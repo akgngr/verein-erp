@@ -1,0 +1,12 @@
+onlyBuiltDependencies:
+  - "@heroui/shared-utils"
+  - "@prisma/client"
+  - "@prisma/engines"
+  - esbuild
+  - prisma
+  - unrs-resolver
+
+# HeroUI ile aynı @internationalized/date kopyasının kullanılması için tek sürüme sabitlenir
+# (DatePicker tip uyumu: CalendarDate → DateValue nominal uyuşmazlığını önler).
+overrides:
+  "@internationalized/date": 3.12.4

@@ -1,0 +1,20 @@
+import { CalendarDays } from "lucide-react";
+
+import type { ModuleConfig } from "@/shared/types/module";
+
+import { meetingsPermissions } from "./permissions";
+
+export const moduleConfig: ModuleConfig = {
+  key: "meetings",
+  label: "Toplantılar",
+  nav: [
+    {
+      href: "/toplantilar",
+      label: "Toplantılar",
+      icon: CalendarDays,
+      group: "main",
+      order: 2,
+      permission: { definition: meetingsPermissions, action: "view" },
+    },
+  ],
+};
