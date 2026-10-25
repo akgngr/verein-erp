@@ -28,3 +28,25 @@ Work Log:
 Stage Summary:
 - Kabul kriterlerinin tamamı doğrulandı (bkz. spec 16). passwordHash hiçbir yanıtta/audite geçmiyor.
 - Karar noktaları koddaki `// KARAR:` yorumlarında: lazy getDb/getEnv, proxy.ts adı, distDir env override, @internationalized/date override, FormDatePicker string değer, FILTER_ALL "Tümü" seçeneği, JWT tip snapshot'ları (next-auth/jwt export * augmentation birleşmiyor), HeroUI client sarmalayıcıları, defaultDir option (list-params), seed için process.loadEnvFile.
+
+---
+Task ID: 2
+Agent: Z.ai (main, devam oturumu)
+Task: Önizleme "bağlanmayı reddetti" sorununun teşhisi ve kalıcı çözümü + tam E2E yeniden doğrulama
+
+Work Log:
+- Teşhis 1: preview trafiği Caddy(:81) → :3000 üzerinden geçiyor; kullanıcı denediğinde servisler kapalıydı (sandbox yeniden başlangıcı sonrası userspace postgres/dev otomatik açılmıyor)
+- Teşhis 2 (kritik): Next.js 16 "Blocked cross-origin request ... from 127.0.0.1" — allowedDevOrigins yokken /_next/hmr ve dev kaynakları engelleniyor; tarayıcıda hidrasyon hiç tamamlanmıyor (React fiber yok), tıklamalar native GET submit oluyordu
+- Teşhis 3 (kritik): dev.log proje kökünde tee'leniyordu → her istek log yazıyor → Turbopack yeniden derliyor → HMR reload → yeni istek (sonsuz reload döngüsü; kanıt: 6 sn'de 481→513 satır). Bu, hidrasyonun asıl katili
+- Teşhis 4: sandbox global DATABASE_URL (sqlite) daemon sürecine miras kalınca Prisma "URL must start with postgresql://" hatası veriyordu (authorize patlıyor)
+- Teşhis 5: .zscripts/dev.sh açılışta `bun run db:push` (olmayan script) → set -e betiği öldürüyor → sandbox açılışında sunucu hiç başlamıyor
+- Çözüm: next.config.ts'e allowedDevOrigins (localhost, 127.0.0.1, preview alan adı, *.space-z.ai); dev script'i tee hedefini izlenmeyen .next/dev.log'a taşıdı; .env.local oluşturuldu (boot'ta ezilen .env'e karşı dayanıklılık, Next önceliği); scripts/start-dev-daemon.sh (çift-fork daemonizasyonu + .env.local yükleme — bash oturumu sonlanınca süreç grupları temizlendiği için nohup/setsid yetmiyor); scripts/start-postgres.sh (idempotent initdb/start/createdb); dev.sh'a env yükleme + postgres start + `prisma migrate deploy` + idempotent seed eklendi
+- E2E (agent-browser, 127.0.0.1): / → /giris; login (admin@dernek.local/Admin12345) → zorunlu parola değişimi (/profil) → panel + "Parolanız güncellendi" bildirimi → sidebar 6 link → kullanıcı menüsü → Çıkış yap → /giris; tümü çalışıyor
+- Önizleme alan adı Host simülasyonu: 200, sıfır engelleme
+- scripts/reset-admin.ts ile DB belgelenmiş ilk-kurulum durumuna döndürüldü (test kullanıcısı silindi, denetim kaydı temizlendi, parola=ADMIN_PASSWORD, mustChangePassword=true)
+- pnpm typecheck + pnpm lint temiz; /api/health sağlıklı
+
+Stage Summary:
+- Kalıcı KARAR'lar: allowedDevOrigins (next.config.ts), log konumu .next/dev.log (reload döngüsü kırıldı), .env.local (boot dayanıklılığı), çift-fork daemon (scripts/start-dev-daemon.sh), idempotent postgres+seed açılışı (scripts/start-postgres.sh + dev.sh)
+- Uygulama kodu (src/) hiç değişmedi — yalnızca çalışma ortamı/altyapı düzeltildi
+- Dev sunucusu çalışıyor: çift-fork ile PID 1 altında; log: .next/dev.log
