@@ -12,6 +12,21 @@ const nextConfig: NextConfig = {
     "preview-chat-f44dc199-3def-4ec9-82a1-f073394f8be0.space-z.ai",
     "*.space-z.ai",
   ],
+  // KARAR: Önizleme vekili (proxy), Server Actions POST isteklerinde x-forwarded-host
+  // başlığını iç host'a (fcapp.run) yeniden yazar ama origin başlığını önizleme alan
+  // adı olarak korur; Next.js bu uyumsuzlukta action'ı "Invalid Server Actions request"
+  // ile iptal eder. Bu yüzden önizleme alan adları allowedOrigins listesinde izinlidir.
+  experimental: {
+    serverActions: {
+      allowedOrigins: [
+        "localhost:3000",
+        "127.0.0.1:3000",
+        "preview-chat-f44dc199-3def-4ec9-82a1-f073394f8be0.space-z.ai",
+        "*.space-z.ai",
+        "*.fcapp.run",
+      ],
+    },
+  },
   // KARAR: distDir yalnızca ortam değişkeniyle geçici olarak değiştirilebilir;
   // varsayılan ".next" aynen korunur. (Sandbox'ta çalışan dev sunucusunu bozmadan
   // `pnpm build` doğrulaması için kullanılır; kullanıcı tarafında etkisi yoktur.)

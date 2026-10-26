@@ -43,6 +43,12 @@ COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder /app/node_modules/.bin/prisma ./node_modules/.bin/prisma
 
+# Evrak dosya depolaması (Faz 1): kalıcı volume bağlanacak klasör,
+# root olmayan kullanıcıya verilir; UPLOAD_DIR varsayılanı bu yoldur.
+RUN mkdir -p /app/storage/uploads \
+  && chown -R nextjs:nodejs /app/storage
+ENV UPLOAD_DIR=/app/storage/uploads
+
 USER nextjs
 EXPOSE 3000
 ENV PORT=3000

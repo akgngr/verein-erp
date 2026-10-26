@@ -44,6 +44,17 @@ const seedEnv = loadSeedEnv();
 
 const prisma = new PrismaClient();
 
+/** Evrak kategorileri (Faz 1): idempotent upsert ile oluşur; ad benzersizdir. */
+const DOCUMENT_CATEGORIES = [
+  "Resmi Yazı",
+  "Dilekçe",
+  "Fatura/Belge",
+  "Sözleşme",
+  "Davet/Duyuru",
+  "Bildirim",
+  "Diğer",
+] as const;
+
 async function main() {
   const { ADMIN_EMAIL, ADMIN_PASSWORD, ADMIN_NAME } = seedEnv;
   const email = ADMIN_EMAIL.toLowerCase();
@@ -51,21 +62,29 @@ async function main() {
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
     console.log(`Yönetici zaten mevcut (${email}); seed değişiklik yapmadı.`);
-    return;
+  } else {
+    await prisma.user.create({
+      data: {
+        name: ADMIN_NAME,
+        email,
+        passwordHash: await hashPassword(ADMIN_PASSWORD),
+        role: "ADMIN",
+        mustChangePassword: true,
+      },
+    });
+
+    console.log(`İlk yönetici oluşturuldu: ${email}`);
+    console.log("İlk girişte parola değişikliği istenecek (mustChangePassword = true).");
   }
 
-  await prisma.user.create({
-    data: {
-      name: ADMIN_NAME,
-      email,
-      passwordHash: await hashPassword(ADMIN_PASSWORD),
-      role: "ADMIN",
-      mustChangePassword: true,
-    },
-  });
-
-  console.log(`İlk yönetici oluşturuldu: ${email}`);
-  console.log("İlk girişte parola değişikliği istenecek (mustChangePassword = true).");
+  for (const name of DOCUMENT_CATEGORIES) {
+    await prisma.documentCategory.upsert({
+      where: { name },
+      update: {},
+      create: { name },
+    });
+  }
+  console.log(`Evrak kategorileri hazır (${DOCUMENT_CATEGORIES.length} adet).`);
 }
 
 main()

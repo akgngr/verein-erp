@@ -1,0 +1,119 @@
+enum DocumentDirection {
+  INCOMING // Gelen
+  OUTGOING // Giden
+}
+
+enum DocumentStatus {
+  OPEN // Açık
+  IN_PROGRESS // İşlemde
+  COMPLETED // Tamamlandı
+  ARCHIVED // Arşivlendi
+}
+
+enum DeliveryMethod {
+  POST // Posta
+  EMAIL // E-posta
+  HAND // Elden
+  COURIER // Kargo/Kurye
+  KEP // KEP
+  OTHER // Diğer
+}
+
+model DocumentCategory {
+  id        String     @id @default(cuid())
+  name      String     @unique
+  isActive  Boolean    @default(true)
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  documents Document[]
+}
+
+// Kayıt numarası sayacı: yön + yıl bazında sıra; üretim atomik upsert ile yapılır.
+model DocumentCounter {
+  direction DocumentDirection
+  year      Int
+  lastSeq   Int               @default(0)
+
+  @@id([direction, year])
+}
+
+model Document {
+  id              String            @id @default(cuid())
+  direction       DocumentDirection
+  year            Int
+  sequence        Int
+  registryNumber  String            @unique // GLN-2026-0001 / GDN-2026-0001
+  registeredAt    DateTime          @default(now())
+  documentDate    DateTime          @db.Date // evrakın üzerindeki tarih
+  counterparty    String // gelen: gönderen, giden: alıcı (kurum/kişi)
+  referenceNumber String? // karşı tarafın evrak sayı/no'su
+  subject         String
+  summary         String?
+  deliveryMethod  DeliveryMethod?
+  status          DocumentStatus    @default(OPEN)
+  dueDate         DateTime?         @db.Date // son işlem/cevap tarihi
+
+  categoryId      String?
+  category        DocumentCategory? @relation(fields: [categoryId], references: [id], onDelete: SetNull)
+
+  assigneeId    String? // FK DEĞİL: modüller arası bağımsızlık için düz alan
+  assigneeLabel String? // işlem anındaki "Ad" anlık görüntüsü
+
+  replyToId String?
+  replyTo   Document?  @relation("DocumentReplies", fields: [replyToId], references: [id], onDelete: SetNull)
+  replies   Document[] @relation("DocumentReplies")
+
+  createdById    String // FK DEĞİL
+  createdByLabel String
+  updatedById    String?
+  updatedByLabel String?
+
+  deletedAt     DateTime?
+  deletedById   String?
+  deletedByLabel String?
+
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+
+  files DocumentFile[]
+  notes DocumentNote[]
+
+  @@unique([direction, year, sequence])
+  @@index([direction])
+  @@index([status])
+  @@index([documentDate])
+  @@index([registeredAt])
+  @@index([dueDate])
+  @@index([categoryId])
+  @@index([assigneeId])
+  @@index([deletedAt])
+}
+
+model DocumentFile {
+  id              String   @id @default(cuid())
+  documentId      String
+  document        Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  originalName    String
+  storedName      String   @unique // uuid + uzantı; kullanıcı adı yola ASLA girmez
+  storagePath     String // UPLOAD_DIR'e göreli: <yıl>/<documentId>/<storedName>
+  mimeType        String
+  size            Int
+  uploadedById    String
+  uploadedByLabel String
+  createdAt       DateTime @default(now())
+  deletedAt       DateTime?
+
+  @@index([documentId])
+}
+
+model DocumentNote {
+  id          String   @id @default(cuid())
+  documentId  String
+  document    Document @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  body        String
+  authorId    String
+  authorLabel String
+  createdAt   DateTime @default(now())
+
+  @@index([documentId, createdAt])
+}

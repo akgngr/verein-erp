@@ -34,16 +34,22 @@ fi
 python3 - <<'EOF'
 import os
 
+# KARAR: Dev çıktısı PROJE DIŞINA (/tmp) yazılır — proje içi herhangi bir dosyaya
+# sürekli yazmak (ör. .next/dev.log'a tee) Turbopack dosya izleyicisini tetikler
+# ve sonsuz "derle → HMR reload → yeni istek → tekrar derle" döngüsüne yol açar.
+LOG = "/tmp/dernek-dev.log"
+
 pid = os.fork()
 if pid == 0:
     os.setsid()
     pid2 = os.fork()
     if pid2 == 0:
         os.chdir("/home/z/my-project")
+        log = os.open(LOG, os.O_WRONLY | os.O_CREAT | os.O_APPEND)
+        os.dup2(log, 1)
+        os.dup2(log, 2)
         devnull = os.open(os.devnull, os.O_RDWR)
         os.dup2(devnull, 0)
-        os.dup2(devnull, 1)
-        os.dup2(devnull, 2)
         os.execvp("bun", ["bun", "run", "dev"])
     os._exit(0)
 os.waitpid(pid, 0)

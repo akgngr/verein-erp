@@ -76,6 +76,19 @@ export async function requirePermission(
   return user;
 }
 
+/**
+ * Atama seçicileri için aktif kullanıcı seçenekleri (Faz 1, izinli ekleme).
+ * `label` kullanıcı adıdır; ada göre sıralıdır. passwordHash ASLA seçilmez.
+ */
+export async function listActiveUserOptions(): Promise<{ id: string; label: string }[]> {
+  const users = await getDb().user.findMany({
+    where: { isActive: true },
+    select: { id: true, name: true },
+    orderBy: { name: "asc" },
+  });
+  return users.map((dbUser) => ({ id: dbUser.id, label: dbUser.name }));
+}
+
 export type ActionAuditFn = (args: {
   action: string;
   entity: string;

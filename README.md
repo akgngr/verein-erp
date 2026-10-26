@@ -1,9 +1,12 @@
-# Dernek Yönetim Sistemi — Faz 0 (Temel Altyapı)
+# Dernek Yönetim Sistemi — Faz 0 (Temel Altyapı) + Faz 1 (Evrak Kayıt)
 
 Next.js (App Router) + TypeScript + Prisma (PostgreSQL) + Auth.js v5 + HeroUI üzerine
-kurulu, **modüler monolit** mimarili dernek yönetim uygulaması. Bu faz yalnızca temel
-altyapıyı içerir: kimlik doğrulama, roller/yetkiler, layout, ortak DataTable ve form
-altyapısı. Evrak / Toplantı / Üye modülleri iskelet düzeyindedir.
+kurulu, **modüler monolit** mimarili dernek yönetim uygulaması. Faz 0 temel altyapıyı
+(kimlik doğrulama, roller/yetkiler, layout, ortak DataTable ve form altyapısı),
+Faz 1 ise tam çalışan **gelen/giden evrak kayıt modülünü** içerir: kayıt numarası
+üretimi, dosya yükleme/indirme/önizleme, durum takibi, işlem notları, arama/
+filtreleme, Excel dışa aktarım ve denetim kaydı entegrasyonu. Toplantı / Üye
+modülleri iskelet düzeyindedir.
 
 ---
 
@@ -33,6 +36,8 @@ cp .env.example .env
 | `AUTH_SECRET` | `openssl rand -base64 32` ile üretin. |
 | `AUTH_TRUST_HOST` | Yerel/sunucu dağıtımı için `true` bırakın. |
 | `ADMIN_EMAIL` / `ADMIN_PASSWORD` / `ADMIN_NAME` | İlk yönetici seed bilgileri. Geçici parola parola kuralına uymalıdır: en az 10 karakter, 1 büyük harf, 1 küçük harf, 1 rakam. |
+| `UPLOAD_DIR` | Evrak dosyalarının diske yazılacağı klasör (varsayılan `./storage/uploads`). Üretimde mutlak yol + kalıcı volume kullanın. |
+| `MAX_UPLOAD_MB` | Dosya başına en fazla boyut (MB, varsayılan 20). |
 
 Eksik veya geçersiz değişken durumunda uygulama, açıklayıcı bir hata ile durur
 (`src/shared/env.ts`).
@@ -68,6 +73,21 @@ pg_restore --no-owner --no-acl -d "$DATABASE_URL" dernek.dump
   `next.config.ts` içinde `output: "standalone"` kullanılır, root olmayan kullanıcı ile
   çalışır, konteyner başlangıcında `prisma migrate deploy` çalışır. Sağlık kontrolü
   `/api/health` uç noktasını kullanır. Yerelde bu imaj çalıştırılmaz.
+
+### Evrak dosyaları için kalıcı volume ve yedekleme (Faz 1)
+
+- Coolify'da `UPLOAD_DIR` için kalıcı volume bağlayın (imajda `/app/storage/uploads`
+  hazırdır ve root olmayan kullanıcıya aittir). Volume bağlanmazsa yeniden
+  dağıtımda yüklenen dosyalar kaybolur.
+- **Yedekleme:** veritabanı yedeği (`pg_dump`) ile `UPLOAD_DIR` klasörü
+  **birlikte** yedeklenmelidir; ikisi tek bir bütünün parçalarıdır.
+- `storage/` klasörü `.gitignore` içindedir; yükleme dosyaları repoya girmez.
+- Evrak kayıt numarası biçimi: `GLN-<yıl>-<sıra>` (gelen) / `GDN-<yıl>-<sıra>`
+  (giden); sıra yön + yıl bazındadır, 4 hane sıfır dolguludur ve 9999'u aşarsa
+  hane sayısı kendiliğinden artar.
+- Yeni dosya türü eklemek için `src/modules/documents/constants.ts`
+  içindeki `FILE_TYPE_RULES` listesine uzantı + beklenen MIME + imza türü
+  ekleyin; izin listesi tek yerden yönetilir.
 
 ## 5. Yeni modül ekleme (yalnızca 6 adım)
 

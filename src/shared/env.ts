@@ -17,6 +17,9 @@ const envSchema = z.object({
     .min(16, "AUTH_SECRET tanımlı değil ya da çok kısa. `openssl rand -base64 32` komutuyla üretin."),
   AUTH_TRUST_HOST: z.string().optional(),
   NODE_ENV: z.enum(["development", "test", "production"]).default("development"),
+  // Evrak dosya depolama (Faz 1): UPLOAD_DIR disk yolu, MAX_UPLOAD_MB dosya başına sınır.
+  UPLOAD_DIR: z.string().min(1).default("./storage/uploads"),
+  MAX_UPLOAD_MB: z.coerce.number().int().min(1).max(200).default(20),
 });
 
 export type Env = z.infer<typeof envSchema>;

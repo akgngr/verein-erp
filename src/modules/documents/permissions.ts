@@ -1,9 +1,17 @@
 import { definePermissions } from "@/shared/permissions/define";
 
-/** 7.3 yetki matrisi — documents */
+/** 6. bölüm yetki matrisi — documents */
 export const documentsPermissions = definePermissions("documents", {
   ADMIN: ["view", "create", "update", "delete"],
   BOARD: ["view", "create", "update"],
   SECRETARY: ["view", "create", "update"],
+  VIEWER: ["view"],
+});
+
+/** 6. bölüm yetki matrisi — documentCategories (silme yoktur; pasife alma = update) */
+export const documentCategoriesPermissions = definePermissions("documentCategories", {
+  ADMIN: ["view", "create", "update"],
+  BOARD: ["view", "create", "update"],
+  SECRETARY: ["view"],
   VIEWER: ["view"],
 });

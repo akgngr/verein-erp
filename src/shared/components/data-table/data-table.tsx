@@ -14,13 +14,14 @@ import {
   TableRow,
 } from "@heroui/react";
 import { MoreHorizontal } from "lucide-react";
-import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useTransition, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect, useState } from "react";
 import type { Key } from "react";
 
 import { cn } from "@/shared/utils";
 
 import { DataTablePagination } from "./data-table-pagination";
+import { useListQueryState } from "./use-list-query-state";
 import { DataTableToolbar } from "./data-table-toolbar";
 import type { DataTableProps } from "./types";
 import { EmptyState } from "../ui/empty-state";
@@ -49,76 +50,43 @@ export function DataTable<T extends { id: string }>({
   ariaLabel = "Tablo",
 }: DataTableProps<T>) {
   const router = useRouter();
-  const pathname = usePathname();
   const searchParams = useSearchParams();
-  const [isPending, startTransition] = useTransition();
+  const { setParams, isPending } = useListQueryState();
   const [searchDraft, setSearchDraft] = useState(q);
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
-
-  const updateParams = useCallback(
-    (mutate: (params: URLSearchParams) => void) => {
-      const params = new URLSearchParams(searchParams.toString());
-      mutate(params);
-      startTransition(() => {
-        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
-      });
-    },
-    [pathname, router, searchParams],
-  );
 
   // Arama kutusu 300 ms debounce ile q'yü günceller; arama değişince sayfa 1'e döner.
   useEffect(() => {
     if (searchDraft === q) return;
     const timer = setTimeout(() => {
-      updateParams((params) => {
-        params.delete("page");
-        if (searchDraft) params.set("q", searchDraft);
-        else params.delete("q");
-      });
+      setParams({ q: searchDraft }, { resetPage: true });
     }, 300);
     return () => clearTimeout(timer);
-  }, [searchDraft, q, updateParams]);
+  }, [searchDraft, q, setParams]);
 
   const handleSort = (columnKey: Key) => {
     const column = columns.find((item) => item.key === String(columnKey));
     if (!column?.sortable) return;
-    updateParams((params) => {
-      params.delete("page");
-      if (sort !== String(columnKey) || !dir) {
-        params.set("sort", String(columnKey));
-        params.set("dir", "asc");
-      } else if (dir === "asc") {
-        params.set("dir", "desc");
-      } else {
-        params.delete("sort");
-        params.delete("dir");
-      }
-    });
+    if (sort !== String(columnKey) || !dir) {
+      setParams({ sort: String(columnKey), dir: "asc" }, { resetPage: true });
+    } else if (dir === "asc") {
+      setParams({ sort: String(columnKey), dir: "desc" }, { resetPage: true });
+    } else {
+      setParams({ sort: null, dir: null }, { resetPage: true });
+    }
   };
 
   const handleFilterChange = (key: string, value: string) => {
-    updateParams((params) => {
-      params.delete("page");
-      const paramKey = `filter.${key}`;
-      if (value) params.set(paramKey, value);
-      else params.delete(paramKey);
-    });
+    setParams({ [`filter.${key}`]: value }, { resetPage: true });
   };
 
   const handlePageChange = (nextPage: number) => {
-    updateParams((params) => {
-      if (nextPage > 1) params.set("page", String(nextPage));
-      else params.delete("page");
-    });
+    setParams({ page: nextPage > 1 ? String(nextPage) : null });
   };
 
   const handlePageSizeChange = (nextSize: number) => {
-    updateParams((params) => {
-      params.delete("page");
-      if (nextSize !== 10) params.set("pageSize", String(nextSize));
-      else params.delete("pageSize");
-    });
+    setParams({ pageSize: nextSize !== 10 ? String(nextSize) : null }, { resetPage: true });
   };
 
   const hasRowActions = typeof rowActions === "function";

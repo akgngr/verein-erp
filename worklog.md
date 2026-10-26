@@ -50,3 +50,31 @@ Stage Summary:
 - Kalıcı KARAR'lar: allowedDevOrigins (next.config.ts), log konumu .next/dev.log (reload döngüsü kırıldı), .env.local (boot dayanıklılığı), çift-fork daemon (scripts/start-dev-daemon.sh), idempotent postgres+seed açılışı (scripts/start-postgres.sh + dev.sh)
 - Uygulama kodu (src/) hiç değişmedi — yalnızca çalışma ortamı/altyapı düzeltildi
 - Dev sunucusu çalışıyor: çift-fork ile PID 1 altında; log: .next/dev.log
+
+---
+Task ID: 3
+Agent: Z.ai (main, devam oturumu)
+Task: Faz 1 — Gelen/Giden Evrak Kayıt Modülü + önizleme "Invalid Server Actions request" hatasının giderilmesi
+
+Work Log:
+- ORTAM ONARIMI: sandbox sıfırlanmasıyla silinen PostgreSQL 17.6 userspace kurulumu yeniden indirildi/ilkendirildi; .env.local (DATABASE_URL/AUTH_SECRET/ADMIN_*/UPLOAD_DIR/MAX_UPLOAD_MB) ve .env.example yeniden yazıldı; migration + seed yeniden uygulandı
+- KRİTİK DÜZELTME 1: "Invalid Server Actions request" — önizleme vekili x-forwarded-host'u iç host'a yazıp origin'i koruduğu için Next action'ı iptal ediyordu; next.config.ts'e experimental.serverActions.allowedOrigins (*.space-z.ai, *.fcapp.run) eklendi; tarayıcıda login E2E ile doğrulandı
+- KRİTİK DÜZELTME 2: sonsuz "derle → HMR reload" döngüsü — dev script'indeki `tee .next/dev.log` her istekte dosyaya yazıp Turbopack izleyicisini tetikliyordu; dev script'i tee'sizleştirildi, daemon çıktısı /tmp/dernek-dev.log'a (proje dışı) yönlendirildi
+- Adım 1: exceljs kuruldu; prisma/schema/documents.prisma (Document, DocumentCategory, DocumentCounter, DocumentFile, DocumentNote + 3 enum) ve add_documents migration; seed'e 7 kategori (upsert, idempotent)
+- Adım 2: izinli Faz 0 eklemeleri — auth/server: listActiveUserOptions; shared/data-table: useListQueryState hook'u (DataTable içi refactor dahil); env: UPLOAD_DIR/MAX_UPLOAD_MB
+- Adım 3: permissions (documents + documentCategories), constants (etiket/renk/dosya kuralları/limitler), types, utils (berlinToday/MonthRange/Year, parseDateOnly, isDocumentOverdue), schemas (document/note/category — emptyToNull preprocess, dueDate>=documentDate refine), index dışa aktarımları
+- Adım 4: services — registry-number (formatRegistryNumber, allocateRegistryNumber atomik upsert, runWithRegistryRetry 3x P2002), file-validation (uzantı+MIME+magic byte), file-storage (path traversal koruması, uuid storedName, stream indirme)
+- Adım 5: queries — list-documents (buildDocumentWhere tek filtre kaynağı; q/direction/status/category/assignee/from/to/mine/overdue), get-document, get-document-stats (Berlin ayı, registeredAt bazlı KARAR), list-categories(+options), list-counterparties, search-reply-targets
+- Adım 6: actions — create (transaction+sayı üretimi+audit CREATE), update (eşzamanlılık updatedAt kontrolü, değişen alan diff'i, yön/numara değiştirilemez), change-status (STATUS_CHANGE), delete (yumuşak), add-note, delete-file (yumuşak), category (create/update/ACTIVATE/DEACTIVATE); validate-relations: kategori/sorumlu yalnızca DEĞİŞİNCE doğrulanır (pasif referanslı eski kayıt düzenlenebilsin)
+- Adım 7: handlers (upload: 401/403/404/400 JSON + disk temizliği; download: RFC 5987 + nosniff + private,no-store + inline yalnız pdf/jpg/png; export: exceljs, dondurulmuş başlık, otomatik filtre, gerçek tarih hücresi dd.mm.yyyy, 10.000 satır sınırı notu) + ince API rotaları; proxy matcher'a api/documents muafiyeti (401 JSON garantisi)
+- Adım 8: components — rozetler, DocumentForm (create/edit ortak; yön+numara salt okunur), CounterpartyAutocomplete, ReplyToSelect, FileUploader (sürükle-bırak, istemci ön kontrolü, sıralı yükleme, komut-state akışı), FileList, NotesTimeline, StatsCards, DirectionTabs+ListFilters, CategoryFormModal, DocumentTable, DocumentDetailActions, CategoryTable
+- Adım 9: views (liste/yeni/detay/düzenle/kategoriler) + ince rotalar; Panel Evrak kartı gerçek değerler + yetkiye göre görünür
+- Adım 10: README (UPLOAD_DIR volume/yedekleme notu, numara formatı, FILE_TYPE_RULES), Dockerfile (/app/storage/uploads + UPLOAD_DIR env), .gitignore storage/, final build
+- E2E doğrulama (agent-browser + curl): login→zorunlu parola→panel; GLN-2026-0001/0002, GDN-2026-0001 (ayrı sayaçlar); giden↔gelen karşılıklı yanıt bağlantıları; PDF upload + inline önizleme + RFC 5987 indirme; fake.pdf/svg/exe/oversize/11. dosya reddi; 401/403; VIEWER (görür/indirir, butonsuz, upload 403), SECRETARY (oluşturur, silemez, Sil butonu yok); durum değişimi; not ekleme; kategori ekle/pasife al (pasif formda görünmez); eşzamanlılık uyarısı (stale updatedAt → "Bu kayıt başka biri tarafından değiştirildi"); ADMIN yumuşak silme (listeden/exporttan kaybolur, numara yeniden kullanılmaz → 0003); gecikmiş evrak kırmızı; q/sort/direction filtreleri URL'den; audit tüm aksiyonlar + passwordHash sızmı yok; Excel gerçek tarih hücresi
+- Doğrulama: pnpm typecheck + pnpm lint + pnpm build (NEXT_DIST_DIR=.next-build) temiz; modül sınır denetimi: documents yalnızca auth/server + shared import ediyor
+
+Stage Summary:
+- Faz 1 kabul kriterlerinin tamamı doğrulandı
+- Yeni KARAR'lar: allowedOrigins (next.config), dev log /tmp'ye (Turbopack döngü kırılımı), proxy matcher api/documents muafiyeti, registeredAt bazlı "bu ay" istatistiği, resolver-cast (z.preprocess input tipleri), form'da direction/updatedAt hidden defaultValues (istemci şema eşleşmesi), validate-relations "yalnızca değişince doğrula", canonical MIME kaydı (istemci MIME'i değil kural listesi), DocumentTable/DocumentDetailActions/CategoryTable dosyaları (users modülü table bileşeni kalıbı)
+- Silinen evrağın disk dosyaları ve dosya satırları korunur; indirme loglanmaz
+- Test kullanıcıları (sekreter@dernek.local/Viewer@) sandbox'ta bırakıldı; demo evraklar GLN-2026-0001/0003, GDN-2026-0001 (GLN-2026-0002 silinmiş durumda)

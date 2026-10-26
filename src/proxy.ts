@@ -8,7 +8,10 @@ export default NextAuth(authConfig).auth;
 
 export const config = {
   // /api/health, /api/auth ve statik dosyalar muaf tutulur (6. bölüm, md. 5).
+  // KARAR (Faz 1): /api/documents uçları da muaftır — oturumsuz isteğin
+  // middleware'in yönlendirmesine değil, handler'ın 401/403 JSON yanıtına
+  // düşmesi gerekir (7. bölüm: "Handler'lar yönlendirme yapmaz").
   matcher: [
-    "/((?!api/health|api/auth|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt)$).*)",
+    "/((?!api/health|api/auth|api/documents|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt)$).*)",
   ],
 };
