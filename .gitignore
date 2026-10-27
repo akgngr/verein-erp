@@ -63,3 +63,11 @@ download/*.png
 scripts/*.png
 scripts/console-dump*.txt
 download/*.zip
+
+# Sandbox altyapısı — repoya girmez (push öncesi temizlik, Task 23)
+/skills/
+/.zscripts/
+/upload/
+/mini-services/
+/download/
+/.env
