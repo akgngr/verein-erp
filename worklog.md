@@ -154,3 +154,23 @@ Stage Summary:
 - Kod durumu doğrulandı: tsc 0 hata; 10 modül (auth, users, documents, meetings, members, organization, accounting, donations, audit + registry) tam; 36 DB tablosu; tüm migration'lar uygulandı; sunucu daemon ayakta (health 200, /giris 200)
 - Mevcut üyeler modülü Faz 3 iş emrinden FARKLI tasarımda (Verein pivotu kararı): MembershipType ENUM vs tablo, memberNumber "UYE-2026-0001" vs int 0001, dueYear vs dueId FK, kimlikNo alanı (iş emri KVKK gereği yasaklıyor). Faz 4 member-sync + Faz 5 bu şemaya bağımlı → iş emri birebir uygulanırsa muhasebe/bağış BOZULUR. KARAR: yeniden inşa YOK; mevcut yapı korunur, iş emri dokümanı referans. Eksikler (tür yönetimi, aidat satırı/raporu, Excel import, anonimleştirme) kullanıcı onayıyla ayrı iş olarak değerlendirilecek
 - PUSH: PAT verilince `git push -u origin main` ile tüm birikmiş commit'ler gidecek; sonraki her task sonunda push yapılacak
+
+---
+Task ID: 22
+Agent: Z.ai (main)
+Task: WIP kod kurtarma (tsc/lint/build temiz) + GitHub push kurulumu + değişiklik paketi (zip)
+
+Work Log:
+- Kullanıcı push talebi + "etkilenen dosyaları zip'le" istedi; Faz 3 eklemelerini ("evet") onayladı
+- 283 dosyalık kod koruma commit'i + remote kurulumu (push PAT bekliyor — "could not read Username")
+- ŞEMA-DB SENKRON KRİZİ: auth.prisma (TREASURER/AUDITOR rolleri, User.locale), documents.prisma (REGISTERED_MAIL/FAX), meetings.prisma (invitationSentAt) DB'de var şemada YOKTU → prisma migrate diff ile tam fark çıkarıldı, şemaya işlendi (diff 0)
+- TSC ASLINDA HATALIYDI: önceki "tsc 0" raporu pipe exit-code yanılgısıydı; gerçek sayı 74 hata → düzeltmeler: next-intl kuruldu, tüm permissions matrislerine TREASURER/AUDITOR (+sidebar panel), members/server.ts+ui.ts giriş noktaları bağlandı, shared/files parseSingleFileUpload zengin arayüz (originalName/declaredMime/size/head) + computeSha256, shared/env DOCUMENT_LANGUAGE, NavItem.labelKey, DataTableToolbarContext, donations view import yolları + can import + memberRecipient null→"" , meetings status-badge/type-badge import + StatusMenu prop, delivery zod enum'ları, user-form role zod, zod v4 donation .omit() krizi (refine'siz base ayrımı)
+- next build: İLK DENEME BAŞARISIZ (2 kriz): (1) NEXT_DIST_DIR=/tmp InvalidDistDirError — Next 16 dış distDir yasak; çözüm: dev'i durdur + default .next ile build + daemon restart (Task 20 kuralı GÜNCELLENDİ: build sonrası dev her zaman restart); (2) zod v4 ".omit() cannot be used on object schemas containing refinements" → donationBaseSchema ayrımı
+- SONUÇ: tsc 0 hata + lint 0 hata (4 bilinen uyarı) + build ✓ (16/16 static) + health 200
+- DEGISTIKLERI.md içeren zip paketi üretildi: download/dernek-degisiklikler-20261027.zip (312 dosya; download/ ve scripts test kanıtları hariç) — zip kendi kendini içermemesi için download/*.zip .gitignore'a alındı
+- RİSK NOTU: pkill -f "next dev" kendi komutunu da öldürür (exit 137) — pattern [n]ext dev ya da pgrep kullan
+
+Stage Summary:
+- Proje artık ÇALIŞIR durumda: tsc/lint/build temiz, tüm migration'lar uygulandı, sunucu daemon ayakta
+- Faz 3 eklemeleri (tür yönetimi + aidat satırı/raporu + Excel içe aktar) ONAYLANDI — sonraki task (Task 23)
+- PUSH: PAT gelince `git push -u origin main` (3 birikmiş commit var)
