@@ -194,9 +194,11 @@ curl localhost:3000/api/health   # 200 beklenir
 
 E2E: agent-browser (snapshot -i @ref zorunlu) — demo hesap: admin@dernek.local (parola worklog Task 11 notuna göre Admin12345).
 
-## 9. Repo ve kurtarma (Task 21 sonrası)
+## 9. Repo ve kurtarma (Task 21 sonrası; push Task 23'te tamamlandı)
 
-- GitHub remote: `origin = https://github.com/akgngr/verein-erp.git` (main dalı) — her task sonunda commit + push; push PAT gerektirir (credential yoksa "could not read Username" hatası normal)
+- GitHub remote: `origin = https://github.com/akgngr/verein-erp.git` (main dalı) — **push ÇALIŞIYOR** (Task 23): PAT remote URL'e gömülü (.git/config, izlenmeyen dosya; değer buraya YAZILMAZ). Her task sonunda commit + push
+- Push öncesi repo temizliği (bde0fc3): sandbox altyapısı (skills/ 1069 dosya, .zscripts/, upload/, tool-results/, mini-services/, .env) izlemeden çıkarıldı → 551 dosyalık temiz proje; .gitignore'da kalıcı kurallar. Sır taraması negatif (PAT/secret/AUTH yok)
+- Yerel toplama paketi: `git archive -o download/dernek-degisiklikler-<tarih>.zip HEAD` (izlenen dosyaların birebir aynıları; GitHub klonu alternatif: git clone https://github.com/akgngr/verein-erp.git)
 - İş emri dokümanları: docs/specs/ altında (phase-2, phase-3-members-dues, phase-4-accounting-compliance, phase-5-donations) — sandbox reset'lerine karşı repoda taşınır
 - Sandbox reset kurtarma sırası (3. kez doğrulandı): pg 17.6 binary (~/.pgtools) → .env.local/.env.example → scripts/start-postgres.sh (initdb ~/.pgdata) → migrate deploy + seed → **migrate status kontrolü** → scripts/start-dev-daemon.sh
 - ⚠️ migration uyarısı: migrate deploy'da "already exists" hatası = kısmen uygulanan/çakışan migration; _prisma_migrations'daki failed kaydını temizlemeden deploy ilerlemez

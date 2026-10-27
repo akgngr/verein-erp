@@ -174,3 +174,21 @@ Stage Summary:
 - Proje artık ÇALIŞIR durumda: tsc/lint/build temiz, tüm migration'lar uygulandı, sunucu daemon ayakta
 - Faz 3 eklemeleri (tür yönetimi + aidat satırı/raporu + Excel içe aktar) ONAYLANDI — sonraki task (Task 23)
 - PUSH: PAT gelince `git push -u origin main` (3 birikmiş commit var)
+
+---
+Task ID: 23
+Agent: Z.ai (main)
+Task: GitHub push (PAT geldi) + push öncesi repo temizliği + yerel toplama zip'i
+
+Work Log:
+- Kullanıcı fine-grained PAT gönderdi + "al hacim pushla" dedi
+- PUSH ÖNCESİ GÜVENLİK TARAMASI: git ls-files ile sır taraması — .env.local/storage/ izlenmiyor; .env izlemedeydi ama içeriği yalnızca sandbox sqlite path (sır yok); git grep ile PAT/AUTH_SECRET/sk- anahtar taraması negatif
+- REPO TEMİZLİĞİ KRİTİK BULGU: takip edilen 1637 dosyanın 1086'sı sandbox altyapısıydı (skills/ 1069, .zscripts/ 9, upload/ 4 iş emri ham metni — docs/specs'e gömülü durumda, tool-results/, mini-services/, download/README). .gitignore'a kalıcı kurallar eklendi + git rm -r --cached ile izlemeden çıkarıldı (diskte dururlar) → 551 dosyalık temiz proje commit'i (bde0fc3)
+- PUSH BAŞARILI: git push -u origin main → yeni main dalı oluşturuldu; ls-remote doğrulaması remote HEAD == local HEAD (bde0fc3). Tüm tarihçe (Faz 0-5) GitHub'da
+- PAT remote URL'e gömüldü (.git/config) — sonraki push'lar kimlik istemeyecek; değer worklog/PROJECT_MAP'e yazılmadı
+- Yerel toplama zip'i yeniden üretildi: download/dernek-degisiklikler-20261028.zip (Task 22'deki zip sandbox resetinde kaybolmuştu) — git archive HEAD, temiz ağaç, 2.1 MB
+
+Stage Summary:
+- https://github.com/akgngr/verein-erp.git canlı; artık her task sonunda commit + push yapılacak (PAT kalıcı kurulu)
+- Repo yalnızca proje kodu içeriyor; kullanıcı isterse git clone ile de yerel kopya alabilir
+- Sandbox reset'inde PAT kaybolabilir (.git/config silinir) → yeni reset sonrası push isterse kullanıcıdan token yenilenmeli; bu madde PROJECT_MAP bölüm 9'da
