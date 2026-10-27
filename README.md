@@ -178,3 +178,45 @@ bile diskteki dosyalar korunur (yumuşak silme).
 kullanılır (uzantı → MIME → magic byte doğrulaması, yol güvenliği, indirme başlıkları).
 Evrak modülü pptx kabul etmez; toplantılar tüm listeyi kabul eder. Her iki modülde de
 `MAX_UPLOAD_MB` sınırı geçerlidir.
+
+## 8. Üyeler modülü eklemeleri (Faz 3 eklemeleri — Verein pivotu sonrası)
+
+**Üyelik türü yönetimi (`/uyeler/turler`):**
+
+- Dört sabit tür (Asıl / Onursal / Fahri / Destekçi) için yıllık aidat tutarı ve
+  aktiflik yönetilir; tür ekleme/silme yapılmaz (enum sabittir — `MembershipTypeConfig`
+  tablosu enum'a key'lenir; Faz 4 muhasebe aktarımı ve Faz 5 bağış bildirimleri bu
+  enum'a bağımlıdır).
+- Tutar boş = "belirlenmedi" (toplu aidat üretimi o türü atlar); 0 = aidat yok.
+  Pasif tür yalnızca yeni üye kaydında gizlenir; mevcut üyelerin türü korunur.
+
+**Yıllık aidat satırları (`MemberDue`) ve rapor (`/uyeler/aidat`):**
+
+- Üye başına yıl başına tek satır (`@@unique([memberId, year])`): beklenen tutar,
+  son ödeme tarihi, not ve durum (Açık / Kısmen / Ödendi / Muaf).
+- Durum denormalizedir ve **yalnızca** `recalculateDueStatus` yazar; ödeme
+  ekleme/iptal işlemleriyle aynı transaction içinde yeniden hesaplanır. Ödenen
+  tutar kolonda tutulmaz — void edilmemiş `MemberPayment` kayıtlarından hesaplanır.
+- Ödemeler aidat satırına `dueId` FK ile DEĞİL, `(memberId, dueYear)` çiftiyle
+  bağlanır; aidat satırı olmayan ödemeler de geçerlidir (geçmiş kayıtlar bozulmaz).
+- Toplu üretim: yıl (geçen yıl .. gelecek yıl) + son ödeme tarihi seçilir, dry-run
+  önizlemeden sonra onaylanır; uygunluk = aktif üye + türün aidat tutarı > 0 +
+  katılım tarihi ≤ yıl sonu + o yıl satırı yok. İkinci çalıştırma mükerrer üretmez.
+- "Muaf" elle verilir (ödemesi olmayan satırda); raporda beklenen tutara dahil edilmez.
+- Excel dışa aktarım: `GET /api/members/dues/export` (yıl/filtre parametreleri raporla aynı).
+
+**Excel içe aktarma (`/uyeler/ice-aktar`):**
+
+- Şablon: `GET /api/members/import-template` ("Üyeler" + "Açıklamalar" sayfalı xlsx).
+- İki adımlı: "Kontrol et" (dry-run, hiçbir kayıt yazmaz) → satır bazlı Türkçe hata
+  raporu → "İçe aktar" (hatalı satırlar atlanır, geçerli satırlar tek transaction'da).
+- Zorunlu sütunlar: Ad, Soyad, Üyelik Türü, Üyelik Başlangıç Tarihi. Tarih biçimi
+  gg.aa.yyyy. Tür eşleme: TR adları (Asıl Üye vb.) + yaygın DE karşılıklar.
+- Mükerrer kontrol: e-posta (küçük/büyük duyarsız) veya ad+soyad+doğum tarihi —
+  hem DB'de hem dosya içinde. Kimlik numarası/banka bilgisi içe AKTARILMAZ (KVKK).
+- Sınırlar: 5 MB, 2.000 satır, yalnız .xlsx. Üye numaraları içe aktarım yılı
+  sayacından atanır; dosyada numara sütunu bulunmaz.
+
+**i18n notu:** members modülü `next-intl` kullanır (non-routing mod, `NEXT_LOCALE`
+çerezi); `src/i18n/request.ts` + `next.config.ts`'teki `createNextIntlPlugin` ve root
+layout'taki `NextIntlClientProvider` bu modun zorunlu parçalarıdır.

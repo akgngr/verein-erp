@@ -10,6 +10,7 @@ import { ActionError, createAction } from "@/modules/auth/server";
 import { memberPaymentsPermissions } from "../permissions";
 import { paymentCreateSchema } from "../schemas/payment";
 import { allocateReceiptNumber, runWithReceiptNumberRetry } from "../services/receipt-number";
+import { recalculateDueStatus } from "../services/dues-calculation";
 import { berlinYear, parseDateOnly } from "../utils";
 
 /**
@@ -68,7 +69,7 @@ export async function createPaymentAction(
       const created = await runWithReceiptNumberRetry(() =>
         db.$transaction(async (tx) => {
           const { sequence, receiptNumber } = await allocateReceiptNumber(tx, year);
-          return tx.memberPayment.create({
+          const payment = await tx.memberPayment.create({
             data: {
               year,
               sequence,
@@ -83,6 +84,10 @@ export async function createPaymentAction(
               createdByLabel,
             },
           });
+          // Faz 3 eklemeleri: ilgili yıllık aidat satırının durumu aynı
+          // transaction içinde yeniden hesaplanır (satır yoksa işlem yok).
+          await recalculateDueStatus(tx, member.id, input.dueYear);
+          return payment;
         }),
       );
 

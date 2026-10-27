@@ -192,3 +192,27 @@ Stage Summary:
 - https://github.com/akgngr/verein-erp.git canlı; artık her task sonunda commit + push yapılacak (PAT kalıcı kurulu)
 - Repo yalnızca proje kodu içeriyor; kullanıcı isterse git clone ile de yerel kopya alabilir
 - Sandbox reset'inde PAT kaybolabilir (.git/config silinir) → yeni reset sonrası push isterse kullanıcıdan token yenilenmeli; bu madde PROJECT_MAP bölüm 9'da
+
+---
+Task ID: 24
+Agent: Z.ai (main)
+Task: Faz 3 eklemeleri — üyelik türü yönetimi + yıllık aidat satırı/raporu + Excel içe aktarma (kullanıcı onaylı kapsam)
+
+Work Log:
+- ORTAM KURTARMA (4. reset): .pgtools + veri + .env.local silinmişti → pg 17.6 binary yeniden indirildi, initdb, migrate deploy, seed. KOPYA MIGRATION KRİZİ TEKRARLANDI: 20261027064205_add_meetings, b4d59fc commit'inde dirilmiş (reset eski disk durumunu geri getirip commit'e karıştı) → git rm + failed kayıt silindi. Kök neden worklog'a işlendi
+- ŞEMA: MemberDueStatus enum (OPEN/PARTIAL/PAID/WAIVED) + MemberDue (@@unique [memberId, year]) + MembershipTypeConfig (enum'a key'li @id). Migration 20261028120000; diff=0 doğrulandı. KARAR: dueId FK YOK — ödeme (memberId, dueYear) ile eşleşir (Faz 4/5 sorguları korunur); paidAmount denormalize EDİLMEDİ — ödeme aggregate'ından hesaplanır; tür yönetimi serbest MemberType tablosu YERİNE enum-key'li konfigürasyon (iş emri adaptasyonu)
+- SERVİSLER: dues-calculation (recalculateDueStatus — TEK yazar; deriveDueStatus saf fonksiyon), dues-generation (dry-run önizleme + transaction'lı üretim; uygunluk: aktif + joinDate ≤ yıl sonu + tür tutarı > 0 + satır yok). import-parser: DB'siz saf ayrıştırıcı; header normalizeValue (TR İ/ı + ascii-fold); tarih gerçek hücre VE gg.aa.yyyy; alan doğrulaması memberCreateSchema ile (mesajlar formla birebir); kimlikNo import edilmez (KVKK)
+- AKSİYONLAR: generateDues (dryRun/commit), addDue (P2002→Türkçe hata), updateDue (tutar ≥ ödenen; WAIVED ödemeli satırda reddedilir; status OPEN↔WAIVED elle, türetilenler recalc), deleteDue (ödemesiz şart), updateMembershipTypeConfig (upsert; null=belirlenmedi). createPayment + voidPayment transaction'larına recalculateDueStatus kancası eklendi
+- HANDLER'LAR: export-dues (exceljs, para hücreleri '#,##0.00 "€"'), import-members (POST dryRun=1|0; parseSingleFileUpload; 5MB/.xlsx/ZIP imza/2000 satır; mükerrer kontrol DB+dosya içi: e-posta veya ad+soyad+doğum; commit tek transaction; audit IMPORT sayaç-only), import-template (Üyeler+Açıklamalar sayfaları)
+- EKRANLAR: /uyeler/turler (4 sabit tür; basit HeroUI Table), /uyeler/aidat (istatistik kartları + yıl seçici + DataTable + GenerateDuesModal + Excel linki), /uyeler/ice-aktar (ImportWizard: şablon→dosya→kontrol→hata tablosu→içe aktar), üye detaya DuesPanel (ekle/düzenle/muaf/sil), üye listesine 4 aksiyon butonu (izne göre), üye formunda pasif tür filtresi (yalnız create)
+- i18n: messages de+tr dues/types/import namespaces; scripts/add-messages.py ile güvenli JSON merge
+- KRİTİK HATA AYIKLAMA — /uyeler 500: (1) next-intl config bulunamıyor → next.config.ts'e createNextIntlPlugin BAĞLANMAMIŞ (pivot'ta atlanmış; request.ts karar notu zaten bekliyordu) → eklendi; (2) client'ta context yok → root layout'a NextIntlClientProvider + lang={locale}. BU İKİ FİX OLMASAYDI members UI TÜMÜ ölüydü — /uyeler sayfası pivot'tan beri placeholder'daydı; gerçek liste bağlandı (ayrı fix: uyeler/page.tsx MembersView→MemberListView)
+- E2E (agent-browser): login→parola değişimi→/uyeler GERÇEK liste→üye oluştur (UYE-2026-0001)→turler 60€→aidat dry-run (Uygun 1, €60,00)→üretim→ödeme MAK-2026-0001→DB'de status=PAID→UI'da Ödendi→import dry-run (3/2/1 satır hata raporu)→commit "2 üye içe aktarıldı"→liste Aktif:3→Excel export 200
+- BİRİM TEST: scripts/test-import-parser.ts (tür/durum eşleme, e-posta lowercase, tarih hücre+metin, hata mesajları) ✓; make-import-test.ts E2E dosyası
+- DERSLER: (1) bash tool çıktısı '[m' dizisini ANSI-ESC sanıp yutuyor → şema dosyaları "bozuk" GÖRÜNDÜ ama od -c ile ham bayt sağlam çıktı; cat yerine Read/od kullan; (2) ExcelJS addRow(object) kolon eşlemesi yalnız sheet.columns tanımlıysa çalışır; (3) reset-admin.ts AuditLog deleteMany artık append-only trigger'a takılıyor → try/catch + KARAR notu (denetim geçmişi korunur); (4) generate-dues-modal yılı Input yerine Select ile sınırla
+
+Stage Summary:
+- Kabul: tsc 0 hata + lint 0 hata (4 bilinen uyarı) + build ✓ + health 200 + E2E akışı tam
+- Faz 3 iş emrinin Verein pivotu sonrası eksik 3 parçası tamamlandı; anonimleştirme kapsam dışı (kullanıcı onayı 3 parçalıydı)
+- Demo veri: UYE-2026-0001 Demo Üyesi (2026 aidatı €60 ÖDENDİ + makbuz), UYE-2026-0002/0003 içe aktarılmış örnek üyeler; ASIL tür aidatı €60 ayarlı; admin parolası reset-admin ile belgelenmiş duruma döndürüldü (mustChangePassword=true)
+- Repo durum: tüm değişiklikler commit + push (aşağıda)

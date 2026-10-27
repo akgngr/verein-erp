@@ -8,6 +8,7 @@ import { ActionError, createAction } from "@/modules/auth/server";
 
 import { memberPaymentsPermissions } from "../permissions";
 import { paymentVoidSchema } from "../schemas/payment";
+import { recalculateDueStatus } from "../services/dues-calculation";
 
 /**
  * Ödeme iptali (void) — Faz 4 (4.1): izin memberPayments.delete, ADMIN + TREASURER.
@@ -33,14 +34,20 @@ export async function voidPaymentAction(input: unknown): Promise<ActionResult> {
       const voidedAt = new Date();
       const voidedByLabel = buildUserLabel(user.name, user.email);
 
-      const updated = await db.memberPayment.update({
-        where: { id: payment.id },
-        data: {
-          voidedAt,
-          voidedById: user.id,
-          voidedByLabel,
-          voidReason: input.reason,
-        },
+      // Faz 3 eklemeleri: iptal, aidat satırı durumunu da etkiler — güncelleme
+      // ve yeniden hesaplama aynı transaction içinde (recalculateDueStatus sözleşmesi).
+      const updated = await db.$transaction(async (tx) => {
+        const row = await tx.memberPayment.update({
+          where: { id: payment.id },
+          data: {
+            voidedAt,
+            voidedById: user.id,
+            voidedByLabel,
+            voidReason: input.reason,
+          },
+        });
+        await recalculateDueStatus(tx, payment.memberId, payment.dueYear);
+        return row;
       });
 
       await audit({

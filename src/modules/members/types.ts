@@ -1,4 +1,9 @@
-import type { MemberStatus, MembershipType, PaymentMethod } from "@prisma/client";
+import type {
+  MemberDueStatus,
+  MemberStatus,
+  MembershipType,
+  PaymentMethod,
+} from "@prisma/client";
 
 /**
  * Üye modülü satır/detay tipleri.
@@ -101,4 +106,82 @@ export type MemberStats = {
   resigned: number;
   newThisMonth: number;
   byType: { type: MembershipType; count: number }[];
+};
+
+// --- Faz 3 eklemeleri: aidat satırı, tür yönetimi, içe aktarma ---------------
+
+/** Üye detay aidat satırı (DuesPanel). */
+export type DueRow = {
+  id: string;
+  year: number;
+  amountDueCents: number;
+  paidCents: number;
+  remainingCents: number;
+  status: MemberDueStatus;
+  /** YYYY-MM-DD */
+  dueDate: string;
+  note: string | null;
+  /** dueDate < bugün (Europe/Berlin) ve durumu PAID/WAIVED değil. */
+  overdue: boolean;
+};
+
+/** Aidat raporu satırı (cross-member). */
+export type DuesReportRow = {
+  id: string;
+  memberId: string;
+  membershipNumber: string;
+  fullName: string;
+  type: MembershipType;
+  year: number;
+  amountDueCents: number;
+  paidCents: number;
+  remainingCents: number;
+  status: MemberDueStatus;
+  /** YYYY-MM-DD */
+  dueDate: string;
+  overdue: boolean;
+  /** Son geçerli (void edilmemiş) ödemenin tarihi; ödeme yoksa null. */
+  lastPaymentAt: string | null;
+};
+
+/** Aidat raporu istatistikleri. */
+export type DuesStats = {
+  year: number;
+  expectedCents: number;
+  collectedCents: number;
+  remainingCents: number;
+  /** 0-100; beklenen 0 ise null. */
+  collectionRate: number | null;
+  openCount: number;
+  partialCount: number;
+  paidCount: number;
+  waivedCount: number;
+  overdueCount: number;
+};
+
+/** Üyelik türü konfigürasyon satırı (türler ekranı). */
+export type MemberTypeConfigRow = {
+  type: MembershipType;
+  /** null = henüz belirlenmedi (aidat üretimi bu türü atlar). */
+  annualDueCents: number | null;
+  isActive: boolean;
+  memberCount: number;
+};
+
+/** İçe aktarma satır hatası. */
+export type ImportRowError = { row: number; messages: string[] };
+
+/** dry-run (kontrol) sonucu. */
+export type ImportPreviewData = {
+  total: number;
+  valid: number;
+  errors: ImportRowError[];
+};
+
+/** commit (içe aktarım) sonucu. */
+export type ImportCommitData = {
+  total: number;
+  valid: number;
+  imported: number;
+  errors: ImportRowError[];
 };

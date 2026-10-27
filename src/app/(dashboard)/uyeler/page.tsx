@@ -1,7 +1,11 @@
-import { MembersView } from "@/modules/members/ui";
+import { MemberListView } from "@/modules/members/ui";
 
 export const metadata = { title: "Üyeler" };
 
-export default function UyelerPage() {
-  return <MembersView />;
+export default async function UyelerPage({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  return <MemberListView searchParams={searchParams} />;
 }

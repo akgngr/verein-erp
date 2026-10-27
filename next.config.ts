@@ -1,5 +1,13 @@
 import type { NextConfig } from "next";
 
+import createNextIntlPlugin from "next-intl/plugin";
+
+// Faz 3 eklemeleri düzeltmesi: members modülünün RSC/client bileşenleri
+// getTranslations/useTranslations kullanır; src/i18n/request.ts hazırdı ama
+// plugin next.config.ts'e hiç bağlanmamıştı (Verein pivotu esnasında atlanmış).
+// Non-routing mod (URL'de dil öneki yok) — bkz. src/i18n/request.ts karar notu.
+const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
+
 const nextConfig: NextConfig = {
   output: "standalone",
   // KARAR: Next.js 16, dev kaynaklarımıza (/_next/hmr vb.) yalnızca izinli
@@ -55,4 +63,4 @@ const nextConfig: NextConfig = {
   },
 };
 
-export default nextConfig;
+export default withNextIntl(nextConfig);

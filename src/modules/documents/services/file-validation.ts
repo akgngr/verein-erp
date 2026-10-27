@@ -1,12 +1,15 @@
 import "server-only";
 
-import type { FileTypeRule } from "../constants";
+// Faz 2 refactor notu: dosya türü sabitleri shared/files'a taşındı; bu dosya
+// yalnızca geriye dönük uyum için bırakıldı (hiçbir yerden import edilmiyor).
+import type { FileTypeRule } from "@/shared/files/file-types";
 import {
-  ALLOWED_EXTENSIONS,
   FILE_TYPE_RULES,
   GENERIC_MIME_FALLBACKS,
   MAGIC_SIGNATURE_BYTES,
-} from "../constants";
+} from "@/shared/files/file-types";
+
+import { ALLOWED_EXTENSIONS } from "../constants";
 
 export type ValidatedFile = {
   originalName: string;

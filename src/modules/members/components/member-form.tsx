@@ -7,6 +7,8 @@ import { useState } from "react";
 import { useForm, type Resolver } from "react-hook-form";
 import { useTranslations } from "next-intl";
 
+import type { MembershipType } from "@prisma/client";
+
 import { applyActionResult } from "@/shared/components/forms/action-result";
 import { FormDatePicker } from "@/shared/components/forms/form-date-picker";
 import { FormErrorSummary } from "@/shared/components/forms/form-error-summary";
@@ -75,7 +77,7 @@ export type MemberEditFormData = {
 };
 
 type MemberFormProps =
-  | { mode: "create" }
+  | { mode: "create"; /** Faz 3 eklemeleri: pasif türler yeni kayıtta gizlenir. */ availableTypes?: MembershipType[] }
   | { mode: "edit"; member: MemberEditFormData };
 
 const STATUS_SELECT_OPTIONS = (
@@ -90,6 +92,15 @@ export function MemberForm(props: MemberFormProps) {
 
   const isEdit = props.mode === "edit";
   const member = isEdit ? props.member : null;
+
+  // Faz 3 eklemeleri: create modunda yalnız aktif türler listelenir; edit
+  // modunda tüm türler seçilebilir kalır (mevcut üye pasif türde olabilir).
+  const typeOptions =
+    !isEdit && props.availableTypes
+      ? MEMBERSHIP_TYPE_SELECT_OPTIONS.filter((option) =>
+          (props.availableTypes as MembershipType[]).includes(option.value),
+        )
+      : MEMBERSHIP_TYPE_SELECT_OPTIONS;
 
   const defaultValues: MemberFormValues = member
     ? {
@@ -197,7 +208,7 @@ export function MemberForm(props: MemberFormProps) {
               name="type"
               label={t("form.type")}
               control={form.control}
-              options={MEMBERSHIP_TYPE_SELECT_OPTIONS.map((option) => ({
+              options={typeOptions.map((option) => ({
                 value: option.value,
                 label: t(`type.${option.value}`),
               }))}

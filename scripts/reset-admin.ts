@@ -46,8 +46,15 @@ async function main() {
   console.log(`Silinen test kullanıcısı: ${removed.count}`);
 
   // 2) Denetim kayıtlarını temizle (test oturumlarının ürettiği kayıtlar).
-  await prisma.auditLog.deleteMany({});
-  console.log("Denetim kayıtları temizlendi.");
+  // KARAR (Faz 4 sonrası): AuditLog tablosuna append-only trigger eklendi
+  // (migration 20261026202000); DELETE artık DB düzeyinde reddediliyor. Denetim
+  // geçmişi kalıcıdır — duman testi kayıtları gerçek sistem geçmişi sayılır.
+  try {
+    await prisma.auditLog.deleteMany({});
+    console.log("Denetim kayıtları temizlendi.");
+  } catch {
+    console.log("Denetim kayıtları append-only olduğundan korunuyor (silinemedi) — beklenen davranış.");
+  }
 
   // 3) Yöneticiyi belgelenmiş ilk kurulum durumuna döndür.
   const data = {

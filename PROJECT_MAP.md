@@ -211,3 +211,12 @@ E2E: agent-browser (snapshot -i @ref zorunlu) — demo hesap: admin@dernek.local
 - parseSingleFileUpload zengin arayüz: { originalName, declaredMime, size, head, buffer } — eski { name, type, buffer } KULLANMA
 - Yetki matrisi değişimi = Record<Role,...> derleme hatası verir: TREASURER/AUDITOR satırları TÜM permissions'larda ZORUNLU (+sidebar panel grants)
 - Şema-DB senkron şüphesinde: cat prisma/schema/*.prisma > /tmp/combined && prisma migrate diff --from-url $DATABASE_URL --to-schema-datamodel /tmp/combined --script
+
+## 11. Faz 3 eklemeleri dersleri (Task 24)
+
+- next-intl non-routing mod ÜÇ parçalıdır: src/i18n/request.ts + next.config.ts'te createNextIntlPlugin + root layout'ta NextIntlClientProvider. Pivot'ta plugin/provider bağlanmamıştı → members UI'ının TAMAMI ölüydü (/uyeler placeholder'daydı). Yeni modülde getTranslations/useTranslations görürsen bu üçünü kontrol et
+- Kopya migration dirilişi (2. kez): sandbox reset eski disk durumunu geri getiriyor ve sonraki commit'e karışıyor (b4d59fc vakası). Her kurtarmada ls prisma/schema/migrations + migrate status ZORUNLU
+- bash tool çıktısı '[m' dizisini yutar (ANSI ESC[m sanarak) → 'fields: emberId]' gibi SAHTE bozulma görüntüleri üretir. Dosya şüphesinde od -c / Read tool ile ham bayt doğrula; cat'e güvenme
+- ExcelJS: addRow(object) yalnız sheet.columns tanımlıysa kolonları eşler; kolonsuz object satırı BOŞ hücre basar (test/dosya üretiminde dizi kullan)
+- reset-admin.ts: AuditLog append-only trigger'ı yüzünden deleteMany artık engellenir — script try/catch'li; denetim geçmişi kalıcı sayılır
+- Aidat modeli KARARLARI: ödeme↔aidat bağı (memberId, dueYear) çifti (dueId FK yok); status denormalize ama TEK yazar recalculateDueStatus (ödeme add/void ile aynı transaction); paidAmount saklanmaz (aggregate); WAIVED elle verilir, ödeme gelince düşer. Ayrıntı: prisma/schema/members.prisma karar notları + README bölüm 8

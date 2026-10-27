@@ -1,4 +1,4 @@
-import { UserPlus } from "lucide-react";
+import { BarChart3, Tags, Upload, UserPlus } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
@@ -14,7 +14,7 @@ import {
   listMembers,
 } from "../queries/list-members";
 import { getMemberStats } from "../queries/get-member-stats";
-import { membersPermissions } from "../permissions";
+import { memberPaymentsPermissions, membersPermissions, memberTypesPermissions } from "../permissions";
 import {
   MEMBER_STATUS_FILTER_OPTIONS,
   MEMBERSHIP_TYPE_FILTER_OPTIONS,
@@ -52,6 +52,9 @@ export async function MemberListView({
   const canCreate = can(user.role, membersPermissions, "create");
   const canUpdate = can(user.role, membersPermissions, "update");
   const canDelete = can(user.role, membersPermissions, "delete");
+  // Faz 3 eklemeleri: alt sayfa kısayolları izne göre gösterilir.
+  const canViewDues = can(user.role, memberPaymentsPermissions, "view");
+  const canViewTypes = can(user.role, memberTypesPermissions, "view");
 
   const month = berlinMonthRange();
   const monthFrom = month.start.toISOString().slice(0, 10);
@@ -63,11 +66,28 @@ export async function MemberListView({
         title={t("pageTitle")}
         description={t("pageDescription")}
         actions={
-          canCreate ? (
-            <LinkButton href="/uyeler/yeni" startIcon={<UserPlus className="h-4 w-4" />}>
-              {t("newMember")}
-            </LinkButton>
-          ) : null
+          <div className="flex flex-wrap items-center gap-2">
+            {canCreate ? (
+              <LinkButton href="/uyeler/yeni" startIcon={<UserPlus className="h-4 w-4" />}>
+                {t("newMember")}
+              </LinkButton>
+            ) : null}
+            {canCreate ? (
+              <LinkButton href="/uyeler/ice-aktar" variant="flat" startIcon={<Upload className="h-4 w-4" />}>
+                {t("importLink")}
+              </LinkButton>
+            ) : null}
+            {canViewDues ? (
+              <LinkButton href="/uyeler/aidat" variant="flat" startIcon={<BarChart3 className="h-4 w-4" />}>
+                {t("duesLink")}
+              </LinkButton>
+            ) : null}
+            {canViewTypes ? (
+              <LinkButton href="/uyeler/turler" variant="flat" startIcon={<Tags className="h-4 w-4" />}>
+                {t("typesLink")}
+              </LinkButton>
+            ) : null}
+          </div>
         }
       />
 

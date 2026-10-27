@@ -4,9 +4,14 @@ import { PageHeader } from "@/shared/components/ui/page-header";
 import { getTranslations } from "next-intl/server";
 
 import { membersPermissions } from "../permissions";
+import { listMemberTypeConfigs } from "../queries/list-member-types";
 import { MemberForm } from "../components/member-form";
 
-/** Yeni üye kayıt sayfası. Üyelik numarası sunucuda üretilir. */
+/**
+ * Yeni üye kayıt sayfası. Üyelik numarası sunucuda üretilir.
+ * Faz 3 eklemeleri: pasif üyelik türleri yeni kayıtta seçilemez (mevcut
+ * üyelerin türü korunur — tür pasifleştirme yalnız yeni kaydı etkiler).
+ */
 export async function MemberCreateView() {
   try {
     await requirePermission(membersPermissions, "create");
@@ -15,7 +20,10 @@ export async function MemberCreateView() {
     throw error;
   }
 
-  const t = await getTranslations("members");
+  const [t, typeConfigs] = await Promise.all([
+    getTranslations("members"),
+    listMemberTypeConfigs(),
+  ]);
 
   return (
     <div>
@@ -23,7 +31,10 @@ export async function MemberCreateView() {
         title={t("createTitle")}
         description={t("createDescription")}
       />
-      <MemberForm mode="create" />
+      <MemberForm
+        mode="create"
+        availableTypes={typeConfigs.filter((row) => row.isActive).map((row) => row.type)}
+      />
     </div>
   );
 }

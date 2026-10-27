@@ -10,7 +10,9 @@ import { formatDateTime, formatDate } from "@/shared/utils";
 import { memberPaymentsPermissions, membersPermissions } from "../permissions";
 import { getMember } from "../queries/get-member";
 import { listMemberPayments } from "../queries/list-payments";
+import { listMemberDues } from "../queries/get-member-dues";
 import { MemberDetailActions } from "../components/member-detail-actions";
+import { DuesPanel } from "../components/dues-panel";
 import { NotesTimeline } from "../components/notes-timeline";
 import { PaymentsPanel } from "../components/payments-panel";
 import { StatusBadge } from "../components/status-badge";
@@ -39,12 +41,15 @@ export async function MemberDetailView({ id }: { id: string }) {
   if (!member) notFound();
   const t = await getTranslations("members");
 
-  // Aidat ödemeleri (Faz 4, 4.6): panel için ayrı izinler (memberPayments).
-  const [payments] = await Promise.all([
+  // Aidat ödemeleri (Faz 4, 4.6) + yıllık aidat satırları (Faz 3 eklemeleri):
+  // panel için ayrı izinler (memberPayments).
+  const [payments, dues] = await Promise.all([
     listMemberPayments(member.id),
+    listMemberDues(member.id),
   ]);
   const canCreatePayment = can(user.role, memberPaymentsPermissions, "create");
   const canVoidPayment = can(user.role, memberPaymentsPermissions, "delete");
+  const canUpdatePayment = can(user.role, memberPaymentsPermissions, "update");
 
   const canUpdate = can(user.role, membersPermissions, "update");
   const canDelete = can(user.role, membersPermissions, "delete");
@@ -146,6 +151,16 @@ export async function MemberDetailView({ id }: { id: string }) {
             payments={payments}
             canCreate={canCreatePayment}
             canDelete={canVoidPayment}
+          />
+        </div>
+
+        {/* Yıllık aidat satırları (Faz 3 eklemeleri) */}
+        <div className="lg:col-span-3">
+          <DuesPanel
+            memberId={member.id}
+            dues={dues}
+            canCreate={canCreatePayment}
+            canUpdate={canUpdatePayment}
           />
         </div>
       </div>
