@@ -97,3 +97,40 @@ Stage Summary:
 - Doğrulama: /api/health 200, /giris 200, / 307 (auth redirect — doğru), pg_isready accepting connections
 - Ders (tekrar doğrulandı): sandbox reset sonrası kurtarma sırası = pg binary indir → .env.local yaz → start-postgres.sh → migrate+seed → start-dev-daemon.sh; nohup/setsid yerine daima çift-fork daemon kullan
 - Veriler taze (initdb yeni): önceki oturumların demo verileri yok; seed verisi mevcut
+
+---
+Task ID: 19
+Agent: ana ajan
+Task: Sandbox-reset kurtarma — Faz 2 (Toplantılar & Tutanak) sıfırdan yeniden inşa
+
+Work Log:
+- Hasar tespiti: kod Faz 1'e dönmüştü (git'te yalnız Faz 1 checkpoint'i vardı; Faz 2/3/4 kayıp). İş emirleri upload/'tan kurtarıldı → docs/specs/ altına gömüldü (Faz 2/4/5 mevcut; Faz 3 iş emri KAYIP — Faz 4 dokümanı referanslarından yeniden kurulacak)
+- Ders: her adımda git commit alınacak; .next-build build çıktısı PROJE DIŞINA (/tmp) taşınacak — Turbopack proje içindeki .next-build'i izleyip her istekte rebuild + sonsuz reload döngüsüne yol açıyor (504'ün asıl kök nedeni buydu; .next/dev/trace+logs silmek yetmiyordu)
+- Adım 1-2: @react-pdf/renderer kurulumu; shared/permissions define.ts'e "approve"; shared/files/ (file-types+validation+storage+http) kuruldu; documents buna refactor edildi (pptx hariç birebir aynı davranış); ORGANIZATION_NAME env + .env.example yeniden yazıldı
+- Adım 3: meetings.prisma (Meeting, AgendaItem, MeetingAttendee, MeetingDecision, ActionItem, MeetingFile, MeetingCounter) + migration
+- Adım 4-5: permissions (approve matrisi), constants (etiketler + geçiş haritası), utils (berlinToday/berlinYear/parseDateOnly/parseTimeToMinutes/isActionItemOverdue), types, 5 zod şema dosyası, servisler (meeting-number atomik sayaç + P2002 retry, meeting-guards kilit kapsamları, quorum)
+- Adım 6-7: queries (list-meetings arama gündem/karar içerir, get-meeting detay, list-action-items cross-meeting nulls-last + varsayılan OPEN, stats, copy-sources); actions (create kopyalama desteğiyle, update eşzamanlılık + değişen alan audit'i, delete yumuşak; change-status geçiş haritası + onay koşulları + reopen gerekçe; agenda move/delete yeniden numaralama; attendee tek başkan/sekreter + markAll; decision all-or-nothing oylar; action-item actionStatus her durumda; delete-file APPROVED'ta yalnız ADMIN)
+- Adım 8-9: ince rotalar (files/minutes-pdf); Noto Sans 400/700 TTF assets/fonts'a gömüldü (OFL); fonts.ts + MinutesDocument (TASLAK damgası, yeter sayısı cümlesi, imza bloğu, Sayfa X/Y); next.config serverExternalPackages + outputFileTracingIncludes; Dockerfile font kopyalama
+- Adım 10-11: 17 bileşen + 5 view + 5 rota; dashboard Toplantı kartı gerçek değerlerle; README Faz 2 bölümü
+- E2E (agent-browser): sekreter login → TOP-2026-001 üretimi → gündem maddesi + satır sonlu görüşme → 4 kullanıcı katılımcı + tümünü katıldı → durum PLANNED→HELD (onay penceresi) → karar 2026/1 → görev ekleme → baskan login → HELD→APPROVED → kilit (Düzenle gizli) + PDF onay satırı → izleyici login: yalnız Tutanak(PDF) görünür
+- PDF doğrulama (pdftotext): TASLAK damgası, Türkçe glifler (TUTANAĞI, ğ/İ/ş), görüşme satır sonları, Karar No 2026/1, Sayfa 1/2, imza bloğu, "Onaylandı: 27.10.2026 – Test Başkan <...>"
+- Düzeltmeler: badges.tsx "use client" eksikliği (build'de createContext patlaması); status-menu PLANNED→HELD onay penceresi açılmıyordu (pending !== "HELD" koşulu); confirmDialogMessage HELD iki geçiş ayrımı; decision şeması extend-on-pipe hatası; MeetingAttendee'da user relation yok (aktiflik ayrı sorgu)
+
+Stage Summary:
+- Faz 2 kabul kriterleri E2E ile doğrulandı; tsc + eslint + next build (NEXT_DIST_DIR=/tmp/dernek-next-build!) temiz
+- Test kullanıcıları: sekreter@/baskan@/izleyici@dernek.local (Test@12345); demo veri: TOP-2026-001 (Onaylandı), karar 2026/1, 1 görev, 1 gündem maddesi
+- Kullanıcı admin parolasını 06:28'de değiştirdi (Admin12345 geçersiz) — parola sıfırlama istenirse scripts/reset-admin.ts
+- SONRAKİ ADIM: Faz 3 (Üyeler & Aidat) — iş emri yok; Faz 4 dokümanındaki üye/aidat referanslarından minimum kabul edilebilir şema kurulacak, ardından Faz 4 resmi iş emrine geçilecek
+
+---
+Task ID: 20
+Agent: ana ajan
+Task: Ortam onarımı (dev sunucu 504) + kurallar
+
+Work Log:
+- 504 kök nedeni: (1) sandbox reset sonrası .pgtools/.env.local yok — süreçler zaten çökmüştü; (2) taze başlatılan dev'in .next-build'i proje içinde → Turbopack sonsuz rebuild döngüsü
+- Çözüm: pg binary + .env.local + migrate/seed yeniden kuruldu (Task 18); build çıktısı bundan böyle /tmp altına alınacak
+
+Stage Summary:
+- KURAL: `NEXT_DIST_DIR=/tmp/dernek-next-build bunx next build` — proje içine ASLA yazma
+- KURAL: her faz/step sonunda git commit (auto-checkpoint yalnız boot'ta)
