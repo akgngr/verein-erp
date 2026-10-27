@@ -201,3 +201,11 @@ E2E: agent-browser (snapshot -i @ref zorunlu) — demo hesap: admin@dernek.local
 - Sandbox reset kurtarma sırası (3. kez doğrulandı): pg 17.6 binary (~/.pgtools) → .env.local/.env.example → scripts/start-postgres.sh (initdb ~/.pgdata) → migrate deploy + seed → **migrate status kontrolü** → scripts/start-dev-daemon.sh
 - ⚠️ migration uyarısı: migrate deploy'da "already exists" hatası = kısmen uygulanan/çakışan migration; _prisma_migrations'daki failed kaydını temizlemeden deploy ilerlemez
 - build her zaman `NEXT_DIST_DIR=/tmp/dernek-next-build` ile (proje içi .next-build = Turbopack sonsuz rebuild döngüsü = 504)
+
+## 10. Faz 4 WIP kurtarma durumları (Task 22)
+
+- `NEXT_DIST_DIR=/tmp` artık ÇALIŞMAZ (Next 16 InvalidDistDirError) → build default .next ile; build öncesi dev DURDURULUR, build sonrası daemon RESTART
+- zod v4: refine edilmiş şemadan .omit() yasak → refine'siz base şema ayrımı yapılır (donationBaseSchema deseni)
+- parseSingleFileUpload zengin arayüz: { originalName, declaredMime, size, head, buffer } — eski { name, type, buffer } KULLANMA
+- Yetki matrisi değişimi = Record<Role,...> derleme hatası verir: TREASURER/AUDITOR satırları TÜM permissions'larda ZORUNLU (+sidebar panel grants)
+- Şema-DB senkron şüphesinde: cat prisma/schema/*.prisma > /tmp/combined && prisma migrate diff --from-url $DATABASE_URL --to-schema-datamodel /tmp/combined --script
