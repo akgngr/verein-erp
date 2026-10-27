@@ -3,24 +3,19 @@ import "server-only";
 import { NextResponse } from "next/server";
 
 import { getDb } from "@/shared/db";
+import { buildDownloadResponse, openReadStream } from "@/shared/files";
 import { can } from "@/shared/permissions/define";
 
 import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 
-import { INLINE_PREVIEW_EXTENSIONS } from "../constants";
 import { documentsPermissions } from "../permissions";
-import { getExtension } from "../services/file-validation";
-import { openFileStream } from "../services/file-storage";
-
-/** Content-Disposition için ASCII yedek dosya adı üretir. */
-function asciiFileName(name: string): string {
-  return name.replace(/[^\x20-\x7e]/g, "_").replace(/["\\]/g, "_").slice(0, 150);
-}
 
 /**
  * Dosya indirme/önizleme (GET /api/documents/files/[fileId], 7. bölüm):
  * oturum + documents.view + dosya ve bağlı evrak silinmemiş olmalı.
  * ?inline=1 yalnızca pdf/jpg/png için inline kabul edilir; diğerleri attachment.
+ * Faz 2: başlık kuralları shared/files/http buildDownloadResponse'a taşındı
+ * (davranış birebir aynıdır).
  */
 export async function downloadFileHandler(
   request: Request,
@@ -54,16 +49,11 @@ export async function downloadFileHandler(
   }
 
   const inlineRequested = new URL(request.url).searchParams.get("inline") === "1";
-  const canInline = INLINE_PREVIEW_EXTENSIONS.includes(getExtension(file.originalName));
-  const disposition = inlineRequested && canInline ? "inline" : "attachment";
 
-  const encodedName = encodeURIComponent(file.originalName);
-  const headers = new Headers({
-    "Content-Type": file.mimeType,
-    "X-Content-Type-Options": "nosniff",
-    "Cache-Control": "private, no-store",
-    "Content-Disposition": `${disposition}; filename="${asciiFileName(file.originalName)}"; filename*=UTF-8''${encodedName}`,
+  return buildDownloadResponse({
+    stream: openReadStream(file.storagePath),
+    originalName: file.originalName,
+    mimeType: file.mimeType,
+    inline: inlineRequested,
   });
-
-  return new Response(openFileStream(file.storagePath), { headers });
 }

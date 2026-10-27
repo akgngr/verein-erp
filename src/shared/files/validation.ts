@@ -1,12 +1,10 @@
-import "server-only";
+import type { FileTypeRule } from "./file-types";
+import { FILE_TYPE_RULES, GENERIC_MIME_FALLBACKS, MAGIC_SIGNATURE_BYTES } from "./file-types";
 
-import type { FileTypeRule } from "../constants";
-import {
-  ALLOWED_EXTENSIONS,
-  FILE_TYPE_RULES,
-  GENERIC_MIME_FALLBACKS,
-  MAGIC_SIGNATURE_BYTES,
-} from "../constants";
+/**
+ * Yükleme doğrulaması (Faz 2, 8. bölüm). Çağıran modül kendi izinli uzantı
+ * alt kümesini verir (documents: pptx hariç; meetings: tam liste).
+ */
 
 export type ValidatedFile = {
   originalName: string;
@@ -29,7 +27,7 @@ export function getExtension(fileName: string): string {
 
 /**
  * Kullanıcının dosya adı yalnızca veritabanındaki originalName alanında tutulur;
- * kontrol karakterleri ve yol ayırıcılar temizlenir (7. bölüm).
+ * kontrol karakterleri ve yol ayırıcılar temizlenir (8. bölüm).
  */
 export function sanitizeOriginalName(fileName: string): string {
   const cleaned = fileName
@@ -51,29 +49,34 @@ function hasMagicSignature(head: Uint8Array, signature: readonly number[]): bool
   return signature.every((byte, index) => head[index] === byte);
 }
 
-/**
- * Yükleme doğrulaması (7. bölüm): uzantı izin listesinde mi, bildirilen MIME
- * uzantıyla uyumlu mu, dosya imzası (magic bytes) uzantıyla tutarlı mı?
- * Boyut sınırı da burada denetlenir. Uyumsuzlukta neden açıklayan hata döner.
- */
-export function validateFile(input: {
+export type UploadCandidate = {
   originalName: string;
   declaredMime: string;
   size: number;
-  maxBytes: number;
   head: Uint8Array;
+};
+
+/**
+ * validateUpload (8. bölüm): uzantı çağıranın izin listesinde mi, bildirilen
+ * MIME uzantıyla uyumlu mu, dosya imzası (magic bytes) uzantıyla tutarlı mı?
+ * Boyut sınırı da burada denetlenir. Uyumsuzlukta neden açıklayan hata döner.
+ */
+export function validateUpload(input: {
+  file: UploadCandidate;
+  allowedExtensions: readonly string[];
+  maxBytes: number;
 }): FileValidationResult {
-  const originalName = sanitizeOriginalName(input.originalName);
+  const originalName = sanitizeOriginalName(input.file.originalName);
   const extension = getExtension(originalName);
 
-  if (!extension || !ALLOWED_EXTENSIONS.includes(extension)) {
+  if (!extension || !input.allowedExtensions.includes(extension)) {
     return { ok: false, error: "Bu dosya türü kabul edilmiyor." };
   }
 
-  if (input.size <= 0) {
+  if (input.file.size <= 0) {
     return { ok: false, error: "Boş dosya yüklenemez." };
   }
-  if (input.size > input.maxBytes) {
+  if (input.file.size > input.maxBytes) {
     const maxMb = Math.floor(input.maxBytes / (1024 * 1024));
     return { ok: false, error: `Dosya en fazla ${maxMb} MB olabilir.` };
   }
@@ -85,7 +88,7 @@ export function validateFile(input: {
 
   // MIME uyumu: kural listesi ya da genel (zip tabanlı ofis) değerler kabul edilir;
   // asıl güvenlik kapısı aşağıdaki magic byte kontrolüdür.
-  const mime = (input.declaredMime || "").split(";")[0].trim().toLowerCase();
+  const mime = (input.file.declaredMime || "").split(";")[0].trim().toLowerCase();
   const mimeCompatible = rule.mimes.includes(mime) || GENERIC_MIME_FALLBACKS.includes(mime);
   if (rule.mimes.length > 0 && !mimeCompatible) {
     return {
@@ -96,7 +99,7 @@ export function validateFile(input: {
 
   if (rule.signature !== "none") {
     const signature = MAGIC_SIGNATURE_BYTES[rule.signature];
-    if (!hasMagicSignature(input.head, signature)) {
+    if (!hasMagicSignature(input.file.head, signature)) {
       return {
         ok: false,
         error: `Dosya içeriği .${extension} uzantısıyla uyumlu değil.`,
@@ -107,6 +110,6 @@ export function validateFile(input: {
   return {
     ok: true,
     rule,
-    file: { originalName, extension, mimeType: rule.mimes[0] ?? mime, size: input.size },
+    file: { originalName, extension, mimeType: rule.mimes[0] ?? mime, size: input.file.size },
   };
 }

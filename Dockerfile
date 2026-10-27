@@ -37,6 +37,10 @@ COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 
+# KARAR (Faz 2, 9. bölüm): tutanak PDF fontları process.cwd() üzerinden okunur;
+# standalone çıktıya tracing dahil olsa da runner imajına açıkça kopyalanır.
+COPY --from=builder --chown=nextjs:nodejs /app/src/modules/meetings/assets/fonts ./src/modules/meetings/assets/fonts
+
 # `prisma migrate deploy` için CLI + şema + migration geçmişi
 COPY --from=builder /app/prisma ./prisma
 COPY --from=builder /app/node_modules/prisma ./node_modules/prisma

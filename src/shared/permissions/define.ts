@@ -1,6 +1,6 @@
 import type { Role } from "../roles";
 
-export type PermissionAction = "view" | "create" | "update" | "delete";
+export type PermissionAction = "view" | "create" | "update" | "delete" | "approve";
 
 export type PermissionDefinition = {
   resource: string;

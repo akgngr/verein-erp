@@ -34,7 +34,13 @@ const nextConfig: NextConfig = {
   // Prisma sorgu motorunun standalone çıktıya dahil edilmesi için
   outputFileTracingIncludes: {
     "/**": ["./node_modules/.prisma/client/**", "./node_modules/@prisma/client/**"],
+    // KARAR (Faz 2, 9. bölüm): tutanak PDF fontları rota çıktısına ayrıca dahil
+    // edilir; @react-pdf/renderer dosyayı process.cwd() üzerinden okur.
+    "/api/meetings/[id]/minutes-pdf": ["./src/modules/meetings/assets/fonts/**"],
   },
+  // KARAR (Faz 2, 9. bölüm): @react-pdf/renderer Next bundler'ıyla sorun
+  // çıkarabildiği için sunucu paketinin dışında tutulur (serverExternalPackages).
+  serverExternalPackages: ["@react-pdf/renderer"],
   async headers() {
     return [
       {

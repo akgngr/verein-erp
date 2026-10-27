@@ -140,3 +140,41 @@ kurulur (ör. `AuditLog.userId` FK değildir).
 - Parola kuralı tek noktadan: `src/shared/security/password.ts` (bcrypt cost 12).
 - Tüm yazma action'ları `createAction` sarmalayıcısıyla yazılır; denetim kaydı
   (`writeAudit`) parola alanlarını otomatik temizler.
+
+## 7. Toplantılar modülü (Faz 2)
+
+**Numara biçimleri:**
+
+- Toplantı: `TOP-<yıl>-<sıra>` (ör. `TOP-2026-001`); sıra yıl içinde tüm türlerde ortaktır,
+  `MeetingCounter` üzerinde atomik upsert ile üretilir. Numara sonradan değiştirilemez;
+  toplantı tarihi başka yıla kayarsa bile numara aynı kalır. Silinen toplantının numarası
+  yeniden kullanılmaz.
+- Karar: `<yıl>/<sıra>` (ör. `2026/7`); yıl bazında ortak sayaç. Karar silinirse numara
+  boşluk bırakır, asla tekrarlanmaz.
+
+**Onay akışı ve kilitleme:**
+
+- Durumlar: Planlandı → Yapıldı (taslak) → Onaylandı; İptal edildi ↔ Planlandı.
+- Onaylamak için en az 1 gündem maddesi ve en az 1 "Katıldı" katılımcısı gerekir.
+  `quorumRequired` tanımlıysa ve sağlanmadıysa UI uyarır; onay yine de mümkündür.
+- Onaylı tutanak kilitlenir: içerik (toplantı, gündem, katılımcı, karar, görev ekleme/
+  düzenleme) düzenlenemez; "Yeniden aç" yalnızca `approve` yetkisiyle ve zorunlu gerekçeyle
+  yapılır (gerekçe denetim kaydına işlenir).
+- Görev durumu (Tamamlandı/Açık) ve ek yükleme onaylı toplantıda da çalışır; onaylı
+  toplantının ekini yalnızca yönetici (delete) silebilir.
+
+**`ORGANIZATION_NAME`:** Tutanak PDF'i antetinde görünür; `.env` içinde ayarlanır
+(varsayılan `Dernek`). Değişiklik sonrası sunucu yeniden başlatılmalıdır.
+
+**Fontlar ve lisans:** Tutanak PDF'i Noto Sans (Regular + Bold, OFL lisansı) kullanır;
+TTF dosyaları `src/modules/meetings/assets/fonts/` altında depolanır. Standart PDF
+fontları Türkçe glifleri (ğ, İ, ş…) oluşturamadığı için gereklidirler.
+
+**Yedekleme:** Veritabanı ve `UPLOAD_DIR` birlikte yedeklenmelidir; ek dosyaları diskte
+`UPLOAD_DIR/meetings/<yıl>/<toplantıId>/` altındadır, kayıtlar DB'dedir. Toplantı silinse
+bile diskteki dosyalar korunur (yumuşak silme).
+
+**Paylaşılan dosya katmanı:** `src/shared/files/` hem Evrak hem Toplantı modülü tarafından
+kullanılır (uzantı → MIME → magic byte doğrulaması, yol güvenliği, indirme başlıkları).
+Evrak modülü pptx kabul etmez; toplantılar tüm listeyi kabul eder. Her iki modülde de
+`MAX_UPLOAD_MB` sınırı geçerlidir.

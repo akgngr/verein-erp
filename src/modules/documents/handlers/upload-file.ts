@@ -1,20 +1,20 @@
 import "server-only";
 
+import path from "node:path";
 import { NextResponse } from "next/server";
 
 import { writeAudit } from "@/shared/audit/write-audit";
 import { getDb } from "@/shared/db";
+import { getEnv } from "@/shared/env";
+import { parseSingleFileUpload, validateUpload } from "@/shared/files";
+import { makeStoredName, removeFile, saveFile } from "@/shared/files";
 import { can } from "@/shared/permissions/define";
 import { buildUserLabel } from "@/shared/utils";
 
 import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 
-import { MAX_FILES_PER_DOCUMENT } from "../constants";
+import { ALLOWED_EXTENSIONS, MAX_FILES_PER_DOCUMENT } from "../constants";
 import { documentsPermissions } from "../permissions";
-import { cleanupFile } from "../services/file-storage";
-import { validateFile } from "../services/file-validation";
-import { buildStoragePath, makeStoredName, saveFile } from "../services/file-storage";
-import { getEnv } from "@/shared/env";
 
 /**
  * Dosya yükleme (POST /api/documents/[id]/files, 7. bölüm).
@@ -23,6 +23,9 @@ import { getEnv } from "@/shared/env";
  * documents.update gerektirir; basitlik için handler ikisinden birine sahip
  * olmayı yeterli sayar. VIEWER yalnızca view yetkisine sahip olduğundan
  * asla yükleyemez. Handler'lar yönlendirme yapmaz; hata JSON döner.
+ *
+ * Faz 2: doğrulama ve depolama shared/files katmanına taşındı; davranış
+ * Faz 1 ile birebir aynıdır (aynı uzantı alt kümesi, 20 MB, aynı başlıklar).
  */
 export async function uploadFileHandler(request: Request, ctx: { id: string }): Promise<Response> {
   let user;
@@ -63,38 +66,32 @@ export async function uploadFileHandler(request: Request, ctx: { id: string }): 
     );
   }
 
-  let formData: FormData;
-  try {
-    formData = await request.formData();
-  } catch {
-    return NextResponse.json(
-      { ok: false, error: "Dosya okunamadı (multipart/form-data bekleniyor)." },
-      { status: 400 },
-    );
-  }
-
-  const file = formData.get("file");
-  if (!(file instanceof File)) {
-    return NextResponse.json({ ok: false, error: "Dosya bulunamadı." }, { status: 400 });
+  const parsed = await parseSingleFileUpload(request);
+  if (!parsed.ok) {
+    return NextResponse.json({ ok: false, error: parsed.error }, { status: parsed.status });
   }
 
   const maxBytes = getEnv().MAX_UPLOAD_MB * 1024 * 1024;
-  const buffer = Buffer.from(await file.arrayBuffer());
-  const validation = validateFile({
-    originalName: file.name,
-    declaredMime: file.type,
-    size: buffer.byteLength,
+  const validation = validateUpload({
+    file: {
+      originalName: parsed.file.name,
+      declaredMime: parsed.file.type,
+      size: parsed.file.buffer.byteLength,
+      head: new Uint8Array(parsed.file.buffer.subarray(0, 8)),
+    },
+    allowedExtensions: ALLOWED_EXTENSIONS,
     maxBytes,
-    head: new Uint8Array(buffer.subarray(0, 8)),
   });
   if (!validation.ok) {
     return NextResponse.json({ ok: false, error: validation.error }, { status: 400 });
   }
 
+  // KARAR: documents depolama yolu Faz 1'deki gibi modül öneksizdir:
+  // <yıl>/<documentId>/<storedName> (mevcut verilerle uyum için değişmez).
   const storedName = makeStoredName(validation.file.extension);
-  const storagePath = buildStoragePath(doc.year, doc.id, storedName);
+  const storagePath = path.posix.join(String(doc.year), doc.id, storedName);
 
-  await saveFile(storagePath, buffer);
+  await saveFile(storagePath, parsed.file.buffer);
   try {
     const created = await db.documentFile.create({
       data: {
@@ -128,7 +125,7 @@ export async function uploadFileHandler(request: Request, ctx: { id: string }): 
     });
   } catch (error) {
     // Kayıt oluşamadıysa diske yazılan dosya temizlenir (7. bölüm).
-    await cleanupFile(storagePath);
+    await removeFile(storagePath);
     console.error("[upload-file] Dosya kaydı oluşturulamadı:", error);
     return NextResponse.json({ ok: false, error: "Dosya yüklenemedi." }, { status: 500 });
   }

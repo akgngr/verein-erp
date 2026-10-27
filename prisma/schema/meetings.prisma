@@ -1,0 +1,191 @@
+enum MeetingType {
+  BOARD // Yönetim Kurulu
+  GENERAL_ASSEMBLY // Genel Kurul
+  COMMITTEE // Komisyon
+  OTHER // Diğer
+}
+
+enum MeetingStatus {
+  PLANNED // Planlandı
+  HELD // Yapıldı (tutanak taslağı)
+  APPROVED // Onaylandı
+  CANCELLED // İptal edildi
+}
+
+enum AttendeeRole {
+  CHAIRPERSON // Başkan
+  SECRETARY // Sekreter
+  MEMBER // Üye
+  GUEST // Konuk
+}
+
+enum AttendanceStatus {
+  INVITED // Davetli
+  PRESENT // Katıldı
+  ABSENT_EXCUSED // Mazeretli
+  ABSENT // Katılmadı
+}
+
+enum DecisionResult {
+  ACCEPTED // Kabul edildi
+  REJECTED // Reddedildi
+  POSTPONED // Ertelendi
+}
+
+enum ActionItemStatus {
+  OPEN // Açık
+  DONE // Tamamlandı
+}
+
+enum MeetingCounterKind {
+  MEETING
+  DECISION
+}
+
+// Toplantı ve karar numarası sayacı: tür + yıl bazında sıra; üretim atomik upsert ile yapılır.
+model MeetingCounter {
+  kind    MeetingCounterKind
+  year    Int
+  lastSeq Int                @default(0)
+
+  @@id([kind, year])
+}
+
+model Meeting {
+  id               String        @id @default(cuid())
+  year             Int
+  sequence         Int
+  meetingNumber    String        @unique // TOP-2026-001
+  type             MeetingType
+  title            String
+  meetingDate      DateTime      @db.Date
+  startTime        String? // "HH:mm" yerel (Europe/Berlin)
+  endTime          String?
+  location         String?
+  description      String? // amaç / toplantı öncesi notlar
+  quorumRequired   Int? // PRESENT katılımcı asgari sayısı
+  status           MeetingStatus @default(PLANNED)
+
+  approvedAt      DateTime?
+  approvedById    String?
+  approvedByLabel String?
+
+  createdById    String
+  createdByLabel String
+  updatedById    String?
+  updatedByLabel String?
+
+  deletedAt     DateTime?
+  deletedById   String?
+  deletedByLabel String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  agendaItems AgendaItem[]
+  attendees   MeetingAttendee[]
+  decisions   MeetingDecision[]
+  actionItems ActionItem[]
+  files       MeetingFile[]
+
+  @@unique([year, sequence])
+  @@index([type])
+  @@index([status])
+  @@index([meetingDate])
+  @@index([deletedAt])
+}
+
+model AgendaItem {
+  id          String   @id @default(cuid())
+  meetingId   String
+  meeting     Meeting  @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  position    Int // 1 tabanlı, toplantı başına ardışık
+  title       String
+  description String? // planlanan içerik
+  discussion  String? // tutanak metni: ne görüşüldü
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  decisions MeetingDecision[]
+
+  @@index([meetingId, position])
+}
+
+model MeetingAttendee {
+  id         String           @id @default(cuid())
+  meetingId  String
+  meeting    Meeting          @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  userId     String? // FK DEĞİL; null = dış konuk
+  name       String // görüntülenen ad anlık görüntüsü
+  role       AttendeeRole     @default(MEMBER)
+  attendance AttendanceStatus @default(INVITED)
+  note       String?
+  createdAt  DateTime         @default(now())
+
+  @@unique([meetingId, userId])
+  @@index([meetingId])
+}
+
+model MeetingDecision {
+  id             String         @id @default(cuid())
+  meetingId      String
+  meeting        Meeting        @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  agendaItemId   String?
+  agendaItem     AgendaItem?    @relation(fields: [agendaItemId], references: [id], onDelete: SetNull)
+  year           Int
+  sequence       Int
+  decisionNumber String // "2026/7"
+  text           String
+  result         DecisionResult
+  votesFor       Int?
+  votesAgainst   Int?
+  votesAbstain   Int?
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+
+  actionItems ActionItem[]
+
+  @@unique([year, sequence])
+  @@index([meetingId])
+}
+
+model ActionItem {
+  id              String           @id @default(cuid())
+  meetingId       String
+  meeting         Meeting          @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  decisionId      String?
+  decision        MeetingDecision? @relation(fields: [decisionId], references: [id], onDelete: SetNull)
+  description     String
+  assigneeId      String? // FK DEĞİL
+  assigneeLabel   String? // kullanıcı etiketi anlık görüntüsü VEYA serbest metin ad
+  dueDate         DateTime?        @db.Date
+  status          ActionItemStatus @default(OPEN)
+  completedAt     DateTime?
+  completedById   String?
+  completedByLabel String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@index([meetingId])
+  @@index([status])
+  @@index([dueDate])
+  @@index([assigneeId])
+}
+
+model MeetingFile {
+  id              String    @id @default(cuid())
+  meetingId       String
+  meeting         Meeting   @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  originalName    String
+  storedName      String    @unique
+  storagePath     String // UPLOAD_DIR'e göre: meetings/<year>/<meetingId>/<storedName>
+  mimeType        String
+  size            Int
+  uploadedById    String
+  uploadedByLabel String
+  createdAt       DateTime  @default(now())
+  deletedAt       DateTime?
+
+  @@index([meetingId])
+}

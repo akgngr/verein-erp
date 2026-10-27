@@ -4,14 +4,17 @@ import Link from "next/link";
 import { requireUser } from "@/modules/auth/server";
 import { getDocumentStats } from "@/modules/documents/server";
 import { documentsPermissions, type DocumentStats } from "@/modules/documents";
+import { getMeetingStats } from "@/modules/meetings/server";
+import { meetingsPermissions, type MeetingStats } from "@/modules/meetings";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { can } from "@/shared/permissions/define";
+import { formatDate } from "@/shared/utils";
 
 export const metadata = { title: "Panel" };
 
 // KARAR: Kartlar HeroUI yerine düz markup ile çizilir; böylece panel sayfası tamamen
-// sunucu tarafında kalır (HeroUI v2 client bileşen gerektirir). Toplantı ve Üye
-// kartları yer tutucudur (sonraki fazlar); Evrak kartı Faz 1 ile gerçek değerleri gösterir.
+// sunucu tarafında kalır (HeroUI v2 client bileşen gerektirir). Toplantı kartı Faz 2
+// ile gerçek değerleri gösterir; Üye kartı yer tutucudur (sonraki fazlar).
 function SummaryCard({
   href,
   icon: Icon,
@@ -60,15 +63,26 @@ function PlaceholderCard({ icon: Icon, label }: { icon: typeof FileText; label: 
 export default async function PanelPage() {
   const user = await requireUser();
 
-  // KARAR: Yetki, kartın görünürlüğünü belirler; yetkisiz role Evrak kartı
-  // hiç render edilmez (9. bölüm). İstatistik sorgusu hata verirse panel
-  // tüm sayfayı bozmamak için kartı gizler.
+  // KARAR: Yetki, kartın görünürlüğünü belirler; yetkisiz role kart hiç render
+  // edilmez (11. bölüm). İstatistik sorgusu hata verirse panel tüm sayfayı
+  // bozmamak için kartı gizler.
   let stats: DocumentStats | null = null;
   if (can(user.role, documentsPermissions, "view")) {
     try {
       stats = await getDocumentStats();
     } catch (error) {
       console.error("[panel] Evrak istatistiği alınamadı:", error);
+    }
+  }
+
+  // Toplantı kartı (11. bölüm): sıradaki toplantı + onay bekleyen tutanak +
+  // açık/gecikmiş görev sayıları.
+  let meetingStats: MeetingStats | null = null;
+  if (can(user.role, meetingsPermissions, "view")) {
+    try {
+      meetingStats = await getMeetingStats();
+    } catch (error) {
+      console.error("[panel] Toplantı istatistiği alınamadı:", error);
     }
   }
 
@@ -85,7 +99,19 @@ export default async function PanelPage() {
             danger={stats.overdue > 0}
           />
         ) : null}
-        <PlaceholderCard icon={CalendarDays} label="Toplantı" />
+        {meetingStats ? (
+          <SummaryCard
+            href="/toplantilar"
+            icon={CalendarDays}
+            title={
+              meetingStats.nextMeeting
+                ? `${meetingStats.nextMeeting.meetingNumber} — ${formatDate(meetingStats.nextMeeting.meetingDate)}`
+                : `Planlanan: ${meetingStats.plannedCount}`
+            }
+            subtitle={`Onay bekleyen tutanak: ${meetingStats.draftMinutesCount} · Açık görev: ${meetingStats.openActionItems} (gecikmiş: ${meetingStats.overdueActionItems})`}
+            danger={meetingStats.overdueActionItems > 0}
+          />
+        ) : null}
         <PlaceholderCard icon={Users} label="Üye" />
       </div>
       {stats && stats.overdue > 0 ? (
@@ -95,6 +121,17 @@ export default async function PanelPage() {
             Son işlem tarihi geçmiş {stats.overdue} evrak bulunuyor.{" "}
             <Link href="/evrak?filter.overdue=1" className="underline">
               Süresi geçmişleri görüntüle
+            </Link>
+          </span>
+        </div>
+      ) : null}
+      {meetingStats && meetingStats.overdueActionItems > 0 ? (
+        <div className="mt-4 flex items-center gap-2 rounded-medium border border-danger-200 bg-danger-50 px-4 py-3 text-small text-danger-600 dark:border-danger-100 dark:bg-danger-100/20">
+          <AlertTriangle className="h-4 w-4 shrink-0" aria-hidden />
+          <span>
+            Süresi geçmiş {meetingStats.overdueActionItems} toplantı görevi bulunuyor.{" "}
+            <Link href="/toplantilar/gorevler?filter.overdue=1" className="underline">
+              Gecikmiş görevleri görüntüle
             </Link>
           </span>
         </div>

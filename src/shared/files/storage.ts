@@ -1,7 +1,7 @@
 import "server-only";
 
 import { createReadStream } from "node:fs";
-import { mkdir, stat, unlink, writeFile } from "node:fs/promises";
+import { mkdir, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { Readable } from "node:stream";
 import { randomUUID } from "node:crypto";
@@ -9,7 +9,7 @@ import { randomUUID } from "node:crypto";
 import { getEnv } from "@/shared/env";
 
 /**
- * Yerel disk depolama (7. bölüm).
+ * Paylaşılan yerel disk depolama (Faz 2, 8. bölüm).
  *
  * KARAR: Diskteki yol YALNIZCA veritabanındaki storagePath'ten üretilir;
  * kullanıcının dosya adı yola hiçbir zaman girmez. path.resolve sonucu
@@ -22,7 +22,7 @@ export function getUploadRoot(): string {
 }
 
 /** storagePath'i UPLOAD_DIR altındaki mutlak yola çözer; yol dışına çıkışı reddeder. */
-export function resolveStoragePath(storagePath: string): string {
+export function resolveSafePath(storagePath: string): string {
   const root = getUploadRoot();
   const resolved = path.resolve(root, storagePath);
   if (resolved !== root && !resolved.startsWith(root + path.sep)) {
@@ -31,12 +31,7 @@ export function resolveStoragePath(storagePath: string): string {
   return resolved;
 }
 
-/** Veritabanına yazılacak göreli yol: <yıl>/<documentId>/<storedName>. */
-export function buildStoragePath(year: number, documentId: string, storedName: string): string {
-  return path.posix.join(String(year), documentId, storedName);
-}
-
-/** storedName = uuid + küçük harf uzantı; kullanıcı adı ASLA kullanılmaz. */
+/** storedName = uuid + küçük harf uzantı; kullanıcı adı ASLA kullanılmaz (8. bölüm). */
 export function makeStoredName(extension: string): string {
   const suffix = extension ? `.${extension.toLowerCase()}` : "";
   return randomUUID() + suffix;
@@ -44,30 +39,25 @@ export function makeStoredName(extension: string): string {
 
 /** Dosyayı diske yazar (hedef klasörü oluşturur). */
 export async function saveFile(storagePath: string, data: Uint8Array): Promise<void> {
-  const resolved = resolveStoragePath(storagePath);
+  const resolved = resolveSafePath(storagePath);
   await mkdir(path.dirname(resolved), { recursive: true });
   await writeFile(resolved, data);
 }
 
 /**
  * Yalnızca yükleme başarısız olduğunda temizlik için kullanılır.
- * Kayıt silme (yumuşak) diskteki dosyaya DOKUNMAZ (5. bölüm md. 4-5).
+ * Kayıt (yumuşak) silme diskteki dosyaya DOKUNMAZ (Faz 1 md. 4-5, Faz 2 md. 5).
  */
-export async function cleanupFile(storagePath: string): Promise<void> {
+export async function removeFile(storagePath: string): Promise<void> {
   try {
-    await unlink(resolveStoragePath(storagePath));
+    await unlink(resolveSafePath(storagePath));
   } catch (error) {
-    console.error("[file-storage] Geçici dosya temizlenemedi:", error);
+    console.error("[shared/files] Geçici dosya temizlenemedi:", error);
   }
 }
 
-export async function getFileSize(storagePath: string): Promise<number> {
-  const info = await stat(resolveStoragePath(storagePath));
-  return info.size;
-}
-
 /** İndirme/önizleme için dosyayı akış (stream) olarak açar. */
-export function openFileStream(storagePath: string): ReadableStream<Uint8Array> {
-  const stream = createReadStream(resolveStoragePath(storagePath));
+export function openReadStream(storagePath: string): ReadableStream<Uint8Array> {
+  const stream = createReadStream(resolveSafePath(storagePath));
   return Readable.toWeb(stream) as ReadableStream<Uint8Array>;
 }

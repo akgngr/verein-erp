@@ -1,9 +1,9 @@
 import { definePermissions } from "@/shared/permissions/define";
 
-/** 7.3 yetki matrisi — meetings */
+/** 6. bölüm yetki matrisi — meetings (Faz 2: approve aksiyonu eklendi) */
 export const meetingsPermissions = definePermissions("meetings", {
-  ADMIN: ["view", "create", "update", "delete"],
-  BOARD: ["view", "create", "update"],
+  ADMIN: ["view", "create", "update", "delete", "approve"],
+  BOARD: ["view", "create", "update", "approve"],
   SECRETARY: ["view", "create", "update"],
   VIEWER: ["view"],
 });

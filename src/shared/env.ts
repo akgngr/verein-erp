@@ -20,6 +20,8 @@ const envSchema = z.object({
   // Evrak dosya depolama (Faz 1): UPLOAD_DIR disk yolu, MAX_UPLOAD_MB dosya başına sınır.
   UPLOAD_DIR: z.string().min(1).default("./storage/uploads"),
   MAX_UPLOAD_MB: z.coerce.number().int().min(1).max(200).default(20),
+  // Dernek unvanı (Faz 2): PDF tutanak anteti ve genel etiketler için.
+  ORGANIZATION_NAME: z.string().min(1).default("Dernek"),
 });
 
 export type Env = z.infer<typeof envSchema>;

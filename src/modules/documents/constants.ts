@@ -1,6 +1,10 @@
 import type { DeliveryMethod, DocumentDirection, DocumentStatus } from "@prisma/client";
 
+import { ALL_ALLOWED_EXTENSIONS, INLINE_PREVIEW_EXTENSIONS } from "@/shared/files/file-types";
 import type { ChipColor } from "@/shared/roles";
+
+// Önizlenebilir türler shared/files'tan gelir; documents/index.ts buradan yeniden dışa aktarır.
+export { INLINE_PREVIEW_EXTENSIONS };
 
 /**
  * Evrak modülü sabitleri: Türkçe etiketler, rozet renkleri, izinli dosya türleri,
@@ -65,69 +69,14 @@ export const DEFAULT_STATUS_BY_DIRECTION: Record<DocumentDirection, DocumentStat
   OUTGOING: "COMPLETED",
 };
 
-/** Dosya imzası (magic bytes) kontrol türleri; "none" = imza kontrolü yok (txt). */
-export type FileSignatureKind = "pdf" | "png" | "jpeg" | "zip" | "ole" | "none";
-
-export type FileTypeRule = {
-  extensions: string[];
-  /** Uzantıyla uyumlu kabul edilen MIME'lar (istemcinin bildirdiği değer). */
-  mimes: string[];
-  signature: FileSignatureKind;
-};
-
-/** İzinli dosya türleri ve eşleşme kuralları (7. bölüm). SVG/HTML/JS/çalıştırılabilir YASAK. */
-export const FILE_TYPE_RULES: FileTypeRule[] = [
-  { extensions: ["pdf"], mimes: ["application/pdf"], signature: "pdf" },
-  { extensions: ["jpg", "jpeg"], mimes: ["image/jpeg", "application/jpeg"], signature: "jpeg" },
-  { extensions: ["png"], mimes: ["image/png", "application/png"], signature: "png" },
-  { extensions: ["doc"], mimes: ["application/msword"], signature: "ole" },
-  {
-    extensions: ["docx"],
-    mimes: ["application/vnd.openxmlformats-officedocument.wordprocessingml.document"],
-    signature: "zip",
-  },
-  { extensions: ["xls"], mimes: ["application/vnd.ms-excel"], signature: "ole" },
-  {
-    extensions: ["xlsx"],
-    mimes: ["application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"],
-    signature: "zip",
-  },
-  { extensions: ["odt"], mimes: ["application/vnd.oasis.opendocument.text"], signature: "zip" },
-  {
-    extensions: ["ods"],
-    mimes: ["application/vnd.oasis.opendocument.spreadsheet"],
-    signature: "zip",
-  },
-  { extensions: ["txt"], mimes: ["text/plain"], signature: "none" },
-];
-
-export const ALLOWED_EXTENSIONS: readonly string[] = FILE_TYPE_RULES.flatMap(
-  (rule) => rule.extensions,
-);
-
-/** Magic byte imzaları (dosyanın ilk baytları). */
-export const MAGIC_SIGNATURE_BYTES: Record<Exclude<FileSignatureKind, "none">, readonly number[]> = {
-  pdf: [0x25, 0x50, 0x44, 0x46], // %PDF-
-  png: [0x89, 0x50, 0x4e, 0x47],
-  jpeg: [0xff, 0xd8, 0xff],
-  zip: [0x50, 0x4b], // PK (docx/xlsx/odt/ods)
-  ole: [0xd0, 0xcf, 0x11, 0xe0], // doc/xls
-};
-
 /**
- * KARAR: İşletim sistemi/tarayıcıya göre ZIP tabanlı ofis belgeleri için MIME
- * "application/octet-stream" veya "application/zip" olarak bildirilebilir; bu
- * genel değerler uzantıyla uyumlu sayılır. Asıl güvenlik kapısı magic byte
- * kontrolüdür — uyumsuz imza her koşulda reddedilir.
+ * KARAR (Faz 2, 8. bölüm): dosya türü kuralları shared/files/file-types.ts'e taşındı.
+ * Evrak modülünün izin verdiği alt küme Faz 1 davranışıyla birebir aynı kalır:
+ * pptx YOKTUR (yalnızca toplantılar kabul eder).
  */
-export const GENERIC_MIME_FALLBACKS: readonly string[] = [
-  "application/octet-stream",
-  "application/zip",
-  "application/x-zip-compressed",
-];
-
-/** Tarayıcıda önizlenebilen (inline) türler; indirme her tür için mümkündür. */
-export const INLINE_PREVIEW_EXTENSIONS: readonly string[] = ["pdf", "jpg", "jpeg", "png"];
+export const ALLOWED_EXTENSIONS: readonly string[] = ALL_ALLOWED_EXTENSIONS.filter(
+  (extension) => extension !== "pptx",
+);
 
 /** Evrak başına en fazla aktif dosya (7. bölüm). */
 export const MAX_FILES_PER_DOCUMENT = 10;
