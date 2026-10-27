@@ -5,6 +5,8 @@ import type { PermissionAction, PermissionDefinition } from "../permissions/defi
 export type NavItem = {
   href: string;
   label: string;
+  /** i18n anahtarı (Faz 4): messages/*.json'da nav.<key> olarak çözülür. */
+  labelKey?: string;
   icon: LucideIcon;
   group: "main" | "settings";
   order: number;

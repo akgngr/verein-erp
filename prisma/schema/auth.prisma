@@ -3,6 +3,8 @@ enum Role {
   BOARD
   SECRETARY
   VIEWER
+  TREASURER // Sayman (Faz 4 — muhasebe)
+  AUDITOR // Denetçi (Faz 4 — denetim okuma)
 }
 
 model User {
@@ -16,6 +18,7 @@ model User {
   failedLoginCount   Int       @default(0)
   lockedUntil        DateTime?
   lastLoginAt        DateTime?
+  locale             String    @default("tr") // arayüz dili (de | tr)
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
 }

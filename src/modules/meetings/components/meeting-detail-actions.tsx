@@ -82,7 +82,8 @@ export function MeetingDetailActions({
 
       <StatusMenu
         meetingId={meetingId}
-        current={status}
+        meetingNumber={meetingNumber}
+        status={status}
         canUpdate={canUpdate}
         canApprove={canApprove}
         quorumRequired={quorumRequired}

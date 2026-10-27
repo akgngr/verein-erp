@@ -55,7 +55,8 @@ export const DELIVERY_METHOD_LABELS: Record<DeliveryMethod, string> = {
   EMAIL: "E-posta",
   HAND: "Elden",
   COURIER: "Kargo/Kurye",
-  KEP: "KEP",
+  REGISTERED_MAIL: "Kayıtlı Posta",
+  FAX: "Faks",
   OTHER: "Diğer",
 };
 

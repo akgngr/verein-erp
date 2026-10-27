@@ -45,3 +45,11 @@ export type DataTableProps<T extends { id: string }> = {
   /** Erişilebilirlik için tablo etiketi. */
   ariaLabel?: string;
 };
+
+/** Liste araç çubuğu (toolbar) bağlamı — documents DocumentToolbar gibi
+ * modül-özel araç çubukları DataTable ile aynı arama draftını paylaşır. */
+export type DataTableToolbarContext = {
+  idPrefix: string;
+  searchDraft: string;
+  onSearchDraftChange: (value: string) => void;
+};

@@ -33,7 +33,7 @@ export async function authorize(
   id: string;
   name: string;
   email: string;
-  role: "ADMIN" | "BOARD" | "SECRETARY" | "VIEWER";
+  role: "ADMIN" | "BOARD" | "SECRETARY" | "VIEWER" | "TREASURER" | "AUDITOR";
   mustChangePassword: boolean;
 }> {
   getEnv();

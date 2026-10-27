@@ -7,7 +7,7 @@ import { PageHeader } from "@/shared/components/ui/page-header";
 import { listActiveCategoryOptions } from "@/modules/accounting/server";
 
 import { getDonation } from "../queries/get-donation";
-import { listDonors } from "./list-donors";
+import { listDonors } from "../queries/list-donors";
 import { donationsPermissions } from "../permissions";
 import { DonationForm } from "../components/donation-form";
 
@@ -26,7 +26,7 @@ export async function DonationEditView({ id }: { id: string }) {
     getDonation(id),
     listDonors({
       page: 1,
-      pageSize: 500 as const,
+      pageSize: 50 as const,
       q: "",
       sort: "donorNumber",
       dir: "asc" as const,

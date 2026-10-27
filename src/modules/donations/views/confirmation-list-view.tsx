@@ -1,3 +1,4 @@
+import { can } from "@/shared/permissions/define";
 import { Download, FileDown } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 

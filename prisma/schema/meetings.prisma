@@ -64,6 +64,8 @@ model Meeting {
   location         String?
   description      String? // amaç / toplantı öncesi notlar
   quorumRequired   Int? // PRESENT katılımcı asgari sayısı
+  // Faz 4 (4.6): davetiyelerin gönderildiği tarih ( invitationsversendet am )
+  invitationSentAt DateTime? @db.Date
   status           MeetingStatus @default(PLANNED)
 
   approvedAt      DateTime?

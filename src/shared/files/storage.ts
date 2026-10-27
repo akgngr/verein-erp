@@ -4,7 +4,7 @@ import { createReadStream } from "node:fs";
 import { mkdir, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { Readable } from "node:stream";
-import { randomUUID } from "node:crypto";
+import { createHash, randomUUID } from "node:crypto";
 
 import { getEnv } from "@/shared/env";
 
@@ -60,4 +60,10 @@ export async function removeFile(storagePath: string): Promise<void> {
 export function openReadStream(storagePath: string): ReadableStream<Uint8Array> {
   const stream = createReadStream(resolveSafePath(storagePath));
   return Readable.toWeb(stream) as ReadableStream<Uint8Array>;
+}
+
+/** SHA-256 özeti (Faz 5: Zuwendungsbestätigung hash kaydı için). */
+export function computeSha256(data: Uint8Array): string {
+  const hash = createHash("sha256").update(data);
+  return hash.digest("hex");
 }

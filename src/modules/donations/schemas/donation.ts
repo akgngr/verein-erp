@@ -14,8 +14,7 @@ function emptyToNull<T extends z.ZodType>(schema: T) {
   );
 }
 
-export const donationCreateSchema = z
-  .object({
+const donationBaseSchema = z.object({
     donorId: z.string().trim().min(1, "Bağışçı seçin."),
     receivedAt: z
       .string()
@@ -31,7 +30,9 @@ export const donationCreateSchema = z
     claimBasis: emptyToNull(z.string().trim().max(300, "Dayanak en fazla 300 karakter olabilir.").nullable()),
     waiverDeclaredAt: emptyToNull(z.string().trim().regex(DATE_ONLY, "Geçerli bir tarih girin.").nullable()),
     expenseCategoryId: emptyToNull(z.string().trim().min(1).nullable()),
-  })
+  });
+
+export const donationCreateSchema = donationBaseSchema
   .superRefine((data, ctx) => {
     if (data.waivedReimbursement) {
       // Yöntem REIMBURSEMENT_WAIVER'a zorlanır (§ 11 md. 4); şemada da doğrulanır.
@@ -72,7 +73,9 @@ export const donationCreateSchema = z
     }
   });
 
-export const donationUpdateSchema = donationCreateSchema.omit({ donorId: true }).extend({
+// KARAR: zod v4 — refine edilmiş şemadan .omit() çağrılamaz; update şeması
+// refine'siz taban şemadan türetilir, koşul kuralı sunucuda yeniden uygulanır.
+export const donationUpdateSchema = donationBaseSchema.omit({ donorId: true }).extend({
   id: z.string().min(1),
   /** Eşzamanlılık koruması: formun taşıdığı kaydın updatedAt'i. */
   updatedAt: z.string().min(1, "Kayıt sürümü eksik."),

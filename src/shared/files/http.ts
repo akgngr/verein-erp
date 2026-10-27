@@ -9,7 +9,16 @@ import { getExtension } from "./validation";
  */
 
 export type ParsedUpload =
-  | { ok: true; file: { name: string; type: string; buffer: Buffer } }
+  | {
+      ok: true;
+      file: {
+        originalName: string;
+        declaredMime: string;
+        size: number;
+        head: Uint8Array;
+        buffer: Buffer;
+      };
+    }
   | { ok: false; status: 400; error: string };
 
 /** multipart/form-data içindeki "file" alanını okur; hata durumunda JSON mesaj döner. */
@@ -31,7 +40,19 @@ export async function parseSingleFileUpload(request: Request): Promise<ParsedUpl
   }
 
   const buffer = Buffer.from(await file.arrayBuffer());
-  return { ok: true, file: { name: file.name, type: file.type, buffer } };
+  // head: imza (magic bytes) denetimi için ilk 64 KB — validateUpload'ın
+  // en uzun imzası bu pencerede kalır.
+  const head = new Uint8Array(buffer.subarray(0, 65_536));
+  return {
+    ok: true,
+    file: {
+      originalName: file.name,
+      declaredMime: file.type,
+      size: buffer.byteLength,
+      head,
+      buffer,
+    },
+  };
 }
 
 /** Content-Disposition için ASCII yedek dosya adı üretir. */

@@ -22,6 +22,8 @@ const envSchema = z.object({
   MAX_UPLOAD_MB: z.coerce.number().int().min(1).max(200).default(20),
   // Dernek unvanı (Faz 2): PDF tutanak anteti ve genel etiketler için.
   ORGANIZATION_NAME: z.string().min(1).default("Dernek"),
+  // PDF dili (Faz 4 Adım 5): de = Almanca (varsayılan), tr = Türkçe.
+  DOCUMENT_LANGUAGE: z.enum(["de", "tr"]).default("de"),
 });
 
 export type Env = z.infer<typeof envSchema>;

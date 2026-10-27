@@ -46,7 +46,7 @@ const baseFields = {
   summary: emptyToNull(
     z.string().trim().max(2000, "Özet en fazla 2000 karakter olabilir.").nullable(),
   ),
-  deliveryMethod: emptyToNull(z.enum(["POST", "EMAIL", "HAND", "COURIER", "KEP", "OTHER"]).nullable()),
+  deliveryMethod: emptyToNull(z.enum(["POST", "EMAIL", "HAND", "COURIER", "REGISTERED_MAIL", "FAX", "OTHER"]).nullable()),
   status: statusSchema.optional(),
   dueDate: emptyToNull(
     z.string().trim().regex(DATE_ONLY, "Geçerli bir son işlem tarihi girin.").nullable(),

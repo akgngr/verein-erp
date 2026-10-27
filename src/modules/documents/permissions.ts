@@ -6,6 +6,8 @@ export const documentsPermissions = definePermissions("documents", {
   BOARD: ["view", "create", "update"],
   SECRETARY: ["view", "create", "update"],
   VIEWER: ["view"],
+  TREASURER: ["view"],
+  AUDITOR: ["view"],
 });
 
 /** 6. bölüm yetki matrisi — documentCategories (silme yoktur; pasife alma = update) */
@@ -14,4 +16,6 @@ export const documentCategoriesPermissions = definePermissions("documentCategori
   BOARD: ["view", "create", "update"],
   SECRETARY: ["view"],
   VIEWER: ["view"],
+  TREASURER: ["view"],
+  AUDITOR: ["view"],
 });

@@ -6,4 +6,6 @@ export const meetingsPermissions = definePermissions("meetings", {
   BOARD: ["view", "create", "update", "approve"],
   SECRETARY: ["view", "create", "update"],
   VIEWER: ["view"],
+  TREASURER: ["view"],
+  AUDITOR: ["view"],
 });

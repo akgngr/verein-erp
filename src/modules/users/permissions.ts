@@ -6,4 +6,6 @@ export const usersPermissions = definePermissions("users", {
   BOARD: [],
   SECRETARY: [],
   VIEWER: [],
+  TREASURER: [],
+  AUDITOR: [],
 });

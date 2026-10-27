@@ -15,6 +15,8 @@ export const ROLE_LABELS: Record<Role, string> = {
   BOARD: "Yönetim Kurulu",
   SECRETARY: "Sekreter",
   VIEWER: "Salt okunur",
+  TREASURER: "Sayman",
+  AUDITOR: "Denetçi",
 };
 
 export const ROLE_COLORS: Record<Role, ChipColor> = {
@@ -22,6 +24,8 @@ export const ROLE_COLORS: Record<Role, ChipColor> = {
   BOARD: "secondary",
   SECRETARY: "success",
   VIEWER: "default",
+  TREASURER: "warning",
+  AUDITOR: "danger",
 };
 
 export const ROLE_OPTIONS: { value: Role; label: string }[] = (

@@ -6,4 +6,30 @@ export const membersPermissions = definePermissions("members", {
   BOARD: ["view", "create", "update"],
   SECRETARY: ["view", "create", "update"],
   VIEWER: ["view"],
+  TREASURER: ["view"],
+  AUDITOR: ["view"],
+});
+
+/**
+ * Aidat/ödeme yetkileri (Faz 4, 4.6 — KARAR): VIEWER ödeme verisi göremez;
+ * TREASURER (sayman) ödemeleri kaydeder ve görüntüler; AUDITOR yalnız okur.
+ * Void (iptal) yalnız ADMIN'dir ("delete").
+ */
+export const memberPaymentsPermissions = definePermissions("memberPayments", {
+  ADMIN: ["view", "create", "update", "delete"],
+  BOARD: ["view", "create", "update"],
+  SECRETARY: ["view", "create", "update"],
+  VIEWER: [],
+  TREASURER: ["view", "create", "update"],
+  AUDITOR: ["view"],
+});
+
+/** Üyelik türü yönetimi (Faz 3 eklemeleri): sayman da görür. */
+export const memberTypesPermissions = definePermissions("memberTypes", {
+  ADMIN: ["view", "create", "update"],
+  BOARD: ["view", "create", "update"],
+  SECRETARY: ["view"],
+  VIEWER: ["view"],
+  TREASURER: ["view"],
+  AUDITOR: ["view"],
 });

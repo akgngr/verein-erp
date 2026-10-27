@@ -5,7 +5,7 @@ import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { listActiveCategoryOptions } from "@/modules/accounting/server";
 
-import { listDonors } from "./list-donors";
+import { listDonors } from "../queries/list-donors";
 import { donationsPermissions } from "../permissions";
 import { DonationForm } from "../components/donation-form";
 
@@ -22,7 +22,7 @@ export async function DonationCreateView() {
     listDonors(
       {
         page: 1,
-        pageSize: 500 as const,
+        pageSize: 50 as const,
         q: "",
         sort: "donorNumber",
         dir: "asc" as const,

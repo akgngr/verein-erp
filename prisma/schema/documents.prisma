@@ -15,7 +15,8 @@ enum DeliveryMethod {
   EMAIL // E-posta
   HAND // Elden
   COURIER // Kargo/Kurye
-  KEP // KEP
+  REGISTERED_MAIL // Kayıtlı postayla teslim (Faz 4'te KEP'ten değiştirildi)
+  FAX // Faks
   OTHER // Diğer
 }
 

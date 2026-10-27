@@ -74,10 +74,10 @@ export async function uploadFileHandler(request: Request, ctx: { id: string }): 
   const maxBytes = getEnv().MAX_UPLOAD_MB * 1024 * 1024;
   const validation = validateUpload({
     file: {
-      originalName: parsed.file.name,
-      declaredMime: parsed.file.type,
-      size: parsed.file.buffer.byteLength,
-      head: new Uint8Array(parsed.file.buffer.subarray(0, 8)),
+      originalName: parsed.file.originalName,
+      declaredMime: parsed.file.declaredMime,
+      size: parsed.file.size,
+      head: parsed.file.head,
     },
     allowedExtensions: ALLOWED_EXTENSIONS,
     maxBytes,

@@ -6,7 +6,7 @@ import { getOrganizationProfile } from "@/modules/organization/server";
 import { amountToGermanWords } from "@/shared/german-number-words";
 
 import { ITEM_LABELS } from "../constants";
-import { getMemberAddressBlock, type MemberAddressBlock } from "@/modules/members/server";
+import type { MemberAddressBlock } from "@/modules/members/server";
 
 /**
  * Değişmez anlık görüntü oluşturucu (§ 11 md. 9 md. 5): recipient + issuer
@@ -87,9 +87,10 @@ export function memberRecipient(block: MemberAddressBlock): RecipientSnapshot {
   return {
     kind: "member",
     name: block.name,
-    street: block.street,
-    postalCode: block.postalCode,
-    city: block.city,
+    // KARAR: Adres alanları opsiyoneldir; makbuzda boş alan boş string görünür.
+    street: block.street ?? "",
+    postalCode: block.postalCode ?? "",
+    city: block.city ?? "",
     country: block.country,
   };
 }

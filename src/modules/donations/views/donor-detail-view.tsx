@@ -9,7 +9,7 @@ import { formatDate } from "@/shared/utils";
 import { can } from "@/shared/permissions/define";
 
 import { getDonor } from "../queries/get-donor";
-import { listDonations } from "./list-donations";
+import { listDonations } from "../queries/list-donations";
 import { donationsPermissions } from "../permissions";
 import { DONATION_METHOD_LABELS } from "../constants";
 import { AnonymizeDonorDialog } from "../components/anonymize-donor-dialog";
@@ -51,8 +51,6 @@ export async function DonorDetailView({ id }: { id: string }) {
   const tList = await getTranslations("donations.list");
   const format = (cents: number) =>
     (cents / 100).toLocaleString("tr-TR", { style: "currency", currency: "EUR" });
-
-  const canUpdate = can(user.role, donationsPermissions, "update");
   const canDelete = can(user.role, donationsPermissions, "delete");
 
   return (

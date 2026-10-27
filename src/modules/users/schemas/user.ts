@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { passwordSchema } from "@/shared/security/password";
 
-const roleSchema = z.enum(["ADMIN", "BOARD", "SECRETARY", "VIEWER"]);
+const roleSchema = z.enum(["ADMIN", "BOARD", "SECRETARY", "VIEWER", "TREASURER", "AUDITOR"]);
 
 export const userCreateSchema = z.object({
   name: z.string().trim().min(1, "Ad soyad zorunludur.").max(100, "Ad soyad en fazla 100 karakter olabilir."),
