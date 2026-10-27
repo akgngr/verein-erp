@@ -1,0 +1,167 @@
+// Üye kayıt modülü (Faz 3 — Almanya dernekleri (Verein) için uyarlandı).
+// KARAR: Üyeler, sistem kullanıcılarından (User) BAĞIMSIZ bir varlıktır — derneğin
+// kayıt altında tuttuğu kişilerdir ve çoğu sisteme giriş yapmaz. Bu, documents ve
+// meetings modüllerindeki "modüller arası bağımsızlık" kararıyla uyumludur: userId
+// gibi kullanıcı referansları FK DEĞİLDİR; "…Id" + "…Label" anlık görüntü alanları
+// kullanılır. İleride bir üyenin aynı zamanda sistem kullanıcısı olması gerekirse
+// e-posta alanı üzerinden eşleştirme yapılabilir; FK bağı kurulsaydı üye silindiğinde
+// kullanıcı da silinirdi (istenmeyen davranış).
+
+enum MembershipType {
+  ASIL // Asıl üye (Almanca: Ordentliches Mitglied)
+  ONURSAL // Onursal üye (Ehrenmitglied)
+  FAHRI // Fahri üye (Ehrenamtlich)
+  DESTEKCI // Destekçi üye (Fördermitglied)
+}
+
+enum MemberStatus {
+  ACTIVE // Aktif (Aktiv)
+  PASSIVE // Pasif (Passiv)
+  RESIGNED // Ayrıldı (Ausgetreten)
+  DECEASED // Vefat etti (Verstorben)
+}
+
+// Üye numarası sayacı: yıl bazında sıra; üretim atomik upsert ile yapılır.
+model MemberCounter {
+  year    Int
+  lastSeq Int @default(0)
+
+  @@id([year])
+}
+
+model Member {
+  id               String         @id @default(cuid())
+  year             Int
+  sequence         Int
+  membershipNumber String         @unique // UYE-2026-0001
+  type             MembershipType @default(ASIL)
+  status           MemberStatus   @default(ACTIVE)
+
+  firstName String
+  lastName  String
+
+  // KARAR (Verein pivotu): tcKimlikNo alanı, "kimlikNo" olarak yeniden adlandırıldı.
+  // Serbest metin (max 60) — kullanıcının girdiği değerin türüne karışılmaz:
+  // Mitgliedsnummer / Steueridentifikationsnummer / ehliyet no / uyruk no / pasaport no.
+  // DB düzeyinde @unique DEĞİLDİR (çünkü serbest metinde çakışma olabilir; örn. farklı
+  // iki üyenin aynı ehliyet numarasını girmesi). Yalnızca role göre maskelenir:
+  // ADMIN/BOARD/SECRETARY tam görür, VIEWER yanıtta HİÇ GÖREMEZ (services/kimlik.ts).
+  kimlikNo String?
+
+  email String?
+  phone String?
+
+  // KARAR (Verein pivotu): adres, Alman adres yapısına göre yapılandırıldı.
+  // Straße + Hausnummer, PLZ (5 hane), Stadt, Bundesland (Eyalet/İl). Tümü opsiyonel;
+  // form boş bırakılabilir; kayıt gösteriminde "Straße Hausnr, PLZ Stadt (Bundesland)"
+  // biçiminde birleştirilir (utils.ts formatAddress).
+  street      String?
+  houseNumber String?
+  postalCode  String?
+  city        String?
+  state       String? // Bundesland / Eyalet / İl
+
+  birthDate  DateTime? @db.Date
+  profession String?
+
+  // Faz 4 (4.6): ülke — PLZ doğrulama kuralı buna bağlıdır (boş veya
+  // Deutschland/Germany/Almanya ise 5 haneli Alman PLZ zorunlu, aksi halde serbest ≤10).
+  country String?
+
+  // Faz 4 (4.6): fesih bildirimi tarihi (Kündigung eingegangen am) — RESIGNED
+  // durumuna geçişte opsiyonel girilir; exitDate'ten sonra olamaz; üye
+  // ACTIVE/PASSIVE'e dönerse temizlenir.
+  cancellationReceivedAt DateTime? @db.Date
+
+  joinDate   DateTime  @db.Date
+  exitDate   DateTime? @db.Date
+  exitReason String?
+
+  notes String? // serbest metin: üye kartındaki genel not
+
+  createdById    String
+  createdByLabel String
+  updatedById    String?
+  updatedByLabel String?
+
+  deletedAt      DateTime?
+  deletedById    String?
+  deletedByLabel String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  memberNotes MemberNote[]
+  payments    MemberPayment[]
+
+  @@unique([year, sequence])
+  @@index([status])
+  @@index([type])
+  @@index([lastName, firstName])
+  @@index([joinDate])
+  @@index([email])
+  @@index([postalCode, city])
+  @@index([deletedAt])
+}
+
+// Aidat ödemesi yöntemi (Faz 4, 4.6 — KARAR: aidat altyapısı Faz 3'te inşa
+// edilmemişti; minimum ödeme + makbuz + iptal (void) burada kurulur).
+enum PaymentMethod {
+  CASH // Nakit (Bar)
+  BANK_TRANSFER // Banka havalesi (Überweisung)
+  CARD // Kart (Kartenzahlung)
+  OTHER // Diğer (Sonstige)
+}
+
+// Makbuz numarası sayacı: yıl bazında sıra; üretim atomik upsert ile yapılır.
+model MemberPaymentCounter {
+  year    Int
+  lastSeq Int @default(0)
+
+  @@id([year])
+}
+
+// Üyelik aidatı ödemesi + makbuz (Quittung). KARAR: Ödemeler ASLA sert silinmez;
+// yanlış kayıt void (iptal) edilir — neden zorunludur, muhasebe aktarımı
+// (member-sync) void'i fişin ters kaydına çevirir. member FK'sı Restrict'tir:
+// üye yumuşak silinse de ödemeler muhasebe kaydıyla birlikte kalır.
+model MemberPayment {
+  id            String        @id @default(cuid())
+  year          Int // makbuz yılı = paidAt yılı (sayacın yılı)
+  sequence      Int
+  receiptNumber String        @unique // MAK-2026-0001
+  memberId      String
+  member        Member        @relation(fields: [memberId], references: [id], onDelete: Restrict)
+  dueYear       Int // aidat yılı (Mitgliedsbeitrag für das Jahr)
+  amount        Decimal       @db.Decimal(12, 2) // her zaman pozitif
+  method        PaymentMethod
+  paidAt        DateTime      @db.Date
+  reference     String? // açıklama/referans (≤ 100)
+
+  voidedAt      DateTime?
+  voidedById    String? // FK DEĞİL
+  voidedByLabel String?
+  voidReason    String?
+
+  createdById    String
+  createdByLabel String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([year, sequence])
+  @@index([memberId])
+  @@index([paidAt])
+  @@index([dueYear])
+}
+
+model MemberNote {
+  id          String   @id @default(cuid())
+  memberId    String
+  member      Member   @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  body        String
+  authorId    String
+  authorLabel String
+  createdAt   DateTime @default(now())
+
+  @@index([memberId, createdAt])
+}

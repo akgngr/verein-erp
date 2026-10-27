@@ -1,0 +1,79 @@
+import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
+
+import { ForbiddenError, requirePermission } from "@/modules/auth/server";
+import { AccessDenied } from "@/shared/components/ui/access-denied";
+import { PageHeader } from "@/shared/components/ui/page-header";
+
+import { getBooking } from "../queries/get-booking";
+import { listAccountOptions } from "../queries/list-accounts";
+import { listCategoryOptions } from "../queries/list-categories";
+import { listProjectOptions } from "../queries/list-projects";
+import { accountingPermissions } from "../permissions";
+import { BookingForm } from "../components/booking-form";
+
+/** Fiş düzenleme (§ 11.2): ters/kilitli/kaynak fişlerde açıklayıcı engel. */
+export async function AccountingEditView({ id }: { id: string }) {
+  try {
+    await requirePermission(accountingPermissions, "update");
+  } catch (error) {
+    if (error instanceof ForbiddenError) return <AccessDenied />;
+    throw error;
+  }
+
+  const [booking, accounts, categories, projects] = await Promise.all([
+    getBooking(id),
+    listAccountOptions(),
+    listCategoryOptions(),
+    listProjectOptions(),
+  ]);
+  if (!booking) notFound();
+  const t = await getTranslations("accounting.form");
+
+  const blocked =
+    booking.reversedAt
+      ? t("editBlockedReversed")
+      : booking.sourceType
+        ? t("editBlockedSource")
+        : null;
+
+  if (blocked) {
+    return (
+      <div>
+        <PageHeader title={t("editTitle")} description={booking.bookingNumber} />
+        <div className="max-w-3xl rounded-medium border border-warning-300 bg-warning-50 px-4 py-3 text-small text-warning-700">
+          {blocked}
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div>
+      <PageHeader title={t("editTitle")} description={booking.bookingNumber} />
+      <BookingForm
+        mode="edit"
+        accounts={accounts}
+        categories={categories}
+        projects={projects}
+        initial={{
+          type: booking.type,
+          bookingDate:
+            booking.bookingDate instanceof Date
+              ? booking.bookingDate.toISOString().slice(0, 10)
+              : String(booking.bookingDate),
+          accountId: booking.accountId,
+          counterAccountId: booking.counterAccountId ?? "",
+          categoryId: booking.categoryId ?? "",
+          projectId: booking.projectId ?? "",
+          amount: (booking.amountCents / 100).toFixed(2),
+          description: booking.description,
+          counterparty: booking.counterparty ?? "",
+          receiptReference: booking.receiptReference ?? "",
+          id: booking.id,
+          updatedAt: new Date(booking.updatedAt).toISOString(),
+        }}
+      />
+    </div>
+  );
+}

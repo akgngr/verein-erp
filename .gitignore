@@ -55,3 +55,10 @@ server.log
 
 # Evrak dosya depolaması (Faz 1) — diske yazılan yükleme dosyaları git'e girmez
 storage/
+
+# Test kanıtı / debug çıktıları — repoya girmez
+tool-results/
+agent-ctx/
+download/*.png
+scripts/*.png
+scripts/console-dump*.txt
