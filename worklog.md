@@ -78,3 +78,22 @@ Stage Summary:
 - Yeni KARAR'lar: allowedOrigins (next.config), dev log /tmp'ye (Turbopack döngü kırılımı), proxy matcher api/documents muafiyeti, registeredAt bazlı "bu ay" istatistiği, resolver-cast (z.preprocess input tipleri), form'da direction/updatedAt hidden defaultValues (istemci şema eşleşmesi), validate-relations "yalnızca değişince doğrula", canonical MIME kaydı (istemci MIME'i değil kural listesi), DocumentTable/DocumentDetailActions/CategoryTable dosyaları (users modülü table bileşeni kalıbı)
 - Silinen evrağın disk dosyaları ve dosya satırları korunur; indirme loglanmaz
 - Test kullanıcıları (sekreter@dernek.local/Viewer@) sandbox'ta bırakıldı; demo evraklar GLN-2026-0001/0003, GDN-2026-0001 (GLN-2026-0002 silinmiş durumda)
+
+---
+Task ID: 18
+Agent: ana ajan
+Task: Dev sunucu 504 hatası onarımı (sandbox sıfırlanması sonrası ortam kurtarma)
+
+Work Log:
+- Teşhis: next-server %103 CPU + 1.4GB RAM ile HMR full-reload döngüsünde kilitliydi; süreçler durduruldu, .next/dev/trace + .next/dev/logs + lock silindi
+- Sandbox sıfırlanmasının silgileri tespit edildi: /home/z/.pgtools (PostgreSQL 17.6 userspace binary), .env.local, .env.example yoktu; süreç ölümünün asıl nedeni buydu (setsid/nohup bile yetmiyordu çünkü .env.local olmadan auth MissingSecret + DB erişilemiyordu)
+- PostgreSQL 17.6.0 statik binary yeniden indirildi (theseus-rs release, /home/z/.pgtools)
+- .env.local yeniden yazıldı (DATABASE_URL=postgresql://postgres@127.0.0.1:5432/dernek, taze AUTH_SECRET, ADMIN_*, UPLOAD_DIR, MAX_UPLOAD_MB; ADMIN_NAME tırnaklı — sourcing hatası düzeltildi)
+- scripts/start-postgres.sh çalıştı: initdb (/home/z/.pgdata) + start + dernek DB oluşturuldu
+- set -a && . ./.env.local && set +a ile bunx prisma migrate deploy (2 migration uygulandı) + bunx tsx prisma/seed.ts (admin@dernek.local + 7 evrak kategorisi)
+- scripts/start-dev-daemon.sh (çift-fork) ile sunucu kalıcı başlatıldı
+
+Stage Summary:
+- Doğrulama: /api/health 200, /giris 200, / 307 (auth redirect — doğru), pg_isready accepting connections
+- Ders (tekrar doğrulandı): sandbox reset sonrası kurtarma sırası = pg binary indir → .env.local yaz → start-postgres.sh → migrate+seed → start-dev-daemon.sh; nohup/setsid yerine daima çift-fork daemon kullan
+- Veriler taze (initdb yeni): önceki oturumların demo verileri yok; seed verisi mevcut
