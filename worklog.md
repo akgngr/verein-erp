@@ -134,3 +134,23 @@ Work Log:
 Stage Summary:
 - KURAL: `NEXT_DIST_DIR=/tmp/dernek-next-build bunx next build` — proje içine ASLA yazma
 - KURAL: her faz/step sonunda git commit (auto-checkpoint yalnız boot'ta)
+
+---
+Task ID: 21
+Agent: Z.ai (main)
+Task: Sandbox-reset kurtarma (3. kez) + GitHub push kurulumu + Faz 3 iş emrini repoya gömme
+
+Work Log:
+- Kullanıcı "faz 3'e dönmüşsün" bildirdi → teşhis: KOD KAYIP DEĞİL; tüm fazların kodu (üyeler, muhasebe, bağışlar, organizasyon) working tree'de duruyordu ama git'e commit'lenmemişti. Kullanıcının algısının nedeni: veritabanı verileri yine silinmişti
+- 283 dosya commit'lendi (Kod koruma commit'i — feat: faz3+faz4+faz5 WIP)
+- GitHub remote eklendi: https://github.com/akgngr/verein-erp.git (origin/main); push için PAT bekliyor (gh CLI + credential yok — push "could not read Username" ile reddedildi)
+- Ortam kurtarma (3. kez): .pgtools + .pgdata + .env.local + .env.example silinmişti → pg 17.6 binary yeniden indirildi, .env.local/.env.example yeniden yazıldı, initdb + migrate deploy + seed
+- Migration krizi düzeltildi: 20261027064205_add_meetings dosyası, 20261026085101_add_meetings'in BİREBİR KOPYASI olarak ezilmişti (taze DB'de CREATE TYPE MeetingType çakışması → migrate deploy takılıyordu, arkada 5 migration bekliyordu: f4_step6/7, f5_step3/5/7). Failed kaydı silindi + kopya dosya git rm + deploy tamamlandı (36 tablo)
+- ÇÖZÜMLEME (sunucu onarımında kök neden değil ama 3. reset dersi): kopya migration dosyası migration_lock sağlığından geçmez — migrate status her kurtarmada ZORUNLU
+- Kullanıcının yüklediği Faz 3 iş emri (upload/Pasted Content_1793093507700.txt) → docs/specs/phase-3-members-dues.md olarak gömüldü (Task 19'daki "Faz 3 iş emri KAYIP" notunun kapanışı; artık faz 2/3/4/5 hepsi repoda)
+- .gitignore'a test kanıtı klasörleri eklendi (tool-results/, agent-ctx/, download/*.png, scripts/*.png, scripts/console-dump*)
+
+Stage Summary:
+- Kod durumu doğrulandı: tsc 0 hata; 10 modül (auth, users, documents, meetings, members, organization, accounting, donations, audit + registry) tam; 36 DB tablosu; tüm migration'lar uygulandı; sunucu daemon ayakta (health 200, /giris 200)
+- Mevcut üyeler modülü Faz 3 iş emrinden FARKLI tasarımda (Verein pivotu kararı): MembershipType ENUM vs tablo, memberNumber "UYE-2026-0001" vs int 0001, dueYear vs dueId FK, kimlikNo alanı (iş emri KVKK gereği yasaklıyor). Faz 4 member-sync + Faz 5 bu şemaya bağımlı → iş emri birebir uygulanırsa muhasebe/bağış BOZULUR. KARAR: yeniden inşa YOK; mevcut yapı korunur, iş emri dokümanı referans. Eksikler (tür yönetimi, aidat satırı/raporu, Excel import, anonimleştirme) kullanıcı onayıyla ayrı iş olarak değerlendirilecek
+- PUSH: PAT verilince `git push -u origin main` ile tüm birikmiş commit'ler gidecek; sonraki her task sonunda push yapılacak

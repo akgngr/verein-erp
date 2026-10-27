@@ -193,3 +193,11 @@ curl localhost:3000/api/health   # 200 beklenir
 ```
 
 E2E: agent-browser (snapshot -i @ref zorunlu) — demo hesap: admin@dernek.local (parola worklog Task 11 notuna göre Admin12345).
+
+## 9. Repo ve kurtarma (Task 21 sonrası)
+
+- GitHub remote: `origin = https://github.com/akgngr/verein-erp.git` (main dalı) — her task sonunda commit + push; push PAT gerektirir (credential yoksa "could not read Username" hatası normal)
+- İş emri dokümanları: docs/specs/ altında (phase-2, phase-3-members-dues, phase-4-accounting-compliance, phase-5-donations) — sandbox reset'lerine karşı repoda taşınır
+- Sandbox reset kurtarma sırası (3. kez doğrulandı): pg 17.6 binary (~/.pgtools) → .env.local/.env.example → scripts/start-postgres.sh (initdb ~/.pgdata) → migrate deploy + seed → **migrate status kontrolü** → scripts/start-dev-daemon.sh
+- ⚠️ migration uyarısı: migrate deploy'da "already exists" hatası = kısmen uygulanan/çakışan migration; _prisma_migrations'daki failed kaydını temizlemeden deploy ilerlemez
+- build her zaman `NEXT_DIST_DIR=/tmp/dernek-next-build` ile (proje içi .next-build = Turbopack sonsuz rebuild döngüsü = 504)
