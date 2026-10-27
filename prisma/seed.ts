@@ -85,6 +85,25 @@ async function main() {
     });
   }
   console.log(`Evrak kategorileri hazır (${DOCUMENT_CATEGORIES.length} adet).`);
+
+  // Üyelik türü konfigürasyonları (Faz 3 eklemeleri): idempotent upsert.
+  // KARAR: ASIL ve DESTEKCI için aidat tutarı null bırakılır (yönetici türler
+  // ekranından belirler; null iken tür aidat üretimine dahil edilmez). ONURSAL
+  // ve FAHRI 0 = aidat yok (iş emri seed kuralı: onursal/fahri aidatsızdır).
+  const membershipTypeConfigs = [
+    { type: "ASIL", annualDue: null, isActive: true },
+    { type: "ONURSAL", annualDue: "0", isActive: true },
+    { type: "FAHRI", annualDue: "0", isActive: true },
+    { type: "DESTEKCI", annualDue: null, isActive: true },
+  ] as const;
+  for (const config of membershipTypeConfigs) {
+    await prisma.membershipTypeConfig.upsert({
+      where: { type: config.type },
+      update: {},
+      create: config,
+    });
+  }
+  console.log(`Üyelik türü konfigürasyonları hazır (${membershipTypeConfigs.length} adet).`);
 }
 
 main()

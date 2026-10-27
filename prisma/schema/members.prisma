@@ -21,6 +21,33 @@ enum MemberStatus {
   DECEASED // Vefat etti (Verstorben)
 }
 
+// Yıllık aidat satırı durumu (Faz 3 eklemeleri).
+// KARAR: OPEN/PARTIAL/PAID türetilir (dues-calculation.recalculateDue tek yazar);
+// WAIVED ise elle verilir (bu üye bu yıl aidattan muaf). WAIVED iken ödeme
+// kaydedilirse durum yeniden hesaplanır (PARTIAL/PAID).
+enum MemberDueStatus {
+  OPEN // Açık / ödenmedi
+  PARTIAL // Kısmen ödendi
+  PAID // Ödendi
+  WAIVED // Muaf (beklenen tutara dahil edilmez)
+}
+
+// Üyelik türü yönetimi (Faz 3 eklemeleri).
+// KARAR: İş emrindeki MemberType tablosu YERİNE enum'a key'lenmiş konfigürasyon
+// tablosu kullanıldı. Nedeni: mevcut şemada Member.type bir ENUM'dır ve Faz 4
+// muhasebe member-sync + Faz 5 bağış bildirimleri bu enum'a bağımlı; türleri
+// serbest tabloya çevirmek üye formu/filtreleri/aktarımı kırardı. Böylece iş
+// emrinin istediği yönetilebilirlik (yıllık aidat tutarı + pasife alma) enum
+// bozulmadan sağlanır; yeni tür ekleme/silme kapsam dışıdır (enum sabittir).
+model MembershipTypeConfig {
+  type      MembershipType @id
+  // null = henüz belirlenmedi (tür aidat üretimine dahil edilmez); 0 = aidat yok.
+  annualDue Decimal?       @db.Decimal(12, 2)
+  isActive  Boolean        @default(true) // false: yeni üye kaydında seçilemez
+  createdAt DateTime       @default(now())
+  updatedAt DateTime       @updatedAt
+}
+
 // Üye numarası sayacı: yıl bazında sıra; üretim atomik upsert ile yapılır.
 model MemberCounter {
   year    Int
@@ -93,6 +120,7 @@ model Member {
 
   memberNotes MemberNote[]
   payments    MemberPayment[]
+  dues        MemberDue[]
 
   @@unique([year, sequence])
   @@index([status])
@@ -102,6 +130,31 @@ model Member {
   @@index([email])
   @@index([postalCode, city])
   @@index([deletedAt])
+}
+
+// Yıllık aidat satırı (Faz 3 eklemeleri): üye başına yıl başına tek kayıt.
+// KARAR: Mevcut MemberPayment.dueYear alanı KORUNDU — ödeme aidat satırına dueId
+// FK ile DEĞİL, (memberId, dueYear) çiftiyle bağlanır. Böylece Faz 4/5 sorguları
+// ve makbuz akışı bozulmaz; aidat satırı olmayan ödemeler (geçmiş kayıtlar)
+// geçerli kalır. Ödenen tutar denormalize EDİLMEZ; her okumada MemberPayment
+// aggregate'ından hesaplanır (tek doğruluk kaynağı ödeme kayıtlarıdır).
+model MemberDue {
+  id             String          @id @default(cuid())
+  memberId       String
+  member         Member          @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  year           Int // aidat yılı
+  amountDue      Decimal         @db.Decimal(12, 2) // beklenen tutar (pozitif)
+  status         MemberDueStatus @default(OPEN) // denormalize; yalnız recalculateDue yazar
+  dueDate        DateTime        @db.Date // son ödeme tarihi (Fälligkeit)
+  note           String?
+
+  createdById    String
+  createdByLabel String
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
+
+  @@unique([memberId, year])
+  @@index([year, status])
 }
 
 // Aidat ödemesi yöntemi (Faz 4, 4.6 — KARAR: aidat altyapısı Faz 3'te inşa
