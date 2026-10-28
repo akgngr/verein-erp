@@ -1,0 +1,8 @@
+{
+  "loginTitle": "Giriş Yap",
+  "email": "E-posta",
+  "password": "Parola",
+  "loginButton": "Giriş yap",
+  "logout": "Çıkış yap",
+  "mustChangePasswordBanner": "Parolanızı güncellemeniz zorunludur"
+}

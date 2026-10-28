@@ -3,6 +3,7 @@
 import { Link, addToast } from "@heroui/react";
 import { Eye, ListTodo, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { DataTable } from "@/shared/components/data-table/data-table";
@@ -14,28 +15,15 @@ import type {
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { formatDate } from "@/shared/utils";
 
-import { deleteMeetingAction } from "../actions/meeting-actions";
 import type { MeetingStatus, MeetingType } from "@prisma/client";
 
+import { deleteMeetingAction } from "../actions/meeting-actions";
 import { TITLE_TRUNCATE_LENGTH } from "../constants";
-import { StatusBadge, TypeBadge } from "./badges";
-
-export type MeetingRow = {
-  id: string;
-  meetingNumber: string;
-  type: MeetingType;
-  title: string;
-  meetingDate: Date;
-  startTime: string | null;
-  location: string | null;
-  status: MeetingStatus;
-  decisionCount: number;
-  openActionItemCount: number;
-};
+import { StatusBadge } from "./status-badge";
+import { TypeBadge } from "./type-badge";
 
 /**
- * Toplantı listesi tablosu (7.1). Satır tıklaması yerine Toplantı No hücresi
- * bağlantıdır (Faz 0 sözleşmesi: paylaşılan tabloya satır-tıklama eklenmez).
+ * Toplantı listesi tablosu (7.1).
  */
 export function MeetingTable({
   rows,
@@ -69,6 +57,7 @@ export function MeetingTable({
   canDelete: boolean;
 }) {
   const router = useRouter();
+  const t = useTranslations("meetings");
   const [deleting, setDeleting] = useState<MeetingRow | null>(null);
 
   const confirmDelete = async () => {
@@ -78,7 +67,10 @@ export function MeetingTable({
       addToast({ title: result.error, color: "danger" });
       return;
     }
-    addToast({ title: `Toplantı silindi: ${deleting.meetingNumber}`, color: "success" });
+    addToast({
+      title: t("list.deletedToast", { number: deleting.meetingNumber }),
+      color: "success",
+    });
     setDeleting(null);
     router.refresh();
   };
@@ -86,7 +78,7 @@ export function MeetingTable({
   const columns: DataTableColumn<MeetingRow>[] = [
     {
       key: "meetingNumber",
-      label: "Toplantı No",
+      label: t("list.number"),
       sortable: true,
       width: 140,
       render: (row) => (
@@ -97,13 +89,13 @@ export function MeetingTable({
     },
     {
       key: "type",
-      label: "Tür",
+      label: t("list.type"),
       width: 150,
       render: (row) => <TypeBadge type={row.type} />,
     },
     {
       key: "title",
-      label: "Başlık",
+      label: t("list.title"),
       sortable: true,
       render: (row) => (
         <span title={row.title}>
@@ -115,7 +107,7 @@ export function MeetingTable({
     },
     {
       key: "meetingDate",
-      label: "Tarih",
+      label: t("list.date"),
       sortable: true,
       width: 150,
       render: (row) => (
@@ -127,27 +119,27 @@ export function MeetingTable({
     },
     {
       key: "location",
-      label: "Yer",
+      label: t("list.location"),
       width: 150,
       render: (row) => row.location ?? "-",
     },
     {
       key: "status",
-      label: "Durum",
+      label: t("list.status"),
       sortable: true,
       width: 120,
       render: (row) => <StatusBadge status={row.status} />,
     },
     {
       key: "decisionCount",
-      label: "Karar",
+      label: t("list.decisionCount"),
       align: "center",
       width: 80,
       render: (row) => row.decisionCount,
     },
     {
       key: "openActionItemCount",
-      label: "Açık Görev",
+      label: t("list.openTaskCount"),
       align: "center",
       width: 100,
       render: (row) =>
@@ -199,7 +191,7 @@ export function MeetingTable({
   return (
     <>
       <DataTable<MeetingRow>
-        ariaLabel="Toplantılar"
+        ariaLabel={t("list.aria")}
         columns={columns}
         rows={rows}
         total={total}
@@ -213,16 +205,19 @@ export function MeetingTable({
         dateFilter={dateFilter}
         filterExtra={filterExtra}
         toolbarExtra={toolbarExtra}
-        searchPlaceholder="Toplantı no, başlık, yer, gündem, karar ara…"
+        searchPlaceholder={t("list.search")}
         rowActions={rowActions}
-        emptyMessage="Toplantı bulunamadı."
+        emptyMessage={t("list.empty")}
       />
 
       <ConfirmDialog
         isOpen={deleting !== null}
         onOpenChange={(open) => !open && setDeleting(null)}
-        title="Toplantıyı sil"
-        message={`"${deleting?.meetingNumber ?? ""}" numaralı toplantı silinecek. Silinen toplantı listelerde, aramada, istatistikte ve görev listesinde görünmez; numarası yeniden kullanılmaz. Onaylıyor musunuz?`}
+        title={t("list.deleteTitle")}
+        message={t("list.deleteMessage", {
+          number: deleting?.meetingNumber ?? "",
+          title: deleting?.title ?? "",
+        })}
         confirmLabel="Sil"
         confirmColor="danger"
         onConfirm={confirmDelete}
@@ -230,3 +225,16 @@ export function MeetingTable({
     </>
   );
 }
+
+export type MeetingRow = {
+  id: string;
+  meetingNumber: string;
+  type: MeetingType;
+  title: string;
+  meetingDate: Date;
+  startTime: string | null;
+  location: string | null;
+  status: MeetingStatus;
+  decisionCount: number;
+  openActionItemCount: number;
+};

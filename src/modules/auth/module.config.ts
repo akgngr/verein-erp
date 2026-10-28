@@ -6,6 +6,6 @@ export const moduleConfig: ModuleConfig = {
   description: "Kullanıcı girişi, oturum yönetimi ve parola güvenliği.",
   category: "CORE",
   isProtected: true,
-  hasSchema: true,
+  hasSchema: false,
   nav: [],
 };

@@ -1,0 +1,244 @@
+{
+  "list": {
+    "title": "Bağış kayıtları (Spenden)",
+    "stats": {
+      "total": "Bağış toplamı",
+      "count": "Bağış sayısı",
+      "unconfirmed": "Bildirim bekleyen (>300 €)",
+      "issued": "Düzenlenen bildirim"
+    },
+    "columns": {
+      "number": "No",
+      "date": "Tarih",
+      "donor": "Bağışçı",
+      "amount": "Tutar",
+      "method": "Yöntem",
+      "waived": "Aufwandsspende",
+      "confirmation": "Bildirim",
+      "booking": "Muhasebe fişi",
+      "none": "Yok"
+    },
+    "empty": "Kayıt bulunamadı.",
+    "filters": {
+      "q": "Bağış no, bağışçı, referans",
+      "method": "Yöntem",
+      "waived": "Aufwandsspende",
+      "confirmation": "Bildirim durumu",
+      "confirmationNone": "Yok",
+      "confirmationIssued": "Düzenlendi",
+      "confirmationCancelled": "İptal",
+      "over300": "300 € üzeri",
+      "from": "Başlangıç",
+      "to": "Bitiş"
+    },
+    "actions": {
+      "new": "Yeni bağış",
+      "donors": "Bağışçılar",
+      "issue": "Bildirim oluştur",
+      "confirmations": "Bildirimler",
+      "settings": "Ayarlar",
+      "export": "Excel'e aktar",
+      "view": "Görüntüle",
+      "edit": "Düzenle",
+      "cancel": "İptal et"
+    },
+    "year": "Yıl"
+  },
+  "form": {
+    "createTitle": "Yeni bağış",
+    "editTitle": "Bağışı düzenle",
+    "donor": "Bağışçı",
+    "donorNew": "Yeni bağışçı",
+    "donorFromMember": "Üyeden oluştur",
+    "date": "Bağış tarihi (Tag der Zuwendung)",
+    "amount": "Tutar (€)",
+    "amountHint": "300 € ve altındaki bağışlar için resmi bildirim zorunlu değildir (banka dekontu yeterlidir).",
+    "method": {
+      "CASH": "Nakit (Bar)",
+      "BANK_TRANSFER": "Banka havalesi (Überweisung)",
+      "CARD": "Kart (Kartenzahlung)",
+      "PAYPAL": "PayPal",
+      "REIMBURSEMENT_WAIVER": "Aufwandsspende",
+      "OTHER": "Diğer (Sonstige)"
+    },
+    "paypalHint": "Yalnızca derneğe net ulaşan tutarı girin (PayPal komisyonu bağış değildir).",
+    "reference": "Referans",
+    "purposeNote": "Amaç notu",
+    "waived": "Aufwandsspende (gider vazgeçimi)",
+    "waivedNotice": "Aufwandsspende yalnızca, dernek ödemeyi önceden (sözleşme, tüzük veya yönetim kurulu kararıyla) taahhüt ettiyse ve vazgeçme gecikmeden beyan edildiyse geçerlidir.",
+    "claimBasis": "Talep dayanağı (Vorstandsbeschluss vom …)",
+    "waiverDeclaredAt": "Vazgeçim beyan tarihi",
+    "expenseCategory": "Gider kategorisi",
+    "save": "Kaydet",
+    "cancel": "Vazgeç",
+    "toastSaved": "Bağış kaydedildi: {number}",
+    "editBlocked": "İptal edilmiş veya aktif bildirimli bağış düzenlenemez."
+  },
+  "detail": {
+    "title": "Bağış detayı",
+    "fields": {
+      "number": "Bağış No",
+      "date": "Tarih",
+      "donor": "Bağışçı",
+      "amount": "Tutar",
+      "method": "Yöntem",
+      "reference": "Referans",
+      "purposeNote": "Amaç notu",
+      "waived": "Aufwandsspende",
+      "claimBasis": "Talep dayanağı",
+      "waiverDeclaredAt": "Beyan tarihi",
+      "booking": "Gelir fişi",
+      "waiverBooking": "Gider fişi",
+      "confirmation": "Bildirim",
+      "status": "Durum",
+      "createdBy": "Oluşturan"
+    },
+    "active": "Aktif",
+    "reversed": "İptal edildi",
+    "reverseInfo": "İptal: {date} — {reason}",
+    "cancelTitle": "Bağışı iptal et",
+    "cancelReason": "İptal nedeni (5-300 karakter)",
+    "cancelHint": "Muhasebe fişleri ters kayıt edilir; iptal edilmiş bağış üstü çizili görünür ve istatistiklerden hariç tutulur.",
+    "toastCancelled": "Bağış iptal edildi.",
+    "issue": "Bildirim oluştur"
+  },
+  "donors": {
+    "title": "Bağışçılar (Spender)",
+    "columns": {
+      "number": "SP-no",
+      "name": "Ad / Kuruluş",
+      "city": "Şehir",
+      "count": "Bağış sayısı",
+      "total": "Toplam",
+      "status": "Durum"
+    },
+    "empty": "Bağışçı yok.",
+    "form": {
+      "createTitle": "Yeni bağışçı",
+      "editTitle": "Bağışçıyı düzenle",
+      "type": "Tür",
+      "typePERSON": "Kişi (Person)",
+      "typeORGANIZATION": "Kuruluş (Organisation)",
+      "firstName": "Ad",
+      "lastName": "Soyad",
+      "organizationName": "Kuruluş adı",
+      "street": "Straße",
+      "postalCode": "PLZ",
+      "city": "Şehir",
+      "country": "Ülke",
+      "email": "E-posta",
+      "phone": "Telefon",
+      "note": "Not",
+      "fromMember": "Üyeden bağışçı oluştur",
+      "fromMemberHint": "Üyenin adı ve adresi bir kez kopyalanır; üye kaydıyla canlı bağlantı kurulmaz.",
+      "save": "Kaydet",
+      "cancel": "Vazgeç",
+      "toastSaved": "Bağışçı kaydedildi: {number}"
+    },
+    "detail": {
+      "anonymize": "Anonimleştir",
+      "anonymizeTitle": "Bağışçıyı anonimleştir",
+      "anonymizeHint": "Ad, adres, iletişim ve not silinir; bağışçı numarası ve bağış kayıtları kalır. Bildirim nüshaları saklama süresi içindeyse engellenir. Onay için bağışçı numarasını yazın.",
+      "anonymizeConfirm": "Bağışçı numarası (örn. SP-0007)",
+      "anonymizedMark": "Anonimleştirilmiş",
+      "deactivate": "Pasifleştir",
+      "activate": "Etkinleştir",
+      "toastAnonymized": "Bağışçı anonimleştirildi."
+    }
+  },
+  "confirmations": {
+    "title": "Bildirimler (Zuwendungsbestätigungen)",
+    "columns": {
+      "number": "ZB-no",
+      "date": "Tarih",
+      "kind": "Tür",
+      "recipient": "Alıcı",
+      "total": "Tutar",
+      "status": "Durum",
+      "warning": "Uyarı"
+    },
+    "kind": {
+      "SINGLE": "Einzel (Tek)",
+      "COLLECTIVE": "Sammel (Toplu)"
+    },
+    "content": {
+      "DONATION": "Bağış",
+      "MEMBERSHIP_FEE": "Aidat"
+    },
+    "status": {
+      "ISSUED": "Düzenlendi",
+      "CANCELLED": "İptal edildi"
+    },
+    "voidedWarning": "Bu bildirimdeki bir ödeme iptal edilmiş ({receipt}). Bildirimi iptal edip yenisini oluşturun.",
+    "empty": "Bildirim yok.",
+    "actions": {
+      "view": "Görüntüle",
+      "pdf": "PDF",
+      "cancel": "İptal et",
+      "batchPdf": "Seçilenleri tek PDF'te indir",
+      "export": "Excel (Zuwendungsregister)",
+      "replace": "Yerine yenisini oluştur"
+    },
+    "cancelTitle": "Bildirimi iptal et",
+    "cancelReason": "İptal nedeni (5-300 karakter)",
+    "cancelHint": "Depolanan PDF değişmez; ögeler yeniden kullanılabilir hâle gelir. Yerine yeni bildirim oluşturabilirsiniz.",
+    "detail": {
+      "title": "Bildirim detayı",
+      "cancelledBanner": "İPTAL EDİLDİ",
+      "fields": {
+        "number": "ZB-no",
+        "issuedAt": "Tarih",
+        "recipient": "Alıcı",
+        "period": "Dönem",
+        "total": "Toplam",
+        "words": "Yazıyla",
+        "waived": "Aufwandsspende",
+        "templateVersion": "Şablon sürümü",
+        "items": "Ögeler",
+        "retention": "Nüsha saklama süresi bitişi"
+      }
+    },
+    "issue": {
+      "title": "Bildirim oluştur (Zuwendungsbestätigung)",
+      "step1": "1. Tür",
+      "typeSingle": "Tek bağış",
+      "typeCollective": "Bağışçıya toplu",
+      "typeFee": "Üyelik aidatı",
+      "typeBatch": "Yıllık toplu üretim",
+      "step2": "2. Adaylar",
+      "step3": "3. Önizleme",
+      "donor": "Bağışçı",
+      "member": "Üye",
+      "year": "Yıl",
+      "period": "Dönem",
+      "excludeSmall": "300 € altı bağışları hariç tut",
+      "total": "Toplam",
+      "readiness": "Hazır olma kontrolü",
+      "issue": "Oluştur",
+      "toastIssued": "Bildirim düzenlendi: {number}",
+      "candidatesEmpty": "Bildirilebilir kayıt yok.",
+      "batchRun": "Toplu üretimi çalıştır",
+      "batchResult": "{ok} başarılı, {failed} başarısız"
+    }
+  },
+  "settings": {
+    "title": "Bağış ayarları (Bildirim üretimi)",
+    "readiness": "Hazır olma kontrolü",
+    "preview": "Şablon önizlemeleri (MUSTER)",
+    "previewSingleDonation": "Tek bağış",
+    "previewCollectiveDonation": "Toplu bağış (Sammelbestätigung + Anlage)",
+    "previewSingleFee": "Tek aidat",
+    "previewCollectiveFee": "Toplu aidat",
+    "bmflink": "BMF amtliche Muster (Formularcenter)",
+    "bmflinkHref": "https://www.bundesfinanzministerium.de/Formularcenter",
+    "confirmLabel": "Preview'deki metni BMF'nin resmi örneğiyle karşılaştırdım; derneğimizin durumuna uygun",
+    "confirmButton": "Metni onayla",
+    "toastConfirmed": "Şablon metni onaylandı.",
+    "confirmedInfo": "Onaylayan: {label} — {date} — sürüm {version}",
+    "feeDeductibleInfo": "Aidat indirilebilirliği (membershipFeesDeductible): {value}",
+    "feeDeductibleLink": "Dernek Bilgileri sayfasında değiştir",
+    "validityDays": "{days} gün kaldı",
+    "validityExpired": "Muafiyet belgesi süresi dolmuş",
+    "validityWarn": "90 günden az kaldı — yenileme planlayın"
+  }
+}

@@ -9,7 +9,7 @@ export const moduleConfig: ModuleConfig = {
   description: "Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri.",
   category: "CORE",
   isProtected: true,
-  hasSchema: false, // User modeli auth.prisma içinde barınır
+  hasSchema: true,
   nav: [
     {
       href: "/ayarlar/kullanicilar",

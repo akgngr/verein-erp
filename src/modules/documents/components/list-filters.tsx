@@ -3,6 +3,7 @@
 import { Switch, Tab, Tabs } from "@heroui/react";
 import { AlertCircle, UserCheck } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 
 import { DateRangeFilter } from "@/shared/components/data-table/date-range-filter";
 import { useListQueryState } from "@/shared/components/data-table/use-list-query-state";
@@ -13,13 +14,14 @@ import { cn } from "@/shared/utils";
  * Tablo üst satırının sağında yer alır.
  */
 export function DirectionTabs() {
+  const t = useTranslations("documents.filter");
   const { setParams } = useListQueryState();
   const searchParams = useSearchParams();
   const direction = searchParams.get("filter.direction") ?? "all";
 
   return (
     <Tabs
-      aria-label="Yön filtresi"
+      aria-label={t("directionAria")}
       size="sm"
       selectedKey={direction}
       onSelectionChange={(key) =>
@@ -34,9 +36,9 @@ export function DirectionTabs() {
         tab: "h-7 text-small font-medium px-3",
       }}
     >
-      <Tab key="all" title="Tümü" />
-      <Tab key="INCOMING" title="Gelen" />
-      <Tab key="OUTGOING" title="Giden" />
+      <Tab key="all" title={t("all")} />
+      <Tab key="INCOMING" title={t("incoming")} />
+      <Tab key="OUTGOING" title={t("outgoing")} />
     </Tabs>
   );
 }
@@ -46,13 +48,15 @@ export function DirectionTabs() {
  * Tablo alt satırının en solunda yer alır.
  */
 export function DocumentDateFilter() {
-  return <DateRangeFilter label="Kayıt Tarihi" idPrefix="doc-date" />;
+  const t = useTranslations("documents.filter");
+  return <DateRangeFilter label={t("dateRange")} idPrefix="doc-date" />;
 }
 
 /**
  * Filtreler Popover'ı içinde gösterilecek hızlı switch filtreleri (Bana atananlar ve Süresi geçmişler).
  */
 export function DocumentQuickFilters() {
+  const t = useTranslations("documents.filter");
   const { setParams } = useListQueryState();
   const searchParams = useSearchParams();
 
@@ -62,7 +66,7 @@ export function DocumentQuickFilters() {
   return (
     <div className="flex flex-col gap-2">
       <span className="text-[11px] font-semibold text-default-500 uppercase tracking-wider">
-        Özel Filtreler
+        {t("filters")}
       </span>
 
       {/* Bana Atananlar Switch Kartı */}
@@ -94,16 +98,13 @@ export function DocumentQuickFilters() {
             <UserCheck className="h-4 w-4" />
           </div>
           <div className="flex flex-col text-left">
-            <span className="text-small font-medium text-foreground">Bana atananlar</span>
-            <span className="text-[11px] text-default-400">
-              Yalnızca sizin sorumlu olduğunuz evraklar
-            </span>
+            <span className="text-small font-medium text-foreground">{t("mine")}</span>
           </div>
         </div>
         <Switch
           id="doc-filter-mine"
           size="sm"
-          aria-label="Bana atananlar"
+          aria-label={t("mine")}
           isSelected={mine}
           onValueChange={(val) =>
             setParams({ "filter.mine": val ? "1" : null }, { resetPage: true })
@@ -140,17 +141,13 @@ export function DocumentQuickFilters() {
             <AlertCircle className="h-4 w-4" />
           </div>
           <div className="flex flex-col text-left">
-            <span className="text-small font-medium text-foreground">Süresi geçmişler</span>
-            <span className="text-[11px] text-default-400">
-              İşlem süresi veya vadesi dolmuş kayıtlar
-            </span>
+            <span className="text-small font-medium text-foreground">{t("overdue")}</span>
           </div>
         </div>
         <Switch
           id="doc-filter-overdue"
           size="sm"
-          color="danger"
-          aria-label="Süresi geçmişler"
+          aria-label={t("overdue")}
           isSelected={overdue}
           onValueChange={(val) =>
             setParams({ "filter.overdue": val ? "1" : null }, { resetPage: true })
@@ -159,9 +156,4 @@ export function DocumentQuickFilters() {
       </div>
     </div>
   );
-}
-
-/** Geriye dönük uyumluluk için ListFilters */
-export function ListFilters() {
-  return <DocumentDateFilter />;
 }

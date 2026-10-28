@@ -1,4 +1,5 @@
 import { Download, FolderTree, Inbox, Send } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, listActiveUserOptions, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
@@ -35,6 +36,7 @@ export async function DocumentListView({
     throw error;
   }
 
+  const t = await getTranslations("documents");
   const raw = await searchParams;
   const params = parseListParams(raw, {
     sortableFields: DOCUMENT_SORTABLE_FIELDS,
@@ -83,17 +85,17 @@ export async function DocumentListView({
   return (
     <div>
       <PageHeader
-        title="Evrak Kayıt"
-        description="Gelen ve giden evrakların kaydı, numaralandırılması ve takibi."
+        title={t("pageTitle")}
+        description={t("pageDescription")}
         actions={
           <>
             {canCreate ? (
               <>
                 <LinkButton href="/evrak/yeni?yon=gelen" startIcon={<Inbox className="h-4 w-4" />}>
-                  Yeni gelen evrak
+                  {t("newIncoming")}
                 </LinkButton>
                 <LinkButton href="/evrak/yeni?yon=giden" startIcon={<Send className="h-4 w-4" />}>
-                  Yeni giden evrak
+                  {t("newOutgoing")}
                 </LinkButton>
               </>
             ) : null}
@@ -103,7 +105,7 @@ export async function DocumentListView({
               variant="bordered"
               startIcon={<Download className="h-4 w-4" />}
             >
-              Excel&apos;e aktar
+              {t("exportExcel")}
             </LinkButton>
             {canSeeCategories ? (
               <LinkButton
@@ -112,7 +114,7 @@ export async function DocumentListView({
                 variant="light"
                 startIcon={<FolderTree className="h-4 w-4" />}
               >
-                Kategoriler
+                {t("categoriesButton")}
               </LinkButton>
             ) : null}
           </>
@@ -133,9 +135,9 @@ export async function DocumentListView({
         dateFilter={<DocumentDateFilter />}
         filterExtra={<DocumentQuickFilters />}
         filters={[
-          { key: "status", label: "Durum", options: [...STATUS_FILTER_OPTIONS] },
-          { key: "categoryId", label: "Kategori", options: categories.map((c) => ({ value: c.id, label: c.label })) },
-          { key: "assigneeId", label: "Sorumlu", options: assignees.map((a) => ({ value: a.id, label: a.label })) },
+          { key: "status", label: t("filter.status"), options: [...STATUS_FILTER_OPTIONS] },
+          { key: "categoryId", label: t("filter.category"), options: categories.map((c) => ({ value: c.id, label: c.label })) },
+          { key: "assigneeId", label: t("filter.assignee"), options: assignees.map((a) => ({ value: a.id, label: a.label })) },
         ]}
         canUpdate={can(user.role, documentsPermissions, "update")}
         canDelete={canDelete}

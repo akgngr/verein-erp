@@ -1,0 +1,8 @@
+{
+  "loginTitle": "Anmelden",
+  "email": "E-Mail",
+  "password": "Passwort",
+  "loginButton": "Anmelden",
+  "logout": "Abmelden",
+  "mustChangePasswordBanner": "Passwort muss aktualisiert werden"
+}

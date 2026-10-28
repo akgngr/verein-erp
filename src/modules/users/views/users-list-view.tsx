@@ -1,4 +1,5 @@
 import { Plus } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 import { requirePermission, ForbiddenError } from "@/modules/auth/server";
 import type { SessionUser } from "@/modules/auth";
@@ -26,6 +27,7 @@ export async function UsersListView({
     throw error;
   }
 
+  const t = await getTranslations("users");
   const params = parseListParams(await searchParams, {
     sortableFields: ["name", "email", "role", "isActive", "lastLoginAt", "createdAt"],
     defaultSort: "name",
@@ -39,12 +41,12 @@ export async function UsersListView({
   return (
     <div>
       <PageHeader
-        title="Kullanıcılar"
-        description="Sistem kullanıcıları, rolleri ve durumları."
+        title={t("pageTitle")}
+        description={t("pageDescription")}
         actions={
           canCreate ? (
             <LinkButton href="/ayarlar/kullanicilar/yeni" startIcon={<Plus className="h-4 w-4" />}>
-              Yeni kullanıcı
+              {t("newUser")}
             </LinkButton>
           ) : undefined
         }

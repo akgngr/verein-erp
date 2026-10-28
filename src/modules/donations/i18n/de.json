@@ -1,0 +1,244 @@
+{
+  "list": {
+    "title": "Spenden",
+    "stats": {
+      "total": "Spendensumme",
+      "count": "Anzahl Spenden",
+      "unconfirmed": "Bestätigung offen (>300 €)",
+      "issued": "Ausgestellte Bestätigungen"
+    },
+    "columns": {
+      "number": "Nr.",
+      "date": "Datum",
+      "donor": "Spender/in",
+      "amount": "Betrag",
+      "method": "Art",
+      "waived": "Aufwandsspende",
+      "confirmation": "Bestätigung",
+      "booking": "Buchung",
+      "none": "Keine"
+    },
+    "empty": "Keine Einträge gefunden.",
+    "filters": {
+      "q": "Spendennr., Spender/in, Referenz",
+      "method": "Art",
+      "waived": "Aufwandsspende",
+      "confirmation": "Bestätigungsstatus",
+      "confirmationNone": "Keine",
+      "confirmationIssued": "Ausgestellt",
+      "confirmationCancelled": "Storniert",
+      "over300": "Über 300 €",
+      "from": "Von",
+      "to": "Bis"
+    },
+    "actions": {
+      "new": "Neue Spende",
+      "donors": "Spender/innen",
+      "issue": "Bestätigung erstellen",
+      "confirmations": "Bestätigungen",
+      "settings": "Einstellungen",
+      "export": "Excel-Export",
+      "view": "Anzeigen",
+      "edit": "Bearbeiten",
+      "cancel": "Stornieren"
+    },
+    "year": "Jahr"
+  },
+  "form": {
+    "createTitle": "Neue Spende",
+    "editTitle": "Spende bearbeiten",
+    "donor": "Spender/in",
+    "donorNew": "Neue/r Spender/in",
+    "donorFromMember": "Aus Mitglied anlegen",
+    "date": "Datum der Zuwendung",
+    "amount": "Betrag (€)",
+    "amountHint": "Bis 300 € ist keine formelle Bestätigung erforderlich (Kontoauszug genügt).",
+    "method": {
+      "CASH": "Bar",
+      "BANK_TRANSFER": "Überweisung",
+      "CARD": "Kartenzahlung",
+      "PAYPAL": "PayPal",
+      "REIMBURSEMENT_WAIVER": "Aufwandsspende",
+      "OTHER": "Sonstige"
+    },
+    "paypalHint": "Nur den beim Verein netto eingehenden Betrag eingeben (PayPal-Gebühr ist keine Spende).",
+    "reference": "Referenz",
+    "purposeNote": "Verwendungshinweis",
+    "waived": "Aufwandsspende (Verzicht auf Erstattung)",
+    "waivedNotice": "Eine Aufwandsspende ist nur zulässig, wenn der Verein die Erstattung bereits (durch Vertrag, Satzung oder Vorstandsbeschluss) geschuldet hat und der Verzicht zeitnah erklärt wurde.",
+    "claimBasis": "Grundlage des Erstattungsanspruchs (Vorstandsbeschluss vom …)",
+    "waiverDeclaredAt": "Erklärungsdatum des Verzichts",
+    "expenseCategory": "Aufwandskategorie",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "toastSaved": "Spende erfasst: {number}",
+    "editBlocked": "Stornierte oder mit Bestätigung verknüpfte Spenden können nicht bearbeitet werden."
+  },
+  "detail": {
+    "title": "Spendendetail",
+    "fields": {
+      "number": "Spendennr.",
+      "date": "Datum",
+      "donor": "Spender/in",
+      "amount": "Betrag",
+      "method": "Zahlungsart",
+      "reference": "Referenz",
+      "purposeNote": "Verwendungshinweis",
+      "waived": "Aufwandsspende",
+      "claimBasis": "Grundlage",
+      "waiverDeclaredAt": "Erklärt am",
+      "booking": "Einnahmebuchung",
+      "waiverBooking": "Ausgabenbuchung",
+      "confirmation": "Bestätigung",
+      "status": "Status",
+      "createdBy": "Erstellt von"
+    },
+    "active": "Aktiv",
+    "reversed": "Storniert",
+    "reverseInfo": "Storniert: {date} — {reason}",
+    "cancelTitle": "Spende stornieren",
+    "cancelReason": "Grund (5-300 Zeichen)",
+    "cancelHint": "Die Buchungen werden storniert; stornierte Spenden bleiben durchgestrichen sichtbar und zählen nicht in Statistiken.",
+    "toastCancelled": "Spende storniert.",
+    "issue": "Bestätigung erstellen"
+  },
+  "donors": {
+    "title": "Spender/innen",
+    "columns": {
+      "number": "SP-Nr.",
+      "name": "Name / Organisation",
+      "city": "Ort",
+      "count": "Spenden",
+      "total": "Summe",
+      "status": "Status"
+    },
+    "empty": "Keine Spender/innen.",
+    "form": {
+      "createTitle": "Neue/r Spender/in",
+      "editTitle": "Spender/in bearbeiten",
+      "type": "Art",
+      "typePERSON": "Person",
+      "typeORGANIZATION": "Organisation",
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "organizationName": "Organisation",
+      "street": "Straße",
+      "postalCode": "PLZ",
+      "city": "Ort",
+      "country": "Land",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "note": "Notiz",
+      "fromMember": "Aus Mitglied anlegen",
+      "fromMemberHint": "Name und Adresse des Mitglieds werden einmalig kopiert; keine Live-Verknüpfung.",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "toastSaved": "Spender/in gespeichert: {number}"
+    },
+    "detail": {
+      "anonymize": "Anonymisieren",
+      "anonymizeTitle": "Spender/in anonymisieren",
+      "anonymizeHint": "Name, Adresse, Kontaktdaten und Notiz werden gelöscht; Spendernummer und Spenden bleiben. Gesperrt, solange Bestätigungsdoppelte in der Aufbewahrungsfrist sind. Zur Bestätigung die Spendernummer eingeben.",
+      "anonymizeConfirm": "Spendernummer (z. B. SP-0007)",
+      "anonymizedMark": "Anonymisiert",
+      "deactivate": "Deaktivieren",
+      "activate": "Aktivieren",
+      "toastAnonymized": "Spender/in anonymisiert."
+    }
+  },
+  "confirmations": {
+    "title": "Zuwendungsbestätigungen",
+    "columns": {
+      "number": "ZB-Nr.",
+      "date": "Datum",
+      "kind": "Art",
+      "recipient": "Empfänger/in",
+      "total": "Betrag",
+      "status": "Status",
+      "warning": "Warnung"
+    },
+    "kind": {
+      "SINGLE": "Einzel",
+      "COLLECTIVE": "Sammel"
+    },
+    "content": {
+      "DONATION": "Spende",
+      "MEMBERSHIP_FEE": "Mitgliedsbeitrag"
+    },
+    "status": {
+      "ISSUED": "Ausgestellt",
+      "CANCELLED": "Storniert"
+    },
+    "voidedWarning": "Eine Zahlung in dieser Bestätigung wurde storniert ({receipt}). Bitte Bestätigung stornieren und neu erstellen.",
+    "empty": "Keine Bestätigungen.",
+    "actions": {
+      "view": "Anzeigen",
+      "pdf": "PDF",
+      "cancel": "Stornieren",
+      "batchPdf": "Auswahl als ein PDF herunterladen",
+      "export": "Excel (Zuwendungsregister)",
+      "replace": "Ersatzbestätigung erstellen"
+    },
+    "cancelTitle": "Bestätigung stornieren",
+    "cancelReason": "Grund (5-300 Zeichen)",
+    "cancelHint": "Das gespeicherte PDF bleibt unverändert; die Posten werden wieder freigegeben. Eine Ersatzbestätigung kann erstellt werden.",
+    "detail": {
+      "title": "Bestätigungsdetail",
+      "cancelledBanner": "STORNIERT",
+      "fields": {
+        "number": "ZB-Nr.",
+        "issuedAt": "Datum",
+        "recipient": "Empfänger/in",
+        "period": "Zeitraum",
+        "total": "Gesamtsumme",
+        "words": "In Buchstaben",
+        "waived": "Aufwandsspende",
+        "templateVersion": "Musterversion",
+        "items": "Posten",
+        "retention": "Ende der Aufbewahrungsfrist"
+      }
+    },
+    "issue": {
+      "title": "Zuwendungsbestätigung erstellen",
+      "step1": "1. Art",
+      "typeSingle": "Einzelne Spende",
+      "typeCollective": "Sammelbestätigung für Spender/in",
+      "typeFee": "Mitgliedsbeitrag",
+      "typeBatch": "Jahres-Sammelproduktion",
+      "step2": "2. Kandidaten",
+      "step3": "3. Vorschau",
+      "donor": "Spender/in",
+      "member": "Mitglied",
+      "year": "Jahr",
+      "period": "Zeitraum",
+      "excludeSmall": "Spenden unter 300 € ausschließen",
+      "total": "Summe",
+      "readiness": "Bereitschaftsprüfung",
+      "issue": "Erstellen",
+      "toastIssued": "Bestätigung ausgestellt: {number}",
+      "candidatesEmpty": "Keine bestätigungsfähigen Einträge.",
+      "batchRun": "Sammelproduktion starten",
+      "batchResult": "{ok} erfolgreich, {failed} fehlgeschlagen"
+    }
+  },
+  "settings": {
+    "title": "Spenden-Einstellungen (Bestätigungsproduktion)",
+    "readiness": "Bereitschaftsprüfung",
+    "preview": "Mustervorschauen (MUSTER)",
+    "previewSingleDonation": "Einzelne Spende",
+    "previewCollectiveDonation": "Sammelbestätigung mit Anlage",
+    "previewSingleFee": "Einzelner Mitgliedsbeitrag",
+    "previewCollectiveFee": "Mitgliedsbeiträge (Sammel)",
+    "bmflink": "BMF amtliche Muster (Formularcenter)",
+    "bmflinkHref": "https://www.bundesfinanzministerium.de/Formularcenter",
+    "confirmLabel": "Ich habe den Mustertext mit dem offiziellen BMF-Muster verglichen; er passt zu unserem Verein",
+    "confirmButton": "Text bestätigen",
+    "toastConfirmed": "Mustertext bestätigt.",
+    "confirmedInfo": "Bestätigt von: {label} — {date} — Version {version}",
+    "feeDeductibleInfo": "Mitgliedsbeiträge abziehbar (membershipFeesDeductible): {value}",
+    "feeDeductibleLink": "Auf der Seite Vereinsdaten ändern",
+    "validityDays": "{days} Tage verbleiben",
+    "validityExpired": "Die Freistellungsbescheinigung ist abgelaufen",
+    "validityWarn": "Weniger als 90 Tage — Verlängerung planen"
+  }
+}

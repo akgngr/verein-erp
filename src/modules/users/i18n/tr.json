@@ -1,0 +1,10 @@
+{
+  "pageTitle": "Kullanıcılar",
+  "pageDescription": "Sistem kullanıcıları, rolleri ve durumları.",
+  "newUser": "Yeni kullanıcı",
+  "createTitle": "Yeni Kullanıcı",
+  "createDescription": "Sisteme yeni bir kullanıcı ekleyin. Kullanıcı ilk girişte parolasını değiştirmeye zorlanır.",
+  "editTitle": "Kullanıcıyı Düzenle",
+  "notFoundTitle": "Kullanıcı bulunamadı",
+  "notFoundDescription": "Kayıt silinmiş olabilir."
+}

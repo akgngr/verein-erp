@@ -1,0 +1,10 @@
+{
+  "pageTitle": "Benutzer",
+  "pageDescription": "Systembenutzer, Rollen und Status.",
+  "newUser": "Neuer Benutzer",
+  "createTitle": "Neuer Benutzer",
+  "createDescription": "Fügen Sie dem System einen neuen Benutzer hinzu. Der Benutzer muss beim ersten Anmelden sein Passwort ändern.",
+  "editTitle": "Benutzer bearbeiten",
+  "notFoundTitle": "Benutzer nicht gefunden",
+  "notFoundDescription": "Der Datensatz könnte gelöscht worden sein."
+}

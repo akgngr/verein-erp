@@ -1,4 +1,5 @@
 import { CalendarPlus, ListTodo } from "lucide-react";
+import { getTranslations } from "next-intl/server";
 
 import { requirePermission, ForbiddenError } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
@@ -29,6 +30,7 @@ export async function MeetingListView({
     throw error;
   }
 
+  const t = await getTranslations("meetings");
   const raw = await searchParams;
   const params = parseListParams(raw, {
     sortableFields: MEETING_SORTABLE_FIELDS,
@@ -46,8 +48,8 @@ export async function MeetingListView({
   return (
     <div>
       <PageHeader
-        title="Toplantılar"
-        description="Toplantı takvimi, gündem, tutanak ve kararların yönetimi."
+        title={t("pageTitle")}
+        description={t("pageDescription")}
         actions={
           <>
             {canCreate ? (
@@ -56,7 +58,7 @@ export async function MeetingListView({
                 color="primary"
                 startIcon={<CalendarPlus className="h-4 w-4" />}
               >
-                Yeni toplantı
+                {t("newMeeting")}
               </LinkButton>
             ) : null}
             <LinkButton
@@ -65,7 +67,7 @@ export async function MeetingListView({
               variant="bordered"
               startIcon={<ListTodo className="h-4 w-4" />}
             >
-              Görevler
+              {t("tasksButton")}
             </LinkButton>
           </>
         }
@@ -82,8 +84,8 @@ export async function MeetingListView({
         dir={params.dir}
         q={params.q}
         filters={[
-          { key: "type", label: "Tür", options: [...MEETING_TYPE_FILTER_OPTIONS] },
-          { key: "status", label: "Durum", options: [...MEETING_STATUS_FILTER_OPTIONS] },
+          { key: "type", label: t("list.filterType"), options: [...MEETING_TYPE_FILTER_OPTIONS] },
+          { key: "status", label: t("list.filterStatus"), options: [...MEETING_STATUS_FILTER_OPTIONS] },
         ]}
         dateFilter={<MeetingDateFilter />}
         canUpdate={canUpdate}

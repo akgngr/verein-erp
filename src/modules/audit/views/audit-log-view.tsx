@@ -1,3 +1,5 @@
+import { getTranslations } from "next-intl/server";
+
 import { requirePermission, ForbiddenError } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
@@ -20,10 +22,10 @@ export async function AuditLogView({
     throw error;
   }
 
+  const t = await getTranslations("audit");
   const params = parseListParams(await searchParams, {
     sortableFields: ["createdAt"],
     defaultSort: "createdAt",
-    // KARAR: denetim kaydında en yeni kayıt varsayılan olarak üstte görünür.
     defaultDir: "desc",
     filterKeys: ["action", "entity"],
   });
@@ -33,8 +35,8 @@ export async function AuditLogView({
   return (
     <div>
       <PageHeader
-        title="Denetim Kaydı"
-        description="Sistemde gerçekleşen kimlik doğrulama ve veri işlemleri."
+        title={t("pageTitle")}
+        description={t("pageDescription")}
       />
       <AuditLogTable
         rows={rows}

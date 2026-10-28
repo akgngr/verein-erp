@@ -3,6 +3,7 @@
 import { Link, addToast } from "@heroui/react";
 import { Eye, Paperclip, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { DataTable } from "@/shared/components/data-table/data-table";
@@ -23,11 +24,6 @@ import { StatusBadge } from "./status-badge";
 
 /**
  * Evrak listesi tablosu (8.1).
- *
- * KARAR: DataTable paylaşılan client bileşeni olduğundan satır aksiyonları
- * (sil onayı) bu sarmalayıcıda yaşar — users modülündeki UsersTable kalıbıyla
- * aynıdır. Satır tıklaması yerine Kayıt No hücresi bağlantıdır; paylaşılan
- * tabloya satır-tıklama davranışı eklenmemiştir (Faz 0 sözleşmesi korunur).
  */
 export function DocumentTable({
   rows,
@@ -61,6 +57,7 @@ export function DocumentTable({
   canDelete: boolean;
 }) {
   const router = useRouter();
+  const t = useTranslations("documents");
   const [deleting, setDeleting] = useState<DocumentRow | null>(null);
 
   const confirmDelete = async () => {
@@ -70,7 +67,10 @@ export function DocumentTable({
       addToast({ title: result.error, color: "danger" });
       return;
     }
-    addToast({ title: `Evrak silindi: ${deleting.registryNumber}`, color: "success" });
+    addToast({
+      title: t("list.deletedToast", { registryNumber: deleting.registryNumber }),
+      color: "success",
+    });
     setDeleting(null);
     router.refresh();
   };
@@ -78,7 +78,7 @@ export function DocumentTable({
   const columns: DataTableColumn<DocumentRow>[] = [
     {
       key: "registryNumber",
-      label: "Kayıt No",
+      label: t("list.registryNumber"),
       sortable: true,
       width: 150,
       render: (row) => (
@@ -89,27 +89,27 @@ export function DocumentTable({
     },
     {
       key: "direction",
-      label: "Yön",
+      label: t("list.direction"),
       width: 90,
       render: (row) => <DirectionBadge direction={row.direction} />,
     },
     {
       key: "documentDate",
-      label: "Evrak Tarihi",
+      label: t("list.documentDate"),
       sortable: true,
       width: 120,
       render: (row) => formatDate(row.documentDate),
     },
     {
       key: "counterparty",
-      label: "Kurum/Kişi",
+      label: t("list.counterparty"),
       sortable: true,
       width: 200,
       render: (row) => <span className="line-clamp-2">{row.counterparty}</span>,
     },
     {
       key: "subject",
-      label: "Konu",
+      label: t("list.subject"),
       sortable: true,
       render: (row) => (
         <span title={row.subject}>
@@ -121,26 +121,26 @@ export function DocumentTable({
     },
     {
       key: "categoryName",
-      label: "Kategori",
+      label: t("list.category"),
       width: 130,
       render: (row) => row.categoryName ?? "-",
     },
     {
       key: "status",
-      label: "Durum",
+      label: t("list.status"),
       sortable: true,
       width: 120,
       render: (row) => <StatusBadge status={row.status} />,
     },
     {
       key: "assigneeLabel",
-      label: "Sorumlu",
+      label: t("list.assignee"),
       width: 150,
       render: (row) => row.assigneeLabel ?? "-",
     },
     {
       key: "dueDate",
-      label: "Son İşlem Tarihi",
+      label: t("list.dueDate"),
       sortable: true,
       width: 150,
       render: (row) =>
@@ -154,7 +154,7 @@ export function DocumentTable({
     },
     {
       key: "fileCount",
-      label: "Dosya",
+      label: t("list.files"),
       align: "center",
       width: 80,
       render: (row) => (
@@ -167,12 +167,12 @@ export function DocumentTable({
   ];
 
   const rowActions = (row: DocumentRow): DataTableRowAction[] => [
-    { key: "view", label: "Görüntüle", icon: <Eye className="h-4 w-4" />, href: `/evrak/${row.id}` },
+    { key: "view", label: t("list.view"), icon: <Eye className="h-4 w-4" />, href: `/evrak/${row.id}` },
     ...(canUpdate
       ? [
           {
             key: "edit",
-            label: "Düzenle",
+            label: t("list.edit"),
             icon: <Pencil className="h-4 w-4" />,
             href: `/evrak/${row.id}/duzenle`,
           },
@@ -182,7 +182,7 @@ export function DocumentTable({
       ? [
           {
             key: "delete",
-            label: "Sil",
+            label: t("list.delete"),
             icon: <Trash2 className="h-4 w-4" />,
             color: "danger" as const,
             onPress: () => setDeleting(row),
@@ -194,7 +194,7 @@ export function DocumentTable({
   return (
     <>
       <DataTable<DocumentRow>
-        ariaLabel="Evrak kayıtları"
+        ariaLabel={t("list.aria")}
         columns={columns}
         rows={rows}
         total={total}
@@ -208,17 +208,17 @@ export function DocumentTable({
         dateFilter={dateFilter}
         filterExtra={filterExtra}
         toolbarExtra={toolbarExtra}
-        searchPlaceholder="Kayıt no, kurum/kişi, konu ara…"
+        searchPlaceholder={t("filter.search")}
         rowActions={rowActions}
-        emptyMessage="Kayıt bulunamadı."
+        emptyMessage={t("list.empty")}
       />
 
       <ConfirmDialog
         isOpen={deleting !== null}
         onOpenChange={(open) => !open && setDeleting(null)}
-        title="Evrağı sil"
-        message={`"${deleting?.registryNumber ?? ""}" numaralı evrak kaydı silinecek. Silinen evrak listelerde, aramada, istatistikte ve Excel dışa aktarımda görünmez; kayıt numarası yeniden kullanılmaz. Onaylıyor musunuz?`}
-        confirmLabel="Sil"
+        title={t("list.deleteTitle")}
+        message={t("list.deleteMessage", { registryNumber: deleting?.registryNumber ?? "" })}
+        confirmLabel={t("list.delete")}
         confirmColor="danger"
         onConfirm={confirmDelete}
       />
