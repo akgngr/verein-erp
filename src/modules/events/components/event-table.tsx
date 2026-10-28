@@ -1,9 +1,9 @@
 "use client"
 
-import Link from "next/link"
-import { useRouter, useSearchParams } from "next/navigation"
 import { useState } from "react"
-import { Button } from "@heroui/react"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { Chip, addToast } from "@heroui/react"
 import {
   Calendar,
   Clock,
@@ -11,10 +11,15 @@ import {
   Video,
   Users,
   Eye,
-  Edit2,
+  Pencil,
   Trash2,
 } from "lucide-react"
-import { DataTablePagination } from "@/shared/components/data-table"
+import { DataTable } from "@/shared/components/data-table/data-table"
+import type {
+  DataTableColumn,
+  DataTableFilter,
+} from "@/shared/components/data-table/types"
+import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog"
 import type { EventRow } from "../types"
 import { EVENT_TYPES, EVENT_STATUSES } from "../constants"
 import { deleteEventAction } from "../actions/event-actions"
@@ -26,7 +31,9 @@ interface EventTableProps {
   total: number
   page: number
   pageSize: number
-  totalPages: number
+  sort?: string
+  dir?: "asc" | "desc"
+  q?: string
 }
 
 export function EventTable({
@@ -34,194 +41,206 @@ export function EventTable({
   total,
   page,
   pageSize,
-  totalPages,
+  sort,
+  dir,
+  q,
 }: EventTableProps) {
   const router = useRouter()
-  const searchParams = useSearchParams()
   const [editingEvent, setEditingEvent] = useState<EventRow | null>(null)
-  const [deletingId, setDeletingId] = useState<string | null>(null)
+  const [deletingEvent, setDeletingEvent] = useState<EventRow | null>(null)
 
-  const handlePageChange = (newPage: number) => {
-    const params = new URLSearchParams(searchParams.toString())
-    params.set("page", String(newPage))
-    router.push(`/events?${params.toString()}`)
-  }
-
-  const handlePageSizeChange = (newPageSize: number) => {
-    const params = new URLSearchParams(searchParams.toString())
-    params.set("pageSize", String(newPageSize))
-    params.set("page", "1")
-    router.push(`/events?${params.toString()}`)
-  }
-
-  const handleDelete = async (id: string, title: string) => {
-    if (
-      !window.confirm(
-        `"${title}" başlıklı etkinliği silmek istediğinize emin misiniz?`,
-      )
-    ) {
-      return
-    }
-
-    setDeletingId(id)
-    try {
-      await deleteEventAction(id)
-    } finally {
-      setDeletingId(null)
+  const handleDeleteConfirm = async () => {
+    if (!deletingEvent) return
+    const res = await deleteEventAction(deletingEvent.id)
+    if (res.success) {
+      addToast({
+        title: `"${deletingEvent.title}" etkinliği silindi.`,
+        color: "success",
+      })
+      setDeletingEvent(null)
+      router.refresh()
+    } else {
+      addToast({
+        title: res.error ?? "Etkinlik silinirken bir hata oluştu.",
+        color: "danger",
+      })
     }
   }
+
+  const columns: DataTableColumn<EventRow>[] = [
+    {
+      key: "title",
+      label: "Etkinlik",
+      sortable: true,
+      render: (row) => (
+        <div className="flex flex-col py-1">
+          <Link
+            href={`/events?detail=${row.id}`}
+            className="font-semibold text-small text-foreground hover:text-primary transition-colors"
+          >
+            {row.title}
+          </Link>
+          {row.description && (
+            <span className="text-tiny text-default-400 line-clamp-1 max-w-sm mt-0.5">
+              {row.description}
+            </span>
+          )}
+        </div>
+      ),
+    },
+    {
+      key: "type",
+      label: "Tür",
+      sortable: true,
+      width: 140,
+      render: (row) => {
+        const typeMeta = EVENT_TYPES.find((t) => t.value === row.type)
+        return (
+          <Chip size="sm" variant="flat" color="default">
+            {typeMeta?.labelTr ?? row.type}
+          </Chip>
+        )
+      },
+    },
+    {
+      key: "status",
+      label: "Durum",
+      sortable: true,
+      width: 140,
+      render: (row) => {
+        const statusColorMap: Record<
+          string,
+          "success" | "warning" | "default" | "danger"
+        > = {
+          PUBLISHED: "success",
+          DRAFT: "warning",
+          COMPLETED: "default",
+          CANCELLED: "danger",
+        }
+        const statusMeta = EVENT_STATUSES.find((s) => s.value === row.status)
+        return (
+          <Chip
+            size="sm"
+            variant="dot"
+            color={statusColorMap[row.status] ?? "default"}
+          >
+            {statusMeta?.labelTr ?? row.status}
+          </Chip>
+        )
+      },
+    },
+    {
+      key: "startDate",
+      label: "Tarih & Zaman",
+      sortable: true,
+      width: 180,
+      render: (row) => (
+        <div className="flex flex-col text-small">
+          <div className="flex items-center gap-1.5 font-medium">
+            <Calendar className="h-3.5 w-3.5 text-default-400" />
+            <span>{formatDateTimeTr(row.startDate)}</span>
+          </div>
+          {row.isPast && (
+            <span className="text-tiny text-default-400 flex items-center gap-1 mt-0.5">
+              <Clock className="h-3 w-3" /> Geçmiş etkinlik
+            </span>
+          )}
+        </div>
+      ),
+    },
+    {
+      key: "location",
+      label: "Konum",
+      render: (row) =>
+        row.isOnline ? (
+          <div className="flex items-center gap-1.5 text-primary text-small">
+            <Video className="h-3.5 w-3.5" />
+            <span>Online Etkinlik</span>
+          </div>
+        ) : row.location ? (
+          <div className="flex items-center gap-1.5 text-default-600 max-w-[200px] truncate text-small">
+            <MapPin className="h-3.5 w-3.5 text-default-400 shrink-0" />
+            <span className="truncate">{row.location}</span>
+          </div>
+        ) : (
+          <span className="text-default-400 text-small italic">Belirtilmedi</span>
+        ),
+    },
+    {
+      key: "capacity",
+      label: "Katılımcı / Kontenjan",
+      width: 160,
+      render: (row) => (
+        <div className="flex items-center gap-2 text-small">
+          <Users className="h-3.5 w-3.5 text-default-400" />
+          <span className="font-semibold">{row.registeredCount}</span>
+          <span className="text-default-400">/</span>
+          <span className="text-default-500">
+            {row.capacity ? `${row.capacity} kişi` : "Sınırsız"}
+          </span>
+        </div>
+      ),
+    },
+  ]
+
+  const filters: DataTableFilter[] = [
+    {
+      key: "type",
+      label: "Tür",
+      options: EVENT_TYPES.map((t) => ({ value: t.value, label: t.labelTr })),
+    },
+    {
+      key: "status",
+      label: "Durum",
+      options: EVENT_STATUSES.map((s) => ({ value: s.value, label: s.labelTr })),
+    },
+    {
+      key: "timeFilter",
+      label: "Zaman",
+      options: [
+        { value: "all", label: "Tüm Zamanlar" },
+        { value: "upcoming", label: "Yaklaşanlar" },
+        { value: "past", label: "Geçmiş" },
+      ],
+    },
+  ]
 
   return (
-    <div className="w-full flex flex-col gap-4">
-      <div className="overflow-x-auto rounded-xl border border-divider bg-background shadow-xs">
-        <table className="w-full text-left text-xs text-foreground">
-          <thead className="bg-default-50 text-default-600 font-semibold uppercase tracking-wider text-[11px] border-b border-divider">
-            <tr>
-              <th className="py-3 px-4">Etkinlik</th>
-              <th className="py-3 px-4">Tür & Durum</th>
-              <th className="py-3 px-4">Tarih & Saat</th>
-              <th className="py-3 px-4">Konum</th>
-              <th className="py-3 px-4">Katılımcı / Kontenjan</th>
-              <th className="py-3 px-4 text-right">İşlemler</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-divider font-medium">
-            {items.map((event) => {
-              const typeMeta = EVENT_TYPES.find((t) => t.value === event.type)
-              const statusMeta = EVENT_STATUSES.find(
-                (s) => s.value === event.status,
-              )
-
-              return (
-                <tr
-                  key={event.id}
-                  className="transition-colors hover:bg-default-50/50 group"
-                >
-                  <td className="py-3 px-4">
-                    <div className="flex flex-col">
-                      <Link
-                        href={`/events?detail=${event.id}`}
-                        className="font-semibold text-sm text-foreground hover:text-primary transition-colors inline-block"
-                      >
-                        {event.title}
-                      </Link>
-                      {event.description && (
-                        <span className="text-[11px] text-default-400 line-clamp-1 max-w-xs mt-0.5 font-normal">
-                          {event.description}
-                        </span>
-                      )}
-                    </div>
-                  </td>
-
-                  <td className="py-3 px-4">
-                    <div className="flex flex-wrap items-center gap-1.5">
-                      <span className="inline-flex items-center rounded-md px-2 py-0.5 text-[11px] font-medium bg-default-100 text-default-700 border border-default-200">
-                        {typeMeta?.labelTr ?? event.type}
-                      </span>
-                      <span
-                        className={`inline-flex items-center rounded-md px-2 py-0.5 text-[11px] font-medium border ${
-                          statusMeta?.tailwindClass ??
-                          "bg-default-100 text-default-700 border-default-200"
-                        }`}
-                      >
-                        {statusMeta?.labelTr ?? event.status}
-                      </span>
-                    </div>
-                  </td>
-
-                  <td className="py-3 px-4">
-                    <div className="flex flex-col gap-0.5 text-default-600">
-                      <div className="flex items-center gap-1.5 font-medium">
-                        <Calendar className="h-3.5 w-3.5 text-default-400" />
-                        <span>{formatDateTimeTr(event.startDate)}</span>
-                      </div>
-                      {event.isPast && (
-                        <span className="text-[10px] text-default-400 font-normal flex items-center gap-1">
-                          <Clock className="h-3 w-3" /> Geçmiş etkinlik
-                        </span>
-                      )}
-                    </div>
-                  </td>
-
-                  <td className="py-3 px-4">
-                    {event.isOnline ? (
-                      <div className="flex items-center gap-1.5 text-primary text-xs">
-                        <Video className="h-3.5 w-3.5" />
-                        <span>Online Etkinlik</span>
-                      </div>
-                    ) : event.location ? (
-                      <div className="flex items-center gap-1.5 text-default-600 max-w-[200px] truncate">
-                        <MapPin className="h-3.5 w-3.5 text-default-400 shrink-0" />
-                        <span className="truncate">{event.location}</span>
-                      </div>
-                    ) : (
-                      <span className="text-default-400 italic">
-                        Belirtilmedi
-                      </span>
-                    )}
-                  </td>
-
-                  <td className="py-3 px-4">
-                    <div className="flex items-center gap-2">
-                      <Users className="h-3.5 w-3.5 text-default-400" />
-                      <span className="font-semibold">
-                        {event.registeredCount}
-                      </span>
-                      <span className="text-default-400">/</span>
-                      <span className="text-default-500">
-                        {event.capacity ? `${event.capacity} kişi` : "Sınırsız"}
-                      </span>
-                    </div>
-                  </td>
-
-                  <td className="py-3 px-4 text-right">
-                    <div className="flex items-center justify-end gap-1">
-                      <Button
-                        as={Link}
-                        href={`/events?detail=${event.id}`}
-                        size="sm"
-                        variant="light"
-                        isIconOnly
-                        aria-label="Detay"
-                      >
-                        <Eye className="h-4 w-4 text-default-600" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="light"
-                        isIconOnly
-                        aria-label="Düzenle"
-                        onPress={() => setEditingEvent(event)}
-                      >
-                        <Edit2 className="h-4 w-4 text-default-600" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="light"
-                        color="danger"
-                        isIconOnly
-                        aria-label="Sil"
-                        isLoading={deletingId === event.id}
-                        onPress={() => handleDelete(event.id, event.title)}
-                      >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </td>
-                </tr>
-              )
-            })}
-          </tbody>
-        </table>
-      </div>
-
-      <DataTablePagination
+    <>
+      <DataTable<EventRow>
+        columns={columns}
+        rows={items}
+        total={total}
         page={page}
         pageSize={pageSize}
-        total={total}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
-        onPageSizeChange={handlePageSizeChange}
+        sort={sort}
+        dir={dir}
+        q={q}
+        searchPlaceholder="Etkinlik başlığı, açıklama veya konum ara..."
+        filters={filters}
+        rowActions={(row) => [
+          {
+            key: "detail",
+            label: "Detayları Görüntüle",
+            icon: <Eye className="h-4 w-4" />,
+            href: `/events?detail=${row.id}`,
+          },
+          {
+            key: "edit",
+            label: "Düzenle",
+            icon: <Pencil className="h-4 w-4" />,
+            onPress: () => setEditingEvent(row),
+          },
+          {
+            key: "delete",
+            label: "Sil",
+            icon: <Trash2 className="h-4 w-4" />,
+            color: "danger",
+            onPress: () => setDeletingEvent(row),
+          },
+        ]}
+        emptyMessage="Henüz kayıtlı bir etkinlik bulunmuyor."
+        ariaLabel="Etkinlikler tablosu"
       />
 
       {editingEvent && (
@@ -231,6 +250,16 @@ export function EventTable({
           eventToEdit={editingEvent}
         />
       )}
-    </div>
+
+      <ConfirmDialog
+        isOpen={Boolean(deletingEvent)}
+        onOpenChange={(open) => !open && setDeletingEvent(null)}
+        title="Etkinliği Sil"
+        message={`"${deletingEvent?.title}" başlıklı etkinliği ve tüm katılımcı kayıtlarını silmek istediğinize emin misiniz? Bu işlem geri alınamaz.`}
+        confirmLabel="Sil"
+        confirmColor="danger"
+        onConfirm={handleDeleteConfirm}
+      />
+    </>
   )
 }

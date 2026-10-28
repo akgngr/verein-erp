@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useRouter } from "next/navigation"
 import {
   Modal,
   ModalContent,
@@ -11,6 +12,7 @@ import {
   Input,
   Textarea,
   Checkbox,
+  addToast,
 } from "@heroui/react"
 import { ChevronDown } from "lucide-react"
 import { EVENT_TYPES, EVENT_STATUSES } from "../constants"
@@ -28,6 +30,7 @@ export function EventFormModal({
   onClose,
   eventToEdit,
 }: EventFormModalProps) {
+  const router = useRouter()
   const isEditing = Boolean(eventToEdit)
 
   const [title, setTitle] = useState(eventToEdit?.title ?? "")
@@ -103,7 +106,14 @@ export function EventFormModal({
         }
       }
 
+      if (isEditing) {
+        addToast({ title: "Etkinlik başarıyla güncellendi.", color: "success" })
+      } else {
+        addToast({ title: "Etkinlik başarıyla oluşturuldu.", color: "success" })
+      }
+
       onClose()
+      router.refresh()
     } catch (err) {
       setErrorMessage(
         err instanceof Error ? err.message : "Bir hata meydana geldi.",

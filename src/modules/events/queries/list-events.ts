@@ -19,12 +19,12 @@ export async function listEvents(filters: EventFilters = {}): Promise<{
   const now = new Date()
   const whereConditions: Prisma.EventWhereInput = {}
 
-  if (filters.query && filters.query.trim().length > 0) {
-    const q = filters.query.trim()
+  const searchTerm = (filters.q ?? filters.query)?.trim()
+  if (searchTerm && searchTerm.length > 0) {
     whereConditions.OR = [
-      { title: { contains: q, mode: "insensitive" } },
-      { description: { contains: q, mode: "insensitive" } },
-      { location: { contains: q, mode: "insensitive" } },
+      { title: { contains: searchTerm, mode: "insensitive" } },
+      { description: { contains: searchTerm, mode: "insensitive" } },
+      { location: { contains: searchTerm, mode: "insensitive" } },
     ]
   }
 
@@ -40,6 +40,17 @@ export async function listEvents(filters: EventFilters = {}): Promise<{
     whereConditions.startDate = { gte: now }
   } else if (filters.timeFilter === "past") {
     whereConditions.startDate = { lt: now }
+  }
+
+  let orderBy: Prisma.EventOrderByWithRelationInput = {
+    startDate: filters.timeFilter === "past" ? "desc" : "asc",
+  }
+  if (filters.sort) {
+    const dir = filters.dir === "desc" ? "desc" : "asc"
+    if (filters.sort === "title") orderBy = { title: dir }
+    else if (filters.sort === "type") orderBy = { type: dir }
+    else if (filters.sort === "status") orderBy = { status: dir }
+    else if (filters.sort === "startDate") orderBy = { startDate: dir }
   }
 
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1)
@@ -63,7 +74,7 @@ export async function listEvents(filters: EventFilters = {}): Promise<{
       where: whereConditions,
       skip,
       take: pageSize,
-      orderBy: { startDate: filters.timeFilter === "past" ? "desc" : "asc" },
+      orderBy,
       include: {
         attendees: {
           select: { status: true },

@@ -1,6 +1,15 @@
-import Link from "next/link"
+import {
+  Calendar,
+  Clock,
+  MapPin,
+  Video,
+  ArrowLeft,
+  Users,
+  FileSpreadsheet,
+} from "lucide-react"
 import { notFound } from "next/navigation"
-import { Calendar, Clock, MapPin, Video, ArrowLeft, Users } from "lucide-react"
+import { PageHeader } from "@/shared/components/ui/page-header"
+import { LinkButton } from "@/shared/components/ui/link-button"
 import { getEventById } from "../queries/get-event"
 import { AttendeeList } from "../components/attendee-list"
 import { EVENT_TYPES, EVENT_STATUSES } from "../constants"
@@ -28,57 +37,90 @@ export async function EventDetailView({ eventId }: EventDetailViewProps) {
   )
 
   return (
-    <div className="flex flex-col gap-6 p-6">
+    <div className="space-y-6">
       <div>
-        <Link
-          href="/events"
-          className="inline-flex items-center gap-1.5 text-xs font-medium text-default-500 hover:text-foreground transition-colors mb-2"
-        >
-          <ArrowLeft className="h-3.5 w-3.5" />
-          Tüm Etkinliklere Dön
-        </Link>
-        <div className="flex flex-wrap items-center justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">
-              {event.title}
-            </h1>
-            <div className="flex items-center gap-2 mt-1.5">
-              <span className="inline-flex items-center rounded-md px-2.5 py-1 text-xs font-medium bg-default-100 text-default-700 border border-default-200">
-                {typeMeta?.labelTr ?? event.type}
-              </span>
-              <span
-                className={`inline-flex items-center rounded-md px-2.5 py-1 text-xs font-medium border ${
-                  statusMeta?.tailwindClass ??
-                  "bg-default-100 text-default-700 border-default-200"
-                }`}
-              >
-                {statusMeta?.labelTr ?? event.status}
-              </span>
-            </div>
-          </div>
+        <div className="mb-2">
+          <LinkButton
+            href="/events"
+            variant="light"
+            size="sm"
+            color="default"
+            startIcon={<ArrowLeft className="h-4 w-4" />}
+          >
+            Tüm Etkinliklere Dön
+          </LinkButton>
         </div>
+
+        <PageHeader
+          title={event.title}
+          description={`${typeMeta?.labelTr ?? event.type} · ${formatDateTimeTr(event.startDate)}${
+            event.isOnline
+              ? " · Online"
+              : event.location
+                ? ` · ${event.location}`
+                : ""
+          }`}
+          actions={
+            <div className="flex items-center gap-2">
+              <a
+                href="/api/events/export"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 rounded-medium border border-default-300 bg-content1 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-default-100 shadow-xs"
+              >
+                <FileSpreadsheet className="h-4 w-4 text-success" />
+                Excel&apos;e Aktar
+              </a>
+            </div>
+          }
+        />
+      </div>
+
+      <div className="flex flex-wrap items-center gap-2 -mt-4 mb-2">
+        <span className="inline-flex items-center rounded-medium bg-default-100 px-2.5 py-1 text-xs font-medium text-foreground">
+          {typeMeta?.labelTr ?? event.type}
+        </span>
+        <span
+          className={`inline-flex items-center rounded-medium px-2.5 py-1 text-xs font-medium border ${
+            event.status === "PUBLISHED"
+              ? "bg-success-50 text-success-700 border-success-200"
+              : event.status === "DRAFT"
+                ? "bg-warning-50 text-warning-700 border-warning-200"
+                : event.status === "CANCELLED"
+                  ? "bg-danger-50 text-danger-700 border-danger-200"
+                  : "bg-default-100 text-default-700 border-default-200"
+          }`}
+        >
+          {statusMeta?.labelTr ?? event.status}
+        </span>
+        {event.isPast && (
+          <span className="text-tiny text-default-400 flex items-center gap-1">
+            <Clock className="h-3 w-3" /> Bu etkinlik tamamlanmış / geçmiş
+            tarihlidir.
+          </span>
+        )}
       </div>
 
       {/* Bilgi Kartları */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <div className="p-4 rounded-xl border border-divider bg-background shadow-xs flex flex-col gap-2">
-          <span className="text-xs text-default-500 font-medium flex items-center gap-1.5">
+        <div className="p-4 rounded-medium border border-default-200 bg-content1 shadow-xs flex flex-col gap-2">
+          <span className="text-tiny text-default-500 font-medium flex items-center gap-1.5">
             <Calendar className="h-4 w-4 text-primary" />
             Tarih & Zaman
           </span>
-          <span className="text-sm font-semibold text-foreground">
+          <span className="text-small font-semibold text-foreground">
             {formatDateTimeTr(event.startDate)}
           </span>
           {event.endDate && (
-            <span className="text-xs text-default-400 flex items-center gap-1">
+            <span className="text-tiny text-default-400 flex items-center gap-1">
               <Clock className="h-3.5 w-3.5" />
               Bitiş: {formatDateTimeTr(event.endDate)}
             </span>
           )}
         </div>
 
-        <div className="p-4 rounded-xl border border-divider bg-background shadow-xs flex flex-col gap-2">
-          <span className="text-xs text-default-500 font-medium flex items-center gap-1.5">
+        <div className="p-4 rounded-medium border border-default-200 bg-content1 shadow-xs flex flex-col gap-2">
+          <span className="text-tiny text-default-500 font-medium flex items-center gap-1.5">
             {event.isOnline ? (
               <Video className="h-4 w-4 text-primary" />
             ) : (
@@ -92,30 +134,30 @@ export async function EventDetailView({ eventId }: EventDetailViewProps) {
                 href={event.onlineUrl}
                 target="_blank"
                 rel="noreferrer"
-                className="text-xs text-primary underline truncate font-medium"
+                className="text-small text-primary underline truncate font-medium"
               >
                 {event.onlineUrl}
               </a>
             ) : (
-              <span className="text-xs text-foreground font-medium">
+              <span className="text-small text-foreground font-medium">
                 Online Toplantı
               </span>
             )
           ) : (
-            <span className="text-xs font-semibold text-foreground">
+            <span className="text-small font-semibold text-foreground truncate">
               {event.location || "Fiziksel konum belirtilmemiş"}
             </span>
           )}
         </div>
 
-        <div className="p-4 rounded-xl border border-divider bg-background shadow-xs flex flex-col gap-2">
-          <span className="text-xs text-default-500 font-medium flex items-center gap-1.5">
+        <div className="p-4 rounded-medium border border-default-200 bg-content1 shadow-xs flex flex-col gap-2">
+          <span className="text-tiny text-default-500 font-medium flex items-center gap-1.5">
             <Users className="h-4 w-4 text-primary" />
             Kapasite Durumu
           </span>
-          <div className="flex items-center justify-between text-xs font-semibold">
+          <div className="flex items-center justify-between text-small font-semibold">
             <span>{event.registeredCount} Kayıtlı Katılımcı</span>
-            <span className="text-default-400">
+            <span className="text-default-400 text-tiny">
               {event.capacity ? `${event.capacity} Kontenjan` : "Sınırsız"}
             </span>
           </div>
@@ -123,7 +165,7 @@ export async function EventDetailView({ eventId }: EventDetailViewProps) {
             <div className="w-full bg-default-100 rounded-full h-2 overflow-hidden mt-1">
               <div
                 className={`h-full transition-all rounded-full ${
-                  capacityRatio >= 100 ? "bg-rose-500" : "bg-primary"
+                  capacityRatio >= 100 ? "bg-danger" : "bg-primary"
                 }`}
                 style={{ width: `${capacityRatio}%` }}
               />
@@ -134,18 +176,18 @@ export async function EventDetailView({ eventId }: EventDetailViewProps) {
 
       {/* Açıklama */}
       {event.description && (
-        <div className="p-4 rounded-xl border border-divider bg-background shadow-xs">
-          <h3 className="text-xs font-semibold uppercase tracking-wider text-default-500 mb-2">
+        <div className="p-4 rounded-medium border border-default-200 bg-content1 shadow-xs">
+          <h3 className="text-tiny font-semibold uppercase tracking-wider text-default-500 mb-2">
             Etkinlik Açıklaması
           </h3>
-          <p className="text-sm text-foreground whitespace-pre-wrap leading-relaxed">
+          <p className="text-small text-foreground whitespace-pre-wrap leading-relaxed">
             {event.description}
           </p>
         </div>
       )}
 
       {/* Katılımcı Listesi */}
-      <div className="p-5 rounded-xl border border-divider bg-background shadow-xs">
+      <div className="p-5 rounded-medium border border-default-200 bg-content1 shadow-xs">
         <AttendeeList
           eventId={event.id}
           capacity={event.capacity}

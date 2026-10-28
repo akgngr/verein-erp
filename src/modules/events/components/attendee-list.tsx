@@ -1,8 +1,10 @@
 "use client"
 
 import { useState } from "react"
-import { Button, Input } from "@heroui/react"
+import { useRouter } from "next/navigation"
+import { Button, Input, Chip, addToast } from "@heroui/react"
 import { ChevronDown, Plus, Trash2, Mail, Phone, User } from "lucide-react"
+import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog"
 import type { EventAttendeeItem, AttendeeStatus } from "../types"
 import { ATTENDEE_STATUSES } from "../constants"
 import {
@@ -23,6 +25,7 @@ export function AttendeeList({
   capacity,
   attendees,
 }: AttendeeListProps) {
+  const router = useRouter()
   const [isAdding, setIsAdding] = useState(false)
   const [firstName, setFirstName] = useState("")
   const [lastName, setLastName] = useState("")
@@ -32,6 +35,9 @@ export function AttendeeList({
   const [loading, setLoading] = useState(false)
   const [statusLoadingId, setStatusLoadingId] = useState<string | null>(null)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
+
+  const [deletingAttendee, setDeletingAttendee] =
+    useState<EventAttendeeItem | null>(null)
 
   const activeCount = attendees.filter((a) => a.status !== "CANCELLED").length
   const isFull = capacity !== null && activeCount >= capacity
@@ -57,12 +63,18 @@ export function AttendeeList({
         return
       }
 
+      addToast({
+        title: `${firstName} ${lastName} katılımcı olarak eklendi.`,
+        color: "success",
+      })
+
       setFirstName("")
       setLastName("")
       setEmail("")
       setPhone("")
       setNotes("")
       setIsAdding(false)
+      router.refresh()
     } finally {
       setLoading(false)
     }
@@ -74,34 +86,50 @@ export function AttendeeList({
   ) => {
     setStatusLoadingId(attendeeId)
     try {
-      await updateAttendeeStatusAction({
+      const res = await updateAttendeeStatusAction({
         attendeeId,
         status: newStatus,
       })
+      if (res.success) {
+        addToast({ title: "Katılım durumu güncellendi.", color: "success" })
+        router.refresh()
+      } else {
+        addToast({
+          title: res.error ?? "Durum güncellenemedi.",
+          color: "danger",
+        })
+      }
     } finally {
       setStatusLoadingId(null)
     }
   }
 
-  const handleDelete = async (attendeeId: string, name: string) => {
-    if (
-      !window.confirm(
-        `${name} isimli katılımcıyı listeden çıkarmak istediğinize emin misiniz?`,
-      )
-    ) {
-      return
+  const handleDeleteConfirm = async () => {
+    if (!deletingAttendee) return
+    const res = await deleteAttendeeAction(deletingAttendee.id)
+    if (res.success) {
+      addToast({
+        title: `${deletingAttendee.firstName} ${deletingAttendee.lastName} katılımcı listesinden çıkarıldı.`,
+        color: "success",
+      })
+      setDeletingAttendee(null)
+      router.refresh()
+    } else {
+      addToast({
+        title: res.error ?? "Katılımcı silinemedi.",
+        color: "danger",
+      })
     }
-    await deleteAttendeeAction(attendeeId)
   }
 
   return (
     <div className="flex flex-col gap-4">
       <div className="flex items-center justify-between">
         <div>
-          <h3 className="text-base font-semibold text-foreground">
+          <h3 className="text-small font-semibold text-foreground">
             Katılımcı Kayıtları ({attendees.length})
           </h3>
-          <p className="text-xs text-default-500">
+          <p className="text-tiny text-default-500">
             Kayıt olan üyeler ve dış konukların katılım durumlarını yönetin.
           </p>
         </div>
@@ -123,11 +151,11 @@ export function AttendeeList({
       {isAdding && (
         <form
           onSubmit={handleAddSubmit}
-          className="p-4 rounded-xl border border-divider bg-default-50/50 flex flex-col gap-3"
+          className="p-4 rounded-medium border border-default-200 bg-content2/40 flex flex-col gap-3"
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-foreground">
-              Manuel Katılımcı Kaydı
+              Yeni Katılımcı Kaydı
             </span>
             <Button
               size="sm"
@@ -198,13 +226,13 @@ export function AttendeeList({
       )}
 
       {attendees.length === 0 ? (
-        <div className="p-8 text-center rounded-xl border border-dashed border-divider text-default-400 text-xs">
+        <div className="p-8 text-center rounded-medium border border-dashed border-default-200 text-default-400 text-xs">
           Henüz kayıtlı bir katılımcı bulunmuyor.
         </div>
       ) : (
-        <div className="overflow-x-auto rounded-xl border border-divider bg-background shadow-xs">
+        <div className="overflow-x-auto rounded-medium border border-default-200 bg-content1 shadow-xs">
           <table className="w-full text-left text-xs text-foreground">
-            <thead className="bg-default-50 text-default-600 font-semibold uppercase tracking-wider text-[11px] border-b border-divider">
+            <thead className="bg-default-50 text-default-600 font-semibold uppercase tracking-wider text-[11px] border-b border-default-200">
               <tr>
                 <th className="py-3 px-4">Katılımcı Adı</th>
                 <th className="py-3 px-4">Tür</th>
@@ -214,7 +242,7 @@ export function AttendeeList({
                 <th className="py-3 px-4 text-right">İşlem</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-divider font-medium">
+            <tbody className="divide-y divide-default-100 font-medium">
               {attendees.map((attendee) => {
                 const fullName = `${attendee.firstName} ${attendee.lastName}`
                 const isMember = Boolean(attendee.memberId)
@@ -236,15 +264,13 @@ export function AttendeeList({
                     </td>
 
                     <td className="py-3 px-4">
-                      <span
-                        className={`inline-flex items-center rounded-md px-2 py-0.5 text-[10px] font-medium border ${
-                          isMember
-                            ? "bg-primary-50 text-primary-700 border-primary-200 dark:bg-primary-950/40 dark:text-primary-400 dark:border-primary-800"
-                            : "bg-default-100 text-default-700 border-default-200"
-                        }`}
+                      <Chip
+                        size="sm"
+                        variant="flat"
+                        color={isMember ? "primary" : "default"}
                       >
                         {isMember ? "Dernek Üyesi" : "Misafir"}
-                      </span>
+                      </Chip>
                     </td>
 
                     <td className="py-3 px-4">
@@ -311,7 +337,7 @@ export function AttendeeList({
                         color="danger"
                         isIconOnly
                         aria-label="Katılımcıyı Çıkar"
-                        onPress={() => handleDelete(attendee.id, fullName)}
+                        onPress={() => setDeletingAttendee(attendee)}
                       >
                         <Trash2 className="h-3.5 w-3.5" />
                       </Button>
@@ -323,6 +349,16 @@ export function AttendeeList({
           </table>
         </div>
       )}
+
+      <ConfirmDialog
+        isOpen={Boolean(deletingAttendee)}
+        onOpenChange={(open) => !open && setDeletingAttendee(null)}
+        title="Katılımcıyı Çıkar"
+        message={`"${deletingAttendee?.firstName} ${deletingAttendee?.lastName}" isimli katılımcıyı listeden çıkarmak istediğinize emin misiniz?`}
+        confirmLabel="Çıkar"
+        confirmColor="danger"
+        onConfirm={handleDeleteConfirm}
+      />
     </div>
   )
 }

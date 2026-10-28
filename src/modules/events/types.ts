@@ -55,9 +55,12 @@ export interface EventStats {
 
 export interface EventFilters {
   query?: string
+  q?: string
   type?: EventType | "ALL"
   status?: EventStatus | "ALL"
   timeFilter?: "all" | "upcoming" | "past"
+  sort?: string
+  dir?: "asc" | "desc"
   page?: number
   pageSize?: number
 }
