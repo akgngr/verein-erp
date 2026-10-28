@@ -1226,6 +1226,10 @@
       "sphereASSET_MANAGEMENT": "Vermögensverwaltung",
       "spherePURPOSE_OPERATION": "Zweckbetrieb",
       "sphereECONOMIC_OPERATION": "Wirtschaftlicher Geschäftsbetrieb",
+      "sphereIdeell": "Ideeller Bereich",
+      "sphereAsset_management": "Vermögensverwaltung",
+      "spherePurpose_operation": "Zweckbetrieb",
+      "sphereEconomic_operation": "Wirtschaftlicher Geschäftsbetrieb",
       "directionINCOME": "Einnahmen",
       "directionEXPENSE": "Ausgaben"
     },

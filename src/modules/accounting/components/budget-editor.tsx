@@ -42,8 +42,13 @@ export function BudgetEditor({
   const format = (cents: number) =>
     (cents / 100).toLocaleString("tr-TR", { style: "currency", currency: "EUR" });
 
-  const sphereLabel = (sphere: string) =>
-    t(`sphere${sphere.charAt(0)}${sphere.slice(1).toLowerCase()}`);
+  const sphereLabel = (sphere: string) => {
+    const rawKey = `sphere${sphere}`;
+    if (t.has(rawKey)) return t(rawKey);
+    const camel = `sphere${sphere.charAt(0)}${sphere.slice(1).toLowerCase()}`;
+    if (t.has(camel)) return t(camel);
+    return sphere;
+  };
 
   const grouped = useMemo(() => {
     const groups: Array<{ direction: string; sphere: string; rows: BudgetLineRow[] }> = [];

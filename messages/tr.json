@@ -1226,6 +1226,10 @@
       "sphereASSET_MANAGEMENT": "Varlık yönetimi",
       "spherePURPOSE_OPERATION": "Amaca bağlı işletme",
       "sphereECONOMIC_OPERATION": "Ticari işletme",
+      "sphereIdeell": "İdeel alan",
+      "sphereAsset_management": "Varlık yönetimi",
+      "spherePurpose_operation": "Amaca bağlı işletme",
+      "sphereEconomic_operation": "Ticari işletme",
       "directionINCOME": "Gelir",
       "directionEXPENSE": "Gider"
     },

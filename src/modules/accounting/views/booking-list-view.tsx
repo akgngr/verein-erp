@@ -92,8 +92,13 @@ export async function AccountingListView({
     .reverse()
     .map((year) => ({ value: year, label: year }));
 
-  const sphereLabel = (sphere: string) =>
-    tBudget(`sphere${sphere.charAt(0)}${sphere.slice(1).toLowerCase()}`);
+  const sphereLabel = (sphere: string) => {
+    const rawKey = `sphere${sphere}`;
+    if (tBudget.has(rawKey)) return tBudget(rawKey);
+    const camel = `sphere${sphere.charAt(0)}${sphere.slice(1).toLowerCase()}`;
+    if (tBudget.has(camel)) return tBudget(camel);
+    return sphere;
+  };
 
   return (
     <div>

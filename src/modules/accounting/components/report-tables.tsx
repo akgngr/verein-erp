@@ -12,8 +12,13 @@ export function IncomeExpenseTable({ report }: { report: IncomeExpenseReport }) 
   const tBudget = useTranslations("accounting.budget");
   const format = (cents: number) =>
     (cents / 100).toLocaleString("tr-TR", { style: "currency", currency: "EUR" });
-  const sphereLabel = (sphere: string) =>
-    tBudget(`sphere${sphere.charAt(0)}${sphere.slice(1).toLowerCase()}`);
+  const sphereLabel = (sphere: string) => {
+    const rawKey = `sphere${sphere}`;
+    if (tBudget.has(rawKey)) return tBudget(rawKey);
+    const camel = `sphere${sphere.charAt(0)}${sphere.slice(1).toLowerCase()}`;
+    if (tBudget.has(camel)) return tBudget(camel);
+    return sphere;
+  };
 
   const rowsWithSphere = report.rows.map((row, index) => ({
     ...row,

@@ -42,8 +42,13 @@ export function CategoryFormModal({
   const [helpText, setHelpText] = useState(category?.helpText ?? "");
   const [busy, setBusy] = useState(false);
 
-  const sphereLabel = (value: Sphere) =>
-    tBudget(`sphere${value.charAt(0)}${value.slice(1).toLowerCase()}`);
+  const sphereLabel = (value: Sphere) => {
+    const rawKey = `sphere${value}`;
+    if (tBudget.has(rawKey)) return tBudget(rawKey);
+    const camel = `sphere${value.charAt(0)}${value.slice(1).toLowerCase()}`;
+    if (tBudget.has(camel)) return tBudget(camel);
+    return value;
+  };
 
   const submit = async () => {
     setBusy(true);
