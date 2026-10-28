@@ -1,0 +1,17 @@
+[
+  {
+    "key": "categories",
+    "label": "Evrak Kategorileri",
+    "labelKey": "categoriesButton",
+    "href": "/evrak/kategoriler",
+    "icon": "FolderTree"
+  },
+  {
+    "key": "export",
+    "label": "Excel Dışa Aktar",
+    "labelKey": "exportExcel",
+    "href": "/api/documents/export",
+    "icon": "Download",
+    "isDownload": true
+  }
+]

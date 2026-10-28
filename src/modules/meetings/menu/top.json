@@ -1,0 +1,9 @@
+[
+  {
+    "key": "tasks",
+    "label": "Toplantı Görevleri",
+    "labelKey": "tasksButton",
+    "href": "/toplantilar/gorevler",
+    "icon": "ListTodo"
+  }
+]

@@ -2,167 +2,151 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
+import { useMemo } from "react";
 import { Button } from "@heroui/react";
 import {
+  BarChart3,
   Boxes,
   Building2,
+  Calendar,
+  CalendarCheck,
   CalendarDays,
   ChevronLeft,
+  Download,
   FileSpreadsheet,
   FileText,
   FolderKanban,
+  FolderTree,
   HandHeart,
   LayoutDashboard,
+  LayoutGrid,
+  ListTodo,
   LucideIcon,
+  Package,
+  PieChart,
+  Receipt,
   Settings,
   ShieldAlert,
   SlidersHorizontal,
   Tag,
+  Upload,
   Users,
   Wallet,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import { allModules } from "@/registry";
+import type { TopNavItem } from "@/shared/types/module";
 import { cn } from "@/shared/utils";
 import { SidebarTrigger } from "./sidebar";
 
-type ModuleSettingLink = {
-  label: string;
-  href: string;
-  icon?: LucideIcon;
+const ICON_MAP: Record<string, LucideIcon> = {
+  BarChart3,
+  Boxes,
+  Building2,
+  Calendar,
+  CalendarCheck,
+  CalendarDays,
+  Download,
+  FileSpreadsheet,
+  FileText,
+  FolderKanban,
+  FolderTree,
+  HandHeart,
+  LayoutDashboard,
+  LayoutGrid,
+  ListTodo,
+  Package,
+  PieChart,
+  Receipt,
+  Settings,
+  ShieldAlert,
+  SlidersHorizontal,
+  Tag,
+  Upload,
+  Users,
+  Wallet,
 };
 
-type ActiveModuleConfig = {
-  key: string;
-  label: string;
-  icon: LucideIcon;
-  settingsLinks: ModuleSettingLink[];
-};
+function resolveIcon(iconName?: string): LucideIcon | null {
+  if (!iconName) return null;
+  return ICON_MAP[iconName] ?? null;
+}
 
 export function Topbar() {
   const pathname = usePathname();
   const router = useRouter();
   const tNav = useTranslations("nav");
+  const tRoot = useTranslations();
 
-  // Yalnızca açık olan modülle alakalı ayarlar ve ek yapılandırma alanları
-  const getActiveModule = (): ActiveModuleConfig => {
-    if (pathname.startsWith("/muhasebe")) {
+  // Aktif modül ve modülün menu/top.json üzerinden gelen menü öğeleri
+  const activeModule = useMemo(() => {
+    // 1. Pathname ile eşleşen kayıtlı modülü bul
+    const found = allModules.find((mod) => {
+      // Modülün ana menü rotası
+      if (mod.nav.some((n) => pathname === n.href || pathname.startsWith(`${n.href}/`))) {
+        return true;
+      }
+      // Modülün topNav rotaları
+      if (mod.topNav?.some((t) => pathname === t.href || pathname.startsWith(`${t.href}/`))) {
+        return true;
+      }
+      return false;
+    });
+
+    if (found) {
+      const mainHref = found.nav[0]?.href ?? `/${found.key}`;
       return {
-        key: "accounting",
-        label: tNav.has("muhasebe") ? tNav("muhasebe") : "Muhasebe",
-        icon: Wallet,
-        settingsLinks: [
-          {
-            label: "Muhasebe Ayarları",
-            href: "/muhasebe/ayarlar",
-            icon: SlidersHorizontal,
-          },
-        ],
+        key: found.key,
+        label: tNav.has(found.key) ? tNav(found.key) : found.label,
+        mainHref,
+        icon: found.nav[0]?.icon ?? Package,
+        topNav: found.topNav ?? [],
       };
     }
 
-    if (pathname.startsWith("/evrak")) {
-      return {
-        key: "documents",
-        label: tNav.has("evrak") ? tNav("evrak") : "Evrak Kayıt",
-        icon: FileText,
-        settingsLinks: [
-          {
-            label: "Evrak Kategorileri",
-            href: "/evrak/kategoriler",
-            icon: FolderKanban,
-          },
-        ],
-      };
-    }
-
-    if (pathname.startsWith("/uyeler")) {
-      return {
-        key: "members",
-        label: tNav.has("uyeler") ? tNav("uyeler") : "Üyeler",
-        icon: Users,
-        settingsLinks: [
-          {
-            label: "Üyelik Türleri",
-            href: "/uyeler/turler",
-            icon: Tag,
-          },
-          {
-            label: "Excel İçe Aktar",
-            href: "/uyeler/ice-aktar",
-            icon: FileSpreadsheet,
-          },
-        ],
-      };
-    }
-
-    if (pathname.startsWith("/toplantilar")) {
-      return {
-        key: "meetings",
-        label: tNav.has("toplantilar") ? tNav("toplantilar") : "Toplantılar",
-        icon: CalendarDays,
-        settingsLinks: [],
-      };
-    }
-
-    if (pathname.startsWith("/bagislar")) {
-      return {
-        key: "donations",
-        label: tNav.has("bagislar") ? tNav("bagislar") : "Bağışlar",
-        icon: HandHeart,
-        settingsLinks: [],
-      };
-    }
-
+    // 2. /ayarlar genel sayfası (system modülü ile ilişkili)
     if (pathname.startsWith("/ayarlar")) {
+      const systemMod = allModules.find((m) => m.key === "system");
       return {
-        key: "settings",
+        key: "system",
         label: tNav.has("ayarlar") ? tNav("ayarlar") : "Ayarlar",
+        mainHref: "/ayarlar",
         icon: Settings,
-        settingsLinks: [
-          {
-            label: "Dernek Bilgileri",
-            href: "/ayarlar/dernek",
-            icon: Building2,
-          },
-          {
-            label: "Kullanıcılar & Roller",
-            href: "/ayarlar/kullanicilar",
-            icon: Users,
-          },
-          {
-            label: "Modül Yönetimi",
-            href: "/ayarlar/moduller",
-            icon: Boxes,
-          },
-          {
-            label: "Denetim Kayıtları",
-            href: "/ayarlar/denetim-kaydi",
-            icon: ShieldAlert,
-          },
-        ],
+        topNav: systemMod?.topNav ?? [],
       };
     }
 
+    // 3. Varsayılan Panel / Dashboard
     return {
       key: "dashboard",
       label: tNav.has("panel") ? tNav("panel") : "Panel",
+      mainHref: "/",
       icon: LayoutDashboard,
-      settingsLinks: [],
+      topNav: [],
     };
-  };
+  }, [pathname, tNav]);
 
-  const activeModule = getActiveModule();
   const ModuleIcon = activeModule.icon;
 
+  // i18n etiket çözücü: modül anahtarını veya doğrudan kök anahtarı dener
+  const resolveLabel = (item: TopNavItem): string => {
+    if (item.labelKey) {
+      const namespacedKey = `${activeModule.key}.${item.labelKey}`;
+      if (tRoot.has(namespacedKey)) return tRoot(namespacedKey);
+      if (tRoot.has(item.labelKey)) return tRoot(item.labelKey);
+    }
+    return item.label;
+  };
+
   return (
-    <header className="sticky top-0 z-20 flex h-9.5 w-full items-center justify-between border-b border-default-200/80 bg-background/85 px-3 backdrop-blur-md select-none transition-all">
-      {/* Sol Bölüm: Geri Butonu + Modül İsmi + SADECE Modül Ayarları / Yapılandırma Linkleri */}
+    <header className="sticky top-0 z-20 flex h-10 w-full items-center justify-between border-b border-default-200/80 bg-background/85 px-3 backdrop-blur-md select-none transition-all">
+      {/* Sol Bölüm: Geri Butonu + Modül Başlığı + Modül Menü Linkleri (menu/top.json) */}
       <div className="flex min-w-0 items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar">
         {/* Mobilde Menü Çekmecesi Tetikleyici */}
         <SidebarTrigger />
 
-        {/* Tek Geri Butonu (Yeni ekleme / detay sayfasından önceki listeye dönmek için) */}
+        {/* Tek Geri Butonu */}
         <Button
           isIconOnly
           variant="light"
@@ -177,35 +161,58 @@ export function Topbar() {
 
         <div className="h-3.5 w-px bg-default-200/90 mx-0.5 shrink-0" aria-hidden />
 
-        {/* Açık Olan Modülün İsmi */}
-        <div className="flex items-center gap-1.5 px-2 py-0.5 rounded-md bg-default-100/70 border border-default-200/50 shrink-0">
+        {/* Açık Olan Modülün İsmi (Ana sayfasına tıklandığında döner) */}
+        <Link
+          href={activeModule.mainHref}
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-default-100/70 border border-default-200/50 hover:bg-default-100 hover:border-default-300/70 shrink-0 transition-colors"
+          title={`${activeModule.label} ana sayfasına git`}
+        >
           <ModuleIcon className="h-3.5 w-3.5 text-primary shrink-0" />
-          <span className="text-[11px] font-bold tracking-tight text-foreground truncate">
+          <span className="text-[11.5px] font-bold tracking-tight text-foreground truncate">
             {activeModule.label}
           </span>
-        </div>
+        </Link>
 
-        {/* YALNIZCA ilgili modüle ait ayar ve ek yapılandırma alanlarının linkleri */}
-        {activeModule.settingsLinks.length > 0 && (
+        {/* Modüle ait üst menü linkleri (menu/top.json standartı) */}
+        {activeModule.topNav.length > 0 && (
           <>
             <div className="h-3.5 w-px bg-default-200/90 mx-0.5 shrink-0" aria-hidden />
             <nav className="flex items-center gap-1 shrink-0">
-              {activeModule.settingsLinks.map((link) => {
-                const active = pathname === link.href || pathname.startsWith(`${link.href}/`);
-                const LinkIcon = link.icon;
+              {activeModule.topNav.map((link) => {
+                const active =
+                  pathname === link.href || (!link.isDownload && pathname.startsWith(`${link.href}/`));
+                const LinkIcon = resolveIcon(link.icon);
+                const label = resolveLabel(link);
+
+                if (link.isDownload) {
+                  return (
+                    <a
+                      key={link.key}
+                      href={link.href}
+                      className={cn(
+                        "flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-md font-medium transition-colors shrink-0",
+                        "text-default-600 hover:bg-default-100/80 hover:text-foreground border border-default-200/50 hover:border-default-300",
+                      )}
+                    >
+                      {LinkIcon && <LinkIcon className="h-3.5 w-3.5 shrink-0 opacity-80" />}
+                      <span>{label}</span>
+                    </a>
+                  );
+                }
+
                 return (
                   <Link
-                    key={link.href}
+                    key={link.key}
                     href={link.href}
                     className={cn(
-                      "flex items-center gap-1.5 px-2 py-0.5 text-xs rounded-md font-medium transition-colors shrink-0",
+                      "flex items-center gap-1.5 px-2.5 py-1 text-xs rounded-md font-medium transition-colors shrink-0",
                       active
-                        ? "bg-primary-50 text-primary-700 dark:bg-primary-500/15 dark:text-primary-300 font-semibold shadow-2xs"
-                        : "text-default-500 hover:bg-default-100/80 hover:text-foreground",
+                        ? "bg-primary-50 text-primary-700 dark:bg-primary-500/15 dark:text-primary-300 font-semibold shadow-2xs border border-primary-200/60 dark:border-primary-500/30"
+                        : "text-default-600 hover:bg-default-100/80 hover:text-foreground border border-transparent hover:border-default-200/60",
                     )}
                   >
-                    {LinkIcon && <LinkIcon className="h-3 w-3 shrink-0 opacity-70" />}
-                    <span>{link.label}</span>
+                    {LinkIcon && <LinkIcon className="h-3.5 w-3.5 shrink-0 opacity-80" />}
+                    <span>{label}</span>
                   </Link>
                 );
               })}
@@ -214,7 +221,7 @@ export function Topbar() {
         )}
       </div>
 
-      {/* Sağ Taraf: Boş / Temiz (Genel ayarlar ikonu kaldırıldı) */}
+      {/* Sağ Taraf: Boş / Temiz */}
       <div className="shrink-0" />
     </header>
   );

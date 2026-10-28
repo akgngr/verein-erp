@@ -1,7 +1,8 @@
 import { Wallet } from "lucide-react";
 
-import type { ModuleConfig } from "@/shared/types/module";
+import type { ModuleConfig, TopNavItem } from "@/shared/types/module";
 import { accountingPermissions } from "./permissions";
+import topNav from "./menu/top.json";
 
 export const moduleConfig: ModuleConfig = {
   key: "accounting",
@@ -9,6 +10,7 @@ export const moduleConfig: ModuleConfig = {
   description: "Alman dernek mevzuatına uygun çift taraflı defter tutma, fiş ve bütçe yönetimi.",
   category: "OFFICIAL",
   hasSchema: true,
+  topNav: topNav as TopNavItem[],
   nav: [
     {
       href: "/muhasebe",

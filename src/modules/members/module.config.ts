@@ -1,7 +1,8 @@
 import { Users } from "lucide-react";
 
-import type { ModuleConfig } from "@/shared/types/module";
+import type { ModuleConfig, TopNavItem } from "@/shared/types/module";
 import { membersPermissions } from "./permissions";
+import topNav from "./menu/top.json";
 
 export const moduleConfig: ModuleConfig = {
   key: "members",
@@ -9,6 +10,7 @@ export const moduleConfig: ModuleConfig = {
   description: "Üye kayıtları, üyelik tipleri, aidat tahakkuk ve ödeme takibi.",
   category: "OFFICIAL",
   hasSchema: true,
+  topNav: topNav as TopNavItem[],
   nav: [
     {
       href: "/uyeler",

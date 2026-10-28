@@ -1,4 +1,4 @@
-import { CalendarPlus, ListTodo } from "lucide-react";
+import { CalendarPlus } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { requirePermission, ForbiddenError } from "@/modules/auth/server";
@@ -51,25 +51,15 @@ export async function MeetingListView({
         title={t("pageTitle")}
         description={t("pageDescription")}
         actions={
-          <>
-            {canCreate ? (
-              <LinkButton
-                href="/toplantilar/yeni"
-                color="primary"
-                startIcon={<CalendarPlus className="h-4 w-4" />}
-              >
-                {t("newMeeting")}
-              </LinkButton>
-            ) : null}
+          canCreate ? (
             <LinkButton
-              href="/toplantilar/gorevler"
-              color="default"
-              variant="bordered"
-              startIcon={<ListTodo className="h-4 w-4" />}
+              href="/toplantilar/yeni"
+              color="primary"
+              startIcon={<CalendarPlus className="h-4 w-4" />}
             >
-              {t("tasksButton")}
+              {t("newMeeting")}
             </LinkButton>
-          </>
+          ) : null
         }
       />
 

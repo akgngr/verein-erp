@@ -37,11 +37,23 @@ export function scaffoldModule(moduleKey: string, options: { label?: string; des
   // Klasörleri oluştur
   fs.mkdirSync(moduleDir, { recursive: true });
   fs.mkdirSync(path.join(moduleDir, "prisma"), { recursive: true });
+  fs.mkdirSync(path.join(moduleDir, "menu"), { recursive: true });
   fs.mkdirSync(path.join(moduleDir, "messages"), { recursive: true });
   fs.mkdirSync(path.join(moduleDir, "views"), { recursive: true });
   fs.mkdirSync(path.join(moduleDir, "components"), { recursive: true });
   fs.mkdirSync(path.join(moduleDir, "actions"), { recursive: true });
   fs.mkdirSync(path.join(moduleDir, "queries"), { recursive: true });
+
+  // 0. menu/top.json
+  const topMenu = [
+    {
+      key: "overview",
+      label: "Genel Bakış",
+      href: `/${cleanKey}`,
+      icon: "LayoutGrid"
+    }
+  ];
+  fs.writeFileSync(path.join(moduleDir, "menu", "top.json"), JSON.stringify(topMenu, null, 2) + "\n", "utf8");
 
   // 1. permissions.ts
   const permissionsCode = `import { definePermissions } from "@/shared/permissions/define";
@@ -59,8 +71,9 @@ export const ${cleanKey}Permissions = definePermissions("${cleanKey}", {
 
   // 2. module.config.ts
   const configCode = `import { Package } from "lucide-react";
-import type { ModuleConfig } from "@/shared/types/module";
+import type { ModuleConfig, TopNavItem } from "@/shared/types/module";
 import { ${cleanKey}Permissions } from "./permissions";
+import topNav from "./menu/top.json";
 
 export const moduleConfig: ModuleConfig = {
   key: "${cleanKey}",
@@ -68,6 +81,8 @@ export const moduleConfig: ModuleConfig = {
   description: "${description}",
   category: "EXTENSION",
   hasSchema: true,
+  topNav: topNav as TopNavItem[],
+  nav: [
   nav: [
     {
       href: "/${cleanKey}",

@@ -1,4 +1,4 @@
-import { Download, HandHeart, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
@@ -53,28 +53,11 @@ export async function DonationListView({
         title={t("list.title")}
         description={String(year)}
         actions={
-          <div className="flex flex-wrap items-center gap-2">
-            {canCreate ? (
-              <LinkButton href="/bagislar/yeni" startIcon={<Plus className="h-4 w-4" />}>
-                {t("list.actions.new")}
-              </LinkButton>
-            ) : null}
-            <LinkButton href="/bagislar/bagiscilar" variant="flat" startIcon={<HandHeart className="h-4 w-4" />}>
-              {t("list.actions.donors")}
+          canCreate ? (
+            <LinkButton href="/bagislar/yeni" startIcon={<Plus className="h-4 w-4" />}>
+              {t("list.actions.new")}
             </LinkButton>
-            <LinkButton href="/bagislar/bildirimler/olustur" variant="flat">
-              {t("list.actions.issue")}
-            </LinkButton>
-            <LinkButton href="/bagislar/bildirimler" variant="flat">
-              {t("list.actions.confirmations")}
-            </LinkButton>
-            <LinkButton href="/bagislar/ayarlar" variant="flat">
-              {t("list.actions.settings")}
-            </LinkButton>
-            <LinkButton href={`/api/donations/export?filter.year=${year}`} variant="bordered" startIcon={<Download className="h-4 w-4" />}>
-              {t("list.actions.export")}
-            </LinkButton>
-          </div>
+          ) : null
         }
       />
       <DonationStatsCards stats={stats} />

@@ -1,4 +1,4 @@
-import { Download, FolderTree, Inbox, Send } from "lucide-react";
+import { Inbox, Send } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, listActiveUserOptions, requirePermission } from "@/modules/auth/server";
@@ -15,7 +15,7 @@ import {
   DOCUMENT_SORTABLE_FIELDS,
   listDocuments,
 } from "../queries/list-documents";
-import { documentCategoriesPermissions, documentsPermissions } from "../permissions";
+import { documentsPermissions } from "../permissions";
 import { STATUS_FILTER_OPTIONS } from "../constants";
 import { berlinMonthRange } from "../utils";
 import { DirectionTabs, DocumentDateFilter, DocumentQuickFilters } from "../components/list-filters";
@@ -63,20 +63,6 @@ export async function DocumentListView({
 
   const canCreate = can(user.role, documentsPermissions, "create");
   const canDelete = can(user.role, documentsPermissions, "delete");
-  const canSeeCategories = can(user.role, documentCategoriesPermissions, "view");
-
-  // "Excel'e aktar" mevcut filtrelerle aynı sonucu vermeli (10. bölüm).
-  const exportQuery = new URLSearchParams();
-  for (const [key, value] of Object.entries(raw)) {
-    const single = Array.isArray(value) ? value[0] : value;
-    if (
-      single &&
-      (key === "q" || key === "sort" || key === "dir" || key.startsWith("filter."))
-    ) {
-      exportQuery.set(key, single);
-    }
-  }
-  const exportHref = `/api/documents/export${exportQuery.size > 0 ? `?${exportQuery.toString()}` : ""}`;
 
   const month = berlinMonthRange();
   const monthFrom = month.start.toISOString().slice(0, 10);
@@ -88,36 +74,16 @@ export async function DocumentListView({
         title={t("pageTitle")}
         description={t("pageDescription")}
         actions={
-          <>
-            {canCreate ? (
-              <>
-                <LinkButton href="/evrak/yeni?yon=gelen" startIcon={<Inbox className="h-4 w-4" />}>
-                  {t("newIncoming")}
-                </LinkButton>
-                <LinkButton href="/evrak/yeni?yon=giden" startIcon={<Send className="h-4 w-4" />}>
-                  {t("newOutgoing")}
-                </LinkButton>
-              </>
-            ) : null}
-            <LinkButton
-              href={exportHref}
-              color="default"
-              variant="bordered"
-              startIcon={<Download className="h-4 w-4" />}
-            >
-              {t("exportExcel")}
-            </LinkButton>
-            {canSeeCategories ? (
-              <LinkButton
-                href="/evrak/kategoriler"
-                color="default"
-                variant="light"
-                startIcon={<FolderTree className="h-4 w-4" />}
-              >
-                {t("categoriesButton")}
+          canCreate ? (
+            <div className="flex flex-wrap items-center gap-2">
+              <LinkButton href="/evrak/yeni?yon=gelen" startIcon={<Inbox className="h-4 w-4" />}>
+                {t("newIncoming")}
               </LinkButton>
-            ) : null}
-          </>
+              <LinkButton href="/evrak/yeni?yon=giden" startIcon={<Send className="h-4 w-4" />}>
+                {t("newOutgoing")}
+              </LinkButton>
+            </div>
+          ) : null
         }
       />
 

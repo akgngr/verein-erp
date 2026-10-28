@@ -1,4 +1,4 @@
-import { BarChart3, Download, Landmark, PiggyBank, Settings, Wallet } from "lucide-react";
+import { Landmark, PiggyBank, Wallet } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
@@ -101,44 +101,19 @@ export async function AccountingListView({
         title={t("list.title")}
         description={String(yearFilter)}
         actions={
-          <div className="flex flex-wrap items-center gap-2">
-            {canCreate ? (
-              <>
-                <LinkButton href="/muhasebe/yeni?tur=gelir" startIcon={<PiggyBank className="h-4 w-4" />}>
-                  {t("list.actions.newIncome")}
-                </LinkButton>
-                <LinkButton href="/muhasebe/yeni?tur=gider" color="secondary" startIcon={<Wallet className="h-4 w-4" />}>
-                  {t("list.actions.newExpense")}
-                </LinkButton>
-                <LinkButton href="/muhasebe/yeni?tur=virman" color="default" variant="bordered" startIcon={<Landmark className="h-4 w-4" />}>
-                  {t("list.actions.newTransfer")}
-                </LinkButton>
-              </>
-            ) : null}
-            <LinkButton href="/muhasebe/uyelik-aktarimi" color="default" variant="light">
-              {t("list.actions.sync")}
-            </LinkButton>
-            <LinkButton href={`/muhasebe/raporlar?filter.year=${yearFilter}`} color="default" variant="light" startIcon={<BarChart3 className="h-4 w-4" />}>
-              {t("list.actions.reports")}
-            </LinkButton>
-            <LinkButton href={`/muhasebe/butce?filter.year=${yearFilter}`} color="default" variant="light">
-              {t("list.actions.budget")}
-            </LinkButton>
-            <LinkButton href="/muhasebe/yil-kapanisi" color="default" variant="light">
-              {t("list.actions.yearClosing")}
-            </LinkButton>
-            <LinkButton href="/muhasebe/ayarlar" color="default" variant="light" startIcon={<Settings className="h-4 w-4" />}>
-              {t("list.actions.settings")}
-            </LinkButton>
-            <LinkButton
-              href={`/api/accounting/export?filter.year=${yearFilter}`}
-              color="default"
-              variant="bordered"
-              startIcon={<Download className="h-4 w-4" />}
-            >
-              {t("list.actions.export")}
-            </LinkButton>
-          </div>
+          canCreate ? (
+            <div className="flex flex-wrap items-center gap-2">
+              <LinkButton href="/muhasebe/yeni?tur=gelir" startIcon={<PiggyBank className="h-4 w-4" />}>
+                {t("list.actions.newIncome")}
+              </LinkButton>
+              <LinkButton href="/muhasebe/yeni?tur=gider" color="secondary" startIcon={<Wallet className="h-4 w-4" />}>
+                {t("list.actions.newExpense")}
+              </LinkButton>
+              <LinkButton href="/muhasebe/yeni?tur=virman" color="default" variant="bordered" startIcon={<Landmark className="h-4 w-4" />}>
+                {t("list.actions.newTransfer")}
+              </LinkButton>
+            </div>
+          ) : null
         }
       />
 

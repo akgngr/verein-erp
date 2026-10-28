@@ -1,7 +1,8 @@
 import { FileText } from "lucide-react";
 
-import type { ModuleConfig } from "@/shared/types/module";
+import type { ModuleConfig, TopNavItem } from "@/shared/types/module";
 import { documentsPermissions } from "./permissions";
+import topNav from "./menu/top.json";
 
 export const moduleConfig: ModuleConfig = {
   key: "documents",
@@ -9,6 +10,7 @@ export const moduleConfig: ModuleConfig = {
   description: "Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi.",
   category: "OFFICIAL",
   hasSchema: true,
+  topNav: topNav as TopNavItem[],
   nav: [
     {
       href: "/evrak",

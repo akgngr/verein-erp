@@ -1,0 +1,45 @@
+[
+  {
+    "key": "sync",
+    "label": "Üyelik aktarımı",
+    "labelKey": "actions.sync",
+    "href": "/muhasebe/uyelik-aktarimi",
+    "icon": "Users"
+  },
+  {
+    "key": "reports",
+    "label": "Raporlar",
+    "labelKey": "actions.reports",
+    "href": "/muhasebe/raporlar",
+    "icon": "BarChart3"
+  },
+  {
+    "key": "budget",
+    "label": "Bütçe (Haushaltsplan)",
+    "labelKey": "actions.budget",
+    "href": "/muhasebe/butce",
+    "icon": "PieChart"
+  },
+  {
+    "key": "yearClosing",
+    "label": "Yıl kapanışı",
+    "labelKey": "actions.yearClosing",
+    "href": "/muhasebe/yil-kapanisi",
+    "icon": "CalendarCheck"
+  },
+  {
+    "key": "settings",
+    "label": "Ayarlar",
+    "labelKey": "actions.settings",
+    "href": "/muhasebe/ayarlar",
+    "icon": "SlidersHorizontal"
+  },
+  {
+    "key": "export",
+    "label": "Excel'e aktar",
+    "labelKey": "actions.export",
+    "href": "/api/accounting/export",
+    "icon": "Download",
+    "isDownload": true
+  }
+]

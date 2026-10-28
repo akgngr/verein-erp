@@ -1,7 +1,8 @@
 import { HandHeart } from "lucide-react";
 
-import type { ModuleConfig } from "@/shared/types/module";
+import type { ModuleConfig, TopNavItem } from "@/shared/types/module";
 import { donationsPermissions } from "./permissions";
+import topNav from "./menu/top.json";
 
 export const moduleConfig: ModuleConfig = {
   key: "donations",
@@ -9,6 +10,7 @@ export const moduleConfig: ModuleConfig = {
   description: "Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı takibi.",
   category: "OFFICIAL",
   hasSchema: true,
+  topNav: topNav as TopNavItem[],
   nav: [
     {
       href: "/bagislar",
