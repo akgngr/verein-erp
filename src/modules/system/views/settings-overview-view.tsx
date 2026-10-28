@@ -4,6 +4,7 @@ import {
   Calculator,
   ChevronRight,
   Globe2,
+  Palette,
   ShieldAlert,
   Users,
 } from "lucide-react";
@@ -21,6 +22,7 @@ import { accountingPermissions } from "@/modules/accounting";
 import { cn } from "@/shared/utils";
 
 import { LanguageSettingCard } from "../components/language-setting-card";
+import { ThemeSettingCard } from "../components/theme-setting-card";
 
 export async function SettingsOverviewView() {
   const user = await requireUser();
@@ -98,23 +100,48 @@ export async function SettingsOverviewView() {
         description={t("subtitle")}
       />
 
-      {/* 1. Dil ve Bölge Yapılandırması */}
-      <section className="p-5 rounded-2xl border border-default-200/80 bg-content1 shadow-xs">
-        <div className="flex items-center gap-2.5">
-          <div className="h-8 w-8 rounded-lg bg-primary-100 dark:bg-primary-500/20 text-primary-600 dark:text-primary-300 flex items-center justify-center">
-            <Globe2 className="h-4 w-4" />
-          </div>
+      {/* 1. Dil ve Tema / Görünüm Yapılandırması */}
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+        {/* Dil Seçimi */}
+        <section className="p-5 rounded-2xl border border-default-200/80 bg-content1 shadow-xs flex flex-col justify-between">
           <div>
-            <h3 className="text-small font-semibold text-foreground">
-              {t("languageSection.title")}
-            </h3>
-            <p className="text-tiny text-default-400">
-              {t("languageSection.description")}
-            </p>
+            <div className="flex items-center gap-2.5">
+              <div className="h-8 w-8 rounded-lg bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-300 flex items-center justify-center">
+                <Globe2 className="h-4 w-4" />
+              </div>
+              <div>
+                <h3 className="text-small font-semibold text-foreground">
+                  {t("languageSection.title")}
+                </h3>
+                <p className="text-tiny text-default-400">
+                  {t("languageSection.description")}
+                </p>
+              </div>
+            </div>
+            <LanguageSettingCard onSetLocale={setLocaleAction} />
           </div>
-        </div>
-        <LanguageSettingCard onSetLocale={setLocaleAction} />
-      </section>
+        </section>
+
+        {/* Tema Seçimi */}
+        <section className="p-5 rounded-2xl border border-default-200/80 bg-content1 shadow-xs flex flex-col justify-between">
+          <div>
+            <div className="flex items-center gap-2.5">
+              <div className="h-8 w-8 rounded-lg bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-300 flex items-center justify-center">
+                <Palette className="h-4 w-4" />
+              </div>
+              <div>
+                <h3 className="text-small font-semibold text-foreground">
+                  {t("themeSection.title")}
+                </h3>
+                <p className="text-tiny text-default-400">
+                  {t("themeSection.description")}
+                </p>
+              </div>
+            </div>
+            <ThemeSettingCard />
+          </div>
+        </section>
+      </div>
 
       {/* 2. Sistem & Yönetim Ayar Kartları */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

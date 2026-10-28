@@ -1626,6 +1626,16 @@
       "de": "Deutsch",
       "switchSuccess": "Arayüz dili başarıyla değiştirildi."
     },
+    "themeSection": {
+      "title": "Görünüm ve Tema",
+      "description": "Arayüz renk şemasını ve görünüm tercihlerinizi belirleyin.",
+      "light": "Açık Tema",
+      "lightDesc": "Aydınlık ve yüksek kontrastlı standart arayüz",
+      "dark": "Koyu Tema",
+      "darkDesc": "Göz yormayan koyu arka plan ve yumuşak renkler",
+      "system": "Sistem Teması",
+      "systemDesc": "Cihazınızın işletim sistemi temasıyla otomatik senkronize"
+    },
     "cards": {
       "organization": {
         "title": "Dernek Bilgileri",
@@ -1653,13 +1663,5 @@
         "action": "Ayarlar"
       }
     }
-  },
-  "testmod": {
-    "title": "Test Modülü",
-    "description": "Test Modülü yönetim modülü.",
-    "listTitle": "Test Modülü Listesi",
-    "newItem": "Yeni Test Modülü",
-    "emptyTitle": "Henüz kayıt bulunmuyor",
-    "emptyDescription": "İlk kaydınızı eklemek için 'Yeni Test Modülü' butonuna tıklayın."
   }
 }

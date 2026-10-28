@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 import type { SessionUser } from "@/modules/auth";
-import { requireUser, signOutAction, setLocaleAction } from "@/modules/auth/server";
+import { requireUser, signOutAction } from "@/modules/auth/server";
 import { getAllActiveModuleKeys } from "@/shared/modules/module-store";
 import { allModules } from "@/registry";
 
@@ -31,18 +31,24 @@ export default async function DashboardLayout({
   return (
     <SidebarProvider>
       <div className="flex min-h-dvh">
-        <DesktopSidebar role={user.role} activeModuleKeys={activeModuleKeys} />
+        <DesktopSidebar
+          role={user.role}
+          activeModuleKeys={activeModuleKeys}
+          userName={user.name}
+          userEmail={user.email}
+          onSignOut={signOutAction}
+        />
         <div className="flex min-w-0 flex-1 flex-col">
-          <Topbar
-            name={user.name}
-            email={user.email}
-            role={user.role}
-            onSignOut={signOutAction}
-            onSetLocale={setLocaleAction}
-          />
+          <Topbar />
           <main className="flex-1 px-4 py-6 md:px-6">{children}</main>
         </div>
-        <MobileSidebar role={user.role} activeModuleKeys={activeModuleKeys} />
+        <MobileSidebar
+          role={user.role}
+          activeModuleKeys={activeModuleKeys}
+          userName={user.name}
+          userEmail={user.email}
+          onSignOut={signOutAction}
+        />
       </div>
     </SidebarProvider>
   );

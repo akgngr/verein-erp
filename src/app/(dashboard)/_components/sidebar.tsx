@@ -1,14 +1,25 @@
 "use client";
 
-import { Button, Drawer, DrawerBody, DrawerContent, DrawerHeader } from "@heroui/react";
-import { Building2, LayoutDashboard, Menu as MenuIcon } from "lucide-react";
+import {
+  Button,
+  Chip,
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerHeader,
+  Dropdown,
+  DropdownItem,
+  DropdownMenu,
+  DropdownTrigger,
+} from "@heroui/react";
+import { Building2, LayoutDashboard, LogOut, Menu as MenuIcon, Settings, UserRound } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { createContext, useContext, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 
 import { registry } from "@/registry";
-import type { Role } from "@/shared/roles";
+import { ROLE_COLORS, ROLE_LABELS, type Role } from "@/shared/roles";
 import { can } from "@/shared/permissions/define";
 import type { NavItem } from "@/shared/types/module";
 import { cn } from "@/shared/utils";
@@ -162,18 +173,144 @@ function Brand() {
   );
 }
 
+function SidebarUserFooter({
+  name,
+  email,
+  role,
+  onSignOut,
+  onNavigate,
+}: {
+  name: string;
+  email: string;
+  role: Role;
+  onSignOut: () => Promise<void>;
+  onNavigate?: () => void;
+}) {
+  const tNav = useTranslations("nav");
+  const tSidebar = useTranslations("sidebar");
+  const initials = name
+    .split(" ")
+    .map((part) => part.charAt(0).toUpperCase())
+    .slice(0, 2)
+    .join("");
+
+  return (
+    <div className="border-t border-default-200/80 p-3 bg-default-50/50 shrink-0">
+      <Dropdown placement="top-start">
+        <DropdownTrigger>
+          <button
+            type="button"
+            className="group flex w-full items-center gap-2.5 rounded-xl p-2 text-left transition-all duration-150 hover:bg-default-100/90 cursor-pointer"
+            aria-label={tSidebar.has("userMenu") ? tSidebar("userMenu") : "Kullanıcı menüsü"}
+          >
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground font-semibold text-small shadow-xs group-hover:scale-105 transition-transform">
+              {initials || "?"}
+            </div>
+            <div className="flex min-w-0 flex-1 flex-col">
+              <span className="truncate text-small font-semibold text-foreground leading-tight">
+                {name}
+              </span>
+              <span className="truncate text-tiny text-default-400 leading-tight">
+                {email}
+              </span>
+            </div>
+            <Chip
+              size="sm"
+              variant="flat"
+              color={ROLE_COLORS[role]}
+              className="h-5 text-[10px] shrink-0"
+            >
+              {ROLE_LABELS[role]}
+            </Chip>
+          </button>
+        </DropdownTrigger>
+        <DropdownMenu aria-label={tSidebar.has("userActions") ? tSidebar("userActions") : "Kullanıcı işlemleri"}>
+          <DropdownItem key="identity" isReadOnly showDivider>
+            <div className="flex flex-col gap-1 py-1">
+              <p className="text-small font-semibold text-foreground">{name}</p>
+              <p className="text-tiny text-default-500">{email}</p>
+              <Chip color={ROLE_COLORS[role]} size="sm" variant="flat" className="mt-1 self-start">
+                {ROLE_LABELS[role]}
+              </Chip>
+            </div>
+          </DropdownItem>
+          <DropdownItem
+            key="profile"
+            startContent={<UserRound className="h-4 w-4 text-default-500" />}
+            href="/profil"
+            onPress={onNavigate}
+          >
+            {tNav.has("profil") ? tNav("profil") : "Profil"}
+          </DropdownItem>
+          <DropdownItem
+            key="settings"
+            startContent={<Settings className="h-4 w-4 text-default-500" />}
+            href="/ayarlar"
+            onPress={onNavigate}
+          >
+            {tNav.has("ayarlar") ? tNav("ayarlar") : "Ayarlar"}
+          </DropdownItem>
+          <DropdownItem
+            key="logout"
+            color="danger"
+            className="text-danger"
+            startContent={<LogOut className="h-4 w-4" />}
+            onPress={() => void onSignOut()}
+          >
+            Çıkış yap
+          </DropdownItem>
+        </DropdownMenu>
+      </Dropdown>
+    </div>
+  );
+}
+
 /** Masaüstü sabit sidebar (256px). */
-function DesktopSidebar({ role, activeModuleKeys }: { role: Role; activeModuleKeys?: string[] }) {
+function DesktopSidebar({
+  role,
+  activeModuleKeys,
+  userName,
+  userEmail,
+  onSignOut,
+}: {
+  role: Role;
+  activeModuleKeys?: string[];
+  userName?: string;
+  userEmail?: string;
+  onSignOut?: () => Promise<void>;
+}) {
   return (
     <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-default-200/80 bg-background/95 backdrop-blur-sm lg:flex">
       <Brand />
-      <SidebarContent role={role} activeModuleKeys={activeModuleKeys} />
+      <div className="flex-1 overflow-y-auto">
+        <SidebarContent role={role} activeModuleKeys={activeModuleKeys} />
+      </div>
+      {userName && onSignOut && (
+        <SidebarUserFooter
+          name={userName}
+          email={userEmail ?? ""}
+          role={role}
+          onSignOut={onSignOut}
+        />
+      )}
     </aside>
   );
 }
 
 /** Mobil (<1024px) HeroUI Drawer. */
-function MobileSidebar({ role, activeModuleKeys }: { role: Role; activeModuleKeys?: string[] }) {
+function MobileSidebar({
+  role,
+  activeModuleKeys,
+  userName,
+  userEmail,
+  onSignOut,
+}: {
+  role: Role;
+  activeModuleKeys?: string[];
+  userName?: string;
+  userEmail?: string;
+  onSignOut?: () => Promise<void>;
+}) {
   const { mobileOpen, setMobileOpen } = useSidebar();
   return (
     <Drawer
@@ -185,14 +322,27 @@ function MobileSidebar({ role, activeModuleKeys }: { role: Role; activeModuleKey
     >
       <DrawerContent>
         {(onClose) => (
-          <>
+          <div className="flex h-full flex-col">
             <DrawerHeader className="flex flex-col items-start px-0 pb-0">
               <Brand />
             </DrawerHeader>
-            <DrawerBody className="px-0">
-              <SidebarContent role={role} activeModuleKeys={activeModuleKeys} onNavigate={onClose} />
+            <DrawerBody className="flex-1 overflow-y-auto px-0">
+              <SidebarContent
+                role={role}
+                activeModuleKeys={activeModuleKeys}
+                onNavigate={onClose}
+              />
             </DrawerBody>
-          </>
+            {userName && onSignOut && (
+              <SidebarUserFooter
+                name={userName}
+                email={userEmail ?? ""}
+                role={role}
+                onSignOut={onSignOut}
+                onNavigate={onClose}
+              />
+            )}
+          </div>
         )}
       </DrawerContent>
     </Drawer>

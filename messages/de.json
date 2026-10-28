@@ -1626,6 +1626,16 @@
       "de": "Deutsch",
       "switchSuccess": "Die Sprache der Benutzeroberfläche wurde erfolgreich geändert."
     },
+    "themeSection": {
+      "title": "Erscheinungsbild & Design",
+      "description": "Legen Sie das Farbschema und die Anzeigeoptionen fest.",
+      "light": "Helles Design",
+      "lightDesc": "Helles und kontrastreiches Standard-Interface",
+      "dark": "Dunkles Design",
+      "darkDesc": "Augenschonender dunkler Hintergrund mit sanften Akzenten",
+      "system": "Systemstandard",
+      "systemDesc": "Synchronisiert sich automatisch mit den Einstellungen Ihres Betriebssystems"
+    },
     "cards": {
       "organization": {
         "title": "Vereinsdaten",
@@ -1653,13 +1663,5 @@
         "action": "Einstellungen"
       }
     }
-  },
-  "testmod": {
-    "title": "Test Modülü",
-    "description": "Test Modülü yönetim modülü.",
-    "listTitle": "Test Modülü-Übersicht",
-    "newItem": "Neuer Eintrag",
-    "emptyTitle": "Keine Einträge vorhanden",
-    "emptyDescription": "Klicken Sie auf 'Neuer Eintrag', um den ersten Datensatz anzulegen."
   }
 }
