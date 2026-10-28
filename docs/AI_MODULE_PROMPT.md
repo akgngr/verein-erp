@@ -13,8 +13,8 @@ Sen Verein ERP dernek yönetim sistemi için üretim kalitesinde (production-rea
 Senden projemiz için `<MODUL_ADI>` (örn: `inventory`, `sponsors`, `events`) adında yeni bir bağımsız eklenti modülü geliştirmeni istiyorum.
 
 PROJE MİMARİSİ VE SINIR KURALLARI:
-1. Dikey Dilim İzolasyonu (Vertical Slice Architecture): Modüle ait tüm dosyalar `src/modules/<MODUL_ADI>/` altında ve rota sayfası `src/app/(dashboard)/<MODUL_ADI>/page.tsx` altında olmalıdır.
-2. Sıfır Çekirdek Teması (Zero-Touch Core): `src/registry.ts`, `prisma/schema/base.prisma` veya kök `messages/` dosyalarına DOKUNMA. Kod yazma.
+1. Dikey Dilim İzolasyonu (Vertical Slice Architecture): Modüle ait tüm dosyalar ve sayfa rotası İSTİSNASIZ `src/modules/<MODUL_ADI>/` altında olmalıdır. `src/app` dizinine ASLA dosya yazma.
+2. Sıfır Çekirdek Teması (Zero-Touch Core): `src/registry.ts`, `prisma/schema/base.prisma`, `src/app/` veya kök `messages/` dosyalarına DOKUNMA. Kod yazma.
 3. Katı İthalat Sınırları (Strict Imports): Başka bir modülün iç dosyalarını ASLA doğrudan import etme. Yalnızca `@/modules/<modul>`, `@/modules/<modul>/server` ve `@/modules/<modul>/ui` public API'larını kullan. Modül içinden `src/app` katmanını ASLA import etme.
 4. Sayfa Eylem Ayrımı: `PageHeader actions` alanına YALNIZCA doğrudan ana CRUD butonunu (`+ Yeni Ekle`) koy. Araçlar, raporlar ve dışa aktarma bağlantılarını `menu/top.json` içinde tanımla.
 5. KRİTİK SSR Hydration Kuralı: Tablo satırları (`map`) veya dinamik listeler içinde asla HeroUI'ın `<Select>` bileşenini kullanma. Bunun yerine stillendirilmiş native HTML `<select>` ve yanında Lucide `<ChevronDown>` kullan (React 19 / Next.js 16 SSR ID hydration mismatch hatalarını önler).
@@ -48,8 +48,8 @@ Lütfen bana her bir dosyanın TAM DOSYA YOLUNU ve EKSİKSİZ ÇALIŞAN KODUNU s
     - Tablo bileşeni. SSR Hydration Mismatch hatası vermemesi için tablo satırlarında HeroUI Select YERİNE native HTML `<select>` kullan.
 13. `src/modules/<MODUL_ADI>/views/<MODUL_ADI>-list-view.tsx`:
     - `PageHeader` (actions kısmında yalnızca `+ Yeni Ekle` butonu olmalı) ve tabloyu render eden ana RSC görünümü.
-14. `src/app/(dashboard)/<MODUL_ADI>/page.tsx`:
-    - Sayfa rotası.
+14. `src/modules/<MODUL_ADI>/page.tsx`:
+    - Modülün Next.js Server Component sayfası. NOT: `src/app` dizinine ASLA kod yazma; sistem `pnpm module:sync` ile Next.js köprüsünü otomatik oluşturur.
 
 Lütfen kodları placeholder veya "TODO" bırakmadan, çalışmaya hazır ve eksiksiz olarak üret.
 ```

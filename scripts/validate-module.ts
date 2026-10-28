@@ -232,14 +232,16 @@ export function validateModule(moduleKey: string, customModulesDir?: string): Mo
     }
   }
 
-  // 8. Dashboard rota kontrolü (varsa)
+  // 8. Dashboard sayfa kontrolü (modül içinde src/modules/<module>/page.tsx veya app altında)
   if (info.category !== "CORE" && moduleKey !== "auth") {
-    const directPage = path.join(APP_DIR, moduleKey, "page.tsx");
-    // Alternatif Türkçe rota eşleşmesi için module.config.ts içindeki href taranır
+    const internalPage = path.join(moduleDir, "page.tsx");
+    const directAppPage = path.join(APP_DIR, moduleKey, "page.tsx");
+    
+    // Alternatif rota eşleşmesi için module.config.ts içindeki href taranır
     const configText = fs.existsSync(configPath) ? fs.readFileSync(configPath, "utf8") : "";
     const hrefMatches = [...configText.matchAll(/href:\s*["']\/([^"']+)["']/g)];
     
-    let hasMatchingRoute = fs.existsSync(directPage);
+    let hasMatchingRoute = fs.existsSync(internalPage) || fs.existsSync(directAppPage);
     for (const match of hrefMatches) {
       const routeSegment = match[1];
       const routeFile = path.join(APP_DIR, routeSegment, "page.tsx");
@@ -251,7 +253,7 @@ export function validateModule(moduleKey: string, customModulesDir?: string): Mo
 
     info.hasAppRoute = hasMatchingRoute;
     if (!hasMatchingRoute) {
-      warnings.push(`Modül için dashboard sayfası bulunamadı (örn: src/app/(dashboard)/${moduleKey}/page.tsx).`);
+      warnings.push(`Modül için dashboard sayfası bulunamadı (src/modules/${moduleKey}/page.tsx oluşturulmalıdır).`);
     }
   }
 
@@ -260,7 +262,7 @@ export function validateModule(moduleKey: string, customModulesDir?: string): Mo
   for (const file of tsFiles) {
     const content = fs.readFileSync(file, "utf8");
 
-    // Yasak 1: Başka modüllerin iç dosyalarına erişim (sadece @/modules/<target>, @/modules/<target>/server, @/modules/<target>/ui, @/modules/<target>/edge serbesttir)
+    // Yasak 1: Başka modüllerin iç dosyalarına erişim (sadece @/modules/<target>, @/modules/<target>/server, @/modules/<target>/ui, @/modules/<target>/page, @/modules/<target>/edge serbesttir)
     const importMatches = [...content.matchAll(/from\s+["']@\/modules\/([^"']+)["']/g)];
     for (const match of importMatches) {
       const importPath = match[1];
@@ -272,7 +274,7 @@ export function validateModule(moduleKey: string, customModulesDir?: string): Mo
       if (targetModule === moduleKey) continue;
 
       // Public giriş noktaları serbest
-      if (!subPath || subPath === "server" || subPath === "ui" || subPath === "edge") {
+      if (!subPath || subPath === "server" || subPath === "ui" || subPath === "edge" || subPath === "page") {
         continue;
       }
 

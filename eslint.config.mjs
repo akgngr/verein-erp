@@ -5,13 +5,21 @@ import nextTypescript from "eslint-config-next/typescript";
 //   @/modules/<modül>          → index.ts (izomorfik)
 //   @/modules/<modül>/server   → sunucu girişi
 //   @/modules/<modül>/ui       → UI girişi
+//   @/modules/<modül>/page     → Dashboard sayfa girişi (otomatik senkronize)
 //   @/modules/<modül>/edge     → yalnızca auth modülü (middleware)
 // KARAR: Desen; "@ /modules/x/queries/y" gibi derin içe aktarmaları da kapsasın diye
 // "@ /modules/*/**" ile genişletildi. İstisnalar yalnızca tam public giriş yollarıdır.
 const MODULE_INTERNAL_IMPORTS = {
-  group: ["@/modules/*/*", "@/modules/*/**", "!@/modules/*/server", "!@/modules/*/ui", "!@/modules/*/edge"],
+  group: [
+    "@/modules/*/*",
+    "@/modules/*/**",
+    "!@/modules/*/server",
+    "!@/modules/*/ui",
+    "!@/modules/*/page",
+    "!@/modules/*/edge",
+  ],
   message:
-    "Modül iç dosyalarına doğrudan erişim yasaktır. Public girişler: @/modules/<modül>, @/modules/<modül>/server, @/modules/<modül>/ui",
+    "Modül iç dosyalarına doğrudan erişim yasaktır. Public girişler: @/modules/<modül>, @/modules/<modül>/server, @/modules/<modül>/ui, @/modules/<modül>/page",
 };
 
 const eslintConfig = [

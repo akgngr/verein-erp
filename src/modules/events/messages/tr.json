@@ -1,0 +1,74 @@
+{
+  "title": "Etkinlikler",
+  "description": "Dernek etkinlikleri, seminerler, toplantılar ve katılımcı listeleri.",
+  "newEvent": "Yeni Etkinlik",
+  "editEvent": "Etkinliği Düzenle",
+  "deleteEvent": "Etkinliği Sil",
+  "detail": "Etkinlik Detayı",
+  "backToList": "Tüm Etkinliklere Dön",
+  "emptyTitle": "Henüz etkinlik bulunmuyor",
+  "emptyDescription": "Yeni bir seminer, atölye veya dernek buluşması oluşturmak için butona tıklayın.",
+  "stats": {
+    "total": "Toplam Etkinlik",
+    "upcoming": "Yaklaşan Etkinlikler",
+    "attendeesMonth": "Bu Ayki Katılımcı",
+    "capacityUsage": "Doluluk Oranı"
+  },
+  "fields": {
+    "title": "Etkinlik Başlığı",
+    "description": "Açıklama",
+    "type": "Etkinlik Türü",
+    "status": "Durum",
+    "startDate": "Başlangıç Zamanı",
+    "endDate": "Bitiş Zamanı",
+    "location": "Konum / Adres",
+    "isOnline": "Çevrim İçi (Online) Etkinlik",
+    "onlineUrl": "Toplantı Bağlantısı (URL)",
+    "capacity": "Kontenjan (Kişi Sayısı)",
+    "unlimited": "Sınırsız",
+    "notes": "Notlar"
+  },
+  "types": {
+    "WORKSHOP": "Atölye",
+    "SEMINAR": "Seminer",
+    "SOCIAL": "Sosyal Buluşma",
+    "CULTURAL": "Kültürel Etkinlik",
+    "SPORTS": "Spor Faaliyeti",
+    "OTHER": "Diğer"
+  },
+  "status": {
+    "DRAFT": "Taslak",
+    "PUBLISHED": "Yayında",
+    "COMPLETED": "Tamamlandı",
+    "CANCELLED": "İptal Edildi"
+  },
+  "attendees": {
+    "title": "Katılımcı Kayıtları",
+    "add": "Yeni Katılımcı Ekle",
+    "firstName": "Ad",
+    "lastName": "Soyad",
+    "email": "E-Posta",
+    "phone": "Telefon",
+    "registeredAt": "Kayıt Tarihi",
+    "status": "Katılım Durumu",
+    "member": "Dernek Üyesi",
+    "guest": "Misafir",
+    "empty": "Henüz kayıtlı katılımcı bulunmamaktadır.",
+    "capacityReached": "Bu etkinliğin kontenjanı tamamen dolmuştur."
+  },
+  "attendeeStatus": {
+    "REGISTERED": "Kayıtlı",
+    "ATTENDED": "Katıldı",
+    "CANCELLED": "İptal"
+  },
+  "actions": {
+    "save": "Kaydet",
+    "cancel": "Vazgeç",
+    "delete": "Sil",
+    "confirmDelete": "Bu etkinliği silmek istediğinizden emin misiniz? Katılımcı kayıtları da silinecektir.",
+    "searchPlaceholder": "Etkinlik başlığı veya konum ara...",
+    "filterType": "Tür Filtresi",
+    "filterStatus": "Durum Filtresi",
+    "all": "Tümü"
+  }
+}

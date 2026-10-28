@@ -1,0 +1,74 @@
+{
+  "title": "Veranstaltungen",
+  "description": "Vereinsveranstaltungen, Seminare, Workshops und Teilnehmerverwaltung.",
+  "newEvent": "Neue Veranstaltung",
+  "editEvent": "Veranstaltung bearbeiten",
+  "deleteEvent": "Veranstaltung löschen",
+  "detail": "Veranstaltungsdetails",
+  "backToList": "Zurück zur Übersicht",
+  "emptyTitle": "Keine Veranstaltungen vorhanden",
+  "emptyDescription": "Klicken Sie auf den Button, um die erste Veranstaltung für den Verein anzulegen.",
+  "stats": {
+    "total": "Gesamtanzahl",
+    "upcoming": "Bevorstehend",
+    "attendeesMonth": "Teilnehmer diesen Monat",
+    "capacityUsage": "Auslastung"
+  },
+  "fields": {
+    "title": "Veranstaltungstitel",
+    "description": "Beschreibung",
+    "type": "Kategorie / Art",
+    "status": "Status",
+    "startDate": "Beginn",
+    "endDate": "Ende",
+    "location": "Veranstaltungsort",
+    "isOnline": "Online-Veranstaltung",
+    "onlineUrl": "Meeting-Link (URL)",
+    "capacity": "Maximale Teilnehmerzahl",
+    "unlimited": "Unbegrenzt",
+    "notes": "Notizen"
+  },
+  "types": {
+    "WORKSHOP": "Workshop",
+    "SEMINAR": "Seminar",
+    "SOCIAL": "Geselligkeit & Treffen",
+    "CULTURAL": "Kulturveranstaltung",
+    "SPORTS": "Sportliche Aktivität",
+    "OTHER": "Sonstiges"
+  },
+  "status": {
+    "DRAFT": "Entwurf",
+    "PUBLISHED": "Veröffentlicht",
+    "COMPLETED": "Abgeschlossen",
+    "CANCELLED": "Abgesagt"
+  },
+  "attendees": {
+    "title": "Teilnehmerliste",
+    "add": "Teilnehmer hinzufügen",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "email": "E-Mail",
+    "phone": "Telefonnummer",
+    "registeredAt": "Anmeldedatum",
+    "status": "Teilnahmestatus",
+    "member": "Vereinsmitglied",
+    "guest": "Gast",
+    "empty": "Bisher sind keine Teilnehmer für dieses Event registriert.",
+    "capacityReached": "Die maximale Teilnehmerkapazität ist erreicht."
+  },
+  "attendeeStatus": {
+    "REGISTERED": "Angemeldet",
+    "ATTENDED": "Teilgenommen",
+    "CANCELLED": "Abgemeldet"
+  },
+  "actions": {
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "confirmDelete": "Möchten Sie dieses Event wirklich löschen? Alle Teilnehmerdaten werden gelöscht.",
+    "searchPlaceholder": "Veranstaltung oder Ort suchen...",
+    "filterType": "Kategorie-Filter",
+    "filterStatus": "Status-Filter",
+    "all": "Alle"
+  }
+}

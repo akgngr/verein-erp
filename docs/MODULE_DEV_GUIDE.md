@@ -27,17 +27,13 @@ Bu rehber, **Verein ERP** sistemine diğer modülleri ve çekirdek sistemi bozma
 
 ## 2. Eksiksiz Modül Klasör Ağacı (Complete Tree Structure)
 
-Projeye terminal erişimi olmayan bir AI, aşağıdaki tüm klasörleri ve dosyaları doğrudan oluşturmalıdır:
+Projeye terminal erişimi olmayan bir AI veya geliştirici, **`src/app` katmanına ASLA dokunmadan**, tüm modülü yalnızca `src/modules/<modul_adi>/` altında oluşturur. `pnpm module:sync` komutu `page.tsx` dosyasını otomatik olarak keşfeder ve `src/app/(dashboard)/<modul_adi>/page.tsx` köprüsünü kendisi kurar:
 
 ```text
 src/
-├── app/
-│   └── (dashboard)/
-│       └── <modul_adi>/                      # Örn: inventory
-│           └── page.tsx                      # Dashboard rota sayfası (RSC)
-│
 └── modules/
     └── <modul_adi>/                          # Örn: inventory
+        ├── page.tsx                         # [OTOMATİK ROTA] Modülün Next.js sayfası (src/app'e dokunulmaz!)
         ├── module.config.ts                  # Modül meta verisi, sidebar menü tanımı, yetki bağlamı
         ├── permissions.ts                   # definePermissions ile rol bazlı yetki matrisi
         ├── schema.prisma                    # Modülün Prisma veritabanı modelleri
@@ -238,11 +234,16 @@ export { InventoryListView } from "./views/inventory-list-view";
 
 ---
 
-### 7. Dashboard Sayfası (`src/app/(dashboard)/<modul_adi>/page.tsx`)
-```typescript
-import { InventoryListView } from "@/modules/inventory/ui";
+### 7. Modül Sayfası (`src/modules/<modul_adi>/page.tsx`)
+> **Önemli:** Next.js App Router köprüsü (`src/app/(dashboard)/<modul_adi>/page.tsx`) `pnpm module:sync` tarafından otomatik olarak üretilir. Geliştirici veya AI doğrudan modülün kendi içindeki `src/modules/<modul_adi>/page.tsx` dosyasını yazar; `src/app` dizinine ASLA manuel dosya eklemez.
 
-export const metadata = { title: "Envanter" };
+```typescript
+import { InventoryListView } from "./views/inventory-list-view";
+
+export const metadata = {
+  title: "Envanter — Verein ERP",
+  description: "Dernek demirbaş ve malzeme takibi.",
+};
 
 export default async function InventoryPage({
   searchParams,
@@ -286,8 +287,8 @@ Sen Verein ERP dernek yönetim sistemi için üretim kalitesinde (production-rea
 Senden projemiz için `<MODUL_ADI>` (örn: `inventory`, `sponsors`, `events`) adında yeni bir bağımsız modül geliştirmeni istiyorum.
 
 PROJE MİMARİSİ VE SINIR KURALLARI:
-1. Dikey Dilim İzolasyonu (Vertical Slice Architecture): Modüle ait tüm dosyalar `src/modules/<MODUL_ADI>/` altında ve rota sayfası `src/app/(dashboard)/<MODUL_ADI>/page.tsx` altında olmalıdır.
-2. Sıfır Çekirdek Teması (Zero-Touch Core): `src/registry.ts`, `prisma/schema/base.prisma` veya kök `messages/` dosyalarına DOKUNMA. Kod yazma.
+1. Dikey Dilim İzolasyonu (Vertical Slice Architecture): Modüle ait tüm dosyalar ve sayfa rotası İSTİSNASIZ `src/modules/<MODUL_ADI>/` altında olmalıdır. `src/app` dizinine ASLA dosya yazma.
+2. Sıfır Çekirdek Teması (Zero-Touch Core): `src/registry.ts`, `prisma/schema/base.prisma`, `src/app/` veya kök `messages/` dosyalarına DOKUNMA. Kod yazma.
 3. Katı İthalat Sınırları (Strict Imports): Başka bir modülün iç dosyalarını ASLA doğrudan import etme. Yalnızca `@/modules/<modul>`, `@/modules/<modul>/server` ve `@/modules/<modul>/ui` public API'larını kullan. Modül içinden `src/app` katmanını ASLA import etme.
 
 SENİN ÜRETMEN GEREKEN DOSYALAR:
@@ -319,8 +320,8 @@ Lütfen bana her bir dosyanın TAM DOSYA YOLUNU ve EKSİKSİZ ÇALIŞAN KODUNU s
     - Tablo bileşeni. SSR Hydration Mismatch hatası vermemesi için tablo satırlarında HeroUI Select YERİNE native HTML `<select>` kullan.
 13. `src/modules/<MODUL_ADI>/views/<MODUL_ADI>-list-view.tsx`:
     - `PageHeader` (actions kısmında yalnızca `+ Yeni Ekle` butonu olmalı) ve tabloyu render eden ana RSC görünümü.
-14. `src/app/(dashboard)/<MODUL_ADI>/page.tsx`:
-    - Sayfa rotası.
+14. `src/modules/<MODUL_ADI>/page.tsx`:
+    - Modülün Next.js Server Component sayfası. NOT: `src/app` dizinine ASLA kod yazma; sistem `pnpm module:sync` ile Next.js köprüsünü otomatik oluşturur.
 
 Lütfen kodları placeholder veya "TODO" bırakmadan, çalışmaya hazır ve eksiksiz olarak üret.
 ```

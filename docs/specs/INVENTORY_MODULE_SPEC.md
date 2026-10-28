@@ -28,8 +28,8 @@ Projede katı dikey dilim izolasyonu (Vertical Slice Architecture) ve modül kam
 2. MİMARİ VE TEKNİK KURALLAR (KESİNLİKLE ÇİĞNENEMEZ)
 ================================================================================
 1. SIFIR ÇEKİRDEK TEMASI (ZERO-TOUCH CORE):
-   - Yalnızca `src/modules/inventory/` ve `src/app/(dashboard)/inventory/page.tsx` dosyalarını üret.
-   - `src/registry.ts`, `prisma/schema/base.prisma` veya kök `messages/*.json` dosyalarına ASLA dokunma! (Bunlar `pnpm module:sync` ile otomatik bağlanacaktır).
+   - Yalnızca `src/modules/inventory/` altındaki dosyaları üret. `src/app` dizinine ASLA manuel dosya yazma.
+   - `src/registry.ts`, `prisma/schema/base.prisma`, `src/app/` veya kök `messages/*.json` dosyalarına ASLA dokunma! (Bunlar `pnpm module:sync` ile otomatik bağlanacaktır).
 2. TABLO İSİMLENDİRME KURALI:
    - Tüm tablolarda çakışmayı önlemek için `@@map("inventory_...")` kullan (Örn: `@@map("inventory_items")`).
    - Dış tablolara zorlayıcı foreign key `@relation` yazma, yumuşak referans kullan (`assignedMemberId String?`).
@@ -89,8 +89,8 @@ Lütfen bana her bir dosyanın TAM YOLUNU ve EKSİKSİZ, ÇALIŞMAYA HAZIR KODUN
     - `DataTable` ile demirbaş listesi, durum rozetleri, silme/düzenleme butonları.
 17. `src/modules/inventory/views/inventory-list-view.tsx`:
     - `PageHeader`, istatistik kartları (Toplam adet, Kullanımda, Arızalı), arama/filtre araç çubuğu ve tabloyu içeren ana RSC görünümü.
-18. `src/app/(dashboard)/inventory/page.tsx`:
-    - Dashboard RSC sayfası (`<InventoryListView searchParams={searchParams} />`).
+18. `src/modules/inventory/page.tsx`:
+    - Modülün ana Next.js Server Component sayfası (`<InventoryListView searchParams={searchParams} />`). NOT: `src/app/(dashboard)/inventory/page.tsx` köprüsü `pnpm module:sync` tarafından otomatik olarak üretilir.
 
 Lütfen kodları placeholder veya "TODO" bırakmadan, projeye yapıştırıldığında doğrudan çalışacak şekilde eksiksiz üret.
 ```

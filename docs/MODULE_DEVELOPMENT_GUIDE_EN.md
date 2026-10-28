@@ -27,17 +27,13 @@ This guide outlines the architectural standards, vertical slice directory struct
 
 ## 2. Complete Module Directory Tree
 
-For an AI agent without direct terminal access, all files must be created according to the following tree:
+For an external developer or AI agent without terminal access, **you NEVER touch `src/app/` directly**. All module files, including the Next.js page, are created inside `src/modules/<module_name>/`. The project's `pnpm module:sync` tool discovers `page.tsx` and automatically manages the `src/app/(dashboard)/<module_name>/page.tsx` bridge:
 
 ```text
 src/
-├── app/
-│   └── (dashboard)/
-│       └── <module_name>/                   # e.g., inventory
-│           └── page.tsx                     # Dashboard RSC page route
-│
 └── modules/
     └── <module_name>/                       # e.g., inventory
+        ├── page.tsx                         # [AUTO ROUTE] Module Next.js page (zero-touch to src/app!)
         ├── module.config.ts                 # Metadata, sidebar nav, permission scope
         ├── permissions.ts                  # Role-based access definitions via definePermissions
         ├── schema.prisma                   # Module Prisma models (additive schema)
@@ -238,11 +234,16 @@ export { InventoryListView } from "./views/inventory-list-view";
 
 ---
 
-### 7. Dashboard Route Page (`src/app/(dashboard)/<module_name>/page.tsx`)
-```typescript
-import { InventoryListView } from "@/modules/inventory/ui";
+### 7. Module Page (`src/modules/<module_name>/page.tsx`)
+> **Note:** The Next.js App Router bridge (`src/app/(dashboard)/<module_name>/page.tsx`) is generated automatically by `pnpm module:sync`. You implement the page directly inside `src/modules/<module_name>/page.tsx` and never touch `src/app/` manually.
 
-export const metadata = { title: "Envanter" };
+```typescript
+import { InventoryListView } from "./views/inventory-list-view";
+
+export const metadata = {
+  title: "Inventory — Verein ERP",
+  description: "Club asset and equipment tracking.",
+};
 
 export default async function InventoryPage({
   searchParams,
@@ -286,8 +287,8 @@ You are a senior full-stack Next.js 16 / TypeScript / Prisma engineer building p
 I want you to build a complete, standalone extension module named `<MODULE_NAME>` (e.g., `inventory`, `sponsors`, `events`).
 
 ARCHITECTURAL PRINCIPLES & BOUNDARY RULES:
-1. Vertical Slice Architecture: All module files must live inside `src/modules/<MODULE_NAME>/` and its route page at `src/app/(dashboard)/<MODULE_NAME>/page.tsx`.
-2. Zero-Touch Core: Never touch or edit `src/registry.ts`, `prisma/schema/base.prisma`, or root `messages/*.json`.
+1. Vertical Slice Architecture: All module files and the page route must live inside `src/modules/<MODULE_NAME>/`. NEVER write files to `src/app/`.
+2. Zero-Touch Core: Never touch or edit `src/registry.ts`, `prisma/schema/base.prisma`, `src/app/`, or root `messages/*.json`.
 3. Strict Public Import Boundaries: Never import internal files of other modules (e.g. `@/modules/auth/queries/...`). Only use `@/modules/<module>`, `@/modules/<module>/server`, and `@/modules/<module>/ui`. Never import `@/app/...` inside a module.
 4. UI Action Separation: In `PageHeader actions`, include ONLY the primary creation button (`+ New ...`). Put secondary sub-pages, tools, and export links inside `menu/top.json`.
 5. SSR Hydration Mismatch Prevention: Never use HeroUI's `<Select>` inside table cells or row mapping loops. Use a styled native HTML `<select>` with Lucide `<ChevronDown>`.
@@ -321,8 +322,8 @@ Provide the FULL PATH and COMPLETE, FUNCTIONAL CODE for each of the following 14
     - Data table using native styled `<select>` for any inline dropdowns.
 13. `src/modules/<MODULE_NAME>/views/<MODULE_NAME>-list-view.tsx`:
     - Main Server Component list view with `PageHeader` and data table.
-14. `src/app/(dashboard)/<MODULE_NAME>/page.tsx`:
-    - Dashboard page route.
+14. `src/modules/<MODULE_NAME>/page.tsx`:
+    - Module Next.js Server Component page. NOTE: Do NOT touch `src/app`; `pnpm module:sync` creates the App Router route automatically.
 ```
 
 ---

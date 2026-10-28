@@ -39,8 +39,8 @@ Projede katı dikey dilim izolasyonu (Vertical Slice Architecture), sıfır çek
 2. MİMARİ VE TEKNİK KURALLAR (KESİNLİKLE ÇİĞNENEMEZ)
 ================================================================================
 1. SIFIR ÇEKİRDEK TEMASI (ZERO-TOUCH CORE):
-   - Yalnızca `src/modules/events/` ve `src/app/(dashboard)/events/page.tsx` rotası üzerinde çalış.
-   - `src/registry.ts`, `prisma/schema/base.prisma` veya kök `messages/*.json` dosyalarına ASLA dokunma! (Bunlar `pnpm module:sync` ile otomatik senkronize edilir).
+   - Yalnızca `src/modules/events/` altında çalış. `src/app` dizinine ASLA manuel dosya yazma.
+   - `src/registry.ts`, `prisma/schema/base.prisma`, `src/app/` veya kök `messages/*.json` dosyalarına ASLA dokunma! (Bunlar `pnpm module:sync` ile otomatik senkronize edilir).
 2. TABLO İSİMLENDİRME KURALI:
    - Tüm tablolarda çakışmayı önlemek için mutlaka `@@map("events_...")` kullan (Örn: `@@map("events_items")`, `@@map("events_attendees")`).
    - Dış modül tablolarına zorlayıcı `@relation` yazma, yumuşak referans kullan (`memberId String?`).
@@ -106,8 +106,8 @@ Lütfen bana her bir dosyanın TAM DOSYA YOLUNU ve EKSİKSİZ, ÇALIŞMAYA HAZIR
     - `PageHeader`, istatistik kartları (Toplam, Yaklaşan, Bu Ayki Katılımcı), araç çubuğu ve tabloyu içeren ana RSC görünümü.
 20. `src/modules/events/views/event-detail-view.tsx`:
     - Etkinlik bilgileri, konum/bağlantı, kapasite barı, katılımcı yönetimi ve silme/düzenleme butonları.
-21. `src/app/(dashboard)/events/page.tsx`:
-    - Dashboard RSC sayfası (`<EventListView searchParams={searchParams} />`).
+21. `src/modules/events/page.tsx`:
+    - Modülün ana Next.js Server Component sayfası (searchParams ile liste veya detay görünümünü render eder). `src/app/(dashboard)/events/page.tsx` köprüsü `pnpm module:sync` ile otomatik bağlanır.
 
 Lütfen kodları placeholder veya "TODO" bırakmadan, projeye yapıştırıldığında doğrudan çalışacak şekilde eksiksiz üret.
 ```

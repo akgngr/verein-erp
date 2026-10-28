@@ -3,10 +3,10 @@ import path from "node:path";
 import { syncModuleSchemas } from "../src/shared/modules/sync-schemas";
 import { syncModuleTranslations } from "../src/shared/modules/sync-i18n";
 import { syncModuleRegistry } from "../src/shared/modules/sync-registry";
+import { syncModuleRoutes } from "../src/shared/modules/sync-routes";
 
 const ROOT_DIR = process.cwd();
 const MODULES_DIR = path.join(ROOT_DIR, "src", "modules");
-const APP_DIR = path.join(ROOT_DIR, "src", "app", "(dashboard)");
 
 function capitalize(s: string) {
   return s.charAt(0).toUpperCase() + s.slice(1);
@@ -208,25 +208,26 @@ export { moduleConfig } from "./module.config";
 `;
   fs.writeFileSync(path.join(moduleDir, "index.ts"), indexCode, "utf8");
 
-  // 9. src/app/(dashboard)/<cleanKey>/page.tsx
-  const pageDir = path.join(APP_DIR, cleanKey);
-  if (!fs.existsSync(pageDir)) {
-    fs.mkdirSync(pageDir, { recursive: true });
-    const pageCode = `import { ${pascalName}ListView } from "@/modules/${cleanKey}/ui";
+  // 9. src/modules/<cleanKey>/page.tsx (Modül içi bağımsız sayfa)
+  const pageCode = `import { ${pascalName}ListView } from "./ui";
 
 export const metadata = { title: "${label}" };
 
-export default async function ${pascalName}Page() {
+export default async function ${pascalName}Page({
+  searchParams,
+}: {
+  searchParams: Promise<Record<string, string | string[] | undefined>>;
+}) {
   return <${pascalName}ListView />;
 }
 `;
-    fs.writeFileSync(path.join(pageDir, "page.tsx"), pageCode, "utf8");
-  }
+  fs.writeFileSync(path.join(moduleDir, "page.tsx"), pageCode, "utf8");
 
-  // Otomatik senkronizasyonu çalıştır
+  // Otomatik senkronizasyonu çalıştır (Şemalar, Çeviriler, Registry ve Rotalar)
   const schemaRes = syncModuleSchemas();
   const i18nRes = syncModuleTranslations();
   const regRes = syncModuleRegistry();
+  const routeRes = syncModuleRoutes();
 
   return {
     key: cleanKey,
@@ -235,6 +236,7 @@ export default async function ${pascalName}Page() {
     syncedSchemas: schemaRes.synced,
     mergedLocales: Object.keys(i18nRes.modulesMerged),
     totalRegisteredModules: regRes.registered.length,
+    syncedRoutesCount: routeRes.syncedRoutes.length,
   };
 }
 
