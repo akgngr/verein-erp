@@ -49,8 +49,8 @@ Projede katı dikey dilim izolasyonu (Vertical Slice Architecture), sıfır çek
 3. RESMİ İTHALAT (IMPORT) YOLLARI TABLOSU:
    Modül içinde projenin çekirdek servislerini kullanırken YALNIZCA şu resmi yolları kullan:
    - Veritabanı Singleton: `import { getDb } from "@/shared/db";` -> `const db = getDb();` (ASLA `@/shared/lib/prisma` veya `new PrismaClient()` yazma!)
-   - Yetki Denetimi: `import { requirePermission } from "@/shared/lib/permissions-service";`
-   - Yetki Tanımlama: `import { definePermissions } from "@/shared/types/permissions";`
+   - Yetki Denetimi (Server Action & Query): `import { requirePermission } from "@/modules/auth/server";`
+   - Yetki Tanımlama (permissions.ts): `import { definePermissions } from "@/shared/permissions/define";`
    - Sayfa Başlığı: `import { PageHeader } from "@/shared/components/ui/page-header";`
    - Boş Durum: `import { EmptyState } from "@/shared/components/ui/empty-state";`
    - Veri Tablosu: `import { DataTable, DataTablePagination } from "@/shared/components/data-table";`
@@ -68,12 +68,12 @@ Projede katı dikey dilim izolasyonu (Vertical Slice Architecture), sıfır çek
      - Bu bileşenlerin ilk satırında `"use client";` bulunur.
      - `@heroui/react` kütüphanesi YALNIZCA bu `"use client"` bileşenleri içinde kullanılır.
 
-5. "SERVICES" VE "HELPERS" KATI AYRIMI (İNCE GÖRÜNÜM / THIN VIEWS PRENSİBİ):
+5. "SERVICES", "HELPERS", "QUERIES" VE "ACTIONS" KATI AYRIMI (İNCE GÖRÜNÜM / THIN VIEWS):
    - `views/*-view.tsx` dosyalarında ASLA inline hesaplama, matematiksel işlem veya karmaşık mantık yazma! View yalnızca orkestratördür.
    - **`helpers/` (Saf Hesaplama ve Yardımcı Fonksiyonlar - Pure Functions):**
      - Dış dünyaya yan etkisi olmayan deterministik hesaplamalar (örn: `calculateCapacityRatio`, `isEventPast`, `formatEventDateTime`).
    - **`services/` (İş Mantığı & Dış Entegrasyonlar):**
-     - Çok adımlı iş süreçleri, dış API entegrasyonları, Excel veri hazırlama veya bildirim orkestrasyonu (örn: `event-export-service.ts`).
+     - Çok adımlı iş süreçleri, dış API entegrasyonları, Excel/PDF veri hazırlama veya bildirim orkestrasyonu (örn: `event-export-service.ts`).
    - **`queries/` (Salt-Okunur Veri Okuma):**
      - Yalnızca Prisma `SELECT` sorguları.
    - **`actions/` (Mutasyonlar):**
@@ -88,6 +88,13 @@ Projede katı dikey dilim izolasyonu (Vertical Slice Architecture), sıfır çek
 7. KRİTİK SSR HYDRATION VE REACT 19 SAFLIK KURALLARI:
    - Tablo satırları (`map`) içinde HeroUI `<Select>` KULLANMA! Bunun yerine stillendirilmiş native HTML `<select>` ve yanında Lucide `<ChevronDown>` kullan (SSR ID mismatch hatasını önler).
    - Render esnasında `Date.now()` veya `new Date()` çağırma (`react-hooks/purity`). `isPast` gibi tarih karşılaştırmalarını `queries/list-events.ts` veya `helpers/event-helpers.ts` içinde yapıp `EventRow` nesnesine ekle.
+
+8. SIFIR `any` KURALI VE GÜÇLÜ TİPLEME (ESLINT `@typescript-eslint/no-explicit-any`):
+   - Projede ESLint katı `no-explicit-any` kuralı devrededir; `any` kullanımı derlemeyi durdurur.
+   - ASLA `as any` veya `: any` KULLANMA!
+   - `const db = getDb()` PrismaClient döndürür ve şema derlendiğinde tablolar tam tiplidir (`db.event`, `db.eventAttendee`). ASLA `const db = getDb() as any` veya `(db as any)...` yazma!
+   - Hata yakalamada ASLA `catch (error: any)` yazma! `catch (error: unknown)` veya doğrudan `catch (error)` yazıp `error instanceof Error ? error.message : "..."` kullan.
+   - Dizi fonksiyonlarında `(item: any) => ...` YERİNE TypeScript tip çıkarımına güven veya tanımlı tipleri kullan (`(item) => ...`).
 
 ===============================================================================
 3. ÜRETMEN GEREKEN TÜM DOSYALAR (EKSİKSİZ KOD LİSTESİ - 24 DOSYA)

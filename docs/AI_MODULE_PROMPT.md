@@ -16,20 +16,34 @@ PROJE MİMARİSİ VE SINIR KURALLARI:
 1. Dikey Dilim İzolasyonu (Vertical Slice Architecture): Modüle ait tüm dosyalar ve sayfa rotası İSTİSNASIZ `src/modules/<MODUL_ADI>/` altında olmalıdır. `src/app` dizinine ASLA dosya yazma.
 2. Sıfır Çekirdek Teması (Zero-Touch Core): `src/registry.ts`, `prisma/schema/base.prisma`, `src/app/` veya kök `messages/` dosyalarına DOKUNMA. Kod yazma.
 3. Katı İthalat Sınırları (Strict Imports): Başka bir modülün iç dosyalarını ASLA doğrudan import etme. Yalnızca `@/modules/<modul>`, `@/modules/<modul>/server` ve `@/modules/<modul>/ui` public API'larını kullan. Modül içinden `src/app` katmanını ASLA import etme.
-4. Veritabanı Singleton Erişimi: Veritabanına erişirken `@/shared/lib/prisma` veya `new PrismaClient()` ASLA kullanma. YALNIZCA singleton veritabanı sağlayıcısını kullan:
-   `import { getDb } from "@/shared/db";` -> `const db = getDb();`
-5. Server Component (RSC) vs Client Component Sınırı:
+4. Resmi İthalat (Import) Yolları Tablosu:
+   - Veritabanı Singleton: `import { getDb } from "@/shared/db";` -> `const db = getDb();` (ASLA `@/shared/lib/prisma` veya `new PrismaClient()` yazma!)
+   - Yetki Tanımlama (permissions.ts): `import { definePermissions } from "@/shared/permissions/define";` (ASLA `@/shared/types/permissions` yazma!)
+   - Yetki Denetimi (Server Actions & Queries): `import { requirePermission } from "@/modules/auth/server";` (ASLA `@/shared/lib/permissions-service` yazma!)
+   - Sayfa Başlığı: `import { PageHeader } from "@/shared/components/ui/page-header";`
+   - Boş Durum: `import { EmptyState } from "@/shared/components/ui/empty-state";`
+   - Veri Tablosu: `import { DataTable, DataTablePagination } from "@/shared/components/data-table";`
+   - Modül Tipleri: `import type { ModuleConfig, TopNavItem } from "@/shared/types/module";`
+5. Sıfır "any" Kuralı ve Güçlü Tipleme (ESLint @typescript-eslint/no-explicit-any):
+   - Projede ESLint katı `no-explicit-any` kuralı devrededir; `any` kullanımı derlemeyi bozar.
+   - ASLA `as any` veya `: any` KULLANMA!
+   - `const db = getDb()` doğrudan tipli PrismaClient döndürür. Modül şeması derlendiğinde tablolar tam tiplidir. ASLA `const db = getDb() as any` veya `(db as any)...` yazma!
+   - Hata yakalamada ASLA `catch (error: any)` yazma! `catch (error: unknown)` veya doğrudan `catch (error)` yazıp `error instanceof Error ? error.message : "..."` kullan.
+   - Dizi işlemlerinde `(item: any) => ...` YERİNE TypeScript tip çıkarımına güven (`(item) => ...`) veya arayüz tiplerini kullan.
+6. Server Component (RSC) vs Client Component Sınırı:
    - `views/*-view.tsx` ve `page.tsx` asenkron SERVER COMPONENT'tir (RSC). Başlarına ASLA `"use client"` koyma!
    - Server Component içine ASLA `onClose={async () => { "use server"; }}` gibi inline server action yazma.
    - `@heroui/react` bir Client Component kütüphanesidir. `@heroui/react` bileşenlerini (Button, Modal, Input vb.) YALNIZCA `"use client"` olan `components/*.tsx` dosyalarında kullan. Server Component (`views/*.tsx`) içinde `@heroui/react` import etme (Next.js build `createContext is not a function` hatası verir); bunun yerine Tailwind CSS kullan.
-6. "Services" ve "Helpers" Katı Ayrımı (İnce Görünüm / Thin Views Kuralı):
+7. "Services", "Helpers", "Queries" ve "Actions" Katı Ayrımı (İnce Görünüm / Thin Views Kuralı):
    - `views/*-view.tsx` dosyalarında KESİNLİKLE hesaplama, matematiksel işlem, formatlama veya karmaşık lojik yazma. View yalnızca bir orkestratördür: parametreyi alır, sorgu/servis/helper'ı çağırır, çıkan sonucu bileşenlere props olarak iletir.
    - **`helpers/`:** Dış dünyaya yan etkisi olmayan saf (pure) fonksiyonlar: oran/kontenjan hesaplamaları, tarih/para formatlama, durum türetme.
    - **`services/`:** Çok adımlı iş süreçleri, dış API entegrasyonları, dosya dışa aktarma (Excel/PDF) motorları.
-7. URL Tabanlı Modal Kapatma (`<MODUL_ADI>-create-modal.tsx`):
+   - **`queries/`:** Yalnızca veritabanı okuma (SELECT) Prisma sorguları.
+   - **`actions/`:** Yalnızca `"use server"` form mutasyonları (`create`, `update`, `delete`).
+8. URL Tabanlı Modal Kapatma (`<MODUL_ADI>-create-modal.tsx`):
    - `?action=new` modalını açıp kapatmak için `"use client"` olan bir `components/<MODUL_ADI>-create-modal.tsx` sarmalayıcısı yaz. Bu bileşenin `onClose` fonksiyonu `useRouter` ile URL'deki `action` parametresini temizler.
-8. Sayfa Eylem Ayrımı: `PageHeader actions` alanına YALNIZCA doğrudan ana CRUD butonunu (`+ Yeni Ekle`) koy. Araçlar, raporlar ve dışa aktarma bağlantılarını `menu/top.json` içinde tanımla.
-9. KRİTİK SSR Hydration & Saflık Kuralları (React 19 / Next.js 16):
+9. Sayfa Eylem Ayrımı: `PageHeader actions` alanına YALNIZCA doğrudan ana CRUD butonunu (`+ Yeni Ekle`) koy. Araçlar, raporlar ve dışa aktarma bağlantılarını `menu/top.json` içinde tanımla.
+10. KRİTİK SSR Hydration & Saflık Kuralları (React 19 / Next.js 16):
    - Tablo satırları (`map`) içinde asla HeroUI'ın `<Select>` bileşenini kullanma. Bunun yerine stillendirilmiş native HTML `<select>` ve yanında Lucide `<ChevronDown>` kullan.
    - Render esnasında `Date.now()` çağırma (`react-hooks/purity`). Tarih karşılaştırmalarını (`isPast` vb.) sorguda (`queries/`) veya saf helper'da (`helpers/`) hesapla.
 

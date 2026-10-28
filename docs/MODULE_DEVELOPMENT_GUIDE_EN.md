@@ -27,17 +27,25 @@ This guide outlines the architectural standards, vertical slice directory struct
    - **All Client Interactivity belongs in `components/*.tsx`:** Forms, modals, buttons with click handlers, pagination, and data tables must be placed in separate files inside `components/` with `"use client";` at the very top. `@heroui/react` is allowed ONLY in these client component files.
 7. **Official Import Paths Table:**
    - Database Singleton: `import { getDb } from "@/shared/db";` -> `const db = getDb();` (NEVER use `@/shared/lib/prisma` or `new PrismaClient()`)
-   - Server Permission Check: `import { requirePermission } from "@/shared/lib/permissions-service";`
-   - Permissions Definition: `import { definePermissions } from "@/shared/types/permissions";`
+   - Server Permission Check: `import { requirePermission } from "@/modules/auth/server";`
+   - Permissions Definition: `import { definePermissions } from "@/shared/permissions/define";`
    - Page Header: `import { PageHeader } from "@/shared/components/ui/page-header";`
    - Empty State: `import { EmptyState } from "@/shared/components/ui/empty-state";`
    - Data Table: `import { DataTable, DataTablePagination } from "@/shared/components/data-table";`
    - Module-Internal Imports: Use relative imports (`./` or `../`).
    - Other Modules: Only import through public entrypoints (`@/modules/<mod>`, `@/modules/<mod>/server`, `@/modules/<mod>/ui`). Never import `src/app` inside modules.
-8. **"Services" vs "Helpers" Strict Segregation (Thin Views Principle):**
+8. **Strict Zero-`any` Rule (ESLint `@typescript-eslint/no-explicit-any`):**
+   - The repository strictly enforces `@typescript-eslint/no-explicit-any`. Any use of `any` triggers a build error.
+   - NEVER use `as any` or `: any`.
+   - `const db = getDb()` returns a fully typed `PrismaClient`. All models are typed once generated. Never cast `getDb() as any`.
+   - In error handling, NEVER use `catch (error: any)`. Use `catch (error: unknown)` or `catch (error)` and safely access `error instanceof Error ? error.message : "..."`.
+   - In array callbacks, rely on TypeScript inference `(item) => ...` or type with explicit interfaces.
+9. **"Services" vs "Helpers" vs "Queries" vs "Actions" Strict Segregation (Thin Views Principle):**
    - **Views (`views/*-view.tsx`):** Views are purely dumb orchestrators. They NEVER contain complex calculations, loops, or raw queries. They only fetch via `queries/`, compute via `helpers/` / `services/`, and pass props to `components/`.
    - **`helpers/` (Pure Functions):** Side-effect-free, deterministic mathematical and logical utilities (e.g., `calculateCapacityRatio`, `isEventPast`, `formatCurrency`).
    - **`services/` (Business Logic & Integrations):** Multi-step workflows, background tasks, external API integrations, or file export motors (Excel/PDF).
+   - **`queries/` (Read-only Data Retrieval):** Prisma `SELECT` queries only.
+   - **`actions/` (Mutations):** `"use server"` form mutations (`create`, `update`, `delete`).
 
 ---
 
@@ -324,17 +332,33 @@ I want you to build a complete, standalone extension module named `<MODULE_NAME>
 ARCHITECTURAL PRINCIPLES & BOUNDARY RULES:
 1. Vertical Slice Architecture: All module files and the page route must live inside `src/modules/<MODULE_NAME>/`. NEVER write files to `src/app/`.
 2. Zero-Touch Core: Never touch or edit `src/registry.ts`, `prisma/schema/base.prisma`, `src/app/`, or root `messages/*.json`.
-3. Strict Public Import Boundaries: Never import internal files of other modules (e.g. `@/modules/auth/queries/...`). Only use `@/modules/<module>`, `@/modules/<module>/server`, and `@/modules/<module>/ui`. Never import `@/app/...` inside a module.
-4. Database Singleton Access: Never import `@/shared/lib/prisma` or instantiate `new PrismaClient()`. Always use:
-   `import { getDb } from "@/shared/db";` -> `const db = getDb();`
+3. Official Import Paths Table:
+   - Database Singleton: `import { getDb } from "@/shared/db";` -> `const db = getDb();` (NEVER `@/shared/lib/prisma` or `new PrismaClient()`)
+   - Permissions Definition: `import { definePermissions } from "@/shared/permissions/define";` (NEVER `@/shared/types/permissions`)
+   - Permissions Enforcement: `import { requirePermission } from "@/modules/auth/server";` (NEVER `@/shared/lib/permissions-service`)
+   - Page Header: `import { PageHeader } from "@/shared/components/ui/page-header";`
+   - Empty State: `import { EmptyState } from "@/shared/components/ui/empty-state";`
+   - Data Table: `import { DataTable, DataTablePagination } from "@/shared/components/data-table";`
+   - Module Types: `import type { ModuleConfig, TopNavItem } from "@/shared/types/module";`
+4. Strict Zero-`any` Rule (ESLint `@typescript-eslint/no-explicit-any`):
+   - The project forbids `any`. NEVER use `as any` or `: any`.
+   - `const db = getDb()` is fully typed. Do NOT cast `as any`.
+   - In error handling, NEVER use `catch (error: any)`. Use `catch (error: unknown)` or `catch (error)` and safely access `error instanceof Error ? error.message : "..."`.
+   - In array callbacks, rely on TypeScript inference `(item) => ...`.
 5. Server Component (RSC) vs Client Component Boundaries:
    - `views/*-view.tsx` and `page.tsx` are async SERVER COMPONENTS (RSC). NEVER put `"use client"` on them!
    - Never write inline server actions (`onClose={async () => { "use server"; }}`) inside Server Components.
    - `@heroui/react` is a Client Component library. ONLY use it inside `"use client"` components (`components/*.tsx`). Never import `@heroui/react` into Server Component views (`views/*.tsx`) as it triggers `createContext is not a function` during Next.js build; use Tailwind CSS instead.
-6. URL-Based Modal Pattern (`<MODULE_NAME>-create-modal.tsx`):
+6. "Services" vs "Helpers" vs "Queries" vs "Actions" Segregation (Thin Views Principle):
+   - Views (`views/*-view.tsx`) are purely orchestrators. NEVER put calculations, loops, or business logic in views.
+   - `helpers/`: Pure functions (formatting, calculations, state derivations).
+   - `services/`: Workflows, exports (Excel/PDF), external integrations.
+   - `queries/`: Read-only Prisma SELECT queries.
+   - `actions/`: `"use server"` form mutations.
+7. URL-Based Modal Pattern (`<MODULE_NAME>-create-modal.tsx`):
    - Wrap creation modals in a `"use client"` component (`components/<MODULE_NAME>-create-modal.tsx`) that uses `useRouter` to clear `?action=new` on close.
-7. UI Action Separation: In `PageHeader actions`, include ONLY the primary creation button (`+ New ...`). Put secondary sub-pages, tools, and export links inside `menu/top.json`.
-8. SSR Hydration & React 19 Purity:
+8. UI Action Separation: In `PageHeader actions`, include ONLY the primary creation button (`+ New ...`). Put secondary sub-pages, tools, and export links inside `menu/top.json`.
+9. SSR Hydration & React 19 Purity:
    - Never use HeroUI's `<Select>` inside table cells or row mapping loops. Use a styled native HTML `<select>` with Lucide `<ChevronDown>`.
    - Never call `Date.now()` during render (`react-hooks/purity`). Derive timestamp comparisons in database queries.
 
