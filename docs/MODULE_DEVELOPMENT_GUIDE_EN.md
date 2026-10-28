@@ -256,25 +256,37 @@ export default async function InventoryPage({
 
 ---
 
-### 8. UI, Tables & CRITICAL SSR Hydration Rule
-- **Page Header Actions (`PageHeader actions`):** Keep this area clean. Only place the primary CRUD button here.
-- **Data Tables:** Utilize `@/shared/components/data-table` (`DataTable`, `DataTablePagination`).
-- ⚠️ **CRITICAL SSR HYDRATION RULE (React 19 / Next.js 16):**
-  Never use HeroUI's `<Select>` inside table row loops (`map`) or dynamic lists. HeroUI's Select relies on dynamic React Aria IDs that diverge between server and client during SSR, causing hydration mismatch console errors.
-  Instead, always use an accessible, styled native HTML `<select>` inside table cells:
-  ```tsx
-  <div className="relative inline-block w-full">
-    <select
-      value={item.status}
-      onChange={(e) => updateStatus(item.id, e.target.value)}
-      className="h-8 w-full appearance-none rounded-medium bg-default-100 px-2.5 pr-8 text-xs font-medium text-foreground transition-colors hover:bg-default-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer border border-transparent focus:border-primary/50"
-    >
-      <option value="ACTIVE">Active</option>
-      <option value="PASSIVE">Passive</option>
-    </select>
-    <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-default-400" aria-hidden="true" />
-  </div>
-  ```
+### 8. UI, Tables, HeroUI & CRITICAL SSR / React 19 Rules
+
+1. **Page Header Actions (`PageHeader actions`):** Keep this area clean. Only place the primary CRUD button (`+ New ...`) here.
+2. **Data Tables:** Utilize `@/shared/components/data-table` (`DataTable`, `DataTablePagination`).
+3. ⚠️ **HeroUI (`@heroui/react`) Boundary Rule:**
+   - `@heroui/react` components (Modal, Button, Input, Textarea, Checkbox) **MUST ONLY BE USED inside Client Components (`components/*.tsx`)** marked with `"use client"`.
+   - Never import `@heroui/react` (Chip, Progress, Button, etc.) inside Server Component views (`views/*-view.tsx` or `page.tsx`). In React 19 Server Components runtime, `React.createContext` is unavailable, causing Next.js build to crash with `TypeError: createContext is not a function`. Use standard Tailwind CSS classes for badges, status chips, and progress bars in Server Components.
+4. ⚠️ **CRITICAL SSR HYDRATION RULE (React 19 / Next.js 16):**
+   - Never use HeroUI's `<Select>` inside table row loops (`map`) or dynamic lists. HeroUI's Select relies on dynamic React Aria IDs that diverge between server and client during SSR, causing hydration mismatch console errors.
+   - Instead, always use an accessible, styled native HTML `<select>` inside table cells:
+   ```tsx
+   <div className="relative inline-block w-full">
+     <select
+       value={item.status}
+       onChange={(e) => updateStatus(item.id, e.target.value)}
+       className="h-8 w-full appearance-none rounded-medium bg-default-100 px-2.5 pr-8 text-xs font-medium text-foreground transition-colors hover:bg-default-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer border border-transparent focus:border-primary/50"
+     >
+       <option value="ACTIVE">Active</option>
+       <option value="PASSIVE">Passive</option>
+     </select>
+     <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-default-400" aria-hidden="true" />
+   </div>
+   ```
+5. ⚠️ **URL-Based Modal & Server Action Boundary:**
+   - Never pass inline server actions like `onClose={async () => { "use server"; }}` from a Server Component to a Client Component (Build error: `It is not allowed to define inline "use server" annotated Server Actions in Client Components`).
+   - Use a dedicated `"use client"` wrapper (`components/<module>-create-modal.tsx`) that clears the URL search parameter (`?action=new`) via `useRouter`.
+6. ⚠️ **Database Singleton Rule:**
+   - Never import from `@/shared/lib/prisma` or call `new PrismaClient()`. Always use the project singleton:
+     `import { getDb } from "@/shared/db";` -> `const db = getDb();`
+7. ⚠️ **React 19 Purity Rule:**
+   - Never call `Date.now()` or `new Date()` inside render bodies (`react-hooks/purity`). Derive date comparisons (`isPast`) in database queries (`queries/`).
 
 ---
 
@@ -290,11 +302,21 @@ ARCHITECTURAL PRINCIPLES & BOUNDARY RULES:
 1. Vertical Slice Architecture: All module files and the page route must live inside `src/modules/<MODULE_NAME>/`. NEVER write files to `src/app/`.
 2. Zero-Touch Core: Never touch or edit `src/registry.ts`, `prisma/schema/base.prisma`, `src/app/`, or root `messages/*.json`.
 3. Strict Public Import Boundaries: Never import internal files of other modules (e.g. `@/modules/auth/queries/...`). Only use `@/modules/<module>`, `@/modules/<module>/server`, and `@/modules/<module>/ui`. Never import `@/app/...` inside a module.
-4. UI Action Separation: In `PageHeader actions`, include ONLY the primary creation button (`+ New ...`). Put secondary sub-pages, tools, and export links inside `menu/top.json`.
-5. SSR Hydration Mismatch Prevention: Never use HeroUI's `<Select>` inside table cells or row mapping loops. Use a styled native HTML `<select>` with Lucide `<ChevronDown>`.
+4. Database Singleton Access: Never import `@/shared/lib/prisma` or instantiate `new PrismaClient()`. Always use:
+   `import { getDb } from "@/shared/db";` -> `const db = getDb();`
+5. Server Component (RSC) vs Client Component Boundaries:
+   - `views/*-view.tsx` and `page.tsx` are async SERVER COMPONENTS (RSC). NEVER put `"use client"` on them!
+   - Never write inline server actions (`onClose={async () => { "use server"; }}`) inside Server Components.
+   - `@heroui/react` is a Client Component library. ONLY use it inside `"use client"` components (`components/*.tsx`). Never import `@heroui/react` into Server Component views (`views/*.tsx`) as it triggers `createContext is not a function` during Next.js build; use Tailwind CSS instead.
+6. URL-Based Modal Pattern (`<MODULE_NAME>-create-modal.tsx`):
+   - Wrap creation modals in a `"use client"` component (`components/<MODULE_NAME>-create-modal.tsx`) that uses `useRouter` to clear `?action=new` on close.
+7. UI Action Separation: In `PageHeader actions`, include ONLY the primary creation button (`+ New ...`). Put secondary sub-pages, tools, and export links inside `menu/top.json`.
+8. SSR Hydration & React 19 Purity:
+   - Never use HeroUI's `<Select>` inside table cells or row mapping loops. Use a styled native HTML `<select>` with Lucide `<ChevronDown>`.
+   - Never call `Date.now()` during render (`react-hooks/purity`). Derive timestamp comparisons in database queries.
 
 FILES YOU MUST GENERATE:
-Provide the FULL PATH and COMPLETE, FUNCTIONAL CODE for each of the following 14 files without placeholders or TODOs:
+Provide the FULL PATH and COMPLETE, FUNCTIONAL CODE for each of the following 16 files without placeholders or TODOs:
 
 1. `src/modules/<MODULE_NAME>/module.config.ts`:
    - `key: "<MODULE_NAME>"`, `category: "EXTENSION"`, `hasSchema: true`, `topNav: topNav as TopNavItem[]`, `nav: [...]` (with Lucide icon).
@@ -315,14 +337,18 @@ Provide the FULL PATH and COMPLETE, FUNCTIONAL CODE for each of the following 14
 9. `src/modules/<MODULE_NAME>/schemas/<MODULE_NAME>-schema.ts`:
    - Zod validation schema for form inputs.
 10. `src/modules/<MODULE_NAME>/queries/list-<MODULE_NAME>.ts`:
-    - Prisma query function supporting search, sorting, and pagination.
+    - Prisma query function using `getDb()` supporting search, sorting, and pagination.
 11. `src/modules/<MODULE_NAME>/actions/<MODULE_NAME>-actions.ts`:
     - `"use server"` mutations (create, update, delete) protected by `requirePermission`.
 12. `src/modules/<MODULE_NAME>/components/<MODULE_NAME>-table.tsx`:
-    - Data table using native styled `<select>` for any inline dropdowns.
-13. `src/modules/<MODULE_NAME>/views/<MODULE_NAME>-list-view.tsx`:
-    - Main Server Component list view with `PageHeader` and data table.
-14. `src/modules/<MODULE_NAME>/page.tsx`:
+    - `"use client"` Data table using native styled `<select>` for any inline dropdowns.
+13. `src/modules/<MODULE_NAME>/components/<MODULE_NAME>-form-modal.tsx`:
+    - `"use client"` Create / Edit modal form using `@heroui/react` (Modal, Input, etc.).
+14. `src/modules/<MODULE_NAME>/components/<MODULE_NAME>-create-modal.tsx`:
+    - `"use client"` Modal wrapper that manages closing and cleans up `?action=new` from the URL.
+15. `src/modules/<MODULE_NAME>/views/<MODULE_NAME>-list-view.tsx`:
+    - Async Server Component (RSC). NO `"use client"`. Renders `PageHeader`, filters, stats cards, table, and create modal.
+16. `src/modules/<MODULE_NAME>/page.tsx`:
     - Module Next.js Server Component page. NOTE: Do NOT touch `src/app`; `pnpm module:sync` creates the App Router route automatically.
 ```
 

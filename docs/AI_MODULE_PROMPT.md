@@ -16,8 +16,18 @@ PROJE MİMARİSİ VE SINIR KURALLARI:
 1. Dikey Dilim İzolasyonu (Vertical Slice Architecture): Modüle ait tüm dosyalar ve sayfa rotası İSTİSNASIZ `src/modules/<MODUL_ADI>/` altında olmalıdır. `src/app` dizinine ASLA dosya yazma.
 2. Sıfır Çekirdek Teması (Zero-Touch Core): `src/registry.ts`, `prisma/schema/base.prisma`, `src/app/` veya kök `messages/` dosyalarına DOKUNMA. Kod yazma.
 3. Katı İthalat Sınırları (Strict Imports): Başka bir modülün iç dosyalarını ASLA doğrudan import etme. Yalnızca `@/modules/<modul>`, `@/modules/<modul>/server` ve `@/modules/<modul>/ui` public API'larını kullan. Modül içinden `src/app` katmanını ASLA import etme.
-4. Sayfa Eylem Ayrımı: `PageHeader actions` alanına YALNIZCA doğrudan ana CRUD butonunu (`+ Yeni Ekle`) koy. Araçlar, raporlar ve dışa aktarma bağlantılarını `menu/top.json` içinde tanımla.
-5. KRİTİK SSR Hydration Kuralı: Tablo satırları (`map`) veya dinamik listeler içinde asla HeroUI'ın `<Select>` bileşenini kullanma. Bunun yerine stillendirilmiş native HTML `<select>` ve yanında Lucide `<ChevronDown>` kullan (React 19 / Next.js 16 SSR ID hydration mismatch hatalarını önler).
+4. Veritabanı Singleton Erişimi: Veritabanına erişirken `@/shared/lib/prisma` veya `new PrismaClient()` ASLA kullanma. YALNIZCA singleton veritabanı sağlayıcısını kullan:
+   `import { getDb } from "@/shared/db";` -> `const db = getDb();`
+5. Server Component (RSC) vs Client Component Sınırı:
+   - `views/*-view.tsx` ve `page.tsx` asenkron SERVER COMPONENT'tir (RSC). Başlarına ASLA `"use client"` koyma!
+   - Server Component içine ASLA `onClose={async () => { "use server"; }}` gibi inline server action yazma.
+   - `@heroui/react` bir Client Component kütüphanesidir. `@heroui/react` bileşenlerini (Button, Modal, Input vb.) YALNIZCA `"use client"` olan `components/*.tsx` dosyalarında kullan. Server Component (`views/*.tsx`) içinde `@heroui/react` import etme (Next.js build `createContext is not a function` hatası verir); bunun yerine Tailwind CSS kullan.
+6. URL Tabanlı Modal Kapatma (`<MODUL_ADI>-create-modal.tsx`):
+   - `?action=new` modalını açıp kapatmak için `"use client"` olan bir `components/<MODUL_ADI>-create-modal.tsx` sarmalayıcısı yaz. Bu bileşenin `onClose` fonksiyonu `useRouter` ile URL'deki `action` parametresini temizler.
+7. Sayfa Eylem Ayrımı: `PageHeader actions` alanına YALNIZCA doğrudan ana CRUD butonunu (`+ Yeni Ekle`) koy. Araçlar, raporlar ve dışa aktarma bağlantılarını `menu/top.json` içinde tanımla.
+8. KRİTİK SSR Hydration & Saflık Kuralları (React 19 / Next.js 16):
+   - Tablo satırları (`map`) içinde asla HeroUI'ın `<Select>` bileşenini kullanma. Bunun yerine stillendirilmiş native HTML `<select>` ve yanında Lucide `<ChevronDown>` kullan.
+   - Render esnasında `Date.now()` çağırma (`react-hooks/purity`). Tarih karşılaştırmalarını (`isPast` vb.) sorguda (`queries/`) hesapla.
 
 SENİN ÜRETMEN GEREKEN DOSYALAR:
 Lütfen bana her bir dosyanın TAM DOSYA YOLUNU ve EKSİKSİZ ÇALIŞAN KODUNU sırasıyla ver:
@@ -41,15 +51,19 @@ Lütfen bana her bir dosyanın TAM DOSYA YOLUNU ve EKSİKSİZ ÇALIŞAN KODUNU s
 9. `src/modules/<MODUL_ADI>/schemas/<MODUL_ADI>-schema.ts`:
    - Zod doğrulama şeması.
 10. `src/modules/<MODUL_ADI>/queries/list-<MODUL_ADI>.ts`:
-    - Prisma ile veritabanından veri çeken sayfalama ve filtreleme destekli sorgu fonksiyonu.
+    - `getDb()` ile veritabanından veri çeken sayfalama ve filtreleme destekli sorgu fonksiyonu.
 11. `src/modules/<MODUL_ADI>/actions/<MODUL_ADI>-actions.ts`:
     - `"use server"` Server Action mutasyon fonksiyonları (ekleme, güncelleme, silme). `requirePermission` ile yetki denetimi yap.
 12. `src/modules/<MODUL_ADI>/components/<MODUL_ADI>-table.tsx`:
-    - Tablo bileşeni. SSR Hydration Mismatch hatası vermemesi için tablo satırlarında HeroUI Select YERİNE native HTML `<select>` kullan.
-13. `src/modules/<MODUL_ADI>/views/<MODUL_ADI>-list-view.tsx`:
-    - `PageHeader` (actions kısmında yalnızca `+ Yeni Ekle` butonu olmalı) ve tabloyu render eden ana RSC görünümü.
-14. `src/modules/<MODUL_ADI>/page.tsx`:
-    - Modülün Next.js Server Component sayfası. NOT: `src/app` dizinine ASLA kod yazma; sistem `pnpm module:sync` ile Next.js köprüsünü otomatik oluşturur.
+    - `"use client"` Tablo bileşeni. SSR Hydration Mismatch hatası vermemesi için tablo satırlarında HeroUI Select YERİNE native HTML `<select>` kullan.
+13. `src/modules/<MODUL_ADI>/components/<MODUL_ADI>-form-modal.tsx`:
+    - `"use client"` Ekleme / düzenleme modal formu (`@heroui/react` Modal, Input vb.).
+14. `src/modules/<MODUL_ADI>/components/<MODUL_ADI>-create-modal.tsx`:
+    - `"use client"` URL query (`?action=new`) yöneten modal sarmalayıcısı.
+15. `src/modules/<MODUL_ADI>/views/<MODUL_ADI>-list-view.tsx`:
+    - Saf asenkron Server Component (RSC). `"use client"` İÇERMEZ. `PageHeader`, arama filtreleri, istatistik kartları, `<MODUL_ADI>-table` ve `<MODUL_ADI>-create-modal` bileşenlerini render eder.
+16. `src/modules/<MODUL_ADI>/page.tsx`:
+    - Modülün Next.js Server Component sayfası. NOT: `src/app` dizinine ASLA kod yazma; sistem `pnpm module:sync` ile Next.js App Router köprüsünü otomatik oluşturur.
 
 Lütfen kodları placeholder veya "TODO" bırakmadan, çalışmaya hazır ve eksiksiz olarak üret.
 ```
