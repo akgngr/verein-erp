@@ -2,12 +2,10 @@
 
 import {
   Button,
-  Select,
-  SelectItem,
   Input,
   addToast,
 } from "@heroui/react";
-import { Trash2, UserPlus, UserCheck } from "lucide-react";
+import { ChevronDown, Trash2, UserPlus, UserCheck } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -161,48 +159,54 @@ export function AttendeesTab({
                   </td>
                   <td className="p-2">
                     {editable ? (
-                      <Select
-                        size="sm"
-                        aria-label="Görev"
-                        selectedKeys={new Set([attendee.role])}
-                        onSelectionChange={(keys) => {
-                          const key = Array.from(keys as Set<string>)[0];
-                          if (key) void update(attendee.id, { role: String(key) });
-                        }}
-                        classNames={{ trigger: "min-h-8 h-8" }}
-                      >
-                        {(
-                          Object.keys(ATTENDEE_ROLE_LABELS) as Array<keyof typeof ATTENDEE_ROLE_LABELS>
-                        ).map((roleKey) => (
-                          <SelectItem key={roleKey} textValue={ATTENDEE_ROLE_LABELS[roleKey]}>
-                            {ATTENDEE_ROLE_LABELS[roleKey]}
-                          </SelectItem>
-                        ))}
-                      </Select>
+                      <div className="relative inline-block w-full min-w-[130px]">
+                        <select
+                          id={`attendee-role-${attendee.id}`}
+                          aria-label="Görev"
+                          value={attendee.role}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            if (val) void update(attendee.id, { role: val });
+                          }}
+                          className="h-8 w-full appearance-none rounded-medium bg-default-100 px-2.5 pr-8 text-xs font-medium text-foreground transition-colors hover:bg-default-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer border border-transparent focus:border-primary/50"
+                        >
+                          {(
+                            Object.keys(ATTENDEE_ROLE_LABELS) as Array<keyof typeof ATTENDEE_ROLE_LABELS>
+                          ).map((roleKey) => (
+                            <option key={roleKey} value={roleKey} className="bg-background text-foreground">
+                              {ATTENDEE_ROLE_LABELS[roleKey]}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-default-400" aria-hidden="true" />
+                      </div>
                     ) : (
                       ATTENDEE_ROLE_LABELS[attendee.role]
                     )}
                   </td>
                   <td className="p-2">
                     {editable ? (
-                      <Select
-                        size="sm"
-                        aria-label="Katılım"
-                        selectedKeys={new Set([attendee.attendance])}
-                        onSelectionChange={(keys) => {
-                          const key = Array.from(keys as Set<string>)[0];
-                          if (key) void update(attendee.id, { attendance: String(key) });
-                        }}
-                        classNames={{ trigger: "min-h-8 h-8" }}
-                      >
-                        {(
-                          Object.keys(ATTENDANCE_LABELS) as Array<keyof typeof ATTENDANCE_LABELS>
-                        ).map((statusKey) => (
-                          <SelectItem key={statusKey} textValue={ATTENDANCE_LABELS[statusKey]}>
-                            {ATTENDANCE_LABELS[statusKey]}
-                          </SelectItem>
-                        ))}
-                      </Select>
+                      <div className="relative inline-block w-full min-w-[130px]">
+                        <select
+                          id={`attendee-attendance-${attendee.id}`}
+                          aria-label="Katılım"
+                          value={attendee.attendance}
+                          onChange={(e) => {
+                            const val = e.target.value;
+                            if (val) void update(attendee.id, { attendance: val });
+                          }}
+                          className="h-8 w-full appearance-none rounded-medium bg-default-100 px-2.5 pr-8 text-xs font-medium text-foreground transition-colors hover:bg-default-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer border border-transparent focus:border-primary/50"
+                        >
+                          {(
+                            Object.keys(ATTENDANCE_LABELS) as Array<keyof typeof ATTENDANCE_LABELS>
+                          ).map((statusKey) => (
+                            <option key={statusKey} value={statusKey} className="bg-background text-foreground">
+                              {ATTENDANCE_LABELS[statusKey]}
+                            </option>
+                          ))}
+                        </select>
+                        <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-default-400" aria-hidden="true" />
+                      </div>
                     ) : (
                       ATTENDANCE_LABELS[attendee.attendance]
                     )}
