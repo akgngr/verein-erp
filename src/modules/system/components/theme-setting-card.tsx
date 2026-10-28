@@ -1,16 +1,22 @@
 "use client";
 
-import { useTheme } from "next-themes";
-import { Check, Laptop, Moon, Sun } from "lucide-react";
+import { Check, Laptop, Moon, Sun, type LucideIcon } from "lucide-react";
 import { useTranslations } from "next-intl";
 
+import { useTheme, type Theme } from "@/shared/components/theme-provider";
 import { cn } from "@/shared/utils";
 
 export function ThemeSettingCard() {
   const { theme, setTheme } = useTheme();
   const t = useTranslations("settings");
 
-  const themes = [
+  const themes: {
+    key: Theme;
+    title: string;
+    description: string;
+    icon: LucideIcon;
+    iconColor: string;
+  }[] = [
     {
       key: "light",
       title: t.has("themeSection.light") ? t("themeSection.light") : "Açık Tema",

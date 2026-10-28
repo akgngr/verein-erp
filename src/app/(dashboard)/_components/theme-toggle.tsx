@@ -1,7 +1,7 @@
 "use client";
 
 import { Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
+import { useTheme, type Theme } from "@/shared/components/theme-provider";
 
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/react";
 
@@ -24,7 +24,7 @@ export function ThemeToggle() {
         selectedKeys={theme ? [theme] : []}
         selectionMode="single"
         disallowEmptySelection
-        onAction={(key) => setTheme(String(key))}
+        onAction={(key) => setTheme(String(key) as Theme)}
       >
         <DropdownItem key="light" startContent={<Sun className="h-4 w-4" />}>
           Açık

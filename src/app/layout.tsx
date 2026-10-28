@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import Script from "next/script";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale } from "next-intl/server";
 
+import { THEME_INIT_SCRIPT } from "@/shared/components/theme-provider";
 import { Providers } from "./providers";
 import "./globals.css";
 
@@ -28,6 +30,13 @@ export default async function RootLayout({
 
   return (
     <html lang={locale} suppressHydrationWarning>
+      <head>
+        <Script
+          id="theme-init"
+          strategy="beforeInteractive"
+          dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
+        />
+      </head>
       <body className="min-h-dvh antialiased">
         <NextIntlClientProvider>
           <Providers>{children}</Providers>
