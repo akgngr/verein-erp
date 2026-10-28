@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { revalidatePath } from "next/cache";
+import { syncModuleSchemas } from "./sync-schemas";
 
 const ROOT_DIR = process.cwd();
 const CONFIG_FILE = path.join(ROOT_DIR, "src", "config", "modules-state.json");
@@ -21,6 +22,7 @@ export function getModuleStates(): Record<string, boolean> {
     users: true,
     organization: true,
     audit: true,
+    system: true,
     members: true,
     accounting: true,
     documents: true,
@@ -37,6 +39,23 @@ export function isModuleActive(key: string): boolean {
   return true; // Bilinmeyen veya yeni modüller varsayılan olarak aktiftir
 }
 
+/**
+ * Kayıtlı tüm modüller arasından aktif olanların anahtarlarını döner.
+ * modules-state.json dosyasında henüz yer almayan yeni modüller varsayılan olarak aktiftir.
+ */
+export function getAllActiveModuleKeys(registeredKeys: string[]): string[] {
+  const states = getModuleStates();
+  return registeredKeys.filter((key) => states[key] !== false);
+}
+
+function safeRevalidateLayout() {
+  try {
+    revalidatePath("/", "layout");
+  } catch {
+    // Next.js istek bağlamı dışındaki çağrılarda (test / CLI) yoksayılır
+  }
+}
+
 export async function setModuleActive(key: string, isActive: boolean): Promise<void> {
   const states = getModuleStates();
   states[key] = isActive;
@@ -47,7 +66,7 @@ export async function setModuleActive(key: string, isActive: boolean): Promise<v
       fs.mkdirSync(dir, { recursive: true });
     }
     fs.writeFileSync(CONFIG_FILE, JSON.stringify(states, null, 2), "utf8");
-    revalidatePath("/", "layout");
+    safeRevalidateLayout();
   } catch (error) {
     console.error(`[module-store] Failed to update state for module ${key}:`, error);
     throw error;
@@ -75,10 +94,9 @@ export async function deleteModuleExtension(key: string): Promise<{ success: boo
     fs.writeFileSync(CONFIG_FILE, JSON.stringify(states, null, 2), "utf8");
 
     // Şemaları yeniden senkronize et
-    const { syncModuleSchemas } = await import("../../../scripts/sync-schemas");
     syncModuleSchemas();
 
-    revalidatePath("/", "layout");
+    safeRevalidateLayout();
     return { success: true };
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);

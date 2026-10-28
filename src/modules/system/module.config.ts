@@ -1,6 +1,6 @@
-import { Boxes } from "lucide-react";
+import { Boxes, Settings } from "lucide-react";
 import type { ModuleConfig } from "@/shared/types/module";
-import { systemPermissions } from "@/shared/permissions/system";
+import { settingsPermissions, systemPermissions } from "@/shared/permissions/system";
 
 export const moduleConfig: ModuleConfig = {
   key: "system",
@@ -11,8 +11,16 @@ export const moduleConfig: ModuleConfig = {
   hasSchema: false,
   nav: [
     {
+      href: "/ayarlar",
+      label: "Ayarlar",
+      icon: Settings,
+      group: "settings",
+      order: 0,
+      permission: { definition: settingsPermissions, action: "view" },
+    },
+    {
       href: "/ayarlar/moduller",
-      label: "Modüller",
+      label: "Modül Yönetimi",
       icon: Boxes,
       group: "settings",
       order: 3,

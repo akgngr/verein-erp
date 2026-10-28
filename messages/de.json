@@ -39,7 +39,9 @@
     "profil": "Profil",
     "organization": "Vereinsdaten",
     "muhasebe": "Buchhaltung",
-    "bagislar": "Spenden"
+    "bagislar": "Spenden",
+    "ayarlar": "Einstellungen",
+    "moduller": "Modulverwaltung"
   },
   "sidebar": {
     "brand": "Vereinsverwaltung",
@@ -1565,6 +1567,91 @@
       "validityDays": "{days} Tage verbleiben",
       "validityExpired": "Die Freistellungsbescheinigung ist abgelaufen",
       "validityWarn": "Weniger als 90 Tage — Verlängerung planen"
+    }
+  },
+  "system": {
+    "title": "Modulverwaltung",
+    "subtitle": "Systemkern-, offizielle und Erweiterungsmodule konfigurieren, synchronisieren oder verwalten.",
+    "stats": {
+      "total": "Module gesamt",
+      "active": "aktiv",
+      "inactive": "inaktiv",
+      "core": "Kern",
+      "coreDesc": "Geschützte Systeminfrastruktur",
+      "official": "Offizielle Module",
+      "officialDesc": "Integrierte Verein-ERP-Tools",
+      "extension": "Erweiterungen",
+      "extensionDesc": "KI- oder Entwickler-Plugins"
+    },
+    "searchPlaceholder": "Modul suchen...",
+    "tabs": {
+      "all": "Alle",
+      "core": "Kern",
+      "official": "Offiziell",
+      "extension": "Erweiterungen"
+    },
+    "syncSchemas": "Schemas synchronisieren",
+    "syncSuccess": "Prisma-Schemas wurden erfolgreich synchronisiert.",
+    "noModulesFound": "Keine Module gefunden, die den Kriterien entsprechen.",
+    "badges": {
+      "core": "Kern",
+      "official": "Offizielles Modul",
+      "extension": "Entwickler-Plugin"
+    },
+    "author": "Entwickler",
+    "routes": "Routen",
+    "noDescription": "Keine Beschreibung vorhanden.",
+    "status": {
+      "protected": "Geschützt",
+      "active": "Aktiv",
+      "inactive": "Inaktiv",
+      "activatedToast": "Modul {label} wurde aktiviert.",
+      "deactivatedToast": "Modul {label} wurde deaktiviert."
+    },
+    "deleteModal": {
+      "title": "Modul löschen",
+      "message": "Der Modulordner \"{label}\" und alle zugehörigen Dateien werden unwiderruflich gelöscht. Bestätigen?",
+      "confirm": "Löschen",
+      "successToast": "Modul {label} wurde erfolgreich gelöscht."
+    }
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "subtitle": "Vereinsprofil, Benutzerberechtigungen, Module und Systemeinstellungen verwalten.",
+    "languageSection": {
+      "title": "Sprache & Region",
+      "description": "Benutzeroberflächensprache und lokale Vereinseinstellungen festlegen.",
+      "activeLanguage": "Aktuelle Sprache",
+      "tr": "Türkçe",
+      "de": "Deutsch",
+      "switchSuccess": "Die Sprache der Benutzeroberfläche wurde erfolgreich geändert."
+    },
+    "cards": {
+      "organization": {
+        "title": "Vereinsdaten",
+        "description": "Identität, Vereinsname, Steuernummer/Vereinsregister, Adresse, Logo und Kontaktdaten.",
+        "action": "Bearbeiten"
+      },
+      "users": {
+        "title": "Benutzer & Rollen",
+        "description": "Benutzerkonten, Systemrollen (Vorstand, Kassenwart, Prüfer usw.) und Berechtigungen.",
+        "action": "Verwalten"
+      },
+      "modules": {
+        "title": "Modulverwaltung",
+        "description": "Systemkern-, offizielle ERP-Module und externe Entwickler-Erweiterungen verwalten.",
+        "action": "Konfigurieren"
+      },
+      "audit": {
+        "title": "Audit-Protokoll",
+        "description": "Zeitgestempelte Historie aller Datenänderungen, Anmeldeaktivitäten und Sicherheitsereignisse.",
+        "action": "Prüfen"
+      },
+      "accounting": {
+        "title": "Buchhaltungseinstellungen",
+        "description": "Kontenrahmen (SKR49 / Standard), Budgetziele und Geschäftsjahresabschlüsse.",
+        "action": "Einstellungen"
+      }
     }
   }
 }

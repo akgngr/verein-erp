@@ -51,7 +51,7 @@ const PANEL_ITEM: NavItem = {
 };
 
 function isActive(pathname: string, href: string): boolean {
-  if (href === "/") return pathname === "/";
+  if (href === "/" || href === "/ayarlar") return pathname === href;
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 

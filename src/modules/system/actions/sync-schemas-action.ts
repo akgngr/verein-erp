@@ -2,7 +2,7 @@
 
 import { createAction } from "@/modules/auth/server";
 import { systemPermissions } from "@/shared/permissions/system";
-import { syncModuleSchemas } from "../../../../scripts/sync-schemas";
+import { syncModuleSchemas } from "@/shared/modules/sync-schemas";
 import type { ActionResult } from "@/shared/types/action";
 import { z } from "zod";
 

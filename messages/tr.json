@@ -39,7 +39,9 @@
     "profil": "Profil",
     "organization": "Dernek Bilgileri",
     "muhasebe": "Muhasebe",
-    "bagislar": "Bağışlar"
+    "bagislar": "Bağışlar",
+    "ayarlar": "Ayarlar",
+    "moduller": "Modül Yönetimi"
   },
   "sidebar": {
     "brand": "Dernek Yönetim",
@@ -1565,6 +1567,91 @@
       "validityDays": "{days} gün kaldı",
       "validityExpired": "Muafiyet belgesi süresi dolmuş",
       "validityWarn": "90 günden az kaldı — yenileme planlayın"
+    }
+  },
+  "system": {
+    "title": "Modül Yönetimi",
+    "subtitle": "Sistem çekirdek, resmi ve eklenti modüllerini yapılandırın, senkronize edin veya yönetin.",
+    "stats": {
+      "total": "Toplam Modül",
+      "active": "aktif",
+      "inactive": "pasif",
+      "core": "Çekirdek",
+      "coreDesc": "Korumalı sistem altyapısı",
+      "official": "Resmi Modüller",
+      "officialDesc": "Yerleşik dernek ERP araçları",
+      "extension": "Eklentiler",
+      "extensionDesc": "AI veya geliştirici eklentileri"
+    },
+    "searchPlaceholder": "Modül ara...",
+    "tabs": {
+      "all": "Tümü",
+      "core": "Çekirdek",
+      "official": "Resmi",
+      "extension": "Eklentiler"
+    },
+    "syncSchemas": "Şemaları Senkronize Et",
+    "syncSuccess": "Prisma şemaları başarıyla senkronize edildi.",
+    "noModulesFound": "Arama kriterlerine uygun modül bulunamadı.",
+    "badges": {
+      "core": "Çekirdek",
+      "official": "Resmi Modül",
+      "extension": "Geliştirici Eklentisi"
+    },
+    "author": "Geliştirici",
+    "routes": "Rotalar",
+    "noDescription": "Açıklama bulunmuyor.",
+    "status": {
+      "protected": "Korumalı",
+      "active": "Aktif",
+      "inactive": "Pasif",
+      "activatedToast": "{label} modülü etkinleştirildi.",
+      "deactivatedToast": "{label} modülü devre dışı bırakıldı."
+    },
+    "deleteModal": {
+      "title": "Modülü Sil",
+      "message": "\"{label}\" modül klasörü ve tüm dosyaları kalıcı olarak silinecek. Bu işlem geri alınamaz. Onaylıyor musunuz?",
+      "confirm": "Sil",
+      "successToast": "{label} modülü başarıyla silindi."
+    }
+  },
+  "settings": {
+    "title": "Ayarlar",
+    "subtitle": "Dernek profilini, kullanıcı yetkilerini, modülleri ve sistem tercihlerini yönetin.",
+    "languageSection": {
+      "title": "Dil ve Bölge Tercihleri",
+      "description": "Sistem arayüz dilini ve yerelleştirme ayarlarını belirleyin.",
+      "activeLanguage": "Geçerli Dil",
+      "tr": "Türkçe",
+      "de": "Deutsch",
+      "switchSuccess": "Arayüz dili başarıyla değiştirildi."
+    },
+    "cards": {
+      "organization": {
+        "title": "Dernek Bilgileri",
+        "description": "Kurumsal kimlik, dernek adı, vergi numarası, resmi adres, logo ve iletişim bilgileri.",
+        "action": "Düzenle"
+      },
+      "users": {
+        "title": "Kullanıcılar ve Roller",
+        "description": "Kullanıcı hesapları, sistem rolleri (Yönetim, Sayman, Denetçi vb.) ve yetkilendirmeler.",
+        "action": "Yönet"
+      },
+      "modules": {
+        "title": "Modül Yönetimi",
+        "description": "Çekirdek sistem araçları, resmi ERP modülleri ve harici geliştirici eklentilerini yönetin.",
+        "action": "Yapılandır"
+      },
+      "audit": {
+        "title": "Denetim Kayıtları",
+        "description": "Sistemdeki tüm veri değişiklikleri, oturum hareketleri ve güvenlik olaylarının dökümü.",
+        "action": "İncele"
+      },
+      "accounting": {
+        "title": "Muhasebe Ayarları",
+        "description": "Hesap planı (SKR49 / standart), bütçe hedefleri ve mali yıl yapılandırmaları.",
+        "action": "Ayarlar"
+      }
     }
   }
 }

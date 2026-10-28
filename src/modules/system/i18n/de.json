@@ -1,0 +1,46 @@
+{
+  "title": "Modulverwaltung",
+  "subtitle": "Systemkern-, offizielle und Erweiterungsmodule konfigurieren, synchronisieren oder verwalten.",
+  "stats": {
+    "total": "Module gesamt",
+    "active": "aktiv",
+    "inactive": "inaktiv",
+    "core": "Kern",
+    "coreDesc": "Geschützte Systeminfrastruktur",
+    "official": "Offizielle Module",
+    "officialDesc": "Integrierte Verein-ERP-Tools",
+    "extension": "Erweiterungen",
+    "extensionDesc": "KI- oder Entwickler-Plugins"
+  },
+  "searchPlaceholder": "Modul suchen...",
+  "tabs": {
+    "all": "Alle",
+    "core": "Kern",
+    "official": "Offiziell",
+    "extension": "Erweiterungen"
+  },
+  "syncSchemas": "Schemas synchronisieren",
+  "syncSuccess": "Prisma-Schemas wurden erfolgreich synchronisiert.",
+  "noModulesFound": "Keine Module gefunden, die den Kriterien entsprechen.",
+  "badges": {
+    "core": "Kern",
+    "official": "Offizielles Modul",
+    "extension": "Entwickler-Plugin"
+  },
+  "author": "Entwickler",
+  "routes": "Routen",
+  "noDescription": "Keine Beschreibung vorhanden.",
+  "status": {
+    "protected": "Geschützt",
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "activatedToast": "Modul {label} wurde aktiviert.",
+    "deactivatedToast": "Modul {label} wurde deaktiviert."
+  },
+  "deleteModal": {
+    "title": "Modul löschen",
+    "message": "Der Modulordner \"{label}\" und alle zugehörigen Dateien werden unwiderruflich gelöscht. Bestätigen?",
+    "confirm": "Löschen",
+    "successToast": "Modul {label} wurde erfolgreich gelöscht."
+  }
+}

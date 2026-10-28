@@ -18,6 +18,7 @@ import {
   Trash2,
   Zap,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
 
@@ -47,6 +48,7 @@ export function ModuleList({
   canManage: boolean;
 }) {
   const router = useRouter();
+  const t = useTranslations("system");
   const [isPending, startTransition] = useTransition();
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
@@ -77,7 +79,9 @@ export function ModuleList({
         return;
       }
       addToast({
-        title: `${mod.label} modülü ${newActive ? "etkinleştirildi" : "devre dışı bırakıldı"}.`,
+        title: newActive
+          ? t("status.activatedToast", { label: mod.label })
+          : t("status.deactivatedToast", { label: mod.label }),
         color: "success",
       });
       router.refresh();
@@ -92,7 +96,7 @@ export function ModuleList({
       return;
     }
     addToast({
-      title: `${deletingModule.label} modülü başarıyla silindi.`,
+      title: t("deleteModal.successToast", { label: deletingModule.label }),
       color: "success",
     });
     setDeletingModule(null);
@@ -107,7 +111,7 @@ export function ModuleList({
         return;
       }
       addToast({
-        title: "Prisma şemaları başarıyla senkronize edildi.",
+        title: t("syncSuccess"),
         color: "success",
       });
       router.refresh();
@@ -125,7 +129,7 @@ export function ModuleList({
             className="font-semibold text-tiny tracking-wide"
             startContent={<Shield className="h-3 w-3 ml-1" />}
           >
-            Çekirdek
+            {t("badges.core")}
           </Chip>
         );
       case "OFFICIAL":
@@ -137,7 +141,7 @@ export function ModuleList({
             className="font-semibold text-tiny tracking-wide"
             startContent={<Zap className="h-3 w-3 ml-1" />}
           >
-            Resmi Modül
+            {t("badges.official")}
           </Chip>
         );
       case "EXTENSION":
@@ -149,7 +153,7 @@ export function ModuleList({
             className="font-semibold text-tiny tracking-wide"
             startContent={<Boxes className="h-3 w-3 ml-1" />}
           >
-            Geliştirici Eklentisi
+            {t("badges.extension")}
           </Chip>
         );
     }
@@ -161,44 +165,44 @@ export function ModuleList({
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         <div className="p-4 rounded-2xl bg-content1 border border-default-200/80 shadow-xs flex flex-col gap-1">
           <span className="text-tiny font-semibold text-default-400 uppercase tracking-wider">
-            Toplam Modül
+            {t("stats.total")}
           </span>
           <span className="text-2xl font-bold text-foreground tracking-tight">
             {stats.total}
           </span>
           <span className="text-[11px] text-default-400">
-            {stats.active} aktif, {stats.inactive} pasif
+            {stats.active} {t("stats.active")}, {stats.inactive} {t("stats.inactive")}
           </span>
         </div>
 
         <div className="p-4 rounded-2xl bg-content1 border border-default-200/80 shadow-xs flex flex-col gap-1">
           <span className="text-tiny font-semibold text-secondary-500 uppercase tracking-wider flex items-center gap-1">
-            <Shield className="h-3 w-3" /> Çekirdek
+            <Shield className="h-3 w-3" /> {t("stats.core")}
           </span>
           <span className="text-2xl font-bold text-foreground tracking-tight">
             {stats.core}
           </span>
-          <span className="text-[11px] text-default-400">Korumalı sistem altyapısı</span>
+          <span className="text-[11px] text-default-400">{t("stats.coreDesc")}</span>
         </div>
 
         <div className="p-4 rounded-2xl bg-content1 border border-default-200/80 shadow-xs flex flex-col gap-1">
           <span className="text-tiny font-semibold text-primary-500 uppercase tracking-wider flex items-center gap-1">
-            <Zap className="h-3 w-3" /> Resmi Modüller
+            <Zap className="h-3 w-3" /> {t("stats.official")}
           </span>
           <span className="text-2xl font-bold text-foreground tracking-tight">
             {stats.official}
           </span>
-          <span className="text-[11px] text-default-400">Yerleşik dernek ERP araçları</span>
+          <span className="text-[11px] text-default-400">{t("stats.officialDesc")}</span>
         </div>
 
         <div className="p-4 rounded-2xl bg-content1 border border-default-200/80 shadow-xs flex flex-col gap-1">
           <span className="text-tiny font-semibold text-warning-500 uppercase tracking-wider flex items-center gap-1">
-            <Boxes className="h-3 w-3" /> Eklentiler
+            <Boxes className="h-3 w-3" /> {t("stats.extension")}
           </span>
           <span className="text-2xl font-bold text-foreground tracking-tight">
             {stats.extension}
           </span>
-          <span className="text-[11px] text-default-400">AI veya geliştirici eklentileri</span>
+          <span className="text-[11px] text-default-400">{t("stats.extensionDesc")}</span>
         </div>
       </div>
 
@@ -208,7 +212,7 @@ export function ModuleList({
           <div className="w-full sm:w-72">
             <Input
               size="sm"
-              placeholder="Modül ara..."
+              placeholder={t("searchPlaceholder")}
               value={search}
               onValueChange={setSearch}
               onClear={() => setSearch("")}
@@ -231,10 +235,10 @@ export function ModuleList({
               tab: "h-7 text-small font-medium px-3",
             }}
           >
-            <Tab key="all" title="Tümü" />
-            <Tab key="CORE" title="Çekirdek" />
-            <Tab key="OFFICIAL" title="Resmi" />
-            <Tab key="EXTENSION" title="Eklentiler" />
+            <Tab key="all" title={t("tabs.all")} />
+            <Tab key="CORE" title={t("tabs.core")} />
+            <Tab key="OFFICIAL" title={t("tabs.official")} />
+            <Tab key="EXTENSION" title={t("tabs.extension")} />
           </Tabs>
         </div>
 
@@ -247,7 +251,7 @@ export function ModuleList({
             startContent={<RefreshCw className="h-3.5 w-3.5" />}
             className="h-9 px-3 text-small font-medium border-default-200/80 hover:bg-default-100 rounded-xl"
           >
-            Şemaları Senkronize Et
+            {t("syncSchemas")}
           </Button>
         ) : null}
       </div>
@@ -257,7 +261,7 @@ export function ModuleList({
         <div className="divide-y divide-default-100">
           {filteredModules.length === 0 ? (
             <div className="p-8 text-center text-default-400 text-small">
-              Arama kriterlerine uygun modül bulunamadı.
+              {t("noModulesFound")}
             </div>
           ) : (
             filteredModules.map((mod) => (
@@ -287,12 +291,12 @@ export function ModuleList({
                       </span>
                     </div>
                     <p className="text-tiny text-default-500 mt-0.5 line-clamp-1">
-                      {mod.description ?? "Açıklama bulunmuyor."}
+                      {mod.description ?? t("noDescription")}
                     </p>
                     <div className="flex items-center gap-3 mt-1.5 text-[11px] text-default-400">
-                      <span>Geliştirici: <span className="font-medium text-default-600">{mod.author}</span></span>
+                      <span>{t("author")}: <span className="font-medium text-default-600">{mod.author}</span></span>
                       {mod.routes.length > 0 ? (
-                        <span>Rotalar: <code className="text-primary-600">{mod.routes.join(", ")}</code></span>
+                        <span>{t("routes")}: <code className="text-primary-600">{mod.routes.join(", ")}</code></span>
                       ) : null}
                     </div>
                   </div>
@@ -304,12 +308,12 @@ export function ModuleList({
                     {mod.isProtected ? (
                       <div className="flex items-center gap-1.5 text-xs text-default-400 font-medium px-2.5 py-1 rounded-lg bg-default-100/70">
                         <Lock className="h-3 w-3" />
-                        <span>Korumalı</span>
+                        <span>{t("status.protected")}</span>
                       </div>
                     ) : (
                       <div className="flex items-center gap-2">
                         <span className="text-xs font-medium text-default-500">
-                          {mod.isActive ? "Aktif" : "Pasif"}
+                          {mod.isActive ? t("status.active") : t("status.inactive")}
                         </span>
                         <Switch
                           size="sm"
@@ -329,7 +333,7 @@ export function ModuleList({
                       variant="light"
                       color="danger"
                       aria-label={`${mod.label} modülünü sil`}
-                      title="Modülü sil"
+                      title={t("deleteModal.confirm")}
                       className="rounded-lg"
                       onPress={() => setDeletingModule(mod)}
                     >
@@ -347,9 +351,9 @@ export function ModuleList({
       <ConfirmDialog
         isOpen={deletingModule !== null}
         onOpenChange={(open) => !open && setDeletingModule(null)}
-        title="Modülü Sil"
-        message={`"${deletingModule?.label}" modül klasörü ve tüm dosyaları kalıcı olarak silinecek. Bu işlem geri alınamaz. Onaylıyor musunuz?`}
-        confirmLabel="Sil"
+        title={t("deleteModal.title")}
+        message={t("deleteModal.message", { label: deletingModule?.label ?? "" })}
+        confirmLabel={t("deleteModal.confirm")}
         confirmColor="danger"
         onConfirm={handleConfirmDelete}
       />

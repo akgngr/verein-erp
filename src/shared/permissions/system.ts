@@ -11,3 +11,15 @@ export const systemPermissions: PermissionDefinition = {
     VIEWER: [],
   },
 };
+
+export const settingsPermissions: PermissionDefinition = {
+  resource: "settings",
+  grants: {
+    ADMIN: ["view"],
+    BOARD: ["view"],
+    SECRETARY: ["view"],
+    TREASURER: ["view"],
+    AUDITOR: ["view"],
+    VIEWER: ["view"],
+  },
+};

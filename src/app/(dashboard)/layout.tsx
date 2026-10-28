@@ -2,7 +2,8 @@ import { redirect } from "next/navigation";
 
 import type { SessionUser } from "@/modules/auth";
 import { requireUser, signOutAction } from "@/modules/auth/server";
-import { getModuleStates } from "@/shared/modules/module-store";
+import { getAllActiveModuleKeys } from "@/shared/modules/module-store";
+import { allModules } from "@/registry";
 
 import { DesktopSidebar, MobileSidebar, SidebarProvider } from "./_components/sidebar";
 import { Topbar } from "./_components/topbar";
@@ -25,10 +26,7 @@ export default async function DashboardLayout({
     redirect("/giris?pasif=1");
   }
 
-  const moduleStates = getModuleStates();
-  const activeModuleKeys = Object.entries(moduleStates)
-    .filter(([, isActive]) => isActive !== false)
-    .map(([key]) => key);
+  const activeModuleKeys = getAllActiveModuleKeys(allModules.map((m) => m.key));
 
   return (
     <SidebarProvider>

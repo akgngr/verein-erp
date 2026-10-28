@@ -1,0 +1,46 @@
+{
+  "title": "Modül Yönetimi",
+  "subtitle": "Sistem çekirdek, resmi ve eklenti modüllerini yapılandırın, senkronize edin veya yönetin.",
+  "stats": {
+    "total": "Toplam Modül",
+    "active": "aktif",
+    "inactive": "pasif",
+    "core": "Çekirdek",
+    "coreDesc": "Korumalı sistem altyapısı",
+    "official": "Resmi Modüller",
+    "officialDesc": "Yerleşik dernek ERP araçları",
+    "extension": "Eklentiler",
+    "extensionDesc": "AI veya geliştirici eklentileri"
+  },
+  "searchPlaceholder": "Modül ara...",
+  "tabs": {
+    "all": "Tümü",
+    "core": "Çekirdek",
+    "official": "Resmi",
+    "extension": "Eklentiler"
+  },
+  "syncSchemas": "Şemaları Senkronize Et",
+  "syncSuccess": "Prisma şemaları başarıyla senkronize edildi.",
+  "noModulesFound": "Arama kriterlerine uygun modül bulunamadı.",
+  "badges": {
+    "core": "Çekirdek",
+    "official": "Resmi Modül",
+    "extension": "Geliştirici Eklentisi"
+  },
+  "author": "Geliştirici",
+  "routes": "Rotalar",
+  "noDescription": "Açıklama bulunmuyor.",
+  "status": {
+    "protected": "Korumalı",
+    "active": "Aktif",
+    "inactive": "Pasif",
+    "activatedToast": "{label} modülü etkinleştirildi.",
+    "deactivatedToast": "{label} modülü devre dışı bırakıldı."
+  },
+  "deleteModal": {
+    "title": "Modülü Sil",
+    "message": "\"{label}\" modül klasörü ve tüm dosyaları kalıcı olarak silinecek. Bu işlem geri alınamaz. Onaylıyor musunuz?",
+    "confirm": "Sil",
+    "successToast": "{label} modülü başarıyla silindi."
+  }
+}
