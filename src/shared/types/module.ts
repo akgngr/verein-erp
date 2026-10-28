@@ -2,6 +2,8 @@ import type { LucideIcon } from "lucide-react";
 
 import type { PermissionAction, PermissionDefinition } from "../permissions/define";
 
+export type ModuleCategory = "CORE" | "OFFICIAL" | "EXTENSION";
+
 export type NavItem = {
   href: string;
   label: string;
@@ -16,5 +18,12 @@ export type NavItem = {
 export type ModuleConfig = {
   key: string;
   label: string;
+  description?: string;
+  version?: string;
+  author?: string;
+  category: ModuleCategory;
+  /** CORE modüller için true (pasife alınamaz, silinemez). */
+  isProtected?: boolean;
+  hasSchema?: boolean;
   nav: NavItem[];
 };

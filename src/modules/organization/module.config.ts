@@ -1,12 +1,15 @@
 import { Building2 } from "lucide-react";
 
 import type { ModuleConfig } from "@/shared/types/module";
-
 import { organizationPermissions } from "./permissions";
 
 export const moduleConfig: ModuleConfig = {
   key: "organization",
   label: "Dernek Bilgileri",
+  description: "Dernek ana verileri, resmi iletişim ve antet logosu.",
+  category: "CORE",
+  isProtected: true,
+  hasSchema: true,
   nav: [
     {
       href: "/ayarlar/dernek",

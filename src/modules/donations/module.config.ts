@@ -1,16 +1,17 @@
 import { HandHeart } from "lucide-react";
 
 import type { ModuleConfig } from "@/shared/types/module";
-
 import { donationsPermissions } from "./permissions";
 
 export const moduleConfig: ModuleConfig = {
   key: "donations",
   label: "Bağışlar",
+  description: "Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı takibi.",
+  category: "OFFICIAL",
+  hasSchema: true,
   nav: [
     {
       href: "/bagislar",
-      // § 9: "Bağışlar (Spenden)"
       label: "Bağışlar",
       labelKey: "bagislar",
       icon: HandHeart,

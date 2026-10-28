@@ -1,12 +1,15 @@
 import { ScrollText } from "lucide-react";
 
 import type { ModuleConfig } from "@/shared/types/module";
-
 import { auditPermissions } from "./permissions";
 
 export const moduleConfig: ModuleConfig = {
   key: "audit",
-  label: "Denetim Kaydı",
+  label: "Denetim Kayıtları",
+  description: "Sistem işlemlerinin değiştirilemez güvenlik ve denetim logları.",
+  category: "CORE",
+  isProtected: true,
+  hasSchema: true,
   nav: [
     {
       href: "/ayarlar/denetim-kaydi",

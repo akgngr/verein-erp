@@ -1,15 +1,1 @@
-model AuditLog {
-  id        String   @id @default(cuid())
-  userId    String? // FK DEĞİL: modüller arası bağımsızlık için düz alan
-  userLabel String? // işlem anındaki "Ad <e-posta>" anlık görüntüsü
-  action    String // örn: LOGIN_SUCCESS, LOGIN_FAILED, LOGOUT, CREATE, UPDATE, DEACTIVATE, ACTIVATE, PASSWORD_CHANGE, PASSWORD_RESET
-  entity    String // örn: User, Auth
-  entityId  String?
-  changes   Json? // { before: {...}, after: {...} } (parola alanları ASLA yazılmaz)
-  ip        String?
-  createdAt DateTime @default(now())
-
-  @@index([createdAt])
-  @@index([entity, entityId])
-  @@index([userId])
-}
+../../src/modules/audit/schema.prisma

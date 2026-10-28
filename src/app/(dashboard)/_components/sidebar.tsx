@@ -55,11 +55,24 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(`${href}/`);
 }
 
-function SidebarContent({ role, onNavigate }: { role: Role; onNavigate?: () => void }) {
+function SidebarContent({
+  role,
+  activeModuleKeys,
+  onNavigate,
+}: {
+  role: Role;
+  activeModuleKeys?: string[];
+  onNavigate?: () => void;
+}) {
   const pathname = usePathname();
 
+  // Yalnızca aktif olan modüllerin menü öğeleri gösterilir
+  const activeModules = activeModuleKeys
+    ? registry.filter((m) => activeModuleKeys.includes(m.key))
+    : registry;
+
   // Menü yetkiye göre süzülür ve group + order ile sıralanır (7.4, 8. bölüm).
-  const visibleItems = [...registry.flatMap((module) => module.nav), PANEL_ITEM]
+  const visibleItems = [...activeModules.flatMap((module) => module.nav), PANEL_ITEM]
     .filter((item) => can(role, item.permission.definition, item.permission.action))
     .sort((a, b) => (a.group === b.group ? a.order - b.order : a.group === "main" ? -1 : 1));
 
@@ -130,17 +143,17 @@ function Brand() {
 }
 
 /** Masaüstü sabit sidebar (256px). */
-function DesktopSidebar({ role }: { role: Role }) {
+function DesktopSidebar({ role, activeModuleKeys }: { role: Role; activeModuleKeys?: string[] }) {
   return (
     <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-default-200/80 bg-background/95 backdrop-blur-sm lg:flex">
       <Brand />
-      <SidebarContent role={role} />
+      <SidebarContent role={role} activeModuleKeys={activeModuleKeys} />
     </aside>
   );
 }
 
 /** Mobil (<1024px) HeroUI Drawer. */
-function MobileSidebar({ role }: { role: Role }) {
+function MobileSidebar({ role, activeModuleKeys }: { role: Role; activeModuleKeys?: string[] }) {
   const { mobileOpen, setMobileOpen } = useSidebar();
   return (
     <Drawer
@@ -157,7 +170,7 @@ function MobileSidebar({ role }: { role: Role }) {
               <Brand />
             </DrawerHeader>
             <DrawerBody className="px-0">
-              <SidebarContent role={role} onNavigate={onClose} />
+              <SidebarContent role={role} activeModuleKeys={activeModuleKeys} onNavigate={onClose} />
             </DrawerBody>
           </>
         )}

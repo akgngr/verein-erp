@@ -24,8 +24,9 @@ Her yeni modül `src/modules/<modul_adi>/` altında şu klasör ve dosya hiyerar
 
 ```
 src/modules/<modul_adi>/
+├── schema.prisma          # [YENİ] Modülün veritabanı modelleri (Otomatik prisma/schema'ya senkronize olur)
 ├── permissions.ts         # Modüle ait RBAC izin tanımları (create, read, update, delete)
-├── module.config.ts       # Menü, ikon, rota ve yetki eşleşmesi (Registry için)
+├── module.config.ts       # Menü, kategori (CORE/OFFICIAL/EXTENSION), ikon, rota eşleşmesi
 ├── types.ts               # Modül içi tipler ve modeller
 ├── constants.ts           # Filtre sabitleri, enum etiketleri, varsayılan değerler
 ├── schemas/               # Zod doğrulama şemaları (Server action girişleri için)
@@ -44,12 +45,35 @@ src/modules/<modul_adi>/
 │   ├── <modul>-list-view.tsx
 │   └── <modul>-detail-view.tsx
 ├── index.ts               # Kamuya açık İZOMORFİK / UI giriş noktası (Public API)
+├── ui.ts                  # Kamuya açık UI bileşenleri girişi
 └── server.ts              # Kamuya açık SUNUCU giriş noktası (Public Server API)
 ```
 
 ---
 
-## 3. Modüller Arası Bağımlılık Kuralları (Boundary Rules)
+## 3. Modül Kategorileri ve Yaşam Döngüsü
+
+Sistemdeki tüm modüller 3 kategoriden birine ait olmak zorundadır (`module.config.ts` içinde `category` alanı):
+
+| Kategori | Tanım | Örnekler | Pasife Alınabilir mi? | Silinebilir mi? |
+|---|---|---|:---:|:---:|
+| **CORE** (Çekirdek) | Sistemin çalışması için zorunlu altyapı | `auth`, `users`, `organization`, `audit`, `system` | ❌ Hayır | ❌ Hayır |
+| **OFFICIAL** (Resmi) | Verein ERP'nin yerleşik dernek fonksiyonları | `members`, `accounting`, `documents`, `meetings`, `donations` | ✅ Evet | ❌ Hayır |
+| **EXTENSION** (Eklenti) | AI Agent veya dış geliştirici tarafından eklenen bağımsız eklentiler | `inventory`, `events`, vb. | ✅ Evet | ✅ Evet |
+
+> **Modül Yönetimi Arayüzü:** Yöneticiler `/ayarlar/moduller` sayfasından tüm modüllerin durumunu tek tıkla aktif/pasif yapabilir veya eklentileri kaldırabilir. Pasif modüller sol menüde gizlenir.
+
+---
+
+## 4. Otomatik Prisma Şema Senkronizasyonu (`scripts/sync-schemas.ts`)
+
+Geliştiriciler ve AI Agent'lar `prisma/schema/` klasörüne elle dosya eklemek zorunda değildir.
+* Bir modülün içine `src/modules/<modul>/schema.prisma` konulduğunda, `pnpm dev`, `pnpm build` veya `pnpm db:migrate` çalıştırıldığı anda bu dosya otomatik olarak `prisma/schema/<modul>.prisma` içine sembolik bağlanır.
+* Manuel tetiklemek için: `pnpm run sync:schemas` veya arayüzdeki *"Şemaları Senkronize Et"* butonu kullanılabilir.
+
+---
+
+## 5. Modüller Arası Bağımlılık Kuralları (Boundary Rules)
 
 Bu kurallar `eslint.config.mjs` tarafından katı şekilde denetlenir. Kural ihlali derleme hatasına (`pnpm lint`) yol açar.
 

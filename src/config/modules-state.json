@@ -1,0 +1,11 @@
+{
+  "auth": true,
+  "users": true,
+  "organization": true,
+  "audit": true,
+  "members": true,
+  "accounting": true,
+  "documents": true,
+  "meetings": true,
+  "donations": true
+}

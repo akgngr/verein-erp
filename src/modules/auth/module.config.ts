@@ -3,6 +3,9 @@ import type { ModuleConfig } from "@/shared/types/module";
 export const moduleConfig: ModuleConfig = {
   key: "auth",
   label: "Kimlik Doğrulama",
-  // auth modülünün menü öğesi yoktur (Panel bağlantısı sidebar'da sabittir).
+  description: "Kullanıcı girişi, oturum yönetimi ve parola güvenliği.",
+  category: "CORE",
+  isProtected: true,
+  hasSchema: true,
   nav: [],
 };

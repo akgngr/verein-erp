@@ -6,16 +6,26 @@ import { moduleConfig as documentsModule } from "@/modules/documents";
 import { moduleConfig as meetingsModule } from "@/modules/meetings";
 import { moduleConfig as membersModule } from "@/modules/members";
 import { moduleConfig as usersModule } from "@/modules/users";
+import { moduleConfig as accountingModule } from "@/modules/accounting";
+import { moduleConfig as donationsModule } from "@/modules/donations";
+import { moduleConfig as organizationModule } from "@/modules/organization";
+import { moduleConfig as systemModule } from "@/modules/system";
 
 /**
- * Tüm modüllerin moduleConfig dışa aktarımları (3.5 md. 5).
- * Sidebar bu diziden menüyü üretir; yeni modül buraya tek satır eklenir.
+ * Projedeki TÜM kayıtlı modüllerin tam listesi.
  */
-export const registry: ModuleConfig[] = [
+export const allModules: ModuleConfig[] = [
   documentsModule,
   meetingsModule,
   membersModule,
+  accountingModule,
+  donationsModule,
+  organizationModule,
   usersModule,
+  systemModule,
   auditModule,
   authModule,
 ];
+
+/** Geriye dönük uyumluluk için varsayılan registry */
+export const registry: ModuleConfig[] = allModules;

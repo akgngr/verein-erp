@@ -8,7 +8,11 @@
     "start": "next start",
     "lint": "eslint .",
     "typecheck": "tsc --noEmit",
-    "db:migrate": "prisma migrate dev",
+    "sync:schemas": "tsx scripts/sync-schemas.ts",
+    "predev": "tsx scripts/sync-schemas.ts",
+    "prebuild": "tsx scripts/sync-schemas.ts",
+    "pretypecheck": "tsx scripts/sync-schemas.ts",
+    "db:migrate": "tsx scripts/sync-schemas.ts && prisma migrate dev",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio"
   },

@@ -2,6 +2,7 @@ import { redirect } from "next/navigation";
 
 import type { SessionUser } from "@/modules/auth";
 import { requireUser, signOutAction } from "@/modules/auth/server";
+import { getModuleStates } from "@/shared/modules/module-store";
 
 import { DesktopSidebar, MobileSidebar, SidebarProvider } from "./_components/sidebar";
 import { Topbar } from "./_components/topbar";
@@ -24,10 +25,15 @@ export default async function DashboardLayout({
     redirect("/giris?pasif=1");
   }
 
+  const moduleStates = getModuleStates();
+  const activeModuleKeys = Object.entries(moduleStates)
+    .filter(([, isActive]) => isActive !== false)
+    .map(([key]) => key);
+
   return (
     <SidebarProvider>
       <div className="flex min-h-dvh">
-        <DesktopSidebar role={user.role} />
+        <DesktopSidebar role={user.role} activeModuleKeys={activeModuleKeys} />
         <div className="flex min-w-0 flex-1 flex-col">
           <Topbar
             name={user.name}
@@ -37,7 +43,7 @@ export default async function DashboardLayout({
           />
           <main className="flex-1 px-4 py-6 md:px-6">{children}</main>
         </div>
-        <MobileSidebar role={user.role} />
+        <MobileSidebar role={user.role} activeModuleKeys={activeModuleKeys} />
       </div>
     </SidebarProvider>
   );
