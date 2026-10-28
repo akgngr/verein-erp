@@ -176,7 +176,6 @@ export function DocumentToolbar({
     options: { value: string; label: string }[],
   ) => (
     <Select
-      id={`${ctx.idPrefix}-filter-${key}`}
       className="w-full"
       size="sm"
       aria-label={label}

@@ -92,7 +92,6 @@ export function AccountFormModal({
             maxLength={100}
           />
           <Select
-            id="account-type"
             label={t("type")}
             labelPlacement="outside"
             selectedKeys={[type]}
@@ -113,7 +112,6 @@ export function AccountFormModal({
             inputMode="decimal"
           />
           <DatePicker
-            id="account-opening-date"
             label={t("openingDate")}
             labelPlacement="outside"
             granularity="day"

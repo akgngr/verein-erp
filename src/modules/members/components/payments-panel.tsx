@@ -241,7 +241,6 @@ export function PaymentsPanel({
                   const key = Array.from(keys)[0] as MethodKey | undefined;
                   if (key) setMethod(key);
                 }}
-                id="form-payment-method"
               >
                 {PAYMENT_METHODS.map((value) => (
                   <SelectItem key={value}>{t(`method.${value}`)}</SelectItem>
@@ -251,7 +250,6 @@ export function PaymentsPanel({
               <DatePicker
                 label={t("form.paidAt")}
                 labelPlacement="outside"
-                id="form-payment-paidAt"
                 value={(() => {
                   if (!paidAt) return null;
                   try {
@@ -296,7 +294,6 @@ export function PaymentsPanel({
           <ModalBody>
             <p className="text-small text-default-500">{t("voidConfirm")}</p>
             <Textarea
-              id="payment-void-reason"
               label={t("voidReason")}
               labelPlacement="outside"
               value={voidReason}

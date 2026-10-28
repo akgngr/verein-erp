@@ -159,7 +159,6 @@ export function StatusChangeMenu({
           </ModalHeader>
           <ModalBody className="flex flex-col gap-4">
             <DatePicker
-              id="status-change-exit-date"
               label={t("statusChange.exitDateLabel")}
               labelPlacement="outside"
               granularity="day"
@@ -169,7 +168,6 @@ export function StatusChangeMenu({
               isRequired
             />
             <Input
-              id="status-change-exit-reason"
               label={t("statusChange.exitReasonLabel")}
               labelPlacement="outside"
               placeholder={t("statusChange.exitReasonPlaceholder")}
@@ -179,7 +177,6 @@ export function StatusChangeMenu({
             />
             {pendingExitStatus === "RESIGNED" ? (
               <DatePicker
-                id="status-change-cancellation-date"
                 label={t("statusMenu.cancellationReceivedAtLabel")}
                 labelPlacement="outside"
                 description={t("statusMenu.cancellationReceivedAtHint")}

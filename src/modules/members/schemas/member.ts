@@ -12,7 +12,7 @@ import { z } from "zod";
 
 function emptyToNull<T extends z.ZodType>(schema: T) {
   return z.preprocess(
-    (value) => (typeof value === "string" && value.trim() === "" ? null : value),
+    (value) => (value === undefined || (typeof value === "string" && value.trim() === "") ? null : value),
     schema,
   );
 }
@@ -104,13 +104,15 @@ const baseFields = {
 
 /** Faz 4 (4.6): Ülke boş veya Almanya ise PLZ 5 haneli olmalıdır; aksi halde serbest ≤10. */
 function refinePostalCode<
-  Data extends { country: string | null; postalCode: string | null },
+  Data extends { country?: string | null; postalCode?: string | null },
 >(data: Data, ctx: z.RefinementCtx): void {
+  const country = data.country ?? null;
+  const postalCode = data.postalCode ?? null;
   const isGermany =
-    data.country === null ||
-    data.country === "" ||
-    /^(deutschland|germany|almanya)$/i.test(data.country.trim());
-  if (isGermany && data.postalCode && !/^\d{5}$/.test(data.postalCode)) {
+    country === null ||
+    country === "" ||
+    /^(deutschland|germany|almanya)$/i.test(country.trim());
+  if (isGermany && postalCode && !/^\d{5}$/.test(postalCode)) {
     ctx.addIssue({
       code: "custom",
       path: ["postalCode"],
@@ -121,16 +123,18 @@ function refinePostalCode<
 
 /** exitDate verilmişse joinDate'ten önce olamaz; exitReason verilmişse exitDate de verilmeli. */
 function refineMemberDates<
-  Data extends { joinDate: string; exitDate: string | null; exitReason?: string | null },
+  Data extends { joinDate: string; exitDate?: string | null; exitReason?: string | null },
 >(data: Data, ctx: z.RefinementCtx): void {
-  if (data.exitDate && data.exitDate < data.joinDate) {
+  const exitDate = data.exitDate ?? null;
+  const exitReason = data.exitReason ?? null;
+  if (exitDate && exitDate < data.joinDate) {
     ctx.addIssue({
       code: "custom",
       path: ["exitDate"],
       message: "Ayrılış tarihi katılım tarihinden önce olamaz.",
     });
   }
-  if (data.exitReason && !data.exitDate) {
+  if (exitReason && !exitDate) {
     ctx.addIssue({
       code: "custom",
       path: ["exitDate"],

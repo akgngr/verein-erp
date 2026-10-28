@@ -46,7 +46,6 @@ export function FormDatePicker<T extends FieldValues>({
         }
         return (
           <DatePicker
-            id={`form-date-picker-${String(name)}`}
             label={label}
             labelPlacement={labelPlacement}
             description={description}

@@ -89,7 +89,6 @@ export function CategoryFormModal({
             maxLength={150}
           />
           <Select
-            id="category-direction"
             label={t("direction")}
             labelPlacement="outside"
             selectedKeys={[direction]}
@@ -103,7 +102,6 @@ export function CategoryFormModal({
             ))}
           </Select>
           <Select
-            id="category-sphere"
             label={t("sphere")}
             labelPlacement="outside"
             selectedKeys={[sphere]}

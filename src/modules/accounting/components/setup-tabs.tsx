@@ -394,7 +394,6 @@ function SyncSettingsCard({
           <>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <Select
-                id="settings-fee-category"
                 label={t("memberFeeCategory")}
                 labelPlacement="outside"
                 selectedKeys={memberFeeCategoryId ? [memberFeeCategoryId] : []}
@@ -405,7 +404,6 @@ function SyncSettingsCard({
                 ))}
               </Select>
               <Select
-                id="settings-cash-account"
                 label={t("cashAccount")}
                 labelPlacement="outside"
                 selectedKeys={cashAccountId ? [cashAccountId] : []}
@@ -416,7 +414,6 @@ function SyncSettingsCard({
                 ))}
               </Select>
               <Select
-                id="settings-bank-account"
                 label={t("bankAccount")}
                 labelPlacement="outside"
                 selectedKeys={bankAccountId ? [bankAccountId] : []}
@@ -429,7 +426,6 @@ function SyncSettingsCard({
             </div>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <Select
-                id="settings-donation-category"
                 label={t("donationCategory")}
                 labelPlacement="outside"
                 selectedKeys={donationCategoryId ? [donationCategoryId] : []}

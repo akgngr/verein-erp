@@ -223,14 +223,10 @@ export function DataTableToolbar({
                     const currentValue = activeFilters[filter.key] ?? "";
                     return (
                       <div key={filter.key} className="flex flex-col gap-1.5">
-                        <label
-                          htmlFor={`dt-popover-filter-${filter.key}`}
-                          className="text-[11px] font-semibold text-default-500 uppercase tracking-wider"
-                        >
+                        <span className="text-[11px] font-semibold text-default-500 uppercase tracking-wider">
                           {filter.label}
-                        </label>
+                        </span>
                         <Select
-                          id={`dt-popover-filter-${filter.key}`}
                           size="sm"
                           aria-label={filter.label}
                           placeholder={`${filter.label} seçin`}

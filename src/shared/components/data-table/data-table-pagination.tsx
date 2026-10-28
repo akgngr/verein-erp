@@ -22,11 +22,11 @@ export function DataTablePagination({
       <p className="text-small text-default-500">Toplam {total} kayıt</p>
       <div className="flex flex-wrap items-center justify-center gap-3">
         <Select
-          id="dt-pagination-page-size"
           className="w-[130px]"
           size="sm"
           aria-label="Sayfa başına kayıt"
           selectedKeys={[String(pageSize)]}
+          disallowEmptySelection
           onSelectionChange={(keys) => {
             const key = keys === "all" ? undefined : Array.from(keys)[0];
             if (key) onPageSizeChange(Number(key));
