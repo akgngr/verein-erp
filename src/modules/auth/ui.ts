@@ -3,4 +3,3 @@
 
 export { LoginView } from "./views/login-view";
 export { ProfileView } from "./views/profile-view";
-export { setLocaleAction } from "./actions/set-locale";

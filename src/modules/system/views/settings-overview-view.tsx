@@ -10,7 +10,7 @@ import {
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
-import { requireUser } from "@/modules/auth/server";
+import { requireUser, setLocaleAction } from "@/modules/auth/server";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { can } from "@/shared/permissions/define";
 import { organizationPermissions } from "@/modules/organization";
@@ -20,7 +20,7 @@ import { systemPermissions } from "@/shared/permissions/system";
 import { accountingPermissions } from "@/modules/accounting";
 import { cn } from "@/shared/utils";
 
-import { LanguageSettingCard } from "../components/language-switcher";
+import { LanguageSettingCard } from "../components/language-setting-card";
 
 export async function SettingsOverviewView() {
   const user = await requireUser();
@@ -113,7 +113,7 @@ export async function SettingsOverviewView() {
             </p>
           </div>
         </div>
-        <LanguageSettingCard />
+        <LanguageSettingCard onSetLocale={setLocaleAction} />
       </section>
 
       {/* 2. Sistem & Yönetim Ayar Kartları */}

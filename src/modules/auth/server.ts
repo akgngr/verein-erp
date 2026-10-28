@@ -26,6 +26,7 @@ export { handlers, auth, signIn, signOut, unstable_update } from "./auth";
 // Server action'lar: client bileşenler bunları prop yoluyla alır (server.ts "server-only"
 // olduğu için doğrudan client import edilemez).
 export { signOutAction } from "./actions/logout";
+export { setLocaleAction } from "./actions/set-locale";
 
 /** Mevcut oturum kullanıcısını veritabanından tazeleyerek döner; pasif kullanıcı null döner. */
 export async function getCurrentUser(): Promise<SessionUser | null> {

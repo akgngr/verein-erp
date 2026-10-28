@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 
 import type { SessionUser } from "@/modules/auth";
-import { requireUser, signOutAction } from "@/modules/auth/server";
+import { requireUser, signOutAction, setLocaleAction } from "@/modules/auth/server";
 import { getAllActiveModuleKeys } from "@/shared/modules/module-store";
 import { allModules } from "@/registry";
 
@@ -38,6 +38,7 @@ export default async function DashboardLayout({
             email={user.email}
             role={user.role}
             onSignOut={signOutAction}
+            onSetLocale={setLocaleAction}
           />
           <main className="flex-1 px-4 py-6 md:px-6">{children}</main>
         </div>
