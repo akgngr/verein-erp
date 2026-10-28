@@ -14,6 +14,7 @@ export const moduleConfig: ModuleConfig = {
     {
       href: "/ayarlar/denetim-kaydi",
       label: "Denetim Kaydı",
+      labelKey: "denetimKaydi",
       icon: ScrollText,
       group: "settings",
       order: 2,

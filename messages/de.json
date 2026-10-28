@@ -1653,5 +1653,13 @@
         "action": "Einstellungen"
       }
     }
+  },
+  "testmod": {
+    "title": "Test Modülü",
+    "description": "Test Modülü yönetim modülü.",
+    "listTitle": "Test Modülü-Übersicht",
+    "newItem": "Neuer Eintrag",
+    "emptyTitle": "Keine Einträge vorhanden",
+    "emptyDescription": "Klicken Sie auf 'Neuer Eintrag', um den ersten Datensatz anzulegen."
   }
 }

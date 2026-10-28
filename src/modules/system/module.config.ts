@@ -8,11 +8,12 @@ export const moduleConfig: ModuleConfig = {
   description: "Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.",
   category: "CORE",
   isProtected: true,
-  hasSchema: false,
+  hasSchema: true,
   nav: [
     {
       href: "/ayarlar",
       label: "Ayarlar",
+      labelKey: "ayarlar",
       icon: Settings,
       group: "settings",
       order: 0,
@@ -21,6 +22,7 @@ export const moduleConfig: ModuleConfig = {
     {
       href: "/ayarlar/moduller",
       label: "Modül Yönetimi",
+      labelKey: "moduller",
       icon: Boxes,
       group: "settings",
       order: 3,

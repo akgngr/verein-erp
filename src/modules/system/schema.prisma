@@ -1,0 +1,21 @@
+// System modülü: dinamik modül durumu ve sistem ayarları tablosu
+
+model SystemModuleState {
+  id          String   @id @default(uuid())
+  moduleKey   String   @unique
+  isEnabled   Boolean  @default(true)
+  settings    Json?
+  updatedAt   DateTime @updatedAt
+  createdAt   DateTime @default(now())
+
+  @@map("system_module_states")
+}
+
+model SystemSetting {
+  key         String   @id
+  value       String
+  description String?
+  updatedAt   DateTime @updatedAt
+
+  @@map("system_settings")
+}

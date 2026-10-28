@@ -17,7 +17,17 @@ describe("Modular Prisma Schemas Synchronizer", () => {
     assert.ok(fs.existsSync(path.join(schemaDir, "base.prisma")));
 
     // Modül şemaları mevcuttur
-    const expectedModules = ["users", "members", "accounting", "documents", "meetings", "donations"];
+    const expectedModules = [
+      "users",
+      "members",
+      "accounting",
+      "documents",
+      "meetings",
+      "donations",
+      "organization",
+      "system",
+      "audit",
+    ];
     for (const mod of expectedModules) {
       const linkPath = path.join(schemaDir, `${mod}.prisma`);
       assert.ok(fs.existsSync(linkPath), `${mod}.prisma bağlantısı mevcut olmalıdır`);

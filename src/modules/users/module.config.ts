@@ -14,6 +14,7 @@ export const moduleConfig: ModuleConfig = {
     {
       href: "/ayarlar/kullanicilar",
       label: "Kullanıcılar",
+      labelKey: "kullanicilar",
       icon: UsersRound,
       group: "settings",
       order: 1,

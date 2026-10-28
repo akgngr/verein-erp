@@ -1,1 +1,1 @@
-../../src/modules/documents/schema.prisma
+../../src/modules/documents/prisma/schema.prisma

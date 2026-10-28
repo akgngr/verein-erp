@@ -29,9 +29,15 @@ export function syncModuleSchemas(): { synced: string[]; removed: string[] } {
   for (const entry of moduleEntries) {
     if (!entry.isDirectory()) continue;
     const moduleName = entry.name;
-    const moduleSchemaPath = path.join(MODULES_DIR, moduleName, "schema.prisma");
+    
+    // Hem prisma/schema.prisma hem de doğrudan schema.prisma desteklenir
+    const candidatePaths = [
+      path.join(MODULES_DIR, moduleName, "prisma", "schema.prisma"),
+      path.join(MODULES_DIR, moduleName, "schema.prisma"),
+    ];
+    const moduleSchemaPath = candidatePaths.find((p) => fs.existsSync(p));
 
-    if (fs.existsSync(moduleSchemaPath)) {
+    if (moduleSchemaPath) {
       activeModuleNames.add(moduleName);
       const targetSchemaPath = path.join(PRISMA_SCHEMA_DIR, `${moduleName}.prisma`);
 

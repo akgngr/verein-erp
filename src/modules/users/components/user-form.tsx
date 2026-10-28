@@ -12,10 +12,11 @@ import { FormInput } from "@/shared/components/forms/form-input";
 import { FormSelect } from "@/shared/components/forms/form-select";
 import { FormSwitch } from "@/shared/components/forms/form-switch";
 import { SubmitButton } from "@/shared/components/forms/submit-button";
-import { ROLE_OPTIONS } from "@/shared/roles";
+import { ROLE_OPTIONS, type Role } from "@/shared/roles";
 
 import { createUserAction } from "../actions/create-user";
 import { updateUserAction } from "../actions/update-user";
+import { RolePermissionsPreview } from "./role-permissions-matrix";
 import {
   userCreateSchema,
   userUpdateSchema,
@@ -36,6 +37,8 @@ export function UserCreateForm() {
     resolver: zodResolver(userCreateSchema),
     defaultValues: { name: "", email: "", role: "VIEWER", password: "" },
   });
+
+  const selectedRole = (form.watch("role") as Role) || "VIEWER";
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(null);
@@ -61,6 +64,7 @@ export function UserCreateForm() {
         placeholder="ornek@dernek.org"
       />
       <FormSelect name="role" label="Rol" control={form.control} options={ROLE_SELECT_OPTIONS} isRequired />
+      <RolePermissionsPreview role={selectedRole} />
       <FormInput
         name="password"
         label="Geçici parola"
@@ -98,6 +102,8 @@ export function UserEditForm({ user }: { user: UserEditValues }) {
     defaultValues: { name: user.name, email: user.email, role: user.role, isActive: user.isActive },
   });
 
+  const selectedRole = (form.watch("role") as Role) || user.role;
+
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(null);
     const result = await updateUserAction({ id: user.id, ...values });
@@ -115,6 +121,7 @@ export function UserEditForm({ user }: { user: UserEditValues }) {
       <FormInput name="name" label="Ad Soyad" control={form.control} isRequired />
       <FormInput name="email" label="E-posta" control={form.control} type="email" isRequired />
       <FormSelect name="role" label="Rol" control={form.control} options={ROLE_SELECT_OPTIONS} isRequired />
+      <RolePermissionsPreview role={selectedRole} />
       <FormSwitch
         name="isActive"
         label="Hesap aktif"

@@ -13,6 +13,7 @@ export const moduleConfig: ModuleConfig = {
     {
       href: "/evrak",
       label: "Evrak Kayıt",
+      labelKey: "evrak",
       icon: FileText,
       group: "main",
       order: 1,

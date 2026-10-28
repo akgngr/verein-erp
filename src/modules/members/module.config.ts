@@ -13,6 +13,7 @@ export const moduleConfig: ModuleConfig = {
     {
       href: "/uyeler",
       label: "Üyeler",
+      labelKey: "uyeler",
       icon: Users,
       group: "main",
       order: 3,

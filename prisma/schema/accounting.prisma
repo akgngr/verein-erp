@@ -1,1 +1,1 @@
-../../src/modules/accounting/schema.prisma
+../../src/modules/accounting/prisma/schema.prisma

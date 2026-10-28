@@ -11,7 +11,9 @@ import type { RawSearchParams } from "@/shared/list-params";
 import { parseListParams } from "@/shared/list-params";
 
 import { UsersTable } from "../components/users-table";
-import { listUsers } from "../queries/list-users";
+import { RolePermissionsMatrix } from "../components/role-permissions-matrix";
+import { UsersTabsContainer } from "../components/users-tabs-container";
+import { getUserCountsByRole, listUsers } from "../queries/list-users";
 import { usersPermissions } from "../permissions";
 
 export async function UsersListView({
@@ -34,12 +36,16 @@ export async function UsersListView({
     filterKeys: ["role", "status"],
   });
 
-  const { rows, total } = await listUsers(params);
+  const [{ rows, total }, roleCounts] = await Promise.all([
+    listUsers(params),
+    getUserCountsByRole(),
+  ]);
+
   const canCreate = can(user.role, usersPermissions, "create");
   const canUpdate = can(user.role, usersPermissions, "update");
 
   return (
-    <div>
+    <div className="flex flex-col gap-5">
       <PageHeader
         title={t("pageTitle")}
         description={t("pageDescription")}
@@ -51,15 +57,23 @@ export async function UsersListView({
           ) : undefined
         }
       />
-      <UsersTable
-        rows={rows}
-        total={total}
-        page={params.page}
-        pageSize={params.pageSize}
-        sort={params.sort}
-        dir={params.dir}
-        q={params.q}
-        canUpdate={canUpdate}
+
+      <UsersTabsContainer
+        usersContent={
+          <UsersTable
+            rows={rows}
+            total={total}
+            page={params.page}
+            pageSize={params.pageSize}
+            sort={params.sort}
+            dir={params.dir}
+            q={params.q}
+            canUpdate={canUpdate}
+          />
+        }
+        permissionsContent={
+          <RolePermissionsMatrix users={rows} roleCounts={roleCounts} />
+        }
       />
     </div>
   );

@@ -13,6 +13,7 @@ export const moduleConfig: ModuleConfig = {
     {
       href: "/toplantilar",
       label: "Toplantılar",
+      labelKey: "toplantilar",
       icon: CalendarDays,
       group: "main",
       order: 2,

@@ -2,8 +2,9 @@ import path from "node:path";
 import { pathToFileURL } from "node:url";
 import { syncModuleSchemas } from "../src/shared/modules/sync-schemas";
 import { syncModuleTranslations } from "../src/shared/modules/sync-i18n";
+import { syncModuleRegistry } from "../src/shared/modules/sync-registry";
 
-export { syncModuleSchemas, syncModuleTranslations };
+export { syncModuleSchemas, syncModuleTranslations, syncModuleRegistry };
 
 // Komut satırından doğrudan çalıştırıldığında:
 const isDirectExecution =
@@ -15,7 +16,8 @@ const isDirectExecution =
 if (isDirectExecution) {
   const schemaRes = syncModuleSchemas();
   const i18nRes = syncModuleTranslations();
+  const regRes = syncModuleRegistry();
   console.log(
-    `[sync] ${schemaRes.synced.length} şema bağlandı (${schemaRes.removed.length} temizlendi) | Modül çevirileri (${Object.keys(i18nRes.modulesMerged).join(", ")}) güncellendi.`,
+    `[sync] ${schemaRes.synced.length} şema | Çeviriler (${Object.keys(i18nRes.modulesMerged).join(", ")}) | ${regRes.registered.length} modül registry'ye bağlandı.`,
   );
 }

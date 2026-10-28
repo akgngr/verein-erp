@@ -5,6 +5,7 @@ import { Building2, LayoutDashboard, Menu as MenuIcon } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { createContext, useContext, useState, type ReactNode } from "react";
+import { useTranslations } from "next-intl";
 
 import { registry } from "@/registry";
 import type { Role } from "@/shared/roles";
@@ -38,6 +39,7 @@ function useSidebar(): SidebarContextValue {
 const PANEL_ITEM: NavItem = {
   href: "/",
   label: "Panel",
+  labelKey: "panel",
   icon: LayoutDashboard,
   group: "main",
   order: 0,
@@ -65,6 +67,8 @@ function SidebarContent({
   onNavigate?: () => void;
 }) {
   const pathname = usePathname();
+  const tNav = useTranslations("nav");
+  const tSidebar = useTranslations("sidebar");
 
   // Yalnızca aktif olan modüllerin menü öğeleri gösterilir
   const activeModules = activeModuleKeys
@@ -79,9 +83,22 @@ function SidebarContent({
   const mainItems = visibleItems.filter((item) => item.group === "main");
   const settingsItems = visibleItems.filter((item) => item.group === "settings");
 
+  const getItemLabel = (item: NavItem): string => {
+    if (item.labelKey && tNav.has(item.labelKey)) {
+      return tNav(item.labelKey);
+    }
+    const cleanKey = item.href.replace(/^\//, "").split("/").pop();
+    if (cleanKey && tNav.has(cleanKey)) {
+      return tNav(cleanKey);
+    }
+    return item.label;
+  };
+
   const renderItem = (item: NavItem) => {
     const Icon = item.icon;
     const active = isActive(pathname, item.href);
+    const label = getItemLabel(item);
+
     return (
       <Link
         key={item.href}
@@ -108,18 +125,18 @@ function SidebarContent({
           )}
           aria-hidden
         />
-        <span className="truncate">{item.label}</span>
+        <span className="truncate">{label}</span>
       </Link>
     );
   };
 
   return (
-    <nav className="flex flex-col gap-5 px-3 py-4" aria-label="Ana menü">
+    <nav className="flex flex-col gap-5 px-3 py-4" aria-label={tSidebar.has("mainMenu") ? tSidebar("mainMenu") : "Ana menü"}>
       <div className="flex flex-col gap-1">{mainItems.map(renderItem)}</div>
       {settingsItems.length > 0 ? (
         <div className="flex flex-col gap-1 pt-2">
           <p className="px-3 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-default-400">
-            Ayarlar
+            {tSidebar.has("settings") ? tSidebar("settings") : "Ayarlar"}
           </p>
           {settingsItems.map(renderItem)}
         </div>
@@ -129,6 +146,7 @@ function SidebarContent({
 }
 
 function Brand() {
+  const tSidebar = useTranslations("sidebar");
   return (
     <div className="flex items-center gap-3 border-b border-default-200/80 px-5 py-4">
       <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-xs">
@@ -136,7 +154,9 @@ function Brand() {
       </div>
       <div className="flex flex-col min-w-0">
         <span className="text-small font-bold tracking-tight text-foreground truncate">Dernek ERP</span>
-        <span className="text-[11px] font-medium text-default-400 leading-none truncate">Yönetim Sistemi</span>
+        <span className="text-[11px] font-medium text-default-400 leading-none truncate">
+          {tSidebar.has("brand") ? tSidebar("brand") : "Yönetim Sistemi"}
+        </span>
       </div>
     </div>
   );
@@ -182,12 +202,13 @@ function MobileSidebar({ role, activeModuleKeys }: { role: Role; activeModuleKey
 /** Topbar'daki mobil menü butonu. */
 function SidebarTrigger() {
   const { setMobileOpen } = useSidebar();
+  const tSidebar = useTranslations("sidebar");
   return (
     <Button
       isIconOnly
       variant="light"
       size="sm"
-      aria-label="Menüyü aç"
+      aria-label={tSidebar.has("openMobile") ? tSidebar("openMobile") : "Menüyü aç"}
       className="lg:hidden"
       onPress={() => setMobileOpen(true)}
     >

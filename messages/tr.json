@@ -1653,5 +1653,13 @@
         "action": "Ayarlar"
       }
     }
+  },
+  "testmod": {
+    "title": "Test Modülü",
+    "description": "Test Modülü yönetim modülü.",
+    "listTitle": "Test Modülü Listesi",
+    "newItem": "Yeni Test Modülü",
+    "emptyTitle": "Henüz kayıt bulunmuyor",
+    "emptyDescription": "İlk kaydınızı eklemek için 'Yeni Test Modülü' butonuna tıklayın."
   }
 }

@@ -42,9 +42,14 @@ export function syncModuleTranslations(): {
     for (const entry of moduleEntries) {
       if (!entry.isDirectory()) continue;
       const moduleName = entry.name;
-      const moduleI18nFile = path.join(MODULES_DIR, moduleName, "i18n", `${locale}.json`);
+      // Standart messages/<locale>.json önceliklidir, i18n/<locale>.json geriye dönük desteklenir
+      const candidateFiles = [
+        path.join(MODULES_DIR, moduleName, "messages", `${locale}.json`),
+        path.join(MODULES_DIR, moduleName, "i18n", `${locale}.json`),
+      ];
+      const moduleI18nFile = candidateFiles.find((f) => fs.existsSync(f));
 
-      if (fs.existsSync(moduleI18nFile)) {
+      if (moduleI18nFile) {
         try {
           const moduleContent = JSON.parse(fs.readFileSync(moduleI18nFile, "utf8"));
           // Modül anahtarı altında derin birleştirme
