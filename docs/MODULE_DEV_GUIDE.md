@@ -22,6 +22,18 @@ Bu rehber, **Verein ERP** sistemine diğer modülleri ve çekirdek sistemi bozma
 5. **Sayfa Eylem Ayrımı Kuralı (UI Action Area Separation):**
    - **Sayfa Başlığı Eylem Alanı (`PageHeader actions`):** YALNIZCA doğrudan ana CRUD butonuna (`+ Yeni Ekle`) ayrılmıştır.
    - **Araçlar, Raporlar ve Alt Sayfa Bağlantıları:** `menu/top.json` içinde tanımlanır; sayfa gövdesinde mükerrer buton olarak gösterilmez.
+6. **Server Component (RSC) vs Client Component Katı Dosya Ayrımı:**
+   - **Görünümler (`views/*-view.tsx`) ve Sayfalar (`page.tsx`) YALNIZCA Server Component'tir (RSC):** Başlarına ASLA `"use client"` konulamaz; içlerinde `useState`, `useEffect`, `useRouter`, inline `"use server"` yazılamaz ve `@heroui/react` import edilemez (React 19 Server ortamında `createContext` olmadığı için build çöker).
+   - **Tüm İstemci Etkileşimi YALNIZCA `components/` Klasöründe Yaşar:** Eğer bir modal, form, buton tıklaması, filtre aracı, tablo veya etkileşimli bir öğe yazılacaksa bu KESİNLİKLE `src/modules/<modul>/components/` altında ayrı bir dosya olarak yazılır ve ilk satırına `"use client";` konur. `@heroui/react` kütüphanesi YALNIZCA bu client bileşenleri içinde kullanılır. Server component'ler istemci bileşenlerini `components/` klasöründen import edip saf veriyi prop olarak geçirir.
+7. **Resmi İthalat (Import) Standardı Tablosu:**
+   - Veritabanı Singleton: `import { getDb } from "@/shared/db";` -> `const db = getDb();` (ASLA `@/shared/lib/prisma` veya `new PrismaClient()` yazma!)
+   - Yetki Denetimi (Server): `import { requirePermission } from "@/shared/lib/permissions-service";`
+   - Yetki Tanımlama: `import { definePermissions } from "@/shared/types/permissions";`
+   - Sayfa Başlığı: `import { PageHeader } from "@/shared/components/ui/page-header";`
+   - Boş Durum: `import { EmptyState } from "@/shared/components/ui/empty-state";`
+   - Veri Tablosu: `import { DataTable, DataTablePagination } from "@/shared/components/data-table";`
+   - Modül İçi İthalatlar: Kendi modülün içindeki dosyaları import ederken göreli yollar (`./` veya `../`) kullan.
+   - Dış Modüller: ASLA başka modülün iç dosyalarını import etme. Yalnızca `@/modules/<modul>`, `@/modules/<modul>/server` ve `@/modules/<modul>/ui` kullan. Modül içinden `src/app` katmanını ASLA import etme.
 
 ---
 
@@ -60,12 +72,13 @@ src/
         ├── actions/                         # Server Actions ("use server" form aksiyonları)
         │   └── <modul_adi>-actions.ts       # Ekleme, güncelleme, silme mutasyonları
         │
-        ├── components/                      # Modüle özel React bileşenleri
+        ├── components/                      # Modüle özel React bileşenleri ("use client")
         │   ├── <modul_adi>-table.tsx        # DataTable listeleme tablosu
-        │   └── <modul_adi>-form-modal.tsx   # Ekleme / düzenleme modal formu
+        │   ├── <modul_adi>-form-modal.tsx   # Ekleme / düzenleme modal formu (@heroui/react)
+        │   └── <modul_adi>-create-modal.tsx # ["use client"] URL (?action=new) yöneten modal sarmalayıcısı
         │
-        └── views/                           # Sayfa düzeyinde Server Component görünümleri
-            └── <modul_adi>-list-view.tsx    # Ana listeleme görünümü
+        └── views/                           # Sayfa düzeyinde Server Component görünümleri (RSC)
+            └── <modul_adi>-list-view.tsx    # Ana listeleme görünümü (saf RSC, "use client" içermez)
 ```
 
 ---

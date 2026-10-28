@@ -22,6 +22,18 @@ This guide outlines the architectural standards, vertical slice directory struct
 5. **Page Header Action Area Separation:**
    - **Page Header Action Area (`PageHeader actions`):** Reserved EXCLUSIVELY for the primary CRUD button (`+ New Item`, `+ New Entry`).
    - **Tools, Reports, Sub-page Links, and Exports:** Belongs in `menu/top.json` and must NOT be duplicated as buttons inside the main page body.
+6. **Strict Server Component (RSC) vs Client Component Segregation:**
+   - **Views (`views/*-view.tsx`) and Pages (`page.tsx`) are strictly Server Components (RSC):** Never mark them with `"use client"`. Never use React hooks (`useState`, `useEffect`, `useRouter`), never define inline `"use server"` closures, and NEVER import `@heroui/react` in them (RSC lacks React Context and will fail build with `createContext is not a function`). Use plain Tailwind CSS for static badges and indicators.
+   - **All Client Interactivity belongs in `components/*.tsx`:** Forms, modals, buttons with click handlers, pagination, and data tables must be placed in separate files inside `components/` with `"use client";` at the very top. `@heroui/react` is allowed ONLY in these client component files.
+7. **Official Import Paths Table:**
+   - Database Singleton: `import { getDb } from "@/shared/db";` -> `const db = getDb();` (NEVER use `@/shared/lib/prisma` or `new PrismaClient()`)
+   - Server Permission Check: `import { requirePermission } from "@/shared/lib/permissions-service";`
+   - Permissions Definition: `import { definePermissions } from "@/shared/types/permissions";`
+   - Page Header: `import { PageHeader } from "@/shared/components/ui/page-header";`
+   - Empty State: `import { EmptyState } from "@/shared/components/ui/empty-state";`
+   - Data Table: `import { DataTable, DataTablePagination } from "@/shared/components/data-table";`
+   - Module-Internal Imports: Use relative imports (`./` or `../`).
+   - Other Modules: Only import through public entrypoints (`@/modules/<mod>`, `@/modules/<mod>/server`, `@/modules/<mod>/ui`). Never import `src/app` inside modules.
 
 ---
 
@@ -60,12 +72,13 @@ src/
         ├── actions/                        # Server Actions ("use server" mutations)
         │   └── <module_name>-actions.ts    # Create, update, delete mutations
         │
-        ├── components/                     # Module-specific React components
+        ├── components/                     # Module-specific React components ("use client")
         │   ├── <module_name>-table.tsx     # Data table component
-        │   └── <module_name>-form-modal.tsx# Create / Edit modal dialog
+        │   ├── <module_name>-form-modal.tsx# Create / Edit modal dialog (@heroui/react)
+        │   └── <module_name>-create-modal.tsx# Modal wrapper handling ?action=new cleanup
         │
-        └── views/                          # Page-level Server Component views
-            └── <module_name>-list-view.tsx # Primary list view
+        └── views/                          # Page-level Server Component views (RSC)
+            └── <module_name>-list-view.tsx # Primary list view (pure RSC, no "use client")
 ```
 
 ---

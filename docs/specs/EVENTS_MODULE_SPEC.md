@@ -41,28 +41,45 @@ Projede katı dikey dilim izolasyonu (Vertical Slice Architecture), sıfır çek
 1. SIFIR ÇEKİRDEK TEMASI (ZERO-TOUCH CORE):
    - Yalnızca `src/modules/events/` altında çalış. `src/app` dizinine ASLA manuel dosya yazma.
    - `src/registry.ts`, `prisma/schema/base.prisma`, `src/app/` veya kök `messages/*.json` dosyalarına ASLA dokunma! (Bunlar `pnpm module:sync` ile otomatik senkronize edilir).
+
 2. TABLO İSİMLENDİRME KURALI:
    - Tüm tablolarda çakışmayı önlemek için mutlaka `@@map("events_...")` kullan (Örn: `@@map("events_items")`, `@@map("events_attendees")`).
    - Dış modül tablolarına zorlayıcı `@relation` yazma, yumuşak referans kullan (`memberId String?`).
-3. KATI İTHALAT (IMPORT) SINIRLARI (`eslint.config.mjs`):
-   - Başka bir modülün iç dosyalarını (örn: `@/modules/auth/queries/...`, `@/modules/members/components/...`) ASLA import etme! Sadece public girişleri kullan:
-     - `@/modules/auth/server` (`requirePermission`, `ForbiddenError`)
-     - `@/shared/permissions/define` (`definePermissions`, `can`)
-     - `@/shared/components/ui/...` (`PageHeader`, `AccessDenied`, `EmptyState`, `Badge`)
-     - `@/shared/components/data-table` (`DataTable`, `DataTablePagination`)
-   - Modül içinden `src/app` katmanını ASLA import etme.
-4. PUBLIC API SINIRLARI:
-   - `index.ts`: İzomorfik public API. KESİNLİKLE `import "server-only"` İÇEREMEZ.
-   - `server.ts`: Sunucu public API. İlk satırında `import "server-only";` bulunmalı.
-   - `ui.ts`: Dışa aktarılan React görünümleri.
-5. UI VE SAYFA EYLEM AYRIMI:
-   - `PageHeader actions` alanına YALNIZCA doğrudan ana CRUD butonunu (`+ Yeni Etkinlik`) koy.
-   - Yaklaşan/Geçmiş filtreleri veya Excel aktarımı gibi ikincil linkleri sayfa içine yığma, `menu/top.json` içinde tanımla.
-6. KRİTİK SSR HYDRATION KURALI (React 19 / Next.js 16):
-   - Tablo satırları (`map`) içinde katılım durumu değişimi için HeroUI `<Select>` KULLANMA! Bunun yerine stillendirilmiş native HTML `<select>` ve yanında Lucide `<ChevronDown>` kullan (SSR ID mismatch hatasını önler).
 
-================================================================================
-3. ÜRETMEN GEREKEN TÜM DOSYALAR (EKSİKSİZ KOD LİSTESİ)
+3. RESMİ İTHALAT (IMPORT) YOLLARI TABLOSU:
+   Modül içinde projenin çekirdek servislerini kullanırken YALNIZCA şu resmi yolları kullan:
+   - Veritabanı Singleton: `import { getDb } from "@/shared/db";` -> `const db = getDb();` (ASLA `@/shared/lib/prisma` veya `new PrismaClient()` yazma!)
+   - Yetki Denetimi: `import { requirePermission } from "@/shared/lib/permissions-service";`
+   - Yetki Tanımlama: `import { definePermissions } from "@/shared/types/permissions";`
+   - Sayfa Başlığı: `import { PageHeader } from "@/shared/components/ui/page-header";`
+   - Boş Durum: `import { EmptyState } from "@/shared/components/ui/empty-state";`
+   - Veri Tablosu: `import { DataTable, DataTablePagination } from "@/shared/components/data-table";`
+   - Modül Tipleri: `import type { ModuleConfig, TopNavItem } from "@/shared/types/module";`
+   - Modül İçi İthalatlar: Kendi modülün içindeki dosyaları import ederken göreli yollar (`./` veya `../`) kullan.
+
+4. SERVER COMPONENT (RSC) VE CLIENT COMPONENT KATI DOSYA AYRIMI:
+   - `views/*-view.tsx` ve `page.tsx` dosyaları ASENKRON SERVER COMPONENT'TİR:
+     - Dosyanın başında ASLA `"use client";` YER ALAMAZ!
+     - İçinde `useState`, `useEffect`, `useRouter` gibi React hook'ları KULLANILAMAZ!
+     - İçinde `@heroui/react` (Button, Modal, Chip, Progress vb.) ASLA IMPORT EDİLEMEZ! (React 19 Server ortamında `createContext` olmadığı için build çöker). Rozet ve barlar için saf Tailwind sınıfları kullanılır.
+     - İçinde `onClose={async () => { "use server"; }}` gibi inline server action ASLA YAZILAMAZ!
+   - ETKİLEŞİMLİ TÜM KODLAR YALNIZCA `components/` ALTINDA YAŞAR:
+     - Modal, form, buton tıklamaları, sayfalama ve tablo etkileşimleri için mutlaka `components/` altında ayrı bir bileşen yazılır.
+     - Bu bileşenlerin ilk satırında `"use client";` bulunur.
+     - `@heroui/react` kütüphanesi YALNIZCA bu `"use client"` bileşenleri içinde kullanılır.
+
+5. URL TABANLI MODAL PATTERNİ (`components/event-create-modal.tsx`):
+   - Server Component (`event-list-view.tsx`) içindeki `+ Yeni Etkinlik` butonu `<Link href="/events?action=new">` linkidir.
+   - Sayfada modalı açmak için `isModalOpen = searchParams.action === "new"` denetlenir ve `<EventCreateModal isOpen={isModalOpen} />` render edilir.
+   - `EventCreateModal` bir `"use client"` bileşenidir; kapatıldığında `useRouter` ile URL'deki `action` parametresini temizler.
+   - Böylece Server Component'ten Client Component'e fonksiyon geçilmez, inline server action ihtiyacı kalmaz.
+
+6. KRİTİK SSR HYDRATION VE REACT 19 SAFLIK KURALLARI:
+   - Tablo satırları (`map`) içinde HeroUI `<Select>` KULLANMA! Bunun yerine stillendirilmiş native HTML `<select>` ve yanında Lucide `<ChevronDown>` kullan (SSR ID mismatch hatasını önler).
+   - Render esnasında `Date.now()` veya `new Date()` çağırma (`react-hooks/purity`). `isPast` gibi tarih karşılaştırmalarını `queries/list-events.ts` içinde yapıp `EventRow` nesnesine ekle.
+
+===============================================================================
+3. ÜRETMEN GEREKEN TÜM DOSYALAR (EKSİKSİZ KOD LİSTESİ - 22 DOSYA)
 ================================================================================
 Lütfen bana her bir dosyanın TAM DOSYA YOLUNU ve EKSİKSİZ, ÇALIŞMAYA HAZIR KODUNU sırasıyla ver:
 
@@ -79,35 +96,37 @@ Lütfen bana her bir dosyanın TAM DOSYA YOLUNU ve EKSİKSİZ, ÇALIŞMAYA HAZIR
 6. `src/modules/events/messages/de.json`:
    - Almanca arayüz sözlüğü (Veranstaltungen, Teilnehmer, Status, Typen vb. tam Verein terminolojisi)
 7. `src/modules/events/index.ts`:
-   - `moduleConfig`, `eventsPermissions` ve tipleri dışa aktar.
+   - `moduleConfig`, `eventsPermissions` ve tipleri dışa aktar. KESİNLİKLE 'server-only' içermez.
 8. `src/modules/events/server.ts`:
    - `import "server-only";`, sorgular, eylemler ve izinleri dışa aktar.
 9. `src/modules/events/ui.ts`:
-   - `EventListView`, `EventDetailView`, `EventCreateView` bileşenlerini dışa aktar.
+   - `EventListView`, `EventDetailView`, `EventTable`, `EventFormModal`, `EventCreateModal`, `AttendeeList` bileşenlerini dışa aktar.
 10. `src/modules/events/types.ts`:
-    - TypeScript arayüzleri (`EventRow`, `EventAttendeeItem`, `EventFilters`, `EventType`, `EventStatus`).
+    - TypeScript arayüzleri (`EventRow` [içinde `isPast?: boolean`], `EventAttendeeItem`, `EventStats`, `EventType`, `EventStatus`).
 11. `src/modules/events/constants.ts`:
     - Tür ve durum etiketleri (TR/DE), sıralama sabitleri, varsayılan sayfalama.
 12. `src/modules/events/schemas/event-schema.ts`:
     - Zod şemaları (`eventCreateSchema`, `eventUpdateSchema`, `attendeeAddSchema`).
 13. `src/modules/events/queries/list-events.ts`:
-    - Prisma ile filtrelenebilir (arama, tür, durum, yaklaşan/geçmiş), sıralanabilir sorgu fonksiyonu.
+    - `getDb()` ile filtrelenebilir (arama, tür, durum, yaklaşan/geçmiş), sıralanabilir sorgu fonksiyonu. Her item için `isPast: item.startDate < new Date()` hesapla.
 14. `src/modules/events/queries/get-event.ts`:
-    - Tek bir etkinliğin detaylarını ve katılımcılarını getiren sorgu.
+    - `getDb()` ile tek bir etkinliğin detaylarını ve katılımcılarını getiren sorgu.
 15. `src/modules/events/actions/event-actions.ts`:
-    - `"use server"` Server Actions: `createEventAction`, `updateEventAction`, `deleteEventAction`, `addAttendeeAction`, `updateAttendeeStatusAction` (`requirePermission` denetimiyle).
+    - `"use server"` Server Actions: `createEventAction`, `updateEventAction`, `deleteEventAction`, `addAttendeeAction`, `updateAttendeeStatusAction` (`requirePermission` denetimiyle ve `getDb()` ile).
 16. `src/modules/events/components/event-form-modal.tsx`:
-    - Yeni etkinlik ekleme ve düzenleme formu (HeroUI Modal, Input, Textarea, native select, form doğrulama).
-17. `src/modules/events/components/event-table.tsx`:
-    - `DataTable` ile etkinlik listesi, tarih, katılımcı sayısı/kapasite göstergesi, durum rozetleri.
-18. `src/modules/events/components/attendee-list.tsx`:
-    - Etkinlik detayında katılımcıları listeleyen, katıldı/gelmedi native select içeren tablo.
-19. `src/modules/events/views/event-list-view.tsx`:
-    - `PageHeader`, istatistik kartları (Toplam, Yaklaşan, Bu Ayki Katılımcı), araç çubuğu ve tabloyu içeren ana RSC görünümü.
-20. `src/modules/events/views/event-detail-view.tsx`:
-    - Etkinlik bilgileri, konum/bağlantı, kapasite barı, katılımcı yönetimi ve silme/düzenleme butonları.
-21. `src/modules/events/page.tsx`:
-    - Modülün ana Next.js Server Component sayfası (searchParams ile liste veya detay görünümünü render eder). `src/app/(dashboard)/events/page.tsx` köprüsü `pnpm module:sync` ile otomatik bağlanır.
+    - `"use client"` Yeni etkinlik ekleme ve düzenleme formu (HeroUI Modal, Input, Textarea, native select, form doğrulama).
+17. `src/modules/events/components/event-create-modal.tsx`:
+    - `"use client"` URL'deki `?action=new` parametresini dinleyen ve modal kapandığında `useRouter` ile temizleyen sarmalayıcı bileşen.
+18. `src/modules/events/components/event-table.tsx`:
+    - `"use client"` `DataTablePagination` ile sayfalama yapan, satır içi düzenleme/silme destekleyen etkinlik tablosu.
+19. `src/modules/events/components/attendee-list.tsx`:
+    - `"use client"` Etkinlik detayında katılımcıları listeleyen, katıldı/gelmedi native select içeren interaktif tablo.
+20. `src/modules/events/views/event-list-view.tsx`:
+    - Asenkron Server Component (RSC). `"use client"` İÇERMEZ! `PageHeader` (actions'ta yalnızca `+ Yeni Etkinlik` linki), istatistik kartları, arama araç çubuğu, `<EventTable>` ve `<EventCreateModal>` render eder.
+21. `src/modules/events/views/event-detail-view.tsx`:
+    - Asenkron Server Component (RSC). `"use client"` İÇERMEZ! HeroUI import etmez, rozet ve kapasite çubuğu için saf Tailwind CSS kullanır. `<AttendeeList>` client component'ini render eder.
+22. `src/modules/events/page.tsx`:
+    - Modülün ana Next.js Server Component sayfası (searchParams ile liste veya detay görünümünü render eder). NOT: `src/app` dizinine ASLA kod yazma; `pnpm module:sync` Next.js App Router köprüsünü otomatik oluşturur.
 
 Lütfen kodları placeholder veya "TODO" bırakmadan, projeye yapıştırıldığında doğrudan çalışacak şekilde eksiksiz üret.
 ```
