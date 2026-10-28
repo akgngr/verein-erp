@@ -214,44 +214,67 @@ Verein ERP, modül geliştirme sürecini hatasız ve otomatik kılmak için öze
 
 ## 6. Harici AI Agent'a Verilecek Görev İstemi (Prompt Template)
 
-Başka bir yapay zekaya (Claude, Cursor, ChatGPT, Windsurf, Gemini vb.) yeni bir modül geliştirmesi yaptırmak istediğinizde aşağıdaki istemi doğrudan kopyalayıp verebilirsiniz:
+Başka bir yapay zekaya (Claude, Cursor, ChatGPT, Windsurf, Gemini vb.) yeni bir modül geliştirmesi yaptırmak istediğinizde aşağıdaki istemi doğrudan kopyalayıp verebilirsiniz. Bu istem, AI agent'ın projede hata yapmasını (SSR Hydration mismatch, server-only sızıntısı, bozuk importlar vb.) engelleyecek tüm ayrıntılı talimatları içerir:
 
 ```markdown
-Sen Verein ERP projesi için modül geliştiren uzman bir yazılım agent'ısın.
-Senden projemize `<MODUL_ADI>` (örn: `inventory`, `sponsors`, `library`) isimli yeni bir eklenti modülü geliştirmeni istiyorum.
+Sen Verein ERP projesi için üretim kalitesinde (production-ready) modül geliştiren kıdemli bir Next.js / TypeScript yazılım agent'ısın.
+Senden projemize `<MODUL_ADI>` (örn: `inventory`, `sponsors`, `events`) isimli yeni bir eklenti modülü geliştirmeni istiyorum.
 
-Projede katı modüler mimari ve dikey dilim izolasyonu uygulanmaktadır (Bkz: `docs/MODULE_DEV_GUIDE.md`).
+Projede dikey dilim izolasyonu (Vertical Slice Architecture) ve katı modül sınırları uygulanmaktadır (`docs/MODULE_DEV_GUIDE.md`).
 
-GELİŞTİRME KURALLARI VE ŞARTNAME:
-1. İZOLASYON VE SIFIR ÇEKİRDEK TEMASI:
+AŞAĞIDAKİ ŞARTNAME VE KURALLARA KESİNLİKLE UYMALISIN:
+
+1. İZOLASYON VE SIFIR ÇEKİRDEK TEMASI (ZERO-TOUCH CORE):
    - Yalnızca `src/modules/<MODUL_ADI>/` klasörü ve `src/app/(dashboard)/<MODUL_ADI>/page.tsx` rotası üzerinde çalış.
    - `src/registry.ts`, `prisma/schema/base.prisma` veya kök `messages/` dosyalarına ELLE DOKUNMA! Bunlar `pnpm module:sync` tarafından otomatik yönetilir.
 
-2. ZORUNLU STANDART DOSYALAR:
-   Modül dizininde şu dosyaları eksiksiz oluştur:
-   - `module.config.ts`: `key`, `label`, `category: "EXTENSION"`, `hasSchema: true`, `topNav`, `nav` tanımları.
-   - `menu/top.json`: Üst barda gösterilecek sekmeler, ayarlar veya dışa aktarma linkleri dizisi.
-   - `permissions.ts`: `definePermissions` kullanarak 6 rolü (`ADMIN`, `BOARD`, `SECRETARY`, `TREASURER`, `AUDITOR`, `VIEWER`) kapsayan yetki tanımları.
-   - `schema.prisma`: Veritabanı modeli. Tüm tablolarda `@@map("<MODUL_ADI>_...")` ön eki bulunmalıdır.
-   - `messages/tr.json` ve `messages/de.json`: Türkçe ve Almanca arayüz metinleri.
-   - `index.ts`: İzomorfik public API (`moduleConfig`, yetkiler, tipler). KESİNLİKLE 'server-only' içermez.
-   - `server.ts`: Sunucu public API (başında `import "server-only";` bulunmalı).
-   - `ui.ts`: Dışa aktarılan React görünümleri.
+2. BAŞLANGIÇ ADIMI (SCAFFOLD):
+   - İşe başlarken önce `pnpm module:create <MODUL_ADI> "Modül Başlığı"` komutunu çalıştırarak temel iskeleti otomatik üret.
 
-3. KATI İTHALAT (IMPORT) SINIRLARI:
-   - Başka modüllerin iç dosyalarını (örn: `@/modules/auth/queries/...`) ASLA import etme.
-   - Yalnızca kamuya açık girişleri kullan: `@/modules/<modul>`, `@/modules/<modul>/server`, `@/modules/<modul>/ui`.
+3. ZORUNLU DOSYA YAPISI VE KURALLAR:
+   - `module.config.ts`:
+     - `key: "<MODUL_ADI>"`
+     - `category: "EXTENSION"`
+     - `hasSchema: true`
+     - `topNav: topNav as TopNavItem[]` (menu/top.json dosyasından import edilerek)
+     - `nav: [...]` (Sidebar menü tanımı, ikon `lucide-react` üzerinden)
+   - `menu/top.json`:
+     - Üst barda (Topbar) yer alacak araçlar ve sekmeler dizisi (`key`, `label`, `href` ['/' ile başlayan], `icon` [Lucide ikon adı string olarak]).
+   - `permissions.ts`:
+     - `definePermissions("<MODUL_ADI>", { ADMIN: [...], BOARD: [...], SECRETARY: [...], TREASURER: [...], AUDITOR: [...], VIEWER: [...] })` şeklinde tüm 6 rolü tanımla.
+   - `schema.prisma`:
+     - Modülün veritabanı modellerini yaz.
+     - Çakışmaları önlemek için TÜM modellerde `@@map("<MODUL_ADI>_...")` kuralına uy (örn: `@@map("inventory_items")`).
+     - Yumuşak referans (Soft reference) kullan: Başka modüllerin tablolarına zorlayıcı FK / @relation yazmak yerine `memberId String?` gibi alanlar tut.
+   - `messages/tr.json` ve `messages/de.json`:
+     - Modülün tüm buton, tablo başlığı, form alanı ve hata mesajlarının hem Türkçe hem Almanca karşılıklarını eksiksiz yaz.
+   - Public API Giriş Noktaları:
+     - `index.ts`: İzomorfik public API (`moduleConfig`, yetkiler, tipler). KESİNLİKLE 'server-only' içermez.
+     - `server.ts`: Sunucu public API (dosyanın ilk satırında `import "server-only";` bulunmalı).
+     - `ui.ts`: Dışa aktarılan React görünümleri.
+   - `queries/`:
+     - Prisma sorgularını barındırır. Sayfalama, filtreleme ve arama için `src/shared/list-params` yardımcılarını kullan.
+   - `actions/`:
+     - Form mutasyonları için Server Actions (`"use server"`). Girişleri Zod şemasıyla doğrula, `requirePermission` ile yetki kontrolü yap, `revalidatePath` ile sayfayı tazele.
+
+4. KATI İTHALAT (IMPORT) SINIRLARI (`eslint.config.mjs`):
+   - Başka modüllerin iç dosyalarını (örn: `@/modules/members/queries/...`, `@/modules/auth/components/...`) ASLA import etme!
+   - Sadece public girişleri kullan:
+     - `@/modules/<modul>` (tipler)
+     - `@/modules/<modul>/server` (sunucu fonksiyonları / eylemleri)
+     - `@/modules/<modul>/ui` (UI bileşenleri)
    - Modül içinden `src/app` katmanını ASLA import etme.
 
-4. UI VE ÜST BAR STANDARDI:
-   - Sayfa başlığı eylem alanına (`PageHeader actions`) YALNIZCA ana oluşturma butonunu (`+ Yeni Ekle`) koy.
-   - Alt sayfalar, raporlar veya Excel indirme butonlarını sayfa içine koyma, `menu/top.json` içinde tanımla.
-   - Sayfalarda veri listelemesi için `@/shared/components/data-table` bileşenlerini kullan.
+5. UI, FORMLAR VE HYDRATION KURALLARI:
+   - **Sayfa Eylem Ayrımı:** Sayfa başlığı eylem alanına (`PageHeader actions`) YALNIZCA doğrudan ana CRUD butonunu (`+ Yeni Ekle`) koy. Araçlar, raporlar ve dışa aktarma butonlarını `menu/top.json` içinde tanımla.
+   - **Tablolar:** Tablo listelemelerinde `@/shared/components/data-table` (`DataTable`, `DataTableToolbar`) bileşenlerini kullan.
+   - **KRİTİK SSR HYDRATION KURALI:** Tablo hücreleri veya döngü içinde (`map`) dinamik açılır menü gerektiğinde HeroUI'ın `<Select>` bileşenini KULLANMA! Bunun yerine stillendirilmiş native HTML `<select className="h-8 appearance-none rounded-medium bg-default-100 px-2.5 pr-8 text-xs font-medium text-foreground transition-colors hover:bg-default-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer border border-transparent focus:border-primary/50">` ve yanında Lucide `<ChevronDown>` kullan. (Bu kural React 19 / Next.js 16 SSR ID hydration mismatch hatalarını önler). HeroUI `<Select>` sadece bağımsız form pencerelerinde/modallarda kullanılabilir.
 
-5. DOĞRULAMA ADIMLARI:
-   Geliştirmeni tamamladıktan sonra sırasıyla şu komutları çalıştırıp sıfır hatayla geçtiğinden emin ol:
-   - `pnpm module:sync`
-   - `pnpm module:validate <MODUL_ADI>`
-   - `pnpm typecheck`
-   - `pnpm lint`
+6. DOĞRULAMA VE TEST ADIMLARI:
+   Geliştirmeni bitirdikten sonra sırasıyla şu komutları çalıştır ve sıfır hata alana kadar tamamla:
+   1. `pnpm module:sync`   -> Şemaları, çevirileri ve registry'yi bağlar
+   2. `pnpm module:validate <MODUL_ADI>` -> Mimari standart denetimi yapar
+   3. `pnpm typecheck`     -> TypeScript tip kontrolü
+   4. `pnpm lint`          -> Katı ESLint sınır denetimi
+   5. `pnpm test`          -> Sistem testlerini koşturur
 ```
