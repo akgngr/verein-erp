@@ -107,6 +107,6 @@ pnpm module:validate <MODUL_ADI>
 pnpm typecheck
 pnpm test
 
-# 4. Veritabanı tablosunu oluştur
-pnpm db:migrate
+# 4. Veritabanı tablolarını senkronize et / oluştur
+pnpm db:push
 ```

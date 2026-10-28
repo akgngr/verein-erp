@@ -413,7 +413,7 @@ Lütfen kodları placeholder veya "TODO" bırakmadan, çalışmaya hazır ve eks
 
 ## 5. Modül Dosyaları Oluşturulduktan Sonraki Adımlar
 
-Geliştirici veya AI dosyaları projeye ekledikten sonra terminalde şu 3 komutu koşturarak modülü anında canlıya alır:
+Geliştirici veya AI dosyaları projeye ekledikten sonra terminalde şu 4 komutu koşturarak modülü anında canlıya alır:
 
 ```bash
 # 1. Modülün şemasını, çevirilerini ve registry kaydını sisteme otomatik bağla
@@ -425,4 +425,7 @@ pnpm module:validate <MODUL_ADI>
 # 3. Tip kontrolünü ve testleri koştur
 pnpm typecheck
 pnpm test
+
+# 4. Veritabanı tablolarını senkronize et / oluştur
+pnpm db:push
 ```

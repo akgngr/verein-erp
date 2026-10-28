@@ -18,6 +18,7 @@
     "prebuild": "tsx scripts/sync-schemas.ts",
     "pretypecheck": "tsx scripts/sync-schemas.ts",
     "db:migrate": "tsx scripts/sync-schemas.ts && prisma migrate dev",
+    "db:push": "tsx scripts/sync-schemas.ts && prisma db push",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio"
   },

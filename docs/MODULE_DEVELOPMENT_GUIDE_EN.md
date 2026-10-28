@@ -416,6 +416,6 @@ pnpm module:validate <MODULE_NAME>
 pnpm typecheck
 pnpm test
 
-# 4. Apply database migration
-pnpm db:migrate
+# 4. Synchronize database tables
+pnpm db:push
 ```
