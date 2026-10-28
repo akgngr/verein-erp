@@ -12,7 +12,7 @@ import { MEETING_DEFAULT_SORT, MEETING_SORTABLE_FIELDS, listMeetings } from "../
 import { meetingsPermissions } from "../permissions";
 import { MEETING_STATUS_FILTER_OPTIONS, MEETING_TYPE_FILTER_OPTIONS } from "../constants";
 import { MeetingTable } from "../components/meeting-table";
-import { MeetingListFilters } from "../components/list-filters";
+import { MeetingDateFilter } from "../components/list-filters";
 import { StatsCards } from "../components/stats-cards";
 
 /** Toplantı listesi (7.1): istatistik kartları + filtreler + tablo. */
@@ -85,7 +85,7 @@ export async function MeetingListView({
           { key: "type", label: "Tür", options: [...MEETING_TYPE_FILTER_OPTIONS] },
           { key: "status", label: "Durum", options: [...MEETING_STATUS_FILTER_OPTIONS] },
         ]}
-        toolbarExtra={<MeetingListFilters />}
+        dateFilter={<MeetingDateFilter />}
         canUpdate={canUpdate}
         canDelete={canDelete}
       />

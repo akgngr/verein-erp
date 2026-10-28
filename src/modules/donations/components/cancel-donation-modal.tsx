@@ -57,7 +57,15 @@ export function CancelDonationModal({
         </ModalHeader>
         <ModalBody>
           <p className="text-small text-default-500">{hint}</p>
-          <Textarea label={reasonLabel} value={reason} onValueChange={setReason} maxLength={300} minRows={3} isRequired />
+          <Textarea
+            label={reasonLabel}
+            labelPlacement="outside"
+            value={reason}
+            onValueChange={setReason}
+            maxLength={300}
+            minRows={3}
+            isRequired
+          />
         </ModalBody>
         <ModalFooter>
           <Button variant="flat" onPress={() => onOpenChange(false)}>

@@ -229,6 +229,7 @@ export function DuesPanel({
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <Input
                     label={t("colYear")}
+                    labelPlacement="outside"
                     type="number"
                     min={2000}
                     max={new Date().getFullYear() + 1}
@@ -237,17 +238,20 @@ export function DuesPanel({
                   />
                   <Input
                     label={t("colAmountDue")}
+                    labelPlacement="outside"
                     placeholder="0,00"
                     value={amount}
                     onValueChange={setAmount}
                   />
                   <DatePicker
                     label={t("colDueDate")}
+                    labelPlacement="outside"
                     value={dueDate ? (parseDate(dueDate) as DateValue) : null}
                     onChange={(next) => setDueDate(next ? next.toString() : "")}
                   />
                   <Textarea
                     label={t("colNote")}
+                    labelPlacement="outside"
                     maxLength={300}
                     value={note}
                     onValueChange={setNote}
@@ -278,17 +282,20 @@ export function DuesPanel({
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <Input
                     label={t("colAmountDue")}
+                    labelPlacement="outside"
                     placeholder="0,00"
                     value={amount}
                     onValueChange={setAmount}
                   />
                   <DatePicker
                     label={t("colDueDate")}
+                    labelPlacement="outside"
                     value={dueDate ? (parseDate(dueDate) as DateValue) : null}
                     onChange={(next) => setDueDate(next ? next.toString() : "")}
                   />
                   <Textarea
                     label={t("colNote")}
+                    labelPlacement="outside"
                     maxLength={300}
                     value={note}
                     onValueChange={setNote}

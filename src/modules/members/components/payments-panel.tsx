@@ -218,6 +218,7 @@ export function PaymentsPanel({
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Input
                 label={t("form.dueYear")}
+                labelPlacement="outside"
                 type="number"
                 value={dueYear}
                 onValueChange={setDueYear}
@@ -226,6 +227,7 @@ export function PaymentsPanel({
               />
               <Input
                 label={t("form.amount")}
+                labelPlacement="outside"
                 value={amount}
                 onValueChange={setAmount}
                 placeholder="120,00"
@@ -233,6 +235,7 @@ export function PaymentsPanel({
               />
               <Select
                 label={t("form.method")}
+                labelPlacement="outside"
                 selectedKeys={[method]}
                 onSelectionChange={(keys) => {
                   const key = Array.from(keys)[0] as MethodKey | undefined;
@@ -247,6 +250,7 @@ export function PaymentsPanel({
               {/* KARAR: FormDatePicker kalıbı — değer "yyyy-MM-dd" string; CalendarDate'e çevrilir. */}
               <DatePicker
                 label={t("form.paidAt")}
+                labelPlacement="outside"
                 id="form-payment-paidAt"
                 value={(() => {
                   if (!paidAt) return null;
@@ -260,6 +264,7 @@ export function PaymentsPanel({
               />
               <Textarea
                 label={t("form.reference")}
+                labelPlacement="outside"
                 description={t("form.referenceDescription")}
                 value={reference}
                 onValueChange={setReference}
@@ -291,7 +296,9 @@ export function PaymentsPanel({
           <ModalBody>
             <p className="text-small text-default-500">{t("voidConfirm")}</p>
             <Textarea
+              id="payment-void-reason"
               label={t("voidReason")}
+              labelPlacement="outside"
               value={voidReason}
               onValueChange={setVoidReason}
               maxLength={300}

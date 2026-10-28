@@ -29,7 +29,9 @@ export function CounterpartyAutocomplete<T extends FieldValues>({
       control={control}
       render={({ field, fieldState }) => (
         <Autocomplete
+          id={`form-autocomplete-${String(name)}`}
           label={label}
+          labelPlacement="outside"
           isRequired={isRequired}
           isDisabled={isDisabled}
           allowsCustomValue
@@ -41,6 +43,9 @@ export function CounterpartyAutocomplete<T extends FieldValues>({
           defaultItems={suggestions.map((value) => ({ value }))}
           isInvalid={Boolean(fieldState.error)}
           errorMessage={fieldState.error?.message}
+          classNames={{
+            base: "w-full",
+          }}
         >
           {(item) => (
             <AutocompleteItem key={item.value} textValue={item.value}>

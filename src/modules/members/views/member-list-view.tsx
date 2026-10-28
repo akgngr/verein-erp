@@ -20,7 +20,7 @@ import {
   MEMBERSHIP_TYPE_FILTER_OPTIONS,
 } from "../constants";
 import { berlinMonthRange } from "../utils";
-import { ListFilters } from "../components/list-filters";
+import { MemberDateFilter } from "../components/list-filters";
 import { MemberTable } from "../components/member-table";
 import { StatsCards } from "../components/stats-cards";
 
@@ -105,7 +105,7 @@ export async function MemberListView({
           { key: "status", label: t("list.status"), options: MEMBER_STATUS_FILTER_OPTIONS.map((o) => ({ value: o.value, label: t(`status.${o.value}`) })) },
           { key: "type", label: t("list.type"), options: MEMBERSHIP_TYPE_FILTER_OPTIONS.map((o) => ({ value: o.value, label: t(`type.${o.value}`) })) },
         ]}
-        toolbarExtra={<ListFilters />}
+        dateFilter={<MemberDateFilter />}
         searchPlaceholder={t("list.searchPlaceholder")}
         ariaLabel={t("list.aria")}
         emptyMessage={t("list.empty")}

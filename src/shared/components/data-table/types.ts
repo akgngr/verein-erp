@@ -40,6 +40,13 @@ export type DataTableProps<T extends { id: string }> = {
   searchPlaceholder?: string;
   filters?: DataTableFilter[];
   rowActions?: (row: T) => DataTableRowAction[];
+  /** Üst satır sağ taraf (ör. Gelen/Giden sekmesi). */
+  topRightExtra?: ReactNode;
+  /** Alt satır sol taraf (ör. DateRangeFilter). */
+  dateFilter?: ReactNode;
+  /** Filtreler menüsü içine yerleştirilecek ek kontroller (ör. Hızlı switch'ler). */
+  filterExtra?: ReactNode;
+  /** Geriye dönük uyumluluk için genel araç çubuğu eklentisi. */
   toolbarExtra?: ReactNode;
   emptyMessage?: string;
   /** Erişilebilirlik için tablo etiketi. */

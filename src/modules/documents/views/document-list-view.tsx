@@ -17,7 +17,7 @@ import {
 import { documentCategoriesPermissions, documentsPermissions } from "../permissions";
 import { STATUS_FILTER_OPTIONS } from "../constants";
 import { berlinMonthRange } from "../utils";
-import { DirectionTabs, ListFilters } from "../components/list-filters";
+import { DirectionTabs, DocumentDateFilter, DocumentQuickFilters } from "../components/list-filters";
 import { DocumentTable } from "../components/document-table";
 import { StatsCards } from "../components/stats-cards";
 
@@ -121,10 +121,6 @@ export async function DocumentListView({
 
       <StatsCards stats={stats} monthFrom={monthFrom} monthTo={monthTo} />
 
-      <div className="mb-3">
-        <DirectionTabs />
-      </div>
-
       <DocumentTable
         rows={list.rows}
         total={list.total}
@@ -133,12 +129,14 @@ export async function DocumentListView({
         sort={params.sort}
         dir={params.dir}
         q={params.q}
+        topRightExtra={<DirectionTabs />}
+        dateFilter={<DocumentDateFilter />}
+        filterExtra={<DocumentQuickFilters />}
         filters={[
           { key: "status", label: "Durum", options: [...STATUS_FILTER_OPTIONS] },
           { key: "categoryId", label: "Kategori", options: categories.map((c) => ({ value: c.id, label: c.label })) },
           { key: "assigneeId", label: "Sorumlu", options: assignees.map((a) => ({ value: a.id, label: a.label })) },
         ]}
-        toolbarExtra={<ListFilters />}
         canUpdate={can(user.role, documentsPermissions, "update")}
         canDelete={canDelete}
       />

@@ -71,7 +71,9 @@ function ReplyToSelectInner({
 
   return (
     <Autocomplete
+      id="doc-reply-to-autocomplete"
       label="Yanıtlanan evrak"
+      labelPlacement="outside"
       description="Kayıt no, kurum/kişi veya konu ile arayın; gelen bir evrağı seçin (isteğe bağlı)."
       isDisabled={isDisabled}
       allowsCustomValue={false}

@@ -5,7 +5,7 @@ import { AlertTriangle, Eye } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { DataTable } from "@/shared/components/data-table/data-table";
-import type { DataTableColumn, DataTableFilter, DataTableRowAction } from "@/shared/components/data-table/types";
+import type { DataTableColumn, DataTableRowAction } from "@/shared/components/data-table/types";
 
 import type { ConfirmationListItem } from "../types";
 

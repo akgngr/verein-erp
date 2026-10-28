@@ -46,6 +46,9 @@ export function MeetingTable({
   dir,
   q,
   filters,
+  topRightExtra,
+  dateFilter,
+  filterExtra,
   toolbarExtra,
   canUpdate,
   canDelete,
@@ -58,6 +61,9 @@ export function MeetingTable({
   dir?: "asc" | "desc";
   q?: string;
   filters?: DataTableFilter[];
+  topRightExtra?: React.ReactNode;
+  dateFilter?: React.ReactNode;
+  filterExtra?: React.ReactNode;
   toolbarExtra?: React.ReactNode;
   canUpdate: boolean;
   canDelete: boolean;
@@ -203,6 +209,9 @@ export function MeetingTable({
         dir={dir}
         q={q}
         filters={filters}
+        topRightExtra={topRightExtra}
+        dateFilter={dateFilter}
+        filterExtra={filterExtra}
         toolbarExtra={toolbarExtra}
         searchPlaceholder="Toplantı no, başlık, yer, gündem, karar ara…"
         rowActions={rowActions}

@@ -17,10 +17,11 @@ export function Topbar({
   onSignOut: () => Promise<void>;
 }) {
   return (
-    <header className="sticky top-0 z-20 flex items-center justify-between gap-3 border-b border-default-200 bg-background/80 px-4 py-3 backdrop-blur md:px-6">
+    <header className="sticky top-0 z-20 flex h-16 items-center justify-between gap-3 border-b border-default-200/80 bg-background/80 px-4 backdrop-blur-md md:px-6">
       <SidebarTrigger />
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-3 ml-auto">
         <ThemeToggle />
+        <div className="h-4 w-px bg-default-200" aria-hidden />
         <UserMenu name={name} email={email} role={role} onSignOut={onSignOut} />
       </div>
     </header>

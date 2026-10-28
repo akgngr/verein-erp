@@ -12,6 +12,7 @@ export type FormTextareaProps<T extends FieldValues> = {
   placeholder?: string;
   rows?: number;
   isDisabled?: boolean;
+  labelPlacement?: "inside" | "outside" | "outside-left";
 };
 
 /** HeroUI Textarea + react-hook-form Controller sarmalayıcısı (10.4). */
@@ -24,6 +25,7 @@ export function FormTextarea<T extends FieldValues>({
   placeholder,
   rows = 4,
   isDisabled,
+  labelPlacement = "outside",
 }: FormTextareaProps<T>) {
   return (
     <Controller
@@ -31,7 +33,9 @@ export function FormTextarea<T extends FieldValues>({
       control={control}
       render={({ field, fieldState }) => (
         <Textarea
+          id={`form-textarea-${String(name)}`}
           label={label}
+          labelPlacement={labelPlacement}
           description={description}
           isRequired={isRequired}
           placeholder={placeholder}
@@ -42,6 +46,10 @@ export function FormTextarea<T extends FieldValues>({
           onBlur={field.onBlur}
           isInvalid={Boolean(fieldState.error)}
           errorMessage={fieldState.error?.message}
+          classNames={{
+            label: "text-small font-medium text-foreground pb-1",
+            inputWrapper: "shadow-xs border-default-200 hover:border-default-400 focus-within:!border-primary transition-colors bg-default-50/50 hover:bg-default-100/50 focus-within:!bg-background",
+          }}
         />
       )}
     />

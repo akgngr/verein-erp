@@ -58,8 +58,21 @@ export function ProjectFormModal({
       <ModalContent>
         <ModalHeader>{project ? t("edit") : t("new")}</ModalHeader>
         <ModalBody className="gap-4">
-          <Input label={t("name")} value={name} onValueChange={setName} isRequired maxLength={150} />
-          <Textarea label={t("note")} value={note} onValueChange={setNote} maxLength={500} />
+          <Input
+            label={t("name")}
+            labelPlacement="outside"
+            value={name}
+            onValueChange={setName}
+            isRequired
+            maxLength={150}
+          />
+          <Textarea
+            label={t("note")}
+            labelPlacement="outside"
+            value={note}
+            onValueChange={setNote}
+            maxLength={500}
+          />
         </ModalBody>
         <ModalFooter>
           <Button variant="flat" onPress={() => onOpenChange(false)}>

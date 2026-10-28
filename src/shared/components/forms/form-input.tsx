@@ -13,6 +13,7 @@ export type FormInputProps<T extends FieldValues> = {
   type?: "text" | "email" | "password" | "number" | "tel" | "url";
   autoComplete?: string;
   isDisabled?: boolean;
+  labelPlacement?: "inside" | "outside" | "outside-left";
 };
 
 /** HeroUI Input + react-hook-form Controller sarmalayıcısı (10.4). */
@@ -26,6 +27,7 @@ export function FormInput<T extends FieldValues>({
   type = "text",
   autoComplete,
   isDisabled,
+  labelPlacement = "outside",
 }: FormInputProps<T>) {
   return (
     <Controller
@@ -33,7 +35,9 @@ export function FormInput<T extends FieldValues>({
       control={control}
       render={({ field, fieldState }) => (
         <Input
+          id={`form-input-${String(name)}`}
           label={label}
+          labelPlacement={labelPlacement}
           description={description}
           isRequired={isRequired}
           placeholder={placeholder}
@@ -45,6 +49,10 @@ export function FormInput<T extends FieldValues>({
           onBlur={field.onBlur}
           isInvalid={Boolean(fieldState.error)}
           errorMessage={fieldState.error?.message}
+          classNames={{
+            label: "text-small font-medium text-foreground pb-1",
+            inputWrapper: "shadow-xs border-default-200 hover:border-default-400 focus-within:!border-primary transition-colors bg-default-50/50 hover:bg-default-100/50 focus-within:!bg-background",
+          }}
         />
       )}
     />

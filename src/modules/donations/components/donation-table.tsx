@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { DataTable } from "@/shared/components/data-table/data-table";
-import type { DataTableColumn, DataTableFilter, DataTableRowAction } from "@/shared/components/data-table/types";
+import type { DataTableColumn, DataTableRowAction } from "@/shared/components/data-table/types";
 
 import type { DonationListItem } from "../types";
 import { CancelDonationModal } from "./cancel-donation-modal";

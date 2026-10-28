@@ -34,6 +34,9 @@ export function MemberTable({
   dir,
   q,
   filters,
+  topRightExtra,
+  dateFilter,
+  filterExtra,
   toolbarExtra,
   searchPlaceholder,
   ariaLabel,
@@ -49,6 +52,9 @@ export function MemberTable({
   dir?: "asc" | "desc";
   q?: string;
   filters?: DataTableFilter[];
+  topRightExtra?: React.ReactNode;
+  dateFilter?: React.ReactNode;
+  filterExtra?: React.ReactNode;
   toolbarExtra?: React.ReactNode;
   /** RSC'den t() ile üretilen etiketler (i18n). */
   searchPlaceholder?: string;
@@ -169,6 +175,9 @@ export function MemberTable({
         dir={dir}
         q={q}
         filters={filters}
+        topRightExtra={topRightExtra}
+        dateFilter={dateFilter}
+        filterExtra={filterExtra}
         toolbarExtra={toolbarExtra}
         searchPlaceholder={searchPlaceholder ?? t("list.searchPlaceholder")}
         rowActions={rowActions}

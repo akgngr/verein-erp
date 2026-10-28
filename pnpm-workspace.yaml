@@ -1,7 +1,19 @@
+allowBuilds:
+  '@heroui/shared-utils': true
+  '@parcel/watcher': true
+  '@prisma/client': true
+  '@prisma/engines': true
+  '@swc/core': true
+  esbuild: true
+  prisma: true
+  unrs-resolver: true
+
 onlyBuiltDependencies:
   - "@heroui/shared-utils"
+  - "@parcel/watcher"
   - "@prisma/client"
   - "@prisma/engines"
+  - "@swc/core"
   - esbuild
   - prisma
   - unrs-resolver

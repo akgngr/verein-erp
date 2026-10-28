@@ -1,39 +1,42 @@
-"use client";
+"use client"
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { addToast } from "@heroui/react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod"
+import { addToast } from "@heroui/react"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { useForm } from "react-hook-form"
 
-import { applyActionResult } from "@/shared/components/forms/action-result";
-import { FormErrorSummary } from "@/shared/components/forms/form-error-summary";
-import { FormInput } from "@/shared/components/forms/form-input";
-import { SubmitButton } from "@/shared/components/forms/submit-button";
+import { applyActionResult } from "@/shared/components/forms/action-result"
+import { FormErrorSummary } from "@/shared/components/forms/form-error-summary"
+import { FormInput } from "@/shared/components/forms/form-input"
+import { SubmitButton } from "@/shared/components/forms/submit-button"
 
-import { changePasswordAction } from "../actions/change-password";
-import { changePasswordSchema, type ChangePasswordInput } from "../schemas/change-password";
+import { changePasswordAction } from "../actions/change-password"
+import {
+  changePasswordSchema,
+  type ChangePasswordInput,
+} from "../schemas/change-password"
 
 export function ChangePasswordForm() {
-  const router = useRouter();
-  const [formError, setFormError] = useState<string | null>(null);
+  const router = useRouter()
+  const [formError, setFormError] = useState<string | null>(null)
   const form = useForm<ChangePasswordInput>({
     resolver: zodResolver(changePasswordSchema),
     defaultValues: { currentPassword: "", newPassword: "" },
-  });
+  })
 
   const onSubmit = form.handleSubmit(async (values) => {
-    setFormError(null);
-    const result = await changePasswordAction(values);
+    setFormError(null)
+    const result = await changePasswordAction(values)
     if (!result.ok) {
-      setFormError(applyActionResult(result, form.setError));
-      return;
+      setFormError(applyActionResult(result, form.setError))
+      return
     }
-    form.reset();
-    addToast({ title: "Parolanız güncellendi.", color: "success" });
-    router.push("/");
-    router.refresh();
-  });
+    form.reset()
+    addToast({ title: "Parolanız güncellendi.", color: "success" })
+    router.push("/")
+    router.refresh()
+  })
 
   return (
     <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
@@ -55,7 +58,9 @@ export function ChangePasswordForm() {
         description="En az 10 karakter; 1 büyük harf, 1 küçük harf ve 1 rakam içermelidir."
       />
       <FormErrorSummary message={formError} />
-      <SubmitButton isSubmitting={form.formState.isSubmitting}>Parolayı güncelle</SubmitButton>
+      <SubmitButton isSubmitting={form.formState.isSubmitting}>
+        Parolayı güncelle
+      </SubmitButton>
     </form>
-  );
+  )
 }

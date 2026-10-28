@@ -52,6 +52,7 @@ export function ReverseModal({
           <p className="text-small text-default-500">{t("hint")}</p>
           <Textarea
             label={t("reason")}
+            labelPlacement="outside"
             value={reason}
             onValueChange={setReason}
             maxLength={300}

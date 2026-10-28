@@ -74,7 +74,9 @@ export function GenerateDuesModal({ currentYear }: { currentYear: number }) {
                 <p className="text-small text-default-500">{t("description")}</p>
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <Select
+                    id="generate-dues-year"
                     label={t("year")}
+                    labelPlacement="outside"
                     selectedKeys={[year]}
                     disallowEmptySelection
                     onSelectionChange={(keys) => {
@@ -89,7 +91,9 @@ export function GenerateDuesModal({ currentYear }: { currentYear: number }) {
                     ))}
                   </Select>
                   <DatePicker
+                    id="generate-dues-date"
                     label={t("dueDate")}
+                    labelPlacement="outside"
                     value={dueDate ? (parseDate(dueDate) as DateValue) : null}
                     onChange={(next) => setDueDate(next ? next.toString() : "")}
                   />

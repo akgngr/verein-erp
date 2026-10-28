@@ -3,6 +3,7 @@
 /* HeroUI (v2) eklentisi — Tailwind CSS v4 kurulumu (resmi doküman adımları) */
 @plugin "../heroui.ts";
 @source "../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}";
+@source "../../node_modules/.pnpm/@heroui+theme*/**/*.{js,ts,jsx,tsx}";
 
 /* Koyu tema: next-themes "class" stratejisi */
 @custom-variant dark (&:is(.dark *));
@@ -10,4 +11,33 @@
 html,
 body {
   height: 100%;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Özel ince ve estetik kaydırma çubuğu */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.4);
+  border-radius: 9999px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.7);
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: rgba(156, 163, 175, 0.25);
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: rgba(156, 163, 175, 0.5);
 }

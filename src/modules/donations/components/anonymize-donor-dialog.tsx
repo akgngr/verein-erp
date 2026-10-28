@@ -51,6 +51,7 @@ export function AnonymizeDonorDialog({
             <p className="text-small text-default-500">{labels.hint}</p>
             <Input
               label={labels.confirmLabel}
+              labelPlacement="outside"
               value={confirmText}
               onValueChange={setConfirmText}
               isDisabled={retentionBlocked}

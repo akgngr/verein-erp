@@ -14,6 +14,7 @@ export type FormSelectProps<T extends FieldValues> = {
   isRequired?: boolean;
   placeholder?: string;
   isDisabled?: boolean;
+  labelPlacement?: "inside" | "outside" | "outside-left";
 };
 
 /** HeroUI Select + react-hook-form Controller sarmalayıcısı (10.4). Değer tipi string'dir. */
@@ -26,6 +27,7 @@ export function FormSelect<T extends FieldValues>({
   isRequired,
   placeholder = "Seçin",
   isDisabled,
+  labelPlacement = "outside",
 }: FormSelectProps<T>) {
   return (
     <Controller
@@ -35,7 +37,9 @@ export function FormSelect<T extends FieldValues>({
         const value = field.value ? String(field.value) : "";
         return (
           <Select
+            id={`form-select-${String(name)}`}
             label={label}
+            labelPlacement={labelPlacement}
             description={description}
             isRequired={isRequired}
             placeholder={placeholder}
@@ -47,6 +51,10 @@ export function FormSelect<T extends FieldValues>({
             }}
             isInvalid={Boolean(fieldState.error)}
             errorMessage={fieldState.error?.message}
+            classNames={{
+              label: "text-small font-medium text-foreground pb-1",
+              trigger: "shadow-xs border-default-200 hover:border-default-400 focus-within:!border-primary transition-colors bg-default-50/50 hover:bg-default-100/50 focus-within:!bg-background",
+            }}
           >
             {options.map((option) => (
               <SelectItem key={option.value} textValue={option.label}>

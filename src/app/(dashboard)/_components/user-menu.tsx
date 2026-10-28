@@ -35,11 +35,16 @@ export function UserMenu({
           avatarProps={{
             name: initials || "?",
             color: "primary",
-            className: "text-small",
+            className: "text-small font-semibold shadow-xs",
+            size: "sm",
           }}
           name={name}
           description={email}
-          className="gap-3"
+          classNames={{
+            base: "gap-2.5 transition-opacity hover:opacity-80 cursor-pointer p-1 rounded-medium",
+            name: "text-small font-semibold text-foreground text-left hidden sm:block",
+            description: "text-tiny text-default-400 text-left hidden sm:block",
+          }}
         />
       </DropdownTrigger>
       <DropdownMenu aria-label="Kullanıcı işlemleri">

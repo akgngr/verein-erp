@@ -45,6 +45,9 @@ export function DataTable<T extends { id: string }>({
   searchPlaceholder,
   filters,
   rowActions,
+  topRightExtra,
+  dateFilter,
+  filterExtra,
   toolbarExtra,
   emptyMessage = "Kayıt bulunamadı.",
   ariaLabel = "Tablo",
@@ -133,6 +136,9 @@ export function DataTable<T extends { id: string }>({
         filters={filters}
         activeFilters={activeFilters}
         onFilterChange={handleFilterChange}
+        topRightExtra={topRightExtra}
+        dateFilter={dateFilter}
+        filterExtra={filterExtra}
         toolbarExtra={toolbarExtra}
       />
 
@@ -151,6 +157,12 @@ export function DataTable<T extends { id: string }>({
               : undefined
           }
           onSortChange={(descriptor) => handleSort(descriptor.column)}
+          classNames={{
+            wrapper: "shadow-xs border border-default-200/80 rounded-large p-0 overflow-hidden bg-content1",
+            th: "bg-default-100/70 text-default-600 font-semibold text-tiny tracking-wider uppercase py-3 border-b border-default-200/80",
+            td: "py-3 text-small border-b border-default-100 last:border-b-0",
+            tr: "hover:bg-default-50/70 transition-colors",
+          }}
         >
           <TableHeader>{headerColumns}</TableHeader>
           <TableBody

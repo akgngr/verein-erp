@@ -129,6 +129,7 @@ export function BudgetEditor({
                       <td className="py-1.5 pr-3">{line.categoryName}</td>
                       <td className="py-1.5 pr-3">
                         <Input
+                          id={`budget-input-${line.categoryId}`}
                           aria-label={`${line.categoryName} — ${t("colPlan")}`}
                           value={values[line.categoryId] ?? ""}
                           onValueChange={(value) =>

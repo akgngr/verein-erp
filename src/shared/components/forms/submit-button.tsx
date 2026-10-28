@@ -10,12 +10,14 @@ export function SubmitButton({
   color = "primary",
   fullWidth = false,
   variant = "solid",
+  className,
 }: {
   children: ReactNode;
   isSubmitting: boolean;
   color?: "default" | "primary" | "secondary" | "success" | "warning" | "danger";
   fullWidth?: boolean;
   variant?: "solid" | "bordered" | "light" | "flat" | "faded" | "ghost" | "shadow";
+  className?: string;
 }) {
   return (
     <Button
@@ -25,6 +27,7 @@ export function SubmitButton({
       isLoading={isSubmitting}
       isDisabled={isSubmitting}
       fullWidth={fullWidth}
+      className={className ?? "font-medium shadow-xs hover:shadow-sm transition-all"}
     >
       {children}
     </Button>

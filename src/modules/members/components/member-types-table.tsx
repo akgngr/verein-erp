@@ -148,6 +148,7 @@ export function MemberTypesTable({
               <ModalBody>
                 <Input
                   label={t("colAnnualDue")}
+                  labelPlacement="outside"
                   placeholder="0,00"
                   value={annualDue}
                   onValueChange={setAnnualDue}

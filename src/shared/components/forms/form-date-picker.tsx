@@ -11,6 +11,7 @@ export type FormDatePickerProps<T extends FieldValues> = {
   description?: string;
   isRequired?: boolean;
   isDisabled?: boolean;
+  labelPlacement?: "inside" | "outside" | "outside-left";
 };
 
 /**
@@ -27,6 +28,7 @@ export function FormDatePicker<T extends FieldValues>({
   description,
   isRequired,
   isDisabled,
+  labelPlacement = "outside",
 }: FormDatePickerProps<T>) {
   return (
     <Controller
@@ -44,7 +46,9 @@ export function FormDatePicker<T extends FieldValues>({
         }
         return (
           <DatePicker
+            id={`form-date-picker-${String(name)}`}
             label={label}
+            labelPlacement={labelPlacement}
             description={description}
             isRequired={isRequired}
             isDisabled={isDisabled}
@@ -52,6 +56,10 @@ export function FormDatePicker<T extends FieldValues>({
             onChange={(next) => field.onChange(next ? next.toString() : "")}
             isInvalid={Boolean(fieldState.error)}
             errorMessage={fieldState.error?.message}
+            classNames={{
+              label: "text-small font-medium text-foreground pb-1",
+              inputWrapper: "shadow-xs border-default-200 hover:border-default-400 focus-within:!border-primary transition-colors bg-default-50/50 hover:bg-default-100/50 focus-within:!bg-background",
+            }}
           />
         );
       }}

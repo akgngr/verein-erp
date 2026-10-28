@@ -162,6 +162,7 @@ export function AttendeesTab({
                   <td className="p-2">
                     {editable ? (
                       <Select
+                        id={`attendee-role-${attendee.id}`}
                         size="sm"
                         aria-label="Görev"
                         selectedKeys={new Set([attendee.role])}
@@ -186,6 +187,7 @@ export function AttendeesTab({
                   <td className="p-2">
                     {editable ? (
                       <Select
+                        id={`attendee-att-${attendee.id}`}
                         size="sm"
                         aria-label="Katılım"
                         selectedKeys={new Set([attendee.attendance])}
@@ -210,6 +212,7 @@ export function AttendeesTab({
                   <td className="p-2">
                     {editable ? (
                       <Input
+                        id={`attendee-note-${attendee.id}`}
                         size="sm"
                         aria-label="Not"
                         defaultValue={attendee.note ?? ""}

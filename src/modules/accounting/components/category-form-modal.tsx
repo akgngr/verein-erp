@@ -80,10 +80,18 @@ export function CategoryFormModal({
       <ModalContent>
         <ModalHeader>{category ? t("edit") : t("new")}</ModalHeader>
         <ModalBody className="gap-4">
-          <Input label={t("name")} value={name} onValueChange={setName} isRequired maxLength={150} />
+          <Input
+            label={t("name")}
+            labelPlacement="outside"
+            value={name}
+            onValueChange={setName}
+            isRequired
+            maxLength={150}
+          />
           <Select
             id="category-direction"
             label={t("direction")}
+            labelPlacement="outside"
             selectedKeys={[direction]}
             onSelectionChange={(keys) => {
               const key = Array.from(keys)[0] as CategoryDirection | undefined;
@@ -97,6 +105,7 @@ export function CategoryFormModal({
           <Select
             id="category-sphere"
             label={t("sphere")}
+            labelPlacement="outside"
             selectedKeys={[sphere]}
             onSelectionChange={(keys) => {
               const key = Array.from(keys)[0] as Sphere | undefined;
@@ -107,7 +116,13 @@ export function CategoryFormModal({
               <SelectItem key={value}>{sphereLabel(value)}</SelectItem>
             ))}
           </Select>
-          <Textarea label={t("helpText")} value={helpText} onValueChange={setHelpText} maxLength={500} />
+          <Textarea
+            label={t("helpText")}
+            labelPlacement="outside"
+            value={helpText}
+            onValueChange={setHelpText}
+            maxLength={500}
+          />
         </ModalBody>
         <ModalFooter>
           <Button variant="flat" onPress={() => onOpenChange(false)}>

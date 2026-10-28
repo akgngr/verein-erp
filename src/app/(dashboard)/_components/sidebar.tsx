@@ -76,24 +76,36 @@ function SidebarContent({ role, onNavigate }: { role: Role; onNavigate?: () => v
         onClick={onNavigate}
         aria-current={active ? "page" : undefined}
         className={cn(
-          "flex items-center gap-3 rounded-medium px-3 py-2 text-small transition-colors",
+          "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-small font-medium transition-all duration-150",
           active
-            ? "bg-primary-100 text-primary-600 dark:bg-primary-100/20 dark:text-primary-300"
-            : "text-default-600 hover:bg-default-100",
+            ? "bg-primary-50 text-primary-700 shadow-xs dark:bg-primary-500/15 dark:text-primary-300 font-semibold"
+            : "text-default-600 hover:bg-default-100/80 hover:text-foreground",
         )}
       >
-        <Icon className="h-4 w-4 shrink-0" aria-hidden />
+        {active && (
+          <span
+            className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full bg-primary"
+            aria-hidden
+          />
+        )}
+        <Icon
+          className={cn(
+            "h-4 w-4 shrink-0 transition-colors",
+            active ? "text-primary" : "text-default-400 group-hover:text-default-600",
+          )}
+          aria-hidden
+        />
         <span className="truncate">{item.label}</span>
       </Link>
     );
   };
 
   return (
-    <nav className="flex flex-col gap-4 px-3 py-4" aria-label="Ana menü">
+    <nav className="flex flex-col gap-5 px-3 py-4" aria-label="Ana menü">
       <div className="flex flex-col gap-1">{mainItems.map(renderItem)}</div>
       {settingsItems.length > 0 ? (
-        <div className="flex flex-col gap-1">
-          <p className="px-3 pb-1 text-tiny font-medium uppercase tracking-wide text-default-400">
+        <div className="flex flex-col gap-1 pt-2">
+          <p className="px-3 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-default-400">
             Ayarlar
           </p>
           {settingsItems.map(renderItem)}
@@ -105,9 +117,14 @@ function SidebarContent({ role, onNavigate }: { role: Role; onNavigate?: () => v
 
 function Brand() {
   return (
-    <div className="flex items-center gap-2 border-b border-default-200 px-5 py-4">
-      <Building2 className="h-5 w-5 text-primary" aria-hidden />
-      <span className="text-small font-semibold">Dernek Yönetim</span>
+    <div className="flex items-center gap-3 border-b border-default-200/80 px-5 py-4">
+      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-xs">
+        <Building2 className="h-5 w-5" aria-hidden />
+      </div>
+      <div className="flex flex-col min-w-0">
+        <span className="text-small font-bold tracking-tight text-foreground truncate">Dernek ERP</span>
+        <span className="text-[11px] font-medium text-default-400 leading-none truncate">Yönetim Sistemi</span>
+      </div>
     </div>
   );
 }
@@ -115,7 +132,7 @@ function Brand() {
 /** Masaüstü sabit sidebar (256px). */
 function DesktopSidebar({ role }: { role: Role }) {
   return (
-    <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-default-200 lg:flex">
+    <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-default-200/80 bg-background/95 backdrop-blur-sm lg:flex">
       <Brand />
       <SidebarContent role={role} />
     </aside>

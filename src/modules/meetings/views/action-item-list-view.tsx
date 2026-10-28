@@ -9,7 +9,7 @@ import { ACTION_ITEM_DEFAULT_SORT, ACTION_ITEM_SORTABLE_FIELDS, listActionItems 
 import { meetingsPermissions } from "../permissions";
 import { ACTION_ITEM_STATUS_LABELS } from "../constants";
 import { ActionItemTable } from "../components/action-item-table";
-import { ActionItemFilters } from "../components/list-filters";
+import { ActionItemDateFilter, ActionItemQuickFilters } from "../components/list-filters";
 
 /**
  * Çapraz toplantı görev listesi (7.4): varsayılan görünüm yalnızca AÇIK
@@ -82,7 +82,8 @@ export async function ActionItemListView({
             options: userOptions.map((option) => ({ value: option.id, label: option.label })),
           },
         ]}
-        toolbarExtra={<ActionItemFilters />}
+        dateFilter={<ActionItemDateFilter />}
+        filterExtra={<ActionItemQuickFilters />}
         canUpdate={canUpdate}
       />
     </div>

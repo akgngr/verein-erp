@@ -44,6 +44,9 @@ export function ActionItemTable({
   dir,
   q,
   filters,
+  topRightExtra,
+  dateFilter,
+  filterExtra,
   toolbarExtra,
   canUpdate,
 }: {
@@ -55,6 +58,9 @@ export function ActionItemTable({
   dir?: "asc" | "desc";
   q?: string;
   filters?: DataTableFilter[];
+  topRightExtra?: React.ReactNode;
+  dateFilter?: React.ReactNode;
+  filterExtra?: React.ReactNode;
   toolbarExtra?: React.ReactNode;
   canUpdate: boolean;
 }) {
@@ -164,6 +170,9 @@ export function ActionItemTable({
       dir={dir}
       q={q}
       filters={filters}
+      topRightExtra={topRightExtra}
+      dateFilter={dateFilter}
+      filterExtra={filterExtra}
       toolbarExtra={toolbarExtra}
       searchPlaceholder="Görev, sorumlu, toplantı ara…"
       rowActions={rowActions}

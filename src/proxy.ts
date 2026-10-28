@@ -4,7 +4,10 @@ import { authConfig } from "@/modules/auth/edge";
 
 // Next.js 16: middleware dosyasının adı proxy.ts'tir (kurulu sürüme göre belirlendi).
 // Edge-uyumlu Auth.js yapılandırması kullanılır; Prisma import EDİLMEZ.
-export default NextAuth(authConfig).auth;
+const authMiddleware = NextAuth(authConfig).auth;
+
+export default authMiddleware;
+export const proxy = authMiddleware;
 
 export const config = {
   // /api/health, /api/auth ve statik dosyalar muaf tutulur (6. bölüm, md. 5).

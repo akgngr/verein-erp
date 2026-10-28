@@ -47,6 +47,7 @@ export function YearUnlockDialog({
           <p className="text-small text-default-500">{t("unlockHint")}</p>
           <Textarea
             label={t("unlockReason")}
+            labelPlacement="outside"
             value={reason}
             onValueChange={setReason}
             maxLength={300}

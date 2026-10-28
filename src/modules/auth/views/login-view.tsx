@@ -1,6 +1,7 @@
 "use client";
 
 import { Card, CardBody, CardHeader } from "@heroui/react";
+import { Building2 } from "lucide-react";
 
 import { LoginForm } from "../components/login-form";
 
@@ -11,16 +12,21 @@ import { LoginForm } from "../components/login-form";
  */
 export function LoginView({ passive }: { passive?: boolean }) {
   return (
-    <Card className="w-full max-w-md" shadow="sm">
-      <CardHeader className="flex flex-col items-start gap-1 px-8 pt-8">
-        <h1 className="text-xl font-semibold text-foreground">Dernek Yönetim Sistemi</h1>
-        <p className="text-small text-default-500">Devam etmek için giriş yapın.</p>
+    <Card className="w-full max-w-md border border-default-200/80 shadow-md rounded-2xl" shadow="none">
+      <CardHeader className="flex flex-col items-center text-center gap-3 px-8 pt-9 pb-2">
+        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground shadow-sm">
+          <Building2 className="h-6 w-6" aria-hidden />
+        </div>
+        <div>
+          <h1 className="text-xl font-bold tracking-tight text-foreground">Dernek Yönetim Sistemi</h1>
+          <p className="mt-1 text-small text-default-500">Devam etmek için oturum açın</p>
+        </div>
       </CardHeader>
-      <CardBody className="gap-4 px-8 pb-8">
+      <CardBody className="gap-4 px-8 pb-9 pt-4">
         {passive ? (
           <div
             role="alert"
-            className="rounded-medium border border-warning-200 bg-warning-50 px-4 py-3 text-small text-warning-600 dark:border-warning-100 dark:bg-warning-100/20"
+            className="rounded-xl border border-warning-200 bg-warning-50/70 px-4 py-3 text-small text-warning-700 dark:border-warning-900/50 dark:bg-warning-950/30 dark:text-warning-300"
           >
             Oturumunuz sonlandırıldı. Hesabınız pasif duruma alınmış olabilir; lütfen
             yöneticinizle görüşün.

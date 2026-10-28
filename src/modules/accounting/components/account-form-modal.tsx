@@ -83,10 +83,18 @@ export function AccountFormModal({
       <ModalContent>
         <ModalHeader>{account ? t("edit") : t("new")}</ModalHeader>
         <ModalBody className="gap-4">
-          <Input label={t("name")} value={name} onValueChange={setName} isRequired maxLength={100} />
+          <Input
+            label={t("name")}
+            labelPlacement="outside"
+            value={name}
+            onValueChange={setName}
+            isRequired
+            maxLength={100}
+          />
           <Select
             id="account-type"
             label={t("type")}
+            labelPlacement="outside"
             selectedKeys={[type]}
             onSelectionChange={(keys) => {
               const key = Array.from(keys)[0] as AccountType | undefined;
@@ -99,6 +107,7 @@ export function AccountFormModal({
           </Select>
           <Input
             label={t("openingBalance")}
+            labelPlacement="outside"
             value={openingBalance}
             onValueChange={setOpeningBalance}
             inputMode="decimal"
@@ -106,6 +115,7 @@ export function AccountFormModal({
           <DatePicker
             id="account-opening-date"
             label={t("openingDate")}
+            labelPlacement="outside"
             granularity="day"
             value={(() => {
               try {
