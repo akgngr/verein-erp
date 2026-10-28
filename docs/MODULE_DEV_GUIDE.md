@@ -1,83 +1,75 @@
-# Verein ERP — Modül Geliştirme Rehberi & Dış AI Agent Şartnamesi
+# Verein ERP — Modül Geliştirme Rehberi & Dış AI Şartnamesi
+> **Sürüm:** 2.0 (Standardize Edilmiş Mimari)  
+> **Hedef Kitle:** Harici AI Agent'lar (Claude, ChatGPT, Gemini, Cursor, Windsurf) ve Bağımsız Geliştiriciler
 
-Bu belge, **Verein ERP** projesine yeni bir modül eklemek isteyen harici geliştiriciler veya otonom AI agent'lar (Claude, GPT, Gemini vb.) için hazırlanmış standart mimari kurallarını ve geliştirme adımlarını içerir.
-
----
-
-## 1. Temel Mimari Prensipler (Sıfır Bağımlılık)
-
-1. **İzole Modül Dizini**: Tüm yeni modüller `src/modules/<modul_adi>/` altında kendi kendine yeten bağımsız bir paket olarak geliştirilir.
-2. **Çekirdek Koda Sıfır Dokunuş (Zero-Touch Core)**: Çekirdek dosyalara (`src/registry.ts`, `prisma/schema/*`, `messages/*.json`) elle ekleme yapılması **yasaktır**. Otomasyon scriptleri bu dosyaları modülünüzden otomatik olarak türetir.
-3. **Katı İçe Aktarma Sınırları (`eslint.config.mjs`)**:
-   - Bir modül, başka bir modülün iç dosyalarını (örn. `@/modules/x/queries/y`) ASLA import edemez.
-   - Sadece şu 3 public giriş noktası serbesttir:
-     - `@/modules/<modul>` (`index.ts` — izomorfik tipler, şemalar, config)
-     - `@/modules/<modul>/server` (`server.ts` — server-only eylemler, sorgular)
-     - `@/modules/<modul>/ui` (`ui.ts` — React istemci/sunucu görünüm bileşenleri)
-4. **Çoklu Dil (i18n) Standardı**: Modüle ait tüm çeviriler modülün içindeki `messages/tr.json` ve `messages/de.json` dosyalarında yer almalıdır.
+Bu rehber, **Verein ERP** sistemine diğer modülleri ve çekirdek sistemi bozmadan, sıfır temas (zero-touch) prensibiyle çalışan yeni bir modül eklemek için gereken standartları, dosya yapısını, denetim araçlarını ve hazır yapay zeka istemini (prompt) içerir.
 
 ---
 
-## 2. Modül Dosya Yapısı
+## 1. Temel Mimari Prensipler (Architecture Principles)
 
-Yeni bir modül (`src/modules/<modul_adi>/`) aşağıdaki dosya yapısına sahip olmalıdır:
+1. **Sıfır Çekirdek Dokunuşu (Zero-Touch Core):**
+   Yeni bir modül geliştirirken veya mevcut bir modülü silerken çekirdek dosyalara (`src/registry.ts`, `prisma/schema/*`, `messages/*.json`) **ASLA ELLE MÜDAHALE EDİLMEZ**. Tüm kayıtlar ve bağlantılar `pnpm module:sync` otomasyon scripti tarafından dinamik olarak yönetilir.
+
+2. **Dikey Dilim İzolasyonu (Vertical Slice Isolation):**
+   Modüle ait veritabanı şeması, iş kuralları, yetki tanımları, çevirileri, sayfaları ve bileşenleri tamamen `src/modules/<modul_adi>/` dizini içinde yer alır.
+
+3. **Katı Kamu API Sınırları (Public API Boundary - `eslint.config.mjs`):**
+   Bir modülün iç klasörleri (`queries/`, `actions/`, `components/`, `views/`, `services/`) **özeldir (private)**. Dış dünyaya ve diğer modüllere yalnızca şu 3 kamuya açık dosya üzerinden konuşur:
+   - `@/modules/<modul>` (`index.ts` — İzomorfik tipler, şemalar, yetki tanımları, moduleConfig)
+   - `@/modules/<modul>/server` (`server.ts` — "server-only" sorgular, sunucu aksiyonları, yetki korumaları)
+   - `@/modules/<modul>/ui` (`ui.ts` — React istemci ve sunucu görünüm bileşenleri)
+   *(Not: `@/modules/auth/edge` yalnızca middleware için geçerli özel bir istisnadır).*
+
+4. **Üst Bar Menüsü Standardı (`menu/top.json`):**
+   Her modülün alt sayfaları, modüle özel yapılandırmaları ve dışa aktarma (Excel vb.) araçları sayfa içine buton yığılması yerine modül dizinindeki `menu/top.json` dosyasında bildirilir ve dinamik Mac-tarzı üst barda gösterilir.
+
+5. **Sayfa Eylem Ayrımı Kuralı (UI Action Area Separation):**
+   - **Sayfa Başlığı Eylem Alanı (`PageHeader actions`):** YALNIZCA doğrudan ana CRUD butonuna (`+ Yeni Üye`, `+ Fiş Ekle`, `+ Yeni Bağış`) ayrılmıştır.
+   - **Araçlar, Raporlar ve Alt Sayfa Bağlantıları:** `menu/top.json` içinde tanımlanır; sayfa gövdesinde mükerrer buton olarak gösterilmez.
+
+---
+
+## 2. Modül Anatomisi (Standart Klasör & Dosya Yapısı)
+
+Yeni bir modül (`src/modules/<modul_adi>/`) aşağıdaki standart dosya ağacına sahip olmalıdır:
 
 ```
 src/modules/<modul_adi>/
-├── module.config.ts        # Modül meta verisi, sidebar menü öğeleri, yetki bağlamı
-├── permissions.ts         # definePermissions ile rol yetki tanımları
-├── schema.prisma          # (Varsa) Modüle özel Prisma veritabanı modelleri
-├── prisma/
-│   └── schema.prisma      # (Sembolik bağlantı veya kopya)
+├── module.config.ts        # Modül meta verisi, sidebar menü tanımı, yetki bağlamı
+├── menu/
+│   └── top.json           # [STANDART] Üst bar araçları, alt sekmeler ve dışa aktarma linkleri
+├── permissions.ts         # definePermissions ile rol bazlı yetki matrisi
+├── schema.prisma          # (Varsa) Prisma veritabanı modelleri
 ├── messages/
-│   ├── tr.json            # Türkçe metinler
-│   └── de.json            # Almanca metinler
-├── index.ts               # İzomorfik public API (tipler, yetki, config)
-├── ui.ts                  # Public UI bileşenleri dışa aktarımı
-├── server.ts              # "server-only" sorgu ve sunucu aksiyonları dışa aktarımı
-├── queries/               # Prisma veri okuma fonksiyonları ("server-only")
+│   ├── tr.json            # Türkçe yerelleştirilmiş metinler
+│   └── de.json            # Almanca yerelleştirilmiş metinler (Verein terminolojisi)
+├── index.ts               # Kamuya açık İZOMORFİK giriş noktası (Public API)
+├── server.ts              # Kamuya açık SUNUCU giriş noktası ("server-only")
+├── ui.ts                  # Kamuya açık UI bileşenleri girişi
+├── types.ts               # Modül içi tipler ve arayüzler
+├── constants.ts           # Filtre sabitleri, sıralama alanları, varsayılanlar
+├── queries/               # Salt-okunur veritabanı sorguları (RSC için)
 ├── actions/               # Server Actions (form gönderme, mutasyonlar)
-├── schemas/               # Zod doğrulama şemaları ve TypeScript tipleri
+├── schemas/               # Zod doğrulama şemaları
 ├── components/            # Modüle özel React bileşenleri
-└── views/                 # Sayfa düzeyinde görünüm bileşenleri
+└── views/                 # Sayfa düzeyinde Server/Client görünümleri
 ```
 
-Ayrıca sayfa rotası için tek bir dosya eklenir:
+Ayrıca modülün dashboard rotası için tek bir dosya eklenir:
 - `src/app/(dashboard)/<modul_adi>/page.tsx`
 
 ---
 
-## 3. Adım Adım Modül Oluşturma
+## 3. Standart Dosyaların Detaylı Şartnamesi
 
-### Yöntem A: Hızlı Başlangıç (Scaffold CLI)
-
-Yeni bir modülü tek komutla tüm standart dosyalarıyla oluşturabilirsiniz:
-
-```bash
-pnpm module:create <modul_adi> "Modül Başlığı"
-```
-
-*Örnek:*
-```bash
-pnpm module:create inventory "Envanter ve Demirbaş"
-```
-
-Bu komut:
-1. `src/modules/inventory/` klasörünü ve tüm gerekli şablon dosyaları oluşturur.
-2. `src/app/(dashboard)/inventory/page.tsx` rotasını açar.
-3. Otomatik senkronizasyonu çalıştırarak `src/registry.ts`, `prisma/schema/inventory.prisma` ve dil dosyalarını bağlar.
-
----
-
-### Yöntem B: Manuel veya AI Agent Tarafından Oluşturma
-
-Bir AI Agent modülü sıfırdan oluştururken aşağıdaki 5 temel dosyayı hazırlar:
-
-#### 1. `module.config.ts`
+### 1. `module.config.ts`
+Modülün kimliğini, kategorisini ve menü konumunu belirler.
 ```typescript
 import { Package } from "lucide-react";
-import type { ModuleConfig } from "@/shared/types/module";
+import type { ModuleConfig, TopNavItem } from "@/shared/types/module";
 import { inventoryPermissions } from "./permissions";
+import topNav from "./menu/top.json";
 
 export const moduleConfig: ModuleConfig = {
   key: "inventory",
@@ -85,11 +77,12 @@ export const moduleConfig: ModuleConfig = {
   description: "Dernek demirbaş ve malzeme takibi.",
   category: "EXTENSION", // 'CORE' | 'OFFICIAL' | 'EXTENSION'
   hasSchema: true,
+  topNav: topNav as TopNavItem[],
   nav: [
     {
       href: "/inventory",
       label: "Envanter",
-      labelKey: "inventory", // messages/*.json içinde nav.inventory olarak çözülür
+      labelKey: "inventory", // messages/ içinde nav.<key> olarak çözülür
       icon: Package,
       group: "main",         // 'main' veya 'settings'
       order: 10,
@@ -99,7 +92,34 @@ export const moduleConfig: ModuleConfig = {
 };
 ```
 
-#### 2. `permissions.ts`
+### 2. `menu/top.json`
+Modül açıkken üst barda yer alacak sekmeler ve araçlar.
+```json
+[
+  {
+    "key": "overview",
+    "label": "Genel Bakış",
+    "href": "/inventory",
+    "icon": "LayoutGrid"
+  },
+  {
+    "key": "categories",
+    "label": "Kategoriler",
+    "href": "/inventory/kategoriler",
+    "icon": "FolderTree"
+  },
+  {
+    "key": "export",
+    "label": "Excel'e Aktar",
+    "href": "/api/inventory/export",
+    "icon": "FileSpreadsheet",
+    "isDownload": true
+  }
+]
+```
+
+### 3. `permissions.ts`
+6 temel sistem rolünü (`ADMIN`, `BOARD`, `SECRETARY`, `TREASURER`, `AUDITOR`, `VIEWER`) eksiksiz kapsamalıdır.
 ```typescript
 import { definePermissions } from "@/shared/permissions/define";
 
@@ -113,7 +133,8 @@ export const inventoryPermissions = definePermissions("inventory", {
 });
 ```
 
-#### 3. `schema.prisma`
+### 4. `schema.prisma`
+Eklenti tablolarının ad çakışmasını engellemek için `@@map("<modul_adi>_...")` kuralı zorunludur.
 ```prisma
 model InventoryItem {
   id          String   @id @default(uuid())
@@ -127,7 +148,7 @@ model InventoryItem {
 }
 ```
 
-#### 4. `messages/tr.json` ve `messages/de.json`
+### 5. `messages/tr.json` ve `messages/de.json`
 ```json
 // messages/tr.json
 {
@@ -137,56 +158,100 @@ model InventoryItem {
 }
 ```
 
-#### 5. `ui.ts`, `server.ts` ve `index.ts`
+### 6. Public Giriş Noktaları (`index.ts`, `server.ts`, `ui.ts`)
 ```typescript
-// ui.ts
-export { InventoryListView } from "./views/inventory-list-view";
+// index.ts (İzomorfik — 'server-only' KESİNLİKLE İÇEREMEZ)
+export { moduleConfig } from "./module.config";
+export { inventoryPermissions } from "./permissions";
 
-// server.ts
+// server.ts (Sunucu — 'server-only' ZORUNLUDUR)
 import "server-only";
 export { inventoryPermissions } from "./permissions";
+export { listInventoryItems } from "./queries/list-inventory";
+export { createInventoryAction } from "./actions/create-inventory";
 
-// index.ts
-export { inventoryPermissions } from "./permissions";
-export { moduleConfig } from "./module.config";
+// ui.ts (Görünümler ve UI bileşenleri)
+export { InventoryListView } from "./views/inventory-list-view";
+```
+
+### 7. Dashboard Sayfası (`src/app/(dashboard)/<modul_adi>/page.tsx`)
+```typescript
+import { InventoryListView } from "@/modules/inventory/ui";
+
+export const metadata = { title: "Envanter" };
+
+export default async function InventoryPage() {
+  return <InventoryListView />;
+}
 ```
 
 ---
 
-## 4. Senkronizasyon ve Doğrulama
+## 4. Modül Kategorileri ve Yaşam Döngüsü
 
-Modül dosyaları yazıldıktan sonra senkronizasyonu çalıştırın:
-
-```bash
-pnpm module:sync
-```
-
-Bu komut:
-- `prisma/schema/<modul_adi>.prisma` sembolik bağlantısını kurar.
-- Modül çevirilerini ana dil dosyalarına derinlemesine enjekte eder.
-- `src/registry.ts` dosyasını otomatik olarak günceller.
-
-Ardından veritabanını ve testleri doğrulayın:
-
-```bash
-pnpm typecheck   # TypeScript derleme kontrolü
-pnpm lint        # ESLint modül sınırları denetimi
-pnpm test        # Test paketlerinin doğrulanması
-pnpm db:migrate  # Veritabanı şema göçünün oluşturulması
-```
+| Kategori | Tanım | Örnekler | Pasife Alınabilir mi? | Silinebilir mi? |
+|---|---|---|:---:|:---:|
+| **CORE** | Sistem altyapısı ve çekirdek ayarlar | `auth`, `users`, `organization`, `audit`, `system` | ❌ Hayır | ❌ Hayır |
+| **OFFICIAL** | Verein ERP yerleşik dernek fonksiyonları | `members`, `accounting`, `documents`, `meetings`, `donations` | ✅ Evet | ❌ Hayır |
+| **EXTENSION** | Bağımsız eklentiler / AI tarafından eklenen modüller | `inventory`, `sponsors`, `events` vb. | ✅ Evet | ✅ Evet |
 
 ---
 
-## 5. Dış AI Agent'a Verilecek Görev İstemi (Prompt Şablonu)
+## 5. CLI Komutları & Otomasyon Araçları
 
-Başka bir yapay zekaya (Cursor, Windsurf, Claude, ChatGPT vb.) modül geliştirmesi yaptırmak istediğinizde aşağıdaki istemi doğrudan kopyalayıp verebilirsiniz:
+Verein ERP, modül geliştirme sürecini hatasız ve otomatik kılmak için özel CLI araçları sunar:
 
-> **İstem (Prompt):**
-> "Verein ERP projesine `<modul_adi>` isimli yeni bir eklenti modülü geliştirmeni istiyorum.
-> Projede katı modüler mimari uygulanmaktadır (`docs/MODULE_DEV_GUIDE.md`).
-> Kurallar:
-> 1. Sadece `src/modules/<modul_adi>/` dizini ve `src/app/(dashboard)/<modul_adi>/page.tsx` üzerinde çalış.
-> 2. `src/registry.ts`, `prisma/schema/base.prisma` veya `messages/` kök dosyalarını elle DÜZENLEME; `pnpm module:sync` çalıştırarak otomatik bağlanmasını sağla.
-> 3. Modülün içinde `module.config.ts`, `permissions.ts`, `schema.prisma`, `messages/tr.json`, `messages/de.json`, `index.ts`, `ui.ts` ve `server.ts` dosyalarını eksiksiz oluştur.
-> 4. Başka bir modülden kod çağırırken sadece public giriş noktalarını kullan (`@/modules/<modul>`, `@/modules/<modul>/ui`, `@/modules/<modul>/server`).
-> 5. İşi bitirdikten sonra `pnpm module:sync`, `pnpm typecheck` ve `pnpm lint` komutlarını çalıştırarak doğrula."
+| Komut | Açıklama |
+|---|---|
+| `pnpm module:create <ad> [Başlık]` | Standart dosyalarıyla birlikte sıfırdan yeni modül iskeleti üretir ve sisteme bağlar. |
+| `pnpm module:sync` | Modül şemalarını (`prisma/schema/`), çevirileri (`messages/`) ve `src/registry.ts` dosyasını otomatik eşitler. |
+| `pnpm module:validate [ad]` | Bir modülü veya tüm modülleri mimari standartlara, kural ihlallerine ve import sınırlarına göre denetler. |
+| `pnpm typecheck` | TypeScript derleme ve tip doğrulamasını çalıştırır. |
+| `pnpm lint` | Katı içe aktarma sınırlarını (ESLint) kontrol eder. |
+| `pnpm test` | Otomatik modül standart testleri dahil tüm test paketini koşturur. |
+
+---
+
+## 6. Harici AI Agent'a Verilecek Görev İstemi (Prompt Template)
+
+Başka bir yapay zekaya (Claude, Cursor, ChatGPT, Windsurf, Gemini vb.) yeni bir modül geliştirmesi yaptırmak istediğinizde aşağıdaki istemi doğrudan kopyalayıp verebilirsiniz:
+
+```markdown
+Sen Verein ERP projesi için modül geliştiren uzman bir yazılım agent'ısın.
+Senden projemize `<MODUL_ADI>` (örn: `inventory`, `sponsors`, `library`) isimli yeni bir eklenti modülü geliştirmeni istiyorum.
+
+Projede katı modüler mimari ve dikey dilim izolasyonu uygulanmaktadır (Bkz: `docs/MODULE_DEV_GUIDE.md`).
+
+GELİŞTİRME KURALLARI VE ŞARTNAME:
+1. İZOLASYON VE SIFIR ÇEKİRDEK TEMASI:
+   - Yalnızca `src/modules/<MODUL_ADI>/` klasörü ve `src/app/(dashboard)/<MODUL_ADI>/page.tsx` rotası üzerinde çalış.
+   - `src/registry.ts`, `prisma/schema/base.prisma` veya kök `messages/` dosyalarına ELLE DOKUNMA! Bunlar `pnpm module:sync` tarafından otomatik yönetilir.
+
+2. ZORUNLU STANDART DOSYALAR:
+   Modül dizininde şu dosyaları eksiksiz oluştur:
+   - `module.config.ts`: `key`, `label`, `category: "EXTENSION"`, `hasSchema: true`, `topNav`, `nav` tanımları.
+   - `menu/top.json`: Üst barda gösterilecek sekmeler, ayarlar veya dışa aktarma linkleri dizisi.
+   - `permissions.ts`: `definePermissions` kullanarak 6 rolü (`ADMIN`, `BOARD`, `SECRETARY`, `TREASURER`, `AUDITOR`, `VIEWER`) kapsayan yetki tanımları.
+   - `schema.prisma`: Veritabanı modeli. Tüm tablolarda `@@map("<MODUL_ADI>_...")` ön eki bulunmalıdır.
+   - `messages/tr.json` ve `messages/de.json`: Türkçe ve Almanca arayüz metinleri.
+   - `index.ts`: İzomorfik public API (`moduleConfig`, yetkiler, tipler). KESİNLİKLE 'server-only' içermez.
+   - `server.ts`: Sunucu public API (başında `import "server-only";` bulunmalı).
+   - `ui.ts`: Dışa aktarılan React görünümleri.
+
+3. KATI İTHALAT (IMPORT) SINIRLARI:
+   - Başka modüllerin iç dosyalarını (örn: `@/modules/auth/queries/...`) ASLA import etme.
+   - Yalnızca kamuya açık girişleri kullan: `@/modules/<modul>`, `@/modules/<modul>/server`, `@/modules/<modul>/ui`.
+   - Modül içinden `src/app` katmanını ASLA import etme.
+
+4. UI VE ÜST BAR STANDARDI:
+   - Sayfa başlığı eylem alanına (`PageHeader actions`) YALNIZCA ana oluşturma butonunu (`+ Yeni Ekle`) koy.
+   - Alt sayfalar, raporlar veya Excel indirme butonlarını sayfa içine koyma, `menu/top.json` içinde tanımla.
+   - Sayfalarda veri listelemesi için `@/shared/components/data-table` bileşenlerini kullan.
+
+5. DOĞRULAMA ADIMLARI:
+   Geliştirmeni tamamladıktan sonra sırasıyla şu komutları çalıştırıp sıfır hatayla geçtiğinden emin ol:
+   - `pnpm module:sync`
+   - `pnpm module:validate <MODUL_ADI>`
+   - `pnpm typecheck`
+   - `pnpm lint`
+```

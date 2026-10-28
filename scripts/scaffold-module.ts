@@ -83,7 +83,6 @@ export const moduleConfig: ModuleConfig = {
   hasSchema: true,
   topNav: topNav as TopNavItem[],
   nav: [
-  nav: [
     {
       href: "/${cleanKey}",
       label: "${label}",

@@ -12,6 +12,8 @@
     "sync:schemas": "tsx scripts/sync-schemas.ts",
     "module:sync": "tsx scripts/sync-schemas.ts",
     "module:create": "tsx scripts/scaffold-module.ts",
+    "module:validate": "tsx scripts/validate-module.ts",
+    "module:check": "tsx scripts/validate-module.ts",
     "predev": "tsx scripts/sync-schemas.ts",
     "prebuild": "tsx scripts/sync-schemas.ts",
     "pretypecheck": "tsx scripts/sync-schemas.ts",

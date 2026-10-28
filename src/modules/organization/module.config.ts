@@ -1,7 +1,8 @@
 import { Building2 } from "lucide-react";
 
-import type { ModuleConfig } from "@/shared/types/module";
+import type { ModuleConfig, TopNavItem } from "@/shared/types/module";
 import { organizationPermissions } from "./permissions";
+import topNav from "./menu/top.json";
 
 export const moduleConfig: ModuleConfig = {
   key: "organization",
@@ -10,6 +11,7 @@ export const moduleConfig: ModuleConfig = {
   category: "CORE",
   isProtected: true,
   hasSchema: true,
+  topNav: topNav as TopNavItem[],
   nav: [
     {
       href: "/ayarlar/dernek",
