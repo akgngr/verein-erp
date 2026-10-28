@@ -34,6 +34,10 @@ Bu rehber, **Verein ERP** sistemine diğer modülleri ve çekirdek sistemi bozma
    - Veri Tablosu: `import { DataTable, DataTablePagination } from "@/shared/components/data-table";`
    - Modül İçi İthalatlar: Kendi modülün içindeki dosyaları import ederken göreli yollar (`./` veya `../`) kullan.
    - Dış Modüller: ASLA başka modülün iç dosyalarını import etme. Yalnızca `@/modules/<modul>`, `@/modules/<modul>/server` ve `@/modules/<modul>/ui` kullan. Modül içinden `src/app` katmanını ASLA import etme.
+8. **"Services" ve "Helpers" Katı Ayrımı (İnce Görünüm / Thin Views Prensibi):**
+   - **Görünümler (`views/*-view.tsx`):** Kesinlikle içinde hesaplama, matematiksel işlem veya ham sorgu barındırmaz. View yalnızca bir orkestratördür: `queries` ile veriyi çeker, `helpers`/`services` ile işler ve `components`'e aktarır.
+   - **`helpers/` (Saf Fonksiyonlar - Pure Functions):** Yan etkisi (side-effect) olmayan deterministik matematik ve mantık fonksiyonları. Örneğin: oran/kontenjan hesaplamaları (`calculateCapacityRatio`), tarih kıyaslamaları (`isEventPast`), para/metin formatlama.
+   - **`services/` (İş Mantığı ve Dış Entegrasyonlar):** Çok adımlı iş akışları, dış API çağrıları, dosya dışa aktarma (Excel/PDF) motorları.
 
 ---
 
@@ -66,6 +70,12 @@ src/
         ├── schemas/                         # Zod doğrulama şemaları
         │   └── <modul_adi>-schema.ts        # Form validasyon şeması (create/update)
         │
+        ├── helpers/                         # [SAF FONKSİYONLAR] Hesaplama, oran, tarih/para formatlama
+        │   └── <modul_adi>-helpers.ts       # calculateRatio, isPast, formatDateRange
+        │
+        ├── services/                        # [İŞ AKIŞI & SERVİSLER] Dış API, Excel/PDF export
+        │   └── <modul_adi>-service.ts       # İş süreçleri ve entegrasyon servisleri
+        │
         ├── queries/                         # Salt-okunur veritabanı sorguları (RSC için)
         │   └── list-<modul_adi>.ts          # Sayfalanmış listeleme sorgusu
         │
@@ -78,7 +88,7 @@ src/
         │   └── <modul_adi>-create-modal.tsx # ["use client"] URL (?action=new) yöneten modal sarmalayıcısı
         │
         └── views/                           # Sayfa düzeyinde Server Component görünümleri (RSC)
-            └── <modul_adi>-list-view.tsx    # Ana listeleme görünümü (saf RSC, "use client" içermez)
+            └── <modul_adi>-list-view.tsx    # İnce görünüm: queries, helpers ve components orkestratörü
 ```
 
 ---

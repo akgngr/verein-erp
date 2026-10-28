@@ -22,12 +22,16 @@ PROJE MİMARİSİ VE SINIR KURALLARI:
    - `views/*-view.tsx` ve `page.tsx` asenkron SERVER COMPONENT'tir (RSC). Başlarına ASLA `"use client"` koyma!
    - Server Component içine ASLA `onClose={async () => { "use server"; }}` gibi inline server action yazma.
    - `@heroui/react` bir Client Component kütüphanesidir. `@heroui/react` bileşenlerini (Button, Modal, Input vb.) YALNIZCA `"use client"` olan `components/*.tsx` dosyalarında kullan. Server Component (`views/*.tsx`) içinde `@heroui/react` import etme (Next.js build `createContext is not a function` hatası verir); bunun yerine Tailwind CSS kullan.
-6. URL Tabanlı Modal Kapatma (`<MODUL_ADI>-create-modal.tsx`):
+6. "Services" ve "Helpers" Katı Ayrımı (İnce Görünüm / Thin Views Kuralı):
+   - `views/*-view.tsx` dosyalarında KESİNLİKLE hesaplama, matematiksel işlem, formatlama veya karmaşık lojik yazma. View yalnızca bir orkestratördür: parametreyi alır, sorgu/servis/helper'ı çağırır, çıkan sonucu bileşenlere props olarak iletir.
+   - **`helpers/`:** Dış dünyaya yan etkisi olmayan saf (pure) fonksiyonlar: oran/kontenjan hesaplamaları, tarih/para formatlama, durum türetme.
+   - **`services/`:** Çok adımlı iş süreçleri, dış API entegrasyonları, dosya dışa aktarma (Excel/PDF) motorları.
+7. URL Tabanlı Modal Kapatma (`<MODUL_ADI>-create-modal.tsx`):
    - `?action=new` modalını açıp kapatmak için `"use client"` olan bir `components/<MODUL_ADI>-create-modal.tsx` sarmalayıcısı yaz. Bu bileşenin `onClose` fonksiyonu `useRouter` ile URL'deki `action` parametresini temizler.
-7. Sayfa Eylem Ayrımı: `PageHeader actions` alanına YALNIZCA doğrudan ana CRUD butonunu (`+ Yeni Ekle`) koy. Araçlar, raporlar ve dışa aktarma bağlantılarını `menu/top.json` içinde tanımla.
-8. KRİTİK SSR Hydration & Saflık Kuralları (React 19 / Next.js 16):
+8. Sayfa Eylem Ayrımı: `PageHeader actions` alanına YALNIZCA doğrudan ana CRUD butonunu (`+ Yeni Ekle`) koy. Araçlar, raporlar ve dışa aktarma bağlantılarını `menu/top.json` içinde tanımla.
+9. KRİTİK SSR Hydration & Saflık Kuralları (React 19 / Next.js 16):
    - Tablo satırları (`map`) içinde asla HeroUI'ın `<Select>` bileşenini kullanma. Bunun yerine stillendirilmiş native HTML `<select>` ve yanında Lucide `<ChevronDown>` kullan.
-   - Render esnasında `Date.now()` çağırma (`react-hooks/purity`). Tarih karşılaştırmalarını (`isPast` vb.) sorguda (`queries/`) hesapla.
+   - Render esnasında `Date.now()` çağırma (`react-hooks/purity`). Tarih karşılaştırmalarını (`isPast` vb.) sorguda (`queries/`) veya saf helper'da (`helpers/`) hesapla.
 
 SENİN ÜRETMEN GEREKEN DOSYALAR:
 Lütfen bana her bir dosyanın TAM DOSYA YOLUNU ve EKSİKSİZ ÇALIŞAN KODUNU sırasıyla ver:
@@ -45,24 +49,28 @@ Lütfen bana her bir dosyanın TAM DOSYA YOLUNU ve EKSİKSİZ ÇALIŞAN KODUNU s
 6. `src/modules/<MODUL_ADI>/index.ts`:
    - İzomorfik kamuya açık dosya (`moduleConfig`, yetkiler, tipler). KESİNLİKLE 'server-only' içermez.
 7. `src/modules/<MODUL_ADI>/server.ts`:
-   - Sunucu kamuya açık dosyası. İlk satırında `import "server-only";` bulunmalı. Sorgu ve mutasyonları dışa aktar.
+   - Sunucu kamuya açık dosyası. İlk satırında `import "server-only";` bulunmalı. Sorgu, servis ve mutasyonları dışa aktar.
 8. `src/modules/<MODUL_ADI>/ui.ts`:
    - UI kamuya açık dosyası. Görünüm bileşenlerini dışa aktar.
 9. `src/modules/<MODUL_ADI>/schemas/<MODUL_ADI>-schema.ts`:
    - Zod doğrulama şeması.
-10. `src/modules/<MODUL_ADI>/queries/list-<MODUL_ADI>.ts`:
+10. `src/modules/<MODUL_ADI>/helpers/<MODUL_ADI>-helpers.ts`:
+    - Saf matematiksel, biçimlendirme ve hesaplama fonksiyonları (Pure Functions).
+11. `src/modules/<MODUL_ADI>/services/<MODUL_ADI>-service.ts`:
+    - Çok adımlı iş mantığı süreçleri, Excel/PDF veya dış API entegrasyon servisleri.
+12. `src/modules/<MODUL_ADI>/queries/list-<MODUL_ADI>.ts`:
     - `getDb()` ile veritabanından veri çeken sayfalama ve filtreleme destekli sorgu fonksiyonu.
-11. `src/modules/<MODUL_ADI>/actions/<MODUL_ADI>-actions.ts`:
+13. `src/modules/<MODUL_ADI>/actions/<MODUL_ADI>-actions.ts`:
     - `"use server"` Server Action mutasyon fonksiyonları (ekleme, güncelleme, silme). `requirePermission` ile yetki denetimi yap.
-12. `src/modules/<MODUL_ADI>/components/<MODUL_ADI>-table.tsx`:
+14. `src/modules/<MODUL_ADI>/components/<MODUL_ADI>-table.tsx`:
     - `"use client"` Tablo bileşeni. SSR Hydration Mismatch hatası vermemesi için tablo satırlarında HeroUI Select YERİNE native HTML `<select>` kullan.
-13. `src/modules/<MODUL_ADI>/components/<MODUL_ADI>-form-modal.tsx`:
+15. `src/modules/<MODUL_ADI>/components/<MODUL_ADI>-form-modal.tsx`:
     - `"use client"` Ekleme / düzenleme modal formu (`@heroui/react` Modal, Input vb.).
-14. `src/modules/<MODUL_ADI>/components/<MODUL_ADI>-create-modal.tsx`:
+16. `src/modules/<MODUL_ADI>/components/<MODUL_ADI>-create-modal.tsx`:
     - `"use client"` URL query (`?action=new`) yöneten modal sarmalayıcısı.
-15. `src/modules/<MODUL_ADI>/views/<MODUL_ADI>-list-view.tsx`:
-    - Saf asenkron Server Component (RSC). `"use client"` İÇERMEZ. `PageHeader`, arama filtreleri, istatistik kartları, `<MODUL_ADI>-table` ve `<MODUL_ADI>-create-modal` bileşenlerini render eder.
-16. `src/modules/<MODUL_ADI>/page.tsx`:
+17. `src/modules/<MODUL_ADI>/views/<MODUL_ADI>-list-view.tsx`:
+    - Saf asenkron Server Component (RSC). `"use client"` İÇERMEZ. İnce orkestratör: `queries` ve `helpers` çağırıp `<MODUL_ADI>-table` ve `<MODUL_ADI>-create-modal` bileşenlerini render eder.
+18. `src/modules/<MODUL_ADI>/page.tsx`:
     - Modülün Next.js Server Component sayfası. NOT: `src/app` dizinine ASLA kod yazma; sistem `pnpm module:sync` ile Next.js App Router köprüsünü otomatik oluşturur.
 
 Lütfen kodları placeholder veya "TODO" bırakmadan, çalışmaya hazır ve eksiksiz olarak üret.

@@ -34,6 +34,10 @@ This guide outlines the architectural standards, vertical slice directory struct
    - Data Table: `import { DataTable, DataTablePagination } from "@/shared/components/data-table";`
    - Module-Internal Imports: Use relative imports (`./` or `../`).
    - Other Modules: Only import through public entrypoints (`@/modules/<mod>`, `@/modules/<mod>/server`, `@/modules/<mod>/ui`). Never import `src/app` inside modules.
+8. **"Services" vs "Helpers" Strict Segregation (Thin Views Principle):**
+   - **Views (`views/*-view.tsx`):** Views are purely dumb orchestrators. They NEVER contain complex calculations, loops, or raw queries. They only fetch via `queries/`, compute via `helpers/` / `services/`, and pass props to `components/`.
+   - **`helpers/` (Pure Functions):** Side-effect-free, deterministic mathematical and logical utilities (e.g., `calculateCapacityRatio`, `isEventPast`, `formatCurrency`).
+   - **`services/` (Business Logic & Integrations):** Multi-step workflows, background tasks, external API integrations, or file export motors (Excel/PDF).
 
 ---
 
@@ -66,6 +70,12 @@ src/
         ├── schemas/                        # Zod validation schemas
         │   └── <module_name>-schema.ts     # Create / Update input validation
         │
+        ├── helpers/                        # [PURE FUNCTIONS] Side-effect-free calculations & formatters
+        │   └── <module_name>-helpers.ts    # calculateRatio, isPast, formatDateRange
+        │
+        ├── services/                       # [WORKFLOWS & SERVICES] External APIs, Excel/PDF exports
+        │   └── <module_name>-service.ts    # Business logic services & multi-step operations
+        │
         ├── queries/                        # Read-only database queries (RSC)
         │   └── list-<module_name>.ts       # Paginated, filtered query
         │
@@ -78,7 +88,7 @@ src/
         │   └── <module_name>-create-modal.tsx# Modal wrapper handling ?action=new cleanup
         │
         └── views/                          # Page-level Server Component views (RSC)
-            └── <module_name>-list-view.tsx # Primary list view (pure RSC, no "use client")
+            └── <module_name>-list-view.tsx # Thin orchestrator view (pure RSC, no "use client")
 ```
 
 ---

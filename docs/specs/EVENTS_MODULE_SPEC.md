@@ -68,18 +68,29 @@ Projede katı dikey dilim izolasyonu (Vertical Slice Architecture), sıfır çek
      - Bu bileşenlerin ilk satırında `"use client";` bulunur.
      - `@heroui/react` kütüphanesi YALNIZCA bu `"use client"` bileşenleri içinde kullanılır.
 
-5. URL TABANLI MODAL PATTERNİ (`components/event-create-modal.tsx`):
+5. "SERVICES" VE "HELPERS" KATI AYRIMI (İNCE GÖRÜNÜM / THIN VIEWS PRENSİBİ):
+   - `views/*-view.tsx` dosyalarında ASLA inline hesaplama, matematiksel işlem veya karmaşık mantık yazma! View yalnızca orkestratördür.
+   - **`helpers/` (Saf Hesaplama ve Yardımcı Fonksiyonlar - Pure Functions):**
+     - Dış dünyaya yan etkisi olmayan deterministik hesaplamalar (örn: `calculateCapacityRatio`, `isEventPast`, `formatEventDateTime`).
+   - **`services/` (İş Mantığı & Dış Entegrasyonlar):**
+     - Çok adımlı iş süreçleri, dış API entegrasyonları, Excel veri hazırlama veya bildirim orkestrasyonu (örn: `event-export-service.ts`).
+   - **`queries/` (Salt-Okunur Veri Okuma):**
+     - Yalnızca Prisma `SELECT` sorguları.
+   - **`actions/` (Mutasyonlar):**
+     - Yalnızca `"use server"` form mutasyonları (`create`, `update`, `delete`).
+
+6. URL TABANLI MODAL PATTERNİ (`components/event-create-modal.tsx`):
    - Server Component (`event-list-view.tsx`) içindeki `+ Yeni Etkinlik` butonu `<Link href="/events?action=new">` linkidir.
    - Sayfada modalı açmak için `isModalOpen = searchParams.action === "new"` denetlenir ve `<EventCreateModal isOpen={isModalOpen} />` render edilir.
    - `EventCreateModal` bir `"use client"` bileşenidir; kapatıldığında `useRouter` ile URL'deki `action` parametresini temizler.
    - Böylece Server Component'ten Client Component'e fonksiyon geçilmez, inline server action ihtiyacı kalmaz.
 
-6. KRİTİK SSR HYDRATION VE REACT 19 SAFLIK KURALLARI:
+7. KRİTİK SSR HYDRATION VE REACT 19 SAFLIK KURALLARI:
    - Tablo satırları (`map`) içinde HeroUI `<Select>` KULLANMA! Bunun yerine stillendirilmiş native HTML `<select>` ve yanında Lucide `<ChevronDown>` kullan (SSR ID mismatch hatasını önler).
-   - Render esnasında `Date.now()` veya `new Date()` çağırma (`react-hooks/purity`). `isPast` gibi tarih karşılaştırmalarını `queries/list-events.ts` içinde yapıp `EventRow` nesnesine ekle.
+   - Render esnasında `Date.now()` veya `new Date()` çağırma (`react-hooks/purity`). `isPast` gibi tarih karşılaştırmalarını `queries/list-events.ts` veya `helpers/event-helpers.ts` içinde yapıp `EventRow` nesnesine ekle.
 
 ===============================================================================
-3. ÜRETMEN GEREKEN TÜM DOSYALAR (EKSİKSİZ KOD LİSTESİ - 22 DOSYA)
+3. ÜRETMEN GEREKEN TÜM DOSYALAR (EKSİKSİZ KOD LİSTESİ - 24 DOSYA)
 ================================================================================
 Lütfen bana her bir dosyanın TAM DOSYA YOLUNU ve EKSİKSİZ, ÇALIŞMAYA HAZIR KODUNU sırasıyla ver:
 
@@ -98,7 +109,7 @@ Lütfen bana her bir dosyanın TAM DOSYA YOLUNU ve EKSİKSİZ, ÇALIŞMAYA HAZIR
 7. `src/modules/events/index.ts`:
    - `moduleConfig`, `eventsPermissions` ve tipleri dışa aktar. KESİNLİKLE 'server-only' içermez.
 8. `src/modules/events/server.ts`:
-   - `import "server-only";`, sorgular, eylemler ve izinleri dışa aktar.
+   - `import "server-only";`, sorgular, eylemler, servisler ve izinleri dışa aktar.
 9. `src/modules/events/ui.ts`:
    - `EventListView`, `EventDetailView`, `EventTable`, `EventFormModal`, `EventCreateModal`, `AttendeeList` bileşenlerini dışa aktar.
 10. `src/modules/events/types.ts`:
@@ -107,25 +118,29 @@ Lütfen bana her bir dosyanın TAM DOSYA YOLUNU ve EKSİKSİZ, ÇALIŞMAYA HAZIR
     - Tür ve durum etiketleri (TR/DE), sıralama sabitleri, varsayılan sayfalama.
 12. `src/modules/events/schemas/event-schema.ts`:
     - Zod şemaları (`eventCreateSchema`, `eventUpdateSchema`, `attendeeAddSchema`).
-13. `src/modules/events/queries/list-events.ts`:
+13. `src/modules/events/helpers/event-helpers.ts`:
+    - Saf yardımcı fonksiyonlar: `calculateCapacityRatio(registered, capacity)`, `formatDateTimeTr(date)`, `formatDateRange(start, end)`.
+14. `src/modules/events/services/event-export-service.ts`:
+    - Excel ve raporlama için veri hazırlama / dışa aktarma iş mantığı servisi.
+15. `src/modules/events/queries/list-events.ts`:
     - `getDb()` ile filtrelenebilir (arama, tür, durum, yaklaşan/geçmiş), sıralanabilir sorgu fonksiyonu. Her item için `isPast: item.startDate < new Date()` hesapla.
-14. `src/modules/events/queries/get-event.ts`:
+16. `src/modules/events/queries/get-event.ts`:
     - `getDb()` ile tek bir etkinliğin detaylarını ve katılımcılarını getiren sorgu.
-15. `src/modules/events/actions/event-actions.ts`:
+17. `src/modules/events/actions/event-actions.ts`:
     - `"use server"` Server Actions: `createEventAction`, `updateEventAction`, `deleteEventAction`, `addAttendeeAction`, `updateAttendeeStatusAction` (`requirePermission` denetimiyle ve `getDb()` ile).
-16. `src/modules/events/components/event-form-modal.tsx`:
+18. `src/modules/events/components/event-form-modal.tsx`:
     - `"use client"` Yeni etkinlik ekleme ve düzenleme formu (HeroUI Modal, Input, Textarea, native select, form doğrulama).
-17. `src/modules/events/components/event-create-modal.tsx`:
+19. `src/modules/events/components/event-create-modal.tsx`:
     - `"use client"` URL'deki `?action=new` parametresini dinleyen ve modal kapandığında `useRouter` ile temizleyen sarmalayıcı bileşen.
-18. `src/modules/events/components/event-table.tsx`:
+20. `src/modules/events/components/event-table.tsx`:
     - `"use client"` `DataTablePagination` ile sayfalama yapan, satır içi düzenleme/silme destekleyen etkinlik tablosu.
-19. `src/modules/events/components/attendee-list.tsx`:
+21. `src/modules/events/components/attendee-list.tsx`:
     - `"use client"` Etkinlik detayında katılımcıları listeleyen, katıldı/gelmedi native select içeren interaktif tablo.
-20. `src/modules/events/views/event-list-view.tsx`:
-    - Asenkron Server Component (RSC). `"use client"` İÇERMEZ! `PageHeader` (actions'ta yalnızca `+ Yeni Etkinlik` linki), istatistik kartları, arama araç çubuğu, `<EventTable>` ve `<EventCreateModal>` render eder.
-21. `src/modules/events/views/event-detail-view.tsx`:
-    - Asenkron Server Component (RSC). `"use client"` İÇERMEZ! HeroUI import etmez, rozet ve kapasite çubuğu için saf Tailwind CSS kullanır. `<AttendeeList>` client component'ini render eder.
-22. `src/modules/events/page.tsx`:
+22. `src/modules/events/views/event-list-view.tsx`:
+    - Asenkron Server Component (RSC). `"use client"` İÇERMEZ! İnce orkestratör: `listEvents` sorgusunu çağırır; `PageHeader`, istatistik kartları, araç çubuğu, `<EventTable>` ve `<EventCreateModal>` bileşenlerini render eder.
+23. `src/modules/events/views/event-detail-view.tsx`:
+    - Asenkron Server Component (RSC). `"use client"` İÇERMEZ! İnce orkestratör: `getEventById` sorgusunu ve `calculateCapacityRatio` helper'ını çağırır. HeroUI import etmez; rozet ve bar için Tailwind kullanır. `<AttendeeList>` client component'ini render eder.
+24. `src/modules/events/page.tsx`:
     - Modülün ana Next.js Server Component sayfası (searchParams ile liste veya detay görünümünü render eder). NOT: `src/app` dizinine ASLA kod yazma; `pnpm module:sync` Next.js App Router köprüsünü otomatik oluşturur.
 
 Lütfen kodları placeholder veya "TODO" bırakmadan, projeye yapıştırıldığında doğrudan çalışacak şekilde eksiksiz üret.
