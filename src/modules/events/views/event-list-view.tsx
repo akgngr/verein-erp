@@ -1,11 +1,10 @@
-"use client";
 import Link from "next/link";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { CalendarDays, CalendarCheck, Users, Search, ChevronDown } from "lucide-react";
 import { listEvents } from "../queries/list-events";
 import { EventTable } from "../components/event-table";
-import { EventFormModal } from "../components/event-form-modal";
+import { EventCreateModal } from "../components/event-create-modal";
 import { EVENT_TYPES, EVENT_STATUSES } from "../constants";
 import type { EventType, EventStatus } from "../types";
 
@@ -152,12 +151,7 @@ export async function EventListView({ searchParams }: EventListViewProps) {
         />
       )}
 
-      <EventFormModal
-        isOpen={isModalOpen}
-        onClose={async () => {
-          "use server";
-        }}
-      />
+      <EventCreateModal isOpen={isModalOpen} />
     </div>
   );
 }

@@ -1,4 +1,5 @@
-import { EventListView, EventDetailView } from "./ui";
+import { EventListView } from "./views/event-list-view";
+import { EventDetailView } from "./views/event-detail-view";
 
 export const metadata = {
   title: "Etkinlikler — Verein ERP",

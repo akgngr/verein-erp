@@ -1,4 +1,3 @@
-"use client";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -9,7 +8,6 @@ import {
   ArrowLeft,
   Users,
 } from "lucide-react";
-import { Chip, Progress } from "@heroui/react";
 import { getEventById } from "../queries/get-event";
 import { AttendeeList } from "../components/attendee-list";
 import { EVENT_TYPES, EVENT_STATUSES } from "../constants";
@@ -56,12 +54,23 @@ export async function EventDetailView({ eventId }: EventDetailViewProps) {
           <div>
             <h1 className="text-2xl font-bold text-foreground">{event.title}</h1>
             <div className="flex items-center gap-2 mt-1.5">
-              <Chip size="sm" variant="flat">
+              <span className="inline-flex items-center rounded-medium bg-default-100 px-2.5 py-0.5 text-xs font-medium text-default-700">
                 {typeMeta?.labelTr ?? event.type}
-              </Chip>
-              <Chip size="sm" variant="dot" color={statusMeta?.variant ?? "default"}>
+              </span>
+              <span className="inline-flex items-center gap-1.5 rounded-medium bg-default-100 px-2.5 py-0.5 text-xs font-medium text-default-700">
+                <span
+                  className={`h-1.5 w-1.5 rounded-full ${
+                    statusMeta?.variant === "success"
+                      ? "bg-success"
+                      : statusMeta?.variant === "warning"
+                      ? "bg-warning"
+                      : statusMeta?.variant === "danger"
+                      ? "bg-danger"
+                      : "bg-default-400"
+                  }`}
+                />
                 {statusMeta?.labelTr ?? event.status}
-              </Chip>
+              </span>
             </div>
           </div>
         </div>
@@ -125,12 +134,21 @@ export async function EventDetailView({ eventId }: EventDetailViewProps) {
             </span>
           </div>
           {event.capacity && (
-            <Progress
-              size="sm"
-              value={capacityRatio}
-              color={capacityRatio >= 100 ? "danger" : "primary"}
+            <div
+              className="h-2 w-full overflow-hidden rounded-full bg-default-100"
+              role="progressbar"
+              aria-valuenow={capacityRatio}
+              aria-valuemin={0}
+              aria-valuemax={100}
               aria-label="Kapasite doluluğu"
-            />
+            >
+              <div
+                className={`h-full transition-all ${
+                  capacityRatio >= 100 ? "bg-danger" : "bg-primary"
+                }`}
+                style={{ width: `${capacityRatio}%` }}
+              />
+            </div>
           )}
         </div>
       </div>
