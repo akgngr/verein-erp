@@ -324,5 +324,11 @@
   },
   "nav": {
     "uyeler": "Üyeler"
+  },
+  "meta": {
+    "list": "Üyeler",
+    "types": "Üyelik türleri",
+    "dues": "Aidat raporu",
+    "import": "Üye içe aktar"
   }
 }

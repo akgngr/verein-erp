@@ -1,6 +1,10 @@
+import { getTranslations } from "next-intl/server";
 import { UsersListView } from "./ui";
 
-export const metadata = { title: "Kullanıcılar" };
+export async function generateMetadata() {
+  const t = await getTranslations("users.meta");
+  return { title: t("list") };
+}
 
 export default async function KullanicilarPage({
   searchParams,

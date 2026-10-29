@@ -1,9 +1,12 @@
-import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
 import { ReportsView } from "../../server";
 import { berlinToday } from "../../server";
 
-export const metadata: Metadata = { title: "Raporlar" };
+export async function generateMetadata() {
+  const t = await getTranslations("accounting.meta");
+  return { title: t("reports") };
+}
 
 /** Raporlar — ?sekme=e|k|p|y + filter.year + account + from/to (§ 6). */
 export default async function MuhasebeRaporlarPage({

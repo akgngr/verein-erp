@@ -4,5 +4,8 @@
   "password": "Passwort",
   "loginButton": "Anmelden",
   "logout": "Abmelden",
-  "mustChangePasswordBanner": "Passwort muss aktualisiert werden"
+  "mustChangePasswordBanner": "Passwort muss aktualisiert werden",
+  "meta": {
+    "profile": "Profil"
+  }
 }

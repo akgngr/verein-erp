@@ -51,8 +51,8 @@ export async function createMeetingAction(
 
       const meetingDate = parseDateOnly(input.meetingDate);
       if (!meetingDate) {
-        throw new ActionError("Toplantı tarihi geçersiz.", {
-          meetingDate: ["Geçerli bir toplantı tarihi girin."],
+        throw new ActionError("meetings.errors.invalidDate", {
+          meetingDate: ["meetings.validation.dateInvalid"],
         });
       }
       const year = berlinYear(meetingDate);
@@ -66,7 +66,7 @@ export async function createMeetingAction(
           select: { id: true },
         });
         if (!source) {
-          throw new ActionError("Kopyalanacak toplantı bulunamadı veya türü farklı.", {
+          throw new ActionError("meetings.errors.copySourceInvalid", {
             copyFromMeetingId: ["Geçerli bir önceki toplantı seçin."],
           });
         }
@@ -183,10 +183,10 @@ export async function updateMeetingAction(
     handler: async ({ input, user, audit }) => {
       const db = getDb();
       const meeting = await db.meeting.findFirst({ where: { id: input.id, deletedAt: null } });
-      if (!meeting) throw new ActionError("Toplantı bulunamadı.");
+      if (!meeting) throw new ActionError("meetings.errors.meetingNotFound");
 
       if (meeting.status !== "PLANNED" && meeting.status !== "HELD") {
-        throw new ActionError("Onaylanmış toplantı tutanağı düzenlenemez. Önce yeniden açın.");
+        throw new ActionError("meetings.errors.approvedLocked");
       }
 
       if (new Date(input.updatedAt).getTime() !== meeting.updatedAt.getTime()) {
@@ -197,8 +197,8 @@ export async function updateMeetingAction(
 
       const meetingDate = parseDateOnly(input.meetingDate);
       if (!meetingDate) {
-        throw new ActionError("Toplantı tarihi geçersiz.", {
-          meetingDate: ["Geçerli bir toplantı tarihi girin."],
+        throw new ActionError("meetings.errors.invalidDate", {
+          meetingDate: ["meetings.validation.dateInvalid"],
         });
       }
 
@@ -281,10 +281,10 @@ export async function deleteMeetingAction(
         select: { id: true, meetingNumber: true, status: true },
       });
       if (!meeting) {
-        throw new ActionError("Toplantı bulunamadı.");
+        throw new ActionError("meetings.errors.meetingNotFound");
       }
       if (meeting.status === "APPROVED") {
-        throw new ActionError("Onaylanmış toplantı silinemez. Önce yeniden açın.");
+        throw new ActionError("meetings.errors.approvedNoDelete");
       }
 
       await db.meeting.update({

@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { CalendarClock, ClipboardCheck, ListTodo, AlarmClock } from "lucide-react";
 import Link from "next/link";
 
@@ -8,30 +9,31 @@ import type { MeetingStats } from "../types";
  * görev listesi uygulanır (11. bölüm panel kartıyla aynı sayımlar).
  */
 export function StatsCards({ stats }: { stats: MeetingStats }) {
+  const t = useTranslations("meetings.stats");
   const cards = [
     {
-      label: "Planlanan toplantılar",
+      label: t("planned"),
       value: stats.plannedCount,
       href: stats.plannedCount > 0 ? "/toplantilar?filter.status=PLANNED" : null,
       icon: CalendarClock,
       tone: "text-primary",
     },
     {
-      label: "Onay bekleyen tutanaklar",
+      label: t("draftMinutes"),
       value: stats.draftMinutesCount,
       href: stats.draftMinutesCount > 0 ? "/toplantilar?filter.status=HELD" : null,
       icon: ClipboardCheck,
       tone: "text-secondary",
     },
     {
-      label: "Açık görevler",
+      label: t("openTasks"),
       value: stats.openActionItems,
       href: stats.openActionItems > 0 ? "/toplantilar/gorevler" : null,
       icon: ListTodo,
       tone: "text-success",
     },
     {
-      label: "Gecikmiş görevler",
+      label: t("overdueTasks"),
       value: stats.overdueActionItems,
       href:
         stats.overdueActionItems > 0

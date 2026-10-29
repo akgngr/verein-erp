@@ -1,8 +1,11 @@
-import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
 import { MemberSyncView } from "../../server";
 
-export const metadata: Metadata = { title: "Üyelik aktarımı" };
+export async function generateMetadata() {
+  const t = await getTranslations("accounting.meta");
+  return { title: t("memberSync") };
+}
 
 /** Üyelik aktarımı — ince sayfa (§ 6). */
 export default function MuhasebeUyelikAktarimiPage() {

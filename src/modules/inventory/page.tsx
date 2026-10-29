@@ -1,9 +1,10 @@
+import { getTranslations } from "next-intl/server";
 import { InventoryListView } from "./views/inventory-list-view";
 
-export const metadata = {
-  title: "Envanter — Verein ERP",
-  description: "Dernek demirbaş ve malzeme takibi.",
-};
+export async function generateMetadata() {
+  const t = await getTranslations("inventory.meta");
+  return { title: t("list") };
+}
 
 export default async function InventoryPage({
   searchParams,

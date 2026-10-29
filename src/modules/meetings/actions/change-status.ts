@@ -37,7 +37,7 @@ export async function changeMeetingStatusAction(
         },
       });
       if (!meeting) {
-        throw new ActionError("Toplantı bulunamadı.");
+        throw new ActionError("meetings.errors.meetingNotFound");
       }
 
       const required = assertTransitionAllowed(
@@ -64,8 +64,8 @@ export async function changeMeetingStatusAction(
       // yalnızca APPROVED → HELD'e izin verir, burada ikisini birleştiriyoruz.
       const isReopen = meeting.status === "APPROVED" && input.status === "HELD";
       if (isReopen && !input.reason) {
-        throw new ActionError("Yeniden açma gerekçesi zorunludur.", {
-          reason: ["Yeniden açma gerekçesi zorunludur."],
+        throw new ActionError("meetings.errors.reopenReasonRequired", {
+          reason: ["meetings.errors.reopenReasonRequired"],
         });
       }
 

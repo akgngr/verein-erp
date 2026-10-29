@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import {
   Button,
   Input,
@@ -16,7 +18,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { addAttendeeGuestAction, addAttendeeUsersAction } from "../actions/attendee-actions";
-import { ATTENDEE_ROLE_LABELS } from "../constants";
 
 /**
  * Katılımcı ekleme penceresi (7.3): kayıtlı kullanıcı (çoklu seçim) ya da
@@ -34,6 +35,9 @@ export function AttendeeAddModal({
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const tCommon = useTranslations("common");
+  const t = useTranslations("meetings.attendeeAdd");
+  const tRole = useTranslations("meetings.attendeeRole");
   const router = useRouter();
   const [tab, setTab] = useState<"user" | "guest">("user");
   const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
@@ -63,7 +67,7 @@ export function AttendeeAddModal({
       setError(result.error);
       return;
     }
-    addToast({ title: `${result.data.added} katılımcı eklendi`, color: "success" });
+    addToast({ title: t("addedCountToast", { count: result.data.added }), color: "success" });
     close();
     router.refresh();
   };
@@ -81,7 +85,7 @@ export function AttendeeAddModal({
       setError(result.error);
       return;
     }
-    addToast({ title: "Konuk eklendi", color: "success" });
+    addToast({ title: t("addedGuestToast"), color: "success" });
     close();
     router.refresh();
   };
@@ -89,7 +93,7 @@ export function AttendeeAddModal({
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
       <ModalContent>
-        <ModalHeader>Katılımcı ekle</ModalHeader>
+        <ModalHeader>{t("title")}</ModalHeader>
         <ModalBody>
           <div className="flex gap-2">
             <Button
@@ -98,7 +102,7 @@ export function AttendeeAddModal({
               color={tab === "user" ? "primary" : "default"}
               onPress={() => setTab("user")}
             >
-              Kayıtlı kullanıcı
+              {t("tabUsers")}
             </Button>
             <Button
               size="sm"
@@ -106,20 +110,20 @@ export function AttendeeAddModal({
               color={tab === "guest" ? "primary" : "default"}
               onPress={() => setTab("guest")}
             >
-              Konuk
+              {t("tabGuest")}
             </Button>
           </div>
 
           {tab === "user" ? (
             <>
               <Select
-                label="Kullanıcılar"
+                label={t("users")}
                 labelPlacement="outside"
                 selectionMode="multiple"
                 selectedKeys={selectedUsers}
                 onSelectionChange={(keys) => setSelectedUsers(new Set(keys as Set<string>))}
                 isRequired
-                description="Bir kullanıcı toplantıya bir kez eklenebilir."
+                description={t("usersDescription")}
               >
                 {userOptions.map((option) => (
                   <SelectItem key={option.id} textValue={option.label}>
@@ -128,14 +132,14 @@ export function AttendeeAddModal({
                 ))}
               </Select>
               <Select
-                label="Görev"
+                label={t("role")}
                 labelPlacement="outside"
                 selectedKeys={role}
                 onSelectionChange={(keys) => setRole(new Set(keys as Set<string>))}
               >
                 {(["MEMBER", "CHAIRPERSON", "SECRETARY"] as const).map((roleKey) => (
-                  <SelectItem key={roleKey} textValue={ATTENDEE_ROLE_LABELS[roleKey]}>
-                    {ATTENDEE_ROLE_LABELS[roleKey]}
+                  <SelectItem key={roleKey} textValue={tRole(roleKey)}>
+                    {tRole(roleKey)}
                   </SelectItem>
                 ))}
               </Select>
@@ -143,7 +147,7 @@ export function AttendeeAddModal({
           ) : (
             <>
               <Input
-                label="Konuk adı"
+                label={t("name")}
                 labelPlacement="outside"
                 value={guestName}
                 onValueChange={setGuestName}
@@ -152,14 +156,14 @@ export function AttendeeAddModal({
                 maxLength={120}
               />
               <Select
-                label="Görev"
+                label={t("role")}
                 labelPlacement="outside"
                 selectedKeys={guestRole}
                 onSelectionChange={(keys) => setGuestRole(new Set(keys as Set<string>))}
               >
                 {(["GUEST", "MEMBER"] as const).map((roleKey) => (
-                  <SelectItem key={roleKey} textValue={ATTENDEE_ROLE_LABELS[roleKey]}>
-                    {ATTENDEE_ROLE_LABELS[roleKey]}
+                  <SelectItem key={roleKey} textValue={tRole(roleKey)}>
+                    {tRole(roleKey)}
                   </SelectItem>
                 ))}
               </Select>
@@ -170,7 +174,7 @@ export function AttendeeAddModal({
         </ModalBody>
         <ModalFooter>
           <Button variant="light" onPress={close}>
-            Vazgeç
+            {tCommon("cancel")}
           </Button>
           {tab === "user" ? (
             <Button
@@ -179,7 +183,7 @@ export function AttendeeAddModal({
               onPress={submitUsers}
               isDisabled={selectedUsers.size === 0}
             >
-              Ekle
+              {t("add")}
             </Button>
           ) : (
             <Button
@@ -188,7 +192,7 @@ export function AttendeeAddModal({
               onPress={submitGuest}
               isDisabled={guestName.trim().length < 2}
             >
-              Ekle
+              {t("add")}
             </Button>
           )}
         </ModalFooter>

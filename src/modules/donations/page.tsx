@@ -1,6 +1,10 @@
+import { getTranslations } from "next-intl/server";
 import { DonationListView } from "./ui";
 
-export const metadata = { title: "Bağışlar" };
+export async function generateMetadata() {
+  const t = await getTranslations("donations.meta");
+  return { title: t("list") };
+}
 
 export default async function BagislarPage({
   searchParams,

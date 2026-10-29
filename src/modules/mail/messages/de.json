@@ -112,5 +112,9 @@
   "menu": {
     "settings": "Einstellungen",
     "logs": "Versandprotokoll"
+  },
+  "meta": {
+    "settings": "E-Mail-Einstellungen",
+    "logs": "E-Mail-Versandprotokoll"
   }
 }

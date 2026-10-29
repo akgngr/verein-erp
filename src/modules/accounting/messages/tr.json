@@ -318,5 +318,16 @@
   },
   "nav": {
     "muhasebe": "Muhasebe"
+  },
+  "meta": {
+    "list": "Muhasebe",
+    "create": "Yeni fiş",
+    "detail": "Fiş detayı",
+    "edit": "Fişi düzenle",
+    "reports": "Raporlar",
+    "budget": "Bütçe",
+    "yearClosing": "Yıl kapanışı",
+    "settings": "Muhasebe ayarları",
+    "memberSync": "Üyelik aktarımı"
   }
 }

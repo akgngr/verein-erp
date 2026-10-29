@@ -203,5 +203,12 @@
   },
   "nav": {
     "evrak": "Evrak Kayıt"
+  },
+  "meta": {
+    "list": "Evrak Kayıt",
+    "create": "Yeni evrak",
+    "detail": "Evrak detayı",
+    "edit": "Evrağı düzenle",
+    "categories": "Evrak kategorileri"
   }
 }

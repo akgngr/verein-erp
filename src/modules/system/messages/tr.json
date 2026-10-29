@@ -46,5 +46,9 @@
   "nav": {
     "ayarlar": "Ayarlar",
     "moduller": "Modül Yönetimi"
+  },
+  "meta": {
+    "settings": "Ayarlar",
+    "modules": "Modül yönetimi"
   }
 }

@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Link, addToast } from "@heroui/react";
 import { CheckCircle2, Circle, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -64,6 +66,7 @@ export function ActionItemTable({
   toolbarExtra?: React.ReactNode;
   canUpdate: boolean;
 }) {
+  const t = useTranslations("meetings.tasks");
   const router = useRouter();
   // KARAR: satır aksiyonu DataTable'ın kendi menüsünde koşar; tablo düzeyinde
   // bekleme göstergesi yoktur (paylaşılan bileşen davranışı korunur).
@@ -79,7 +82,7 @@ export function ActionItemTable({
       return;
     }
     addToast({
-      title: target === "DONE" ? "Görev tamamlandı olarak işaretlendi" : "Görev yeniden açıldı",
+      title: target === "DONE" ? t("doneToast") : t("reopenedToast"),
       color: "success",
     });
     router.refresh();
@@ -88,12 +91,12 @@ export function ActionItemTable({
   const columns: DataTableColumn<ActionItemRow>[] = [
     {
       key: "description",
-      label: "Görev",
+      label: t("colDescription"),
       render: (row) => <span className="line-clamp-2">{row.description}</span>,
     },
     {
       key: "meetingNumber",
-      label: "Toplantı",
+      label: t("colMeeting"),
       width: 190,
       render: (row) => (
         <Link href={`/toplantilar/${row.meetingId}`} size="sm">
@@ -103,13 +106,13 @@ export function ActionItemTable({
     },
     {
       key: "assigneeLabel",
-      label: "Sorumlu",
+      label: t("colAssignee"),
       width: 150,
       render: (row) => row.assigneeLabel ?? "-",
     },
     {
       key: "dueDate",
-      label: "Son tarih",
+      label: t("colDueDate"),
       sortable: true,
       width: 140,
       render: (row) => {
@@ -117,7 +120,7 @@ export function ActionItemTable({
         return row.dueDate ? (
           <span className={overdue ? "font-medium text-danger-600" : undefined}>
             {formatDate(row.dueDate)}
-            {overdue ? " (gecikmiş)" : ""}
+            {overdue ? t("overdueShort") : ""}
           </span>
         ) : (
           "-"
@@ -126,26 +129,26 @@ export function ActionItemTable({
     },
     {
       key: "status",
-      label: "Durum",
+      label: t("colStatus"),
       sortable: true,
       width: 120,
       render: (row) => <StatusBadge status={row.status} />,
     },
     {
       key: "decisionNumber",
-      label: "Karar No",
+      label: t("colDecision"),
       width: 100,
       render: (row) => row.decisionNumber ?? "-",
     },
   ];
 
   const rowActions = (row: ActionItemRow): DataTableRowAction[] => [
-    { key: "view", label: "Toplantıya git", icon: <Eye className="h-4 w-4" />, href: `/toplantilar/${row.meetingId}?sekme=gorevler` },
+    { key: "view", label: t("goToMeeting"), icon: <Eye className="h-4 w-4" />, href: `/toplantilar/${row.meetingId}?sekme=gorevler` },
     ...(canUpdate
       ? [
           {
             key: "toggle",
-            label: row.status === "DONE" ? "Yeniden aç" : "Tamamlandı olarak işaretle",
+            label: row.status === "DONE" ? t("reopenAction") : t("markDoneAction"),
             icon:
               row.status === "DONE" ? (
                 <Circle className="h-4 w-4" />
@@ -174,9 +177,9 @@ export function ActionItemTable({
       dateFilter={dateFilter}
       filterExtra={filterExtra}
       toolbarExtra={toolbarExtra}
-      searchPlaceholder="Görev, sorumlu, toplantı ara…"
+      searchPlaceholder={t("search")}
       rowActions={rowActions}
-      emptyMessage="Görev bulunamadı."
+      emptyMessage={t("listEmpty")}
     />
   );
 }

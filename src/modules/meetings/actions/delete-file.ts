@@ -33,7 +33,7 @@ export async function deleteMeetingFileAction(
           meeting: { select: { id: true, meetingNumber: true, status: true, deletedAt: true } },
         },
       });
-      if (!file) throw new ActionError("Dosya bulunamadı.");
+      if (!file) throw new ActionError("meetings.errors.fileNotFound");
 
       // KARAR: fileDelete kapsamı rolü de dikkate alır (APPROVED → yalnızca ADMIN).
       assertMeetingEditable(file.meeting, "fileDelete", user.role, meetingsPermissions);

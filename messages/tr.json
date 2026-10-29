@@ -566,11 +566,25 @@
       "yearClosing": "Yıl kapanışı",
       "settings": "Ayarlar",
       "export": "Excel'e aktar"
+    },
+    "meta": {
+      "list": "Muhasebe",
+      "create": "Yeni fiş",
+      "detail": "Fiş detayı",
+      "edit": "Fişi düzenle",
+      "reports": "Raporlar",
+      "budget": "Bütçe",
+      "yearClosing": "Yıl kapanışı",
+      "settings": "Muhasebe ayarları",
+      "memberSync": "Üyelik aktarımı"
     }
   },
   "audit": {
     "pageTitle": "Denetim Kaydı",
-    "pageDescription": "Sistemde gerçekleşen kimlik doğrulama ve veri işlemleri."
+    "pageDescription": "Sistemde gerçekleşen kimlik doğrulama ve veri işlemleri.",
+    "meta": {
+      "list": "Denetim Kaydı"
+    }
   },
   "auth": {
     "loginTitle": "Giriş Yap",
@@ -578,7 +592,10 @@
     "password": "Parola",
     "loginButton": "Giriş yap",
     "logout": "Çıkış yap",
-    "mustChangePasswordBanner": "Parolanızı güncellemeniz zorunludur"
+    "mustChangePasswordBanner": "Parolanızı güncellemeniz zorunludur",
+    "meta": {
+      "profile": "Profil"
+    }
   },
   "documents": {
     "pageTitle": "Evrak Kayıt",
@@ -782,6 +799,13 @@
     "menu": {
       "categories": "Kategoriler",
       "export": "Excel'e aktar"
+    },
+    "meta": {
+      "list": "Evrak Kayıt",
+      "create": "Yeni evrak",
+      "detail": "Evrak detayı",
+      "edit": "Evrağı düzenle",
+      "categories": "Evrak kategorileri"
     }
   },
   "donations": {
@@ -1041,7 +1065,8 @@
       "donorCreate": "Yeni bağışçı",
       "donorDetail": "Bağışçı detayı",
       "donorEdit": "Bağışçıyı düzenle",
-      "confirmations": "Bildirimler"
+      "confirmations": "Bildirimler",
+      "list": "Bağışlar"
     }
   },
   "events": {
@@ -1120,6 +1145,9 @@
     "menu": {
       "upcoming": "Yaklaşan etkinlikler",
       "past": "Geçmiş etkinlikler"
+    },
+    "meta": {
+      "list": "Etkinlikler"
     }
   },
   "inventory": {
@@ -1228,6 +1256,10 @@
     "menu": {
       "categories": "Kategoriler",
       "export": "Excel'e aktar"
+    },
+    "meta": {
+      "list": "Envanter",
+      "categories": "Envanter kategorileri"
     }
   },
   "mail": {
@@ -1341,6 +1373,10 @@
     "menu": {
       "settings": "Ayarlar",
       "logs": "Gönderim kayıtları"
+    },
+    "meta": {
+      "settings": "E-posta ayarları",
+      "logs": "E-posta gönderim kayıtları"
     }
   },
   "meetings": {
@@ -1412,7 +1448,9 @@
       "filterStatus": "Durum",
       "deletedToast": "Toplantı silindi: {number}",
       "deleteTitle": "Toplantı silinecek",
-      "deleteMessage": "{number} – {title} silinecek; listeden, aramadan, istatistiklerden ve panelden kaybolacak. Numarası yeniden kullanılmayacak. Devam edilsin mi?"
+      "deleteMessage": "{number} – {title} silinecek; listeden, aramadan, istatistiklerden ve panelden kaybolacak. Numarası yeniden kullanılmayacak. Devam edilsin mi?",
+      "deleteAction": "Toplantıyı sil",
+      "deleteNumberedMessage": "\"{number}\" numaralı toplantı silinecek. Silinen toplantı listelerde, aramada, istatistikte ve görev listesinde görünmez; numarası yeniden kullanılmaz. Onaylıyor musunuz?"
     },
     "filters": {
       "dateFrom": "Toplantı tarihi (başlangıç)",
@@ -1424,7 +1462,12 @@
       "dueFrom": "Son tarih (başlangıç)",
       "dueTo": "Son tarih (bitiş)",
       "mine": "Bana atananlar",
-      "overdue": "Süresi geçmişler"
+      "overdue": "Süresi geçmişler",
+      "customFilters": "Özel Filtreler",
+      "mineHint": "Yalnızca size atanan açık görevler",
+      "overdueHint": "Son teslim tarihi geçmiş görevler",
+      "meetingDate": "Toplantı tarihi",
+      "dueDate": "Son tarih"
     },
     "detail": {
       "approvedLine": "Onaylandı: {date} – {by}",
@@ -1449,7 +1492,19 @@
       "fieldDescription": "Açıklama",
       "quorumValue": "{required} katılımcı ({present} katıldı)",
       "fieldInvitationSentAt": "Davet gönderim tarihi (Einladung versandt am)",
-      "invitationLeadTime": "Davet süresi: {count} gün"
+      "invitationLeadTime": "Davet süresi: {count} gün",
+      "tabGeneralShort": "Genel",
+      "tabAgendaShort": "Gündem",
+      "tabAttendeesShort": "Katılımcılar",
+      "tabDecisionsShort": "Kararlar",
+      "tabTasksShort": "Görevler",
+      "tabFilesShort": "Ekler",
+      "approvedOn": "Onaylandı: {date} – {by}",
+      "recordedBy": "Kaydeden",
+      "createdAt": "Oluşturma",
+      "updatedAt": "Son güncelleme",
+      "notSpecified": "Belirtilmedi",
+      "quorumValueShort": "{required} katılımcı ({present} katıldı)"
     },
     "quorum": {
       "reached": "Toplantı yeter sayısı sağlandı ({present}/{required})",
@@ -1474,7 +1529,17 @@
       "reopenInfo": "Onay geri alınacak ve tutanak taslak (Yapıldı) durumuna dönecek. Bu işlem denetim kaydına gerekçesiyle yazılır.",
       "reasonLabel": "Gerekçe (zorunlu)",
       "reasonPlaceholder": "Örneğin: İmza eksikliği nedeniyle düzeltme gerekiyor.",
-      "reopenConfirm": "Yeniden aç"
+      "reopenConfirm": "Yeniden aç",
+      "changeTitle": "Durum değişikliği",
+      "reopenModalTitle": "Tutanak yeniden açma",
+      "reopenModalInfo": "Tutanağı düzenlemek için yeniden açıyorsunuz. Gerekçe zorunludur ve denetim kaydına işlenir.",
+      "reasonShort": "Gerekçe",
+      "confirmApprove": "\"{number}\" numaralı toplantı tutanağı onaylanacak. Onaydan sonra içerik kilitlenir; düzenlemek için yeniden açmanız gerekir. Onaylıyor musunuz?",
+      "confirmApproveNoQuorum": "Toplantı yeter sayısı sağlanmamış. Yine de onaylamak istiyor musunuz?",
+      "confirmReopen": "\"{number}\" numaralı tutanak yeniden açılacak ve düzenlenebilir duruma geçecektir. Devam edilsin mi?",
+      "confirmHeld": "\"{number}\" numaralı toplantı \"Yapıldı\" durumuna alınacak (tutanak taslağı). Devam edilsin mi?",
+      "confirmCancel": "\"{number}\" numaralı toplantı iptal edilecek. Devam edilsin mi?",
+      "confirmPlanned": "\"{number}\" numaralı toplantı \"Planlandı\" durumuna alınacak. Devam edilsin mi?"
     },
     "form": {
       "createTitle": "Yeni toplantı",
@@ -1506,7 +1571,12 @@
       "createdToast": "Toplantı oluşturuldu: {number}",
       "updatedToast": "Toplantı güncellendi.",
       "invitationSentAt": "Davet gönderim tarihi (Einladung versandt am)",
-      "invitationSentAtDescription": "Davetin üyelere gönderildiği tarih; toplantı tarihinden sonra olamaz."
+      "invitationSentAtDescription": "Davetin üyelere gönderildiği tarih; toplantı tarihinden sonra olamaz.",
+      "selectType": "Tür seçin",
+      "timePlaceholder": "SS:dd",
+      "createPageDescription": "Toplantı kaydı oluşturun; numara otomatik üretilir (TOP-<yıl>-<sıra>).",
+      "lockedApproved": "Onaylanmış toplantı tutanağı düzenlenemez. Önce yeniden açın.",
+      "lockedCancelled": "İptal edilmiş toplantı düzenlenemez. Önce 'Planlandı' durumuna alın."
     },
     "agenda": {
       "add": "Madde ekle",
@@ -1529,7 +1599,10 @@
       "plannedContent": "Planlanan içerik",
       "plannedContentDescription": "Maddenin görüşülmesi planlanan konular (isteğe bağlı)",
       "addedToast": "Gündem maddesi eklendi.",
-      "updatedToast": "Gündem maddesi güncellendi."
+      "updatedToast": "Gündem maddesi güncellendi.",
+      "contentHelp": "En fazla 2000 karakter.",
+      "deleteNamedMessage": "\"{title}\" maddesi silinecek; sıralama yeniden numaralanır. Bu maddeye bağlı kararlar silinmez, gündem bağlantıları boşalır. Onaylıyor musunuz?",
+      "deleteItemAria": "Gündem maddesini sil"
     },
     "decisions": {
       "add": "Karar ekle",
@@ -1552,7 +1625,16 @@
       "votesAbstain": "Çekimser oy",
       "votesHelp": "Oy alanlarının üçü de boş bırakılabilir; herhangi biri doldurulursa boş kalanlar 0 kabul edilir.",
       "addedToast": "Karar eklendi: {number}",
-      "updatedToast": "Karar güncellendi."
+      "updatedToast": "Karar güncellendi.",
+      "editTitleNumbered": "Kararı düzenle: {number}",
+      "textHelp": "En fazla 3000 karakter.",
+      "agendaHelp": "Boş bırakılırsa karar gündeme bağlanmaz.",
+      "noAgenda": "Bağlantı yok",
+      "votesForShort": "Kabul",
+      "votesAgainstShort": "Ret",
+      "votesAbstainShort": "Çekimser",
+      "deletedNumberedToast": "Karar silindi: {number}",
+      "deleteNumberedMessage": "\"{number}\" numaralı karar silinecek. Karar numarası yeniden kullanılmaz; bu karara bağlı görevlerin bağlantısı boşalır. Onaylıyor musunuz?"
     },
     "attendees": {
       "markAll": "Tümünü katıldı işaretle",
@@ -1574,7 +1656,14 @@
       "removeAria": "{name} adlı katılımcıyı çıkar",
       "removeTitle": "Katılımcı çıkarılacak",
       "removeMessage": "Katılımcı toplantıdan çıkarılacak. Devam edilsin mi?",
-      "removeConfirm": "Çıkar"
+      "removeConfirm": "Çıkar",
+      "addUser": "Kullanıcı ekle",
+      "guestName": "Konuk adı",
+      "addGuest": "Konuk ekle",
+      "source": "Kaynak",
+      "removedNamedToast": "Katılımcı çıkarıldı: {name}",
+      "markedToast": "{count} katılımcı 'Katıldı' olarak işaretlendi",
+      "namePlaceholder": "Ad Soyad"
     },
     "attendeeAdd": {
       "title": "Katılımcı ekle",
@@ -1593,7 +1682,11 @@
       "note": "Not",
       "notePlaceholder": "Örnek: Bağlantı çevrimiçi katılacak",
       "addUsers": "Kullanıcıları ekle",
-      "addGuest": "Konuğu ekle"
+      "addGuest": "Konuğu ekle",
+      "users": "Kullanıcılar",
+      "usersDescription": "Bir kullanıcı toplantıya bir kez eklenebilir.",
+      "addedCountToast": "{count} katılımcı eklendi",
+      "add": "Ekle"
     },
     "tasks": {
       "pageTitle": "Görevler",
@@ -1638,7 +1731,19 @@
       "colDecision": "Karar No",
       "search": "Görev, sorumlu, toplantı ara",
       "listEmpty": "Görev bulunamadı.",
-      "listAria": "Görev listesi"
+      "listAria": "Görev listesi",
+      "descriptionHelp": "En fazla 1000 karakter.",
+      "assigneeUserLabel": "Sorumlu (kullanıcı)",
+      "assigneeUserHelp": "Seçilirse serbest metin yok sayılır.",
+      "assigneeFreeLabel": "Sorumlu (serbest ad)",
+      "assigneeFreeHelp": "Dış kişi adı yazılabilir.",
+      "noAssigneeOption": "Atanmadı",
+      "noDecision": "Bağlantı yok",
+      "overdueShort": " (gecikmiş)",
+      "unassigned": "Sorumlu atanmadı",
+      "decisionLine": "Karar: {number}",
+      "deleteNamedMessage": "\"{description}\" görevi silinecek. Onaylıyor musunuz?",
+      "listDescription": "Tüm toplantılardan gelen görevlerin takibi; varsayılan görünüm yalnızca açık görevlerdir."
     },
     "discussion": {
       "title": "Görüşmeler",
@@ -1651,7 +1756,12 @@
       "empty": "Görüşme metni girilmemiş.",
       "edit": "Düzenle",
       "write": "Metin yaz",
-      "savedToast": "Görüşme metni kaydedildi."
+      "savedToast": "Görüşme metni kaydedildi.",
+      "label": "Görüşmeler:",
+      "emptyNote": "Henüz görüşme notu girilmemiş.",
+      "add": "Görüşme ekle",
+      "fieldLabel": "Görüşmeler (tutanak metni)",
+      "fieldHelp": "En fazla 10000 karakter; satır sonları korunur."
     },
     "files": {
       "maxFilesToast": "Toplantı başına en fazla {count} dosya eklenebilir.",
@@ -1668,10 +1778,81 @@
       "downloadAria": "{name} indir",
       "deleteAria": "{name} sil",
       "deleteTitle": "Dosya silinecek",
-      "deleteMessage": "Dosya listeden kaldırılacak; diskteki kopya korunur. Devam edilsin mi?"
+      "deleteMessage": "Dosya listeden kaldırılacak; diskteki kopya korunur. Devam edilsin mi?",
+      "uploadedCountToast": "{count} dosya yüklendi",
+      "uploading": "Yükleniyor…",
+      "emptyMeeting": "Bu toplantıya henüz dosya eklenmemiş.",
+      "download": "İndir",
+      "preview": "Önizle",
+      "deleteAction": "Dosyayı sil",
+      "deleteNamedAria": "{name} dosyasını sil",
+      "deleteNamedMessage": "\"{name}\" dosyası toplantıdan kaldırılacak. Diskteki dosya korunur. Onaylıyor musunuz?",
+      "limitReached": "En fazla {count} dosya eklenebilir.",
+      "dropOrClick": "Dosyaları buraya sürükleyin ya da seçmek için tıklayın",
+      "rulesLine": "İzinli türler: {types} — Dosya başına en fazla {maxMb} MB — Toplantı başına en fazla {maxFiles} dosya"
     },
     "menu": {
       "tasks": "Görevler"
+    },
+    "errors": {
+      "meetingNotFound": "Toplantı bulunamadı.",
+      "decisionNotFound": "Karar bulunamadı.",
+      "assigneeNotFound": "Sorumlu kullanıcı bulunamadı veya pasif durumda.",
+      "taskNotFound": "Görev bulunamadı.",
+      "agendaNotFound": "Gündem maddesi bulunamadı.",
+      "agendaCannotMove": "Bu madde bu yönde taşınamaz.",
+      "userNotFound": "Seçilen kullanıcı bulunamadı veya pasif durumda.",
+      "chairExists": "Bu toplantıda zaten bir başkan var.",
+      "secretaryExists": "Bu toplantıda zaten bir sekreter var.",
+      "usersAlreadyAdded": "Seçilen kullanıcılar bu toplantıda zaten mevcut.",
+      "attendeeNotFound": "Katılımcı bulunamadı.",
+      "reopenReasonRequired": "Yeniden açma gerekçesi zorunludur.",
+      "fileNotFound": "Dosya bulunamadı.",
+      "invalidDate": "Toplantı tarihi geçersiz.",
+      "copySourceInvalid": "Kopyalanacak toplantı bulunamadı veya türü farklı.",
+      "approvedLocked": "Onaylanmış toplantı tutanağı düzenlenemez. Önce yeniden açın.",
+      "approvedNoDelete": "Onaylanmış toplantı silinemez. Önce yeniden açın.",
+      "approvedFileAdminOnly": "Onaylanmış toplantının dosyasını yalnızca yönetici silebilir.",
+      "transitionNotAllowed": "Bu durum değişikliğine izin verilmiyor.",
+      "forbidden": "Bu işlem için yetkiniz yok."
+    },
+    "validation": {
+      "taskMin": "Görev açıklaması en az 3 karakter olmalıdır.",
+      "taskMax": "Görev açıklaması en fazla 1000 karakter olabilir.",
+      "assigneeMin": "Sorumlu adı en az 2 karakter olmalıdır.",
+      "assigneeMax": "Sorumlu adı en fazla 120 karakter olabilir.",
+      "dueDateInvalid": "Geçerli bir son tarih girin.",
+      "agendaMin": "Gündem maddesi en az 2 karakter olmalıdır.",
+      "agendaMax": "Gündem maddesi en fazla 200 karakter olabilir.",
+      "plannedMax": "Planlanan içerik en fazla 2000 karakter olabilir.",
+      "discussionMax": "Görüşme metni en fazla 10000 karakter olabilir.",
+      "selectUser": "En az bir kullanıcı seçin.",
+      "guestMin": "Konuk adı en az 2 karakter olmalıdır.",
+      "guestMax": "Konuk adı en fazla 120 karakter olabilir.",
+      "noteMax": "Not en fazla 200 karakter olabilir.",
+      "reasonMin": "Gerekçe en az 5 karakter olmalıdır.",
+      "reasonMax": "Gerekçe en fazla 500 karakter olabilir.",
+      "votesRange": "Oy sayısı 0-1000 arasında olmalıdır.",
+      "decisionMin": "Karar metni en az 3 karakter olmalıdır.",
+      "decisionMax": "Karar metni en fazla 3000 karakter olabilir.",
+      "titleMin": "Başlık en az 3 karakter olmalıdır.",
+      "titleMax": "Başlık en fazla 200 karakter olabilir.",
+      "dateRequired": "Toplantı tarihi zorunludur.",
+      "dateInvalid": "Geçerli bir toplantı tarihi girin.",
+      "timeFormat": "Saat biçimi SS:dd olmalıdır.",
+      "locationMax": "Yer en fazla 200 karakter olabilir.",
+      "quorumMin": "Yeter sayısı en az 1 olabilir.",
+      "quorumMax": "Yeter sayısı en fazla 500 olabilir.",
+      "descriptionMax": "Açıklama en fazla 2000 karakter olabilir.",
+      "endNeedsStart": "Bitiş saati girmek için başlangıç saati zorunludur.",
+      "endAfterStart": "Bitiş saati başlangıç saatinden sonra olmalıdır."
+    },
+    "meta": {
+      "list": "Toplantılar",
+      "tasks": "Toplantı görevleri",
+      "create": "Yeni toplantı",
+      "detail": "Toplantı detayı",
+      "edit": "Toplantıyı düzenle"
     }
   },
   "members": {
@@ -1997,6 +2178,12 @@
       "types": "Üyelik türleri",
       "import": "İçe aktar",
       "export": "Excel'e aktar"
+    },
+    "meta": {
+      "list": "Üyeler",
+      "types": "Üyelik türleri",
+      "dues": "Aidat raporu",
+      "import": "Üye içe aktar"
     }
   },
   "organization": {
@@ -2088,6 +2275,10 @@
       "message": "\"{label}\" modül klasörü ve tüm dosyaları kalıcı olarak silinecek. Bu işlem geri alınamaz. Onaylıyor musunuz?",
       "confirm": "Sil",
       "successToast": "{label} modülü başarıyla silindi."
+    },
+    "meta": {
+      "settings": "Ayarlar",
+      "modules": "Modül yönetimi"
     }
   },
   "users": {
@@ -2098,6 +2289,11 @@
     "createDescription": "Sisteme yeni bir kullanıcı ekleyin. Kullanıcı ilk girişte parolasını değiştirmeye zorlanır.",
     "editTitle": "Kullanıcıyı Düzenle",
     "notFoundTitle": "Kullanıcı bulunamadı",
-    "notFoundDescription": "Kayıt silinmiş olabilir."
+    "notFoundDescription": "Kayıt silinmiş olabilir.",
+    "meta": {
+      "list": "Kullanıcılar",
+      "create": "Yeni kullanıcı",
+      "edit": "Kullanıcıyı düzenle"
+    }
   }
 }

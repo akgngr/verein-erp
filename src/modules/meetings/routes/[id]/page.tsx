@@ -1,6 +1,10 @@
+import { getTranslations } from "next-intl/server";
 import { MeetingDetailView } from "../../ui";
 
-export const metadata = { title: "Toplantı detayı" };
+export async function generateMetadata() {
+  const t = await getTranslations("meetings.meta");
+  return { title: t("detail") };
+}
 
 /**
  * Toplantı detayı (7.3) — ince rota: ?sekme= sekme, ?gundem= karar önden

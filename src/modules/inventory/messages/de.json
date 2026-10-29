@@ -107,5 +107,9 @@
   "menu": {
     "categories": "Kategorien",
     "export": "Excel-Export"
+  },
+  "meta": {
+    "list": "Inventar",
+    "categories": "Inventarkategorien"
   }
 }

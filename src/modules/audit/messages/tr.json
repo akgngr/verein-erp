@@ -3,5 +3,8 @@
   "pageDescription": "Sistemde gerçekleşen kimlik doğrulama ve veri işlemleri.",
   "nav": {
     "denetimKaydi": "Denetim Kaydı"
+  },
+  "meta": {
+    "list": "Denetim Kaydı"
   }
 }

@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { requirePermission, ForbiddenError } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
@@ -13,6 +14,7 @@ import { MeetingForm } from "../components/meeting-form";
  * küçük veri kümesi (son 10) için basit ve güvenli yol budur.
  */
 export async function MeetingCreateView() {
+  const t = await getTranslations("meetings.form");
   try {
     await requirePermission(meetingsPermissions, "create");
   } catch (error) {
@@ -32,8 +34,8 @@ export async function MeetingCreateView() {
   return (
     <div>
       <PageHeader
-        title="Yeni toplantı"
-        description="Toplantı kaydı oluşturun; numara otomatik üretilir (TOP-<yıl>-<sıra>)."
+        title={t("createTitle")}
+        description={t("createPageDescription")}
       />
       <MeetingForm mode="create" copySourcesByType={copySourcesByType} />
     </div>

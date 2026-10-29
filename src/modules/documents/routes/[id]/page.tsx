@@ -1,6 +1,10 @@
+import { getTranslations } from "next-intl/server";
 import { DocumentDetailView } from "../../ui";
 
-export const metadata = { title: "Evrak Detayı" };
+export async function generateMetadata() {
+  const t = await getTranslations("documents.meta");
+  return { title: t("detail") };
+}
 
 /** Evrak detayı — ince rota: id'yi view'a iletir. */
 export default async function EvrakDetayPage({

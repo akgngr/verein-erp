@@ -1,6 +1,10 @@
+import { getTranslations } from "next-intl/server";
 import { UserCreateView } from "../../ui";
 
-export const metadata = { title: "Yeni Kullanıcı" };
+export async function generateMetadata() {
+  const t = await getTranslations("users.meta");
+  return { title: t("create") };
+}
 
 export default function YeniKullaniciPage() {
   return <UserCreateView />;

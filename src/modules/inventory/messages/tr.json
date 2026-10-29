@@ -107,5 +107,9 @@
   "menu": {
     "categories": "Kategoriler",
     "export": "Excel'e aktar"
+  },
+  "meta": {
+    "list": "Envanter",
+    "categories": "Envanter kategorileri"
   }
 }

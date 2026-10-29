@@ -1,8 +1,11 @@
-import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
 import { AccountingSetupView } from "../../server";
 
-export const metadata: Metadata = { title: "Muhasebe ayarları" };
+export async function generateMetadata() {
+  const t = await getTranslations("accounting.meta");
+  return { title: t("settings") };
+}
 
 /** Ayarlar — ?sekme=hesaplar|kategoriler|projeler (§ 6). */
 export default async function MuhasebeAyarlarPage({

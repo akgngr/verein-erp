@@ -1,6 +1,10 @@
+import { getTranslations } from "next-intl/server";
 import { DocumentCreateView } from "../../ui";
 
-export const metadata = { title: "Yeni Evrak" };
+export async function generateMetadata() {
+  const t = await getTranslations("documents.meta");
+  return { title: t("create") };
+}
 
 /** Yeni evrak — ince rota: yon parametresini view'a iletir. */
 export default async function YeniEvrakPage({

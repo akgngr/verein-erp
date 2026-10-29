@@ -12,7 +12,7 @@ export type EditScope = "content" | "actionStatus" | "files" | "fileDelete";
 
 /** Onaylanmış toplantı için standart kilit hatası (5. bölüm md. 4). */
 export function lockedMeetingError(): ActionError {
-  return new ActionError("Onaylanmış toplantı tutanağı düzenlenemez. Önce yeniden açın.");
+  return new ActionError("meetings.errors.approvedLocked");
 }
 
 /**
@@ -30,7 +30,7 @@ export function assertMeetingEditable(
   definition: PermissionDefinition,
 ): void {
   if (meeting.deletedAt) {
-    throw new ActionError("Toplantı bulunamadı.");
+    throw new ActionError("meetings.errors.meetingNotFound");
   }
 
   switch (scope) {
@@ -44,7 +44,7 @@ export function assertMeetingEditable(
       return;
     case "fileDelete":
       if (meeting.status === "APPROVED" && !can(role, definition, "delete")) {
-        throw new ActionError("Onaylanmış toplantının dosyasını yalnızca yönetici silebilir.");
+        throw new ActionError("meetings.errors.approvedFileAdminOnly");
       }
       return;
   }
@@ -62,10 +62,10 @@ export function assertTransitionAllowed(
 ): "update" | "approve" {
   const required = MEETING_STATUS_TRANSITIONS[from]?.[to];
   if (!required) {
-    throw new ActionError("Bu durum değişikliğine izin verilmiyor.");
+    throw new ActionError("meetings.errors.transitionNotAllowed");
   }
   if (!can(role, definition, required)) {
-    throw new ActionError("Bu işlem için yetkiniz yok.");
+    throw new ActionError("meetings.errors.forbidden");
   }
   return required;
 }

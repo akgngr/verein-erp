@@ -74,5 +74,8 @@
   "menu": {
     "upcoming": "Bevorstehende Veranstaltungen",
     "past": "Vergangene Veranstaltungen"
+  },
+  "meta": {
+    "list": "Veranstaltungen"
   }
 }

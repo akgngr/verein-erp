@@ -1,8 +1,11 @@
-import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
 import { AccountingCreateView } from "../../server";
 
-export const metadata: Metadata = { title: "Yeni fiş" };
+export async function generateMetadata() {
+  const t = await getTranslations("accounting.meta");
+  return { title: t("create") };
+}
 
 /** Yeni fiş — ?tur=gelir|gider|virman (§ 6). */
 export default async function MuhasebeYeniPage({

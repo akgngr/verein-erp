@@ -4,5 +4,8 @@
   "password": "Parola",
   "loginButton": "Giriş yap",
   "logout": "Çıkış yap",
-  "mustChangePasswordBanner": "Parolanızı güncellemeniz zorunludur"
+  "mustChangePasswordBanner": "Parolanızı güncellemeniz zorunludur",
+  "meta": {
+    "profile": "Profil"
+  }
 }

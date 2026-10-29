@@ -1,6 +1,10 @@
+import { getTranslations } from "next-intl/server";
 import { UserEditView } from "../../ui";
 
-export const metadata = { title: "Kullanıcıyı Düzenle" };
+export async function generateMetadata() {
+  const t = await getTranslations("users.meta");
+  return { title: t("edit") };
+}
 
 export default async function KullaniciDuzenlePage({
   params,

@@ -25,32 +25,32 @@ const baseFields = {
   title: z
     .string()
     .trim()
-    .min(3, "Başlık en az 3 karakter olmalıdır.")
-    .max(200, "Başlık en fazla 200 karakter olabilir."),
+    .min(3, "meetings.validation.titleMin")
+    .max(200, "meetings.validation.titleMax"),
   meetingDate: z
     .string()
     .trim()
-    .min(1, "Toplantı tarihi zorunludur.")
-    .regex(DATE_ONLY, "Geçerli bir toplantı tarihi girin."),
+    .min(1, "meetings.validation.dateRequired")
+    .regex(DATE_ONLY, "meetings.validation.dateInvalid"),
   startTime: emptyToNull(
-    z.string().trim().regex(TIME_HH_MM, "Saat biçimi SS:dd olmalıdır.").nullable(),
+    z.string().trim().regex(TIME_HH_MM, "meetings.validation.timeFormat").nullable(),
   ),
   endTime: emptyToNull(
-    z.string().trim().regex(TIME_HH_MM, "Saat biçimi SS:dd olmalıdır.").nullable(),
+    z.string().trim().regex(TIME_HH_MM, "meetings.validation.timeFormat").nullable(),
   ),
   location: emptyToNull(
-    z.string().trim().max(200, "Yer en fazla 200 karakter olabilir.").nullable(),
+    z.string().trim().max(200, "meetings.validation.locationMax").nullable(),
   ),
   quorumRequired: emptyToNull(
     z.coerce
       .number()
       .int("Yeter sayısı tam sayı olmalıdır.")
-      .min(1, "Yeter sayısı en az 1 olabilir.")
-      .max(500, "Yeter sayısı en fazla 500 olabilir.")
+      .min(1, "meetings.validation.quorumMin")
+      .max(500, "meetings.validation.quorumMax")
       .nullable(),
   ),
   description: emptyToNull(
-    z.string().trim().max(2000, "Açıklama en fazla 2000 karakter olabilir.").nullable(),
+    z.string().trim().max(2000, "meetings.validation.descriptionMax").nullable(),
   ),
 };
 
@@ -63,7 +63,7 @@ function refineTimeOrder<Data extends { startTime: string | null; endTime: strin
     ctx.addIssue({
       code: "custom",
       path: ["endTime"],
-      message: "Bitiş saati girmek için başlangıç saati zorunludur.",
+      message: "meetings.validation.endNeedsStart",
     });
     return;
   }
@@ -71,7 +71,7 @@ function refineTimeOrder<Data extends { startTime: string | null; endTime: strin
     ctx.addIssue({
       code: "custom",
       path: ["endTime"],
-      message: "Bitiş saati başlangıç saatinden sonra olmalıdır.",
+      message: "meetings.validation.endAfterStart",
     });
   }
 }

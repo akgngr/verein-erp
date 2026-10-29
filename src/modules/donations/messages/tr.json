@@ -258,6 +258,7 @@
     "donorCreate": "Yeni bağışçı",
     "donorDetail": "Bağışçı detayı",
     "donorEdit": "Bağışçıyı düzenle",
-    "confirmations": "Bildirimler"
+    "confirmations": "Bildirimler",
+    "list": "Bağışlar"
   }
 }

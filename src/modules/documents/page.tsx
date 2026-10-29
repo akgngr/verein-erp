@@ -1,6 +1,10 @@
+import { getTranslations } from "next-intl/server";
 import { DocumentListView } from "./ui";
 
-export const metadata = { title: "Evrak Kayıt" };
+export async function generateMetadata() {
+  const t = await getTranslations("documents.meta");
+  return { title: t("list") };
+}
 
 /** Evrak listesi — ince rota (3.4): yalnızca searchParams'ı view'a iletir. */
 export default async function EvrakPage({

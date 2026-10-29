@@ -324,5 +324,11 @@
   },
   "nav": {
     "uyeler": "Mitglieder"
+  },
+  "meta": {
+    "list": "Mitglieder",
+    "types": "Mitgliedsarten",
+    "dues": "Beitragsbericht",
+    "import": "Mitglieder importieren"
   }
 }

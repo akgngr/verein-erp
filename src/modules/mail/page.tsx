@@ -1,9 +1,10 @@
+import { getTranslations } from "next-intl/server";
 import { MailSettingsView } from "./views/mail-settings-view";
 
-export const metadata = {
-  title: "E-posta Ayarları — Verein ERP",
-  description: "SMTP ayarları, bağlantı doğrulama ve test e-postası.",
-};
+export async function generateMetadata() {
+  const t = await getTranslations("mail.meta");
+  return { title: t("settings") };
+}
 
 export default async function MailPage({
   searchParams,

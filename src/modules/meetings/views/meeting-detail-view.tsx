@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { FileText, Pencil } from "lucide-react";
 import { notFound } from "next/navigation";
 
@@ -48,6 +49,10 @@ export async function MeetingDetailView({
   tabParam?: string;
   agendaPreset?: string;
 }) {
+  const tStatus = await getTranslations("meetings.status");
+  const tType = await getTranslations("meetings.type");
+  const tCommon = await getTranslations("common");
+  const t = await getTranslations("meetings.detail");
   let user;
   try {
     user = await requirePermission(meetingsPermissions, "view");
@@ -74,12 +79,12 @@ export async function MeetingDetailView({
   ]);
 
   const tabs: { key: TabKey; label: string; badge?: number }[] = [
-    { key: "genel", label: "Genel" },
-    { key: "gundem", label: "Gündem", badge: meeting.agendaItems.length },
-    { key: "katilimcilar", label: "Katılımcılar", badge: meeting.attendees.length },
-    { key: "kararlar", label: "Kararlar", badge: meeting.decisions.length },
-    { key: "gorevler", label: "Görevler", badge: meeting.actionItems.filter((item) => item.status === "OPEN").length },
-    { key: "ekler", label: "Ekler", badge: meeting.files.length },
+    { key: "genel", label: t("tabGeneralShort") },
+    { key: "gundem", label: t("tabAgendaShort"), badge: meeting.agendaItems.length },
+    { key: "katilimcilar", label: t("tabAttendeesShort"), badge: meeting.attendees.length },
+    { key: "kararlar", label: t("tabDecisionsShort"), badge: meeting.decisions.length },
+    { key: "gorevler", label: t("tabTasksShort"), badge: meeting.actionItems.filter((item) => item.status === "OPEN").length },
+    { key: "ekler", label: t("tabFilesShort"), badge: meeting.files.length },
   ];
 
   const timeText =
@@ -91,7 +96,7 @@ export async function MeetingDetailView({
     <div>
       <PageHeader
         title={`${meeting.meetingNumber} — ${meeting.title}`}
-        description={`${MEETING_TYPE_LABELS[meeting.type]} · ${formatDate(meeting.meetingDate)}${meeting.startTime ? ` · ${timeText}` : ""}${meeting.location ? ` · ${meeting.location}` : ""}`}
+        description={`${tType(meeting.type)} · ${formatDate(meeting.meetingDate)}${meeting.startTime ? ` · ${timeText}` : ""}${meeting.location ? ` · ${meeting.location}` : ""}`}
         actions={
           <>
             {canUpdate && contentEditable ? (
@@ -101,7 +106,7 @@ export async function MeetingDetailView({
                 variant="bordered"
                 startIcon={<Pencil className="h-4 w-4" />}
               >
-                Düzenle
+                {tCommon("edit")}
               </LinkButton>
             ) : null}
             <StatusMenu
@@ -135,10 +140,10 @@ export async function MeetingDetailView({
         <StatusBadge status={meeting.status} />
         <TypeBadge type={meeting.type} />
         {meeting.status !== "APPROVED" ? (
-          <span className="text-tiny text-default-400">Tutanak taslak durumundadır.</span>
+          <span className="text-tiny text-default-400">{t("draftNote")}</span>
         ) : (
           <span className="text-tiny text-success-600">
-            Onaylandı: {formatDate(meeting.approvedAt)} – {meeting.approvedByLabel ?? ""}
+            {t("approvedOn", { date: formatDate(meeting.approvedAt), by: meeting.approvedByLabel ?? "" })}
           </span>
         )}
       </div>
@@ -169,27 +174,27 @@ export async function MeetingDetailView({
         <div className="flex max-w-3xl flex-col gap-4">
           <QuorumBanner quorum={meeting.quorum} />
           <dl className="grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2">
-            <InfoItem label="Toplantı No" value={meeting.meetingNumber} />
-            <InfoItem label="Türü" value={MEETING_TYPE_LABELS[meeting.type]} />
-            <InfoItem label="Durum" value={MEETING_STATUS_LABELS[meeting.status]} />
-            <InfoItem label="Tarih" value={formatDate(meeting.meetingDate)} />
-            <InfoItem label="Saat" value={timeText} />
-            <InfoItem label="Yer" value={meeting.location ?? "-"} />
+            <InfoItem label={t("fieldNumber")} value={meeting.meetingNumber} />
+            <InfoItem label={t("fieldType")} value={tType(meeting.type)} />
+            <InfoItem label={t("fieldStatus")} value={tStatus(meeting.status)} />
+            <InfoItem label={t("fieldDate")} value={formatDate(meeting.meetingDate)} />
+            <InfoItem label={t("fieldTime")} value={timeText} />
+            <InfoItem label={t("fieldLocation")} value={meeting.location ?? "-"} />
             <InfoItem
-              label="Yeter sayısı"
+              label={t("fieldQuorum")}
               value={
                 meeting.quorumRequired !== null
-                  ? `${meeting.quorumRequired} katılımcı (${meeting.quorum.presentCount} katıldı)`
-                  : "Belirtilmedi"
+                  ? t("quorumValueShort", { required: meeting.quorumRequired, present: meeting.quorum.presentCount })
+                  : t("notSpecified")
               }
             />
-            <InfoItem label="Kaydeden" value={meeting.createdByLabel} />
-            <InfoItem label="Oluşturma" value={formatDateTime(meeting.createdAt)} />
-            <InfoItem label="Son güncelleme" value={formatDateTime(meeting.updatedAt)} />
+            <InfoItem label={t("recordedBy")} value={meeting.createdByLabel} />
+            <InfoItem label={t("createdAt")} value={formatDateTime(meeting.createdAt)} />
+            <InfoItem label={t("updatedAt")} value={formatDateTime(meeting.updatedAt)} />
           </dl>
           {meeting.description ? (
             <div>
-              <p className="text-tiny font-medium text-default-500">Açıklama</p>
+              <p className="text-tiny font-medium text-default-500">{t("fieldDescription")}</p>
               <p className="whitespace-pre-wrap text-small">{meeting.description}</p>
             </div>
           ) : null}

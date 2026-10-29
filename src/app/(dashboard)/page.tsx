@@ -14,7 +14,10 @@ import { can } from "@/shared/permissions/define";
 import { formatDate } from "@/shared/utils";
 import { cn } from "@/shared/utils";
 
-export const metadata = { title: "Panel" };
+export async function generateMetadata() {
+  const t = await getTranslations("nav");
+  return { title: t("panel") };
+}
 
 type DetailItem = { label: string; value: string | number; danger?: boolean };
 

@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import type { QuorumInfo } from "../types";
 
 /**
@@ -5,6 +6,7 @@ import type { QuorumInfo } from "../types";
  * gösterilmez; ulaşıldığında yeşil, ulaşılamadığında amber renk.
  */
 export function QuorumBanner({ quorum }: { quorum: QuorumInfo }) {
+  const t = useTranslations("meetings.quorum");
   if (quorum.required === null || quorum.reached === null) return null;
 
   const reached = quorum.reached;
@@ -18,8 +20,8 @@ export function QuorumBanner({ quorum }: { quorum: QuorumInfo }) {
       }`}
     >
       {reached
-        ? `Toplantı yeter sayısı sağlandı (${quorum.presentCount}/${quorum.required})`
-        : `Toplantı yeter sayısı sağlanmadı (${quorum.presentCount}/${quorum.required})`}
+        ? t("reached", { present: quorum.presentCount, required: quorum.required })
+        : t("notReached", { present: quorum.presentCount, required: quorum.required })}
     </div>
   );
 }

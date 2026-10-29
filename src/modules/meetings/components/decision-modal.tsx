@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import {
   Button,
   Input,
@@ -20,9 +22,7 @@ import { addDecisionAction, updateDecisionAction } from "../actions/decision-act
 import { DECISION_RESULT_LABELS } from "../constants";
 import type { DecisionItem } from "../types";
 
-const RESULT_OPTIONS = (
-  Object.keys(DECISION_RESULT_LABELS) as Array<keyof typeof DECISION_RESULT_LABELS>
-).map((result) => ({ value: result, label: DECISION_RESULT_LABELS[result] }));
+const RESULT_KEYS = Object.keys(DECISION_RESULT_LABELS) as Array<keyof typeof DECISION_RESULT_LABELS>;
 
 /**
  * Karar ekleme/düzenleme penceresi (7.3): metin, sonuç, opsiyonel gündem
@@ -43,6 +43,10 @@ export function DecisionModal({
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const tCommon = useTranslations("common");
+  const t = useTranslations("meetings.decisions");
+  const tResult = useTranslations("meetings.decisionResult");
+  const resultOptions = RESULT_KEYS.map((key) => ({ value: key, label: tResult(key) }));
   const router = useRouter();
   const [agendaItemId, setAgendaItemId] = useState<Set<string>>(
     new Set([decision?.agendaItemId ?? defaultAgendaItemId ?? ""].filter(Boolean)),
@@ -88,8 +92,8 @@ export function DecisionModal({
     }
     addToast({
       title: decision
-        ? `Karar güncellendi`
-        : `Karar eklendi: ${(res.data as { decisionNumber?: string }).decisionNumber ?? ""}`,
+        ? t("updatedToast")
+        : t("addedToast", { number: (res.data as { decisionNumber?: string }).decisionNumber ?? "" }),
       color: "success",
     });
     onOpenChange(false);
@@ -99,25 +103,25 @@ export function DecisionModal({
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange} key={key} size="lg">
       <ModalContent>
-        <ModalHeader>{decision ? `Kararı düzenle: ${decision.decisionNumber}` : "Karar ekle"}</ModalHeader>
+        <ModalHeader>{decision ? t("editTitleNumbered", { number: decision.decisionNumber }) : t("modalAddTitle")}</ModalHeader>
         <ModalBody>
           <Textarea
-            label="Karar metni"
+            label={t("text")}
             labelPlacement="outside"
             value={text}
             onValueChange={setText}
             minRows={3}
             isRequired
             maxLength={3000}
-            description="En fazla 3000 karakter."
+            description={t("textHelp")}
           />
           <Select
-            label="Sonuç"
+            label={t("result")}
             labelPlacement="outside"
             selectedKeys={result}
             onSelectionChange={(keys) => setResult(new Set(keys as Set<string>))}
           >
-            {RESULT_OPTIONS.map((option) => (
+            {resultOptions.map((option) => (
               <SelectItem key={option.value} textValue={option.label}>
                 {option.label}
               </SelectItem>
@@ -125,14 +129,14 @@ export function DecisionModal({
           </Select>
           {agendaItems.length > 0 ? (
             <Select
-              label="Bağlı gündem maddesi"
+              label={t("agendaItem")}
               labelPlacement="outside"
               selectedKeys={agendaItemId}
               onSelectionChange={(keys) => setAgendaItemId(new Set(keys as Set<string>))}
-              description="Boş bırakılırsa karar gündeme bağlanmaz."
+              description={t("agendaHelp")}
             >
               {[
-                { value: "", label: "Bağlantı yok" },
+                { value: "", label: t("noAgenda") },
                 ...agendaItems.map((item) => ({
                   value: item.id,
                   label: `${item.position}. ${item.title}`,
@@ -147,7 +151,7 @@ export function DecisionModal({
           <div className="grid grid-cols-3 gap-3">
             <Input
               type="number"
-              label="Kabul"
+              label={t("votesForShort")}
               labelPlacement="outside"
               value={votesFor}
               onValueChange={setVotesFor}
@@ -156,7 +160,7 @@ export function DecisionModal({
             />
             <Input
               type="number"
-              label="Ret"
+              label={t("votesAgainstShort")}
               labelPlacement="outside"
               value={votesAgainst}
               onValueChange={setVotesAgainst}
@@ -165,7 +169,7 @@ export function DecisionModal({
             />
             <Input
               type="number"
-              label="Çekimser"
+              label={t("votesAbstainShort")}
               labelPlacement="outside"
               value={votesAbstain}
               onValueChange={setVotesAbstain}
@@ -177,10 +181,10 @@ export function DecisionModal({
         </ModalBody>
         <ModalFooter>
           <Button variant="light" onPress={() => onOpenChange(false)}>
-            Vazgeç
+            {tCommon("cancel")}
           </Button>
           <Button color="primary" isLoading={busy} onPress={submit} isDisabled={text.trim().length < 3}>
-            Kaydet
+            {tCommon("save")}
           </Button>
         </ModalFooter>
       </ModalContent>

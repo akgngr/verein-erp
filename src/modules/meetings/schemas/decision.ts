@@ -16,7 +16,7 @@ function emptyToNull<T extends z.ZodType>(schema: T) {
 export const decisionResultSchema = z.enum(["ACCEPTED", "REJECTED", "POSTPONED"]);
 
 const voteField = emptyToNull(
-  z.coerce.number().int().min(0, "Oy sayısı 0-1000 arasında olmalıdır.").max(1000, "Oy sayısı 0-1000 arasında olmalıdır.").nullable(),
+  z.coerce.number().int().min(0, "meetings.validation.votesRange").max(1000, "meetings.validation.votesRange").nullable(),
 );
 
 const decisionBaseObject = z.object({
@@ -25,8 +25,8 @@ const decisionBaseObject = z.object({
   text: z
     .string()
     .trim()
-    .min(3, "Karar metni en az 3 karakter olmalıdır.")
-    .max(3000, "Karar metni en fazla 3000 karakter olabilir."),
+    .min(3, "meetings.validation.decisionMin")
+    .max(3000, "meetings.validation.decisionMax"),
   result: decisionResultSchema,
   votesFor: voteField,
   votesAgainst: voteField,

@@ -1,6 +1,10 @@
+import { getTranslations } from "next-intl/server";
 import { CategoryListView } from "../../ui";
 
-export const metadata = { title: "Evrak Kategorileri" };
+export async function generateMetadata() {
+  const t = await getTranslations("documents.meta");
+  return { title: t("categories") };
+}
 
 /** Kategoriler — ince rota: searchParams'ı view'a iletir. */
 export default async function KategorilerPage({

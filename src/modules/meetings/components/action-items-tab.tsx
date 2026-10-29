@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Button, addToast } from "@heroui/react";
 import { CheckCircle2, Circle, Pencil, Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -32,6 +34,8 @@ export function ActionItemsTab({
   userOptions: { id: string; label: string }[];
   contentEditable: boolean;
 }) {
+  const tCommon = useTranslations("common");
+  const t = useTranslations("meetings.tasks");
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [editing, setEditing] = useState<ActionItemRow | null>(null);
@@ -45,7 +49,7 @@ export function ActionItemsTab({
       return;
     }
     addToast({
-      title: target === "DONE" ? "Görev tamamlandı olarak işaretlendi" : "Görev yeniden açıldı",
+      title: target === "DONE" ? t("doneToast") : t("reopenedToast"),
       color: "success",
     });
     router.refresh();
@@ -58,7 +62,7 @@ export function ActionItemsTab({
       addToast({ title: result.error, color: "danger" });
       return;
     }
-    addToast({ title: "Görev silindi", color: "success" });
+    addToast({ title: t("deletedToast"), color: "success" });
     setDeleting(null);
     router.refresh();
   };
@@ -76,13 +80,13 @@ export function ActionItemsTab({
               setModalOpen(true);
             }}
           >
-            Görev ekle
+            {t("add")}
           </Button>
         </div>
       ) : null}
 
       {actionItems.length === 0 ? (
-        <p className="text-small text-default-500">Görev kaydı yok.</p>
+        <p className="text-small text-default-500">{t("empty")}</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {actionItems.map((actionItem) => {
@@ -98,13 +102,13 @@ export function ActionItemsTab({
                     {actionItem.description}
                   </p>
                   <p className="mt-0.5 flex flex-wrap gap-x-3 text-tiny text-default-500">
-                    <span>{actionItem.assigneeLabel ?? "Sorumlu atanmadı"}</span>
+                    <span>{actionItem.assigneeLabel ?? t("unassigned")}</span>
                     <span className={overdue ? "font-medium text-danger-600" : ""}>
                       Son tarih: {actionItem.dueDate ? formatDate(actionItem.dueDate) : "-"}
-                      {overdue ? " (gecikmiş)" : ""}
+                      {overdue ? t("overdueShort") : ""}
                     </span>
                     {actionItem.decisionNumber ? (
-                      <span>Karar: {actionItem.decisionNumber}</span>
+                      <span>{t("decisionLine", { number: actionItem.decisionNumber })}</span>
                     ) : null}
                   </p>
                 </div>
@@ -122,7 +126,7 @@ export function ActionItemsTab({
                     }
                     onPress={() => toggleStatus(actionItem)}
                   >
-                    {done ? "Yeniden aç" : "Tamamlandı"}
+                    {done ? t("reopen") : t("markDone")}
                   </Button>
                   {contentEditable ? (
                     <>
@@ -130,7 +134,7 @@ export function ActionItemsTab({
                         isIconOnly
                         size="sm"
                         variant="light"
-                        aria-label="Düzenle"
+                        aria-label={tCommon("edit")}
                         onPress={() => {
                           setEditing(actionItem);
                           setModalOpen(true);
@@ -143,7 +147,7 @@ export function ActionItemsTab({
                         size="sm"
                         variant="light"
                         color="danger"
-                        aria-label="Sil"
+                        aria-label={tCommon("delete")}
                         onPress={() => setDeleting(actionItem)}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -172,9 +176,9 @@ export function ActionItemsTab({
       <ConfirmDialog
         isOpen={deleting !== null}
         onOpenChange={(open) => !open && setDeleting(null)}
-        title="Görevi sil"
-        message={`"${deleting?.description ?? ""}" görevi silinecek. Onaylıyor musunuz?`}
-        confirmLabel="Sil"
+        title={t("deleteAria")}
+        message={t("deleteNamedMessage", { description: deleting?.description ?? "" })}
+        confirmLabel={tCommon("delete")}
         confirmColor="danger"
         onConfirm={confirmDelete}
       />

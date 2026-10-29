@@ -64,10 +64,13 @@ function useSidebar(): SidebarContextValue {
   return ctx;
 }
 
+/** Ürün adı (marka; çevrilmez). */
+const BRAND = "Dernek ERP"; // i18n-ignore
+
 /** Sidebar'da sabit "Panel" öğesi (yetki gerektirmez). */
 const PANEL_ITEM: NavItem = {
   href: "/",
-  label: "Panel",
+  label: "Panel", // i18n-ignore (yedek; çeviri nav.panel)
   labelKey: "panel",
   icon: LayoutDashboard,
   group: "main",
@@ -299,7 +302,7 @@ function Brand() {
         <Building2 className="h-5 w-5" aria-hidden />
       </div>
       <div className="flex flex-col min-w-0">
-        <span className="text-small font-bold tracking-tight text-foreground truncate">Dernek ERP</span>
+        <span className="text-small font-bold tracking-tight text-foreground truncate">{BRAND}</span>
         <span className="text-[11px] font-medium text-default-400 leading-none truncate">
           {tSidebar.has("brand") ? tSidebar("brand") : "Yönetim Sistemi"}
         </span>
@@ -494,7 +497,7 @@ function MobileHeader() {
       <SidebarTrigger />
       <Building2 className="h-4 w-4 text-primary" aria-hidden />
       <span className="truncate text-small font-semibold text-foreground">
-        Dernek ERP{tSidebar.has("brand") ? ` · ${tSidebar("brand")}` : ""}
+        {BRAND}{tSidebar.has("brand") ? ` · ${tSidebar("brand")}` : ""}
       </span>
     </header>
   );

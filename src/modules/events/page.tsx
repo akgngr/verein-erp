@@ -1,8 +1,9 @@
+import { getTranslations } from "next-intl/server";
 import { EventListView, EventDetailView } from "./ui"
 
-export const metadata = {
-  title: "Etkinlikler — Verein ERP",
-  description: "Dernek etkinlikleri, seminerler ve katılımcı yönetimi.",
+export async function generateMetadata() {
+  const t = await getTranslations("events.meta");
+  return { title: t("list") };
 }
 
 export default async function EventsPage({

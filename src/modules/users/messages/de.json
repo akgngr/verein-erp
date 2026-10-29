@@ -9,5 +9,10 @@
   "notFoundDescription": "Der Datensatz könnte gelöscht worden sein.",
   "nav": {
     "kullanicilar": "Benutzer"
+  },
+  "meta": {
+    "list": "Benutzer",
+    "create": "Neuer Benutzer",
+    "edit": "Benutzer bearbeiten"
   }
 }

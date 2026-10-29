@@ -1,9 +1,12 @@
-import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 
 import { BudgetView } from "../../server";
 import { berlinToday } from "../../server";
 
-export const metadata: Metadata = { title: "Bütçe" };
+export async function generateMetadata() {
+  const t = await getTranslations("accounting.meta");
+  return { title: t("budget") };
+}
 
 /** Bütçe — ?filter.year= (§ 6). */
 export default async function MuhasebeButcePage({

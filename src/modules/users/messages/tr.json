@@ -9,5 +9,10 @@
   "notFoundDescription": "Kayıt silinmiş olabilir.",
   "nav": {
     "kullanicilar": "Kullanıcılar"
+  },
+  "meta": {
+    "list": "Kullanıcılar",
+    "create": "Yeni kullanıcı",
+    "edit": "Kullanıcıyı düzenle"
   }
 }

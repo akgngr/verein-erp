@@ -3,5 +3,8 @@
   "pageDescription": "Authentifizierungs- und Datenoperationen im System.",
   "nav": {
     "denetimKaydi": "Prüfprotokoll"
+  },
+  "meta": {
+    "list": "Prüfprotokoll"
   }
 }

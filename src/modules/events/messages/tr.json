@@ -74,5 +74,8 @@
   "menu": {
     "upcoming": "Yaklaşan etkinlikler",
     "past": "Geçmiş etkinlikler"
+  },
+  "meta": {
+    "list": "Etkinlikler"
   }
 }

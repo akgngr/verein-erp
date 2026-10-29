@@ -318,5 +318,16 @@
   },
   "nav": {
     "muhasebe": "Buchhaltung"
+  },
+  "meta": {
+    "list": "Buchhaltung",
+    "create": "Neue Buchung",
+    "detail": "Buchungsdetails",
+    "edit": "Buchung bearbeiten",
+    "reports": "Berichte",
+    "budget": "Haushaltsplan",
+    "yearClosing": "Jahresabschluss",
+    "settings": "Buchhaltungseinstellungen",
+    "memberSync": "Übernahme der Mitgliedsbeiträge"
   }
 }

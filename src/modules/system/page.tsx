@@ -1,9 +1,10 @@
+import { getTranslations } from "next-intl/server";
 import { SettingsOverviewView } from "./ui";
 
-export const metadata = {
-  title: "Ayarlar | Verein ERP",
-  description: "Sistem ve dernek yönetimi ayarları",
-};
+export async function generateMetadata() {
+  const t = await getTranslations("system.meta");
+  return { title: t("settings") };
+}
 
 export default function SettingsPage() {
   return <SettingsOverviewView />;

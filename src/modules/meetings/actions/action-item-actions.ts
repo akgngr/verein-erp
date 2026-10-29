@@ -35,7 +35,7 @@ export async function addActionItemAction(
         where: { id: input.meetingId, deletedAt: null },
         select: { id: true, meetingNumber: true, status: true, deletedAt: true },
       });
-      if (!meeting) throw new ActionError("Toplantı bulunamadı.");
+      if (!meeting) throw new ActionError("meetings.errors.meetingNotFound");
       assertMeetingEditable(meeting, "content", user.role, meetingsPermissions);
 
       // KARAR: bağlı karar aynı toplantıya ait olmalıdır (5. bölüm md. 10).
@@ -45,7 +45,7 @@ export async function addActionItemAction(
           select: { id: true },
         });
         if (!decision) {
-          throw new ActionError("Karar bulunamadı.", {
+          throw new ActionError("meetings.errors.decisionNotFound", {
             decisionId: ["Geçerli bir karar seçin."],
           });
         }
@@ -58,7 +58,7 @@ export async function addActionItemAction(
           select: { name: true },
         });
         if (!assignee) {
-          throw new ActionError("Sorumlu kullanıcı bulunamadı veya pasif durumda.", {
+          throw new ActionError("meetings.errors.assigneeNotFound", {
             assigneeId: ["Geçerli bir sorumlu seçin."],
           });
         }
@@ -110,7 +110,7 @@ export async function updateActionItemAction(
           meeting: { select: { id: true, meetingNumber: true, status: true, deletedAt: true } },
         },
       });
-      if (!actionItem) throw new ActionError("Görev bulunamadı.");
+      if (!actionItem) throw new ActionError("meetings.errors.taskNotFound");
       assertMeetingEditable(actionItem.meeting, "content", user.role, meetingsPermissions);
 
       if (input.decisionId) {
@@ -119,7 +119,7 @@ export async function updateActionItemAction(
           select: { id: true },
         });
         if (!decision) {
-          throw new ActionError("Karar bulunamadı.", {
+          throw new ActionError("meetings.errors.decisionNotFound", {
             decisionId: ["Geçerli bir karar seçin."],
           });
         }
@@ -132,7 +132,7 @@ export async function updateActionItemAction(
           select: { name: true },
         });
         if (!assignee) {
-          throw new ActionError("Sorumlu kullanıcı bulunamadı veya pasif durumda.", {
+          throw new ActionError("meetings.errors.assigneeNotFound", {
             assigneeId: ["Geçerli bir sorumlu seçin."],
           });
         }
@@ -184,11 +184,11 @@ export async function setActionItemStatusAction(
           meeting: { select: { meetingNumber: true, deletedAt: true } },
         },
       });
-      if (!actionItem) throw new ActionError("Görev bulunamadı.");
+      if (!actionItem) throw new ActionError("meetings.errors.taskNotFound");
       // KARAR: actionStatus kapsamı her durumda izinlidir; yalnızca yumuşak
       // silinmiş toplantıda engellenir (5. bölüm md. 4).
       if (actionItem.meeting.deletedAt) {
-        throw new ActionError("Toplantı bulunamadı.");
+        throw new ActionError("meetings.errors.meetingNotFound");
       }
       if (actionItem.status === input.status) {
         return { id: actionItem.id, status: input.status };
@@ -243,7 +243,7 @@ export async function deleteActionItemAction(
           meeting: { select: { meetingNumber: true, status: true, deletedAt: true } },
         },
       });
-      if (!actionItem) throw new ActionError("Görev bulunamadı.");
+      if (!actionItem) throw new ActionError("meetings.errors.taskNotFound");
       assertMeetingEditable(actionItem.meeting, "content", user.role, meetingsPermissions);
 
       await db.actionItem.delete({ where: { id: actionItem.id } });

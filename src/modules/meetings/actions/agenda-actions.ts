@@ -32,7 +32,7 @@ export async function addAgendaItemAction(input: unknown): Promise<ActionResult<
         where: { id: input.meetingId, deletedAt: null },
         select: { id: true, meetingNumber: true, status: true, deletedAt: true },
       });
-      if (!meeting) throw new ActionError("Toplantı bulunamadı.");
+      if (!meeting) throw new ActionError("meetings.errors.meetingNotFound");
       assertMeetingEditable(meeting, "content", user.role, meetingsPermissions);
 
       const created = await db.$transaction(async (tx) => {
@@ -84,7 +84,7 @@ export async function updateAgendaItemAction(
           },
         },
       });
-      if (!item) throw new ActionError("Gündem maddesi bulunamadı.");
+      if (!item) throw new ActionError("meetings.errors.agendaNotFound");
       assertMeetingEditable(item.meeting, "content", user.role, meetingsPermissions);
 
       await db.agendaItem.update({
@@ -122,7 +122,7 @@ export async function deleteAgendaItemAction(
           meeting: { select: { meetingNumber: true, status: true, deletedAt: true } },
         },
       });
-      if (!item) throw new ActionError("Gündem maddesi bulunamadı.");
+      if (!item) throw new ActionError("meetings.errors.agendaNotFound");
       assertMeetingEditable(item.meeting, "content", user.role, meetingsPermissions);
 
       // KARAR: maddeye bağlı kararlar silinmez; agendaItemId SetNull ile boşalır
@@ -174,7 +174,7 @@ export async function moveAgendaItemAction(
           meeting: { select: { meetingNumber: true, status: true, deletedAt: true } },
         },
       });
-      if (!item) throw new ActionError("Gündem maddesi bulunamadı.");
+      if (!item) throw new ActionError("meetings.errors.agendaNotFound");
       assertMeetingEditable(item.meeting, "content", user.role, meetingsPermissions);
 
       await db.$transaction(async (tx) => {
@@ -186,7 +186,7 @@ export async function moveAgendaItemAction(
         const index = siblings.findIndex((sibling) => sibling.id === item.id);
         const targetIndex = input.direction === "up" ? index - 1 : index + 1;
         if (targetIndex < 0 || targetIndex >= siblings.length) {
-          throw new ActionError("Bu madde bu yönde taşınamaz.");
+          throw new ActionError("meetings.errors.agendaCannotMove");
         }
         // KARAR: konumlar swap edilir; ardışıklık korunur (5. bölüm md. 7).
         const target = siblings[targetIndex];
@@ -229,7 +229,7 @@ export async function updateAgendaDiscussionAction(
           meeting: { select: { meetingNumber: true, status: true, deletedAt: true } },
         },
       });
-      if (!item) throw new ActionError("Gündem maddesi bulunamadı.");
+      if (!item) throw new ActionError("meetings.errors.agendaNotFound");
       // KARAR: görüşme metni PLANNED ve HELD'de düzenlenebilir (5. bölüm md. 7).
       assertMeetingEditable(item.meeting, "content", user.role, meetingsPermissions);
 

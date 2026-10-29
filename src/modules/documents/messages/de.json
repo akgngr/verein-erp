@@ -203,5 +203,12 @@
   },
   "nav": {
     "evrak": "Dokumente"
+  },
+  "meta": {
+    "list": "Dokumente",
+    "create": "Neues Dokument",
+    "detail": "Dokumentdetails",
+    "edit": "Dokument bearbeiten",
+    "categories": "Dokumentkategorien"
   }
 }

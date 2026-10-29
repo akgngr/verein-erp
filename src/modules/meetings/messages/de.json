@@ -67,7 +67,9 @@
     "filterStatus": "Status",
     "deletedToast": "Sitzung gelöscht: {number}",
     "deleteTitle": "Sitzung wird gelöscht",
-    "deleteMessage": "{number} – {title} wird gelöscht; sie verschwindet aus Liste, Suche, Statistiken und Dashboard. Die Nummer wird nicht wiederverwendet. Fortfahren?"
+    "deleteMessage": "{number} – {title} wird gelöscht; sie verschwindet aus Liste, Suche, Statistiken und Dashboard. Die Nummer wird nicht wiederverwendet. Fortfahren?",
+    "deleteAction": "Sitzung löschen",
+    "deleteNumberedMessage": "Sitzung „{number}“ wird gelöscht. Sie erscheint danach nicht mehr in Listen, Suche, Statistik und Aufgabenliste; die Nummer wird nicht erneut vergeben. Fortfahren?"
   },
   "filters": {
     "dateFrom": "Sitzungsdatum (von)",
@@ -79,7 +81,12 @@
     "dueFrom": "Frist (von)",
     "dueTo": "Frist (bis)",
     "mine": "Mir zugewiesen",
-    "overdue": "Überfällig"
+    "overdue": "Überfällig",
+    "customFilters": "Weitere Filter",
+    "mineHint": "Nur Ihnen zugewiesene offene Aufgaben",
+    "overdueHint": "Aufgaben mit überschrittener Frist",
+    "meetingDate": "Sitzungsdatum",
+    "dueDate": "Fälligkeit"
   },
   "detail": {
     "approvedLine": "Genehmigt am: {date} – {by}",
@@ -104,7 +111,19 @@
     "fieldDescription": "Beschreibung",
     "quorumValue": "{required} Teilnehmer ({present} anwesend)",
     "fieldInvitationSentAt": "Einladung versandt am",
-    "invitationLeadTime": "Einladungsfrist: {count} Tage"
+    "invitationLeadTime": "Einladungsfrist: {count} Tage",
+    "tabGeneralShort": "Allgemein",
+    "tabAgendaShort": "Tagesordnung",
+    "tabAttendeesShort": "Teilnehmer",
+    "tabDecisionsShort": "Beschlüsse",
+    "tabTasksShort": "Aufgaben",
+    "tabFilesShort": "Anlagen",
+    "approvedOn": "Freigegeben: {date} – {by}",
+    "recordedBy": "Erfasst von",
+    "createdAt": "Erstellt",
+    "updatedAt": "Zuletzt geändert",
+    "notSpecified": "Nicht angegeben",
+    "quorumValueShort": "{required} Teilnehmer ({present} anwesend)"
   },
   "quorum": {
     "reached": "Die Beschlussfähigkeit wurde festgestellt ({present}/{required})",
@@ -129,7 +148,17 @@
     "reopenInfo": "Die Genehmigung wird zurückgenommen und das Protokoll kehrt in den Entwurfsstatus (Durchgeführt) zurück. Dieser Vorgang wird mit Begründung im Prüfprotokoll festgehalten.",
     "reasonLabel": "Begründung (Pflichtfeld)",
     "reasonPlaceholder": "Zum Beispiel: Korrektur aufgrund fehlender Unterschrift erforderlich.",
-    "reopenConfirm": "Wieder öffnen"
+    "reopenConfirm": "Wieder öffnen",
+    "changeTitle": "Statusänderung",
+    "reopenModalTitle": "Protokoll erneut öffnen",
+    "reopenModalInfo": "Sie öffnen das Protokoll erneut zur Bearbeitung. Eine Begründung ist Pflicht und wird im Prüfprotokoll vermerkt.",
+    "reasonShort": "Begründung",
+    "confirmApprove": "Das Protokoll der Sitzung „{number}“ wird freigegeben und danach gesperrt; zur Bearbeitung muss es erneut geöffnet werden. Fortfahren?",
+    "confirmApproveNoQuorum": "Die Beschlussfähigkeit wurde nicht erreicht. Trotzdem freigeben?",
+    "confirmReopen": "Das Protokoll „{number}“ wird erneut geöffnet und kann bearbeitet werden. Fortfahren?",
+    "confirmHeld": "Die Sitzung „{number}“ wird auf „Durchgeführt“ gesetzt (Protokollentwurf). Fortfahren?",
+    "confirmCancel": "Die Sitzung „{number}“ wird abgesagt. Fortfahren?",
+    "confirmPlanned": "Die Sitzung „{number}“ wird auf „Geplant“ gesetzt. Fortfahren?"
   },
   "form": {
     "createTitle": "Neue Sitzung",
@@ -161,7 +190,12 @@
     "createdToast": "Sitzung angelegt: {number}",
     "updatedToast": "Sitzung aktualisiert.",
     "invitationSentAt": "Einladung versandt am",
-    "invitationSentAtDescription": "Datum des Versands der Einladung; darf nicht nach dem Sitzungsdatum liegen."
+    "invitationSentAtDescription": "Datum des Versands der Einladung; darf nicht nach dem Sitzungsdatum liegen.",
+    "selectType": "Art wählen",
+    "timePlaceholder": "HH:mm",
+    "createPageDescription": "Sitzung anlegen; die Nummer wird automatisch vergeben (TOP-<Jahr>-<Nr.>).",
+    "lockedApproved": "Ein freigegebenes Protokoll kann nicht bearbeitet werden. Bitte zuerst erneut öffnen.",
+    "lockedCancelled": "Eine abgesagte Sitzung kann nicht bearbeitet werden. Bitte zuerst auf „Geplant“ setzen."
   },
   "agenda": {
     "add": "Punkt hinzufügen",
@@ -184,7 +218,10 @@
     "plannedContent": "Geplanter Inhalt",
     "plannedContentDescription": "In der Sitzung geplante Themen (optional)",
     "addedToast": "Tagesordnungspunkt hinzugefügt.",
-    "updatedToast": "Tagesordnungspunkt aktualisiert."
+    "updatedToast": "Tagesordnungspunkt aktualisiert.",
+    "contentHelp": "Höchstens 2000 Zeichen.",
+    "deleteNamedMessage": "Der Punkt „{title}“ wird gelöscht und die Reihenfolge neu nummeriert. Verknüpfte Beschlüsse bleiben erhalten, verlieren aber die Zuordnung. Fortfahren?",
+    "deleteItemAria": "Tagesordnungspunkt löschen"
   },
   "decisions": {
     "add": "Beschluss hinzufügen",
@@ -207,7 +244,16 @@
     "votesAbstain": "Enthaltungen",
     "votesHelp": "Alle drei Stimmenfelder können leer bleiben; wird eines ausgefüllt, gelten die leeren als 0.",
     "addedToast": "Beschluss hinzugefügt: {number}",
-    "updatedToast": "Beschluss aktualisiert."
+    "updatedToast": "Beschluss aktualisiert.",
+    "editTitleNumbered": "Beschluss bearbeiten: {number}",
+    "textHelp": "Höchstens 3000 Zeichen.",
+    "agendaHelp": "Leer lassen, um den Beschluss keinem Punkt zuzuordnen.",
+    "noAgenda": "Keine Verknüpfung",
+    "votesForShort": "Ja",
+    "votesAgainstShort": "Nein",
+    "votesAbstainShort": "Enthaltung",
+    "deletedNumberedToast": "Beschluss gelöscht: {number}",
+    "deleteNumberedMessage": "Beschluss „{number}“ wird gelöscht. Die Nummer wird nicht erneut vergeben; verknüpfte Aufgaben verlieren die Zuordnung. Fortfahren?"
   },
   "attendees": {
     "markAll": "Alle als anwesend markieren",
@@ -229,7 +275,14 @@
     "removeAria": "Teilnehmer {name} entfernen",
     "removeTitle": "Teilnehmer wird entfernt",
     "removeMessage": "Der Teilnehmer wird von der Sitzung entfernt. Fortfahren?",
-    "removeConfirm": "Entfernen"
+    "removeConfirm": "Entfernen",
+    "addUser": "Benutzer hinzufügen",
+    "guestName": "Name des Gastes",
+    "addGuest": "Gast hinzufügen",
+    "source": "Herkunft",
+    "removedNamedToast": "Teilnehmer entfernt: {name}",
+    "markedToast": "{count} Teilnehmer als „anwesend“ markiert",
+    "namePlaceholder": "Vor- und Nachname"
   },
   "attendeeAdd": {
     "title": "Teilnehmer hinzufügen",
@@ -248,7 +301,11 @@
     "note": "Notiz",
     "notePlaceholder": "Beispiel: Nimmt online teil",
     "addUsers": "Benutzer hinzufügen",
-    "addGuest": "Gast hinzufügen"
+    "addGuest": "Gast hinzufügen",
+    "users": "Benutzer",
+    "usersDescription": "Ein Benutzer kann nur einmal zur Sitzung hinzugefügt werden.",
+    "addedCountToast": "{count} Teilnehmer hinzugefügt",
+    "add": "Hinzufügen"
   },
   "tasks": {
     "pageTitle": "Aufgaben",
@@ -293,7 +350,19 @@
     "colDecision": "Beschluss-Nr.",
     "search": "Aufgabe, Verantwortliche oder Sitzung suchen",
     "listEmpty": "Keine Aufgaben gefunden.",
-    "listAria": "Aufgabenliste"
+    "listAria": "Aufgabenliste",
+    "descriptionHelp": "Höchstens 1000 Zeichen.",
+    "assigneeUserLabel": "Verantwortlich (Benutzer)",
+    "assigneeUserHelp": "Bei Auswahl wird der Freitext ignoriert.",
+    "assigneeFreeLabel": "Verantwortlich (Freitext)",
+    "assigneeFreeHelp": "Name einer externen Person möglich.",
+    "noAssigneeOption": "Nicht zugewiesen",
+    "noDecision": "Keine Verknüpfung",
+    "overdueShort": " (überfällig)",
+    "unassigned": "Niemand zugewiesen",
+    "decisionLine": "Beschluss: {number}",
+    "deleteNamedMessage": "Die Aufgabe „{description}“ wird gelöscht. Fortfahren?",
+    "listDescription": "Aufgaben aus allen Sitzungen; standardmäßig werden nur offene Aufgaben angezeigt."
   },
   "discussion": {
     "title": "Diskussionen",
@@ -306,7 +375,12 @@
     "empty": "Kein Diskussionstext erfasst.",
     "edit": "Bearbeiten",
     "write": "Text erfassen",
-    "savedToast": "Diskussionstext gespeichert."
+    "savedToast": "Diskussionstext gespeichert.",
+    "label": "Beratung:",
+    "emptyNote": "Noch keine Beratungsnotiz erfasst.",
+    "add": "Beratung hinzufügen",
+    "fieldLabel": "Beratung (Protokolltext)",
+    "fieldHelp": "Höchstens 10000 Zeichen; Zeilenumbrüche bleiben erhalten."
   },
   "files": {
     "maxFilesToast": "Pro Sitzung können maximal {count} Dateien hinzugefügt werden.",
@@ -323,12 +397,83 @@
     "downloadAria": "{name} herunterladen",
     "deleteAria": "{name} löschen",
     "deleteTitle": "Datei wird gelöscht",
-    "deleteMessage": "Die Datei wird aus der Liste entfernt; die Kopie auf der Festplatte bleibt erhalten. Fortfahren?"
+    "deleteMessage": "Die Datei wird aus der Liste entfernt; die Kopie auf der Festplatte bleibt erhalten. Fortfahren?",
+    "uploadedCountToast": "{count} Dateien hochgeladen",
+    "uploading": "Wird hochgeladen…",
+    "emptyMeeting": "Zu dieser Sitzung wurden noch keine Dateien hinzugefügt.",
+    "download": "Herunterladen",
+    "preview": "Vorschau",
+    "deleteAction": "Datei löschen",
+    "deleteNamedAria": "{name} löschen",
+    "deleteNamedMessage": "Die Datei „{name}“ wird aus der Sitzung entfernt; die Kopie auf dem Datenträger bleibt erhalten. Fortfahren?",
+    "limitReached": "Es können höchstens {count} Dateien hinzugefügt werden.",
+    "dropOrClick": "Dateien hierher ziehen oder zum Auswählen klicken",
+    "rulesLine": "Erlaubte Typen: {types} — höchstens {maxMb} MB pro Datei — höchstens {maxFiles} Dateien pro Sitzung"
   },
   "menu": {
     "tasks": "Aufgaben"
   },
   "nav": {
     "toplantilar": "Sitzungen"
+  },
+  "errors": {
+    "meetingNotFound": "Sitzung nicht gefunden.",
+    "decisionNotFound": "Beschluss nicht gefunden.",
+    "assigneeNotFound": "Der verantwortliche Benutzer wurde nicht gefunden oder ist deaktiviert.",
+    "taskNotFound": "Aufgabe nicht gefunden.",
+    "agendaNotFound": "Tagesordnungspunkt nicht gefunden.",
+    "agendaCannotMove": "Dieser Punkt kann nicht in diese Richtung verschoben werden.",
+    "userNotFound": "Der ausgewählte Benutzer wurde nicht gefunden oder ist deaktiviert.",
+    "chairExists": "Diese Sitzung hat bereits eine Sitzungsleitung.",
+    "secretaryExists": "Diese Sitzung hat bereits eine Protokollführung.",
+    "usersAlreadyAdded": "Die ausgewählten Benutzer sind bereits Teilnehmer dieser Sitzung.",
+    "attendeeNotFound": "Teilnehmer nicht gefunden.",
+    "reopenReasonRequired": "Für das erneute Öffnen ist eine Begründung erforderlich.",
+    "fileNotFound": "Datei nicht gefunden.",
+    "invalidDate": "Das Sitzungsdatum ist ungültig.",
+    "copySourceInvalid": "Die zu kopierende Sitzung wurde nicht gefunden oder hat eine andere Art.",
+    "approvedLocked": "Ein freigegebenes Protokoll kann nicht bearbeitet werden. Bitte zuerst erneut öffnen.",
+    "approvedNoDelete": "Eine freigegebene Sitzung kann nicht gelöscht werden. Bitte zuerst erneut öffnen.",
+    "approvedFileAdminOnly": "Dateien einer freigegebenen Sitzung kann nur ein Administrator löschen.",
+    "transitionNotAllowed": "Diese Statusänderung ist nicht zulässig.",
+    "forbidden": "Für diese Aktion fehlt Ihnen die Berechtigung."
+  },
+  "validation": {
+    "taskMin": "Die Aufgabenbeschreibung muss mindestens 3 Zeichen lang sein.",
+    "taskMax": "Die Aufgabenbeschreibung darf höchstens 1000 Zeichen lang sein.",
+    "assigneeMin": "Der Name der verantwortlichen Person muss mindestens 2 Zeichen lang sein.",
+    "assigneeMax": "Der Name der verantwortlichen Person darf höchstens 120 Zeichen lang sein.",
+    "dueDateInvalid": "Bitte ein gültiges Fälligkeitsdatum eingeben.",
+    "agendaMin": "Der Tagesordnungspunkt muss mindestens 2 Zeichen lang sein.",
+    "agendaMax": "Der Tagesordnungspunkt darf höchstens 200 Zeichen lang sein.",
+    "plannedMax": "Der geplante Inhalt darf höchstens 2000 Zeichen lang sein.",
+    "discussionMax": "Der Beratungstext darf höchstens 10000 Zeichen lang sein.",
+    "selectUser": "Bitte mindestens einen Benutzer auswählen.",
+    "guestMin": "Der Name des Gastes muss mindestens 2 Zeichen lang sein.",
+    "guestMax": "Der Name des Gastes darf höchstens 120 Zeichen lang sein.",
+    "noteMax": "Die Notiz darf höchstens 200 Zeichen lang sein.",
+    "reasonMin": "Die Begründung muss mindestens 5 Zeichen lang sein.",
+    "reasonMax": "Die Begründung darf höchstens 500 Zeichen lang sein.",
+    "votesRange": "Die Stimmenzahl muss zwischen 0 und 1000 liegen.",
+    "decisionMin": "Der Beschlusstext muss mindestens 3 Zeichen lang sein.",
+    "decisionMax": "Der Beschlusstext darf höchstens 3000 Zeichen lang sein.",
+    "titleMin": "Der Titel muss mindestens 3 Zeichen lang sein.",
+    "titleMax": "Der Titel darf höchstens 200 Zeichen lang sein.",
+    "dateRequired": "Das Sitzungsdatum ist erforderlich.",
+    "dateInvalid": "Bitte ein gültiges Sitzungsdatum eingeben.",
+    "timeFormat": "Die Uhrzeit muss im Format HH:mm angegeben werden.",
+    "locationMax": "Der Ort darf höchstens 200 Zeichen lang sein.",
+    "quorumMin": "Die Beschlussfähigkeit muss mindestens 1 betragen.",
+    "quorumMax": "Die Beschlussfähigkeit darf höchstens 500 betragen.",
+    "descriptionMax": "Die Beschreibung darf höchstens 2000 Zeichen lang sein.",
+    "endNeedsStart": "Für eine Endzeit ist eine Startzeit erforderlich.",
+    "endAfterStart": "Die Endzeit muss nach der Startzeit liegen."
+  },
+  "meta": {
+    "list": "Sitzungen",
+    "tasks": "Sitzungsaufgaben",
+    "create": "Neue Sitzung",
+    "detail": "Sitzungsdetails",
+    "edit": "Sitzung bearbeiten"
   }
 }

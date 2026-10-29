@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Button, addToast } from "@heroui/react";
 import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -20,6 +22,8 @@ export function DeleteMeetingButton({
   meetingId: string;
   meetingNumber: string;
 }) {
+  const tCommon = useTranslations("common");
+  const t = useTranslations("meetings.list");
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -32,7 +36,7 @@ export function DeleteMeetingButton({
       addToast({ title: result.error, color: "danger" });
       return;
     }
-    addToast({ title: `Toplantı silindi: ${meetingNumber}`, color: "success" });
+    addToast({ title: t("deletedToast", { number: meetingNumber }), color: "success" });
     setOpen(false);
     router.push("/toplantilar");
     router.refresh();
@@ -47,14 +51,14 @@ export function DeleteMeetingButton({
         startContent={<Trash2 className="h-4 w-4" />}
         onPress={() => setOpen(true)}
       >
-        Sil
+        {tCommon("delete")}
       </Button>
       <ConfirmDialog
         isOpen={open}
         onOpenChange={setOpen}
-        title="Toplantıyı sil"
-        message={`"${meetingNumber}" numaralı toplantı silinecek. Silinen toplantı listelerde, aramada, istatistikte ve görev listesinde görünmez; numarası yeniden kullanılmaz. Onaylıyor musunuz?`}
-        confirmLabel="Sil"
+        title={t("deleteAction")}
+        message={t("deleteNumberedMessage", { number: meetingNumber })}
+        confirmLabel={tCommon("delete")}
         confirmColor="danger"
         onConfirm={confirmDelete}
       />

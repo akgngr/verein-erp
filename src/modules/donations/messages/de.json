@@ -258,6 +258,7 @@
     "donorCreate": "Neuer Spender",
     "donorDetail": "Spenderdetails",
     "donorEdit": "Spender bearbeiten",
-    "confirmations": "Zuwendungsbestätigungen"
+    "confirmations": "Zuwendungsbestätigungen",
+    "list": "Spenden"
   }
 }

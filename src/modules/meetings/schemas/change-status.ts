@@ -17,7 +17,7 @@ export const changeStatusSchema = z.object({
   meetingId: z.string().trim().min(1),
   status: z.enum(["PLANNED", "HELD", "APPROVED", "CANCELLED"]),
   reason: emptyToNull(
-    z.string().trim().min(5, "Gerekçe en az 5 karakter olmalıdır.").max(500, "Gerekçe en fazla 500 karakter olabilir.").nullable(),
+    z.string().trim().min(5, "meetings.validation.reasonMin").max(500, "meetings.validation.reasonMax").nullable(),
   ),
 });
 
