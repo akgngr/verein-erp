@@ -98,6 +98,9 @@ jobs:
       - name: Translation keys exist (no MISSING_MESSAGE at runtime)
         run: pnpm exec tsx scripts/check-i18n-keys.ts
 
+      - name: No hard-coded UI text (all texts come from messages)
+        run: pnpm exec tsx scripts/check-hardcoded-text.ts
+
       - name: Typecheck
         run: pnpm typecheck
 

@@ -223,7 +223,8 @@
       "batchRun": "Sammelproduktion starten",
       "batchResult": "{ok} erfolgreich, {failed} fehlgeschlagen"
     },
-    "create": "Bestätigung erstellen"
+    "create": "Bestätigung erstellen",
+    "batchHint": "Sammeldruck: Zeilen in der Liste auswählen und die PDF-Schaltfläche verwenden (§ 13, max. 100)."
   },
   "settings": {
     "title": "Spenden-Einstellungen (Bestätigungsproduktion)",

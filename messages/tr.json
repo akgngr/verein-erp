@@ -89,6 +89,7 @@
     "denetimKaydi": "Denetim Kaydı",
     "evrak": "Evrak Kayıt",
     "bagislar": "Bağışlar",
+    "events": "Etkinlikler",
     "inventory": "Envanter",
     "mail": "E-posta",
     "toplantilar": "Toplantılar",
@@ -1435,7 +1436,8 @@
         "batchRun": "Toplu üretimi çalıştır",
         "batchResult": "{ok} başarılı, {failed} başarısız"
       },
-      "create": "Bildirim oluştur"
+      "create": "Bildirim oluştur",
+      "batchHint": "Toplu yazdırma: liste satırlarını seçip PDF düğmesini kullanın (§ 13, max 100)."
     },
     "settings": {
       "title": "Bağış ayarları (Bildirim üretimi)",
@@ -2218,7 +2220,7 @@
       "invitationSentAtDescription": "Davetin üyelere gönderildiği tarih; toplantı tarihinden sonra olamaz.",
       "selectType": "Tür seçin",
       "timePlaceholder": "SS:dd",
-      "createPageDescription": "Toplantı kaydı oluşturun; numara otomatik üretilir (TOP-<yıl>-<sıra>).",
+      "createPageDescription": "Toplantı kaydı oluşturun; numara otomatik üretilir (örn. TOP-2026-001).",
       "lockedApproved": "Onaylanmış toplantı tutanağı düzenlenemez. Önce yeniden açın.",
       "lockedCancelled": "İptal edilmiş toplantı düzenlenemez. Önce 'Planlandı' durumuna alın."
     },

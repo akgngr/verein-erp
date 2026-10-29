@@ -184,5 +184,8 @@
   "module": {
     "label": "Etkinlikler",
     "description": "Dernek etkinlikleri, seminerler, atölyeler ve katılımcı yönetimi."
+  },
+  "nav": {
+    "events": "Etkinlikler"
   }
 }

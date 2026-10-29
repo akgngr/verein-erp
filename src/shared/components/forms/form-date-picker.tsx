@@ -20,7 +20,7 @@ export type FormDatePickerProps<T extends FieldValues> = {
  *
  * KARAR: Form değerinin tipi "yyyy-MM-dd" biçimli string'dir; HeroUI'nin
  * CalendarDate değerine çevrilerek kullanılır. Yerelleştirme HeroUIProvider
- * locale="tr-TR" üzerinden sağlanır.
+ * (arayüz diline göre de-DE / tr-TR) üzerinden sağlanır.
  */
 export function FormDatePicker<T extends FieldValues>({
   name,

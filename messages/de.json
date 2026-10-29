@@ -89,6 +89,7 @@
     "denetimKaydi": "Prüfprotokoll",
     "evrak": "Dokumente",
     "bagislar": "Spenden",
+    "events": "Veranstaltungen",
     "inventory": "Inventar",
     "mail": "E-Mail",
     "toplantilar": "Sitzungen",
@@ -1435,7 +1436,8 @@
         "batchRun": "Sammelproduktion starten",
         "batchResult": "{ok} erfolgreich, {failed} fehlgeschlagen"
       },
-      "create": "Bestätigung erstellen"
+      "create": "Bestätigung erstellen",
+      "batchHint": "Sammeldruck: Zeilen in der Liste auswählen und die PDF-Schaltfläche verwenden (§ 13, max. 100)."
     },
     "settings": {
       "title": "Spenden-Einstellungen (Bestätigungsproduktion)",
@@ -2218,7 +2220,7 @@
       "invitationSentAtDescription": "Datum des Versands der Einladung; darf nicht nach dem Sitzungsdatum liegen.",
       "selectType": "Art wählen",
       "timePlaceholder": "HH:mm",
-      "createPageDescription": "Sitzung anlegen; die Nummer wird automatisch vergeben (TOP-<Jahr>-<Nr.>).",
+      "createPageDescription": "Sitzung anlegen; die Nummer wird automatisch vergeben (z. B. TOP-2026-001).",
       "lockedApproved": "Ein freigegebenes Protokoll kann nicht bearbeitet werden. Bitte zuerst erneut öffnen.",
       "lockedCancelled": "Eine abgesagte Sitzung kann nicht bearbeitet werden. Bitte zuerst auf „Geplant“ setzen."
     },

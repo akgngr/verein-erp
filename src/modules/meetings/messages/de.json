@@ -193,7 +193,7 @@
     "invitationSentAtDescription": "Datum des Versands der Einladung; darf nicht nach dem Sitzungsdatum liegen.",
     "selectType": "Art wählen",
     "timePlaceholder": "HH:mm",
-    "createPageDescription": "Sitzung anlegen; die Nummer wird automatisch vergeben (TOP-<Jahr>-<Nr.>).",
+    "createPageDescription": "Sitzung anlegen; die Nummer wird automatisch vergeben (z. B. TOP-2026-001).",
     "lockedApproved": "Ein freigegebenes Protokoll kann nicht bearbeitet werden. Bitte zuerst erneut öffnen.",
     "lockedCancelled": "Eine abgesagte Sitzung kann nicht bearbeitet werden. Bitte zuerst auf „Geplant“ setzen."
   },

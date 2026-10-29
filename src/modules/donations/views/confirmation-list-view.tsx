@@ -74,7 +74,7 @@ export async function ConfirmationListView({
       />
       <div className="mt-3 text-tiny text-default-400">
         <FileDown className="mr-1 inline h-3.5 w-3.5" aria-hidden />
-        Toplu yazdırma: liste satırlarını seçip PDF düğmesini kullanın (§ 13, max 100).
+        {t("batchHint")}
       </div>
     </div>
   );

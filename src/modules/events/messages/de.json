@@ -184,5 +184,8 @@
   "module": {
     "label": "Veranstaltungen",
     "description": "Vereinsveranstaltungen, Seminare, Workshops und Teilnehmerverwaltung."
+  },
+  "nav": {
+    "events": "Veranstaltungen"
   }
 }

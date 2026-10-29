@@ -193,7 +193,7 @@
     "invitationSentAtDescription": "Davetin üyelere gönderildiği tarih; toplantı tarihinden sonra olamaz.",
     "selectType": "Tür seçin",
     "timePlaceholder": "SS:dd",
-    "createPageDescription": "Toplantı kaydı oluşturun; numara otomatik üretilir (TOP-<yıl>-<sıra>).",
+    "createPageDescription": "Toplantı kaydı oluşturun; numara otomatik üretilir (örn. TOP-2026-001).",
     "lockedApproved": "Onaylanmış toplantı tutanağı düzenlenemez. Önce yeniden açın.",
     "lockedCancelled": "İptal edilmiş toplantı düzenlenemez. Önce 'Planlandı' durumuna alın."
   },

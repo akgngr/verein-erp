@@ -14,6 +14,8 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { createTranslator } from "next-intl";
+
 const ROOT_DIR = process.cwd();
 const SRC_DIR = path.join(ROOT_DIR, "src");
 const LOCALES = ["tr", "de"] as const;
@@ -91,11 +93,49 @@ export function checkSource(file: string, source: string, messagesByLocale: Reco
   return missing;
 }
 
+/**
+ * ICU sözdizimi denetimi: her mesaj next-intl ile biçimlendirilir; "<Jahr>" gibi
+ * etiket sanılan metinler veya kapanmamış süslü parantezler çalışma anında
+ * sayfayı düşürür (INVALID_MESSAGE) — burada derleme öncesi yakalanır.
+ */
+export function checkMessageSyntax(locale: string, messages: Messages): string[] {
+  const errors: string[] = [];
+  const lookupText = (key: string) => String(lookup(messages, key) ?? "");
+  const leafKeys = (node: unknown, prefix: string): string[] =>
+    typeof node === "object" && node !== null
+      ? Object.entries(node).flatMap(([key, value]) => leafKeys(value, prefix ? `${prefix}.${key}` : key))
+      : [prefix];
+  for (const key of leafKeys(messages, "")) {
+    let failure: string | null = null;
+    const t = createTranslator({
+      locale,
+      messages,
+      onError: (error) => {
+        failure = error.message;
+      },
+      getMessageFallback: () => "",
+    });
+    // Her yer tutucuya sayı verilir: hem {name} hem {count, plural, ...} biçimlenir.
+    const values = Object.fromEntries(
+      [...lookupText(key).matchAll(/\{\s*(\w+)/g)].map((match) => [match[1], 1]),
+    );
+    t(key as never, values as never);
+    if (failure) errors.push(`[${locale}] ${key}: ${failure}`);
+  }
+  return errors;
+}
+
 function main() {
   const messagesByLocale = Object.fromEntries(LOCALES.map((locale) => [locale, loadMessages(locale)]));
   const problems = listSourceFiles(SRC_DIR).flatMap((file) =>
     checkSource(path.relative(ROOT_DIR, file), fs.readFileSync(file, "utf8"), messagesByLocale),
   );
+  const syntaxErrors = LOCALES.flatMap((locale) => checkMessageSyntax(locale, messagesByLocale[locale]));
+  if (syntaxErrors.length > 0) {
+    console.error(`[i18n-keys] ${syntaxErrors.length} invalid ICU message(s):`);
+    for (const error of syntaxErrors) console.error(`  ${error}`);
+    process.exit(1);
+  }
 
   if (problems.length === 0) {
     console.log("[i18n-keys] OK — all static translation keys exist in tr and de.");

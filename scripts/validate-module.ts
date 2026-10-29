@@ -28,6 +28,57 @@ const REQUIRED_ROLES = ["ADMIN", "BOARD", "SECRETARY", "TREASURER", "AUDITOR", "
 /**
  * Belirli bir modülü Verein ERP standartlarına göre denetler.
  */
+
+/** Nokta yolundaki değeri döndürür (yoksa undefined). */
+function lookupKey(messages: unknown, dotted: string): unknown {
+  let current: unknown = messages;
+  for (const part of dotted.split(".")) {
+    if (typeof current !== "object" || current === null || !(part in current)) return undefined;
+    current = (current as Record<string, unknown>)[part];
+  }
+  return current;
+}
+
+/** Yaprak anahtarların listesi ("a.b.c"). */
+function leafKeys(messages: unknown, prefix = ""): string[] {
+  if (typeof messages !== "object" || messages === null) return [prefix];
+  return Object.entries(messages as Record<string, unknown>).flatMap(([key, value]) =>
+    leafKeys(value, prefix ? `${prefix}.${key}` : key),
+  );
+}
+
+/**
+ * Çeviri bütünlüğü: tr/de anahtar eşliği; nav `labelKey` → `nav.<key>`;
+ * menü öğesi → `menu.<key>`; sistem listesi için `module.label`/`module.description`.
+ */
+function checkModuleMessages(moduleDir: string, trJson: unknown, deJson: unknown): string[] {
+  const problems: string[] = [];
+  const trKeys = new Set(leafKeys(trJson));
+  const deKeys = new Set(leafKeys(deJson));
+  const onlyTr = [...trKeys].filter((key) => !deKeys.has(key));
+  const onlyDe = [...deKeys].filter((key) => !trKeys.has(key));
+  if (onlyTr.length) problems.push(`de.json eksik anahtarlar: ${onlyTr.slice(0, 10).join(", ")}`);
+  if (onlyDe.length) problems.push(`tr.json eksik anahtarlar: ${onlyDe.slice(0, 10).join(", ")}`);
+
+  const configPath = path.join(moduleDir, "module.config.ts");
+  if (!fs.existsSync(configPath)) return problems;
+  const config = fs.readFileSync(configPath, "utf8");
+  const required = ["module.label", "module.description"];
+  for (const match of config.matchAll(/labelKey:\s*["']([\w-]+)["']/g)) required.push(`nav.${match[1]}`);
+  const menuBlock = config.match(/\n\s*menu:\s*\[([\s\S]*?)\n\s*\]/);
+  if (menuBlock) {
+    for (const match of menuBlock[1].matchAll(/\bkey:\s*["']([\w-]+)["']/g)) required.push(`menu.${match[1]}`);
+  }
+  for (const key of required) {
+    for (const [locale, json] of [["tr", trJson], ["de", deJson]] as const) {
+      if (typeof lookupKey(json, key) !== "string") {
+        problems.push(`messages/${locale}.json içinde '${key}' çevirisi yok.`);
+      }
+    }
+  }
+  return problems;
+}
+
 export function validateModule(moduleKey: string, customModulesDir?: string): ModuleValidationResult {
   const baseModulesDir = customModulesDir || MODULES_DIR;
   const moduleDir = path.join(baseModulesDir, moduleKey);
@@ -149,6 +200,7 @@ export function validateModule(moduleKey: string, customModulesDir?: string): Mo
         errors.push("'messages/de.json' geçerli bir JSON nesnesi olmalıdır.");
       }
       info.hasTranslations = true;
+      errors.push(...checkModuleMessages(moduleDir, trJson, deJson));
     } catch (err) {
       errors.push(`Çeviri JSON dosyaları çözümlenemedi: ${err instanceof Error ? err.message : String(err)}`);
     }

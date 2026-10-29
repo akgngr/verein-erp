@@ -223,7 +223,8 @@
       "batchRun": "Toplu üretimi çalıştır",
       "batchResult": "{ok} başarılı, {failed} başarısız"
     },
-    "create": "Bildirim oluştur"
+    "create": "Bildirim oluştur",
+    "batchHint": "Toplu yazdırma: liste satırlarını seçip PDF düğmesini kullanın (§ 13, max 100)."
   },
   "settings": {
     "title": "Bağış ayarları (Bildirim üretimi)",
