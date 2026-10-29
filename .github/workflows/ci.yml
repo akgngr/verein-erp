@@ -57,6 +57,12 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
+      # KARAR: @prisma/client'ın postinstall'u client'ı paket DIŞINA (.prisma) üretir; pnpm,
+      # önbellekteki "side effects" ile bu script'i atlayabilir (önbellekli ikinci çalıştırmada
+      # client hiç üretilmez → MODULE_NOT_FOUND .prisma/client). Dockerfile gibi açıkça üretilir.
+      - name: Generate Prisma client
+        run: pnpm exec prisma generate
+
       - name: Generated files are committed (module:sync is a no-op)
         run: |
           pnpm exec tsx scripts/sync-schemas.ts

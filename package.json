@@ -19,7 +19,7 @@
     "module:validate": "tsx scripts/validate-module.ts",
     "module:check": "tsx scripts/validate-module.ts",
     "predev": "tsx scripts/sync-schemas.ts",
-    "prebuild": "tsx scripts/sync-schemas.ts",
+    "prebuild": "tsx scripts/sync-schemas.ts && prisma generate",
     "pretypecheck": "tsx scripts/sync-schemas.ts",
     "db:migrate": "tsx scripts/sync-schemas.ts && prisma migrate dev",
     "db:deploy": "tsx scripts/sync-schemas.ts && prisma migrate deploy && node scripts/verify-db-integrity.mjs",
