@@ -1,328 +1,152 @@
-# Verein ERP — Modül Geliştirme Rehberi & Dış AI Şartnamesi
-> **Sürüm:** 2.1 (Harici AI Agent ve İzole Geliştirici Özel Sürümü)  
-> **Hedef Kitle:** Projeye terminal/CLI erişimi **olmayan** veya **olan** harici AI Agent'lar (ChatGPT, Claude web/chat, Gemini, Cursor, Windsurf) ve Bağımsız Geliştiriciler
+# Verein ERP — Modül Geliştirme Rehberi
 
-Bu rehber, **Verein ERP** sistemine diğer modülleri ve çekirdek sistemi bozmadan, sıfır temas (**zero-touch core**) prensibiyle çalışan yeni bir modül eklemek için gereken standartları, dosya ağacını, şablon kodları ve harici AI agent'lar için özelleştirilmiş hazır istemleri (prompt) içerir.
+> **Tek kaynak.** İngilizcesi: [`MODULE_DEVELOPMENT_GUIDE_EN.md`](MODULE_DEVELOPMENT_GUIDE_EN.md).
+> Depoya erişimi olmayan harici bir AI için kopyala-yapıştır istem: [`AI_MODULE_PROMPT.md`](AI_MODULE_PROMPT.md).
 
----
-
-## 1. Temel Mimari Prensipler (Architecture Principles)
-
-1. **Sıfır Çekirdek Dokunuşu (Zero-Touch Core):**
-   Yeni bir modül geliştirirken veya mevcut bir modülü silerken çekirdek dosyalara (`src/registry.ts`, `prisma/schema/*`, `messages/*.json`) **ASLA ELLE MÜDAHALE EDİLMEZ**. Tüm kayıtlar ve bağlantılar projedeki senkronizasyon araçları tarafından dinamik olarak yönetilir.
-2. **Dikey Dilim İzolasyonu (Vertical Slice Isolation):**
-   Modüle ait veritabanı şeması, iş kuralları, yetki tanımları, çevirileri, sayfaları ve bileşenleri tamamen `src/modules/<modul_adi>/` dizini içinde yer alır.
-3. **Katı Kamu API Sınırları (Public API Boundary - `eslint.config.mjs`):**
-   Bir modülün iç klasörleri (`queries/`, `actions/`, `components/`, `views/`, `services/`) **özeldir (private)**. Dış dünyaya ve diğer modüllere yalnızca şu 3 kamuya açık dosya üzerinden konuşur:
-   - `@/modules/<modul>` (`index.ts` — İzomorfik tipler, şemalar, yetki tanımları, moduleConfig)
-   - `@/modules/<modul>/server` (`server.ts` — "server-only" sorgular, sunucu aksiyonları, yetki korumaları)
-   - `@/modules/<modul>/ui` (`ui.ts` — React istemci ve sunucu görünüm bileşenleri)
-4. **Modül Menüsü Standardı (sol panel, `module.config.ts` → `menu`):**
-   Her modülün alt sayfaları, modüle özel yapılandırmaları ve dışa aktarma (Excel vb.) araçları sayfa içine buton yığılması yerine `module.config.ts` içindeki `menu` dizisinde bildirilir. Üst bar yoktur: kullanıcı sol panelde modüle girdiğinde ana menü kayarak modülün menüsüne dönüşür (en üstte "Ana menü" butonu); ana menüye dönüldüğünde en üstte modüle geri dönme butonu çıkar. Modülün ana sayfası ("Genel bakış") otomatik eklenir. (Eski `menu/top.json` standardı kaldırılmıştır; doğrulayıcı hata verir.)
-5. **Sayfa Eylem Ayrımı Kuralı (UI Action Area Separation):**
-   - **Sayfa Başlığı Eylem Alanı (`PageHeader actions`):** YALNIZCA doğrudan ana CRUD butonuna (`+ Yeni Ekle`) ayrılmıştır.
-   - **Araçlar, Raporlar ve Alt Sayfa Bağlantıları:** `module.config.ts` içindeki `menu` dizisinde tanımlanır; sayfa gövdesinde mükerrer buton olarak gösterilmez.
+Bu rehber, çekirdeğe dokunmadan (**sıfır dokunuş**) yeni bir modül eklemenin kurallarını anlatır.
+Kuralların çoğu otomatik denetlenir; bir kural çiğnendiğinde CI kırmızıya döner (bkz. §8).
 
 ---
 
-## 2. Eksiksiz Modül Klasör Ağacı (Complete Tree Structure)
-
-Projeye terminal erişimi olmayan bir AI, aşağıdaki tüm klasörleri ve dosyaları doğrudan oluşturmalıdır:
-
-```text
-src/
-└── modules/
-    └── <modul_adi>/                          # Örn: inventory
-        ├── page.tsx                         # [OTOMATİK ROTA] Modül sayfası; src/app köprüsünü module:sync kurar
-        ├── routes/<yol>/page.tsx            # Alt sayfalar → /<kök>/<yol>
-        ├── api/<yol>/route.ts               # API rotaları → /api/<modul_adi>/<yol>
-        ├── module.config.ts                  # Modül meta verisi, sidebar menü tanımı, yetki bağlamı
-        ├── permissions.ts                   # definePermissions ile rol bazlı yetki matrisi
-        ├── schema.prisma                    # Modülün Prisma veritabanı modelleri
-        ├── index.ts                         # Kamuya açık İZOMORFİK giriş noktası (Public API)
-        ├── server.ts                        # Kamuya açık SUNUCU giriş noktası ("server-only")
-        ├── ui.ts                            # Kamuya açık UI bileşenleri girişi
-        │
-        ├── messages/
-        │   ├── tr.json                      # Türkçe yerelleştirilmiş metinler
-        │   └── de.json                      # Almanca yerelleştirilmiş metinler (Verein terminolojisi)
-        │
-        ├── types/ (veya types.ts)           # Modül içi TypeScript tipleri ve arayüzler
-        ├── constants.ts                     # Filtre sabitleri, sıralama alanları, varsayılanlar
-        │
-        ├── schemas/                         # Zod doğrulama şemaları
-        │   └── <modul_adi>-schema.ts        # Form validasyon şeması (create/update)
-        │
-        ├── queries/                         # Salt-okunur veritabanı sorguları (RSC için)
-        │   └── list-<modul_adi>.ts          # Sayfalanmış listeleme sorgusu
-        │
-        ├── actions/                         # Server Actions ("use server" form aksiyonları)
-        │   └── <modul_adi>-actions.ts       # Ekleme, güncelleme, silme mutasyonları
-        │
-        ├── components/                      # Modüle özel React bileşenleri
-        │   ├── <modul_adi>-table.tsx        # DataTable listeleme tablosu
-        │   └── <modul_adi>-form-modal.tsx   # Ekleme / düzenleme modal formu
-        │
-        └── views/                           # Sayfa düzeyinde Server Component görünümleri
-            └── <modul_adi>-list-view.tsx    # Ana listeleme görünümü
-```
-
----
-
-## 3. Adım Adım Dosya Şablonları & Kurallar
-
-### 1. `module.config.ts` (Modül Kimliği ve Menüsü)
-```typescript
-import { Download, FolderTree, Package } from "lucide-react"; // İlgili Lucide ikonları
-import type { ModuleConfig } from "@/shared/types/module";
-import { inventoryPermissions } from "./permissions";
-
-export const moduleConfig: ModuleConfig = {
-  key: "inventory",                       // Klasör adıyla BİREBİR AYNI olmalıdır
-  label: "Envanter",                      // Modülün görünen adı (TR)
-  description: "Dernek demirbaş ve malzeme takibi.",
-  category: "EXTENSION",                  // Eklentiler için 'EXTENSION', sistem için 'CORE'/'OFFICIAL'
-  hasSchema: true,                        // Veritabanı tablosu varsa true
-  nav: [
-    {
-      href: "/inventory",
-      label: "Envanter",
-      labelKey: "inventory",              // nav.<key> olarak çeviride çözülür
-      icon: Package,
-      group: "main",                      // 'main' (ana menü) veya 'settings' (ayarlar altı)
-      order: 10,
-      permission: { definition: inventoryPermissions, action: "view" },
-    },
-  ],
-  // Modül menüsü (sol panel). Ana sayfa ("Genel bakış") otomatik eklenir, burada tekrar edilmez.
-  menu: [
-    { key: "categories", label: "Kategoriler", href: "/inventory/kategoriler", icon: FolderTree },
-    { key: "export", label: "Excel'e aktar", href: "/api/inventory/export", icon: Download, isDownload: true },
-  ],
-};
-```
-
----
-
-### 2. `menu` (Sol Panel Modül Menüsü)
-Sayfada buton kalabalığı yaratmak yerine alt sayfalar, araçlar ve Excel dışa aktarımı `module.config.ts` içindeki `menu` dizisinde tanımlanır (örnek yukarıda). Kurallar:
-
-- **Ana sayfa tekrar edilmez:** `nav[0].href` "Genel bakış" olarak otomatik eklenir. Ana sayfanın farklı bir adı olacaksa (örn. E-posta: `/mail` = "Ayarlar") aynı `href` ile bir öğe tanımlanır, o zaman otomatik öğe eklenmez.
-- **Yetki:** Her öğe, hedef sayfanın gerçekten kontrol ettiği yetkiyi `permission: { definition, action }` ile taşır; verilmezse modülün `nav[0]` yetkisi kullanılır. Yetkisi olmayan kullanıcı bağlantıyı görmez.
-- **Çeviri:** Etiket `messages/tr.json` ve `messages/de.json` içinde `"menu": { "<key>": "..." }` altında tanımlanır; `label` yalnızca yedektir.
-- **Sorgu parametresi:** `href` sorgu içerebilir (örn. `/events?filter.timeFilter=upcoming`); bağlantı yalnızca parametre eşleşince aktif görünür.
-- **İndirme:** API rotaları (`/api/...`) `isDownload: true` ile işaretlenir.
-- **Denetim:** `tests/navigation.test.ts` her bağlantının bir sayfası (`page.tsx`) veya API rotası (`route.ts`) olduğunu ve her etiketin iki dilde çevrildiğini doğrular. Sayfası olmayan link CI'ı kırmızıya çevirir.
-
----
-
-### 3. `permissions.ts` (6 Temel Rol Yetki Matrisi)
-Sistemde 6 rol vardır. Yetki matrisi bu rolleri eksiksiz içermelidir:
-```typescript
-import { definePermissions } from "@/shared/permissions/define";
-
-export const inventoryPermissions = definePermissions("inventory", {
-  ADMIN: ["view", "create", "update", "delete", "approve"],
-  BOARD: ["view", "create", "update"],
-  SECRETARY: ["view", "create", "update"],
-  TREASURER: ["view"],
-  AUDITOR: ["view"],
-  VIEWER: ["view"],
-});
-```
-
----
-
-### 4. `schema.prisma` (Veritabanı Modelleri & Çakışma Önleme)
-- Tablo isimlerinde çakışmayı önlemek için mutlaka `@@map("<modul_adi>_...")` ön eki kullanılmalıdır.
-- Başka modüllerin tablolarına zorlayıcı `@relation` kurmak yerine **Yumuşak Referans (Soft Reference)** tercih edilir (örn: `memberId String?`).
-
-```prisma
-model InventoryItem {
-  id          String   @id @default(uuid())
-  title       String
-  category    String   @default("GENEL")
-  quantity    Int      @default(1)
-  location    String?
-  notes       String?
-  isActive    Boolean  @default(true)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  @@map("inventory_items")
-}
-```
-
----
-
-### 5. `messages/tr.json` ve `messages/de.json` (İki Dilli i18n Desteği)
-Modül metinleri otomatik olarak ana dil sözlüğünde modül anahtarı (`messages.<modul_adi>`) altına yerleşir.
-
-> **Kök `messages/<dil>.json` ÜRETİLEN dosyadır, elle düzenlenmez.** `pnpm module:sync` onu her seferinde `messages/shell/<dil>.json` (kabuk metinleri: `common`, `sidebar`, `panel` …) + modül dosyalarından baştan kurar. Modül ad alanı birleştirilmez, değiştirilir: modülden silinen anahtar kökte kalmaz. Sol paneldeki menü etiketi (`nav[0].labelKey`) modül dosyasındaki ayrılmış `"nav": { "<labelKey>": "..." }` bloğunda tanımlanır.
-
-```json
-// messages/tr.json
-{
-  "title": "Envanter ve Demirbaş",
-  "description": "Dernek malzemeleri, demirbaşlar ve zimmet kayıtları.",
-  "newItem": "Yeni Demirbaş",
-  "emptyTitle": "Demirbaş kaydı bulunamadı",
-  "emptyDescription": "Yeni bir demirbaş eklemek için butona tıklayın.",
-  "fields": {
-    "title": "Başlık",
-    "category": "Kategori",
-    "quantity": "Adet",
-    "location": "Konum"
-  }
-}
-```
-
-```json
-// messages/de.json
-{
-  "title": "Inventar & Sachmittel",
-  "description": "Verwaltung von Vereinsinventar und Sachmitteln.",
-  "newItem": "Neuer Eintrag",
-  "emptyTitle": "Keine Einträge vorhanden",
-  "emptyDescription": "Klicken Sie auf den Button, um das erste Inventar anzulegen.",
-  "fields": {
-    "title": "Titel",
-    "category": "Kategorie",
-    "quantity": "Anzahl",
-    "location": "Standort"
-  }
-}
-```
-
----
-
-### 6. Public API Giriş Noktaları (`index.ts`, `server.ts`, `ui.ts`)
-
-#### `index.ts` (İzomorfik — Hem İstemci Hem Sunucu)
-> **DİKKAT:** `index.ts` KESİNLİKLE `import "server-only"` İÇEREMEZ. Sadece tipler, şemalar ve moduleConfig export edilir.
-```typescript
-export { moduleConfig } from "./module.config";
-export { inventoryPermissions } from "./permissions";
-```
-
-#### `server.ts` (Sunucu — "server-only" Zorunludur)
-```typescript
-import "server-only";
-
-export { inventoryPermissions } from "./permissions";
-export { listInventoryItems } from "./queries/list-inventory";
-export { createInventoryAction, deleteInventoryAction } from "./actions/inventory-actions";
-```
-
-#### `ui.ts` (Görünümler ve UI Bileşenleri)
-```typescript
-export { InventoryListView } from "./views/inventory-list-view";
-```
-
----
-
-### 7. Modül Sayfası (`src/modules/<modul_adi>/page.tsx`)
-> `src/app` köprüsünü `pnpm module:sync` üretir; `src/app`'e elle dosya yazılmaz. Alt sayfa/API kuralları için bkz. `docs/MODULE_DEV_GUIDE.md` § 7.
-
-```typescript
-import { InventoryListView } from "./ui";
-
-export const metadata = { title: "Envanter" };
-
-export default async function InventoryPage({
-  searchParams,
-}: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
-  return <InventoryListView searchParams={searchParams} />;
-}
-```
-
----
-
-### 8. UI, Tablolar ve KRİTİK SSR Hydration Kuralı
-- **Sayfa Başlığı Eylem Alanı (`PageHeader actions`):** Sadece ana CRUD butonunu barındırır.
-- **Tablolar:** `@/shared/components/data-table` bileşenleri (`DataTable`, `DataTablePagination`) kullanılır.
-- ⚠️ **KRİTİK SSR HYDRATION KURALI (React 19 / Next.js 16):**
-  Tablo satırları (`map`) veya dinamik listeler içinde asla HeroUI'ın `<Select>` bileşenini kullanmayın. HeroUI Select rastgele dinamik `react-aria` kimlikleri ürettiği için SSR Hydration Mismatch hatası verir.
-  Bunun yerine tablo içi seçimlerde her zaman stillendirilmiş native HTML `<select>` kullanın:
-  ```tsx
-  <div className="relative inline-block w-full">
-    <select
-      value={item.status}
-      onChange={(e) => updateStatus(item.id, e.target.value)}
-      className="h-8 w-full appearance-none rounded-medium bg-default-100 px-2.5 pr-8 text-xs font-medium text-foreground transition-colors hover:bg-default-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer border border-transparent focus:border-primary/50"
-    >
-      <option value="ACTIVE">Aktif</option>
-      <option value="PASSIVE">Pasif</option>
-    </select>
-    <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-default-400" aria-hidden="true" />
-  </div>
-  ```
-
----
-
-## 4. Harici AI Agent İçin Özel Geliştirme Prompt Şablonu
-
-Aşağıdaki istemi, **projeye doğrudan terminal/dosya sistemi erişimi olmayan** harici bir yapay zekaya (ChatGPT, Claude web arayüzü vb.) doğrudan verebilirsiniz. Bu istem, AI'a tüm dosyaları eksiksiz dosya yollarıyla üretmesi için rehberlik eder:
-
-```markdown
-Sen Verein ERP dernek yönetim sistemi için üretim kalitesinde (production-ready) modül geliştiren uzman bir Full-Stack Next.js 16 / TypeScript / Prisma mühendisisin.
-Senden projemiz için `<MODUL_ADI>` (örn: `inventory`, `sponsors`, `events`) adında yeni bir bağımsız modül geliştirmeni istiyorum.
-
-PROJE MİMARİSİ VE SINIR KURALLARI:
-1. Dikey Dilim İzolasyonu (Vertical Slice Architecture): Modüle ait tüm dosyalar ve sayfa rotası İSTİSNASIZ `src/modules/<MODUL_ADI>/` altında olmalıdır. `src/app` dizinine ASLA dosya yazma.
-2. Sıfır Çekirdek Teması (Zero-Touch Core): `src/registry.ts`, `prisma/schema/base.prisma` veya kök `messages/` dosyalarına DOKUNMA. Kod yazma.
-3. Katı İthalat Sınırları (Strict Imports): Başka bir modülün iç dosyalarını ASLA doğrudan import etme. Yalnızca `@/modules/<modul>`, `@/modules/<modul>/server` ve `@/modules/<modul>/ui` public API'larını kullan. Modül içinden `src/app` katmanını ASLA import etme.
-
-SENİN ÜRETMEN GEREKEN DOSYALAR:
-Lütfen bana her bir dosyanın TAM DOSYA YOLUNU ve EKSİKSİZ ÇALIŞAN KODUNU sırasıyla ver:
-
-1. `src/modules/<MODUL_ADI>/module.config.ts`:
-   - `key: "<MODUL_ADI>"`, `category: "EXTENSION"`, `hasSchema: true`, `nav: [...]` (Lucide ikonu ile), alt sayfa varsa `menu: [...]` (`key`, `label`, `href` ['/' ile başlayan], `icon` [Lucide bileşeni], gerekirse `permission`, indirme için `isDownload: true`).
-2. (Kaldırıldı — modül menüsü artık `module.config.ts` içindeki `menu` dizisindedir.)
-3. `src/modules/<MODUL_ADI>/permissions.ts`:
-   - `definePermissions("<MODUL_ADI>", { ADMIN: [...], BOARD: [...], SECRETARY: [...], TREASURER: [...], AUDITOR: [...], VIEWER: [...] })` şeklinde 6 rolü de tanımla.
-4. `src/modules/<MODUL_ADI>/schema.prisma`:
-   - Veritabanı modeli. Tablo isimlerinde çakışmayı önlemek için mutlaka `@@map("<MODUL_ADI>_...")` kullan.
-5. `src/modules/<MODUL_ADI>/messages/tr.json` ve `src/modules/<MODUL_ADI>/messages/de.json`:
-   - Başlıklar, butonlar, alanlar, hata mesajları için Türkçe ve Almanca tam çeviri sözlükleri.
-6. `src/modules/<MODUL_ADI>/index.ts`:
-   - İzomorfik kamuya açık dosya (`moduleConfig`, yetkiler, tipler). KESİNLİKLE 'server-only' içermez.
-7. `src/modules/<MODUL_ADI>/server.ts`:
-   - Sunucu kamuya açık dosyası. İlk satırında `import "server-only";` bulunmalı. Sorgu ve mutasyonları dışa aktar.
-8. `src/modules/<MODUL_ADI>/ui.ts`:
-   - UI kamuya açık dosyası. Görünüm bileşenlerini dışa aktar.
-9. `src/modules/<MODUL_ADI>/schemas/<MODUL_ADI>-schema.ts`:
-   - Zod doğrulama şeması.
-10. `src/modules/<MODUL_ADI>/queries/list-<MODUL_ADI>.ts`:
-    - Prisma ile veritabanından veri çeken sayfalama ve filtreleme destekli sorgu fonksiyonu.
-11. `src/modules/<MODUL_ADI>/actions/<MODUL_ADI>-actions.ts`:
-    - `"use server"` Server Action mutasyon fonksiyonları (ekleme, güncelleme, silme). `requirePermission` ile yetki denetimi yap.
-12. `src/modules/<MODUL_ADI>/components/<MODUL_ADI>-table.tsx`:
-    - Tablo bileşeni. SSR Hydration Mismatch hatası vermemesi için tablo satırlarında HeroUI Select YERİNE native HTML `<select>` kullan.
-13. `src/modules/<MODUL_ADI>/views/<MODUL_ADI>-list-view.tsx`:
-    - `PageHeader` (actions kısmında yalnızca `+ Yeni Ekle` butonu olmalı) ve tabloyu render eden ana RSC görünümü.
-14. `src/modules/<MODUL_ADI>/page.tsx`:
-    - Modülün sayfası. `src/app` köprüsünü `pnpm module:sync` otomatik kurar.
-
-Lütfen kodları placeholder veya "TODO" bırakmadan, çalışmaya hazır ve eksiksiz olarak üret.
-```
-
----
-
-## 5. Modül Dosyaları Oluşturulduktan Sonraki Adımlar
-
-Geliştirici veya AI dosyaları projeye ekledikten sonra terminalde şu 3 komutu koşturarak modülü anında canlıya alır:
+## 1. En hızlı ve en güvenli yol: iskeletle başla
 
 ```bash
-# 1. Modülün şemasını, çevirilerini ve registry kaydını sisteme otomatik bağla
-pnpm module:sync
-
-# 2. Modülün standartlara ve import kurallarına uygunluğunu doğrula
-pnpm module:validate <MODUL_ADI>
-
-# 3. Tip kontrolünü ve testleri koştur
-pnpm typecheck
-pnpm test
+pnpm module:create sponsors "Sponsorlar" "Sponsoren"
+pnpm db:migrate --name add_sponsors      # tabloyu oluşturur (db push KULLANMA)
+pnpm dev                                 # → /sponsors
 ```
+
+İskelet **ilk andan çalışan** bir modül üretir: liste (arama, durum filtresi, sıralama, sayfalama),
+sağ çekmecede oluşturma/düzenleme formu, silme onayı, denetim kaydı ve Türkçe/Almanca çeviriler.
+Tüm kurallardan geçer (tip, lint, sabit metin, çeviri, modül standardı). Yeni alanları ve ekranları
+bu iskeletin üzerine ekle; kalıpları kopyalayarak ilerle.
+
+Şablonların kaynağı: `scripts/scaffold-templates.ts` (testi: `tests/scaffold.test.ts`).
+
+---
+
+## 2. Temel ilkeler
+
+1. **Sıfır dokunuş:** `src/app`, `src/registry.ts`, `prisma/schema/*` ve kök `messages/*.json` elle
+   düzenlenmez. `pnpm module:sync` hepsini modül klasöründen üretir.
+2. **Dikey dilim:** Modülün her şeyi (şema, yetki, çeviri, sayfa, API, bileşen) `src/modules/<anahtar>/`
+   altındadır.
+3. **Public API sınırı:** Başka modüller yalnızca `@/modules/<m>` (`index.ts`, izomorfik),
+   `@/modules/<m>/server` (`server.ts`, `import "server-only"`) ve `@/modules/<m>/ui` (`ui.ts`)
+   üzerinden kullanılır. İç klasörler özeldir (ESLint sınır kuralı).
+4. **İnce görünüm:** `views/*` yalnızca orkestrasyon yapar: `queries/` ile okur, `components/`'e
+   prop geçirir. Hesaplama `helpers/` (saf) veya `services/` (çok adımlı iş, dışa aktarma) içindedir;
+   mutasyonlar `actions/` (`"use server"`) içindedir.
+
+---
+
+## 3. Klasör yapısı
+
+```text
+src/modules/<anahtar>/
+├── module.config.ts     # kimlik, nav (sol panel), menu (modül alt menüsü)
+├── permissions.ts       # 6 rolün yetki matrisi (definePermissions)
+├── schema.prisma        # modelleri; tablo adları @@map("<anahtar>_...")
+├── index.ts | server.ts | ui.ts
+├── page.tsx             # modül ana sayfası  → /<anahtar>
+├── routes/<yol>/page.tsx   # alt sayfalar   → /<anahtar>/<yol>
+├── api/<yol>/route.ts      # API rotaları   → /api/<anahtar>/<yol>
+├── messages/tr.json | de.json
+├── schemas/  queries/  actions/  services/  helpers/
+├── components/          # "use client" bileşenler (HeroUI yalnızca burada)
+└── views/               # sunucu bileşenleri (HeroUI YOK)
+```
+
+`page.tsx`, `routes/` ve `api/` dosyalarının `src/app` köprülerini `pnpm module:sync` üretir.
+Rota segment ayarları (`export const runtime = "nodejs"` vb.) kaynak dosyada yazılır, köprüye kopyalanır.
+
+---
+
+## 4. Sunucu ve istemci bileşenleri
+
+- `views/*` ve `page.tsx` **sunucu bileşenidir**: `"use client"` yok, hook yok,
+  **`@heroui/react` import edilmez** (sayfa 500 ile düşer). HeroUI gerekiyorsa `components/` altında
+  `"use client"` bir bileşen yaz. PageHeader butonları için hazır istemci bileşenler:
+  `LinkButton`, `FormDrawerButton`.
+- `"use client"` / `"use server"` dosyanın **ilk satırıdır**; önüne import gelirse direktif geçersiz olur.
+- Liste içinde (`map`) HeroUI `Select` kullanma (SSR kimlik uyuşmazlığı); stillendirilmiş native
+  `<select>` kullan.
+- Render sırasında `Date.now()` / `new Date()` çağırma; tarih karşılaştırmasını sorguda/helper'da yap.
+- `any` yok; `catch (error)` + `error instanceof Error`.
+
+---
+
+## 5. Formlar: sağdan açılan çekmece standardı
+
+Oluşturma/düzenleme formları ayrı sayfa veya modal değil, **sağ çekmecede** açılır. Açık olması URL'de tutulur:
+
+| Nerede | Parametre | Görünüm |
+| --- | --- | --- |
+| Liste sayfası | `?yeni` (gerekirse `?yeni=<tür>`) | `<X>CreateView` |
+| Liste sayfası | `?duzenle=<id>` | `<X>EditView id` |
+| Detay sayfası | `?duzenle` | `<X>EditView id` |
+
+Yapı taşları (`@/shared/components/forms/form-drawer`):
+
+- `FormDrawer`: sunucu view'ı formu bunun içine koyar; kapatınca yalnızca `yeni`/`duzenle` silinir, filtreler korunur. Mobilde tam ekrandır.
+- `FormDrawerButton param="yeni"`: PageHeader butonu (mevcut sorguyu koruyarak açar).
+- `useFormDrawerHref()`: tablo satır eylemleri için (`drawerHref("duzenle", row.id)`).
+- `useFormDrawerClose()`: form kaydedince/vazgeçince çekmeceyi kapatır.
+- `FormSurface`: sayfada kart, çekmecede çerçevesiz form kabı.
+
+İptal/onay soruları (sil, stornier, test e-postası) form değildir; `ConfirmDialog` veya modal kalır.
+Örnek uygulama: iskeletin `views/item-*-view.tsx` ve `components/item-form.tsx` dosyaları.
+
+---
+
+## 6. Çeviriler (Türkçe + Almanca zorunlu)
+
+- **Arayüzde sabit metin yoktur.** Tüm metinler `messages/tr.json` ve `messages/de.json` içindedir;
+  iki dosya **aynı anahtarlara** sahip olmalıdır.
+- Sunucuda `await getTranslations("<anahtar>.<alan>")`, istemcide `useTranslations(...)`.
+- Zorunlu anahtarlar:
+  - `nav.<labelKey>`: sol panel adı;
+  - `module.label` / `module.description`: modül yönetimi listesi;
+  - `menu.<key>`: her modül menüsü öğesi;
+  - `meta.*`: sayfa başlıkları; `page.tsx` içinde `generateMetadata` kullan, sabit `metadata` değil.
+- **Doğrulama ve hata mesajları çeviri anahtarıdır:** `z.string().min(1, "<anahtar>.validation.titleRequired")`,
+  `throw new ActionError("<anahtar>.errors.notFound")`. Değer gerekiyorsa üçüncü parametre:
+  `new ActionError(key, undefined, { number })`. `createAction` bunları kullanıcının diline çevirir;
+  form bileşenleri de alan hatalarını çevirir.
+- Enum etiketleri kodda değil mesajlardadır (`types.ACTIVE`, `status.OPEN` …). `constants.ts` yalnızca
+  değer listesi tutar.
+- ICU kuralı: mesaj içinde `<Jahr>` gibi açılı ayraç kullanma (etiket sanılır); değişken `{ad}` biçimindedir.
+- Excel/PDF: Excel başlıkları arayüz dilini izler (Türkçe çıktı şartnamedeki metinlerle aynıdır).
+  Resmî PDF'ler `?lang=de|tr` alır ve `pdf/strings.ts` sözlüğü kullanır.
+
+Kök `messages/<dil>.json` **üretilen** dosyadır; `messages/shell/<dil>.json` + modül dosyalarından kurulur.
+
+---
+
+## 7. Diğer kurallar
+
+- **Yetki:** `permissions.ts` 6 rolün tamamını içerir (ADMIN, BOARD, SECRETARY, TREASURER, AUDITOR, VIEWER).
+  Mutasyonlar `createAction({ permission, schema, handler })` ile yazılır; yetki, şema doğrulama,
+  denetim kaydı (`audit`) ve hata çevirisi oradadır.
+- **Veritabanı:** `const db = getDb()` (`@/shared/db`). Başka modülün tablosuna `@relation` yerine
+  yumuşak referans (`memberId String?` + etiket anlık görüntüsü). Şema değişikliği = migration (`pnpm db:migrate`).
+- **Menü:** Alt sayfalar ve dışa aktarma `module.config.ts → menu` içindedir (ana sayfa otomatik eklenir;
+  API bağlantıları `isDownload: true`; gerekirse `permission`). PageHeader'da yalnızca ana "Yeni" eylemi olur.
+- **Liste:** `parseListParams` + `DataTable` (`@/shared/components/data-table/data-table`); arama, filtre,
+  sıralama ve sayfalama URL'dedir.
+
+---
+
+## 8. Doğrulama (CI aynı adımları çalıştırır)
+
+```bash
+pnpm module:sync                                  # köprüler, şema, çeviri, kayıt
+pnpm module:validate                              # modül standardı + çeviri bütünlüğü + migration
+pnpm exec tsx scripts/check-i18n-keys.ts          # kullanılan her anahtar tr/de'de var; ICU geçerli
+pnpm exec tsx scripts/check-hardcoded-text.ts     # arayüzde sabit metin yok
+pnpm typecheck && pnpm lint && pnpm test
+```
+
+Testlerin yakaladıkları: elle yazılmış `src/app` dosyası (`zero-touch`), ilk satırda olmayan direktif
+(`directives`), "use client" olmadan HeroUI (`heroui-client-only`), sayfası olmayan menü bağlantısı
+(`navigation`), iskelet şablonlarının kurallara uyumu (`scaffold`).

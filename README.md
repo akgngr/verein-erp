@@ -89,19 +89,18 @@ pg_restore --no-owner --no-acl -d "$DATABASE_URL" dernek.dump
   içindeki `FILE_TYPE_RULES` listesine uzantı + beklenen MIME + imza türü
   ekleyin; izin listesi tek yerden yönetilir.
 
-## 5. Yeni modül ekleme (yalnızca 6 adım)
+## 5. Yeni modül ekleme
 
-1. `src/modules/<yeni>/` klasörünü standart yapıyla oluşturun:
-   `index.ts`, `server.ts`, `ui.ts`, `module.config.ts`, `permissions.ts`
-   (+ gerektiğinde `schemas/`, `queries/`, `actions/`, `components/`, `views/`).
-2. `prisma/schema/<yeni>.prisma` dosyasını ekleyin, `pnpm db:migrate` ile migration oluşturun.
-3. `permissions.ts` içinde yetkileri `definePermissions` ile tanımlayın.
-4. `module.config.ts` içinde menü öğelerini tanımlayın (icon, href, group, order, permission).
-5. `src/registry.ts` içindeki listeye modülü ekleyin.
-6. `src/app/(dashboard)/<rota>/page.tsx` ince route dosyalarını oluşturun
-   (yalnızca modül view bileşenini render eder).
+```bash
+pnpm module:create sponsors "Sponsorlar" "Sponsoren"   # çalışan iskelet (liste, çekmece form, TR/DE)
+pnpm db:migrate --name add_sponsors
+pnpm dev                                               # → /sponsors
+```
 
-Bu 6 adım dışında `shared` ya da başka bir modül değiştirilmez.
+Modül yalnızca `src/modules/<anahtar>/` altında yazılır; `src/app`, `src/registry.ts`, Prisma şeması
+ve kök çeviri dosyaları `pnpm module:sync` tarafından üretilir (elle düzenlenmez).
+Kurallar ve doğrulama adımları: [docs/MODULE_DEVELOPMENT_GUIDE.md](docs/MODULE_DEVELOPMENT_GUIDE.md)
+(İngilizce: [docs/MODULE_DEVELOPMENT_GUIDE_EN.md](docs/MODULE_DEVELOPMENT_GUIDE_EN.md)).
 
 ## 6. Mimari kurallar (özet)
 
