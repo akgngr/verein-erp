@@ -1,0 +1,16 @@
+[
+  {
+    "key": "settings",
+    "label": "Ayarlar",
+    "labelKey": "topNav.settings",
+    "href": "/mail",
+    "icon": "Settings"
+  },
+  {
+    "key": "logs",
+    "label": "Gönderim Kayıtları",
+    "labelKey": "topNav.logs",
+    "href": "/mail/kayitlar",
+    "icon": "ScrollText"
+  }
+]

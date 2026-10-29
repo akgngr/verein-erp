@@ -41,7 +41,9 @@
     "muhasebe": "Buchhaltung",
     "bagislar": "Spenden",
     "ayarlar": "Einstellungen",
-    "moduller": "Modulverwaltung"
+    "moduller": "Modulverwaltung",
+    "inventory": "Inventar",
+    "mail": "E-Mail"
   },
   "sidebar": {
     "brand": "Vereinsverwaltung",
@@ -1740,6 +1742,248 @@
       "filterType": "Kategorie-Filter",
       "filterStatus": "Status-Filter",
       "all": "Alle"
+    }
+  },
+  "inventory": {
+    "title": "Inventar & Sachmittel",
+    "description": "Verwaltung von Vereinsinventar, technischer Ausrüstung und Ausgaben an Mitglieder.",
+    "newItem": "Neuer Eintrag",
+    "emptyTitle": "Keine Einträge vorhanden",
+    "emptyDescription": "Klicken Sie auf „Neuer Eintrag“, um das erste Inventar anzulegen.",
+    "noResultsTitle": "Keine Treffer",
+    "noResultsDescription": "Für Ihre Such- bzw. Filterkriterien wurden keine Einträge gefunden. Setzen Sie die Filter zurück.",
+    "fields": {
+      "name": "Bezeichnung",
+      "category": "Kategorie",
+      "serialNumber": "Seriennummer",
+      "location": "Standort / Raum",
+      "quantity": "Anzahl",
+      "status": "Zustand",
+      "purchaseDate": "Anschaffungsdatum",
+      "purchasePrice": "Anschaffungspreis",
+      "description": "Beschreibung",
+      "assignedMemberId": "Ausgegeben an (Mitglied)",
+      "createdAt": "Erfasst am"
+    },
+    "placeholders": {
+      "search": "Bezeichnung, Seriennummer, Standort oder Beschreibung durchsuchen…",
+      "name": "z. B. Beamer",
+      "serialNumber": "z. B. SN-2024-001",
+      "location": "z. B. Vereinsheim, Besprechungsraum",
+      "assignedMemberId": "Mitglieds-ID",
+      "description": "Zusätzliche Angaben, Garantiehinweise usw."
+    },
+    "hints": {
+      "assignedMemberId": "Optional: ID des Mitglieds, an das der Gegenstand ausgegeben wurde."
+    },
+    "categories": {
+      "ELECTRONICS": "Elektronik",
+      "FURNITURE": "Möbel",
+      "KITCHEN": "Küche",
+      "OFFICE": "Büro",
+      "SPORTS": "Sport",
+      "OTHER": "Sonstiges"
+    },
+    "statuses": {
+      "IN_USE": "In Benutzung",
+      "IDLE": "Verfügbar",
+      "BROKEN": "Defekt",
+      "SCRAPPED": "Ausgemustert"
+    },
+    "stats": {
+      "title": "Inventarübersicht",
+      "totalQuantity": "Gesamtanzahl",
+      "inUse": "In Benutzung",
+      "broken": "Defekt",
+      "itemCount": "{count} Einträge"
+    },
+    "filters": {
+      "search": "Suchen",
+      "allCategories": "Alle Kategorien",
+      "allStatuses": "Alle Zustände",
+      "sortBy": "Sortierung",
+      "direction": "Sortierrichtung",
+      "asc": "Aufsteigend",
+      "desc": "Absteigend",
+      "apply": "Anwenden",
+      "reset": "Filter zurücksetzen",
+      "sortOptions": {
+        "name": "Nach Bezeichnung",
+        "category": "Nach Kategorie",
+        "status": "Nach Zustand",
+        "quantity": "Nach Anzahl",
+        "purchaseDate": "Nach Anschaffungsdatum",
+        "purchasePrice": "Nach Anschaffungspreis",
+        "createdAt": "Nach Erfassungsdatum"
+      }
+    },
+    "actions": {
+      "create": "Anlegen",
+      "save": "Änderungen speichern",
+      "cancel": "Abbrechen",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "confirmDelete": "Ja, löschen"
+    },
+    "modal": {
+      "createTitle": "Neuer Inventareintrag",
+      "editTitle": "Inventareintrag bearbeiten",
+      "deleteTitle": "Inventareintrag löschen",
+      "deleteDescription": "Der Eintrag „{name}“ wird dauerhaft gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden."
+    },
+    "table": {
+      "actions": "Aktionen",
+      "unassigned": "Nicht ausgegeben",
+      "serialPrefix": "SN:"
+    },
+    "validation": {
+      "nameRequired": "Bitte geben Sie eine Bezeichnung ein.",
+      "tooLong": "Der eingegebene Text ist zu lang.",
+      "quantityInteger": "Die Anzahl muss eine ganze Zahl sein.",
+      "quantityMin": "Die Anzahl muss mindestens 1 betragen.",
+      "quantityMax": "Die Anzahl überschreitet den zulässigen Höchstwert.",
+      "priceMin": "Der Anschaffungspreis darf nicht negativ sein.",
+      "priceMax": "Der Anschaffungspreis überschreitet den zulässigen Höchstwert.",
+      "dateInvalid": "Bitte geben Sie ein gültiges Datum ein.",
+      "invalid": "Ungültiger Wert."
+    },
+    "errors": {
+      "forbidden": "Sie haben keine Berechtigung für diese Aktion.",
+      "validation": "Die Eingaben sind ungültig. Bitte prüfen Sie das Formular.",
+      "notFound": "Der Inventareintrag wurde nicht gefunden. Möglicherweise wurde er gelöscht.",
+      "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+    },
+    "export": {
+      "filePrefix": "inventar"
+    },
+    "categoriesPage": {
+      "title": "Kategorien",
+      "description": "Anzahl der Einträge und Gesamtanzahl je Kategorie.",
+      "columns": {
+        "category": "Kategorie",
+        "itemCount": "Einträge",
+        "totalQuantity": "Gesamtanzahl"
+      },
+      "viewItems": "Anzeigen",
+      "total": "Gesamt"
+    },
+    "topNav": {
+      "overview": "Übersicht",
+      "categories": "Kategorien",
+      "export": "Excel-Export"
+    }
+  },
+  "mail": {
+    "title": "E-Mail-Einstellungen",
+    "description": "SMTP-Server und Absenderangaben für alle E-Mails, die das System versendet.",
+    "topNav": {
+      "settings": "Einstellungen",
+      "logs": "Versandprotokoll"
+    },
+    "status": {
+      "title": "Status",
+      "configured": "E-Mail-Versand ist eingerichtet",
+      "notConfigured": "E-Mail-Versand ist nicht eingerichtet",
+      "configuredHint": "Nach Änderungen sollten Sie die Verbindung prüfen und eine Test-E-Mail senden.",
+      "notConfiguredHint": "Tragen Sie SMTP-Server und Absenderadresse ein und speichern Sie. Die Zugangsdaten erhalten Sie von Ihrem E-Mail-Anbieter (Hoster).",
+      "server": "Server",
+      "sender": "Absender",
+      "updatedAt": "Zuletzt geändert"
+    },
+    "settings": {
+      "title": "SMTP-Einstellungen",
+      "description": "Geben Sie die SMTP-Zugangsdaten Ihres E-Mail-Anbieters ein (z. B. IONOS, Strato, all-inkl, Google Workspace).",
+      "saved": "Einstellungen gespeichert.",
+      "verified": "Verbindung erfolgreich: Der SMTP-Server ist erreichbar und die Anmeldung war erfolgreich.",
+      "logModeOk": "Im Testmodus ist keine Verbindung nötig; E-Mails werden nur protokolliert.",
+      "readOnly": "Diese Einstellungen können nur Administratoren ändern."
+    },
+    "fields": {
+      "transport": "Versandart",
+      "host": "SMTP-Server",
+      "port": "Port",
+      "security": "Verschlüsselung",
+      "username": "Benutzername",
+      "password": "Passwort",
+      "fromAddress": "Absenderadresse",
+      "fromName": "Absendername",
+      "replyTo": "Antwortadresse",
+      "testRecipient": "Empfängeradresse"
+    },
+    "placeholders": {
+      "host": "z. B. smtp.ionos.de",
+      "username": "Meist Ihre E-Mail-Adresse",
+      "passwordStored": "••••••••",
+      "fromAddress": "z. B. info@verein.de",
+      "fromName": "z. B. Musterverein e. V.",
+      "replyTo": "z. B. vorstand@verein.de",
+      "testRecipient": "name@beispiel.de",
+      "logSearch": "Empfänger oder Betreff suchen…"
+    },
+    "hints": {
+      "logMode": "Testmodus: E-Mails werden nicht versendet, sondern nur im Versandprotokoll erfasst. Für den Echtbetrieb SMTP wählen.",
+      "password": "Das Passwort wird verschlüsselt gespeichert und nicht wieder angezeigt.",
+      "passwordStored": "Ein Passwort ist gespeichert. Zum Ändern neues Passwort eingeben, zum Beibehalten leer lassen.",
+      "replyTo": "Optional: Adresse, an die Antworten der Empfänger gehen."
+    },
+    "transports": {
+      "SMTP": "SMTP (echter Versand)",
+      "LOG": "Testmodus (nur protokollieren)"
+    },
+    "security": {
+      "STARTTLS": "STARTTLS (Port 587)",
+      "SSL": "SSL/TLS (Port 465)",
+      "NONE": "Unverschlüsselt (nicht empfohlen)"
+    },
+    "statuses": {
+      "SENT": "Versendet",
+      "FAILED": "Fehlgeschlagen",
+      "LOGGED": "Test (nicht versendet)"
+    },
+    "actions": {
+      "save": "Speichern",
+      "verify": "Verbindung prüfen",
+      "sendTest": "Test-E-Mail senden",
+      "close": "Schließen"
+    },
+    "testMail": {
+      "title": "Test-E-Mail senden",
+      "description": "Es wird eine Test-E-Mail mit den gespeicherten Einstellungen an die angegebene Adresse gesendet. Ungespeicherte Änderungen werden nicht verwendet.",
+      "subject": "Verein ERP — Test-E-Mail",
+      "body": "Hallo,\n\ndies ist eine Test-E-Mail zur Überprüfung der E-Mail-Einstellungen von Verein ERP. Wenn Sie diese Nachricht erhalten, funktioniert der E-Mail-Versand.\n\nBitte antworten Sie nicht auf diese E-Mail.",
+      "sent": "Die Test-E-Mail wurde an {to} gesendet. Bitte prüfen Sie den Posteingang (und den Spam-Ordner)."
+    },
+    "logs": {
+      "title": "Versandprotokoll",
+      "description": "Protokoll aller vom System versendeten E-Mails. Aus Datenschutzgründen werden keine Nachrichteninhalte gespeichert.",
+      "empty": "Keine Einträge im Versandprotokoll.",
+      "columns": {
+        "createdAt": "Datum",
+        "to": "Empfänger",
+        "subject": "Betreff",
+        "module": "Modul",
+        "status": "Status",
+        "error": "Fehler"
+      }
+    },
+    "validation": {
+      "hostRequired": "Bitte geben Sie den SMTP-Server an.",
+      "fromAddressRequired": "Bitte geben Sie eine Absenderadresse an.",
+      "emailRequired": "Bitte geben Sie eine E-Mail-Adresse ein.",
+      "emailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+      "portInvalid": "Der Port muss eine ganze Zahl zwischen 1 und 65535 sein.",
+      "tooLong": "Der eingegebene Text ist zu lang.",
+      "invalid": "Ungültiger Wert."
+    },
+    "errors": {
+      "forbidden": "Sie haben keine Berechtigung für diese Aktion.",
+      "validation": "Die Eingaben sind ungültig. Bitte prüfen Sie das Formular.",
+      "notConfigured": "Der E-Mail-Versand ist noch nicht eingerichtet. Bitte speichern Sie zuerst die SMTP-Einstellungen.",
+      "encryptionKeyMissing": "Das Passwort konnte nicht sicher gespeichert werden: Auf dem Server ist kein Schlüssel (AUTH_SECRET) hinterlegt. Bitte wenden Sie sich an Ihren Administrator.",
+      "passwordUnreadable": "Das gespeicherte Passwort kann nicht entschlüsselt werden (Serverschlüssel geändert?). Bitte Passwort neu eingeben und speichern.",
+      "connectionFailed": "Verbindung zum SMTP-Server oder Anmeldung fehlgeschlagen. Bitte Server, Port, Verschlüsselung und Zugangsdaten prüfen.",
+      "sendFailed": "Die Test-E-Mail konnte nicht gesendet werden.",
+      "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
     }
   }
 }

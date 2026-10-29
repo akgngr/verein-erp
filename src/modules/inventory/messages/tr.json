@@ -1,0 +1,112 @@
+{
+  "nav": {
+    "inventory": "Envanter"
+  },
+  "title": "Envanter ve Demirbaş",
+  "description": "Dernek demirbaşları, teknik ekipmanlar ve zimmet kayıtları.",
+  "newItem": "Yeni Demirbaş",
+  "emptyTitle": "Demirbaş kaydı bulunamadı",
+  "emptyDescription": "Yeni bir demirbaş eklemek için \"Yeni Demirbaş\" butonuna tıklayın.",
+  "noResultsTitle": "Sonuç bulunamadı",
+  "noResultsDescription": "Arama veya filtre kriterlerinize uyan demirbaş yok. Filtreleri sıfırlamayı deneyin.",
+  "fields": {
+    "name": "Demirbaş Adı",
+    "category": "Kategori",
+    "serialNumber": "Seri No",
+    "location": "Konum / Oda",
+    "quantity": "Adet",
+    "status": "Durum",
+    "purchaseDate": "Alım Tarihi",
+    "purchasePrice": "Alım Bedeli",
+    "description": "Açıklama",
+    "assignedMemberId": "Zimmetli Üye",
+    "createdAt": "Kayıt Tarihi"
+  },
+  "placeholders": {
+    "search": "Ad, seri no, konum veya açıklamada ara…",
+    "name": "Örn. Projeksiyon cihazı",
+    "serialNumber": "Örn. SN-2024-001",
+    "location": "Örn. Toplantı salonu",
+    "assignedMemberId": "Üye ID",
+    "description": "Ek bilgiler, garanti notları vb."
+  },
+  "hints": {
+    "assignedMemberId": "Opsiyonel: demirbaşın zimmetlendiği üyenin ID'si."
+  },
+  "categories": {
+    "ELECTRONICS": "Elektronik",
+    "FURNITURE": "Mobilya",
+    "KITCHEN": "Mutfak",
+    "OFFICE": "Ofis",
+    "SPORTS": "Spor",
+    "OTHER": "Diğer"
+  },
+  "statuses": {
+    "IN_USE": "Kullanımda",
+    "IDLE": "Boşta",
+    "BROKEN": "Arızalı",
+    "SCRAPPED": "Hurda"
+  },
+  "stats": {
+    "title": "Envanter özeti",
+    "totalQuantity": "Toplam Adet",
+    "inUse": "Kullanımda",
+    "broken": "Arızalı",
+    "itemCount": "{count} kayıt"
+  },
+  "actions": {
+    "create": "Kaydet",
+    "save": "Değişiklikleri Kaydet",
+    "cancel": "İptal",
+    "edit": "Düzenle",
+    "delete": "Sil",
+    "confirmDelete": "Evet, Sil"
+  },
+  "modal": {
+    "createTitle": "Yeni Demirbaş",
+    "editTitle": "Demirbaşı Düzenle",
+    "deleteTitle": "Demirbaşı Sil",
+    "deleteDescription": "\"{name}\" kaydı kalıcı olarak silinecek. Bu işlem geri alınamaz."
+  },
+  "table": {
+    "actions": "İşlemler",
+    "unassigned": "Zimmet yok",
+    "serialPrefix": "SN:"
+  },
+  "validation": {
+    "nameRequired": "Demirbaş adı zorunludur.",
+    "tooLong": "Girilen metin çok uzun.",
+    "quantityInteger": "Adet tam sayı olmalıdır.",
+    "quantityMin": "Adet en az 1 olmalıdır.",
+    "quantityMax": "Adet izin verilen üst sınırı aşıyor.",
+    "priceMin": "Alım bedeli negatif olamaz.",
+    "priceMax": "Alım bedeli izin verilen üst sınırı aşıyor.",
+    "dateInvalid": "Geçerli bir tarih girin.",
+    "invalid": "Geçersiz değer."
+  },
+  "errors": {
+    "forbidden": "Bu işlem için yetkiniz yok.",
+    "validation": "Girilen bilgiler geçersiz. Lütfen formu kontrol edin.",
+    "notFound": "Demirbaş kaydı bulunamadı. Silinmiş olabilir.",
+    "unknown": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin."
+  },
+  "export": {
+    "filePrefix": "envanter"
+  },
+  "categoriesPage": {
+    "title": "Kategoriler",
+    "description": "Kategori bazında demirbaş kayıt sayısı ve toplam adet.",
+    "columns": {
+      "category": "Kategori",
+      "itemCount": "Kayıt Sayısı",
+      "totalQuantity": "Toplam Adet"
+    },
+    "viewItems": "Listele",
+    "total": "Toplam"
+  },
+  "topNav": {
+    "overview": "Genel Bakış",
+    "categories": "Kategoriler",
+    "export": "Excel Dışa Aktar"
+  }
+}

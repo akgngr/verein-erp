@@ -1,0 +1,34 @@
+model MailSettings {
+  id                String   @id @default("default")
+  transport         String   @default("SMTP")
+  host              String?
+  port              Int      @default(587)
+  security          String   @default("STARTTLS")
+  username          String?
+  passwordEncrypted String?
+  fromAddress       String?
+  fromName          String?
+  replyTo           String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  @@map("mail_settings")
+}
+
+model MailLog {
+  id        String   @id @default(uuid())
+  toAddress String
+  toName    String?
+  subject   String
+  status    String
+  error     String?
+  messageId String?
+  module    String
+  reference String?
+  createdAt DateTime @default(now())
+
+  @@index([status])
+  @@index([module])
+  @@index([createdAt])
+  @@map("mail_logs")
+}

@@ -1,0 +1,116 @@
+{
+  "nav": {
+    "mail": "E-posta"
+  },
+  "title": "E-posta Ayarları",
+  "description": "Sistemin gönderdiği tüm e-postalar için SMTP sunucusu ve gönderen bilgileri.",
+  "topNav": {
+    "settings": "Ayarlar",
+    "logs": "Gönderim Kayıtları"
+  },
+  "status": {
+    "title": "Durum",
+    "configured": "E-posta gönderimi hazır",
+    "notConfigured": "E-posta gönderimi yapılandırılmadı",
+    "configuredHint": "Ayarları değiştirdikten sonra bağlantıyı doğrulayıp test e-postası göndermeniz önerilir.",
+    "notConfiguredHint": "SMTP sunucusu ve gönderen adresini girip kaydedin. Bu bilgileri e-posta sağlayıcınızdan (hosting firması) alabilirsiniz.",
+    "server": "Sunucu",
+    "sender": "Gönderen",
+    "updatedAt": "Son güncelleme"
+  },
+  "settings": {
+    "title": "SMTP Ayarları",
+    "description": "E-posta sağlayıcınızın (örn. IONOS, Strato, all-inkl, Google Workspace) SMTP bilgilerini girin.",
+    "saved": "Ayarlar kaydedildi.",
+    "verified": "Bağlantı başarılı: SMTP sunucusuna bağlanıldı ve giriş yapıldı.",
+    "logModeOk": "Test modunda bağlantı gerekmez; e-postalar gönderilmeden kaydedilir.",
+    "readOnly": "Bu ayarları yalnızca yöneticiler değiştirebilir."
+  },
+  "fields": {
+    "transport": "Gönderim Modu",
+    "host": "SMTP Sunucusu",
+    "port": "Port",
+    "security": "Güvenlik",
+    "username": "Kullanıcı Adı",
+    "password": "Şifre",
+    "fromAddress": "Gönderen Adresi",
+    "fromName": "Gönderen Adı",
+    "replyTo": "Yanıt Adresi",
+    "testRecipient": "Alıcı E-posta Adresi"
+  },
+  "placeholders": {
+    "host": "örn. smtp.ionos.de",
+    "username": "Genellikle e-posta adresinizdir",
+    "passwordStored": "••••••••",
+    "fromAddress": "örn. info@dernek.de",
+    "fromName": "örn. Örnek Derneği e.V.",
+    "replyTo": "örn. yonetim@dernek.de",
+    "testRecipient": "ornek@eposta.de",
+    "logSearch": "Alıcı veya konu ara…"
+  },
+  "hints": {
+    "logMode": "Test modu: E-postalar gerçekten gönderilmez, yalnızca gönderim kayıtlarına yazılır. Canlı kullanım için SMTP seçin.",
+    "password": "Şifre şifrelenerek saklanır ve bir daha gösterilmez.",
+    "passwordStored": "Kayıtlı bir şifre var. Değiştirmek için yeni şifreyi girin, korumak için boş bırakın.",
+    "replyTo": "Opsiyonel: Alıcıların \"Yanıtla\" dediğinde gidecek adres."
+  },
+  "transports": {
+    "SMTP": "SMTP (gerçek gönderim)",
+    "LOG": "Test modu (göndermeden kaydet)"
+  },
+  "security": {
+    "STARTTLS": "STARTTLS (port 587)",
+    "SSL": "SSL/TLS (port 465)",
+    "NONE": "Şifrelemesiz (önerilmez)"
+  },
+  "statuses": {
+    "SENT": "Gönderildi",
+    "FAILED": "Başarısız",
+    "LOGGED": "Test (gönderilmedi)"
+  },
+  "actions": {
+    "save": "Kaydet",
+    "verify": "Bağlantıyı Doğrula",
+    "sendTest": "Test E-postası Gönder",
+    "close": "Kapat"
+  },
+  "testMail": {
+    "title": "Test E-postası Gönder",
+    "description": "Kayıtlı ayarlarla girilen adrese bir test e-postası gönderilir. Kaydedilmemiş değişiklikler kullanılmaz.",
+    "subject": "Verein ERP — Test e-postası",
+    "body": "Merhaba,\n\nbu, Verein ERP e-posta ayarlarını kontrol etmek için gönderilmiş bir test e-postasıdır. Bu mesajı aldıysanız e-posta gönderimi doğru çalışıyor.\n\nBu e-postayı yanıtlamanıza gerek yoktur.",
+    "sent": "Test e-postası {to} adresine gönderildi. Gelen kutusunu (ve gereksiz klasörünü) kontrol edin."
+  },
+  "logs": {
+    "title": "Gönderim Kayıtları",
+    "description": "Sistemden gönderilen tüm e-postaların kayıtları. Gizlilik nedeniyle mesaj içerikleri saklanmaz.",
+    "empty": "Gönderim kaydı bulunamadı.",
+    "columns": {
+      "createdAt": "Tarih",
+      "to": "Alıcı",
+      "subject": "Konu",
+      "module": "Modül",
+      "status": "Durum",
+      "error": "Hata"
+    }
+  },
+  "validation": {
+    "hostRequired": "SMTP sunucusu zorunludur.",
+    "fromAddressRequired": "Gönderen adresi zorunludur.",
+    "emailRequired": "E-posta adresi zorunludur.",
+    "emailInvalid": "Geçerli bir e-posta adresi girin.",
+    "portInvalid": "Port 1 ile 65535 arasında bir tam sayı olmalıdır.",
+    "tooLong": "Girilen metin çok uzun.",
+    "invalid": "Geçersiz değer."
+  },
+  "errors": {
+    "forbidden": "Bu işlem için yetkiniz yok.",
+    "validation": "Girilen bilgiler geçersiz. Lütfen formu kontrol edin.",
+    "notConfigured": "E-posta gönderimi henüz yapılandırılmadı. Önce SMTP ayarlarını kaydedin.",
+    "encryptionKeyMissing": "Şifre güvenli şekilde saklanamadı: sunucuda şifreleme anahtarı (AUTH_SECRET) bulunamadı. Sistem yöneticinize başvurun.",
+    "passwordUnreadable": "Kayıtlı şifre çözülemedi (sunucu anahtarı değişmiş olabilir). Lütfen şifreyi yeniden girip kaydedin.",
+    "connectionFailed": "SMTP sunucusuna bağlanılamadı veya giriş başarısız. Sunucu, port, güvenlik ve kimlik bilgilerini kontrol edin.",
+    "sendFailed": "Test e-postası gönderilemedi.",
+    "unknown": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin."
+  }
+}

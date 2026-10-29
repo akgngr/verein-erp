@@ -1,0 +1,112 @@
+{
+  "nav": {
+    "inventory": "Inventar"
+  },
+  "title": "Inventar & Sachmittel",
+  "description": "Verwaltung von Vereinsinventar, technischer Ausrüstung und Ausgaben an Mitglieder.",
+  "newItem": "Neuer Eintrag",
+  "emptyTitle": "Keine Einträge vorhanden",
+  "emptyDescription": "Klicken Sie auf „Neuer Eintrag“, um das erste Inventar anzulegen.",
+  "noResultsTitle": "Keine Treffer",
+  "noResultsDescription": "Für Ihre Such- bzw. Filterkriterien wurden keine Einträge gefunden. Setzen Sie die Filter zurück.",
+  "fields": {
+    "name": "Bezeichnung",
+    "category": "Kategorie",
+    "serialNumber": "Seriennummer",
+    "location": "Standort / Raum",
+    "quantity": "Anzahl",
+    "status": "Zustand",
+    "purchaseDate": "Anschaffungsdatum",
+    "purchasePrice": "Anschaffungspreis",
+    "description": "Beschreibung",
+    "assignedMemberId": "Ausgegeben an (Mitglied)",
+    "createdAt": "Erfasst am"
+  },
+  "placeholders": {
+    "search": "Bezeichnung, Seriennummer, Standort oder Beschreibung durchsuchen…",
+    "name": "z. B. Beamer",
+    "serialNumber": "z. B. SN-2024-001",
+    "location": "z. B. Vereinsheim, Besprechungsraum",
+    "assignedMemberId": "Mitglieds-ID",
+    "description": "Zusätzliche Angaben, Garantiehinweise usw."
+  },
+  "hints": {
+    "assignedMemberId": "Optional: ID des Mitglieds, an das der Gegenstand ausgegeben wurde."
+  },
+  "categories": {
+    "ELECTRONICS": "Elektronik",
+    "FURNITURE": "Möbel",
+    "KITCHEN": "Küche",
+    "OFFICE": "Büro",
+    "SPORTS": "Sport",
+    "OTHER": "Sonstiges"
+  },
+  "statuses": {
+    "IN_USE": "In Benutzung",
+    "IDLE": "Verfügbar",
+    "BROKEN": "Defekt",
+    "SCRAPPED": "Ausgemustert"
+  },
+  "stats": {
+    "title": "Inventarübersicht",
+    "totalQuantity": "Gesamtanzahl",
+    "inUse": "In Benutzung",
+    "broken": "Defekt",
+    "itemCount": "{count} Einträge"
+  },
+  "actions": {
+    "create": "Anlegen",
+    "save": "Änderungen speichern",
+    "cancel": "Abbrechen",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "confirmDelete": "Ja, löschen"
+  },
+  "modal": {
+    "createTitle": "Neuer Inventareintrag",
+    "editTitle": "Inventareintrag bearbeiten",
+    "deleteTitle": "Inventareintrag löschen",
+    "deleteDescription": "Der Eintrag „{name}“ wird dauerhaft gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden."
+  },
+  "table": {
+    "actions": "Aktionen",
+    "unassigned": "Nicht ausgegeben",
+    "serialPrefix": "SN:"
+  },
+  "validation": {
+    "nameRequired": "Bitte geben Sie eine Bezeichnung ein.",
+    "tooLong": "Der eingegebene Text ist zu lang.",
+    "quantityInteger": "Die Anzahl muss eine ganze Zahl sein.",
+    "quantityMin": "Die Anzahl muss mindestens 1 betragen.",
+    "quantityMax": "Die Anzahl überschreitet den zulässigen Höchstwert.",
+    "priceMin": "Der Anschaffungspreis darf nicht negativ sein.",
+    "priceMax": "Der Anschaffungspreis überschreitet den zulässigen Höchstwert.",
+    "dateInvalid": "Bitte geben Sie ein gültiges Datum ein.",
+    "invalid": "Ungültiger Wert."
+  },
+  "errors": {
+    "forbidden": "Sie haben keine Berechtigung für diese Aktion.",
+    "validation": "Die Eingaben sind ungültig. Bitte prüfen Sie das Formular.",
+    "notFound": "Der Inventareintrag wurde nicht gefunden. Möglicherweise wurde er gelöscht.",
+    "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+  },
+  "export": {
+    "filePrefix": "inventar"
+  },
+  "categoriesPage": {
+    "title": "Kategorien",
+    "description": "Anzahl der Einträge und Gesamtanzahl je Kategorie.",
+    "columns": {
+      "category": "Kategorie",
+      "itemCount": "Einträge",
+      "totalQuantity": "Gesamtanzahl"
+    },
+    "viewItems": "Anzeigen",
+    "total": "Gesamt"
+  },
+  "topNav": {
+    "overview": "Übersicht",
+    "categories": "Kategorien",
+    "export": "Excel-Export"
+  }
+}

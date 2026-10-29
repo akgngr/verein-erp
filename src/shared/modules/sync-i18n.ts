@@ -6,10 +6,21 @@ const ROOT_DIR = process.cwd();
 const MODULES_DIR = path.join(ROOT_DIR, "src", "modules");
 const MESSAGES_DIR = path.join(ROOT_DIR, "messages");
 
+/** Modül çevirisinde kök "nav" ad alanına birleştirilecek ayrılmış anahtar. */
+const RESERVED_NAV_KEY = "nav";
+
+function isPlainObject(value: unknown): value is Record<string, unknown> {
+  return typeof value === "object" && value !== null && !Array.isArray(value);
+}
+
 /**
  * Modül Çeviri Senkronizasyonu (Modular i18n):
  * Her modülün içindeki src/modules/<module>/i18n/<locale>.json dosyalarını bulur
  * ve ana messages/<locale>.json dosyasına [moduleKey] ad alanı altında birleştirir.
+ *
+ * Modül çevirisindeki ayrılmış "nav" nesnesi (örn. { "nav": { "inventory": "Inventar" } })
+ * modül ad alanına değil, kök "nav" ad alanına birleştirilir; böylece sidebar
+ * `labelKey` değerleri kök çeviri dosyasına elle dokunmadan çevrilir.
  */
 export function syncModuleTranslations(): {
   locales: string[];
@@ -51,12 +62,24 @@ export function syncModuleTranslations(): {
 
       if (moduleI18nFile) {
         try {
-          const moduleContent = JSON.parse(fs.readFileSync(moduleI18nFile, "utf8"));
+          const parsed: unknown = JSON.parse(fs.readFileSync(moduleI18nFile, "utf8"));
+          const moduleContent = isPlainObject(parsed) ? parsed : {};
+          const { [RESERVED_NAV_KEY]: moduleNav, ...moduleMessages } = moduleContent;
+
           // Modül anahtarı altında derin birleştirme
           mainJson[moduleName] = {
             ...((mainJson[moduleName] as Record<string, unknown>) || {}),
-            ...moduleContent,
+            ...moduleMessages,
           };
+
+          // Ayrılmış "nav" nesnesini kök nav ad alanına birleştir
+          if (isPlainObject(moduleNav)) {
+            mainJson[RESERVED_NAV_KEY] = {
+              ...(isPlainObject(mainJson[RESERVED_NAV_KEY]) ? mainJson[RESERVED_NAV_KEY] : {}),
+              ...moduleNav,
+            };
+          }
+
           result.modulesMerged[locale].push(moduleName);
         } catch (err) {
           console.error(

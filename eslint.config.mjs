@@ -17,6 +17,10 @@ const MODULE_INTERNAL_IMPORTS = {
     "!@/modules/*/ui",
     "!@/modules/*/page",
     "!@/modules/*/edge",
+    "!@/modules/*/routes",
+    "!@/modules/*/routes/**",
+    "!@/modules/*/api",
+    "!@/modules/*/api/**",
   ],
   message:
     "Modül iç dosyalarına doğrudan erişim yasaktır. Public girişler: @/modules/<modül>, @/modules/<modül>/server, @/modules/<modül>/ui, @/modules/<modül>/page",

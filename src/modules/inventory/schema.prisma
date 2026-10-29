@@ -1,0 +1,20 @@
+model InventoryItem {
+  id               String    @id @default(uuid())
+  name             String
+  category         String    @default("OTHER")
+  serialNumber     String?
+  location         String?
+  quantity         Int       @default(1)
+  status           String    @default("IDLE")
+  purchaseDate     DateTime? @db.Date
+  purchasePrice    Decimal?  @db.Decimal(12, 2)
+  description      String?
+  assignedMemberId String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([category])
+  @@index([status])
+  @@index([assignedMemberId])
+  @@map("inventory_items")
+}

@@ -329,7 +329,7 @@ export function validateAllModules(customModulesDir?: string): ModuleValidationR
   if (!fs.existsSync(baseDir)) return [];
   const entries = fs.readdirSync(baseDir, { withFileTypes: true });
   return entries
-    .filter((e) => e.isDirectory())
+    .filter((e) => e.isDirectory() && !e.name.startsWith("temp-") && !e.name.startsWith("."))
     .map((e) => validateModule(e.name, baseDir));
 }
 

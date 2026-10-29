@@ -1,0 +1,116 @@
+{
+  "nav": {
+    "mail": "E-Mail"
+  },
+  "title": "E-Mail-Einstellungen",
+  "description": "SMTP-Server und Absenderangaben für alle E-Mails, die das System versendet.",
+  "topNav": {
+    "settings": "Einstellungen",
+    "logs": "Versandprotokoll"
+  },
+  "status": {
+    "title": "Status",
+    "configured": "E-Mail-Versand ist eingerichtet",
+    "notConfigured": "E-Mail-Versand ist nicht eingerichtet",
+    "configuredHint": "Nach Änderungen sollten Sie die Verbindung prüfen und eine Test-E-Mail senden.",
+    "notConfiguredHint": "Tragen Sie SMTP-Server und Absenderadresse ein und speichern Sie. Die Zugangsdaten erhalten Sie von Ihrem E-Mail-Anbieter (Hoster).",
+    "server": "Server",
+    "sender": "Absender",
+    "updatedAt": "Zuletzt geändert"
+  },
+  "settings": {
+    "title": "SMTP-Einstellungen",
+    "description": "Geben Sie die SMTP-Zugangsdaten Ihres E-Mail-Anbieters ein (z. B. IONOS, Strato, all-inkl, Google Workspace).",
+    "saved": "Einstellungen gespeichert.",
+    "verified": "Verbindung erfolgreich: Der SMTP-Server ist erreichbar und die Anmeldung war erfolgreich.",
+    "logModeOk": "Im Testmodus ist keine Verbindung nötig; E-Mails werden nur protokolliert.",
+    "readOnly": "Diese Einstellungen können nur Administratoren ändern."
+  },
+  "fields": {
+    "transport": "Versandart",
+    "host": "SMTP-Server",
+    "port": "Port",
+    "security": "Verschlüsselung",
+    "username": "Benutzername",
+    "password": "Passwort",
+    "fromAddress": "Absenderadresse",
+    "fromName": "Absendername",
+    "replyTo": "Antwortadresse",
+    "testRecipient": "Empfängeradresse"
+  },
+  "placeholders": {
+    "host": "z. B. smtp.ionos.de",
+    "username": "Meist Ihre E-Mail-Adresse",
+    "passwordStored": "••••••••",
+    "fromAddress": "z. B. info@verein.de",
+    "fromName": "z. B. Musterverein e. V.",
+    "replyTo": "z. B. vorstand@verein.de",
+    "testRecipient": "name@beispiel.de",
+    "logSearch": "Empfänger oder Betreff suchen…"
+  },
+  "hints": {
+    "logMode": "Testmodus: E-Mails werden nicht versendet, sondern nur im Versandprotokoll erfasst. Für den Echtbetrieb SMTP wählen.",
+    "password": "Das Passwort wird verschlüsselt gespeichert und nicht wieder angezeigt.",
+    "passwordStored": "Ein Passwort ist gespeichert. Zum Ändern neues Passwort eingeben, zum Beibehalten leer lassen.",
+    "replyTo": "Optional: Adresse, an die Antworten der Empfänger gehen."
+  },
+  "transports": {
+    "SMTP": "SMTP (echter Versand)",
+    "LOG": "Testmodus (nur protokollieren)"
+  },
+  "security": {
+    "STARTTLS": "STARTTLS (Port 587)",
+    "SSL": "SSL/TLS (Port 465)",
+    "NONE": "Unverschlüsselt (nicht empfohlen)"
+  },
+  "statuses": {
+    "SENT": "Versendet",
+    "FAILED": "Fehlgeschlagen",
+    "LOGGED": "Test (nicht versendet)"
+  },
+  "actions": {
+    "save": "Speichern",
+    "verify": "Verbindung prüfen",
+    "sendTest": "Test-E-Mail senden",
+    "close": "Schließen"
+  },
+  "testMail": {
+    "title": "Test-E-Mail senden",
+    "description": "Es wird eine Test-E-Mail mit den gespeicherten Einstellungen an die angegebene Adresse gesendet. Ungespeicherte Änderungen werden nicht verwendet.",
+    "subject": "Verein ERP — Test-E-Mail",
+    "body": "Hallo,\n\ndies ist eine Test-E-Mail zur Überprüfung der E-Mail-Einstellungen von Verein ERP. Wenn Sie diese Nachricht erhalten, funktioniert der E-Mail-Versand.\n\nBitte antworten Sie nicht auf diese E-Mail.",
+    "sent": "Die Test-E-Mail wurde an {to} gesendet. Bitte prüfen Sie den Posteingang (und den Spam-Ordner)."
+  },
+  "logs": {
+    "title": "Versandprotokoll",
+    "description": "Protokoll aller vom System versendeten E-Mails. Aus Datenschutzgründen werden keine Nachrichteninhalte gespeichert.",
+    "empty": "Keine Einträge im Versandprotokoll.",
+    "columns": {
+      "createdAt": "Datum",
+      "to": "Empfänger",
+      "subject": "Betreff",
+      "module": "Modul",
+      "status": "Status",
+      "error": "Fehler"
+    }
+  },
+  "validation": {
+    "hostRequired": "Bitte geben Sie den SMTP-Server an.",
+    "fromAddressRequired": "Bitte geben Sie eine Absenderadresse an.",
+    "emailRequired": "Bitte geben Sie eine E-Mail-Adresse ein.",
+    "emailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+    "portInvalid": "Der Port muss eine ganze Zahl zwischen 1 und 65535 sein.",
+    "tooLong": "Der eingegebene Text ist zu lang.",
+    "invalid": "Ungültiger Wert."
+  },
+  "errors": {
+    "forbidden": "Sie haben keine Berechtigung für diese Aktion.",
+    "validation": "Die Eingaben sind ungültig. Bitte prüfen Sie das Formular.",
+    "notConfigured": "Der E-Mail-Versand ist noch nicht eingerichtet. Bitte speichern Sie zuerst die SMTP-Einstellungen.",
+    "encryptionKeyMissing": "Das Passwort konnte nicht sicher gespeichert werden: Auf dem Server ist kein Schlüssel (AUTH_SECRET) hinterlegt. Bitte wenden Sie sich an Ihren Administrator.",
+    "passwordUnreadable": "Das gespeicherte Passwort kann nicht entschlüsselt werden (Serverschlüssel geändert?). Bitte Passwort neu eingeben und speichern.",
+    "connectionFailed": "Verbindung zum SMTP-Server oder Anmeldung fehlgeschlagen. Bitte Server, Port, Verschlüsselung und Zugangsdaten prüfen.",
+    "sendFailed": "Die Test-E-Mail konnte nicht gesendet werden.",
+    "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+  }
+}

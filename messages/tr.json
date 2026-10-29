@@ -41,7 +41,9 @@
     "muhasebe": "Muhasebe",
     "bagislar": "Bağışlar",
     "ayarlar": "Ayarlar",
-    "moduller": "Modül Yönetimi"
+    "moduller": "Modül Yönetimi",
+    "inventory": "Envanter",
+    "mail": "E-posta"
   },
   "sidebar": {
     "brand": "Dernek Yönetim",
@@ -1740,6 +1742,248 @@
       "filterType": "Tür Filtresi",
       "filterStatus": "Durum Filtresi",
       "all": "Tümü"
+    }
+  },
+  "inventory": {
+    "title": "Envanter ve Demirbaş",
+    "description": "Dernek demirbaşları, teknik ekipmanlar ve zimmet kayıtları.",
+    "newItem": "Yeni Demirbaş",
+    "emptyTitle": "Demirbaş kaydı bulunamadı",
+    "emptyDescription": "Yeni bir demirbaş eklemek için \"Yeni Demirbaş\" butonuna tıklayın.",
+    "noResultsTitle": "Sonuç bulunamadı",
+    "noResultsDescription": "Arama veya filtre kriterlerinize uyan demirbaş yok. Filtreleri sıfırlamayı deneyin.",
+    "fields": {
+      "name": "Demirbaş Adı",
+      "category": "Kategori",
+      "serialNumber": "Seri No",
+      "location": "Konum / Oda",
+      "quantity": "Adet",
+      "status": "Durum",
+      "purchaseDate": "Alım Tarihi",
+      "purchasePrice": "Alım Bedeli",
+      "description": "Açıklama",
+      "assignedMemberId": "Zimmetli Üye",
+      "createdAt": "Kayıt Tarihi"
+    },
+    "placeholders": {
+      "search": "Ad, seri no, konum veya açıklamada ara…",
+      "name": "Örn. Projeksiyon cihazı",
+      "serialNumber": "Örn. SN-2024-001",
+      "location": "Örn. Toplantı salonu",
+      "assignedMemberId": "Üye ID",
+      "description": "Ek bilgiler, garanti notları vb."
+    },
+    "hints": {
+      "assignedMemberId": "Opsiyonel: demirbaşın zimmetlendiği üyenin ID'si."
+    },
+    "categories": {
+      "ELECTRONICS": "Elektronik",
+      "FURNITURE": "Mobilya",
+      "KITCHEN": "Mutfak",
+      "OFFICE": "Ofis",
+      "SPORTS": "Spor",
+      "OTHER": "Diğer"
+    },
+    "statuses": {
+      "IN_USE": "Kullanımda",
+      "IDLE": "Boşta",
+      "BROKEN": "Arızalı",
+      "SCRAPPED": "Hurda"
+    },
+    "stats": {
+      "title": "Envanter özeti",
+      "totalQuantity": "Toplam Adet",
+      "inUse": "Kullanımda",
+      "broken": "Arızalı",
+      "itemCount": "{count} kayıt"
+    },
+    "filters": {
+      "search": "Ara",
+      "allCategories": "Tüm kategoriler",
+      "allStatuses": "Tüm durumlar",
+      "sortBy": "Sıralama",
+      "direction": "Sıralama yönü",
+      "asc": "Artan",
+      "desc": "Azalan",
+      "apply": "Uygula",
+      "reset": "Filtreleri sıfırla",
+      "sortOptions": {
+        "name": "Ada göre",
+        "category": "Kategoriye göre",
+        "status": "Duruma göre",
+        "quantity": "Adede göre",
+        "purchaseDate": "Alım tarihine göre",
+        "purchasePrice": "Alım bedeline göre",
+        "createdAt": "Kayıt tarihine göre"
+      }
+    },
+    "actions": {
+      "create": "Kaydet",
+      "save": "Değişiklikleri Kaydet",
+      "cancel": "İptal",
+      "edit": "Düzenle",
+      "delete": "Sil",
+      "confirmDelete": "Evet, Sil"
+    },
+    "modal": {
+      "createTitle": "Yeni Demirbaş",
+      "editTitle": "Demirbaşı Düzenle",
+      "deleteTitle": "Demirbaşı Sil",
+      "deleteDescription": "\"{name}\" kaydı kalıcı olarak silinecek. Bu işlem geri alınamaz."
+    },
+    "table": {
+      "actions": "İşlemler",
+      "unassigned": "Zimmet yok",
+      "serialPrefix": "SN:"
+    },
+    "validation": {
+      "nameRequired": "Demirbaş adı zorunludur.",
+      "tooLong": "Girilen metin çok uzun.",
+      "quantityInteger": "Adet tam sayı olmalıdır.",
+      "quantityMin": "Adet en az 1 olmalıdır.",
+      "quantityMax": "Adet izin verilen üst sınırı aşıyor.",
+      "priceMin": "Alım bedeli negatif olamaz.",
+      "priceMax": "Alım bedeli izin verilen üst sınırı aşıyor.",
+      "dateInvalid": "Geçerli bir tarih girin.",
+      "invalid": "Geçersiz değer."
+    },
+    "errors": {
+      "forbidden": "Bu işlem için yetkiniz yok.",
+      "validation": "Girilen bilgiler geçersiz. Lütfen formu kontrol edin.",
+      "notFound": "Demirbaş kaydı bulunamadı. Silinmiş olabilir.",
+      "unknown": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin."
+    },
+    "export": {
+      "filePrefix": "envanter"
+    },
+    "categoriesPage": {
+      "title": "Kategoriler",
+      "description": "Kategori bazında demirbaş kayıt sayısı ve toplam adet.",
+      "columns": {
+        "category": "Kategori",
+        "itemCount": "Kayıt Sayısı",
+        "totalQuantity": "Toplam Adet"
+      },
+      "viewItems": "Listele",
+      "total": "Toplam"
+    },
+    "topNav": {
+      "overview": "Genel Bakış",
+      "categories": "Kategoriler",
+      "export": "Excel Dışa Aktar"
+    }
+  },
+  "mail": {
+    "title": "E-posta Ayarları",
+    "description": "Sistemin gönderdiği tüm e-postalar için SMTP sunucusu ve gönderen bilgileri.",
+    "topNav": {
+      "settings": "Ayarlar",
+      "logs": "Gönderim Kayıtları"
+    },
+    "status": {
+      "title": "Durum",
+      "configured": "E-posta gönderimi hazır",
+      "notConfigured": "E-posta gönderimi yapılandırılmadı",
+      "configuredHint": "Ayarları değiştirdikten sonra bağlantıyı doğrulayıp test e-postası göndermeniz önerilir.",
+      "notConfiguredHint": "SMTP sunucusu ve gönderen adresini girip kaydedin. Bu bilgileri e-posta sağlayıcınızdan (hosting firması) alabilirsiniz.",
+      "server": "Sunucu",
+      "sender": "Gönderen",
+      "updatedAt": "Son güncelleme"
+    },
+    "settings": {
+      "title": "SMTP Ayarları",
+      "description": "E-posta sağlayıcınızın (örn. IONOS, Strato, all-inkl, Google Workspace) SMTP bilgilerini girin.",
+      "saved": "Ayarlar kaydedildi.",
+      "verified": "Bağlantı başarılı: SMTP sunucusuna bağlanıldı ve giriş yapıldı.",
+      "logModeOk": "Test modunda bağlantı gerekmez; e-postalar gönderilmeden kaydedilir.",
+      "readOnly": "Bu ayarları yalnızca yöneticiler değiştirebilir."
+    },
+    "fields": {
+      "transport": "Gönderim Modu",
+      "host": "SMTP Sunucusu",
+      "port": "Port",
+      "security": "Güvenlik",
+      "username": "Kullanıcı Adı",
+      "password": "Şifre",
+      "fromAddress": "Gönderen Adresi",
+      "fromName": "Gönderen Adı",
+      "replyTo": "Yanıt Adresi",
+      "testRecipient": "Alıcı E-posta Adresi"
+    },
+    "placeholders": {
+      "host": "örn. smtp.ionos.de",
+      "username": "Genellikle e-posta adresinizdir",
+      "passwordStored": "••••••••",
+      "fromAddress": "örn. info@dernek.de",
+      "fromName": "örn. Örnek Derneği e.V.",
+      "replyTo": "örn. yonetim@dernek.de",
+      "testRecipient": "ornek@eposta.de",
+      "logSearch": "Alıcı veya konu ara…"
+    },
+    "hints": {
+      "logMode": "Test modu: E-postalar gerçekten gönderilmez, yalnızca gönderim kayıtlarına yazılır. Canlı kullanım için SMTP seçin.",
+      "password": "Şifre şifrelenerek saklanır ve bir daha gösterilmez.",
+      "passwordStored": "Kayıtlı bir şifre var. Değiştirmek için yeni şifreyi girin, korumak için boş bırakın.",
+      "replyTo": "Opsiyonel: Alıcıların \"Yanıtla\" dediğinde gidecek adres."
+    },
+    "transports": {
+      "SMTP": "SMTP (gerçek gönderim)",
+      "LOG": "Test modu (göndermeden kaydet)"
+    },
+    "security": {
+      "STARTTLS": "STARTTLS (port 587)",
+      "SSL": "SSL/TLS (port 465)",
+      "NONE": "Şifrelemesiz (önerilmez)"
+    },
+    "statuses": {
+      "SENT": "Gönderildi",
+      "FAILED": "Başarısız",
+      "LOGGED": "Test (gönderilmedi)"
+    },
+    "actions": {
+      "save": "Kaydet",
+      "verify": "Bağlantıyı Doğrula",
+      "sendTest": "Test E-postası Gönder",
+      "close": "Kapat"
+    },
+    "testMail": {
+      "title": "Test E-postası Gönder",
+      "description": "Kayıtlı ayarlarla girilen adrese bir test e-postası gönderilir. Kaydedilmemiş değişiklikler kullanılmaz.",
+      "subject": "Verein ERP — Test e-postası",
+      "body": "Merhaba,\n\nbu, Verein ERP e-posta ayarlarını kontrol etmek için gönderilmiş bir test e-postasıdır. Bu mesajı aldıysanız e-posta gönderimi doğru çalışıyor.\n\nBu e-postayı yanıtlamanıza gerek yoktur.",
+      "sent": "Test e-postası {to} adresine gönderildi. Gelen kutusunu (ve gereksiz klasörünü) kontrol edin."
+    },
+    "logs": {
+      "title": "Gönderim Kayıtları",
+      "description": "Sistemden gönderilen tüm e-postaların kayıtları. Gizlilik nedeniyle mesaj içerikleri saklanmaz.",
+      "empty": "Gönderim kaydı bulunamadı.",
+      "columns": {
+        "createdAt": "Tarih",
+        "to": "Alıcı",
+        "subject": "Konu",
+        "module": "Modül",
+        "status": "Durum",
+        "error": "Hata"
+      }
+    },
+    "validation": {
+      "hostRequired": "SMTP sunucusu zorunludur.",
+      "fromAddressRequired": "Gönderen adresi zorunludur.",
+      "emailRequired": "E-posta adresi zorunludur.",
+      "emailInvalid": "Geçerli bir e-posta adresi girin.",
+      "portInvalid": "Port 1 ile 65535 arasında bir tam sayı olmalıdır.",
+      "tooLong": "Girilen metin çok uzun.",
+      "invalid": "Geçersiz değer."
+    },
+    "errors": {
+      "forbidden": "Bu işlem için yetkiniz yok.",
+      "validation": "Girilen bilgiler geçersiz. Lütfen formu kontrol edin.",
+      "notConfigured": "E-posta gönderimi henüz yapılandırılmadı. Önce SMTP ayarlarını kaydedin.",
+      "encryptionKeyMissing": "Şifre güvenli şekilde saklanamadı: sunucuda şifreleme anahtarı (AUTH_SECRET) bulunamadı. Sistem yöneticinize başvurun.",
+      "passwordUnreadable": "Kayıtlı şifre çözülemedi (sunucu anahtarı değişmiş olabilir). Lütfen şifreyi yeniden girip kaydedin.",
+      "connectionFailed": "SMTP sunucusuna bağlanılamadı veya giriş başarısız. Sunucu, port, güvenlik ve kimlik bilgilerini kontrol edin.",
+      "sendFailed": "Test e-postası gönderilemedi.",
+      "unknown": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin."
     }
   }
 }

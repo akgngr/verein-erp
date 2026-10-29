@@ -1,0 +1,10 @@
+import { definePermissions } from "@/shared/permissions/define";
+
+export const inventoryPermissions = definePermissions("inventory", {
+  ADMIN: ["view", "create", "update", "delete", "approve"],
+  BOARD: ["view", "create", "update"],
+  SECRETARY: ["view", "create", "update"],
+  TREASURER: ["view"],
+  AUDITOR: ["view"],
+  VIEWER: ["view"],
+});

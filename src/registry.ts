@@ -14,6 +14,8 @@ import { moduleConfig as systemModule } from "@/modules/system";
 import { moduleConfig as auditModule } from "@/modules/audit";
 import { moduleConfig as authModule } from "@/modules/auth";
 import { moduleConfig as eventsModule } from "@/modules/events";
+import { moduleConfig as inventoryModule } from "@/modules/inventory";
+import { moduleConfig as mailModule } from "@/modules/mail";
 
 /**
  * Projedeki TÜM kayıtlı modüllerin dinamik listesi.
@@ -30,6 +32,8 @@ export const allModules: ModuleConfig[] = [
   auditModule,
   authModule,
   eventsModule,
+  inventoryModule,
+  mailModule,
 ];
 
 /** Geriye dönük uyumluluk için varsayılan registry */
