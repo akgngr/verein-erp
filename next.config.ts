@@ -8,31 +8,35 @@ import createNextIntlPlugin from "next-intl/plugin";
 // Non-routing mod (URL'de dil öneki yok) — bkz. src/i18n/request.ts karar notu.
 const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
+/**
+ * Virgülle ayrılmış ortam değişkenini listeye çevirir (boşlukları ve boş öğeleri atar).
+ * KARAR (A-2): next.config değerleri standalone derlemede server.js'e DERLEME ANINDA
+ * gömülür; bu değişkenler imaj derlenirken (build arg) verilmelidir.
+ */
+function envList(name: string): string[] {
+  return (process.env[name] ?? "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean);
+}
+
+const isProduction = process.env.NODE_ENV === "production";
+
 const nextConfig: NextConfig = {
   output: "standalone",
-  // KARAR: Next.js 16, dev kaynaklarımıza (/_next/hmr vb.) yalnızca izinli
-  // kaynaklardan (allowedDevOrigins) gelen isteklere yanıt verir. Bu listede
-  // eksik bir host, tarayıcıda hidrasyonun hiç tamamlanmamasına yol açar.
-  // Sandbox içi erişim (127.0.0.1/localhost) ve önizleme alan adı burada izinlidir.
-  allowedDevOrigins: [
-    "localhost",
-    "127.0.0.1",
-    "preview-chat-f44dc199-3def-4ec9-82a1-f073394f8be0.space-z.ai",
-    "*.space-z.ai",
-  ],
-  // KARAR: Önizleme vekili (proxy), Server Actions POST isteklerinde x-forwarded-host
-  // başlığını iç host'a (fcapp.run) yeniden yazar ama origin başlığını önizleme alan
-  // adı olarak korur; Next.js bu uyumsuzlukta action'ı "Invalid Server Actions request"
-  // ile iptal eder. Bu yüzden önizleme alan adları allowedOrigins listesinde izinlidir.
+  // KARAR (A-2): Next.js 16 dev kaynaklarına (/_next/hmr vb.) yalnızca izinli
+  // kaynaklardan erişilir. Yerel geliştirme için localhost/127.0.0.1 yeterlidir;
+  // başka bir host (örn. LAN IP, tünel) gerekiyorsa DEV_ALLOWED_ORIGINS ile eklenir.
+  // Üretimde bu liste kullanılmaz.
+  allowedDevOrigins: isProduction ? [] : ["localhost", "127.0.0.1", ...envList("DEV_ALLOWED_ORIGINS")],
+  // KARAR (A-2): Server Actions yalnızca AYNI KAYNAKTAN kabul edilir (CSRF koruması).
+  // Standart reverse proxy (Caddy/nginx Host başlığını korur) ile ek ayar gerekmez.
+  // Proxy Host başlığını değiştiriyorsa izinli kaynaklar SERVER_ACTIONS_ALLOWED_ORIGINS
+  // ile açıkça verilir (örn. "verein.example.de"). Eski sandbox önizleme alan adları
+  // güvenlik nedeniyle kaldırıldı.
   experimental: {
     serverActions: {
-      allowedOrigins: [
-        "localhost:3000",
-        "127.0.0.1:3000",
-        "preview-chat-f44dc199-3def-4ec9-82a1-f073394f8be0.space-z.ai",
-        "*.space-z.ai",
-        "*.fcapp.run",
-      ],
+      allowedOrigins: envList("SERVER_ACTIONS_ALLOWED_ORIGINS"),
     },
   },
   // KARAR: distDir yalnızca ortam değişkeniyle geçici olarak değiştirilebilir;

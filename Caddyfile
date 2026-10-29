@@ -1,23 +1,26 @@
-:81 {
-	@transform_port_query {
-		query XTransformPort=*
+# Üretim reverse proxy şablonu (A-2).
+#
+# Ortam değişkenleri:
+#   APP_DOMAIN    Uygulamanın alan adı (örn. verein.example.de). Caddy, bu alan adı için
+#                 Let's Encrypt sertifikasını otomatik alır ve HTTP'yi HTTPS'e yönlendirir.
+#                 Varsayılan "localhost" (yerel deneme; Caddy'nin kendi sertifikası).
+#   APP_UPSTREAM  Next.js sunucusunun adresi. docker-compose'da "app:3000",
+#                 aynı makinede "localhost:3000" (varsayılan).
+#
+# KARAR: Yalnızca uygulamaya yönlendirme yapılır. Sorgu parametresiyle başka bir iç porta
+# yönlendiren eski sandbox kuralı güvenlik açığı olduğu için kaldırıldı.
+
+{$APP_DOMAIN:localhost} {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		-Server
 	}
 
-	handle @transform_port_query {
-		reverse_proxy localhost:{query.XTransformPort} {
-			header_up Host {host}
-			header_up X-Forwarded-For {remote_host}
-			header_up X-Forwarded-Proto {scheme}
-			header_up X-Real-IP {remote_host}
-		}
-	}
-
-	handle {
-		reverse_proxy localhost:3000 {
-			header_up Host {host}
-			header_up X-Forwarded-For {remote_host}
-			header_up X-Forwarded-Proto {scheme}
-			header_up X-Real-IP {remote_host}
-		}
+	reverse_proxy {$APP_UPSTREAM:localhost:3000} {
+		# Caddy, X-Forwarded-For'u istemcinin gerçek adresiyle kendisi ayarlar; istemcinin
+		# gönderdiği değer üzerine yazılır (denetim kaydındaki IP sahte olamaz).
+		header_up X-Real-IP {remote_host}
 	}
 }
