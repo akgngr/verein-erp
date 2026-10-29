@@ -18,7 +18,10 @@
     "prebuild": "tsx scripts/sync-schemas.ts",
     "pretypecheck": "tsx scripts/sync-schemas.ts",
     "db:migrate": "tsx scripts/sync-schemas.ts && prisma migrate dev",
-    "db:push": "tsx scripts/sync-schemas.ts && prisma db push",
+    "db:deploy": "tsx scripts/sync-schemas.ts && prisma migrate deploy && node scripts/verify-db-integrity.mjs",
+    "db:verify": "node scripts/verify-db-integrity.mjs",
+    "db:baseline": "tsx scripts/sync-schemas.ts && node scripts/db-baseline.mjs",
+    "db:push:dev": "tsx scripts/sync-schemas.ts && node scripts/db-push-dev.mjs",
     "db:seed": "tsx prisma/seed.ts",
     "db:studio": "prisma studio"
   },

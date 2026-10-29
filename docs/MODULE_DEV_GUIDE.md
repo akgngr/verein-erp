@@ -426,6 +426,8 @@ pnpm module:validate <MODUL_ADI>
 pnpm typecheck
 pnpm test
 
-# 4. Veritabanı tablolarını senkronize et / oluştur
-pnpm db:push
+# 4. Migration üret (şema varsa ZORUNLU — `db push` KULLANMA; bkz. docs/operations/MIGRATION_BASELINE.md)
+#    Oluşan prisma/schema/migrations/<zaman>_add_<modul>/ klasörünü commit'le.
+#    Not: migration üretilene kadar `module:validate` "migration bulunamadı" hatası verir; bu adımdan sonra 2. adımı tekrar çalıştır.
+pnpm db:migrate --name add_<MODUL_ADI>
 ```

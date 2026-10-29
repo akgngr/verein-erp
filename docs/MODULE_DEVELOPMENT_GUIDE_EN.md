@@ -416,6 +416,8 @@ pnpm module:validate <MODULE_NAME>
 pnpm typecheck
 pnpm test
 
-# 4. Synchronize database tables
-pnpm db:push
+# 4. Create a migration (REQUIRED if the module has a schema — do NOT use `db push`; see docs/operations/MIGRATION_BASELINE.md)
+#    Commit the generated prisma/schema/migrations/<timestamp>_add_<module>/ folder.
+#    Note: `module:validate` reports "migration bulunamadı" until this step is done; re-run step 2 afterwards.
+pnpm db:migrate --name add_<MODULE_NAME>
 ```
