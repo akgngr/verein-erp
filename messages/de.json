@@ -1386,6 +1386,7 @@
       "date": "Datum der Zuwendung",
       "amount": "Betrag (€)",
       "amountHint": "Bis 300 € ist keine formelle Bestätigung erforderlich (Kontoauszug genügt).",
+      "methodLabel": "Zahlungsart",
       "method": {
         "CASH": "Bar",
         "BANK_TRANSFER": "Überweisung",

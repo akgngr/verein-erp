@@ -89,6 +89,9 @@ jobs:
           fi
           exit "$status"
 
+      - name: Translation keys exist (no MISSING_MESSAGE at runtime)
+        run: pnpm exec tsx scripts/check-i18n-keys.ts
+
       - name: Typecheck
         run: pnpm typecheck
 
