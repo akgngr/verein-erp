@@ -70,12 +70,10 @@ export async function EventDetailView({ eventId }: EventDetailViewProps) {
             <div className="flex items-center gap-2">
               <a
                 href="/api/events/export"
-                target="_blank"
-                rel="noopener noreferrer"
                 className="inline-flex items-center gap-1.5 rounded-medium border border-default-300 bg-content1 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-default-100 shadow-xs"
               >
                 <FileSpreadsheet className="h-4 w-4 text-success" />
-                Excel&apos;e Aktar
+                {tEvents("export.button")}
               </a>
             </div>
           }

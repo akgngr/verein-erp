@@ -11,4 +11,4 @@ export {
   updateAttendeeStatusAction,
   deleteAttendeeAction,
 } from "./actions/event-actions"
-export { exportEventsToDataset } from "./services/event-export-service"
+export { buildEventsWorkbook } from "./services/event-export-service"

@@ -1700,7 +1700,8 @@
     },
     "menu": {
       "upcoming": "Yaklaşan etkinlikler",
-      "past": "Geçmiş etkinlikler"
+      "past": "Geçmiş etkinlikler",
+      "export": "Excel'e aktar"
     },
     "meta": {
       "list": "Etkinlikler"
@@ -1786,6 +1787,23 @@
     "module": {
       "label": "Etkinlikler",
       "description": "Dernek etkinlikleri, seminerler, atölyeler ve katılımcı yönetimi."
+    },
+    "export": {
+      "sheet": "Etkinlikler",
+      "file": "etkinlikler",
+      "online": "Online",
+      "button": "Excel'e Aktar",
+      "columns": {
+        "title": "Etkinlik",
+        "type": "Tür",
+        "status": "Durum",
+        "startDate": "Başlangıç",
+        "endDate": "Bitiş",
+        "location": "Konum",
+        "capacity": "Kontenjan",
+        "registered": "Kayıtlı",
+        "attended": "Katıldı"
+      }
     }
   },
   "inventory": {

@@ -1,4 +1,4 @@
-import { CalendarDays, Clock, History } from "lucide-react"
+import { CalendarDays, Clock, Download, History } from "lucide-react"
 import type { ModuleConfig } from "@/shared/types/module"
 import { eventsPermissions } from "./permissions"
 
@@ -23,5 +23,6 @@ export const moduleConfig: ModuleConfig = {
   menu: [
     { key: "upcoming", label: "Yaklaşan etkinlikler", href: "/events?filter.timeFilter=upcoming", icon: Clock },
     { key: "past", label: "Geçmiş etkinlikler", href: "/events?filter.timeFilter=past", icon: History },
+    { key: "export", label: "Excel'e aktar", href: "/api/events/export", icon: Download, isDownload: true },
   ],
 }

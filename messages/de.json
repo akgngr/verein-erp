@@ -1700,7 +1700,8 @@
     },
     "menu": {
       "upcoming": "Bevorstehende Veranstaltungen",
-      "past": "Vergangene Veranstaltungen"
+      "past": "Vergangene Veranstaltungen",
+      "export": "Excel-Export"
     },
     "meta": {
       "list": "Veranstaltungen"
@@ -1786,6 +1787,23 @@
     "module": {
       "label": "Veranstaltungen",
       "description": "Vereinsveranstaltungen, Seminare, Workshops und Teilnehmerverwaltung."
+    },
+    "export": {
+      "sheet": "Veranstaltungen",
+      "file": "veranstaltungen",
+      "online": "Online",
+      "button": "Excel-Export",
+      "columns": {
+        "title": "Veranstaltung",
+        "type": "Art",
+        "status": "Status",
+        "startDate": "Beginn",
+        "endDate": "Ende",
+        "location": "Ort",
+        "capacity": "Kapazität",
+        "registered": "Angemeldet",
+        "attended": "Teilgenommen"
+      }
     }
   },
   "inventory": {

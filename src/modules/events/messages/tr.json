@@ -98,7 +98,8 @@
   },
   "menu": {
     "upcoming": "Yaklaşan etkinlikler",
-    "past": "Geçmiş etkinlikler"
+    "past": "Geçmiş etkinlikler",
+    "export": "Excel'e aktar"
   },
   "meta": {
     "list": "Etkinlikler"
@@ -187,5 +188,22 @@
   },
   "nav": {
     "events": "Etkinlikler"
+  },
+  "export": {
+    "sheet": "Etkinlikler",
+    "file": "etkinlikler",
+    "online": "Online",
+    "button": "Excel'e Aktar",
+    "columns": {
+      "title": "Etkinlik",
+      "type": "Tür",
+      "status": "Durum",
+      "startDate": "Başlangıç",
+      "endDate": "Bitiş",
+      "location": "Konum",
+      "capacity": "Kontenjan",
+      "registered": "Kayıtlı",
+      "attended": "Katıldı"
+    }
   }
 }
