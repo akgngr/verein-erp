@@ -16,6 +16,7 @@ export function DuesYearSelect({ current, years }: { current: number; years: num
 
   return (
     <Select
+      id="members-dues-year"
       aria-label={t("year")}
       label={t("year")}
       labelPlacement="outside-left"

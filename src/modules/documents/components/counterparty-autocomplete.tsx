@@ -29,6 +29,7 @@ export function CounterpartyAutocomplete<T extends FieldValues>({
       control={control}
       render={({ field, fieldState }) => (
         <Autocomplete
+          id={`form-autocomplete-${String(name)}`}
           label={label}
           labelPlacement="outside"
           isRequired={isRequired}

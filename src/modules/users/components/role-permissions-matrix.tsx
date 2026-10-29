@@ -187,6 +187,7 @@ export function RolePermissionsMatrix({
               Kullanıcı Yetki Önizle:
             </span>
             <Select
+              id="users-permission-preview-user"
               size="sm"
               placeholder="Kullanıcı seçin..."
               className="w-56"

@@ -26,6 +26,7 @@ export function FormSwitch<T extends FieldValues>({
       render={({ field }) => (
         <div>
           <Switch
+            id={`form-switch-${String(name)}`}
             isSelected={Boolean(field.value)}
             onValueChange={field.onChange}
             onBlur={field.onBlur}

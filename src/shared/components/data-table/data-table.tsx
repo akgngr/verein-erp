@@ -28,6 +28,10 @@ import { EmptyState } from "../ui/empty-state";
 
 const ACTIONS_COLUMN_KEY = "_actions";
 
+// KARAR: Satır işlemleri ("…") sütunu sağ kenara sabitlenir (sticky). Çok sütunlu tablolar
+// kapsayıcıdan taştığında (yatay kaydırma) işlem menüsü her zaman görünür kalır.
+const ACTIONS_STICKY_CLASS = "sticky right-0 z-10";
+
 /**
  * Sunucu taraflı ortak DataTable (9.2): arama/sıralama/sayfalama veritabanında
  * yapılır, durum URL query parametrelerinde tutulur (paylaşılabilir görünüm).
@@ -112,7 +116,12 @@ export function DataTable<T extends { id: string }>({
     )),
     ...(hasRowActions
       ? [
-          <TableColumn key={ACTIONS_COLUMN_KEY} align="end" width={64}>
+          <TableColumn
+            key={ACTIONS_COLUMN_KEY}
+            align="end"
+            width={64}
+            className={`${ACTIONS_STICKY_CLASS} bg-default-100`}
+          >
             <span className="sr-only">İşlemler</span>
           </TableColumn>,
         ]
@@ -158,7 +167,9 @@ export function DataTable<T extends { id: string }>({
           }
           onSortChange={(descriptor) => handleSort(descriptor.column)}
           classNames={{
-            wrapper: "shadow-xs border border-default-200/80 rounded-large p-0 overflow-hidden bg-content1",
+            // KARAR: overflow-x-auto — sütunlar sığmadığında satır işlemleri ("…") sütunu
+            // kırpılmasın; dar ekranlarda tablo yatay kaydırılır (overflow-hidden onu gizliyordu).
+            wrapper: "shadow-xs border border-default-200/80 rounded-large p-0 overflow-x-auto bg-content1",
             th: "bg-default-100/70 text-default-600 font-semibold text-tiny tracking-wider uppercase py-3 border-b border-default-200/80",
             td: "py-3 text-small border-b border-default-100 last:border-b-0",
             tr: "hover:bg-default-50/70 transition-colors",
@@ -179,7 +190,7 @@ export function DataTable<T extends { id: string }>({
                 )),
                 ...(hasRowActions
                   ? [
-                      <TableCell key={ACTIONS_COLUMN_KEY}>
+                      <TableCell key={ACTIONS_COLUMN_KEY} className={`${ACTIONS_STICKY_CLASS} bg-content1`}>
                         {actions.length > 0 ? (
                           <Dropdown placement="bottom-end">
                             <DropdownTrigger>
