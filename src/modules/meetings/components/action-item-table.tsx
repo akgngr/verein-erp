@@ -16,18 +16,19 @@ import type {
 import { formatDate } from "@/shared/utils";
 
 import { setActionItemStatusAction } from "../actions/action-item-actions";
-import { ACTION_ITEM_STATUS_COLORS, ACTION_ITEM_STATUS_LABELS } from "../constants";
+import { ACTION_ITEM_STATUS_COLORS } from "../constants";
 import { isActionItemOverdue } from "../utils";
 import type { ActionItemRow } from "../types";
 
 /** Durum rozeti (7.4). */
 function StatusBadge({ status }: { status: ActionItemRow["status"] }) {
+  const t = useTranslations("meetings.actionStatus");
   const color = ACTION_ITEM_STATUS_COLORS[status];
   const colorClass =
     color === "success" ? "bg-success-50 text-success-700" : "bg-warning-50 text-warning-600";
   return (
     <span className={`rounded-small px-2 py-0.5 text-tiny ${colorClass}`}>
-      {ACTION_ITEM_STATUS_LABELS[status]}
+      {t(status)}
     </span>
   );
 }

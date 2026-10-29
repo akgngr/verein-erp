@@ -19,10 +19,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { addDecisionAction, updateDecisionAction } from "../actions/decision-actions";
-import { DECISION_RESULT_LABELS } from "../constants";
+import { DECISION_RESULT_VALUES } from "../constants";
 import type { DecisionItem } from "../types";
 
-const RESULT_KEYS = Object.keys(DECISION_RESULT_LABELS) as Array<keyof typeof DECISION_RESULT_LABELS>;
+const RESULT_KEYS = DECISION_RESULT_VALUES;
 
 /**
  * Karar ekleme/düzenleme penceresi (7.3): metin, sonuç, opsiyonel gündem

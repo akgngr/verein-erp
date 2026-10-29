@@ -55,5 +55,9 @@
     "purposesMax": "Amaç metni en fazla 500 karakter olabilir.",
     "postalCodeDe": "Almanya için posta kodu 5 haneli olmalıdır (PLZ).",
     "websiteInvalid": "Web sitesi geçerli bir adres olmalıdır (https://...)."
+  },
+  "errors": {
+    "logoMissing": "Logo yüklenmemiş.",
+    "logoReadFailed": "Logo okunamadı."
   }
 }

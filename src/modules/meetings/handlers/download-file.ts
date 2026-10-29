@@ -9,6 +9,7 @@ import { can } from "@/shared/permissions/define";
 import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 
 import { meetingsPermissions } from "../permissions";
+import { translateMessage } from "@/shared/i18n/translate-message";
 
 /**
  * Toplantı eki indirme/önizleme (GET /api/meetings/files/[fileId], 8. bölüm):
@@ -24,13 +25,13 @@ export async function downloadMeetingFileHandler(
     user = await requireUser();
   } catch (error) {
     if (error instanceof UnauthorizedError) {
-      return NextResponse.json({ ok: false, error: "Oturum bulunamadı." }, { status: 401 });
+      return NextResponse.json({ ok: false, error: await translateMessage("common.errors.sessionExpired") }, { status: 401 });
     }
     throw error;
   }
 
   if (!can(user.role, meetingsPermissions, "view")) {
-    return NextResponse.json({ ok: false, error: "Bu işlem için yetkiniz yok." }, { status: 403 });
+    return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
   }
 
   const file = await getDb().meetingFile.findFirst({
@@ -43,7 +44,7 @@ export async function downloadMeetingFileHandler(
     },
   });
   if (!file || file.meeting.deletedAt) {
-    return NextResponse.json({ ok: false, error: "Dosya bulunamadı." }, { status: 404 });
+    return NextResponse.json({ ok: false, error: await translateMessage("files.missing") }, { status: 404 });
   }
 
   const inlineRequested = new URL(request.url).searchParams.get("inline") === "1";

@@ -15,6 +15,7 @@ import { getOrganizationLogoDataUri, getOrganizationProfile } from "@/modules/or
 import { memberPaymentsPermissions } from "../permissions";
 import { RECEIPT_STRINGS } from "../pdf/strings";
 import { ReceiptDocument, type ReceiptPdfData } from "../pdf/receipt-document";
+import { translateMessage } from "@/shared/i18n/translate-message";
 
 /** Content-Disposition için ASCII yedek dosya adı üretir. */
 function asciiFileName(name: string): string {
@@ -36,18 +37,18 @@ export async function exportReceiptPdfHandler(
     user = await requireUser();
   } catch (error) {
     if (error instanceof UnauthorizedError) {
-      return NextResponse.json({ ok: false, error: "Oturum bulunamadı." }, { status: 401 });
+      return NextResponse.json({ ok: false, error: await translateMessage("common.errors.sessionExpired") }, { status: 401 });
     }
     throw error;
   }
 
   if (!can(user.role, memberPaymentsPermissions, "view")) {
-    return NextResponse.json({ ok: false, error: "Bu işlem için yetkiniz yok." }, { status: 403 });
+    return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
   }
 
   const paymentId = new URL(request.url).searchParams.get("payment") ?? "";
   if (!paymentId) {
-    return NextResponse.json({ ok: false, error: "Ödeme belirtilmedi." }, { status: 400 });
+    return NextResponse.json({ ok: false, error: await translateMessage("members.errors.paymentNotSpecified") }, { status: 400 });
   }
 
   const db = getDb();
@@ -58,7 +59,7 @@ export async function exportReceiptPdfHandler(
     },
   });
   if (!payment) {
-    return NextResponse.json({ ok: false, error: "Ödeme bulunamadı." }, { status: 404 });
+    return NextResponse.json({ ok: false, error: await translateMessage("members.errors.paymentNotFound2") }, { status: 404 });
   }
 
   const lang = resolvePdfLang(request);

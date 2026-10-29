@@ -351,7 +351,17 @@
     "paymentNotFound": "Ödeme bulunamadı.",
     "paymentAlreadyVoided": "Bu ödeme zaten iptal edilmiş.",
     "dueHasPayments": "Ödeme kaydı olan aidat satırı silinemez. Önce ödemeleri iptal edin.",
-    "importMissingColumns": "Zorunlu sütunlar bulunamadı (Ad, Soyad, Üyelik Türü, Üyelik Başlangıç Tarihi). Şablonu indirip doldurun."
+    "importMissingColumns": "Zorunlu sütunlar bulunamadı (Ad, Soyad, Üyelik Türü, Üyelik Başlangıç Tarihi). Şablonu indirip doldurun.",
+    "dataExportMissing": "Üye bulunamadı veya verileri silinmiş.",
+    "importTooLarge": "Dosya {max} MB sınırını aşıyor.",
+    "importXlsxOnly": "Yalnızca .xlsx dosyası kabul edilir.",
+    "importInvalidXlsx": "Dosya geçerli bir .xlsx paketi değil.",
+    "importDupEmailDb": "Mükerrer kayıt: bu e-posta ile kayıtlı bir üye zaten var.",
+    "importDupEmailFile": "Mükerrer kayıt: aynı e-posta dosyada birden çok kez geçiyor.",
+    "importDupPersonDb": "Mükerrer kayıt: aynı ad, soyad ve doğum tarihiyle kayıtlı bir üye zaten var.",
+    "importDupPersonFile": "Mükerrer kayıt: aynı ad, soyad ve doğum tarihi dosyada birden çok kez geçiyor.",
+    "paymentNotSpecified": "Ödeme belirtilmedi.",
+    "paymentNotFound2": "Ödeme bulunamadı."
   },
   "validation": {
     "yearMinPrev": "Yıl en fazla bir önceki yıl olabilir.",
@@ -400,5 +410,49 @@
   "module": {
     "label": "Üyeler",
     "description": "Üye kayıtları, üyelik tipleri, aidat tahakkuk ve ödeme takibi."
+  },
+  "export": {
+    "dues": {
+      "membershipNumber": "Üye No",
+      "fullName": "Ad Soyad",
+      "type": "Üyelik Türü",
+      "year": "Yıl",
+      "amountDue": "Tutar",
+      "paid": "Ödenen",
+      "remaining": "Kalan",
+      "status": "Durum",
+      "lastPaymentAt": "Son Ödeme Tarihi",
+      "dueDate": "Son Tarih",
+      "_sheet": "Aidat",
+      "_file": "aidat"
+    },
+    "register": {
+      "membershipNumber": "Üye No",
+      "type": "Üyelik Türü",
+      "status": "Durum",
+      "firstName": "Ad",
+      "lastName": "Soyad",
+      "email": "E-posta",
+      "phone": "Telefon",
+      "street": "Straße",
+      "houseNumber": "Kapı No",
+      "postalCode": "PLZ",
+      "city": "Şehir",
+      "state": "Eyalet",
+      "country": "Ülke",
+      "joinDate": "Katılım",
+      "exitDate": "Ayrılış",
+      "_sheet": "Üye Defteri",
+      "_file": "uye-defteri"
+    }
+  },
+  "importErrors": {
+    "unreadable": "Dosya okunamadı. Geçerli bir .xlsx dosyası yükleyin.",
+    "noSheet": "Çalışma sayfası bulunamadı. Şablonu indirip doldurun.",
+    "tooManyRows": "Dosyada {max} satırdan fazla veri var. Dosyayı bölerek yükleyin.",
+    "unknownType": "Bilinmeyen üyelik türü: \"{value}\".",
+    "unknownStatus": "Bilinmeyen durum: \"{value}\". (Aktif / Pasif / Ayrıldı)",
+    "birthDateInvalid": "Doğum tarihi geçersiz (gg.aa.yyyy kullanın).",
+    "joinDateRequired": "Üyelik başlangıç tarihi zorunludur (gg.aa.yyyy)."
   }
 }

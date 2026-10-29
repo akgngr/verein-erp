@@ -77,7 +77,10 @@
     },
     "active": "Aktiv",
     "passive": "Inaktiv",
-    "emailPlaceholder": "beispiel@verein.de"
+    "emailPlaceholder": "beispiel@verein.de",
+    "export": {
+      "truncated": "Ergebnisse auf {max} Zeilen begrenzt."
+    }
   },
   "nav": {
     "panel": "Dashboard",
@@ -176,7 +179,7 @@
     "kullaniciDuzenle": "Benutzer bearbeiten",
     "denetimKaydi": "Prüfprotokoll",
     "profil": "Profil",
-    "dernekBilgileri": "Dernek Bilgileri | Vereinsverwaltung"
+    "dernekBilgileri": "Vereinsdaten"
   },
   "pdfLanguage": {
     "german": "Deutsch",
@@ -265,7 +268,9 @@
     "typeNotAllowed": "Dieser Dateityp ist nicht erlaubt.",
     "empty": "Leere Dateien können nicht hochgeladen werden.",
     "contentMismatch": "Der Dateiinhalt passt nicht zur Endung .{extension}.",
-    "tooLarge": "Die Datei darf höchstens {maxMb} MB groß sein."
+    "tooLarge": "Die Datei darf höchstens {maxMb} MB groß sein.",
+    "uploadFailed": "Die Datei konnte nicht hochgeladen werden.",
+    "maxPerRecord": "Pro Datensatz sind höchstens {max} Dateien erlaubt."
   },
   "accounting": {
     "list": {
@@ -653,7 +658,10 @@
       "sourcedNoEdit": "Automatisch erzeugte Buchungen können nicht bearbeitet werden; sie werden im Quellmodul verwaltet.",
       "categoryInUse": "In dieser Kategorie gibt es Buchungen; Richtung (Einnahme/Ausgabe) und Sphäre können nicht geändert werden. Legen Sie eine neue Kategorie an.",
       "categoryDirectionLocked": "Bei Kategorien mit Buchungen ist die Richtung fest.",
-      "categorySphereLocked": "Bei Kategorien mit Buchungen ist die Sphäre fest."
+      "categorySphereLocked": "Bei Kategorien mit Buchungen ist die Sphäre fest.",
+      "bookingNotFound2": "Buchung nicht gefunden.",
+      "reversedNoFile": "Einer stornierten Buchung können keine Belege hinzugefügt werden.",
+      "reversedSuffix": "STORNIERT"
     },
     "settings": {
       "donationShort": "Spende"
@@ -694,6 +702,84 @@
     "module": {
       "label": "Buchhaltung",
       "description": "Buchführung nach deutschem Vereinsrecht mit Buchungen, Belegen und Budget."
+    },
+    "enums": {
+      "bookingType": {
+        "INCOME": "Einnahme",
+        "EXPENSE": "Ausgabe",
+        "TRANSFER": "Umbuchung"
+      },
+      "direction": {
+        "INCOME": "Einnahme",
+        "EXPENSE": "Ausgabe"
+      },
+      "sphere": {
+        "IDEELL": "Ideeller Bereich",
+        "ASSET_MANAGEMENT": "Vermögensverwaltung",
+        "PURPOSE_OPERATION": "Zweckbetrieb",
+        "ECONOMIC_OPERATION": "Wirtschaftlicher Geschäftsbetrieb"
+      },
+      "accountType": {
+        "CASH": "Kasse",
+        "BANK": "Girokonto",
+        "OTHER": "Sonstiges"
+      },
+      "sourceType": {
+        "MEMBER_PAYMENT": "Mitgliedsbeitrag (automatisch)",
+        "DONATION": "Spende (automatisch)",
+        "DONATION_WAIVER": "Aufwandsspende – Aufwand (automatisch)"
+      }
+    },
+    "export": {
+      "bookings": {
+        "bookingNumber": "Buchungsnr.",
+        "bookingDate": "Datum",
+        "type": "Art",
+        "accountName": "Konto",
+        "counterAccount": "Gegenkonto",
+        "categoryName": "Kategorie",
+        "sphere": "Sphäre",
+        "project": "Projekt",
+        "amount": "Betrag",
+        "description": "Beschreibung",
+        "counterparty": "Gegenpartei",
+        "receiptReference": "Belegnr.",
+        "fileCount": "Belege",
+        "status": "Status",
+        "reverseReason": "Stornogrund",
+        "_sheet": "Buchungen",
+        "_file": "buchungen",
+        "_reversed": "Storniert",
+        "_active": "Aktiv"
+      },
+      "incomeExpense": {
+        "sphere": "Sphäre",
+        "direction": "Richtung",
+        "category": "Kategorie",
+        "plan": "Plan",
+        "actual": "Ist",
+        "diff": "Abweichung",
+        "previous": "Vorjahr",
+        "_sheet": "EÜR",
+        "_file": "euer",
+        "_grandTotal": "GESAMTERGEBNIS (Einnahmen - Ausgaben)",
+        "_exceeded": "Die Einnahmen des wirtschaftlichen Geschäftsbetriebs übersteigen 50.000 € (§ 64 Abs. 3 AO). Bitte Steuerberatung hinzuziehen.",
+        "_near": "Die Einnahmen des wirtschaftlichen Geschäftsbetriebs haben 80 % der Grenze von 50.000 € erreicht (§ 64 Abs. 3 AO)."
+      },
+      "ledger": {
+        "date": "Datum",
+        "number": "Buchungsnr.",
+        "description": "Beschreibung",
+        "receipt": "Belegnr.",
+        "income": "Einnahme",
+        "expense": "Ausgabe",
+        "balance": "Saldo",
+        "_sheet": "Kassenbuch",
+        "_file": "kassenbuch",
+        "_opening": "Anfangsbestand ({account})",
+        "_closing": "Endbestand",
+        "_noAccount": "Kein Konto ausgewählt."
+      }
     }
   },
   "audit": {
@@ -1071,7 +1157,8 @@
       "assigneeInactive": "Die verantwortliche Person wurde nicht gefunden oder ihr Konto ist deaktiviert.",
       "replyOnlyOutgoing": "Ein Bezugsdokument kann nur bei ausgehenden Dokumenten gewählt werden.",
       "replySelf": "Ein Dokument kann nicht auf sich selbst antworten.",
-      "replyTargetInvalid": "Das Bezugsdokument wurde nicht gefunden oder ist kein eingehendes Dokument."
+      "replyTargetInvalid": "Das Bezugsdokument wurde nicht gefunden oder ist kein eingehendes Dokument.",
+      "documentNotFound2": "Schriftstück nicht gefunden."
     },
     "validation": {
       "categoryMin": "Der Kategoriename muss mindestens 2 Zeichen lang sein.",
@@ -1093,6 +1180,34 @@
     "module": {
       "label": "Schriftgut",
       "description": "Nummerierung, Verfolgung und Archivierung ein- und ausgehender Schriftstücke."
+    },
+    "export": {
+      "register": {
+        "registryNumber": "Eingangs-/Ausgangsnr.",
+        "direction": "Richtung",
+        "registeredAt": "Erfasst am",
+        "documentDate": "Datum des Schriftstücks",
+        "counterparty": "Absender/Empfänger",
+        "referenceNumber": "Aktenzeichen",
+        "subject": "Betreff",
+        "categoryName": "Kategorie",
+        "deliveryMethod": "Zustellart",
+        "status": "Status",
+        "assigneeLabel": "Zuständig",
+        "dueDate": "Frist",
+        "fileCount": "Dateien",
+        "_sheet": "Schriftgutregister",
+        "_file": "schriftgutregister",
+        "deliveries": {
+          "POST": "Post",
+          "EMAIL": "E-Mail",
+          "HAND": "Persönlich",
+          "COURIER": "Kurier",
+          "REGISTERED_MAIL": "Einschreiben",
+          "FAX": "Fax",
+          "OTHER": "Sonstiges"
+        }
+      }
     }
   },
   "donations": {
@@ -1392,7 +1507,11 @@
       "activeDonationBlocksAnonymize": "Es gibt eine Spende mit aktiver Bestätigung ({number}); stornieren Sie zuerst die Bestätigung.",
       "mixedWaiver": "Die ausgewählten Spenden mischen Aufwandsspenden und Geldspenden; bitte getrennt bestätigen.",
       "feeConfirmationsDisabled": "Bestätigungen für Mitgliedsbeiträge sind deaktiviert (membershipFeesDeductible = false; § 10b Abs. 1 Satz 8 EStG).",
-      "mixedWaiverYear": "Die Spenden dieses Spenders im Jahr sind gemischt (Aufwandsspende ja/nein); Sammelbestätigung übersprungen."
+      "mixedWaiverYear": "Die Spenden dieses Spenders im Jahr sind gemischt (Aufwandsspende ja/nein); Sammelbestätigung übersprungen.",
+      "noConfirmationSelected": "Keine Bestätigung ausgewählt.",
+      "confirmationNotFound2": "Bestätigung nicht gefunden.",
+      "storedPdfMissing": "Gespeicherte PDF-Datei nicht gefunden.",
+      "pdfIntegrity": "PDF-Integritätsfehler: Die gespeicherte Datei stimmt nicht mit dem SHA-256 des Datensatzes überein. Bitte informieren Sie die Systemadministration (Eintrag PDF_INTEGRITY_ERROR)."
     },
     "validation": {
       "periodStartInvalid": "Bitte einen gültigen Zeitraumbeginn eingeben.",
@@ -1430,6 +1549,53 @@
     "module": {
       "label": "Spenden",
       "description": "Spendenerfassung, Zuwendungsbestätigungen und Spenderverwaltung."
+    },
+    "export": {
+      "register": {
+        "confirmationNumber": "ZB-Nr.",
+        "issuedAt": "Datum",
+        "kind": "Art",
+        "content": "Inhalt",
+        "recipientName": "Empfänger",
+        "period": "Zeitraum",
+        "total": "Summe",
+        "status": "Status",
+        "cancelReason": "Stornogrund",
+        "_sheet": "Zuwendungsregister",
+        "_file": "zuwendungsregister",
+        "kinds": {
+          "SINGLE": "Einzelbestätigung",
+          "COLLECTIVE": "Sammelbestätigung"
+        },
+        "contents": {
+          "DONATION": "Geldspende",
+          "MEMBERSHIP_FEE": "Mitgliedsbeitrag"
+        }
+      },
+      "donations": {
+        "donationNumber": "Nr.",
+        "receivedAt": "Datum",
+        "donorNumber": "Spendernr.",
+        "donorName": "Spender",
+        "amount": "Betrag",
+        "method": "Zahlungsart",
+        "waived": "Aufwandsspende",
+        "confirmationNumber": "Bestätigungsnr.",
+        "bookingNumber": "Buchung",
+        "_sheet": "Spenden",
+        "_file": "spenden",
+        "_yes": "Ja",
+        "_no": "Nein",
+        "_cancelled": "STORNIERT",
+        "methods": {
+          "CASH": "Bar",
+          "BANK_TRANSFER": "Überweisung",
+          "CARD": "Kartenzahlung",
+          "PAYPAL": "PayPal",
+          "REIMBURSEMENT_WAIVER": "Aufwandsspende",
+          "OTHER": "Sonstige"
+        }
+      }
     }
   },
   "events": {
@@ -2294,7 +2460,9 @@
       "transitionNotAllowed": "Diese Statusänderung ist nicht zulässig.",
       "forbidden": "Für diese Aktion fehlt Ihnen die Berechtigung.",
       "approveNeedsAgenda": "Zur Freigabe ist mindestens ein Tagesordnungspunkt erforderlich.",
-      "approveNeedsPresent": "Zur Freigabe muss mindestens ein Teilnehmer als „anwesend“ markiert sein."
+      "approveNeedsPresent": "Zur Freigabe muss mindestens ein Teilnehmer als „anwesend“ markiert sein.",
+      "meetingNotFound2": "Sitzung nicht gefunden.",
+      "notEditable": "Die Sitzung kann nicht bearbeitet werden."
     },
     "validation": {
       "taskMin": "Die Aufgabenbeschreibung muss mindestens 3 Zeichen lang sein.",
@@ -2690,7 +2858,17 @@
       "paymentNotFound": "Zahlung nicht gefunden.",
       "paymentAlreadyVoided": "Diese Zahlung wurde bereits storniert.",
       "dueHasPayments": "Beitragszeilen mit Zahlungen können nicht gelöscht werden. Stornieren Sie zuerst die Zahlungen.",
-      "importMissingColumns": "Pflichtspalten fehlen (Ad, Soyad, Üyelik Türü, Üyelik Başlangıç Tarihi). Bitte die Vorlage herunterladen und ausfüllen."
+      "importMissingColumns": "Pflichtspalten fehlen (Ad, Soyad, Üyelik Türü, Üyelik Başlangıç Tarihi). Bitte die Vorlage herunterladen und ausfüllen.",
+      "dataExportMissing": "Mitglied nicht gefunden oder Daten gelöscht.",
+      "importTooLarge": "Die Datei überschreitet die Grenze von {max} MB.",
+      "importXlsxOnly": "Nur .xlsx-Dateien werden akzeptiert.",
+      "importInvalidXlsx": "Die Datei ist kein gültiges .xlsx-Paket.",
+      "importDupEmailDb": "Duplikat: Ein Mitglied mit dieser E-Mail existiert bereits.",
+      "importDupEmailFile": "Duplikat: Dieselbe E-Mail kommt mehrfach in der Datei vor.",
+      "importDupPersonDb": "Duplikat: Ein Mitglied mit gleichem Vor-, Nachnamen und Geburtsdatum existiert bereits.",
+      "importDupPersonFile": "Duplikat: Gleicher Vor-, Nachname und Geburtsdatum kommen mehrfach in der Datei vor.",
+      "paymentNotSpecified": "Keine Zahlung angegeben.",
+      "paymentNotFound2": "Zahlung nicht gefunden."
     },
     "validation": {
       "yearMinPrev": "Das Jahr darf höchstens das Vorjahr sein.",
@@ -2739,6 +2917,50 @@
     "module": {
       "label": "Mitglieder",
       "description": "Mitgliederverwaltung, Mitgliedsarten, Beitragssoll und Zahlungen."
+    },
+    "export": {
+      "dues": {
+        "membershipNumber": "Mitgliedsnr.",
+        "fullName": "Name",
+        "type": "Mitgliedsart",
+        "year": "Jahr",
+        "amountDue": "Betrag",
+        "paid": "Bezahlt",
+        "remaining": "Offen",
+        "status": "Status",
+        "lastPaymentAt": "Letzte Zahlung",
+        "dueDate": "Fällig am",
+        "_sheet": "Beiträge",
+        "_file": "beitraege"
+      },
+      "register": {
+        "membershipNumber": "Mitgliedsnr.",
+        "type": "Mitgliedsart",
+        "status": "Status",
+        "firstName": "Vorname",
+        "lastName": "Nachname",
+        "email": "E-Mail",
+        "phone": "Telefon",
+        "street": "Straße",
+        "houseNumber": "Hausnr.",
+        "postalCode": "PLZ",
+        "city": "Ort",
+        "state": "Bundesland",
+        "country": "Land",
+        "joinDate": "Eintritt",
+        "exitDate": "Austritt",
+        "_sheet": "Mitgliederverzeichnis",
+        "_file": "mitgliederverzeichnis"
+      }
+    },
+    "importErrors": {
+      "unreadable": "Die Datei konnte nicht gelesen werden. Bitte eine gültige .xlsx-Datei hochladen.",
+      "noSheet": "Kein Arbeitsblatt gefunden. Bitte die Vorlage herunterladen und ausfüllen.",
+      "tooManyRows": "Die Datei enthält mehr als {max} Datenzeilen. Bitte aufteilen und einzeln hochladen.",
+      "unknownType": "Unbekannte Mitgliedsart: „{value}“.",
+      "unknownStatus": "Unbekannter Status: „{value}“. (Aktif / Pasif / Ayrıldı)",
+      "birthDateInvalid": "Ungültiges Geburtsdatum (TT.MM.JJJJ verwenden).",
+      "joinDateRequired": "Eintrittsdatum ist erforderlich (TT.MM.JJJJ)."
     }
   },
   "organization": {
@@ -2795,6 +3017,10 @@
       "purposesMax": "Der Zwecktext darf höchstens 500 Zeichen lang sein.",
       "postalCodeDe": "Die PLZ muss in Deutschland 5-stellig sein.",
       "websiteInvalid": "Die Website muss eine gültige Adresse sein (https://...)."
+    },
+    "errors": {
+      "logoMissing": "Es wurde kein Logo hochgeladen.",
+      "logoReadFailed": "Das Logo konnte nicht gelesen werden."
     }
   },
   "system": {

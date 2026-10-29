@@ -22,8 +22,8 @@ import { AttendeeAddModal } from "./attendee-add-modal";
 import { QuorumBanner } from "./quorum-banner";
 import type { AttendeeItem, QuorumInfo } from "../types";
 import {
-  ATTENDEE_ROLE_LABELS,
-  ATTENDANCE_LABELS,
+  ATTENDEE_ROLE_VALUES,
+  ATTENDANCE_VALUES,
 } from "../constants";
 
 /**
@@ -175,9 +175,7 @@ export function AttendeesTab({
                           }}
                           className="h-8 w-full appearance-none rounded-medium bg-default-100 px-2.5 pr-8 text-xs font-medium text-foreground transition-colors hover:bg-default-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer border border-transparent focus:border-primary/50"
                         >
-                          {(
-                            Object.keys(ATTENDEE_ROLE_LABELS) as Array<keyof typeof ATTENDEE_ROLE_LABELS>
-                          ).map((roleKey) => (
+                          {ATTENDEE_ROLE_VALUES.map((roleKey) => (
                             <option key={roleKey} value={roleKey} className="bg-background text-foreground">
                               {tRole(roleKey)}
                             </option>
@@ -202,9 +200,7 @@ export function AttendeesTab({
                           }}
                           className="h-8 w-full appearance-none rounded-medium bg-default-100 px-2.5 pr-8 text-xs font-medium text-foreground transition-colors hover:bg-default-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer border border-transparent focus:border-primary/50"
                         >
-                          {(
-                            Object.keys(ATTENDANCE_LABELS) as Array<keyof typeof ATTENDANCE_LABELS>
-                          ).map((statusKey) => (
+                          {ATTENDANCE_VALUES.map((statusKey) => (
                             <option key={statusKey} value={statusKey} className="bg-background text-foreground">
                               {tAttendance(statusKey)}
                             </option>

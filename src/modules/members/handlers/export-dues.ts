@@ -1,6 +1,7 @@
 import "server-only";
 
 import ExcelJS from "exceljs";
+import { getLocale, getTranslations } from "next-intl/server";
 import { NextResponse } from "next/server";
 
 import { writeAudit } from "@/shared/audit/write-audit";
@@ -12,8 +13,6 @@ import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 
 import {
   DUES_EXPORT_MAX_ROWS,
-  MEMBER_DUE_STATUS_LABELS,
-  MEMBERSHIP_TYPE_LABELS,
 } from "../constants";
 import { memberPaymentsPermissions } from "../permissions";
 import {
@@ -22,6 +21,7 @@ import {
   listDuesForExport,
 } from "../queries/list-dues";
 import { berlinToday, berlinYear } from "../utils";
+import { translateMessage } from "@/shared/i18n/translate-message";
 
 /**
  * Aidat raporu Excel dışa aktarımı (GET /api/members/dues/export, Faz 3 eklemeleri).
@@ -34,13 +34,13 @@ export async function exportDuesHandler(request: Request): Promise<Response> {
     user = await requireUser();
   } catch (error) {
     if (error instanceof UnauthorizedError) {
-      return NextResponse.json({ ok: false, error: "Oturum bulunamadı." }, { status: 401 });
+      return NextResponse.json({ ok: false, error: await translateMessage("common.errors.sessionExpired") }, { status: 401 });
     }
     throw error;
   }
 
   if (!can(user.role, memberPaymentsPermissions, "view")) {
-    return NextResponse.json({ ok: false, error: "Bu işlem için yetkiniz yok." }, { status: 403 });
+    return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
   }
 
   const raw: RawSearchParams = Object.fromEntries(new URL(request.url).searchParams.entries());
@@ -61,32 +61,35 @@ export async function exportDuesHandler(request: Request): Promise<Response> {
   const truncated = fetched.length > DUES_EXPORT_MAX_ROWS;
   const rows = fetched.slice(0, DUES_EXPORT_MAX_ROWS);
 
+  const tRoot = await getTranslations();
+  const tx = (key: string, values?: Record<string, string | number>) => tRoot(`members.export.dues.${key}`, values);
+  const locale = await getLocale();
   const workbook = new ExcelJS.Workbook();
-  const sheet = workbook.addWorksheet("Aidat");
+  const sheet = workbook.addWorksheet(tx("_sheet"));
 
   sheet.columns = [
-    { header: "Üye No", key: "membershipNumber", width: 16 },
-    { header: "Ad Soyad", key: "fullName", width: 26 },
-    { header: "Üyelik Türü", key: "type", width: 16 },
-    { header: "Yıl", key: "year", width: 8 },
-    { header: "Tutar", key: "amountDue", width: 14 },
-    { header: "Ödenen", key: "paid", width: 14 },
-    { header: "Kalan", key: "remaining", width: 14 },
-    { header: "Durum", key: "status", width: 12 },
-    { header: "Son Ödeme Tarihi", key: "lastPaymentAt", width: 18 },
-    { header: "Son Tarih", key: "dueDate", width: 14 },
+    { header: tx("membershipNumber"), key: "membershipNumber", width: 16 },
+    { header: tx("fullName"), key: "fullName", width: 26 },
+    { header: tx("type"), key: "type", width: 16 },
+    { header: tx("year"), key: "year", width: 8 },
+    { header: tx("amountDue"), key: "amountDue", width: 14 },
+    { header: tx("paid"), key: "paid", width: 14 },
+    { header: tx("remaining"), key: "remaining", width: 14 },
+    { header: tx("status"), key: "status", width: 12 },
+    { header: tx("lastPaymentAt"), key: "lastPaymentAt", width: 18 },
+    { header: tx("dueDate"), key: "dueDate", width: 14 },
   ];
 
   for (const row of rows) {
     const added = sheet.addRow({
       membershipNumber: row.membershipNumber,
       fullName: row.fullName,
-      type: MEMBERSHIP_TYPE_LABELS[row.type],
+      type: tRoot(`members.type.${row.type}`),
       year: row.year,
       amountDue: row.amountDueCents / 100,
       paid: row.paidCents / 100,
       remaining: row.remainingCents / 100,
-      status: MEMBER_DUE_STATUS_LABELS[row.status],
+      status: tRoot(`members.dues.status.${row.status}`),
       lastPaymentAt: row.lastPaymentAt ? new Date(`${row.lastPaymentAt}T00:00:00.000Z`) : "",
       dueDate: new Date(`${row.dueDate}T00:00:00.000Z`),
     });
@@ -105,14 +108,14 @@ export async function exportDuesHandler(request: Request): Promise<Response> {
 
   if (truncated) {
     const note = sheet.addRow({
-      membershipNumber: `Sonuçlar ${DUES_EXPORT_MAX_ROWS.toLocaleString("tr-TR")} satırla sınırlandı.`,
+      membershipNumber: tRoot("common.export.truncated", { max: DUES_EXPORT_MAX_ROWS.toLocaleString(locale) }),
     });
     note.font = { italic: true, bold: true };
     sheet.mergeCells(`A${note.number}:J${note.number}`);
   }
 
   const buffer = await workbook.xlsx.writeBuffer();
-  const fileName = `aidat-${year}-${berlinToday().toISOString().slice(0, 10)}.xlsx`;
+  const fileName = `${tx("_file")}-${year}-${berlinToday().toISOString().slice(0, 10)}.xlsx`;
 
   await writeAudit({
     userId: user.id,

@@ -298,7 +298,11 @@
     "activeDonationBlocksAnonymize": "Bağışçıya ait aktif bildirimli bağış var ({number}); önce bildirimi iptal edin.",
     "mixedWaiver": "Seçilen bağışlarda Aufwandsspende değeri karışık; ayrı ayrı bildirim üretin.",
     "feeConfirmationsDisabled": "Aidat bildirimleri kapalı (membershipFeesDeductible = false; § 10b Abs. 1 Satz 8 EStG).",
-    "mixedWaiverYear": "Bu bağışçının yılındaki bağışlar karışık (Aufwandsspende evet/hayır); toplu üretim atlandı."
+    "mixedWaiverYear": "Bu bağışçının yılındaki bağışlar karışık (Aufwandsspende evet/hayır); toplu üretim atlandı.",
+    "noConfirmationSelected": "Bildirim seçilmedi.",
+    "confirmationNotFound2": "Bildirim bulunamadı.",
+    "storedPdfMissing": "Depolanmış PDF bulunamadı.",
+    "pdfIntegrity": "PDF bütünlük hatası: depolanan dosya kayıttaki SHA-256 ile uyuşmuyor. Sistem yöneticisine haber verin (kayıt PDF_INTEGRITY_ERROR)."
   },
   "validation": {
     "periodStartInvalid": "Geçerli bir dönem başlangıcı girin.",
@@ -336,5 +340,52 @@
   "module": {
     "label": "Bağışlar",
     "description": "Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı takibi."
+  },
+  "export": {
+    "register": {
+      "confirmationNumber": "ZB-no",
+      "issuedAt": "Tarih",
+      "kind": "Tür",
+      "content": "İçerik",
+      "recipientName": "Alıcı adı",
+      "period": "Dönem",
+      "total": "Toplam",
+      "status": "Durum",
+      "cancelReason": "İptal nedeni",
+      "_sheet": "Zuwendungsregister",
+      "_file": "zuwendungsregister",
+      "kinds": {
+        "SINGLE": "Einzelbestätigung (Tek)",
+        "COLLECTIVE": "Sammelbestätigung (Toplu)"
+      },
+      "contents": {
+        "DONATION": "Geldspende (Bağış)",
+        "MEMBERSHIP_FEE": "Mitgliedsbeitrag (Aidat)"
+      }
+    },
+    "donations": {
+      "donationNumber": "No",
+      "receivedAt": "Tarih",
+      "donorNumber": "Bağışçı No",
+      "donorName": "Bağışçı adı",
+      "amount": "Tutar",
+      "method": "Yöntem",
+      "waived": "Aufwandsspende",
+      "confirmationNumber": "Bildirim No",
+      "bookingNumber": "Muhasebe fişi",
+      "_sheet": "Bağışlar",
+      "_file": "bagislar",
+      "_yes": "Evet (Ja)",
+      "_no": "Hayır (Nein)",
+      "_cancelled": "İPTAL",
+      "methods": {
+        "CASH": "Nakit (Bar)",
+        "BANK_TRANSFER": "Banka havalesi (Überweisung)",
+        "CARD": "Kart (Kartenzahlung)",
+        "PAYPAL": "PayPal",
+        "REIMBURSEMENT_WAIVER": "Aufwandsspende (gider vazgeçimi)",
+        "OTHER": "Diğer (Sonstige)"
+      }
+    }
   }
 }

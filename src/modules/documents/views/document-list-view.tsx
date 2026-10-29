@@ -16,7 +16,7 @@ import {
   listDocuments,
 } from "../queries/list-documents";
 import { documentsPermissions } from "../permissions";
-import { STATUS_FILTER_OPTIONS } from "../constants";
+import { STATUS_VALUES } from "../constants";
 import { berlinMonthRange } from "../utils";
 import { DirectionTabs, DocumentDateFilter, DocumentQuickFilters } from "../components/list-filters";
 import { DocumentTable } from "../components/document-table";
@@ -101,7 +101,7 @@ export async function DocumentListView({
         dateFilter={<DocumentDateFilter />}
         filterExtra={<DocumentQuickFilters />}
         filters={[
-          { key: "status", label: t("filter.status"), options: [...STATUS_FILTER_OPTIONS] },
+          { key: "status", label: t("filter.status"), options: STATUS_VALUES.map((value) => ({ value, label: t(`status.${value}`) })) },
           { key: "categoryId", label: t("filter.category"), options: categories.map((c) => ({ value: c.id, label: c.label })) },
           { key: "assigneeId", label: t("filter.assignee"), options: assignees.map((a) => ({ value: a.id, label: a.label })) },
         ]}

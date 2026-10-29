@@ -16,8 +16,8 @@ import {
 import { getMemberStats } from "../queries/get-member-stats";
 import { membersPermissions } from "../permissions";
 import {
-  MEMBER_STATUS_FILTER_OPTIONS,
-  MEMBERSHIP_TYPE_FILTER_OPTIONS,
+  MEMBER_STATUS_VALUES,
+  MEMBERSHIP_TYPE_VALUES,
 } from "../constants";
 import { berlinMonthRange } from "../utils";
 import { MemberDateFilter } from "../components/list-filters";
@@ -82,8 +82,8 @@ export async function MemberListView({
         dir={params.dir}
         q={params.q}
         filters={[
-          { key: "status", label: t("list.status"), options: MEMBER_STATUS_FILTER_OPTIONS.map((o) => ({ value: o.value, label: t(`status.${o.value}`) })) },
-          { key: "type", label: t("list.type"), options: MEMBERSHIP_TYPE_FILTER_OPTIONS.map((o) => ({ value: o.value, label: t(`type.${o.value}`) })) },
+          { key: "status", label: t("list.status"), options: MEMBER_STATUS_VALUES.map((value) => ({ value, label: t(`status.${value}`) })) },
+          { key: "type", label: t("list.type"), options: MEMBERSHIP_TYPE_VALUES.map((value) => ({ value, label: t(`type.${value}`) })) },
         ]}
         dateFilter={<MemberDateFilter />}
         searchPlaceholder={t("list.searchPlaceholder")}

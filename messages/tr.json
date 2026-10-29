@@ -77,7 +77,10 @@
     },
     "active": "Aktif",
     "passive": "Pasif",
-    "emailPlaceholder": "ornek@dernek.org"
+    "emailPlaceholder": "ornek@dernek.org",
+    "export": {
+      "truncated": "Sonuçlar {max} satırla sınırlandı."
+    }
   },
   "nav": {
     "panel": "Panel",
@@ -176,7 +179,7 @@
     "kullaniciDuzenle": "Kullanıcıyı Düzenle",
     "denetimKaydi": "Denetim Kaydı",
     "profil": "Profil",
-    "dernekBilgileri": "Dernek Bilgileri | Dernek Yönetim Sistemi"
+    "dernekBilgileri": "Dernek Bilgileri"
   },
   "pdfLanguage": {
     "german": "Almanca (Deutsch)",
@@ -265,7 +268,9 @@
     "typeNotAllowed": "Bu dosya türü kabul edilmiyor.",
     "empty": "Boş dosya yüklenemez.",
     "contentMismatch": "Dosya içeriği .{extension} uzantısıyla uyumlu değil.",
-    "tooLarge": "Dosya en fazla {maxMb} MB olabilir."
+    "tooLarge": "Dosya en fazla {maxMb} MB olabilir.",
+    "uploadFailed": "Dosya yüklenemedi.",
+    "maxPerRecord": "Kayıt başına en fazla {max} dosya eklenebilir."
   },
   "accounting": {
     "list": {
@@ -653,7 +658,10 @@
       "sourcedNoEdit": "Kaynak fiş (otomatik) düzenlenemez; kaynağı olan modülden yönetilir.",
       "categoryInUse": "Bu kategoride fiş kayıtlı; yön (Gelir/Gider) ve alan (Sphere) değiştirilemez. Yeni bir kategori oluşturun.",
       "categoryDirectionLocked": "Fişi olan kategoride yön değişmez.",
-      "categorySphereLocked": "Fişi olan kategoride alan değişmez."
+      "categorySphereLocked": "Fişi olan kategoride alan değişmez.",
+      "bookingNotFound2": "Fiş bulunamadı.",
+      "reversedNoFile": "İptal edilmiş fişe belge eklenemez.",
+      "reversedSuffix": "İPTAL EDİLDİ"
     },
     "settings": {
       "donationShort": "Bağış"
@@ -694,6 +702,84 @@
     "module": {
       "label": "Muhasebe",
       "description": "Alman dernek mevzuatına uygun çift taraflı defter tutma, fiş ve bütçe yönetimi."
+    },
+    "enums": {
+      "bookingType": {
+        "INCOME": "Gelir (Einnahme)",
+        "EXPENSE": "Gider (Ausgabe)",
+        "TRANSFER": "Virman (Umbuchung)"
+      },
+      "direction": {
+        "INCOME": "Gelir",
+        "EXPENSE": "Gider"
+      },
+      "sphere": {
+        "IDEELL": "İdeel alan (ideeller Bereich)",
+        "ASSET_MANAGEMENT": "Varlık yönetimi (Vermögensverwaltung)",
+        "PURPOSE_OPERATION": "Amaca bağlı işletme (Zweckbetrieb)",
+        "ECONOMIC_OPERATION": "Ticari işletme (wirtschaftlicher Geschäftsbetrieb)"
+      },
+      "accountType": {
+        "CASH": "Kasa (Kasse)",
+        "BANK": "Banka hesabı (Girokonto)",
+        "OTHER": "Diğer (Sonstiges)"
+      },
+      "sourceType": {
+        "MEMBER_PAYMENT": "Üyelik aidatı (otomatik)",
+        "DONATION": "Bağış (otomatik)",
+        "DONATION_WAIVER": "Aufwandsspende gideri (otomatik)"
+      }
+    },
+    "export": {
+      "bookings": {
+        "bookingNumber": "Buchungsnr.",
+        "bookingDate": "Tarih",
+        "type": "Tür",
+        "accountName": "Hesap",
+        "counterAccount": "Hedef hesap",
+        "categoryName": "Kategori",
+        "sphere": "Alan",
+        "project": "Proje",
+        "amount": "Tutar",
+        "description": "Açıklama",
+        "counterparty": "Karşı taraf",
+        "receiptReference": "Belge no",
+        "fileCount": "Belge sayısı",
+        "status": "Durum",
+        "reverseReason": "İptal nedeni",
+        "_sheet": "Buchungen",
+        "_file": "buchungen",
+        "_reversed": "İptal edildi",
+        "_active": "Aktif"
+      },
+      "incomeExpense": {
+        "sphere": "Alan",
+        "direction": "Yön",
+        "category": "Kategori",
+        "plan": "Plan",
+        "actual": "Gerçekleşen",
+        "diff": "Fark",
+        "previous": "Önceki yıl",
+        "_sheet": "EÜR",
+        "_file": "gelir-gider",
+        "_grandTotal": "GENEL TOPLAM (Gelir - Gider)",
+        "_exceeded": "Ticari işletme gelirleri 50.000 € sınırını aştı (§ 64 Abs. 3 AO). Vergi danışmanına başvurun.",
+        "_near": "Ticari işletme gelirleri 50.000 € sınırının %80'ine ulaştı (§ 64 Abs. 3 AO)."
+      },
+      "ledger": {
+        "date": "Tarih",
+        "number": "Buchungsnr.",
+        "description": "Açıklama",
+        "receipt": "Belge no",
+        "income": "Gelir",
+        "expense": "Gider",
+        "balance": "Bakiye",
+        "_sheet": "Kassenbuch",
+        "_file": "kasa-defteri",
+        "_opening": "Dönem başı bakiyesi ({account})",
+        "_closing": "Dönem sonu bakiyesi",
+        "_noAccount": "Hesap seçilmedi."
+      }
     }
   },
   "audit": {
@@ -1071,7 +1157,8 @@
       "assigneeInactive": "Sorumlu bulunamadı veya hesabı pasif durumda.",
       "replyOnlyOutgoing": "Yanıtlanan evrak yalnızca giden evrakta seçilebilir.",
       "replySelf": "Bir evrak kendine yanıt olarak bağlanamaz.",
-      "replyTargetInvalid": "Yanıt verilecek evrak bulunamadı veya gelen evrak değil."
+      "replyTargetInvalid": "Yanıt verilecek evrak bulunamadı veya gelen evrak değil.",
+      "documentNotFound2": "Evrak bulunamadı."
     },
     "validation": {
       "categoryMin": "Kategori adı en az 2 karakter olmalıdır.",
@@ -1093,6 +1180,34 @@
     "module": {
       "label": "Evrak Kayıt",
       "description": "Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi."
+    },
+    "export": {
+      "register": {
+        "registryNumber": "Kayıt No",
+        "direction": "Yön",
+        "registeredAt": "Kayıt Tarihi",
+        "documentDate": "Evrak Tarihi",
+        "counterparty": "Gönderen/Alıcı",
+        "referenceNumber": "Evrak Sayısı",
+        "subject": "Konu",
+        "categoryName": "Kategori",
+        "deliveryMethod": "Teslim Şekli",
+        "status": "Durum",
+        "assigneeLabel": "Sorumlu",
+        "dueDate": "Son İşlem Tarihi",
+        "fileCount": "Dosya Sayısı",
+        "_sheet": "Evrak Defteri",
+        "_file": "evrak-defteri",
+        "deliveries": {
+          "POST": "Posta",
+          "EMAIL": "E-posta",
+          "HAND": "Elden",
+          "COURIER": "Kargo/Kurye",
+          "REGISTERED_MAIL": "Kayıtlı Posta",
+          "FAX": "Faks",
+          "OTHER": "Diğer"
+        }
+      }
     }
   },
   "donations": {
@@ -1392,7 +1507,11 @@
       "activeDonationBlocksAnonymize": "Bağışçıya ait aktif bildirimli bağış var ({number}); önce bildirimi iptal edin.",
       "mixedWaiver": "Seçilen bağışlarda Aufwandsspende değeri karışık; ayrı ayrı bildirim üretin.",
       "feeConfirmationsDisabled": "Aidat bildirimleri kapalı (membershipFeesDeductible = false; § 10b Abs. 1 Satz 8 EStG).",
-      "mixedWaiverYear": "Bu bağışçının yılındaki bağışlar karışık (Aufwandsspende evet/hayır); toplu üretim atlandı."
+      "mixedWaiverYear": "Bu bağışçının yılındaki bağışlar karışık (Aufwandsspende evet/hayır); toplu üretim atlandı.",
+      "noConfirmationSelected": "Bildirim seçilmedi.",
+      "confirmationNotFound2": "Bildirim bulunamadı.",
+      "storedPdfMissing": "Depolanmış PDF bulunamadı.",
+      "pdfIntegrity": "PDF bütünlük hatası: depolanan dosya kayıttaki SHA-256 ile uyuşmuyor. Sistem yöneticisine haber verin (kayıt PDF_INTEGRITY_ERROR)."
     },
     "validation": {
       "periodStartInvalid": "Geçerli bir dönem başlangıcı girin.",
@@ -1430,6 +1549,53 @@
     "module": {
       "label": "Bağışlar",
       "description": "Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı takibi."
+    },
+    "export": {
+      "register": {
+        "confirmationNumber": "ZB-no",
+        "issuedAt": "Tarih",
+        "kind": "Tür",
+        "content": "İçerik",
+        "recipientName": "Alıcı adı",
+        "period": "Dönem",
+        "total": "Toplam",
+        "status": "Durum",
+        "cancelReason": "İptal nedeni",
+        "_sheet": "Zuwendungsregister",
+        "_file": "zuwendungsregister",
+        "kinds": {
+          "SINGLE": "Einzelbestätigung (Tek)",
+          "COLLECTIVE": "Sammelbestätigung (Toplu)"
+        },
+        "contents": {
+          "DONATION": "Geldspende (Bağış)",
+          "MEMBERSHIP_FEE": "Mitgliedsbeitrag (Aidat)"
+        }
+      },
+      "donations": {
+        "donationNumber": "No",
+        "receivedAt": "Tarih",
+        "donorNumber": "Bağışçı No",
+        "donorName": "Bağışçı adı",
+        "amount": "Tutar",
+        "method": "Yöntem",
+        "waived": "Aufwandsspende",
+        "confirmationNumber": "Bildirim No",
+        "bookingNumber": "Muhasebe fişi",
+        "_sheet": "Bağışlar",
+        "_file": "bagislar",
+        "_yes": "Evet (Ja)",
+        "_no": "Hayır (Nein)",
+        "_cancelled": "İPTAL",
+        "methods": {
+          "CASH": "Nakit (Bar)",
+          "BANK_TRANSFER": "Banka havalesi (Überweisung)",
+          "CARD": "Kart (Kartenzahlung)",
+          "PAYPAL": "PayPal",
+          "REIMBURSEMENT_WAIVER": "Aufwandsspende (gider vazgeçimi)",
+          "OTHER": "Diğer (Sonstige)"
+        }
+      }
     }
   },
   "events": {
@@ -2294,7 +2460,9 @@
       "transitionNotAllowed": "Bu durum değişikliğine izin verilmiyor.",
       "forbidden": "Bu işlem için yetkiniz yok.",
       "approveNeedsAgenda": "Onaylamak için en az bir gündem maddesi gereklidir.",
-      "approveNeedsPresent": "Onaylamak için en az bir katılımcının 'Katıldı' olarak işaretlenmesi gereklidir."
+      "approveNeedsPresent": "Onaylamak için en az bir katılımcının 'Katıldı' olarak işaretlenmesi gereklidir.",
+      "meetingNotFound2": "Toplantı bulunamadı.",
+      "notEditable": "Toplantı düzenlenemez."
     },
     "validation": {
       "taskMin": "Görev açıklaması en az 3 karakter olmalıdır.",
@@ -2690,7 +2858,17 @@
       "paymentNotFound": "Ödeme bulunamadı.",
       "paymentAlreadyVoided": "Bu ödeme zaten iptal edilmiş.",
       "dueHasPayments": "Ödeme kaydı olan aidat satırı silinemez. Önce ödemeleri iptal edin.",
-      "importMissingColumns": "Zorunlu sütunlar bulunamadı (Ad, Soyad, Üyelik Türü, Üyelik Başlangıç Tarihi). Şablonu indirip doldurun."
+      "importMissingColumns": "Zorunlu sütunlar bulunamadı (Ad, Soyad, Üyelik Türü, Üyelik Başlangıç Tarihi). Şablonu indirip doldurun.",
+      "dataExportMissing": "Üye bulunamadı veya verileri silinmiş.",
+      "importTooLarge": "Dosya {max} MB sınırını aşıyor.",
+      "importXlsxOnly": "Yalnızca .xlsx dosyası kabul edilir.",
+      "importInvalidXlsx": "Dosya geçerli bir .xlsx paketi değil.",
+      "importDupEmailDb": "Mükerrer kayıt: bu e-posta ile kayıtlı bir üye zaten var.",
+      "importDupEmailFile": "Mükerrer kayıt: aynı e-posta dosyada birden çok kez geçiyor.",
+      "importDupPersonDb": "Mükerrer kayıt: aynı ad, soyad ve doğum tarihiyle kayıtlı bir üye zaten var.",
+      "importDupPersonFile": "Mükerrer kayıt: aynı ad, soyad ve doğum tarihi dosyada birden çok kez geçiyor.",
+      "paymentNotSpecified": "Ödeme belirtilmedi.",
+      "paymentNotFound2": "Ödeme bulunamadı."
     },
     "validation": {
       "yearMinPrev": "Yıl en fazla bir önceki yıl olabilir.",
@@ -2739,6 +2917,50 @@
     "module": {
       "label": "Üyeler",
       "description": "Üye kayıtları, üyelik tipleri, aidat tahakkuk ve ödeme takibi."
+    },
+    "export": {
+      "dues": {
+        "membershipNumber": "Üye No",
+        "fullName": "Ad Soyad",
+        "type": "Üyelik Türü",
+        "year": "Yıl",
+        "amountDue": "Tutar",
+        "paid": "Ödenen",
+        "remaining": "Kalan",
+        "status": "Durum",
+        "lastPaymentAt": "Son Ödeme Tarihi",
+        "dueDate": "Son Tarih",
+        "_sheet": "Aidat",
+        "_file": "aidat"
+      },
+      "register": {
+        "membershipNumber": "Üye No",
+        "type": "Üyelik Türü",
+        "status": "Durum",
+        "firstName": "Ad",
+        "lastName": "Soyad",
+        "email": "E-posta",
+        "phone": "Telefon",
+        "street": "Straße",
+        "houseNumber": "Kapı No",
+        "postalCode": "PLZ",
+        "city": "Şehir",
+        "state": "Eyalet",
+        "country": "Ülke",
+        "joinDate": "Katılım",
+        "exitDate": "Ayrılış",
+        "_sheet": "Üye Defteri",
+        "_file": "uye-defteri"
+      }
+    },
+    "importErrors": {
+      "unreadable": "Dosya okunamadı. Geçerli bir .xlsx dosyası yükleyin.",
+      "noSheet": "Çalışma sayfası bulunamadı. Şablonu indirip doldurun.",
+      "tooManyRows": "Dosyada {max} satırdan fazla veri var. Dosyayı bölerek yükleyin.",
+      "unknownType": "Bilinmeyen üyelik türü: \"{value}\".",
+      "unknownStatus": "Bilinmeyen durum: \"{value}\". (Aktif / Pasif / Ayrıldı)",
+      "birthDateInvalid": "Doğum tarihi geçersiz (gg.aa.yyyy kullanın).",
+      "joinDateRequired": "Üyelik başlangıç tarihi zorunludur (gg.aa.yyyy)."
     }
   },
   "organization": {
@@ -2795,6 +3017,10 @@
       "purposesMax": "Amaç metni en fazla 500 karakter olabilir.",
       "postalCodeDe": "Almanya için posta kodu 5 haneli olmalıdır (PLZ).",
       "websiteInvalid": "Web sitesi geçerli bir adres olmalıdır (https://...)."
+    },
+    "errors": {
+      "logoMissing": "Logo yüklenmemiş.",
+      "logoReadFailed": "Logo okunamadı."
     }
   },
   "system": {

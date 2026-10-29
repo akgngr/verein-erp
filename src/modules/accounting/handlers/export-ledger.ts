@@ -1,6 +1,7 @@
 import "server-only";
 
 import ExcelJS from "exceljs";
+import { getTranslations } from "next-intl/server";
 import { NextResponse } from "next/server";
 
 import { writeAudit } from "@/shared/audit/write-audit";
@@ -9,10 +10,10 @@ import { buildUserLabel } from "@/shared/utils";
 
 import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 
-import { BOOKING_TYPE_LABELS } from "../constants";
 import { accountingPermissions } from "../permissions";
 import { getLedgerReport } from "../queries/get-ledger";
 import { berlinToday } from "../utils";
+import { translateMessage } from "@/shared/i18n/translate-message";
 
 /**
  * Kasa defteri Excel dışa aktarımı (GET /api/accounting/reports/ledger/export,
@@ -25,13 +26,13 @@ export async function exportLedgerHandler(request: Request): Promise<Response> {
     user = await requireUser();
   } catch (error) {
     if (error instanceof UnauthorizedError) {
-      return NextResponse.json({ ok: false, error: "Oturum bulunamadı." }, { status: 401 });
+      return NextResponse.json({ ok: false, error: await translateMessage("common.errors.sessionExpired") }, { status: 401 });
     }
     throw error;
   }
 
   if (!can(user.role, accountingPermissions, "view")) {
-    return NextResponse.json({ ok: false, error: "Bu işlem için yetkiniz yok." }, { status: 403 });
+    return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
   }
 
   const url = new URL(request.url);
@@ -42,26 +43,28 @@ export async function exportLedgerHandler(request: Request): Promise<Response> {
   const to = url.searchParams.get("to") ?? `${year}-12-31`;
 
   if (!accountId) {
-    return NextResponse.json({ ok: false, error: "Hesap seçilmedi." }, { status: 400 });
+    return NextResponse.json({ ok: false, error: await translateMessage("accounting.export.ledger._noAccount") }, { status: 400 });
   }
 
   const report = await getLedgerReport(accountId, from, to);
 
+  const tRoot = await getTranslations();
+  const tx = (key: string, values?: Record<string, string | number>) => tRoot(`accounting.export.ledger.${key}`, values);
   const workbook = new ExcelJS.Workbook();
-  const sheet = workbook.addWorksheet("Kassenbuch");
+  const sheet = workbook.addWorksheet(tx("_sheet"));
 
   sheet.columns = [
-    { header: "Tarih", key: "date", width: 12 },
-    { header: "Buchungsnr.", key: "number", width: 14 },
-    { header: "Açıklama", key: "description", width: 42 },
-    { header: "Belge no", key: "receipt", width: 16 },
-    { header: "Gelir", key: "income", width: 14 },
-    { header: "Gider", key: "expense", width: 14 },
-    { header: "Bakiye", key: "balance", width: 14 },
+    { header: tx("date"), key: "date", width: 12 },
+    { header: tx("number"), key: "number", width: 14 },
+    { header: tx("description"), key: "description", width: 42 },
+    { header: tx("receipt"), key: "receipt", width: 16 },
+    { header: tx("income"), key: "income", width: 14 },
+    { header: tx("expense"), key: "expense", width: 14 },
+    { header: tx("balance"), key: "balance", width: 14 },
   ];
 
   const openingRow = sheet.addRow({
-    description: `Dönem başı bakiyesi (${report.accountName})`,
+    description: tx("_opening", { account: report.accountName }),
     balance: report.openingBalanceCents / 100,
   });
   openingRow.font = { bold: true };
@@ -73,7 +76,7 @@ export async function exportLedgerHandler(request: Request): Promise<Response> {
     const added = sheet.addRow({
       date: row.bookingDate,
       number: row.bookingNumber,
-      description: row.reversedAt ? `${row.description} (İPTAL EDİLDİ)` : row.description,
+      description: row.reversedAt ? `${row.description} (${tRoot("accounting.errors.reversedSuffix")})` : row.description,
       receipt: row.receiptReference ?? "",
       income,
       expense,
@@ -92,7 +95,7 @@ export async function exportLedgerHandler(request: Request): Promise<Response> {
   }
 
   const closingRow = sheet.addRow({
-    description: "Dönem sonu bakiyesi",
+    description: tx("_closing"),
     balance: report.closingBalanceCents / 100,
   });
   closingRow.font = { bold: true };
@@ -102,7 +105,7 @@ export async function exportLedgerHandler(request: Request): Promise<Response> {
   sheet.views = [{ state: "frozen", ySplit: 1 }];
 
   const buffer = await workbook.xlsx.writeBuffer();
-  const fileName = `kasa-defteri-${report.accountName.replace(/[^\w-]+/g, "-")}-${from}_${to}.xlsx`;
+  const fileName = `${tx("_file")}-${report.accountName.replace(/[^\w-]+/g, "-")}-${from}_${to}.xlsx`;
 
   await writeAudit({
     userId: user.id,
@@ -113,7 +116,6 @@ export async function exportLedgerHandler(request: Request): Promise<Response> {
     after: { report: "ledger", account: report.accountName, from, to },
   });
 
-  void BOOKING_TYPE_LABELS;
   return new Response(buffer as ArrayBuffer, {
     headers: {
       "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",

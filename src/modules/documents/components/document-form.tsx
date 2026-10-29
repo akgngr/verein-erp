@@ -20,7 +20,7 @@ import type { DocumentDirection } from "@prisma/client";
 
 import { createDocumentAction } from "../actions/create-document";
 import { updateDocumentAction } from "../actions/update-document";
-import { DEFAULT_STATUS_BY_DIRECTION, DELIVERY_METHOD_OPTIONS, STATUS_LABELS } from "../constants";
+import { DEFAULT_STATUS_BY_DIRECTION, DELIVERY_METHOD_VALUES, STATUS_VALUES } from "../constants";
 import { documentCreateSchema, documentUpdateSchema } from "../schemas/document";
 import type { AssigneeOption, CategoryOption, ReplyTargetOption } from "../types";
 import { berlinToday } from "../utils";
@@ -262,7 +262,7 @@ export function DocumentForm(props: DocumentFormProps) {
               control={form.control}
               options={[
                 { value: "", label: t("notSpecified") },
-                ...DELIVERY_METHOD_OPTIONS.map((option) => ({ value: option.value, label: tDelivery(option.value) })),
+                ...DELIVERY_METHOD_VALUES.map((value) => ({ value, label: tDelivery(value) })),
               ]}
             />
           </div>
@@ -272,7 +272,7 @@ export function DocumentForm(props: DocumentFormProps) {
               name="status"
               label={t("status")}
               control={form.control}
-              options={(Object.keys(STATUS_LABELS) as Array<keyof typeof STATUS_LABELS>).map(
+              options={STATUS_VALUES.map(
                 (status) => ({ value: status, label: tStatus(status) }),
               )}
             />

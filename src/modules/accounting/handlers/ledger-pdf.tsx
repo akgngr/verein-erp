@@ -17,6 +17,7 @@ import { ACCOUNTING_STRINGS } from "../pdf/strings";
 import { LedgerDocument, type LedgerPdfData } from "../pdf/ledger-document";
 import { getLedgerReport } from "../queries/get-ledger";
 import { berlinToday } from "../utils";
+import { translateMessage } from "@/shared/i18n/translate-message";
 
 /** Content-Disposition için ASCII yedek dosya adı üretir. */
 function asciiFileName(name: string): string {
@@ -34,13 +35,13 @@ export async function ledgerPdfHandler(request: Request): Promise<Response> {
     user = await requireUser();
   } catch (error) {
     if (error instanceof UnauthorizedError) {
-      return NextResponse.json({ ok: false, error: "Oturum bulunamadı." }, { status: 401 });
+      return NextResponse.json({ ok: false, error: await translateMessage("common.errors.sessionExpired") }, { status: 401 });
     }
     throw error;
   }
 
   if (!can(user.role, accountingPermissions, "view")) {
-    return NextResponse.json({ ok: false, error: "Bu işlem için yetkiniz yok." }, { status: 403 });
+    return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
   }
 
   const url = new URL(request.url);
@@ -49,7 +50,7 @@ export async function ledgerPdfHandler(request: Request): Promise<Response> {
   const from = url.searchParams.get("from") ?? `${year}-01-01`;
   const to = url.searchParams.get("to") ?? `${year}-12-31`;
   if (!accountId) {
-    return NextResponse.json({ ok: false, error: "Hesap seçilmedi." }, { status: 400 });
+    return NextResponse.json({ ok: false, error: await translateMessage("accounting.export.ledger._noAccount") }, { status: 400 });
   }
 
   const lang = resolvePdfLang(request);

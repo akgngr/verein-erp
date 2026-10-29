@@ -226,7 +226,8 @@
     "assigneeInactive": "Sorumlu bulunamadı veya hesabı pasif durumda.",
     "replyOnlyOutgoing": "Yanıtlanan evrak yalnızca giden evrakta seçilebilir.",
     "replySelf": "Bir evrak kendine yanıt olarak bağlanamaz.",
-    "replyTargetInvalid": "Yanıt verilecek evrak bulunamadı veya gelen evrak değil."
+    "replyTargetInvalid": "Yanıt verilecek evrak bulunamadı veya gelen evrak değil.",
+    "documentNotFound2": "Evrak bulunamadı."
   },
   "validation": {
     "categoryMin": "Kategori adı en az 2 karakter olmalıdır.",
@@ -248,5 +249,33 @@
   "module": {
     "label": "Evrak Kayıt",
     "description": "Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi."
+  },
+  "export": {
+    "register": {
+      "registryNumber": "Kayıt No",
+      "direction": "Yön",
+      "registeredAt": "Kayıt Tarihi",
+      "documentDate": "Evrak Tarihi",
+      "counterparty": "Gönderen/Alıcı",
+      "referenceNumber": "Evrak Sayısı",
+      "subject": "Konu",
+      "categoryName": "Kategori",
+      "deliveryMethod": "Teslim Şekli",
+      "status": "Durum",
+      "assigneeLabel": "Sorumlu",
+      "dueDate": "Son İşlem Tarihi",
+      "fileCount": "Dosya Sayısı",
+      "_sheet": "Evrak Defteri",
+      "_file": "evrak-defteri",
+      "deliveries": {
+        "POST": "Posta",
+        "EMAIL": "E-posta",
+        "HAND": "Elden",
+        "COURIER": "Kargo/Kurye",
+        "REGISTERED_MAIL": "Kayıtlı Posta",
+        "FAX": "Faks",
+        "OTHER": "Diğer"
+      }
+    }
   }
 }

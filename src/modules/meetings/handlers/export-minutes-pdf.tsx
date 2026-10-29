@@ -5,19 +5,24 @@ import { NextResponse } from "next/server";
 
 import { getDb } from "@/shared/db";
 import { can } from "@/shared/permissions/define";
+import { resolvePdfLang } from "@/shared/pdf/i18n";
 
 import { UnauthorizedError, requireUser } from "@/modules/auth/server";
+import { getOrganizationLogoDataUri, getOrganizationProfile } from "@/modules/organization/server";
 
 import { meetingsPermissions } from "../permissions";
 import { MinutesDocument, type MinutesPdfData } from "../pdf/minutes-document";
+import { MINUTES_STRINGS } from "../pdf/strings";
+import { translateMessage } from "@/shared/i18n/translate-message";
 
 /**
  * Tutanak PDF dışa aktarımı (GET /api/meetings/[id]/minutes-pdf, 9. bölüm):
- * oturum + meetings.view; dosya adı tutanak-<toplantıNo>.pdf; inline disposition
+ * oturum + meetings.view; ?lang=de|tr (Faz 4 §4.3, varsayılan DOCUMENT_LANGUAGE);
+ * dosya adı protokoll-/tutanak-<toplantıNo>.pdf; inline disposition
  * (tarayıcıda açılır); Cache-Control: no-store. İndirme/PDF loglanmaz (10. bölüm).
  */
 export async function exportMinutesPdfHandler(
-  _request: Request,
+  request: Request,
   ctx: { id: string },
 ): Promise<Response> {
   let user;
@@ -25,13 +30,13 @@ export async function exportMinutesPdfHandler(
     user = await requireUser();
   } catch (error) {
     if (error instanceof UnauthorizedError) {
-      return NextResponse.json({ ok: false, error: "Oturum bulunamadı." }, { status: 401 });
+      return NextResponse.json({ ok: false, error: await translateMessage("common.errors.sessionExpired") }, { status: 401 });
     }
     throw error;
   }
 
   if (!can(user.role, meetingsPermissions, "view")) {
-    return NextResponse.json({ ok: false, error: "Bu işlem için yetkiniz yok." }, { status: 403 });
+    return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
   }
 
   const db = getDb();
@@ -53,14 +58,23 @@ export async function exportMinutesPdfHandler(
     },
   });
   if (!meeting) {
-    return NextResponse.json({ ok: false, error: "Toplantı bulunamadı." }, { status: 404 });
+    return NextResponse.json({ ok: false, error: await translateMessage("meetings.errors.meetingNotFound2") }, { status: 404 });
   }
 
   const presentCount = meeting.attendees.filter(
     (attendee) => attendee.attendance === "PRESENT",
   ).length;
 
+  const lang = resolvePdfLang(request);
+  const [profile, logoDataUri] = await Promise.all([
+    getOrganizationProfile(),
+    getOrganizationLogoDataUri(),
+  ]);
+
   const data: MinutesPdfData = {
+    lang,
+    organization: { ...profile, logoDataUri },
+    invitationSentAt: meeting.invitationSentAt,
     meetingNumber: meeting.meetingNumber,
     type: meeting.type,
     title: meeting.title,
@@ -114,7 +128,7 @@ export async function exportMinutesPdfHandler(
   return new Response(new Uint8Array(buffer), {
     headers: {
       "Content-Type": "application/pdf",
-      "Content-Disposition": `inline; filename="tutanak-${meeting.meetingNumber}.pdf"`,
+      "Content-Disposition": `inline; filename="${MINUTES_STRINGS[lang].fileName}-${meeting.meetingNumber}.pdf"`,
       "Cache-Control": "no-store",
     },
   });

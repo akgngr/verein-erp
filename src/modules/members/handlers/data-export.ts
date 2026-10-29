@@ -10,6 +10,7 @@ import { writeAudit } from "@/shared/audit/write-audit";
 import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 
 import { membersPermissions } from "../permissions";
+import { translateMessage } from "@/shared/i18n/translate-message";
 
 /**
  * DSGVO veri taşıma hakkı (Art. 15) dışa aktarması (Faz 4, 4.6):
@@ -27,13 +28,13 @@ export async function exportMemberDataHandler(_request: Request, ctx: { id: stri
     user = await requireUser();
   } catch (error) {
     if (error instanceof UnauthorizedError) {
-      return NextResponse.json({ ok: false, error: "Oturum bulunamadı." }, { status: 401 });
+      return NextResponse.json({ ok: false, error: await translateMessage("common.errors.sessionExpired") }, { status: 401 });
     }
     throw error;
   }
 
   if (!can(user.role, membersPermissions, "update")) {
-    return NextResponse.json({ ok: false, error: "Bu işlem için yetkiniz yok." }, { status: 403 });
+    return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
   }
 
   const db = getDb();
@@ -58,7 +59,7 @@ export async function exportMemberDataHandler(_request: Request, ctx: { id: stri
 
   if (!member || member.deletedAt) {
     return NextResponse.json(
-      { ok: false, error: "Üye bulunamadı veya verileri silinmiş." },
+      { ok: false, error: await translateMessage("members.errors.dataExportMissing") },
       { status: 404 },
     );
   }

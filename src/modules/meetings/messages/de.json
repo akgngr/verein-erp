@@ -438,7 +438,9 @@
     "transitionNotAllowed": "Diese Statusänderung ist nicht zulässig.",
     "forbidden": "Für diese Aktion fehlt Ihnen die Berechtigung.",
     "approveNeedsAgenda": "Zur Freigabe ist mindestens ein Tagesordnungspunkt erforderlich.",
-    "approveNeedsPresent": "Zur Freigabe muss mindestens ein Teilnehmer als „anwesend“ markiert sein."
+    "approveNeedsPresent": "Zur Freigabe muss mindestens ein Teilnehmer als „anwesend“ markiert sein.",
+    "meetingNotFound2": "Sitzung nicht gefunden.",
+    "notEditable": "Die Sitzung kann nicht bearbeitet werden."
   },
   "validation": {
     "taskMin": "Die Aufgabenbeschreibung muss mindestens 3 Zeichen lang sein.",

@@ -17,6 +17,7 @@ import { ACCOUNTING_STRINGS } from "../pdf/strings";
 import { AnnualReportDocument, type AnnualReportPdfData } from "../pdf/annual-report-document";
 import { getAnnualReportData } from "../queries/get-income-expense-report";
 import { berlinToday } from "../utils";
+import { translateMessage } from "@/shared/i18n/translate-message";
 
 /** Content-Disposition için ASCII yedek dosya adı üretir. */
 function asciiFileName(name: string): string {
@@ -33,13 +34,13 @@ export async function annualReportPdfHandler(request: Request): Promise<Response
     user = await requireUser();
   } catch (error) {
     if (error instanceof UnauthorizedError) {
-      return NextResponse.json({ ok: false, error: "Oturum bulunamadı." }, { status: 401 });
+      return NextResponse.json({ ok: false, error: await translateMessage("common.errors.sessionExpired") }, { status: 401 });
     }
     throw error;
   }
 
   if (!can(user.role, accountingPermissions, "view")) {
-    return NextResponse.json({ ok: false, error: "Bu işlem için yetkiniz yok." }, { status: 403 });
+    return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
   }
 
   const url = new URL(request.url);

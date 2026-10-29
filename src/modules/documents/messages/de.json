@@ -226,7 +226,8 @@
     "assigneeInactive": "Die verantwortliche Person wurde nicht gefunden oder ihr Konto ist deaktiviert.",
     "replyOnlyOutgoing": "Ein Bezugsdokument kann nur bei ausgehenden Dokumenten gewählt werden.",
     "replySelf": "Ein Dokument kann nicht auf sich selbst antworten.",
-    "replyTargetInvalid": "Das Bezugsdokument wurde nicht gefunden oder ist kein eingehendes Dokument."
+    "replyTargetInvalid": "Das Bezugsdokument wurde nicht gefunden oder ist kein eingehendes Dokument.",
+    "documentNotFound2": "Schriftstück nicht gefunden."
   },
   "validation": {
     "categoryMin": "Der Kategoriename muss mindestens 2 Zeichen lang sein.",
@@ -248,5 +249,33 @@
   "module": {
     "label": "Schriftgut",
     "description": "Nummerierung, Verfolgung und Archivierung ein- und ausgehender Schriftstücke."
+  },
+  "export": {
+    "register": {
+      "registryNumber": "Eingangs-/Ausgangsnr.",
+      "direction": "Richtung",
+      "registeredAt": "Erfasst am",
+      "documentDate": "Datum des Schriftstücks",
+      "counterparty": "Absender/Empfänger",
+      "referenceNumber": "Aktenzeichen",
+      "subject": "Betreff",
+      "categoryName": "Kategorie",
+      "deliveryMethod": "Zustellart",
+      "status": "Status",
+      "assigneeLabel": "Zuständig",
+      "dueDate": "Frist",
+      "fileCount": "Dateien",
+      "_sheet": "Schriftgutregister",
+      "_file": "schriftgutregister",
+      "deliveries": {
+        "POST": "Post",
+        "EMAIL": "E-Mail",
+        "HAND": "Persönlich",
+        "COURIER": "Kurier",
+        "REGISTERED_MAIL": "Einschreiben",
+        "FAX": "Fax",
+        "OTHER": "Sonstiges"
+      }
+    }
   }
 }

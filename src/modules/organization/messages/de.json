@@ -55,5 +55,9 @@
     "purposesMax": "Der Zwecktext darf höchstens 500 Zeichen lang sein.",
     "postalCodeDe": "Die PLZ muss in Deutschland 5-stellig sein.",
     "websiteInvalid": "Die Website muss eine gültige Adresse sein (https://...)."
+  },
+  "errors": {
+    "logoMissing": "Es wurde kein Logo hochgeladen.",
+    "logoReadFailed": "Das Logo konnte nicht gelesen werden."
   }
 }

@@ -16,8 +16,7 @@ import { FormTextarea } from "@/shared/components/forms/form-textarea";
 import { SubmitButton } from "@/shared/components/forms/submit-button";
 
 import { createMeetingAction, updateMeetingAction } from "../actions/meeting-actions";
-import { MEETING_TYPE_LABELS } from "../constants";
-import type { MeetingType } from "@prisma/client";
+import { MEETING_TYPE_VALUES } from "../constants";
 import { meetingCreateSchema, meetingUpdateSchema } from "../schemas/meeting";
 import type { CopySourceOption } from "../types";
 import { berlinToday } from "../utils";
@@ -61,7 +60,6 @@ type MeetingFormProps =
     }
   | { mode: "edit"; meeting: MeetingEditFormData };
 
-const MEETING_TYPES = Object.keys(MEETING_TYPE_LABELS) as MeetingType[];
 
 /**
  * Toplantı oluşturma/düzenleme formu (7.2). Create'te "Önceki toplantıdan
@@ -76,7 +74,7 @@ export function MeetingForm(props: MeetingFormProps) {
   const [formError, setFormError] = useState<string | null>(null);
   const typeOptions = [
     { value: "", label: t("selectType") },
-    ...MEETING_TYPES.map((type) => ({ value: type, label: tType(type) })),
+    ...MEETING_TYPE_VALUES.map((type) => ({ value: type, label: tType(type) })),
   ];
 
   const isEdit = props.mode === "edit";

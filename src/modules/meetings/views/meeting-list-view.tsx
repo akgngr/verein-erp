@@ -11,7 +11,7 @@ import { parseListParams, type RawSearchParams } from "@/shared/list-params";
 import { getMeetingStats } from "../queries/get-meeting-stats";
 import { MEETING_DEFAULT_SORT, MEETING_SORTABLE_FIELDS, listMeetings } from "../queries/list-meetings";
 import { meetingsPermissions } from "../permissions";
-import { MEETING_STATUS_FILTER_OPTIONS, MEETING_TYPE_FILTER_OPTIONS } from "../constants";
+import { MEETING_STATUS_VALUES, MEETING_TYPE_VALUES } from "../constants";
 import { MeetingTable } from "../components/meeting-table";
 import { MeetingDateFilter } from "../components/list-filters";
 import { StatsCards } from "../components/stats-cards";
@@ -74,8 +74,8 @@ export async function MeetingListView({
         dir={params.dir}
         q={params.q}
         filters={[
-          { key: "type", label: t("list.filterType"), options: [...MEETING_TYPE_FILTER_OPTIONS] },
-          { key: "status", label: t("list.filterStatus"), options: [...MEETING_STATUS_FILTER_OPTIONS] },
+          { key: "type", label: t("list.filterType"), options: MEETING_TYPE_VALUES.map((value) => ({ value, label: t(`type.${value}`) })) },
+          { key: "status", label: t("list.filterStatus"), options: MEETING_STATUS_VALUES.map((value) => ({ value, label: t(`status.${value}`) })) },
         ]}
         dateFilter={<MeetingDateFilter />}
         canUpdate={canUpdate}

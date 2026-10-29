@@ -9,7 +9,7 @@ import { useState } from "react";
 
 import type { DocumentStatus } from "@prisma/client";
 
-import { STATUS_LABELS } from "../constants";
+import { STATUS_VALUES } from "../constants";
 import { changeStatusAction } from "../actions/change-status";
 
 /**
@@ -54,7 +54,7 @@ export function StatusChangeMenu({
         </Button>
       </DropdownTrigger>
       <DropdownMenu aria-label={t("button")} disabledKeys={[current]}>
-        {(Object.keys(STATUS_LABELS) as DocumentStatus[]).map((status) => (
+        {STATUS_VALUES.map((status) => (
           <DropdownItem
             key={status}
             description={status === current ? t("current") : undefined}

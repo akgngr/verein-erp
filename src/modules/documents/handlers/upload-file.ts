@@ -15,6 +15,7 @@ import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 
 import { ALLOWED_EXTENSIONS, MAX_FILES_PER_DOCUMENT } from "../constants";
 import { documentsPermissions } from "../permissions";
+import { translateMessage } from "@/shared/i18n/translate-message";
 
 /**
  * Dosya yükleme (POST /api/documents/[id]/files, 7. bölüm).
@@ -33,7 +34,7 @@ export async function uploadFileHandler(request: Request, ctx: { id: string }): 
     user = await requireUser();
   } catch (error) {
     if (error instanceof UnauthorizedError) {
-      return NextResponse.json({ ok: false, error: "Oturum bulunamadı." }, { status: 401 });
+      return NextResponse.json({ ok: false, error: await translateMessage("common.errors.sessionExpired") }, { status: 401 });
     }
     throw error;
   }
@@ -42,7 +43,7 @@ export async function uploadFileHandler(request: Request, ctx: { id: string }): 
     can(user.role, documentsPermissions, "create") || can(user.role, documentsPermissions, "update");
   if (!mayUpload) {
     return NextResponse.json(
-      { ok: false, error: "Bu işlem için yetkiniz yok." },
+      { ok: false, error: await translateMessage("common.errors.forbidden") },
       { status: 403 },
     );
   }
@@ -53,7 +54,7 @@ export async function uploadFileHandler(request: Request, ctx: { id: string }): 
     select: { id: true, year: true, registryNumber: true },
   });
   if (!doc) {
-    return NextResponse.json({ ok: false, error: "Evrak bulunamadı." }, { status: 404 });
+    return NextResponse.json({ ok: false, error: await translateMessage("documents.errors.documentNotFound2") }, { status: 404 });
   }
 
   const activeCount = await db.documentFile.count({
@@ -61,7 +62,7 @@ export async function uploadFileHandler(request: Request, ctx: { id: string }): 
   });
   if (activeCount >= MAX_FILES_PER_DOCUMENT) {
     return NextResponse.json(
-      { ok: false, error: `Evrak başına en fazla ${MAX_FILES_PER_DOCUMENT} dosya eklenebilir.` },
+      { ok: false, error: await translateMessage("files.maxPerRecord", { max: MAX_FILES_PER_DOCUMENT }) },
       { status: 400 },
     );
   }
@@ -127,6 +128,6 @@ export async function uploadFileHandler(request: Request, ctx: { id: string }): 
     // Kayıt oluşamadıysa diske yazılan dosya temizlenir (7. bölüm).
     await removeFile(storagePath);
     console.error("[upload-file] Dosya kaydı oluşturulamadı:", error);
-    return NextResponse.json({ ok: false, error: "Dosya yüklenemedi." }, { status: 500 });
+    return NextResponse.json({ ok: false, error: await translateMessage("files.uploadFailed") }, { status: 500 });
   }
 }

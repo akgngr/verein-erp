@@ -1,193 +1,171 @@
-/**
- * Tutanak PDF metinleri (Faz 4, 4.3): de VARSAYILAN, tr opsiyonel. Tek arayüz
- * (MinutesStrings) ile iki dil — eksik çeviri DERLEME HATASIDIR. Sözlük:
- * §1 tablosu + §4.3 madde metinleri (PROTOKOLL / Sitzung / Beschluss...).
- */
+import type { PdfLang } from "@/shared/pdf/i18n";
 
+import type { AttendanceStatus, AttendeeRole, DecisionResult, MeetingType } from "@prisma/client";
+
+/**
+ * Tutanak PDF sözlüğü (Faz 4, 4.3): Almanca varsayılan, Türkçe isteğe bağlı.
+ * Ortak arayüz sayesinde eksik çeviri derleme hatasıdır. Kullanıcının yazdığı
+ * serbest metinler (başlık, gündem, görüşme, karar metni) olduğu gibi basılır.
+ */
 export type MinutesStrings = {
-  /** Kısa belge başlığı (antet altı büyük başlık). */
-  headerTitle: string;
-  /** GA için uzun başlık — handler tür bilgisiyle seçer. */
-  headerTitleAssembly: string;
-  infoNumber: string;
-  infoType: string;
-  infoTitle: string;
-  infoDate: string;
-  infoTime: string;
-  infoLocation: string;
-  /** Faz 4 (4.5): davet gönderim tarihi etiketi — yalnızca doluysa basılır. */
-  invitationSentAt: string;
-  sectionAttendees: string;
-  colName: string;
-  colRole: string;
-  colAttendance: string;
-  sectionAgenda: string;
-  agendaEmpty: string;
-  agendaPlanned: string;
-  agendaDiscussions: string;
-  agendaLinkedDecisions: string;
-  sectionDecisions: string;
-  decisionsEmpty: string;
-  decisionNo: string;
-  decisionResult: string;
-  sectionActionItems: string;
-  colTask: string;
-  colAssignee: string;
-  colDueDate: string;
-  colStatus: string;
-  sectionSignatures: string;
-  footerPage: (page: number, total: number) => string;
-  draftMark: string;
-  approvedLine: (date: string, by: string) => string;
-  quorumReached: (present: number, required: number) => string;
-  quorumNotReached: (present: number, required: number) => string;
-  votesLine: (forCount: number, against: number, abstain: number) => string;
-  attendance: Record<"INVITED" | "PRESENT" | "ABSENT_EXCUSED" | "ABSENT", string>;
-  attendeeRole: {
-    /** Genel Kurul için başkan etiketi (§4.3: Versammlungsleiter/in). */
-    chairAssembly: string;
-    /** Diğer toplantılar (§4.3: Sitzungsleiter/in). */
-    chairSession: string;
-    secretary: string;
-    member: string;
-    guest: string;
-  };
-  decisionResultLabels: Record<"ACCEPTED" | "REJECTED" | "POSTPONED", string>;
-  actionStatusLabel: Record<"OPEN" | "DONE", string>;
-  /** Toplantı türü etiketleri — PDF bilgi bloğu (TYPE_LABELS TR kalır, PDF dil izler). */
-  meetingType: Record<"BOARD" | "GENERAL_ASSEMBLY" | "COMMITTEE" | "OTHER", string>;
-  none: string;
+  documentTitle: string;
+  /** Genel kurul ve diğer toplantılar için alt başlık. */
+  subtitle: (type: MeetingType) => string;
+  draft: string;
+  meetingNumber: string;
+  type: string;
+  title: string;
+  date: string;
+  time: string;
+  location: string;
+  invitationSent: string;
+  attendees: string;
+  name: string;
+  role: string;
+  attendance: string;
+  noAttendees: string;
+  quorumMet: (present: number, required: number) => string;
+  quorumNotMet: (present: number, required: number) => string;
+  agenda: string;
+  noAgenda: string;
+  planned: string;
+  discussion: string;
+  decisions: string;
+  decisionNumber: (number: string) => string;
+  result: string;
+  votes: (yes: number, no: number, abstain: number) => string;
+  actionItems: string;
+  task: string;
+  assignee: string;
+  dueDate: string;
+  status: string;
+  actionDone: string;
+  actionOpen: string;
+  signatures: string;
+  approved: (date: string, label: string) => string;
+  page: (current: number, total: number) => string;
+  meetingTypes: Record<MeetingType, string>;
+  /** Rol etiketi toplantı türüne bağlıdır (Versammlungsleiter/in vs Sitzungsleiter/in). */
+  roleLabel: (role: AttendeeRole, type: MeetingType) => string;
+  attendanceLabels: Record<AttendanceStatus, string>;
+  resultLabels: Record<DecisionResult, string>;
+  fileName: string;
 };
 
-export const MINUTES_STRINGS: { de: MinutesStrings; tr: MinutesStrings } = {
+export const MINUTES_STRINGS: Record<PdfLang, MinutesStrings> = {
   de: {
-    headerTitle: "SITZUNGSPROTOKOLL",
-    headerTitleAssembly: "PROTOKOLL DER MITGLIEDERVERSAMMLUNG",
-    infoNumber: "Sitzungs-Nr.",
-    infoType: "Art",
-    infoTitle: "Titel",
-    infoDate: "Datum",
-    infoTime: "Uhrzeit",
-    infoLocation: "Ort",
-    invitationSentAt: "Einladung versandt am",
-    sectionAttendees: "Teilnehmer",
-    colName: "Name",
-    colRole: "Funktion",
-    colAttendance: "Anwesenheit",
-    sectionAgenda: "Tagesordnung",
-    agendaEmpty: "Keine Tagesordnungspunkte.",
-    agendaPlanned: "Geplant:",
-    agendaDiscussions: "Diskussion:",
-    agendaLinkedDecisions: "Zugehörige Beschlüsse:",
-    sectionDecisions: "Beschlüsse",
-    decisionsEmpty: "Es wurden keine Beschlüsse gefasst.",
-    decisionNo: "Beschluss Nr.",
-    decisionResult: "Ergebnis:",
-    sectionActionItems: "Aufgaben",
-    colTask: "Aufgabe",
-    colAssignee: "Verantwortlich",
-    colDueDate: "Frist",
-    colStatus: "Status",
-    sectionSignatures: "Unterschriften",
-    footerPage: (page, total) => `Seite ${page} von ${total}`,
-    draftMark: "ENTWURF",
-    approvedLine: (date, by) => `Genehmigt am ${date} – ${by}`,
-    quorumReached: (present, required) =>
+    documentTitle: "PROTOKOLL",
+    subtitle: (type) =>
+      type === "GENERAL_ASSEMBLY" ? "Protokoll der Mitgliederversammlung" : "Sitzungsprotokoll",
+    draft: "ENTWURF",
+    meetingNumber: "Sitzungs-Nr.",
+    type: "Art",
+    title: "Titel",
+    date: "Datum",
+    time: "Uhrzeit",
+    location: "Ort",
+    invitationSent: "Einladung versandt am",
+    attendees: "Teilnehmende",
+    name: "Name",
+    role: "Funktion",
+    attendance: "Anwesenheit",
+    noAttendees: "Keine Teilnehmenden erfasst.",
+    quorumMet: (present, required) =>
       `Die Beschlussfähigkeit wurde festgestellt (${present}/${required}).`,
-    quorumNotReached: (present, required) =>
+    quorumNotMet: (present, required) =>
       `Die Beschlussfähigkeit war nicht gegeben (${present}/${required}).`,
-    votesLine: (forCount, against, abstain) =>
-      `Ja ${forCount} / Nein ${against} / Enthaltungen ${abstain}`,
-    attendance: {
+    agenda: "Tagesordnung",
+    noAgenda: "Keine Tagesordnungspunkte.",
+    planned: "Vorgesehen",
+    discussion: "Beratung",
+    decisions: "Beschlüsse",
+    decisionNumber: (number) => `Beschluss Nr. ${number}`,
+    result: "Ergebnis",
+    votes: (yes, no, abstain) => `Ja ${yes} / Nein ${no} / Enthaltungen ${abstain}`,
+    actionItems: "Aufgaben",
+    task: "Aufgabe",
+    assignee: "Verantwortlich",
+    dueDate: "Frist",
+    status: "Status",
+    actionDone: "Erledigt",
+    actionOpen: "Offen",
+    signatures: "Unterschriften",
+    approved: (date, label) => `Genehmigt am ${date} – ${label}`,
+    page: (current, total) => `Seite ${current} von ${total}`,
+    meetingTypes: {
+      BOARD: "Vorstandssitzung",
+      GENERAL_ASSEMBLY: "Mitgliederversammlung",
+      COMMITTEE: "Ausschusssitzung",
+      OTHER: "Sonstige Sitzung",
+    },
+    roleLabel: (role, type) => {
+      if (role === "CHAIRPERSON") {
+        return type === "GENERAL_ASSEMBLY" ? "Versammlungsleiter/in" : "Sitzungsleiter/in";
+      }
+      if (role === "SECRETARY") return "Protokollführer/in";
+      return role === "GUEST" ? "Gast" : "Mitglied";
+    },
+    attendanceLabels: {
       INVITED: "Eingeladen",
       PRESENT: "Anwesend",
       ABSENT_EXCUSED: "Entschuldigt",
       ABSENT: "Nicht anwesend",
     },
-    attendeeRole: {
-      chairAssembly: "Versammlungsleiter/in",
-      chairSession: "Sitzungsleiter/in",
-      secretary: "Protokollführer/in",
-      member: "Mitglied",
-      guest: "Gast",
-    },
-    decisionResultLabels: {
-      ACCEPTED: "angenommen",
-      REJECTED: "abgelehnt",
-      POSTPONED: "vertagt",
-    },
-    actionStatusLabel: { OPEN: "Offen", DONE: "Erledigt" },
-    meetingType: {
-      BOARD: "Vorstandssitzung",
-      GENERAL_ASSEMBLY: "Mitgliederversammlung",
-      COMMITTEE: "Ausschuss",
-      OTHER: "Sonstiges",
-    },
-    none: "–",
+    resultLabels: { ACCEPTED: "angenommen", REJECTED: "abgelehnt", POSTPONED: "vertagt" },
+    fileName: "protokoll",
   },
   tr: {
-    headerTitle: "TOPLANTI TUTANAĞI",
-    headerTitleAssembly: "GENEL KURUL TOPLANTI TUTANAĞI",
-    infoNumber: "Toplantı No",
-    infoType: "Tür",
-    infoTitle: "Başlık",
-    infoDate: "Tarih",
-    infoTime: "Saat",
-    infoLocation: "Yer",
-    invitationSentAt: "Davet gönderim tarihi (Einladung versandt am)",
-    sectionAttendees: "Katılımcılar",
-    colName: "Ad Soyad",
-    colRole: "Görev",
-    colAttendance: "Katılım",
-    sectionAgenda: "Gündem",
-    agendaEmpty: "Gündem maddesi yok.",
-    agendaPlanned: "Planlanan:",
-    agendaDiscussions: "Görüşmeler:",
-    agendaLinkedDecisions: "Bağlı kararlar:",
-    sectionDecisions: "Kararlar",
-    decisionsEmpty: "Karar alınmamıştır.",
-    decisionNo: "Karar No:",
-    decisionResult: "Sonuç:",
-    sectionActionItems: "Görevler",
-    colTask: "Görev",
-    colAssignee: "Sorumlu",
-    colDueDate: "Son Tarih",
-    colStatus: "Durum",
-    sectionSignatures: "İmzalar",
-    footerPage: (page, total) => `Sayfa ${page} / ${total}`,
-    draftMark: "TASLAK",
-    approvedLine: (date, by) => `Onaylandı: ${date} - ${by}`,
-    quorumReached: (present, required) =>
-      `Toplantı yeter sayısı sağlanmıştır (${present}/${required}).`,
-    quorumNotReached: (present, required) =>
+    documentTitle: "TOPLANTI TUTANAĞI",
+    subtitle: (type) => (type === "GENERAL_ASSEMBLY" ? "Genel Kurul Tutanağı" : "Toplantı Tutanağı"),
+    draft: "TASLAK",
+    meetingNumber: "Toplantı No",
+    type: "Türü",
+    title: "Başlık",
+    date: "Tarih",
+    time: "Saat",
+    location: "Yer",
+    invitationSent: "Davet gönderim tarihi",
+    attendees: "Katılımcılar",
+    name: "Ad Soyad",
+    role: "Görev",
+    attendance: "Katılım",
+    noAttendees: "Katılımcı kaydı yok.",
+    quorumMet: (present, required) => `Toplantı yeter sayısı sağlanmıştır (${present}/${required}).`,
+    quorumNotMet: (present, required) =>
       `Toplantı yeter sayısı sağlanamamıştır (${present}/${required}).`,
-    votesLine: (forCount, against, abstain) =>
-      `Kabul ${forCount} / Ret ${against} / Çekimser ${abstain}`,
-    attendance: {
-      INVITED: "Davetli",
-      PRESENT: "Katıldı",
-      ABSENT_EXCUSED: "Mazeretli",
-      ABSENT: "Katılmadı",
-    },
-    attendeeRole: {
-      chairAssembly: "Genel Kurul Başkanı",
-      chairSession: "Başkan",
-      secretary: "Sekreter",
-      member: "Üye",
-      guest: "Konuk",
-    },
-    decisionResultLabels: {
-      ACCEPTED: "Kabul edildi",
-      REJECTED: "Reddedildi",
-      POSTPONED: "Ertelendi",
-    },
-    actionStatusLabel: { OPEN: "Açık", DONE: "Tamamlandı" },
-    meetingType: {
+    agenda: "Gündem",
+    noAgenda: "Gündem maddesi yok.",
+    planned: "Planlanan",
+    discussion: "Görüşmeler",
+    decisions: "Kararlar",
+    decisionNumber: (number) => `Karar No: ${number}`,
+    result: "Sonuç",
+    votes: (yes, no, abstain) => `Kabul ${yes} / Ret ${no} / Çekimser ${abstain}`,
+    actionItems: "Görevler",
+    task: "Görev",
+    assignee: "Sorumlu",
+    dueDate: "Son Tarih",
+    status: "Durum",
+    actionDone: "Tamamlandı",
+    actionOpen: "Açık",
+    signatures: "İmza",
+    approved: (date, label) => `Onaylandı: ${date} – ${label}`,
+    page: (current, total) => `Sayfa ${current} / ${total}`,
+    meetingTypes: {
       BOARD: "Yönetim Kurulu",
       GENERAL_ASSEMBLY: "Genel Kurul",
       COMMITTEE: "Komisyon",
       OTHER: "Diğer",
     },
-    none: "-",
+    roleLabel: (role) =>
+      ({ CHAIRPERSON: "Başkan", SECRETARY: "Sekreter", MEMBER: "Üye", GUEST: "Konuk" })[role],
+    attendanceLabels: {
+      INVITED: "Davetli",
+      PRESENT: "Katıldı",
+      ABSENT_EXCUSED: "Mazeretli",
+      ABSENT: "Katılmadı",
+    },
+    resultLabels: { ACCEPTED: "Kabul edildi", REJECTED: "Reddedildi", POSTPONED: "Ertelendi" },
+    fileName: "tutanak",
   },
 };

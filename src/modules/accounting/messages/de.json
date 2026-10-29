@@ -387,7 +387,10 @@
     "sourcedNoEdit": "Automatisch erzeugte Buchungen können nicht bearbeitet werden; sie werden im Quellmodul verwaltet.",
     "categoryInUse": "In dieser Kategorie gibt es Buchungen; Richtung (Einnahme/Ausgabe) und Sphäre können nicht geändert werden. Legen Sie eine neue Kategorie an.",
     "categoryDirectionLocked": "Bei Kategorien mit Buchungen ist die Richtung fest.",
-    "categorySphereLocked": "Bei Kategorien mit Buchungen ist die Sphäre fest."
+    "categorySphereLocked": "Bei Kategorien mit Buchungen ist die Sphäre fest.",
+    "bookingNotFound2": "Buchung nicht gefunden.",
+    "reversedNoFile": "Einer stornierten Buchung können keine Belege hinzugefügt werden.",
+    "reversedSuffix": "STORNIERT"
   },
   "settings": {
     "donationShort": "Spende"
@@ -428,5 +431,83 @@
   "module": {
     "label": "Buchhaltung",
     "description": "Buchführung nach deutschem Vereinsrecht mit Buchungen, Belegen und Budget."
+  },
+  "enums": {
+    "bookingType": {
+      "INCOME": "Einnahme",
+      "EXPENSE": "Ausgabe",
+      "TRANSFER": "Umbuchung"
+    },
+    "direction": {
+      "INCOME": "Einnahme",
+      "EXPENSE": "Ausgabe"
+    },
+    "sphere": {
+      "IDEELL": "Ideeller Bereich",
+      "ASSET_MANAGEMENT": "Vermögensverwaltung",
+      "PURPOSE_OPERATION": "Zweckbetrieb",
+      "ECONOMIC_OPERATION": "Wirtschaftlicher Geschäftsbetrieb"
+    },
+    "accountType": {
+      "CASH": "Kasse",
+      "BANK": "Girokonto",
+      "OTHER": "Sonstiges"
+    },
+    "sourceType": {
+      "MEMBER_PAYMENT": "Mitgliedsbeitrag (automatisch)",
+      "DONATION": "Spende (automatisch)",
+      "DONATION_WAIVER": "Aufwandsspende – Aufwand (automatisch)"
+    }
+  },
+  "export": {
+    "bookings": {
+      "bookingNumber": "Buchungsnr.",
+      "bookingDate": "Datum",
+      "type": "Art",
+      "accountName": "Konto",
+      "counterAccount": "Gegenkonto",
+      "categoryName": "Kategorie",
+      "sphere": "Sphäre",
+      "project": "Projekt",
+      "amount": "Betrag",
+      "description": "Beschreibung",
+      "counterparty": "Gegenpartei",
+      "receiptReference": "Belegnr.",
+      "fileCount": "Belege",
+      "status": "Status",
+      "reverseReason": "Stornogrund",
+      "_sheet": "Buchungen",
+      "_file": "buchungen",
+      "_reversed": "Storniert",
+      "_active": "Aktiv"
+    },
+    "incomeExpense": {
+      "sphere": "Sphäre",
+      "direction": "Richtung",
+      "category": "Kategorie",
+      "plan": "Plan",
+      "actual": "Ist",
+      "diff": "Abweichung",
+      "previous": "Vorjahr",
+      "_sheet": "EÜR",
+      "_file": "euer",
+      "_grandTotal": "GESAMTERGEBNIS (Einnahmen - Ausgaben)",
+      "_exceeded": "Die Einnahmen des wirtschaftlichen Geschäftsbetriebs übersteigen 50.000 € (§ 64 Abs. 3 AO). Bitte Steuerberatung hinzuziehen.",
+      "_near": "Die Einnahmen des wirtschaftlichen Geschäftsbetriebs haben 80 % der Grenze von 50.000 € erreicht (§ 64 Abs. 3 AO)."
+    },
+    "ledger": {
+      "date": "Datum",
+      "number": "Buchungsnr.",
+      "description": "Beschreibung",
+      "receipt": "Belegnr.",
+      "income": "Einnahme",
+      "expense": "Ausgabe",
+      "balance": "Saldo",
+      "_sheet": "Kassenbuch",
+      "_file": "kassenbuch",
+      "_opening": "Anfangsbestand ({account})",
+      "_closing": "Endbestand",
+      "_noAccount": "Kein Konto ausgewählt."
+    }
   }
 }

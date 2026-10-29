@@ -77,7 +77,10 @@
     },
     "active": "Aktiv",
     "passive": "Inaktiv",
-    "emailPlaceholder": "beispiel@verein.de"
+    "emailPlaceholder": "beispiel@verein.de",
+    "export": {
+      "truncated": "Ergebnisse auf {max} Zeilen begrenzt."
+    }
   },
   "nav": {
     "panel": "Dashboard",
@@ -164,7 +167,7 @@
     "kullaniciDuzenle": "Benutzer bearbeiten",
     "denetimKaydi": "Prüfprotokoll",
     "profil": "Profil",
-    "dernekBilgileri": "Dernek Bilgileri | Vereinsverwaltung"
+    "dernekBilgileri": "Vereinsdaten"
   },
   "pdfLanguage": {
     "german": "Deutsch",
@@ -253,6 +256,8 @@
     "typeNotAllowed": "Dieser Dateityp ist nicht erlaubt.",
     "empty": "Leere Dateien können nicht hochgeladen werden.",
     "contentMismatch": "Der Dateiinhalt passt nicht zur Endung .{extension}.",
-    "tooLarge": "Die Datei darf höchstens {maxMb} MB groß sein."
+    "tooLarge": "Die Datei darf höchstens {maxMb} MB groß sein.",
+    "uploadFailed": "Die Datei konnte nicht hochgeladen werden.",
+    "maxPerRecord": "Pro Datensatz sind höchstens {max} Dateien erlaubt."
   }
 }

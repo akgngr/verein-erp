@@ -19,6 +19,7 @@ import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 
 import { BOOKING_FILE_EXTENSIONS, MAX_FILES_PER_BOOKING } from "../constants";
 import { accountingPermissions } from "../permissions";
+import { translateMessage } from "@/shared/i18n/translate-message";
 
 /**
  * Fiş (Beleg) yükleme (POST /api/accounting/[id]/files, § 9):
@@ -36,7 +37,7 @@ export async function uploadBookingFileHandler(
     user = await requireUser();
   } catch (error) {
     if (error instanceof UnauthorizedError) {
-      return NextResponse.json({ ok: false, error: "Oturum bulunamadı." }, { status: 401 });
+      return NextResponse.json({ ok: false, error: await translateMessage("common.errors.sessionExpired") }, { status: 401 });
     }
     throw error;
   }
@@ -46,7 +47,7 @@ export async function uploadBookingFileHandler(
   const hasCreate = can(user.role, accountingPermissions, "create");
   if (!hasUpdate && !hasCreate) {
     return NextResponse.json(
-      { ok: false, error: "Bu işlem için yetkiniz yok." },
+      { ok: false, error: await translateMessage("common.errors.forbidden") },
       { status: 403 },
     );
   }
@@ -57,11 +58,11 @@ export async function uploadBookingFileHandler(
     select: { id: true, year: true, bookingNumber: true, reversedAt: true },
   });
   if (!booking) {
-    return NextResponse.json({ ok: false, error: "Fiş bulunamadı." }, { status: 404 });
+    return NextResponse.json({ ok: false, error: await translateMessage("accounting.errors.bookingNotFound2") }, { status: 404 });
   }
   if (booking.reversedAt) {
     return NextResponse.json(
-      { ok: false, error: "İptal edilmiş fişe belge eklenemez." },
+      { ok: false, error: await translateMessage("accounting.errors.reversedNoFile") },
       { status: 409 },
     );
   }
@@ -71,7 +72,7 @@ export async function uploadBookingFileHandler(
   });
   if (activeCount >= MAX_FILES_PER_BOOKING) {
     return NextResponse.json(
-      { ok: false, error: `Fiş başına en fazla ${MAX_FILES_PER_BOOKING} belge eklenebilir.` },
+      { ok: false, error: await translateMessage("files.maxPerRecord", { max: MAX_FILES_PER_BOOKING }) },
       { status: 400 },
     );
   }

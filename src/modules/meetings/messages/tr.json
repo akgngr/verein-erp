@@ -438,7 +438,9 @@
     "transitionNotAllowed": "Bu durum değişikliğine izin verilmiyor.",
     "forbidden": "Bu işlem için yetkiniz yok.",
     "approveNeedsAgenda": "Onaylamak için en az bir gündem maddesi gereklidir.",
-    "approveNeedsPresent": "Onaylamak için en az bir katılımcının 'Katıldı' olarak işaretlenmesi gereklidir."
+    "approveNeedsPresent": "Onaylamak için en az bir katılımcının 'Katıldı' olarak işaretlenmesi gereklidir.",
+    "meetingNotFound2": "Toplantı bulunamadı.",
+    "notEditable": "Toplantı düzenlenemez."
   },
   "validation": {
     "taskMin": "Görev açıklaması en az 3 karakter olmalıdır.",

@@ -16,3 +16,8 @@ export async function getMessageTranslator(): Promise<(message: string, values?:
     return (message) => message;
   }
 }
+
+/** Tek mesaj için kısayol (route handler'ların JSON hata yanıtları). */
+export async function translateMessage(message: string, values?: MessageValues): Promise<string> {
+  return (await getMessageTranslator())(message, values);
+}

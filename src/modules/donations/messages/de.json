@@ -298,7 +298,11 @@
     "activeDonationBlocksAnonymize": "Es gibt eine Spende mit aktiver Bestätigung ({number}); stornieren Sie zuerst die Bestätigung.",
     "mixedWaiver": "Die ausgewählten Spenden mischen Aufwandsspenden und Geldspenden; bitte getrennt bestätigen.",
     "feeConfirmationsDisabled": "Bestätigungen für Mitgliedsbeiträge sind deaktiviert (membershipFeesDeductible = false; § 10b Abs. 1 Satz 8 EStG).",
-    "mixedWaiverYear": "Die Spenden dieses Spenders im Jahr sind gemischt (Aufwandsspende ja/nein); Sammelbestätigung übersprungen."
+    "mixedWaiverYear": "Die Spenden dieses Spenders im Jahr sind gemischt (Aufwandsspende ja/nein); Sammelbestätigung übersprungen.",
+    "noConfirmationSelected": "Keine Bestätigung ausgewählt.",
+    "confirmationNotFound2": "Bestätigung nicht gefunden.",
+    "storedPdfMissing": "Gespeicherte PDF-Datei nicht gefunden.",
+    "pdfIntegrity": "PDF-Integritätsfehler: Die gespeicherte Datei stimmt nicht mit dem SHA-256 des Datensatzes überein. Bitte informieren Sie die Systemadministration (Eintrag PDF_INTEGRITY_ERROR)."
   },
   "validation": {
     "periodStartInvalid": "Bitte einen gültigen Zeitraumbeginn eingeben.",
@@ -336,5 +340,52 @@
   "module": {
     "label": "Spenden",
     "description": "Spendenerfassung, Zuwendungsbestätigungen und Spenderverwaltung."
+  },
+  "export": {
+    "register": {
+      "confirmationNumber": "ZB-Nr.",
+      "issuedAt": "Datum",
+      "kind": "Art",
+      "content": "Inhalt",
+      "recipientName": "Empfänger",
+      "period": "Zeitraum",
+      "total": "Summe",
+      "status": "Status",
+      "cancelReason": "Stornogrund",
+      "_sheet": "Zuwendungsregister",
+      "_file": "zuwendungsregister",
+      "kinds": {
+        "SINGLE": "Einzelbestätigung",
+        "COLLECTIVE": "Sammelbestätigung"
+      },
+      "contents": {
+        "DONATION": "Geldspende",
+        "MEMBERSHIP_FEE": "Mitgliedsbeitrag"
+      }
+    },
+    "donations": {
+      "donationNumber": "Nr.",
+      "receivedAt": "Datum",
+      "donorNumber": "Spendernr.",
+      "donorName": "Spender",
+      "amount": "Betrag",
+      "method": "Zahlungsart",
+      "waived": "Aufwandsspende",
+      "confirmationNumber": "Bestätigungsnr.",
+      "bookingNumber": "Buchung",
+      "_sheet": "Spenden",
+      "_file": "spenden",
+      "_yes": "Ja",
+      "_no": "Nein",
+      "_cancelled": "STORNIERT",
+      "methods": {
+        "CASH": "Bar",
+        "BANK_TRANSFER": "Überweisung",
+        "CARD": "Kartenzahlung",
+        "PAYPAL": "PayPal",
+        "REIMBURSEMENT_WAIVER": "Aufwandsspende",
+        "OTHER": "Sonstige"
+      }
+    }
   }
 }

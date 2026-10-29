@@ -10,7 +10,6 @@ import { can } from "@/shared/permissions/define";
 
 import { getBooking } from "../queries/get-booking";
 import { accountingPermissions } from "../permissions";
-import { SOURCE_TYPE_LABELS } from "../constants";
 import { BookingTypeBadge } from "../components/booking-type-badge";
 import { BookingDetailActions } from "../components/booking-detail-actions";
 import { FilesPanel } from "../components/files-panel";
@@ -90,7 +89,9 @@ export async function AccountingDetailView({ id }: { id: string }) {
             <InfoRow label={t("detail.fields.receiptReference")}>{booking.receiptReference ?? "—"}</InfoRow>
             <InfoRow label={t("detail.fields.source")}>
               {booking.sourceType
-                ? (SOURCE_TYPE_LABELS[booking.sourceType] ?? booking.sourceType)
+                ? (t.has(`enums.sourceType.${booking.sourceType}`)
+                    ? t(`enums.sourceType.${booking.sourceType}`)
+                    : booking.sourceType)
                 : t("detail.sourceManual")}
             </InfoRow>
             <InfoRow label={t("detail.fields.createdBy")}>

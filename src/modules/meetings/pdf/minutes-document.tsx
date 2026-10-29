@@ -6,20 +6,25 @@ import {
   View,
 } from "@react-pdf/renderer";
 
-import { getEnv } from "@/shared/env";
+import type {
+  AttendanceStatus,
+  AttendeeRole,
+  DecisionResult,
+  MeetingStatus,
+  MeetingType,
+} from "@prisma/client";
 
-import {
-  ATTENDEE_ROLE_LABELS,
-  ATTENDANCE_LABELS,
-  DECISION_RESULT_LABELS,
-  MEETING_STATUS_LABELS,
-  MEETING_TYPE_LABELS,
-} from "../constants";
+import { formatPdfDate } from "@/shared/pdf/format";
+import type { PdfLang } from "@/shared/pdf/i18n";
+import { Letterhead, type LetterheadProfile } from "@/shared/pdf/letterhead";
+
 import { registerMinutesFonts } from "./fonts";
+import { MINUTES_STRINGS, type MinutesStrings } from "./strings";
 
 /**
- * Toplantı tutanağı PDF'i (9. bölüm): A4 dikey, Türkçe metin.
- * - Antet: ORGANIZATION_NAME + "TOPLANTI TUTANAĞI"; onaysız toplantıda TASLAK damgası.
+ * Toplantı tutanağı PDF'i (9. bölüm + Faz 4 §4.3): A4 dikey; Almanca varsayılan,
+ * `?lang=tr` ile Türkçe (sözlük: pdf/strings.ts).
+ * - Antet: dernek profili (shared/pdf/letterhead) + başlık; onaysız toplantıda taslak damgası.
  * - Bilgi bloğu, katılımcı tablosu, yeter sayısı cümlesi, gündem (+görüşmeler ve
  *   bağlı kararlar), kararlar bölümü, görev tablosu, imza bloğu, onay satırı.
  * - Her sayfanın altbilgisi: toplantı numarası (sol), "Sayfa X / Y" (sağ).
@@ -106,22 +111,25 @@ const styles = StyleSheet.create({
 });
 
 export type MinutesPdfData = {
+  lang: PdfLang;
+  organization: LetterheadProfile;
+  invitationSentAt: Date | null;
   meetingNumber: string;
-  type: keyof typeof MEETING_TYPE_LABELS;
+  type: MeetingType;
   title: string;
   meetingDate: Date;
   startTime: string | null;
   endTime: string | null;
   location: string | null;
-  status: keyof typeof MEETING_STATUS_LABELS;
+  status: MeetingStatus;
   approvedAt: Date | null;
   approvedByLabel: string | null;
   quorumRequired: number | null;
   presentCount: number;
   attendees: {
     name: string;
-    role: keyof typeof ATTENDEE_ROLE_LABELS;
-    attendance: keyof typeof ATTENDANCE_LABELS;
+    role: AttendeeRole;
+    attendance: AttendanceStatus;
   }[];
   agendaItems: {
     position: number;
@@ -131,7 +139,7 @@ export type MinutesPdfData = {
     decisions: {
       decisionNumber: string;
       text: string;
-      result: keyof typeof DECISION_RESULT_LABELS;
+      result: DecisionResult;
       votesFor: number | null;
       votesAgainst: number | null;
       votesAbstain: number | null;
@@ -140,7 +148,7 @@ export type MinutesPdfData = {
   unlinkedDecisions: {
     decisionNumber: string;
     text: string;
-    result: keyof typeof DECISION_RESULT_LABELS;
+    result: DecisionResult;
     votesFor: number | null;
     votesAgainst: number | null;
     votesAbstain: number | null;
@@ -154,9 +162,7 @@ export type MinutesPdfData = {
 };
 
 function formatDateOnly(value: Date): string {
-  const day = String(value.getUTCDate()).padStart(2, "0");
-  const month = String(value.getUTCMonth() + 1).padStart(2, "0");
-  return `${day}.${month}.${value.getUTCFullYear()}`;
+  return formatPdfDate(value);
 }
 
 function InfoRow({ label, value }: { label: string; value: string }) {
@@ -171,20 +177,22 @@ function InfoRow({ label, value }: { label: string; value: string }) {
 /** Karar satırı: numara, metin, sonuç, oylar (9. bölüm md. 5). */
 function DecisionLines({
   decisions,
+  strings,
 }: {
   decisions: MinutesPdfData["unlinkedDecisions"];
+  strings: MinutesStrings;
 }) {
   if (decisions.length === 0) return null;
   return (
     <View>
       {decisions.map((decision) => (
         <View key={decision.decisionNumber} style={styles.decisionBox}>
-          <Text style={styles.decisionNumber}>Karar No: {decision.decisionNumber}</Text>
+          <Text style={styles.decisionNumber}>{strings.decisionNumber(decision.decisionNumber)}</Text>
           <Text>{decision.text}</Text>
           <Text style={styles.agendaMeta}>
-            Sonuç: {DECISION_RESULT_LABELS[decision.result]}
+            {strings.result}: {strings.resultLabels[decision.result]}
             {decision.votesFor !== null
-              ? ` — Kabul ${decision.votesFor} / Ret ${decision.votesAgainst ?? 0} / Çekimser ${decision.votesAbstain ?? 0}`
+              ? ` — ${strings.votes(decision.votesFor, decision.votesAgainst ?? 0, decision.votesAbstain ?? 0)}`
               : ""}
           </Text>
         </View>
@@ -195,7 +203,8 @@ function DecisionLines({
 
 export function MinutesDocument({ data }: { data: MinutesPdfData }) {
   registerMinutesFonts();
-  const organizationName = getEnv().ORGANIZATION_NAME;
+  const strings = MINUTES_STRINGS[data.lang];
+  const role = (value: AttendeeRole) => strings.roleLabel(value, data.type);
   const isDraft = data.status !== "APPROVED";
 
   const timeRange =
@@ -206,10 +215,10 @@ export function MinutesDocument({ data }: { data: MinutesPdfData }) {
   const signaturePeople = [
     ...data.attendees
       .filter((attendee) => attendee.role === "CHAIRPERSON")
-      .map((attendee) => ({ name: attendee.name, role: ATTENDEE_ROLE_LABELS[attendee.role] })),
+      .map((attendee) => ({ name: attendee.name, role: role(attendee.role) })),
     ...data.attendees
       .filter((attendee) => attendee.role === "SECRETARY")
-      .map((attendee) => ({ name: attendee.name, role: ATTENDEE_ROLE_LABELS[attendee.role] })),
+      .map((attendee) => ({ name: attendee.name, role: role(attendee.role) })),
     ...data.attendees
       .filter(
         (attendee) =>
@@ -217,57 +226,61 @@ export function MinutesDocument({ data }: { data: MinutesPdfData }) {
           attendee.role !== "CHAIRPERSON" &&
           attendee.role !== "SECRETARY",
       )
-      .map((attendee) => ({ name: attendee.name, role: ATTENDEE_ROLE_LABELS[attendee.role] })),
+      .map((attendee) => ({ name: attendee.name, role: role(attendee.role) })),
   ];
 
   return (
-    <Document title={`Tutanak-${data.meetingNumber}`} language="tr">
+    <Document title={`${strings.subtitle(data.type)} ${data.meetingNumber}`} language={data.lang}>
       <Page size="A4" style={styles.page}>
-        <Text style={styles.org}>{organizationName}</Text>
-        <Text style={styles.title}>TOPLANTI TUTANAĞI</Text>
-        {isDraft ? <Text style={styles.draftBadge}>TASLAK</Text> : null}
+        <Letterhead profile={data.organization} />
+        <Text style={styles.org}>{strings.documentTitle}</Text>
+        <Text style={styles.title}>{strings.subtitle(data.type)}</Text>
+        {isDraft ? <Text style={styles.draftBadge}>{strings.draft}</Text> : null}
         <View style={styles.hr} />
 
         <View style={styles.infoTable}>
-          <InfoRow label="Toplantı No" value={data.meetingNumber} />
-          <InfoRow label="Türü" value={MEETING_TYPE_LABELS[data.type]} />
-          <InfoRow label="Başlık" value={data.title} />
-          <InfoRow label="Tarih" value={formatDateOnly(data.meetingDate)} />
-          <InfoRow label="Saat" value={timeRange} />
-          <InfoRow label="Yer" value={data.location ?? "-"} />
+          <InfoRow label={strings.meetingNumber} value={data.meetingNumber} />
+          <InfoRow label={strings.type} value={strings.meetingTypes[data.type]} />
+          <InfoRow label={strings.title} value={data.title} />
+          <InfoRow label={strings.date} value={formatDateOnly(data.meetingDate)} />
+          <InfoRow label={strings.time} value={timeRange} />
+          <InfoRow label={strings.location} value={data.location ?? "-"} />
+          {data.invitationSentAt ? (
+            <InfoRow label={strings.invitationSent} value={formatDateOnly(data.invitationSentAt)} />
+          ) : null}
         </View>
 
-        <Text style={styles.sectionTitle}>Katılımcılar</Text>
+        <Text style={styles.sectionTitle}>{strings.attendees}</Text>
         <View style={styles.table}>
           <View style={[styles.tableRow, styles.tableHeader]}>
-            <Text style={styles.cellName}>Ad Soyad</Text>
-            <Text style={styles.cellRole}>Görev</Text>
-            <Text style={styles.cellAttendance}>Katılım</Text>
+            <Text style={styles.cellName}>{strings.name}</Text>
+            <Text style={styles.cellRole}>{strings.role}</Text>
+            <Text style={styles.cellAttendance}>{strings.attendance}</Text>
           </View>
           {data.attendees.map((attendee) => (
             <View key={`${attendee.name}-${attendee.role}`} style={styles.tableRow}>
               <Text style={styles.cellName}>{attendee.name}</Text>
-              <Text style={styles.cellRole}>{ATTENDEE_ROLE_LABELS[attendee.role]}</Text>
-              <Text style={styles.cellAttendance}>{ATTENDANCE_LABELS[attendee.attendance]}</Text>
+              <Text style={styles.cellRole}>{role(attendee.role)}</Text>
+              <Text style={styles.cellAttendance}>{strings.attendanceLabels[attendee.attendance]}</Text>
             </View>
           ))}
           {data.attendees.length === 0 ? (
             <View style={styles.tableRow}>
-              <Text style={{ padding: 4 }}>Katılımcı kaydı yok.</Text>
+              <Text style={{ padding: 4 }}>{strings.noAttendees}</Text>
             </View>
           ) : null}
         </View>
         {data.quorumRequired !== null ? (
           <Text style={styles.quorum}>
             {data.presentCount >= data.quorumRequired
-              ? `Toplantı yeter sayısı sağlanmıştır (${data.presentCount}/${data.quorumRequired}).`
-              : `Toplantı yeter sayısı sağlanamamıştır (${data.presentCount}/${data.quorumRequired}).`}
+              ? strings.quorumMet(data.presentCount, data.quorumRequired)
+              : strings.quorumNotMet(data.presentCount, data.quorumRequired)}
           </Text>
         ) : null}
 
-        <Text style={styles.sectionTitle}>Gündem</Text>
+        <Text style={styles.sectionTitle}>{strings.agenda}</Text>
         {data.agendaItems.length === 0 ? (
-          <Text>Gündem maddesi yok.</Text>
+          <Text>{strings.noAgenda}</Text>
         ) : (
           data.agendaItems.map((item) => (
             <View key={`${item.position}-${item.title}`} style={styles.agendaItem} wrap={false}>
@@ -275,35 +288,35 @@ export function MinutesDocument({ data }: { data: MinutesPdfData }) {
                 {item.position}. {item.title}
               </Text>
               {item.description ? (
-                <Text style={styles.agendaMeta}>Planlanan: {item.description}</Text>
+                <Text style={styles.agendaMeta}>{strings.planned}: {item.description}</Text>
               ) : null}
               {item.discussion ? (
                 <View>
-                  <Text style={styles.agendaMeta}>Görüşmeler:</Text>
+                  <Text style={styles.agendaMeta}>{strings.discussion}:</Text>
                   <Text style={styles.discussion}>{item.discussion}</Text>
                 </View>
               ) : null}
-              <DecisionLines decisions={item.decisions} />
+              <DecisionLines decisions={item.decisions} strings={strings} />
             </View>
           ))
         )}
 
         {data.unlinkedDecisions.length > 0 ? (
           <>
-            <Text style={styles.sectionTitle}>Kararlar</Text>
-            <DecisionLines decisions={data.unlinkedDecisions} />
+            <Text style={styles.sectionTitle}>{strings.decisions}</Text>
+            <DecisionLines decisions={data.unlinkedDecisions} strings={strings} />
           </>
         ) : null}
 
         {data.actionItems.length > 0 ? (
           <>
-            <Text style={styles.sectionTitle}>Görevler</Text>
+            <Text style={styles.sectionTitle}>{strings.actionItems}</Text>
             <View style={styles.table}>
               <View style={[styles.tableRow, styles.tableHeader]}>
-                <Text style={styles.cellAction}>Görev</Text>
-                <Text style={styles.cellAssignee}>Sorumlu</Text>
-                <Text style={styles.cellDue}>Son Tarih</Text>
-                <Text style={styles.cellStatus}>Durum</Text>
+                <Text style={styles.cellAction}>{strings.task}</Text>
+                <Text style={styles.cellAssignee}>{strings.assignee}</Text>
+                <Text style={styles.cellDue}>{strings.dueDate}</Text>
+                <Text style={styles.cellStatus}>{strings.status}</Text>
               </View>
               {data.actionItems.map((actionItem) => (
                 <View key={`${actionItem.description.slice(0, 12)}`} style={styles.tableRow} wrap={false}>
@@ -313,7 +326,7 @@ export function MinutesDocument({ data }: { data: MinutesPdfData }) {
                     {actionItem.dueDate ? formatDateOnly(actionItem.dueDate) : "-"}
                   </Text>
                   <Text style={styles.cellStatus}>
-                    {actionItem.status === "DONE" ? "Tamamlandı" : "Açık"}
+                    {actionItem.status === "DONE" ? strings.actionDone : strings.actionOpen}
                   </Text>
                 </View>
               ))}
@@ -321,7 +334,7 @@ export function MinutesDocument({ data }: { data: MinutesPdfData }) {
           </>
         ) : null}
 
-        <Text style={styles.sectionTitle}>İmza</Text>
+        <Text style={styles.sectionTitle}>{strings.signatures}</Text>
         <View style={styles.signatureGrid}>
           {signaturePeople.map((person) => (
             <View key={`${person.name}-${person.role}`} style={styles.signatureCell} wrap={false}>
@@ -335,14 +348,14 @@ export function MinutesDocument({ data }: { data: MinutesPdfData }) {
 
         {!isDraft && data.approvedAt ? (
           <Text style={styles.approvedLine}>
-            Onaylandı: {formatDateOnly(data.approvedAt)} – {data.approvedByLabel ?? ""}
+            {strings.approved(formatDateOnly(data.approvedAt), data.approvedByLabel ?? "")}
           </Text>
         ) : null}
 
         <View style={styles.footer} fixed>
           <Text>{data.meetingNumber}</Text>
           <Text
-            render={({ pageNumber, totalPages }) => `Sayfa ${pageNumber} / ${totalPages}`}
+            render={({ pageNumber, totalPages }) => strings.page(pageNumber, totalPages)}
           />
         </View>
       </Page>

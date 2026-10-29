@@ -16,6 +16,7 @@ import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 import { MAX_FILES_PER_MEETING, MEETING_ALLOWED_EXTENSIONS } from "../constants";
 import { meetingsPermissions } from "../permissions";
 import { assertMeetingEditable } from "../services/meeting-guards";
+import { translateMessage } from "@/shared/i18n/translate-message";
 
 /**
  * Toplantı eki yükleme (POST /api/meetings/[id]/files, 8. bölüm):
@@ -33,14 +34,14 @@ export async function uploadMeetingFileHandler(
     user = await requireUser();
   } catch (error) {
     if (error instanceof UnauthorizedError) {
-      return NextResponse.json({ ok: false, error: "Oturum bulunamadı." }, { status: 401 });
+      return NextResponse.json({ ok: false, error: await translateMessage("common.errors.sessionExpired") }, { status: 401 });
     }
     throw error;
   }
 
   if (!can(user.role, meetingsPermissions, "update")) {
     return NextResponse.json(
-      { ok: false, error: "Bu işlem için yetkiniz yok." },
+      { ok: false, error: await translateMessage("common.errors.forbidden") },
       { status: 403 },
     );
   }
@@ -51,12 +52,12 @@ export async function uploadMeetingFileHandler(
     select: { id: true, year: true, meetingNumber: true, status: true, deletedAt: true },
   });
   if (!meeting) {
-    return NextResponse.json({ ok: false, error: "Toplantı bulunamadı." }, { status: 404 });
+    return NextResponse.json({ ok: false, error: await translateMessage("meetings.errors.meetingNotFound2") }, { status: 404 });
   }
   try {
     assertMeetingEditable(meeting, "files", user.role, meetingsPermissions);
   } catch (error) {
-    const message = error instanceof Error ? error.message : "Toplantı düzenlenemez.";
+    const message = await translateMessage(error instanceof Error ? error.message : "meetings.errors.notEditable");
     return NextResponse.json({ ok: false, error: message }, { status: 400 });
   }
 
@@ -65,7 +66,7 @@ export async function uploadMeetingFileHandler(
   });
   if (activeCount >= MAX_FILES_PER_MEETING) {
     return NextResponse.json(
-      { ok: false, error: `Toplantı başına en fazla ${MAX_FILES_PER_MEETING} dosya eklenebilir.` },
+      { ok: false, error: await translateMessage("files.maxPerRecord", { max: MAX_FILES_PER_MEETING }) },
       { status: 400 },
     );
   }
@@ -130,6 +131,6 @@ export async function uploadMeetingFileHandler(
     // Kayıt oluşamadıysa diske yazılan dosya temizlenir (8. bölüm).
     await removeFile(storagePath);
     console.error("[meetings/upload-file] Dosya kaydı oluşturulamadı:", error);
-    return NextResponse.json({ ok: false, error: "Dosya yüklenemedi." }, { status: 500 });
+    return NextResponse.json({ ok: false, error: await translateMessage("files.uploadFailed") }, { status: 500 });
   }
 }

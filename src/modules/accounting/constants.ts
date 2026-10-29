@@ -42,29 +42,13 @@ export const DESCRIPTION_MIN = 3;
 export const DESCRIPTION_MAX = 300;
 
 /** Etiket sözlükleri (sunucu içi; Excel + audit + PDF TR/DE akışı buradan beslenir). */
-export const ACCOUNT_TYPE_LABELS: Record<AccountType, string> = {
-  CASH: "Kasa (Kasse)",
-  BANK: "Banka hesabı (Girokonto)",
-  OTHER: "Diğer (Sonstiges)",
-};
+export const ACCOUNT_TYPE_VALUES: AccountType[] = ["CASH", "BANK", "OTHER"];
 
-export const BOOKING_TYPE_LABELS: Record<BookingType, string> = {
-  INCOME: "Gelir (Einnahme)",
-  EXPENSE: "Gider (Ausgabe)",
-  TRANSFER: "Virman (Umbuchung)",
-};
+export const BOOKING_TYPE_VALUES: BookingType[] = ["INCOME", "EXPENSE", "TRANSFER"];
 
-export const DIRECTION_LABELS: Record<CategoryDirection, string> = {
-  INCOME: "Gelir",
-  EXPENSE: "Gider",
-};
+export const DIRECTION_VALUES: CategoryDirection[] = ["INCOME", "EXPENSE"];
 
-export const SPHERE_LABELS: Record<Sphere, string> = {
-  IDEELL: "İdeel alan (ideeller Bereich)",
-  ASSET_MANAGEMENT: "Varlık yönetimi (Vermögensverwaltung)",
-  PURPOSE_OPERATION: "Amaca bağlı işletme (Zweckbetrieb)",
-  ECONOMIC_OPERATION: "Ticari işletme (wirtschaftlicher Geschäftsbetrieb)",
-};
+export const SPHERE_VALUES: Sphere[] = ["IDEELL", "ASSET_MANAGEMENT", "PURPOSE_OPERATION", "ECONOMIC_OPERATION"];
 
 export const SPHERE_ORDER: Sphere[] = [
   "IDEELL",
@@ -85,8 +69,4 @@ export const PAYMENT_METHOD_ACCOUNT: Record<
 };
 
 /** Kaynak etiketleri — fiş listesi/detay "Kaynak" kolonu (§ 6). */
-export const SOURCE_TYPE_LABELS: Record<string, string> = {
-  MEMBER_PAYMENT: "Üyelik aidatı (otomatik)",
-  DONATION: "Bağış (otomatik)",
-  DONATION_WAIVER: "Aufwandsspende gideri (otomatik)",
-};
+export const SOURCE_TYPE_VALUES = ["MEMBER_PAYMENT", "DONATION", "DONATION_WAIVER"] as const;

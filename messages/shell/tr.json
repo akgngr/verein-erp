@@ -77,7 +77,10 @@
     },
     "active": "Aktif",
     "passive": "Pasif",
-    "emailPlaceholder": "ornek@dernek.org"
+    "emailPlaceholder": "ornek@dernek.org",
+    "export": {
+      "truncated": "Sonuçlar {max} satırla sınırlandı."
+    }
   },
   "nav": {
     "panel": "Panel",
@@ -164,7 +167,7 @@
     "kullaniciDuzenle": "Kullanıcıyı Düzenle",
     "denetimKaydi": "Denetim Kaydı",
     "profil": "Profil",
-    "dernekBilgileri": "Dernek Bilgileri | Dernek Yönetim Sistemi"
+    "dernekBilgileri": "Dernek Bilgileri"
   },
   "pdfLanguage": {
     "german": "Almanca (Deutsch)",
@@ -253,6 +256,8 @@
     "typeNotAllowed": "Bu dosya türü kabul edilmiyor.",
     "empty": "Boş dosya yüklenemez.",
     "contentMismatch": "Dosya içeriği .{extension} uzantısıyla uyumlu değil.",
-    "tooLarge": "Dosya en fazla {maxMb} MB olabilir."
+    "tooLarge": "Dosya en fazla {maxMb} MB olabilir.",
+    "uploadFailed": "Dosya yüklenemedi.",
+    "maxPerRecord": "Kayıt başına en fazla {max} dosya eklenebilir."
   }
 }

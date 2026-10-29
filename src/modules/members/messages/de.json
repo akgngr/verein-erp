@@ -351,7 +351,17 @@
     "paymentNotFound": "Zahlung nicht gefunden.",
     "paymentAlreadyVoided": "Diese Zahlung wurde bereits storniert.",
     "dueHasPayments": "Beitragszeilen mit Zahlungen können nicht gelöscht werden. Stornieren Sie zuerst die Zahlungen.",
-    "importMissingColumns": "Pflichtspalten fehlen (Ad, Soyad, Üyelik Türü, Üyelik Başlangıç Tarihi). Bitte die Vorlage herunterladen und ausfüllen."
+    "importMissingColumns": "Pflichtspalten fehlen (Ad, Soyad, Üyelik Türü, Üyelik Başlangıç Tarihi). Bitte die Vorlage herunterladen und ausfüllen.",
+    "dataExportMissing": "Mitglied nicht gefunden oder Daten gelöscht.",
+    "importTooLarge": "Die Datei überschreitet die Grenze von {max} MB.",
+    "importXlsxOnly": "Nur .xlsx-Dateien werden akzeptiert.",
+    "importInvalidXlsx": "Die Datei ist kein gültiges .xlsx-Paket.",
+    "importDupEmailDb": "Duplikat: Ein Mitglied mit dieser E-Mail existiert bereits.",
+    "importDupEmailFile": "Duplikat: Dieselbe E-Mail kommt mehrfach in der Datei vor.",
+    "importDupPersonDb": "Duplikat: Ein Mitglied mit gleichem Vor-, Nachnamen und Geburtsdatum existiert bereits.",
+    "importDupPersonFile": "Duplikat: Gleicher Vor-, Nachname und Geburtsdatum kommen mehrfach in der Datei vor.",
+    "paymentNotSpecified": "Keine Zahlung angegeben.",
+    "paymentNotFound2": "Zahlung nicht gefunden."
   },
   "validation": {
     "yearMinPrev": "Das Jahr darf höchstens das Vorjahr sein.",
@@ -400,5 +410,49 @@
   "module": {
     "label": "Mitglieder",
     "description": "Mitgliederverwaltung, Mitgliedsarten, Beitragssoll und Zahlungen."
+  },
+  "export": {
+    "dues": {
+      "membershipNumber": "Mitgliedsnr.",
+      "fullName": "Name",
+      "type": "Mitgliedsart",
+      "year": "Jahr",
+      "amountDue": "Betrag",
+      "paid": "Bezahlt",
+      "remaining": "Offen",
+      "status": "Status",
+      "lastPaymentAt": "Letzte Zahlung",
+      "dueDate": "Fällig am",
+      "_sheet": "Beiträge",
+      "_file": "beitraege"
+    },
+    "register": {
+      "membershipNumber": "Mitgliedsnr.",
+      "type": "Mitgliedsart",
+      "status": "Status",
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "street": "Straße",
+      "houseNumber": "Hausnr.",
+      "postalCode": "PLZ",
+      "city": "Ort",
+      "state": "Bundesland",
+      "country": "Land",
+      "joinDate": "Eintritt",
+      "exitDate": "Austritt",
+      "_sheet": "Mitgliederverzeichnis",
+      "_file": "mitgliederverzeichnis"
+    }
+  },
+  "importErrors": {
+    "unreadable": "Die Datei konnte nicht gelesen werden. Bitte eine gültige .xlsx-Datei hochladen.",
+    "noSheet": "Kein Arbeitsblatt gefunden. Bitte die Vorlage herunterladen und ausfüllen.",
+    "tooManyRows": "Die Datei enthält mehr als {max} Datenzeilen. Bitte aufteilen und einzeln hochladen.",
+    "unknownType": "Unbekannte Mitgliedsart: „{value}“.",
+    "unknownStatus": "Unbekannter Status: „{value}“. (Aktif / Pasif / Ayrıldı)",
+    "birthDateInvalid": "Ungültiges Geburtsdatum (TT.MM.JJJJ verwenden).",
+    "joinDateRequired": "Eintrittsdatum ist erforderlich (TT.MM.JJJJ)."
   }
 }

@@ -5,7 +5,7 @@ import { PageHeader } from "@/shared/components/ui/page-header";
 
 import { listCopySources } from "../queries/list-copy-sources";
 import { meetingsPermissions } from "../permissions";
-import { MEETING_TYPE_LABELS } from "../constants";
+import { MEETING_TYPE_VALUES } from "../constants";
 import { MeetingForm } from "../components/meeting-form";
 
 /**
@@ -22,7 +22,7 @@ export async function MeetingCreateView() {
     throw error;
   }
 
-  const types = Object.keys(MEETING_TYPE_LABELS) as Array<keyof typeof MEETING_TYPE_LABELS>;
+  const types = MEETING_TYPE_VALUES;
   const sourceLists = await Promise.all(types.map((type) => listCopySources(type)));
   const copySourcesByType: Partial<
     Record<"BOARD" | "GENERAL_ASSEMBLY" | "COMMITTEE" | "OTHER", Awaited<ReturnType<typeof listCopySources>>>

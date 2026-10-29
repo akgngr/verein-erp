@@ -16,7 +16,15 @@ import type { ImportRowError } from "../types";
  * içe aktarılmaz (KVKK — iş emrinin ulusal kimlik yasağı korunur).
  */
 
-export class ImportParseError extends Error {}
+/** message bir çeviri anahtarıdır; values interpolasyon değerleridir. */
+export class ImportParseError extends Error {
+  constructor(message: string, public values?: Record<string, string | number>) {
+    super(message);
+  }
+}
+
+/** Satır mesajları için çevirmen; varsayılan anahtarı aynen döndürür (betik/test). */
+export type ImportTranslate = (key: string, values?: Record<string, string | number>) => string;
 
 /** Başlık/hücre normalizasyonu: TR büyük İ/I düzeltmesi + ascii-fold + tek boşluk. */
 function normalizeValue(value: string): string {
@@ -120,18 +128,21 @@ export type ParsedImport = {
   errors: ImportRowError[];
 };
 
-export async function parseImportWorkbook(buffer: Buffer): Promise<ParsedImport> {
+export async function parseImportWorkbook(
+  buffer: Buffer,
+  translate: ImportTranslate = (key) => key,
+): Promise<ParsedImport> {
   const workbook = new ExcelJS.Workbook();
   try {
     // exceljs kendi Buffer tipini bekler — node Buffer'ından dönüştürme gerekir.
     await workbook.xlsx.load(buffer as unknown as ExcelJS.Buffer);
   } catch {
-    throw new ImportParseError("Dosya okunamadı. Geçerli bir .xlsx dosyası yükleyin.");
+    throw new ImportParseError("members.importErrors.unreadable");
   }
 
   const sheet = workbook.worksheets[0];
   if (!sheet) {
-    throw new ImportParseError("Çalışma sayfası bulunamadı. Şablonu indirip doldurun.");
+    throw new ImportParseError("members.importErrors.noSheet");
   }
 
   // Başlık satırı: hücre metni → kolon indeksi.
@@ -156,9 +167,7 @@ export async function parseImportWorkbook(buffer: Buffer): Promise<ParsedImport>
   // Satır sınırı: şablon başlıktan sonraki tüm satırlar.
   const maxDataRow = sheet.actualRowCount;
   if (maxDataRow - 1 > IMPORT_MAX_ROWS) {
-    throw new ImportParseError(
-      `Dosyada ${IMPORT_MAX_ROWS.toLocaleString("tr-TR")} satırdan fazla veri var. Dosyayı bölerek yükleyin.`,
-    );
+    throw new ImportParseError("members.importErrors.tooManyRows", { max: IMPORT_MAX_ROWS });
   }
 
   for (let rowNumber = 2; rowNumber <= maxDataRow; rowNumber += 1) {
@@ -188,20 +197,20 @@ export async function parseImportWorkbook(buffer: Buffer): Promise<ParsedImport>
     const rowMessages: string[] = [];
 
     const type = IMPORT_TYPE_ALIASES[normalizeValue(typeText)];
-    if (!type) rowMessages.push(`Bilinmeyen üyelik türü: "${typeText}".`);
+    if (!type) rowMessages.push(translate("members.importErrors.unknownType", { value: typeText }));
 
     let status: "ACTIVE" | "PASSIVE" | "RESIGNED" = "ACTIVE";
     if (statusText !== "") {
       const mapped = IMPORT_STATUS_ALIASES[normalizeValue(statusText)];
-      if (!mapped) rowMessages.push(`Bilinmeyen durum: "${statusText}". (Aktif / Pasif / Ayrıldı)`);
+      if (!mapped) rowMessages.push(translate("members.importErrors.unknownStatus", { value: statusText }));
       else status = mapped;
     }
 
     const birthDate = cellToIsoDate(cell("birthDate"));
     if (birthDate === null && cellToText(cell("birthDate")).trim() !== "") {
-      rowMessages.push("Doğum tarihi geçersiz (gg.aa.yyyy kullanın).");
+      rowMessages.push(translate("members.importErrors.birthDateInvalid"));
     }
-    if (!joinDateIso) rowMessages.push("Üyelik başlangıç tarihi zorunludur (gg.aa.yyyy).");
+    if (!joinDateIso) rowMessages.push(translate("members.importErrors.joinDateRequired"));
 
     if (rowMessages.length > 0) {
       errors.push({ row: rowNumber, messages: rowMessages });
@@ -232,7 +241,7 @@ export async function parseImportWorkbook(buffer: Buffer): Promise<ParsedImport>
     });
 
     if (!validation.success) {
-      const messages = validation.error.issues.map((issue) => issue.message);
+      const messages = validation.error.issues.map((issue) => translate(issue.message));
       errors.push({ row: rowNumber, messages });
       continue;
     }

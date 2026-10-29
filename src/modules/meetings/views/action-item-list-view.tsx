@@ -8,7 +8,7 @@ import { parseListParams, type RawSearchParams } from "@/shared/list-params";
 
 import { ACTION_ITEM_DEFAULT_SORT, ACTION_ITEM_SORTABLE_FIELDS, listActionItems } from "../queries/list-action-items";
 import { meetingsPermissions } from "../permissions";
-import { ACTION_ITEM_STATUS_LABELS } from "../constants";
+import { ACTION_ITEM_STATUS_VALUES } from "../constants";
 import { ActionItemTable } from "../components/action-item-table";
 import { ActionItemDateFilter, ActionItemQuickFilters } from "../components/list-filters";
 
@@ -73,9 +73,9 @@ export async function ActionItemListView({
             label: t("tasks.colStatus"),
             options: [
               { value: "*", label: t("filters.all") },
-              ...Object.keys(ACTION_ITEM_STATUS_LABELS).map((value) => ({
+              ...ACTION_ITEM_STATUS_VALUES.map((value) => ({
                 value,
-                label: tStatus(value as keyof typeof ACTION_ITEM_STATUS_LABELS),
+                label: tStatus(value as (typeof ACTION_ITEM_STATUS_VALUES)[number]),
               })),
             ],
           },
