@@ -7,7 +7,7 @@ export const moduleConfig: ModuleConfig = {
   label: "Etkinlikler",
   description:
     "Dernek etkinlikleri, seminerler, atölyeler ve katılımcı yönetimi.",
-  category: "EXTENSION",
+  category: "OFFICIAL",
   hasSchema: true,
   nav: [
     {

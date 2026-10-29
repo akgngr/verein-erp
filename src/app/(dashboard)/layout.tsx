@@ -32,7 +32,11 @@ export default async function DashboardLayout({
     redirect("/giris?pasif=1");
   }
 
-  const activeModuleKeys = getAllActiveModuleKeys(allModules.map((m) => m.key));
+  // Çekirdek modüller pasife alınamaz; eski bir durum dosyasında kapalı kalmış olsa da etkin sayılır.
+  const coreModuleKeys = allModules.filter((m) => m.category === "CORE").map((m) => m.key);
+  const activeModuleKeys = [
+    ...new Set([...getAllActiveModuleKeys(allModules.map((m) => m.key)), ...coreModuleKeys]),
+  ];
   const collapsed = (await cookies()).get(SIDEBAR_COLLAPSED_COOKIE)?.value === "1";
 
   return (

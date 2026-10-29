@@ -6,7 +6,7 @@ export const moduleConfig: ModuleConfig = {
   key: "inventory",
   label: "Envanter ve Demirbaş",
   description: "Dernek demirbaşları, teknik ekipmanlar ve zimmet kayıtlarının takibi.",
-  category: "EXTENSION",
+  category: "OFFICIAL",
   hasSchema: true,
   nav: [
     {
