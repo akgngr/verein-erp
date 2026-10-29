@@ -241,7 +241,7 @@ describe("Members Module - Core Services & Utilities", () => {
       if (!res.success) {
         const plzIssue = res.error.issues.find((i) => i.path.includes("postalCode"));
         assert.ok(plzIssue, "Posta kodu hatası bekleniyor");
-        assert.match(plzIssue.message, /5 haneli/);
+        assert.equal(plzIssue.message, "members.validation.postalCodeDe");
       }
     });
 
@@ -273,7 +273,7 @@ describe("Members Module - Core Services & Utilities", () => {
       if (!res.success) {
         const dateIssue = res.error.issues.find((i) => i.path.includes("exitDate"));
         assert.ok(dateIssue);
-        assert.match(dateIssue.message, /önce olamaz/);
+        assert.equal(dateIssue.message, "members.validation.exitBeforeJoin");
       }
     });
 
@@ -291,7 +291,7 @@ describe("Members Module - Core Services & Utilities", () => {
       if (!res.success) {
         const issue = res.error.issues.find((i) => i.path.includes("exitDate"));
         assert.ok(issue);
-        assert.match(issue.message, /ayrılış tarihi de girin/);
+        assert.equal(issue.message, "members.validation.exitReasonNeedsDate");
       }
     });
 
