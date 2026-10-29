@@ -39,7 +39,7 @@ describe("Module Registry Integrity", () => {
   });
 
   test("core modules are marked protected or CORE category", () => {
-    const coreKeys = ["auth", "system", "audit", "organization", "users"];
+    const coreKeys = ["auth", "system", "audit", "organization", "users", "mail"];
     for (const key of coreKeys) {
       const mod = allModules.find((m) => m.key === key);
       assert.ok(mod, `${key} çekirdek modülü registry'de bulunmalıdır`);

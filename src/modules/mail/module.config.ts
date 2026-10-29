@@ -7,7 +7,8 @@ export const moduleConfig: ModuleConfig = {
   label: "E-posta Altyapısı",
   description:
     "Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gönderim kayıtları.",
-  category: "EXTENSION",
+  category: "CORE",
+  isProtected: true,
   hasSchema: true,
   nav: [
     {
