@@ -3,6 +3,9 @@
  * denetimi): hem DE hem TR sürümünü üretir. Kullanım: bun scripts/test-minutes-pdf.tsx
  * (KARAR: tsx CJS'te top-level await + @react-pdf/hyphenate alt yolu çözümlenemediği
  * için doğrudan bun ile çalıştırılır.)
+ *
+ * ARŞİV (A-8): Proje tek paket yöneticisi olarak pnpm kullanır; bu script tsx ile
+ * çalışmadığı için arşivlendi. Tutanak PDF'i B-4.4 E2E duman testinde doğrulanır.
  */
 try {
   process.loadEnvFile();

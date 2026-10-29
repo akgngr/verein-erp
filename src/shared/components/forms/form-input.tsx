@@ -17,6 +17,9 @@ export type FormInputProps<T extends FieldValues> = {
 };
 
 /** HeroUI Input + react-hook-form Controller sarmalayıcısı (10.4). */
+// KARAR: HeroUI, labelPlacement="outside" iken placeholder YOKSA label'ı input'un İÇİNE
+// alır (giriş formunda E-posta dışarıda, Parola içeride görünüyordu). Dış yerleşimde
+// placeholder verilmemişse boşluk karakteri verilerek label tutarlı biçimde dışarıda kalır.
 export function FormInput<T extends FieldValues>({
   name,
   label,
@@ -40,11 +43,11 @@ export function FormInput<T extends FieldValues>({
           labelPlacement={labelPlacement}
           description={description}
           isRequired={isRequired}
-          placeholder={placeholder}
+          placeholder={placeholder ?? (labelPlacement === "outside" ? " " : undefined)}
           type={type}
           autoComplete={autoComplete}
           isDisabled={isDisabled}
-          value={typeof field.value === "string" ? field.value : ""}
+          value={field.value === null || field.value === undefined ? "" : String(field.value)}
           onValueChange={field.onChange}
           onBlur={field.onBlur}
           isInvalid={Boolean(fieldState.error)}

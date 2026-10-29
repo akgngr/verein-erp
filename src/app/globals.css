@@ -2,8 +2,11 @@
 
 /* HeroUI (v2) eklentisi — Tailwind CSS v4 kurulumu (resmi doküman adımları) */
 @plugin "../heroui.ts";
-@source "../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx}";
-@source "../../node_modules/.pnpm/@heroui+theme*/**/*.{js,ts,jsx,tsx}";
+/* KARAR: @heroui/theme package.json'da DOĞRUDAN bağımlılıktır (sürümü @heroui/react'in
+   kullandığıyla aynı tutulur). pnpm dolaylı bağımlılığı node_modules/@heroui/theme'a koymaz;
+   bu yol olmadan HeroUI durum sınıfları (label animasyonu, hover, focus, selected) hiç
+   üretilmez. Doğrudan bağımlılık pnpm sürümünden/hoist ayarından bağımsız çalışır. */
+@source "../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx,mjs}";
 
 /* Koyu tema: next-themes "class" stratejisi */
 @custom-variant dark (&:is(.dark *));

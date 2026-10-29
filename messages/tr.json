@@ -1386,6 +1386,7 @@
       "date": "Bağış tarihi (Tag der Zuwendung)",
       "amount": "Tutar (€)",
       "amountHint": "300 € ve altındaki bağışlar için resmi bildirim zorunlu değildir (banka dekontu yeterlidir).",
+      "methodLabel": "Yöntem",
       "method": {
         "CASH": "Nakit (Bar)",
         "BANK_TRANSFER": "Banka havalesi (Überweisung)",

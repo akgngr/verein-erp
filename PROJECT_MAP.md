@@ -16,7 +16,7 @@
 | Veritabanı | PostgreSQL 17.6 (userspace) + Prisma ORM |
 | Auth | next-auth v5 (JWT) + bcrypt; oturum çerezleri `requireUser()` ile okunur |
 | i18n | next-intl 4.x **non-routing** (NEXT_LOCALE cookie; `src/i18n/request.ts` default export) |
-| Paket | bun (dev: `bun dev`, port 3000) |
+| Paket | pnpm (`packageManager` alanı; dev: `pnpm dev`, port 3000) — bun KULLANILMAZ (A-8) |
 
 ## 2. Dizin haritası
 
@@ -97,7 +97,7 @@ Kritik bağlantılar:
 ## 4. Yeni özellik ekleme tarifleri
 
 ### 4a. Yeni modül (örn. "Finans") — kalıp: documents modülü
-1. `prisma/schema/<modul>.prisma` model + `bunx prisma migrate dev --name add_x` (schema/ altındaki parça dosyalar tek şemaya derlenir)
+1. `prisma/schema/<modul>.prisma` model + `pnpm db:migrate --name add_x` (schema/ altındaki parça dosyalar tek şemaya derlenir)
 2. `src/modules/<modul>/`: `permissions.ts`, `types.ts`, `constants.ts`, `schemas/` (zod), `queries/` (list/get/stats), `actions/` (create/update/delete; hepsi zod + requirePermission + audit), `components/`, `views/`, `module.config.ts`, `index.ts`
 3. `src/registry.ts`'e moduleConfig ekle (nav etiketleri şimdilik TR hardcoded — i18n devri açık)
 4. `src/app/(dashboard)/<modul>/page.tsx` → view çağırır
@@ -154,9 +154,9 @@ src/modules/documents/
 16. **next-intl açı parantezi:** mesaj metninde `TOP-<yıl>` gibi açı parantezli örnekler ICU etiketi sanılır → UNCLOSED_TAG sunucu hatası. Biçim açıklamaları parantezsiz yazılır ("TOP-YIL-SIRA biçiminde").
 17. **PDF yerelleştirme (Faz 4, 4.3):** `resolvePdfLang(request)` + `MINUTES_STRINGS[lang]` sözlüğü (eksik çeviri DERLEME HATASI); varsayılan dil env `DOCUMENT_LANGUAGE` (de). Tüm PDF butonları `PdfSplitButton` kullanır (ana tıklama varsayılan dil, açılır menü `?lang=`). PDF dosya adı da dil izler (protokoll-/tutanak-).
 18. **PDF antet (Letterhead):** `shared/pdf/letterhead.tsx` yapısal `LetterheadProfile` alır — shared modül import edemez; veriyi çağıran modül public giriş (`@/modules/organization/server`) üzerinden toplar (ESLint sınır kuralı public girişlere izin verir). Logo: PNG/JPG ≤2 MB, `UPLOAD_DIR/organization/<uuid>` + data URI ile react-pdf Image (objectFit contain, 84×56 pt).
-19. **Modül içi scripts:** `scripts/test-minutes-pdf.tsx` `bun` ile çalıştırılır (tsx CJS'te top-level await + @react-pdf/hyphenate alt yolu çözümlenemedi).
+19. **Modül içi scripts:** `scripts/archive/test-minutes-pdf.tsx` (ARŞİV, A-8 — tsx'te çalışmaz; PDF doğrulaması E2E'ye taşınır) eskiden `bun` ile çalıştırılırdı (tsx CJS'te top-level await + @react-pdf/hyphenate alt yolu çözümlenemedi).
 20. **Prisma client değişince dev sunucusu ZORUNLU yeniden başlatılır** (eski client bellekten atılmaz — migrate deploy + generate yetmez; pkill next + start-dev-daemon.sh).
-21. **Prisma migrate interaktif onay ortamda çalışmaz** (non-interactive): şema diff'i `bunx prisma migrate diff --from-schema-datasource prisma/schema --to-schema-datamodel prisma/schema --script` ile üretilir; migration klasörü elle kurulur (enum değişimlerinde SQL elle düzenlenir: ALTER TYPE … RENAME VALUE) ve `migrate deploy` uygulanır.
+21. **Prisma migrate interaktif onay ortamda çalışmaz** (non-interactive): şema diff'i `pnpm exec prisma migrate diff --from-schema-datasource prisma/schema --to-schema-datamodel prisma/schema --script` ile üretilir; migration klasörü elle kurulur (enum değişimlerinde SQL elle düzenlenir: ALTER TYPE … RENAME VALUE) ve `migrate deploy` uygulanır.
 22. **RSC → Client bileşene FONKSİYON prop geçilemez** ("Functions cannot be passed directly to Client Components") — etiket verisi RSC'de string olarak hazırlanır (year-closing lockedByFormatted kalıbı).
 23. **Ortak PDF font kaydı:** yeni PDF modülleri `shared/pdf/fonts.ts` (registerSharedPdfFonts) kullanır; font dosyaları `src/shared/pdf/fonts/` (NotoSans OFL). Her yeni PDF rotası next.config `outputFileTracingIncludes`'a eklenir.
 24. **Aidat/muhasebe DB koruması:** AccountingBooking/File DELETE engelli; fişte bookingNumber/year/sequence/createdAt değişmez (trigger'lar). MemberPayment silme action'ı YOK (yalnız void).
@@ -164,6 +164,7 @@ src/modules/documents/
 26. **Fiş metni gizliliği:** muhasebe fişlerinde üye NUMARASI (ad asla); audit'te description/counterparty içeriği yazılmaz; Kassenminus CASH hesapta DB-öncesi servis katmanında zorlanır.
 27. **Şema değişikliği YALNIZCA migration ile (A-1):** `pnpm db:migrate --name <x>` → migration klasörü commit'lenir; sunucuda `pnpm db:deploy` (migrate deploy + `scripts/verify-db-integrity.mjs`). `prisma db push` YASAK — migration kaydı üretmez ve değişmezlik trigger'larını (AuditLog, AccountingBooking, Donation, ZuwendungConfirmation…) KURMAZ. Yerel deneme için yalnızca `pnpm db:push:dev` (üretimde reddeder). Push ile kurulmuş veritabanı: `pnpm db:baseline -- --yes` (bkz. docs/operations/MIGRATION_BASELINE.md). `module:validate`, migration'ı olmayan tabloyu HATA sayar. Docker konteyneri doğrulama başarısızsa başlamaz.
 28. **Server Actions yalnızca aynı kaynaktan (A-2):** `next.config.ts` izinli kaynak listeleri boştur; ek kaynak gerekiyorsa `SERVER_ACTIONS_ALLOWED_ORIGINS` (derleme anında okunur). Caddyfile yalnızca uygulamaya yönlendirir (`APP_DOMAIN`, `APP_UPSTREAM`); sorgu parametresiyle iç porta yönlendirme kuralı kaldırıldı ve geri eklenmez.
+29. **`@heroui/theme` doğrudan bağımlılıktır (KALDIRMA):** Tailwind v4, HeroUI bileşen stillerini `src/app/globals.css` içindeki `@source "../../node_modules/@heroui/theme/dist/..."` ile üretir. pnpm dolaylı bağımlılığı bu yola koymaz; paket `package.json`'da yoksa label animasyonu, hover/focus/selected/invalid stillerinin HİÇBİRİ üretilmez (CSS 78 KB'a düşer). `@heroui/react` güncellenirken `@heroui/theme` sürümü de onun bağımlılığıyla aynı tutulur.
 
 ## 7. i18n durum haritası
 
@@ -187,10 +188,10 @@ Compact toolbar kalıbı (documents/document-toolbar.tsx): tek satır (lg+) aram
 ## 8. Komutlar
 
 ```bash
-bun dev                          # http://localhost:3000
-bun run tsc --noEmit && bun run lint   # kalite kapısı (0 hata zorunlu)
-bunx prisma migrate dev --name <x>     # şema değişimi (production: migrate deploy)
-bunx prisma db seed
+pnpm dev                         # http://localhost:3000
+pnpm typecheck && pnpm lint && pnpm test   # kalite kapısı (0 hata zorunlu)
+pnpm db:migrate --name <x>       # şema değişimi (sunucu: pnpm db:deploy)
+pnpm db:seed
 curl localhost:3000/api/health   # 200 beklenir
 ```
 

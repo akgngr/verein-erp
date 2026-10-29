@@ -1,0 +1,127 @@
+# A-9: Sürekli entegrasyon — her push ve pull request'te kalite kapısı.
+# Yerel karşılığı: pnpm db:deploy && pnpm typecheck && pnpm lint && pnpm module:validate && pnpm test && pnpm build
+
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch: # GitHub Actions sekmesinden elle çalıştırma
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  quality:
+    name: Quality gate
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    services:
+      postgres:
+        image: postgres:17
+        env:
+          POSTGRES_USER: verein
+          POSTGRES_PASSWORD: verein
+          POSTGRES_DB: verein_ci
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U verein"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      DATABASE_URL: postgresql://verein:verein@localhost:5432/verein_ci
+      SHADOW_DATABASE_URL: postgresql://verein:verein@localhost:5432/verein_shadow
+      # Yalnızca derleme/test için; gerçek bir sır değildir.
+      AUTH_SECRET: ci-only-auth-secret-not-used-in-production
+      NEXT_TELEMETRY_DISABLED: "1"
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4 # sürüm package.json "packageManager" alanından okunur
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      # KARAR: @prisma/client'ın postinstall'u client'ı paket DIŞINA (.prisma) üretir; pnpm,
+      # önbellekteki "side effects" ile bu script'i atlayabilir (önbellekli ikinci çalıştırmada
+      # client hiç üretilmez → MODULE_NOT_FOUND .prisma/client). Dockerfile gibi açıkça üretilir.
+      - name: Generate Prisma client
+        run: pnpm exec prisma generate
+
+      - name: Generated files are committed (module:sync is a no-op)
+        run: |
+          pnpm exec tsx scripts/sync-schemas.ts
+          if ! git diff --exit-code; then
+            echo "::error::'pnpm module:sync' çıktısı commit'lenmemiş (registry, rota köprüleri, şema veya çeviriler). Yerelde 'pnpm module:sync' çalıştırıp commit'leyin."
+            exit 1
+          fi
+
+      - name: Prisma schema is valid
+        run: pnpm exec prisma validate
+
+      - name: Migrations apply cleanly and integrity triggers exist
+        run: pnpm db:deploy
+
+      - name: Migrations match the schema (no schema change without a migration)
+        run: |
+          psql "postgresql://verein:verein@localhost:5432/verein_ci" -c "CREATE DATABASE verein_shadow;"
+          set +e
+          pnpm exec prisma migrate diff \
+            --from-migrations prisma/schema/migrations \
+            --to-schema-datamodel prisma/schema \
+            --shadow-database-url "$SHADOW_DATABASE_URL" \
+            --exit-code --script > migration-drift.sql
+          status=$?
+          set -e
+          if [ "$status" -eq 2 ]; then
+            echo "::error::Şema değişmiş ama migration yok. 'pnpm db:migrate --name <değişiklik>' ile migration üretin. Eksik SQL:"
+            cat migration-drift.sql
+            exit 1
+          fi
+          exit "$status"
+
+      - name: Translation keys exist (no MISSING_MESSAGE at runtime)
+        run: pnpm exec tsx scripts/check-i18n-keys.ts
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      # NOT: Uyarılar (React Compiler ↔ form.watch, 5 adet) B-7'de giderildiğinde
+      # bu adım `pnpm lint --max-warnings 0` olacak.
+      - name: Lint
+        run: pnpm lint
+
+      - name: Module standards
+        run: pnpm module:validate
+
+      - name: Tests
+        run: pnpm test
+
+      - name: Build
+        run: pnpm build
+
+  docker:
+    name: Docker image builds
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: quality
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build image
+        run: docker build --tag verein-erp:ci .

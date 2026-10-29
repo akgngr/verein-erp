@@ -24,7 +24,8 @@ pnpm db:verify
 
 - `OK — 10 triggers, 4 functions, all migrations applied.` → Bir şey yapmanız gerekmez.
 - `Table "_prisma_migrations" not found` veya `Missing trigger: …` → Veritabanı `db push` ile kurulmuş. 3. bölümü uygulayın.
-- `Migration not applied: …` → `pnpm db:deploy` çalıştırın.
+- `Migration not applied: …` → `pnpm db:deploy` çalıştırın. Bu komut `relation "…" already exists` (P3018) hatası verirse, o tablolar daha önce `db push` ile eklenmiştir (**karışık durum**); 3. bölümü uygulayın.
+- `Migration failed or incomplete: …` → Önceki bir `db:deploy` yarıda kalmış; 3. bölümü uygulayın.
 
 ## 3. `db push` ile kurulmuş veritabanını migration düzenine geçirme (tek seferlik)
 
@@ -40,13 +41,19 @@ Ardından:
 pnpm db:baseline -- --yes
 ```
 
+`--yes` olmadan çalıştırırsanız hiçbir şeyi değiştirmez; yalnızca **yapacaklarını listeler**.
+
 Komutun yaptıkları:
 
-1. `_prisma_migrations` zaten doluysa **hiçbir şey yapmadan çıkar**; baseline gerekmez.
+1. Bekleyen ve başarısız migration'ları bulur. Hiçbiri yoksa **hiçbir şey yapmadan çıkar**.
 2. Veritabanını `prisma/schema` ile karşılaştırır. **Fark varsa hiçbir şeyi değiştirmeden durur** ve farkı gösterir. Bu durumda farkı elle giderin (genellikle eski bir `db push` denemesinden kalan kolon) ve komutu tekrar çalıştırın.
-3. Trigger migration'ı (`*_reassert_integrity_triggers`) dışındaki tüm migration'ları "uygulandı" olarak işaretler. Bu tablolar zaten var; işaretlenmezlerse tekrar oluşturulmaya çalışılır ve "already exists" hatası alınır.
-4. `prisma migrate deploy` çalıştırır. Bu adımda yalnızca trigger migration'ı **gerçekten çalışır** ve korumaları kurar.
-5. `db:verify` ile sonucu doğrular.
+3. "Uygulandı" sayılacak migration'lardan biri veri değiştiren SQL içeriyorsa ve bilinen, tekrar çalıştırılması güvenli bir veri tamamlama değilse **durur**.
+4. Yarıda kalmış (başarısız) migration kayıtlarını temizler.
+5. Trigger migration'ı (`*_reassert_integrity_triggers`) dışındaki bekleyen migration'ları "uygulandı" olarak işaretler. Tabloları zaten var; işaretlenmezlerse tekrar oluşturulmaya çalışılır ve "already exists" hatası alınır. Bilinen veri tamamlamaları (örn. bağış kategorisi bağlantısı) bu adımda gerçekten çalıştırılır.
+6. `prisma migrate deploy` çalıştırır. Bu adımda trigger migration'ı **gerçekten çalışır** ve korumaları kurar.
+7. `db:verify` ile sonucu doğrular.
+
+Desteklenen durumlar: tamamen `db push` ile kurulmuş veritabanı **ve** migration geçmişi olup bazı tabloları sonradan `db push` ile eklenmiş (karışık) veritabanı.
 
 Bundan sonra her güncellemede yalnızca `pnpm db:deploy` (veya Docker imajının kendi açılış adımı) kullanılır.
 

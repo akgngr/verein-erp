@@ -1,6 +1,6 @@
 /**
  * Faz 5 (§ 7) zorunlu doğrulama: amountToGermanWords'ün spec'teki tüm örnekleri.
- * Tek seferlik; depoda kalıcı. Çalıştırma: bun scripts/verify-amount-words.ts
+ * Tek seferlik; depoda kalıcı. Çalıştırma: pnpm exec tsx scripts/verify-amount-words.ts
  */
 import { amountToGermanWords } from "../src/shared/german-number-words";
 

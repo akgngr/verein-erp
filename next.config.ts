@@ -39,6 +39,12 @@ const nextConfig: NextConfig = {
       allowedOrigins: envList("SERVER_ACTIONS_ALLOWED_ORIGINS"),
     },
   },
+  // KARAR: Next.js 16 geliştirme modunda server action ARGÜMANLARINI terminale yazar
+  // (varsayılan true). Bu, giriş parolalarını ve formlardaki kişisel verileri (adres,
+  // IBAN, kimlik no) düz metin olarak log'a döker; DSGVO ve güvenlik gereği kapatılır.
+  logging: {
+    serverFunctions: false,
+  },
   // KARAR: distDir yalnızca ortam değişkeniyle geçici olarak değiştirilebilir;
   // varsayılan ".next" aynen korunur. (Sandbox'ta çalışan dev sunucusunu bozmadan
   // `pnpm build` doğrulaması için kullanılır; kullanıcı tarafında etkisi yoktur.)

@@ -16,6 +16,9 @@ export type FormTextareaProps<T extends FieldValues> = {
 };
 
 /** HeroUI Textarea + react-hook-form Controller sarmalayıcısı (10.4). */
+// KARAR: HeroUI, labelPlacement="outside" iken placeholder YOKSA label'ı input'un İÇİNE
+// alır (giriş formunda E-posta dışarıda, Parola içeride görünüyordu). Dış yerleşimde
+// placeholder verilmemişse boşluk karakteri verilerek label tutarlı biçimde dışarıda kalır.
 export function FormTextarea<T extends FieldValues>({
   name,
   label,
@@ -38,7 +41,7 @@ export function FormTextarea<T extends FieldValues>({
           labelPlacement={labelPlacement}
           description={description}
           isRequired={isRequired}
-          placeholder={placeholder}
+          placeholder={placeholder ?? (labelPlacement === "outside" ? " " : undefined)}
           isDisabled={isDisabled}
           minRows={rows}
           value={typeof field.value === "string" ? field.value : ""}

@@ -127,7 +127,7 @@ export function DonationForm({
           </div>
           <FormSelect
             name="method"
-            label={t("method")}
+            label={t("methodLabel")}
             control={form.control}
             isRequired
             options={[

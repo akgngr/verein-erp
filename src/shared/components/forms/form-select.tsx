@@ -37,6 +37,7 @@ export function FormSelect<T extends FieldValues>({
         const value = field.value ? String(field.value) : "";
         return (
           <Select
+            id={`form-select-${String(name)}`}
             label={label}
             labelPlacement={labelPlacement}
             description={description}

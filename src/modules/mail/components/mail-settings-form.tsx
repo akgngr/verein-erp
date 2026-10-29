@@ -140,7 +140,7 @@ export function MailSettingsForm({ settings, canUpdate }: MailSettingsFormProps)
           errorMessage={errorText(errors.host?.message)}
         />
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="grid grid-cols-[minmax(0,3fr)_minmax(0,2fr)] gap-4">
           <div className="flex flex-col gap-1.5">
             <label htmlFor="mail-security" className="text-small text-foreground">
               {t("fields.security")}
