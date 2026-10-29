@@ -22,11 +22,3 @@ onlyBuiltDependencies:
 # (DatePicker tip uyumu: CalendarDate → DateValue nominal uyuşmazlığını önler).
 overrides:
   "@internationalized/date": 3.12.4
-
-# KARAR (UI düzeltmesi): HeroUI bileşen stilleri @heroui/theme paketindeki sınıflardan
-# Tailwind tarafından üretilir (src/app/globals.css → @source). pnpm bu dolaylı
-# bağımlılığı node_modules/@heroui/theme'a koymadığı için Tailwind sınıfları HİÇ
-# üretmiyordu (label animasyonu, hover/focus/selected durumları). HeroUI'nin resmi
-# pnpm talimatı: @heroui paketlerini kök node_modules'a kaldır (hoist).
-publicHoistPattern:
-  - "*@heroui/*"
