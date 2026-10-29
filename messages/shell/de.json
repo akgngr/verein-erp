@@ -27,7 +27,14 @@
     "recordsPerPageValue": "{count} Einträge",
     "accessDeniedTitle": "Zugriff verweigert",
     "accessDeniedDescription": "Sie dürfen diese Seite nicht anzeigen. Bitte wenden Sie sich an Ihre Verwaltung.",
-    "appDescription": "Vereinsverwaltung: Dokumente, Sitzungen und Mitgliederverwaltung."
+    "appDescription": "Vereinsverwaltung: Dokumente, Sitzungen und Mitgliederverwaltung.",
+    "errors": {
+      "formInvalid": "Bitte korrigieren Sie die Fehler im Formular.",
+      "sessionExpired": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
+      "forbidden": "Für diese Aktion fehlt Ihnen die Berechtigung.",
+      "duplicate": "Dieser Datensatz existiert bereits.",
+      "unexpected": "Ein unerwarteter Fehler ist aufgetreten."
+    }
   },
   "nav": {
     "panel": "Dashboard",

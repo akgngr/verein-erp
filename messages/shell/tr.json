@@ -27,7 +27,14 @@
     "recordsPerPageValue": "{count} kayıt",
     "accessDeniedTitle": "Erişim engellendi",
     "accessDeniedDescription": "Bu sayfayı görüntüleme yetkiniz yok. Lütfen yöneticinizle görüşün.",
-    "appDescription": "Dernek yönetim sistemi: evrak kayıt, toplantılar ve üye yönetimi."
+    "appDescription": "Dernek yönetim sistemi: evrak kayıt, toplantılar ve üye yönetimi.",
+    "errors": {
+      "formInvalid": "Lütfen formdaki hataları düzeltin.",
+      "sessionExpired": "Oturumunuz sona erdi. Lütfen tekrar giriş yapın.",
+      "forbidden": "Bu işlem için yetkiniz yok.",
+      "duplicate": "Bu kayıt zaten mevcut.",
+      "unexpected": "Beklenmeyen bir hata oluştu."
+    }
   },
   "nav": {
     "panel": "Panel",

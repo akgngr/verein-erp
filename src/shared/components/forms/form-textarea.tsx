@@ -2,6 +2,7 @@
 
 import { Textarea } from "@heroui/react";
 import { Controller, type Control, type FieldValues, type Path } from "react-hook-form";
+import { useTranslateMessage } from "@/shared/i18n/use-translate-message";
 
 export type FormTextareaProps<T extends FieldValues> = {
   name: Path<T>;
@@ -30,6 +31,7 @@ export function FormTextarea<T extends FieldValues>({
   isDisabled,
   labelPlacement = "outside",
 }: FormTextareaProps<T>) {
+  const translateMessage = useTranslateMessage();
   return (
     <Controller
       name={name}
@@ -48,7 +50,7 @@ export function FormTextarea<T extends FieldValues>({
           onValueChange={field.onChange}
           onBlur={field.onBlur}
           isInvalid={Boolean(fieldState.error)}
-          errorMessage={fieldState.error?.message}
+          errorMessage={translateMessage(fieldState.error?.message)}
           classNames={{
             label: "text-small font-medium text-foreground pb-1",
             inputWrapper: "shadow-xs border-default-200 hover:border-default-400 focus-within:!border-primary transition-colors bg-default-50/50 hover:bg-default-100/50 focus-within:!bg-background",

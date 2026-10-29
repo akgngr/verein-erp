@@ -3,6 +3,7 @@
 import { DatePicker } from "@heroui/react";
 import { parseDate, type DateValue } from "@internationalized/date";
 import { Controller, type Control, type FieldValues, type Path } from "react-hook-form";
+import { useTranslateMessage } from "@/shared/i18n/use-translate-message";
 
 export type FormDatePickerProps<T extends FieldValues> = {
   name: Path<T>;
@@ -30,6 +31,7 @@ export function FormDatePicker<T extends FieldValues>({
   isDisabled,
   labelPlacement = "outside",
 }: FormDatePickerProps<T>) {
+  const translateMessage = useTranslateMessage();
   return (
     <Controller
       name={name}
@@ -55,7 +57,7 @@ export function FormDatePicker<T extends FieldValues>({
             value={value}
             onChange={(next) => field.onChange(next ? next.toString() : "")}
             isInvalid={Boolean(fieldState.error)}
-            errorMessage={fieldState.error?.message}
+            errorMessage={translateMessage(fieldState.error?.message)}
             classNames={{
               label: "text-small font-medium text-foreground pb-1",
               inputWrapper: "shadow-xs border-default-200 hover:border-default-400 focus-within:!border-primary transition-colors bg-default-50/50 hover:bg-default-100/50 focus-within:!bg-background",
