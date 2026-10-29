@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { ForbiddenError, listActiveUserOptions, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
@@ -21,6 +22,7 @@ export async function DocumentCreateView({
 }: {
   searchParams: Promise<RawSearchParams>;
 }) {
+  const t = await getTranslations("documents.form");
   try {
     await requirePermission(documentsPermissions, "create");
   } catch (error) {
@@ -44,8 +46,8 @@ export async function DocumentCreateView({
   return (
     <div>
       <PageHeader
-        title={direction === "INCOMING" ? "Yeni gelen evrak" : "Yeni giden evrak"}
-        description="Kayıt numarası, kayıt sırası ve kayıt tarihi otomatik atanır."
+        title={direction === "INCOMING" ? t("createTitleIncoming") : t("createTitleOutgoing")}
+        description={t("createDescription")}
       />
       <DocumentForm
         mode="create"

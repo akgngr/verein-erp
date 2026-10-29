@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
@@ -14,6 +15,7 @@ export async function CategoryListView({
 }: {
   searchParams: Promise<RawSearchParams>;
 }) {
+  const t = await getTranslations("documents");
   let user;
   try {
     user = await requirePermission(documentCategoriesPermissions, "view");
@@ -33,8 +35,8 @@ export async function CategoryListView({
   return (
     <div>
       <PageHeader
-        title="Evrak Kategorileri"
-        description="Kategoriler silinmez; pasife alınan kategori yeni evraklarda seçilemez, mevcut evraklarda görünür."
+        title={t("categoriesPageTitle")}
+        description={t("categoriesPageDescription")}
       />
       <CategoryTable
         rows={list.rows}

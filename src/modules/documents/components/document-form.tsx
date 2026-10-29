@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, Card, CardBody, addToast } from "@heroui/react";
 import { useRouter } from "next/navigation";
@@ -18,11 +20,7 @@ import type { DocumentDirection } from "@prisma/client";
 
 import { createDocumentAction } from "../actions/create-document";
 import { updateDocumentAction } from "../actions/update-document";
-import {
-  DEFAULT_STATUS_BY_DIRECTION,
-  DELIVERY_METHOD_OPTIONS,
-  STATUS_LABELS,
-} from "../constants";
+import { DEFAULT_STATUS_BY_DIRECTION, DELIVERY_METHOD_OPTIONS, STATUS_LABELS } from "../constants";
 import { documentCreateSchema, documentUpdateSchema } from "../schemas/document";
 import type { AssigneeOption, CategoryOption, ReplyTargetOption } from "../types";
 import { berlinToday } from "../utils";
@@ -88,18 +86,14 @@ type DocumentFormProps =
       maxMb: number;
     };
 
-const DELIVERY_SELECT_OPTIONS = [
-  { value: "", label: "Belirtilmedi" },
-  ...DELIVERY_METHOD_OPTIONS,
-];
-
-const emptyOptions = [{ value: "", label: "Kategori yok" }];
-
 /**
  * Yeni/düzenleme evrak formu (8.2, 8.4). Yön ve kayıt numarası salt okunurdur;
  * kayıt numarası şemada bulunmadığından API üzerinden gönderilse de yok sayılır.
  */
 export function DocumentForm(props: DocumentFormProps) {
+  const tDelivery = useTranslations("documents.delivery");
+  const tStatus = useTranslations("documents.status");
+  const t = useTranslations("documents.form");
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
   const [pendingFileCount, setPendingFileCount] = useState(0);
@@ -161,7 +155,7 @@ export function DocumentForm(props: DocumentFormProps) {
         setFormError(applyActionResult(result, form.setError));
         return;
       }
-      addToast({ title: `Evrak güncellendi: ${result.data.registryNumber}`, color: "success" });
+      addToast({ title: t("updatedToast", { registryNumber: result.data.registryNumber }), color: "success" });
       router.push(`/evrak/${doc.id}`);
       router.refresh();
       return;
@@ -186,10 +180,10 @@ export function DocumentForm(props: DocumentFormProps) {
     }
 
     if (failed === 0) {
-      addToast({ title: `Evrak kaydedildi: ${registryNumber}`, color: "success" });
+      addToast({ title: t("savedToast", { registryNumber }), color: "success" });
     } else {
       addToast({
-        title: `Evrak kaydedildi ancak ${failed} dosya yüklenemedi. Dosyaları detay sayfasından yeniden yükleyebilirsiniz.`,
+        title: t("savedWithUploadErrorToast", { count: failed }),
         color: "warning",
       });
     }
@@ -199,7 +193,7 @@ export function DocumentForm(props: DocumentFormProps) {
     router.refresh();
   });
 
-  const counterpartyLabel = direction === "INCOMING" ? "Gönderen" : "Alıcı";
+  const counterpartyLabel = direction === "INCOMING" ? t("sender") : t("receiver");
 
   return (
     <Card shadow="sm" className="max-w-3xl">
@@ -209,7 +203,7 @@ export function DocumentForm(props: DocumentFormProps) {
             <span className="text-small font-semibold">{doc.registryNumber}</span>
             <DirectionBadge direction={doc.direction} />
             <span className="text-tiny text-default-500">
-              Yön ve kayıt numarası değiştirilemez.
+              {t("readOnlyNote")}
             </span>
           </div>
         ) : null}
@@ -218,15 +212,15 @@ export function DocumentForm(props: DocumentFormProps) {
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormDatePicker
               name="documentDate"
-              label="Evrak tarihi"
+              label={t("documentDate")}
               control={form.control}
               isRequired
             />
             <FormDatePicker
               name="dueDate"
-              label="Son işlem tarihi"
+              label={t("dueDate")}
               control={form.control}
-              description="Boş bırakılabilir; tarihi geçenler kırmızı vurgulanır."
+              description={t("dueDateDescription")}
             />
           </div>
 
@@ -240,51 +234,54 @@ export function DocumentForm(props: DocumentFormProps) {
 
           <FormInput
             name="referenceNumber"
-            label={`Karşı tarafın evrak sayısı`}
+            label={t("referenceNumber")}
             control={form.control}
-            placeholder="Örn. 12345 / 2026"
+            placeholder={t("referenceNumberPlaceholder")}
           />
 
-          <FormInput name="subject" label="Konu" control={form.control} isRequired />
+          <FormInput name="subject" label={t("subject")} control={form.control} isRequired />
 
           <FormTextarea
             name="summary"
-            label="Özet"
+            label={t("summary")}
             control={form.control}
             rows={3}
-            description="Evrak içeriğinin kısa özeti (en fazla 2000 karakter)."
+            description={t("summaryDescription")}
           />
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormSelect
               name="categoryId"
-              label="Kategori"
+              label={t("category")}
               control={form.control}
-              options={[...emptyOptions, ...props.categories.map((c) => ({ value: c.id, label: c.label }))]}
+              options={[{ value: "", label: t("noCategory") }, ...props.categories.map((c) => ({ value: c.id, label: c.label }))]}
             />
             <FormSelect
               name="deliveryMethod"
-              label="Teslim şekli"
+              label={t("deliveryMethod")}
               control={form.control}
-              options={DELIVERY_SELECT_OPTIONS}
+              options={[
+                { value: "", label: t("notSpecified") },
+                ...DELIVERY_METHOD_OPTIONS.map((option) => ({ value: option.value, label: tDelivery(option.value) })),
+              ]}
             />
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormSelect
               name="status"
-              label="Durum"
+              label={t("status")}
               control={form.control}
               options={(Object.keys(STATUS_LABELS) as Array<keyof typeof STATUS_LABELS>).map(
-                (status) => ({ value: status, label: STATUS_LABELS[status] }),
+                (status) => ({ value: status, label: tStatus(status) }),
               )}
             />
             <FormSelect
               name="assigneeId"
-              label="Sorumlu"
+              label={t("assignee")}
               control={form.control}
               options={[
-                { value: "", label: "Atanmadı" },
+                { value: "", label: t("unassigned") },
                 ...props.assignees.map((a) => ({ value: a.id, label: a.label })),
               ]}
             />
@@ -300,7 +297,7 @@ export function DocumentForm(props: DocumentFormProps) {
 
           {!isEdit ? (
             <div className="flex flex-col gap-2">
-              <p className="text-small font-medium text-foreground">Dosyalar</p>
+              <p className="text-small font-medium text-foreground">{t("filesSection")}</p>
               <FileUploader
                 mode="create"
                 maxMb={props.maxMb}
@@ -314,13 +311,13 @@ export function DocumentForm(props: DocumentFormProps) {
 
           <div className="flex items-center gap-2">
             <SubmitButton isSubmitting={form.formState.isSubmitting}>
-              {isEdit ? "Kaydet" : "Evrakı kaydet"}
+              {isEdit ? t("save") : t("saveNew")}
             </SubmitButton>
             <Button
               variant="light"
               onPress={() => router.push(doc ? `/evrak/${doc.id}` : "/evrak")}
             >
-              Vazgeç
+              {t("cancel")}
             </Button>
           </div>
         </form>

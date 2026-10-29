@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Button, addToast } from "@heroui/react";
 import { Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -27,6 +29,7 @@ export function DocumentDetailActions({
   canUpdate: boolean;
   canDelete: boolean;
 }) {
+  const t = useTranslations("documents.list");
   const router = useRouter();
   const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -36,7 +39,7 @@ export function DocumentDetailActions({
       addToast({ title: result.error, color: "danger" });
       return;
     }
-    addToast({ title: `Evrak silindi: ${registryNumber}`, color: "success" });
+    addToast({ title: t("deletedToast", { registryNumber }), color: "success" });
     router.push("/evrak");
     router.refresh();
   };
@@ -55,7 +58,7 @@ export function DocumentDetailActions({
             variant="solid"
             startContent={<Pencil className="h-4 w-4" aria-hidden />}
           >
-            Düzenle
+            {t("edit")}
           </Button>
         ) : null}
         {canUpdate ? (
@@ -69,7 +72,7 @@ export function DocumentDetailActions({
             startContent={<Trash2 className="h-4 w-4" aria-hidden />}
             onPress={() => setConfirmOpen(true)}
           >
-            Sil
+            {t("delete")}
           </Button>
         ) : null}
       </div>
@@ -77,9 +80,9 @@ export function DocumentDetailActions({
       <ConfirmDialog
         isOpen={confirmOpen}
         onOpenChange={setConfirmOpen}
-        title="Evrağı sil"
-        message={`"${registryNumber}" numaralı evrak kaydı silinecek. Silinen evrak listelerde, aramada, istatistikte ve Excel dışa aktarımda görünmez; kayıt numarası yeniden kullanılmaz. Onaylıyor musunuz?`}
-        confirmLabel="Sil"
+        title={t("deleteTitle")}
+        message={t("deleteMessage", { registryNumber })}
+        confirmLabel={t("delete")}
         confirmColor="danger"
         onConfirm={confirmDelete}
       />

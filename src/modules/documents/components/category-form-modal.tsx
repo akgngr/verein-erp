@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import {
   Button,
   Input,
@@ -33,6 +35,7 @@ export function CategoryFormModal({
   /** null → yeni kategori; dolu → düzenleme. */
   category: CategoryListItem | null;
 }) {
+  const t = useTranslations("documents.categories");
   const router = useRouter();
 
   const submit = async (name: string, onClose: () => void): Promise<string | null> => {
@@ -40,7 +43,7 @@ export function CategoryFormModal({
       ? await updateCategoryAction({ id: category.id, name })
       : await createCategoryAction({ name });
     if (!result.ok) return result.error;
-    addToast({ title: category ? "Kategori güncellendi." : "Kategori oluşturuldu.", color: "success" });
+    addToast({ title: category ? t("updatedToast") : t("createdToast"), color: "success" });
     onClose();
     router.refresh();
     return null;
@@ -66,6 +69,8 @@ function CategoryFormContent({
   onClose: () => void;
   onSubmit: (name: string, onClose: () => void) => Promise<string | null>;
 }) {
+  const tCommon = useTranslations("common");
+  const t = useTranslations("documents.categories");
   const [name, setName] = useState(category?.name ?? "");
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -80,13 +85,13 @@ function CategoryFormContent({
   return (
     <>
       <ModalHeader className="flex flex-col gap-1">
-        {category ? "Kategoriyi düzenle" : "Yeni kategori"}
+        {category ? t("edit") : t("new")}
       </ModalHeader>
       <ModalBody>
         <Input
-          label="Kategori adı"
+          label={t("nameLabel")}
           labelPlacement="outside"
-          placeholder="Örn. Resmi Yazı"
+          placeholder={t("namePlaceholder")}
           value={name}
           onValueChange={setName}
           isRequired
@@ -100,7 +105,7 @@ function CategoryFormContent({
       </ModalBody>
       <ModalFooter>
         <Button variant="light" onPress={onClose} isDisabled={isSubmitting}>
-          Vazgeç
+          {tCommon("cancel")}
         </Button>
         <Button
           color="primary"
@@ -108,7 +113,7 @@ function CategoryFormContent({
           isDisabled={isSubmitting || name.trim().length < 2}
           onPress={() => void handle()}
         >
-          Kaydet
+          {tCommon("save")}
         </Button>
       </ModalFooter>
     </>

@@ -5,8 +5,8 @@ export const categoryCreateSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(2, "Kategori adı en az 2 karakter olmalıdır.")
-    .max(60, "Kategori adı en fazla 60 karakter olabilir."),
+    .min(2, "documents.validation.categoryMin")
+    .max(60, "documents.validation.categoryMax"),
 });
 
 export const categoryUpdateSchema = categoryCreateSchema.extend({

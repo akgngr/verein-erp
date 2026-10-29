@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, addToast } from "@heroui/react";
 import { ChevronDown, RefreshCw } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -21,6 +23,8 @@ export function StatusChangeMenu({
   documentId: string;
   current: DocumentStatus;
 }) {
+  const t = useTranslations("documents.statusChange");
+  const tStatus = useTranslations("documents.status");
   const router = useRouter();
   const [busy, setBusy] = useState(false);
 
@@ -32,7 +36,7 @@ export function StatusChangeMenu({
       addToast({ title: result.error, color: "danger" });
       return;
     }
-    addToast({ title: `Durum güncellendi: ${STATUS_LABELS[status]}`, color: "success" });
+    addToast({ title: t("updatedToast", { status: tStatus(status) }), color: "success" });
     router.refresh();
   };
 
@@ -46,17 +50,17 @@ export function StatusChangeMenu({
           startContent={<RefreshCw className="h-4 w-4" aria-hidden />}
           endContent={<ChevronDown className="h-4 w-4" aria-hidden />}
         >
-          Durum değiştir
+          {t("button")}
         </Button>
       </DropdownTrigger>
-      <DropdownMenu aria-label="Durum değiştir" disabledKeys={[current]}>
+      <DropdownMenu aria-label={t("button")} disabledKeys={[current]}>
         {(Object.keys(STATUS_LABELS) as DocumentStatus[]).map((status) => (
           <DropdownItem
             key={status}
-            description={status === current ? "Mevcut durum" : undefined}
+            description={status === current ? t("current") : undefined}
             onPress={() => void change(status)}
           >
-            {STATUS_LABELS[status]}
+            {tStatus(status)}
           </DropdownItem>
         ))}
       </DropdownMenu>

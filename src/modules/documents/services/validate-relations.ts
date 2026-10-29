@@ -19,8 +19,8 @@ export async function validateCategory(categoryId: string | null): Promise<void>
   if (!categoryId) return;
   const category = await getDb().documentCategory.findUnique({ where: { id: categoryId } });
   if (!category || !category.isActive) {
-    throw new ActionError("Kategori bulunamadı veya pasif durumda.", {
-      categoryId: ["Kategori bulunamadı veya pasif durumda."],
+    throw new ActionError("documents.errors.categoryInactive", {
+      categoryId: ["documents.errors.categoryInactive"],
     });
   }
 }
@@ -35,8 +35,8 @@ export async function validateAssignee(
     select: { id: true, name: true, isActive: true },
   });
   if (!user || !user.isActive) {
-    throw new ActionError("Sorumlu bulunamadı veya hesabı pasif durumda.", {
-      assigneeId: ["Sorumlu bulunamadı veya hesabı pasif durumda."],
+    throw new ActionError("documents.errors.assigneeInactive", {
+      assigneeId: ["documents.errors.assigneeInactive"],
     });
   }
   return { id: user.id, label: user.name };
@@ -54,13 +54,13 @@ export async function validateReplyTo(
   if (!replyToId) return;
 
   if (direction !== "OUTGOING") {
-    throw new ActionError("Yanıtlanan evrak yalnızca giden evrakta seçilebilir.", {
-      replyToId: ["Yanıtlanan evrak yalnızca giden evrakta seçilebilir."],
+    throw new ActionError("documents.errors.replyOnlyOutgoing", {
+      replyToId: ["documents.errors.replyOnlyOutgoing"],
     });
   }
   if (selfId && replyToId === selfId) {
-    throw new ActionError("Bir evrak kendine yanıt olarak bağlanamaz.", {
-      replyToId: ["Bir evrak kendine yanıt olarak bağlanamaz."],
+    throw new ActionError("documents.errors.replySelf", {
+      replyToId: ["documents.errors.replySelf"],
     });
   }
   const target = await getDb().document.findUnique({
@@ -68,8 +68,8 @@ export async function validateReplyTo(
     select: { direction: true, deletedAt: true },
   });
   if (!target || target.deletedAt || target.direction !== "INCOMING") {
-    throw new ActionError("Yanıt verilecek evrak bulunamadı veya gelen evrak değil.", {
-      replyToId: ["Yanıt verilecek evrak bulunamadı veya gelen evrak değil."],
+    throw new ActionError("documents.errors.replyTargetInvalid", {
+      replyToId: ["documents.errors.replyTargetInvalid"],
     });
   }
 }

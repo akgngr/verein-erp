@@ -26,7 +26,7 @@ export async function deleteFileAction(input: unknown): Promise<ActionResult> {
           document: { select: { id: true, registryNumber: true, deletedAt: true } },
         },
       });
-      if (!file || file.document.deletedAt) throw new ActionError("Dosya bulunamadı.");
+      if (!file || file.document.deletedAt) throw new ActionError("documents.errors.fileNotFound");
 
       await db.documentFile.update({
         where: { id: file.id },

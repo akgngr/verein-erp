@@ -626,7 +626,8 @@
       "deactivatedToast": "Kategorie deaktiviert.",
       "activatedToast": "Kategorie aktiviert.",
       "createdToast": "Kategorie erstellt.",
-      "updatedToast": "Kategorie aktualisiert."
+      "updatedToast": "Kategorie aktualisiert.",
+      "deactivateNamedMessage": "„{name}“ wird deaktiviert: In neuen Dokumenten nicht mehr wählbar, in bestehenden weiterhin sichtbar. Fortfahren?"
     },
     "categoriesPageTitle": "Dokumentkategorien",
     "categoriesPageDescription": "Kategorien werden nicht gelöscht; deaktivierte Kategorien sind in neuen Formularen nicht wählbar, bleiben aber bestehenden Dokumenten sichtbar.",
@@ -636,7 +637,8 @@
       "overdue": "Überfällig",
       "incomingThisMonth": "Eingegangen diesen Monat",
       "outgoingThisMonth": "Ausgegangen diesen Monat",
-      "applyFilter": "Filter anwenden"
+      "applyFilter": "Filter anwenden",
+      "filterAria": "{label}: {value} — Filter anwenden"
     },
     "filter": {
       "all": "Alle",
@@ -762,7 +764,9 @@
       "updatedToast": "Dokument aktualisiert: {registryNumber}",
       "savedToast": "Dokument gespeichert: {registryNumber}",
       "savedWithUploadErrorToast": "Dokument gespeichert, aber {count} Datei(en) konnten nicht hochgeladen werden. Sie können sie auf der Detailseite erneut hochladen.",
-      "passiveSuffix": "(inaktiv)"
+      "passiveSuffix": "(inaktiv)",
+      "editNumbered": "{registryNumber} — Richtung und Registernummer können nicht geändert werden.",
+      "passiveCategory": "{name} (inaktiv)"
     },
     "files": {
       "addAria": "Dateien hinzufügen",
@@ -786,7 +790,8 @@
       "deleteAria": "Datei {name} löschen",
       "deleteTitle": "Datei löschen",
       "deleteMessage": "Die Datei \"{name}\" wird aus dem Datensatz entfernt. Die Datei bleibt auf dem Datenträger erhalten. Bestätigen?",
-      "deletedToast": "Datei gelöscht."
+      "deletedToast": "Datei gelöscht.",
+      "removeFromListAria": "{name} aus der Liste entfernen"
     },
     "notes": {
       "empty": "Noch keine Vermerke hinzugefügt.",
@@ -806,6 +811,35 @@
       "detail": "Dokumentdetails",
       "edit": "Dokument bearbeiten",
       "categories": "Dokumentkategorien"
+    },
+    "errors": {
+      "documentNotFound": "Dokument nicht gefunden.",
+      "categoryNameTaken": "Dieser Kategoriename wird bereits verwendet.",
+      "categoryNotFound": "Kategorie nicht gefunden.",
+      "invalidDate": "Das Dokumentdatum ist ungültig.",
+      "fileNotFound": "Datei nicht gefunden.",
+      "categoryInactive": "Die Kategorie wurde nicht gefunden oder ist inaktiv.",
+      "assigneeInactive": "Die verantwortliche Person wurde nicht gefunden oder ihr Konto ist deaktiviert.",
+      "replyOnlyOutgoing": "Ein Bezugsdokument kann nur bei ausgehenden Dokumenten gewählt werden.",
+      "replySelf": "Ein Dokument kann nicht auf sich selbst antworten.",
+      "replyTargetInvalid": "Das Bezugsdokument wurde nicht gefunden oder ist kein eingehendes Dokument."
+    },
+    "validation": {
+      "categoryMin": "Der Kategoriename muss mindestens 2 Zeichen lang sein.",
+      "categoryMax": "Der Kategoriename darf höchstens 60 Zeichen lang sein.",
+      "dateRequired": "Das Dokumentdatum ist erforderlich.",
+      "dateInvalid": "Bitte ein gültiges Dokumentdatum eingeben.",
+      "counterpartyMin": "Absender/Empfänger muss mindestens 2 Zeichen lang sein.",
+      "counterpartyMax": "Absender/Empfänger darf höchstens 200 Zeichen lang sein.",
+      "referenceMax": "Das Aktenzeichen darf höchstens 100 Zeichen lang sein.",
+      "subjectMin": "Der Betreff muss mindestens 3 Zeichen lang sein.",
+      "subjectMax": "Der Betreff darf höchstens 300 Zeichen lang sein.",
+      "summaryMax": "Die Zusammenfassung darf höchstens 2000 Zeichen lang sein.",
+      "dueDateInvalid": "Bitte eine gültige Bearbeitungsfrist eingeben.",
+      "dueBeforeDocument": "Die Bearbeitungsfrist darf nicht vor dem Dokumentdatum liegen.",
+      "versionMissing": "Die Datensatzversion fehlt.",
+      "noteEmpty": "Die Notiz darf nicht leer sein.",
+      "noteMax": "Die Notiz darf höchstens 2000 Zeichen lang sein."
     }
   },
   "donations": {

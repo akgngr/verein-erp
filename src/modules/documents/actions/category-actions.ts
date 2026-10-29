@@ -22,8 +22,8 @@ async function assertNameAvailable(name: string, excludeId?: string): Promise<vo
     select: { id: true },
   });
   if (existing && existing.id !== excludeId) {
-    throw new ActionError("Bu kategori adı zaten kullanımda.", {
-      name: ["Bu kategori adı zaten kullanımda."],
+    throw new ActionError("documents.errors.categoryNameTaken", {
+      name: ["documents.errors.categoryNameTaken"],
     });
   }
 }
@@ -61,7 +61,7 @@ export async function updateCategoryAction(input: unknown): Promise<ActionResult
     schema: categoryUpdateSchema,
     handler: async ({ input, audit }) => {
       const category = await getDb().documentCategory.findUnique({ where: { id: input.id } });
-      if (!category) throw new ActionError("Kategori bulunamadı.");
+      if (!category) throw new ActionError("documents.errors.categoryNotFound");
 
       await assertNameAvailable(input.name, category.id);
 
@@ -91,7 +91,7 @@ export async function setCategoryActiveAction(input: unknown): Promise<ActionRes
     schema: categorySetActiveSchema,
     handler: async ({ input, audit }) => {
       const category = await getDb().documentCategory.findUnique({ where: { id: input.id } });
-      if (!category) throw new ActionError("Kategori bulunamadı.");
+      if (!category) throw new ActionError("documents.errors.categoryNotFound");
 
       const updated = await getDb().documentCategory.update({
         where: { id: category.id },

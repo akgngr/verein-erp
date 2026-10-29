@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Textarea, addToast } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -24,11 +26,12 @@ export function NotesTimeline({
   notes: DocumentNoteItem[];
   canUpdate: boolean;
 }) {
+  const t = useTranslations("documents.notes");
   return (
     <div className="flex flex-col gap-4">
       {canUpdate ? <NoteForm documentId={documentId} /> : null}
       {notes.length === 0 ? (
-        <p className="text-small text-default-500">Henüz işlem notu eklenmemiş.</p>
+        <p className="text-small text-default-500">{t("empty")}</p>
       ) : (
         <ol className="flex flex-col gap-3">
           {notes.map((note) => (
@@ -50,6 +53,7 @@ export function NotesTimeline({
 }
 
 function NoteForm({ documentId }: { documentId: string }) {
+  const t = useTranslations("documents.notes");
   const router = useRouter();
   const [body, setBody] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -66,16 +70,16 @@ function NoteForm({ documentId }: { documentId: string }) {
       return;
     }
     setBody("");
-    addToast({ title: "Not eklendi.", color: "success" });
+    addToast({ title: t("addedToast"), color: "success" });
     router.refresh();
   };
 
   return (
     <form className="flex flex-col gap-2" onSubmit={handleSubmit} noValidate>
       <Textarea
-        label="Yeni işlem notu"
+        label={t("newNote")}
         labelPlacement="outside"
-        placeholder="Evrakla ilgili işlem/iş birliği notu yazın…"
+        placeholder={t("notePlaceholder")}
         value={body}
         onValueChange={setBody}
         minRows={3}
@@ -84,7 +88,7 @@ function NoteForm({ documentId }: { documentId: string }) {
       />
       <FormErrorSummary message={error} />
       <div>
-        <SubmitButton isSubmitting={isSubmitting}>Notu ekle</SubmitButton>
+        <SubmitButton isSubmitting={isSubmitting}>{t("add")}</SubmitButton>
       </div>
     </form>
   );

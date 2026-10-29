@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Button, addToast } from "@heroui/react";
 import { FileUp, Paperclip, Trash2, UploadCloud } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -61,6 +63,7 @@ export function FileUploader({
   /** Yalnızca mode "create": form evrak kaydını tamamladığında komut gönderir. */
   uploadCommand?: UploadCommand | null;
 }) {
+  const t = useTranslations("documents.files");
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [pending, setPending] = useState<PendingFile[]>([]);
@@ -81,17 +84,17 @@ export function FileUploader({
     for (const file of Array.from(files)) {
       if (next.length + pending.length >= MAX_FILES_PER_DOCUMENT - existingCount) {
         addToast({
-          title: `Evrak başına en fazla ${MAX_FILES_PER_DOCUMENT} dosya eklenebilir.`,
+          title: t("maxFilesToast", { count: MAX_FILES_PER_DOCUMENT }),
           color: "warning",
         });
         break;
       }
       if (!ALLOWED_EXTENSIONS.includes(getExtension(file.name))) {
-        addToast({ title: `${file.name}: bu dosya türü kabul edilmiyor.`, color: "warning" });
+        addToast({ title: t("typeNotAccepted", { name: file.name }), color: "warning" });
         continue;
       }
       if (file.size > maxMb * 1024 * 1024) {
-        addToast({ title: `${file.name}: dosya en fazla ${maxMb} MB olabilir.`, color: "warning" });
+        addToast({ title: t("tooLarge", { name: file.name, maxMb }), color: "warning" });
         continue;
       }
       next.push({ id: `${file.name}-${file.size}-${Date.now()}-${next.length}`, file, status: "pending" });
@@ -107,7 +110,7 @@ export function FileUploader({
       body,
     });
     if (response.ok) return true;
-    let error = "Dosya yüklenemedi.";
+    let error = t("uploadFailed");
     try {
       const data = (await response.json()) as { error?: string };
       if (data.error) error = data.error;
@@ -135,7 +138,7 @@ export function FileUploader({
           setPending((current) =>
             current.map((p) =>
               p.id === item.id
-                ? { ...p, status: "error", error: error instanceof Error ? error.message : "Hata" }
+                ? { ...p, status: "error", error: error instanceof Error ? error.message : t("errorGeneric") }
                 : p,
             ),
           );
@@ -173,14 +176,14 @@ export function FileUploader({
         ok += 1;
       } catch (error) {
         addToast({
-          title: error instanceof Error ? error.message : "Dosya yüklenemedi.",
+          title: error instanceof Error ? error.message : t("uploadFailed"),
           color: "danger",
         });
       }
     }
     setBusy(false);
     if (ok > 0) {
-      addToast({ title: "Dosya(lar) yüklendi.", color: "success" });
+      addToast({ title: t("uploadedToast"), color: "success" });
       onUploaded?.();
       router.refresh();
     }
@@ -222,7 +225,7 @@ export function FileUploader({
       <div
         role="button"
         tabIndex={0}
-        aria-label="Dosya ekle"
+        aria-label={t("addAria")}
         onClick={() => !busy && inputRef.current?.click()}
         onKeyDown={(event) => {
           if (event.key === "Enter" || event.key === " ") inputRef.current?.click();
@@ -241,11 +244,10 @@ export function FileUploader({
       >
         <UploadCloud className="h-6 w-6 text-default-400" aria-hidden />
         <p className="text-small text-default-500">
-          Dosyaları buraya sürükleyin ya da <span className="text-primary">seçin</span>
+          {t("dropHint")} <span className="text-primary">{t("dropHintSelect")}</span>
         </p>
         <p className="text-tiny text-default-400">
-          İzinli türler: {ALLOWED_EXTENSIONS.join(", ")} — Dosya başına en fazla {maxMb} MB —
-          Kalan kapasite: {Math.max(0, capacity)}
+          {t("rules", { extensions: ALLOWED_EXTENSIONS.join(", "), maxMb, capacity: Math.max(0, capacity) })}
         </p>
         <input
           ref={inputRef}
@@ -274,20 +276,20 @@ export function FileUploader({
               </span>
               <span className="flex shrink-0 items-center gap-2">
                 {item.status === "uploading" ? (
-                  <span className="text-tiny text-primary">Yükleniyor…</span>
+                  <span className="text-tiny text-primary">{t("uploading")}</span>
                 ) : null}
                 {item.status === "done" ? (
-                  <span className="text-tiny text-success">Yüklendi</span>
+                  <span className="text-tiny text-success">{t("uploaded")}</span>
                 ) : null}
                 {item.status === "error" ? (
-                  <span className="text-tiny text-danger">{item.error ?? "Hata"}</span>
+                  <span className="text-tiny text-danger">{item.error ?? t("errorGeneric")}</span>
                 ) : null}
                 {item.status === "pending" || item.status === "error" ? (
                   <Button
                     isIconOnly
                     size="sm"
                     variant="light"
-                    aria-label={`${item.file.name} dosyasını listeden çıkar`}
+                    aria-label={t("removeFromListAria", { name: item.file.name })}
                     onPress={() => setPending((current) => current.filter((p) => p.id !== item.id))}
                   >
                     <Trash2 className="h-4 w-4 text-default-500" aria-hidden />

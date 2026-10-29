@@ -20,7 +20,7 @@ export async function changeStatusAction(input: unknown): Promise<ActionResult> 
     handler: async ({ input, user, audit }) => {
       const db = getDb();
       const doc = await db.document.findFirst({ where: { id: input.id, deletedAt: null } });
-      if (!doc) throw new ActionError("Evrak bulunamadı.");
+      if (!doc) throw new ActionError("documents.errors.documentNotFound");
 
       const updated = await db.document.update({
         where: { id: doc.id },
