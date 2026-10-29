@@ -9,6 +9,7 @@ import { PAYMENT_METHOD_ACCOUNT } from "../constants";
 import { allocateBookingNumber } from "./booking-number";
 import { assertBookingDateAllowed, isYearLocked } from "./booking-guards";
 import { assertNoNegativeCash } from "./balances";
+import { ActionError } from "@/modules/auth/server";
 
 /**
  * Faz 5 (§ 6): bağış modülünün kullanacağı servis düzeyi fiş API'si.
@@ -45,7 +46,7 @@ export async function createSourcedBooking(
   const run = async (tx: Prisma.TransactionClient): Promise<{ id: string; bookingNumber: string }> => {
     const year = input.bookingDate.getUTCFullYear();
     if (await isYearLocked(year, tx)) {
-      throw new Error(`${year} yılı kilitli (abgeschlossen); fiş girilemez.`);
+      throw new ActionError(`${year} yılı kilitli (abgeschlossen); fiş girilemez.`);
     }
     await assertBookingDateAllowed({
       bookingDate: input.bookingDate,
@@ -58,7 +59,7 @@ export async function createSourcedBooking(
       select: { isActive: true, direction: true },
     });
     if (!category || !category.isActive || category.direction !== input.type) {
-      throw new Error("Kategori bulunamadı veya fiş türüyle uyuşmuyor.");
+      throw new ActionError("Kategori bulunamadı veya fiş türüyle uyuşmuyor.");
     }
 
     const { sequence, bookingNumber } = await allocateBookingNumber(tx, year);
@@ -111,7 +112,7 @@ export async function reverseSourcedBooking(input: {
     if (!booking || booking.reversedAt) return; // idempotent no-op
 
     if (await isYearLocked(booking.year, tx)) {
-      throw new Error(
+      throw new ActionError(
         `${booking.year} yılı kilitli; ters kayıt için yıl kilidini açın.`,
       );
     }
@@ -146,8 +147,8 @@ export async function getDonationBookingTargets(): Promise<{
   if (cashId === null) missing.push("kasa hesabı");
   if (bankId === null) missing.push("banka hesabı");
   if (missing.length > 0) {
-    throw new Error(
-      `Muhasebe ayarları eksik: ${missing.join(", ")}. Muhasebe > Üyelik aktarımı sayfasından tamamlayın.`,
+    throw new ActionError(
+      `Muhasebe ayarları eksik: ${missing.join(", ")}. Muhasebe > Ayarlar sayfasından tamamlayın.`,
     );
   }
 
@@ -172,7 +173,7 @@ export async function getDonationBookingTargets(): Promise<{
   if (!cash || !cash.isActive) missing.push("geçerli kasa hesabı");
   if (!bank || !bank.isActive) missing.push("geçerli banka hesabı");
   if (missing.length > 0) {
-    throw new Error(`Muhasebe ayarları geçersiz: ${missing.join(", ")}.`);
+    throw new ActionError(`Muhasebe ayarları geçersiz: ${missing.join(", ")}.`);
   }
 
   // Yukarıdaki null denetimleri sonrası üç alan da string'tir.

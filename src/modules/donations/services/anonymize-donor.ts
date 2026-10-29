@@ -4,6 +4,7 @@ import { getDb } from "@/shared/db";
 import { buildUserLabel } from "@/shared/utils";
 
 import { retentionEndDate } from "./issue-guards";
+import { ActionError } from "@/modules/auth/server";
 
 /**
  * Bağışçı anonimleştirme (§ 11 md. 12): ad, kuruluş adı, adres, e-posta,
@@ -20,8 +21,8 @@ export async function anonymizeDonor(
     where: { id: donorId },
     select: { id: true, donorNumber: true, isAnonymized: true },
   });
-  if (!donor) throw new Error("Bağışçı bulunamadı.");
-  if (donor.isAnonymized) throw new Error("Bu bağışçı zaten anonimleştirilmiş.");
+  if (!donor) throw new ActionError("Bağışçı bulunamadı.");
+  if (donor.isAnonymized) throw new ActionError("Bu bağışçı zaten anonimleştirilmiş.");
 
   const now = new Date();
 
@@ -34,7 +35,7 @@ export async function anonymizeDonor(
     (confirmation) => retentionEndDate(confirmation.issuedAt).getTime() > now.getTime(),
   );
   if (blockedByRetention) {
-    throw new Error(
+    throw new ActionError(
       `Bu bağışçının bildirim nüshaları saklama süresi içinde (${issuedConfirmations.length} bildirim). Saklama süresi bitmeden anonimleştirilemez.`,
     );
   }
@@ -51,7 +52,7 @@ export async function anonymizeDonor(
       select: { donationNumber: true },
     });
     if (blockingDonation) {
-      throw new Error(
+      throw new ActionError(
         `Bağışçıya ait aktif bildirimli bağış var (${blockingDonation.donationNumber}); önce bildirimi iptal edin.`,
       );
     }

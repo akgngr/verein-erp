@@ -9,6 +9,7 @@ import { listPaymentsForAccounting } from "@/modules/members/server";
 
 import { PAYMENT_METHOD_ACCOUNT } from "../constants";
 import { allocateBookingNumber } from "./booking-number";
+import { ActionError } from "@/modules/auth/server";
 
 /**
  * Üyelik aktarımı (§ 8 md. 15): üyeler modülündeki ödemeleri deftere taşır.
@@ -30,7 +31,7 @@ export async function assertSyncConfigured(settings: AccountingSettingsData): Pr
   if (!settings.cashAccountId) missing.push("kasa hesabı");
   if (!settings.bankAccountId) missing.push("banka hesabı");
   if (missing.length > 0) {
-    throw new Error(`Ayarlar eksik: ${missing.join(", ")}. Ayarlar sayfasından tamamlayın.`);
+    throw new ActionError(`Ayarlar eksik: ${missing.join(", ")}. Ayarlar sayfasından tamamlayın.`);
   }
 }
 
@@ -204,7 +205,7 @@ export async function runMemberSync(
             select: { openingDate: true },
           });
           if (paidAt.getTime() < account.openingDate.getTime()) {
-            throw new Error("Fiş tarihi hesabın açılış tarihinden önce olamaz.");
+            throw new ActionError("Fiş tarihi hesabın açılış tarihinden önce olamaz.");
           }
 
           const { sequence, bookingNumber } = await allocateBookingNumber(tx, year);
@@ -276,7 +277,7 @@ export async function runMemberSync(
 export function parseAmountToCents(amount: string): number {
   const cents = toCents(amount);
   if (cents === null || cents <= 0) {
-    throw new Error("Tutar geçersiz.");
+    throw new ActionError("Tutar geçersiz.");
   }
   return cents;
 }

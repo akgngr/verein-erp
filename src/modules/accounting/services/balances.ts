@@ -4,6 +4,7 @@ import type { Prisma } from "@prisma/client";
 
 import { getDb } from "@/shared/db";
 import { centsToDecimalString } from "@/shared/money";
+import { ActionError } from "@/modules/auth/server";
 
 /**
  * Bakiye hesapları + Kassenminus kuralı (§ 8 md. 9-10).
@@ -112,7 +113,7 @@ export async function assertNoNegativeCash(
   for (const movement of movements) {
     running += movementEffectOn(movement, accountId);
     if (running < 0) {
-      throw new Error("Kasa bakiyesi eksiye düşemez (Kassenminus).");
+      throw new ActionError("Kasa bakiyesi eksiye düşemez (Kassenminus).");
     }
   }
 }
@@ -181,7 +182,7 @@ export async function assertNoNegativeCashWithReplacement(
   for (const delta of deltas) {
     running += delta.delta;
     if (running < 0) {
-      throw new Error("Kasa bakiyesi eksiye düşemez (Kassenminus).");
+      throw new ActionError("Kasa bakiyesi eksiye düşemez (Kassenminus).");
     }
   }
 }
