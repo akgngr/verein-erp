@@ -33,16 +33,16 @@ export const paymentCreateSchema = z.object({
   amount: z
     .string()
     .trim()
-    .min(1, "Tutar zorunludur.")
-    .max(14, "Tutar çok büyük."),
+    .min(1, "members.validation.amountRequired")
+    .max(14, "members.validation.amountTooLarge"),
   method: z.enum(["CASH", "BANK_TRANSFER", "CARD", "OTHER"]),
   paidAt: z
     .string()
     .trim()
-    .min(1, "Ödeme tarihi zorunludur.")
-    .regex(DATE_ONLY, "Geçerli bir ödeme tarihi girin."),
+    .min(1, "members.validation.paymentDateRequired")
+    .regex(DATE_ONLY, "members.validation.paymentDateInvalid"),
   reference: emptyToNull(
-    z.string().trim().max(100, "Referans en fazla 100 karakter olabilir.").nullable(),
+    z.string().trim().max(100, "members.validation.referenceMax").nullable(),
   ),
 });
 
@@ -51,8 +51,8 @@ export const paymentVoidSchema = z.object({
   reason: z
     .string()
     .trim()
-    .min(5, "İptal nedeni en az 5 karakter olmalıdır.")
-    .max(300, "İptal nedeni en fazla 300 karakter olabilir."),
+    .min(5, "members.validation.voidReasonMin")
+    .max(300, "members.validation.voidReasonMax"),
 });
 
 export type PaymentCreateInput = z.infer<typeof paymentCreateSchema>;

@@ -21,7 +21,7 @@ export async function deleteMemberAction(input: unknown): Promise<ActionResult> 
     handler: async ({ input, user, audit }) => {
       const db = getDb();
       const member = await db.member.findFirst({ where: { id: input.id, deletedAt: null } });
-      if (!member) throw new ActionError("Üye bulunamadı.");
+      if (!member) throw new ActionError("members.errors.memberNotFound");
 
       const deletedAt = new Date();
       await db.member.update({

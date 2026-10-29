@@ -26,25 +26,25 @@ const baseFields = {
   firstName: z
     .string()
     .trim()
-    .min(2, "Ad en az 2 karakter olmalıdır.")
-    .max(60, "Ad en fazla 60 karakter olabilir."),
+    .min(2, "members.validation.firstNameMin")
+    .max(60, "members.validation.firstNameMax"),
   lastName: z
     .string()
     .trim()
-    .min(2, "Soyad en az 2 karakter olmalıdır.")
-    .max(60, "Soyad en fazla 60 karakter olabilir."),
+    .min(2, "members.validation.lastNameMin")
+    .max(60, "members.validation.lastNameMax"),
   kimlikNo: emptyToNull(
     z
       .string()
       .trim()
-      .max(60, "Kimlik no en fazla 60 karakter olabilir.")
+      .max(60, "members.validation.idNumberMax")
       .nullable(),
   ),
   email: emptyToNull(
     z
       .string()
       .trim()
-      .max(120, "E-posta en fazla 120 karakter olabilir.")
+      .max(120, "members.validation.emailMax")
       .email("Geçerli bir e-posta girin.")
       .nullable(),
   ),
@@ -52,53 +52,53 @@ const baseFields = {
     z
       .string()
       .trim()
-      .max(30, "Telefon en fazla 30 karakter olabilir.")
-      .regex(PHONE, "Geçerli bir telefon girin.")
+      .max(30, "members.validation.phoneMax")
+      .regex(PHONE, "members.validation.phoneInvalid")
       .nullable(),
   ),
   // Alman adres alanları — her biri opsiyonel; en azından street veya city önerilir.
   street: emptyToNull(
-    z.string().trim().max(120, "Straße/Sokak en fazla 120 karakter olabilir.").nullable(),
+    z.string().trim().max(120, "members.validation.streetMax").nullable(),
   ),
   houseNumber: emptyToNull(
-    z.string().trim().max(20, "Kapı no en fazla 20 karakter olabilir.").nullable(),
+    z.string().trim().max(20, "members.validation.houseNumberMax").nullable(),
   ),
   // Faz 4 (4.6): Ülke alanı eklendi; PLZ kuralı ülkeye bağlıdır (refinePostalCode).
   country: emptyToNull(
-    z.string().trim().max(60, "Ülke en fazla 60 karakter olabilir.").nullable(),
+    z.string().trim().max(60, "members.validation.countryMax").nullable(),
   ),
   postalCode: emptyToNull(
     z
       .string()
       .trim()
-      .max(10, "PLZ/Posta kodu en fazla 10 karakter olabilir.")
+      .max(10, "members.validation.postalCodeMax")
       .nullable(),
   ),
   city: emptyToNull(
-    z.string().trim().max(120, "Şehir/Ort en fazla 120 karakter olabilir.").nullable(),
+    z.string().trim().max(120, "members.validation.cityMax").nullable(),
   ),
   state: emptyToNull(
-    z.string().trim().max(120, "Bundesland/Eyalet/İl en fazla 120 karakter olabilir.").nullable(),
+    z.string().trim().max(120, "members.validation.stateMax").nullable(),
   ),
   birthDate: emptyToNull(
-    z.string().trim().regex(DATE_ONLY, "Geçerli bir doğum tarihi girin.").nullable(),
+    z.string().trim().regex(DATE_ONLY, "members.validation.birthDateInvalid").nullable(),
   ),
   profession: emptyToNull(
-    z.string().trim().max(100, "Meslek en fazla 100 karakter olabilir.").nullable(),
+    z.string().trim().max(100, "members.validation.professionMax").nullable(),
   ),
   joinDate: z
     .string()
     .trim()
-    .min(1, "Katılım tarihi zorunludur.")
-    .regex(DATE_ONLY, "Geçerli bir katılım tarihi girin."),
+    .min(1, "members.validation.joinDateRequired")
+    .regex(DATE_ONLY, "members.validation.joinDateInvalid"),
   exitDate: emptyToNull(
-    z.string().trim().regex(DATE_ONLY, "Geçerli bir ayrılış tarihi girin.").nullable(),
+    z.string().trim().regex(DATE_ONLY, "members.validation.exitDateInvalid").nullable(),
   ),
   exitReason: emptyToNull(
-    z.string().trim().max(500, "Ayrılış nedeni en fazla 500 karakter olabilir.").nullable(),
+    z.string().trim().max(500, "members.validation.exitReasonMax").nullable(),
   ),
   notes: emptyToNull(
-    z.string().trim().max(2000, "Notlar en fazla 2000 karakter olabilir.").nullable(),
+    z.string().trim().max(2000, "members.validation.notesMax").nullable(),
   ),
 };
 
@@ -116,7 +116,7 @@ function refinePostalCode<
     ctx.addIssue({
       code: "custom",
       path: ["postalCode"],
-      message: "Almanya için posta kodu 5 haneli olmalıdır.",
+      message: "members.validation.postalCodeDe",
     });
   }
 }
@@ -131,14 +131,14 @@ function refineMemberDates<
     ctx.addIssue({
       code: "custom",
       path: ["exitDate"],
-      message: "Ayrılış tarihi katılım tarihinden önce olamaz.",
+      message: "members.validation.exitBeforeJoin",
     });
   }
   if (exitReason && !exitDate) {
     ctx.addIssue({
       code: "custom",
       path: ["exitDate"],
-      message: "Ayrılış nedeni verilmişse ayrılış tarihi de girin.",
+      message: "members.validation.exitReasonNeedsDate",
     });
   }
 }
@@ -155,7 +155,7 @@ export const memberUpdateSchema = z
     ...baseFields,
     status: z.enum(["ACTIVE", "PASSIVE", "RESIGNED", "DECEASED"]),
     /** Eşzamanlılık koruması: formun taşıdığı kaydın updatedAt'i. */
-    updatedAt: z.string().min(1, "Kayıt sürümü eksik."),
+    updatedAt: z.string().min(1, "members.validation.versionMissing"),
   })
   .superRefine((data, ctx) => {
     refineMemberDates(data, ctx);
@@ -166,10 +166,10 @@ export const changeStatusSchema = z.object({
   id: z.string().min(1),
   status: z.enum(["ACTIVE", "PASSIVE", "RESIGNED", "DECEASED"]),
   exitDate: emptyToNull(
-    z.string().trim().regex(DATE_ONLY, "Geçerli bir ayrılış tarihi girin.").nullable(),
+    z.string().trim().regex(DATE_ONLY, "members.validation.exitDateInvalid").nullable(),
   ).optional(),
   exitReason: emptyToNull(
-    z.string().trim().max(500, "Ayrılış nedeni en fazla 500 karakter olabilir.").nullable(),
+    z.string().trim().max(500, "members.validation.exitReasonMax").nullable(),
   ).optional(),
   // Faz 4 (4.6): fesih bildirimi tarihi — RESIGNED'e geçişte opsiyonel; exitDate'ten
   // sonra olamaz (aksiyonda doğrulanır); ACTIVE/PASSIVE'e dönüşte temizlenir.
@@ -177,7 +177,7 @@ export const changeStatusSchema = z.object({
     z
       .string()
       .trim()
-      .regex(DATE_ONLY, "Geçerli bir fesih bildirimi tarihi girin.")
+      .regex(DATE_ONLY, "members.validation.noticeDateInvalid")
       .nullable(),
   ).optional(),
 });

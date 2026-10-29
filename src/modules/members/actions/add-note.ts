@@ -22,7 +22,7 @@ export async function addMemberNoteAction(
         where: { id: input.memberId, deletedAt: null },
         select: { id: true, membershipNumber: true },
       });
-      if (!member) throw new ActionError("Üye bulunamadı.");
+      if (!member) throw new ActionError("members.errors.memberNotFound");
 
       const created = await db.memberNote.create({
         data: {

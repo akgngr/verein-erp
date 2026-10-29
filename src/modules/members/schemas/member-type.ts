@@ -18,7 +18,7 @@ function emptyToNull<T extends z.ZodType>(schema: T) {
 export const memberTypeConfigUpdateSchema = z.object({
   type: z.enum(["ASIL", "ONURSAL", "FAHRI", "DESTEKCI"]),
   annualDue: emptyToNull(
-    z.string().trim().max(14, "Tutar çok büyük.").nullable(),
+    z.string().trim().max(14, "members.validation.amountTooLarge").nullable(),
   ),
   isActive: z.boolean(),
 });

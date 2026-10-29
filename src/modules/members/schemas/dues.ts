@@ -25,13 +25,13 @@ export const generateDuesSchema = z.object({
   year: z.coerce
     .number()
     .int("Yıl tam sayı olmalıdır.")
-    .min(CURRENT_YEAR - 1, "Yıl en fazla bir önceki yıl olabilir.")
-    .max(CURRENT_YEAR + 1, "Yıl en fazla gelecek yıl olabilir."),
+    .min(CURRENT_YEAR - 1, "members.validation.yearMinPrev")
+    .max(CURRENT_YEAR + 1, "members.validation.yearMaxNext"),
   dueDate: z
     .string()
     .trim()
-    .min(1, "Son ödeme tarihi zorunludur.")
-    .regex(DATE_ONLY, "Geçerli bir son ödeme tarihi girin."),
+    .min(1, "members.validation.dueDateRequired")
+    .regex(DATE_ONLY, "members.validation.dueDateInvalid"),
   dryRun: z.boolean(),
 });
 
@@ -41,19 +41,19 @@ export const dueAddSchema = z.object({
     .number()
     .int("Yıl tam sayı olmalıdır.")
     .min(2000, "Yıl 2000'den küçük olamaz.")
-    .max(CURRENT_YEAR + 1, "Yıl gelecek yıldan büyük olamaz."),
+    .max(CURRENT_YEAR + 1, "members.validation.yearAfterNext"),
   amount: z
     .string()
     .trim()
-    .min(1, "Tutar zorunludur.")
-    .max(14, "Tutar çok büyük."),
+    .min(1, "members.validation.amountRequired")
+    .max(14, "members.validation.amountTooLarge"),
   dueDate: z
     .string()
     .trim()
-    .min(1, "Son ödeme tarihi zorunludur.")
-    .regex(DATE_ONLY, "Geçerli bir son ödeme tarihi girin."),
+    .min(1, "members.validation.dueDateRequired")
+    .regex(DATE_ONLY, "members.validation.dueDateInvalid"),
   note: emptyToNull(
-    z.string().trim().max(300, "Not en fazla 300 karakter olabilir.").nullable(),
+    z.string().trim().max(300, "members.validation.note300").nullable(),
   ),
 });
 
@@ -62,15 +62,15 @@ export const dueUpdateSchema = z.object({
   amount: z
     .string()
     .trim()
-    .min(1, "Tutar zorunludur.")
-    .max(14, "Tutar çok büyük."),
+    .min(1, "members.validation.amountRequired")
+    .max(14, "members.validation.amountTooLarge"),
   dueDate: z
     .string()
     .trim()
-    .min(1, "Son ödeme tarihi zorunludur.")
-    .regex(DATE_ONLY, "Geçerli bir son ödeme tarihi girin."),
+    .min(1, "members.validation.dueDateRequired")
+    .regex(DATE_ONLY, "members.validation.dueDateInvalid"),
   note: emptyToNull(
-    z.string().trim().max(300, "Not en fazla 300 karakter olabilir.").nullable(),
+    z.string().trim().max(300, "members.validation.note300").nullable(),
   ),
   /** true = muaf işaretle (ödemesi yoksa), false = muafiyeti kaldır. */
   waived: z.boolean(),

@@ -30,12 +30,12 @@ export async function updateMembershipTypeConfigAction(
       if (input.annualDue !== null) {
         const cents = toCents(input.annualDue);
         if (cents === null || cents < 0) {
-          throw new ActionError("Tutar geçersiz.", {
+          throw new ActionError("members.errors.amountInvalid", {
             annualDue: ["Geçerli bir tutar girin (en fazla 2 ondalık, negatif olamaz)."],
           });
         }
         if (cents > 999_999_999) {
-          throw new ActionError("Tutar çok büyük.", {
+          throw new ActionError("members.errors.amountTooLarge", {
             annualDue: ["Tutar en fazla 9.999.999,99 € olabilir."],
           });
         }
