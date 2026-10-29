@@ -33,7 +33,8 @@
       "sessionExpired": "Oturumunuz sona erdi. Lütfen tekrar giriş yapın.",
       "forbidden": "Bu işlem için yetkiniz yok.",
       "duplicate": "Bu kayıt zaten mevcut.",
-      "unexpected": "Beklenmeyen bir hata oluştu."
+      "unexpected": "Beklenmeyen bir hata oluştu.",
+      "staleRecord": "Kayıt bu arada başka bir kullanıcı tarafından güncellendi. Sayfayı yenileyip tekrar deneyin."
     },
     "selectPlaceholder": "Seçin",
     "noRecords": "Kayıt bulunamadı.",
@@ -73,7 +74,10 @@
       "activeFilters": "{count} filtre aktif",
       "done": "Tamam",
       "label": "Tablo"
-    }
+    },
+    "active": "Aktif",
+    "passive": "Pasif",
+    "emailPlaceholder": "ornek@dernek.org"
   },
   "nav": {
     "panel": "Panel",
@@ -188,7 +192,10 @@
       "activeLanguage": "Geçerli Dil",
       "tr": "Türkçe",
       "de": "Deutsch",
-      "switchSuccess": "Arayüz dili başarıyla değiştirildi."
+      "switchSuccess": "Arayüz dili başarıyla değiştirildi.",
+      "trHint": "Türkiye dernek standartları & Türkçe arayüz",
+      "deHint": "Alman dernek standardı & Almanca arayüz",
+      "switchedTo": "Arayüz dili güncellendi: {language}"
     },
     "themeSection": {
       "title": "Görünüm ve Tema",
@@ -226,6 +233,13 @@
         "description": "Hesap planı (SKR49 / standart), bütçe hedefleri ve mali yıl yapılandırmaları.",
         "action": "Ayarlar"
       }
+    },
+    "badges": {
+      "organization": "Profil & Kimlik",
+      "users": "Erişim & Roller",
+      "modules": "Modüller & Şema",
+      "audit": "Güvenlik & Log",
+      "accounting": "Mali Yapı"
     }
   },
   "roles": {
@@ -240,14 +254,18 @@
     "passwordMin": "Parola en az 10 karakter olmalıdır.",
     "passwordUpper": "Parola en az bir büyük harf içermelidir.",
     "passwordLower": "Parola en az bir küçük harf içermelidir.",
-    "passwordDigit": "Parola en az bir rakam içermelidir."
+    "passwordDigit": "Parola en az bir rakam içermelidir.",
+    "emailInvalid": "Geçerli bir e-posta adresi girin.",
+    "passwordHint": "En az 10 karakter; 1 büyük harf, 1 küçük harf ve 1 rakam içermelidir.",
+    "yearInt": "Yıl tam sayı olmalıdır."
   },
   "files": {
     "readFailed": "Dosya okunamadı (multipart/form-data bekleniyor).",
     "missing": "Dosya bulunamadı.",
     "typeNotAllowed": "Bu dosya türü kabul edilmiyor.",
     "empty": "Boş dosya yüklenemez.",
-    "contentMismatch": "Dosya içeriği .{extension} uzantısıyla uyumlu değil."
+    "contentMismatch": "Dosya içeriği .{extension} uzantısıyla uyumlu değil.",
+    "tooLarge": "Dosya en fazla {maxMb} MB olabilir."
   },
   "accounting": {
     "list": {
@@ -631,7 +649,11 @@
       "itemFeeCategory": "aidat kategorisi",
       "itemValidDonationCategory": "geçerli bağış kategorisi",
       "itemValidCashAccount": "geçerli kasa hesabı",
-      "itemValidBankAccount": "geçerli banka hesabı"
+      "itemValidBankAccount": "geçerli banka hesabı",
+      "sourcedNoEdit": "Kaynak fiş (otomatik) düzenlenemez; kaynağı olan modülden yönetilir.",
+      "categoryInUse": "Bu kategoride fiş kayıtlı; yön (Gelir/Gider) ve alan (Sphere) değiştirilemez. Yeni bir kategori oluşturun.",
+      "categoryDirectionLocked": "Fişi olan kategoride yön değişmez.",
+      "categorySphereLocked": "Fişi olan kategoride alan değişmez."
     },
     "settings": {
       "donationShort": "Bağış"
@@ -668,6 +690,10 @@
       "cashAccountRequired": "Kasa hesabı seçin.",
       "bankAccountRequired": "Banka hesabı seçin.",
       "donationCategoryRequired": "Bağış kategorisi seçin."
+    },
+    "module": {
+      "label": "Muhasebe",
+      "description": "Alman dernek mevzuatına uygun çift taraflı defter tutma, fiş ve bütçe yönetimi."
     }
   },
   "audit": {
@@ -675,6 +701,105 @@
     "pageDescription": "Sistemde gerçekleşen kimlik doğrulama ve veri işlemleri.",
     "meta": {
       "list": "Denetim Kaydı"
+    },
+    "actions": {
+      "LOGIN_SUCCESS": "Giriş (başarılı)",
+      "LOGIN_FAILED": "Giriş (başarısız)",
+      "LOGOUT": "Çıkış",
+      "CREATE": "Oluşturma",
+      "UPDATE": "Güncelleme",
+      "DELETE": "Silme",
+      "DEACTIVATE": "Pasife alma",
+      "ACTIVATE": "Aktifleştirme",
+      "PASSWORD_CHANGE": "Parola değişimi",
+      "PASSWORD_RESET": "Parola sıfırlama",
+      "STATUS_CHANGE": "Durum değişikliği",
+      "APPROVE": "Onaylama",
+      "REOPEN": "Yeniden açma",
+      "CANCEL": "İptal",
+      "VOID": "Geçersiz kılma",
+      "REVERSE": "Ters kayıt",
+      "EXPORT": "Dışa aktarma",
+      "IMPORT": "İçe aktarma",
+      "DATA_EXPORT": "Veri dışa aktarma (DSGVO)",
+      "FILE_UPLOAD": "Dosya yükleme",
+      "FILE_DELETE": "Dosya silme",
+      "NOTE_ADD": "Not ekleme",
+      "ANONYMIZE": "Anonimleştirme",
+      "YEAR_CLOSE": "Yıl kapatma",
+      "YEAR_UNLOCK": "Yıl kilidini açma",
+      "BUDGET_SAVE": "Bütçe kaydı",
+      "SYNC_MEMBER_PAYMENTS": "Aidat aktarımı",
+      "TEMPLATE_CONFIRM": "Şablon onayı",
+      "PDF_DOWNLOAD": "PDF indirme",
+      "PDF_BATCH_DOWNLOAD": "Toplu PDF indirme",
+      "PDF_INTEGRITY_ERROR": "PDF bütünlük hatası",
+      "DUE_ADD": "Aidat ekleme",
+      "DUE_UPDATE": "Aidat güncelleme",
+      "DUE_DELETE": "Aidat silme",
+      "DUES_GENERATE": "Aidat tahakkuku",
+      "ATTENDEE_ADD": "Katılımcı ekleme",
+      "ATTENDEE_UPDATE": "Katılımcı güncelleme",
+      "ATTENDEE_REMOVE": "Katılımcı çıkarma",
+      "ATTENDEE_MARK_ALL": "Tümünü katıldı işaretleme",
+      "AGENDA_ADD": "Gündem ekleme",
+      "AGENDA_UPDATE": "Gündem güncelleme",
+      "AGENDA_DELETE": "Gündem silme",
+      "AGENDA_MOVE": "Gündem sıralama",
+      "AGENDA_DISCUSSION": "Görüşme notu",
+      "DECISION_ADD": "Karar ekleme",
+      "DECISION_UPDATE": "Karar güncelleme",
+      "DECISION_DELETE": "Karar silme",
+      "ACTION_ADD": "Görev ekleme",
+      "ACTION_UPDATE": "Görev güncelleme",
+      "ACTION_DELETE": "Görev silme",
+      "ACTION_STATUS": "Görev durumu"
+    },
+    "entities": {
+      "User": "Kullanıcı",
+      "Auth": "Oturum",
+      "Document": "Evrak",
+      "DocumentCategory": "Evrak kategorisi",
+      "DocumentFile": "Evrak dosyası",
+      "Meeting": "Toplantı",
+      "MeetingAttendee": "Toplantı katılımcısı",
+      "MeetingDecision": "Karar",
+      "MeetingFile": "Toplantı dosyası",
+      "AgendaItem": "Gündem maddesi",
+      "ActionItem": "Görev",
+      "Member": "Üye",
+      "MemberDue": "Aidat",
+      "MemberPayment": "Üye ödemesi",
+      "MembershipTypeConfig": "Üyelik tipi",
+      "AccountingAccount": "Hesap",
+      "AccountingBooking": "Fiş",
+      "AccountingBookingFile": "Fiş belgesi",
+      "AccountingBudgetLine": "Bütçe kalemi",
+      "AccountingCategory": "Muhasebe kategorisi",
+      "AccountingProject": "Proje",
+      "AccountingSettings": "Muhasebe ayarları",
+      "AccountingYear": "Mali yıl",
+      "Donation": "Bağış",
+      "Donor": "Bağışçı",
+      "DonationsSettings": "Bağış ayarları",
+      "ZuwendungConfirmation": "Bağış makbuzu",
+      "OrganizationProfile": "Dernek profili",
+      "SystemModule": "Modül"
+    },
+    "table": {
+      "aria": "Denetim kaydı listesi",
+      "date": "Tarih",
+      "user": "Kullanıcı",
+      "action": "İşlem",
+      "entity": "Varlık",
+      "entityId": "Varlık ID",
+      "ip": "IP",
+      "search": "Kullanıcı veya varlık ID ara...",
+      "empty": "Denetim kaydı bulunamadı."
+    },
+    "module": {
+      "label": "Denetim Kayıtları",
+      "description": "Sistem işlemlerinin değiştirilemez güvenlik ve denetim logları."
     }
   },
   "auth": {
@@ -686,6 +811,39 @@
     "mustChangePasswordBanner": "Parolanızı güncellemeniz zorunludur",
     "meta": {
       "profile": "Profil"
+    },
+    "appTitle": "Dernek Yönetim Sistemi",
+    "loginSubtitle": "Devam etmek için oturum açın",
+    "passiveNotice": "Oturumunuz sonlandırıldı. Hesabınız pasif duruma alınmış olabilir; lütfen yöneticinizle görüşün.",
+    "profile": {
+      "title": "Profil",
+      "description": "Hesap bilgileriniz ve parola değişikliği.",
+      "accountInfo": "Hesap Bilgileri",
+      "name": "Ad Soyad",
+      "email": "E-posta",
+      "role": "Rol",
+      "changePassword": "Parola Değiştir",
+      "currentPassword": "Mevcut parola",
+      "newPassword": "Yeni parola",
+      "submit": "Parolayı güncelle",
+      "updated": "Parolanız güncellendi."
+    },
+    "errors": {
+      "sessionInvalid": "Oturumunuz geçersiz. Lütfen tekrar giriş yapın.",
+      "currentPasswordWrong": "Mevcut parolanız hatalı.",
+      "invalidCredentials": "E-posta veya parola hatalı.",
+      "accountLocked": "Hesap geçici olarak kilitlendi, daha sonra tekrar deneyin.",
+      "loginFailed": "Giriş yapılamadı. Lütfen tekrar deneyin.",
+      "invalidLocale": "Geçersiz dil seçimi."
+    },
+    "validation": {
+      "currentPasswordRequired": "Mevcut parolanızı girin.",
+      "emailRequired": "E-posta zorunludur.",
+      "passwordRequired": "Parola zorunludur."
+    },
+    "module": {
+      "label": "Kimlik Doğrulama",
+      "description": "Kullanıcı girişi, oturum yönetimi ve parola güvenliği."
     }
   },
   "documents": {
@@ -931,6 +1089,10 @@
       "versionMissing": "Kayıt sürümü eksik.",
       "noteEmpty": "Not boş olamaz.",
       "noteMax": "Not en fazla 2000 karakter olabilir."
+    },
+    "module": {
+      "label": "Evrak Kayıt",
+      "description": "Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi."
     }
   },
   "donations": {
@@ -1223,7 +1385,14 @@
       "alreadyAnonymized": "Bu bağışçı zaten anonimleştirilmiş.",
       "confirmationNeedsItem": "Bildirim için en az bir öge gerekir.",
       "waiverExpenseRequired": "Aufwandsspende için gider kategorisi zorunludur.",
-      "typeDonorNumber": "Bağışçı numarasını yazın: {number}"
+      "typeDonorNumber": "Bağışçı numarasını yazın: {number}",
+      "activeConfirmationEdit": "Bu bağışın aktif bir bildirimi var; önce bildirimi iptal edin, sonra düzenleyin.",
+      "activeConfirmation": "Bu bağışın aktif bir bildirimi var; önce bildirimi iptal edin.",
+      "retentionBlocksAnonymize": "Bu bağışçının bildirim nüshaları saklama süresi içinde ({count} bildirim). Saklama süresi bitmeden anonimleştirilemez.",
+      "activeDonationBlocksAnonymize": "Bağışçıya ait aktif bildirimli bağış var ({number}); önce bildirimi iptal edin.",
+      "mixedWaiver": "Seçilen bağışlarda Aufwandsspende değeri karışık; ayrı ayrı bildirim üretin.",
+      "feeConfirmationsDisabled": "Aidat bildirimleri kapalı (membershipFeesDeductible = false; § 10b Abs. 1 Satz 8 EStG).",
+      "mixedWaiverYear": "Bu bağışçının yılındaki bağışlar karışık (Aufwandsspende evet/hayır); toplu üretim atlandı."
     },
     "validation": {
       "periodStartInvalid": "Geçerli bir dönem başlangıcı girin.",
@@ -1257,6 +1426,10 @@
       "organizationRequired": "Kuruluş için ad (en az 2 karakter) zorunludur.",
       "postalCodeDe": "Almanya için posta kodu 5 haneli olmalıdır.",
       "confirmNumberRequired": "Onay için bağışçı numarasını yazın (örn. SP-0007)."
+    },
+    "module": {
+      "label": "Bağışlar",
+      "description": "Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı takibi."
     }
   },
   "events": {
@@ -1441,6 +1614,10 @@
       "description": "Etkinlik Açıklaması",
       "dateTime": "Tarih & Zaman",
       "endLine": "Bitiş: {date}"
+    },
+    "module": {
+      "label": "Etkinlikler",
+      "description": "Dernek etkinlikleri, seminerler, atölyeler ve katılımcı yönetimi."
     }
   },
   "inventory": {
@@ -1553,6 +1730,10 @@
     "meta": {
       "list": "Envanter",
       "categories": "Envanter kategorileri"
+    },
+    "module": {
+      "label": "Envanter ve Demirbaş",
+      "description": "Dernek demirbaşları, teknik ekipmanlar ve zimmet kayıtlarının takibi."
     }
   },
   "mail": {
@@ -1670,6 +1851,10 @@
     "meta": {
       "settings": "E-posta ayarları",
       "logs": "E-posta gönderim kayıtları"
+    },
+    "module": {
+      "label": "E-posta Altyapısı",
+      "description": "Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gönderim kayıtları."
     }
   },
   "meetings": {
@@ -2107,7 +2292,9 @@
       "approvedNoDelete": "Onaylanmış toplantı silinemez. Önce yeniden açın.",
       "approvedFileAdminOnly": "Onaylanmış toplantının dosyasını yalnızca yönetici silebilir.",
       "transitionNotAllowed": "Bu durum değişikliğine izin verilmiyor.",
-      "forbidden": "Bu işlem için yetkiniz yok."
+      "forbidden": "Bu işlem için yetkiniz yok.",
+      "approveNeedsAgenda": "Onaylamak için en az bir gündem maddesi gereklidir.",
+      "approveNeedsPresent": "Onaylamak için en az bir katılımcının 'Katıldı' olarak işaretlenmesi gereklidir."
     },
     "validation": {
       "taskMin": "Görev açıklaması en az 3 karakter olmalıdır.",
@@ -2138,7 +2325,8 @@
       "quorumMax": "Yeter sayısı en fazla 500 olabilir.",
       "descriptionMax": "Açıklama en fazla 2000 karakter olabilir.",
       "endNeedsStart": "Bitiş saati girmek için başlangıç saati zorunludur.",
-      "endAfterStart": "Bitiş saati başlangıç saatinden sonra olmalıdır."
+      "endAfterStart": "Bitiş saati başlangıç saatinden sonra olmalıdır.",
+      "quorumInt": "Yeter sayısı tam sayı olmalıdır."
     },
     "meta": {
       "list": "Toplantılar",
@@ -2146,6 +2334,10 @@
       "create": "Yeni toplantı",
       "detail": "Toplantı detayı",
       "edit": "Toplantıyı düzenle"
+    },
+    "module": {
+      "label": "Toplantılar",
+      "description": "Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar."
     }
   },
   "members": {
@@ -2496,7 +2688,9 @@
       "duesBelowPaid": "Aidat tutarı ödenen tutarın altına düşürülemez.",
       "duesWaiveWithPayments": "Ödemesi olan aidat satırı muaf yapılamaz.",
       "paymentNotFound": "Ödeme bulunamadı.",
-      "paymentAlreadyVoided": "Bu ödeme zaten iptal edilmiş."
+      "paymentAlreadyVoided": "Bu ödeme zaten iptal edilmiş.",
+      "dueHasPayments": "Ödeme kaydı olan aidat satırı silinemez. Önce ödemeleri iptal edin.",
+      "importMissingColumns": "Zorunlu sütunlar bulunamadı (Ad, Soyad, Üyelik Türü, Üyelik Başlangıç Tarihi). Şablonu indirip doldurun."
     },
     "validation": {
       "yearMinPrev": "Yıl en fazla bir önceki yıl olabilir.",
@@ -2541,6 +2735,10 @@
       "referenceMax": "Referans en fazla 100 karakter olabilir.",
       "voidReasonMin": "İptal nedeni en az 5 karakter olmalıdır.",
       "voidReasonMax": "İptal nedeni en fazla 300 karakter olabilir."
+    },
+    "module": {
+      "label": "Üyeler",
+      "description": "Üye kayıtları, üyelik tipleri, aidat tahakkuk ve ödeme takibi."
     }
   },
   "organization": {
@@ -2586,7 +2784,18 @@
     "charitablePurposes": "Desteklenen amaçlar (begünstigte Zwecke)",
     "charitablePurposesDescription": "Muafiyet yazısından aynen kopyalayın — cümle şu kalıba girer: 'Wir sind wegen Förderung …' ve '… nur zur Förderung … verwendet wird'. Örnek: 'der Bildung und Erziehung'.",
     "membershipFeesDeductible": "Üyelik aidatları vergiden düşülebilir (Mitgliedsbeiträge abziehbar)",
-    "membershipFeesDeductibleDescription": "Yalnızca § 10b Abs. 1 Satz 8 EStG kapsamı DIŞINDAKI amaçlar (örn. spor, hobi kültürü, gelenek) için işaretleyin. Emin değilseniz Steuerberater'a sorun."
+    "membershipFeesDeductibleDescription": "Yalnızca § 10b Abs. 1 Satz 8 EStG kapsamı DIŞINDAKI amaçlar (örn. spor, hobi kültürü, gelenek) için işaretleyin. Emin değilseniz Steuerberater'a sorun.",
+    "module": {
+      "label": "Dernek Bilgileri",
+      "description": "Dernek ana verileri, resmi iletişim ve antet logosu."
+    },
+    "validation": {
+      "dateFormat": "Tarih YYYY-MM-DD biçiminde olmalıdır.",
+      "nameMin": "Dernek adı en az 3 karakter olmalıdır.",
+      "purposesMax": "Amaç metni en fazla 500 karakter olabilir.",
+      "postalCodeDe": "Almanya için posta kodu 5 haneli olmalıdır (PLZ).",
+      "websiteInvalid": "Web sitesi geçerli bir adres olmalıdır (https://...)."
+    }
   },
   "system": {
     "title": "Modül Yönetimi",
@@ -2636,6 +2845,19 @@
     "meta": {
       "settings": "Ayarlar",
       "modules": "Modül yönetimi"
+    },
+    "module": {
+      "label": "Modül Yönetimi",
+      "description": "Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi."
+    },
+    "authorCommunity": "Topluluk / Geliştirici",
+    "toggleAria": "{label} durumunu değiştir",
+    "deleteAria": "{label} modülünü sil",
+    "errors": {
+      "notFound": "Modül bulunamadı.",
+      "coreCannotDisable": "Çekirdek sistem modülleri devre dışı bırakılamaz.",
+      "onlyExtensionsDeletable": "Yalnızca harici geliştirici eklentileri (EXTENSION) silinebilir. Çekirdek ve resmi modüller silinemez.",
+      "deleteFailed": "Modül silinirken hata oluştu."
     }
   },
   "users": {
@@ -2651,6 +2873,191 @@
       "list": "Kullanıcılar",
       "create": "Yeni kullanıcı",
       "edit": "Kullanıcıyı düzenle"
+    },
+    "tabUsers": "Kullanıcı Listesi",
+    "tabRoles": "Roller ve Yetki Matrisi",
+    "table": {
+      "aria": "Kullanıcı listesi",
+      "name": "Ad",
+      "email": "E-posta",
+      "role": "Rol",
+      "status": "Durum",
+      "lastLogin": "Son giriş",
+      "createdAt": "Oluşturulma",
+      "search": "Ad veya e-posta ara...",
+      "empty": "Kullanıcı bulunamadı.",
+      "edit": "Düzenle",
+      "resetPassword": "Parola sıfırla",
+      "deactivate": "Pasife al",
+      "activate": "Aktifleştir",
+      "activated": "Kullanıcı aktifleştirildi.",
+      "deactivated": "Kullanıcı pasife alındı.",
+      "activateTitle": "Kullanıcıyı aktifleştir",
+      "deactivateTitle": "Kullanıcıyı pasife al",
+      "activateConfirm": "\"{name}\" kullanıcısı aktifleştirilecek. Onaylıyor musunuz?",
+      "deactivateConfirm": "\"{name}\" kullanıcısı pasife alınacak; mevcut oturumuyla bile işlem yapamayacak. Onaylıyor musunuz?"
+    },
+    "form": {
+      "name": "Ad Soyad",
+      "email": "E-posta",
+      "role": "Rol",
+      "tempPassword": "Geçici parola",
+      "tempPasswordHint": "En az 10 karakter; 1 büyük harf, 1 küçük harf ve 1 rakam içermelidir. Kullanıcı ilk girişte yeni parola belirleyecektir.",
+      "isActive": "Hesap aktif",
+      "isActiveHint": "Pasife alınan kullanıcı oturumu geçerli olsa bile işlem yapamaz.",
+      "created": "Kullanıcı oluşturuldu.",
+      "updated": "Kullanıcı güncellendi."
+    },
+    "resetPassword": {
+      "title": "Parolayı Sıfırla",
+      "newPassword": "Yeni geçici parola",
+      "submit": "Sıfırla",
+      "done": "Parola sıfırlandı. Kullanıcı sonraki girişte yeni parola belirleyecek."
+    },
+    "errors": {
+      "emailTaken": "Bu e-posta adresi zaten kullanımda.",
+      "notFound": "Kullanıcı bulunamadı.",
+      "selfDeactivate": "Kendinizi pasife alamazsınız.",
+      "lastAdmin": "Sistemde en az bir aktif yönetici kalmalıdır.",
+      "selfDemote": "Kendi rolünüzü düşüremezsiniz."
+    },
+    "validation": {
+      "nameRequired": "Ad soyad zorunludur.",
+      "nameMax": "Ad soyad en fazla 100 karakter olabilir."
+    },
+    "matrix": {
+      "title": "Rol ve İzin Yönetimi",
+      "subtitle": "Sistem rollerinin modül bazındaki okuma, yazma, onay ve silme yetki matrisi.",
+      "viewRole": "Rol İnceleme",
+      "viewMatrix": "Karşılaştırma Matrisi",
+      "memberCount": "{count} üye",
+      "search": "Modül veya yetki ara (örn: muhasebe, evrak, onay)...",
+      "previewUser": "Kullanıcı Yetki Önizle:",
+      "selectUser": "Kullanıcı seçin...",
+      "clearUser": "Kullanıcı seçimini temizle",
+      "simulated": "Simüle Edilen: {name}",
+      "totalActive": "Toplam Aktif İzin",
+      "actionCount": "{count} Eylem Yetkisi",
+      "resourceCount": "{count} kaynak",
+      "colResource": "Modül / Kaynak",
+      "colAction": "Eylem",
+      "previewTitle": "{role} Yetki Özeti",
+      "previewCount": "{count} Yetki Aktif",
+      "accessFull": "Tam",
+      "accessRead": "Okuma",
+      "accessNone": "Yok",
+      "actions": {
+        "view": "Görüntüleme",
+        "create": "Oluşturma",
+        "update": "Düzenleme",
+        "delete": "Silme",
+        "approve": "Onaylama"
+      },
+      "roles": {
+        "ADMIN": {
+          "label": "Yönetici (Admin)",
+          "shortDesc": "Sistem, modül ve kullanıcı yönetimi dahil tam yetki.",
+          "legalContext": "Tüm modüllerde oluşturma, düzenleme, silme ve denetim yetkisine sahiptir."
+        },
+        "BOARD": {
+          "label": "Yönetim Kurulu (Vorstand)",
+          "shortDesc": "Toplantı, karar, evrak ve dernek yönetimi ana yetkileri.",
+          "legalContext": "BGB § 26 uyarınca dernek temsil ve yürütme organıdır; mali detayları özet görür."
+        },
+        "SECRETARY": {
+          "label": "Sekreter (Schriftführer)",
+          "shortDesc": "Evrak kayıt, toplantı tutanakları ve üye kayıt operasyonları.",
+          "legalContext": "Yazışmalar, defterler ve karar defterlerinin tanziminden sorumludur."
+        },
+        "TREASURER": {
+          "label": "Sayman (Kassenwart)",
+          "shortDesc": "Çift taraflı muhasebe, fişler, bütçe, bağış makbuzları ve aidatlar.",
+          "legalContext": "Mali defterlerin tutulması ve vergi dairesi (Finanzamt) uyumluluğundan sorumludur."
+        },
+        "AUDITOR": {
+          "label": "Denetçi (Kassenprüfer)",
+          "shortDesc": "Mali ve idari kayıtlara salt okunur denetim erişimi.",
+          "legalContext": "Yıllık mali denetim yapar; bağışçı kişisel verilerine erişemez."
+        },
+        "VIEWER": {
+          "label": "Salt Okunur (Leser)",
+          "shortDesc": "Temel evrak ve toplantı bilgilerini inceleme yetkisi.",
+          "legalContext": "Veri değişikliği veya mali kayıtları inceleme yetkisi bulunmaz."
+        }
+      },
+      "modules": {
+        "documents": "Evrak Kayıt",
+        "meetings": "Toplantılar",
+        "members": "Üyeler",
+        "accounting": "Muhasebe",
+        "donations": "Bağışlar",
+        "organization": "Dernek Profili",
+        "users": "Kullanıcılar",
+        "audit": "Denetim Kaydı",
+        "system": "Sistem & Modüller"
+      },
+      "resources": {
+        "documents": {
+          "label": "Gelen / Giden Evraklar",
+          "description": "Resmi evrakların sisteme kaydedilmesi, numaralandırılması ve arşivlenmesi."
+        },
+        "documentCategories": {
+          "label": "Evrak Kategorileri",
+          "description": "Evrak kategorilerinin ve dosya planının yönetimi."
+        },
+        "meetings": {
+          "label": "Toplantı ve Kararlar",
+          "description": "Toplantı takvimi, gündem maddeleri, tutanaklar, kararlar ve onaylama."
+        },
+        "members": {
+          "label": "Üye Kayıtları",
+          "description": "Dernek üyelerinin profili, iletişim verileri ve üyelik durumları."
+        },
+        "memberPayments": {
+          "label": "Aidat ve Ödemeler",
+          "description": "Üye aidat tahakkukları, tahsilat ve ödeme takibi."
+        },
+        "memberTypes": {
+          "label": "Üyelik Tipleri",
+          "description": "Asil, fahri, öğrenci vb. üyelik tipleri ve aidat baremleri."
+        },
+        "accounting": {
+          "label": "Yevmiye & Defterler",
+          "description": "Fişler, gelir-gider kayıtları, hesap planı ve dönem raporları."
+        },
+        "accountingSetup": {
+          "label": "Hesap Planı & Bütçe",
+          "description": "Hesap planı (SKR49/SKR42), bütçe öngörüleri ve mali ayarlar."
+        },
+        "donations": {
+          "label": "Bağış ve Makbuzlar",
+          "description": "Bağış tahsilatları ve resmi Zuwendungsbestätigung makbuz üretimi."
+        },
+        "organization": {
+          "label": "Dernek Ana Bilgileri",
+          "description": "Resmi dernek sicil no, vergi no, banka hesapları ve antet logosu."
+        },
+        "users": {
+          "label": "Kullanıcı Hesapları",
+          "description": "Sistem kullanıcıları, oturum hesapları ve parola sıfırlama."
+        },
+        "audit": {
+          "label": "Güvenlik & Değişiklik Günlüğü",
+          "description": "Değiştirilemez sistemsel denetim izleri ve güvenlik kayıtları."
+        },
+        "system": {
+          "label": "Modül Yönetimi",
+          "description": "Eklenti yükleme, modül aktifleştirme ve pasifleştirme."
+        },
+        "settings": {
+          "label": "Sistem Ayarları",
+          "description": "Genel dernek sistemi ve platform parametreleri."
+        }
+      }
+    },
+    "module": {
+      "label": "Kullanıcılar",
+      "description": "Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri."
     }
   }
 }

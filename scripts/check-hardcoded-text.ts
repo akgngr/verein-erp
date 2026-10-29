@@ -57,7 +57,7 @@ export function scanSource(file: string, source: string): Finding[] {
   const findings: Finding[] = [];
   const lines = source.split("\n");
   const propPattern = new RegExp(`(?:^|\\s)(${UI_PROPS.join("|")})=(["'])([^"']*)\\2`, "g");
-  const objectPattern = new RegExp(`\\b(label|title|description|placeholder|emptyMessage|message)\\s*:\\s*(["'\`])([^"'\`]*)\\2`, "g");
+  const objectPattern = new RegExp(`\\b(label|title|description|placeholder|emptyMessage|message|error)\\s*:\\s*(["'\`])([^"'\`]*)\\2`, "g");
   const validationPattern = /\.(?:min|max|length|regex|email|url|refine|nonempty|int|positive|nonnegative|gte|lte|gt|lt)\([^)]*?,\s*(["'`])([^"'`]+)\1|\bmessage\s*:\s*(["'`])([^"'`]+)\3|new ActionError\(\s*(["'`])([^"'`]+)\5/g;
 
   lines.forEach((raw, index) => {
@@ -71,6 +71,17 @@ export function scanSource(file: string, source: string): Finding[] {
     for (const match of raw.matchAll(validationPattern)) {
       const text = match[2] ?? match[4] ?? match[6];
       if (text && !isIgnorable(text)) at("validation", text);
+    }
+    // Tek argümanlı zod mesajı: z.email("…"), .url("…"), .nonempty("…")
+    for (const match of raw.matchAll(/\b(?:z\.)?(?:email|url|uuid|nonempty|int|positive|nonnegative|date|iso\.date)\(\s*(["'`])([^"'`]+)\1\s*\)/g)) {
+      if (!isIgnorable(match[2])) at("validation", match[2]);
+    }
+    // Çok satırlı hata: `throw new ActionError(` + sonraki satırda metin
+    if (/new \w*Error\(\s*$/.test(raw)) {
+      const nextMatch = (lines[index + 1] ?? "").trim().match(/^(["'`])([^"'`]+)\1/);
+      if (nextMatch && !isIgnorable(nextMatch[2])) {
+        findings.push({ file, line: index + 2, kind: "validation", text: nextMatch[2].slice(0, 90) });
+      }
     }
     for (const match of raw.matchAll(propPattern)) {
       if (!isIgnorable(match[3])) at("prop", match[3]);

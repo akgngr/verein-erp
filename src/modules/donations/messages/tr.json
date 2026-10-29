@@ -291,7 +291,14 @@
     "alreadyAnonymized": "Bu bağışçı zaten anonimleştirilmiş.",
     "confirmationNeedsItem": "Bildirim için en az bir öge gerekir.",
     "waiverExpenseRequired": "Aufwandsspende için gider kategorisi zorunludur.",
-    "typeDonorNumber": "Bağışçı numarasını yazın: {number}"
+    "typeDonorNumber": "Bağışçı numarasını yazın: {number}",
+    "activeConfirmationEdit": "Bu bağışın aktif bir bildirimi var; önce bildirimi iptal edin, sonra düzenleyin.",
+    "activeConfirmation": "Bu bağışın aktif bir bildirimi var; önce bildirimi iptal edin.",
+    "retentionBlocksAnonymize": "Bu bağışçının bildirim nüshaları saklama süresi içinde ({count} bildirim). Saklama süresi bitmeden anonimleştirilemez.",
+    "activeDonationBlocksAnonymize": "Bağışçıya ait aktif bildirimli bağış var ({number}); önce bildirimi iptal edin.",
+    "mixedWaiver": "Seçilen bağışlarda Aufwandsspende değeri karışık; ayrı ayrı bildirim üretin.",
+    "feeConfirmationsDisabled": "Aidat bildirimleri kapalı (membershipFeesDeductible = false; § 10b Abs. 1 Satz 8 EStG).",
+    "mixedWaiverYear": "Bu bağışçının yılındaki bağışlar karışık (Aufwandsspende evet/hayır); toplu üretim atlandı."
   },
   "validation": {
     "periodStartInvalid": "Geçerli bir dönem başlangıcı girin.",
@@ -325,5 +332,9 @@
     "organizationRequired": "Kuruluş için ad (en az 2 karakter) zorunludur.",
     "postalCodeDe": "Almanya için posta kodu 5 haneli olmalıdır.",
     "confirmNumberRequired": "Onay için bağışçı numarasını yazın (örn. SP-0007)."
+  },
+  "module": {
+    "label": "Bağışlar",
+    "description": "Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı takibi."
   }
 }

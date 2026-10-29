@@ -15,7 +15,8 @@ export type ValidatedFile = {
 
 export type FileValidationResult =
   | { ok: true; file: ValidatedFile; rule: FileTypeRule }
-  | { ok: false; error: string };
+  /** error bir çeviri anahtarıdır (`files.*`); yanıt öncesi uploadErrorMessage ile çevrilir. */
+  | { ok: false; error: string; values?: Record<string, string | number> };
 
 /** Dosya adından izinli uzantıyı çıkarır (nokta dahil değil, küçük harf). */
 export function getExtension(fileName: string): string {
@@ -70,20 +71,20 @@ export function validateUpload(input: {
   const extension = getExtension(originalName);
 
   if (!extension || !input.allowedExtensions.includes(extension)) {
-    return { ok: false, error: "Bu dosya türü kabul edilmiyor." };
+    return { ok: false, error: "files.typeNotAllowed" };
   }
 
   if (input.file.size <= 0) {
-    return { ok: false, error: "Boş dosya yüklenemez." };
+    return { ok: false, error: "files.empty" };
   }
   if (input.file.size > input.maxBytes) {
     const maxMb = Math.floor(input.maxBytes / (1024 * 1024));
-    return { ok: false, error: `Dosya en fazla ${maxMb} MB olabilir.` };
+    return { ok: false, error: "files.tooLarge", values: { maxMb } };
   }
 
   const rule = findRule(extension);
   if (!rule) {
-    return { ok: false, error: "Bu dosya türü kabul edilmiyor." };
+    return { ok: false, error: "files.typeNotAllowed" };
   }
 
   // MIME uyumu: kural listesi ya da genel (zip tabanlı ofis) değerler kabul edilir;
@@ -91,19 +92,13 @@ export function validateUpload(input: {
   const mime = (input.file.declaredMime || "").split(";")[0].trim().toLowerCase();
   const mimeCompatible = rule.mimes.includes(mime) || GENERIC_MIME_FALLBACKS.includes(mime);
   if (rule.mimes.length > 0 && !mimeCompatible) {
-    return {
-      ok: false,
-      error: `Dosya içeriği .${extension} uzantısıyla uyumlu değil.`,
-    };
+    return { ok: false, error: "files.contentMismatch", values: { extension } };
   }
 
   if (rule.signature !== "none") {
     const signature = MAGIC_SIGNATURE_BYTES[rule.signature];
     if (!hasMagicSignature(input.file.head, signature)) {
-      return {
-        ok: false,
-        error: `Dosya içeriği .${extension} uzantısıyla uyumlu değil.`,
-      };
+      return { ok: false, error: "files.contentMismatch", values: { extension } };
     }
   }
 

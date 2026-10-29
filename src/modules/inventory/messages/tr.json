@@ -111,5 +111,9 @@
   "meta": {
     "list": "Envanter",
     "categories": "Envanter kategorileri"
+  },
+  "module": {
+    "label": "Envanter ve Demirbaş",
+    "description": "Dernek demirbaşları, teknik ekipmanlar ve zimmet kayıtlarının takibi."
   }
 }

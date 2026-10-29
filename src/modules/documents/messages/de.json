@@ -244,5 +244,9 @@
     "versionMissing": "Die Datensatzversion fehlt.",
     "noteEmpty": "Die Notiz darf nicht leer sein.",
     "noteMax": "Die Notiz darf höchstens 2000 Zeichen lang sein."
+  },
+  "module": {
+    "label": "Schriftgut",
+    "description": "Nummerierung, Verfolgung und Archivierung ein- und ausgehender Schriftstücke."
   }
 }

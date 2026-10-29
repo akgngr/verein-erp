@@ -25,7 +25,7 @@ function toErrorResult(error: unknown): InventoryActionResult {
 
   console.error(
     "[inventory] action failed:",
-    error instanceof Error ? error.message : "Unknown error",
+    error instanceof Error ? error.message : String(error),
   );
   return { ok: false, error: "unknown" };
 }

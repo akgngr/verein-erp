@@ -33,7 +33,8 @@
       "sessionExpired": "Oturumunuz sona erdi. Lütfen tekrar giriş yapın.",
       "forbidden": "Bu işlem için yetkiniz yok.",
       "duplicate": "Bu kayıt zaten mevcut.",
-      "unexpected": "Beklenmeyen bir hata oluştu."
+      "unexpected": "Beklenmeyen bir hata oluştu.",
+      "staleRecord": "Kayıt bu arada başka bir kullanıcı tarafından güncellendi. Sayfayı yenileyip tekrar deneyin."
     },
     "selectPlaceholder": "Seçin",
     "noRecords": "Kayıt bulunamadı.",
@@ -73,7 +74,10 @@
       "activeFilters": "{count} filtre aktif",
       "done": "Tamam",
       "label": "Tablo"
-    }
+    },
+    "active": "Aktif",
+    "passive": "Pasif",
+    "emailPlaceholder": "ornek@dernek.org"
   },
   "nav": {
     "panel": "Panel",
@@ -176,7 +180,10 @@
       "activeLanguage": "Geçerli Dil",
       "tr": "Türkçe",
       "de": "Deutsch",
-      "switchSuccess": "Arayüz dili başarıyla değiştirildi."
+      "switchSuccess": "Arayüz dili başarıyla değiştirildi.",
+      "trHint": "Türkiye dernek standartları & Türkçe arayüz",
+      "deHint": "Alman dernek standardı & Almanca arayüz",
+      "switchedTo": "Arayüz dili güncellendi: {language}"
     },
     "themeSection": {
       "title": "Görünüm ve Tema",
@@ -214,6 +221,13 @@
         "description": "Hesap planı (SKR49 / standart), bütçe hedefleri ve mali yıl yapılandırmaları.",
         "action": "Ayarlar"
       }
+    },
+    "badges": {
+      "organization": "Profil & Kimlik",
+      "users": "Erişim & Roller",
+      "modules": "Modüller & Şema",
+      "audit": "Güvenlik & Log",
+      "accounting": "Mali Yapı"
     }
   },
   "roles": {
@@ -228,13 +242,17 @@
     "passwordMin": "Parola en az 10 karakter olmalıdır.",
     "passwordUpper": "Parola en az bir büyük harf içermelidir.",
     "passwordLower": "Parola en az bir küçük harf içermelidir.",
-    "passwordDigit": "Parola en az bir rakam içermelidir."
+    "passwordDigit": "Parola en az bir rakam içermelidir.",
+    "emailInvalid": "Geçerli bir e-posta adresi girin.",
+    "passwordHint": "En az 10 karakter; 1 büyük harf, 1 küçük harf ve 1 rakam içermelidir.",
+    "yearInt": "Yıl tam sayı olmalıdır."
   },
   "files": {
     "readFailed": "Dosya okunamadı (multipart/form-data bekleniyor).",
     "missing": "Dosya bulunamadı.",
     "typeNotAllowed": "Bu dosya türü kabul edilmiyor.",
     "empty": "Boş dosya yüklenemez.",
-    "contentMismatch": "Dosya içeriği .{extension} uzantısıyla uyumlu değil."
+    "contentMismatch": "Dosya içeriği .{extension} uzantısıyla uyumlu değil.",
+    "tooLarge": "Dosya en fazla {maxMb} MB olabilir."
   }
 }

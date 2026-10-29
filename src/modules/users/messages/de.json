@@ -14,5 +14,190 @@
     "list": "Benutzer",
     "create": "Neuer Benutzer",
     "edit": "Benutzer bearbeiten"
+  },
+  "tabUsers": "Benutzerliste",
+  "tabRoles": "Rollen und Berechtigungsmatrix",
+  "table": {
+    "aria": "Benutzerliste",
+    "name": "Name",
+    "email": "E-Mail",
+    "role": "Rolle",
+    "status": "Status",
+    "lastLogin": "Letzte Anmeldung",
+    "createdAt": "Erstellt am",
+    "search": "Name oder E-Mail suchen...",
+    "empty": "Keine Benutzer gefunden.",
+    "edit": "Bearbeiten",
+    "resetPassword": "Passwort zurücksetzen",
+    "deactivate": "Deaktivieren",
+    "activate": "Aktivieren",
+    "activated": "Benutzer wurde aktiviert.",
+    "deactivated": "Benutzer wurde deaktiviert.",
+    "activateTitle": "Benutzer aktivieren",
+    "deactivateTitle": "Benutzer deaktivieren",
+    "activateConfirm": "Der Benutzer „{name}“ wird aktiviert. Fortfahren?",
+    "deactivateConfirm": "Der Benutzer „{name}“ wird deaktiviert und kann auch mit einer bestehenden Sitzung nichts mehr ausführen. Fortfahren?"
+  },
+  "form": {
+    "name": "Vor- und Nachname",
+    "email": "E-Mail",
+    "role": "Rolle",
+    "tempPassword": "Vorläufiges Passwort",
+    "tempPasswordHint": "Mindestens 10 Zeichen; mindestens 1 Großbuchstabe, 1 Kleinbuchstabe und 1 Ziffer. Der Benutzer legt bei der ersten Anmeldung ein neues Passwort fest.",
+    "isActive": "Konto aktiv",
+    "isActiveHint": "Ein deaktivierter Benutzer kann auch mit gültiger Sitzung nichts ausführen.",
+    "created": "Benutzer wurde angelegt.",
+    "updated": "Benutzer wurde aktualisiert."
+  },
+  "resetPassword": {
+    "title": "Passwort zurücksetzen",
+    "newPassword": "Neues vorläufiges Passwort",
+    "submit": "Zurücksetzen",
+    "done": "Passwort wurde zurückgesetzt. Der Benutzer legt bei der nächsten Anmeldung ein neues Passwort fest."
+  },
+  "errors": {
+    "emailTaken": "Diese E-Mail-Adresse wird bereits verwendet.",
+    "notFound": "Benutzer nicht gefunden.",
+    "selfDeactivate": "Sie können sich nicht selbst deaktivieren.",
+    "lastAdmin": "Im System muss mindestens ein aktiver Administrator verbleiben.",
+    "selfDemote": "Sie können Ihre eigene Rolle nicht herabstufen."
+  },
+  "validation": {
+    "nameRequired": "Name ist erforderlich.",
+    "nameMax": "Der Name darf höchstens 100 Zeichen lang sein."
+  },
+  "matrix": {
+    "title": "Rollen- und Berechtigungsverwaltung",
+    "subtitle": "Lese-, Schreib-, Freigabe- und Löschrechte der Systemrollen je Modul.",
+    "viewRole": "Rollenansicht",
+    "viewMatrix": "Vergleichsmatrix",
+    "memberCount": "{count} Mitglieder",
+    "search": "Modul oder Berechtigung suchen (z. B. Buchhaltung, Schriftgut, Freigabe)...",
+    "previewUser": "Benutzerrechte prüfen:",
+    "selectUser": "Benutzer wählen...",
+    "clearUser": "Benutzerauswahl aufheben",
+    "simulated": "Simuliert: {name}",
+    "totalActive": "Aktive Berechtigungen gesamt",
+    "actionCount": "{count} Aktionsrechte",
+    "resourceCount": "{count} Ressourcen",
+    "colResource": "Modul / Ressource",
+    "colAction": "Aktion",
+    "previewTitle": "Berechtigungsübersicht: {role}",
+    "previewCount": "{count} Rechte aktiv",
+    "accessFull": "Voll",
+    "accessRead": "Lesen",
+    "accessNone": "Keine",
+    "actions": {
+      "view": "Anzeigen",
+      "create": "Anlegen",
+      "update": "Bearbeiten",
+      "delete": "Löschen",
+      "approve": "Freigeben"
+    },
+    "roles": {
+      "ADMIN": {
+        "label": "Administrator (Admin)",
+        "shortDesc": "Vollzugriff einschließlich System-, Modul- und Benutzerverwaltung.",
+        "legalContext": "Darf in allen Modulen anlegen, bearbeiten, löschen und prüfen."
+      },
+      "BOARD": {
+        "label": "Vorstand",
+        "shortDesc": "Kernrechte für Sitzungen, Beschlüsse, Schriftgut und Vereinsführung.",
+        "legalContext": "Vertretungs- und Leitungsorgan nach § 26 BGB; sieht Finanzdetails in zusammengefasster Form."
+      },
+      "SECRETARY": {
+        "label": "Schriftführer",
+        "shortDesc": "Schriftgutverwaltung, Sitzungsprotokolle und Mitgliederverwaltung.",
+        "legalContext": "Verantwortlich für Schriftverkehr, Register und Beschlussbücher."
+      },
+      "TREASURER": {
+        "label": "Kassenwart",
+        "shortDesc": "Buchhaltung, Belege, Budget, Zuwendungsbestätigungen und Beiträge.",
+        "legalContext": "Verantwortlich für die Buchführung und die Einhaltung der Vorgaben des Finanzamts."
+      },
+      "AUDITOR": {
+        "label": "Kassenprüfer",
+        "shortDesc": "Lesender Prüfzugriff auf Finanz- und Verwaltungsdaten.",
+        "legalContext": "Führt die jährliche Kassenprüfung durch; kein Zugriff auf personenbezogene Spenderdaten."
+      },
+      "VIEWER": {
+        "label": "Leser",
+        "shortDesc": "Darf grundlegende Schriftgut- und Sitzungsdaten einsehen.",
+        "legalContext": "Keine Änderungsrechte und kein Einblick in Finanzdaten."
+      }
+    },
+    "modules": {
+      "documents": "Schriftgut",
+      "meetings": "Sitzungen",
+      "members": "Mitglieder",
+      "accounting": "Buchhaltung",
+      "donations": "Spenden",
+      "organization": "Vereinsprofil",
+      "users": "Benutzer",
+      "audit": "Prüfprotokoll",
+      "system": "System & Module"
+    },
+    "resources": {
+      "documents": {
+        "label": "Ein- / ausgehendes Schriftgut",
+        "description": "Erfassung, Nummerierung und Archivierung offizieller Schriftstücke."
+      },
+      "documentCategories": {
+        "label": "Schriftgutkategorien",
+        "description": "Verwaltung der Kategorien und des Aktenplans."
+      },
+      "meetings": {
+        "label": "Sitzungen und Beschlüsse",
+        "description": "Sitzungskalender, Tagesordnung, Protokolle, Beschlüsse und Freigabe."
+      },
+      "members": {
+        "label": "Mitgliederdaten",
+        "description": "Profile, Kontaktdaten und Mitgliedschaftsstatus der Vereinsmitglieder."
+      },
+      "memberPayments": {
+        "label": "Beiträge und Zahlungen",
+        "description": "Beitragssoll, Einzug und Zahlungsverfolgung."
+      },
+      "memberTypes": {
+        "label": "Mitgliedsarten",
+        "description": "Mitgliedsarten (ordentlich, Ehren-, Förder- usw.) und Beitragssätze."
+      },
+      "accounting": {
+        "label": "Journal & Bücher",
+        "description": "Buchungen, Einnahmen/Ausgaben, Kontenplan und Periodenberichte."
+      },
+      "accountingSetup": {
+        "label": "Kontenplan & Budget",
+        "description": "Kontenplan (SKR49/SKR42), Budgetplanung und Finanzeinstellungen."
+      },
+      "donations": {
+        "label": "Spenden und Bestätigungen",
+        "description": "Spendeneingänge und Erstellung amtlicher Zuwendungsbestätigungen."
+      },
+      "organization": {
+        "label": "Vereinsstammdaten",
+        "description": "Registernummer, Steuernummer, Bankverbindungen und Briefkopf-Logo."
+      },
+      "users": {
+        "label": "Benutzerkonten",
+        "description": "Systembenutzer, Anmeldekonten und Passwort-Zurücksetzung."
+      },
+      "audit": {
+        "label": "Sicherheits- & Änderungsprotokoll",
+        "description": "Unveränderliche Prüfspuren und Sicherheitsereignisse."
+      },
+      "system": {
+        "label": "Modulverwaltung",
+        "description": "Erweiterungen installieren, Module aktivieren und deaktivieren."
+      },
+      "settings": {
+        "label": "Systemeinstellungen",
+        "description": "Allgemeine System- und Plattformparameter."
+      }
+    }
+  },
+  "module": {
+    "label": "Benutzer",
+    "description": "Benutzerkonten, Rollen und Zugriffsrechte."
   }
 }

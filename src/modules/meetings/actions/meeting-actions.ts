@@ -190,9 +190,7 @@ export async function updateMeetingAction(
       }
 
       if (new Date(input.updatedAt).getTime() !== meeting.updatedAt.getTime()) {
-        throw new ActionError(
-          "Bu kayıt başka biri tarafından değiştirildi. Sayfayı yenileyip tekrar deneyin.",
-        );
+        throw new ActionError("common.errors.staleRecord");
       }
 
       const meetingDate = parseDateOnly(input.meetingDate);

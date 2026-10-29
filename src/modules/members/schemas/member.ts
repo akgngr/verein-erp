@@ -45,7 +45,7 @@ const baseFields = {
       .string()
       .trim()
       .max(120, "members.validation.emailMax")
-      .email("Geçerli bir e-posta girin.")
+      .email("validation.emailInvalid")
       .nullable(),
   ),
   phone: emptyToNull(

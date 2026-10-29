@@ -1,3 +1,5 @@
+import { getTranslations } from "next-intl/server";
+
 import { allModules } from "@/registry";
 import { getModuleStates } from "@/shared/modules/module-store";
 import type { ModuleCategory } from "@/shared/types/module";
@@ -27,6 +29,9 @@ export async function getModulesList(): Promise<{
   };
 }> {
   const states = getModuleStates();
+  const t = await getTranslations();
+  // Modül adı/açıklaması `<modül>.module.{label,description}` çevirisinden; yoksa config değeri.
+  const text = (key: string, fallback: string | undefined) => (t.has(key) ? t(key) : fallback);
 
   const modules: ModuleItem[] = allModules.map((mod) => {
     const isProtected = Boolean(mod.isProtected || mod.category === "CORE");
@@ -34,10 +39,10 @@ export async function getModulesList(): Promise<{
 
     return {
       key: mod.key,
-      label: mod.label,
-      description: mod.description,
+      label: text(`${mod.key}.module.label`, mod.label) ?? mod.label,
+      description: text(`${mod.key}.module.description`, mod.description),
       version: mod.version ?? "1.0.0",
-      author: mod.author ?? (mod.category === "EXTENSION" ? "Topluluk / Geliştirici" : "Verein ERP"),
+      author: mod.author ?? (mod.category === "EXTENSION" ? t("system.authorCommunity") : "Verein ERP"),
       category: mod.category,
       isProtected,
       isActive,

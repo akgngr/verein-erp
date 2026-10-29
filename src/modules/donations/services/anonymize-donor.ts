@@ -35,9 +35,9 @@ export async function anonymizeDonor(
     (confirmation) => retentionEndDate(confirmation.issuedAt).getTime() > now.getTime(),
   );
   if (blockedByRetention) {
-    throw new ActionError(
-      `Bu bağışçının bildirim nüshaları saklama süresi içinde (${issuedConfirmations.length} bildirim). Saklama süresi bitmeden anonimleştirilemez.`,
-    );
+    throw new ActionError("donations.errors.retentionBlocksAnonymize", undefined, {
+      count: issuedConfirmations.length,
+    });
   }
 
   // Engeli B: aktif bildirim ögesi olan, ters kayıt edilmemiş bağış.
@@ -52,9 +52,9 @@ export async function anonymizeDonor(
       select: { donationNumber: true },
     });
     if (blockingDonation) {
-      throw new ActionError(
-        `Bağışçıya ait aktif bildirimli bağış var (${blockingDonation.donationNumber}); önce bildirimi iptal edin.`,
-      );
+      throw new ActionError("donations.errors.activeDonationBlocksAnonymize", undefined, {
+        number: blockingDonation.donationNumber,
+      });
     }
   }
 

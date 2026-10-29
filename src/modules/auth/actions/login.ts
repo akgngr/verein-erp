@@ -7,10 +7,13 @@ import type { ActionResult } from "@/shared/types/action";
 import { signIn } from "../auth";
 import { loginSchema } from "../schemas/login";
 
-/** CredentialsSignin "code" değeri → kullanıcıya gösterilecek Türkçe mesaj. */
+/**
+ * CredentialsSignin "code" değeri → mesaj anahtarı. Giriş sayfası henüz
+ * oturumsuz olduğundan anahtarlar istemcide (FormErrorSummary) çevrilir.
+ */
 const LOGIN_ERROR_MESSAGES: Record<string, string> = {
-  invalid_credentials: "E-posta veya parola hatalı.",
-  account_locked: "Hesap geçici olarak kilitlendi, daha sonra tekrar deneyin.",
+  invalid_credentials: "auth.errors.invalidCredentials",
+  account_locked: "auth.errors.accountLocked",
 };
 
 export async function loginAction(input: unknown): Promise<ActionResult<null>> {
@@ -21,7 +24,7 @@ export async function loginAction(input: unknown): Promise<ActionResult<null>> {
       const key = issue.path.join(".") || "_form";
       (fieldErrors[key] ??= []).push(issue.message);
     }
-    return { ok: false, error: "Lütfen formdaki hataları düzeltin.", fieldErrors };
+    return { ok: false, error: "common.errors.formInvalid", fieldErrors };
   }
 
   try {
@@ -35,11 +38,11 @@ export async function loginAction(input: unknown): Promise<ActionResult<null>> {
   } catch (error) {
     if (error instanceof CredentialsSignin) {
       const message =
-        (error.code && LOGIN_ERROR_MESSAGES[error.code]) || "E-posta veya parola hatalı.";
+        (error.code && LOGIN_ERROR_MESSAGES[error.code]) || "auth.errors.invalidCredentials";
       return { ok: false, error: message };
     }
     if (error instanceof AuthError) {
-      return { ok: false, error: "Giriş yapılamadı. Lütfen tekrar deneyin." };
+      return { ok: false, error: "auth.errors.loginFailed" };
     }
     // NEXT_REDIRECT gibi framework hataları aynen fırlatılır.
     throw error;

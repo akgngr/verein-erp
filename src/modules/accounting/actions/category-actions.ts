@@ -82,10 +82,10 @@ export async function updateCategoryAction(input: unknown): Promise<ActionResult
         (input.direction !== existing.direction || input.sphere !== existing.sphere)
       ) {
         throw new ActionError(
-          "Bu kategoride fiş kayıtlı; yön (Gelir/Gider) ve alan (Sphere) değiştirilemez. Yeni bir kategori oluşturun.",
+          "accounting.errors.categoryInUse",
           {
-            direction: ["Fişi olan kategoride yön değişmez."],
-            sphere: ["Fişi olan kategoride alan değişmez."],
+            direction: ["accounting.errors.categoryDirectionLocked"],
+            sphere: ["accounting.errors.categorySphereLocked"],
           },
         );
       }

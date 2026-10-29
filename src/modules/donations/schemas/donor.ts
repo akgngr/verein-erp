@@ -26,7 +26,7 @@ const baseFields = {
   city: emptyToNull(z.string().trim().max(120, "donations.validation.cityMax").nullable()),
   country: emptyToNull(z.string().trim().max(60, "donations.validation.countryMax").nullable()),
   email: emptyToNull(
-    z.string().trim().max(120).email("Geçerli bir e-posta girin.").nullable(),
+    z.string().trim().max(120).email("validation.emailInvalid").nullable(),
   ),
   phone: emptyToNull(z.string().trim().max(30, "donations.validation.phoneMax").nullable()),
   /** KARAR: üye bağlantısı ipucudur — veri kopyalanır, FK kurulmaz (§ 2). Formda alan yoktur (optional). */

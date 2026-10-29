@@ -349,7 +349,9 @@
     "duesBelowPaid": "Aidat tutarı ödenen tutarın altına düşürülemez.",
     "duesWaiveWithPayments": "Ödemesi olan aidat satırı muaf yapılamaz.",
     "paymentNotFound": "Ödeme bulunamadı.",
-    "paymentAlreadyVoided": "Bu ödeme zaten iptal edilmiş."
+    "paymentAlreadyVoided": "Bu ödeme zaten iptal edilmiş.",
+    "dueHasPayments": "Ödeme kaydı olan aidat satırı silinemez. Önce ödemeleri iptal edin.",
+    "importMissingColumns": "Zorunlu sütunlar bulunamadı (Ad, Soyad, Üyelik Türü, Üyelik Başlangıç Tarihi). Şablonu indirip doldurun."
   },
   "validation": {
     "yearMinPrev": "Yıl en fazla bir önceki yıl olabilir.",
@@ -394,5 +396,9 @@
     "referenceMax": "Referans en fazla 100 karakter olabilir.",
     "voidReasonMin": "İptal nedeni en az 5 karakter olmalıdır.",
     "voidReasonMax": "İptal nedeni en fazla 300 karakter olabilir."
+  },
+  "module": {
+    "label": "Üyeler",
+    "description": "Üye kayıtları, üyelik tipleri, aidat tahakkuk ve ödeme takibi."
   }
 }

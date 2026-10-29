@@ -116,5 +116,9 @@
   "meta": {
     "settings": "E-Mail-Einstellungen",
     "logs": "E-Mail-Versandprotokoll"
+  },
+  "module": {
+    "label": "E-Mail-Versand",
+    "description": "Gemeinsamer E-Mail-Versand für alle Module mit SMTP-Einstellungen und Versandprotokoll."
   }
 }

@@ -1,7 +1,9 @@
 import "server-only";
 
+import { getMessageTranslator } from "@/shared/i18n/translate-message";
+
 import { INLINE_PREVIEW_EXTENSIONS } from "./file-types";
-import { getExtension } from "./validation";
+import { getExtension, type FileValidationResult } from "./validation";
 
 /**
  * HTTP yardımcıları (Faz 2, 8. bölüm): multipart yükleme ayrıştırma ve
@@ -21,8 +23,17 @@ export type ParsedUpload =
     }
   | { ok: false; status: 400; error: string };
 
+/** validateUpload hatasını isteğin dilinde kullanıcı mesajına çevirir. */
+export async function uploadErrorMessage(
+  result: Extract<FileValidationResult, { ok: false }>,
+): Promise<string> {
+  const translate = await getMessageTranslator();
+  return translate(result.error, result.values);
+}
+
 /** multipart/form-data içindeki "file" alanını okur; hata durumunda JSON mesaj döner. */
 export async function parseSingleFileUpload(request: Request): Promise<ParsedUpload> {
+  const translate = await getMessageTranslator();
   let formData: FormData;
   try {
     formData = await request.formData();
@@ -30,13 +41,13 @@ export async function parseSingleFileUpload(request: Request): Promise<ParsedUpl
     return {
       ok: false,
       status: 400,
-      error: "Dosya okunamadı (multipart/form-data bekleniyor).",
+      error: translate("files.readFailed"),
     };
   }
 
   const file = formData.get("file");
   if (!(file instanceof File)) {
-    return { ok: false, status: 400, error: "Dosya bulunamadı." };
+    return { ok: false, status: 400, error: translate("files.missing") };
   }
 
   const buffer = Buffer.from(await file.arrayBuffer());

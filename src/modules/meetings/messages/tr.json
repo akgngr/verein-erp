@@ -436,7 +436,9 @@
     "approvedNoDelete": "Onaylanmış toplantı silinemez. Önce yeniden açın.",
     "approvedFileAdminOnly": "Onaylanmış toplantının dosyasını yalnızca yönetici silebilir.",
     "transitionNotAllowed": "Bu durum değişikliğine izin verilmiyor.",
-    "forbidden": "Bu işlem için yetkiniz yok."
+    "forbidden": "Bu işlem için yetkiniz yok.",
+    "approveNeedsAgenda": "Onaylamak için en az bir gündem maddesi gereklidir.",
+    "approveNeedsPresent": "Onaylamak için en az bir katılımcının 'Katıldı' olarak işaretlenmesi gereklidir."
   },
   "validation": {
     "taskMin": "Görev açıklaması en az 3 karakter olmalıdır.",
@@ -467,7 +469,8 @@
     "quorumMax": "Yeter sayısı en fazla 500 olabilir.",
     "descriptionMax": "Açıklama en fazla 2000 karakter olabilir.",
     "endNeedsStart": "Bitiş saati girmek için başlangıç saati zorunludur.",
-    "endAfterStart": "Bitiş saati başlangıç saatinden sonra olmalıdır."
+    "endAfterStart": "Bitiş saati başlangıç saatinden sonra olmalıdır.",
+    "quorumInt": "Yeter sayısı tam sayı olmalıdır."
   },
   "meta": {
     "list": "Toplantılar",
@@ -475,5 +478,9 @@
     "create": "Yeni toplantı",
     "detail": "Toplantı detayı",
     "edit": "Toplantıyı düzenle"
+  },
+  "module": {
+    "label": "Toplantılar",
+    "description": "Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar."
   }
 }

@@ -8,7 +8,7 @@ import { z } from "zod";
 export const budgetSaveSchema = z.object({
   year: z.coerce
     .number()
-    .int("Yıl tam sayı olmalıdır.")
+    .int("validation.yearInt")
     .min(2000, "Yıl 2000'den küçük olamaz.")
     .max(2100, "accounting.validation.yearInvalid"),
   /** Kategori id → tutar string ("1.234,56"); boş/0 = satır silinir. */

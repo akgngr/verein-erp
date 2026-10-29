@@ -44,5 +44,16 @@
   "membershipFeesDeductibleDescription": "Nur ankreuzen, wenn die Vereinszwecke NICHT unter § 10b Abs. 1 Satz 8 EStG fallen (z. B. Sport, Freizeitkultur, Heimatpflege, Brauchtum). Im Zweifel Steuerberatung fragen.",
   "nav": {
     "organization": "Vereinsdaten"
+  },
+  "module": {
+    "label": "Vereinsdaten",
+    "description": "Stammdaten des Vereins, offizielle Kontaktdaten und Briefkopf-Logo."
+  },
+  "validation": {
+    "dateFormat": "Das Datum muss im Format JJJJ-MM-TT sein.",
+    "nameMin": "Der Vereinsname muss mindestens 3 Zeichen lang sein.",
+    "purposesMax": "Der Zwecktext darf höchstens 500 Zeichen lang sein.",
+    "postalCodeDe": "Die PLZ muss in Deutschland 5-stellig sein.",
+    "websiteInvalid": "Die Website muss eine gültige Adresse sein (https://...)."
   }
 }

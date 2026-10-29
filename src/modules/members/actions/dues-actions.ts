@@ -286,9 +286,7 @@ export async function deleteDueAction(input: unknown): Promise<ActionResult> {
       });
       // İş emri: ödemesi olan satır silinmez (önce ödemeler iptal edilmeli).
       if (paymentCount > 0) {
-        throw new ActionError(
-          "Ödeme kaydı olan aidat satırı silinemez. Önce ödemeleri iptal edin.",
-        );
+        throw new ActionError("members.errors.dueHasPayments");
       }
 
       await db.memberDue.delete({ where: { id: due.id } });

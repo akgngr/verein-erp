@@ -33,7 +33,8 @@
       "sessionExpired": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
       "forbidden": "Für diese Aktion fehlt Ihnen die Berechtigung.",
       "duplicate": "Dieser Datensatz existiert bereits.",
-      "unexpected": "Ein unerwarteter Fehler ist aufgetreten."
+      "unexpected": "Ein unerwarteter Fehler ist aufgetreten.",
+      "staleRecord": "Der Datensatz wurde zwischenzeitlich von einer anderen Person geändert. Bitte laden Sie die Seite neu und versuchen Sie es erneut."
     },
     "selectPlaceholder": "Bitte wählen",
     "noRecords": "Keine Einträge gefunden.",
@@ -73,7 +74,10 @@
       "activeFilters": "{count} Filter aktiv",
       "done": "Fertig",
       "label": "Tabelle"
-    }
+    },
+    "active": "Aktiv",
+    "passive": "Inaktiv",
+    "emailPlaceholder": "beispiel@verein.de"
   },
   "nav": {
     "panel": "Dashboard",
@@ -176,7 +180,10 @@
       "activeLanguage": "Aktuelle Sprache",
       "tr": "Türkçe",
       "de": "Deutsch",
-      "switchSuccess": "Die Sprache der Benutzeroberfläche wurde erfolgreich geändert."
+      "switchSuccess": "Die Sprache der Benutzeroberfläche wurde erfolgreich geändert.",
+      "trHint": "Türkische Oberfläche",
+      "deHint": "Deutsche Oberfläche & deutscher Vereinsstandard",
+      "switchedTo": "Oberflächensprache geändert: {language}"
     },
     "themeSection": {
       "title": "Erscheinungsbild & Design",
@@ -214,6 +221,13 @@
         "description": "Kontenrahmen (SKR49 / Standard), Budgetziele und Geschäftsjahresabschlüsse.",
         "action": "Einstellungen"
       }
+    },
+    "badges": {
+      "organization": "Profil & Identität",
+      "users": "Zugriff & Rollen",
+      "modules": "Module & Schema",
+      "audit": "Sicherheit & Protokoll",
+      "accounting": "Finanzstruktur"
     }
   },
   "roles": {
@@ -228,13 +242,17 @@
     "passwordMin": "Das Passwort muss mindestens 10 Zeichen lang sein.",
     "passwordUpper": "Das Passwort muss mindestens einen Großbuchstaben enthalten.",
     "passwordLower": "Das Passwort muss mindestens einen Kleinbuchstaben enthalten.",
-    "passwordDigit": "Das Passwort muss mindestens eine Ziffer enthalten."
+    "passwordDigit": "Das Passwort muss mindestens eine Ziffer enthalten.",
+    "emailInvalid": "Bitte eine gültige E-Mail-Adresse eingeben.",
+    "passwordHint": "Mindestens 10 Zeichen; mindestens 1 Großbuchstabe, 1 Kleinbuchstabe und 1 Ziffer.",
+    "yearInt": "Das Jahr muss eine ganze Zahl sein."
   },
   "files": {
     "readFailed": "Die Datei konnte nicht gelesen werden (multipart/form-data erwartet).",
     "missing": "Datei nicht gefunden.",
     "typeNotAllowed": "Dieser Dateityp ist nicht erlaubt.",
     "empty": "Leere Dateien können nicht hochgeladen werden.",
-    "contentMismatch": "Der Dateiinhalt passt nicht zur Endung .{extension}."
+    "contentMismatch": "Der Dateiinhalt passt nicht zur Endung .{extension}.",
+    "tooLarge": "Die Datei darf höchstens {maxMb} MB groß sein."
   }
 }

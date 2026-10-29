@@ -6,7 +6,7 @@ import { writeAudit } from "@/shared/audit/write-audit";
 import { getDb } from "@/shared/db";
 import {
   parseSingleFileUpload,
-  validateUpload,
+  uploadErrorMessage, validateUpload,
   makeStoredName,
   removeFile,
   saveFile,
@@ -93,7 +93,7 @@ export async function uploadBookingFileHandler(
     maxBytes,
   });
   if (!validation.ok) {
-    return NextResponse.json({ ok: false, error: validation.error }, { status: 400 });
+    return NextResponse.json({ ok: false, error: await uploadErrorMessage(validation) }, { status: 400 });
   }
 
   // Depolama yolu (§ 9): accounting/<yıl>/<bookingId>/<storedName>.

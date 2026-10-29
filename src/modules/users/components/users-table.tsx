@@ -15,7 +15,6 @@ import { formatDateTime } from "@/shared/utils";
 
 import { ResetPasswordDialog } from "./reset-password-dialog";
 import { setUserActiveAction } from "../actions/set-active";
-import { USER_STATUS_OPTIONS } from "../constants";
 import type { UserRow } from "../queries/list-users";
 import { ROLES } from "@/shared/roles";
 
@@ -43,6 +42,8 @@ export function UsersTable({
   canUpdate: boolean;
 }) {
   const tRoles = useTranslations("roles");
+  const t = useTranslations("users.table");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const [activeTarget, setActiveTarget] = useState<{ user: UserRow; isActive: boolean } | null>(
     null,
@@ -50,11 +51,11 @@ export function UsersTable({
   const [resetTarget, setResetTarget] = useState<UserRow | null>(null);
 
   const columns: DataTableColumn<UserRow>[] = [
-    { key: "name", label: "Ad", sortable: true },
-    { key: "email", label: "E-posta", sortable: true },
+    { key: "name", label: t("name"), sortable: true },
+    { key: "email", label: t("email"), sortable: true },
     {
       key: "role",
-      label: "Rol",
+      label: t("role"),
       sortable: true,
       render: (row) => (
         <Chip color={ROLE_COLORS[row.role]} size="sm" variant="flat">
@@ -64,23 +65,23 @@ export function UsersTable({
     },
     {
       key: "isActive",
-      label: "Durum",
+      label: t("status"),
       sortable: true,
       render: (row) => (
         <Chip color={row.isActive ? "success" : "default"} size="sm" variant="flat">
-          {row.isActive ? "Aktif" : "Pasif"}
+          {row.isActive ? tCommon("active") : tCommon("passive")}
         </Chip>
       ),
     },
     {
       key: "lastLoginAt",
-      label: "Son giriş",
+      label: t("lastLogin"),
       sortable: true,
       render: (row) => formatDateTime(row.lastLoginAt),
     },
     {
       key: "createdAt",
-      label: "Oluşturulma",
+      label: t("createdAt"),
       sortable: true,
       render: (row) => formatDateTime(row.createdAt),
     },
@@ -93,7 +94,7 @@ export function UsersTable({
       return;
     }
     addToast({
-      title: isActive ? "Kullanıcı aktifleştirildi." : "Kullanıcı pasife alındı.",
+      title: isActive ? t("activated") : t("deactivated"),
       color: "success",
     });
     router.refresh();
@@ -102,7 +103,7 @@ export function UsersTable({
   return (
     <>
       <DataTable<UserRow>
-        ariaLabel="Kullanıcı listesi"
+        ariaLabel={t("aria")}
         columns={columns}
         rows={rows}
         total={total}
@@ -111,30 +112,37 @@ export function UsersTable({
         sort={sort}
         dir={dir}
         q={q}
-        searchPlaceholder="Ad veya e-posta ara..."
+        searchPlaceholder={t("search")}
         filters={[
-          { key: "role", label: "Rol", options: ROLES.map((role) => ({ value: role as string, label: tRoles(role) })) },
-          { key: "status", label: "Durum", options: [...USER_STATUS_OPTIONS] },
+          { key: "role", label: t("role"), options: ROLES.map((role) => ({ value: role as string, label: tRoles(role) })) },
+          {
+            key: "status",
+            label: t("status"),
+            options: [
+              { value: "active", label: tCommon("active") },
+              { value: "passive", label: tCommon("passive") },
+            ],
+          },
         ]}
-        emptyMessage="Kullanıcı bulunamadı."
+        emptyMessage={t("empty")}
         rowActions={(row) => [
           {
             key: "edit",
-            label: "Düzenle",
+            label: t("edit"),
             icon: <Pencil className="h-4 w-4" />,
             href: `/ayarlar/kullanicilar/${row.id}`,
             hidden: !canUpdate,
           },
           {
             key: "reset-password",
-            label: "Parola sıfırla",
+            label: t("resetPassword"),
             icon: <KeyRound className="h-4 w-4" />,
             onPress: () => setResetTarget(row),
             hidden: !canUpdate,
           },
           {
             key: "toggle-active",
-            label: row.isActive ? "Pasife al" : "Aktifleştir",
+            label: row.isActive ? t("deactivate") : t("activate"),
             icon: row.isActive ? <Power className="h-4 w-4" /> : <RefreshCcw className="h-4 w-4" />,
             color: row.isActive ? "danger" : "default",
             onPress: () => setActiveTarget({ user: row, isActive: !row.isActive }),
@@ -148,17 +156,15 @@ export function UsersTable({
         onOpenChange={(open) => {
           if (!open) setActiveTarget(null);
         }}
-        title={activeTarget?.isActive ? "Kullanıcıyı aktifleştir" : "Kullanıcıyı pasife al"}
+        title={activeTarget?.isActive ? t("activateTitle") : t("deactivateTitle")}
         message={
           activeTarget
-            ? `"${activeTarget.user.name}" kullanıcısı ${
-                activeTarget.isActive
-                  ? "aktifleştirilecek. Onaylıyor musunuz?"
-                  : "pasife alınacak; mevcut oturumuyla bile işlem yapamayacak. Onaylıyor musunuz?"
-              }`
+            ? t(activeTarget.isActive ? "activateConfirm" : "deactivateConfirm", {
+                name: activeTarget.user.name,
+              })
             : ""
         }
-        confirmLabel={activeTarget?.isActive ? "Aktifleştir" : "Pasife al"}
+        confirmLabel={activeTarget?.isActive ? t("activate") : t("deactivate")}
         confirmColor={activeTarget?.isActive ? "primary" : "danger"}
         onConfirm={async () => {
           if (activeTarget) await handleSetActive(activeTarget.user, activeTarget.isActive);

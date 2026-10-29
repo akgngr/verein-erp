@@ -172,13 +172,11 @@ export async function updateDonationAction(input: unknown): Promise<ActionResult
       });
       if (activeItem) {
         throw new ActionError(
-          "Bu bağışın aktif bir bildirimi var; önce bildirimi iptal edin, sonra düzenleyin.",
+          "donations.errors.activeConfirmationEdit",
         );
       }
       if (existing.updatedAt.toISOString() !== input.updatedAt) {
-        throw new ActionError(
-          "Bu kayıt başka biri tarafından değiştirildi. Sayfayı yenileyip tekrar deneyin.",
-        );
+        throw new ActionError("common.errors.staleRecord");
       }
 
       const cents = toCents(input.amount);
@@ -299,7 +297,7 @@ export async function cancelDonationAction(input: unknown): Promise<ActionResult
       });
       if (activeItem) {
         throw new ActionError(
-          "Bu bağışın aktif bir bildirimi var; önce bildirimi iptal edin.",
+          "donations.errors.activeConfirmation",
         );
       }
 

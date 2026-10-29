@@ -49,14 +49,10 @@ export async function changeMeetingStatusAction(
 
       if (input.status === "APPROVED") {
         if (meeting._count.agendaItems < 1) {
-          throw new ActionError(
-            "Onaylamak için en az bir gündem maddesi gereklidir.",
-          );
+          throw new ActionError("meetings.errors.approveNeedsAgenda");
         }
         if (meeting._count.attendees < 1) {
-          throw new ActionError(
-            "Onaylamak için en az bir katılımcının 'Katıldı' olarak işaretlenmesi gereklidir.",
-          );
+          throw new ActionError("meetings.errors.approveNeedsPresent");
         }
       }
 

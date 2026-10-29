@@ -22,7 +22,7 @@ export async function GET(request: Request): Promise<Response> {
     }
     console.error(
       "[inventory] export failed:",
-      error instanceof Error ? error.message : "Unknown error",
+      error instanceof Error ? error.message : String(error),
     );
     return new Response("Internal Server Error", { status: 500 });
   }

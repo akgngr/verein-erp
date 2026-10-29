@@ -176,9 +176,7 @@ export async function updateBookingAction(input: unknown): Promise<ActionResult>
         throw new ActionError("accounting.errors.reversedNoEdit");
       }
       if (existing.sourceType) {
-        throw new ActionError(
-          "Kaynak fiş (otomatik) düzenlenemez; kaynağı olan modülden yönetilir.",
-        );
+        throw new ActionError("accounting.errors.sourcedNoEdit");
       }
 
       const year = existing.year;
@@ -193,9 +191,7 @@ export async function updateBookingAction(input: unknown): Promise<ActionResult>
       }
 
       if (existing.updatedAt.toISOString() !== input.updatedAt) {
-        throw new ActionError(
-          "Bu kayıt başka biri tarafından değiştirildi. Sayfayı yenileyip tekrar deneyin.",
-        );
+        throw new ActionError("common.errors.staleRecord");
       }
 
       try {

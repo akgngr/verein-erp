@@ -244,5 +244,9 @@
     "versionMissing": "Kayıt sürümü eksik.",
     "noteEmpty": "Not boş olamaz.",
     "noteMax": "Not en fazla 2000 karakter olabilir."
+  },
+  "module": {
+    "label": "Evrak Kayıt",
+    "description": "Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi."
   }
 }

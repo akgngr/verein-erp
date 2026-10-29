@@ -436,7 +436,9 @@
     "approvedNoDelete": "Eine freigegebene Sitzung kann nicht gelöscht werden. Bitte zuerst erneut öffnen.",
     "approvedFileAdminOnly": "Dateien einer freigegebenen Sitzung kann nur ein Administrator löschen.",
     "transitionNotAllowed": "Diese Statusänderung ist nicht zulässig.",
-    "forbidden": "Für diese Aktion fehlt Ihnen die Berechtigung."
+    "forbidden": "Für diese Aktion fehlt Ihnen die Berechtigung.",
+    "approveNeedsAgenda": "Zur Freigabe ist mindestens ein Tagesordnungspunkt erforderlich.",
+    "approveNeedsPresent": "Zur Freigabe muss mindestens ein Teilnehmer als „anwesend“ markiert sein."
   },
   "validation": {
     "taskMin": "Die Aufgabenbeschreibung muss mindestens 3 Zeichen lang sein.",
@@ -467,7 +469,8 @@
     "quorumMax": "Die Beschlussfähigkeit darf höchstens 500 betragen.",
     "descriptionMax": "Die Beschreibung darf höchstens 2000 Zeichen lang sein.",
     "endNeedsStart": "Für eine Endzeit ist eine Startzeit erforderlich.",
-    "endAfterStart": "Die Endzeit muss nach der Startzeit liegen."
+    "endAfterStart": "Die Endzeit muss nach der Startzeit liegen.",
+    "quorumInt": "Die Beschlussfähigkeit muss eine ganze Zahl sein."
   },
   "meta": {
     "list": "Sitzungen",
@@ -475,5 +478,9 @@
     "create": "Neue Sitzung",
     "detail": "Sitzungsdetails",
     "edit": "Sitzung bearbeiten"
+  },
+  "module": {
+    "label": "Sitzungen",
+    "description": "Vorstands- und Mitgliederversammlungen, Protokolle und Beschlüsse."
   }
 }

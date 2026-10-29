@@ -35,13 +35,28 @@ import {
 } from "../permissions-matrix";
 import type { UserRow } from "../queries/list-users";
 
-const ACTION_LABELS: Record<PermissionAction, { label: string; color: "default" | "primary" | "secondary" | "success" | "warning" | "danger" }> = {
-  view: { label: "Görüntüleme", color: "default" },
-  create: { label: "Oluşturma", color: "primary" },
-  update: { label: "Düzenleme", color: "secondary" },
-  delete: { label: "Silme", color: "danger" },
-  approve: { label: "Onaylama", color: "success" },
+const ACTION_COLORS: Record<PermissionAction, "default" | "primary" | "secondary" | "success" | "warning" | "danger"> = {
+  view: "default",
+  create: "primary",
+  update: "secondary",
+  delete: "danger",
+  approve: "success",
 };
+
+/** Matris metinleri `users.matrix` çevirilerinden okunur (permissions-matrix.ts yalnızca yapı taşır). */
+function useMatrixLabels() {
+  const t = useTranslations("users.matrix");
+  return useMemo(() => ({
+    t,
+    action: (action: PermissionAction) => t(`actions.${action}`),
+    roleLabel: (role: Role) => t(`roles.${role}.label`),
+    roleShort: (role: Role) => t(`roles.${role}.shortDesc`),
+    roleLegal: (role: Role) => t(`roles.${role}.legalContext`),
+    module: (res: PermissionResourceMeta) => t(`modules.${res.moduleKey}`),
+    resource: (res: PermissionResourceMeta) => t(`resources.${res.resourceKey}.label`),
+    description: (res: PermissionResourceMeta) => t(`resources.${res.resourceKey}.description`),
+  }), [t]);
+}
 
 export function RolePermissionsMatrix({
   users = [],
@@ -58,6 +73,8 @@ export function RolePermissionsMatrix({
   roleCounts?: Record<Role, number>;
 }) {
   const tRoles = useTranslations("roles");
+  const labels = useMatrixLabels();
+  const { t } = labels;
   const [selectedRole, setSelectedRole] = useState<Role>("ADMIN");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedUserFilter, setSelectedUserFilter] = useState<string>("");
@@ -79,20 +96,20 @@ export function RolePermissionsMatrix({
     if (!q) return ALL_RESOURCES_META;
     return ALL_RESOURCES_META.filter(
       (res) =>
-        res.moduleLabel.toLowerCase().includes(q) ||
-        res.resourceLabel.toLowerCase().includes(q) ||
-        res.description.toLowerCase().includes(q) ||
+        labels.module(res).toLowerCase().includes(q) ||
+        labels.resource(res).toLowerCase().includes(q) ||
+        labels.description(res).toLowerCase().includes(q) ||
         res.resourceKey.toLowerCase().includes(q),
     );
-  }, [searchQuery]);
+  }, [searchQuery, labels]);
 
   // Kaynakları modül bazında grupla
   const groupedResources = useMemo(() => {
     const map = new Map<string, PermissionResourceMeta[]>();
     for (const res of filteredResources) {
-      const list = map.get(res.moduleLabel) || [];
+      const list = map.get(res.moduleKey) || [];
       list.push(res);
-      map.set(res.moduleLabel, list);
+      map.set(res.moduleKey, list);
     }
     return Array.from(map.entries());
   }, [filteredResources]);
@@ -115,10 +132,10 @@ export function RolePermissionsMatrix({
         <div>
           <h2 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
             <ShieldCheck className="h-5 w-5 text-primary" />
-            Rol ve İzin Yönetimi
+            {t("title")}
           </h2>
           <p className="text-small text-default-500">
-            Sistem rollerinin modül bazındaki okuma, yazma, onay ve silme yetki matrisi.
+            {t("subtitle")}
           </p>
         </div>
 
@@ -130,8 +147,8 @@ export function RolePermissionsMatrix({
           size="sm"
           color="primary"
         >
-          <Tab key="role-detail" title="Rol İnceleme" />
-          <Tab key="matrix-table" title="Karşılaştırma Matrisi" />
+          <Tab key="role-detail" title={t("viewRole")} />
+          <Tab key="matrix-table" title={t("viewMatrix")} />
         </Tabs>
       </div>
 
@@ -157,11 +174,11 @@ export function RolePermissionsMatrix({
                     {tRoles(meta.role)}
                   </Chip>
                   <span className="text-[11px] font-semibold text-default-400">
-                    {userCount} üye
+                    {t("memberCount", { count: userCount })}
                   </span>
                 </div>
                 <p className="text-xs text-default-600 line-clamp-2 leading-relaxed">
-                  {meta.shortDesc}
+                  {labels.roleShort(meta.role)}
                 </p>
               </CardBody>
             </Card>
@@ -174,7 +191,7 @@ export function RolePermissionsMatrix({
         <div className="flex items-center gap-2 flex-1 max-w-md">
           <Input
             size="sm"
-            placeholder="Modül veya yetki ara (örn: muhasebe, evrak, onay)..."
+            placeholder={t("search")}
             startContent={<Search className="h-4 w-4 text-default-400" />}
             value={searchQuery}
             onValueChange={setSearchQuery}
@@ -187,12 +204,13 @@ export function RolePermissionsMatrix({
           <div className="flex items-center gap-2">
             <span className="text-xs font-medium text-default-500 shrink-0 flex items-center gap-1">
               <UserCheck className="h-3.5 w-3.5 text-primary" />
-              Kullanıcı Yetki Önizle:
+              {t("previewUser")}
             </span>
             <Select
               id="users-permission-preview-user"
               size="sm"
-              placeholder="Kullanıcı seçin..."
+              placeholder={t("selectUser")}
+              aria-label={t("selectUser")}
               className="w-56"
               selectedKeys={selectedUserFilter ? [selectedUserFilter] : []}
               onSelectionChange={(keys) => {
@@ -218,6 +236,7 @@ export function RolePermissionsMatrix({
                 size="sm"
                 isIconOnly
                 variant="light"
+                aria-label={t("clearUser")}
                 onPress={() => setSelectedUserFilter("")}
               >
                 <X className="h-4 w-4" />
@@ -239,28 +258,28 @@ export function RolePermissionsMatrix({
               <div className="flex flex-col">
                 <div className="flex items-center gap-2">
                   <h3 className="text-base font-bold text-foreground">
-                    {currentRoleMeta.label}
+                    {labels.roleLabel(currentRoleMeta.role)}
                   </h3>
                   <Chip size="sm" color={currentRoleMeta.badgeColor} variant="solid">
                     {tRoles(selectedRole)}
                   </Chip>
                   {selectedUser && (
                     <Chip size="sm" variant="flat" color="success">
-                      Simüle Edilen: {selectedUser.name}
+                      {t("simulated", { name: selectedUser.name })}
                     </Chip>
                   )}
                 </div>
                 <p className="text-xs text-default-500 mt-0.5">
-                  {currentRoleMeta.legalContext}
+                  {labels.roleLegal(currentRoleMeta.role)}
                 </p>
               </div>
             </div>
 
             <div className="flex items-center gap-3 shrink-0">
               <div className="text-right">
-                <span className="text-xs text-default-400 block font-medium">Toplam Aktif İzin</span>
+                <span className="text-xs text-default-400 block font-medium">{t("totalActive")}</span>
                 <span className="text-lg font-bold text-primary">
-                  {totalPermissionsForRole} Eylem Yetkisi
+                  {t("actionCount", { count: totalPermissionsForRole })}
                 </span>
               </div>
             </div>
@@ -268,15 +287,15 @@ export function RolePermissionsMatrix({
 
           {/* Modül Gruplu Yetki Listesi */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {groupedResources.map(([moduleLabel, resources]) => (
-              <Card key={moduleLabel} className="border border-default-200/80 shadow-xs">
+            {groupedResources.map(([moduleKey, resources]) => (
+              <Card key={moduleKey} className="border border-default-200/80 shadow-xs">
                 <CardHeader className="bg-default-50/80 border-b border-default-200/60 py-2.5 px-4 flex items-center justify-between">
                   <span className="text-sm font-semibold text-foreground flex items-center gap-2">
                     <span className="h-2 w-2 rounded-full bg-primary" />
-                    {moduleLabel}
+                    {labels.module(resources[0])}
                   </span>
                   <span className="text-xs text-default-400 font-medium">
-                    {resources.length} kaynak
+                    {t("resourceCount", { count: resources.length })}
                   </span>
                 </CardHeader>
                 <CardBody className="p-4 flex flex-col gap-4">
@@ -287,27 +306,26 @@ export function RolePermissionsMatrix({
                     >
                       <div className="flex items-center justify-between">
                         <span className="text-xs font-semibold text-foreground">
-                          {res.resourceLabel}
+                          {labels.resource(res)}
                         </span>
                         <code className="text-[10px] font-mono bg-default-100 text-default-600 px-1.5 py-0.5 rounded">
                           {res.resourceKey}
                         </code>
                       </div>
                       <p className="text-[11px] text-default-400 leading-snug">
-                        {res.description}
+                        {labels.description(res)}
                       </p>
 
                       {/* Eylem Rozetleri */}
                       <div className="flex flex-wrap gap-1.5 pt-1">
                         {res.supportedActions.map((action) => {
                           const isGranted = can(selectedRole, res.definition, action);
-                          const actionMeta = ACTION_LABELS[action];
                           return (
                             <Chip
                               key={action}
                               size="sm"
                               variant={isGranted ? "flat" : "bordered"}
-                              color={isGranted ? actionMeta.color : "default"}
+                              color={isGranted ? ACTION_COLORS[action] : "default"}
                               startContent={
                                 isGranted ? (
                                   <Check className="h-3 w-3 shrink-0 ml-1" />
@@ -319,7 +337,7 @@ export function RolePermissionsMatrix({
                                 !isGranted ? "opacity-40 border-dashed" : "font-medium"
                               }`}
                             >
-                              {actionMeta.label}
+                              {labels.action(action)}
                             </Chip>
                           );
                         })}
@@ -340,8 +358,8 @@ export function RolePermissionsMatrix({
             <table className="w-full text-left text-xs">
               <thead className="bg-default-100 text-default-700 uppercase tracking-wider text-[11px] font-semibold border-b border-default-200">
                 <tr>
-                  <th className="py-3 px-4 w-64">Modül / Kaynak</th>
-                  <th className="py-3 px-3 w-36">Eylem</th>
+                  <th className="py-3 px-4 w-64">{t("colResource")}</th>
+                  <th className="py-3 px-3 w-36">{t("colAction")}</th>
                   {ALL_ROLES_META.map((meta) => (
                     <th
                       key={meta.role}
@@ -350,7 +368,7 @@ export function RolePermissionsMatrix({
                       }`}
                     >
                       <div className="flex flex-col items-center gap-0.5">
-                        <span>{meta.label.split(" ")[0]}</span>
+                        <span>{tRoles(meta.role)}</span>
                         <span className="text-[9px] text-default-400 font-normal lowercase">
                           {meta.role}
                         </span>
@@ -362,7 +380,6 @@ export function RolePermissionsMatrix({
               <tbody className="divide-y divide-default-100">
                 {filteredResources.flatMap((res) =>
                   res.supportedActions.map((action, actionIdx) => {
-                    const actionMeta = ACTION_LABELS[action];
                     return (
                       <tr
                         key={`${res.resourceKey}-${action}`}
@@ -375,10 +392,10 @@ export function RolePermissionsMatrix({
                           >
                             <div className="flex flex-col gap-0.5">
                               <span className="text-default-400 text-[10px] uppercase font-semibold">
-                                {res.moduleLabel}
+                                {labels.module(res)}
                               </span>
                               <span className="font-semibold text-foreground text-xs">
-                                {res.resourceLabel}
+                                {labels.resource(res)}
                               </span>
                               <code className="text-[10px] text-default-400 font-mono mt-0.5">
                                 {res.resourceKey}
@@ -387,8 +404,8 @@ export function RolePermissionsMatrix({
                           </td>
                         ) : null}
                         <td className="py-2.5 px-3 border-r border-default-100">
-                          <Chip size="sm" variant="flat" color={actionMeta.color} className="text-[10px] h-6">
-                            {actionMeta.label}
+                          <Chip size="sm" variant="flat" color={ACTION_COLORS[action]} className="text-[10px] h-6">
+                            {labels.action(action)}
                           </Chip>
                         </td>
                         {ALL_ROLES_META.map((meta) => {
@@ -429,6 +446,8 @@ export function RolePermissionsMatrix({
 /** Form içinde canlı rol yetki önizleme bileşeni */
 export function RolePermissionsPreview({ role }: { role: Role }) {
   const meta = ALL_ROLES_META.find((r) => r.role === role) || ALL_ROLES_META[0];
+  const labels = useMatrixLabels();
+  const { t } = labels;
 
   const permissionsCount = useMemo(() => {
     let count = 0;
@@ -446,15 +465,15 @@ export function RolePermissionsPreview({ role }: { role: Role }) {
         <div className="flex items-center gap-2">
           <Shield className="h-4 w-4 text-primary" />
           <span className="text-xs font-semibold text-foreground">
-            {meta.label} Yetki Özeti
+            {t("previewTitle", { role: labels.roleLabel(meta.role) })}
           </span>
         </div>
         <Chip size="sm" color={meta.badgeColor} variant="flat">
-          {permissionsCount} Yetki Aktif
+          {t("previewCount", { count: permissionsCount })}
         </Chip>
       </div>
       <p className="text-xs text-default-500 leading-relaxed">
-        {meta.legalContext}
+        {labels.roleLegal(meta.role)}
       </p>
       <div className="flex flex-wrap gap-1.5 pt-1">
         {ALL_RESOURCES_META.slice(0, 6).map((res) => {
@@ -472,7 +491,7 @@ export function RolePermissionsPreview({ role }: { role: Role }) {
               color={hasWrite ? "primary" : hasView ? "default" : "danger"}
               className={`text-[10px] h-5 ${!hasView ? "opacity-30" : ""}`}
             >
-              {res.moduleLabel}: {hasWrite ? "Tam" : hasView ? "Okuma" : "Yok"}
+              {labels.module(res)}: {t(hasWrite ? "accessFull" : hasView ? "accessRead" : "accessNone")}
             </Chip>
           );
         })}

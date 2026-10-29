@@ -24,7 +24,7 @@ const CURRENT_YEAR = new Date().getFullYear();
 export const generateDuesSchema = z.object({
   year: z.coerce
     .number()
-    .int("Yıl tam sayı olmalıdır.")
+    .int("validation.yearInt")
     .min(CURRENT_YEAR - 1, "members.validation.yearMinPrev")
     .max(CURRENT_YEAR + 1, "members.validation.yearMaxNext"),
   dueDate: z
@@ -39,7 +39,7 @@ export const dueAddSchema = z.object({
   memberId: z.string().min(1),
   year: z.coerce
     .number()
-    .int("Yıl tam sayı olmalıdır.")
+    .int("validation.yearInt")
     .min(2000, "Yıl 2000'den küçük olamaz.")
     .max(CURRENT_YEAR + 1, "members.validation.yearAfterNext"),
   amount: z

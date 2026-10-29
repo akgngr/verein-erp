@@ -180,5 +180,9 @@
     "description": "Etkinlik Açıklaması",
     "dateTime": "Tarih & Zaman",
     "endLine": "Bitiş: {date}"
+  },
+  "module": {
+    "label": "Etkinlikler",
+    "description": "Dernek etkinlikleri, seminerler, atölyeler ve katılımcı yönetimi."
   }
 }

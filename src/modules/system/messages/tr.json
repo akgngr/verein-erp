@@ -50,5 +50,18 @@
   "meta": {
     "settings": "Ayarlar",
     "modules": "Modül yönetimi"
+  },
+  "module": {
+    "label": "Modül Yönetimi",
+    "description": "Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi."
+  },
+  "authorCommunity": "Topluluk / Geliştirici",
+  "toggleAria": "{label} durumunu değiştir",
+  "deleteAria": "{label} modülünü sil",
+  "errors": {
+    "notFound": "Modül bulunamadı.",
+    "coreCannotDisable": "Çekirdek sistem modülleri devre dışı bırakılamaz.",
+    "onlyExtensionsDeletable": "Yalnızca harici geliştirici eklentileri (EXTENSION) silinebilir. Çekirdek ve resmi modüller silinemez.",
+    "deleteFailed": "Modül silinirken hata oluştu."
   }
 }

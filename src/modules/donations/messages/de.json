@@ -291,7 +291,14 @@
     "alreadyAnonymized": "Dieser Spender wurde bereits anonymisiert.",
     "confirmationNeedsItem": "Für eine Zuwendungsbestätigung ist mindestens eine Position erforderlich.",
     "waiverExpenseRequired": "Für eine Aufwandsspende ist eine Ausgabenkategorie erforderlich.",
-    "typeDonorNumber": "Bitte die Spendernummer eingeben: {number}"
+    "typeDonorNumber": "Bitte die Spendernummer eingeben: {number}",
+    "activeConfirmationEdit": "Für diese Spende besteht eine aktive Bestätigung; stornieren Sie zuerst die Bestätigung und bearbeiten Sie dann.",
+    "activeConfirmation": "Für diese Spende besteht eine aktive Bestätigung; stornieren Sie zuerst die Bestätigung.",
+    "retentionBlocksAnonymize": "Für diesen Spender laufen noch Aufbewahrungsfristen ({count} Bestätigungen). Eine Anonymisierung ist erst nach Ablauf möglich.",
+    "activeDonationBlocksAnonymize": "Es gibt eine Spende mit aktiver Bestätigung ({number}); stornieren Sie zuerst die Bestätigung.",
+    "mixedWaiver": "Die ausgewählten Spenden mischen Aufwandsspenden und Geldspenden; bitte getrennt bestätigen.",
+    "feeConfirmationsDisabled": "Bestätigungen für Mitgliedsbeiträge sind deaktiviert (membershipFeesDeductible = false; § 10b Abs. 1 Satz 8 EStG).",
+    "mixedWaiverYear": "Die Spenden dieses Spenders im Jahr sind gemischt (Aufwandsspende ja/nein); Sammelbestätigung übersprungen."
   },
   "validation": {
     "periodStartInvalid": "Bitte einen gültigen Zeitraumbeginn eingeben.",
@@ -325,5 +332,9 @@
     "organizationRequired": "Für Organisationen ist ein Name (mindestens 2 Zeichen) erforderlich.",
     "postalCodeDe": "Für Deutschland muss die PLZ 5-stellig sein.",
     "confirmNumberRequired": "Zur Bestätigung bitte die Spendernummer eingeben (z. B. SP-0007)."
+  },
+  "module": {
+    "label": "Spenden",
+    "description": "Spendenerfassung, Zuwendungsbestätigungen und Spenderverwaltung."
   }
 }

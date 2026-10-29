@@ -8,7 +8,7 @@ import { getEnv } from "@/shared/env";
 import {
   openReadStream,
   parseSingleFileUpload,
-  validateUpload,
+  uploadErrorMessage, validateUpload,
   buildDownloadResponse,
 } from "@/shared/files";
 import { can } from "@/shared/permissions/define";
@@ -116,7 +116,7 @@ export async function uploadOrganizationLogoHandler(request: Request): Promise<R
     maxBytes: LOGO_MAX_BYTES,
   });
   if (!validation.ok) {
-    return NextResponse.json({ ok: false, error: validation.error }, { status: 400 });
+    return NextResponse.json({ ok: false, error: await uploadErrorMessage(validation) }, { status: 400 });
   }
 
   const db = getDb();

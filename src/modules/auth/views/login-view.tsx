@@ -2,6 +2,7 @@
 
 import { Card, CardBody, CardHeader } from "@heroui/react";
 import { Building2 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { LoginForm } from "../components/login-form";
 
@@ -11,6 +12,7 @@ import { LoginForm } from "../components/login-form";
  * sardığı için client tarafında güvenle kullanılır.
  */
 export function LoginView({ passive }: { passive?: boolean }) {
+  const t = useTranslations("auth");
   return (
     <Card className="w-full max-w-md border border-default-200/80 shadow-md rounded-2xl" shadow="none">
       <CardHeader className="flex flex-col items-center text-center gap-3 px-8 pt-9 pb-2">
@@ -18,8 +20,8 @@ export function LoginView({ passive }: { passive?: boolean }) {
           <Building2 className="h-6 w-6" aria-hidden />
         </div>
         <div>
-          <h1 className="text-xl font-bold tracking-tight text-foreground">Dernek Yönetim Sistemi</h1>
-          <p className="mt-1 text-small text-default-500">Devam etmek için oturum açın</p>
+          <h1 className="text-xl font-bold tracking-tight text-foreground">{t("appTitle")}</h1>
+          <p className="mt-1 text-small text-default-500">{t("loginSubtitle")}</p>
         </div>
       </CardHeader>
       <CardBody className="gap-4 px-8 pb-9 pt-4">
@@ -28,8 +30,7 @@ export function LoginView({ passive }: { passive?: boolean }) {
             role="alert"
             className="rounded-xl border border-warning-200 bg-warning-50/70 px-4 py-3 text-small text-warning-700 dark:border-warning-900/50 dark:bg-warning-950/30 dark:text-warning-300"
           >
-            Oturumunuz sonlandırıldı. Hesabınız pasif duruma alınmış olabilir; lütfen
-            yöneticinizle görüşün.
+            {t("passiveNotice")}
           </div>
         ) : null}
         <LoginForm />

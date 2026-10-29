@@ -1,3 +1,5 @@
+import { getTranslations } from "next-intl/server";
+
 import { requirePermission, ForbiddenError } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { EmptyState } from "@/shared/components/ui/empty-state";
@@ -15,15 +17,16 @@ export async function UserEditView({ userId }: { userId: string }) {
     throw error;
   }
 
+  const t = await getTranslations("users");
   const user = await getUserById(userId);
   if (!user) {
-    return <EmptyState title="Kullanıcı bulunamadı" description="Kayıt silinmiş olabilir." />;
+    return <EmptyState title={t("notFoundTitle")} description={t("notFoundDescription")} />;
   }
 
   return (
     <div>
       <PageHeader
-        title="Kullanıcıyı Düzenle"
+        title={t("editTitle")}
         description={`${user.name} — ${user.email}`}
       />
       <UserFormCard>

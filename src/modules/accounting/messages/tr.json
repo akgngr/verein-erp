@@ -383,7 +383,11 @@
     "itemFeeCategory": "aidat kategorisi",
     "itemValidDonationCategory": "geçerli bağış kategorisi",
     "itemValidCashAccount": "geçerli kasa hesabı",
-    "itemValidBankAccount": "geçerli banka hesabı"
+    "itemValidBankAccount": "geçerli banka hesabı",
+    "sourcedNoEdit": "Kaynak fiş (otomatik) düzenlenemez; kaynağı olan modülden yönetilir.",
+    "categoryInUse": "Bu kategoride fiş kayıtlı; yön (Gelir/Gider) ve alan (Sphere) değiştirilemez. Yeni bir kategori oluşturun.",
+    "categoryDirectionLocked": "Fişi olan kategoride yön değişmez.",
+    "categorySphereLocked": "Fişi olan kategoride alan değişmez."
   },
   "settings": {
     "donationShort": "Bağış"
@@ -420,5 +424,9 @@
     "cashAccountRequired": "Kasa hesabı seçin.",
     "bankAccountRequired": "Banka hesabı seçin.",
     "donationCategoryRequired": "Bağış kategorisi seçin."
+  },
+  "module": {
+    "label": "Muhasebe",
+    "description": "Alman dernek mevzuatına uygun çift taraflı defter tutma, fiş ve bütçe yönetimi."
   }
 }

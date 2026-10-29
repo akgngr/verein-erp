@@ -266,7 +266,7 @@ export async function issueCollectiveDonationConfirmation(
   const waivedValues = new Set(donations.map((donation) => donation.waivedReimbursement));
   if (waivedValues.size > 1) {
     throw new IssueError(
-      "Seçilen bağışlarda Aufwandsspende değeri karışık; ayrı ayrı bildirim üretin.",
+      "donations.errors.mixedWaiver",
     );
   }
   const waived = waivedValues.has(true);
@@ -315,7 +315,7 @@ export async function issueMembershipFeeConfirmation(
   const profile = await getIssuerMembershipFeesDeductible();
   if (!profile) {
     throw new IssueError(
-      "Aidat bildirimleri kapalı (membershipFeesDeductible = false; § 10b Abs. 1 Satz 8 EStG).",
+      "donations.errors.feeConfirmationsDisabled",
     );
   }
 
@@ -435,7 +435,7 @@ async function issueCollectiveDonationForYear(
   const waivedValues = new Set(eligible.map((donation) => donation.waivedReimbursement));
   if (waivedValues.size > 1) {
     throw new IssueError(
-      "Bu bağışçının yılındaki bağışlar karışık (Aufwandsspende evet/hayır); toplu üretim atlandı.",
+      "donations.errors.mixedWaiverYear",
     );
   }
   return issueCollectiveDonationConfirmation(actor, {

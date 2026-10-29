@@ -2,6 +2,8 @@ import "server-only";
 
 import { NextResponse } from "next/server";
 
+import { getMessageTranslator } from "@/shared/i18n/translate-message";
+
 import { writeAudit } from "@/shared/audit/write-audit";
 import { getDb } from "@/shared/db";
 import { parseSingleFileUpload } from "@/shared/files/http";
@@ -79,7 +81,8 @@ export async function importMembersHandler(request: Request): Promise<Response> 
     parsedFile = await parseImportWorkbook(file.buffer);
   } catch (error) {
     if (error instanceof ImportParseError) {
-      return NextResponse.json({ ok: false, error: error.message }, { status: 400 });
+      const translate = await getMessageTranslator();
+      return NextResponse.json({ ok: false, error: translate(error.message) }, { status: 400 });
     }
     throw error;
   }

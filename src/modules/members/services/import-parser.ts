@@ -145,7 +145,7 @@ export async function parseImportWorkbook(buffer: Buffer): Promise<ParsedImport>
   const missing = REQUIRED_HEADERS.filter((field) => !columnByField.has(field));
   if (missing.length > 0) {
     throw new ImportParseError(
-      "Zorunlu sütunlar bulunamadı (Ad, Soyad, Üyelik Türü, Üyelik Başlangıç Tarihi). Şablonu indirip doldurun.",
+      "members.errors.importMissingColumns",
     );
   }
 

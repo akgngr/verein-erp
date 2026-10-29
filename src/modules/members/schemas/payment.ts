@@ -22,7 +22,7 @@ const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
 /** Aidat yılı: makul aralık 2000..gelecek yıl (KARAR: serbest metin değil). */
 const dueYearSchema = z.coerce
   .number()
-  .int("Aidat yılı tam sayı olmalıdır.")
+  .int("validation.yearInt")
   .min(2000, "Aidat yılı 2000'den küçük olamaz.")
   .max(new Date().getFullYear() + 1, "Aidat yılı gelecek yıldan büyük olamaz.");
 

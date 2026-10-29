@@ -47,7 +47,7 @@ export async function setLocaleAction(input: unknown): Promise<ActionResult<Loca
       const key = issue.path.join(".") || "_form";
       (fieldErrors[key] ??= []).push(issue.message);
     }
-    return { ok: false, error: "Geçersiz dil seçimi.", fieldErrors };
+    return { ok: false, error: "auth.errors.invalidLocale", fieldErrors };
   }
 
   const newLocale = parsed.data.locale;

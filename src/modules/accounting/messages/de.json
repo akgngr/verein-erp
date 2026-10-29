@@ -383,7 +383,11 @@
     "itemFeeCategory": "Beitragskategorie",
     "itemValidDonationCategory": "gültige Spendenkategorie",
     "itemValidCashAccount": "gültiges Kassenkonto",
-    "itemValidBankAccount": "gültiges Bankkonto"
+    "itemValidBankAccount": "gültiges Bankkonto",
+    "sourcedNoEdit": "Automatisch erzeugte Buchungen können nicht bearbeitet werden; sie werden im Quellmodul verwaltet.",
+    "categoryInUse": "In dieser Kategorie gibt es Buchungen; Richtung (Einnahme/Ausgabe) und Sphäre können nicht geändert werden. Legen Sie eine neue Kategorie an.",
+    "categoryDirectionLocked": "Bei Kategorien mit Buchungen ist die Richtung fest.",
+    "categorySphereLocked": "Bei Kategorien mit Buchungen ist die Sphäre fest."
   },
   "settings": {
     "donationShort": "Spende"
@@ -420,5 +424,9 @@
     "cashAccountRequired": "Bitte ein Kassenkonto wählen.",
     "bankAccountRequired": "Bitte ein Bankkonto wählen.",
     "donationCategoryRequired": "Bitte eine Spendenkategorie wählen."
+  },
+  "module": {
+    "label": "Buchhaltung",
+    "description": "Buchführung nach deutschem Vereinsrecht mit Buchungen, Belegen und Budget."
   }
 }

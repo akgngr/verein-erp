@@ -44,5 +44,16 @@
   "membershipFeesDeductibleDescription": "Yalnızca § 10b Abs. 1 Satz 8 EStG kapsamı DIŞINDAKI amaçlar (örn. spor, hobi kültürü, gelenek) için işaretleyin. Emin değilseniz Steuerberater'a sorun.",
   "nav": {
     "organization": "Dernek Bilgileri"
+  },
+  "module": {
+    "label": "Dernek Bilgileri",
+    "description": "Dernek ana verileri, resmi iletişim ve antet logosu."
+  },
+  "validation": {
+    "dateFormat": "Tarih YYYY-MM-DD biçiminde olmalıdır.",
+    "nameMin": "Dernek adı en az 3 karakter olmalıdır.",
+    "purposesMax": "Amaç metni en fazla 500 karakter olabilir.",
+    "postalCodeDe": "Almanya için posta kodu 5 haneli olmalıdır (PLZ).",
+    "websiteInvalid": "Web sitesi geçerli bir adres olmalıdır (https://...)."
   }
 }

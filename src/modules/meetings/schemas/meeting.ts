@@ -44,7 +44,7 @@ const baseFields = {
   quorumRequired: emptyToNull(
     z.coerce
       .number()
-      .int("Yeter sayısı tam sayı olmalıdır.")
+      .int("meetings.validation.quorumInt")
       .min(1, "meetings.validation.quorumMin")
       .max(500, "meetings.validation.quorumMax")
       .nullable(),

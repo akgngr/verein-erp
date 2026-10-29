@@ -58,9 +58,7 @@ export async function updateMemberAction(
       if (!member) throw new ActionError("members.errors.memberNotFound");
 
       if (new Date(input.updatedAt).getTime() !== member.updatedAt.getTime()) {
-        throw new ActionError(
-          "Bu kayıt başka biri tarafından değiştirildi. Sayfayı yenileyip tekrar deneyin.",
-        );
+        throw new ActionError("common.errors.staleRecord");
       }
 
       const joinDate = parseDateOnly(input.joinDate);

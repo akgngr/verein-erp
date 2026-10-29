@@ -349,7 +349,9 @@
     "duesBelowPaid": "Der Beitrag darf nicht unter den bereits gezahlten Betrag gesenkt werden.",
     "duesWaiveWithPayments": "Eine Beitragszeile mit Zahlungen kann nicht befreit werden.",
     "paymentNotFound": "Zahlung nicht gefunden.",
-    "paymentAlreadyVoided": "Diese Zahlung wurde bereits storniert."
+    "paymentAlreadyVoided": "Diese Zahlung wurde bereits storniert.",
+    "dueHasPayments": "Beitragszeilen mit Zahlungen können nicht gelöscht werden. Stornieren Sie zuerst die Zahlungen.",
+    "importMissingColumns": "Pflichtspalten fehlen (Ad, Soyad, Üyelik Türü, Üyelik Başlangıç Tarihi). Bitte die Vorlage herunterladen und ausfüllen."
   },
   "validation": {
     "yearMinPrev": "Das Jahr darf höchstens das Vorjahr sein.",
@@ -394,5 +396,9 @@
     "referenceMax": "Die Referenz darf höchstens 100 Zeichen lang sein.",
     "voidReasonMin": "Der Stornogrund muss mindestens 5 Zeichen lang sein.",
     "voidReasonMax": "Der Stornogrund darf höchstens 300 Zeichen lang sein."
+  },
+  "module": {
+    "label": "Mitglieder",
+    "description": "Mitgliederverwaltung, Mitgliedsarten, Beitragssoll und Zahlungen."
   }
 }

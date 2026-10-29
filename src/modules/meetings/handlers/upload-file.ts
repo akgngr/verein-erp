@@ -6,7 +6,7 @@ import { NextResponse } from "next/server";
 import { writeAudit } from "@/shared/audit/write-audit";
 import { getDb } from "@/shared/db";
 import { getEnv } from "@/shared/env";
-import { parseSingleFileUpload, validateUpload } from "@/shared/files";
+import { parseSingleFileUpload, uploadErrorMessage, validateUpload } from "@/shared/files";
 import { makeStoredName, removeFile, saveFile } from "@/shared/files";
 import { can } from "@/shared/permissions/define";
 import { buildUserLabel } from "@/shared/utils";
@@ -87,7 +87,7 @@ export async function uploadMeetingFileHandler(
     maxBytes,
   });
   if (!validation.ok) {
-    return NextResponse.json({ ok: false, error: validation.error }, { status: 400 });
+    return NextResponse.json({ ok: false, error: await uploadErrorMessage(validation) }, { status: 400 });
   }
 
   // Depolama yolu: meetings/<yıl>/<meetingId>/<storedName> (4. bölüm).

@@ -52,9 +52,7 @@ export async function updateDocumentAction(
       if (!doc) throw new ActionError("documents.errors.documentNotFound");
 
       if (new Date(input.updatedAt).getTime() !== doc.updatedAt.getTime()) {
-        throw new ActionError(
-          "Bu kayıt başka biri tarafından değiştirildi. Sayfayı yenileyip tekrar deneyin.",
-        );
+        throw new ActionError("common.errors.staleRecord");
       }
 
       const documentDate = parseDateOnly(input.documentDate);

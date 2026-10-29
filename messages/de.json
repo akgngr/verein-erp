@@ -33,7 +33,8 @@
       "sessionExpired": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
       "forbidden": "Für diese Aktion fehlt Ihnen die Berechtigung.",
       "duplicate": "Dieser Datensatz existiert bereits.",
-      "unexpected": "Ein unerwarteter Fehler ist aufgetreten."
+      "unexpected": "Ein unerwarteter Fehler ist aufgetreten.",
+      "staleRecord": "Der Datensatz wurde zwischenzeitlich von einer anderen Person geändert. Bitte laden Sie die Seite neu und versuchen Sie es erneut."
     },
     "selectPlaceholder": "Bitte wählen",
     "noRecords": "Keine Einträge gefunden.",
@@ -73,7 +74,10 @@
       "activeFilters": "{count} Filter aktiv",
       "done": "Fertig",
       "label": "Tabelle"
-    }
+    },
+    "active": "Aktiv",
+    "passive": "Inaktiv",
+    "emailPlaceholder": "beispiel@verein.de"
   },
   "nav": {
     "panel": "Dashboard",
@@ -188,7 +192,10 @@
       "activeLanguage": "Aktuelle Sprache",
       "tr": "Türkçe",
       "de": "Deutsch",
-      "switchSuccess": "Die Sprache der Benutzeroberfläche wurde erfolgreich geändert."
+      "switchSuccess": "Die Sprache der Benutzeroberfläche wurde erfolgreich geändert.",
+      "trHint": "Türkische Oberfläche",
+      "deHint": "Deutsche Oberfläche & deutscher Vereinsstandard",
+      "switchedTo": "Oberflächensprache geändert: {language}"
     },
     "themeSection": {
       "title": "Erscheinungsbild & Design",
@@ -226,6 +233,13 @@
         "description": "Kontenrahmen (SKR49 / Standard), Budgetziele und Geschäftsjahresabschlüsse.",
         "action": "Einstellungen"
       }
+    },
+    "badges": {
+      "organization": "Profil & Identität",
+      "users": "Zugriff & Rollen",
+      "modules": "Module & Schema",
+      "audit": "Sicherheit & Protokoll",
+      "accounting": "Finanzstruktur"
     }
   },
   "roles": {
@@ -240,14 +254,18 @@
     "passwordMin": "Das Passwort muss mindestens 10 Zeichen lang sein.",
     "passwordUpper": "Das Passwort muss mindestens einen Großbuchstaben enthalten.",
     "passwordLower": "Das Passwort muss mindestens einen Kleinbuchstaben enthalten.",
-    "passwordDigit": "Das Passwort muss mindestens eine Ziffer enthalten."
+    "passwordDigit": "Das Passwort muss mindestens eine Ziffer enthalten.",
+    "emailInvalid": "Bitte eine gültige E-Mail-Adresse eingeben.",
+    "passwordHint": "Mindestens 10 Zeichen; mindestens 1 Großbuchstabe, 1 Kleinbuchstabe und 1 Ziffer.",
+    "yearInt": "Das Jahr muss eine ganze Zahl sein."
   },
   "files": {
     "readFailed": "Die Datei konnte nicht gelesen werden (multipart/form-data erwartet).",
     "missing": "Datei nicht gefunden.",
     "typeNotAllowed": "Dieser Dateityp ist nicht erlaubt.",
     "empty": "Leere Dateien können nicht hochgeladen werden.",
-    "contentMismatch": "Der Dateiinhalt passt nicht zur Endung .{extension}."
+    "contentMismatch": "Der Dateiinhalt passt nicht zur Endung .{extension}.",
+    "tooLarge": "Die Datei darf höchstens {maxMb} MB groß sein."
   },
   "accounting": {
     "list": {
@@ -631,7 +649,11 @@
       "itemFeeCategory": "Beitragskategorie",
       "itemValidDonationCategory": "gültige Spendenkategorie",
       "itemValidCashAccount": "gültiges Kassenkonto",
-      "itemValidBankAccount": "gültiges Bankkonto"
+      "itemValidBankAccount": "gültiges Bankkonto",
+      "sourcedNoEdit": "Automatisch erzeugte Buchungen können nicht bearbeitet werden; sie werden im Quellmodul verwaltet.",
+      "categoryInUse": "In dieser Kategorie gibt es Buchungen; Richtung (Einnahme/Ausgabe) und Sphäre können nicht geändert werden. Legen Sie eine neue Kategorie an.",
+      "categoryDirectionLocked": "Bei Kategorien mit Buchungen ist die Richtung fest.",
+      "categorySphereLocked": "Bei Kategorien mit Buchungen ist die Sphäre fest."
     },
     "settings": {
       "donationShort": "Spende"
@@ -668,6 +690,10 @@
       "cashAccountRequired": "Bitte ein Kassenkonto wählen.",
       "bankAccountRequired": "Bitte ein Bankkonto wählen.",
       "donationCategoryRequired": "Bitte eine Spendenkategorie wählen."
+    },
+    "module": {
+      "label": "Buchhaltung",
+      "description": "Buchführung nach deutschem Vereinsrecht mit Buchungen, Belegen und Budget."
     }
   },
   "audit": {
@@ -675,6 +701,105 @@
     "pageDescription": "Authentifizierungs- und Datenoperationen im System.",
     "meta": {
       "list": "Prüfprotokoll"
+    },
+    "actions": {
+      "LOGIN_SUCCESS": "Anmeldung (erfolgreich)",
+      "LOGIN_FAILED": "Anmeldung (fehlgeschlagen)",
+      "LOGOUT": "Abmeldung",
+      "CREATE": "Anlegen",
+      "UPDATE": "Änderung",
+      "DELETE": "Löschen",
+      "DEACTIVATE": "Deaktivierung",
+      "ACTIVATE": "Aktivierung",
+      "PASSWORD_CHANGE": "Passwortänderung",
+      "PASSWORD_RESET": "Passwort-Zurücksetzung",
+      "STATUS_CHANGE": "Statusänderung",
+      "APPROVE": "Freigabe",
+      "REOPEN": "Wiedereröffnung",
+      "CANCEL": "Stornierung",
+      "VOID": "Ungültigmachung",
+      "REVERSE": "Stornobuchung",
+      "EXPORT": "Export",
+      "IMPORT": "Import",
+      "DATA_EXPORT": "Datenauskunft (DSGVO)",
+      "FILE_UPLOAD": "Datei-Upload",
+      "FILE_DELETE": "Datei gelöscht",
+      "NOTE_ADD": "Notiz hinzugefügt",
+      "ANONYMIZE": "Anonymisierung",
+      "YEAR_CLOSE": "Jahresabschluss",
+      "YEAR_UNLOCK": "Jahr entsperrt",
+      "BUDGET_SAVE": "Budget gespeichert",
+      "SYNC_MEMBER_PAYMENTS": "Beitragsübernahme",
+      "TEMPLATE_CONFIRM": "Vorlagenfreigabe",
+      "PDF_DOWNLOAD": "PDF-Download",
+      "PDF_BATCH_DOWNLOAD": "PDF-Sammeldownload",
+      "PDF_INTEGRITY_ERROR": "PDF-Integritätsfehler",
+      "DUE_ADD": "Beitrag hinzugefügt",
+      "DUE_UPDATE": "Beitrag geändert",
+      "DUE_DELETE": "Beitrag gelöscht",
+      "DUES_GENERATE": "Beitragssoll erzeugt",
+      "ATTENDEE_ADD": "Teilnehmer hinzugefügt",
+      "ATTENDEE_UPDATE": "Teilnehmer geändert",
+      "ATTENDEE_REMOVE": "Teilnehmer entfernt",
+      "ATTENDEE_MARK_ALL": "Alle als anwesend markiert",
+      "AGENDA_ADD": "TOP hinzugefügt",
+      "AGENDA_UPDATE": "TOP geändert",
+      "AGENDA_DELETE": "TOP gelöscht",
+      "AGENDA_MOVE": "TOP verschoben",
+      "AGENDA_DISCUSSION": "Beratungsnotiz",
+      "DECISION_ADD": "Beschluss hinzugefügt",
+      "DECISION_UPDATE": "Beschluss geändert",
+      "DECISION_DELETE": "Beschluss gelöscht",
+      "ACTION_ADD": "Aufgabe hinzugefügt",
+      "ACTION_UPDATE": "Aufgabe geändert",
+      "ACTION_DELETE": "Aufgabe gelöscht",
+      "ACTION_STATUS": "Aufgabenstatus"
+    },
+    "entities": {
+      "User": "Benutzer",
+      "Auth": "Sitzung",
+      "Document": "Schriftstück",
+      "DocumentCategory": "Schriftgutkategorie",
+      "DocumentFile": "Schriftgutdatei",
+      "Meeting": "Sitzung",
+      "MeetingAttendee": "Sitzungsteilnehmer",
+      "MeetingDecision": "Beschluss",
+      "MeetingFile": "Sitzungsdatei",
+      "AgendaItem": "Tagesordnungspunkt",
+      "ActionItem": "Aufgabe",
+      "Member": "Mitglied",
+      "MemberDue": "Beitrag",
+      "MemberPayment": "Mitgliedszahlung",
+      "MembershipTypeConfig": "Mitgliedsart",
+      "AccountingAccount": "Konto",
+      "AccountingBooking": "Buchung",
+      "AccountingBookingFile": "Buchungsbeleg",
+      "AccountingBudgetLine": "Budgetposition",
+      "AccountingCategory": "Buchungskategorie",
+      "AccountingProject": "Projekt",
+      "AccountingSettings": "Buchhaltungseinstellungen",
+      "AccountingYear": "Geschäftsjahr",
+      "Donation": "Spende",
+      "Donor": "Spender",
+      "DonationsSettings": "Spendeneinstellungen",
+      "ZuwendungConfirmation": "Zuwendungsbestätigung",
+      "OrganizationProfile": "Vereinsprofil",
+      "SystemModule": "Modul"
+    },
+    "table": {
+      "aria": "Prüfprotokoll",
+      "date": "Datum",
+      "user": "Benutzer",
+      "action": "Aktion",
+      "entity": "Objekt",
+      "entityId": "Objekt-ID",
+      "ip": "IP",
+      "search": "Benutzer oder Objekt-ID suchen...",
+      "empty": "Keine Protokolleinträge gefunden."
+    },
+    "module": {
+      "label": "Prüfprotokoll",
+      "description": "Unveränderliche Sicherheits- und Prüfprotokolle aller Systemvorgänge."
     }
   },
   "auth": {
@@ -686,6 +811,39 @@
     "mustChangePasswordBanner": "Passwort muss aktualisiert werden",
     "meta": {
       "profile": "Profil"
+    },
+    "appTitle": "Vereinsverwaltung",
+    "loginSubtitle": "Melden Sie sich an, um fortzufahren",
+    "passiveNotice": "Ihre Sitzung wurde beendet. Ihr Konto wurde möglicherweise deaktiviert; bitte wenden Sie sich an Ihren Administrator.",
+    "profile": {
+      "title": "Profil",
+      "description": "Ihre Kontodaten und Passwortänderung.",
+      "accountInfo": "Kontodaten",
+      "name": "Name",
+      "email": "E-Mail",
+      "role": "Rolle",
+      "changePassword": "Passwort ändern",
+      "currentPassword": "Aktuelles Passwort",
+      "newPassword": "Neues Passwort",
+      "submit": "Passwort aktualisieren",
+      "updated": "Ihr Passwort wurde aktualisiert."
+    },
+    "errors": {
+      "sessionInvalid": "Ihre Sitzung ist ungültig. Bitte melden Sie sich erneut an.",
+      "currentPasswordWrong": "Das aktuelle Passwort ist falsch.",
+      "invalidCredentials": "E-Mail oder Passwort ist falsch.",
+      "accountLocked": "Das Konto ist vorübergehend gesperrt. Bitte versuchen Sie es später erneut.",
+      "loginFailed": "Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+      "invalidLocale": "Ungültige Sprachauswahl."
+    },
+    "validation": {
+      "currentPasswordRequired": "Bitte das aktuelle Passwort eingeben.",
+      "emailRequired": "E-Mail ist erforderlich.",
+      "passwordRequired": "Passwort ist erforderlich."
+    },
+    "module": {
+      "label": "Authentifizierung",
+      "description": "Anmeldung, Sitzungsverwaltung und Passwortsicherheit."
     }
   },
   "documents": {
@@ -931,6 +1089,10 @@
       "versionMissing": "Die Datensatzversion fehlt.",
       "noteEmpty": "Die Notiz darf nicht leer sein.",
       "noteMax": "Die Notiz darf höchstens 2000 Zeichen lang sein."
+    },
+    "module": {
+      "label": "Schriftgut",
+      "description": "Nummerierung, Verfolgung und Archivierung ein- und ausgehender Schriftstücke."
     }
   },
   "donations": {
@@ -1223,7 +1385,14 @@
       "alreadyAnonymized": "Dieser Spender wurde bereits anonymisiert.",
       "confirmationNeedsItem": "Für eine Zuwendungsbestätigung ist mindestens eine Position erforderlich.",
       "waiverExpenseRequired": "Für eine Aufwandsspende ist eine Ausgabenkategorie erforderlich.",
-      "typeDonorNumber": "Bitte die Spendernummer eingeben: {number}"
+      "typeDonorNumber": "Bitte die Spendernummer eingeben: {number}",
+      "activeConfirmationEdit": "Für diese Spende besteht eine aktive Bestätigung; stornieren Sie zuerst die Bestätigung und bearbeiten Sie dann.",
+      "activeConfirmation": "Für diese Spende besteht eine aktive Bestätigung; stornieren Sie zuerst die Bestätigung.",
+      "retentionBlocksAnonymize": "Für diesen Spender laufen noch Aufbewahrungsfristen ({count} Bestätigungen). Eine Anonymisierung ist erst nach Ablauf möglich.",
+      "activeDonationBlocksAnonymize": "Es gibt eine Spende mit aktiver Bestätigung ({number}); stornieren Sie zuerst die Bestätigung.",
+      "mixedWaiver": "Die ausgewählten Spenden mischen Aufwandsspenden und Geldspenden; bitte getrennt bestätigen.",
+      "feeConfirmationsDisabled": "Bestätigungen für Mitgliedsbeiträge sind deaktiviert (membershipFeesDeductible = false; § 10b Abs. 1 Satz 8 EStG).",
+      "mixedWaiverYear": "Die Spenden dieses Spenders im Jahr sind gemischt (Aufwandsspende ja/nein); Sammelbestätigung übersprungen."
     },
     "validation": {
       "periodStartInvalid": "Bitte einen gültigen Zeitraumbeginn eingeben.",
@@ -1257,6 +1426,10 @@
       "organizationRequired": "Für Organisationen ist ein Name (mindestens 2 Zeichen) erforderlich.",
       "postalCodeDe": "Für Deutschland muss die PLZ 5-stellig sein.",
       "confirmNumberRequired": "Zur Bestätigung bitte die Spendernummer eingeben (z. B. SP-0007)."
+    },
+    "module": {
+      "label": "Spenden",
+      "description": "Spendenerfassung, Zuwendungsbestätigungen und Spenderverwaltung."
     }
   },
   "events": {
@@ -1441,6 +1614,10 @@
       "description": "Beschreibung",
       "dateTime": "Datum & Uhrzeit",
       "endLine": "Ende: {date}"
+    },
+    "module": {
+      "label": "Veranstaltungen",
+      "description": "Vereinsveranstaltungen, Seminare, Workshops und Teilnehmerverwaltung."
     }
   },
   "inventory": {
@@ -1553,6 +1730,10 @@
     "meta": {
       "list": "Inventar",
       "categories": "Inventarkategorien"
+    },
+    "module": {
+      "label": "Inventar",
+      "description": "Verwaltung von Inventar, technischer Ausstattung und Ausgaben an Personen."
     }
   },
   "mail": {
@@ -1670,6 +1851,10 @@
     "meta": {
       "settings": "E-Mail-Einstellungen",
       "logs": "E-Mail-Versandprotokoll"
+    },
+    "module": {
+      "label": "E-Mail-Versand",
+      "description": "Gemeinsamer E-Mail-Versand für alle Module mit SMTP-Einstellungen und Versandprotokoll."
     }
   },
   "meetings": {
@@ -2107,7 +2292,9 @@
       "approvedNoDelete": "Eine freigegebene Sitzung kann nicht gelöscht werden. Bitte zuerst erneut öffnen.",
       "approvedFileAdminOnly": "Dateien einer freigegebenen Sitzung kann nur ein Administrator löschen.",
       "transitionNotAllowed": "Diese Statusänderung ist nicht zulässig.",
-      "forbidden": "Für diese Aktion fehlt Ihnen die Berechtigung."
+      "forbidden": "Für diese Aktion fehlt Ihnen die Berechtigung.",
+      "approveNeedsAgenda": "Zur Freigabe ist mindestens ein Tagesordnungspunkt erforderlich.",
+      "approveNeedsPresent": "Zur Freigabe muss mindestens ein Teilnehmer als „anwesend“ markiert sein."
     },
     "validation": {
       "taskMin": "Die Aufgabenbeschreibung muss mindestens 3 Zeichen lang sein.",
@@ -2138,7 +2325,8 @@
       "quorumMax": "Die Beschlussfähigkeit darf höchstens 500 betragen.",
       "descriptionMax": "Die Beschreibung darf höchstens 2000 Zeichen lang sein.",
       "endNeedsStart": "Für eine Endzeit ist eine Startzeit erforderlich.",
-      "endAfterStart": "Die Endzeit muss nach der Startzeit liegen."
+      "endAfterStart": "Die Endzeit muss nach der Startzeit liegen.",
+      "quorumInt": "Die Beschlussfähigkeit muss eine ganze Zahl sein."
     },
     "meta": {
       "list": "Sitzungen",
@@ -2146,6 +2334,10 @@
       "create": "Neue Sitzung",
       "detail": "Sitzungsdetails",
       "edit": "Sitzung bearbeiten"
+    },
+    "module": {
+      "label": "Sitzungen",
+      "description": "Vorstands- und Mitgliederversammlungen, Protokolle und Beschlüsse."
     }
   },
   "members": {
@@ -2496,7 +2688,9 @@
       "duesBelowPaid": "Der Beitrag darf nicht unter den bereits gezahlten Betrag gesenkt werden.",
       "duesWaiveWithPayments": "Eine Beitragszeile mit Zahlungen kann nicht befreit werden.",
       "paymentNotFound": "Zahlung nicht gefunden.",
-      "paymentAlreadyVoided": "Diese Zahlung wurde bereits storniert."
+      "paymentAlreadyVoided": "Diese Zahlung wurde bereits storniert.",
+      "dueHasPayments": "Beitragszeilen mit Zahlungen können nicht gelöscht werden. Stornieren Sie zuerst die Zahlungen.",
+      "importMissingColumns": "Pflichtspalten fehlen (Ad, Soyad, Üyelik Türü, Üyelik Başlangıç Tarihi). Bitte die Vorlage herunterladen und ausfüllen."
     },
     "validation": {
       "yearMinPrev": "Das Jahr darf höchstens das Vorjahr sein.",
@@ -2541,6 +2735,10 @@
       "referenceMax": "Die Referenz darf höchstens 100 Zeichen lang sein.",
       "voidReasonMin": "Der Stornogrund muss mindestens 5 Zeichen lang sein.",
       "voidReasonMax": "Der Stornogrund darf höchstens 300 Zeichen lang sein."
+    },
+    "module": {
+      "label": "Mitglieder",
+      "description": "Mitgliederverwaltung, Mitgliedsarten, Beitragssoll und Zahlungen."
     }
   },
   "organization": {
@@ -2586,7 +2784,18 @@
     "charitablePurposes": "Begünstigte Zwecke",
     "charitablePurposesDescription": "Aus dem Bescheid wörtlich übernehmen — der Satz lautet: 'Wir sind wegen Förderung …' und '… nur zur Förderung … verwendet wird'. Beispiel: 'der Bildung und Erziehung'.",
     "membershipFeesDeductible": "Mitgliedsbeiträge sind steuerlich abziehbar",
-    "membershipFeesDeductibleDescription": "Nur ankreuzen, wenn die Vereinszwecke NICHT unter § 10b Abs. 1 Satz 8 EStG fallen (z. B. Sport, Freizeitkultur, Heimatpflege, Brauchtum). Im Zweifel Steuerberatung fragen."
+    "membershipFeesDeductibleDescription": "Nur ankreuzen, wenn die Vereinszwecke NICHT unter § 10b Abs. 1 Satz 8 EStG fallen (z. B. Sport, Freizeitkultur, Heimatpflege, Brauchtum). Im Zweifel Steuerberatung fragen.",
+    "module": {
+      "label": "Vereinsdaten",
+      "description": "Stammdaten des Vereins, offizielle Kontaktdaten und Briefkopf-Logo."
+    },
+    "validation": {
+      "dateFormat": "Das Datum muss im Format JJJJ-MM-TT sein.",
+      "nameMin": "Der Vereinsname muss mindestens 3 Zeichen lang sein.",
+      "purposesMax": "Der Zwecktext darf höchstens 500 Zeichen lang sein.",
+      "postalCodeDe": "Die PLZ muss in Deutschland 5-stellig sein.",
+      "websiteInvalid": "Die Website muss eine gültige Adresse sein (https://...)."
+    }
   },
   "system": {
     "title": "Modulverwaltung",
@@ -2636,6 +2845,19 @@
     "meta": {
       "settings": "Einstellungen",
       "modules": "Modulverwaltung"
+    },
+    "module": {
+      "label": "Modulverwaltung",
+      "description": "Verwaltung der installierten Kern-, offiziellen und Erweiterungsmodule."
+    },
+    "authorCommunity": "Community / Entwickler",
+    "toggleAria": "Status von {label} ändern",
+    "deleteAria": "Modul {label} löschen",
+    "errors": {
+      "notFound": "Modul nicht gefunden.",
+      "coreCannotDisable": "Kernmodule können nicht deaktiviert werden.",
+      "onlyExtensionsDeletable": "Nur externe Erweiterungen (EXTENSION) können gelöscht werden. Kern- und offizielle Module nicht.",
+      "deleteFailed": "Beim Löschen des Moduls ist ein Fehler aufgetreten."
     }
   },
   "users": {
@@ -2651,6 +2873,191 @@
       "list": "Benutzer",
       "create": "Neuer Benutzer",
       "edit": "Benutzer bearbeiten"
+    },
+    "tabUsers": "Benutzerliste",
+    "tabRoles": "Rollen und Berechtigungsmatrix",
+    "table": {
+      "aria": "Benutzerliste",
+      "name": "Name",
+      "email": "E-Mail",
+      "role": "Rolle",
+      "status": "Status",
+      "lastLogin": "Letzte Anmeldung",
+      "createdAt": "Erstellt am",
+      "search": "Name oder E-Mail suchen...",
+      "empty": "Keine Benutzer gefunden.",
+      "edit": "Bearbeiten",
+      "resetPassword": "Passwort zurücksetzen",
+      "deactivate": "Deaktivieren",
+      "activate": "Aktivieren",
+      "activated": "Benutzer wurde aktiviert.",
+      "deactivated": "Benutzer wurde deaktiviert.",
+      "activateTitle": "Benutzer aktivieren",
+      "deactivateTitle": "Benutzer deaktivieren",
+      "activateConfirm": "Der Benutzer „{name}“ wird aktiviert. Fortfahren?",
+      "deactivateConfirm": "Der Benutzer „{name}“ wird deaktiviert und kann auch mit einer bestehenden Sitzung nichts mehr ausführen. Fortfahren?"
+    },
+    "form": {
+      "name": "Vor- und Nachname",
+      "email": "E-Mail",
+      "role": "Rolle",
+      "tempPassword": "Vorläufiges Passwort",
+      "tempPasswordHint": "Mindestens 10 Zeichen; mindestens 1 Großbuchstabe, 1 Kleinbuchstabe und 1 Ziffer. Der Benutzer legt bei der ersten Anmeldung ein neues Passwort fest.",
+      "isActive": "Konto aktiv",
+      "isActiveHint": "Ein deaktivierter Benutzer kann auch mit gültiger Sitzung nichts ausführen.",
+      "created": "Benutzer wurde angelegt.",
+      "updated": "Benutzer wurde aktualisiert."
+    },
+    "resetPassword": {
+      "title": "Passwort zurücksetzen",
+      "newPassword": "Neues vorläufiges Passwort",
+      "submit": "Zurücksetzen",
+      "done": "Passwort wurde zurückgesetzt. Der Benutzer legt bei der nächsten Anmeldung ein neues Passwort fest."
+    },
+    "errors": {
+      "emailTaken": "Diese E-Mail-Adresse wird bereits verwendet.",
+      "notFound": "Benutzer nicht gefunden.",
+      "selfDeactivate": "Sie können sich nicht selbst deaktivieren.",
+      "lastAdmin": "Im System muss mindestens ein aktiver Administrator verbleiben.",
+      "selfDemote": "Sie können Ihre eigene Rolle nicht herabstufen."
+    },
+    "validation": {
+      "nameRequired": "Name ist erforderlich.",
+      "nameMax": "Der Name darf höchstens 100 Zeichen lang sein."
+    },
+    "matrix": {
+      "title": "Rollen- und Berechtigungsverwaltung",
+      "subtitle": "Lese-, Schreib-, Freigabe- und Löschrechte der Systemrollen je Modul.",
+      "viewRole": "Rollenansicht",
+      "viewMatrix": "Vergleichsmatrix",
+      "memberCount": "{count} Mitglieder",
+      "search": "Modul oder Berechtigung suchen (z. B. Buchhaltung, Schriftgut, Freigabe)...",
+      "previewUser": "Benutzerrechte prüfen:",
+      "selectUser": "Benutzer wählen...",
+      "clearUser": "Benutzerauswahl aufheben",
+      "simulated": "Simuliert: {name}",
+      "totalActive": "Aktive Berechtigungen gesamt",
+      "actionCount": "{count} Aktionsrechte",
+      "resourceCount": "{count} Ressourcen",
+      "colResource": "Modul / Ressource",
+      "colAction": "Aktion",
+      "previewTitle": "Berechtigungsübersicht: {role}",
+      "previewCount": "{count} Rechte aktiv",
+      "accessFull": "Voll",
+      "accessRead": "Lesen",
+      "accessNone": "Keine",
+      "actions": {
+        "view": "Anzeigen",
+        "create": "Anlegen",
+        "update": "Bearbeiten",
+        "delete": "Löschen",
+        "approve": "Freigeben"
+      },
+      "roles": {
+        "ADMIN": {
+          "label": "Administrator (Admin)",
+          "shortDesc": "Vollzugriff einschließlich System-, Modul- und Benutzerverwaltung.",
+          "legalContext": "Darf in allen Modulen anlegen, bearbeiten, löschen und prüfen."
+        },
+        "BOARD": {
+          "label": "Vorstand",
+          "shortDesc": "Kernrechte für Sitzungen, Beschlüsse, Schriftgut und Vereinsführung.",
+          "legalContext": "Vertretungs- und Leitungsorgan nach § 26 BGB; sieht Finanzdetails in zusammengefasster Form."
+        },
+        "SECRETARY": {
+          "label": "Schriftführer",
+          "shortDesc": "Schriftgutverwaltung, Sitzungsprotokolle und Mitgliederverwaltung.",
+          "legalContext": "Verantwortlich für Schriftverkehr, Register und Beschlussbücher."
+        },
+        "TREASURER": {
+          "label": "Kassenwart",
+          "shortDesc": "Buchhaltung, Belege, Budget, Zuwendungsbestätigungen und Beiträge.",
+          "legalContext": "Verantwortlich für die Buchführung und die Einhaltung der Vorgaben des Finanzamts."
+        },
+        "AUDITOR": {
+          "label": "Kassenprüfer",
+          "shortDesc": "Lesender Prüfzugriff auf Finanz- und Verwaltungsdaten.",
+          "legalContext": "Führt die jährliche Kassenprüfung durch; kein Zugriff auf personenbezogene Spenderdaten."
+        },
+        "VIEWER": {
+          "label": "Leser",
+          "shortDesc": "Darf grundlegende Schriftgut- und Sitzungsdaten einsehen.",
+          "legalContext": "Keine Änderungsrechte und kein Einblick in Finanzdaten."
+        }
+      },
+      "modules": {
+        "documents": "Schriftgut",
+        "meetings": "Sitzungen",
+        "members": "Mitglieder",
+        "accounting": "Buchhaltung",
+        "donations": "Spenden",
+        "organization": "Vereinsprofil",
+        "users": "Benutzer",
+        "audit": "Prüfprotokoll",
+        "system": "System & Module"
+      },
+      "resources": {
+        "documents": {
+          "label": "Ein- / ausgehendes Schriftgut",
+          "description": "Erfassung, Nummerierung und Archivierung offizieller Schriftstücke."
+        },
+        "documentCategories": {
+          "label": "Schriftgutkategorien",
+          "description": "Verwaltung der Kategorien und des Aktenplans."
+        },
+        "meetings": {
+          "label": "Sitzungen und Beschlüsse",
+          "description": "Sitzungskalender, Tagesordnung, Protokolle, Beschlüsse und Freigabe."
+        },
+        "members": {
+          "label": "Mitgliederdaten",
+          "description": "Profile, Kontaktdaten und Mitgliedschaftsstatus der Vereinsmitglieder."
+        },
+        "memberPayments": {
+          "label": "Beiträge und Zahlungen",
+          "description": "Beitragssoll, Einzug und Zahlungsverfolgung."
+        },
+        "memberTypes": {
+          "label": "Mitgliedsarten",
+          "description": "Mitgliedsarten (ordentlich, Ehren-, Förder- usw.) und Beitragssätze."
+        },
+        "accounting": {
+          "label": "Journal & Bücher",
+          "description": "Buchungen, Einnahmen/Ausgaben, Kontenplan und Periodenberichte."
+        },
+        "accountingSetup": {
+          "label": "Kontenplan & Budget",
+          "description": "Kontenplan (SKR49/SKR42), Budgetplanung und Finanzeinstellungen."
+        },
+        "donations": {
+          "label": "Spenden und Bestätigungen",
+          "description": "Spendeneingänge und Erstellung amtlicher Zuwendungsbestätigungen."
+        },
+        "organization": {
+          "label": "Vereinsstammdaten",
+          "description": "Registernummer, Steuernummer, Bankverbindungen und Briefkopf-Logo."
+        },
+        "users": {
+          "label": "Benutzerkonten",
+          "description": "Systembenutzer, Anmeldekonten und Passwort-Zurücksetzung."
+        },
+        "audit": {
+          "label": "Sicherheits- & Änderungsprotokoll",
+          "description": "Unveränderliche Prüfspuren und Sicherheitsereignisse."
+        },
+        "system": {
+          "label": "Modulverwaltung",
+          "description": "Erweiterungen installieren, Module aktivieren und deaktivieren."
+        },
+        "settings": {
+          "label": "Systemeinstellungen",
+          "description": "Allgemeine System- und Plattformparameter."
+        }
+      }
+    },
+    "module": {
+      "label": "Benutzer",
+      "description": "Benutzerkonten, Rollen und Zugriffsrechte."
     }
   }
 }

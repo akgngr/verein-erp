@@ -180,5 +180,9 @@
     "description": "Beschreibung",
     "dateTime": "Datum & Uhrzeit",
     "endLine": "Ende: {date}"
+  },
+  "module": {
+    "label": "Veranstaltungen",
+    "description": "Vereinsveranstaltungen, Seminare, Workshops und Teilnehmerverwaltung."
   }
 }
