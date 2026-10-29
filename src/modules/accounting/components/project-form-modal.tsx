@@ -24,6 +24,7 @@ export function ProjectFormModal({
   onOpenChange: (open: boolean) => void;
   project?: ProjectRow | null;
 }) {
+  const tCommon = useTranslations("common");
   const t = useTranslations("accounting.setup.projects");
   const router = useRouter();
   const [name, setName] = useState(project?.name ?? "");
@@ -76,7 +77,7 @@ export function ProjectFormModal({
         </ModalBody>
         <ModalFooter>
           <Button variant="flat" onPress={() => onOpenChange(false)}>
-            Vazgeç
+            {tCommon("cancel")}
           </Button>
           <Button color="primary" onPress={submit} isLoading={busy} isDisabled={name.trim().length < 2}>
             {project ? t("edit") : t("new")}

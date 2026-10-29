@@ -113,7 +113,7 @@ export async function assertNoNegativeCash(
   for (const movement of movements) {
     running += movementEffectOn(movement, accountId);
     if (running < 0) {
-      throw new ActionError("Kasa bakiyesi eksiye düşemez (Kassenminus).");
+      throw new ActionError("accounting.errors.cashNegative");
     }
   }
 }
@@ -182,7 +182,7 @@ export async function assertNoNegativeCashWithReplacement(
   for (const delta of deltas) {
     running += delta.delta;
     if (running < 0) {
-      throw new ActionError("Kasa bakiyesi eksiye düşemez (Kassenminus).");
+      throw new ActionError("accounting.errors.cashNegative");
     }
   }
 }

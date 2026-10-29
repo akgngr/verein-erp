@@ -21,37 +21,37 @@ const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
 export const bookingDateSchema = z
   .string()
   .trim()
-  .min(1, "Fiş tarihi zorunludur.")
-  .regex(DATE_ONLY, "Geçerli bir fiş tarihi girin.");
+  .min(1, "accounting.validation.bookingDateRequired")
+  .regex(DATE_ONLY, "accounting.validation.bookingDateInvalid");
 
 /** Tutar: > 0, en fazla 2 ondalık, max 9.999.999,99 (§ 8 md. 4). */
 export const bookingAmountSchema = z
   .string()
   .trim()
-  .min(1, "Tutar zorunludur.")
-  .max(14, "Tutar çok büyük.");
+  .min(1, "accounting.validation.amountRequired")
+  .max(14, "accounting.validation.amountTooLarge");
 
 const sharedTextFields = {
   description: z
     .string()
     .trim()
-    .min(3, "Açıklama en az 3 karakter olmalıdır.")
-    .max(300, "Açıklama en fazla 300 karakter olabilir."),
+    .min(3, "accounting.validation.descriptionMin")
+    .max(300, "accounting.validation.descriptionMax"),
   counterparty: emptyToNull(
-    z.string().trim().max(150, "Karşı taraf en fazla 150 karakter olabilir.").nullable(),
+    z.string().trim().max(150, "accounting.validation.counterpartyMax").nullable(),
   ),
   receiptReference: emptyToNull(
-    z.string().trim().max(100, "Belge no en fazla 100 karakter olabilir.").nullable(),
+    z.string().trim().max(100, "accounting.validation.receiptMax").nullable(),
   ),
-  projectId: emptyToNull(z.string().trim().min(1, "Geçerli bir proje seçin.").nullable()),
+  projectId: emptyToNull(z.string().trim().min(1, "accounting.validation.projectInvalid").nullable()),
 };
 
 /** Gelir/gider fişi oluşturma (§ 8 md. 1). */
 export const bookingIncomeExpenseSchema = z.object({
   type: z.enum(["INCOME", "EXPENSE"]),
   bookingDate: bookingDateSchema,
-  accountId: z.string().trim().min(1, "Hesap zorunludur."),
-  categoryId: z.string().trim().min(1, "Kategori zorunludur."),
+  accountId: z.string().trim().min(1, "accounting.validation.accountRequired"),
+  categoryId: z.string().trim().min(1, "accounting.validation.categoryRequired"),
   ...sharedTextFields,
   amount: bookingAmountSchema,
 });
@@ -60,8 +60,8 @@ export const bookingIncomeExpenseSchema = z.object({
 export const bookingTransferSchema = z.object({
   type: z.literal("TRANSFER"),
   bookingDate: bookingDateSchema,
-  accountId: z.string().trim().min(1, "Kaynak hesap zorunludur."),
-  counterAccountId: z.string().trim().min(1, "Hedef hesap zorunludur."),
+  accountId: z.string().trim().min(1, "accounting.validation.sourceRequired"),
+  counterAccountId: z.string().trim().min(1, "accounting.validation.targetRequired"),
   ...sharedTextFields,
   amount: bookingAmountSchema,
 });
@@ -76,13 +76,13 @@ export const bookingCreateSchema = z.discriminatedUnion("type", [
 export const bookingUpdateSchema = z.object({
   id: z.string().min(1),
   bookingDate: bookingDateSchema,
-  accountId: z.string().trim().min(1, "Hesap zorunludur."),
+  accountId: z.string().trim().min(1, "accounting.validation.accountRequired"),
   counterAccountId: emptyToNull(z.string().trim().min(1).nullable()),
   categoryId: emptyToNull(z.string().trim().min(1).nullable()),
   ...sharedTextFields,
   amount: bookingAmountSchema,
   /** Eşzamanlılık koruması: formun taşıdığı kaydın updatedAt'i. */
-  updatedAt: z.string().min(1, "Kayıt sürümü eksik."),
+  updatedAt: z.string().min(1, "accounting.validation.versionMissing"),
 });
 
 /** Ters kayıt (Storno) (§ 8 md. 7): neden 5-300. */
@@ -91,8 +91,8 @@ export const bookingReverseSchema = z.object({
   reason: z
     .string()
     .trim()
-    .min(5, "Gerekçe en az 5 karakter olmalıdır.")
-    .max(300, "Gerekçe en fazla 300 karakter olabilir."),
+    .min(5, "accounting.validation.reasonMin")
+    .max(300, "accounting.validation.reasonMax"),
 });
 
 export type BookingCreateInput = z.infer<typeof bookingCreateSchema>;

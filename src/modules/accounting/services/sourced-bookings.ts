@@ -1,5 +1,7 @@
 import "server-only";
 
+import { getMessageTranslator } from "@/shared/i18n/translate-message";
+
 import type { Prisma } from "@prisma/client";
 
 import { getDb } from "@/shared/db";
@@ -46,7 +48,7 @@ export async function createSourcedBooking(
   const run = async (tx: Prisma.TransactionClient): Promise<{ id: string; bookingNumber: string }> => {
     const year = input.bookingDate.getUTCFullYear();
     if (await isYearLocked(year, tx)) {
-      throw new ActionError(`${year} yılı kilitli (abgeschlossen); fiş girilemez.`);
+      throw new ActionError("accounting.errors.yearLocked", undefined, { year });
     }
     await assertBookingDateAllowed({
       bookingDate: input.bookingDate,
@@ -59,7 +61,7 @@ export async function createSourcedBooking(
       select: { isActive: true, direction: true },
     });
     if (!category || !category.isActive || category.direction !== input.type) {
-      throw new ActionError("Kategori bulunamadı veya fiş türüyle uyuşmuyor.");
+      throw new ActionError("accounting.errors.categoryMismatch");
     }
 
     const { sequence, bookingNumber } = await allocateBookingNumber(tx, year);
@@ -113,7 +115,7 @@ export async function reverseSourcedBooking(input: {
 
     if (await isYearLocked(booking.year, tx)) {
       throw new ActionError(
-        `${booking.year} yılı kilitli; ters kayıt için yıl kilidini açın.`,
+        "accounting.errors.reverseYearLockedYear", undefined, { year: booking.year },
       );
     }
     await tx.accountingBooking.update({
@@ -138,18 +140,17 @@ export async function getDonationBookingTargets(): Promise<{
   bankAccountId: string;
 }> {
   const db = getDb();
+  const translate = await getMessageTranslator();
   const settings = await db.accountingSettings.findUnique({ where: { id: "singleton" } });
   const missing: string[] = [];
   const donationCategoryId = settings?.donationCategoryId ?? null;
   const cashId = settings?.cashAccountId ?? null;
   const bankId = settings?.bankAccountId ?? null;
-  if (donationCategoryId === null) missing.push("bağış kategorisi");
-  if (cashId === null) missing.push("kasa hesabı");
-  if (bankId === null) missing.push("banka hesabı");
+  if (donationCategoryId === null) missing.push(translate("accounting.errors.itemDonationCategory"));
+  if (cashId === null) missing.push(translate("accounting.errors.itemCashAccount"));
+  if (bankId === null) missing.push(translate("accounting.errors.itemBankAccount"));
   if (missing.length > 0) {
-    throw new ActionError(
-      `Muhasebe ayarları eksik: ${missing.join(", ")}. Muhasebe > Ayarlar sayfasından tamamlayın.`,
-    );
+    throw new ActionError("accounting.errors.settingsMissing", undefined, { missing: missing.join(", ") });
   }
 
   // Yukarıdaki atış (throw) sonrası üç id de null olamaz (KARAR: açık denetim).
@@ -168,12 +169,12 @@ export async function getDonationBookingTargets(): Promise<{
     }),
   ]);
   if (!category || !category.isActive || category.direction !== "INCOME") {
-    missing.push("geçerli bağış kategorisi");
+    missing.push(translate("accounting.errors.itemValidDonationCategory"));
   }
-  if (!cash || !cash.isActive) missing.push("geçerli kasa hesabı");
-  if (!bank || !bank.isActive) missing.push("geçerli banka hesabı");
+  if (!cash || !cash.isActive) missing.push(translate("accounting.errors.itemValidCashAccount"));
+  if (!bank || !bank.isActive) missing.push(translate("accounting.errors.itemValidBankAccount"));
   if (missing.length > 0) {
-    throw new ActionError(`Muhasebe ayarları geçersiz: ${missing.join(", ")}.`);
+    throw new ActionError("accounting.errors.settingsInvalid", undefined, { missing: missing.join(", ") });
   }
 
   // Yukarıdaki null denetimleri sonrası üç alan da string'tir.

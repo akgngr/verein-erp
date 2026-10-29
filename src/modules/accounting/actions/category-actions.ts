@@ -39,7 +39,7 @@ export async function createCategoryAction(
         return { id: created.id };
       } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
-          throw new ActionError("Bu kategori adı zaten kullanılıyor.", {
+          throw new ActionError("accounting.errors.categoryNameTaken", {
             name: ["Farklı bir kategori adı girin."],
           });
         }
@@ -71,7 +71,7 @@ export async function updateCategoryAction(input: unknown): Promise<ActionResult
     handler: async ({ input, audit }) => {
       const db = getDb();
       const existing = await db.accountingCategory.findUnique({ where: { id: input.id } });
-      if (!existing) throw new ActionError("Kategori bulunamadı.");
+      if (!existing) throw new ActionError("accounting.errors.categoryNotFound");
 
       const activeBookingCount = await db.accountingBooking.count({
         where: { categoryId: existing.id, reversedAt: null },

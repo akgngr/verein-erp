@@ -16,29 +16,29 @@ export const accountCreateSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(2, "Hesap adı en az 2 karakter olmalıdır.")
-    .max(100, "Hesap adı en fazla 100 karakter olabilir."),
+    .min(2, "accounting.validation.accountNameMin")
+    .max(100, "accounting.validation.accountNameMax"),
   type: z.enum(["CASH", "BANK", "OTHER"]),
   openingBalance: z
     .string()
     .trim()
-    .max(14, "Tutar çok büyük.")
+    .max(14, "accounting.validation.amountTooLarge")
     .default("0"),
   openingDate: z
     .string()
     .trim()
-    .regex(DATE_ONLY, "Geçerli bir açılış tarihi girin."),
+    .regex(DATE_ONLY, "accounting.validation.openingDateInvalid"),
 });
 
 export const accountUpdateSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(2, "Hesap adı en az 2 karakter olmalıdır.")
-    .max(100, "Hesap adı en fazla 100 karakter olabilir."),
+    .min(2, "accounting.validation.accountNameMin")
+    .max(100, "accounting.validation.accountNameMax"),
   type: z.enum(["CASH", "BANK", "OTHER"]),
   openingBalance: z.string().trim().max(14).default("0"),
-  openingDate: z.string().trim().regex(DATE_ONLY, "Geçerli bir açılış tarihi girin."),
+  openingDate: z.string().trim().regex(DATE_ONLY, "accounting.validation.openingDateInvalid"),
   isActive: z.boolean().optional(),
 });
 

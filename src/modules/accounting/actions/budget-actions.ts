@@ -24,7 +24,7 @@ export async function saveBudgetAction(input: unknown): Promise<ActionResult> {
 
       const lock = await db.accountingYear.findUnique({ where: { year: input.year } });
       if (lock?.lockedAt) {
-        throw new ActionError(`${input.year} yılı kilitli; bütçe düzenlenemez.`);
+        throw new ActionError("accounting.errors.budgetYearLocked", undefined, { year: input.year });
       }
 
       // Değişen satırları belirlemek için mevcut planı oku.
@@ -49,7 +49,7 @@ export async function saveBudgetAction(input: unknown): Promise<ActionResult> {
 
           const targetCents = line.amount.trim() === "" ? 0 : toCents(line.amount);
           if (targetCents === null || targetCents < 0) {
-            throw new ActionError("Bütçe tutarı geçersiz.", {
+            throw new ActionError("accounting.errors.budgetInvalid", {
               lines: ["Tutarlar 0 veya pozitif olmalıdır."],
             });
           }

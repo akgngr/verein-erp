@@ -37,6 +37,7 @@ export function AccountFormModal({
   onOpenChange: (open: boolean) => void;
   account?: AccountRow | null;
 }) {
+  const tCommon = useTranslations("common");
   const t = useTranslations("accounting.setup.accounts");
   const router = useRouter();
   const [name, setName] = useState(account?.name ?? "");
@@ -128,7 +129,7 @@ export function AccountFormModal({
         </ModalBody>
         <ModalFooter>
           <Button variant="flat" onPress={() => onOpenChange(false)}>
-            Vazgeç
+            {tCommon("cancel")}
           </Button>
           <Button color="primary" onPress={submit} isLoading={busy} isDisabled={name.trim().length < 2}>
             {account ? t("edit") : t("new")}

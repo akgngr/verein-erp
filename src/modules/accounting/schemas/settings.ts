@@ -10,11 +10,11 @@ function emptyToNull<T extends z.ZodType>(schema: T) {
 }
 
 export const accountingSettingsSchema = z.object({
-  memberFeeCategoryId: emptyToNull(z.string().trim().min(1, "Aidat kategorisi seçin.").nullable()),
-  cashAccountId: emptyToNull(z.string().trim().min(1, "Kasa hesabı seçin.").nullable()),
-  bankAccountId: emptyToNull(z.string().trim().min(1, "Banka hesabı seçin.").nullable()),
+  memberFeeCategoryId: emptyToNull(z.string().trim().min(1, "accounting.validation.feeCategoryRequired").nullable()),
+  cashAccountId: emptyToNull(z.string().trim().min(1, "accounting.validation.cashAccountRequired").nullable()),
+  bankAccountId: emptyToNull(z.string().trim().min(1, "accounting.validation.bankAccountRequired").nullable()),
   // Faz 5 (§ 6): bağış kategorisi — aktif INCOME kategorisi olmalı (aksiyonda).
-  donationCategoryId: emptyToNull(z.string().trim().min(1, "Bağış kategorisi seçin.").nullable()),
+  donationCategoryId: emptyToNull(z.string().trim().min(1, "accounting.validation.donationCategoryRequired").nullable()),
 });
 
 export type AccountingSettingsInput = z.infer<typeof accountingSettingsSchema>;

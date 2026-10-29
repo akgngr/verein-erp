@@ -11,8 +11,8 @@ export const unlockYearSchema = z.object({
   reason: z
     .string()
     .trim()
-    .min(5, "Gerekçe en az 5 karakter olmalıdır.")
-    .max(300, "Gerekçe en fazla 300 karakter olabilir."),
+    .min(5, "accounting.validation.reasonMin")
+    .max(300, "accounting.validation.reasonMax"),
 });
 
 export type CloseYearInput = z.infer<typeof closeYearSchema>;

@@ -48,7 +48,8 @@ function isIgnorable(text: string): boolean {
   if (/^[a-z]+([A-Z][a-z]+)*$/.test(t)) return true; // camelCase tanımlayıcı
   if (!/[a-zçğıöşüäöüß]{2,}/.test(t)) return true; // küçük harf yok: kısaltma, kod (GMT, VR 12345)
   if (/^[a-z0-9:/[\]._%-]+( [a-z0-9:/[\]._%-]+)*$/.test(t) && t.includes("-")) return true; // Tailwind sınıfları
-  if (/^(Promise|Record|Array|Partial|Readonly)$/.test(t)) return true; // tip adları
+  if (/^(&|\|)?\s*(Promise|Record|Array|Partial|Readonly|Pick|Omit)$/.test(t)) return true; // tip adları
+  if (t.includes("${")) return true; // iç içe şablon: yalnızca değişken birleştirme
   return false;
 }
 

@@ -1,5 +1,7 @@
 import "server-only";
 
+import { getMessageTranslator } from "@/shared/i18n/translate-message";
+
 import type { Prisma } from "@prisma/client";
 
 import { getDb } from "@/shared/db";
@@ -9,6 +11,7 @@ import { listPaymentsForAccounting } from "@/modules/members/server";
 
 import { PAYMENT_METHOD_ACCOUNT } from "../constants";
 import { allocateBookingNumber } from "./booking-number";
+import { BookingRuleError } from "./booking-guards";
 import { ActionError } from "@/modules/auth/server";
 
 /**
@@ -26,12 +29,13 @@ export type AccountingSettingsData = {
 
 /** Ayarlar eksikse açıklayan Türkçe hata döner (§ 8 md. 15 md. 1). */
 export async function assertSyncConfigured(settings: AccountingSettingsData): Promise<void> {
+  const translate = await getMessageTranslator();
   const missing: string[] = [];
-  if (!settings.memberFeeCategoryId) missing.push("aidat kategorisi");
-  if (!settings.cashAccountId) missing.push("kasa hesabı");
-  if (!settings.bankAccountId) missing.push("banka hesabı");
+  if (!settings.memberFeeCategoryId) missing.push(translate("accounting.errors.itemFeeCategory"));
+  if (!settings.cashAccountId) missing.push(translate("accounting.errors.itemCashAccount"));
+  if (!settings.bankAccountId) missing.push(translate("accounting.errors.itemBankAccount"));
   if (missing.length > 0) {
-    throw new ActionError(`Ayarlar eksik: ${missing.join(", ")}. Ayarlar sayfasından tamamlayın.`);
+    throw new ActionError("accounting.errors.syncSettingsMissing", undefined, { missing: missing.join(", ") });
   }
 }
 
@@ -93,6 +97,7 @@ export async function previewMemberSync(): Promise<{
   let reverseTotal = 0;
   let skippedLockedYear = 0;
   let skippedBeforeOpening = 0;
+  const translate = await getMessageTranslator();
   const conflicts: Array<{ receiptNumber: string; reason: string }> = [];
 
   for (const payment of payments) {
@@ -121,7 +126,7 @@ export async function previewMemberSync(): Promise<{
       if (await isLockedYear(bookingYear)) {
         conflicts.push({
           receiptNumber: payment.receiptNumber,
-          reason: "Fişin yılı kilitli; ters kayıt için yıl kilidini açın.",
+          reason: translate("accounting.errors.reverseYearLocked"),
         });
       }
     }
@@ -177,6 +182,7 @@ export async function runMemberSync(
   let createdCount = 0;
   let reversedCount = 0;
   let skippedCount = 0;
+  const translate = await getMessageTranslator();
   const conflicts: Array<{ receiptNumber: string; reason: string }> = [];
 
   const { assertNoNegativeCash } = await import("./balances");
@@ -205,7 +211,7 @@ export async function runMemberSync(
             select: { openingDate: true },
           });
           if (paidAt.getTime() < account.openingDate.getTime()) {
-            throw new ActionError("Fiş tarihi hesabın açılış tarihinden önce olamaz.");
+            throw new ActionError("accounting.errors.beforeOpening");
           }
 
           const { sequence, bookingNumber } = await allocateBookingNumber(tx, year);
@@ -236,8 +242,10 @@ export async function runMemberSync(
         });
         createdCount += 1;
       } catch (error) {
-        const message = error instanceof Error ? error.message : "Bilinmeyen hata";
-        conflicts.push({ receiptNumber: payment.receiptNumber, reason: message });
+        // Çakışma nedeni önizleme tablosunda gösterilir: anahtar mesaj burada çevrilir.
+        const message = error instanceof Error ? error.message : "common.errors.unexpected";
+        const values = error instanceof ActionError || error instanceof BookingRuleError ? error.values : undefined;
+        conflicts.push({ receiptNumber: payment.receiptNumber, reason: translate(message, values) });
       }
     } else {
       if (!existing || existing.reversedAt) continue;
@@ -250,7 +258,7 @@ export async function runMemberSync(
       if (await isLockedYear(bookingYear)) {
         conflicts.push({
           receiptNumber: payment.receiptNumber,
-          reason: "Fişin yılı kilitli; ters kayıt için yıl kilidini açın.",
+          reason: translate("accounting.errors.reverseYearLocked"),
         });
         continue;
       }
@@ -277,7 +285,7 @@ export async function runMemberSync(
 export function parseAmountToCents(amount: string): number {
   const cents = toCents(amount);
   if (cents === null || cents <= 0) {
-    throw new ActionError("Tutar geçersiz.");
+    throw new ActionError("accounting.errors.amountInvalid");
   }
   return cents;
 }

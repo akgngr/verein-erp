@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Button } from "@heroui/react";
 import { Ban, Pencil } from "lucide-react";
 import { useState } from "react";
@@ -18,6 +20,7 @@ export function BookingDetailActions({
   canUpdate: boolean;
   canDelete: boolean;
 }) {
+  const tCommon = useTranslations("common");
   const [reverseOpen, setReverseOpen] = useState(false);
 
   if (!canUpdate && !canDelete) return null;
@@ -34,7 +37,7 @@ export function BookingDetailActions({
             variant="solid"
             startContent={<Pencil className="h-4 w-4" aria-hidden />}
           >
-            Düzenle
+            {tCommon("edit")}
           </Button>
         ) : null}
         {canDelete ? (

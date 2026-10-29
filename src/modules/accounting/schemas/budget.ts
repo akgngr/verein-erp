@@ -10,7 +10,7 @@ export const budgetSaveSchema = z.object({
     .number()
     .int("Yıl tam sayı olmalıdır.")
     .min(2000, "Yıl 2000'den küçük olamaz.")
-    .max(2100, "Yıl geçersiz."),
+    .max(2100, "accounting.validation.yearInvalid"),
   /** Kategori id → tutar string ("1.234,56"); boş/0 = satır silinir. */
   lines: z
     .array(
@@ -19,7 +19,7 @@ export const budgetSaveSchema = z.object({
         amount: z.string().trim().max(14).default(""),
       }),
     )
-    .max(200, "Satır sayısı sınırı aşıldı."),
+    .max(200, "accounting.validation.rowLimit"),
 });
 
 export const budgetYearSchema = z.object({

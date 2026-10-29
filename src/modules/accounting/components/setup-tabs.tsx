@@ -353,6 +353,7 @@ function SyncSettingsCard({
   categoryOptions: Array<{ value: string; label: string }>;
   accountOptions: Array<{ value: string; label: string }>;
 }) {
+  const tSettingsShort = useTranslations("accounting.settings");
   const t = useTranslations("accounting.setup.syncSettings");
   const tAccounts = useTranslations("accounting.setup.accounts");
   const tCategories = useTranslations("accounting.setup.categories");
@@ -450,7 +451,7 @@ function SyncSettingsCard({
           <p className="text-small text-default-500">
             {tCategories("name")}: <strong>{settings.memberFeeCategoryName ?? "—"}</strong> ·{" "}
             {tAccounts("typeCASH")}: <strong>{settings.cashAccountName ?? "—"}</strong> ·{" "}
-            {tAccounts("typeBANK")}: <strong>{settings.bankAccountName ?? "—"}</strong> · Bağış:{" "}
+            {tAccounts("typeBANK")}: <strong>{settings.bankAccountName ?? "—"}</strong> · {tSettingsShort("donationShort")}:{" "}
             <strong>{settings.donationCategoryName ?? "—"}</strong>
           </p>
         )}

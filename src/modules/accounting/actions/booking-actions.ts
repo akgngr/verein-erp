@@ -20,7 +20,7 @@ import { berlinYear, parseDateOnly } from "../utils";
 
 function ruleError(error: unknown): never {
   if (error instanceof BookingRuleError) {
-    throw new ActionError(error.message);
+    throw new ActionError(error.message, undefined, error.values);
   }
   throw error;
 }
@@ -34,18 +34,18 @@ function parseCommon(input: {
 }) {
   const bookingDate = parseDateOnly(input.bookingDate);
   if (!bookingDate) {
-    throw new ActionError("Fiş tarihi geçersiz.", {
+    throw new ActionError("accounting.errors.bookingDateInvalid", {
       bookingDate: ["Geçerli bir fiş tarihi girin."],
     });
   }
   const cents = toCents(input.amount);
   if (cents === null || cents <= 0) {
-    throw new ActionError("Tutar geçersiz.", {
+    throw new ActionError("accounting.errors.amountInvalid", {
       amount: ["0'dan büyük bir tutar girin (en fazla 2 ondalık)."],
     });
   }
   if (cents > 999_999_999) {
-    throw new ActionError("Tutar çok büyük.", {
+    throw new ActionError("accounting.errors.amountTooLarge", {
       amount: ["Tutar en fazla 9.999.999,99 € olabilir."],
     });
   }
@@ -74,12 +74,12 @@ export async function createBookingAction(
           db.$transaction(async (tx) => {
             if (input.type === "TRANSFER") {
               if (!input.counterAccountId) {
-                throw new ActionError("Hedef hesap zorunludur.", {
+                throw new ActionError("accounting.errors.targetRequired", {
                   counterAccountId: ["Hedef hesap seçin."],
                 });
               }
               if (input.counterAccountId === input.accountId) {
-                throw new ActionError("Hedef hesap kaynak hesapla aynı olamaz.", {
+                throw new ActionError("accounting.errors.targetSameAsSource", {
                   counterAccountId: ["Farklı bir hedef hesap seçin."],
                 });
               }
@@ -170,10 +170,10 @@ export async function updateBookingAction(input: unknown): Promise<ActionResult>
       const updatedByLabel = buildUserLabel(user.name, user.email);
 
       const existing = await db.accountingBooking.findUnique({ where: { id: input.id } });
-      if (!existing) throw new ActionError("Fiş bulunamadı.");
+      if (!existing) throw new ActionError("accounting.errors.bookingNotFound");
 
       if (existing.reversedAt) {
-        throw new ActionError("İptal edilmiş fiş düzenlenemez; yeni fiş oluşturun.");
+        throw new ActionError("accounting.errors.reversedNoEdit");
       }
       if (existing.sourceType) {
         throw new ActionError(
@@ -187,8 +187,8 @@ export async function updateBookingAction(input: unknown): Promise<ActionResult>
         // KARAR: yıl değişikliği fiş numarası bütünlüğünü bozar → yasak; kullanıcı
         // yeni fiş oluşturup eskiyi ters kayıt eder (§ 8 md. 7 akışı).
         throw new ActionError(
-          "Fiş başka yıla taşınamaz; yeni fiş oluşturup eski fişi ters kayıt edin.",
-          { bookingDate: ["Fiş yılı değiştirilemez."] },
+          "accounting.errors.yearChangeForbidden",
+          { bookingDate: ["accounting.errors.yearChangeField"] },
         );
       }
 
@@ -208,7 +208,7 @@ export async function updateBookingAction(input: unknown): Promise<ActionResult>
 
           if (existing.type === "TRANSFER") {
             if (input.categoryId) {
-              throw new ActionError("Virman fişinde kategori olamaz.", {
+              throw new ActionError("accounting.errors.transferNoCategory", {
                 categoryId: ["Virmanda kategori seçilmez."],
               });
             }
@@ -306,9 +306,9 @@ export async function reverseBookingAction(input: unknown): Promise<ActionResult
       const label = buildUserLabel(user.name, user.email);
 
       const existing = await db.accountingBooking.findUnique({ where: { id: input.id } });
-      if (!existing) throw new ActionError("Fiş bulunamadı.");
+      if (!existing) throw new ActionError("accounting.errors.bookingNotFound");
       if (existing.reversedAt) {
-        throw new ActionError("Bu fiş zaten iptal edilmiş.");
+        throw new ActionError("accounting.errors.alreadyReversed");
       }
       if (existing.sourceType) {
         throw new ActionError(
@@ -321,7 +321,7 @@ export async function reverseBookingAction(input: unknown): Promise<ActionResult
           const row = await tx.accountingYear.findUnique({ where: { year: existing.year } });
           if (row?.lockedAt) {
             throw new BookingRuleError(
-              `${existing.year} yılı kilitli; ters kayıt için kilidi açın.`,
+              "accounting.errors.reverseYearLockedNumbered", undefined, { year: existing.year },
             );
           }
 

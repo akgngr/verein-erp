@@ -54,6 +54,7 @@ export function IncomeExpenseTable({ report }: { report: IncomeExpenseReport }) 
 }
 
 export function LedgerTable({ report }: { report: LedgerReport }) {
+  const tReports = useTranslations("accounting.reports");
   const t = useTranslations("accounting.reports.ledger");
   const format = (cents: number) =>
     (cents / 100).toLocaleString("tr-TR", { style: "currency", currency: "EUR" });
@@ -87,7 +88,7 @@ export function LedgerTable({ report }: { report: LedgerReport }) {
             id: row.id,
             date: row.bookingDate.toISOString().slice(0, 10),
             number: row.bookingNumber,
-            description: row.reversedAt ? `${row.description} (İPTAL)` : row.description,
+            description: row.reversedAt ? tReports("reversedSuffix", { description: row.description }) : row.description,
             receipt: row.receiptReference ?? "",
             income: !row.reversedAt && row.amountCents > 0 ? format(row.amountCents) : "",
             expense:

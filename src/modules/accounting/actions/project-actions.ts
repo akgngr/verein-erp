@@ -33,7 +33,7 @@ export async function createProjectAction(
         return { id: created.id };
       } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
-          throw new ActionError("Bu proje adı zaten kullanılıyor.", {
+          throw new ActionError("accounting.errors.projectNameTaken", {
             name: ["Farklı bir proje adı girin."],
           });
         }
@@ -60,7 +60,7 @@ export async function updateProjectAction(input: unknown): Promise<ActionResult>
     handler: async ({ input, audit }) => {
       const db = getDb();
       const existing = await db.accountingProject.findUnique({ where: { id: input.id } });
-      if (!existing) throw new ActionError("Proje bulunamadı.");
+      if (!existing) throw new ActionError("accounting.errors.projectNotFound");
 
       await db.accountingProject.update({
         where: { id: existing.id },
