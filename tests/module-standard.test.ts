@@ -4,7 +4,7 @@ import os from "node:os";
 import path from "node:path";
 import { describe, it } from "node:test";
 
-import { validateAllModules, validateModule } from "../scripts/validate-module";
+import { listSchemaTableNames, validateAllModules, validateModule } from "../scripts/validate-module";
 
 describe("Verein ERP Module Standardization & Conformance", () => {
   it("all existing modules in src/modules/ pass full validation with 0 errors", () => {
@@ -105,6 +105,49 @@ describe("Verein ERP Module Standardization & Conformance", () => {
     const res = validateModule("bad-nav-mod", tempDir);
     assert.equal(res.valid, false);
     assert.ok(res.errors.some((e) => e.includes("menu/top.json") && e.includes("'/' ile başlayan")));
+
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  });
+  it("listSchemaTableNames resolves @@map names and falls back to model names", () => {
+    const schema = [
+      "model InventoryItem {",
+      "  id String @id",
+      '  @@map("inventory_items")',
+      "}",
+      "",
+      "model Member {",
+      "  id String @id",
+      "}",
+    ].join("\n");
+    assert.deepEqual(listSchemaTableNames(schema), ["inventory_items", "Member"]);
+  });
+
+  it("validator flags schema tables without a migration (A-1.6: db push is not a migration)", () => {
+    const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "verein-mod-test-"));
+    const dummyMod = path.join(tempDir, "nomig-mod");
+    fs.mkdirSync(path.join(dummyMod, "messages"), { recursive: true });
+
+    fs.writeFileSync(
+      path.join(dummyMod, "module.config.ts"),
+      `export const moduleConfig = { key: "nomig-mod", label: "Test", category: "EXTENSION", hasSchema: true, nav: [] };`,
+    );
+    fs.writeFileSync(path.join(dummyMod, "permissions.ts"), `export const p = {};`);
+    fs.writeFileSync(path.join(dummyMod, "messages", "tr.json"), JSON.stringify({ title: "Test" }));
+    fs.writeFileSync(path.join(dummyMod, "messages", "de.json"), JSON.stringify({ title: "Test" }));
+    fs.writeFileSync(path.join(dummyMod, "index.ts"), `export {};`);
+    fs.writeFileSync(path.join(dummyMod, "server.ts"), `import "server-only";`);
+    fs.writeFileSync(path.join(dummyMod, "ui.ts"), `export {};`);
+    fs.writeFileSync(
+      path.join(dummyMod, "schema.prisma"),
+      `model NomigThing {\n  id String @id\n  @@map("nomig-mod_things")\n}\n`,
+    );
+
+    const res = validateModule("nomig-mod", tempDir);
+    assert.equal(res.valid, false);
+    assert.ok(
+      res.errors.some((e) => e.includes('"nomig-mod_things"') && e.includes("migration")),
+      `Beklenen migration hatası bulunamadı: ${res.errors.join(" | ")}`,
+    );
 
     fs.rmSync(tempDir, { recursive: true, force: true });
   });

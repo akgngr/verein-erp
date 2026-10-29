@@ -5,6 +5,7 @@ import { pathToFileURL } from "node:url";
 const ROOT_DIR = process.cwd();
 const MODULES_DIR = path.join(ROOT_DIR, "src", "modules");
 const APP_DIR = path.join(ROOT_DIR, "src", "app", "(dashboard)");
+const MIGRATIONS_DIR = path.join(ROOT_DIR, "prisma", "schema", "migrations");
 
 export interface ModuleValidationResult {
   moduleKey: string;
@@ -217,6 +218,18 @@ export function validateModule(moduleKey: string, customModulesDir?: string): Mo
       if (!schemaText.includes("model ")) {
         warnings.push("'schema.prisma' dosyası herhangi bir 'model' tanımı içermiyor.");
       }
+      // A-1.6: Şemadaki her tablo bir migration ile oluşturulmuş olmalı.
+      // `prisma db push` migration üretmez; üretimdeki `prisma migrate deploy`
+      // migration'ı olmayan tabloyu hiç oluşturmaz.
+      const migrationSql = readAllMigrationSql();
+      for (const tableName of listSchemaTableNames(schemaText)) {
+        if (!migrationSql.includes(`CREATE TABLE "${tableName}"`)) {
+          errors.push(
+            `Tablo "${tableName}" için migration bulunamadı. 'pnpm db:migrate --name add_${moduleKey}' ile migration üretin ('db push' migration oluşturmaz).`,
+          );
+        }
+      }
+
       // EXTENSION modüller için çakışma önleyici @@map kuralı kontrolü
       if (info.category === "EXTENSION") {
         const mapMatches = [...schemaText.matchAll(/@@map\(["']([^"']+)["']\)/g)];
@@ -299,6 +312,28 @@ export function validateModule(moduleKey: string, customModulesDir?: string): Mo
     warnings,
     info,
   };
+}
+
+/** Şemadaki modellerin veritabanı tablo adları (@@map varsa o, yoksa model adı). */
+export function listSchemaTableNames(schemaText: string): string[] {
+  const tables: string[] = [];
+  for (const match of schemaText.matchAll(/^model\s+(\w+)\s*\{([\s\S]*?)^\}/gm)) {
+    const mapMatch = match[2].match(/@@map\(\s*["']([^"']+)["']\s*\)/);
+    tables.push(mapMatch ? mapMatch[1] : match[1]);
+  }
+  return tables;
+}
+
+/** prisma/schema/migrations altındaki tüm migration.sql içeriklerini birleştirir. */
+function readAllMigrationSql(): string {
+  if (!fs.existsSync(MIGRATIONS_DIR)) return "";
+  return fs
+    .readdirSync(MIGRATIONS_DIR, { withFileTypes: true })
+    .filter((entry) => entry.isDirectory())
+    .map((entry) => path.join(MIGRATIONS_DIR, entry.name, "migration.sql"))
+    .filter((file) => fs.existsSync(file))
+    .map((file) => fs.readFileSync(file, "utf8"))
+    .join("\n");
 }
 
 /**

@@ -47,6 +47,9 @@ COPY --from=builder /app/node_modules/prisma ./node_modules/prisma
 COPY --from=builder /app/node_modules/@prisma ./node_modules/@prisma
 COPY --from=builder /app/node_modules/.bin/prisma ./node_modules/.bin/prisma
 
+# A-1.4: veritabanı bütünlük doğrulaması (düz Node.js, tsx gerektirmez)
+COPY --from=builder /app/scripts/verify-db-integrity.mjs ./scripts/verify-db-integrity.mjs
+
 # Evrak dosya depolaması (Faz 1): kalıcı volume bağlanacak klasör,
 # root olmayan kullanıcıya verilir; UPLOAD_DIR varsayılanı bu yoldur.
 RUN mkdir -p /app/storage/uploads \
@@ -58,5 +61,6 @@ EXPOSE 3000
 ENV PORT=3000
 ENV HOSTNAME=0.0.0.0
 
-# Konteyner başlangıcında migration, ardından uygulama (13. bölüm)
-CMD ["sh", "-c", "node_modules/.bin/prisma migrate deploy && node server.js"]
+# Konteyner başlangıcında migration → bütünlük doğrulaması → uygulama (13. bölüm, A-1.4).
+# Değişmezlik trigger'ları eksikse veya bir migration uygulanmamışsa konteyner BAŞLAMAZ.
+CMD ["sh", "-c", "node_modules/.bin/prisma migrate deploy && node scripts/verify-db-integrity.mjs && node server.js"]

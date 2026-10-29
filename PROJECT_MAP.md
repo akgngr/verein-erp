@@ -162,6 +162,8 @@ src/modules/documents/
 24. **Aidat/muhasebe DB koruması:** AccountingBooking/File DELETE engelli; fişte bookingNumber/year/sequence/createdAt değişmez (trigger'lar). MemberPayment silme action'ı YOK (yalnız void).
 25. **Muhasebe aritmetiği:** tüm tutarlar integer cent (shared/money.ts); Decimal(12,2) yalnız kalıcılık; raporlar tek servis (report-builders) — ekran/Excel/PDF aynı sayıları gösterir.
 26. **Fiş metni gizliliği:** muhasebe fişlerinde üye NUMARASI (ad asla); audit'te description/counterparty içeriği yazılmaz; Kassenminus CASH hesapta DB-öncesi servis katmanında zorlanır.
+27. **Şema değişikliği YALNIZCA migration ile (A-1):** `pnpm db:migrate --name <x>` → migration klasörü commit'lenir; sunucuda `pnpm db:deploy` (migrate deploy + `scripts/verify-db-integrity.mjs`). `prisma db push` YASAK — migration kaydı üretmez ve değişmezlik trigger'larını (AuditLog, AccountingBooking, Donation, ZuwendungConfirmation…) KURMAZ. Yerel deneme için yalnızca `pnpm db:push:dev` (üretimde reddeder). Push ile kurulmuş veritabanı: `pnpm db:baseline -- --yes` (bkz. docs/operations/MIGRATION_BASELINE.md). `module:validate`, migration'ı olmayan tabloyu HATA sayar. Docker konteyneri doğrulama başarısızsa başlamaz.
+28. **Server Actions yalnızca aynı kaynaktan (A-2):** `next.config.ts` izinli kaynak listeleri boştur; ek kaynak gerekiyorsa `SERVER_ACTIONS_ALLOWED_ORIGINS` (derleme anında okunur). Caddyfile yalnızca uygulamaya yönlendirir (`APP_DOMAIN`, `APP_UPSTREAM`); sorgu parametresiyle iç porta yönlendirme kuralı kaldırıldı ve geri eklenmez.
 
 ## 7. i18n durum haritası
 
