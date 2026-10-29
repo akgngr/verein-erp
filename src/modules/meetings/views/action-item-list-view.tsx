@@ -14,7 +14,7 @@ import { ActionItemDateFilter, ActionItemQuickFilters } from "../components/list
 
 /**
  * Çapraz toplantı görev listesi (7.4): varsayılan görünüm yalnızca AÇIK
- * görevler (sorgu tarafında uygulanır); t("filters.all") filtresi filter.status=* ile
+ * görevler (sorgu tarafında uygulanır); "Tümü" filtresi filter.status=* ile
  * tamamlananları da gösterir.
  */
 export async function ActionItemListView({

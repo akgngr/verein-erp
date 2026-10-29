@@ -21,7 +21,7 @@ import { DiscussionEditor } from "./discussion-editor";
 /**
  * Gündem sekmesi (7.3): sıralı liste; madde numarası, başlık, planlanan içerik,
  * açılır "Görüşmeler" bölümü ve bağlı kararlar. Düzenlenebilirken: ekle,
- * düzenle, yukarı/aşağı taşı, sil, t("addDecision").
+ * düzenle, yukarı/aşağı taşı, sil, "Karar ekle".
  */
 export function AgendaTab({
   meetingId,

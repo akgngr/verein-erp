@@ -18,7 +18,7 @@ import type { CategoryListItem } from "../types";
 
 /**
  * Kategori listesi tablosu (8.5): Ad, Durum, Evrak sayısı + satır aksiyonları
- * (Düzenle modalı, Pasife al/Aktifleştir onayı) ve t("new") butonu.
+ * (Düzenle modalı, Pasife al/Aktifleştir onayı) ve "Yeni kategori" butonu.
  */
 export function CategoryTable({
   rows,

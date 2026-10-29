@@ -9,12 +9,11 @@ import { Controller, type Control, type FieldValues, type Path } from "react-hoo
 import type { ReplyTargetOption } from "../types";
 
 function replyTargetLabel(option: ReplyTargetOption): string {
-  const t = useTranslations("documents.form");
   return `${option.registryNumber} — ${option.counterparty} — ${option.subject}`;
 }
 
 /**
- * t("replyTo") seçici (8.2): yalnızca giden evrak formunda görünür.
+ * "Yanıtlanan evrak" seçici (8.2): yalnızca giden evrak formunda görünür.
  *
  * KARAR: Aday gelen evraklar sunucudan (search-reply-targets, en yeni 20 kayıt)
  * statik liste olarak alınır; arama istemci tarafında kayıt no/kurum/konu
