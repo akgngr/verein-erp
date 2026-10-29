@@ -11,6 +11,7 @@ import {
   DropdownItem,
   DropdownMenu,
   DropdownTrigger,
+  Tooltip,
 } from "@heroui/react";
 import {
   Building2,
@@ -19,6 +20,8 @@ import {
   LayoutDashboard,
   LogOut,
   Menu as MenuIcon,
+  PanelLeftClose,
+  PanelLeftOpen,
   Settings,
   UserRound,
   type LucideIcon,
@@ -42,17 +45,35 @@ import {
 import type { ModuleConfig, NavItem, PermissionRequirement } from "@/shared/types/module";
 import { cn } from "@/shared/utils";
 
+import { SIDEBAR_COLLAPSED_COOKIE } from "./sidebar-state";
+
 type SidebarContextValue = {
   mobileOpen: boolean;
   setMobileOpen: (open: boolean) => void;
+  /** Masaüstü panel ikon şeridine daraltıldı mı (mobil çekmeceyi etkilemez). */
+  collapsed: boolean;
+  toggleCollapsed: () => void;
 };
 
 const SidebarContext = createContext<SidebarContextValue | null>(null);
 
-function SidebarProvider({ children }: { children: ReactNode }) {
+
+function SidebarProvider({
+  children,
+  initialCollapsed = false,
+}: {
+  children: ReactNode;
+  initialCollapsed?: boolean;
+}) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [collapsed, setCollapsed] = useState(initialCollapsed);
+  const toggleCollapsed = () => {
+    const next = !collapsed;
+    setCollapsed(next);
+    document.cookie = `${SIDEBAR_COLLAPSED_COOKIE}=${next ? "1" : "0"}; path=/; max-age=31536000; samesite=lax`;
+  };
   return (
-    <SidebarContext.Provider value={{ mobileOpen, setMobileOpen }}>
+    <SidebarContext.Provider value={{ mobileOpen, setMobileOpen, collapsed, toggleCollapsed }}>
       {children}
     </SidebarContext.Provider>
   );
@@ -104,10 +125,13 @@ function SidebarContent({
   role,
   activeModuleKeys,
   onNavigate,
+  collapsed = false,
 }: {
   role: Role;
   activeModuleKeys?: string[];
   onNavigate?: () => void;
+  /** İkon şeridi: etiketler gizlenir, ipucu (tooltip) olarak gösterilir. */
+  collapsed?: boolean;
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -166,7 +190,8 @@ function SidebarContent({
 
   const itemClass = (active: boolean) =>
     cn(
-      "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-small font-medium transition-all duration-150",
+      "group relative flex items-center gap-3 rounded-lg py-2.5 text-small font-medium transition-all duration-150",
+      collapsed ? "justify-center px-0" : "px-3",
       active
         ? "bg-primary-50 text-primary-700 shadow-xs dark:bg-primary-500/15 dark:text-primary-300 font-semibold"
         : "text-default-600 hover:bg-default-100/80 hover:text-foreground",
@@ -186,18 +211,15 @@ function SidebarContent({
           )}
           aria-hidden
         />
-        <span className="truncate">{link.label}</span>
+        <span className={collapsed ? "sr-only" : "truncate"}>{link.label}</span>
       </>
     );
     // İndirme bağlantıları API rotasıdır: istemci yönlendirmesi yapılmaz.
-    if (link.isDownload) {
-      return (
-        <a key={link.key} href={link.href} className={itemClass(false)}>
-          {content}
-        </a>
-      );
-    }
-    return (
+    const element = link.isDownload ? (
+      <a key={link.key} href={link.href} className={itemClass(false)}>
+        {content}
+      </a>
+    ) : (
       <Link
         key={link.key}
         href={link.href}
@@ -208,7 +230,18 @@ function SidebarContent({
         {content}
       </Link>
     );
+    return withTooltip(link.key, link.label, element);
   };
+
+  /** Daraltılmış panelde etiket, öğenin sağında ipucu olarak görünür. */
+  const withTooltip = (key: string, label: string, element: ReactNode) =>
+    collapsed ? (
+      <Tooltip key={key} content={label} placement="right" delay={300} closeDelay={0}>
+        {element}
+      </Tooltip>
+    ) : (
+      element
+    );
 
   const renderMainItem = (item: NavItem) => {
     const mod = moduleNavKey.get(item.href);
@@ -221,8 +254,10 @@ function SidebarContent({
     );
   };
 
-  const switchButtonClass =
-    "flex w-full items-center gap-2 rounded-lg border border-default-200/80 bg-default-50 px-3 py-2 text-small font-medium text-default-600 transition-colors hover:bg-default-100 hover:text-foreground";
+  const switchButtonClass = cn(
+    "flex w-full items-center gap-2 rounded-lg border border-default-200/80 bg-default-50 py-2 text-small font-medium text-default-600 transition-colors hover:bg-default-100 hover:text-foreground",
+    collapsed ? "justify-center px-0" : "px-3",
+  );
 
   const returnModule = !shownModule && routeModuleKey ? modules.find((m) => m.key === routeModuleKey) : undefined;
 
@@ -234,26 +269,41 @@ function SidebarContent({
         aria-hidden={shownModule ? true : undefined}
         inert={shownModule ? true : undefined}
         className={cn(
-          "col-start-1 row-start-1 flex flex-col gap-5 px-3 py-4 transition-[translate,opacity] duration-200 ease-out",
+          "col-start-1 row-start-1 flex flex-col gap-5 py-4 transition-[translate,opacity] duration-200 ease-out",
+          collapsed ? "px-2" : "px-3",
           shownModule ? "pointer-events-none -translate-x-full opacity-0" : "translate-x-0 opacity-100",
         )}
       >
-        {returnModule ? (
-          <button type="button" className={switchButtonClass} onClick={() => setOverride(null)}>
-            <span className="truncate">
-              {tSidebar.has("backToModule")
+        {returnModule
+          ? (() => {
+              const label = tSidebar.has("backToModule")
                 ? tSidebar("backToModule", { module: moduleLabel(returnModule) })
-                : moduleLabel(returnModule)}
-            </span>
-            <ChevronRight className="ml-auto h-4 w-4 shrink-0" aria-hidden />
-          </button>
-        ) : null}
+                : moduleLabel(returnModule);
+              return withTooltip(
+                "back-to-module",
+                label,
+                <button
+                  type="button"
+                  className={switchButtonClass}
+                  aria-label={collapsed ? label : undefined}
+                  onClick={() => setOverride(null)}
+                >
+                  {collapsed ? null : <span className="truncate">{label}</span>}
+                  <ChevronRight className={cn("h-4 w-4 shrink-0", !collapsed && "ml-auto")} aria-hidden />
+                </button>,
+              );
+            })()
+          : null}
         <div className="flex flex-col gap-1">{mainItems.map(renderMainItem)}</div>
         {settingsItems.length > 0 ? (
           <div className="flex flex-col gap-1 pt-2">
-            <p className="px-3 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-default-400">
-              {tSidebar.has("settings") ? tSidebar("settings") : "Ayarlar"}
-            </p>
+            {collapsed ? (
+              <hr className="mx-2 mb-1.5 border-default-200/80" />
+            ) : (
+              <p className="px-3 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-default-400">
+                {tSidebar.has("settings") ? tSidebar("settings") : "Ayarlar"}
+              </p>
+            )}
             {settingsItems.map(renderMainItem)}
           </div>
         ) : null}
@@ -265,22 +315,40 @@ function SidebarContent({
         aria-hidden={shownModule ? undefined : true}
         inert={shownModule ? undefined : true}
         className={cn(
-          "col-start-1 row-start-1 flex flex-col gap-4 px-3 py-4 transition-[translate,opacity] duration-200 ease-out",
+          "col-start-1 row-start-1 flex flex-col gap-4 py-4 transition-[translate,opacity] duration-200 ease-out",
+          collapsed ? "px-2" : "px-3",
           shownModule ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-full opacity-0",
         )}
       >
         {shownModule ? (
           <>
-            <button type="button" className={switchButtonClass} onClick={() => setOverride("main")}>
-              <ChevronLeft className="h-4 w-4 shrink-0" aria-hidden />
-              <span className="truncate">{tSidebar.has("backToMain") ? tSidebar("backToMain") : "Ana menü"}</span>
-            </button>
-            <div className="flex items-center gap-2 px-3">
+            {withTooltip(
+              "back-to-main",
+              tSidebar("backToMain"),
+              <button
+                type="button"
+                className={switchButtonClass}
+                aria-label={collapsed ? tSidebar("backToMain") : undefined}
+                onClick={() => setOverride("main")}
+              >
+                <ChevronLeft className="h-4 w-4 shrink-0" aria-hidden />
+                {collapsed ? null : <span className="truncate">{tSidebar("backToMain")}</span>}
+              </button>,
+            )}
+            {/* Daraltılmışken başlık ikonu ilk bağlantıyla karışır: yerine ayraç (ad ekran okuyucuda kalır). */}
+            {collapsed ? <hr className="mx-2 border-default-200/80" aria-hidden /> : null}
+            <div className={cn("flex items-center gap-2", collapsed ? "sr-only" : "px-3")}>
               {(() => {
                 const ModuleIcon = moduleHome(shownModule)?.icon;
                 return ModuleIcon ? <ModuleIcon className="h-4 w-4 shrink-0 text-primary" aria-hidden /> : null;
               })()}
-              <span className="truncate text-[11px] font-semibold uppercase tracking-wider text-default-500">
+              <span
+                className={
+                  collapsed
+                    ? "sr-only"
+                    : "truncate text-[11px] font-semibold uppercase tracking-wider text-default-500"
+                }
+              >
                 {moduleLabel(shownModule)}
               </span>
             </div>
@@ -294,14 +362,19 @@ function SidebarContent({
   );
 }
 
-function Brand() {
+function Brand({ collapsed = false }: { collapsed?: boolean }) {
   const tSidebar = useTranslations("sidebar");
   return (
-    <div className="flex items-center gap-3 border-b border-default-200/80 px-5 py-4">
-      <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-xs">
+    <div
+      className={cn(
+        "flex items-center gap-3 border-b border-default-200/80 py-4",
+        collapsed ? "justify-center px-2" : "px-5",
+      )}
+    >
+      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-xs">
         <Building2 className="h-5 w-5" aria-hidden />
       </div>
-      <div className="flex flex-col min-w-0">
+      <div className={collapsed ? "sr-only" : "flex flex-col min-w-0"}>
         <span className="text-small font-bold tracking-tight text-foreground truncate">{BRAND}</span>
         <span className="text-[11px] font-medium text-default-400 leading-none truncate">
           {tSidebar.has("brand") ? tSidebar("brand") : "Yönetim Sistemi"}
@@ -317,12 +390,14 @@ function SidebarUserFooter({
   role,
   onSignOut,
   onNavigate,
+  collapsed = false,
 }: {
   name: string;
   email: string;
   role: Role;
   onSignOut: () => Promise<void>;
   onNavigate?: () => void;
+  collapsed?: boolean;
 }) {
   const tRoles = useTranslations("roles");
   const tNav = useTranslations("nav");
@@ -335,33 +410,40 @@ function SidebarUserFooter({
     .join("");
 
   return (
-    <div className="border-t border-default-200/80 p-3 bg-default-50/50 shrink-0">
-      <Dropdown placement="top-start">
+    <div className={cn("border-t border-default-200/80 bg-default-50/50 shrink-0", collapsed ? "p-2" : "p-3")}>
+      <Dropdown placement={collapsed ? "right-end" : "top-start"}>
         <DropdownTrigger>
           <button
             type="button"
-            className="group flex w-full items-center gap-2.5 rounded-xl p-2 text-left transition-all duration-150 hover:bg-default-100/90 cursor-pointer"
+            className={cn(
+              "group flex w-full items-center gap-2.5 rounded-xl text-left transition-all duration-150 hover:bg-default-100/90 cursor-pointer",
+              collapsed ? "justify-center p-1" : "p-2",
+            )}
             aria-label={tSidebar.has("userMenu") ? tSidebar("userMenu") : "Kullanıcı menüsü"}
           >
             <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground font-semibold text-small shadow-xs group-hover:scale-105 transition-transform">
               {initials || "?"}
             </div>
-            <div className="flex min-w-0 flex-1 flex-col">
-              <span className="truncate text-small font-semibold text-foreground leading-tight">
-                {name}
-              </span>
-              <span className="truncate text-tiny text-default-400 leading-tight">
-                {email}
-              </span>
-            </div>
-            <Chip
-              size="sm"
-              variant="flat"
-              color={ROLE_COLORS[role]}
-              className="h-5 text-[10px] shrink-0"
-            >
-              {tRoles(role)}
-            </Chip>
+            {collapsed ? null : (
+              <>
+                <div className="flex min-w-0 flex-1 flex-col">
+                  <span className="truncate text-small font-semibold text-foreground leading-tight">
+                    {name}
+                  </span>
+                  <span className="truncate text-tiny text-default-400 leading-tight">
+                    {email}
+                  </span>
+                </div>
+                <Chip
+                  size="sm"
+                  variant="flat"
+                  color={ROLE_COLORS[role]}
+                  className="h-5 text-[10px] shrink-0"
+                >
+                  {tRoles(role)}
+                </Chip>
+              </>
+            )}
           </button>
         </DropdownTrigger>
         <DropdownMenu aria-label={tSidebar.has("userActions") ? tSidebar("userActions") : "Kullanıcı işlemleri"}>
@@ -405,7 +487,7 @@ function SidebarUserFooter({
   );
 }
 
-/** Masaüstü sabit sidebar (256px). */
+/** Masaüstü sabit sidebar: 256px; daraltılınca 72px ikon şeridi (tercih çerezde). */
 function DesktopSidebar({
   role,
   activeModuleKeys,
@@ -419,11 +501,37 @@ function DesktopSidebar({
   userEmail?: string;
   onSignOut?: () => Promise<void>;
 }) {
+  const { collapsed, toggleCollapsed } = useSidebar();
+  const tSidebar = useTranslations("sidebar");
+  const toggleLabel = collapsed ? tSidebar("expand") : tSidebar("collapse");
   return (
-    <aside className="sticky top-0 hidden h-dvh w-64 shrink-0 flex-col border-r border-default-200/80 bg-background/95 backdrop-blur-sm lg:flex">
-      <Brand />
-      <div className="flex-1 overflow-y-auto">
-        <SidebarContent role={role} activeModuleKeys={activeModuleKeys} />
+    <aside
+      className={cn(
+        "sticky top-0 hidden h-dvh shrink-0 flex-col border-r border-default-200/80 bg-background/95 backdrop-blur-sm transition-[width] duration-200 ease-out lg:flex",
+        collapsed ? "w-[72px]" : "w-64",
+      )}
+    >
+      <Brand collapsed={collapsed} />
+      <div className="flex-1 overflow-y-auto overflow-x-hidden">
+        <SidebarContent role={role} activeModuleKeys={activeModuleKeys} collapsed={collapsed} />
+      </div>
+      <div className={cn("flex px-2 pb-2", collapsed ? "justify-center" : "justify-end")}>
+        <Tooltip content={toggleLabel} placement="right" delay={300} closeDelay={0}>
+          <Button
+            isIconOnly
+            size="sm"
+            variant="light"
+            aria-label={toggleLabel}
+            aria-expanded={!collapsed}
+            onPress={toggleCollapsed}
+          >
+            {collapsed ? (
+              <PanelLeftOpen className="h-4 w-4 text-default-500" aria-hidden />
+            ) : (
+              <PanelLeftClose className="h-4 w-4 text-default-500" aria-hidden />
+            )}
+          </Button>
+        </Tooltip>
       </div>
       {userName && onSignOut && (
         <SidebarUserFooter
@@ -431,6 +539,7 @@ function DesktopSidebar({
           email={userEmail ?? ""}
           role={role}
           onSignOut={onSignOut}
+          collapsed={collapsed}
         />
       )}
     </aside>
