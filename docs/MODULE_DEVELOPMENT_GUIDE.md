@@ -17,11 +17,11 @@ Bu rehber, **Verein ERP** sistemine diğer modülleri ve çekirdek sistemi bozma
    - `@/modules/<modul>` (`index.ts` — İzomorfik tipler, şemalar, yetki tanımları, moduleConfig)
    - `@/modules/<modul>/server` (`server.ts` — "server-only" sorgular, sunucu aksiyonları, yetki korumaları)
    - `@/modules/<modul>/ui` (`ui.ts` — React istemci ve sunucu görünüm bileşenleri)
-4. **Üst Bar Menüsü Standardı (`menu/top.json`):**
-   Her modülün alt sayfaları, modüle özel yapılandırmaları ve dışa aktarma (Excel vb.) araçları sayfa içine buton yığılması yerine modül dizinindeki `menu/top.json` dosyasında bildirilir ve dinamik Mac-tarzı üst barda gösterilir.
+4. **Modül Menüsü Standardı (sol panel, `module.config.ts` → `menu`):**
+   Her modülün alt sayfaları, modüle özel yapılandırmaları ve dışa aktarma (Excel vb.) araçları sayfa içine buton yığılması yerine `module.config.ts` içindeki `menu` dizisinde bildirilir. Üst bar yoktur: kullanıcı sol panelde modüle girdiğinde ana menü kayarak modülün menüsüne dönüşür (en üstte "Ana menü" butonu); ana menüye dönüldüğünde en üstte modüle geri dönme butonu çıkar. Modülün ana sayfası ("Genel bakış") otomatik eklenir. (Eski `menu/top.json` standardı kaldırılmıştır; doğrulayıcı hata verir.)
 5. **Sayfa Eylem Ayrımı Kuralı (UI Action Area Separation):**
    - **Sayfa Başlığı Eylem Alanı (`PageHeader actions`):** YALNIZCA doğrudan ana CRUD butonuna (`+ Yeni Ekle`) ayrılmıştır.
-   - **Araçlar, Raporlar ve Alt Sayfa Bağlantıları:** `menu/top.json` içinde tanımlanır; sayfa gövdesinde mükerrer buton olarak gösterilmez.
+   - **Araçlar, Raporlar ve Alt Sayfa Bağlantıları:** `module.config.ts` içindeki `menu` dizisinde tanımlanır; sayfa gövdesinde mükerrer buton olarak gösterilmez.
 
 ---
 
@@ -44,9 +44,6 @@ src/
         ├── index.ts                         # Kamuya açık İZOMORFİK giriş noktası (Public API)
         ├── server.ts                        # Kamuya açık SUNUCU giriş noktası ("server-only")
         ├── ui.ts                            # Kamuya açık UI bileşenleri girişi
-        │
-        ├── menu/
-        │   └── top.json                     # [STANDART] Üst bar araçları, alt sekmeler ve linkler
         │
         ├── messages/
         │   ├── tr.json                      # Türkçe yerelleştirilmiş metinler
@@ -78,10 +75,9 @@ src/
 
 ### 1. `module.config.ts` (Modül Kimliği ve Menüsü)
 ```typescript
-import { Package } from "lucide-react"; // İlgili Lucide ikonu
-import type { ModuleConfig, TopNavItem } from "@/shared/types/module";
+import { Download, FolderTree, Package } from "lucide-react"; // İlgili Lucide ikonları
+import type { ModuleConfig } from "@/shared/types/module";
 import { inventoryPermissions } from "./permissions";
-import topNav from "./menu/top.json";
 
 export const moduleConfig: ModuleConfig = {
   key: "inventory",                       // Klasör adıyla BİREBİR AYNI olmalıdır
@@ -89,7 +85,6 @@ export const moduleConfig: ModuleConfig = {
   description: "Dernek demirbaş ve malzeme takibi.",
   category: "EXTENSION",                  // Eklentiler için 'EXTENSION', sistem için 'CORE'/'OFFICIAL'
   hasSchema: true,                        // Veritabanı tablosu varsa true
-  topNav: topNav as TopNavItem[],         // menu/top.json üst bar bağlantısı
   nav: [
     {
       href: "/inventory",
@@ -101,37 +96,25 @@ export const moduleConfig: ModuleConfig = {
       permission: { definition: inventoryPermissions, action: "view" },
     },
   ],
+  // Modül menüsü (sol panel). Ana sayfa ("Genel bakış") otomatik eklenir, burada tekrar edilmez.
+  menu: [
+    { key: "categories", label: "Kategoriler", href: "/inventory/kategoriler", icon: FolderTree },
+    { key: "export", label: "Excel'e aktar", href: "/api/inventory/export", icon: Download, isDownload: true },
+  ],
 };
 ```
 
 ---
 
-### 2. `menu/top.json` (Mac-Tarzı Üst Bar Navigasyonu)
-Sayfada buton kalabalığı yaratmak yerine araçlar, filtreler, alt sayfalar ve Excel dışa aktarımı burada tanımlanır:
-```json
-[
-  {
-    "key": "overview",
-    "label": "Genel Bakış",
-    "href": "/inventory",
-    "icon": "LayoutGrid"
-  },
-  {
-    "key": "categories",
-    "label": "Kategoriler",
-    "href": "/inventory/kategoriler",
-    "icon": "FolderTree"
-  },
-  {
-    "key": "export",
-    "label": "Excel'e Aktar",
-    "href": "/api/inventory/export",
-    "icon": "FileSpreadsheet",
-    "isDownload": true
-  }
-]
-```
-> **Kural:** `href` mutlaka `/` ile başlamalıdır. İkon isimleri standart Lucide ikon adıdır (PascalCase).
+### 2. `menu` (Sol Panel Modül Menüsü)
+Sayfada buton kalabalığı yaratmak yerine alt sayfalar, araçlar ve Excel dışa aktarımı `module.config.ts` içindeki `menu` dizisinde tanımlanır (örnek yukarıda). Kurallar:
+
+- **Ana sayfa tekrar edilmez:** `nav[0].href` "Genel bakış" olarak otomatik eklenir. Ana sayfanın farklı bir adı olacaksa (örn. E-posta: `/mail` = "Ayarlar") aynı `href` ile bir öğe tanımlanır, o zaman otomatik öğe eklenmez.
+- **Yetki:** Her öğe, hedef sayfanın gerçekten kontrol ettiği yetkiyi `permission: { definition, action }` ile taşır; verilmezse modülün `nav[0]` yetkisi kullanılır. Yetkisi olmayan kullanıcı bağlantıyı görmez.
+- **Çeviri:** Etiket `messages/tr.json` ve `messages/de.json` içinde `"menu": { "<key>": "..." }` altında tanımlanır; `label` yalnızca yedektir.
+- **Sorgu parametresi:** `href` sorgu içerebilir (örn. `/events?filter.timeFilter=upcoming`); bağlantı yalnızca parametre eşleşince aktif görünür.
+- **İndirme:** API rotaları (`/api/...`) `isDownload: true` ile işaretlenir.
+- **Denetim:** `tests/navigation.test.ts` her bağlantının bir sayfası (`page.tsx`) veya API rotası (`route.ts`) olduğunu ve her etiketin iki dilde çevrildiğini doğrular. Sayfası olmayan link CI'ı kırmızıya çevirir.
 
 ---
 
@@ -294,9 +277,8 @@ SENİN ÜRETMEN GEREKEN DOSYALAR:
 Lütfen bana her bir dosyanın TAM DOSYA YOLUNU ve EKSİKSİZ ÇALIŞAN KODUNU sırasıyla ver:
 
 1. `src/modules/<MODUL_ADI>/module.config.ts`:
-   - `key: "<MODUL_ADI>"`, `category: "EXTENSION"`, `hasSchema: true`, `topNav: topNav as TopNavItem[]`, `nav: [...]` (Lucide ikonu ile).
-2. `src/modules/<MODUL_ADI>/menu/top.json`:
-   - Üst bar (Mac-tarzı Topbar) araçları, filtreleri veya sekmeleri dizisi (`key`, `label`, `href` ['/' ile başlayan], `icon` [Lucide ikon adı]).
+   - `key: "<MODUL_ADI>"`, `category: "EXTENSION"`, `hasSchema: true`, `nav: [...]` (Lucide ikonu ile), alt sayfa varsa `menu: [...]` (`key`, `label`, `href` ['/' ile başlayan], `icon` [Lucide bileşeni], gerekirse `permission`, indirme için `isDownload: true`).
+2. (Kaldırıldı — modül menüsü artık `module.config.ts` içindeki `menu` dizisindedir.)
 3. `src/modules/<MODUL_ADI>/permissions.ts`:
    - `definePermissions("<MODUL_ADI>", { ADMIN: [...], BOARD: [...], SECRETARY: [...], TREASURER: [...], AUDITOR: [...], VIEWER: [...] })` şeklinde 6 rolü de tanımla.
 4. `src/modules/<MODUL_ADI>/schema.prisma`:

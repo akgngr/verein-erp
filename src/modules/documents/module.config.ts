@@ -1,8 +1,7 @@
-import { FileText } from "lucide-react";
+import { Download, FileText, FolderTree } from "lucide-react";
 
-import type { ModuleConfig, TopNavItem } from "@/shared/types/module";
-import { documentsPermissions } from "./permissions";
-import topNav from "./menu/top.json";
+import type { ModuleConfig } from "@/shared/types/module";
+import { documentCategoriesPermissions, documentsPermissions } from "./permissions";
 
 export const moduleConfig: ModuleConfig = {
   key: "documents",
@@ -10,7 +9,6 @@ export const moduleConfig: ModuleConfig = {
   description: "Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi.",
   category: "OFFICIAL",
   hasSchema: true,
-  topNav: topNav as TopNavItem[],
   nav: [
     {
       href: "/evrak",
@@ -21,5 +19,9 @@ export const moduleConfig: ModuleConfig = {
       order: 1,
       permission: { definition: documentsPermissions, action: "view" },
     },
+  ],
+  menu: [
+    { key: "categories", label: "Kategoriler", href: "/evrak/kategoriler", icon: FolderTree, permission: { definition: documentCategoriesPermissions, action: "view" } },
+    { key: "export", label: "Excel'e aktar", href: "/api/documents/export", icon: Download, isDownload: true },
   ],
 };

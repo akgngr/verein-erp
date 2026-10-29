@@ -324,5 +324,8 @@
     "deleteAria": "{name} löschen",
     "deleteTitle": "Datei wird gelöscht",
     "deleteMessage": "Die Datei wird aus der Liste entfernt; die Kopie auf der Festplatte bleibt erhalten. Fortfahren?"
+  },
+  "menu": {
+    "tasks": "Aufgaben"
   }
 }

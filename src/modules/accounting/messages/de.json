@@ -307,5 +307,13 @@
   },
   "balances": {
     "title": "Kontensalden"
+  },
+  "menu": {
+    "sync": "Mitgliedsbeiträge übernehmen",
+    "reports": "Berichte",
+    "budget": "Haushaltsplan",
+    "yearClosing": "Jahresabschluss",
+    "settings": "Einstellungen",
+    "export": "Excel-Export"
   }
 }

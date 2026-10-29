@@ -1,7 +1,6 @@
-import { CalendarDays } from "lucide-react"
-import type { ModuleConfig, TopNavItem } from "@/shared/types/module"
+import { CalendarDays, Clock, History } from "lucide-react"
+import type { ModuleConfig } from "@/shared/types/module"
 import { eventsPermissions } from "./permissions"
-import topNav from "./menu/top.json"
 
 export const moduleConfig: ModuleConfig = {
   key: "events",
@@ -10,7 +9,6 @@ export const moduleConfig: ModuleConfig = {
     "Dernek etkinlikleri, seminerler, atölyeler ve katılımcı yönetimi.",
   category: "EXTENSION",
   hasSchema: true,
-  topNav: topNav as TopNavItem[],
   nav: [
     {
       href: "/events",
@@ -21,5 +19,9 @@ export const moduleConfig: ModuleConfig = {
       order: 25,
       permission: { definition: eventsPermissions, action: "view" },
     },
+  ],
+  menu: [
+    { key: "upcoming", label: "Yaklaşan etkinlikler", href: "/events?filter.timeFilter=upcoming", icon: Clock },
+    { key: "past", label: "Geçmiş etkinlikler", href: "/events?filter.timeFilter=past", icon: History },
   ],
 }

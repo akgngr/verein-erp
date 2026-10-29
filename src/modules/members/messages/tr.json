@@ -315,5 +315,11 @@
     "commitSkipped": "{count} satır hatalı olduğundan atlandı.",
     "goToList": "Üye listesine git",
     "toastImported": "{count} üye içe aktarıldı."
+  },
+  "menu": {
+    "dues": "Aidat raporu",
+    "types": "Üyelik türleri",
+    "import": "İçe aktar",
+    "export": "Excel'e aktar"
   }
 }

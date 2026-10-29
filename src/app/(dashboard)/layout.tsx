@@ -5,8 +5,7 @@ import { requireUser, signOutAction } from "@/modules/auth/server";
 import { getAllActiveModuleKeys } from "@/shared/modules/module-store";
 import { allModules } from "@/registry";
 
-import { DesktopSidebar, MobileSidebar, SidebarProvider } from "./_components/sidebar";
-import { Topbar } from "./_components/topbar";
+import { DesktopSidebar, MobileHeader, MobileSidebar, SidebarProvider } from "./_components/sidebar";
 
 // KARAR: requireUser() oturum çerezlerini okur; bu segment statik üretilemez.
 // force-dynamic, derleme sırasında veritabanına erişim denemesini de engeller.
@@ -39,7 +38,7 @@ export default async function DashboardLayout({
           onSignOut={signOutAction}
         />
         <div className="flex min-w-0 flex-1 flex-col">
-          <Topbar />
+          <MobileHeader />
           <main className="flex-1 px-4 py-6 md:px-6">{children}</main>
         </div>
         <MobileSidebar

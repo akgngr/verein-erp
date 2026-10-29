@@ -196,5 +196,9 @@
     "add": "Vermerk hinzufügen",
     "addedToast": "Vermerk hinzugefügt."
   },
-  "categoriesButton": "Kategorien"
+  "categoriesButton": "Kategorien",
+  "menu": {
+    "categories": "Kategorien",
+    "export": "Excel-Export"
+  }
 }

@@ -1,7 +1,6 @@
-import { Package } from "lucide-react";
-import type { ModuleConfig, TopNavItem } from "@/shared/types/module";
+import { Download, FolderTree, Package } from "lucide-react";
+import type { ModuleConfig } from "@/shared/types/module";
 import { inventoryPermissions } from "./permissions";
-import topNav from "./menu/top.json";
 
 export const moduleConfig: ModuleConfig = {
   key: "inventory",
@@ -9,7 +8,6 @@ export const moduleConfig: ModuleConfig = {
   description: "Dernek demirbaşları, teknik ekipmanlar ve zimmet kayıtlarının takibi.",
   category: "EXTENSION",
   hasSchema: true,
-  topNav: topNav as TopNavItem[],
   nav: [
     {
       href: "/inventory",
@@ -20,5 +18,9 @@ export const moduleConfig: ModuleConfig = {
       order: 10,
       permission: { definition: inventoryPermissions, action: "view" },
     },
+  ],
+  menu: [
+    { key: "categories", label: "Kategoriler", href: "/inventory/kategoriler", icon: FolderTree },
+    { key: "export", label: "Excel'e aktar", href: "/api/inventory/export", icon: Download, isDownload: true },
   ],
 };

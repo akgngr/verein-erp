@@ -23,7 +23,7 @@ PROJE MİMARİSİ VE SINIR KURALLARI:
    - Sayfa Başlığı: `import { PageHeader } from "@/shared/components/ui/page-header";`
    - Boş Durum: `import { EmptyState } from "@/shared/components/ui/empty-state";`
    - Veri Tablosu: `import { DataTable, DataTablePagination } from "@/shared/components/data-table";`
-   - Modül Tipleri: `import type { ModuleConfig, TopNavItem } from "@/shared/types/module";`
+   - Modül Tipleri: `import type { ModuleConfig } from "@/shared/types/module";`
 5. Sıfır "any" Kuralı ve Güçlü Tipleme (ESLint @typescript-eslint/no-explicit-any):
    - Projede ESLint katı `no-explicit-any` kuralı devrededir; `any` kullanımı derlemeyi bozar.
    - ASLA `as any` veya `: any` KULLANMA!
@@ -42,7 +42,7 @@ PROJE MİMARİSİ VE SINIR KURALLARI:
    - **`actions/`:** Yalnızca `"use server"` form mutasyonları (`create`, `update`, `delete`).
 8. URL Tabanlı Modal Kapatma (`<MODUL_ADI>-create-modal.tsx`):
    - `?action=new` modalını açıp kapatmak için `"use client"` olan bir `components/<MODUL_ADI>-create-modal.tsx` sarmalayıcısı yaz. Bu bileşenin `onClose` fonksiyonu `useRouter` ile URL'deki `action` parametresini temizler.
-9. Sayfa Eylem Ayrımı: `PageHeader actions` alanına YALNIZCA doğrudan ana CRUD butonunu (`+ Yeni Ekle`) koy. Araçlar, raporlar ve dışa aktarma bağlantılarını `menu/top.json` içinde tanımla.
+9. Sayfa Eylem Ayrımı: `PageHeader actions` alanına YALNIZCA doğrudan ana CRUD butonunu (`+ Yeni Ekle`) koy. Araçlar, raporlar ve dışa aktarma bağlantılarını `module.config.ts` içindeki `menu` dizisinde tanımla (etiketler `messages/<dil>.json` → `menu.<key>`).
 10. KRİTİK SSR Hydration & Saflık Kuralları (React 19 / Next.js 16):
    - Tablo satırları (`map`) içinde asla HeroUI'ın `<Select>` bileşenini kullanma. Bunun yerine stillendirilmiş native HTML `<select>` ve yanında Lucide `<ChevronDown>` kullan.
    - Render esnasında `Date.now()` çağırma (`react-hooks/purity`). Tarih karşılaştırmalarını (`isPast` vb.) sorguda (`queries/`) veya saf helper'da (`helpers/`) hesapla.
@@ -51,9 +51,8 @@ SENİN ÜRETMEN GEREKEN DOSYALAR:
 Lütfen bana her bir dosyanın TAM DOSYA YOLUNU ve EKSİKSİZ ÇALIŞAN KODUNU sırasıyla ver:
 
 1. `src/modules/<MODUL_ADI>/module.config.ts`:
-   - `key: "<MODUL_ADI>"`, `category: "EXTENSION"`, `hasSchema: true`, `topNav: topNav as TopNavItem[]`, `nav: [...]` (Lucide ikonu ile).
-2. `src/modules/<MODUL_ADI>/menu/top.json`:
-   - Üst bar (Mac-tarzı Topbar) araçları, filtreleri veya sekmeleri dizisi (`key`, `label`, `href` ['/' ile başlayan], `icon` [Lucide ikon adı]).
+   - `key: "<MODUL_ADI>"`, `category: "EXTENSION"`, `hasSchema: true`, `nav: [...]` (Lucide ikonu ile), alt sayfa varsa `menu: [...]` (`key`, `label`, `href` ['/' ile başlayan], `icon` [Lucide bileşeni], gerekirse `permission`, indirme için `isDownload: true`).
+2. (Kaldırıldı — modül menüsü artık `module.config.ts` içindeki `menu` dizisindedir.)
 3. `src/modules/<MODUL_ADI>/permissions.ts`:
    - `definePermissions("<MODUL_ADI>", { ADMIN: [...], BOARD: [...], SECRETARY: [...], TREASURER: [...], AUDITOR: [...], VIEWER: [...] })` şeklinde 6 rolü de tanımla.
 4. `src/modules/<MODUL_ADI>/schema.prisma`:

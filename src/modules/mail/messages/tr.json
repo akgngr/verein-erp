@@ -4,10 +4,6 @@
   },
   "title": "E-posta Ayarları",
   "description": "Sistemin gönderdiği tüm e-postalar için SMTP sunucusu ve gönderen bilgileri.",
-  "topNav": {
-    "settings": "Ayarlar",
-    "logs": "Gönderim Kayıtları"
-  },
   "status": {
     "title": "Durum",
     "configured": "E-posta gönderimi hazır",
@@ -112,5 +108,9 @@
     "connectionFailed": "SMTP sunucusuna bağlanılamadı veya giriş başarısız. Sunucu, port, güvenlik ve kimlik bilgilerini kontrol edin.",
     "sendFailed": "Test e-postası gönderilemedi.",
     "unknown": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin."
+  },
+  "menu": {
+    "settings": "Ayarlar",
+    "logs": "Gönderim kayıtları"
   }
 }

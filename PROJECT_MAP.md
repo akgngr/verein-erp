@@ -35,7 +35,7 @@ src/
 │   ├── (auth)/giris/             # login; ?pasif=1 bilgilendirmesi
 │   ├── (dashboard)/
 │   │   ├── layout.tsx            # requireUser → SidebarProvider + DesktopSidebar/MobileSidebar
-│   │   ├── _components/          # sidebar.tsx (collapse+footer), user-menu.tsx, theme-toggle.tsx
+│   │   ├── _components/          # sidebar.tsx (ana menü ⇄ modül menüsü, MobileHeader, footer), user-menu.tsx, theme-toggle.tsx
 │   │   ├── page.tsx              # Panel (dashboard)
 │   │   ├── evrak/                # documents modülü sayfaları (page.tsx = server view çağırır)
 │   │   ├── toplantilar/          # meetings
@@ -165,6 +165,7 @@ src/modules/documents/
 27. **Şema değişikliği YALNIZCA migration ile (A-1):** `pnpm db:migrate --name <x>` → migration klasörü commit'lenir; sunucuda `pnpm db:deploy` (migrate deploy + `scripts/verify-db-integrity.mjs`). `prisma db push` YASAK — migration kaydı üretmez ve değişmezlik trigger'larını (AuditLog, AccountingBooking, Donation, ZuwendungConfirmation…) KURMAZ. Yerel deneme için yalnızca `pnpm db:push:dev` (üretimde reddeder). Push ile kurulmuş veritabanı: `pnpm db:baseline -- --yes` (bkz. docs/operations/MIGRATION_BASELINE.md). `module:validate`, migration'ı olmayan tabloyu HATA sayar. Docker konteyneri doğrulama başarısızsa başlamaz.
 28. **Server Actions yalnızca aynı kaynaktan (A-2):** `next.config.ts` izinli kaynak listeleri boştur; ek kaynak gerekiyorsa `SERVER_ACTIONS_ALLOWED_ORIGINS` (derleme anında okunur). Caddyfile yalnızca uygulamaya yönlendirir (`APP_DOMAIN`, `APP_UPSTREAM`); sorgu parametresiyle iç porta yönlendirme kuralı kaldırıldı ve geri eklenmez.
 29. **`@heroui/theme` doğrudan bağımlılıktır (KALDIRMA):** Tailwind v4, HeroUI bileşen stillerini `src/app/globals.css` içindeki `@source "../../node_modules/@heroui/theme/dist/..."` ile üretir. pnpm dolaylı bağımlılığı bu yola koymaz; paket `package.json`'da yoksa label animasyonu, hover/focus/selected/invalid stillerinin HİÇBİRİ üretilmez (CSS 78 KB'a düşer). `@heroui/react` güncellenirken `@heroui/theme` sürümü de onun bağımlılığıyla aynı tutulur.
+30. **Üst bar yok; modül menüsü sol panelde (`ModuleConfig.menu`):** Modülün alt sayfaları/araçları `module.config.ts` → `menu: [...]` ile tanımlanır (eski `menu/top.json` ve `topbar.tsx` kaldırıldı; doğrulayıcı `menu/top.json`'u HATA sayar). Alt menüsü olan modüle girilince sol panel modül menüsüne kayar ("Ana menü" butonu); ana menüye dönülünce üstte modüle dönüş butonu çıkar. Mantık `src/shared/navigation/module-nav.ts`'te (saf, testli); ana sayfa "Genel bakış" olarak otomatik eklenir. Her öğe hedef sayfanın kontrol ettiği yetkiyi taşır (`permission`, varsayılan `nav[0]` yetkisi); etiketler `<modül>.menu.<key>`. `tests/navigation.test.ts` sayfası olmayan bağlantıyı ve eksik çeviriyi yakalar. Mobilde yalnızca menü butonlu ince şerit (`MobileHeader`) vardır.
 
 ## 7. i18n durum haritası
 

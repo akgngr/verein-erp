@@ -70,5 +70,9 @@
     "filterType": "Kategorie-Filter",
     "filterStatus": "Status-Filter",
     "all": "Alle"
+  },
+  "menu": {
+    "upcoming": "Bevorstehende Veranstaltungen",
+    "past": "Vergangene Veranstaltungen"
   }
 }

@@ -241,5 +241,8 @@
     "validityDays": "{days} Tage verbleiben",
     "validityExpired": "Die Freistellungsbescheinigung ist abgelaufen",
     "validityWarn": "Weniger als 90 Tage — Verlängerung planen"
+  },
+  "menu": {
+    "export": "Excel-Export"
   }
 }

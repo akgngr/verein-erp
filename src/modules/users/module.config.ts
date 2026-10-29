@@ -1,8 +1,7 @@
 import { UsersRound } from "lucide-react";
 
-import type { ModuleConfig, TopNavItem } from "@/shared/types/module";
+import type { ModuleConfig } from "@/shared/types/module";
 import { usersPermissions } from "./permissions";
-import topNav from "./menu/top.json";
 
 export const moduleConfig: ModuleConfig = {
   key: "users",
@@ -11,7 +10,6 @@ export const moduleConfig: ModuleConfig = {
   category: "CORE",
   isProtected: true,
   hasSchema: true,
-  topNav: topNav as TopNavItem[],
   nav: [
     {
       href: "/ayarlar/kullanicilar",

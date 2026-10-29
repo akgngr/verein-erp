@@ -1,8 +1,7 @@
-import { HandHeart } from "lucide-react";
+import { Download, HandHeart } from "lucide-react";
 
-import type { ModuleConfig, TopNavItem } from "@/shared/types/module";
+import type { ModuleConfig } from "@/shared/types/module";
 import { donationsPermissions } from "./permissions";
-import topNav from "./menu/top.json";
 
 export const moduleConfig: ModuleConfig = {
   key: "donations",
@@ -10,7 +9,6 @@ export const moduleConfig: ModuleConfig = {
   description: "Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı takibi.",
   category: "OFFICIAL",
   hasSchema: true,
-  topNav: topNav as TopNavItem[],
   nav: [
     {
       href: "/bagislar",
@@ -21,5 +19,8 @@ export const moduleConfig: ModuleConfig = {
       order: 5,
       permission: { definition: donationsPermissions, action: "view" },
     },
+  ],
+  menu: [
+    { key: "export", label: "Excel'e aktar", href: "/api/donations/export", icon: Download, isDownload: true },
   ],
 };

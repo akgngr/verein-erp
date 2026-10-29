@@ -38,7 +38,7 @@ export async function getInventoryAbilities(): Promise<InventoryAbilities> {
 /**
  * Builds an Excel-compatible CSV export (UTF-8 BOM, ";" separator) of the
  * inventory, honoring the same search / filter / sort params as the list page.
- * Intended to be served from the `/api/inventory/export` route declared in menu/top.json.
+ * Intended to be served from the `/api/inventory/export` route declared in module.config.ts (menu).
  */
 export async function exportInventoryCsv(
   searchParams: InventorySearchParams,

@@ -104,8 +104,7 @@
     "viewItems": "Anzeigen",
     "total": "Gesamt"
   },
-  "topNav": {
-    "overview": "Übersicht",
+  "menu": {
     "categories": "Kategorien",
     "export": "Excel-Export"
   }
