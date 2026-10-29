@@ -31,13 +31,11 @@ Projeye terminal erişimi olmayan bir AI, aşağıdaki tüm klasörleri ve dosya
 
 ```text
 src/
-├── app/
-│   └── (dashboard)/
-│       └── <modul_adi>/                      # Örn: inventory
-│           └── page.tsx                      # Dashboard rota sayfası (RSC)
-│
 └── modules/
     └── <modul_adi>/                          # Örn: inventory
+        ├── page.tsx                         # [OTOMATİK ROTA] Modül sayfası; src/app köprüsünü module:sync kurar
+        ├── routes/<yol>/page.tsx            # Alt sayfalar → /<kök>/<yol>
+        ├── api/<yol>/route.ts               # API rotaları → /api/<modul_adi>/<yol>
         ├── module.config.ts                  # Modül meta verisi, sidebar menü tanımı, yetki bağlamı
         ├── permissions.ts                   # definePermissions ile rol bazlı yetki matrisi
         ├── schema.prisma                    # Modülün Prisma veritabanı modelleri
@@ -160,6 +158,8 @@ model InventoryItem {
 ### 5. `messages/tr.json` ve `messages/de.json` (İki Dilli i18n Desteği)
 Modül metinleri otomatik olarak ana dil sözlüğünde modül anahtarı (`messages.<modul_adi>`) altına yerleşir.
 
+> **Kök `messages/<dil>.json` ÜRETİLEN dosyadır, elle düzenlenmez.** `pnpm module:sync` onu her seferinde `messages/shell/<dil>.json` (kabuk metinleri: `common`, `sidebar`, `panel` …) + modül dosyalarından baştan kurar. Modül ad alanı birleştirilmez, değiştirilir: modülden silinen anahtar kökte kalmaz. Sol paneldeki menü etiketi (`nav[0].labelKey`) modül dosyasındaki ayrılmış `"nav": { "<labelKey>": "..." }` bloğunda tanımlanır.
+
 ```json
 // messages/tr.json
 {
@@ -221,9 +221,11 @@ export { InventoryListView } from "./views/inventory-list-view";
 
 ---
 
-### 7. Dashboard Sayfası (`src/app/(dashboard)/<modul_adi>/page.tsx`)
+### 7. Modül Sayfası (`src/modules/<modul_adi>/page.tsx`)
+> `src/app` köprüsünü `pnpm module:sync` üretir; `src/app`'e elle dosya yazılmaz. Alt sayfa/API kuralları için bkz. `docs/MODULE_DEV_GUIDE.md` § 7.
+
 ```typescript
-import { InventoryListView } from "@/modules/inventory/ui";
+import { InventoryListView } from "./ui";
 
 export const metadata = { title: "Envanter" };
 
@@ -269,7 +271,7 @@ Sen Verein ERP dernek yönetim sistemi için üretim kalitesinde (production-rea
 Senden projemiz için `<MODUL_ADI>` (örn: `inventory`, `sponsors`, `events`) adında yeni bir bağımsız modül geliştirmeni istiyorum.
 
 PROJE MİMARİSİ VE SINIR KURALLARI:
-1. Dikey Dilim İzolasyonu (Vertical Slice Architecture): Modüle ait tüm dosyalar `src/modules/<MODUL_ADI>/` altında ve rota sayfası `src/app/(dashboard)/<MODUL_ADI>/page.tsx` altında olmalıdır.
+1. Dikey Dilim İzolasyonu (Vertical Slice Architecture): Modüle ait tüm dosyalar ve sayfa rotası İSTİSNASIZ `src/modules/<MODUL_ADI>/` altında olmalıdır. `src/app` dizinine ASLA dosya yazma.
 2. Sıfır Çekirdek Teması (Zero-Touch Core): `src/registry.ts`, `prisma/schema/base.prisma` veya kök `messages/` dosyalarına DOKUNMA. Kod yazma.
 3. Katı İthalat Sınırları (Strict Imports): Başka bir modülün iç dosyalarını ASLA doğrudan import etme. Yalnızca `@/modules/<modul>`, `@/modules/<modul>/server` ve `@/modules/<modul>/ui` public API'larını kullan. Modül içinden `src/app` katmanını ASLA import etme.
 
@@ -301,8 +303,8 @@ Lütfen bana her bir dosyanın TAM DOSYA YOLUNU ve EKSİKSİZ ÇALIŞAN KODUNU s
     - Tablo bileşeni. SSR Hydration Mismatch hatası vermemesi için tablo satırlarında HeroUI Select YERİNE native HTML `<select>` kullan.
 13. `src/modules/<MODUL_ADI>/views/<MODUL_ADI>-list-view.tsx`:
     - `PageHeader` (actions kısmında yalnızca `+ Yeni Ekle` butonu olmalı) ve tabloyu render eden ana RSC görünümü.
-14. `src/app/(dashboard)/<MODUL_ADI>/page.tsx`:
-    - Sayfa rotası.
+14. `src/modules/<MODUL_ADI>/page.tsx`:
+    - Modülün sayfası. `src/app` köprüsünü `pnpm module:sync` otomatik kurar.
 
 Lütfen kodları placeholder veya "TODO" bırakmadan, çalışmaya hazır ve eksiksiz olarak üret.
 ```
