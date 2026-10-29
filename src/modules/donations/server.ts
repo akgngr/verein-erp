@@ -33,7 +33,12 @@ export { getDonationsSettings } from "./queries/get-settings";
 export { getReadiness } from "./services/issue-guards";
 export { createDonorAction, updateDonorAction, anonymizeDonorAction } from "./actions/donor-actions";
 export { createDonationAction, updateDonationAction, cancelDonationAction } from "./actions/donation-actions";
-export { issueConfirmationAction, cancelConfirmationAction } from "./actions/confirmation-actions";
+export {
+  issueConfirmationAction,
+  cancelConfirmationAction,
+  issueBatchAction,
+  reissueConfirmationAction,
+} from "./actions/confirmation-actions";
 export { confirmTemplateAction } from "./actions/settings-actions";
 export { downloadConfirmationPdfHandler } from "./handlers/confirmation-pdf";
 export { batchPdfHandler } from "./handlers/batch-pdf";

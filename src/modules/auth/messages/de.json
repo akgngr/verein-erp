@@ -4,5 +4,41 @@
   "password": "Passwort",
   "loginButton": "Anmelden",
   "logout": "Abmelden",
-  "mustChangePasswordBanner": "Passwort muss aktualisiert werden"
+  "mustChangePasswordBanner": "Passwort muss aktualisiert werden",
+  "meta": {
+    "profile": "Profil"
+  },
+  "appTitle": "Vereinsverwaltung",
+  "loginSubtitle": "Melden Sie sich an, um fortzufahren",
+  "passiveNotice": "Ihre Sitzung wurde beendet. Ihr Konto wurde möglicherweise deaktiviert; bitte wenden Sie sich an Ihren Administrator.",
+  "profile": {
+    "title": "Profil",
+    "description": "Ihre Kontodaten und Passwortänderung.",
+    "accountInfo": "Kontodaten",
+    "name": "Name",
+    "email": "E-Mail",
+    "role": "Rolle",
+    "changePassword": "Passwort ändern",
+    "currentPassword": "Aktuelles Passwort",
+    "newPassword": "Neues Passwort",
+    "submit": "Passwort aktualisieren",
+    "updated": "Ihr Passwort wurde aktualisiert."
+  },
+  "errors": {
+    "sessionInvalid": "Ihre Sitzung ist ungültig. Bitte melden Sie sich erneut an.",
+    "currentPasswordWrong": "Das aktuelle Passwort ist falsch.",
+    "invalidCredentials": "E-Mail oder Passwort ist falsch.",
+    "accountLocked": "Das Konto ist vorübergehend gesperrt. Bitte versuchen Sie es später erneut.",
+    "loginFailed": "Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+    "invalidLocale": "Ungültige Sprachauswahl."
+  },
+  "validation": {
+    "currentPasswordRequired": "Bitte das aktuelle Passwort eingeben.",
+    "emailRequired": "E-Mail ist erforderlich.",
+    "passwordRequired": "Passwort ist erforderlich."
+  },
+  "module": {
+    "label": "Authentifizierung",
+    "description": "Anmeldung, Sitzungsverwaltung und Passwortsicherheit."
+  }
 }

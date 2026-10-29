@@ -16,22 +16,22 @@ export const donorTypeSchema = z.enum(["PERSON", "ORGANIZATION"]);
 
 const baseFields = {
   type: donorTypeSchema,
-  firstName: emptyToNull(z.string().trim().max(60, "Ad en fazla 60 karakter olabilir.").nullable()),
-  lastName: emptyToNull(z.string().trim().max(60, "Soyad en fazla 60 karakter olabilir.").nullable()),
+  firstName: emptyToNull(z.string().trim().max(60, "donations.validation.firstNameMax").nullable()),
+  lastName: emptyToNull(z.string().trim().max(60, "donations.validation.lastNameMax").nullable()),
   organizationName: emptyToNull(
-    z.string().trim().max(120, "Kuruluş adı en fazla 120 karakter olabilir.").nullable(),
+    z.string().trim().max(120, "donations.validation.organizationMax").nullable(),
   ),
-  street: emptyToNull(z.string().trim().max(120, "Straße en fazla 120 karakter olabilir.").nullable()),
-  postalCode: emptyToNull(z.string().trim().max(10, "PLZ en fazla 10 karakter olabilir.").nullable()),
-  city: emptyToNull(z.string().trim().max(120, "Şehir en fazla 120 karakter olabilir.").nullable()),
-  country: emptyToNull(z.string().trim().max(60, "Ülke en fazla 60 karakter olabilir.").nullable()),
+  street: emptyToNull(z.string().trim().max(120, "donations.validation.streetMax").nullable()),
+  postalCode: emptyToNull(z.string().trim().max(10, "donations.validation.postalCodeMax").nullable()),
+  city: emptyToNull(z.string().trim().max(120, "donations.validation.cityMax").nullable()),
+  country: emptyToNull(z.string().trim().max(60, "donations.validation.countryMax").nullable()),
   email: emptyToNull(
-    z.string().trim().max(120).email("Geçerli bir e-posta girin.").nullable(),
+    z.string().trim().max(120).email("validation.emailInvalid").nullable(),
   ),
-  phone: emptyToNull(z.string().trim().max(30, "Telefon en fazla 30 karakter olabilir.").nullable()),
+  phone: emptyToNull(z.string().trim().max(30, "donations.validation.phoneMax").nullable()),
   /** KARAR: üye bağlantısı ipucudur — veri kopyalanır, FK kurulmaz (§ 2). Formda alan yoktur (optional). */
   memberId: emptyToNull(z.string().trim().max(60).nullable()).optional(),
-  note: emptyToNull(z.string().trim().max(500, "Not en fazla 500 karakter olabilir.").nullable()),
+  note: emptyToNull(z.string().trim().max(500, "donations.validation.noteMax").nullable()),
   /** Üyeden bağışçı oluşturma: ön doldurma bayrağı (veri bir kez kopyalanır). */
   copyFromMemberId: emptyToNull(z.string().trim().min(1).nullable()),
 };
@@ -41,13 +41,13 @@ export const donorCreateSchema = z
   .superRefine((data, ctx) => {
     // § 11 md. 2: PERSON zorunlu lastName (1-60); ORGANIZATION zorunlu organizationName (2-120).
     if (data.type === "PERSON" && !data.lastName) {
-      ctx.addIssue({ code: "custom", path: ["lastName"], message: "Kişi için soyad zorunludur." });
+      ctx.addIssue({ code: "custom", path: ["lastName"], message: "donations.validation.lastNameRequired" });
     }
     if (data.type === "ORGANIZATION" && (!data.organizationName || data.organizationName.length < 2)) {
       ctx.addIssue({
         code: "custom",
         path: ["organizationName"],
-        message: "Kuruluş için ad (en az 2 karakter) zorunludur.",
+        message: "donations.validation.organizationRequired",
       });
     }
     // PLZ kuralı: ülke boş veya Almanya → 5 hane.
@@ -57,7 +57,7 @@ export const donorCreateSchema = z
       ctx.addIssue({
         code: "custom",
         path: ["postalCode"],
-        message: "Almanya için posta kodu 5 haneli olmalıdır.",
+        message: "donations.validation.postalCodeDe",
       });
     }
   });
@@ -78,7 +78,7 @@ export const donorAnonymizeSchema = z.object({
   confirmDonorNumber: z
     .string()
     .trim()
-    .min(1, "Onay için bağışçı numarasını yazın (örn. SP-0007)."),
+    .min(1, "donations.validation.confirmNumberRequired"),
 });
 
 export type DonorCreateInput = z.infer<typeof donorCreateSchema>;

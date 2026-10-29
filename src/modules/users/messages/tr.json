@@ -9,5 +9,195 @@
   "notFoundDescription": "Kayıt silinmiş olabilir.",
   "nav": {
     "kullanicilar": "Kullanıcılar"
+  },
+  "meta": {
+    "list": "Kullanıcılar",
+    "create": "Yeni kullanıcı",
+    "edit": "Kullanıcıyı düzenle"
+  },
+  "tabUsers": "Kullanıcı Listesi",
+  "tabRoles": "Roller ve Yetki Matrisi",
+  "table": {
+    "aria": "Kullanıcı listesi",
+    "name": "Ad",
+    "email": "E-posta",
+    "role": "Rol",
+    "status": "Durum",
+    "lastLogin": "Son giriş",
+    "createdAt": "Oluşturulma",
+    "search": "Ad veya e-posta ara...",
+    "empty": "Kullanıcı bulunamadı.",
+    "edit": "Düzenle",
+    "resetPassword": "Parola sıfırla",
+    "deactivate": "Pasife al",
+    "activate": "Aktifleştir",
+    "activated": "Kullanıcı aktifleştirildi.",
+    "deactivated": "Kullanıcı pasife alındı.",
+    "activateTitle": "Kullanıcıyı aktifleştir",
+    "deactivateTitle": "Kullanıcıyı pasife al",
+    "activateConfirm": "\"{name}\" kullanıcısı aktifleştirilecek. Onaylıyor musunuz?",
+    "deactivateConfirm": "\"{name}\" kullanıcısı pasife alınacak; mevcut oturumuyla bile işlem yapamayacak. Onaylıyor musunuz?"
+  },
+  "form": {
+    "name": "Ad Soyad",
+    "email": "E-posta",
+    "role": "Rol",
+    "tempPassword": "Geçici parola",
+    "tempPasswordHint": "En az 10 karakter; 1 büyük harf, 1 küçük harf ve 1 rakam içermelidir. Kullanıcı ilk girişte yeni parola belirleyecektir.",
+    "isActive": "Hesap aktif",
+    "isActiveHint": "Pasife alınan kullanıcı oturumu geçerli olsa bile işlem yapamaz.",
+    "created": "Kullanıcı oluşturuldu.",
+    "updated": "Kullanıcı güncellendi."
+  },
+  "resetPassword": {
+    "title": "Parolayı Sıfırla",
+    "newPassword": "Yeni geçici parola",
+    "submit": "Sıfırla",
+    "done": "Parola sıfırlandı. Kullanıcı sonraki girişte yeni parola belirleyecek."
+  },
+  "errors": {
+    "emailTaken": "Bu e-posta adresi zaten kullanımda.",
+    "notFound": "Kullanıcı bulunamadı.",
+    "selfDeactivate": "Kendinizi pasife alamazsınız.",
+    "lastAdmin": "Sistemde en az bir aktif yönetici kalmalıdır.",
+    "selfDemote": "Kendi rolünüzü düşüremezsiniz."
+  },
+  "validation": {
+    "nameRequired": "Ad soyad zorunludur.",
+    "nameMax": "Ad soyad en fazla 100 karakter olabilir."
+  },
+  "matrix": {
+    "title": "Rol ve İzin Yönetimi",
+    "subtitle": "Sistem rollerinin modül bazındaki okuma, yazma, onay ve silme yetki matrisi.",
+    "viewRole": "Rol İnceleme",
+    "viewMatrix": "Karşılaştırma Matrisi",
+    "memberCount": "{count} üye",
+    "search": "Modül veya yetki ara (örn: muhasebe, evrak, onay)...",
+    "previewUser": "Kullanıcı Yetki Önizle:",
+    "selectUser": "Kullanıcı seçin...",
+    "clearUser": "Kullanıcı seçimini temizle",
+    "simulated": "Simüle Edilen: {name}",
+    "totalActive": "Toplam Aktif İzin",
+    "actionCount": "{count} Eylem Yetkisi",
+    "resourceCount": "{count} kaynak",
+    "colResource": "Modül / Kaynak",
+    "colAction": "Eylem",
+    "previewTitle": "{role} Yetki Özeti",
+    "previewCount": "{count} Yetki Aktif",
+    "accessFull": "Tam",
+    "accessRead": "Okuma",
+    "accessNone": "Yok",
+    "actions": {
+      "view": "Görüntüleme",
+      "create": "Oluşturma",
+      "update": "Düzenleme",
+      "delete": "Silme",
+      "approve": "Onaylama"
+    },
+    "roles": {
+      "ADMIN": {
+        "label": "Yönetici (Admin)",
+        "shortDesc": "Sistem, modül ve kullanıcı yönetimi dahil tam yetki.",
+        "legalContext": "Tüm modüllerde oluşturma, düzenleme, silme ve denetim yetkisine sahiptir."
+      },
+      "BOARD": {
+        "label": "Yönetim Kurulu (Vorstand)",
+        "shortDesc": "Toplantı, karar, evrak ve dernek yönetimi ana yetkileri.",
+        "legalContext": "BGB § 26 uyarınca dernek temsil ve yürütme organıdır; mali detayları özet görür."
+      },
+      "SECRETARY": {
+        "label": "Sekreter (Schriftführer)",
+        "shortDesc": "Evrak kayıt, toplantı tutanakları ve üye kayıt operasyonları.",
+        "legalContext": "Yazışmalar, defterler ve karar defterlerinin tanziminden sorumludur."
+      },
+      "TREASURER": {
+        "label": "Sayman (Kassenwart)",
+        "shortDesc": "Çift taraflı muhasebe, fişler, bütçe, bağış makbuzları ve aidatlar.",
+        "legalContext": "Mali defterlerin tutulması ve vergi dairesi (Finanzamt) uyumluluğundan sorumludur."
+      },
+      "AUDITOR": {
+        "label": "Denetçi (Kassenprüfer)",
+        "shortDesc": "Mali ve idari kayıtlara salt okunur denetim erişimi.",
+        "legalContext": "Yıllık mali denetim yapar; bağışçı kişisel verilerine erişemez."
+      },
+      "VIEWER": {
+        "label": "Salt Okunur (Leser)",
+        "shortDesc": "Temel evrak ve toplantı bilgilerini inceleme yetkisi.",
+        "legalContext": "Veri değişikliği veya mali kayıtları inceleme yetkisi bulunmaz."
+      }
+    },
+    "modules": {
+      "documents": "Evrak Kayıt",
+      "meetings": "Toplantılar",
+      "members": "Üyeler",
+      "accounting": "Muhasebe",
+      "donations": "Bağışlar",
+      "organization": "Dernek Profili",
+      "users": "Kullanıcılar",
+      "audit": "Denetim Kaydı",
+      "system": "Sistem & Modüller"
+    },
+    "resources": {
+      "documents": {
+        "label": "Gelen / Giden Evraklar",
+        "description": "Resmi evrakların sisteme kaydedilmesi, numaralandırılması ve arşivlenmesi."
+      },
+      "documentCategories": {
+        "label": "Evrak Kategorileri",
+        "description": "Evrak kategorilerinin ve dosya planının yönetimi."
+      },
+      "meetings": {
+        "label": "Toplantı ve Kararlar",
+        "description": "Toplantı takvimi, gündem maddeleri, tutanaklar, kararlar ve onaylama."
+      },
+      "members": {
+        "label": "Üye Kayıtları",
+        "description": "Dernek üyelerinin profili, iletişim verileri ve üyelik durumları."
+      },
+      "memberPayments": {
+        "label": "Aidat ve Ödemeler",
+        "description": "Üye aidat tahakkukları, tahsilat ve ödeme takibi."
+      },
+      "memberTypes": {
+        "label": "Üyelik Tipleri",
+        "description": "Asil, fahri, öğrenci vb. üyelik tipleri ve aidat baremleri."
+      },
+      "accounting": {
+        "label": "Yevmiye & Defterler",
+        "description": "Fişler, gelir-gider kayıtları, hesap planı ve dönem raporları."
+      },
+      "accountingSetup": {
+        "label": "Hesap Planı & Bütçe",
+        "description": "Hesap planı (SKR49/SKR42), bütçe öngörüleri ve mali ayarlar."
+      },
+      "donations": {
+        "label": "Bağış ve Makbuzlar",
+        "description": "Bağış tahsilatları ve resmi Zuwendungsbestätigung makbuz üretimi."
+      },
+      "organization": {
+        "label": "Dernek Ana Bilgileri",
+        "description": "Resmi dernek sicil no, vergi no, banka hesapları ve antet logosu."
+      },
+      "users": {
+        "label": "Kullanıcı Hesapları",
+        "description": "Sistem kullanıcıları, oturum hesapları ve parola sıfırlama."
+      },
+      "audit": {
+        "label": "Güvenlik & Değişiklik Günlüğü",
+        "description": "Değiştirilemez sistemsel denetim izleri ve güvenlik kayıtları."
+      },
+      "system": {
+        "label": "Modül Yönetimi",
+        "description": "Eklenti yükleme, modül aktifleştirme ve pasifleştirme."
+      },
+      "settings": {
+        "label": "Sistem Ayarları",
+        "description": "Genel dernek sistemi ve platform parametreleri."
+      }
+    }
+  },
+  "module": {
+    "label": "Kullanıcılar",
+    "description": "Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri."
   }
 }

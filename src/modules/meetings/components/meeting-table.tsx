@@ -1,5 +1,6 @@
 "use client";
 
+import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
 import { Link, addToast } from "@heroui/react";
 import { Eye, ListTodo, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -57,6 +58,7 @@ export function MeetingTable({
   canDelete: boolean;
 }) {
   const router = useRouter();
+  const drawerHref = useFormDrawerHref();
   const t = useTranslations("meetings");
   const [deleting, setDeleting] = useState<MeetingRow | null>(null);
 
@@ -154,14 +156,14 @@ export function MeetingTable({
   ];
 
   const rowActions = (row: MeetingRow): DataTableRowAction[] => [
-    { key: "view", label: "Görüntüle", icon: <Eye className="h-4 w-4" />, href: `/toplantilar/${row.id}` },
+    { key: "view", label: t("common.view"), icon: <Eye className="h-4 w-4" />, href: `/toplantilar/${row.id}` },
     ...(canUpdate && (row.status === "PLANNED" || row.status === "HELD")
       ? [
           {
             key: "edit",
-            label: "Düzenle",
+            label: t("common.edit"),
             icon: <Pencil className="h-4 w-4" />,
-            href: `/toplantilar/${row.id}/duzenle`,
+            href: drawerHref("duzenle", row.id),
           },
         ]
       : []),
@@ -169,7 +171,7 @@ export function MeetingTable({
       ? [
           {
             key: "actions",
-            label: "Görevler",
+            label: t("tasksButton"),
             icon: <ListTodo className="h-4 w-4" />,
             href: `/toplantilar/gorevler?q=${encodeURIComponent(row.meetingNumber)}`,
           },
@@ -179,7 +181,7 @@ export function MeetingTable({
       ? [
           {
             key: "delete",
-            label: "Sil",
+            label: t("common.delete"),
             icon: <Trash2 className="h-4 w-4" />,
             color: "danger" as const,
             onPress: () => setDeleting(row),
@@ -218,7 +220,7 @@ export function MeetingTable({
           number: deleting?.meetingNumber ?? "",
           title: deleting?.title ?? "",
         })}
-        confirmLabel="Sil"
+        confirmLabel={t("common.delete")}
         confirmColor="danger"
         onConfirm={confirmDelete}
       />

@@ -1,9 +1,11 @@
 import { Inbox, Send } from "lucide-react";
+import { FormDrawerButton } from "@/shared/components/forms/form-drawer";
+import { DocumentCreateView } from "./document-create-view";
+import { DocumentEditView } from "./document-edit-view";
 import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, listActiveUserOptions, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
-import { LinkButton } from "@/shared/components/ui/link-button";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { can } from "@/shared/permissions/define";
 import { parseListParams, type RawSearchParams } from "@/shared/list-params";
@@ -16,7 +18,7 @@ import {
   listDocuments,
 } from "../queries/list-documents";
 import { documentsPermissions } from "../permissions";
-import { STATUS_FILTER_OPTIONS } from "../constants";
+import { STATUS_VALUES } from "../constants";
 import { berlinMonthRange } from "../utils";
 import { DirectionTabs, DocumentDateFilter, DocumentQuickFilters } from "../components/list-filters";
 import { DocumentTable } from "../components/document-table";
@@ -62,6 +64,7 @@ export async function DocumentListView({
   ]);
 
   const canCreate = can(user.role, documentsPermissions, "create");
+  const canUpdate = can(user.role, documentsPermissions, "update");
   const canDelete = can(user.role, documentsPermissions, "delete");
 
   const month = berlinMonthRange();
@@ -76,12 +79,12 @@ export async function DocumentListView({
         actions={
           canCreate ? (
             <div className="flex flex-wrap items-center gap-2">
-              <LinkButton href="/evrak/yeni?yon=gelen" startIcon={<Inbox className="h-4 w-4" />}>
+              <FormDrawerButton param="yeni" value="gelen" startIcon={<Inbox className="h-4 w-4" />}>
                 {t("newIncoming")}
-              </LinkButton>
-              <LinkButton href="/evrak/yeni?yon=giden" startIcon={<Send className="h-4 w-4" />}>
+              </FormDrawerButton>
+              <FormDrawerButton param="yeni" value="giden" startIcon={<Send className="h-4 w-4" />}>
                 {t("newOutgoing")}
-              </LinkButton>
+              </FormDrawerButton>
             </div>
           ) : null
         }
@@ -101,13 +104,17 @@ export async function DocumentListView({
         dateFilter={<DocumentDateFilter />}
         filterExtra={<DocumentQuickFilters />}
         filters={[
-          { key: "status", label: t("filter.status"), options: [...STATUS_FILTER_OPTIONS] },
+          { key: "status", label: t("filter.status"), options: STATUS_VALUES.map((value) => ({ value, label: t(`status.${value}`) })) },
           { key: "categoryId", label: t("filter.category"), options: categories.map((c) => ({ value: c.id, label: c.label })) },
           { key: "assigneeId", label: t("filter.assignee"), options: assignees.map((a) => ({ value: a.id, label: a.label })) },
         ]}
-        canUpdate={can(user.role, documentsPermissions, "update")}
+        canUpdate={canUpdate}
         canDelete={canDelete}
       />
+      {canCreate && typeof raw.yeni === "string" ? (
+        <DocumentCreateView direction={raw.yeni === "giden" ? "OUTGOING" : "INCOMING"} />
+      ) : null}
+      {canUpdate && typeof raw.duzenle === "string" && raw.duzenle ? <DocumentEditView id={raw.duzenle} /> : null}
     </div>
   );
 }

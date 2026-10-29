@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import {
   Button,
   Input,
@@ -20,8 +22,8 @@ import { AttendeeAddModal } from "./attendee-add-modal";
 import { QuorumBanner } from "./quorum-banner";
 import type { AttendeeItem, QuorumInfo } from "../types";
 import {
-  ATTENDEE_ROLE_LABELS,
-  ATTENDANCE_LABELS,
+  ATTENDEE_ROLE_VALUES,
+  ATTENDANCE_VALUES,
 } from "../constants";
 
 /**
@@ -42,6 +44,9 @@ export function AttendeesTab({
   userOptions: { id: string; label: string }[];
   editable: boolean;
 }) {
+  const t = useTranslations("meetings.attendees");
+  const tAttendance = useTranslations("meetings.attendance");
+  const tRole = useTranslations("meetings.attendeeRole");
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [guestName, setGuestName] = useState("");
@@ -69,7 +74,7 @@ export function AttendeesTab({
       addToast({ title: result.error, color: "danger" });
       return;
     }
-    addToast({ title: `Katılımcı çıkarıldı: ${name}`, color: "success" });
+    addToast({ title: t("removedNamedToast", { name }), color: "success" });
     router.refresh();
   };
 
@@ -81,7 +86,7 @@ export function AttendeesTab({
       addToast({ title: result.error, color: "danger" });
       return;
     }
-    addToast({ title: `${result.data.updated} katılımcı 'Katıldı' olarak işaretlendi`, color: "success" });
+    addToast({ title: t("markedToast", { count: result.data.updated }), color: "success" });
     router.refresh();
   };
 
@@ -107,7 +112,7 @@ export function AttendeesTab({
             startContent={<UserPlus className="h-4 w-4" />}
             onPress={() => setModalOpen(true)}
           >
-            Kullanıcı ekle
+            {t("addUser")}
           </Button>
           <Button
             size="sm"
@@ -116,37 +121,37 @@ export function AttendeesTab({
             isLoading={busy}
             onPress={markAll}
           >
-            Tümünü katıldı işaretle
+            {t("markAll")}
           </Button>
           <div className="flex items-end gap-1">
             <Input
               size="sm"
-              label="Konuk adı"
+              label={t("guestName")}
               labelPlacement="outside"
               value={guestName}
               onValueChange={setGuestName}
-              placeholder="Ad Soyad"
+              placeholder={t("name")}
               classNames={{ base: "w-56" }}
             />
             <Button size="sm" variant="flat" isDisabled={guestName.trim().length < 2} onPress={quickAddGuest}>
-              Konuk ekle
+              {t("addGuest")}
             </Button>
           </div>
         </div>
       ) : null}
 
       {attendees.length === 0 ? (
-        <p className="text-small text-default-500">Katılımcı kaydı yok.</p>
+        <p className="text-small text-default-500">{t("empty")}</p>
       ) : (
         <div className="overflow-x-auto">
           <table className="w-full text-small">
             <thead>
               <tr className="border-b border-default-200 text-left text-default-500">
-                <th className="p-2">Ad Soyad</th>
-                <th className="p-2">Kaynak</th>
-                <th className="p-2">Görev</th>
-                <th className="p-2">Katılım</th>
-                <th className="p-2">Not</th>
+                <th className="p-2">{t("name")}</th>
+                <th className="p-2">{t("source")}</th>
+                <th className="p-2">{t("role")}</th>
+                <th className="p-2">{t("attendance")}</th>
+                <th className="p-2">{t("note")}</th>
                 <th className="p-2 w-12" />
               </tr>
             </thead>
@@ -155,14 +160,14 @@ export function AttendeesTab({
                 <tr key={attendee.id} className="border-b border-default-100">
                   <td className="p-2 font-medium">{attendee.name}</td>
                   <td className="p-2 text-default-500">
-                    {attendee.userId ? "Kayıtlı kullanıcı" : "Konuk"}
+                    {attendee.userId ? t("registered") : t("guest")}
                   </td>
                   <td className="p-2">
                     {editable ? (
                       <div className="relative inline-block w-full min-w-[130px]">
                         <select
                           id={`attendee-role-${attendee.id}`}
-                          aria-label="Görev"
+                          aria-label={t("role")}
                           value={attendee.role}
                           onChange={(e) => {
                             const val = e.target.value;
@@ -170,18 +175,16 @@ export function AttendeesTab({
                           }}
                           className="h-8 w-full appearance-none rounded-medium bg-default-100 px-2.5 pr-8 text-xs font-medium text-foreground transition-colors hover:bg-default-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer border border-transparent focus:border-primary/50"
                         >
-                          {(
-                            Object.keys(ATTENDEE_ROLE_LABELS) as Array<keyof typeof ATTENDEE_ROLE_LABELS>
-                          ).map((roleKey) => (
+                          {ATTENDEE_ROLE_VALUES.map((roleKey) => (
                             <option key={roleKey} value={roleKey} className="bg-background text-foreground">
-                              {ATTENDEE_ROLE_LABELS[roleKey]}
+                              {tRole(roleKey)}
                             </option>
                           ))}
                         </select>
                         <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-default-400" aria-hidden="true" />
                       </div>
                     ) : (
-                      ATTENDEE_ROLE_LABELS[attendee.role]
+                      tRole(attendee.role)
                     )}
                   </td>
                   <td className="p-2">
@@ -189,7 +192,7 @@ export function AttendeesTab({
                       <div className="relative inline-block w-full min-w-[130px]">
                         <select
                           id={`attendee-attendance-${attendee.id}`}
-                          aria-label="Katılım"
+                          aria-label={t("attendance")}
                           value={attendee.attendance}
                           onChange={(e) => {
                             const val = e.target.value;
@@ -197,18 +200,16 @@ export function AttendeesTab({
                           }}
                           className="h-8 w-full appearance-none rounded-medium bg-default-100 px-2.5 pr-8 text-xs font-medium text-foreground transition-colors hover:bg-default-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer border border-transparent focus:border-primary/50"
                         >
-                          {(
-                            Object.keys(ATTENDANCE_LABELS) as Array<keyof typeof ATTENDANCE_LABELS>
-                          ).map((statusKey) => (
+                          {ATTENDANCE_VALUES.map((statusKey) => (
                             <option key={statusKey} value={statusKey} className="bg-background text-foreground">
-                              {ATTENDANCE_LABELS[statusKey]}
+                              {tAttendance(statusKey)}
                             </option>
                           ))}
                         </select>
                         <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 -translate-y-1/2 h-3.5 w-3.5 text-default-400" aria-hidden="true" />
                       </div>
                     ) : (
-                      ATTENDANCE_LABELS[attendee.attendance]
+                      tAttendance(attendee.attendance)
                     )}
                   </td>
                   <td className="p-2">
@@ -216,7 +217,7 @@ export function AttendeesTab({
                       <Input
                         id={`attendee-note-${attendee.id}`}
                         size="sm"
-                        aria-label="Not"
+                        aria-label={t("note")}
                         defaultValue={attendee.note ?? ""}
                         onBlur={(event) => {
                           const note = event.target.value;
@@ -235,7 +236,7 @@ export function AttendeesTab({
                         size="sm"
                         variant="light"
                         color="danger"
-                        aria-label="Çıkar"
+                        aria-label={t("removeConfirm")}
                         onPress={() => remove(attendee.id, attendee.name)}
                       >
                         <Trash2 className="h-4 w-4" />

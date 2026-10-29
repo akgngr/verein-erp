@@ -107,5 +107,13 @@
   "menu": {
     "categories": "Kategorien",
     "export": "Excel-Export"
+  },
+  "meta": {
+    "list": "Inventar",
+    "categories": "Inventarkategorien"
+  },
+  "module": {
+    "label": "Inventar",
+    "description": "Verwaltung von Inventar, technischer Ausstattung und Ausgaben an Personen."
   }
 }

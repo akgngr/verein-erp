@@ -1,9 +1,11 @@
 import { CalendarPlus } from "lucide-react";
+import { FormDrawerButton } from "@/shared/components/forms/form-drawer";
+import { MeetingCreateView } from "./meeting-create-view";
+import { MeetingEditView } from "./meeting-edit-view";
 import { getTranslations } from "next-intl/server";
 
 import { requirePermission, ForbiddenError } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
-import { LinkButton } from "@/shared/components/ui/link-button";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { can } from "@/shared/permissions/define";
 import { parseListParams, type RawSearchParams } from "@/shared/list-params";
@@ -11,7 +13,7 @@ import { parseListParams, type RawSearchParams } from "@/shared/list-params";
 import { getMeetingStats } from "../queries/get-meeting-stats";
 import { MEETING_DEFAULT_SORT, MEETING_SORTABLE_FIELDS, listMeetings } from "../queries/list-meetings";
 import { meetingsPermissions } from "../permissions";
-import { MEETING_STATUS_FILTER_OPTIONS, MEETING_TYPE_FILTER_OPTIONS } from "../constants";
+import { MEETING_STATUS_VALUES, MEETING_TYPE_VALUES } from "../constants";
 import { MeetingTable } from "../components/meeting-table";
 import { MeetingDateFilter } from "../components/list-filters";
 import { StatsCards } from "../components/stats-cards";
@@ -52,13 +54,9 @@ export async function MeetingListView({
         description={t("pageDescription")}
         actions={
           canCreate ? (
-            <LinkButton
-              href="/toplantilar/yeni"
-              color="primary"
-              startIcon={<CalendarPlus className="h-4 w-4" />}
-            >
+            <FormDrawerButton param="yeni" startIcon={<CalendarPlus className="h-4 w-4" />}>
               {t("newMeeting")}
-            </LinkButton>
+            </FormDrawerButton>
           ) : null
         }
       />
@@ -74,13 +72,15 @@ export async function MeetingListView({
         dir={params.dir}
         q={params.q}
         filters={[
-          { key: "type", label: t("list.filterType"), options: [...MEETING_TYPE_FILTER_OPTIONS] },
-          { key: "status", label: t("list.filterStatus"), options: [...MEETING_STATUS_FILTER_OPTIONS] },
+          { key: "type", label: t("list.filterType"), options: MEETING_TYPE_VALUES.map((value) => ({ value, label: t(`type.${value}`) })) },
+          { key: "status", label: t("list.filterStatus"), options: MEETING_STATUS_VALUES.map((value) => ({ value, label: t(`status.${value}`) })) },
         ]}
         dateFilter={<MeetingDateFilter />}
         canUpdate={canUpdate}
         canDelete={canDelete}
       />
+      {canCreate && raw.yeni !== undefined ? <MeetingCreateView /> : null}
+      {canUpdate && typeof raw.duzenle === "string" && raw.duzenle ? <MeetingEditView id={raw.duzenle} /> : null}
     </div>
   );
 }

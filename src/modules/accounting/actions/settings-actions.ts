@@ -25,7 +25,7 @@ export async function saveSettingsAction(input: unknown): Promise<ActionResult> 
           where: { id: input.memberFeeCategoryId },
         });
         if (!category || !category.isActive || category.direction !== "INCOME") {
-          throw new ActionError("Aidat kategorisi aktif bir gelir kategorisi olmalıdır.", {
+          throw new ActionError("accounting.errors.feeCategoryInvalid", {
             memberFeeCategoryId: ["Aktif bir gelir kategorisi seçin."],
           });
         }
@@ -38,7 +38,7 @@ export async function saveSettingsAction(input: unknown): Promise<ActionResult> 
         if (id) {
           const account = await db.accountingAccount.findUnique({ where: { id } });
           if (!account || !account.isActive) {
-            throw new ActionError("Hesap bulunamadı veya devre dışı.", {
+            throw new ActionError("accounting.errors.accountInactive", {
               [key]: ["Aktif bir hesap seçin."],
             });
           }
@@ -50,7 +50,7 @@ export async function saveSettingsAction(input: unknown): Promise<ActionResult> 
           where: { id: input.donationCategoryId },
         });
         if (!category || !category.isActive || category.direction !== "INCOME") {
-          throw new ActionError("Bağış kategorisi aktif bir gelir kategorisi olmalıdır.", {
+          throw new ActionError("accounting.errors.donationCategoryInvalid", {
             donationCategoryId: ["Aktif bir gelir kategorisi seçin."],
           });
         }

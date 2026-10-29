@@ -108,7 +108,8 @@ export function hasActiveInventoryFilters(filters: InventoryFilters): boolean {
 }
 
 export function isCreateModalRequested(params: InventorySearchParams): boolean {
-  return getSingleParam(params.action) === "new";
+  // Form standardı `?yeni`; eski `?action=new` bağlantıları da açar.
+  return params.yeni !== undefined || getSingleParam(params.action) === "new";
 }
 
 /** Returns the query string without the given key (no leading "?"). */

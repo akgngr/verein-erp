@@ -2,6 +2,9 @@
 
 import { Select, SelectItem } from "@heroui/react";
 import { Controller, type Control, type FieldValues, type Path } from "react-hook-form";
+import { useTranslations } from "next-intl";
+
+import { useTranslateMessage } from "@/shared/i18n/use-translate-message";
 
 export type FormSelectOption = { value: string; label: string };
 
@@ -25,10 +28,12 @@ export function FormSelect<T extends FieldValues>({
   options,
   description,
   isRequired,
-  placeholder = "Seçin",
+  placeholder,
   isDisabled,
   labelPlacement = "outside",
 }: FormSelectProps<T>) {
+  const translateMessage = useTranslateMessage();
+  const tCommon = useTranslations("common");
   return (
     <Controller
       name={name}
@@ -42,7 +47,7 @@ export function FormSelect<T extends FieldValues>({
             labelPlacement={labelPlacement}
             description={description}
             isRequired={isRequired}
-            placeholder={placeholder}
+            placeholder={placeholder ?? tCommon("selectPlaceholder")}
             isDisabled={isDisabled}
             selectedKeys={value ? [value] : []}
             onSelectionChange={(keys) => {
@@ -50,7 +55,7 @@ export function FormSelect<T extends FieldValues>({
               field.onChange(key !== undefined ? String(key) : "");
             }}
             isInvalid={Boolean(fieldState.error)}
-            errorMessage={fieldState.error?.message}
+            errorMessage={translateMessage(fieldState.error?.message)}
             classNames={{
               label: "text-small font-medium text-foreground pb-1",
               trigger: "shadow-xs border-default-200 hover:border-default-400 focus-within:!border-primary transition-colors bg-default-50/50 hover:bg-default-100/50 focus-within:!bg-background",

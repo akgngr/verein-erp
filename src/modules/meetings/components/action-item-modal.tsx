@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import {
   Button,
   Input,
@@ -47,6 +49,8 @@ export function ActionItemModal({
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const tCommon = useTranslations("common");
+  const t = useTranslations("meetings.tasks");
   const router = useRouter();
   const [description, setDescription] = useState(item?.description ?? "");
   const [assigneeId, setAssigneeId] = useState<Set<string>>(
@@ -83,7 +87,7 @@ export function ActionItemModal({
       setError(result.error);
       return;
     }
-    addToast({ title: item ? "Görev güncellendi" : "Görev eklendi", color: "success" });
+    addToast({ title: item ? t("updatedToast") : t("addedToast"), color: "success" });
     onOpenChange(false);
     router.refresh();
   };
@@ -93,28 +97,28 @@ export function ActionItemModal({
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange} key={key} size="lg">
       <ModalContent>
-        <ModalHeader>{item ? "Görevi düzenle" : "Görev ekle"}</ModalHeader>
+        <ModalHeader>{item ? t("modalEditTitle") : t("modalAddTitle")}</ModalHeader>
         <ModalBody>
           <Textarea
-            label="Görev açıklaması"
+            label={t("descriptionLabel")}
             labelPlacement="outside"
             value={description}
             onValueChange={setDescription}
             minRows={2}
             isRequired
             maxLength={1000}
-            description="En fazla 1000 karakter."
+            description={t("descriptionHelp")}
           />
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <Select
-              label="Sorumlu (kullanıcı)"
+              label={t("assigneeUserLabel")}
               labelPlacement="outside"
               selectedKeys={assigneeId}
               onSelectionChange={(keys) => setAssigneeId(new Set(keys as Set<string>))}
-              description="Seçilirse serbest metin yok sayılır."
+              description={t("assigneeUserHelp")}
             >
               {[
-                { value: "", label: "Atanmadı" },
+                { value: "", label: t("noAssigneeOption") },
                 ...userOptions.map((option) => ({ value: option.id, label: option.label })),
               ].map((option) => (
                 <SelectItem key={option.value} textValue={option.label}>
@@ -123,31 +127,31 @@ export function ActionItemModal({
               ))}
             </Select>
             <Input
-              label="Sorumlu (serbest ad)"
+              label={t("assigneeFreeLabel")}
               labelPlacement="outside"
               value={selectedUserId ? "" : assigneeName}
               onValueChange={setAssigneeName}
               isDisabled={Boolean(selectedUserId)}
               maxLength={120}
-              description="Dış kişi adı yazılabilir."
+              description={t("assigneeFreeHelp")}
             />
           </div>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <Input
               type="date"
-              label="Son tarih"
+              label={t("dueDateLabel")}
               labelPlacement="outside"
               value={dueDate}
               onValueChange={setDueDate}
             />
             <Select
-              label="Bağlı karar"
+              label={t("decisionLabel")}
               labelPlacement="outside"
               selectedKeys={decisionId}
               onSelectionChange={(keys) => setDecisionId(new Set(keys as Set<string>))}
             >
               {[
-                { value: "", label: "Bağlantı yok" },
+                { value: "", label: t("noDecision") },
                 ...decisions.map((decision) => ({
                   value: decision.id,
                   label: decision.decisionNumber,
@@ -163,7 +167,7 @@ export function ActionItemModal({
         </ModalBody>
         <ModalFooter>
           <Button variant="light" onPress={() => onOpenChange(false)}>
-            Vazgeç
+            {tCommon("cancel")}
           </Button>
           <Button
             color="primary"
@@ -171,7 +175,7 @@ export function ActionItemModal({
             onPress={submit}
             isDisabled={description.trim().length < 3}
           >
-            Kaydet
+            {tCommon("save")}
           </Button>
         </ModalFooter>
       </ModalContent>

@@ -17,27 +17,15 @@ export const REGISTRY_PREFIX: Record<DocumentDirection, string> = {
   OUTGOING: "GDN",
 };
 
-export const DIRECTION_LABELS: Record<DocumentDirection, string> = {
-  INCOMING: "Gelen",
-  OUTGOING: "Giden",
-};
+export const DIRECTION_VALUES: DocumentDirection[] = ["INCOMING", "OUTGOING"];
 
 export const DIRECTION_COLORS: Record<DocumentDirection, ChipColor> = {
   INCOMING: "primary",
   OUTGOING: "secondary",
 };
 
-export const DIRECTION_FILTER_OPTIONS = [
-  { value: "INCOMING", label: "Gelen" },
-  { value: "OUTGOING", label: "Giden" },
-] as const;
 
-export const STATUS_LABELS: Record<DocumentStatus, string> = {
-  OPEN: "Açık",
-  IN_PROGRESS: "İşlemde",
-  COMPLETED: "Tamamlandı",
-  ARCHIVED: "Arşivlendi",
-};
+export const STATUS_VALUES: DocumentStatus[] = ["OPEN", "IN_PROGRESS", "COMPLETED", "ARCHIVED"];
 
 export const STATUS_COLORS: Record<DocumentStatus, ChipColor> = {
   OPEN: "warning",
@@ -46,23 +34,9 @@ export const STATUS_COLORS: Record<DocumentStatus, ChipColor> = {
   ARCHIVED: "default",
 };
 
-export const STATUS_FILTER_OPTIONS = (Object.keys(STATUS_LABELS) as DocumentStatus[]).map(
-  (status) => ({ value: status, label: STATUS_LABELS[status] }),
-);
 
-export const DELIVERY_METHOD_LABELS: Record<DeliveryMethod, string> = {
-  POST: "Posta",
-  EMAIL: "E-posta",
-  HAND: "Elden",
-  COURIER: "Kargo/Kurye",
-  REGISTERED_MAIL: "Kayıtlı Posta",
-  FAX: "Faks",
-  OTHER: "Diğer",
-};
+export const DELIVERY_METHOD_VALUES: DeliveryMethod[] = ["POST", "EMAIL", "HAND", "COURIER", "REGISTERED_MAIL", "FAX", "OTHER"];
 
-export const DELIVERY_METHOD_OPTIONS = (Object.keys(DELIVERY_METHOD_LABELS) as DeliveryMethod[]).map(
-  (method) => ({ value: method, label: DELIVERY_METHOD_LABELS[method] }),
-);
 
 /** Durum seçenekleri: varsayılanlar form tarafında yön'e göre seçilir (5. bölüm md. 2). */
 export const DEFAULT_STATUS_BY_DIRECTION: Record<DocumentDirection, DocumentStatus> = {

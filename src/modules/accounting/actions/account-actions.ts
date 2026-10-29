@@ -24,13 +24,13 @@ export async function createAccountAction(
       const db = getDb();
       const openingDate = parseDateOnly(input.openingDate);
       if (!openingDate) {
-        throw new ActionError("Açılış tarihi geçersiz.", {
+        throw new ActionError("accounting.errors.openingDateInvalid", {
           openingDate: ["Geçerli bir tarih girin."],
         });
       }
       const openingCents = toCents(input.openingBalance) ?? 0;
       if (openingCents < 0) {
-        throw new ActionError("Açılış bakiyesi negatif olamaz.", {
+        throw new ActionError("accounting.errors.openingNegative", {
           openingBalance: ["0 veya pozitif bir tutar girin."],
         });
       }
@@ -53,7 +53,7 @@ export async function createAccountAction(
         return { id: created.id };
       } catch (error) {
         if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
-          throw new ActionError("Bu hesap adı zaten kullanılıyor.", {
+          throw new ActionError("accounting.errors.accountNameTaken", {
             name: ["Farklı bir hesap adı girin."],
           });
         }
@@ -86,7 +86,7 @@ export async function updateAccountAction(input: unknown): Promise<ActionResult>
     handler: async ({ input, audit }) => {
       const db = getDb();
       const existing = await db.accountingAccount.findUnique({ where: { id: input.id } });
-      if (!existing) throw new ActionError("Hesap bulunamadı.");
+      if (!existing) throw new ActionError("accounting.errors.accountNotFound");
 
       const hasBookings = await db.accountingBooking.count({
         where: { OR: [{ accountId: existing.id }, { counterAccountId: existing.id }] },
@@ -100,17 +100,17 @@ export async function updateAccountAction(input: unknown): Promise<ActionResult>
 
       if (input.openingDate) {
         if (hasBookings > 0) {
-          throw new ActionError("Hareketi olan hesabın açılış bakiyesi değiştirilemez.");
+          throw new ActionError("accounting.errors.openingLocked");
         }
         const openingDate = parseDateOnly(input.openingDate);
         if (!openingDate) {
-          throw new ActionError("Açılış tarihi geçersiz.", {
+          throw new ActionError("accounting.errors.openingDateInvalid", {
             openingDate: ["Geçerli bir tarih girin."],
           });
         }
         const openingCents = toCents(input.openingBalance || "0") ?? 0;
         if (openingCents < 0) {
-          throw new ActionError("Açılış bakiyesi negatif olamaz.", {
+          throw new ActionError("accounting.errors.openingNegative", {
             openingBalance: ["0 veya pozitif bir tutar girin."],
           });
         }

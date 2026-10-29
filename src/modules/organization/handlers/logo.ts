@@ -8,7 +8,7 @@ import { getEnv } from "@/shared/env";
 import {
   openReadStream,
   parseSingleFileUpload,
-  validateUpload,
+  uploadErrorMessage, validateUpload,
   buildDownloadResponse,
 } from "@/shared/files";
 import { can } from "@/shared/permissions/define";
@@ -24,6 +24,7 @@ import {
   deleteLogoFile,
   saveLogoFile,
 } from "../services/logo";
+import { translateMessage } from "@/shared/i18n/translate-message";
 
 /**
  * Dernek logosu uçları (kullanıcı isteği). Tümü JSON/akış döner; handler'lar
@@ -50,7 +51,7 @@ async function authenticate(): Promise<
       return {
         ok: false,
         response: NextResponse.json(
-          { ok: false, error: "Oturum bulunamadı." },
+          { ok: false, error: await translateMessage("common.errors.sessionExpired") },
           { status: 401 },
         ),
       };
@@ -66,7 +67,7 @@ export async function getOrganizationLogoHandler(): Promise<Response> {
 
   const user = auth.user;
   if (!can(user.role, organizationPermissions, "view")) {
-    return NextResponse.json({ ok: false, error: "Bu işlem için yetkiniz yok." }, { status: 403 });
+    return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
   }
 
   const row = await getDb().organizationProfile.findUnique({
@@ -74,7 +75,7 @@ export async function getOrganizationLogoHandler(): Promise<Response> {
     select: { logoPath: true, logoMime: true, logoOriginalName: true },
   });
   if (!row?.logoPath || !row.logoMime) {
-    return NextResponse.json({ ok: false, error: "Logo yüklenmemiş." }, { status: 404 });
+    return NextResponse.json({ ok: false, error: await translateMessage("organization.errors.logoMissing") }, { status: 404 });
   }
 
   try {
@@ -86,7 +87,7 @@ export async function getOrganizationLogoHandler(): Promise<Response> {
     });
   } catch (error) {
     console.error("[organization/logo] Logo okunamadı:", error);
-    return NextResponse.json({ ok: false, error: "Logo okunamadı." }, { status: 404 });
+    return NextResponse.json({ ok: false, error: await translateMessage("organization.errors.logoReadFailed") }, { status: 404 });
   }
 }
 
@@ -97,7 +98,7 @@ export async function uploadOrganizationLogoHandler(request: Request): Promise<R
 
   const user = auth.user;
   if (!can(user.role, organizationPermissions, "update")) {
-    return NextResponse.json({ ok: false, error: "Bu işlem için yetkiniz yok." }, { status: 403 });
+    return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
   }
 
   const parsed = await parseSingleFileUpload(request);
@@ -116,7 +117,7 @@ export async function uploadOrganizationLogoHandler(request: Request): Promise<R
     maxBytes: LOGO_MAX_BYTES,
   });
   if (!validation.ok) {
-    return NextResponse.json({ ok: false, error: validation.error }, { status: 400 });
+    return NextResponse.json({ ok: false, error: await uploadErrorMessage(validation) }, { status: 400 });
   }
 
   const db = getDb();
@@ -181,7 +182,7 @@ export async function deleteOrganizationLogoHandler(): Promise<Response> {
 
   const user = auth.user;
   if (!can(user.role, organizationPermissions, "update")) {
-    return NextResponse.json({ ok: false, error: "Bu işlem için yetkiniz yok." }, { status: 403 });
+    return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
   }
 
   const db = getDb();
@@ -190,7 +191,7 @@ export async function deleteOrganizationLogoHandler(): Promise<Response> {
     select: { logoPath: true, logoOriginalName: true },
   });
   if (!existing?.logoPath) {
-    return NextResponse.json({ ok: false, error: "Logo yüklenmemiş." }, { status: 404 });
+    return NextResponse.json({ ok: false, error: await translateMessage("organization.errors.logoMissing") }, { status: 404 });
   }
 
   await db.organizationProfile.update({

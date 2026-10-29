@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { requirePermission, ForbiddenError, listActiveUserOptions } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { LinkButton } from "@/shared/components/ui/link-button";
@@ -7,7 +8,7 @@ import { parseListParams, type RawSearchParams } from "@/shared/list-params";
 
 import { ACTION_ITEM_DEFAULT_SORT, ACTION_ITEM_SORTABLE_FIELDS, listActionItems } from "../queries/list-action-items";
 import { meetingsPermissions } from "../permissions";
-import { ACTION_ITEM_STATUS_LABELS } from "../constants";
+import { ACTION_ITEM_STATUS_VALUES } from "../constants";
 import { ActionItemTable } from "../components/action-item-table";
 import { ActionItemDateFilter, ActionItemQuickFilters } from "../components/list-filters";
 
@@ -21,6 +22,8 @@ export async function ActionItemListView({
 }: {
   searchParams: Promise<RawSearchParams>;
 }) {
+  const tStatus = await getTranslations("meetings.actionStatus");
+  const t = await getTranslations("meetings");
   let user;
   try {
     user = await requirePermission(meetingsPermissions, "view");
@@ -47,11 +50,11 @@ export async function ActionItemListView({
   return (
     <div>
       <PageHeader
-        title="Toplantı görevleri"
-        description="Tüm toplantılardan gelen görevlerin takibi; varsayılan görünüm yalnızca açık görevlerdir."
+        title={t("tasks.pageTitle")}
+        description={t("tasks.listDescription")}
         actions={
           <LinkButton href="/toplantilar" color="default" variant="bordered">
-            Toplantılar
+            {t("pageTitle")}
           </LinkButton>
         }
       />
@@ -67,18 +70,18 @@ export async function ActionItemListView({
         filters={[
           {
             key: "status",
-            label: "Durum",
+            label: t("tasks.colStatus"),
             options: [
-              { value: "*", label: "Tümü" },
-              ...Object.entries(ACTION_ITEM_STATUS_LABELS).map(([value, label]) => ({
+              { value: "*", label: t("filters.all") },
+              ...ACTION_ITEM_STATUS_VALUES.map((value) => ({
                 value,
-                label,
+                label: tStatus(value as (typeof ACTION_ITEM_STATUS_VALUES)[number]),
               })),
             ],
           },
           {
             key: "assigneeId",
-            label: "Sorumlu",
+            label: t("tasks.colAssignee"),
             options: userOptions.map((option) => ({ value: option.id, label: option.label })),
           },
         ]}

@@ -48,14 +48,14 @@ export async function generateDuesAction(
     handler: async ({ input, user, audit }) => {
       const dueDate = parseDateOnly(input.dueDate);
       if (!dueDate) {
-        throw new ActionError("Tarih geçersiz.", {
-          dueDate: ["Geçerli bir son ödeme tarihi girin."],
+        throw new ActionError("members.errors.dateInvalid", {
+          dueDate: ["members.validation.dueDateInvalid"],
         });
       }
       // İş emri: son ödeme tarihi aidat yılı içinde veya sonrası olmalı.
       const yearStart = new Date(Date.UTC(input.year, 0, 1));
       if (dueDate.getTime() < yearStart.getTime()) {
-        throw new ActionError("Son ödeme tarihi aidat yılından önce olamaz.", {
+        throw new ActionError("members.errors.dueBeforeYear", {
           dueDate: ["Son ödeme tarihi aidat yılı içinde veya sonrasında olmalıdır."],
         });
       }
@@ -113,27 +113,27 @@ export async function addDueAction(
         select: { id: true, membershipNumber: true },
       });
       if (!member) {
-        throw new ActionError("Üye bulunamadı.", {
+        throw new ActionError("members.errors.memberNotFound", {
           memberId: ["Geçerli bir üye seçin."],
         });
       }
 
       const cents = toCents(input.amount);
       if (cents === null || cents <= 0) {
-        throw new ActionError("Tutar geçersiz.", {
+        throw new ActionError("members.errors.amountInvalid", {
           amount: ["0'dan büyük bir tutar girin (en fazla 2 ondalık)."],
         });
       }
       if (cents > 999_999_999) {
-        throw new ActionError("Tutar çok büyük.", {
+        throw new ActionError("members.errors.amountTooLarge", {
           amount: ["Tutar en fazla 9.999.999,99 € olabilir."],
         });
       }
 
       const dueDate = parseDateOnly(input.dueDate);
       if (!dueDate) {
-        throw new ActionError("Tarih geçersiz.", {
-          dueDate: ["Geçerli bir son ödeme tarihi girin."],
+        throw new ActionError("members.errors.dateInvalid", {
+          dueDate: ["members.validation.dueDateInvalid"],
         });
       }
 
@@ -154,7 +154,7 @@ export async function addDueAction(
         // KARAR: @@unique([memberId, year]) çakışması kullanıcı hatasıdır —
         // P2002'yi anlamlı Türkçe mesaja çeviriyoruz.
         if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
-          throw new ActionError("Bu üyenin bu yıl için aidat satırı zaten var.", {
+          throw new ActionError("members.errors.duesExists", {
             year: ["Bu yıl için aidat satırı zaten mevcut."],
           });
         }
@@ -192,7 +192,7 @@ export async function updateDueAction(input: unknown): Promise<ActionResult> {
         where: { id: input.id },
         include: { member: { select: { membershipNumber: true } } },
       });
-      if (!due) throw new ActionError("Aidat satırı bulunamadı.");
+      if (!due) throw new ActionError("members.errors.duesNotFound");
 
       const paidAggregate = await db.memberPayment.aggregate({
         where: { memberId: due.memberId, dueYear: due.year, voidedAt: null },
@@ -202,27 +202,27 @@ export async function updateDueAction(input: unknown): Promise<ActionResult> {
 
       const cents = toCents(input.amount);
       if (cents === null || cents <= 0) {
-        throw new ActionError("Tutar geçersiz.", {
+        throw new ActionError("members.errors.amountInvalid", {
           amount: ["0'dan büyük bir tutar girin (en fazla 2 ondalık)."],
         });
       }
       // İş emri: tutar ödenenin altına düşürülemez.
       if (cents < paidCents) {
-        throw new ActionError("Aidat tutarı ödenen tutarın altına düşürülemez.", {
+        throw new ActionError("members.errors.duesBelowPaid", {
           amount: ["Tutar en az ödenen tutar kadar olmalıdır."],
         });
       }
 
       const dueDate = parseDateOnly(input.dueDate);
       if (!dueDate) {
-        throw new ActionError("Tarih geçersiz.", {
-          dueDate: ["Geçerli bir son ödeme tarihi girin."],
+        throw new ActionError("members.errors.dateInvalid", {
+          dueDate: ["members.validation.dueDateInvalid"],
         });
       }
 
       // Muafiyet: ödemesi olan satır muaf yapılamaz (para gerçekten alındı).
       if (input.waived && paidCents > 0) {
-        throw new ActionError("Ödemesi olan aidat satırı muaf yapılamaz.", {
+        throw new ActionError("members.errors.duesWaiveWithPayments", {
           waived: ["Önce ödemeleri iptal edin veya satırı muaf yapmayın."],
         });
       }
@@ -279,16 +279,14 @@ export async function deleteDueAction(input: unknown): Promise<ActionResult> {
         where: { id: input.id },
         include: { member: { select: { membershipNumber: true } } },
       });
-      if (!due) throw new ActionError("Aidat satırı bulunamadı.");
+      if (!due) throw new ActionError("members.errors.duesNotFound");
 
       const paymentCount = await db.memberPayment.count({
         where: { memberId: due.memberId, dueYear: due.year, voidedAt: null },
       });
       // İş emri: ödemesi olan satır silinmez (önce ödemeler iptal edilmeli).
       if (paymentCount > 0) {
-        throw new ActionError(
-          "Ödeme kaydı olan aidat satırı silinemez. Önce ödemeleri iptal edin.",
-        );
+        throw new ActionError("members.errors.dueHasPayments");
       }
 
       await db.memberDue.delete({ where: { id: due.id } });

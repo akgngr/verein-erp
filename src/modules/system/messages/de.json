@@ -46,5 +46,22 @@
   "nav": {
     "ayarlar": "Einstellungen",
     "moduller": "Modulverwaltung"
+  },
+  "meta": {
+    "settings": "Einstellungen",
+    "modules": "Modulverwaltung"
+  },
+  "module": {
+    "label": "Modulverwaltung",
+    "description": "Verwaltung der installierten Kern-, offiziellen und Erweiterungsmodule."
+  },
+  "authorCommunity": "Community / Entwickler",
+  "toggleAria": "Status von {label} ändern",
+  "deleteAria": "Modul {label} löschen",
+  "errors": {
+    "notFound": "Modul nicht gefunden.",
+    "coreCannotDisable": "Kernmodule können nicht deaktiviert werden.",
+    "onlyExtensionsDeletable": "Nur externe Erweiterungen (EXTENSION) können gelöscht werden. Kern- und offizielle Module nicht.",
+    "deleteFailed": "Beim Löschen des Moduls ist ein Fehler aufgetreten."
   }
 }

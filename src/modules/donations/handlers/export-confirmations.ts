@@ -1,6 +1,7 @@
 import "server-only";
 
 import ExcelJS from "exceljs";
+import { getTranslations } from "next-intl/server";
 import { NextResponse } from "next/server";
 
 import { writeAudit } from "@/shared/audit/write-audit";
@@ -10,13 +11,14 @@ import { buildUserLabel } from "@/shared/utils";
 
 import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 
-import { CONFIRMATION_CONTENT_LABELS, CONFIRMATION_KIND_LABELS, DONATIONS_EXPORT_MAX_ROWS } from "../constants";
+import { DONATIONS_EXPORT_MAX_ROWS } from "../constants";
 import { donationsPermissions } from "../permissions";
 import {
   CONFIRMATION_DEFAULT_SORT,
   CONFIRMATION_SORTABLE_FIELDS,
   listConfirmations,
 } from "../queries/list-confirmations";
+import { translateMessage } from "@/shared/i18n/translate-message";
 
 /**
  * Zuwendungsregister Excel (§ 15 md. 9): /api/donations/confirmations/export.
@@ -28,13 +30,13 @@ export async function exportConfirmationsHandler(request: Request): Promise<Resp
     user = await requireUser();
   } catch (error) {
     if (error instanceof UnauthorizedError) {
-      return NextResponse.json({ ok: false, error: "Oturum bulunamadı." }, { status: 401 });
+      return NextResponse.json({ ok: false, error: await translateMessage("common.errors.sessionExpired") }, { status: 401 });
     }
     throw error;
   }
 
   if (!can(user.role, donationsPermissions, "view")) {
-    return NextResponse.json({ ok: false, error: "Bu işlem için yetkiniz yok." }, { status: 403 });
+    return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
   }
 
   const raw: RawSearchParams = Object.fromEntries(new URL(request.url).searchParams.entries());
@@ -48,31 +50,33 @@ export async function exportConfirmationsHandler(request: Request): Promise<Resp
   const fetched = await listConfirmations({ ...params, take: DONATIONS_EXPORT_MAX_ROWS });
   const rows = fetched.rows;
 
+  const tRoot = await getTranslations();
+  const tx = (key: string, values?: Record<string, string | number>) => tRoot(`donations.export.register.${key}`, values);
   const workbook = new ExcelJS.Workbook();
-  const sheet = workbook.addWorksheet("Zuwendungsregister");
+  const sheet = workbook.addWorksheet(tx("_sheet"));
 
   sheet.columns = [
-    { header: "ZB-no", key: "confirmationNumber", width: 14 },
-    { header: "Tarih", key: "issuedAt", width: 12 },
-    { header: "Tür", key: "kind", width: 30 },
-    { header: "İçerik", key: "content", width: 24 },
-    { header: "Alıcı adı", key: "recipientName", width: 32 },
-    { header: "Dönem", key: "period", width: 26 },
-    { header: "Toplam", key: "total", width: 14 },
-    { header: "Durum", key: "status", width: 14 },
-    { header: "İptal nedeni", key: "cancelReason", width: 34 },
+    { header: tx("confirmationNumber"), key: "confirmationNumber", width: 14 },
+    { header: tx("issuedAt"), key: "issuedAt", width: 12 },
+    { header: tx("kind"), key: "kind", width: 30 },
+    { header: tx("content"), key: "content", width: 24 },
+    { header: tx("recipientName"), key: "recipientName", width: 32 },
+    { header: tx("period"), key: "period", width: 26 },
+    { header: tx("total"), key: "total", width: 14 },
+    { header: tx("status"), key: "status", width: 14 },
+    { header: tx("cancelReason"), key: "cancelReason", width: 34 },
   ];
 
   for (const row of rows) {
     const added = sheet.addRow({
       confirmationNumber: row.confirmationNumber,
       issuedAt: row.issuedAt,
-      kind: CONFIRMATION_KIND_LABELS[row.kind],
-      content: CONFIRMATION_CONTENT_LABELS[row.content],
+      kind: tx(`kinds.${row.kind}`),
+      content: tx(`contents.${row.content}`),
       recipientName: row.recipientName,
       period: "",
       total: row.totalCents / 100,
-      status: row.status === "ISSUED" ? "Düzenlendi" : "İptal edildi",
+      status: tRoot(`donations.confirmations.status.${row.status}`),
       cancelReason: "",
     });
     const dateCell = added.getCell("issuedAt");
@@ -87,7 +91,7 @@ export async function exportConfirmationsHandler(request: Request): Promise<Resp
   sheet.views = [{ state: "frozen", ySplit: 1 }];
 
   const buffer = await workbook.xlsx.writeBuffer();
-  const fileName = `zuwendungsregister-${new Date().toISOString().slice(0, 10)}.xlsx`;
+  const fileName = `${tx("_file")}-${new Date().toISOString().slice(0, 10)}.xlsx`;
 
   await writeAudit({
     userId: user.id,

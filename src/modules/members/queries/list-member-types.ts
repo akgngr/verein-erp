@@ -4,7 +4,7 @@ import type { MembershipType, Prisma } from "@prisma/client";
 
 import { getDb } from "@/shared/db";
 
-import { MEMBERSHIP_TYPE_SELECT_OPTIONS } from "../constants";
+import { MEMBERSHIP_TYPE_VALUES } from "../constants";
 import { decimalToCents } from "../services/dues-calculation";
 import type { MemberTypeConfigRow } from "../types";
 
@@ -36,7 +36,7 @@ export async function listMemberTypeConfigs(): Promise<MemberTypeConfigRow[]> {
 
   const countByType = new Map(counts.map((row) => [row.type, row._count._all]));
 
-  return MEMBERSHIP_TYPE_SELECT_OPTIONS.map(({ value }) => {
+  return MEMBERSHIP_TYPE_VALUES.map((value) => {
     const config = configs.find((row) => row.type === value);
     return {
       type: value,

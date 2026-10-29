@@ -45,7 +45,7 @@ export async function SettingsOverviewView() {
       description: t("cards.organization.description"),
       actionLabel: t("cards.organization.action"),
       allowed: canOrg,
-      badge: "Profil & Kimlik",
+      badge: t("badges.organization"),
     },
     {
       key: "users",
@@ -56,7 +56,7 @@ export async function SettingsOverviewView() {
       description: t("cards.users.description"),
       actionLabel: t("cards.users.action"),
       allowed: canUsers,
-      badge: "Erişim & Roller",
+      badge: t("badges.users"),
     },
     {
       key: "modules",
@@ -67,7 +67,7 @@ export async function SettingsOverviewView() {
       description: t("cards.modules.description"),
       actionLabel: t("cards.modules.action"),
       allowed: canSystem,
-      badge: "Modüller & Şema",
+      badge: t("badges.modules"),
     },
     {
       key: "audit",
@@ -78,7 +78,7 @@ export async function SettingsOverviewView() {
       description: t("cards.audit.description"),
       actionLabel: t("cards.audit.action"),
       allowed: canAudit,
-      badge: "Güvenlik & Log",
+      badge: t("badges.audit"),
     },
     {
       key: "accounting",
@@ -89,7 +89,7 @@ export async function SettingsOverviewView() {
       description: t("cards.accounting.description"),
       actionLabel: t("cards.accounting.action"),
       allowed: canAccounting,
-      badge: "Mali Yapı",
+      badge: t("badges.accounting"),
     },
   ];
 

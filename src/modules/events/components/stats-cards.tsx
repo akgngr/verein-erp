@@ -1,3 +1,4 @@
+import { useTranslations } from "next-intl";
 import { CalendarDays, CalendarCheck, Users } from "lucide-react"
 import Link from "next/link"
 import type { EventStats } from "../types"
@@ -7,23 +8,24 @@ import type { EventStats } from "../types"
  * Verein ERP tasarım standardı ile uyumlu; tıklanabilir ve ilgili filtreye yönlendirir.
  */
 export function StatsCards({ stats }: { stats: EventStats }) {
+  const t = useTranslations("events.stats");
   const cards = [
     {
-      label: "Toplam Etkinlik",
+      label: t("total"),
       value: stats.totalEvents,
       href: "/events",
       icon: CalendarDays,
       tone: "text-primary",
     },
     {
-      label: "Yaklaşan Etkinlikler",
+      label: t("upcoming"),
       value: stats.upcomingEventsCount,
       href: "/events?filter.timeFilter=upcoming",
       icon: CalendarCheck,
       tone: "text-success",
     },
     {
-      label: "Bu Ayki Katılımcı",
+      label: t("attendeesMonth"),
       value: stats.totalAttendeesMonth,
       href: "/events",
       icon: Users,

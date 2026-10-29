@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Autocomplete, AutocompleteItem } from "@heroui/react";
 import { useState } from "react";
 import { Controller, type Control, type FieldValues, type Path } from "react-hook-form";
@@ -63,6 +65,7 @@ function ReplyToSelectInner({
   isInvalid?: boolean;
   errorMessage?: string;
 }) {
+  const t = useTranslations("documents.form");
   // KARAR: Arama metni ayrı state'te tutulur; görünen metin türetilir —
   // seçim varsa etiket, yoksa yazılan arama metni (effect gerekmez).
   const [searchText, setSearchText] = useState("");
@@ -72,9 +75,9 @@ function ReplyToSelectInner({
   return (
     <Autocomplete
       id="documents-reply-to"
-      label="Yanıtlanan evrak"
+      label={t("replyTo")}
       labelPlacement="outside"
-      description="Kayıt no, kurum/kişi veya konu ile arayın; gelen bir evrağı seçin (isteğe bağlı)."
+      description={t("replyToDescription")}
       isDisabled={isDisabled}
       allowsCustomValue={false}
       items={options}

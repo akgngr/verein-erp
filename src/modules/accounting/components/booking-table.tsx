@@ -1,5 +1,6 @@
 "use client";
 
+import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
 import { Link } from "@heroui/react";
 import { Ban, Eye, Pencil } from "lucide-react";
 import { useState } from "react";
@@ -46,6 +47,7 @@ export function BookingTable({
   canDelete: boolean;
 }) {
   const t = useTranslations("accounting.list");
+  const drawerHref = useFormDrawerHref();
   const [reversing, setReversing] = useState<BookingListItem | null>(null);
 
   const formatAmount = (cents: number) =>
@@ -154,7 +156,7 @@ export function BookingTable({
             key: "edit",
             label: t("actions.edit"),
             icon: <Pencil className="h-4 w-4" />,
-            href: `/muhasebe/${row.id}/duzenle`,
+            href: drawerHref("duzenle", row.id),
           },
         ]
       : []),

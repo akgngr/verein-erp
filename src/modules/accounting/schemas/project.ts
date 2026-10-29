@@ -6,12 +6,12 @@ export const projectCreateSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(2, "Proje adı en az 2 karakter olmalıdır.")
-    .max(150, "Proje adı en fazla 150 karakter olabilir."),
+    .min(2, "accounting.validation.projectNameMin")
+    .max(150, "accounting.validation.projectNameMax"),
   note: z
     .string()
     .trim()
-    .max(500, "Not en fazla 500 karakter olabilir.")
+    .max(500, "accounting.validation.noteMax")
     .optional()
     .transform((value) => (value ? value : undefined)),
 });

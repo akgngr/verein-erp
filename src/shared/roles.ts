@@ -7,18 +7,9 @@ export type { Role };
 export type ChipColor = "default" | "primary" | "secondary" | "success" | "warning" | "danger";
 
 /**
- * Yeni bir rol Prisma enum'una eklendiğinde derleme hatası alınır
- * (Record<Role, ...> zorunlu kılar) ve etiketi/renki buraya eklenir.
+ * Yeni bir rol Prisma enum'una eklendiğinde derleme hatası alınır (Record<Role, ...> zorunlu
+ * kılar); rengi buraya, etiketi messages/shell/<dil>.json → "roles" altına eklenir.
  */
-export const ROLE_LABELS: Record<Role, string> = {
-  ADMIN: "Yönetici",
-  BOARD: "Yönetim Kurulu",
-  SECRETARY: "Sekreter",
-  VIEWER: "Salt okunur",
-  TREASURER: "Sayman",
-  AUDITOR: "Denetçi",
-};
-
 export const ROLE_COLORS: Record<Role, ChipColor> = {
   ADMIN: "primary",
   BOARD: "secondary",
@@ -28,6 +19,5 @@ export const ROLE_COLORS: Record<Role, ChipColor> = {
   AUDITOR: "danger",
 };
 
-export const ROLE_OPTIONS: { value: Role; label: string }[] = (
-  Object.keys(ROLE_LABELS) as Role[]
-).map((role) => ({ value: role, label: ROLE_LABELS[role] }));
+/** Tüm roller (sabit sırayla). Etiket: useTranslations("roles")(role). */
+export const ROLES = Object.keys(ROLE_COLORS) as Role[];

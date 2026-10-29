@@ -1,6 +1,10 @@
+import { getTranslations } from "next-intl/server";
 import { DuesReportView } from "../../ui";
 
-export const metadata = { title: "Aidat Raporu" };
+export async function generateMetadata() {
+  const t = await getTranslations("members.meta");
+  return { title: t("dues") };
+}
 
 export default async function AidatPage({
   searchParams,

@@ -28,12 +28,12 @@ export async function deleteBookingFileAction(input: unknown): Promise<ActionRes
         where: { id: input.fileId, deletedAt: null },
         include: { booking: { select: { bookingNumber: true, year: true } } },
       });
-      if (!file) throw new ActionError("Dosya bulunamadı.");
+      if (!file) throw new ActionError("accounting.errors.fileNotFound");
 
       const lock = await db.accountingYear.findUnique({ where: { year: file.booking.year } });
       if (lock?.lockedAt) {
         throw new ActionError(
-          `${file.booking.year} yılı kilitli; belge silinemez (geç belge yüklemesi serbesttir).`,
+          "accounting.errors.fileYearLocked", undefined, { year: file.booking.year },
         );
       }
 

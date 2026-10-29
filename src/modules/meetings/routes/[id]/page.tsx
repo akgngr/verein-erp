@@ -1,6 +1,10 @@
+import { getTranslations } from "next-intl/server";
 import { MeetingDetailView } from "../../ui";
 
-export const metadata = { title: "Toplantı detayı" };
+export async function generateMetadata() {
+  const t = await getTranslations("meetings.meta");
+  return { title: t("detail") };
+}
 
 /**
  * Toplantı detayı (7.3) — ince rota: ?sekme= sekme, ?gundem= karar önden
@@ -17,5 +21,7 @@ export default async function ToplantiDetayPage({
   const raw = await searchParams;
   const tab = Array.isArray(raw.sekme) ? raw.sekme[0] : raw.sekme;
   const gundem = Array.isArray(raw.gundem) ? raw.gundem[0] : raw.gundem;
-  return <MeetingDetailView id={id} tabParam={tab} agendaPreset={gundem} />;
+  return (
+    <MeetingDetailView id={id} tabParam={tab} agendaPreset={gundem} editOpen={raw.duzenle !== undefined} />
+  );
 }

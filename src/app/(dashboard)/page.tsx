@@ -1,5 +1,6 @@
 import { AlertTriangle, ArrowRight, CalendarDays, FileText, Users, type LucideIcon } from "lucide-react";
 import Link from "next/link";
+import { getTranslations } from "next-intl/server";
 
 import { requireUser } from "@/modules/auth/server";
 import { getDocumentStats } from "@/modules/documents/server";
@@ -13,7 +14,10 @@ import { can } from "@/shared/permissions/define";
 import { formatDate } from "@/shared/utils";
 import { cn } from "@/shared/utils";
 
-export const metadata = { title: "Panel" };
+export async function generateMetadata() {
+  const t = await getTranslations("nav");
+  return { title: t("panel") };
+}
 
 type DetailItem = { label: string; value: string | number; danger?: boolean };
 
@@ -139,6 +143,7 @@ function AlertBanner({
 
 export default async function PanelPage() {
   const user = await requireUser();
+  const t = await getTranslations("panel");
 
   let stats: DocumentStats | null = null;
   if (can(user.role, documentsPermissions, "view")) {
@@ -170,8 +175,8 @@ export default async function PanelPage() {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Genel Bakış"
-        description="Dernek yönetim sistemi ve operasyonel özet durumu."
+        title={t("overviewTitle")}
+        description={t("overviewDescription")}
       />
 
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -179,15 +184,15 @@ export default async function PanelPage() {
           <StatCard
             href="/evrak"
             icon={FileText}
-            category="Evrak Kayıt"
+            category={t("docsCategory")}
             primaryMetric={stats.open + stats.inProgress}
-            primaryLabel="Açık / İşlemde"
-            badge={stats.overdue > 0 ? { text: `${stats.overdue} Gecikmiş`, color: "danger" } : undefined}
+            primaryLabel={t("docsPrimary")}
+            badge={stats.overdue > 0 ? { text: t("overdueBadge", { count: stats.overdue }), color: "danger" } : undefined}
             danger={stats.overdue > 0}
             details={[
-              { label: "Bu ay gelen", value: stats.incomingThisMonth },
-              { label: "Bu ay giden", value: stats.outgoingThisMonth },
-              ...(stats.overdue > 0 ? [{ label: "Süresi geçmiş", value: stats.overdue, danger: true }] : []),
+              { label: t("incomingMonth"), value: stats.incomingThisMonth },
+              { label: t("outgoingMonth"), value: stats.outgoingThisMonth },
+              ...(stats.overdue > 0 ? [{ label: t("overdueLabel"), value: stats.overdue, danger: true }] : []),
             ]}
           />
         ) : null}
@@ -196,7 +201,7 @@ export default async function PanelPage() {
           <StatCard
             href="/toplantilar"
             icon={CalendarDays}
-            category="Toplantı & Tutanak"
+            category={t("meetingsCategory")}
             primaryMetric={
               meetingStats.nextMeeting
                 ? formatDate(meetingStats.nextMeeting.meetingDate)
@@ -204,20 +209,20 @@ export default async function PanelPage() {
             }
             primaryLabel={
               meetingStats.nextMeeting
-                ? `Sıradaki: ${meetingStats.nextMeeting.meetingNumber}`
-                : "Planlanan Toplantı"
+                ? t("nextLabel", { number: meetingStats.nextMeeting.meetingNumber })
+                : t("plannedLabel")
             }
             badge={
               meetingStats.overdueActionItems > 0
-                ? { text: `${meetingStats.overdueActionItems} Gecikmiş Görev`, color: "danger" }
+                ? { text: t("overdueTasksBadge", { count: meetingStats.overdueActionItems }), color: "danger" }
                 : undefined
             }
             danger={meetingStats.overdueActionItems > 0}
             details={[
-              { label: "Onay bekleyen", value: meetingStats.draftMinutesCount },
-              { label: "Açık görev", value: meetingStats.openActionItems },
+              { label: t("pendingMinutes"), value: meetingStats.draftMinutesCount },
+              { label: t("openTasksLabel"), value: meetingStats.openActionItems },
               ...(meetingStats.overdueActionItems > 0
-                ? [{ label: "Gecikmiş görev", value: meetingStats.overdueActionItems, danger: true }]
+                ? [{ label: t("overdueTasksLabel"), value: meetingStats.overdueActionItems, danger: true }]
                 : []),
             ]}
           />
@@ -226,13 +231,13 @@ export default async function PanelPage() {
         <StatCard
           href="/uyeler"
           icon={Users}
-          category="Üye Yönetimi"
+          category={t("membersCategory")}
           primaryMetric={memberStats ? memberStats.active : 0}
-          primaryLabel="Aktif Üye"
+          primaryLabel={t("activeMembers")}
           details={[
-            { label: "Bu ay yeni", value: memberStats ? memberStats.newThisMonth : 0 },
-            { label: "Pasif", value: memberStats ? memberStats.passive : 0 },
-            { label: "Ayrılan", value: memberStats ? memberStats.resigned : 0 },
+            { label: t("newThisMonth"), value: memberStats ? memberStats.newThisMonth : 0 },
+            { label: t("passive"), value: memberStats ? memberStats.passive : 0 },
+            { label: t("resigned"), value: memberStats ? memberStats.resigned : 0 },
           ]}
         />
       </div>
@@ -241,18 +246,18 @@ export default async function PanelPage() {
         {stats && stats.overdue > 0 ? (
           <AlertBanner
             icon={AlertTriangle}
-            message={`Son işlem tarihi geçmiş ${stats.overdue} adet evrak bekliyor.`}
+            message={t("docsOverdueAlert", { count: stats.overdue })}
             actionHref="/evrak?filter.overdue=1"
-            actionText="Geciken evrakları gör"
+            actionText={t("docsOverdueAction")}
           />
         ) : null}
 
         {meetingStats && meetingStats.overdueActionItems > 0 ? (
           <AlertBanner
             icon={AlertTriangle}
-            message={`Termini geçmiş ${meetingStats.overdueActionItems} adet toplantı görevi bulunuyor.`}
+            message={t("tasksOverdueAlert", { count: meetingStats.overdueActionItems })}
             actionHref="/toplantilar/gorevler?filter.overdue=1"
-            actionText="Geciken görevleri gör"
+            actionText={t("tasksOverdueAction")}
           />
         ) : null}
       </div>

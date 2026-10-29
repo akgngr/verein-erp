@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Button, Link, addToast } from "@heroui/react";
 import { ArrowDown, ArrowUp, MessageSquarePlus, Pencil, Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -36,6 +38,8 @@ export function AgendaTab({
   canDecide: boolean;
   agendaModalSlot?: React.ReactNode;
 }) {
+  const tCommon = useTranslations("common");
+  const t = useTranslations("meetings.agenda");
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<AgendaItemDetail | null>(null);
@@ -60,7 +64,7 @@ export function AgendaTab({
       addToast({ title: result.error, color: "danger" });
       return;
     }
-    addToast({ title: "Gündem maddesi silindi", color: "success" });
+    addToast({ title: t("deletedToast"), color: "success" });
     setDeleting(null);
     router.refresh();
   };
@@ -78,14 +82,14 @@ export function AgendaTab({
               setModalOpen(true);
             }}
           >
-            Madde ekle
+            {t("add")}
           </Button>
           {agendaModalSlot}
         </div>
       ) : null}
 
       {items.length === 0 ? (
-        <p className="text-small text-default-500">Gündem maddesi yok.</p>
+        <p className="text-small text-default-500">{t("empty")}</p>
       ) : (
         <ol className="flex flex-col gap-3">
           {items.map((item, index) => {
@@ -110,7 +114,7 @@ export function AgendaTab({
                         isIconOnly
                         size="sm"
                         variant="light"
-                        aria-label="Yukarı taşı"
+                        aria-label={t("moveUp")}
                         isDisabled={busy || index === 0}
                         onPress={() => move(item.id, "up")}
                       >
@@ -120,7 +124,7 @@ export function AgendaTab({
                         isIconOnly
                         size="sm"
                         variant="light"
-                        aria-label="Aşağı taşı"
+                        aria-label={t("moveDown")}
                         isDisabled={busy || index === items.length - 1}
                         onPress={() => move(item.id, "down")}
                       >
@@ -130,7 +134,7 @@ export function AgendaTab({
                         isIconOnly
                         size="sm"
                         variant="light"
-                        aria-label="Düzenle"
+                        aria-label={tCommon("edit")}
                         onPress={() => {
                           setEditingItem(item);
                           setModalOpen(true);
@@ -143,7 +147,7 @@ export function AgendaTab({
                         size="sm"
                         variant="light"
                         color="danger"
-                        aria-label="Sil"
+                        aria-label={tCommon("delete")}
                         onPress={() => setDeleting(item)}
                       >
                         <Trash2 className="h-4 w-4" />
@@ -177,7 +181,7 @@ export function AgendaTab({
                       className="inline-flex items-center gap-1 text-primary"
                     >
                       <MessageSquarePlus className="h-4 w-4" aria-hidden />
-                      Karar ekle
+                      {t("addDecision")}
                     </Link>
                   </div>
                 ) : null}
@@ -200,9 +204,9 @@ export function AgendaTab({
       <ConfirmDialog
         isOpen={deleting !== null}
         onOpenChange={(open) => !open && setDeleting(null)}
-        title="Gündem maddesini sil"
-        message={`"${deleting?.title ?? ""}" maddesi silinecek; sıralama yeniden numaralanır. Bu maddeye bağlı kararlar silinmez, gündem bağlantıları boşalır. Onaylıyor musunuz?`}
-        confirmLabel="Sil"
+        title={t("deleteItemAria")}
+        message={t("deleteNamedMessage", { title: deleting?.title ?? "" })}
+        confirmLabel={tCommon("delete")}
         confirmColor="danger"
         onConfirm={confirmDelete}
       />

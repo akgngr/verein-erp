@@ -23,7 +23,7 @@ export async function changeMemberStatusAction(input: unknown): Promise<ActionRe
     handler: async ({ input, user, audit }) => {
       const db = getDb();
       const member = await db.member.findFirst({ where: { id: input.id, deletedAt: null } });
-      if (!member) throw new ActionError("Üye bulunamadı.");
+      if (!member) throw new ActionError("members.errors.memberNotFound");
 
       const newStatus = input.status;
       let exitDate = member.exitDate;
@@ -34,8 +34,8 @@ export async function changeMemberStatusAction(input: unknown): Promise<ActionRe
       if (input.exitDate) {
         const parsed = parseDateOnly(input.exitDate);
         if (!parsed) {
-          throw new ActionError("Ayrılış tarihi geçersiz.", {
-            exitDate: ["Geçerli bir ayrılış tarihi girin."],
+          throw new ActionError("members.errors.exitDateInvalid", {
+            exitDate: ["members.validation.exitDateInvalid"],
           });
         }
         exitDate = parsed;
@@ -47,12 +47,12 @@ export async function changeMemberStatusAction(input: unknown): Promise<ActionRe
         } else {
           const parsed = parseDateOnly(input.cancellationReceivedAt);
           if (!parsed) {
-            throw new ActionError("Fesih bildirimi tarihi geçersiz.", {
+            throw new ActionError("members.errors.noticeDateInvalid", {
               cancellationReceivedAt: ["Geçerli bir tarih girin."],
             });
           }
           if (exitDate && parsed.getTime() > exitDate.getTime()) {
-            throw new ActionError("Fesih bildirimi tarihi ayrılış tarihinden sonra olamaz.", {
+            throw new ActionError("members.errors.noticeAfterExit", {
               cancellationReceivedAt: ["Ayrılış tarihinden sonra olamaz."],
             });
           }

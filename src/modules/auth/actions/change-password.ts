@@ -20,13 +20,13 @@ export async function changePasswordAction(input: unknown) {
       const db = getDb();
       const dbUser = await db.user.findUnique({ where: { id: user.id } });
       if (!dbUser || !dbUser.isActive) {
-        throw new ActionError("Oturumunuz geçersiz. Lütfen tekrar giriş yapın.");
+        throw new ActionError("auth.errors.sessionInvalid");
       }
 
       const currentOk = await verifyPassword(input.currentPassword, dbUser.passwordHash);
       if (!currentOk) {
-        throw new ActionError("Mevcut parolanız hatalı.", {
-          currentPassword: ["Mevcut parolanız hatalı."],
+        throw new ActionError("auth.errors.currentPasswordWrong", {
+          currentPassword: ["auth.errors.currentPasswordWrong"],
         });
       }
 

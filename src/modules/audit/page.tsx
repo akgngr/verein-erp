@@ -1,6 +1,10 @@
+import { getTranslations } from "next-intl/server";
 import { AuditLogView } from "./ui";
 
-export const metadata = { title: "Denetim Kaydı" };
+export async function generateMetadata() {
+  const t = await getTranslations("audit.meta");
+  return { title: t("list") };
+}
 
 export default async function DenetimKaydiPage({
   searchParams,

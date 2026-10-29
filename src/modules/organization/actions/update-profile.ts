@@ -33,9 +33,7 @@ export async function updateOrganizationProfileAction(input: unknown): Promise<A
         // Eşzamanlılık: istemcinin gördüğü updatedAt ile sunucudaki aynı olmalı
         // (ilk kayıtta satır yoktur, karşılaştırma yapılmaz).
         if (input.updatedAt && input.updatedAt !== existing.updatedAt.toISOString()) {
-          throw new ActionError(
-            "Kayıt bu arada başka bir kullanıcı tarafından güncellendi. Sayfayı yenileyip tekrar deneyin.",
-          );
+          throw new ActionError("common.errors.staleRecord");
         }
         await db.organizationProfile.update({ where: { id: "singleton" }, data });
       } else {

@@ -1,17 +1,18 @@
 "use client";
 
 import { useEffect, useState, useTransition } from "react";
+import { FORM_DRAWER_PROPS } from "@/shared/components/forms/form-drawer";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 import {
   Button,
   Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerFooter,
+  DrawerHeader,
   Textarea,
 } from "@heroui/react";
 import { ChevronDown } from "lucide-react";
@@ -82,20 +83,20 @@ export function InventoryFormModal({ isOpen, onClose, item = null }: InventoryFo
   });
 
   return (
-    <Modal
+    <Drawer
       isOpen={isOpen}
       onOpenChange={(open) => {
         if (!open) handleClose();
       }}
+      {...FORM_DRAWER_PROPS}
       size="2xl"
-      scrollBehavior="inside"
       isDismissable={!isPending}
     >
-      <ModalContent>
-        <form onSubmit={onSubmit} noValidate>
-          <ModalHeader>{isEdit ? t("modal.editTitle") : t("modal.createTitle")}</ModalHeader>
+      <DrawerContent>
+        <form onSubmit={onSubmit} noValidate className="flex h-full min-h-0 flex-col">
+          <DrawerHeader>{isEdit ? t("modal.editTitle") : t("modal.createTitle")}</DrawerHeader>
 
-          <ModalBody>
+          <DrawerBody>
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <Input
                 {...register("name")}
@@ -231,18 +232,18 @@ export function InventoryFormModal({ isOpen, onClose, item = null }: InventoryFo
                 {submitError}
               </p>
             ) : null}
-          </ModalBody>
+          </DrawerBody>
 
-          <ModalFooter>
+          <DrawerFooter>
             <Button variant="light" onPress={handleClose} isDisabled={isPending}>
               {t("actions.cancel")}
             </Button>
             <Button color="primary" type="submit" isLoading={isPending}>
               {isEdit ? t("actions.save") : t("actions.create")}
             </Button>
-          </ModalFooter>
+          </DrawerFooter>
         </form>
-      </ModalContent>
-    </Modal>
+      </DrawerContent>
+    </Drawer>
   );
 }

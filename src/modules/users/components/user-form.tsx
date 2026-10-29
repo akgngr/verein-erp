@@ -1,8 +1,10 @@
 "use client";
 
+import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addToast, Button, Card, CardBody } from "@heroui/react";
+import { addToast, Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -12,7 +14,7 @@ import { FormInput } from "@/shared/components/forms/form-input";
 import { FormSelect } from "@/shared/components/forms/form-select";
 import { FormSwitch } from "@/shared/components/forms/form-switch";
 import { SubmitButton } from "@/shared/components/forms/submit-button";
-import { ROLE_OPTIONS, type Role } from "@/shared/roles";
+import { ROLES, type Role } from "@/shared/roles";
 
 import { createUserAction } from "../actions/create-user";
 import { updateUserAction } from "../actions/update-user";
@@ -24,14 +26,18 @@ import {
   type UserUpdateInput,
 } from "../schemas/user";
 
-const ROLE_SELECT_OPTIONS = ROLE_OPTIONS.map((option) => ({
-  value: option.value as string,
-  label: option.label,
-}));
+function useRoleSelectOptions() {
+  const tRoles = useTranslations("roles");
+  return ROLES.map((role) => ({ value: role as string, label: tRoles(role) }));
+}
 
 /** Yeni kullanıcı formu (11.1). */
 export function UserCreateForm() {
+  const t = useTranslations("users.form");
+  const tCommon = useTranslations("common");
   const router = useRouter();
+  const closeDrawer = useFormDrawerClose();
+  const roleOptions = useRoleSelectOptions();
   const [formError, setFormError] = useState<string | null>(null);
   const form = useForm<UserCreateInput>({
     resolver: zodResolver(userCreateSchema),
@@ -47,38 +53,42 @@ export function UserCreateForm() {
       setFormError(applyActionResult(result, form.setError));
       return;
     }
-    addToast({ title: "Kullanıcı oluşturuldu.", color: "success" });
-    router.push(`/ayarlar/kullanicilar/${result.data.id}`);
-    router.refresh();
+    addToast({ title: t("created"), color: "success" });
+    if (closeDrawer) {
+      closeDrawer();
+    } else {
+      router.push(`/ayarlar/kullanicilar/${result.data.id}`);
+      router.refresh();
+    }
   });
 
   return (
     <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
-      <FormInput name="name" label="Ad Soyad" control={form.control} isRequired />
+      <FormInput name="name" label={t("name")} control={form.control} isRequired />
       <FormInput
         name="email"
-        label="E-posta"
+        label={t("email")}
         control={form.control}
         type="email"
         isRequired
-        placeholder="ornek@dernek.org"
+        placeholder={tCommon("emailPlaceholder")}
       />
-      <FormSelect name="role" label="Rol" control={form.control} options={ROLE_SELECT_OPTIONS} isRequired />
+      <FormSelect name="role" label={t("role")} control={form.control} options={roleOptions} isRequired />
       <RolePermissionsPreview role={selectedRole} />
       <FormInput
         name="password"
-        label="Geçici parola"
+        label={t("tempPassword")}
         control={form.control}
         type="password"
         autoComplete="new-password"
         isRequired
-        description="En az 10 karakter; 1 büyük harf, 1 küçük harf ve 1 rakam içermelidir. Kullanıcı ilk girişte yeni parola belirleyecektir."
+        description={t("tempPasswordHint")}
       />
       <FormErrorSummary message={formError} />
       <div className="flex items-center gap-2">
-        <SubmitButton isSubmitting={form.formState.isSubmitting}>Oluştur</SubmitButton>
-        <Button variant="light" onPress={() => router.push("/ayarlar/kullanicilar")}>
-          Vazgeç
+        <SubmitButton isSubmitting={form.formState.isSubmitting}>{tCommon("create")}</SubmitButton>
+        <Button variant="light" onPress={() => (closeDrawer ? closeDrawer() : router.push("/ayarlar/kullanicilar"))}>
+          {tCommon("cancel")}
         </Button>
       </div>
     </form>
@@ -95,7 +105,11 @@ export type UserEditValues = {
 
 /** Düzenleme formu (11.1): ad, e-posta, rol, aktif/pasif. Parola sıfırlama ayrı eylemdir. */
 export function UserEditForm({ user }: { user: UserEditValues }) {
+  const t = useTranslations("users.form");
+  const tCommon = useTranslations("common");
   const router = useRouter();
+  const closeDrawer = useFormDrawerClose();
+  const roleOptions = useRoleSelectOptions();
   const [formError, setFormError] = useState<string | null>(null);
   const form = useForm<UserUpdateInput>({
     resolver: zodResolver(userUpdateSchema),
@@ -111,28 +125,32 @@ export function UserEditForm({ user }: { user: UserEditValues }) {
       setFormError(applyActionResult(result, form.setError));
       return;
     }
-    addToast({ title: "Kullanıcı güncellendi.", color: "success" });
-    router.push("/ayarlar/kullanicilar");
-    router.refresh();
+    addToast({ title: t("updated"), color: "success" });
+    if (closeDrawer) {
+      closeDrawer();
+    } else {
+      router.push("/ayarlar/kullanicilar");
+      router.refresh();
+    }
   });
 
   return (
     <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
-      <FormInput name="name" label="Ad Soyad" control={form.control} isRequired />
-      <FormInput name="email" label="E-posta" control={form.control} type="email" isRequired />
-      <FormSelect name="role" label="Rol" control={form.control} options={ROLE_SELECT_OPTIONS} isRequired />
+      <FormInput name="name" label={t("name")} control={form.control} isRequired />
+      <FormInput name="email" label={t("email")} control={form.control} type="email" isRequired />
+      <FormSelect name="role" label={t("role")} control={form.control} options={roleOptions} isRequired />
       <RolePermissionsPreview role={selectedRole} />
       <FormSwitch
         name="isActive"
-        label="Hesap aktif"
+        label={t("isActive")}
         control={form.control}
-        description="Pasife alınan kullanıcı oturumu geçerli olsa bile işlem yapamaz."
+        description={t("isActiveHint")}
       />
       <FormErrorSummary message={formError} />
       <div className="flex items-center gap-2">
-        <SubmitButton isSubmitting={form.formState.isSubmitting}>Kaydet</SubmitButton>
-        <Button variant="light" onPress={() => router.push("/ayarlar/kullanicilar")}>
-          Vazgeç
+        <SubmitButton isSubmitting={form.formState.isSubmitting}>{tCommon("save")}</SubmitButton>
+        <Button variant="light" onPress={() => (closeDrawer ? closeDrawer() : router.push("/ayarlar/kullanicilar"))}>
+          {tCommon("cancel")}
         </Button>
       </div>
     </form>
@@ -141,9 +159,5 @@ export function UserEditForm({ user }: { user: UserEditValues }) {
 
 /** Sayfa düzeyinde kart sarmalayıcı (create/edit view'lar ortak kullanır). */
 export function UserFormCard({ children }: { children: React.ReactNode }) {
-  return (
-    <Card shadow="sm" className="max-w-2xl">
-      <CardBody className="gap-2 p-6">{children}</CardBody>
-    </Card>
-  );
+  return <FormSurface className="max-w-2xl">{children}</FormSurface>;
 }

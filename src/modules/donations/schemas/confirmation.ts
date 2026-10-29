@@ -19,9 +19,9 @@ export const issueCollectiveDonationSchema = z.object({
   kind: z.literal("COLLECTIVE"),
   content: z.literal("DONATION"),
   donorId: z.string().min(1),
-  periodFrom: z.string().trim().regex(DATE_ONLY, "Geçerli bir dönem başlangıcı girin."),
-  periodTo: z.string().trim().regex(DATE_ONLY, "Geçerli bir dönem sonu girin."),
-  donationIds: z.array(z.string().min(1)).min(1, "En az bir bağış seçin.").max(200),
+  periodFrom: z.string().trim().regex(DATE_ONLY, "donations.validation.periodStartInvalid"),
+  periodTo: z.string().trim().regex(DATE_ONLY, "donations.validation.periodEndInvalid"),
+  donationIds: z.array(z.string().min(1)).min(1, "donations.validation.selectDonation").max(200),
 });
 
 /** Aidat bildirimi (§ 11 md. 9 md. 3): tek üye, takvim yılı. */
@@ -32,7 +32,12 @@ export const issueMembershipFeeSchema = z.object({
   year: z.coerce.number().int().min(2000).max(2100),
 });
 
-export const issueConfirmationSchema = z.discriminatedUnion("kind", [
+/**
+ * KARAR: discriminatedUnion("kind") kullanılamaz — aidat şeması da kind "SINGLE"
+ * kabul eder (Zod "Duplicate discriminator value" ile her çağrıda düşer). Şemalar
+ * content + kind literal'leriyle zaten ayrışır; düz union yeterlidir.
+ */
+export const issueConfirmationSchema = z.union([
   issueSingleDonationSchema,
   issueCollectiveDonationSchema,
   issueMembershipFeeSchema,
@@ -44,8 +49,8 @@ export const cancelConfirmationSchema = z.object({
   reason: z
     .string()
     .trim()
-    .min(5, "İptal nedeni en az 5 karakter olmalıdır.")
-    .max(300, "İptal nedeni en fazla 300 karakter olabilir."),
+    .min(5, "donations.validation.cancelReasonMin")
+    .max(300, "donations.validation.cancelReasonMax"),
 });
 
 /** Yıllık toplu üretim (§ 11 md. 9 md. 4): alıcı başına bir bildirim. */
@@ -55,6 +60,9 @@ export const issueBatchSchema = z.object({
   /** Bağış için donor id'leri; aidat için member id'leri. */
   recipientIds: z.array(z.string().min(1)).min(1).max(200),
 });
+
+/** "Yerine yenisini oluştur": iptal edilmiş bildirim kimliği. */
+export const reissueConfirmationSchema = z.object({ id: z.string().min(1) });
 
 export type IssueConfirmationInput = z.infer<typeof issueConfirmationSchema>;
 export type CancelConfirmationInput = z.infer<typeof cancelConfirmationSchema>;

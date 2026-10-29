@@ -27,7 +27,7 @@ async function loadMeetingForUpdate(meetingId: string) {
     where: { id: meetingId, deletedAt: null },
     select: { id: true, meetingNumber: true, status: true, deletedAt: true },
   });
-  if (!meeting) throw new ActionError("Toplantı bulunamadı.");
+  if (!meeting) throw new ActionError("meetings.errors.meetingNotFound");
   return meeting;
 }
 
@@ -60,13 +60,13 @@ export async function addAttendeeUsersAction(
         if (existingUserIds.has(userId)) continue; // bir kullanıcı toplantıya bir kez eklenir
         const label = activeById.get(userId);
         if (!label) {
-          throw new ActionError("Seçilen kullanıcı bulunamadı veya pasif durumda.");
+          throw new ActionError("meetings.errors.userNotFound");
         }
         if (input.role === "CHAIRPERSON" && hasChairperson) {
-          throw new ActionError("Bu toplantıda zaten bir başkan var.");
+          throw new ActionError("meetings.errors.chairExists");
         }
         if (input.role === "SECRETARY" && hasSecretary) {
-          throw new ActionError("Bu toplantıda zaten bir sekreter var.");
+          throw new ActionError("meetings.errors.secretaryExists");
         }
         // KARAR: aynı toplu ekleme içinde de tek başkan/sekreter kuralı korunur.
         if (input.role === "CHAIRPERSON") {
@@ -77,7 +77,7 @@ export async function addAttendeeUsersAction(
         rows.push({ userId, name: label, role: input.role });
       }
       if (rows.length === 0) {
-        throw new ActionError("Seçilen kullanıcılar bu toplantıda zaten mevcut.");
+        throw new ActionError("meetings.errors.usersAlreadyAdded");
       }
 
       await db.meetingAttendee.createMany({
@@ -155,7 +155,7 @@ export async function updateAttendeeAction(
           meeting: { select: { id: true, meetingNumber: true, status: true, deletedAt: true } },
         },
       });
-      if (!attendee) throw new ActionError("Katılımcı bulunamadı.");
+      if (!attendee) throw new ActionError("meetings.errors.attendeeNotFound");
       assertMeetingEditable(attendee.meeting, "content", user.role, meetingsPermissions);
 
       // KARAR: en fazla bir Başkan ve bir Sekreter — başka katılımcıda aynı rol
@@ -171,8 +171,8 @@ export async function updateAttendeeAction(
         if (clash) {
           throw new ActionError(
             input.role === "CHAIRPERSON"
-              ? "Bu toplantıda zaten bir başkan var."
-              : "Bu toplantıda zaten bir sekreter var.",
+              ? "meetings.errors.chairExists"
+              : "meetings.errors.secretaryExists",
           );
         }
       }
@@ -216,7 +216,7 @@ export async function removeAttendeeAction(
           meeting: { select: { meetingNumber: true, status: true, deletedAt: true } },
         },
       });
-      if (!attendee) throw new ActionError("Katılımcı bulunamadı.");
+      if (!attendee) throw new ActionError("meetings.errors.attendeeNotFound");
       assertMeetingEditable(attendee.meeting, "content", user.role, meetingsPermissions);
 
       await db.meetingAttendee.delete({ where: { id: attendee.id } });

@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Button, addToast } from "@heroui/react";
 import { Download, Eye, Paperclip, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -32,6 +34,8 @@ export function FileList({
   files: DocumentFileItem[];
   canUpdate: boolean;
 }) {
+  const tCommon = useTranslations("common");
+  const t = useTranslations("documents.files");
   const router = useRouter();
   const [deleting, setDeleting] = useState<DocumentFileItem | null>(null);
 
@@ -42,13 +46,13 @@ export function FileList({
       addToast({ title: result.error, color: "danger" });
       return;
     }
-    addToast({ title: "Dosya silindi.", color: "success" });
+    addToast({ title: t("deletedToast"), color: "success" });
     setDeleting(null);
     router.refresh();
   };
 
   if (files.length === 0) {
-    return <p className="text-small text-default-500">Bu evrağa henüz dosya eklenmemiş.</p>;
+    return <p className="text-small text-default-500">{t("empty")}</p>;
   }
 
   return (
@@ -78,7 +82,7 @@ export function FileList({
                   variant="flat"
                   startContent={<Download className="h-4 w-4" aria-hidden />}
                 >
-                  İndir
+                  {t("download")}
                 </Button>
                 {previewable ? (
                   <Button
@@ -90,7 +94,7 @@ export function FileList({
                     variant="light"
                     startContent={<Eye className="h-4 w-4" aria-hidden />}
                   >
-                    Önizle
+                    {t("preview")}
                   </Button>
                 ) : null}
                 {canUpdate ? (
@@ -99,7 +103,7 @@ export function FileList({
                     size="sm"
                     variant="light"
                     color="danger"
-                    aria-label={`${file.originalName} dosyasını sil`}
+                    aria-label={t("deleteAria", { name: file.originalName })}
                     onPress={() => setDeleting(file)}
                   >
                     <Trash2 className="h-4 w-4" aria-hidden />
@@ -114,9 +118,9 @@ export function FileList({
       <ConfirmDialog
         isOpen={deleting !== null}
         onOpenChange={(open) => !open && setDeleting(null)}
-        title="Dosyayı sil"
-        message={`"${deleting?.originalName ?? ""}" dosyası kayıttan kaldırılacak. Diskteki dosya korunur. Onaylıyor musunuz?`}
-        confirmLabel="Sil"
+        title={t("deleteTitle")}
+        message={t("deleteMessage", { name: deleting?.originalName ?? "" })}
+        confirmLabel={tCommon("delete")}
         confirmColor="danger"
         onConfirm={confirmDelete}
       />

@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Button, addToast } from "@heroui/react";
 import { Download, Eye, Paperclip, Trash2, Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -40,6 +42,8 @@ export function FilesTab({
   maxMb: number;
   allowedExtensions: readonly string[];
 }) {
+  const tCommon = useTranslations("common");
+  const t = useTranslations("meetings.files");
   const router = useRouter();
   const inputRef = useRef<HTMLInputElement>(null);
   const [uploading, setUploading] = useState(false);
@@ -62,16 +66,16 @@ export function FilesTab({
         const json = (await response.json()) as { ok: boolean; error?: string };
         if (!response.ok || !json.ok) {
           failed += 1;
-          addToast({ title: json.error ?? "Dosya yüklenemedi.", color: "danger" });
+          addToast({ title: json.error ?? t("uploadFailed"), color: "danger" });
         }
       } catch {
         failed += 1;
-        addToast({ title: "Dosya yüklenemedi.", color: "danger" });
+        addToast({ title: t("uploadFailed"), color: "danger" });
       }
     }
     setUploading(false);
     if (failed === 0 && list.length > 0) {
-      addToast({ title: `${list.length} dosya yüklendi`, color: "success" });
+      addToast({ title: t("uploadedCountToast", { count: list.length }), color: "success" });
     }
     router.refresh();
   };
@@ -83,7 +87,7 @@ export function FilesTab({
       addToast({ title: result.error, color: "danger" });
       return;
     }
-    addToast({ title: "Dosya silindi.", color: "success" });
+    addToast({ title: t("deletedToast"), color: "success" });
     setDeleting(null);
     router.refresh();
   };
@@ -117,12 +121,11 @@ export function FilesTab({
           <Upload className="h-6 w-6 text-default-400" aria-hidden />
           <p className="text-small">
             {limitReached
-              ? `En fazla ${MAX_FILES_PER_MEETING} dosya eklenebilir.`
-              : "Dosyaları buraya sürükleyin ya da seçmek için tıklayın"}
+              ? t("limitReached", { count: MAX_FILES_PER_MEETING })
+              : t("dropOrClick")}
           </p>
           <p className="text-tiny text-default-400">
-            İzinli türler: {allowedExtensions.join(", ")} — Dosya başına en fazla {maxMb} MB —
-            Toplantı başına en fazla {MAX_FILES_PER_MEETING} dosya
+            {t("rulesLine", { types: allowedExtensions.join(", "), maxMb, maxFiles: MAX_FILES_PER_MEETING })}
           </p>
           <input
             ref={inputRef}
@@ -135,12 +138,12 @@ export function FilesTab({
               event.target.value = "";
             }}
           />
-          {uploading ? <p className="text-small text-primary">Yükleniyor…</p> : null}
+          {uploading ? <p className="text-small text-primary">{t("uploading")}</p> : null}
         </div>
       ) : null}
 
       {files.length === 0 ? (
-        <p className="text-small text-default-500">Bu toplantıya henüz dosya eklenmemiş.</p>
+        <p className="text-small text-default-500">{t("emptyMeeting")}</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {files.map((file) => {
@@ -172,7 +175,7 @@ export function FilesTab({
                     variant="flat"
                     startContent={<Download className="h-4 w-4" aria-hidden />}
                   >
-                    İndir
+                    {t("download")}
                   </Button>
                   {previewable ? (
                     <Button
@@ -184,7 +187,7 @@ export function FilesTab({
                       variant="light"
                       startContent={<Eye className="h-4 w-4" aria-hidden />}
                     >
-                      Önizle
+                      {t("preview")}
                     </Button>
                   ) : null}
                   {canDeleteFiles ? (
@@ -193,7 +196,7 @@ export function FilesTab({
                       size="sm"
                       variant="light"
                       color="danger"
-                      aria-label={`${file.originalName} dosyasını sil`}
+                      aria-label={t("deleteNamedAria", { name: file.originalName })}
                       onPress={() => setDeleting(file)}
                     >
                       <Trash2 className="h-4 w-4" aria-hidden />
@@ -209,9 +212,9 @@ export function FilesTab({
       <ConfirmDialog
         isOpen={deleting !== null}
         onOpenChange={(open) => !open && setDeleting(null)}
-        title="Dosyayı sil"
-        message={`"${deleting?.originalName ?? ""}" dosyası toplantıdan kaldırılacak. Diskteki dosya korunur. Onaylıyor musunuz?`}
-        confirmLabel="Sil"
+        title={t("deleteAction")}
+        message={t("deleteNamedMessage", { name: deleting?.originalName ?? "" })}
+        confirmLabel={tCommon("delete")}
         confirmColor="danger"
         onConfirm={confirmDelete}
       />

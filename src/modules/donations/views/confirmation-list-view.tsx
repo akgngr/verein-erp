@@ -53,7 +53,7 @@ export async function ConfirmationListView({
         actions={
           <div className="flex flex-wrap gap-2">
             <LinkButton href="/bagislar/bildirimler/olustur" variant="flat">
-              Bildirim oluştur
+              {t("create")}
             </LinkButton>
             <LinkButton href="/api/donations/confirmations/export" variant="bordered" startIcon={<Download className="h-4 w-4" />}>
               {t("actions.export")}
@@ -74,7 +74,7 @@ export async function ConfirmationListView({
       />
       <div className="mt-3 text-tiny text-default-400">
         <FileDown className="mr-1 inline h-3.5 w-3.5" aria-hidden />
-        Toplu yazdırma: liste satırlarını seçip PDF düğmesini kullanın (§ 13, max 100).
+        {t("batchHint")}
       </div>
     </div>
   );

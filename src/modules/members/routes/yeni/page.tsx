@@ -1,12 +1,6 @@
-import { getTranslations } from "next-intl/server";
-import { MemberCreateView } from "../../ui";
+import { redirect } from "next/navigation";
 
-export async function generateMetadata() {
-  const t = await getTranslations("meta");
-  return { title: t("uyeYeni") };
-}
-
-/** Yeni üye — ince rota. */
+/** Eski adres: yeni üye formu artık listenin sağ çekmecesinde açılır. */
 export default function YeniUyePage() {
-  return <MemberCreateView />;
+  redirect("/uyeler?yeni");
 }

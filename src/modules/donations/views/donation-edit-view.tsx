@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
-import { PageHeader } from "@/shared/components/ui/page-header";
+import { FormDrawer } from "@/shared/components/forms/form-drawer";
 import { listActiveCategoryOptions } from "@/modules/accounting/server";
 
 import { getDonation } from "../queries/get-donation";
@@ -17,7 +17,7 @@ export async function DonationEditView({ id }: { id: string }) {
   try {
     user = await requirePermission(donationsPermissions, "update");
   } catch (error) {
-    if (error instanceof ForbiddenError) return <AccessDenied />;
+    if (error instanceof ForbiddenError) return <FormDrawer title="">{<AccessDenied />}</FormDrawer>;
     throw error;
   }
   void user;
@@ -42,8 +42,7 @@ export async function DonationEditView({ id }: { id: string }) {
   const blocked = donation.reversedAt || donation.hasActiveConfirmationItem;
 
   return (
-    <div>
-      <PageHeader title={t("editTitle")} description={donation.donationNumber} />
+    <FormDrawer title={t("editTitle")} description={donation.donationNumber}>
       {blocked ? (
         <div className="max-w-3xl rounded-medium border border-warning-300 bg-warning-50 px-4 py-3 text-small text-warning-700">
           {t("editBlocked")}
@@ -78,6 +77,6 @@ export async function DonationEditView({ id }: { id: string }) {
           }}
         />
       )}
-    </div>
+    </FormDrawer>
   );
 }

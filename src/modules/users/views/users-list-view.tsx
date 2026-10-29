@@ -1,10 +1,12 @@
 import { Plus } from "lucide-react";
+import { FormDrawerButton } from "@/shared/components/forms/form-drawer";
+import { UserCreateView } from "./user-create-view";
+import { UserEditView } from "./user-edit-view";
 import { getTranslations } from "next-intl/server";
 
 import { requirePermission, ForbiddenError } from "@/modules/auth/server";
 import type { SessionUser } from "@/modules/auth";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
-import { LinkButton } from "@/shared/components/ui/link-button";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { can } from "@/shared/permissions/define";
 import type { RawSearchParams } from "@/shared/list-params";
@@ -30,7 +32,8 @@ export async function UsersListView({
   }
 
   const t = await getTranslations("users");
-  const params = parseListParams(await searchParams, {
+  const raw = await searchParams;
+  const params = parseListParams(raw, {
     sortableFields: ["name", "email", "role", "isActive", "lastLoginAt", "createdAt"],
     defaultSort: "name",
     filterKeys: ["role", "status"],
@@ -51,9 +54,9 @@ export async function UsersListView({
         description={t("pageDescription")}
         actions={
           canCreate ? (
-            <LinkButton href="/ayarlar/kullanicilar/yeni" startIcon={<Plus className="h-4 w-4" />}>
+            <FormDrawerButton param="yeni" startIcon={<Plus className="h-4 w-4" />}>
               {t("newUser")}
-            </LinkButton>
+            </FormDrawerButton>
           ) : undefined
         }
       />
@@ -75,6 +78,8 @@ export async function UsersListView({
           <RolePermissionsMatrix users={rows} roleCounts={roleCounts} />
         }
       />
+      {canCreate && raw.yeni !== undefined ? <UserCreateView /> : null}
+      {canUpdate && typeof raw.duzenle === "string" && raw.duzenle ? <UserEditView userId={raw.duzenle} /> : null}
     </div>
   );
 }

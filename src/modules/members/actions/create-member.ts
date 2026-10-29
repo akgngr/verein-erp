@@ -35,8 +35,8 @@ export async function createMemberAction(
 
       const joinDate = parseDateOnly(input.joinDate);
       if (!joinDate) {
-        throw new ActionError("Katılım tarihi geçersiz.", {
-          joinDate: ["Geçerli bir katılım tarihi girin."],
+        throw new ActionError("members.errors.joinDateInvalid", {
+          joinDate: ["members.validation.joinDateInvalid"],
         });
       }
       const birthDate = input.birthDate ? parseDateOnly(input.birthDate) : null;

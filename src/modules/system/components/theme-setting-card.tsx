@@ -19,28 +19,22 @@ export function ThemeSettingCard() {
   }[] = [
     {
       key: "light",
-      title: t.has("themeSection.light") ? t("themeSection.light") : "Açık Tema",
-      description: t.has("themeSection.lightDesc")
-        ? t("themeSection.lightDesc")
-        : "Aydınlık ve yüksek kontrastlı standart arayüz",
+      title: t("themeSection.light"),
+      description: t("themeSection.lightDesc"),
       icon: Sun,
       iconColor: "text-amber-500 bg-amber-500/10",
     },
     {
       key: "dark",
-      title: t.has("themeSection.dark") ? t("themeSection.dark") : "Koyu Tema",
-      description: t.has("themeSection.darkDesc")
-        ? t("themeSection.darkDesc")
-        : "Göz yormayan koyu arka plan ve yumuşak renkler",
+      title: t("themeSection.dark"),
+      description: t("themeSection.darkDesc"),
       icon: Moon,
       iconColor: "text-blue-500 bg-blue-500/10",
     },
     {
       key: "system",
-      title: t.has("themeSection.system") ? t("themeSection.system") : "Sistem Teması",
-      description: t.has("themeSection.systemDesc")
-        ? t("themeSection.systemDesc")
-        : "Cihazınızın işletim sistemi temasıyla otomatik senkronize",
+      title: t("themeSection.system"),
+      description: t("themeSection.systemDesc"),
       icon: Laptop,
       iconColor: "text-purple-500 bg-purple-500/10",
     },

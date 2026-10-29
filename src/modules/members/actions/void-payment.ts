@@ -28,8 +28,8 @@ export async function voidPaymentAction(input: unknown): Promise<ActionResult> {
         where: { id: input.id },
         include: { member: { select: { membershipNumber: true } } },
       });
-      if (!payment) throw new ActionError("Ödeme bulunamadı.");
-      if (payment.voidedAt) throw new ActionError("Bu ödeme zaten iptal edilmiş.");
+      if (!payment) throw new ActionError("members.errors.paymentNotFound");
+      if (payment.voidedAt) throw new ActionError("members.errors.paymentAlreadyVoided");
 
       const voidedAt = new Date();
       const voidedByLabel = buildUserLabel(user.name, user.email);

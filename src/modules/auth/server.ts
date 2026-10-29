@@ -16,6 +16,7 @@ import {
   UnauthorizedError,
 } from "./errors";
 import type { SessionUser } from "./types";
+import { getMessageTranslator } from "@/shared/i18n/translate-message";
 
 // Hata sınıfları: view'lar ForbiddenError'ı yakalayıp <AccessDenied /> gösterir.
 export { ActionError, ForbiddenError, UnauthorizedError } from "./errors";
@@ -55,7 +56,7 @@ export async function requireUser(): Promise<SessionUser> {
 
   const dbUser = await getDb().user.findUnique({ where: { id: session.user.id } });
   if (!dbUser || !dbUser.isActive) {
-    throw new UnauthorizedError("Oturumunuz geçersiz veya hesabınız pasif duruma alınmış.");
+    throw new UnauthorizedError("auth.errors.sessionInvalid");
   }
 
   return {
@@ -115,6 +116,10 @@ export function createAction<I, T>(
   config: ActionConfig<I, T>,
 ): (rawInput: unknown) => Promise<ActionResult<T>> {
   return async function runAction(rawInput: unknown): Promise<ActionResult<T>> {
+    const translate = await getMessageTranslator();
+    const translateFields = (fields?: Record<string, string[]>) =>
+      fields &&
+      Object.fromEntries(Object.entries(fields).map(([key, messages]) => [key, messages.map((m) => translate(m))]));
     try {
       const user = config.permission
         ? await requirePermission(config.permission.definition, config.permission.action)
@@ -127,7 +132,7 @@ export function createAction<I, T>(
           const key = issue.path.join(".") || "_form";
           (fieldErrors[key] ??= []).push(issue.message);
         }
-        return { ok: false, error: "Lütfen formdaki hataları düzeltin.", fieldErrors };
+        return { ok: false, error: translate("common.errors.formInvalid"), fieldErrors: translateFields(fieldErrors) };
       }
 
       const userLabel = buildUserLabel(user.name, user.email);
@@ -139,19 +144,23 @@ export function createAction<I, T>(
       return { ok: true, data };
     } catch (error) {
       if (error instanceof UnauthorizedError) {
-        return { ok: false, error: "Oturumunuz sona erdi. Lütfen tekrar giriş yapın." };
+        return { ok: false, error: translate("common.errors.sessionExpired") };
       }
       if (error instanceof ForbiddenError) {
-        return { ok: false, error: "Bu işlem için yetkiniz yok." };
+        return { ok: false, error: translate("common.errors.forbidden") };
       }
       if (error instanceof ActionError) {
-        return { ok: false, error: error.message, fieldErrors: error.fieldErrors };
+        return {
+          ok: false,
+          error: translate(error.message, error.values),
+          fieldErrors: translateFields(error.fieldErrors),
+        };
       }
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
-        return { ok: false, error: "Bu kayıt zaten mevcut." };
+        return { ok: false, error: translate("common.errors.duplicate") };
       }
       console.error("[action] Beklenmeyen hata:", error);
-      return { ok: false, error: "Beklenmeyen bir hata oluştu." };
+      return { ok: false, error: translate("common.errors.unexpected") };
     }
   };
 }

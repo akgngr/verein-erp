@@ -6,14 +6,14 @@ export const categoryCreateSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(2, "Kategori adı en az 2 karakter olmalıdır.")
-    .max(150, "Kategori adı en fazla 150 karakter olabilir."),
+    .min(2, "accounting.validation.categoryNameMin")
+    .max(150, "accounting.validation.categoryNameMax"),
   direction: z.enum(["INCOME", "EXPENSE"]),
   sphere: z.enum(["IDEELL", "ASSET_MANAGEMENT", "PURPOSE_OPERATION", "ECONOMIC_OPERATION"]),
   helpText: z
     .string()
     .trim()
-    .max(500, "Yardım metni en fazla 500 karakter olabilir.")
+    .max(500, "accounting.validation.helpMax")
     .optional()
     .transform((value) => (value ? value : undefined)),
 });

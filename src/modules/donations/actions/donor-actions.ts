@@ -1,5 +1,7 @@
 "use server";
 
+import { getMessageTranslator } from "@/shared/i18n/translate-message";
+
 import { getDb } from "@/shared/db";
 import { buildUserLabel } from "@/shared/utils";
 import type { ActionResult } from "@/shared/types/action";
@@ -52,7 +54,7 @@ export async function createDonorAction(
       if (input.copyFromMemberId) {
         memberCopy = await getMemberAddressBlock(input.copyFromMemberId);
         if (!memberCopy) {
-          throw new ActionError("Üye bulunamadı veya adresi eksik.", {
+          throw new ActionError("donations.errors.memberAddressMissing", {
             copyFromMemberId: ["Üye adresi tam değil."],
           });
         }
@@ -112,7 +114,7 @@ export async function updateDonorAction(input: unknown): Promise<ActionResult> {
     handler: async ({ input, user, audit }) => {
       const db = getDb();
       const existing = await db.donor.findUnique({ where: { id: input.id } });
-      if (!existing) throw new ActionError("Bağışçı bulunamadı.");
+      if (!existing) throw new ActionError("donations.errors.donorNotFound");
 
       await db.donor.update({
         where: { id: existing.id },
@@ -156,19 +158,21 @@ export async function anonymizeDonorAction(input: unknown): Promise<ActionResult
     handler: async ({ input, user, audit }) => {
       const db = getDb();
       const donor = await db.donor.findUnique({ where: { id: input.id } });
-      if (!donor) throw new ActionError("Bağışçı bulunamadı.");
+      if (!donor) throw new ActionError("donations.errors.donorNotFound");
 
       const expected = formatDonorNumber(donor.donorNumber);
       if (input.confirmDonorNumber.trim().toUpperCase() !== expected) {
-        throw new ActionError("Onay numarası uyuşmuyor.", {
-          confirmDonorNumber: [`Bağışçı numarasını yazın: ${expected}`],
+        const translate = await getMessageTranslator();
+        throw new ActionError("donations.errors.confirmNumberMismatch", {
+          confirmDonorNumber: [translate("donations.errors.typeDonorNumber", { number: expected })],
         });
       }
 
       try {
         await anonymizeDonor(donor.id, { id: user.id, label: buildUserLabel(user.name, user.email) });
       } catch (error) {
-        throw new ActionError(error instanceof Error ? error.message : "Anonimleştirilemedi.");
+        if (error instanceof ActionError) throw error;
+        throw new ActionError(error instanceof Error ? error.message : "donations.errors.anonymizeFailed");
       }
 
       await audit({

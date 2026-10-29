@@ -55,18 +55,16 @@ export async function updateMemberAction(
     handler: async ({ input, user, audit }) => {
       const db = getDb();
       const member = await db.member.findFirst({ where: { id: input.id, deletedAt: null } });
-      if (!member) throw new ActionError("Üye bulunamadı.");
+      if (!member) throw new ActionError("members.errors.memberNotFound");
 
       if (new Date(input.updatedAt).getTime() !== member.updatedAt.getTime()) {
-        throw new ActionError(
-          "Bu kayıt başka biri tarafından değiştirildi. Sayfayı yenileyip tekrar deneyin.",
-        );
+        throw new ActionError("common.errors.staleRecord");
       }
 
       const joinDate = parseDateOnly(input.joinDate);
       if (!joinDate) {
-        throw new ActionError("Katılım tarihi geçersiz.", {
-          joinDate: ["Geçerli bir katılım tarihi girin."],
+        throw new ActionError("members.errors.joinDateInvalid", {
+          joinDate: ["members.validation.joinDateInvalid"],
         });
       }
       const birthDate = input.birthDate ? parseDateOnly(input.birthDate) : null;

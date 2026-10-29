@@ -33,8 +33,8 @@ export async function createDocumentAction(
 
       const documentDate = parseDateOnly(input.documentDate);
       if (!documentDate) {
-        throw new ActionError("Evrak tarihi geçersiz.", {
-          documentDate: ["Geçerli bir evrak tarihi girin."],
+        throw new ActionError("documents.errors.invalidDate", {
+          documentDate: ["documents.validation.dateInvalid"],
         });
       }
       const dueDate = input.dueDate ? parseDateOnly(input.dueDate) : null;

@@ -49,18 +49,16 @@ export async function updateDocumentAction(
     handler: async ({ input, user, audit }) => {
       const db = getDb();
       const doc = await db.document.findFirst({ where: { id: input.id, deletedAt: null } });
-      if (!doc) throw new ActionError("Evrak bulunamadı.");
+      if (!doc) throw new ActionError("documents.errors.documentNotFound");
 
       if (new Date(input.updatedAt).getTime() !== doc.updatedAt.getTime()) {
-        throw new ActionError(
-          "Bu kayıt başka biri tarafından değiştirildi. Sayfayı yenileyip tekrar deneyin.",
-        );
+        throw new ActionError("common.errors.staleRecord");
       }
 
       const documentDate = parseDateOnly(input.documentDate);
       if (!documentDate) {
-        throw new ActionError("Evrak tarihi geçersiz.", {
-          documentDate: ["Geçerli bir evrak tarihi girin."],
+        throw new ActionError("documents.errors.invalidDate", {
+          documentDate: ["documents.validation.dateInvalid"],
         });
       }
       const dueDate = input.dueDate ? parseDateOnly(input.dueDate) : null;

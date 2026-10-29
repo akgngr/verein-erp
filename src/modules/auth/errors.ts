@@ -19,13 +19,22 @@ export class ForbiddenError extends Error {
   }
 }
 
-/** İş kuralı ihlali: mesajı doğrudan kullanıcıya gösterilir. */
+/**
+ * İş kuralı ihlali: mesajı kullanıcıya gösterilir. `message` bir çeviri anahtarı olabilir
+ * (örn. "accounting.errors.yearLocked"); createAction onu `values` ile kullanıcının diline çevirir.
+ */
 export class ActionError extends Error {
   fieldErrors?: Record<string, string[]>;
+  values?: Record<string, string | number>;
 
-  constructor(message: string, fieldErrors?: Record<string, string[]>) {
+  constructor(
+    message: string,
+    fieldErrors?: Record<string, string[]>,
+    values?: Record<string, string | number>,
+  ) {
     super(message);
     this.name = "ActionError";
     this.fieldErrors = fieldErrors;
+    this.values = values;
   }
 }

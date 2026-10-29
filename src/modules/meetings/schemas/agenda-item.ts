@@ -18,10 +18,10 @@ export const agendaItemAddSchema = z.object({
   title: z
     .string()
     .trim()
-    .min(2, "Gündem maddesi en az 2 karakter olmalıdır.")
-    .max(200, "Gündem maddesi en fazla 200 karakter olabilir."),
+    .min(2, "meetings.validation.agendaMin")
+    .max(200, "meetings.validation.agendaMax"),
   description: emptyToNull(
-    z.string().trim().max(2000, "Planlanan içerik en fazla 2000 karakter olabilir.").nullable(),
+    z.string().trim().max(2000, "meetings.validation.plannedMax").nullable(),
   ),
 });
 
@@ -30,10 +30,10 @@ export const agendaItemUpdateSchema = z.object({
   title: z
     .string()
     .trim()
-    .min(2, "Gündem maddesi en az 2 karakter olmalıdır.")
-    .max(200, "Gündem maddesi en fazla 200 karakter olabilir."),
+    .min(2, "meetings.validation.agendaMin")
+    .max(200, "meetings.validation.agendaMax"),
   description: emptyToNull(
-    z.string().trim().max(2000, "Planlanan içerik en fazla 2000 karakter olabilir.").nullable(),
+    z.string().trim().max(2000, "meetings.validation.plannedMax").nullable(),
   ),
 });
 
@@ -47,7 +47,7 @@ export const agendaItemMoveSchema = z.object({
 export const agendaDiscussionUpdateSchema = z.object({
   id: z.string().trim().min(1),
   discussion: emptyToNull(
-    z.string().trim().max(10000, "Görüşme metni en fazla 10000 karakter olabilir.").nullable(),
+    z.string().trim().max(10000, "meetings.validation.discussionMax").nullable(),
   ),
 });
 

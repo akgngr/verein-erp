@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { useListQueryState } from "@/shared/components/data-table/use-list-query-state";
 import { cn } from "@/shared/utils";
 
@@ -26,32 +28,33 @@ type CardDefinition = {
  * uygulanır; aynı filtre zaten etkinse temizlenir (toggle).
  */
 export function StatsCards({ stats, monthFrom, monthTo }: StatsCardsProps) {
+  const t = useTranslations("documents.stats");
   const { setParams, isPending } = useListQueryState();
 
   const cards: CardDefinition[] = [
-    { key: "open", label: "Açık", value: stats.open, filter: { "filter.status": "OPEN" } },
+    { key: "open", label: t("open"), value: stats.open, filter: { "filter.status": "OPEN" } },
     {
       key: "inProgress",
-      label: "İşlemde",
+      label: t("inProgress"),
       value: stats.inProgress,
       filter: { "filter.status": "IN_PROGRESS" },
     },
     {
       key: "overdue",
-      label: "Süresi geçmiş",
+      label: t("overdue"),
       value: stats.overdue,
       danger: stats.overdue > 0,
       filter: { "filter.overdue": "1" },
     },
     {
       key: "incomingThisMonth",
-      label: "Bu ay gelen",
+      label: t("incomingThisMonth"),
       value: stats.incomingThisMonth,
       filter: { "filter.direction": "INCOMING", "filter.from": monthFrom, "filter.to": monthTo },
     },
     {
       key: "outgoingThisMonth",
-      label: "Bu ay giden",
+      label: t("outgoingThisMonth"),
       value: stats.outgoingThisMonth,
       filter: { "filter.direction": "OUTGOING", "filter.from": monthFrom, "filter.to": monthTo },
     },
@@ -69,7 +72,7 @@ export function StatsCards({ stats, monthFrom, monthTo }: StatsCardsProps) {
             "flex flex-col items-start gap-1 rounded-medium border bg-content1 px-4 py-3 text-left shadow-sm transition-colors",
             card.filter ? "hover:border-primary-300 hover:bg-primary-50/40" : "cursor-default",
           )}
-          aria-label={`${card.label}: ${card.value} — filtreyi uygula`}
+          aria-label={t("filterAria", { label: card.label, value: card.value })}
         >
           <span
             className={cn(

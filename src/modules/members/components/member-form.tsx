@@ -1,7 +1,7 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Card, CardBody, addToast } from "@heroui/react";
+import { Button, addToast } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm, type Resolver } from "react-hook-form";
@@ -9,6 +9,7 @@ import { useTranslations } from "next-intl";
 
 import type { MembershipType } from "@prisma/client";
 
+import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
 import { applyActionResult } from "@/shared/components/forms/action-result";
 import { FormDatePicker } from "@/shared/components/forms/form-date-picker";
 import { FormErrorSummary } from "@/shared/components/forms/form-error-summary";
@@ -20,8 +21,8 @@ import { SubmitButton } from "@/shared/components/forms/submit-button";
 import { createMemberAction } from "../actions/create-member";
 import { updateMemberAction } from "../actions/update-member";
 import {
-  MEMBERSHIP_TYPE_SELECT_OPTIONS,
-  MEMBER_STATUS_LABELS,
+  MEMBERSHIP_TYPE_VALUES,
+  MEMBER_STATUS_VALUES,
 } from "../constants";
 import { memberCreateSchema, memberUpdateSchema } from "../schemas/member";
 import { berlinToday } from "../utils";
@@ -80,13 +81,12 @@ type MemberFormProps =
   | { mode: "create"; /** Faz 3 eklemeleri: pasif türler yeni kayıtta gizlenir. */ availableTypes?: MembershipType[] }
   | { mode: "edit"; member: MemberEditFormData };
 
-const STATUS_SELECT_OPTIONS = (
-  Object.keys(MEMBER_STATUS_LABELS) as Array<keyof typeof MEMBER_STATUS_LABELS>
-).map((status) => ({ value: status, label: status }));
+const STATUS_SELECT_OPTIONS = MEMBER_STATUS_VALUES.map((status) => ({ value: status, label: status }));
 
 /** Yeni/düzenleme üye formu. Üyelik numarası salt okunurdur; şemada yer almaz. */
 export function MemberForm(props: MemberFormProps) {
   const router = useRouter();
+  const closeDrawer = useFormDrawerClose();
   const t = useTranslations("members");
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -97,10 +97,10 @@ export function MemberForm(props: MemberFormProps) {
   // modunda tüm türler seçilebilir kalır (mevcut üye pasif türde olabilir).
   const typeOptions =
     !isEdit && props.availableTypes
-      ? MEMBERSHIP_TYPE_SELECT_OPTIONS.filter((option) =>
-          (props.availableTypes as MembershipType[]).includes(option.value),
+      ? MEMBERSHIP_TYPE_VALUES.filter((value) =>
+          (props.availableTypes as MembershipType[]).includes(value),
         )
-      : MEMBERSHIP_TYPE_SELECT_OPTIONS;
+      : MEMBERSHIP_TYPE_VALUES;
 
   const defaultValues: MemberFormValues = member
     ? {
@@ -175,8 +175,13 @@ export function MemberForm(props: MemberFormProps) {
         return;
       }
       addToast({ title: t("created.toastUpdated", { membershipNumber: result.data.membershipNumber }), color: "success" });
-      router.push(`/uyeler/${member.id}`);
-      router.refresh();
+      // Çekmecede: kapat (adres değişince sunucu verisi tazelenir); sayfada: detaya dön.
+      if (closeDrawer) {
+        closeDrawer();
+      } else {
+        router.push(`/uyeler/${member.id}`);
+        router.refresh();
+      }
       return;
     }
 
@@ -191,8 +196,7 @@ export function MemberForm(props: MemberFormProps) {
   });
 
   return (
-    <Card shadow="sm" className="max-w-3xl">
-      <CardBody className="gap-4 p-6">
+    <FormSurface className="max-w-3xl">
         {isEdit && member ? (
           <div className="flex items-center gap-3 rounded-medium border border-default-200 bg-default-50 px-4 py-3">
             <span className="text-small font-semibold">{member.membershipNumber}</span>
@@ -208,9 +212,9 @@ export function MemberForm(props: MemberFormProps) {
               name="type"
               label={t("form.type")}
               control={form.control}
-              options={typeOptions.map((option) => ({
-                value: option.value,
-                label: t(`type.${option.value}`),
+              options={typeOptions.map((value) => ({
+                value,
+                label: t(`type.${value}`),
               }))}
               isRequired
             />
@@ -372,13 +376,14 @@ export function MemberForm(props: MemberFormProps) {
             </SubmitButton>
             <Button
               variant="light"
-              onPress={() => router.push(isEdit && member ? `/uyeler/${member.id}` : "/uyeler")}
+              onPress={() =>
+                closeDrawer ? closeDrawer() : router.push(isEdit && member ? `/uyeler/${member.id}` : "/uyeler")
+              }
             >
               {t("form.cancel")}
             </Button>
           </div>
         </form>
-      </CardBody>
-    </Card>
+    </FormSurface>
   );
 }

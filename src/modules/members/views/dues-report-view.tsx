@@ -10,7 +10,7 @@ import { parseListParams, type RawSearchParams } from "@/shared/list-params";
 import { can } from "@/shared/permissions/define";
 
 import { memberPaymentsPermissions } from "../permissions";
-import { MEMBERSHIP_TYPE_FILTER_OPTIONS } from "../constants";
+import { MEMBERSHIP_TYPE_VALUES } from "../constants";
 import { DUES_DEFAULT_SORT, DUES_SORTABLE_FIELDS, listDues } from "../queries/list-dues";
 import { getDuesStats } from "../queries/get-dues-stats";
 import { berlinYear } from "../utils";
@@ -146,9 +146,9 @@ export async function DuesReportView({
           {
             key: "type",
             label: t("colType"),
-            options: MEMBERSHIP_TYPE_FILTER_OPTIONS.map((option) => ({
-              value: option.value,
-              label: t(`memberType.${option.value}`),
+            options: MEMBERSHIP_TYPE_VALUES.map((value) => ({
+              value,
+              label: t(`memberType.${value}`),
             })),
           },
         ]}

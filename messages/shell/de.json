@@ -27,7 +27,60 @@
     "recordsPerPageValue": "{count} Einträge",
     "accessDeniedTitle": "Zugriff verweigert",
     "accessDeniedDescription": "Sie dürfen diese Seite nicht anzeigen. Bitte wenden Sie sich an Ihre Verwaltung.",
-    "appDescription": "Vereinsverwaltung: Dokumente, Sitzungen und Mitgliederverwaltung."
+    "appDescription": "Vereinsverwaltung: Dokumente, Sitzungen und Mitgliederverwaltung.",
+    "errors": {
+      "formInvalid": "Bitte korrigieren Sie die Fehler im Formular.",
+      "sessionExpired": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
+      "forbidden": "Für diese Aktion fehlt Ihnen die Berechtigung.",
+      "duplicate": "Dieser Datensatz existiert bereits.",
+      "unexpected": "Ein unerwarteter Fehler ist aufgetreten.",
+      "staleRecord": "Der Datensatz wurde zwischenzeitlich von einer anderen Person geändert. Bitte laden Sie die Seite neu und versuchen Sie es erneut."
+    },
+    "selectPlaceholder": "Bitte wählen",
+    "noRecords": "Keine Einträge gefunden.",
+    "rowActions": "Zeilenaktionen",
+    "filterSelect": "{label} wählen",
+    "noFilter": "Kein Filter gewählt",
+    "languageChanged": "Sprache geändert: Deutsch",
+    "languageChangeFailed": "Die Sprache konnte nicht geändert werden.",
+    "languageSelect": "Sprachauswahl",
+    "languageOptions": "Sprachoptionen",
+    "signOut": "Abmelden",
+    "loginTitle": "Anmeldung",
+    "appTitleTemplate": "%s | Vereinsverwaltung",
+    "dateRange": {
+      "today": "Heute",
+      "yesterday": "Gestern",
+      "last7": "Letzte 7 Tage",
+      "last14": "Letzte 14 Tage",
+      "last30": "Letzte 30 Tage",
+      "last90": "Letzte 90 Tage",
+      "last365": "Letzte 365 Tage",
+      "none": "Kein Zeitraum gewählt",
+      "picker": "Zeitraumauswahl",
+      "clear": "Datumsfilter entfernen",
+      "label": "Datum",
+      "from": "ab {date}",
+      "until": "bis {date}",
+      "apply": "Anwenden",
+      "custom": "Benutzerdefiniert"
+    },
+    "table": {
+      "searchPlaceholder": "Suchen...",
+      "searchLabel": "Tabelle durchsuchen",
+      "filters": "Filter",
+      "filtersHint": "Auswahl treffen, um die Ergebnisse einzugrenzen",
+      "reset": "Zurücksetzen",
+      "activeFilters": "{count} Filter aktiv",
+      "done": "Fertig",
+      "label": "Tabelle"
+    },
+    "active": "Aktiv",
+    "passive": "Inaktiv",
+    "emailPlaceholder": "beispiel@verein.de",
+    "export": {
+      "truncated": "Ergebnisse auf {max} Zeilen begrenzt."
+    }
   },
   "nav": {
     "panel": "Dashboard",
@@ -67,7 +120,31 @@
     "orgBannerLink": "Vereinsdaten ausfüllen",
     "accountingNet": "Saldo: {net}",
     "accountingMissing": "Beleg fehlt: {count}",
-    "accountingYearLocked": "Jahr abgeschlossen"
+    "accountingYearLocked": "Jahr abgeschlossen",
+    "overviewTitle": "Übersicht",
+    "overviewDescription": "Vereinsverwaltung und operativer Überblick.",
+    "docsCategory": "Dokumente",
+    "docsPrimary": "Offen / in Bearbeitung",
+    "overdueBadge": "{count} überfällig",
+    "incomingMonth": "Eingang diesen Monat",
+    "outgoingMonth": "Ausgang diesen Monat",
+    "overdueLabel": "Überfällig",
+    "meetingsCategory": "Sitzungen & Protokolle",
+    "nextLabel": "Nächste: {number}",
+    "plannedLabel": "Geplante Sitzungen",
+    "overdueTasksBadge": "{count} überfällige Aufgaben",
+    "pendingMinutes": "Freigabe ausstehend",
+    "openTasksLabel": "Offene Aufgaben",
+    "overdueTasksLabel": "Überfällige Aufgaben",
+    "membersCategory": "Mitgliederverwaltung",
+    "activeMembers": "Aktive Mitglieder",
+    "newThisMonth": "Neu diesen Monat",
+    "passive": "Passiv",
+    "resigned": "Ausgetreten",
+    "docsOverdueAlert": "{count} Dokumente haben die Bearbeitungsfrist überschritten.",
+    "docsOverdueAction": "Überfällige Dokumente anzeigen",
+    "tasksOverdueAlert": "{count} Sitzungsaufgaben sind überfällig.",
+    "tasksOverdueAction": "Überfällige Aufgaben anzeigen"
   },
   "meta": {
     "panel": "Dashboard",
@@ -90,7 +167,7 @@
     "kullaniciDuzenle": "Benutzer bearbeiten",
     "denetimKaydi": "Prüfprotokoll",
     "profil": "Profil",
-    "dernekBilgileri": "Dernek Bilgileri | Vereinsverwaltung"
+    "dernekBilgileri": "Vereinsdaten"
   },
   "pdfLanguage": {
     "german": "Deutsch",
@@ -106,7 +183,10 @@
       "activeLanguage": "Aktuelle Sprache",
       "tr": "Türkçe",
       "de": "Deutsch",
-      "switchSuccess": "Die Sprache der Benutzeroberfläche wurde erfolgreich geändert."
+      "switchSuccess": "Die Sprache der Benutzeroberfläche wurde erfolgreich geändert.",
+      "trHint": "Türkische Oberfläche",
+      "deHint": "Deutsche Oberfläche & deutscher Vereinsstandard",
+      "switchedTo": "Oberflächensprache geändert: {language}"
     },
     "themeSection": {
       "title": "Erscheinungsbild & Design",
@@ -144,6 +224,40 @@
         "description": "Kontenrahmen (SKR49 / Standard), Budgetziele und Geschäftsjahresabschlüsse.",
         "action": "Einstellungen"
       }
+    },
+    "badges": {
+      "organization": "Profil & Identität",
+      "users": "Zugriff & Rollen",
+      "modules": "Module & Schema",
+      "audit": "Sicherheit & Protokoll",
+      "accounting": "Finanzstruktur"
     }
+  },
+  "roles": {
+    "ADMIN": "Administrator",
+    "BOARD": "Vorstand",
+    "SECRETARY": "Schriftführung",
+    "VIEWER": "Nur Lesen",
+    "TREASURER": "Kassenwart",
+    "AUDITOR": "Kassenprüfung"
+  },
+  "validation": {
+    "passwordMin": "Das Passwort muss mindestens 10 Zeichen lang sein.",
+    "passwordUpper": "Das Passwort muss mindestens einen Großbuchstaben enthalten.",
+    "passwordLower": "Das Passwort muss mindestens einen Kleinbuchstaben enthalten.",
+    "passwordDigit": "Das Passwort muss mindestens eine Ziffer enthalten.",
+    "emailInvalid": "Bitte eine gültige E-Mail-Adresse eingeben.",
+    "passwordHint": "Mindestens 10 Zeichen; mindestens 1 Großbuchstabe, 1 Kleinbuchstabe und 1 Ziffer.",
+    "yearInt": "Das Jahr muss eine ganze Zahl sein."
+  },
+  "files": {
+    "readFailed": "Die Datei konnte nicht gelesen werden (multipart/form-data erwartet).",
+    "missing": "Datei nicht gefunden.",
+    "typeNotAllowed": "Dieser Dateityp ist nicht erlaubt.",
+    "empty": "Leere Dateien können nicht hochgeladen werden.",
+    "contentMismatch": "Der Dateiinhalt passt nicht zur Endung .{extension}.",
+    "tooLarge": "Die Datei darf höchstens {maxMb} MB groß sein.",
+    "uploadFailed": "Die Datei konnte nicht hochgeladen werden.",
+    "maxPerRecord": "Pro Datensatz sind höchstens {max} Dateien erlaubt."
   }
 }

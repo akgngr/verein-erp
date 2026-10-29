@@ -1,5 +1,6 @@
 "use client";
 
+import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
 import { Link, addToast } from "@heroui/react";
 import { Eye, Paperclip, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -57,6 +58,7 @@ export function DocumentTable({
   canDelete: boolean;
 }) {
   const router = useRouter();
+  const drawerHref = useFormDrawerHref();
   const t = useTranslations("documents");
   const [deleting, setDeleting] = useState<DocumentRow | null>(null);
 
@@ -174,7 +176,7 @@ export function DocumentTable({
             key: "edit",
             label: t("list.edit"),
             icon: <Pencil className="h-4 w-4" />,
-            href: `/evrak/${row.id}/duzenle`,
+            href: drawerHref("duzenle", row.id),
           },
         ]
       : []),

@@ -19,11 +19,11 @@ export async function toggleModuleAction(input: unknown): Promise<ActionResult> 
     handler: async ({ input, audit }) => {
       const moduleMeta = allModules.find((m) => m.key === input.key);
       if (!moduleMeta) {
-        throw new ActionError("Modül bulunamadı.");
+        throw new ActionError("system.errors.notFound");
       }
 
       if (moduleMeta.isProtected || moduleMeta.category === "CORE") {
-        throw new ActionError("Çekirdek sistem modülleri devre dışı bırakılamaz.");
+        throw new ActionError("system.errors.coreCannotDisable");
       }
 
       await setModuleActive(input.key, input.isActive);

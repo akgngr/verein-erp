@@ -15,12 +15,7 @@ import type { ChipColor } from "@/shared/roles";
  * haritası ve dosya limitleri — HEPSİ tek yerde (5. ve 6. bölüm).
  */
 
-export const MEETING_TYPE_LABELS: Record<MeetingType, string> = {
-  BOARD: "Yönetim Kurulu",
-  GENERAL_ASSEMBLY: "Genel Kurul",
-  COMMITTEE: "Komisyon",
-  OTHER: "Diğer",
-};
+export const MEETING_TYPE_VALUES: MeetingType[] = ["BOARD", "GENERAL_ASSEMBLY", "COMMITTEE", "OTHER"];
 
 export const MEETING_TYPE_COLORS: Record<MeetingType, ChipColor> = {
   BOARD: "primary",
@@ -29,16 +24,8 @@ export const MEETING_TYPE_COLORS: Record<MeetingType, ChipColor> = {
   OTHER: "default",
 };
 
-export const MEETING_TYPE_FILTER_OPTIONS = (
-  Object.keys(MEETING_TYPE_LABELS) as MeetingType[]
-).map((type) => ({ value: type, label: MEETING_TYPE_LABELS[type] }));
 
-export const MEETING_STATUS_LABELS: Record<MeetingStatus, string> = {
-  PLANNED: "Planlandı",
-  HELD: "Yapıldı",
-  APPROVED: "Onaylandı",
-  CANCELLED: "İptal edildi",
-};
+export const MEETING_STATUS_VALUES: MeetingStatus[] = ["PLANNED", "HELD", "APPROVED", "CANCELLED"];
 
 export const MEETING_STATUS_COLORS: Record<MeetingStatus, ChipColor> = {
   PLANNED: "warning",
@@ -47,27 +34,11 @@ export const MEETING_STATUS_COLORS: Record<MeetingStatus, ChipColor> = {
   CANCELLED: "danger",
 };
 
-export const MEETING_STATUS_FILTER_OPTIONS = (
-  Object.keys(MEETING_STATUS_LABELS) as MeetingStatus[]
-).map((status) => ({ value: status, label: MEETING_STATUS_LABELS[status] }));
 
-export const ATTENDEE_ROLE_LABELS: Record<AttendeeRole, string> = {
-  CHAIRPERSON: "Başkan",
-  SECRETARY: "Sekreter",
-  MEMBER: "Üye",
-  GUEST: "Konuk",
-};
+export const ATTENDEE_ROLE_VALUES: AttendeeRole[] = ["CHAIRPERSON", "SECRETARY", "MEMBER", "GUEST"];
 
-export const ATTENDEE_ROLE_FILTER_OPTIONS = (
-  Object.keys(ATTENDEE_ROLE_LABELS) as AttendeeRole[]
-).map((role) => ({ value: role, label: ATTENDEE_ROLE_LABELS[role] }));
 
-export const ATTENDANCE_LABELS: Record<AttendanceStatus, string> = {
-  INVITED: "Davetli",
-  PRESENT: "Katıldı",
-  ABSENT_EXCUSED: "Mazeretli",
-  ABSENT: "Katılmadı",
-};
+export const ATTENDANCE_VALUES: AttendanceStatus[] = ["INVITED", "PRESENT", "ABSENT_EXCUSED", "ABSENT"];
 
 export const ATTENDANCE_COLORS: Record<AttendanceStatus, ChipColor> = {
   INVITED: "default",
@@ -76,11 +47,7 @@ export const ATTENDANCE_COLORS: Record<AttendanceStatus, ChipColor> = {
   ABSENT: "danger",
 };
 
-export const DECISION_RESULT_LABELS: Record<DecisionResult, string> = {
-  ACCEPTED: "Kabul edildi",
-  REJECTED: "Reddedildi",
-  POSTPONED: "Ertelendi",
-};
+export const DECISION_RESULT_VALUES: DecisionResult[] = ["ACCEPTED", "REJECTED", "POSTPONED"];
 
 export const DECISION_RESULT_COLORS: Record<DecisionResult, ChipColor> = {
   ACCEPTED: "success",
@@ -88,10 +55,7 @@ export const DECISION_RESULT_COLORS: Record<DecisionResult, ChipColor> = {
   POSTPONED: "warning",
 };
 
-export const ACTION_ITEM_STATUS_LABELS: Record<ActionItemStatus, string> = {
-  OPEN: "Açık",
-  DONE: "Tamamlandı",
-};
+export const ACTION_ITEM_STATUS_VALUES: ActionItemStatus[] = ["OPEN", "DONE"];
 
 export const ACTION_ITEM_STATUS_COLORS: Record<ActionItemStatus, ChipColor> = {
   OPEN: "warning",

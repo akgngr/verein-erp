@@ -19,14 +19,14 @@ const baseFields = {
   description: z
     .string()
     .trim()
-    .min(3, "Görev açıklaması en az 3 karakter olmalıdır.")
-    .max(1000, "Görev açıklaması en fazla 1000 karakter olabilir."),
+    .min(3, "meetings.validation.taskMin")
+    .max(1000, "meetings.validation.taskMax"),
   assigneeId: emptyToNull(z.string().trim().min(1).nullable()),
   assigneeName: emptyToNull(
-    z.string().trim().min(2, "Sorumlu adı en az 2 karakter olmalıdır.").max(120, "Sorumlu adı en fazla 120 karakter olabilir.").nullable(),
+    z.string().trim().min(2, "meetings.validation.assigneeMin").max(120, "meetings.validation.assigneeMax").nullable(),
   ),
   dueDate: emptyToNull(
-    z.string().trim().regex(DATE_ONLY, "Geçerli bir son tarih girin.").nullable(),
+    z.string().trim().regex(DATE_ONLY, "meetings.validation.dueDateInvalid").nullable(),
   ),
   decisionId: emptyToNull(z.string().trim().min(1).nullable()),
 };

@@ -1,7 +1,7 @@
 "use client";
 
+import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Card, CardBody } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm, type Resolver } from "react-hook-form";
@@ -40,7 +40,9 @@ export function DonorForm({
   mode: "create" | "edit";
   initial?: Partial<DonorFormValues>;
 }) {
+  const tDonors = useTranslations("donations.donors");
   const router = useRouter();
+  const closeDrawer = useFormDrawerClose();
   const t = useTranslations("donations.donors.form");
   const [formError, setFormError] = useState<string | null>(null);
 
@@ -76,8 +78,13 @@ export function DonorForm({
         setFormError(applyActionResult(result, form.setError));
         return;
       }
-      router.push(`/bagislar/bagiscilar/${values.id}`);
-      router.refresh();
+      // Çekmecede: kapat (adres değişince sunucu verisi tazelenir); sayfada: detaya dön.
+      if (closeDrawer) {
+        closeDrawer();
+      } else {
+        router.push(`/bagislar/bagiscilar/${values.id}`);
+        router.refresh();
+      }
       return;
     }
     const result = await createDonorAction(values);
@@ -90,8 +97,7 @@ export function DonorForm({
   });
 
   return (
-    <Card shadow="sm" className="max-w-3xl">
-      <CardBody className="gap-4 p-6">
+    <FormSurface className="max-w-3xl">
         <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
           <FormSelect
             name="type"
@@ -128,7 +134,7 @@ export function DonorForm({
               label={t("fromMember")}
               control={form.control}
               description={t("fromMemberHint")}
-              placeholder="Üye numarası (opsiyonel)"
+              placeholder={tDonors("memberNumberPlaceholder")}
             />
           ) : null}
           {formError ? (
@@ -138,7 +144,6 @@ export function DonorForm({
           ) : null}
           <SubmitButton isSubmitting={form.formState.isSubmitting}>{t("save")}</SubmitButton>
         </form>
-      </CardBody>
-    </Card>
+    </FormSurface>
   );
 }

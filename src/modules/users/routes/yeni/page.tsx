@@ -1,7 +1,6 @@
-import { UserCreateView } from "../../ui";
+import { redirect } from "next/navigation";
 
-export const metadata = { title: "Yeni Kullanıcı" };
-
-export default function YeniKullaniciPage() {
-  return <UserCreateView />;
+/** Eski adres: form artık listenin sağ çekmecesinde açılır. */
+export default function Page() {
+  redirect("/ayarlar/kullanicilar?yeni");
 }

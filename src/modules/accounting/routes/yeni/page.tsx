@@ -1,16 +1,7 @@
-import type { Metadata } from "next";
+import { redirect } from "next/navigation";
 
-import { AccountingCreateView } from "../../server";
-
-export const metadata: Metadata = { title: "Yeni fiş" };
-
-/** Yeni fiş — ?tur=gelir|gider|virman (§ 6). */
-export default async function MuhasebeYeniPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ tur?: string }>;
-}) {
+/** Eski adres: yeni fiş formu artık listenin sağ çekmecesinde açılır (`?yeni=gelir|gider|virman`). */
+export default async function Page({ searchParams }: { searchParams: Promise<{ tur?: string }> }) {
   const { tur } = await searchParams;
-  const type = tur === "gider" ? "EXPENSE" : tur === "virman" ? "TRANSFER" : "INCOME";
-  return <AccountingCreateView type={type} />;
+  redirect(`/muhasebe?yeni=${tur === "gider" || tur === "virman" ? tur : "gelir"}`);
 }

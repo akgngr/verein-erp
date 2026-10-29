@@ -11,6 +11,7 @@ import {
 import { parseDate, type DateValue } from "@internationalized/date";
 import { CalendarDays, ChevronDown, Globe, X } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { cn } from "@/shared/utils";
@@ -28,7 +29,8 @@ type PresetKey =
 
 interface PresetItem {
   key: PresetKey;
-  label: string;
+  /** common.dateRange altındaki çeviri anahtarı. */
+  labelKey: string;
   getRange: () => { from: string; to: string };
 }
 
@@ -52,7 +54,7 @@ function addDays(d: Date, n: number): Date {
 const PRESETS_GROUP_1: PresetItem[] = [
   {
     key: "today",
-    label: "Bugün",
+    labelKey: "today",
     getRange: () => {
       const today = getBerlinToday();
       const iso = toISODate(today);
@@ -61,7 +63,7 @@ const PRESETS_GROUP_1: PresetItem[] = [
   },
   {
     key: "yesterday",
-    label: "Dün",
+    labelKey: "yesterday",
     getRange: () => {
       const today = getBerlinToday();
       const yesterday = toISODate(addDays(today, -1));
@@ -73,7 +75,7 @@ const PRESETS_GROUP_1: PresetItem[] = [
 const PRESETS_GROUP_2: PresetItem[] = [
   {
     key: "7d",
-    label: "Son 7 gün",
+    labelKey: "last7",
     getRange: () => {
       const today = getBerlinToday();
       return { from: toISODate(addDays(today, -6)), to: toISODate(today) };
@@ -81,7 +83,7 @@ const PRESETS_GROUP_2: PresetItem[] = [
   },
   {
     key: "14d",
-    label: "Son 14 gün",
+    labelKey: "last14",
     getRange: () => {
       const today = getBerlinToday();
       return { from: toISODate(addDays(today, -13)), to: toISODate(today) };
@@ -89,7 +91,7 @@ const PRESETS_GROUP_2: PresetItem[] = [
   },
   {
     key: "30d",
-    label: "Son 30 gün",
+    labelKey: "last30",
     getRange: () => {
       const today = getBerlinToday();
       return { from: toISODate(addDays(today, -29)), to: toISODate(today) };
@@ -97,7 +99,7 @@ const PRESETS_GROUP_2: PresetItem[] = [
   },
   {
     key: "90d",
-    label: "Son 90 gün",
+    labelKey: "last90",
     getRange: () => {
       const today = getBerlinToday();
       return { from: toISODate(addDays(today, -89)), to: toISODate(today) };
@@ -105,7 +107,7 @@ const PRESETS_GROUP_2: PresetItem[] = [
   },
   {
     key: "365d",
-    label: "Son 365 gün",
+    labelKey: "last365",
     getRange: () => {
       const today = getBerlinToday();
       return { from: toISODate(addDays(today, -364)), to: toISODate(today) };
@@ -115,23 +117,17 @@ const PRESETS_GROUP_2: PresetItem[] = [
 
 const ALL_PRESETS = [...PRESETS_GROUP_1, ...PRESETS_GROUP_2];
 
-const SHORT_DATE_FORMATTER = new Intl.DateTimeFormat("tr-TR", {
-  month: "short",
-  day: "numeric",
-});
-
-const FULL_DATE_FORMATTER = new Intl.DateTimeFormat("tr-TR", {
-  year: "numeric",
-  month: "short",
-  day: "numeric",
-});
-
-function formatDisplayDate(dateStr: string, format: "short" | "full" = "short"): string {
+function formatDisplayDate(dateStr: string, format: "short" | "full" = "short", locale = "tr"): string {
   if (!dateStr) return "";
   try {
     const parts = dateStr.split("-").map(Number);
     const d = new Date(Date.UTC(parts[0], parts[1] - 1, parts[2]));
-    return format === "short" ? SHORT_DATE_FORMATTER.format(d) : FULL_DATE_FORMATTER.format(d);
+    return new Intl.DateTimeFormat(locale === "de" ? "de-DE" : "tr-TR", {
+      ...(format === "full" ? { year: "numeric" as const } : {}),
+      month: "short",
+      day: "numeric",
+      timeZone: "UTC",
+    }).format(d);
   } catch {
     return dateStr;
   }
@@ -165,7 +161,7 @@ function getInitialPreset(activeFrom: string, activeTo: string): PresetKey {
 }
 
 export function DateRangeFilter({
-  label = "Tarih",
+  label,
   fromParam = "filter.from",
   toParam = "filter.to",
   idPrefix = "dt-date",
@@ -177,6 +173,10 @@ export function DateRangeFilter({
 }) {
   const { setParams } = useListQueryState();
   const searchParams = useSearchParams();
+  const t = useTranslations("common.dateRange");
+  const tCommon = useTranslations("common");
+  const locale = useLocale();
+  const fmt = (dateStr: string, format: "short" | "full" = "short") => formatDisplayDate(dateStr, format, locale);
 
   const activeFrom = searchParams.get(fromParam) ?? "";
   const activeTo = searchParams.get(toParam) ?? "";
@@ -254,7 +254,7 @@ export function DateRangeFilter({
   const todayIso = toISODate(getBerlinToday());
 
   // Tetikleyici butondaki metin
-  let triggerText = label;
+  let triggerText = label ?? t("label");
   if (hasActiveRange) {
     const matched = ALL_PRESETS.find((p) => {
       const r = p.getRange();
@@ -262,33 +262,33 @@ export function DateRangeFilter({
     });
 
     const isEndToday = activeTo === todayIso;
-    const endDisplay = isEndToday ? "Bugün" : formatDisplayDate(activeTo);
+    const endDisplay = isEndToday ? t("today") : fmt(activeTo);
 
     if (matched) {
       if (activeFrom === activeTo) {
-        triggerText = `${matched.label} (${formatDisplayDate(activeFrom)})`;
+        triggerText = `${t(matched.labelKey)} (${fmt(activeFrom)})`;
       } else {
-        triggerText = `${matched.label} (${formatDisplayDate(activeFrom)} - ${endDisplay})`;
+        triggerText = `${t(matched.labelKey)} (${fmt(activeFrom)} - ${endDisplay})`;
       }
     } else if (activeFrom && activeTo) {
       if (activeFrom === activeTo) {
-        triggerText = formatDisplayDate(activeFrom);
+        triggerText = fmt(activeFrom);
       } else {
-        triggerText = `${formatDisplayDate(activeFrom)} - ${endDisplay}`;
+        triggerText = `${fmt(activeFrom)} - ${endDisplay}`;
       }
     } else if (activeFrom) {
-      triggerText = `${formatDisplayDate(activeFrom)}'den itibaren`;
+      triggerText = t("from", { date: fmt(activeFrom) });
     } else if (activeTo) {
-      triggerText = `${formatDisplayDate(activeTo)}'ye kadar`;
+      triggerText = t("until", { date: fmt(activeTo) });
     }
   }
 
   // Alt bilgi metni
-  let footerDateText = "Tarih aralığı seçilmedi";
+  let footerDateText = t("none");
   if (tempRange?.start && tempRange?.end) {
-    footerDateText = `${formatDisplayDate(tempRange.start.toString(), "full")} - ${formatDisplayDate(tempRange.end.toString(), "full")}`;
+    footerDateText = `${fmt(tempRange.start.toString(), "full")} - ${fmt(tempRange.end.toString(), "full")}`;
   } else if (tempRange?.start) {
-    footerDateText = `${formatDisplayDate(tempRange.start.toString(), "full")} - …`;
+    footerDateText = `${fmt(tempRange.start.toString(), "full")} - …`;
   }
 
   const renderPresetButton = (preset: PresetItem) => {
@@ -305,7 +305,7 @@ export function DateRangeFilter({
             : "text-default-700 hover:bg-default-100/80 hover:text-foreground",
         )}
       >
-        {preset.label}
+        {t(preset.labelKey)}
       </button>
     );
   };
@@ -360,7 +360,7 @@ export function DateRangeFilter({
                       : "text-default-700 hover:bg-default-100/80 hover:text-foreground",
                   )}
                 >
-                  Özel
+                  {t("custom")}
                 </button>
 
                 <div className="my-1 border-t border-default-200/60" />
@@ -375,7 +375,7 @@ export function DateRangeFilter({
               {/* Sağ: HeroUI RangeCalendar */}
               <div className="p-3 bg-content1">
                 <RangeCalendar
-                  aria-label="Tarih aralığı seçici"
+                  aria-label={t("picker")}
                   value={tempRange}
                   onChange={handleCalendarChange}
                   showMonthAndYearPickers
@@ -409,7 +409,7 @@ export function DateRangeFilter({
                     onPress={handleClear}
                     className="text-xs font-medium h-8 px-2.5"
                   >
-                    Temizle
+                    {tCommon("clear")}
                   </Button>
                 ) : null}
                 <Button
@@ -418,7 +418,7 @@ export function DateRangeFilter({
                   onPress={() => setIsOpen(false)}
                   className="h-8 px-4 text-xs font-medium border border-default-300 rounded-lg hover:bg-default-100 text-foreground"
                 >
-                  Vazgeç
+                  {tCommon("cancel")}
                 </Button>
                 <Button
                   size="sm"
@@ -426,7 +426,7 @@ export function DateRangeFilter({
                   isDisabled={!tempRange}
                   className="h-8 px-4 text-xs font-medium bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 rounded-lg shadow-xs transition-colors"
                 >
-                  Uygula
+                  {t("apply")}
                 </Button>
               </div>
             </div>
@@ -439,8 +439,8 @@ export function DateRangeFilter({
           isIconOnly
           size="sm"
           variant="light"
-          aria-label="Tarih filtresini kaldır"
-          title="Tarih filtresini kaldır"
+          aria-label={t("clear")}
+          title={t("clear")}
           className="h-9 w-7 min-w-7 ml-1 text-default-400 hover:text-danger hover:bg-danger-50/50 rounded-lg transition-colors"
           onPress={handleClear}
         >

@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Switch } from "@heroui/react";
 import { AlertCircle, UserCheck } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -13,7 +15,8 @@ import { cn } from "@/shared/utils";
  * meetingDate üzerinde çalışır. Alt satırın solunda yer alır.
  */
 export function MeetingDateFilter() {
-  return <DateRangeFilter label="Toplantı tarihi" idPrefix="meeting-date" />;
+  const t = useTranslations("meetings.filters");
+  return <DateRangeFilter label={t("meetingDate")} idPrefix="meeting-date" />;
 }
 
 /** Geriye dönük uyumluluk */
@@ -24,13 +27,15 @@ export const MeetingListFilters = MeetingDateFilter;
  * dueDate üzerinde çalışır.
  */
 export function ActionItemDateFilter() {
-  return <DateRangeFilter label="Son tarih" idPrefix="action-item-date" />;
+  const t = useTranslations("meetings.filters");
+  return <DateRangeFilter label={t("dueDate")} idPrefix="action-item-date" />;
 }
 
 /**
  * Görev listesi Filtreler Popover'ı içinde gösterilecek hızlı switch filtreleri.
  */
 export function ActionItemQuickFilters() {
+  const t = useTranslations("meetings.filters");
   const { setParams } = useListQueryState();
   const searchParams = useSearchParams();
 
@@ -40,7 +45,7 @@ export function ActionItemQuickFilters() {
   return (
     <div className="flex flex-col gap-2">
       <span className="text-[11px] font-semibold text-default-500 uppercase tracking-wider">
-        Özel Filtreler
+        {t("customFilters")}
       </span>
 
       {/* Bana Atananlar Switch Kartı */}
@@ -72,16 +77,16 @@ export function ActionItemQuickFilters() {
             <UserCheck className="h-4 w-4" />
           </div>
           <div className="flex flex-col text-left">
-            <span className="text-small font-medium text-foreground">Bana atananlar</span>
+            <span className="text-small font-medium text-foreground">{t("mine")}</span>
             <span className="text-[11px] text-default-400">
-              Yalnızca size atanan açık görevler
+              {t("mineHint")}
             </span>
           </div>
         </div>
         <Switch
           id="action-item-filter-mine"
           size="sm"
-          aria-label="Bana atananlar"
+          aria-label={t("mine")}
           isSelected={mine}
           onValueChange={(val) =>
             setParams({ "filter.mine": val ? "1" : null }, { resetPage: true })
@@ -118,9 +123,9 @@ export function ActionItemQuickFilters() {
             <AlertCircle className="h-4 w-4" />
           </div>
           <div className="flex flex-col text-left">
-            <span className="text-small font-medium text-foreground">Süresi geçmişler</span>
+            <span className="text-small font-medium text-foreground">{t("overdue")}</span>
             <span className="text-[11px] text-default-400">
-              Son teslim tarihi geçmiş görevler
+              {t("overdueHint")}
             </span>
           </div>
         </div>
@@ -128,7 +133,7 @@ export function ActionItemQuickFilters() {
           id="action-item-filter-overdue"
           size="sm"
           color="danger"
-          aria-label="Süresi geçmişler"
+          aria-label={t("overdue")}
           isSelected={overdue}
           onValueChange={(val) =>
             setParams({ "filter.overdue": val ? "1" : null }, { resetPage: true })

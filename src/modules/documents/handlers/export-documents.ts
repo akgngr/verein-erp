@@ -1,6 +1,7 @@
 import "server-only";
 
 import ExcelJS from "exceljs";
+import { getLocale, getTranslations } from "next-intl/server";
 import { NextResponse } from "next/server";
 
 import { can } from "@/shared/permissions/define";
@@ -8,7 +9,7 @@ import { parseListParams, type RawSearchParams } from "@/shared/list-params";
 
 import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 
-import { DELIVERY_METHOD_LABELS, DIRECTION_LABELS, EXPORT_MAX_ROWS, STATUS_LABELS } from "../constants";
+import { EXPORT_MAX_ROWS } from "../constants";
 import { documentsPermissions } from "../permissions";
 import {
   DOCUMENT_DEFAULT_SORT,
@@ -16,6 +17,7 @@ import {
   listDocumentsForExport,
 } from "../queries/list-documents";
 import { berlinToday } from "../utils";
+import { translateMessage } from "@/shared/i18n/translate-message";
 
 /**
  * Excel dışa aktarım (GET /api/documents/export, 10. bölüm): liste ekranındaki
@@ -28,13 +30,13 @@ export async function exportDocumentsHandler(request: Request): Promise<Response
     user = await requireUser();
   } catch (error) {
     if (error instanceof UnauthorizedError) {
-      return NextResponse.json({ ok: false, error: "Oturum bulunamadı." }, { status: 401 });
+      return NextResponse.json({ ok: false, error: await translateMessage("common.errors.sessionExpired") }, { status: 401 });
     }
     throw error;
   }
 
   if (!can(user.role, documentsPermissions, "view")) {
-    return NextResponse.json({ ok: false, error: "Bu işlem için yetkiniz yok." }, { status: 403 });
+    return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
   }
 
   const raw: RawSearchParams = Object.fromEntries(new URL(request.url).searchParams.entries());
@@ -59,37 +61,40 @@ export async function exportDocumentsHandler(request: Request): Promise<Response
   const truncated = fetched.length > EXPORT_MAX_ROWS;
   const rows = fetched.slice(0, EXPORT_MAX_ROWS);
 
+  const tRoot = await getTranslations();
+  const tx = (key: string, values?: Record<string, string | number>) => tRoot(`documents.export.register.${key}`, values);
+  const locale = await getLocale();
   const workbook = new ExcelJS.Workbook();
-  const sheet = workbook.addWorksheet("Evrak Defteri");
+  const sheet = workbook.addWorksheet(tx("_sheet"));
 
   sheet.columns = [
-    { header: "Kayıt No", key: "registryNumber", width: 16 },
-    { header: "Yön", key: "direction", width: 10 },
-    { header: "Kayıt Tarihi", key: "registeredAt", width: 14 },
-    { header: "Evrak Tarihi", key: "documentDate", width: 14 },
-    { header: "Gönderen/Alıcı", key: "counterparty", width: 30 },
-    { header: "Evrak Sayısı", key: "referenceNumber", width: 18 },
-    { header: "Konu", key: "subject", width: 44 },
-    { header: "Kategori", key: "categoryName", width: 16 },
-    { header: "Teslim Şekli", key: "deliveryMethod", width: 13 },
-    { header: "Durum", key: "status", width: 13 },
-    { header: "Sorumlu", key: "assigneeLabel", width: 22 },
-    { header: "Son İşlem Tarihi", key: "dueDate", width: 16 },
-    { header: "Dosya Sayısı", key: "fileCount", width: 13 },
+    { header: tx("registryNumber"), key: "registryNumber", width: 16 },
+    { header: tx("direction"), key: "direction", width: 10 },
+    { header: tx("registeredAt"), key: "registeredAt", width: 14 },
+    { header: tx("documentDate"), key: "documentDate", width: 14 },
+    { header: tx("counterparty"), key: "counterparty", width: 30 },
+    { header: tx("referenceNumber"), key: "referenceNumber", width: 18 },
+    { header: tx("subject"), key: "subject", width: 44 },
+    { header: tx("categoryName"), key: "categoryName", width: 16 },
+    { header: tx("deliveryMethod"), key: "deliveryMethod", width: 13 },
+    { header: tx("status"), key: "status", width: 13 },
+    { header: tx("assigneeLabel"), key: "assigneeLabel", width: 22 },
+    { header: tx("dueDate"), key: "dueDate", width: 16 },
+    { header: tx("fileCount"), key: "fileCount", width: 13 },
   ];
 
   for (const row of rows) {
     const added = sheet.addRow({
       registryNumber: row.registryNumber,
-      direction: DIRECTION_LABELS[row.direction],
+      direction: tRoot(`documents.direction.${row.direction}`),
       registeredAt: row.registeredAt,
       documentDate: row.documentDate,
       counterparty: row.counterparty,
       referenceNumber: row.referenceNumber ?? "",
       subject: row.subject,
       categoryName: row.categoryName ?? "",
-      deliveryMethod: row.deliveryMethod ? DELIVERY_METHOD_LABELS[row.deliveryMethod] : "",
-      status: STATUS_LABELS[row.status],
+      deliveryMethod: row.deliveryMethod ? tx(`deliveries.${row.deliveryMethod}`) : "",
+      status: tRoot(`documents.status.${row.status}`),
       assigneeLabel: row.assigneeLabel ?? "",
       dueDate: row.dueDate,
       fileCount: row.fileCount,
@@ -107,14 +112,14 @@ export async function exportDocumentsHandler(request: Request): Promise<Response
 
   if (truncated) {
     const note = sheet.addRow({
-      registryNumber: `Sonuçlar ${EXPORT_MAX_ROWS.toLocaleString("tr-TR")} satırla sınırlandı.`,
+      registryNumber: tRoot("common.export.truncated", { max: EXPORT_MAX_ROWS.toLocaleString(locale) }),
     });
     note.font = { italic: true, bold: true };
     sheet.mergeCells(`A${note.number}:M${note.number}`);
   }
 
   const buffer = await workbook.xlsx.writeBuffer();
-  const fileName = `evrak-defteri-${berlinToday().toISOString().slice(0, 10)}.xlsx`;
+  const fileName = `${tx("_file")}-${berlinToday().toISOString().slice(0, 10)}.xlsx`;
 
   return new Response(buffer as ArrayBuffer, {
     headers: {

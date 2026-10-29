@@ -7,6 +7,7 @@ import { amountToGermanWords } from "@/shared/german-number-words";
 
 import { ITEM_LABELS } from "../constants";
 import type { MemberAddressBlock } from "@/modules/members/server";
+import { ActionError } from "@/modules/auth/server";
 
 /**
  * Değişmez anlık görüntü oluşturucu (§ 11 md. 9 md. 5): recipient + issuer
@@ -70,7 +71,7 @@ export function donorRecipient(donor: {
   if (!donor.postalCode) missing.push("PLZ");
   if (!donor.city) missing.push("şehir");
   if (missing.length > 0) {
-    throw new Error(`Bildirim için alıcı verisi eksik: ${missing.join(", ")}`);
+    throw new ActionError(`Bildirim için alıcı verisi eksik: ${missing.join(", ")}`);
   }
   return {
     kind: "donor",
@@ -107,11 +108,11 @@ export async function buildConfirmationSnapshot(
 ): Promise<ConfirmationBuild> {
   void tx;
   if (args.items.length === 0) {
-    throw new Error("Bildirim için en az bir öge gerekir.");
+    throw new ActionError("donations.errors.confirmationNeedsItem");
   }
   const totalCents = args.items.reduce((sum, item) => sum + item.amountCents, 0);
   if (totalCents <= 0) {
-    throw new Error("Bildirim toplamı 0'dan büyük olmalıdır.");
+    throw new ActionError("Bildirim toplamı 0'dan büyük olmalıdır.");
   }
 
   const profile = await getOrganizationProfile();

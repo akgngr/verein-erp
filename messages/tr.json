@@ -27,7 +27,60 @@
     "recordsPerPageValue": "{count} kayıt",
     "accessDeniedTitle": "Erişim engellendi",
     "accessDeniedDescription": "Bu sayfayı görüntüleme yetkiniz yok. Lütfen yöneticinizle görüşün.",
-    "appDescription": "Dernek yönetim sistemi: evrak kayıt, toplantılar ve üye yönetimi."
+    "appDescription": "Dernek yönetim sistemi: evrak kayıt, toplantılar ve üye yönetimi.",
+    "errors": {
+      "formInvalid": "Lütfen formdaki hataları düzeltin.",
+      "sessionExpired": "Oturumunuz sona erdi. Lütfen tekrar giriş yapın.",
+      "forbidden": "Bu işlem için yetkiniz yok.",
+      "duplicate": "Bu kayıt zaten mevcut.",
+      "unexpected": "Beklenmeyen bir hata oluştu.",
+      "staleRecord": "Kayıt bu arada başka bir kullanıcı tarafından güncellendi. Sayfayı yenileyip tekrar deneyin."
+    },
+    "selectPlaceholder": "Seçin",
+    "noRecords": "Kayıt bulunamadı.",
+    "rowActions": "Satır işlemleri",
+    "filterSelect": "{label} seçin",
+    "noFilter": "Filtre seçilmedi",
+    "languageChanged": "Dil değiştirildi: Türkçe",
+    "languageChangeFailed": "Dil değiştirilemedi.",
+    "languageSelect": "Dil seçimi",
+    "languageOptions": "Dil seçenekleri",
+    "signOut": "Çıkış yap",
+    "loginTitle": "Giriş",
+    "appTitleTemplate": "%s | Dernek Yönetim Sistemi",
+    "dateRange": {
+      "today": "Bugün",
+      "yesterday": "Dün",
+      "last7": "Son 7 gün",
+      "last14": "Son 14 gün",
+      "last30": "Son 30 gün",
+      "last90": "Son 90 gün",
+      "last365": "Son 365 gün",
+      "none": "Tarih aralığı seçilmedi",
+      "picker": "Tarih aralığı seçici",
+      "clear": "Tarih filtresini kaldır",
+      "label": "Tarih",
+      "from": "{date}'den itibaren",
+      "until": "{date}'ye kadar",
+      "apply": "Uygula",
+      "custom": "Özel"
+    },
+    "table": {
+      "searchPlaceholder": "Ara...",
+      "searchLabel": "Tabloda ara",
+      "filters": "Filtreler",
+      "filtersHint": "Sonuçları daraltmak için seçim yapın",
+      "reset": "Sıfırla",
+      "activeFilters": "{count} filtre aktif",
+      "done": "Tamam",
+      "label": "Tablo"
+    },
+    "active": "Aktif",
+    "passive": "Pasif",
+    "emailPlaceholder": "ornek@dernek.org",
+    "export": {
+      "truncated": "Sonuçlar {max} satırla sınırlandı."
+    }
   },
   "nav": {
     "panel": "Panel",
@@ -36,6 +89,7 @@
     "denetimKaydi": "Denetim Kaydı",
     "evrak": "Evrak Kayıt",
     "bagislar": "Bağışlar",
+    "events": "Etkinlikler",
     "inventory": "Envanter",
     "mail": "E-posta",
     "toplantilar": "Toplantılar",
@@ -79,7 +133,31 @@
     "orgBannerLink": "Dernek bilgilerini doldur",
     "accountingNet": "Muhasebe farkı: {net}",
     "accountingMissing": "Belgesi eksik: {count}",
-    "accountingYearLocked": "Yıl kilitli"
+    "accountingYearLocked": "Yıl kilitli",
+    "overviewTitle": "Genel Bakış",
+    "overviewDescription": "Dernek yönetim sistemi ve operasyonel özet durumu.",
+    "docsCategory": "Evrak Kayıt",
+    "docsPrimary": "Açık / İşlemde",
+    "overdueBadge": "{count} Gecikmiş",
+    "incomingMonth": "Bu ay gelen",
+    "outgoingMonth": "Bu ay giden",
+    "overdueLabel": "Süresi geçmiş",
+    "meetingsCategory": "Toplantı & Tutanak",
+    "nextLabel": "Sıradaki: {number}",
+    "plannedLabel": "Planlanan Toplantı",
+    "overdueTasksBadge": "{count} Gecikmiş Görev",
+    "pendingMinutes": "Onay bekleyen",
+    "openTasksLabel": "Açık görev",
+    "overdueTasksLabel": "Gecikmiş görev",
+    "membersCategory": "Üye Yönetimi",
+    "activeMembers": "Aktif Üye",
+    "newThisMonth": "Bu ay yeni",
+    "passive": "Pasif",
+    "resigned": "Ayrılan",
+    "docsOverdueAlert": "Son işlem tarihi geçmiş {count} adet evrak bekliyor.",
+    "docsOverdueAction": "Geciken evrakları gör",
+    "tasksOverdueAlert": "Termini geçmiş {count} adet toplantı görevi bulunuyor.",
+    "tasksOverdueAction": "Geciken görevleri gör"
   },
   "meta": {
     "panel": "Panel",
@@ -102,7 +180,7 @@
     "kullaniciDuzenle": "Kullanıcıyı Düzenle",
     "denetimKaydi": "Denetim Kaydı",
     "profil": "Profil",
-    "dernekBilgileri": "Dernek Bilgileri | Dernek Yönetim Sistemi"
+    "dernekBilgileri": "Dernek Bilgileri"
   },
   "pdfLanguage": {
     "german": "Almanca (Deutsch)",
@@ -118,7 +196,10 @@
       "activeLanguage": "Geçerli Dil",
       "tr": "Türkçe",
       "de": "Deutsch",
-      "switchSuccess": "Arayüz dili başarıyla değiştirildi."
+      "switchSuccess": "Arayüz dili başarıyla değiştirildi.",
+      "trHint": "Türkiye dernek standartları & Türkçe arayüz",
+      "deHint": "Alman dernek standardı & Almanca arayüz",
+      "switchedTo": "Arayüz dili güncellendi: {language}"
     },
     "themeSection": {
       "title": "Görünüm ve Tema",
@@ -156,7 +237,41 @@
         "description": "Hesap planı (SKR49 / standart), bütçe hedefleri ve mali yıl yapılandırmaları.",
         "action": "Ayarlar"
       }
+    },
+    "badges": {
+      "organization": "Profil & Kimlik",
+      "users": "Erişim & Roller",
+      "modules": "Modüller & Şema",
+      "audit": "Güvenlik & Log",
+      "accounting": "Mali Yapı"
     }
+  },
+  "roles": {
+    "ADMIN": "Yönetici",
+    "BOARD": "Yönetim Kurulu",
+    "SECRETARY": "Sekreter",
+    "VIEWER": "Salt okunur",
+    "TREASURER": "Sayman",
+    "AUDITOR": "Denetçi"
+  },
+  "validation": {
+    "passwordMin": "Parola en az 10 karakter olmalıdır.",
+    "passwordUpper": "Parola en az bir büyük harf içermelidir.",
+    "passwordLower": "Parola en az bir küçük harf içermelidir.",
+    "passwordDigit": "Parola en az bir rakam içermelidir.",
+    "emailInvalid": "Geçerli bir e-posta adresi girin.",
+    "passwordHint": "En az 10 karakter; 1 büyük harf, 1 küçük harf ve 1 rakam içermelidir.",
+    "yearInt": "Yıl tam sayı olmalıdır."
+  },
+  "files": {
+    "readFailed": "Dosya okunamadı (multipart/form-data bekleniyor).",
+    "missing": "Dosya bulunamadı.",
+    "typeNotAllowed": "Bu dosya türü kabul edilmiyor.",
+    "empty": "Boş dosya yüklenemez.",
+    "contentMismatch": "Dosya içeriği .{extension} uzantısıyla uyumlu değil.",
+    "tooLarge": "Dosya en fazla {maxMb} MB olabilir.",
+    "uploadFailed": "Dosya yüklenemedi.",
+    "maxPerRecord": "Kayıt başına en fazla {max} dosya eklenebilir."
   },
   "accounting": {
     "list": {
@@ -310,7 +425,8 @@
         "activate": "Etkinleştir",
         "typeCASH": "Kasa (Kasse)",
         "typeBANK": "Banka hesabı (Girokonto)",
-        "typeOTHER": "Diğer (Sonstiges)"
+        "typeOTHER": "Diğer (Sonstiges)",
+        "saved": "Hesap kaydedildi."
       },
       "categories": {
         "name": "Kategori",
@@ -328,7 +444,8 @@
         "sphereIDEELL": "İdeel alan",
         "sphereASSET_MANAGEMENT": "Varlık yönetimi",
         "spherePURPOSE_OPERATION": "Amaca bağlı işletme",
-        "sphereECONOMIC_OPERATION": "Ticari işletme"
+        "sphereECONOMIC_OPERATION": "Ticari işletme",
+        "saved": "Kategori kaydedildi."
       },
       "projects": {
         "name": "Proje",
@@ -338,7 +455,8 @@
         "new": "Yeni proje",
         "edit": "Düzenle",
         "deactivate": "Devre dışı bırak",
-        "activate": "Etkinleştir"
+        "activate": "Etkinleştir",
+        "saved": "Proje kaydedildi."
       },
       "syncSettings": {
         "title": "Üyelik aktarımı ayarları",
@@ -463,7 +581,8 @@
         "pdf": "Kassenbericht PDF"
       },
       "economic80": "Ticari işletme gelirleri 50.000 € sınırının %80'ine ulaştı (§ 64 Abs. 3 AO).",
-      "economicExceeded": "Ticari işletme gelirleri 50.000 € sınırını aştı (§ 64 Abs. 3 AO). Vergi danışmanına başvurun."
+      "economicExceeded": "Ticari işletme gelirleri 50.000 € sınırını aştı (§ 64 Abs. 3 AO). Vergi danışmanına başvurun.",
+      "reversedSuffix": "{description} (İPTAL)"
     },
     "balances": {
       "title": "Hesap bakiyeleri"
@@ -475,11 +594,303 @@
       "yearClosing": "Yıl kapanışı",
       "settings": "Ayarlar",
       "export": "Excel'e aktar"
+    },
+    "meta": {
+      "list": "Muhasebe",
+      "create": "Yeni fiş",
+      "detail": "Fiş detayı",
+      "edit": "Fişi düzenle",
+      "reports": "Raporlar",
+      "budget": "Bütçe",
+      "yearClosing": "Yıl kapanışı",
+      "settings": "Muhasebe ayarları",
+      "memberSync": "Üyelik aktarımı"
+    },
+    "errors": {
+      "openingDateInvalid": "Açılış tarihi geçersiz.",
+      "openingNegative": "Açılış bakiyesi negatif olamaz.",
+      "accountNameTaken": "Bu hesap adı zaten kullanılıyor.",
+      "accountNotFound": "Hesap bulunamadı.",
+      "openingLocked": "Hareketi olan hesabın açılış bakiyesi değiştirilemez.",
+      "bookingDateInvalid": "Fiş tarihi geçersiz.",
+      "amountInvalid": "Tutar geçersiz.",
+      "amountTooLarge": "Tutar çok büyük.",
+      "targetRequired": "Hedef hesap zorunludur.",
+      "targetSameAsSource": "Hedef hesap kaynak hesapla aynı olamaz.",
+      "bookingNotFound": "Fiş bulunamadı.",
+      "reversedNoEdit": "İptal edilmiş fiş düzenlenemez; yeni fiş oluşturun.",
+      "transferNoCategory": "Virman fişinde kategori olamaz.",
+      "alreadyReversed": "Bu fiş zaten iptal edilmiş.",
+      "budgetInvalid": "Bütçe tutarı geçersiz.",
+      "categoryNameTaken": "Bu kategori adı zaten kullanılıyor.",
+      "categoryNotFound": "Kategori bulunamadı.",
+      "fileNotFound": "Dosya bulunamadı.",
+      "projectNameTaken": "Bu proje adı zaten kullanılıyor.",
+      "projectNotFound": "Proje bulunamadı.",
+      "feeCategoryInvalid": "Aidat kategorisi aktif bir gelir kategorisi olmalıdır.",
+      "accountInactive": "Hesap bulunamadı veya devre dışı.",
+      "donationCategoryInvalid": "Bağış kategorisi aktif bir gelir kategorisi olmalıdır.",
+      "cashNegative": "Kasa bakiyesi eksiye düşemez (Kassenminus).",
+      "beforeOpening": "Fiş tarihi hesabın açılış tarihinden önce olamaz.",
+      "categoryMismatch": "Kategori bulunamadı veya fiş türüyle uyuşmuyor.",
+      "yearChangeForbidden": "Fiş başka yıla taşınamaz; yeni fiş oluşturup eski fişi ters kayıt edin.",
+      "yearChangeField": "Fiş yılı değiştirilemez.",
+      "bookingDateFuture": "Fiş tarihi gelecekte olamaz.",
+      "categoryDirection": "Kategori yönü fiş türüyle uyuşmuyor.",
+      "reverseYearLocked": "Fişin yılı kilitli; ters kayıt için yıl kilidini açın.",
+      "budgetYearLocked": "{year} yılı kilitli; bütçe düzenlenemez.",
+      "yearAlreadyLocked": "{year} yılı zaten kilitli.",
+      "yearAlreadyOpen": "{year} yılı zaten açık.",
+      "reverseYearLockedNumbered": "{year} yılı kilitli; ters kayıt için kilidi açın.",
+      "fileYearLocked": "{year} yılı kilitli; belge silinemez (geç belge yüklemesi serbesttir).",
+      "yearLocked": "{year} yılı kilitli (abgeschlossen); fiş girilemez.",
+      "yearLockedDate": "{year} yılı kilitli (abgeschlossen); bu tarihe fiş girilemez.",
+      "accountDisabled": "Devre dışı hesap kullanılamaz: {name}",
+      "beforeOpeningNamed": "Fiş tarihi hesabın açılış tarihinden önce olamaz: {name}",
+      "categoryDisabled": "Devre dışı kategori kullanılamaz: {name}",
+      "reverseYearLockedYear": "{year} yılı kilitli; ters kayıt için yıl kilidini açın.",
+      "settingsMissing": "Muhasebe ayarları eksik: {missing}. Muhasebe > Ayarlar sayfasından tamamlayın.",
+      "settingsInvalid": "Muhasebe ayarları geçersiz: {missing}.",
+      "syncSettingsMissing": "Ayarlar eksik: {missing}. Ayarlar sayfasından tamamlayın.",
+      "itemDonationCategory": "bağış kategorisi",
+      "itemCashAccount": "kasa hesabı",
+      "itemBankAccount": "banka hesabı",
+      "itemFeeCategory": "aidat kategorisi",
+      "itemValidDonationCategory": "geçerli bağış kategorisi",
+      "itemValidCashAccount": "geçerli kasa hesabı",
+      "itemValidBankAccount": "geçerli banka hesabı",
+      "sourcedNoEdit": "Kaynak fiş (otomatik) düzenlenemez; kaynağı olan modülden yönetilir.",
+      "categoryInUse": "Bu kategoride fiş kayıtlı; yön (Gelir/Gider) ve alan (Sphere) değiştirilemez. Yeni bir kategori oluşturun.",
+      "categoryDirectionLocked": "Fişi olan kategoride yön değişmez.",
+      "categorySphereLocked": "Fişi olan kategoride alan değişmez.",
+      "bookingNotFound2": "Fiş bulunamadı.",
+      "reversedNoFile": "İptal edilmiş fişe belge eklenemez.",
+      "reversedSuffix": "İPTAL EDİLDİ"
+    },
+    "settings": {
+      "donationShort": "Bağış"
+    },
+    "validation": {
+      "accountNameMin": "Hesap adı en az 2 karakter olmalıdır.",
+      "accountNameMax": "Hesap adı en fazla 100 karakter olabilir.",
+      "amountTooLarge": "Tutar çok büyük.",
+      "openingDateInvalid": "Geçerli bir açılış tarihi girin.",
+      "bookingDateRequired": "Fiş tarihi zorunludur.",
+      "bookingDateInvalid": "Geçerli bir fiş tarihi girin.",
+      "amountRequired": "Tutar zorunludur.",
+      "descriptionMin": "Açıklama en az 3 karakter olmalıdır.",
+      "descriptionMax": "Açıklama en fazla 300 karakter olabilir.",
+      "counterpartyMax": "Karşı taraf en fazla 150 karakter olabilir.",
+      "receiptMax": "Belge no en fazla 100 karakter olabilir.",
+      "projectInvalid": "Geçerli bir proje seçin.",
+      "accountRequired": "Hesap zorunludur.",
+      "categoryRequired": "Kategori zorunludur.",
+      "sourceRequired": "Kaynak hesap zorunludur.",
+      "targetRequired": "Hedef hesap zorunludur.",
+      "versionMissing": "Kayıt sürümü eksik.",
+      "reasonMin": "Gerekçe en az 5 karakter olmalıdır.",
+      "reasonMax": "Gerekçe en fazla 300 karakter olabilir.",
+      "yearInvalid": "Yıl geçersiz.",
+      "rowLimit": "Satır sayısı sınırı aşıldı.",
+      "categoryNameMin": "Kategori adı en az 2 karakter olmalıdır.",
+      "categoryNameMax": "Kategori adı en fazla 150 karakter olabilir.",
+      "helpMax": "Yardım metni en fazla 500 karakter olabilir.",
+      "projectNameMin": "Proje adı en az 2 karakter olmalıdır.",
+      "projectNameMax": "Proje adı en fazla 150 karakter olabilir.",
+      "noteMax": "Not en fazla 500 karakter olabilir.",
+      "feeCategoryRequired": "Aidat kategorisi seçin.",
+      "cashAccountRequired": "Kasa hesabı seçin.",
+      "bankAccountRequired": "Banka hesabı seçin.",
+      "donationCategoryRequired": "Bağış kategorisi seçin."
+    },
+    "module": {
+      "label": "Muhasebe",
+      "description": "Alman dernek mevzuatına uygun çift taraflı defter tutma, fiş ve bütçe yönetimi."
+    },
+    "enums": {
+      "bookingType": {
+        "INCOME": "Gelir (Einnahme)",
+        "EXPENSE": "Gider (Ausgabe)",
+        "TRANSFER": "Virman (Umbuchung)"
+      },
+      "direction": {
+        "INCOME": "Gelir",
+        "EXPENSE": "Gider"
+      },
+      "sphere": {
+        "IDEELL": "İdeel alan (ideeller Bereich)",
+        "ASSET_MANAGEMENT": "Varlık yönetimi (Vermögensverwaltung)",
+        "PURPOSE_OPERATION": "Amaca bağlı işletme (Zweckbetrieb)",
+        "ECONOMIC_OPERATION": "Ticari işletme (wirtschaftlicher Geschäftsbetrieb)"
+      },
+      "accountType": {
+        "CASH": "Kasa (Kasse)",
+        "BANK": "Banka hesabı (Girokonto)",
+        "OTHER": "Diğer (Sonstiges)"
+      },
+      "sourceType": {
+        "MEMBER_PAYMENT": "Üyelik aidatı (otomatik)",
+        "DONATION": "Bağış (otomatik)",
+        "DONATION_WAIVER": "Aufwandsspende gideri (otomatik)"
+      }
+    },
+    "export": {
+      "bookings": {
+        "bookingNumber": "Buchungsnr.",
+        "bookingDate": "Tarih",
+        "type": "Tür",
+        "accountName": "Hesap",
+        "counterAccount": "Hedef hesap",
+        "categoryName": "Kategori",
+        "sphere": "Alan",
+        "project": "Proje",
+        "amount": "Tutar",
+        "description": "Açıklama",
+        "counterparty": "Karşı taraf",
+        "receiptReference": "Belge no",
+        "fileCount": "Belge sayısı",
+        "status": "Durum",
+        "reverseReason": "İptal nedeni",
+        "_sheet": "Buchungen",
+        "_file": "buchungen",
+        "_reversed": "İptal edildi",
+        "_active": "Aktif"
+      },
+      "incomeExpense": {
+        "sphere": "Alan",
+        "direction": "Yön",
+        "category": "Kategori",
+        "plan": "Plan",
+        "actual": "Gerçekleşen",
+        "diff": "Fark",
+        "previous": "Önceki yıl",
+        "_sheet": "EÜR",
+        "_file": "gelir-gider",
+        "_grandTotal": "GENEL TOPLAM (Gelir - Gider)",
+        "_exceeded": "Ticari işletme gelirleri 50.000 € sınırını aştı (§ 64 Abs. 3 AO). Vergi danışmanına başvurun.",
+        "_near": "Ticari işletme gelirleri 50.000 € sınırının %80'ine ulaştı (§ 64 Abs. 3 AO)."
+      },
+      "ledger": {
+        "date": "Tarih",
+        "number": "Buchungsnr.",
+        "description": "Açıklama",
+        "receipt": "Belge no",
+        "income": "Gelir",
+        "expense": "Gider",
+        "balance": "Bakiye",
+        "_sheet": "Kassenbuch",
+        "_file": "kasa-defteri",
+        "_opening": "Dönem başı bakiyesi ({account})",
+        "_closing": "Dönem sonu bakiyesi",
+        "_noAccount": "Hesap seçilmedi."
+      }
     }
   },
   "audit": {
     "pageTitle": "Denetim Kaydı",
-    "pageDescription": "Sistemde gerçekleşen kimlik doğrulama ve veri işlemleri."
+    "pageDescription": "Sistemde gerçekleşen kimlik doğrulama ve veri işlemleri.",
+    "meta": {
+      "list": "Denetim Kaydı"
+    },
+    "actions": {
+      "LOGIN_SUCCESS": "Giriş (başarılı)",
+      "LOGIN_FAILED": "Giriş (başarısız)",
+      "LOGOUT": "Çıkış",
+      "CREATE": "Oluşturma",
+      "UPDATE": "Güncelleme",
+      "DELETE": "Silme",
+      "DEACTIVATE": "Pasife alma",
+      "ACTIVATE": "Aktifleştirme",
+      "PASSWORD_CHANGE": "Parola değişimi",
+      "PASSWORD_RESET": "Parola sıfırlama",
+      "STATUS_CHANGE": "Durum değişikliği",
+      "APPROVE": "Onaylama",
+      "REOPEN": "Yeniden açma",
+      "CANCEL": "İptal",
+      "VOID": "Geçersiz kılma",
+      "REVERSE": "Ters kayıt",
+      "EXPORT": "Dışa aktarma",
+      "IMPORT": "İçe aktarma",
+      "DATA_EXPORT": "Veri dışa aktarma (DSGVO)",
+      "FILE_UPLOAD": "Dosya yükleme",
+      "FILE_DELETE": "Dosya silme",
+      "NOTE_ADD": "Not ekleme",
+      "ANONYMIZE": "Anonimleştirme",
+      "YEAR_CLOSE": "Yıl kapatma",
+      "YEAR_UNLOCK": "Yıl kilidini açma",
+      "BUDGET_SAVE": "Bütçe kaydı",
+      "SYNC_MEMBER_PAYMENTS": "Aidat aktarımı",
+      "TEMPLATE_CONFIRM": "Şablon onayı",
+      "PDF_DOWNLOAD": "PDF indirme",
+      "PDF_BATCH_DOWNLOAD": "Toplu PDF indirme",
+      "PDF_INTEGRITY_ERROR": "PDF bütünlük hatası",
+      "DUE_ADD": "Aidat ekleme",
+      "DUE_UPDATE": "Aidat güncelleme",
+      "DUE_DELETE": "Aidat silme",
+      "DUES_GENERATE": "Aidat tahakkuku",
+      "ATTENDEE_ADD": "Katılımcı ekleme",
+      "ATTENDEE_UPDATE": "Katılımcı güncelleme",
+      "ATTENDEE_REMOVE": "Katılımcı çıkarma",
+      "ATTENDEE_MARK_ALL": "Tümünü katıldı işaretleme",
+      "AGENDA_ADD": "Gündem ekleme",
+      "AGENDA_UPDATE": "Gündem güncelleme",
+      "AGENDA_DELETE": "Gündem silme",
+      "AGENDA_MOVE": "Gündem sıralama",
+      "AGENDA_DISCUSSION": "Görüşme notu",
+      "DECISION_ADD": "Karar ekleme",
+      "DECISION_UPDATE": "Karar güncelleme",
+      "DECISION_DELETE": "Karar silme",
+      "ACTION_ADD": "Görev ekleme",
+      "ACTION_UPDATE": "Görev güncelleme",
+      "ACTION_DELETE": "Görev silme",
+      "ACTION_STATUS": "Görev durumu"
+    },
+    "entities": {
+      "User": "Kullanıcı",
+      "Auth": "Oturum",
+      "Document": "Evrak",
+      "DocumentCategory": "Evrak kategorisi",
+      "DocumentFile": "Evrak dosyası",
+      "Meeting": "Toplantı",
+      "MeetingAttendee": "Toplantı katılımcısı",
+      "MeetingDecision": "Karar",
+      "MeetingFile": "Toplantı dosyası",
+      "AgendaItem": "Gündem maddesi",
+      "ActionItem": "Görev",
+      "Member": "Üye",
+      "MemberDue": "Aidat",
+      "MemberPayment": "Üye ödemesi",
+      "MembershipTypeConfig": "Üyelik tipi",
+      "AccountingAccount": "Hesap",
+      "AccountingBooking": "Fiş",
+      "AccountingBookingFile": "Fiş belgesi",
+      "AccountingBudgetLine": "Bütçe kalemi",
+      "AccountingCategory": "Muhasebe kategorisi",
+      "AccountingProject": "Proje",
+      "AccountingSettings": "Muhasebe ayarları",
+      "AccountingYear": "Mali yıl",
+      "Donation": "Bağış",
+      "Donor": "Bağışçı",
+      "DonationsSettings": "Bağış ayarları",
+      "ZuwendungConfirmation": "Bağış makbuzu",
+      "OrganizationProfile": "Dernek profili",
+      "SystemModule": "Modül"
+    },
+    "table": {
+      "aria": "Denetim kaydı listesi",
+      "date": "Tarih",
+      "user": "Kullanıcı",
+      "action": "İşlem",
+      "entity": "Varlık",
+      "entityId": "Varlık ID",
+      "ip": "IP",
+      "search": "Kullanıcı veya varlık ID ara...",
+      "empty": "Denetim kaydı bulunamadı."
+    },
+    "module": {
+      "label": "Denetim Kayıtları",
+      "description": "Sistem işlemlerinin değiştirilemez güvenlik ve denetim logları."
+    }
   },
   "auth": {
     "loginTitle": "Giriş Yap",
@@ -487,7 +898,43 @@
     "password": "Parola",
     "loginButton": "Giriş yap",
     "logout": "Çıkış yap",
-    "mustChangePasswordBanner": "Parolanızı güncellemeniz zorunludur"
+    "mustChangePasswordBanner": "Parolanızı güncellemeniz zorunludur",
+    "meta": {
+      "profile": "Profil"
+    },
+    "appTitle": "Dernek Yönetim Sistemi",
+    "loginSubtitle": "Devam etmek için oturum açın",
+    "passiveNotice": "Oturumunuz sonlandırıldı. Hesabınız pasif duruma alınmış olabilir; lütfen yöneticinizle görüşün.",
+    "profile": {
+      "title": "Profil",
+      "description": "Hesap bilgileriniz ve parola değişikliği.",
+      "accountInfo": "Hesap Bilgileri",
+      "name": "Ad Soyad",
+      "email": "E-posta",
+      "role": "Rol",
+      "changePassword": "Parola Değiştir",
+      "currentPassword": "Mevcut parola",
+      "newPassword": "Yeni parola",
+      "submit": "Parolayı güncelle",
+      "updated": "Parolanız güncellendi."
+    },
+    "errors": {
+      "sessionInvalid": "Oturumunuz geçersiz. Lütfen tekrar giriş yapın.",
+      "currentPasswordWrong": "Mevcut parolanız hatalı.",
+      "invalidCredentials": "E-posta veya parola hatalı.",
+      "accountLocked": "Hesap geçici olarak kilitlendi, daha sonra tekrar deneyin.",
+      "loginFailed": "Giriş yapılamadı. Lütfen tekrar deneyin.",
+      "invalidLocale": "Geçersiz dil seçimi."
+    },
+    "validation": {
+      "currentPasswordRequired": "Mevcut parolanızı girin.",
+      "emailRequired": "E-posta zorunludur.",
+      "passwordRequired": "Parola zorunludur."
+    },
+    "module": {
+      "label": "Kimlik Doğrulama",
+      "description": "Kullanıcı girişi, oturum yönetimi ve parola güvenliği."
+    }
   },
   "documents": {
     "pageTitle": "Evrak Kayıt",
@@ -518,7 +965,8 @@
       "deactivatedToast": "Kategori pasife alındı.",
       "activatedToast": "Kategori aktifleştirildi.",
       "createdToast": "Kategori oluşturuldu.",
-      "updatedToast": "Kategori güncellendi."
+      "updatedToast": "Kategori güncellendi.",
+      "deactivateNamedMessage": "\"{name}\" pasife alınacak; yeni evrak formlarında seçilemeyecek ama mevcut evraklarda görünmeye devam edecek. Onaylıyor musunuz?"
     },
     "categoriesPageTitle": "Evrak Kategorileri",
     "categoriesPageDescription": "Kategoriler silinmez; pasife alınan kategori yeni evraklarda seçilemez, mevcut evraklarda görünür.",
@@ -528,7 +976,8 @@
       "overdue": "Süresi geçmiş",
       "incomingThisMonth": "Bu ay gelen",
       "outgoingThisMonth": "Bu ay giden",
-      "applyFilter": "filtreyi uygula"
+      "applyFilter": "filtreyi uygula",
+      "filterAria": "{label}: {value} — filtreyi uygula"
     },
     "filter": {
       "all": "Tümü",
@@ -654,7 +1103,9 @@
       "updatedToast": "Evrak güncellendi: {registryNumber}",
       "savedToast": "Evrak kaydedildi: {registryNumber}",
       "savedWithUploadErrorToast": "Evrak kaydedildi ancak {count} dosya yüklenemedi. Dosyaları detay sayfasından yeniden yükleyebilirsiniz.",
-      "passiveSuffix": "(pasif)"
+      "passiveSuffix": "(pasif)",
+      "editNumbered": "{registryNumber} — yön ve kayıt numarası değiştirilemez.",
+      "passiveCategory": "{name} (pasif)"
     },
     "files": {
       "addAria": "Dosya ekle",
@@ -678,7 +1129,8 @@
       "deleteAria": "{name} dosyasını sil",
       "deleteTitle": "Dosyayı sil",
       "deleteMessage": "\"{name}\" dosyası kayıttan kaldırılacak. Diskteki dosya korunur. Onaylıyor musunuz?",
-      "deletedToast": "Dosya silindi."
+      "deletedToast": "Dosya silindi.",
+      "removeFromListAria": "{name} dosyasını listeden çıkar"
     },
     "notes": {
       "empty": "Henüz işlem notu eklenmemiş.",
@@ -691,6 +1143,75 @@
     "menu": {
       "categories": "Kategoriler",
       "export": "Excel'e aktar"
+    },
+    "meta": {
+      "list": "Evrak Kayıt",
+      "create": "Yeni evrak",
+      "detail": "Evrak detayı",
+      "edit": "Evrağı düzenle",
+      "categories": "Evrak kategorileri"
+    },
+    "errors": {
+      "documentNotFound": "Evrak bulunamadı.",
+      "categoryNameTaken": "Bu kategori adı zaten kullanımda.",
+      "categoryNotFound": "Kategori bulunamadı.",
+      "invalidDate": "Evrak tarihi geçersiz.",
+      "fileNotFound": "Dosya bulunamadı.",
+      "categoryInactive": "Kategori bulunamadı veya pasif durumda.",
+      "assigneeInactive": "Sorumlu bulunamadı veya hesabı pasif durumda.",
+      "replyOnlyOutgoing": "Yanıtlanan evrak yalnızca giden evrakta seçilebilir.",
+      "replySelf": "Bir evrak kendine yanıt olarak bağlanamaz.",
+      "replyTargetInvalid": "Yanıt verilecek evrak bulunamadı veya gelen evrak değil.",
+      "documentNotFound2": "Evrak bulunamadı."
+    },
+    "validation": {
+      "categoryMin": "Kategori adı en az 2 karakter olmalıdır.",
+      "categoryMax": "Kategori adı en fazla 60 karakter olabilir.",
+      "dateRequired": "Evrak tarihi zorunludur.",
+      "dateInvalid": "Geçerli bir evrak tarihi girin.",
+      "counterpartyMin": "Gönderen/Alıcı en az 2 karakter olmalıdır.",
+      "counterpartyMax": "Gönderen/Alıcı en fazla 200 karakter olabilir.",
+      "referenceMax": "Evrak sayısı en fazla 100 karakter olabilir.",
+      "subjectMin": "Konu en az 3 karakter olmalıdır.",
+      "subjectMax": "Konu en fazla 300 karakter olabilir.",
+      "summaryMax": "Özet en fazla 2000 karakter olabilir.",
+      "dueDateInvalid": "Geçerli bir son işlem tarihi girin.",
+      "dueBeforeDocument": "Son işlem tarihi evrak tarihinden önce olamaz.",
+      "versionMissing": "Kayıt sürümü eksik.",
+      "noteEmpty": "Not boş olamaz.",
+      "noteMax": "Not en fazla 2000 karakter olabilir."
+    },
+    "module": {
+      "label": "Evrak Kayıt",
+      "description": "Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi."
+    },
+    "export": {
+      "register": {
+        "registryNumber": "Kayıt No",
+        "direction": "Yön",
+        "registeredAt": "Kayıt Tarihi",
+        "documentDate": "Evrak Tarihi",
+        "counterparty": "Gönderen/Alıcı",
+        "referenceNumber": "Evrak Sayısı",
+        "subject": "Konu",
+        "categoryName": "Kategori",
+        "deliveryMethod": "Teslim Şekli",
+        "status": "Durum",
+        "assigneeLabel": "Sorumlu",
+        "dueDate": "Son İşlem Tarihi",
+        "fileCount": "Dosya Sayısı",
+        "_sheet": "Evrak Defteri",
+        "_file": "evrak-defteri",
+        "deliveries": {
+          "POST": "Posta",
+          "EMAIL": "E-posta",
+          "HAND": "Elden",
+          "COURIER": "Kargo/Kurye",
+          "REGISTERED_MAIL": "Kayıtlı Posta",
+          "FAX": "Faks",
+          "OTHER": "Diğer"
+        }
+      }
     }
   },
   "donations": {
@@ -840,7 +1361,9 @@
         "deactivate": "Pasifleştir",
         "activate": "Etkinleştir",
         "toastAnonymized": "Bağışçı anonimleştirildi."
-      }
+      },
+      "memberNumberPlaceholder": "Üye numarası (opsiyonel)",
+      "anonymizedNoEdit": "Anonimleştirilmiş bağışçı düzenlenemez."
     },
     "confirmations": {
       "title": "Bildirimler (Zuwendungsbestätigungen)",
@@ -892,7 +1415,21 @@
           "templateVersion": "Şablon sürümü",
           "items": "Ögeler",
           "retention": "Nüsha saklama süresi bitişi"
-        }
+        },
+        "subtitle": "{kind} · {content} · {date}",
+        "issuedBy": "Düzenleyen",
+        "place": "Düzenleme yeri",
+        "cancelledInfo": "{date} tarihinde {label} tarafından iptal edildi: {reason}",
+        "replaces": "Yerine geçtiği bildirim",
+        "replacedBy": "Yerine düzenlenen bildirim",
+        "pdfHash": "PDF (SHA-256)",
+        "itemDate": "Tarih",
+        "itemLabel": "Tür",
+        "itemAmount": "Tutar",
+        "address": "Adres",
+        "reissued": "Yeni bildirim düzenlendi: {number}",
+        "cancelled": "Bildirim iptal edildi.",
+        "notFound": "Bildirim bulunamadı"
       },
       "issue": {
         "title": "Bildirim oluştur (Zuwendungsbestätigung)",
@@ -914,8 +1451,42 @@
         "toastIssued": "Bildirim düzenlendi: {number}",
         "candidatesEmpty": "Bildirilebilir kayıt yok.",
         "batchRun": "Toplu üretimi çalıştır",
-        "batchResult": "{ok} başarılı, {failed} başarısız"
-      }
+        "batchResult": "{ok} başarılı, {failed} başarısız",
+        "subtitle": "Bağış veya aidat için resmî Zuwendungsbestätigung üretin.",
+        "typeSingleHint": "Bir bağış için tek bildirim",
+        "typeCollectiveHint": "Bir bağışçının yıl içindeki bağışları tek bildirimde (Sammelbestätigung)",
+        "typeFeeHint": "Bir üyenin yıllık aidat ödemeleri",
+        "typeBatchHint": "Yıl sonunda tüm alıcılar için toplu üretim",
+        "selectDonor": "Bağışçı seçin",
+        "selectMember": "Üye seçin",
+        "noRecipients": "Bu yıl için bildirilebilir kaydı olan alıcı yok.",
+        "groupNotWaived": "Geldspende",
+        "groupWaived": "Aufwandsspende (gider vazgeçimi)",
+        "groupRule": "Tek bildirimde yalnızca aynı türdeki (Aufwandsspende evet/hayır) bağışlar birleştirilebilir.",
+        "selectAll": "Tümünü seç",
+        "clearAll": "Seçimi temizle",
+        "words": "Yazıyla",
+        "recipient": "Alıcı",
+        "itemCount": "{count} kalem",
+        "feeAllIncluded": "Bildirime bu yılın henüz bildirilmemiş tüm aidat ödemeleri eklenir.",
+        "batchContent": "İçerik",
+        "contentDonation": "Bağışlar",
+        "contentFee": "Aidatlar",
+        "batchSelected": "{count} alıcı seçildi",
+        "resultOk": "Düzenlendi: {number}",
+        "resultFailed": "Başarısız: {error}",
+        "openConfirmation": "Bildirimi aç",
+        "downloadPdf": "PDF indir",
+        "blocked": "Eksikler giderilmeden bildirim oluşturulamaz.",
+        "fix": "Düzelt",
+        "issuedTitle": "Bildirim düzenlendi",
+        "selectedTotal": "Seçili toplam",
+        "date": "Tarih",
+        "number": "No",
+        "amount": "Tutar"
+      },
+      "create": "Bildirim oluştur",
+      "batchHint": "Toplu yazdırma: liste satırlarını seçip PDF düğmesini kullanın (§ 13, max 100)."
     },
     "settings": {
       "title": "Bağış ayarları (Bildirim üretimi)",
@@ -935,12 +1506,20 @@
       "feeDeductibleLink": "Dernek Bilgileri sayfasında değiştir",
       "validityDays": "{days} gün kaldı",
       "validityExpired": "Muafiyet belgesi süresi dolmuş",
-      "validityWarn": "90 günden az kaldı — yenileme planlayın"
+      "validityWarn": "90 günden az kaldı — yenileme planlayın",
+      "subtitle": "Bildirim üretimi için ön koşullar, şablon önizlemeleri ve metin onayı.",
+      "templateSection": "Şablon metni onayı",
+      "templateNotConfirmed": "Mevcut şablon sürümü ({version}) henüz onaylanmadı.",
+      "openPreview": "Önizlemeyi aç",
+      "feeSection": "Aidat bildirimleri",
+      "approveOnly": "Metni yalnızca onay yetkisi olan kullanıcılar onaylayabilir."
     },
     "menu": {
       "donors": "Bağışçılar",
       "confirmations": "Bildirimler",
-      "export": "Excel'e aktar"
+      "export": "Excel'e aktar",
+      "issue": "Bildirim oluştur",
+      "settings": "Ayarlar"
     },
     "meta": {
       "create": "Yeni bağış",
@@ -950,7 +1529,166 @@
       "donorCreate": "Yeni bağışçı",
       "donorDetail": "Bağışçı detayı",
       "donorEdit": "Bağışçıyı düzenle",
-      "confirmations": "Bildirimler"
+      "confirmations": "Bildirimler",
+      "list": "Bağışlar",
+      "confirmationDetail": "Bildirim detayı",
+      "issue": "Bildirim oluştur",
+      "settings": "Bağış ayarları"
+    },
+    "common": {
+      "yes": "Evet",
+      "no": "Hayır",
+      "active": "Aktif",
+      "passive": "Pasif",
+      "backToList": "← Bağışlar"
+    },
+    "errors": {
+      "confirmationNotFound": "Bildirim bulunamadı.",
+      "confirmationAlreadyCancelled": "Bu bildirim zaten iptal edilmiş.",
+      "donorInactive": "Bağışçı bulunamadı veya pasif.",
+      "amountInvalid": "Tutar geçersiz.",
+      "amountTooLarge": "Tutar çok büyük.",
+      "dateInvalid": "Bağış tarihi geçersiz.",
+      "dateFuture": "Bağış tarihi gelecekte olamaz.",
+      "dateTooOld": "Bağış tarihi geçen yılın başından daha eski olamaz.",
+      "donationNotFound": "Bağış bulunamadı.",
+      "cancelledNoEdit": "İptal edilmiş bağış düzenlenemez.",
+      "yearChange": "Bağış başka yıla taşınamaz; bağış numarası yıla bağlıdır.",
+      "donorNotFound": "Bağışçı bulunamadı.",
+      "alreadyCancelled": "Bu bağış zaten iptal edilmiş.",
+      "memberAddressMissing": "Üye bulunamadı veya adresi eksik.",
+      "confirmNumberMismatch": "Onay numarası uyuşmuyor.",
+      "anonymizeFailed": "Anonimleştirilemedi.",
+      "alreadyAnonymized": "Bu bağışçı zaten anonimleştirilmiş.",
+      "confirmationNeedsItem": "Bildirim için en az bir öge gerekir.",
+      "waiverExpenseRequired": "Aufwandsspende için gider kategorisi zorunludur.",
+      "typeDonorNumber": "Bağışçı numarasını yazın: {number}",
+      "activeConfirmationEdit": "Bu bağışın aktif bir bildirimi var; önce bildirimi iptal edin, sonra düzenleyin.",
+      "activeConfirmation": "Bu bağışın aktif bir bildirimi var; önce bildirimi iptal edin.",
+      "retentionBlocksAnonymize": "Bu bağışçının bildirim nüshaları saklama süresi içinde ({count} bildirim). Saklama süresi bitmeden anonimleştirilemez.",
+      "activeDonationBlocksAnonymize": "Bağışçıya ait aktif bildirimli bağış var ({number}); önce bildirimi iptal edin.",
+      "mixedWaiver": "Seçilen bağışlarda Aufwandsspende değeri karışık; ayrı ayrı bildirim üretin.",
+      "feeConfirmationsDisabled": "Aidat bildirimleri kapalı (membershipFeesDeductible = false; § 10b Abs. 1 Satz 8 EStG).",
+      "mixedWaiverYear": "Bu bağışçının yılındaki bağışlar karışık (Aufwandsspende evet/hayır); toplu üretim atlandı.",
+      "noConfirmationSelected": "Bildirim seçilmedi.",
+      "confirmationNotFound2": "Bildirim bulunamadı.",
+      "storedPdfMissing": "Depolanmış PDF bulunamadı.",
+      "pdfIntegrity": "PDF bütünlük hatası: depolanan dosya kayıttaki SHA-256 ile uyuşmuyor. Sistem yöneticisine haber verin (kayıt PDF_INTEGRITY_ERROR).",
+      "reversedDonation": "İptal edilmiş bağışa bildirim düzenlenemez.",
+      "someDonationsMissing": "Seçilen bağışlardan bazıları bulunamadı.",
+      "periodSingleYear": "Sammelbestätigung dönemi tek takvim yılı içinde olmalıdır.",
+      "donationReversed": "{number} iptal edilmiş.",
+      "donationOutsidePeriod": "{number} dönem yılı dışında.",
+      "noFeePayments": "Bu üye ve yıl için bildirilebilir ödeme yok.",
+      "feePaymentsCovered": "Tüm ödemeler zaten aktif bir bildirimde.",
+      "noDonationsInYear": "Bu bağışçının o yıl için bildirilebilir bağışı yok.",
+      "replaceNotCancelled": "Yalnızca iptal edilmiş bir bildirimin yerine yenisi oluşturulabilir.",
+      "alreadyReplaced": "Bu bildirimin yerine zaten yenisi oluşturulmuş."
+    },
+    "validation": {
+      "periodStartInvalid": "Geçerli bir dönem başlangıcı girin.",
+      "periodEndInvalid": "Geçerli bir dönem sonu girin.",
+      "selectDonation": "En az bir bağış seçin.",
+      "cancelReasonMin": "İptal nedeni en az 5 karakter olmalıdır.",
+      "cancelReasonMax": "İptal nedeni en fazla 300 karakter olabilir.",
+      "selectDonor": "Bağışçı seçin.",
+      "dateRequired": "Bağış tarihi zorunludur.",
+      "dateInvalid": "Geçerli bir tarih girin.",
+      "amountRequired": "Tutar zorunludur.",
+      "amountTooLarge": "Tutar çok büyük.",
+      "referenceMax": "Referans en fazla 100 karakter olabilir.",
+      "purposeMax": "Amaç notu en fazla 300 karakter olabilir.",
+      "basisMax": "Dayanak en fazla 300 karakter olabilir.",
+      "basisRequired": "Önceden doğmuş talebin dayanağı zorunludur (en az 5 karakter).",
+      "waiverDateRequired": "Vazgeçimin beyan tarihi zorunludur.",
+      "expenseCategoryRequired": "Gider kategorisi zorunludur (Aufwandsspende gideri).",
+      "waiverMethodOnly": "Bu yöntem yalnızca Aufwandsspende ile kullanılır.",
+      "versionMissing": "Kayıt sürümü eksik.",
+      "firstNameMax": "Ad en fazla 60 karakter olabilir.",
+      "lastNameMax": "Soyad en fazla 60 karakter olabilir.",
+      "organizationMax": "Kuruluş adı en fazla 120 karakter olabilir.",
+      "streetMax": "Straße en fazla 120 karakter olabilir.",
+      "postalCodeMax": "PLZ en fazla 10 karakter olabilir.",
+      "cityMax": "Şehir en fazla 120 karakter olabilir.",
+      "countryMax": "Ülke en fazla 60 karakter olabilir.",
+      "phoneMax": "Telefon en fazla 30 karakter olabilir.",
+      "noteMax": "Not en fazla 500 karakter olabilir.",
+      "lastNameRequired": "Kişi için soyad zorunludur.",
+      "organizationRequired": "Kuruluş için ad (en az 2 karakter) zorunludur.",
+      "postalCodeDe": "Almanya için posta kodu 5 haneli olmalıdır.",
+      "confirmNumberRequired": "Onay için bağışçı numarasını yazın (örn. SP-0007)."
+    },
+    "module": {
+      "label": "Bağışlar",
+      "description": "Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı takibi."
+    },
+    "export": {
+      "register": {
+        "confirmationNumber": "ZB-no",
+        "issuedAt": "Tarih",
+        "kind": "Tür",
+        "content": "İçerik",
+        "recipientName": "Alıcı adı",
+        "period": "Dönem",
+        "total": "Toplam",
+        "status": "Durum",
+        "cancelReason": "İptal nedeni",
+        "_sheet": "Zuwendungsregister",
+        "_file": "zuwendungsregister",
+        "kinds": {
+          "SINGLE": "Einzelbestätigung (Tek)",
+          "COLLECTIVE": "Sammelbestätigung (Toplu)"
+        },
+        "contents": {
+          "DONATION": "Geldspende (Bağış)",
+          "MEMBERSHIP_FEE": "Mitgliedsbeitrag (Aidat)"
+        }
+      },
+      "donations": {
+        "donationNumber": "No",
+        "receivedAt": "Tarih",
+        "donorNumber": "Bağışçı No",
+        "donorName": "Bağışçı adı",
+        "amount": "Tutar",
+        "method": "Yöntem",
+        "waived": "Aufwandsspende",
+        "confirmationNumber": "Bildirim No",
+        "bookingNumber": "Muhasebe fişi",
+        "_sheet": "Bağışlar",
+        "_file": "bagislar",
+        "_yes": "Evet (Ja)",
+        "_no": "Hayır (Nein)",
+        "_cancelled": "İPTAL",
+        "methods": {
+          "CASH": "Nakit (Bar)",
+          "BANK_TRANSFER": "Banka havalesi (Überweisung)",
+          "CARD": "Kart (Kartenzahlung)",
+          "PAYPAL": "PayPal",
+          "REIMBURSEMENT_WAIVER": "Aufwandsspende (gider vazgeçimi)",
+          "OTHER": "Diğer (Sonstige)"
+        }
+      }
+    },
+    "readiness": {
+      "orgComplete": "Dernek profili eksiksiz.",
+      "orgMissing": "Dernek profili eksik: {fields}",
+      "fieldName": "ad",
+      "fieldStreet": "Straße",
+      "fieldPostalCode": "PLZ",
+      "fieldCity": "şehir",
+      "fieldTaxNumber": "Steuernummer",
+      "fieldTaxOffice": "Finanzamt",
+      "fieldDocumentType": "muafiyet belgesi türü",
+      "fieldDocumentDate": "belge tarihi",
+      "fieldPurposes": "amaç metni (begünstigte Zwecke)",
+      "fieldPeriod": "son vergi dönemi (letzter Veranlagungszeitraum)",
+      "validityMissing": "Muafiyet belgesi tarihi girilmemiş.",
+      "validityOk": "Muafiyet belgesi geçerli ({days} gün kaldı).",
+      "validityExpired": "Muafiyet belgesinin tarihi çok eski; bildirim geçerli sayılmaz.",
+      "templateOk": "Şablon metni onaylanmış.",
+      "templateMissing": "Şablon metni henüz onaylanmadı (BMF örnekleriyle karşılaştırın).",
+      "feesOk": "Aidat bildirimleri açılabilir.",
+      "feesOff": "Aidat bildirimleri kapalı (membershipFeesDeductible = false; § 10b Abs. 1 Satz 8 EStG)."
     }
   },
   "events": {
@@ -1009,7 +1747,32 @@
       "member": "Dernek Üyesi",
       "guest": "Misafir",
       "empty": "Henüz kayıtlı katılımcı bulunmamaktadır.",
-      "capacityReached": "Bu etkinliğin kontenjanı tamamen dolmuştur."
+      "capacityReached": "Bu etkinliğin kontenjanı tamamen dolmuştur.",
+      "countTitle": "Katılımcı Kayıtları ({count})",
+      "subtitle": "Kayıt olan üyeler ve dış konukların katılım durumlarını yönetin.",
+      "full": "Kontenjan Dolu",
+      "addShort": "Katılımcı Ekle",
+      "newRegistration": "Yeni Katılımcı Kaydı",
+      "close": "Kapat",
+      "specialNote": "Özel Not (Alerji, Diyet Tercihi vb.)",
+      "cancel": "İptal",
+      "complete": "Kaydı Tamamla",
+      "emptyShort": "Henüz kayıtlı bir katılımcı bulunmuyor.",
+      "colName": "Katılımcı Adı",
+      "colType": "Tür",
+      "colContact": "İletişim",
+      "colRegistered": "Kayıt Tarihi & Not",
+      "colStatus": "Katılım Durumu",
+      "colAction": "İşlem",
+      "removeTitle": "Katılımcıyı Çıkar",
+      "removeConfirm": "Çıkar",
+      "removeMessage": "\"{name}\" isimli katılımcıyı listeden çıkarmak istediğinize emin misiniz?",
+      "addedToast": "{name} katılımcı olarak eklendi.",
+      "statusUpdatedToast": "Katılım durumu güncellendi.",
+      "removedToast": "{name} katılımcı listesinden çıkarıldı.",
+      "addFailed": "Katılımcı eklenemedi.",
+      "statusFailed": "Durum güncellenemedi.",
+      "removeFailed": "Katılımcı silinemedi."
     },
     "attendeeStatus": {
       "REGISTERED": "Kayıtlı",
@@ -1028,7 +1791,111 @@
     },
     "menu": {
       "upcoming": "Yaklaşan etkinlikler",
-      "past": "Geçmiş etkinlikler"
+      "past": "Geçmiş etkinlikler",
+      "export": "Excel'e aktar"
+    },
+    "meta": {
+      "list": "Etkinlikler"
+    },
+    "errors": {
+      "invalidInput": "Girdi doğrulama hatası.",
+      "createFailed": "Etkinlik oluşturulurken bir hata oluştu.",
+      "idMissing": "Etkinlik kimliği eksik.",
+      "updateFailed": "Etkinlik güncellenirken bir hata oluştu.",
+      "invalidId": "Geçersiz kimlik.",
+      "deleteFailed": "Etkinlik silinirken bir hata meydana geldi.",
+      "notFound": "Etkinlik bulunamadı.",
+      "capacityFull": "Etkinlik kontenjanı tamamen dolmuştur.",
+      "attendeeAddFailed": "Katılımcı kaydedilemedi.",
+      "invalidStatus": "Geçersiz durum verisi.",
+      "statusUpdateFailed": "Katılım durumu güncellenemedi.",
+      "invalidAttendeeId": "Geçersiz katılımcı kimliği.",
+      "attendeeDeleteFailed": "Katılımcı silinemedi."
+    },
+    "validation": {
+      "titleMin": "Başlık en az 3 karakter olmalıdır.",
+      "startRequired": "Başlangıç zamanı zorunludur.",
+      "urlInvalid": "Geçerli bir web adresi giriniz.",
+      "capacityPositive": "Kontenjan pozitif bir sayı olmalıdır.",
+      "eventIdInvalid": "Geçersiz etkinlik kimliği.",
+      "firstNameMin": "Ad en az 2 karakter olmalıdır.",
+      "lastNameMin": "Soyad en az 2 karakter olmalıdır.",
+      "emailInvalid": "Geçerli bir e-posta giriniz."
+    },
+    "form": {
+      "createTitle": "Yeni Etkinlik Oluştur",
+      "editTitle": "Etkinliği Düzenle",
+      "titlePlaceholder": "Örn: Yıllık Dernek Çalıştayı",
+      "publishStatus": "Yayın Durumu",
+      "endOptional": "Bitiş Zamanı (Opsiyonel)",
+      "isOnlineLabel": "Bu etkinlik çevrim içi (Online) olarak düzenlenecektir",
+      "onlineUrl": "Online Toplantı Bağlantısı",
+      "onlineUrlPlaceholder": "https://meet.google.com/... veya Zoom linki",
+      "physicalLocation": "Fiziksel Konum / Adres",
+      "locationPlaceholder": "Örn: Dernek Merkezi Toplantı Salonu, Frankfurt",
+      "capacityOptional": "Maksimum Kontenjan (Opsiyonel)",
+      "capacityPlaceholder": "Boş bırakılırsa limitsiz kabul edilir",
+      "descriptionLabel": "Açıklama ve Detaylar",
+      "descriptionPlaceholder": "Etkinlik gündemi, yanınızda getirmeniz gerekenler ve katılım kuralları...",
+      "saveChanges": "Değişiklikleri Kaydet",
+      "create": "Etkinliği Oluştur",
+      "updatedToast": "Etkinlik başarıyla güncellendi.",
+      "createdToast": "Etkinlik başarıyla oluşturuldu.",
+      "createFailed": "Etkinlik oluşturulamadı.",
+      "genericError": "Bir hata meydana geldi.",
+      "subtitle": "Dernek içi seminer, atölye veya sosyal etkinlik bilgilerini belirleyin."
+    },
+    "table": {
+      "event": "Etkinlik",
+      "type": "Tür",
+      "status": "Durum",
+      "dateTime": "Tarih & Zaman",
+      "location": "Konum",
+      "online": "Online Etkinlik",
+      "notSpecified": "Belirtilmedi",
+      "attendeesCapacity": "Katılımcı / Kontenjan",
+      "capacityPeople": "{count} kişi",
+      "unlimited": "Sınırsız",
+      "time": "Zaman",
+      "allTime": "Tüm Zamanlar",
+      "upcoming": "Yaklaşanlar",
+      "past": "Geçmiş",
+      "search": "Etkinlik başlığı, açıklama veya konum ara...",
+      "viewDetails": "Detayları Görüntüle",
+      "empty": "Henüz kayıtlı bir etkinlik bulunmuyor.",
+      "deletedToast": "\"{title}\" etkinliği silindi.",
+      "deleteFailed": "Etkinlik silinirken bir hata oluştu.",
+      "deleteMessage": "\"{title}\" başlıklı etkinliği ve tüm katılımcı kayıtlarını silmek istediğinize emin misiniz? Bu işlem geri alınamaz."
+    },
+    "detailView": {
+      "onlineMeeting": "Online Toplantı",
+      "capacityStatus": "Kapasite Durumu",
+      "capacityCount": "{count} Kontenjan",
+      "unlimited": "Sınırsız",
+      "description": "Etkinlik Açıklaması",
+      "dateTime": "Tarih & Zaman",
+      "endLine": "Bitiş: {date}"
+    },
+    "module": {
+      "label": "Etkinlikler",
+      "description": "Dernek etkinlikleri, seminerler, atölyeler ve katılımcı yönetimi."
+    },
+    "export": {
+      "sheet": "Etkinlikler",
+      "file": "etkinlikler",
+      "online": "Online",
+      "button": "Excel'e Aktar",
+      "columns": {
+        "title": "Etkinlik",
+        "type": "Tür",
+        "status": "Durum",
+        "startDate": "Başlangıç",
+        "endDate": "Bitiş",
+        "location": "Konum",
+        "capacity": "Kontenjan",
+        "registered": "Kayıtlı",
+        "attended": "Katıldı"
+      }
     }
   },
   "inventory": {
@@ -1137,6 +2004,14 @@
     "menu": {
       "categories": "Kategoriler",
       "export": "Excel'e aktar"
+    },
+    "meta": {
+      "list": "Envanter",
+      "categories": "Envanter kategorileri"
+    },
+    "module": {
+      "label": "Envanter ve Demirbaş",
+      "description": "Dernek demirbaşları, teknik ekipmanlar ve zimmet kayıtlarının takibi."
     }
   },
   "mail": {
@@ -1250,6 +2125,14 @@
     "menu": {
       "settings": "Ayarlar",
       "logs": "Gönderim kayıtları"
+    },
+    "meta": {
+      "settings": "E-posta ayarları",
+      "logs": "E-posta gönderim kayıtları"
+    },
+    "module": {
+      "label": "E-posta Altyapısı",
+      "description": "Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gönderim kayıtları."
     }
   },
   "meetings": {
@@ -1321,7 +2204,9 @@
       "filterStatus": "Durum",
       "deletedToast": "Toplantı silindi: {number}",
       "deleteTitle": "Toplantı silinecek",
-      "deleteMessage": "{number} – {title} silinecek; listeden, aramadan, istatistiklerden ve panelden kaybolacak. Numarası yeniden kullanılmayacak. Devam edilsin mi?"
+      "deleteMessage": "{number} – {title} silinecek; listeden, aramadan, istatistiklerden ve panelden kaybolacak. Numarası yeniden kullanılmayacak. Devam edilsin mi?",
+      "deleteAction": "Toplantıyı sil",
+      "deleteNumberedMessage": "\"{number}\" numaralı toplantı silinecek. Silinen toplantı listelerde, aramada, istatistikte ve görev listesinde görünmez; numarası yeniden kullanılmaz. Onaylıyor musunuz?"
     },
     "filters": {
       "dateFrom": "Toplantı tarihi (başlangıç)",
@@ -1333,7 +2218,12 @@
       "dueFrom": "Son tarih (başlangıç)",
       "dueTo": "Son tarih (bitiş)",
       "mine": "Bana atananlar",
-      "overdue": "Süresi geçmişler"
+      "overdue": "Süresi geçmişler",
+      "customFilters": "Özel Filtreler",
+      "mineHint": "Yalnızca size atanan açık görevler",
+      "overdueHint": "Son teslim tarihi geçmiş görevler",
+      "meetingDate": "Toplantı tarihi",
+      "dueDate": "Son tarih"
     },
     "detail": {
       "approvedLine": "Onaylandı: {date} – {by}",
@@ -1358,7 +2248,19 @@
       "fieldDescription": "Açıklama",
       "quorumValue": "{required} katılımcı ({present} katıldı)",
       "fieldInvitationSentAt": "Davet gönderim tarihi (Einladung versandt am)",
-      "invitationLeadTime": "Davet süresi: {count} gün"
+      "invitationLeadTime": "Davet süresi: {count} gün",
+      "tabGeneralShort": "Genel",
+      "tabAgendaShort": "Gündem",
+      "tabAttendeesShort": "Katılımcılar",
+      "tabDecisionsShort": "Kararlar",
+      "tabTasksShort": "Görevler",
+      "tabFilesShort": "Ekler",
+      "approvedOn": "Onaylandı: {date} – {by}",
+      "recordedBy": "Kaydeden",
+      "createdAt": "Oluşturma",
+      "updatedAt": "Son güncelleme",
+      "notSpecified": "Belirtilmedi",
+      "quorumValueShort": "{required} katılımcı ({present} katıldı)"
     },
     "quorum": {
       "reached": "Toplantı yeter sayısı sağlandı ({present}/{required})",
@@ -1383,7 +2285,17 @@
       "reopenInfo": "Onay geri alınacak ve tutanak taslak (Yapıldı) durumuna dönecek. Bu işlem denetim kaydına gerekçesiyle yazılır.",
       "reasonLabel": "Gerekçe (zorunlu)",
       "reasonPlaceholder": "Örneğin: İmza eksikliği nedeniyle düzeltme gerekiyor.",
-      "reopenConfirm": "Yeniden aç"
+      "reopenConfirm": "Yeniden aç",
+      "changeTitle": "Durum değişikliği",
+      "reopenModalTitle": "Tutanak yeniden açma",
+      "reopenModalInfo": "Tutanağı düzenlemek için yeniden açıyorsunuz. Gerekçe zorunludur ve denetim kaydına işlenir.",
+      "reasonShort": "Gerekçe",
+      "confirmApprove": "\"{number}\" numaralı toplantı tutanağı onaylanacak. Onaydan sonra içerik kilitlenir; düzenlemek için yeniden açmanız gerekir. Onaylıyor musunuz?",
+      "confirmApproveNoQuorum": "Toplantı yeter sayısı sağlanmamış. Yine de onaylamak istiyor musunuz?",
+      "confirmReopen": "\"{number}\" numaralı tutanak yeniden açılacak ve düzenlenebilir duruma geçecektir. Devam edilsin mi?",
+      "confirmHeld": "\"{number}\" numaralı toplantı \"Yapıldı\" durumuna alınacak (tutanak taslağı). Devam edilsin mi?",
+      "confirmCancel": "\"{number}\" numaralı toplantı iptal edilecek. Devam edilsin mi?",
+      "confirmPlanned": "\"{number}\" numaralı toplantı \"Planlandı\" durumuna alınacak. Devam edilsin mi?"
     },
     "form": {
       "createTitle": "Yeni toplantı",
@@ -1415,7 +2327,12 @@
       "createdToast": "Toplantı oluşturuldu: {number}",
       "updatedToast": "Toplantı güncellendi.",
       "invitationSentAt": "Davet gönderim tarihi (Einladung versandt am)",
-      "invitationSentAtDescription": "Davetin üyelere gönderildiği tarih; toplantı tarihinden sonra olamaz."
+      "invitationSentAtDescription": "Davetin üyelere gönderildiği tarih; toplantı tarihinden sonra olamaz.",
+      "selectType": "Tür seçin",
+      "timePlaceholder": "SS:dd",
+      "createPageDescription": "Toplantı kaydı oluşturun; numara otomatik üretilir (örn. TOP-2026-001).",
+      "lockedApproved": "Onaylanmış toplantı tutanağı düzenlenemez. Önce yeniden açın.",
+      "lockedCancelled": "İptal edilmiş toplantı düzenlenemez. Önce 'Planlandı' durumuna alın."
     },
     "agenda": {
       "add": "Madde ekle",
@@ -1438,7 +2355,10 @@
       "plannedContent": "Planlanan içerik",
       "plannedContentDescription": "Maddenin görüşülmesi planlanan konular (isteğe bağlı)",
       "addedToast": "Gündem maddesi eklendi.",
-      "updatedToast": "Gündem maddesi güncellendi."
+      "updatedToast": "Gündem maddesi güncellendi.",
+      "contentHelp": "En fazla 2000 karakter.",
+      "deleteNamedMessage": "\"{title}\" maddesi silinecek; sıralama yeniden numaralanır. Bu maddeye bağlı kararlar silinmez, gündem bağlantıları boşalır. Onaylıyor musunuz?",
+      "deleteItemAria": "Gündem maddesini sil"
     },
     "decisions": {
       "add": "Karar ekle",
@@ -1461,7 +2381,16 @@
       "votesAbstain": "Çekimser oy",
       "votesHelp": "Oy alanlarının üçü de boş bırakılabilir; herhangi biri doldurulursa boş kalanlar 0 kabul edilir.",
       "addedToast": "Karar eklendi: {number}",
-      "updatedToast": "Karar güncellendi."
+      "updatedToast": "Karar güncellendi.",
+      "editTitleNumbered": "Kararı düzenle: {number}",
+      "textHelp": "En fazla 3000 karakter.",
+      "agendaHelp": "Boş bırakılırsa karar gündeme bağlanmaz.",
+      "noAgenda": "Bağlantı yok",
+      "votesForShort": "Kabul",
+      "votesAgainstShort": "Ret",
+      "votesAbstainShort": "Çekimser",
+      "deletedNumberedToast": "Karar silindi: {number}",
+      "deleteNumberedMessage": "\"{number}\" numaralı karar silinecek. Karar numarası yeniden kullanılmaz; bu karara bağlı görevlerin bağlantısı boşalır. Onaylıyor musunuz?"
     },
     "attendees": {
       "markAll": "Tümünü katıldı işaretle",
@@ -1483,7 +2412,14 @@
       "removeAria": "{name} adlı katılımcıyı çıkar",
       "removeTitle": "Katılımcı çıkarılacak",
       "removeMessage": "Katılımcı toplantıdan çıkarılacak. Devam edilsin mi?",
-      "removeConfirm": "Çıkar"
+      "removeConfirm": "Çıkar",
+      "addUser": "Kullanıcı ekle",
+      "guestName": "Konuk adı",
+      "addGuest": "Konuk ekle",
+      "source": "Kaynak",
+      "removedNamedToast": "Katılımcı çıkarıldı: {name}",
+      "markedToast": "{count} katılımcı 'Katıldı' olarak işaretlendi",
+      "namePlaceholder": "Ad Soyad"
     },
     "attendeeAdd": {
       "title": "Katılımcı ekle",
@@ -1502,7 +2438,11 @@
       "note": "Not",
       "notePlaceholder": "Örnek: Bağlantı çevrimiçi katılacak",
       "addUsers": "Kullanıcıları ekle",
-      "addGuest": "Konuğu ekle"
+      "addGuest": "Konuğu ekle",
+      "users": "Kullanıcılar",
+      "usersDescription": "Bir kullanıcı toplantıya bir kez eklenebilir.",
+      "addedCountToast": "{count} katılımcı eklendi",
+      "add": "Ekle"
     },
     "tasks": {
       "pageTitle": "Görevler",
@@ -1547,7 +2487,19 @@
       "colDecision": "Karar No",
       "search": "Görev, sorumlu, toplantı ara",
       "listEmpty": "Görev bulunamadı.",
-      "listAria": "Görev listesi"
+      "listAria": "Görev listesi",
+      "descriptionHelp": "En fazla 1000 karakter.",
+      "assigneeUserLabel": "Sorumlu (kullanıcı)",
+      "assigneeUserHelp": "Seçilirse serbest metin yok sayılır.",
+      "assigneeFreeLabel": "Sorumlu (serbest ad)",
+      "assigneeFreeHelp": "Dış kişi adı yazılabilir.",
+      "noAssigneeOption": "Atanmadı",
+      "noDecision": "Bağlantı yok",
+      "overdueShort": " (gecikmiş)",
+      "unassigned": "Sorumlu atanmadı",
+      "decisionLine": "Karar: {number}",
+      "deleteNamedMessage": "\"{description}\" görevi silinecek. Onaylıyor musunuz?",
+      "listDescription": "Tüm toplantılardan gelen görevlerin takibi; varsayılan görünüm yalnızca açık görevlerdir."
     },
     "discussion": {
       "title": "Görüşmeler",
@@ -1560,7 +2512,12 @@
       "empty": "Görüşme metni girilmemiş.",
       "edit": "Düzenle",
       "write": "Metin yaz",
-      "savedToast": "Görüşme metni kaydedildi."
+      "savedToast": "Görüşme metni kaydedildi.",
+      "label": "Görüşmeler:",
+      "emptyNote": "Henüz görüşme notu girilmemiş.",
+      "add": "Görüşme ekle",
+      "fieldLabel": "Görüşmeler (tutanak metni)",
+      "fieldHelp": "En fazla 10000 karakter; satır sonları korunur."
     },
     "files": {
       "maxFilesToast": "Toplantı başına en fazla {count} dosya eklenebilir.",
@@ -1577,10 +2534,90 @@
       "downloadAria": "{name} indir",
       "deleteAria": "{name} sil",
       "deleteTitle": "Dosya silinecek",
-      "deleteMessage": "Dosya listeden kaldırılacak; diskteki kopya korunur. Devam edilsin mi?"
+      "deleteMessage": "Dosya listeden kaldırılacak; diskteki kopya korunur. Devam edilsin mi?",
+      "uploadedCountToast": "{count} dosya yüklendi",
+      "uploading": "Yükleniyor…",
+      "emptyMeeting": "Bu toplantıya henüz dosya eklenmemiş.",
+      "download": "İndir",
+      "preview": "Önizle",
+      "deleteAction": "Dosyayı sil",
+      "deleteNamedAria": "{name} dosyasını sil",
+      "deleteNamedMessage": "\"{name}\" dosyası toplantıdan kaldırılacak. Diskteki dosya korunur. Onaylıyor musunuz?",
+      "limitReached": "En fazla {count} dosya eklenebilir.",
+      "dropOrClick": "Dosyaları buraya sürükleyin ya da seçmek için tıklayın",
+      "rulesLine": "İzinli türler: {types} — Dosya başına en fazla {maxMb} MB — Toplantı başına en fazla {maxFiles} dosya"
     },
     "menu": {
       "tasks": "Görevler"
+    },
+    "errors": {
+      "meetingNotFound": "Toplantı bulunamadı.",
+      "decisionNotFound": "Karar bulunamadı.",
+      "assigneeNotFound": "Sorumlu kullanıcı bulunamadı veya pasif durumda.",
+      "taskNotFound": "Görev bulunamadı.",
+      "agendaNotFound": "Gündem maddesi bulunamadı.",
+      "agendaCannotMove": "Bu madde bu yönde taşınamaz.",
+      "userNotFound": "Seçilen kullanıcı bulunamadı veya pasif durumda.",
+      "chairExists": "Bu toplantıda zaten bir başkan var.",
+      "secretaryExists": "Bu toplantıda zaten bir sekreter var.",
+      "usersAlreadyAdded": "Seçilen kullanıcılar bu toplantıda zaten mevcut.",
+      "attendeeNotFound": "Katılımcı bulunamadı.",
+      "reopenReasonRequired": "Yeniden açma gerekçesi zorunludur.",
+      "fileNotFound": "Dosya bulunamadı.",
+      "invalidDate": "Toplantı tarihi geçersiz.",
+      "copySourceInvalid": "Kopyalanacak toplantı bulunamadı veya türü farklı.",
+      "approvedLocked": "Onaylanmış toplantı tutanağı düzenlenemez. Önce yeniden açın.",
+      "approvedNoDelete": "Onaylanmış toplantı silinemez. Önce yeniden açın.",
+      "approvedFileAdminOnly": "Onaylanmış toplantının dosyasını yalnızca yönetici silebilir.",
+      "transitionNotAllowed": "Bu durum değişikliğine izin verilmiyor.",
+      "forbidden": "Bu işlem için yetkiniz yok.",
+      "approveNeedsAgenda": "Onaylamak için en az bir gündem maddesi gereklidir.",
+      "approveNeedsPresent": "Onaylamak için en az bir katılımcının 'Katıldı' olarak işaretlenmesi gereklidir.",
+      "meetingNotFound2": "Toplantı bulunamadı.",
+      "notEditable": "Toplantı düzenlenemez."
+    },
+    "validation": {
+      "taskMin": "Görev açıklaması en az 3 karakter olmalıdır.",
+      "taskMax": "Görev açıklaması en fazla 1000 karakter olabilir.",
+      "assigneeMin": "Sorumlu adı en az 2 karakter olmalıdır.",
+      "assigneeMax": "Sorumlu adı en fazla 120 karakter olabilir.",
+      "dueDateInvalid": "Geçerli bir son tarih girin.",
+      "agendaMin": "Gündem maddesi en az 2 karakter olmalıdır.",
+      "agendaMax": "Gündem maddesi en fazla 200 karakter olabilir.",
+      "plannedMax": "Planlanan içerik en fazla 2000 karakter olabilir.",
+      "discussionMax": "Görüşme metni en fazla 10000 karakter olabilir.",
+      "selectUser": "En az bir kullanıcı seçin.",
+      "guestMin": "Konuk adı en az 2 karakter olmalıdır.",
+      "guestMax": "Konuk adı en fazla 120 karakter olabilir.",
+      "noteMax": "Not en fazla 200 karakter olabilir.",
+      "reasonMin": "Gerekçe en az 5 karakter olmalıdır.",
+      "reasonMax": "Gerekçe en fazla 500 karakter olabilir.",
+      "votesRange": "Oy sayısı 0-1000 arasında olmalıdır.",
+      "decisionMin": "Karar metni en az 3 karakter olmalıdır.",
+      "decisionMax": "Karar metni en fazla 3000 karakter olabilir.",
+      "titleMin": "Başlık en az 3 karakter olmalıdır.",
+      "titleMax": "Başlık en fazla 200 karakter olabilir.",
+      "dateRequired": "Toplantı tarihi zorunludur.",
+      "dateInvalid": "Geçerli bir toplantı tarihi girin.",
+      "timeFormat": "Saat biçimi SS:dd olmalıdır.",
+      "locationMax": "Yer en fazla 200 karakter olabilir.",
+      "quorumMin": "Yeter sayısı en az 1 olabilir.",
+      "quorumMax": "Yeter sayısı en fazla 500 olabilir.",
+      "descriptionMax": "Açıklama en fazla 2000 karakter olabilir.",
+      "endNeedsStart": "Bitiş saati girmek için başlangıç saati zorunludur.",
+      "endAfterStart": "Bitiş saati başlangıç saatinden sonra olmalıdır.",
+      "quorumInt": "Yeter sayısı tam sayı olmalıdır."
+    },
+    "meta": {
+      "list": "Toplantılar",
+      "tasks": "Toplantı görevleri",
+      "create": "Yeni toplantı",
+      "detail": "Toplantı detayı",
+      "edit": "Toplantıyı düzenle"
+    },
+    "module": {
+      "label": "Toplantılar",
+      "description": "Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar."
     }
   },
   "members": {
@@ -1717,7 +2754,8 @@
     "listFilters": {
       "from": "Katılım başlangıç",
       "to": "Katılım bitiş",
-      "clear": "Temizle"
+      "clear": "Temizle",
+      "joinDate": "Katılım Tarihi"
     },
     "created": {
       "toast": "Üye kaydedildi: {membershipNumber}",
@@ -1906,6 +2944,135 @@
       "types": "Üyelik türleri",
       "import": "İçe aktar",
       "export": "Excel'e aktar"
+    },
+    "meta": {
+      "list": "Üyeler",
+      "types": "Üyelik türleri",
+      "dues": "Aidat raporu",
+      "import": "Üye içe aktar"
+    },
+    "errors": {
+      "memberNotFound": "Üye bulunamadı.",
+      "exitDateInvalid": "Ayrılış tarihi geçersiz.",
+      "noticeDateInvalid": "Fesih bildirimi tarihi geçersiz.",
+      "noticeAfterExit": "Fesih bildirimi tarihi ayrılış tarihinden sonra olamaz.",
+      "joinDateInvalid": "Katılım tarihi geçersiz.",
+      "amountInvalid": "Tutar geçersiz.",
+      "amountTooLarge": "Tutar çok büyük.",
+      "paymentDateInvalid": "Ödeme tarihi geçersiz.",
+      "paymentDateFuture": "Ödeme tarihi gelecekte olamaz.",
+      "dateInvalid": "Tarih geçersiz.",
+      "dueBeforeYear": "Son ödeme tarihi aidat yılından önce olamaz.",
+      "duesExists": "Bu üyenin bu yıl için aidat satırı zaten var.",
+      "duesNotFound": "Aidat satırı bulunamadı.",
+      "duesBelowPaid": "Aidat tutarı ödenen tutarın altına düşürülemez.",
+      "duesWaiveWithPayments": "Ödemesi olan aidat satırı muaf yapılamaz.",
+      "paymentNotFound": "Ödeme bulunamadı.",
+      "paymentAlreadyVoided": "Bu ödeme zaten iptal edilmiş.",
+      "dueHasPayments": "Ödeme kaydı olan aidat satırı silinemez. Önce ödemeleri iptal edin.",
+      "importMissingColumns": "Zorunlu sütunlar bulunamadı (Ad, Soyad, Üyelik Türü, Üyelik Başlangıç Tarihi). Şablonu indirip doldurun.",
+      "dataExportMissing": "Üye bulunamadı veya verileri silinmiş.",
+      "importTooLarge": "Dosya {max} MB sınırını aşıyor.",
+      "importXlsxOnly": "Yalnızca .xlsx dosyası kabul edilir.",
+      "importInvalidXlsx": "Dosya geçerli bir .xlsx paketi değil.",
+      "importDupEmailDb": "Mükerrer kayıt: bu e-posta ile kayıtlı bir üye zaten var.",
+      "importDupEmailFile": "Mükerrer kayıt: aynı e-posta dosyada birden çok kez geçiyor.",
+      "importDupPersonDb": "Mükerrer kayıt: aynı ad, soyad ve doğum tarihiyle kayıtlı bir üye zaten var.",
+      "importDupPersonFile": "Mükerrer kayıt: aynı ad, soyad ve doğum tarihi dosyada birden çok kez geçiyor.",
+      "paymentNotSpecified": "Ödeme belirtilmedi.",
+      "paymentNotFound2": "Ödeme bulunamadı."
+    },
+    "validation": {
+      "yearMinPrev": "Yıl en fazla bir önceki yıl olabilir.",
+      "yearMaxNext": "Yıl en fazla gelecek yıl olabilir.",
+      "dueDateRequired": "Son ödeme tarihi zorunludur.",
+      "dueDateInvalid": "Geçerli bir son ödeme tarihi girin.",
+      "yearAfterNext": "Yıl gelecek yıldan büyük olamaz.",
+      "amountRequired": "Tutar zorunludur.",
+      "amountTooLarge": "Tutar çok büyük.",
+      "note300": "Not en fazla 300 karakter olabilir.",
+      "firstNameMin": "Ad en az 2 karakter olmalıdır.",
+      "firstNameMax": "Ad en fazla 60 karakter olabilir.",
+      "lastNameMin": "Soyad en az 2 karakter olmalıdır.",
+      "lastNameMax": "Soyad en fazla 60 karakter olabilir.",
+      "idNumberMax": "Kimlik no en fazla 60 karakter olabilir.",
+      "emailMax": "E-posta en fazla 120 karakter olabilir.",
+      "phoneMax": "Telefon en fazla 30 karakter olabilir.",
+      "phoneInvalid": "Geçerli bir telefon girin.",
+      "streetMax": "Straße/Sokak en fazla 120 karakter olabilir.",
+      "houseNumberMax": "Kapı no en fazla 20 karakter olabilir.",
+      "countryMax": "Ülke en fazla 60 karakter olabilir.",
+      "postalCodeMax": "PLZ/Posta kodu en fazla 10 karakter olabilir.",
+      "cityMax": "Şehir/Ort en fazla 120 karakter olabilir.",
+      "stateMax": "Bundesland/Eyalet/İl en fazla 120 karakter olabilir.",
+      "birthDateInvalid": "Geçerli bir doğum tarihi girin.",
+      "professionMax": "Meslek en fazla 100 karakter olabilir.",
+      "joinDateRequired": "Katılım tarihi zorunludur.",
+      "joinDateInvalid": "Geçerli bir katılım tarihi girin.",
+      "exitDateInvalid": "Geçerli bir ayrılış tarihi girin.",
+      "exitReasonMax": "Ayrılış nedeni en fazla 500 karakter olabilir.",
+      "notesMax": "Notlar en fazla 2000 karakter olabilir.",
+      "postalCodeDe": "Almanya için posta kodu 5 haneli olmalıdır.",
+      "exitBeforeJoin": "Ayrılış tarihi katılım tarihinden önce olamaz.",
+      "exitReasonNeedsDate": "Ayrılış nedeni verilmişse ayrılış tarihi de girin.",
+      "versionMissing": "Kayıt sürümü eksik.",
+      "noticeDateInvalid": "Geçerli bir fesih bildirimi tarihi girin.",
+      "memberMissing": "Üye bilgisi eksik.",
+      "noteEmpty": "Not boş olamaz.",
+      "noteMax": "Not en fazla 2000 karakter olabilir.",
+      "paymentDateRequired": "Ödeme tarihi zorunludur.",
+      "paymentDateInvalid": "Geçerli bir ödeme tarihi girin.",
+      "referenceMax": "Referans en fazla 100 karakter olabilir.",
+      "voidReasonMin": "İptal nedeni en az 5 karakter olmalıdır.",
+      "voidReasonMax": "İptal nedeni en fazla 300 karakter olabilir."
+    },
+    "module": {
+      "label": "Üyeler",
+      "description": "Üye kayıtları, üyelik tipleri, aidat tahakkuk ve ödeme takibi."
+    },
+    "export": {
+      "dues": {
+        "membershipNumber": "Üye No",
+        "fullName": "Ad Soyad",
+        "type": "Üyelik Türü",
+        "year": "Yıl",
+        "amountDue": "Tutar",
+        "paid": "Ödenen",
+        "remaining": "Kalan",
+        "status": "Durum",
+        "lastPaymentAt": "Son Ödeme Tarihi",
+        "dueDate": "Son Tarih",
+        "_sheet": "Aidat",
+        "_file": "aidat"
+      },
+      "register": {
+        "membershipNumber": "Üye No",
+        "type": "Üyelik Türü",
+        "status": "Durum",
+        "firstName": "Ad",
+        "lastName": "Soyad",
+        "email": "E-posta",
+        "phone": "Telefon",
+        "street": "Straße",
+        "houseNumber": "Kapı No",
+        "postalCode": "PLZ",
+        "city": "Şehir",
+        "state": "Eyalet",
+        "country": "Ülke",
+        "joinDate": "Katılım",
+        "exitDate": "Ayrılış",
+        "_sheet": "Üye Defteri",
+        "_file": "uye-defteri"
+      }
+    },
+    "importErrors": {
+      "unreadable": "Dosya okunamadı. Geçerli bir .xlsx dosyası yükleyin.",
+      "noSheet": "Çalışma sayfası bulunamadı. Şablonu indirip doldurun.",
+      "tooManyRows": "Dosyada {max} satırdan fazla veri var. Dosyayı bölerek yükleyin.",
+      "unknownType": "Bilinmeyen üyelik türü: \"{value}\".",
+      "unknownStatus": "Bilinmeyen durum: \"{value}\". (Aktif / Pasif / Ayrıldı)",
+      "birthDateInvalid": "Doğum tarihi geçersiz (gg.aa.yyyy kullanın).",
+      "joinDateRequired": "Üyelik başlangıç tarihi zorunludur (gg.aa.yyyy)."
     }
   },
   "organization": {
@@ -1951,7 +3118,22 @@
     "charitablePurposes": "Desteklenen amaçlar (begünstigte Zwecke)",
     "charitablePurposesDescription": "Muafiyet yazısından aynen kopyalayın — cümle şu kalıba girer: 'Wir sind wegen Förderung …' ve '… nur zur Förderung … verwendet wird'. Örnek: 'der Bildung und Erziehung'.",
     "membershipFeesDeductible": "Üyelik aidatları vergiden düşülebilir (Mitgliedsbeiträge abziehbar)",
-    "membershipFeesDeductibleDescription": "Yalnızca § 10b Abs. 1 Satz 8 EStG kapsamı DIŞINDAKI amaçlar (örn. spor, hobi kültürü, gelenek) için işaretleyin. Emin değilseniz Steuerberater'a sorun."
+    "membershipFeesDeductibleDescription": "Yalnızca § 10b Abs. 1 Satz 8 EStG kapsamı DIŞINDAKI amaçlar (örn. spor, hobi kültürü, gelenek) için işaretleyin. Emin değilseniz Steuerberater'a sorun.",
+    "module": {
+      "label": "Dernek Bilgileri",
+      "description": "Dernek ana verileri, resmi iletişim ve antet logosu."
+    },
+    "validation": {
+      "dateFormat": "Tarih YYYY-MM-DD biçiminde olmalıdır.",
+      "nameMin": "Dernek adı en az 3 karakter olmalıdır.",
+      "purposesMax": "Amaç metni en fazla 500 karakter olabilir.",
+      "postalCodeDe": "Almanya için posta kodu 5 haneli olmalıdır (PLZ).",
+      "websiteInvalid": "Web sitesi geçerli bir adres olmalıdır (https://...)."
+    },
+    "errors": {
+      "logoMissing": "Logo yüklenmemiş.",
+      "logoReadFailed": "Logo okunamadı."
+    }
   },
   "system": {
     "title": "Modül Yönetimi",
@@ -1997,6 +3179,23 @@
       "message": "\"{label}\" modül klasörü ve tüm dosyaları kalıcı olarak silinecek. Bu işlem geri alınamaz. Onaylıyor musunuz?",
       "confirm": "Sil",
       "successToast": "{label} modülü başarıyla silindi."
+    },
+    "meta": {
+      "settings": "Ayarlar",
+      "modules": "Modül yönetimi"
+    },
+    "module": {
+      "label": "Modül Yönetimi",
+      "description": "Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi."
+    },
+    "authorCommunity": "Topluluk / Geliştirici",
+    "toggleAria": "{label} durumunu değiştir",
+    "deleteAria": "{label} modülünü sil",
+    "errors": {
+      "notFound": "Modül bulunamadı.",
+      "coreCannotDisable": "Çekirdek sistem modülleri devre dışı bırakılamaz.",
+      "onlyExtensionsDeletable": "Yalnızca harici geliştirici eklentileri (EXTENSION) silinebilir. Çekirdek ve resmi modüller silinemez.",
+      "deleteFailed": "Modül silinirken hata oluştu."
     }
   },
   "users": {
@@ -2007,6 +3206,196 @@
     "createDescription": "Sisteme yeni bir kullanıcı ekleyin. Kullanıcı ilk girişte parolasını değiştirmeye zorlanır.",
     "editTitle": "Kullanıcıyı Düzenle",
     "notFoundTitle": "Kullanıcı bulunamadı",
-    "notFoundDescription": "Kayıt silinmiş olabilir."
+    "notFoundDescription": "Kayıt silinmiş olabilir.",
+    "meta": {
+      "list": "Kullanıcılar",
+      "create": "Yeni kullanıcı",
+      "edit": "Kullanıcıyı düzenle"
+    },
+    "tabUsers": "Kullanıcı Listesi",
+    "tabRoles": "Roller ve Yetki Matrisi",
+    "table": {
+      "aria": "Kullanıcı listesi",
+      "name": "Ad",
+      "email": "E-posta",
+      "role": "Rol",
+      "status": "Durum",
+      "lastLogin": "Son giriş",
+      "createdAt": "Oluşturulma",
+      "search": "Ad veya e-posta ara...",
+      "empty": "Kullanıcı bulunamadı.",
+      "edit": "Düzenle",
+      "resetPassword": "Parola sıfırla",
+      "deactivate": "Pasife al",
+      "activate": "Aktifleştir",
+      "activated": "Kullanıcı aktifleştirildi.",
+      "deactivated": "Kullanıcı pasife alındı.",
+      "activateTitle": "Kullanıcıyı aktifleştir",
+      "deactivateTitle": "Kullanıcıyı pasife al",
+      "activateConfirm": "\"{name}\" kullanıcısı aktifleştirilecek. Onaylıyor musunuz?",
+      "deactivateConfirm": "\"{name}\" kullanıcısı pasife alınacak; mevcut oturumuyla bile işlem yapamayacak. Onaylıyor musunuz?"
+    },
+    "form": {
+      "name": "Ad Soyad",
+      "email": "E-posta",
+      "role": "Rol",
+      "tempPassword": "Geçici parola",
+      "tempPasswordHint": "En az 10 karakter; 1 büyük harf, 1 küçük harf ve 1 rakam içermelidir. Kullanıcı ilk girişte yeni parola belirleyecektir.",
+      "isActive": "Hesap aktif",
+      "isActiveHint": "Pasife alınan kullanıcı oturumu geçerli olsa bile işlem yapamaz.",
+      "created": "Kullanıcı oluşturuldu.",
+      "updated": "Kullanıcı güncellendi."
+    },
+    "resetPassword": {
+      "title": "Parolayı Sıfırla",
+      "newPassword": "Yeni geçici parola",
+      "submit": "Sıfırla",
+      "done": "Parola sıfırlandı. Kullanıcı sonraki girişte yeni parola belirleyecek."
+    },
+    "errors": {
+      "emailTaken": "Bu e-posta adresi zaten kullanımda.",
+      "notFound": "Kullanıcı bulunamadı.",
+      "selfDeactivate": "Kendinizi pasife alamazsınız.",
+      "lastAdmin": "Sistemde en az bir aktif yönetici kalmalıdır.",
+      "selfDemote": "Kendi rolünüzü düşüremezsiniz."
+    },
+    "validation": {
+      "nameRequired": "Ad soyad zorunludur.",
+      "nameMax": "Ad soyad en fazla 100 karakter olabilir."
+    },
+    "matrix": {
+      "title": "Rol ve İzin Yönetimi",
+      "subtitle": "Sistem rollerinin modül bazındaki okuma, yazma, onay ve silme yetki matrisi.",
+      "viewRole": "Rol İnceleme",
+      "viewMatrix": "Karşılaştırma Matrisi",
+      "memberCount": "{count} üye",
+      "search": "Modül veya yetki ara (örn: muhasebe, evrak, onay)...",
+      "previewUser": "Kullanıcı Yetki Önizle:",
+      "selectUser": "Kullanıcı seçin...",
+      "clearUser": "Kullanıcı seçimini temizle",
+      "simulated": "Simüle Edilen: {name}",
+      "totalActive": "Toplam Aktif İzin",
+      "actionCount": "{count} Eylem Yetkisi",
+      "resourceCount": "{count} kaynak",
+      "colResource": "Modül / Kaynak",
+      "colAction": "Eylem",
+      "previewTitle": "{role} Yetki Özeti",
+      "previewCount": "{count} Yetki Aktif",
+      "accessFull": "Tam",
+      "accessRead": "Okuma",
+      "accessNone": "Yok",
+      "actions": {
+        "view": "Görüntüleme",
+        "create": "Oluşturma",
+        "update": "Düzenleme",
+        "delete": "Silme",
+        "approve": "Onaylama"
+      },
+      "roles": {
+        "ADMIN": {
+          "label": "Yönetici (Admin)",
+          "shortDesc": "Sistem, modül ve kullanıcı yönetimi dahil tam yetki.",
+          "legalContext": "Tüm modüllerde oluşturma, düzenleme, silme ve denetim yetkisine sahiptir."
+        },
+        "BOARD": {
+          "label": "Yönetim Kurulu (Vorstand)",
+          "shortDesc": "Toplantı, karar, evrak ve dernek yönetimi ana yetkileri.",
+          "legalContext": "BGB § 26 uyarınca dernek temsil ve yürütme organıdır; mali detayları özet görür."
+        },
+        "SECRETARY": {
+          "label": "Sekreter (Schriftführer)",
+          "shortDesc": "Evrak kayıt, toplantı tutanakları ve üye kayıt operasyonları.",
+          "legalContext": "Yazışmalar, defterler ve karar defterlerinin tanziminden sorumludur."
+        },
+        "TREASURER": {
+          "label": "Sayman (Kassenwart)",
+          "shortDesc": "Çift taraflı muhasebe, fişler, bütçe, bağış makbuzları ve aidatlar.",
+          "legalContext": "Mali defterlerin tutulması ve vergi dairesi (Finanzamt) uyumluluğundan sorumludur."
+        },
+        "AUDITOR": {
+          "label": "Denetçi (Kassenprüfer)",
+          "shortDesc": "Mali ve idari kayıtlara salt okunur denetim erişimi.",
+          "legalContext": "Yıllık mali denetim yapar; bağışçı kişisel verilerine erişemez."
+        },
+        "VIEWER": {
+          "label": "Salt Okunur (Leser)",
+          "shortDesc": "Temel evrak ve toplantı bilgilerini inceleme yetkisi.",
+          "legalContext": "Veri değişikliği veya mali kayıtları inceleme yetkisi bulunmaz."
+        }
+      },
+      "modules": {
+        "documents": "Evrak Kayıt",
+        "meetings": "Toplantılar",
+        "members": "Üyeler",
+        "accounting": "Muhasebe",
+        "donations": "Bağışlar",
+        "organization": "Dernek Profili",
+        "users": "Kullanıcılar",
+        "audit": "Denetim Kaydı",
+        "system": "Sistem & Modüller"
+      },
+      "resources": {
+        "documents": {
+          "label": "Gelen / Giden Evraklar",
+          "description": "Resmi evrakların sisteme kaydedilmesi, numaralandırılması ve arşivlenmesi."
+        },
+        "documentCategories": {
+          "label": "Evrak Kategorileri",
+          "description": "Evrak kategorilerinin ve dosya planının yönetimi."
+        },
+        "meetings": {
+          "label": "Toplantı ve Kararlar",
+          "description": "Toplantı takvimi, gündem maddeleri, tutanaklar, kararlar ve onaylama."
+        },
+        "members": {
+          "label": "Üye Kayıtları",
+          "description": "Dernek üyelerinin profili, iletişim verileri ve üyelik durumları."
+        },
+        "memberPayments": {
+          "label": "Aidat ve Ödemeler",
+          "description": "Üye aidat tahakkukları, tahsilat ve ödeme takibi."
+        },
+        "memberTypes": {
+          "label": "Üyelik Tipleri",
+          "description": "Asil, fahri, öğrenci vb. üyelik tipleri ve aidat baremleri."
+        },
+        "accounting": {
+          "label": "Yevmiye & Defterler",
+          "description": "Fişler, gelir-gider kayıtları, hesap planı ve dönem raporları."
+        },
+        "accountingSetup": {
+          "label": "Hesap Planı & Bütçe",
+          "description": "Hesap planı (SKR49/SKR42), bütçe öngörüleri ve mali ayarlar."
+        },
+        "donations": {
+          "label": "Bağış ve Makbuzlar",
+          "description": "Bağış tahsilatları ve resmi Zuwendungsbestätigung makbuz üretimi."
+        },
+        "organization": {
+          "label": "Dernek Ana Bilgileri",
+          "description": "Resmi dernek sicil no, vergi no, banka hesapları ve antet logosu."
+        },
+        "users": {
+          "label": "Kullanıcı Hesapları",
+          "description": "Sistem kullanıcıları, oturum hesapları ve parola sıfırlama."
+        },
+        "audit": {
+          "label": "Güvenlik & Değişiklik Günlüğü",
+          "description": "Değiştirilemez sistemsel denetim izleri ve güvenlik kayıtları."
+        },
+        "system": {
+          "label": "Modül Yönetimi",
+          "description": "Eklenti yükleme, modül aktifleştirme ve pasifleştirme."
+        },
+        "settings": {
+          "label": "Sistem Ayarları",
+          "description": "Genel dernek sistemi ve platform parametreleri."
+        }
+      }
+    },
+    "module": {
+      "label": "Kullanıcılar",
+      "description": "Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri."
+    }
   }
 }

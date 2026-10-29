@@ -2,6 +2,7 @@
 
 import { Tab, Tabs } from "@heroui/react";
 import { ShieldCheck, Users } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { type ReactNode, useState } from "react";
 
 export function UsersTabsContainer({
@@ -11,6 +12,7 @@ export function UsersTabsContainer({
   usersContent: ReactNode;
   permissionsContent: ReactNode;
 }) {
+  const t = useTranslations("users");
   const [selectedTab, setSelectedTab] = useState<string>("users");
 
   return (
@@ -32,7 +34,7 @@ export function UsersTabsContainer({
           title={
             <div className="flex items-center gap-2">
               <Users className="h-4 w-4" />
-              <span>Kullanıcı Listesi</span>
+              <span>{t("tabUsers")}</span>
             </div>
           }
         />
@@ -41,7 +43,7 @@ export function UsersTabsContainer({
           title={
             <div className="flex items-center gap-2">
               <ShieldCheck className="h-4 w-4" />
-              <span>Roller ve Yetki Matrisi</span>
+              <span>{t("tabRoles")}</span>
             </div>
           }
         />

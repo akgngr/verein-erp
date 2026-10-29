@@ -1,12 +1,7 @@
-import { UserEditView } from "../../ui";
+import { redirect } from "next/navigation";
 
-export const metadata = { title: "Kullanıcıyı Düzenle" };
-
-export default async function KullaniciDuzenlePage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+/** Eski adres: form artık sağ çekmecede açılır. */
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  return <UserEditView userId={id} />;
+  redirect(`/ayarlar/kullanicilar?duzenle=${id}`);
 }

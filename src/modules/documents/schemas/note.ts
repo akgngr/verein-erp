@@ -6,8 +6,8 @@ export const addNoteSchema = z.object({
   body: z
     .string()
     .trim()
-    .min(1, "Not boş olamaz.")
-    .max(2000, "Not en fazla 2000 karakter olabilir."),
+    .min(1, "documents.validation.noteEmpty")
+    .max(2000, "documents.validation.noteMax"),
 });
 
 export type AddNoteInput = z.infer<typeof addNoteSchema>;

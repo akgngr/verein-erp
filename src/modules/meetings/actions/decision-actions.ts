@@ -35,7 +35,7 @@ export async function addDecisionAction(
           meetingDate: true,
         },
       });
-      if (!meeting) throw new ActionError("Toplantı bulunamadı.");
+      if (!meeting) throw new ActionError("meetings.errors.meetingNotFound");
       assertMeetingEditable(meeting, "content", user.role, meetingsPermissions);
 
       // KARAR: gündem bağlantısı aynı toplantıya ait olmalıdır (5. bölüm md. 9).
@@ -45,7 +45,7 @@ export async function addDecisionAction(
           select: { id: true },
         });
         if (!agendaItem) {
-          throw new ActionError("Gündem maddesi bulunamadı.", {
+          throw new ActionError("meetings.errors.agendaNotFound", {
             agendaItemId: ["Geçerli bir gündem maddesi seçin."],
           });
         }
@@ -109,7 +109,7 @@ export async function updateDecisionAction(
           },
         },
       });
-      if (!decision) throw new ActionError("Karar bulunamadı.");
+      if (!decision) throw new ActionError("meetings.errors.decisionNotFound");
       assertMeetingEditable(decision.meeting, "content", user.role, meetingsPermissions);
 
       if (input.agendaItemId && input.agendaItemId !== decision.agendaItemId) {
@@ -118,7 +118,7 @@ export async function updateDecisionAction(
           select: { id: true },
         });
         if (!agendaItem) {
-          throw new ActionError("Gündem maddesi bulunamadı.", {
+          throw new ActionError("meetings.errors.agendaNotFound", {
             agendaItemId: ["Geçerli bir gündem maddesi seçin."],
           });
         }
@@ -166,7 +166,7 @@ export async function deleteDecisionAction(
           meeting: { select: { meetingNumber: true, status: true, deletedAt: true } },
         },
       });
-      if (!decision) throw new ActionError("Karar bulunamadı.");
+      if (!decision) throw new ActionError("meetings.errors.decisionNotFound");
       assertMeetingEditable(decision.meeting, "content", user.role, meetingsPermissions);
 
       await db.meetingDecision.delete({ where: { id: decision.id } });

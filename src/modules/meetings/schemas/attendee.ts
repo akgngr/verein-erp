@@ -19,7 +19,7 @@ export const attendanceStatusSchema = z.enum(["INVITED", "PRESENT", "ABSENT_EXCU
 /** Kullanıcı ekleme: birden fazla kullanıcı tek seferde eklenebilir (5. bölüm md. 8). */
 export const attendeeAddUsersSchema = z.object({
   meetingId: z.string().trim().min(1),
-  userIds: z.array(z.string().trim().min(1)).min(1, "En az bir kullanıcı seçin."),
+  userIds: z.array(z.string().trim().min(1)).min(1, "meetings.validation.selectUser"),
   role: attendeeRoleSchema.default("MEMBER"),
 });
 
@@ -28,8 +28,8 @@ export const attendeeAddGuestSchema = z.object({
   name: z
     .string()
     .trim()
-    .min(2, "Konuk adı en az 2 karakter olmalıdır.")
-    .max(120, "Konuk adı en fazla 120 karakter olabilir."),
+    .min(2, "meetings.validation.guestMin")
+    .max(120, "meetings.validation.guestMax"),
   role: z.enum(["GUEST", "MEMBER"]).default("GUEST"),
 });
 
@@ -37,7 +37,7 @@ export const attendeeUpdateSchema = z.object({
   id: z.string().trim().min(1),
   role: attendeeRoleSchema,
   attendance: attendanceStatusSchema,
-  note: emptyToNull(z.string().trim().max(200, "Not en fazla 200 karakter olabilir.").nullable()),
+  note: emptyToNull(z.string().trim().max(200, "meetings.validation.noteMax").nullable()),
 });
 
 export const attendeeRemoveSchema = z.object({ id: z.string().trim().min(1) });

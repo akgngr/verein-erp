@@ -16,7 +16,7 @@ export async function resetUserPasswordAction(input: unknown): Promise<ActionRes
     handler: async ({ input, audit }) => {
       const db = getDb();
       const target = await db.user.findUnique({ where: { id: input.id } });
-      if (!target) throw new ActionError("Kullanıcı bulunamadı.");
+      if (!target) throw new ActionError("users.errors.notFound");
 
       await db.user.update({
         where: { id: target.id },

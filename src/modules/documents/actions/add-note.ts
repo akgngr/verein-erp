@@ -20,7 +20,7 @@ export async function addNoteAction(input: unknown): Promise<ActionResult> {
     handler: async ({ input, user, audit }) => {
       const db = getDb();
       const doc = await db.document.findFirst({ where: { id: input.documentId, deletedAt: null } });
-      if (!doc) throw new ActionError("Evrak bulunamadı.");
+      if (!doc) throw new ActionError("documents.errors.documentNotFound");
 
       await db.documentNote.create({
         data: {

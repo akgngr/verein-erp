@@ -1,9 +1,10 @@
+import { getTranslations } from "next-intl/server";
 import { MailLogsView } from "../../views/mail-logs-view";
 
-export const metadata = {
-  title: "E-posta Gönderim Kayıtları — Verein ERP",
-  description: "Sistemden gönderilen e-postaların kayıtları.",
-};
+export async function generateMetadata() {
+  const t = await getTranslations("mail.meta");
+  return { title: t("logs") };
+}
 
 export default async function MailLogsPage({
   searchParams,

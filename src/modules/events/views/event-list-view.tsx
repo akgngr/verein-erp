@@ -1,6 +1,7 @@
+import { getTranslations } from "next-intl/server";
+import { FormDrawerButton } from "@/shared/components/forms/form-drawer"
 import { Plus } from "lucide-react"
 import { PageHeader } from "@/shared/components/ui/page-header"
-import { LinkButton } from "@/shared/components/ui/link-button"
 import { parseListParams, type RawSearchParams } from "@/shared/list-params"
 import { listEvents } from "../queries/list-events"
 import { EventTable } from "../components/event-table"
@@ -13,6 +14,7 @@ interface EventListViewProps {
 }
 
 export async function EventListView({ searchParams }: EventListViewProps) {
+  const tEvents = await getTranslations("events");
   const raw = await searchParams
 
   const params = parseListParams(raw, {
@@ -36,21 +38,18 @@ export async function EventListView({ searchParams }: EventListViewProps) {
     listEvents({}),
   ])
 
-  const isModalOpen = raw.action === "new"
+  // Form standardı: `?yeni` (eski `?action=new` bağlantıları da açar).
+  const isModalOpen = raw.yeni !== undefined || raw.action === "new"
 
   return (
     <div>
       <PageHeader
-        title="Etkinlikler"
-        description="Dernek etkinlikleri, seminerler, atölyeler ve katılımcı kayıt yönetimi."
+        title={tEvents("title")}
+        description={tEvents("description")}
         actions={
-          <LinkButton
-            href="/events?action=new"
-            color="primary"
-            startIcon={<Plus className="h-4 w-4" />}
-          >
-            Yeni Etkinlik
-          </LinkButton>
+          <FormDrawerButton param="yeni" startIcon={<Plus className="h-4 w-4" />}>
+            {tEvents("newEvent")}
+          </FormDrawerButton>
         }
       />
 

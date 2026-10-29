@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
-import { PageHeader } from "@/shared/components/ui/page-header";
+import { FormDrawer } from "@/shared/components/forms/form-drawer";
 
 import { listAccountOptions } from "../queries/list-accounts";
 import { listCategoryOptions } from "../queries/list-categories";
@@ -21,7 +21,7 @@ export async function AccountingCreateView({
     await requirePermission(accountingPermissions, "create");
     canCreate = true;
   } catch (error) {
-    if (error instanceof ForbiddenError) return <AccessDenied />;
+    if (error instanceof ForbiddenError) return <FormDrawer title="">{<AccessDenied />}</FormDrawer>;
     throw error;
   }
   void canCreate;
@@ -34,12 +34,8 @@ export async function AccountingCreateView({
   const t = await getTranslations("accounting.form");
 
   return (
-    <div>
-      <PageHeader
-        title={t("createTitle")}
-        description={type === "INCOME" ? t("typeIncome") : type === "EXPENSE" ? t("typeExpense") : t("typeTransfer")}
-      />
+    <FormDrawer title={t("createTitle")} description={type === "INCOME" ? t("typeIncome") : type === "EXPENSE" ? t("typeExpense") : t("typeTransfer")}>
       <BookingForm mode="create" accounts={accounts} categories={categories} projects={projects} initial={{ type }} />
-    </div>
+    </FormDrawer>
   );
 }

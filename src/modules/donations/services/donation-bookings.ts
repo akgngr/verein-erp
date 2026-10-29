@@ -5,6 +5,7 @@ import type { Prisma } from "@prisma/client";
 import { createSourcedBooking, donationAccountKeyFor, getDonationBookingTargets, reverseSourcedBooking } from "@/modules/accounting/server";
 
 import { formatDonorNumber } from "./confirmation-numbers";
+import { ActionError } from "@/modules/auth/server";
 
 /**
  * Bağış muhasebe fişleri (§ 11 md. 5): bağış kaydının transaction'ı İÇİNDE
@@ -67,7 +68,7 @@ export async function createDonationBookings(
 
   // Aufwandsspende: banka hesabına gelir + gider çifti (§ 11 md. 5 md. 3).
   if (!args.expenseCategoryId) {
-    throw new Error("Aufwandsspende için gider kategorisi zorunludur.");
+    throw new ActionError("donations.errors.waiverExpenseRequired");
   }
   const expense = await createSourcedBooking({
     tx,

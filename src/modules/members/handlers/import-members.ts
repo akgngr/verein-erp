@@ -2,6 +2,8 @@ import "server-only";
 
 import { NextResponse } from "next/server";
 
+import { getMessageTranslator } from "@/shared/i18n/translate-message";
+
 import { writeAudit } from "@/shared/audit/write-audit";
 import { getDb } from "@/shared/db";
 import { parseSingleFileUpload } from "@/shared/files/http";
@@ -16,6 +18,7 @@ import { membersPermissions } from "../permissions";
 import { allocateMembershipNumber } from "../services/membership-number";
 import { ImportParseError, parseImportWorkbook } from "../services/import-parser";
 import { berlinYear, parseDateOnly } from "../utils";
+import { translateMessage } from "@/shared/i18n/translate-message";
 
 /**
  * Excel üye içe aktarma (POST /api/members/import?dryRun=1|0, Faz 3 eklemeleri).
@@ -27,18 +30,19 @@ import { berlinYear, parseDateOnly } from "../utils";
  * mevcut UYE-<yıl>-<sıra> yapısıyla uyumsuz olduğundan korunmadı).
  */
 export async function importMembersHandler(request: Request): Promise<Response> {
+  const translate = await getMessageTranslator();
   let user;
   try {
     user = await requireUser();
   } catch (error) {
     if (error instanceof UnauthorizedError) {
-      return NextResponse.json({ ok: false, error: "Oturum bulunamadı." }, { status: 401 });
+      return NextResponse.json({ ok: false, error: await translateMessage("common.errors.sessionExpired") }, { status: 401 });
     }
     throw error;
   }
 
   if (!can(user.role, membersPermissions, "create")) {
-    return NextResponse.json({ ok: false, error: "Bu işlem için yetkiniz yok." }, { status: 403 });
+    return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
   }
 
   const dryRun = new URL(request.url).searchParams.get("dryRun") !== "0";
@@ -51,13 +55,13 @@ export async function importMembersHandler(request: Request): Promise<Response> 
   const { file } = parsed;
   if (file.size > IMPORT_MAX_FILE_MB * 1024 * 1024) {
     return NextResponse.json(
-      { ok: false, error: `Dosya ${IMPORT_MAX_FILE_MB} MB sınırını aşıyor.` },
+      { ok: false, error: await translateMessage("members.errors.importTooLarge", { max: IMPORT_MAX_FILE_MB }) },
       { status: 400 },
     );
   }
   if (getExtension(file.originalName) !== "xlsx") {
     return NextResponse.json(
-      { ok: false, error: "Yalnızca .xlsx dosyası kabul edilir." },
+      { ok: false, error: await translateMessage("members.errors.importXlsxOnly") },
       { status: 400 },
     );
   }
@@ -69,17 +73,17 @@ export async function importMembersHandler(request: Request): Promise<Response> 
     (file.head[2] !== 0x03 && file.head[2] !== 0x05)
   ) {
     return NextResponse.json(
-      { ok: false, error: "Dosya geçerli bir .xlsx paketi değil." },
+      { ok: false, error: await translateMessage("members.errors.importInvalidXlsx") },
       { status: 400 },
     );
   }
 
   let parsedFile;
   try {
-    parsedFile = await parseImportWorkbook(file.buffer);
+    parsedFile = await parseImportWorkbook(file.buffer, translate);
   } catch (error) {
     if (error instanceof ImportParseError) {
-      return NextResponse.json({ ok: false, error: error.message }, { status: 400 });
+      return NextResponse.json({ ok: false, error: translate(error.message, error.values) }, { status: 400 });
     }
     throw error;
   }
@@ -151,16 +155,16 @@ export async function importMembersHandler(request: Request): Promise<Response> 
       : null;
 
     if (emailKey && dbEmails.has(emailKey)) {
-      rowErrors.push("Mükerrer kayıt: bu e-posta ile kayıtlı bir üye zaten var.");
+      rowErrors.push(translate("members.errors.importDupEmailDb"));
     }
     if (emailKey && fileEmails.has(emailKey)) {
-      rowErrors.push("Mükerrer kayıt: aynı e-posta dosyada birden çok kez geçiyor.");
+      rowErrors.push(translate("members.errors.importDupEmailFile"));
     }
     if (pairKey && dbPairs.has(pairKey)) {
-      rowErrors.push("Mükerrer kayıt: aynı ad, soyad ve doğum tarihiyle kayıtlı bir üye zaten var.");
+      rowErrors.push(translate("members.errors.importDupPersonDb"));
     }
     if (pairKey && filePairs.has(pairKey)) {
-      rowErrors.push("Mükerrer kayıt: aynı ad, soyad ve doğum tarihi dosyada birden çok kez geçiyor.");
+      rowErrors.push(translate("members.errors.importDupPersonFile"));
     }
 
     if (emailKey) fileEmails.add(emailKey);

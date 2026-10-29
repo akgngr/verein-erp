@@ -16,6 +16,7 @@ import { donationsPermissions } from "../permissions";
 import { ConfirmationBody, type ConfirmationPdfData } from "../pdf/confirmation-document";
 import { ATTACHMENT_TITLE } from "../pdf/template-de";
 import { storedSnapshotToPdfData } from "./snapshot-pdf";
+import { translateMessage } from "@/shared/i18n/translate-message";
 
 /** ASCII güvenli dosya adı. */
 function asciiFileName(name: string): string {
@@ -32,19 +33,19 @@ export async function batchPdfHandler(request: Request): Promise<Response> {
     user = await requireUser();
   } catch (error) {
     if (error instanceof UnauthorizedError) {
-      return NextResponse.json({ ok: false, error: "Oturum bulunamadı." }, { status: 401 });
+      return NextResponse.json({ ok: false, error: await translateMessage("common.errors.sessionExpired") }, { status: 401 });
     }
     throw error;
   }
 
   if (!can(user.role, donationsPermissions, "view")) {
-    return NextResponse.json({ ok: false, error: "Bu işlem için yetkiniz yok." }, { status: 403 });
+    return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
   }
 
   const idsParam = new URL(request.url).searchParams.get("ids") ?? "";
   const ids = idsParam.split(",").map((id) => id.trim()).filter(Boolean).slice(0, BATCH_PDF_MAX_IDS);
   if (ids.length === 0) {
-    return NextResponse.json({ ok: false, error: "Bildirim seçilmedi." }, { status: 400 });
+    return NextResponse.json({ ok: false, error: await translateMessage("donations.errors.noConfirmationSelected") }, { status: 400 });
   }
 
   const db = getDb();
@@ -54,7 +55,7 @@ export async function batchPdfHandler(request: Request): Promise<Response> {
     orderBy: [{ year: "asc" }, { sequence: "asc" }],
   });
   if (confirmations.length === 0) {
-    return NextResponse.json({ ok: false, error: "Bildirim bulunamadı." }, { status: 404 });
+    return NextResponse.json({ ok: false, error: await translateMessage("donations.errors.confirmationNotFound2") }, { status: 404 });
   }
 
   // Değişmez snapshot'lardan PDF verisi (yeniden üretim deterministik; § 13).

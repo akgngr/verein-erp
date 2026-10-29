@@ -53,7 +53,7 @@ export function MemberDetailActions({
         {canUpdate ? (
           <Button
             as="a"
-            href={`/uyeler/${memberId}/duzenle`}
+            href={`/uyeler/${memberId}?duzenle`}
             size="sm"
             color="primary"
             variant="solid"

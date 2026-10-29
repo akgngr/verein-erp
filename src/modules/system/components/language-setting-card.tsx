@@ -2,7 +2,7 @@
 
 import { addToast } from "@heroui/react";
 import { Check } from "lucide-react";
-import { useLocale } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
 
@@ -25,6 +25,8 @@ export function LanguageSettingCard({
   onSetLocale: (input: { locale: Locale }) => Promise<ActionResult<Locale>>;
 }) {
   const currentLocale = useLocale() as Locale;
+  const t = useTranslations("settings.languageSection");
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
@@ -34,14 +36,12 @@ export function LanguageSettingCard({
     startTransition(async () => {
       const result = await onSetLocale({ locale: nextLocale });
       if (!result.ok) {
-        addToast({ title: result.error ?? "Dil değiştirilemedi.", color: "danger" });
+        addToast({ title: tCommon("languageChangeFailed"), color: "danger" });
         return;
       }
       addToast({
-        title:
-          nextLocale === "de"
-            ? "Sprache erfolgreich auf Deutsch aktualisiert."
-            : "Arayüz dili başarıyla Türkçe olarak güncellendi.",
+        // Bildirim yeni dilde gösterilir; mesajlar henüz eski dilde yüklü olduğundan dil adı kullanılır.
+        title: t("switchedTo", { language: LOCALE_LABELS[nextLocale] }),
         color: "success",
       });
       router.refresh();
@@ -74,9 +74,7 @@ export function LanguageSettingCard({
                   {LOCALE_LABELS[loc]}
                 </p>
                 <p className="text-tiny text-default-400">
-                  {loc === "tr"
-                    ? "Türkiye dernek standartları & Türkçe arayüz"
-                    : "Deutscher Verein-Standard & deutsches Interface"}
+                  {t(loc === "tr" ? "trHint" : "deHint")}
                 </p>
               </div>
             </div>

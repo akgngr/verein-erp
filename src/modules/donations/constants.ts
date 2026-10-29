@@ -29,37 +29,18 @@ export const BATCH_PDF_MAX_IDS = 100;
 export const BATCH_ISSUE_MAX_RECIPIENTS = 200;
 
 /** Etiket sözlükleri (sunucu içi: audit/export/PDF TR satırları). */
-export const DONOR_TYPE_LABELS: Record<DonorType, string> = {
-  PERSON: "Kişi (Person)",
-  ORGANIZATION: "Kuruluş (Organisation)",
-};
+export const DONOR_TYPE_VALUES: DonorType[] = ["PERSON", "ORGANIZATION"];
 
-export const DONATION_METHOD_LABELS: Record<DonationMethod, string> = {
-  CASH: "Nakit (Bar)",
-  BANK_TRANSFER: "Banka havalesi (Überweisung)",
-  CARD: "Kart (Kartenzahlung)",
-  PAYPAL: "PayPal",
-  REIMBURSEMENT_WAIVER: "Aufwandsspende (gider vazgeçimi)",
-  OTHER: "Diğer (Sonstige)",
-};
+export const DONATION_METHOD_VALUES: DonationMethod[] = ["CASH", "BANK_TRANSFER", "CARD", "PAYPAL", "REIMBURSEMENT_WAIVER", "OTHER"];
 
 /** KARAR (§ 11 md. 4): Aufwandsspende yöntemi ZORUNLU olarak REIMBURSEMENT_WAIVER. */
 export const WAIVER_METHOD: DonationMethod = "REIMBURSEMENT_WAIVER";
 
-export const CONFIRMATION_KIND_LABELS: Record<ConfirmationKind, string> = {
-  SINGLE: "Einzelbestätigung (Tek)",
-  COLLECTIVE: "Sammelbestätigung (Toplu)",
-};
+export const CONFIRMATION_KIND_VALUES: ConfirmationKind[] = ["SINGLE", "COLLECTIVE"];
 
-export const CONFIRMATION_CONTENT_LABELS: Record<ConfirmationContent, string> = {
-  DONATION: "Geldspende (Bağış)",
-  MEMBERSHIP_FEE: "Mitgliedsbeitrag (Aidat)",
-};
+export const CONFIRMATION_CONTENT_VALUES: ConfirmationContent[] = ["DONATION", "MEMBERSHIP_FEE"];
 
-export const CONFIRMATION_STATUS_LABELS: Record<ConfirmationStatus, string> = {
-  ISSUED: "Düzenlendi",
-  CANCELLED: "İptal edildi",
-};
+export const CONFIRMATION_STATUS_VALUES: ConfirmationStatus[] = ["ISSUED", "CANCELLED"];
 
 /** Bildirim ögesi etiketi (Anlage "Art der Zuwendung" kolonu; § 13 md. 13). */
 export const ITEM_LABELS: Record<ConfirmationItemType, string> = {

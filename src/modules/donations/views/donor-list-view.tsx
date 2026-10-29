@@ -1,9 +1,11 @@
 import { Plus } from "lucide-react";
+import { FormDrawerButton } from "@/shared/components/forms/form-drawer";
+import { DonorCreateView } from "./donor-create-view";
+import { DonorEditView } from "./donor-edit-view";
 import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
-import { LinkButton } from "@/shared/components/ui/link-button";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { parseListParams, type RawSearchParams } from "@/shared/list-params";
 import { can } from "@/shared/permissions/define";
@@ -37,6 +39,7 @@ export async function DonorListView({
   const t = await getTranslations("donations.donors");
 
   const canCreate = can(user.role, donationsPermissions, "create");
+  const canUpdate = can(user.role, donationsPermissions, "update");
 
   return (
     <div>
@@ -45,9 +48,9 @@ export async function DonorListView({
         description={""}
         actions={
           canCreate ? (
-            <LinkButton href="/bagislar/bagiscilar/yeni" startIcon={<Plus className="h-4 w-4" />}>
+            <FormDrawerButton param="yeni" startIcon={<Plus className="h-4 w-4" />}>
               {t("form.createTitle")}
-            </LinkButton>
+            </FormDrawerButton>
           ) : null
         }
       />
@@ -59,9 +62,11 @@ export async function DonorListView({
         sort={params.sort}
         dir={params.dir}
         q={params.q}
-        canUpdate={can(user.role, donationsPermissions, "update")}
+        canUpdate={canUpdate}
         canDelete={can(user.role, donationsPermissions, "delete")}
       />
+      {canCreate && raw.yeni !== undefined ? <DonorCreateView /> : null}
+      {canUpdate && typeof raw.duzenle === "string" && raw.duzenle ? <DonorEditView id={raw.duzenle} /> : null}
     </div>
   );
 }

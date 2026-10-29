@@ -317,7 +317,7 @@ export function ModuleList({
                         </span>
                         <Switch
                           size="sm"
-                          aria-label={`${mod.label} durumunu değiştir`}
+                          aria-label={t("toggleAria", { label: mod.label })}
                           isSelected={mod.isActive}
                           isDisabled={!canManage || isPending}
                           onValueChange={(val) => handleToggle(mod, val)}
@@ -332,7 +332,7 @@ export function ModuleList({
                       size="sm"
                       variant="light"
                       color="danger"
-                      aria-label={`${mod.label} modülünü sil`}
+                      aria-label={t("deleteAria", { label: mod.label })}
                       title={t("deleteModal.confirm")}
                       className="rounded-lg"
                       onPress={() => setDeletingModule(mod)}

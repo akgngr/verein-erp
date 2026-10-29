@@ -7,8 +7,13 @@ import { can } from "@/shared/permissions/define";
 
 import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 
-import { MEMBERSHIP_TYPE_LABELS } from "../constants";
+/**
+ * İçe aktarma dosya biçimi Türkçe başlık/değerlerle tanımlıdır (import-parser
+ * HEADER_MAP / IMPORT_TYPE_ALIASES); şablon arayüz dilinden bağımsız sabittir.
+ */
+const MEMBERSHIP_TYPE_LABELS = { ASIL: "Asıl", ONURSAL: "Onursal", FAHRI: "Fahri", DESTEKCI: "Destekçi" } as const;
 import { membersPermissions } from "../permissions";
+import { translateMessage } from "@/shared/i18n/translate-message";
 
 /**
  * İçe aktarma şablonu (GET /api/members/import-template, Faz 3 eklemeleri).
@@ -22,13 +27,13 @@ export async function importTemplateHandler(): Promise<Response> {
     user = await requireUser();
   } catch (error) {
     if (error instanceof UnauthorizedError) {
-      return NextResponse.json({ ok: false, error: "Oturum bulunamadı." }, { status: 401 });
+      return NextResponse.json({ ok: false, error: await translateMessage("common.errors.sessionExpired") }, { status: 401 });
     }
     throw error;
   }
 
   if (!can(user.role, membersPermissions, "create")) {
-    return NextResponse.json({ ok: false, error: "Bu işlem için yetkiniz yok." }, { status: 403 });
+    return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
   }
 
   const workbook = new ExcelJS.Workbook();

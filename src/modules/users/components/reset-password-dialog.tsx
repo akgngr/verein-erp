@@ -2,6 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addToast, Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -25,6 +26,9 @@ export function ResetPasswordDialog({
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
 }) {
+  const t = useTranslations("users.resetPassword");
+  const tCommon = useTranslations("common");
+  const tValidation = useTranslations("validation");
   const [formError, setFormError] = useState<string | null>(null);
   const form = useForm<{ password: string }>({
     resolver: zodResolver(userResetPasswordSchema.pick({ password: true })),
@@ -39,7 +43,7 @@ export function ResetPasswordDialog({
       return;
     }
     addToast({
-      title: "Parola sıfırlandı. Kullanıcı sonraki girişte yeni parola belirleyecek.",
+      title: t("done"),
       color: "success",
     });
     form.reset();
@@ -56,17 +60,17 @@ export function ResetPasswordDialog({
       <ModalContent>
         {() => (
           <>
-            <ModalHeader className="flex flex-col gap-1">Parolayı Sıfırla</ModalHeader>
+            <ModalHeader className="flex flex-col gap-1">{t("title")}</ModalHeader>
             <ModalBody>
               <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
                 <FormInput
                   name="password"
-                  label="Yeni geçici parola"
+                  label={t("newPassword")}
                   control={form.control}
                   type="password"
                   autoComplete="new-password"
                   isRequired
-                  description="En az 10 karakter; 1 büyük harf, 1 küçük harf ve 1 rakam içermelidir."
+                  description={tValidation("passwordHint")}
                 />
                 <FormErrorSummary message={formError} />
               </form>
@@ -77,7 +81,7 @@ export function ResetPasswordDialog({
                 onPress={() => onOpenChange(false)}
                 isDisabled={form.formState.isSubmitting}
               >
-                Vazgeç
+                {tCommon("cancel")}
               </Button>
               <Button
                 color="primary"
@@ -85,7 +89,7 @@ export function ResetPasswordDialog({
                 isDisabled={form.formState.isSubmitting}
                 onPress={() => void onSubmit()}
               >
-                Sıfırla
+                {t("submit")}
               </Button>
             </ModalFooter>
           </>

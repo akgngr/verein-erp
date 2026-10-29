@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod"
 import { addToast } from "@heroui/react"
 import { useRouter } from "next/navigation"
+import { useTranslations } from "next-intl"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 
@@ -18,6 +19,8 @@ import {
 } from "../schemas/change-password"
 
 export function ChangePasswordForm() {
+  const t = useTranslations("auth.profile")
+  const tValidation = useTranslations("validation")
   const router = useRouter()
   const [formError, setFormError] = useState<string | null>(null)
   const form = useForm<ChangePasswordInput>({
@@ -33,7 +36,7 @@ export function ChangePasswordForm() {
       return
     }
     form.reset()
-    addToast({ title: "Parolanız güncellendi.", color: "success" })
+    addToast({ title: t("updated"), color: "success" })
     router.push("/")
     router.refresh()
   })
@@ -42,7 +45,7 @@ export function ChangePasswordForm() {
     <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
       <FormInput
         name="currentPassword"
-        label="Mevcut parola"
+        label={t("currentPassword")}
         control={form.control}
         type="password"
         autoComplete="current-password"
@@ -50,16 +53,16 @@ export function ChangePasswordForm() {
       />
       <FormInput
         name="newPassword"
-        label="Yeni parola"
+        label={t("newPassword")}
         control={form.control}
         type="password"
         autoComplete="new-password"
         isRequired
-        description="En az 10 karakter; 1 büyük harf, 1 küçük harf ve 1 rakam içermelidir."
+        description={tValidation("passwordHint")}
       />
       <FormErrorSummary message={formError} />
       <SubmitButton isSubmitting={form.formState.isSubmitting}>
-        Parolayı güncelle
+        {t("submit")}
       </SubmitButton>
     </form>
   )

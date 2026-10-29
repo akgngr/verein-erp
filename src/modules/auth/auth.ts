@@ -13,8 +13,9 @@ export const { handlers, auth, signIn, signOut, unstable_update } = NextAuth({
   providers: [
     Credentials({
       credentials: {
-        email: { label: "E-posta" },
-        password: { label: "Parola", type: "password" },
+        // i18n-ignore — Auth.js varsayılan formu kullanılmaz; etiketler görünmez.
+        email: { label: "email" },
+        password: { label: "password", type: "password" },
       },
       authorize,
     }),

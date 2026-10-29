@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Button, Textarea, addToast } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -20,6 +22,7 @@ export function DiscussionEditor({
   initialDiscussion: string | null;
   editable: boolean;
 }) {
+  const t = useTranslations("meetings.discussion");
   const router = useRouter();
   const [editing, setEditing] = useState(false);
   const [value, setValue] = useState(initialDiscussion ?? "");
@@ -29,7 +32,7 @@ export function DiscussionEditor({
     if (!initialDiscussion) return null;
     return (
       <div className="mt-2">
-        <p className="text-tiny font-medium text-default-500">Görüşmeler:</p>
+        <p className="text-tiny font-medium text-default-500">{t("label")}</p>
         <p className="whitespace-pre-wrap text-small">{initialDiscussion}</p>
       </div>
     );
@@ -38,11 +41,11 @@ export function DiscussionEditor({
   if (!editing) {
     return (
       <div className="mt-2">
-        <p className="text-tiny font-medium text-default-500">Görüşmeler:</p>
+        <p className="text-tiny font-medium text-default-500">{t("label")}</p>
         {initialDiscussion ? (
           <p className="whitespace-pre-wrap text-small">{initialDiscussion}</p>
         ) : (
-          <p className="text-small text-default-400">Henüz görüşme notu girilmemiş.</p>
+          <p className="text-small text-default-400">{t("emptyNote")}</p>
         )}
         <Button
           size="sm"
@@ -53,7 +56,7 @@ export function DiscussionEditor({
             setEditing(true);
           }}
         >
-          {initialDiscussion ? "Düzenle" : "Görüşme ekle"}
+          {initialDiscussion ? t("edit") : t("add")}
         </Button>
       </div>
     );
@@ -70,7 +73,7 @@ export function DiscussionEditor({
       addToast({ title: result.error, color: "danger" });
       return;
     }
-    addToast({ title: "Görüşme metni kaydedildi", color: "success" });
+    addToast({ title: t("savedToast"), color: "success" });
     setEditing(false);
     router.refresh();
   };
@@ -78,20 +81,20 @@ export function DiscussionEditor({
   return (
     <div className="mt-2">
       <Textarea
-        label="Görüşmeler (tutanak metni)"
+        label={t("fieldLabel")}
         labelPlacement="outside"
         value={value}
         onValueChange={setValue}
         minRows={4}
         maxLength={10000}
-        description="En fazla 10000 karakter; satır sonları korunur."
+        description={t("fieldHelp")}
       />
       <div className="mt-2 flex gap-2">
         <Button size="sm" color="primary" isLoading={busy} onPress={save}>
-          Kaydet
+          {t("save")}
         </Button>
         <Button size="sm" variant="light" onPress={() => setEditing(false)}>
-          Vazgeç
+          {t("cancel")}
         </Button>
       </div>
     </div>

@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { addToast } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -19,7 +21,7 @@ import {
 } from "@heroui/react";
 
 import { changeMeetingStatusAction } from "../actions/change-status";
-import { MEETING_STATUS_LABELS, MEETING_STATUS_TRANSITIONS } from "../constants";
+import { MEETING_STATUS_TRANSITIONS } from "../constants";
 import type { MeetingStatus } from "@prisma/client";
 
 /**
@@ -44,6 +46,9 @@ export function StatusMenu({
   quorumReached: boolean | null;
   quorumRequired: number | null;
 }) {
+  const tCommon = useTranslations("common");
+  const t = useTranslations("meetings.statusMenu");
+  const tStatus = useTranslations("meetings.status");
   const router = useRouter();
   const [pending, setPending] = useState<MeetingStatus | null>(null);
   const [reopenOpen, setReopenOpen] = useState(false);
@@ -63,22 +68,22 @@ export function StatusMenu({
   const confirmDialogMessage = (target: MeetingStatus): string => {
     if (target === "APPROVED") {
       if (quorumRequired !== null && quorumReached === false) {
-        return "Toplantı yeter sayısı sağlanmamış. Yine de onaylamak istiyor musunuz?";
+        return t("confirmApproveNoQuorum");
       }
-      return `"${meetingNumber}" numaralı toplantı tutanağı onaylanacak. Onaydan sonra içerik kilitlenir; düzenlemek için yeniden açmanız gerekir. Onaylıyor musunuz?`;
+      return t("confirmApprove", { number: meetingNumber });
     }
     // KARAR: HELD hedefi iki farklı geçiştir — onaylıdan yeniden açma ile
     // taslağa alma farklı mesaj alır (5. bölüm md. 3).
     if (target === "HELD" && status === "APPROVED") {
-      return `"${meetingNumber}" numaralı tutanak yeniden açılacak ve düzenlenebilir duruma geçecektir. Devam edilsin mi?`;
+      return t("confirmReopen", { number: meetingNumber });
     }
     if (target === "HELD") {
-      return `"${meetingNumber}" numaralı toplantı "Yapıldı" durumuna alınacak (tutanak taslağı). Devam edilsin mi?`;
+      return t("confirmHeld", { number: meetingNumber });
     }
     if (target === "CANCELLED") {
-      return `"${meetingNumber}" numaralı toplantı iptal edilecek. Devam edilsin mi?`;
+      return t("confirmCancel", { number: meetingNumber });
     }
-    return `"${meetingNumber}" numaralı toplantı "Planlandı" durumuna alınacak. Devam edilsin mi?`;
+    return t("confirmPlanned", { number: meetingNumber });
   };
 
   const submit = async (target: MeetingStatus, reasonText: string | null) => {
@@ -95,7 +100,7 @@ export function StatusMenu({
       return;
     }
     addToast({
-      title: `Durum güncellendi: ${MEETING_STATUS_LABELS[target]}`,
+      title: t("updatedToast", { label: tStatus(target) }),
       color: "success",
     });
     setPending(null);
@@ -117,21 +122,21 @@ export function StatusMenu({
       <Dropdown>
         <DropdownTrigger>
           <Button variant="flat" color="default">
-            Durum
+            {t("button")}
           </Button>
         </DropdownTrigger>
-        <DropdownMenu aria-label="Durum değişikliği" onAction={(key) => onTransitionClick(key as MeetingStatus)}>
+        <DropdownMenu aria-label={t("changeTitle")} onAction={(key) => onTransitionClick(key as MeetingStatus)}>
           {transitions.map(([target]) => (
-            <DropdownItem key={target}>{MEETING_STATUS_LABELS[target]}</DropdownItem>
+            <DropdownItem key={target}>{tStatus(target)}</DropdownItem>
           ))}
         </DropdownMenu>
       </Dropdown>
 
       <ConfirmStatusDialog
         isOpen={pending !== null}
-        title="Durum değişikliği"
+        title={t("changeTitle")}
         message={pending ? confirmDialogMessage(pending) : ""}
-        confirmLabel="Onayla"
+        confirmLabel={t("approveConfirm")}
         busy={busy}
         error={error}
         onCancel={() => {
@@ -144,14 +149,11 @@ export function StatusMenu({
       {/* Yeniden açma: gerekçe zorunlu (5-500 karakter) (5. bölüm md. 3). */}
       <Modal isOpen={reopenOpen} onOpenChange={(open) => !open && setReopenOpen(false)}>
         <ModalContent>
-          <ModalHeader>Tutanak yeniden açma</ModalHeader>
+          <ModalHeader>{t("reopenModalTitle")}</ModalHeader>
           <ModalBody>
-            <p className="text-small text-default-600">
-              Tutanağı düzenlemek için yeniden açıyorsunuz. Gerekçe zorunludur ve denetim
-              kaydına işlenir.
-            </p>
+            <p className="text-small text-default-600">{t("reopenModalInfo")}</p>
             <Textarea
-              label="Gerekçe"
+              label={t("reasonShort")}
               labelPlacement="outside"
               value={reason}
               onValueChange={setReason}
@@ -168,7 +170,7 @@ export function StatusMenu({
                 setError(null);
               }}
             >
-              Vazgeç
+              {tCommon("cancel")}
             </Button>
             <Button
               color="primary"
@@ -176,7 +178,7 @@ export function StatusMenu({
               onPress={() => submit("HELD", reason)}
               isDisabled={reason.trim().length < 5}
             >
-              Yeniden aç
+              {t("reopenConfirm")}
             </Button>
           </ModalFooter>
         </ModalContent>
@@ -204,6 +206,7 @@ function ConfirmStatusDialog({
   onCancel: () => void;
   onConfirm: () => void;
 }) {
+  const tCommon = useTranslations("common");
   return (
     <Modal isOpen={isOpen} onOpenChange={(open) => !open && onCancel()}>
       <ModalContent>
@@ -214,7 +217,7 @@ function ConfirmStatusDialog({
         </ModalBody>
         <ModalFooter>
           <Button variant="light" onPress={onCancel}>
-            Vazgeç
+            {tCommon("cancel")}
           </Button>
           <Button color="primary" isLoading={busy} onPress={onConfirm}>
             {confirmLabel}

@@ -4,5 +4,41 @@
   "password": "Parola",
   "loginButton": "Giriş yap",
   "logout": "Çıkış yap",
-  "mustChangePasswordBanner": "Parolanızı güncellemeniz zorunludur"
+  "mustChangePasswordBanner": "Parolanızı güncellemeniz zorunludur",
+  "meta": {
+    "profile": "Profil"
+  },
+  "appTitle": "Dernek Yönetim Sistemi",
+  "loginSubtitle": "Devam etmek için oturum açın",
+  "passiveNotice": "Oturumunuz sonlandırıldı. Hesabınız pasif duruma alınmış olabilir; lütfen yöneticinizle görüşün.",
+  "profile": {
+    "title": "Profil",
+    "description": "Hesap bilgileriniz ve parola değişikliği.",
+    "accountInfo": "Hesap Bilgileri",
+    "name": "Ad Soyad",
+    "email": "E-posta",
+    "role": "Rol",
+    "changePassword": "Parola Değiştir",
+    "currentPassword": "Mevcut parola",
+    "newPassword": "Yeni parola",
+    "submit": "Parolayı güncelle",
+    "updated": "Parolanız güncellendi."
+  },
+  "errors": {
+    "sessionInvalid": "Oturumunuz geçersiz. Lütfen tekrar giriş yapın.",
+    "currentPasswordWrong": "Mevcut parolanız hatalı.",
+    "invalidCredentials": "E-posta veya parola hatalı.",
+    "accountLocked": "Hesap geçici olarak kilitlendi, daha sonra tekrar deneyin.",
+    "loginFailed": "Giriş yapılamadı. Lütfen tekrar deneyin.",
+    "invalidLocale": "Geçersiz dil seçimi."
+  },
+  "validation": {
+    "currentPasswordRequired": "Mevcut parolanızı girin.",
+    "emailRequired": "E-posta zorunludur.",
+    "passwordRequired": "Parola zorunludur."
+  },
+  "module": {
+    "label": "Kimlik Doğrulama",
+    "description": "Kullanıcı girişi, oturum yönetimi ve parola güvenliği."
+  }
 }

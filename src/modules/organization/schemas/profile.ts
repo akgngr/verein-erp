@@ -15,7 +15,7 @@ const optionalText = (max: number) =>
 
 const emailLike = z.preprocess(
   (value) => (typeof value === "string" && value.trim() === "" ? null : value),
-  z.string().trim().max(200).email("Geçerli bir e-posta adresi girin.").nullable(),
+  z.string().trim().max(200).email("validation.emailInvalid").nullable(),
 );
 
 const urlLike = z.preprocess(
@@ -24,7 +24,7 @@ const urlLike = z.preprocess(
     .string()
     .trim()
     .max(200)
-    .url("Web sitesi geçerli bir adres olmalıdır (https://...).")
+    .url("organization.validation.websiteInvalid")
     .nullable(),
 );
 
@@ -32,13 +32,13 @@ const isoDate = z.preprocess(
   (value) => (typeof value === "string" && value.trim() === "" ? null : value),
   z
     .string()
-    .regex(/^\d{4}-\d{2}-\d{2}$/, "Tarih YYYY-MM-DD biçiminde olmalıdır.")
+    .regex(/^\d{4}-\d{2}-\d{2}$/, "organization.validation.dateFormat")
     .nullable(),
 );
 
 export const organizationUpdateSchema = z
   .object({
-    name: z.string().trim().min(3, "Dernek adı en az 3 karakter olmalıdır.").max(200),
+    name: z.string().trim().min(3, "organization.validation.nameMin").max(200),
     street: optionalText(200),
     postalCode: optionalText(10),
     city: optionalText(200),
@@ -64,7 +64,7 @@ export const organizationUpdateSchema = z
         z
           .string()
           .trim()
-          .max(500, "Amaç metni en fazla 500 karakter olabilir.")
+          .max(500, "organization.validation.purposesMax")
           .nullable(),
       ),
     // KARAR (§ 1): Uygulama § 10b Abs. 1 Satz 8 EStG kararını veremez — bayrak
@@ -82,7 +82,7 @@ export const organizationUpdateSchema = z
       ctx.addIssue({
         code: "custom",
         path: ["postalCode"],
-        message: "Almanya için posta kodu 5 haneli olmalıdır (PLZ).",
+        message: "organization.validation.postalCodeDe",
       });
     }
   });

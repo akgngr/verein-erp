@@ -112,5 +112,13 @@
   "menu": {
     "settings": "Ayarlar",
     "logs": "Gönderim kayıtları"
+  },
+  "meta": {
+    "settings": "E-posta ayarları",
+    "logs": "E-posta gönderim kayıtları"
+  },
+  "module": {
+    "label": "E-posta Altyapısı",
+    "description": "Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gönderim kayıtları."
   }
 }

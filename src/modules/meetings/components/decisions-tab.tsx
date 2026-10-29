@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Button, addToast } from "@heroui/react";
 import { Plus, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -8,13 +10,14 @@ import { useState } from "react";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 
 import { deleteDecisionAction } from "../actions/decision-actions";
-import { DECISION_RESULT_COLORS, DECISION_RESULT_LABELS } from "../constants";
+import { DECISION_RESULT_COLORS } from "../constants";
 import type { AgendaItemDetail, DecisionItem } from "../types";
 
 import { DecisionModal } from "./decision-modal";
 
 /** Sonuç rozeti (7.3 Kararlar). */
 function ResultBadge({ result }: { result: DecisionItem["result"] }) {
+  const tResult = useTranslations("meetings.decisionResult");
   const color = DECISION_RESULT_COLORS[result];
   const colorClass =
     color === "success"
@@ -24,7 +27,7 @@ function ResultBadge({ result }: { result: DecisionItem["result"] }) {
         : "bg-warning-50 text-warning-600";
   return (
     <span className={`rounded-small px-2 py-0.5 text-tiny ${colorClass}`}>
-      {DECISION_RESULT_LABELS[result]}
+      {tResult(result)}
     </span>
   );
 }
@@ -46,6 +49,8 @@ export function DecisionsTab({
   editable: boolean;
   presetAgendaItemId?: string | null;
 }) {
+  const tCommon = useTranslations("common");
+  const t = useTranslations("meetings.decisions");
   const router = useRouter();
   const [modalOpen, setModalOpen] = useState(Boolean(presetAgendaItemId));
   const [editing, setEditing] = useState<DecisionItem | null>(null);
@@ -58,7 +63,7 @@ export function DecisionsTab({
       addToast({ title: result.error, color: "danger" });
       return;
     }
-    addToast({ title: `Karar silindi: ${deleting.decisionNumber}`, color: "success" });
+    addToast({ title: t("deletedNumberedToast", { number: deleting.decisionNumber }), color: "success" });
     setDeleting(null);
     router.refresh();
   };
@@ -76,13 +81,13 @@ export function DecisionsTab({
               setModalOpen(true);
             }}
           >
-            Karar ekle
+            {t("add")}
           </Button>
         </div>
       ) : null}
 
       {decisions.length === 0 ? (
-        <p className="text-small text-default-500">Karar kaydı yok.</p>
+        <p className="text-small text-default-500">{t("empty")}</p>
       ) : (
         <ul className="flex flex-col gap-3">
           {decisions.map((decision) => (
@@ -112,7 +117,7 @@ export function DecisionsTab({
                       isIconOnly
                       size="sm"
                       variant="light"
-                      aria-label="Düzenle"
+                      aria-label={tCommon("edit")}
                       onPress={() => {
                         setEditing(decision);
                         setModalOpen(true);
@@ -125,7 +130,7 @@ export function DecisionsTab({
                       size="sm"
                       variant="light"
                       color="danger"
-                      aria-label="Sil"
+                      aria-label={tCommon("delete")}
                       onPress={() => setDeleting(decision)}
                     >
                       <Trash2 className="h-4 w-4" />
@@ -153,9 +158,9 @@ export function DecisionsTab({
       <ConfirmDialog
         isOpen={deleting !== null}
         onOpenChange={(open) => !open && setDeleting(null)}
-        title="Kararı sil"
-        message={`"${deleting?.decisionNumber ?? ""}" numaralı karar silinecek. Karar numarası yeniden kullanılmaz; bu karara bağlı görevlerin bağlantısı boşalır. Onaylıyor musunuz?`}
-        confirmLabel="Sil"
+        title={t("delete")}
+        message={t("deleteNumberedMessage", { number: deleting?.decisionNumber ?? "" })}
+        confirmLabel={tCommon("delete")}
         confirmColor="danger"
         onConfirm={confirmDelete}
       />

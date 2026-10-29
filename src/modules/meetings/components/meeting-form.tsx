@@ -1,8 +1,10 @@
 "use client";
 
+import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Card, CardBody, addToast } from "@heroui/react";
+import { Button, addToast } from "@heroui/react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm, useWatch, type Control, type Resolver } from "react-hook-form";
 
@@ -15,7 +17,7 @@ import { FormTextarea } from "@/shared/components/forms/form-textarea";
 import { SubmitButton } from "@/shared/components/forms/submit-button";
 
 import { createMeetingAction, updateMeetingAction } from "../actions/meeting-actions";
-import { MEETING_TYPE_LABELS } from "../constants";
+import { MEETING_TYPE_VALUES } from "../constants";
 import { meetingCreateSchema, meetingUpdateSchema } from "../schemas/meeting";
 import type { CopySourceOption } from "../types";
 import { berlinToday } from "../utils";
@@ -59,11 +61,6 @@ type MeetingFormProps =
     }
   | { mode: "edit"; meeting: MeetingEditFormData };
 
-const TYPE_OPTIONS = (
-  Object.keys(MEETING_TYPE_LABELS) as Array<keyof typeof MEETING_TYPE_LABELS>
-).map((type) => ({ value: type, label: MEETING_TYPE_LABELS[type] }));
-
-const EMPTY_TYPE_OPTIONS = [{ value: "", label: "Tür seçin" }, ...TYPE_OPTIONS];
 
 /**
  * Toplantı oluşturma/düzenleme formu (7.2). Create'te "Önceki toplantıdan
@@ -72,7 +69,15 @@ const EMPTY_TYPE_OPTIONS = [{ value: "", label: "Tür seçin" }, ...TYPE_OPTIONS
  */
 export function MeetingForm(props: MeetingFormProps) {
   const router = useRouter();
+  const closeDrawer = useFormDrawerClose();
+  const t = useTranslations("meetings.form");
+  const tType = useTranslations("meetings.type");
+  const tCommon = useTranslations("common");
   const [formError, setFormError] = useState<string | null>(null);
+  const typeOptions = [
+    { value: "", label: t("selectType") },
+    ...MEETING_TYPE_VALUES.map((type) => ({ value: type, label: tType(type) })),
+  ];
 
   const isEdit = props.mode === "edit";
   const meeting = isEdit ? props.meeting : null;
@@ -121,9 +126,14 @@ export function MeetingForm(props: MeetingFormProps) {
         setFormError(applyActionResult(result, form.setError));
         return;
       }
-      addToast({ title: `Toplantı güncellendi: ${meeting.meetingNumber}`, color: "success" });
-      router.push(`/toplantilar/${meeting.id}?sekme=gundem`);
-      router.refresh();
+      addToast({ title: t("updatedToast"), color: "success" });
+      // Çekmecede: kapat (adres değişince sunucu verisi tazelenir); sayfada: detaya dön.
+      if (closeDrawer) {
+        closeDrawer();
+      } else {
+        router.push(`/toplantilar/${meeting.id}?sekme=gundem`);
+        router.refresh();
+      }
       return;
     }
 
@@ -132,7 +142,7 @@ export function MeetingForm(props: MeetingFormProps) {
       setFormError(applyActionResult(result, form.setError));
       return;
     }
-    addToast({ title: `Toplantı kaydedildi: ${result.data.meetingNumber}`, color: "success" });
+    addToast({ title: t("createdToast", { number: result.data.meetingNumber }), color: "success" });
     router.push(`/toplantilar/${result.data.id}?sekme=gundem`);
     router.refresh();
   });
@@ -143,14 +153,11 @@ export function MeetingForm(props: MeetingFormProps) {
       : [];
 
   return (
-    <Card shadow="sm" className="max-w-3xl">
-      <CardBody className="gap-4 p-6">
+    <FormSurface className="max-w-3xl">
         {meeting ? (
           <div className="flex items-center gap-3 rounded-medium border border-default-200 bg-default-50 px-4 py-3">
             <span className="text-small font-semibold">{meeting.meetingNumber}</span>
-            <span className="text-tiny text-default-500">
-              Toplantı numarası ve türü değiştirilemez.
-            </span>
+            <span className="text-tiny text-default-500">{t("immutableNote")}</span>
           </div>
         ) : null}
 
@@ -159,9 +166,9 @@ export function MeetingForm(props: MeetingFormProps) {
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
               <FormSelect
                 name="type"
-                label="Toplantı türü"
+                label={t("type")}
                 control={form.control}
-                options={EMPTY_TYPE_OPTIONS}
+                options={typeOptions}
                 isRequired
                 key={watchedType === undefined ? "type-empty" : "type-set"}
               />
@@ -175,67 +182,68 @@ export function MeetingForm(props: MeetingFormProps) {
             </div>
           ) : null}
 
-          <FormInput name="title" label="Başlık" control={form.control} isRequired />
+          <FormInput name="title" label={t("title")} control={form.control} isRequired />
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
             <FormDatePicker
               name="meetingDate"
-              label="Toplantı tarihi"
+              label={t("date")}
               control={form.control}
               isRequired
             />
             <FormInput
               name="startTime"
-              label="Başlangıç saati"
+              label={t("startTime")}
               control={form.control}
-              placeholder="SS:dd"
-              description="Europe/Berlin yerel saati"
+              placeholder={t("timePlaceholder")}
+              description={t("startTimeDescription")}
             />
             <FormInput
               name="endTime"
-              label="Bitiş saati"
+              label={t("endTime")}
               control={form.control}
-              placeholder="SS:dd"
+              placeholder={t("timePlaceholder")}
             />
           </div>
 
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FormInput name="location" label="Yer" control={form.control} />
+            <FormInput name="location" label={t("location")} control={form.control} />
             <FormInput
               name="quorumRequired"
-              label="Yeter sayısı"
+              label={t("quorum")}
               control={form.control}
               type="number"
-              description="Katılımcı asgari sayısı (boş bırakılabilir)."
+              description={t("quorumDescription")}
             />
           </div>
 
           <FormTextarea
             name="description"
-            label="Açıklama"
+            label={t("description")}
             control={form.control}
             rows={3}
-            description="Toplantı amacı / notlar (en fazla 2000 karakter)."
+            description={t("descriptionDescription")}
           />
 
           <FormErrorSummary message={formError} />
 
           <div className="flex items-center gap-2">
             <SubmitButton isSubmitting={form.formState.isSubmitting}>
-              {isEdit ? "Kaydet" : "Toplantıyı kaydet"}
+              {isEdit ? t("saveChanges") : t("create")}
             </SubmitButton>
             <Button
               variant="light"
               onPress={() =>
-                router.push(meeting ? `/toplantilar/${meeting.id}` : "/toplantilar")
+                closeDrawer
+                  ? closeDrawer()
+                  : router.push(meeting ? `/toplantilar/${meeting.id}` : "/toplantilar")
               }
             >
-              Vazgeç
+              {tCommon("cancel")}
             </Button>
           </div>
         </form>
-      </CardBody>
-    </Card>
+    </FormSurface>
   );
 }
 
@@ -249,14 +257,15 @@ function CopySourceSelect({
   copySources: CopySourceOption[];
   resetKey: string;
 }) {
+  const t = useTranslations("meetings.form");
   return (
     <FormSelect
       key={`copy-${resetKey}`}
       name="copyFromMeetingId"
-      label="Önceki toplantıdan kopyala"
+      label={t("copyFrom")}
       control={control}
       options={[
-        { value: "", label: "Kopyalama" },
+        { value: "", label: t("copyNone") },
         ...copySources.map((source) => ({
           value: source.id,
           label: `${source.meetingNumber} – ${source.title} – ${source.meetingDate
@@ -264,7 +273,7 @@ function CopySourceSelect({
             .slice(0, 10)}`,
         })),
       ]}
-      description="Katılımcılar ve gündem başlıkları kopyalanır; görüşmeler, kararlar ve görevler kopyalanmaz."
+      description={t("copyFromDescription")}
     />
   );
 }

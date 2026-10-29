@@ -1,13 +1,7 @@
-import { MeetingEditView } from "../../../ui";
+import { redirect } from "next/navigation";
 
-export const metadata = { title: "Toplantıyı düzenle" };
-
-/** Toplantı düzenleme (7.2) — ince rota. */
-export default async function ToplantiDuzenlePage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+/** Eski adres: form artık sağ çekmecede açılır. */
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  return <MeetingEditView id={id} />;
+  redirect(`/toplantilar/${id}?duzenle`);
 }

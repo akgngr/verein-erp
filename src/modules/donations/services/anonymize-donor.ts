@@ -4,6 +4,7 @@ import { getDb } from "@/shared/db";
 import { buildUserLabel } from "@/shared/utils";
 
 import { retentionEndDate } from "./issue-guards";
+import { ActionError } from "@/modules/auth/server";
 
 /**
  * Bağışçı anonimleştirme (§ 11 md. 12): ad, kuruluş adı, adres, e-posta,
@@ -20,8 +21,8 @@ export async function anonymizeDonor(
     where: { id: donorId },
     select: { id: true, donorNumber: true, isAnonymized: true },
   });
-  if (!donor) throw new Error("Bağışçı bulunamadı.");
-  if (donor.isAnonymized) throw new Error("Bu bağışçı zaten anonimleştirilmiş.");
+  if (!donor) throw new ActionError("donations.errors.donorNotFound");
+  if (donor.isAnonymized) throw new ActionError("donations.errors.alreadyAnonymized");
 
   const now = new Date();
 
@@ -34,9 +35,9 @@ export async function anonymizeDonor(
     (confirmation) => retentionEndDate(confirmation.issuedAt).getTime() > now.getTime(),
   );
   if (blockedByRetention) {
-    throw new Error(
-      `Bu bağışçının bildirim nüshaları saklama süresi içinde (${issuedConfirmations.length} bildirim). Saklama süresi bitmeden anonimleştirilemez.`,
-    );
+    throw new ActionError("donations.errors.retentionBlocksAnonymize", undefined, {
+      count: issuedConfirmations.length,
+    });
   }
 
   // Engeli B: aktif bildirim ögesi olan, ters kayıt edilmemiş bağış.
@@ -51,9 +52,9 @@ export async function anonymizeDonor(
       select: { donationNumber: true },
     });
     if (blockingDonation) {
-      throw new Error(
-        `Bağışçıya ait aktif bildirimli bağış var (${blockingDonation.donationNumber}); önce bildirimi iptal edin.`,
-      );
+      throw new ActionError("donations.errors.activeDonationBlocksAnonymize", undefined, {
+        number: blockingDonation.donationNumber,
+      });
     }
   }
 

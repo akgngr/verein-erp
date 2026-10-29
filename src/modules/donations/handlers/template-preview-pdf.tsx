@@ -10,6 +10,7 @@ import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 
 import { donationsPermissions } from "../permissions";
 import { ConfirmationDocument, type ConfirmationPdfData } from "../pdf/confirmation-document";
+import { translateMessage } from "@/shared/i18n/translate-message";
 
 /**
  * Şablon önizleme (§ 13): ?type=single-donation|collective-donation|single-fee|
@@ -22,13 +23,13 @@ export async function templatePreviewPdfHandler(request: Request): Promise<Respo
     user = await requireUser();
   } catch (error) {
     if (error instanceof UnauthorizedError) {
-      return NextResponse.json({ ok: false, error: "Oturum bulunamadı." }, { status: 401 });
+      return NextResponse.json({ ok: false, error: await translateMessage("common.errors.sessionExpired") }, { status: 401 });
     }
     throw error;
   }
 
   if (!can(user.role, donationsPermissions, "view")) {
-    return NextResponse.json({ ok: false, error: "Bu işlem için yetkiniz yok." }, { status: 403 });
+    return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
   }
 
   const type = new URL(request.url).searchParams.get("type") ?? "single-donation";

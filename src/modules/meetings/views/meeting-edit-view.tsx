@@ -1,6 +1,7 @@
+import { getTranslations } from "next-intl/server";
 import { requirePermission, ForbiddenError } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
-import { PageHeader } from "@/shared/components/ui/page-header";
+import { FormDrawer } from "@/shared/components/forms/form-drawer";
 import { notFound } from "next/navigation";
 
 import { meetingsPermissions } from "../permissions";
@@ -12,10 +13,11 @@ import { MeetingForm } from "../components/meeting-form";
  * da iptal edilmiş toplantıda bilgi mesajı + geri bağlantı gösterilir (5. bölüm md. 4).
  */
 export async function MeetingEditView({ id }: { id: string }) {
+  const t = await getTranslations("meetings.form");
   try {
     await requirePermission(meetingsPermissions, "update");
   } catch (error) {
-    if (error instanceof ForbiddenError) return <AccessDenied />;
+    if (error instanceof ForbiddenError) return <FormDrawer title="">{<AccessDenied />}</FormDrawer>;
     throw error;
   }
 
@@ -26,23 +28,18 @@ export async function MeetingEditView({ id }: { id: string }) {
 
   if (locked) {
     return (
-      <div>
-        <PageHeader title="Toplantıyı düzenle" />
+      <FormDrawer title={t("editTitle")} description={meeting.meetingNumber}>
         <div className="rounded-medium border border-warning-200 bg-warning-50 px-4 py-3 text-small text-warning-600">
           {meeting.status === "APPROVED"
-            ? "Onaylanmış toplantı tutanağı düzenlenemez. Önce yeniden açın."
-            : "İptal edilmiş toplantı düzenlenemez. Önce 'Planlandı' durumuna alın."}
+            ? t("lockedApproved")
+            : t("lockedCancelled")}
         </div>
-        <a href={`/toplantilar/${meeting.id}`} className="mt-3 inline-block text-small text-primary">
-          Toplantı detayına dön
-        </a>
-      </div>
+      </FormDrawer>
     );
   }
 
   return (
-    <div>
-      <PageHeader title="Toplantıyı düzenle" description={meeting.meetingNumber} />
+    <FormDrawer title={t("editTitle")} description={meeting.meetingNumber}>
       <MeetingForm
         mode="edit"
         meeting={{
@@ -59,6 +56,6 @@ export async function MeetingEditView({ id }: { id: string }) {
           updatedAt: meeting.updatedAt,
         }}
       />
-    </div>
+    </FormDrawer>
   );
 }

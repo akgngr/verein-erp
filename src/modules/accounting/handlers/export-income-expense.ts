@@ -1,6 +1,7 @@
 import "server-only";
 
 import ExcelJS from "exceljs";
+import { getTranslations } from "next-intl/server";
 import { NextResponse } from "next/server";
 
 import { writeAudit } from "@/shared/audit/write-audit";
@@ -9,10 +10,11 @@ import { buildUserLabel } from "@/shared/utils";
 
 import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 
-import { DIRECTION_LABELS, SPHERE_LABELS, SPHERE_ORDER } from "../constants";
+import { SPHERE_ORDER } from "../constants";
 import { accountingPermissions } from "../permissions";
 import { getIncomeExpenseReport } from "../queries/get-income-expense-report";
 import { berlinToday } from "../utils";
+import { translateMessage } from "@/shared/i18n/translate-message";
 
 /**
  * Gelir-Gider tablosu Excel dışa aktarımı (GET /api/accounting/reports/
@@ -26,13 +28,13 @@ export async function exportIncomeExpenseHandler(request: Request): Promise<Resp
     user = await requireUser();
   } catch (error) {
     if (error instanceof UnauthorizedError) {
-      return NextResponse.json({ ok: false, error: "Oturum bulunamadı." }, { status: 401 });
+      return NextResponse.json({ ok: false, error: await translateMessage("common.errors.sessionExpired") }, { status: 401 });
     }
     throw error;
   }
 
   if (!can(user.role, accountingPermissions, "view")) {
-    return NextResponse.json({ ok: false, error: "Bu işlem için yetkiniz yok." }, { status: 403 });
+    return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
   }
 
   const url = new URL(request.url);
@@ -41,17 +43,19 @@ export async function exportIncomeExpenseHandler(request: Request): Promise<Resp
 
   const report = await getIncomeExpenseReport(year);
 
+  const tRoot = await getTranslations();
+  const tx = (key: string, values?: Record<string, string | number>) => tRoot(`accounting.export.incomeExpense.${key}`, values);
   const workbook = new ExcelJS.Workbook();
-  const sheet = workbook.addWorksheet("EÜR");
+  const sheet = workbook.addWorksheet(tx("_sheet"));
 
   sheet.columns = [
-    { header: "Alan", key: "sphere", width: 30 },
-    { header: "Yön", key: "direction", width: 10 },
-    { header: "Kategori", key: "category", width: 40 },
-    { header: "Plan", key: "plan", width: 14 },
-    { header: "Gerçekleşen", key: "actual", width: 14 },
-    { header: "Fark", key: "diff", width: 14 },
-    { header: "Önceki yıl", key: "previous", width: 14 },
+    { header: tx("sphere"), key: "sphere", width: 30 },
+    { header: tx("direction"), key: "direction", width: 10 },
+    { header: tx("category"), key: "category", width: 40 },
+    { header: tx("plan"), key: "plan", width: 14 },
+    { header: tx("actual"), key: "actual", width: 14 },
+    { header: tx("diff"), key: "diff", width: 14 },
+    { header: tx("previous"), key: "previous", width: 14 },
   ];
 
   let currentSphere = "";
@@ -62,8 +66,8 @@ export async function exportIncomeExpenseHandler(request: Request): Promise<Resp
       if (row.direction === "INCOME") incomeTotal += row.actualCents;
       else expenseTotal += row.actualCents;
       const added = sheet.addRow({
-        sphere: row.sphere !== currentSphere ? SPHERE_LABELS[row.sphere] : "",
-        direction: DIRECTION_LABELS[row.direction],
+        sphere: row.sphere !== currentSphere ? tRoot(`accounting.enums.sphere.${row.sphere}`) : "",
+        direction: tRoot(`accounting.enums.direction.${row.direction}`),
         category: row.categoryName,
         plan: row.planCents / 100,
         actual: row.actualCents / 100,
@@ -78,7 +82,7 @@ export async function exportIncomeExpenseHandler(request: Request): Promise<Resp
   }
 
   const totalRow = sheet.addRow({
-    category: "GENEL TOPLAM (Gelir - Gider)",
+    category: tx("_grandTotal"),
     actual: (incomeTotal - expenseTotal) / 100,
   });
   totalRow.font = { bold: true };
@@ -87,8 +91,8 @@ export async function exportIncomeExpenseHandler(request: Request): Promise<Resp
   if (report.economicOperationNotice !== "none") {
     const noticeText =
       report.economicOperationNotice === "exceeded"
-        ? "Ticari işletme gelirleri 50.000 € sınırını aştı (§ 64 Abs. 3 AO). Vergi danışmanına başvurun."
-        : "Ticari işletme gelirleri 50.000 € sınırının %80'ine ulaştı (§ 64 Abs. 3 AO).";
+        ? tx("_exceeded")
+        : tx("_near");
     const notice = sheet.addRow({ category: noticeText });
     notice.font = {
       italic: true,
@@ -104,7 +108,7 @@ export async function exportIncomeExpenseHandler(request: Request): Promise<Resp
   sheet.views = [{ state: "frozen", ySplit: 1 }];
 
   const buffer = await workbook.xlsx.writeBuffer();
-  const fileName = `gelir-gider-${year}.xlsx`;
+  const fileName = `${tx("_file")}-${year}.xlsx`;
 
   await writeAudit({
     userId: user.id,

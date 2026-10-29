@@ -9,6 +9,7 @@ import { can } from "@/shared/permissions/define";
 import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 
 import { accountingPermissions } from "../permissions";
+import { translateMessage } from "@/shared/i18n/translate-message";
 
 /**
  * Fiş belgesi indirme/önizleme (GET /api/accounting/files/[fileId], § 9):
@@ -25,13 +26,13 @@ export async function downloadBookingFileHandler(
     user = await requireUser();
   } catch (error) {
     if (error instanceof UnauthorizedError) {
-      return NextResponse.json({ ok: false, error: "Oturum bulunamadı." }, { status: 401 });
+      return NextResponse.json({ ok: false, error: await translateMessage("common.errors.sessionExpired") }, { status: 401 });
     }
     throw error;
   }
 
   if (!can(user.role, accountingPermissions, "view")) {
-    return NextResponse.json({ ok: false, error: "Bu işlem için yetkiniz yok." }, { status: 403 });
+    return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
   }
 
   const file = await getDb().accountingBookingFile.findFirst({
@@ -39,7 +40,7 @@ export async function downloadBookingFileHandler(
     select: { originalName: true, mimeType: true, storagePath: true },
   });
   if (!file) {
-    return NextResponse.json({ ok: false, error: "Dosya bulunamadı." }, { status: 404 });
+    return NextResponse.json({ ok: false, error: await translateMessage("files.missing") }, { status: 404 });
   }
 
   const inlineRequested = new URL(request.url).searchParams.get("inline") === "1";

@@ -20,7 +20,7 @@ export async function closeYearAction(input: unknown): Promise<ActionResult> {
 
       const existing = await db.accountingYear.findUnique({ where: { year: input.year } });
       if (existing?.lockedAt) {
-        throw new ActionError(`${input.year} yılı zaten kilitli.`);
+        throw new ActionError("accounting.errors.yearAlreadyLocked", undefined, { year: input.year });
       }
 
       await db.accountingYear.upsert({
@@ -62,7 +62,7 @@ export async function unlockYearAction(input: unknown): Promise<ActionResult> {
 
       const existing = await db.accountingYear.findUnique({ where: { year: input.year } });
       if (!existing?.lockedAt) {
-        throw new ActionError(`${input.year} yılı zaten açık.`);
+        throw new ActionError("accounting.errors.yearAlreadyOpen", undefined, { year: input.year });
       }
 
       await db.accountingYear.update({

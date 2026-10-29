@@ -12,7 +12,16 @@ import { berlinToday } from "../utils";
  * çevirir (createAction bunu otomatik yapar).
  */
 
-export class BookingRuleError extends Error {}
+export class BookingRuleError extends Error {
+  /** Çeviri anahtarı mesajı için yer tutucu değerleri (bkz. ActionError). */
+  constructor(
+    message: string,
+    _fieldErrors?: undefined,
+    public values?: Record<string, string | number>,
+  ) {
+    super(message);
+  }
+}
 
 /** Yıl kilitli mi? (AccountingYear.lockedAt doluysa kilitli; § 8 md. 8.) */
 export async function isYearLocked(
@@ -37,12 +46,12 @@ export async function assertBookingDateAllowed(args: {
   const { bookingDate, year, accountIds, tx } = args;
 
   if (await isYearLocked(year, tx)) {
-    throw new BookingRuleError(`${year} yılı kilitli (abgeschlossen); bu tarihe fiş girilemez.`);
+    throw new BookingRuleError("accounting.errors.yearLockedDate", undefined, { year });
   }
 
   const today = berlinToday();
   if (bookingDate.getTime() > today.getTime()) {
-    throw new BookingRuleError("Fiş tarihi gelecekte olamaz.");
+    throw new BookingRuleError("accounting.errors.bookingDateFuture");
   }
 
   const accounts = await tx.accountingAccount.findMany({
@@ -50,15 +59,15 @@ export async function assertBookingDateAllowed(args: {
     select: { id: true, name: true, openingDate: true, isActive: true },
   });
   if (accounts.length !== accountIds.length) {
-    throw new BookingRuleError("Hesap bulunamadı.");
+    throw new BookingRuleError("accounting.errors.accountNotFound");
   }
   for (const account of accounts) {
     if (!account.isActive) {
-      throw new BookingRuleError(`Devre dışı hesap kullanılamaz: ${account.name}`);
+      throw new BookingRuleError("accounting.errors.accountDisabled", undefined, { name: account.name });
     }
     if (bookingDate.getTime() < account.openingDate.getTime()) {
       throw new BookingRuleError(
-        `Fiş tarihi hesabın açılış tarihinden önce olamaz: ${account.name}`,
+        "accounting.errors.beforeOpeningNamed", undefined, { name: account.name },
       );
     }
   }
@@ -74,11 +83,11 @@ export async function assertCategoryMatches(
     where: { id: categoryId },
     select: { name: true, direction: true, isActive: true },
   });
-  if (!category) throw new BookingRuleError("Kategori bulunamadı.");
+  if (!category) throw new BookingRuleError("accounting.errors.categoryNotFound");
   if (!category.isActive) {
-    throw new BookingRuleError(`Devre dışı kategori kullanılamaz: ${category.name}`);
+    throw new BookingRuleError("accounting.errors.categoryDisabled", undefined, { name: category.name });
   }
   if (category.direction !== direction) {
-    throw new BookingRuleError("Kategori yönü fiş türüyle uyuşmuyor.");
+    throw new BookingRuleError("accounting.errors.categoryDirection");
   }
 }

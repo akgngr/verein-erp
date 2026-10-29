@@ -1,13 +1,7 @@
-import { DocumentEditView } from "../../../ui";
+import { redirect } from "next/navigation";
 
-export const metadata = { title: "Evrağı Düzenle" };
-
-/** Evrak düzenleme — ince rota: id'yi view'a iletir. */
-export default async function EvrakDuzenlePage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+/** Eski adres: form artık sağ çekmecede açılır. */
+export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  return <DocumentEditView id={id} />;
+  redirect(`/evrak/${id}?duzenle`);
 }

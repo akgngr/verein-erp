@@ -54,7 +54,7 @@ export function moduleMenuItems(mod: ModuleConfig): ModuleMenuItem[] {
   return [
     {
       key: MODULE_HOME_KEY,
-      label: "Genel bakış",
+      label: "Genel bakış", // i18n-ignore (yedek; çeviri sidebar.overview)
       href: home.href,
       icon: home.icon,
       permission: home.permission,

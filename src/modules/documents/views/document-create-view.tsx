@@ -1,7 +1,7 @@
+import { getTranslations } from "next-intl/server";
 import { ForbiddenError, listActiveUserOptions, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
-import { PageHeader } from "@/shared/components/ui/page-header";
-import type { RawSearchParams } from "@/shared/list-params";
+import { FormDrawer } from "@/shared/components/forms/form-drawer";
 
 import { getEnv } from "@/shared/env";
 
@@ -12,25 +12,18 @@ import { searchReplyTargets } from "../queries/search-reply-targets";
 import { DocumentForm } from "../components/document-form";
 
 /**
- * Yeni evrak (8.2): `yon` parametresi yönü belirler (geçersizse gelen).
- * KARAR: Yönü sayfa sunucusu okur; action'a forma ek bir alan olarak değil,
- * doğrudan yönlendirmeyle taşınır.
+ * Yeni evrak (8.2; sağ çekmece): yön listedeki `?yeni=gelen|giden` değerinden
+ * gelir (geçersizse gelen). KARAR: Yönü sunucu okur; forma alan olarak eklenmez.
  */
-export async function DocumentCreateView({
-  searchParams,
-}: {
-  searchParams: Promise<RawSearchParams>;
-}) {
+export async function DocumentCreateView({ direction }: { direction: "INCOMING" | "OUTGOING" }) {
+  const t = await getTranslations("documents.form");
   try {
     await requirePermission(documentsPermissions, "create");
   } catch (error) {
-    if (error instanceof ForbiddenError) return <AccessDenied />;
+    if (error instanceof ForbiddenError) return <FormDrawer title="">{<AccessDenied />}</FormDrawer>;
     throw error;
   }
 
-  const raw = await searchParams;
-  const yon = Array.isArray(raw.yon) ? raw.yon[0] : raw.yon;
-  const direction = yon === "giden" ? "OUTGOING" : "INCOMING";
 
   // KARAR: "Yanıtlanan evrak" yalnızca giden evrakta görünür; aday gelen
   // evraklar yalnızca giden formda sorgulanır.
@@ -42,11 +35,7 @@ export async function DocumentCreateView({
   ]);
 
   return (
-    <div>
-      <PageHeader
-        title={direction === "INCOMING" ? "Yeni gelen evrak" : "Yeni giden evrak"}
-        description="Kayıt numarası, kayıt sırası ve kayıt tarihi otomatik atanır."
-      />
+    <FormDrawer title={direction === "INCOMING" ? t("createTitleIncoming") : t("createTitleOutgoing")} description={t("createDescription")}>
       <DocumentForm
         mode="create"
         direction={direction}
@@ -56,6 +45,6 @@ export async function DocumentCreateView({
         replyTargets={replyTargets}
         maxMb={getEnv().MAX_UPLOAD_MB}
       />
-    </div>
+    </FormDrawer>
   );
 }

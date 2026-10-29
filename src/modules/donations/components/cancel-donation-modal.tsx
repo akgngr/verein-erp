@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea, addToast } from "@heroui/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -28,6 +30,7 @@ export function CancelDonationModal({
   confirmLabel: string;
   toastTitle: string;
 }) {
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const [reason, setReason] = useState("");
   const [busy, setBusy] = useState(false);
@@ -69,7 +72,7 @@ export function CancelDonationModal({
         </ModalBody>
         <ModalFooter>
           <Button variant="flat" onPress={() => onOpenChange(false)}>
-            Vazgeç
+            {tCommon("cancel")}
           </Button>
           <Button color="danger" onPress={confirm} isLoading={busy} isDisabled={reason.trim().length < 5}>
             {confirmLabel}

@@ -5,15 +5,15 @@ import { passwordSchema } from "@/shared/security/password";
 const roleSchema = z.enum(["ADMIN", "BOARD", "SECRETARY", "VIEWER", "TREASURER", "AUDITOR"]);
 
 export const userCreateSchema = z.object({
-  name: z.string().trim().min(1, "Ad soyad zorunludur.").max(100, "Ad soyad en fazla 100 karakter olabilir."),
-  email: z.email("Geçerli bir e-posta adresi girin.").max(200),
+  name: z.string().trim().min(1, "users.validation.nameRequired").max(100, "users.validation.nameMax"),
+  email: z.email("validation.emailInvalid").max(200),
   role: roleSchema,
   password: passwordSchema,
 });
 
 export const userUpdateSchema = z.object({
-  name: z.string().trim().min(1, "Ad soyad zorunludur.").max(100, "Ad soyad en fazla 100 karakter olabilir."),
-  email: z.email("Geçerli bir e-posta adresi girin.").max(200),
+  name: z.string().trim().min(1, "users.validation.nameRequired").max(100, "users.validation.nameMax"),
+  email: z.email("validation.emailInvalid").max(200),
   role: roleSchema,
   isActive: z.boolean(),
 });

@@ -31,6 +31,7 @@ export function CategoryFormModal({
   onOpenChange: (open: boolean) => void;
   category?: CategoryRow | null;
 }) {
+  const tCommon = useTranslations("common");
   const t = useTranslations("accounting.setup.categories");
   const tBudget = useTranslations("accounting.budget");
   const router = useRouter();
@@ -72,7 +73,7 @@ export function CategoryFormModal({
         addToast({ title: result.error, color: "danger" });
         return;
       }
-      addToast({ title: "✓", color: "success" });
+      addToast({ title: t("saved"), color: "success" });
       onOpenChange(false);
       router.refresh();
     } finally {
@@ -129,7 +130,7 @@ export function CategoryFormModal({
         </ModalBody>
         <ModalFooter>
           <Button variant="flat" onPress={() => onOpenChange(false)}>
-            Vazgeç
+            {tCommon("cancel")}
           </Button>
           <Button color="primary" onPress={submit} isLoading={busy} isDisabled={name.trim().length < 2}>
             {category ? t("edit") : t("new")}

@@ -18,16 +18,16 @@ export async function deleteModuleAction(input: unknown): Promise<ActionResult> 
     handler: async ({ input, audit }) => {
       const moduleMeta = allModules.find((m) => m.key === input.key);
       if (!moduleMeta) {
-        throw new ActionError("Modül bulunamadı.");
+        throw new ActionError("system.errors.notFound");
       }
 
       if (moduleMeta.category !== "EXTENSION") {
-        throw new ActionError("Yalnızca harici geliştirici eklentileri (EXTENSION) silinebilir. Çekirdek ve resmi modüller silinemez.");
+        throw new ActionError("system.errors.onlyExtensionsDeletable");
       }
 
       const res = await deleteModuleExtension(input.key);
       if (!res.success) {
-        throw new ActionError(res.error ?? "Modül silinirken hata oluştu.");
+        throw new ActionError(res.error ?? "system.errors.deleteFailed");
       }
 
       await audit({

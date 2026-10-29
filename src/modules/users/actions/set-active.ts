@@ -18,16 +18,16 @@ export async function setUserActiveAction(input: unknown): Promise<ActionResult>
     handler: async ({ input, user, audit }) => {
       const db = getDb();
       const target = await db.user.findUnique({ where: { id: input.id } });
-      if (!target) throw new ActionError("Kullanıcı bulunamadı.");
+      if (!target) throw new ActionError("users.errors.notFound");
 
       if (target.id === user.id) {
-        throw new ActionError("Kendinizi pasife alamazsınız.");
+        throw new ActionError("users.errors.selfDeactivate");
       }
 
       if (target.isActive && !input.isActive && target.role === "ADMIN") {
         const activeAdmins = await db.user.count({ where: { role: "ADMIN", isActive: true } });
         if (activeAdmins <= 1) {
-          throw new ActionError("Sistemde en az bir aktif yönetici kalmalıdır.");
+          throw new ActionError("users.errors.lastAdmin");
         }
       }
 

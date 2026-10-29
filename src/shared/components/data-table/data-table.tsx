@@ -15,6 +15,7 @@ import {
 } from "@heroui/react";
 import { MoreHorizontal } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
 import type { Key } from "react";
 
@@ -53,10 +54,11 @@ export function DataTable<T extends { id: string }>({
   dateFilter,
   filterExtra,
   toolbarExtra,
-  emptyMessage = "Kayıt bulunamadı.",
-  ariaLabel = "Tablo",
+  emptyMessage,
+  ariaLabel,
 }: DataTableProps<T>) {
   const router = useRouter();
+  const tCommon = useTranslations("common");
   const searchParams = useSearchParams();
   const { setParams, isPending } = useListQueryState();
   const [searchDraft, setSearchDraft] = useState(q);
@@ -122,7 +124,7 @@ export function DataTable<T extends { id: string }>({
             width={64}
             className={`${ACTIONS_STICKY_CLASS} bg-default-100`}
           >
-            <span className="sr-only">İşlemler</span>
+            <span className="sr-only">{tCommon("actions")}</span>
           </TableColumn>,
         ]
       : []),
@@ -131,7 +133,7 @@ export function DataTable<T extends { id: string }>({
   const defaultCell = (row: T, key: string) => {
     const value = (row as Record<string, unknown>)[key];
     if (value === null || value === undefined || value === "") return "-";
-    if (typeof value === "boolean") return value ? "Evet" : "Hayır";
+    if (typeof value === "boolean") return value ? tCommon("yes") : tCommon("no");
     if (value instanceof Date) return value.toLocaleString("tr-TR");
     return String(value);
   };
@@ -158,7 +160,7 @@ export function DataTable<T extends { id: string }>({
         )}
       >
         <Table
-          aria-label={ariaLabel}
+          aria-label={ariaLabel ?? tCommon("table.label")}
           selectionMode="none"
           sortDescriptor={
             sort && dir
@@ -177,7 +179,7 @@ export function DataTable<T extends { id: string }>({
         >
           <TableHeader>{headerColumns}</TableHeader>
           <TableBody
-            emptyContent={<EmptyState title={emptyMessage} className="border-none bg-transparent" />}
+            emptyContent={<EmptyState title={emptyMessage ?? tCommon("noRecords")} className="border-none bg-transparent" />}
             isLoading={isPending}
           >
             {rows.map((row) => {
@@ -198,12 +200,12 @@ export function DataTable<T extends { id: string }>({
                                 isIconOnly
                                 size="sm"
                                 variant="light"
-                                aria-label="Satır işlemleri"
+                                aria-label={tCommon("rowActions")}
                               >
                                 <MoreHorizontal className="h-4 w-4" />
                               </Button>
                             </DropdownTrigger>
-                            <DropdownMenu aria-label="Satır işlemleri">
+                            <DropdownMenu aria-label={tCommon("rowActions")}>
                               {actions.map((action) => (
                                 <DropdownItem
                                   key={action.key}

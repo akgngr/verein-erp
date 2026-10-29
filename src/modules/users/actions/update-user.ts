@@ -23,27 +23,27 @@ export async function updateUserAction(input: unknown): Promise<ActionResult> {
     handler: async ({ input, user, audit }) => {
       const db = getDb();
       const target = await db.user.findUnique({ where: { id: input.id } });
-      if (!target) throw new ActionError("Kullanıcı bulunamadı.");
+      if (!target) throw new ActionError("users.errors.notFound");
 
       const email = input.email.toLowerCase();
       if (email !== target.email) {
         const duplicate = await db.user.findUnique({ where: { email } });
         if (duplicate) {
-          throw new ActionError("Bu e-posta adresi zaten kullanımda.", {
-            email: ["Bu e-posta adresi zaten kullanımda."],
+          throw new ActionError("users.errors.emailTaken", {
+            email: ["users.errors.emailTaken"],
           });
         }
       }
 
       if (target.id === user.id && target.role === "ADMIN" && input.role !== "ADMIN") {
-        throw new ActionError("Kendi rolünüzü düşüremezsiniz.", {
-          role: ["Kendi rolünüzü düşüremezsiniz."],
+        throw new ActionError("users.errors.selfDemote", {
+          role: ["users.errors.selfDemote"],
         });
       }
 
       if (target.id === user.id && target.isActive && !input.isActive) {
-        throw new ActionError("Kendinizi pasife alamazsınız.", {
-          isActive: ["Kendinizi pasife alamazsınız."],
+        throw new ActionError("users.errors.selfDeactivate", {
+          isActive: ["users.errors.selfDeactivate"],
         });
       }
 
@@ -52,7 +52,7 @@ export async function updateUserAction(input: unknown): Promise<ActionResult> {
       if (losesAdmin) {
         const activeAdmins = await db.user.count({ where: { role: "ADMIN", isActive: true } });
         if (activeAdmins <= 1) {
-          throw new ActionError("Sistemde en az bir aktif yönetici kalmalıdır.");
+          throw new ActionError("users.errors.lastAdmin");
         }
       }
 

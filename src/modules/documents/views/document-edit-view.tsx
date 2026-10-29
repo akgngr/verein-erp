@@ -1,8 +1,9 @@
+import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
 
 import { ForbiddenError, listActiveUserOptions, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
-import { PageHeader } from "@/shared/components/ui/page-header";
+import { FormDrawer } from "@/shared/components/forms/form-drawer";
 import { getEnv } from "@/shared/env";
 
 import { documentsPermissions } from "../permissions";
@@ -18,10 +19,11 @@ import { DocumentForm } from "../components/document-form";
  * formun gizli updatedAt alanıyla sağlanır (5. bölüm md. 6).
  */
 export async function DocumentEditView({ id }: { id: string }) {
+  const t = await getTranslations("documents.form");
   try {
     await requirePermission(documentsPermissions, "update");
   } catch (error) {
-    if (error instanceof ForbiddenError) return <AccessDenied />;
+    if (error instanceof ForbiddenError) return <FormDrawer title="">{<AccessDenied />}</FormDrawer>;
     throw error;
   }
 
@@ -39,12 +41,12 @@ export async function DocumentEditView({ id }: { id: string }) {
 
   const categories = [...activeCategories];
   if (doc.categoryId && !categories.some((c) => c.id === doc.categoryId)) {
-    categories.push({ id: doc.categoryId, label: `${doc.categoryName ?? "Kategori"} (pasif)` });
+    categories.push({ id: doc.categoryId, label: t("passiveCategory", { name: doc.categoryName ?? t("category") }) });
   }
 
   const assignees = [...activeAssignees];
   if (doc.assigneeId && !assignees.some((a) => a.id === doc.assigneeId)) {
-    assignees.push({ id: doc.assigneeId, label: `${doc.assigneeLabel ?? "Sorumlu"} (pasif)` });
+    assignees.push({ id: doc.assigneeId, label: t("passiveCategory", { name: doc.assigneeLabel ?? t("assignee") }) });
   }
 
   // KARAR: Aday gelen evraklar yalnızca giden evrakta sorgulanır; kendi kendine
@@ -69,11 +71,7 @@ export async function DocumentEditView({ id }: { id: string }) {
   }
 
   return (
-    <div>
-      <PageHeader
-        title="Evrağı düzenle"
-        description={`${doc.registryNumber} — yön ve kayıt numarası değiştirilemez.`}
-      />
+    <FormDrawer title={t("editTitle")} description={t("editNumbered", { registryNumber: doc.registryNumber })}>
       <DocumentForm
         mode="edit"
         document={{
@@ -99,6 +97,6 @@ export async function DocumentEditView({ id }: { id: string }) {
         replyTargets={replyTargets}
         maxMb={getEnv().MAX_UPLOAD_MB}
       />
-    </div>
+    </FormDrawer>
   );
 }

@@ -1,9 +1,10 @@
+import { getTranslations } from "next-intl/server";
 import { InventoryCategoriesView } from "../../views/inventory-categories-view";
 
-export const metadata = {
-  title: "Envanter Kategorileri — Verein ERP",
-  description: "Kategori bazında demirbaş özeti.",
-};
+export async function generateMetadata() {
+  const t = await getTranslations("inventory.meta");
+  return { title: t("categories") };
+}
 
 export default async function InventoryCategoriesPage() {
   return <InventoryCategoriesView />;

@@ -27,7 +27,8 @@
     "deactivatedToast": "Kategori pasife alındı.",
     "activatedToast": "Kategori aktifleştirildi.",
     "createdToast": "Kategori oluşturuldu.",
-    "updatedToast": "Kategori güncellendi."
+    "updatedToast": "Kategori güncellendi.",
+    "deactivateNamedMessage": "\"{name}\" pasife alınacak; yeni evrak formlarında seçilemeyecek ama mevcut evraklarda görünmeye devam edecek. Onaylıyor musunuz?"
   },
   "categoriesPageTitle": "Evrak Kategorileri",
   "categoriesPageDescription": "Kategoriler silinmez; pasife alınan kategori yeni evraklarda seçilemez, mevcut evraklarda görünür.",
@@ -37,7 +38,8 @@
     "overdue": "Süresi geçmiş",
     "incomingThisMonth": "Bu ay gelen",
     "outgoingThisMonth": "Bu ay giden",
-    "applyFilter": "filtreyi uygula"
+    "applyFilter": "filtreyi uygula",
+    "filterAria": "{label}: {value} — filtreyi uygula"
   },
   "filter": {
     "all": "Tümü",
@@ -163,7 +165,9 @@
     "updatedToast": "Evrak güncellendi: {registryNumber}",
     "savedToast": "Evrak kaydedildi: {registryNumber}",
     "savedWithUploadErrorToast": "Evrak kaydedildi ancak {count} dosya yüklenemedi. Dosyaları detay sayfasından yeniden yükleyebilirsiniz.",
-    "passiveSuffix": "(pasif)"
+    "passiveSuffix": "(pasif)",
+    "editNumbered": "{registryNumber} — yön ve kayıt numarası değiştirilemez.",
+    "passiveCategory": "{name} (pasif)"
   },
   "files": {
     "addAria": "Dosya ekle",
@@ -187,7 +191,8 @@
     "deleteAria": "{name} dosyasını sil",
     "deleteTitle": "Dosyayı sil",
     "deleteMessage": "\"{name}\" dosyası kayıttan kaldırılacak. Diskteki dosya korunur. Onaylıyor musunuz?",
-    "deletedToast": "Dosya silindi."
+    "deletedToast": "Dosya silindi.",
+    "removeFromListAria": "{name} dosyasını listeden çıkar"
   },
   "notes": {
     "empty": "Henüz işlem notu eklenmemiş.",
@@ -203,5 +208,74 @@
   },
   "nav": {
     "evrak": "Evrak Kayıt"
+  },
+  "meta": {
+    "list": "Evrak Kayıt",
+    "create": "Yeni evrak",
+    "detail": "Evrak detayı",
+    "edit": "Evrağı düzenle",
+    "categories": "Evrak kategorileri"
+  },
+  "errors": {
+    "documentNotFound": "Evrak bulunamadı.",
+    "categoryNameTaken": "Bu kategori adı zaten kullanımda.",
+    "categoryNotFound": "Kategori bulunamadı.",
+    "invalidDate": "Evrak tarihi geçersiz.",
+    "fileNotFound": "Dosya bulunamadı.",
+    "categoryInactive": "Kategori bulunamadı veya pasif durumda.",
+    "assigneeInactive": "Sorumlu bulunamadı veya hesabı pasif durumda.",
+    "replyOnlyOutgoing": "Yanıtlanan evrak yalnızca giden evrakta seçilebilir.",
+    "replySelf": "Bir evrak kendine yanıt olarak bağlanamaz.",
+    "replyTargetInvalid": "Yanıt verilecek evrak bulunamadı veya gelen evrak değil.",
+    "documentNotFound2": "Evrak bulunamadı."
+  },
+  "validation": {
+    "categoryMin": "Kategori adı en az 2 karakter olmalıdır.",
+    "categoryMax": "Kategori adı en fazla 60 karakter olabilir.",
+    "dateRequired": "Evrak tarihi zorunludur.",
+    "dateInvalid": "Geçerli bir evrak tarihi girin.",
+    "counterpartyMin": "Gönderen/Alıcı en az 2 karakter olmalıdır.",
+    "counterpartyMax": "Gönderen/Alıcı en fazla 200 karakter olabilir.",
+    "referenceMax": "Evrak sayısı en fazla 100 karakter olabilir.",
+    "subjectMin": "Konu en az 3 karakter olmalıdır.",
+    "subjectMax": "Konu en fazla 300 karakter olabilir.",
+    "summaryMax": "Özet en fazla 2000 karakter olabilir.",
+    "dueDateInvalid": "Geçerli bir son işlem tarihi girin.",
+    "dueBeforeDocument": "Son işlem tarihi evrak tarihinden önce olamaz.",
+    "versionMissing": "Kayıt sürümü eksik.",
+    "noteEmpty": "Not boş olamaz.",
+    "noteMax": "Not en fazla 2000 karakter olabilir."
+  },
+  "module": {
+    "label": "Evrak Kayıt",
+    "description": "Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi."
+  },
+  "export": {
+    "register": {
+      "registryNumber": "Kayıt No",
+      "direction": "Yön",
+      "registeredAt": "Kayıt Tarihi",
+      "documentDate": "Evrak Tarihi",
+      "counterparty": "Gönderen/Alıcı",
+      "referenceNumber": "Evrak Sayısı",
+      "subject": "Konu",
+      "categoryName": "Kategori",
+      "deliveryMethod": "Teslim Şekli",
+      "status": "Durum",
+      "assigneeLabel": "Sorumlu",
+      "dueDate": "Son İşlem Tarihi",
+      "fileCount": "Dosya Sayısı",
+      "_sheet": "Evrak Defteri",
+      "_file": "evrak-defteri",
+      "deliveries": {
+        "POST": "Posta",
+        "EMAIL": "E-posta",
+        "HAND": "Elden",
+        "COURIER": "Kargo/Kurye",
+        "REGISTERED_MAIL": "Kayıtlı Posta",
+        "FAX": "Faks",
+        "OTHER": "Diğer"
+      }
+    }
   }
 }

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AccountingEditView } from "./booking-edit-view";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
@@ -10,7 +11,6 @@ import { can } from "@/shared/permissions/define";
 
 import { getBooking } from "../queries/get-booking";
 import { accountingPermissions } from "../permissions";
-import { SOURCE_TYPE_LABELS } from "../constants";
 import { BookingTypeBadge } from "../components/booking-type-badge";
 import { BookingDetailActions } from "../components/booking-detail-actions";
 import { FilesPanel } from "../components/files-panel";
@@ -25,7 +25,14 @@ function InfoRow({ label, children }: { label: string; children: React.ReactNode
 }
 
 /** Fiş detayı (§ 11.3): tüm alanlar + belgeler + aksiyonlar. */
-export async function AccountingDetailView({ id }: { id: string }) {
+export async function AccountingDetailView({
+  id,
+  searchParams,
+}: {
+  id: string;
+  /** `?duzenle` → düzenleme çekmecesi. */
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
   let user;
   try {
     user = await requirePermission(accountingPermissions, "view");
@@ -90,7 +97,9 @@ export async function AccountingDetailView({ id }: { id: string }) {
             <InfoRow label={t("detail.fields.receiptReference")}>{booking.receiptReference ?? "—"}</InfoRow>
             <InfoRow label={t("detail.fields.source")}>
               {booking.sourceType
-                ? (SOURCE_TYPE_LABELS[booking.sourceType] ?? booking.sourceType)
+                ? (t.has(`enums.sourceType.${booking.sourceType}`)
+                    ? t(`enums.sourceType.${booking.sourceType}`)
+                    : booking.sourceType)
                 : t("detail.sourceManual")}
             </InfoRow>
             <InfoRow label={t("detail.fields.createdBy")}>
@@ -126,6 +135,7 @@ export async function AccountingDetailView({ id }: { id: string }) {
           </Link>
         </div>
       </div>
+      {canUpdate && (await searchParams)?.duzenle !== undefined ? <AccountingEditView id={booking.id} /> : null}
     </div>
   );
 }

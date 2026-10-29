@@ -21,7 +21,7 @@ export async function deleteDocumentAction(input: unknown): Promise<ActionResult
     handler: async ({ input, user, audit }) => {
       const db = getDb();
       const doc = await db.document.findFirst({ where: { id: input.id, deletedAt: null } });
-      if (!doc) throw new ActionError("Evrak bulunamadı.");
+      if (!doc) throw new ActionError("documents.errors.documentNotFound");
 
       const deletedAt = new Date();
       await db.document.update({

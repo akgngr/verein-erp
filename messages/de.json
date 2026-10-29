@@ -27,7 +27,60 @@
     "recordsPerPageValue": "{count} Einträge",
     "accessDeniedTitle": "Zugriff verweigert",
     "accessDeniedDescription": "Sie dürfen diese Seite nicht anzeigen. Bitte wenden Sie sich an Ihre Verwaltung.",
-    "appDescription": "Vereinsverwaltung: Dokumente, Sitzungen und Mitgliederverwaltung."
+    "appDescription": "Vereinsverwaltung: Dokumente, Sitzungen und Mitgliederverwaltung.",
+    "errors": {
+      "formInvalid": "Bitte korrigieren Sie die Fehler im Formular.",
+      "sessionExpired": "Ihre Sitzung ist abgelaufen. Bitte melden Sie sich erneut an.",
+      "forbidden": "Für diese Aktion fehlt Ihnen die Berechtigung.",
+      "duplicate": "Dieser Datensatz existiert bereits.",
+      "unexpected": "Ein unerwarteter Fehler ist aufgetreten.",
+      "staleRecord": "Der Datensatz wurde zwischenzeitlich von einer anderen Person geändert. Bitte laden Sie die Seite neu und versuchen Sie es erneut."
+    },
+    "selectPlaceholder": "Bitte wählen",
+    "noRecords": "Keine Einträge gefunden.",
+    "rowActions": "Zeilenaktionen",
+    "filterSelect": "{label} wählen",
+    "noFilter": "Kein Filter gewählt",
+    "languageChanged": "Sprache geändert: Deutsch",
+    "languageChangeFailed": "Die Sprache konnte nicht geändert werden.",
+    "languageSelect": "Sprachauswahl",
+    "languageOptions": "Sprachoptionen",
+    "signOut": "Abmelden",
+    "loginTitle": "Anmeldung",
+    "appTitleTemplate": "%s | Vereinsverwaltung",
+    "dateRange": {
+      "today": "Heute",
+      "yesterday": "Gestern",
+      "last7": "Letzte 7 Tage",
+      "last14": "Letzte 14 Tage",
+      "last30": "Letzte 30 Tage",
+      "last90": "Letzte 90 Tage",
+      "last365": "Letzte 365 Tage",
+      "none": "Kein Zeitraum gewählt",
+      "picker": "Zeitraumauswahl",
+      "clear": "Datumsfilter entfernen",
+      "label": "Datum",
+      "from": "ab {date}",
+      "until": "bis {date}",
+      "apply": "Anwenden",
+      "custom": "Benutzerdefiniert"
+    },
+    "table": {
+      "searchPlaceholder": "Suchen...",
+      "searchLabel": "Tabelle durchsuchen",
+      "filters": "Filter",
+      "filtersHint": "Auswahl treffen, um die Ergebnisse einzugrenzen",
+      "reset": "Zurücksetzen",
+      "activeFilters": "{count} Filter aktiv",
+      "done": "Fertig",
+      "label": "Tabelle"
+    },
+    "active": "Aktiv",
+    "passive": "Inaktiv",
+    "emailPlaceholder": "beispiel@verein.de",
+    "export": {
+      "truncated": "Ergebnisse auf {max} Zeilen begrenzt."
+    }
   },
   "nav": {
     "panel": "Dashboard",
@@ -36,6 +89,7 @@
     "denetimKaydi": "Prüfprotokoll",
     "evrak": "Dokumente",
     "bagislar": "Spenden",
+    "events": "Veranstaltungen",
     "inventory": "Inventar",
     "mail": "E-Mail",
     "toplantilar": "Sitzungen",
@@ -79,7 +133,31 @@
     "orgBannerLink": "Vereinsdaten ausfüllen",
     "accountingNet": "Saldo: {net}",
     "accountingMissing": "Beleg fehlt: {count}",
-    "accountingYearLocked": "Jahr abgeschlossen"
+    "accountingYearLocked": "Jahr abgeschlossen",
+    "overviewTitle": "Übersicht",
+    "overviewDescription": "Vereinsverwaltung und operativer Überblick.",
+    "docsCategory": "Dokumente",
+    "docsPrimary": "Offen / in Bearbeitung",
+    "overdueBadge": "{count} überfällig",
+    "incomingMonth": "Eingang diesen Monat",
+    "outgoingMonth": "Ausgang diesen Monat",
+    "overdueLabel": "Überfällig",
+    "meetingsCategory": "Sitzungen & Protokolle",
+    "nextLabel": "Nächste: {number}",
+    "plannedLabel": "Geplante Sitzungen",
+    "overdueTasksBadge": "{count} überfällige Aufgaben",
+    "pendingMinutes": "Freigabe ausstehend",
+    "openTasksLabel": "Offene Aufgaben",
+    "overdueTasksLabel": "Überfällige Aufgaben",
+    "membersCategory": "Mitgliederverwaltung",
+    "activeMembers": "Aktive Mitglieder",
+    "newThisMonth": "Neu diesen Monat",
+    "passive": "Passiv",
+    "resigned": "Ausgetreten",
+    "docsOverdueAlert": "{count} Dokumente haben die Bearbeitungsfrist überschritten.",
+    "docsOverdueAction": "Überfällige Dokumente anzeigen",
+    "tasksOverdueAlert": "{count} Sitzungsaufgaben sind überfällig.",
+    "tasksOverdueAction": "Überfällige Aufgaben anzeigen"
   },
   "meta": {
     "panel": "Dashboard",
@@ -102,7 +180,7 @@
     "kullaniciDuzenle": "Benutzer bearbeiten",
     "denetimKaydi": "Prüfprotokoll",
     "profil": "Profil",
-    "dernekBilgileri": "Dernek Bilgileri | Vereinsverwaltung"
+    "dernekBilgileri": "Vereinsdaten"
   },
   "pdfLanguage": {
     "german": "Deutsch",
@@ -118,7 +196,10 @@
       "activeLanguage": "Aktuelle Sprache",
       "tr": "Türkçe",
       "de": "Deutsch",
-      "switchSuccess": "Die Sprache der Benutzeroberfläche wurde erfolgreich geändert."
+      "switchSuccess": "Die Sprache der Benutzeroberfläche wurde erfolgreich geändert.",
+      "trHint": "Türkische Oberfläche",
+      "deHint": "Deutsche Oberfläche & deutscher Vereinsstandard",
+      "switchedTo": "Oberflächensprache geändert: {language}"
     },
     "themeSection": {
       "title": "Erscheinungsbild & Design",
@@ -156,7 +237,41 @@
         "description": "Kontenrahmen (SKR49 / Standard), Budgetziele und Geschäftsjahresabschlüsse.",
         "action": "Einstellungen"
       }
+    },
+    "badges": {
+      "organization": "Profil & Identität",
+      "users": "Zugriff & Rollen",
+      "modules": "Module & Schema",
+      "audit": "Sicherheit & Protokoll",
+      "accounting": "Finanzstruktur"
     }
+  },
+  "roles": {
+    "ADMIN": "Administrator",
+    "BOARD": "Vorstand",
+    "SECRETARY": "Schriftführung",
+    "VIEWER": "Nur Lesen",
+    "TREASURER": "Kassenwart",
+    "AUDITOR": "Kassenprüfung"
+  },
+  "validation": {
+    "passwordMin": "Das Passwort muss mindestens 10 Zeichen lang sein.",
+    "passwordUpper": "Das Passwort muss mindestens einen Großbuchstaben enthalten.",
+    "passwordLower": "Das Passwort muss mindestens einen Kleinbuchstaben enthalten.",
+    "passwordDigit": "Das Passwort muss mindestens eine Ziffer enthalten.",
+    "emailInvalid": "Bitte eine gültige E-Mail-Adresse eingeben.",
+    "passwordHint": "Mindestens 10 Zeichen; mindestens 1 Großbuchstabe, 1 Kleinbuchstabe und 1 Ziffer.",
+    "yearInt": "Das Jahr muss eine ganze Zahl sein."
+  },
+  "files": {
+    "readFailed": "Die Datei konnte nicht gelesen werden (multipart/form-data erwartet).",
+    "missing": "Datei nicht gefunden.",
+    "typeNotAllowed": "Dieser Dateityp ist nicht erlaubt.",
+    "empty": "Leere Dateien können nicht hochgeladen werden.",
+    "contentMismatch": "Der Dateiinhalt passt nicht zur Endung .{extension}.",
+    "tooLarge": "Die Datei darf höchstens {maxMb} MB groß sein.",
+    "uploadFailed": "Die Datei konnte nicht hochgeladen werden.",
+    "maxPerRecord": "Pro Datensatz sind höchstens {max} Dateien erlaubt."
   },
   "accounting": {
     "list": {
@@ -310,7 +425,8 @@
         "activate": "Aktivieren",
         "typeCASH": "Kasse",
         "typeBANK": "Girokonto",
-        "typeOTHER": "Sonstiges"
+        "typeOTHER": "Sonstiges",
+        "saved": "Konto gespeichert."
       },
       "categories": {
         "name": "Kategorie",
@@ -328,7 +444,8 @@
         "sphereIDEELL": "Ideeller Bereich",
         "sphereASSET_MANAGEMENT": "Vermögensverwaltung",
         "spherePURPOSE_OPERATION": "Zweckbetrieb",
-        "sphereECONOMIC_OPERATION": "Wirtschaftlicher Geschäftsbetrieb"
+        "sphereECONOMIC_OPERATION": "Wirtschaftlicher Geschäftsbetrieb",
+        "saved": "Kategorie gespeichert."
       },
       "projects": {
         "name": "Projekt",
@@ -338,7 +455,8 @@
         "new": "Neues Projekt",
         "edit": "Bearbeiten",
         "deactivate": "Deaktivieren",
-        "activate": "Aktivieren"
+        "activate": "Aktivieren",
+        "saved": "Projekt gespeichert."
       },
       "syncSettings": {
         "title": "Einstellungen Mitgliedsbeitrag-Sync",
@@ -463,7 +581,8 @@
         "pdf": "Kassenbericht PDF"
       },
       "economic80": "Die Einnahmen des wirtschaftlichen Geschäftsbetriebs erreichen 80 % der Grenze von 50.000 € (§ 64 Abs. 3 AO).",
-      "economicExceeded": "Die Einnahmen des wirtschaftlichen Geschäftsbetriebs haben die Grenze von 50.000 € überschritten (§ 64 Abs. 3 AO). Bitte Steuerberatung hinzuziehen."
+      "economicExceeded": "Die Einnahmen des wirtschaftlichen Geschäftsbetriebs haben die Grenze von 50.000 € überschritten (§ 64 Abs. 3 AO). Bitte Steuerberatung hinzuziehen.",
+      "reversedSuffix": "{description} (STORNIERT)"
     },
     "balances": {
       "title": "Kontensalden"
@@ -475,11 +594,303 @@
       "yearClosing": "Jahresabschluss",
       "settings": "Einstellungen",
       "export": "Excel-Export"
+    },
+    "meta": {
+      "list": "Buchhaltung",
+      "create": "Neue Buchung",
+      "detail": "Buchungsdetails",
+      "edit": "Buchung bearbeiten",
+      "reports": "Berichte",
+      "budget": "Haushaltsplan",
+      "yearClosing": "Jahresabschluss",
+      "settings": "Buchhaltungseinstellungen",
+      "memberSync": "Übernahme der Mitgliedsbeiträge"
+    },
+    "errors": {
+      "openingDateInvalid": "Das Eröffnungsdatum ist ungültig.",
+      "openingNegative": "Der Anfangsbestand darf nicht negativ sein.",
+      "accountNameTaken": "Dieser Kontoname wird bereits verwendet.",
+      "accountNotFound": "Konto nicht gefunden.",
+      "openingLocked": "Der Anfangsbestand eines bebuchten Kontos kann nicht geändert werden.",
+      "bookingDateInvalid": "Das Buchungsdatum ist ungültig.",
+      "amountInvalid": "Der Betrag ist ungültig.",
+      "amountTooLarge": "Der Betrag ist zu hoch.",
+      "targetRequired": "Das Zielkonto ist erforderlich.",
+      "targetSameAsSource": "Ziel- und Quellkonto dürfen nicht identisch sein.",
+      "bookingNotFound": "Buchung nicht gefunden.",
+      "reversedNoEdit": "Eine stornierte Buchung kann nicht bearbeitet werden; bitte eine neue Buchung anlegen.",
+      "transferNoCategory": "Eine Umbuchung kann keine Kategorie haben.",
+      "alreadyReversed": "Diese Buchung wurde bereits storniert.",
+      "budgetInvalid": "Der Planbetrag ist ungültig.",
+      "categoryNameTaken": "Dieser Kategoriename wird bereits verwendet.",
+      "categoryNotFound": "Kategorie nicht gefunden.",
+      "fileNotFound": "Datei nicht gefunden.",
+      "projectNameTaken": "Dieser Projektname wird bereits verwendet.",
+      "projectNotFound": "Projekt nicht gefunden.",
+      "feeCategoryInvalid": "Die Beitragskategorie muss eine aktive Einnahmenkategorie sein.",
+      "accountInactive": "Das Konto wurde nicht gefunden oder ist deaktiviert.",
+      "donationCategoryInvalid": "Die Spendenkategorie muss eine aktive Einnahmenkategorie sein.",
+      "cashNegative": "Der Kassenbestand darf nicht negativ werden (Kassenminus).",
+      "beforeOpening": "Das Buchungsdatum darf nicht vor dem Eröffnungsdatum des Kontos liegen.",
+      "categoryMismatch": "Die Kategorie wurde nicht gefunden oder passt nicht zur Buchungsart.",
+      "yearChangeForbidden": "Eine Buchung kann nicht in ein anderes Jahr verschoben werden; bitte neu buchen und die alte Buchung stornieren.",
+      "yearChangeField": "Das Buchungsjahr kann nicht geändert werden.",
+      "bookingDateFuture": "Das Buchungsdatum darf nicht in der Zukunft liegen.",
+      "categoryDirection": "Die Kategorie passt nicht zur Buchungsart.",
+      "reverseYearLocked": "Das Jahr der Buchung ist abgeschlossen; zum Stornieren bitte das Jahr entsperren.",
+      "budgetYearLocked": "Das Jahr {year} ist abgeschlossen; der Haushaltsplan kann nicht bearbeitet werden.",
+      "yearAlreadyLocked": "Das Jahr {year} ist bereits abgeschlossen.",
+      "yearAlreadyOpen": "Das Jahr {year} ist bereits offen.",
+      "reverseYearLockedNumbered": "Das Jahr {year} ist abgeschlossen; zum Stornieren bitte entsperren.",
+      "fileYearLocked": "Das Jahr {year} ist abgeschlossen; Belege können nicht gelöscht werden (nachträgliches Hochladen bleibt möglich).",
+      "yearLocked": "Das Jahr {year} ist abgeschlossen; es können keine Buchungen erfasst werden.",
+      "yearLockedDate": "Das Jahr {year} ist abgeschlossen; zu diesem Datum kann nicht gebucht werden.",
+      "accountDisabled": "Deaktiviertes Konto kann nicht verwendet werden: {name}",
+      "beforeOpeningNamed": "Das Buchungsdatum darf nicht vor dem Eröffnungsdatum des Kontos liegen: {name}",
+      "categoryDisabled": "Deaktivierte Kategorie kann nicht verwendet werden: {name}",
+      "reverseYearLockedYear": "Das Jahr {year} ist abgeschlossen; zum Stornieren bitte das Jahr entsperren.",
+      "settingsMissing": "Buchhaltungseinstellungen unvollständig: {missing}. Bitte unter Buchhaltung > Einstellungen ergänzen.",
+      "settingsInvalid": "Buchhaltungseinstellungen ungültig: {missing}.",
+      "syncSettingsMissing": "Einstellungen unvollständig: {missing}. Bitte auf der Einstellungsseite ergänzen.",
+      "itemDonationCategory": "Spendenkategorie",
+      "itemCashAccount": "Kassenkonto",
+      "itemBankAccount": "Bankkonto",
+      "itemFeeCategory": "Beitragskategorie",
+      "itemValidDonationCategory": "gültige Spendenkategorie",
+      "itemValidCashAccount": "gültiges Kassenkonto",
+      "itemValidBankAccount": "gültiges Bankkonto",
+      "sourcedNoEdit": "Automatisch erzeugte Buchungen können nicht bearbeitet werden; sie werden im Quellmodul verwaltet.",
+      "categoryInUse": "In dieser Kategorie gibt es Buchungen; Richtung (Einnahme/Ausgabe) und Sphäre können nicht geändert werden. Legen Sie eine neue Kategorie an.",
+      "categoryDirectionLocked": "Bei Kategorien mit Buchungen ist die Richtung fest.",
+      "categorySphereLocked": "Bei Kategorien mit Buchungen ist die Sphäre fest.",
+      "bookingNotFound2": "Buchung nicht gefunden.",
+      "reversedNoFile": "Einer stornierten Buchung können keine Belege hinzugefügt werden.",
+      "reversedSuffix": "STORNIERT"
+    },
+    "settings": {
+      "donationShort": "Spende"
+    },
+    "validation": {
+      "accountNameMin": "Der Kontoname muss mindestens 2 Zeichen lang sein.",
+      "accountNameMax": "Der Kontoname darf höchstens 100 Zeichen lang sein.",
+      "amountTooLarge": "Der Betrag ist zu hoch.",
+      "openingDateInvalid": "Bitte ein gültiges Eröffnungsdatum eingeben.",
+      "bookingDateRequired": "Das Buchungsdatum ist erforderlich.",
+      "bookingDateInvalid": "Bitte ein gültiges Buchungsdatum eingeben.",
+      "amountRequired": "Der Betrag ist erforderlich.",
+      "descriptionMin": "Der Buchungstext muss mindestens 3 Zeichen lang sein.",
+      "descriptionMax": "Der Buchungstext darf höchstens 300 Zeichen lang sein.",
+      "counterpartyMax": "Der Geschäftspartner darf höchstens 150 Zeichen lang sein.",
+      "receiptMax": "Die Belegnummer darf höchstens 100 Zeichen lang sein.",
+      "projectInvalid": "Bitte ein gültiges Projekt wählen.",
+      "accountRequired": "Das Konto ist erforderlich.",
+      "categoryRequired": "Die Kategorie ist erforderlich.",
+      "sourceRequired": "Das Quellkonto ist erforderlich.",
+      "targetRequired": "Das Zielkonto ist erforderlich.",
+      "versionMissing": "Die Datensatzversion fehlt.",
+      "reasonMin": "Die Begründung muss mindestens 5 Zeichen lang sein.",
+      "reasonMax": "Die Begründung darf höchstens 300 Zeichen lang sein.",
+      "yearInvalid": "Das Jahr ist ungültig.",
+      "rowLimit": "Die maximale Zeilenanzahl wurde überschritten.",
+      "categoryNameMin": "Der Kategoriename muss mindestens 2 Zeichen lang sein.",
+      "categoryNameMax": "Der Kategoriename darf höchstens 150 Zeichen lang sein.",
+      "helpMax": "Der Hilfetext darf höchstens 500 Zeichen lang sein.",
+      "projectNameMin": "Der Projektname muss mindestens 2 Zeichen lang sein.",
+      "projectNameMax": "Der Projektname darf höchstens 150 Zeichen lang sein.",
+      "noteMax": "Die Notiz darf höchstens 500 Zeichen lang sein.",
+      "feeCategoryRequired": "Bitte eine Beitragskategorie wählen.",
+      "cashAccountRequired": "Bitte ein Kassenkonto wählen.",
+      "bankAccountRequired": "Bitte ein Bankkonto wählen.",
+      "donationCategoryRequired": "Bitte eine Spendenkategorie wählen."
+    },
+    "module": {
+      "label": "Buchhaltung",
+      "description": "Buchführung nach deutschem Vereinsrecht mit Buchungen, Belegen und Budget."
+    },
+    "enums": {
+      "bookingType": {
+        "INCOME": "Einnahme",
+        "EXPENSE": "Ausgabe",
+        "TRANSFER": "Umbuchung"
+      },
+      "direction": {
+        "INCOME": "Einnahme",
+        "EXPENSE": "Ausgabe"
+      },
+      "sphere": {
+        "IDEELL": "Ideeller Bereich",
+        "ASSET_MANAGEMENT": "Vermögensverwaltung",
+        "PURPOSE_OPERATION": "Zweckbetrieb",
+        "ECONOMIC_OPERATION": "Wirtschaftlicher Geschäftsbetrieb"
+      },
+      "accountType": {
+        "CASH": "Kasse",
+        "BANK": "Girokonto",
+        "OTHER": "Sonstiges"
+      },
+      "sourceType": {
+        "MEMBER_PAYMENT": "Mitgliedsbeitrag (automatisch)",
+        "DONATION": "Spende (automatisch)",
+        "DONATION_WAIVER": "Aufwandsspende – Aufwand (automatisch)"
+      }
+    },
+    "export": {
+      "bookings": {
+        "bookingNumber": "Buchungsnr.",
+        "bookingDate": "Datum",
+        "type": "Art",
+        "accountName": "Konto",
+        "counterAccount": "Gegenkonto",
+        "categoryName": "Kategorie",
+        "sphere": "Sphäre",
+        "project": "Projekt",
+        "amount": "Betrag",
+        "description": "Beschreibung",
+        "counterparty": "Gegenpartei",
+        "receiptReference": "Belegnr.",
+        "fileCount": "Belege",
+        "status": "Status",
+        "reverseReason": "Stornogrund",
+        "_sheet": "Buchungen",
+        "_file": "buchungen",
+        "_reversed": "Storniert",
+        "_active": "Aktiv"
+      },
+      "incomeExpense": {
+        "sphere": "Sphäre",
+        "direction": "Richtung",
+        "category": "Kategorie",
+        "plan": "Plan",
+        "actual": "Ist",
+        "diff": "Abweichung",
+        "previous": "Vorjahr",
+        "_sheet": "EÜR",
+        "_file": "euer",
+        "_grandTotal": "GESAMTERGEBNIS (Einnahmen - Ausgaben)",
+        "_exceeded": "Die Einnahmen des wirtschaftlichen Geschäftsbetriebs übersteigen 50.000 € (§ 64 Abs. 3 AO). Bitte Steuerberatung hinzuziehen.",
+        "_near": "Die Einnahmen des wirtschaftlichen Geschäftsbetriebs haben 80 % der Grenze von 50.000 € erreicht (§ 64 Abs. 3 AO)."
+      },
+      "ledger": {
+        "date": "Datum",
+        "number": "Buchungsnr.",
+        "description": "Beschreibung",
+        "receipt": "Belegnr.",
+        "income": "Einnahme",
+        "expense": "Ausgabe",
+        "balance": "Saldo",
+        "_sheet": "Kassenbuch",
+        "_file": "kassenbuch",
+        "_opening": "Anfangsbestand ({account})",
+        "_closing": "Endbestand",
+        "_noAccount": "Kein Konto ausgewählt."
+      }
     }
   },
   "audit": {
     "pageTitle": "Prüfprotokoll",
-    "pageDescription": "Authentifizierungs- und Datenoperationen im System."
+    "pageDescription": "Authentifizierungs- und Datenoperationen im System.",
+    "meta": {
+      "list": "Prüfprotokoll"
+    },
+    "actions": {
+      "LOGIN_SUCCESS": "Anmeldung (erfolgreich)",
+      "LOGIN_FAILED": "Anmeldung (fehlgeschlagen)",
+      "LOGOUT": "Abmeldung",
+      "CREATE": "Anlegen",
+      "UPDATE": "Änderung",
+      "DELETE": "Löschen",
+      "DEACTIVATE": "Deaktivierung",
+      "ACTIVATE": "Aktivierung",
+      "PASSWORD_CHANGE": "Passwortänderung",
+      "PASSWORD_RESET": "Passwort-Zurücksetzung",
+      "STATUS_CHANGE": "Statusänderung",
+      "APPROVE": "Freigabe",
+      "REOPEN": "Wiedereröffnung",
+      "CANCEL": "Stornierung",
+      "VOID": "Ungültigmachung",
+      "REVERSE": "Stornobuchung",
+      "EXPORT": "Export",
+      "IMPORT": "Import",
+      "DATA_EXPORT": "Datenauskunft (DSGVO)",
+      "FILE_UPLOAD": "Datei-Upload",
+      "FILE_DELETE": "Datei gelöscht",
+      "NOTE_ADD": "Notiz hinzugefügt",
+      "ANONYMIZE": "Anonymisierung",
+      "YEAR_CLOSE": "Jahresabschluss",
+      "YEAR_UNLOCK": "Jahr entsperrt",
+      "BUDGET_SAVE": "Budget gespeichert",
+      "SYNC_MEMBER_PAYMENTS": "Beitragsübernahme",
+      "TEMPLATE_CONFIRM": "Vorlagenfreigabe",
+      "PDF_DOWNLOAD": "PDF-Download",
+      "PDF_BATCH_DOWNLOAD": "PDF-Sammeldownload",
+      "PDF_INTEGRITY_ERROR": "PDF-Integritätsfehler",
+      "DUE_ADD": "Beitrag hinzugefügt",
+      "DUE_UPDATE": "Beitrag geändert",
+      "DUE_DELETE": "Beitrag gelöscht",
+      "DUES_GENERATE": "Beitragssoll erzeugt",
+      "ATTENDEE_ADD": "Teilnehmer hinzugefügt",
+      "ATTENDEE_UPDATE": "Teilnehmer geändert",
+      "ATTENDEE_REMOVE": "Teilnehmer entfernt",
+      "ATTENDEE_MARK_ALL": "Alle als anwesend markiert",
+      "AGENDA_ADD": "TOP hinzugefügt",
+      "AGENDA_UPDATE": "TOP geändert",
+      "AGENDA_DELETE": "TOP gelöscht",
+      "AGENDA_MOVE": "TOP verschoben",
+      "AGENDA_DISCUSSION": "Beratungsnotiz",
+      "DECISION_ADD": "Beschluss hinzugefügt",
+      "DECISION_UPDATE": "Beschluss geändert",
+      "DECISION_DELETE": "Beschluss gelöscht",
+      "ACTION_ADD": "Aufgabe hinzugefügt",
+      "ACTION_UPDATE": "Aufgabe geändert",
+      "ACTION_DELETE": "Aufgabe gelöscht",
+      "ACTION_STATUS": "Aufgabenstatus"
+    },
+    "entities": {
+      "User": "Benutzer",
+      "Auth": "Sitzung",
+      "Document": "Schriftstück",
+      "DocumentCategory": "Schriftgutkategorie",
+      "DocumentFile": "Schriftgutdatei",
+      "Meeting": "Sitzung",
+      "MeetingAttendee": "Sitzungsteilnehmer",
+      "MeetingDecision": "Beschluss",
+      "MeetingFile": "Sitzungsdatei",
+      "AgendaItem": "Tagesordnungspunkt",
+      "ActionItem": "Aufgabe",
+      "Member": "Mitglied",
+      "MemberDue": "Beitrag",
+      "MemberPayment": "Mitgliedszahlung",
+      "MembershipTypeConfig": "Mitgliedsart",
+      "AccountingAccount": "Konto",
+      "AccountingBooking": "Buchung",
+      "AccountingBookingFile": "Buchungsbeleg",
+      "AccountingBudgetLine": "Budgetposition",
+      "AccountingCategory": "Buchungskategorie",
+      "AccountingProject": "Projekt",
+      "AccountingSettings": "Buchhaltungseinstellungen",
+      "AccountingYear": "Geschäftsjahr",
+      "Donation": "Spende",
+      "Donor": "Spender",
+      "DonationsSettings": "Spendeneinstellungen",
+      "ZuwendungConfirmation": "Zuwendungsbestätigung",
+      "OrganizationProfile": "Vereinsprofil",
+      "SystemModule": "Modul"
+    },
+    "table": {
+      "aria": "Prüfprotokoll",
+      "date": "Datum",
+      "user": "Benutzer",
+      "action": "Aktion",
+      "entity": "Objekt",
+      "entityId": "Objekt-ID",
+      "ip": "IP",
+      "search": "Benutzer oder Objekt-ID suchen...",
+      "empty": "Keine Protokolleinträge gefunden."
+    },
+    "module": {
+      "label": "Prüfprotokoll",
+      "description": "Unveränderliche Sicherheits- und Prüfprotokolle aller Systemvorgänge."
+    }
   },
   "auth": {
     "loginTitle": "Anmelden",
@@ -487,7 +898,43 @@
     "password": "Passwort",
     "loginButton": "Anmelden",
     "logout": "Abmelden",
-    "mustChangePasswordBanner": "Passwort muss aktualisiert werden"
+    "mustChangePasswordBanner": "Passwort muss aktualisiert werden",
+    "meta": {
+      "profile": "Profil"
+    },
+    "appTitle": "Vereinsverwaltung",
+    "loginSubtitle": "Melden Sie sich an, um fortzufahren",
+    "passiveNotice": "Ihre Sitzung wurde beendet. Ihr Konto wurde möglicherweise deaktiviert; bitte wenden Sie sich an Ihren Administrator.",
+    "profile": {
+      "title": "Profil",
+      "description": "Ihre Kontodaten und Passwortänderung.",
+      "accountInfo": "Kontodaten",
+      "name": "Name",
+      "email": "E-Mail",
+      "role": "Rolle",
+      "changePassword": "Passwort ändern",
+      "currentPassword": "Aktuelles Passwort",
+      "newPassword": "Neues Passwort",
+      "submit": "Passwort aktualisieren",
+      "updated": "Ihr Passwort wurde aktualisiert."
+    },
+    "errors": {
+      "sessionInvalid": "Ihre Sitzung ist ungültig. Bitte melden Sie sich erneut an.",
+      "currentPasswordWrong": "Das aktuelle Passwort ist falsch.",
+      "invalidCredentials": "E-Mail oder Passwort ist falsch.",
+      "accountLocked": "Das Konto ist vorübergehend gesperrt. Bitte versuchen Sie es später erneut.",
+      "loginFailed": "Anmeldung fehlgeschlagen. Bitte versuchen Sie es erneut.",
+      "invalidLocale": "Ungültige Sprachauswahl."
+    },
+    "validation": {
+      "currentPasswordRequired": "Bitte das aktuelle Passwort eingeben.",
+      "emailRequired": "E-Mail ist erforderlich.",
+      "passwordRequired": "Passwort ist erforderlich."
+    },
+    "module": {
+      "label": "Authentifizierung",
+      "description": "Anmeldung, Sitzungsverwaltung und Passwortsicherheit."
+    }
   },
   "documents": {
     "pageTitle": "Dokumente",
@@ -518,7 +965,8 @@
       "deactivatedToast": "Kategorie deaktiviert.",
       "activatedToast": "Kategorie aktiviert.",
       "createdToast": "Kategorie erstellt.",
-      "updatedToast": "Kategorie aktualisiert."
+      "updatedToast": "Kategorie aktualisiert.",
+      "deactivateNamedMessage": "„{name}“ wird deaktiviert: In neuen Dokumenten nicht mehr wählbar, in bestehenden weiterhin sichtbar. Fortfahren?"
     },
     "categoriesPageTitle": "Dokumentkategorien",
     "categoriesPageDescription": "Kategorien werden nicht gelöscht; deaktivierte Kategorien sind in neuen Formularen nicht wählbar, bleiben aber bestehenden Dokumenten sichtbar.",
@@ -528,7 +976,8 @@
       "overdue": "Überfällig",
       "incomingThisMonth": "Eingegangen diesen Monat",
       "outgoingThisMonth": "Ausgegangen diesen Monat",
-      "applyFilter": "Filter anwenden"
+      "applyFilter": "Filter anwenden",
+      "filterAria": "{label}: {value} — Filter anwenden"
     },
     "filter": {
       "all": "Alle",
@@ -654,7 +1103,9 @@
       "updatedToast": "Dokument aktualisiert: {registryNumber}",
       "savedToast": "Dokument gespeichert: {registryNumber}",
       "savedWithUploadErrorToast": "Dokument gespeichert, aber {count} Datei(en) konnten nicht hochgeladen werden. Sie können sie auf der Detailseite erneut hochladen.",
-      "passiveSuffix": "(inaktiv)"
+      "passiveSuffix": "(inaktiv)",
+      "editNumbered": "{registryNumber} — Richtung und Registernummer können nicht geändert werden.",
+      "passiveCategory": "{name} (inaktiv)"
     },
     "files": {
       "addAria": "Dateien hinzufügen",
@@ -678,7 +1129,8 @@
       "deleteAria": "Datei {name} löschen",
       "deleteTitle": "Datei löschen",
       "deleteMessage": "Die Datei \"{name}\" wird aus dem Datensatz entfernt. Die Datei bleibt auf dem Datenträger erhalten. Bestätigen?",
-      "deletedToast": "Datei gelöscht."
+      "deletedToast": "Datei gelöscht.",
+      "removeFromListAria": "{name} aus der Liste entfernen"
     },
     "notes": {
       "empty": "Noch keine Vermerke hinzugefügt.",
@@ -691,6 +1143,75 @@
     "menu": {
       "categories": "Kategorien",
       "export": "Excel-Export"
+    },
+    "meta": {
+      "list": "Dokumente",
+      "create": "Neues Dokument",
+      "detail": "Dokumentdetails",
+      "edit": "Dokument bearbeiten",
+      "categories": "Dokumentkategorien"
+    },
+    "errors": {
+      "documentNotFound": "Dokument nicht gefunden.",
+      "categoryNameTaken": "Dieser Kategoriename wird bereits verwendet.",
+      "categoryNotFound": "Kategorie nicht gefunden.",
+      "invalidDate": "Das Dokumentdatum ist ungültig.",
+      "fileNotFound": "Datei nicht gefunden.",
+      "categoryInactive": "Die Kategorie wurde nicht gefunden oder ist inaktiv.",
+      "assigneeInactive": "Die verantwortliche Person wurde nicht gefunden oder ihr Konto ist deaktiviert.",
+      "replyOnlyOutgoing": "Ein Bezugsdokument kann nur bei ausgehenden Dokumenten gewählt werden.",
+      "replySelf": "Ein Dokument kann nicht auf sich selbst antworten.",
+      "replyTargetInvalid": "Das Bezugsdokument wurde nicht gefunden oder ist kein eingehendes Dokument.",
+      "documentNotFound2": "Schriftstück nicht gefunden."
+    },
+    "validation": {
+      "categoryMin": "Der Kategoriename muss mindestens 2 Zeichen lang sein.",
+      "categoryMax": "Der Kategoriename darf höchstens 60 Zeichen lang sein.",
+      "dateRequired": "Das Dokumentdatum ist erforderlich.",
+      "dateInvalid": "Bitte ein gültiges Dokumentdatum eingeben.",
+      "counterpartyMin": "Absender/Empfänger muss mindestens 2 Zeichen lang sein.",
+      "counterpartyMax": "Absender/Empfänger darf höchstens 200 Zeichen lang sein.",
+      "referenceMax": "Das Aktenzeichen darf höchstens 100 Zeichen lang sein.",
+      "subjectMin": "Der Betreff muss mindestens 3 Zeichen lang sein.",
+      "subjectMax": "Der Betreff darf höchstens 300 Zeichen lang sein.",
+      "summaryMax": "Die Zusammenfassung darf höchstens 2000 Zeichen lang sein.",
+      "dueDateInvalid": "Bitte eine gültige Bearbeitungsfrist eingeben.",
+      "dueBeforeDocument": "Die Bearbeitungsfrist darf nicht vor dem Dokumentdatum liegen.",
+      "versionMissing": "Die Datensatzversion fehlt.",
+      "noteEmpty": "Die Notiz darf nicht leer sein.",
+      "noteMax": "Die Notiz darf höchstens 2000 Zeichen lang sein."
+    },
+    "module": {
+      "label": "Schriftgut",
+      "description": "Nummerierung, Verfolgung und Archivierung ein- und ausgehender Schriftstücke."
+    },
+    "export": {
+      "register": {
+        "registryNumber": "Eingangs-/Ausgangsnr.",
+        "direction": "Richtung",
+        "registeredAt": "Erfasst am",
+        "documentDate": "Datum des Schriftstücks",
+        "counterparty": "Absender/Empfänger",
+        "referenceNumber": "Aktenzeichen",
+        "subject": "Betreff",
+        "categoryName": "Kategorie",
+        "deliveryMethod": "Zustellart",
+        "status": "Status",
+        "assigneeLabel": "Zuständig",
+        "dueDate": "Frist",
+        "fileCount": "Dateien",
+        "_sheet": "Schriftgutregister",
+        "_file": "schriftgutregister",
+        "deliveries": {
+          "POST": "Post",
+          "EMAIL": "E-Mail",
+          "HAND": "Persönlich",
+          "COURIER": "Kurier",
+          "REGISTERED_MAIL": "Einschreiben",
+          "FAX": "Fax",
+          "OTHER": "Sonstiges"
+        }
+      }
     }
   },
   "donations": {
@@ -840,7 +1361,9 @@
         "deactivate": "Deaktivieren",
         "activate": "Aktivieren",
         "toastAnonymized": "Spender/in anonymisiert."
-      }
+      },
+      "memberNumberPlaceholder": "Mitgliedsnummer (optional)",
+      "anonymizedNoEdit": "Ein anonymisierter Spender kann nicht bearbeitet werden."
     },
     "confirmations": {
       "title": "Zuwendungsbestätigungen",
@@ -892,7 +1415,21 @@
           "templateVersion": "Musterversion",
           "items": "Posten",
           "retention": "Ende der Aufbewahrungsfrist"
-        }
+        },
+        "subtitle": "{kind} · {content} · {date}",
+        "issuedBy": "Ausgestellt von",
+        "place": "Ausstellungsort",
+        "cancelledInfo": "Am {date} von {label} storniert: {reason}",
+        "replaces": "Ersetzt Bestätigung",
+        "replacedBy": "Ersetzt durch",
+        "pdfHash": "PDF (SHA-256)",
+        "itemDate": "Datum",
+        "itemLabel": "Art",
+        "itemAmount": "Betrag",
+        "address": "Anschrift",
+        "reissued": "Neue Bestätigung ausgestellt: {number}",
+        "cancelled": "Bestätigung storniert.",
+        "notFound": "Bestätigung nicht gefunden"
       },
       "issue": {
         "title": "Zuwendungsbestätigung erstellen",
@@ -914,8 +1451,42 @@
         "toastIssued": "Bestätigung ausgestellt: {number}",
         "candidatesEmpty": "Keine bestätigungsfähigen Einträge.",
         "batchRun": "Sammelproduktion starten",
-        "batchResult": "{ok} erfolgreich, {failed} fehlgeschlagen"
-      }
+        "batchResult": "{ok} erfolgreich, {failed} fehlgeschlagen",
+        "subtitle": "Amtliche Zuwendungsbestätigung für Spenden oder Mitgliedsbeiträge erstellen.",
+        "typeSingleHint": "Eine Bestätigung für eine einzelne Spende",
+        "typeCollectiveHint": "Alle Spenden eines Spenders im Jahr in einer Sammelbestätigung",
+        "typeFeeHint": "Mitgliedsbeiträge eines Mitglieds für ein Jahr",
+        "typeBatchHint": "Jahresabschluss: Bestätigungen für alle Empfänger",
+        "selectDonor": "Spender wählen",
+        "selectMember": "Mitglied wählen",
+        "noRecipients": "Für dieses Jahr gibt es keine Empfänger mit bestätigbaren Einträgen.",
+        "groupNotWaived": "Geldspenden",
+        "groupWaived": "Aufwandsspenden (Verzicht auf Erstattung)",
+        "groupRule": "Eine Bestätigung darf nur Spenden derselben Art (Aufwandsspende ja/nein) enthalten.",
+        "selectAll": "Alle auswählen",
+        "clearAll": "Auswahl aufheben",
+        "words": "In Worten",
+        "recipient": "Empfänger",
+        "itemCount": "{count} Positionen",
+        "feeAllIncluded": "Die Bestätigung umfasst alle noch nicht bestätigten Beitragszahlungen dieses Jahres.",
+        "batchContent": "Inhalt",
+        "contentDonation": "Spenden",
+        "contentFee": "Mitgliedsbeiträge",
+        "batchSelected": "{count} Empfänger ausgewählt",
+        "resultOk": "Ausgestellt: {number}",
+        "resultFailed": "Fehlgeschlagen: {error}",
+        "openConfirmation": "Bestätigung öffnen",
+        "downloadPdf": "PDF herunterladen",
+        "blocked": "Ohne Behebung der offenen Punkte kann keine Bestätigung erstellt werden.",
+        "fix": "Beheben",
+        "issuedTitle": "Bestätigung ausgestellt",
+        "selectedTotal": "Ausgewählte Summe",
+        "date": "Datum",
+        "number": "Nr.",
+        "amount": "Betrag"
+      },
+      "create": "Bestätigung erstellen",
+      "batchHint": "Sammeldruck: Zeilen in der Liste auswählen und die PDF-Schaltfläche verwenden (§ 13, max. 100)."
     },
     "settings": {
       "title": "Spenden-Einstellungen (Bestätigungsproduktion)",
@@ -935,12 +1506,20 @@
       "feeDeductibleLink": "Auf der Seite Vereinsdaten ändern",
       "validityDays": "{days} Tage verbleiben",
       "validityExpired": "Die Freistellungsbescheinigung ist abgelaufen",
-      "validityWarn": "Weniger als 90 Tage — Verlängerung planen"
+      "validityWarn": "Weniger als 90 Tage — Verlängerung planen",
+      "subtitle": "Voraussetzungen, Vorlagenvorschau und Freigabe des Vorlagentextes für Zuwendungsbestätigungen.",
+      "templateSection": "Freigabe des Vorlagentextes",
+      "templateNotConfirmed": "Die aktuelle Vorlagenversion ({version}) ist noch nicht freigegeben.",
+      "openPreview": "Vorschau öffnen",
+      "feeSection": "Bestätigungen für Mitgliedsbeiträge",
+      "approveOnly": "Nur Benutzer mit Freigaberecht können den Text freigeben."
     },
     "menu": {
       "donors": "Spender",
       "confirmations": "Zuwendungsbestätigungen",
-      "export": "Excel-Export"
+      "export": "Excel-Export",
+      "issue": "Bestätigung erstellen",
+      "settings": "Einstellungen"
     },
     "meta": {
       "create": "Neue Spende",
@@ -950,7 +1529,166 @@
       "donorCreate": "Neuer Spender",
       "donorDetail": "Spenderdetails",
       "donorEdit": "Spender bearbeiten",
-      "confirmations": "Zuwendungsbestätigungen"
+      "confirmations": "Zuwendungsbestätigungen",
+      "list": "Spenden",
+      "confirmationDetail": "Bestätigungsdetails",
+      "issue": "Bestätigung erstellen",
+      "settings": "Spendeneinstellungen"
+    },
+    "common": {
+      "yes": "Ja",
+      "no": "Nein",
+      "active": "Aktiv",
+      "passive": "Inaktiv",
+      "backToList": "← Spenden"
+    },
+    "errors": {
+      "confirmationNotFound": "Zuwendungsbestätigung nicht gefunden.",
+      "confirmationAlreadyCancelled": "Diese Zuwendungsbestätigung wurde bereits storniert.",
+      "donorInactive": "Der Spender wurde nicht gefunden oder ist inaktiv.",
+      "amountInvalid": "Der Betrag ist ungültig.",
+      "amountTooLarge": "Der Betrag ist zu hoch.",
+      "dateInvalid": "Das Spendendatum ist ungültig.",
+      "dateFuture": "Das Spendendatum darf nicht in der Zukunft liegen.",
+      "dateTooOld": "Das Spendendatum darf nicht vor dem Beginn des Vorjahres liegen.",
+      "donationNotFound": "Spende nicht gefunden.",
+      "cancelledNoEdit": "Eine stornierte Spende kann nicht bearbeitet werden.",
+      "yearChange": "Eine Spende kann nicht in ein anderes Jahr verschoben werden; die Spendennummer ist jahresgebunden.",
+      "donorNotFound": "Spender nicht gefunden.",
+      "alreadyCancelled": "Diese Spende wurde bereits storniert.",
+      "memberAddressMissing": "Mitglied nicht gefunden oder Adresse unvollständig.",
+      "confirmNumberMismatch": "Die eingegebene Nummer stimmt nicht überein.",
+      "anonymizeFailed": "Anonymisierung fehlgeschlagen.",
+      "alreadyAnonymized": "Dieser Spender wurde bereits anonymisiert.",
+      "confirmationNeedsItem": "Für eine Zuwendungsbestätigung ist mindestens eine Position erforderlich.",
+      "waiverExpenseRequired": "Für eine Aufwandsspende ist eine Ausgabenkategorie erforderlich.",
+      "typeDonorNumber": "Bitte die Spendernummer eingeben: {number}",
+      "activeConfirmationEdit": "Für diese Spende besteht eine aktive Bestätigung; stornieren Sie zuerst die Bestätigung und bearbeiten Sie dann.",
+      "activeConfirmation": "Für diese Spende besteht eine aktive Bestätigung; stornieren Sie zuerst die Bestätigung.",
+      "retentionBlocksAnonymize": "Für diesen Spender laufen noch Aufbewahrungsfristen ({count} Bestätigungen). Eine Anonymisierung ist erst nach Ablauf möglich.",
+      "activeDonationBlocksAnonymize": "Es gibt eine Spende mit aktiver Bestätigung ({number}); stornieren Sie zuerst die Bestätigung.",
+      "mixedWaiver": "Die ausgewählten Spenden mischen Aufwandsspenden und Geldspenden; bitte getrennt bestätigen.",
+      "feeConfirmationsDisabled": "Bestätigungen für Mitgliedsbeiträge sind deaktiviert (membershipFeesDeductible = false; § 10b Abs. 1 Satz 8 EStG).",
+      "mixedWaiverYear": "Die Spenden dieses Spenders im Jahr sind gemischt (Aufwandsspende ja/nein); Sammelbestätigung übersprungen.",
+      "noConfirmationSelected": "Keine Bestätigung ausgewählt.",
+      "confirmationNotFound2": "Bestätigung nicht gefunden.",
+      "storedPdfMissing": "Gespeicherte PDF-Datei nicht gefunden.",
+      "pdfIntegrity": "PDF-Integritätsfehler: Die gespeicherte Datei stimmt nicht mit dem SHA-256 des Datensatzes überein. Bitte informieren Sie die Systemadministration (Eintrag PDF_INTEGRITY_ERROR).",
+      "reversedDonation": "Für eine stornierte Spende kann keine Bestätigung ausgestellt werden.",
+      "someDonationsMissing": "Einige der ausgewählten Spenden wurden nicht gefunden.",
+      "periodSingleYear": "Der Zeitraum einer Sammelbestätigung muss innerhalb eines Kalenderjahres liegen.",
+      "donationReversed": "{number} ist storniert.",
+      "donationOutsidePeriod": "{number} liegt außerhalb des Zeitraums.",
+      "noFeePayments": "Für dieses Mitglied und Jahr gibt es keine bestätigbaren Zahlungen.",
+      "feePaymentsCovered": "Alle Zahlungen sind bereits in einer aktiven Bestätigung enthalten.",
+      "noDonationsInYear": "Für diesen Spender gibt es in diesem Jahr keine bestätigbaren Spenden.",
+      "replaceNotCancelled": "Nur für eine stornierte Bestätigung kann ein Ersatz erstellt werden.",
+      "alreadyReplaced": "Für diese Bestätigung wurde bereits ein Ersatz erstellt."
+    },
+    "validation": {
+      "periodStartInvalid": "Bitte einen gültigen Zeitraumbeginn eingeben.",
+      "periodEndInvalid": "Bitte ein gültiges Zeitraumende eingeben.",
+      "selectDonation": "Bitte mindestens eine Spende auswählen.",
+      "cancelReasonMin": "Der Stornogrund muss mindestens 5 Zeichen lang sein.",
+      "cancelReasonMax": "Der Stornogrund darf höchstens 300 Zeichen lang sein.",
+      "selectDonor": "Bitte einen Spender auswählen.",
+      "dateRequired": "Das Spendendatum ist erforderlich.",
+      "dateInvalid": "Bitte ein gültiges Datum eingeben.",
+      "amountRequired": "Der Betrag ist erforderlich.",
+      "amountTooLarge": "Der Betrag ist zu hoch.",
+      "referenceMax": "Die Referenz darf höchstens 100 Zeichen lang sein.",
+      "purposeMax": "Der Verwendungszweck darf höchstens 300 Zeichen lang sein.",
+      "basisMax": "Die Rechtsgrundlage darf höchstens 300 Zeichen lang sein.",
+      "basisRequired": "Die Grundlage des zuvor entstandenen Anspruchs ist erforderlich (mindestens 5 Zeichen).",
+      "waiverDateRequired": "Das Datum der Verzichtserklärung ist erforderlich.",
+      "expenseCategoryRequired": "Die Ausgabenkategorie ist erforderlich (Aufwand der Aufwandsspende).",
+      "waiverMethodOnly": "Diese Zahlungsart ist nur bei Aufwandsspenden zulässig.",
+      "versionMissing": "Die Datensatzversion fehlt.",
+      "firstNameMax": "Der Vorname darf höchstens 60 Zeichen lang sein.",
+      "lastNameMax": "Der Nachname darf höchstens 60 Zeichen lang sein.",
+      "organizationMax": "Der Organisationsname darf höchstens 120 Zeichen lang sein.",
+      "streetMax": "Die Straße darf höchstens 120 Zeichen lang sein.",
+      "postalCodeMax": "Die PLZ darf höchstens 10 Zeichen lang sein.",
+      "cityMax": "Der Ort darf höchstens 120 Zeichen lang sein.",
+      "countryMax": "Das Land darf höchstens 60 Zeichen lang sein.",
+      "phoneMax": "Die Telefonnummer darf höchstens 30 Zeichen lang sein.",
+      "noteMax": "Die Notiz darf höchstens 500 Zeichen lang sein.",
+      "lastNameRequired": "Für Personen ist der Nachname erforderlich.",
+      "organizationRequired": "Für Organisationen ist ein Name (mindestens 2 Zeichen) erforderlich.",
+      "postalCodeDe": "Für Deutschland muss die PLZ 5-stellig sein.",
+      "confirmNumberRequired": "Zur Bestätigung bitte die Spendernummer eingeben (z. B. SP-0007)."
+    },
+    "module": {
+      "label": "Spenden",
+      "description": "Spendenerfassung, Zuwendungsbestätigungen und Spenderverwaltung."
+    },
+    "export": {
+      "register": {
+        "confirmationNumber": "ZB-Nr.",
+        "issuedAt": "Datum",
+        "kind": "Art",
+        "content": "Inhalt",
+        "recipientName": "Empfänger",
+        "period": "Zeitraum",
+        "total": "Summe",
+        "status": "Status",
+        "cancelReason": "Stornogrund",
+        "_sheet": "Zuwendungsregister",
+        "_file": "zuwendungsregister",
+        "kinds": {
+          "SINGLE": "Einzelbestätigung",
+          "COLLECTIVE": "Sammelbestätigung"
+        },
+        "contents": {
+          "DONATION": "Geldspende",
+          "MEMBERSHIP_FEE": "Mitgliedsbeitrag"
+        }
+      },
+      "donations": {
+        "donationNumber": "Nr.",
+        "receivedAt": "Datum",
+        "donorNumber": "Spendernr.",
+        "donorName": "Spender",
+        "amount": "Betrag",
+        "method": "Zahlungsart",
+        "waived": "Aufwandsspende",
+        "confirmationNumber": "Bestätigungsnr.",
+        "bookingNumber": "Buchung",
+        "_sheet": "Spenden",
+        "_file": "spenden",
+        "_yes": "Ja",
+        "_no": "Nein",
+        "_cancelled": "STORNIERT",
+        "methods": {
+          "CASH": "Bar",
+          "BANK_TRANSFER": "Überweisung",
+          "CARD": "Kartenzahlung",
+          "PAYPAL": "PayPal",
+          "REIMBURSEMENT_WAIVER": "Aufwandsspende",
+          "OTHER": "Sonstige"
+        }
+      }
+    },
+    "readiness": {
+      "orgComplete": "Vereinsprofil vollständig.",
+      "orgMissing": "Vereinsprofil unvollständig: {fields}",
+      "fieldName": "Name",
+      "fieldStreet": "Straße",
+      "fieldPostalCode": "PLZ",
+      "fieldCity": "Ort",
+      "fieldTaxNumber": "Steuernummer",
+      "fieldTaxOffice": "Finanzamt",
+      "fieldDocumentType": "Art des Freistellungsbescheids",
+      "fieldDocumentDate": "Bescheiddatum",
+      "fieldPurposes": "begünstigte Zwecke",
+      "fieldPeriod": "letzter Veranlagungszeitraum",
+      "validityMissing": "Datum des Freistellungsbescheids fehlt.",
+      "validityOk": "Freistellungsbescheid gültig (noch {days} Tage).",
+      "validityExpired": "Der Freistellungsbescheid ist zu alt; Bestätigungen wären nicht gültig.",
+      "templateOk": "Vorlagentext freigegeben.",
+      "templateMissing": "Vorlagentext noch nicht freigegeben (mit den BMF-Mustern vergleichen).",
+      "feesOk": "Bestätigungen für Mitgliedsbeiträge möglich.",
+      "feesOff": "Bestätigungen für Mitgliedsbeiträge deaktiviert (membershipFeesDeductible = false; § 10b Abs. 1 Satz 8 EStG)."
     }
   },
   "events": {
@@ -1009,7 +1747,32 @@
       "member": "Vereinsmitglied",
       "guest": "Gast",
       "empty": "Bisher sind keine Teilnehmer für dieses Event registriert.",
-      "capacityReached": "Die maximale Teilnehmerkapazität ist erreicht."
+      "capacityReached": "Die maximale Teilnehmerkapazität ist erreicht.",
+      "countTitle": "Teilnehmeranmeldungen ({count})",
+      "subtitle": "Teilnahmestatus von Mitgliedern und Gästen verwalten.",
+      "full": "Ausgebucht",
+      "addShort": "Teilnehmer hinzufügen",
+      "newRegistration": "Neue Anmeldung",
+      "close": "Schließen",
+      "specialNote": "Besondere Hinweise (Allergien, Ernährung usw.)",
+      "cancel": "Abbrechen",
+      "complete": "Anmeldung abschließen",
+      "emptyShort": "Noch keine Teilnehmer angemeldet.",
+      "colName": "Name",
+      "colType": "Art",
+      "colContact": "Kontakt",
+      "colRegistered": "Anmeldung & Hinweis",
+      "colStatus": "Teilnahmestatus",
+      "colAction": "Aktion",
+      "removeTitle": "Teilnehmer entfernen",
+      "removeConfirm": "Entfernen",
+      "removeMessage": "Teilnehmer „{name}“ wirklich aus der Liste entfernen?",
+      "addedToast": "{name} wurde als Teilnehmer hinzugefügt.",
+      "statusUpdatedToast": "Teilnahmestatus aktualisiert.",
+      "removedToast": "{name} wurde aus der Teilnehmerliste entfernt.",
+      "addFailed": "Der Teilnehmer konnte nicht hinzugefügt werden.",
+      "statusFailed": "Der Status konnte nicht aktualisiert werden.",
+      "removeFailed": "Der Teilnehmer konnte nicht entfernt werden."
     },
     "attendeeStatus": {
       "REGISTERED": "Angemeldet",
@@ -1028,7 +1791,111 @@
     },
     "menu": {
       "upcoming": "Bevorstehende Veranstaltungen",
-      "past": "Vergangene Veranstaltungen"
+      "past": "Vergangene Veranstaltungen",
+      "export": "Excel-Export"
+    },
+    "meta": {
+      "list": "Veranstaltungen"
+    },
+    "errors": {
+      "invalidInput": "Die Eingabe ist ungültig.",
+      "createFailed": "Beim Anlegen der Veranstaltung ist ein Fehler aufgetreten.",
+      "idMissing": "Die Veranstaltungs-ID fehlt.",
+      "updateFailed": "Beim Aktualisieren der Veranstaltung ist ein Fehler aufgetreten.",
+      "invalidId": "Ungültige ID.",
+      "deleteFailed": "Beim Löschen der Veranstaltung ist ein Fehler aufgetreten.",
+      "notFound": "Veranstaltung nicht gefunden.",
+      "capacityFull": "Die Veranstaltung ist ausgebucht.",
+      "attendeeAddFailed": "Der Teilnehmer konnte nicht angemeldet werden.",
+      "invalidStatus": "Ungültiger Status.",
+      "statusUpdateFailed": "Der Teilnahmestatus konnte nicht aktualisiert werden.",
+      "invalidAttendeeId": "Ungültige Teilnehmer-ID.",
+      "attendeeDeleteFailed": "Der Teilnehmer konnte nicht entfernt werden."
+    },
+    "validation": {
+      "titleMin": "Der Titel muss mindestens 3 Zeichen lang sein.",
+      "startRequired": "Die Startzeit ist erforderlich.",
+      "urlInvalid": "Bitte eine gültige Webadresse eingeben.",
+      "capacityPositive": "Die Teilnehmerzahl muss eine positive Zahl sein.",
+      "eventIdInvalid": "Ungültige Veranstaltungs-ID.",
+      "firstNameMin": "Der Vorname muss mindestens 2 Zeichen lang sein.",
+      "lastNameMin": "Der Nachname muss mindestens 2 Zeichen lang sein.",
+      "emailInvalid": "Bitte eine gültige E-Mail-Adresse eingeben."
+    },
+    "form": {
+      "createTitle": "Neue Veranstaltung anlegen",
+      "editTitle": "Veranstaltung bearbeiten",
+      "titlePlaceholder": "z. B. Jährlicher Vereinsworkshop",
+      "publishStatus": "Veröffentlichungsstatus",
+      "endOptional": "Endzeit (optional)",
+      "isOnlineLabel": "Diese Veranstaltung findet online statt",
+      "onlineUrl": "Online-Meeting-Link",
+      "onlineUrlPlaceholder": "https://meet.google.com/… oder Zoom-Link",
+      "physicalLocation": "Veranstaltungsort / Adresse",
+      "locationPlaceholder": "z. B. Vereinsheim, Sitzungssaal, Frankfurt",
+      "capacityOptional": "Maximale Teilnehmerzahl (optional)",
+      "capacityPlaceholder": "Leer lassen für unbegrenzt",
+      "descriptionLabel": "Beschreibung und Details",
+      "descriptionPlaceholder": "Programm, Mitzubringendes und Teilnahmebedingungen …",
+      "saveChanges": "Änderungen speichern",
+      "create": "Veranstaltung anlegen",
+      "updatedToast": "Veranstaltung aktualisiert.",
+      "createdToast": "Veranstaltung angelegt.",
+      "createFailed": "Die Veranstaltung konnte nicht angelegt werden.",
+      "genericError": "Es ist ein Fehler aufgetreten.",
+      "subtitle": "Legen Sie die Angaben zu Seminaren, Workshops oder geselligen Veranstaltungen fest."
+    },
+    "table": {
+      "event": "Veranstaltung",
+      "type": "Art",
+      "status": "Status",
+      "dateTime": "Datum & Uhrzeit",
+      "location": "Ort",
+      "online": "Online-Veranstaltung",
+      "notSpecified": "Nicht angegeben",
+      "attendeesCapacity": "Teilnehmer / Plätze",
+      "capacityPeople": "{count} Personen",
+      "unlimited": "Unbegrenzt",
+      "time": "Zeitraum",
+      "allTime": "Alle",
+      "upcoming": "Bevorstehend",
+      "past": "Vergangen",
+      "search": "Titel, Beschreibung oder Ort suchen …",
+      "viewDetails": "Details anzeigen",
+      "empty": "Noch keine Veranstaltungen vorhanden.",
+      "deletedToast": "Veranstaltung „{title}“ gelöscht.",
+      "deleteFailed": "Beim Löschen der Veranstaltung ist ein Fehler aufgetreten.",
+      "deleteMessage": "Veranstaltung „{title}“ mit allen Teilnehmeranmeldungen löschen? Dies kann nicht rückgängig gemacht werden."
+    },
+    "detailView": {
+      "onlineMeeting": "Online-Meeting",
+      "capacityStatus": "Belegung",
+      "capacityCount": "{count} Plätze",
+      "unlimited": "Unbegrenzt",
+      "description": "Beschreibung",
+      "dateTime": "Datum & Uhrzeit",
+      "endLine": "Ende: {date}"
+    },
+    "module": {
+      "label": "Veranstaltungen",
+      "description": "Vereinsveranstaltungen, Seminare, Workshops und Teilnehmerverwaltung."
+    },
+    "export": {
+      "sheet": "Veranstaltungen",
+      "file": "veranstaltungen",
+      "online": "Online",
+      "button": "Excel-Export",
+      "columns": {
+        "title": "Veranstaltung",
+        "type": "Art",
+        "status": "Status",
+        "startDate": "Beginn",
+        "endDate": "Ende",
+        "location": "Ort",
+        "capacity": "Kapazität",
+        "registered": "Angemeldet",
+        "attended": "Teilgenommen"
+      }
     }
   },
   "inventory": {
@@ -1137,6 +2004,14 @@
     "menu": {
       "categories": "Kategorien",
       "export": "Excel-Export"
+    },
+    "meta": {
+      "list": "Inventar",
+      "categories": "Inventarkategorien"
+    },
+    "module": {
+      "label": "Inventar",
+      "description": "Verwaltung von Inventar, technischer Ausstattung und Ausgaben an Personen."
     }
   },
   "mail": {
@@ -1250,6 +2125,14 @@
     "menu": {
       "settings": "Einstellungen",
       "logs": "Versandprotokoll"
+    },
+    "meta": {
+      "settings": "E-Mail-Einstellungen",
+      "logs": "E-Mail-Versandprotokoll"
+    },
+    "module": {
+      "label": "E-Mail-Versand",
+      "description": "Gemeinsamer E-Mail-Versand für alle Module mit SMTP-Einstellungen und Versandprotokoll."
     }
   },
   "meetings": {
@@ -1321,7 +2204,9 @@
       "filterStatus": "Status",
       "deletedToast": "Sitzung gelöscht: {number}",
       "deleteTitle": "Sitzung wird gelöscht",
-      "deleteMessage": "{number} – {title} wird gelöscht; sie verschwindet aus Liste, Suche, Statistiken und Dashboard. Die Nummer wird nicht wiederverwendet. Fortfahren?"
+      "deleteMessage": "{number} – {title} wird gelöscht; sie verschwindet aus Liste, Suche, Statistiken und Dashboard. Die Nummer wird nicht wiederverwendet. Fortfahren?",
+      "deleteAction": "Sitzung löschen",
+      "deleteNumberedMessage": "Sitzung „{number}“ wird gelöscht. Sie erscheint danach nicht mehr in Listen, Suche, Statistik und Aufgabenliste; die Nummer wird nicht erneut vergeben. Fortfahren?"
     },
     "filters": {
       "dateFrom": "Sitzungsdatum (von)",
@@ -1333,7 +2218,12 @@
       "dueFrom": "Frist (von)",
       "dueTo": "Frist (bis)",
       "mine": "Mir zugewiesen",
-      "overdue": "Überfällig"
+      "overdue": "Überfällig",
+      "customFilters": "Weitere Filter",
+      "mineHint": "Nur Ihnen zugewiesene offene Aufgaben",
+      "overdueHint": "Aufgaben mit überschrittener Frist",
+      "meetingDate": "Sitzungsdatum",
+      "dueDate": "Fälligkeit"
     },
     "detail": {
       "approvedLine": "Genehmigt am: {date} – {by}",
@@ -1358,7 +2248,19 @@
       "fieldDescription": "Beschreibung",
       "quorumValue": "{required} Teilnehmer ({present} anwesend)",
       "fieldInvitationSentAt": "Einladung versandt am",
-      "invitationLeadTime": "Einladungsfrist: {count} Tage"
+      "invitationLeadTime": "Einladungsfrist: {count} Tage",
+      "tabGeneralShort": "Allgemein",
+      "tabAgendaShort": "Tagesordnung",
+      "tabAttendeesShort": "Teilnehmer",
+      "tabDecisionsShort": "Beschlüsse",
+      "tabTasksShort": "Aufgaben",
+      "tabFilesShort": "Anlagen",
+      "approvedOn": "Freigegeben: {date} – {by}",
+      "recordedBy": "Erfasst von",
+      "createdAt": "Erstellt",
+      "updatedAt": "Zuletzt geändert",
+      "notSpecified": "Nicht angegeben",
+      "quorumValueShort": "{required} Teilnehmer ({present} anwesend)"
     },
     "quorum": {
       "reached": "Die Beschlussfähigkeit wurde festgestellt ({present}/{required})",
@@ -1383,7 +2285,17 @@
       "reopenInfo": "Die Genehmigung wird zurückgenommen und das Protokoll kehrt in den Entwurfsstatus (Durchgeführt) zurück. Dieser Vorgang wird mit Begründung im Prüfprotokoll festgehalten.",
       "reasonLabel": "Begründung (Pflichtfeld)",
       "reasonPlaceholder": "Zum Beispiel: Korrektur aufgrund fehlender Unterschrift erforderlich.",
-      "reopenConfirm": "Wieder öffnen"
+      "reopenConfirm": "Wieder öffnen",
+      "changeTitle": "Statusänderung",
+      "reopenModalTitle": "Protokoll erneut öffnen",
+      "reopenModalInfo": "Sie öffnen das Protokoll erneut zur Bearbeitung. Eine Begründung ist Pflicht und wird im Prüfprotokoll vermerkt.",
+      "reasonShort": "Begründung",
+      "confirmApprove": "Das Protokoll der Sitzung „{number}“ wird freigegeben und danach gesperrt; zur Bearbeitung muss es erneut geöffnet werden. Fortfahren?",
+      "confirmApproveNoQuorum": "Die Beschlussfähigkeit wurde nicht erreicht. Trotzdem freigeben?",
+      "confirmReopen": "Das Protokoll „{number}“ wird erneut geöffnet und kann bearbeitet werden. Fortfahren?",
+      "confirmHeld": "Die Sitzung „{number}“ wird auf „Durchgeführt“ gesetzt (Protokollentwurf). Fortfahren?",
+      "confirmCancel": "Die Sitzung „{number}“ wird abgesagt. Fortfahren?",
+      "confirmPlanned": "Die Sitzung „{number}“ wird auf „Geplant“ gesetzt. Fortfahren?"
     },
     "form": {
       "createTitle": "Neue Sitzung",
@@ -1415,7 +2327,12 @@
       "createdToast": "Sitzung angelegt: {number}",
       "updatedToast": "Sitzung aktualisiert.",
       "invitationSentAt": "Einladung versandt am",
-      "invitationSentAtDescription": "Datum des Versands der Einladung; darf nicht nach dem Sitzungsdatum liegen."
+      "invitationSentAtDescription": "Datum des Versands der Einladung; darf nicht nach dem Sitzungsdatum liegen.",
+      "selectType": "Art wählen",
+      "timePlaceholder": "HH:mm",
+      "createPageDescription": "Sitzung anlegen; die Nummer wird automatisch vergeben (z. B. TOP-2026-001).",
+      "lockedApproved": "Ein freigegebenes Protokoll kann nicht bearbeitet werden. Bitte zuerst erneut öffnen.",
+      "lockedCancelled": "Eine abgesagte Sitzung kann nicht bearbeitet werden. Bitte zuerst auf „Geplant“ setzen."
     },
     "agenda": {
       "add": "Punkt hinzufügen",
@@ -1438,7 +2355,10 @@
       "plannedContent": "Geplanter Inhalt",
       "plannedContentDescription": "In der Sitzung geplante Themen (optional)",
       "addedToast": "Tagesordnungspunkt hinzugefügt.",
-      "updatedToast": "Tagesordnungspunkt aktualisiert."
+      "updatedToast": "Tagesordnungspunkt aktualisiert.",
+      "contentHelp": "Höchstens 2000 Zeichen.",
+      "deleteNamedMessage": "Der Punkt „{title}“ wird gelöscht und die Reihenfolge neu nummeriert. Verknüpfte Beschlüsse bleiben erhalten, verlieren aber die Zuordnung. Fortfahren?",
+      "deleteItemAria": "Tagesordnungspunkt löschen"
     },
     "decisions": {
       "add": "Beschluss hinzufügen",
@@ -1461,7 +2381,16 @@
       "votesAbstain": "Enthaltungen",
       "votesHelp": "Alle drei Stimmenfelder können leer bleiben; wird eines ausgefüllt, gelten die leeren als 0.",
       "addedToast": "Beschluss hinzugefügt: {number}",
-      "updatedToast": "Beschluss aktualisiert."
+      "updatedToast": "Beschluss aktualisiert.",
+      "editTitleNumbered": "Beschluss bearbeiten: {number}",
+      "textHelp": "Höchstens 3000 Zeichen.",
+      "agendaHelp": "Leer lassen, um den Beschluss keinem Punkt zuzuordnen.",
+      "noAgenda": "Keine Verknüpfung",
+      "votesForShort": "Ja",
+      "votesAgainstShort": "Nein",
+      "votesAbstainShort": "Enthaltung",
+      "deletedNumberedToast": "Beschluss gelöscht: {number}",
+      "deleteNumberedMessage": "Beschluss „{number}“ wird gelöscht. Die Nummer wird nicht erneut vergeben; verknüpfte Aufgaben verlieren die Zuordnung. Fortfahren?"
     },
     "attendees": {
       "markAll": "Alle als anwesend markieren",
@@ -1483,7 +2412,14 @@
       "removeAria": "Teilnehmer {name} entfernen",
       "removeTitle": "Teilnehmer wird entfernt",
       "removeMessage": "Der Teilnehmer wird von der Sitzung entfernt. Fortfahren?",
-      "removeConfirm": "Entfernen"
+      "removeConfirm": "Entfernen",
+      "addUser": "Benutzer hinzufügen",
+      "guestName": "Name des Gastes",
+      "addGuest": "Gast hinzufügen",
+      "source": "Herkunft",
+      "removedNamedToast": "Teilnehmer entfernt: {name}",
+      "markedToast": "{count} Teilnehmer als „anwesend“ markiert",
+      "namePlaceholder": "Vor- und Nachname"
     },
     "attendeeAdd": {
       "title": "Teilnehmer hinzufügen",
@@ -1502,7 +2438,11 @@
       "note": "Notiz",
       "notePlaceholder": "Beispiel: Nimmt online teil",
       "addUsers": "Benutzer hinzufügen",
-      "addGuest": "Gast hinzufügen"
+      "addGuest": "Gast hinzufügen",
+      "users": "Benutzer",
+      "usersDescription": "Ein Benutzer kann nur einmal zur Sitzung hinzugefügt werden.",
+      "addedCountToast": "{count} Teilnehmer hinzugefügt",
+      "add": "Hinzufügen"
     },
     "tasks": {
       "pageTitle": "Aufgaben",
@@ -1547,7 +2487,19 @@
       "colDecision": "Beschluss-Nr.",
       "search": "Aufgabe, Verantwortliche oder Sitzung suchen",
       "listEmpty": "Keine Aufgaben gefunden.",
-      "listAria": "Aufgabenliste"
+      "listAria": "Aufgabenliste",
+      "descriptionHelp": "Höchstens 1000 Zeichen.",
+      "assigneeUserLabel": "Verantwortlich (Benutzer)",
+      "assigneeUserHelp": "Bei Auswahl wird der Freitext ignoriert.",
+      "assigneeFreeLabel": "Verantwortlich (Freitext)",
+      "assigneeFreeHelp": "Name einer externen Person möglich.",
+      "noAssigneeOption": "Nicht zugewiesen",
+      "noDecision": "Keine Verknüpfung",
+      "overdueShort": " (überfällig)",
+      "unassigned": "Niemand zugewiesen",
+      "decisionLine": "Beschluss: {number}",
+      "deleteNamedMessage": "Die Aufgabe „{description}“ wird gelöscht. Fortfahren?",
+      "listDescription": "Aufgaben aus allen Sitzungen; standardmäßig werden nur offene Aufgaben angezeigt."
     },
     "discussion": {
       "title": "Diskussionen",
@@ -1560,7 +2512,12 @@
       "empty": "Kein Diskussionstext erfasst.",
       "edit": "Bearbeiten",
       "write": "Text erfassen",
-      "savedToast": "Diskussionstext gespeichert."
+      "savedToast": "Diskussionstext gespeichert.",
+      "label": "Beratung:",
+      "emptyNote": "Noch keine Beratungsnotiz erfasst.",
+      "add": "Beratung hinzufügen",
+      "fieldLabel": "Beratung (Protokolltext)",
+      "fieldHelp": "Höchstens 10000 Zeichen; Zeilenumbrüche bleiben erhalten."
     },
     "files": {
       "maxFilesToast": "Pro Sitzung können maximal {count} Dateien hinzugefügt werden.",
@@ -1577,10 +2534,90 @@
       "downloadAria": "{name} herunterladen",
       "deleteAria": "{name} löschen",
       "deleteTitle": "Datei wird gelöscht",
-      "deleteMessage": "Die Datei wird aus der Liste entfernt; die Kopie auf der Festplatte bleibt erhalten. Fortfahren?"
+      "deleteMessage": "Die Datei wird aus der Liste entfernt; die Kopie auf der Festplatte bleibt erhalten. Fortfahren?",
+      "uploadedCountToast": "{count} Dateien hochgeladen",
+      "uploading": "Wird hochgeladen…",
+      "emptyMeeting": "Zu dieser Sitzung wurden noch keine Dateien hinzugefügt.",
+      "download": "Herunterladen",
+      "preview": "Vorschau",
+      "deleteAction": "Datei löschen",
+      "deleteNamedAria": "{name} löschen",
+      "deleteNamedMessage": "Die Datei „{name}“ wird aus der Sitzung entfernt; die Kopie auf dem Datenträger bleibt erhalten. Fortfahren?",
+      "limitReached": "Es können höchstens {count} Dateien hinzugefügt werden.",
+      "dropOrClick": "Dateien hierher ziehen oder zum Auswählen klicken",
+      "rulesLine": "Erlaubte Typen: {types} — höchstens {maxMb} MB pro Datei — höchstens {maxFiles} Dateien pro Sitzung"
     },
     "menu": {
       "tasks": "Aufgaben"
+    },
+    "errors": {
+      "meetingNotFound": "Sitzung nicht gefunden.",
+      "decisionNotFound": "Beschluss nicht gefunden.",
+      "assigneeNotFound": "Der verantwortliche Benutzer wurde nicht gefunden oder ist deaktiviert.",
+      "taskNotFound": "Aufgabe nicht gefunden.",
+      "agendaNotFound": "Tagesordnungspunkt nicht gefunden.",
+      "agendaCannotMove": "Dieser Punkt kann nicht in diese Richtung verschoben werden.",
+      "userNotFound": "Der ausgewählte Benutzer wurde nicht gefunden oder ist deaktiviert.",
+      "chairExists": "Diese Sitzung hat bereits eine Sitzungsleitung.",
+      "secretaryExists": "Diese Sitzung hat bereits eine Protokollführung.",
+      "usersAlreadyAdded": "Die ausgewählten Benutzer sind bereits Teilnehmer dieser Sitzung.",
+      "attendeeNotFound": "Teilnehmer nicht gefunden.",
+      "reopenReasonRequired": "Für das erneute Öffnen ist eine Begründung erforderlich.",
+      "fileNotFound": "Datei nicht gefunden.",
+      "invalidDate": "Das Sitzungsdatum ist ungültig.",
+      "copySourceInvalid": "Die zu kopierende Sitzung wurde nicht gefunden oder hat eine andere Art.",
+      "approvedLocked": "Ein freigegebenes Protokoll kann nicht bearbeitet werden. Bitte zuerst erneut öffnen.",
+      "approvedNoDelete": "Eine freigegebene Sitzung kann nicht gelöscht werden. Bitte zuerst erneut öffnen.",
+      "approvedFileAdminOnly": "Dateien einer freigegebenen Sitzung kann nur ein Administrator löschen.",
+      "transitionNotAllowed": "Diese Statusänderung ist nicht zulässig.",
+      "forbidden": "Für diese Aktion fehlt Ihnen die Berechtigung.",
+      "approveNeedsAgenda": "Zur Freigabe ist mindestens ein Tagesordnungspunkt erforderlich.",
+      "approveNeedsPresent": "Zur Freigabe muss mindestens ein Teilnehmer als „anwesend“ markiert sein.",
+      "meetingNotFound2": "Sitzung nicht gefunden.",
+      "notEditable": "Die Sitzung kann nicht bearbeitet werden."
+    },
+    "validation": {
+      "taskMin": "Die Aufgabenbeschreibung muss mindestens 3 Zeichen lang sein.",
+      "taskMax": "Die Aufgabenbeschreibung darf höchstens 1000 Zeichen lang sein.",
+      "assigneeMin": "Der Name der verantwortlichen Person muss mindestens 2 Zeichen lang sein.",
+      "assigneeMax": "Der Name der verantwortlichen Person darf höchstens 120 Zeichen lang sein.",
+      "dueDateInvalid": "Bitte ein gültiges Fälligkeitsdatum eingeben.",
+      "agendaMin": "Der Tagesordnungspunkt muss mindestens 2 Zeichen lang sein.",
+      "agendaMax": "Der Tagesordnungspunkt darf höchstens 200 Zeichen lang sein.",
+      "plannedMax": "Der geplante Inhalt darf höchstens 2000 Zeichen lang sein.",
+      "discussionMax": "Der Beratungstext darf höchstens 10000 Zeichen lang sein.",
+      "selectUser": "Bitte mindestens einen Benutzer auswählen.",
+      "guestMin": "Der Name des Gastes muss mindestens 2 Zeichen lang sein.",
+      "guestMax": "Der Name des Gastes darf höchstens 120 Zeichen lang sein.",
+      "noteMax": "Die Notiz darf höchstens 200 Zeichen lang sein.",
+      "reasonMin": "Die Begründung muss mindestens 5 Zeichen lang sein.",
+      "reasonMax": "Die Begründung darf höchstens 500 Zeichen lang sein.",
+      "votesRange": "Die Stimmenzahl muss zwischen 0 und 1000 liegen.",
+      "decisionMin": "Der Beschlusstext muss mindestens 3 Zeichen lang sein.",
+      "decisionMax": "Der Beschlusstext darf höchstens 3000 Zeichen lang sein.",
+      "titleMin": "Der Titel muss mindestens 3 Zeichen lang sein.",
+      "titleMax": "Der Titel darf höchstens 200 Zeichen lang sein.",
+      "dateRequired": "Das Sitzungsdatum ist erforderlich.",
+      "dateInvalid": "Bitte ein gültiges Sitzungsdatum eingeben.",
+      "timeFormat": "Die Uhrzeit muss im Format HH:mm angegeben werden.",
+      "locationMax": "Der Ort darf höchstens 200 Zeichen lang sein.",
+      "quorumMin": "Die Beschlussfähigkeit muss mindestens 1 betragen.",
+      "quorumMax": "Die Beschlussfähigkeit darf höchstens 500 betragen.",
+      "descriptionMax": "Die Beschreibung darf höchstens 2000 Zeichen lang sein.",
+      "endNeedsStart": "Für eine Endzeit ist eine Startzeit erforderlich.",
+      "endAfterStart": "Die Endzeit muss nach der Startzeit liegen.",
+      "quorumInt": "Die Beschlussfähigkeit muss eine ganze Zahl sein."
+    },
+    "meta": {
+      "list": "Sitzungen",
+      "tasks": "Sitzungsaufgaben",
+      "create": "Neue Sitzung",
+      "detail": "Sitzungsdetails",
+      "edit": "Sitzung bearbeiten"
+    },
+    "module": {
+      "label": "Sitzungen",
+      "description": "Vorstands- und Mitgliederversammlungen, Protokolle und Beschlüsse."
     }
   },
   "members": {
@@ -1717,7 +2754,8 @@
     "listFilters": {
       "from": "Beitritt von",
       "to": "Beitritt bis",
-      "clear": "Zurücksetzen"
+      "clear": "Zurücksetzen",
+      "joinDate": "Eintrittsdatum"
     },
     "created": {
       "toast": "Mitglied gespeichert: {membershipNumber}",
@@ -1906,6 +2944,135 @@
       "types": "Mitgliedsarten",
       "import": "Importieren",
       "export": "Excel-Export"
+    },
+    "meta": {
+      "list": "Mitglieder",
+      "types": "Mitgliedsarten",
+      "dues": "Beitragsbericht",
+      "import": "Mitglieder importieren"
+    },
+    "errors": {
+      "memberNotFound": "Mitglied nicht gefunden.",
+      "exitDateInvalid": "Das Austrittsdatum ist ungültig.",
+      "noticeDateInvalid": "Das Datum der Kündigung ist ungültig.",
+      "noticeAfterExit": "Die Kündigung darf nicht nach dem Austrittsdatum liegen.",
+      "joinDateInvalid": "Das Eintrittsdatum ist ungültig.",
+      "amountInvalid": "Der Betrag ist ungültig.",
+      "amountTooLarge": "Der Betrag ist zu hoch.",
+      "paymentDateInvalid": "Das Zahlungsdatum ist ungültig.",
+      "paymentDateFuture": "Das Zahlungsdatum darf nicht in der Zukunft liegen.",
+      "dateInvalid": "Das Datum ist ungültig.",
+      "dueBeforeYear": "Das Fälligkeitsdatum darf nicht vor dem Beitragsjahr liegen.",
+      "duesExists": "Für dieses Mitglied gibt es in diesem Jahr bereits eine Beitragszeile.",
+      "duesNotFound": "Beitragszeile nicht gefunden.",
+      "duesBelowPaid": "Der Beitrag darf nicht unter den bereits gezahlten Betrag gesenkt werden.",
+      "duesWaiveWithPayments": "Eine Beitragszeile mit Zahlungen kann nicht befreit werden.",
+      "paymentNotFound": "Zahlung nicht gefunden.",
+      "paymentAlreadyVoided": "Diese Zahlung wurde bereits storniert.",
+      "dueHasPayments": "Beitragszeilen mit Zahlungen können nicht gelöscht werden. Stornieren Sie zuerst die Zahlungen.",
+      "importMissingColumns": "Pflichtspalten fehlen (Ad, Soyad, Üyelik Türü, Üyelik Başlangıç Tarihi). Bitte die Vorlage herunterladen und ausfüllen.",
+      "dataExportMissing": "Mitglied nicht gefunden oder Daten gelöscht.",
+      "importTooLarge": "Die Datei überschreitet die Grenze von {max} MB.",
+      "importXlsxOnly": "Nur .xlsx-Dateien werden akzeptiert.",
+      "importInvalidXlsx": "Die Datei ist kein gültiges .xlsx-Paket.",
+      "importDupEmailDb": "Duplikat: Ein Mitglied mit dieser E-Mail existiert bereits.",
+      "importDupEmailFile": "Duplikat: Dieselbe E-Mail kommt mehrfach in der Datei vor.",
+      "importDupPersonDb": "Duplikat: Ein Mitglied mit gleichem Vor-, Nachnamen und Geburtsdatum existiert bereits.",
+      "importDupPersonFile": "Duplikat: Gleicher Vor-, Nachname und Geburtsdatum kommen mehrfach in der Datei vor.",
+      "paymentNotSpecified": "Keine Zahlung angegeben.",
+      "paymentNotFound2": "Zahlung nicht gefunden."
+    },
+    "validation": {
+      "yearMinPrev": "Das Jahr darf höchstens das Vorjahr sein.",
+      "yearMaxNext": "Das Jahr darf höchstens das nächste Jahr sein.",
+      "dueDateRequired": "Das Fälligkeitsdatum ist erforderlich.",
+      "dueDateInvalid": "Bitte ein gültiges Fälligkeitsdatum eingeben.",
+      "yearAfterNext": "Das Jahr darf nicht nach dem nächsten Jahr liegen.",
+      "amountRequired": "Der Betrag ist erforderlich.",
+      "amountTooLarge": "Der Betrag ist zu hoch.",
+      "note300": "Die Notiz darf höchstens 300 Zeichen lang sein.",
+      "firstNameMin": "Der Vorname muss mindestens 2 Zeichen lang sein.",
+      "firstNameMax": "Der Vorname darf höchstens 60 Zeichen lang sein.",
+      "lastNameMin": "Der Nachname muss mindestens 2 Zeichen lang sein.",
+      "lastNameMax": "Der Nachname darf höchstens 60 Zeichen lang sein.",
+      "idNumberMax": "Die Ausweis-/ID-Nummer darf höchstens 60 Zeichen lang sein.",
+      "emailMax": "Die E-Mail-Adresse darf höchstens 120 Zeichen lang sein.",
+      "phoneMax": "Die Telefonnummer darf höchstens 30 Zeichen lang sein.",
+      "phoneInvalid": "Bitte eine gültige Telefonnummer eingeben.",
+      "streetMax": "Die Straße darf höchstens 120 Zeichen lang sein.",
+      "houseNumberMax": "Die Hausnummer darf höchstens 20 Zeichen lang sein.",
+      "countryMax": "Das Land darf höchstens 60 Zeichen lang sein.",
+      "postalCodeMax": "Die PLZ darf höchstens 10 Zeichen lang sein.",
+      "cityMax": "Der Ort darf höchstens 120 Zeichen lang sein.",
+      "stateMax": "Das Bundesland darf höchstens 120 Zeichen lang sein.",
+      "birthDateInvalid": "Bitte ein gültiges Geburtsdatum eingeben.",
+      "professionMax": "Der Beruf darf höchstens 100 Zeichen lang sein.",
+      "joinDateRequired": "Das Eintrittsdatum ist erforderlich.",
+      "joinDateInvalid": "Bitte ein gültiges Eintrittsdatum eingeben.",
+      "exitDateInvalid": "Bitte ein gültiges Austrittsdatum eingeben.",
+      "exitReasonMax": "Der Austrittsgrund darf höchstens 500 Zeichen lang sein.",
+      "notesMax": "Die Notizen dürfen höchstens 2000 Zeichen lang sein.",
+      "postalCodeDe": "Für Deutschland muss die PLZ 5-stellig sein.",
+      "exitBeforeJoin": "Das Austrittsdatum darf nicht vor dem Eintrittsdatum liegen.",
+      "exitReasonNeedsDate": "Wenn ein Austrittsgrund angegeben ist, bitte auch das Austrittsdatum eingeben.",
+      "versionMissing": "Die Datensatzversion fehlt.",
+      "noticeDateInvalid": "Bitte ein gültiges Kündigungsdatum eingeben.",
+      "memberMissing": "Die Mitgliedsangabe fehlt.",
+      "noteEmpty": "Die Notiz darf nicht leer sein.",
+      "noteMax": "Die Notiz darf höchstens 2000 Zeichen lang sein.",
+      "paymentDateRequired": "Das Zahlungsdatum ist erforderlich.",
+      "paymentDateInvalid": "Bitte ein gültiges Zahlungsdatum eingeben.",
+      "referenceMax": "Die Referenz darf höchstens 100 Zeichen lang sein.",
+      "voidReasonMin": "Der Stornogrund muss mindestens 5 Zeichen lang sein.",
+      "voidReasonMax": "Der Stornogrund darf höchstens 300 Zeichen lang sein."
+    },
+    "module": {
+      "label": "Mitglieder",
+      "description": "Mitgliederverwaltung, Mitgliedsarten, Beitragssoll und Zahlungen."
+    },
+    "export": {
+      "dues": {
+        "membershipNumber": "Mitgliedsnr.",
+        "fullName": "Name",
+        "type": "Mitgliedsart",
+        "year": "Jahr",
+        "amountDue": "Betrag",
+        "paid": "Bezahlt",
+        "remaining": "Offen",
+        "status": "Status",
+        "lastPaymentAt": "Letzte Zahlung",
+        "dueDate": "Fällig am",
+        "_sheet": "Beiträge",
+        "_file": "beitraege"
+      },
+      "register": {
+        "membershipNumber": "Mitgliedsnr.",
+        "type": "Mitgliedsart",
+        "status": "Status",
+        "firstName": "Vorname",
+        "lastName": "Nachname",
+        "email": "E-Mail",
+        "phone": "Telefon",
+        "street": "Straße",
+        "houseNumber": "Hausnr.",
+        "postalCode": "PLZ",
+        "city": "Ort",
+        "state": "Bundesland",
+        "country": "Land",
+        "joinDate": "Eintritt",
+        "exitDate": "Austritt",
+        "_sheet": "Mitgliederverzeichnis",
+        "_file": "mitgliederverzeichnis"
+      }
+    },
+    "importErrors": {
+      "unreadable": "Die Datei konnte nicht gelesen werden. Bitte eine gültige .xlsx-Datei hochladen.",
+      "noSheet": "Kein Arbeitsblatt gefunden. Bitte die Vorlage herunterladen und ausfüllen.",
+      "tooManyRows": "Die Datei enthält mehr als {max} Datenzeilen. Bitte aufteilen und einzeln hochladen.",
+      "unknownType": "Unbekannte Mitgliedsart: „{value}“.",
+      "unknownStatus": "Unbekannter Status: „{value}“. (Aktif / Pasif / Ayrıldı)",
+      "birthDateInvalid": "Ungültiges Geburtsdatum (TT.MM.JJJJ verwenden).",
+      "joinDateRequired": "Eintrittsdatum ist erforderlich (TT.MM.JJJJ)."
     }
   },
   "organization": {
@@ -1951,7 +3118,22 @@
     "charitablePurposes": "Begünstigte Zwecke",
     "charitablePurposesDescription": "Aus dem Bescheid wörtlich übernehmen — der Satz lautet: 'Wir sind wegen Förderung …' und '… nur zur Förderung … verwendet wird'. Beispiel: 'der Bildung und Erziehung'.",
     "membershipFeesDeductible": "Mitgliedsbeiträge sind steuerlich abziehbar",
-    "membershipFeesDeductibleDescription": "Nur ankreuzen, wenn die Vereinszwecke NICHT unter § 10b Abs. 1 Satz 8 EStG fallen (z. B. Sport, Freizeitkultur, Heimatpflege, Brauchtum). Im Zweifel Steuerberatung fragen."
+    "membershipFeesDeductibleDescription": "Nur ankreuzen, wenn die Vereinszwecke NICHT unter § 10b Abs. 1 Satz 8 EStG fallen (z. B. Sport, Freizeitkultur, Heimatpflege, Brauchtum). Im Zweifel Steuerberatung fragen.",
+    "module": {
+      "label": "Vereinsdaten",
+      "description": "Stammdaten des Vereins, offizielle Kontaktdaten und Briefkopf-Logo."
+    },
+    "validation": {
+      "dateFormat": "Das Datum muss im Format JJJJ-MM-TT sein.",
+      "nameMin": "Der Vereinsname muss mindestens 3 Zeichen lang sein.",
+      "purposesMax": "Der Zwecktext darf höchstens 500 Zeichen lang sein.",
+      "postalCodeDe": "Die PLZ muss in Deutschland 5-stellig sein.",
+      "websiteInvalid": "Die Website muss eine gültige Adresse sein (https://...)."
+    },
+    "errors": {
+      "logoMissing": "Es wurde kein Logo hochgeladen.",
+      "logoReadFailed": "Das Logo konnte nicht gelesen werden."
+    }
   },
   "system": {
     "title": "Modulverwaltung",
@@ -1997,6 +3179,23 @@
       "message": "Der Modulordner \"{label}\" und alle zugehörigen Dateien werden unwiderruflich gelöscht. Bestätigen?",
       "confirm": "Löschen",
       "successToast": "Modul {label} wurde erfolgreich gelöscht."
+    },
+    "meta": {
+      "settings": "Einstellungen",
+      "modules": "Modulverwaltung"
+    },
+    "module": {
+      "label": "Modulverwaltung",
+      "description": "Verwaltung der installierten Kern-, offiziellen und Erweiterungsmodule."
+    },
+    "authorCommunity": "Community / Entwickler",
+    "toggleAria": "Status von {label} ändern",
+    "deleteAria": "Modul {label} löschen",
+    "errors": {
+      "notFound": "Modul nicht gefunden.",
+      "coreCannotDisable": "Kernmodule können nicht deaktiviert werden.",
+      "onlyExtensionsDeletable": "Nur externe Erweiterungen (EXTENSION) können gelöscht werden. Kern- und offizielle Module nicht.",
+      "deleteFailed": "Beim Löschen des Moduls ist ein Fehler aufgetreten."
     }
   },
   "users": {
@@ -2007,6 +3206,196 @@
     "createDescription": "Fügen Sie dem System einen neuen Benutzer hinzu. Der Benutzer muss beim ersten Anmelden sein Passwort ändern.",
     "editTitle": "Benutzer bearbeiten",
     "notFoundTitle": "Benutzer nicht gefunden",
-    "notFoundDescription": "Der Datensatz könnte gelöscht worden sein."
+    "notFoundDescription": "Der Datensatz könnte gelöscht worden sein.",
+    "meta": {
+      "list": "Benutzer",
+      "create": "Neuer Benutzer",
+      "edit": "Benutzer bearbeiten"
+    },
+    "tabUsers": "Benutzerliste",
+    "tabRoles": "Rollen und Berechtigungsmatrix",
+    "table": {
+      "aria": "Benutzerliste",
+      "name": "Name",
+      "email": "E-Mail",
+      "role": "Rolle",
+      "status": "Status",
+      "lastLogin": "Letzte Anmeldung",
+      "createdAt": "Erstellt am",
+      "search": "Name oder E-Mail suchen...",
+      "empty": "Keine Benutzer gefunden.",
+      "edit": "Bearbeiten",
+      "resetPassword": "Passwort zurücksetzen",
+      "deactivate": "Deaktivieren",
+      "activate": "Aktivieren",
+      "activated": "Benutzer wurde aktiviert.",
+      "deactivated": "Benutzer wurde deaktiviert.",
+      "activateTitle": "Benutzer aktivieren",
+      "deactivateTitle": "Benutzer deaktivieren",
+      "activateConfirm": "Der Benutzer „{name}“ wird aktiviert. Fortfahren?",
+      "deactivateConfirm": "Der Benutzer „{name}“ wird deaktiviert und kann auch mit einer bestehenden Sitzung nichts mehr ausführen. Fortfahren?"
+    },
+    "form": {
+      "name": "Vor- und Nachname",
+      "email": "E-Mail",
+      "role": "Rolle",
+      "tempPassword": "Vorläufiges Passwort",
+      "tempPasswordHint": "Mindestens 10 Zeichen; mindestens 1 Großbuchstabe, 1 Kleinbuchstabe und 1 Ziffer. Der Benutzer legt bei der ersten Anmeldung ein neues Passwort fest.",
+      "isActive": "Konto aktiv",
+      "isActiveHint": "Ein deaktivierter Benutzer kann auch mit gültiger Sitzung nichts ausführen.",
+      "created": "Benutzer wurde angelegt.",
+      "updated": "Benutzer wurde aktualisiert."
+    },
+    "resetPassword": {
+      "title": "Passwort zurücksetzen",
+      "newPassword": "Neues vorläufiges Passwort",
+      "submit": "Zurücksetzen",
+      "done": "Passwort wurde zurückgesetzt. Der Benutzer legt bei der nächsten Anmeldung ein neues Passwort fest."
+    },
+    "errors": {
+      "emailTaken": "Diese E-Mail-Adresse wird bereits verwendet.",
+      "notFound": "Benutzer nicht gefunden.",
+      "selfDeactivate": "Sie können sich nicht selbst deaktivieren.",
+      "lastAdmin": "Im System muss mindestens ein aktiver Administrator verbleiben.",
+      "selfDemote": "Sie können Ihre eigene Rolle nicht herabstufen."
+    },
+    "validation": {
+      "nameRequired": "Name ist erforderlich.",
+      "nameMax": "Der Name darf höchstens 100 Zeichen lang sein."
+    },
+    "matrix": {
+      "title": "Rollen- und Berechtigungsverwaltung",
+      "subtitle": "Lese-, Schreib-, Freigabe- und Löschrechte der Systemrollen je Modul.",
+      "viewRole": "Rollenansicht",
+      "viewMatrix": "Vergleichsmatrix",
+      "memberCount": "{count} Mitglieder",
+      "search": "Modul oder Berechtigung suchen (z. B. Buchhaltung, Schriftgut, Freigabe)...",
+      "previewUser": "Benutzerrechte prüfen:",
+      "selectUser": "Benutzer wählen...",
+      "clearUser": "Benutzerauswahl aufheben",
+      "simulated": "Simuliert: {name}",
+      "totalActive": "Aktive Berechtigungen gesamt",
+      "actionCount": "{count} Aktionsrechte",
+      "resourceCount": "{count} Ressourcen",
+      "colResource": "Modul / Ressource",
+      "colAction": "Aktion",
+      "previewTitle": "Berechtigungsübersicht: {role}",
+      "previewCount": "{count} Rechte aktiv",
+      "accessFull": "Voll",
+      "accessRead": "Lesen",
+      "accessNone": "Keine",
+      "actions": {
+        "view": "Anzeigen",
+        "create": "Anlegen",
+        "update": "Bearbeiten",
+        "delete": "Löschen",
+        "approve": "Freigeben"
+      },
+      "roles": {
+        "ADMIN": {
+          "label": "Administrator (Admin)",
+          "shortDesc": "Vollzugriff einschließlich System-, Modul- und Benutzerverwaltung.",
+          "legalContext": "Darf in allen Modulen anlegen, bearbeiten, löschen und prüfen."
+        },
+        "BOARD": {
+          "label": "Vorstand",
+          "shortDesc": "Kernrechte für Sitzungen, Beschlüsse, Schriftgut und Vereinsführung.",
+          "legalContext": "Vertretungs- und Leitungsorgan nach § 26 BGB; sieht Finanzdetails in zusammengefasster Form."
+        },
+        "SECRETARY": {
+          "label": "Schriftführer",
+          "shortDesc": "Schriftgutverwaltung, Sitzungsprotokolle und Mitgliederverwaltung.",
+          "legalContext": "Verantwortlich für Schriftverkehr, Register und Beschlussbücher."
+        },
+        "TREASURER": {
+          "label": "Kassenwart",
+          "shortDesc": "Buchhaltung, Belege, Budget, Zuwendungsbestätigungen und Beiträge.",
+          "legalContext": "Verantwortlich für die Buchführung und die Einhaltung der Vorgaben des Finanzamts."
+        },
+        "AUDITOR": {
+          "label": "Kassenprüfer",
+          "shortDesc": "Lesender Prüfzugriff auf Finanz- und Verwaltungsdaten.",
+          "legalContext": "Führt die jährliche Kassenprüfung durch; kein Zugriff auf personenbezogene Spenderdaten."
+        },
+        "VIEWER": {
+          "label": "Leser",
+          "shortDesc": "Darf grundlegende Schriftgut- und Sitzungsdaten einsehen.",
+          "legalContext": "Keine Änderungsrechte und kein Einblick in Finanzdaten."
+        }
+      },
+      "modules": {
+        "documents": "Schriftgut",
+        "meetings": "Sitzungen",
+        "members": "Mitglieder",
+        "accounting": "Buchhaltung",
+        "donations": "Spenden",
+        "organization": "Vereinsprofil",
+        "users": "Benutzer",
+        "audit": "Prüfprotokoll",
+        "system": "System & Module"
+      },
+      "resources": {
+        "documents": {
+          "label": "Ein- / ausgehendes Schriftgut",
+          "description": "Erfassung, Nummerierung und Archivierung offizieller Schriftstücke."
+        },
+        "documentCategories": {
+          "label": "Schriftgutkategorien",
+          "description": "Verwaltung der Kategorien und des Aktenplans."
+        },
+        "meetings": {
+          "label": "Sitzungen und Beschlüsse",
+          "description": "Sitzungskalender, Tagesordnung, Protokolle, Beschlüsse und Freigabe."
+        },
+        "members": {
+          "label": "Mitgliederdaten",
+          "description": "Profile, Kontaktdaten und Mitgliedschaftsstatus der Vereinsmitglieder."
+        },
+        "memberPayments": {
+          "label": "Beiträge und Zahlungen",
+          "description": "Beitragssoll, Einzug und Zahlungsverfolgung."
+        },
+        "memberTypes": {
+          "label": "Mitgliedsarten",
+          "description": "Mitgliedsarten (ordentlich, Ehren-, Förder- usw.) und Beitragssätze."
+        },
+        "accounting": {
+          "label": "Journal & Bücher",
+          "description": "Buchungen, Einnahmen/Ausgaben, Kontenplan und Periodenberichte."
+        },
+        "accountingSetup": {
+          "label": "Kontenplan & Budget",
+          "description": "Kontenplan (SKR49/SKR42), Budgetplanung und Finanzeinstellungen."
+        },
+        "donations": {
+          "label": "Spenden und Bestätigungen",
+          "description": "Spendeneingänge und Erstellung amtlicher Zuwendungsbestätigungen."
+        },
+        "organization": {
+          "label": "Vereinsstammdaten",
+          "description": "Registernummer, Steuernummer, Bankverbindungen und Briefkopf-Logo."
+        },
+        "users": {
+          "label": "Benutzerkonten",
+          "description": "Systembenutzer, Anmeldekonten und Passwort-Zurücksetzung."
+        },
+        "audit": {
+          "label": "Sicherheits- & Änderungsprotokoll",
+          "description": "Unveränderliche Prüfspuren und Sicherheitsereignisse."
+        },
+        "system": {
+          "label": "Modulverwaltung",
+          "description": "Erweiterungen installieren, Module aktivieren und deaktivieren."
+        },
+        "settings": {
+          "label": "Systemeinstellungen",
+          "description": "Allgemeine System- und Plattformparameter."
+        }
+      }
+    },
+    "module": {
+      "label": "Benutzer",
+      "description": "Benutzerkonten, Rollen und Zugriffsrechte."
+    }
   }
 }

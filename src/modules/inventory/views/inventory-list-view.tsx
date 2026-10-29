@@ -1,10 +1,9 @@
-import Link from "next/link";
+import { FormDrawerButton } from "@/shared/components/forms/form-drawer";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Plus } from "lucide-react";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
-import { INVENTORY_BASE_PATH } from "../constants";
 import {
   formatNumber,
   hasActiveInventoryFilters,
@@ -71,14 +70,9 @@ export async function InventoryListView({ searchParams }: InventoryListViewProps
         description={t("description")}
         actions={
           abilities.canCreate ? (
-            <Link
-              href={`${INVENTORY_BASE_PATH}?action=new`}
-              scroll={false}
-              className="inline-flex h-10 items-center gap-2 rounded-medium bg-primary px-4 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-primary/40"
-            >
-              <Plus className="h-4 w-4" aria-hidden="true" />
+            <FormDrawerButton param="yeni" startIcon={<Plus className="h-4 w-4" aria-hidden="true" />}>
               {t("newItem")}
-            </Link>
+            </FormDrawerButton>
           ) : undefined
         }
       />

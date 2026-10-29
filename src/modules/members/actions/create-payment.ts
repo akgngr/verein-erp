@@ -32,33 +32,33 @@ export async function createPaymentAction(
         where: { id: input.memberId, deletedAt: null },
       });
       if (!member) {
-        throw new ActionError("Üye bulunamadı.", {
+        throw new ActionError("members.errors.memberNotFound", {
           memberId: ["Geçerli bir üye seçin."],
         });
       }
 
       const cents = toCents(input.amount);
       if (cents === null || cents <= 0) {
-        throw new ActionError("Tutar geçersiz.", {
+        throw new ActionError("members.errors.amountInvalid", {
           amount: ["0'dan büyük bir tutar girin (en fazla 2 ondalık)."],
         });
       }
       if (cents > 999_999_999) {
-        throw new ActionError("Tutar çok büyük.", {
+        throw new ActionError("members.errors.amountTooLarge", {
           amount: ["Tutar en fazla 9.999.999,99 € olabilir."],
         });
       }
 
       const paidAt = parseDateOnly(input.paidAt);
       if (!paidAt) {
-        throw new ActionError("Ödeme tarihi geçersiz.", {
-          paidAt: ["Geçerli bir ödeme tarihi girin."],
+        throw new ActionError("members.errors.paymentDateInvalid", {
+          paidAt: ["members.validation.paymentDateInvalid"],
         });
       }
       // KARAR: Gelecek tarihli ödeme kabul edilmez (ödeme gerçekleşmiş koddur).
       const today = berlinTodayStart();
       if (paidAt.getTime() > today.getTime()) {
-        throw new ActionError("Ödeme tarihi gelecekte olamaz.", {
+        throw new ActionError("members.errors.paymentDateFuture", {
           paidAt: ["Ödeme tarihi bugünden sonra olamaz."],
         });
       }

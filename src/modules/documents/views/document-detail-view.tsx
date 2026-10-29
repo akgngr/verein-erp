@@ -1,3 +1,5 @@
+import { getTranslations } from "next-intl/server";
+import { DocumentEditView } from "./document-edit-view";
 import { AlertTriangle, FileText, Link2, Paperclip } from "lucide-react";
 import { notFound } from "next/navigation";
 
@@ -8,7 +10,7 @@ import { can } from "@/shared/permissions/define";
 
 import { getDocumentDetail } from "../queries/get-document";
 import { documentsPermissions } from "../permissions";
-import { DELIVERY_METHOD_LABELS } from "../constants";
+
 import { formatDate, formatDateTime } from "@/shared/utils";
 import { DocumentDetailActions } from "../components/document-detail-actions";
 import { DirectionBadge } from "../components/direction-badge";
@@ -28,7 +30,16 @@ function InfoRow({ label, children }: { label: string; children: React.ReactNode
 }
 
 /** Evrak detayı (8.3): bilgi kartı, dosyalar, ilişkili evrak, işlem notları. */
-export async function DocumentDetailView({ id }: { id: string }) {
+export async function DocumentDetailView({
+  id,
+  searchParams,
+}: {
+  id: string;
+  /** `?duzenle` → düzenleme çekmecesi. */
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const tDelivery = await getTranslations("documents.delivery");
+  const t = await getTranslations("documents.detail");
   let user;
   try {
     user = await requirePermission(documentsPermissions, "view");
@@ -81,28 +92,28 @@ export async function DocumentDetailView({ id }: { id: string }) {
             <span className="text-tiny text-default-400">{doc.registryNumber}</span>
           </div>
           <div className="grid grid-cols-1 gap-x-6 sm:grid-cols-2">
-            <InfoRow label={doc.direction === "INCOMING" ? "Gönderen" : "Alıcı"}>
+            <InfoRow label={doc.direction === "INCOMING" ? t("sender") : t("receiver")}>
               {doc.counterparty}
             </InfoRow>
-            <InfoRow label="Karşı tarafın evrak sayısı">{doc.referenceNumber ?? "-"}</InfoRow>
-            <InfoRow label="Evrak tarihi">{formatDate(doc.documentDate)}</InfoRow>
-            <InfoRow label="Kayıt tarihi">{formatDateTime(doc.registeredAt)}</InfoRow>
-            <InfoRow label="Teslim şekli">
-              {doc.deliveryMethod ? DELIVERY_METHOD_LABELS[doc.deliveryMethod] : "-"}
+            <InfoRow label={t("referenceNumber")}>{doc.referenceNumber ?? "-"}</InfoRow>
+            <InfoRow label={t("documentDate")}>{formatDate(doc.documentDate)}</InfoRow>
+            <InfoRow label={t("registeredAt")}>{formatDateTime(doc.registeredAt)}</InfoRow>
+            <InfoRow label={t("deliveryMethod")}>
+              {doc.deliveryMethod ? tDelivery(doc.deliveryMethod) : "-"}
             </InfoRow>
-            <InfoRow label="Kategori">{doc.categoryName ?? "-"}</InfoRow>
-            <InfoRow label="Sorumlu">{doc.assigneeLabel ?? "-"}</InfoRow>
-            <InfoRow label="Son işlem tarihi">{formatDate(doc.dueDate)}</InfoRow>
-            <InfoRow label="Oluşturan">
+            <InfoRow label={t("category")}>{doc.categoryName ?? "-"}</InfoRow>
+            <InfoRow label={t("assignee")}>{doc.assigneeLabel ?? "-"}</InfoRow>
+            <InfoRow label={t("dueDate")}>{formatDate(doc.dueDate)}</InfoRow>
+            <InfoRow label={t("createdBy")}>
               {`${doc.createdByLabel} — ${formatDateTime(doc.createdAt)}`}
             </InfoRow>
-            <InfoRow label="Son güncelleyen">
+            <InfoRow label={t("updatedBy")}>
               {doc.updatedByLabel ? `${doc.updatedByLabel} — ${formatDateTime(doc.updatedAt)}` : "-"}
             </InfoRow>
           </div>
           {doc.summary ? (
             <div className="mt-3 rounded-medium bg-default-50 px-4 py-3">
-              <p className="text-tiny font-medium uppercase tracking-wide text-default-400">Özet</p>
+              <p className="text-tiny font-medium uppercase tracking-wide text-default-400">{t("summary")}</p>
               <p className="mt-1 whitespace-pre-wrap text-small text-foreground">{doc.summary}</p>
             </div>
           ) : null}
@@ -112,12 +123,12 @@ export async function DocumentDetailView({ id }: { id: string }) {
         <div className="rounded-medium border border-default-200 bg-content1 p-5 shadow-sm">
           <h2 className="mb-3 flex items-center gap-2 text-small font-semibold">
             <Link2 className="h-4 w-4 text-default-400" aria-hidden />
-            İlişkili evrak
+            {t("related")}
           </h2>
           {doc.direction === "OUTGOING" ? (
             <div>
               <p className="text-tiny font-medium uppercase tracking-wide text-default-400">
-                Yanıtlanan evrak
+                {t("repliedTo")}
               </p>
               {doc.replyTo ? (
                 <a
@@ -137,7 +148,7 @@ export async function DocumentDetailView({ id }: { id: string }) {
           {doc.direction === "INCOMING" ? (
             <div>
               <p className="text-tiny font-medium uppercase tracking-wide text-default-400">
-                Bu evrağa verilen yanıtlar
+                {t("repliesToThis")}
               </p>
               {doc.replies.length > 0 ? (
                 <ul className="mt-1 flex flex-col gap-2">
@@ -156,7 +167,7 @@ export async function DocumentDetailView({ id }: { id: string }) {
                   ))}
                 </ul>
               ) : (
-                <p className="mt-1 text-small text-default-500">Henüz yanıt bağlanmamış.</p>
+                <p className="mt-1 text-small text-default-500">{t("noReplies")}</p>
               )}
             </div>
           ) : null}
@@ -167,7 +178,7 @@ export async function DocumentDetailView({ id }: { id: string }) {
       <div className="mt-4 rounded-medium border border-default-200 bg-content1 p-5 shadow-sm">
         <h2 className="mb-3 flex items-center gap-2 text-small font-semibold">
           <Paperclip className="h-4 w-4 text-default-400" aria-hidden />
-          Dosyalar
+          {t("filesTitle")}
         </h2>
         <FileList files={doc.files} canUpdate={canUpdate} />
         {canUpdate ? (
@@ -186,10 +197,11 @@ export async function DocumentDetailView({ id }: { id: string }) {
       <div className="mt-4 rounded-medium border border-default-200 bg-content1 p-5 shadow-sm">
         <h2 className="mb-3 flex items-center gap-2 text-small font-semibold">
           <FileText className="h-4 w-4 text-default-400" aria-hidden />
-          İşlem notları
+          {t("notesTitle")}
         </h2>
         <NotesTimeline documentId={doc.id} notes={doc.notes} canUpdate={canUpdate} />
       </div>
+      {canUpdate && (await searchParams)?.duzenle !== undefined ? <DocumentEditView id={id} /> : null}
     </div>
   );
 }

@@ -195,6 +195,6 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 /** Tema bağlamına erişim; ThemeProvider dışında kullanılırsa hata fırlatır. */
 export function useTheme(): ThemeContextValue {
   const ctx = useContext(ThemeContext);
-  if (!ctx) throw new Error("useTheme, ThemeProvider içinde kullanılmalıdır.");
+  if (!ctx) throw new Error("useTheme, ThemeProvider içinde kullanılmalıdır."); // i18n-ignore (geliştirici hatası; kullanıcıya gösterilmez)
   return ctx;
 }

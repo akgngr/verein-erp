@@ -1,5 +1,6 @@
 "use client";
 
+import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
 import { Link } from "@heroui/react";
 import { Ban, Eye, Pencil } from "lucide-react";
 import { useState } from "react";
@@ -35,7 +36,9 @@ export function DonationTable({
   canUpdate: boolean;
   canDelete: boolean;
 }) {
+  const tCommon = useTranslations("common");
   const t = useTranslations("donations.list");
+  const drawerHref = useFormDrawerHref();
   const tForm = useTranslations("donations.form");
   const tDetail = useTranslations("donations.detail");
   const [cancelling, setCancelling] = useState<DonationListItem | null>(null);
@@ -115,7 +118,7 @@ export function DonationTable({
   const rowActions = (row: DonationListItem): DataTableRowAction[] => [
     { key: "view", label: t("actions.view"), icon: <Eye className="h-4 w-4" />, href: `/bagislar/${row.id}` },
     ...(canUpdate && !row.reversedAt
-      ? [{ key: "edit", label: t("actions.edit"), icon: <Pencil className="h-4 w-4" />, href: `/bagislar/${row.id}/duzenle` }]
+      ? [{ key: "edit", label: t("actions.edit"), icon: <Pencil className="h-4 w-4" />, href: drawerHref("duzenle", row.id) }]
       : []),
     ...(canDelete && !row.reversedAt
       ? [
@@ -152,8 +155,8 @@ export function DonationTable({
             key: "waived",
             label: t("filters.waived"),
             options: [
-              { value: "1", label: "Evet" },
-              { value: "0", label: "Hayır" },
+              { value: "1", label: tCommon("yes") },
+              { value: "0", label: tCommon("no") },
             ],
           },
           {

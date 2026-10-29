@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Button, addToast } from "@heroui/react";
 import { Pencil, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -37,6 +39,8 @@ export function CategoryTable({
   q?: string;
   canUpdate: boolean;
 }) {
+  const tCommon = useTranslations("common");
+  const t = useTranslations("documents.categories");
   const router = useRouter();
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<CategoryListItem | null>(null);
@@ -52,7 +56,7 @@ export function CategoryTable({
       return;
     }
     addToast({
-      title: category.isActive ? "Kategori pasife alındı." : "Kategori aktifleştirildi.",
+      title: category.isActive ? t("deactivatedToast") : t("activatedToast"),
       color: "success",
     });
     router.refresh();
@@ -62,26 +66,26 @@ export function CategoryTable({
     { key: "name", label: "Ad", sortable: true, render: (row) => row.name },
     {
       key: "isActive",
-      label: "Durum",
+      label: t("status"),
       sortable: true,
       width: 110,
       render: (row) =>
         row.isActive ? (
-          <span className="text-small font-medium text-success">Aktif</span>
+          <span className="text-small font-medium text-success">{t("active")}</span>
         ) : (
-          <span className="text-small font-medium text-default-400">Pasif</span>
+          <span className="text-small font-medium text-default-400">{t("passive")}</span>
         ),
     },
     {
       key: "documentCount",
-      label: "Evrak sayısı",
+      label: t("documentCount"),
       align: "center",
       width: 120,
       render: (row) => row.documentCount,
     },
     {
       key: "createdAt",
-      label: "Oluşturulma",
+      label: t("createdAt"),
       sortable: true,
       width: 130,
       render: (row) => formatDate(row.createdAt),
@@ -93,7 +97,7 @@ export function CategoryTable({
       ? [
           {
             key: "edit",
-            label: "Düzenle",
+            label: tCommon("edit"),
             icon: <Pencil className="h-4 w-4" />,
             onPress: () => {
               setEditing(row);
@@ -102,7 +106,7 @@ export function CategoryTable({
           },
           {
             key: "toggle",
-            label: row.isActive ? "Pasife al" : "Aktifleştir",
+            label: row.isActive ? t("deactivate") : t("activate"),
             color: row.isActive ? "danger" : "default",
             onPress: () => setDeactivating(row),
           },
@@ -122,7 +126,7 @@ export function CategoryTable({
               setFormOpen(true);
             }}
           >
-            Yeni kategori
+            {t("new")}
           </Button>
         ) : null}
       </div>
@@ -137,9 +141,9 @@ export function CategoryTable({
         sort={sort}
         dir={dir}
         q={q}
-        searchPlaceholder="Kategori ara…"
+        searchPlaceholder={t("search")}
         rowActions={rowActions}
-        emptyMessage="Kategori bulunamadı."
+        emptyMessage={t("empty")}
       />
 
       <CategoryFormModal
@@ -151,13 +155,13 @@ export function CategoryTable({
       <ConfirmDialog
         isOpen={deactivating !== null}
         onOpenChange={(open) => !open && setDeactivating(null)}
-        title={deactivating?.isActive ? "Kategoriyi pasife al" : "Kategoriyi aktifleştir"}
+        title={deactivating?.isActive ? t("deactivateTitle") : t("activateTitle")}
         message={
           deactivating?.isActive
-            ? `"${deactivating?.name ?? ""}" pasife alınacak; yeni evrak formlarında seçilemeyecek ama mevcut evraklarda görünmeye devam edecek. Onaylıyor musunuz?`
-            : `"${deactivating?.name ?? ""}" yeniden aktifleştirilecek. Onaylıyor musunuz?`
+            ? t("deactivateNamedMessage", { name: deactivating?.name ?? "" })
+            : t("activateMessage", { name: deactivating?.name ?? "" })
         }
-        confirmLabel={deactivating?.isActive ? "Pasife al" : "Aktifleştir"}
+        confirmLabel={deactivating?.isActive ? t("deactivate") : t("activate")}
         confirmColor={deactivating?.isActive ? "danger" : "primary"}
         onConfirm={() => deactivating ? toggleActive(deactivating) : Promise.resolve()}
       />

@@ -24,7 +24,7 @@ import { useTranslations } from "next-intl";
 import type { MemberStatus } from "@prisma/client";
 
 import { changeMemberStatusAction } from "../actions/change-status";
-import { MEMBER_STATUS_LABELS } from "../constants";
+import { MEMBER_STATUS_VALUES } from "../constants";
 import { berlinToday } from "../utils";
 
 /**
@@ -131,7 +131,7 @@ export function StatusChangeMenu({
           </Button>
         </DropdownTrigger>
         <DropdownMenu aria-label={t("actions.changeStatus")} disabledKeys={[current]}>
-          {(Object.keys(MEMBER_STATUS_LABELS) as MemberStatus[]).map((status) => (
+          {MEMBER_STATUS_VALUES.map((status) => (
             <DropdownItem
               key={status}
               textValue={t(`status.${status}`)}

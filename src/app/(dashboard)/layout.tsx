@@ -1,3 +1,4 @@
+import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
 import type { SessionUser } from "@/modules/auth";
@@ -5,7 +6,13 @@ import { requireUser, signOutAction } from "@/modules/auth/server";
 import { getAllActiveModuleKeys } from "@/shared/modules/module-store";
 import { allModules } from "@/registry";
 
-import { DesktopSidebar, MobileHeader, MobileSidebar, SidebarProvider } from "./_components/sidebar";
+import {
+  DesktopSidebar,
+  MobileHeader,
+  MobileSidebar,
+  SidebarProvider,
+} from "./_components/sidebar";
+import { SIDEBAR_COLLAPSED_COOKIE } from "./_components/sidebar-state";
 
 // KARAR: requireUser() oturum çerezlerini okur; bu segment statik üretilemez.
 // force-dynamic, derleme sırasında veritabanına erişim denemesini de engeller.
@@ -26,9 +33,10 @@ export default async function DashboardLayout({
   }
 
   const activeModuleKeys = getAllActiveModuleKeys(allModules.map((m) => m.key));
+  const collapsed = (await cookies()).get(SIDEBAR_COLLAPSED_COOKIE)?.value === "1";
 
   return (
-    <SidebarProvider>
+    <SidebarProvider initialCollapsed={collapsed}>
       <div className="flex min-h-dvh">
         <DesktopSidebar
           role={user.role}

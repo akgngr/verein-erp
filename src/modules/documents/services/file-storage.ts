@@ -26,7 +26,7 @@ export function resolveStoragePath(storagePath: string): string {
   const root = getUploadRoot();
   const resolved = path.resolve(root, storagePath);
   if (resolved !== root && !resolved.startsWith(root + path.sep)) {
-    throw new Error("Geçersiz depolama yolu.");
+    throw new Error("Geçersiz depolama yolu."); // i18n-ignore (geliştirici hatası; kullanıcıya gösterilmez)
   }
   return resolved;
 }

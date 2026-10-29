@@ -21,8 +21,8 @@ export async function createUserAction(input: unknown): Promise<ActionResult<{ i
       // P2002 yerine anlamlı özel mesaj (10.2).
       const existing = await db.user.findUnique({ where: { email } });
       if (existing) {
-        throw new ActionError("Bu e-posta adresi zaten kullanımda.", {
-          email: ["Bu e-posta adresi zaten kullanımda."],
+        throw new ActionError("users.errors.emailTaken", {
+          email: ["users.errors.emailTaken"],
         });
       }
 

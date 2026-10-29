@@ -23,8 +23,8 @@ const DATE_ONLY = /^\d{4}-\d{2}-\d{2}$/;
 const documentDateSchema = z
   .string()
   .trim()
-  .min(1, "Evrak tarihi zorunludur.")
-  .regex(DATE_ONLY, "Geçerli bir evrak tarihi girin.");
+  .min(1, "documents.validation.dateRequired")
+  .regex(DATE_ONLY, "documents.validation.dateInvalid");
 
 const statusSchema = z.enum(["OPEN", "IN_PROGRESS", "COMPLETED", "ARCHIVED"]);
 
@@ -33,23 +33,23 @@ const baseFields = {
   counterparty: z
     .string()
     .trim()
-    .min(2, "Gönderen/Alıcı en az 2 karakter olmalıdır.")
-    .max(200, "Gönderen/Alıcı en fazla 200 karakter olabilir."),
+    .min(2, "documents.validation.counterpartyMin")
+    .max(200, "documents.validation.counterpartyMax"),
   referenceNumber: emptyToNull(
-    z.string().trim().max(100, "Evrak sayısı en fazla 100 karakter olabilir.").nullable(),
+    z.string().trim().max(100, "documents.validation.referenceMax").nullable(),
   ),
   subject: z
     .string()
     .trim()
-    .min(3, "Konu en az 3 karakter olmalıdır.")
-    .max(300, "Konu en fazla 300 karakter olabilir."),
+    .min(3, "documents.validation.subjectMin")
+    .max(300, "documents.validation.subjectMax"),
   summary: emptyToNull(
-    z.string().trim().max(2000, "Özet en fazla 2000 karakter olabilir.").nullable(),
+    z.string().trim().max(2000, "documents.validation.summaryMax").nullable(),
   ),
   deliveryMethod: emptyToNull(z.enum(["POST", "EMAIL", "HAND", "COURIER", "REGISTERED_MAIL", "FAX", "OTHER"]).nullable()),
   status: statusSchema.optional(),
   dueDate: emptyToNull(
-    z.string().trim().regex(DATE_ONLY, "Geçerli bir son işlem tarihi girin.").nullable(),
+    z.string().trim().regex(DATE_ONLY, "documents.validation.dueDateInvalid").nullable(),
   ),
   categoryId: emptyToNull(z.string().trim().min(1).nullable()),
   assigneeId: emptyToNull(z.string().trim().min(1).nullable()),
@@ -67,7 +67,7 @@ function refineDueDate<Data extends { dueDate: string | null; documentDate: stri
     ctx.addIssue({
       code: "custom",
       path: ["dueDate"],
-      message: "Son işlem tarihi evrak tarihinden önce olamaz.",
+      message: "documents.validation.dueBeforeDocument",
     });
   }
 }
@@ -83,7 +83,7 @@ export const documentUpdateSchema = z
   .object({
     ...baseFields,
     /** Eşzamanlılık koruması (5. bölüm md. 6): formun taşıdığı kaydın updatedAt'i. */
-    updatedAt: z.string().min(1, "Kayıt sürümü eksik."),
+    updatedAt: z.string().min(1, "documents.validation.versionMissing"),
   })
   .superRefine(refineDueDate);
 

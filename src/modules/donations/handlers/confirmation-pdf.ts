@@ -15,6 +15,7 @@ import { buildUserLabel } from "@/shared/utils";
 import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 
 import { donationsPermissions } from "../permissions";
+import { translateMessage } from "@/shared/i18n/translate-message";
 
 /**
  * Depolanmış bildirim PDF'inin İNDİRİLMESİ (§ 13): STORED BYTES döner — yeniden
@@ -30,13 +31,13 @@ export async function downloadConfirmationPdfHandler(
     user = await requireUser();
   } catch (error) {
     if (error instanceof UnauthorizedError) {
-      return NextResponse.json({ ok: false, error: "Oturum bulunamadı." }, { status: 401 });
+      return NextResponse.json({ ok: false, error: await translateMessage("common.errors.sessionExpired") }, { status: 401 });
     }
     throw error;
   }
 
   if (!can(user.role, donationsPermissions, "view")) {
-    return NextResponse.json({ ok: false, error: "Bu işlem için yetkiniz yok." }, { status: 403 });
+    return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
   }
 
   const db = getDb();
@@ -51,7 +52,7 @@ export async function downloadConfirmationPdfHandler(
     },
   });
   if (!confirmation?.pdfStoragePath || !confirmation.pdfSha256) {
-    return NextResponse.json({ ok: false, error: "Depolanmış PDF bulunamadı." }, { status: 404 });
+    return NextResponse.json({ ok: false, error: await translateMessage("donations.errors.storedPdfMissing") }, { status: 404 });
   }
 
   // Bütünlük denetimi (§ 13): diskteki dosyanın SHA-256'sı kayıttakiyle aynı mı?
@@ -72,7 +73,7 @@ export async function downloadConfirmationPdfHandler(
       {
         ok: false,
         error:
-          "PDF bütünlük hatası: depolanan dosya kayıttaki SHA-256 ile uyuşmuyor. Sistem yöneticisine haber verin (kayıt PDF_INTEGRITY_ERROR).",
+          await translateMessage("donations.errors.pdfIntegrity"),
       },
       { status: 500 },
     );

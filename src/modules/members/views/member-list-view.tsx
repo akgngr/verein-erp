@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
-import { LinkButton } from "@/shared/components/ui/link-button";
+import { FormDrawerButton } from "@/shared/components/forms/form-drawer";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { parseListParams, type RawSearchParams } from "@/shared/list-params";
 import { can } from "@/shared/permissions/define";
@@ -16,11 +16,13 @@ import {
 import { getMemberStats } from "../queries/get-member-stats";
 import { membersPermissions } from "../permissions";
 import {
-  MEMBER_STATUS_FILTER_OPTIONS,
-  MEMBERSHIP_TYPE_FILTER_OPTIONS,
+  MEMBER_STATUS_VALUES,
+  MEMBERSHIP_TYPE_VALUES,
 } from "../constants";
 import { berlinMonthRange } from "../utils";
 import { MemberDateFilter } from "../components/list-filters";
+import { MemberCreateView } from "./member-create-view";
+import { MemberEditView } from "./member-edit-view";
 import { MemberTable } from "../components/member-table";
 import { StatsCards } from "../components/stats-cards";
 
@@ -64,9 +66,9 @@ export async function MemberListView({
         description={t("pageDescription")}
         actions={
           canCreate ? (
-            <LinkButton href="/uyeler/yeni" startIcon={<UserPlus className="h-4 w-4" />}>
+            <FormDrawerButton param="yeni" startIcon={<UserPlus className="h-4 w-4" />}>
               {t("newMember")}
-            </LinkButton>
+            </FormDrawerButton>
           ) : null
         }
       />
@@ -82,8 +84,8 @@ export async function MemberListView({
         dir={params.dir}
         q={params.q}
         filters={[
-          { key: "status", label: t("list.status"), options: MEMBER_STATUS_FILTER_OPTIONS.map((o) => ({ value: o.value, label: t(`status.${o.value}`) })) },
-          { key: "type", label: t("list.type"), options: MEMBERSHIP_TYPE_FILTER_OPTIONS.map((o) => ({ value: o.value, label: t(`type.${o.value}`) })) },
+          { key: "status", label: t("list.status"), options: MEMBER_STATUS_VALUES.map((value) => ({ value, label: t(`status.${value}`) })) },
+          { key: "type", label: t("list.type"), options: MEMBERSHIP_TYPE_VALUES.map((value) => ({ value, label: t(`type.${value}`) })) },
         ]}
         dateFilter={<MemberDateFilter />}
         searchPlaceholder={t("list.searchPlaceholder")}
@@ -92,6 +94,8 @@ export async function MemberListView({
         canUpdate={canUpdate}
         canDelete={canDelete}
       />
+      {canCreate && raw.yeni !== undefined ? <MemberCreateView /> : null}
+      {canUpdate && typeof raw.duzenle === "string" && raw.duzenle ? <MemberEditView id={raw.duzenle} /> : null}
     </div>
   );
 }

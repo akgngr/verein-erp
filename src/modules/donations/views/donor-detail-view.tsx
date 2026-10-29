@@ -1,9 +1,12 @@
+import { FilePlus2, Pencil } from "lucide-react";
+import { DonorEditView } from "./donor-edit-view";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
+import { LinkButton } from "@/shared/components/ui/link-button";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { formatDate } from "@/shared/utils";
 import { can } from "@/shared/permissions/define";
@@ -11,7 +14,7 @@ import { can } from "@/shared/permissions/define";
 import { getDonor } from "../queries/get-donor";
 import { listDonations } from "../queries/list-donations";
 import { donationsPermissions } from "../permissions";
-import { DONATION_METHOD_LABELS } from "../constants";
+
 import { AnonymizeDonorDialog } from "../components/anonymize-donor-dialog";
 
 function InfoRow({ label, children }: { label: string; children: React.ReactNode }) {
@@ -24,7 +27,16 @@ function InfoRow({ label, children }: { label: string; children: React.ReactNode
 }
 
 /** Bağışçı detayı (§ 15 md. 4): bağışlar + bildirimler + anonimleştirme. */
-export async function DonorDetailView({ id }: { id: string }) {
+export async function DonorDetailView({
+  id,
+  searchParams,
+}: {
+  id: string;
+  /** `?duzenle` → düzenleme çekmecesi. */
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
+  const tMethod = await getTranslations("donations.form.method");
+  const tD = await getTranslations("donations.common");
   let user;
   try {
     user = await requirePermission(donationsPermissions, "view");
@@ -52,12 +64,38 @@ export async function DonorDetailView({ id }: { id: string }) {
   const format = (cents: number) =>
     (cents / 100).toLocaleString("tr-TR", { style: "currency", currency: "EUR" });
   const canDelete = can(user.role, donationsPermissions, "delete");
+  const canUpdate = can(user.role, donationsPermissions, "update") && !donor.isAnonymized;
+  const canIssue = can(user.role, donationsPermissions, "approve") && !donor.isAnonymized;
+  const tConfirmations = await getTranslations("donations.confirmations");
 
   return (
     <div>
       <PageHeader
         title={`SP-${String(donor.donorNumber).padStart(4, "0")}`}
         description={`${donor.displayName} — ${format(donor.totalCents)}`}
+        actions={
+          <div className="flex flex-wrap gap-2">
+            {canUpdate ? (
+              <LinkButton
+                href={`/bagislar/bagiscilar/${donor.id}?duzenle`}
+                variant="bordered"
+                color="default"
+                startIcon={<Pencil className="h-4 w-4" />}
+              >
+                {t("form.editTitle")}
+              </LinkButton>
+            ) : null}
+            {canIssue ? (
+              <LinkButton
+                href={`/bagislar/bildirimler/olustur?tur=toplu&bagisci=${donor.id}`}
+                variant="flat"
+                startIcon={<FilePlus2 className="h-4 w-4" />}
+              >
+                {tConfirmations("create")}
+              </LinkButton>
+            ) : null}
+          </div>
+        }
       />
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
         <div className="rounded-medium border border-default-200 bg-content1 p-5 shadow-sm">
@@ -68,7 +106,7 @@ export async function DonorDetailView({ id }: { id: string }) {
               </span>
             ) : null}
             <span className="text-tiny text-default-400">
-              {donor.isActive ? "Aktif" : "Pasif"} · {formatDate(donor.createdAt)}
+              {donor.isActive ? tD("active") : tD("passive")} · {formatDate(donor.createdAt)}
             </span>
           </div>
           <div className="grid grid-cols-1 gap-x-6 sm:grid-cols-2">
@@ -101,7 +139,7 @@ export async function DonorDetailView({ id }: { id: string }) {
                       {row.donationNumber}
                     </Link>
                     <span className="text-default-500">
-                      {row.receivedAt instanceof Date ? row.receivedAt.toISOString().slice(0, 10) : ""} · {DONATION_METHOD_LABELS[row.method]}
+                      {row.receivedAt instanceof Date ? row.receivedAt.toISOString().slice(0, 10) : ""} · {tMethod(row.method)}
                     </span>
                     <span className={row.reversedAt ? "text-default-400 line-through" : "font-medium"}>
                       {format(row.amountCents)}
@@ -133,6 +171,7 @@ export async function DonorDetailView({ id }: { id: string }) {
           ← {t("title")}
         </Link>
       </div>
+      {canUpdate && (await searchParams)?.duzenle !== undefined ? <DonorEditView id={donor.id} /> : null}
     </div>
   );
 }
