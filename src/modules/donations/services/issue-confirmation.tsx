@@ -38,7 +38,12 @@ import { confirmationIssuerSnapshotToPdf } from "./issuer-snapshot";
  * snapshot + aktif ögeler + depolanmış PDF (SHA-256 kayıtlı).
  */
 
-export class IssueError extends Error {}
+/** message bir çeviri anahtarıdır; values interpolasyon değerleridir. */
+export class IssueError extends Error {
+  constructor(message: string, public values?: Record<string, string | number>) {
+    super(message);
+  }
+}
 
 export type IssueResult = { id: string; confirmationNumber: string };
 
@@ -108,7 +113,7 @@ async function issueOne(args: {
             waived: args.waived,
           });
           if (snapshot.totalCents !== args.items.reduce((sum, item) => sum + item.amountCents, 0)) {
-            throw new IssueError("Öge toplamı bildirim tutarına eşit değil.");
+            throw new IssueError("Öge toplamı bildirim tutarına eşit değil."); // i18n-ignore (geliştirici hatası; kullanıcıya gösterilmez)
           }
 
           // 3) PDF verisi + render + depolama (transaction içinde; rollback güvenli).
@@ -205,7 +210,7 @@ export async function issueSingleDonationConfirmation(
     include: { donor: true },
   });
   if (!donation) throw new IssueError("donations.errors.donationNotFound");
-  if (donation.reversedAt) throw new IssueError("İptal edilmiş bağışa bildirim düzenlenemez.");
+  if (donation.reversedAt) throw new IssueError("donations.errors.reversedDonation");
 
   const recipient = donorRecipient(donation.donor);
   return issueOne({
@@ -254,14 +259,14 @@ export async function issueCollectiveDonationConfirmation(
     where: { id: { in: args.donationIds }, donorId: args.donorId },
   });
   if (donations.length !== args.donationIds.length) {
-    throw new IssueError("Seçilen bağışlardan bazıları bulunamadı.");
+    throw new IssueError("donations.errors.someDonationsMissing");
   }
 
   // Grup kuralı (§ 1): tek bildirim = tek alıcı + tek içerik + tek takvim yılı +
   // tek vazgeçim değeri; dönem bir takvim yılı içinde.
   const year = args.periodFrom.getUTCFullYear();
   if (args.periodTo.getUTCFullYear() !== year) {
-    throw new IssueError("Sammelbestätigung dönemi tek takvim yılı içinde olmalıdır.");
+    throw new IssueError("donations.errors.periodSingleYear");
   }
   const waivedValues = new Set(donations.map((donation) => donation.waivedReimbursement));
   if (waivedValues.size > 1) {
@@ -271,9 +276,11 @@ export async function issueCollectiveDonationConfirmation(
   }
   const waived = waivedValues.has(true);
   for (const donation of donations) {
-    if (donation.reversedAt) throw new IssueError(`${donation.donationNumber} iptal edilmiş.`);
+    if (donation.reversedAt) {
+      throw new IssueError("donations.errors.donationReversed", { number: donation.donationNumber });
+    }
     if (donation.receivedAt.getUTCFullYear() !== year) {
-      throw new IssueError(`${donation.donationNumber} dönem yılı dışında.`);
+      throw new IssueError("donations.errors.donationOutsidePeriod", { number: donation.donationNumber });
     }
     if (donation.waivedReimbursement) {
       // KARAR: vazgeçimli bağışlarda yöntem zaten REIMBURSEMENT_WAIVER.
@@ -324,7 +331,7 @@ export async function issueMembershipFeeConfirmation(
   );
   const member = memberRows[0];
   if (!member || member.payments.length === 0) {
-    throw new IssueError("Bu üye ve yıl için bildirilebilir ödeme yok.");
+    throw new IssueError("donations.errors.noFeePayments");
   }
 
   // Aktif ögesi olmayan ödemeler (activeKey benzersizliği DB'de de korur).
@@ -335,7 +342,7 @@ export async function issueMembershipFeeConfirmation(
   const activeSourceIds = new Set(activeItems.map((item) => item.sourceId));
   const eligible = member.payments.filter((payment) => !activeSourceIds.has(payment.id));
   if (eligible.length === 0) {
-    throw new IssueError("Tüm ödemeler zaten aktif bir bildirimde.");
+    throw new IssueError("donations.errors.feePaymentsCovered");
   }
 
   const recipient = memberRecipient(await getMemberAddressBlock(args.memberId) ?? {
@@ -396,7 +403,7 @@ export async function issueBatchConfirmations(
         ok: false,
         error: translate(
           error instanceof Error ? error.message : "common.errors.unexpected",
-          error instanceof ActionError ? error.values : undefined,
+          error instanceof ActionError || error instanceof IssueError ? error.values : undefined,
         ),
       });
     }
@@ -430,7 +437,7 @@ async function issueCollectiveDonationForYear(
   });
   const eligible = donations.filter((donation) => !activeSourceIds.has(donation.id));
   if (eligible.length === 0) {
-    throw new IssueError("Bu bağışçının o yıl için bildirilebilir bağışı yok.");
+    throw new IssueError("donations.errors.noDonationsInYear");
   }
   const waivedValues = new Set(eligible.map((donation) => donation.waivedReimbursement));
   if (waivedValues.size > 1) {

@@ -31,7 +31,7 @@ export function hasEncryptionKey(): boolean {
 /** Encrypts a secret as `v1:<iv>:<tag>:<ciphertext>` (base64 parts). */
 export function encryptSecret(plainText: string): string {
   const secret = getSecret();
-  if (!secret) throw new Error("Encryption key is not available");
+  if (!secret) throw new Error("Encryption key is not available"); // i18n-ignore (geliştirici hatası; kullanıcıya gösterilmez)
 
   const iv = randomBytes(IV_LENGTH);
   const cipher = createCipheriv(ALGORITHM, deriveKey(secret), iv);

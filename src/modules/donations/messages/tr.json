@@ -199,7 +199,21 @@
         "templateVersion": "Şablon sürümü",
         "items": "Ögeler",
         "retention": "Nüsha saklama süresi bitişi"
-      }
+      },
+      "subtitle": "{kind} · {content} · {date}",
+      "issuedBy": "Düzenleyen",
+      "place": "Düzenleme yeri",
+      "cancelledInfo": "{date} tarihinde {label} tarafından iptal edildi: {reason}",
+      "replaces": "Yerine geçtiği bildirim",
+      "replacedBy": "Yerine düzenlenen bildirim",
+      "pdfHash": "PDF (SHA-256)",
+      "itemDate": "Tarih",
+      "itemLabel": "Tür",
+      "itemAmount": "Tutar",
+      "address": "Adres",
+      "reissued": "Yeni bildirim düzenlendi: {number}",
+      "cancelled": "Bildirim iptal edildi.",
+      "notFound": "Bildirim bulunamadı"
     },
     "issue": {
       "title": "Bildirim oluştur (Zuwendungsbestätigung)",
@@ -221,7 +235,39 @@
       "toastIssued": "Bildirim düzenlendi: {number}",
       "candidatesEmpty": "Bildirilebilir kayıt yok.",
       "batchRun": "Toplu üretimi çalıştır",
-      "batchResult": "{ok} başarılı, {failed} başarısız"
+      "batchResult": "{ok} başarılı, {failed} başarısız",
+      "subtitle": "Bağış veya aidat için resmî Zuwendungsbestätigung üretin.",
+      "typeSingleHint": "Bir bağış için tek bildirim",
+      "typeCollectiveHint": "Bir bağışçının yıl içindeki bağışları tek bildirimde (Sammelbestätigung)",
+      "typeFeeHint": "Bir üyenin yıllık aidat ödemeleri",
+      "typeBatchHint": "Yıl sonunda tüm alıcılar için toplu üretim",
+      "selectDonor": "Bağışçı seçin",
+      "selectMember": "Üye seçin",
+      "noRecipients": "Bu yıl için bildirilebilir kaydı olan alıcı yok.",
+      "groupNotWaived": "Geldspende",
+      "groupWaived": "Aufwandsspende (gider vazgeçimi)",
+      "groupRule": "Tek bildirimde yalnızca aynı türdeki (Aufwandsspende evet/hayır) bağışlar birleştirilebilir.",
+      "selectAll": "Tümünü seç",
+      "clearAll": "Seçimi temizle",
+      "words": "Yazıyla",
+      "recipient": "Alıcı",
+      "itemCount": "{count} kalem",
+      "feeAllIncluded": "Bildirime bu yılın henüz bildirilmemiş tüm aidat ödemeleri eklenir.",
+      "batchContent": "İçerik",
+      "contentDonation": "Bağışlar",
+      "contentFee": "Aidatlar",
+      "batchSelected": "{count} alıcı seçildi",
+      "resultOk": "Düzenlendi: {number}",
+      "resultFailed": "Başarısız: {error}",
+      "openConfirmation": "Bildirimi aç",
+      "downloadPdf": "PDF indir",
+      "blocked": "Eksikler giderilmeden bildirim oluşturulamaz.",
+      "fix": "Düzelt",
+      "issuedTitle": "Bildirim düzenlendi",
+      "selectedTotal": "Seçili toplam",
+      "date": "Tarih",
+      "number": "No",
+      "amount": "Tutar"
     },
     "create": "Bildirim oluştur",
     "batchHint": "Toplu yazdırma: liste satırlarını seçip PDF düğmesini kullanın (§ 13, max 100)."
@@ -244,12 +290,20 @@
     "feeDeductibleLink": "Dernek Bilgileri sayfasında değiştir",
     "validityDays": "{days} gün kaldı",
     "validityExpired": "Muafiyet belgesi süresi dolmuş",
-    "validityWarn": "90 günden az kaldı — yenileme planlayın"
+    "validityWarn": "90 günden az kaldı — yenileme planlayın",
+    "subtitle": "Bildirim üretimi için ön koşullar, şablon önizlemeleri ve metin onayı.",
+    "templateSection": "Şablon metni onayı",
+    "templateNotConfirmed": "Mevcut şablon sürümü ({version}) henüz onaylanmadı.",
+    "openPreview": "Önizlemeyi aç",
+    "feeSection": "Aidat bildirimleri",
+    "approveOnly": "Metni yalnızca onay yetkisi olan kullanıcılar onaylayabilir."
   },
   "menu": {
     "donors": "Bağışçılar",
     "confirmations": "Bildirimler",
-    "export": "Excel'e aktar"
+    "export": "Excel'e aktar",
+    "issue": "Bildirim oluştur",
+    "settings": "Ayarlar"
   },
   "nav": {
     "bagislar": "Bağışlar"
@@ -263,7 +317,10 @@
     "donorDetail": "Bağışçı detayı",
     "donorEdit": "Bağışçıyı düzenle",
     "confirmations": "Bildirimler",
-    "list": "Bağışlar"
+    "list": "Bağışlar",
+    "confirmationDetail": "Bildirim detayı",
+    "issue": "Bildirim oluştur",
+    "settings": "Bağış ayarları"
   },
   "common": {
     "yes": "Evet",
@@ -303,7 +360,17 @@
     "noConfirmationSelected": "Bildirim seçilmedi.",
     "confirmationNotFound2": "Bildirim bulunamadı.",
     "storedPdfMissing": "Depolanmış PDF bulunamadı.",
-    "pdfIntegrity": "PDF bütünlük hatası: depolanan dosya kayıttaki SHA-256 ile uyuşmuyor. Sistem yöneticisine haber verin (kayıt PDF_INTEGRITY_ERROR)."
+    "pdfIntegrity": "PDF bütünlük hatası: depolanan dosya kayıttaki SHA-256 ile uyuşmuyor. Sistem yöneticisine haber verin (kayıt PDF_INTEGRITY_ERROR).",
+    "reversedDonation": "İptal edilmiş bağışa bildirim düzenlenemez.",
+    "someDonationsMissing": "Seçilen bağışlardan bazıları bulunamadı.",
+    "periodSingleYear": "Sammelbestätigung dönemi tek takvim yılı içinde olmalıdır.",
+    "donationReversed": "{number} iptal edilmiş.",
+    "donationOutsidePeriod": "{number} dönem yılı dışında.",
+    "noFeePayments": "Bu üye ve yıl için bildirilebilir ödeme yok.",
+    "feePaymentsCovered": "Tüm ödemeler zaten aktif bir bildirimde.",
+    "noDonationsInYear": "Bu bağışçının o yıl için bildirilebilir bağışı yok.",
+    "replaceNotCancelled": "Yalnızca iptal edilmiş bir bildirimin yerine yenisi oluşturulabilir.",
+    "alreadyReplaced": "Bu bildirimin yerine zaten yenisi oluşturulmuş."
   },
   "validation": {
     "periodStartInvalid": "Geçerli bir dönem başlangıcı girin.",
@@ -388,5 +455,26 @@
         "OTHER": "Diğer (Sonstige)"
       }
     }
+  },
+  "readiness": {
+    "orgComplete": "Dernek profili eksiksiz.",
+    "orgMissing": "Dernek profili eksik: {fields}",
+    "fieldName": "ad",
+    "fieldStreet": "Straße",
+    "fieldPostalCode": "PLZ",
+    "fieldCity": "şehir",
+    "fieldTaxNumber": "Steuernummer",
+    "fieldTaxOffice": "Finanzamt",
+    "fieldDocumentType": "muafiyet belgesi türü",
+    "fieldDocumentDate": "belge tarihi",
+    "fieldPurposes": "amaç metni (begünstigte Zwecke)",
+    "fieldPeriod": "son vergi dönemi (letzter Veranlagungszeitraum)",
+    "validityMissing": "Muafiyet belgesi tarihi girilmemiş.",
+    "validityOk": "Muafiyet belgesi geçerli ({days} gün kaldı).",
+    "validityExpired": "Muafiyet belgesinin tarihi çok eski; bildirim geçerli sayılmaz.",
+    "templateOk": "Şablon metni onaylanmış.",
+    "templateMissing": "Şablon metni henüz onaylanmadı (BMF örnekleriyle karşılaştırın).",
+    "feesOk": "Aidat bildirimleri açılabilir.",
+    "feesOff": "Aidat bildirimleri kapalı (membershipFeesDeductible = false; § 10b Abs. 1 Satz 8 EStG)."
   }
 }

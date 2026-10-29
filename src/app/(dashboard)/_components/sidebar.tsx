@@ -81,7 +81,7 @@ function SidebarProvider({
 
 function useSidebar(): SidebarContextValue {
   const ctx = useContext(SidebarContext);
-  if (!ctx) throw new Error("useSidebar yalnızca SidebarProvider içinde kullanılabilir.");
+  if (!ctx) throw new Error("useSidebar yalnızca SidebarProvider içinde kullanılabilir."); // i18n-ignore (geliştirici hatası; kullanıcıya gösterilmez)
   return ctx;
 }
 

@@ -150,7 +150,8 @@
       "activate": "Aktivieren",
       "typeCASH": "Kasse",
       "typeBANK": "Girokonto",
-      "typeOTHER": "Sonstiges"
+      "typeOTHER": "Sonstiges",
+      "saved": "Konto gespeichert."
     },
     "categories": {
       "name": "Kategorie",
@@ -168,7 +169,8 @@
       "sphereIDEELL": "Ideeller Bereich",
       "sphereASSET_MANAGEMENT": "Vermögensverwaltung",
       "spherePURPOSE_OPERATION": "Zweckbetrieb",
-      "sphereECONOMIC_OPERATION": "Wirtschaftlicher Geschäftsbetrieb"
+      "sphereECONOMIC_OPERATION": "Wirtschaftlicher Geschäftsbetrieb",
+      "saved": "Kategorie gespeichert."
     },
     "projects": {
       "name": "Projekt",
@@ -178,7 +180,8 @@
       "new": "Neues Projekt",
       "edit": "Bearbeiten",
       "deactivate": "Deaktivieren",
-      "activate": "Aktivieren"
+      "activate": "Aktivieren",
+      "saved": "Projekt gespeichert."
     },
     "syncSettings": {
       "title": "Einstellungen Mitgliedsbeitrag-Sync",

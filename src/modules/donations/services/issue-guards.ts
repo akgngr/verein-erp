@@ -4,6 +4,7 @@ import { TEMPLATE_VERSION } from "../pdf/template-de";
 import { CONFIRMATION_RETENTION_YEARS } from "../constants";
 import { getOrganizationProfile } from "@/modules/organization/server";
 import { getDb } from "@/shared/db";
+import { getMessageTranslator } from "@/shared/i18n/translate-message";
 
 /**
  * Üretim guard'ları (§ 11 md. 8): her üretimden ÖNCE çağrılır; EKSİK TÜM
@@ -44,6 +45,9 @@ export async function getReadiness(issueDate: Date): Promise<{
   }>;
 }> {
   const db = getDb();
+  // Etiketler isteğin dilinde üretilir (ayarlar sayfası, sihirbaz ve ReadinessError aynı metni gösterir).
+  const t = await getMessageTranslator();
+  const r = (key: string, values?: Record<string, string | number>) => t(`donations.readiness.${key}`, values);
   const [profile, settings] = await Promise.all([
     getOrganizationProfile(),
     db.donationsSettings.findUnique({ where: { id: "singleton" } }),
@@ -59,25 +63,25 @@ export async function getReadiness(issueDate: Date): Promise<{
 
   // 1) Dernek profili alanları.
   const missingProfile: string[] = [];
-  if (!profile.name) missingProfile.push("ad");
-  if (!profile.street) missingProfile.push("Straße");
-  if (!profile.postalCode) missingProfile.push("PLZ");
-  if (!profile.city) missingProfile.push("şehir");
-  if (!profile.taxNumber) missingProfile.push("Steuernummer");
-  if (!profile.taxOffice) missingProfile.push("Finanzamt");
-  if (!profile.exemptionDocumentType) missingProfile.push("muafiyet belgesi türü");
-  if (!profile.exemptionNoticeDate) missingProfile.push("belge tarihi");
-  if (!profile.charitablePurposes) missingProfile.push("amaç metni (begünstigte Zwecke)");
+  if (!profile.name) missingProfile.push(r("fieldName"));
+  if (!profile.street) missingProfile.push(r("fieldStreet"));
+  if (!profile.postalCode) missingProfile.push(r("fieldPostalCode"));
+  if (!profile.city) missingProfile.push(r("fieldCity"));
+  if (!profile.taxNumber) missingProfile.push(r("fieldTaxNumber"));
+  if (!profile.taxOffice) missingProfile.push(r("fieldTaxOffice"));
+  if (!profile.exemptionDocumentType) missingProfile.push(r("fieldDocumentType"));
+  if (!profile.exemptionNoticeDate) missingProfile.push(r("fieldDocumentDate"));
+  if (!profile.charitablePurposes) missingProfile.push(r("fieldPurposes"));
   if (!profile.exemptionNoticePeriod && profile.exemptionDocumentType !== "SPECIAL_ASSESSMENT_60A") {
-    missingProfile.push("son vergi dönemi (letzter Veranlagungszeitraum)");
+    missingProfile.push(r("fieldPeriod"));
   }
   items.push({
     key: "organization",
     ok: missingProfile.length === 0,
     label:
       missingProfile.length === 0
-        ? "Dernek profili eksiksiz."
-        : `Dernek profili eksik: ${missingProfile.join(", ")}`,
+        ? r("orgComplete")
+        : r("orgMissing", { fields: missingProfile.join(", ") }),
     fixHref: missingProfile.length === 0 ? null : "/ayarlar/dernek",
     daysRemaining: null,
   });
@@ -97,10 +101,10 @@ export async function getReadiness(issueDate: Date): Promise<{
     key: "validity",
     ok: validityOk,
     label: !profile.exemptionNoticeDate
-      ? "Muafiyet belgesi tarihi girilmemiş."
+      ? r("validityMissing")
       : validityOk
-        ? `Muafiyet belgesi geçerli (${daysRemaining} gün kaldı).`
-        : "Muafiyet belgesinin tarihi çok eski; bildirim geçerli sayılmaz.",
+        ? r("validityOk", { days: daysRemaining ?? 0 })
+        : r("validityExpired"),
     fixHref: validityOk ? null : "/ayarlar/dernek",
     daysRemaining,
   });
@@ -110,9 +114,7 @@ export async function getReadiness(issueDate: Date): Promise<{
   items.push({
     key: "template",
     ok: templateOk,
-    label: templateOk
-      ? "Şablon metni onaylanmış."
-      : "Şablon metni henüz onaylanmadı (BMF örnekleriyle karşılaştırın).",
+    label: templateOk ? r("templateOk") : r("templateMissing"),
     fixHref: templateOk ? null : "/bagislar/ayarlar",
     daysRemaining: null,
   });
@@ -121,9 +123,7 @@ export async function getReadiness(issueDate: Date): Promise<{
   items.push({
     key: "membershipFees",
     ok: profile.membershipFeesDeductible,
-    label: profile.membershipFeesDeductible
-      ? "Aidat bildirimleri açılabilir."
-      : "Aidat bildirimleri kapalı (membershipFeesDeductible = false; § 10b Abs. 1 Satz 8 EStG).",
+    label: profile.membershipFeesDeductible ? r("feesOk") : r("feesOff"),
     fixHref: profile.membershipFeesDeductible ? null : "/ayarlar/dernek",
     daysRemaining: null,
   });

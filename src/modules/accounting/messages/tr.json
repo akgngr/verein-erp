@@ -150,7 +150,8 @@
       "activate": "Etkinleştir",
       "typeCASH": "Kasa (Kasse)",
       "typeBANK": "Banka hesabı (Girokonto)",
-      "typeOTHER": "Diğer (Sonstiges)"
+      "typeOTHER": "Diğer (Sonstiges)",
+      "saved": "Hesap kaydedildi."
     },
     "categories": {
       "name": "Kategori",
@@ -168,7 +169,8 @@
       "sphereIDEELL": "İdeel alan",
       "sphereASSET_MANAGEMENT": "Varlık yönetimi",
       "spherePURPOSE_OPERATION": "Amaca bağlı işletme",
-      "sphereECONOMIC_OPERATION": "Ticari işletme"
+      "sphereECONOMIC_OPERATION": "Ticari işletme",
+      "saved": "Kategori kaydedildi."
     },
     "projects": {
       "name": "Proje",
@@ -178,7 +180,8 @@
       "new": "Yeni proje",
       "edit": "Düzenle",
       "deactivate": "Devre dışı bırak",
-      "activate": "Etkinleştir"
+      "activate": "Etkinleştir",
+      "saved": "Proje kaydedildi."
     },
     "syncSettings": {
       "title": "Üyelik aktarımı ayarları",

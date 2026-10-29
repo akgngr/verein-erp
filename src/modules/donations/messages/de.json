@@ -199,7 +199,21 @@
         "templateVersion": "Musterversion",
         "items": "Posten",
         "retention": "Ende der Aufbewahrungsfrist"
-      }
+      },
+      "subtitle": "{kind} · {content} · {date}",
+      "issuedBy": "Ausgestellt von",
+      "place": "Ausstellungsort",
+      "cancelledInfo": "Am {date} von {label} storniert: {reason}",
+      "replaces": "Ersetzt Bestätigung",
+      "replacedBy": "Ersetzt durch",
+      "pdfHash": "PDF (SHA-256)",
+      "itemDate": "Datum",
+      "itemLabel": "Art",
+      "itemAmount": "Betrag",
+      "address": "Anschrift",
+      "reissued": "Neue Bestätigung ausgestellt: {number}",
+      "cancelled": "Bestätigung storniert.",
+      "notFound": "Bestätigung nicht gefunden"
     },
     "issue": {
       "title": "Zuwendungsbestätigung erstellen",
@@ -221,7 +235,39 @@
       "toastIssued": "Bestätigung ausgestellt: {number}",
       "candidatesEmpty": "Keine bestätigungsfähigen Einträge.",
       "batchRun": "Sammelproduktion starten",
-      "batchResult": "{ok} erfolgreich, {failed} fehlgeschlagen"
+      "batchResult": "{ok} erfolgreich, {failed} fehlgeschlagen",
+      "subtitle": "Amtliche Zuwendungsbestätigung für Spenden oder Mitgliedsbeiträge erstellen.",
+      "typeSingleHint": "Eine Bestätigung für eine einzelne Spende",
+      "typeCollectiveHint": "Alle Spenden eines Spenders im Jahr in einer Sammelbestätigung",
+      "typeFeeHint": "Mitgliedsbeiträge eines Mitglieds für ein Jahr",
+      "typeBatchHint": "Jahresabschluss: Bestätigungen für alle Empfänger",
+      "selectDonor": "Spender wählen",
+      "selectMember": "Mitglied wählen",
+      "noRecipients": "Für dieses Jahr gibt es keine Empfänger mit bestätigbaren Einträgen.",
+      "groupNotWaived": "Geldspenden",
+      "groupWaived": "Aufwandsspenden (Verzicht auf Erstattung)",
+      "groupRule": "Eine Bestätigung darf nur Spenden derselben Art (Aufwandsspende ja/nein) enthalten.",
+      "selectAll": "Alle auswählen",
+      "clearAll": "Auswahl aufheben",
+      "words": "In Worten",
+      "recipient": "Empfänger",
+      "itemCount": "{count} Positionen",
+      "feeAllIncluded": "Die Bestätigung umfasst alle noch nicht bestätigten Beitragszahlungen dieses Jahres.",
+      "batchContent": "Inhalt",
+      "contentDonation": "Spenden",
+      "contentFee": "Mitgliedsbeiträge",
+      "batchSelected": "{count} Empfänger ausgewählt",
+      "resultOk": "Ausgestellt: {number}",
+      "resultFailed": "Fehlgeschlagen: {error}",
+      "openConfirmation": "Bestätigung öffnen",
+      "downloadPdf": "PDF herunterladen",
+      "blocked": "Ohne Behebung der offenen Punkte kann keine Bestätigung erstellt werden.",
+      "fix": "Beheben",
+      "issuedTitle": "Bestätigung ausgestellt",
+      "selectedTotal": "Ausgewählte Summe",
+      "date": "Datum",
+      "number": "Nr.",
+      "amount": "Betrag"
     },
     "create": "Bestätigung erstellen",
     "batchHint": "Sammeldruck: Zeilen in der Liste auswählen und die PDF-Schaltfläche verwenden (§ 13, max. 100)."
@@ -244,12 +290,20 @@
     "feeDeductibleLink": "Auf der Seite Vereinsdaten ändern",
     "validityDays": "{days} Tage verbleiben",
     "validityExpired": "Die Freistellungsbescheinigung ist abgelaufen",
-    "validityWarn": "Weniger als 90 Tage — Verlängerung planen"
+    "validityWarn": "Weniger als 90 Tage — Verlängerung planen",
+    "subtitle": "Voraussetzungen, Vorlagenvorschau und Freigabe des Vorlagentextes für Zuwendungsbestätigungen.",
+    "templateSection": "Freigabe des Vorlagentextes",
+    "templateNotConfirmed": "Die aktuelle Vorlagenversion ({version}) ist noch nicht freigegeben.",
+    "openPreview": "Vorschau öffnen",
+    "feeSection": "Bestätigungen für Mitgliedsbeiträge",
+    "approveOnly": "Nur Benutzer mit Freigaberecht können den Text freigeben."
   },
   "menu": {
     "donors": "Spender",
     "confirmations": "Zuwendungsbestätigungen",
-    "export": "Excel-Export"
+    "export": "Excel-Export",
+    "issue": "Bestätigung erstellen",
+    "settings": "Einstellungen"
   },
   "nav": {
     "bagislar": "Spenden"
@@ -263,7 +317,10 @@
     "donorDetail": "Spenderdetails",
     "donorEdit": "Spender bearbeiten",
     "confirmations": "Zuwendungsbestätigungen",
-    "list": "Spenden"
+    "list": "Spenden",
+    "confirmationDetail": "Bestätigungsdetails",
+    "issue": "Bestätigung erstellen",
+    "settings": "Spendeneinstellungen"
   },
   "common": {
     "yes": "Ja",
@@ -303,7 +360,17 @@
     "noConfirmationSelected": "Keine Bestätigung ausgewählt.",
     "confirmationNotFound2": "Bestätigung nicht gefunden.",
     "storedPdfMissing": "Gespeicherte PDF-Datei nicht gefunden.",
-    "pdfIntegrity": "PDF-Integritätsfehler: Die gespeicherte Datei stimmt nicht mit dem SHA-256 des Datensatzes überein. Bitte informieren Sie die Systemadministration (Eintrag PDF_INTEGRITY_ERROR)."
+    "pdfIntegrity": "PDF-Integritätsfehler: Die gespeicherte Datei stimmt nicht mit dem SHA-256 des Datensatzes überein. Bitte informieren Sie die Systemadministration (Eintrag PDF_INTEGRITY_ERROR).",
+    "reversedDonation": "Für eine stornierte Spende kann keine Bestätigung ausgestellt werden.",
+    "someDonationsMissing": "Einige der ausgewählten Spenden wurden nicht gefunden.",
+    "periodSingleYear": "Der Zeitraum einer Sammelbestätigung muss innerhalb eines Kalenderjahres liegen.",
+    "donationReversed": "{number} ist storniert.",
+    "donationOutsidePeriod": "{number} liegt außerhalb des Zeitraums.",
+    "noFeePayments": "Für dieses Mitglied und Jahr gibt es keine bestätigbaren Zahlungen.",
+    "feePaymentsCovered": "Alle Zahlungen sind bereits in einer aktiven Bestätigung enthalten.",
+    "noDonationsInYear": "Für diesen Spender gibt es in diesem Jahr keine bestätigbaren Spenden.",
+    "replaceNotCancelled": "Nur für eine stornierte Bestätigung kann ein Ersatz erstellt werden.",
+    "alreadyReplaced": "Für diese Bestätigung wurde bereits ein Ersatz erstellt."
   },
   "validation": {
     "periodStartInvalid": "Bitte einen gültigen Zeitraumbeginn eingeben.",
@@ -388,5 +455,26 @@
         "OTHER": "Sonstige"
       }
     }
+  },
+  "readiness": {
+    "orgComplete": "Vereinsprofil vollständig.",
+    "orgMissing": "Vereinsprofil unvollständig: {fields}",
+    "fieldName": "Name",
+    "fieldStreet": "Straße",
+    "fieldPostalCode": "PLZ",
+    "fieldCity": "Ort",
+    "fieldTaxNumber": "Steuernummer",
+    "fieldTaxOffice": "Finanzamt",
+    "fieldDocumentType": "Art des Freistellungsbescheids",
+    "fieldDocumentDate": "Bescheiddatum",
+    "fieldPurposes": "begünstigte Zwecke",
+    "fieldPeriod": "letzter Veranlagungszeitraum",
+    "validityMissing": "Datum des Freistellungsbescheids fehlt.",
+    "validityOk": "Freistellungsbescheid gültig (noch {days} Tage).",
+    "validityExpired": "Der Freistellungsbescheid ist zu alt; Bestätigungen wären nicht gültig.",
+    "templateOk": "Vorlagentext freigegeben.",
+    "templateMissing": "Vorlagentext noch nicht freigegeben (mit den BMF-Mustern vergleichen).",
+    "feesOk": "Bestätigungen für Mitgliedsbeiträge möglich.",
+    "feesOff": "Bestätigungen für Mitgliedsbeiträge deaktiviert (membershipFeesDeductible = false; § 10b Abs. 1 Satz 8 EStG)."
   }
 }

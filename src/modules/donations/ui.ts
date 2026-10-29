@@ -7,3 +7,6 @@ export { DonorCreateView } from "./views/donor-create-view";
 export { DonorDetailView } from "./views/donor-detail-view";
 export { DonorEditView } from "./views/donor-edit-view";
 export { ConfirmationListView } from "./views/confirmation-list-view";
+export { ConfirmationIssueView } from "./views/confirmation-issue-view";
+export { ConfirmationDetailView } from "./views/confirmation-detail-view";
+export { DonationsSettingsView } from "./views/settings-view";

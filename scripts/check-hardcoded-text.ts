@@ -58,7 +58,7 @@ export function scanSource(file: string, source: string): Finding[] {
   const lines = source.split("\n");
   const propPattern = new RegExp(`(?:^|\\s)(${UI_PROPS.join("|")})=(["'])([^"']*)\\2`, "g");
   const objectPattern = new RegExp(`\\b(label|title|description|placeholder|emptyMessage|message|error)\\s*:\\s*(["'\`])([^"'\`]*)\\2`, "g");
-  const validationPattern = /\.(?:min|max|length|regex|email|url|refine|nonempty|int|positive|nonnegative|gte|lte|gt|lt)\([^)]*?,\s*(["'`])([^"'`]+)\1|\bmessage\s*:\s*(["'`])([^"'`]+)\3|new ActionError\(\s*(["'`])([^"'`]+)\5/g;
+  const validationPattern = /\.(?:min|max|length|regex|email|url|refine|nonempty|int|positive|nonnegative|gte|lte|gt|lt)\([^)]*?,\s*(["'`])([^"'`]+)\1|\bmessage\s*:\s*(["'`])([^"'`]+)\3|new \w*Error\(\s*(["'`])([^"'`]+)\5/g;
 
   lines.forEach((rawLine, index) => {
     // HTML varlıkları (&apos; &amp; …) metin sayılır; ";" düz metin kuralını bozmasın.

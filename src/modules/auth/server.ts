@@ -56,7 +56,7 @@ export async function requireUser(): Promise<SessionUser> {
 
   const dbUser = await getDb().user.findUnique({ where: { id: session.user.id } });
   if (!dbUser || !dbUser.isActive) {
-    throw new UnauthorizedError("Oturumunuz geçersiz veya hesabınız pasif duruma alınmış.");
+    throw new UnauthorizedError("auth.errors.sessionInvalid");
   }
 
   return {

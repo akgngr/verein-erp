@@ -73,7 +73,7 @@ export function CategoryFormModal({
         addToast({ title: result.error, color: "danger" });
         return;
       }
-      addToast({ title: "✓", color: "success" });
+      addToast({ title: t("saved"), color: "success" });
       onOpenChange(false);
       router.refresh();
     } finally {

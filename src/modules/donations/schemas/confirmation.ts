@@ -32,7 +32,12 @@ export const issueMembershipFeeSchema = z.object({
   year: z.coerce.number().int().min(2000).max(2100),
 });
 
-export const issueConfirmationSchema = z.discriminatedUnion("kind", [
+/**
+ * KARAR: discriminatedUnion("kind") kullanılamaz — aidat şeması da kind "SINGLE"
+ * kabul eder (Zod "Duplicate discriminator value" ile her çağrıda düşer). Şemalar
+ * content + kind literal'leriyle zaten ayrışır; düz union yeterlidir.
+ */
+export const issueConfirmationSchema = z.union([
   issueSingleDonationSchema,
   issueCollectiveDonationSchema,
   issueMembershipFeeSchema,
@@ -55,6 +60,9 @@ export const issueBatchSchema = z.object({
   /** Bağış için donor id'leri; aidat için member id'leri. */
   recipientIds: z.array(z.string().min(1)).min(1).max(200),
 });
+
+/** "Yerine yenisini oluştur": iptal edilmiş bildirim kimliği. */
+export const reissueConfirmationSchema = z.object({ id: z.string().min(1) });
 
 export type IssueConfirmationInput = z.infer<typeof issueConfirmationSchema>;
 export type CancelConfirmationInput = z.infer<typeof cancelConfirmationSchema>;
