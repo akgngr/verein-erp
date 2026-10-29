@@ -3,7 +3,7 @@
  *
  * KARAR: seed.ts ile aynı desen — env.ts / "server-only" import EDİLMEZ;
  * kendi PrismaClient'ı oluşturulur, password.ts göreli yolla kullanılır.
- * Kullanım: set -a && . ./.env.local && set +a && bunx tsx scripts/create-test-users.ts
+ * Kullanım: set -a && . ./.env.local && set +a && pnpm exec tsx scripts/create-test-users.ts
  */
 try {
   process.loadEnvFile();

@@ -10,5 +10,5 @@ sleep 3
 
 rm -rf .next-build
 export NEXT_DIST_DIR=.next-build
-bunx next build
+pnpm exec next build
 echo "BUILD_EXIT_CODE:$?"

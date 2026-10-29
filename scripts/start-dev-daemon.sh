@@ -50,7 +50,7 @@ if pid == 0:
         os.dup2(log, 2)
         devnull = os.open(os.devnull, os.O_RDWR)
         os.dup2(devnull, 0)
-        os.execvp("bun", ["bun", "run", "dev"])
+        os.execvp("pnpm", ["pnpm", "dev"])
     os._exit(0)
 os.waitpid(pid, 0)
 EOF

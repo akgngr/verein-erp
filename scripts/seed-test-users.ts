@@ -1,7 +1,7 @@
 /**
  * Faz 2 kabul testleri için rol test kullanıcılarını oluşturur (idempotent).
  * KARAR: Admin hesabına DOKUNMAZ — kullanıcı kendi parolasını seçmiş olabilir.
- * Kullanım: set -a && source .env.local && set +a && bunx tsx scripts/seed-test-users.ts
+ * Kullanım: set -a && source .env.local && set +a && pnpm exec tsx scripts/seed-test-users.ts
  */
 try {
   process.loadEnvFile();
