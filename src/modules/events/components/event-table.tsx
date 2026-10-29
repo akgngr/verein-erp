@@ -1,5 +1,7 @@
 "use client"
 
+import { useTranslations, useLocale } from "next-intl";
+
 import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
@@ -45,6 +47,12 @@ export function EventTable({
   dir,
   q,
 }: EventTableProps) {
+  const tEvents = useTranslations("events");
+  const tCommon = useTranslations("common");
+  const tStatus = useTranslations("events.status");
+  const tTypes = useTranslations("events.types");
+  const tTable = useTranslations("events.table");
+  const locale = useLocale();
   const router = useRouter()
   const [editingEvent, setEditingEvent] = useState<EventRow | null>(null)
   const [deletingEvent, setDeletingEvent] = useState<EventRow | null>(null)
@@ -54,14 +62,14 @@ export function EventTable({
     const res = await deleteEventAction(deletingEvent.id)
     if (res.success) {
       addToast({
-        title: `"${deletingEvent.title}" etkinliği silindi.`,
+        title: tTable("deletedToast", { title: deletingEvent.title }),
         color: "success",
       })
       setDeletingEvent(null)
       router.refresh()
     } else {
       addToast({
-        title: res.error ?? "Etkinlik silinirken bir hata oluştu.",
+        title: res.error ?? tTable("deleteFailed"),
         color: "danger",
       })
     }
@@ -70,7 +78,7 @@ export function EventTable({
   const columns: DataTableColumn<EventRow>[] = [
     {
       key: "title",
-      label: "Etkinlik",
+      label: tTable("event"),
       sortable: true,
       render: (row) => (
         <div className="flex flex-col py-1">
@@ -90,21 +98,21 @@ export function EventTable({
     },
     {
       key: "type",
-      label: "Tür",
+      label: tTable("type"),
       sortable: true,
       width: 140,
       render: (row) => {
         const typeMeta = EVENT_TYPES.find((t) => t.value === row.type)
         return (
           <Chip size="sm" variant="flat" color="default">
-            {typeMeta?.labelTr ?? row.type}
+            {typeMeta ? tTypes(typeMeta.value) : row.type}
           </Chip>
         )
       },
     },
     {
       key: "status",
-      label: "Durum",
+      label: tTable("status"),
       sortable: true,
       width: 140,
       render: (row) => {
@@ -124,21 +132,21 @@ export function EventTable({
             variant="dot"
             color={statusColorMap[row.status] ?? "default"}
           >
-            {statusMeta?.labelTr ?? row.status}
+            {statusMeta ? tStatus(statusMeta.value) : row.status}
           </Chip>
         )
       },
     },
     {
       key: "startDate",
-      label: "Tarih & Zaman",
+      label: tTable("dateTime"),
       sortable: true,
       width: 180,
       render: (row) => (
         <div className="flex flex-col text-small">
           <div className="flex items-center gap-1.5 font-medium">
             <Calendar className="h-3.5 w-3.5 text-default-400" />
-            <span>{formatDateTimeTr(row.startDate)}</span>
+            <span>{formatDateTimeTr(row.startDate, locale)}</span>
           </div>
           {row.isPast && (
             <span className="text-tiny text-default-400 flex items-center gap-1 mt-0.5">
@@ -150,12 +158,12 @@ export function EventTable({
     },
     {
       key: "location",
-      label: "Konum",
+      label: tTable("location"),
       render: (row) =>
         row.isOnline ? (
           <div className="flex items-center gap-1.5 text-primary text-small">
             <Video className="h-3.5 w-3.5" />
-            <span>Online Etkinlik</span>
+            <span>{tTable("online")}</span>
           </div>
         ) : row.location ? (
           <div className="flex items-center gap-1.5 text-default-600 max-w-[200px] truncate text-small">
@@ -163,12 +171,12 @@ export function EventTable({
             <span className="truncate">{row.location}</span>
           </div>
         ) : (
-          <span className="text-default-400 text-small italic">Belirtilmedi</span>
+          <span className="text-default-400 text-small italic">{tTable("notSpecified")}</span>
         ),
     },
     {
       key: "capacity",
-      label: "Katılımcı / Kontenjan",
+      label: tTable("attendeesCapacity"),
       width: 160,
       render: (row) => (
         <div className="flex items-center gap-2 text-small">
@@ -176,7 +184,7 @@ export function EventTable({
           <span className="font-semibold">{row.registeredCount}</span>
           <span className="text-default-400">/</span>
           <span className="text-default-500">
-            {row.capacity ? `${row.capacity} kişi` : "Sınırsız"}
+            {row.capacity ? tTable("capacityPeople", { count: row.capacity }) : tTable("unlimited")}
           </span>
         </div>
       ),
@@ -186,21 +194,21 @@ export function EventTable({
   const filters: DataTableFilter[] = [
     {
       key: "type",
-      label: "Tür",
-      options: EVENT_TYPES.map((t) => ({ value: t.value, label: t.labelTr })),
+      label: tTable("type"),
+      options: EVENT_TYPES.map((type) => ({ value: type.value, label: tTypes(type.value) })),
     },
     {
       key: "status",
-      label: "Durum",
-      options: EVENT_STATUSES.map((s) => ({ value: s.value, label: s.labelTr })),
+      label: tTable("status"),
+      options: EVENT_STATUSES.map((status) => ({ value: status.value, label: tStatus(status.value) })),
     },
     {
       key: "timeFilter",
-      label: "Zaman",
+      label: tTable("time"),
       options: [
-        { value: "all", label: "Tüm Zamanlar" },
-        { value: "upcoming", label: "Yaklaşanlar" },
-        { value: "past", label: "Geçmiş" },
+        { value: "all", label: tTable("allTime") },
+        { value: "upcoming", label: tTable("upcoming") },
+        { value: "past", label: tTable("past") },
       ],
     },
   ]
@@ -216,30 +224,30 @@ export function EventTable({
         sort={sort}
         dir={dir}
         q={q}
-        searchPlaceholder="Etkinlik başlığı, açıklama veya konum ara..."
+        searchPlaceholder={tTable("search")}
         filters={filters}
         rowActions={(row) => [
           {
             key: "detail",
-            label: "Detayları Görüntüle",
+            label: tTable("viewDetails"),
             icon: <Eye className="h-4 w-4" />,
             href: `/events?detail=${row.id}`,
           },
           {
             key: "edit",
-            label: "Düzenle",
+            label: tCommon("edit"),
             icon: <Pencil className="h-4 w-4" />,
             onPress: () => setEditingEvent(row),
           },
           {
             key: "delete",
-            label: "Sil",
+            label: tCommon("delete"),
             icon: <Trash2 className="h-4 w-4" />,
             color: "danger",
             onPress: () => setDeletingEvent(row),
           },
         ]}
-        emptyMessage="Henüz kayıtlı bir etkinlik bulunmuyor."
+        emptyMessage={tTable("empty")}
         ariaLabel="Etkinlikler tablosu"
       />
 
@@ -254,9 +262,9 @@ export function EventTable({
       <ConfirmDialog
         isOpen={Boolean(deletingEvent)}
         onOpenChange={(open) => !open && setDeletingEvent(null)}
-        title="Etkinliği Sil"
-        message={`"${deletingEvent?.title}" başlıklı etkinliği ve tüm katılımcı kayıtlarını silmek istediğinize emin misiniz? Bu işlem geri alınamaz.`}
-        confirmLabel="Sil"
+        title={tEvents("deleteEvent")}
+        message={tTable("deleteMessage", { title: deletingEvent?.title ?? "" })}
+        confirmLabel={tCommon("delete")}
         confirmColor="danger"
         onConfirm={handleDeleteConfirm}
       />

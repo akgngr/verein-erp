@@ -1,3 +1,4 @@
+import { getLocale, getTranslations } from "next-intl/server";
 import {
   Calendar,
   Clock,
@@ -23,7 +24,12 @@ interface EventDetailViewProps {
 }
 
 export async function EventDetailView({ eventId }: EventDetailViewProps) {
+  const tStatus = await getTranslations("events.status");
+  const tTypes = await getTranslations("events.types");
+  const tDetail = await getTranslations("events.detailView");
+  const tEvents = await getTranslations("events");
   const event = await getEventById(eventId)
+  const locale = await getLocale()
 
   if (!event) {
     notFound()
@@ -47,13 +53,13 @@ export async function EventDetailView({ eventId }: EventDetailViewProps) {
             color="default"
             startIcon={<ArrowLeft className="h-4 w-4" />}
           >
-            Tüm Etkinliklere Dön
+            {tEvents("backToList")}
           </LinkButton>
         </div>
 
         <PageHeader
           title={event.title}
-          description={`${typeMeta?.labelTr ?? event.type} · ${formatDateTimeTr(event.startDate)}${
+          description={`${typeMeta ? tTypes(typeMeta.value) : event.type} · ${formatDateTimeTr(event.startDate, locale)}${
             event.isOnline
               ? " · Online"
               : event.location
@@ -78,7 +84,7 @@ export async function EventDetailView({ eventId }: EventDetailViewProps) {
 
       <div className="flex flex-wrap items-center gap-2 -mt-4 mb-2">
         <span className="inline-flex items-center rounded-medium bg-default-100 px-2.5 py-1 text-xs font-medium text-foreground">
-          {typeMeta?.labelTr ?? event.type}
+          {typeMeta ? tTypes(typeMeta.value) : event.type}
         </span>
         <span
           className={`inline-flex items-center rounded-medium px-2.5 py-1 text-xs font-medium border ${
@@ -91,7 +97,7 @@ export async function EventDetailView({ eventId }: EventDetailViewProps) {
                   : "bg-default-100 text-default-700 border-default-200"
           }`}
         >
-          {statusMeta?.labelTr ?? event.status}
+          {statusMeta ? tStatus(statusMeta.value) : event.status}
         </span>
         {event.isPast && (
           <span className="text-tiny text-default-400 flex items-center gap-1">
@@ -106,15 +112,15 @@ export async function EventDetailView({ eventId }: EventDetailViewProps) {
         <div className="p-4 rounded-medium border border-default-200 bg-content1 shadow-xs flex flex-col gap-2">
           <span className="text-tiny text-default-500 font-medium flex items-center gap-1.5">
             <Calendar className="h-4 w-4 text-primary" />
-            Tarih & Zaman
+            {tDetail("dateTime")}
           </span>
           <span className="text-small font-semibold text-foreground">
-            {formatDateTimeTr(event.startDate)}
+            {formatDateTimeTr(event.startDate, locale)}
           </span>
           {event.endDate && (
             <span className="text-tiny text-default-400 flex items-center gap-1">
               <Clock className="h-3.5 w-3.5" />
-              Bitiş: {formatDateTimeTr(event.endDate)}
+              {tDetail("endLine", { date: formatDateTimeTr(event.endDate, locale) })}
             </span>
           )}
         </div>
@@ -140,7 +146,7 @@ export async function EventDetailView({ eventId }: EventDetailViewProps) {
               </a>
             ) : (
               <span className="text-small text-foreground font-medium">
-                Online Toplantı
+                {tDetail("onlineMeeting")}
               </span>
             )
           ) : (
@@ -153,12 +159,12 @@ export async function EventDetailView({ eventId }: EventDetailViewProps) {
         <div className="p-4 rounded-medium border border-default-200 bg-content1 shadow-xs flex flex-col gap-2">
           <span className="text-tiny text-default-500 font-medium flex items-center gap-1.5">
             <Users className="h-4 w-4 text-primary" />
-            Kapasite Durumu
+            {tDetail("capacityStatus")}
           </span>
           <div className="flex items-center justify-between text-small font-semibold">
             <span>{event.registeredCount} Kayıtlı Katılımcı</span>
             <span className="text-default-400 text-tiny">
-              {event.capacity ? `${event.capacity} Kontenjan` : "Sınırsız"}
+              {event.capacity ? tDetail("capacityCount", { count: event.capacity }) : tDetail("unlimited")}
             </span>
           </div>
           {event.capacity && (
@@ -178,7 +184,7 @@ export async function EventDetailView({ eventId }: EventDetailViewProps) {
       {event.description && (
         <div className="p-4 rounded-medium border border-default-200 bg-content1 shadow-xs">
           <h3 className="text-tiny font-semibold uppercase tracking-wider text-default-500 mb-2">
-            Etkinlik Açıklaması
+            {tDetail("description")}
           </h3>
           <p className="text-small text-foreground whitespace-pre-wrap leading-relaxed">
             {event.description}

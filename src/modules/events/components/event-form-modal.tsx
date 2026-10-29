@@ -1,5 +1,7 @@
 "use client"
 
+import { useTranslations } from "next-intl";
+
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import {
@@ -30,6 +32,11 @@ export function EventFormModal({
   onClose,
   eventToEdit,
 }: EventFormModalProps) {
+  const tCommon = useTranslations("common");
+  const tStatus = useTranslations("events.status");
+  const tTypes = useTranslations("events.types");
+  const tFields = useTranslations("events.fields");
+  const tForm = useTranslations("events.form");
   const router = useRouter()
   const isEditing = Boolean(eventToEdit)
 
@@ -100,23 +107,23 @@ export function EventFormModal({
         })
 
         if (!res.success) {
-          setErrorMessage(res.error ?? "Etkinlik oluşturulamadı.")
+          setErrorMessage(res.error ?? tForm("createFailed"))
           setLoading(false)
           return
         }
       }
 
       if (isEditing) {
-        addToast({ title: "Etkinlik başarıyla güncellendi.", color: "success" })
+        addToast({ title: tForm("updatedToast"), color: "success" })
       } else {
-        addToast({ title: "Etkinlik başarıyla oluşturuldu.", color: "success" })
+        addToast({ title: tForm("createdToast"), color: "success" })
       }
 
       onClose()
       router.refresh()
     } catch (err) {
       setErrorMessage(
-        err instanceof Error ? err.message : "Bir hata meydana geldi.",
+        err instanceof Error ? err.message : tForm("genericError"),
       )
     } finally {
       setLoading(false)
@@ -135,7 +142,7 @@ export function EventFormModal({
           <form onSubmit={handleSubmit}>
             <ModalHeader className="flex flex-col gap-1">
               <span className="text-lg font-semibold text-foreground">
-                {isEditing ? "Etkinliği Düzenle" : "Yeni Etkinlik Oluştur"}
+                {isEditing ? tForm("editTitle") : tForm("createTitle")}
               </span>
               <span className="text-xs text-default-500 font-normal">
                 Dernek içi seminer, atölye veya sosyal etkinlik bilgilerini
@@ -151,8 +158,8 @@ export function EventFormModal({
               )}
 
               <Input
-                label="Etkinlik Başlığı"
-                placeholder="Örn: Yıllık Dernek Çalıştayı"
+                label={tFields("title")}
+                placeholder={tForm("titlePlaceholder")}
                 value={title}
                 onChange={(e) => setTitle(e.target.value)}
                 isRequired
@@ -162,7 +169,7 @@ export function EventFormModal({
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <div className="flex flex-col gap-1.5">
                   <label className="text-xs font-medium text-foreground">
-                    Etkinlik Türü
+                    {tFields("type")}
                   </label>
                   <div className="relative inline-block w-full">
                     <select
@@ -172,7 +179,7 @@ export function EventFormModal({
                     >
                       {EVENT_TYPES.map((t) => (
                         <option key={t.value} value={t.value}>
-                          {t.labelTr}
+                          {tTypes(t.value)}
                         </option>
                       ))}
                     </select>
@@ -182,7 +189,7 @@ export function EventFormModal({
 
                 <div className="flex flex-col gap-1.5">
                   <label className="text-xs font-medium text-foreground">
-                    Yayın Durumu
+                    {tForm("publishStatus")}
                   </label>
                   <div className="relative inline-block w-full">
                     <select
@@ -192,7 +199,7 @@ export function EventFormModal({
                     >
                       {EVENT_STATUSES.map((s) => (
                         <option key={s.value} value={s.value}>
-                          {s.labelTr}
+                          {tStatus(s.value)}
                         </option>
                       ))}
                     </select>
@@ -203,7 +210,7 @@ export function EventFormModal({
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                 <Input
-                  label="Başlangıç Zamanı"
+                  label={tFields("startDate")}
                   type="datetime-local"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
@@ -212,7 +219,7 @@ export function EventFormModal({
                 />
 
                 <Input
-                  label="Bitiş Zamanı (Opsiyonel)"
+                  label={tForm("endOptional")}
                   type="datetime-local"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
@@ -226,21 +233,21 @@ export function EventFormModal({
                   onValueChange={setIsOnline}
                   size="sm"
                 >
-                  Bu etkinlik çevrim içi (Online) olarak düzenlenecektir
+                  {tForm("isOnlineLabel")}
                 </Checkbox>
 
                 {isOnline ? (
                   <Input
-                    label="Online Toplantı Bağlantısı"
-                    placeholder="https://meet.google.com/... veya Zoom linki"
+                    label={tForm("onlineUrl")}
+                    placeholder={tForm("onlineUrlPlaceholder")}
                     value={onlineUrl}
                     onChange={(e) => setOnlineUrl(e.target.value)}
                     variant="bordered"
                   />
                 ) : (
                   <Input
-                    label="Fiziksel Konum / Adres"
-                    placeholder="Örn: Dernek Merkezi Toplantı Salonu, Frankfurt"
+                    label={tForm("physicalLocation")}
+                    placeholder={tForm("locationPlaceholder")}
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
                     variant="bordered"
@@ -249,18 +256,18 @@ export function EventFormModal({
               </div>
 
               <Input
-                label="Maksimum Kontenjan (Opsiyonel)"
+                label={tForm("capacityOptional")}
                 type="number"
                 min="1"
-                placeholder="Boş bırakılırsa limitsiz kabul edilir"
+                placeholder={tForm("capacityPlaceholder")}
                 value={capacity}
                 onChange={(e) => setCapacity(e.target.value)}
                 variant="bordered"
               />
 
               <Textarea
-                label="Açıklama ve Detaylar"
-                placeholder="Etkinlik gündemi, yanınızda getirmeniz gerekenler ve katılım kuralları..."
+                label={tForm("descriptionLabel")}
+                placeholder={tForm("descriptionPlaceholder")}
                 value={description}
                 onChange={(e) => setDescription(e.target.value)}
                 minRows={3}
@@ -270,10 +277,10 @@ export function EventFormModal({
 
             <ModalFooter>
               <Button variant="flat" onPress={onClose} isDisabled={loading}>
-                Vazgeç
+                {tCommon("cancel")}
               </Button>
               <Button color="primary" type="submit" isLoading={loading}>
-                {isEditing ? "Değişiklikleri Kaydet" : "Etkinliği Oluştur"}
+                {isEditing ? tForm("saveChanges") : tForm("create")}
               </Button>
             </ModalFooter>
           </form>

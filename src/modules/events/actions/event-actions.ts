@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache"
 import { getDb } from "@/shared/db"
 import { requirePermission } from "@/modules/auth/server";
+import { getMessageTranslator } from "@/shared/i18n/translate-message";
 import { eventsPermissions } from "../permissions"
 import {
   eventCreateSchema,
@@ -16,16 +17,23 @@ import {
 } from "../schemas/event-schema"
 import type { ActionResult } from "../types"
 
+/** Beklenmeyen hata: ayrıntı loglanır, kullanıcıya çevrilmiş genel mesaj döner (ham DB mesajı sızmaz). */
+function failure(error: unknown, message: string): string {
+  console.error("[events]", error)
+  return message
+}
+
 export async function createEventAction(
   rawInput: EventCreateInput,
 ): Promise<ActionResult<{ id: string }>> {
+  const translate = await getMessageTranslator()
   await requirePermission(eventsPermissions, "create")
 
   const parsed = eventCreateSchema.safeParse(rawInput)
   if (!parsed.success) {
     return {
       success: false,
-      error: parsed.error.issues[0]?.message ?? "Girdi doğrulama hatası.",
+      error: translate(parsed.error.issues[0]?.message ?? "events.errors.invalidInput"),
     }
   }
 
@@ -54,10 +62,7 @@ export async function createEventAction(
   } catch (error) {
     return {
       success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "Etkinlik oluşturulurken bir hata oluştu.",
+      error: failure(error, translate("events.errors.createFailed")),
     }
   }
 }
@@ -65,19 +70,20 @@ export async function createEventAction(
 export async function updateEventAction(
   rawInput: EventUpdateInput,
 ): Promise<ActionResult> {
+  const translate = await getMessageTranslator()
   await requirePermission(eventsPermissions, "update")
 
   const parsed = eventUpdateSchema.safeParse(rawInput)
   if (!parsed.success) {
     return {
       success: false,
-      error: parsed.error.issues[0]?.message ?? "Girdi doğrulama hatası.",
+      error: translate(parsed.error.issues[0]?.message ?? "events.errors.invalidInput"),
     }
   }
 
   const { id, ...data } = parsed.data
   if (!id) {
-    return { success: false, error: "Etkinlik kimliği eksik." }
+    return { success: false, error: translate("events.errors.idMissing") }
   }
 
   const db = getDb()
@@ -119,19 +125,17 @@ export async function updateEventAction(
   } catch (error) {
     return {
       success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "Etkinlik güncellenirken bir hata oluştu.",
+      error: failure(error, translate("events.errors.updateFailed")),
     }
   }
 }
 
 export async function deleteEventAction(id: string): Promise<ActionResult> {
+  const translate = await getMessageTranslator()
   await requirePermission(eventsPermissions, "delete")
 
   if (!id) {
-    return { success: false, error: "Geçersiz kimlik." }
+    return { success: false, error: translate("events.errors.invalidId") }
   }
 
   const db = getDb()
@@ -143,10 +147,7 @@ export async function deleteEventAction(id: string): Promise<ActionResult> {
   } catch (error) {
     return {
       success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "Etkinlik silinirken bir hata meydana geldi.",
+      error: failure(error, translate("events.errors.deleteFailed")),
     }
   }
 }
@@ -154,13 +155,14 @@ export async function deleteEventAction(id: string): Promise<ActionResult> {
 export async function addAttendeeAction(
   rawInput: AttendeeAddInput,
 ): Promise<ActionResult<{ id: string }>> {
+  const translate = await getMessageTranslator()
   await requirePermission(eventsPermissions, "update")
 
   const parsed = attendeeAddSchema.safeParse(rawInput)
   if (!parsed.success) {
     return {
       success: false,
-      error: parsed.error.issues[0]?.message ?? "Girdi doğrulama hatası.",
+      error: translate(parsed.error.issues[0]?.message ?? "events.errors.invalidInput"),
     }
   }
 
@@ -181,11 +183,11 @@ export async function addAttendeeAction(
     })
 
     if (!event) {
-      return { success: false, error: "Etkinlik bulunamadı." }
+      return { success: false, error: translate("events.errors.notFound") }
     }
 
     if (event.capacity && event._count.attendees >= event.capacity) {
-      return { success: false, error: "Etkinlik kontenjanı tamamen dolmuştur." }
+      return { success: false, error: translate("events.errors.capacityFull") }
     }
 
     const newAttendee = await db.eventAttendee.create({
@@ -207,8 +209,7 @@ export async function addAttendeeAction(
   } catch (error) {
     return {
       success: false,
-      error:
-        error instanceof Error ? error.message : "Katılımcı kaydedilemedi.",
+      error: failure(error, translate("events.errors.attendeeAddFailed")),
     }
   }
 }
@@ -216,11 +217,12 @@ export async function addAttendeeAction(
 export async function updateAttendeeStatusAction(
   rawInput: AttendeeStatusUpdateInput,
 ): Promise<ActionResult> {
+  const translate = await getMessageTranslator()
   await requirePermission(eventsPermissions, "update")
 
   const parsed = attendeeStatusUpdateSchema.safeParse(rawInput)
   if (!parsed.success) {
-    return { success: false, error: "Geçersiz durum verisi." }
+    return { success: false, error: translate("events.errors.invalidStatus") }
   }
 
   const db = getDb()
@@ -236,10 +238,7 @@ export async function updateAttendeeStatusAction(
   } catch (error) {
     return {
       success: false,
-      error:
-        error instanceof Error
-          ? error.message
-          : "Katılım durumu güncellenemedi.",
+      error: failure(error, translate("events.errors.statusUpdateFailed")),
     }
   }
 }
@@ -247,10 +246,11 @@ export async function updateAttendeeStatusAction(
 export async function deleteAttendeeAction(
   attendeeId: string,
 ): Promise<ActionResult> {
+  const translate = await getMessageTranslator()
   await requirePermission(eventsPermissions, "update")
 
   if (!attendeeId) {
-    return { success: false, error: "Geçersiz katılımcı kimliği." }
+    return { success: false, error: translate("events.errors.invalidAttendeeId") }
   }
 
   const db = getDb()
@@ -265,7 +265,7 @@ export async function deleteAttendeeAction(
   } catch (error) {
     return {
       success: false,
-      error: error instanceof Error ? error.message : "Katılımcı silinemedi.",
+      error: failure(error, translate("events.errors.attendeeDeleteFailed")),
     }
   }
 }

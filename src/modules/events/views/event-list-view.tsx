@@ -1,3 +1,4 @@
+import { getTranslations } from "next-intl/server";
 import { Plus } from "lucide-react"
 import { PageHeader } from "@/shared/components/ui/page-header"
 import { LinkButton } from "@/shared/components/ui/link-button"
@@ -13,6 +14,7 @@ interface EventListViewProps {
 }
 
 export async function EventListView({ searchParams }: EventListViewProps) {
+  const tEvents = await getTranslations("events");
   const raw = await searchParams
 
   const params = parseListParams(raw, {
@@ -41,15 +43,15 @@ export async function EventListView({ searchParams }: EventListViewProps) {
   return (
     <div>
       <PageHeader
-        title="Etkinlikler"
-        description="Dernek etkinlikleri, seminerler, atölyeler ve katılımcı kayıt yönetimi."
+        title={tEvents("title")}
+        description={tEvents("description")}
         actions={
           <LinkButton
             href="/events?action=new"
             color="primary"
             startIcon={<Plus className="h-4 w-4" />}
           >
-            Yeni Etkinlik
+            {tEvents("newEvent")}
           </LinkButton>
         }
       />

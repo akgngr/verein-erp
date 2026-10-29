@@ -1,5 +1,7 @@
 "use client"
 
+import { useTranslations, useLocale } from "next-intl";
+
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import { Button, Input, Chip, addToast } from "@heroui/react"
@@ -25,6 +27,9 @@ export function AttendeeList({
   capacity,
   attendees,
 }: AttendeeListProps) {
+  const tAttendeeStatus = useTranslations("events.attendeeStatus");
+  const tA = useTranslations("events.attendees");
+  const locale = useLocale();
   const router = useRouter()
   const [isAdding, setIsAdding] = useState(false)
   const [firstName, setFirstName] = useState("")
@@ -59,12 +64,12 @@ export function AttendeeList({
       })
 
       if (!res.success) {
-        setErrorMsg(res.error ?? "Katılımcı eklenemedi.")
+        setErrorMsg(res.error ?? tA("addFailed"))
         return
       }
 
       addToast({
-        title: `${firstName} ${lastName} katılımcı olarak eklendi.`,
+        title: tA("addedToast", { name: `${firstName} ${lastName}` }),
         color: "success",
       })
 
@@ -91,11 +96,11 @@ export function AttendeeList({
         status: newStatus,
       })
       if (res.success) {
-        addToast({ title: "Katılım durumu güncellendi.", color: "success" })
+        addToast({ title: tA("statusUpdatedToast"), color: "success" })
         router.refresh()
       } else {
         addToast({
-          title: res.error ?? "Durum güncellenemedi.",
+          title: res.error ?? tA("statusFailed"),
           color: "danger",
         })
       }
@@ -109,14 +114,14 @@ export function AttendeeList({
     const res = await deleteAttendeeAction(deletingAttendee.id)
     if (res.success) {
       addToast({
-        title: `${deletingAttendee.firstName} ${deletingAttendee.lastName} katılımcı listesinden çıkarıldı.`,
+        title: tA("removedToast", { name: `${deletingAttendee.firstName} ${deletingAttendee.lastName}` }),
         color: "success",
       })
       setDeletingAttendee(null)
       router.refresh()
     } else {
       addToast({
-        title: res.error ?? "Katılımcı silinemedi.",
+        title: res.error ?? tA("removeFailed"),
         color: "danger",
       })
     }
@@ -127,10 +132,10 @@ export function AttendeeList({
       <div className="flex items-center justify-between">
         <div>
           <h3 className="text-small font-semibold text-foreground">
-            Katılımcı Kayıtları ({attendees.length})
+            {tA("countTitle", { count: attendees.length })}
           </h3>
           <p className="text-tiny text-default-500">
-            Kayıt olan üyeler ve dış konukların katılım durumlarını yönetin.
+            {tA("subtitle")}
           </p>
         </div>
 
@@ -143,7 +148,7 @@ export function AttendeeList({
             onPress={() => setIsAdding(true)}
             isDisabled={isFull}
           >
-            {isFull ? "Kontenjan Dolu" : "Katılımcı Ekle"}
+            {isFull ? tA("full") : tA("addShort")}
           </Button>
         )}
       </div>
@@ -155,14 +160,14 @@ export function AttendeeList({
         >
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-foreground">
-              Yeni Katılımcı Kaydı
+              {tA("newRegistration")}
             </span>
             <Button
               size="sm"
               variant="light"
               onPress={() => setIsAdding(false)}
             >
-              Kapat
+              {tA("close")}
             </Button>
           </div>
 
@@ -175,14 +180,14 @@ export function AttendeeList({
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-2.5">
             <Input
               size="sm"
-              label="Ad"
+              label={tA("firstName")}
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
               isRequired
             />
             <Input
               size="sm"
-              label="Soyad"
+              label={tA("lastName")}
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
               isRequired
@@ -190,13 +195,13 @@ export function AttendeeList({
             <Input
               size="sm"
               type="email"
-              label="E-Posta"
+              label={tA("email")}
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
             <Input
               size="sm"
-              label="Telefon"
+              label={tA("phone")}
               value={phone}
               onChange={(e) => setPhone(e.target.value)}
             />
@@ -204,7 +209,7 @@ export function AttendeeList({
 
           <Input
             size="sm"
-            label="Özel Not (Alerji, Diyet Tercihi vb.)"
+            label={tA("specialNote")}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
           />
@@ -216,10 +221,10 @@ export function AttendeeList({
               onPress={() => setIsAdding(false)}
               isDisabled={loading}
             >
-              İptal
+              {tA("cancel")}
             </Button>
             <Button size="sm" color="primary" type="submit" isLoading={loading}>
-              Kaydı Tamamla
+              {tA("complete")}
             </Button>
           </div>
         </form>
@@ -227,19 +232,19 @@ export function AttendeeList({
 
       {attendees.length === 0 ? (
         <div className="p-8 text-center rounded-medium border border-dashed border-default-200 text-default-400 text-xs">
-          Henüz kayıtlı bir katılımcı bulunmuyor.
+          {tA("emptyShort")}
         </div>
       ) : (
         <div className="overflow-x-auto rounded-medium border border-default-200 bg-content1 shadow-xs">
           <table className="w-full text-left text-xs text-foreground">
             <thead className="bg-default-50 text-default-600 font-semibold uppercase tracking-wider text-[11px] border-b border-default-200">
               <tr>
-                <th className="py-3 px-4">Katılımcı Adı</th>
-                <th className="py-3 px-4">Tür</th>
-                <th className="py-3 px-4">İletişim</th>
-                <th className="py-3 px-4">Kayıt Tarihi & Not</th>
-                <th className="py-3 px-4 w-44">Katılım Durumu</th>
-                <th className="py-3 px-4 text-right">İşlem</th>
+                <th className="py-3 px-4">{tA("colName")}</th>
+                <th className="py-3 px-4">{tA("colType")}</th>
+                <th className="py-3 px-4">{tA("colContact")}</th>
+                <th className="py-3 px-4">{tA("colRegistered")}</th>
+                <th className="py-3 px-4 w-44">{tA("colStatus")}</th>
+                <th className="py-3 px-4 text-right">{tA("colAction")}</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-default-100 font-medium">
@@ -269,7 +274,7 @@ export function AttendeeList({
                         variant="flat"
                         color={isMember ? "primary" : "default"}
                       >
-                        {isMember ? "Dernek Üyesi" : "Misafir"}
+                        {isMember ? tA("member") : tA("guest")}
                       </Chip>
                     </td>
 
@@ -296,7 +301,7 @@ export function AttendeeList({
                     <td className="py-3 px-4">
                       <div className="flex flex-col">
                         <span className="text-default-600">
-                          {formatDateTimeTr(attendee.registeredAt)}
+                          {formatDateTimeTr(attendee.registeredAt, locale)}
                         </span>
                         {attendee.notes && (
                           <span className="text-[11px] text-default-400 italic">
@@ -322,7 +327,7 @@ export function AttendeeList({
                         >
                           {ATTENDEE_STATUSES.map((status) => (
                             <option key={status.value} value={status.value}>
-                              {status.labelTr}
+                              {tAttendeeStatus(status.value)}
                             </option>
                           ))}
                         </select>
@@ -336,7 +341,7 @@ export function AttendeeList({
                         variant="light"
                         color="danger"
                         isIconOnly
-                        aria-label="Katılımcıyı Çıkar"
+                        aria-label={tA("removeTitle")}
                         onPress={() => setDeletingAttendee(attendee)}
                       >
                         <Trash2 className="h-3.5 w-3.5" />
@@ -353,9 +358,9 @@ export function AttendeeList({
       <ConfirmDialog
         isOpen={Boolean(deletingAttendee)}
         onOpenChange={(open) => !open && setDeletingAttendee(null)}
-        title="Katılımcıyı Çıkar"
-        message={`"${deletingAttendee?.firstName} ${deletingAttendee?.lastName}" isimli katılımcıyı listeden çıkarmak istediğinize emin misiniz?`}
-        confirmLabel="Çıkar"
+        title={tA("removeTitle")}
+        message={tA("removeMessage", { name: `${deletingAttendee?.firstName ?? ""} ${deletingAttendee?.lastName ?? ""}` })}
+        confirmLabel={tA("removeConfirm")}
         confirmColor="danger"
         onConfirm={handleDeleteConfirm}
       />
