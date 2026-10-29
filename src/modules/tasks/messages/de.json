@@ -1,0 +1,90 @@
+{
+  "nav": {
+    "tasks": "Aufgaben"
+  },
+  "module": {
+    "label": "Aufgaben",
+    "description": "Aufgaben- und Vorgangsverwaltung."
+  },
+  "menu": {
+    "assignedToMe": "Mir zugewiesen"
+  },
+  "meta": {
+    "list": "Aufgaben",
+    "assignedToMe": "Mir zugewiesene Aufgaben"
+  },
+  "title": "Aufgaben",
+  "description": "Verfolgung, Priorisierung und Koordination von Vereinsaufgaben.",
+  "assignedToMeTitle": "Mir zugewiesene Aufgaben",
+  "assignedToMeDescription": "Offene und erledigte Aufgaben, für die Sie zuständig sind.",
+  "newItem": "Neue Aufgabe",
+  "table": {
+    "aria": "Aufgabenliste",
+    "title": "Titel",
+    "status": "Status",
+    "priority": "Priorität",
+    "dueDate": "Fälligkeitsdatum",
+    "assignee": "Zuständig",
+    "updatedAt": "Zuletzt geändert",
+    "search": "Titel, Beschreibung oder Zuständigen suchen...",
+    "empty": "Noch keine Aufgaben vorhanden. Fügen Sie mit 'Neue Aufgabe' die erste Aufgabe hinzu.",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "deleteTitle": "Aufgabe löschen",
+    "deleteMessage": "Die Aufgabe \"{title}\" wird endgültig gelöscht. Möchten Sie fortfahren?",
+    "deleted": "Aufgabe gelöscht.",
+    "markDone": "Als erledigt markieren",
+    "markedDone": "Aufgabe als erledigt markiert.",
+    "reopen": "Wiedereröffnen",
+    "reopened": "Aufgabe wiedereröffnet.",
+    "overdue": "Überfällig",
+    "statuses": {
+      "OPEN": "Offen",
+      "IN_PROGRESS": "In Bearbeitung",
+      "DONE": "Erledigt",
+      "CANCELLED": "Abgebrochen"
+    },
+    "priorities": {
+      "LOW": "Niedrig",
+      "NORMAL": "Normal",
+      "HIGH": "Hoch"
+    }
+  },
+  "form": {
+    "createTitle": "Neue Aufgabe",
+    "editTitle": "Aufgabe bearbeiten",
+    "title": "Titel",
+    "description": "Beschreibung",
+    "status": "Status",
+    "priority": "Priorität",
+    "dueDate": "Fälligkeitsdatum",
+    "assignee": "Zuständiges Mitglied",
+    "selectMemberPlaceholder": "Mitglied wählen (optional)",
+    "meeting": "Sitzungsverknüpfung",
+    "selectMeetingPlaceholder": "Sitzung wählen (optional)",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "created": "Aufgabe erstellt.",
+    "updated": "Aufgabe aktualisiert.",
+    "statuses": {
+      "OPEN": "Offen",
+      "IN_PROGRESS": "In Bearbeitung",
+      "DONE": "Erledigt",
+      "CANCELLED": "Abgebrochen"
+    },
+    "priorities": {
+      "LOW": "Niedrig",
+      "NORMAL": "Normal",
+      "HIGH": "Hoch"
+    }
+  },
+  "errors": {
+    "notFound": "Aufgabe nicht gefunden."
+  },
+  "validation": {
+    "titleRequired": "Titel ist erforderlich.",
+    "titleMax": "Titel darf maximal 200 Zeichen lang sein.",
+    "descriptionMax": "Beschreibung darf maximal 2000 Zeichen lang sein.",
+    "dateInvalid": "Bitte ein gültiges Datum eingeben (JJJJ-MM-TT)."
+  }
+}

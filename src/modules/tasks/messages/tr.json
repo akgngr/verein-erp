@@ -1,0 +1,90 @@
+{
+  "nav": {
+    "tasks": "Görevler"
+  },
+  "module": {
+    "label": "Görevler",
+    "description": "Görev ve iş takibi yönetimi."
+  },
+  "menu": {
+    "assignedToMe": "Bana atananlar"
+  },
+  "meta": {
+    "list": "Görevler",
+    "assignedToMe": "Bana Atananlar"
+  },
+  "title": "Görevler",
+  "description": "Dernek içi görevlerin takibi, önceliklendirilmesi ve koordinasyonu.",
+  "assignedToMeTitle": "Bana Atanan Görevler",
+  "assignedToMeDescription": "Sorumlusu olduğunuz açık ve tamamlanmış görevler.",
+  "newItem": "Yeni görev",
+  "table": {
+    "aria": "Görevler listesi",
+    "title": "Başlık",
+    "status": "Durum",
+    "priority": "Öncelik",
+    "dueDate": "Bitiş tarihi",
+    "assignee": "Sorumlu",
+    "updatedAt": "Son değişiklik",
+    "search": "Başlık, açıklama veya sorumlu ara...",
+    "empty": "Henüz görev bulunmuyor. 'Yeni görev' butonu ile ilk görevi ekleyin.",
+    "edit": "Düzenle",
+    "delete": "Sil",
+    "deleteTitle": "Görevi sil",
+    "deleteMessage": "\"{title}\" görevi kalıcı olarak silinecek. Onaylıyor musunuz?",
+    "deleted": "Görev silindi.",
+    "markDone": "Tamamlandı olarak işaretle",
+    "markedDone": "Görev tamamlandı.",
+    "reopen": "Tekrar aç",
+    "reopened": "Görev tekrar açıldı.",
+    "overdue": "Gecikti",
+    "statuses": {
+      "OPEN": "Açık",
+      "IN_PROGRESS": "İşlemde",
+      "DONE": "Tamamlandı",
+      "CANCELLED": "İptal edildi"
+    },
+    "priorities": {
+      "LOW": "Düşük",
+      "NORMAL": "Normal",
+      "HIGH": "Yüksek"
+    }
+  },
+  "form": {
+    "createTitle": "Yeni görev",
+    "editTitle": "Görevi düzenle",
+    "title": "Başlık",
+    "description": "Açıklama",
+    "status": "Durum",
+    "priority": "Öncelik",
+    "dueDate": "Bitiş tarihi",
+    "assignee": "Sorumlu üye",
+    "selectMemberPlaceholder": "Üye seçin (isteğe bağlı)",
+    "meeting": "Toplantı bağlantısı",
+    "selectMeetingPlaceholder": "Toplantı seçin (isteğe bağlı)",
+    "save": "Kaydet",
+    "cancel": "Vazgeç",
+    "created": "Görev oluşturuldu.",
+    "updated": "Görev güncellendi.",
+    "statuses": {
+      "OPEN": "Açık",
+      "IN_PROGRESS": "İşlemde",
+      "DONE": "Tamamlandı",
+      "CANCELLED": "İptal edildi"
+    },
+    "priorities": {
+      "LOW": "Düşük",
+      "NORMAL": "Normal",
+      "HIGH": "Yüksek"
+    }
+  },
+  "errors": {
+    "notFound": "Görev bulunamadı."
+  },
+  "validation": {
+    "titleRequired": "Başlık zorunludur.",
+    "titleMax": "Başlık en fazla 200 karakter olabilir.",
+    "descriptionMax": "Açıklama en fazla 2000 karakter olabilir.",
+    "dateInvalid": "Geçerli bir tarih giriniz (YYYY-AA-GG)."
+  }
+}

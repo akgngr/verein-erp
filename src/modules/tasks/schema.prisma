@@ -1,0 +1,38 @@
+enum TaskStatus {
+  OPEN
+  IN_PROGRESS
+  DONE
+  CANCELLED
+}
+
+enum TaskPriority {
+  LOW
+  NORMAL
+  HIGH
+}
+
+model Task {
+  id               String        @id @default(uuid())
+  title            String
+  description      String?
+  status           TaskStatus    @default(OPEN)
+  priority         TaskPriority  @default(NORMAL)
+  dueDate          DateTime?     @db.Date
+  memberId         String?
+  memberName       String?
+  meetingId        String?
+  completedAt      DateTime?
+  completedById    String?
+  completedByLabel String?
+  createdById      String?
+  createdByLabel   String?
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  @@index([status])
+  @@index([priority])
+  @@index([dueDate])
+  @@index([memberId])
+  @@index([meetingId])
+  @@map("tasks_tasks")
+}
