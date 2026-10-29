@@ -1,12 +1,4 @@
-import { exportMinutesPdfHandler } from "@/modules/meetings/server";
-
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/meetings/api/[id]/minutes-pdf/route.ts
+export * from "@/modules/meetings/api/[id]/minutes-pdf/route";
 export const runtime = "nodejs";
-
-/** GET tutanak PDF — ince sarmalayıcı (9. bölüm): mantık handlers/export-minutes-pdf.tsx'te. */
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> },
-): Promise<Response> {
-  const { id } = await params;
-  return exportMinutesPdfHandler(request, { id });
-}

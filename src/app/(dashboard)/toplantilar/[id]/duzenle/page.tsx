@@ -1,13 +1,4 @@
-import { MeetingEditView } from "@/modules/meetings/ui";
-
-export const metadata = { title: "Toplantıyı düzenle" };
-
-/** Toplantı düzenleme (7.2) — ince rota. */
-export default async function ToplantiDuzenlePage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  return <MeetingEditView id={id} />;
-}
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/meetings/routes/[id]/duzenle/page.tsx
+export { default } from "@/modules/meetings/routes/[id]/duzenle/page";
+export * from "@/modules/meetings/routes/[id]/duzenle/page";

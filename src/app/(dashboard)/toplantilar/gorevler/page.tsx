@@ -1,12 +1,4 @@
-import { ActionItemListView } from "@/modules/meetings/ui";
-
-export const metadata = { title: "Toplantı görevleri" };
-
-/** Çapraz görev listesi (7.4) — ince rota. */
-export default async function GorevlerPage({
-  searchParams,
-}: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
-  return <ActionItemListView searchParams={searchParams} />;
-}
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/meetings/routes/gorevler/page.tsx
+export { default } from "@/modules/meetings/routes/gorevler/page";
+export * from "@/modules/meetings/routes/gorevler/page";

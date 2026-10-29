@@ -1,11 +1,4 @@
-import { MemberListView } from "@/modules/members/ui";
-
-export const metadata = { title: "Üyeler" };
-
-export default async function UyelerPage({
-  searchParams,
-}: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
-  return <MemberListView searchParams={searchParams} />;
-}
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/members/page.tsx
+export { default } from "@/modules/members/page";
+export * from "@/modules/members/page";

@@ -1,13 +1,4 @@
-import { DocumentEditView } from "@/modules/documents/ui";
-
-export const metadata = { title: "Evrağı Düzenle" };
-
-/** Evrak düzenleme — ince rota: id'yi view'a iletir. */
-export default async function EvrakDuzenlePage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  return <DocumentEditView id={id} />;
-}
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/documents/routes/[id]/duzenle/page.tsx
+export { default } from "@/modules/documents/routes/[id]/duzenle/page";
+export * from "@/modules/documents/routes/[id]/duzenle/page";

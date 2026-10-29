@@ -1,10 +1,4 @@
-import { SettingsOverviewView } from "@/modules/system/ui";
-
-export const metadata = {
-  title: "Ayarlar | Verein ERP",
-  description: "Sistem ve dernek yönetimi ayarları",
-};
-
-export default function SettingsPage() {
-  return <SettingsOverviewView />;
-}
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/system/page.tsx
+export { default } from "@/modules/system/page";
+export * from "@/modules/system/page";

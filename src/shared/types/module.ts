@@ -49,6 +49,11 @@ export type ModuleConfig = {
   /** CORE modüller için true (pasife alınamaz, silinemez). */
   isProtected?: boolean;
   hasSchema?: boolean;
+  /**
+   * Modül sayfalarının bağlandığı rota kökü (örn. "/profil"). Verilmezse ilk nav `href`'i
+   * kullanılır; menüde görünmeyen (nav'ı olmayan) modüllerin sayfaları için gereklidir.
+   */
+  basePath?: string;
   nav: NavItem[];
   /**
    * Modül menüsü: tanımlıysa sol panelde modüle girildiğinde ana menünün yerini alır.

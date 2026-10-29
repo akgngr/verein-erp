@@ -1,14 +1,4 @@
-import type { Metadata } from "next";
-
-import { AccountingListView } from "@/modules/accounting/server";
-
-export const metadata: Metadata = { title: "Muhasebe" };
-
-/** Fiş listesi — ince sayfa (§ 6): veri view'da yüklenir. */
-export default function MuhasebePage({
-  searchParams,
-}: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
-  return <AccountingListView searchParams={searchParams} />;
-}
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/accounting/page.tsx
+export { default } from "@/modules/accounting/page";
+export * from "@/modules/accounting/page";

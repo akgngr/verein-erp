@@ -1,15 +1,4 @@
-import type { Metadata } from "next";
-
-import { AccountingDetailView } from "@/modules/accounting/server";
-
-export const metadata: Metadata = { title: "Fiş detayı" };
-
-/** Fiş detayı — ince sayfa (§ 6). */
-export default async function MuhasebeDetayPage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  return <AccountingDetailView id={id} />;
-}
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/accounting/routes/[id]/page.tsx
+export { default } from "@/modules/accounting/routes/[id]/page";
+export * from "@/modules/accounting/routes/[id]/page";

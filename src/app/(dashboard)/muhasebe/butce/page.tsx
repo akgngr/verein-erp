@@ -1,17 +1,4 @@
-import type { Metadata } from "next";
-
-import { BudgetView } from "@/modules/accounting/server";
-import { berlinToday } from "@/modules/accounting/server";
-
-export const metadata: Metadata = { title: "Bütçe" };
-
-/** Bütçe — ?filter.year= (§ 6). */
-export default async function MuhasebeButcePage({
-  searchParams,
-}: {
-  searchParams: Promise<{ "filter.year"?: string }>;
-}) {
-  const { "filter.year": yearRaw } = await searchParams;
-  const year = yearRaw && /^\d{4}$/.test(yearRaw) ? Number(yearRaw) : berlinToday().getUTCFullYear();
-  return <BudgetView year={year} />;
-}
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/accounting/routes/butce/page.tsx
+export { default } from "@/modules/accounting/routes/butce/page";
+export * from "@/modules/accounting/routes/butce/page";

@@ -2,7 +2,8 @@ import { MeetingListView } from "./ui";
 
 export const metadata = { title: "Toplantılar" };
 
-export default async function MeetingsPage({
+/** Toplantı listesi (7.1) — ince rota: içerik views/meeting-list-view.tsx'te. */
+export default async function ToplantilarPage({
   searchParams,
 }: {
   searchParams: Promise<Record<string, string | string[] | undefined>>;

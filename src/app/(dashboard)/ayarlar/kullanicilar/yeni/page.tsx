@@ -1,7 +1,4 @@
-import { UserCreateView } from "@/modules/users/ui";
-
-export const metadata = { title: "Yeni Kullanıcı" };
-
-export default function YeniKullaniciPage() {
-  return <UserCreateView />;
-}
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/users/routes/yeni/page.tsx
+export { default } from "@/modules/users/routes/yeni/page";
+export * from "@/modules/users/routes/yeni/page";

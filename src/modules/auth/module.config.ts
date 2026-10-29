@@ -7,5 +7,7 @@ export const moduleConfig: ModuleConfig = {
   category: "CORE",
   isProtected: true,
   hasSchema: false,
+  // Menüde görünmeyen profil sayfası (/profil) bu köke bağlanır.
+  basePath: "/profil",
   nav: [],
 };

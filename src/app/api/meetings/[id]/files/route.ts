@@ -1,12 +1,4 @@
-import { uploadMeetingFileHandler } from "@/modules/meetings/server";
-
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/meetings/api/[id]/files/route.ts
+export * from "@/modules/meetings/api/[id]/files/route";
 export const runtime = "nodejs";
-
-/** POST yükleme — ince sarmalayıcı (8. bölüm): mantık handlers/upload-file.ts'te. */
-export async function POST(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> },
-): Promise<Response> {
-  const { id } = await params;
-  return uploadMeetingFileHandler(request, { id });
-}
