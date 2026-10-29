@@ -10,10 +10,10 @@ import { z } from "zod";
  */
 export const passwordSchema = z
   .string()
-  .min(10, "Parola en az 10 karakter olmalıdır.")
-  .regex(/[A-ZĞÜŞİÖÇ]/, "Parola en az bir büyük harf içermelidir.")
-  .regex(/[a-zğüşiöç]/, "Parola en az bir küçük harf içermelidir.")
-  .regex(/[0-9]/, "Parola en az bir rakam içermelidir.");
+  .min(10, "validation.passwordMin")
+  .regex(/[A-ZĞÜŞİÖÇ]/, "validation.passwordUpper")
+  .regex(/[a-zğüşiöç]/, "validation.passwordLower")
+  .regex(/[0-9]/, "validation.passwordDigit");
 
 // Spesifikasyon: bcrypt cost 12
 const BCRYPT_COST = 12;

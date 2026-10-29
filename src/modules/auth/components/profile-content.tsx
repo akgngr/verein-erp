@@ -1,16 +1,19 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Card, CardBody, CardHeader, Chip } from "@heroui/react";
 
 import { ChangePasswordForm } from "../components/change-password-form";
 import type { SessionUser } from "../types";
-import { ROLE_COLORS, ROLE_LABELS } from "@/shared/roles";
+import { ROLE_COLORS } from "@/shared/roles";
 
 /**
  * Profil sayfasının HeroUI kullanan bölümü client bileşendir;
  * sunucu tarafı ProfileView requireUser ile veriyi çekip buraya aktarır.
  */
 export function ProfileContent({ user }: { user: SessionUser }) {
+  const tRoles = useTranslations("roles");
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
       <Card shadow="sm">
@@ -29,7 +32,7 @@ export function ProfileContent({ user }: { user: SessionUser }) {
           <div className="flex items-center justify-between gap-4">
             <span className="text-default-500">Rol</span>
             <Chip color={ROLE_COLORS[user.role]} size="sm" variant="flat">
-              {ROLE_LABELS[user.role]}
+              {tRoles(user.role)}
             </Chip>
           </div>
         </CardBody>

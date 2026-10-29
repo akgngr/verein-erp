@@ -1,19 +1,19 @@
 import type { Metadata } from "next";
 import Script from "next/script";
 import { NextIntlClientProvider } from "next-intl";
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { THEME_INIT_SCRIPT } from "@/shared/components/theme-provider";
 import { Providers } from "./providers";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: {
-    default: "Dernek Yönetim Sistemi",
-    template: "%s | Dernek Yönetim Sistemi",
-  },
-  description: "Dernek yönetim sistemi: evrak kayıt, toplantılar ve üye yönetimi.",
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const t = await getTranslations("common");
+  return {
+    title: { default: t("appName"), template: t("appTitleTemplate") },
+    description: t("appDescription"),
+  };
+}
 
 /**
  * Faz 3 eklemeleri düzeltmesi: members modülünün client bileşenleri

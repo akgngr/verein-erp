@@ -11,6 +11,7 @@ import {
 } from "@heroui/react";
 import { ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { cn } from "@/shared/utils";
@@ -46,6 +47,8 @@ export function DataTableToolbar({
 }) {
   const searchParams = useSearchParams();
   const { setParams } = useListQueryState();
+  const tCommon = useTranslations("common");
+  const tTable = useTranslations("common.table");
   const [isFilterOpen, setIsFilterOpen] = useState(false);
 
   // Aktif filtre sayısı hesaplama (Arama ve Tarih hariç popover içindekiler)
@@ -116,9 +119,9 @@ export function DataTableToolbar({
             onValueChange={onSearchDraftChange}
             onClear={() => onSearchDraftChange("")}
             isClearable
-            placeholder={searchPlaceholder ?? "Ara..."}
+            placeholder={searchPlaceholder ?? tTable("searchPlaceholder")}
             startContent={<Search className="h-4 w-4 text-default-400 shrink-0" />}
-            aria-label="Tabloda ara"
+            aria-label={tTable("searchLabel")}
             classNames={{
               inputWrapper:
                 "h-9 shadow-xs bg-default-100/60 hover:bg-default-100 border border-default-200/80 transition-colors rounded-xl",
@@ -138,7 +141,7 @@ export function DataTableToolbar({
             onPress={handleResetAll}
             startContent={<X className="h-3.5 w-3.5" />}
           >
-            Temizle
+            {tCommon("clear")}
           </Button>
         ) : null}
       </div>
@@ -184,7 +187,7 @@ export function DataTableToolbar({
                   )
                 }
               >
-                <span>Filtreler</span>
+                <span>{tTable("filters")}</span>
               </Button>
             </PopoverTrigger>
             <PopoverContent className="p-0 border border-default-200/80 shadow-2xl rounded-2xl bg-content1 overflow-hidden w-[340px] sm:w-[380px] max-w-[calc(100vw-2rem)]">
@@ -197,10 +200,10 @@ export function DataTableToolbar({
                     </div>
                     <div className="flex flex-col">
                       <h4 className="text-small font-semibold text-foreground">
-                        Filtreler
+                        {tTable("filters")}
                       </h4>
                       <p className="text-[11px] text-default-400">
-                        Sonuçları daraltmak için seçim yapın
+                        {tTable("filtersHint")}
                       </p>
                     </div>
                   </div>
@@ -212,7 +215,7 @@ export function DataTableToolbar({
                       className="text-xs h-7 px-2 font-medium"
                       onPress={handleResetFiltersOnly}
                     >
-                      Sıfırla
+                      {tTable("reset")}
                     </Button>
                   ) : null}
                 </div>
@@ -229,7 +232,7 @@ export function DataTableToolbar({
                         <Select
                           size="sm"
                           aria-label={filter.label}
-                          placeholder={`${filter.label} seçin`}
+                          placeholder={tCommon("filterSelect", { label: filter.label })}
                           selectedKeys={currentValue ? [currentValue] : [FILTER_ALL]}
                           onSelectionChange={(keys) => {
                             const key =
@@ -246,7 +249,7 @@ export function DataTableToolbar({
                           }}
                         >
                           {[
-                            { value: FILTER_ALL, label: "Tümü" },
+                            { value: FILTER_ALL, label: tCommon("all") },
                             ...filter.options,
                           ].map((option) => (
                             <SelectItem
@@ -272,15 +275,15 @@ export function DataTableToolbar({
                 <div className="px-4 py-2.5 bg-default-50/50 border-t border-default-200/80 flex items-center justify-between">
                   <span className="text-xs text-default-400 font-medium">
                     {activeFilterCount > 0
-                      ? `${activeFilterCount} filtre aktif`
-                      : "Filtre seçilmedi"}
+                      ? tTable("activeFilters", { count: activeFilterCount })
+                      : tCommon("noFilter")}
                   </span>
                   <Button
                     size="sm"
                     onPress={() => setIsFilterOpen(false)}
                     className="h-8 px-4 text-xs font-semibold bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 rounded-lg shadow-xs transition-colors"
                   >
-                    Tamam
+                    {tTable("done")}
                   </Button>
                 </div>
               </div>

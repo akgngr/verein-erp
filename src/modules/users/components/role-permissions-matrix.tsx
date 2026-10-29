@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { useMemo, useState } from "react";
 import {
   Button,
@@ -24,7 +26,7 @@ import {
 
 import { can, type PermissionAction } from "@/shared/permissions/define";
 import type { Role } from "@/shared/roles";
-import { ROLE_COLORS, ROLE_LABELS } from "@/shared/roles";
+import { ROLE_COLORS } from "@/shared/roles";
 
 import {
   ALL_RESOURCES_META,
@@ -55,6 +57,7 @@ export function RolePermissionsMatrix({
   users?: UserRow[];
   roleCounts?: Record<Role, number>;
 }) {
+  const tRoles = useTranslations("roles");
   const [selectedRole, setSelectedRole] = useState<Role>("ADMIN");
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedUserFilter, setSelectedUserFilter] = useState<string>("");
@@ -151,7 +154,7 @@ export function RolePermissionsMatrix({
               <CardBody className="p-3.5 flex flex-col gap-2">
                 <div className="flex items-center justify-between">
                   <Chip size="sm" color={meta.badgeColor} variant={isSelected ? "solid" : "flat"}>
-                    {ROLE_LABELS[meta.role]}
+                    {tRoles(meta.role)}
                   </Chip>
                   <span className="text-[11px] font-semibold text-default-400">
                     {userCount} üye
@@ -200,11 +203,11 @@ export function RolePermissionsMatrix({
               }}
             >
               {users.map((u) => (
-                <SelectItem key={u.id} textValue={`${u.name} (${ROLE_LABELS[u.role]})`}>
+                <SelectItem key={u.id} textValue={`${u.name} (${tRoles(u.role)})`}>
                   <div className="flex items-center justify-between">
                     <span className="truncate">{u.name}</span>
                     <Chip size="sm" variant="dot" color={ROLE_COLORS[u.role]}>
-                      {ROLE_LABELS[u.role]}
+                      {tRoles(u.role)}
                     </Chip>
                   </div>
                 </SelectItem>
@@ -239,7 +242,7 @@ export function RolePermissionsMatrix({
                     {currentRoleMeta.label}
                   </h3>
                   <Chip size="sm" color={currentRoleMeta.badgeColor} variant="solid">
-                    {ROLE_LABELS[selectedRole]}
+                    {tRoles(selectedRole)}
                   </Chip>
                   {selectedUser && (
                     <Chip size="sm" variant="flat" color="success">

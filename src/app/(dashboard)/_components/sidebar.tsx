@@ -29,7 +29,7 @@ import { createContext, useContext, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 
 import { registry } from "@/registry";
-import { ROLE_COLORS, ROLE_LABELS, type Role } from "@/shared/roles";
+import { ROLE_COLORS, type Role } from "@/shared/roles";
 import { can } from "@/shared/permissions/define";
 import {
   MODULE_HOME_KEY,
@@ -321,7 +321,9 @@ function SidebarUserFooter({
   onSignOut: () => Promise<void>;
   onNavigate?: () => void;
 }) {
+  const tRoles = useTranslations("roles");
   const tNav = useTranslations("nav");
+  const tCommon = useTranslations("common");
   const tSidebar = useTranslations("sidebar");
   const initials = name
     .split(" ")
@@ -355,7 +357,7 @@ function SidebarUserFooter({
               color={ROLE_COLORS[role]}
               className="h-5 text-[10px] shrink-0"
             >
-              {ROLE_LABELS[role]}
+              {tRoles(role)}
             </Chip>
           </button>
         </DropdownTrigger>
@@ -365,7 +367,7 @@ function SidebarUserFooter({
               <p className="text-small font-semibold text-foreground">{name}</p>
               <p className="text-tiny text-default-500">{email}</p>
               <Chip color={ROLE_COLORS[role]} size="sm" variant="flat" className="mt-1 self-start">
-                {ROLE_LABELS[role]}
+                {tRoles(role)}
               </Chip>
             </div>
           </DropdownItem>
@@ -392,7 +394,7 @@ function SidebarUserFooter({
             startContent={<LogOut className="h-4 w-4" />}
             onPress={() => void onSignOut()}
           >
-            Çıkış yap
+            {tCommon("signOut")}
           </DropdownItem>
         </DropdownMenu>
       </Dropdown>

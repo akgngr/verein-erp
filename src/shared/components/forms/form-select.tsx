@@ -2,6 +2,8 @@
 
 import { Select, SelectItem } from "@heroui/react";
 import { Controller, type Control, type FieldValues, type Path } from "react-hook-form";
+import { useTranslations } from "next-intl";
+
 import { useTranslateMessage } from "@/shared/i18n/use-translate-message";
 
 export type FormSelectOption = { value: string; label: string };
@@ -26,11 +28,12 @@ export function FormSelect<T extends FieldValues>({
   options,
   description,
   isRequired,
-  placeholder = "Seçin",
+  placeholder,
   isDisabled,
   labelPlacement = "outside",
 }: FormSelectProps<T>) {
   const translateMessage = useTranslateMessage();
+  const tCommon = useTranslations("common");
   return (
     <Controller
       name={name}
@@ -44,7 +47,7 @@ export function FormSelect<T extends FieldValues>({
             labelPlacement={labelPlacement}
             description={description}
             isRequired={isRequired}
-            placeholder={placeholder}
+            placeholder={placeholder ?? tCommon("selectPlaceholder")}
             isDisabled={isDisabled}
             selectedKeys={value ? [value] : []}
             onSelectionChange={(keys) => {

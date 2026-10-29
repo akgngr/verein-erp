@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { addToast, Chip } from "@heroui/react";
 import { KeyRound, Pencil, Power, RefreshCcw } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -8,14 +10,14 @@ import { useState } from "react";
 import { DataTable } from "@/shared/components/data-table/data-table";
 import type { DataTableColumn } from "@/shared/components/data-table/types";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
-import { ROLE_COLORS, ROLE_LABELS } from "@/shared/roles";
+import { ROLE_COLORS } from "@/shared/roles";
 import { formatDateTime } from "@/shared/utils";
 
 import { ResetPasswordDialog } from "./reset-password-dialog";
 import { setUserActiveAction } from "../actions/set-active";
 import { USER_STATUS_OPTIONS } from "../constants";
 import type { UserRow } from "../queries/list-users";
-import { ROLE_OPTIONS } from "@/shared/roles";
+import { ROLES } from "@/shared/roles";
 
 /**
  * Kullanıcı listesi: ortak DataTable üzerinde modüle özel kolonlar,
@@ -40,6 +42,7 @@ export function UsersTable({
   q?: string;
   canUpdate: boolean;
 }) {
+  const tRoles = useTranslations("roles");
   const router = useRouter();
   const [activeTarget, setActiveTarget] = useState<{ user: UserRow; isActive: boolean } | null>(
     null,
@@ -55,7 +58,7 @@ export function UsersTable({
       sortable: true,
       render: (row) => (
         <Chip color={ROLE_COLORS[row.role]} size="sm" variant="flat">
-          {ROLE_LABELS[row.role]}
+          {tRoles(row.role)}
         </Chip>
       ),
     },
@@ -110,7 +113,7 @@ export function UsersTable({
         q={q}
         searchPlaceholder="Ad veya e-posta ara..."
         filters={[
-          { key: "role", label: "Rol", options: ROLE_OPTIONS.map((o) => ({ value: o.value as string, label: o.label })) },
+          { key: "role", label: "Rol", options: ROLES.map((role) => ({ value: role as string, label: tRoles(role) })) },
           { key: "status", label: "Durum", options: [...USER_STATUS_OPTIONS] },
         ]}
         emptyMessage="Kullanıcı bulunamadı."

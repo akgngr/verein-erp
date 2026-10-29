@@ -1,6 +1,7 @@
 "use client";
 
 import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 export function ConfirmDialog({
@@ -8,8 +9,8 @@ export function ConfirmDialog({
   onOpenChange,
   title,
   message,
-  confirmLabel = "Onayla",
-  cancelLabel = "Vazgeç",
+  confirmLabel,
+  cancelLabel,
   confirmColor = "primary",
   onConfirm,
 }: {
@@ -24,6 +25,7 @@ export function ConfirmDialog({
   onConfirm: () => Promise<void>;
 }) {
   const [isPending, setIsPending] = useState(false);
+  const tCommon = useTranslations("common");
 
   const handleConfirm = async (onClose: () => void) => {
     try {
@@ -46,7 +48,7 @@ export function ConfirmDialog({
             </ModalBody>
             <ModalFooter>
               <Button variant="light" onPress={onClose} isDisabled={isPending}>
-                {cancelLabel}
+                {cancelLabel ?? tCommon("cancel")}
               </Button>
               <Button
                 color={confirmColor}
@@ -54,7 +56,7 @@ export function ConfirmDialog({
                 isDisabled={isPending}
                 onPress={() => void handleConfirm(onClose)}
               >
-                {confirmLabel}
+                {confirmLabel ?? tCommon("confirm")}
               </Button>
             </ModalFooter>
           </>

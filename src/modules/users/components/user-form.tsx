@@ -3,6 +3,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { addToast, Button, Card, CardBody } from "@heroui/react";
 import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
@@ -12,7 +13,7 @@ import { FormInput } from "@/shared/components/forms/form-input";
 import { FormSelect } from "@/shared/components/forms/form-select";
 import { FormSwitch } from "@/shared/components/forms/form-switch";
 import { SubmitButton } from "@/shared/components/forms/submit-button";
-import { ROLE_OPTIONS, type Role } from "@/shared/roles";
+import { ROLES, type Role } from "@/shared/roles";
 
 import { createUserAction } from "../actions/create-user";
 import { updateUserAction } from "../actions/update-user";
@@ -24,14 +25,15 @@ import {
   type UserUpdateInput,
 } from "../schemas/user";
 
-const ROLE_SELECT_OPTIONS = ROLE_OPTIONS.map((option) => ({
-  value: option.value as string,
-  label: option.label,
-}));
+function useRoleSelectOptions() {
+  const tRoles = useTranslations("roles");
+  return ROLES.map((role) => ({ value: role as string, label: tRoles(role) }));
+}
 
 /** Yeni kullanıcı formu (11.1). */
 export function UserCreateForm() {
   const router = useRouter();
+  const roleOptions = useRoleSelectOptions();
   const [formError, setFormError] = useState<string | null>(null);
   const form = useForm<UserCreateInput>({
     resolver: zodResolver(userCreateSchema),
@@ -63,7 +65,7 @@ export function UserCreateForm() {
         isRequired
         placeholder="ornek@dernek.org"
       />
-      <FormSelect name="role" label="Rol" control={form.control} options={ROLE_SELECT_OPTIONS} isRequired />
+      <FormSelect name="role" label="Rol" control={form.control} options={roleOptions} isRequired />
       <RolePermissionsPreview role={selectedRole} />
       <FormInput
         name="password"
@@ -96,6 +98,7 @@ export type UserEditValues = {
 /** Düzenleme formu (11.1): ad, e-posta, rol, aktif/pasif. Parola sıfırlama ayrı eylemdir. */
 export function UserEditForm({ user }: { user: UserEditValues }) {
   const router = useRouter();
+  const roleOptions = useRoleSelectOptions();
   const [formError, setFormError] = useState<string | null>(null);
   const form = useForm<UserUpdateInput>({
     resolver: zodResolver(userUpdateSchema),
@@ -120,7 +123,7 @@ export function UserEditForm({ user }: { user: UserEditValues }) {
     <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
       <FormInput name="name" label="Ad Soyad" control={form.control} isRequired />
       <FormInput name="email" label="E-posta" control={form.control} type="email" isRequired />
-      <FormSelect name="role" label="Rol" control={form.control} options={ROLE_SELECT_OPTIONS} isRequired />
+      <FormSelect name="role" label="Rol" control={form.control} options={roleOptions} isRequired />
       <RolePermissionsPreview role={selectedRole} />
       <FormSwitch
         name="isActive"

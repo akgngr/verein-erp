@@ -27,7 +27,53 @@
     "recordsPerPageValue": "{count} kayıt",
     "accessDeniedTitle": "Erişim engellendi",
     "accessDeniedDescription": "Bu sayfayı görüntüleme yetkiniz yok. Lütfen yöneticinizle görüşün.",
-    "appDescription": "Dernek yönetim sistemi: evrak kayıt, toplantılar ve üye yönetimi."
+    "appDescription": "Dernek yönetim sistemi: evrak kayıt, toplantılar ve üye yönetimi.",
+    "errors": {
+      "formInvalid": "Lütfen formdaki hataları düzeltin.",
+      "sessionExpired": "Oturumunuz sona erdi. Lütfen tekrar giriş yapın.",
+      "forbidden": "Bu işlem için yetkiniz yok.",
+      "duplicate": "Bu kayıt zaten mevcut.",
+      "unexpected": "Beklenmeyen bir hata oluştu."
+    },
+    "selectPlaceholder": "Seçin",
+    "noRecords": "Kayıt bulunamadı.",
+    "rowActions": "Satır işlemleri",
+    "filterSelect": "{label} seçin",
+    "noFilter": "Filtre seçilmedi",
+    "languageChanged": "Dil değiştirildi: Türkçe",
+    "languageChangeFailed": "Dil değiştirilemedi.",
+    "languageSelect": "Dil seçimi",
+    "languageOptions": "Dil seçenekleri",
+    "signOut": "Çıkış yap",
+    "loginTitle": "Giriş",
+    "appTitleTemplate": "%s | Dernek Yönetim Sistemi",
+    "dateRange": {
+      "today": "Bugün",
+      "yesterday": "Dün",
+      "last7": "Son 7 gün",
+      "last14": "Son 14 gün",
+      "last30": "Son 30 gün",
+      "last90": "Son 90 gün",
+      "last365": "Son 365 gün",
+      "none": "Tarih aralığı seçilmedi",
+      "picker": "Tarih aralığı seçici",
+      "clear": "Tarih filtresini kaldır",
+      "label": "Tarih",
+      "from": "{date}'den itibaren",
+      "until": "{date}'ye kadar",
+      "apply": "Uygula",
+      "custom": "Özel"
+    },
+    "table": {
+      "searchPlaceholder": "Ara...",
+      "searchLabel": "Tabloda ara",
+      "filters": "Filtreler",
+      "filtersHint": "Sonuçları daraltmak için seçim yapın",
+      "reset": "Sıfırla",
+      "activeFilters": "{count} filtre aktif",
+      "done": "Tamam",
+      "label": "Tablo"
+    }
   },
   "nav": {
     "panel": "Panel",
@@ -79,7 +125,31 @@
     "orgBannerLink": "Dernek bilgilerini doldur",
     "accountingNet": "Muhasebe farkı: {net}",
     "accountingMissing": "Belgesi eksik: {count}",
-    "accountingYearLocked": "Yıl kilitli"
+    "accountingYearLocked": "Yıl kilitli",
+    "overviewTitle": "Genel Bakış",
+    "overviewDescription": "Dernek yönetim sistemi ve operasyonel özet durumu.",
+    "docsCategory": "Evrak Kayıt",
+    "docsPrimary": "Açık / İşlemde",
+    "overdueBadge": "{count} Gecikmiş",
+    "incomingMonth": "Bu ay gelen",
+    "outgoingMonth": "Bu ay giden",
+    "overdueLabel": "Süresi geçmiş",
+    "meetingsCategory": "Toplantı & Tutanak",
+    "nextLabel": "Sıradaki: {number}",
+    "plannedLabel": "Planlanan Toplantı",
+    "overdueTasksBadge": "{count} Gecikmiş Görev",
+    "pendingMinutes": "Onay bekleyen",
+    "openTasksLabel": "Açık görev",
+    "overdueTasksLabel": "Gecikmiş görev",
+    "membersCategory": "Üye Yönetimi",
+    "activeMembers": "Aktif Üye",
+    "newThisMonth": "Bu ay yeni",
+    "passive": "Pasif",
+    "resigned": "Ayrılan",
+    "docsOverdueAlert": "Son işlem tarihi geçmiş {count} adet evrak bekliyor.",
+    "docsOverdueAction": "Geciken evrakları gör",
+    "tasksOverdueAlert": "Termini geçmiş {count} adet toplantı görevi bulunuyor.",
+    "tasksOverdueAction": "Geciken görevleri gör"
   },
   "meta": {
     "panel": "Panel",
@@ -157,6 +227,27 @@
         "action": "Ayarlar"
       }
     }
+  },
+  "roles": {
+    "ADMIN": "Yönetici",
+    "BOARD": "Yönetim Kurulu",
+    "SECRETARY": "Sekreter",
+    "VIEWER": "Salt okunur",
+    "TREASURER": "Sayman",
+    "AUDITOR": "Denetçi"
+  },
+  "validation": {
+    "passwordMin": "Parola en az 10 karakter olmalıdır.",
+    "passwordUpper": "Parola en az bir büyük harf içermelidir.",
+    "passwordLower": "Parola en az bir küçük harf içermelidir.",
+    "passwordDigit": "Parola en az bir rakam içermelidir."
+  },
+  "files": {
+    "readFailed": "Dosya okunamadı (multipart/form-data bekleniyor).",
+    "missing": "Dosya bulunamadı.",
+    "typeNotAllowed": "Bu dosya türü kabul edilmiyor.",
+    "empty": "Boş dosya yüklenemez.",
+    "contentMismatch": "Dosya içeriği .{extension} uzantısıyla uyumlu değil."
   },
   "accounting": {
     "list": {

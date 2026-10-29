@@ -1,8 +1,13 @@
+import { getTranslations } from "next-intl/server";
+
 import type { RawSearchParams } from "@/shared/list-params";
 
 import { LoginView } from "@/modules/auth/ui";
 
-export const metadata = { title: "Giriş" };
+export async function generateMetadata() {
+  const t = await getTranslations("common");
+  return { title: t("loginTitle") };
+}
 
 export default async function GirisPage({
   searchParams,
