@@ -3,7 +3,7 @@ import { notFound } from "next/navigation";
 
 import { ForbiddenError, listActiveUserOptions, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
-import { PageHeader } from "@/shared/components/ui/page-header";
+import { FormDrawer } from "@/shared/components/forms/form-drawer";
 import { getEnv } from "@/shared/env";
 
 import { documentsPermissions } from "../permissions";
@@ -23,7 +23,7 @@ export async function DocumentEditView({ id }: { id: string }) {
   try {
     await requirePermission(documentsPermissions, "update");
   } catch (error) {
-    if (error instanceof ForbiddenError) return <AccessDenied />;
+    if (error instanceof ForbiddenError) return <FormDrawer title="">{<AccessDenied />}</FormDrawer>;
     throw error;
   }
 
@@ -71,11 +71,7 @@ export async function DocumentEditView({ id }: { id: string }) {
   }
 
   return (
-    <div>
-      <PageHeader
-        title={t("editTitle")}
-        description={t("editNumbered", { registryNumber: doc.registryNumber })}
-      />
+    <FormDrawer title={t("editTitle")} description={t("editNumbered", { registryNumber: doc.registryNumber })}>
       <DocumentForm
         mode="edit"
         document={{
@@ -101,6 +97,6 @@ export async function DocumentEditView({ id }: { id: string }) {
         replyTargets={replyTargets}
         maxMb={getEnv().MAX_UPLOAD_MB}
       />
-    </div>
+    </FormDrawer>
   );
 }

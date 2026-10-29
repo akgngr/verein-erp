@@ -1842,7 +1842,8 @@
       "updatedToast": "Etkinlik başarıyla güncellendi.",
       "createdToast": "Etkinlik başarıyla oluşturuldu.",
       "createFailed": "Etkinlik oluşturulamadı.",
-      "genericError": "Bir hata meydana geldi."
+      "genericError": "Bir hata meydana geldi.",
+      "subtitle": "Dernek içi seminer, atölye veya sosyal etkinlik bilgilerini belirleyin."
     },
     "table": {
       "event": "Etkinlik",

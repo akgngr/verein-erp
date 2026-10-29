@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
-import { PageHeader } from "@/shared/components/ui/page-header";
+import { FormDrawer } from "@/shared/components/forms/form-drawer";
 
 import { getDonor } from "../queries/get-donor";
 import { donationsPermissions } from "../permissions";
@@ -16,7 +16,7 @@ export async function DonorEditView({ id }: { id: string }) {
   try {
     user = await requirePermission(donationsPermissions, "update");
   } catch (error) {
-    if (error instanceof ForbiddenError) return <AccessDenied />;
+    if (error instanceof ForbiddenError) return <FormDrawer title="">{<AccessDenied />}</FormDrawer>;
     throw error;
   }
   void user;
@@ -26,8 +26,7 @@ export async function DonorEditView({ id }: { id: string }) {
   const t = await getTranslations("donations.donors.form");
 
   return (
-    <div>
-      <PageHeader title={t("editTitle")} description={`SP-${String(donor.donorNumber).padStart(4, "0")}`} />
+    <FormDrawer title={t("editTitle")} description={`SP-${String(donor.donorNumber).padStart(4, "0")}`}>
       {donor.isAnonymized ? (
         <div className="max-w-3xl rounded-medium border border-warning-300 bg-warning-50 px-4 py-3 text-small text-warning-700">
           {tDonors("anonymizedNoEdit")}
@@ -52,6 +51,6 @@ export async function DonorEditView({ id }: { id: string }) {
           }}
         />
       )}
-    </div>
+    </FormDrawer>
   );
 }

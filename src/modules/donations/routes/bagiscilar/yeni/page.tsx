@@ -1,12 +1,6 @@
-import { getTranslations } from "next-intl/server";
-import { DonorCreateView } from "../../../ui";
+import { redirect } from "next/navigation";
 
-export async function generateMetadata() {
-  const t = await getTranslations("donations.meta");
-  return { title: t("donorCreate") };
-}
-
-/** Yeni bağışçı — ince rota. */
+/** Eski adres: form artık listenin sağ çekmecesinde açılır. */
 export default function Page() {
-  return <DonorCreateView />;
+  redirect("/bagislar/bagiscilar?yeni");
 }

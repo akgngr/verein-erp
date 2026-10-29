@@ -21,5 +21,7 @@ export default async function ToplantiDetayPage({
   const raw = await searchParams;
   const tab = Array.isArray(raw.sekme) ? raw.sekme[0] : raw.sekme;
   const gundem = Array.isArray(raw.gundem) ? raw.gundem[0] : raw.gundem;
-  return <MeetingDetailView id={id} tabParam={tab} agendaPreset={gundem} />;
+  return (
+    <MeetingDetailView id={id} tabParam={tab} agendaPreset={gundem} editOpen={raw.duzenle !== undefined} />
+  );
 }

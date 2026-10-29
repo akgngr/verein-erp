@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { AccountingEditView } from "./booking-edit-view";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
@@ -24,7 +25,14 @@ function InfoRow({ label, children }: { label: string; children: React.ReactNode
 }
 
 /** Fiş detayı (§ 11.3): tüm alanlar + belgeler + aksiyonlar. */
-export async function AccountingDetailView({ id }: { id: string }) {
+export async function AccountingDetailView({
+  id,
+  searchParams,
+}: {
+  id: string;
+  /** `?duzenle` → düzenleme çekmecesi. */
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
   let user;
   try {
     user = await requirePermission(accountingPermissions, "view");
@@ -127,6 +135,7 @@ export async function AccountingDetailView({ id }: { id: string }) {
           </Link>
         </div>
       </div>
+      {canUpdate && (await searchParams)?.duzenle !== undefined ? <AccountingEditView id={booking.id} /> : null}
     </div>
   );
 }

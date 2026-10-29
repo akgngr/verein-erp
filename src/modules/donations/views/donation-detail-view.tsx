@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { DonationEditView } from "./donation-edit-view";
 import { notFound } from "next/navigation";
 import { Ban, Pencil } from "lucide-react";
 import { getTranslations } from "next-intl/server";
@@ -24,7 +25,14 @@ function InfoRow({ label, children }: { label: string; children: React.ReactNode
 }
 
 /** Bağış detayı (§ 15 md. 3). */
-export async function DonationDetailView({ id }: { id: string }) {
+export async function DonationDetailView({
+  id,
+  searchParams,
+}: {
+  id: string;
+  /** `?duzenle` → düzenleme çekmecesi. */
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const tD = await getTranslations("donations.common");
   const tMethod = await getTranslations("donations.form.method");
   let user;
@@ -55,7 +63,7 @@ export async function DonationDetailView({ id }: { id: string }) {
         actions={
           <div className="flex flex-wrap gap-2">
             {canUpdate ? (
-              <LinkButtonEdit href={`/bagislar/${donation.id}/duzenle`} label={tForm("editTitle")} />
+              <LinkButtonEdit href={`/bagislar/${donation.id}?duzenle`} label={tForm("editTitle")} />
             ) : null}
             {canIssue ? (
               <LinkButtonIssue href={`/bagislar/bildirimler/olustur?kaynak=bagis&bagisci=${donation.donorId}`} label={t("issue")} />
@@ -135,6 +143,7 @@ export async function DonationDetailView({ id }: { id: string }) {
         </Link>
       </div>
       <span className="hidden">{Pencil.name}</span>
+      {canUpdate && (await searchParams)?.duzenle !== undefined ? <DonationEditView id={donation.id} /> : null}
     </div>
   );
 }

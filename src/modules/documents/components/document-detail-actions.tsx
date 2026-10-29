@@ -52,7 +52,7 @@ export function DocumentDetailActions({
         {canUpdate ? (
           <Button
             as="a"
-            href={`/evrak/${documentId}/duzenle`}
+            href={`/evrak/${documentId}?duzenle`}
             size="sm"
             color="primary"
             variant="solid"

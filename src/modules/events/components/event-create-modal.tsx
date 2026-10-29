@@ -14,6 +14,7 @@ export function EventCreateModal({ isOpen }: EventCreateModalProps) {
   const handleClose = () => {
     const params = new URLSearchParams(searchParams.toString())
     params.delete("action")
+    params.delete("yeni")
     const newQuery = params.toString()
     router.replace(newQuery ? `/events?${newQuery}` : "/events")
   }

@@ -1,11 +1,8 @@
 "use client";
 
+import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
 import { zodResolver } from "@hookform/resolvers/zod";
-import {
-  Card,
-  CardBody,
-  addToast,
-} from "@heroui/react";
+import { addToast } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm, type Resolver } from "react-hook-form";
@@ -59,6 +56,7 @@ type Props = {
  */
 export function BookingForm({ mode, accounts, categories, projects, initial }: Props) {
   const router = useRouter();
+  const closeDrawer = useFormDrawerClose();
   const t = useTranslations("accounting.form");
   const tSpheres = useTranslations("accounting.budget");
   const [formError, setFormError] = useState<string | null>(null);
@@ -115,8 +113,13 @@ export function BookingForm({ mode, accounts, categories, projects, initial }: P
         return;
       }
       addToast({ title: t("toastUpdated"), color: "success" });
-      router.push(`/muhasebe/${values.id}`);
-      router.refresh();
+      // Çekmecede: kapat (adres değişince sunucu verisi tazelenir); sayfada: detaya dön.
+      if (closeDrawer) {
+        closeDrawer();
+      } else {
+        router.push(`/muhasebe/${values.id}`);
+        router.refresh();
+      }
       return;
     }
 
@@ -142,8 +145,7 @@ export function BookingForm({ mode, accounts, categories, projects, initial }: P
   });
 
   return (
-    <Card shadow="sm" className="max-w-3xl">
-      <CardBody className="gap-4 p-6">
+    <FormSurface className="max-w-3xl">
         <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
           <FormDatePicker
             name="bookingDate"
@@ -215,7 +217,6 @@ export function BookingForm({ mode, accounts, categories, projects, initial }: P
 
           <SubmitButton isSubmitting={form.formState.isSubmitting}>{t("save")}</SubmitButton>
         </form>
-      </CardBody>
-    </Card>
+    </FormSurface>
   );
 }

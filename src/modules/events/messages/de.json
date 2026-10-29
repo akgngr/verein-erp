@@ -149,7 +149,8 @@
     "updatedToast": "Veranstaltung aktualisiert.",
     "createdToast": "Veranstaltung angelegt.",
     "createFailed": "Die Veranstaltung konnte nicht angelegt werden.",
-    "genericError": "Es ist ein Fehler aufgetreten."
+    "genericError": "Es ist ein Fehler aufgetreten.",
+    "subtitle": "Legen Sie die Angaben zu Seminaren, Workshops oder geselligen Veranstaltungen fest."
   },
   "table": {
     "event": "Veranstaltung",

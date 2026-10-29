@@ -1,7 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { requirePermission, ForbiddenError } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
-import { PageHeader } from "@/shared/components/ui/page-header";
+import { FormDrawer } from "@/shared/components/forms/form-drawer";
 
 import { listCopySources } from "../queries/list-copy-sources";
 import { meetingsPermissions } from "../permissions";
@@ -18,7 +18,7 @@ export async function MeetingCreateView() {
   try {
     await requirePermission(meetingsPermissions, "create");
   } catch (error) {
-    if (error instanceof ForbiddenError) return <AccessDenied />;
+    if (error instanceof ForbiddenError) return <FormDrawer title="">{<AccessDenied />}</FormDrawer>;
     throw error;
   }
 
@@ -32,12 +32,8 @@ export async function MeetingCreateView() {
   });
 
   return (
-    <div>
-      <PageHeader
-        title={t("createTitle")}
-        description={t("createPageDescription")}
-      />
+    <FormDrawer title={t("createTitle")} description={t("createPageDescription")}>
       <MeetingForm mode="create" copySourcesByType={copySourcesByType} />
-    </div>
+    </FormDrawer>
   );
 }

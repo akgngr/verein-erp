@@ -1,9 +1,10 @@
 "use client";
 
+import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
 import { useTranslations } from "next-intl";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Card, CardBody, addToast } from "@heroui/react";
+import { Button, addToast } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm, type Resolver } from "react-hook-form";
@@ -95,6 +96,7 @@ export function DocumentForm(props: DocumentFormProps) {
   const tStatus = useTranslations("documents.status");
   const t = useTranslations("documents.form");
   const router = useRouter();
+  const closeDrawer = useFormDrawerClose();
   const [formError, setFormError] = useState<string | null>(null);
   const [pendingFileCount, setPendingFileCount] = useState(0);
   const [uploadCommand, setUploadCommand] = useState<UploadCommand | null>(null);
@@ -156,8 +158,13 @@ export function DocumentForm(props: DocumentFormProps) {
         return;
       }
       addToast({ title: t("updatedToast", { registryNumber: result.data.registryNumber }), color: "success" });
-      router.push(`/evrak/${doc.id}`);
-      router.refresh();
+      // Çekmecede: kapat (adres değişince sunucu verisi tazelenir); sayfada: detaya dön.
+      if (closeDrawer) {
+        closeDrawer();
+      } else {
+        router.push(`/evrak/${doc.id}`);
+        router.refresh();
+      }
       return;
     }
 
@@ -196,8 +203,7 @@ export function DocumentForm(props: DocumentFormProps) {
   const counterpartyLabel = direction === "INCOMING" ? t("sender") : t("receiver");
 
   return (
-    <Card shadow="sm" className="max-w-3xl">
-      <CardBody className="gap-4 p-6">
+    <FormSurface className="max-w-3xl">
         {doc ? (
           <div className="flex items-center gap-3 rounded-medium border border-default-200 bg-default-50 px-4 py-3">
             <span className="text-small font-semibold">{doc.registryNumber}</span>
@@ -315,13 +321,12 @@ export function DocumentForm(props: DocumentFormProps) {
             </SubmitButton>
             <Button
               variant="light"
-              onPress={() => router.push(doc ? `/evrak/${doc.id}` : "/evrak")}
+              onPress={() => (closeDrawer ? closeDrawer() : router.push(doc ? `/evrak/${doc.id}` : "/evrak"))}
             >
               {t("cancel")}
             </Button>
           </div>
         </form>
-      </CardBody>
-    </Card>
+    </FormSurface>
   );
 }

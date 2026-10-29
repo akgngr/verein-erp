@@ -74,7 +74,7 @@ export function MeetingDetailActions({
           size="sm"
           variant="bordered"
           startContent={<Pencil className="h-4 w-4" aria-hidden />}
-          href={`/toplantilar/${meetingId}/duzenle`}
+          href={`/toplantilar/${meetingId}?duzenle`}
         >
           {t("common.edit")}
         </Button>

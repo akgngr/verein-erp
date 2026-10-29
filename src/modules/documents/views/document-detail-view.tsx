@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { DocumentEditView } from "./document-edit-view";
 import { AlertTriangle, FileText, Link2, Paperclip } from "lucide-react";
 import { notFound } from "next/navigation";
 
@@ -29,7 +30,14 @@ function InfoRow({ label, children }: { label: string; children: React.ReactNode
 }
 
 /** Evrak detayı (8.3): bilgi kartı, dosyalar, ilişkili evrak, işlem notları. */
-export async function DocumentDetailView({ id }: { id: string }) {
+export async function DocumentDetailView({
+  id,
+  searchParams,
+}: {
+  id: string;
+  /** `?duzenle` → düzenleme çekmecesi. */
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
   const tDelivery = await getTranslations("documents.delivery");
   const t = await getTranslations("documents.detail");
   let user;
@@ -193,6 +201,7 @@ export async function DocumentDetailView({ id }: { id: string }) {
         </h2>
         <NotesTimeline documentId={doc.id} notes={doc.notes} canUpdate={canUpdate} />
       </div>
+      {canUpdate && (await searchParams)?.duzenle !== undefined ? <DocumentEditView id={id} /> : null}
     </div>
   );
 }

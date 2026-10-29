@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
-import { PageHeader } from "@/shared/components/ui/page-header";
+import { FormDrawer } from "@/shared/components/forms/form-drawer";
 
 import { donationsPermissions } from "../permissions";
 import { DonorForm } from "../components/donor-form";
@@ -12,14 +12,13 @@ export async function DonorCreateView() {
   try {
     await requirePermission(donationsPermissions, "create");
   } catch (error) {
-    if (error instanceof ForbiddenError) return <AccessDenied />;
+    if (error instanceof ForbiddenError) return <FormDrawer title="">{<AccessDenied />}</FormDrawer>;
     throw error;
   }
   const t = await getTranslations("donations.donors.form");
   return (
-    <div>
-      <PageHeader title={t("createTitle")} description={""} />
+    <FormDrawer title={t("createTitle")}>
       <DonorForm mode="create" />
-    </div>
+    </FormDrawer>
   );
 }

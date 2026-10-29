@@ -8,14 +8,14 @@ interface InventoryCreateModalProps {
   isOpen: boolean;
 }
 
-/** Opens the create form for `?action=new` and removes the param on close. */
+/** Opens the create form for `?yeni` (legacy `?action=new`) and removes the param on close. */
 export function InventoryCreateModal({ isOpen }: InventoryCreateModalProps) {
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
 
   const handleClose = () => {
-    const query = removeSearchParam(searchParams.toString(), "action");
+    const query = removeSearchParam(removeSearchParam(searchParams.toString(), "action"), "yeni");
     router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
   };
 

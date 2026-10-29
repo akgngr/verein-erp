@@ -1,7 +1,8 @@
 "use client";
 
+import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Card, CardBody, Switch, addToast } from "@heroui/react";
+import { Switch, addToast } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm, type Resolver } from "react-hook-form";
@@ -47,8 +48,8 @@ export function DonationForm({
   initial?: Partial<DonationFormValues>;
 }) {
   const router = useRouter();
+  const closeDrawer = useFormDrawerClose();
   const t = useTranslations("donations.form");
-  const tDetail = useTranslations("donations.detail");
   const [formError, setFormError] = useState<string | null>(null);
 
   const form = useForm<DonationFormValues>({
@@ -87,8 +88,13 @@ export function DonationForm({
         return;
       }
       addToast({ title: t("toastSaved", { number: "" }), color: "success" });
-      router.push(`/bagislar/${values.id}`);
-      router.refresh();
+      // Çekmecede: kapat (adres değişince sunucu verisi tazelenir); sayfada: detaya dön.
+      if (closeDrawer) {
+        closeDrawer();
+      } else {
+        router.push(`/bagislar/${values.id}`);
+        router.refresh();
+      }
       return;
     }
     const result = await createDonationAction(values);
@@ -102,8 +108,7 @@ export function DonationForm({
   });
 
   return (
-    <Card shadow="sm" className="max-w-3xl">
-      <CardBody className="gap-4 p-6">
+    <FormSurface className="max-w-3xl">
         <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
           <FormSelect
             name="donorId"
@@ -180,8 +185,6 @@ export function DonationForm({
           ) : null}
           <SubmitButton isSubmitting={form.formState.isSubmitting}>{t("save")}</SubmitButton>
         </form>
-      </CardBody>
-      <span className="hidden">{tDetail("title")}</span>
-    </Card>
+    </FormSurface>
   );
 }

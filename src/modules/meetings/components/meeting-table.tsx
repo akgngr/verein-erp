@@ -1,5 +1,6 @@
 "use client";
 
+import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
 import { Link, addToast } from "@heroui/react";
 import { Eye, ListTodo, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -57,6 +58,7 @@ export function MeetingTable({
   canDelete: boolean;
 }) {
   const router = useRouter();
+  const drawerHref = useFormDrawerHref();
   const t = useTranslations("meetings");
   const [deleting, setDeleting] = useState<MeetingRow | null>(null);
 
@@ -161,7 +163,7 @@ export function MeetingTable({
             key: "edit",
             label: t("common.edit"),
             icon: <Pencil className="h-4 w-4" />,
-            href: `/toplantilar/${row.id}/duzenle`,
+            href: drawerHref("duzenle", row.id),
           },
         ]
       : []),

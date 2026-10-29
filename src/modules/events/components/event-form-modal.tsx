@@ -2,14 +2,15 @@
 
 import { useTranslations } from "next-intl";
 
+import { FORM_DRAWER_PROPS } from "@/shared/components/forms/form-drawer";
 import { useState } from "react"
 import { useRouter } from "next/navigation"
 import {
-  Modal,
-  ModalContent,
-  ModalHeader,
-  ModalBody,
-  ModalFooter,
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerBody,
+  DrawerFooter,
   Button,
   Input,
   Textarea,
@@ -131,26 +132,25 @@ export function EventFormModal({
   }
 
   return (
-    <Modal
+    <Drawer
       isOpen={isOpen}
       onOpenChange={onClose}
+      {...FORM_DRAWER_PROPS}
       size="2xl"
-      scrollBehavior="inside"
     >
-      <ModalContent>
+      <DrawerContent>
         {() => (
-          <form onSubmit={handleSubmit}>
-            <ModalHeader className="flex flex-col gap-1">
+          <form onSubmit={handleSubmit} className="flex h-full min-h-0 flex-col">
+            <DrawerHeader className="flex flex-col gap-1">
               <span className="text-lg font-semibold text-foreground">
                 {isEditing ? tForm("editTitle") : tForm("createTitle")}
               </span>
               <span className="text-xs text-default-500 font-normal">
-                Dernek içi seminer, atölye veya sosyal etkinlik bilgilerini
-                belirleyin.
+                {tForm("subtitle")}
               </span>
-            </ModalHeader>
+            </DrawerHeader>
 
-            <ModalBody className="gap-4">
+            <DrawerBody className="gap-4">
               {errorMessage && (
                 <div className="p-3 text-xs rounded-medium bg-danger-50 text-danger-600 border border-danger-200">
                   {errorMessage}
@@ -273,19 +273,19 @@ export function EventFormModal({
                 minRows={3}
                 variant="bordered"
               />
-            </ModalBody>
+            </DrawerBody>
 
-            <ModalFooter>
+            <DrawerFooter>
               <Button variant="flat" onPress={onClose} isDisabled={loading}>
                 {tCommon("cancel")}
               </Button>
               <Button color="primary" type="submit" isLoading={loading}>
                 {isEditing ? tForm("saveChanges") : tForm("create")}
               </Button>
-            </ModalFooter>
+            </DrawerFooter>
           </form>
         )}
-      </ModalContent>
-    </Modal>
+      </DrawerContent>
+    </Drawer>
   )
 }

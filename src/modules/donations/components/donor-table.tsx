@@ -1,5 +1,6 @@
 "use client";
 
+import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
 import { Link } from "@heroui/react";
 import { Eye, Pencil } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -32,6 +33,7 @@ export function DonorTable({
 }) {
   const tD = useTranslations("donations.common");
   const t = useTranslations("donations.donors");
+  const drawerHref = useFormDrawerHref();
   const format = (cents: number) =>
     (cents / 100).toLocaleString("tr-TR", { style: "currency", currency: "EUR" });
 
@@ -73,7 +75,7 @@ export function DonorTable({
   const rowActions = (row: DonorListItem): DataTableRowAction[] => [
     { key: "view", label: t("detail.anonymize"), icon: <Eye className="h-4 w-4" />, href: `/bagislar/bagiscilar/${row.id}` },
     ...(canUpdate
-      ? [{ key: "edit", label: t("form.editTitle"), icon: <Pencil className="h-4 w-4" />, href: `/bagislar/bagiscilar/${row.id}/duzenle` }]
+      ? [{ key: "edit", label: t("form.editTitle"), icon: <Pencil className="h-4 w-4" />, href: drawerHref("duzenle", row.id) }]
       : []),
   ];
 

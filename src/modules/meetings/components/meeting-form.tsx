@@ -1,7 +1,8 @@
 "use client";
 
+import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Card, CardBody, addToast } from "@heroui/react";
+import { Button, addToast } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -68,6 +69,7 @@ type MeetingFormProps =
  */
 export function MeetingForm(props: MeetingFormProps) {
   const router = useRouter();
+  const closeDrawer = useFormDrawerClose();
   const t = useTranslations("meetings.form");
   const tType = useTranslations("meetings.type");
   const tCommon = useTranslations("common");
@@ -125,8 +127,13 @@ export function MeetingForm(props: MeetingFormProps) {
         return;
       }
       addToast({ title: t("updatedToast"), color: "success" });
-      router.push(`/toplantilar/${meeting.id}?sekme=gundem`);
-      router.refresh();
+      // Çekmecede: kapat (adres değişince sunucu verisi tazelenir); sayfada: detaya dön.
+      if (closeDrawer) {
+        closeDrawer();
+      } else {
+        router.push(`/toplantilar/${meeting.id}?sekme=gundem`);
+        router.refresh();
+      }
       return;
     }
 
@@ -146,8 +153,7 @@ export function MeetingForm(props: MeetingFormProps) {
       : [];
 
   return (
-    <Card shadow="sm" className="max-w-3xl">
-      <CardBody className="gap-4 p-6">
+    <FormSurface className="max-w-3xl">
         {meeting ? (
           <div className="flex items-center gap-3 rounded-medium border border-default-200 bg-default-50 px-4 py-3">
             <span className="text-small font-semibold">{meeting.meetingNumber}</span>
@@ -228,15 +234,16 @@ export function MeetingForm(props: MeetingFormProps) {
             <Button
               variant="light"
               onPress={() =>
-                router.push(meeting ? `/toplantilar/${meeting.id}` : "/toplantilar")
+                closeDrawer
+                  ? closeDrawer()
+                  : router.push(meeting ? `/toplantilar/${meeting.id}` : "/toplantilar")
               }
             >
               {tCommon("cancel")}
             </Button>
           </div>
         </form>
-      </CardBody>
-    </Card>
+    </FormSurface>
   );
 }
 

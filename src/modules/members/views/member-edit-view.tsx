@@ -1,6 +1,6 @@
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
-import { PageHeader } from "@/shared/components/ui/page-header";
+import { FormDrawer } from "@/shared/components/forms/form-drawer";
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
@@ -9,7 +9,7 @@ import { getMember } from "../queries/get-member";
 import { MemberForm } from "../components/member-form";
 
 /**
- * Üye düzenleme: form, üyelik numarasını salt okunur gösterir. Eşzamanlılık
+ * Üye düzenleme (sağ çekmece; listede `?duzenle=<id>`, detayda `?duzenle`): form, üyelik numarasını salt okunur gösterir. Eşzamanlılık
  * koruması formun gizli updatedAt alanıyla sağlanır.
  */
 export async function MemberEditView({ id }: { id: string }) {
@@ -17,7 +17,7 @@ export async function MemberEditView({ id }: { id: string }) {
   try {
     user = await requirePermission(membersPermissions, "update");
   } catch (error) {
-    if (error instanceof ForbiddenError) return <AccessDenied />;
+    if (error instanceof ForbiddenError) return <FormDrawer title="">{<AccessDenied />}</FormDrawer>;
     throw error;
   }
 
@@ -27,11 +27,10 @@ export async function MemberEditView({ id }: { id: string }) {
   const t = await getTranslations("members");
 
   return (
-    <div>
-      <PageHeader
-        title={t("editTitle")}
-        description={t("editDescription", { membershipNumber: member.membershipNumber })}
-      />
+    <FormDrawer
+      title={t("editTitle")}
+      description={t("editDescription", { membershipNumber: member.membershipNumber })}
+    >
       <MemberForm
         mode="edit"
         member={{
@@ -59,6 +58,6 @@ export async function MemberEditView({ id }: { id: string }) {
           updatedAt: member.updatedAt,
         }}
       />
-    </div>
+    </FormDrawer>
   );
 }

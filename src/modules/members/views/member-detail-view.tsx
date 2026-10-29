@@ -8,6 +8,7 @@ import { can } from "@/shared/permissions/define";
 import { formatDateTime, formatDate } from "@/shared/utils";
 
 import { memberPaymentsPermissions, membersPermissions } from "../permissions";
+import { MemberEditView } from "./member-edit-view";
 import { getMember } from "../queries/get-member";
 import { listMemberPayments } from "../queries/list-payments";
 import { listMemberDues } from "../queries/get-member-dues";
@@ -28,7 +29,13 @@ function InfoRow({ label, children }: { label: string; children: React.ReactNode
 }
 
 /** Üye detayı: bilgi kartı, işlem notları, durum değiştirme menüsü. */
-export async function MemberDetailView({ id }: { id: string }) {
+export async function MemberDetailView({
+  id,
+  searchParams,
+}: {
+  id: string;
+  searchParams?: Promise<Record<string, string | string[] | undefined>>;
+}) {
   let user;
   try {
     user = await requirePermission(membersPermissions, "view");
@@ -164,6 +171,7 @@ export async function MemberDetailView({ id }: { id: string }) {
           />
         </div>
       </div>
+      {canUpdate && (await searchParams)?.duzenle !== undefined ? <MemberEditView id={member.id} /> : null}
     </div>
   );
 }

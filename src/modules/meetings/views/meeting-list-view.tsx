@@ -1,9 +1,11 @@
 import { CalendarPlus } from "lucide-react";
+import { FormDrawerButton } from "@/shared/components/forms/form-drawer";
+import { MeetingCreateView } from "./meeting-create-view";
+import { MeetingEditView } from "./meeting-edit-view";
 import { getTranslations } from "next-intl/server";
 
 import { requirePermission, ForbiddenError } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
-import { LinkButton } from "@/shared/components/ui/link-button";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { can } from "@/shared/permissions/define";
 import { parseListParams, type RawSearchParams } from "@/shared/list-params";
@@ -52,13 +54,9 @@ export async function MeetingListView({
         description={t("pageDescription")}
         actions={
           canCreate ? (
-            <LinkButton
-              href="/toplantilar/yeni"
-              color="primary"
-              startIcon={<CalendarPlus className="h-4 w-4" />}
-            >
+            <FormDrawerButton param="yeni" startIcon={<CalendarPlus className="h-4 w-4" />}>
               {t("newMeeting")}
-            </LinkButton>
+            </FormDrawerButton>
           ) : null
         }
       />
@@ -81,6 +79,8 @@ export async function MeetingListView({
         canUpdate={canUpdate}
         canDelete={canDelete}
       />
+      {canCreate && raw.yeni !== undefined ? <MeetingCreateView /> : null}
+      {canUpdate && typeof raw.duzenle === "string" && raw.duzenle ? <MeetingEditView id={raw.duzenle} /> : null}
     </div>
   );
 }

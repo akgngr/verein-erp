@@ -1,7 +1,8 @@
 "use client";
 
+import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addToast, Button, Card, CardBody } from "@heroui/react";
+import { addToast, Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -35,6 +36,7 @@ export function UserCreateForm() {
   const t = useTranslations("users.form");
   const tCommon = useTranslations("common");
   const router = useRouter();
+  const closeDrawer = useFormDrawerClose();
   const roleOptions = useRoleSelectOptions();
   const [formError, setFormError] = useState<string | null>(null);
   const form = useForm<UserCreateInput>({
@@ -52,8 +54,12 @@ export function UserCreateForm() {
       return;
     }
     addToast({ title: t("created"), color: "success" });
-    router.push(`/ayarlar/kullanicilar/${result.data.id}`);
-    router.refresh();
+    if (closeDrawer) {
+      closeDrawer();
+    } else {
+      router.push(`/ayarlar/kullanicilar/${result.data.id}`);
+      router.refresh();
+    }
   });
 
   return (
@@ -81,7 +87,7 @@ export function UserCreateForm() {
       <FormErrorSummary message={formError} />
       <div className="flex items-center gap-2">
         <SubmitButton isSubmitting={form.formState.isSubmitting}>{tCommon("create")}</SubmitButton>
-        <Button variant="light" onPress={() => router.push("/ayarlar/kullanicilar")}>
+        <Button variant="light" onPress={() => (closeDrawer ? closeDrawer() : router.push("/ayarlar/kullanicilar"))}>
           {tCommon("cancel")}
         </Button>
       </div>
@@ -102,6 +108,7 @@ export function UserEditForm({ user }: { user: UserEditValues }) {
   const t = useTranslations("users.form");
   const tCommon = useTranslations("common");
   const router = useRouter();
+  const closeDrawer = useFormDrawerClose();
   const roleOptions = useRoleSelectOptions();
   const [formError, setFormError] = useState<string | null>(null);
   const form = useForm<UserUpdateInput>({
@@ -119,8 +126,12 @@ export function UserEditForm({ user }: { user: UserEditValues }) {
       return;
     }
     addToast({ title: t("updated"), color: "success" });
-    router.push("/ayarlar/kullanicilar");
-    router.refresh();
+    if (closeDrawer) {
+      closeDrawer();
+    } else {
+      router.push("/ayarlar/kullanicilar");
+      router.refresh();
+    }
   });
 
   return (
@@ -138,7 +149,7 @@ export function UserEditForm({ user }: { user: UserEditValues }) {
       <FormErrorSummary message={formError} />
       <div className="flex items-center gap-2">
         <SubmitButton isSubmitting={form.formState.isSubmitting}>{tCommon("save")}</SubmitButton>
-        <Button variant="light" onPress={() => router.push("/ayarlar/kullanicilar")}>
+        <Button variant="light" onPress={() => (closeDrawer ? closeDrawer() : router.push("/ayarlar/kullanicilar"))}>
           {tCommon("cancel")}
         </Button>
       </div>
@@ -148,9 +159,5 @@ export function UserEditForm({ user }: { user: UserEditValues }) {
 
 /** Sayfa düzeyinde kart sarmalayıcı (create/edit view'lar ortak kullanır). */
 export function UserFormCard({ children }: { children: React.ReactNode }) {
-  return (
-    <Card shadow="sm" className="max-w-2xl">
-      <CardBody className="gap-2 p-6">{children}</CardBody>
-    </Card>
-  );
+  return <FormSurface className="max-w-2xl">{children}</FormSurface>;
 }

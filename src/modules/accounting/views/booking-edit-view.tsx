@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
-import { PageHeader } from "@/shared/components/ui/page-header";
+import { FormDrawer } from "@/shared/components/forms/form-drawer";
 
 import { getBooking } from "../queries/get-booking";
 import { listAccountOptions } from "../queries/list-accounts";
@@ -17,7 +17,7 @@ export async function AccountingEditView({ id }: { id: string }) {
   try {
     await requirePermission(accountingPermissions, "update");
   } catch (error) {
-    if (error instanceof ForbiddenError) return <AccessDenied />;
+    if (error instanceof ForbiddenError) return <FormDrawer title="">{<AccessDenied />}</FormDrawer>;
     throw error;
   }
 
@@ -39,18 +39,16 @@ export async function AccountingEditView({ id }: { id: string }) {
 
   if (blocked) {
     return (
-      <div>
-        <PageHeader title={t("editTitle")} description={booking.bookingNumber} />
-        <div className="max-w-3xl rounded-medium border border-warning-300 bg-warning-50 px-4 py-3 text-small text-warning-700">
+      <FormDrawer title={t("editTitle")} description={booking.bookingNumber}>
+        <div className="rounded-medium border border-warning-300 bg-warning-50 px-4 py-3 text-small text-warning-700">
           {blocked}
         </div>
-      </div>
+      </FormDrawer>
     );
   }
 
   return (
-    <div>
-      <PageHeader title={t("editTitle")} description={booking.bookingNumber} />
+    <FormDrawer title={t("editTitle")} description={booking.bookingNumber}>
       <BookingForm
         mode="edit"
         accounts={accounts}
@@ -74,6 +72,6 @@ export async function AccountingEditView({ id }: { id: string }) {
           updatedAt: new Date(booking.updatedAt).toISOString(),
         }}
       />
-    </div>
+    </FormDrawer>
   );
 }

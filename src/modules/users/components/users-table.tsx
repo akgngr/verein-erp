@@ -1,5 +1,6 @@
 "use client";
 
+import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
 import { useTranslations } from "next-intl";
 
 import { addToast, Chip } from "@heroui/react";
@@ -45,6 +46,7 @@ export function UsersTable({
   const t = useTranslations("users.table");
   const tCommon = useTranslations("common");
   const router = useRouter();
+  const drawerHref = useFormDrawerHref();
   const [activeTarget, setActiveTarget] = useState<{ user: UserRow; isActive: boolean } | null>(
     null,
   );
@@ -130,7 +132,7 @@ export function UsersTable({
             key: "edit",
             label: t("edit"),
             icon: <Pencil className="h-4 w-4" />,
-            href: `/ayarlar/kullanicilar/${row.id}`,
+            href: drawerHref("duzenle", row.id),
             hidden: !canUpdate,
           },
           {

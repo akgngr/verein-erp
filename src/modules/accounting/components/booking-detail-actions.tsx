@@ -31,7 +31,7 @@ export function BookingDetailActions({
         {canUpdate ? (
           <Button
             as="a"
-            href={`/muhasebe/${bookingId}/duzenle`}
+            href={`/muhasebe/${bookingId}?duzenle`}
             size="sm"
             color="primary"
             variant="solid"

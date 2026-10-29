@@ -1,4 +1,5 @@
 import { getTranslations } from "next-intl/server";
+import { MeetingEditView } from "./meeting-edit-view";
 import { FileText, Pencil } from "lucide-react";
 import { notFound } from "next/navigation";
 
@@ -40,10 +41,13 @@ export async function MeetingDetailView({
   id,
   tabParam,
   agendaPreset,
+  editOpen = false,
 }: {
   id: string;
   tabParam?: string;
   agendaPreset?: string;
+  /** `?duzenle` → düzenleme çekmecesi. */
+  editOpen?: boolean;
 }) {
   const tStatus = await getTranslations("meetings.status");
   const tType = await getTranslations("meetings.type");
@@ -97,7 +101,7 @@ export async function MeetingDetailView({
           <>
             {canUpdate && contentEditable ? (
               <LinkButton
-                href={`/toplantilar/${meeting.id}/duzenle`}
+                href={`/toplantilar/${meeting.id}?duzenle`}
                 color="default"
                 variant="bordered"
                 startIcon={<Pencil className="h-4 w-4" />}
@@ -250,6 +254,7 @@ export async function MeetingDetailView({
           allowedExtensions={MEETING_ALLOWED_EXTENSIONS}
         />
       ) : null}
+      {canUpdate && editOpen ? <MeetingEditView id={meeting.id} /> : null}
     </div>
   );
 }

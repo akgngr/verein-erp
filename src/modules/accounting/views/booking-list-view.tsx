@@ -1,9 +1,11 @@
 import { Landmark, PiggyBank, Wallet } from "lucide-react";
+import { FormDrawerButton } from "@/shared/components/forms/form-drawer";
+import { AccountingCreateView } from "./booking-create-view";
+import { AccountingEditView } from "./booking-edit-view";
 import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
-import { LinkButton } from "@/shared/components/ui/link-button";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { parseListParams, type RawSearchParams } from "@/shared/list-params";
 import { can } from "@/shared/permissions/define";
@@ -108,15 +110,15 @@ export async function AccountingListView({
         actions={
           canCreate ? (
             <div className="flex flex-wrap items-center gap-2">
-              <LinkButton href="/muhasebe/yeni?tur=gelir" startIcon={<PiggyBank className="h-4 w-4" />}>
+              <FormDrawerButton param="yeni" value="gelir" startIcon={<PiggyBank className="h-4 w-4" />}>
                 {t("list.actions.newIncome")}
-              </LinkButton>
-              <LinkButton href="/muhasebe/yeni?tur=gider" color="secondary" startIcon={<Wallet className="h-4 w-4" />}>
+              </FormDrawerButton>
+              <FormDrawerButton param="yeni" value="gider" color="secondary" startIcon={<Wallet className="h-4 w-4" />}>
                 {t("list.actions.newExpense")}
-              </LinkButton>
-              <LinkButton href="/muhasebe/yeni?tur=virman" color="default" variant="bordered" startIcon={<Landmark className="h-4 w-4" />}>
+              </FormDrawerButton>
+              <FormDrawerButton param="yeni" value="virman" color="default" variant="bordered" startIcon={<Landmark className="h-4 w-4" />}>
                 {t("list.actions.newTransfer")}
-              </LinkButton>
+              </FormDrawerButton>
             </div>
           ) : null
         }
@@ -182,6 +184,10 @@ export async function AccountingListView({
         canUpdate={canUpdate}
         canDelete={canDelete}
       />
+      {canCreate && typeof raw.yeni === "string" ? (
+        <AccountingCreateView type={raw.yeni === "gider" ? "EXPENSE" : raw.yeni === "virman" ? "TRANSFER" : "INCOME"} />
+      ) : null}
+      {canUpdate && typeof raw.duzenle === "string" && raw.duzenle ? <AccountingEditView id={raw.duzenle} /> : null}
     </div>
   );
 }

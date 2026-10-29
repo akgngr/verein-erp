@@ -2,7 +2,7 @@ import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
-import { PageHeader } from "@/shared/components/ui/page-header";
+import { FormDrawer } from "@/shared/components/forms/form-drawer";
 import { listActiveCategoryOptions } from "@/modules/accounting/server";
 
 import { listDonors } from "../queries/list-donors";
@@ -14,7 +14,7 @@ export async function DonationCreateView() {
   try {
     await requirePermission(donationsPermissions, "create");
   } catch (error) {
-    if (error instanceof ForbiddenError) return <AccessDenied />;
+    if (error instanceof ForbiddenError) return <FormDrawer title="">{<AccessDenied />}</FormDrawer>;
     throw error;
   }
 
@@ -36,8 +36,7 @@ export async function DonationCreateView() {
   const t = await getTranslations("donations.form");
 
   return (
-    <div>
-      <PageHeader title={t("createTitle")} description={""} />
+    <FormDrawer title={t("createTitle")}>
       <DonationForm
         mode="create"
         donors={donorRows.rows.map((row) => ({
@@ -47,6 +46,6 @@ export async function DonationCreateView() {
         }))}
         expenseCategories={expenseCategories}
       />
-    </div>
+    </FormDrawer>
   );
 }

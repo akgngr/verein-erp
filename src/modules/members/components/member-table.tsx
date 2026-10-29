@@ -6,6 +6,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
+import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
 import { DataTable } from "@/shared/components/data-table/data-table";
 import type {
   DataTableColumn,
@@ -64,6 +65,7 @@ export function MemberTable({
   canDelete: boolean;
 }) {
   const router = useRouter();
+  const drawerHref = useFormDrawerHref();
   const t = useTranslations("members");
   const [deleting, setDeleting] = useState<MemberRow | null>(null);
 
@@ -145,7 +147,7 @@ export function MemberTable({
             key: "edit",
             label: t("actions.edit"),
             icon: <Pencil className="h-4 w-4" />,
-            href: `/uyeler/${row.id}/duzenle`,
+            href: drawerHref("duzenle", row.id),
           },
         ]
       : []),

@@ -1,13 +1,7 @@
-import { getTranslations } from "next-intl/server";
-import { DonationEditView } from "../../../ui";
+import { redirect } from "next/navigation";
 
-export async function generateMetadata() {
-  const t = await getTranslations("donations.meta");
-  return { title: t("edit") };
-}
-
-/** Bağış düzenleme — ince rota: id'yi view'a iletir. */
+/** Eski adres: form artık sağ çekmecede açılır. */
 export default async function Page({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  return <DonationEditView id={id} />;
+  redirect(`/bagislar/${id}?duzenle`);
 }

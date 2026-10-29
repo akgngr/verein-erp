@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
-import { LinkButton } from "@/shared/components/ui/link-button";
+import { FormDrawerButton } from "@/shared/components/forms/form-drawer";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { parseListParams, type RawSearchParams } from "@/shared/list-params";
 import { can } from "@/shared/permissions/define";
@@ -21,6 +21,8 @@ import {
 } from "../constants";
 import { berlinMonthRange } from "../utils";
 import { MemberDateFilter } from "../components/list-filters";
+import { MemberCreateView } from "./member-create-view";
+import { MemberEditView } from "./member-edit-view";
 import { MemberTable } from "../components/member-table";
 import { StatsCards } from "../components/stats-cards";
 
@@ -64,9 +66,9 @@ export async function MemberListView({
         description={t("pageDescription")}
         actions={
           canCreate ? (
-            <LinkButton href="/uyeler/yeni" startIcon={<UserPlus className="h-4 w-4" />}>
+            <FormDrawerButton param="yeni" startIcon={<UserPlus className="h-4 w-4" />}>
               {t("newMember")}
-            </LinkButton>
+            </FormDrawerButton>
           ) : null
         }
       />
@@ -92,6 +94,8 @@ export async function MemberListView({
         canUpdate={canUpdate}
         canDelete={canDelete}
       />
+      {canCreate && raw.yeni !== undefined ? <MemberCreateView /> : null}
+      {canUpdate && typeof raw.duzenle === "string" && raw.duzenle ? <MemberEditView id={raw.duzenle} /> : null}
     </div>
   );
 }
