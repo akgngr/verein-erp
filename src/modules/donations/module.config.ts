@@ -1,4 +1,4 @@
-import { Download, HandHeart } from "lucide-react";
+import { Download, HandHeart, Receipt, Users } from "lucide-react";
 
 import type { ModuleConfig } from "@/shared/types/module";
 import { donationsPermissions } from "./permissions";
@@ -21,6 +21,8 @@ export const moduleConfig: ModuleConfig = {
     },
   ],
   menu: [
+    { key: "donors", label: "Bağışçılar", href: "/bagislar/bagiscilar", icon: Users },
+    { key: "confirmations", label: "Bildirimler", href: "/bagislar/bildirimler", icon: Receipt },
     { key: "export", label: "Excel'e aktar", href: "/api/donations/export", icon: Download, isDownload: true },
   ],
 };

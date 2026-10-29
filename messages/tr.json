@@ -938,7 +938,19 @@
       "validityWarn": "90 günden az kaldı — yenileme planlayın"
     },
     "menu": {
+      "donors": "Bağışçılar",
+      "confirmations": "Bildirimler",
       "export": "Excel'e aktar"
+    },
+    "meta": {
+      "create": "Yeni bağış",
+      "detail": "Bağış detayı",
+      "edit": "Bağışı düzenle",
+      "donors": "Bağışçılar",
+      "donorCreate": "Yeni bağışçı",
+      "donorDetail": "Bağışçı detayı",
+      "donorEdit": "Bağışçıyı düzenle",
+      "confirmations": "Bildirimler"
     }
   },
   "events": {

@@ -243,9 +243,21 @@
     "validityWarn": "Weniger als 90 Tage — Verlängerung planen"
   },
   "menu": {
+    "donors": "Spender",
+    "confirmations": "Zuwendungsbestätigungen",
     "export": "Excel-Export"
   },
   "nav": {
     "bagislar": "Spenden"
+  },
+  "meta": {
+    "create": "Neue Spende",
+    "detail": "Spendendetails",
+    "edit": "Spende bearbeiten",
+    "donors": "Spender",
+    "donorCreate": "Neuer Spender",
+    "donorDetail": "Spenderdetails",
+    "donorEdit": "Spender bearbeiten",
+    "confirmations": "Zuwendungsbestätigungen"
   }
 }
