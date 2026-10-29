@@ -11,11 +11,7 @@ import { formatDate, formatDateTime } from "@/shared/utils";
 
 import { getMeeting } from "../queries/get-meeting";
 import { meetingsPermissions } from "../permissions";
-import {
-  MEETING_ALLOWED_EXTENSIONS,
-  MEETING_STATUS_LABELS,
-  MEETING_TYPE_LABELS,
-} from "../constants";
+import { MEETING_ALLOWED_EXTENSIONS } from "../constants";
 import { getEnv } from "@/shared/env";
 import { StatusBadge, TypeBadge } from "../components/badges";
 import { QuorumBanner } from "../components/quorum-banner";
