@@ -45,6 +45,9 @@ KURALLAR (her biri CI'da otomatik denetlenir):
     (`definePermissions` — `@/shared/permissions/define`).
 12. `any` yok; `catch (error)` + `error instanceof Error`. Render sırasında `Date.now()` yok.
     Liste satırlarında HeroUI Select yerine native `<select>`.
+13. Kullanıcı etiketi: `buildUserLabel(user.name, user.email)` (`@/shared/utils`), nesne değil iki metin.
+14. Şemada `z.preprocess`/`.default()` varsa form:
+    `resolver: zodResolver(schema) as unknown as Resolver<FormValues>` (`type Resolver` react-hook-form'dan).
 
 ÜRETECEĞİN DOSYALAR (tam yol + eksiksiz kod, TODO bırakma):
 module.config.ts, permissions.ts, schema.prisma, types.ts, index.ts, server.ts ("server-only"), ui.ts,
@@ -60,7 +63,7 @@ views/item-list-view.tsx, views/item-create-view.tsx, views/item-edit-view.tsx
 
 ```bash
 pnpm module:sync
-pnpm db:migrate --name add_<anahtar>
+pnpm db:migrate --name add_<anahtar>   # DATABASE_URL'e ağ erişimi gerekir (P1001 = ulaşılamıyor)
 pnpm module:validate
 pnpm exec tsx scripts/check-i18n-keys.ts && pnpm exec tsx scripts/check-hardcoded-text.ts
 pnpm typecheck && pnpm lint && pnpm test
