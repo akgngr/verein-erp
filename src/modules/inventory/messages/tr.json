@@ -104,9 +104,8 @@
     "viewItems": "Listele",
     "total": "Toplam"
   },
-  "topNav": {
-    "overview": "Genel Bakış",
+  "menu": {
     "categories": "Kategoriler",
-    "export": "Excel Dışa Aktar"
+    "export": "Excel'e aktar"
   }
 }

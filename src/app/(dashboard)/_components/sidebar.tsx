@@ -12,16 +12,34 @@ import {
   DropdownMenu,
   DropdownTrigger,
 } from "@heroui/react";
-import { Building2, LayoutDashboard, LogOut, Menu as MenuIcon, Settings, UserRound } from "lucide-react";
+import {
+  Building2,
+  ChevronLeft,
+  ChevronRight,
+  LayoutDashboard,
+  LogOut,
+  Menu as MenuIcon,
+  Settings,
+  UserRound,
+  type LucideIcon,
+} from "lucide-react";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import { createContext, useContext, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 
 import { registry } from "@/registry";
 import { ROLE_COLORS, ROLE_LABELS, type Role } from "@/shared/roles";
 import { can } from "@/shared/permissions/define";
-import type { NavItem } from "@/shared/types/module";
+import {
+  MODULE_HOME_KEY,
+  findActiveKey,
+  findActiveModule,
+  hasModuleMenu,
+  moduleHome,
+  moduleMenuItems,
+} from "@/shared/navigation/module-nav";
+import type { ModuleConfig, NavItem, PermissionRequirement } from "@/shared/types/module";
 import { cn } from "@/shared/utils";
 
 type SidebarContextValue = {
@@ -63,11 +81,22 @@ const PANEL_ITEM: NavItem = {
   },
 };
 
-function isActive(pathname: string, href: string): boolean {
-  if (href === "/" || href === "/ayarlar") return pathname === href;
-  return pathname === href || pathname.startsWith(`${href}/`);
-}
+type MenuLink = {
+  key: string;
+  href: string;
+  label: string;
+  icon: LucideIcon;
+  isDownload?: boolean;
+};
 
+/**
+ * Sol panel içeriği: ana menü ⇄ modül menüsü.
+ *
+ * KARAR: Alt menüsü (ModuleConfig.menu) olan bir modüle girildiğinde ana menü kayarak
+ * modülün menüsüne dönüşür; en üstte "Ana menü" butonu olur. Ana menüye dönüldüğünde sayfa
+ * değişmez ve en üstte modüle geri dönme butonu çıkar. Görünüm adresten türetilir; kullanıcının
+ * seçimi yalnızca adres değişene kadar geçerlidir (sayfa değişince menü yine adrese uyar).
+ */
 function SidebarContent({
   role,
   activeModuleKeys,
@@ -78,56 +107,74 @@ function SidebarContent({
   onNavigate?: () => void;
 }) {
   const pathname = usePathname();
+  const searchParams = useSearchParams();
   const tNav = useTranslations("nav");
   const tSidebar = useTranslations("sidebar");
+  const tRoot = useTranslations();
 
-  // Yalnızca aktif olan modüllerin menü öğeleri gösterilir
-  const activeModules = activeModuleKeys
-    ? registry.filter((m) => activeModuleKeys.includes(m.key))
-    : registry;
+  const allowed = (permission: PermissionRequirement) =>
+    can(role, permission.definition, permission.action);
+
+  // Yalnızca aktif olan ve kullanıcının görebildiği modüller
+  const modules = (activeModuleKeys ? registry.filter((m) => activeModuleKeys.includes(m.key)) : registry).filter(
+    (mod) => mod.nav.some((item) => allowed(item.permission)),
+  );
 
   // Menü yetkiye göre süzülür ve group + order ile sıralanır (7.4, 8. bölüm).
-  const visibleItems = [...activeModules.flatMap((module) => module.nav), PANEL_ITEM]
-    .filter((item) => can(role, item.permission.definition, item.permission.action))
+  const visibleItems = [...modules.flatMap((mod) => mod.nav), PANEL_ITEM]
+    .filter((item) => allowed(item.permission))
     .sort((a, b) => (a.group === b.group ? a.order - b.order : a.group === "main" ? -1 : 1));
-
   const mainItems = visibleItems.filter((item) => item.group === "main");
   const settingsItems = visibleItems.filter((item) => item.group === "settings");
+  const activeMainHref = findActiveKey(visibleItems, (item) => item.href, pathname, searchParams);
 
-  const getItemLabel = (item: NavItem): string => {
-    if (item.labelKey && tNav.has(item.labelKey)) {
-      return tNav(item.labelKey);
-    }
-    const cleanKey = item.href.replace(/^\//, "").split("/").pop();
-    if (cleanKey && tNav.has(cleanKey)) {
-      return tNav(cleanKey);
-    }
+  const routeModule = findActiveModule(modules, pathname, searchParams);
+  const routeModuleKey = routeModule && hasModuleMenu(routeModule) ? routeModule.key : null;
+
+  // null: adrese uy; "main": ana menü; diğer: o modülün menüsü (tıklama anında, gezinme bitmeden).
+  const [override, setOverride] = useState<string | null>(null);
+  const [overridePath, setOverridePath] = useState(pathname);
+  if (overridePath !== pathname) {
+    setOverridePath(pathname);
+    setOverride(null);
+  }
+  const shownModuleKey = override === "main" ? null : (override ?? routeModuleKey);
+  const shownModule = shownModuleKey ? modules.find((mod) => mod.key === shownModuleKey) : undefined;
+
+  const navLabel = (item: NavItem): string => {
+    if (item.labelKey && tNav.has(item.labelKey)) return tNav(item.labelKey);
     return item.label;
   };
+  const moduleLabel = (mod: ModuleConfig): string => {
+    const home = moduleHome(mod);
+    return home ? navLabel(home) : mod.label;
+  };
+  const moduleNavKey = new Map(modules.map((mod) => [moduleHome(mod)?.href, mod]));
 
-  const renderItem = (item: NavItem) => {
-    const Icon = item.icon;
-    const active = isActive(pathname, item.href);
-    const label = getItemLabel(item);
+  const moduleLinks: MenuLink[] = shownModule
+    ? moduleMenuItems(shownModule)
+        .filter((item) => allowed(item.permission ?? moduleHome(shownModule)!.permission))
+        .map((item) => {
+          const key = item.key === MODULE_HOME_KEY ? "sidebar.overview" : `${shownModule.key}.menu.${item.key}`;
+          return { ...item, label: tRoot.has(key) ? tRoot(key) : item.label };
+        })
+    : [];
+  const activeModuleLink = findActiveKey(moduleLinks, (item) => item.key, pathname, searchParams);
 
-    return (
-      <Link
-        key={item.href}
-        href={item.href}
-        onClick={onNavigate}
-        aria-current={active ? "page" : undefined}
-        className={cn(
-          "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-small font-medium transition-all duration-150",
-          active
-            ? "bg-primary-50 text-primary-700 shadow-xs dark:bg-primary-500/15 dark:text-primary-300 font-semibold"
-            : "text-default-600 hover:bg-default-100/80 hover:text-foreground",
-        )}
-      >
+  const itemClass = (active: boolean) =>
+    cn(
+      "group relative flex items-center gap-3 rounded-lg px-3 py-2.5 text-small font-medium transition-all duration-150",
+      active
+        ? "bg-primary-50 text-primary-700 shadow-xs dark:bg-primary-500/15 dark:text-primary-300 font-semibold"
+        : "text-default-600 hover:bg-default-100/80 hover:text-foreground",
+    );
+
+  const renderLink = (link: MenuLink, active: boolean, onClick?: () => void) => {
+    const Icon = link.icon;
+    const content = (
+      <>
         {active && (
-          <span
-            className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full bg-primary"
-            aria-hidden
-          />
+          <span className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full bg-primary" aria-hidden />
         )}
         <Icon
           className={cn(
@@ -136,23 +183,111 @@ function SidebarContent({
           )}
           aria-hidden
         />
-        <span className="truncate">{label}</span>
+        <span className="truncate">{link.label}</span>
+      </>
+    );
+    // İndirme bağlantıları API rotasıdır: istemci yönlendirmesi yapılmaz.
+    if (link.isDownload) {
+      return (
+        <a key={link.key} href={link.href} className={itemClass(false)}>
+          {content}
+        </a>
+      );
+    }
+    return (
+      <Link
+        key={link.key}
+        href={link.href}
+        onClick={onClick}
+        aria-current={active ? "page" : undefined}
+        className={itemClass(active)}
+      >
+        {content}
       </Link>
     );
   };
 
+  const renderMainItem = (item: NavItem) => {
+    const mod = moduleNavKey.get(item.href);
+    const drillsDown = mod ? hasModuleMenu(mod) : false;
+    return renderLink(
+      { key: item.href, href: item.href, label: navLabel(item), icon: item.icon },
+      item.href === activeMainHref,
+      // Alt menüsü olan modülde panel modül menüsüne geçer (mobil çekmece açık kalır).
+      drillsDown && mod ? () => setOverride(mod.key) : onNavigate,
+    );
+  };
+
+  const switchButtonClass =
+    "flex w-full items-center gap-2 rounded-lg border border-default-200/80 bg-default-50 px-3 py-2 text-small font-medium text-default-600 transition-colors hover:bg-default-100 hover:text-foreground";
+
+  const returnModule = !shownModule && routeModuleKey ? modules.find((m) => m.key === routeModuleKey) : undefined;
+
   return (
-    <nav className="flex flex-col gap-5 px-3 py-4" aria-label={tSidebar.has("mainMenu") ? tSidebar("mainMenu") : "Ana menü"}>
-      <div className="flex flex-col gap-1">{mainItems.map(renderItem)}</div>
-      {settingsItems.length > 0 ? (
-        <div className="flex flex-col gap-1 pt-2">
-          <p className="px-3 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-default-400">
-            {tSidebar.has("settings") ? tSidebar("settings") : "Ayarlar"}
-          </p>
-          {settingsItems.map(renderItem)}
-        </div>
-      ) : null}
-    </nav>
+    <div className="grid overflow-x-hidden">
+      {/* Ana menü */}
+      <nav
+        aria-label={tSidebar.has("mainMenu") ? tSidebar("mainMenu") : "Ana menü"}
+        aria-hidden={shownModule ? true : undefined}
+        inert={shownModule ? true : undefined}
+        className={cn(
+          "col-start-1 row-start-1 flex flex-col gap-5 px-3 py-4 transition-[translate,opacity] duration-200 ease-out",
+          shownModule ? "pointer-events-none -translate-x-full opacity-0" : "translate-x-0 opacity-100",
+        )}
+      >
+        {returnModule ? (
+          <button type="button" className={switchButtonClass} onClick={() => setOverride(null)}>
+            <span className="truncate">
+              {tSidebar.has("backToModule")
+                ? tSidebar("backToModule", { module: moduleLabel(returnModule) })
+                : moduleLabel(returnModule)}
+            </span>
+            <ChevronRight className="ml-auto h-4 w-4 shrink-0" aria-hidden />
+          </button>
+        ) : null}
+        <div className="flex flex-col gap-1">{mainItems.map(renderMainItem)}</div>
+        {settingsItems.length > 0 ? (
+          <div className="flex flex-col gap-1 pt-2">
+            <p className="px-3 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-default-400">
+              {tSidebar.has("settings") ? tSidebar("settings") : "Ayarlar"}
+            </p>
+            {settingsItems.map(renderMainItem)}
+          </div>
+        ) : null}
+      </nav>
+
+      {/* Modül menüsü */}
+      <nav
+        aria-label={shownModule ? moduleLabel(shownModule) : undefined}
+        aria-hidden={shownModule ? undefined : true}
+        inert={shownModule ? undefined : true}
+        className={cn(
+          "col-start-1 row-start-1 flex flex-col gap-4 px-3 py-4 transition-[translate,opacity] duration-200 ease-out",
+          shownModule ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-full opacity-0",
+        )}
+      >
+        {shownModule ? (
+          <>
+            <button type="button" className={switchButtonClass} onClick={() => setOverride("main")}>
+              <ChevronLeft className="h-4 w-4 shrink-0" aria-hidden />
+              <span className="truncate">{tSidebar.has("backToMain") ? tSidebar("backToMain") : "Ana menü"}</span>
+            </button>
+            <div className="flex items-center gap-2 px-3">
+              {(() => {
+                const ModuleIcon = moduleHome(shownModule)?.icon;
+                return ModuleIcon ? <ModuleIcon className="h-4 w-4 shrink-0 text-primary" aria-hidden /> : null;
+              })()}
+              <span className="truncate text-[11px] font-semibold uppercase tracking-wider text-default-500">
+                {moduleLabel(shownModule)}
+              </span>
+            </div>
+            <div className="flex flex-col gap-1">
+              {moduleLinks.map((link) => renderLink(link, link.key === activeModuleLink, onNavigate))}
+            </div>
+          </>
+        ) : null}
+      </nav>
+    </div>
   );
 }
 
@@ -349,7 +484,21 @@ function MobileSidebar({
   );
 }
 
-/** Topbar'daki mobil menü butonu. */
+/** Mobil (<1024px) üst şerit: yalnızca menü butonu ve marka. Masaüstünde üst bar yoktur. */
+function MobileHeader() {
+  const tSidebar = useTranslations("sidebar");
+  return (
+    <header className="sticky top-0 z-20 flex h-12 items-center gap-2 border-b border-default-200/80 bg-background/85 px-3 backdrop-blur-md lg:hidden">
+      <SidebarTrigger />
+      <Building2 className="h-4 w-4 text-primary" aria-hidden />
+      <span className="truncate text-small font-semibold text-foreground">
+        Dernek ERP{tSidebar.has("brand") ? ` · ${tSidebar("brand")}` : ""}
+      </span>
+    </header>
+  );
+}
+
+/** Mobil üst şeritteki menü butonu. */
 function SidebarTrigger() {
   const { setMobileOpen } = useSidebar();
   const tSidebar = useTranslations("sidebar");
@@ -367,4 +516,4 @@ function SidebarTrigger() {
   );
 }
 
-export { SidebarProvider, DesktopSidebar, MobileSidebar, SidebarTrigger };
+export { SidebarProvider, DesktopSidebar, MobileSidebar, MobileHeader };

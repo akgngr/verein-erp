@@ -315,5 +315,11 @@
     "commitSkipped": "{count} Zeilen wegen Fehlern übersprungen.",
     "goToList": "Zur Mitgliederliste",
     "toastImported": "{count} Mitglieder importiert."
+  },
+  "menu": {
+    "dues": "Beitragsbericht",
+    "types": "Mitgliedsarten",
+    "import": "Importieren",
+    "export": "Excel-Export"
   }
 }

@@ -58,7 +58,10 @@
     "themeDark": "Koyu",
     "themeSystem": "Sistem",
     "userMenu": "Kullanıcı menüsü",
-    "userActions": "Kullanıcı işlemleri"
+    "userActions": "Kullanıcı işlemleri",
+    "overview": "Genel bakış",
+    "backToMain": "Ana menü",
+    "backToModule": "{module} menüsüne dön"
   },
   "panel": {
     "title": "Panel",
@@ -403,6 +406,12 @@
       "commitSkipped": "{count} satır hatalı olduğundan atlandı.",
       "goToList": "Üye listesine git",
       "toastImported": "{count} üye içe aktarıldı."
+    },
+    "menu": {
+      "dues": "Aidat raporu",
+      "types": "Üyelik türleri",
+      "import": "İçe aktar",
+      "export": "Excel'e aktar"
     }
   },
   "documents": {
@@ -603,7 +612,11 @@
       "add": "Notu ekle",
       "addedToast": "Not eklendi."
     },
-    "categoriesButton": "Kategoriler"
+    "categoriesButton": "Kategoriler",
+    "menu": {
+      "categories": "Kategoriler",
+      "export": "Excel'e aktar"
+    }
   },
   "meta": {
     "panel": "Panel",
@@ -954,6 +967,9 @@
       "deleteAria": "{name} sil",
       "deleteTitle": "Dosya silinecek",
       "deleteMessage": "Dosya listeden kaldırılacak; diskteki kopya korunur. Devam edilsin mi?"
+    },
+    "menu": {
+      "tasks": "Görevler"
     }
   },
   "users": {
@@ -1329,6 +1345,14 @@
     },
     "balances": {
       "title": "Hesap bakiyeleri"
+    },
+    "menu": {
+      "sync": "Üyelik aktarımı",
+      "reports": "Raporlar",
+      "budget": "Bütçe",
+      "yearClosing": "Yıl kapanışı",
+      "settings": "Ayarlar",
+      "export": "Excel'e aktar"
     }
   },
   "donations": {
@@ -1574,6 +1598,9 @@
       "validityDays": "{days} gün kaldı",
       "validityExpired": "Muafiyet belgesi süresi dolmuş",
       "validityWarn": "90 günden az kaldı — yenileme planlayın"
+    },
+    "menu": {
+      "export": "Excel'e aktar"
     }
   },
   "system": {
@@ -1743,6 +1770,10 @@
       "filterType": "Tür Filtresi",
       "filterStatus": "Durum Filtresi",
       "all": "Tümü"
+    },
+    "menu": {
+      "upcoming": "Yaklaşan etkinlikler",
+      "past": "Geçmiş etkinlikler"
     }
   },
   "inventory": {
@@ -1868,19 +1899,14 @@
       "viewItems": "Listele",
       "total": "Toplam"
     },
-    "topNav": {
-      "overview": "Genel Bakış",
+    "menu": {
       "categories": "Kategoriler",
-      "export": "Excel Dışa Aktar"
+      "export": "Excel'e aktar"
     }
   },
   "mail": {
     "title": "E-posta Ayarları",
     "description": "Sistemin gönderdiği tüm e-postalar için SMTP sunucusu ve gönderen bilgileri.",
-    "topNav": {
-      "settings": "Ayarlar",
-      "logs": "Gönderim Kayıtları"
-    },
     "status": {
       "title": "Durum",
       "configured": "E-posta gönderimi hazır",
@@ -1985,6 +2011,10 @@
       "connectionFailed": "SMTP sunucusuna bağlanılamadı veya giriş başarısız. Sunucu, port, güvenlik ve kimlik bilgilerini kontrol edin.",
       "sendFailed": "Test e-postası gönderilemedi.",
       "unknown": "Beklenmeyen bir hata oluştu. Lütfen tekrar deneyin."
+    },
+    "menu": {
+      "settings": "Ayarlar",
+      "logs": "Gönderim kayıtları"
     }
   }
 }

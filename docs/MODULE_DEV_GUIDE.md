@@ -17,11 +17,11 @@ Bu rehber, **Verein ERP** sistemine diğer modülleri ve çekirdek sistemi bozma
    - `@/modules/<modul>` (`index.ts` — İzomorfik tipler, şemalar, yetki tanımları, moduleConfig)
    - `@/modules/<modul>/server` (`server.ts` — "server-only" sorgular, sunucu aksiyonları, yetki korumaları)
    - `@/modules/<modul>/ui` (`ui.ts` — React istemci ve sunucu görünüm bileşenleri)
-4. **Üst Bar Menüsü Standardı (`menu/top.json`):**
-   Her modülün alt sayfaları, modüle özel yapılandırmaları ve dışa aktarma (Excel vb.) araçları sayfa içine buton yığılması yerine modül dizinindeki `menu/top.json` dosyasında bildirilir ve dinamik Mac-tarzı üst barda gösterilir.
+4. **Modül Menüsü Standardı (sol panel, `module.config.ts` → `menu`):**
+   Her modülün alt sayfaları, modüle özel yapılandırmaları ve dışa aktarma (Excel vb.) araçları sayfa içine buton yığılması yerine `module.config.ts` içindeki `menu` dizisinde bildirilir. Üst bar yoktur: kullanıcı sol panelde modüle girdiğinde ana menü kayarak modülün menüsüne dönüşür (en üstte "Ana menü" butonu); ana menüye dönüldüğünde en üstte modüle geri dönme butonu çıkar. Modülün ana sayfası ("Genel bakış") otomatik eklenir. (Eski `menu/top.json` standardı kaldırılmıştır; doğrulayıcı hata verir.)
 5. **Sayfa Eylem Ayrımı Kuralı (UI Action Area Separation):**
    - **Sayfa Başlığı Eylem Alanı (`PageHeader actions`):** YALNIZCA doğrudan ana CRUD butonuna (`+ Yeni Ekle`) ayrılmıştır.
-   - **Araçlar, Raporlar ve Alt Sayfa Bağlantıları:** `menu/top.json` içinde tanımlanır; sayfa gövdesinde mükerrer buton olarak gösterilmez.
+   - **Araçlar, Raporlar ve Alt Sayfa Bağlantıları:** `module.config.ts` içindeki `menu` dizisinde tanımlanır; sayfa gövdesinde mükerrer buton olarak gösterilmez.
 6. **Server Component (RSC) vs Client Component Katı Dosya Ayrımı:**
    - **Görünümler (`views/*-view.tsx`) ve Sayfalar (`page.tsx`) YALNIZCA Server Component'tir (RSC):** Başlarına ASLA `"use client"` konulamaz; içlerinde `useState`, `useEffect`, `useRouter`, inline `"use server"` yazılamaz ve `@heroui/react` import edilemez (React 19 Server ortamında `createContext` olmadığı için build çöker).
    - **Tüm İstemci Etkileşimi YALNIZCA `components/` Klasöründe Yaşar:** Eğer bir modal, form, buton tıklaması, filtre aracı, tablo veya etkileşimli bir öğe yazılacaksa bu KESİNLİKLE `src/modules/<modul>/components/` altında ayrı bir dosya olarak yazılır ve ilk satırına `"use client";` konur. `@heroui/react` kütüphanesi YALNIZCA bu client bileşenleri içinde kullanılır. Server component'ler istemci bileşenlerini `components/` klasöründen import edip saf veriyi prop olarak geçirir.
@@ -56,9 +56,6 @@ src/
         ├── index.ts                         # Kamuya açık İZOMORFİK giriş noktası (Public API)
         ├── server.ts                        # Kamuya açık SUNUCU giriş noktası ("server-only")
         ├── ui.ts                            # Kamuya açık UI bileşenleri girişi
-        │
-        ├── menu/
-        │   └── top.json                     # [STANDART] Üst bar araçları, alt sekmeler ve linkler
         │
         ├── messages/
         │   ├── tr.json                      # Türkçe yerelleştirilmiş metinler
@@ -97,10 +94,9 @@ src/
 
 ### 1. `module.config.ts` (Modül Kimliği ve Menüsü)
 ```typescript
-import { Package } from "lucide-react"; // İlgili Lucide ikonu
-import type { ModuleConfig, TopNavItem } from "@/shared/types/module";
+import { Download, FolderTree, Package } from "lucide-react"; // İlgili Lucide ikonları
+import type { ModuleConfig } from "@/shared/types/module";
 import { inventoryPermissions } from "./permissions";
-import topNav from "./menu/top.json";
 
 export const moduleConfig: ModuleConfig = {
   key: "inventory",                       // Klasör adıyla BİREBİR AYNI olmalıdır
@@ -108,7 +104,6 @@ export const moduleConfig: ModuleConfig = {
   description: "Dernek demirbaş ve malzeme takibi.",
   category: "EXTENSION",                  // Eklentiler için 'EXTENSION', sistem için 'CORE'/'OFFICIAL'
   hasSchema: true,                        // Veritabanı tablosu varsa true
-  topNav: topNav as TopNavItem[],         // menu/top.json üst bar bağlantısı
   nav: [
     {
       href: "/inventory",
@@ -120,37 +115,25 @@ export const moduleConfig: ModuleConfig = {
       permission: { definition: inventoryPermissions, action: "view" },
     },
   ],
+  // Modül menüsü (sol panel). Ana sayfa ("Genel bakış") otomatik eklenir, burada tekrar edilmez.
+  menu: [
+    { key: "categories", label: "Kategoriler", href: "/inventory/kategoriler", icon: FolderTree },
+    { key: "export", label: "Excel'e aktar", href: "/api/inventory/export", icon: Download, isDownload: true },
+  ],
 };
 ```
 
 ---
 
-### 2. `menu/top.json` (Mac-Tarzı Üst Bar Navigasyonu)
-Sayfada buton kalabalığı yaratmak yerine araçlar, filtreler, alt sayfalar ve Excel dışa aktarımı burada tanımlanır:
-```json
-[
-  {
-    "key": "overview",
-    "label": "Genel Bakış",
-    "href": "/inventory",
-    "icon": "LayoutGrid"
-  },
-  {
-    "key": "categories",
-    "label": "Kategoriler",
-    "href": "/inventory/kategoriler",
-    "icon": "FolderTree"
-  },
-  {
-    "key": "export",
-    "label": "Excel'e Aktar",
-    "href": "/api/inventory/export",
-    "icon": "FileSpreadsheet",
-    "isDownload": true
-  }
-]
-```
-> **Kural:** `href` mutlaka `/` ile başlamalıdır. İkon isimleri standart Lucide ikon adıdır (PascalCase).
+### 2. `menu` (Sol Panel Modül Menüsü)
+Sayfada buton kalabalığı yaratmak yerine alt sayfalar, araçlar ve Excel dışa aktarımı `module.config.ts` içindeki `menu` dizisinde tanımlanır (örnek yukarıda). Kurallar:
+
+- **Ana sayfa tekrar edilmez:** `nav[0].href` "Genel bakış" olarak otomatik eklenir. Ana sayfanın farklı bir adı olacaksa (örn. E-posta: `/mail` = "Ayarlar") aynı `href` ile bir öğe tanımlanır, o zaman otomatik öğe eklenmez.
+- **Yetki:** Her öğe, hedef sayfanın gerçekten kontrol ettiği yetkiyi `permission: { definition, action }` ile taşır; verilmezse modülün `nav[0]` yetkisi kullanılır. Yetkisi olmayan kullanıcı bağlantıyı görmez.
+- **Çeviri:** Etiket `messages/tr.json` ve `messages/de.json` içinde `"menu": { "<key>": "..." }` altında tanımlanır; `label` yalnızca yedektir.
+- **Sorgu parametresi:** `href` sorgu içerebilir (örn. `/events?filter.timeFilter=upcoming`); bağlantı yalnızca parametre eşleşince aktif görünür.
+- **İndirme:** API rotaları (`/api/...`) `isDownload: true` ile işaretlenir.
+- **Denetim:** `tests/navigation.test.ts` her bağlantının bir sayfası (`page.tsx`) veya API rotası (`route.ts`) olduğunu ve her etiketin iki dilde çevrildiğini doğrular. Sayfası olmayan link CI'ı kırmızıya çevirir.
 
 ---
 
@@ -318,7 +301,7 @@ export default async function InventoryPage({
    - Sayfa Başlığı: `import { PageHeader } from "@/shared/components/ui/page-header";`
    - Boş Durum: `import { EmptyState } from "@/shared/components/ui/empty-state";`
    - Veri Tablosu: `import { DataTable, DataTablePagination } from "@/shared/components/data-table";`
-   - Modül Tipleri: `import type { ModuleConfig, TopNavItem } from "@/shared/types/module";`
+   - Modül Tipleri: `import type { ModuleConfig } from "@/shared/types/module";`
 9. ⚠️ **Sıfır `any` Kuralı (ESLint `@typescript-eslint/no-explicit-any`):**
    - Projede `any` kullanımı kesinlikle yasaktır (`no-explicit-any`).
    - `const db = getDb()` doğrudan tipli `PrismaClient` döner; `pnpm module:sync` sonrası modeller tam tiplidir. Asla `getDb() as any` veya `(db as any)...` yazmayın.
@@ -346,7 +329,7 @@ PROJE MİMARİSİ VE SINIR KURALLARI:
    - Sayfa Başlığı: `import { PageHeader } from "@/shared/components/ui/page-header";`
    - Boş Durum: `import { EmptyState } from "@/shared/components/ui/empty-state";`
    - Veri Tablosu: `import { DataTable, DataTablePagination } from "@/shared/components/data-table";`
-   - Modül Tipleri: `import type { ModuleConfig, TopNavItem } from "@/shared/types/module";`
+   - Modül Tipleri: `import type { ModuleConfig } from "@/shared/types/module";`
 5. Sıfır "any" Kuralı ve Güçlü Tipleme (ESLint @typescript-eslint/no-explicit-any):
    - Projede ESLint katı `no-explicit-any` kuralı devrededir; `any` kullanımı derlemeyi bozar.
    - ASLA `as any` veya `: any` KULLANMA!
@@ -365,7 +348,7 @@ PROJE MİMARİSİ VE SINIR KURALLARI:
    - **`actions/`:** Yalnızca `"use server"` form mutasyonları (`create`, `update`, `delete`).
 8. URL Tabanlı Modal Kapatma (`<MODUL_ADI>-create-modal.tsx`):
    - `?action=new` modalını açıp kapatmak için `"use client"` olan bir `components/<MODUL_ADI>-create-modal.tsx` sarmalayıcısı yaz. Bu bileşenin `onClose` fonksiyonu `useRouter` ile URL'deki `action` parametresini temizler.
-9. Sayfa Eylem Ayrımı: `PageHeader actions` alanına YALNIZCA doğrudan ana CRUD butonunu (`+ Yeni Ekle`) koy. Araçlar, raporlar ve dışa aktarma bağlantılarını `menu/top.json` içinde tanımla.
+9. Sayfa Eylem Ayrımı: `PageHeader actions` alanına YALNIZCA doğrudan ana CRUD butonunu (`+ Yeni Ekle`) koy. Araçlar, raporlar ve dışa aktarma bağlantılarını `module.config.ts` içindeki `menu` dizisinde tanımla (etiketler `messages/<dil>.json` → `menu.<key>`).
 10. KRİTİK SSR Hydration & Saflık Kuralları (React 19 / Next.js 16):
    - Tablo satırları (`map`) içinde asla HeroUI'ın `<Select>` bileşenini kullanma. Bunun yerine stillendirilmiş native HTML `<select>` ve yanında Lucide `<ChevronDown>` kullan.
    - Render esnasında `Date.now()` çağırma (`react-hooks/purity`). Tarih karşılaştırmalarını (`isPast` vb.) sorguda (`queries/`) veya saf helper'da (`helpers/`) hesapla.
@@ -374,9 +357,8 @@ SENİN ÜRETMEN GEREKEN DOSYALAR:
 Lütfen bana her bir dosyanın TAM DOSYA YOLUNU ve EKSİKSİZ ÇALIŞAN KODUNU sırasıyla ver:
 
 1. `src/modules/<MODUL_ADI>/module.config.ts`:
-   - `key: "<MODUL_ADI>"`, `category: "EXTENSION"`, `hasSchema: true`, `topNav: topNav as TopNavItem[]`, `nav: [...]` (Lucide ikonu ile).
-2. `src/modules/<MODUL_ADI>/menu/top.json`:
-   - Üst bar (Mac-tarzı Topbar) araçları, filtreleri veya sekmeleri dizisi (`key`, `label`, `href` ['/' ile başlayan], `icon` [Lucide ikon adı]).
+   - `key: "<MODUL_ADI>"`, `category: "EXTENSION"`, `hasSchema: true`, `nav: [...]` (Lucide ikonu ile), alt sayfa varsa `menu: [...]` (`key`, `label`, `href` ['/' ile başlayan], `icon` [Lucide bileşeni], gerekirse `permission`, indirme için `isDownload: true`).
+2. (Kaldırıldı — modül menüsü artık `module.config.ts` içindeki `menu` dizisindedir.)
 3. `src/modules/<MODUL_ADI>/permissions.ts`:
    - `definePermissions("<MODUL_ADI>", { ADMIN: [...], BOARD: [...], SECRETARY: [...], TREASURER: [...], AUDITOR: [...], VIEWER: [...] })` şeklinde 6 rolü de tanımla.
 4. `src/modules/<MODUL_ADI>/schema.prisma`:

@@ -241,5 +241,8 @@
     "validityDays": "{days} gün kaldı",
     "validityExpired": "Muafiyet belgesi süresi dolmuş",
     "validityWarn": "90 günden az kaldı — yenileme planlayın"
+  },
+  "menu": {
+    "export": "Excel'e aktar"
   }
 }

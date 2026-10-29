@@ -29,13 +29,11 @@ describe("Module Registry Integrity", () => {
         }
       }
 
-      // TopNav (menu/top.json) kontrolü
-      if (mod.topNav && mod.topNav.length > 0) {
-        for (const item of mod.topNav) {
-          assert.ok(item.key, `${mod.key} topNav öğesinin anahtarı (key) bulunmalıdır`);
-          assert.ok(item.label, `${mod.key} topNav öğesinin etiketi (label) bulunmalıdır`);
-          assert.ok(item.href.startsWith("/"), `${mod.key} topNav öğesi rotası '/' ile başlamalıdır`);
-        }
+      // Modül menüsü (sol panel) kontrolü; bağlantı hedefleri tests/navigation.test.ts'te
+      for (const item of mod.menu ?? []) {
+        assert.ok(item.key, `${mod.key} menü öğesinin anahtarı (key) bulunmalıdır`);
+        assert.ok(item.label, `${mod.key} menü öğesinin etiketi (label) bulunmalıdır`);
+        assert.ok(item.href.startsWith("/"), `${mod.key} menü öğesi rotası '/' ile başlamalıdır`);
       }
     }
   });
@@ -49,21 +47,21 @@ describe("Module Registry Integrity", () => {
     }
   });
 
-  test("modules with topNav (menu/top.json) configure expected module actions", () => {
+  test("module menus configure expected module actions", () => {
     const accounting = allModules.find((m) => m.key === "accounting");
-    assert.ok(accounting?.topNav, "accounting modülü topNav tanımlamalıdır");
-    const accountingKeys = accounting.topNav.map((t) => t.key);
-    assert.ok(accountingKeys.includes("sync"), "Üyelik aktarımı topNav içinde olmalıdır");
-    assert.ok(accountingKeys.includes("reports"), "Raporlar topNav içinde olmalıdır");
-    assert.ok(accountingKeys.includes("budget"), "Bütçe topNav içinde olmalıdır");
-    assert.ok(accountingKeys.includes("yearClosing"), "Yıl kapanışı topNav içinde olmalıdır");
-    assert.ok(accountingKeys.includes("settings"), "Ayarlar topNav içinde olmalıdır");
-    assert.ok(accountingKeys.includes("export"), "Excel'e aktar topNav içinde olmalıdır");
+    assert.ok(accounting?.menu, "accounting modülü menu tanımlamalıdır");
+    const accountingKeys = accounting.menu.map((t) => t.key);
+    assert.ok(accountingKeys.includes("sync"), "Üyelik aktarımı menüde olmalıdır");
+    assert.ok(accountingKeys.includes("reports"), "Raporlar menüde olmalıdır");
+    assert.ok(accountingKeys.includes("budget"), "Bütçe menüde olmalıdır");
+    assert.ok(accountingKeys.includes("yearClosing"), "Yıl kapanışı menüde olmalıdır");
+    assert.ok(accountingKeys.includes("settings"), "Ayarlar menüde olmalıdır");
+    assert.ok(accountingKeys.includes("export"), "Excel'e aktar menüde olmalıdır");
 
     const members = allModules.find((m) => m.key === "members");
-    assert.ok(members?.topNav, "members modülü topNav tanımlamalıdır");
-    const membersKeys = members.topNav.map((t) => t.key);
-    assert.ok(membersKeys.includes("dues"), "Aidat raporu topNav içinde olmalıdır");
-    assert.ok(membersKeys.includes("types"), "Üyelik türleri topNav içinde olmalıdır");
+    assert.ok(members?.menu, "members modülü menu tanımlamalıdır");
+    const membersKeys = members.menu.map((t) => t.key);
+    assert.ok(membersKeys.includes("dues"), "Aidat raporu menüde olmalıdır");
+    assert.ok(membersKeys.includes("types"), "Üyelik türleri menüde olmalıdır");
   });
 });

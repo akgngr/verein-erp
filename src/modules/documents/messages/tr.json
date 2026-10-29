@@ -196,5 +196,9 @@
     "add": "Notu ekle",
     "addedToast": "Not eklendi."
   },
-  "categoriesButton": "Kategoriler"
+  "categoriesButton": "Kategoriler",
+  "menu": {
+    "categories": "Kategoriler",
+    "export": "Excel'e aktar"
+  }
 }

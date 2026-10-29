@@ -1,7 +1,6 @@
-import { Mail } from "lucide-react";
-import type { ModuleConfig, TopNavItem } from "@/shared/types/module";
+import { Mail, ScrollText, Settings } from "lucide-react";
+import type { ModuleConfig } from "@/shared/types/module";
 import { mailPermissions } from "./permissions";
-import topNav from "./menu/top.json";
 
 export const moduleConfig: ModuleConfig = {
   key: "mail",
@@ -10,7 +9,6 @@ export const moduleConfig: ModuleConfig = {
     "Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gönderim kayıtları.",
   category: "EXTENSION",
   hasSchema: true,
-  topNav: topNav as TopNavItem[],
   nav: [
     {
       href: "/mail",
@@ -21,5 +19,9 @@ export const moduleConfig: ModuleConfig = {
       order: 50,
       permission: { definition: mailPermissions, action: "view" },
     },
+  ],
+  menu: [
+    { key: "settings", label: "Ayarlar", href: "/mail", icon: Settings },
+    { key: "logs", label: "Gönderim kayıtları", href: "/mail/kayitlar", icon: ScrollText },
   ],
 };

@@ -58,7 +58,10 @@
     "themeDark": "Dunkel",
     "themeSystem": "System",
     "userMenu": "Benutzermenü",
-    "userActions": "Benutzeraktionen"
+    "userActions": "Benutzeraktionen",
+    "overview": "Übersicht",
+    "backToMain": "Hauptmenü",
+    "backToModule": "Zurück zu {module}"
   },
   "panel": {
     "title": "Dashboard",
@@ -403,6 +406,12 @@
       "commitSkipped": "{count} Zeilen wegen Fehlern übersprungen.",
       "goToList": "Zur Mitgliederliste",
       "toastImported": "{count} Mitglieder importiert."
+    },
+    "menu": {
+      "dues": "Beitragsbericht",
+      "types": "Mitgliedsarten",
+      "import": "Importieren",
+      "export": "Excel-Export"
     }
   },
   "documents": {
@@ -603,7 +612,11 @@
       "add": "Vermerk hinzufügen",
       "addedToast": "Vermerk hinzugefügt."
     },
-    "categoriesButton": "Kategorien"
+    "categoriesButton": "Kategorien",
+    "menu": {
+      "categories": "Kategorien",
+      "export": "Excel-Export"
+    }
   },
   "meta": {
     "panel": "Dashboard",
@@ -954,6 +967,9 @@
       "deleteAria": "{name} löschen",
       "deleteTitle": "Datei wird gelöscht",
       "deleteMessage": "Die Datei wird aus der Liste entfernt; die Kopie auf der Festplatte bleibt erhalten. Fortfahren?"
+    },
+    "menu": {
+      "tasks": "Aufgaben"
     }
   },
   "users": {
@@ -1329,6 +1345,14 @@
     },
     "balances": {
       "title": "Kontensalden"
+    },
+    "menu": {
+      "sync": "Mitgliedsbeiträge übernehmen",
+      "reports": "Berichte",
+      "budget": "Haushaltsplan",
+      "yearClosing": "Jahresabschluss",
+      "settings": "Einstellungen",
+      "export": "Excel-Export"
     }
   },
   "donations": {
@@ -1574,6 +1598,9 @@
       "validityDays": "{days} Tage verbleiben",
       "validityExpired": "Die Freistellungsbescheinigung ist abgelaufen",
       "validityWarn": "Weniger als 90 Tage — Verlängerung planen"
+    },
+    "menu": {
+      "export": "Excel-Export"
     }
   },
   "system": {
@@ -1743,6 +1770,10 @@
       "filterType": "Kategorie-Filter",
       "filterStatus": "Status-Filter",
       "all": "Alle"
+    },
+    "menu": {
+      "upcoming": "Bevorstehende Veranstaltungen",
+      "past": "Vergangene Veranstaltungen"
     }
   },
   "inventory": {
@@ -1868,8 +1899,7 @@
       "viewItems": "Anzeigen",
       "total": "Gesamt"
     },
-    "topNav": {
-      "overview": "Übersicht",
+    "menu": {
       "categories": "Kategorien",
       "export": "Excel-Export"
     }
@@ -1877,10 +1907,6 @@
   "mail": {
     "title": "E-Mail-Einstellungen",
     "description": "SMTP-Server und Absenderangaben für alle E-Mails, die das System versendet.",
-    "topNav": {
-      "settings": "Einstellungen",
-      "logs": "Versandprotokoll"
-    },
     "status": {
       "title": "Status",
       "configured": "E-Mail-Versand ist eingerichtet",
@@ -1985,6 +2011,10 @@
       "connectionFailed": "Verbindung zum SMTP-Server oder Anmeldung fehlgeschlagen. Bitte Server, Port, Verschlüsselung und Zugangsdaten prüfen.",
       "sendFailed": "Die Test-E-Mail konnte nicht gesendet werden.",
       "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+    },
+    "menu": {
+      "settings": "Einstellungen",
+      "logs": "Versandprotokoll"
     }
   }
 }

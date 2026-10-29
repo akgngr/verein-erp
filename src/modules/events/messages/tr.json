@@ -70,5 +70,9 @@
     "filterType": "Tür Filtresi",
     "filterStatus": "Durum Filtresi",
     "all": "Tümü"
+  },
+  "menu": {
+    "upcoming": "Yaklaşan etkinlikler",
+    "past": "Geçmiş etkinlikler"
   }
 }

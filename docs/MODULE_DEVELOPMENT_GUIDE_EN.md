@@ -17,11 +17,11 @@ This guide outlines the architectural standards, vertical slice directory struct
    - `@/modules/<module>` (`index.ts` — Isomorphic types, Zod schemas, permissions, moduleConfig)
    - `@/modules/<module>/server` (`server.ts` — "server-only" queries, server actions, permission guards)
    - `@/modules/<module>/ui` (`ui.ts` — React client and server view components)
-4. **Mac-Style Declarative Top Bar (`menu/top.json`):**
-   Sub-pages, module-specific configurations, and export tools (e.g., Excel downloads) must be declared in `menu/top.json` rather than cluttering page bodies with redundant buttons. They render dynamically in the sleek global top bar.
+4. **Module Menu Standard (left sidebar, `module.config.ts` → `menu`):**
+   Sub-pages, module-specific configurations, and export tools (e.g., Excel downloads) are declared in the `menu` array of `module.config.ts` rather than cluttering page bodies with redundant buttons. There is no top bar: when the user enters a module, the sidebar slides from the main menu to the module's menu (with a "Main menu" button on top); when the main menu is reopened, a button on top returns to the module. The module home ("Overview") is added automatically. (The legacy `menu/top.json` is removed; the validator rejects it.)
 5. **Page Header Action Area Separation:**
    - **Page Header Action Area (`PageHeader actions`):** Reserved EXCLUSIVELY for the primary CRUD button (`+ New Item`, `+ New Entry`).
-   - **Tools, Reports, Sub-page Links, and Exports:** Belongs in `menu/top.json` and must NOT be duplicated as buttons inside the main page body.
+   - **Tools, Reports, Sub-page Links, and Exports:** Belongs in the `menu` array of `module.config.ts` and must NOT be duplicated as buttons inside the main page body.
 6. **Strict Server Component (RSC) vs Client Component Segregation:**
    - **Views (`views/*-view.tsx`) and Pages (`page.tsx`) are strictly Server Components (RSC):** Never mark them with `"use client"`. Never use React hooks (`useState`, `useEffect`, `useRouter`), never define inline `"use server"` closures, and NEVER import `@heroui/react` in them (RSC lacks React Context and will fail build with `createContext is not a function`). Use plain Tailwind CSS for static badges and indicators.
    - **All Client Interactivity belongs in `components/*.tsx`:** Forms, modals, buttons with click handlers, pagination, and data tables must be placed in separate files inside `components/` with `"use client";` at the very top. `@heroui/react` is allowed ONLY in these client component files.
@@ -65,9 +65,6 @@ src/
         ├── server.ts                       # Server-only public API entry point ("server-only")
         ├── ui.ts                           # UI components & views public API
         │
-        ├── menu/
-        │   └── top.json                    # [STANDARD] Topbar tools, tabs, and export links
-        │
         ├── messages/
         │   ├── tr.json                     # Turkish translations
         │   └── de.json                     # German translations (Verein terminology)
@@ -105,10 +102,9 @@ src/
 
 ### 1. `module.config.ts` (Module Identity & Navigation)
 ```typescript
-import { Package } from "lucide-react"; // Relevant Lucide icon
-import type { ModuleConfig, TopNavItem } from "@/shared/types/module";
+import { Download, FolderTree, Package } from "lucide-react"; // Relevant Lucide icons
+import type { ModuleConfig } from "@/shared/types/module";
 import { inventoryPermissions } from "./permissions";
-import topNav from "./menu/top.json";
 
 export const moduleConfig: ModuleConfig = {
   key: "inventory",                       // MUST match directory name exactly
@@ -116,7 +112,6 @@ export const moduleConfig: ModuleConfig = {
   description: "Club asset and equipment inventory management.",
   category: "EXTENSION",                  // 'EXTENSION' for plugins; 'CORE' / 'OFFICIAL' for system
   hasSchema: true,                        // true if database models exist
-  topNav: topNav as TopNavItem[],         // Topbar link array from menu/top.json
   nav: [
     {
       href: "/inventory",
@@ -128,37 +123,25 @@ export const moduleConfig: ModuleConfig = {
       permission: { definition: inventoryPermissions, action: "view" },
     },
   ],
+  // Module menu (left sidebar). The home page ("Overview") is added automatically; do not repeat it.
+  menu: [
+    { key: "categories", label: "Kategoriler", href: "/inventory/kategoriler", icon: FolderTree },
+    { key: "export", label: "Excel'e aktar", href: "/api/inventory/export", icon: Download, isDownload: true },
+  ],
 };
 ```
 
 ---
 
-### 2. `menu/top.json` (Mac-Style Topbar Navigation)
-Declare sub-pages, secondary settings, and export utilities here instead of adding buttons to the page body:
-```json
-[
-  {
-    "key": "overview",
-    "label": "Genel Bakış",
-    "href": "/inventory",
-    "icon": "LayoutGrid"
-  },
-  {
-    "key": "categories",
-    "label": "Kategoriler",
-    "href": "/inventory/kategoriler",
-    "icon": "FolderTree"
-  },
-  {
-    "key": "export",
-    "label": "Excel'e Aktar",
-    "href": "/api/inventory/export",
-    "icon": "FileSpreadsheet",
-    "isDownload": true
-  }
-]
-```
-> **Rule:** `href` must start with a leading slash `/`. `icon` must be a valid PascalCase Lucide icon name.
+### 2. `menu` (Left Sidebar Module Menu)
+Declare sub-pages, secondary settings, and export utilities in the `menu` array of `module.config.ts` (see the example above) instead of adding buttons to the page body. Rules:
+
+- **Do not repeat the home page:** `nav[0].href` is added automatically as "Overview". If the home page needs another name (e.g. Mail: `/mail` = "Settings"), declare an item with the same `href`; the automatic item is then omitted.
+- **Permissions:** Each item carries the permission its target page actually checks via `permission: { definition, action }`; it defaults to the module's `nav[0]` permission. Users without it do not see the link.
+- **Translations:** Labels live in `messages/tr.json` and `messages/de.json` under `"menu": { "<key>": "..." }`; `label` is only a fallback.
+- **Query strings:** `href` may include a query (e.g. `/events?filter.timeFilter=upcoming`); the link is active only when the query matches.
+- **Downloads:** API routes (`/api/...`) are marked with `isDownload: true`.
+- **Checks:** `tests/navigation.test.ts` verifies that every link has a page (`page.tsx`) or API route (`route.ts`) and that every label is translated in both locales. A link without a page turns CI red.
 
 ---
 
@@ -339,7 +322,7 @@ ARCHITECTURAL PRINCIPLES & BOUNDARY RULES:
    - Page Header: `import { PageHeader } from "@/shared/components/ui/page-header";`
    - Empty State: `import { EmptyState } from "@/shared/components/ui/empty-state";`
    - Data Table: `import { DataTable, DataTablePagination } from "@/shared/components/data-table";`
-   - Module Types: `import type { ModuleConfig, TopNavItem } from "@/shared/types/module";`
+   - Module Types: `import type { ModuleConfig } from "@/shared/types/module";`
 4. Strict Zero-`any` Rule (ESLint `@typescript-eslint/no-explicit-any`):
    - The project forbids `any`. NEVER use `as any` or `: any`.
    - `const db = getDb()` is fully typed. Do NOT cast `as any`.
@@ -357,7 +340,7 @@ ARCHITECTURAL PRINCIPLES & BOUNDARY RULES:
    - `actions/`: `"use server"` form mutations.
 7. URL-Based Modal Pattern (`<MODULE_NAME>-create-modal.tsx`):
    - Wrap creation modals in a `"use client"` component (`components/<MODULE_NAME>-create-modal.tsx`) that uses `useRouter` to clear `?action=new` on close.
-8. UI Action Separation: In `PageHeader actions`, include ONLY the primary creation button (`+ New ...`). Put secondary sub-pages, tools, and export links inside `menu/top.json`.
+8. UI Action Separation: In `PageHeader actions`, include ONLY the primary creation button (`+ New ...`). Put secondary sub-pages, tools, and export links in the `menu` array of `module.config.ts` (labels in `messages/<locale>.json` → `menu.<key>`).
 9. SSR Hydration & React 19 Purity:
    - Never use HeroUI's `<Select>` inside table cells or row mapping loops. Use a styled native HTML `<select>` with Lucide `<ChevronDown>`.
    - Never call `Date.now()` during render (`react-hooks/purity`). Derive timestamp comparisons in database queries.
@@ -366,9 +349,8 @@ FILES YOU MUST GENERATE:
 Provide the FULL PATH and COMPLETE, FUNCTIONAL CODE for each of the following 16 files without placeholders or TODOs:
 
 1. `src/modules/<MODULE_NAME>/module.config.ts`:
-   - `key: "<MODULE_NAME>"`, `category: "EXTENSION"`, `hasSchema: true`, `topNav: topNav as TopNavItem[]`, `nav: [...]` (with Lucide icon).
-2. `src/modules/<MODULE_NAME>/menu/top.json`:
-   - Topbar navigation array (`key`, `label`, `href` [starting with '/'], `icon` [PascalCase Lucide icon name]).
+   - `key: "<MODULE_NAME>"`, `category: "EXTENSION"`, `hasSchema: true`, `nav: [...]` (with Lucide icon), and `menu: [...]` when there are sub-pages (`key`, `label`, `href` [starting with '/'], `icon` [Lucide component], optional `permission`, `isDownload: true` for downloads).
+2. (Removed — the module menu now lives in the `menu` array of `module.config.ts`.)
 3. `src/modules/<MODULE_NAME>/permissions.ts`:
    - `definePermissions("<MODULE_NAME>", { ADMIN: [...], BOARD: [...], SECRETARY: [...], TREASURER: [...], AUDITOR: [...], VIEWER: [...] })` covering all 6 roles.
 4. `src/modules/<MODULE_NAME>/schema.prisma`:

@@ -26,16 +26,12 @@ describe("Verein ERP Module Standardization & Conformance", () => {
     }
   });
 
-  it("official modules have topbar declarative menu (menu/top.json)", () => {
+  it("official modules declare a module menu (sidebar)", () => {
     const officialModules = ["accounting", "members", "documents", "meetings", "donations"];
     for (const key of officialModules) {
       const res = validateModule(key);
       assert.equal(res.valid, true);
-      assert.equal(res.info.hasTopMenu, true, `${key} modülü menu/top.json içermelidir.`);
-      assert.ok(
-        (res.info.topMenuItemsCount ?? 0) > 0,
-        `${key} modülü en az 1 üst menü öğesine sahip olmalıdır.`,
-      );
+      assert.equal(res.info.hasMenu, true, `${key} modülü module.config.ts içinde 'menu' tanımlamalıdır.`);
     }
   });
 
@@ -78,7 +74,7 @@ describe("Verein ERP Module Standardization & Conformance", () => {
     fs.rmSync(tempDir, { recursive: true, force: true });
   });
 
-  it("validator flags invalid menu/top.json schema", () => {
+  it("validator rejects the legacy menu/top.json", () => {
     const tempDir = fs.mkdtempSync(path.join(os.tmpdir(), "verein-mod-test-"));
     const dummyMod = path.join(tempDir, "bad-nav-mod");
     fs.mkdirSync(dummyMod, { recursive: true });
@@ -96,15 +92,15 @@ describe("Verein ERP Module Standardization & Conformance", () => {
     fs.writeFileSync(path.join(dummyMod, "ui.ts"), `export {};`);
     fs.writeFileSync(path.join(dummyMod, "index.ts"), `export {};`);
 
-    // Invalid top.json: missing leading slash in href
+    // Eski üst bar menüsü artık kabul edilmez
     fs.writeFileSync(
       path.join(dummyMod, "menu", "top.json"),
-      JSON.stringify([{ key: "overview", label: "Overview", href: "no-slash-path" }]),
+      JSON.stringify([{ key: "overview", label: "Overview", href: "/bad-nav-mod" }]),
     );
 
     const res = validateModule("bad-nav-mod", tempDir);
     assert.equal(res.valid, false);
-    assert.ok(res.errors.some((e) => e.includes("menu/top.json") && e.includes("'/' ile başlayan")));
+    assert.ok(res.errors.some((e) => e.includes("menu/top.json") && e.includes("eski standart")));
 
     fs.rmSync(tempDir, { recursive: true, force: true });
   });

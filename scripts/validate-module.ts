@@ -16,8 +16,7 @@ export interface ModuleValidationResult {
     label?: string;
     category?: "CORE" | "OFFICIAL" | "EXTENSION" | string;
     hasSchema?: boolean;
-    hasTopMenu?: boolean;
-    topMenuItemsCount?: number;
+    hasMenu?: boolean;
     hasTranslations?: boolean;
     hasPermissions?: boolean;
     hasAppRoute?: boolean;
@@ -95,38 +94,15 @@ export function validateModule(moduleKey: string, customModulesDir?: string): Mo
     }
   }
 
-  // 3. menu/top.json standart kontrolü
-  const topMenuPath = path.join(moduleDir, "menu", "top.json");
-  if (fs.existsSync(topMenuPath)) {
-    info.hasTopMenu = true;
-    try {
-      const topMenuRaw = fs.readFileSync(topMenuPath, "utf8");
-      const topMenu = JSON.parse(topMenuRaw);
-      if (!Array.isArray(topMenu)) {
-        errors.push("'menu/top.json' geçerli bir JSON dizisi olmalıdır.");
-      } else {
-        info.topMenuItemsCount = topMenu.length;
-        topMenu.forEach((item, idx) => {
-          if (!item.key || typeof item.key !== "string") {
-            errors.push(`menu/top.json [${idx}] 'key' alanı zorunludur.`);
-          }
-          if (!item.label || typeof item.label !== "string") {
-            errors.push(`menu/top.json [${idx}] 'label' alanı zorunludur.`);
-          }
-          if (!item.href || typeof item.href !== "string" || !item.href.startsWith("/")) {
-            errors.push(`menu/top.json [${idx}] 'href' alanı '/' ile başlayan geçerli bir URL olmalıdır.`);
-          }
-        });
-      }
-    } catch (err) {
-      errors.push(`'menu/top.json' geçersiz JSON formatına sahip: ${err instanceof Error ? err.message : String(err)}`);
-    }
-  } else {
-    info.hasTopMenu = false;
-    // EXTENSION ve OFFICIAL modüller için top.json zorunlu veya şiddetle tavsiye edilir
-    if (info.category === "EXTENSION" || info.category === "OFFICIAL") {
-      warnings.push("Modülün üst bar navigasyonu için 'menu/top.json' dosyası önerilir.");
-    }
+  // 3. Modül menüsü standardı: menü module.config.ts içinde `menu` olarak tanımlanır.
+  // Bağlantıların sayfa/rota karşılığı ve çevirileri tests/navigation.test.ts'te doğrulanır.
+  if (fs.existsSync(path.join(moduleDir, "menu", "top.json"))) {
+    errors.push(
+      "'menu/top.json' eski standarttır (üst bar kaldırıldı). Modül menüsünü 'module.config.ts' içinde 'menu: [...]' olarak tanımlayın.",
+    );
+  }
+  if (fs.existsSync(configPath)) {
+    info.hasMenu = /\n\s*menu:\s*\[/.test(fs.readFileSync(configPath, "utf8"));
   }
 
   // 4. permissions.ts kontrolü
@@ -406,8 +382,8 @@ if (isCLI) {
     }
 
     if (res.valid && res.warnings.length === 0) {
-      const topItems = res.info.hasTopMenu ? ` | TopNav (${res.info.topMenuItemsCount} öğe)` : "";
-      console.log(`   \x1b[32m✔ Tam uyumlu:\x1b[0m i18n, Yetki, Schema (${res.info.hasSchema ? "var" : "yok"}), Public APIs (index, server, ui)${topItems}`);
+      const menuInfo = res.info.hasMenu ? " | Modül menüsü" : "";
+      console.log(`   \x1b[32m✔ Tam uyumlu:\x1b[0m i18n, Yetki, Schema (${res.info.hasSchema ? "var" : "yok"}), Public APIs (index, server, ui)${menuInfo}`);
     }
     console.log("");
   }

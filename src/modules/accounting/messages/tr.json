@@ -307,5 +307,13 @@
   },
   "balances": {
     "title": "Hesap bakiyeleri"
+  },
+  "menu": {
+    "sync": "Üyelik aktarımı",
+    "reports": "Raporlar",
+    "budget": "Bütçe",
+    "yearClosing": "Yıl kapanışı",
+    "settings": "Ayarlar",
+    "export": "Excel'e aktar"
   }
 }

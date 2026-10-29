@@ -324,5 +324,8 @@
     "deleteAria": "{name} sil",
     "deleteTitle": "Dosya silinecek",
     "deleteMessage": "Dosya listeden kaldırılacak; diskteki kopya korunur. Devam edilsin mi?"
+  },
+  "menu": {
+    "tasks": "Görevler"
   }
 }

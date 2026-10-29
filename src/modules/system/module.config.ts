@@ -1,7 +1,6 @@
 import { Boxes, Settings } from "lucide-react";
-import type { ModuleConfig, TopNavItem } from "@/shared/types/module";
+import type { ModuleConfig } from "@/shared/types/module";
 import { settingsPermissions, systemPermissions } from "@/shared/permissions/system";
-import topNav from "./menu/top.json";
 
 export const moduleConfig: ModuleConfig = {
   key: "system",
@@ -10,7 +9,6 @@ export const moduleConfig: ModuleConfig = {
   category: "CORE",
   isProtected: true,
   hasSchema: true,
-  topNav: topNav as TopNavItem[],
   nav: [
     {
       href: "/ayarlar",

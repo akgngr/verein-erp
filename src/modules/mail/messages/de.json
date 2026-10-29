@@ -4,10 +4,6 @@
   },
   "title": "E-Mail-Einstellungen",
   "description": "SMTP-Server und Absenderangaben für alle E-Mails, die das System versendet.",
-  "topNav": {
-    "settings": "Einstellungen",
-    "logs": "Versandprotokoll"
-  },
   "status": {
     "title": "Status",
     "configured": "E-Mail-Versand ist eingerichtet",
@@ -112,5 +108,9 @@
     "connectionFailed": "Verbindung zum SMTP-Server oder Anmeldung fehlgeschlagen. Bitte Server, Port, Verschlüsselung und Zugangsdaten prüfen.",
     "sendFailed": "Die Test-E-Mail konnte nicht gesendet werden.",
     "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+  },
+  "menu": {
+    "settings": "Einstellungen",
+    "logs": "Versandprotokoll"
   }
 }
