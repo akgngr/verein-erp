@@ -30,6 +30,7 @@ export function DonorTable({
   canUpdate: boolean;
   canDelete: boolean;
 }) {
+  const tD = useTranslations("donations.common");
   const t = useTranslations("donations.donors");
   const format = (cents: number) =>
     (cents / 100).toLocaleString("tr-TR", { style: "currency", currency: "EUR" });
@@ -100,8 +101,8 @@ export function DonorTable({
           key: "active",
           label: t("columns.status"),
           options: [
-            { value: "1", label: "Aktif" },
-            { value: "0", label: "Pasif" },
+            { value: "1", label: tD("active") },
+            { value: "0", label: tD("passive") },
           ],
         },
       ]}

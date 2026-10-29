@@ -15,20 +15,20 @@ function emptyToNull<T extends z.ZodType>(schema: T) {
 }
 
 const donationBaseSchema = z.object({
-    donorId: z.string().trim().min(1, "Bağışçı seçin."),
+    donorId: z.string().trim().min(1, "donations.validation.selectDonor"),
     receivedAt: z
       .string()
       .trim()
-      .min(1, "Bağış tarihi zorunludur.")
-      .regex(DATE_ONLY, "Geçerli bir tarih girin."),
-    amount: z.string().trim().min(1, "Tutar zorunludur.").max(14, "Tutar çok büyük."),
+      .min(1, "donations.validation.dateRequired")
+      .regex(DATE_ONLY, "donations.validation.dateInvalid"),
+    amount: z.string().trim().min(1, "donations.validation.amountRequired").max(14, "donations.validation.amountTooLarge"),
     method: z.enum(["CASH", "BANK_TRANSFER", "CARD", "PAYPAL", "REIMBURSEMENT_WAIVER", "OTHER"]),
-    reference: emptyToNull(z.string().trim().max(100, "Referans en fazla 100 karakter olabilir.").nullable()),
-    purposeNote: emptyToNull(z.string().trim().max(300, "Amaç notu en fazla 300 karakter olabilir.").nullable()),
+    reference: emptyToNull(z.string().trim().max(100, "donations.validation.referenceMax").nullable()),
+    purposeNote: emptyToNull(z.string().trim().max(300, "donations.validation.purposeMax").nullable()),
     // Aufwandsspende (§ 11 md. 4):
     waivedReimbursement: z.boolean().default(false),
-    claimBasis: emptyToNull(z.string().trim().max(300, "Dayanak en fazla 300 karakter olabilir.").nullable()),
-    waiverDeclaredAt: emptyToNull(z.string().trim().regex(DATE_ONLY, "Geçerli bir tarih girin.").nullable()),
+    claimBasis: emptyToNull(z.string().trim().max(300, "donations.validation.basisMax").nullable()),
+    waiverDeclaredAt: emptyToNull(z.string().trim().regex(DATE_ONLY, "donations.validation.dateInvalid").nullable()),
     expenseCategoryId: emptyToNull(z.string().trim().min(1).nullable()),
   });
 
@@ -47,28 +47,28 @@ export const donationCreateSchema = donationBaseSchema
         ctx.addIssue({
           code: "custom",
           path: ["claimBasis"],
-          message: "Önceden doğmuş talebin dayanağı zorunludur (en az 5 karakter).",
+          message: "donations.validation.basisRequired",
         });
       }
       if (!data.waiverDeclaredAt) {
         ctx.addIssue({
           code: "custom",
           path: ["waiverDeclaredAt"],
-          message: "Vazgeçimin beyan tarihi zorunludur.",
+          message: "donations.validation.waiverDateRequired",
         });
       }
       if (!data.expenseCategoryId) {
         ctx.addIssue({
           code: "custom",
           path: ["expenseCategoryId"],
-          message: "Gider kategorisi zorunludur (Aufwandsspende gideri).",
+          message: "donations.validation.expenseCategoryRequired",
         });
       }
     } else if (data.method === "REIMBURSEMENT_WAIVER") {
       ctx.addIssue({
         code: "custom",
         path: ["method"],
-        message: "Bu yöntem yalnızca Aufwandsspende ile kullanılır.",
+        message: "donations.validation.waiverMethodOnly",
       });
     }
   });
@@ -78,7 +78,7 @@ export const donationCreateSchema = donationBaseSchema
 export const donationUpdateSchema = donationBaseSchema.omit({ donorId: true }).extend({
   id: z.string().min(1),
   /** Eşzamanlılık koruması: formun taşıdığı kaydın updatedAt'i. */
-  updatedAt: z.string().min(1, "Kayıt sürümü eksik."),
+  updatedAt: z.string().min(1, "donations.validation.versionMissing"),
 });
 
 /** Bağış iptali (§ 11 md. 7): neden 5-300. */
@@ -87,8 +87,8 @@ export const donationCancelSchema = z.object({
   reason: z
     .string()
     .trim()
-    .min(5, "İptal nedeni en az 5 karakter olmalıdır.")
-    .max(300, "İptal nedeni en fazla 300 karakter olabilir."),
+    .min(5, "donations.validation.cancelReasonMin")
+    .max(300, "donations.validation.cancelReasonMax"),
 });
 
 export type DonationCreateInput = z.infer<typeof donationCreateSchema>;

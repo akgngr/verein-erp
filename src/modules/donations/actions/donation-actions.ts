@@ -35,38 +35,38 @@ export async function createDonationAction(
 
       const donor = await db.donor.findUnique({ where: { id: input.donorId } });
       if (!donor || !donor.isActive) {
-        throw new ActionError("Bağışçı bulunamadı veya pasif.", {
+        throw new ActionError("donations.errors.donorInactive", {
           donorId: ["Aktif bir bağışçı seçin."],
         });
       }
 
       const cents = toCents(input.amount);
       if (cents === null || cents <= 0) {
-        throw new ActionError("Tutar geçersiz.", {
+        throw new ActionError("donations.errors.amountInvalid", {
           amount: ["0'dan büyük bir tutar girin (en fazla 2 ondalık)."],
         });
       }
       if (cents > 999_999_999) {
-        throw new ActionError("Tutar çok büyük.", {
+        throw new ActionError("donations.errors.amountTooLarge", {
           amount: ["Tutar en fazla 9.999.999,99 € olabilir."],
         });
       }
 
       const receivedAt = parseDateOnly(input.receivedAt);
       if (!receivedAt) {
-        throw new ActionError("Bağış tarihi geçersiz.", {
-          receivedAt: ["Geçerli bir tarih girin."],
+        throw new ActionError("donations.errors.dateInvalid", {
+          receivedAt: ["donations.validation.dateInvalid"],
         });
       }
       const today = berlinTodayStart();
       if (receivedAt.getTime() > today.getTime()) {
-        throw new ActionError("Bağış tarihi gelecekte olamaz.", {
+        throw new ActionError("donations.errors.dateFuture", {
           receivedAt: ["Gelecek tarih girilemez."],
         });
       }
       const prevYearStart = new Date(Date.UTC(today.getUTCFullYear() - 1, 0, 1));
       if (receivedAt.getTime() < prevYearStart.getTime()) {
-        throw new ActionError("Bağış tarihi geçen yılın başından daha eski olamaz.", {
+        throw new ActionError("donations.errors.dateTooOld", {
           receivedAt: ["En fazla geçen yılın 1 Ocak'ına kadar."],
         });
       }
@@ -160,10 +160,10 @@ export async function updateDonationAction(input: unknown): Promise<ActionResult
     handler: async ({ input, user, audit }) => {
       const db = getDb();
       const existing = await db.donation.findUnique({ where: { id: input.id } });
-      if (!existing) throw new ActionError("Bağış bulunamadı.");
+      if (!existing) throw new ActionError("donations.errors.donationNotFound");
 
       if (existing.reversedAt) {
-        throw new ActionError("İptal edilmiş bağış düzenlenemez.");
+        throw new ActionError("donations.errors.cancelledNoEdit");
       }
       // Aktif bildirim ögesi engeli (§ 11 md. 6).
       const activeItem = await db.zuwendungConfirmationItem.findFirst({
@@ -183,19 +183,19 @@ export async function updateDonationAction(input: unknown): Promise<ActionResult
 
       const cents = toCents(input.amount);
       if (cents === null || cents <= 0) {
-        throw new ActionError("Tutar geçersiz.", {
+        throw new ActionError("donations.errors.amountInvalid", {
           amount: ["0'dan büyük bir tutar girin."],
         });
       }
       const receivedAt = parseDateOnly(input.receivedAt);
       if (!receivedAt) {
-        throw new ActionError("Bağış tarihi geçersiz.", {
-          receivedAt: ["Geçerli bir tarih girin."],
+        throw new ActionError("donations.errors.dateInvalid", {
+          receivedAt: ["donations.validation.dateInvalid"],
         });
       }
       const year = receivedAt.getUTCFullYear();
       if (year !== existing.year) {
-        throw new ActionError("Bağış başka yıla taşınamaz; bağış numarası yıla bağlıdır.", {
+        throw new ActionError("donations.errors.yearChange", {
           receivedAt: ["Bağış yılı değiştirilemez."],
         });
       }
@@ -203,7 +203,7 @@ export async function updateDonationAction(input: unknown): Promise<ActionResult
       const createdByLabel = buildUserLabel(user.name, user.email);
       const actor = { id: user.id, label: createdByLabel };
       const donor = await db.donor.findUnique({ where: { id: existing.donorId } });
-      if (!donor) throw new ActionError("Bağışçı bulunamadı.");
+      if (!donor) throw new ActionError("donations.errors.donorNotFound");
 
       // Fiş etkilenecek alanlar değişti mi (§ 11 md. 6)?
       const bookingsAffected =
@@ -289,8 +289,8 @@ export async function cancelDonationAction(input: unknown): Promise<ActionResult
     handler: async ({ input, user, audit }) => {
       const db = getDb();
       const existing = await db.donation.findUnique({ where: { id: input.id } });
-      if (!existing) throw new ActionError("Bağış bulunamadı.");
-      if (existing.reversedAt) throw new ActionError("Bu bağış zaten iptal edilmiş.");
+      if (!existing) throw new ActionError("donations.errors.donationNotFound");
+      if (existing.reversedAt) throw new ActionError("donations.errors.alreadyCancelled");
 
       // Aktif bildirim engeli (§ 11 md. 7): önce bildirimi iptal et.
       const activeItem = await db.zuwendungConfirmationItem.findFirst({

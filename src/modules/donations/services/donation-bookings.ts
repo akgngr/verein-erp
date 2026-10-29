@@ -68,7 +68,7 @@ export async function createDonationBookings(
 
   // Aufwandsspende: banka hesabına gelir + gider çifti (§ 11 md. 5 md. 3).
   if (!args.expenseCategoryId) {
-    throw new ActionError("Aufwandsspende için gider kategorisi zorunludur.");
+    throw new ActionError("donations.errors.waiverExpenseRequired");
   }
   const expense = await createSourcedBooking({
     tx,

@@ -53,7 +53,7 @@ export async function ConfirmationListView({
         actions={
           <div className="flex flex-wrap gap-2">
             <LinkButton href="/bagislar/bildirimler/olustur" variant="flat">
-              Bildirim oluştur
+              {t("create")}
             </LinkButton>
             <LinkButton href="/api/donations/confirmations/export" variant="bordered" startIcon={<Download className="h-4 w-4" />}>
               {t("actions.export")}

@@ -21,8 +21,8 @@ export async function anonymizeDonor(
     where: { id: donorId },
     select: { id: true, donorNumber: true, isAnonymized: true },
   });
-  if (!donor) throw new ActionError("Bağışçı bulunamadı.");
-  if (donor.isAnonymized) throw new ActionError("Bu bağışçı zaten anonimleştirilmiş.");
+  if (!donor) throw new ActionError("donations.errors.donorNotFound");
+  if (donor.isAnonymized) throw new ActionError("donations.errors.alreadyAnonymized");
 
   const now = new Date();
 

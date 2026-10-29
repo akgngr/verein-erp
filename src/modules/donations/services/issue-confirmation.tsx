@@ -1,5 +1,9 @@
 import "server-only";
 
+import { ActionError } from "@/modules/auth/server";
+
+import { getMessageTranslator } from "@/shared/i18n/translate-message";
+
 import type { Prisma } from "@prisma/client";
 import { renderToBuffer } from "@react-pdf/renderer";
 import { randomUUID } from "node:crypto";
@@ -200,7 +204,7 @@ export async function issueSingleDonationConfirmation(
     where: { id: donationId },
     include: { donor: true },
   });
-  if (!donation) throw new IssueError("Bağış bulunamadı.");
+  if (!donation) throw new IssueError("donations.errors.donationNotFound");
   if (donation.reversedAt) throw new IssueError("İptal edilmiş bağışa bildirim düzenlenemez.");
 
   const recipient = donorRecipient(donation.donor);
@@ -218,7 +222,7 @@ export async function issueSingleDonationConfirmation(
         sourceId: donation.id,
         itemDate: donation.receivedAt,
         amountCents: Number(donation.amount.mul(100).toFixed(0)),
-        label: "Geldspende",
+        label: "Geldspende", // i18n-ignore (amtlicher Belegtext, immer Deutsch)
         waived: donation.waivedReimbursement,
       },
     ],
@@ -241,10 +245,10 @@ export async function issueCollectiveDonationConfirmation(
   },
 ): Promise<IssueResult> {
   const db = getDb();
-  if (args.donationIds.length === 0) throw new IssueError("En az bir bağış seçin.");
+  if (args.donationIds.length === 0) throw new IssueError("donations.validation.selectDonation");
 
   const donor = await db.donor.findUnique({ where: { id: args.donorId } });
-  if (!donor) throw new IssueError("Bağışçı bulunamadı.");
+  if (!donor) throw new IssueError("donations.errors.donorNotFound");
 
   const donations = await db.donation.findMany({
     where: { id: { in: args.donationIds }, donorId: args.donorId },
@@ -292,7 +296,7 @@ export async function issueCollectiveDonationConfirmation(
       sourceId: donation.id,
       itemDate: donation.receivedAt,
       amountCents: Number(donation.amount.mul(100).toFixed(0)),
-      label: "Geldspende",
+      label: "Geldspende", // i18n-ignore (amtlicher Belegtext, immer Deutsch)
       waived: donation.waivedReimbursement,
     })),
     periodFrom: args.periodFrom,
@@ -357,7 +361,7 @@ export async function issueMembershipFeeConfirmation(
       sourceId: payment.id,
       itemDate: new Date(`${payment.paidAt}T00:00:00Z`),
       amountCents: payment.amountCents,
-      label: "Mitgliedsbeitrag",
+      label: "Mitgliedsbeitrag", // i18n-ignore (amtlicher Belegtext, immer Deutsch)
       waived: false,
     })),
     periodFrom: new Date(Date.UTC(args.year, 0, 1)),
@@ -377,6 +381,7 @@ export async function issueBatchConfirmations(
   actor: { id: string; label: string },
   args: { year: number; content: "DONATION" | "MEMBERSHIP_FEE"; recipientIds: string[] },
 ): Promise<Array<{ recipientId: string; ok: boolean; confirmationNumber?: string; error?: string }>> {
+  const translate = await getMessageTranslator();
   const results: Array<{ recipientId: string; ok: boolean; confirmationNumber?: string; error?: string }> = [];
   for (const recipientId of args.recipientIds) {
     try {
@@ -389,7 +394,10 @@ export async function issueBatchConfirmations(
       results.push({
         recipientId,
         ok: false,
-        error: error instanceof Error ? error.message : "Bilinmeyen hata",
+        error: translate(
+          error instanceof Error ? error.message : "common.errors.unexpected",
+          error instanceof ActionError ? error.values : undefined,
+        ),
       });
     }
   }

@@ -1080,7 +1080,9 @@
         "deactivate": "Pasifleştir",
         "activate": "Etkinleştir",
         "toastAnonymized": "Bağışçı anonimleştirildi."
-      }
+      },
+      "memberNumberPlaceholder": "Üye numarası (opsiyonel)",
+      "anonymizedNoEdit": "Anonimleştirilmiş bağışçı düzenlenemez."
     },
     "confirmations": {
       "title": "Bildirimler (Zuwendungsbestätigungen)",
@@ -1155,7 +1157,8 @@
         "candidatesEmpty": "Bildirilebilir kayıt yok.",
         "batchRun": "Toplu üretimi çalıştır",
         "batchResult": "{ok} başarılı, {failed} başarısız"
-      }
+      },
+      "create": "Bildirim oluştur"
     },
     "settings": {
       "title": "Bağış ayarları (Bildirim üretimi)",
@@ -1192,6 +1195,68 @@
       "donorEdit": "Bağışçıyı düzenle",
       "confirmations": "Bildirimler",
       "list": "Bağışlar"
+    },
+    "common": {
+      "yes": "Evet",
+      "no": "Hayır",
+      "active": "Aktif",
+      "passive": "Pasif",
+      "backToList": "← Bağışlar"
+    },
+    "errors": {
+      "confirmationNotFound": "Bildirim bulunamadı.",
+      "confirmationAlreadyCancelled": "Bu bildirim zaten iptal edilmiş.",
+      "donorInactive": "Bağışçı bulunamadı veya pasif.",
+      "amountInvalid": "Tutar geçersiz.",
+      "amountTooLarge": "Tutar çok büyük.",
+      "dateInvalid": "Bağış tarihi geçersiz.",
+      "dateFuture": "Bağış tarihi gelecekte olamaz.",
+      "dateTooOld": "Bağış tarihi geçen yılın başından daha eski olamaz.",
+      "donationNotFound": "Bağış bulunamadı.",
+      "cancelledNoEdit": "İptal edilmiş bağış düzenlenemez.",
+      "yearChange": "Bağış başka yıla taşınamaz; bağış numarası yıla bağlıdır.",
+      "donorNotFound": "Bağışçı bulunamadı.",
+      "alreadyCancelled": "Bu bağış zaten iptal edilmiş.",
+      "memberAddressMissing": "Üye bulunamadı veya adresi eksik.",
+      "confirmNumberMismatch": "Onay numarası uyuşmuyor.",
+      "anonymizeFailed": "Anonimleştirilemedi.",
+      "alreadyAnonymized": "Bu bağışçı zaten anonimleştirilmiş.",
+      "confirmationNeedsItem": "Bildirim için en az bir öge gerekir.",
+      "waiverExpenseRequired": "Aufwandsspende için gider kategorisi zorunludur.",
+      "typeDonorNumber": "Bağışçı numarasını yazın: {number}"
+    },
+    "validation": {
+      "periodStartInvalid": "Geçerli bir dönem başlangıcı girin.",
+      "periodEndInvalid": "Geçerli bir dönem sonu girin.",
+      "selectDonation": "En az bir bağış seçin.",
+      "cancelReasonMin": "İptal nedeni en az 5 karakter olmalıdır.",
+      "cancelReasonMax": "İptal nedeni en fazla 300 karakter olabilir.",
+      "selectDonor": "Bağışçı seçin.",
+      "dateRequired": "Bağış tarihi zorunludur.",
+      "dateInvalid": "Geçerli bir tarih girin.",
+      "amountRequired": "Tutar zorunludur.",
+      "amountTooLarge": "Tutar çok büyük.",
+      "referenceMax": "Referans en fazla 100 karakter olabilir.",
+      "purposeMax": "Amaç notu en fazla 300 karakter olabilir.",
+      "basisMax": "Dayanak en fazla 300 karakter olabilir.",
+      "basisRequired": "Önceden doğmuş talebin dayanağı zorunludur (en az 5 karakter).",
+      "waiverDateRequired": "Vazgeçimin beyan tarihi zorunludur.",
+      "expenseCategoryRequired": "Gider kategorisi zorunludur (Aufwandsspende gideri).",
+      "waiverMethodOnly": "Bu yöntem yalnızca Aufwandsspende ile kullanılır.",
+      "versionMissing": "Kayıt sürümü eksik.",
+      "firstNameMax": "Ad en fazla 60 karakter olabilir.",
+      "lastNameMax": "Soyad en fazla 60 karakter olabilir.",
+      "organizationMax": "Kuruluş adı en fazla 120 karakter olabilir.",
+      "streetMax": "Straße en fazla 120 karakter olabilir.",
+      "postalCodeMax": "PLZ en fazla 10 karakter olabilir.",
+      "cityMax": "Şehir en fazla 120 karakter olabilir.",
+      "countryMax": "Ülke en fazla 60 karakter olabilir.",
+      "phoneMax": "Telefon en fazla 30 karakter olabilir.",
+      "noteMax": "Not en fazla 500 karakter olabilir.",
+      "lastNameRequired": "Kişi için soyad zorunludur.",
+      "organizationRequired": "Kuruluş için ad (en az 2 karakter) zorunludur.",
+      "postalCodeDe": "Almanya için posta kodu 5 haneli olmalıdır.",
+      "confirmNumberRequired": "Onay için bağışçı numarasını yazın (örn. SP-0007)."
     }
   },
   "events": {

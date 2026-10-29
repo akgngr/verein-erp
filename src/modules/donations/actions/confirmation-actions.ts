@@ -67,9 +67,9 @@ export async function cancelConfirmationAction(input: unknown): Promise<ActionRe
         where: { id: input.id },
         select: { id: true, confirmationNumber: true, status: true },
       });
-      if (!confirmation) throw new ActionError("Bildirim bulunamadı.");
+      if (!confirmation) throw new ActionError("donations.errors.confirmationNotFound");
       if (confirmation.status !== "ISSUED") {
-        throw new ActionError("Bu bildirim zaten iptal edilmiş.");
+        throw new ActionError("donations.errors.confirmationAlreadyCancelled");
       }
 
       const label = buildUserLabel(user.name, user.email);

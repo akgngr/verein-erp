@@ -40,6 +40,7 @@ export function DonorForm({
   mode: "create" | "edit";
   initial?: Partial<DonorFormValues>;
 }) {
+  const tDonors = useTranslations("donations.donors");
   const router = useRouter();
   const t = useTranslations("donations.donors.form");
   const [formError, setFormError] = useState<string | null>(null);
@@ -128,7 +129,7 @@ export function DonorForm({
               label={t("fromMember")}
               control={form.control}
               description={t("fromMemberHint")}
-              placeholder="Üye numarası (opsiyonel)"
+              placeholder={tDonors("memberNumberPlaceholder")}
             />
           ) : null}
           {formError ? (

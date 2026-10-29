@@ -108,7 +108,7 @@ export async function buildConfirmationSnapshot(
 ): Promise<ConfirmationBuild> {
   void tx;
   if (args.items.length === 0) {
-    throw new ActionError("Bildirim için en az bir öge gerekir.");
+    throw new ActionError("donations.errors.confirmationNeedsItem");
   }
   const totalCents = args.items.reduce((sum, item) => sum + item.amountCents, 0);
   if (totalCents <= 0) {

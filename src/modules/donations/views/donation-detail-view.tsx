@@ -11,7 +11,7 @@ import { can } from "@/shared/permissions/define";
 
 import { getDonation } from "../queries/get-donation";
 import { donationsPermissions } from "../permissions";
-import { DONATION_METHOD_LABELS } from "../constants";
+
 import { DonationCancelButton } from "../components/donation-cancel-button";
 
 function InfoRow({ label, children }: { label: string; children: React.ReactNode }) {
@@ -25,6 +25,8 @@ function InfoRow({ label, children }: { label: string; children: React.ReactNode
 
 /** Bağış detayı (§ 15 md. 3). */
 export async function DonationDetailView({ id }: { id: string }) {
+  const tD = await getTranslations("donations.common");
+  const tMethod = await getTranslations("donations.form.method");
   let user;
   try {
     user = await requirePermission(donationsPermissions, "view");
@@ -93,7 +95,7 @@ export async function DonationDetailView({ id }: { id: string }) {
           <InfoRow label={t("fields.amount")}>
             <span className="font-semibold">{format(donation.amountCents)}</span>
           </InfoRow>
-          <InfoRow label={t("fields.method")}>{DONATION_METHOD_LABELS[donation.method]}</InfoRow>
+          <InfoRow label={t("fields.method")}>{tMethod(donation.method)}</InfoRow>
           <InfoRow label={t("fields.status")}>
             {donation.reversedAt ? t("reversed") : t("active")}
           </InfoRow>
@@ -129,7 +131,7 @@ export async function DonationDetailView({ id }: { id: string }) {
       </div>
       <div className="mt-4">
         <Link href="/bagislar" className="text-small text-primary underline">
-          ← Bağışlar
+          {tD("backToList")}
         </Link>
       </div>
       <span className="hidden">{Pencil.name}</span>

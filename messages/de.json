@@ -1080,7 +1080,9 @@
         "deactivate": "Deaktivieren",
         "activate": "Aktivieren",
         "toastAnonymized": "Spender/in anonymisiert."
-      }
+      },
+      "memberNumberPlaceholder": "Mitgliedsnummer (optional)",
+      "anonymizedNoEdit": "Ein anonymisierter Spender kann nicht bearbeitet werden."
     },
     "confirmations": {
       "title": "Zuwendungsbestätigungen",
@@ -1155,7 +1157,8 @@
         "candidatesEmpty": "Keine bestätigungsfähigen Einträge.",
         "batchRun": "Sammelproduktion starten",
         "batchResult": "{ok} erfolgreich, {failed} fehlgeschlagen"
-      }
+      },
+      "create": "Bestätigung erstellen"
     },
     "settings": {
       "title": "Spenden-Einstellungen (Bestätigungsproduktion)",
@@ -1192,6 +1195,68 @@
       "donorEdit": "Spender bearbeiten",
       "confirmations": "Zuwendungsbestätigungen",
       "list": "Spenden"
+    },
+    "common": {
+      "yes": "Ja",
+      "no": "Nein",
+      "active": "Aktiv",
+      "passive": "Inaktiv",
+      "backToList": "← Spenden"
+    },
+    "errors": {
+      "confirmationNotFound": "Zuwendungsbestätigung nicht gefunden.",
+      "confirmationAlreadyCancelled": "Diese Zuwendungsbestätigung wurde bereits storniert.",
+      "donorInactive": "Der Spender wurde nicht gefunden oder ist inaktiv.",
+      "amountInvalid": "Der Betrag ist ungültig.",
+      "amountTooLarge": "Der Betrag ist zu hoch.",
+      "dateInvalid": "Das Spendendatum ist ungültig.",
+      "dateFuture": "Das Spendendatum darf nicht in der Zukunft liegen.",
+      "dateTooOld": "Das Spendendatum darf nicht vor dem Beginn des Vorjahres liegen.",
+      "donationNotFound": "Spende nicht gefunden.",
+      "cancelledNoEdit": "Eine stornierte Spende kann nicht bearbeitet werden.",
+      "yearChange": "Eine Spende kann nicht in ein anderes Jahr verschoben werden; die Spendennummer ist jahresgebunden.",
+      "donorNotFound": "Spender nicht gefunden.",
+      "alreadyCancelled": "Diese Spende wurde bereits storniert.",
+      "memberAddressMissing": "Mitglied nicht gefunden oder Adresse unvollständig.",
+      "confirmNumberMismatch": "Die eingegebene Nummer stimmt nicht überein.",
+      "anonymizeFailed": "Anonymisierung fehlgeschlagen.",
+      "alreadyAnonymized": "Dieser Spender wurde bereits anonymisiert.",
+      "confirmationNeedsItem": "Für eine Zuwendungsbestätigung ist mindestens eine Position erforderlich.",
+      "waiverExpenseRequired": "Für eine Aufwandsspende ist eine Ausgabenkategorie erforderlich.",
+      "typeDonorNumber": "Bitte die Spendernummer eingeben: {number}"
+    },
+    "validation": {
+      "periodStartInvalid": "Bitte einen gültigen Zeitraumbeginn eingeben.",
+      "periodEndInvalid": "Bitte ein gültiges Zeitraumende eingeben.",
+      "selectDonation": "Bitte mindestens eine Spende auswählen.",
+      "cancelReasonMin": "Der Stornogrund muss mindestens 5 Zeichen lang sein.",
+      "cancelReasonMax": "Der Stornogrund darf höchstens 300 Zeichen lang sein.",
+      "selectDonor": "Bitte einen Spender auswählen.",
+      "dateRequired": "Das Spendendatum ist erforderlich.",
+      "dateInvalid": "Bitte ein gültiges Datum eingeben.",
+      "amountRequired": "Der Betrag ist erforderlich.",
+      "amountTooLarge": "Der Betrag ist zu hoch.",
+      "referenceMax": "Die Referenz darf höchstens 100 Zeichen lang sein.",
+      "purposeMax": "Der Verwendungszweck darf höchstens 300 Zeichen lang sein.",
+      "basisMax": "Die Rechtsgrundlage darf höchstens 300 Zeichen lang sein.",
+      "basisRequired": "Die Grundlage des zuvor entstandenen Anspruchs ist erforderlich (mindestens 5 Zeichen).",
+      "waiverDateRequired": "Das Datum der Verzichtserklärung ist erforderlich.",
+      "expenseCategoryRequired": "Die Ausgabenkategorie ist erforderlich (Aufwand der Aufwandsspende).",
+      "waiverMethodOnly": "Diese Zahlungsart ist nur bei Aufwandsspenden zulässig.",
+      "versionMissing": "Die Datensatzversion fehlt.",
+      "firstNameMax": "Der Vorname darf höchstens 60 Zeichen lang sein.",
+      "lastNameMax": "Der Nachname darf höchstens 60 Zeichen lang sein.",
+      "organizationMax": "Der Organisationsname darf höchstens 120 Zeichen lang sein.",
+      "streetMax": "Die Straße darf höchstens 120 Zeichen lang sein.",
+      "postalCodeMax": "Die PLZ darf höchstens 10 Zeichen lang sein.",
+      "cityMax": "Der Ort darf höchstens 120 Zeichen lang sein.",
+      "countryMax": "Das Land darf höchstens 60 Zeichen lang sein.",
+      "phoneMax": "Die Telefonnummer darf höchstens 30 Zeichen lang sein.",
+      "noteMax": "Die Notiz darf höchstens 500 Zeichen lang sein.",
+      "lastNameRequired": "Für Personen ist der Nachname erforderlich.",
+      "organizationRequired": "Für Organisationen ist ein Name (mindestens 2 Zeichen) erforderlich.",
+      "postalCodeDe": "Für Deutschland muss die PLZ 5-stellig sein.",
+      "confirmNumberRequired": "Zur Bestätigung bitte die Spendernummer eingeben (z. B. SP-0007)."
     }
   },
   "events": {

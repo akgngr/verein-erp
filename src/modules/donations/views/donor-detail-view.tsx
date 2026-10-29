@@ -11,7 +11,7 @@ import { can } from "@/shared/permissions/define";
 import { getDonor } from "../queries/get-donor";
 import { listDonations } from "../queries/list-donations";
 import { donationsPermissions } from "../permissions";
-import { DONATION_METHOD_LABELS } from "../constants";
+
 import { AnonymizeDonorDialog } from "../components/anonymize-donor-dialog";
 
 function InfoRow({ label, children }: { label: string; children: React.ReactNode }) {
@@ -25,6 +25,8 @@ function InfoRow({ label, children }: { label: string; children: React.ReactNode
 
 /** Bağışçı detayı (§ 15 md. 4): bağışlar + bildirimler + anonimleştirme. */
 export async function DonorDetailView({ id }: { id: string }) {
+  const tMethod = await getTranslations("donations.form.method");
+  const tD = await getTranslations("donations.common");
   let user;
   try {
     user = await requirePermission(donationsPermissions, "view");
@@ -68,7 +70,7 @@ export async function DonorDetailView({ id }: { id: string }) {
               </span>
             ) : null}
             <span className="text-tiny text-default-400">
-              {donor.isActive ? "Aktif" : "Pasif"} · {formatDate(donor.createdAt)}
+              {donor.isActive ? tD("active") : tD("passive")} · {formatDate(donor.createdAt)}
             </span>
           </div>
           <div className="grid grid-cols-1 gap-x-6 sm:grid-cols-2">
@@ -101,7 +103,7 @@ export async function DonorDetailView({ id }: { id: string }) {
                       {row.donationNumber}
                     </Link>
                     <span className="text-default-500">
-                      {row.receivedAt instanceof Date ? row.receivedAt.toISOString().slice(0, 10) : ""} · {DONATION_METHOD_LABELS[row.method]}
+                      {row.receivedAt instanceof Date ? row.receivedAt.toISOString().slice(0, 10) : ""} · {tMethod(row.method)}
                     </span>
                     <span className={row.reversedAt ? "text-default-400 line-through" : "font-medium"}>
                       {format(row.amountCents)}

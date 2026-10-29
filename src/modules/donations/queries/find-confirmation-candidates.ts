@@ -36,7 +36,7 @@ export async function findDonationCandidates(donorId: string, year: number): Pro
       sourceId: donation.id,
       itemDate: donation.receivedAt,
       amountCents: Number(donation.amount.mul(100).toFixed(0)),
-      label: "Geldspende",
+      label: "Geldspende", // i18n-ignore (amtlicher Belegtext, immer Deutsch)
       waived: donation.waivedReimbursement,
       sourceNumber: donation.donationNumber,
     }));
@@ -61,7 +61,7 @@ export async function findMemberFeeCandidates(memberId: string, year: number): P
       sourceId: payment.id,
       itemDate: new Date(`${payment.paidAt}T00:00:00Z`),
       amountCents: payment.amountCents,
-      label: "Mitgliedsbeitrag",
+      label: "Mitgliedsbeitrag", // i18n-ignore (amtlicher Belegtext, immer Deutsch)
       waived: false,
       sourceNumber: payment.receiptNumber,
     }));

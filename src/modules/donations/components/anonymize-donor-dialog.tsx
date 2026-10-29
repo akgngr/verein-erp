@@ -1,5 +1,7 @@
 "use client";
 
+import { useTranslations } from "next-intl";
+
 import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, addToast } from "@heroui/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -18,6 +20,7 @@ export function AnonymizeDonorDialog({
   retentionBlocked: boolean;
   labels: { button: string; title: string; hint: string; confirmLabel: string; toast: string };
 }) {
+  const tCommon = useTranslations("common");
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [confirmText, setConfirmText] = useState("");
@@ -59,7 +62,7 @@ export function AnonymizeDonorDialog({
           </ModalBody>
           <ModalFooter>
             <Button variant="flat" onPress={() => setOpen(false)}>
-              Vazgeç
+              {tCommon("cancel")}
             </Button>
             <Button
               color="danger"

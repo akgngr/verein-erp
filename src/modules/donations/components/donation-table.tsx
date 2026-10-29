@@ -35,6 +35,7 @@ export function DonationTable({
   canUpdate: boolean;
   canDelete: boolean;
 }) {
+  const tCommon = useTranslations("common");
   const t = useTranslations("donations.list");
   const tForm = useTranslations("donations.form");
   const tDetail = useTranslations("donations.detail");
@@ -152,8 +153,8 @@ export function DonationTable({
             key: "waived",
             label: t("filters.waived"),
             options: [
-              { value: "1", label: "Evet" },
-              { value: "0", label: "Hayır" },
+              { value: "1", label: tCommon("yes") },
+              { value: "0", label: tCommon("no") },
             ],
           },
           {
