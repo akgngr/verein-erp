@@ -16,6 +16,11 @@ pnpm db:migrate --name add_sponsors      # creates the table (do NOT use db push
 pnpm dev                                 # → /sponsors
 ```
 
+`pnpm db:migrate` must be able to **reach** the database in `DATABASE_URL` (a remote server such as Neon
+needs network access; otherwise `P1001: Can't reach database server`). In a network-restricted environment
+use a local PostgreSQL (e.g. `docker run -e POSTGRES_PASSWORD=dev -p 5432:5432 postgres:16`) and point
+`DATABASE_URL` at it. If the migration has to be generated elsewhere, say so explicitly; do not hand-write SQL.
+
 The scaffold produces a module that **works from the first second**: list (search, status filter,
 sorting, paging), create/edit form in the right-side drawer, delete confirmation, audit log and
 Turkish/German translations. It passes every check (types, lint, hard-coded text, translations,
@@ -93,6 +98,18 @@ Building blocks (`@/shared/components/forms/form-drawer`):
 - `useFormDrawerClose()`: closes the drawer after save/cancel.
 - `FormSurface`: a card on a page, borderless inside the drawer.
 
+**Form types:** if the schema uses `z.preprocess` (e.g. `emptyToNull` turning empty text into `null`) or
+`.default()`, Zod's input type differs from its output and `useForm<FormValues>` vs `zodResolver` fails with
+`TS2322`. Project pattern (see `meetings/components/meeting-form.tsx`):
+
+```ts
+import { useForm, type Resolver } from "react-hook-form";
+
+const form = useForm<TaskFormValues>({
+  resolver: zodResolver(taskSchema) as unknown as Resolver<TaskFormValues>,
+});
+```
+
 Confirmations (delete, cancel, test mail) are not forms; they stay `ConfirmDialog`/modal.
 Reference implementation: the scaffold's `views/item-*-view.tsx` and `components/item-form.tsx`.
 
@@ -127,6 +144,8 @@ The root `messages/<locale>.json` is **generated** from `messages/shell/<locale>
 - **Permissions:** `permissions.ts` defines all 6 roles (ADMIN, BOARD, SECRETARY, TREASURER, AUDITOR, VIEWER).
   Mutations use `createAction({ permission, schema, handler })`, which handles permission, schema
   validation, audit log (`audit`) and error translation.
+- **User label:** for fields like `createdByLabel` use `buildUserLabel(user.name, user.email)`
+  (`@/shared/utils`); it takes two strings, not the user object.
 - **Database:** `const db = getDb()` (`@/shared/db`). Reference other modules' tables softly
   (`memberId String?` + label snapshot), not with `@relation`. Schema change = migration (`pnpm db:migrate`).
 - **Menu:** sub-pages and exports go to `module.config.ts → menu` (home is added automatically;
@@ -145,6 +164,10 @@ pnpm exec tsx scripts/check-i18n-keys.ts          # every used key exists in tr/
 pnpm exec tsx scripts/check-hardcoded-text.ts     # no hard-coded UI text
 pnpm typecheck && pnpm lint && pnpm test
 ```
+
+`pnpm typecheck` first deletes stale Next route types (`.next/types`, `.next/dev/types`), so adding a route
+while `next dev` is running no longer breaks it with `.next/dev/types/routes.d.ts … TS1128`. If you run `tsc`
+directly, run `rm -rf .next/types .next/dev/types` first.
 
 Tests catch: hand-written `src/app` files (`zero-touch`), directives not on the first line
 (`directives`), HeroUI without "use client" (`heroui-client-only`), menu links without a page

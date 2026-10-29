@@ -16,6 +16,11 @@ pnpm db:migrate --name add_sponsors      # tabloyu oluşturur (db push KULLANMA)
 pnpm dev                                 # → /sponsors
 ```
 
+`pnpm db:migrate`, `.env` içindeki `DATABASE_URL` veritabanına **bağlanabilmelidir** (Neon gibi uzak bir
+sunucuysa ağ erişimi gerekir; yoksa `P1001: Can't reach database server`). Ağı kısıtlı ortamda yerel bir
+PostgreSQL kullan (örn. `docker run -e POSTGRES_PASSWORD=dev -p 5432:5432 postgres:16`) ve `DATABASE_URL`'i
+ona yönelt. Migration'ı başka bir ortamda üretmen gerekiyorsa bunu açıkça not et; elle SQL yazma.
+
 İskelet **ilk andan çalışan** bir modül üretir: liste (arama, durum filtresi, sıralama, sayfalama),
 sağ çekmecede oluşturma/düzenleme formu, silme onayı, denetim kaydı ve Türkçe/Almanca çeviriler.
 Tüm kurallardan geçer (tip, lint, sabit metin, çeviri, modül standardı). Yeni alanları ve ekranları
@@ -94,6 +99,18 @@ Yapı taşları (`@/shared/components/forms/form-drawer`):
 - `useFormDrawerClose()`: form kaydedince/vazgeçince çekmeceyi kapatır.
 - `FormSurface`: sayfada kart, çekmecede çerçevesiz form kabı.
 
+**Form tipleri:** Şemada `z.preprocess` (örn. boş metni `null` yapan `emptyToNull`) ya da `.default()`
+varsa Zod'un girdi tipi çıktıdan farklılaşır ve `useForm<FormValues>` ile `zodResolver` arasında
+`TS2322` çıkar. Projedeki kalıp (bkz. `meetings/components/meeting-form.tsx`):
+
+```ts
+import { useForm, type Resolver } from "react-hook-form";
+
+const form = useForm<TaskFormValues>({
+  resolver: zodResolver(taskSchema) as unknown as Resolver<TaskFormValues>,
+});
+```
+
 İptal/onay soruları (sil, stornier, test e-postası) form değildir; `ConfirmDialog` veya modal kalır.
 Örnek uygulama: iskeletin `views/item-*-view.tsx` ve `components/item-form.tsx` dosyaları.
 
@@ -128,6 +145,8 @@ Kök `messages/<dil>.json` **üretilen** dosyadır; `messages/shell/<dil>.json` 
 - **Yetki:** `permissions.ts` 6 rolün tamamını içerir (ADMIN, BOARD, SECRETARY, TREASURER, AUDITOR, VIEWER).
   Mutasyonlar `createAction({ permission, schema, handler })` ile yazılır; yetki, şema doğrulama,
   denetim kaydı (`audit`) ve hata çevirisi oradadır.
+- **Kullanıcı etiketi:** `createdByLabel` gibi alanlar için `buildUserLabel(user.name, user.email)`
+  (`@/shared/utils`); fonksiyon kullanıcı nesnesi değil iki metin alır.
 - **Veritabanı:** `const db = getDb()` (`@/shared/db`). Başka modülün tablosuna `@relation` yerine
   yumuşak referans (`memberId String?` + etiket anlık görüntüsü). Şema değişikliği = migration (`pnpm db:migrate`).
 - **Menü:** Alt sayfalar ve dışa aktarma `module.config.ts → menu` içindedir (ana sayfa otomatik eklenir;
@@ -146,6 +165,10 @@ pnpm exec tsx scripts/check-i18n-keys.ts          # kullanılan her anahtar tr/d
 pnpm exec tsx scripts/check-hardcoded-text.ts     # arayüzde sabit metin yok
 pnpm typecheck && pnpm lint && pnpm test
 ```
+
+`pnpm typecheck` önce eski Next rota tiplerini (`.next/types`, `.next/dev/types`) siler; `next dev` açıkken
+yeni rota eklenince oluşan `.next/dev/types/routes.d.ts … TS1128` hatası böylece çıkmaz. `tsc`'yi doğrudan
+çalıştırıyorsan önce `rm -rf .next/types .next/dev/types`.
 
 Testlerin yakaladıkları: elle yazılmış `src/app` dosyası (`zero-touch`), ilk satırda olmayan direktif
 (`directives`), "use client" olmadan HeroUI (`heroui-client-only`), sayfası olmayan menü bağlantısı
