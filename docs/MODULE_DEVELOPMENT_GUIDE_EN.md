@@ -187,6 +187,8 @@ model InventoryItem {
 ### 5. `messages/tr.json` and `messages/de.json` (Bilingual i18n Dictionaries)
 Module translations are automatically merged under the `messages.<module_name>` namespace.
 
+> **Root `messages/<locale>.json` is GENERATED; never edit it.** `pnpm module:sync` rebuilds it from `messages/shell/<locale>.json` (shell texts: `common`, `sidebar`, `panel` …) plus the module files. Module namespaces are replaced, not merged, so keys deleted in a module do not linger at the root. The sidebar label (`nav[0].labelKey`) lives in the module file's reserved `"nav": { "<labelKey>": "..." }` block.
+
 ```json
 // messages/tr.json
 {
@@ -267,6 +269,19 @@ export default async function InventoryPage({
   return <InventoryListView searchParams={searchParams} />;
 }
 ```
+
+
+#### Sub-pages and API routes (zero-touch)
+| File written in the module | Resulting route |
+| --- | --- |
+| `page.tsx` | `/<root>` (root = `basePath`, else `nav[0].href`) |
+| `routes/<path>/page.tsx` (e.g. `routes/[id]/duzenle/page.tsx`) | `/<root>/<path>` |
+| `api/<path>/route.ts` (e.g. `api/export/route.ts`) | `/api/<module_name>/<path>` |
+
+- `pnpm module:sync` generates the bridges; `src/app` holds NO hand-written files. `tests/zero-touch.test.ts` catches hand-written pages/routes outside the shell (panel `/`, `/giris`, `/api/health`) and bridges whose source is gone.
+- Route segment config (`export const runtime = "nodejs"`, `maxDuration` …) is written in the source file and copied into the bridge automatically (Next.js reads these values only from the route file itself).
+- Modules without nav set a root with `basePath: "/profil"` in `module.config.ts`.
+- Import your own module's code with relative paths (`../../ui`); other modules only via their public API.
 
 ---
 

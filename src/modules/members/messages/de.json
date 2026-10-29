@@ -321,5 +321,8 @@
     "types": "Mitgliedsarten",
     "import": "Importieren",
     "export": "Excel-Export"
+  },
+  "nav": {
+    "uyeler": "Mitglieder"
   }
 }

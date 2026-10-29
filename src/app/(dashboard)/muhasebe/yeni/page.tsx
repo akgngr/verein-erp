@@ -1,16 +1,4 @@
-import type { Metadata } from "next";
-
-import { AccountingCreateView } from "@/modules/accounting/server";
-
-export const metadata: Metadata = { title: "Yeni fiş" };
-
-/** Yeni fiş — ?tur=gelir|gider|virman (§ 6). */
-export default async function MuhasebeYeniPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ tur?: string }>;
-}) {
-  const { tur } = await searchParams;
-  const type = tur === "gider" ? "EXPENSE" : tur === "virman" ? "TRANSFER" : "INCOME";
-  return <AccountingCreateView type={type} />;
-}
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/accounting/routes/yeni/page.tsx
+export { default } from "@/modules/accounting/routes/yeni/page";
+export * from "@/modules/accounting/routes/yeni/page";

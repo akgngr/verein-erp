@@ -200,5 +200,8 @@
   "menu": {
     "categories": "Kategoriler",
     "export": "Excel'e aktar"
+  },
+  "nav": {
+    "evrak": "Evrak Kayıt"
   }
 }

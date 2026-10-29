@@ -63,13 +63,7 @@ export function syncModuleRoutes(): SyncRoutesResult {
     const configPath = path.join(MODULES_DIR, moduleName, "module.config.ts");
     if (fs.existsSync(configPath)) {
       try {
-        const configContent = fs.readFileSync(configPath, "utf8");
-        // nav içindeki ilk href: "/..." tanımını yakala
-        const hrefMatch = configContent.match(/href:\s*["']\/([^"']+)["']/);
-        if (hrefMatch && hrefMatch[1]) {
-          // Örn: "ayarlar/kullanicilar" veya "muhasebe" veya "events"
-          routeSegment = hrefMatch[1];
-        }
+        routeSegment = resolveRouteSegment(fs.readFileSync(configPath, "utf8")) ?? moduleName;
       } catch (err) {
         console.error(`[sync-routes] Error reading module config for ${moduleName}:`, err);
       }
@@ -85,10 +79,7 @@ export function syncModuleRoutes(): SyncRoutesResult {
       fs.mkdirSync(targetRouteDir, { recursive: true });
     }
 
-    const bridgeCode = `${AUTO_ROUTE_BANNER}
-// Kaynak: src/modules/${moduleName}/page.tsx
-export { default, metadata } from "@/modules/${moduleName}/page";
-`;
+    const bridgeCode = pageBridge(`src/modules/${moduleName}/page.tsx`, `@/modules/${moduleName}/page`);
 
     // Dosya yoksa veya otomatik üretilmişse güncelle
     let needsWrite = true;
@@ -122,6 +113,50 @@ export { default, metadata } from "@/modules/${moduleName}/page";
   cleanStaleBridges(API_DIR, result);
 
   return result;
+}
+
+/**
+ * Modülün sayfalarının bağlandığı rota kökü: module.config.ts'teki `basePath`, yoksa ilk nav
+ * `href`'i (örn. "ayarlar/kullanicilar", "muhasebe"). Ayrıştırma metin üzerindendir; config
+ * import edilmez (sync betiği uygulama bağımlılıklarını yüklemez).
+ */
+export function resolveRouteSegment(configContent: string): string | undefined {
+  const basePath = configContent.match(/basePath:\s*["']\/([^"']+)["']/);
+  if (basePath) return basePath[1];
+  const navHref = configContent.match(/href:\s*["']\/([^"'?]+)["']/);
+  return navHref?.[1];
+}
+
+/**
+ * KARAR: Route segment config (runtime, maxDuration, dynamic…) Next.js tarafından dosyanın
+ * KENDİSİNDE statik olarak okunur; `export *` ile gelen değer dikkate alınmaz. Bu yüzden
+ * kaynaktaki `export const <seçenek> = <değer>;` satırları köprüye kopyalanır.
+ */
+const SEGMENT_CONFIG_KEYS = [
+  "dynamic",
+  "dynamicParams",
+  "revalidate",
+  "fetchCache",
+  "runtime",
+  "preferredRegion",
+  "maxDuration",
+];
+
+export function segmentConfig(sourceRelPath: string): string {
+  const sourcePath = path.join(ROOT_DIR, sourceRelPath);
+  if (!fs.existsSync(sourcePath)) return "";
+  const pattern = new RegExp(`^export const (${SEGMENT_CONFIG_KEYS.join("|")})\\s*=\\s*[^;\\n]+;?$`, "gm");
+  const lines = fs.readFileSync(sourcePath, "utf8").match(pattern) ?? [];
+  return lines.map((line) => (line.endsWith(";") ? line : `${line};`)).join("\n") + (lines.length ? "\n" : "");
+}
+
+/** Sayfa köprüsü: varsayılan bileşen + tüm dışa aktarımlar (metadata, generateMetadata…) + segment config. */
+function pageBridge(source: string, importPath: string): string {
+  return `${AUTO_ROUTE_BANNER}
+// Kaynak: ${source}
+export { default } from "${importPath}";
+export * from "${importPath}";
+${segmentConfig(source)}`;
 }
 
 /** Bir dizindeki, adı `fileName` olan dosyaların göreli klasör yollarını döndürür. */
@@ -175,13 +210,10 @@ function syncModuleSubpages(
 ): void {
   const subpagesDir = path.join(MODULES_DIR, moduleName, MODULE_SUBPAGES_DIR);
   for (const subPath of findFiles(subpagesDir, "page.tsx")) {
-    const source = `src/modules/${moduleName}/${MODULE_SUBPAGES_DIR}/${subPath}/page.tsx`;
-    const importPath = `@/modules/${moduleName}/${MODULE_SUBPAGES_DIR}/${subPath}/page`;
-    const bridgeCode = `${AUTO_ROUTE_BANNER}
-// Kaynak: ${source}
-export { default } from "${importPath}";
-export * from "${importPath}";
-`;
+    const bridgeCode = pageBridge(
+      `src/modules/${moduleName}/${MODULE_SUBPAGES_DIR}/${subPath}/page.tsx`,
+      `@/modules/${moduleName}/${MODULE_SUBPAGES_DIR}/${subPath}/page`,
+    );
     writeBridge(
       path.join(DASHBOARD_DIR, routeSegment, subPath, "page.tsx"),
       bridgeCode,
@@ -198,7 +230,7 @@ function syncModuleApiRoutes(moduleName: string, result: SyncRoutesResult): void
     const bridgeCode = `${AUTO_ROUTE_BANNER}
 // Kaynak: ${source}
 export * from "@/modules/${moduleName}/${MODULE_API_DIR}/${subPath}/route";
-`;
+${segmentConfig(source)}`;
     writeBridge(
       path.join(API_DIR, moduleName, subPath, "route.ts"),
       bridgeCode,

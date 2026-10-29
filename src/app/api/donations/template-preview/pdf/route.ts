@@ -1,8 +1,4 @@
-import { templatePreviewPdfHandler } from "@/modules/donations/server";
-
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/donations/api/template-preview/pdf/route.ts
+export * from "@/modules/donations/api/template-preview/pdf/route";
 export const runtime = "nodejs";
-
-/** GET şablon önizleme PDF'i — ince sarmalayıcı (§ 13). */
-export async function GET(request: Request): Promise<Response> {
-  return templatePreviewPdfHandler(request);
-}

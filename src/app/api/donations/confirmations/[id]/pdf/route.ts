@@ -1,12 +1,4 @@
-import { downloadConfirmationPdfHandler } from "@/modules/donations/server";
-
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/donations/api/confirmations/[id]/pdf/route.ts
+export * from "@/modules/donations/api/confirmations/[id]/pdf/route";
 export const runtime = "nodejs";
-
-/** GET depolanmış bildirim PDF'i — ince sarmalayıcı (§ 13). */
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> },
-): Promise<Response> {
-  const { id } = await params;
-  return downloadConfirmationPdfHandler(request, { id });
-}

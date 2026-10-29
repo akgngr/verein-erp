@@ -42,5 +42,9 @@
     "message": "\"{label}\" modül klasörü ve tüm dosyaları kalıcı olarak silinecek. Bu işlem geri alınamaz. Onaylıyor musunuz?",
     "confirm": "Sil",
     "successToast": "{label} modülü başarıyla silindi."
+  },
+  "nav": {
+    "ayarlar": "Ayarlar",
+    "moduller": "Modül Yönetimi"
   }
 }

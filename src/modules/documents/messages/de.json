@@ -200,5 +200,8 @@
   "menu": {
     "categories": "Kategorien",
     "export": "Excel-Export"
+  },
+  "nav": {
+    "evrak": "Dokumente"
   }
 }

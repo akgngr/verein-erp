@@ -1,17 +1,4 @@
-import { getTranslations } from "next-intl/server";
-import { MemberEditView } from "@/modules/members/ui";
-
-export async function generateMetadata() {
-  const t = await getTranslations("meta");
-  return { title: t("uyeDuzenle") };
-}
-
-/** Üye düzenleme — ince rota: id'yi view'a iletir. */
-export default async function UyeDuzenlePage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  return <MemberEditView id={id} />;
-}
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/members/routes/[id]/duzenle/page.tsx
+export { default } from "@/modules/members/routes/[id]/duzenle/page";
+export * from "@/modules/members/routes/[id]/duzenle/page";

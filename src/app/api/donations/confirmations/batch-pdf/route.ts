@@ -1,8 +1,4 @@
-import { batchPdfHandler } from "@/modules/donations/server";
-
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/donations/api/confirmations/batch-pdf/route.ts
+export * from "@/modules/donations/api/confirmations/batch-pdf/route";
 export const runtime = "nodejs";
-
-/** GET toplu yazdırma PDF'i — ince sarmalayıcı (§ 13). */
-export async function GET(request: Request): Promise<Response> {
-  return batchPdfHandler(request);
-}

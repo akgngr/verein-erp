@@ -1,11 +1,4 @@
-import { importMembersHandler } from "@/modules/members/server";
-
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/members/api/import/route.ts
+export * from "@/modules/members/api/import/route";
 export const runtime = "nodejs";
-
-/**
- * POST üye içe aktarma (?dryRun=1|0, multipart "file") — ince sarmalayıcı;
- * mantık handlers/import-members.ts'te (dry-run + commit).
- */
-export async function POST(request: Request): Promise<Response> {
-  return importMembersHandler(request);
-}

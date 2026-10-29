@@ -1,8 +1,4 @@
-import { exportDonationsHandler } from "@/modules/donations/server";
-
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/donations/api/export/route.ts
+export * from "@/modules/donations/api/export/route";
 export const runtime = "nodejs";
-
-/** GET bağış listesi Excel — ince sarmalayıcı (§ 15 md. 9). */
-export async function GET(request: Request): Promise<Response> {
-  return exportDonationsHandler(request);
-}

@@ -109,7 +109,9 @@ export const moduleConfig: ModuleConfig = {
   }
 
   // 4. messages/tr.json and messages/de.json
+  // "nav": sol paneldeki menü etiketi (nav[0].labelKey) — kök nav ad alanına senkronlanır.
   const trMessages = {
+    nav: { [cleanKey]: label },
     title: label,
     description: description,
     listTitle: `${label} Listesi`,
@@ -119,6 +121,7 @@ export const moduleConfig: ModuleConfig = {
   };
 
   const deMessages = {
+    nav: { [cleanKey]: label },
     title: label,
     description: description,
     listTitle: `${label}-Übersicht`,

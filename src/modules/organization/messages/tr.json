@@ -41,5 +41,8 @@
   "charitablePurposes": "Desteklenen amaçlar (begünstigte Zwecke)",
   "charitablePurposesDescription": "Muafiyet yazısından aynen kopyalayın — cümle şu kalıba girer: 'Wir sind wegen Förderung …' ve '… nur zur Förderung … verwendet wird'. Örnek: 'der Bildung und Erziehung'.",
   "membershipFeesDeductible": "Üyelik aidatları vergiden düşülebilir (Mitgliedsbeiträge abziehbar)",
-  "membershipFeesDeductibleDescription": "Yalnızca § 10b Abs. 1 Satz 8 EStG kapsamı DIŞINDAKI amaçlar (örn. spor, hobi kültürü, gelenek) için işaretleyin. Emin değilseniz Steuerberater'a sorun."
+  "membershipFeesDeductibleDescription": "Yalnızca § 10b Abs. 1 Satz 8 EStG kapsamı DIŞINDAKI amaçlar (örn. spor, hobi kültürü, gelenek) için işaretleyin. Emin değilseniz Steuerberater'a sorun.",
+  "nav": {
+    "organization": "Dernek Bilgileri"
+  }
 }

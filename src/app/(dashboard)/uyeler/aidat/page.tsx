@@ -1,11 +1,4 @@
-import { DuesReportView } from "@/modules/members/ui";
-
-export const metadata = { title: "Aidat Raporu" };
-
-export default async function AidatPage({
-  searchParams,
-}: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
-  return <DuesReportView searchParams={searchParams} />;
-}
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/members/routes/aidat/page.tsx
+export { default } from "@/modules/members/routes/aidat/page";
+export * from "@/modules/members/routes/aidat/page";

@@ -1,11 +1,4 @@
-import { AuditLogView } from "@/modules/audit/ui";
-
-export const metadata = { title: "Denetim Kaydı" };
-
-export default async function DenetimKaydiPage({
-  searchParams,
-}: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
-  return <AuditLogView searchParams={searchParams} />;
-}
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/audit/page.tsx
+export { default } from "@/modules/audit/page";
+export * from "@/modules/audit/page";

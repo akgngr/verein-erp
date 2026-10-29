@@ -315,5 +315,8 @@
     "yearClosing": "Jahresabschluss",
     "settings": "Einstellungen",
     "export": "Excel-Export"
+  },
+  "nav": {
+    "muhasebe": "Buchhaltung"
   }
 }

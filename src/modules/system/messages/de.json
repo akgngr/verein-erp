@@ -42,5 +42,9 @@
     "message": "Der Modulordner \"{label}\" und alle zugehörigen Dateien werden unwiderruflich gelöscht. Bestätigen?",
     "confirm": "Löschen",
     "successToast": "Modul {label} wurde erfolgreich gelöscht."
+  },
+  "nav": {
+    "ayarlar": "Einstellungen",
+    "moduller": "Modulverwaltung"
   }
 }

@@ -1,8 +1,4 @@
-import { exportMembersHandler } from "@/modules/members/server";
-
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/members/api/export/route.ts
+export * from "@/modules/members/api/export/route";
 export const runtime = "nodejs";
-
-/** GET üye defteri Excel — ince sarmalayıcı (4.6); mantık handlers/export-members.ts'te. */
-export async function GET(request: Request): Promise<Response> {
-  return exportMembersHandler(request);
-}

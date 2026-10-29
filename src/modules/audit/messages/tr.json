@@ -1,4 +1,7 @@
 {
   "pageTitle": "Denetim Kaydı",
-  "pageDescription": "Sistemde gerçekleşen kimlik doğrulama ve veri işlemleri."
+  "pageDescription": "Sistemde gerçekleşen kimlik doğrulama ve veri işlemleri.",
+  "nav": {
+    "denetimKaydi": "Denetim Kaydı"
+  }
 }

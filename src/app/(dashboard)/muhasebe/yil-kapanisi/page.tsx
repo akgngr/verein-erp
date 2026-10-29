@@ -1,10 +1,4 @@
-import type { Metadata } from "next";
-
-import { YearClosingView } from "@/modules/accounting/server";
-
-export const metadata: Metadata = { title: "Yıl kapanışı" };
-
-/** Yıl kapanışı — ince sayfa (§ 6). */
-export default function MuhasebeYilKapanisiPage() {
-  return <YearClosingView />;
-}
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/accounting/routes/yil-kapanisi/page.tsx
+export { default } from "@/modules/accounting/routes/yil-kapanisi/page";
+export * from "@/modules/accounting/routes/yil-kapanisi/page";

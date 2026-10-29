@@ -179,6 +179,8 @@ model InventoryItem {
 ### 5. `messages/tr.json` ve `messages/de.json` (İki Dilli i18n Desteği)
 Modül metinleri otomatik olarak ana dil sözlüğünde modül anahtarı (`messages.<modul_adi>`) altına yerleşir.
 
+> **Kök `messages/<dil>.json` ÜRETİLEN dosyadır, elle düzenlenmez.** `pnpm module:sync` onu her seferinde `messages/shell/<dil>.json` (kabuk metinleri: `common`, `sidebar`, `panel` …) + modül dosyalarından baştan kurar. Modül ad alanı birleştirilmez, değiştirilir: modülden silinen anahtar kökte kalmaz. Sol paneldeki menü etiketi (`nav[0].labelKey`) modül dosyasındaki ayrılmış `"nav": { "<labelKey>": "..." }` bloğunda tanımlanır.
+
 ```json
 // messages/tr.json
 {
@@ -259,6 +261,19 @@ export default async function InventoryPage({
   return <InventoryListView searchParams={searchParams} />;
 }
 ```
+
+
+#### Alt sayfalar ve API rotaları (sıfır dokunuş)
+| Modülde yazılan dosya | Oluşan rota |
+| --- | --- |
+| `page.tsx` | `/<kök>` (kök = `basePath`, yoksa `nav[0].href`) |
+| `routes/<yol>/page.tsx` (örn. `routes/[id]/duzenle/page.tsx`) | `/<kök>/<yol>` |
+| `api/<yol>/route.ts` (örn. `api/export/route.ts`) | `/api/<modul_adi>/<yol>` |
+
+- Köprüleri `pnpm module:sync` üretir; `src/app`'te elle dosya OLMAZ. `tests/zero-touch.test.ts` kabuk (panel `/`, `/giris`, `/api/health`) dışında elle yazılmış sayfa/API dosyasını ve kaynağı silinmiş köprüyü yakalar.
+- Route segment config (`export const runtime = "nodejs"`, `maxDuration` …) kaynak dosyada yazılır; köprüye otomatik kopyalanır (Next.js bu değerleri yalnızca rota dosyasının kendisinden okur).
+- Menüde görünmeyen modülün sayfaları için `module.config.ts` → `basePath: "/profil"` gibi kök verilir.
+- Modül içinden kendi kodunu göreli yolla import et (`../../ui`); başka modülleri yalnızca public API ile.
 
 ---
 

@@ -327,5 +327,8 @@
   },
   "menu": {
     "tasks": "Görevler"
+  },
+  "nav": {
+    "toplantilar": "Toplantılar"
   }
 }

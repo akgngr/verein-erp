@@ -41,5 +41,8 @@
   "charitablePurposes": "Begünstigte Zwecke",
   "charitablePurposesDescription": "Aus dem Bescheid wörtlich übernehmen — der Satz lautet: 'Wir sind wegen Förderung …' und '… nur zur Förderung … verwendet wird'. Beispiel: 'der Bildung und Erziehung'.",
   "membershipFeesDeductible": "Mitgliedsbeiträge sind steuerlich abziehbar",
-  "membershipFeesDeductibleDescription": "Nur ankreuzen, wenn die Vereinszwecke NICHT unter § 10b Abs. 1 Satz 8 EStG fallen (z. B. Sport, Freizeitkultur, Heimatpflege, Brauchtum). Im Zweifel Steuerberatung fragen."
+  "membershipFeesDeductibleDescription": "Nur ankreuzen, wenn die Vereinszwecke NICHT unter § 10b Abs. 1 Satz 8 EStG fallen (z. B. Sport, Freizeitkultur, Heimatpflege, Brauchtum). Im Zweifel Steuerberatung fragen.",
+  "nav": {
+    "organization": "Vereinsdaten"
+  }
 }

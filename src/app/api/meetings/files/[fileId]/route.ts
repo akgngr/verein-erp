@@ -1,12 +1,4 @@
-import { downloadMeetingFileHandler } from "@/modules/meetings/server";
-
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/meetings/api/files/[fileId]/route.ts
+export * from "@/modules/meetings/api/files/[fileId]/route";
 export const runtime = "nodejs";
-
-/** GET indirme/önizleme — ince sarmalayıcı (8. bölüm): mantık handlers/download-file.ts'te. */
-export async function GET(
-  request: Request,
-  { params }: { params: Promise<{ fileId: string }> },
-): Promise<Response> {
-  const { fileId } = await params;
-  return downloadMeetingFileHandler(request, { fileId });
-}

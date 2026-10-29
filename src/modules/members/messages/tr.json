@@ -321,5 +321,8 @@
     "types": "Üyelik türleri",
     "import": "İçe aktar",
     "export": "Excel'e aktar"
+  },
+  "nav": {
+    "uyeler": "Üyeler"
   }
 }

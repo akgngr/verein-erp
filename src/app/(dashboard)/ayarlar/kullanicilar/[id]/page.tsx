@@ -1,12 +1,4 @@
-import { UserEditView } from "@/modules/users/ui";
-
-export const metadata = { title: "Kullanıcıyı Düzenle" };
-
-export default async function KullaniciDuzenlePage({
-  params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
-  const { id } = await params;
-  return <UserEditView userId={id} />;
-}
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/users/routes/[id]/page.tsx
+export { default } from "@/modules/users/routes/[id]/page";
+export * from "@/modules/users/routes/[id]/page";

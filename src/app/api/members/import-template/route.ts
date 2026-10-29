@@ -1,8 +1,4 @@
-import { importTemplateHandler } from "@/modules/members/server";
-
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/members/api/import-template/route.ts
+export * from "@/modules/members/api/import-template/route";
 export const runtime = "nodejs";
-
-/** GET içe aktarma şablonu (.xlsx) — ince sarmalayıcı; mantık handlers/import-template.ts'te. */
-export async function GET(): Promise<Response> {
-  return importTemplateHandler();
-}

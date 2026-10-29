@@ -1,12 +1,4 @@
-import { DocumentCreateView } from "@/modules/documents/ui";
-
-export const metadata = { title: "Yeni Evrak" };
-
-/** Yeni evrak — ince rota: yon parametresini view'a iletir. */
-export default async function YeniEvrakPage({
-  searchParams,
-}: {
-  searchParams: Promise<Record<string, string | string[] | undefined>>;
-}) {
-  return <DocumentCreateView searchParams={searchParams} />;
-}
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/documents/routes/yeni/page.tsx
+export { default } from "@/modules/documents/routes/yeni/page";
+export * from "@/modules/documents/routes/yeni/page";

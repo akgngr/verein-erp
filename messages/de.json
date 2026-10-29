@@ -31,19 +31,19 @@
   },
   "nav": {
     "panel": "Dashboard",
+    "profil": "Profil",
+    "muhasebe": "Buchhaltung",
+    "denetimKaydi": "Prüfprotokoll",
     "evrak": "Dokumente",
+    "bagislar": "Spenden",
+    "inventory": "Inventar",
+    "mail": "E-Mail",
     "toplantilar": "Sitzungen",
     "uyeler": "Mitglieder",
-    "kullanicilar": "Benutzer",
-    "denetimKaydi": "Prüfprotokoll",
-    "profil": "Profil",
     "organization": "Vereinsdaten",
-    "muhasebe": "Buchhaltung",
-    "bagislar": "Spenden",
     "ayarlar": "Einstellungen",
     "moduller": "Modulverwaltung",
-    "inventory": "Inventar",
-    "mail": "E-Mail"
+    "kullanicilar": "Benutzer"
   },
   "sidebar": {
     "brand": "Vereinsverwaltung",
@@ -81,6 +81,406 @@
     "accountingMissing": "Beleg fehlt: {count}",
     "accountingYearLocked": "Jahr abgeschlossen"
   },
+  "meta": {
+    "panel": "Dashboard",
+    "evrak": "Dokumente",
+    "evrakYeni": "Neues Dokument",
+    "evrakDetay": "Dokumentdetail",
+    "evrakDuzenle": "Dokument bearbeiten",
+    "evrakKategoriler": "Dokumentkategorien",
+    "toplantilar": "Sitzungen",
+    "toplantiYeni": "Neue Sitzung",
+    "toplantiDetay": "Sitzungsdetail",
+    "toplantiDuzenle": "Sitzung bearbeiten",
+    "toplantiGorevler": "Aufgaben",
+    "uyeler": "Mitglieder",
+    "uyeYeni": "Neues Mitglied",
+    "uyeDetay": "Mitgliederdetail",
+    "uyeDuzenle": "Mitglied bearbeiten",
+    "kullanicilar": "Benutzer",
+    "kullaniciYeni": "Neuer Benutzer",
+    "kullaniciDuzenle": "Benutzer bearbeiten",
+    "denetimKaydi": "Prüfprotokoll",
+    "profil": "Profil",
+    "dernekBilgileri": "Dernek Bilgileri | Vereinsverwaltung"
+  },
+  "pdfLanguage": {
+    "german": "Deutsch",
+    "turkish": "Türkçe",
+    "aria": "PDF-Sprache wählen"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "subtitle": "Vereinsprofil, Benutzerberechtigungen, Module und Systemeinstellungen verwalten.",
+    "languageSection": {
+      "title": "Sprache & Region",
+      "description": "Benutzeroberflächensprache und lokale Vereinseinstellungen festlegen.",
+      "activeLanguage": "Aktuelle Sprache",
+      "tr": "Türkçe",
+      "de": "Deutsch",
+      "switchSuccess": "Die Sprache der Benutzeroberfläche wurde erfolgreich geändert."
+    },
+    "themeSection": {
+      "title": "Erscheinungsbild & Design",
+      "description": "Legen Sie das Farbschema und die Anzeigeoptionen fest.",
+      "light": "Helles Design",
+      "lightDesc": "Helles und kontrastreiches Standard-Interface",
+      "dark": "Dunkles Design",
+      "darkDesc": "Augenschonender dunkler Hintergrund mit sanften Akzenten",
+      "system": "Systemstandard",
+      "systemDesc": "Synchronisiert sich automatisch mit den Einstellungen Ihres Betriebssystems"
+    },
+    "cards": {
+      "organization": {
+        "title": "Vereinsdaten",
+        "description": "Identität, Vereinsname, Steuernummer/Vereinsregister, Adresse, Logo und Kontaktdaten.",
+        "action": "Bearbeiten"
+      },
+      "users": {
+        "title": "Benutzer & Rollen",
+        "description": "Benutzerkonten, Systemrollen (Vorstand, Kassenwart, Prüfer usw.) und Berechtigungen.",
+        "action": "Verwalten"
+      },
+      "modules": {
+        "title": "Modulverwaltung",
+        "description": "Systemkern-, offizielle ERP-Module und externe Entwickler-Erweiterungen verwalten.",
+        "action": "Konfigurieren"
+      },
+      "audit": {
+        "title": "Audit-Protokoll",
+        "description": "Zeitgestempelte Historie aller Datenänderungen, Anmeldeaktivitäten und Sicherheitsereignisse.",
+        "action": "Prüfen"
+      },
+      "accounting": {
+        "title": "Buchhaltungseinstellungen",
+        "description": "Kontenrahmen (SKR49 / Standard), Budgetziele und Geschäftsjahresabschlüsse.",
+        "action": "Einstellungen"
+      }
+    }
+  },
+  "accounting": {
+    "list": {
+      "title": "Buchungen",
+      "yearLocked": "Jahr {year} ist abgeschlossen",
+      "stats": {
+        "income": "Einnahmen",
+        "expense": "Ausgaben",
+        "net": "Überschuss/Fehlbetrag",
+        "missingReceipt": "Beleg fehlt"
+      },
+      "filters": {
+        "all": "Alle",
+        "q": "Buchungsnr., Beschreibung, Kontrahent, Beleg-Nr.",
+        "type": "Art",
+        "account": "Konto",
+        "category": "Kategorie",
+        "sphere": "Bereich",
+        "project": "Projekt",
+        "missingReceipt": "Beleg fehlt",
+        "source": "Quelle",
+        "sourceManual": "Manuell",
+        "sourceMember": "Mitgliedssync",
+        "hideReversed": "Stornierte ausblenden",
+        "from": "Von",
+        "to": "Bis",
+        "apply": "Anwenden",
+        "clear": "Zurücksetzen",
+        "sphereIdeell": "Ideeller Bereich",
+        "sphereAsset_management": "Vermögensverwaltung",
+        "spherePurpose_operation": "Zweckbetrieb",
+        "sphereEconomic_operation": "Wirtschaftlicher Geschäftsbetrieb"
+      },
+      "columns": {
+        "number": "Buchungsnr.",
+        "date": "Datum",
+        "type": "Art",
+        "account": "Konto",
+        "category": "Kategorie",
+        "description": "Beschreibung",
+        "counterparty": "Kontrahent",
+        "project": "Projekt",
+        "amount": "Betrag",
+        "receipt": "Beleg",
+        "missing": "fehlt",
+        "status": "Status",
+        "active": "Aktiv",
+        "reversed": "Storniert",
+        "source": "Quelle"
+      },
+      "empty": "Keine Buchungen gefunden.",
+      "actions": {
+        "newIncome": "Einnahme erfassen",
+        "newExpense": "Ausgabe erfassen",
+        "newTransfer": "Umbuchung",
+        "sync": "Mitgliedsbeiträge übernehmen",
+        "reports": "Berichte",
+        "budget": "Haushaltsplan",
+        "yearClosing": "Jahresabschluss",
+        "settings": "Einstellungen",
+        "export": "Excel-Export",
+        "view": "Anzeigen",
+        "edit": "Bearbeiten",
+        "reverse": "Stornieren"
+      },
+      "sourceLabel": "Mitgliedsbeitrag (automatisch)"
+    },
+    "form": {
+      "createTitle": "Neue Buchung",
+      "editTitle": "Buchung bearbeiten",
+      "typeIncome": "Einnahme",
+      "typeExpense": "Ausgabe",
+      "typeTransfer": "Umbuchung",
+      "date": "Buchungsdatum",
+      "amount": "Betrag (€)",
+      "account": "Konto",
+      "sourceAccount": "Quellkonto",
+      "targetAccount": "Zielkonto",
+      "category": "Kategorie",
+      "project": "Projekt",
+      "description": "Buchungstext",
+      "counterparty": "Kontrahent",
+      "receiptReference": "Beleg-/Rechnungsnr.",
+      "files": "Beleg",
+      "filesHint": "PDF/JPG/PNG; Sie können Belege später in der Detailansicht hochladen.",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "editBlockedReversed": "Stornierte Buchungen können nicht bearbeitet werden; bitte neue Buchung anlegen.",
+      "editBlockedLocked": "Buchungen im abgeschlossenen Jahr können nicht bearbeitet werden.",
+      "editBlockedSource": "Automatisch erstellte Buchungen können nicht bearbeitet werden.",
+      "toastSaved": "Buchung erfasst: {number}",
+      "toastUpdated": "Buchung aktualisiert.",
+      "toastReversed": "Buchung storniert."
+    },
+    "reverse": {
+      "title": "Buchung stornieren",
+      "reason": "Grund (5-300 Zeichen)",
+      "hint": "Buchungen werden nicht gelöscht, sondern storniert (GoBD). Stornierte Buchungen bleiben durchgestrichen sichtbar und werden aus allen Summen ausgeschlossen.",
+      "confirm": "Stornieren",
+      "cancel": "Abbrechen"
+    },
+    "detail": {
+      "title": "Buchungsdetail",
+      "fields": {
+        "number": "Buchungsnr.",
+        "type": "Art",
+        "date": "Datum",
+        "account": "Konto",
+        "category": "Kategorie",
+        "project": "Projekt",
+        "amount": "Betrag",
+        "description": "Buchungstext",
+        "counterparty": "Kontrahent",
+        "receiptReference": "Beleg-Nr.",
+        "status": "Status",
+        "createdBy": "Erstellt von",
+        "updatedBy": "Aktualisiert von",
+        "source": "Quelle",
+        "reverseInfo": "Stornoinfo"
+      },
+      "reversedBy": "{label} — {date}",
+      "reason": "Grund: {reason}",
+      "sourceMember": "Mitgliedssync (automatisch)",
+      "sourceManual": "Manuell",
+      "files": {
+        "title": "Belege",
+        "empty": "Keine Belege.",
+        "upload": "Beleg hochladen",
+        "delete": "Löschen",
+        "download": "Herunterladen"
+      }
+    },
+    "setup": {
+      "title": "Buchhaltung Einstellungen",
+      "tabs": {
+        "accounts": "Konten",
+        "categories": "Kategorien",
+        "projects": "Projekte"
+      },
+      "accounts": {
+        "name": "Kontoname",
+        "type": "Art",
+        "openingBalance": "Anfangsbestand (€)",
+        "openingDate": "Eröffnungsdatum",
+        "balance": "Saldo",
+        "bookings": "Buchungen",
+        "status": "Status",
+        "new": "Neues Konto",
+        "edit": "Bearbeiten",
+        "deactivate": "Deaktivieren",
+        "activate": "Aktivieren",
+        "typeCASH": "Kasse",
+        "typeBANK": "Girokonto",
+        "typeOTHER": "Sonstiges"
+      },
+      "categories": {
+        "name": "Kategorie",
+        "direction": "Richtung",
+        "sphere": "Bereich",
+        "directionINCOME": "Einnahmen",
+        "directionEXPENSE": "Ausgaben",
+        "helpText": "Hinweistext",
+        "bookings": "Buchungen",
+        "status": "Status",
+        "new": "Neue Kategorie",
+        "edit": "Bearbeiten",
+        "deactivate": "Deaktivieren",
+        "activate": "Aktivieren",
+        "sphereIDEELL": "Ideeller Bereich",
+        "sphereASSET_MANAGEMENT": "Vermögensverwaltung",
+        "spherePURPOSE_OPERATION": "Zweckbetrieb",
+        "sphereECONOMIC_OPERATION": "Wirtschaftlicher Geschäftsbetrieb"
+      },
+      "projects": {
+        "name": "Projekt",
+        "note": "Notiz",
+        "bookings": "Buchungen",
+        "status": "Status",
+        "new": "Neues Projekt",
+        "edit": "Bearbeiten",
+        "deactivate": "Deaktivieren",
+        "activate": "Aktivieren"
+      },
+      "syncSettings": {
+        "title": "Einstellungen Mitgliedsbeitrag-Sync",
+        "memberFeeCategory": "Beitragskategorie",
+        "cashAccount": "Kasse",
+        "bankAccount": "Girokonto",
+        "save": "Speichern",
+        "toastSaved": "Einstellungen gespeichert.",
+        "donationCategory": "Spendenkategorie"
+      }
+    },
+    "budget": {
+      "title": "Haushaltsplan",
+      "year": "Jahr",
+      "copyFromPrevious": "Aus Vorjahr kopieren",
+      "save": "Speichern",
+      "colCategory": "Kategorie",
+      "colPlan": "Plan (€)",
+      "colActual": "Ist",
+      "colDiff": "Differenz",
+      "empty": "Keine Kategorien.",
+      "locked": "Jahr {year} ist abgeschlossen; Haushaltsplan ist schreibgeschützt.",
+      "toastSaved": "Haushaltsplan gespeichert.",
+      "sphereIDEELL": "Ideeller Bereich",
+      "sphereASSET_MANAGEMENT": "Vermögensverwaltung",
+      "spherePURPOSE_OPERATION": "Zweckbetrieb",
+      "sphereECONOMIC_OPERATION": "Wirtschaftlicher Geschäftsbetrieb",
+      "sphereIdeell": "Ideeller Bereich",
+      "sphereAsset_management": "Vermögensverwaltung",
+      "spherePurpose_operation": "Zweckbetrieb",
+      "sphereEconomic_operation": "Wirtschaftlicher Geschäftsbetrieb",
+      "directionINCOME": "Einnahmen",
+      "directionEXPENSE": "Ausgaben"
+    },
+    "years": {
+      "title": "Jahresabschluss",
+      "colYear": "Jahr",
+      "colBookings": "Buchungen",
+      "colIncome": "Einnahmen",
+      "colExpense": "Ausgaben",
+      "colMissing": "Beleg fehlt",
+      "colStatus": "Status",
+      "open": "Offen",
+      "locked": "Abgeschlossen",
+      "lockedBy": "{label} — {date}",
+      "close": "Jahr abschließen",
+      "unlock": "Entsperren",
+      "closeTitle": "Jahr {year} abschließen",
+      "closePreview": "Vorschau",
+      "closeHint": "Im abgeschlossenen Jahr sind Buchungen, Stornierungen und Haushaltsänderungen gesperrt; Beleguploads bleiben möglich. Korrekturen erfolgen im offenen Jahr.",
+      "closeConfirm": "Abschließen",
+      "unlockTitle": "Jahr {year} entsperren",
+      "unlockReason": "Grund (5-300 Zeichen)",
+      "unlockHint": "Korrekturen erfolgen normalerweise als neue Buchung im offenen Jahr. Das Entsperren ist ein Sonderfall und wird als YEAR_UNLOCK protokolliert.",
+      "unlockConfirm": "Entsperren",
+      "cancel": "Abbrechen",
+      "toastClosed": "Jahr {year} abgeschlossen.",
+      "toastUnlocked": "Jahr {year} wieder geöffnet."
+    },
+    "sync": {
+      "title": "Mitgliedsbeiträge übernehmen",
+      "description": "Zahlungen aus dem Mitgliedermodule werden als Einnahmenbuchungen übernommen; stornierte Quittungen werden gegengebucht. Im Buchungstext steht nur die Mitgliedsnummer.",
+      "preview": "Vorschau",
+      "run": "Übernehmen",
+      "toImport": "Zu übernehmende Zahlungen",
+      "toReverse": "Gegenzubuchen (Quittung storniert)",
+      "skippedLocked": "Übersprungen (Jahr abgeschlossen)",
+      "skippedOpening": "Vor Kontoeröffnung",
+      "conflicts": "Konflikte",
+      "noConflict": "Keine",
+      "notConfigured": "Einstellungen unvollständig: Beitragskategorie, Kasse und Girokonto müssen gewählt sein.",
+      "count": "{count} Einträge",
+      "total": "Summe: {total}",
+      "toastRun": "Übernahme fertig: {created} Buchungen, {reversed} Gegenbuchungen.",
+      "empty": "Keine Zahlungen zu übernehmen.",
+      "receipt": "Quittungs-Nr.",
+      "reason": "Grund"
+    },
+    "reports": {
+      "title": "Berichte",
+      "year": "Jahr",
+      "tabIncomeExpense": "Einnahmen-Ausgaben-Rechnung",
+      "tabLedger": "Kassenbuch",
+      "tabProjects": "Projektbericht",
+      "tabAnnual": "Kassenbericht",
+      "incomeExpense": {
+        "colPlan": "Plan",
+        "colActual": "Ist",
+        "colDiff": "Differenz",
+        "colPrevious": "Vorjahr",
+        "incomeTotal": "Einnahmen gesamt",
+        "expenseTotal": "Ausgaben gesamt",
+        "surplus": "Überschuss/Fehlbetrag",
+        "exportExcel": "Excel-Export"
+      },
+      "ledger": {
+        "account": "Konto",
+        "from": "Von",
+        "to": "Bis",
+        "show": "Anzeigen",
+        "colDate": "Datum",
+        "colNumber": "Buchungsnr.",
+        "colDescription": "Beschreibung",
+        "colReceipt": "Beleg-Nr.",
+        "colIncome": "Einnahme",
+        "colExpense": "Ausgabe",
+        "colBalance": "Saldo",
+        "opening": "Anfangsbestand",
+        "closing": "Endbestand",
+        "exportExcel": "Excel-Export",
+        "pdf": "Kassenbuch PDF"
+      },
+      "projects": {
+        "colProject": "Projekt",
+        "colIncome": "Einnahmen",
+        "colExpense": "Ausgaben",
+        "colBalance": "Saldo",
+        "empty": "Keine Projektbuchungen in diesem Jahr."
+      },
+      "annual": {
+        "description": "Jahres-Kassenbericht für die Mitgliederversammlung: Kontensalden, EÜR, Projekte, Unterschriftsfelder.",
+        "pdf": "Kassenbericht PDF"
+      },
+      "economic80": "Die Einnahmen des wirtschaftlichen Geschäftsbetriebs erreichen 80 % der Grenze von 50.000 € (§ 64 Abs. 3 AO).",
+      "economicExceeded": "Die Einnahmen des wirtschaftlichen Geschäftsbetriebs haben die Grenze von 50.000 € überschritten (§ 64 Abs. 3 AO). Bitte Steuerberatung hinzuziehen."
+    },
+    "balances": {
+      "title": "Kontensalden"
+    },
+    "menu": {
+      "sync": "Mitgliedsbeiträge übernehmen",
+      "reports": "Berichte",
+      "budget": "Haushaltsplan",
+      "yearClosing": "Jahresabschluss",
+      "settings": "Einstellungen",
+      "export": "Excel-Export"
+    }
+  },
+  "audit": {
+    "pageTitle": "Prüfprotokoll",
+    "pageDescription": "Authentifizierungs- und Datenoperationen im System."
+  },
   "auth": {
     "loginTitle": "Anmelden",
     "email": "E-Mail",
@@ -88,331 +488,6 @@
     "loginButton": "Anmelden",
     "logout": "Abmelden",
     "mustChangePasswordBanner": "Passwort muss aktualisiert werden"
-  },
-  "members": {
-    "pageTitle": "Mitglieder",
-    "pageDescription": "Mitgliedsakten, Mitgliedsnummerierung und Statusverfolgung.",
-    "newMember": "Neues Mitglied",
-    "createTitle": "Neues Mitglied",
-    "createDescription": "Mitgliedsnummer wird beim Speichern automatisch vergeben (MITGL-Jahr-Nr).",
-    "editTitle": "Mitglied bearbeiten",
-    "editDescription": "{membershipNumber} — Mitgliedsnummer kann nicht geändert werden.",
-    "list": {
-      "searchPlaceholder": "Mitgliedsnr., Vorname, Nachname, E-Mail, Telefon suchen…",
-      "aria": "Mitgliederregister",
-      "empty": "Keine Mitglieder gefunden.",
-      "membershipNumber": "Mitgliedsnr.",
-      "fullName": "Nachname, Vorname",
-      "type": "Typ",
-      "status": "Status",
-      "joinDate": "Beitritt",
-      "email": "E-Mail",
-      "phone": "Telefon"
-    },
-    "stats": {
-      "active": "Aktiv",
-      "passive": "Passiv",
-      "resigned": "Ausgetreten",
-      "newThisMonth": "Neu in diesem Monat",
-      "byType": "Nach Typ:",
-      "applyFilter": "Filter anwenden"
-    },
-    "status": {
-      "ACTIVE": "Aktiv",
-      "PASSIVE": "Passiv",
-      "RESIGNED": "Ausgetreten",
-      "DECEASED": "Verstorben"
-    },
-    "type": {
-      "ASIL": "Ordentlich",
-      "ONURSAL": "Ehrenmitglied",
-      "FAHRI": "Ehrenamtlich",
-      "DESTEKCI": "Fördermitglied"
-    },
-    "form": {
-      "type": "Mitgliedsart",
-      "status": "Status",
-      "firstName": "Vorname",
-      "lastName": "Nachname",
-      "kimlikNo": "Ausweisnr.",
-      "kimlikNoDescription": "Mitgliedsnummer / Steuer-ID / Führerschein / Staatsangehörigkeit / Reisepassnr.; optional. Nur Verwalterrollen sehen dies.",
-      "kimlikNoPlaceholder": "z.B. MITGL-001 oder 12345678901",
-      "birthDate": "Geburtsdatum",
-      "birthDateDescription": "Optional.",
-      "email": "E-Mail",
-      "phone": "Telefon",
-      "street": "Straße",
-      "streetPlaceholder": "z.B. Hauptstraße",
-      "houseNumber": "Hausnr.",
-      "houseNumberPlaceholder": "z.B. 12 oder 45a",
-      "postalCode": "PLZ",
-      "postalCodePlaceholder": "z.B. 10115",
-      "city": "Ort",
-      "cityPlaceholder": "z.B. Berlin",
-      "state": "Bundesland",
-      "statePlaceholder": "z.B. Berlin, Bayern, Nordrhein-Westfalen",
-      "profession": "Beruf",
-      "professionPlaceholder": "z.B. Rechtsanwalt, Ingenieur, Lehrer",
-      "joinDate": "Beitrittsdatum",
-      "exitDate": "Austrittsdatum",
-      "exitDateDescription": "Nur bei Ausgetreten/Verstorben ausfüllen.",
-      "exitReason": "Austrittsgrund",
-      "exitReasonDescription": "Bei Austrittsdatum ausfüllen.",
-      "notes": "Allgemeine Notizen",
-      "notesDescription": "Freitextnotiz auf der Mitgliedskarte (max. 2000 Zeichen).",
-      "membershipReadOnly": "Mitgliedsnummer ist unveränderlich.",
-      "emailPlaceholder": "z.B. name@email.com",
-      "phonePlaceholder": "z.B. +49 30 1234 5678",
-      "submit": "Mitglied speichern",
-      "save": "Änderungen speichern",
-      "cancel": "Abbrechen",
-      "country": "Land",
-      "countryDescription": "Leer oder Deutschland: Postleitzahl muss 5-stellig sein.",
-      "cancellationReceivedAt": "Kündigung eingegangen am",
-      "cancellationReceivedAtDescription": "Datum des Eingangs der Kündigung; darf nicht nach dem Austrittsdatum liegen."
-    },
-    "detail": {
-      "membershipNumberLabel": "Mitgliedsnummer",
-      "firstName": "Vorname",
-      "lastName": "Nachname",
-      "type": "Mitgliedsart",
-      "status": "Status",
-      "kimlikNo": "Ausweisnr.",
-      "birthDate": "Geburtsdatum",
-      "email": "E-Mail",
-      "phone": "Telefon",
-      "profession": "Beruf",
-      "joinDate": "Beitrittsdatum",
-      "exitDate": "Austrittsdatum",
-      "exitReason": "Austrittsgrund",
-      "address": "Adresse",
-      "createdBy": "Erstellt von",
-      "updatedBy": "Zuletzt geändert von",
-      "notesTitle": "Allgemeine Notizen",
-      "notesTimelineTitle": "Vermerke",
-      "noNotes": "Noch keine Vermerke hinzugefügt.",
-      "newNote": "Neuer Vermerk",
-      "notePlaceholder": "Vermerk zum Mitglied schreiben…",
-      "addNote": "Vermerk hinzufügen",
-      "fieldCountry": "Land",
-      "fieldCancellationReceivedAt": "Kündigung eingegangen am"
-    },
-    "actions": {
-      "view": "Anzeigen",
-      "edit": "Bearbeiten",
-      "delete": "Löschen",
-      "changeStatus": "Status ändern",
-      "currentStatus": "Aktueller Status"
-    },
-    "statusChange": {
-      "resignedTitle": "Ausgetretenes Mitglied",
-      "deceasedTitle": "Verstorbenes Mitglied",
-      "exitDateLabel": "Austrittsdatum",
-      "exitReasonLabel": "Austrittsgrund",
-      "exitReasonPlaceholder": "Kurze Erläuterung (optional)",
-      "exitDateRequired": "Austrittsdatum ist erforderlich.",
-      "confirm": "Bestätigen",
-      "updatedToast": "Status aktualisiert: {status}"
-    },
-    "deleteConfirm": {
-      "title": "Mitglied löschen",
-      "message": "Das Mitglied mit der Nummer \"{membershipNumber}\" wird gelöscht. Gelöschte Mitglieder erscheinen nicht in Listen, Suche, Statistik oder Excel-Export; die Mitgliedsnummer wird nicht wiederverwendet. Bestätigen?",
-      "confirm": "Löschen",
-      "successToast": "Mitglied gelöscht: {membershipNumber}"
-    },
-    "listFilters": {
-      "from": "Beitritt von",
-      "to": "Beitritt bis",
-      "clear": "Zurücksetzen"
-    },
-    "created": {
-      "toast": "Mitglied gespeichert: {membershipNumber}",
-      "toastUpdated": "Mitglied aktualisiert: {membershipNumber}"
-    },
-    "notes": {
-      "addedToast": "Vermerk hinzugefügt."
-    },
-    "statusMenu": {
-      "cancellationReceivedAtLabel": "Kündigung eingegangen am",
-      "cancellationReceivedAtHint": "Optional; darf nicht nach dem Austrittsdatum liegen."
-    },
-    "payments": {
-      "title": "Mitgliedsbeiträge",
-      "empty": "Keine Zahlungen für dieses Mitglied.",
-      "add": "Zahlung erfassen",
-      "colReceipt": "Quittungs-Nr.",
-      "colDueYear": "Beitragsjahr",
-      "colAmount": "Betrag",
-      "colMethod": "Zahlungsart",
-      "colPaidAt": "Zahlungsdatum",
-      "colStatus": "Status",
-      "statusActive": "Aktiv",
-      "statusVoided": "Storniert",
-      "receiptPdf": "Quittung PDF",
-      "void": "Stornieren",
-      "voidTitle": "Zahlung stornieren",
-      "voidReason": "Grund (5-300 Zeichen)",
-      "voidConfirm": "Ein Grund ist erforderlich; der Vorgang kann nicht rückgängig gemacht werden. Der Gegenbuchung erfolgt beim nächsten Abgleich.",
-      "method": {
-        "CASH": "Bar",
-        "BANK_TRANSFER": "Überweisung",
-        "CARD": "Kartenzahlung",
-        "OTHER": "Sonstige"
-      },
-      "form": {
-        "title": "Neuer Mitgliedsbeitrag",
-        "dueYear": "Beitragsjahr",
-        "amount": "Betrag (€)",
-        "method": "Zahlungsart",
-        "paidAt": "Zahlungsdatum",
-        "reference": "Referenz / Notiz",
-        "referenceDescription": "z. B. Nummer des Kontoauszugs (max. 100 Zeichen).",
-        "save": "Speichern",
-        "cancel": "Abbrechen"
-      },
-      "voidedInfo": "Storniert: {date} — {reason}",
-      "toastSaved": "Zahlung erfasst: {receipt}",
-      "toastVoided": "Zahlung storniert."
-    },
-    "dataExport": {
-      "action": "Datenexport (DSGVO Art. 15)",
-      "description": "Alle gespeicherten Daten des Mitglieds werden als JSON-Datei heruntergeladen.",
-      "toastStarted": "Datendatei wird heruntergeladen."
-    },
-    "duesLink": "Beitragsbericht",
-    "typesLink": "Mitgliedsarten",
-    "importLink": "Importieren",
-    "dues": {
-      "reportTitle": "Beitragsbericht {year}",
-      "reportDescription": "Jährliche Beitragszeilen, Zahlungseingänge und Rückstände.",
-      "exportExcel": "Excel-Export",
-      "year": "Jahr",
-      "filterOverdue": "Überfällig",
-      "overdue": "Überfällig",
-      "status": {
-        "OPEN": "Offen",
-        "PARTIAL": "Teilweise",
-        "PAID": "Bezahlt",
-        "WAIVED": "Erlassen"
-      },
-      "memberType": {
-        "ASIL": "Ordentlich",
-        "ONURSAL": "Ehrenmitglied",
-        "FAHRI": "Ehrenamtlich",
-        "DESTEKCI": "Fördermitglied"
-      },
-      "colMemberNumber": "Mitgl.-Nr.",
-      "colFullName": "Name",
-      "colType": "Mitgliedsart",
-      "colAmountDue": "Betrag",
-      "colPaid": "Bezahlt",
-      "colRemaining": "Offen",
-      "colStatus": "Status",
-      "colDueDate": "Fällig am",
-      "colLastPayment": "Letzte Zahlung",
-      "goToMember": "Zum Mitglied",
-      "empty": "Keine Beitragszeilen für dieses Jahr.",
-      "searchPlaceholder": "Name oder Mitgliedsnummer suchen…",
-      "stats": {
-        "expected": "Erwarteter Betrag",
-        "collected": "Eingenommen",
-        "remaining": "Offen",
-        "rate": "Einnahmequote"
-      },
-      "counts": {
-        "title": "Anzahlen"
-      },
-      "generate": {
-        "open": "Beiträge erstellen",
-        "title": "Beiträge stapelweise erstellen",
-        "description": "Für das gewählte Jahr werden für geeignete aktive Mitglieder einzelne Beitragszeilen erstellt. Zuerst mit „Prüfen“ eine Vorschau ansehen; ein erneutes Ausführen erzeugt keine doppelten Zeilen.",
-        "year": "Jahr",
-        "dueDate": "Fällig am",
-        "check": "Prüfen",
-        "confirm": "Erstellen",
-        "cancel": "Abbrechen",
-        "previewEligible": "Geeignete Mitglieder",
-        "previewTotal": "Gesamtbetrag",
-        "previewSkippedNoAmount": "Art ohne/ohne festgelegten Betrag",
-        "previewSkippedExisting": "Beitragszeile bereits vorhanden",
-        "toastCreated": "{count} Beitragszeilen erstellt."
-      },
-      "panel": {
-        "title": "Beitragszeilen",
-        "add": "Beitrag hinzufügen",
-        "addTitle": "Beitragszeile hinzufügen",
-        "editTitle": "Beitrag {year} bearbeiten",
-        "colYear": "Jahr",
-        "colAmountDue": "Betrag",
-        "colPaid": "Bezahlt",
-        "colRemaining": "Offen",
-        "colStatus": "Status",
-        "colDueDate": "Fällig am",
-        "colNote": "Notiz",
-        "edit": "Bearbeiten",
-        "delete": "Löschen",
-        "deleteTitle": "Beitragszeile löschen",
-        "deleteMessage": "Die Beitragszeile für das Jahr {year} wird gelöscht. Fortfahren?",
-        "waived": "Beitrag erlassen",
-        "paidInfo": "Auf diese Zeile bezahlt: {paid}",
-        "overdue": "Überfällig",
-        "empty": "Keine Beitragszeilen.",
-        "save": "Speichern",
-        "cancel": "Abbrechen",
-        "toastAdded": "Beitragszeile hinzugefügt.",
-        "toastUpdated": "Beitragszeile aktualisiert.",
-        "toastDeleted": "Beitragszeile gelöscht."
-      }
-    },
-    "types": {
-      "title": "Mitgliedsarten",
-      "description": "Jährliche Beitragssätze und Verfügbarkeit. Arten können nicht hinzugefügt oder entfernt werden; eine inaktive Art wird nur bei neuen Mitgliedern ausgeblendet.",
-      "backToMembers": "Zurück zu den Mitgliedern",
-      "colType": "Art",
-      "colAnnualDue": "Jahresbeitrag",
-      "colMemberCount": "Mitglieder",
-      "colStatus": "Status",
-      "notSet": "Nicht festgelegt",
-      "noDue": "Beitragsfrei",
-      "active": "Aktiv",
-      "passive": "Inaktiv",
-      "edit": "Bearbeiten",
-      "editTitle": "Mitgliedsart bearbeiten",
-      "annualDueHint": "Leer = noch nicht festgelegt (wird bei der Beitragserstellung übersprungen); 0 = beitragsfrei. Eine Änderung wirkt sich nicht auf bestehende Beitragszeilen aus.",
-      "isActive": "Bei neuen Mitgliedern wählbar",
-      "save": "Speichern",
-      "cancel": "Abbrechen",
-      "toastSaved": "Mitgliedsart aktualisiert.",
-      "empty": "Keine Einträge."
-    },
-    "import": {
-      "title": "Mitglieder importieren",
-      "description": "Excel-Vorlage ausfüllen und hochladen. Zuerst wird mit „Prüfen“ kontrolliert; fehlerhafte Zeilen werden übersprungen und gültige Zeilen importiert.",
-      "downloadTemplate": "Vorlage herunterladen",
-      "chooseFile": "Datei wählen (.xlsx)",
-      "check": "Prüfen",
-      "networkError": "Anfrage fehlgeschlagen. Bitte erneut versuchen.",
-      "previewTitle": "Prüfergebnis",
-      "totalRows": "Zeilen gesamt",
-      "validRows": "Gültig",
-      "errorRows": "Fehlerhaft",
-      "skippedWarning": "Fehlerhafte Zeilen werden beim Import übersprungen.",
-      "colRow": "Zeile",
-      "colMessages": "Fehler",
-      "moreErrors": "… und {count} weitere Zeilen",
-      "importButton": "Importieren",
-      "commitTitle": "Import abgeschlossen",
-      "commitSummary": "{imported} Mitglieder importiert ({total} Zeilen in der Datei gelesen).",
-      "commitSkipped": "{count} Zeilen wegen Fehlern übersprungen.",
-      "goToList": "Zur Mitgliederliste",
-      "toastImported": "{count} Mitglieder importiert."
-    },
-    "menu": {
-      "dues": "Beitragsbericht",
-      "types": "Mitgliedsarten",
-      "import": "Importieren",
-      "export": "Excel-Export"
-    }
   },
   "documents": {
     "pageTitle": "Dokumente",
@@ -618,28 +693,564 @@
       "export": "Excel-Export"
     }
   },
-  "meta": {
-    "panel": "Dashboard",
-    "evrak": "Dokumente",
-    "evrakYeni": "Neues Dokument",
-    "evrakDetay": "Dokumentdetail",
-    "evrakDuzenle": "Dokument bearbeiten",
-    "evrakKategoriler": "Dokumentkategorien",
-    "toplantilar": "Sitzungen",
-    "toplantiYeni": "Neue Sitzung",
-    "toplantiDetay": "Sitzungsdetail",
-    "toplantiDuzenle": "Sitzung bearbeiten",
-    "toplantiGorevler": "Aufgaben",
-    "uyeler": "Mitglieder",
-    "uyeYeni": "Neues Mitglied",
-    "uyeDetay": "Mitgliederdetail",
-    "uyeDuzenle": "Mitglied bearbeiten",
-    "kullanicilar": "Benutzer",
-    "kullaniciYeni": "Neuer Benutzer",
-    "kullaniciDuzenle": "Benutzer bearbeiten",
-    "denetimKaydi": "Prüfprotokoll",
-    "profil": "Profil",
-    "dernekBilgileri": "Dernek Bilgileri | Vereinsverwaltung"
+  "donations": {
+    "list": {
+      "title": "Spenden",
+      "stats": {
+        "total": "Spendensumme",
+        "count": "Anzahl Spenden",
+        "unconfirmed": "Bestätigung offen (>300 €)",
+        "issued": "Ausgestellte Bestätigungen"
+      },
+      "columns": {
+        "number": "Nr.",
+        "date": "Datum",
+        "donor": "Spender/in",
+        "amount": "Betrag",
+        "method": "Art",
+        "waived": "Aufwandsspende",
+        "confirmation": "Bestätigung",
+        "booking": "Buchung",
+        "none": "Keine"
+      },
+      "empty": "Keine Einträge gefunden.",
+      "filters": {
+        "q": "Spendennr., Spender/in, Referenz",
+        "method": "Art",
+        "waived": "Aufwandsspende",
+        "confirmation": "Bestätigungsstatus",
+        "confirmationNone": "Keine",
+        "confirmationIssued": "Ausgestellt",
+        "confirmationCancelled": "Storniert",
+        "over300": "Über 300 €",
+        "from": "Von",
+        "to": "Bis"
+      },
+      "actions": {
+        "new": "Neue Spende",
+        "donors": "Spender/innen",
+        "issue": "Bestätigung erstellen",
+        "confirmations": "Bestätigungen",
+        "settings": "Einstellungen",
+        "export": "Excel-Export",
+        "view": "Anzeigen",
+        "edit": "Bearbeiten",
+        "cancel": "Stornieren"
+      },
+      "year": "Jahr"
+    },
+    "form": {
+      "createTitle": "Neue Spende",
+      "editTitle": "Spende bearbeiten",
+      "donor": "Spender/in",
+      "donorNew": "Neue/r Spender/in",
+      "donorFromMember": "Aus Mitglied anlegen",
+      "date": "Datum der Zuwendung",
+      "amount": "Betrag (€)",
+      "amountHint": "Bis 300 € ist keine formelle Bestätigung erforderlich (Kontoauszug genügt).",
+      "methodLabel": "Zahlungsart",
+      "method": {
+        "CASH": "Bar",
+        "BANK_TRANSFER": "Überweisung",
+        "CARD": "Kartenzahlung",
+        "PAYPAL": "PayPal",
+        "REIMBURSEMENT_WAIVER": "Aufwandsspende",
+        "OTHER": "Sonstige"
+      },
+      "paypalHint": "Nur den beim Verein netto eingehenden Betrag eingeben (PayPal-Gebühr ist keine Spende).",
+      "reference": "Referenz",
+      "purposeNote": "Verwendungshinweis",
+      "waived": "Aufwandsspende (Verzicht auf Erstattung)",
+      "waivedNotice": "Eine Aufwandsspende ist nur zulässig, wenn der Verein die Erstattung bereits (durch Vertrag, Satzung oder Vorstandsbeschluss) geschuldet hat und der Verzicht zeitnah erklärt wurde.",
+      "claimBasis": "Grundlage des Erstattungsanspruchs (Vorstandsbeschluss vom …)",
+      "waiverDeclaredAt": "Erklärungsdatum des Verzichts",
+      "expenseCategory": "Aufwandskategorie",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "toastSaved": "Spende erfasst: {number}",
+      "editBlocked": "Stornierte oder mit Bestätigung verknüpfte Spenden können nicht bearbeitet werden."
+    },
+    "detail": {
+      "title": "Spendendetail",
+      "fields": {
+        "number": "Spendennr.",
+        "date": "Datum",
+        "donor": "Spender/in",
+        "amount": "Betrag",
+        "method": "Zahlungsart",
+        "reference": "Referenz",
+        "purposeNote": "Verwendungshinweis",
+        "waived": "Aufwandsspende",
+        "claimBasis": "Grundlage",
+        "waiverDeclaredAt": "Erklärt am",
+        "booking": "Einnahmebuchung",
+        "waiverBooking": "Ausgabenbuchung",
+        "confirmation": "Bestätigung",
+        "status": "Status",
+        "createdBy": "Erstellt von"
+      },
+      "active": "Aktiv",
+      "reversed": "Storniert",
+      "reverseInfo": "Storniert: {date} — {reason}",
+      "cancelTitle": "Spende stornieren",
+      "cancelReason": "Grund (5-300 Zeichen)",
+      "cancelHint": "Die Buchungen werden storniert; stornierte Spenden bleiben durchgestrichen sichtbar und zählen nicht in Statistiken.",
+      "toastCancelled": "Spende storniert.",
+      "issue": "Bestätigung erstellen"
+    },
+    "donors": {
+      "title": "Spender/innen",
+      "columns": {
+        "number": "SP-Nr.",
+        "name": "Name / Organisation",
+        "city": "Ort",
+        "count": "Spenden",
+        "total": "Summe",
+        "status": "Status"
+      },
+      "empty": "Keine Spender/innen.",
+      "form": {
+        "createTitle": "Neue/r Spender/in",
+        "editTitle": "Spender/in bearbeiten",
+        "type": "Art",
+        "typePERSON": "Person",
+        "typeORGANIZATION": "Organisation",
+        "firstName": "Vorname",
+        "lastName": "Nachname",
+        "organizationName": "Organisation",
+        "street": "Straße",
+        "postalCode": "PLZ",
+        "city": "Ort",
+        "country": "Land",
+        "email": "E-Mail",
+        "phone": "Telefon",
+        "note": "Notiz",
+        "fromMember": "Aus Mitglied anlegen",
+        "fromMemberHint": "Name und Adresse des Mitglieds werden einmalig kopiert; keine Live-Verknüpfung.",
+        "save": "Speichern",
+        "cancel": "Abbrechen",
+        "toastSaved": "Spender/in gespeichert: {number}"
+      },
+      "detail": {
+        "anonymize": "Anonymisieren",
+        "anonymizeTitle": "Spender/in anonymisieren",
+        "anonymizeHint": "Name, Adresse, Kontaktdaten und Notiz werden gelöscht; Spendernummer und Spenden bleiben. Gesperrt, solange Bestätigungsdoppelte in der Aufbewahrungsfrist sind. Zur Bestätigung die Spendernummer eingeben.",
+        "anonymizeConfirm": "Spendernummer (z. B. SP-0007)",
+        "anonymizedMark": "Anonymisiert",
+        "deactivate": "Deaktivieren",
+        "activate": "Aktivieren",
+        "toastAnonymized": "Spender/in anonymisiert."
+      }
+    },
+    "confirmations": {
+      "title": "Zuwendungsbestätigungen",
+      "columns": {
+        "number": "ZB-Nr.",
+        "date": "Datum",
+        "kind": "Art",
+        "recipient": "Empfänger/in",
+        "total": "Betrag",
+        "status": "Status",
+        "warning": "Warnung"
+      },
+      "kind": {
+        "SINGLE": "Einzel",
+        "COLLECTIVE": "Sammel"
+      },
+      "content": {
+        "DONATION": "Spende",
+        "MEMBERSHIP_FEE": "Mitgliedsbeitrag"
+      },
+      "status": {
+        "ISSUED": "Ausgestellt",
+        "CANCELLED": "Storniert"
+      },
+      "voidedWarning": "Eine Zahlung in dieser Bestätigung wurde storniert ({receipt}). Bitte Bestätigung stornieren und neu erstellen.",
+      "empty": "Keine Bestätigungen.",
+      "actions": {
+        "view": "Anzeigen",
+        "pdf": "PDF",
+        "cancel": "Stornieren",
+        "batchPdf": "Auswahl als ein PDF herunterladen",
+        "export": "Excel (Zuwendungsregister)",
+        "replace": "Ersatzbestätigung erstellen"
+      },
+      "cancelTitle": "Bestätigung stornieren",
+      "cancelReason": "Grund (5-300 Zeichen)",
+      "cancelHint": "Das gespeicherte PDF bleibt unverändert; die Posten werden wieder freigegeben. Eine Ersatzbestätigung kann erstellt werden.",
+      "detail": {
+        "title": "Bestätigungsdetail",
+        "cancelledBanner": "STORNIERT",
+        "fields": {
+          "number": "ZB-Nr.",
+          "issuedAt": "Datum",
+          "recipient": "Empfänger/in",
+          "period": "Zeitraum",
+          "total": "Gesamtsumme",
+          "words": "In Buchstaben",
+          "waived": "Aufwandsspende",
+          "templateVersion": "Musterversion",
+          "items": "Posten",
+          "retention": "Ende der Aufbewahrungsfrist"
+        }
+      },
+      "issue": {
+        "title": "Zuwendungsbestätigung erstellen",
+        "step1": "1. Art",
+        "typeSingle": "Einzelne Spende",
+        "typeCollective": "Sammelbestätigung für Spender/in",
+        "typeFee": "Mitgliedsbeitrag",
+        "typeBatch": "Jahres-Sammelproduktion",
+        "step2": "2. Kandidaten",
+        "step3": "3. Vorschau",
+        "donor": "Spender/in",
+        "member": "Mitglied",
+        "year": "Jahr",
+        "period": "Zeitraum",
+        "excludeSmall": "Spenden unter 300 € ausschließen",
+        "total": "Summe",
+        "readiness": "Bereitschaftsprüfung",
+        "issue": "Erstellen",
+        "toastIssued": "Bestätigung ausgestellt: {number}",
+        "candidatesEmpty": "Keine bestätigungsfähigen Einträge.",
+        "batchRun": "Sammelproduktion starten",
+        "batchResult": "{ok} erfolgreich, {failed} fehlgeschlagen"
+      }
+    },
+    "settings": {
+      "title": "Spenden-Einstellungen (Bestätigungsproduktion)",
+      "readiness": "Bereitschaftsprüfung",
+      "preview": "Mustervorschauen (MUSTER)",
+      "previewSingleDonation": "Einzelne Spende",
+      "previewCollectiveDonation": "Sammelbestätigung mit Anlage",
+      "previewSingleFee": "Einzelner Mitgliedsbeitrag",
+      "previewCollectiveFee": "Mitgliedsbeiträge (Sammel)",
+      "bmflink": "BMF amtliche Muster (Formularcenter)",
+      "bmflinkHref": "https://www.bundesfinanzministerium.de/Formularcenter",
+      "confirmLabel": "Ich habe den Mustertext mit dem offiziellen BMF-Muster verglichen; er passt zu unserem Verein",
+      "confirmButton": "Text bestätigen",
+      "toastConfirmed": "Mustertext bestätigt.",
+      "confirmedInfo": "Bestätigt von: {label} — {date} — Version {version}",
+      "feeDeductibleInfo": "Mitgliedsbeiträge abziehbar (membershipFeesDeductible): {value}",
+      "feeDeductibleLink": "Auf der Seite Vereinsdaten ändern",
+      "validityDays": "{days} Tage verbleiben",
+      "validityExpired": "Die Freistellungsbescheinigung ist abgelaufen",
+      "validityWarn": "Weniger als 90 Tage — Verlängerung planen"
+    },
+    "menu": {
+      "donors": "Spender",
+      "confirmations": "Zuwendungsbestätigungen",
+      "export": "Excel-Export"
+    },
+    "meta": {
+      "create": "Neue Spende",
+      "detail": "Spendendetails",
+      "edit": "Spende bearbeiten",
+      "donors": "Spender",
+      "donorCreate": "Neuer Spender",
+      "donorDetail": "Spenderdetails",
+      "donorEdit": "Spender bearbeiten",
+      "confirmations": "Zuwendungsbestätigungen"
+    }
+  },
+  "events": {
+    "title": "Veranstaltungen",
+    "description": "Vereinsveranstaltungen, Seminare, Workshops und Teilnehmerverwaltung.",
+    "newEvent": "Neue Veranstaltung",
+    "editEvent": "Veranstaltung bearbeiten",
+    "deleteEvent": "Veranstaltung löschen",
+    "detail": "Veranstaltungsdetails",
+    "backToList": "Zurück zur Übersicht",
+    "emptyTitle": "Keine Veranstaltungen vorhanden",
+    "emptyDescription": "Klicken Sie auf den Button, um die erste Veranstaltung für den Verein anzulegen.",
+    "stats": {
+      "total": "Gesamtanzahl",
+      "upcoming": "Bevorstehend",
+      "attendeesMonth": "Teilnehmer diesen Monat",
+      "capacityUsage": "Auslastung"
+    },
+    "fields": {
+      "title": "Veranstaltungstitel",
+      "description": "Beschreibung",
+      "type": "Kategorie / Art",
+      "status": "Status",
+      "startDate": "Beginn",
+      "endDate": "Ende",
+      "location": "Veranstaltungsort",
+      "isOnline": "Online-Veranstaltung",
+      "onlineUrl": "Meeting-Link (URL)",
+      "capacity": "Maximale Teilnehmerzahl",
+      "unlimited": "Unbegrenzt",
+      "notes": "Notizen"
+    },
+    "types": {
+      "WORKSHOP": "Workshop",
+      "SEMINAR": "Seminar",
+      "SOCIAL": "Geselligkeit & Treffen",
+      "CULTURAL": "Kulturveranstaltung",
+      "SPORTS": "Sportliche Aktivität",
+      "OTHER": "Sonstiges"
+    },
+    "status": {
+      "DRAFT": "Entwurf",
+      "PUBLISHED": "Veröffentlicht",
+      "COMPLETED": "Abgeschlossen",
+      "CANCELLED": "Abgesagt"
+    },
+    "attendees": {
+      "title": "Teilnehmerliste",
+      "add": "Teilnehmer hinzufügen",
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "email": "E-Mail",
+      "phone": "Telefonnummer",
+      "registeredAt": "Anmeldedatum",
+      "status": "Teilnahmestatus",
+      "member": "Vereinsmitglied",
+      "guest": "Gast",
+      "empty": "Bisher sind keine Teilnehmer für dieses Event registriert.",
+      "capacityReached": "Die maximale Teilnehmerkapazität ist erreicht."
+    },
+    "attendeeStatus": {
+      "REGISTERED": "Angemeldet",
+      "ATTENDED": "Teilgenommen",
+      "CANCELLED": "Abgemeldet"
+    },
+    "actions": {
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "delete": "Löschen",
+      "confirmDelete": "Möchten Sie dieses Event wirklich löschen? Alle Teilnehmerdaten werden gelöscht.",
+      "searchPlaceholder": "Veranstaltung oder Ort suchen...",
+      "filterType": "Kategorie-Filter",
+      "filterStatus": "Status-Filter",
+      "all": "Alle"
+    },
+    "menu": {
+      "upcoming": "Bevorstehende Veranstaltungen",
+      "past": "Vergangene Veranstaltungen"
+    }
+  },
+  "inventory": {
+    "title": "Inventar & Sachmittel",
+    "description": "Verwaltung von Vereinsinventar, technischer Ausrüstung und Ausgaben an Mitglieder.",
+    "newItem": "Neuer Eintrag",
+    "emptyTitle": "Keine Einträge vorhanden",
+    "emptyDescription": "Klicken Sie auf „Neuer Eintrag“, um das erste Inventar anzulegen.",
+    "noResultsTitle": "Keine Treffer",
+    "noResultsDescription": "Für Ihre Such- bzw. Filterkriterien wurden keine Einträge gefunden. Setzen Sie die Filter zurück.",
+    "fields": {
+      "name": "Bezeichnung",
+      "category": "Kategorie",
+      "serialNumber": "Seriennummer",
+      "location": "Standort / Raum",
+      "quantity": "Anzahl",
+      "status": "Zustand",
+      "purchaseDate": "Anschaffungsdatum",
+      "purchasePrice": "Anschaffungspreis",
+      "description": "Beschreibung",
+      "assignedMemberId": "Ausgegeben an (Mitglied)",
+      "createdAt": "Erfasst am"
+    },
+    "placeholders": {
+      "search": "Bezeichnung, Seriennummer, Standort oder Beschreibung durchsuchen…",
+      "name": "z. B. Beamer",
+      "serialNumber": "z. B. SN-2024-001",
+      "location": "z. B. Vereinsheim, Besprechungsraum",
+      "assignedMemberId": "Mitglieds-ID",
+      "description": "Zusätzliche Angaben, Garantiehinweise usw."
+    },
+    "hints": {
+      "assignedMemberId": "Optional: ID des Mitglieds, an das der Gegenstand ausgegeben wurde."
+    },
+    "categories": {
+      "ELECTRONICS": "Elektronik",
+      "FURNITURE": "Möbel",
+      "KITCHEN": "Küche",
+      "OFFICE": "Büro",
+      "SPORTS": "Sport",
+      "OTHER": "Sonstiges"
+    },
+    "statuses": {
+      "IN_USE": "In Benutzung",
+      "IDLE": "Verfügbar",
+      "BROKEN": "Defekt",
+      "SCRAPPED": "Ausgemustert"
+    },
+    "stats": {
+      "title": "Inventarübersicht",
+      "totalQuantity": "Gesamtanzahl",
+      "inUse": "In Benutzung",
+      "broken": "Defekt",
+      "itemCount": "{count} Einträge"
+    },
+    "actions": {
+      "create": "Anlegen",
+      "save": "Änderungen speichern",
+      "cancel": "Abbrechen",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "confirmDelete": "Ja, löschen"
+    },
+    "modal": {
+      "createTitle": "Neuer Inventareintrag",
+      "editTitle": "Inventareintrag bearbeiten",
+      "deleteTitle": "Inventareintrag löschen",
+      "deleteDescription": "Der Eintrag „{name}“ wird dauerhaft gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden."
+    },
+    "table": {
+      "actions": "Aktionen",
+      "unassigned": "Nicht ausgegeben",
+      "serialPrefix": "SN:"
+    },
+    "validation": {
+      "nameRequired": "Bitte geben Sie eine Bezeichnung ein.",
+      "tooLong": "Der eingegebene Text ist zu lang.",
+      "quantityInteger": "Die Anzahl muss eine ganze Zahl sein.",
+      "quantityMin": "Die Anzahl muss mindestens 1 betragen.",
+      "quantityMax": "Die Anzahl überschreitet den zulässigen Höchstwert.",
+      "priceMin": "Der Anschaffungspreis darf nicht negativ sein.",
+      "priceMax": "Der Anschaffungspreis überschreitet den zulässigen Höchstwert.",
+      "dateInvalid": "Bitte geben Sie ein gültiges Datum ein.",
+      "invalid": "Ungültiger Wert."
+    },
+    "errors": {
+      "forbidden": "Sie haben keine Berechtigung für diese Aktion.",
+      "validation": "Die Eingaben sind ungültig. Bitte prüfen Sie das Formular.",
+      "notFound": "Der Inventareintrag wurde nicht gefunden. Möglicherweise wurde er gelöscht.",
+      "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+    },
+    "export": {
+      "filePrefix": "inventar"
+    },
+    "categoriesPage": {
+      "title": "Kategorien",
+      "description": "Anzahl der Einträge und Gesamtanzahl je Kategorie.",
+      "columns": {
+        "category": "Kategorie",
+        "itemCount": "Einträge",
+        "totalQuantity": "Gesamtanzahl"
+      },
+      "viewItems": "Anzeigen",
+      "total": "Gesamt"
+    },
+    "menu": {
+      "categories": "Kategorien",
+      "export": "Excel-Export"
+    }
+  },
+  "mail": {
+    "title": "E-Mail-Einstellungen",
+    "description": "SMTP-Server und Absenderangaben für alle E-Mails, die das System versendet.",
+    "status": {
+      "title": "Status",
+      "configured": "E-Mail-Versand ist eingerichtet",
+      "notConfigured": "E-Mail-Versand ist nicht eingerichtet",
+      "configuredHint": "Nach Änderungen sollten Sie die Verbindung prüfen und eine Test-E-Mail senden.",
+      "notConfiguredHint": "Tragen Sie SMTP-Server und Absenderadresse ein und speichern Sie. Die Zugangsdaten erhalten Sie von Ihrem E-Mail-Anbieter (Hoster).",
+      "server": "Server",
+      "sender": "Absender",
+      "updatedAt": "Zuletzt geändert"
+    },
+    "settings": {
+      "title": "SMTP-Einstellungen",
+      "description": "Geben Sie die SMTP-Zugangsdaten Ihres E-Mail-Anbieters ein (z. B. IONOS, Strato, all-inkl, Google Workspace).",
+      "saved": "Einstellungen gespeichert.",
+      "verified": "Verbindung erfolgreich: Der SMTP-Server ist erreichbar und die Anmeldung war erfolgreich.",
+      "logModeOk": "Im Testmodus ist keine Verbindung nötig; E-Mails werden nur protokolliert.",
+      "readOnly": "Diese Einstellungen können nur Administratoren ändern."
+    },
+    "fields": {
+      "transport": "Versandart",
+      "host": "SMTP-Server",
+      "port": "Port",
+      "security": "Verschlüsselung",
+      "username": "Benutzername",
+      "password": "Passwort",
+      "fromAddress": "Absenderadresse",
+      "fromName": "Absendername",
+      "replyTo": "Antwortadresse",
+      "testRecipient": "Empfängeradresse"
+    },
+    "placeholders": {
+      "host": "z. B. smtp.ionos.de",
+      "username": "Meist Ihre E-Mail-Adresse",
+      "passwordStored": "••••••••",
+      "fromAddress": "z. B. info@verein.de",
+      "fromName": "z. B. Musterverein e. V.",
+      "replyTo": "z. B. vorstand@verein.de",
+      "testRecipient": "name@beispiel.de",
+      "logSearch": "Empfänger oder Betreff suchen…"
+    },
+    "hints": {
+      "logMode": "Testmodus: E-Mails werden nicht versendet, sondern nur im Versandprotokoll erfasst. Für den Echtbetrieb SMTP wählen.",
+      "password": "Das Passwort wird verschlüsselt gespeichert und nicht wieder angezeigt.",
+      "passwordStored": "Ein Passwort ist gespeichert. Zum Ändern neues Passwort eingeben, zum Beibehalten leer lassen.",
+      "replyTo": "Optional: Adresse, an die Antworten der Empfänger gehen."
+    },
+    "transports": {
+      "SMTP": "SMTP (echter Versand)",
+      "LOG": "Testmodus (nur protokollieren)"
+    },
+    "security": {
+      "STARTTLS": "STARTTLS (Port 587)",
+      "SSL": "SSL/TLS (Port 465)",
+      "NONE": "Unverschlüsselt (nicht empfohlen)"
+    },
+    "statuses": {
+      "SENT": "Versendet",
+      "FAILED": "Fehlgeschlagen",
+      "LOGGED": "Test (nicht versendet)"
+    },
+    "actions": {
+      "save": "Speichern",
+      "verify": "Verbindung prüfen",
+      "sendTest": "Test-E-Mail senden",
+      "close": "Schließen"
+    },
+    "testMail": {
+      "title": "Test-E-Mail senden",
+      "description": "Es wird eine Test-E-Mail mit den gespeicherten Einstellungen an die angegebene Adresse gesendet. Ungespeicherte Änderungen werden nicht verwendet.",
+      "subject": "Verein ERP — Test-E-Mail",
+      "body": "Hallo,\n\ndies ist eine Test-E-Mail zur Überprüfung der E-Mail-Einstellungen von Verein ERP. Wenn Sie diese Nachricht erhalten, funktioniert der E-Mail-Versand.\n\nBitte antworten Sie nicht auf diese E-Mail.",
+      "sent": "Die Test-E-Mail wurde an {to} gesendet. Bitte prüfen Sie den Posteingang (und den Spam-Ordner)."
+    },
+    "logs": {
+      "title": "Versandprotokoll",
+      "description": "Protokoll aller vom System versendeten E-Mails. Aus Datenschutzgründen werden keine Nachrichteninhalte gespeichert.",
+      "empty": "Keine Einträge im Versandprotokoll.",
+      "columns": {
+        "createdAt": "Datum",
+        "to": "Empfänger",
+        "subject": "Betreff",
+        "module": "Modul",
+        "status": "Status",
+        "error": "Fehler"
+      }
+    },
+    "validation": {
+      "hostRequired": "Bitte geben Sie den SMTP-Server an.",
+      "fromAddressRequired": "Bitte geben Sie eine Absenderadresse an.",
+      "emailRequired": "Bitte geben Sie eine E-Mail-Adresse ein.",
+      "emailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
+      "portInvalid": "Der Port muss eine ganze Zahl zwischen 1 und 65535 sein.",
+      "tooLong": "Der eingegebene Text ist zu lang.",
+      "invalid": "Ungültiger Wert."
+    },
+    "errors": {
+      "forbidden": "Sie haben keine Berechtigung für diese Aktion.",
+      "validation": "Die Eingaben sind ungültig. Bitte prüfen Sie das Formular.",
+      "notConfigured": "Der E-Mail-Versand ist noch nicht eingerichtet. Bitte speichern Sie zuerst die SMTP-Einstellungen.",
+      "encryptionKeyMissing": "Das Passwort konnte nicht sicher gespeichert werden: Auf dem Server ist kein Schlüssel (AUTH_SECRET) hinterlegt. Bitte wenden Sie sich an Ihren Administrator.",
+      "passwordUnreadable": "Das gespeicherte Passwort kann nicht entschlüsselt werden (Serverschlüssel geändert?). Bitte Passwort neu eingeben und speichern.",
+      "connectionFailed": "Verbindung zum SMTP-Server oder Anmeldung fehlgeschlagen. Bitte Server, Port, Verschlüsselung und Zugangsdaten prüfen.",
+      "sendFailed": "Die Test-E-Mail konnte nicht gesendet werden.",
+      "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+    },
+    "menu": {
+      "settings": "Einstellungen",
+      "logs": "Versandprotokoll"
+    }
   },
   "meetings": {
     "pageTitle": "Sitzungen",
@@ -972,19 +1583,330 @@
       "tasks": "Aufgaben"
     }
   },
-  "users": {
-    "pageTitle": "Benutzer",
-    "pageDescription": "Systembenutzer, Rollen und Status.",
-    "newUser": "Neuer Benutzer",
-    "createTitle": "Neuer Benutzer",
-    "createDescription": "Fügen Sie dem System einen neuen Benutzer hinzu. Der Benutzer muss beim ersten Anmelden sein Passwort ändern.",
-    "editTitle": "Benutzer bearbeiten",
-    "notFoundTitle": "Benutzer nicht gefunden",
-    "notFoundDescription": "Der Datensatz könnte gelöscht worden sein."
-  },
-  "audit": {
-    "pageTitle": "Prüfprotokoll",
-    "pageDescription": "Authentifizierungs- und Datenoperationen im System."
+  "members": {
+    "pageTitle": "Mitglieder",
+    "pageDescription": "Mitgliedsakten, Mitgliedsnummerierung und Statusverfolgung.",
+    "newMember": "Neues Mitglied",
+    "createTitle": "Neues Mitglied",
+    "createDescription": "Mitgliedsnummer wird beim Speichern automatisch vergeben (MITGL-Jahr-Nr).",
+    "editTitle": "Mitglied bearbeiten",
+    "editDescription": "{membershipNumber} — Mitgliedsnummer kann nicht geändert werden.",
+    "list": {
+      "searchPlaceholder": "Mitgliedsnr., Vorname, Nachname, E-Mail, Telefon suchen…",
+      "aria": "Mitgliederregister",
+      "empty": "Keine Mitglieder gefunden.",
+      "membershipNumber": "Mitgliedsnr.",
+      "fullName": "Nachname, Vorname",
+      "type": "Typ",
+      "status": "Status",
+      "joinDate": "Beitritt",
+      "email": "E-Mail",
+      "phone": "Telefon"
+    },
+    "stats": {
+      "active": "Aktiv",
+      "passive": "Passiv",
+      "resigned": "Ausgetreten",
+      "newThisMonth": "Neu in diesem Monat",
+      "byType": "Nach Typ:",
+      "applyFilter": "Filter anwenden"
+    },
+    "status": {
+      "ACTIVE": "Aktiv",
+      "PASSIVE": "Passiv",
+      "RESIGNED": "Ausgetreten",
+      "DECEASED": "Verstorben"
+    },
+    "type": {
+      "ASIL": "Ordentlich",
+      "ONURSAL": "Ehrenmitglied",
+      "FAHRI": "Ehrenamtlich",
+      "DESTEKCI": "Fördermitglied"
+    },
+    "form": {
+      "type": "Mitgliedsart",
+      "status": "Status",
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "kimlikNo": "Ausweisnr.",
+      "kimlikNoDescription": "Mitgliedsnummer / Steuer-ID / Führerschein / Staatsangehörigkeit / Reisepassnr.; optional. Nur Verwalterrollen sehen dies.",
+      "kimlikNoPlaceholder": "z.B. MITGL-001 oder 12345678901",
+      "birthDate": "Geburtsdatum",
+      "birthDateDescription": "Optional.",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "street": "Straße",
+      "streetPlaceholder": "z.B. Hauptstraße",
+      "houseNumber": "Hausnr.",
+      "houseNumberPlaceholder": "z.B. 12 oder 45a",
+      "postalCode": "PLZ",
+      "postalCodePlaceholder": "z.B. 10115",
+      "city": "Ort",
+      "cityPlaceholder": "z.B. Berlin",
+      "state": "Bundesland",
+      "statePlaceholder": "z.B. Berlin, Bayern, Nordrhein-Westfalen",
+      "profession": "Beruf",
+      "professionPlaceholder": "z.B. Rechtsanwalt, Ingenieur, Lehrer",
+      "joinDate": "Beitrittsdatum",
+      "exitDate": "Austrittsdatum",
+      "exitDateDescription": "Nur bei Ausgetreten/Verstorben ausfüllen.",
+      "exitReason": "Austrittsgrund",
+      "exitReasonDescription": "Bei Austrittsdatum ausfüllen.",
+      "notes": "Allgemeine Notizen",
+      "notesDescription": "Freitextnotiz auf der Mitgliedskarte (max. 2000 Zeichen).",
+      "membershipReadOnly": "Mitgliedsnummer ist unveränderlich.",
+      "emailPlaceholder": "z.B. name@email.com",
+      "phonePlaceholder": "z.B. +49 30 1234 5678",
+      "submit": "Mitglied speichern",
+      "save": "Änderungen speichern",
+      "cancel": "Abbrechen",
+      "country": "Land",
+      "countryDescription": "Leer oder Deutschland: Postleitzahl muss 5-stellig sein.",
+      "cancellationReceivedAt": "Kündigung eingegangen am",
+      "cancellationReceivedAtDescription": "Datum des Eingangs der Kündigung; darf nicht nach dem Austrittsdatum liegen."
+    },
+    "detail": {
+      "membershipNumberLabel": "Mitgliedsnummer",
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "type": "Mitgliedsart",
+      "status": "Status",
+      "kimlikNo": "Ausweisnr.",
+      "birthDate": "Geburtsdatum",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "profession": "Beruf",
+      "joinDate": "Beitrittsdatum",
+      "exitDate": "Austrittsdatum",
+      "exitReason": "Austrittsgrund",
+      "address": "Adresse",
+      "createdBy": "Erstellt von",
+      "updatedBy": "Zuletzt geändert von",
+      "notesTitle": "Allgemeine Notizen",
+      "notesTimelineTitle": "Vermerke",
+      "noNotes": "Noch keine Vermerke hinzugefügt.",
+      "newNote": "Neuer Vermerk",
+      "notePlaceholder": "Vermerk zum Mitglied schreiben…",
+      "addNote": "Vermerk hinzufügen",
+      "fieldCountry": "Land",
+      "fieldCancellationReceivedAt": "Kündigung eingegangen am"
+    },
+    "actions": {
+      "view": "Anzeigen",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "changeStatus": "Status ändern",
+      "currentStatus": "Aktueller Status"
+    },
+    "statusChange": {
+      "resignedTitle": "Ausgetretenes Mitglied",
+      "deceasedTitle": "Verstorbenes Mitglied",
+      "exitDateLabel": "Austrittsdatum",
+      "exitReasonLabel": "Austrittsgrund",
+      "exitReasonPlaceholder": "Kurze Erläuterung (optional)",
+      "exitDateRequired": "Austrittsdatum ist erforderlich.",
+      "confirm": "Bestätigen",
+      "updatedToast": "Status aktualisiert: {status}"
+    },
+    "deleteConfirm": {
+      "title": "Mitglied löschen",
+      "message": "Das Mitglied mit der Nummer \"{membershipNumber}\" wird gelöscht. Gelöschte Mitglieder erscheinen nicht in Listen, Suche, Statistik oder Excel-Export; die Mitgliedsnummer wird nicht wiederverwendet. Bestätigen?",
+      "confirm": "Löschen",
+      "successToast": "Mitglied gelöscht: {membershipNumber}"
+    },
+    "listFilters": {
+      "from": "Beitritt von",
+      "to": "Beitritt bis",
+      "clear": "Zurücksetzen"
+    },
+    "created": {
+      "toast": "Mitglied gespeichert: {membershipNumber}",
+      "toastUpdated": "Mitglied aktualisiert: {membershipNumber}"
+    },
+    "notes": {
+      "addedToast": "Vermerk hinzugefügt."
+    },
+    "statusMenu": {
+      "cancellationReceivedAtLabel": "Kündigung eingegangen am",
+      "cancellationReceivedAtHint": "Optional; darf nicht nach dem Austrittsdatum liegen."
+    },
+    "payments": {
+      "title": "Mitgliedsbeiträge",
+      "empty": "Keine Zahlungen für dieses Mitglied.",
+      "add": "Zahlung erfassen",
+      "colReceipt": "Quittungs-Nr.",
+      "colDueYear": "Beitragsjahr",
+      "colAmount": "Betrag",
+      "colMethod": "Zahlungsart",
+      "colPaidAt": "Zahlungsdatum",
+      "colStatus": "Status",
+      "statusActive": "Aktiv",
+      "statusVoided": "Storniert",
+      "receiptPdf": "Quittung PDF",
+      "void": "Stornieren",
+      "voidTitle": "Zahlung stornieren",
+      "voidReason": "Grund (5-300 Zeichen)",
+      "voidConfirm": "Ein Grund ist erforderlich; der Vorgang kann nicht rückgängig gemacht werden. Der Gegenbuchung erfolgt beim nächsten Abgleich.",
+      "method": {
+        "CASH": "Bar",
+        "BANK_TRANSFER": "Überweisung",
+        "CARD": "Kartenzahlung",
+        "OTHER": "Sonstige"
+      },
+      "form": {
+        "title": "Neuer Mitgliedsbeitrag",
+        "dueYear": "Beitragsjahr",
+        "amount": "Betrag (€)",
+        "method": "Zahlungsart",
+        "paidAt": "Zahlungsdatum",
+        "reference": "Referenz / Notiz",
+        "referenceDescription": "z. B. Nummer des Kontoauszugs (max. 100 Zeichen).",
+        "save": "Speichern",
+        "cancel": "Abbrechen"
+      },
+      "voidedInfo": "Storniert: {date} — {reason}",
+      "toastSaved": "Zahlung erfasst: {receipt}",
+      "toastVoided": "Zahlung storniert."
+    },
+    "dataExport": {
+      "action": "Datenexport (DSGVO Art. 15)",
+      "description": "Alle gespeicherten Daten des Mitglieds werden als JSON-Datei heruntergeladen.",
+      "toastStarted": "Datendatei wird heruntergeladen."
+    },
+    "duesLink": "Beitragsbericht",
+    "typesLink": "Mitgliedsarten",
+    "importLink": "Importieren",
+    "dues": {
+      "reportTitle": "Beitragsbericht {year}",
+      "reportDescription": "Jährliche Beitragszeilen, Zahlungseingänge und Rückstände.",
+      "exportExcel": "Excel-Export",
+      "year": "Jahr",
+      "filterOverdue": "Überfällig",
+      "overdue": "Überfällig",
+      "status": {
+        "OPEN": "Offen",
+        "PARTIAL": "Teilweise",
+        "PAID": "Bezahlt",
+        "WAIVED": "Erlassen"
+      },
+      "memberType": {
+        "ASIL": "Ordentlich",
+        "ONURSAL": "Ehrenmitglied",
+        "FAHRI": "Ehrenamtlich",
+        "DESTEKCI": "Fördermitglied"
+      },
+      "colMemberNumber": "Mitgl.-Nr.",
+      "colFullName": "Name",
+      "colType": "Mitgliedsart",
+      "colAmountDue": "Betrag",
+      "colPaid": "Bezahlt",
+      "colRemaining": "Offen",
+      "colStatus": "Status",
+      "colDueDate": "Fällig am",
+      "colLastPayment": "Letzte Zahlung",
+      "goToMember": "Zum Mitglied",
+      "empty": "Keine Beitragszeilen für dieses Jahr.",
+      "searchPlaceholder": "Name oder Mitgliedsnummer suchen…",
+      "stats": {
+        "expected": "Erwarteter Betrag",
+        "collected": "Eingenommen",
+        "remaining": "Offen",
+        "rate": "Einnahmequote"
+      },
+      "counts": {
+        "title": "Anzahlen"
+      },
+      "generate": {
+        "open": "Beiträge erstellen",
+        "title": "Beiträge stapelweise erstellen",
+        "description": "Für das gewählte Jahr werden für geeignete aktive Mitglieder einzelne Beitragszeilen erstellt. Zuerst mit „Prüfen“ eine Vorschau ansehen; ein erneutes Ausführen erzeugt keine doppelten Zeilen.",
+        "year": "Jahr",
+        "dueDate": "Fällig am",
+        "check": "Prüfen",
+        "confirm": "Erstellen",
+        "cancel": "Abbrechen",
+        "previewEligible": "Geeignete Mitglieder",
+        "previewTotal": "Gesamtbetrag",
+        "previewSkippedNoAmount": "Art ohne/ohne festgelegten Betrag",
+        "previewSkippedExisting": "Beitragszeile bereits vorhanden",
+        "toastCreated": "{count} Beitragszeilen erstellt."
+      },
+      "panel": {
+        "title": "Beitragszeilen",
+        "add": "Beitrag hinzufügen",
+        "addTitle": "Beitragszeile hinzufügen",
+        "editTitle": "Beitrag {year} bearbeiten",
+        "colYear": "Jahr",
+        "colAmountDue": "Betrag",
+        "colPaid": "Bezahlt",
+        "colRemaining": "Offen",
+        "colStatus": "Status",
+        "colDueDate": "Fällig am",
+        "colNote": "Notiz",
+        "edit": "Bearbeiten",
+        "delete": "Löschen",
+        "deleteTitle": "Beitragszeile löschen",
+        "deleteMessage": "Die Beitragszeile für das Jahr {year} wird gelöscht. Fortfahren?",
+        "waived": "Beitrag erlassen",
+        "paidInfo": "Auf diese Zeile bezahlt: {paid}",
+        "overdue": "Überfällig",
+        "empty": "Keine Beitragszeilen.",
+        "save": "Speichern",
+        "cancel": "Abbrechen",
+        "toastAdded": "Beitragszeile hinzugefügt.",
+        "toastUpdated": "Beitragszeile aktualisiert.",
+        "toastDeleted": "Beitragszeile gelöscht."
+      }
+    },
+    "types": {
+      "title": "Mitgliedsarten",
+      "description": "Jährliche Beitragssätze und Verfügbarkeit. Arten können nicht hinzugefügt oder entfernt werden; eine inaktive Art wird nur bei neuen Mitgliedern ausgeblendet.",
+      "backToMembers": "Zurück zu den Mitgliedern",
+      "colType": "Art",
+      "colAnnualDue": "Jahresbeitrag",
+      "colMemberCount": "Mitglieder",
+      "colStatus": "Status",
+      "notSet": "Nicht festgelegt",
+      "noDue": "Beitragsfrei",
+      "active": "Aktiv",
+      "passive": "Inaktiv",
+      "edit": "Bearbeiten",
+      "editTitle": "Mitgliedsart bearbeiten",
+      "annualDueHint": "Leer = noch nicht festgelegt (wird bei der Beitragserstellung übersprungen); 0 = beitragsfrei. Eine Änderung wirkt sich nicht auf bestehende Beitragszeilen aus.",
+      "isActive": "Bei neuen Mitgliedern wählbar",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "toastSaved": "Mitgliedsart aktualisiert.",
+      "empty": "Keine Einträge."
+    },
+    "import": {
+      "title": "Mitglieder importieren",
+      "description": "Excel-Vorlage ausfüllen und hochladen. Zuerst wird mit „Prüfen“ kontrolliert; fehlerhafte Zeilen werden übersprungen und gültige Zeilen importiert.",
+      "downloadTemplate": "Vorlage herunterladen",
+      "chooseFile": "Datei wählen (.xlsx)",
+      "check": "Prüfen",
+      "networkError": "Anfrage fehlgeschlagen. Bitte erneut versuchen.",
+      "previewTitle": "Prüfergebnis",
+      "totalRows": "Zeilen gesamt",
+      "validRows": "Gültig",
+      "errorRows": "Fehlerhaft",
+      "skippedWarning": "Fehlerhafte Zeilen werden beim Import übersprungen.",
+      "colRow": "Zeile",
+      "colMessages": "Fehler",
+      "moreErrors": "… und {count} weitere Zeilen",
+      "importButton": "Importieren",
+      "commitTitle": "Import abgeschlossen",
+      "commitSummary": "{imported} Mitglieder importiert ({total} Zeilen in der Datei gelesen).",
+      "commitSkipped": "{count} Zeilen wegen Fehlern übersprungen.",
+      "goToList": "Zur Mitgliederliste",
+      "toastImported": "{count} Mitglieder importiert."
+    },
+    "menu": {
+      "dues": "Beitragsbericht",
+      "types": "Mitgliedsarten",
+      "import": "Importieren",
+      "export": "Excel-Export"
+    }
   },
   "organization": {
     "pageTitle": "Vereinsdaten",
@@ -1030,578 +1952,6 @@
     "charitablePurposesDescription": "Aus dem Bescheid wörtlich übernehmen — der Satz lautet: 'Wir sind wegen Förderung …' und '… nur zur Förderung … verwendet wird'. Beispiel: 'der Bildung und Erziehung'.",
     "membershipFeesDeductible": "Mitgliedsbeiträge sind steuerlich abziehbar",
     "membershipFeesDeductibleDescription": "Nur ankreuzen, wenn die Vereinszwecke NICHT unter § 10b Abs. 1 Satz 8 EStG fallen (z. B. Sport, Freizeitkultur, Heimatpflege, Brauchtum). Im Zweifel Steuerberatung fragen."
-  },
-  "pdfLanguage": {
-    "german": "Deutsch",
-    "turkish": "Türkçe",
-    "aria": "PDF-Sprache wählen"
-  },
-  "accounting": {
-    "list": {
-      "title": "Buchungen",
-      "yearLocked": "Jahr {year} ist abgeschlossen",
-      "stats": {
-        "income": "Einnahmen",
-        "expense": "Ausgaben",
-        "net": "Überschuss/Fehlbetrag",
-        "missingReceipt": "Beleg fehlt"
-      },
-      "filters": {
-        "all": "Alle",
-        "q": "Buchungsnr., Beschreibung, Kontrahent, Beleg-Nr.",
-        "type": "Art",
-        "account": "Konto",
-        "category": "Kategorie",
-        "sphere": "Bereich",
-        "project": "Projekt",
-        "missingReceipt": "Beleg fehlt",
-        "source": "Quelle",
-        "sourceManual": "Manuell",
-        "sourceMember": "Mitgliedssync",
-        "hideReversed": "Stornierte ausblenden",
-        "from": "Von",
-        "to": "Bis",
-        "apply": "Anwenden",
-        "clear": "Zurücksetzen",
-        "sphereIdeell": "Ideeller Bereich",
-        "sphereAsset_management": "Vermögensverwaltung",
-        "spherePurpose_operation": "Zweckbetrieb",
-        "sphereEconomic_operation": "Wirtschaftlicher Geschäftsbetrieb"
-      },
-      "columns": {
-        "number": "Buchungsnr.",
-        "date": "Datum",
-        "type": "Art",
-        "account": "Konto",
-        "category": "Kategorie",
-        "description": "Beschreibung",
-        "counterparty": "Kontrahent",
-        "project": "Projekt",
-        "amount": "Betrag",
-        "receipt": "Beleg",
-        "missing": "fehlt",
-        "status": "Status",
-        "active": "Aktiv",
-        "reversed": "Storniert",
-        "source": "Quelle"
-      },
-      "empty": "Keine Buchungen gefunden.",
-      "actions": {
-        "newIncome": "Einnahme erfassen",
-        "newExpense": "Ausgabe erfassen",
-        "newTransfer": "Umbuchung",
-        "sync": "Mitgliedsbeiträge übernehmen",
-        "reports": "Berichte",
-        "budget": "Haushaltsplan",
-        "yearClosing": "Jahresabschluss",
-        "settings": "Einstellungen",
-        "export": "Excel-Export",
-        "view": "Anzeigen",
-        "edit": "Bearbeiten",
-        "reverse": "Stornieren"
-      },
-      "sourceLabel": "Mitgliedsbeitrag (automatisch)"
-    },
-    "form": {
-      "createTitle": "Neue Buchung",
-      "editTitle": "Buchung bearbeiten",
-      "typeIncome": "Einnahme",
-      "typeExpense": "Ausgabe",
-      "typeTransfer": "Umbuchung",
-      "date": "Buchungsdatum",
-      "amount": "Betrag (€)",
-      "account": "Konto",
-      "sourceAccount": "Quellkonto",
-      "targetAccount": "Zielkonto",
-      "category": "Kategorie",
-      "project": "Projekt",
-      "description": "Buchungstext",
-      "counterparty": "Kontrahent",
-      "receiptReference": "Beleg-/Rechnungsnr.",
-      "files": "Beleg",
-      "filesHint": "PDF/JPG/PNG; Sie können Belege später in der Detailansicht hochladen.",
-      "save": "Speichern",
-      "cancel": "Abbrechen",
-      "editBlockedReversed": "Stornierte Buchungen können nicht bearbeitet werden; bitte neue Buchung anlegen.",
-      "editBlockedLocked": "Buchungen im abgeschlossenen Jahr können nicht bearbeitet werden.",
-      "editBlockedSource": "Automatisch erstellte Buchungen können nicht bearbeitet werden.",
-      "toastSaved": "Buchung erfasst: {number}",
-      "toastUpdated": "Buchung aktualisiert.",
-      "toastReversed": "Buchung storniert."
-    },
-    "reverse": {
-      "title": "Buchung stornieren",
-      "reason": "Grund (5-300 Zeichen)",
-      "hint": "Buchungen werden nicht gelöscht, sondern storniert (GoBD). Stornierte Buchungen bleiben durchgestrichen sichtbar und werden aus allen Summen ausgeschlossen.",
-      "confirm": "Stornieren",
-      "cancel": "Abbrechen"
-    },
-    "detail": {
-      "title": "Buchungsdetail",
-      "fields": {
-        "number": "Buchungsnr.",
-        "type": "Art",
-        "date": "Datum",
-        "account": "Konto",
-        "category": "Kategorie",
-        "project": "Projekt",
-        "amount": "Betrag",
-        "description": "Buchungstext",
-        "counterparty": "Kontrahent",
-        "receiptReference": "Beleg-Nr.",
-        "status": "Status",
-        "createdBy": "Erstellt von",
-        "updatedBy": "Aktualisiert von",
-        "source": "Quelle",
-        "reverseInfo": "Stornoinfo"
-      },
-      "reversedBy": "{label} — {date}",
-      "reason": "Grund: {reason}",
-      "sourceMember": "Mitgliedssync (automatisch)",
-      "sourceManual": "Manuell",
-      "files": {
-        "title": "Belege",
-        "empty": "Keine Belege.",
-        "upload": "Beleg hochladen",
-        "delete": "Löschen",
-        "download": "Herunterladen"
-      }
-    },
-    "setup": {
-      "title": "Buchhaltung Einstellungen",
-      "tabs": {
-        "accounts": "Konten",
-        "categories": "Kategorien",
-        "projects": "Projekte"
-      },
-      "accounts": {
-        "name": "Kontoname",
-        "type": "Art",
-        "openingBalance": "Anfangsbestand (€)",
-        "openingDate": "Eröffnungsdatum",
-        "balance": "Saldo",
-        "bookings": "Buchungen",
-        "status": "Status",
-        "new": "Neues Konto",
-        "edit": "Bearbeiten",
-        "deactivate": "Deaktivieren",
-        "activate": "Aktivieren",
-        "typeCASH": "Kasse",
-        "typeBANK": "Girokonto",
-        "typeOTHER": "Sonstiges"
-      },
-      "categories": {
-        "name": "Kategorie",
-        "direction": "Richtung",
-        "sphere": "Bereich",
-        "directionINCOME": "Einnahmen",
-        "directionEXPENSE": "Ausgaben",
-        "helpText": "Hinweistext",
-        "bookings": "Buchungen",
-        "status": "Status",
-        "new": "Neue Kategorie",
-        "edit": "Bearbeiten",
-        "deactivate": "Deaktivieren",
-        "activate": "Aktivieren",
-        "sphereIDEELL": "Ideeller Bereich",
-        "sphereASSET_MANAGEMENT": "Vermögensverwaltung",
-        "spherePURPOSE_OPERATION": "Zweckbetrieb",
-        "sphereECONOMIC_OPERATION": "Wirtschaftlicher Geschäftsbetrieb"
-      },
-      "projects": {
-        "name": "Projekt",
-        "note": "Notiz",
-        "bookings": "Buchungen",
-        "status": "Status",
-        "new": "Neues Projekt",
-        "edit": "Bearbeiten",
-        "deactivate": "Deaktivieren",
-        "activate": "Aktivieren"
-      },
-      "syncSettings": {
-        "title": "Einstellungen Mitgliedsbeitrag-Sync",
-        "memberFeeCategory": "Beitragskategorie",
-        "cashAccount": "Kasse",
-        "bankAccount": "Girokonto",
-        "save": "Speichern",
-        "toastSaved": "Einstellungen gespeichert.",
-        "donationCategory": "Spendenkategorie"
-      }
-    },
-    "budget": {
-      "title": "Haushaltsplan",
-      "year": "Jahr",
-      "copyFromPrevious": "Aus Vorjahr kopieren",
-      "save": "Speichern",
-      "colCategory": "Kategorie",
-      "colPlan": "Plan (€)",
-      "colActual": "Ist",
-      "colDiff": "Differenz",
-      "empty": "Keine Kategorien.",
-      "locked": "Jahr {year} ist abgeschlossen; Haushaltsplan ist schreibgeschützt.",
-      "toastSaved": "Haushaltsplan gespeichert.",
-      "sphereIDEELL": "Ideeller Bereich",
-      "sphereASSET_MANAGEMENT": "Vermögensverwaltung",
-      "spherePURPOSE_OPERATION": "Zweckbetrieb",
-      "sphereECONOMIC_OPERATION": "Wirtschaftlicher Geschäftsbetrieb",
-      "sphereIdeell": "Ideeller Bereich",
-      "sphereAsset_management": "Vermögensverwaltung",
-      "spherePurpose_operation": "Zweckbetrieb",
-      "sphereEconomic_operation": "Wirtschaftlicher Geschäftsbetrieb",
-      "directionINCOME": "Einnahmen",
-      "directionEXPENSE": "Ausgaben"
-    },
-    "years": {
-      "title": "Jahresabschluss",
-      "colYear": "Jahr",
-      "colBookings": "Buchungen",
-      "colIncome": "Einnahmen",
-      "colExpense": "Ausgaben",
-      "colMissing": "Beleg fehlt",
-      "colStatus": "Status",
-      "open": "Offen",
-      "locked": "Abgeschlossen",
-      "lockedBy": "{label} — {date}",
-      "close": "Jahr abschließen",
-      "unlock": "Entsperren",
-      "closeTitle": "Jahr {year} abschließen",
-      "closePreview": "Vorschau",
-      "closeHint": "Im abgeschlossenen Jahr sind Buchungen, Stornierungen und Haushaltsänderungen gesperrt; Beleguploads bleiben möglich. Korrekturen erfolgen im offenen Jahr.",
-      "closeConfirm": "Abschließen",
-      "unlockTitle": "Jahr {year} entsperren",
-      "unlockReason": "Grund (5-300 Zeichen)",
-      "unlockHint": "Korrekturen erfolgen normalerweise als neue Buchung im offenen Jahr. Das Entsperren ist ein Sonderfall und wird als YEAR_UNLOCK protokolliert.",
-      "unlockConfirm": "Entsperren",
-      "cancel": "Abbrechen",
-      "toastClosed": "Jahr {year} abgeschlossen.",
-      "toastUnlocked": "Jahr {year} wieder geöffnet."
-    },
-    "sync": {
-      "title": "Mitgliedsbeiträge übernehmen",
-      "description": "Zahlungen aus dem Mitgliedermodule werden als Einnahmenbuchungen übernommen; stornierte Quittungen werden gegengebucht. Im Buchungstext steht nur die Mitgliedsnummer.",
-      "preview": "Vorschau",
-      "run": "Übernehmen",
-      "toImport": "Zu übernehmende Zahlungen",
-      "toReverse": "Gegenzubuchen (Quittung storniert)",
-      "skippedLocked": "Übersprungen (Jahr abgeschlossen)",
-      "skippedOpening": "Vor Kontoeröffnung",
-      "conflicts": "Konflikte",
-      "noConflict": "Keine",
-      "notConfigured": "Einstellungen unvollständig: Beitragskategorie, Kasse und Girokonto müssen gewählt sein.",
-      "count": "{count} Einträge",
-      "total": "Summe: {total}",
-      "toastRun": "Übernahme fertig: {created} Buchungen, {reversed} Gegenbuchungen.",
-      "empty": "Keine Zahlungen zu übernehmen.",
-      "receipt": "Quittungs-Nr.",
-      "reason": "Grund"
-    },
-    "reports": {
-      "title": "Berichte",
-      "year": "Jahr",
-      "tabIncomeExpense": "Einnahmen-Ausgaben-Rechnung",
-      "tabLedger": "Kassenbuch",
-      "tabProjects": "Projektbericht",
-      "tabAnnual": "Kassenbericht",
-      "incomeExpense": {
-        "colPlan": "Plan",
-        "colActual": "Ist",
-        "colDiff": "Differenz",
-        "colPrevious": "Vorjahr",
-        "incomeTotal": "Einnahmen gesamt",
-        "expenseTotal": "Ausgaben gesamt",
-        "surplus": "Überschuss/Fehlbetrag",
-        "exportExcel": "Excel-Export"
-      },
-      "ledger": {
-        "account": "Konto",
-        "from": "Von",
-        "to": "Bis",
-        "show": "Anzeigen",
-        "colDate": "Datum",
-        "colNumber": "Buchungsnr.",
-        "colDescription": "Beschreibung",
-        "colReceipt": "Beleg-Nr.",
-        "colIncome": "Einnahme",
-        "colExpense": "Ausgabe",
-        "colBalance": "Saldo",
-        "opening": "Anfangsbestand",
-        "closing": "Endbestand",
-        "exportExcel": "Excel-Export",
-        "pdf": "Kassenbuch PDF"
-      },
-      "projects": {
-        "colProject": "Projekt",
-        "colIncome": "Einnahmen",
-        "colExpense": "Ausgaben",
-        "colBalance": "Saldo",
-        "empty": "Keine Projektbuchungen in diesem Jahr."
-      },
-      "annual": {
-        "description": "Jahres-Kassenbericht für die Mitgliederversammlung: Kontensalden, EÜR, Projekte, Unterschriftsfelder.",
-        "pdf": "Kassenbericht PDF"
-      },
-      "economic80": "Die Einnahmen des wirtschaftlichen Geschäftsbetriebs erreichen 80 % der Grenze von 50.000 € (§ 64 Abs. 3 AO).",
-      "economicExceeded": "Die Einnahmen des wirtschaftlichen Geschäftsbetriebs haben die Grenze von 50.000 € überschritten (§ 64 Abs. 3 AO). Bitte Steuerberatung hinzuziehen."
-    },
-    "balances": {
-      "title": "Kontensalden"
-    },
-    "menu": {
-      "sync": "Mitgliedsbeiträge übernehmen",
-      "reports": "Berichte",
-      "budget": "Haushaltsplan",
-      "yearClosing": "Jahresabschluss",
-      "settings": "Einstellungen",
-      "export": "Excel-Export"
-    }
-  },
-  "donations": {
-    "list": {
-      "title": "Spenden",
-      "stats": {
-        "total": "Spendensumme",
-        "count": "Anzahl Spenden",
-        "unconfirmed": "Bestätigung offen (>300 €)",
-        "issued": "Ausgestellte Bestätigungen"
-      },
-      "columns": {
-        "number": "Nr.",
-        "date": "Datum",
-        "donor": "Spender/in",
-        "amount": "Betrag",
-        "method": "Art",
-        "waived": "Aufwandsspende",
-        "confirmation": "Bestätigung",
-        "booking": "Buchung",
-        "none": "Keine"
-      },
-      "empty": "Keine Einträge gefunden.",
-      "filters": {
-        "q": "Spendennr., Spender/in, Referenz",
-        "method": "Art",
-        "waived": "Aufwandsspende",
-        "confirmation": "Bestätigungsstatus",
-        "confirmationNone": "Keine",
-        "confirmationIssued": "Ausgestellt",
-        "confirmationCancelled": "Storniert",
-        "over300": "Über 300 €",
-        "from": "Von",
-        "to": "Bis"
-      },
-      "actions": {
-        "new": "Neue Spende",
-        "donors": "Spender/innen",
-        "issue": "Bestätigung erstellen",
-        "confirmations": "Bestätigungen",
-        "settings": "Einstellungen",
-        "export": "Excel-Export",
-        "view": "Anzeigen",
-        "edit": "Bearbeiten",
-        "cancel": "Stornieren"
-      },
-      "year": "Jahr"
-    },
-    "form": {
-      "createTitle": "Neue Spende",
-      "editTitle": "Spende bearbeiten",
-      "donor": "Spender/in",
-      "donorNew": "Neue/r Spender/in",
-      "donorFromMember": "Aus Mitglied anlegen",
-      "date": "Datum der Zuwendung",
-      "amount": "Betrag (€)",
-      "amountHint": "Bis 300 € ist keine formelle Bestätigung erforderlich (Kontoauszug genügt).",
-      "methodLabel": "Zahlungsart",
-      "method": {
-        "CASH": "Bar",
-        "BANK_TRANSFER": "Überweisung",
-        "CARD": "Kartenzahlung",
-        "PAYPAL": "PayPal",
-        "REIMBURSEMENT_WAIVER": "Aufwandsspende",
-        "OTHER": "Sonstige"
-      },
-      "paypalHint": "Nur den beim Verein netto eingehenden Betrag eingeben (PayPal-Gebühr ist keine Spende).",
-      "reference": "Referenz",
-      "purposeNote": "Verwendungshinweis",
-      "waived": "Aufwandsspende (Verzicht auf Erstattung)",
-      "waivedNotice": "Eine Aufwandsspende ist nur zulässig, wenn der Verein die Erstattung bereits (durch Vertrag, Satzung oder Vorstandsbeschluss) geschuldet hat und der Verzicht zeitnah erklärt wurde.",
-      "claimBasis": "Grundlage des Erstattungsanspruchs (Vorstandsbeschluss vom …)",
-      "waiverDeclaredAt": "Erklärungsdatum des Verzichts",
-      "expenseCategory": "Aufwandskategorie",
-      "save": "Speichern",
-      "cancel": "Abbrechen",
-      "toastSaved": "Spende erfasst: {number}",
-      "editBlocked": "Stornierte oder mit Bestätigung verknüpfte Spenden können nicht bearbeitet werden."
-    },
-    "detail": {
-      "title": "Spendendetail",
-      "fields": {
-        "number": "Spendennr.",
-        "date": "Datum",
-        "donor": "Spender/in",
-        "amount": "Betrag",
-        "method": "Zahlungsart",
-        "reference": "Referenz",
-        "purposeNote": "Verwendungshinweis",
-        "waived": "Aufwandsspende",
-        "claimBasis": "Grundlage",
-        "waiverDeclaredAt": "Erklärt am",
-        "booking": "Einnahmebuchung",
-        "waiverBooking": "Ausgabenbuchung",
-        "confirmation": "Bestätigung",
-        "status": "Status",
-        "createdBy": "Erstellt von"
-      },
-      "active": "Aktiv",
-      "reversed": "Storniert",
-      "reverseInfo": "Storniert: {date} — {reason}",
-      "cancelTitle": "Spende stornieren",
-      "cancelReason": "Grund (5-300 Zeichen)",
-      "cancelHint": "Die Buchungen werden storniert; stornierte Spenden bleiben durchgestrichen sichtbar und zählen nicht in Statistiken.",
-      "toastCancelled": "Spende storniert.",
-      "issue": "Bestätigung erstellen"
-    },
-    "donors": {
-      "title": "Spender/innen",
-      "columns": {
-        "number": "SP-Nr.",
-        "name": "Name / Organisation",
-        "city": "Ort",
-        "count": "Spenden",
-        "total": "Summe",
-        "status": "Status"
-      },
-      "empty": "Keine Spender/innen.",
-      "form": {
-        "createTitle": "Neue/r Spender/in",
-        "editTitle": "Spender/in bearbeiten",
-        "type": "Art",
-        "typePERSON": "Person",
-        "typeORGANIZATION": "Organisation",
-        "firstName": "Vorname",
-        "lastName": "Nachname",
-        "organizationName": "Organisation",
-        "street": "Straße",
-        "postalCode": "PLZ",
-        "city": "Ort",
-        "country": "Land",
-        "email": "E-Mail",
-        "phone": "Telefon",
-        "note": "Notiz",
-        "fromMember": "Aus Mitglied anlegen",
-        "fromMemberHint": "Name und Adresse des Mitglieds werden einmalig kopiert; keine Live-Verknüpfung.",
-        "save": "Speichern",
-        "cancel": "Abbrechen",
-        "toastSaved": "Spender/in gespeichert: {number}"
-      },
-      "detail": {
-        "anonymize": "Anonymisieren",
-        "anonymizeTitle": "Spender/in anonymisieren",
-        "anonymizeHint": "Name, Adresse, Kontaktdaten und Notiz werden gelöscht; Spendernummer und Spenden bleiben. Gesperrt, solange Bestätigungsdoppelte in der Aufbewahrungsfrist sind. Zur Bestätigung die Spendernummer eingeben.",
-        "anonymizeConfirm": "Spendernummer (z. B. SP-0007)",
-        "anonymizedMark": "Anonymisiert",
-        "deactivate": "Deaktivieren",
-        "activate": "Aktivieren",
-        "toastAnonymized": "Spender/in anonymisiert."
-      }
-    },
-    "confirmations": {
-      "title": "Zuwendungsbestätigungen",
-      "columns": {
-        "number": "ZB-Nr.",
-        "date": "Datum",
-        "kind": "Art",
-        "recipient": "Empfänger/in",
-        "total": "Betrag",
-        "status": "Status",
-        "warning": "Warnung"
-      },
-      "kind": {
-        "SINGLE": "Einzel",
-        "COLLECTIVE": "Sammel"
-      },
-      "content": {
-        "DONATION": "Spende",
-        "MEMBERSHIP_FEE": "Mitgliedsbeitrag"
-      },
-      "status": {
-        "ISSUED": "Ausgestellt",
-        "CANCELLED": "Storniert"
-      },
-      "voidedWarning": "Eine Zahlung in dieser Bestätigung wurde storniert ({receipt}). Bitte Bestätigung stornieren und neu erstellen.",
-      "empty": "Keine Bestätigungen.",
-      "actions": {
-        "view": "Anzeigen",
-        "pdf": "PDF",
-        "cancel": "Stornieren",
-        "batchPdf": "Auswahl als ein PDF herunterladen",
-        "export": "Excel (Zuwendungsregister)",
-        "replace": "Ersatzbestätigung erstellen"
-      },
-      "cancelTitle": "Bestätigung stornieren",
-      "cancelReason": "Grund (5-300 Zeichen)",
-      "cancelHint": "Das gespeicherte PDF bleibt unverändert; die Posten werden wieder freigegeben. Eine Ersatzbestätigung kann erstellt werden.",
-      "detail": {
-        "title": "Bestätigungsdetail",
-        "cancelledBanner": "STORNIERT",
-        "fields": {
-          "number": "ZB-Nr.",
-          "issuedAt": "Datum",
-          "recipient": "Empfänger/in",
-          "period": "Zeitraum",
-          "total": "Gesamtsumme",
-          "words": "In Buchstaben",
-          "waived": "Aufwandsspende",
-          "templateVersion": "Musterversion",
-          "items": "Posten",
-          "retention": "Ende der Aufbewahrungsfrist"
-        }
-      },
-      "issue": {
-        "title": "Zuwendungsbestätigung erstellen",
-        "step1": "1. Art",
-        "typeSingle": "Einzelne Spende",
-        "typeCollective": "Sammelbestätigung für Spender/in",
-        "typeFee": "Mitgliedsbeitrag",
-        "typeBatch": "Jahres-Sammelproduktion",
-        "step2": "2. Kandidaten",
-        "step3": "3. Vorschau",
-        "donor": "Spender/in",
-        "member": "Mitglied",
-        "year": "Jahr",
-        "period": "Zeitraum",
-        "excludeSmall": "Spenden unter 300 € ausschließen",
-        "total": "Summe",
-        "readiness": "Bereitschaftsprüfung",
-        "issue": "Erstellen",
-        "toastIssued": "Bestätigung ausgestellt: {number}",
-        "candidatesEmpty": "Keine bestätigungsfähigen Einträge.",
-        "batchRun": "Sammelproduktion starten",
-        "batchResult": "{ok} erfolgreich, {failed} fehlgeschlagen"
-      }
-    },
-    "settings": {
-      "title": "Spenden-Einstellungen (Bestätigungsproduktion)",
-      "readiness": "Bereitschaftsprüfung",
-      "preview": "Mustervorschauen (MUSTER)",
-      "previewSingleDonation": "Einzelne Spende",
-      "previewCollectiveDonation": "Sammelbestätigung mit Anlage",
-      "previewSingleFee": "Einzelner Mitgliedsbeitrag",
-      "previewCollectiveFee": "Mitgliedsbeiträge (Sammel)",
-      "bmflink": "BMF amtliche Muster (Formularcenter)",
-      "bmflinkHref": "https://www.bundesfinanzministerium.de/Formularcenter",
-      "confirmLabel": "Ich habe den Mustertext mit dem offiziellen BMF-Muster verglichen; er passt zu unserem Verein",
-      "confirmButton": "Text bestätigen",
-      "toastConfirmed": "Mustertext bestätigt.",
-      "confirmedInfo": "Bestätigt von: {label} — {date} — Version {version}",
-      "feeDeductibleInfo": "Mitgliedsbeiträge abziehbar (membershipFeesDeductible): {value}",
-      "feeDeductibleLink": "Auf der Seite Vereinsdaten ändern",
-      "validityDays": "{days} Tage verbleiben",
-      "validityExpired": "Die Freistellungsbescheinigung ist abgelaufen",
-      "validityWarn": "Weniger als 90 Tage — Verlängerung planen"
-    },
-    "menu": {
-      "export": "Excel-Export"
-    }
   },
   "system": {
     "title": "Modulverwaltung",
@@ -1649,372 +1999,14 @@
       "successToast": "Modul {label} wurde erfolgreich gelöscht."
     }
   },
-  "settings": {
-    "title": "Einstellungen",
-    "subtitle": "Vereinsprofil, Benutzerberechtigungen, Module und Systemeinstellungen verwalten.",
-    "languageSection": {
-      "title": "Sprache & Region",
-      "description": "Benutzeroberflächensprache und lokale Vereinseinstellungen festlegen.",
-      "activeLanguage": "Aktuelle Sprache",
-      "tr": "Türkçe",
-      "de": "Deutsch",
-      "switchSuccess": "Die Sprache der Benutzeroberfläche wurde erfolgreich geändert."
-    },
-    "themeSection": {
-      "title": "Erscheinungsbild & Design",
-      "description": "Legen Sie das Farbschema und die Anzeigeoptionen fest.",
-      "light": "Helles Design",
-      "lightDesc": "Helles und kontrastreiches Standard-Interface",
-      "dark": "Dunkles Design",
-      "darkDesc": "Augenschonender dunkler Hintergrund mit sanften Akzenten",
-      "system": "Systemstandard",
-      "systemDesc": "Synchronisiert sich automatisch mit den Einstellungen Ihres Betriebssystems"
-    },
-    "cards": {
-      "organization": {
-        "title": "Vereinsdaten",
-        "description": "Identität, Vereinsname, Steuernummer/Vereinsregister, Adresse, Logo und Kontaktdaten.",
-        "action": "Bearbeiten"
-      },
-      "users": {
-        "title": "Benutzer & Rollen",
-        "description": "Benutzerkonten, Systemrollen (Vorstand, Kassenwart, Prüfer usw.) und Berechtigungen.",
-        "action": "Verwalten"
-      },
-      "modules": {
-        "title": "Modulverwaltung",
-        "description": "Systemkern-, offizielle ERP-Module und externe Entwickler-Erweiterungen verwalten.",
-        "action": "Konfigurieren"
-      },
-      "audit": {
-        "title": "Audit-Protokoll",
-        "description": "Zeitgestempelte Historie aller Datenänderungen, Anmeldeaktivitäten und Sicherheitsereignisse.",
-        "action": "Prüfen"
-      },
-      "accounting": {
-        "title": "Buchhaltungseinstellungen",
-        "description": "Kontenrahmen (SKR49 / Standard), Budgetziele und Geschäftsjahresabschlüsse.",
-        "action": "Einstellungen"
-      }
-    }
-  },
-  "events": {
-    "title": "Veranstaltungen",
-    "description": "Vereinsveranstaltungen, Seminare, Workshops und Teilnehmerverwaltung.",
-    "newEvent": "Neue Veranstaltung",
-    "editEvent": "Veranstaltung bearbeiten",
-    "deleteEvent": "Veranstaltung löschen",
-    "detail": "Veranstaltungsdetails",
-    "backToList": "Zurück zur Übersicht",
-    "emptyTitle": "Keine Veranstaltungen vorhanden",
-    "emptyDescription": "Klicken Sie auf den Button, um die erste Veranstaltung für den Verein anzulegen.",
-    "stats": {
-      "total": "Gesamtanzahl",
-      "upcoming": "Bevorstehend",
-      "attendeesMonth": "Teilnehmer diesen Monat",
-      "capacityUsage": "Auslastung"
-    },
-    "fields": {
-      "title": "Veranstaltungstitel",
-      "description": "Beschreibung",
-      "type": "Kategorie / Art",
-      "status": "Status",
-      "startDate": "Beginn",
-      "endDate": "Ende",
-      "location": "Veranstaltungsort",
-      "isOnline": "Online-Veranstaltung",
-      "onlineUrl": "Meeting-Link (URL)",
-      "capacity": "Maximale Teilnehmerzahl",
-      "unlimited": "Unbegrenzt",
-      "notes": "Notizen"
-    },
-    "types": {
-      "WORKSHOP": "Workshop",
-      "SEMINAR": "Seminar",
-      "SOCIAL": "Geselligkeit & Treffen",
-      "CULTURAL": "Kulturveranstaltung",
-      "SPORTS": "Sportliche Aktivität",
-      "OTHER": "Sonstiges"
-    },
-    "status": {
-      "DRAFT": "Entwurf",
-      "PUBLISHED": "Veröffentlicht",
-      "COMPLETED": "Abgeschlossen",
-      "CANCELLED": "Abgesagt"
-    },
-    "attendees": {
-      "title": "Teilnehmerliste",
-      "add": "Teilnehmer hinzufügen",
-      "firstName": "Vorname",
-      "lastName": "Nachname",
-      "email": "E-Mail",
-      "phone": "Telefonnummer",
-      "registeredAt": "Anmeldedatum",
-      "status": "Teilnahmestatus",
-      "member": "Vereinsmitglied",
-      "guest": "Gast",
-      "empty": "Bisher sind keine Teilnehmer für dieses Event registriert.",
-      "capacityReached": "Die maximale Teilnehmerkapazität ist erreicht."
-    },
-    "attendeeStatus": {
-      "REGISTERED": "Angemeldet",
-      "ATTENDED": "Teilgenommen",
-      "CANCELLED": "Abgemeldet"
-    },
-    "actions": {
-      "save": "Speichern",
-      "cancel": "Abbrechen",
-      "delete": "Löschen",
-      "confirmDelete": "Möchten Sie dieses Event wirklich löschen? Alle Teilnehmerdaten werden gelöscht.",
-      "searchPlaceholder": "Veranstaltung oder Ort suchen...",
-      "filterType": "Kategorie-Filter",
-      "filterStatus": "Status-Filter",
-      "all": "Alle"
-    },
-    "menu": {
-      "upcoming": "Bevorstehende Veranstaltungen",
-      "past": "Vergangene Veranstaltungen"
-    }
-  },
-  "inventory": {
-    "title": "Inventar & Sachmittel",
-    "description": "Verwaltung von Vereinsinventar, technischer Ausrüstung und Ausgaben an Mitglieder.",
-    "newItem": "Neuer Eintrag",
-    "emptyTitle": "Keine Einträge vorhanden",
-    "emptyDescription": "Klicken Sie auf „Neuer Eintrag“, um das erste Inventar anzulegen.",
-    "noResultsTitle": "Keine Treffer",
-    "noResultsDescription": "Für Ihre Such- bzw. Filterkriterien wurden keine Einträge gefunden. Setzen Sie die Filter zurück.",
-    "fields": {
-      "name": "Bezeichnung",
-      "category": "Kategorie",
-      "serialNumber": "Seriennummer",
-      "location": "Standort / Raum",
-      "quantity": "Anzahl",
-      "status": "Zustand",
-      "purchaseDate": "Anschaffungsdatum",
-      "purchasePrice": "Anschaffungspreis",
-      "description": "Beschreibung",
-      "assignedMemberId": "Ausgegeben an (Mitglied)",
-      "createdAt": "Erfasst am"
-    },
-    "placeholders": {
-      "search": "Bezeichnung, Seriennummer, Standort oder Beschreibung durchsuchen…",
-      "name": "z. B. Beamer",
-      "serialNumber": "z. B. SN-2024-001",
-      "location": "z. B. Vereinsheim, Besprechungsraum",
-      "assignedMemberId": "Mitglieds-ID",
-      "description": "Zusätzliche Angaben, Garantiehinweise usw."
-    },
-    "hints": {
-      "assignedMemberId": "Optional: ID des Mitglieds, an das der Gegenstand ausgegeben wurde."
-    },
-    "categories": {
-      "ELECTRONICS": "Elektronik",
-      "FURNITURE": "Möbel",
-      "KITCHEN": "Küche",
-      "OFFICE": "Büro",
-      "SPORTS": "Sport",
-      "OTHER": "Sonstiges"
-    },
-    "statuses": {
-      "IN_USE": "In Benutzung",
-      "IDLE": "Verfügbar",
-      "BROKEN": "Defekt",
-      "SCRAPPED": "Ausgemustert"
-    },
-    "stats": {
-      "title": "Inventarübersicht",
-      "totalQuantity": "Gesamtanzahl",
-      "inUse": "In Benutzung",
-      "broken": "Defekt",
-      "itemCount": "{count} Einträge"
-    },
-    "filters": {
-      "search": "Suchen",
-      "allCategories": "Alle Kategorien",
-      "allStatuses": "Alle Zustände",
-      "sortBy": "Sortierung",
-      "direction": "Sortierrichtung",
-      "asc": "Aufsteigend",
-      "desc": "Absteigend",
-      "apply": "Anwenden",
-      "reset": "Filter zurücksetzen",
-      "sortOptions": {
-        "name": "Nach Bezeichnung",
-        "category": "Nach Kategorie",
-        "status": "Nach Zustand",
-        "quantity": "Nach Anzahl",
-        "purchaseDate": "Nach Anschaffungsdatum",
-        "purchasePrice": "Nach Anschaffungspreis",
-        "createdAt": "Nach Erfassungsdatum"
-      }
-    },
-    "actions": {
-      "create": "Anlegen",
-      "save": "Änderungen speichern",
-      "cancel": "Abbrechen",
-      "edit": "Bearbeiten",
-      "delete": "Löschen",
-      "confirmDelete": "Ja, löschen"
-    },
-    "modal": {
-      "createTitle": "Neuer Inventareintrag",
-      "editTitle": "Inventareintrag bearbeiten",
-      "deleteTitle": "Inventareintrag löschen",
-      "deleteDescription": "Der Eintrag „{name}“ wird dauerhaft gelöscht. Dieser Vorgang kann nicht rückgängig gemacht werden."
-    },
-    "table": {
-      "actions": "Aktionen",
-      "unassigned": "Nicht ausgegeben",
-      "serialPrefix": "SN:"
-    },
-    "validation": {
-      "nameRequired": "Bitte geben Sie eine Bezeichnung ein.",
-      "tooLong": "Der eingegebene Text ist zu lang.",
-      "quantityInteger": "Die Anzahl muss eine ganze Zahl sein.",
-      "quantityMin": "Die Anzahl muss mindestens 1 betragen.",
-      "quantityMax": "Die Anzahl überschreitet den zulässigen Höchstwert.",
-      "priceMin": "Der Anschaffungspreis darf nicht negativ sein.",
-      "priceMax": "Der Anschaffungspreis überschreitet den zulässigen Höchstwert.",
-      "dateInvalid": "Bitte geben Sie ein gültiges Datum ein.",
-      "invalid": "Ungültiger Wert."
-    },
-    "errors": {
-      "forbidden": "Sie haben keine Berechtigung für diese Aktion.",
-      "validation": "Die Eingaben sind ungültig. Bitte prüfen Sie das Formular.",
-      "notFound": "Der Inventareintrag wurde nicht gefunden. Möglicherweise wurde er gelöscht.",
-      "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
-    },
-    "export": {
-      "filePrefix": "inventar"
-    },
-    "categoriesPage": {
-      "title": "Kategorien",
-      "description": "Anzahl der Einträge und Gesamtanzahl je Kategorie.",
-      "columns": {
-        "category": "Kategorie",
-        "itemCount": "Einträge",
-        "totalQuantity": "Gesamtanzahl"
-      },
-      "viewItems": "Anzeigen",
-      "total": "Gesamt"
-    },
-    "menu": {
-      "categories": "Kategorien",
-      "export": "Excel-Export"
-    }
-  },
-  "mail": {
-    "title": "E-Mail-Einstellungen",
-    "description": "SMTP-Server und Absenderangaben für alle E-Mails, die das System versendet.",
-    "status": {
-      "title": "Status",
-      "configured": "E-Mail-Versand ist eingerichtet",
-      "notConfigured": "E-Mail-Versand ist nicht eingerichtet",
-      "configuredHint": "Nach Änderungen sollten Sie die Verbindung prüfen und eine Test-E-Mail senden.",
-      "notConfiguredHint": "Tragen Sie SMTP-Server und Absenderadresse ein und speichern Sie. Die Zugangsdaten erhalten Sie von Ihrem E-Mail-Anbieter (Hoster).",
-      "server": "Server",
-      "sender": "Absender",
-      "updatedAt": "Zuletzt geändert"
-    },
-    "settings": {
-      "title": "SMTP-Einstellungen",
-      "description": "Geben Sie die SMTP-Zugangsdaten Ihres E-Mail-Anbieters ein (z. B. IONOS, Strato, all-inkl, Google Workspace).",
-      "saved": "Einstellungen gespeichert.",
-      "verified": "Verbindung erfolgreich: Der SMTP-Server ist erreichbar und die Anmeldung war erfolgreich.",
-      "logModeOk": "Im Testmodus ist keine Verbindung nötig; E-Mails werden nur protokolliert.",
-      "readOnly": "Diese Einstellungen können nur Administratoren ändern."
-    },
-    "fields": {
-      "transport": "Versandart",
-      "host": "SMTP-Server",
-      "port": "Port",
-      "security": "Verschlüsselung",
-      "username": "Benutzername",
-      "password": "Passwort",
-      "fromAddress": "Absenderadresse",
-      "fromName": "Absendername",
-      "replyTo": "Antwortadresse",
-      "testRecipient": "Empfängeradresse"
-    },
-    "placeholders": {
-      "host": "z. B. smtp.ionos.de",
-      "username": "Meist Ihre E-Mail-Adresse",
-      "passwordStored": "••••••••",
-      "fromAddress": "z. B. info@verein.de",
-      "fromName": "z. B. Musterverein e. V.",
-      "replyTo": "z. B. vorstand@verein.de",
-      "testRecipient": "name@beispiel.de",
-      "logSearch": "Empfänger oder Betreff suchen…"
-    },
-    "hints": {
-      "logMode": "Testmodus: E-Mails werden nicht versendet, sondern nur im Versandprotokoll erfasst. Für den Echtbetrieb SMTP wählen.",
-      "password": "Das Passwort wird verschlüsselt gespeichert und nicht wieder angezeigt.",
-      "passwordStored": "Ein Passwort ist gespeichert. Zum Ändern neues Passwort eingeben, zum Beibehalten leer lassen.",
-      "replyTo": "Optional: Adresse, an die Antworten der Empfänger gehen."
-    },
-    "transports": {
-      "SMTP": "SMTP (echter Versand)",
-      "LOG": "Testmodus (nur protokollieren)"
-    },
-    "security": {
-      "STARTTLS": "STARTTLS (Port 587)",
-      "SSL": "SSL/TLS (Port 465)",
-      "NONE": "Unverschlüsselt (nicht empfohlen)"
-    },
-    "statuses": {
-      "SENT": "Versendet",
-      "FAILED": "Fehlgeschlagen",
-      "LOGGED": "Test (nicht versendet)"
-    },
-    "actions": {
-      "save": "Speichern",
-      "verify": "Verbindung prüfen",
-      "sendTest": "Test-E-Mail senden",
-      "close": "Schließen"
-    },
-    "testMail": {
-      "title": "Test-E-Mail senden",
-      "description": "Es wird eine Test-E-Mail mit den gespeicherten Einstellungen an die angegebene Adresse gesendet. Ungespeicherte Änderungen werden nicht verwendet.",
-      "subject": "Verein ERP — Test-E-Mail",
-      "body": "Hallo,\n\ndies ist eine Test-E-Mail zur Überprüfung der E-Mail-Einstellungen von Verein ERP. Wenn Sie diese Nachricht erhalten, funktioniert der E-Mail-Versand.\n\nBitte antworten Sie nicht auf diese E-Mail.",
-      "sent": "Die Test-E-Mail wurde an {to} gesendet. Bitte prüfen Sie den Posteingang (und den Spam-Ordner)."
-    },
-    "logs": {
-      "title": "Versandprotokoll",
-      "description": "Protokoll aller vom System versendeten E-Mails. Aus Datenschutzgründen werden keine Nachrichteninhalte gespeichert.",
-      "empty": "Keine Einträge im Versandprotokoll.",
-      "columns": {
-        "createdAt": "Datum",
-        "to": "Empfänger",
-        "subject": "Betreff",
-        "module": "Modul",
-        "status": "Status",
-        "error": "Fehler"
-      }
-    },
-    "validation": {
-      "hostRequired": "Bitte geben Sie den SMTP-Server an.",
-      "fromAddressRequired": "Bitte geben Sie eine Absenderadresse an.",
-      "emailRequired": "Bitte geben Sie eine E-Mail-Adresse ein.",
-      "emailInvalid": "Bitte geben Sie eine gültige E-Mail-Adresse ein.",
-      "portInvalid": "Der Port muss eine ganze Zahl zwischen 1 und 65535 sein.",
-      "tooLong": "Der eingegebene Text ist zu lang.",
-      "invalid": "Ungültiger Wert."
-    },
-    "errors": {
-      "forbidden": "Sie haben keine Berechtigung für diese Aktion.",
-      "validation": "Die Eingaben sind ungültig. Bitte prüfen Sie das Formular.",
-      "notConfigured": "Der E-Mail-Versand ist noch nicht eingerichtet. Bitte speichern Sie zuerst die SMTP-Einstellungen.",
-      "encryptionKeyMissing": "Das Passwort konnte nicht sicher gespeichert werden: Auf dem Server ist kein Schlüssel (AUTH_SECRET) hinterlegt. Bitte wenden Sie sich an Ihren Administrator.",
-      "passwordUnreadable": "Das gespeicherte Passwort kann nicht entschlüsselt werden (Serverschlüssel geändert?). Bitte Passwort neu eingeben und speichern.",
-      "connectionFailed": "Verbindung zum SMTP-Server oder Anmeldung fehlgeschlagen. Bitte Server, Port, Verschlüsselung und Zugangsdaten prüfen.",
-      "sendFailed": "Die Test-E-Mail konnte nicht gesendet werden.",
-      "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
-    },
-    "menu": {
-      "settings": "Einstellungen",
-      "logs": "Versandprotokoll"
-    }
+  "users": {
+    "pageTitle": "Benutzer",
+    "pageDescription": "Systembenutzer, Rollen und Status.",
+    "newUser": "Neuer Benutzer",
+    "createTitle": "Neuer Benutzer",
+    "createDescription": "Fügen Sie dem System einen neuen Benutzer hinzu. Der Benutzer muss beim ersten Anmelden sein Passwort ändern.",
+    "editTitle": "Benutzer bearbeiten",
+    "notFoundTitle": "Benutzer nicht gefunden",
+    "notFoundDescription": "Der Datensatz könnte gelöscht worden sein."
   }
 }

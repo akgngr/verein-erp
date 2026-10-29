@@ -1,8 +1,4 @@
-import { annualReportPdfHandler } from "@/modules/accounting/server";
-
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/accounting/api/reports/annual/pdf/route.ts
+export * from "@/modules/accounting/api/reports/annual/pdf/route";
 export const runtime = "nodejs";
-
-/** GET Kassenbericht PDF — ince sarmalayıcı (§ 11.8 md. 4). */
-export async function GET(request: Request): Promise<Response> {
-  return annualReportPdfHandler(request);
-}

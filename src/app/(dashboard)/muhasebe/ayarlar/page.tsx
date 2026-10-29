@@ -1,16 +1,4 @@
-import type { Metadata } from "next";
-
-import { AccountingSetupView } from "@/modules/accounting/server";
-
-export const metadata: Metadata = { title: "Muhasebe ayarları" };
-
-/** Ayarlar — ?sekme=hesaplar|kategoriler|projeler (§ 6). */
-export default async function MuhasebeAyarlarPage({
-  searchParams,
-}: {
-  searchParams: Promise<{ sekme?: string }>;
-}) {
-  const { sekme } = await searchParams;
-  const tab = sekme === "kategoriler" ? "kategoriler" : sekme === "projeler" ? "projeler" : "hesaplar";
-  return <AccountingSetupView tab={tab} />;
-}
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/accounting/routes/ayarlar/page.tsx
+export { default } from "@/modules/accounting/routes/ayarlar/page";
+export * from "@/modules/accounting/routes/ayarlar/page";

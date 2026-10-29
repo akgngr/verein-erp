@@ -1,10 +1,4 @@
-import type { Metadata } from "next";
-
-import { MemberSyncView } from "@/modules/accounting/server";
-
-export const metadata: Metadata = { title: "Üyelik aktarımı" };
-
-/** Üyelik aktarımı — ince sayfa (§ 6). */
-export default function MuhasebeUyelikAktarimiPage() {
-  return <MemberSyncView />;
-}
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/accounting/routes/uyelik-aktarimi/page.tsx
+export { default } from "@/modules/accounting/routes/uyelik-aktarimi/page";
+export * from "@/modules/accounting/routes/uyelik-aktarimi/page";

@@ -5,6 +5,6 @@ export const metadata = {
   description: "Sistem ve dernek yönetimi ayarları",
 };
 
-export default function SystemPage() {
+export default function SettingsPage() {
   return <SettingsOverviewView />;
 }

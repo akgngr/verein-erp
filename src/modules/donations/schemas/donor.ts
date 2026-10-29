@@ -29,8 +29,8 @@ const baseFields = {
     z.string().trim().max(120).email("Geçerli bir e-posta girin.").nullable(),
   ),
   phone: emptyToNull(z.string().trim().max(30, "Telefon en fazla 30 karakter olabilir.").nullable()),
-  /** KARAR: üye bağlantısı ipucudur — veri kopyalanır, FK kurulmaz (§ 2). */
-  memberId: emptyToNull(z.string().trim().max(60).nullable()),
+  /** KARAR: üye bağlantısı ipucudur — veri kopyalanır, FK kurulmaz (§ 2). Formda alan yoktur (optional). */
+  memberId: emptyToNull(z.string().trim().max(60).nullable()).optional(),
   note: emptyToNull(z.string().trim().max(500, "Not en fazla 500 karakter olabilir.").nullable()),
   /** Üyeden bağışçı oluşturma: ön doldurma bayrağı (veri bir kez kopyalanır). */
   copyFromMemberId: emptyToNull(z.string().trim().min(1).nullable()),
