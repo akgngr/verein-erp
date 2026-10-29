@@ -1,0 +1,149 @@
+{
+  "common": {
+    "appName": "Vereinsverwaltung",
+    "loading": "Lädt…",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "delete": "Löschen",
+    "edit": "Bearbeiten",
+    "create": "Erstellen",
+    "view": "Anzeigen",
+    "search": "Suchen",
+    "filter": "Filtern",
+    "clear": "Zurücksetzen",
+    "all": "Alle",
+    "yes": "Ja",
+    "no": "Nein",
+    "confirm": "Bestätigen",
+    "back": "Zurück",
+    "actions": "Aktionen",
+    "status": "Status",
+    "type": "Typ",
+    "date": "Datum",
+    "notProvided": "—",
+    "language": "Sprache",
+    "totalRecords": "Insgesamt {count} Einträge",
+    "recordsPerPage": "Einträge pro Seite",
+    "recordsPerPageValue": "{count} Einträge",
+    "accessDeniedTitle": "Zugriff verweigert",
+    "accessDeniedDescription": "Sie dürfen diese Seite nicht anzeigen. Bitte wenden Sie sich an Ihre Verwaltung.",
+    "appDescription": "Vereinsverwaltung: Dokumente, Sitzungen und Mitgliederverwaltung."
+  },
+  "nav": {
+    "panel": "Dashboard",
+    "profil": "Profil"
+  },
+  "sidebar": {
+    "brand": "Vereinsverwaltung",
+    "collapse": "Menü einklappen",
+    "expand": "Menü ausklappen",
+    "openMobile": "Menü öffnen",
+    "mainMenu": "Hauptmenü",
+    "settings": "Einstellungen",
+    "theme": "Design wählen",
+    "themeOptions": "Designoptionen",
+    "themeLight": "Hell",
+    "themeDark": "Dunkel",
+    "themeSystem": "System",
+    "userMenu": "Benutzermenü",
+    "userActions": "Benutzeraktionen",
+    "overview": "Übersicht",
+    "backToMain": "Hauptmenü",
+    "backToModule": "Zurück zu {module}"
+  },
+  "panel": {
+    "title": "Dashboard",
+    "description": "Willkommen in der Vereinsverwaltung.",
+    "docsOpen": "Offen + in Bearbeitung: {count}",
+    "docsOverdue": "Überfällig: {count}",
+    "plannedMeetings": "Geplant: {count}",
+    "nextMeeting": "Nächste: {number} – {date}",
+    "draftMinutes": "Protokolle zur Freigabe: {count}",
+    "openTasks": "Offene Aufgaben: {count} (überfällig: {overdue})",
+    "memberCard": "Mitglieder",
+    "overdueAlert": "{count} Dokumente mit überfälligem Bearbeitungsdatum.",
+    "viewOverdue": "Überfällige anzeigen",
+    "orgBanner": "Vereinsdaten sind unvollständig. Für einen vollständigen Briefkopf in offiziellen Dokumenten bitte die Vereinsdaten ergänzen.",
+    "orgBannerLink": "Vereinsdaten ausfüllen",
+    "accountingNet": "Saldo: {net}",
+    "accountingMissing": "Beleg fehlt: {count}",
+    "accountingYearLocked": "Jahr abgeschlossen"
+  },
+  "meta": {
+    "panel": "Dashboard",
+    "evrak": "Dokumente",
+    "evrakYeni": "Neues Dokument",
+    "evrakDetay": "Dokumentdetail",
+    "evrakDuzenle": "Dokument bearbeiten",
+    "evrakKategoriler": "Dokumentkategorien",
+    "toplantilar": "Sitzungen",
+    "toplantiYeni": "Neue Sitzung",
+    "toplantiDetay": "Sitzungsdetail",
+    "toplantiDuzenle": "Sitzung bearbeiten",
+    "toplantiGorevler": "Aufgaben",
+    "uyeler": "Mitglieder",
+    "uyeYeni": "Neues Mitglied",
+    "uyeDetay": "Mitgliederdetail",
+    "uyeDuzenle": "Mitglied bearbeiten",
+    "kullanicilar": "Benutzer",
+    "kullaniciYeni": "Neuer Benutzer",
+    "kullaniciDuzenle": "Benutzer bearbeiten",
+    "denetimKaydi": "Prüfprotokoll",
+    "profil": "Profil",
+    "dernekBilgileri": "Dernek Bilgileri | Vereinsverwaltung"
+  },
+  "pdfLanguage": {
+    "german": "Deutsch",
+    "turkish": "Türkçe",
+    "aria": "PDF-Sprache wählen"
+  },
+  "settings": {
+    "title": "Einstellungen",
+    "subtitle": "Vereinsprofil, Benutzerberechtigungen, Module und Systemeinstellungen verwalten.",
+    "languageSection": {
+      "title": "Sprache & Region",
+      "description": "Benutzeroberflächensprache und lokale Vereinseinstellungen festlegen.",
+      "activeLanguage": "Aktuelle Sprache",
+      "tr": "Türkçe",
+      "de": "Deutsch",
+      "switchSuccess": "Die Sprache der Benutzeroberfläche wurde erfolgreich geändert."
+    },
+    "themeSection": {
+      "title": "Erscheinungsbild & Design",
+      "description": "Legen Sie das Farbschema und die Anzeigeoptionen fest.",
+      "light": "Helles Design",
+      "lightDesc": "Helles und kontrastreiches Standard-Interface",
+      "dark": "Dunkles Design",
+      "darkDesc": "Augenschonender dunkler Hintergrund mit sanften Akzenten",
+      "system": "Systemstandard",
+      "systemDesc": "Synchronisiert sich automatisch mit den Einstellungen Ihres Betriebssystems"
+    },
+    "cards": {
+      "organization": {
+        "title": "Vereinsdaten",
+        "description": "Identität, Vereinsname, Steuernummer/Vereinsregister, Adresse, Logo und Kontaktdaten.",
+        "action": "Bearbeiten"
+      },
+      "users": {
+        "title": "Benutzer & Rollen",
+        "description": "Benutzerkonten, Systemrollen (Vorstand, Kassenwart, Prüfer usw.) und Berechtigungen.",
+        "action": "Verwalten"
+      },
+      "modules": {
+        "title": "Modulverwaltung",
+        "description": "Systemkern-, offizielle ERP-Module und externe Entwickler-Erweiterungen verwalten.",
+        "action": "Konfigurieren"
+      },
+      "audit": {
+        "title": "Audit-Protokoll",
+        "description": "Zeitgestempelte Historie aller Datenänderungen, Anmeldeaktivitäten und Sicherheitsereignisse.",
+        "action": "Prüfen"
+      },
+      "accounting": {
+        "title": "Buchhaltungseinstellungen",
+        "description": "Kontenrahmen (SKR49 / Standard), Budgetziele und Geschäftsjahresabschlüsse.",
+        "action": "Einstellungen"
+      }
+    }
+  }
+}

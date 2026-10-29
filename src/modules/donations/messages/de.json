@@ -244,5 +244,8 @@
   },
   "menu": {
     "export": "Excel-Export"
+  },
+  "nav": {
+    "bagislar": "Spenden"
   }
 }

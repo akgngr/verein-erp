@@ -327,5 +327,8 @@
   },
   "menu": {
     "tasks": "Aufgaben"
+  },
+  "nav": {
+    "toplantilar": "Sitzungen"
   }
 }

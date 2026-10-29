@@ -6,5 +6,8 @@
   "createDescription": "Sisteme yeni bir kullanıcı ekleyin. Kullanıcı ilk girişte parolasını değiştirmeye zorlanır.",
   "editTitle": "Kullanıcıyı Düzenle",
   "notFoundTitle": "Kullanıcı bulunamadı",
-  "notFoundDescription": "Kayıt silinmiş olabilir."
+  "notFoundDescription": "Kayıt silinmiş olabilir.",
+  "nav": {
+    "kullanicilar": "Kullanıcılar"
+  }
 }

@@ -315,5 +315,8 @@
     "yearClosing": "Yıl kapanışı",
     "settings": "Ayarlar",
     "export": "Excel'e aktar"
+  },
+  "nav": {
+    "muhasebe": "Muhasebe"
   }
 }

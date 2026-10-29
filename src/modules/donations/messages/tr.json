@@ -244,5 +244,8 @@
   },
   "menu": {
     "export": "Excel'e aktar"
+  },
+  "nav": {
+    "bagislar": "Bağışlar"
   }
 }

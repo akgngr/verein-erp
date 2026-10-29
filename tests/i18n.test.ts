@@ -20,7 +20,7 @@ describe("i18n Multilang Configuration & Parity", () => {
     assert.strictEqual(toLocale(null), DEFAULT_LOCALE);
   });
 
-  test("syncModuleTranslations merges module translations into root message files", () => {
+  test("syncModuleTranslations builds root message files from shell + modules", () => {
     const res = syncModuleTranslations();
     assert.ok(res.locales.includes("tr"));
     assert.ok(res.locales.includes("de"));
@@ -44,5 +44,32 @@ describe("i18n Multilang Configuration & Parity", () => {
     assert.strictEqual(de.settings.title, "Einstellungen");
     assert.strictEqual(tr.system.title, "Modül Yönetimi");
     assert.strictEqual(de.system.title, "Modulverwaltung");
+  });
+
+  test("modülden silinen anahtar kökte kalmaz; modül nav'ı kök nav'a eklenir", () => {
+    const moduleDir = path.join(process.cwd(), "src", "modules", "temp-i18n-mod");
+    const write = (messages: Record<string, unknown>) => {
+      fs.mkdirSync(path.join(moduleDir, "messages"), { recursive: true });
+      for (const locale of SUPPORTED_LOCALES) {
+        fs.writeFileSync(path.join(moduleDir, "messages", `${locale}.json`), JSON.stringify(messages));
+      }
+    };
+    const read = () => JSON.parse(fs.readFileSync(path.join(process.cwd(), "messages", "tr.json"), "utf8"));
+
+    try {
+      write({ nav: { tempI18n: "Geçici" }, title: "T", old: "silinecek" });
+      syncModuleTranslations();
+      assert.equal(read()["temp-i18n-mod"].old, "silinecek");
+      assert.equal(read().nav.tempI18n, "Geçici");
+
+      write({ title: "T" });
+      syncModuleTranslations();
+      assert.deepEqual(read()["temp-i18n-mod"], { title: "T" }, "eski anahtar kalmamalıdır");
+      assert.equal(read().nav.tempI18n, undefined, "eski nav etiketi kalmamalıdır");
+    } finally {
+      fs.rmSync(moduleDir, { recursive: true, force: true });
+      syncModuleTranslations();
+    }
+    assert.equal(read()["temp-i18n-mod"], undefined, "silinen modülün ad alanı kalmamalıdır");
   });
 });

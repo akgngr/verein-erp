@@ -1,4 +1,7 @@
 {
   "pageTitle": "Prüfprotokoll",
-  "pageDescription": "Authentifizierungs- und Datenoperationen im System."
+  "pageDescription": "Authentifizierungs- und Datenoperationen im System.",
+  "nav": {
+    "denetimKaydi": "Prüfprotokoll"
+  }
 }
