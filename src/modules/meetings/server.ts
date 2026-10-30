@@ -55,3 +55,4 @@ export async function listMeetingOptions(options: { ids?: string[]; take?: numbe
   });
   return meetings.map((meeting) => ({ id: meeting.id, label: `${meeting.meetingNumber} - ${meeting.title}` }));
 }
+export { listUpcomingMeetings } from "./queries/list-upcoming-meetings";

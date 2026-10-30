@@ -937,13 +937,16 @@
       "members": "Yalnızca üye sayılarını ve aidat tahsilat istatistiğini okur; hiçbir üyenin adı veya bilgisi okunmaz. Kayıtlı adlar yalnızca maskeleme için sunucuda kullanılır.",
       "events": "Yaklaşan etkinliklerin başlık, tarih, yer ve katılım sayılarını okur; izin verilirse kullanıcı onayıyla taslak etkinlik oluşturur. Katılımcı isimleri okunmaz.",
       "tasks": "Açık görevlerin başlık ve durumunu okur; izin verilirse kullanıcı onayıyla görev oluşturur, tamamlar veya siler.",
-      "courses": "Kurs adlarını ve durumlarını okur; öğrenci bilgisi okunmaz.",
+      "courses": "Yalnızca kurs istatistiklerini okur (öğretmen, öğrenci, veli adı yok); izin verilirse kullanıcı onayıyla kurs oluşturur, durumunu değiştirir veya siler.",
       "system": "Hangi modüllerin etkin ve asistana izinli olduğunu okur (asistan yalnızca bunlara erişir).",
-      "students": "Yalnızca maskeleme için öğrenci ve veli adlarını sunucuda okur; bu adlar yapay zekâya asla gönderilmez.",
+      "students": "Yalnızca öğrenci ve veli sayılarını okur.",
       "auth": "Yalnızca maskeleme için kullanıcı adlarını sunucuda okur ve oturumu doğrular; adlar yapay zekâya gönderilmez.",
-      "meetings": "Yalnızca toplantı istatistiklerini (planlanan, sıradaki toplantı, açık görev sayısı) okur; katılımcı isimleri okunmaz.",
-      "documents": "Yalnızca evrak kayıt sayılarını (açık, gecikmiş, bu ay gelen/giden) okur.",
-      "donations": "Yalnızca bağış toplamlarını ve makbuz sayılarını okur; bağışçı bilgisi okunmaz."
+      "meetings": "Toplantı listesi, gündem ve kararları okur (katılımcı isimleri hariç); izin verilirse kullanıcı onayıyla toplantı oluşturur, durumunu değiştirir veya siler.",
+      "documents": "Evrak kayıtlarını ve eklerin metnini okur (kişisel tanımlayıcılar maskelenir); izin verilirse kullanıcı onayıyla evrak ekler, durumunu değiştirir veya siler.",
+      "donations": "Yalnızca bağış toplamlarını ve makbuz sayılarını okur; bağışçı bilgisi okunmaz.",
+      "inventory": "Envanter kalemlerini ve toplamları okur (zimmetli üye hariç); izin verilirse kullanıcı onayıyla kalem ekler, durumunu değiştirir veya siler.",
+      "progress": "Yalnızca devam ve değerlendirme istatistiklerini okur.",
+      "organization": "Derneğin kamuya açık ana verilerini okur; vergi numarası ve vergi dairesi bilgileri hariç."
     },
     "errors": {
       "consentRequired": "Asistanı kullanmak için önce veri koruma bilgilendirmesini onaylayın.",
@@ -955,7 +958,14 @@
       "baseUrlRequired": "Yerel model için sunucu adresi gerekli.",
       "baseUrlNotPrivate": "Bu adres dernek ağında değil. Veri koruma gereği yalnızca yerel/özel ağ adresleri kabul edilir.",
       "providerAuth": "Sağlayıcı API anahtarını reddetti (anahtar geçersiz, süresi dolmuş veya bu modele yetkisi yok). Yönetici Ayarlar → Yapay zekâ asistanı sayfasından anahtarı ve model adını kontrol etmelidir.",
-      "permissionRevoked": "Bu işlem için asistan izni kapatılmış; öneri uygulanmadı."
+      "permissionRevoked": "Bu işlem için asistan izni kapatılmış; öneri uygulanmadı.",
+      "inventory": {
+        "forbidden": "Bu işlem için yetkiniz yok.",
+        "validation": "Envanter bilgileri geçersiz.",
+        "notFound": "Envanter kalemi bulunamadı.",
+        "unknown": "Envanter işlemi tamamlanamadı."
+      },
+      "conversationNotFound": "Sohbet bulunamadı."
     },
     "panel": {
       "title": "Asistan",
@@ -968,7 +978,7 @@
       "error": "Asistana ulaşılamadı.",
       "empty": "(boş yanıt)",
       "welcome": "Merhaba! Derneğin verileri hakkında soru sorabilir, rapor isteyebilir veya görev önerisi alabilirsiniz. Örnekler:",
-      "privacyNote": "Kişisel veriler maskelenir; sohbet kaydedilmez.",
+      "privacyNote": "Kişisel veriler maskelenir; sohbet size özel ve şifreli saklanır.",
       "notConfigured": "Asistan henüz yapılandırılmamış: yönetici Ayarlar → Yapay zekâ asistanı sayfasından bir sağlayıcı bağlamalıdır.",
       "examples": {
         "q1": "Bu yılın gelir-gider özetini çıkar.",
@@ -981,19 +991,55 @@
           "createTask": "Görev önerisi",
           "completeTask": "Görevi tamamlama",
           "deleteTask": "Görevi silme",
-          "createEvent": "Etkinlik önerisi (taslak)"
+          "createEvent": "Etkinlik önerisi (taslak)",
+          "createDocument": "Evrak kaydı önerisi",
+          "changeDocumentStatus": "Evrak durumu",
+          "deleteDocument": "Evrakı silme",
+          "createMeeting": "Toplantı önerisi",
+          "changeMeetingStatus": "Toplantı durumu",
+          "deleteMeeting": "Toplantıyı silme",
+          "createInventory": "Envanter kalemi önerisi",
+          "changeInventoryStatus": "Envanter durumu",
+          "deleteInventory": "Envanter kalemini silme",
+          "createCourse": "Kurs önerisi (planlanan)",
+          "changeCourseStatus": "Kurs durumu",
+          "deleteCourse": "Kursu silme"
         },
         "confirm": {
           "createTask": "Görevi oluştur",
           "completeTask": "Tamamlandı olarak işaretle",
           "deleteTask": "Görevi sil",
-          "createEvent": "Taslak etkinlik oluştur"
+          "createEvent": "Taslak etkinlik oluştur",
+          "createDocument": "Evrakı kaydet",
+          "changeDocumentStatus": "Durumu değiştir",
+          "deleteDocument": "Evrakı sil",
+          "createMeeting": "Toplantıyı oluştur",
+          "changeMeetingStatus": "Durumu değiştir",
+          "deleteMeeting": "Toplantıyı sil",
+          "createInventory": "Kalemi ekle",
+          "changeInventoryStatus": "Durumu değiştir",
+          "deleteInventory": "Kalemi sil",
+          "createCourse": "Kursu oluştur",
+          "changeCourseStatus": "Durumu değiştir",
+          "deleteCourse": "Kursu sil"
         },
         "done": {
           "createTask": "Görev oluşturuldu.",
           "completeTask": "Görev tamamlandı.",
           "deleteTask": "Görev silindi.",
-          "createEvent": "Taslak etkinlik oluşturuldu."
+          "createEvent": "Taslak etkinlik oluşturuldu.",
+          "createDocument": "Evrak kaydedildi.",
+          "changeDocumentStatus": "Evrak durumu değiştirildi.",
+          "deleteDocument": "Evrak silindi.",
+          "createMeeting": "Toplantı oluşturuldu.",
+          "changeMeetingStatus": "Toplantı durumu değiştirildi.",
+          "deleteMeeting": "Toplantı silindi.",
+          "createInventory": "Envanter kalemi eklendi.",
+          "changeInventoryStatus": "Envanter durumu değiştirildi.",
+          "deleteInventory": "Envanter kalemi silindi.",
+          "createCourse": "Kurs oluşturuldu.",
+          "changeCourseStatus": "Kurs durumu değiştirildi.",
+          "deleteCourse": "Kurs silindi."
         },
         "applied": "Uygulandı",
         "online": "Çevrim içi",
@@ -1001,7 +1047,9 @@
           "LOW": "Düşük öncelik",
           "NORMAL": "Normal öncelik",
           "HIGH": "Yüksek öncelik"
-        }
+        },
+        "newStatus": "Yeni durum",
+        "restored": "Geçmiş öneri (yeniden uygulamak için tekrar isteyin)"
       },
       "consent": {
         "title": "Veri koruma bilgilendirmesi",
@@ -1011,13 +1059,19 @@
           "noPersonal": "Asistan kişi adı, iletişim bilgisi, adres, banka veya kimlik verisi okumaz; yalnızca toplamlar, sayılar ve kurumsal kayıtlar (etkinlik, görev, kurs adı) kullanılır.",
           "masking": "Mesajınızda geçen kayıtlı kişi adları (üye, kullanıcı, öğrenci, veli) ve üye/öğrenci numaraları; ayrıca e-posta, IBAN, telefon ve vergi numaraları yapay zekâya gönderilmeden önce maskelenir.",
           "ownRights": "Asistan yalnızca sizin yetkinizin olduğu ve yöneticinin izin verdiği modüllere erişir.",
-          "noStorage": "Sohbet sunucuda veya tarayıcıda saklanmaz; paneli kapatıp temizlediğinizde silinir.",
+          "noStorage": "Sohbetleriniz yalnızca size özel olarak ve şifrelenmiş hâlde saklanır; 180 gün sonra otomatik silinir. Dilediğiniz sohbeti ya da tüm geçmişinizi istediğiniz an silebilirsiniz.",
           "noChanges": "Asistan veri değiştiremez; önerdiği işlemler ancak siz onaylarsanız sizin adınıza yapılır.",
           "provider": "Yanıtlar seçili sağlayıcıyla üretilir: {provider} — {where}",
           "revoke": "Onayınızı Ayarlar → Yapay zekâ asistanı sayfasından istediğiniz zaman geri alabilirsiniz."
         }
       },
-      "barPlaceholder": "Asistana sorun veya bir şey isteyin…"
+      "barPlaceholder": "Asistana sorun veya bir şey isteyin…",
+      "resize": "Genişliği ayarlamak için sürükleyin",
+      "history": "Sohbet geçmişi",
+      "historyEmpty": "Henüz kayıtlı sohbet yok.",
+      "newConversation": "Yeni sohbet",
+      "deleteConversation": "Bu sohbeti sil",
+      "conversationDeleted": "Sohbet silindi."
     },
     "settings": {
       "title": "Yapay zekâ asistanı",
@@ -1051,7 +1105,7 @@
         "noPersonal": "Araçlar kişisel veri döndürmez: yalnızca toplamlar, sayılar ve kurumsal kayıtlar.",
         "masking": "Mesajınızda geçen kayıtlı kişi adları (üye, kullanıcı, öğrenci, veli) ve üye/öğrenci numaraları; ayrıca e-posta, IBAN, telefon ve vergi numaraları yapay zekâya gönderilmeden önce maskelenir.",
         "ownRights": "Her istek, kullanıcının kendi rol yetkisiyle ve yöneticinin modül erişim onayıyla sınırlıdır.",
-        "noStorage": "Sohbet içeriği hiçbir yerde saklanmaz.",
+        "noStorage": "Sohbet geçmişi kullanıcıya özel ve AES-256-GCM ile şifreli saklanır; 180 gün sonra otomatik silinir. Kullanıcı tek tek ya da tamamen silebilir; onay geri alınınca geçmiş de silinir.",
         "noChanges": "Asistan veri değiştiremez; öneriler kullanıcı onayıyla uygulanır.",
         "audit": "Denetim kaydına yalnızca meta veri yazılır: kullanılan araçlar, token sayısı ve maskelenen değer sayısı.",
         "provider": "Sağlayıcıyı yönetici seçer ve yalnızca izinli listeden olabilir: kendi sunucunuz, Mistral (AB), Claude veya OpenAI. API anahtarları veritabanında şifreli saklanır ve hiçbir ekranda gösterilmez. Dernek, seçilen sağlayıcıyla veri işleme sözleşmesi (AVV/DPA) yapmalıdır.",
@@ -1092,7 +1146,9 @@
           "update": "Güncelleme",
           "delete": "Silme"
         }
-      }
+      },
+      "deleteHistory": "Tüm sohbet geçmişimi sil",
+      "historyDeleted": "{count} sohbet silindi."
     },
     "providers": {
       "local": {

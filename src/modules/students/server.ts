@@ -5,3 +5,4 @@ export { studentsPermissions, studentsDatevPermissions } from "./permissions";
 export { listStudentOptions, getStudentPayer } from "./queries/students";
 export { listGuardianOptions } from "./queries/guardians";
 export type { StudentOption, StudentPayer } from "./types";
+export { getStudentStats } from "./queries/stats";

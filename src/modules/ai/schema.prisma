@@ -32,3 +32,31 @@ model AiProviderCredential {
 
   @@map("ai_provider_credentials")
 }
+
+/// Sohbet geçmişi (kullanıcıya özel). KARAR (KVKK/DSGVO): başlık ve mesaj içerikleri AES-256-GCM
+/// ile ŞİFRELİ saklanır; yalnızca sahibi okuyabilir ve silebilir. AI_CONVERSATION_RETENTION_DAYS
+/// günden eski sohbetler otomatik silinir. Silinen kullanıcının sohbetleri de silinir.
+model AiConversation {
+  id        String      @id @default(cuid())
+  userId    String // FK DEĞİL (yumuşak referans)
+  titleEnc  String
+  createdAt DateTime    @default(now())
+  updatedAt DateTime    @updatedAt
+  messages  AiMessage[]
+
+  @@index([userId, updatedAt])
+  @@map("ai_conversations")
+}
+
+model AiMessage {
+  id             String         @id @default(cuid())
+  conversationId String
+  role           String // user | assistant
+  contentEnc     String
+  proposalsEnc   String?
+  createdAt      DateTime       @default(now())
+  conversation   AiConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  @@index([conversationId, createdAt])
+  @@map("ai_messages")
+}

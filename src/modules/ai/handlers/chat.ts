@@ -14,14 +14,13 @@ import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 import { aiPermissions } from "../permissions";
 import { runAssistant } from "../services/assistant";
 import { getActiveProvider, hasAiConsent } from "../services/consent";
+import { AI_HISTORY_WINDOW, appendTurns, createConversation, getConversation } from "../services/history";
 import { ProviderError } from "../services/providers";
 
+/** İstemci yalnızca yeni mesajı ve sohbet kimliğini gönderir; geçmiş sunucuda (şifreli) tutulur. */
 const bodySchema = z.object({
-  turns: z
-    .array(z.object({ role: z.enum(["user", "assistant"]), content: z.string().min(1).max(4000) }))
-    .min(1)
-    .max(40)
-    .refine((turns) => turns[turns.length - 1].role === "user"),
+  conversationId: z.string().min(1).max(64).nullable(),
+  message: z.string().trim().min(1).max(4000),
 });
 
 // Basit kötüye kullanım sınırı: kullanıcı başına dakikada 15 istek (süreç belleğinde).
@@ -64,7 +63,17 @@ export async function aiChatHandler(request: Request): Promise<Response> {
   if (!parsed.success) return fail("ai.errors.invalidRequest", 400);
 
   try {
-    const result = await runAssistant({ user, locale: await getLocale(), provider, turns: parsed.data.turns });
+    const { message } = parsed.data;
+    let conversationId = parsed.data.conversationId;
+    const previous = conversationId ? await getConversation(user.id, conversationId) : null;
+    if (conversationId && !previous) return fail("ai.errors.conversationNotFound", 404);
+    const history = (previous?.turns ?? []).slice(-(AI_HISTORY_WINDOW - 1)).map(({ role, content }) => ({ role, content }));
+    const result = await runAssistant({ user, locale: await getLocale(), provider, turns: [...history, { role: "user", content: message }] });
+    conversationId ??= await createConversation(user.id, message);
+    await appendTurns(conversationId, [
+      { role: "user", content: message },
+      { role: "assistant", content: result.reply, proposals: result.proposals },
+    ]);
     await writeAudit({
       userId: user.id,
       userLabel: buildUserLabel(user.name, user.email),
@@ -73,7 +82,7 @@ export async function aiChatHandler(request: Request): Promise<Response> {
       entityId: null,
       after: { provider, tools: result.toolsUsed, inputTokens: result.usage.inputTokens, outputTokens: result.usage.outputTokens, redactedValues: result.redactions },
     });
-    return NextResponse.json({ ok: true, reply: result.reply, proposals: result.proposals });
+    return NextResponse.json({ ok: true, conversationId, reply: result.reply, proposals: result.proposals });
   } catch (error) {
     if (error instanceof ProviderError) {
       console.error(`[ai] Sağlayıcı hatası (${provider}): ${error.kind}`);
