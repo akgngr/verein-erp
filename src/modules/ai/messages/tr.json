@@ -1,0 +1,120 @@
+{
+  "nav": {
+    "ai": "Yapay zekâ asistanı"
+  },
+  "module": {
+    "label": "Yapay zekâ asistanı",
+    "description": "Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuyan asistan."
+  },
+  "meta": {
+    "settings": "Yapay zekâ asistanı"
+  },
+  "access": {
+    "accounting": "Gelir-gider toplamlarını ve hesap bakiyelerini okur; rapor bağlantısı verir (fiş ayrıntısı ve kişi verisi okunmaz).",
+    "members": "Yalnızca üye sayılarını ve aidat tahsilat istatistiğini okur; hiçbir üyenin adı veya bilgisi okunmaz. Kayıtlı adlar yalnızca maskeleme için sunucuda kullanılır.",
+    "events": "Yaklaşan etkinliklerin başlık, tarih, yer ve katılım sayılarını okur; katılımcı isimleri okunmaz.",
+    "tasks": "Açık görevlerin başlık ve durumunu okur; kullanıcının onayıyla görev oluşturur.",
+    "courses": "Kurs adlarını ve durumlarını okur; öğrenci bilgisi okunmaz.",
+    "system": "Hangi modüllerin etkin ve asistana izinli olduğunu okur (asistan yalnızca bunlara erişir).",
+    "students": "Yalnızca maskeleme için öğrenci ve veli adlarını sunucuda okur; bu adlar yapay zekâya asla gönderilmez.",
+    "auth": "Yalnızca maskeleme için kullanıcı adlarını sunucuda okur ve oturumu doğrular; adlar yapay zekâya gönderilmez."
+  },
+  "errors": {
+    "consentRequired": "Asistanı kullanmak için önce veri koruma bilgilendirmesini onaylayın.",
+    "notConfigured": "Asistan henüz yapılandırılmamış (API anahtarı tanımlı değil).",
+    "rateLimited": "Çok fazla istek gönderildi; lütfen biraz bekleyin.",
+    "invalidRequest": "Geçersiz istek.",
+    "unavailable": "Asistan şu anda yanıt veremiyor; lütfen sonra tekrar deneyin."
+  },
+  "panel": {
+    "title": "Asistan",
+    "open": "Asistanı aç",
+    "close": "Kapat",
+    "clear": "Sohbeti temizle",
+    "input": "Bir şey sorun veya isteyin…",
+    "send": "Gönder",
+    "thinking": "Yanıt hazırlanıyor…",
+    "error": "Asistana ulaşılamadı.",
+    "empty": "(boş yanıt)",
+    "welcome": "Merhaba! Derneğin verileri hakkında soru sorabilir, rapor isteyebilir veya görev önerisi alabilirsiniz. Örnekler:",
+    "privacyNote": "Kişisel veriler maskelenir; sohbet kaydedilmez.",
+    "notConfigured": "Asistan henüz yapılandırılmamış. Yönetici API anahtarını tanımlamalıdır.",
+    "taskCreated": "Görev oluşturuldu.",
+    "examples": {
+      "q1": "Bu yılın gelir-gider özetini çıkar.",
+      "q2": "Aidat tahsilat durumumuz nasıl?",
+      "q3": "Yaklaşan etkinlikler neler?",
+      "q4": "Yıllık rapor (Kassenbericht) PDF'ini ver."
+    },
+    "proposal": {
+      "task": "Görev önerisi",
+      "confirm": "Görevi oluştur",
+      "created": "Oluşturuldu",
+      "priority": {
+        "LOW": "Düşük öncelik",
+        "NORMAL": "Normal öncelik",
+        "HIGH": "Yüksek öncelik"
+      }
+    },
+    "consent": {
+      "title": "Veri koruma bilgilendirmesi",
+      "intro": "Asistanı kullanmadan önce lütfen okuyun ve onaylayın:",
+      "accept": "Okudum, onaylıyorum",
+      "points": {
+        "noPersonal": "Asistan kişi adı, iletişim bilgisi, adres, banka veya kimlik verisi okumaz; yalnızca toplamlar, sayılar ve kurumsal kayıtlar (etkinlik, görev, kurs adı) kullanılır.",
+        "masking": "Mesajınızda geçen kayıtlı kişi adları (üye, kullanıcı, öğrenci, veli) ve üye/öğrenci numaraları; ayrıca e-posta, IBAN, telefon ve vergi numaraları yapay zekâya gönderilmeden önce maskelenir.",
+        "ownRights": "Asistan yalnızca sizin yetkinizin olduğu ve yöneticinin izin verdiği modüllere erişir.",
+        "noStorage": "Sohbet sunucuda veya tarayıcıda saklanmaz; paneli kapatıp temizlediğinizde silinir.",
+        "noChanges": "Asistan veri değiştiremez; önerdiği işlemler ancak siz onaylarsanız sizin adınıza yapılır.",
+        "provider": "Yanıtlar Anthropic (Claude) API'si ile üretilir; API verileri model eğitimi için kullanılmaz.",
+        "revoke": "Onayınızı Ayarlar → Yapay zekâ asistanı sayfasından istediğiniz zaman geri alabilirsiniz."
+      }
+    }
+  },
+  "settings": {
+    "title": "Yapay zekâ asistanı",
+    "description": "Asistanın durumu, erişebildiği alanlar ve veri koruma kuralları.",
+    "accept": "Onay ver",
+    "revoke": "Onayımı geri al",
+    "accepted": "Onayınız kaydedildi.",
+    "revoked": "Onayınız geri alındı; asistan sizin için kapatıldı.",
+    "myConsent": "Kişisel onayım",
+    "enableHint": "Asistan bir eklentidir ve varsayılan olarak kapalıdır. Yönetici, erişim izinlerini inceleyip onaylayarak etkinleştirebilir:",
+    "modulesLink": "Ayarlar → Modüller",
+    "areasTitle": "Erişebildiği alanlar (sizin için)",
+    "areasHelp": "Yalnızca yöneticinin izin verdiği ve sizin yetkinizin olduğu alanlar. Hiçbir alanda kişisel veri okunmaz.",
+    "areasNone": "Şu anda erişebildiği alan yok.",
+    "privacyTitle": "Veri koruma (KVKK / DSGVO)",
+    "areas": {
+      "accounting": "Muhasebe (toplamlar, raporlar)",
+      "members": "Üyeler (yalnızca sayılar)",
+      "events": "Etkinlikler",
+      "tasks": "Görevler",
+      "courses": "Kurslar (yalnızca adlar)"
+    },
+    "status": {
+      "module": "Modül",
+      "key": "API anahtarı",
+      "keyOk": "Tanımlı (değer gösterilmez).",
+      "keyMissing": "Tanımlı değil: sunucuda ANTHROPIC_API_KEY ortam değişkeni gerekli.",
+      "consent": "Kişisel onay",
+      "consentOk": "Onay verdiniz.",
+      "consentMissing": "Henüz onay vermediniz.",
+      "availability": {
+        "available": "Etkin ve erişim izni onaylı.",
+        "inactive": "Kapalı.",
+        "needsApproval": "Erişim izni bekliyor."
+      }
+    },
+    "privacy": {
+      "noPersonal": "Araçlar kişisel veri döndürmez: yalnızca toplamlar, sayılar ve kurumsal kayıtlar.",
+      "masking": "Mesajınızda geçen kayıtlı kişi adları (üye, kullanıcı, öğrenci, veli) ve üye/öğrenci numaraları; ayrıca e-posta, IBAN, telefon ve vergi numaraları yapay zekâya gönderilmeden önce maskelenir.",
+      "ownRights": "Her istek, kullanıcının kendi rol yetkisiyle ve yöneticinin modül erişim onayıyla sınırlıdır.",
+      "noStorage": "Sohbet içeriği hiçbir yerde saklanmaz.",
+      "noChanges": "Asistan veri değiştiremez; öneriler kullanıcı onayıyla uygulanır.",
+      "audit": "Denetim kaydına yalnızca meta veri yazılır: kullanılan araçlar, token sayısı ve maskelenen değer sayısı.",
+      "provider": "Sağlayıcı: Anthropic Claude API. API verileri model eğitiminde kullanılmaz; dernek adına bir veri işleme sözleşmesi (AVV/DPA) yapılmalıdır.",
+      "revoke": "Her kullanıcı onayını kendisi verir ve istediği an geri alır; yönetici modülü kapatarak asistanı herkes için durdurabilir."
+    }
+  }
+}
