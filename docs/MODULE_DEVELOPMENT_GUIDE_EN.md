@@ -50,7 +50,7 @@ Template source: `scripts/scaffold-templates.ts` (test: `tests/scaffold.test.ts`
 ```text
 src/modules/<key>/
 ├── module.config.ts     # identity, nav (sidebar), menu (module sub-menu)
-├── permissions.ts       # permission matrix for the 6 roles (definePermissions)
+├── permissions.ts       # permission matrix for the 7 roles (definePermissions)
 ├── schema.prisma        # models; table names @@map("<key>_...")
 ├── index.ts | server.ts | ui.ts
 ├── page.tsx             # module home     → /<key>
@@ -142,7 +142,8 @@ The root `messages/<locale>.json` is **generated** from `messages/shell/<locale>
 
 ## 7. Other rules
 
-- **Permissions:** `permissions.ts` defines all 6 roles (ADMIN, BOARD, SECRETARY, TREASURER, AUDITOR, VIEWER).
+- **Permissions:** `permissions.ts` defines all 7 roles (ADMIN, BOARD, SECRETARY, TREASURER, AUDITOR, VIEWER, TEACHER).
+  TEACHER only sees the courses and student-progress modules; other modules use `TEACHER: []`.
   Mutations use `createAction({ permission, schema, handler })`, which handles permission, schema
   validation, audit log (`audit`) and error translation.
 - **User label:** for fields like `createdByLabel` use `buildUserLabel(user.name, user.email)`
@@ -150,6 +151,11 @@ The root `messages/<locale>.json` is **generated** from `messages/shell/<locale>
 - **Database:** `const db = getDb()` (`@/shared/db`). Reference other modules' tables softly
   (`memberId String?` + label snapshot), not with `@relation`. For member pickers use
   `listMemberOptions()` (`@/modules/members/server`); do not query the `member` table directly. Schema change = migration (`pnpm db:migrate`).
+- **Accounting bookings:** a module that collects money does not write bookings itself; it uses
+  `createSourcedBooking` / `reverseSourcedBooking` (with `tx` inside its own transaction) and
+  `getPaymentAccountTargets()` (cash/bank account) from `@/modules/accounting/server`. Add the
+  `sourceType` to accounting's `SOURCE_TYPE_VALUES` and the `enums.sourceType` translation; use a new
+  `sourceId` per payment (paying again after a reversal creates a new booking). Example: `courses`.
 - **Menu:** sub-pages and exports go to `module.config.ts → menu` (home is added automatically;
   API links `isDownload: true`; optional `permission`). The PageHeader holds only the main "New" action.
 - **Settings:** the sidebar has a single "Settings" entry; settings screens are not added to the main

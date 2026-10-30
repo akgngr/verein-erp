@@ -459,7 +459,8 @@
     "sourceType": {
       "MEMBER_PAYMENT": "Üyelik aidatı (otomatik)",
       "DONATION": "Bağış (otomatik)",
-      "DONATION_WAIVER": "Aufwandsspende gideri (otomatik)"
+      "DONATION_WAIVER": "Aufwandsspende gideri (otomatik)",
+      "COURSE_FEE": "Kurs ücreti (otomatik)"
     }
   },
   "export": {

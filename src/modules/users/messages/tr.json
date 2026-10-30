@@ -124,6 +124,11 @@
         "label": "Salt Okunur (Leser)",
         "shortDesc": "Temel evrak ve toplantı bilgilerini inceleme yetkisi.",
         "legalContext": "Veri değişikliği veya mali kayıtları inceleme yetkisi bulunmaz."
+      },
+      "TEACHER": {
+        "label": "Öğretmen (Lehrkraft)",
+        "shortDesc": "Yalnızca kendi kursları ve öğrencilerinin yoklama, not ve gelişim kayıtları.",
+        "legalContext": "Kurs ücretlerine ve dernek kayıtlarına erişemez; öğrenci verileri DSGVO gereği yalnızca ders amacıyla işlenir."
       }
     },
     "modules": {

@@ -1,0 +1,188 @@
+{
+  "nav": {
+    "students": "Schüler"
+  },
+  "module": {
+    "label": "Schüler",
+    "description": "Kurs- und Nachhilfeschüler, Erziehungsberechtigte und DATEV-konforme Debitoren."
+  },
+  "menu": {
+    "guardians": "Erziehungsberechtigte",
+    "datevExport": "DATEV Debitoren (CSV)",
+    "settings": "Einstellungen"
+  },
+  "meta": {
+    "list": "Schüler",
+    "guardians": "Erziehungsberechtigte",
+    "settings": "Schüler-Einstellungen",
+    "detail": "Schüler"
+  },
+  "title": "Schüler",
+  "description": "Teilnehmende an Kursen und Nachhilfe sowie Zahlungspflichtige.",
+  "newStudent": "Neuer Schüler",
+  "status": {
+    "ACTIVE": "Aktiv",
+    "INACTIVE": "Inaktiv"
+  },
+  "relation": {
+    "MOTHER": "Mutter",
+    "FATHER": "Vater",
+    "GUARDIAN": "Gesetzl. Vertretung",
+    "SELF": "Selbst",
+    "OTHER": "Sonstige"
+  },
+  "form": {
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "birthDate": "Geburtsdatum",
+    "status": "Status",
+    "school": "Schule",
+    "gradeLevel": "Klasse",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "consentTitle": "Einwilligungen (DSGVO)",
+    "dataConsentAt": "Datum der Einwilligung zur Datenverarbeitung",
+    "dataConsentHelp": "Datum der schriftlichen Einwilligung der Erziehungsberechtigten bzw. des volljährigen Schülers.",
+    "photoConsent": "Foto-Einwilligung liegt vor",
+    "note": "Notiz",
+    "updated": "Schüler aktualisiert.",
+    "created": "Schüler angelegt. Verknüpfen Sie jetzt Erziehungsberechtigte bzw. Zahlungspflichtige.",
+    "createTitle": "Neuer Schüler",
+    "createDescription": "Die Schülernummer wird automatisch vergeben.",
+    "editTitle": "Schüler bearbeiten"
+  },
+  "table": {
+    "number": "Nr.",
+    "name": "Name",
+    "birthDate": "Geburtsdatum",
+    "school": "Schule / Klasse",
+    "payer": "Zahlungspflichtig",
+    "noPayer": "Nicht zugeordnet",
+    "status": "Status",
+    "aria": "Schülerliste",
+    "search": "Name, Nummer oder Schule suchen...",
+    "empty": "Noch keine Schüler.",
+    "open": "Öffnen",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "deleteTitle": "Schüler löschen",
+    "deleteMessage": "{name} löschen? Historische Angaben in Kursanmeldungen bleiben erhalten.",
+    "deleted": "Schüler gelöscht."
+  },
+  "guardianTable": {
+    "debtorNumber": "Debitor-Nr.",
+    "name": "Name",
+    "address": "Anschrift",
+    "contact": "Kontakt",
+    "sepa": "SEPA",
+    "sepaYes": "Mandat vorhanden",
+    "students": "Schüler",
+    "aria": "Liste der Erziehungsberechtigten",
+    "search": "Name, E-Mail, Ort oder Debitor-Nr. suchen...",
+    "empty": "Noch keine Erziehungsberechtigten.",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "deleteTitle": "Erziehungsberechtigte löschen",
+    "deleteMessage": "{name} (#{number}) löschen? Verknüpfungen zu Schülern werden entfernt; die Debitorennummer wird nicht wiederverwendet.",
+    "deleted": "Erziehungsberechtigte gelöscht."
+  },
+  "guardianForm": {
+    "salutation": "Anrede",
+    "salutationPlaceholder": "Frau / Herr",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "addressTitle": "Anschrift (DATEV)",
+    "street": "Straße",
+    "houseNumber": "Nr.",
+    "postalCode": "PLZ",
+    "city": "Ort",
+    "country": "Land",
+    "countryHelp": "ISO-Code, z. B. DE",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "bankTitle": "Bank und SEPA-Mandat",
+    "iban": "IBAN",
+    "bic": "BIC",
+    "accountHolder": "Kontoinhaber",
+    "sepaMandateReference": "Mandatsreferenz",
+    "sepaMandateDate": "Datum des Mandats",
+    "note": "Notiz",
+    "updated": "Erziehungsberechtigte aktualisiert.",
+    "created": "Erziehungsberechtigte angelegt (Debitor-Nr. {number}).",
+    "createTitle": "Neue Erziehungsberechtigte",
+    "createDescription": "Die DATEV-Debitorennummer wird automatisch vergeben.",
+    "editTitle": "Erziehungsberechtigte bearbeiten"
+  },
+  "guardianList": {
+    "title": "Erziehungsberechtigte",
+    "description": "Zahlungspflichtige; jede Person ist ein Debitorenkonto in DATEV.",
+    "new": "Neue Erziehungsberechtigte"
+  },
+  "guardians": {
+    "title": "Erziehungsberechtigte und Zahlungspflichtige",
+    "selfPayer": "Schüler zahlt selbst",
+    "selfPayerCreated": "Debitor für den Schüler angelegt; bitte die Anschrift im Datensatz ergänzen.",
+    "empty": "Keine Erziehungsberechtigten bzw. Zahlungspflichtigen verknüpft; Kursgebühren können nicht erhoben werden.",
+    "payer": "Zahlungspflichtig",
+    "payerSet": "Zahlungspflichtige Person geändert.",
+    "makePayer": "Als zahlungspflichtig festlegen",
+    "openGuardian": "Datensatz",
+    "unlink": "Verknüpfung entfernen",
+    "unlinked": "Verknüpfung entfernt.",
+    "linked": "Erziehungsberechtigte verknüpft.",
+    "linkTitle": "Erziehungsberechtigte verknüpfen",
+    "guardian": "Person",
+    "chooseGuardian": "Person wählen…",
+    "relation": "Beziehung",
+    "link": "Verknüpfen",
+    "newGuardian": "Nicht in der Liste? Neu anlegen"
+  },
+  "detail": {
+    "noConsent": "Keine Einwilligung",
+    "yes": "Ja",
+    "no": "Nein",
+    "createdBy": "Angelegt von: {label}",
+    "edit": "Bearbeiten"
+  },
+  "settings": {
+    "title": "Schüler-Einstellungen",
+    "description": "DATEV-Stammdatenexport und Debitorennummern.",
+    "consultantNo": "DATEV-Beraternummer",
+    "clientNo": "DATEV-Mandantennummer",
+    "debtorRangeStart": "Beginn der Debitorennummern",
+    "debtorRangeHelp": "10000–69999; neue Erziehungsberechtigte werden ab dieser Nummer vergeben.",
+    "saved": "Einstellungen gespeichert.",
+    "datevNote": "Der DATEV-Export im EXTF-Format (Debitoren/Kreditoren, Version 5) enthält Name, Anschrift und Kontaktdaten; Bankdaten werden nicht exportiert. Bitte Sachkontenlänge und Nummernkreis mit der Steuerberatung abstimmen."
+  },
+  "errors": {
+    "notFound": "Schüler nicht gefunden.",
+    "guardianNotFound": "Erziehungsberechtigte nicht gefunden.",
+    "selfPayerExists": "Für diesen Schüler gibt es bereits einen Eintrag „Selbst“.",
+    "debtorRangeExhausted": "Der Nummernkreis für Debitoren ist ausgeschöpft (69999).",
+    "datevSettingsMissing": "Für den DATEV-Export zuerst Berater- und Mandantennummer in den Schüler-Einstellungen eintragen."
+  },
+  "validation": {
+    "firstNameRequired": "Vorname ist erforderlich.",
+    "lastNameRequired": "Nachname ist erforderlich.",
+    "nameMax": "Höchstens 80 Zeichen.",
+    "textMax": "Der Text ist zu lang.",
+    "noteMax": "Die Notiz darf höchstens 2000 Zeichen lang sein.",
+    "dateInvalid": "Bitte ein gültiges Datum eingeben.",
+    "guardianRequired": "Bitte eine Person wählen.",
+    "countryInvalid": "Zweistelligen ISO-Ländercode eingeben (z. B. DE).",
+    "ibanInvalid": "IBAN ist ungültig.",
+    "bicInvalid": "BIC ist ungültig.",
+    "consultantNoInvalid": "Die Beraternummer muss 4–7 Stellen haben.",
+    "clientNoInvalid": "Die Mandantennummer muss 1–5 Stellen haben.",
+    "debtorRange": "Muss zwischen 10000 und 69999 liegen."
+  },
+  "cards": {
+    "overview": {
+      "title": "Schüler",
+      "description": "Aktive Schüler, Erziehungsberechtigte und fehlende Zahlungspflichtige.",
+      "active": "Aktive Schüler",
+      "guardians": "Erziehungsberechtigte",
+      "withoutPayer": "Ohne Zahlungspflichtige"
+    }
+  }
+}

@@ -23,7 +23,7 @@ export interface ModuleValidationResult {
   };
 }
 
-const REQUIRED_ROLES = ["ADMIN", "BOARD", "SECRETARY", "TREASURER", "AUDITOR", "VIEWER"];
+const REQUIRED_ROLES = ["ADMIN", "BOARD", "SECRETARY", "TREASURER", "AUDITOR", "VIEWER", "TEACHER"];
 
 /**
  * Belirli bir modülü Verein ERP standartlarına göre denetler.

@@ -41,7 +41,8 @@ KURALLAR (her biri CI'da otomatik denetlenir):
    Sayfa başlığı `PageHeader` (`@/shared/components/ui/page-header`); başlıkta yalnızca ana "Yeni" butonu.
    Alt sayfalar ve dışa aktarma `module.config.ts → menu`.
 10. `page.tsx` başlığı `generateMetadata` + `getTranslations("<ANAHTAR>.meta")` ile.
-11. `permissions.ts` 6 rolün tamamını içerir: ADMIN, BOARD, SECRETARY, TREASURER, AUDITOR, VIEWER
+11. `permissions.ts` 7 rolün tamamını içerir: ADMIN, BOARD, SECRETARY, TREASURER, AUDITOR, VIEWER, TEACHER
+    (TEACHER = öğretmen; kurslarla ilgisi yoksa `TEACHER: []`)
     (`definePermissions` — `@/shared/permissions/define`).
 12. `any` yok; `catch (error)` + `error instanceof Error`. Render sırasında `Date.now()` yok.
     Liste satırlarında HeroUI Select yerine native `<select>`.

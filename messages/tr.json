@@ -94,6 +94,7 @@
     "profil": "Profil",
     "muhasebe": "Muhasebe",
     "denetimKaydi": "Denetim Kaydı",
+    "courses": "Kurslar",
     "evrak": "Evrak Kayıt",
     "bagislar": "Bağışlar",
     "events": "Etkinlikler",
@@ -102,6 +103,8 @@
     "toplantilar": "Toplantılar",
     "uyeler": "Üyeler",
     "organization": "Dernek Bilgileri",
+    "progress": "Öğrenci takibi",
+    "students": "Öğrenciler",
     "ayarlar": "Ayarlar",
     "moduller": "Modül Yönetimi",
     "tasks": "Görevler",
@@ -241,7 +244,8 @@
     "SECRETARY": "Sekreter",
     "VIEWER": "Salt okunur",
     "TREASURER": "Sayman",
-    "AUDITOR": "Denetçi"
+    "AUDITOR": "Denetçi",
+    "TEACHER": "Öğretmen"
   },
   "validation": {
     "passwordMin": "Parola en az 10 karakter olmalıdır.",
@@ -720,7 +724,8 @@
       "sourceType": {
         "MEMBER_PAYMENT": "Üyelik aidatı (otomatik)",
         "DONATION": "Bağış (otomatik)",
-        "DONATION_WAIVER": "Aufwandsspende gideri (otomatik)"
+        "DONATION_WAIVER": "Aufwandsspende gideri (otomatik)",
+        "COURSE_FEE": "Kurs ücreti (otomatik)"
       }
     },
     "export": {
@@ -923,6 +928,333 @@
     "module": {
       "label": "Kimlik Doğrulama",
       "description": "Kullanıcı girişi, oturum yönetimi ve parola güvenliği."
+    }
+  },
+  "courses": {
+    "module": {
+      "label": "Kurslar",
+      "description": "Gönüllü kurslar ve Nachhilfe: öğretmenler, dersler, kayıtlar, ücretler ve muhasebe aktarımı."
+    },
+    "menu": {
+      "teachers": "Öğretmenler",
+      "fees": "Ücretler ve tahsilat",
+      "settings": "Ayarlar"
+    },
+    "meta": {
+      "list": "Kurslar",
+      "teachers": "Öğretmenler",
+      "fees": "Kurs ücretleri",
+      "settings": "Kurs ayarları",
+      "detail": "Kurs"
+    },
+    "title": "Kurslar",
+    "description": "Gönüllü kurslar ve ücretli ya da ücretsiz Nachhilfe dersleri.",
+    "myTitle": "Kurslarım",
+    "myDescription": "Öğretmeni olduğunuz kurslar.",
+    "newCourse": "Yeni kurs",
+    "enums": {
+      "kind": {
+        "COURSE": "Kurs",
+        "TUTORING": "Nachhilfe"
+      },
+      "status": {
+        "PLANNED": "Planlandı",
+        "ACTIVE": "Devam ediyor",
+        "COMPLETED": "Tamamlandı",
+        "CANCELLED": "İptal"
+      },
+      "feeType": {
+        "FREE": "Ücretsiz",
+        "ONE_TIME": "Tek seferlik",
+        "MONTHLY": "Aylık",
+        "INSTALLMENTS": "Taksitli"
+      },
+      "enrollmentStatus": {
+        "ACTIVE": "Devam ediyor",
+        "COMPLETED": "Tamamladı",
+        "WITHDRAWN": "Ayrıldı"
+      },
+      "chargeStatus": {
+        "OPEN": "Açık",
+        "PAID": "Ödendi",
+        "WAIVED": "Feragat",
+        "CANCELLED": "İptal"
+      },
+      "paymentMethod": {
+        "CASH": "Nakit",
+        "BANK_TRANSFER": "Havale",
+        "SEPA_DEBIT": "SEPA otomatik ödeme",
+        "CARD": "Kart",
+        "OTHER": "Diğer"
+      }
+    },
+    "weekday": {
+      "1": "Pazartesi",
+      "2": "Salı",
+      "3": "Çarşamba",
+      "4": "Perşembe",
+      "5": "Cuma",
+      "6": "Cumartesi",
+      "7": "Pazar"
+    },
+    "form": {
+      "kind": "Tür",
+      "status": "Durum",
+      "title": "Kurs adı",
+      "subject": "Ders / konu",
+      "level": "Seviye",
+      "location": "Yer",
+      "scheduleNote": "Ders günleri",
+      "scheduleNotePlaceholder": "ör. Salı 17:00–18:30",
+      "startDate": "Başlangıç",
+      "endDate": "Bitiş",
+      "capacity": "Kontenjan",
+      "feeTitle": "Ücret",
+      "feeType": "Ücret modeli",
+      "feeMonthly": "Aylık ücret (€)",
+      "feeTotal": "Toplam ücret (€)",
+      "feeHelp": "ör. 45,00",
+      "installmentCount": "Taksit sayısı",
+      "feeExplain": {
+        "FREE": "Kayıtta ödeme kalemi oluşmaz.",
+        "ONE_TIME": "Kayıt tarihinde tek ödeme kalemi oluşur.",
+        "MONTHLY": "Kurs süresince her ay bir kalem oluşur; bitiş tarihi zorunludur.",
+        "INSTALLMENTS": "Toplam ücret, kayıt tarihinden itibaren aylık taksitlere bölünür."
+      },
+      "teachers": "Öğretmenler",
+      "noTeachers": "Henüz öğretmen yok; önce Öğretmenler sayfasından ekleyin.",
+      "description": "Açıklama",
+      "updated": "Kurs güncellendi. Ücret değişikliği yalnızca yeni kayıtlara uygulanır.",
+      "created": "Kurs oluşturuldu.",
+      "createTitle": "Yeni kurs",
+      "createDescription": "Kurs kodu otomatik verilir.",
+      "editTitle": "Kursu düzenle"
+    },
+    "table": {
+      "code": "Kod",
+      "title": "Kurs",
+      "period": "Dönem",
+      "fee": "Ücret",
+      "enrolled": "Öğrenci",
+      "status": "Durum",
+      "kind": "Tür",
+      "aria": "Kurs listesi",
+      "search": "Kurs adı, kod veya konu ara...",
+      "empty": "Henüz kurs yok.",
+      "open": "Aç",
+      "edit": "Düzenle",
+      "delete": "Sil",
+      "deleteTitle": "Kursu sil",
+      "deleteMessage": "“{title}” silinsin mi? Tahsilat yapılmış kurslar silinemez; durumunu “İptal” yapın.",
+      "deleted": "Kurs silindi."
+    },
+    "detail": {
+      "period": "Dönem",
+      "createdBy": "Oluşturan: {label}",
+      "edit": "Düzenle",
+      "tabs": "Kurs bölümleri",
+      "tab": {
+        "genel": "Genel",
+        "dersler": "Dersler",
+        "ogrenciler": "Öğrenciler",
+        "ucretler": "Ücretler"
+      }
+    },
+    "sessions": {
+      "saved": "Ders kaydedildi.",
+      "seriesCreated": "{count} ders eklendi.",
+      "add": "Ders ekle",
+      "series": "Haftalık seri oluştur",
+      "empty": "Henüz ders yok.",
+      "cancelled": "İptal",
+      "editTitle": "Dersi düzenle",
+      "addTitle": "Ders ekle",
+      "date": "Tarih",
+      "startTime": "Başlangıç",
+      "endTime": "Bitiş",
+      "topic": "Konu",
+      "teacher": "Öğretmen",
+      "noTeacher": "Belirtilmedi",
+      "note": "Not",
+      "markCancelled": "Bu ders yapılmadı (iptal)",
+      "seriesTitle": "Haftalık seri",
+      "seriesHelp": "Kursun başlangıç ve bitiş tarihleri arasında seçilen güne ders eklenir; aynı gün zaten varsa atlanır. Bitiş tarihi yoksa 12 hafta.",
+      "weekdayLabel": "Gün",
+      "seriesCreate": "Dersleri oluştur",
+      "deleteTitle": "Dersi sil",
+      "deleteMessage": "{date} tarihli ders ve yoklama kayıtları silinsin mi?"
+    },
+    "enrollments": {
+      "enrolledToast": "{count} öğrenci kaydedildi.",
+      "withdrawnToast": "Kayıt kapatıldı; {count} açık ücret kalemi iptal edildi.",
+      "statusToast": "Kayıt durumu güncellendi.",
+      "add": "Öğrenci kaydet",
+      "empty": "Bu kursa kayıtlı öğrenci yok.",
+      "student": "Öğrenci",
+      "payer": "Ödeme sorumlusu",
+      "enrolledAt": "Kayıt tarihi",
+      "open": "Açık borç",
+      "status": "Durum",
+      "addTitle": "Kursa öğrenci kaydet",
+      "search": "Ad veya öğrenci no ile ara",
+      "noStudents": "Eşleşen öğrenci yok.",
+      "discount": "İndirim",
+      "planHelp": "Ücretli kursta her öğrenci için ödeme planı oluşur; öğrencinin ödeme sorumlusu (veli) tanımlı olmalıdır.",
+      "enroll": "{count} öğrenciyi kaydet"
+    },
+    "charges": {
+      "labelMonth": "Ay {period}",
+      "labelInstallment": "Taksit {sequence}/{total}",
+      "labelOnce": "Kurs ücreti",
+      "course": "Kurs",
+      "student": "Öğrenci / ödeyen",
+      "item": "Kalem",
+      "dueDate": "Vade",
+      "amount": "Tutar",
+      "status": "Durum",
+      "overdue": "Gecikmiş",
+      "paidToast": "Tahsil edildi; muhasebe fişi {booking}.",
+      "reversedToast": "Tahsilat geri alındı; fiş ters kayıtla iptal edildi.",
+      "waivedToast": "Kalemden feragat edildi.",
+      "aria": "Ücret kalemleri",
+      "search": "Öğrenci, ödeyen, kurs kodu veya Debitor no ara...",
+      "all": "Tümü",
+      "onlyOverdue": "Yalnızca gecikmiş",
+      "openTotal": "Açık toplam: {amount}",
+      "empty": "Kalem yok.",
+      "pay": "Tahsil et",
+      "waive": "Feragat et",
+      "reverse": "Tahsilatı geri al",
+      "payTitle": "Tahsilat",
+      "reverseTitle": "Tahsilatı geri al",
+      "waiveTitle": "Kalemden feragat",
+      "paidAt": "Ödeme tarihi",
+      "method": "Yöntem",
+      "reference": "Referans (dekont, SEPA vb.)",
+      "payHelp": "Kayıt muhasebeye gelir fişi olarak yazılır: nakit kasa hesabına, diğerleri banka hesabına.",
+      "reason": "Gerekçe",
+      "payConfirm": "Tahsil et",
+      "reverseConfirm": "Geri al",
+      "waiveConfirm": "Feragat et"
+    },
+    "teacherForm": {
+      "firstName": "Ad",
+      "lastName": "Soyad",
+      "email": "E-posta",
+      "phone": "Telefon",
+      "subjects": "Dersler",
+      "subjectsPlaceholder": "ör. Matematik, Almanca",
+      "note": "Not",
+      "isActive": "Aktif",
+      "invite": "Sisteme davet et (öğretmen hesabı aç)",
+      "inviteHelp": "Öğretmen rolünde bir giriş hesabı açılır; öğretmen yalnızca kendi kurslarını ve öğrenci takibini görür. E-posta altyapısı ayarlıysa davet e-postası gider; geçici parola size bir kez gösterilir.",
+      "updated": "Öğretmen güncellendi.",
+      "created": "Öğretmen kaydedildi.",
+      "done": "Tamam",
+      "createTitle": "Yeni öğretmen",
+      "createDescription": "Gönüllü ya da ücretli eğitmen.",
+      "editTitle": "Öğretmeni düzenle"
+    },
+    "invite": {
+      "title": "Öğretmen hesabı açıldı",
+      "mailSent": "Davet e-postası {email} adresine gönderildi.",
+      "mailNotSent": "E-posta gönderilmedi (e-posta altyapısı ayarlı değil ya da gönderim başarısız). Giriş bilgilerini öğretmene kendiniz iletin.",
+      "temporaryPassword": "Geçici parola",
+      "onceHint": "Bu parola yalnızca şimdi gösterilir ve saklanmaz. Öğretmen ilk girişte yeni parola belirler."
+    },
+    "inviteMail": {
+      "subject": "Kurs sistemine davetiniz",
+      "body": "Merhaba {name},\n\nderneğimizin kurs sistemine öğretmen olarak davet edildiniz.\n\nGiriş adresi: {url}\nE-posta: {email}\nGeçici parola: {password}\n\nİlk girişte kendi parolanızı belirlemeniz istenecektir.\n\nSaygılarımızla"
+    },
+    "teachers": {
+      "title": "Öğretmenler",
+      "description": "Kurs ve Nachhilfe öğretmenleri; isterseniz yalnızca kendi kurslarını görecekleri bir hesapla davet edin.",
+      "new": "Yeni öğretmen",
+      "empty": "Henüz öğretmen yok.",
+      "name": "Ad soyad",
+      "subjects": "Dersler",
+      "contact": "İletişim",
+      "courses": "Kurs",
+      "account": "Hesap",
+      "inactive": "pasif",
+      "hasAccount": "Giriş var",
+      "noAccount": "Hesap yok",
+      "invite": "Davet et",
+      "inviteTitle": "Davet",
+      "inviteDone": "Kapat"
+    },
+    "fees": {
+      "title": "Kurs ücretleri",
+      "description": "Tüm kursların ödeme kalemleri; tahsilat muhasebeye fiş olarak yazılır.",
+      "categoryMissing": "Tahsilat için önce Kurs ayarlarından muhasebe gelir kategorisini seçin."
+    },
+    "settings": {
+      "title": "Kurs ayarları",
+      "description": "Kurs ücretlerinin muhasebedeki yeri.",
+      "incomeCategory": "Gelir kategorisi",
+      "chooseCategory": "Kategori seçin…",
+      "incomeCategoryHelp": "Kurs ücretleri bu kategoriye gelir olarak yazılır (genellikle Zweckbetrieb). Kasa ve banka hesabı muhasebe ayarlarından gelir.",
+      "saved": "Ayarlar kaydedildi."
+    },
+    "errors": {
+      "notFound": "Kurs bulunamadı.",
+      "teacherNotFound": "Öğretmen bulunamadı.",
+      "deleteHasPayments": "Bu kursta tahsilat var; silinemez. Durumunu “İptal” yapın.",
+      "sessionNotFound": "Ders bulunamadı.",
+      "seriesEmpty": "Eklenecek yeni ders günü bulunamadı.",
+      "courseClosed": "Tamamlanmış ya da iptal edilmiş kursa kayıt yapılamaz.",
+      "studentNotFound": "Seçilen öğrencilerden biri bulunamadı ya da pasif.",
+      "alreadyEnrolled": "Seçilen öğrenciler bu kursa zaten kayıtlı.",
+      "capacityExceeded": "Kontenjan ({capacity}) aşılıyor; boş yer: {free}.",
+      "payerMissing": "Ödeme sorumlusu tanımlı olmayan öğrenciler var: {names}. Öğrenci kaydından veli bağlayın.",
+      "enrollmentNotFound": "Kayıt bulunamadı.",
+      "chargeNotFound": "Ücret kalemi bulunamadı.",
+      "chargeNotOpen": "Bu kalem açık değil.",
+      "paymentNotFound": "Tahsilat bulunamadı ya da zaten geri alınmış.",
+      "categoryMissing": "Kurs ayarlarında muhasebe gelir kategorisi seçilmemiş.",
+      "teacherHasAccount": "Bu öğretmenin zaten bir hesabı var."
+    },
+    "validation": {
+      "textMax": "Metin çok uzun.",
+      "dateInvalid": "Geçerli bir tarih girin.",
+      "timeInvalid": "Saat SS:DD biçiminde olmalıdır.",
+      "titleRequired": "Kurs adı en az 2 karakter olmalıdır.",
+      "startDateRequired": "Başlangıç tarihi zorunludur.",
+      "capacityInvalid": "Kontenjan pozitif bir sayı olmalıdır.",
+      "endBeforeStart": "Bitiş, başlangıçtan önce olamaz.",
+      "feeInvalid": "Geçerli bir tutar girin (ör. 45,00).",
+      "installmentsInvalid": "Taksit sayısı 2 ile 24 arasında olmalıdır.",
+      "endDateForMonthly": "Aylık ücretli kursta bitiş tarihi zorunludur.",
+      "endBeforeStartTime": "Bitiş saati başlangıçtan sonra olmalıdır.",
+      "selectStudent": "En az bir öğrenci seçin.",
+      "discountInvalid": "İndirim 0 ile 100 arasında olmalıdır.",
+      "reasonMin": "Gerekçe en az 5 karakter olmalıdır.",
+      "firstNameRequired": "Ad zorunludur.",
+      "lastNameRequired": "Soyad zorunludur.",
+      "emailForInvite": "Davet için e-posta zorunludur."
+    },
+    "cards": {
+      "overview": {
+        "title": "Kurslar",
+        "description": "Devam eden ve planlanan kurslar, kayıtlı öğrenciler (öğretmen için yalnızca kendi kursları).",
+        "active": "Devam eden kurs",
+        "planned": "Planlanan",
+        "students": "Öğrenci"
+      },
+      "upcomingSessions": {
+        "title": "Yaklaşan dersler",
+        "description": "Sıradaki beş ders (öğretmen için yalnızca kendi kursları).",
+        "empty": "Yaklaşan ders yok.",
+        "colCourse": "Kurs",
+        "colDate": "Tarih",
+        "colTopic": "Konu"
+      },
+      "openFees": {
+        "title": "Açık kurs ücretleri",
+        "description": "Tahsil edilmemiş kurs ücretleri ve gecikenler.",
+        "open": "{count} açık kalem",
+        "overdue": "Gecikmiş"
+      }
     }
   },
   "documents": {
@@ -3194,6 +3526,317 @@
       "logoReadFailed": "Logo okunamadı."
     }
   },
+  "progress": {
+    "module": {
+      "label": "Öğrenci takibi",
+      "description": "Kurs öğrencilerinin yoklaması, sınav ve notları, gelişim notları ve veli raporu."
+    },
+    "meta": {
+      "list": "Öğrenci takibi",
+      "course": "Kurs takibi"
+    },
+    "title": "Öğrenci takibi",
+    "description": "Bir kurs seçin: yoklama alın, not girin, gelişim notu yazın ve veli raporu oluşturun.",
+    "noCourses": "Görüntüleyebileceğiniz kurs yok.",
+    "noTeacher": "Öğretmen atanmamış",
+    "tabs": "Takip bölümleri",
+    "tab": {
+      "yoklama": "Yoklama",
+      "notlar": "Sınav ve notlar",
+      "gelisim": "Gelişim notları",
+      "rapor": "Veli raporu"
+    },
+    "attendanceStatus": {
+      "PRESENT": "Katıldı",
+      "ABSENT": "Gelmedi",
+      "EXCUSED": "Mazeretli",
+      "LATE": "Geç"
+    },
+    "assessmentType": {
+      "EXAM": "Sınav",
+      "HOMEWORK": "Ödev",
+      "ORAL": "Sözlü",
+      "PROJECT": "Proje",
+      "OTHER": "Diğer"
+    },
+    "attendance": {
+      "noSessions": "Bu kursta henüz ders yok; önce Kurslar › Dersler sekmesinden ders ekleyin.",
+      "noStudents": "Bu kursta kayıtlı öğrenci yok.",
+      "saved": "{count} öğrencinin yoklaması kaydedildi.",
+      "session": "Ders",
+      "cancelled": "iptal",
+      "allPresent": "Hepsi katıldı",
+      "sessionCancelled": "Bu ders iptal edildi; yoklama alınmaz.",
+      "student": "Öğrenci",
+      "status": "Durum",
+      "note": "Not",
+      "rate": "Devam",
+      "save": "Yoklamayı kaydet",
+      "rateHelp": "Devam oranı = (katıldı + geç) / mazeretsiz tüm kayıtlı dersler; iptal dersler sayılmaz."
+    },
+    "grades": {
+      "saved": "Notlar kaydedildi.",
+      "add": "Sınav / ödev ekle",
+      "delete": "Sil",
+      "assessment": "Değerlendirme",
+      "empty": "Henüz sınav veya ödev yok.",
+      "noStudents": "Bu kursta kayıtlı öğrenci yok.",
+      "student": "Öğrenci",
+      "pointsOf": "Puan (en çok {max})",
+      "points": "Puan",
+      "grade": "Not",
+      "comment": "Yorum",
+      "save": "Notları kaydet",
+      "gradeHelp": "Not alanı Almanya not sistemine göredir: 1 (çok iyi) – 6 (yetersiz); 2- veya 3+ gibi yazılabilir. Boş bırakılan satır silinir.",
+      "addTitle": "Sınav / ödev ekle",
+      "title": "Başlık",
+      "date": "Tarih",
+      "type": "Tür",
+      "maxPoints": "En yüksek puan",
+      "deleteTitle": "Değerlendirmeyi sil",
+      "deleteMessage": "“{title}” ve girilen tüm notlar silinsin mi?"
+    },
+    "notes": {
+      "noStudents": "Bu kursta kayıtlı öğrenci yok.",
+      "saved": "Gelişim notu eklendi.",
+      "students": "Öğrenciler",
+      "date": "Tarih",
+      "rating": "Değerlendirme",
+      "ratingLabel": {
+        "1": "Zorlanıyor",
+        "2": "Gelişmeli",
+        "3": "Yeterli",
+        "4": "İyi",
+        "5": "Çok iyi"
+      },
+      "text": "Gözlem",
+      "goals": "Hedefler",
+      "add": "Notu ekle",
+      "empty": "Bu öğrenci için henüz gelişim notu yok.",
+      "ratingAria": "Değerlendirme {rating}/5",
+      "delete": "Notu sil"
+    },
+    "report": {
+      "noStudents": "Bu kursta kayıtlı öğrenci yok.",
+      "help": "Her öğrenci için devam durumu, notlar ve gelişim gözlemlerini içeren rapor (PDF, dernek antetli).",
+      "pdf": {
+        "de": "Rapor (DE)",
+        "tr": "Rapor (TR)"
+      }
+    },
+    "errors": {
+      "courseNotFound": "Kurs bulunamadı ya da erişiminiz yok.",
+      "sessionNotFound": "Ders bulunamadı.",
+      "assessmentNotFound": "Değerlendirme bulunamadı.",
+      "pointsAboveMax": "Puan en yüksek puanı ({max}) aşamaz.",
+      "enrollmentNotFound": "Öğrenci bu kursta kayıtlı değil.",
+      "noteNotFound": "Not bulunamadı.",
+      "noteNotYours": "Yalnızca kendi yazdığınız notu silebilirsiniz."
+    },
+    "validation": {
+      "textMax": "Metin çok uzun.",
+      "titleRequired": "Başlık en az 2 karakter olmalıdır.",
+      "dateInvalid": "Geçerli bir tarih girin.",
+      "pointsInvalid": "Puan sayı olmalıdır (ör. 17,5).",
+      "gradeInvalid": "Not 1–6 arası olmalıdır (ör. 2 veya 2-).",
+      "ratingInvalid": "Değerlendirme 1–5 arası olmalıdır.",
+      "noteRequired": "Gözlem en az 3 karakter olmalıdır."
+    },
+    "cards": {
+      "attendance": {
+        "title": "Devam durumu",
+        "description": "Son 30 günde alınan yoklamalardan devam oranı (öğretmen için yalnızca kendi kursları).",
+        "rate": "devam oranı (30 gün)",
+        "absent": "Gelmedi",
+        "excused": "Mazeretli"
+      }
+    }
+  },
+  "students": {
+    "module": {
+      "label": "Öğrenciler",
+      "description": "Kurs ve Nachhilfe öğrencileri, veliler ve DATEV uyumlu borçlu (Debitor) kayıtları."
+    },
+    "menu": {
+      "guardians": "Veliler",
+      "datevExport": "DATEV Debitoren (CSV)",
+      "settings": "Ayarlar"
+    },
+    "meta": {
+      "list": "Öğrenciler",
+      "guardians": "Veliler",
+      "settings": "Öğrenci ayarları",
+      "detail": "Öğrenci"
+    },
+    "title": "Öğrenciler",
+    "description": "Kurslara ve Nachhilfe derslerine katılan öğrenciler ve ödeme sorumluları.",
+    "newStudent": "Yeni öğrenci",
+    "status": {
+      "ACTIVE": "Aktif",
+      "INACTIVE": "Pasif"
+    },
+    "relation": {
+      "MOTHER": "Anne",
+      "FATHER": "Baba",
+      "GUARDIAN": "Yasal temsilci",
+      "SELF": "Kendisi",
+      "OTHER": "Diğer"
+    },
+    "form": {
+      "firstName": "Ad",
+      "lastName": "Soyad",
+      "birthDate": "Doğum tarihi",
+      "status": "Durum",
+      "school": "Okul",
+      "gradeLevel": "Sınıf",
+      "email": "E-posta",
+      "phone": "Telefon",
+      "consentTitle": "Onaylar (DSGVO)",
+      "dataConsentAt": "Veri işleme onayı tarihi",
+      "dataConsentHelp": "Velinin ya da yetişkin öğrencinin yazılı onay tarihi.",
+      "photoConsent": "Fotoğraf çekimine/yayınına izin var",
+      "note": "Not",
+      "updated": "Öğrenci güncellendi.",
+      "created": "Öğrenci kaydedildi. Şimdi veli veya ödeme sorumlusunu bağlayın.",
+      "createTitle": "Yeni öğrenci",
+      "createDescription": "Öğrenci numarası otomatik verilir.",
+      "editTitle": "Öğrenciyi düzenle"
+    },
+    "table": {
+      "number": "No",
+      "name": "Ad soyad",
+      "birthDate": "Doğum tarihi",
+      "school": "Okul / sınıf",
+      "payer": "Ödeme sorumlusu",
+      "noPayer": "Atanmadı",
+      "status": "Durum",
+      "aria": "Öğrenci listesi",
+      "search": "Ad, numara veya okul ara...",
+      "empty": "Henüz öğrenci yok.",
+      "open": "Aç",
+      "edit": "Düzenle",
+      "delete": "Sil",
+      "deleteTitle": "Öğrenciyi sil",
+      "deleteMessage": "{name} silinsin mi? Kurs kayıtlarındaki geçmiş bilgiler korunur.",
+      "deleted": "Öğrenci silindi."
+    },
+    "guardianTable": {
+      "debtorNumber": "Debitor no",
+      "name": "Ad soyad",
+      "address": "Adres",
+      "contact": "İletişim",
+      "sepa": "SEPA",
+      "sepaYes": "Talimat var",
+      "students": "Öğrenci",
+      "aria": "Veli listesi",
+      "search": "Ad, e-posta, şehir veya Debitor no ara...",
+      "empty": "Henüz veli yok.",
+      "edit": "Düzenle",
+      "delete": "Sil",
+      "deleteTitle": "Veliyi sil",
+      "deleteMessage": "{name} (#{number}) silinsin mi? Öğrencilerle bağı kaldırılır; Debitor numarası tekrar kullanılmaz.",
+      "deleted": "Veli silindi."
+    },
+    "guardianForm": {
+      "salutation": "Hitap",
+      "salutationPlaceholder": "Frau / Herr",
+      "firstName": "Ad",
+      "lastName": "Soyad",
+      "addressTitle": "Adres (DATEV)",
+      "street": "Sokak",
+      "houseNumber": "No",
+      "postalCode": "Posta kodu",
+      "city": "Şehir",
+      "country": "Ülke",
+      "countryHelp": "ISO kodu, ör. DE",
+      "email": "E-posta",
+      "phone": "Telefon",
+      "bankTitle": "Banka ve SEPA talimatı",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "accountHolder": "Hesap sahibi",
+      "sepaMandateReference": "Talimat referansı (Mandatsreferenz)",
+      "sepaMandateDate": "Talimat tarihi",
+      "note": "Not",
+      "updated": "Veli güncellendi.",
+      "created": "Veli kaydedildi (Debitor no {number}).",
+      "createTitle": "Yeni veli",
+      "createDescription": "DATEV Debitor numarası otomatik verilir.",
+      "editTitle": "Veliyi düzenle"
+    },
+    "guardianList": {
+      "title": "Veliler",
+      "description": "Ödeme sorumluları; her biri DATEV'de bir Debitor hesabıdır.",
+      "new": "Yeni veli"
+    },
+    "guardians": {
+      "title": "Veliler ve ödeme sorumlusu",
+      "selfPayer": "Öğrenci kendisi ödüyor",
+      "selfPayerCreated": "Öğrenci için ödeme kaydı (Debitor) açıldı; adresi veli kaydında tamamlayın.",
+      "empty": "Veli veya ödeme sorumlusu bağlanmamış; kurs ücreti alınamaz.",
+      "payer": "Ödeme sorumlusu",
+      "payerSet": "Ödeme sorumlusu değiştirildi.",
+      "makePayer": "Ödeme sorumlusu yap",
+      "openGuardian": "Veli kaydı",
+      "unlink": "Bağı kaldır",
+      "unlinked": "Veli bağı kaldırıldı.",
+      "linked": "Veli bağlandı.",
+      "linkTitle": "Veli bağla",
+      "guardian": "Veli",
+      "chooseGuardian": "Veli seçin…",
+      "relation": "Yakınlık",
+      "link": "Bağla",
+      "newGuardian": "Listede yoksa yeni veli oluştur"
+    },
+    "detail": {
+      "noConsent": "Onay yok",
+      "yes": "Evet",
+      "no": "Hayır",
+      "createdBy": "Kaydeden: {label}",
+      "edit": "Düzenle"
+    },
+    "settings": {
+      "title": "Öğrenci ayarları",
+      "description": "DATEV Stammdaten dışa aktarımı ve Debitor numaralandırması.",
+      "consultantNo": "DATEV Beraternummer",
+      "clientNo": "DATEV Mandantennummer",
+      "debtorRangeStart": "Debitor numarası başlangıcı",
+      "debtorRangeHelp": "10000–69999 arası; yeni veliler bu sayıdan itibaren numaralanır.",
+      "saved": "Ayarlar kaydedildi.",
+      "datevNote": "DATEV dışa aktarımı EXTF biçiminde (Debitoren/Kreditoren, sürüm 5) ad, adres ve iletişim sütunlarını içerir; banka bilgileri dışa aktarılmaz. Vergi danışmanınızla Sachkontenlänge ve numara aralığını teyit edin."
+    },
+    "errors": {
+      "notFound": "Öğrenci bulunamadı.",
+      "guardianNotFound": "Veli bulunamadı.",
+      "selfPayerExists": "Bu öğrenci için zaten bir “kendisi” kaydı var.",
+      "debtorRangeExhausted": "Debitor numara aralığı doldu (69999).",
+      "datevSettingsMissing": "DATEV dışa aktarımı için önce Öğrenci ayarlarında Beraternummer ve Mandantennummer girin."
+    },
+    "validation": {
+      "firstNameRequired": "Ad zorunludur.",
+      "lastNameRequired": "Soyad zorunludur.",
+      "nameMax": "En fazla 80 karakter olabilir.",
+      "textMax": "Metin çok uzun.",
+      "noteMax": "Not en fazla 2000 karakter olabilir.",
+      "dateInvalid": "Geçerli bir tarih girin.",
+      "guardianRequired": "Bir veli seçin.",
+      "countryInvalid": "İki harfli ISO ülke kodu girin (ör. DE).",
+      "ibanInvalid": "IBAN geçersiz.",
+      "bicInvalid": "BIC geçersiz.",
+      "consultantNoInvalid": "Beraternummer 4–7 haneli olmalıdır.",
+      "clientNoInvalid": "Mandantennummer 1–5 haneli olmalıdır.",
+      "debtorRange": "10000 ile 69999 arasında olmalıdır."
+    },
+    "cards": {
+      "overview": {
+        "title": "Öğrenciler",
+        "description": "Aktif öğrenci sayısı, veliler ve ödeme sorumlusu eksik olanlar.",
+        "active": "Aktif öğrenci",
+        "guardians": "Veli",
+        "withoutPayer": "Ödeme sorumlusu yok"
+      }
+    }
+  },
   "system": {
     "title": "Modül Yönetimi",
     "subtitle": "Sistem çekirdek, resmi ve eklenti modüllerini yapılandırın, senkronize edin veya yönetin.",
@@ -3467,6 +4110,11 @@
           "label": "Salt Okunur (Leser)",
           "shortDesc": "Temel evrak ve toplantı bilgilerini inceleme yetkisi.",
           "legalContext": "Veri değişikliği veya mali kayıtları inceleme yetkisi bulunmaz."
+        },
+        "TEACHER": {
+          "label": "Öğretmen (Lehrkraft)",
+          "shortDesc": "Yalnızca kendi kursları ve öğrencilerinin yoklama, not ve gelişim kayıtları.",
+          "legalContext": "Kurs ücretlerine ve dernek kayıtlarına erişemez; öğrenci verileri DSGVO gereği yalnızca ders amacıyla işlenir."
         }
       },
       "modules": {

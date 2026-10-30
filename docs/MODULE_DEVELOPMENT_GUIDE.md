@@ -50,7 +50,7 @@ bu iskeletin üzerine ekle; kalıpları kopyalayarak ilerle.
 ```text
 src/modules/<anahtar>/
 ├── module.config.ts     # kimlik, nav (sol panel), menu (modül alt menüsü)
-├── permissions.ts       # 6 rolün yetki matrisi (definePermissions)
+├── permissions.ts       # 7 rolün yetki matrisi (definePermissions)
 ├── schema.prisma        # modelleri; tablo adları @@map("<anahtar>_...")
 ├── index.ts | server.ts | ui.ts
 ├── page.tsx             # modül ana sayfası  → /<anahtar>
@@ -143,7 +143,8 @@ Kök `messages/<dil>.json` **üretilen** dosyadır; `messages/shell/<dil>.json` 
 
 ## 7. Diğer kurallar
 
-- **Yetki:** `permissions.ts` 6 rolün tamamını içerir (ADMIN, BOARD, SECRETARY, TREASURER, AUDITOR, VIEWER).
+- **Yetki:** `permissions.ts` 7 rolün tamamını içerir (ADMIN, BOARD, SECRETARY, TREASURER, AUDITOR, VIEWER, TEACHER).
+  TEACHER (öğretmen) yalnızca kurs ve öğrenci takibi modüllerini görür; diğer modüllerde `TEACHER: []`.
   Mutasyonlar `createAction({ permission, schema, handler })` ile yazılır; yetki, şema doğrulama,
   denetim kaydı (`audit`) ve hata çevirisi oradadır.
 - **Kullanıcı etiketi:** `createdByLabel` gibi alanlar için `buildUserLabel(user.name, user.email)`
@@ -151,6 +152,11 @@ Kök `messages/<dil>.json` **üretilen** dosyadır; `messages/shell/<dil>.json` 
 - **Veritabanı:** `const db = getDb()` (`@/shared/db`). Başka modülün tablosuna `@relation` yerine
   yumuşak referans (`memberId String?` + etiket anlık görüntüsü). Üye seçimi için
   `listMemberOptions()` (`@/modules/members/server`) kullan; `member` tablosunu doğrudan sorgulama. Şema değişikliği = migration (`pnpm db:migrate`).
+- **Muhasebeye fiş:** Tahsilat yapan modül fişi kendisi yazmaz; `@/modules/accounting/server` içindeki
+  `createSourcedBooking` / `reverseSourcedBooking` (kendi transaction'ında `tx` ile) ve
+  `getPaymentAccountTargets()` (kasa/banka hesabı) kullanılır. `sourceType` muhasebenin
+  `SOURCE_TYPE_VALUES` listesine ve `enums.sourceType` çevirisine eklenir; `sourceId` her tahsilat
+  için yeni bir kimliktir (ters kayıttan sonra yeniden ödeme yeni fiş üretir). Örnek: `courses` modülü.
 - **Menü:** Alt sayfalar ve dışa aktarma `module.config.ts → menu` içindedir (ana sayfa otomatik eklenir;
   API bağlantıları `isDownload: true`; gerekirse `permission`). PageHeader'da yalnızca ana "Yeni" eylemi olur.
 - **Ayarlar:** Sol menüde tek bir "Ayarlar" girişi vardır; ayar ekranları ayrı menü öğesi olarak

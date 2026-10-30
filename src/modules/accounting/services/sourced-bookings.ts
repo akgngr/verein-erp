@@ -201,3 +201,29 @@ export async function listActiveCategoryOptions(
   });
   return rows;
 }
+
+/**
+ * Genel tahsilat hedefleri (kurs ücretleri vb.): ayarlardaki kasa ve banka hesabı.
+ * Eksik ya da pasifse ne eksikse adıyla hata verir (bağış hedefleriyle aynı denetim).
+ */
+export async function getPaymentAccountTargets(): Promise<{ cashAccountId: string; bankAccountId: string }> {
+  const db = getDb();
+  const translate = await getMessageTranslator();
+  const settings = await db.accountingSettings.findUnique({ where: { id: "singleton" } });
+  const missing: string[] = [];
+  if (!settings?.cashAccountId) missing.push(translate("accounting.errors.itemCashAccount"));
+  if (!settings?.bankAccountId) missing.push(translate("accounting.errors.itemBankAccount"));
+  if (missing.length > 0) {
+    throw new ActionError("accounting.errors.settingsMissing", undefined, { missing: missing.join(", ") });
+  }
+  const [cash, bank] = await Promise.all([
+    db.accountingAccount.findUnique({ where: { id: settings!.cashAccountId! }, select: { isActive: true } }),
+    db.accountingAccount.findUnique({ where: { id: settings!.bankAccountId! }, select: { isActive: true } }),
+  ]);
+  if (!cash?.isActive) missing.push(translate("accounting.errors.itemValidCashAccount"));
+  if (!bank?.isActive) missing.push(translate("accounting.errors.itemValidBankAccount"));
+  if (missing.length > 0) {
+    throw new ActionError("accounting.errors.settingsInvalid", undefined, { missing: missing.join(", ") });
+  }
+  return { cashAccountId: settings!.cashAccountId!, bankAccountId: settings!.bankAccountId! };
+}

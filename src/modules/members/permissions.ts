@@ -8,6 +8,7 @@ export const membersPermissions = definePermissions("members", {
   VIEWER: ["view"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TEACHER: [],
 });
 
 /**
@@ -22,6 +23,7 @@ export const memberPaymentsPermissions = definePermissions("memberPayments", {
   VIEWER: [],
   TREASURER: ["view", "create", "update"],
   AUDITOR: ["view"],
+  TEACHER: [],
 });
 
 /** Üyelik türü yönetimi (Faz 3 eklemeleri): sayman da görür. */
@@ -32,4 +34,5 @@ export const memberTypesPermissions = definePermissions("memberTypes", {
   VIEWER: ["view"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TEACHER: [],
 });

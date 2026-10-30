@@ -69,4 +69,4 @@ export const PAYMENT_METHOD_ACCOUNT: Record<
 };
 
 /** Kaynak etiketleri — fiş listesi/detay "Kaynak" kolonu (§ 6). */
-export const SOURCE_TYPE_VALUES = ["MEMBER_PAYMENT", "DONATION", "DONATION_WAIVER"] as const;
+export const SOURCE_TYPE_VALUES = ["MEMBER_PAYMENT", "DONATION", "DONATION_WAIVER", "COURSE_FEE"] as const;

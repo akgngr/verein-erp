@@ -6,5 +6,6 @@ export const tasksPermissions = definePermissions("tasks", {
   SECRETARY: ["view", "create", "update"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TEACHER: [],
   VIEWER: ["view"],
 });
