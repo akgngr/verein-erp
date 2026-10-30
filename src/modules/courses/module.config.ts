@@ -16,7 +16,7 @@ export const moduleConfig: ModuleConfig = {
     { module: "accounting", operations: ["read", "write"] },
     { module: "mail", operations: ["read", "write"] },
     { module: "students", operations: ["read"] },
-    { module: "users", operations: ["write"] },
+    { module: "users", operations: ["read", "write"] },
   ],
   nav: [
     {

@@ -43,7 +43,7 @@ async function loginUrl(): Promise<string> {
 async function inviteTeacher(teacher: { id: string; firstName: string; lastName: string; email: string | null }): Promise<InviteResult> {
   if (!teacher.email) throw new ActionError("courses.validation.emailForInvite");
   const temporaryPassword = generatePassword();
-  const name = `${teacher.firstName} ${teacher.lastName}`;
+  const name = `${teacher.firstName} ${teacher.lastName}`.trim();
   const account = await createUserAccount({ name, email: teacher.email, role: "TEACHER", temporaryPassword });
   await getDb().courseTeacher.update({ where: { id: teacher.id }, data: { userId: account.id } });
 
@@ -70,7 +70,7 @@ export async function createTeacherAction(input: unknown): Promise<ActionResult<
     handler: async ({ input, audit }) => {
       const created = await getDb().courseTeacher.create({ data: teacherData(input) });
       const invite = input.invite ? await inviteTeacher(created) : null;
-      await audit({ action: "CREATE", entity: "CourseTeacher", entityId: created.id, after: { name: `${created.firstName} ${created.lastName}`, invited: Boolean(invite) } });
+      await audit({ action: "CREATE", entity: "CourseTeacher", entityId: created.id, after: { name: `${created.firstName} ${created.lastName}`.trim(), invited: Boolean(invite) } });
       return { id: created.id, invite };
     },
   });
@@ -85,7 +85,13 @@ export async function updateTeacherAction(input: unknown): Promise<ActionResult<
       const db = getDb();
       const existing = await db.courseTeacher.findUnique({ where: { id: input.id } });
       if (!existing) throw new ActionError("courses.errors.teacherNotFound");
-      await db.courseTeacher.update({ where: { id: existing.id }, data: teacherData(input) });
+      const data = teacherData(input);
+      // Hesaplı öğretmende ad/e-posta kullanıcı kaydına aittir (services/teacher-sync.ts).
+      const { firstName, lastName, email, ...ownFields } = data;
+      await db.courseTeacher.update({
+        where: { id: existing.id },
+        data: existing.userId ? ownFields : { ...ownFields, firstName, lastName, email },
+      });
       await audit({ action: "UPDATE", entity: "CourseTeacher", entityId: existing.id, after: { isActive: input.isActive } });
       return { id: existing.id };
     },

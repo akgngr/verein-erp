@@ -38,3 +38,10 @@ export function addMonths(date: Date, months: number): Date {
 export function monthKey(date: Date): string {
   return `${date.getUTCFullYear()}-${String(date.getUTCMonth() + 1).padStart(2, "0")}`;
 }
+
+/** "Ad Soyad" → son kelime soyad, kalanı ad; tek kelimelik ad soyad alanına yazılır (soyad zorunlu). */
+export function splitUserName(name: string): { firstName: string; lastName: string } {
+  const parts = name.trim().split(/\s+/);
+  if (parts.length < 2) return { firstName: "", lastName: parts[0] ?? "" };
+  return { firstName: parts.slice(0, -1).join(" "), lastName: parts[parts.length - 1] };
+}

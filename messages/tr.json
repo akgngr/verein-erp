@@ -990,6 +990,12 @@
         "SEPA_DEBIT": "SEPA otomatik ödeme",
         "CARD": "Kart",
         "OTHER": "Diğer"
+      },
+      "level": {
+        "BEGINNER": "Başlangıç",
+        "INTERMEDIATE": "Orta",
+        "ADVANCED": "İleri",
+        "ALL": "Tüm seviyeler"
       }
     },
     "weekday": {
@@ -1142,6 +1148,7 @@
       "waiveConfirm": "Feragat et"
     },
     "teacherForm": {
+      "linkedHint": "Ad ve e-posta, öğretmenin kullanıcı hesabından gelir; Kullanıcılar bölümünden değiştirin.",
       "firstName": "Ad",
       "lastName": "Soyad",
       "email": "E-posta",
@@ -1264,7 +1271,7 @@
       "accounting": "Kurs ücreti tahsilatlarını gelir fişi olarak yazar ve geri alır; kasa/banka hesaplarını ve gelir kategorilerini okur.",
       "mail": "Öğretmen davet e-postası gönderir.",
       "students": "Kursa kaydedilecek öğrencileri ve ödeme sorumlularını okur.",
-      "users": "Davet edilen öğretmen için Öğretmen rolünde kullanıcı hesabı açar."
+      "users": "Davet edilen öğretmen için Öğretmen rolünde kullanıcı hesabı açar; hesabı olan öğretmenin ad ve e-postasını kullanıcı kaydından okur."
     }
   },
   "documents": {
@@ -3765,7 +3772,6 @@
     },
     "guardianForm": {
       "salutation": "Hitap",
-      "salutationPlaceholder": "Frau / Herr",
       "firstName": "Ad",
       "lastName": "Soyad",
       "addressTitle": "Adres (DATEV)",
@@ -3788,7 +3794,12 @@
       "created": "Veli kaydedildi (Debitor no {number}).",
       "createTitle": "Yeni veli",
       "createDescription": "DATEV Debitor numarası otomatik verilir.",
-      "editTitle": "Veliyi düzenle"
+      "editTitle": "Veliyi düzenle",
+      "salutationOptions": {
+        "Frau": "Frau (Bayan)",
+        "Herr": "Herr (Bay)",
+        "NONE": "Belirtmek istemiyor"
+      }
     },
     "guardianList": {
       "title": "Veliler",

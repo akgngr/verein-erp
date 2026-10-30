@@ -88,7 +88,6 @@
   },
   "guardianForm": {
     "salutation": "Hitap",
-    "salutationPlaceholder": "Frau / Herr",
     "firstName": "Ad",
     "lastName": "Soyad",
     "addressTitle": "Adres (DATEV)",
@@ -111,7 +110,12 @@
     "created": "Veli kaydedildi (Debitor no {number}).",
     "createTitle": "Yeni veli",
     "createDescription": "DATEV Debitor numarası otomatik verilir.",
-    "editTitle": "Veliyi düzenle"
+    "editTitle": "Veliyi düzenle",
+    "salutationOptions": {
+      "Frau": "Frau (Bayan)",
+      "Herr": "Herr (Bay)",
+      "NONE": "Belirtmek istemiyor"
+    }
   },
   "guardianList": {
     "title": "Veliler",

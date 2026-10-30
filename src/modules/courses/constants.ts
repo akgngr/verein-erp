@@ -12,6 +12,8 @@ export const COURSE_FEE_TYPE_VALUES: CourseFeeType[] = ["FREE", "ONE_TIME", "MON
 export const COURSE_STATUS_VALUES: CourseStatus[] = ["PLANNED", "ACTIVE", "COMPLETED", "CANCELLED"];
 export const ENROLLMENT_STATUS_VALUES: CourseEnrollmentStatus[] = ["ACTIVE", "COMPLETED", "WITHDRAWN"];
 export const CHARGE_STATUS_VALUES: CourseChargeStatus[] = ["OPEN", "PAID", "WAIVED", "CANCELLED"];
+/** Kurs seviyesi; anahtar saklanır, etiket çeviriden gelir (eski serbest metinler aynen gösterilir). */
+export const COURSE_LEVEL_VALUES = ["BEGINNER", "INTERMEDIATE", "ADVANCED", "ALL"] as const;
 export const PAYMENT_METHOD_VALUES: CoursePaymentMethod[] = ["CASH", "BANK_TRANSFER", "SEPA_DEBIT", "CARD", "OTHER"];
 
 /** Kurs kodu öneki: K-<yıl>-001. */

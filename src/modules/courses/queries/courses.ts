@@ -6,12 +6,13 @@ import { getDb } from "@/shared/db";
 import type { ListParams, ListResult } from "@/shared/list-params";
 
 import type { CourseDetail, CourseRoster, CourseRow } from "../types";
+import { syncLinkedTeachers } from "../services/teacher-sync";
 
 export const COURSE_SORTABLE_FIELDS = ["code", "title", "startDate", "updatedAt"] as const;
 export const COURSE_DEFAULT_SORT = "startDate";
 export type CourseListFilterKeys = "status" | "kind";
 
-const teacherName = (teacher: { firstName: string; lastName: string }) => `${teacher.firstName} ${teacher.lastName}`;
+const teacherName = (teacher: { firstName: string; lastName: string }) => `${teacher.firstName} ${teacher.lastName}`.trim();
 
 /** Kurs listesi; `scope` (öğretmen) verilirse yalnızca o kurslar. */
 export async function listCourses(params: ListParams<CourseListFilterKeys>, scope: string[] | null): Promise<ListResult<CourseRow>> {
@@ -97,6 +98,7 @@ export async function getCourse(id: string): Promise<CourseDetail | null> {
 
 /** Öğrenci takibi için: kurs, oturumlar ve kayıtlar (izin/kapsam denetimi çağıranda). */
 export async function getCourseRoster(courseId: string): Promise<CourseRoster | null> {
+  await syncLinkedTeachers();
   const course = await getDb().course.findFirst({
     where: { id: courseId, deletedAt: null },
     include: {

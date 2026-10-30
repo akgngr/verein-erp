@@ -46,3 +46,6 @@ export const DATEV_DEBTOR_COLUMNS = [
   "Bemerkung (Telefon GL)",
   "E-Mail",
 ] as const;
+
+/** Veli hitabı (DATEV "Anrede"); NONE = belirtilmemiş, null olarak saklanır. */
+export const GUARDIAN_SALUTATION_VALUES = ["Frau", "Herr", "NONE"] as const;

@@ -4,7 +4,8 @@ const text = (max: number) => z.string().trim().max(max, "courses.validation.tex
 
 export const teacherSchema = z
   .object({
-    firstName: z.string().trim().min(1, "courses.validation.firstNameRequired").max(80, "courses.validation.textMax"),
+    // Ad isteğe bağlı: tek kelimelik kullanıcı adları soyad olarak senkronlanır (services/teacher-sync.ts).
+    firstName: text(80),
     lastName: z.string().trim().min(1, "courses.validation.lastNameRequired").max(80, "courses.validation.textMax"),
     email: z.string().trim().refine((value) => value === "" || z.email().safeParse(value).success, "validation.emailInvalid"),
     phone: text(40),

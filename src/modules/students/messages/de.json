@@ -88,7 +88,6 @@
   },
   "guardianForm": {
     "salutation": "Anrede",
-    "salutationPlaceholder": "Frau / Herr",
     "firstName": "Vorname",
     "lastName": "Nachname",
     "addressTitle": "Anschrift (DATEV)",
@@ -111,7 +110,12 @@
     "created": "Erziehungsberechtigte angelegt (Debitor-Nr. {number}).",
     "createTitle": "Neue Erziehungsberechtigte",
     "createDescription": "Die DATEV-Debitorennummer wird automatisch vergeben.",
-    "editTitle": "Erziehungsberechtigte bearbeiten"
+    "editTitle": "Erziehungsberechtigte bearbeiten",
+    "salutationOptions": {
+      "Frau": "Frau",
+      "Herr": "Herr",
+      "NONE": "Keine Angabe"
+    }
   },
   "guardianList": {
     "title": "Erziehungsberechtigte",
