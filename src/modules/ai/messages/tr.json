@@ -27,7 +27,8 @@
     "unavailable": "Asistan şu anda yanıt veremiyor; lütfen sonra tekrar deneyin.",
     "providerNotReady": "Bu sağlayıcı hazır değil (anahtar veya model eksik ya da yerel adres özel ağda değil).",
     "baseUrlRequired": "Yerel model için sunucu adresi gerekli.",
-    "baseUrlNotPrivate": "Bu adres dernek ağında değil. Veri koruma gereği yalnızca yerel/özel ağ adresleri kabul edilir."
+    "baseUrlNotPrivate": "Bu adres dernek ağında değil. Veri koruma gereği yalnızca yerel/özel ağ adresleri kabul edilir.",
+    "providerAuth": "Sağlayıcı API anahtarını reddetti (anahtar geçersiz, süresi dolmuş veya bu modele yetkisi yok). Yönetici Ayarlar → Yapay zekâ asistanı sayfasından anahtarı ve model adını kontrol etmelidir."
   },
   "panel": {
     "title": "Asistan",

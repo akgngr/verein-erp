@@ -950,7 +950,8 @@
       "unavailable": "Der Assistent ist gerade nicht erreichbar; bitte später erneut versuchen.",
       "providerNotReady": "Dieser Anbieter ist nicht bereit (Schlüssel oder Modell fehlt bzw. lokale Adresse nicht im privaten Netz).",
       "baseUrlRequired": "Für das lokale Modell ist eine Serveradresse erforderlich.",
-      "baseUrlNotPrivate": "Diese Adresse liegt nicht im Vereinsnetz. Aus Datenschutzgründen sind nur lokale/private Adressen zulässig."
+      "baseUrlNotPrivate": "Diese Adresse liegt nicht im Vereinsnetz. Aus Datenschutzgründen sind nur lokale/private Adressen zulässig.",
+      "providerAuth": "Der Anbieter hat den API-Schlüssel abgelehnt (ungültig, abgelaufen oder ohne Zugriff auf dieses Modell). Ein Administrator sollte Schlüssel und Modell unter Einstellungen → KI-Assistent prüfen."
     },
     "panel": {
       "title": "Assistent",

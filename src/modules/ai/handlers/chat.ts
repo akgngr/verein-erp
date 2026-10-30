@@ -78,7 +78,7 @@ export async function aiChatHandler(request: Request): Promise<Response> {
     if (error instanceof ProviderError) {
       console.error(`[ai] Sağlayıcı hatası (${provider}): ${error.kind}`);
       if (error.kind === "rateLimit") return fail("ai.errors.rateLimited", 429);
-      if (error.kind === "auth") return fail("ai.errors.notConfigured", 503, "notConfigured");
+      if (error.kind === "auth") return fail("ai.errors.providerAuth", 502, "providerAuth");
       return fail("ai.errors.unavailable", 502);
     }
     throw error;
