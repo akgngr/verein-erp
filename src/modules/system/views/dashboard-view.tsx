@@ -18,7 +18,7 @@ export async function DashboardView() {
   const tRoot = await getTranslations();
   const text = (key: string) => (tRoot.has(key) ? tRoot(key) : key);
 
-  const available = listAvailableDashboardCards(user.role);
+  const available = await listAvailableDashboardCards(user.role);
   const layout = await getDashboardLayout(user.id, available);
   const byId = new Map(available.map((entry) => [entry.id, entry]));
 

@@ -25,7 +25,7 @@ export async function SettingsOverviewView() {
   const t = await getTranslations("settings");
   const tRoot = await getTranslations();
 
-  const activeKeys = new Set(listUsableModuleKeys());
+  const activeKeys = new Set(await listUsableModuleKeys());
   const modules = allModules.filter((mod) => activeKeys.has(mod.key));
   const text = (key: string, fallback: string) => (tRoot.has(key) ? tRoot(key) : fallback);
 

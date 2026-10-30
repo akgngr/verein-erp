@@ -1,9 +1,11 @@
 import { getTranslations } from "next-intl/server";
 
 import { allModules } from "@/registry";
-import { getModuleStates } from "@/shared/modules/module-store";
-import { getAccessApprovals, isAccessApproved } from "@/shared/modules/module-access";
+import { isAccessApproved } from "@/shared/modules/module-access";
 import type { ModuleAccessOperation, ModuleCategory } from "@/shared/types/module";
+
+import { getAccessRecords } from "../services/module-access-store";
+import { getEffectiveModuleStates } from "../services/module-state-store";
 
 export type ModuleItem = {
   key: string;
@@ -34,8 +36,8 @@ export async function getModulesList(): Promise<{
     inactive: number;
   };
 }> {
-  const states = getModuleStates();
-  const approvals = getAccessApprovals();
+  const states = await getEffectiveModuleStates();
+  const records = await getAccessRecords();
   const t = await getTranslations();
   // Modül adı/açıklaması `<modül>.module.{label,description}` çevirisinden; yoksa config değeri.
   const text = (key: string, fallback: string | undefined) => (t.has(key) ? t(key) : fallback);
@@ -61,8 +63,11 @@ export async function getModulesList(): Promise<{
         operations: request.operations,
         reason: text(`${mod.key}.access.${request.module}`, "") ?? "",
       })),
-      accessStatus: !mod.access?.length ? "none" : isAccessApproved(mod.key, mod.access) ? "approved" : "pending",
-      approvedBy: approvals[mod.key]?.approvedBy ?? null,
+      accessStatus: !mod.access?.length ? "none" : isAccessApproved(mod, records[mod.key]) ? "approved" : "pending",
+      approvedBy: (() => {
+        const record = records[mod.key];
+        return record && "approvedBy" in record ? record.approvedBy : null;
+      })(),
     };
   });
 

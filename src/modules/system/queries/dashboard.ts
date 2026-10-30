@@ -11,8 +11,8 @@ import { listUsableModuleKeys } from "../services/module-gate";
 export type AvailableDashboardCard = { id: string; moduleKey: string; card: DashboardCardDefinition };
 
 /** Kullanıcının görebileceği kartlar: modül etkin ve kartın yetkisi var. */
-export function listAvailableDashboardCards(role: Role): AvailableDashboardCard[] {
-  const active = new Set(listUsableModuleKeys());
+export async function listAvailableDashboardCards(role: Role): Promise<AvailableDashboardCard[]> {
+  const active = new Set(await listUsableModuleKeys());
   return dashboardCards
     .filter((entry) => active.has(entry.moduleKey))
     .flatMap((entry) =>
