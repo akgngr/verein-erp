@@ -1,6 +1,5 @@
 import "server-only";
 
-import type Anthropic from "@anthropic-ai/sdk";
 import { z } from "zod";
 
 import { can } from "@/shared/permissions/define";
@@ -40,13 +39,15 @@ type ToolDefinition<S extends z.ZodType> = {
   allowed: (user: SessionUser) => boolean;
   description: string;
   schema: S;
-  inputSchema: Anthropic.Tool["input_schema"];
+  inputSchema: JsonSchema;
   run: (input: z.infer<S>, context: ToolContext) => Promise<unknown>;
 };
 
+type JsonSchema = Record<string, unknown>;
+
 const define = <S extends z.ZodType>(tool: ToolDefinition<S>) => tool;
 const yearSchema = z.object({ year: z.number().int().min(2000).max(2100) });
-const YEAR_INPUT: Anthropic.Tool["input_schema"] = {
+const YEAR_INPUT: JsonSchema = {
   type: "object",
   properties: { year: { type: "integer", description: "Fiscal year, e.g. 2026" } }, // i18n-ignore (model-facing tool text)
   required: ["year"],
@@ -232,9 +233,6 @@ export async function availableTools(user: SessionUser) {
 
 export type AvailableTool = (typeof TOOLS)[number];
 
-export function toApiTool(tool: AvailableTool): Anthropic.Tool {
-  return { name: tool.name, description: tool.description, input_schema: tool.inputSchema, strict: true };
-}
 
 /** Girdi şemayla doğrulanır; geçersizse model hata sonucu alır. */
 export async function runTool(tool: AvailableTool, rawInput: unknown, context: ToolContext): Promise<{ ok: true; value: unknown } | { ok: false; error: string }> {
