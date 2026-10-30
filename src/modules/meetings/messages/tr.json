@@ -276,13 +276,15 @@
     "removeTitle": "Katılımcı çıkarılacak",
     "removeMessage": "Katılımcı toplantıdan çıkarılacak. Devam edilsin mi?",
     "removeConfirm": "Çıkar",
-    "addUser": "Kullanıcı ekle",
+    "addUser": "Katılımcı ekle",
     "guestName": "Konuk adı",
     "addGuest": "Konuk ekle",
     "source": "Kaynak",
     "removedNamedToast": "Katılımcı çıkarıldı: {name}",
     "markedToast": "{count} katılımcı 'Katıldı' olarak işaretlendi",
-    "namePlaceholder": "Ad Soyad"
+    "namePlaceholder": "Ad Soyad",
+    "member": "Dernek üyesi",
+    "openMember": "Üye kaydını aç"
   },
   "attendeeAdd": {
     "title": "Katılımcı ekle",
@@ -305,7 +307,13 @@
     "users": "Kullanıcılar",
     "usersDescription": "Bir kullanıcı toplantıya bir kez eklenebilir.",
     "addedCountToast": "{count} katılımcı eklendi",
-    "add": "Ekle"
+    "add": "Ekle",
+    "tabMembers": "Dernek üyesi",
+    "members": "Üyeler",
+    "membersDescription": "Aktif ve pasif üyeler listelenir. Bir üye toplantıya bir kez eklenebilir.",
+    "membersSearch": "Ad veya üye no ile ara",
+    "noMembers": "Eşleşen üye yok.",
+    "selectedCount": "{count} üye seçildi"
   },
   "tasks": {
     "pageTitle": "Görevler",
@@ -440,7 +448,9 @@
     "approveNeedsAgenda": "Onaylamak için en az bir gündem maddesi gereklidir.",
     "approveNeedsPresent": "Onaylamak için en az bir katılımcının 'Katıldı' olarak işaretlenmesi gereklidir.",
     "meetingNotFound2": "Toplantı bulunamadı.",
-    "notEditable": "Toplantı düzenlenemez."
+    "notEditable": "Toplantı düzenlenemez.",
+    "memberNotFound": "Seçilen üye bulunamadı veya üyeliği sona ermiş.",
+    "membersAlreadyAdded": "Seçilen üyeler bu toplantıda zaten mevcut."
   },
   "validation": {
     "taskMin": "Görev açıklaması en az 3 karakter olmalıdır.",
@@ -472,7 +482,8 @@
     "descriptionMax": "Açıklama en fazla 2000 karakter olabilir.",
     "endNeedsStart": "Bitiş saati girmek için başlangıç saati zorunludur.",
     "endAfterStart": "Bitiş saati başlangıç saatinden sonra olmalıdır.",
-    "quorumInt": "Yeter sayısı tam sayı olmalıdır."
+    "quorumInt": "Yeter sayısı tam sayı olmalıdır.",
+    "selectMember": "En az bir üye seçin."
   },
   "meta": {
     "list": "Toplantılar",
@@ -484,5 +495,30 @@
   "module": {
     "label": "Toplantılar",
     "description": "Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar."
+  },
+  "cards": {
+    "overview": {
+      "title": "Toplantı ve tutanak",
+      "description": "Sıradaki toplantı, onay bekleyen tutanaklar ve açık görevler.",
+      "next": "Sıradaki: {number}",
+      "planned": "Planlanan toplantı",
+      "pendingMinutes": "Onay bekleyen",
+      "openTasks": "Açık görev",
+      "overdueTasks": "Gecikmiş görev"
+    },
+    "upcoming": {
+      "title": "Yaklaşan toplantılar",
+      "description": "Planlanmış ilk beş toplantının tablosu.",
+      "empty": "Planlanmış toplantı yok.",
+      "colTitle": "Toplantı",
+      "colDate": "Tarih",
+      "colLocation": "Yer"
+    },
+    "overdueTasks": {
+      "title": "Geciken toplantı görevleri",
+      "description": "Termini geçmiş görev varsa uyarı gösterir.",
+      "message": "Termini geçmiş {count} toplantı görevi var.",
+      "action": "Geciken görevleri gör"
+    }
   }
 }

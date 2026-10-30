@@ -454,5 +454,23 @@
     "unknownStatus": "Unbekannter Status: „{value}“. (Aktif / Pasif / Ayrıldı)",
     "birthDateInvalid": "Ungültiges Geburtsdatum (TT.MM.JJJJ verwenden).",
     "joinDateRequired": "Eintrittsdatum ist erforderlich (TT.MM.JJJJ)."
+  },
+  "cards": {
+    "members": {
+      "title": "Mitglieder",
+      "description": "Aktive, passive, ausgetretene und in diesem Monat eingetretene Mitglieder.",
+      "active": "Aktive Mitglieder",
+      "newThisMonth": "Neu diesen Monat",
+      "passive": "Passiv",
+      "resigned": "Ausgetreten"
+    },
+    "duesCollection": {
+      "title": "Beitragseinzug",
+      "description": "Einzugsquote der Mitgliedsbeiträge dieses Jahres (Anzeige).",
+      "rate": "Einzugsquote {year}",
+      "caption": "{collected} / {expected}",
+      "open": "Offen",
+      "overdue": "Überfällig"
+    }
   }
 }

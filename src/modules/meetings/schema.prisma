@@ -117,7 +117,8 @@ model MeetingAttendee {
   id         String           @id @default(cuid())
   meetingId  String
   meeting    Meeting          @relation(fields: [meetingId], references: [id], onDelete: Cascade)
-  userId     String? // FK DEĞİL; null = dış konuk
+  userId     String? // FK DEĞİL; sistem kullanıcısı
+  memberId   String? // FK DEĞİL (yumuşak referans); dernek üyesi. İkisi de null = dış konuk
   name       String // görüntülenen ad anlık görüntüsü
   role       AttendeeRole     @default(MEMBER)
   attendance AttendanceStatus @default(INVITED)
@@ -125,6 +126,7 @@ model MeetingAttendee {
   createdAt  DateTime         @default(now())
 
   @@unique([meetingId, userId])
+  @@unique([meetingId, memberId])
   @@index([meetingId])
 }
 

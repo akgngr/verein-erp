@@ -4,7 +4,7 @@
 > Copy-paste prompt for an external AI without repository access: [`AI_MODULE_PROMPT.md`](AI_MODULE_PROMPT.md).
 
 This guide covers the rules for adding a module without touching the core (**zero touch**).
-Most rules are checked automatically; breaking one turns CI red (see §8).
+Most rules are checked automatically; breaking one turns CI red (see §9).
 
 ---
 
@@ -58,6 +58,7 @@ src/modules/<key>/
 ├── api/<path>/route.ts     # API routes   → /api/<key>/<path>
 ├── messages/tr.json | de.json
 ├── schemas/  queries/  actions/  services/  helpers/
+├── cards/index.tsx      # dashboard cards (optional; see §8)
 ├── components/          # "use client" components (HeroUI only here)
 └── views/               # server components (NO HeroUI)
 ```
@@ -147,15 +148,72 @@ The root `messages/<locale>.json` is **generated** from `messages/shell/<locale>
 - **User label:** for fields like `createdByLabel` use `buildUserLabel(user.name, user.email)`
   (`@/shared/utils`); it takes two strings, not the user object.
 - **Database:** `const db = getDb()` (`@/shared/db`). Reference other modules' tables softly
-  (`memberId String?` + label snapshot), not with `@relation`. Schema change = migration (`pnpm db:migrate`).
+  (`memberId String?` + label snapshot), not with `@relation`. For member pickers use
+  `listMemberOptions()` (`@/modules/members/server`); do not query the `member` table directly. Schema change = migration (`pnpm db:migrate`).
 - **Menu:** sub-pages and exports go to `module.config.ts → menu` (home is added automatically;
   API links `isDownload: true`; optional `permission`). The PageHeader holds only the main "New" action.
+- **Settings:** the sidebar has a single "Settings" entry; settings screens are not added to the main
+  menu as separate items.
+  - A standalone settings/admin page (e.g. "E-mail", "Users") → give its `nav` item
+    `group: "settings"`. It then appears in the "Settings" sub-menu and in the "Association and system"
+    section of the settings hub (`/ayarlar`); `module.description` is used as its description.
+  - A settings page inside the module (e.g. `/muhasebe/ayarlar`) → a `menu` item with `key: "settings"`.
+    It is listed automatically in the "Module settings" section of the hub.
+  - Never add cards/links to the shell or the hub by hand; everything is built from the registry.
 - **Lists:** `parseListParams` + `DataTable` (`@/shared/components/data-table/data-table`); search,
   filters, sorting and paging live in the URL.
 
 ---
 
-## 8. Verification (CI runs the same steps)
+## 8. Dashboard cards (`cards/`)
+
+A module can offer cards for the dashboard (`/`). With "Edit dashboard" the user adds, removes and
+reorders cards; the layout is stored per user. If the user never edited it, cards with
+`defaultVisible: true` are shown. A card is hidden when its module is inactive or the user lacks its
+`permission`.
+
+`src/modules/<key>/cards/index.tsx`:
+
+```tsx
+import { Users } from "lucide-react";
+
+import { StatCardBody } from "@/shared/components/dashboard/card-bodies";
+import { defineCards } from "@/shared/types/dashboard";
+
+import { sponsorsPermissions } from "../permissions";
+import { getSponsorStats } from "../queries/get-sponsor-stats";
+
+export const cards = defineCards([
+  {
+    key: "overview",                          // id: "sponsors.overview"
+    titleKey: "cards.overview.title",         // in the module messages
+    descriptionKey: "cards.overview.description",
+    icon: Users,
+    size: "sm",                               // sm = 1 column, md = 2, lg = full row
+    defaultVisible: true,
+    href: "/sponsors",
+    permission: { definition: sponsorsPermissions, action: "view" },
+    render: async ({ t }) => {
+      const stats = await getSponsorStats();
+      return <StatCardBody value={stats.active} label={t("cards.overview.active")} />;
+    },
+  },
+]);
+```
+
+- Body components (`@/shared/components/dashboard/card-bodies`): `StatCardBody` (number),
+  `TableCardBody` (short table), `GaugeCardBody` (0-100 gauge), `AlertCardBody` (warning).
+  The dashboard draws title, icon, link and edit buttons; the card only returns its body.
+- `render` runs on the server: it may query, but cannot use hooks or HeroUI. `t` is scoped to the
+  module's translation namespace. Return `null` when there is nothing to show (e.g. an overdue
+  warning); the card is then hidden in view mode. If it throws, only that card shows an error.
+- Card title/description texts live in `messages/tr.json` and `de.json` under `cards.<key>.*`.
+- `pnpm module:sync` collects the `cards/index.tsx` files into the generated `src/dashboard-cards.ts`;
+  do not edit that file. Examples: the `cards/` folders of `members`, `meetings`, `documents`.
+
+---
+
+## 9. Verification (CI runs the same steps)
 
 ```bash
 pnpm module:sync                                  # bridges, schema, translations, registry

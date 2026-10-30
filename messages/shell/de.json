@@ -80,6 +80,13 @@
     "emailPlaceholder": "beispiel@verein.de",
     "export": {
       "truncated": "Ergebnisse auf {max} Zeilen begrenzt."
+    },
+    "password": {
+      "show": "Passwort anzeigen",
+      "hide": "Passwort verbergen",
+      "generate": "Passwort erzeugen",
+      "copy": "Kopieren",
+      "copied": "Passwort in die Zwischenablage kopiert."
     }
   },
   "nav": {
@@ -123,28 +130,25 @@
     "accountingYearLocked": "Jahr abgeschlossen",
     "overviewTitle": "Übersicht",
     "overviewDescription": "Vereinsverwaltung und operativer Überblick.",
-    "docsCategory": "Dokumente",
-    "docsPrimary": "Offen / in Bearbeitung",
-    "overdueBadge": "{count} überfällig",
-    "incomingMonth": "Eingang diesen Monat",
-    "outgoingMonth": "Ausgang diesen Monat",
-    "overdueLabel": "Überfällig",
-    "meetingsCategory": "Sitzungen & Protokolle",
-    "nextLabel": "Nächste: {number}",
-    "plannedLabel": "Geplante Sitzungen",
-    "overdueTasksBadge": "{count} überfällige Aufgaben",
-    "pendingMinutes": "Freigabe ausstehend",
-    "openTasksLabel": "Offene Aufgaben",
-    "overdueTasksLabel": "Überfällige Aufgaben",
-    "membersCategory": "Mitgliederverwaltung",
-    "activeMembers": "Aktive Mitglieder",
-    "newThisMonth": "Neu diesen Monat",
-    "passive": "Passiv",
-    "resigned": "Ausgetreten",
-    "docsOverdueAlert": "{count} Dokumente haben die Bearbeitungsfrist überschritten.",
-    "docsOverdueAction": "Überfällige Dokumente anzeigen",
-    "tasksOverdueAlert": "{count} Sitzungsaufgaben sind überfällig.",
-    "tasksOverdueAction": "Überfällige Aufgaben anzeigen"
+    "edit": "Dashboard bearbeiten",
+    "done": "Fertig",
+    "reset": "Standard wiederherstellen",
+    "editHint": "Karten hinzufügen, entfernen oder neu anordnen. Änderungen werden sofort gespeichert und betreffen nur Ihr Dashboard.",
+    "available": "Verfügbare Karten",
+    "noneAvailable": "Keine weiteren Karten verfügbar.",
+    "add": "Hinzufügen",
+    "remove": "Entfernen",
+    "moveUp": "Nach vorne",
+    "moveDown": "Nach hinten",
+    "empty": "Ihr Dashboard enthält keine Karten. Klicken Sie auf „Dashboard bearbeiten“, um Karten hinzuzufügen.",
+    "cardError": "Diese Karte konnte gerade nicht geladen werden.",
+    "nothingNow": "Derzeit nichts anzuzeigen; die Karte erscheint, sobald es etwas gibt.",
+    "saveError": "Dashboard-Layout konnte nicht gespeichert werden.",
+    "sizes": {
+      "sm": "Klein",
+      "md": "Mittel",
+      "lg": "Breit"
+    }
   },
   "meta": {
     "panel": "Dashboard",
@@ -176,7 +180,7 @@
   },
   "settings": {
     "title": "Einstellungen",
-    "subtitle": "Vereinsprofil, Benutzerberechtigungen, Module und Systemeinstellungen verwalten.",
+    "subtitle": "Hier erreichen Sie die Einstellungen für Verein, Zugriff, System und Module.",
     "languageSection": {
       "title": "Sprache & Region",
       "description": "Benutzeroberflächensprache und lokale Vereinseinstellungen festlegen.",
@@ -198,40 +202,24 @@
       "system": "Systemstandard",
       "systemDesc": "Synchronisiert sich automatisch mit den Einstellungen Ihres Betriebssystems"
     },
-    "cards": {
-      "organization": {
-        "title": "Vereinsdaten",
-        "description": "Identität, Vereinsname, Steuernummer/Vereinsregister, Adresse, Logo und Kontaktdaten.",
-        "action": "Bearbeiten"
-      },
-      "users": {
-        "title": "Benutzer & Rollen",
-        "description": "Benutzerkonten, Systemrollen (Vorstand, Kassenwart, Prüfer usw.) und Berechtigungen.",
-        "action": "Verwalten"
+    "searchPlaceholder": "Einstellung suchen…",
+    "noResults": "Keine Einstellung passt zu Ihrer Suche.",
+    "open": "Öffnen",
+    "sections": {
+      "general": {
+        "title": "Verein und System",
+        "description": "Vereinsdaten, Benutzer und Systemverwaltung."
       },
       "modules": {
-        "title": "Modulverwaltung",
-        "description": "Systemkern-, offizielle ERP-Module und externe Entwickler-Erweiterungen verwalten.",
-        "action": "Konfigurieren"
+        "title": "Moduleinstellungen",
+        "description": "Eigene Konfigurationsseiten der Module."
       },
-      "audit": {
-        "title": "Audit-Protokoll",
-        "description": "Zeitgestempelte Historie aller Datenänderungen, Anmeldeaktivitäten und Sicherheitsereignisse.",
-        "action": "Prüfen"
-      },
-      "accounting": {
-        "title": "Buchhaltungseinstellungen",
-        "description": "Kontenrahmen (SKR49 / Standard), Budgetziele und Geschäftsjahresabschlüsse.",
-        "action": "Einstellungen"
+      "personal": {
+        "title": "Persönliche Einstellungen",
+        "description": "Wirkt sich nur auf Ihre Oberfläche aus."
       }
     },
-    "badges": {
-      "organization": "Profil & Identität",
-      "users": "Zugriff & Rollen",
-      "modules": "Module & Schema",
-      "audit": "Sicherheit & Protokoll",
-      "accounting": "Finanzstruktur"
-    }
+    "moduleSettings": "Einstellungen: {module}"
   },
   "roles": {
     "ADMIN": "Administrator",

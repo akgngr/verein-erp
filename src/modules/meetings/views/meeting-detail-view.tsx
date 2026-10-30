@@ -4,6 +4,8 @@ import { FileText, Pencil } from "lucide-react";
 import { notFound } from "next/navigation";
 
 import { ForbiddenError, listActiveUserOptions, requirePermission } from "@/modules/auth/server";
+import { membersPermissions } from "@/modules/members";
+import { listMemberOptions } from "@/modules/members/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { LinkButton } from "@/shared/components/ui/link-button";
 import { PageHeader } from "@/shared/components/ui/page-header";
@@ -73,8 +75,11 @@ export async function MeetingDetailView({
   const canUpload = canUpdate; // files kapsamı: her durumda update yetkisi yeter
   const canDeleteFiles = meeting.status === "APPROVED" ? canDelete : canUpdate;
 
-  const [userOptions, maxUploadMb] = await Promise.all([
+  const canViewMembers = can(user.role, membersPermissions, "view");
+  const [userOptions, memberOptions, maxUploadMb] = await Promise.all([
     listActiveUserOptions(),
+    // Üye seçimi yalnızca katılımcı sekmesinde ve üyeleri görebilene yüklenir.
+    tab === "katilimcilar" && canViewMembers && contentEditable && canUpdate ? listMemberOptions() : Promise.resolve([]),
     Promise.resolve(getEnv().MAX_UPLOAD_MB),
   ]);
 
@@ -217,6 +222,8 @@ export async function MeetingDetailView({
           attendees={meeting.attendees}
           quorum={meeting.quorum}
           userOptions={userOptions}
+          memberOptions={memberOptions}
+          canViewMembers={canViewMembers}
           editable={contentEditable && canUpdate}
         />
       ) : null}

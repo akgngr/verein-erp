@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 
 import { applyActionResult } from "@/shared/components/forms/action-result";
 import { FormErrorSummary } from "@/shared/components/forms/form-error-summary";
-import { FormInput } from "@/shared/components/forms/form-input";
+import { FormPasswordInput } from "@/shared/components/forms/form-password-input";
 
 import { resetUserPasswordAction } from "../actions/reset-password";
 import { userResetPasswordSchema } from "../schemas/user";
@@ -63,12 +63,11 @@ export function ResetPasswordDialog({
             <ModalHeader className="flex flex-col gap-1">{t("title")}</ModalHeader>
             <ModalBody>
               <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
-                <FormInput
+                <FormPasswordInput
                   name="password"
                   label={t("newPassword")}
                   control={form.control}
-                  type="password"
-                  autoComplete="new-password"
+                  allowGenerate
                   isRequired
                   description={tValidation("passwordHint")}
                 />

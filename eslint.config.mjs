@@ -7,6 +7,7 @@ import nextTypescript from "eslint-config-next/typescript";
 //   @/modules/<modül>/ui       → UI girişi
 //   @/modules/<modül>/page     → Dashboard sayfa girişi (otomatik senkronize)
 //   @/modules/<modül>/edge     → yalnızca auth modülü (middleware)
+//   @/modules/<modül>/cards    → panel kartları (yalnızca üretilen src/dashboard-cards.ts)
 // KARAR: Desen; "@ /modules/x/queries/y" gibi derin içe aktarmaları da kapsasın diye
 // "@ /modules/*/**" ile genişletildi. İstisnalar yalnızca tam public giriş yollarıdır.
 const MODULE_INTERNAL_IMPORTS = {
@@ -17,6 +18,7 @@ const MODULE_INTERNAL_IMPORTS = {
     "!@/modules/*/ui",
     "!@/modules/*/page",
     "!@/modules/*/edge",
+    "!@/modules/*/cards",
     "!@/modules/*/routes",
     "!@/modules/*/routes/**",
     "!@/modules/*/api",

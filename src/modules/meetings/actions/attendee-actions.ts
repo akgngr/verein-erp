@@ -4,10 +4,12 @@ import { getDb } from "@/shared/db";
 import type { ActionResult } from "@/shared/types/action";
 
 import { ActionError, createAction, listActiveUserOptions } from "@/modules/auth/server";
+import { listMemberOptions } from "@/modules/members/server";
 
 import { meetingsPermissions } from "../permissions";
 import {
   attendeeAddGuestSchema,
+  attendeeAddMembersSchema,
   attendeeAddUsersSchema,
   attendeeMarkAllPresentSchema,
   attendeeRemoveSchema,
@@ -95,6 +97,66 @@ export async function addAttendeeUsersAction(
         entity: "MeetingAttendee",
         entityId: meeting.id,
         after: { meetingNumber: meeting.meetingNumber, addedUsers: rows.length, role: input.role },
+      });
+
+      return { added: rows.length };
+    },
+  });
+
+  return run(input) as Promise<ActionResult<{ added: number }>>;
+}
+
+export async function addAttendeeMembersAction(
+  input: unknown,
+): Promise<ActionResult<{ added: number }>> {
+  const run = createAction({
+    permission: { definition: meetingsPermissions, action: "update" },
+    schema: attendeeAddMembersSchema,
+    handler: async ({ input, user, audit }) => {
+      const db = getDb();
+      const meeting = await loadMeetingForUpdate(input.meetingId);
+      assertMeetingEditable(meeting, "content", user.role, meetingsPermissions);
+
+      // KARAR: ad, üye kaydından sunucuda okunur (anlık görüntü); ayrılmış/silinmiş üye reddedilir.
+      const members = await listMemberOptions({ ids: input.memberIds });
+      const memberById = new Map(members.map((member) => [member.id, member.label]));
+
+      const existing = await db.meetingAttendee.findMany({
+        where: { meetingId: meeting.id },
+        select: { memberId: true, role: true },
+      });
+      const existingMemberIds = new Set(existing.map((attendee) => attendee.memberId));
+      let hasChairperson = existing.some((attendee) => attendee.role === "CHAIRPERSON");
+      let hasSecretary = existing.some((attendee) => attendee.role === "SECRETARY");
+
+      const rows: { memberId: string; name: string }[] = [];
+      for (const memberId of input.memberIds) {
+        if (existingMemberIds.has(memberId)) continue; // bir üye toplantıya bir kez eklenir
+        const label = memberById.get(memberId);
+        if (!label) throw new ActionError("meetings.errors.memberNotFound");
+        if (input.role === "CHAIRPERSON" && hasChairperson) throw new ActionError("meetings.errors.chairExists");
+        if (input.role === "SECRETARY" && hasSecretary) throw new ActionError("meetings.errors.secretaryExists");
+        if (input.role === "CHAIRPERSON") hasChairperson = true;
+        else if (input.role === "SECRETARY") hasSecretary = true;
+        rows.push({ memberId, name: label });
+      }
+      if (rows.length === 0) throw new ActionError("meetings.errors.membersAlreadyAdded");
+
+      await db.meetingAttendee.createMany({
+        data: rows.map((row) => ({
+          meetingId: meeting.id,
+          memberId: row.memberId,
+          name: row.name,
+          role: input.role,
+          attendance: "INVITED" as const,
+        })),
+      });
+
+      await audit({
+        action: "ATTENDEE_ADD",
+        entity: "MeetingAttendee",
+        entityId: meeting.id,
+        after: { meetingNumber: meeting.meetingNumber, addedMembers: rows.length, role: input.role },
       });
 
       return { added: rows.length };

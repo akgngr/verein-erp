@@ -9,7 +9,7 @@ import { useForm } from "react-hook-form"
 
 import { applyActionResult } from "@/shared/components/forms/action-result"
 import { FormErrorSummary } from "@/shared/components/forms/form-error-summary"
-import { FormInput } from "@/shared/components/forms/form-input"
+import { FormPasswordInput } from "@/shared/components/forms/form-password-input"
 import { SubmitButton } from "@/shared/components/forms/submit-button"
 
 import { changePasswordAction } from "../actions/change-password"
@@ -43,20 +43,17 @@ export function ChangePasswordForm() {
 
   return (
     <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
-      <FormInput
+      <FormPasswordInput
         name="currentPassword"
         label={t("currentPassword")}
         control={form.control}
-        type="password"
         autoComplete="current-password"
         isRequired
       />
-      <FormInput
+      <FormPasswordInput
         name="newPassword"
         label={t("newPassword")}
         control={form.control}
-        type="password"
-        autoComplete="new-password"
         isRequired
         description={tValidation("passwordHint")}
       />

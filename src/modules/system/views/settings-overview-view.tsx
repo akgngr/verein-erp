@@ -1,199 +1,117 @@
-import {
-  Boxes,
-  Building2,
-  Calculator,
-  ChevronRight,
-  Globe2,
-  Palette,
-  ShieldAlert,
-  Users,
-} from "lucide-react";
-import Link from "next/link";
+import { Globe2, Palette } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 
 import { requireUser, setLocaleAction } from "@/modules/auth/server";
+import { allModules } from "@/registry";
 import { PageHeader } from "@/shared/components/ui/page-header";
+import { getAllActiveModuleKeys } from "@/shared/modules/module-store";
+import { moduleHome } from "@/shared/navigation/module-nav";
 import { can } from "@/shared/permissions/define";
-import { organizationPermissions } from "@/modules/organization";
-import { usersPermissions } from "@/modules/users";
-import { auditPermissions } from "@/modules/audit";
-import { systemPermissions } from "@/shared/permissions/system";
-import { accountingPermissions } from "@/modules/accounting";
-import { cn } from "@/shared/utils";
 
 import { LanguageSettingCard } from "../components/language-setting-card";
+import { SettingsHub, type SettingsHubSection } from "../components/settings-hub";
 import { ThemeSettingCard } from "../components/theme-setting-card";
 
+/** Ayar merkezinin kendi adresi; listede tekrar gösterilmez. */
+const HUB_HREF = "/ayarlar";
+
+/**
+ * Ayar merkezi. Kabuk hiçbir modülü tanımaz; liste registry'den kurulur:
+ * - "Dernek ve sistem": `nav` içinde `group: "settings"` olan sayfalar,
+ * - "Modül ayarları": `menu` içinde `key: "settings"` olan öğeler (örn. /muhasebe/ayarlar).
+ */
 export async function SettingsOverviewView() {
   const user = await requireUser();
   const t = await getTranslations("settings");
+  const tRoot = await getTranslations();
 
-  // Yetki kontrolleri
-  const canOrg = can(user.role, organizationPermissions, "view");
-  const canUsers = can(user.role, usersPermissions, "view");
-  const canSystem = can(user.role, systemPermissions, "view");
-  const canAudit = can(user.role, auditPermissions, "view");
-  const canAccounting = can(user.role, accountingPermissions, "view");
+  const activeKeys = new Set(getAllActiveModuleKeys(allModules.map((mod) => mod.key)));
+  const modules = allModules.filter((mod) => activeKeys.has(mod.key));
+  const text = (key: string, fallback: string) => (tRoot.has(key) ? tRoot(key) : fallback);
 
-  const cards = [
-    {
-      key: "organization",
-      href: "/ayarlar/dernek",
-      icon: Building2,
-      color: "text-blue-500 bg-blue-500/10 border-blue-500/20",
-      title: t("cards.organization.title"),
-      description: t("cards.organization.description"),
-      actionLabel: t("cards.organization.action"),
-      allowed: canOrg,
-      badge: t("badges.organization"),
-    },
-    {
-      key: "users",
-      href: "/ayarlar/kullanicilar",
-      icon: Users,
-      color: "text-emerald-500 bg-emerald-500/10 border-emerald-500/20",
-      title: t("cards.users.title"),
-      description: t("cards.users.description"),
-      actionLabel: t("cards.users.action"),
-      allowed: canUsers,
-      badge: t("badges.users"),
-    },
-    {
-      key: "modules",
-      href: "/ayarlar/moduller",
-      icon: Boxes,
-      color: "text-amber-500 bg-amber-500/10 border-amber-500/20",
-      title: t("cards.modules.title"),
-      description: t("cards.modules.description"),
-      actionLabel: t("cards.modules.action"),
-      allowed: canSystem,
-      badge: t("badges.modules"),
-    },
-    {
-      key: "audit",
-      href: "/ayarlar/denetim-kaydi",
-      icon: ShieldAlert,
-      color: "text-violet-500 bg-violet-500/10 border-violet-500/20",
-      title: t("cards.audit.title"),
-      description: t("cards.audit.description"),
-      actionLabel: t("cards.audit.action"),
-      allowed: canAudit,
-      badge: t("badges.audit"),
-    },
-    {
-      key: "accounting",
-      href: "/muhasebe/ayarlar",
-      icon: Calculator,
-      color: "text-cyan-500 bg-cyan-500/10 border-cyan-500/20",
-      title: t("cards.accounting.title"),
-      description: t("cards.accounting.description"),
-      actionLabel: t("cards.accounting.action"),
-      allowed: canAccounting,
-      badge: t("badges.accounting"),
-    },
+  const general = modules
+    .flatMap((mod) =>
+      mod.nav
+        .filter((item) => item.group === "settings" && item.href !== HUB_HREF)
+        .filter((item) => can(user.role, item.permission.definition, item.permission.action))
+        .map((item) => ({ mod, item })),
+    )
+    .sort((a, b) => a.item.order - b.item.order)
+    .map(({ mod, item }) => {
+      const Icon = item.icon;
+      return {
+        key: item.href,
+        href: item.href,
+        icon: <Icon className="h-5 w-5" aria-hidden />,
+        title: text(`nav.${item.labelKey}`, item.label),
+        description: text(`${mod.key}.module.description`, mod.description ?? ""),
+      };
+    });
+
+  const generalHrefs = new Set(general.map((entry) => entry.href));
+  const moduleSettings = modules.flatMap((mod) => {
+    const home = moduleHome(mod);
+    const item = mod.menu?.find((entry) => entry.key === "settings");
+    // Ayar sayfası zaten "Dernek ve sistem" bölümündeyse (örn. E-posta) tekrar listelenmez.
+    if (!home || !item || generalHrefs.has(item.href)) return [];
+    const permission = item.permission ?? home.permission;
+    if (!can(user.role, permission.definition, permission.action)) return [];
+    const Icon = home.icon;
+    const moduleName = text(`nav.${home.labelKey}`, home.label);
+    return [
+      {
+        key: item.href,
+        href: item.href,
+        icon: <Icon className="h-5 w-5" aria-hidden />,
+        title: t("moduleSettings", { module: moduleName }),
+        description: text(`${mod.key}.module.description`, mod.description ?? ""),
+      },
+    ];
+  });
+
+  const sections: SettingsHubSection[] = [
+    { key: "general", title: t("sections.general.title"), description: t("sections.general.description"), items: general },
+    { key: "modules", title: t("sections.modules.title"), description: t("sections.modules.description"), items: moduleSettings },
   ];
 
   return (
-    <div className="flex flex-col gap-6">
-      <PageHeader
-        title={t("title")}
-        description={t("subtitle")}
-      />
+    <div className="flex flex-col gap-8">
+      <PageHeader title={t("title")} description={t("subtitle")} />
 
-      {/* 1. Dil ve Tema / Görünüm Yapılandırması */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
-        {/* Dil Seçimi */}
-        <section className="p-5 rounded-2xl border border-default-200/80 bg-content1 shadow-xs flex flex-col justify-between">
-          <div>
+      <SettingsHub sections={sections} />
+
+      <section className="flex flex-col gap-3">
+        <div>
+          <h2 className="text-medium font-semibold text-foreground">{t("sections.personal.title")}</h2>
+          <p className="text-small text-default-500">{t("sections.personal.description")}</p>
+        </div>
+        <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+          <div className="flex flex-col rounded-2xl border border-default-200/80 bg-content1 p-5 shadow-xs">
             <div className="flex items-center gap-2.5">
-              <div className="h-8 w-8 rounded-lg bg-blue-100 dark:bg-blue-500/20 text-blue-600 dark:text-blue-300 flex items-center justify-center">
-                <Globe2 className="h-4 w-4" />
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-50 text-primary-600 dark:bg-primary-500/15 dark:text-primary-300">
+                <Globe2 className="h-4 w-4" aria-hidden />
               </div>
               <div>
-                <h3 className="text-small font-semibold text-foreground">
-                  {t("languageSection.title")}
-                </h3>
-                <p className="text-tiny text-default-400">
-                  {t("languageSection.description")}
-                </p>
+                <h3 className="text-small font-semibold text-foreground">{t("languageSection.title")}</h3>
+                <p className="text-tiny text-default-400">{t("languageSection.description")}</p>
               </div>
             </div>
             <LanguageSettingCard onSetLocale={setLocaleAction} />
           </div>
-        </section>
-
-        {/* Tema Seçimi */}
-        <section className="p-5 rounded-2xl border border-default-200/80 bg-content1 shadow-xs flex flex-col justify-between">
-          <div>
+          <div className="flex flex-col rounded-2xl border border-default-200/80 bg-content1 p-5 shadow-xs">
             <div className="flex items-center gap-2.5">
-              <div className="h-8 w-8 rounded-lg bg-amber-100 dark:bg-amber-500/20 text-amber-600 dark:text-amber-300 flex items-center justify-center">
-                <Palette className="h-4 w-4" />
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-50 text-primary-600 dark:bg-primary-500/15 dark:text-primary-300">
+                <Palette className="h-4 w-4" aria-hidden />
               </div>
               <div>
-                <h3 className="text-small font-semibold text-foreground">
-                  {t("themeSection.title")}
-                </h3>
-                <p className="text-tiny text-default-400">
-                  {t("themeSection.description")}
-                </p>
+                <h3 className="text-small font-semibold text-foreground">{t("themeSection.title")}</h3>
+                <p className="text-tiny text-default-400">{t("themeSection.description")}</p>
               </div>
             </div>
             <ThemeSettingCard />
           </div>
-        </section>
-      </div>
-
-      {/* 2. Sistem & Yönetim Ayar Kartları */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {cards
-          .filter((card) => card.allowed)
-          .map((card) => {
-            const Icon = card.icon;
-            return (
-              <Link
-                key={card.key}
-                href={card.href}
-                className="group p-5 rounded-2xl border border-default-200/80 bg-content1 hover:bg-default-50/80 hover:border-default-300 shadow-xs transition-all duration-200 flex flex-col justify-between gap-4"
-              >
-                <div className="flex items-start justify-between gap-3">
-                  <div className="flex items-start gap-3.5">
-                    <div
-                      className={cn(
-                        "h-10 w-10 rounded-xl border flex items-center justify-center shrink-0 transition-transform group-hover:scale-105",
-                        card.color,
-                      )}
-                    >
-                      <Icon className="h-5 w-5" />
-                    </div>
-                    <div className="flex flex-col">
-                      <div className="flex items-center gap-2 flex-wrap">
-                        <h4 className="text-small font-bold text-foreground group-hover:text-primary transition-colors">
-                          {card.title}
-                        </h4>
-                        <span className="text-[10px] font-semibold tracking-wider uppercase px-2 py-0.5 rounded-full bg-default-100 text-default-500">
-                          {card.badge}
-                        </span>
-                      </div>
-                      <p className="text-tiny text-default-500 mt-1 line-clamp-2">
-                        {card.description}
-                      </p>
-                    </div>
-                  </div>
-                  <ChevronRight className="h-5 w-5 text-default-300 group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0 mt-1" />
-                </div>
-
-                <div className="pt-3 border-t border-default-100 flex items-center justify-between text-tiny text-default-400 font-medium">
-                  <span className="font-mono text-[11px] text-default-400">
-                    {card.href}
-                  </span>
-                  <span className="text-primary font-semibold flex items-center gap-1 group-hover:underline">
-                    {card.actionLabel} &rarr;
-                  </span>
-                </div>
-              </Link>
-            );
-          })}
-      </div>
+        </div>
+      </section>
     </div>
   );
 }

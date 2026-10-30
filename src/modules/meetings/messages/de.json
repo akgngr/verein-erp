@@ -276,13 +276,15 @@
     "removeTitle": "Teilnehmer wird entfernt",
     "removeMessage": "Der Teilnehmer wird von der Sitzung entfernt. Fortfahren?",
     "removeConfirm": "Entfernen",
-    "addUser": "Benutzer hinzufügen",
+    "addUser": "Teilnehmende hinzufügen",
     "guestName": "Name des Gastes",
     "addGuest": "Gast hinzufügen",
     "source": "Herkunft",
     "removedNamedToast": "Teilnehmer entfernt: {name}",
     "markedToast": "{count} Teilnehmer als „anwesend“ markiert",
-    "namePlaceholder": "Vor- und Nachname"
+    "namePlaceholder": "Vor- und Nachname",
+    "member": "Vereinsmitglied",
+    "openMember": "Mitgliedsdatensatz öffnen"
   },
   "attendeeAdd": {
     "title": "Teilnehmer hinzufügen",
@@ -305,7 +307,13 @@
     "users": "Benutzer",
     "usersDescription": "Ein Benutzer kann nur einmal zur Sitzung hinzugefügt werden.",
     "addedCountToast": "{count} Teilnehmer hinzugefügt",
-    "add": "Hinzufügen"
+    "add": "Hinzufügen",
+    "tabMembers": "Vereinsmitglied",
+    "members": "Mitglieder",
+    "membersDescription": "Aktive und passive Mitglieder werden angezeigt. Ein Mitglied kann nur einmal hinzugefügt werden.",
+    "membersSearch": "Nach Name oder Mitgliedsnummer suchen",
+    "noMembers": "Kein passendes Mitglied.",
+    "selectedCount": "{count} Mitglieder ausgewählt"
   },
   "tasks": {
     "pageTitle": "Aufgaben",
@@ -440,7 +448,9 @@
     "approveNeedsAgenda": "Zur Freigabe ist mindestens ein Tagesordnungspunkt erforderlich.",
     "approveNeedsPresent": "Zur Freigabe muss mindestens ein Teilnehmer als „anwesend“ markiert sein.",
     "meetingNotFound2": "Sitzung nicht gefunden.",
-    "notEditable": "Die Sitzung kann nicht bearbeitet werden."
+    "notEditable": "Die Sitzung kann nicht bearbeitet werden.",
+    "memberNotFound": "Das ausgewählte Mitglied wurde nicht gefunden oder ist ausgetreten.",
+    "membersAlreadyAdded": "Die ausgewählten Mitglieder sind bereits in dieser Sitzung."
   },
   "validation": {
     "taskMin": "Die Aufgabenbeschreibung muss mindestens 3 Zeichen lang sein.",
@@ -472,7 +482,8 @@
     "descriptionMax": "Die Beschreibung darf höchstens 2000 Zeichen lang sein.",
     "endNeedsStart": "Für eine Endzeit ist eine Startzeit erforderlich.",
     "endAfterStart": "Die Endzeit muss nach der Startzeit liegen.",
-    "quorumInt": "Die Beschlussfähigkeit muss eine ganze Zahl sein."
+    "quorumInt": "Die Beschlussfähigkeit muss eine ganze Zahl sein.",
+    "selectMember": "Wählen Sie mindestens ein Mitglied aus."
   },
   "meta": {
     "list": "Sitzungen",
@@ -484,5 +495,30 @@
   "module": {
     "label": "Sitzungen",
     "description": "Vorstands- und Mitgliederversammlungen, Protokolle und Beschlüsse."
+  },
+  "cards": {
+    "overview": {
+      "title": "Sitzungen und Protokolle",
+      "description": "Nächste Sitzung, Protokolle zur Freigabe und offene Aufgaben.",
+      "next": "Nächste: {number}",
+      "planned": "Geplante Sitzungen",
+      "pendingMinutes": "Freigabe ausstehend",
+      "openTasks": "Offene Aufgaben",
+      "overdueTasks": "Überfällige Aufgaben"
+    },
+    "upcoming": {
+      "title": "Anstehende Sitzungen",
+      "description": "Tabelle der nächsten fünf geplanten Sitzungen.",
+      "empty": "Keine geplanten Sitzungen.",
+      "colTitle": "Sitzung",
+      "colDate": "Datum",
+      "colLocation": "Ort"
+    },
+    "overdueTasks": {
+      "title": "Überfällige Sitzungsaufgaben",
+      "description": "Zeigt eine Warnung, wenn Aufgaben überfällig sind.",
+      "message": "{count} Sitzungsaufgaben sind überfällig.",
+      "action": "Überfällige Aufgaben anzeigen"
+    }
   }
 }

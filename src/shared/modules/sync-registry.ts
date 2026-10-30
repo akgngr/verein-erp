@@ -4,6 +4,7 @@ import path from "node:path";
 const ROOT_DIR = process.cwd();
 const MODULES_DIR = path.join(ROOT_DIR, "src", "modules");
 const REGISTRY_FILE = path.join(ROOT_DIR, "src", "registry.ts");
+const CARDS_FILE = path.join(ROOT_DIR, "src", "dashboard-cards.ts");
 
 // Sabit öncelikli sıralama (çekirdek ve resmi modüller üstte)
 const PRIORITY_ORDER = [
@@ -82,5 +83,37 @@ export const registry: ModuleConfig[] = allModules;
     console.error("[sync-registry] Failed to write src/registry.ts:", err);
   }
 
+  syncDashboardCards(validModules);
+
   return { registered: validModules };
+}
+
+/**
+ * Panel kartları kaydı: `cards/index.ts` dosyası olan modüllerin `cards` dizisini
+ * src/dashboard-cards.ts içinde toplar (yalnızca sunucu; kart render'ı sorgu yapar).
+ */
+function syncDashboardCards(modules: string[]): void {
+  const withCards = modules.filter((mod) =>
+    ["index.ts", "index.tsx"].some((file) => fs.existsSync(path.join(MODULES_DIR, mod, "cards", file))),
+  );
+  const imports = withCards
+    .map((mod) => `import { cards as ${mod}Cards } from "@/modules/${mod}/cards";`)
+    .join("\n");
+  const listItems = withCards.map((mod) => `  { moduleKey: "${mod}", cards: ${mod}Cards },`).join("\n");
+
+  const content = `// Bu dosya syncModuleRegistry tarafından otomatik üretilir (pnpm module:sync); elle düzenlemeyin.
+import "server-only";
+
+import type { DashboardCardDefinition } from "@/shared/types/dashboard";
+${imports ? `\n${imports}\n` : ""}
+/** Modüllerin panele sunduğu kartlar (src/modules/<modül>/cards/index.ts). */
+export const dashboardCards: { moduleKey: string; cards: DashboardCardDefinition[] }[] = ${listItems ? `[\n${listItems}\n]` : "[]"};
+`;
+
+  try {
+    const current = fs.existsSync(CARDS_FILE) ? fs.readFileSync(CARDS_FILE, "utf8") : "";
+    if (current !== content) fs.writeFileSync(CARDS_FILE, content, "utf8");
+  } catch (err) {
+    console.error("[sync-registry] Failed to write src/dashboard-cards.ts:", err);
+  }
 }

@@ -48,6 +48,11 @@ KURALLAR (her biri CI'da otomatik denetlenir):
 13. Kullanıcı etiketi: `buildUserLabel(user.name, user.email)` (`@/shared/utils`), nesne değil iki metin.
 14. Şemada `z.preprocess`/`.default()` varsa form:
     `resolver: zodResolver(schema) as unknown as Resolver<FormValues>` (`type Resolver` react-hook-form'dan).
+15. Ayar sayfası ana menüye eklenmez: bağımsız ayar sayfası → `nav` öğesinde `group: "settings"`;
+    modül içi ayar sayfası → `menu` içinde `key: "settings"`. İkisi de "Ayarlar" altında kendiliğinden görünür.
+16. Panel kartı (isteğe bağlı): `cards/index.tsx` → `export const cards = defineCards([...])`
+    (`@/shared/types/dashboard`); gövde `@/shared/components/dashboard/card-bodies` bileşenleriyle
+    (StatCardBody, TableCardBody, GaugeCardBody, AlertCardBody); metinler `cards.<key>.*`.
 
 ÜRETECEĞİN DOSYALAR (tam yol + eksiksiz kod, TODO bırakma):
 module.config.ts, permissions.ts, schema.prisma, types.ts, index.ts, server.ts ("server-only"), ui.ts,

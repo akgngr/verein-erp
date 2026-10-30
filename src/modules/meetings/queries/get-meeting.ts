@@ -103,6 +103,7 @@ export async function getMeeting(id: string): Promise<MeetingDetail | null> {
     attendees: meeting.attendees.map((attendee) => ({
       id: attendee.id,
       userId: attendee.userId,
+      memberId: attendee.memberId,
       name: attendee.name,
       role: attendee.role,
       attendance: attendee.attendance,

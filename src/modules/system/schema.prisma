@@ -19,3 +19,12 @@ model SystemSetting {
 
   @@map("system_settings")
 }
+
+/// Kullanıcının panel düzeni: sıralı kart kimlikleri ("<modül>.<kart>"). Kayıt yoksa varsayılan kartlar gösterilir.
+model SystemDashboardLayout {
+  userId    String   @id // FK DEĞİL (yumuşak referans)
+  cards     String[]
+  updatedAt DateTime @updatedAt
+
+  @@map("system_dashboard_layouts")
+}

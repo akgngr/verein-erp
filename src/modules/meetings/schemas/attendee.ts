@@ -23,6 +23,13 @@ export const attendeeAddUsersSchema = z.object({
   role: attendeeRoleSchema.default("MEMBER"),
 });
 
+/** Dernek üyesi ekleme: birden fazla üye tek seferde eklenebilir. */
+export const attendeeAddMembersSchema = z.object({
+  meetingId: z.string().trim().min(1),
+  memberIds: z.array(z.string().trim().min(1)).min(1, "meetings.validation.selectMember"),
+  role: attendeeRoleSchema.default("MEMBER"),
+});
+
 export const attendeeAddGuestSchema = z.object({
   meetingId: z.string().trim().min(1),
   name: z
@@ -45,6 +52,7 @@ export const attendeeRemoveSchema = z.object({ id: z.string().trim().min(1) });
 export const attendeeMarkAllPresentSchema = z.object({ meetingId: z.string().trim().min(1) });
 
 export type AttendeeAddUsersInput = z.infer<typeof attendeeAddUsersSchema>;
+export type AttendeeAddMembersInput = z.infer<typeof attendeeAddMembersSchema>;
 export type AttendeeAddGuestInput = z.infer<typeof attendeeAddGuestSchema>;
 export type AttendeeUpdateInput = z.infer<typeof attendeeUpdateSchema>;
 export type AttendeeRemoveInput = z.infer<typeof attendeeRemoveSchema>;

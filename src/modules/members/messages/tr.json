@@ -454,5 +454,23 @@
     "unknownStatus": "Bilinmeyen durum: \"{value}\". (Aktif / Pasif / Ayrıldı)",
     "birthDateInvalid": "Doğum tarihi geçersiz (gg.aa.yyyy kullanın).",
     "joinDateRequired": "Üyelik başlangıç tarihi zorunludur (gg.aa.yyyy)."
+  },
+  "cards": {
+    "members": {
+      "title": "Üyeler",
+      "description": "Aktif, pasif, ayrılan ve bu ay katılan üye sayıları.",
+      "active": "Aktif üye",
+      "newThisMonth": "Bu ay yeni",
+      "passive": "Pasif",
+      "resigned": "Ayrılan"
+    },
+    "duesCollection": {
+      "title": "Aidat tahsilatı",
+      "description": "Bu yılın aidat tahsilat oranı (gösterge).",
+      "rate": "{year} tahsilat oranı",
+      "caption": "{collected} / {expected}",
+      "open": "Açık",
+      "overdue": "Gecikmiş"
+    }
   }
 }

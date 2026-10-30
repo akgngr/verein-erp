@@ -277,5 +277,21 @@
         "OTHER": "Sonstiges"
       }
     }
+  },
+  "cards": {
+    "overview": {
+      "title": "Dokumente",
+      "description": "Offene und laufende Dokumente, Ein- und Ausgänge dieses Monats.",
+      "open": "Offen / in Bearbeitung",
+      "incomingMonth": "Eingang diesen Monat",
+      "outgoingMonth": "Ausgang diesen Monat",
+      "overdue": "Überfällig"
+    },
+    "overdue": {
+      "title": "Überfällige Dokumente",
+      "description": "Zeigt eine Warnung, wenn Dokumente die Frist überschritten haben.",
+      "message": "{count} Dokumente haben die Bearbeitungsfrist überschritten.",
+      "action": "Überfällige Dokumente anzeigen"
+    }
   }
 }
