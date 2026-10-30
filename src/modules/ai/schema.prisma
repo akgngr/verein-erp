@@ -1,0 +1,9 @@
+/// Kullanıcının AI asistanı için verdiği açık rıza (KVKK/DSGVO). Kayıt yoksa asistan kullanılamaz.
+/// Sohbet içeriği SAKLANMAZ; yalnızca rızanın kendisi ve sürümü tutulur.
+model AiUserConsent {
+  userId     String   @id // FK DEĞİL (yumuşak referans)
+  version    Int
+  acceptedAt DateTime @default(now())
+
+  @@map("ai_user_consents")
+}

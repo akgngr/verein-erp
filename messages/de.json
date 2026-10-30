@@ -93,6 +93,7 @@
     "panel": "Dashboard",
     "profil": "Profil",
     "muhasebe": "Buchhaltung",
+    "ai": "KI-Assistent",
     "denetimKaydi": "Prüfprotokoll",
     "courses": "Kurse",
     "evrak": "Dokumente",
@@ -920,6 +921,123 @@
         "lines": "Mindestens eine Position hinzufügen.",
         "reason": "Grund muss mindestens 3 Zeichen haben.",
         "paymentDays": "Anzahl Tage eingeben."
+      }
+    }
+  },
+  "ai": {
+    "module": {
+      "label": "KI-Assistent",
+      "description": "Chat im rechten Panel, der nur aggregierte Daten freigegebener Module liest."
+    },
+    "meta": {
+      "settings": "KI-Assistent"
+    },
+    "access": {
+      "accounting": "Liest Einnahmen-/Ausgabensummen und Kontostände; liefert Berichtslinks (keine Buchungsdetails, keine Personendaten).",
+      "members": "Liest nur Mitgliederzahlen und Beitragsstatistik; keine Namen oder Daten einzelner Mitglieder. Registrierte Namen werden nur serverseitig zur Maskierung verwendet.",
+      "events": "Liest Titel, Datum, Ort und Teilnehmerzahlen kommender Veranstaltungen; keine Teilnehmernamen.",
+      "tasks": "Liest Titel und Status offener Aufgaben; legt Aufgaben nur nach Bestätigung an.",
+      "courses": "Liest Kursnamen und -status; keine Schülerdaten.",
+      "system": "Liest, welche Module aktiv und für den Assistenten freigegeben sind (nur darauf wird zugegriffen).",
+      "students": "Liest Schüler- und Elternnamen nur serverseitig zur Maskierung; diese Namen werden nie an die KI gesendet.",
+      "auth": "Liest Benutzernamen nur serverseitig zur Maskierung und prüft die Sitzung; Namen werden nie an die KI gesendet."
+    },
+    "errors": {
+      "consentRequired": "Bitte bestätigen Sie zuerst den Datenschutzhinweis.",
+      "notConfigured": "Der Assistent ist noch nicht eingerichtet (kein API-Schlüssel).",
+      "rateLimited": "Zu viele Anfragen; bitte kurz warten.",
+      "invalidRequest": "Ungültige Anfrage.",
+      "unavailable": "Der Assistent ist gerade nicht erreichbar; bitte später erneut versuchen."
+    },
+    "panel": {
+      "title": "Assistent",
+      "open": "Assistent öffnen",
+      "close": "Schließen",
+      "clear": "Chat leeren",
+      "input": "Fragen oder bitten Sie um etwas…",
+      "send": "Senden",
+      "thinking": "Antwort wird erstellt…",
+      "error": "Assistent nicht erreichbar.",
+      "empty": "(leere Antwort)",
+      "welcome": "Hallo! Fragen Sie zu den Vereinsdaten, fordern Sie Berichte an oder lassen Sie sich Aufgaben vorschlagen. Beispiele:",
+      "privacyNote": "Personendaten werden maskiert; der Chat wird nicht gespeichert.",
+      "notConfigured": "Der Assistent ist noch nicht eingerichtet. Ein Administrator muss den API-Schlüssel hinterlegen.",
+      "taskCreated": "Aufgabe angelegt.",
+      "examples": {
+        "q1": "Fasse die Einnahmen und Ausgaben dieses Jahres zusammen.",
+        "q2": "Wie steht es um die Beitragszahlungen?",
+        "q3": "Welche Veranstaltungen stehen an?",
+        "q4": "Gib mir den Kassenbericht als PDF."
+      },
+      "proposal": {
+        "task": "Aufgabenvorschlag",
+        "confirm": "Aufgabe anlegen",
+        "created": "Angelegt",
+        "priority": {
+          "LOW": "Niedrige Priorität",
+          "NORMAL": "Normale Priorität",
+          "HIGH": "Hohe Priorität"
+        }
+      },
+      "consent": {
+        "title": "Datenschutzhinweis",
+        "intro": "Bitte lesen und bestätigen Sie vor der Nutzung:",
+        "accept": "Gelesen und einverstanden",
+        "points": {
+          "noPersonal": "Der Assistent liest keine Namen, Kontaktdaten, Adressen, Bank- oder Ausweisdaten; nur Summen, Zahlen und Vereinsdaten (Veranstaltungen, Aufgaben, Kursnamen).",
+          "masking": "Registrierte Personennamen (Mitglieder, Nutzer, Schüler, Eltern) und Mitglieds-/Schülernummern sowie E-Mail-Adressen, IBANs, Telefon- und Steuernummern in Ihren Nachrichten werden vor dem Versand an die KI maskiert.",
+          "ownRights": "Der Assistent greift nur auf Module zu, für die Sie berechtigt sind und die der Administrator freigegeben hat.",
+          "noStorage": "Der Chat wird weder auf dem Server noch im Browser gespeichert; nach Schließen und Leeren ist er gelöscht.",
+          "noChanges": "Der Assistent kann keine Daten ändern; Vorschläge werden nur nach Ihrer Bestätigung in Ihrem Namen ausgeführt.",
+          "provider": "Antworten werden über die Anthropic-(Claude-)API erzeugt; API-Daten werden nicht zum Training verwendet.",
+          "revoke": "Sie können Ihre Einwilligung jederzeit unter Einstellungen → KI-Assistent widerrufen."
+        }
+      }
+    },
+    "settings": {
+      "title": "KI-Assistent",
+      "description": "Status, freigegebene Bereiche und Datenschutzregeln des Assistenten.",
+      "accept": "Einwilligen",
+      "revoke": "Einwilligung widerrufen",
+      "accepted": "Einwilligung gespeichert.",
+      "revoked": "Einwilligung widerrufen; der Assistent ist für Sie deaktiviert.",
+      "myConsent": "Meine Einwilligung",
+      "enableHint": "Der Assistent ist eine Erweiterung und standardmäßig deaktiviert. Ein Administrator kann ihn nach Prüfung der Zugriffsrechte aktivieren:",
+      "modulesLink": "Einstellungen → Module",
+      "areasTitle": "Zugängliche Bereiche (für Sie)",
+      "areasHelp": "Nur vom Administrator freigegebene Bereiche, für die Sie berechtigt sind. In keinem Bereich werden Personendaten gelesen.",
+      "areasNone": "Derzeit kein Bereich freigegeben.",
+      "privacyTitle": "Datenschutz (DSGVO)",
+      "areas": {
+        "accounting": "Buchhaltung (Summen, Berichte)",
+        "members": "Mitglieder (nur Zahlen)",
+        "events": "Veranstaltungen",
+        "tasks": "Aufgaben",
+        "courses": "Kurse (nur Namen)"
+      },
+      "status": {
+        "module": "Modul",
+        "key": "API-Schlüssel",
+        "keyOk": "Hinterlegt (Wert wird nicht angezeigt).",
+        "keyMissing": "Nicht hinterlegt: Umgebungsvariable ANTHROPIC_API_KEY auf dem Server erforderlich.",
+        "consent": "Persönliche Einwilligung",
+        "consentOk": "Sie haben eingewilligt.",
+        "consentMissing": "Noch keine Einwilligung.",
+        "availability": {
+          "available": "Aktiv und Zugriff freigegeben.",
+          "inactive": "Deaktiviert.",
+          "needsApproval": "Wartet auf Zugriffsfreigabe."
+        }
+      },
+      "privacy": {
+        "noPersonal": "Werkzeuge liefern keine Personendaten: nur Summen, Zahlen und Vereinsdaten.",
+        "masking": "Registrierte Personennamen (Mitglieder, Nutzer, Schüler, Eltern) und Mitglieds-/Schülernummern sowie E-Mail-Adressen, IBANs, Telefon- und Steuernummern in Ihren Nachrichten werden vor dem Versand an die KI maskiert.",
+        "ownRights": "Jede Anfrage ist auf die Rolle des Nutzers und die Modulfreigabe des Administrators beschränkt.",
+        "noStorage": "Chatinhalte werden nirgends gespeichert.",
+        "noChanges": "Der Assistent ändert keine Daten; Vorschläge werden nur nach Bestätigung ausgeführt.",
+        "audit": "Im Audit-Log stehen nur Metadaten: verwendete Werkzeuge, Tokenzahlen und Anzahl maskierter Werte.",
+        "provider": "Anbieter: Anthropic Claude API. API-Daten werden nicht zum Training verwendet; der Verein sollte einen Auftragsverarbeitungsvertrag (AVV/DPA) abschließen.",
+        "revoke": "Jede Person willigt selbst ein und kann jederzeit widerrufen; der Administrator kann den Assistenten durch Deaktivieren des Moduls für alle stoppen."
       }
     }
   },

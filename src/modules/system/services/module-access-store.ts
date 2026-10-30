@@ -28,7 +28,7 @@ export async function setAccessRecord(key: string, record: ModuleAccessRecord): 
   const value = JSON.stringify(record);
   await getDb().systemSetting.upsert({
     where: { key: `${PREFIX}${key}` },
-    create: { key: `${PREFIX}${key}`, value, description: "Modüller arası erişim izni" },
+    create: { key: `${PREFIX}${key}`, value, description: "module-access approval" },
     update: { value },
   });
 }

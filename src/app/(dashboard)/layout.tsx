@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 
 import type { SessionUser } from "@/modules/auth";
 import { requireUser, signOutAction } from "@/modules/auth/server";
+import { AiAssistantSlot } from "@/modules/ai/ui";
 import { listUsableModuleKeys } from "@/modules/system/server";
 
 import {
@@ -56,6 +57,8 @@ export default async function DashboardLayout({
           userEmail={user.email}
           onSignOut={signOutAction}
         />
+        {/* Sağ panel AI asistanı: modül kapalıysa, onaysızsa veya rol izinli değilse hiç çizilmez. */}
+        <AiAssistantSlot user={user} />
       </div>
     </SidebarProvider>
   );
