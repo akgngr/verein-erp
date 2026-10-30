@@ -18,7 +18,9 @@ import {
   updateAttendeeAction,
 } from "../actions/attendee-actions";
 
-import { AttendeeAddModal } from "./attendee-add-modal";
+import Link from "next/link";
+
+import { AttendeeAddModal, type AttendeeMemberOption } from "./attendee-add-modal";
 import { QuorumBanner } from "./quorum-banner";
 import type { AttendeeItem, QuorumInfo } from "../types";
 import {
@@ -36,12 +38,17 @@ export function AttendeesTab({
   attendees,
   quorum,
   userOptions,
+  memberOptions,
+  canViewMembers,
   editable,
 }: {
   meetingId: string;
   attendees: AttendeeItem[];
   quorum: QuorumInfo;
   userOptions: { id: string; label: string }[];
+  memberOptions: AttendeeMemberOption[];
+  /** Üye adı üye kaydına bağlantı olarak gösterilir. */
+  canViewMembers: boolean;
   editable: boolean;
 }) {
   const t = useTranslations("meetings.attendees");
@@ -158,9 +165,21 @@ export function AttendeesTab({
             <tbody>
               {attendees.map((attendee) => (
                 <tr key={attendee.id} className="border-b border-default-100">
-                  <td className="p-2 font-medium">{attendee.name}</td>
+                  <td className="p-2 font-medium">
+                    {attendee.memberId && canViewMembers ? (
+                      <Link
+                        href={`/uyeler/${attendee.memberId}`}
+                        title={t("openMember")}
+                        className="text-primary underline-offset-4 hover:underline"
+                      >
+                        {attendee.name}
+                      </Link>
+                    ) : (
+                      attendee.name
+                    )}
+                  </td>
                   <td className="p-2 text-default-500">
-                    {attendee.userId ? t("registered") : t("guest")}
+                    {attendee.memberId ? t("member") : attendee.userId ? t("registered") : t("guest")}
                   </td>
                   <td className="p-2">
                     {editable ? (
@@ -253,6 +272,8 @@ export function AttendeesTab({
       <AttendeeAddModal
         meetingId={meetingId}
         userOptions={userOptions}
+        memberOptions={memberOptions}
+        addedMemberIds={attendees.flatMap((attendee) => (attendee.memberId ? [attendee.memberId] : []))}
         isOpen={modalOpen}
         onOpenChange={setModalOpen}
       />

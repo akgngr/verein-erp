@@ -277,5 +277,21 @@
         "OTHER": "Diğer"
       }
     }
+  },
+  "cards": {
+    "overview": {
+      "title": "Evrak kayıt",
+      "description": "Açık ve işlemdeki evraklar, bu ayın gelen/giden sayıları.",
+      "open": "Açık / işlemde",
+      "incomingMonth": "Bu ay gelen",
+      "outgoingMonth": "Bu ay giden",
+      "overdue": "Süresi geçmiş"
+    },
+    "overdue": {
+      "title": "Süresi geçmiş evraklar",
+      "description": "Son işlem tarihi geçmiş evrak varsa uyarı gösterir.",
+      "message": "Son işlem tarihi geçmiş {count} evrak bekliyor.",
+      "action": "Geciken evrakları gör"
+    }
   }
 }

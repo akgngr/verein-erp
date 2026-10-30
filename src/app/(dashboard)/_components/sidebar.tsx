@@ -105,6 +105,36 @@ const PANEL_ITEM: NavItem = {
   },
 };
 
+/** Ayar sayfalarını toplayan sanal modülün anahtarı (registry'de yoktur). */
+const SETTINGS_KEY = "_settings";
+
+/**
+ * "settings" grubundaki nav öğelerinden sanal bir modül kurar: ana sayfası "/ayarlar" (yoksa ilk öğe),
+ * menüsü diğer ayar sayfaları. Görünür ayar sayfası yoksa null.
+ */
+function buildSettingsModule(items: NavItem[]): { module: ModuleConfig; hub: NavItem; items: NavItem[] } | null {
+  if (items.length === 0) return null;
+  const hub = items.find((item) => item.href === "/ayarlar") ?? items[0];
+  const pages = items.filter((item) => item !== hub);
+  return {
+    hub,
+    items,
+    module: {
+      key: SETTINGS_KEY,
+      label: hub.label,
+      category: "CORE",
+      nav: [hub],
+      menu: pages.map((item) => ({
+        key: item.href,
+        label: item.label,
+        href: item.href,
+        icon: item.icon,
+        permission: item.permission,
+      })),
+    },
+  };
+}
+
 type MenuLink = {
   key: string;
   href: string;
@@ -143,17 +173,31 @@ function SidebarContent({
     can(role, permission.definition, permission.action);
 
   // Yalnızca aktif olan ve kullanıcının görebildiği modüller
-  const modules = (activeModuleKeys ? registry.filter((m) => activeModuleKeys.includes(m.key)) : registry).filter(
+  const visibleModules = (activeModuleKeys ? registry.filter((m) => activeModuleKeys.includes(m.key)) : registry).filter(
     (mod) => mod.nav.some((item) => allowed(item.permission)),
   );
 
   // Menü yetkiye göre süzülür ve group + order ile sıralanır (7.4, 8. bölüm).
-  const visibleItems = [...modules.flatMap((mod) => mod.nav), PANEL_ITEM]
+  const visibleItems = [...visibleModules.flatMap((mod) => mod.nav), PANEL_ITEM]
     .filter((item) => allowed(item.permission))
     .sort((a, b) => (a.group === b.group ? a.order - b.order : a.group === "main" ? -1 : 1));
   const mainItems = visibleItems.filter((item) => item.group === "main");
-  const settingsItems = visibleItems.filter((item) => item.group === "settings");
-  const activeMainHref = findActiveKey(visibleItems, (item) => item.href, pathname, searchParams);
+
+  // KARAR: "settings" grubundaki tüm sayfalar ana menüde tek "Ayarlar" girişinde toplanır; girişe
+  // tıklanınca panel, modül menüsü gibi ayar sayfalarının menüsüne geçer.
+  const settings = buildSettingsModule(visibleItems.filter((item) => item.group === "settings"));
+  const modules = [
+    ...(settings ? [settings.module] : []),
+    ...visibleModules.filter((mod) => mod.nav.some((item) => item.group === "main") || hasModuleMenu(mod)),
+  ];
+  // Herhangi bir ayar sayfasındayken ana menüdeki "Ayarlar" girişi aktiftir.
+  const activeMainKey = findActiveKey(
+    [...mainItems, ...(settings?.items ?? [])],
+    (item) => (item.group === "settings" ? SETTINGS_KEY : item.href),
+    pathname,
+    searchParams,
+  );
+  const activeMainHref = activeMainKey === SETTINGS_KEY ? settings?.hub.href : activeMainKey;
 
   const routeModule = findActiveModule(modules, pathname, searchParams);
   const routeModuleKey = routeModule && hasModuleMenu(routeModule) ? routeModule.key : null;
@@ -182,6 +226,9 @@ function SidebarContent({
     ? moduleMenuItems(shownModule)
         .filter((item) => allowed(item.permission ?? moduleHome(shownModule)!.permission))
         .map((item) => {
+          if (shownModule.key === SETTINGS_KEY && item.key !== MODULE_HOME_KEY) {
+            return { ...item, label: navLabel(settings!.items.find((nav) => nav.href === item.href)!) };
+          }
           const key = item.key === MODULE_HOME_KEY ? "sidebar.overview" : `${shownModule.key}.menu.${item.key}`;
           return { ...item, label: tRoot.has(key) ? tRoot(key) : item.label };
         })
@@ -295,16 +342,9 @@ function SidebarContent({
             })()
           : null}
         <div className="flex flex-col gap-1">{mainItems.map(renderMainItem)}</div>
-        {settingsItems.length > 0 ? (
-          <div className="flex flex-col gap-1 pt-2">
-            {collapsed ? (
-              <hr className="mx-2 mb-1.5 border-default-200/80" />
-            ) : (
-              <p className="px-3 pb-1.5 text-[11px] font-semibold uppercase tracking-wider text-default-400">
-                {tSidebar.has("settings") ? tSidebar("settings") : "Ayarlar"}
-              </p>
-            )}
-            {settingsItems.map(renderMainItem)}
+        {settings ? (
+          <div className="flex flex-col gap-1 border-t border-default-200/80 pt-3">
+            {renderMainItem(settings.hub)}
           </div>
         ) : null}
       </nav>

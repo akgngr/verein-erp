@@ -25,6 +25,7 @@ export type MeetingListItem = {
 export type AttendeeItem = {
   id: string;
   userId: string | null;
+  memberId: string | null;
   name: string;
   role: AttendeeRole;
   attendance: AttendanceStatus;

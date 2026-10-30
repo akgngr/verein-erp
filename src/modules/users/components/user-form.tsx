@@ -11,6 +11,7 @@ import { useForm } from "react-hook-form";
 import { applyActionResult } from "@/shared/components/forms/action-result";
 import { FormErrorSummary } from "@/shared/components/forms/form-error-summary";
 import { FormInput } from "@/shared/components/forms/form-input";
+import { FormPasswordInput } from "@/shared/components/forms/form-password-input";
 import { FormSelect } from "@/shared/components/forms/form-select";
 import { FormSwitch } from "@/shared/components/forms/form-switch";
 import { SubmitButton } from "@/shared/components/forms/submit-button";
@@ -75,12 +76,11 @@ export function UserCreateForm() {
       />
       <FormSelect name="role" label={t("role")} control={form.control} options={roleOptions} isRequired />
       <RolePermissionsPreview role={selectedRole} />
-      <FormInput
+      <FormPasswordInput
         name="password"
         label={t("tempPassword")}
         control={form.control}
-        type="password"
-        autoComplete="new-password"
+        allowGenerate
         isRequired
         description={t("tempPasswordHint")}
       />

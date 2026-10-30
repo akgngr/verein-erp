@@ -7,6 +7,7 @@ import { buildUserLabel } from "@/shared/utils";
 import type { ActionResult } from "@/shared/types/action";
 
 import { ActionError, createAction } from "@/modules/auth/server";
+import { listMemberOptions } from "@/modules/members/server";
 
 import { meetingsPermissions } from "../permissions";
 import { meetingCreateSchema, meetingUpdateSchema } from "../schemas/meeting";
@@ -58,7 +59,7 @@ export async function createMeetingAction(
       const year = berlinYear(meetingDate);
 
       // Kopyalama kaynağı (5. bölüm md. 11): aynı türden, silinmemiş toplantı.
-      let copyAttendees: { userId: string | null; name: string; role: "CHAIRPERSON" | "SECRETARY" | "MEMBER" | "GUEST" }[] = [];
+      let copyAttendees: { userId: string | null; memberId: string | null; name: string; role: "CHAIRPERSON" | "SECRETARY" | "MEMBER" | "GUEST" }[] = [];
       let copyAgenda: { title: string; description: string | null }[] = [];
       if (input.copyFromMeetingId) {
         const source = await db.meeting.findFirst({
@@ -75,17 +76,26 @@ export async function createMeetingAction(
         const [sourceAttendees, activeUsers] = await Promise.all([
           db.meetingAttendee.findMany({
             where: { meetingId: source.id },
-            select: { userId: true, name: true, role: true },
+            select: { userId: true, memberId: true, name: true, role: true },
           }),
           db.user.findMany({ where: { isActive: true }, select: { id: true } }),
         ]);
         const activeIds = new Set(activeUsers.map((activeUser) => activeUser.id));
+        const sourceMemberIds = sourceAttendees.flatMap((attendee) => (attendee.memberId ? [attendee.memberId] : []));
+        const validMemberIds = new Set(
+          sourceMemberIds.length > 0
+            ? (await listMemberOptions({ ids: sourceMemberIds })).map((member) => member.id)
+            : [],
+        );
         copyAttendees = sourceAttendees
           // KARAR: kullanıcı katılımcıları yalnızca kullanıcı hâlâ aktifse kopyalanır;
           // konuklar her zaman korunur (5. bölüm md. 11).
+          // Üye katılımcıları da yalnızca üyelik sürüyorsa kopyalanır.
           .filter((attendee) => !attendee.userId || activeIds.has(attendee.userId))
+          .filter((attendee) => !attendee.memberId || validMemberIds.has(attendee.memberId))
           .map((attendee) => ({
             userId: attendee.userId,
+            memberId: attendee.memberId,
             name: attendee.name,
             role: attendee.role as "CHAIRPERSON" | "SECRETARY" | "MEMBER" | "GUEST",
           }));
@@ -137,6 +147,7 @@ export async function createMeetingAction(
                     attendees: {
                       create: copyAttendees.map((attendee) => ({
                         userId: attendee.userId,
+                        memberId: attendee.memberId,
                         name: attendee.name,
                         role: attendee.role,
                         // KARAR: katılım kopyalanmaz, herkes INVITED başlar (5. bölüm md. 11).

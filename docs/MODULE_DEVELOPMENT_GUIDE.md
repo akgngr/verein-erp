@@ -4,7 +4,7 @@
 > Depoya erişimi olmayan harici bir AI için kopyala-yapıştır istem: [`AI_MODULE_PROMPT.md`](AI_MODULE_PROMPT.md).
 
 Bu rehber, çekirdeğe dokunmadan (**sıfır dokunuş**) yeni bir modül eklemenin kurallarını anlatır.
-Kuralların çoğu otomatik denetlenir; bir kural çiğnendiğinde CI kırmızıya döner (bkz. §8).
+Kuralların çoğu otomatik denetlenir; bir kural çiğnendiğinde CI kırmızıya döner (bkz. §9).
 
 ---
 
@@ -58,6 +58,7 @@ src/modules/<anahtar>/
 ├── api/<yol>/route.ts      # API rotaları   → /api/<anahtar>/<yol>
 ├── messages/tr.json | de.json
 ├── schemas/  queries/  actions/  services/  helpers/
+├── cards/index.tsx      # panel kartları (isteğe bağlı; bkz. §8)
 ├── components/          # "use client" bileşenler (HeroUI yalnızca burada)
 └── views/               # sunucu bileşenleri (HeroUI YOK)
 ```
@@ -148,15 +149,71 @@ Kök `messages/<dil>.json` **üretilen** dosyadır; `messages/shell/<dil>.json` 
 - **Kullanıcı etiketi:** `createdByLabel` gibi alanlar için `buildUserLabel(user.name, user.email)`
   (`@/shared/utils`); fonksiyon kullanıcı nesnesi değil iki metin alır.
 - **Veritabanı:** `const db = getDb()` (`@/shared/db`). Başka modülün tablosuna `@relation` yerine
-  yumuşak referans (`memberId String?` + etiket anlık görüntüsü). Şema değişikliği = migration (`pnpm db:migrate`).
+  yumuşak referans (`memberId String?` + etiket anlık görüntüsü). Üye seçimi için
+  `listMemberOptions()` (`@/modules/members/server`) kullan; `member` tablosunu doğrudan sorgulama. Şema değişikliği = migration (`pnpm db:migrate`).
 - **Menü:** Alt sayfalar ve dışa aktarma `module.config.ts → menu` içindedir (ana sayfa otomatik eklenir;
   API bağlantıları `isDownload: true`; gerekirse `permission`). PageHeader'da yalnızca ana "Yeni" eylemi olur.
+- **Ayarlar:** Sol menüde tek bir "Ayarlar" girişi vardır; ayar ekranları ayrı menü öğesi olarak
+  ana menüye eklenmez.
+  - Bağımsız bir ayar/yönetim sayfası (örn. "E-posta", "Kullanıcılar") → `nav` öğesine
+    `group: "settings"` ver. Sayfa, "Ayarlar" alt menüsünde ve ayar merkezinin (`/ayarlar`)
+    "Dernek ve sistem" bölümünde kendiliğinden görünür; açıklama olarak `module.description` kullanılır.
+  - Modülün kendi içindeki ayar sayfası (örn. `/muhasebe/ayarlar`) → `menu` içinde `key: "settings"`
+    olan bir öğe. Ayar merkezinin "Modül ayarları" bölümünde kendiliğinden listelenir.
+  - Kabuğa veya ayar merkezine elle kart/bağlantı ekleme; her şey registry'den kurulur.
 - **Liste:** `parseListParams` + `DataTable` (`@/shared/components/data-table/data-table`); arama, filtre,
   sıralama ve sayfalama URL'dedir.
 
 ---
 
-## 8. Doğrulama (CI aynı adımları çalıştırır)
+## 8. Panel kartları (`cards/`)
+
+Modül panele (`/`) kart sunabilir. Kullanıcı "Paneli düzenle" ile kartları ekler, kaldırır ve
+sıralar; düzen kullanıcı başına kaydedilir. Kullanıcı hiç düzenlemediyse `defaultVisible: true`
+kartlar gösterilir. Modül pasifse ya da kullanıcının kartın `permission` yetkisi yoksa kart görünmez.
+
+`src/modules/<anahtar>/cards/index.tsx`:
+
+```tsx
+import { Users } from "lucide-react";
+
+import { StatCardBody } from "@/shared/components/dashboard/card-bodies";
+import { defineCards } from "@/shared/types/dashboard";
+
+import { sponsorsPermissions } from "../permissions";
+import { getSponsorStats } from "../queries/get-sponsor-stats";
+
+export const cards = defineCards([
+  {
+    key: "overview",                          // kimlik: "sponsors.overview"
+    titleKey: "cards.overview.title",         // modül mesajlarında
+    descriptionKey: "cards.overview.description",
+    icon: Users,
+    size: "sm",                               // sm = 1 sütun, md = 2, lg = tam satır
+    defaultVisible: true,
+    href: "/sponsors",
+    permission: { definition: sponsorsPermissions, action: "view" },
+    render: async ({ t }) => {
+      const stats = await getSponsorStats();
+      return <StatCardBody value={stats.active} label={t("cards.overview.active")} />;
+    },
+  },
+]);
+```
+
+- Gövde bileşenleri (`@/shared/components/dashboard/card-bodies`): `StatCardBody` (sayı),
+  `TableCardBody` (kısa tablo), `GaugeCardBody` (0-100 gösterge), `AlertCardBody` (uyarı).
+  Başlık, ikon, bağlantı ve düzenleme düğmelerini panel çizer; kart yalnızca gövdeyi döner.
+- `render` sunucuda çalışır: sorgu yapabilir, hook ve HeroUI kullanamaz. `t` modülün çeviri ad
+  alanındadır. Gösterecek bir şey yoksa `null` dön (örn. gecikme uyarısı); kart görüntüleme
+  modunda gizlenir. Hata fırlatırsa yalnızca o kart hata mesajı gösterir.
+- Kart başlık/açıklama metinleri `messages/tr.json` ve `de.json` içinde `cards.<key>.*` altındadır.
+- `pnpm module:sync`, `cards/index.tsx` dosyalarını üretilen `src/dashboard-cards.ts` içinde toplar;
+  bu dosyayı elle düzenleme. Örnekler: `members`, `meetings`, `documents` modüllerinin `cards/` klasörü.
+
+---
+
+## 9. Doğrulama (CI aynı adımları çalıştırır)
 
 ```bash
 pnpm module:sync                                  # köprüler, şema, çeviri, kayıt

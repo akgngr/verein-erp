@@ -49,7 +49,8 @@ function leafKeys(messages: unknown, prefix = ""): string[] {
 
 /**
  * Çeviri bütünlüğü: tr/de anahtar eşliği; nav `labelKey` → `nav.<key>`;
- * menü öğesi → `menu.<key>`; sistem listesi için `module.label`/`module.description`.
+ * menü öğesi → `menu.<key>`; sistem listesi için `module.label`/`module.description`;
+ * panel kartlarının `titleKey`/`descriptionKey` anahtarları.
  */
 function checkModuleMessages(moduleDir: string, trJson: unknown, deJson: unknown): string[] {
   const problems: string[] = [];
@@ -68,6 +69,13 @@ function checkModuleMessages(moduleDir: string, trJson: unknown, deJson: unknown
   const menuBlock = config.match(/\n\s*menu:\s*\[([\s\S]*?)\n\s*\]/);
   if (menuBlock) {
     for (const match of menuBlock[1].matchAll(/\bkey:\s*["']([\w-]+)["']/g)) required.push(`menu.${match[1]}`);
+  }
+  // Panel kartları: başlık ve açıklama anahtarları modül mesajlarında olmalı.
+  for (const file of ["index.tsx", "index.ts"]) {
+    const cardsPath = path.join(moduleDir, "cards", file);
+    if (!fs.existsSync(cardsPath)) continue;
+    const cardsText = fs.readFileSync(cardsPath, "utf8");
+    for (const match of cardsText.matchAll(/(?:titleKey|descriptionKey):\s*["']([\w.-]+)["']/g)) required.push(match[1]);
   }
   for (const key of required) {
     for (const [locale, json] of [["tr", trJson], ["de", deJson]] as const) {

@@ -80,6 +80,13 @@
     "emailPlaceholder": "ornek@dernek.org",
     "export": {
       "truncated": "Sonuçlar {max} satırla sınırlandı."
+    },
+    "password": {
+      "show": "Parolayı göster",
+      "hide": "Parolayı gizle",
+      "generate": "Parola üret",
+      "copy": "Kopyala",
+      "copied": "Parola panoya kopyalandı."
     }
   },
   "nav": {
@@ -137,28 +144,25 @@
     "accountingYearLocked": "Yıl kilitli",
     "overviewTitle": "Genel Bakış",
     "overviewDescription": "Dernek yönetim sistemi ve operasyonel özet durumu.",
-    "docsCategory": "Evrak Kayıt",
-    "docsPrimary": "Açık / İşlemde",
-    "overdueBadge": "{count} Gecikmiş",
-    "incomingMonth": "Bu ay gelen",
-    "outgoingMonth": "Bu ay giden",
-    "overdueLabel": "Süresi geçmiş",
-    "meetingsCategory": "Toplantı & Tutanak",
-    "nextLabel": "Sıradaki: {number}",
-    "plannedLabel": "Planlanan Toplantı",
-    "overdueTasksBadge": "{count} Gecikmiş Görev",
-    "pendingMinutes": "Onay bekleyen",
-    "openTasksLabel": "Açık görev",
-    "overdueTasksLabel": "Gecikmiş görev",
-    "membersCategory": "Üye Yönetimi",
-    "activeMembers": "Aktif Üye",
-    "newThisMonth": "Bu ay yeni",
-    "passive": "Pasif",
-    "resigned": "Ayrılan",
-    "docsOverdueAlert": "Son işlem tarihi geçmiş {count} adet evrak bekliyor.",
-    "docsOverdueAction": "Geciken evrakları gör",
-    "tasksOverdueAlert": "Termini geçmiş {count} adet toplantı görevi bulunuyor.",
-    "tasksOverdueAction": "Geciken görevleri gör"
+    "edit": "Paneli düzenle",
+    "done": "Bitti",
+    "reset": "Varsayılana dön",
+    "editHint": "Kartları ekleyin, kaldırın ya da sırasını değiştirin. Değişiklikler hemen kaydedilir ve yalnızca sizin panelinizi etkiler.",
+    "available": "Eklenebilecek kartlar",
+    "noneAvailable": "Eklenebilecek başka kart yok.",
+    "add": "Ekle",
+    "remove": "Kaldır",
+    "moveUp": "Öne al",
+    "moveDown": "Geri al",
+    "empty": "Panelinizde kart yok. Kart eklemek için “Paneli düzenle”ye tıklayın.",
+    "cardError": "Bu kart şu an yüklenemedi.",
+    "nothingNow": "Şu an gösterilecek bir şey yok; durum oluşunca kart görünür.",
+    "saveError": "Panel düzeni kaydedilemedi.",
+    "sizes": {
+      "sm": "Küçük",
+      "md": "Orta",
+      "lg": "Geniş"
+    }
   },
   "meta": {
     "panel": "Panel",
@@ -190,7 +194,7 @@
   },
   "settings": {
     "title": "Ayarlar",
-    "subtitle": "Dernek profilini, kullanıcı yetkilerini, modülleri ve sistem tercihlerini yönetin.",
+    "subtitle": "Dernek, erişim, sistem ve modül ayarlarına buradan ulaşın.",
     "languageSection": {
       "title": "Dil ve Bölge Tercihleri",
       "description": "Sistem arayüz dilini ve yerelleştirme ayarlarını belirleyin.",
@@ -212,40 +216,24 @@
       "system": "Sistem Teması",
       "systemDesc": "Cihazınızın işletim sistemi temasıyla otomatik senkronize"
     },
-    "cards": {
-      "organization": {
-        "title": "Dernek Bilgileri",
-        "description": "Kurumsal kimlik, dernek adı, vergi numarası, resmi adres, logo ve iletişim bilgileri.",
-        "action": "Düzenle"
-      },
-      "users": {
-        "title": "Kullanıcılar ve Roller",
-        "description": "Kullanıcı hesapları, sistem rolleri (Yönetim, Sayman, Denetçi vb.) ve yetkilendirmeler.",
-        "action": "Yönet"
+    "searchPlaceholder": "Ayar ara…",
+    "noResults": "Aramanızla eşleşen ayar yok.",
+    "open": "Aç",
+    "sections": {
+      "general": {
+        "title": "Dernek ve sistem",
+        "description": "Dernek bilgileri, kullanıcılar ve sistem yönetimi."
       },
       "modules": {
-        "title": "Modül Yönetimi",
-        "description": "Çekirdek sistem araçları, resmi ERP modülleri ve harici geliştirici eklentilerini yönetin.",
-        "action": "Yapılandır"
+        "title": "Modül ayarları",
+        "description": "Modüllerin kendi yapılandırma sayfaları."
       },
-      "audit": {
-        "title": "Denetim Kayıtları",
-        "description": "Sistemdeki tüm veri değişiklikleri, oturum hareketleri ve güvenlik olaylarının dökümü.",
-        "action": "İncele"
-      },
-      "accounting": {
-        "title": "Muhasebe Ayarları",
-        "description": "Hesap planı (SKR49 / standart), bütçe hedefleri ve mali yıl yapılandırmaları.",
-        "action": "Ayarlar"
+      "personal": {
+        "title": "Kişisel tercihler",
+        "description": "Yalnızca sizin arayüzünüzü etkiler."
       }
     },
-    "badges": {
-      "organization": "Profil & Kimlik",
-      "users": "Erişim & Roller",
-      "modules": "Modüller & Şema",
-      "audit": "Güvenlik & Log",
-      "accounting": "Mali Yapı"
-    }
+    "moduleSettings": "{module} ayarları"
   },
   "roles": {
     "ADMIN": "Yönetici",
@@ -1212,6 +1200,22 @@
           "FAX": "Faks",
           "OTHER": "Diğer"
         }
+      }
+    },
+    "cards": {
+      "overview": {
+        "title": "Evrak kayıt",
+        "description": "Açık ve işlemdeki evraklar, bu ayın gelen/giden sayıları.",
+        "open": "Açık / işlemde",
+        "incomingMonth": "Bu ay gelen",
+        "outgoingMonth": "Bu ay giden",
+        "overdue": "Süresi geçmiş"
+      },
+      "overdue": {
+        "title": "Süresi geçmiş evraklar",
+        "description": "Son işlem tarihi geçmiş evrak varsa uyarı gösterir.",
+        "message": "Son işlem tarihi geçmiş {count} evrak bekliyor.",
+        "action": "Geciken evrakları gör"
       }
     }
   },
@@ -2414,13 +2418,15 @@
       "removeTitle": "Katılımcı çıkarılacak",
       "removeMessage": "Katılımcı toplantıdan çıkarılacak. Devam edilsin mi?",
       "removeConfirm": "Çıkar",
-      "addUser": "Kullanıcı ekle",
+      "addUser": "Katılımcı ekle",
       "guestName": "Konuk adı",
       "addGuest": "Konuk ekle",
       "source": "Kaynak",
       "removedNamedToast": "Katılımcı çıkarıldı: {name}",
       "markedToast": "{count} katılımcı 'Katıldı' olarak işaretlendi",
-      "namePlaceholder": "Ad Soyad"
+      "namePlaceholder": "Ad Soyad",
+      "member": "Dernek üyesi",
+      "openMember": "Üye kaydını aç"
     },
     "attendeeAdd": {
       "title": "Katılımcı ekle",
@@ -2443,7 +2449,13 @@
       "users": "Kullanıcılar",
       "usersDescription": "Bir kullanıcı toplantıya bir kez eklenebilir.",
       "addedCountToast": "{count} katılımcı eklendi",
-      "add": "Ekle"
+      "add": "Ekle",
+      "tabMembers": "Dernek üyesi",
+      "members": "Üyeler",
+      "membersDescription": "Aktif ve pasif üyeler listelenir. Bir üye toplantıya bir kez eklenebilir.",
+      "membersSearch": "Ad veya üye no ile ara",
+      "noMembers": "Eşleşen üye yok.",
+      "selectedCount": "{count} üye seçildi"
     },
     "tasks": {
       "pageTitle": "Görevler",
@@ -2575,7 +2587,9 @@
       "approveNeedsAgenda": "Onaylamak için en az bir gündem maddesi gereklidir.",
       "approveNeedsPresent": "Onaylamak için en az bir katılımcının 'Katıldı' olarak işaretlenmesi gereklidir.",
       "meetingNotFound2": "Toplantı bulunamadı.",
-      "notEditable": "Toplantı düzenlenemez."
+      "notEditable": "Toplantı düzenlenemez.",
+      "memberNotFound": "Seçilen üye bulunamadı veya üyeliği sona ermiş.",
+      "membersAlreadyAdded": "Seçilen üyeler bu toplantıda zaten mevcut."
     },
     "validation": {
       "taskMin": "Görev açıklaması en az 3 karakter olmalıdır.",
@@ -2607,7 +2621,8 @@
       "descriptionMax": "Açıklama en fazla 2000 karakter olabilir.",
       "endNeedsStart": "Bitiş saati girmek için başlangıç saati zorunludur.",
       "endAfterStart": "Bitiş saati başlangıç saatinden sonra olmalıdır.",
-      "quorumInt": "Yeter sayısı tam sayı olmalıdır."
+      "quorumInt": "Yeter sayısı tam sayı olmalıdır.",
+      "selectMember": "En az bir üye seçin."
     },
     "meta": {
       "list": "Toplantılar",
@@ -2619,6 +2634,31 @@
     "module": {
       "label": "Toplantılar",
       "description": "Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar."
+    },
+    "cards": {
+      "overview": {
+        "title": "Toplantı ve tutanak",
+        "description": "Sıradaki toplantı, onay bekleyen tutanaklar ve açık görevler.",
+        "next": "Sıradaki: {number}",
+        "planned": "Planlanan toplantı",
+        "pendingMinutes": "Onay bekleyen",
+        "openTasks": "Açık görev",
+        "overdueTasks": "Gecikmiş görev"
+      },
+      "upcoming": {
+        "title": "Yaklaşan toplantılar",
+        "description": "Planlanmış ilk beş toplantının tablosu.",
+        "empty": "Planlanmış toplantı yok.",
+        "colTitle": "Toplantı",
+        "colDate": "Tarih",
+        "colLocation": "Yer"
+      },
+      "overdueTasks": {
+        "title": "Geciken toplantı görevleri",
+        "description": "Termini geçmiş görev varsa uyarı gösterir.",
+        "message": "Termini geçmiş {count} toplantı görevi var.",
+        "action": "Geciken görevleri gör"
+      }
     }
   },
   "members": {
@@ -3074,6 +3114,24 @@
       "unknownStatus": "Bilinmeyen durum: \"{value}\". (Aktif / Pasif / Ayrıldı)",
       "birthDateInvalid": "Doğum tarihi geçersiz (gg.aa.yyyy kullanın).",
       "joinDateRequired": "Üyelik başlangıç tarihi zorunludur (gg.aa.yyyy)."
+    },
+    "cards": {
+      "members": {
+        "title": "Üyeler",
+        "description": "Aktif, pasif, ayrılan ve bu ay katılan üye sayıları.",
+        "active": "Aktif üye",
+        "newThisMonth": "Bu ay yeni",
+        "passive": "Pasif",
+        "resigned": "Ayrılan"
+      },
+      "duesCollection": {
+        "title": "Aidat tahsilatı",
+        "description": "Bu yılın aidat tahsilat oranı (gösterge).",
+        "rate": "{year} tahsilat oranı",
+        "caption": "{collected} / {expected}",
+        "open": "Açık",
+        "overdue": "Gecikmiş"
+      }
     }
   },
   "organization": {

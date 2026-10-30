@@ -246,3 +246,27 @@ export async function listMemberFeePaymentsForConfirmation(args: {
   }
   return [...byMember.values()].sort((a, b) => a.memberNumber.localeCompare(b.memberNumber));
 }
+
+export type MemberOption = { id: string; label: string; membershipNumber: string };
+
+/**
+ * Seçim listeleri için üyeler (başka modüller: toplantı katılımcısı, görev sorumlusu …).
+ * Varsayılan: silinmemiş, aktif veya pasif üyeler; `ids` verilirse yalnızca onlar.
+ */
+export async function listMemberOptions(options: { ids?: string[] } = {}): Promise<MemberOption[]> {
+  const { getDb } = await import("@/shared/db");
+  const members = await getDb().member.findMany({
+    where: {
+      deletedAt: null,
+      status: { in: ["ACTIVE", "PASSIVE"] },
+      ...(options.ids ? { id: { in: options.ids } } : {}),
+    },
+    select: { id: true, firstName: true, lastName: true, membershipNumber: true },
+    orderBy: [{ lastName: "asc" }, { firstName: "asc" }],
+  });
+  return members.map((member) => ({
+    id: member.id,
+    label: `${member.firstName} ${member.lastName}`,
+    membershipNumber: member.membershipNumber,
+  }));
+}

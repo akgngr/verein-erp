@@ -80,6 +80,13 @@
     "emailPlaceholder": "beispiel@verein.de",
     "export": {
       "truncated": "Ergebnisse auf {max} Zeilen begrenzt."
+    },
+    "password": {
+      "show": "Passwort anzeigen",
+      "hide": "Passwort verbergen",
+      "generate": "Passwort erzeugen",
+      "copy": "Kopieren",
+      "copied": "Passwort in die Zwischenablage kopiert."
     }
   },
   "nav": {
@@ -137,28 +144,25 @@
     "accountingYearLocked": "Jahr abgeschlossen",
     "overviewTitle": "Übersicht",
     "overviewDescription": "Vereinsverwaltung und operativer Überblick.",
-    "docsCategory": "Dokumente",
-    "docsPrimary": "Offen / in Bearbeitung",
-    "overdueBadge": "{count} überfällig",
-    "incomingMonth": "Eingang diesen Monat",
-    "outgoingMonth": "Ausgang diesen Monat",
-    "overdueLabel": "Überfällig",
-    "meetingsCategory": "Sitzungen & Protokolle",
-    "nextLabel": "Nächste: {number}",
-    "plannedLabel": "Geplante Sitzungen",
-    "overdueTasksBadge": "{count} überfällige Aufgaben",
-    "pendingMinutes": "Freigabe ausstehend",
-    "openTasksLabel": "Offene Aufgaben",
-    "overdueTasksLabel": "Überfällige Aufgaben",
-    "membersCategory": "Mitgliederverwaltung",
-    "activeMembers": "Aktive Mitglieder",
-    "newThisMonth": "Neu diesen Monat",
-    "passive": "Passiv",
-    "resigned": "Ausgetreten",
-    "docsOverdueAlert": "{count} Dokumente haben die Bearbeitungsfrist überschritten.",
-    "docsOverdueAction": "Überfällige Dokumente anzeigen",
-    "tasksOverdueAlert": "{count} Sitzungsaufgaben sind überfällig.",
-    "tasksOverdueAction": "Überfällige Aufgaben anzeigen"
+    "edit": "Dashboard bearbeiten",
+    "done": "Fertig",
+    "reset": "Standard wiederherstellen",
+    "editHint": "Karten hinzufügen, entfernen oder neu anordnen. Änderungen werden sofort gespeichert und betreffen nur Ihr Dashboard.",
+    "available": "Verfügbare Karten",
+    "noneAvailable": "Keine weiteren Karten verfügbar.",
+    "add": "Hinzufügen",
+    "remove": "Entfernen",
+    "moveUp": "Nach vorne",
+    "moveDown": "Nach hinten",
+    "empty": "Ihr Dashboard enthält keine Karten. Klicken Sie auf „Dashboard bearbeiten“, um Karten hinzuzufügen.",
+    "cardError": "Diese Karte konnte gerade nicht geladen werden.",
+    "nothingNow": "Derzeit nichts anzuzeigen; die Karte erscheint, sobald es etwas gibt.",
+    "saveError": "Dashboard-Layout konnte nicht gespeichert werden.",
+    "sizes": {
+      "sm": "Klein",
+      "md": "Mittel",
+      "lg": "Breit"
+    }
   },
   "meta": {
     "panel": "Dashboard",
@@ -190,7 +194,7 @@
   },
   "settings": {
     "title": "Einstellungen",
-    "subtitle": "Vereinsprofil, Benutzerberechtigungen, Module und Systemeinstellungen verwalten.",
+    "subtitle": "Hier erreichen Sie die Einstellungen für Verein, Zugriff, System und Module.",
     "languageSection": {
       "title": "Sprache & Region",
       "description": "Benutzeroberflächensprache und lokale Vereinseinstellungen festlegen.",
@@ -212,40 +216,24 @@
       "system": "Systemstandard",
       "systemDesc": "Synchronisiert sich automatisch mit den Einstellungen Ihres Betriebssystems"
     },
-    "cards": {
-      "organization": {
-        "title": "Vereinsdaten",
-        "description": "Identität, Vereinsname, Steuernummer/Vereinsregister, Adresse, Logo und Kontaktdaten.",
-        "action": "Bearbeiten"
-      },
-      "users": {
-        "title": "Benutzer & Rollen",
-        "description": "Benutzerkonten, Systemrollen (Vorstand, Kassenwart, Prüfer usw.) und Berechtigungen.",
-        "action": "Verwalten"
+    "searchPlaceholder": "Einstellung suchen…",
+    "noResults": "Keine Einstellung passt zu Ihrer Suche.",
+    "open": "Öffnen",
+    "sections": {
+      "general": {
+        "title": "Verein und System",
+        "description": "Vereinsdaten, Benutzer und Systemverwaltung."
       },
       "modules": {
-        "title": "Modulverwaltung",
-        "description": "Systemkern-, offizielle ERP-Module und externe Entwickler-Erweiterungen verwalten.",
-        "action": "Konfigurieren"
+        "title": "Moduleinstellungen",
+        "description": "Eigene Konfigurationsseiten der Module."
       },
-      "audit": {
-        "title": "Audit-Protokoll",
-        "description": "Zeitgestempelte Historie aller Datenänderungen, Anmeldeaktivitäten und Sicherheitsereignisse.",
-        "action": "Prüfen"
-      },
-      "accounting": {
-        "title": "Buchhaltungseinstellungen",
-        "description": "Kontenrahmen (SKR49 / Standard), Budgetziele und Geschäftsjahresabschlüsse.",
-        "action": "Einstellungen"
+      "personal": {
+        "title": "Persönliche Einstellungen",
+        "description": "Wirkt sich nur auf Ihre Oberfläche aus."
       }
     },
-    "badges": {
-      "organization": "Profil & Identität",
-      "users": "Zugriff & Rollen",
-      "modules": "Module & Schema",
-      "audit": "Sicherheit & Protokoll",
-      "accounting": "Finanzstruktur"
-    }
+    "moduleSettings": "Einstellungen: {module}"
   },
   "roles": {
     "ADMIN": "Administrator",
@@ -1212,6 +1200,22 @@
           "FAX": "Fax",
           "OTHER": "Sonstiges"
         }
+      }
+    },
+    "cards": {
+      "overview": {
+        "title": "Dokumente",
+        "description": "Offene und laufende Dokumente, Ein- und Ausgänge dieses Monats.",
+        "open": "Offen / in Bearbeitung",
+        "incomingMonth": "Eingang diesen Monat",
+        "outgoingMonth": "Ausgang diesen Monat",
+        "overdue": "Überfällig"
+      },
+      "overdue": {
+        "title": "Überfällige Dokumente",
+        "description": "Zeigt eine Warnung, wenn Dokumente die Frist überschritten haben.",
+        "message": "{count} Dokumente haben die Bearbeitungsfrist überschritten.",
+        "action": "Überfällige Dokumente anzeigen"
       }
     }
   },
@@ -2414,13 +2418,15 @@
       "removeTitle": "Teilnehmer wird entfernt",
       "removeMessage": "Der Teilnehmer wird von der Sitzung entfernt. Fortfahren?",
       "removeConfirm": "Entfernen",
-      "addUser": "Benutzer hinzufügen",
+      "addUser": "Teilnehmende hinzufügen",
       "guestName": "Name des Gastes",
       "addGuest": "Gast hinzufügen",
       "source": "Herkunft",
       "removedNamedToast": "Teilnehmer entfernt: {name}",
       "markedToast": "{count} Teilnehmer als „anwesend“ markiert",
-      "namePlaceholder": "Vor- und Nachname"
+      "namePlaceholder": "Vor- und Nachname",
+      "member": "Vereinsmitglied",
+      "openMember": "Mitgliedsdatensatz öffnen"
     },
     "attendeeAdd": {
       "title": "Teilnehmer hinzufügen",
@@ -2443,7 +2449,13 @@
       "users": "Benutzer",
       "usersDescription": "Ein Benutzer kann nur einmal zur Sitzung hinzugefügt werden.",
       "addedCountToast": "{count} Teilnehmer hinzugefügt",
-      "add": "Hinzufügen"
+      "add": "Hinzufügen",
+      "tabMembers": "Vereinsmitglied",
+      "members": "Mitglieder",
+      "membersDescription": "Aktive und passive Mitglieder werden angezeigt. Ein Mitglied kann nur einmal hinzugefügt werden.",
+      "membersSearch": "Nach Name oder Mitgliedsnummer suchen",
+      "noMembers": "Kein passendes Mitglied.",
+      "selectedCount": "{count} Mitglieder ausgewählt"
     },
     "tasks": {
       "pageTitle": "Aufgaben",
@@ -2575,7 +2587,9 @@
       "approveNeedsAgenda": "Zur Freigabe ist mindestens ein Tagesordnungspunkt erforderlich.",
       "approveNeedsPresent": "Zur Freigabe muss mindestens ein Teilnehmer als „anwesend“ markiert sein.",
       "meetingNotFound2": "Sitzung nicht gefunden.",
-      "notEditable": "Die Sitzung kann nicht bearbeitet werden."
+      "notEditable": "Die Sitzung kann nicht bearbeitet werden.",
+      "memberNotFound": "Das ausgewählte Mitglied wurde nicht gefunden oder ist ausgetreten.",
+      "membersAlreadyAdded": "Die ausgewählten Mitglieder sind bereits in dieser Sitzung."
     },
     "validation": {
       "taskMin": "Die Aufgabenbeschreibung muss mindestens 3 Zeichen lang sein.",
@@ -2607,7 +2621,8 @@
       "descriptionMax": "Die Beschreibung darf höchstens 2000 Zeichen lang sein.",
       "endNeedsStart": "Für eine Endzeit ist eine Startzeit erforderlich.",
       "endAfterStart": "Die Endzeit muss nach der Startzeit liegen.",
-      "quorumInt": "Die Beschlussfähigkeit muss eine ganze Zahl sein."
+      "quorumInt": "Die Beschlussfähigkeit muss eine ganze Zahl sein.",
+      "selectMember": "Wählen Sie mindestens ein Mitglied aus."
     },
     "meta": {
       "list": "Sitzungen",
@@ -2619,6 +2634,31 @@
     "module": {
       "label": "Sitzungen",
       "description": "Vorstands- und Mitgliederversammlungen, Protokolle und Beschlüsse."
+    },
+    "cards": {
+      "overview": {
+        "title": "Sitzungen und Protokolle",
+        "description": "Nächste Sitzung, Protokolle zur Freigabe und offene Aufgaben.",
+        "next": "Nächste: {number}",
+        "planned": "Geplante Sitzungen",
+        "pendingMinutes": "Freigabe ausstehend",
+        "openTasks": "Offene Aufgaben",
+        "overdueTasks": "Überfällige Aufgaben"
+      },
+      "upcoming": {
+        "title": "Anstehende Sitzungen",
+        "description": "Tabelle der nächsten fünf geplanten Sitzungen.",
+        "empty": "Keine geplanten Sitzungen.",
+        "colTitle": "Sitzung",
+        "colDate": "Datum",
+        "colLocation": "Ort"
+      },
+      "overdueTasks": {
+        "title": "Überfällige Sitzungsaufgaben",
+        "description": "Zeigt eine Warnung, wenn Aufgaben überfällig sind.",
+        "message": "{count} Sitzungsaufgaben sind überfällig.",
+        "action": "Überfällige Aufgaben anzeigen"
+      }
     }
   },
   "members": {
@@ -3074,6 +3114,24 @@
       "unknownStatus": "Unbekannter Status: „{value}“. (Aktif / Pasif / Ayrıldı)",
       "birthDateInvalid": "Ungültiges Geburtsdatum (TT.MM.JJJJ verwenden).",
       "joinDateRequired": "Eintrittsdatum ist erforderlich (TT.MM.JJJJ)."
+    },
+    "cards": {
+      "members": {
+        "title": "Mitglieder",
+        "description": "Aktive, passive, ausgetretene und in diesem Monat eingetretene Mitglieder.",
+        "active": "Aktive Mitglieder",
+        "newThisMonth": "Neu diesen Monat",
+        "passive": "Passiv",
+        "resigned": "Ausgetreten"
+      },
+      "duesCollection": {
+        "title": "Beitragseinzug",
+        "description": "Einzugsquote der Mitgliedsbeiträge dieses Jahres (Anzeige).",
+        "rate": "Einzugsquote {year}",
+        "caption": "{collected} / {expected}",
+        "open": "Offen",
+        "overdue": "Überfällig"
+      }
     }
   },
   "organization": {
