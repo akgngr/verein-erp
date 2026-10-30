@@ -36,7 +36,11 @@
     "activateTitle": "Kullanıcıyı aktifleştir",
     "deactivateTitle": "Kullanıcıyı pasife al",
     "activateConfirm": "\"{name}\" kullanıcısı aktifleştirilecek. Onaylıyor musunuz?",
-    "deactivateConfirm": "\"{name}\" kullanıcısı pasife alınacak; mevcut oturumuyla bile işlem yapamayacak. Onaylıyor musunuz?"
+    "deactivateConfirm": "\"{name}\" kullanıcısı pasife alınacak; mevcut oturumuyla bile işlem yapamayacak. Onaylıyor musunuz?",
+    "delete": "Kalıcı olarak sil",
+    "deleted": "Kullanıcı silindi.",
+    "deleteTitle": "Kullanıcıyı kalıcı olarak sil",
+    "deleteConfirm": "\"{name}\" kullanıcısı kalıcı olarak silinecek ve geri alınamaz. Diğer kayıtlarda adı görünmeye devam eder. Yalnızca erişimi durdurmak istiyorsanız pasife almayı tercih edin. Onaylıyor musunuz?"
   },
   "form": {
     "name": "Ad Soyad",
@@ -60,7 +64,8 @@
     "notFound": "Kullanıcı bulunamadı.",
     "selfDeactivate": "Kendinizi pasife alamazsınız.",
     "lastAdmin": "Sistemde en az bir aktif yönetici kalmalıdır.",
-    "selfDemote": "Kendi rolünüzü düşüremezsiniz."
+    "selfDemote": "Kendi rolünüzü düşüremezsiniz.",
+    "selfDelete": "Kendinizi silemezsiniz."
   },
   "validation": {
     "nameRequired": "Ad soyad zorunludur.",

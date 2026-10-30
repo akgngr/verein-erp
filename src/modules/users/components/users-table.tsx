@@ -4,7 +4,7 @@ import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
 import { useTranslations } from "next-intl";
 
 import { addToast, Chip } from "@heroui/react";
-import { KeyRound, Pencil, Power, RefreshCcw } from "lucide-react";
+import { KeyRound, Pencil, Power, RefreshCcw, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -15,6 +15,7 @@ import { ROLE_COLORS } from "@/shared/roles";
 import { formatDateTime } from "@/shared/utils";
 
 import { ResetPasswordDialog } from "./reset-password-dialog";
+import { deleteUserAction } from "../actions/delete-user";
 import { setUserActiveAction } from "../actions/set-active";
 import type { UserRow } from "../queries/list-users";
 import { ROLES } from "@/shared/roles";
@@ -32,6 +33,7 @@ export function UsersTable({
   dir,
   q,
   canUpdate,
+  canDelete,
 }: {
   rows: UserRow[];
   total: number;
@@ -41,6 +43,7 @@ export function UsersTable({
   dir?: "asc" | "desc";
   q?: string;
   canUpdate: boolean;
+  canDelete: boolean;
 }) {
   const tRoles = useTranslations("roles");
   const t = useTranslations("users.table");
@@ -51,6 +54,7 @@ export function UsersTable({
     null,
   );
   const [resetTarget, setResetTarget] = useState<UserRow | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<UserRow | null>(null);
 
   const columns: DataTableColumn<UserRow>[] = [
     { key: "name", label: t("name"), sortable: true },
@@ -102,6 +106,16 @@ export function UsersTable({
     router.refresh();
   };
 
+  const handleDelete = async (user: UserRow) => {
+    const result = await deleteUserAction({ id: user.id });
+    if (!result.ok) {
+      addToast({ title: result.error, color: "danger" });
+      return;
+    }
+    addToast({ title: t("deleted"), color: "success" });
+    router.refresh();
+  };
+
   return (
     <>
       <DataTable<UserRow>
@@ -150,6 +164,14 @@ export function UsersTable({
             onPress: () => setActiveTarget({ user: row, isActive: !row.isActive }),
             hidden: !canUpdate,
           },
+          {
+            key: "delete",
+            label: t("delete"),
+            icon: <Trash2 className="h-4 w-4" />,
+            color: "danger",
+            onPress: () => setDeleteTarget(row),
+            hidden: !canDelete,
+          },
         ]}
       />
 
@@ -170,6 +192,20 @@ export function UsersTable({
         confirmColor={activeTarget?.isActive ? "primary" : "danger"}
         onConfirm={async () => {
           if (activeTarget) await handleSetActive(activeTarget.user, activeTarget.isActive);
+        }}
+      />
+
+      <ConfirmDialog
+        isOpen={deleteTarget !== null}
+        onOpenChange={(open) => {
+          if (!open) setDeleteTarget(null);
+        }}
+        title={t("deleteTitle")}
+        message={deleteTarget ? t("deleteConfirm", { name: deleteTarget.name }) : ""}
+        confirmLabel={t("delete")}
+        confirmColor="danger"
+        onConfirm={async () => {
+          if (deleteTarget) await handleDelete(deleteTarget);
         }}
       />
 

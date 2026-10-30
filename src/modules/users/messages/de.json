@@ -36,7 +36,11 @@
     "activateTitle": "Benutzer aktivieren",
     "deactivateTitle": "Benutzer deaktivieren",
     "activateConfirm": "Der Benutzer „{name}“ wird aktiviert. Fortfahren?",
-    "deactivateConfirm": "Der Benutzer „{name}“ wird deaktiviert und kann auch mit einer bestehenden Sitzung nichts mehr ausführen. Fortfahren?"
+    "deactivateConfirm": "Der Benutzer „{name}“ wird deaktiviert und kann auch mit einer bestehenden Sitzung nichts mehr ausführen. Fortfahren?",
+    "delete": "Endgültig löschen",
+    "deleted": "Benutzer gelöscht.",
+    "deleteTitle": "Benutzer endgültig löschen",
+    "deleteConfirm": "\"{name}\" wird endgültig gelöscht; dies kann nicht rückgängig gemacht werden. In anderen Datensätzen bleibt der Name sichtbar. Wenn Sie nur den Zugang sperren möchten, deaktivieren Sie den Benutzer stattdessen. Fortfahren?"
   },
   "form": {
     "name": "Vor- und Nachname",
@@ -60,7 +64,8 @@
     "notFound": "Benutzer nicht gefunden.",
     "selfDeactivate": "Sie können sich nicht selbst deaktivieren.",
     "lastAdmin": "Im System muss mindestens ein aktiver Administrator verbleiben.",
-    "selfDemote": "Sie können Ihre eigene Rolle nicht herabstufen."
+    "selfDemote": "Sie können Ihre eigene Rolle nicht herabstufen.",
+    "selfDelete": "Sie können sich nicht selbst löschen."
   },
   "validation": {
     "nameRequired": "Name ist erforderlich.",
