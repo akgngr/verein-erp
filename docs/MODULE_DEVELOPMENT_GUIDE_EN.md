@@ -4,7 +4,7 @@
 > Copy-paste prompt for an external AI without repository access: [`AI_MODULE_PROMPT.md`](AI_MODULE_PROMPT.md).
 
 This guide covers the rules for adding a module without touching the core (**zero touch**).
-Most rules are checked automatically; breaking one turns CI red (see §9).
+Most rules are checked automatically; breaking one turns CI red (see §10).
 
 ---
 
@@ -58,7 +58,7 @@ src/modules/<key>/
 ├── api/<path>/route.ts     # API routes   → /api/<key>/<path>
 ├── messages/tr.json | de.json
 ├── schemas/  queries/  actions/  services/  helpers/
-├── cards/index.tsx      # dashboard cards (optional; see §8)
+├── cards/index.tsx      # dashboard cards (optional; see §9)
 ├── components/          # "use client" components (HeroUI only here)
 └── views/               # server components (NO HeroUI)
 ```
@@ -174,7 +174,32 @@ The root `messages/<locale>.json` is **generated** from `messages/shell/<locale>
 
 ---
 
-## 8. Dashboard cards (`cards/`)
+## 8. Cross-module access (admin approval)
+
+A module uses another module's data only through that module's `@/modules/<m>/server` API and
+**declares** it in `module.config.ts`:
+
+```ts
+access: [
+  { module: "students", operations: ["read"] },
+  { module: "accounting", operations: ["read", "write"] },
+],
+```
+
+- The reason text lives in `messages/tr.json` and `de.json` under `access.<module>`; it is shown in
+  the approval dialog.
+- `pnpm module:validate` scans the code. An undeclared `server` import or direct access to another
+  module's table (`getDb().<model>`) is an error. The operation is derived from the function name:
+  `delete…`/`remove…` → delete; `create…`, `update…`, `send…`, `…Action` etc. → write; otherwise read.
+- `auth` (session, `createAction`) is infrastructure and needs no declaration.
+- When activating the module, the admin sees the requested access in an approval dialog and allows it.
+  Without approval the module is unusable: hidden from the menu, pages and APIs closed (generated
+  bridges are wrapped with `withModuleGate` / `gateRouteHandler`). If an update requests new access,
+  the approval lapses and is asked for again. Approvals live in `src/config/module-access.json`.
+
+---
+
+## 9. Dashboard cards (`cards/`)
 
 A module can offer cards for the dashboard (`/`). With "Edit dashboard" the user adds, removes and
 reorders cards; the layout is stored per user. If the user never edited it, cards with
@@ -222,7 +247,7 @@ export const cards = defineCards([
 
 ---
 
-## 9. Verification (CI runs the same steps)
+## 10. Verification (CI runs the same steps)
 
 ```bash
 pnpm module:sync                                  # bridges, schema, translations, registry

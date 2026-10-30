@@ -4,6 +4,7 @@ import { z } from "zod";
 import { ActionError, createAction } from "@/modules/auth/server";
 import { systemPermissions } from "@/shared/permissions/system";
 import { allModules } from "@/registry";
+import { isAccessApproved } from "@/shared/modules/module-access";
 import { setModuleActive } from "@/shared/modules/module-store";
 import type { ActionResult } from "@/shared/types/action";
 
@@ -24,6 +25,11 @@ export async function toggleModuleAction(input: unknown): Promise<ActionResult> 
 
       if (moduleMeta.isProtected || moduleMeta.category === "CORE") {
         throw new ActionError("system.errors.coreCannotDisable");
+      }
+
+      // Erişim izni olmadan etkinleştirme yok: önce onay penceresinden izin verilmelidir.
+      if (input.isActive && !isAccessApproved(moduleMeta.key, moduleMeta.access)) {
+        throw new ActionError("system.errors.accessNotApproved");
       }
 
       await setModuleActive(input.key, input.isActive);

@@ -1,0 +1,32 @@
+{
+  "meetings": {
+    "signature": "members:read|organization:read",
+    "approvedAt": "2026-10-30T00:00:00.000Z",
+    "approvedBy": "Kurulum (resmi modül)"
+  },
+  "members": {
+    "signature": "organization:read",
+    "approvedAt": "2026-10-30T00:00:00.000Z",
+    "approvedBy": "Kurulum (resmi modül)"
+  },
+  "accounting": {
+    "signature": "members:read|organization:read",
+    "approvedAt": "2026-10-30T00:00:00.000Z",
+    "approvedBy": "Kurulum (resmi modül)"
+  },
+  "donations": {
+    "signature": "accounting:read,write|members:read|organization:read",
+    "approvedAt": "2026-10-30T00:00:00.000Z",
+    "approvedBy": "Kurulum (resmi modül)"
+  },
+  "courses": {
+    "signature": "accounting:read,write|mail:read,write|students:read|users:write",
+    "approvedAt": "2026-10-30T00:00:00.000Z",
+    "approvedBy": "Kurulum (resmi modül)"
+  },
+  "progress": {
+    "signature": "courses:read|organization:read",
+    "approvedAt": "2026-10-30T00:00:00.000Z",
+    "approvedBy": "Kurulum (resmi modül)"
+  }
+}

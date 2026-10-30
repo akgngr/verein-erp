@@ -54,6 +54,9 @@ KURALLAR (her biri CI'da otomatik denetlenir):
 16. Panel kartı (isteğe bağlı): `cards/index.tsx` → `export const cards = defineCards([...])`
     (`@/shared/types/dashboard`); gövde `@/shared/components/dashboard/card-bodies` bileşenleriyle
     (StatCardBody, TableCardBody, GaugeCardBody, AlertCardBody); metinler `cards.<key>.*`.
+17. Başka modülün verisi yalnızca `@/modules/<m>/server` üzerinden ve `module.config.ts` içinde
+    `access: [{ module: "<m>", operations: ["read" | "write" | "delete"] }]` bildirimiyle; gerekçe
+    `messages → access.<m>`. Başka modülün tablosuna `getDb()` ile erişme. Yönetici onaylamadan modül açılmaz.
 
 ÜRETECEĞİN DOSYALAR (tam yol + eksiksiz kod, TODO bırakma):
 module.config.ts, permissions.ts, schema.prisma, types.ts, index.ts, server.ts ("server-only"), ui.ts,

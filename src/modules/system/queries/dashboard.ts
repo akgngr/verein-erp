@@ -1,7 +1,6 @@
 import "server-only";
 
 import { dashboardCards } from "@/dashboard-cards";
-import { allModules } from "@/registry";
 import { can } from "@/shared/permissions/define";
 import type { Role } from "@/shared/roles";
 import { getDb } from "@/shared/db";

@@ -4,6 +4,11 @@ import {
   Button,
   Chip,
   Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
   Switch,
   Tab,
   Tabs,
@@ -15,6 +20,8 @@ import {
   RefreshCw,
   Search,
   Shield,
+  ShieldAlert,
+  ShieldCheck,
   Trash2,
   Zap,
 } from "lucide-react";
@@ -28,6 +35,7 @@ import { cn } from "@/shared/utils";
 
 import { deleteModuleAction } from "../actions/delete-module";
 import { syncSchemasAction } from "../actions/sync-schemas-action";
+import { approveModuleAccessAction, revokeModuleAccessAction } from "../actions/module-access";
 import { toggleModuleAction } from "../actions/toggle-module";
 import type { ModuleItem } from "../queries/get-modules";
 
@@ -53,6 +61,8 @@ export function ModuleList({
   const [search, setSearch] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [deletingModule, setDeletingModule] = useState<ModuleItem | null>(null);
+  const [consentModule, setConsentModule] = useState<ModuleItem | null>(null);
+  const tAccess = useTranslations("system.access");
 
   const filteredModules = useMemo(() => {
     return initialModules.filter((mod) => {
@@ -71,6 +81,11 @@ export function ModuleList({
 
   const handleToggle = (mod: ModuleItem, newActive: boolean) => {
     if (mod.isProtected) return;
+    // Erişim izni yoksa önce onay penceresi: kullanıcı neye izin verdiğini görmeden modül açılmaz.
+    if (newActive && mod.accessStatus === "pending") {
+      setConsentModule(mod);
+      return;
+    }
 
     startTransition(async () => {
       const result = await toggleModuleAction({ key: mod.key, isActive: newActive });
@@ -87,6 +102,28 @@ export function ModuleList({
       router.refresh();
     });
   };
+
+  const approveAccess = async (mod: ModuleItem) => {
+    const result = await approveModuleAccessAction({ key: mod.key, activate: true });
+    if (!result.ok) {
+      addToast({ title: result.error, color: "danger" });
+      return;
+    }
+    addToast({ title: tAccess("approvedToast", { label: mod.label }), color: "success" });
+    setConsentModule(null);
+    router.refresh();
+  };
+
+  const revokeAccess = (mod: ModuleItem) =>
+    startTransition(async () => {
+      const result = await revokeModuleAccessAction({ key: mod.key });
+      if (!result.ok) {
+        addToast({ title: result.error, color: "danger" });
+        return;
+      }
+      addToast({ title: tAccess("revokedToast", { label: mod.label }), color: "success" });
+      router.refresh();
+    });
 
   const handleConfirmDelete = async () => {
     if (!deletingModule) return;
@@ -299,6 +336,34 @@ export function ModuleList({
                         <span>{t("routes")}: <code className="text-primary-600">{mod.routes.join(", ")}</code></span>
                       ) : null}
                     </div>
+                    {mod.access.length > 0 ? (
+                      <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+                        {mod.accessStatus === "pending" ? (
+                          <Chip size="sm" color="warning" variant="flat" startContent={<ShieldAlert className="h-3 w-3" aria-hidden />}>
+                            {tAccess("pending")}
+                          </Chip>
+                        ) : (
+                          <Chip size="sm" color="success" variant="flat" startContent={<ShieldCheck className="h-3 w-3" aria-hidden />}>
+                            {tAccess("approved")}
+                          </Chip>
+                        )}
+                        {mod.access.map((request) => (
+                          <span key={request.module} className="rounded-md bg-default-100 px-1.5 py-0.5 text-[11px] text-default-600">
+                            {request.moduleLabel}: {request.operations.map((op) => tAccess(`op.${op}`)).join(", ")}
+                          </span>
+                        ))}
+                        {canManage && mod.accessStatus === "pending" ? (
+                          <Button size="sm" variant="light" color="warning" className="h-6" onPress={() => setConsentModule(mod)}>
+                            {tAccess("review")}
+                          </Button>
+                        ) : null}
+                        {canManage && mod.accessStatus === "approved" && !mod.isProtected ? (
+                          <Button size="sm" variant="light" className="h-6 text-default-500" isDisabled={isPending} onPress={() => revokeAccess(mod)}>
+                            {tAccess("revoke")}
+                          </Button>
+                        ) : null}
+                      </div>
+                    ) : null}
                   </div>
                 </div>
 
@@ -346,6 +411,47 @@ export function ModuleList({
           )}
         </div>
       </div>
+
+      {/* Erişim izni (onay) penceresi */}
+      <Modal isOpen={consentModule !== null} onOpenChange={(open) => !open && setConsentModule(null)} size="lg">
+        <ModalContent>
+          <ModalHeader className="flex items-center gap-2">
+            <ShieldAlert className="h-5 w-5 text-warning-500" aria-hidden />
+            {consentModule ? tAccess("title", { label: consentModule.label }) : null}
+          </ModalHeader>
+          <ModalBody>
+            {consentModule ? (
+              <div className="flex flex-col gap-3">
+                <p className="text-small text-default-600">{tAccess("intro", { label: consentModule.label })}</p>
+                <ul className="flex flex-col gap-2">
+                  {consentModule.access.map((request) => (
+                    <li key={request.module} className="rounded-medium border border-default-200 p-3">
+                      <div className="flex flex-wrap items-center gap-1.5">
+                        <span className="text-small font-semibold">{request.moduleLabel}</span>
+                        {request.operations.map((op) => (
+                          <Chip key={op} size="sm" variant="flat" color={op === "read" ? "default" : op === "write" ? "warning" : "danger"}>
+                            {tAccess(`op.${op}`)}
+                          </Chip>
+                        ))}
+                      </div>
+                      {request.reason ? <p className="mt-1 text-tiny text-default-500">{request.reason}</p> : null}
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-tiny text-default-500">{tAccess("note")}</p>
+              </div>
+            ) : null}
+          </ModalBody>
+          <ModalFooter>
+            <Button variant="light" onPress={() => setConsentModule(null)}>
+              {tAccess("deny")}
+            </Button>
+            <Button color="warning" isLoading={isPending} onPress={() => consentModule && startTransition(() => approveAccess(consentModule))}>
+              {tAccess("allow")}
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
 
       {/* Silme Onay Modalı */}
       <ConfirmDialog

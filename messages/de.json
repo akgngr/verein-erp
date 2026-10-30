@@ -778,6 +778,10 @@
         "_closing": "Endbestand",
         "_noAccount": "Kein Konto ausgewählt."
       }
+    },
+    "access": {
+      "members": "Liest Mitgliedsbeitragszahlungen, um sie in die Buchhaltung zu übernehmen.",
+      "organization": "Verwendet den Vereinsbriefkopf in PDF-Berichten."
     }
   },
   "audit": {
@@ -1255,6 +1259,12 @@
         "open": "{count} offene Posten",
         "overdue": "Überfällig"
       }
+    },
+    "access": {
+      "accounting": "Bucht Kursgebühren als Einnahmen und storniert sie; liest Kassen-/Bankkonten und Einnahmekategorien.",
+      "mail": "Versendet Einladungs-E-Mails an Lehrkräfte.",
+      "students": "Liest Schüler und Zahlungspflichtige für Kursanmeldungen.",
+      "users": "Legt für eingeladene Lehrkräfte ein Benutzerkonto mit der Rolle Lehrkraft an."
     }
   },
   "documents": {
@@ -2026,6 +2036,11 @@
       "templateMissing": "Vorlagentext noch nicht freigegeben (mit den BMF-Mustern vergleichen).",
       "feesOk": "Bestätigungen für Mitgliedsbeiträge möglich.",
       "feesOff": "Bestätigungen für Mitgliedsbeiträge deaktiviert (membershipFeesDeductible = false; § 10b Abs. 1 Satz 8 EStG)."
+    },
+    "access": {
+      "accounting": "Bucht Spenden als Einnahmen und storniert sie.",
+      "members": "Liest Mitgliedsanschrift und Beitragszahlungen für Zuwendungsbestätigungen.",
+      "organization": "Verwendet Vereinsdaten in Zuwendungsbestätigungen."
     }
   },
   "events": {
@@ -2991,6 +3006,10 @@
         "message": "{count} Sitzungsaufgaben sind überfällig.",
         "action": "Überfällige Aufgaben anzeigen"
       }
+    },
+    "access": {
+      "members": "Liest die Mitgliederliste, um Teilnehmende hinzuzufügen.",
+      "organization": "Verwendet den Vereinsbriefkopf im Protokoll-PDF."
     }
   },
   "members": {
@@ -3464,6 +3483,9 @@
         "open": "Offen",
         "overdue": "Überfällig"
       }
+    },
+    "access": {
+      "organization": "Verwendet den Vereinsbriefkopf in Quittungen und Dokumenten."
     }
   },
   "organization": {
@@ -3650,6 +3672,10 @@
         "absent": "Fehlt",
         "excused": "Entschuldigt"
       }
+    },
+    "access": {
+      "courses": "Liest Kurse, Termine und Anmeldungen für Anwesenheit und Noten.",
+      "organization": "Verwendet den Vereinsbriefkopf im Elternbericht."
     }
   },
   "students": {
@@ -3897,7 +3923,38 @@
       "notFound": "Modul nicht gefunden.",
       "coreCannotDisable": "Kernmodule können nicht deaktiviert werden.",
       "onlyExtensionsDeletable": "Nur externe Erweiterungen (EXTENSION) können gelöscht werden. Kern- und offizielle Module nicht.",
-      "deleteFailed": "Beim Löschen des Moduls ist ein Fehler aufgetreten."
+      "deleteFailed": "Beim Löschen des Moduls ist ein Fehler aufgetreten.",
+      "noAccessRequested": "Dieses Modul fordert keinen Zugriff auf andere Module an.",
+      "accessNotApproved": "Bitte zuerst den angeforderten Zugriff freigeben."
+    },
+    "access": {
+      "pending": "Freigabe ausstehend",
+      "approved": "Zugriff freigegeben",
+      "review": "Prüfen und freigeben",
+      "revoke": "Freigabe entziehen",
+      "title": "Modul {label} bittet um Zugriff",
+      "intro": "Das Modul {label} benötigt Zugriff auf Daten der folgenden Module. Ohne Freigabe ist es nicht nutzbar (nicht im Menü, Seiten und APIs gesperrt).",
+      "note": "Die Freigabe gilt für die aktuelle Zugriffsliste des Moduls. Fordert es nach einem Update neue Zugriffe an, wird erneut um Freigabe gebeten. Sie können die Freigabe jederzeit entziehen.",
+      "deny": "Abbrechen",
+      "allow": "Freigeben und aktivieren",
+      "approvedToast": "Zugriff für {label} freigegeben, Modul aktiviert.",
+      "revokedToast": "Freigabe für {label} entzogen; das Modul ist gesperrt.",
+      "op": {
+        "read": "lesen",
+        "write": "schreiben",
+        "delete": "löschen"
+      }
+    },
+    "gate": {
+      "manage": "Zur Modulverwaltung",
+      "inactive": {
+        "title": "Dieses Modul ist deaktiviert",
+        "description": "Seiten und Daten sind erst nach Aktivierung in der Modulverwaltung nutzbar."
+      },
+      "needsApproval": {
+        "title": "Dieses Modul wartet auf Zugriffsfreigabe",
+        "description": "Das Modul möchte auf Daten anderer Module zugreifen. Es ist gesperrt, bis die Verwaltung den Zugriff in der Modulverwaltung freigibt."
+      }
     }
   },
   "tasks": {
@@ -3986,6 +4043,10 @@
       "titleMax": "Titel darf maximal 200 Zeichen lang sein.",
       "descriptionMax": "Beschreibung darf maximal 2000 Zeichen lang sein.",
       "dateInvalid": "Bitte ein gültiges Datum eingeben (JJJJ-MM-TT)."
+    },
+    "access": {
+      "members": "Liest die Mitgliederliste, um Verantwortliche auszuwählen.",
+      "meetings": "Liest die Sitzungsliste, um Aufgaben einer Sitzung zuzuordnen."
     }
   },
   "users": {

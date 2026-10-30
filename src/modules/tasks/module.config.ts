@@ -14,6 +14,11 @@ export const moduleConfig: ModuleConfig = {
   description: "Görev ve iş takibi yönetimi.",
   category: "EXTENSION",
   hasSchema: true,
+  // Başka modüllerden istenen erişim (yönetici onayı gerekir; gerekçe: messages → access.<modül>).
+  access: [
+    { module: "members", operations: ["read"] },
+    { module: "meetings", operations: ["read"] },
+  ],
   nav: [
     {
       href: "/tasks",

@@ -3,7 +3,7 @@ import "server-only";
 import { Lock } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
-import type { ComponentType } from "react";
+import type { ReactNode } from "react";
 
 import { allModules } from "@/registry";
 import { isAccessApproved } from "@/shared/modules/module-access";
@@ -44,11 +44,12 @@ async function ModuleUnavailable({ status }: { status: Exclude<ModuleAvailabilit
 }
 
 /** Üretilen sayfa köprüleri modül sayfasını bununla sarar (src/shared/modules/sync-routes.ts). */
-export function withModuleGate<P extends object>(key: string, Page: ComponentType<P>) {
-  return async function GatedPage(props: P) {
+export function withModuleGate<P extends object>(key: string, Page: (props: P) => unknown) {
+  return async function GatedPage(props: P): Promise<ReactNode> {
     const status = getModuleAvailability(key);
     if (status !== "available") return <ModuleUnavailable status={status} />;
-    return <Page {...props} />;
+    // Sunucu sayfası fonksiyon olarak çağrılır: yönlendiren sayfalar (redirect) değer döndürmez.
+    return (await Page(props)) as ReactNode;
   };
 }
 

@@ -87,5 +87,9 @@
     "titleMax": "Titel darf maximal 200 Zeichen lang sein.",
     "descriptionMax": "Beschreibung darf maximal 2000 Zeichen lang sein.",
     "dateInvalid": "Bitte ein gültiges Datum eingeben (JJJJ-MM-TT)."
+  },
+  "access": {
+    "members": "Liest die Mitgliederliste, um Verantwortliche auszuwählen.",
+    "meetings": "Liest die Sitzungsliste, um Aufgaben einer Sitzung zuzuordnen."
   }
 }

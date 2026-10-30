@@ -87,5 +87,9 @@
     "titleMax": "Başlık en fazla 200 karakter olabilir.",
     "descriptionMax": "Açıklama en fazla 2000 karakter olabilir.",
     "dateInvalid": "Geçerli bir tarih giriniz (YYYY-AA-GG)."
+  },
+  "access": {
+    "members": "Görev sorumlusu seçmek için üye listesini okur.",
+    "meetings": "Görevi bir toplantıya bağlamak için toplantı listesini okur."
   }
 }
