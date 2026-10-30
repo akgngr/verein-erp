@@ -20,7 +20,7 @@
     "approvedBy": "Kurulum (resmi modül)"
   },
   "courses": {
-    "signature": "accounting:read,write|mail:read,write|students:read|users:write",
+    "signature": "accounting:read,write|mail:read,write|students:read|users:read,write",
     "approvedAt": "2026-10-30T00:00:00.000Z",
     "approvedBy": "Kurulum (resmi modül)"
   },
