@@ -270,3 +270,13 @@ export async function listMemberOptions(options: { ids?: string[] } = {}): Promi
     membershipNumber: member.membershipNumber,
   }));
 }
+
+/** Bu e-posta adresine sahip (silinmemiş) üyelerin kimlikleri; kullanıcıyı üye kaydıyla eşleştirmek için. */
+export async function findMemberIdsByEmail(email: string): Promise<string[]> {
+  const { getDb } = await import("@/shared/db");
+  const members = await getDb().member.findMany({
+    where: { email: { equals: email, mode: "insensitive" }, deletedAt: null },
+    select: { id: true },
+  });
+  return members.map((member) => member.id);
+}

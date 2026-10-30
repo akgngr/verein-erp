@@ -38,3 +38,20 @@ export { deleteMeetingFileAction } from "./actions/delete-file";
 export { uploadMeetingFileHandler } from "./handlers/upload-file";
 export { downloadMeetingFileHandler } from "./handlers/download-file";
 export { exportMinutesPdfHandler } from "./handlers/export-minutes-pdf";
+
+export type MeetingOption = { id: string; label: string };
+
+/**
+ * Seçim listeleri için toplantılar (başka modüller: görevler …): silinmemiş, en yeniden eskiye.
+ * `ids` verilirse yalnızca onlar (silinmiş olsalar da etiket gösterilebilsin diye).
+ */
+export async function listMeetingOptions(options: { ids?: string[]; take?: number } = {}): Promise<MeetingOption[]> {
+  const { getDb } = await import("@/shared/db");
+  const meetings = await getDb().meeting.findMany({
+    where: options.ids ? { id: { in: options.ids } } : { deletedAt: null },
+    select: { id: true, meetingNumber: true, title: true },
+    orderBy: { meetingDate: "desc" },
+    ...(options.ids ? {} : { take: options.take ?? 100 }),
+  });
+  return meetings.map((meeting) => ({ id: meeting.id, label: `${meeting.meetingNumber} - ${meeting.title}` }));
+}

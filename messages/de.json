@@ -3335,7 +3335,8 @@
       }
     },
     "errors": {
-      "notFound": "Aufgabe nicht gefunden."
+      "notFound": "Aufgabe nicht gefunden.",
+      "memberNotFound": "Das ausgewählte Mitglied wurde nicht gefunden oder ist ausgetreten."
     },
     "validation": {
       "titleRequired": "Titel ist erforderlich.",
