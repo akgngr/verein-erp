@@ -21,11 +21,13 @@
   },
   "errors": {
     "consentRequired": "Bitte bestätigen Sie zuerst den Datenschutzhinweis.",
-    "notConfigured": "Der Assistent ist noch nicht eingerichtet: Ein Administrator muss einen KI-Anbieter hinterlegen.",
+    "notConfigured": "Der Assistent ist noch nicht eingerichtet: Ein Administrator muss unter Einstellungen → KI-Assistent einen Anbieter verbinden.",
     "rateLimited": "Zu viele Anfragen; bitte kurz warten.",
     "invalidRequest": "Ungültige Anfrage.",
     "unavailable": "Der Assistent ist gerade nicht erreichbar; bitte später erneut versuchen.",
-    "providerNotReady": "Dieser Anbieter ist nicht eingerichtet (Schlüssel/Modell fehlt oder lokale Adresse liegt nicht im privaten Netz)."
+    "providerNotReady": "Dieser Anbieter ist nicht bereit (Schlüssel oder Modell fehlt bzw. lokale Adresse nicht im privaten Netz).",
+    "baseUrlRequired": "Für das lokale Modell ist eine Serveradresse erforderlich.",
+    "baseUrlNotPrivate": "Diese Adresse liegt nicht im Vereinsnetz. Aus Datenschutzgründen sind nur lokale/private Adressen zulässig."
   },
   "panel": {
     "title": "Assistent",
@@ -39,7 +41,7 @@
     "empty": "(leere Antwort)",
     "welcome": "Hallo! Fragen Sie zu den Vereinsdaten, fordern Sie Berichte an oder lassen Sie sich Aufgaben vorschlagen. Beispiele:",
     "privacyNote": "Personendaten werden maskiert; der Chat wird nicht gespeichert.",
-    "notConfigured": "Der Assistent ist noch nicht eingerichtet: Ein Administrator muss einen KI-Anbieter hinterlegen.",
+    "notConfigured": "Der Assistent ist noch nicht eingerichtet: Ein Administrator muss unter Einstellungen → KI-Assistent einen Anbieter verbinden.",
     "taskCreated": "Aufgabe angelegt.",
     "examples": {
       "q1": "Fasse die Einnahmen und Ausgaben dieses Jahres zusammen.",
@@ -70,7 +72,8 @@
         "provider": "Antworten werden mit dem gewählten Anbieter erzeugt: {provider} — {where}",
         "revoke": "Sie können Ihre Einwilligung jederzeit unter Einstellungen → KI-Assistent widerrufen."
       }
-    }
+    },
+    "barPlaceholder": "Den Assistenten fragen oder um etwas bitten…"
   },
   "settings": {
     "title": "KI-Assistent",
@@ -97,7 +100,7 @@
       "module": "Modul",
       "key": "Anbieter",
       "keyOk": "Aktiver Anbieter eingerichtet ({provider}); Schlüssel wird nicht angezeigt.",
-      "keyMissing": "Kein Anbieter eingerichtet: Server-Umgebungsvariablen für einen der unten genannten Anbieter erforderlich.",
+      "keyMissing": "Kein Anbieter bereit: unten Verbindungsdaten eines Anbieters eingeben und aktivieren.",
       "consent": "Persönliche Einwilligung",
       "consentOk": "Sie haben eingewilligt.",
       "consentMissing": "Noch keine Einwilligung.",
@@ -114,7 +117,7 @@
       "noStorage": "Chatinhalte werden nirgends gespeichert.",
       "noChanges": "Der Assistent ändert keine Daten; Vorschläge werden nur nach Bestätigung ausgeführt.",
       "audit": "Im Audit-Log stehen nur Metadaten: verwendete Werkzeuge, Tokenzahlen und Anzahl maskierter Werte.",
-      "provider": "Der Administrator wählt den Anbieter ausschließlich aus der zugelassenen Liste: eigener Server, Mistral (EU), Claude oder OpenAI. Der Verein muss mit dem gewählten Anbieter einen AVV/DPA abschließen.",
+      "provider": "Der Administrator wählt den Anbieter ausschließlich aus der zugelassenen Liste: eigener Server, Mistral (EU), Claude oder OpenAI. API-Schlüssel werden verschlüsselt in der Datenbank gespeichert und nirgends angezeigt. Der Verein muss mit dem gewählten Anbieter einen AVV/DPA abschließen.",
       "revoke": "Jede Person willigt selbst ein und kann jederzeit widerrufen; der Administrator kann den Assistenten durch Deaktivieren des Moduls für alle stoppen."
     },
     "providerTitle": "KI-Anbieter",
@@ -123,28 +126,75 @@
     "providerReady": "Bereit · Modell: {model}",
     "providerMissing": "Nicht eingerichtet",
     "providerUse": "Diesen Anbieter verwenden",
-    "providerChanged": "Anbieter geändert; Nutzer müssen erneut einwilligen."
+    "providerChanged": "Anbieter geändert; Nutzer müssen erneut einwilligen.",
+    "credentialSave": "Speichern",
+    "credentialSaved": "Verbindungsdaten gespeichert (Schlüssel verschlüsselt abgelegt).",
+    "permissionsTitle": "Berechtigungen des Assistenten",
+    "permissionsHelp": "Wählen Sie einzeln, worauf der Assistent zugreifen und was er tun darf. Standardmäßig ist alles deaktiviert; bei deaktivierter Berechtigung sieht der Assistent diese Daten nicht. Personendaten werden in keinem Fall gelesen.",
+    "areasSave": "Berechtigungen speichern",
+    "areasSaved": "Berechtigungen gespeichert.",
+    "fields": {
+      "apiKey": "API-Schlüssel",
+      "apiKeyOptional": "API-Schlüssel (optional)",
+      "apiKeyKept": "Gespeicherter Schlüssel bleibt erhalten; zum Ändern neuen eingeben",
+      "keyStored": "Schlüssel verschlüsselt gespeichert; Wert wird nicht angezeigt.",
+      "keyUnreadable": "Gespeicherter Schlüssel nicht lesbar (Server-Geheimnis evtl. geändert); bitte erneut eingeben.",
+      "clearKey": "Gespeicherten Schlüssel löschen",
+      "model": "Modell",
+      "baseUrl": "Serveradresse",
+      "baseUrlHelp": "Nur Adressen im Vereinsnetz werden akzeptiert (z. B. localhost, 192.168.x.x, Docker-Dienstname)."
+    },
+    "areaItems": {
+      "accounting": {
+        "label": "Buchhaltungsübersichten",
+        "help": "Einnahmen/Ausgaben je Kategorie und Kontostände. Keine Buchungsdetails, keine Personendaten."
+      },
+      "reports": {
+        "label": "Berichtslinks",
+        "help": "Download-Links für Einnahmen-/Ausgabenliste (PDF/Excel) und Kassenbericht; der Inhalt geht nicht an die KI."
+      },
+      "members": {
+        "label": "Mitgliederstatistik",
+        "help": "Nur Mitgliederzahlen und Beitragsquoten; keine Namen oder Daten einzelner Mitglieder."
+      },
+      "events": {
+        "label": "Veranstaltungen",
+        "help": "Titel, Datum, Ort und Teilnehmerzahl kommender Veranstaltungen; keine Teilnehmernamen."
+      },
+      "tasks": {
+        "label": "Aufgaben lesen",
+        "help": "Titel, Status und Termine offener Aufgaben; keine Angaben zu Verantwortlichen."
+      },
+      "tasksPropose": {
+        "label": "Aufgaben vorschlagen",
+        "help": "Der Assistent darf Aufgaben vorschlagen; angelegt werden sie nur nach Bestätigung durch die Person, mit deren Rechten."
+      },
+      "courses": {
+        "label": "Kurse",
+        "help": "Kursnamen und Status; keine Schülerdaten."
+      }
+    }
   },
   "providers": {
     "local": {
       "name": "Eigener Server (lokales Modell)",
       "where": "Daten verlassen den Vereinsserver nie. Strengste Option.",
-      "setup": "AI_LOCAL_BASE_URL (private Netzadresse, z. B. http://ollama:11434/v1) und AI_LOCAL_MODEL erforderlich; externe Adressen werden abgelehnt."
+      "defaultModel": "z. B. mistral-small"
     },
     "mistral": {
       "name": "Mistral AI",
       "where": "EU (Frankreich) — Verarbeitung in der EU, AVV möglich.",
-      "setup": "MISTRAL_API_KEY erforderlich; Modell AI_MISTRAL_MODEL (Standard mistral-large-latest)."
+      "defaultModel": "mistral-large-latest"
     },
     "anthropic": {
       "name": "Claude (Anthropic)",
       "where": "USA — AVV und EU-US Data Privacy Framework (DPF).",
-      "setup": "ANTHROPIC_API_KEY erforderlich; Modell AI_ANTHROPIC_MODEL (Standard claude-opus-5-5)."
+      "defaultModel": "claude-opus-5-5"
     },
     "openai": {
       "name": "OpenAI (ChatGPT)",
       "where": "USA — AVV, Option zur Datenresidenz in der EU.",
-      "setup": "OPENAI_API_KEY und AI_OPENAI_MODEL erforderlich."
+      "defaultModel": "z. B. Modellname"
     }
   }
 }

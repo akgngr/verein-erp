@@ -10,11 +10,24 @@ model AiUserConsent {
   @@map("ai_user_consents")
 }
 
-/// Asistan ayarı (tekil kayıt "singleton"): yöneticinin seçtiği sağlayıcı.
+/// Asistan ayarı (tekil kayıt "singleton"): seçili sağlayıcı ve asistana açılan alanlar.
+/// KARAR: enabledAreas varsayılan BOŞ — yönetici tek tek işaretlemeden asistan hiçbir veriye erişmez.
 model AiSettings {
-  id        String   @id
-  provider  String
-  updatedAt DateTime @updatedAt
+  id           String   @id
+  provider     String
+  enabledAreas String[] @default([])
+  updatedAt    DateTime @updatedAt
 
   @@map("ai_settings")
+}
+
+/// Sağlayıcı bağlantı bilgisi. API anahtarı AES-256-GCM ile ŞİFRELİ saklanır, istemciye asla dönmez.
+model AiProviderCredential {
+  provider  String   @id // local | mistral | anthropic | openai
+  apiKeyEnc String?
+  model     String?
+  baseUrl   String?
+  updatedAt DateTime @updatedAt
+
+  @@map("ai_provider_credentials")
 }

@@ -13,6 +13,7 @@ import { eventsPermissions, listEvents } from "@/modules/events/server";
 import { membersPermissions } from "@/modules/members";
 import { getDuesStats, getMemberStats } from "@/modules/members/server";
 import { listUsableModuleKeys } from "@/modules/system/server";
+import { getEnabledAreas, type AiArea } from "./areas";
 import { listTasks, TASK_DEFAULT_SORT, TASK_SORTABLE_FIELDS, tasksPermissions } from "@/modules/tasks/server";
 
 /**
@@ -36,6 +37,8 @@ type ToolContext = { user: SessionUser; proposals: AssistantProposal[] };
 type ToolDefinition<S extends z.ZodType> = {
   name: string;
   module: string;
+  /** Yöneticinin işaret listesindeki izin (kapalıysa araç modele hiç sunulmaz). */
+  area: AiArea;
   allowed: (user: SessionUser) => boolean;
   description: string;
   schema: S;
@@ -58,6 +61,7 @@ const euros = (cents: number) => Math.round(cents) / 100;
 const TOOLS = [
   define({
     name: "get_accounting_summary",
+    area: "accounting",
     module: "accounting",
     allowed: (user) => can(user.role, accountingPermissions, "view"),
     description:
@@ -85,6 +89,7 @@ const TOOLS = [
   }),
   define({
     name: "get_member_statistics",
+    area: "members",
     module: "members",
     allowed: (user) => can(user.role, membersPermissions, "view"),
     description: "Member counts by status and membership type, plus membership-fee collection statistics for a year. Numbers only; no member names or details.", // i18n-ignore (model-facing tool text)
@@ -110,6 +115,7 @@ const TOOLS = [
   }),
   define({
     name: "list_upcoming_events",
+    area: "events",
     module: "events",
     allowed: (user) => can(user.role, eventsPermissions, "view"),
     description: "Upcoming events: title, type, status, dates, location, registered count and capacity. No attendee names.", // i18n-ignore (model-facing tool text)
@@ -136,6 +142,7 @@ const TOOLS = [
   }),
   define({
     name: "list_open_tasks",
+    area: "tasks",
     module: "tasks",
     allowed: (user) => can(user.role, tasksPermissions, "view"),
     description: "Open and in-progress tasks: title, status, priority, due date, overdue flag. No assignee data. mine=true returns only the current user's tasks.",
@@ -159,6 +166,7 @@ const TOOLS = [
   }),
   define({
     name: "list_courses",
+    area: "courses",
     module: "courses",
     allowed: (user) => can(user.role, coursesPermissions, "view"),
     description: "Courses: code, title and status. No student data.", // i18n-ignore (model-facing tool text)
@@ -168,6 +176,7 @@ const TOOLS = [
   }),
   define({
     name: "get_report_link",
+    area: "reports",
     module: "accounting",
     allowed: (user) => can(user.role, accountingPermissions, "view"),
     description:
@@ -197,6 +206,7 @@ const TOOLS = [
   }),
   define({
     name: "propose_task",
+    area: "tasksPropose",
     module: "tasks",
     allowed: (user) => can(user.role, tasksPermissions, "create"),
     description:
@@ -227,8 +237,8 @@ const TOOLS = [
 
 /** Bu kullanıcı için şu an kullanılabilir araçlar (modül izni + kullanıcı yetkisi). */
 export async function availableTools(user: SessionUser) {
-  const usable = new Set(await listUsableModuleKeys());
-  return TOOLS.filter((tool) => usable.has(tool.module) && tool.allowed(user));
+  const [usable, enabled] = await Promise.all([listUsableModuleKeys().then((keys) => new Set(keys)), getEnabledAreas().then((areas) => new Set(areas))]);
+  return TOOLS.filter((tool) => enabled.has(tool.area) && usable.has(tool.module) && tool.allowed(user));
 }
 
 export type AvailableTool = (typeof TOOLS)[number];

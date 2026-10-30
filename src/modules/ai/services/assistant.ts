@@ -4,7 +4,7 @@ import type { SessionUser } from "@/modules/auth";
 
 import { loadKnownIdentifiers } from "./known-identifiers";
 import { PseudonymVault } from "./privacy";
-import { adapterFor, providerSettings, type AiProviderId } from "./providers";
+import { adapterFor, getProviderSettings, type AiProviderId } from "./providers";
 import { availableTools, runTool, type AssistantProposal } from "./tools";
 
 const MAX_TOOL_ROUNDS = 6;
@@ -44,8 +44,9 @@ export async function runAssistant(args: { user: SessionUser; locale: string; pr
   const toolsUsed: string[] = [];
   const today = new Date().toLocaleDateString("de-DE", { timeZone: "Europe/Berlin" });
 
-  const result = await adapterFor(args.provider).run({
-    model: providerSettings(args.provider).model ?? "",
+  const settings = await getProviderSettings(args.provider);
+  const result = await adapterFor(settings).run({
+    model: settings.model ?? "",
     system: systemPrompt(args.locale, today),
     turns: args.turns.map((turn) => ({ role: turn.role, content: vault.redact(turn.content) })),
     tools: tools.map((tool) => ({ name: tool.name, description: tool.description, inputSchema: tool.inputSchema as Record<string, unknown> })),

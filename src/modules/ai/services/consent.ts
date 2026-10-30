@@ -16,12 +16,15 @@ const isProviderId = (value: string | null | undefined): value is AiProviderId =
  */
 export async function getActiveProvider(): Promise<AiProviderId | null> {
   const row = await getDb().aiSettings.findUnique({ where: { id: "singleton" } });
-  if (isProviderId(row?.provider)) return isProviderReady(row.provider) ? row.provider : null;
-  return AI_PROVIDER_IDS.find((id) => isProviderReady(id)) ?? null;
+  if (isProviderId(row?.provider)) return (await isProviderReady(row.provider)) ? row.provider : null;
+  for (const id of AI_PROVIDER_IDS) {
+    if (await isProviderReady(id)) return id;
+  }
+  return null;
 }
 
 export async function setActiveProvider(provider: AiProviderId): Promise<void> {
-  await getDb().aiSettings.upsert({ where: { id: "singleton" }, create: { id: "singleton", provider }, update: { provider } });
+  await getDb().aiSettings.upsert({ where: { id: "singleton" }, create: { id: "singleton", provider, enabledAreas: [] }, update: { provider } });
 }
 
 /** Rıza yalnızca güncel sürüm VE şu anki sağlayıcı için geçerlidir. */
@@ -42,7 +45,7 @@ export async function revokeAiConsent(userId: string): Promise<void> {
   await getDb().aiUserConsent.deleteMany({ where: { userId } });
 }
 
-/** Kullanılabilir bir sağlayıcı var mı (anahtar değerleri asla okunup gösterilmez). */
+/** Kullanılabilir bir sağlayıcı var mı (anahtar değeri asla istemciye gönderilmez). */
 export async function isAiConfigured(): Promise<boolean> {
   return (await getActiveProvider()) !== null;
 }
