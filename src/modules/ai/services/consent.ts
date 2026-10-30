@@ -24,7 +24,7 @@ export async function getActiveProvider(): Promise<AiProviderId | null> {
 }
 
 export async function setActiveProvider(provider: AiProviderId): Promise<void> {
-  await getDb().aiSettings.upsert({ where: { id: "singleton" }, create: { id: "singleton", provider, enabledAreas: [] }, update: { provider } });
+  await getDb().aiSettings.upsert({ where: { id: "singleton" }, create: { id: "singleton", provider }, update: { provider } });
 }
 
 /** Rıza yalnızca güncel sürüm VE şu anki sağlayıcı için geçerlidir. */

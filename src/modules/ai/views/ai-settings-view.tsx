@@ -13,10 +13,12 @@ import { can } from "@/shared/permissions/define";
 import { aiPermissions } from "../permissions";
 import { ProviderSelect } from "../components/provider-select";
 import { getActiveProvider, hasAiConsent } from "../services/consent";
-import { AreasChecklist } from "../components/areas-checklist";
-import { AI_AREAS, getEnabledAreas } from "../services/areas";
+import { allModules } from "@/registry";
+
+import { PermissionMatrix } from "../components/permission-matrix";
+import { getAiPermissions } from "../services/permissions";
 import { listProviderStatus } from "../services/providers";
-import { availableTools } from "../services/tools";
+import { availableTools, supportedOperations } from "../services/tools";
 
 function Status({ ok, label, detail }: { ok: boolean; label: string; detail: string }) {
   return (
@@ -41,16 +43,24 @@ export async function AiSettingsView() {
   }
   const t = await getTranslations("ai.settings");
   // Anahtar değerleri istemciye gönderilmez; yalnızca kayıtlı/hazır olup olmadığı ve model adı.
-  const [availability, consented, tools, active, providers, enabledAreas] = await Promise.all([
+  const [availability, consented, tools, active, providers, matrix, tRoot] = await Promise.all([
     getModuleAvailability("ai"),
     hasAiConsent(user.id),
     availableTools(user),
     getActiveProvider(),
     listProviderStatus(),
-    getEnabledAreas(),
+    getAiPermissions(),
+    getTranslations(),
   ]);
   const configured = active !== null;
   const canManage = can(user.role, aiPermissions, "update");
+  const moduleLabel = (key: string) => (tRoot.has(`${key}.module.label`) ? tRoot(`${key}.module.label`) : (allModules.find((mod) => mod.key === key)?.label ?? key));
+  // Matris: asistanın kendisi hariç tüm modüller; asistanın aracı olanlar önce.
+  const supported = supportedOperations();
+  const matrixModules = allModules
+    .filter((mod) => mod.key !== "ai")
+    .map((mod) => ({ key: mod.key, label: moduleLabel(mod.key) }))
+    .sort((a, b) => Number(Boolean(supported[b.key])) - Number(Boolean(supported[a.key])) || a.label.localeCompare(b.label));
   const areas = [...new Set(tools.map((tool) => tool.module))];
 
   return (
@@ -79,7 +89,7 @@ export async function AiSettingsView() {
       <section className="flex flex-col gap-2">
         <h2 className="text-medium font-semibold">{t("permissionsTitle")}</h2>
         <p className="text-small text-default-500">{t("permissionsHelp")}</p>
-        <AreasChecklist areas={[...AI_AREAS]} enabled={enabledAreas} canChange={canManage} />
+        <PermissionMatrix modules={matrixModules} supported={supported} matrix={matrix} canChange={canManage} />
       </section>
 
       <section className="flex flex-col gap-2">
@@ -89,7 +99,7 @@ export async function AiSettingsView() {
           {areas.length === 0 ? <span className="text-small text-default-400">{t("areasNone")}</span> : null}
           {areas.map((area) => (
             <span key={area} className="rounded-full border border-default-200 px-3 py-1 text-small">
-              {t(`areas.${area}`)}
+              {moduleLabel(area)}
             </span>
           ))}
         </div>

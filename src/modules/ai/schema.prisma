@@ -10,13 +10,14 @@ model AiUserConsent {
   @@map("ai_user_consents")
 }
 
-/// Asistan ayarı (tekil kayıt "singleton"): seçili sağlayıcı ve asistana açılan alanlar.
-/// KARAR: enabledAreas varsayılan BOŞ — yönetici tek tek işaretlemeden asistan hiçbir veriye erişmez.
+/// Asistan ayarı (tekil kayıt "singleton"): seçili sağlayıcı ve modül bazında izin matrisi
+/// ({ "<modül>": ["read","create","update","delete"] }). KARAR: varsayılan BOŞ — yönetici
+/// işaretlemeden asistan hiçbir veriye erişmez ve hiçbir işlem öneremez.
 model AiSettings {
-  id           String   @id
-  provider     String
-  enabledAreas String[] @default([])
-  updatedAt    DateTime @updatedAt
+  id          String   @id
+  provider    String
+  permissions Json     @default("{}")
+  updatedAt   DateTime @updatedAt
 
   @@map("ai_settings")
 }

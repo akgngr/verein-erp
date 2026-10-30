@@ -13,13 +13,14 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
 
-import type { ActionResult } from "@/shared/types/action";
 import { announceSidePanel } from "@/shared/components/side-panel-events";
 import { cn } from "@/shared/utils";
 
 import { acceptAiConsentAction } from "../actions/consent-actions";
+import { executeAiProposalAction } from "../actions/execute-proposal";
+import { parseMarkdown } from "../services/markdown";
 import type { AiProposal } from "../types";
 
 type Turn = {
@@ -31,11 +32,12 @@ type Turn = {
 /** Satır içi biçim: **kalın** ve yalnızca uygulama içi [metin](/yol) bağlantıları (dış bağlantı çizilmez). */
 function inline(text: string): ReactNode[] {
   const parts: ReactNode[] = [];
-  const pattern = /\*\*([^*]+)\*\*|\[([^\]]+)\]\((\/[^)\s]*)\)/g;
+  const pattern = /\*\*([^*]+)\*\*|\[([^\]]+)\]\((\/[^)\s]*)\)|`([^`]+)`/g;
   let last = 0;
   for (const match of text.matchAll(pattern)) {
     if (match.index > last) parts.push(text.slice(last, match.index));
     if (match[1]) parts.push(<strong key={match.index}>{match[1]}</strong>);
+    else if (match[4]) parts.push(<code key={match.index} className="rounded bg-default-200 px-1 text-tiny">{match[4]}</code>);
     else
       parts.push(
         <a
@@ -54,23 +56,73 @@ function inline(text: string): ReactNode[] {
   return parts;
 }
 
+/** Öneri kartındaki kısa ayrıntılar (öncelik, tarih, yer …). */
+function proposalDetails(proposal: AiProposal, t: ReturnType<typeof useTranslations>): string[] {
+  switch (proposal.kind) {
+    case "createTask":
+      return [t(`proposal.priority.${proposal.priority}`), proposal.dueDate ?? ""].filter(Boolean);
+    case "createEvent":
+      return [proposal.startDate.replace("T", " "), proposal.isOnline ? t("proposal.online") : (proposal.location ?? "")].filter(Boolean);
+    default:
+      return [];
+  }
+}
+
 function MessageBody({ text }: { text: string }) {
   return (
-    <div className="flex flex-col gap-1">
-      {text.split("\n").map((line, index) => {
-        const bullet = /^\s*[-*]\s+/.test(line);
-        return (
-          <Fragment key={index}>
-            {line.trim() === "" ? (
-              <span className="h-1" />
-            ) : (
-              <p className={cn("whitespace-pre-wrap", bullet && "pl-3")}>
-                {bullet ? "• " : null}
-                {inline(line.replace(/^\s*[-*]\s+/, "").replace(/^#+\s*/, ""))}
+    <div className="flex flex-col gap-2">
+      {parseMarkdown(text).map((block, index) => {
+        switch (block.type) {
+          case "heading":
+            return (
+              <p key={index} className="font-semibold">
+                {inline(block.text)}
               </p>
-            )}
-          </Fragment>
-        );
+            );
+          case "list": {
+            const List = block.ordered ? "ol" : "ul";
+            return (
+              <List key={index} className={cn("flex flex-col gap-0.5 pl-5", block.ordered ? "list-decimal" : "list-disc")}>
+                {block.items.map((item, position) => (
+                  <li key={position}>{inline(item)}</li>
+                ))}
+              </List>
+            );
+          }
+          case "table":
+            return (
+              <div key={index} className="overflow-x-auto rounded-medium border border-default-200 bg-background">
+                <table className="w-full text-tiny">
+                  <thead className="bg-default-100">
+                    <tr>
+                      {block.header.map((cell, column) => (
+                        <th key={column} className="px-2 py-1.5 font-semibold" style={{ textAlign: block.align[column] }}>
+                          {inline(cell)}
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {block.rows.map((row, rowIndex) => (
+                      <tr key={rowIndex} className="border-t border-default-100">
+                        {row.map((cell, column) => (
+                          <td key={column} className="px-2 py-1.5" style={{ textAlign: block.align[column] }}>
+                            {inline(cell)}
+                          </td>
+                        ))}
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            );
+          default:
+            return (
+              <p key={index} className="whitespace-pre-wrap">
+                {inline(block.text)}
+              </p>
+            );
+        }
       })}
     </div>
   );
@@ -83,7 +135,6 @@ function MessageBody({ text }: { text: string }) {
 export function AiChatPanel({
   consented,
   provider,
-  createTask,
   children,
 }: {
   /** Uygulamanın içerik sütunu; asistan onu sarar. */
@@ -91,7 +142,6 @@ export function AiChatPanel({
   consented: boolean;
   /** Etkin sağlayıcı (null: yapılandırılmamış). Rıza bu sağlayıcıya verilir. */
   provider: "local" | "mistral" | "anthropic" | "openai" | null;
-  createTask: (input: unknown) => Promise<ActionResult<{ id: string }>>;
 }) {
   const t = useTranslations("ai.panel");
   const tProvider = useTranslations("ai.providers");
@@ -165,20 +215,14 @@ export function AiChatPanel({
     }
   };
 
-  const confirmTask = async (key: string, proposal: AiProposal) => {
-    const result = await createTask({
-      title: proposal.title,
-      description: proposal.description,
-      status: "OPEN",
-      priority: proposal.priority,
-      dueDate: proposal.dueDate,
-    });
+  const confirmProposal = async (key: string, proposal: AiProposal) => {
+    const result = await executeAiProposalAction(proposal);
     if (!result.ok) {
       addToast({ title: result.error, color: "danger" });
       return;
     }
     setDone(new Set(done).add(key));
-    addToast({ title: t("taskCreated"), color: "success" });
+    addToast({ title: t(`proposal.done.${proposal.kind}`), color: "success" });
   };
 
   return (
@@ -369,22 +413,13 @@ export function AiChatPanel({
                           className="w-[90%] rounded-medium border border-primary-200 bg-primary-50/50 p-3 dark:border-primary-500/30 dark:bg-primary-500/10"
                         >
                           <p className="text-tiny font-semibold uppercase text-primary">
-                            {t("proposal.task")}
+                            {t(`proposal.kinds.${proposal.kind}`)}
                           </p>
                           <p className="font-medium">{proposal.title}</p>
-                          {proposal.description ? (
-                            <p className="text-default-600">
-                              {proposal.description}
-                            </p>
+                          {"description" in proposal && proposal.description ? (
+                            <p className="text-default-600">{proposal.description}</p>
                           ) : null}
-                          <p className="text-tiny text-default-500">
-                            {[
-                              t(`proposal.priority.${proposal.priority}`),
-                              proposal.dueDate,
-                            ]
-                              .filter(Boolean)
-                              .join(" · ")}
-                          </p>
+                          <p className="text-tiny text-default-500">{proposalDetails(proposal, t).join(" · ")}</p>
                           <Button
                             size="sm"
                             color="primary"
@@ -394,11 +429,9 @@ export function AiChatPanel({
                             startContent={
                               <ListPlus className="h-4 w-4" aria-hidden />
                             }
-                            onPress={() => confirmTask(key, proposal)}
+                            onPress={() => confirmProposal(key, proposal)}
                           >
-                            {done.has(key)
-                              ? t("proposal.created")
-                              : t("proposal.confirm")}
+                            {done.has(key) ? t("proposal.applied") : t(`proposal.confirm.${proposal.kind}`)}
                           </Button>
                         </div>
                       );

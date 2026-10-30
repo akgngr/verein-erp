@@ -19,8 +19,11 @@ export const moduleConfig: ModuleConfig = {
   access: [
     { module: "accounting", operations: ["read"] },
     { module: "members", operations: ["read"] },
-    { module: "events", operations: ["read"] },
-    { module: "tasks", operations: ["read", "write"] },
+    { module: "events", operations: ["read", "write"] },
+    { module: "tasks", operations: ["read", "write", "delete"] },
+    { module: "meetings", operations: ["read"] },
+    { module: "documents", operations: ["read"] },
+    { module: "donations", operations: ["read"] },
     { module: "courses", operations: ["read"] },
     { module: "system", operations: ["read"] },
     { module: "students", operations: ["read"] },
