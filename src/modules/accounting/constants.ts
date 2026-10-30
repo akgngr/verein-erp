@@ -70,3 +70,11 @@ export const PAYMENT_METHOD_ACCOUNT: Record<
 
 /** Kaynak etiketleri — fiş listesi/detay "Kaynak" kolonu (§ 6). */
 export const SOURCE_TYPE_VALUES = ["MEMBER_PAYMENT", "DONATION", "DONATION_WAIVER", "COURSE_FEE"] as const;
+
+/** Fatura numarası önekleri (tür başına ayrı sıra). */
+export const INVOICE_NUMBER_PREFIX = { INVOICE: "R", PROFORMA: "PF" } as const;
+export const INVOICE_KIND_VALUES = ["INVOICE", "PROFORMA"] as const;
+export const INVOICE_STATUS_VALUES = ["DRAFT", "ISSUED", "PAID", "CANCELLED"] as const;
+/** Almanya'da geçerli KDV oranları (0 = muaf / § 19 UStG). */
+export const INVOICE_TAX_RATES = [0, 7, 19] as const;
+export const INVOICE_MAX_LINES = 50;

@@ -581,6 +581,7 @@
       "title": "Hesap bakiyeleri"
     },
     "menu": {
+      "invoices": "Faturalar",
       "sync": "Üyelik aktarımı",
       "reports": "Raporlar",
       "budget": "Bütçe",
@@ -725,7 +726,8 @@
         "MEMBER_PAYMENT": "Üyelik aidatı (otomatik)",
         "DONATION": "Bağış (otomatik)",
         "DONATION_WAIVER": "Aufwandsspende gideri (otomatik)",
-        "COURSE_FEE": "Kurs ücreti (otomatik)"
+        "COURSE_FEE": "Kurs ücreti (otomatik)",
+        "INVOICE": "Fatura tahsilatı"
       }
     },
     "export": {
@@ -782,6 +784,143 @@
     "access": {
       "members": "Üye aidat ödemelerini muhasebeye aktarmak için ödemeleri okur.",
       "organization": "PDF raporlarında dernek antetini kullanır."
+    },
+    "pdf": {
+      "voucher": {
+        "INCOME": "Makbuz (PDF)",
+        "EXPENSE": "Ödeme belgesi (PDF)",
+        "TRANSFER": "Virman belgesi (PDF)"
+      },
+      "list": "PDF",
+      "excel": "Excel"
+    },
+    "invoices": {
+      "title": "Faturalar",
+      "description": "Fatura ve proforma fatura hazırlayın, PDF olarak çıkarın, tahsilatı gelir fişine dönüştürün.",
+      "newInvoice": "Yeni fatura",
+      "newProforma": "Yeni proforma",
+      "search": "Numara, alıcı veya konu ara",
+      "empty": "Henüz fatura yok.",
+      "open": "Aç",
+      "draftNumber": "Taslak",
+      "overdue": "Vadesi geçti",
+      "taxTotal": "KDV toplamı",
+      "fromProforma": "Kaynak proforma",
+      "paymentBooking": "Tahsilat fişi",
+      "cancelled": "İptal",
+      "createdBy": "Oluşturan",
+      "kind": {
+        "INVOICE": "Fatura",
+        "PROFORMA": "Proforma"
+      },
+      "status": {
+        "DRAFT": "Taslak",
+        "ISSUED": "Kesildi",
+        "PAID": "Ödendi",
+        "CANCELLED": "İptal"
+      },
+      "columns": {
+        "number": "Numara",
+        "kind": "Tür",
+        "issueDate": "Tarih",
+        "recipient": "Alıcı",
+        "gross": "Tutar",
+        "status": "Durum"
+      },
+      "form": {
+        "kind": "Tür",
+        "category": "Gelir kategorisi",
+        "categoryHelp": "Ödeme alındığında oluşacak gelir fişinin kategorisi.",
+        "issueDate": "Fatura tarihi",
+        "dueDate": "Son ödeme tarihi",
+        "serviceDate": "Hizmet tarihi / dönemi",
+        "serviceDatePlaceholder": "ör. Mart 2026",
+        "subject": "Konu",
+        "recipientTitle": "Alıcı",
+        "recipientName": "Ad / kurum",
+        "recipientEmail": "E-posta",
+        "recipientAddress": "Adres",
+        "recipientAddressPlaceholder": "Sokak No\nPosta kodu Şehir",
+        "introText": "Giriş metni",
+        "linesTitle": "Kalemler",
+        "lineDescription": "Açıklama",
+        "quantity": "Miktar",
+        "unit": "Birim",
+        "unitPrice": "Birim fiyat (€)",
+        "taxRate": "KDV",
+        "removeLine": "Kalemi sil",
+        "addLine": "Kalem ekle",
+        "net": "Net",
+        "tax": "%{rate} KDV",
+        "gross": "Toplam",
+        "taxNote": "Vergi notu",
+        "taxNoteHelp": "KDV hesaplanmıyorsa gerekçesi, ör. \"Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.\"",
+        "footerText": "Alt metin",
+        "created": "Taslak kaydedildi.",
+        "updated": "Fatura güncellendi.",
+        "draftHint": "Taslak olarak kaydedilir; kesinleştirince numara verilir ve artık değiştirilemez.",
+        "editTitle": "Taslağı düzenle"
+      },
+      "actions": {
+        "pdf": "PDF",
+        "previewPdf": "Önizleme (PDF)",
+        "edit": "Düzenle",
+        "issue": "Kesinleştir",
+        "issueTitle": "Faturayı kesinleştir",
+        "issueConfirm": "Belgeye sıradaki numara verilecek. Kesinleşen belge değiştirilemez, yalnızca iptal edilebilir. Devam edilsin mi?",
+        "issued": "{number} numarasıyla kesinleşti.",
+        "deleteDraft": "Taslağı sil",
+        "deleteTitle": "Taslağı sil",
+        "deleteConfirm": "Taslak kalıcı olarak silinecek. Devam edilsin mi?",
+        "deleted": "Taslak silindi.",
+        "recordPayment": "Ödeme alındı",
+        "paymentTitle": "{number} – ödeme kaydı",
+        "paymentHelp": "Fatura tutarı kadar bir gelir fişi oluşturulur ve fatura \"ödendi\" olur. Fişin makbuzunu fiş sayfasından alabilirsiniz.",
+        "paidDate": "Ödeme tarihi",
+        "account": "Hesap (kasa/banka)",
+        "category": "Gelir kategorisi",
+        "paid": "Ödeme kaydedildi (fiş {bookingNumber}).",
+        "convert": "Faturaya dönüştür",
+        "openInvoice": "Faturayı aç",
+        "cancel": "İptal et (Storno)",
+        "cancelTitle": "{number} iptali",
+        "cancelHelp": "Belge numarası korunur ve PDF'te İPTAL damgası görünür.",
+        "cancelPaidHelp": "Belge iptal edilir ve tahsilat fişi ters kaydedilir (Storno).",
+        "reason": "İptal gerekçesi",
+        "cancelled": "Belge iptal edildi.",
+        "close": "Kapat"
+      },
+      "settings": {
+        "title": "Fatura ayarları",
+        "description": "Yeni faturalarda kullanılacak varsayılanlar.",
+        "defaultTaxRate": "Varsayılan KDV oranı",
+        "paymentDays": "Ödeme süresi (gün)",
+        "taxNote": "Vergi notu",
+        "taxNoteHelp": "Dernek KDV mükellefi değilse ör. \"Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.\"",
+        "incomeCategory": "Varsayılan gelir kategorisi",
+        "bankDetails": "Banka bilgileri (PDF alt bilgisi)",
+        "bankDetailsPlaceholder": "IBAN: DE..\nBIC: ...\nBanka adı",
+        "footerText": "Varsayılan alt metin",
+        "saved": "Fatura ayarları kaydedildi."
+      },
+      "errors": {
+        "notFound": "Fatura bulunamadı.",
+        "notDraft": "Yalnızca taslak düzenlenebilir veya silinebilir.",
+        "cannotConvert": "Yalnızca kesinleşmiş bir proforma faturaya dönüştürülebilir.",
+        "alreadyConverted": "Bu proformadan zaten bir fatura oluşturuldu.",
+        "notPayable": "Yalnızca kesilmiş (ödenmemiş) bir faturaya ödeme kaydedilebilir.",
+        "cannotCancel": "Taslak iptal edilmez, silinir; iptal edilmiş belge yeniden iptal edilemez."
+      },
+      "validation": {
+        "textMax": "Metin çok uzun.",
+        "lineDescription": "Kalem açıklaması gerekli.",
+        "quantity": "Geçerli bir miktar girin (ör. 1 veya 2,5).",
+        "price": "Geçerli bir fiyat girin (ör. 12,50).",
+        "recipient": "Alıcı adı gerekli.",
+        "lines": "En az bir kalem ekleyin.",
+        "reason": "Gerekçe en az 3 karakter olmalı.",
+        "paymentDays": "Gün sayısı girin."
+      }
     }
   },
   "audit": {
