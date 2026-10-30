@@ -125,5 +125,9 @@
       "absent": "Fehlt",
       "excused": "Entschuldigt"
     }
+  },
+  "access": {
+    "courses": "Liest Kurse, Termine und Anmeldungen für Anwesenheit und Noten.",
+    "organization": "Verwendet den Vereinsbriefkopf im Elternbericht."
   }
 }

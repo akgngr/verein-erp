@@ -2,17 +2,18 @@ import "server-only";
 
 import { dashboardCards } from "@/dashboard-cards";
 import { allModules } from "@/registry";
-import { getAllActiveModuleKeys } from "@/shared/modules/module-store";
 import { can } from "@/shared/permissions/define";
 import type { Role } from "@/shared/roles";
 import { getDb } from "@/shared/db";
 import type { DashboardCardDefinition } from "@/shared/types/dashboard";
 
+import { listUsableModuleKeys } from "../services/module-gate";
+
 export type AvailableDashboardCard = { id: string; moduleKey: string; card: DashboardCardDefinition };
 
 /** Kullanıcının görebileceği kartlar: modül etkin ve kartın yetkisi var. */
 export function listAvailableDashboardCards(role: Role): AvailableDashboardCard[] {
-  const active = new Set(getAllActiveModuleKeys(allModules.map((mod) => mod.key)));
+  const active = new Set(listUsableModuleKeys());
   return dashboardCards
     .filter((entry) => active.has(entry.moduleKey))
     .flatMap((entry) =>

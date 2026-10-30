@@ -4,7 +4,7 @@ import { getDb } from "@/shared/db";
 import { buildUserLabel } from "@/shared/utils";
 import type { ActionResult } from "@/shared/types/action";
 
-import { ActionError, createAction } from "@/modules/auth/server";
+import { ActionError, createAction, listActiveUserOptions } from "@/modules/auth/server";
 
 import { meetingsPermissions } from "../permissions";
 import {
@@ -53,16 +53,13 @@ export async function addActionItemAction(
 
       let assigneeLabel: string | null = null;
       if (input.assigneeId) {
-        const assignee = await db.user.findFirst({
-          where: { id: input.assigneeId, isActive: true },
-          select: { name: true },
-        });
+        const assignee = (await listActiveUserOptions()).find((option) => option.id === input.assigneeId);
         if (!assignee) {
           throw new ActionError("meetings.errors.assigneeNotFound", {
             assigneeId: ["Geçerli bir sorumlu seçin."],
           });
         }
-        assigneeLabel = assignee.name;
+        assigneeLabel = assignee.label;
       } else if (input.assigneeName) {
         assigneeLabel = input.assigneeName;
       }
@@ -127,16 +124,13 @@ export async function updateActionItemAction(
 
       let assigneeLabel: string | null = null;
       if (input.assigneeId) {
-        const assignee = await db.user.findFirst({
-          where: { id: input.assigneeId, isActive: true },
-          select: { name: true },
-        });
+        const assignee = (await listActiveUserOptions()).find((option) => option.id === input.assigneeId);
         if (!assignee) {
           throw new ActionError("meetings.errors.assigneeNotFound", {
             assigneeId: ["Geçerli bir sorumlu seçin."],
           });
         }
-        assigneeLabel = assignee.name;
+        assigneeLabel = assignee.label;
       } else if (input.assigneeName) {
         assigneeLabel = input.assigneeName;
       }

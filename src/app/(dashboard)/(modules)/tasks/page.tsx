@@ -1,4 +1,7 @@
 // Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
 // Kaynak: src/modules/tasks/page.tsx
-export { default } from "@/modules/tasks/page";
+import { withModuleGate } from "@/modules/system/server";
+import Page from "@/modules/tasks/page";
+
 export * from "@/modules/tasks/page";
+export default withModuleGate("tasks", Page);

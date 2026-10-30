@@ -52,24 +52,22 @@ export function syncModuleRoutes(): SyncRoutesResult {
     if (!entry.isDirectory()) continue;
     const moduleName = entry.name;
     const moduleDir = path.join(MODULES_DIR, moduleName);
+    const configPath = path.join(moduleDir, "module.config.ts");
+    const configText = fs.existsSync(configPath) ? fs.readFileSync(configPath, "utf8") : "";
+    // Çekirdek modüller her zaman açıktır; diğerlerinin köprüleri erişim kapısından geçer
+    // (modül pasif ya da başka modüllere erişimi onaylanmamışsa sayfa/API kapalı).
+    const gated = !/category:\s*["']CORE["']/.test(configText);
 
     for (const subPath of findFiles(path.join(moduleDir, MODULE_API_DIR), "route.ts")) {
       const source = `src/modules/${moduleName}/${MODULE_API_DIR}/${subPath}/route.ts`;
-      apis.set(
-        path.join(moduleName, subPath, "route.ts"),
-        `${AUTO_ROUTE_BANNER}
-// Kaynak: ${source}
-export * from "@/modules/${moduleName}/${MODULE_API_DIR}/${subPath}/route";
-${segmentConfig(source)}`,
-      );
+      apis.set(path.join(moduleName, subPath, "route.ts"), apiBridge(source, `@/modules/${moduleName}/${MODULE_API_DIR}/${subPath}/route`, gated ? moduleName : null));
       result.syncedRoutes.push(`${moduleName} -> /api/${moduleName}/${subPath}`);
     }
 
     if (!fs.existsSync(path.join(moduleDir, "page.tsx"))) continue;
-    const configPath = path.join(moduleDir, "module.config.ts");
-    const routeSegment = (fs.existsSync(configPath) && resolveRouteSegment(fs.readFileSync(configPath, "utf8"))) || moduleName;
+    const routeSegment = (configText && resolveRouteSegment(configText)) || moduleName;
 
-    pages.set(path.join(routeSegment, "page.tsx"), pageBridge(`src/modules/${moduleName}/page.tsx`, `@/modules/${moduleName}/page`));
+    pages.set(path.join(routeSegment, "page.tsx"), pageBridge(`src/modules/${moduleName}/page.tsx`, `@/modules/${moduleName}/page`, gated ? moduleName : null));
     result.syncedRoutes.push(`${moduleName} -> /${routeSegment}`);
 
     for (const subPath of findFiles(path.join(moduleDir, MODULE_SUBPAGES_DIR), "page.tsx")) {
@@ -78,6 +76,7 @@ ${segmentConfig(source)}`,
         pageBridge(
           `src/modules/${moduleName}/${MODULE_SUBPAGES_DIR}/${subPath}/page.tsx`,
           `@/modules/${moduleName}/${MODULE_SUBPAGES_DIR}/${subPath}/page`,
+          gated ? moduleName : null,
         ),
       );
       result.syncedRoutes.push(`${moduleName} -> /${routeSegment}/${subPath}`);
@@ -126,12 +125,61 @@ export function segmentConfig(sourceRelPath: string): string {
   return lines.map((line) => (line.endsWith(";") ? line : `${line};`)).join("\n") + (lines.length ? "\n" : "");
 }
 
-/** Sayfa köprüsü: varsayılan bileşen + tüm dışa aktarımlar (metadata, generateMetadata…) + segment config. */
-function pageBridge(source: string, importPath: string): string {
-  return `${AUTO_ROUTE_BANNER}
+/**
+ * Sayfa köprüsü: tüm dışa aktarımlar (metadata, generateMetadata…) + segment config. `gateKey`
+ * verilirse varsayılan bileşen system modülünün erişim kapısıyla sarılır.
+ */
+function pageBridge(source: string, importPath: string, gateKey: string | null): string {
+  if (!gateKey) {
+    return `${AUTO_ROUTE_BANNER}
 // Kaynak: ${source}
 export { default } from "${importPath}";
 export * from "${importPath}";
+${segmentConfig(source)}`;
+  }
+  return `${AUTO_ROUTE_BANNER}
+// Kaynak: ${source}
+import { withModuleGate } from "@/modules/system/server";
+import Page from "${importPath}";
+
+export * from "${importPath}";
+export default withModuleGate("${gateKey}", Page);
+${segmentConfig(source)}`;
+}
+
+const HTTP_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"];
+
+/** Kaynak route.ts'in dışa aktardığı HTTP yöntemleri (fonksiyon, const ya da destructuring). */
+export function exportedMethods(sourceRelPath: string): string[] {
+  const sourcePath = path.join(ROOT_DIR, sourceRelPath);
+  if (!fs.existsSync(sourcePath)) return [];
+  const text = fs.readFileSync(sourcePath, "utf8");
+  const found = new Set<string>();
+  for (const match of text.matchAll(/export\s+(?:async\s+)?(?:function|const|let)\s+([A-Z]+)\b/g)) found.add(match[1]);
+  for (const match of text.matchAll(/export\s+(?:const|let)\s+\{([^}]*)\}/g)) {
+    for (const name of match[1].split(",")) found.add(name.split(":").pop()!.trim());
+  }
+  for (const match of text.matchAll(/export\s+\{([^}]*)\}/g)) {
+    for (const name of match[1].split(",")) found.add(name.split(/\s+as\s+/).pop()!.trim());
+  }
+  return HTTP_METHODS.filter((method) => found.has(method));
+}
+
+/** API köprüsü; `gateKey` verilirse her HTTP yöntemi erişim kapısıyla sarılır. */
+function apiBridge(source: string, importPath: string, gateKey: string | null): string {
+  if (!gateKey) {
+    return `${AUTO_ROUTE_BANNER}
+// Kaynak: ${source}
+export * from "${importPath}";
+${segmentConfig(source)}`;
+  }
+  const methods = exportedMethods(source);
+  return `${AUTO_ROUTE_BANNER}
+// Kaynak: ${source}
+import { gateRouteHandler } from "@/modules/system/server";
+import * as route from "${importPath}";
+
+${methods.map((method) => `export const ${method} = gateRouteHandler("${gateKey}", route.${method});`).join("\n")}
 ${segmentConfig(source)}`;
 }
 

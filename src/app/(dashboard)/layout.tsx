@@ -3,8 +3,7 @@ import { redirect } from "next/navigation";
 
 import type { SessionUser } from "@/modules/auth";
 import { requireUser, signOutAction } from "@/modules/auth/server";
-import { getAllActiveModuleKeys } from "@/shared/modules/module-store";
-import { allModules } from "@/registry";
+import { listUsableModuleKeys } from "@/modules/system/server";
 
 import {
   DesktopSidebar,
@@ -32,11 +31,8 @@ export default async function DashboardLayout({
     redirect("/giris?pasif=1");
   }
 
-  // Çekirdek modüller pasife alınamaz; eski bir durum dosyasında kapalı kalmış olsa da etkin sayılır.
-  const coreModuleKeys = allModules.filter((m) => m.category === "CORE").map((m) => m.key);
-  const activeModuleKeys = [
-    ...new Set([...getAllActiveModuleKeys(allModules.map((m) => m.key)), ...coreModuleKeys]),
-  ];
+  // Menüde yalnızca kullanılabilir modüller: çekirdek + etkin ve erişim izni onaylı olanlar.
+  const activeModuleKeys = listUsableModuleKeys();
   const collapsed = (await cookies()).get(SIDEBAR_COLLAPSED_COOKIE)?.value === "1";
 
   return (

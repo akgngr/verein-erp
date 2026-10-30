@@ -87,6 +87,122 @@ function checkModuleMessages(moduleDir: string, trJson: unknown, deJson: unknown
   return problems;
 }
 
+/** Modüllerin birbirinin `server` API'sini onaysız kullanmasını engelleyen erişim denetimi. */
+const ACCESS_EXEMPT_MODULES = new Set(["auth"]); // oturum ve createAction: her modülün altyapısı
+
+/** İçe aktarılan adın gerektirdiği erişim türü (ad kuralına göre). */
+export function operationFor(name: string): "read" | "write" | "delete" {
+  if (/^(delete|remove|anonymi[sz]e|purge)/i.test(name)) return "delete";
+  if (/Action$/.test(name) || /^(create|update|record|reverse|send|save|set|add|link|unlink|make|issue|run|toggle|change|void|mark|generate|upload|import|write|approve|close|unlock)/.test(name)) {
+    return "write";
+  }
+  return "read";
+}
+
+/** Kaynak dosyalardaki `@/modules/<m>/server` içe aktarımları: hedef modül → kullanılan adlar. */
+export function findServerImports(moduleDir: string, moduleKey: string): Map<string, Set<string>> {
+  const found = new Map<string, Set<string>>();
+  const walk = (dir: string) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) walk(fullPath);
+      else if (/\.(ts|tsx)$/.test(entry.name)) {
+        const text = fs.readFileSync(fullPath, "utf8");
+        for (const match of text.matchAll(/import\s+(?:type\s+)?\{([^}]*)\}\s+from\s+["']@\/modules\/([a-z0-9-]+)\/server["']/g)) {
+          const target = match[2];
+          if (target === moduleKey || ACCESS_EXEMPT_MODULES.has(target) || /^import\s+type/.test(match[0])) continue;
+          const names = match[1]
+            .split(",")
+            .map((part) => part.trim())
+            .filter((part) => part && !part.startsWith("type "))
+            .map((part) => part.split(/\s+as\s+/)[0].trim());
+          if (!found.has(target)) found.set(target, new Set());
+          for (const name of names) found.get(target)!.add(name);
+        }
+      }
+    }
+  };
+  walk(moduleDir);
+  return found;
+}
+
+/** module.config.ts içindeki `access` bildirimleri: hedef modül → işlemler. */
+export function declaredAccess(configText: string): Map<string, Set<string>> {
+  const declared = new Map<string, Set<string>>();
+  for (const match of configText.matchAll(/module:\s*["']([a-z0-9-]+)["']\s*,\s*operations:\s*\[([^\]]*)\]/g)) {
+    declared.set(match[1], new Set([...match[2].matchAll(/["'](read|write|delete)["']/g)].map((op) => op[1])));
+  }
+  return declared;
+}
+
+/** Prisma model → sahibi modül (src/modules/<m>/schema.prisma). */
+function modelOwners(modulesDir: string): Map<string, string> {
+  const owners = new Map<string, string>();
+  for (const entry of fs.readdirSync(modulesDir, { withFileTypes: true })) {
+    const schemaPath = path.join(modulesDir, entry.name, "schema.prisma");
+    if (!entry.isDirectory() || !fs.existsSync(schemaPath)) continue;
+    for (const match of fs.readFileSync(schemaPath, "utf8").matchAll(/^model\s+(\w+)/gm)) {
+      owners.set(match[1].charAt(0).toLowerCase() + match[1].slice(1), entry.name);
+    }
+  }
+  return owners;
+}
+
+/** Başka modülün tablosuna doğrudan (getDb/tx) erişim: onay mekanizmasını atlar, yasaktır. */
+function findForeignTableAccess(moduleDir: string, moduleKey: string): string[] {
+  // auth: oturum altyapısı users tablosunu okur/yazar (aynı kimlik alanı; bkz. ACCESS_EXEMPT_MODULES).
+  if (ACCESS_EXEMPT_MODULES.has(moduleKey)) return [];
+  const owners = modelOwners(path.dirname(moduleDir));
+  const problems = new Set<string>();
+  const walk = (dir: string) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) walk(fullPath);
+      else if (/\.(ts|tsx)$/.test(entry.name)) {
+        const text = fs.readFileSync(fullPath, "utf8");
+        for (const match of text.matchAll(/\b(?:db|tx|prisma|getDb\(\))\.([a-z]\w*)\.(?:find\w*|create\w*|update\w*|delete\w*|upsert|count|aggregate|groupBy)\b/g)) {
+          const owner = owners.get(match[1]);
+          if (owner && owner !== moduleKey) {
+            problems.add(`'${owner}' modülünün '${match[1]}' tablosuna doğrudan erişiliyor (${path.relative(moduleDir, fullPath)}); o modülün server API'sini kullanın ve 'access' içinde bildirin.`);
+          }
+        }
+      }
+    }
+  };
+  walk(moduleDir);
+  return [...problems];
+}
+
+function checkModuleAccess(moduleDir: string, moduleKey: string, configText: string, trJson: unknown, deJson: unknown): string[] {
+  const problems: string[] = findForeignTableAccess(moduleDir, moduleKey);
+  const declared = declaredAccess(configText);
+  for (const [target, names] of findServerImports(moduleDir, moduleKey)) {
+    const needed = new Set([...names].map(operationFor));
+    const granted = declared.get(target);
+    if (!granted) {
+      problems.push(
+        `'${target}' modülünün sunucu API'si kullanılıyor (${[...names].join(", ")}) ama module.config.ts 'access' içinde bildirilmemiş: { module: "${target}", operations: [${[...needed].map((op) => `"${op}"`).join(", ")}] }`,
+      );
+      continue;
+    }
+    const missing = [...needed].filter((op) => !granted.has(op));
+    if (missing.length > 0) {
+      problems.push(`'${target}' için bildirilen erişim yetersiz; eksik işlem: ${missing.join(", ")} (${[...names].join(", ")}).`);
+    }
+  }
+  for (const target of declared.keys()) {
+    if (!fs.existsSync(path.join(path.dirname(moduleDir), target, "module.config.ts"))) {
+      problems.push(`'access' içinde bilinmeyen modül: '${target}'.`);
+    }
+    for (const [locale, json] of [["tr", trJson], ["de", deJson]] as const) {
+      if (typeof lookupKey(json, `access.${target}`) !== "string") {
+        problems.push(`messages/${locale}.json içinde erişim gerekçesi 'access.${target}' yok (onay ekranında gösterilir).`);
+      }
+    }
+  }
+  return problems;
+}
+
 export function validateModule(moduleKey: string, customModulesDir?: string): ModuleValidationResult {
   const baseModulesDir = customModulesDir || MODULES_DIR;
   const moduleDir = path.join(baseModulesDir, moduleKey);
@@ -209,6 +325,10 @@ export function validateModule(moduleKey: string, customModulesDir?: string): Mo
       }
       info.hasTranslations = true;
       errors.push(...checkModuleMessages(moduleDir, trJson, deJson));
+      const accessConfigPath = path.join(moduleDir, "module.config.ts");
+      if (fs.existsSync(accessConfigPath)) {
+        errors.push(...checkModuleAccess(moduleDir, moduleKey, fs.readFileSync(accessConfigPath, "utf8"), trJson, deJson));
+      }
     } catch (err) {
       errors.push(`Çeviri JSON dosyaları çözümlenemedi: ${err instanceof Error ? err.message : String(err)}`);
     }

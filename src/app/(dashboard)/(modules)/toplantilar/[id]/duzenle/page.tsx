@@ -1,4 +1,7 @@
 // Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
 // Kaynak: src/modules/meetings/routes/[id]/duzenle/page.tsx
-export { default } from "@/modules/meetings/routes/[id]/duzenle/page";
+import { withModuleGate } from "@/modules/system/server";
+import Page from "@/modules/meetings/routes/[id]/duzenle/page";
+
 export * from "@/modules/meetings/routes/[id]/duzenle/page";
+export default withModuleGate("meetings", Page);

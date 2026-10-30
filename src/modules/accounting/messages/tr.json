@@ -513,5 +513,9 @@
       "_closing": "Dönem sonu bakiyesi",
       "_noAccount": "Hesap seçilmedi."
     }
+  },
+  "access": {
+    "members": "Üye aidat ödemelerini muhasebeye aktarmak için ödemeleri okur.",
+    "organization": "PDF raporlarında dernek antetini kullanır."
   }
 }

@@ -1,4 +1,7 @@
 // Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
 // Kaynak: src/modules/members/routes/aidat/page.tsx
-export { default } from "@/modules/members/routes/aidat/page";
+import { withModuleGate } from "@/modules/system/server";
+import Page from "@/modules/members/routes/aidat/page";
+
 export * from "@/modules/members/routes/aidat/page";
+export default withModuleGate("members", Page);

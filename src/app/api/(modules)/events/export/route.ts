@@ -1,3 +1,6 @@
 // Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
 // Kaynak: src/modules/events/api/export/route.ts
-export * from "@/modules/events/api/export/route";
+import { gateRouteHandler } from "@/modules/system/server";
+import * as route from "@/modules/events/api/export/route";
+
+export const GET = gateRouteHandler("events", route.GET);

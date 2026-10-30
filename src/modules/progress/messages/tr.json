@@ -125,5 +125,9 @@
       "absent": "Gelmedi",
       "excused": "Mazeretli"
     }
+  },
+  "access": {
+    "courses": "Yoklama ve notlar için kursları, dersleri ve kayıtlı öğrencileri okur.",
+    "organization": "Veli raporunda dernek antetini kullanır."
   }
 }

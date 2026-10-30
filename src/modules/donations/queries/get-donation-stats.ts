@@ -2,6 +2,8 @@ import "server-only";
 
 import { getDb } from "@/shared/db";
 
+import { getPaymentStatuses } from "@/modules/members/server";
+
 import { SMALL_DONATION_LIMIT_CENTS } from "../constants";
 import type { DonationStats } from "../types";
 
@@ -43,10 +45,7 @@ export async function getDonationStats(year: number): Promise<DonationStats> {
     });
     const paymentIds = [...new Set(rows.flatMap((row) => row.items.map((item) => item.sourceId)))];
     if (paymentIds.length === 0) return 0;
-    const voided = await db.memberPayment.findMany({
-      where: { id: { in: paymentIds }, voidedAt: { not: null } },
-      select: { id: true },
-    });
+    const voided = (await getPaymentStatuses(paymentIds)).filter((payment) => payment.voidedAt);
     const voidedIds = new Set(voided.map((payment) => payment.id));
     return rows.filter((row) => row.items.some((item) => voidedIds.has(item.sourceId))).length;
   });

@@ -9,6 +9,10 @@ export const moduleConfig: ModuleConfig = {
   description: "Üye kayıtları, üyelik tipleri, aidat tahakkuk ve ödeme takibi.",
   category: "OFFICIAL",
   hasSchema: true,
+  // Başka modüllerden istenen erişim (yönetici onayı gerekir; gerekçe: messages → access.<modül>).
+  access: [
+    { module: "organization", operations: ["read"] },
+  ],
   nav: [
     {
       href: "/uyeler",
