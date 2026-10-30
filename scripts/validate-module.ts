@@ -4,7 +4,7 @@ import { pathToFileURL } from "node:url";
 
 const ROOT_DIR = process.cwd();
 const MODULES_DIR = path.join(ROOT_DIR, "src", "modules");
-const APP_DIR = path.join(ROOT_DIR, "src", "app", "(dashboard)");
+const APP_DIR = path.join(ROOT_DIR, "src", "app", "(dashboard)", "(modules)");
 const MIGRATIONS_DIR = path.join(ROOT_DIR, "prisma", "schema", "migrations");
 
 export interface ModuleValidationResult {

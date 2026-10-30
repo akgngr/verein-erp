@@ -63,7 +63,10 @@ src/modules/<key>/
 └── views/               # server components (NO HeroUI)
 ```
 
-`pnpm module:sync` generates the `src/app` bridges for `page.tsx`, `routes/` and `api/`.
+`pnpm module:sync` generates the bridges for `page.tsx`, `routes/` and `api/` and keeps all of them in
+two folders: pages in `src/app/(dashboard)/(modules)/`, APIs in `src/app/api/(modules)/` (parenthesised
+folders are route groups and do not appear in URLs). Both folders are deleted and rebuilt on every sync
+(also before `dev`, `build` and `typecheck`); never put files in them by hand.
 Route segment config (`export const runtime = "nodejs"` etc.) is written in the source file and copied to the bridge.
 
 ---

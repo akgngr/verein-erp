@@ -63,7 +63,10 @@ src/modules/<anahtar>/
 └── views/               # sunucu bileşenleri (HeroUI YOK)
 ```
 
-`page.tsx`, `routes/` ve `api/` dosyalarının `src/app` köprülerini `pnpm module:sync` üretir.
+`page.tsx`, `routes/` ve `api/` dosyalarının köprülerini `pnpm module:sync` üretir ve hepsini iki
+klasörde toplar: sayfalar `src/app/(dashboard)/(modules)/`, API'ler `src/app/api/(modules)/` (parantezli
+klasörler rota grubudur, adrese eklenmez). Bu iki klasör her senkronda (`dev`, `build`, `typecheck`
+öncesinde de) silinip yeniden kurulur; içlerine elle dosya koyma.
 Rota segment ayarları (`export const runtime = "nodejs"` vb.) kaynak dosyada yazılır, köprüye kopyalanır.
 
 ---

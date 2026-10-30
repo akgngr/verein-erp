@@ -3,8 +3,15 @@ import path from "node:path";
 
 const ROOT_DIR = process.cwd();
 const MODULES_DIR = path.join(ROOT_DIR, "src", "modules");
-const DASHBOARD_DIR = path.join(ROOT_DIR, "src", "app", "(dashboard)");
-const API_DIR = path.join(ROOT_DIR, "src", "app", "api");
+const APP_DIR = path.join(ROOT_DIR, "src", "app");
+/**
+ * Üretilen köprülerin TEK yeri (rota grupları URL'ye eklenmez):
+ * - sayfalar: src/app/(dashboard)/(modules)/<rota>/…/page.tsx → /<rota>/…
+ * - API:      src/app/api/(modules)/<modül>/…/route.ts        → /api/<modül>/…
+ * Bu klasörler her senkronda baştan kurulur; elle dosya konmaz.
+ */
+export const GENERATED_PAGES_DIR = path.join(APP_DIR, "(dashboard)", "(modules)");
+export const GENERATED_API_DIR = path.join(APP_DIR, "api", "(modules)");
 
 export const AUTO_ROUTE_BANNER =
   "// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).";
@@ -16,102 +23,71 @@ const MODULE_API_DIR = "api";
 
 export interface SyncRoutesResult {
   syncedRoutes: string[];
+  /** Klasör yeniden kurulduysa true (içerik aynıysa dokunulmaz; dev sunucu boşuna yeniden derlemez). */
+  rebuilt: boolean;
+  /** Eski düzenden (köprülerin doğrudan (dashboard)/ ve api/ altında olduğu) taşınıp silinen dosyalar. */
   cleanedRoutes: string[];
 }
 
 /**
- * Otomatik Modül Sayfa/Rota Senkronizasyonu (Module Route Synchronizer):
- * Her modülün içindeki src/modules/<module>/page.tsx dosyasını keşfeder
- * ve src/app/(dashboard)/<route>/page.tsx içerisine otomatik ince köprü (bridge)
- * rotasını yerleştirir.
+ * Modül Rota Senkronizasyonu: tüm modüllerin sayfa ve API köprülerini üretilen klasörlerde
+ * toplar. KARAR: klasörler "temiz kurulum" ile oluşturulur — tüm köprüler önce geçici bir
+ * klasöre yazılır, içerik mevcut klasörden farklıysa eski klasör silinip yenisi yerine konur.
+ * Böylece silinen/yeniden adlandırılan modüllerden artık köprü kalmaz.
  *
- * Ek olarak:
- * - src/modules/<module>/routes/<alt/yol>/page.tsx -> src/app/(dashboard)/<route>/<alt/yol>/page.tsx
- * - src/modules/<module>/api/<alt/yol>/route.ts    -> src/app/api/<module>/<alt/yol>/route.ts
- * - Kaynağı silinmiş otomatik köprüler (banner taşıyanlar) temizlenir.
+ * - src/modules/<m>/page.tsx                 → (dashboard)/(modules)/<rota>/page.tsx
+ * - src/modules/<m>/routes/<yol>/page.tsx    → (dashboard)/(modules)/<rota>/<yol>/page.tsx
+ * - src/modules/<m>/api/<yol>/route.ts       → api/(modules)/<m>/<yol>/route.ts
  *
- * Böylece dış AI agent'lar ve geliştiriciler src/app katmanına DOKUNMADAN
- * yalnızca src/modules/<module>/ altında dosya yazarak Next.js sayfasını ayağa kaldırabilir.
+ * <rota>: module.config.ts'teki basePath, yoksa ilk nav href'i, yoksa modül anahtarı.
  */
 export function syncModuleRoutes(): SyncRoutesResult {
-  const result: SyncRoutesResult = {
-    syncedRoutes: [],
-    cleanedRoutes: [],
-  };
+  const result: SyncRoutesResult = { syncedRoutes: [], rebuilt: false, cleanedRoutes: [] };
+  if (!fs.existsSync(MODULES_DIR)) return result;
 
-  if (!fs.existsSync(MODULES_DIR) || !fs.existsSync(DASHBOARD_DIR)) {
-    return result;
-  }
+  const pages = new Map<string, string>(); // GENERATED_PAGES_DIR'e göre yol → içerik
+  const apis = new Map<string, string>(); // GENERATED_API_DIR'e göre yol → içerik
 
-  const moduleEntries = fs.readdirSync(MODULES_DIR, { withFileTypes: true });
-  const activeRoutePaths = new Set<string>();
-
-  for (const entry of moduleEntries) {
+  for (const entry of fs.readdirSync(MODULES_DIR, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue;
     const moduleName = entry.name;
-    const modulePagePath = path.join(MODULES_DIR, moduleName, "page.tsx");
+    const moduleDir = path.join(MODULES_DIR, moduleName);
 
-    // API köprüleri sayfadan bağımsızdır.
-    syncModuleApiRoutes(moduleName, result);
-
-    if (!fs.existsSync(modulePagePath)) {
-      continue;
+    for (const subPath of findFiles(path.join(moduleDir, MODULE_API_DIR), "route.ts")) {
+      const source = `src/modules/${moduleName}/${MODULE_API_DIR}/${subPath}/route.ts`;
+      apis.set(
+        path.join(moduleName, subPath, "route.ts"),
+        `${AUTO_ROUTE_BANNER}
+// Kaynak: ${source}
+export * from "@/modules/${moduleName}/${MODULE_API_DIR}/${subPath}/route";
+${segmentConfig(source)}`,
+      );
+      result.syncedRoutes.push(`${moduleName} -> /api/${moduleName}/${subPath}`);
     }
 
-    // 1. Modülün hedef rotasını belirle (module.config.ts içindeki nav[0].href veya modül adı)
-    let routeSegment = moduleName;
-    const configPath = path.join(MODULES_DIR, moduleName, "module.config.ts");
-    if (fs.existsSync(configPath)) {
-      try {
-        routeSegment = resolveRouteSegment(fs.readFileSync(configPath, "utf8")) ?? moduleName;
-      } catch (err) {
-        console.error(`[sync-routes] Error reading module config for ${moduleName}:`, err);
-      }
+    if (!fs.existsSync(path.join(moduleDir, "page.tsx"))) continue;
+    const configPath = path.join(moduleDir, "module.config.ts");
+    const routeSegment = (fs.existsSync(configPath) && resolveRouteSegment(fs.readFileSync(configPath, "utf8"))) || moduleName;
+
+    pages.set(path.join(routeSegment, "page.tsx"), pageBridge(`src/modules/${moduleName}/page.tsx`, `@/modules/${moduleName}/page`));
+    result.syncedRoutes.push(`${moduleName} -> /${routeSegment}`);
+
+    for (const subPath of findFiles(path.join(moduleDir, MODULE_SUBPAGES_DIR), "page.tsx")) {
+      pages.set(
+        path.join(routeSegment, subPath, "page.tsx"),
+        pageBridge(
+          `src/modules/${moduleName}/${MODULE_SUBPAGES_DIR}/${subPath}/page.tsx`,
+          `@/modules/${moduleName}/${MODULE_SUBPAGES_DIR}/${subPath}/page`,
+        ),
+      );
+      result.syncedRoutes.push(`${moduleName} -> /${routeSegment}/${subPath}`);
     }
-
-    activeRoutePaths.add(routeSegment);
-
-    const targetRouteDir = path.join(DASHBOARD_DIR, routeSegment);
-    const targetPagePath = path.join(targetRouteDir, "page.tsx");
-
-    // Rota dizinini oluştur
-    if (!fs.existsSync(targetRouteDir)) {
-      fs.mkdirSync(targetRouteDir, { recursive: true });
-    }
-
-    const bridgeCode = pageBridge(`src/modules/${moduleName}/page.tsx`, `@/modules/${moduleName}/page`);
-
-    // Dosya yoksa veya otomatik üretilmişse güncelle
-    let needsWrite = true;
-    if (fs.existsSync(targetPagePath)) {
-      const existingContent = fs.readFileSync(targetPagePath, "utf8");
-      if (existingContent === bridgeCode) {
-        needsWrite = false;
-      } else if (!existingContent.includes(AUTO_ROUTE_BANNER)) {
-        // Eğer kullanıcı manuel özel bir sayfa yazmışsa üzerine yazma, koru
-        needsWrite = false;
-      }
-    }
-
-    if (needsWrite) {
-      try {
-        fs.writeFileSync(targetPagePath, bridgeCode, "utf8");
-        result.syncedRoutes.push(`${moduleName} -> /${routeSegment}`);
-      } catch (err) {
-        console.error(`[sync-routes] Failed to write route bridge for ${moduleName}:`, err);
-      }
-    } else {
-      result.syncedRoutes.push(`${moduleName} -> /${routeSegment} (güncel)`);
-    }
-
-    // 2. Alt sayfalar (routes/<alt/yol>/page.tsx)
-    syncModuleSubpages(moduleName, routeSegment, result);
   }
 
-  // 3. Kaynağı silinmiş otomatik köprüleri temizle
-  cleanStaleBridges(DASHBOARD_DIR, result);
-  cleanStaleBridges(API_DIR, result);
-
+  removeLegacyBridges(result);
+  const pagesRebuilt = rebuildDir(GENERATED_PAGES_DIR, pages);
+  const apisRebuilt = rebuildDir(GENERATED_API_DIR, apis);
+  result.rebuilt = pagesRebuilt || apisRebuilt;
   return result;
 }
 
@@ -175,111 +151,68 @@ function findFiles(baseDir: string, fileName: string, relDir = ""): string[] {
   return found;
 }
 
-/** Köprüyü yalnızca dosya yoksa veya otomatik üretilmişse yazar (manuel dosyalar korunur). */
-function writeBridge(
-  targetPath: string,
-  bridgeCode: string,
-  label: string,
-  result: SyncRoutesResult,
-): void {
-  if (fs.existsSync(targetPath)) {
-    const existingContent = fs.readFileSync(targetPath, "utf8");
-    if (existingContent === bridgeCode) {
-      result.syncedRoutes.push(`${label} (güncel)`);
-      return;
-    }
-    if (!existingContent.includes(AUTO_ROUTE_BANNER)) {
-      console.warn(`[sync-routes] Manuel dosya korunuyor, köprü yazılmadı: ${targetPath}`);
-      return;
-    }
+/** Klasördeki tüm dosyaları göreli yol → içerik olarak okur. */
+function readTree(dir: string, relDir = ""): Map<string, string> {
+  const files = new Map<string, string>();
+  const current = path.join(dir, relDir);
+  if (!fs.existsSync(current)) return files;
+  for (const entry of fs.readdirSync(current, { withFileTypes: true })) {
+    const relPath = path.join(relDir, entry.name);
+    if (entry.isDirectory()) for (const [key, value] of readTree(dir, relPath)) files.set(key, value);
+    else files.set(relPath, fs.readFileSync(path.join(dir, relPath), "utf8"));
   }
-
-  try {
-    fs.mkdirSync(path.dirname(targetPath), { recursive: true });
-    fs.writeFileSync(targetPath, bridgeCode, "utf8");
-    result.syncedRoutes.push(label);
-  } catch (err) {
-    console.error(`[sync-routes] Failed to write bridge ${targetPath}:`, err);
-  }
+  return files;
 }
 
-function syncModuleSubpages(
-  moduleName: string,
-  routeSegment: string,
-  result: SyncRoutesResult,
-): void {
-  const subpagesDir = path.join(MODULES_DIR, moduleName, MODULE_SUBPAGES_DIR);
-  for (const subPath of findFiles(subpagesDir, "page.tsx")) {
-    const bridgeCode = pageBridge(
-      `src/modules/${moduleName}/${MODULE_SUBPAGES_DIR}/${subPath}/page.tsx`,
-      `@/modules/${moduleName}/${MODULE_SUBPAGES_DIR}/${subPath}/page`,
-    );
-    writeBridge(
-      path.join(DASHBOARD_DIR, routeSegment, subPath, "page.tsx"),
-      bridgeCode,
-      `${moduleName} -> /${routeSegment}/${subPath}`,
-      result,
-    );
-  }
-}
-
-function syncModuleApiRoutes(moduleName: string, result: SyncRoutesResult): void {
-  const apiDir = path.join(MODULES_DIR, moduleName, MODULE_API_DIR);
-  for (const subPath of findFiles(apiDir, "route.ts")) {
-    const source = `src/modules/${moduleName}/${MODULE_API_DIR}/${subPath}/route.ts`;
-    const bridgeCode = `${AUTO_ROUTE_BANNER}
-// Kaynak: ${source}
-export * from "@/modules/${moduleName}/${MODULE_API_DIR}/${subPath}/route";
-${segmentConfig(source)}`;
-    writeBridge(
-      path.join(API_DIR, moduleName, subPath, "route.ts"),
-      bridgeCode,
-      `${moduleName} -> /api/${moduleName}/${subPath}`,
-      result,
-    );
-  }
+function sameTree(a: Map<string, string>, b: Map<string, string>): boolean {
+  if (a.size !== b.size) return false;
+  for (const [key, value] of a) if (b.get(key) !== value) return false;
+  return true;
 }
 
 /**
- * Banner taşıyan ve "// Kaynak:" satırındaki dosyası artık bulunmayan köprüleri siler,
- * bu silmeyle boşalan klasörleri kaldırır. Manuel yazılmış (banner'sız) dosyalara dokunmaz.
+ * Temiz kurulum: içerik farklıysa yeni ağacı geçici klasöre yazar, eski klasörü siler ve geçici
+ * klasörü yerine taşır (yarım kalmış bir klasör hiçbir an görünmez). Aynıysa dokunmaz.
  */
-function cleanStaleBridges(baseDir: string, result: SyncRoutesResult): void {
-  if (!fs.existsSync(baseDir)) return;
+function rebuildDir(targetDir: string, files: Map<string, string>): boolean {
+  if (sameTree(readTree(targetDir), files)) return false;
+  const tempDir = `${targetDir}.tmp-${process.pid}`;
+  fs.rmSync(tempDir, { recursive: true, force: true });
+  for (const [relPath, content] of files) {
+    fs.mkdirSync(path.dirname(path.join(tempDir, relPath)), { recursive: true });
+    fs.writeFileSync(path.join(tempDir, relPath), content, "utf8");
+  }
+  fs.rmSync(targetDir, { recursive: true, force: true });
+  if (files.size > 0) {
+    fs.mkdirSync(path.dirname(targetDir), { recursive: true });
+    fs.renameSync(tempDir, targetDir);
+  } else {
+    fs.rmSync(tempDir, { recursive: true, force: true });
+  }
+  return true;
+}
 
+/**
+ * Eski düzenden kalan köprüleri siler: üretilen klasörlerin DIŞINDA, banner taşıyan page/route
+ * dosyaları (aynı URL'yi iki kez tanımlayıp derlemeyi kırarlar). Elle yazılmış dosyalara dokunmaz;
+ * boşalan klasörleri kaldırır.
+ */
+function removeLegacyBridges(result: SyncRoutesResult): void {
+  const generated = [GENERATED_PAGES_DIR, GENERATED_API_DIR];
   const walk = (dir: string): void => {
+    if (!fs.existsSync(dir) || generated.some((root) => dir === root || dir.startsWith(`${root}.tmp-`))) return;
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
       const fullPath = path.join(dir, entry.name);
       if (entry.isDirectory()) {
         walk(fullPath);
+        if (fs.existsSync(fullPath) && fs.readdirSync(fullPath).length === 0) fs.rmdirSync(fullPath);
         continue;
       }
       if (entry.name !== "page.tsx" && entry.name !== "route.ts") continue;
-
-      const content = fs.readFileSync(fullPath, "utf8");
-      if (!content.startsWith(AUTO_ROUTE_BANNER)) continue;
-
-      const sourceMatch = content.match(/^\/\/ Kaynak: (\S+)$/m);
-      if (!sourceMatch || fs.existsSync(path.join(ROOT_DIR, sourceMatch[1]))) continue;
-
-      try {
-        fs.unlinkSync(fullPath);
-        result.cleanedRoutes.push(path.relative(ROOT_DIR, fullPath));
-        // Yalnızca bu silme ile boşalan klasörleri kaldır
-        let parent = path.dirname(fullPath);
-        while (
-          parent.startsWith(baseDir) &&
-          parent !== baseDir &&
-          fs.readdirSync(parent).length === 0
-        ) {
-          fs.rmdirSync(parent);
-          parent = path.dirname(parent);
-        }
-      } catch (err) {
-        console.error(`[sync-routes] Failed to remove stale bridge ${fullPath}:`, err);
-      }
+      if (!fs.readFileSync(fullPath, "utf8").startsWith(AUTO_ROUTE_BANNER)) continue;
+      fs.unlinkSync(fullPath);
+      result.cleanedRoutes.push(path.relative(ROOT_DIR, fullPath));
     }
   };
-
-  walk(baseDir);
+  walk(APP_DIR);
 }
