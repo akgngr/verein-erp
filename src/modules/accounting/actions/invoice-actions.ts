@@ -235,7 +235,7 @@ export async function recordInvoicePaymentAction(input: unknown): Promise<Action
           accountId: input.accountId,
           categoryId: input.categoryId,
           amountCents: invoice.grossCents,
-          description: `Rechnung ${invoice.number} – ${invoice.recipientName}`.slice(0, 300),
+          description: `Rechnung ${invoice.number} – ${invoice.recipientName}`.slice(0, 300), // i18n-ignore: Buchungstext (Almanca muhasebe kaydı, arayüz metni değil)
           receiptReference: invoice.number,
         });
         await tx.accountingInvoice.update({
