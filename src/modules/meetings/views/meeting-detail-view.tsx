@@ -246,7 +246,11 @@ export async function MeetingDetailView({
             id: decision.id,
             decisionNumber: decision.decisionNumber,
           }))}
-          userOptions={userOptions}
+          attendeeOptions={meeting.attendees.map((attendee) => ({
+            id: attendee.id,
+            userId: attendee.userId,
+            label: attendee.name,
+          }))}
           contentEditable={canUpdate}
         />
       ) : null}

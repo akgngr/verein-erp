@@ -25,13 +25,13 @@ export function ActionItemsTab({
   meetingId,
   actionItems,
   decisions,
-  userOptions,
+  attendeeOptions,
   contentEditable,
 }: {
   meetingId: string;
   actionItems: ActionItemRow[];
   decisions: { id: string; decisionNumber: string }[];
-  userOptions: { id: string; label: string }[];
+  attendeeOptions: { id: string; userId: string | null; label: string }[];
   contentEditable: boolean;
 }) {
   const tCommon = useTranslations("common");
@@ -102,9 +102,17 @@ export function ActionItemsTab({
                     {actionItem.description}
                   </p>
                   <p className="mt-0.5 flex flex-wrap gap-x-3 text-tiny text-default-500">
-                    <span>{actionItem.assigneeLabel ?? t("unassigned")}</span>
+                    <span>
+                      {actionItem.assigneeLabel ?? t("unassigned")}
+                      {actionItem.assigneeLabel && !actionItem.assigneeAttendeeId && !actionItem.assigneeId ? (
+                        <span className="text-default-400">
+                          {" "}
+                          ({[t("externalBadge"), actionItem.assigneeEmail, actionItem.assigneePhone].filter(Boolean).join(" · ")})
+                        </span>
+                      ) : null}
+                    </span>
                     <span className={overdue ? "font-medium text-danger-600" : ""}>
-                      Son tarih: {actionItem.dueDate ? formatDate(actionItem.dueDate) : "-"}
+                      {t("dueDateLabel")}: {actionItem.dueDate ? formatDate(actionItem.dueDate) : "-"}
                       {overdue ? t("overdueShort") : ""}
                     </span>
                     {actionItem.decisionNumber ? (
@@ -164,7 +172,7 @@ export function ActionItemsTab({
       <ActionItemModal
         meetingId={meetingId}
         decisions={decisions}
-        userOptions={userOptions}
+        attendeeOptions={attendeeOptions}
         item={editing}
         isOpen={modalOpen}
         onOpenChange={(open) => {

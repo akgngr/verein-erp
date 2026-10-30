@@ -360,17 +360,20 @@
     "listEmpty": "Görev bulunamadı.",
     "listAria": "Görev listesi",
     "descriptionHelp": "En fazla 1000 karakter.",
-    "assigneeUserLabel": "Sorumlu (kullanıcı)",
-    "assigneeUserHelp": "Seçilirse serbest metin yok sayılır.",
-    "assigneeFreeLabel": "Sorumlu (serbest ad)",
-    "assigneeFreeHelp": "Dış kişi adı yazılabilir.",
     "noAssigneeOption": "Atanmadı",
     "noDecision": "Bağlantı yok",
     "overdueShort": " (gecikmiş)",
     "unassigned": "Sorumlu atanmadı",
     "decisionLine": "Karar: {number}",
     "deleteNamedMessage": "\"{description}\" görevi silinecek. Onaylıyor musunuz?",
-    "listDescription": "Tüm toplantılardan gelen görevlerin takibi; varsayılan görünüm yalnızca açık görevlerdir."
+    "listDescription": "Tüm toplantılardan gelen görevlerin takibi; varsayılan görünüm yalnızca açık görevlerdir.",
+    "assigneeHelp": "Toplantının katılımcılarından birini seçin ya da “Dışarıdan sorumlu” ile listede olmayan birini girin.",
+    "assigneeNoAttendees": "Bu toplantıda henüz katılımcı yok; “Dışarıdan sorumlu” seçebilir ya da önce katılımcı ekleyebilirsiniz.",
+    "assigneeExternalOption": "Dışarıdan sorumlu ekle…",
+    "externalName": "Ad soyad",
+    "externalEmail": "E-posta",
+    "externalPhone": "Telefon",
+    "externalBadge": "Dışarıdan"
   },
   "discussion": {
     "title": "Görüşmeler",
@@ -427,7 +430,6 @@
   "errors": {
     "meetingNotFound": "Toplantı bulunamadı.",
     "decisionNotFound": "Karar bulunamadı.",
-    "assigneeNotFound": "Sorumlu kullanıcı bulunamadı veya pasif durumda.",
     "taskNotFound": "Görev bulunamadı.",
     "agendaNotFound": "Gündem maddesi bulunamadı.",
     "agendaCannotMove": "Bu madde bu yönde taşınamaz.",
@@ -450,7 +452,8 @@
     "meetingNotFound2": "Toplantı bulunamadı.",
     "notEditable": "Toplantı düzenlenemez.",
     "memberNotFound": "Seçilen üye bulunamadı veya üyeliği sona ermiş.",
-    "membersAlreadyAdded": "Seçilen üyeler bu toplantıda zaten mevcut."
+    "membersAlreadyAdded": "Seçilen üyeler bu toplantıda zaten mevcut.",
+    "assigneeNotAttendee": "Seçilen sorumlu bu toplantının katılımcısı değil."
   },
   "validation": {
     "taskMin": "Görev açıklaması en az 3 karakter olmalıdır.",
@@ -483,7 +486,9 @@
     "endNeedsStart": "Bitiş saati girmek için başlangıç saati zorunludur.",
     "endAfterStart": "Bitiş saati başlangıç saatinden sonra olmalıdır.",
     "quorumInt": "Yeter sayısı tam sayı olmalıdır.",
-    "selectMember": "En az bir üye seçin."
+    "selectMember": "En az bir üye seçin.",
+    "assigneeNameRequired": "Dışarıdan sorumlu için ad soyad zorunludur.",
+    "assigneePhoneMax": "Telefon en fazla 40 karakter olabilir."
   },
   "meta": {
     "list": "Toplantılar",

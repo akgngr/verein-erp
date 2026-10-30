@@ -20,8 +20,43 @@ import { parseDateOnly } from "../utils";
  * Görev işlemleri (5. bölüm md. 4 ve 10): ekleme/güncelleme/silme yalnızca
  * PLANNED/HELD'de; durum değişikliği (Tamamlandı/Yeniden aç) ONAYLI
  * toplantıda da çalışır (takip onay sonrası sürer).
- * Sorumlu YA kullanıcı YA serbest metin YA hiçbiri.
+ * Sorumlu YA toplantı katılımcısı YA dışarıdan biri (ad + isteğe bağlı iletişim) YA hiçbiri.
  */
+
+type AssigneeInput = {
+  assigneeAttendeeId: string | null;
+  assigneeName: string | null;
+  assigneeEmail: string | null;
+  assigneePhone: string | null;
+};
+
+/**
+ * Sorumlu alanlarını üretir. Katılımcı seçildiyse ad sunucuda katılımcı kaydından okunur
+ * (anlık görüntü) ve katılımcı bir kullanıcıysa assigneeId doldurulur ("Bana atananlar" için).
+ */
+async function resolveAssignee(meetingId: string, input: AssigneeInput) {
+  if (input.assigneeAttendeeId) {
+    const attendee = await getDb().meetingAttendee.findFirst({
+      where: { id: input.assigneeAttendeeId, meetingId },
+      select: { id: true, userId: true, name: true },
+    });
+    if (!attendee) throw new ActionError("meetings.errors.assigneeNotAttendee");
+    return {
+      assigneeAttendeeId: attendee.id,
+      assigneeId: attendee.userId,
+      assigneeLabel: attendee.name,
+      assigneeEmail: null,
+      assigneePhone: null,
+    };
+  }
+  return {
+    assigneeAttendeeId: null,
+    assigneeId: null,
+    assigneeLabel: input.assigneeName,
+    assigneeEmail: input.assigneeName ? input.assigneeEmail : null,
+    assigneePhone: input.assigneeName ? input.assigneePhone : null,
+  };
+}
 
 export async function addActionItemAction(
   input: unknown,
@@ -51,21 +86,7 @@ export async function addActionItemAction(
         }
       }
 
-      let assigneeLabel: string | null = null;
-      if (input.assigneeId) {
-        const assignee = await db.user.findFirst({
-          where: { id: input.assigneeId, isActive: true },
-          select: { name: true },
-        });
-        if (!assignee) {
-          throw new ActionError("meetings.errors.assigneeNotFound", {
-            assigneeId: ["Geçerli bir sorumlu seçin."],
-          });
-        }
-        assigneeLabel = assignee.name;
-      } else if (input.assigneeName) {
-        assigneeLabel = input.assigneeName;
-      }
+      const assignee = await resolveAssignee(meeting.id, input);
 
       const dueDate = input.dueDate ? parseDateOnly(input.dueDate) : null;
 
@@ -74,8 +95,7 @@ export async function addActionItemAction(
           meetingId: meeting.id,
           decisionId: input.decisionId,
           description: input.description,
-          assigneeId: input.assigneeId,
-          assigneeLabel,
+          ...assignee,
           dueDate,
         },
       });
@@ -84,7 +104,7 @@ export async function addActionItemAction(
         action: "ACTION_ADD",
         entity: "ActionItem",
         entityId: created.id,
-        after: { meetingNumber: meeting.meetingNumber, assigneeLabel },
+        after: { meetingNumber: meeting.meetingNumber, assigneeLabel: assignee.assigneeLabel },
       });
 
       return { id: created.id };
@@ -125,21 +145,7 @@ export async function updateActionItemAction(
         }
       }
 
-      let assigneeLabel: string | null = null;
-      if (input.assigneeId) {
-        const assignee = await db.user.findFirst({
-          where: { id: input.assigneeId, isActive: true },
-          select: { name: true },
-        });
-        if (!assignee) {
-          throw new ActionError("meetings.errors.assigneeNotFound", {
-            assigneeId: ["Geçerli bir sorumlu seçin."],
-          });
-        }
-        assigneeLabel = assignee.name;
-      } else if (input.assigneeName) {
-        assigneeLabel = input.assigneeName;
-      }
+      const assignee = await resolveAssignee(actionItem.meetingId, input);
 
       const dueDate = input.dueDate ? parseDateOnly(input.dueDate) : null;
 
@@ -148,8 +154,7 @@ export async function updateActionItemAction(
         data: {
           decisionId: input.decisionId,
           description: input.description,
-          assigneeId: input.assigneeId,
-          assigneeLabel,
+          ...assignee,
           dueDate,
         },
       });
@@ -158,7 +163,7 @@ export async function updateActionItemAction(
         action: "ACTION_UPDATE",
         entity: "ActionItem",
         entityId: actionItem.id,
-        after: { meetingNumber: actionItem.meeting.meetingNumber, assigneeLabel },
+        after: { meetingNumber: actionItem.meeting.meetingNumber, assigneeLabel: assignee.assigneeLabel },
       });
 
       return { id: actionItem.id };
