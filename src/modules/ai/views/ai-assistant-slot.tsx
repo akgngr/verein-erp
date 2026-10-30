@@ -2,7 +2,6 @@ import type { ReactNode } from "react";
 
 import type { SessionUser } from "@/modules/auth";
 import { listUsableModuleKeys } from "@/modules/system/server";
-import { createTaskAction } from "@/modules/tasks/server";
 import { can } from "@/shared/permissions/define";
 
 import { AiChatPanel } from "../components/ai-chat-panel";
@@ -18,7 +17,7 @@ export async function AiAssistantSlot({ user, children }: { user: SessionUser; c
   if (!(await listUsableModuleKeys()).includes("ai")) return children;
   const [consented, provider] = await Promise.all([hasAiConsent(user.id), getActiveProvider()]);
   return (
-    <AiChatPanel consented={consented} provider={provider} createTask={createTaskAction}>
+    <AiChatPanel consented={consented} provider={provider}>
       {children}
     </AiChatPanel>
   );

@@ -12,24 +12,47 @@ import { coursesPermissions, listCourseOptions } from "@/modules/courses/server"
 import { eventsPermissions, listEvents } from "@/modules/events/server";
 import { membersPermissions } from "@/modules/members";
 import { getDuesStats, getMemberStats } from "@/modules/members/server";
+import { documentsPermissions } from "@/modules/documents";
+import { getDocumentStats } from "@/modules/documents/server";
+import { donationsPermissions } from "@/modules/donations";
+import { getDonationStats } from "@/modules/donations/server";
+import { meetingsPermissions } from "@/modules/meetings";
+import { getMeetingStats } from "@/modules/meetings/server";
 import { listUsableModuleKeys } from "@/modules/system/server";
-import { getEnabledAreas, type AiArea } from "./areas";
-import { listTasks, TASK_DEFAULT_SORT, TASK_SORTABLE_FIELDS, tasksPermissions } from "@/modules/tasks/server";
+import { getTask, listTasks, TASK_DEFAULT_SORT, TASK_SORTABLE_FIELDS, tasksPermissions } from "@/modules/tasks/server";
+
+import { getAiPermissions, isAllowed, type AiOperation } from "./permissions";
 
 /**
  * Asistanın araçları. KURAL (KVKK/DSGVO): hiçbir araç kişi adı, iletişim bilgisi, adres,
  * banka verisi veya kimlik numarası döndürmez — yalnızca toplamlar, sayımlar ve kurumsal
- * kayıtlar (etkinlik, görev başlığı, kurs adı). Her araç iki kapıdan geçer: hedef modül
- * kullanılabilir (etkin + AI modülüne erişim izni onaylı) ve kullanıcının kendi yetkisi var.
- * Veri değiştiren işlem yoktur; "propose_*" araçları yalnızca kullanıcıya onay kartı önerir.
+ * kayıtlar (etkinlik, görev başlığı, kurs adı). Her araç üç kapıdan geçer: yöneticinin izin
+ * matrisinde (modül + işlem) açık, hedef modül kullanılabilir ve kullanıcının kendi yetkisi var.
+ * Araçlar veriyi DEĞİŞTİRMEZ; oluşturma/güncelleme/silme araçları yalnızca onay kartı önerir,
+ * işlem kullanıcı onaylayınca executeAiProposalAction ile onun yetkisiyle yapılır.
  */
 
-export type AssistantProposal = {
-  kind: "createTask";
-  title: string;
-  description: string | null;
-  priority: "LOW" | "NORMAL" | "HIGH";
-  dueDate: string | null;
+export type AssistantProposal =
+  | { kind: "createTask"; title: string; description: string | null; priority: "LOW" | "NORMAL" | "HIGH"; dueDate: string | null }
+  | { kind: "completeTask"; taskId: string; title: string }
+  | { kind: "deleteTask"; taskId: string; title: string }
+  | {
+      kind: "createEvent";
+      title: string;
+      description: string | null;
+      type: "WORKSHOP" | "SEMINAR" | "SOCIAL" | "CULTURAL" | "SPORTS" | "OTHER";
+      startDate: string;
+      endDate: string | null;
+      location: string | null;
+      isOnline: boolean;
+    };
+
+/** Önerinin hangi modül + işlem iznine bağlı olduğu (yürütmede yeniden denetlenir). */
+export const PROPOSAL_PERMISSION: Record<AssistantProposal["kind"], { module: string; operation: AiOperation }> = {
+  createTask: { module: "tasks", operation: "create" },
+  completeTask: { module: "tasks", operation: "update" },
+  deleteTask: { module: "tasks", operation: "delete" },
+  createEvent: { module: "events", operation: "create" },
 };
 
 type ToolContext = { user: SessionUser; proposals: AssistantProposal[] };
@@ -37,8 +60,8 @@ type ToolContext = { user: SessionUser; proposals: AssistantProposal[] };
 type ToolDefinition<S extends z.ZodType> = {
   name: string;
   module: string;
-  /** Yöneticinin işaret listesindeki izin (kapalıysa araç modele hiç sunulmaz). */
-  area: AiArea;
+  /** İzin matrisindeki işlem (kapalıysa araç modele hiç sunulmaz). */
+  operation: AiOperation;
   allowed: (user: SessionUser) => boolean;
   description: string;
   schema: S;
@@ -61,7 +84,7 @@ const euros = (cents: number) => Math.round(cents) / 100;
 const TOOLS = [
   define({
     name: "get_accounting_summary",
-    area: "accounting",
+    operation: "read",
     module: "accounting",
     allowed: (user) => can(user.role, accountingPermissions, "view"),
     description:
@@ -89,7 +112,7 @@ const TOOLS = [
   }),
   define({
     name: "get_member_statistics",
-    area: "members",
+    operation: "read",
     module: "members",
     allowed: (user) => can(user.role, membersPermissions, "view"),
     description: "Member counts by status and membership type, plus membership-fee collection statistics for a year. Numbers only; no member names or details.", // i18n-ignore (model-facing tool text)
@@ -115,7 +138,7 @@ const TOOLS = [
   }),
   define({
     name: "list_upcoming_events",
-    area: "events",
+    operation: "read",
     module: "events",
     allowed: (user) => can(user.role, eventsPermissions, "view"),
     description: "Upcoming events: title, type, status, dates, location, registered count and capacity. No attendee names.", // i18n-ignore (model-facing tool text)
@@ -142,10 +165,10 @@ const TOOLS = [
   }),
   define({
     name: "list_open_tasks",
-    area: "tasks",
+    operation: "read",
     module: "tasks",
     allowed: (user) => can(user.role, tasksPermissions, "view"),
-    description: "Open and in-progress tasks: title, status, priority, due date, overdue flag. No assignee data. mine=true returns only the current user's tasks.",
+    description: "Open and in-progress tasks: id, title, status, priority, due date, overdue flag. No assignee data. Use the id for propose_complete_task / propose_delete_task. mine=true returns only the current user's tasks.",
     schema: z.object({ mine: z.boolean() }),
     inputSchema: {
       type: "object",
@@ -161,12 +184,12 @@ const TOOLS = [
       const result = await listTasks(params, user);
       return result.rows
         .filter((task) => task.status === "OPEN" || task.status === "IN_PROGRESS")
-        .map((task) => ({ title: task.title, status: task.status, priority: task.priority, dueDate: task.dueDate, overdue: task.isOverdue }));
+        .map((task) => ({ id: task.id, title: task.title, status: task.status, priority: task.priority, dueDate: task.dueDate, overdue: task.isOverdue }));
     },
   }),
   define({
     name: "list_courses",
-    area: "courses",
+    operation: "read",
     module: "courses",
     allowed: (user) => can(user.role, coursesPermissions, "view"),
     description: "Courses: code, title and status. No student data.", // i18n-ignore (model-facing tool text)
@@ -176,7 +199,7 @@ const TOOLS = [
   }),
   define({
     name: "get_report_link",
-    area: "reports",
+    operation: "read",
     module: "accounting",
     allowed: (user) => can(user.role, accountingPermissions, "view"),
     description:
@@ -206,7 +229,7 @@ const TOOLS = [
   }),
   define({
     name: "propose_task",
-    area: "tasksPropose",
+    operation: "create",
     module: "tasks",
     allowed: (user) => can(user.role, tasksPermissions, "create"),
     description:
@@ -233,12 +256,121 @@ const TOOLS = [
       return { status: "proposed", note: "A confirmation card was shown to the user; the task is not created until they confirm." };
     },
   }),
+  define({
+    name: "get_meeting_statistics",
+    module: "meetings",
+    operation: "read",
+    allowed: (user) => can(user.role, meetingsPermissions, "view"),
+    description: "Meeting statistics: planned meetings, next meeting (number, title, date), draft minutes, open and overdue action items. No attendee names.", // i18n-ignore (model-facing tool text)
+    schema: z.object({}),
+    inputSchema: { type: "object", properties: {}, required: [], additionalProperties: false },
+    run: async () => {
+      const stats = await getMeetingStats();
+      return { ...stats, nextMeeting: stats.nextMeeting ? { number: stats.nextMeeting.meetingNumber, title: stats.nextMeeting.title, date: stats.nextMeeting.meetingDate.toISOString() } : null };
+    },
+  }),
+  define({
+    name: "get_document_statistics",
+    module: "documents",
+    operation: "read",
+    allowed: (user) => can(user.role, documentsPermissions, "view"),
+    description: "Correspondence register statistics: open, in progress, overdue, incoming and outgoing this month. Counts only.", // i18n-ignore (model-facing tool text)
+    schema: z.object({}),
+    inputSchema: { type: "object", properties: {}, required: [], additionalProperties: false },
+    run: async () => getDocumentStats(),
+  }),
+  define({
+    name: "get_donation_statistics",
+    module: "donations",
+    operation: "read",
+    allowed: (user) => can(user.role, donationsPermissions, "view"),
+    description: "Donation statistics for a year: total (EUR), number of donations, confirmations issued and pending. No donor data.", // i18n-ignore (model-facing tool text)
+    schema: yearSchema,
+    inputSchema: YEAR_INPUT,
+    run: async ({ year }) => {
+      const stats = await getDonationStats(year);
+      return { year, totalEur: euros(stats.totalCents), count: stats.count, unconfirmedOver300: stats.unconfirmedOver300Count, confirmationsIssued: stats.issuedConfirmationCount, confirmationWarnings: stats.warningConfirmationCount };
+    },
+  }),
+  define({
+    name: "propose_event",
+    module: "events",
+    operation: "create",
+    allowed: (user) => can(user.role, eventsPermissions, "create"),
+    description: "PROPOSES a new event. Nothing is created until the user confirms the card. Dates as ISO 8601 local time (YYYY-MM-DDTHH:mm).", // i18n-ignore (model-facing tool text)
+    schema: z.object({
+      title: z.string().min(3).max(200),
+      description: z.string().max(2000).nullable(),
+      type: z.enum(["WORKSHOP", "SEMINAR", "SOCIAL", "CULTURAL", "SPORTS", "OTHER"]),
+      startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/),
+      endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/).nullable(),
+      location: z.string().max(200).nullable(),
+      isOnline: z.boolean(),
+    }),
+    inputSchema: {
+      type: "object",
+      properties: {
+        title: { type: "string" },
+        description: { type: ["string", "null"] },
+        type: { type: "string", enum: ["WORKSHOP", "SEMINAR", "SOCIAL", "CULTURAL", "SPORTS", "OTHER"] },
+        startDate: { type: "string", description: "YYYY-MM-DDTHH:mm" }, // i18n-ignore (model-facing tool text)
+        endDate: { type: ["string", "null"], description: "YYYY-MM-DDTHH:mm" }, // i18n-ignore (model-facing tool text)
+        location: { type: ["string", "null"] },
+        isOnline: { type: "boolean" },
+      },
+      required: ["title", "description", "type", "startDate", "endDate", "location", "isOnline"],
+      additionalProperties: false,
+    },
+    run: async (input, { proposals }) => {
+      proposals.push({ kind: "createEvent", ...input });
+      return { status: "proposed", note: "A confirmation card was shown to the user; nothing is created until they confirm." }; // i18n-ignore (model-facing tool text)
+    },
+  }),
+  define({
+    name: "propose_complete_task",
+    module: "tasks",
+    operation: "update",
+    allowed: (user) => can(user.role, tasksPermissions, "update"),
+    description: "PROPOSES marking a task as done (id from list_open_tasks). Nothing changes until the user confirms.", // i18n-ignore (model-facing tool text)
+    schema: z.object({ taskId: z.string().min(1).max(100) }),
+    inputSchema: { type: "object", properties: { taskId: { type: "string" } }, required: ["taskId"], additionalProperties: false },
+    run: async ({ taskId }, { proposals }) => {
+      const task = await getTask(taskId);
+      if (!task) return { status: "not_found" };
+      proposals.push({ kind: "completeTask", taskId: task.id, title: task.title });
+      return { status: "proposed" };
+    },
+  }),
+  define({
+    name: "propose_delete_task",
+    module: "tasks",
+    operation: "delete",
+    allowed: (user) => can(user.role, tasksPermissions, "delete"),
+    description: "PROPOSES deleting a task (id from list_open_tasks). Nothing is deleted until the user confirms.", // i18n-ignore (model-facing tool text)
+    schema: z.object({ taskId: z.string().min(1).max(100) }),
+    inputSchema: { type: "object", properties: { taskId: { type: "string" } }, required: ["taskId"], additionalProperties: false },
+    run: async ({ taskId }, { proposals }) => {
+      const task = await getTask(taskId);
+      if (!task) return { status: "not_found" };
+      proposals.push({ kind: "deleteTask", taskId: task.id, title: task.title });
+      return { status: "proposed" };
+    },
+  }),
 ];
 
 /** Bu kullanıcı için şu an kullanılabilir araçlar (modül izni + kullanıcı yetkisi). */
 export async function availableTools(user: SessionUser) {
-  const [usable, enabled] = await Promise.all([listUsableModuleKeys().then((keys) => new Set(keys)), getEnabledAreas().then((areas) => new Set(areas))]);
-  return TOOLS.filter((tool) => enabled.has(tool.area) && usable.has(tool.module) && tool.allowed(user));
+  const [usable, matrix] = await Promise.all([listUsableModuleKeys().then((keys) => new Set(keys)), getAiPermissions()]);
+  return TOOLS.filter((tool) => isAllowed(matrix, tool.module, tool.operation) && usable.has(tool.module) && tool.allowed(user));
+}
+
+/** Matristeki her modül için asistanın gerçekten aracı olan işlemler (ayarlar ekranı). */
+export function supportedOperations(): Record<string, AiOperation[]> {
+  const result: Record<string, AiOperation[]> = {};
+  for (const tool of TOOLS) {
+    result[tool.module] = [...new Set([...(result[tool.module] ?? []), tool.operation])];
+  }
+  return result;
 }
 
 export type AvailableTool = (typeof TOOLS)[number];

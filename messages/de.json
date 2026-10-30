@@ -935,12 +935,15 @@
     "access": {
       "accounting": "Liest Einnahmen-/Ausgabensummen und Kontostände; liefert Berichtslinks (keine Buchungsdetails, keine Personendaten).",
       "members": "Liest nur Mitgliederzahlen und Beitragsstatistik; keine Namen oder Daten einzelner Mitglieder. Registrierte Namen werden nur serverseitig zur Maskierung verwendet.",
-      "events": "Liest Titel, Datum, Ort und Teilnehmerzahlen kommender Veranstaltungen; keine Teilnehmernamen.",
-      "tasks": "Liest Titel und Status offener Aufgaben; legt Aufgaben nur nach Bestätigung an.",
+      "events": "Liest Titel, Datum, Ort und Teilnehmerzahlen kommender Veranstaltungen; legt bei Freigabe nach Bestätigung Entwürfe an. Keine Teilnehmernamen.",
+      "tasks": "Liest Titel und Status offener Aufgaben; legt bei Freigabe nach Bestätigung Aufgaben an, erledigt oder löscht sie.",
       "courses": "Liest Kursnamen und -status; keine Schülerdaten.",
       "system": "Liest, welche Module aktiv und für den Assistenten freigegeben sind (nur darauf wird zugegriffen).",
       "students": "Liest Schüler- und Elternnamen nur serverseitig zur Maskierung; diese Namen werden nie an die KI gesendet.",
-      "auth": "Liest Benutzernamen nur serverseitig zur Maskierung und prüft die Sitzung; Namen werden nie an die KI gesendet."
+      "auth": "Liest Benutzernamen nur serverseitig zur Maskierung und prüft die Sitzung; Namen werden nie an die KI gesendet.",
+      "meetings": "Liest nur Sitzungsstatistiken (geplant, nächste Sitzung, offene Aufgaben); keine Teilnehmernamen.",
+      "documents": "Liest nur Zahlen des Schriftverkehrs (offen, überfällig, ein-/ausgehend diesen Monat).",
+      "donations": "Liest nur Spendensummen und Anzahl der Bestätigungen; keine Spenderdaten."
     },
     "errors": {
       "consentRequired": "Bitte bestätigen Sie zuerst den Datenschutzhinweis.",
@@ -951,7 +954,8 @@
       "providerNotReady": "Dieser Anbieter ist nicht bereit (Schlüssel oder Modell fehlt bzw. lokale Adresse nicht im privaten Netz).",
       "baseUrlRequired": "Für das lokale Modell ist eine Serveradresse erforderlich.",
       "baseUrlNotPrivate": "Diese Adresse liegt nicht im Vereinsnetz. Aus Datenschutzgründen sind nur lokale/private Adressen zulässig.",
-      "providerAuth": "Der Anbieter hat den API-Schlüssel abgelehnt (ungültig, abgelaufen oder ohne Zugriff auf dieses Modell). Ein Administrator sollte Schlüssel und Modell unter Einstellungen → KI-Assistent prüfen."
+      "providerAuth": "Der Anbieter hat den API-Schlüssel abgelehnt (ungültig, abgelaufen oder ohne Zugriff auf dieses Modell). Ein Administrator sollte Schlüssel und Modell unter Einstellungen → KI-Assistent prüfen.",
+      "permissionRevoked": "Die Freigabe für diesen Vorgang wurde entzogen; der Vorschlag wurde nicht ausgeführt."
     },
     "panel": {
       "title": "Assistent",
@@ -966,7 +970,6 @@
       "welcome": "Hallo! Fragen Sie zu den Vereinsdaten, fordern Sie Berichte an oder lassen Sie sich Aufgaben vorschlagen. Beispiele:",
       "privacyNote": "Personendaten werden maskiert; der Chat wird nicht gespeichert.",
       "notConfigured": "Der Assistent ist noch nicht eingerichtet: Ein Administrator muss unter Einstellungen → KI-Assistent einen Anbieter verbinden.",
-      "taskCreated": "Aufgabe angelegt.",
       "examples": {
         "q1": "Fasse die Einnahmen und Ausgaben dieses Jahres zusammen.",
         "q2": "Wie steht es um die Beitragszahlungen?",
@@ -974,9 +977,26 @@
         "q4": "Gib mir den Kassenbericht als PDF."
       },
       "proposal": {
-        "task": "Aufgabenvorschlag",
-        "confirm": "Aufgabe anlegen",
-        "created": "Angelegt",
+        "kinds": {
+          "createTask": "Aufgabenvorschlag",
+          "completeTask": "Aufgabe erledigen",
+          "deleteTask": "Aufgabe löschen",
+          "createEvent": "Veranstaltungsvorschlag (Entwurf)"
+        },
+        "confirm": {
+          "createTask": "Aufgabe anlegen",
+          "completeTask": "Als erledigt markieren",
+          "deleteTask": "Aufgabe löschen",
+          "createEvent": "Entwurf anlegen"
+        },
+        "done": {
+          "createTask": "Aufgabe angelegt.",
+          "completeTask": "Aufgabe erledigt.",
+          "deleteTask": "Aufgabe gelöscht.",
+          "createEvent": "Veranstaltungsentwurf angelegt."
+        },
+        "applied": "Ausgeführt",
+        "online": "Online",
         "priority": {
           "LOW": "Niedrige Priorität",
           "NORMAL": "Normale Priorität",
@@ -1013,13 +1033,6 @@
       "areasHelp": "Nur vom Administrator freigegebene Bereiche, für die Sie berechtigt sind. In keinem Bereich werden Personendaten gelesen.",
       "areasNone": "Derzeit kein Bereich freigegeben.",
       "privacyTitle": "Datenschutz (DSGVO)",
-      "areas": {
-        "accounting": "Buchhaltung (Summen, Berichte)",
-        "members": "Mitglieder (nur Zahlen)",
-        "events": "Veranstaltungen",
-        "tasks": "Aufgaben",
-        "courses": "Kurse (nur Namen)"
-      },
       "status": {
         "module": "Modul",
         "key": "Anbieter",
@@ -1053,8 +1066,8 @@
       "providerChanged": "Anbieter geändert; Nutzer müssen erneut einwilligen.",
       "credentialSave": "Speichern",
       "credentialSaved": "Verbindungsdaten gespeichert (Schlüssel verschlüsselt abgelegt).",
-      "permissionsTitle": "Berechtigungen des Assistenten",
-      "permissionsHelp": "Wählen Sie einzeln, worauf der Assistent zugreifen und was er tun darf. Standardmäßig ist alles deaktiviert; bei deaktivierter Berechtigung sieht der Assistent diese Daten nicht. Personendaten werden in keinem Fall gelesen.",
+      "permissionsTitle": "Berechtigungen des Assistenten (je Modul)",
+      "permissionsHelp": "Wählen Sie für jedes Modul Lesen, Schreiben, Aktualisieren und Löschen einzeln. Standardmäßig ist alles deaktiviert. Schreib-, Änderungs- und Löschvorgänge schlägt der Assistent nur vor; ausgeführt werden sie erst nach Bestätigung und mit den eigenen Rechten der Person. Auch mit Leserecht werden keine Personendaten gelesen.",
       "areasSave": "Berechtigungen speichern",
       "areasSaved": "Berechtigungen gespeichert.",
       "fields": {
@@ -1068,34 +1081,16 @@
         "baseUrl": "Serveradresse",
         "baseUrlHelp": "Nur Adressen im Vereinsnetz werden akzeptiert (z. B. localhost, 192.168.x.x, Docker-Dienstname)."
       },
-      "areaItems": {
-        "accounting": {
-          "label": "Buchhaltungsübersichten",
-          "help": "Einnahmen/Ausgaben je Kategorie und Kontostände. Keine Buchungsdetails, keine Personendaten."
-        },
-        "reports": {
-          "label": "Berichtslinks",
-          "help": "Download-Links für Einnahmen-/Ausgabenliste (PDF/Excel) und Kassenbericht; der Inhalt geht nicht an die KI."
-        },
-        "members": {
-          "label": "Mitgliederstatistik",
-          "help": "Nur Mitgliederzahlen und Beitragsquoten; keine Namen oder Daten einzelner Mitglieder."
-        },
-        "events": {
-          "label": "Veranstaltungen",
-          "help": "Titel, Datum, Ort und Teilnehmerzahl kommender Veranstaltungen; keine Teilnehmernamen."
-        },
-        "tasks": {
-          "label": "Aufgaben lesen",
-          "help": "Titel, Status und Termine offener Aufgaben; keine Angaben zu Verantwortlichen."
-        },
-        "tasksPropose": {
-          "label": "Aufgaben vorschlagen",
-          "help": "Der Assistent darf Aufgaben vorschlagen; angelegt werden sie nur nach Bestätigung durch die Person, mit deren Rechten."
-        },
-        "courses": {
-          "label": "Kurse",
-          "help": "Kursnamen und Status; keine Schülerdaten."
+      "matrix": {
+        "noTools": "Der Assistent hat für dieses Modul noch keine Werkzeuge; keine Freigabe möglich.",
+        "unsupported": "Nicht unterstützt",
+        "allow": "Erlauben",
+        "deny": "Nicht erlauben",
+        "operations": {
+          "read": "Lesen",
+          "create": "Schreiben (anlegen)",
+          "update": "Aktualisieren",
+          "delete": "Löschen"
         }
       }
     },

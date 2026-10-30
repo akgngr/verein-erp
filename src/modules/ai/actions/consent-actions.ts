@@ -8,7 +8,8 @@ import type { ActionResult } from "@/shared/types/action";
 import { ActionError, createAction } from "@/modules/auth/server";
 
 import { aiPermissions } from "../permissions";
-import { AI_AREAS, setEnabledAreas } from "../services/areas";
+import { AI_OPERATIONS, sanitizeMatrix, setAiPermissions } from "../services/permissions";
+import { supportedOperations } from "../services/tools";
 import { AI_PROVIDER_IDS, isPrivateEndpoint, isProviderReady, saveProviderCredential } from "../services/providers";
 import { AI_CONSENT_VERSION, getActiveProvider, giveAiConsent, revokeAiConsent, setActiveProvider } from "../services/consent";
 
@@ -107,14 +108,16 @@ export async function saveAiProviderCredentialAction(input: unknown): Promise<Ac
   return run(input) as Promise<ActionResult>;
 }
 
-/** Yönetici, asistana açılan izinleri işaret listesinden seçer (varsayılan: hiçbiri). */
-export async function setAiAreasAction(input: unknown): Promise<ActionResult> {
+/** Yönetici, modül bazında okuma/oluşturma/güncelleme/silme izinlerini seçer (varsayılan: hiçbiri). */
+export async function setAiPermissionsAction(input: unknown): Promise<ActionResult> {
   const run = createAction({
     permission: { definition: aiPermissions, action: "update" },
-    schema: z.object({ areas: z.array(z.enum(AI_AREAS)).max(AI_AREAS.length) }),
+    schema: z.object({ matrix: z.record(z.string().max(40), z.array(z.enum(AI_OPERATIONS)).max(4)) }),
     handler: async ({ input, audit }) => {
-      await setEnabledAreas(input.areas);
-      await audit({ action: "AI_AREAS_CHANGED", entity: "AiSettings", entityId: "singleton", after: { areas: input.areas } });
+      // Yalnızca asistanın gerçekten aracı olan modül/işlemler kaydedilir.
+      const matrix = sanitizeMatrix(input.matrix, supportedOperations());
+      await setAiPermissions(matrix);
+      await audit({ action: "AI_PERMISSIONS_CHANGED", entity: "AiSettings", entityId: "singleton", after: { matrix } });
       revalidatePath("/", "layout");
       return undefined;
     },

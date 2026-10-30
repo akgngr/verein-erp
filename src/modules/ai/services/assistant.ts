@@ -25,8 +25,8 @@ function systemPrompt(locale: string, orgToday: string): string {
     "Use the provided tools for any question about the association's data; never guess numbers. Amounts are in EUR.",
     "Data protection is strict (GDPR/KVKK): tools intentionally return no personal data. Never ask the user for names, contact details, bank data or ID numbers, and never try to infer or reconstruct personal data.",
     "Text like [PERSON_1], [REF_1], [EMAIL_1], [IBAN_1], [PHONE_1] or [TAXID_1] is a placeholder for redacted personal data. Keep placeholders exactly as written; do not comment on them.",
-    "You cannot change data. To create a task, call propose_task; the user confirms it in the panel. For reports, call get_report_link and give the link as a markdown link.",
-    "If a needed tool is not available, say that the administrator has not granted the assistant access to that module.",
+    "You cannot change data directly. Tools named propose_* only show the user a confirmation card; say that the user must confirm it. For reports, call get_report_link and give the link as a markdown link. Use markdown tables for tabular figures.",
+    "If a needed tool is not available, say that the administrator has not granted the assistant this permission for that module (Settings → AI assistant).",
     "Be concise. Use short markdown lists or tables for figures.",
   ].join("\n");
 }
@@ -63,7 +63,11 @@ export async function runAssistant(args: { user: SessionUser; locale: string; pr
   const refusal = args.locale === "de" ? "Diese Anfrage kann ich nicht beantworten." : "Bu isteğe yanıt veremiyorum.";
   return {
     reply: result.refused ? refusal : vault.restore(result.text),
-    proposals: proposals.map((proposal) => ({ ...proposal, title: vault.restore(proposal.title), description: proposal.description ? vault.restore(proposal.description) : null })),
+    // Önerilerdeki metinler kullanıcıya dönerken yer tutuculardan çözülür.
+    proposals: proposals.map(
+      (proposal) =>
+        Object.fromEntries(Object.entries(proposal).map(([key, value]) => [key, typeof value === "string" ? vault.restore(value) : value])) as AssistantProposal,
+    ),
     toolsUsed,
     usage: { inputTokens: result.inputTokens, outputTokens: result.outputTokens },
     redactions: vault.size,

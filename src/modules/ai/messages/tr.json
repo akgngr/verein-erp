@@ -12,12 +12,15 @@
   "access": {
     "accounting": "Gelir-gider toplamlarını ve hesap bakiyelerini okur; rapor bağlantısı verir (fiş ayrıntısı ve kişi verisi okunmaz).",
     "members": "Yalnızca üye sayılarını ve aidat tahsilat istatistiğini okur; hiçbir üyenin adı veya bilgisi okunmaz. Kayıtlı adlar yalnızca maskeleme için sunucuda kullanılır.",
-    "events": "Yaklaşan etkinliklerin başlık, tarih, yer ve katılım sayılarını okur; katılımcı isimleri okunmaz.",
-    "tasks": "Açık görevlerin başlık ve durumunu okur; kullanıcının onayıyla görev oluşturur.",
+    "events": "Yaklaşan etkinliklerin başlık, tarih, yer ve katılım sayılarını okur; izin verilirse kullanıcı onayıyla taslak etkinlik oluşturur. Katılımcı isimleri okunmaz.",
+    "tasks": "Açık görevlerin başlık ve durumunu okur; izin verilirse kullanıcı onayıyla görev oluşturur, tamamlar veya siler.",
     "courses": "Kurs adlarını ve durumlarını okur; öğrenci bilgisi okunmaz.",
     "system": "Hangi modüllerin etkin ve asistana izinli olduğunu okur (asistan yalnızca bunlara erişir).",
     "students": "Yalnızca maskeleme için öğrenci ve veli adlarını sunucuda okur; bu adlar yapay zekâya asla gönderilmez.",
-    "auth": "Yalnızca maskeleme için kullanıcı adlarını sunucuda okur ve oturumu doğrular; adlar yapay zekâya gönderilmez."
+    "auth": "Yalnızca maskeleme için kullanıcı adlarını sunucuda okur ve oturumu doğrular; adlar yapay zekâya gönderilmez.",
+    "meetings": "Yalnızca toplantı istatistiklerini (planlanan, sıradaki toplantı, açık görev sayısı) okur; katılımcı isimleri okunmaz.",
+    "documents": "Yalnızca evrak kayıt sayılarını (açık, gecikmiş, bu ay gelen/giden) okur.",
+    "donations": "Yalnızca bağış toplamlarını ve makbuz sayılarını okur; bağışçı bilgisi okunmaz."
   },
   "errors": {
     "consentRequired": "Asistanı kullanmak için önce veri koruma bilgilendirmesini onaylayın.",
@@ -28,7 +31,8 @@
     "providerNotReady": "Bu sağlayıcı hazır değil (anahtar veya model eksik ya da yerel adres özel ağda değil).",
     "baseUrlRequired": "Yerel model için sunucu adresi gerekli.",
     "baseUrlNotPrivate": "Bu adres dernek ağında değil. Veri koruma gereği yalnızca yerel/özel ağ adresleri kabul edilir.",
-    "providerAuth": "Sağlayıcı API anahtarını reddetti (anahtar geçersiz, süresi dolmuş veya bu modele yetkisi yok). Yönetici Ayarlar → Yapay zekâ asistanı sayfasından anahtarı ve model adını kontrol etmelidir."
+    "providerAuth": "Sağlayıcı API anahtarını reddetti (anahtar geçersiz, süresi dolmuş veya bu modele yetkisi yok). Yönetici Ayarlar → Yapay zekâ asistanı sayfasından anahtarı ve model adını kontrol etmelidir.",
+    "permissionRevoked": "Bu işlem için asistan izni kapatılmış; öneri uygulanmadı."
   },
   "panel": {
     "title": "Asistan",
@@ -43,7 +47,6 @@
     "welcome": "Merhaba! Derneğin verileri hakkında soru sorabilir, rapor isteyebilir veya görev önerisi alabilirsiniz. Örnekler:",
     "privacyNote": "Kişisel veriler maskelenir; sohbet kaydedilmez.",
     "notConfigured": "Asistan henüz yapılandırılmamış: yönetici Ayarlar → Yapay zekâ asistanı sayfasından bir sağlayıcı bağlamalıdır.",
-    "taskCreated": "Görev oluşturuldu.",
     "examples": {
       "q1": "Bu yılın gelir-gider özetini çıkar.",
       "q2": "Aidat tahsilat durumumuz nasıl?",
@@ -51,9 +54,26 @@
       "q4": "Yıllık rapor (Kassenbericht) PDF'ini ver."
     },
     "proposal": {
-      "task": "Görev önerisi",
-      "confirm": "Görevi oluştur",
-      "created": "Oluşturuldu",
+      "kinds": {
+        "createTask": "Görev önerisi",
+        "completeTask": "Görevi tamamlama",
+        "deleteTask": "Görevi silme",
+        "createEvent": "Etkinlik önerisi (taslak)"
+      },
+      "confirm": {
+        "createTask": "Görevi oluştur",
+        "completeTask": "Tamamlandı olarak işaretle",
+        "deleteTask": "Görevi sil",
+        "createEvent": "Taslak etkinlik oluştur"
+      },
+      "done": {
+        "createTask": "Görev oluşturuldu.",
+        "completeTask": "Görev tamamlandı.",
+        "deleteTask": "Görev silindi.",
+        "createEvent": "Taslak etkinlik oluşturuldu."
+      },
+      "applied": "Uygulandı",
+      "online": "Çevrim içi",
       "priority": {
         "LOW": "Düşük öncelik",
         "NORMAL": "Normal öncelik",
@@ -90,13 +110,6 @@
     "areasHelp": "Yalnızca yöneticinin izin verdiği ve sizin yetkinizin olduğu alanlar. Hiçbir alanda kişisel veri okunmaz.",
     "areasNone": "Şu anda erişebildiği alan yok.",
     "privacyTitle": "Veri koruma (KVKK / DSGVO)",
-    "areas": {
-      "accounting": "Muhasebe (toplamlar, raporlar)",
-      "members": "Üyeler (yalnızca sayılar)",
-      "events": "Etkinlikler",
-      "tasks": "Görevler",
-      "courses": "Kurslar (yalnızca adlar)"
-    },
     "status": {
       "module": "Modül",
       "key": "Sağlayıcı",
@@ -130,8 +143,8 @@
     "providerChanged": "Sağlayıcı değiştirildi; kullanıcılar yeniden onay verecek.",
     "credentialSave": "Kaydet",
     "credentialSaved": "Bağlantı bilgisi kaydedildi (anahtar şifreli saklanır).",
-    "permissionsTitle": "Asistanın izinleri",
-    "permissionsHelp": "Asistanın hangi bilgilere erişebileceğini ve neler yapabileceğini tek tek seçin. Varsayılan olarak hepsi kapalıdır; kapalı bir izin için asistan o veriyi hiç göremez. Her durumda kişisel veri okunmaz.",
+    "permissionsTitle": "Asistanın izinleri (modül bazında)",
+    "permissionsHelp": "Her modül için okuma, yazma, güncelleme ve silme iznini ayrı ayrı seçin. Varsayılan olarak hepsi kapalıdır. Yazma, güncelleme ve silme işlemlerini asistan yalnızca önerir; işlem kullanıcı karttan onaylayınca ve kullanıcının kendi yetkisi varsa yapılır. Okuma izni verilse bile kişisel veri okunmaz.",
     "areasSave": "İzinleri kaydet",
     "areasSaved": "İzinler kaydedildi.",
     "fields": {
@@ -145,34 +158,16 @@
       "baseUrl": "Sunucu adresi",
       "baseUrlHelp": "Yalnızca dernek ağındaki adresler kabul edilir (ör. localhost, 192.168.x.x, Docker servis adı)."
     },
-    "areaItems": {
-      "accounting": {
-        "label": "Muhasebe özetleri",
-        "help": "Kategori bazında gelir-gider toplamları ve hesap bakiyeleri. Fiş ayrıntısı ve kişi bilgisi yok."
-      },
-      "reports": {
-        "label": "Rapor bağlantıları",
-        "help": "Gelir-gider listesi (PDF/Excel) ve yıllık rapor için indirme bağlantısı verir; rapor içeriği yapay zekâya gitmez."
-      },
-      "members": {
-        "label": "Üye istatistikleri",
-        "help": "Yalnızca üye sayıları ve aidat tahsilat oranları; hiçbir üyenin adı veya bilgisi yok."
-      },
-      "events": {
-        "label": "Etkinlikler",
-        "help": "Yaklaşan etkinliklerin başlık, tarih, yer ve katılımcı sayısı; katılımcı isimleri yok."
-      },
-      "tasks": {
-        "label": "Görevleri okuma",
-        "help": "Açık görevlerin başlık, durum ve tarihleri; sorumlu kişi bilgisi yok."
-      },
-      "tasksPropose": {
-        "label": "Görev önerme",
-        "help": "Asistan görev önerebilir; görev yalnızca kullanıcı karttan onaylarsa, onun yetkisiyle oluşturulur."
-      },
-      "courses": {
-        "label": "Kurslar",
-        "help": "Kurs adları ve durumları; öğrenci bilgisi yok."
+    "matrix": {
+      "noTools": "Asistanın bu modülde henüz aracı yok; izin verilemez.",
+      "unsupported": "Desteklenmiyor",
+      "allow": "İzin ver",
+      "deny": "İzin verme",
+      "operations": {
+        "read": "Okuma",
+        "create": "Yazma (oluşturma)",
+        "update": "Güncelleme",
+        "delete": "Silme"
       }
     }
   },
