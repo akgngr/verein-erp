@@ -3941,7 +3941,9 @@
       "onlyExtensionsDeletable": "Yalnızca harici geliştirici eklentileri (EXTENSION) silinebilir. Çekirdek ve resmi modüller silinemez.",
       "deleteFailed": "Modül silinirken hata oluştu.",
       "noAccessRequested": "Bu modül başka modüllere erişim istemiyor.",
-      "accessNotApproved": "Önce modülün istediği erişime izin verin."
+      "accessNotApproved": "Önce modülün istediği erişime izin verin.",
+      "devToolsOnly": "Bu işlem yalnızca geliştirme ortamında yapılabilir; canlı sistemde şemalar kurulum sırasında otomatik senkronize edilir.",
+      "syncFailed": "Şemalar senkronize edilemedi. Ayrıntılar sunucu günlüğünde."
     },
     "access": {
       "pending": "İzin bekliyor",

@@ -7,6 +7,7 @@ import { getTranslations } from "next-intl/server";
 
 import { ModuleList } from "../components/module-list";
 import { getModulesList } from "../queries/get-modules";
+import { areFileDevToolsEnabled } from "@/shared/modules/dev-tools";
 
 export async function ModuleManagementView() {
   let user;
@@ -32,6 +33,7 @@ export async function ModuleManagementView() {
         initialModules={modules}
         stats={stats}
         canManage={canManage}
+        devTools={areFileDevToolsEnabled()}
       />
     </div>
   );

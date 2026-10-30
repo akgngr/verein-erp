@@ -4,6 +4,7 @@ import { z } from "zod";
 import { ActionError, createAction } from "@/modules/auth/server";
 import { systemPermissions } from "@/shared/permissions/system";
 import { allModules } from "@/registry";
+import { areFileDevToolsEnabled } from "@/shared/modules/dev-tools";
 import { deleteModuleExtension } from "@/shared/modules/module-store";
 import type { ActionResult } from "@/shared/types/action";
 
@@ -20,6 +21,8 @@ export async function deleteModuleAction(input: unknown): Promise<ActionResult> 
       if (!moduleMeta) {
         throw new ActionError("system.errors.notFound");
       }
+
+      if (!areFileDevToolsEnabled()) throw new ActionError("system.errors.devToolsOnly");
 
       if (moduleMeta.category !== "EXTENSION") {
         throw new ActionError("system.errors.onlyExtensionsDeletable");
