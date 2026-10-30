@@ -1,0 +1,117 @@
+// Öğrenciler modülü: kurs/Nachhilfe öğrencileri ve veliler (ödeme sorumluları).
+// KARAR: Veli = DATEV "Debitor" (borçlu). Her veliye 10000–69999 aralığında benzersiz
+// Debitorennummer verilir; kurs ücretleri bu numarayla eşleşir. Yetişkin öğrenci kendi
+// ödüyorsa öğrencinin bilgileriyle "SELF" ilişkili bir veli kaydı açılır.
+// Üyelerle bağ yumuşak referanstır (memberId; FK değil).
+
+enum StudentStatus {
+  ACTIVE
+  INACTIVE
+}
+
+enum StudentGuardianRelation {
+  MOTHER
+  FATHER
+  GUARDIAN // Vormund / yasal temsilci
+  SELF // yetişkin öğrenci kendisi
+  OTHER
+}
+
+model StudentsCounter {
+  year    Int @id
+  lastSeq Int @default(0)
+
+  @@map("students_counters")
+}
+
+/// DATEV ve numaralandırma ayarları (tek satır, id = "singleton").
+model StudentsSettings {
+  id                String   @id @default("singleton")
+  datevConsultantNo String? // Beraternummer
+  datevClientNo     String? // Mandantennummer
+  debtorRangeStart  Int      @default(10000)
+  updatedAt         DateTime @updatedAt
+
+  @@map("students_settings")
+}
+
+model StudentGuardian {
+  id                   String    @id @default(cuid())
+  debtorNumber         Int       @unique // DATEV Debitorennummer (10000–69999)
+  salutation           String? // Frau / Herr / Divers (serbest)
+  firstName            String
+  lastName             String
+  street               String?
+  houseNumber          String?
+  postalCode           String?
+  city                 String?
+  country              String    @default("DE") // ISO 3166-1 alpha-2
+  email                String?
+  phone                String?
+  iban                 String?
+  bic                  String?
+  accountHolder        String?
+  sepaMandateReference String?
+  sepaMandateDate      DateTime? @db.Date
+  memberId             String? // FK DEĞİL; isteğe bağlı dernek üyesi bağlantısı
+  note                 String?
+  createdById          String
+  createdByLabel       String
+  createdAt            DateTime  @default(now())
+  updatedAt            DateTime  @updatedAt
+  deletedAt            DateTime?
+
+  students StudentGuardianLink[]
+
+  @@index([lastName, firstName])
+  @@index([deletedAt])
+  @@map("students_guardians")
+}
+
+model Student {
+  id            String        @id @default(cuid())
+  year          Int
+  sequence      Int
+  studentNumber String        @unique // OGR-2026-0001
+  firstName     String
+  lastName      String
+  birthDate     DateTime?     @db.Date
+  school        String?
+  gradeLevel    String? // sınıf (örn. "7")
+  email         String?
+  phone         String?
+  status        StudentStatus @default(ACTIVE)
+  photoConsent  Boolean       @default(false)
+  dataConsentAt DateTime?     @db.Date // DSGVO veri işleme onayı tarihi
+  memberId      String? // FK DEĞİL
+  note          String?
+  createdById   String
+  createdByLabel String
+  createdAt     DateTime      @default(now())
+  updatedAt     DateTime      @updatedAt
+  deletedAt     DateTime?
+
+  guardians StudentGuardianLink[]
+
+  @@unique([year, sequence])
+  @@index([lastName, firstName])
+  @@index([status])
+  @@index([deletedAt])
+  @@map("students_students")
+}
+
+model StudentGuardianLink {
+  studentId  String
+  guardianId String
+  relation   StudentGuardianRelation
+  /// Ödeme sorumlusu (Rechnungsempfänger); öğrenci başına en fazla bir tane.
+  isPayer    Boolean                 @default(false)
+  createdAt  DateTime                @default(now())
+
+  student  Student         @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  guardian StudentGuardian @relation(fields: [guardianId], references: [id], onDelete: Cascade)
+
+  @@id([studentId, guardianId])
+  @@index([guardianId])
+  @@map("students_guardian_links")
+}

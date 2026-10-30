@@ -8,6 +8,7 @@ export const systemPermissions: PermissionDefinition = {
     SECRETARY: [],
     TREASURER: [],
     AUDITOR: [],
+    TEACHER: [],
     VIEWER: [],
   },
 };
@@ -20,6 +21,7 @@ export const settingsPermissions: PermissionDefinition = {
     SECRETARY: ["view"],
     TREASURER: ["view"],
     AUDITOR: ["view"],
+    TEACHER: ["view"], // yalnızca kişisel tercihler (dil, tema)
     VIEWER: ["view"],
   },
 };

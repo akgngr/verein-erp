@@ -1,0 +1,330 @@
+{
+  "nav": {
+    "courses": "Kurslar"
+  },
+  "module": {
+    "label": "Kurslar",
+    "description": "Gönüllü kurslar ve Nachhilfe: öğretmenler, dersler, kayıtlar, ücretler ve muhasebe aktarımı."
+  },
+  "menu": {
+    "teachers": "Öğretmenler",
+    "fees": "Ücretler ve tahsilat",
+    "settings": "Ayarlar"
+  },
+  "meta": {
+    "list": "Kurslar",
+    "teachers": "Öğretmenler",
+    "fees": "Kurs ücretleri",
+    "settings": "Kurs ayarları",
+    "detail": "Kurs"
+  },
+  "title": "Kurslar",
+  "description": "Gönüllü kurslar ve ücretli ya da ücretsiz Nachhilfe dersleri.",
+  "myTitle": "Kurslarım",
+  "myDescription": "Öğretmeni olduğunuz kurslar.",
+  "newCourse": "Yeni kurs",
+  "enums": {
+    "kind": {
+      "COURSE": "Kurs",
+      "TUTORING": "Nachhilfe"
+    },
+    "status": {
+      "PLANNED": "Planlandı",
+      "ACTIVE": "Devam ediyor",
+      "COMPLETED": "Tamamlandı",
+      "CANCELLED": "İptal"
+    },
+    "feeType": {
+      "FREE": "Ücretsiz",
+      "ONE_TIME": "Tek seferlik",
+      "MONTHLY": "Aylık",
+      "INSTALLMENTS": "Taksitli"
+    },
+    "enrollmentStatus": {
+      "ACTIVE": "Devam ediyor",
+      "COMPLETED": "Tamamladı",
+      "WITHDRAWN": "Ayrıldı"
+    },
+    "chargeStatus": {
+      "OPEN": "Açık",
+      "PAID": "Ödendi",
+      "WAIVED": "Feragat",
+      "CANCELLED": "İptal"
+    },
+    "paymentMethod": {
+      "CASH": "Nakit",
+      "BANK_TRANSFER": "Havale",
+      "SEPA_DEBIT": "SEPA otomatik ödeme",
+      "CARD": "Kart",
+      "OTHER": "Diğer"
+    }
+  },
+  "weekday": {
+    "1": "Pazartesi",
+    "2": "Salı",
+    "3": "Çarşamba",
+    "4": "Perşembe",
+    "5": "Cuma",
+    "6": "Cumartesi",
+    "7": "Pazar"
+  },
+  "form": {
+    "kind": "Tür",
+    "status": "Durum",
+    "title": "Kurs adı",
+    "subject": "Ders / konu",
+    "level": "Seviye",
+    "location": "Yer",
+    "scheduleNote": "Ders günleri",
+    "scheduleNotePlaceholder": "ör. Salı 17:00–18:30",
+    "startDate": "Başlangıç",
+    "endDate": "Bitiş",
+    "capacity": "Kontenjan",
+    "feeTitle": "Ücret",
+    "feeType": "Ücret modeli",
+    "feeMonthly": "Aylık ücret (€)",
+    "feeTotal": "Toplam ücret (€)",
+    "feeHelp": "ör. 45,00",
+    "installmentCount": "Taksit sayısı",
+    "feeExplain": {
+      "FREE": "Kayıtta ödeme kalemi oluşmaz.",
+      "ONE_TIME": "Kayıt tarihinde tek ödeme kalemi oluşur.",
+      "MONTHLY": "Kurs süresince her ay bir kalem oluşur; bitiş tarihi zorunludur.",
+      "INSTALLMENTS": "Toplam ücret, kayıt tarihinden itibaren aylık taksitlere bölünür."
+    },
+    "teachers": "Öğretmenler",
+    "noTeachers": "Henüz öğretmen yok; önce Öğretmenler sayfasından ekleyin.",
+    "description": "Açıklama",
+    "updated": "Kurs güncellendi. Ücret değişikliği yalnızca yeni kayıtlara uygulanır.",
+    "created": "Kurs oluşturuldu.",
+    "createTitle": "Yeni kurs",
+    "createDescription": "Kurs kodu otomatik verilir.",
+    "editTitle": "Kursu düzenle"
+  },
+  "table": {
+    "code": "Kod",
+    "title": "Kurs",
+    "period": "Dönem",
+    "fee": "Ücret",
+    "enrolled": "Öğrenci",
+    "status": "Durum",
+    "kind": "Tür",
+    "aria": "Kurs listesi",
+    "search": "Kurs adı, kod veya konu ara...",
+    "empty": "Henüz kurs yok.",
+    "open": "Aç",
+    "edit": "Düzenle",
+    "delete": "Sil",
+    "deleteTitle": "Kursu sil",
+    "deleteMessage": "“{title}” silinsin mi? Tahsilat yapılmış kurslar silinemez; durumunu “İptal” yapın.",
+    "deleted": "Kurs silindi."
+  },
+  "detail": {
+    "period": "Dönem",
+    "createdBy": "Oluşturan: {label}",
+    "edit": "Düzenle",
+    "tabs": "Kurs bölümleri",
+    "tab": {
+      "genel": "Genel",
+      "dersler": "Dersler",
+      "ogrenciler": "Öğrenciler",
+      "ucretler": "Ücretler"
+    }
+  },
+  "sessions": {
+    "saved": "Ders kaydedildi.",
+    "seriesCreated": "{count} ders eklendi.",
+    "add": "Ders ekle",
+    "series": "Haftalık seri oluştur",
+    "empty": "Henüz ders yok.",
+    "cancelled": "İptal",
+    "editTitle": "Dersi düzenle",
+    "addTitle": "Ders ekle",
+    "date": "Tarih",
+    "startTime": "Başlangıç",
+    "endTime": "Bitiş",
+    "topic": "Konu",
+    "teacher": "Öğretmen",
+    "noTeacher": "Belirtilmedi",
+    "note": "Not",
+    "markCancelled": "Bu ders yapılmadı (iptal)",
+    "seriesTitle": "Haftalık seri",
+    "seriesHelp": "Kursun başlangıç ve bitiş tarihleri arasında seçilen güne ders eklenir; aynı gün zaten varsa atlanır. Bitiş tarihi yoksa 12 hafta.",
+    "weekdayLabel": "Gün",
+    "seriesCreate": "Dersleri oluştur",
+    "deleteTitle": "Dersi sil",
+    "deleteMessage": "{date} tarihli ders ve yoklama kayıtları silinsin mi?"
+  },
+  "enrollments": {
+    "enrolledToast": "{count} öğrenci kaydedildi.",
+    "withdrawnToast": "Kayıt kapatıldı; {count} açık ücret kalemi iptal edildi.",
+    "statusToast": "Kayıt durumu güncellendi.",
+    "add": "Öğrenci kaydet",
+    "empty": "Bu kursa kayıtlı öğrenci yok.",
+    "student": "Öğrenci",
+    "payer": "Ödeme sorumlusu",
+    "enrolledAt": "Kayıt tarihi",
+    "open": "Açık borç",
+    "status": "Durum",
+    "addTitle": "Kursa öğrenci kaydet",
+    "search": "Ad veya öğrenci no ile ara",
+    "noStudents": "Eşleşen öğrenci yok.",
+    "discount": "İndirim",
+    "planHelp": "Ücretli kursta her öğrenci için ödeme planı oluşur; öğrencinin ödeme sorumlusu (veli) tanımlı olmalıdır.",
+    "enroll": "{count} öğrenciyi kaydet"
+  },
+  "charges": {
+    "labelMonth": "Ay {period}",
+    "labelInstallment": "Taksit {sequence}/{total}",
+    "labelOnce": "Kurs ücreti",
+    "course": "Kurs",
+    "student": "Öğrenci / ödeyen",
+    "item": "Kalem",
+    "dueDate": "Vade",
+    "amount": "Tutar",
+    "status": "Durum",
+    "overdue": "Gecikmiş",
+    "paidToast": "Tahsil edildi; muhasebe fişi {booking}.",
+    "reversedToast": "Tahsilat geri alındı; fiş ters kayıtla iptal edildi.",
+    "waivedToast": "Kalemden feragat edildi.",
+    "aria": "Ücret kalemleri",
+    "search": "Öğrenci, ödeyen, kurs kodu veya Debitor no ara...",
+    "all": "Tümü",
+    "onlyOverdue": "Yalnızca gecikmiş",
+    "openTotal": "Açık toplam: {amount}",
+    "empty": "Kalem yok.",
+    "pay": "Tahsil et",
+    "waive": "Feragat et",
+    "reverse": "Tahsilatı geri al",
+    "payTitle": "Tahsilat",
+    "reverseTitle": "Tahsilatı geri al",
+    "waiveTitle": "Kalemden feragat",
+    "paidAt": "Ödeme tarihi",
+    "method": "Yöntem",
+    "reference": "Referans (dekont, SEPA vb.)",
+    "payHelp": "Kayıt muhasebeye gelir fişi olarak yazılır: nakit kasa hesabına, diğerleri banka hesabına.",
+    "reason": "Gerekçe",
+    "payConfirm": "Tahsil et",
+    "reverseConfirm": "Geri al",
+    "waiveConfirm": "Feragat et"
+  },
+  "teacherForm": {
+    "firstName": "Ad",
+    "lastName": "Soyad",
+    "email": "E-posta",
+    "phone": "Telefon",
+    "subjects": "Dersler",
+    "subjectsPlaceholder": "ör. Matematik, Almanca",
+    "note": "Not",
+    "isActive": "Aktif",
+    "invite": "Sisteme davet et (öğretmen hesabı aç)",
+    "inviteHelp": "Öğretmen rolünde bir giriş hesabı açılır; öğretmen yalnızca kendi kurslarını ve öğrenci takibini görür. E-posta altyapısı ayarlıysa davet e-postası gider; geçici parola size bir kez gösterilir.",
+    "updated": "Öğretmen güncellendi.",
+    "created": "Öğretmen kaydedildi.",
+    "done": "Tamam",
+    "createTitle": "Yeni öğretmen",
+    "createDescription": "Gönüllü ya da ücretli eğitmen.",
+    "editTitle": "Öğretmeni düzenle"
+  },
+  "invite": {
+    "title": "Öğretmen hesabı açıldı",
+    "mailSent": "Davet e-postası {email} adresine gönderildi.",
+    "mailNotSent": "E-posta gönderilmedi (e-posta altyapısı ayarlı değil ya da gönderim başarısız). Giriş bilgilerini öğretmene kendiniz iletin.",
+    "temporaryPassword": "Geçici parola",
+    "onceHint": "Bu parola yalnızca şimdi gösterilir ve saklanmaz. Öğretmen ilk girişte yeni parola belirler."
+  },
+  "inviteMail": {
+    "subject": "Kurs sistemine davetiniz",
+    "body": "Merhaba {name},\n\nderneğimizin kurs sistemine öğretmen olarak davet edildiniz.\n\nGiriş adresi: {url}\nE-posta: {email}\nGeçici parola: {password}\n\nİlk girişte kendi parolanızı belirlemeniz istenecektir.\n\nSaygılarımızla"
+  },
+  "teachers": {
+    "title": "Öğretmenler",
+    "description": "Kurs ve Nachhilfe öğretmenleri; isterseniz yalnızca kendi kurslarını görecekleri bir hesapla davet edin.",
+    "new": "Yeni öğretmen",
+    "empty": "Henüz öğretmen yok.",
+    "name": "Ad soyad",
+    "subjects": "Dersler",
+    "contact": "İletişim",
+    "courses": "Kurs",
+    "account": "Hesap",
+    "inactive": "pasif",
+    "hasAccount": "Giriş var",
+    "noAccount": "Hesap yok",
+    "invite": "Davet et",
+    "inviteTitle": "Davet",
+    "inviteDone": "Kapat"
+  },
+  "fees": {
+    "title": "Kurs ücretleri",
+    "description": "Tüm kursların ödeme kalemleri; tahsilat muhasebeye fiş olarak yazılır.",
+    "categoryMissing": "Tahsilat için önce Kurs ayarlarından muhasebe gelir kategorisini seçin."
+  },
+  "settings": {
+    "title": "Kurs ayarları",
+    "description": "Kurs ücretlerinin muhasebedeki yeri.",
+    "incomeCategory": "Gelir kategorisi",
+    "chooseCategory": "Kategori seçin…",
+    "incomeCategoryHelp": "Kurs ücretleri bu kategoriye gelir olarak yazılır (genellikle Zweckbetrieb). Kasa ve banka hesabı muhasebe ayarlarından gelir.",
+    "saved": "Ayarlar kaydedildi."
+  },
+  "errors": {
+    "notFound": "Kurs bulunamadı.",
+    "teacherNotFound": "Öğretmen bulunamadı.",
+    "deleteHasPayments": "Bu kursta tahsilat var; silinemez. Durumunu “İptal” yapın.",
+    "sessionNotFound": "Ders bulunamadı.",
+    "seriesEmpty": "Eklenecek yeni ders günü bulunamadı.",
+    "courseClosed": "Tamamlanmış ya da iptal edilmiş kursa kayıt yapılamaz.",
+    "studentNotFound": "Seçilen öğrencilerden biri bulunamadı ya da pasif.",
+    "alreadyEnrolled": "Seçilen öğrenciler bu kursa zaten kayıtlı.",
+    "capacityExceeded": "Kontenjan ({capacity}) aşılıyor; boş yer: {free}.",
+    "payerMissing": "Ödeme sorumlusu tanımlı olmayan öğrenciler var: {names}. Öğrenci kaydından veli bağlayın.",
+    "enrollmentNotFound": "Kayıt bulunamadı.",
+    "chargeNotFound": "Ücret kalemi bulunamadı.",
+    "chargeNotOpen": "Bu kalem açık değil.",
+    "paymentNotFound": "Tahsilat bulunamadı ya da zaten geri alınmış.",
+    "categoryMissing": "Kurs ayarlarında muhasebe gelir kategorisi seçilmemiş.",
+    "teacherHasAccount": "Bu öğretmenin zaten bir hesabı var."
+  },
+  "validation": {
+    "textMax": "Metin çok uzun.",
+    "dateInvalid": "Geçerli bir tarih girin.",
+    "timeInvalid": "Saat SS:DD biçiminde olmalıdır.",
+    "titleRequired": "Kurs adı en az 2 karakter olmalıdır.",
+    "startDateRequired": "Başlangıç tarihi zorunludur.",
+    "capacityInvalid": "Kontenjan pozitif bir sayı olmalıdır.",
+    "endBeforeStart": "Bitiş, başlangıçtan önce olamaz.",
+    "feeInvalid": "Geçerli bir tutar girin (ör. 45,00).",
+    "installmentsInvalid": "Taksit sayısı 2 ile 24 arasında olmalıdır.",
+    "endDateForMonthly": "Aylık ücretli kursta bitiş tarihi zorunludur.",
+    "endBeforeStartTime": "Bitiş saati başlangıçtan sonra olmalıdır.",
+    "selectStudent": "En az bir öğrenci seçin.",
+    "discountInvalid": "İndirim 0 ile 100 arasında olmalıdır.",
+    "reasonMin": "Gerekçe en az 5 karakter olmalıdır.",
+    "firstNameRequired": "Ad zorunludur.",
+    "lastNameRequired": "Soyad zorunludur.",
+    "emailForInvite": "Davet için e-posta zorunludur."
+  },
+  "cards": {
+    "overview": {
+      "title": "Kurslar",
+      "description": "Devam eden ve planlanan kurslar, kayıtlı öğrenciler (öğretmen için yalnızca kendi kursları).",
+      "active": "Devam eden kurs",
+      "planned": "Planlanan",
+      "students": "Öğrenci"
+    },
+    "upcomingSessions": {
+      "title": "Yaklaşan dersler",
+      "description": "Sıradaki beş ders (öğretmen için yalnızca kendi kursları).",
+      "empty": "Yaklaşan ders yok.",
+      "colCourse": "Kurs",
+      "colDate": "Tarih",
+      "colTopic": "Konu"
+    },
+    "openFees": {
+      "title": "Açık kurs ücretleri",
+      "description": "Tahsil edilmemiş kurs ücretleri ve gecikenler.",
+      "open": "{count} açık kalem",
+      "overdue": "Gecikmiş"
+    }
+  }
+}

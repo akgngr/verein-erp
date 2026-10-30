@@ -227,7 +227,8 @@
     "SECRETARY": "Schriftführung",
     "VIEWER": "Nur Lesen",
     "TREASURER": "Kassenwart",
-    "AUDITOR": "Kassenprüfung"
+    "AUDITOR": "Kassenprüfung",
+    "TEACHER": "Lehrkraft"
   },
   "validation": {
     "passwordMin": "Das Passwort muss mindestens 10 Zeichen lang sein.",

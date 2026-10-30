@@ -5,6 +5,7 @@ enum Role {
   VIEWER
   TREASURER // Sayman (Faz 4 — muhasebe)
   AUDITOR // Denetçi (Faz 4 — denetim okuma)
+  TEACHER // Öğretmen — yalnızca kurs ve öğrenci takibi modülleri
 }
 
 model User {

@@ -1,0 +1,129 @@
+{
+  "nav": {
+    "progress": "Öğrenci takibi"
+  },
+  "module": {
+    "label": "Öğrenci takibi",
+    "description": "Kurs öğrencilerinin yoklaması, sınav ve notları, gelişim notları ve veli raporu."
+  },
+  "meta": {
+    "list": "Öğrenci takibi",
+    "course": "Kurs takibi"
+  },
+  "title": "Öğrenci takibi",
+  "description": "Bir kurs seçin: yoklama alın, not girin, gelişim notu yazın ve veli raporu oluşturun.",
+  "noCourses": "Görüntüleyebileceğiniz kurs yok.",
+  "noTeacher": "Öğretmen atanmamış",
+  "tabs": "Takip bölümleri",
+  "tab": {
+    "yoklama": "Yoklama",
+    "notlar": "Sınav ve notlar",
+    "gelisim": "Gelişim notları",
+    "rapor": "Veli raporu"
+  },
+  "attendanceStatus": {
+    "PRESENT": "Katıldı",
+    "ABSENT": "Gelmedi",
+    "EXCUSED": "Mazeretli",
+    "LATE": "Geç"
+  },
+  "assessmentType": {
+    "EXAM": "Sınav",
+    "HOMEWORK": "Ödev",
+    "ORAL": "Sözlü",
+    "PROJECT": "Proje",
+    "OTHER": "Diğer"
+  },
+  "attendance": {
+    "noSessions": "Bu kursta henüz ders yok; önce Kurslar › Dersler sekmesinden ders ekleyin.",
+    "noStudents": "Bu kursta kayıtlı öğrenci yok.",
+    "saved": "{count} öğrencinin yoklaması kaydedildi.",
+    "session": "Ders",
+    "cancelled": "iptal",
+    "allPresent": "Hepsi katıldı",
+    "sessionCancelled": "Bu ders iptal edildi; yoklama alınmaz.",
+    "student": "Öğrenci",
+    "status": "Durum",
+    "note": "Not",
+    "rate": "Devam",
+    "save": "Yoklamayı kaydet",
+    "rateHelp": "Devam oranı = (katıldı + geç) / mazeretsiz tüm kayıtlı dersler; iptal dersler sayılmaz."
+  },
+  "grades": {
+    "saved": "Notlar kaydedildi.",
+    "add": "Sınav / ödev ekle",
+    "delete": "Sil",
+    "assessment": "Değerlendirme",
+    "empty": "Henüz sınav veya ödev yok.",
+    "noStudents": "Bu kursta kayıtlı öğrenci yok.",
+    "student": "Öğrenci",
+    "pointsOf": "Puan (en çok {max})",
+    "points": "Puan",
+    "grade": "Not",
+    "comment": "Yorum",
+    "save": "Notları kaydet",
+    "gradeHelp": "Not alanı Almanya not sistemine göredir: 1 (çok iyi) – 6 (yetersiz); 2- veya 3+ gibi yazılabilir. Boş bırakılan satır silinir.",
+    "addTitle": "Sınav / ödev ekle",
+    "title": "Başlık",
+    "date": "Tarih",
+    "type": "Tür",
+    "maxPoints": "En yüksek puan",
+    "deleteTitle": "Değerlendirmeyi sil",
+    "deleteMessage": "“{title}” ve girilen tüm notlar silinsin mi?"
+  },
+  "notes": {
+    "noStudents": "Bu kursta kayıtlı öğrenci yok.",
+    "saved": "Gelişim notu eklendi.",
+    "students": "Öğrenciler",
+    "date": "Tarih",
+    "rating": "Değerlendirme",
+    "ratingLabel": {
+      "1": "Zorlanıyor",
+      "2": "Gelişmeli",
+      "3": "Yeterli",
+      "4": "İyi",
+      "5": "Çok iyi"
+    },
+    "text": "Gözlem",
+    "goals": "Hedefler",
+    "add": "Notu ekle",
+    "empty": "Bu öğrenci için henüz gelişim notu yok.",
+    "ratingAria": "Değerlendirme {rating}/5",
+    "delete": "Notu sil"
+  },
+  "report": {
+    "noStudents": "Bu kursta kayıtlı öğrenci yok.",
+    "help": "Her öğrenci için devam durumu, notlar ve gelişim gözlemlerini içeren rapor (PDF, dernek antetli).",
+    "pdf": {
+      "de": "Rapor (DE)",
+      "tr": "Rapor (TR)"
+    }
+  },
+  "errors": {
+    "courseNotFound": "Kurs bulunamadı ya da erişiminiz yok.",
+    "sessionNotFound": "Ders bulunamadı.",
+    "assessmentNotFound": "Değerlendirme bulunamadı.",
+    "pointsAboveMax": "Puan en yüksek puanı ({max}) aşamaz.",
+    "enrollmentNotFound": "Öğrenci bu kursta kayıtlı değil.",
+    "noteNotFound": "Not bulunamadı.",
+    "noteNotYours": "Yalnızca kendi yazdığınız notu silebilirsiniz."
+  },
+  "validation": {
+    "textMax": "Metin çok uzun.",
+    "titleRequired": "Başlık en az 2 karakter olmalıdır.",
+    "dateInvalid": "Geçerli bir tarih girin.",
+    "pointsInvalid": "Puan sayı olmalıdır (ör. 17,5).",
+    "gradeInvalid": "Not 1–6 arası olmalıdır (ör. 2 veya 2-).",
+    "ratingInvalid": "Değerlendirme 1–5 arası olmalıdır.",
+    "noteRequired": "Gözlem en az 3 karakter olmalıdır."
+  },
+  "cards": {
+    "attendance": {
+      "title": "Devam durumu",
+      "description": "Son 30 günde alınan yoklamalardan devam oranı (öğretmen için yalnızca kendi kursları).",
+      "rate": "devam oranı (30 gün)",
+      "absent": "Gelmedi",
+      "excused": "Mazeretli"
+    }
+  }
+}

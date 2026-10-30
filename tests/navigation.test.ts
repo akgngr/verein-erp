@@ -105,6 +105,7 @@ describe("Menü eşleştirme mantığı", () => {
     SECRETARY: ["view"],
     TREASURER: ["view"],
     AUDITOR: ["view"],
+    TEACHER: ["view"],
     VIEWER: ["view"],
   });
   const permission = { definition: permissions, action: "view" as const };

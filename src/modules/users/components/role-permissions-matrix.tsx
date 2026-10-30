@@ -66,6 +66,7 @@ export function RolePermissionsMatrix({
     SECRETARY: 0,
     TREASURER: 0,
     AUDITOR: 0,
+    TEACHER: 0,
     VIEWER: 0,
   },
 }: {

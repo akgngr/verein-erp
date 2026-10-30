@@ -13,9 +13,12 @@ import { moduleConfig as usersModule } from "@/modules/users";
 import { moduleConfig as systemModule } from "@/modules/system";
 import { moduleConfig as auditModule } from "@/modules/audit";
 import { moduleConfig as authModule } from "@/modules/auth";
+import { moduleConfig as coursesModule } from "@/modules/courses";
 import { moduleConfig as eventsModule } from "@/modules/events";
 import { moduleConfig as inventoryModule } from "@/modules/inventory";
 import { moduleConfig as mailModule } from "@/modules/mail";
+import { moduleConfig as progressModule } from "@/modules/progress";
+import { moduleConfig as studentsModule } from "@/modules/students";
 import { moduleConfig as tasksModule } from "@/modules/tasks";
 
 /**
@@ -32,9 +35,12 @@ export const allModules: ModuleConfig[] = [
   systemModule,
   auditModule,
   authModule,
+  coursesModule,
   eventsModule,
   inventoryModule,
   mailModule,
+  progressModule,
+  studentsModule,
   tasksModule,
 ];
 

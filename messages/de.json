@@ -94,6 +94,7 @@
     "profil": "Profil",
     "muhasebe": "Buchhaltung",
     "denetimKaydi": "Prüfprotokoll",
+    "courses": "Kurse",
     "evrak": "Dokumente",
     "bagislar": "Spenden",
     "events": "Veranstaltungen",
@@ -102,6 +103,8 @@
     "toplantilar": "Sitzungen",
     "uyeler": "Mitglieder",
     "organization": "Vereinsdaten",
+    "progress": "Lernfortschritt",
+    "students": "Schüler",
     "ayarlar": "Einstellungen",
     "moduller": "Modulverwaltung",
     "tasks": "Aufgaben",
@@ -241,7 +244,8 @@
     "SECRETARY": "Schriftführung",
     "VIEWER": "Nur Lesen",
     "TREASURER": "Kassenwart",
-    "AUDITOR": "Kassenprüfung"
+    "AUDITOR": "Kassenprüfung",
+    "TEACHER": "Lehrkraft"
   },
   "validation": {
     "passwordMin": "Das Passwort muss mindestens 10 Zeichen lang sein.",
@@ -720,7 +724,8 @@
       "sourceType": {
         "MEMBER_PAYMENT": "Mitgliedsbeitrag (automatisch)",
         "DONATION": "Spende (automatisch)",
-        "DONATION_WAIVER": "Aufwandsspende – Aufwand (automatisch)"
+        "DONATION_WAIVER": "Aufwandsspende – Aufwand (automatisch)",
+        "COURSE_FEE": "Kursgebühr (automatisch)"
       }
     },
     "export": {
@@ -923,6 +928,333 @@
     "module": {
       "label": "Authentifizierung",
       "description": "Anmeldung, Sitzungsverwaltung und Passwortsicherheit."
+    }
+  },
+  "courses": {
+    "module": {
+      "label": "Kurse",
+      "description": "Ehrenamtliche Kurse und Nachhilfe: Lehrkräfte, Unterricht, Anmeldungen, Gebühren und Übergabe an die Buchhaltung."
+    },
+    "menu": {
+      "teachers": "Lehrkräfte",
+      "fees": "Gebühren und Zahlungen",
+      "settings": "Einstellungen"
+    },
+    "meta": {
+      "list": "Kurse",
+      "teachers": "Lehrkräfte",
+      "fees": "Kursgebühren",
+      "settings": "Kurs-Einstellungen",
+      "detail": "Kurs"
+    },
+    "title": "Kurse",
+    "description": "Ehrenamtliche Kurse sowie kostenpflichtige oder kostenlose Nachhilfe.",
+    "myTitle": "Meine Kurse",
+    "myDescription": "Kurse, in denen Sie unterrichten.",
+    "newCourse": "Neuer Kurs",
+    "enums": {
+      "kind": {
+        "COURSE": "Kurs",
+        "TUTORING": "Nachhilfe"
+      },
+      "status": {
+        "PLANNED": "Geplant",
+        "ACTIVE": "Laufend",
+        "COMPLETED": "Abgeschlossen",
+        "CANCELLED": "Abgesagt"
+      },
+      "feeType": {
+        "FREE": "Kostenlos",
+        "ONE_TIME": "Einmalig",
+        "MONTHLY": "Monatlich",
+        "INSTALLMENTS": "In Raten"
+      },
+      "enrollmentStatus": {
+        "ACTIVE": "Aktiv",
+        "COMPLETED": "Abgeschlossen",
+        "WITHDRAWN": "Abgemeldet"
+      },
+      "chargeStatus": {
+        "OPEN": "Offen",
+        "PAID": "Bezahlt",
+        "WAIVED": "Erlassen",
+        "CANCELLED": "Storniert"
+      },
+      "paymentMethod": {
+        "CASH": "Bar",
+        "BANK_TRANSFER": "Überweisung",
+        "SEPA_DEBIT": "SEPA-Lastschrift",
+        "CARD": "Karte",
+        "OTHER": "Sonstige"
+      }
+    },
+    "weekday": {
+      "1": "Montag",
+      "2": "Dienstag",
+      "3": "Mittwoch",
+      "4": "Donnerstag",
+      "5": "Freitag",
+      "6": "Samstag",
+      "7": "Sonntag"
+    },
+    "form": {
+      "kind": "Art",
+      "status": "Status",
+      "title": "Kursname",
+      "subject": "Fach / Thema",
+      "level": "Niveau",
+      "location": "Ort",
+      "scheduleNote": "Termine",
+      "scheduleNotePlaceholder": "z. B. Dienstag 17:00–18:30",
+      "startDate": "Beginn",
+      "endDate": "Ende",
+      "capacity": "Plätze",
+      "feeTitle": "Gebühr",
+      "feeType": "Gebührenmodell",
+      "feeMonthly": "Monatsgebühr (€)",
+      "feeTotal": "Gesamtgebühr (€)",
+      "feeHelp": "z. B. 45,00",
+      "installmentCount": "Anzahl Raten",
+      "feeExplain": {
+        "FREE": "Bei der Anmeldung entstehen keine Forderungen.",
+        "ONE_TIME": "Am Anmeldedatum entsteht eine Forderung.",
+        "MONTHLY": "Für jeden Kursmonat entsteht eine Forderung; Enddatum erforderlich.",
+        "INSTALLMENTS": "Die Gesamtgebühr wird ab Anmeldedatum in Monatsraten aufgeteilt."
+      },
+      "teachers": "Lehrkräfte",
+      "noTeachers": "Noch keine Lehrkräfte; zuerst unter Lehrkräfte anlegen.",
+      "description": "Beschreibung",
+      "updated": "Kurs aktualisiert. Gebührenänderungen gelten nur für neue Anmeldungen.",
+      "created": "Kurs angelegt.",
+      "createTitle": "Neuer Kurs",
+      "createDescription": "Der Kurscode wird automatisch vergeben.",
+      "editTitle": "Kurs bearbeiten"
+    },
+    "table": {
+      "code": "Code",
+      "title": "Kurs",
+      "period": "Zeitraum",
+      "fee": "Gebühr",
+      "enrolled": "Teilnehmende",
+      "status": "Status",
+      "kind": "Art",
+      "aria": "Kursliste",
+      "search": "Kursname, Code oder Thema suchen...",
+      "empty": "Noch keine Kurse.",
+      "open": "Öffnen",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "deleteTitle": "Kurs löschen",
+      "deleteMessage": "„{title}“ löschen? Kurse mit Zahlungen können nicht gelöscht werden; Status auf „Abgesagt“ setzen.",
+      "deleted": "Kurs gelöscht."
+    },
+    "detail": {
+      "period": "Zeitraum",
+      "createdBy": "Angelegt von: {label}",
+      "edit": "Bearbeiten",
+      "tabs": "Kursbereiche",
+      "tab": {
+        "genel": "Allgemein",
+        "dersler": "Unterricht",
+        "ogrenciler": "Teilnehmende",
+        "ucretler": "Gebühren"
+      }
+    },
+    "sessions": {
+      "saved": "Termin gespeichert.",
+      "seriesCreated": "{count} Termine angelegt.",
+      "add": "Termin hinzufügen",
+      "series": "Wöchentliche Serie",
+      "empty": "Noch keine Termine.",
+      "cancelled": "Ausgefallen",
+      "editTitle": "Termin bearbeiten",
+      "addTitle": "Termin hinzufügen",
+      "date": "Datum",
+      "startTime": "Beginn",
+      "endTime": "Ende",
+      "topic": "Thema",
+      "teacher": "Lehrkraft",
+      "noTeacher": "Nicht angegeben",
+      "note": "Notiz",
+      "markCancelled": "Termin ist ausgefallen",
+      "seriesTitle": "Wöchentliche Serie",
+      "seriesHelp": "Zwischen Kursbeginn und -ende wird am gewählten Wochentag je ein Termin angelegt; vorhandene Tage werden übersprungen. Ohne Enddatum: 12 Wochen.",
+      "weekdayLabel": "Wochentag",
+      "seriesCreate": "Termine anlegen",
+      "deleteTitle": "Termin löschen",
+      "deleteMessage": "Termin am {date} samt Anwesenheit löschen?"
+    },
+    "enrollments": {
+      "enrolledToast": "{count} Schüler angemeldet.",
+      "withdrawnToast": "Abgemeldet; {count} offene Forderungen storniert.",
+      "statusToast": "Anmeldestatus aktualisiert.",
+      "add": "Schüler anmelden",
+      "empty": "Keine Anmeldungen in diesem Kurs.",
+      "student": "Schüler",
+      "payer": "Zahlungspflichtig",
+      "enrolledAt": "Anmeldedatum",
+      "open": "Offen",
+      "status": "Status",
+      "addTitle": "Schüler zum Kurs anmelden",
+      "search": "Nach Name oder Schülernummer suchen",
+      "noStudents": "Kein passender Schüler.",
+      "discount": "Ermäßigung",
+      "planHelp": "Bei kostenpflichtigen Kursen entsteht je Schüler ein Zahlungsplan; eine zahlungspflichtige Person (Erziehungsberechtigte) muss hinterlegt sein.",
+      "enroll": "{count} Schüler anmelden"
+    },
+    "charges": {
+      "labelMonth": "Monat {period}",
+      "labelInstallment": "Rate {sequence}/{total}",
+      "labelOnce": "Kursgebühr",
+      "course": "Kurs",
+      "student": "Schüler / Zahler",
+      "item": "Posten",
+      "dueDate": "Fällig",
+      "amount": "Betrag",
+      "status": "Status",
+      "overdue": "Überfällig",
+      "paidToast": "Zahlung erfasst; Buchung {booking}.",
+      "reversedToast": "Zahlung zurückgenommen; Buchung storniert.",
+      "waivedToast": "Forderung erlassen.",
+      "aria": "Forderungen",
+      "search": "Schüler, Zahler, Kurscode oder Debitor-Nr. suchen...",
+      "all": "Alle",
+      "onlyOverdue": "Nur überfällige",
+      "openTotal": "Offen gesamt: {amount}",
+      "empty": "Keine Posten.",
+      "pay": "Zahlung erfassen",
+      "waive": "Erlassen",
+      "reverse": "Zahlung zurücknehmen",
+      "payTitle": "Zahlung erfassen",
+      "reverseTitle": "Zahlung zurücknehmen",
+      "waiveTitle": "Forderung erlassen",
+      "paidAt": "Zahlungsdatum",
+      "method": "Zahlungsart",
+      "reference": "Referenz (Beleg, SEPA o. Ä.)",
+      "payHelp": "Die Zahlung wird als Einnahme gebucht: bar auf das Kassenkonto, sonst auf das Bankkonto.",
+      "reason": "Begründung",
+      "payConfirm": "Erfassen",
+      "reverseConfirm": "Zurücknehmen",
+      "waiveConfirm": "Erlassen"
+    },
+    "teacherForm": {
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "subjects": "Fächer",
+      "subjectsPlaceholder": "z. B. Mathematik, Deutsch",
+      "note": "Notiz",
+      "isActive": "Aktiv",
+      "invite": "Ins System einladen (Lehrkraft-Konto anlegen)",
+      "inviteHelp": "Es wird ein Konto mit der Rolle Lehrkraft angelegt; sie sieht nur eigene Kurse und den Lernfortschritt. Ist der E-Mail-Versand eingerichtet, geht eine Einladung raus; das vorläufige Passwort wird Ihnen einmalig angezeigt.",
+      "updated": "Lehrkraft aktualisiert.",
+      "created": "Lehrkraft angelegt.",
+      "done": "Fertig",
+      "createTitle": "Neue Lehrkraft",
+      "createDescription": "Ehrenamtliche oder bezahlte Lehrkraft.",
+      "editTitle": "Lehrkraft bearbeiten"
+    },
+    "invite": {
+      "title": "Lehrkraft-Konto angelegt",
+      "mailSent": "Einladung an {email} gesendet.",
+      "mailNotSent": "Keine E-Mail gesendet (E-Mail-Versand nicht eingerichtet oder fehlgeschlagen). Bitte Zugangsdaten selbst übermitteln.",
+      "temporaryPassword": "Vorläufiges Passwort",
+      "onceHint": "Das Passwort wird nur jetzt angezeigt und nicht gespeichert. Beim ersten Login wird ein neues Passwort festgelegt."
+    },
+    "inviteMail": {
+      "subject": "Einladung in das Kurssystem",
+      "body": "Hallo {name},\n\nSie wurden als Lehrkraft in das Kurssystem unseres Vereins eingeladen.\n\nAnmeldung: {url}\nE-Mail: {email}\nVorläufiges Passwort: {password}\n\nBeim ersten Login legen Sie ein eigenes Passwort fest.\n\nMit freundlichen Grüßen"
+    },
+    "teachers": {
+      "title": "Lehrkräfte",
+      "description": "Lehrkräfte für Kurse und Nachhilfe; optional mit Konto, das nur eigene Kurse zeigt.",
+      "new": "Neue Lehrkraft",
+      "empty": "Noch keine Lehrkräfte.",
+      "name": "Name",
+      "subjects": "Fächer",
+      "contact": "Kontakt",
+      "courses": "Kurse",
+      "account": "Konto",
+      "inactive": "inaktiv",
+      "hasAccount": "Login vorhanden",
+      "noAccount": "Kein Konto",
+      "invite": "Einladen",
+      "inviteTitle": "Einladung",
+      "inviteDone": "Schließen"
+    },
+    "fees": {
+      "title": "Kursgebühren",
+      "description": "Forderungen aller Kurse; Zahlungen werden in der Buchhaltung gebucht.",
+      "categoryMissing": "Für Zahlungen zuerst in den Kurs-Einstellungen die Einnahmekategorie wählen."
+    },
+    "settings": {
+      "title": "Kurs-Einstellungen",
+      "description": "Buchung der Kursgebühren.",
+      "incomeCategory": "Einnahmekategorie",
+      "chooseCategory": "Kategorie wählen…",
+      "incomeCategoryHelp": "Kursgebühren werden in dieser Kategorie als Einnahme gebucht (meist Zweckbetrieb). Kassen- und Bankkonto kommen aus den Buchhaltungseinstellungen.",
+      "saved": "Einstellungen gespeichert."
+    },
+    "errors": {
+      "notFound": "Kurs nicht gefunden.",
+      "teacherNotFound": "Lehrkraft nicht gefunden.",
+      "deleteHasPayments": "Für diesen Kurs gibt es Zahlungen; Löschen nicht möglich. Status auf „Abgesagt“ setzen.",
+      "sessionNotFound": "Termin nicht gefunden.",
+      "seriesEmpty": "Keine neuen Termine anzulegen.",
+      "courseClosed": "Für abgeschlossene oder abgesagte Kurse sind keine Anmeldungen möglich.",
+      "studentNotFound": "Ein ausgewählter Schüler wurde nicht gefunden oder ist inaktiv.",
+      "alreadyEnrolled": "Die ausgewählten Schüler sind bereits angemeldet.",
+      "capacityExceeded": "Die Platzzahl ({capacity}) wird überschritten; frei: {free}.",
+      "payerMissing": "Ohne zahlungspflichtige Person: {names}. Bitte im Schülerdatensatz verknüpfen.",
+      "enrollmentNotFound": "Anmeldung nicht gefunden.",
+      "chargeNotFound": "Forderung nicht gefunden.",
+      "chargeNotOpen": "Diese Forderung ist nicht offen.",
+      "paymentNotFound": "Zahlung nicht gefunden oder bereits zurückgenommen.",
+      "categoryMissing": "In den Kurs-Einstellungen ist keine Einnahmekategorie gewählt.",
+      "teacherHasAccount": "Diese Lehrkraft hat bereits ein Konto."
+    },
+    "validation": {
+      "textMax": "Der Text ist zu lang.",
+      "dateInvalid": "Bitte ein gültiges Datum eingeben.",
+      "timeInvalid": "Uhrzeit im Format HH:MM.",
+      "titleRequired": "Der Kursname muss mindestens 2 Zeichen haben.",
+      "startDateRequired": "Beginn ist erforderlich.",
+      "capacityInvalid": "Die Platzzahl muss eine positive Zahl sein.",
+      "endBeforeStart": "Das Ende darf nicht vor dem Beginn liegen.",
+      "feeInvalid": "Bitte einen gültigen Betrag eingeben (z. B. 45,00).",
+      "installmentsInvalid": "Die Ratenanzahl muss zwischen 2 und 24 liegen.",
+      "endDateForMonthly": "Bei monatlicher Gebühr ist ein Enddatum erforderlich.",
+      "endBeforeStartTime": "Das Ende muss nach dem Beginn liegen.",
+      "selectStudent": "Mindestens einen Schüler wählen.",
+      "discountInvalid": "Die Ermäßigung muss zwischen 0 und 100 liegen.",
+      "reasonMin": "Die Begründung muss mindestens 5 Zeichen haben.",
+      "firstNameRequired": "Vorname ist erforderlich.",
+      "lastNameRequired": "Nachname ist erforderlich.",
+      "emailForInvite": "Für die Einladung ist eine E-Mail erforderlich."
+    },
+    "cards": {
+      "overview": {
+        "title": "Kurse",
+        "description": "Laufende und geplante Kurse, angemeldete Schüler (für Lehrkräfte nur eigene Kurse).",
+        "active": "Laufende Kurse",
+        "planned": "Geplant",
+        "students": "Teilnehmende"
+      },
+      "upcomingSessions": {
+        "title": "Nächste Termine",
+        "description": "Die nächsten fünf Unterrichtstermine (für Lehrkräfte nur eigene Kurse).",
+        "empty": "Keine anstehenden Termine.",
+        "colCourse": "Kurs",
+        "colDate": "Datum",
+        "colTopic": "Thema"
+      },
+      "openFees": {
+        "title": "Offene Kursgebühren",
+        "description": "Nicht bezahlte Kursgebühren und überfällige Posten.",
+        "open": "{count} offene Posten",
+        "overdue": "Überfällig"
+      }
     }
   },
   "documents": {
@@ -3194,6 +3526,317 @@
       "logoReadFailed": "Das Logo konnte nicht gelesen werden."
     }
   },
+  "progress": {
+    "module": {
+      "label": "Lernfortschritt",
+      "description": "Anwesenheit, Tests und Noten, Lernentwicklung und Bericht für Erziehungsberechtigte."
+    },
+    "meta": {
+      "list": "Lernfortschritt",
+      "course": "Kursfortschritt"
+    },
+    "title": "Lernfortschritt",
+    "description": "Kurs wählen: Anwesenheit erfassen, Noten eintragen, Beobachtungen notieren und Elternbericht erstellen.",
+    "noCourses": "Keine Kurse verfügbar.",
+    "noTeacher": "Keine Lehrkraft zugeordnet",
+    "tabs": "Bereiche",
+    "tab": {
+      "yoklama": "Anwesenheit",
+      "notlar": "Tests und Noten",
+      "gelisim": "Lernentwicklung",
+      "rapor": "Elternbericht"
+    },
+    "attendanceStatus": {
+      "PRESENT": "Anwesend",
+      "ABSENT": "Fehlt",
+      "EXCUSED": "Entschuldigt",
+      "LATE": "Verspätet"
+    },
+    "assessmentType": {
+      "EXAM": "Test",
+      "HOMEWORK": "Hausaufgabe",
+      "ORAL": "Mündlich",
+      "PROJECT": "Projekt",
+      "OTHER": "Sonstiges"
+    },
+    "attendance": {
+      "noSessions": "Noch keine Termine; zuerst unter Kurse › Unterricht anlegen.",
+      "noStudents": "Keine Anmeldungen in diesem Kurs.",
+      "saved": "Anwesenheit für {count} Schüler gespeichert.",
+      "session": "Termin",
+      "cancelled": "ausgefallen",
+      "allPresent": "Alle anwesend",
+      "sessionCancelled": "Dieser Termin ist ausgefallen; keine Anwesenheit.",
+      "student": "Schüler",
+      "status": "Status",
+      "note": "Notiz",
+      "rate": "Quote",
+      "save": "Anwesenheit speichern",
+      "rateHelp": "Anwesenheitsquote = (anwesend + verspätet) / alle unentschuldigt erfassten Termine; ausgefallene Termine zählen nicht."
+    },
+    "grades": {
+      "saved": "Noten gespeichert.",
+      "add": "Test / Aufgabe hinzufügen",
+      "delete": "Löschen",
+      "assessment": "Leistung",
+      "empty": "Noch keine Tests oder Aufgaben.",
+      "noStudents": "Keine Anmeldungen in diesem Kurs.",
+      "student": "Schüler",
+      "pointsOf": "Punkte (max. {max})",
+      "points": "Punkte",
+      "grade": "Note",
+      "comment": "Bemerkung",
+      "save": "Noten speichern",
+      "gradeHelp": "Noten nach deutschem System: 1 (sehr gut) – 6 (ungenügend), auch 2- oder 3+. Leere Zeilen werden entfernt.",
+      "addTitle": "Test / Aufgabe hinzufügen",
+      "title": "Titel",
+      "date": "Datum",
+      "type": "Art",
+      "maxPoints": "Max. Punkte",
+      "deleteTitle": "Leistung löschen",
+      "deleteMessage": "„{title}“ samt aller Noten löschen?"
+    },
+    "notes": {
+      "noStudents": "Keine Anmeldungen in diesem Kurs.",
+      "saved": "Beobachtung hinzugefügt.",
+      "students": "Schüler",
+      "date": "Datum",
+      "rating": "Bewertung",
+      "ratingLabel": {
+        "1": "Hat Schwierigkeiten",
+        "2": "Ausbaufähig",
+        "3": "Ausreichend",
+        "4": "Gut",
+        "5": "Sehr gut"
+      },
+      "text": "Beobachtung",
+      "goals": "Ziele",
+      "add": "Hinzufügen",
+      "empty": "Noch keine Einträge für diesen Schüler.",
+      "ratingAria": "Bewertung {rating}/5",
+      "delete": "Eintrag löschen"
+    },
+    "report": {
+      "noStudents": "Keine Anmeldungen in diesem Kurs.",
+      "help": "Bericht je Schüler mit Anwesenheit, Noten und Beobachtungen (PDF mit Vereinsbriefkopf).",
+      "pdf": {
+        "de": "Bericht (DE)",
+        "tr": "Bericht (TR)"
+      }
+    },
+    "errors": {
+      "courseNotFound": "Kurs nicht gefunden oder kein Zugriff.",
+      "sessionNotFound": "Termin nicht gefunden.",
+      "assessmentNotFound": "Leistung nicht gefunden.",
+      "pointsAboveMax": "Die Punkte dürfen das Maximum ({max}) nicht überschreiten.",
+      "enrollmentNotFound": "Der Schüler ist in diesem Kurs nicht angemeldet.",
+      "noteNotFound": "Eintrag nicht gefunden.",
+      "noteNotYours": "Sie können nur eigene Einträge löschen."
+    },
+    "validation": {
+      "textMax": "Der Text ist zu lang.",
+      "titleRequired": "Der Titel muss mindestens 2 Zeichen haben.",
+      "dateInvalid": "Bitte ein gültiges Datum eingeben.",
+      "pointsInvalid": "Punkte müssen eine Zahl sein (z. B. 17,5).",
+      "gradeInvalid": "Note zwischen 1 und 6 (z. B. 2 oder 2-).",
+      "ratingInvalid": "Bewertung zwischen 1 und 5.",
+      "noteRequired": "Die Beobachtung muss mindestens 3 Zeichen haben."
+    },
+    "cards": {
+      "attendance": {
+        "title": "Anwesenheit",
+        "description": "Anwesenheitsquote der letzten 30 Tage (für Lehrkräfte nur eigene Kurse).",
+        "rate": "Anwesenheit (30 Tage)",
+        "absent": "Fehlt",
+        "excused": "Entschuldigt"
+      }
+    }
+  },
+  "students": {
+    "module": {
+      "label": "Schüler",
+      "description": "Kurs- und Nachhilfeschüler, Erziehungsberechtigte und DATEV-konforme Debitoren."
+    },
+    "menu": {
+      "guardians": "Erziehungsberechtigte",
+      "datevExport": "DATEV Debitoren (CSV)",
+      "settings": "Einstellungen"
+    },
+    "meta": {
+      "list": "Schüler",
+      "guardians": "Erziehungsberechtigte",
+      "settings": "Schüler-Einstellungen",
+      "detail": "Schüler"
+    },
+    "title": "Schüler",
+    "description": "Teilnehmende an Kursen und Nachhilfe sowie Zahlungspflichtige.",
+    "newStudent": "Neuer Schüler",
+    "status": {
+      "ACTIVE": "Aktiv",
+      "INACTIVE": "Inaktiv"
+    },
+    "relation": {
+      "MOTHER": "Mutter",
+      "FATHER": "Vater",
+      "GUARDIAN": "Gesetzl. Vertretung",
+      "SELF": "Selbst",
+      "OTHER": "Sonstige"
+    },
+    "form": {
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "birthDate": "Geburtsdatum",
+      "status": "Status",
+      "school": "Schule",
+      "gradeLevel": "Klasse",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "consentTitle": "Einwilligungen (DSGVO)",
+      "dataConsentAt": "Datum der Einwilligung zur Datenverarbeitung",
+      "dataConsentHelp": "Datum der schriftlichen Einwilligung der Erziehungsberechtigten bzw. des volljährigen Schülers.",
+      "photoConsent": "Foto-Einwilligung liegt vor",
+      "note": "Notiz",
+      "updated": "Schüler aktualisiert.",
+      "created": "Schüler angelegt. Verknüpfen Sie jetzt Erziehungsberechtigte bzw. Zahlungspflichtige.",
+      "createTitle": "Neuer Schüler",
+      "createDescription": "Die Schülernummer wird automatisch vergeben.",
+      "editTitle": "Schüler bearbeiten"
+    },
+    "table": {
+      "number": "Nr.",
+      "name": "Name",
+      "birthDate": "Geburtsdatum",
+      "school": "Schule / Klasse",
+      "payer": "Zahlungspflichtig",
+      "noPayer": "Nicht zugeordnet",
+      "status": "Status",
+      "aria": "Schülerliste",
+      "search": "Name, Nummer oder Schule suchen...",
+      "empty": "Noch keine Schüler.",
+      "open": "Öffnen",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "deleteTitle": "Schüler löschen",
+      "deleteMessage": "{name} löschen? Historische Angaben in Kursanmeldungen bleiben erhalten.",
+      "deleted": "Schüler gelöscht."
+    },
+    "guardianTable": {
+      "debtorNumber": "Debitor-Nr.",
+      "name": "Name",
+      "address": "Anschrift",
+      "contact": "Kontakt",
+      "sepa": "SEPA",
+      "sepaYes": "Mandat vorhanden",
+      "students": "Schüler",
+      "aria": "Liste der Erziehungsberechtigten",
+      "search": "Name, E-Mail, Ort oder Debitor-Nr. suchen...",
+      "empty": "Noch keine Erziehungsberechtigten.",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "deleteTitle": "Erziehungsberechtigte löschen",
+      "deleteMessage": "{name} (#{number}) löschen? Verknüpfungen zu Schülern werden entfernt; die Debitorennummer wird nicht wiederverwendet.",
+      "deleted": "Erziehungsberechtigte gelöscht."
+    },
+    "guardianForm": {
+      "salutation": "Anrede",
+      "salutationPlaceholder": "Frau / Herr",
+      "firstName": "Vorname",
+      "lastName": "Nachname",
+      "addressTitle": "Anschrift (DATEV)",
+      "street": "Straße",
+      "houseNumber": "Nr.",
+      "postalCode": "PLZ",
+      "city": "Ort",
+      "country": "Land",
+      "countryHelp": "ISO-Code, z. B. DE",
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "bankTitle": "Bank und SEPA-Mandat",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "accountHolder": "Kontoinhaber",
+      "sepaMandateReference": "Mandatsreferenz",
+      "sepaMandateDate": "Datum des Mandats",
+      "note": "Notiz",
+      "updated": "Erziehungsberechtigte aktualisiert.",
+      "created": "Erziehungsberechtigte angelegt (Debitor-Nr. {number}).",
+      "createTitle": "Neue Erziehungsberechtigte",
+      "createDescription": "Die DATEV-Debitorennummer wird automatisch vergeben.",
+      "editTitle": "Erziehungsberechtigte bearbeiten"
+    },
+    "guardianList": {
+      "title": "Erziehungsberechtigte",
+      "description": "Zahlungspflichtige; jede Person ist ein Debitorenkonto in DATEV.",
+      "new": "Neue Erziehungsberechtigte"
+    },
+    "guardians": {
+      "title": "Erziehungsberechtigte und Zahlungspflichtige",
+      "selfPayer": "Schüler zahlt selbst",
+      "selfPayerCreated": "Debitor für den Schüler angelegt; bitte die Anschrift im Datensatz ergänzen.",
+      "empty": "Keine Erziehungsberechtigten bzw. Zahlungspflichtigen verknüpft; Kursgebühren können nicht erhoben werden.",
+      "payer": "Zahlungspflichtig",
+      "payerSet": "Zahlungspflichtige Person geändert.",
+      "makePayer": "Als zahlungspflichtig festlegen",
+      "openGuardian": "Datensatz",
+      "unlink": "Verknüpfung entfernen",
+      "unlinked": "Verknüpfung entfernt.",
+      "linked": "Erziehungsberechtigte verknüpft.",
+      "linkTitle": "Erziehungsberechtigte verknüpfen",
+      "guardian": "Person",
+      "chooseGuardian": "Person wählen…",
+      "relation": "Beziehung",
+      "link": "Verknüpfen",
+      "newGuardian": "Nicht in der Liste? Neu anlegen"
+    },
+    "detail": {
+      "noConsent": "Keine Einwilligung",
+      "yes": "Ja",
+      "no": "Nein",
+      "createdBy": "Angelegt von: {label}",
+      "edit": "Bearbeiten"
+    },
+    "settings": {
+      "title": "Schüler-Einstellungen",
+      "description": "DATEV-Stammdatenexport und Debitorennummern.",
+      "consultantNo": "DATEV-Beraternummer",
+      "clientNo": "DATEV-Mandantennummer",
+      "debtorRangeStart": "Beginn der Debitorennummern",
+      "debtorRangeHelp": "10000–69999; neue Erziehungsberechtigte werden ab dieser Nummer vergeben.",
+      "saved": "Einstellungen gespeichert.",
+      "datevNote": "Der DATEV-Export im EXTF-Format (Debitoren/Kreditoren, Version 5) enthält Name, Anschrift und Kontaktdaten; Bankdaten werden nicht exportiert. Bitte Sachkontenlänge und Nummernkreis mit der Steuerberatung abstimmen."
+    },
+    "errors": {
+      "notFound": "Schüler nicht gefunden.",
+      "guardianNotFound": "Erziehungsberechtigte nicht gefunden.",
+      "selfPayerExists": "Für diesen Schüler gibt es bereits einen Eintrag „Selbst“.",
+      "debtorRangeExhausted": "Der Nummernkreis für Debitoren ist ausgeschöpft (69999).",
+      "datevSettingsMissing": "Für den DATEV-Export zuerst Berater- und Mandantennummer in den Schüler-Einstellungen eintragen."
+    },
+    "validation": {
+      "firstNameRequired": "Vorname ist erforderlich.",
+      "lastNameRequired": "Nachname ist erforderlich.",
+      "nameMax": "Höchstens 80 Zeichen.",
+      "textMax": "Der Text ist zu lang.",
+      "noteMax": "Die Notiz darf höchstens 2000 Zeichen lang sein.",
+      "dateInvalid": "Bitte ein gültiges Datum eingeben.",
+      "guardianRequired": "Bitte eine Person wählen.",
+      "countryInvalid": "Zweistelligen ISO-Ländercode eingeben (z. B. DE).",
+      "ibanInvalid": "IBAN ist ungültig.",
+      "bicInvalid": "BIC ist ungültig.",
+      "consultantNoInvalid": "Die Beraternummer muss 4–7 Stellen haben.",
+      "clientNoInvalid": "Die Mandantennummer muss 1–5 Stellen haben.",
+      "debtorRange": "Muss zwischen 10000 und 69999 liegen."
+    },
+    "cards": {
+      "overview": {
+        "title": "Schüler",
+        "description": "Aktive Schüler, Erziehungsberechtigte und fehlende Zahlungspflichtige.",
+        "active": "Aktive Schüler",
+        "guardians": "Erziehungsberechtigte",
+        "withoutPayer": "Ohne Zahlungspflichtige"
+      }
+    }
+  },
   "system": {
     "title": "Modulverwaltung",
     "subtitle": "Systemkern-, offizielle und Erweiterungsmodule konfigurieren, synchronisieren oder verwalten.",
@@ -3467,6 +4110,11 @@
           "label": "Leser",
           "shortDesc": "Darf grundlegende Schriftgut- und Sitzungsdaten einsehen.",
           "legalContext": "Keine Änderungsrechte und kein Einblick in Finanzdaten."
+        },
+        "TEACHER": {
+          "label": "Lehrkraft (Öğretmen)",
+          "shortDesc": "Nur eigene Kurse sowie Anwesenheit, Noten und Lernfortschritt der eigenen Schüler.",
+          "legalContext": "Kein Zugriff auf Kursgebühren und Vereinsdaten; Schülerdaten werden gemäß DSGVO nur zu Unterrichtszwecken verarbeitet."
         }
       },
       "modules": {

@@ -459,7 +459,8 @@
     "sourceType": {
       "MEMBER_PAYMENT": "Mitgliedsbeitrag (automatisch)",
       "DONATION": "Spende (automatisch)",
-      "DONATION_WAIVER": "Aufwandsspende – Aufwand (automatisch)"
+      "DONATION_WAIVER": "Aufwandsspende – Aufwand (automatisch)",
+      "COURSE_FEE": "Kursgebühr (automatisch)"
     }
   },
   "export": {

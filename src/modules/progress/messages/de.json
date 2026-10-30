@@ -1,0 +1,129 @@
+{
+  "nav": {
+    "progress": "Lernfortschritt"
+  },
+  "module": {
+    "label": "Lernfortschritt",
+    "description": "Anwesenheit, Tests und Noten, Lernentwicklung und Bericht für Erziehungsberechtigte."
+  },
+  "meta": {
+    "list": "Lernfortschritt",
+    "course": "Kursfortschritt"
+  },
+  "title": "Lernfortschritt",
+  "description": "Kurs wählen: Anwesenheit erfassen, Noten eintragen, Beobachtungen notieren und Elternbericht erstellen.",
+  "noCourses": "Keine Kurse verfügbar.",
+  "noTeacher": "Keine Lehrkraft zugeordnet",
+  "tabs": "Bereiche",
+  "tab": {
+    "yoklama": "Anwesenheit",
+    "notlar": "Tests und Noten",
+    "gelisim": "Lernentwicklung",
+    "rapor": "Elternbericht"
+  },
+  "attendanceStatus": {
+    "PRESENT": "Anwesend",
+    "ABSENT": "Fehlt",
+    "EXCUSED": "Entschuldigt",
+    "LATE": "Verspätet"
+  },
+  "assessmentType": {
+    "EXAM": "Test",
+    "HOMEWORK": "Hausaufgabe",
+    "ORAL": "Mündlich",
+    "PROJECT": "Projekt",
+    "OTHER": "Sonstiges"
+  },
+  "attendance": {
+    "noSessions": "Noch keine Termine; zuerst unter Kurse › Unterricht anlegen.",
+    "noStudents": "Keine Anmeldungen in diesem Kurs.",
+    "saved": "Anwesenheit für {count} Schüler gespeichert.",
+    "session": "Termin",
+    "cancelled": "ausgefallen",
+    "allPresent": "Alle anwesend",
+    "sessionCancelled": "Dieser Termin ist ausgefallen; keine Anwesenheit.",
+    "student": "Schüler",
+    "status": "Status",
+    "note": "Notiz",
+    "rate": "Quote",
+    "save": "Anwesenheit speichern",
+    "rateHelp": "Anwesenheitsquote = (anwesend + verspätet) / alle unentschuldigt erfassten Termine; ausgefallene Termine zählen nicht."
+  },
+  "grades": {
+    "saved": "Noten gespeichert.",
+    "add": "Test / Aufgabe hinzufügen",
+    "delete": "Löschen",
+    "assessment": "Leistung",
+    "empty": "Noch keine Tests oder Aufgaben.",
+    "noStudents": "Keine Anmeldungen in diesem Kurs.",
+    "student": "Schüler",
+    "pointsOf": "Punkte (max. {max})",
+    "points": "Punkte",
+    "grade": "Note",
+    "comment": "Bemerkung",
+    "save": "Noten speichern",
+    "gradeHelp": "Noten nach deutschem System: 1 (sehr gut) – 6 (ungenügend), auch 2- oder 3+. Leere Zeilen werden entfernt.",
+    "addTitle": "Test / Aufgabe hinzufügen",
+    "title": "Titel",
+    "date": "Datum",
+    "type": "Art",
+    "maxPoints": "Max. Punkte",
+    "deleteTitle": "Leistung löschen",
+    "deleteMessage": "„{title}“ samt aller Noten löschen?"
+  },
+  "notes": {
+    "noStudents": "Keine Anmeldungen in diesem Kurs.",
+    "saved": "Beobachtung hinzugefügt.",
+    "students": "Schüler",
+    "date": "Datum",
+    "rating": "Bewertung",
+    "ratingLabel": {
+      "1": "Hat Schwierigkeiten",
+      "2": "Ausbaufähig",
+      "3": "Ausreichend",
+      "4": "Gut",
+      "5": "Sehr gut"
+    },
+    "text": "Beobachtung",
+    "goals": "Ziele",
+    "add": "Hinzufügen",
+    "empty": "Noch keine Einträge für diesen Schüler.",
+    "ratingAria": "Bewertung {rating}/5",
+    "delete": "Eintrag löschen"
+  },
+  "report": {
+    "noStudents": "Keine Anmeldungen in diesem Kurs.",
+    "help": "Bericht je Schüler mit Anwesenheit, Noten und Beobachtungen (PDF mit Vereinsbriefkopf).",
+    "pdf": {
+      "de": "Bericht (DE)",
+      "tr": "Bericht (TR)"
+    }
+  },
+  "errors": {
+    "courseNotFound": "Kurs nicht gefunden oder kein Zugriff.",
+    "sessionNotFound": "Termin nicht gefunden.",
+    "assessmentNotFound": "Leistung nicht gefunden.",
+    "pointsAboveMax": "Die Punkte dürfen das Maximum ({max}) nicht überschreiten.",
+    "enrollmentNotFound": "Der Schüler ist in diesem Kurs nicht angemeldet.",
+    "noteNotFound": "Eintrag nicht gefunden.",
+    "noteNotYours": "Sie können nur eigene Einträge löschen."
+  },
+  "validation": {
+    "textMax": "Der Text ist zu lang.",
+    "titleRequired": "Der Titel muss mindestens 2 Zeichen haben.",
+    "dateInvalid": "Bitte ein gültiges Datum eingeben.",
+    "pointsInvalid": "Punkte müssen eine Zahl sein (z. B. 17,5).",
+    "gradeInvalid": "Note zwischen 1 und 6 (z. B. 2 oder 2-).",
+    "ratingInvalid": "Bewertung zwischen 1 und 5.",
+    "noteRequired": "Die Beobachtung muss mindestens 3 Zeichen haben."
+  },
+  "cards": {
+    "attendance": {
+      "title": "Anwesenheit",
+      "description": "Anwesenheitsquote der letzten 30 Tage (für Lehrkräfte nur eigene Kurse).",
+      "rate": "Anwesenheit (30 Tage)",
+      "absent": "Fehlt",
+      "excused": "Entschuldigt"
+    }
+  }
+}

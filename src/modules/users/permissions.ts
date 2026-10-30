@@ -8,4 +8,5 @@ export const usersPermissions = definePermissions("users", {
   VIEWER: [],
   TREASURER: [],
   AUDITOR: [],
+  TEACHER: [],
 });

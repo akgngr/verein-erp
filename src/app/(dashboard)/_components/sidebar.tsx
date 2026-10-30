@@ -99,7 +99,7 @@ const PANEL_ITEM: NavItem = {
   permission: {
     definition: {
       resource: "panel",
-      grants: { ADMIN: ["view"], BOARD: ["view"], SECRETARY: ["view"], VIEWER: ["view"], TREASURER: ["view"], AUDITOR: ["view"] },
+      grants: { ADMIN: ["view"], BOARD: ["view"], SECRETARY: ["view"], VIEWER: ["view"], TREASURER: ["view"], AUDITOR: ["view"], TEACHER: ["view"] },
     },
     action: "view",
   },

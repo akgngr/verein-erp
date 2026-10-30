@@ -8,6 +8,7 @@ export const documentsPermissions = definePermissions("documents", {
   VIEWER: ["view"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TEACHER: [],
 });
 
 /** 6. bölüm yetki matrisi — documentCategories (silme yoktur; pasife alma = update) */
@@ -18,4 +19,5 @@ export const documentCategoriesPermissions = definePermissions("documentCategori
   VIEWER: ["view"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TEACHER: [],
 });

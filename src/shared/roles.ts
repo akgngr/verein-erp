@@ -17,6 +17,7 @@ export const ROLE_COLORS: Record<Role, ChipColor> = {
   VIEWER: "default",
   TREASURER: "warning",
   AUDITOR: "danger",
+  TEACHER: "secondary",
 };
 
 /** Tüm roller (sabit sırayla). Etiket: useTranslations("roles")(role). */

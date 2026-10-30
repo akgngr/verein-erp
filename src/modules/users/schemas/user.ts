@@ -2,7 +2,7 @@ import { z } from "zod";
 
 import { passwordSchema } from "@/shared/security/password";
 
-const roleSchema = z.enum(["ADMIN", "BOARD", "SECRETARY", "VIEWER", "TREASURER", "AUDITOR"]);
+const roleSchema = z.enum(["ADMIN", "BOARD", "SECRETARY", "VIEWER", "TREASURER", "AUDITOR", "TEACHER"]);
 
 export const userCreateSchema = z.object({
   name: z.string().trim().min(1, "users.validation.nameRequired").max(100, "users.validation.nameMax"),

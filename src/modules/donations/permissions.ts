@@ -12,5 +12,6 @@ export const donationsPermissions = definePermissions("donations", {
   SECRETARY: [],
   TREASURER: ["view", "create", "update", "delete", "approve"],
   AUDITOR: [],
+  TEACHER: [],
   VIEWER: [],
 });

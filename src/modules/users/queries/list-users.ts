@@ -86,6 +86,7 @@ export async function getUserCountsByRole(): Promise<Record<Role, number>> {
     SECRETARY: 0,
     TREASURER: 0,
     AUDITOR: 0,
+    TEACHER: 0,
     VIEWER: 0,
   };
   for (const g of groups) {

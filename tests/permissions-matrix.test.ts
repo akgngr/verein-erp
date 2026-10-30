@@ -8,10 +8,10 @@ import { can } from "../src/shared/permissions/define";
 import type { Role } from "../src/shared/roles";
 
 describe("Roles and Permissions Matrix", () => {
-  const allRoles: Role[] = ["ADMIN", "BOARD", "SECRETARY", "TREASURER", "AUDITOR", "VIEWER"];
+  const allRoles: Role[] = ["ADMIN", "BOARD", "SECRETARY", "TREASURER", "AUDITOR", "VIEWER", "TEACHER"];
 
-  test("all 6 system roles are documented with metadata", () => {
-    assert.strictEqual(ALL_ROLES_META.length, 6);
+  test("all 7 system roles are documented with metadata", () => {
+    assert.strictEqual(ALL_ROLES_META.length, 7);
     const documentedRoles = ALL_ROLES_META.map((r) => r.role);
     for (const role of allRoles) {
       assert.ok(documentedRoles.includes(role), `${role} rolü dokümante edilmiş olmalıdır`);
