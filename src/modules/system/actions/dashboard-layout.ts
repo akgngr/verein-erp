@@ -15,7 +15,7 @@ export async function saveDashboardLayoutAction(input: unknown): Promise<ActionR
   const run = createAction({
     schema: dashboardLayoutSchema,
     handler: async ({ input, user }) => {
-      const allowed = new Set(listAvailableDashboardCards(user.role).map((entry) => entry.id));
+      const allowed = new Set((await listAvailableDashboardCards(user.role)).map((entry) => entry.id));
       // Görülemeyen ya da tekrar eden kimlikler sessizce atlanır.
       const cards = [...new Set(input.cards)].filter((id) => allowed.has(id));
       await getDb().systemDashboardLayout.upsert({

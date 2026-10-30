@@ -196,7 +196,7 @@ access: [
 - Yönetici, modülü etkinleştirirken istenen erişimleri bir onay penceresinde görür ve izin verir.
   İzin yoksa modül kullanılamaz: menüde görünmez, sayfaları ve API'leri kapalıdır (üretilen köprüler
   `withModuleGate` / `gateRouteHandler` ile sarılıdır). Modül güncellenip yeni erişim isterse onay
-  düşer ve yeniden istenir. İzinler `src/config/module-access.json` içindedir.
+  düşer ve yeniden istenir. İzinler veritabanında (`system_settings`, `module-access:<modül>`) tutulur; resmi modüller onaylı gelir, eklentiler izin bekler.
 
 ---
 

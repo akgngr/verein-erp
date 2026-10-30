@@ -1,16 +1,15 @@
-import fs from "node:fs";
-import path from "node:path";
-
-import type { ModuleAccessRequest } from "../types/module";
+import type { ModuleAccessRequest, ModuleCategory } from "../types/module";
 
 /**
- * Modüller arası erişim izinleri (yönetici onayı). Modül durumları gibi src/config altında
- * dosyada tutulur (modules-state.json ile aynı yaklaşım). Onay, modülün bildirdiği erişim
- * listesinin imzasına bağlıdır: modül güncellenip yeni erişim isterse onay kendiliğinden düşer.
+ * Modüller arası erişim izinleri (yönetici onayı). Kayıtlar veritabanında tutulur
+ * (src/modules/system/services/module-access-store.ts); burada yalnızca saf kurallar var.
+ * Onay, modülün bildirdiği erişim listesinin imzasına bağlıdır: modül güncellenip yeni erişim
+ * isterse onay kendiliğinden düşer.
  */
-const ACCESS_FILE = path.join(process.cwd(), "src", "config", "module-access.json");
-
 export type ModuleAccessApproval = { signature: string; approvedAt: string; approvedBy: string };
+
+/** Kayıt: onay ya da yöneticinin geri aldığı izin. */
+export type ModuleAccessRecord = ModuleAccessApproval | { revoked: true; revokedAt: string };
 
 /** Erişim listesinin sıradan bağımsız imzası ("accounting:read,write|users:write"). */
 export function accessSignature(access: ModuleAccessRequest[] | undefined): string {
@@ -20,25 +19,16 @@ export function accessSignature(access: ModuleAccessRequest[] | undefined): stri
     .join("|");
 }
 
-export function getAccessApprovals(): Record<string, ModuleAccessApproval> {
-  try {
-    if (fs.existsSync(ACCESS_FILE)) return JSON.parse(fs.readFileSync(ACCESS_FILE, "utf8"));
-  } catch {
-    // Bozuk dosya: hiçbir onay yok sayılır (güvenli taraf).
-  }
-  return {};
-}
-
-/** Modülün bildirdiği erişim onaylı mı (erişim istemeyen modül her zaman onaylıdır). */
-export function isAccessApproved(key: string, access: ModuleAccessRequest[] | undefined): boolean {
-  const signature = accessSignature(access);
-  return signature === "" || getAccessApprovals()[key]?.signature === signature;
-}
-
-export function setAccessApproval(key: string, approval: ModuleAccessApproval | null): void {
-  const approvals = getAccessApprovals();
-  if (approval) approvals[key] = approval;
-  else delete approvals[key];
-  fs.mkdirSync(path.dirname(ACCESS_FILE), { recursive: true });
-  fs.writeFileSync(ACCESS_FILE, `${JSON.stringify(approvals, null, 2)}\n`, "utf8");
+/**
+ * Modülün bildirdiği erişim onaylı mı. Erişim istemeyen modül her zaman onaylıdır.
+ * Kayıt yoksa: resmi (OFFICIAL) modüller projeyle birlikte onaylı gelir; eklentiler izin bekler.
+ */
+export function isAccessApproved(
+  mod: { category: ModuleCategory; access?: ModuleAccessRequest[] },
+  record: ModuleAccessRecord | undefined,
+): boolean {
+  const signature = accessSignature(mod.access);
+  if (signature === "") return true;
+  if (!record) return mod.category === "OFFICIAL";
+  return !("revoked" in record) && record.signature === signature;
 }

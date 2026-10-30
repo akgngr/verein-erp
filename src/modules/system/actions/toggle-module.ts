@@ -5,7 +5,9 @@ import { ActionError, createAction } from "@/modules/auth/server";
 import { systemPermissions } from "@/shared/permissions/system";
 import { allModules } from "@/registry";
 import { isAccessApproved } from "@/shared/modules/module-access";
-import { setModuleActive } from "@/shared/modules/module-store";
+
+import { getAccessRecord } from "../services/module-access-store";
+import { setModuleEnabled } from "../services/module-state-store";
 import type { ActionResult } from "@/shared/types/action";
 
 const toggleModuleSchema = z.object({
@@ -28,11 +30,11 @@ export async function toggleModuleAction(input: unknown): Promise<ActionResult> 
       }
 
       // Erişim izni olmadan etkinleştirme yok: önce onay penceresinden izin verilmelidir.
-      if (input.isActive && !isAccessApproved(moduleMeta.key, moduleMeta.access)) {
+      if (input.isActive && !isAccessApproved(moduleMeta, await getAccessRecord(moduleMeta.key))) {
         throw new ActionError("system.errors.accessNotApproved");
       }
 
-      await setModuleActive(input.key, input.isActive);
+      await setModuleEnabled(input.key, input.isActive);
 
       await audit({
         action: "UPDATE",

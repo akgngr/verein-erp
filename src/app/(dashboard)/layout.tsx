@@ -32,7 +32,7 @@ export default async function DashboardLayout({
   }
 
   // Menüde yalnızca kullanılabilir modüller: çekirdek + etkin ve erişim izni onaylı olanlar.
-  const activeModuleKeys = listUsableModuleKeys();
+  const activeModuleKeys = await listUsableModuleKeys();
   const collapsed = (await cookies()).get(SIDEBAR_COLLAPSED_COOKIE)?.value === "1";
 
   return (

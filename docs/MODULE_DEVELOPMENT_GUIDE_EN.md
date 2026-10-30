@@ -195,7 +195,7 @@ access: [
 - When activating the module, the admin sees the requested access in an approval dialog and allows it.
   Without approval the module is unusable: hidden from the menu, pages and APIs closed (generated
   bridges are wrapped with `withModuleGate` / `gateRouteHandler`). If an update requests new access,
-  the approval lapses and is asked for again. Approvals live in `src/config/module-access.json`.
+  the approval lapses and is asked for again. Approvals are stored in the database (`system_settings`, `module-access:<module>`); official modules come approved, extensions wait for consent.
 
 ---
 

@@ -2,11 +2,23 @@ import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 
 import { allModules } from "../src/registry";
-import { accessSignature } from "../src/shared/modules/module-access";
+import { accessSignature, isAccessApproved } from "../src/shared/modules/module-access";
 import { exportedMethods } from "../src/shared/modules/sync-routes";
 import { declaredAccess, findServerImports, operationFor } from "../scripts/validate-module";
 
 describe("Modüller arası erişim izni", () => {
+  test("onay kuralları: resmi modül onaylı gelir, eklenti izin bekler, geri alma ve imza değişimi onayı düşürür", () => {
+    const access = [{ module: "users", operations: ["read" as const] }];
+    const signature = accessSignature(access);
+    const approval = { signature, approvedAt: "", approvedBy: "" };
+    assert.equal(isAccessApproved({ category: "OFFICIAL", access }, undefined), true);
+    assert.equal(isAccessApproved({ category: "EXTENSION", access }, undefined), false);
+    assert.equal(isAccessApproved({ category: "EXTENSION", access }, approval), true);
+    assert.equal(isAccessApproved({ category: "OFFICIAL", access }, { revoked: true, revokedAt: "" }), false);
+    assert.equal(isAccessApproved({ category: "EXTENSION", access: [{ module: "users", operations: ["write"] }] }, approval), false);
+    assert.equal(isAccessApproved({ category: "EXTENSION", access: [] }, undefined), true);
+  });
+
   test("imza sıradan bağımsızdır ve işlem tekrarını yok sayar", () => {
     const a = accessSignature([
       { module: "users", operations: ["write", "read"] },

@@ -7,7 +7,9 @@ import type { ReactNode } from "react";
 
 import { allModules } from "@/registry";
 import { isAccessApproved } from "@/shared/modules/module-access";
-import { getAllActiveModuleKeys } from "@/shared/modules/module-store";
+
+import { getAccessRecords } from "./module-access-store";
+import { listActiveModuleKeys } from "./module-state-store";
 
 export type ModuleAvailability = "available" | "inactive" | "needsApproval";
 
@@ -15,16 +17,21 @@ export type ModuleAvailability = "available" | "inactive" | "needsApproval";
  * Modül kullanılabilir mi: çekirdek modüller her zaman; diğerleri etkin olmalı ve başka
  * modüllerden istedikleri erişim yönetici tarafından onaylanmış olmalı.
  */
-export function getModuleAvailability(key: string): ModuleAvailability {
+export async function getModuleAvailability(key: string): Promise<ModuleAvailability> {
   const mod = allModules.find((candidate) => candidate.key === key);
   if (!mod || mod.category === "CORE") return "available";
-  if (!getAllActiveModuleKeys([key]).includes(key)) return "inactive";
-  return isAccessApproved(key, mod.access) ? "available" : "needsApproval";
+  if (!(await listActiveModuleKeys([key])).includes(key)) return "inactive";
+  if (!mod.access?.length) return "available";
+  return isAccessApproved(mod, (await getAccessRecords())[key]) ? "available" : "needsApproval";
 }
 
 /** Menü, panel kartları ve ayar merkezi için kullanılabilir modüller. */
-export function listUsableModuleKeys(): string[] {
-  return allModules.filter((mod) => getModuleAvailability(mod.key) === "available").map((mod) => mod.key);
+export async function listUsableModuleKeys(): Promise<string[]> {
+  const [records, activeKeys] = await Promise.all([getAccessRecords(), listActiveModuleKeys(allModules.map((mod) => mod.key))]);
+  const active = new Set(activeKeys);
+  return allModules
+    .filter((mod) => mod.category === "CORE" || (active.has(mod.key) && isAccessApproved(mod, records[mod.key])))
+    .map((mod) => mod.key);
 }
 
 async function ModuleUnavailable({ status }: { status: Exclude<ModuleAvailability, "available"> }) {
@@ -46,7 +53,7 @@ async function ModuleUnavailable({ status }: { status: Exclude<ModuleAvailabilit
 /** Üretilen sayfa köprüleri modül sayfasını bununla sarar (src/shared/modules/sync-routes.ts). */
 export function withModuleGate<P extends object>(key: string, Page: (props: P) => unknown) {
   return async function GatedPage(props: P): Promise<ReactNode> {
-    const status = getModuleAvailability(key);
+    const status = await getModuleAvailability(key);
     if (status !== "available") return <ModuleUnavailable status={status} />;
     // Sunucu sayfası fonksiyon olarak çağrılır: yönlendiren sayfalar (redirect) değer döndürmez.
     return (await Page(props)) as ReactNode;
@@ -59,7 +66,7 @@ type RouteHandler = (...args: never[]) => Response | Promise<Response>;
 /** Üretilen API köprüleri her HTTP yöntemini bununla sarar. */
 export function gateRouteHandler<H extends RouteHandler>(key: string, handler: H): H {
   return (async (...args: Parameters<H>) => {
-    const status = getModuleAvailability(key);
+    const status = await getModuleAvailability(key);
     if (status !== "available") {
       const t = await getTranslations("system.gate");
       return Response.json({ ok: false, error: t(`${status}.title`) }, { status: 403 });
