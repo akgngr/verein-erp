@@ -104,13 +104,18 @@ export function AiChatPanel({
   const [done, setDone] = useState<Set<string>>(new Set());
   const endRef = useRef<HTMLDivElement>(null);
 
-  useEffect(
-    () => endRef.current?.scrollIntoView({ behavior: "smooth" }),
-    [turns, busy],
-  );
+  // KARAR: efektler hiçbir değer döndürmez — yeni tarayıcılarda scrollIntoView Promise döndürür
+  // ve React yalnızca temizlik fonksiyonu kabul eder.
+  useEffect(() => {
+    endRef.current?.scrollIntoView({ behavior: "smooth" });
+  }, [turns, busy]);
   // Sohbet sütunu açılınca sol menü daralır, kapanınca eski hâline döner.
-  useEffect(() => announceSidePanel(open), [open]);
-  useEffect(() => () => announceSidePanel(false), []);
+  useEffect(() => {
+    announceSidePanel(open);
+  }, [open]);
+  useEffect(() => {
+    return () => announceSidePanel(false);
+  }, []);
 
   const send = async (text?: string) => {
     const content = (text ?? draft).trim();
