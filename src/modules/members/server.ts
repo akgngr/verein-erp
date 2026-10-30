@@ -109,15 +109,15 @@ export async function listPaymentsForAccounting(): Promise<AccountingPaymentRow[
  */
 export async function getPaymentStatuses(
   ids: string[],
-): Promise<Array<{ id: string; voidedAt: Date | null }>> {
+): Promise<Array<{ id: string; voidedAt: Date | null; receiptNumber: string }>> {
   if (ids.length === 0) return [];
   const { getDb } = await import("@/shared/db");
   const db = getDb();
   const rows = await db.memberPayment.findMany({
     where: { id: { in: ids } },
-    select: { id: true, voidedAt: true },
+    select: { id: true, voidedAt: true, receiptNumber: true },
   });
-  return rows.map((row) => ({ id: row.id, voidedAt: row.voidedAt }));
+  return rows.map((row) => ({ id: row.id, voidedAt: row.voidedAt, receiptNumber: row.receiptNumber }));
 }
 
 /** Makbuz/alıcı anlık görüntüsü: üye adres bloğu (§ 11 md. 9 md. 5). */
@@ -269,4 +269,14 @@ export async function listMemberOptions(options: { ids?: string[] } = {}): Promi
     label: `${member.firstName} ${member.lastName}`,
     membershipNumber: member.membershipNumber,
   }));
+}
+
+/** Bu e-posta adresine sahip (silinmemiş) üyelerin kimlikleri; kullanıcıyı üye kaydıyla eşleştirmek için. */
+export async function findMemberIdsByEmail(email: string): Promise<string[]> {
+  const { getDb } = await import("@/shared/db");
+  const members = await getDb().member.findMany({
+    where: { email: { equals: email, mode: "insensitive" }, deletedAt: null },
+    select: { id: true },
+  });
+  return members.map((member) => member.id);
 }

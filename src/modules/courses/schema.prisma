@@ -1,0 +1,222 @@
+// Kurslar modülü: gönüllü kurslar ve ücretli/ücretsiz Nachhilfe.
+// KARAR: Öğrenci ve ödeme sorumlusu (DATEV Debitor) students modülündedir; burada yalnızca
+// yumuşak referans + anlık görüntü tutulur. Tahsilatlar muhasebede "COURSE_FEE" kaynaklı gelir
+// fişi olur (sourceId = CoursePayment.id; ters kayıttan sonra yeniden ödeme yeni fiş üretir).
+// Öğretmen, TEACHER rolündeki bir kullanıcıya bağlanabilir (userId; FK değil).
+
+enum CourseKind {
+  COURSE // Kurs
+  TUTORING // Nachhilfe
+}
+
+enum CourseFeeType {
+  FREE
+  ONE_TIME
+  MONTHLY
+  INSTALLMENTS
+}
+
+enum CourseStatus {
+  PLANNED
+  ACTIVE
+  COMPLETED
+  CANCELLED
+}
+
+enum CourseEnrollmentStatus {
+  ACTIVE
+  COMPLETED
+  WITHDRAWN
+}
+
+enum CourseChargeKind {
+  ONE_TIME
+  INSTALLMENT
+  MONTH
+}
+
+enum CourseChargeStatus {
+  OPEN
+  PAID
+  WAIVED
+  CANCELLED
+}
+
+enum CoursePaymentMethod {
+  CASH
+  BANK_TRANSFER
+  SEPA_DEBIT
+  CARD
+  OTHER
+}
+
+model CoursesCounter {
+  year    Int @id
+  lastSeq Int @default(0)
+
+  @@map("courses_counters")
+}
+
+/// Kurs ücretlerinin muhasebe kategorisi (tek satır, id = "singleton").
+model CoursesSettings {
+  id               String   @id @default("singleton")
+  incomeCategoryId String? // FK DEĞİL; muhasebe gelir kategorisi
+  updatedAt        DateTime @updatedAt
+
+  @@map("courses_settings")
+}
+
+model CourseTeacher {
+  id        String   @id @default(cuid())
+  userId    String?  @unique // FK DEĞİL; TEACHER rolündeki giriş hesabı
+  firstName String
+  lastName  String
+  email     String?
+  phone     String?
+  subjects  String? // örn. "Matematik, Almanca"
+  note      String?
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  courses  CourseTeacherLink[]
+  sessions CourseSession[]
+
+  @@index([lastName, firstName])
+  @@map("courses_teachers")
+}
+
+model Course {
+  id               String        @id @default(cuid())
+  year             Int
+  sequence         Int
+  code             String        @unique // K-2026-001
+  kind             CourseKind
+  title            String
+  subject          String?
+  description      String?
+  level            String?
+  location         String?
+  scheduleNote     String? // örn. "Salı 17:00–18:30"
+  startDate        DateTime      @db.Date
+  endDate          DateTime?     @db.Date
+  capacity         Int?
+  feeType          CourseFeeType @default(FREE)
+  feeCents         Int           @default(0) // tek sefer: toplam; aylık: ay başına; taksit: toplam
+  installmentCount Int?
+  status           CourseStatus  @default(PLANNED)
+  createdById      String
+  createdByLabel   String
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+  deletedAt        DateTime?
+
+  teachers    CourseTeacherLink[]
+  sessions    CourseSession[]
+  enrollments CourseEnrollment[]
+
+  @@unique([year, sequence])
+  @@index([status])
+  @@index([deletedAt])
+  @@map("courses_courses")
+}
+
+model CourseTeacherLink {
+  courseId  String
+  teacherId String
+
+  course  Course        @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  teacher CourseTeacher @relation(fields: [teacherId], references: [id], onDelete: Cascade)
+
+  @@id([courseId, teacherId])
+  @@index([teacherId])
+  @@map("courses_course_teachers")
+}
+
+model CourseSession {
+  id          String         @id @default(cuid())
+  courseId    String
+  date        DateTime       @db.Date
+  startTime   String? // "HH:mm"
+  endTime     String?
+  topic       String?
+  teacherId   String?
+  isCancelled Boolean        @default(false)
+  note        String?
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+
+  course  Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  teacher CourseTeacher? @relation(fields: [teacherId], references: [id], onDelete: SetNull)
+
+  @@index([courseId, date])
+  @@map("courses_sessions")
+}
+
+model CourseEnrollment {
+  id                String                 @id @default(cuid())
+  courseId          String
+  studentId         String // FK DEĞİL (students modülü)
+  studentLabel      String
+  studentNumber     String
+  payerGuardianId   String? // FK DEĞİL; ödeme sorumlusu (DATEV Debitor)
+  payerLabel        String?
+  payerDebtorNumber Int?
+  enrolledAt        DateTime               @db.Date
+  status            CourseEnrollmentStatus @default(ACTIVE)
+  discountPercent   Int                    @default(0) // Ermäßigung (0–100)
+  note              String?
+  createdById       String
+  createdByLabel    String
+  createdAt         DateTime               @default(now())
+  updatedAt         DateTime               @updatedAt
+
+  course  Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  charges CourseCharge[]
+
+  @@unique([courseId, studentId])
+  @@index([studentId])
+  @@map("courses_enrollments")
+}
+
+model CourseCharge {
+  id           String             @id @default(cuid())
+  enrollmentId String
+  kind         CourseChargeKind
+  sequence     Int // taksit/ay sırası (1'den)
+  total        Int // toplam taksit/ay sayısı
+  period       String? // aylık ücrette "YYYY-MM"
+  dueDate      DateTime           @db.Date
+  amountCents  Int
+  status       CourseChargeStatus @default(OPEN)
+  waivedReason String?
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
+
+  enrollment CourseEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  payments   CoursePayment[]
+
+  @@index([enrollmentId])
+  @@index([status, dueDate])
+  @@map("courses_charges")
+}
+
+model CoursePayment {
+  id              String              @id @default(cuid())
+  chargeId        String
+  paidAt          DateTime            @db.Date
+  method          CoursePaymentMethod
+  amountCents     Int
+  reference       String?
+  bookingNumber   String? // muhasebe fiş numarası (B-2026-0001)
+  recordedById    String
+  recordedByLabel String
+  createdAt       DateTime            @default(now())
+  reversedAt      DateTime?
+  reverseReason   String?
+
+  charge CourseCharge @relation(fields: [chargeId], references: [id], onDelete: Cascade)
+
+  @@index([chargeId])
+  @@map("courses_payments")
+}

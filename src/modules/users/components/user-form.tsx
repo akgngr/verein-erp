@@ -99,7 +99,7 @@ export type UserEditValues = {
   id: string;
   name: string;
   email: string;
-  role: "ADMIN" | "BOARD" | "SECRETARY" | "VIEWER" | "TREASURER" | "AUDITOR";
+  role: "ADMIN" | "BOARD" | "SECRETARY" | "VIEWER" | "TREASURER" | "AUDITOR" | "TEACHER";
   isActive: boolean;
 };
 

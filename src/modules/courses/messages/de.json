@@ -1,0 +1,343 @@
+{
+  "nav": {
+    "courses": "Kurse"
+  },
+  "module": {
+    "label": "Kurse",
+    "description": "Ehrenamtliche Kurse und Nachhilfe: Lehrkräfte, Unterricht, Anmeldungen, Gebühren und Übergabe an die Buchhaltung."
+  },
+  "menu": {
+    "teachers": "Lehrkräfte",
+    "fees": "Gebühren und Zahlungen",
+    "settings": "Einstellungen"
+  },
+  "meta": {
+    "list": "Kurse",
+    "teachers": "Lehrkräfte",
+    "fees": "Kursgebühren",
+    "settings": "Kurs-Einstellungen",
+    "detail": "Kurs"
+  },
+  "title": "Kurse",
+  "description": "Ehrenamtliche Kurse sowie kostenpflichtige oder kostenlose Nachhilfe.",
+  "myTitle": "Meine Kurse",
+  "myDescription": "Kurse, in denen Sie unterrichten.",
+  "newCourse": "Neuer Kurs",
+  "enums": {
+    "kind": {
+      "COURSE": "Kurs",
+      "TUTORING": "Nachhilfe"
+    },
+    "status": {
+      "PLANNED": "Geplant",
+      "ACTIVE": "Laufend",
+      "COMPLETED": "Abgeschlossen",
+      "CANCELLED": "Abgesagt"
+    },
+    "feeType": {
+      "FREE": "Kostenlos",
+      "ONE_TIME": "Einmalig",
+      "MONTHLY": "Monatlich",
+      "INSTALLMENTS": "In Raten"
+    },
+    "enrollmentStatus": {
+      "ACTIVE": "Aktiv",
+      "COMPLETED": "Abgeschlossen",
+      "WITHDRAWN": "Abgemeldet"
+    },
+    "chargeStatus": {
+      "OPEN": "Offen",
+      "PAID": "Bezahlt",
+      "WAIVED": "Erlassen",
+      "CANCELLED": "Storniert"
+    },
+    "paymentMethod": {
+      "CASH": "Bar",
+      "BANK_TRANSFER": "Überweisung",
+      "SEPA_DEBIT": "SEPA-Lastschrift",
+      "CARD": "Karte",
+      "OTHER": "Sonstige"
+    },
+    "level": {
+      "BEGINNER": "Anfänger",
+      "INTERMEDIATE": "Mittelstufe",
+      "ADVANCED": "Fortgeschritten",
+      "ALL": "Alle Niveaus"
+    }
+  },
+  "weekday": {
+    "1": "Montag",
+    "2": "Dienstag",
+    "3": "Mittwoch",
+    "4": "Donnerstag",
+    "5": "Freitag",
+    "6": "Samstag",
+    "7": "Sonntag"
+  },
+  "form": {
+    "kind": "Art",
+    "status": "Status",
+    "title": "Kursname",
+    "subject": "Fach / Thema",
+    "level": "Niveau",
+    "location": "Ort",
+    "scheduleNote": "Termine",
+    "scheduleNotePlaceholder": "z. B. Dienstag 17:00–18:30",
+    "startDate": "Beginn",
+    "endDate": "Ende",
+    "capacity": "Plätze",
+    "feeTitle": "Gebühr",
+    "feeType": "Gebührenmodell",
+    "feeMonthly": "Monatsgebühr (€)",
+    "feeTotal": "Gesamtgebühr (€)",
+    "feeHelp": "z. B. 45,00",
+    "installmentCount": "Anzahl Raten",
+    "feeExplain": {
+      "FREE": "Bei der Anmeldung entstehen keine Forderungen.",
+      "ONE_TIME": "Am Anmeldedatum entsteht eine Forderung.",
+      "MONTHLY": "Für jeden Kursmonat entsteht eine Forderung; Enddatum erforderlich.",
+      "INSTALLMENTS": "Die Gesamtgebühr wird ab Anmeldedatum in Monatsraten aufgeteilt."
+    },
+    "teachers": "Lehrkräfte",
+    "noTeachers": "Noch keine Lehrkräfte; zuerst unter Lehrkräfte anlegen.",
+    "description": "Beschreibung",
+    "updated": "Kurs aktualisiert. Gebührenänderungen gelten nur für neue Anmeldungen.",
+    "created": "Kurs angelegt.",
+    "createTitle": "Neuer Kurs",
+    "createDescription": "Der Kurscode wird automatisch vergeben.",
+    "editTitle": "Kurs bearbeiten"
+  },
+  "table": {
+    "code": "Code",
+    "title": "Kurs",
+    "period": "Zeitraum",
+    "fee": "Gebühr",
+    "enrolled": "Teilnehmende",
+    "status": "Status",
+    "kind": "Art",
+    "aria": "Kursliste",
+    "search": "Kursname, Code oder Thema suchen...",
+    "empty": "Noch keine Kurse.",
+    "open": "Öffnen",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "deleteTitle": "Kurs löschen",
+    "deleteMessage": "„{title}“ löschen? Kurse mit Zahlungen können nicht gelöscht werden; Status auf „Abgesagt“ setzen.",
+    "deleted": "Kurs gelöscht."
+  },
+  "detail": {
+    "period": "Zeitraum",
+    "createdBy": "Angelegt von: {label}",
+    "edit": "Bearbeiten",
+    "tabs": "Kursbereiche",
+    "tab": {
+      "genel": "Allgemein",
+      "dersler": "Unterricht",
+      "ogrenciler": "Teilnehmende",
+      "ucretler": "Gebühren"
+    }
+  },
+  "sessions": {
+    "saved": "Termin gespeichert.",
+    "seriesCreated": "{count} Termine angelegt.",
+    "add": "Termin hinzufügen",
+    "series": "Wöchentliche Serie",
+    "empty": "Noch keine Termine.",
+    "cancelled": "Ausgefallen",
+    "editTitle": "Termin bearbeiten",
+    "addTitle": "Termin hinzufügen",
+    "date": "Datum",
+    "startTime": "Beginn",
+    "endTime": "Ende",
+    "topic": "Thema",
+    "teacher": "Lehrkraft",
+    "noTeacher": "Nicht angegeben",
+    "note": "Notiz",
+    "markCancelled": "Termin ist ausgefallen",
+    "seriesTitle": "Wöchentliche Serie",
+    "seriesHelp": "Zwischen Kursbeginn und -ende wird am gewählten Wochentag je ein Termin angelegt; vorhandene Tage werden übersprungen. Ohne Enddatum: 12 Wochen.",
+    "weekdayLabel": "Wochentag",
+    "seriesCreate": "Termine anlegen",
+    "deleteTitle": "Termin löschen",
+    "deleteMessage": "Termin am {date} samt Anwesenheit löschen?"
+  },
+  "enrollments": {
+    "enrolledToast": "{count} Schüler angemeldet.",
+    "withdrawnToast": "Abgemeldet; {count} offene Forderungen storniert.",
+    "statusToast": "Anmeldestatus aktualisiert.",
+    "add": "Schüler anmelden",
+    "empty": "Keine Anmeldungen in diesem Kurs.",
+    "student": "Schüler",
+    "payer": "Zahlungspflichtig",
+    "enrolledAt": "Anmeldedatum",
+    "open": "Offen",
+    "status": "Status",
+    "addTitle": "Schüler zum Kurs anmelden",
+    "search": "Nach Name oder Schülernummer suchen",
+    "noStudents": "Kein passender Schüler.",
+    "discount": "Ermäßigung",
+    "planHelp": "Bei kostenpflichtigen Kursen entsteht je Schüler ein Zahlungsplan; eine zahlungspflichtige Person (Erziehungsberechtigte) muss hinterlegt sein.",
+    "enroll": "{count} Schüler anmelden"
+  },
+  "charges": {
+    "labelMonth": "Monat {period}",
+    "labelInstallment": "Rate {sequence}/{total}",
+    "labelOnce": "Kursgebühr",
+    "course": "Kurs",
+    "student": "Schüler / Zahler",
+    "item": "Posten",
+    "dueDate": "Fällig",
+    "amount": "Betrag",
+    "status": "Status",
+    "overdue": "Überfällig",
+    "paidToast": "Zahlung erfasst; Buchung {booking}.",
+    "reversedToast": "Zahlung zurückgenommen; Buchung storniert.",
+    "waivedToast": "Forderung erlassen.",
+    "aria": "Forderungen",
+    "search": "Schüler, Zahler, Kurscode oder Debitor-Nr. suchen...",
+    "all": "Alle",
+    "onlyOverdue": "Nur überfällige",
+    "openTotal": "Offen gesamt: {amount}",
+    "empty": "Keine Posten.",
+    "pay": "Zahlung erfassen",
+    "waive": "Erlassen",
+    "reverse": "Zahlung zurücknehmen",
+    "payTitle": "Zahlung erfassen",
+    "reverseTitle": "Zahlung zurücknehmen",
+    "waiveTitle": "Forderung erlassen",
+    "paidAt": "Zahlungsdatum",
+    "method": "Zahlungsart",
+    "reference": "Referenz (Beleg, SEPA o. Ä.)",
+    "payHelp": "Die Zahlung wird als Einnahme gebucht: bar auf das Kassenkonto, sonst auf das Bankkonto.",
+    "reason": "Begründung",
+    "payConfirm": "Erfassen",
+    "reverseConfirm": "Zurücknehmen",
+    "waiveConfirm": "Erlassen"
+  },
+  "teacherForm": {
+    "linkedHint": "Name und E-Mail stammen aus dem Benutzerkonto der Lehrkraft; ändern Sie sie unter Benutzer.",
+    "firstName": "Vorname",
+    "lastName": "Nachname",
+    "email": "E-Mail",
+    "phone": "Telefon",
+    "subjects": "Fächer",
+    "subjectsPlaceholder": "z. B. Mathematik, Deutsch",
+    "note": "Notiz",
+    "isActive": "Aktiv",
+    "invite": "Ins System einladen (Lehrkraft-Konto anlegen)",
+    "inviteHelp": "Es wird ein Konto mit der Rolle Lehrkraft angelegt; sie sieht nur eigene Kurse und den Lernfortschritt. Ist der E-Mail-Versand eingerichtet, geht eine Einladung raus; das vorläufige Passwort wird Ihnen einmalig angezeigt.",
+    "updated": "Lehrkraft aktualisiert.",
+    "created": "Lehrkraft angelegt.",
+    "done": "Fertig",
+    "createTitle": "Neue Lehrkraft",
+    "createDescription": "Ehrenamtliche oder bezahlte Lehrkraft.",
+    "editTitle": "Lehrkraft bearbeiten"
+  },
+  "invite": {
+    "title": "Lehrkraft-Konto angelegt",
+    "mailSent": "Einladung an {email} gesendet.",
+    "mailNotSent": "Keine E-Mail gesendet (E-Mail-Versand nicht eingerichtet oder fehlgeschlagen). Bitte Zugangsdaten selbst übermitteln.",
+    "temporaryPassword": "Vorläufiges Passwort",
+    "onceHint": "Das Passwort wird nur jetzt angezeigt und nicht gespeichert. Beim ersten Login wird ein neues Passwort festgelegt."
+  },
+  "inviteMail": {
+    "subject": "Einladung in das Kurssystem",
+    "body": "Hallo {name},\n\nSie wurden als Lehrkraft in das Kurssystem unseres Vereins eingeladen.\n\nAnmeldung: {url}\nE-Mail: {email}\nVorläufiges Passwort: {password}\n\nBeim ersten Login legen Sie ein eigenes Passwort fest.\n\nMit freundlichen Grüßen"
+  },
+  "teachers": {
+    "title": "Lehrkräfte",
+    "description": "Lehrkräfte für Kurse und Nachhilfe; optional mit Konto, das nur eigene Kurse zeigt.",
+    "new": "Neue Lehrkraft",
+    "empty": "Noch keine Lehrkräfte.",
+    "name": "Name",
+    "subjects": "Fächer",
+    "contact": "Kontakt",
+    "courses": "Kurse",
+    "account": "Konto",
+    "inactive": "inaktiv",
+    "hasAccount": "Login vorhanden",
+    "noAccount": "Kein Konto",
+    "invite": "Einladen",
+    "inviteTitle": "Einladung",
+    "inviteDone": "Schließen"
+  },
+  "fees": {
+    "title": "Kursgebühren",
+    "description": "Forderungen aller Kurse; Zahlungen werden in der Buchhaltung gebucht.",
+    "categoryMissing": "Für Zahlungen zuerst in den Kurs-Einstellungen die Einnahmekategorie wählen."
+  },
+  "settings": {
+    "title": "Kurs-Einstellungen",
+    "description": "Buchung der Kursgebühren.",
+    "incomeCategory": "Einnahmekategorie",
+    "chooseCategory": "Kategorie wählen…",
+    "incomeCategoryHelp": "Kursgebühren werden in dieser Kategorie als Einnahme gebucht (meist Zweckbetrieb). Kassen- und Bankkonto kommen aus den Buchhaltungseinstellungen.",
+    "saved": "Einstellungen gespeichert."
+  },
+  "errors": {
+    "notFound": "Kurs nicht gefunden.",
+    "teacherNotFound": "Lehrkraft nicht gefunden.",
+    "deleteHasPayments": "Für diesen Kurs gibt es Zahlungen; Löschen nicht möglich. Status auf „Abgesagt“ setzen.",
+    "sessionNotFound": "Termin nicht gefunden.",
+    "seriesEmpty": "Keine neuen Termine anzulegen.",
+    "courseClosed": "Für abgeschlossene oder abgesagte Kurse sind keine Anmeldungen möglich.",
+    "studentNotFound": "Ein ausgewählter Schüler wurde nicht gefunden oder ist inaktiv.",
+    "alreadyEnrolled": "Die ausgewählten Schüler sind bereits angemeldet.",
+    "capacityExceeded": "Die Platzzahl ({capacity}) wird überschritten; frei: {free}.",
+    "payerMissing": "Ohne zahlungspflichtige Person: {names}. Bitte im Schülerdatensatz verknüpfen.",
+    "enrollmentNotFound": "Anmeldung nicht gefunden.",
+    "chargeNotFound": "Forderung nicht gefunden.",
+    "chargeNotOpen": "Diese Forderung ist nicht offen.",
+    "paymentNotFound": "Zahlung nicht gefunden oder bereits zurückgenommen.",
+    "categoryMissing": "In den Kurs-Einstellungen ist keine Einnahmekategorie gewählt.",
+    "teacherHasAccount": "Diese Lehrkraft hat bereits ein Konto."
+  },
+  "validation": {
+    "textMax": "Der Text ist zu lang.",
+    "dateInvalid": "Bitte ein gültiges Datum eingeben.",
+    "timeInvalid": "Uhrzeit im Format HH:MM.",
+    "titleRequired": "Der Kursname muss mindestens 2 Zeichen haben.",
+    "startDateRequired": "Beginn ist erforderlich.",
+    "capacityInvalid": "Die Platzzahl muss eine positive Zahl sein.",
+    "endBeforeStart": "Das Ende darf nicht vor dem Beginn liegen.",
+    "feeInvalid": "Bitte einen gültigen Betrag eingeben (z. B. 45,00).",
+    "installmentsInvalid": "Die Ratenanzahl muss zwischen 2 und 24 liegen.",
+    "endDateForMonthly": "Bei monatlicher Gebühr ist ein Enddatum erforderlich.",
+    "endBeforeStartTime": "Das Ende muss nach dem Beginn liegen.",
+    "selectStudent": "Mindestens einen Schüler wählen.",
+    "discountInvalid": "Die Ermäßigung muss zwischen 0 und 100 liegen.",
+    "reasonMin": "Die Begründung muss mindestens 5 Zeichen haben.",
+    "firstNameRequired": "Vorname ist erforderlich.",
+    "lastNameRequired": "Nachname ist erforderlich.",
+    "emailForInvite": "Für die Einladung ist eine E-Mail erforderlich."
+  },
+  "cards": {
+    "overview": {
+      "title": "Kurse",
+      "description": "Laufende und geplante Kurse, angemeldete Schüler (für Lehrkräfte nur eigene Kurse).",
+      "active": "Laufende Kurse",
+      "planned": "Geplant",
+      "students": "Teilnehmende"
+    },
+    "upcomingSessions": {
+      "title": "Nächste Termine",
+      "description": "Die nächsten fünf Unterrichtstermine (für Lehrkräfte nur eigene Kurse).",
+      "empty": "Keine anstehenden Termine.",
+      "colCourse": "Kurs",
+      "colDate": "Datum",
+      "colTopic": "Thema"
+    },
+    "openFees": {
+      "title": "Offene Kursgebühren",
+      "description": "Nicht bezahlte Kursgebühren und überfällige Posten.",
+      "open": "{count} offene Posten",
+      "overdue": "Überfällig"
+    }
+  },
+  "access": {
+    "accounting": "Bucht Kursgebühren als Einnahmen und storniert sie; liest Kassen-/Bankkonten und Einnahmekategorien.",
+    "mail": "Versendet Einladungs-E-Mails an Lehrkräfte.",
+    "students": "Liest Schüler und Zahlungspflichtige für Kursanmeldungen.",
+    "users": "Legt für eingeladene Lehrkräfte ein Benutzerkonto mit der Rolle Lehrkraft an und liest Name und E-Mail verknüpfter Lehrkräfte aus dem Benutzerkonto."
+  }
+}

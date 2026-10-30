@@ -6,7 +6,7 @@ import { getDb } from "@/shared/db";
 import { buildUserLabel } from "@/shared/utils";
 import type { ActionResult } from "@/shared/types/action";
 
-import { ActionError, createAction } from "@/modules/auth/server";
+import { ActionError, createAction, listActiveUserOptions } from "@/modules/auth/server";
 import { listMemberOptions } from "@/modules/members/server";
 
 import { meetingsPermissions } from "../permissions";
@@ -78,7 +78,7 @@ export async function createMeetingAction(
             where: { meetingId: source.id },
             select: { userId: true, memberId: true, name: true, role: true },
           }),
-          db.user.findMany({ where: { isActive: true }, select: { id: true } }),
+          listActiveUserOptions(),
         ]);
         const activeIds = new Set(activeUsers.map((activeUser) => activeUser.id));
         const sourceMemberIds = sourceAttendees.flatMap((attendee) => (attendee.memberId ? [attendee.memberId] : []));

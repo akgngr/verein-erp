@@ -53,6 +53,10 @@ export const ALL_ROLES_META: RoleMeta[] = [
     role: "VIEWER",
     badgeColor: "default",
   },
+  {
+    role: "TEACHER",
+    badgeColor: "secondary",
+  },
 ];
 
 export const ALL_RESOURCES_META: PermissionResourceMeta[] = [

@@ -41,7 +41,8 @@ KURALLAR (her biri CI'da otomatik denetlenir):
    Sayfa başlığı `PageHeader` (`@/shared/components/ui/page-header`); başlıkta yalnızca ana "Yeni" butonu.
    Alt sayfalar ve dışa aktarma `module.config.ts → menu`.
 10. `page.tsx` başlığı `generateMetadata` + `getTranslations("<ANAHTAR>.meta")` ile.
-11. `permissions.ts` 6 rolün tamamını içerir: ADMIN, BOARD, SECRETARY, TREASURER, AUDITOR, VIEWER
+11. `permissions.ts` 7 rolün tamamını içerir: ADMIN, BOARD, SECRETARY, TREASURER, AUDITOR, VIEWER, TEACHER
+    (TEACHER = öğretmen; kurslarla ilgisi yoksa `TEACHER: []`)
     (`definePermissions` — `@/shared/permissions/define`).
 12. `any` yok; `catch (error)` + `error instanceof Error`. Render sırasında `Date.now()` yok.
     Liste satırlarında HeroUI Select yerine native `<select>`.
@@ -53,6 +54,9 @@ KURALLAR (her biri CI'da otomatik denetlenir):
 16. Panel kartı (isteğe bağlı): `cards/index.tsx` → `export const cards = defineCards([...])`
     (`@/shared/types/dashboard`); gövde `@/shared/components/dashboard/card-bodies` bileşenleriyle
     (StatCardBody, TableCardBody, GaugeCardBody, AlertCardBody); metinler `cards.<key>.*`.
+17. Başka modülün verisi yalnızca `@/modules/<m>/server` üzerinden ve `module.config.ts` içinde
+    `access: [{ module: "<m>", operations: ["read" | "write" | "delete"] }]` bildirimiyle; gerekçe
+    `messages → access.<m>`. Başka modülün tablosuna `getDb()` ile erişme. Yönetici onaylamadan modül açılmaz.
 
 ÜRETECEĞİN DOSYALAR (tam yol + eksiksiz kod, TODO bırakma):
 module.config.ts, permissions.ts, schema.prisma, types.ts, index.ts, server.ts ("server-only"), ui.ts,

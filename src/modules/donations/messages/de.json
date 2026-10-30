@@ -476,5 +476,10 @@
     "templateMissing": "Vorlagentext noch nicht freigegeben (mit den BMF-Mustern vergleichen).",
     "feesOk": "Bestätigungen für Mitgliedsbeiträge möglich.",
     "feesOff": "Bestätigungen für Mitgliedsbeiträge deaktiviert (membershipFeesDeductible = false; § 10b Abs. 1 Satz 8 EStG)."
+  },
+  "access": {
+    "accounting": "Bucht Spenden als Einnahmen und storniert sie.",
+    "members": "Liest Mitgliedsanschrift und Beitragszahlungen für Zuwendungsbestätigungen.",
+    "organization": "Verwendet Vereinsdaten in Zuwendungsbestätigungen."
   }
 }

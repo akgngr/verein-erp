@@ -525,5 +525,9 @@
       "message": "{count} Sitzungsaufgaben sind überfällig.",
       "action": "Überfällige Aufgaben anzeigen"
     }
+  },
+  "access": {
+    "members": "Liest die Mitgliederliste, um Teilnehmende hinzuzufügen.",
+    "organization": "Verwendet den Vereinsbriefkopf im Protokoll-PDF."
   }
 }

@@ -113,6 +113,7 @@ export const ${perm} = definePermissions("${key}", {
   SECRETARY: ["view", "create", "update"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TEACHER: [],
   VIEWER: ["view"],
 });
 `;

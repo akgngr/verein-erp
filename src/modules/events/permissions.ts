@@ -6,5 +6,6 @@ export const eventsPermissions = definePermissions("events", {
   SECRETARY: ["view", "create", "update"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TEACHER: [],
   VIEWER: ["view"],
 })

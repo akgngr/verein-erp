@@ -37,7 +37,9 @@ export default async function RootLayout({
           dangerouslySetInnerHTML={{ __html: THEME_INIT_SCRIPT }}
         />
       </head>
-      <body className="min-h-dvh antialiased">
+      {/* Tarayıcı eklentileri (yazım asistanları vb.) body'ye öznitelik ekler (örn. data-writer-injected);
+          yalnızca body'nin kendi özniteliklerindeki bu farkı yok sayar, alt ağaç denetlenmeye devam eder. */}
+      <body className="min-h-dvh antialiased" suppressHydrationWarning>
         <NextIntlClientProvider>
           <Providers>{children}</Providers>
         </NextIntlClientProvider>

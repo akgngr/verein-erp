@@ -91,6 +91,20 @@ export async function listActiveUserOptions(): Promise<{ id: string; label: stri
   return users.map((dbUser) => ({ id: dbUser.id, label: dbUser.name }));
 }
 
+/**
+ * Başka modüllerde kopyası tutulan kullanıcı bilgilerini tazelemek için (ör. kurs öğretmeni).
+ * Yalnızca ad, e-posta ve durum döner; passwordHash ASLA seçilmez.
+ */
+export async function getUserProfiles(
+  ids: string[],
+): Promise<{ id: string; name: string; email: string; isActive: boolean }[]> {
+  if (ids.length === 0) return [];
+  return getDb().user.findMany({
+    where: { id: { in: ids } },
+    select: { id: true, name: true, email: true, isActive: true },
+  });
+}
+
 export type ActionAuditFn = (args: {
   action: string;
   entity: string;

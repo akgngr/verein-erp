@@ -6,5 +6,6 @@ export const mailPermissions = definePermissions("mail", {
   SECRETARY: [],
   TREASURER: [],
   AUDITOR: ["view"],
+  TEACHER: [],
   VIEWER: [],
 });

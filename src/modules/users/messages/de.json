@@ -124,6 +124,11 @@
         "label": "Leser",
         "shortDesc": "Darf grundlegende Schriftgut- und Sitzungsdaten einsehen.",
         "legalContext": "Keine Änderungsrechte und kein Einblick in Finanzdaten."
+      },
+      "TEACHER": {
+        "label": "Lehrkraft (Öğretmen)",
+        "shortDesc": "Nur eigene Kurse sowie Anwesenheit, Noten und Lernfortschritt der eigenen Schüler.",
+        "legalContext": "Kein Zugriff auf Kursgebühren und Vereinsdaten; Schülerdaten werden gemäß DSGVO nur zu Unterrichtszwecken verarbeitet."
       }
     },
     "modules": {

@@ -1,0 +1,7 @@
+// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
+// Kaynak: src/modules/progress/routes/[courseId]/page.tsx
+import { withModuleGate } from "@/modules/system/server";
+import Page from "@/modules/progress/routes/[courseId]/page";
+
+export * from "@/modules/progress/routes/[courseId]/page";
+export default withModuleGate("progress", Page);

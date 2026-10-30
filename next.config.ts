@@ -55,6 +55,7 @@ const nextConfig: NextConfig = {
     // KARAR (Faz 2, 9. bölüm): tutanak PDF fontları rota çıktısına ayrıca dahil
     // edilir; @react-pdf/renderer dosyayı process.cwd() üzerinden okur.
     "/api/meetings/[id]/minutes-pdf": ["./src/modules/meetings/assets/fonts/**"],
+    "/api/progress/report": ["./src/shared/pdf/fonts/**"],
   },
   // KARAR (Faz 2, 9. bölüm): @react-pdf/renderer Next bundler'ıyla sorun
   // çıkarabildiği için sunucu paketinin dışında tutulur (serverExternalPackages).

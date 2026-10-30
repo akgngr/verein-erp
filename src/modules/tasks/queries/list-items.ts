@@ -3,6 +3,8 @@ import "server-only";
 import type { Prisma } from "@prisma/client";
 
 import { getDb } from "@/shared/db";
+import { listMeetingOptions } from "@/modules/meetings/server";
+import { findMemberIdsByEmail, listMemberOptions } from "@/modules/members/server";
 import type { ListParams, ListResult } from "@/shared/list-params";
 
 import { TASK_PRIORITY_VALUES, TASK_STATUS_VALUES } from "../constants";
@@ -60,12 +62,7 @@ export async function buildTaskWhere(
 
   // "Bana atananlar" filtresi: oturum kullanıcısına veya kullanıcının e-postasıyla eşleşen üyeye atanmışlar.
   if (params.filters.mine === "1" && currentUser) {
-    const db = getDb();
-    const userMembers = await db.member.findMany({
-      where: { email: currentUser.email, deletedAt: null },
-      select: { id: true },
-    });
-    const candidateIds = [currentUser.id, ...userMembers.map((m) => m.id)];
+    const candidateIds = [currentUser.id, ...(await findMemberIdsByEmail(currentUser.email))];
     conditions.push({
       OR: [
         { memberId: { in: candidateIds } },
@@ -109,12 +106,8 @@ export async function listTasks(
   const meetingIds = Array.from(new Set(rows.map((r) => r.meetingId).filter((id): id is string => Boolean(id))));
   const meetingsMap = new Map<string, string>();
   if (meetingIds.length > 0) {
-    const meetings = await db.meeting.findMany({
-      where: { id: { in: meetingIds } },
-      select: { id: true, meetingNumber: true, title: true },
-    });
-    for (const m of meetings) {
-      meetingsMap.set(m.id, `${m.meetingNumber} - ${m.title}`);
+    for (const meeting of await listMeetingOptions({ ids: meetingIds })) {
+      meetingsMap.set(meeting.id, meeting.label);
     }
   }
 
@@ -150,13 +143,8 @@ export async function getTask(id: string): Promise<TasksRow | null> {
 
   let meetingLabel: string | null = null;
   if (r.meetingId) {
-    const meeting = await db.meeting.findUnique({
-      where: { id: r.meetingId },
-      select: { meetingNumber: true, title: true },
-    });
-    if (meeting) {
-      meetingLabel = `${meeting.meetingNumber} - ${meeting.title}`;
-    }
+    const [meeting] = await listMeetingOptions({ ids: [r.meetingId] });
+    meetingLabel = meeting?.label ?? null;
   }
 
   const today = berlinToday();
@@ -187,30 +175,13 @@ export async function getTaskFormOptions(): Promise<{
   memberOptions: MemberOption[];
   meetingOptions: MeetingOption[];
 }> {
-  const db = getDb();
-
-  const [members, meetings] = await Promise.all([
-    db.member.findMany({
-      where: { deletedAt: null },
-      select: { id: true, firstName: true, lastName: true, membershipNumber: true },
-      orderBy: [{ firstName: "asc" }, { lastName: "asc" }],
-    }),
-    db.meeting.findMany({
-      where: { deletedAt: null },
-      select: { id: true, meetingNumber: true, title: true },
-      orderBy: { meetingDate: "desc" },
-      take: 100,
-    }),
-  ]);
+  const [members, meetings] = await Promise.all([listMemberOptions(), listMeetingOptions()]);
 
   return {
-    memberOptions: members.map((m) => ({
-      id: m.id,
-      label: `${m.firstName} ${m.lastName} (${m.membershipNumber})`,
+    memberOptions: members.map((member) => ({
+      id: member.id,
+      label: `${member.label} (${member.membershipNumber})`,
     })),
-    meetingOptions: meetings.map((m) => ({
-      id: m.id,
-      label: `${m.meetingNumber} - ${m.title}`,
-    })),
+    meetingOptions: meetings,
   };
 }

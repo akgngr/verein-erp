@@ -62,6 +62,37 @@
     "notFound": "Modül bulunamadı.",
     "coreCannotDisable": "Çekirdek sistem modülleri devre dışı bırakılamaz.",
     "onlyExtensionsDeletable": "Yalnızca harici geliştirici eklentileri (EXTENSION) silinebilir. Çekirdek ve resmi modüller silinemez.",
-    "deleteFailed": "Modül silinirken hata oluştu."
+    "deleteFailed": "Modül silinirken hata oluştu.",
+    "noAccessRequested": "Bu modül başka modüllere erişim istemiyor.",
+    "accessNotApproved": "Önce modülün istediği erişime izin verin."
+  },
+  "access": {
+    "pending": "İzin bekliyor",
+    "approved": "Erişim onaylı",
+    "review": "İncele ve izin ver",
+    "revoke": "İzni geri al",
+    "title": "{label} modülü erişim izni istiyor",
+    "intro": "{label} modülü çalışmak için aşağıdaki modüllerin verilerine erişmek istiyor. İzin vermezseniz modül kullanılamaz (menüde görünmez, sayfaları ve API'leri kapalı kalır).",
+    "note": "İzin, modülün şu anki erişim listesi içindir. Modül güncellenip yeni erişim isterse yeniden onayınız istenir. İzni istediğiniz zaman geri alabilirsiniz.",
+    "deny": "Vazgeç",
+    "allow": "İzin ver ve etkinleştir",
+    "approvedToast": "{label} için erişim izni verildi ve modül etkinleştirildi.",
+    "revokedToast": "{label} için erişim izni geri alındı; modül kullanılamaz.",
+    "op": {
+      "read": "okuma",
+      "write": "yazma",
+      "delete": "silme"
+    }
+  },
+  "gate": {
+    "manage": "Modül yönetimine git",
+    "inactive": {
+      "title": "Bu modül pasif",
+      "description": "Modül yönetiminden etkinleştirilene kadar sayfaları ve verileri kullanılamaz."
+    },
+    "needsApproval": {
+      "title": "Bu modül erişim izni bekliyor",
+      "description": "Modül başka modüllerin verilerine erişmek istiyor. Yönetici Modül Yönetimi'nden izin verene kadar kullanılamaz."
+    }
   }
 }

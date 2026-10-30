@@ -1,0 +1,85 @@
+// Öğrenci takibi modülü: yoklama, sınav/not, gelişim notları ve veli raporu.
+// KARAR: Kurs, oturum ve kayıt bilgisi courses modülündedir; burada yalnızca yumuşak
+// referanslar (courseId, sessionId, enrollmentId) tutulur. Öğretmen yalnızca kendi
+// kurslarının kayıtlarına yazabilir (courses public API kapsamı).
+
+enum ProgressAttendanceStatus {
+  PRESENT
+  ABSENT
+  EXCUSED
+  LATE
+}
+
+enum ProgressAssessmentType {
+  EXAM
+  HOMEWORK
+  ORAL
+  PROJECT
+  OTHER
+}
+
+model ProgressAttendance {
+  id              String                   @id @default(cuid())
+  courseId        String
+  sessionId       String
+  enrollmentId    String
+  status          ProgressAttendanceStatus
+  note            String?
+  recordedById    String
+  recordedByLabel String
+  updatedAt       DateTime                 @updatedAt
+
+  @@unique([sessionId, enrollmentId])
+  @@index([courseId])
+  @@index([enrollmentId])
+  @@map("progress_attendance")
+}
+
+model ProgressNote {
+  id           String   @id @default(cuid())
+  courseId     String
+  enrollmentId String
+  date         DateTime @db.Date
+  rating       Int? // 1 (zayıf) – 5 (çok iyi)
+  text         String
+  goals        String?
+  authorId     String
+  authorLabel  String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@index([enrollmentId, date])
+  @@map("progress_notes")
+}
+
+model ProgressAssessment {
+  id        String                 @id @default(cuid())
+  courseId  String
+  title     String
+  date      DateTime               @db.Date
+  type      ProgressAssessmentType
+  maxPoints Decimal?               @db.Decimal(7, 2)
+  createdAt DateTime               @default(now())
+  updatedAt DateTime               @updatedAt
+
+  grades ProgressGrade[]
+
+  @@index([courseId, date])
+  @@map("progress_assessments")
+}
+
+model ProgressGrade {
+  id           String   @id @default(cuid())
+  assessmentId String
+  enrollmentId String
+  points       Decimal? @db.Decimal(7, 2)
+  grade        String? // Almanya not sistemi: "1", "2-", "3+" …
+  comment      String?
+  updatedAt    DateTime @updatedAt
+
+  assessment ProgressAssessment @relation(fields: [assessmentId], references: [id], onDelete: Cascade)
+
+  @@unique([assessmentId, enrollmentId])
+  @@index([enrollmentId])
+  @@map("progress_grades")
+}

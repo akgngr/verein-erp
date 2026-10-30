@@ -4,6 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import {
   AUTO_ROUTE_BANNER,
+  GENERATED_PAGES_DIR,
   resolveRouteSegment,
   segmentConfig,
   syncModuleRoutes,
@@ -13,8 +14,7 @@ describe("Module Route Synchronizer", () => {
   test("syncModuleRoutes connects module pages to dashboard routes", () => {
     const dummyModuleDir = path.join(process.cwd(), "src", "modules", "temp-dummy-mod");
     const dummyPage = path.join(dummyModuleDir, "page.tsx");
-    const dashboardDir = path.join(process.cwd(), "src", "app", "(dashboard)");
-    const expectedBridge = path.join(dashboardDir, "temp-dummy-mod", "page.tsx");
+    const expectedBridge = path.join(GENERATED_PAGES_DIR, "temp-dummy-mod", "page.tsx");
 
     try {
       fs.mkdirSync(dummyModuleDir, { recursive: true });
@@ -27,24 +27,21 @@ describe("Module Route Synchronizer", () => {
       const content = fs.readFileSync(expectedBridge, "utf8");
       assert.ok(content.includes(AUTO_ROUTE_BANNER), "Banner içermelidir");
       assert.ok(
-        content.includes('export { default } from "@/modules/temp-dummy-mod/page";') &&
+        content.includes('import Page from "@/modules/temp-dummy-mod/page";') &&
+          content.includes('export default withModuleGate("temp-dummy-mod", Page);') &&
           content.includes('export * from "@/modules/temp-dummy-mod/page";'),
-        "varsayılan bileşen ve tüm dışa aktarımlar (metadata, generateMetadata) köprülenmelidir",
+        "çekirdek olmayan modülün sayfası erişim kapısıyla sarılmalı; tüm dışa aktarımlar (generateMetadata) köprülenmelidir",
       );
     } finally {
-      if (fs.existsSync(expectedBridge)) {
-        fs.unlinkSync(expectedBridge);
-      }
-      const bridgeDir = path.dirname(expectedBridge);
-      if (fs.existsSync(bridgeDir)) {
-        fs.rmdirSync(bridgeDir);
-      }
       if (fs.existsSync(dummyPage)) {
         fs.unlinkSync(dummyPage);
       }
       if (fs.existsSync(dummyModuleDir)) {
         fs.rmdirSync(dummyModuleDir);
       }
+      // Kaynak silindi: yeniden senkronda klasör temiz kurulur, köprü kalmaz.
+      syncModuleRoutes();
+      assert.ok(!fs.existsSync(expectedBridge), "kaynağı silinen köprü temiz kurulumda kalkmalıdır");
     }
   });
 

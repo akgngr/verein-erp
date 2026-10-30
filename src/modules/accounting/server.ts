@@ -25,6 +25,7 @@ export {
   getDonationBookingTargets,
   donationAccountKeyFor,
   listActiveCategoryOptions,
+  getPaymentAccountTargets,
   type SourcedBookingInput,
 } from "./services/sourced-bookings";
 export { createAccountAction, updateAccountAction } from "./actions/account-actions";

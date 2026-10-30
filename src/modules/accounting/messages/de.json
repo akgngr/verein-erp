@@ -459,7 +459,8 @@
     "sourceType": {
       "MEMBER_PAYMENT": "Mitgliedsbeitrag (automatisch)",
       "DONATION": "Spende (automatisch)",
-      "DONATION_WAIVER": "Aufwandsspende – Aufwand (automatisch)"
+      "DONATION_WAIVER": "Aufwandsspende – Aufwand (automatisch)",
+      "COURSE_FEE": "Kursgebühr (automatisch)"
     }
   },
   "export": {
@@ -512,5 +513,9 @@
       "_closing": "Endbestand",
       "_noAccount": "Kein Konto ausgewählt."
     }
+  },
+  "access": {
+    "members": "Liest Mitgliedsbeitragszahlungen, um sie in die Buchhaltung zu übernehmen.",
+    "organization": "Verwendet den Vereinsbriefkopf in PDF-Berichten."
   }
 }

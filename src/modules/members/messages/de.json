@@ -472,5 +472,8 @@
       "open": "Offen",
       "overdue": "Überfällig"
     }
+  },
+  "access": {
+    "organization": "Verwendet den Vereinsbriefkopf in Quittungen und Dokumenten."
   }
 }

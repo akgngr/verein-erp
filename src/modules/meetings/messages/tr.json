@@ -525,5 +525,9 @@
       "message": "Termini geçmiş {count} toplantı görevi var.",
       "action": "Geciken görevleri gör"
     }
+  },
+  "access": {
+    "members": "Toplantıya katılımcı eklemek için üye listesini okur.",
+    "organization": "Tutanak PDF'inde dernek antetini kullanır."
   }
 }
