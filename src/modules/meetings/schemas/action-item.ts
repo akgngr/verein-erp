@@ -2,8 +2,8 @@ import { z } from "zod";
 
 /**
  * Görev (aksiyon maddesi) şemaları (5. bölüm md. 10 ve 12).
- * KARAR: Sorumlu YA aktif kullanıcı (assigneeId + assigneeLabel) YA serbest
- * metin ad (assigneeId = null) YA hiçbiri olabilir.
+ * KARAR: Sorumlu YA toplantının bir katılımcısı (assigneeAttendeeId) YA dışarıdan
+ * biri (ad zorunlu; e-posta ve telefon isteğe bağlı) YA hiçbiri olabilir.
  */
 
 function emptyToNull<T extends z.ZodType>(schema: T) {
@@ -21,19 +21,33 @@ const baseFields = {
     .trim()
     .min(3, "meetings.validation.taskMin")
     .max(1000, "meetings.validation.taskMax"),
-  assigneeId: emptyToNull(z.string().trim().min(1).nullable()),
+  assigneeAttendeeId: emptyToNull(z.string().trim().min(1).nullable()),
   assigneeName: emptyToNull(
     z.string().trim().min(2, "meetings.validation.assigneeMin").max(120, "meetings.validation.assigneeMax").nullable(),
   ),
+  assigneeEmail: emptyToNull(
+    z.string().trim().pipe(z.email("validation.emailInvalid").max(200)).nullable(),
+  ),
+  assigneePhone: emptyToNull(z.string().trim().max(40, "meetings.validation.assigneePhoneMax").nullable()),
   dueDate: emptyToNull(
     z.string().trim().regex(DATE_ONLY, "meetings.validation.dueDateInvalid").nullable(),
   ),
   decisionId: emptyToNull(z.string().trim().min(1).nullable()),
 };
 
-export const actionItemAddSchema = z.object({ meetingId: z.string().trim().min(1), ...baseFields });
+/** Dışarıdan sorumlunun iletişim bilgisi adı olmadan girilemez. */
+function contactNeedsName(value: { assigneeAttendeeId: string | null; assigneeName: string | null; assigneeEmail: string | null; assigneePhone: string | null }) {
+  return value.assigneeAttendeeId !== null || value.assigneeName !== null || (!value.assigneeEmail && !value.assigneePhone);
+}
+const contactNeedsNameIssue = { message: "meetings.validation.assigneeNameRequired", path: ["assigneeName"] };
 
-export const actionItemUpdateSchema = z.object({ id: z.string().trim().min(1), ...baseFields });
+export const actionItemAddSchema = z
+  .object({ meetingId: z.string().trim().min(1), ...baseFields })
+  .refine(contactNeedsName, contactNeedsNameIssue);
+
+export const actionItemUpdateSchema = z
+  .object({ id: z.string().trim().min(1), ...baseFields })
+  .refine(contactNeedsName, contactNeedsNameIssue);
 
 export const actionItemSetStatusSchema = z.object({
   id: z.string().trim().min(1),

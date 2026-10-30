@@ -22,26 +22,30 @@ import { addActionItemAction, updateActionItemAction } from "../actions/action-i
 import type { DecisionItem } from "../types";
 
 /**
- * Görev ekleme/düzenleme penceresi (7.3 Görevler): açıklama, sorumlu (kullanıcı
- * YA serbest metin YA yok), son tarih, bağlı karar. KARAR: kullanıcı seçilirse
- * serbest metin devre dışı kalır ve tersi (5. bölüm md. 10).
+ * Görev ekleme/düzenleme penceresi (7.3 Görevler): açıklama, sorumlu, son tarih, bağlı karar.
+ * KARAR: Sorumlu yalnızca toplantının katılımcılarından seçilir; listede olmayan biri için
+ * "Dışarıdan sorumlu" seçilip ad (zorunlu), e-posta ve telefon elle girilir.
  */
+const EXTERNAL = "__external";
 export function ActionItemModal({
   meetingId,
   decisions,
-  userOptions,
+  attendeeOptions,
   item,
   isOpen,
   onOpenChange,
 }: {
   meetingId: string;
   decisions: Pick<DecisionItem, "id" | "decisionNumber">[];
-  userOptions: { id: string; label: string }[];
+  attendeeOptions: { id: string; userId: string | null; label: string }[];
   item: {
     id: string;
     description: string;
     assigneeId: string | null;
     assigneeLabel: string | null;
+    assigneeAttendeeId: string | null;
+    assigneeEmail: string | null;
+    assigneePhone: string | null;
     dueDate: Date | null;
     decisionNumber: string | null;
     decisionId?: string | null;
@@ -53,12 +57,18 @@ export function ActionItemModal({
   const t = useTranslations("meetings.tasks");
   const router = useRouter();
   const [description, setDescription] = useState(item?.description ?? "");
-  const [assigneeId, setAssigneeId] = useState<Set<string>>(
-    new Set(item?.assigneeId ? [item.assigneeId] : []),
+  // Eski kayıtlar: katılımcı kimliği yoksa aynı kullanıcıya ait katılımcı aranır; o da yoksa
+  // kayıttaki ad "dışarıdan sorumlu" olarak gelir.
+  const initialAttendee =
+    item?.assigneeAttendeeId ??
+    (item?.assigneeId ? attendeeOptions.find((option) => option.userId === item.assigneeId)?.id : undefined);
+  const [assignee, setAssignee] = useState<string>(
+    initialAttendee ?? (item?.assigneeLabel ? EXTERNAL : ""),
   );
-  const [assigneeName, setAssigneeName] = useState(
-    !item?.assigneeId && item?.assigneeLabel ? item.assigneeLabel : "",
-  );
+  const [assigneeName, setAssigneeName] = useState(!initialAttendee ? (item?.assigneeLabel ?? "") : "");
+  const [assigneeEmail, setAssigneeEmail] = useState(item?.assigneeEmail ?? "");
+  const [assigneePhone, setAssigneePhone] = useState(item?.assigneePhone ?? "");
+  const isExternal = assignee === EXTERNAL;
   const [dueDate, setDueDate] = useState(item?.dueDate ? item.dueDate.toISOString().slice(0, 10) : "");
   const [decisionId, setDecisionId] = useState<Set<string>>(
     new Set(item?.decisionId ? [item.decisionId] : []),
@@ -73,9 +83,10 @@ export function ActionItemModal({
     setError(null);
     const common = {
       description,
-      assigneeId: Array.from(assigneeId)[0] ?? null,
-      assigneeName:
-        Array.from(assigneeId)[0] == null && assigneeName.trim() !== "" ? assigneeName.trim() : null,
+      assigneeAttendeeId: assignee && !isExternal ? assignee : null,
+      assigneeName: isExternal ? assigneeName : null,
+      assigneeEmail: isExternal ? assigneeEmail : null,
+      assigneePhone: isExternal ? assigneePhone : null,
       dueDate: dueDate || null,
       decisionId: Array.from(decisionId)[0] ?? null,
     };
@@ -92,8 +103,6 @@ export function ActionItemModal({
     router.refresh();
   };
 
-  const selectedUserId = Array.from(assigneeId)[0];
-
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange} key={key} size="lg">
       <ModalContent>
@@ -109,33 +118,55 @@ export function ActionItemModal({
             maxLength={1000}
             description={t("descriptionHelp")}
           />
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <Select
-              label={t("assigneeUserLabel")}
-              labelPlacement="outside"
-              selectedKeys={assigneeId}
-              onSelectionChange={(keys) => setAssigneeId(new Set(keys as Set<string>))}
-              description={t("assigneeUserHelp")}
-            >
-              {[
-                { value: "", label: t("noAssigneeOption") },
-                ...userOptions.map((option) => ({ value: option.id, label: option.label })),
-              ].map((option) => (
-                <SelectItem key={option.value} textValue={option.label}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </Select>
-            <Input
-              label={t("assigneeFreeLabel")}
-              labelPlacement="outside"
-              value={selectedUserId ? "" : assigneeName}
-              onValueChange={setAssigneeName}
-              isDisabled={Boolean(selectedUserId)}
-              maxLength={120}
-              description={t("assigneeFreeHelp")}
-            />
-          </div>
+          <Select
+            label={t("assigneeLabel")}
+            labelPlacement="outside"
+            placeholder={t("noAssigneeOption")}
+            selectedKeys={assignee ? new Set([assignee]) : new Set<string>()}
+            onSelectionChange={(keys) => setAssignee(Array.from(keys as Set<string>)[0] ?? "")}
+            description={attendeeOptions.length === 0 ? t("assigneeNoAttendees") : t("assigneeHelp")}
+          >
+            {[
+              { value: "", label: t("noAssigneeOption") },
+              ...attendeeOptions.map((option) => ({ value: option.id, label: option.label })),
+              { value: EXTERNAL, label: t("assigneeExternalOption") },
+            ].map((option) => (
+              <SelectItem key={option.value} textValue={option.label}>
+                {option.label}
+              </SelectItem>
+            ))}
+          </Select>
+          {isExternal ? (
+            <div className="grid grid-cols-1 gap-3 rounded-medium border border-default-200 p-3 sm:grid-cols-3">
+              <Input
+                label={t("externalName")}
+                labelPlacement="outside"
+                placeholder=" "
+                value={assigneeName}
+                onValueChange={setAssigneeName}
+                isRequired
+                maxLength={120}
+              />
+              <Input
+                type="email"
+                label={t("externalEmail")}
+                labelPlacement="outside"
+                placeholder=" "
+                value={assigneeEmail}
+                onValueChange={setAssigneeEmail}
+                maxLength={200}
+              />
+              <Input
+                type="tel"
+                label={t("externalPhone")}
+                labelPlacement="outside"
+                placeholder=" "
+                value={assigneePhone}
+                onValueChange={setAssigneePhone}
+                maxLength={40}
+              />
+            </div>
+          ) : null}
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             <Input
               type="date"
@@ -173,7 +204,7 @@ export function ActionItemModal({
             color="primary"
             isLoading={busy}
             onPress={submit}
-            isDisabled={description.trim().length < 3}
+            isDisabled={description.trim().length < 3 || (isExternal && assigneeName.trim().length < 2)}
           >
             {tCommon("save")}
           </Button>

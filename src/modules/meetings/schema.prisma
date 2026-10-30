@@ -161,7 +161,10 @@ model ActionItem {
   decision        MeetingDecision? @relation(fields: [decisionId], references: [id], onDelete: SetNull)
   description     String
   assigneeId      String? // FK DEĞİL
-  assigneeLabel   String? // kullanıcı etiketi anlık görüntüsü VEYA serbest metin ad
+  assigneeLabel   String? // katılımcı adı anlık görüntüsü VEYA dışarıdan sorumlunun adı
+  assigneeAttendeeId String? // FK DEĞİL; sorumlu toplantı katılımcısıysa (assigneeId = katılımcının kullanıcısı)
+  assigneeEmail   String? // yalnızca dışarıdan sorumlu
+  assigneePhone   String? // yalnızca dışarıdan sorumlu
   dueDate         DateTime?        @db.Date
   status          ActionItemStatus @default(OPEN)
   completedAt     DateTime?

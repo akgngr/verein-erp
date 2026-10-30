@@ -64,6 +64,11 @@ export type ActionItemRow = {
   description: string;
   assigneeId: string | null;
   assigneeLabel: string | null;
+  /** Sorumlu toplantı katılımcısıysa katılımcı kimliği. */
+  assigneeAttendeeId: string | null;
+  /** Yalnızca dışarıdan sorumlu için iletişim bilgileri. */
+  assigneeEmail: string | null;
+  assigneePhone: string | null;
   dueDate: Date | null;
   status: ActionItemStatus;
   decisionId: string | null;

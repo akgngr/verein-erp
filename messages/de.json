@@ -2856,17 +2856,20 @@
       "listEmpty": "Keine Aufgaben gefunden.",
       "listAria": "Aufgabenliste",
       "descriptionHelp": "Höchstens 1000 Zeichen.",
-      "assigneeUserLabel": "Verantwortlich (Benutzer)",
-      "assigneeUserHelp": "Bei Auswahl wird der Freitext ignoriert.",
-      "assigneeFreeLabel": "Verantwortlich (Freitext)",
-      "assigneeFreeHelp": "Name einer externen Person möglich.",
       "noAssigneeOption": "Nicht zugewiesen",
       "noDecision": "Keine Verknüpfung",
       "overdueShort": " (überfällig)",
       "unassigned": "Niemand zugewiesen",
       "decisionLine": "Beschluss: {number}",
       "deleteNamedMessage": "Die Aufgabe „{description}“ wird gelöscht. Fortfahren?",
-      "listDescription": "Aufgaben aus allen Sitzungen; standardmäßig werden nur offene Aufgaben angezeigt."
+      "listDescription": "Aufgaben aus allen Sitzungen; standardmäßig werden nur offene Aufgaben angezeigt.",
+      "assigneeHelp": "Wählen Sie eine teilnehmende Person der Sitzung oder geben Sie mit „Externe verantwortliche Person“ jemanden ein, der nicht in der Liste steht.",
+      "assigneeNoAttendees": "Diese Sitzung hat noch keine Teilnehmenden; wählen Sie „Externe verantwortliche Person“ oder fügen Sie zuerst Teilnehmende hinzu.",
+      "assigneeExternalOption": "Externe verantwortliche Person hinzufügen…",
+      "externalName": "Vor- und Nachname",
+      "externalEmail": "E-Mail",
+      "externalPhone": "Telefon",
+      "externalBadge": "Extern"
     },
     "discussion": {
       "title": "Diskussionen",
@@ -2920,7 +2923,6 @@
     "errors": {
       "meetingNotFound": "Sitzung nicht gefunden.",
       "decisionNotFound": "Beschluss nicht gefunden.",
-      "assigneeNotFound": "Der verantwortliche Benutzer wurde nicht gefunden oder ist deaktiviert.",
       "taskNotFound": "Aufgabe nicht gefunden.",
       "agendaNotFound": "Tagesordnungspunkt nicht gefunden.",
       "agendaCannotMove": "Dieser Punkt kann nicht in diese Richtung verschoben werden.",
@@ -2943,7 +2945,8 @@
       "meetingNotFound2": "Sitzung nicht gefunden.",
       "notEditable": "Die Sitzung kann nicht bearbeitet werden.",
       "memberNotFound": "Das ausgewählte Mitglied wurde nicht gefunden oder ist ausgetreten.",
-      "membersAlreadyAdded": "Die ausgewählten Mitglieder sind bereits in dieser Sitzung."
+      "membersAlreadyAdded": "Die ausgewählten Mitglieder sind bereits in dieser Sitzung.",
+      "assigneeNotAttendee": "Die ausgewählte verantwortliche Person nimmt nicht an dieser Sitzung teil."
     },
     "validation": {
       "taskMin": "Die Aufgabenbeschreibung muss mindestens 3 Zeichen lang sein.",
@@ -2976,7 +2979,9 @@
       "endNeedsStart": "Für eine Endzeit ist eine Startzeit erforderlich.",
       "endAfterStart": "Die Endzeit muss nach der Startzeit liegen.",
       "quorumInt": "Die Beschlussfähigkeit muss eine ganze Zahl sein.",
-      "selectMember": "Wählen Sie mindestens ein Mitglied aus."
+      "selectMember": "Wählen Sie mindestens ein Mitglied aus.",
+      "assigneeNameRequired": "Für eine externe verantwortliche Person ist der Name erforderlich.",
+      "assigneePhoneMax": "Die Telefonnummer darf höchstens 40 Zeichen lang sein."
     },
     "meta": {
       "list": "Sitzungen",
