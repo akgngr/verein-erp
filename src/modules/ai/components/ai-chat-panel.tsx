@@ -1,18 +1,32 @@
 "use client";
 
 import { addToast, Button, Textarea } from "@heroui/react";
-import { ListPlus, Lock, Send, ShieldCheck, Sparkles, Trash2, X } from "lucide-react";
+import {
+  ListPlus,
+  Lock,
+  PanelRight,
+  Send,
+  ShieldCheck,
+  Sparkles,
+  Trash2,
+  X,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Fragment, useEffect, useRef, useState, type ReactNode } from "react";
 
 import type { ActionResult } from "@/shared/types/action";
+import { announceSidePanel } from "@/shared/components/side-panel-events";
 import { cn } from "@/shared/utils";
 
 import { acceptAiConsentAction } from "../actions/consent-actions";
 import type { AiProposal } from "../types";
 
-type Turn = { role: "user" | "assistant"; content: string; proposals?: AiProposal[] };
+type Turn = {
+  role: "user" | "assistant";
+  content: string;
+  proposals?: AiProposal[];
+};
 
 /** Satır içi biçim: **kalın** ve yalnızca uygulama içi [metin](/yol) bağlantıları (dış bağlantı çizilmez). */
 function inline(text: string): ReactNode[] {
@@ -22,7 +36,18 @@ function inline(text: string): ReactNode[] {
   for (const match of text.matchAll(pattern)) {
     if (match.index > last) parts.push(text.slice(last, match.index));
     if (match[1]) parts.push(<strong key={match.index}>{match[1]}</strong>);
-    else parts.push(<a key={match.index} href={match[3]} target="_blank" rel="noopener" className="font-medium text-primary underline">{match[2]}</a>);
+    else
+      parts.push(
+        <a
+          key={match.index}
+          href={match[3]}
+          target="_blank"
+          rel="noopener"
+          className="font-medium text-primary underline"
+        >
+          {match[2]}
+        </a>,
+      );
     last = match.index + match[0].length;
   }
   if (last < text.length) parts.push(text.slice(last));
@@ -36,7 +61,14 @@ function MessageBody({ text }: { text: string }) {
         const bullet = /^\s*[-*]\s+/.test(line);
         return (
           <Fragment key={index}>
-            {line.trim() === "" ? <span className="h-1" /> : <p className={cn("whitespace-pre-wrap", bullet && "pl-3")}>{bullet ? "• " : null}{inline(line.replace(/^\s*[-*]\s+/, "").replace(/^#+\s*/, ""))}</p>}
+            {line.trim() === "" ? (
+              <span className="h-1" />
+            ) : (
+              <p className={cn("whitespace-pre-wrap", bullet && "pl-3")}>
+                {bullet ? "• " : null}
+                {inline(line.replace(/^\s*[-*]\s+/, "").replace(/^#+\s*/, ""))}
+              </p>
+            )}
           </Fragment>
         );
       })}
@@ -52,7 +84,10 @@ export function AiChatPanel({
   consented,
   provider,
   createTask,
+  children,
 }: {
+  /** Uygulamanın içerik sütunu; asistan onu sarar. */
+  children: ReactNode;
   consented: boolean;
   /** Etkin sağlayıcı (null: yapılandırılmamış). Rıza bu sağlayıcıya verilir. */
   provider: "local" | "mistral" | "anthropic" | "openai" | null;
@@ -69,10 +104,16 @@ export function AiChatPanel({
   const [done, setDone] = useState<Set<string>>(new Set());
   const endRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => endRef.current?.scrollIntoView({ behavior: "smooth" }), [turns, busy]);
+  useEffect(
+    () => endRef.current?.scrollIntoView({ behavior: "smooth" }),
+    [turns, busy],
+  );
+  // Sohbet sütunu açılınca sol menü daralır, kapanınca eski hâline döner.
+  useEffect(() => announceSidePanel(open), [open]);
+  useEffect(() => () => announceSidePanel(false), []);
 
-  const send = async () => {
-    const content = draft.trim();
+  const send = async (text?: string) => {
+    const content = (text ?? draft).trim();
     if (!content || busy) return;
     const next = [...turns, { role: "user" as const, content }];
     setTurns(next);
@@ -82,9 +123,19 @@ export function AiChatPanel({
       const response = await fetch("/api/ai/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ turns: next.slice(-40).map(({ role, content: text }) => ({ role, content: text })) }),
+        body: JSON.stringify({
+          turns: next
+            .slice(-40)
+            .map(({ role, content: text }) => ({ role, content: text })),
+        }),
       });
-      const data = (await response.json()) as { ok: boolean; reply?: string; proposals?: AiProposal[]; error?: string; code?: string };
+      const data = (await response.json()) as {
+        ok: boolean;
+        reply?: string;
+        proposals?: AiProposal[];
+        error?: string;
+        code?: string;
+      };
       if (!data.ok) {
         addToast({ title: data.error ?? t("error"), color: "danger" });
         if (data.code === "consentRequired") router.refresh();
@@ -92,7 +143,14 @@ export function AiChatPanel({
         setDraft(content);
         return;
       }
-      setTurns([...next, { role: "assistant", content: data.reply || t("empty"), proposals: data.proposals }]);
+      setTurns([
+        ...next,
+        {
+          role: "assistant",
+          content: data.reply || t("empty"),
+          proposals: data.proposals,
+        },
+      ]);
     } catch {
       addToast({ title: t("error"), color: "danger" });
       setTurns(turns);
@@ -103,7 +161,13 @@ export function AiChatPanel({
   };
 
   const confirmTask = async (key: string, proposal: AiProposal) => {
-    const result = await createTask({ title: proposal.title, description: proposal.description, status: "OPEN", priority: proposal.priority, dueDate: proposal.dueDate });
+    const result = await createTask({
+      title: proposal.title,
+      description: proposal.description,
+      status: "OPEN",
+      priority: proposal.priority,
+      dueDate: proposal.dueDate,
+    });
     if (!result.ok) {
       addToast({ title: result.error, color: "danger" });
       return;
@@ -114,143 +178,276 @@ export function AiChatPanel({
 
   return (
     <>
-      {!open ? (
-        <Button
-          isIconOnly
-          radius="full"
-          color="primary"
-          size="lg"
-          aria-label={t("open")}
-          className="fixed bottom-5 right-5 z-40 shadow-lg"
-          onPress={() => setOpen(true)}
-        >
-          <Sparkles className="h-5 w-5" aria-hidden />
-        </Button>
-      ) : null}
-
-      <aside
-        aria-label={t("title")}
-        aria-hidden={!open}
-        className={cn(
-          "fixed inset-y-0 right-0 z-50 flex w-full max-w-[420px] flex-col border-l border-default-200 bg-background shadow-2xl transition-transform duration-200",
-          open ? "translate-x-0" : "pointer-events-none translate-x-full",
-        )}
-      >
-        <header className="flex items-center justify-between gap-2 border-b border-default-200 px-4 py-3">
-          <div className="flex items-center gap-2">
-            <Sparkles className="h-4 w-4 text-primary" aria-hidden />
-            <span className="text-small font-semibold">{t("title")}</span>
-          </div>
-          <div className="flex items-center gap-1">
-            {turns.length > 0 ? (
-              <Button isIconOnly size="sm" variant="light" aria-label={t("clear")} title={t("clear")} onPress={() => setTurns([])}>
-                <Trash2 className="h-4 w-4" aria-hidden />
-              </Button>
-            ) : null}
-            <Button isIconOnly size="sm" variant="light" aria-label={t("close")} onPress={() => setOpen(false)}>
-              <X className="h-4 w-4" aria-hidden />
-            </Button>
-          </div>
-        </header>
-
-        {!provider ? (
-          <div className="flex flex-1 flex-col items-center justify-center gap-2 p-6 text-center text-small text-default-500">
-            <Lock className="h-6 w-6" aria-hidden />
-            {t("notConfigured")}
-          </div>
-        ) : !consented ? (
-          <div className="flex flex-1 flex-col gap-3 overflow-y-auto p-4 text-small">
-            <div className="flex items-center gap-2 font-semibold"><ShieldCheck className="h-4 w-4 text-success" aria-hidden />{t("consent.title")}</div>
-            <p className="text-default-600">{t("consent.intro")}</p>
-            <ul className="flex list-disc flex-col gap-1.5 pl-5 text-default-600">
-              {(["noPersonal", "masking", "ownRights", "noStorage", "noChanges"] as const).map((key) => (
-                <li key={key}>{t(`consent.points.${key}`)}</li>
-              ))}
-              <li>{t("consent.points.provider", { provider: tProvider(`${provider}.name`), where: tProvider(`${provider}.where`) })}</li>
-              <li>{t("consent.points.revoke")}</li>
-            </ul>
-            <Button
-              color="primary"
-              isLoading={accepting}
-              onPress={async () => {
-                setAccepting(true);
-                const result = await acceptAiConsentAction();
-                setAccepting(false);
-                if (!result.ok) return void addToast({ title: result.error, color: "danger" });
-                router.refresh();
-              }}
-            >
-              {t("consent.accept")}
-            </Button>
-          </div>
-        ) : (
-          <>
-            <div className="flex flex-1 flex-col gap-3 overflow-y-auto p-4 text-small">
-              {turns.length === 0 ? (
-                <div className="flex flex-col gap-2 text-default-500">
-                  <p>{t("welcome")}</p>
-                  {(["q1", "q2", "q3", "q4"] as const).map((key) => (
-                    <button key={key} type="button" className="rounded-medium border border-default-200 px-3 py-2 text-left hover:bg-default-100" onClick={() => setDraft(t(`examples.${key}`))}>
-                      {t(`examples.${key}`)}
-                    </button>
-                  ))}
-                </div>
-              ) : null}
-              {turns.map((turn, index) => (
-                <div key={index} className={cn("flex flex-col gap-2", turn.role === "user" ? "items-end" : "items-start")}>
-                  <div className={cn("max-w-[90%] rounded-large px-3 py-2", turn.role === "user" ? "bg-primary text-primary-foreground" : "bg-default-100 text-foreground")}>
-                    {turn.role === "user" ? <p className="whitespace-pre-wrap">{turn.content}</p> : <MessageBody text={turn.content} />}
-                  </div>
-                  {turn.proposals?.map((proposal, position) => {
-                    const key = `${index}-${position}`;
-                    return (
-                      <div key={key} className="w-[90%] rounded-medium border border-primary-200 bg-primary-50/50 p-3 dark:border-primary-500/30 dark:bg-primary-500/10">
-                        <p className="text-tiny font-semibold uppercase text-primary">{t("proposal.task")}</p>
-                        <p className="font-medium">{proposal.title}</p>
-                        {proposal.description ? <p className="text-default-600">{proposal.description}</p> : null}
-                        <p className="text-tiny text-default-500">{[t(`proposal.priority.${proposal.priority}`), proposal.dueDate].filter(Boolean).join(" · ")}</p>
-                        <Button size="sm" color="primary" variant={done.has(key) ? "flat" : "solid"} className="mt-2" isDisabled={done.has(key)} startContent={<ListPlus className="h-4 w-4" aria-hidden />} onPress={() => confirmTask(key, proposal)}>
-                          {done.has(key) ? t("proposal.created") : t("proposal.confirm")}
-                        </Button>
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
-              {busy ? <p className="animate-pulse text-default-400">{t("thinking")}</p> : null}
-              <div ref={endRef} />
-            </div>
+      <div className="relative flex min-w-0 flex-1 flex-col">
+        {children}
+        {!open ? (
+          // Yüzen giriş çubuğu: içerik alanının altında ortada; gönderince sohbet sütunu açılır.
+          <div className="pointer-events-none sticky bottom-4 z-30 flex justify-center px-4">
             <form
-              className="flex flex-col gap-2 border-t border-default-200 p-3"
+              className="pointer-events-auto flex w-full max-w-xl items-center gap-2 rounded-full border border-default-200 bg-background/95 py-1.5 pl-2 pr-1.5 shadow-lg backdrop-blur"
               onSubmit={(event) => {
                 event.preventDefault();
-                void send();
+                if (!draft.trim()) return setOpen(true);
+                setOpen(true);
+                if (consented && provider) void send();
               }}
             >
-              <Textarea
+              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
+                <Sparkles className="h-4 w-4" aria-hidden />
+              </span>
+              <input
                 aria-label={t("input")}
-                placeholder={t("input")}
-                minRows={2}
-                maxRows={6}
+                placeholder={t("barPlaceholder")}
+                className="min-w-0 flex-1 bg-transparent text-small outline-none placeholder:text-default-400"
                 value={draft}
-                onValueChange={setDraft}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter" && !event.shiftKey) {
-                    event.preventDefault();
-                    void send();
-                  }
-                }}
+                onChange={(event) => setDraft(event.target.value)}
               />
-              <div className="flex items-center justify-between gap-2">
-                <span className="text-tiny text-default-400">{t("privacyNote")}</span>
-                <Button type="submit" size="sm" color="primary" isIconOnly aria-label={t("send")} isDisabled={!draft.trim() || busy}>
-                  <Send className="h-4 w-4" aria-hidden />
-                </Button>
-              </div>
+              <Button
+                type="submit"
+                isIconOnly
+                size="sm"
+                variant="light"
+                radius="full"
+                aria-label={t("send")}
+                isDisabled={!draft.trim()}
+              >
+                <Send className="h-4 w-4" aria-hidden />
+              </Button>
+              <span className="h-5 w-px bg-default-200" aria-hidden />
+              <Button
+                isIconOnly
+                size="sm"
+                variant="light"
+                radius="full"
+                aria-label={t("open")}
+                title={t("open")}
+                onPress={() => setOpen(true)}
+              >
+                <PanelRight className="h-4 w-4" aria-hidden />
+              </Button>
             </form>
-          </>
-        )}
-      </aside>
+          </div>
+        ) : null}
+      </div>
+
+      {/* Sohbet sütunu: masaüstünde içeriği sola iten sabit genişlikte sütun, mobilde tam ekran. */}
+      {open ? (
+        <aside
+          aria-label={t("title")}
+          className="fixed inset-0 z-50 flex flex-col bg-background md:sticky md:top-0 md:z-auto md:h-dvh md:w-[400px] md:shrink-0 md:border-l md:border-default-200"
+        >
+          <header className="flex items-center justify-between gap-2 border-b border-default-200 px-4 py-3">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-primary" aria-hidden />
+              <span className="text-small font-semibold">{t("title")}</span>
+            </div>
+            <div className="flex items-center gap-1">
+              {turns.length > 0 ? (
+                <Button
+                  isIconOnly
+                  size="sm"
+                  variant="light"
+                  aria-label={t("clear")}
+                  title={t("clear")}
+                  onPress={() => setTurns([])}
+                >
+                  <Trash2 className="h-4 w-4" aria-hidden />
+                </Button>
+              ) : null}
+              <Button
+                isIconOnly
+                size="sm"
+                variant="light"
+                aria-label={t("close")}
+                onPress={() => setOpen(false)}
+              >
+                <X className="h-4 w-4" aria-hidden />
+              </Button>
+            </div>
+          </header>
+
+          {!provider ? (
+            <div className="flex flex-1 flex-col items-center justify-center gap-2 p-6 text-center text-small text-default-500">
+              <Lock className="h-6 w-6" aria-hidden />
+              {t("notConfigured")}
+            </div>
+          ) : !consented ? (
+            <div className="flex flex-1 flex-col gap-3 overflow-y-auto p-4 text-small">
+              <div className="flex items-center gap-2 font-semibold">
+                <ShieldCheck className="h-4 w-4 text-success" aria-hidden />
+                {t("consent.title")}
+              </div>
+              <p className="text-default-600">{t("consent.intro")}</p>
+              <ul className="flex list-disc flex-col gap-1.5 pl-5 text-default-600">
+                {(
+                  [
+                    "noPersonal",
+                    "masking",
+                    "ownRights",
+                    "noStorage",
+                    "noChanges",
+                  ] as const
+                ).map((key) => (
+                  <li key={key}>{t(`consent.points.${key}`)}</li>
+                ))}
+                <li>
+                  {t("consent.points.provider", {
+                    provider: tProvider(`${provider}.name`),
+                    where: tProvider(`${provider}.where`),
+                  })}
+                </li>
+                <li>{t("consent.points.revoke")}</li>
+              </ul>
+              <Button
+                color="primary"
+                isLoading={accepting}
+                onPress={async () => {
+                  setAccepting(true);
+                  const result = await acceptAiConsentAction();
+                  setAccepting(false);
+                  if (!result.ok)
+                    return void addToast({
+                      title: result.error,
+                      color: "danger",
+                    });
+                  router.refresh();
+                }}
+              >
+                {t("consent.accept")}
+              </Button>
+            </div>
+          ) : (
+            <>
+              <div className="flex flex-1 flex-col gap-3 overflow-y-auto p-4 text-small">
+                {turns.length === 0 ? (
+                  <div className="flex flex-col gap-2 text-default-500">
+                    <p>{t("welcome")}</p>
+                    {(["q1", "q2", "q3", "q4"] as const).map((key) => (
+                      <button
+                        key={key}
+                        type="button"
+                        className="rounded-medium border border-default-200 px-3 py-2 text-left hover:bg-default-100"
+                        onClick={() => setDraft(t(`examples.${key}`))}
+                      >
+                        {t(`examples.${key}`)}
+                      </button>
+                    ))}
+                  </div>
+                ) : null}
+                {turns.map((turn, index) => (
+                  <div
+                    key={index}
+                    className={cn(
+                      "flex flex-col gap-2",
+                      turn.role === "user" ? "items-end" : "items-start",
+                    )}
+                  >
+                    <div
+                      className={cn(
+                        "max-w-[90%] rounded-large px-3 py-2",
+                        turn.role === "user"
+                          ? "bg-primary text-primary-foreground"
+                          : "bg-default-100 text-foreground",
+                      )}
+                    >
+                      {turn.role === "user" ? (
+                        <p className="whitespace-pre-wrap">{turn.content}</p>
+                      ) : (
+                        <MessageBody text={turn.content} />
+                      )}
+                    </div>
+                    {turn.proposals?.map((proposal, position) => {
+                      const key = `${index}-${position}`;
+                      return (
+                        <div
+                          key={key}
+                          className="w-[90%] rounded-medium border border-primary-200 bg-primary-50/50 p-3 dark:border-primary-500/30 dark:bg-primary-500/10"
+                        >
+                          <p className="text-tiny font-semibold uppercase text-primary">
+                            {t("proposal.task")}
+                          </p>
+                          <p className="font-medium">{proposal.title}</p>
+                          {proposal.description ? (
+                            <p className="text-default-600">
+                              {proposal.description}
+                            </p>
+                          ) : null}
+                          <p className="text-tiny text-default-500">
+                            {[
+                              t(`proposal.priority.${proposal.priority}`),
+                              proposal.dueDate,
+                            ]
+                              .filter(Boolean)
+                              .join(" · ")}
+                          </p>
+                          <Button
+                            size="sm"
+                            color="primary"
+                            variant={done.has(key) ? "flat" : "solid"}
+                            className="mt-2"
+                            isDisabled={done.has(key)}
+                            startContent={
+                              <ListPlus className="h-4 w-4" aria-hidden />
+                            }
+                            onPress={() => confirmTask(key, proposal)}
+                          >
+                            {done.has(key)
+                              ? t("proposal.created")
+                              : t("proposal.confirm")}
+                          </Button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                ))}
+                {busy ? (
+                  <p className="animate-pulse text-default-400">
+                    {t("thinking")}
+                  </p>
+                ) : null}
+                <div ref={endRef} />
+              </div>
+              <form
+                className="flex flex-col gap-2 border-t border-default-200 p-3"
+                onSubmit={(event) => {
+                  event.preventDefault();
+                  void send();
+                }}
+              >
+                <Textarea
+                  aria-label={t("input")}
+                  placeholder={t("input")}
+                  minRows={2}
+                  maxRows={6}
+                  value={draft}
+                  onValueChange={setDraft}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" && !event.shiftKey) {
+                      event.preventDefault();
+                      void send();
+                    }
+                  }}
+                />
+                <div className="flex items-center justify-between gap-2">
+                  <span className="text-tiny text-default-400">
+                    {t("privacyNote")}
+                  </span>
+                  <Button
+                    type="submit"
+                    size="sm"
+                    color="primary"
+                    isIconOnly
+                    aria-label={t("send")}
+                    isDisabled={!draft.trim() || busy}
+                  >
+                    <Send className="h-4 w-4" aria-hidden />
+                  </Button>
+                </div>
+              </form>
+            </>
+          )}
+        </aside>
+      ) : null}
     </>
   );
 }

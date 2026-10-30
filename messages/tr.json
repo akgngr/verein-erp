@@ -944,11 +944,13 @@
     },
     "errors": {
       "consentRequired": "Asistanı kullanmak için önce veri koruma bilgilendirmesini onaylayın.",
-      "notConfigured": "Asistan henüz yapılandırılmamış: yönetici bir yapay zekâ sağlayıcısı tanımlamalıdır.",
+      "notConfigured": "Asistan henüz yapılandırılmamış: yönetici Ayarlar → Yapay zekâ asistanı sayfasından bir sağlayıcı bağlamalıdır.",
       "rateLimited": "Çok fazla istek gönderildi; lütfen biraz bekleyin.",
       "invalidRequest": "Geçersiz istek.",
       "unavailable": "Asistan şu anda yanıt veremiyor; lütfen sonra tekrar deneyin.",
-      "providerNotReady": "Bu sağlayıcı yapılandırılmamış (anahtar/model eksik veya yerel adres özel ağda değil)."
+      "providerNotReady": "Bu sağlayıcı hazır değil (anahtar veya model eksik ya da yerel adres özel ağda değil).",
+      "baseUrlRequired": "Yerel model için sunucu adresi gerekli.",
+      "baseUrlNotPrivate": "Bu adres dernek ağında değil. Veri koruma gereği yalnızca yerel/özel ağ adresleri kabul edilir."
     },
     "panel": {
       "title": "Asistan",
@@ -962,7 +964,7 @@
       "empty": "(boş yanıt)",
       "welcome": "Merhaba! Derneğin verileri hakkında soru sorabilir, rapor isteyebilir veya görev önerisi alabilirsiniz. Örnekler:",
       "privacyNote": "Kişisel veriler maskelenir; sohbet kaydedilmez.",
-      "notConfigured": "Asistan henüz yapılandırılmamış: yönetici bir yapay zekâ sağlayıcısı tanımlamalıdır.",
+      "notConfigured": "Asistan henüz yapılandırılmamış: yönetici Ayarlar → Yapay zekâ asistanı sayfasından bir sağlayıcı bağlamalıdır.",
       "taskCreated": "Görev oluşturuldu.",
       "examples": {
         "q1": "Bu yılın gelir-gider özetini çıkar.",
@@ -993,7 +995,8 @@
           "provider": "Yanıtlar seçili sağlayıcıyla üretilir: {provider} — {where}",
           "revoke": "Onayınızı Ayarlar → Yapay zekâ asistanı sayfasından istediğiniz zaman geri alabilirsiniz."
         }
-      }
+      },
+      "barPlaceholder": "Asistana sorun veya bir şey isteyin…"
     },
     "settings": {
       "title": "Yapay zekâ asistanı",
@@ -1020,7 +1023,7 @@
         "module": "Modül",
         "key": "Sağlayıcı",
         "keyOk": "Etkin sağlayıcı yapılandırılmış ({provider}); anahtar değeri gösterilmez.",
-        "keyMissing": "Yapılandırılmış sağlayıcı yok: aşağıdaki sağlayıcılardan biri için sunucu ortam değişkenleri gerekli.",
+        "keyMissing": "Hazır bir sağlayıcı yok: aşağıdan bir sağlayıcının bağlantı bilgisini girip etkinleştirin.",
         "consent": "Kişisel onay",
         "consentOk": "Onay verdiniz.",
         "consentMissing": "Henüz onay vermediniz.",
@@ -1037,7 +1040,7 @@
         "noStorage": "Sohbet içeriği hiçbir yerde saklanmaz.",
         "noChanges": "Asistan veri değiştiremez; öneriler kullanıcı onayıyla uygulanır.",
         "audit": "Denetim kaydına yalnızca meta veri yazılır: kullanılan araçlar, token sayısı ve maskelenen değer sayısı.",
-        "provider": "Sağlayıcıyı yönetici seçer ve yalnızca izinli listeden olabilir: kendi sunucunuz, Mistral (AB), Claude veya OpenAI. Dernek, seçilen sağlayıcıyla veri işleme sözleşmesi (AVV/DPA) yapmalıdır.",
+        "provider": "Sağlayıcıyı yönetici seçer ve yalnızca izinli listeden olabilir: kendi sunucunuz, Mistral (AB), Claude veya OpenAI. API anahtarları veritabanında şifreli saklanır ve hiçbir ekranda gösterilmez. Dernek, seçilen sağlayıcıyla veri işleme sözleşmesi (AVV/DPA) yapmalıdır.",
         "revoke": "Her kullanıcı onayını kendisi verir ve istediği an geri alır; yönetici modülü kapatarak asistanı herkes için durdurabilir."
       },
       "providerTitle": "Yapay zekâ sağlayıcısı",
@@ -1046,28 +1049,75 @@
       "providerReady": "Hazır · model: {model}",
       "providerMissing": "Yapılandırılmamış",
       "providerUse": "Bu sağlayıcıyı kullan",
-      "providerChanged": "Sağlayıcı değiştirildi; kullanıcılar yeniden onay verecek."
+      "providerChanged": "Sağlayıcı değiştirildi; kullanıcılar yeniden onay verecek.",
+      "credentialSave": "Kaydet",
+      "credentialSaved": "Bağlantı bilgisi kaydedildi (anahtar şifreli saklanır).",
+      "permissionsTitle": "Asistanın izinleri",
+      "permissionsHelp": "Asistanın hangi bilgilere erişebileceğini ve neler yapabileceğini tek tek seçin. Varsayılan olarak hepsi kapalıdır; kapalı bir izin için asistan o veriyi hiç göremez. Her durumda kişisel veri okunmaz.",
+      "areasSave": "İzinleri kaydet",
+      "areasSaved": "İzinler kaydedildi.",
+      "fields": {
+        "apiKey": "API anahtarı",
+        "apiKeyOptional": "API anahtarı (isteğe bağlı)",
+        "apiKeyKept": "Kayıtlı anahtar korunur; değiştirmek için yenisini girin",
+        "keyStored": "Anahtar şifreli olarak kayıtlı; değeri gösterilmez.",
+        "keyUnreadable": "Kayıtlı anahtar çözülemedi (sunucu gizli anahtarı değişmiş olabilir); lütfen yeniden girin.",
+        "clearKey": "Kayıtlı anahtarı sil",
+        "model": "Model",
+        "baseUrl": "Sunucu adresi",
+        "baseUrlHelp": "Yalnızca dernek ağındaki adresler kabul edilir (ör. localhost, 192.168.x.x, Docker servis adı)."
+      },
+      "areaItems": {
+        "accounting": {
+          "label": "Muhasebe özetleri",
+          "help": "Kategori bazında gelir-gider toplamları ve hesap bakiyeleri. Fiş ayrıntısı ve kişi bilgisi yok."
+        },
+        "reports": {
+          "label": "Rapor bağlantıları",
+          "help": "Gelir-gider listesi (PDF/Excel) ve yıllık rapor için indirme bağlantısı verir; rapor içeriği yapay zekâya gitmez."
+        },
+        "members": {
+          "label": "Üye istatistikleri",
+          "help": "Yalnızca üye sayıları ve aidat tahsilat oranları; hiçbir üyenin adı veya bilgisi yok."
+        },
+        "events": {
+          "label": "Etkinlikler",
+          "help": "Yaklaşan etkinliklerin başlık, tarih, yer ve katılımcı sayısı; katılımcı isimleri yok."
+        },
+        "tasks": {
+          "label": "Görevleri okuma",
+          "help": "Açık görevlerin başlık, durum ve tarihleri; sorumlu kişi bilgisi yok."
+        },
+        "tasksPropose": {
+          "label": "Görev önerme",
+          "help": "Asistan görev önerebilir; görev yalnızca kullanıcı karttan onaylarsa, onun yetkisiyle oluşturulur."
+        },
+        "courses": {
+          "label": "Kurslar",
+          "help": "Kurs adları ve durumları; öğrenci bilgisi yok."
+        }
+      }
     },
     "providers": {
       "local": {
         "name": "Kendi sunucunuz (yerel model)",
         "where": "Veri dernek sunucusundan hiç çıkmaz. En katı seçenek.",
-        "setup": "AI_LOCAL_BASE_URL (özel ağ adresi, ör. http://ollama:11434/v1) ve AI_LOCAL_MODEL gerekir; dışarıdaki adresler reddedilir."
+        "defaultModel": "ör. mistral-small"
       },
       "mistral": {
         "name": "Mistral AI",
         "where": "AB (Fransa) — AB içinde işleme, AVV yapılabilir.",
-        "setup": "MISTRAL_API_KEY gerekir; model AI_MISTRAL_MODEL (varsayılan mistral-large-latest)."
+        "defaultModel": "mistral-large-latest"
       },
       "anthropic": {
         "name": "Claude (Anthropic)",
         "where": "ABD — AVV ve AB-ABD veri aktarım çerçevesi (DPF).",
-        "setup": "ANTHROPIC_API_KEY gerekir; model AI_ANTHROPIC_MODEL (varsayılan claude-opus-5-5)."
+        "defaultModel": "claude-opus-5-5"
       },
       "openai": {
         "name": "OpenAI (ChatGPT)",
         "where": "ABD — AVV, AB veri yerleşimi seçeneği.",
-        "setup": "OPENAI_API_KEY ve AI_OPENAI_MODEL gerekir."
+        "defaultModel": "ör. model adı"
       }
     }
   },

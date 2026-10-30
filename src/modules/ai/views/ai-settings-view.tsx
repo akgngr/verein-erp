@@ -13,7 +13,9 @@ import { can } from "@/shared/permissions/define";
 import { aiPermissions } from "../permissions";
 import { ProviderSelect } from "../components/provider-select";
 import { getActiveProvider, hasAiConsent } from "../services/consent";
-import { AI_PROVIDER_IDS, isProviderReady, providerSettings } from "../services/providers";
+import { AreasChecklist } from "../components/areas-checklist";
+import { AI_AREAS, getEnabledAreas } from "../services/areas";
+import { listProviderStatus } from "../services/providers";
 import { availableTools } from "../services/tools";
 
 function Status({ ok, label, detail }: { ok: boolean; label: string; detail: string }) {
@@ -38,10 +40,17 @@ export async function AiSettingsView() {
     throw error;
   }
   const t = await getTranslations("ai.settings");
-  const [availability, consented, tools, active] = await Promise.all([getModuleAvailability("ai"), hasAiConsent(user.id), availableTools(user), getActiveProvider()]);
+  // Anahtar değerleri istemciye gönderilmez; yalnızca kayıtlı/hazır olup olmadığı ve model adı.
+  const [availability, consented, tools, active, providers, enabledAreas] = await Promise.all([
+    getModuleAvailability("ai"),
+    hasAiConsent(user.id),
+    availableTools(user),
+    getActiveProvider(),
+    listProviderStatus(),
+    getEnabledAreas(),
+  ]);
   const configured = active !== null;
-  // Anahtar değerleri istemciye gönderilmez; yalnızca hazır olup olmadığı ve model adı.
-  const providers = AI_PROVIDER_IDS.map((id) => ({ id, ready: isProviderReady(id), model: providerSettings(id).model }));
+  const canManage = can(user.role, aiPermissions, "update");
   const areas = [...new Set(tools.map((tool) => tool.module))];
 
   return (
@@ -64,7 +73,13 @@ export async function AiSettingsView() {
       <section className="flex flex-col gap-2">
         <h2 className="text-medium font-semibold">{t("providerTitle")}</h2>
         <p className="text-small text-default-500">{t("providerHelp")}</p>
-        <ProviderSelect providers={providers} active={active} canChange={can(user.role, aiPermissions, "update")} />
+        <ProviderSelect providers={providers} active={active} canChange={canManage} />
+      </section>
+
+      <section className="flex flex-col gap-2">
+        <h2 className="text-medium font-semibold">{t("permissionsTitle")}</h2>
+        <p className="text-small text-default-500">{t("permissionsHelp")}</p>
+        <AreasChecklist areas={[...AI_AREAS]} enabled={enabledAreas} canChange={canManage} />
       </section>
 
       <section className="flex flex-col gap-2">

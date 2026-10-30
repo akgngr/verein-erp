@@ -28,7 +28,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
-import { createContext, useContext, useState, type ReactNode } from "react";
+import { createContext, useContext, useEffect, useRef, useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 
 import { registry } from "@/registry";
@@ -43,6 +43,7 @@ import {
   moduleMenuItems,
 } from "@/shared/navigation/module-nav";
 import type { ModuleConfig, NavItem, PermissionRequirement } from "@/shared/types/module";
+import { SIDE_PANEL_EVENT, type SidePanelEventDetail } from "@/shared/components/side-panel-events";
 import { cn } from "@/shared/utils";
 
 import { SIDEBAR_COLLAPSED_COOKIE } from "./sidebar-state";
@@ -67,6 +68,26 @@ function SidebarProvider({
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [collapsed, setCollapsed] = useState(initialCollapsed);
+  // Sağ yan panel açılınca menü geçici olarak daralır (çerez yazılmaz), kapanınca eski hâline döner.
+  const beforePanel = useRef<boolean | null>(null);
+  const collapsedRef = useRef(collapsed);
+  useEffect(() => {
+    collapsedRef.current = collapsed;
+  }, [collapsed]);
+  useEffect(() => {
+    const onPanel = (event: Event) => {
+      const { open } = (event as CustomEvent<SidePanelEventDetail>).detail;
+      if (open && beforePanel.current === null) {
+        beforePanel.current = collapsedRef.current;
+        setCollapsed(true);
+      } else if (!open && beforePanel.current !== null) {
+        setCollapsed(beforePanel.current);
+        beforePanel.current = null;
+      }
+    };
+    window.addEventListener(SIDE_PANEL_EVENT, onPanel);
+    return () => window.removeEventListener(SIDE_PANEL_EVENT, onPanel);
+  }, []);
   const toggleCollapsed = () => {
     const next = !collapsed;
     setCollapsed(next);
