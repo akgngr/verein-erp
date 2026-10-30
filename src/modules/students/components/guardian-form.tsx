@@ -12,10 +12,12 @@ import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-
 import { FormDatePicker } from "@/shared/components/forms/form-date-picker";
 import { FormErrorSummary } from "@/shared/components/forms/form-error-summary";
 import { FormInput } from "@/shared/components/forms/form-input";
+import { FormSelect } from "@/shared/components/forms/form-select";
 import { FormTextarea } from "@/shared/components/forms/form-textarea";
 import { SubmitButton } from "@/shared/components/forms/submit-button";
 
 import { createGuardianAction, updateGuardianAction } from "../actions/guardian-actions";
+import { GUARDIAN_SALUTATION_VALUES } from "../constants";
 import { guardianSchema, type GuardianInput } from "../schemas/guardian";
 import type { GuardianRow } from "../types";
 import { formatDateOnly } from "../utils";
@@ -24,13 +26,19 @@ import { formatDateOnly } from "../utils";
 export function GuardianForm({ guardian }: { guardian?: GuardianRow }) {
   const t = useTranslations("students.guardianForm");
   const tCommon = useTranslations("common");
+  // Eski serbest metin kayıtları (ör. "Divers") seçenek olarak korunur.
+  const legacySalutation = guardian?.salutation && !(GUARDIAN_SALUTATION_VALUES as readonly string[]).includes(guardian.salutation) ? guardian.salutation : null;
+  const salutationOptions = [
+    ...GUARDIAN_SALUTATION_VALUES.map((value) => ({ value, label: t(`salutationOptions.${value}`) })),
+    ...(legacySalutation ? [{ value: legacySalutation, label: legacySalutation }] : []),
+  ];
   const router = useRouter();
   const closeDrawer = useFormDrawerClose();
   const [formError, setFormError] = useState<string | null>(null);
   const form = useForm<GuardianInput>({
     resolver: zodResolver(guardianSchema),
     defaultValues: {
-      salutation: guardian?.salutation ?? "",
+      salutation: guardian?.salutation ?? "NONE",
       firstName: guardian?.firstName ?? "",
       lastName: guardian?.lastName ?? "",
       street: guardian?.street ?? "",
@@ -76,7 +84,7 @@ export function GuardianForm({ guardian }: { guardian?: GuardianRow }) {
       <form className="flex flex-col gap-5" onSubmit={onSubmit} noValidate>
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-6">
           <div className="sm:col-span-2">
-            <FormInput name="salutation" label={t("salutation")} control={form.control} placeholder={t("salutationPlaceholder")} />
+            <FormSelect name="salutation" label={t("salutation")} control={form.control} options={salutationOptions} />
           </div>
           <div className="sm:col-span-2">
             <FormInput name="firstName" label={t("firstName")} control={form.control} isRequired />

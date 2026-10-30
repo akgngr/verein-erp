@@ -778,6 +778,10 @@
         "_closing": "Dönem sonu bakiyesi",
         "_noAccount": "Hesap seçilmedi."
       }
+    },
+    "access": {
+      "members": "Üye aidat ödemelerini muhasebeye aktarmak için ödemeleri okur.",
+      "organization": "PDF raporlarında dernek antetini kullanır."
     }
   },
   "audit": {
@@ -986,6 +990,12 @@
         "SEPA_DEBIT": "SEPA otomatik ödeme",
         "CARD": "Kart",
         "OTHER": "Diğer"
+      },
+      "level": {
+        "BEGINNER": "Başlangıç",
+        "INTERMEDIATE": "Orta",
+        "ADVANCED": "İleri",
+        "ALL": "Tüm seviyeler"
       }
     },
     "weekday": {
@@ -1138,6 +1148,7 @@
       "waiveConfirm": "Feragat et"
     },
     "teacherForm": {
+      "linkedHint": "Ad ve e-posta, öğretmenin kullanıcı hesabından gelir; Kullanıcılar bölümünden değiştirin.",
       "firstName": "Ad",
       "lastName": "Soyad",
       "email": "E-posta",
@@ -1255,6 +1266,12 @@
         "open": "{count} açık kalem",
         "overdue": "Gecikmiş"
       }
+    },
+    "access": {
+      "accounting": "Kurs ücreti tahsilatlarını gelir fişi olarak yazar ve geri alır; kasa/banka hesaplarını ve gelir kategorilerini okur.",
+      "mail": "Öğretmen davet e-postası gönderir.",
+      "students": "Kursa kaydedilecek öğrencileri ve ödeme sorumlularını okur.",
+      "users": "Davet edilen öğretmen için Öğretmen rolünde kullanıcı hesabı açar; hesabı olan öğretmenin ad ve e-postasını kullanıcı kaydından okur."
     }
   },
   "documents": {
@@ -2026,6 +2043,11 @@
       "templateMissing": "Şablon metni henüz onaylanmadı (BMF örnekleriyle karşılaştırın).",
       "feesOk": "Aidat bildirimleri açılabilir.",
       "feesOff": "Aidat bildirimleri kapalı (membershipFeesDeductible = false; § 10b Abs. 1 Satz 8 EStG)."
+    },
+    "access": {
+      "accounting": "Bağışları gelir fişi olarak yazar ve iptal eder.",
+      "members": "Bağış makbuzu için üye adresini ve aidat ödemelerini okur.",
+      "organization": "Bağış makbuzunda dernek bilgilerini kullanır."
     }
   },
   "events": {
@@ -2991,6 +3013,10 @@
         "message": "Termini geçmiş {count} toplantı görevi var.",
         "action": "Geciken görevleri gör"
       }
+    },
+    "access": {
+      "members": "Toplantıya katılımcı eklemek için üye listesini okur.",
+      "organization": "Tutanak PDF'inde dernek antetini kullanır."
     }
   },
   "members": {
@@ -3464,6 +3490,9 @@
         "open": "Açık",
         "overdue": "Gecikmiş"
       }
+    },
+    "access": {
+      "organization": "Makbuz ve belgelerde dernek antetini kullanır."
     }
   },
   "organization": {
@@ -3650,6 +3679,10 @@
         "absent": "Gelmedi",
         "excused": "Mazeretli"
       }
+    },
+    "access": {
+      "courses": "Yoklama ve notlar için kursları, dersleri ve kayıtlı öğrencileri okur.",
+      "organization": "Veli raporunda dernek antetini kullanır."
     }
   },
   "students": {
@@ -3739,7 +3772,6 @@
     },
     "guardianForm": {
       "salutation": "Hitap",
-      "salutationPlaceholder": "Frau / Herr",
       "firstName": "Ad",
       "lastName": "Soyad",
       "addressTitle": "Adres (DATEV)",
@@ -3762,7 +3794,12 @@
       "created": "Veli kaydedildi (Debitor no {number}).",
       "createTitle": "Yeni veli",
       "createDescription": "DATEV Debitor numarası otomatik verilir.",
-      "editTitle": "Veliyi düzenle"
+      "editTitle": "Veliyi düzenle",
+      "salutationOptions": {
+        "Frau": "Frau (Bayan)",
+        "Herr": "Herr (Bay)",
+        "NONE": "Belirtmek istemiyor"
+      }
     },
     "guardianList": {
       "title": "Veliler",
@@ -3897,7 +3934,38 @@
       "notFound": "Modül bulunamadı.",
       "coreCannotDisable": "Çekirdek sistem modülleri devre dışı bırakılamaz.",
       "onlyExtensionsDeletable": "Yalnızca harici geliştirici eklentileri (EXTENSION) silinebilir. Çekirdek ve resmi modüller silinemez.",
-      "deleteFailed": "Modül silinirken hata oluştu."
+      "deleteFailed": "Modül silinirken hata oluştu.",
+      "noAccessRequested": "Bu modül başka modüllere erişim istemiyor.",
+      "accessNotApproved": "Önce modülün istediği erişime izin verin."
+    },
+    "access": {
+      "pending": "İzin bekliyor",
+      "approved": "Erişim onaylı",
+      "review": "İncele ve izin ver",
+      "revoke": "İzni geri al",
+      "title": "{label} modülü erişim izni istiyor",
+      "intro": "{label} modülü çalışmak için aşağıdaki modüllerin verilerine erişmek istiyor. İzin vermezseniz modül kullanılamaz (menüde görünmez, sayfaları ve API'leri kapalı kalır).",
+      "note": "İzin, modülün şu anki erişim listesi içindir. Modül güncellenip yeni erişim isterse yeniden onayınız istenir. İzni istediğiniz zaman geri alabilirsiniz.",
+      "deny": "Vazgeç",
+      "allow": "İzin ver ve etkinleştir",
+      "approvedToast": "{label} için erişim izni verildi ve modül etkinleştirildi.",
+      "revokedToast": "{label} için erişim izni geri alındı; modül kullanılamaz.",
+      "op": {
+        "read": "okuma",
+        "write": "yazma",
+        "delete": "silme"
+      }
+    },
+    "gate": {
+      "manage": "Modül yönetimine git",
+      "inactive": {
+        "title": "Bu modül pasif",
+        "description": "Modül yönetiminden etkinleştirilene kadar sayfaları ve verileri kullanılamaz."
+      },
+      "needsApproval": {
+        "title": "Bu modül erişim izni bekliyor",
+        "description": "Modül başka modüllerin verilerine erişmek istiyor. Yönetici Modül Yönetimi'nden izin verene kadar kullanılamaz."
+      }
     }
   },
   "tasks": {
@@ -3978,13 +4046,18 @@
       }
     },
     "errors": {
-      "notFound": "Görev bulunamadı."
+      "notFound": "Görev bulunamadı.",
+      "memberNotFound": "Seçilen üye bulunamadı veya üyeliği sona ermiş."
     },
     "validation": {
       "titleRequired": "Başlık zorunludur.",
       "titleMax": "Başlık en fazla 200 karakter olabilir.",
       "descriptionMax": "Açıklama en fazla 2000 karakter olabilir.",
       "dateInvalid": "Geçerli bir tarih giriniz (YYYY-AA-GG)."
+    },
+    "access": {
+      "members": "Görev sorumlusu seçmek için üye listesini okur.",
+      "meetings": "Görevi bir toplantıya bağlamak için toplantı listesini okur."
     }
   },
   "users": {

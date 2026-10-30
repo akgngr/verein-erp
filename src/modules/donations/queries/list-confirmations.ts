@@ -3,6 +3,7 @@ import "server-only";
 import type { Prisma } from "@prisma/client";
 
 import { getDb } from "@/shared/db";
+import { getPaymentStatuses } from "@/modules/members/server";
 import type { ListParams, ListResult } from "@/shared/list-params";
 
 import type { ConfirmationListItem } from "../types";
@@ -72,10 +73,7 @@ export async function listConfirmations(
   // Void uyarısı (§ 11 md. 11): MEMBER_PAYMENT ögelerinin güncel durumu.
   const memberPaymentIds = [...new Set(rows.flatMap((row) => row.items.map((item) => item.sourceId)))];
   const payments = memberPaymentIds.length
-    ? await db.memberPayment.findMany({
-        where: { id: { in: memberPaymentIds }, voidedAt: { not: null } },
-        select: { id: true },
-      })
+    ? (await getPaymentStatuses(memberPaymentIds)).filter((payment) => payment.voidedAt)
     : [];
   const voidedIds = new Set(payments.map((payment) => payment.id));
 

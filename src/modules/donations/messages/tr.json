@@ -476,5 +476,10 @@
     "templateMissing": "Şablon metni henüz onaylanmadı (BMF örnekleriyle karşılaştırın).",
     "feesOk": "Aidat bildirimleri açılabilir.",
     "feesOff": "Aidat bildirimleri kapalı (membershipFeesDeductible = false; § 10b Abs. 1 Satz 8 EStG)."
+  },
+  "access": {
+    "accounting": "Bağışları gelir fişi olarak yazar ve iptal eder.",
+    "members": "Bağış makbuzu için üye adresini ve aidat ödemelerini okur.",
+    "organization": "Bağış makbuzunda dernek bilgilerini kullanır."
   }
 }

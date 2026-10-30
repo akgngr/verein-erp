@@ -11,6 +11,11 @@ export const moduleConfig: ModuleConfig = {
   description: "Kurs öğrencilerinin yoklaması, sınav ve notları, gelişim notları ve veli raporu.",
   category: "OFFICIAL",
   hasSchema: true,
+  // Başka modüllerden istenen erişim (yönetici onayı gerekir; gerekçe: messages → access.<modül>).
+  access: [
+    { module: "courses", operations: ["read"] },
+    { module: "organization", operations: ["read"] },
+  ],
   nav: [
     {
       href: "/ogrenci-takibi",

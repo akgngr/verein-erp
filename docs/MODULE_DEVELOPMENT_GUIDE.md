@@ -4,7 +4,7 @@
 > Depoya erişimi olmayan harici bir AI için kopyala-yapıştır istem: [`AI_MODULE_PROMPT.md`](AI_MODULE_PROMPT.md).
 
 Bu rehber, çekirdeğe dokunmadan (**sıfır dokunuş**) yeni bir modül eklemenin kurallarını anlatır.
-Kuralların çoğu otomatik denetlenir; bir kural çiğnendiğinde CI kırmızıya döner (bkz. §9).
+Kuralların çoğu otomatik denetlenir; bir kural çiğnendiğinde CI kırmızıya döner (bkz. §10).
 
 ---
 
@@ -58,12 +58,15 @@ src/modules/<anahtar>/
 ├── api/<yol>/route.ts      # API rotaları   → /api/<anahtar>/<yol>
 ├── messages/tr.json | de.json
 ├── schemas/  queries/  actions/  services/  helpers/
-├── cards/index.tsx      # panel kartları (isteğe bağlı; bkz. §8)
+├── cards/index.tsx      # panel kartları (isteğe bağlı; bkz. §9)
 ├── components/          # "use client" bileşenler (HeroUI yalnızca burada)
 └── views/               # sunucu bileşenleri (HeroUI YOK)
 ```
 
-`page.tsx`, `routes/` ve `api/` dosyalarının `src/app` köprülerini `pnpm module:sync` üretir.
+`page.tsx`, `routes/` ve `api/` dosyalarının köprülerini `pnpm module:sync` üretir ve hepsini iki
+klasörde toplar: sayfalar `src/app/(dashboard)/(modules)/`, API'ler `src/app/api/(modules)/` (parantezli
+klasörler rota grubudur, adrese eklenmez). Bu iki klasör her senkronda (`dev`, `build`, `typecheck`
+öncesinde de) silinip yeniden kurulur; içlerine elle dosya koyma.
 Rota segment ayarları (`export const runtime = "nodejs"` vb.) kaynak dosyada yazılır, köprüye kopyalanır.
 
 ---
@@ -172,7 +175,32 @@ Kök `messages/<dil>.json` **üretilen** dosyadır; `messages/shell/<dil>.json` 
 
 ---
 
-## 8. Panel kartları (`cards/`)
+## 8. Modüller arası erişim (yönetici onayı)
+
+Bir modül başka bir modülün verisini yalnızca o modülün `@/modules/<m>/server` API'si üzerinden
+kullanır ve bunu `module.config.ts` içinde **bildirir**:
+
+```ts
+access: [
+  { module: "students", operations: ["read"] },
+  { module: "accounting", operations: ["read", "write"] },
+],
+```
+
+- Gerekçe metni `messages/tr.json` ve `de.json` içinde `access.<modül>` anahtarındadır; onay
+  penceresinde gösterilir.
+- `pnpm module:validate` kodu tarar. Bildirilmemiş bir `server` içe aktarımı ya da başka modülün
+  tablosuna doğrudan (`getDb().<model>`) erişim hata verir. İşlem türü fonksiyon adından çıkarılır:
+  `delete…`/`remove…` → silme; `create…`, `update…`, `send…`, `…Action` vb. → yazma; diğerleri okuma.
+- `auth` (oturum, `createAction`) altyapıdır ve bildirim gerektirmez.
+- Yönetici, modülü etkinleştirirken istenen erişimleri bir onay penceresinde görür ve izin verir.
+  İzin yoksa modül kullanılamaz: menüde görünmez, sayfaları ve API'leri kapalıdır (üretilen köprüler
+  `withModuleGate` / `gateRouteHandler` ile sarılıdır). Modül güncellenip yeni erişim isterse onay
+  düşer ve yeniden istenir. İzinler `src/config/module-access.json` içindedir.
+
+---
+
+## 9. Panel kartları (`cards/`)
 
 Modül panele (`/`) kart sunabilir. Kullanıcı "Paneli düzenle" ile kartları ekler, kaldırır ve
 sıralar; düzen kullanıcı başına kaydedilir. Kullanıcı hiç düzenlemediyse `defaultVisible: true`
@@ -219,7 +247,7 @@ export const cards = defineCards([
 
 ---
 
-## 9. Doğrulama (CI aynı adımları çalıştırır)
+## 10. Doğrulama (CI aynı adımları çalıştırır)
 
 ```bash
 pnpm module:sync                                  # köprüler, şema, çeviri, kayıt

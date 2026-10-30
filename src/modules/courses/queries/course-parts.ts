@@ -21,7 +21,7 @@ export async function listSessions(courseId: string): Promise<SessionRow[]> {
     endTime: row.endTime,
     topic: row.topic,
     teacherId: row.teacherId,
-    teacherName: row.teacher ? `${row.teacher.firstName} ${row.teacher.lastName}` : null,
+    teacherName: row.teacher ? `${row.teacher.firstName} ${row.teacher.lastName}`.trim() : null,
     isCancelled: row.isCancelled,
     note: row.note,
   }));
@@ -155,7 +155,7 @@ export async function listTeacherOptions(): Promise<{ id: string; label: string 
     orderBy: [{ lastName: "asc" }, { firstName: "asc" }],
     select: { id: true, firstName: true, lastName: true, subjects: true },
   });
-  return rows.map((row) => ({ id: row.id, label: `${row.firstName} ${row.lastName}${row.subjects ? ` (${row.subjects})` : ""}` }));
+  return rows.map((row) => ({ id: row.id, label: `${`${row.firstName} ${row.lastName}`.trim()}${row.subjects ? ` (${row.subjects})` : ""}` }));
 }
 
 export async function getCoursesSettings(): Promise<{ incomeCategoryId: string }> {

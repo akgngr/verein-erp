@@ -20,6 +20,9 @@ if (isDirectExecution) {
   const regRes = syncModuleRegistry();
   const routeRes = syncModuleRoutes();
   console.log(
-    `[sync] ${schemaRes.synced.length} şema | Çeviriler (${Object.keys(i18nRes.modulesMerged).join(", ")}) | ${regRes.registered.length} modül | ${routeRes.syncedRoutes.length} rota bağlandı.`,
+    `[sync] ${schemaRes.synced.length} şema | Çeviriler (${Object.keys(i18nRes.modulesMerged).join(", ")}) | ${regRes.registered.length} modül | ${routeRes.syncedRoutes.length} rota ${routeRes.rebuilt ? "(modül rotaları yeniden kuruldu)" : "(güncel)"}.`,
   );
+  if (routeRes.cleanedRoutes.length > 0) {
+    console.log(`[sync] Eski düzenden ${routeRes.cleanedRoutes.length} köprü kaldırıldı (artık (modules) klasöründe).`);
+  }
 }

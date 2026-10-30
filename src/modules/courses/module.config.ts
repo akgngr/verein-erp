@@ -11,6 +11,13 @@ export const moduleConfig: ModuleConfig = {
   description: "Gönüllü kurslar ve Nachhilfe: öğretmenler, dersler, kayıtlar, ücretler ve muhasebe aktarımı.",
   category: "OFFICIAL",
   hasSchema: true,
+  // Başka modüllerden istenen erişim (yönetici onayı gerekir; gerekçe: messages → access.<modül>).
+  access: [
+    { module: "accounting", operations: ["read", "write"] },
+    { module: "mail", operations: ["read", "write"] },
+    { module: "students", operations: ["read"] },
+    { module: "users", operations: ["read", "write"] },
+  ],
   nav: [
     {
       href: "/kurslar",

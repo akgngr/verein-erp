@@ -9,6 +9,11 @@ export const moduleConfig: ModuleConfig = {
   description: "Alman dernek mevzuatına uygun çift taraflı defter tutma, fiş ve bütçe yönetimi.",
   category: "OFFICIAL",
   hasSchema: true,
+  // Başka modüllerden istenen erişim (yönetici onayı gerekir; gerekçe: messages → access.<modül>).
+  access: [
+    { module: "members", operations: ["read"] },
+    { module: "organization", operations: ["read"] },
+  ],
   nav: [
     {
       href: "/muhasebe",

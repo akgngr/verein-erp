@@ -57,6 +57,12 @@
       "SEPA_DEBIT": "SEPA-Lastschrift",
       "CARD": "Karte",
       "OTHER": "Sonstige"
+    },
+    "level": {
+      "BEGINNER": "Anfänger",
+      "INTERMEDIATE": "Mittelstufe",
+      "ADVANCED": "Fortgeschritten",
+      "ALL": "Alle Niveaus"
     }
   },
   "weekday": {
@@ -209,6 +215,7 @@
     "waiveConfirm": "Erlassen"
   },
   "teacherForm": {
+    "linkedHint": "Name und E-Mail stammen aus dem Benutzerkonto der Lehrkraft; ändern Sie sie unter Benutzer.",
     "firstName": "Vorname",
     "lastName": "Nachname",
     "email": "E-Mail",
@@ -326,5 +333,11 @@
       "open": "{count} offene Posten",
       "overdue": "Überfällig"
     }
+  },
+  "access": {
+    "accounting": "Bucht Kursgebühren als Einnahmen und storniert sie; liest Kassen-/Bankkonten und Einnahmekategorien.",
+    "mail": "Versendet Einladungs-E-Mails an Lehrkräfte.",
+    "students": "Liest Schüler und Zahlungspflichtige für Kursanmeldungen.",
+    "users": "Legt für eingeladene Lehrkräfte ein Benutzerkonto mit der Rolle Lehrkraft an und liest Name und E-Mail verknüpfter Lehrkräfte aus dem Benutzerkonto."
   }
 }

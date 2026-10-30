@@ -4,12 +4,12 @@ import { getTranslations } from "next-intl/server";
 import { requireUser, setLocaleAction } from "@/modules/auth/server";
 import { allModules } from "@/registry";
 import { PageHeader } from "@/shared/components/ui/page-header";
-import { getAllActiveModuleKeys } from "@/shared/modules/module-store";
 import { moduleHome } from "@/shared/navigation/module-nav";
 import { can } from "@/shared/permissions/define";
 
 import { LanguageSettingCard } from "../components/language-setting-card";
 import { SettingsHub, type SettingsHubSection } from "../components/settings-hub";
+import { listUsableModuleKeys } from "../services/module-gate";
 import { ThemeSettingCard } from "../components/theme-setting-card";
 
 /** Ayar merkezinin kendi adresi; listede tekrar gösterilmez. */
@@ -25,7 +25,7 @@ export async function SettingsOverviewView() {
   const t = await getTranslations("settings");
   const tRoot = await getTranslations();
 
-  const activeKeys = new Set(getAllActiveModuleKeys(allModules.map((mod) => mod.key)));
+  const activeKeys = new Set(listUsableModuleKeys());
   const modules = allModules.filter((mod) => activeKeys.has(mod.key));
   const text = (key: string, fallback: string) => (tRoot.has(key) ? tRoot(key) : fallback);
 

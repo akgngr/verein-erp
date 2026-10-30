@@ -472,5 +472,8 @@
       "open": "Açık",
       "overdue": "Gecikmiş"
     }
+  },
+  "access": {
+    "organization": "Makbuz ve belgelerde dernek antetini kullanır."
   }
 }

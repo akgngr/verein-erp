@@ -42,6 +42,8 @@ export function TeacherForm({ teacher }: { teacher?: TeacherRow }) {
     },
   });
   const wantsInvite = useWatch({ control: form.control, name: "invite" });
+  // Hesabı olan öğretmenin adı ve e-postası kullanıcı kaydından senkronlanır; burada düzenlenmez.
+  const linked = Boolean(teacher?.userId);
 
   const close = () => (closeDrawer ? closeDrawer() : router.push("/kurslar/ogretmenler"));
 
@@ -80,11 +82,12 @@ export function TeacherForm({ teacher }: { teacher?: TeacherRow }) {
     <FormSurface className="max-w-2xl">
       <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <FormInput name="firstName" label={t("firstName")} control={form.control} isRequired />
-          <FormInput name="lastName" label={t("lastName")} control={form.control} isRequired />
-          <FormInput name="email" label={t("email")} control={form.control} type="email" isRequired={wantsInvite} />
+          <FormInput name="firstName" label={t("firstName")} control={form.control} isDisabled={linked} />
+          <FormInput name="lastName" label={t("lastName")} control={form.control} isRequired isDisabled={linked} />
+          <FormInput name="email" label={t("email")} control={form.control} type="email" isRequired={wantsInvite} isDisabled={linked} />
           <FormInput name="phone" label={t("phone")} control={form.control} type="tel" />
         </div>
+        {linked ? <p className="-mt-2 text-tiny text-default-500">{t("linkedHint")}</p> : null}
         <FormInput name="subjects" label={t("subjects")} control={form.control} placeholder={t("subjectsPlaceholder")} />
         <FormTextarea name="note" label={t("note")} control={form.control} />
         <FormSwitch name="isActive" label={t("isActive")} control={form.control} />

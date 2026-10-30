@@ -778,6 +778,10 @@
         "_closing": "Endbestand",
         "_noAccount": "Kein Konto ausgewählt."
       }
+    },
+    "access": {
+      "members": "Liest Mitgliedsbeitragszahlungen, um sie in die Buchhaltung zu übernehmen.",
+      "organization": "Verwendet den Vereinsbriefkopf in PDF-Berichten."
     }
   },
   "audit": {
@@ -986,6 +990,12 @@
         "SEPA_DEBIT": "SEPA-Lastschrift",
         "CARD": "Karte",
         "OTHER": "Sonstige"
+      },
+      "level": {
+        "BEGINNER": "Anfänger",
+        "INTERMEDIATE": "Mittelstufe",
+        "ADVANCED": "Fortgeschritten",
+        "ALL": "Alle Niveaus"
       }
     },
     "weekday": {
@@ -1138,6 +1148,7 @@
       "waiveConfirm": "Erlassen"
     },
     "teacherForm": {
+      "linkedHint": "Name und E-Mail stammen aus dem Benutzerkonto der Lehrkraft; ändern Sie sie unter Benutzer.",
       "firstName": "Vorname",
       "lastName": "Nachname",
       "email": "E-Mail",
@@ -1255,6 +1266,12 @@
         "open": "{count} offene Posten",
         "overdue": "Überfällig"
       }
+    },
+    "access": {
+      "accounting": "Bucht Kursgebühren als Einnahmen und storniert sie; liest Kassen-/Bankkonten und Einnahmekategorien.",
+      "mail": "Versendet Einladungs-E-Mails an Lehrkräfte.",
+      "students": "Liest Schüler und Zahlungspflichtige für Kursanmeldungen.",
+      "users": "Legt für eingeladene Lehrkräfte ein Benutzerkonto mit der Rolle Lehrkraft an und liest Name und E-Mail verknüpfter Lehrkräfte aus dem Benutzerkonto."
     }
   },
   "documents": {
@@ -2026,6 +2043,11 @@
       "templateMissing": "Vorlagentext noch nicht freigegeben (mit den BMF-Mustern vergleichen).",
       "feesOk": "Bestätigungen für Mitgliedsbeiträge möglich.",
       "feesOff": "Bestätigungen für Mitgliedsbeiträge deaktiviert (membershipFeesDeductible = false; § 10b Abs. 1 Satz 8 EStG)."
+    },
+    "access": {
+      "accounting": "Bucht Spenden als Einnahmen und storniert sie.",
+      "members": "Liest Mitgliedsanschrift und Beitragszahlungen für Zuwendungsbestätigungen.",
+      "organization": "Verwendet Vereinsdaten in Zuwendungsbestätigungen."
     }
   },
   "events": {
@@ -2991,6 +3013,10 @@
         "message": "{count} Sitzungsaufgaben sind überfällig.",
         "action": "Überfällige Aufgaben anzeigen"
       }
+    },
+    "access": {
+      "members": "Liest die Mitgliederliste, um Teilnehmende hinzuzufügen.",
+      "organization": "Verwendet den Vereinsbriefkopf im Protokoll-PDF."
     }
   },
   "members": {
@@ -3464,6 +3490,9 @@
         "open": "Offen",
         "overdue": "Überfällig"
       }
+    },
+    "access": {
+      "organization": "Verwendet den Vereinsbriefkopf in Quittungen und Dokumenten."
     }
   },
   "organization": {
@@ -3650,6 +3679,10 @@
         "absent": "Fehlt",
         "excused": "Entschuldigt"
       }
+    },
+    "access": {
+      "courses": "Liest Kurse, Termine und Anmeldungen für Anwesenheit und Noten.",
+      "organization": "Verwendet den Vereinsbriefkopf im Elternbericht."
     }
   },
   "students": {
@@ -3739,7 +3772,6 @@
     },
     "guardianForm": {
       "salutation": "Anrede",
-      "salutationPlaceholder": "Frau / Herr",
       "firstName": "Vorname",
       "lastName": "Nachname",
       "addressTitle": "Anschrift (DATEV)",
@@ -3762,7 +3794,12 @@
       "created": "Erziehungsberechtigte angelegt (Debitor-Nr. {number}).",
       "createTitle": "Neue Erziehungsberechtigte",
       "createDescription": "Die DATEV-Debitorennummer wird automatisch vergeben.",
-      "editTitle": "Erziehungsberechtigte bearbeiten"
+      "editTitle": "Erziehungsberechtigte bearbeiten",
+      "salutationOptions": {
+        "Frau": "Frau",
+        "Herr": "Herr",
+        "NONE": "Keine Angabe"
+      }
     },
     "guardianList": {
       "title": "Erziehungsberechtigte",
@@ -3897,7 +3934,38 @@
       "notFound": "Modul nicht gefunden.",
       "coreCannotDisable": "Kernmodule können nicht deaktiviert werden.",
       "onlyExtensionsDeletable": "Nur externe Erweiterungen (EXTENSION) können gelöscht werden. Kern- und offizielle Module nicht.",
-      "deleteFailed": "Beim Löschen des Moduls ist ein Fehler aufgetreten."
+      "deleteFailed": "Beim Löschen des Moduls ist ein Fehler aufgetreten.",
+      "noAccessRequested": "Dieses Modul fordert keinen Zugriff auf andere Module an.",
+      "accessNotApproved": "Bitte zuerst den angeforderten Zugriff freigeben."
+    },
+    "access": {
+      "pending": "Freigabe ausstehend",
+      "approved": "Zugriff freigegeben",
+      "review": "Prüfen und freigeben",
+      "revoke": "Freigabe entziehen",
+      "title": "Modul {label} bittet um Zugriff",
+      "intro": "Das Modul {label} benötigt Zugriff auf Daten der folgenden Module. Ohne Freigabe ist es nicht nutzbar (nicht im Menü, Seiten und APIs gesperrt).",
+      "note": "Die Freigabe gilt für die aktuelle Zugriffsliste des Moduls. Fordert es nach einem Update neue Zugriffe an, wird erneut um Freigabe gebeten. Sie können die Freigabe jederzeit entziehen.",
+      "deny": "Abbrechen",
+      "allow": "Freigeben und aktivieren",
+      "approvedToast": "Zugriff für {label} freigegeben, Modul aktiviert.",
+      "revokedToast": "Freigabe für {label} entzogen; das Modul ist gesperrt.",
+      "op": {
+        "read": "lesen",
+        "write": "schreiben",
+        "delete": "löschen"
+      }
+    },
+    "gate": {
+      "manage": "Zur Modulverwaltung",
+      "inactive": {
+        "title": "Dieses Modul ist deaktiviert",
+        "description": "Seiten und Daten sind erst nach Aktivierung in der Modulverwaltung nutzbar."
+      },
+      "needsApproval": {
+        "title": "Dieses Modul wartet auf Zugriffsfreigabe",
+        "description": "Das Modul möchte auf Daten anderer Module zugreifen. Es ist gesperrt, bis die Verwaltung den Zugriff in der Modulverwaltung freigibt."
+      }
     }
   },
   "tasks": {
@@ -3978,13 +4046,18 @@
       }
     },
     "errors": {
-      "notFound": "Aufgabe nicht gefunden."
+      "notFound": "Aufgabe nicht gefunden.",
+      "memberNotFound": "Das ausgewählte Mitglied wurde nicht gefunden oder ist ausgetreten."
     },
     "validation": {
       "titleRequired": "Titel ist erforderlich.",
       "titleMax": "Titel darf maximal 200 Zeichen lang sein.",
       "descriptionMax": "Beschreibung darf maximal 2000 Zeichen lang sein.",
       "dateInvalid": "Bitte ein gültiges Datum eingeben (JJJJ-MM-TT)."
+    },
+    "access": {
+      "members": "Liest die Mitgliederliste, um Verantwortliche auszuwählen.",
+      "meetings": "Liest die Sitzungsliste, um Aufgaben einer Sitzung zuzuordnen."
     }
   },
   "users": {

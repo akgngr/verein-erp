@@ -513,5 +513,9 @@
       "_closing": "Endbestand",
       "_noAccount": "Kein Konto ausgewählt."
     }
+  },
+  "access": {
+    "members": "Liest Mitgliedsbeitragszahlungen, um sie in die Buchhaltung zu übernehmen.",
+    "organization": "Verwendet den Vereinsbriefkopf in PDF-Berichten."
   }
 }

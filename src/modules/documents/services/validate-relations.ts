@@ -1,7 +1,7 @@
 import "server-only";
 
 import { getDb } from "@/shared/db";
-import { ActionError } from "@/modules/auth/server";
+import { ActionError, listActiveUserOptions } from "@/modules/auth/server";
 
 /**
  * Evrak şemasındaki referans alanlarının (categoryId, assigneeId, replyToId)
@@ -30,16 +30,13 @@ export async function validateAssignee(
   assigneeId: string | null,
 ): Promise<{ id: string; label: string } | null> {
   if (!assigneeId) return null;
-  const user = await getDb().user.findUnique({
-    where: { id: assigneeId },
-    select: { id: true, name: true, isActive: true },
-  });
-  if (!user || !user.isActive) {
+  const user = (await listActiveUserOptions()).find((option) => option.id === assigneeId);
+  if (!user) {
     throw new ActionError("documents.errors.assigneeInactive", {
       assigneeId: ["documents.errors.assigneeInactive"],
     });
   }
-  return { id: user.id, label: user.name };
+  return { id: user.id, label: user.label };
 }
 
 /**

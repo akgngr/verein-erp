@@ -23,12 +23,15 @@ import { CHARGE_SORTABLE_FIELDS, listCharges, listEnrollments, listSessions, lis
 import { getCourse } from "../queries/courses";
 import { canAccessCourse } from "../services/teacher-scope";
 import { berlinToday, formatDateOnly } from "../utils";
+import { syncLinkedTeachers } from "../services/teacher-sync";
+import { COURSE_LEVEL_VALUES } from "../constants";
 
 const TABS = ["genel", "dersler", "ogrenciler", "ucretler"] as const;
 type Tab = (typeof TABS)[number];
 
 /** Kurs detayı: sekmeler `?sekme=` ile (genel, dersler, öğrenciler, ücretler). */
 export async function CourseDetailView({ id, searchParams }: { id: string; searchParams: Promise<RawSearchParams> }) {
+  await syncLinkedTeachers();
   let user;
   try {
     user = await requirePermission(coursesPermissions, "view");
@@ -52,7 +55,7 @@ export async function CourseDetailView({ id, searchParams }: { id: string; searc
     [t("form.kind"), t(`enums.kind.${course.kind}`)],
     [t("form.status"), t(`enums.status.${course.status}`)],
     [t("form.subject"), course.subject ?? "—"],
-    [t("form.level"), course.level ?? "—"],
+    [t("form.level"), course.level ? ((COURSE_LEVEL_VALUES as readonly string[]).includes(course.level) ? t(`enums.level.${course.level}`) : course.level) : "—"],
     [t("detail.period"), `${formatDate(course.startDate)}${course.endDate ? ` – ${formatDate(course.endDate)}` : ""}`],
     [t("form.scheduleNote"), course.scheduleNote ?? "—"],
     [t("form.location"), course.location ?? "—"],

@@ -9,6 +9,12 @@ export const moduleConfig: ModuleConfig = {
   description: "Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı takibi.",
   category: "OFFICIAL",
   hasSchema: true,
+  // Başka modüllerden istenen erişim (yönetici onayı gerekir; gerekçe: messages → access.<modül>).
+  access: [
+    { module: "accounting", operations: ["read", "write"] },
+    { module: "members", operations: ["read"] },
+    { module: "organization", operations: ["read"] },
+  ],
   nav: [
     {
       href: "/bagislar",

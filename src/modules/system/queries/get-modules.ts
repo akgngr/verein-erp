@@ -2,7 +2,8 @@ import { getTranslations } from "next-intl/server";
 
 import { allModules } from "@/registry";
 import { getModuleStates } from "@/shared/modules/module-store";
-import type { ModuleCategory } from "@/shared/types/module";
+import { getAccessApprovals, isAccessApproved } from "@/shared/modules/module-access";
+import type { ModuleAccessOperation, ModuleCategory } from "@/shared/types/module";
 
 export type ModuleItem = {
   key: string;
@@ -15,6 +16,11 @@ export type ModuleItem = {
   isActive: boolean;
   navCount: number;
   routes: string[];
+  /** Başka modüllerden istenen erişim (ad + işlemler + gerekçe). */
+  access: { module: string; moduleLabel: string; operations: ModuleAccessOperation[]; reason: string }[];
+  /** none: erişim istemiyor; approved: onaylı; pending: yönetici izni bekliyor. */
+  accessStatus: "none" | "approved" | "pending";
+  approvedBy: string | null;
 };
 
 export async function getModulesList(): Promise<{
@@ -29,6 +35,7 @@ export async function getModulesList(): Promise<{
   };
 }> {
   const states = getModuleStates();
+  const approvals = getAccessApprovals();
   const t = await getTranslations();
   // Modül adı/açıklaması `<modül>.module.{label,description}` çevirisinden; yoksa config değeri.
   const text = (key: string, fallback: string | undefined) => (t.has(key) ? t(key) : fallback);
@@ -48,6 +55,14 @@ export async function getModulesList(): Promise<{
       isActive,
       navCount: mod.nav.length,
       routes: mod.nav.map((n) => n.href),
+      access: (mod.access ?? []).map((request) => ({
+        module: request.module,
+        moduleLabel: text(`${request.module}.module.label`, allModules.find((other) => other.key === request.module)?.label) ?? request.module,
+        operations: request.operations,
+        reason: text(`${mod.key}.access.${request.module}`, "") ?? "",
+      })),
+      accessStatus: !mod.access?.length ? "none" : isAccessApproved(mod.key, mod.access) ? "approved" : "pending",
+      approvedBy: approvals[mod.key]?.approvedBy ?? null,
     };
   });
 

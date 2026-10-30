@@ -24,10 +24,7 @@ export async function getConfirmation(id: string): Promise<ConfirmationDetail | 
   );
   const statuses = await getPaymentStatuses(memberPaymentItems.map((item) => item.sourceId));
   const voidedIds = new Set(statuses.filter((status) => status.voidedAt).map((status) => status.id));
-  const voidedReceipts = await db.memberPayment.findMany({
-    where: { id: { in: [...voidedIds] } },
-    select: { id: true, receiptNumber: true },
-  });
+  const voidedReceipts = statuses.filter((status) => status.voidedAt);
 
   return {
     id: confirmation.id,

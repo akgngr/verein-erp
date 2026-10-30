@@ -1,4 +1,0 @@
-// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
-// Kaynak: src/modules/donations/routes/bagiscilar/yeni/page.tsx
-export { default } from "@/modules/donations/routes/bagiscilar/yeni/page";
-export * from "@/modules/donations/routes/bagiscilar/yeni/page";

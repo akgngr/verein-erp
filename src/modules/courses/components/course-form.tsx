@@ -17,7 +17,7 @@ import { FormTextarea } from "@/shared/components/forms/form-textarea";
 import { SubmitButton } from "@/shared/components/forms/submit-button";
 
 import { createCourseAction, updateCourseAction } from "../actions/course-actions";
-import { COURSE_FEE_TYPE_VALUES, COURSE_KIND_VALUES, COURSE_STATUS_VALUES } from "../constants";
+import { COURSE_FEE_TYPE_VALUES, COURSE_LEVEL_VALUES, COURSE_KIND_VALUES, COURSE_STATUS_VALUES } from "../constants";
 import { courseSchema, type CourseInput } from "../schemas/course";
 import type { CourseDetail } from "../types";
 import { centsToInput, formatDateOnly } from "../utils";
@@ -27,6 +27,12 @@ export function CourseForm({ course, teacherOptions }: { course?: CourseDetail; 
   const t = useTranslations("courses.form");
   const tEnum = useTranslations("courses.enums");
   const tCommon = useTranslations("common");
+  // Eski serbest metin seviyeler seçenek olarak korunur.
+  const legacyLevel = course?.level && !(COURSE_LEVEL_VALUES as readonly string[]).includes(course.level) ? course.level : null;
+  const levelOptions = [
+    ...COURSE_LEVEL_VALUES.map((value) => ({ value, label: tEnum(`level.${value}`) })),
+    ...(legacyLevel ? [{ value: legacyLevel, label: legacyLevel }] : []),
+  ];
   const router = useRouter();
   const closeDrawer = useFormDrawerClose();
   const [formError, setFormError] = useState<string | null>(null);
@@ -79,7 +85,7 @@ export function CourseForm({ course, teacherOptions }: { course?: CourseDetail; 
         <FormInput name="title" label={t("title")} control={form.control} isRequired />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormInput name="subject" label={t("subject")} control={form.control} />
-          <FormInput name="level" label={t("level")} control={form.control} />
+          <FormSelect name="level" label={t("level")} control={form.control} options={levelOptions} />
           <FormInput name="location" label={t("location")} control={form.control} />
           <FormInput name="scheduleNote" label={t("scheduleNote")} control={form.control} placeholder={t("scheduleNotePlaceholder")} />
           <FormDatePicker name="startDate" label={t("startDate")} control={form.control} isRequired />

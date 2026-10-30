@@ -1,4 +1,0 @@
-// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).
-// Kaynak: src/modules/members/routes/[id]/page.tsx
-export { default } from "@/modules/members/routes/[id]/page";
-export * from "@/modules/members/routes/[id]/page";

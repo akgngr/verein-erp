@@ -13,8 +13,10 @@ import { TeacherForm } from "../components/teacher-form";
 import { TeacherTable } from "../components/teacher-table";
 import { courseTeachersPermissions } from "../permissions";
 import { getTeacher, listTeachers } from "../queries/course-parts";
+import { syncLinkedTeachers } from "../services/teacher-sync";
 
 export async function TeachersView({ searchParams }: { searchParams: Promise<RawSearchParams> }) {
+  await syncLinkedTeachers();
   let user;
   try {
     user = await requirePermission(courseTeachersPermissions, "view");

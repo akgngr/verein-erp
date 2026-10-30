@@ -13,7 +13,7 @@ import { normalizeIban, parseDateOnly } from "../utils";
 
 function guardianData(input: GuardianInput) {
   return {
-    salutation: input.salutation || null,
+    salutation: input.salutation && input.salutation !== "NONE" ? input.salutation : null,
     firstName: input.firstName,
     lastName: input.lastName,
     street: input.street || null,

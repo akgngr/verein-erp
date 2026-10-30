@@ -15,8 +15,10 @@ import { coursesPermissions } from "../permissions";
 import { listTeacherOptions } from "../queries/course-parts";
 import { COURSE_DEFAULT_SORT, COURSE_SORTABLE_FIELDS, getCourse, listCourses, type CourseListFilterKeys } from "../queries/courses";
 import { teacherCourseScope } from "../services/teacher-scope";
+import { syncLinkedTeachers } from "../services/teacher-sync";
 
 export async function CourseListView({ searchParams }: { searchParams: Promise<RawSearchParams> }) {
+  await syncLinkedTeachers();
   let user;
   try {
     user = await requirePermission(coursesPermissions, "view");

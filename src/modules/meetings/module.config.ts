@@ -9,6 +9,11 @@ export const moduleConfig: ModuleConfig = {
   description: "Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar.",
   category: "OFFICIAL",
   hasSchema: true,
+  // Başka modüllerden istenen erişim (yönetici onayı gerekir; gerekçe: messages → access.<modül>).
+  access: [
+    { module: "members", operations: ["read"] },
+    { module: "organization", operations: ["read"] },
+  ],
   nav: [
     {
       href: "/toplantilar",

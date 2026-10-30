@@ -39,6 +39,19 @@ export type ModuleMenuItem = {
   isDownload?: boolean;
 };
 
+/** Başka bir modülün verisine erişim türü (o modülün `server` API'si üzerinden). */
+export type ModuleAccessOperation = "read" | "write" | "delete";
+
+/**
+ * Modülün başka bir modülden istediği erişim. Bildirilmeyen erişim `module:validate`'te hata verir;
+ * bildirilen erişim yönetici onaylamadan kullanılamaz (modül "izin bekliyor" durumunda kalır).
+ * Gerekçe metni modülün mesajlarında `access.<module>` anahtarındadır.
+ */
+export type ModuleAccessRequest = {
+  module: string;
+  operations: ModuleAccessOperation[];
+};
+
 export type ModuleConfig = {
   key: string;
   label: string;
@@ -49,6 +62,8 @@ export type ModuleConfig = {
   /** CORE modüller için true (pasife alınamaz, silinemez). */
   isProtected?: boolean;
   hasSchema?: boolean;
+  /** Başka modüllerden istenen erişimler (bkz. ModuleAccessRequest). */
+  access?: ModuleAccessRequest[];
   /**
    * Modül sayfalarının bağlandığı rota kökü (örn. "/profil"). Verilmezse ilk nav `href`'i
    * kullanılır; menüde görünmeyen (nav'ı olmayan) modüllerin sayfaları için gereklidir.

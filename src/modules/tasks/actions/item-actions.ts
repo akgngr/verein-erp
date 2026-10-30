@@ -1,6 +1,7 @@
 "use server";
 
 import { ActionError, createAction } from "@/modules/auth/server";
+import { listMemberOptions } from "@/modules/members/server";
 import { getDb } from "@/shared/db";
 import type { ActionResult } from "@/shared/types/action";
 import { buildUserLabel } from "@/shared/utils";
@@ -24,13 +25,9 @@ export async function createTaskAction(input: unknown): Promise<ActionResult<{ i
       let memberName: string | null = null;
 
       if (input.memberId) {
-        const member = await db.member.findUnique({
-          where: { id: input.memberId },
-          select: { firstName: true, lastName: true },
-        });
-        if (member) {
-          memberName = `${member.firstName} ${member.lastName}`.trim();
-        }
+        const [member] = await listMemberOptions({ ids: [input.memberId] });
+        if (!member) throw new ActionError("tasks.errors.memberNotFound");
+        memberName = member.label;
       }
 
       const isDone = input.status === "DONE";
@@ -85,11 +82,9 @@ export async function updateTaskAction(input: unknown): Promise<ActionResult<{ i
       let memberName = existing.memberName;
       if (input.memberId !== existing.memberId) {
         if (input.memberId) {
-          const member = await db.member.findUnique({
-            where: { id: input.memberId },
-            select: { firstName: true, lastName: true },
-          });
-          memberName = member ? `${member.firstName} ${member.lastName}`.trim() : null;
+          const [member] = await listMemberOptions({ ids: [input.memberId] });
+          if (!member) throw new ActionError("tasks.errors.memberNotFound");
+          memberName = member.label;
         } else {
           memberName = null;
         }
