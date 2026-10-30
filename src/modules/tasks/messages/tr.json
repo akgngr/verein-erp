@@ -79,7 +79,8 @@
     }
   },
   "errors": {
-    "notFound": "Görev bulunamadı."
+    "notFound": "Görev bulunamadı.",
+    "memberNotFound": "Seçilen üye bulunamadı veya üyeliği sona ermiş."
   },
   "validation": {
     "titleRequired": "Başlık zorunludur.",
