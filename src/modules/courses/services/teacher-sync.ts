@@ -21,7 +21,11 @@ export async function syncLinkedTeachers(): Promise<void> {
 
   for (const teacher of linked) {
     const profile = profiles.get(teacher.userId as string);
-    if (!profile) continue;
+    if (!profile) {
+      // Kullanıcı hesabı silinmiş: öğretmen kaydı kalır, hesap bağlantısı kaldırılır (yeniden davet edilebilir).
+      await db.courseTeacher.update({ where: { id: teacher.id }, data: { userId: null } });
+      continue;
+    }
     const { firstName, lastName } = splitUserName(profile.name);
     if (teacher.firstName === firstName && teacher.lastName === lastName && teacher.email === profile.email) continue;
     await db.courseTeacher.update({ where: { id: teacher.id }, data: { firstName, lastName, email: profile.email } });

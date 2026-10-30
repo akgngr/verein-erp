@@ -1,7 +1,7 @@
 "use client";
 
 import { Button, Chip, Tooltip, addToast } from "@heroui/react";
-import { ArrowLeft, ArrowRight, Check, LayoutGrid, Plus, RotateCcw, X } from "lucide-react";
+import { ArrowLeft, ArrowRight, Check, GripVertical, LayoutGrid, Plus, RotateCcw, X } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -78,6 +78,27 @@ export function DashboardBoard({
     });
   };
 
+  // Sürükle-bırak (düzenleme modu): sürüklerken sıra yerelde canlı değişir, bırakınca kaydedilir.
+  // Ok düğmeleri klavye ve dokunmatik ekranlar için kalır.
+  const [dragId, setDragId] = useState<string | null>(null);
+  const [dragStartOrder, setDragStartOrder] = useState<string[] | null>(null);
+
+  const dragOver = (overId: string) => {
+    if (!dragId || dragId === overId) return;
+    setOrder((current) => {
+      const next = current.filter((id) => id !== dragId);
+      next.splice(next.indexOf(overId) + (current.indexOf(dragId) < current.indexOf(overId) ? 1 : 0), 0, dragId);
+      return next;
+    });
+  };
+
+  const finishDrag = () => {
+    const changed = dragStartOrder !== null && dragStartOrder.join() !== order.join();
+    setDragId(null);
+    setDragStartOrder(null);
+    if (changed) save(order);
+  };
+
   const move = (index: number, delta: number) => {
     const next = [...order];
     const target = index + delta;
@@ -140,14 +161,31 @@ export function DashboardBoard({
               <section
                 key={card.id}
                 aria-label={card.title}
+                draggable={editing && !pending}
+                onDragStart={(event) => {
+                  event.dataTransfer.effectAllowed = "move";
+                  event.dataTransfer.setData("text/plain", card.id);
+                  setDragId(card.id);
+                  setDragStartOrder(order);
+                }}
+                onDragOver={(event) => {
+                  if (!dragId) return;
+                  event.preventDefault();
+                  event.dataTransfer.dropEffect = "move";
+                  dragOver(card.id);
+                }}
+                onDrop={(event) => event.preventDefault()}
+                onDragEnd={finishDrag}
                 className={cn(
-                  "flex flex-col gap-3 rounded-xl border bg-content1 p-5 shadow-xs",
-                  editing ? "border-dashed border-primary-300" : "border-default-200/80",
+                  "flex flex-col gap-3 rounded-xl border bg-content1 p-5 shadow-xs transition-opacity",
+                  editing ? "cursor-grab border-dashed border-primary-300 active:cursor-grabbing" : "border-default-200/80",
+                  dragId === card.id && "opacity-40",
                   SIZE_CLASS[card.size],
                 )}
               >
                 <header className="flex items-center justify-between gap-2">
                   <div className="flex min-w-0 items-center gap-2.5">
+                    {editing ? <GripVertical className="h-4 w-4 shrink-0 text-default-400" aria-hidden /> : null}
                     <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-50 text-primary-600 dark:bg-primary-500/15 dark:text-primary-400">
                       {card.icon}
                     </span>

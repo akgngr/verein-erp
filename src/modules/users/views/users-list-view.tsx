@@ -46,6 +46,7 @@ export async function UsersListView({
 
   const canCreate = can(user.role, usersPermissions, "create");
   const canUpdate = can(user.role, usersPermissions, "update");
+  const canDelete = can(user.role, usersPermissions, "delete");
 
   return (
     <div className="flex flex-col gap-5">
@@ -72,6 +73,7 @@ export async function UsersListView({
             dir={params.dir}
             q={params.q}
             canUpdate={canUpdate}
+            canDelete={canDelete}
           />
         }
         permissionsContent={
