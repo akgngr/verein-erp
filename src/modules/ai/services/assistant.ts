@@ -1,14 +1,12 @@
 import "server-only";
 
-import Anthropic from "@anthropic-ai/sdk";
-
 import type { SessionUser } from "@/modules/auth";
 
 import { loadKnownIdentifiers } from "./known-identifiers";
 import { PseudonymVault } from "./privacy";
-import { availableTools, runTool, toApiTool, type AssistantProposal } from "./tools";
+import { adapterFor, providerSettings, type AiProviderId } from "./providers";
+import { availableTools, runTool, type AssistantProposal } from "./tools";
 
-const MODEL = "claude-opus-5-5";
 const MAX_TOOL_ROUNDS = 6;
 
 export type ChatTurn = { role: "user" | "assistant"; content: string };
@@ -34,72 +32,39 @@ function systemPrompt(locale: string, orgToday: string): string {
 }
 
 /**
- * Sohbet turu: kullanıcı mesajları maskelenir, model araçları çağırır (kullanıcı yetkisiyle),
- * araç çıktıları da maskelenerek modele gider; yanıt kullanıcıya dönerken yer tutucular çözülür.
+ * Sohbet turu (sağlayıcıdan bağımsız): kullanıcı mesajları ve araç çıktıları maskelenir,
+ * araçlar kullanıcının yetkisiyle çalışır, yanıt kullanıcıya dönerken yer tutucular çözülür.
  * Sunucu sohbeti saklamaz (geçmiş istemcide tutulur, her istekte yeniden gönderilir).
  */
-export async function runAssistant(args: { user: SessionUser; locale: string; turns: ChatTurn[] }): Promise<AssistantResult> {
-  const client = new Anthropic();
+export async function runAssistant(args: { user: SessionUser; locale: string; provider: AiProviderId; turns: ChatTurn[] }): Promise<AssistantResult> {
   const vault = new PseudonymVault(await loadKnownIdentifiers());
   const tools = await availableTools(args.user);
   const byName = new Map(tools.map((tool) => [tool.name, tool]));
   const proposals: AssistantProposal[] = [];
   const toolsUsed: string[] = [];
-  const usage = { inputTokens: 0, outputTokens: 0 };
-
-  const messages: Anthropic.Beta.BetaMessageParam[] = args.turns.map((turn) => ({ role: turn.role, content: vault.redact(turn.content) }));
   const today = new Date().toLocaleDateString("de-DE", { timeZone: "Europe/Berlin" });
 
-  for (let round = 0; round <= MAX_TOOL_ROUNDS; round += 1) {
-    const response = await client.beta.messages.create({
-      model: MODEL,
-      max_tokens: 16000,
-      betas: ["server-side-fallback-2026-07-01"],
-      fallbacks: "default",
-      output_config: { effort: "low" },
-      system: systemPrompt(args.locale, today),
-      tools: tools.map(toApiTool),
-      messages,
-    });
-    usage.inputTokens += response.usage.input_tokens;
-    usage.outputTokens += response.usage.output_tokens;
+  const result = await adapterFor(args.provider).run({
+    model: providerSettings(args.provider).model ?? "",
+    system: systemPrompt(args.locale, today),
+    turns: args.turns.map((turn) => ({ role: turn.role, content: vault.redact(turn.content) })),
+    tools: tools.map((tool) => ({ name: tool.name, description: tool.description, inputSchema: tool.inputSchema as Record<string, unknown> })),
+    maxToolRounds: MAX_TOOL_ROUNDS,
+    executeTool: async (name, input) => {
+      toolsUsed.push(name);
+      const tool = byName.get(name);
+      if (!tool) return { content: "TOOL_NOT_AVAILABLE", isError: true };
+      const outcome = await runTool(tool, input, { user: args.user, proposals });
+      return outcome.ok ? { content: JSON.stringify(vault.redactValue(outcome.value)), isError: false } : { content: outcome.error, isError: true };
+    },
+  });
 
-    if (response.stop_reason === "refusal") {
-      return { reply: args.locale === "de" ? "Diese Anfrage kann ich nicht beantworten." : "Bu isteğe yanıt veremiyorum.", proposals, toolsUsed, usage, redactions: vault.size };
-    }
-
-    messages.push({ role: "assistant", content: response.content });
-    const toolUses = response.content.filter((block): block is Anthropic.Beta.BetaToolUseBlock => block.type === "tool_use");
-
-    if (response.stop_reason !== "tool_use" || toolUses.length === 0 || round === MAX_TOOL_ROUNDS) {
-      const text = response.content
-        .filter((block): block is Anthropic.Beta.BetaTextBlock => block.type === "text")
-        .map((block) => block.text)
-        .join("\n")
-        .trim();
-      return { reply: vault.restore(text), proposals: proposals.map((proposal) => restoreProposal(proposal, vault)), toolsUsed, usage, redactions: vault.size };
-    }
-
-    const results: Anthropic.Beta.BetaToolResultBlockParam[] = [];
-    for (const block of toolUses) {
-      const tool = byName.get(block.name);
-      toolsUsed.push(block.name);
-      if (!tool) {
-        results.push({ type: "tool_result", tool_use_id: block.id, is_error: true, content: "TOOL_NOT_AVAILABLE" });
-        continue;
-      }
-      const outcome = await runTool(tool, block.input, { user: args.user, proposals });
-      results.push(
-        outcome.ok
-          ? { type: "tool_result", tool_use_id: block.id, content: JSON.stringify(vault.redactValue(outcome.value)) }
-          : { type: "tool_result", tool_use_id: block.id, is_error: true, content: outcome.error },
-      );
-    }
-    messages.push({ role: "user", content: results });
-  }
-  return { reply: "", proposals, toolsUsed, usage, redactions: vault.size };
-}
-
-function restoreProposal(proposal: AssistantProposal, vault: PseudonymVault): AssistantProposal {
-  return { ...proposal, title: vault.restore(proposal.title), description: proposal.description ? vault.restore(proposal.description) : null };
+  const refusal = args.locale === "de" ? "Diese Anfrage kann ich nicht beantworten." : "Bu isteğe yanıt veremiyorum.";
+  return {
+    reply: result.refused ? refusal : vault.restore(result.text),
+    proposals: proposals.map((proposal) => ({ ...proposal, title: vault.restore(proposal.title), description: proposal.description ? vault.restore(proposal.description) : null })),
+    toolsUsed,
+    usage: { inputTokens: result.inputTokens, outputTokens: result.outputTokens },
+    redactions: vault.size,
+  };
 }

@@ -21,10 +21,11 @@
   },
   "errors": {
     "consentRequired": "Asistanı kullanmak için önce veri koruma bilgilendirmesini onaylayın.",
-    "notConfigured": "Asistan henüz yapılandırılmamış (API anahtarı tanımlı değil).",
+    "notConfigured": "Asistan henüz yapılandırılmamış: yönetici bir yapay zekâ sağlayıcısı tanımlamalıdır.",
     "rateLimited": "Çok fazla istek gönderildi; lütfen biraz bekleyin.",
     "invalidRequest": "Geçersiz istek.",
-    "unavailable": "Asistan şu anda yanıt veremiyor; lütfen sonra tekrar deneyin."
+    "unavailable": "Asistan şu anda yanıt veremiyor; lütfen sonra tekrar deneyin.",
+    "providerNotReady": "Bu sağlayıcı yapılandırılmamış (anahtar/model eksik veya yerel adres özel ağda değil)."
   },
   "panel": {
     "title": "Asistan",
@@ -38,7 +39,7 @@
     "empty": "(boş yanıt)",
     "welcome": "Merhaba! Derneğin verileri hakkında soru sorabilir, rapor isteyebilir veya görev önerisi alabilirsiniz. Örnekler:",
     "privacyNote": "Kişisel veriler maskelenir; sohbet kaydedilmez.",
-    "notConfigured": "Asistan henüz yapılandırılmamış. Yönetici API anahtarını tanımlamalıdır.",
+    "notConfigured": "Asistan henüz yapılandırılmamış: yönetici bir yapay zekâ sağlayıcısı tanımlamalıdır.",
     "taskCreated": "Görev oluşturuldu.",
     "examples": {
       "q1": "Bu yılın gelir-gider özetini çıkar.",
@@ -66,7 +67,7 @@
         "ownRights": "Asistan yalnızca sizin yetkinizin olduğu ve yöneticinin izin verdiği modüllere erişir.",
         "noStorage": "Sohbet sunucuda veya tarayıcıda saklanmaz; paneli kapatıp temizlediğinizde silinir.",
         "noChanges": "Asistan veri değiştiremez; önerdiği işlemler ancak siz onaylarsanız sizin adınıza yapılır.",
-        "provider": "Yanıtlar Anthropic (Claude) API'si ile üretilir; API verileri model eğitimi için kullanılmaz.",
+        "provider": "Yanıtlar seçili sağlayıcıyla üretilir: {provider} — {where}",
         "revoke": "Onayınızı Ayarlar → Yapay zekâ asistanı sayfasından istediğiniz zaman geri alabilirsiniz."
       }
     }
@@ -94,9 +95,9 @@
     },
     "status": {
       "module": "Modül",
-      "key": "API anahtarı",
-      "keyOk": "Tanımlı (değer gösterilmez).",
-      "keyMissing": "Tanımlı değil: sunucuda ANTHROPIC_API_KEY ortam değişkeni gerekli.",
+      "key": "Sağlayıcı",
+      "keyOk": "Etkin sağlayıcı yapılandırılmış ({provider}); anahtar değeri gösterilmez.",
+      "keyMissing": "Yapılandırılmış sağlayıcı yok: aşağıdaki sağlayıcılardan biri için sunucu ortam değişkenleri gerekli.",
       "consent": "Kişisel onay",
       "consentOk": "Onay verdiniz.",
       "consentMissing": "Henüz onay vermediniz.",
@@ -113,8 +114,37 @@
       "noStorage": "Sohbet içeriği hiçbir yerde saklanmaz.",
       "noChanges": "Asistan veri değiştiremez; öneriler kullanıcı onayıyla uygulanır.",
       "audit": "Denetim kaydına yalnızca meta veri yazılır: kullanılan araçlar, token sayısı ve maskelenen değer sayısı.",
-      "provider": "Sağlayıcı: Anthropic Claude API. API verileri model eğitiminde kullanılmaz; dernek adına bir veri işleme sözleşmesi (AVV/DPA) yapılmalıdır.",
+      "provider": "Sağlayıcıyı yönetici seçer ve yalnızca izinli listeden olabilir: kendi sunucunuz, Mistral (AB), Claude veya OpenAI. Dernek, seçilen sağlayıcıyla veri işleme sözleşmesi (AVV/DPA) yapmalıdır.",
       "revoke": "Her kullanıcı onayını kendisi verir ve istediği an geri alır; yönetici modülü kapatarak asistanı herkes için durdurabilir."
+    },
+    "providerTitle": "Yapay zekâ sağlayıcısı",
+    "providerHelp": "Yalnızca veri koruma açısından uygun sağlayıcılar listelenir. Çin merkezli bulut API'leri (DeepSeek, GLM) bilinçli olarak yoktur; bu modeller yalnızca kendi sunucunuzda çalıştırılabilir. Sağlayıcı değişince her kullanıcıdan yeniden onay istenir.",
+    "providerActive": "Etkin",
+    "providerReady": "Hazır · model: {model}",
+    "providerMissing": "Yapılandırılmamış",
+    "providerUse": "Bu sağlayıcıyı kullan",
+    "providerChanged": "Sağlayıcı değiştirildi; kullanıcılar yeniden onay verecek."
+  },
+  "providers": {
+    "local": {
+      "name": "Kendi sunucunuz (yerel model)",
+      "where": "Veri dernek sunucusundan hiç çıkmaz. En katı seçenek.",
+      "setup": "AI_LOCAL_BASE_URL (özel ağ adresi, ör. http://ollama:11434/v1) ve AI_LOCAL_MODEL gerekir; dışarıdaki adresler reddedilir."
+    },
+    "mistral": {
+      "name": "Mistral AI",
+      "where": "AB (Fransa) — AB içinde işleme, AVV yapılabilir.",
+      "setup": "MISTRAL_API_KEY gerekir; model AI_MISTRAL_MODEL (varsayılan mistral-large-latest)."
+    },
+    "anthropic": {
+      "name": "Claude (Anthropic)",
+      "where": "ABD — AVV ve AB-ABD veri aktarım çerçevesi (DPF).",
+      "setup": "ANTHROPIC_API_KEY gerekir; model AI_ANTHROPIC_MODEL (varsayılan claude-opus-5-5)."
+    },
+    "openai": {
+      "name": "OpenAI (ChatGPT)",
+      "where": "ABD — AVV, AB veri yerleşimi seçeneği.",
+      "setup": "OPENAI_API_KEY ve AI_OPENAI_MODEL gerekir."
     }
   }
 }

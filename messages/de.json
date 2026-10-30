@@ -944,10 +944,11 @@
     },
     "errors": {
       "consentRequired": "Bitte bestätigen Sie zuerst den Datenschutzhinweis.",
-      "notConfigured": "Der Assistent ist noch nicht eingerichtet (kein API-Schlüssel).",
+      "notConfigured": "Der Assistent ist noch nicht eingerichtet: Ein Administrator muss einen KI-Anbieter hinterlegen.",
       "rateLimited": "Zu viele Anfragen; bitte kurz warten.",
       "invalidRequest": "Ungültige Anfrage.",
-      "unavailable": "Der Assistent ist gerade nicht erreichbar; bitte später erneut versuchen."
+      "unavailable": "Der Assistent ist gerade nicht erreichbar; bitte später erneut versuchen.",
+      "providerNotReady": "Dieser Anbieter ist nicht eingerichtet (Schlüssel/Modell fehlt oder lokale Adresse liegt nicht im privaten Netz)."
     },
     "panel": {
       "title": "Assistent",
@@ -961,7 +962,7 @@
       "empty": "(leere Antwort)",
       "welcome": "Hallo! Fragen Sie zu den Vereinsdaten, fordern Sie Berichte an oder lassen Sie sich Aufgaben vorschlagen. Beispiele:",
       "privacyNote": "Personendaten werden maskiert; der Chat wird nicht gespeichert.",
-      "notConfigured": "Der Assistent ist noch nicht eingerichtet. Ein Administrator muss den API-Schlüssel hinterlegen.",
+      "notConfigured": "Der Assistent ist noch nicht eingerichtet: Ein Administrator muss einen KI-Anbieter hinterlegen.",
       "taskCreated": "Aufgabe angelegt.",
       "examples": {
         "q1": "Fasse die Einnahmen und Ausgaben dieses Jahres zusammen.",
@@ -989,7 +990,7 @@
           "ownRights": "Der Assistent greift nur auf Module zu, für die Sie berechtigt sind und die der Administrator freigegeben hat.",
           "noStorage": "Der Chat wird weder auf dem Server noch im Browser gespeichert; nach Schließen und Leeren ist er gelöscht.",
           "noChanges": "Der Assistent kann keine Daten ändern; Vorschläge werden nur nach Ihrer Bestätigung in Ihrem Namen ausgeführt.",
-          "provider": "Antworten werden über die Anthropic-(Claude-)API erzeugt; API-Daten werden nicht zum Training verwendet.",
+          "provider": "Antworten werden mit dem gewählten Anbieter erzeugt: {provider} — {where}",
           "revoke": "Sie können Ihre Einwilligung jederzeit unter Einstellungen → KI-Assistent widerrufen."
         }
       }
@@ -1017,9 +1018,9 @@
       },
       "status": {
         "module": "Modul",
-        "key": "API-Schlüssel",
-        "keyOk": "Hinterlegt (Wert wird nicht angezeigt).",
-        "keyMissing": "Nicht hinterlegt: Umgebungsvariable ANTHROPIC_API_KEY auf dem Server erforderlich.",
+        "key": "Anbieter",
+        "keyOk": "Aktiver Anbieter eingerichtet ({provider}); Schlüssel wird nicht angezeigt.",
+        "keyMissing": "Kein Anbieter eingerichtet: Server-Umgebungsvariablen für einen der unten genannten Anbieter erforderlich.",
         "consent": "Persönliche Einwilligung",
         "consentOk": "Sie haben eingewilligt.",
         "consentMissing": "Noch keine Einwilligung.",
@@ -1036,8 +1037,37 @@
         "noStorage": "Chatinhalte werden nirgends gespeichert.",
         "noChanges": "Der Assistent ändert keine Daten; Vorschläge werden nur nach Bestätigung ausgeführt.",
         "audit": "Im Audit-Log stehen nur Metadaten: verwendete Werkzeuge, Tokenzahlen und Anzahl maskierter Werte.",
-        "provider": "Anbieter: Anthropic Claude API. API-Daten werden nicht zum Training verwendet; der Verein sollte einen Auftragsverarbeitungsvertrag (AVV/DPA) abschließen.",
+        "provider": "Der Administrator wählt den Anbieter ausschließlich aus der zugelassenen Liste: eigener Server, Mistral (EU), Claude oder OpenAI. Der Verein muss mit dem gewählten Anbieter einen AVV/DPA abschließen.",
         "revoke": "Jede Person willigt selbst ein und kann jederzeit widerrufen; der Administrator kann den Assistenten durch Deaktivieren des Moduls für alle stoppen."
+      },
+      "providerTitle": "KI-Anbieter",
+      "providerHelp": "Nur datenschutzrechtlich geeignete Anbieter sind aufgeführt. Cloud-APIs mit Sitz in China (DeepSeek, GLM) sind bewusst ausgeschlossen; diese Modelle nur auf dem eigenen Server. Bei einem Anbieterwechsel muss jede Person erneut einwilligen.",
+      "providerActive": "Aktiv",
+      "providerReady": "Bereit · Modell: {model}",
+      "providerMissing": "Nicht eingerichtet",
+      "providerUse": "Diesen Anbieter verwenden",
+      "providerChanged": "Anbieter geändert; Nutzer müssen erneut einwilligen."
+    },
+    "providers": {
+      "local": {
+        "name": "Eigener Server (lokales Modell)",
+        "where": "Daten verlassen den Vereinsserver nie. Strengste Option.",
+        "setup": "AI_LOCAL_BASE_URL (private Netzadresse, z. B. http://ollama:11434/v1) und AI_LOCAL_MODEL erforderlich; externe Adressen werden abgelehnt."
+      },
+      "mistral": {
+        "name": "Mistral AI",
+        "where": "EU (Frankreich) — Verarbeitung in der EU, AVV möglich.",
+        "setup": "MISTRAL_API_KEY erforderlich; Modell AI_MISTRAL_MODEL (Standard mistral-large-latest)."
+      },
+      "anthropic": {
+        "name": "Claude (Anthropic)",
+        "where": "USA — AVV und EU-US Data Privacy Framework (DPF).",
+        "setup": "ANTHROPIC_API_KEY erforderlich; Modell AI_ANTHROPIC_MODEL (Standard claude-opus-5-5)."
+      },
+      "openai": {
+        "name": "OpenAI (ChatGPT)",
+        "where": "USA — AVV, Option zur Datenresidenz in der EU.",
+        "setup": "OPENAI_API_KEY und AI_OPENAI_MODEL erforderlich."
       }
     }
   },

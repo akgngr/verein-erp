@@ -1,6 +1,5 @@
 import "server-only";
 
-import Anthropic from "@anthropic-ai/sdk";
 import { getLocale } from "next-intl/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
@@ -14,7 +13,8 @@ import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 
 import { aiPermissions } from "../permissions";
 import { runAssistant } from "../services/assistant";
-import { hasAiConsent, isAiConfigured } from "../services/consent";
+import { getActiveProvider, hasAiConsent } from "../services/consent";
+import { ProviderError } from "../services/providers";
 
 const bodySchema = z.object({
   turns: z
@@ -54,29 +54,31 @@ export async function aiChatHandler(request: Request): Promise<Response> {
     throw error;
   }
   if (!can(user.role, aiPermissions, "view")) return fail("common.errors.forbidden", 403);
+  const provider = await getActiveProvider();
+  if (!provider) return fail("ai.errors.notConfigured", 503, "notConfigured");
+  // Rıza sağlayıcıya bağlıdır: yönetici sağlayıcıyı değiştirdiyse yeniden onay istenir.
   if (!(await hasAiConsent(user.id))) return fail("ai.errors.consentRequired", 403, "consentRequired");
-  if (!isAiConfigured()) return fail("ai.errors.notConfigured", 503, "notConfigured");
   if (rateLimited(user.id)) return fail("ai.errors.rateLimited", 429);
 
   const parsed = bodySchema.safeParse(await request.json().catch(() => null));
   if (!parsed.success) return fail("ai.errors.invalidRequest", 400);
 
   try {
-    const result = await runAssistant({ user, locale: await getLocale(), turns: parsed.data.turns });
+    const result = await runAssistant({ user, locale: await getLocale(), provider, turns: parsed.data.turns });
     await writeAudit({
       userId: user.id,
       userLabel: buildUserLabel(user.name, user.email),
       action: "AI_CHAT",
       entity: "AiAssistant",
       entityId: null,
-      after: { tools: result.toolsUsed, inputTokens: result.usage.inputTokens, outputTokens: result.usage.outputTokens, redactedValues: result.redactions },
+      after: { provider, tools: result.toolsUsed, inputTokens: result.usage.inputTokens, outputTokens: result.usage.outputTokens, redactedValues: result.redactions },
     });
     return NextResponse.json({ ok: true, reply: result.reply, proposals: result.proposals });
   } catch (error) {
-    if (error instanceof Anthropic.RateLimitError) return fail("ai.errors.rateLimited", 429);
-    if (error instanceof Anthropic.AuthenticationError) return fail("ai.errors.notConfigured", 503, "notConfigured");
-    if (error instanceof Anthropic.APIError) {
-      console.error(`[ai] API hatası ${error.status}`);
+    if (error instanceof ProviderError) {
+      console.error(`[ai] Sağlayıcı hatası (${provider}): ${error.kind}`);
+      if (error.kind === "rateLimit") return fail("ai.errors.rateLimited", 429);
+      if (error.kind === "auth") return fail("ai.errors.notConfigured", 503, "notConfigured");
       return fail("ai.errors.unavailable", 502);
     }
     throw error;

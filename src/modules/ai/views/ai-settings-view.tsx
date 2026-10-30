@@ -8,8 +8,12 @@ import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
 
 import { ConsentToggle } from "../components/consent-toggle";
+import { can } from "@/shared/permissions/define";
+
 import { aiPermissions } from "../permissions";
-import { hasAiConsent, isAiConfigured } from "../services/consent";
+import { ProviderSelect } from "../components/provider-select";
+import { getActiveProvider, hasAiConsent } from "../services/consent";
+import { AI_PROVIDER_IDS, isProviderReady, providerSettings } from "../services/providers";
 import { availableTools } from "../services/tools";
 
 function Status({ ok, label, detail }: { ok: boolean; label: string; detail: string }) {
@@ -34,8 +38,10 @@ export async function AiSettingsView() {
     throw error;
   }
   const t = await getTranslations("ai.settings");
-  const [availability, consented, tools] = await Promise.all([getModuleAvailability("ai"), hasAiConsent(user.id), availableTools(user)]);
-  const configured = isAiConfigured();
+  const [availability, consented, tools, active] = await Promise.all([getModuleAvailability("ai"), hasAiConsent(user.id), availableTools(user), getActiveProvider()]);
+  const configured = active !== null;
+  // Anahtar değerleri istemciye gönderilmez; yalnızca hazır olup olmadığı ve model adı.
+  const providers = AI_PROVIDER_IDS.map((id) => ({ id, ready: isProviderReady(id), model: providerSettings(id).model }));
   const areas = [...new Set(tools.map((tool) => tool.module))];
 
   return (
@@ -43,7 +49,7 @@ export async function AiSettingsView() {
       <PageHeader title={t("title")} description={t("description")} />
       <div className="grid grid-cols-1 gap-3 md:grid-cols-3">
         <Status ok={availability === "available"} label={t("status.module")} detail={t(`status.availability.${availability}`)} />
-        <Status ok={configured} label={t("status.key")} detail={configured ? t("status.keyOk") : t("status.keyMissing")} />
+        <Status ok={configured} label={t("status.key")} detail={active ? t("status.keyOk", { provider: active }) : t("status.keyMissing")} />
         <Status ok={consented} label={t("status.consent")} detail={consented ? t("status.consentOk") : t("status.consentMissing")} />
       </div>
       {availability !== "available" ? (
@@ -54,6 +60,12 @@ export async function AiSettingsView() {
           </Link>
         </p>
       ) : null}
+
+      <section className="flex flex-col gap-2">
+        <h2 className="text-medium font-semibold">{t("providerTitle")}</h2>
+        <p className="text-small text-default-500">{t("providerHelp")}</p>
+        <ProviderSelect providers={providers} active={active} canChange={can(user.role, aiPermissions, "update")} />
+      </section>
 
       <section className="flex flex-col gap-2">
         <h2 className="text-medium font-semibold">{t("areasTitle")}</h2>

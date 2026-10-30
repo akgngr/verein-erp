@@ -50,14 +50,16 @@ function MessageBody({ text }: { text: string }) {
  */
 export function AiChatPanel({
   consented,
-  configured,
+  provider,
   createTask,
 }: {
   consented: boolean;
-  configured: boolean;
+  /** Etkin sağlayıcı (null: yapılandırılmamış). Rıza bu sağlayıcıya verilir. */
+  provider: "local" | "mistral" | "anthropic" | "openai" | null;
   createTask: (input: unknown) => Promise<ActionResult<{ id: string }>>;
 }) {
   const t = useTranslations("ai.panel");
+  const tProvider = useTranslations("ai.providers");
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [turns, setTurns] = useState<Turn[]>([]);
@@ -151,14 +153,21 @@ export function AiChatPanel({
           </div>
         </header>
 
-        {!consented ? (
+        {!provider ? (
+          <div className="flex flex-1 flex-col items-center justify-center gap-2 p-6 text-center text-small text-default-500">
+            <Lock className="h-6 w-6" aria-hidden />
+            {t("notConfigured")}
+          </div>
+        ) : !consented ? (
           <div className="flex flex-1 flex-col gap-3 overflow-y-auto p-4 text-small">
             <div className="flex items-center gap-2 font-semibold"><ShieldCheck className="h-4 w-4 text-success" aria-hidden />{t("consent.title")}</div>
             <p className="text-default-600">{t("consent.intro")}</p>
             <ul className="flex list-disc flex-col gap-1.5 pl-5 text-default-600">
-              {(["noPersonal", "masking", "ownRights", "noStorage", "noChanges", "provider", "revoke"] as const).map((key) => (
+              {(["noPersonal", "masking", "ownRights", "noStorage", "noChanges"] as const).map((key) => (
                 <li key={key}>{t(`consent.points.${key}`)}</li>
               ))}
+              <li>{t("consent.points.provider", { provider: tProvider(`${provider}.name`), where: tProvider(`${provider}.where`) })}</li>
+              <li>{t("consent.points.revoke")}</li>
             </ul>
             <Button
               color="primary"
@@ -173,11 +182,6 @@ export function AiChatPanel({
             >
               {t("consent.accept")}
             </Button>
-          </div>
-        ) : !configured ? (
-          <div className="flex flex-1 flex-col items-center justify-center gap-2 p-6 text-center text-small text-default-500">
-            <Lock className="h-6 w-6" aria-hidden />
-            {t("notConfigured")}
           </div>
         ) : (
           <>

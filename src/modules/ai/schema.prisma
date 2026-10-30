@@ -1,9 +1,20 @@
 /// Kullanıcının AI asistanı için verdiği açık rıza (KVKK/DSGVO). Kayıt yoksa asistan kullanılamaz.
-/// Sohbet içeriği SAKLANMAZ; yalnızca rızanın kendisi ve sürümü tutulur.
+/// Rıza belirli bir sağlayıcıya verilir; yönetici sağlayıcıyı değiştirirse rıza yeniden istenir.
+/// Sohbet içeriği SAKLANMAZ; yalnızca rızanın kendisi, sürümü ve sağlayıcısı tutulur.
 model AiUserConsent {
   userId     String   @id // FK DEĞİL (yumuşak referans)
   version    Int
+  provider   String   @default("")
   acceptedAt DateTime @default(now())
 
   @@map("ai_user_consents")
+}
+
+/// Asistan ayarı (tekil kayıt "singleton"): yöneticinin seçtiği sağlayıcı.
+model AiSettings {
+  id        String   @id
+  provider  String
+  updatedAt DateTime @updatedAt
+
+  @@map("ai_settings")
 }
