@@ -171,3 +171,98 @@ model AccountingSettings {
   donationCategoryId  String?
   updatedAt           DateTime @updatedAt
 }
+
+// ---------------------------------------------------------------------------
+// Faturalar (Rechnung) ve proforma faturalar.
+// KARAR (GoBD/§ 14 UStG): numara yalnızca kesinleşince (ISSUED) verilir; taslak numarasızdır,
+// numaralar yıl ve türe göre boşluksuz artar. Kesinleşen fatura değiştirilemez, yalnızca iptal edilir.
+// ---------------------------------------------------------------------------
+
+enum InvoiceKind {
+  INVOICE // Rechnung: R-2026-0001
+  PROFORMA // Proforma-Rechnung: PF-2026-0001
+}
+
+enum InvoiceStatus {
+  DRAFT
+  ISSUED
+  PAID
+  CANCELLED
+}
+
+model AccountingInvoiceCounter {
+  kind    InvoiceKind
+  year    Int
+  lastSeq Int         @default(0)
+
+  @@id([kind, year])
+}
+
+model AccountingInvoice {
+  id               String        @id @default(cuid())
+  kind             InvoiceKind
+  status           InvoiceStatus @default(DRAFT)
+  number           String?       @unique
+  year             Int?
+  sequence         Int?
+  issueDate        DateTime      @db.Date
+  dueDate          DateTime?     @db.Date
+  serviceDate      String? // Leistungsdatum/-zeitraum (serbest metin, ör. "März 2026")
+  recipientName    String
+  recipientAddress String? // çok satırlı adres
+  recipientEmail   String?
+  subject          String?
+  introText        String?
+  footerText       String?
+  taxNote          String? // ör. § 19 UStG / steuerbefreit
+  netCents         Int           @default(0)
+  taxCents         Int           @default(0)
+  grossCents       Int           @default(0)
+  // Ödeme alınınca oluşturulan gelir fişi (aynı modül): sourceType "INVOICE".
+  categoryId       String?
+  bookingId        String?
+  // Proformadan dönüştürülen faturada kaynak proforma.
+  sourceProformaId String?
+  issuedAt         DateTime?
+  paidAt           DateTime?
+  cancelledAt      DateTime?
+  cancelReason     String?
+  createdById      String
+  createdByLabel   String
+  createdAt        DateTime      @default(now())
+  updatedAt        DateTime      @updatedAt
+
+  lines AccountingInvoiceLine[]
+
+  @@unique([kind, year, sequence])
+  @@index([status])
+  @@index([issueDate])
+}
+
+model AccountingInvoiceLine {
+  id             String  @id @default(cuid())
+  invoiceId      String
+  position       Int
+  description    String
+  quantity       Decimal @db.Decimal(10, 2)
+  unit           String?
+  unitPriceCents Int
+  taxRate        Int // yüzde (0, 7, 19)
+  totalCents     Int // net satır toplamı
+
+  invoice AccountingInvoice @relation(fields: [invoiceId], references: [id], onDelete: Cascade)
+
+  @@index([invoiceId])
+}
+
+/// Fatura varsayılanları (tekil kayıt "singleton").
+model AccountingInvoiceSettings {
+  id                String  @id // her zaman "singleton"
+  defaultTaxRate    Int     @default(0)
+  taxNote           String? // ör. "Gemäß § 19 UStG wird keine Umsatzsteuer berechnet."
+  paymentDays       Int     @default(14)
+  bankDetails       String? // IBAN / BIC / Bank
+  footerText        String?
+  incomeCategoryId  String? // ödeme fişi için varsayılan gelir kategorisi
+  updatedAt         DateTime @updatedAt
+}

@@ -14,6 +14,7 @@ import { accountingPermissions } from "../permissions";
 import { BookingTypeBadge } from "../components/booking-type-badge";
 import { BookingDetailActions } from "../components/booking-detail-actions";
 import { FilesPanel } from "../components/files-panel";
+import { AccountingPdfButton } from "../components/pdf-button";
 
 function InfoRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -61,12 +62,15 @@ export async function AccountingDetailView({
         title={booking.bookingNumber}
         description={booking.description}
         actions={
-          <BookingDetailActions
-            bookingId={booking.id}
-            bookingNumber={booking.bookingNumber}
-            canUpdate={canUpdate}
-            canDelete={canDelete}
-          />
+          <div className="flex flex-wrap items-center gap-2">
+            <AccountingPdfButton href={`/api/accounting/${booking.id}/pdf`} label={t(`pdf.voucher.${booking.type}`)} />
+            <BookingDetailActions
+              bookingId={booking.id}
+              bookingNumber={booking.bookingNumber}
+              canUpdate={canUpdate}
+              canDelete={canDelete}
+            />
+          </div>
         }
       />
 

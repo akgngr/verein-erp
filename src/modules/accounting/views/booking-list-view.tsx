@@ -1,4 +1,4 @@
-import { Landmark, PiggyBank, Wallet } from "lucide-react";
+import { FileSpreadsheet, Landmark, PiggyBank, Wallet } from "lucide-react";
 import { FormDrawerButton } from "@/shared/components/forms/form-drawer";
 import { AccountingCreateView } from "./booking-create-view";
 import { AccountingEditView } from "./booking-edit-view";
@@ -25,8 +25,12 @@ import { berlinToday } from "../utils";
 import { AccountBalanceChips } from "../components/account-balance-chips";
 import { BookingTable } from "../components/booking-table";
 import { StatsCards } from "../components/stats-cards";
+import { AccountingPdfButton } from "../components/pdf-button";
 
 /** Fiş listesi (§ 11.1): yıl + istatistik + bakiye çipleri + tablo. */
+const EXPORT_LINK_CLASS =
+  "inline-flex h-10 items-center gap-1.5 rounded-medium border border-default-200 px-3 text-small font-medium text-foreground hover:bg-default-100";
+
 export async function AccountingListView({
   searchParams,
 }: {
@@ -84,6 +88,12 @@ export async function AccountingListView({
   const canUpdate = can(user.role, accountingPermissions, "update");
   const canDelete = can(user.role, accountingPermissions, "delete");
 
+  const exportQuery = new URLSearchParams(
+    Object.entries({ ...effectiveParams.filters, sort: params.sort, dir: params.dir }).flatMap(([key, value]) =>
+      typeof value === "string" && value ? [[key, value]] : [],
+    ),
+  ).toString();
+
   const locked = years.find((row) => row.year === yearFilter)?.lockedAt ?? null;
 
   // Yıl seçenekleri: fişi olan yıllar + geçerli yıl.
@@ -108,7 +118,14 @@ export async function AccountingListView({
         title={t("list.title")}
         description={String(yearFilter)}
         actions={
-          canCreate ? (
+          <div className="flex flex-wrap items-center gap-2">
+            {/* Çıktılar ekrandaki filtrelerle üretilir. */}
+            <AccountingPdfButton href={`/api/accounting/export/pdf?${exportQuery}`} label={t("pdf.list")} />
+            <a href={`/api/accounting/export?${exportQuery}`} className={EXPORT_LINK_CLASS}>
+              <FileSpreadsheet className="h-4 w-4" aria-hidden />
+              {t("pdf.excel")}
+            </a>
+          {canCreate ? (
             <div className="flex flex-wrap items-center gap-2">
               <FormDrawerButton param="yeni" value="gelir" startIcon={<PiggyBank className="h-4 w-4" />}>
                 {t("list.actions.newIncome")}
@@ -120,7 +137,8 @@ export async function AccountingListView({
                 {t("list.actions.newTransfer")}
               </FormDrawerButton>
             </div>
-          ) : null
+          ) : null}
+          </div>
         }
       />
 
