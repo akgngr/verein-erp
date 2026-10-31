@@ -15,7 +15,8 @@ import { parseListParams } from "@/shared/list-params";
 import { UsersTable } from "../components/users-table";
 import { RolePermissionsMatrix } from "../components/role-permissions-matrix";
 import { UsersTabsContainer } from "../components/users-tabs-container";
-import { getUserCountsByRole, listUsers } from "../queries/list-users";
+import { listUsers } from "../queries/list-users";
+import { countUsersByRole } from "../services/roles";
 import { usersPermissions } from "../permissions";
 
 export async function UsersListView({
@@ -39,10 +40,7 @@ export async function UsersListView({
     filterKeys: ["role", "status"],
   });
 
-  const [{ rows, total }, roleCounts] = await Promise.all([
-    listUsers(params),
-    getUserCountsByRole(),
-  ]);
+  const [{ rows, total }, roleCounts] = await Promise.all([listUsers(params), countUsersByRole()]);
 
   const canCreate = can(user.role, usersPermissions, "create");
   const canUpdate = can(user.role, usersPermissions, "update");
@@ -77,7 +75,7 @@ export async function UsersListView({
           />
         }
         permissionsContent={
-          <RolePermissionsMatrix users={rows} roleCounts={roleCounts} />
+          <RolePermissionsMatrix userCounts={roleCounts} canManage={canUpdate} />
         }
       />
       {canCreate && raw.yeni !== undefined ? <UserCreateView /> : null}

@@ -546,5 +546,11 @@
       "confirm": "Toplantıyı sil",
       "done": "Toplantı silindi."
     }
+  },
+  "permissions": {
+    "meetings": {
+      "label": "Toplantı ve Kararlar",
+      "description": "Toplantı takvimi, gündem maddeleri, tutanaklar, kararlar ve onaylama."
+    }
   }
 }

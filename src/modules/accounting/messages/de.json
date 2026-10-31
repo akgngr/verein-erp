@@ -656,5 +656,15 @@
       "reason": "Grund muss mindestens 3 Zeichen haben.",
       "paymentDays": "Anzahl Tage eingeben."
     }
+  },
+  "permissions": {
+    "accounting": {
+      "label": "Journal & Bücher",
+      "description": "Buchungen, Einnahmen/Ausgaben, Kontenplan und Periodenberichte."
+    },
+    "accountingSetup": {
+      "label": "Kontenplan & Budget",
+      "description": "Kontenplan (SKR49/SKR42), Budgetplanung und Finanzeinstellungen."
+    }
   }
 }

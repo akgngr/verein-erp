@@ -1,6 +1,7 @@
 import "server-only";
 
-import type { Meeting, MeetingStatus, Role } from "@prisma/client";
+import type { Meeting, MeetingStatus } from "@prisma/client";
+import type { Role } from "@/shared/roles";
 
 import { ActionError } from "@/modules/auth/server";
 import { can, type PermissionDefinition } from "@/shared/permissions/define";

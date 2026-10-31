@@ -77,6 +77,18 @@ function checkModuleMessages(moduleDir: string, trJson: unknown, deJson: unknown
     const cardsText = fs.readFileSync(cardsPath, "utf8");
     for (const match of cardsText.matchAll(/(?:titleKey|descriptionKey):\s*["']([\w.-]+)["']/g)) required.push(match[1]);
   }
+  // İzin kaynakları: "Roller ve İzinler" ekranındaki etiket ve açıklama modülün mesajlarında.
+  const permissionsPath = path.join(moduleDir, "permissions.ts");
+  if (fs.existsSync(permissionsPath)) {
+    for (const match of fs.readFileSync(permissionsPath, "utf8").matchAll(/definePermissions\(\s*["']([\w-]+)["']/g)) {
+      required.push(`permissions.${match[1]}.label`, `permissions.${match[1]}.description`);
+    }
+  }
+  // Modül rolleri (module.config.ts → roles): etiket ve kısa açıklama.
+  const rolesBlock = config.match(/\broles:\s*\[([\s\S]*?)\]/);
+  if (rolesBlock) {
+    for (const match of rolesBlock[1].matchAll(/\bkey:\s*["']([\w-]+)["']/g)) required.push(`roles.${match[1]}.label`, `roles.${match[1]}.shortDesc`);
+  }
   // Modül AI standardı (src/shared/ai/define.ts): her onay eyleminin kart metinleri olmalı.
   required.push(...checkModuleAi(moduleDir, problems));
   for (const key of required) {

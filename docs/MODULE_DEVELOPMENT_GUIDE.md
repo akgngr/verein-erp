@@ -50,7 +50,7 @@ bu iskeletin üzerine ekle; kalıpları kopyalayarak ilerle.
 ```text
 src/modules/<anahtar>/
 ├── module.config.ts     # kimlik, nav (sol panel), menu (modül alt menüsü)
-├── permissions.ts       # 7 rolün yetki matrisi (definePermissions)
+├── permissions.ts       # varsayılan izinler (definePermissions; bkz. §8b)
 ├── schema.prisma        # modelleri; tablo adları @@map("<anahtar>_...")
 ├── index.ts | server.ts | ui.ts
 ├── page.tsx             # modül ana sayfası  → /<anahtar>
@@ -146,8 +146,8 @@ Kök `messages/<dil>.json` **üretilen** dosyadır; `messages/shell/<dil>.json` 
 
 ## 7. Diğer kurallar
 
-- **Yetki:** `permissions.ts` 7 rolün tamamını içerir (ADMIN, BOARD, SECRETARY, TREASURER, AUDITOR, VIEWER, TEACHER).
-  TEACHER (öğretmen) yalnızca kurs ve öğrenci takibi modüllerini görür; diğer modüllerde `TEACHER: []`.
+- **Yetki:** `permissions.ts` 6 sistem rolünün tamamını içerir (ADMIN, BOARD, SECRETARY, TREASURER, AUDITOR, VIEWER);
+  modül rollerini (örn. TEACHER) yalnızca ilgili modüller ekler. Bunlar **varsayılandır**; yönetici değiştirebilir (§8b).
   Mutasyonlar `createAction({ permission, schema, handler })` ile yazılır; yetki, şema doğrulama,
   denetim kaydı (`audit`) ve hata çevirisi oradadır.
 - **Kullanıcı etiketi:** `createdByLabel` gibi alanlar için `buildUserLabel(user.name, user.email)`
@@ -199,6 +199,39 @@ access: [
   düşer ve yeniden istenir. İzinler veritabanında (`system_settings`, `module-access:<modül>`) tutulur; resmi modüller onaylı gelir, eklentiler izin bekler.
 
 ---
+
+## 8b. Roller ve izinler (veritabanı)
+
+Roller ve izinler artık sabit değildir. **Kullanıcılar → Roller ve İzinler** ekranı kurulu ve
+kullanılabilir tüm modüllerden **otomatik** oluşur; modül eklemek için bu ekrana kod yazılmaz.
+
+| Rol türü | Nereden gelir | Silinebilir mi |
+|---|---|---|
+| Sistem rolleri: ADMIN, BOARD, SECRETARY, TREASURER, AUDITOR, VIEWER | `src/shared/roles.ts` | Hayır (ADMIN kilitli, izinleri değişmez) |
+| Modül rolleri (örn. kurslar → TEACHER) | `module.config.ts → roles` | Modülle birlikte gelir/gider |
+| Özel roller | Yönetici ekrandan oluşturur (`custom_roles`) | Evet (kullanıcısı yoksa) |
+
+**Modül tarafında yapılacaklar**
+
+1. `permissions.ts`: her kaynak için `definePermissions("kaynak", { ADMIN, BOARD, SECRETARY, TREASURER, AUDITOR, VIEWER, ...modülRolleri })`.
+   ADMIN'e verilen işlemler kaynağın **desteklediği** işlemlerdir; ekranda yalnızca bunlar çıkar.
+2. Etiketler `messages/{tr,de}.json → permissions.<kaynak>.label` ve `.description` (doğrulayıcı zorunlu tutar).
+3. Modül kendi rolünü getiriyorsa `module.config.ts`:
+   ```ts
+   roles: [{ key: "TEACHER", color: "secondary" }],
+   ```
+   ve `messages → roles.TEACHER.label`, `roles.TEACHER.shortDesc`. Bu rolün izinlerini, ilgili
+   modüllerin `permissions.ts` dosyalarında `TEACHER: [...]` ile varsayılan olarak verin.
+4. Yetki denetimi her zaman `can(user.role, tanım, işlem)` / `requirePermission(...)` ile yapılır;
+   rol adına göre (`role === "BOARD"`) karar vermeyin — özel roller ve yöneticinin değişiklikleri devre dışı kalır.
+
+**Çalışma kuralları**
+
+- Yönetici bir rolün izinlerini değiştirirse fark `role_grants` tablosuna yazılır; "Varsayılana dön" bunu siler.
+- Modül pasifleşir/silinirse rolü yeni kullanıcıya atanamaz; rolü taşıyan kullanıcıların **hiçbir izni olmaz**
+  (kullanıcı silinmez, modül yeniden açılınca izinler geri gelir).
+- Özel rol oluşturulurken başka bir rolün izinleri kopyalanabilir; boş da başlayabilir.
+- Yönetici rolünü yalnızca bir yönetici atayabilir/değiştirebilir (yetki yükseltme koruması).
 
 ## 9. Panel kartları (`cards/`)
 

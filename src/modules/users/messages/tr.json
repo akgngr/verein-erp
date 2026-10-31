@@ -65,11 +65,14 @@
     "selfDeactivate": "Kendinizi pasife alamazsınız.",
     "lastAdmin": "Sistemde en az bir aktif yönetici kalmalıdır.",
     "selfDemote": "Kendi rolünüzü düşüremezsiniz.",
-    "selfDelete": "Kendinizi silemezsiniz."
+    "selfDelete": "Kendinizi silemezsiniz.",
+    "roleUnavailable": "Bu rol atanamaz: rol yok ya da modülü etkin değil.",
+    "adminOnly": "Yönetici rolünü yalnızca bir yönetici atayabilir veya değiştirebilir."
   },
   "validation": {
     "nameRequired": "Ad soyad zorunludur.",
-    "nameMax": "Ad soyad en fazla 100 karakter olabilir."
+    "nameMax": "Ad soyad en fazla 100 karakter olabilir.",
+    "roleRequired": "Rol seçin."
   },
   "matrix": {
     "title": "Rol ve İzin Yönetimi",
@@ -129,11 +132,6 @@
         "label": "Salt Okunur (Leser)",
         "shortDesc": "Temel evrak ve toplantı bilgilerini inceleme yetkisi.",
         "legalContext": "Veri değişikliği veya mali kayıtları inceleme yetkisi bulunmaz."
-      },
-      "TEACHER": {
-        "label": "Öğretmen (Lehrkraft)",
-        "shortDesc": "Yalnızca kendi kursları ve öğrencilerinin yoklama, not ve gelişim kayıtları.",
-        "legalContext": "Kurs ücretlerine ve dernek kayıtlarına erişemez; öğrenci verileri DSGVO gereği yalnızca ders amacıyla işlenir."
       }
     },
     "modules": {
@@ -209,5 +207,71 @@
   "module": {
     "label": "Kullanıcılar",
     "description": "Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri."
+  },
+  "permissions": {
+    "users": {
+      "label": "Kullanıcı Hesapları",
+      "description": "Sistem kullanıcıları, oturum hesapları ve parola sıfırlama."
+    }
+  },
+  "access": {
+    "system": "Modül rollerinin (örn. Öğretmen) kullanılabilir olup olmadığını görmek için kurulu ve etkin modülleri okur."
+  },
+  "roles": {
+    "newRole": "Yeni rol",
+    "kinds": {
+      "system": "Sistem rolleri",
+      "module": "Modül rolleri",
+      "custom": "Özel roller"
+    },
+    "kind": {
+      "system": "Sistem rolü",
+      "module": "Modül rolü",
+      "custom": "Özel rol"
+    },
+    "kindModule": "Modül rolü: {module}",
+    "summary": "{users} kullanıcı · {permissions} izin",
+    "unavailable": "Bu rolün modülü etkin değil: rol yeni kullanıcıya atanamaz ve rolü taşıyan kullanıcıların izni yoktur.",
+    "locked": "Kilitli",
+    "lockedHint": "Yönetici rolü kilitlidir; tüm yetkilere sahiptir ve değiştirilemez.",
+    "edit": "Düzenle",
+    "delete": "Sil",
+    "reset": "Varsayılana dön",
+    "search": "Modül veya izin ara…",
+    "customized": "Değiştirildi",
+    "deleteTitle": "Rolü sil",
+    "deleteMessage": "\"{role}\" rolü silinsin mi? Rolü taşıyan kullanıcı varsa silinemez.",
+    "resetTitle": "Varsayılan izinlere dön",
+    "resetMessage": "\"{role}\" rolündeki tüm değişiklikler silinip modüllerin varsayılan izinleri geri yüklensin mi?",
+    "deleted": "Rol silindi.",
+    "resetDone": "Varsayılan izinler geri yüklendi.",
+    "created": "Rol oluşturuldu.",
+    "updated": "Rol güncellendi.",
+    "editTitle": "Rolü düzenle",
+    "cancel": "Vazgeç",
+    "save": "Kaydet",
+    "fields": {
+      "label": "Rol adı",
+      "labelPlaceholder": "ör. Kurs koordinatörü",
+      "description": "Kısa açıklama",
+      "descriptionPlaceholder": "Bu rol ne yapar?",
+      "color": "Renk",
+      "sample": "Örnek",
+      "copyFrom": "İzinleri kopyala",
+      "copyFromNone": "Boş başla (hiç izin yok)",
+      "copyFromHint": "Seçilen rolün şu anki izinleri yeni role kopyalanır; sonra değiştirebilirsiniz."
+    },
+    "validation": {
+      "labelMin": "Rol adı en az 2 karakter olmalı.",
+      "labelMax": "Rol adı en fazla 60 karakter olabilir.",
+      "descriptionMax": "Açıklama en fazla 200 karakter olabilir."
+    },
+    "errors": {
+      "locked": "Yönetici rolünün izinleri değiştirilemez.",
+      "unknownRole": "Rol bulunamadı.",
+      "unknownResource": "İzin kaynağı bulunamadı veya modülü etkin değil.",
+      "notCustom": "Yalnızca özel roller düzenlenip silinebilir.",
+      "inUse": "Bu rolü taşıyan kullanıcılar var; önce kullanıcılara başka rol atayın."
+    }
   }
 }

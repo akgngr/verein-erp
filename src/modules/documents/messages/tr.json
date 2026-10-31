@@ -310,5 +310,15 @@
       "confirm": "Evrakı sil",
       "done": "Evrak silindi."
     }
+  },
+  "permissions": {
+    "documentCategories": {
+      "label": "Evrak Kategorileri",
+      "description": "Evrak kategorilerinin ve dosya planının yönetimi."
+    },
+    "documents": {
+      "label": "Gelen / Giden Evraklar",
+      "description": "Resmi evrakların sisteme kaydedilmesi, numaralandırılması ve arşivlenmesi."
+    }
   }
 }

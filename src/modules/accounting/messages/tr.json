@@ -656,5 +656,15 @@
       "reason": "Gerekçe en az 3 karakter olmalı.",
       "paymentDays": "Gün sayısı girin."
     }
+  },
+  "permissions": {
+    "accounting": {
+      "label": "Yevmiye & Defterler",
+      "description": "Fişler, gelir-gider kayıtları, hesap planı ve dönem raporları."
+    },
+    "accountingSetup": {
+      "label": "Hesap Planı & Bütçe",
+      "description": "Hesap planı (SKR49/SKR42), bütçe öngörüleri ve mali ayarlar."
+    }
   }
 }

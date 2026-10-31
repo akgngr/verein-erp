@@ -475,5 +475,19 @@
   },
   "access": {
     "organization": "Makbuz ve belgelerde dernek antetini kullanır."
+  },
+  "permissions": {
+    "memberPayments": {
+      "label": "Aidat ve Ödemeler",
+      "description": "Üye aidat tahakkukları, tahsilat ve ödeme takibi."
+    },
+    "memberTypes": {
+      "label": "Üyelik Tipleri",
+      "description": "Asil, fahri, öğrenci vb. üyelik tipleri ve aidat baremleri."
+    },
+    "members": {
+      "label": "Üye Kayıtları",
+      "description": "Dernek üyelerinin profili, iletişim verileri ve üyelik durumları."
+    }
   }
 }

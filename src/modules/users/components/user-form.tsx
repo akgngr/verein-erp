@@ -15,7 +15,8 @@ import { FormPasswordInput } from "@/shared/components/forms/form-password-input
 import { FormSelect } from "@/shared/components/forms/form-select";
 import { FormSwitch } from "@/shared/components/forms/form-switch";
 import { SubmitButton } from "@/shared/components/forms/submit-button";
-import { ROLES, type Role } from "@/shared/roles";
+import { useRoles } from "@/shared/components/roles/roles-provider";
+import type { Role } from "@/shared/roles";
 
 import { createUserAction } from "../actions/create-user";
 import { updateUserAction } from "../actions/update-user";
@@ -27,9 +28,10 @@ import {
   type UserUpdateInput,
 } from "../schemas/user";
 
-function useRoleSelectOptions() {
-  const tRoles = useTranslations("roles");
-  return ROLES.map((role) => ({ value: role as string, label: tRoles(role) }));
+/** Yalnızca atanabilir roller (modülü kullanılabilir olanlar); mevcut rol listede değilse eklenir. */
+function useRoleSelectOptions(current?: string) {
+  const { roles, label } = useRoles();
+  return roles.filter((role) => role.available || role.key === current).map((role) => ({ value: role.key, label: label(role.key) }));
 }
 
 /** Yeni kullanıcı formu (11.1). */
@@ -99,7 +101,7 @@ export type UserEditValues = {
   id: string;
   name: string;
   email: string;
-  role: "ADMIN" | "BOARD" | "SECRETARY" | "VIEWER" | "TREASURER" | "AUDITOR" | "TEACHER";
+  role: Role;
   isActive: boolean;
 };
 
@@ -109,7 +111,7 @@ export function UserEditForm({ user }: { user: UserEditValues }) {
   const tCommon = useTranslations("common");
   const router = useRouter();
   const closeDrawer = useFormDrawerClose();
-  const roleOptions = useRoleSelectOptions();
+  const roleOptions = useRoleSelectOptions(user.role);
   const [formError, setFormError] = useState<string | null>(null);
   const form = useForm<UserUpdateInput>({
     resolver: zodResolver(userUpdateSchema),

@@ -59,5 +59,11 @@
   "errors": {
     "logoMissing": "Es wurde kein Logo hochgeladen.",
     "logoReadFailed": "Das Logo konnte nicht gelesen werden."
+  },
+  "permissions": {
+    "organization": {
+      "label": "Vereinsstammdaten",
+      "description": "Registernummer, Steuernummer, Bankverbindungen und Briefkopf-Logo."
+    }
   }
 }

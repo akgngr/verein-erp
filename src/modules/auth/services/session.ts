@@ -1,4 +1,4 @@
-import type { Role } from "@prisma/client";
+import type { Role } from "@/shared/roles";
 
 import type { SessionUser } from "../types";
 

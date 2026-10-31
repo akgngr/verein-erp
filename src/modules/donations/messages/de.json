@@ -481,5 +481,11 @@
     "accounting": "Bucht Spenden als Einnahmen und storniert sie.",
     "members": "Liest Mitgliedsanschrift und Beitragszahlungen für Zuwendungsbestätigungen.",
     "organization": "Verwendet Vereinsdaten in Zuwendungsbestätigungen."
+  },
+  "permissions": {
+    "donations": {
+      "label": "Spenden und Bestätigungen",
+      "description": "Spendeneingänge und Erstellung amtlicher Zuwendungsbestätigungen."
+    }
   }
 }

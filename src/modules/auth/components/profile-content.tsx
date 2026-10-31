@@ -2,14 +2,14 @@
 
 import { useTranslations } from "next-intl";
 
-import { Card, CardBody, CardHeader, Chip } from "@heroui/react";
+import { Card, CardBody, CardHeader } from "@heroui/react";
 
 import { ChangePasswordForm } from "../components/change-password-form";
 import type { SessionUser } from "../types";
 import type { ProfileData } from "../schemas/profile";
 import type { ActionResult } from "@/shared/types/action";
 import { ProfileForm } from "./profile-form";
-import { ROLE_COLORS } from "@/shared/roles";
+import { RoleChip } from "@/shared/components/roles/roles-provider";
 
 /**
  * Profil sayfasının HeroUI kullanan bölümü client bileşendir;
@@ -24,7 +24,6 @@ export function ProfileContent({
   profile: ProfileData;
   saveProfileAction: (input: unknown) => Promise<ActionResult>;
 }) {
-  const tRoles = useTranslations("roles");
   const t = useTranslations("auth.profile");
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
@@ -43,9 +42,7 @@ export function ProfileContent({
           </div>
           <div className="flex items-center justify-between gap-4">
             <span className="text-default-500">{t("role")}</span>
-            <Chip color={ROLE_COLORS[user.role]} size="sm" variant="flat">
-              {tRoles(user.role)}
-            </Chip>
+            <RoleChip role={user.role} />
           </div>
         </CardBody>
       </Card>

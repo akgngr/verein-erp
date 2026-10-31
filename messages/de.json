@@ -247,8 +247,7 @@
     "SECRETARY": "Schriftführung",
     "VIEWER": "Nur Lesen",
     "TREASURER": "Kassenwart",
-    "AUDITOR": "Kassenprüfung",
-    "TEACHER": "Lehrkraft"
+    "AUDITOR": "Kassenprüfung"
   },
   "validation": {
     "passwordMin": "Das Passwort muss mindestens 10 Zeichen lang sein.",
@@ -924,6 +923,16 @@
         "reason": "Grund muss mindestens 3 Zeichen haben.",
         "paymentDays": "Anzahl Tage eingeben."
       }
+    },
+    "permissions": {
+      "accounting": {
+        "label": "Journal & Bücher",
+        "description": "Buchungen, Einnahmen/Ausgaben, Kontenplan und Periodenberichte."
+      },
+      "accountingSetup": {
+        "label": "Kontenplan & Budget",
+        "description": "Kontenplan (SKR49/SKR42), Budgetplanung und Finanzeinstellungen."
+      }
     }
   },
   "ai": {
@@ -1120,6 +1129,12 @@
       "createdAt": "Erstellt am",
       "note": "Dieser Bericht wurde vom KI-Assistenten erstellt; prüfen Sie Zahlen für offizielle Zwecke im jeweiligen Modul.",
       "footer": "Seite {page} von {total}"
+    },
+    "permissions": {
+      "ai": {
+        "label": "KI-Assistent",
+        "description": "Assistent nutzen und Einstellungen (Anbieter, Berechtigungen) verwalten."
+      }
     }
   },
   "audit": {
@@ -1226,6 +1241,12 @@
     "module": {
       "label": "Prüfprotokoll",
       "description": "Unveränderliche Sicherheits- und Prüfprotokolle aller Systemvorgänge."
+    },
+    "permissions": {
+      "audit": {
+        "label": "Sicherheits- & Änderungsprotokoll",
+        "description": "Unveränderliche Prüfspuren und Sicherheitsereignisse."
+      }
     }
   },
   "auth": {
@@ -1667,6 +1688,30 @@
         "confirm": "Kurs löschen",
         "done": "Kurs gelöscht."
       }
+    },
+    "roles": {
+      "TEACHER": {
+        "label": "Lehrkraft",
+        "shortDesc": "Sieht nur eigene Kurse, Termine und den Lernfortschritt."
+      }
+    },
+    "permissions": {
+      "courseFees": {
+        "label": "Kursgebühren",
+        "description": "Gebührenforderungen, Zahlungen und Übergabe an die Buchhaltung."
+      },
+      "courseSessions": {
+        "label": "Kurstermine",
+        "description": "Terminplan und Termineinträge."
+      },
+      "courseTeachers": {
+        "label": "Lehrkräfte",
+        "description": "Lehrkräfte und Kurszuordnungen."
+      },
+      "courses": {
+        "label": "Kurse",
+        "description": "Kurse und Nachhilfe, Anmeldungen."
+      }
     }
   },
   "documents": {
@@ -1977,6 +2022,16 @@
         "kind": "Schriftstück löschen",
         "confirm": "Löschen",
         "done": "Schriftstück gelöscht."
+      }
+    },
+    "permissions": {
+      "documentCategories": {
+        "label": "Schriftgutkategorien",
+        "description": "Verwaltung der Kategorien und des Aktenplans."
+      },
+      "documents": {
+        "label": "Ein- / ausgehendes Schriftgut",
+        "description": "Erfassung, Nummerierung und Archivierung offizieller Schriftstücke."
       }
     }
   },
@@ -2460,6 +2515,12 @@
       "accounting": "Bucht Spenden als Einnahmen und storniert sie.",
       "members": "Liest Mitgliedsanschrift und Beitragszahlungen für Zuwendungsbestätigungen.",
       "organization": "Verwendet Vereinsdaten in Zuwendungsbestätigungen."
+    },
+    "permissions": {
+      "donations": {
+        "label": "Spenden und Bestätigungen",
+        "description": "Spendeneingänge und Erstellung amtlicher Zuwendungsbestätigungen."
+      }
     }
   },
   "events": {
@@ -2674,6 +2735,12 @@
         "confirm": "Entwurf anlegen",
         "done": "Veranstaltungsentwurf angelegt."
       }
+    },
+    "permissions": {
+      "events": {
+        "label": "Veranstaltungen",
+        "description": "Veranstaltungsplanung, Anmeldungen und Freigabe."
+      }
     }
   },
   "exports": {
@@ -2713,6 +2780,12 @@
     },
     "errors": {
       "notFound": "Datei nicht gefunden oder abgelaufen."
+    },
+    "permissions": {
+      "exports": {
+        "label": "Meine Dateien",
+        "description": "Eigene erstellte Dateien (PDF, Excel, Word …)."
+      }
     }
   },
   "inventory": {
@@ -2846,6 +2919,12 @@
         "confirm": "Posten löschen",
         "done": "Inventarposten gelöscht."
       }
+    },
+    "permissions": {
+      "inventory": {
+        "label": "Inventar",
+        "description": "Inventarverzeichnis, Ausgaben und Aussonderung."
+      }
     }
   },
   "mail": {
@@ -2967,6 +3046,12 @@
     "module": {
       "label": "E-Mail-Versand",
       "description": "Gemeinsamer E-Mail-Versand für alle Module mit SMTP-Einstellungen und Versandprotokoll."
+    },
+    "permissions": {
+      "mail": {
+        "label": "E-Mail-Infrastruktur",
+        "description": "SMTP-Einstellungen und E-Mail-Vorlagen."
+      }
     }
   },
   "meetings": {
@@ -3514,6 +3599,12 @@
         "confirm": "Sitzung löschen",
         "done": "Sitzung gelöscht."
       }
+    },
+    "permissions": {
+      "meetings": {
+        "label": "Sitzungen und Beschlüsse",
+        "description": "Sitzungskalender, Tagesordnung, Protokolle, Beschlüsse und Freigabe."
+      }
     }
   },
   "members": {
@@ -3990,6 +4081,20 @@
     },
     "access": {
       "organization": "Verwendet den Vereinsbriefkopf in Quittungen und Dokumenten."
+    },
+    "permissions": {
+      "memberPayments": {
+        "label": "Beiträge und Zahlungen",
+        "description": "Beitragssoll, Einzug und Zahlungsverfolgung."
+      },
+      "memberTypes": {
+        "label": "Mitgliedsarten",
+        "description": "Mitgliedsarten (ordentlich, Ehren-, Förder- usw.) und Beitragssätze."
+      },
+      "members": {
+        "label": "Mitgliederdaten",
+        "description": "Profile, Kontaktdaten und Mitgliedschaftsstatus der Vereinsmitglieder."
+      }
     }
   },
   "organization": {
@@ -4050,6 +4155,12 @@
     "errors": {
       "logoMissing": "Es wurde kein Logo hochgeladen.",
       "logoReadFailed": "Das Logo konnte nicht gelesen werden."
+    },
+    "permissions": {
+      "organization": {
+        "label": "Vereinsstammdaten",
+        "description": "Registernummer, Steuernummer, Bankverbindungen und Briefkopf-Logo."
+      }
     }
   },
   "progress": {
@@ -4180,6 +4291,12 @@
     "access": {
       "courses": "Liest Kurse, Termine und Anmeldungen für Anwesenheit und Noten.",
       "organization": "Verwendet den Vereinsbriefkopf im Elternbericht."
+    },
+    "permissions": {
+      "progress": {
+        "label": "Lernfortschritt",
+        "description": "Anwesenheit, Noten, Entwicklungsnotizen und Elternbericht."
+      }
     }
   },
   "students": {
@@ -4369,6 +4486,16 @@
         "guardians": "Erziehungsberechtigte",
         "withoutPayer": "Ohne Zahlungspflichtige"
       }
+    },
+    "permissions": {
+      "studentsDatev": {
+        "label": "DATEV-Export",
+        "description": "Export der Schüler- und Elterndaten für DATEV."
+      },
+      "students": {
+        "label": "Schüler",
+        "description": "Schüler- und Elterndaten."
+      }
     }
   },
   "system": {
@@ -4475,6 +4602,16 @@
         "improvement": "Verbesserung",
         "fix": "Korrektur",
         "security": "Sicherheit"
+      }
+    },
+    "permissions": {
+      "settings": {
+        "label": "Systemeinstellungen",
+        "description": "Allgemeine System- und Plattformparameter."
+      },
+      "system": {
+        "label": "Modulverwaltung",
+        "description": "Erweiterungen installieren, Module aktivieren und deaktivieren."
       }
     }
   },
@@ -4585,6 +4722,12 @@
         "confirm": "Aufgabe löschen",
         "done": "Aufgabe gelöscht."
       }
+    },
+    "permissions": {
+      "tasks": {
+        "label": "Aufgaben",
+        "description": "Aufgaben anlegen, zuweisen und verfolgen."
+      }
     }
   },
   "users": {
@@ -4651,11 +4794,14 @@
       "selfDeactivate": "Sie können sich nicht selbst deaktivieren.",
       "lastAdmin": "Im System muss mindestens ein aktiver Administrator verbleiben.",
       "selfDemote": "Sie können Ihre eigene Rolle nicht herabstufen.",
-      "selfDelete": "Sie können sich nicht selbst löschen."
+      "selfDelete": "Sie können sich nicht selbst löschen.",
+      "roleUnavailable": "Diese Rolle kann nicht zugewiesen werden: Sie existiert nicht oder ihr Modul ist nicht aktiv.",
+      "adminOnly": "Nur ein Administrator kann die Administratorrolle vergeben oder ändern."
     },
     "validation": {
       "nameRequired": "Name ist erforderlich.",
-      "nameMax": "Der Name darf höchstens 100 Zeichen lang sein."
+      "nameMax": "Der Name darf höchstens 100 Zeichen lang sein.",
+      "roleRequired": "Bitte eine Rolle wählen."
     },
     "matrix": {
       "title": "Rollen- und Berechtigungsverwaltung",
@@ -4715,11 +4861,6 @@
           "label": "Leser",
           "shortDesc": "Darf grundlegende Schriftgut- und Sitzungsdaten einsehen.",
           "legalContext": "Keine Änderungsrechte und kein Einblick in Finanzdaten."
-        },
-        "TEACHER": {
-          "label": "Lehrkraft (Öğretmen)",
-          "shortDesc": "Nur eigene Kurse sowie Anwesenheit, Noten und Lernfortschritt der eigenen Schüler.",
-          "legalContext": "Kein Zugriff auf Kursgebühren und Vereinsdaten; Schülerdaten werden gemäß DSGVO nur zu Unterrichtszwecken verarbeitet."
         }
       },
       "modules": {
@@ -4795,6 +4936,72 @@
     "module": {
       "label": "Benutzer",
       "description": "Benutzerkonten, Rollen und Zugriffsrechte."
+    },
+    "permissions": {
+      "users": {
+        "label": "Benutzerkonten",
+        "description": "Systembenutzer, Anmeldekonten und Passwort-Zurücksetzung."
+      }
+    },
+    "access": {
+      "system": "Liest installierte und aktive Module, um zu prüfen, ob Modulrollen (z. B. Lehrkraft) verfügbar sind."
+    },
+    "roles": {
+      "newRole": "Neue Rolle",
+      "kinds": {
+        "system": "Systemrollen",
+        "module": "Modulrollen",
+        "custom": "Eigene Rollen"
+      },
+      "kind": {
+        "system": "Systemrolle",
+        "module": "Modulrolle",
+        "custom": "Eigene Rolle"
+      },
+      "kindModule": "Modulrolle: {module}",
+      "summary": "{users} Benutzer · {permissions} Berechtigungen",
+      "unavailable": "Das Modul dieser Rolle ist nicht aktiv: Die Rolle kann nicht vergeben werden, und Benutzer mit dieser Rolle haben keine Berechtigungen.",
+      "locked": "Gesperrt",
+      "lockedHint": "Die Administratorrolle ist gesperrt; sie hat alle Rechte und kann nicht geändert werden.",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "reset": "Auf Standard zurücksetzen",
+      "search": "Modul oder Berechtigung suchen …",
+      "customized": "Geändert",
+      "deleteTitle": "Rolle löschen",
+      "deleteMessage": "Rolle „{role}“ löschen? Rollen mit zugewiesenen Benutzern können nicht gelöscht werden.",
+      "resetTitle": "Standardberechtigungen wiederherstellen",
+      "resetMessage": "Alle Änderungen an der Rolle „{role}“ verwerfen und die Standardberechtigungen der Module wiederherstellen?",
+      "deleted": "Rolle gelöscht.",
+      "resetDone": "Standardberechtigungen wiederhergestellt.",
+      "created": "Rolle angelegt.",
+      "updated": "Rolle aktualisiert.",
+      "editTitle": "Rolle bearbeiten",
+      "cancel": "Abbrechen",
+      "save": "Speichern",
+      "fields": {
+        "label": "Rollenname",
+        "labelPlaceholder": "z. B. Kurskoordination",
+        "description": "Kurzbeschreibung",
+        "descriptionPlaceholder": "Was macht diese Rolle?",
+        "color": "Farbe",
+        "sample": "Beispiel",
+        "copyFrom": "Berechtigungen kopieren",
+        "copyFromNone": "Leer beginnen (keine Berechtigungen)",
+        "copyFromHint": "Die aktuellen Berechtigungen der gewählten Rolle werden übernommen; Sie können sie danach ändern."
+      },
+      "validation": {
+        "labelMin": "Der Rollenname muss mindestens 2 Zeichen haben.",
+        "labelMax": "Der Rollenname darf höchstens 60 Zeichen haben.",
+        "descriptionMax": "Die Beschreibung darf höchstens 200 Zeichen haben."
+      },
+      "errors": {
+        "locked": "Die Berechtigungen der Administratorrolle können nicht geändert werden.",
+        "unknownRole": "Rolle nicht gefunden.",
+        "unknownResource": "Berechtigung nicht gefunden oder Modul nicht aktiv.",
+        "notCustom": "Nur eigene Rollen können bearbeitet und gelöscht werden.",
+        "inUse": "Dieser Rolle sind Benutzer zugewiesen; weisen Sie ihnen zuerst eine andere Rolle zu."
+      }
     }
   }
 }

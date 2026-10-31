@@ -105,5 +105,11 @@
   "module": {
     "label": "Prüfprotokoll",
     "description": "Unveränderliche Sicherheits- und Prüfprotokolle aller Systemvorgänge."
+  },
+  "permissions": {
+    "audit": {
+      "label": "Sicherheits- & Änderungsprotokoll",
+      "description": "Unveränderliche Prüfspuren und Sicherheitsereignisse."
+    }
   }
 }

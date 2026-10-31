@@ -475,5 +475,19 @@
   },
   "access": {
     "organization": "Verwendet den Vereinsbriefkopf in Quittungen und Dokumenten."
+  },
+  "permissions": {
+    "memberPayments": {
+      "label": "Beiträge und Zahlungen",
+      "description": "Beitragssoll, Einzug und Zahlungsverfolgung."
+    },
+    "memberTypes": {
+      "label": "Mitgliedsarten",
+      "description": "Mitgliedsarten (ordentlich, Ehren-, Förder- usw.) und Beitragssätze."
+    },
+    "members": {
+      "label": "Mitgliederdaten",
+      "description": "Profile, Kontaktdaten und Mitgliedschaftsstatus der Vereinsmitglieder."
+    }
   }
 }

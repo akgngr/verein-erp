@@ -108,5 +108,15 @@
       "fix": "Düzeltme",
       "security": "Güvenlik"
     }
+  },
+  "permissions": {
+    "settings": {
+      "label": "Sistem Ayarları",
+      "description": "Genel dernek sistemi ve platform parametreleri."
+    },
+    "system": {
+      "label": "Modül Yönetimi",
+      "description": "Eklenti yükleme, modül aktifleştirme ve pasifleştirme."
+    }
   }
 }

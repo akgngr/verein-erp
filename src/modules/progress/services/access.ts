@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { Role } from "@prisma/client";
+import type { Role } from "@/shared/roles";
 
 import { ActionError } from "@/modules/auth/server";
 import { canAccessCourse, getCourseRoster } from "@/modules/courses/server";

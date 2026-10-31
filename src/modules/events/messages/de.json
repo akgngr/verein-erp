@@ -213,5 +213,11 @@
       "confirm": "Entwurf anlegen",
       "done": "Veranstaltungsentwurf angelegt."
     }
+  },
+  "permissions": {
+    "events": {
+      "label": "Veranstaltungen",
+      "description": "Veranstaltungsplanung, Anmeldungen und Freigabe."
+    }
   }
 }

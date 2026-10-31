@@ -120,5 +120,11 @@
   "module": {
     "label": "E-Mail-Versand",
     "description": "Gemeinsamer E-Mail-Versand für alle Module mit SMTP-Einstellungen und Versandprotokoll."
+  },
+  "permissions": {
+    "mail": {
+      "label": "E-Mail-Infrastruktur",
+      "description": "SMTP-Einstellungen und E-Mail-Vorlagen."
+    }
   }
 }

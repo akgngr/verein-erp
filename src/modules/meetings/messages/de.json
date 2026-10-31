@@ -546,5 +546,11 @@
       "confirm": "Sitzung löschen",
       "done": "Sitzung gelöscht."
     }
+  },
+  "permissions": {
+    "meetings": {
+      "label": "Sitzungen und Beschlüsse",
+      "description": "Sitzungskalender, Tagesordnung, Protokolle, Beschlüsse und Freigabe."
+    }
   }
 }

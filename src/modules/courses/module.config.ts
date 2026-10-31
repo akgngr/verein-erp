@@ -18,6 +18,8 @@ export const moduleConfig: ModuleConfig = {
     { module: "students", operations: ["read"] },
     { module: "users", operations: ["read", "write"] },
   ],
+  // Öğretmen rolü bu modülle gelir: modül pasifse rol atanamaz ve öğretmenlerin izni olmaz.
+  roles: [{ key: "TEACHER", color: "secondary" }],
   nav: [
     {
       href: "/kurslar",

@@ -1,5 +1,6 @@
 "use server";
 
+import { isAssignableRole } from "../services/roles";
 import { z } from "zod";
 
 import { getDb } from "@/shared/db";
@@ -33,6 +34,16 @@ export async function updateUserAction(input: unknown): Promise<ActionResult> {
             email: ["users.errors.emailTaken"],
           });
         }
+      }
+
+      // Yetki yükseltme koruması: Yönetici rolünü yalnızca bir Yönetici verebilir/değiştirebilir.
+      if (user.role !== "ADMIN" && (input.role === "ADMIN" || target.role === "ADMIN")) {
+        throw new ActionError("users.errors.adminOnly", { role: ["users.errors.adminOnly"] });
+      }
+
+      // Rol değişiyorsa yeni rol atanabilir olmalı (mevcut rol, modülü pasif olsa da korunabilir).
+      if (input.role !== target.role && !(await isAssignableRole(input.role))) {
+        throw new ActionError("users.errors.roleUnavailable", { role: ["users.errors.roleUnavailable"] });
       }
 
       if (target.id === user.id && target.role === "ADMIN" && input.role !== "ADMIN") {

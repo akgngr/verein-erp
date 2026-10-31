@@ -129,5 +129,11 @@
   "access": {
     "courses": "Liest Kurse, Termine und Anmeldungen für Anwesenheit und Noten.",
     "organization": "Verwendet den Vereinsbriefkopf im Elternbericht."
+  },
+  "permissions": {
+    "progress": {
+      "label": "Lernfortschritt",
+      "description": "Anwesenheit, Noten, Entwicklungsnotizen und Elternbericht."
+    }
   }
 }

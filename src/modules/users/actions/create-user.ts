@@ -7,6 +7,7 @@ import type { ActionResult } from "@/shared/types/action";
 import { ActionError } from "@/modules/auth/server";
 import { usersPermissions } from "../permissions";
 import { userCreateSchema } from "../schemas/user";
+import { isAssignableRole } from "../services/roles";
 import { createAction } from "@/modules/auth/server";
 
 /** Yeni kullanıcı: ad, e-posta, rol, geçici parola; mustChangePassword = true (11.1). */
@@ -14,7 +15,7 @@ export async function createUserAction(input: unknown): Promise<ActionResult<{ i
   const run = createAction({
     permission: { definition: usersPermissions, action: "create" },
     schema: userCreateSchema,
-    handler: async ({ input, audit }) => {
+    handler: async ({ input, user, audit }) => {
       const db = getDb();
       const email = input.email.toLowerCase();
 
@@ -24,6 +25,15 @@ export async function createUserAction(input: unknown): Promise<ActionResult<{ i
         throw new ActionError("users.errors.emailTaken", {
           email: ["users.errors.emailTaken"],
         });
+      }
+
+      // Yetki yükseltme koruması: Yönetici rolünü yalnızca bir Yönetici verebilir/değiştirebilir.
+      if (user.role !== "ADMIN" && (input.role === "ADMIN")) {
+        throw new ActionError("users.errors.adminOnly", { role: ["users.errors.adminOnly"] });
+      }
+
+      if (!(await isAssignableRole(input.role))) {
+        throw new ActionError("users.errors.roleUnavailable", { role: ["users.errors.roleUnavailable"] });
       }
 
       const created = await db.user.create({

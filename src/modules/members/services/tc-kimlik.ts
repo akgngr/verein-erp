@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { Role } from "@prisma/client";
+import type { Role } from "@/shared/roles";
 
 /**
  * T.C. kimlik no alanının role göre maskelenmesi.
