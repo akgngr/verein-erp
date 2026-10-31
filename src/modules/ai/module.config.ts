@@ -19,6 +19,8 @@ export const moduleConfig: ModuleConfig = {
   // KARAR: Asistanın modüllerle yaptığı işlemler buraya YAZILMAZ — her modül kendi ai.ts dosyasında
   // tanımlar (src/ai-registry.ts otomatik üretilir) ve yönetici Ayarlar → Yapay zekâ'daki izin
   // matrisinden açar. Buradaki liste yalnızca asistan altyapısının kendi kullandığı modüllerdir.
+  // Yapay zekâ sağlayıcı SDK'ları (`pnpm module:deps` kök package.json'a ekler).
+  dependencies: { "@anthropic-ai/sdk": "^1.3.0", "@mistralai/mistralai": "^3.4.0", openai: "^7.45.1" },
   access: [
     { module: "auth", operations: ["read"] },
     { module: "members", operations: ["read"] }, // maskeleme: bilinen kişi adlarının listesi

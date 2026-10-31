@@ -74,6 +74,12 @@ export type ModuleConfig = {
   hasSchema?: boolean;
   /** Başka modüllerden istenen erişimler (bkz. ModuleAccessRequest). */
   access?: ModuleAccessRequest[];
+  /**
+   * Modülün ihtiyaç duyduğu ek npm paketleri: { "qrcode": "^1.5.4" }. Çekirdekte olmayan her dış
+   * paket burada bildirilmelidir (doğrulayıcı denetler). `pnpm module:deps` bunları kök
+   * package.json'a ekler ve kurar; tek node_modules ve tek kilit dosyası kullanılır.
+   */
+  dependencies?: Record<string, string>;
   /** Modülün getirdiği roller (bkz. ModuleRole). */
   roles?: ModuleRole[];
   /**

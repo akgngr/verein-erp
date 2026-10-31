@@ -2,7 +2,7 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
-      "version": "0.13.3",
+      "version": "0.14.1",
       "date": "2026-10-31",
       "title": {
         "tr": "Prisma yapılandırma dosyası",
@@ -18,6 +18,26 @@
           "type": "fix",
           "tr": "Veritabanı komutları (db:deploy, db:verify, db:baseline) .env ve .env.local dosyalarını kendisi okur.",
           "de": "Datenbankbefehle (db:deploy, db:verify, db:baseline) lesen .env und .env.local selbst."
+        }
+      ]
+    },
+    {
+      "version": "0.14.0",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Modüllerin kendi npm paketleri",
+        "de": "Eigene npm-Pakete für Module"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Modüller ek npm paketlerini module.config.ts → dependencies ile bildirir; pnpm module:deps kurar ve kaldırılan modüllerin paketlerini temizler.",
+          "de": "Module deklarieren zusätzliche npm-Pakete in module.config.ts → dependencies; pnpm module:deps installiert sie und entfernt Pakete entfernter Module."
+        },
+        {
+          "type": "security",
+          "tr": "Paketler kurulum betikleri çalıştırılmadan eklenir; çekirdek paket sürümleri modülden değiştirilemez; bildirilmemiş paketler doğrulamada hata verir.",
+          "de": "Pakete werden ohne Installationsskripte hinzugefügt; Kernversionen sind durch Module nicht änderbar; nicht deklarierte Pakete schlagen in der Validierung fehl."
         }
       ]
     },

@@ -13,6 +13,8 @@ export const moduleConfig: ModuleConfig = {
   hasSchema: true,
   // PDF antetinde dernek adı, adresi ve logosu.
   access: [{ module: "organization", operations: ["read"] }],
+  // Word çıktısı için; `pnpm module:deps` kök package.json'a ekler.
+  dependencies: { docx: "^9.15.0" },
   nav: [
     {
       href: "/dosyalar",

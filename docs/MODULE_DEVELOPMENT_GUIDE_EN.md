@@ -208,6 +208,15 @@ Each `definePermissions` resource needs `messages → permissions.<resource>.lab
 defaults; admin changes are stored in `role_grants` ("Reset to default" removes them). When a module is
 inactive, its roles cannot be assigned and grant nothing. Always check permissions with `can(...)`, never by role name (the validator rejects `user.role === "…"`). Data-scope rules are permissions too, e.g. `coursesAll` (all courses vs. own), `memberIdentity`, `progressNotesAll`.
 
+## 8c. Extra npm packages (`dependencies`)
+
+A module that needs a package not used by the core declares it in its own `module.config.ts`
+(`dependencies: { qrcode: "^1.5.4" }`) and runs `pnpm module:deps` (adds/removes packages in the root
+`package.json`, records ownership in `moduleDependencies`, installs with `--ignore-scripts`); commit
+`package.json` and `pnpm-lock.yaml`. Core packages (used outside `src/modules`) need no declaration and their
+versions cannot be changed by modules. `pnpm module:validate` rejects undeclared packages, missing installs,
+incompatible ranges and missing ownership records. `pnpm module:deps --check` changes nothing.
+
 ## 9. Dashboard cards (`cards/`)
 
 A module can offer cards for the dashboard (`/`). With "Edit dashboard" the user adds, removes and
