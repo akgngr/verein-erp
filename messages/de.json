@@ -1013,7 +1013,8 @@
       "historyEmpty": "Noch keine gespeicherten Chats.",
       "newConversation": "Neuer Chat",
       "deleteConversation": "Diesen Chat löschen",
-      "conversationDeleted": "Chat gelöscht."
+      "conversationDeleted": "Chat gelöscht.",
+      "downloadFile": "{title} ({format}) herunterladen"
     },
     "settings": {
       "title": "KI-Assistent",

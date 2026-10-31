@@ -89,7 +89,8 @@
     "historyEmpty": "Henüz kayıtlı sohbet yok.",
     "newConversation": "Yeni sohbet",
     "deleteConversation": "Bu sohbeti sil",
-    "conversationDeleted": "Sohbet silindi."
+    "conversationDeleted": "Sohbet silindi.",
+    "downloadFile": "{title} ({format}) indir"
   },
   "settings": {
     "title": "Yapay zekâ asistanı",

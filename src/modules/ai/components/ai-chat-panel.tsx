@@ -1,7 +1,7 @@
 "use client";
 
 import { addToast, Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Textarea } from "@heroui/react";
-import { History, ListPlus, Lock, MessageSquarePlus, PanelRight, Send, ShieldCheck, Sparkles, Trash2, X } from "lucide-react";
+import { History, ListPlus, Lock, MessageSquarePlus, PanelRight, Send, ShieldCheck, Sparkles, Trash2, X, FileDown } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
@@ -14,12 +14,13 @@ import { executeAiProposalAction } from "../actions/execute-proposal";
 import { deleteAiConversationAction, getAiConversationAction, listAiConversationsAction } from "../actions/history-actions";
 import { AI_PANEL_COOKIE, AI_PANEL_MAX_WIDTH, AI_PANEL_MIN_WIDTH, encodePanelState, type AiPanelState } from "../panel-state";
 import { parseMarkdown } from "../services/markdown";
-import type { AiProposal } from "../types";
+import type { AiFile, AiProposal } from "../types";
 
 type Turn = {
   role: "user" | "assistant";
   content: string;
   proposals?: AiProposal[];
+  files?: AiFile[];
   /** Geçmişten yüklendi: öneri kartları yeniden uygulanamaz (çift kayıt önlenir). */
   restored?: boolean;
 };
@@ -28,6 +29,8 @@ type Turn = {
 function inline(text: string): ReactNode[] {
   const parts: ReactNode[] = [];
   const pattern = /\*\*([^*]+)\*\*|\[([^\]]+)\]\((\/[^)\s]*)\)|`([^`]+)`/g;
+  // KARAR: "//api/..." tarayıcıda başka bir SUNUCU adresidir; yalnızca uygulama içi tek "/" yolları.
+  const internal = (href: string) => `/${href.replace(/^\/+/, "")}`;
   let last = 0;
   for (const match of text.matchAll(pattern)) {
     if (match.index > last) parts.push(text.slice(last, match.index));
@@ -37,7 +40,7 @@ function inline(text: string): ReactNode[] {
       parts.push(
         <a
           key={match.index}
-          href={match[3]}
+          href={internal(match[3])}
           target="_blank"
           rel="noopener"
           className="font-medium text-primary underline"
@@ -237,6 +240,7 @@ export function AiChatPanel({
         conversationId?: string;
         reply?: string;
         proposals?: AiProposal[];
+        files?: AiFile[];
         error?: string;
         code?: string;
       };
@@ -254,6 +258,7 @@ export function AiChatPanel({
           role: "assistant",
           content: data.reply || t("empty"),
           proposals: data.proposals,
+          files: data.files,
         },
       ]);
     } catch {
@@ -484,6 +489,25 @@ export function AiChatPanel({
                         <MessageBody text={turn.content} />
                       )}
                     </div>
+                    {turn.files?.length ? (
+                      <div className="flex w-[90%] flex-wrap gap-2">
+                        {turn.files.map((file) => (
+                          <Button
+                            key={file.url}
+                            as="a"
+                            href={file.url}
+                            target="_blank"
+                            rel="noopener"
+                            size="sm"
+                            color="primary"
+                            variant="flat"
+                            startContent={<FileDown className="h-4 w-4" aria-hidden />}
+                          >
+                            {t("downloadFile", { title: file.title, format: file.format.toUpperCase() })}
+                          </Button>
+                        ))}
+                      </div>
+                    ) : null}
                     {turn.proposals?.map((proposal, position) => {
                       const key = `${index}-${position}`;
                       return (

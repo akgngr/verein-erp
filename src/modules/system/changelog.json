@@ -2,6 +2,26 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.10.1",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Asistan dosya indirme düzeltmesi",
+        "de": "Korrektur: Dateidownload im Assistenten"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Asistanın oluşturduğu PDF artık yanıtın altında indirme düğmesi olarak görünür ve sohbet geçmişinde kalır.",
+          "de": "Vom Assistenten erstellte PDFs erscheinen als Download-Schaltfläche unter der Antwort und bleiben im Verlauf erhalten."
+        },
+        {
+          "type": "fix",
+          "tr": "Asistan yanıtındaki \"//api/…\" biçimindeki hatalı bağlantılar artık doğru açılıyor.",
+          "de": "Fehlerhafte Links der Form \"//api/…\" in Antworten öffnen jetzt korrekt."
+        }
+      ]
+    },
+    {
       "version": "0.10.0",
       "date": "2026-10-31",
       "title": {

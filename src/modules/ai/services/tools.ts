@@ -34,9 +34,11 @@ const AI_TOOLS = [
       required: ["title", "markdown"],
       additionalProperties: false,
     },
-    run: async ({ title, markdown }, { user, restore }) => {
+    run: async ({ title, markdown }, { user, restore, files }) => {
       const id = await saveReport(user.id, restore(title), restore(markdown));
-      return { url: `/api/ai/reports/${id}/pdf`, note: "Give this link to the user as a markdown link." }; // i18n-ignore (model-facing tool text)
+      // Bağlantı modele değil arayüze verilir: yanıtın altında indirme düğmesi çıkar.
+      files.push({ title, url: `/api/ai/reports/${id}/pdf`, format: "pdf" });
+      return { status: "created", note: "The PDF is ready. A download button is shown below your answer automatically. Do NOT write any link, URL or path; just say the PDF is ready." }; // i18n-ignore (model-facing tool text)
     },
   }),
 ];

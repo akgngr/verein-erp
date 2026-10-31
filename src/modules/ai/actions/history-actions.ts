@@ -8,7 +8,7 @@ import { ActionError, createAction } from "@/modules/auth/server";
 
 import { aiPermissions } from "../permissions";
 import { deleteAllConversations, deleteConversation, getConversation, listConversations } from "../services/history";
-import type { AiProposal } from "../types";
+import type { AiFile, AiProposal } from "../types";
 
 const empty = z.object({}).optional();
 const idSchema = z.object({ id: z.string().min(1).max(64) });
@@ -23,14 +23,14 @@ export async function listAiConversationsAction(): Promise<ActionResult<{ id: st
   return run({}) as Promise<ActionResult<{ id: string; title: string; updatedAt: string }[]>>;
 }
 
-export async function getAiConversationAction(input: unknown): Promise<ActionResult<{ id: string; turns: { role: "user" | "assistant"; content: string; proposals: AiProposal[] }[] }>> {
+export async function getAiConversationAction(input: unknown): Promise<ActionResult<{ id: string; turns: { role: "user" | "assistant"; content: string; proposals: AiProposal[]; files: AiFile[] }[] }>> {
   const run = createAction({
     permission: { definition: aiPermissions, action: "view" },
     schema: idSchema,
     handler: async ({ input, user }) => {
       const conversation = await getConversation(user.id, input.id);
       if (!conversation) throw new ActionError("ai.errors.conversationNotFound");
-      return { id: conversation.id, turns: conversation.turns.map(({ role, content, proposals }) => ({ role, content, proposals })) };
+      return { id: conversation.id, turns: conversation.turns.map(({ role, content, proposals, files }) => ({ role, content, proposals, files })) };
     },
   });
   return run(input);
