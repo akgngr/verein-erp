@@ -23,6 +23,10 @@ export const taxSettingsSchema = z.object({
   smallBusiness: z.boolean(),
   taxMethod: z.enum(["IST", "SOLL"]),
   vatPeriod: z.enum(["MONTH", "QUARTER", "YEAR"]),
+  // ACC-2: DATEV başlığı (boş = henüz girilmedi; dışa aktarımda zorunlu).
+  datevConsultantNo: z.string().trim().refine((value) => value === "" || /^\d{4,7}$/.test(value), "accounting.validation.consultantNoInvalid").default(""),
+  datevClientNo: z.string().trim().refine((value) => value === "" || /^\d{1,5}$/.test(value), "accounting.validation.clientNoInvalid").default(""),
+  datevTaxKeys: z.boolean().default(false),
 });
 export type TaxSettingsInput = z.infer<typeof taxSettingsSchema>;
 

@@ -488,7 +488,13 @@
         "smallBusiness": "Kleinunternehmer (§ 19 UStG)",
         "smallBusinessHint": "Açıkken yeni fişlerde KDV %0 yazılır; faturalarda KDV gösterilmez.",
         "save": "Kaydet",
-        "saved": "Vergi ayarları kaydedildi."
+        "saved": "Vergi ayarları kaydedildi.",
+        "datevTitle": "DATEV",
+        "datevHint": "EXTF dışa aktarımının başlığı için vergi danışmanınızdan alın.",
+        "consultantNo": "Beraternummer",
+        "clientNo": "Mandantennummer",
+        "datevTaxKeys": "BU-Schlüssel yaz",
+        "datevTaxKeysHint": "Yalnızca otomatik olmayan (KDV'siz) gelir/gider hesapları kullanıyorsanız açın; 8400/4400 gibi Automatikkonten ile birlikte kullanmayın."
       },
       "skr": {
         "revenue19": "Satış %19",
@@ -633,7 +639,8 @@
       "budget": "Bütçe",
       "yearClosing": "Yıl kapanışı",
       "settings": "Ayarlar",
-      "export": "Excel'e aktar"
+      "export": "Excel'e aktar",
+      "tax": "Vergi"
     },
     "meta": {
       "list": "Muhasebe",
@@ -644,7 +651,8 @@
       "budget": "Bütçe",
       "yearClosing": "Yıl kapanışı",
       "settings": "Muhasebe ayarları",
-      "memberSync": "Üyelik aktarımı"
+      "memberSync": "Üyelik aktarımı",
+      "tax": "Vergi"
     },
     "errors": {
       "openingDateInvalid": "Açılış tarihi geçersiz.",
@@ -743,7 +751,9 @@
       "bankAccountRequired": "Banka hesabı seçin.",
       "donationCategoryRequired": "Bağış kategorisi seçin.",
       "taxRateInvalid": "KDV oranı 0, 7 veya 19 olmalı.",
-      "accountNumberInvalid": "Hesap numarası 4–8 haneli rakam olmalı."
+      "accountNumberInvalid": "Hesap numarası 4–8 haneli rakam olmalı.",
+      "consultantNoInvalid": "Beraternummer 4–7 haneli olmalı.",
+      "clientNoInvalid": "Mandantennummer 1–5 haneli olmalı."
     },
     "module": {
       "label": "Muhasebe",
@@ -978,6 +988,72 @@
       "accountingSetup": {
         "label": "Hesap Planı & Bütçe",
         "description": "Hesap planı (SKR49/SKR42), bütçe öngörüleri ve mali ayarlar."
+      }
+    },
+    "tax": {
+      "title": "Vergi",
+      "subtitle": "{chart} · {method}",
+      "methodIST": "Ist-Versteuerung",
+      "methodSOLL": "Soll-Versteuerung",
+      "prevYear": "Önceki yıl",
+      "nextYear": "Sonraki yıl",
+      "tabs": {
+        "ustva": "UStVA",
+        "euer": "EÜR",
+        "datev": "DATEV"
+      },
+      "periodYear": "Yıl",
+      "periodQuarter": "{q}. çeyrek",
+      "periodMonth": "Ay {m}",
+      "smallBusiness": {
+        "nextYear": "§ 19 UStG: Bu yılki gelir ({current}) {limitPrevious} sınırını aştı — gelecek yıl Kleinunternehmer düzenlemesi uygulanamaz. (Richtwert; aidat ve bağışlar hariç.)",
+        "lost": "§ 19 UStG: Önceki yıl {previous} (sınır {limitPrevious}) veya bu yıl {current} (sınır {limitCurrent}) — Kleinunternehmer düzenlemesi artık uygulanamaz. Vergi danışmanınızla görüşün."
+      },
+      "ustva": {
+        "kz": "Kz",
+        "label": "Tanım",
+        "base": "Matrah",
+        "tax": "Vergi",
+        "kz81": "%19 vergili satışlar",
+        "kz86": "%7 vergili satışlar",
+        "kz66": "İndirilecek KDV (Vorsteuer)",
+        "kz83Pay": "Ödenecek KDV (Vorauszahlung)",
+        "kz83Refund": "İade (Erstattung)",
+        "count": "{count} fiş",
+        "smallBusiness": "Kleinunternehmer (§ 19) etkin: normalde UStVA verilmez.",
+        "note": "Matrah formdaki gibi tam Euro'ya aşağı yuvarlanır; vergi matrahtan hesaplanır (fişlerde kayıtlı satış KDV'si: {booked}). %0 fişler (aidat, bağış, vergisiz gelir) bildirime girmez. Elster'e aktarım yapılmaz — değerleri kontrol edip Elster'e girin."
+      },
+      "euer": {
+        "income": "Betriebseinnahmen (net)",
+        "expense": "Betriebsausgaben (net)",
+        "outputTax": "Tahsil edilen KDV",
+        "inputTax": "Ödenen Vorsteuer",
+        "total": "Toplam",
+        "profit": "Kâr",
+        "loss": "Zarar",
+        "note": "Basitleştirilmiş EÜR (§ 4 Abs. 3 EStG) özeti; resmî Anlage EÜR satırlarına eşleme ve Finanzamt'a ödenen/iade KDV sonraki fazlarda eklenecek."
+      },
+      "datev": {
+        "intro": "Fişler DATEV EXTF formatında (Buchungsstapel) dışa aktarılır; vergi danışmanınız doğrudan içe aktarabilir.",
+        "numbersMissing": "Önce Berater- ve Mandantennummer girin.",
+        "toSettings": "Ayarlar'a git",
+        "issues": "{count} fişte hesap numarası eksik",
+        "issuesHint": "Hesap ve kategorilere SKR numarası girin (Ayarlar → Hesaplar/Kategoriler).",
+        "reason": {
+          "accountMissing": "para hesabında numara yok",
+          "categoryMissing": "kategoride numara yok",
+          "counterMissing": "hedef hesapta numara yok"
+        },
+        "summary": "{year}: {count} fiş, toplam {total}",
+        "downloadYear": "{year} Buchungsstapel",
+        "downloadAccounts": "Kontenbeschriftungen",
+        "noteGross": "Tutarlar brüttür; KDV DATEV'de otomatik hesaplarla ya da (ayarda açıksa) BU-Schlüssel ile ayrılır.",
+        "noteReversed": "İptal edilen fişler dışa aktarılmaz; önceden aktarılmış bir dönemde iptal varsa dönemi yeniden aktarın.",
+        "errors": {
+          "period": "Geçersiz dönem (tek mali yıl içinde olmalı).",
+          "numbers": "Berater-/Mandantennummer eksik.",
+          "missingNumbers": "Bazı fişlerde hesap numarası eksik."
+        }
       }
     }
   },

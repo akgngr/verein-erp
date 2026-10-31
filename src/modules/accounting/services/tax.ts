@@ -16,9 +16,13 @@ export type TaxSettings = {
   smallBusiness: boolean;
   taxMethod: "IST" | "SOLL";
   vatPeriod: "MONTH" | "QUARTER" | "YEAR";
+  /** ACC-2: DATEV EXTF başlığı + BU-Schlüssel. */
+  datevConsultantNo: string;
+  datevClientNo: string;
+  datevTaxKeys: boolean;
 };
 
-export const DEFAULT_TAX_SETTINGS: TaxSettings = { chartOfAccounts: "SKR03", smallBusiness: false, taxMethod: "IST", vatPeriod: "QUARTER" };
+export const DEFAULT_TAX_SETTINGS: TaxSettings = { chartOfAccounts: "SKR03", smallBusiness: false, taxMethod: "IST", vatPeriod: "QUARTER", datevConsultantNo: "", datevClientNo: "", datevTaxKeys: false };
 
 /** Brütten net + KDV (kuruş). Net yuvarlanır, KDV = brüt − net (kuruş kaybı olmaz). */
 export function splitGross(grossCents: number, rate: number): { netCents: number; taxCents: number } {
@@ -51,5 +55,8 @@ export async function getTaxSettings(db: Pick<Prisma.TransactionClient, "account
     smallBusiness: row.smallBusiness,
     taxMethod: row.taxMethod === "SOLL" ? "SOLL" : "IST",
     vatPeriod: row.vatPeriod === "MONTH" ? "MONTH" : row.vatPeriod === "YEAR" ? "YEAR" : "QUARTER",
+    datevConsultantNo: row.datevConsultantNo,
+    datevClientNo: row.datevClientNo,
+    datevTaxKeys: row.datevTaxKeys,
   };
 }

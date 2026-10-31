@@ -54,6 +54,8 @@ export { BudgetView } from "./views/budget-view";
 export { YearClosingView } from "./views/year-closing-view";
 export { MemberSyncView } from "./views/member-sync-view";
 export { ReportsView } from "./views/reports-view";
+export { TaxView } from "./views/tax-view";
+export { exportDatevHandler } from "./handlers/export-datev";
 // Faturalar / proformalar ve belge çıktıları.
 export { invoicePdfHandler } from "./handlers/invoice-pdf";
 export { InvoicesView } from "./views/invoices-view";
