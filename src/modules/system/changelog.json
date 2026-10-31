@@ -22,6 +22,26 @@
       ]
     },
     {
+      "version": "0.14.1",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Prisma yapılandırma dosyası",
+        "de": "Prisma-Konfigurationsdatei"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Prisma ayarları prisma.config.ts dosyasına taşındı (package.json uyarısı giderildi; Prisma 7'ye hazırlık).",
+          "de": "Die Prisma-Einstellungen liegen jetzt in prisma.config.ts (Warnung zu package.json behoben; Vorbereitung auf Prisma 7)."
+        },
+        {
+          "type": "fix",
+          "tr": "Veritabanı komutları (db:deploy, db:verify, db:baseline) .env ve .env.local dosyalarını kendisi okur.",
+          "de": "Datenbankbefehle (db:deploy, db:verify, db:baseline) lesen .env und .env.local selbst."
+        }
+      ]
+    },
+    {
       "version": "0.14.0",
       "date": "2026-10-31",
       "title": {

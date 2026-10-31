@@ -6,6 +6,10 @@
 // değişiklikleri her zaman `pnpm db:migrate` ile migration olarak üretilmelidir.
 
 import { spawnSync } from "node:child_process";
+import nextEnv from "@next/env";
+
+// .env / .env.local, Next.js ve prisma.config.ts ile aynı kuralla (ortamdaki değişkenler önceliklidir).
+nextEnv.loadEnvConfig(process.cwd(), process.env.NODE_ENV !== "production");
 
 if (process.env.NODE_ENV === "production") {
   console.error("[db:push:dev] Refused: NODE_ENV=production. Use `pnpm db:deploy` (prisma migrate deploy).");
