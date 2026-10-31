@@ -16,21 +16,15 @@ export const moduleConfig: ModuleConfig = {
   category: "EXTENSION",
   hasSchema: true,
   // Başka modüllerden istenen erişim (yönetici onayı gerekir; gerekçe: messages → access.<modül>).
+  // KARAR: Asistanın modüllerle yaptığı işlemler buraya YAZILMAZ — her modül kendi ai.ts dosyasında
+  // tanımlar (src/ai-registry.ts otomatik üretilir) ve yönetici Ayarlar → Yapay zekâ'daki izin
+  // matrisinden açar. Buradaki liste yalnızca asistan altyapısının kendi kullandığı modüllerdir.
   access: [
-    { module: "accounting", operations: ["read"] },
     { module: "auth", operations: ["read"] },
-    { module: "courses", operations: ["read", "write", "delete"] },
-    { module: "documents", operations: ["read", "write", "delete"] },
-    { module: "donations", operations: ["read"] },
-    { module: "events", operations: ["read", "write"] },
-    { module: "inventory", operations: ["read", "write", "delete"] },
-    { module: "meetings", operations: ["read", "write", "delete"] },
-    { module: "members", operations: ["read"] },
-    { module: "organization", operations: ["read"] },
-    { module: "progress", operations: ["read"] },
-    { module: "students", operations: ["read"] },
-    { module: "system", operations: ["read"] },
-    { module: "tasks", operations: ["read", "write", "delete"] },
+    { module: "members", operations: ["read"] }, // maskeleme: bilinen kişi adlarının listesi
+    { module: "organization", operations: ["read"] }, // eski PDF raporlarında dernek anteti
+    { module: "students", operations: ["read"] }, // maskeleme: öğrenci ve veli adları
+    { module: "system", operations: ["read"] }, // kullanılabilir modüller
   ],
 
   nav: [
