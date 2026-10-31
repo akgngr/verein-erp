@@ -3,7 +3,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
-import { getModuleAvailability } from "@/modules/system/server";
+import { getModuleAvailability, type ModuleAvailability } from "@/modules/system/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
 
@@ -58,12 +58,14 @@ export async function AiSettingsView() {
   // Matris: asistanın kendisi hariç tüm modüller; asistanın aracı olanlar önce.
   const supported = supportedOperations();
   const moduleDescription = (key: string) => (tRoot.has(`${key}.module.description`) ? tRoot(`${key}.module.description`) : (allModules.find((mod) => mod.key === key)?.description ?? ""));
-  const matrixModules = allModules
-    .filter((mod) => mod.key !== "ai")
-    .map((mod) => {
+  // Modül durumu: kullanılamayan modülde izin açık olsa bile araç asistana verilmez; kartta gösterilir.
+  const candidates = allModules.filter((mod) => mod.key !== "ai");
+  const availabilities: ModuleAvailability[] = await Promise.all(candidates.map((mod) => getModuleAvailability(mod.key)));
+  const matrixModules = candidates
+    .map((mod, index) => {
       // İkon sunucuda çizilir (bileşen fonksiyonları istemciye gönderilemez).
       const Icon = mod.nav[0]?.icon ?? Puzzle;
-      return { key: mod.key, label: moduleLabel(mod.key), description: moduleDescription(mod.key), icon: <Icon aria-hidden /> };
+      return { key: mod.key, label: moduleLabel(mod.key), description: moduleDescription(mod.key), icon: <Icon aria-hidden />, availability: availabilities[index] };
     })
     .sort((a, b) => a.label.localeCompare(b.label));
   const areas = [...new Set(tools.map((tool) => tool.module))];
