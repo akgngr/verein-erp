@@ -26,6 +26,10 @@ import path from "node:path";
 import { spawnSync } from "node:child_process";
 
 import prismaClientPackage from "@prisma/client";
+import nextEnv from "@next/env";
+
+// .env / .env.local, Next.js ve prisma.config.ts ile aynı kuralla (ortamdaki değişkenler önceliklidir).
+nextEnv.loadEnvConfig(process.cwd(), process.env.NODE_ENV !== "production");
 
 const { PrismaClient } = prismaClientPackage;
 
