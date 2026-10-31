@@ -2,82 +2,218 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.9.0",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Modül AI standardı",
+        "de": "KI-Standard für Module"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Modüller asistan araçlarını ve onay eylemlerini kendi ai.ts dosyasında tanımlar; kayıt otomatik üretilir.",
+          "de": "Module definieren Assistenz-Werkzeuge und Bestätigungsaktionen in ihrer eigenen ai.ts; die Registrierung wird automatisch erzeugt."
+        },
+        {
+          "type": "improvement",
+          "tr": "Görevler modülü yeni standarda taşındı; doğrulayıcı ai.ts kurallarını denetler.",
+          "de": "Das Aufgabenmodul nutzt den neuen Standard; der Validator prüft die ai.ts-Regeln."
+        }
+      ]
+    },
+    {
       "version": "0.8.0",
       "date": "2026-10-31",
-      "title": { "tr": "Profil, sürüm notları ve form görünümü", "de": "Profil, Versionshinweise und Formularansicht" },
+      "title": {
+        "tr": "Profil, sürüm notları ve form görünümü",
+        "de": "Profil, Versionshinweise und Formularansicht"
+      },
       "changes": [
-        { "type": "feature", "tr": "Profil sayfası: iletişim, adres, ödeme (IBAN) ve fatura bilgileri; hassas alanlar şifreli saklanır.", "de": "Profilseite: Kontakt, Anschrift, Zahlungs- (IBAN) und Rechnungsdaten; sensible Felder verschlüsselt gespeichert." },
-        { "type": "feature", "tr": "Ayarlar → Sürüm notları sayfası.", "de": "Einstellungen → Versionshinweise." },
-        { "type": "improvement", "tr": "Form alanlarına açık temada gri, koyu temada neon mavi ince kenarlık.", "de": "Formularfelder mit dünnem Rahmen: grau im hellen, neonblau im dunklen Design." }
+        {
+          "type": "feature",
+          "tr": "Profil sayfası: iletişim, adres, ödeme (IBAN) ve fatura bilgileri; hassas alanlar şifreli saklanır.",
+          "de": "Profilseite: Kontakt, Anschrift, Zahlungs- (IBAN) und Rechnungsdaten; sensible Felder verschlüsselt gespeichert."
+        },
+        {
+          "type": "feature",
+          "tr": "Ayarlar → Sürüm notları sayfası.",
+          "de": "Einstellungen → Versionshinweise."
+        },
+        {
+          "type": "improvement",
+          "tr": "Form alanlarına açık temada gri, koyu temada neon mavi ince kenarlık.",
+          "de": "Formularfelder mit dünnem Rahmen: grau im hellen, neonblau im dunklen Design."
+        }
       ]
     },
     {
       "version": "0.7.0",
       "date": "2026-10-31",
-      "title": { "tr": "Yapay zekâ asistanı: tüm modüller, belge okuma, PDF rapor", "de": "KI-Assistent: alle Module, Dokumente lesen, PDF-Berichte" },
+      "title": {
+        "tr": "Yapay zekâ asistanı: tüm modüller, belge okuma, PDF rapor",
+        "de": "KI-Assistent: alle Module, Dokumente lesen, PDF-Berichte"
+      },
       "changes": [
-        { "type": "feature", "tr": "Evrak, toplantı, envanter ve kurs modülleri için okuma/yazma/güncelleme/silme araçları; öğrenci ve devam istatistikleri; dernek bilgileri.", "de": "Lese-/Schreib-/Änderungs-/Löschwerkzeuge für Schriftverkehr, Sitzungen, Inventar und Kurse; Schüler- und Anwesenheitsstatistik; Vereinsdaten." },
-        { "type": "feature", "tr": "Evrak eklerinin (PDF, Word, Excel) içeriğini okuma ve özetleme.", "de": "Inhalte von Anhängen (PDF, Word, Excel) lesen und zusammenfassen." },
-        { "type": "feature", "tr": "Sohbet geçmişi: kullanıcıya özel, şifreli, 180 gün saklama.", "de": "Chatverlauf: personenbezogen, verschlüsselt, 180 Tage Aufbewahrung." },
-        { "type": "feature", "tr": "Asistan istendiğinde antetli PDF rapor hazırlar.", "de": "Der Assistent erstellt auf Wunsch PDF-Berichte mit Briefkopf." },
-        { "type": "improvement", "tr": "Sohbet paneli genişletilebilir; durum sayfa geçişlerinde ve yenilemede korunur. Yanıtlarda tablolar.", "de": "Chatbereich in der Breite anpassbar; Zustand bleibt bei Navigation und Neuladen erhalten. Tabellen in Antworten." }
+        {
+          "type": "feature",
+          "tr": "Evrak, toplantı, envanter ve kurs modülleri için okuma/yazma/güncelleme/silme araçları; öğrenci ve devam istatistikleri; dernek bilgileri.",
+          "de": "Lese-/Schreib-/Änderungs-/Löschwerkzeuge für Schriftverkehr, Sitzungen, Inventar und Kurse; Schüler- und Anwesenheitsstatistik; Vereinsdaten."
+        },
+        {
+          "type": "feature",
+          "tr": "Evrak eklerinin (PDF, Word, Excel) içeriğini okuma ve özetleme.",
+          "de": "Inhalte von Anhängen (PDF, Word, Excel) lesen und zusammenfassen."
+        },
+        {
+          "type": "feature",
+          "tr": "Sohbet geçmişi: kullanıcıya özel, şifreli, 180 gün saklama.",
+          "de": "Chatverlauf: personenbezogen, verschlüsselt, 180 Tage Aufbewahrung."
+        },
+        {
+          "type": "feature",
+          "tr": "Asistan istendiğinde antetli PDF rapor hazırlar.",
+          "de": "Der Assistent erstellt auf Wunsch PDF-Berichte mit Briefkopf."
+        },
+        {
+          "type": "improvement",
+          "tr": "Sohbet paneli genişletilebilir; durum sayfa geçişlerinde ve yenilemede korunur. Yanıtlarda tablolar.",
+          "de": "Chatbereich in der Breite anpassbar; Zustand bleibt bei Navigation und Neuladen erhalten. Tabellen in Antworten."
+        }
       ]
     },
     {
       "version": "0.6.0",
       "date": "2026-10-30",
-      "title": { "tr": "Yapay zekâ asistanı (KVKK/DSGVO öncelikli)", "de": "KI-Assistent (Datenschutz zuerst)" },
+      "title": {
+        "tr": "Yapay zekâ asistanı (KVKK/DSGVO öncelikli)",
+        "de": "KI-Assistent (Datenschutz zuerst)"
+      },
       "changes": [
-        { "type": "feature", "tr": "Sağ panelde sohbet; yöneticinin modül bazında izin matrisi ve kullanıcı rızası.", "de": "Chat im rechten Bereich; Berechtigungsmatrix je Modul und Einwilligung der Nutzer." },
-        { "type": "feature", "tr": "Sağlayıcı seçimi: kendi sunucu, Mistral, Claude, OpenAI; anahtarlar ayarlardan girilir ve şifreli saklanır.", "de": "Anbieterwahl: eigener Server, Mistral, Claude, OpenAI; Schlüssel in den Einstellungen, verschlüsselt gespeichert." },
-        { "type": "security", "tr": "Kişisel veriler modele gitmeden maskelenir; araçlar kişisel veri döndürmez.", "de": "Personendaten werden vor dem Versand maskiert; Werkzeuge liefern keine Personendaten." }
+        {
+          "type": "feature",
+          "tr": "Sağ panelde sohbet; yöneticinin modül bazında izin matrisi ve kullanıcı rızası.",
+          "de": "Chat im rechten Bereich; Berechtigungsmatrix je Modul und Einwilligung der Nutzer."
+        },
+        {
+          "type": "feature",
+          "tr": "Sağlayıcı seçimi: kendi sunucu, Mistral, Claude, OpenAI; anahtarlar ayarlardan girilir ve şifreli saklanır.",
+          "de": "Anbieterwahl: eigener Server, Mistral, Claude, OpenAI; Schlüssel in den Einstellungen, verschlüsselt gespeichert."
+        },
+        {
+          "type": "security",
+          "tr": "Kişisel veriler modele gitmeden maskelenir; araçlar kişisel veri döndürmez.",
+          "de": "Personendaten werden vor dem Versand maskiert; Werkzeuge liefern keine Personendaten."
+        }
       ]
     },
     {
       "version": "0.5.0",
       "date": "2026-10-30",
-      "title": { "tr": "Fatura, proforma ve muhasebe çıktıları", "de": "Rechnungen, Proforma und Buchhaltungsausgaben" },
+      "title": {
+        "tr": "Fatura, proforma ve muhasebe çıktıları",
+        "de": "Rechnungen, Proforma und Buchhaltungsausgaben"
+      },
       "changes": [
-        { "type": "feature", "tr": "Fatura ve proforma: boşluksuz numaralandırma, PDF, ödeme alınca gelir fişi.", "de": "Rechnungen und Proforma: lückenlose Nummerierung, PDF, Einnahmebuchung bei Zahlung." },
-        { "type": "feature", "tr": "Fiş belgeleri (Quittung, Auszahlungsbeleg) ve gelir-gider listesi PDF.", "de": "Belege (Quittung, Auszahlungsbeleg) und Einnahmen-/Ausgabenliste als PDF." },
-        { "type": "feature", "tr": "Kullanıcıyı kalıcı silme; panel kartlarında sürükle-bırak.", "de": "Benutzer endgültig löschen; Drag & Drop für Dashboard-Karten." }
+        {
+          "type": "feature",
+          "tr": "Fatura ve proforma: boşluksuz numaralandırma, PDF, ödeme alınca gelir fişi.",
+          "de": "Rechnungen und Proforma: lückenlose Nummerierung, PDF, Einnahmebuchung bei Zahlung."
+        },
+        {
+          "type": "feature",
+          "tr": "Fiş belgeleri (Quittung, Auszahlungsbeleg) ve gelir-gider listesi PDF.",
+          "de": "Belege (Quittung, Auszahlungsbeleg) und Einnahmen-/Ausgabenliste als PDF."
+        },
+        {
+          "type": "feature",
+          "tr": "Kullanıcıyı kalıcı silme; panel kartlarında sürükle-bırak.",
+          "de": "Benutzer endgültig löschen; Drag & Drop für Dashboard-Karten."
+        }
       ]
     },
     {
       "version": "0.4.0",
       "date": "2026-10-30",
-      "title": { "tr": "Modül izinleri ve modül rotaları", "de": "Modulberechtigungen und Modulrouten" },
+      "title": {
+        "tr": "Modül izinleri ve modül rotaları",
+        "de": "Modulberechtigungen und Modulrouten"
+      },
       "changes": [
-        { "type": "feature", "tr": "Modüller arası erişim yönetici onayına bağlı; onaylar veritabanında.", "de": "Modulübergreifender Zugriff nur mit Freigabe des Administrators; Freigaben in der Datenbank." },
-        { "type": "improvement", "tr": "Üretilen modül rotaları (modules) klasöründe, her derlemede temiz kurulur.", "de": "Generierte Modulrouten im Ordner (modules), bei jedem Build sauber neu erstellt." },
-        { "type": "fix", "tr": "Öğretmen bilgileri kullanıcı kaydıyla senkron; sabit seçenekli alanlar seçim kutusu.", "de": "Lehrkraftdaten mit dem Benutzerkonto synchron; Felder mit festen Optionen als Auswahl." }
+        {
+          "type": "feature",
+          "tr": "Modüller arası erişim yönetici onayına bağlı; onaylar veritabanında.",
+          "de": "Modulübergreifender Zugriff nur mit Freigabe des Administrators; Freigaben in der Datenbank."
+        },
+        {
+          "type": "improvement",
+          "tr": "Üretilen modül rotaları (modules) klasöründe, her derlemede temiz kurulur.",
+          "de": "Generierte Modulrouten im Ordner (modules), bei jedem Build sauber neu erstellt."
+        },
+        {
+          "type": "fix",
+          "tr": "Öğretmen bilgileri kullanıcı kaydıyla senkron; sabit seçenekli alanlar seçim kutusu.",
+          "de": "Lehrkraftdaten mit dem Benutzerkonto synchron; Felder mit festen Optionen als Auswahl."
+        }
       ]
     },
     {
       "version": "0.3.0",
       "date": "2026-10-30",
-      "title": { "tr": "Kurslar, öğrenciler ve öğrenci takibi", "de": "Kurse, Schüler und Lernverlauf" },
+      "title": {
+        "tr": "Kurslar, öğrenciler ve öğrenci takibi",
+        "de": "Kurse, Schüler und Lernverlauf"
+      },
       "changes": [
-        { "type": "feature", "tr": "Kurs ve özel ders yönetimi, öğretmen rolü, ücretler ve muhasebe aktarımı.", "de": "Kurs- und Nachhilfeverwaltung, Lehrkraftrolle, Gebühren und Buchhaltungsübergabe." },
-        { "type": "feature", "tr": "Öğrenci ve veli kayıtları (DATEV uyumlu); devam, not ve değerlendirme takibi.", "de": "Schüler- und Elternverwaltung (DATEV-kompatibel); Anwesenheit, Notizen und Bewertungen." }
+        {
+          "type": "feature",
+          "tr": "Kurs ve özel ders yönetimi, öğretmen rolü, ücretler ve muhasebe aktarımı.",
+          "de": "Kurs- und Nachhilfeverwaltung, Lehrkraftrolle, Gebühren und Buchhaltungsübergabe."
+        },
+        {
+          "type": "feature",
+          "tr": "Öğrenci ve veli kayıtları (DATEV uyumlu); devam, not ve değerlendirme takibi.",
+          "de": "Schüler- und Elternverwaltung (DATEV-kompatibel); Anwesenheit, Notizen und Bewertungen."
+        }
       ]
     },
     {
       "version": "0.2.0",
       "date": "2026-10-30",
-      "title": { "tr": "Ayarlar merkezi ve panel kartları", "de": "Einstellungszentrale und Dashboard-Karten" },
+      "title": {
+        "tr": "Ayarlar merkezi ve panel kartları",
+        "de": "Einstellungszentrale und Dashboard-Karten"
+      },
       "changes": [
-        { "type": "feature", "tr": "Tek ayarlar girişi ve ayarlar merkezi; düzenlenebilir panel kartları.", "de": "Ein Einstieg für Einstellungen und Einstellungszentrale; anpassbare Dashboard-Karten." },
-        { "type": "feature", "tr": "Toplantılara üye katılımcı; parola üretme ve göster/gizle.", "de": "Mitglieder als Sitzungsteilnehmende; Passwort erzeugen und ein-/ausblenden." }
+        {
+          "type": "feature",
+          "tr": "Tek ayarlar girişi ve ayarlar merkezi; düzenlenebilir panel kartları.",
+          "de": "Ein Einstieg für Einstellungen und Einstellungszentrale; anpassbare Dashboard-Karten."
+        },
+        {
+          "type": "feature",
+          "tr": "Toplantılara üye katılımcı; parola üretme ve göster/gizle.",
+          "de": "Mitglieder als Sitzungsteilnehmende; Passwort erzeugen und ein-/ausblenden."
+        }
       ]
     },
     {
       "version": "0.1.0",
       "date": "2026-10-29",
-      "title": { "tr": "İlk sürüm", "de": "Erste Version" },
+      "title": {
+        "tr": "İlk sürüm",
+        "de": "Erste Version"
+      },
       "changes": [
-        { "type": "feature", "tr": "Modüler yapı: üyeler, muhasebe, evrak, toplantılar, bağışlar, etkinlikler, envanter, görevler.", "de": "Modularer Aufbau: Mitglieder, Buchhaltung, Schriftverkehr, Sitzungen, Spenden, Veranstaltungen, Inventar, Aufgaben." },
-        { "type": "improvement", "tr": "Daraltılabilir menü, sağdan açılan formlar, Türkçe/Almanca arayüz.", "de": "Einklappbares Menü, Formulare von rechts, Oberfläche auf Türkisch/Deutsch." }
+        {
+          "type": "feature",
+          "tr": "Modüler yapı: üyeler, muhasebe, evrak, toplantılar, bağışlar, etkinlikler, envanter, görevler.",
+          "de": "Modularer Aufbau: Mitglieder, Buchhaltung, Schriftverkehr, Sitzungen, Spenden, Veranstaltungen, Inventar, Aufgaben."
+        },
+        {
+          "type": "improvement",
+          "tr": "Daraltılabilir menü, sağdan açılan formlar, Türkçe/Almanca arayüz.",
+          "de": "Einklappbares Menü, Formulare von rechts, Oberfläche auf Türkisch/Deutsch."
+        }
       ]
     }
   ]

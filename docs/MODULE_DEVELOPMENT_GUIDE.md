@@ -247,6 +247,36 @@ export const cards = defineCards([
 
 ---
 
+## 9b. Asistan (AI) sözleşmesi (`ai.ts`)
+
+Modül, asistanın kendisiyle neler yapabileceğini **kendi klasöründeki `ai.ts`** dosyasında bildirir
+(YAML/JSON yerine TypeScript: şemalar ve fonksiyonlar tip denetimli, doğrulayıcı tarafından okunur).
+`pnpm module:sync` dosyayı bulur ve `src/ai-registry.ts`'i üretir; AI modülünde elle bir şey değişmez.
+Referans örnek: `src/modules/tasks/ai.ts`. Türler: `src/shared/ai/define.ts`.
+
+```ts
+import "server-only";
+export const ai = defineModuleAi({
+  module: "tasks",                      // klasör adıyla aynı
+  tools: [
+    aiTool({ name: "list_open_tasks", operation: "read", allowed, description, schema, inputSchema, run }),
+    aiTool({ name: "propose_task", operation: "create", ...,
+      run: async (input, { propose }) => { propose({ action: "create", title, details, payload: input }); return PROPOSED; } }),
+  ],
+  actions: {
+    create: aiAction({ operation: "create", schema, execute: (payload) => createTaskAction(payload) }),
+  },
+});
+```
+
+Kurallar:
+- `operation` (read/create/update/delete) yöneticinin **Ayarlar → Asistan** izin matrisindeki satırı belirler; varsayılan kapalıdır.
+- Yazma araçları veriyi değiştirmez, yalnızca `propose` ile onay kartı üretir. Kullanıcı onaylayınca `actions[eylem].execute`
+  çalışır: matris yeniden denetlenir, payload şemayla yeniden doğrulanır, modül eylemi kullanıcının kendi yetkisini denetler.
+- Araçlar kişi adı, iletişim, adres, banka veya kimlik verisi **döndürmez** (KVKK/DSGVO).
+- Her eylem için `messages/{tr,de}.json` içinde `ai.<eylem>.kind`, `ai.<eylem>.confirm`, `ai.<eylem>.done` zorunludur.
+- Başka modülün verisine erişim yine §8'deki `access` onayıyla olur; `ai.ts` yalnızca kendi `server` girişini ve onaylı erişimleri kullanır.
+
 ## 10. Doğrulama (CI aynı adımları çalıştırır)
 
 ```bash

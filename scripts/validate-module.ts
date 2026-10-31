@@ -77,6 +77,8 @@ function checkModuleMessages(moduleDir: string, trJson: unknown, deJson: unknown
     const cardsText = fs.readFileSync(cardsPath, "utf8");
     for (const match of cardsText.matchAll(/(?:titleKey|descriptionKey):\s*["']([\w.-]+)["']/g)) required.push(match[1]);
   }
+  // Modül AI standardı (src/shared/ai/define.ts): her onay eyleminin kart metinleri olmalı.
+  required.push(...checkModuleAi(moduleDir, problems));
   for (const key of required) {
     for (const [locale, json] of [["tr", trJson], ["de", deJson]] as const) {
       if (typeof lookupKey(json, key) !== "string") {
@@ -85,6 +87,29 @@ function checkModuleMessages(moduleDir: string, trJson: unknown, deJson: unknown
     }
   }
   return problems;
+}
+
+/**
+ * `ai.ts` kuralları: server-only, defineModuleAi, `module` anahtarı klasör adıyla aynı, araç adları
+ * snake_case. Dönen değer: eylem başına gereken çeviri anahtarları (<eylem>.kind|confirm|done).
+ */
+export function checkModuleAi(moduleDir: string, problems: string[]): string[] {
+  const aiPath = path.join(moduleDir, "ai.ts");
+  if (!fs.existsSync(aiPath)) return [];
+  const text = fs.readFileSync(aiPath, "utf8");
+  const moduleKey = path.basename(moduleDir);
+  if (!text.includes('import "server-only"')) problems.push("ai.ts 'server-only' içe aktarmalı.");
+  if (!/export const ai = defineModuleAi\(/.test(text)) problems.push("ai.ts 'export const ai = defineModuleAi({...})' biçiminde olmalı.");
+  const declared = text.match(/\bmodule:\s*["']([\w-]+)["']/)?.[1];
+  if (declared !== moduleKey) problems.push(`ai.ts module anahtarı '${declared ?? "?"}' klasör adı '${moduleKey}' ile aynı olmalı.`);
+  for (const match of text.matchAll(/\bname:\s*["']([^"']+)["']/g)) {
+    if (!/^[a-z][a-z0-9_]{2,63}$/.test(match[1])) problems.push(`ai.ts araç adı snake_case olmalı: ${match[1]}`);
+  }
+  const actions = [...text.matchAll(/^\s+([\w]+):\s*aiAction\(/gm)].map((match) => match[1]);
+  for (const proposed of text.matchAll(/propose\(\{\s*action:\s*["']([\w]+)["']/g)) {
+    if (!actions.includes(proposed[1])) problems.push(`ai.ts: önerilen eylem '${proposed[1]}' actions içinde tanımlı değil.`);
+  }
+  return actions.flatMap((action) => ["kind", "confirm", "done"].map((part) => `ai.${action}.${part}`));
 }
 
 /** Modüllerin birbirinin `server` API'sini onaysız kullanmasını engelleyen erişim denetimi. */

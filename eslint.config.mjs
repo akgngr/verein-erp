@@ -19,6 +19,7 @@ const MODULE_INTERNAL_IMPORTS = {
     "!@/modules/*/page",
     "!@/modules/*/edge",
     "!@/modules/*/cards",
+    "!@/modules/*/ai",
     "!@/modules/*/routes",
     "!@/modules/*/routes/**",
     "!@/modules/*/api",
