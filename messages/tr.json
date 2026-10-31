@@ -1118,6 +1118,11 @@
           "confirm": "Evet, izin ver",
           "sensitive": "{module} kişisel veya mali veriye yakın bir modül. Asistana şu izinler verilecek: {operations}. Kişisel veri yine döndürülmez ve yazma işlemleri onayınız olmadan yapılmaz.",
           "write": "Asistan {module} modülünde şunları önerebilecek: {operations}. Her öneri karttan onayınızla ve sizin yetkinizle uygulanır."
+        },
+        "status": {
+          "inactive": "Modül etkin değil: izin açık olsa da asistan bu modülü kullanamaz.",
+          "needsApproval": "Modülün erişim onayı bekliyor: onaylanana kadar asistan bu modülü kullanamaz.",
+          "link": "Modül Yönetimi'ne git"
         }
       },
       "deleteHistory": "Tüm sohbet geçmişimi sil",

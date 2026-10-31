@@ -184,6 +184,11 @@
         "confirm": "Ja, erlauben",
         "sensitive": "{module} enthält personen- oder finanznahe Daten. Der Assistent erhält: {operations}. Personenbezogene Daten werden weiterhin nicht zurückgegeben, und Schreibvorgänge erfolgen nur mit Ihrer Bestätigung.",
         "write": "Der Assistent kann im Modul {module} Folgendes vorschlagen: {operations}. Jeder Vorschlag wird nur nach Ihrer Bestätigung und mit Ihren Rechten ausgeführt."
+      },
+      "status": {
+        "inactive": "Modul ist nicht aktiv: Der Assistent kann es trotz Berechtigung nicht nutzen.",
+        "needsApproval": "Die Zugriffsfreigabe des Moduls steht aus: Bis dahin kann der Assistent es nicht nutzen.",
+        "link": "Zur Modulverwaltung"
       }
     },
     "deleteHistory": "Gesamten Chatverlauf löschen",

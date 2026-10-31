@@ -55,6 +55,23 @@ export async function availableTools(user: SessionUser) {
   return TOOLS.filter((tool) => isAllowed(matrix, tool.module, tool.operation) && usable.has(tool.module) && tool.allowed(user));
 }
 
+export type UnavailableReason = "module" | "matrix" | "role";
+
+/**
+ * Kullanıcının şu an KULLANAMADIĞI araçlar ve gerçek sebebi (ilk engelleyen kapı):
+ *  - module: modül etkin değil ya da erişim onayı bekliyor (Ayarlar → Modül Yönetimi)
+ *  - matrix: yönetici asistana bu modül/işlem için izin vermemiş (Ayarlar → Yapay zekâ)
+ *  - role: kullanıcının rolünde ilgili izin yok (Kullanıcılar → Roller ve İzinler)
+ * Asistan böylece "neden yapamıyorum" sorusuna tahmin yerine doğru cevap verir.
+ */
+export async function unavailableTools(user: SessionUser): Promise<{ name: string; module: string; operation: AiOperation; reason: UnavailableReason }[]> {
+  const [usable, matrix] = await Promise.all([listUsableModuleKeys().then((keys) => new Set(keys)), getAiPermissions()]);
+  return TOOLS.flatMap((tool) => {
+    const reason: UnavailableReason | null = !usable.has(tool.module) ? "module" : !isAllowed(matrix, tool.module, tool.operation) ? "matrix" : !tool.allowed(user) ? "role" : null;
+    return reason ? [{ name: tool.name, module: tool.module, operation: tool.operation, reason }] : [];
+  });
+}
+
 /** Matristeki her modül için asistanın gerçekten aracı olan işlemler (ayarlar ekranı). */
 export function supportedOperations(): Record<string, AiOperation[]> {
   const result: Record<string, AiOperation[]> = {};

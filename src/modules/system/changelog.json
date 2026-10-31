@@ -2,6 +2,26 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.14.2",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Asistan: kapalı yeteneklerin gerçek sebebi",
+        "de": "Assistent: tatsächlicher Grund für gesperrte Funktionen"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Asistan bir işi yapamadığında gerçek sebebi söyler: modül etkin değil / erişim onayı bekliyor, asistan izni kapalı ya da kullanıcının rolünde izin yok — ve nereden açılacağını.",
+          "de": "Kann der Assistent etwas nicht, nennt er den tatsächlichen Grund (Modul inaktiv/Freigabe ausstehend, KI-Berechtigung aus oder fehlende Rollenberechtigung) und wo es geändert wird."
+        },
+        {
+          "type": "improvement",
+          "tr": "Asistan izinleri ekranı, etkin olmayan veya onay bekleyen modülleri uyarıyla gösterir; bu modüllerdeki açık izinler üstü çizili görünür.",
+          "de": "Die KI-Berechtigungsansicht kennzeichnet inaktive oder nicht freigegebene Module; dort aktivierte Berechtigungen werden durchgestrichen angezeigt."
+        }
+      ]
+    },
+    {
       "version": "0.14.0",
       "date": "2026-10-31",
       "title": {
