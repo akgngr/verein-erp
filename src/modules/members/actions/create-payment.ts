@@ -1,7 +1,7 @@
 "use server";
 
 import { getDb } from "@/shared/db";
-import { toCents } from "@/shared/money";
+import { centsToDecimalString, toCents } from "@/shared/money";
 import { buildUserLabel } from "@/shared/utils";
 import type { ActionResult } from "@/shared/types/action";
 
@@ -12,6 +12,7 @@ import { paymentCreateSchema } from "../schemas/payment";
 import { allocateReceiptNumber, runWithReceiptNumberRetry } from "../services/receipt-number";
 import { recalculateDueStatus } from "../services/dues-calculation";
 import { berlinYear, parseDateOnly } from "../utils";
+import { checkDueYear, checkPaymentDate, hasProblems } from "../services/date-rules";
 
 /**
  * Aidat ödemesi kaydı + makbuz numarası (Faz 4, 4.6).
@@ -33,19 +34,19 @@ export async function createPaymentAction(
       });
       if (!member) {
         throw new ActionError("members.errors.memberNotFound", {
-          memberId: ["Geçerli bir üye seçin."],
+          memberId: ["members.validation.memberRequired"],
         });
       }
 
       const cents = toCents(input.amount);
       if (cents === null || cents <= 0) {
         throw new ActionError("members.errors.amountInvalid", {
-          amount: ["0'dan büyük bir tutar girin (en fazla 2 ondalık)."],
+          amount: ["members.validation.amountInvalid"],
         });
       }
       if (cents > 999_999_999) {
         throw new ActionError("members.errors.amountTooLarge", {
-          amount: ["Tutar en fazla 9.999.999,99 € olabilir."],
+          amount: ["members.validation.amountTooLarge"],
         });
       }
 
@@ -55,13 +56,14 @@ export async function createPaymentAction(
           paidAt: ["members.validation.paymentDateInvalid"],
         });
       }
-      // KARAR: Gelecek tarihli ödeme kabul edilmez (ödeme gerçekleşmiş koddur).
+      // KARAR: Ödeme tarihi gelecekte ve üyenin giriş tarihinden önce olamaz; aidat yılı
+      // üyelik yılları içinde olmalı (ör. 2026'da giren üyeye 1980 tarihli ödeme girilemez).
       const today = berlinTodayStart();
-      if (paidAt.getTime() > today.getTime()) {
-        throw new ActionError("members.errors.paymentDateFuture", {
-          paidAt: ["Ödeme tarihi bugünden sonra olamaz."],
-        });
-      }
+      const dateProblems = {
+        ...checkPaymentDate({ paidAt, joinDate: member.joinDate, today }),
+        ...checkDueYear({ year: input.dueYear, joinDate: member.joinDate, exitDate: member.exitDate, today }),
+      };
+      if (hasProblems(dateProblems)) throw new ActionError("members.errors.datesInvalid", dateProblems);
 
       const createdByLabel = buildUserLabel(user.name, user.email);
       const year = berlinYear(paidAt);
@@ -76,7 +78,7 @@ export async function createPaymentAction(
               receiptNumber,
               memberId: member.id,
               dueYear: input.dueYear,
-              amount: cents.toFixed(2),
+              amount: centsToDecimalString(cents),
               method: input.method,
               paidAt,
               reference: input.reference,

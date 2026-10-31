@@ -21,6 +21,26 @@ import { ActionError } from "@/modules/auth/server";
  * yeni fiş üretmez. Void edilen ödemenin fişi sonraki çalıştırmada ters kayıt edilir.
  */
 
+/**
+ * Bir ödemenin fişleri. KARAR (tutar düzeltmesi): yanlış tutarlı fiş silinmez; ters kaydedilir
+ * ("Betragskorrektur") ve doğru tutarla yeni fiş açılır. @@unique([sourceType, sourceId]) nedeniyle
+ * sonraki fişler `<ödemeId>:<n>` kaynak kimliğiyle yazılır; hepsi aynı ödemeye aittir.
+ */
+type PaymentBooking = { id: string; sourceId: string | null; reversedAt: Date | null; bookingDate: Date; amount: { toString(): string } };
+
+function groupBookingsByPayment(bookings: PaymentBooking[]): Map<string, PaymentBooking[]> {
+  const map = new Map<string, PaymentBooking[]>();
+  for (const booking of bookings) {
+    if (!booking.sourceId) continue;
+    const paymentId = booking.sourceId.split(":")[0];
+    map.set(paymentId, [...(map.get(paymentId) ?? []), booking]);
+  }
+  return map;
+}
+
+const bookingCents = (booking: PaymentBooking) => Math.round(Number(booking.amount.toString()) * 100);
+const nextSourceId = (paymentId: string, existing: PaymentBooking[]) => (existing.length === 0 ? paymentId : `${paymentId}:${existing.length + 1}`);
+
 export type AccountingSettingsData = {
   memberFeeCategoryId: string | null;
   cashAccountId: string | null;
@@ -45,6 +65,8 @@ export async function previewMemberSync(): Promise<{
   configured: boolean;
   toImport: { count: number; totalCents: number };
   toReverse: { count: number; totalCents: number };
+  /** Fiş tutarı ödemeyle tutmuyor → ters kayıt + doğru tutarla yeni fiş. */
+  toCorrect: { count: number; totalCents: number };
   skippedLockedYear: number;
   skippedBeforeOpening: number;
   conflicts: Array<{ receiptNumber: string; reason: string }>;
@@ -65,6 +87,7 @@ export async function previewMemberSync(): Promise<{
     configured,
     toImport: { count: 0, totalCents: 0 },
     toReverse: { count: 0, totalCents: 0 },
+    toCorrect: { count: 0, totalCents: 0 },
     skippedLockedYear: 0,
     skippedBeforeOpening: 0,
     conflicts: [] as Array<{ receiptNumber: string; reason: string }>,
@@ -76,11 +99,9 @@ export async function previewMemberSync(): Promise<{
   // Var olan kaynak fişleri tek sorguda al (idempotans kontrolü).
   const existingBookings = await db.accountingBooking.findMany({
     where: { sourceType: "MEMBER_PAYMENT" },
-    select: { sourceId: true, reversedAt: true, bookingDate: true },
+    select: { id: true, sourceId: true, reversedAt: true, bookingDate: true, amount: true },
   });
-  const bookingByPaymentId = new Map(
-    existingBookings.map((booking) => [booking.sourceId, booking]),
-  );
+  const bookingsByPayment = groupBookingsByPayment(existingBookings);
 
   const accounts = await db.accountingAccount.findMany({
     where: { id: { in: [settings.cashAccountId!, settings.bankAccountId!] } },
@@ -95,16 +116,26 @@ export async function previewMemberSync(): Promise<{
   let importTotal = 0;
   let reverseCount = 0;
   let reverseTotal = 0;
+  let correctCount = 0;
+  let correctTotal = 0;
   let skippedLockedYear = 0;
   let skippedBeforeOpening = 0;
   const translate = await getMessageTranslator();
   const conflicts: Array<{ receiptNumber: string; reason: string }> = [];
 
   for (const payment of payments) {
-    const existing = bookingByPaymentId.get(payment.id);
+    const existing = (bookingsByPayment.get(payment.id) ?? []).find((booking) => !booking.reversedAt);
 
     if (!payment.voidedAt) {
-      if (existing && !existing.reversedAt) continue; // zaten aktarılmış
+      if (existing && bookingCents(existing) === payment.amountCents) continue; // zaten doğru aktarılmış
+      if (existing) {
+        correctCount += 1;
+        correctTotal += payment.amountCents;
+        if (await isLockedYear(existing.bookingDate.getUTCFullYear())) {
+          conflicts.push({ receiptNumber: payment.receiptNumber, reason: translate("accounting.errors.reverseYearLocked") });
+        }
+        continue;
+      }
       const year = new Date(`${payment.paidAt}T00:00:00.000Z`).getUTCFullYear();
       const locked = await isLockedYear(year);
       if (locked) {
@@ -137,6 +168,7 @@ export async function previewMemberSync(): Promise<{
     configured,
     toImport: { count: importCount, totalCents: importTotal },
     toReverse: { count: reverseCount, totalCents: reverseTotal },
+    toCorrect: { count: correctCount, totalCents: correctTotal },
     skippedLockedYear,
     skippedBeforeOpening,
     conflicts,
@@ -173,11 +205,9 @@ export async function runMemberSync(
   const payments = await listPaymentsForAccounting();
   const existingBookings = await db.accountingBooking.findMany({
     where: { sourceType: "MEMBER_PAYMENT" },
-    select: { id: true, sourceId: true, reversedAt: true },
+    select: { id: true, sourceId: true, reversedAt: true, bookingDate: true, amount: true },
   });
-  const bookingByPaymentId = new Map(
-    existingBookings.map((booking) => [booking.sourceId, booking]),
-  );
+  const bookingsByPayment = groupBookingsByPayment(existingBookings);
 
   let createdCount = 0;
   let reversedCount = 0;
@@ -188,10 +218,16 @@ export async function runMemberSync(
   const { assertNoNegativeCash } = await import("./balances");
 
   for (const payment of payments) {
-    const existing = bookingByPaymentId.get(payment.id);
+    const allBookings = bookingsByPayment.get(payment.id) ?? [];
+    const existing = allBookings.find((booking) => !booking.reversedAt);
 
     if (!payment.voidedAt) {
-      if (existing && !existing.reversedAt) continue;
+      if (existing && bookingCents(existing) === payment.amountCents) continue;
+      // Tutar tutmuyor: eski fiş ters kaydedilir (kilitli yılda yapılamaz → çakışma).
+      if (existing && (await isLockedYear(existing.bookingDate.getUTCFullYear()))) {
+        conflicts.push({ receiptNumber: payment.receiptNumber, reason: translate("accounting.errors.reverseYearLocked") });
+        continue;
+      }
       const paidAt = new Date(`${payment.paidAt}T00:00:00.000Z`);
       const year = paidAt.getUTCFullYear();
       if (await isLockedYear(year)) {
@@ -214,6 +250,18 @@ export async function runMemberSync(
             throw new ActionError("accounting.errors.beforeOpening");
           }
 
+          if (existing) {
+            await tx.accountingBooking.update({
+              where: { id: existing.id },
+              data: {
+                reversedAt: new Date(),
+                reversedById: actor.id,
+                reversedByLabel: actor.label,
+                reverseReason: `Betragskorrektur: ${(bookingCents(existing) / 100).toFixed(2)} → ${(payment.amountCents / 100).toFixed(2)}`,
+              },
+            });
+          }
+
           const { sequence, bookingNumber } = await allocateBookingNumber(tx, year);
           const description = `Mitgliedsbeitrag ${payment.dueYear} – Mitglied Nr. ${payment.memberNumber} – ${payment.receiptNumber}`;
 
@@ -230,7 +278,7 @@ export async function runMemberSync(
               description,
               receiptReference: payment.receiptNumber,
               sourceType: "MEMBER_PAYMENT",
-              sourceId: payment.id,
+              sourceId: nextSourceId(payment.id, allBookings),
               createdById: actor.id,
               createdByLabel: actor.label,
               updatedById: actor.id,

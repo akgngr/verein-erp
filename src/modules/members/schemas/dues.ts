@@ -40,7 +40,7 @@ export const dueAddSchema = z.object({
   year: z.coerce
     .number()
     .int("validation.yearInt")
-    .min(2000, "Yıl 2000'den küçük olamaz.")
+    .min(2000, "members.validation.yearTooOld")
     .max(CURRENT_YEAR + 1, "members.validation.yearAfterNext"),
   amount: z
     .string()
