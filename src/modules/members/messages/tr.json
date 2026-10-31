@@ -488,6 +488,10 @@
     "members": {
       "label": "Üye Kayıtları",
       "description": "Dernek üyelerinin profili, iletişim verileri ve üyelik durumları."
+    },
+    "memberIdentity": {
+      "label": "Kimlik numaraları",
+      "description": "Üyelerin kimlik numaralarını görme; kapalıysa alan boş gösterilir."
     }
   }
 }

@@ -206,7 +206,7 @@ Users → Roles & Permissions is built automatically from all installed modules.
 e.g. courses → TEACHER, with `messages → roles.<KEY>.label/shortDesc`) and custom roles created by admins.
 Each `definePermissions` resource needs `messages → permissions.<resource>.label/description`. Code values are
 defaults; admin changes are stored in `role_grants` ("Reset to default" removes them). When a module is
-inactive, its roles cannot be assigned and grant nothing. Always check permissions with `can(...)`, never by role name.
+inactive, its roles cannot be assigned and grant nothing. Always check permissions with `can(...)`, never by role name (the validator rejects `user.role === "…"`). Data-scope rules are permissions too, e.g. `coursesAll` (all courses vs. own), `memberIdentity`, `progressNotesAll`.
 
 ## 9. Dashboard cards (`cards/`)
 

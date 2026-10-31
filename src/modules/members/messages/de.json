@@ -488,6 +488,10 @@
     "members": {
       "label": "Mitgliederdaten",
       "description": "Profile, Kontaktdaten und Mitgliedschaftsstatus der Vereinsmitglieder."
+    },
+    "memberIdentity": {
+      "label": "Ausweisnummern",
+      "description": "Ausweisnummern der Mitglieder sehen; ohne Berechtigung bleibt das Feld leer."
     }
   }
 }

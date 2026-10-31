@@ -1711,6 +1711,10 @@
       "courses": {
         "label": "Kurslar",
         "description": "Kurs ve Nachhilfe kayıtları, kayıtlar (öğrenci)."
+      },
+      "coursesAll": {
+        "label": "Tüm kurslar",
+        "description": "Kapalıysa kullanıcı yalnızca öğretmeni olduğu kursları, derslerini ve öğrenci takibini görür."
       }
     }
   },
@@ -4094,6 +4098,10 @@
       "members": {
         "label": "Üye Kayıtları",
         "description": "Dernek üyelerinin profili, iletişim verileri ve üyelik durumları."
+      },
+      "memberIdentity": {
+        "label": "Kimlik numaraları",
+        "description": "Üyelerin kimlik numaralarını görme; kapalıysa alan boş gösterilir."
       }
     }
   },
@@ -4296,6 +4304,10 @@
       "progress": {
         "label": "Öğrenci takibi",
         "description": "Yoklama, notlar, gelişim kayıtları ve veli raporu."
+      },
+      "progressNotesAll": {
+        "label": "Tüm gelişim notları",
+        "description": "Başkalarının yazdığı gelişim notlarını silme; kapalıysa yalnızca kendi notları."
       }
     }
   },

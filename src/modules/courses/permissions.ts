@@ -43,3 +43,17 @@ export const courseTeachersPermissions = definePermissions("courseTeachers", {
   TEACHER: [],
   VIEWER: [],
 });
+
+/**
+ * Kapsam: tüm kursları görme. Kapalıysa kullanıcı yalnızca öğretmeni olduğu kursları (ve onların
+ * derslerini, öğrenci takibini) görür. Varsayılan: öğretmen hariç herkes.
+ */
+export const coursesAllPermissions = definePermissions("coursesAll", {
+  ADMIN: ["view"],
+  BOARD: ["view"],
+  SECRETARY: ["view"],
+  TREASURER: ["view"],
+  AUDITOR: ["view"],
+  TEACHER: [],
+  VIEWER: ["view"],
+});
