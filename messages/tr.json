@@ -108,6 +108,7 @@
     "students": "Öğrenciler",
     "ayarlar": "Ayarlar",
     "moduller": "Modül Yönetimi",
+    "surumNotlari": "Sürüm notları",
     "tasks": "Görevler",
     "kullanicilar": "Kullanıcılar"
   },
@@ -1309,7 +1310,9 @@
       "currentPassword": "Mevcut parola",
       "newPassword": "Yeni parola",
       "submit": "Parolayı güncelle",
-      "updated": "Parolanız güncellendi."
+      "updated": "Parolanız güncellendi.",
+      "details": "Profil Bilgilerim",
+      "detailsHint": "İletişim, adres, ödeme ve fatura bilgileriniz. Yalnızca siz ve yetkili yöneticiler görebilir."
     },
     "errors": {
       "sessionInvalid": "Oturumunuz geçersiz. Lütfen tekrar giriş yapın.",
@@ -1327,6 +1330,44 @@
     "module": {
       "label": "Kimlik Doğrulama",
       "description": "Kullanıcı girişi, oturum yönetimi ve parola güvenliği."
+    },
+    "profileForm": {
+      "contact": "İletişim",
+      "phone": "Telefon",
+      "mobile": "Cep telefonu",
+      "address": "Adres",
+      "street": "Sokak",
+      "houseNumber": "Kapı no",
+      "postalCode": "Posta kodu",
+      "city": "Şehir",
+      "country": "Ülke",
+      "countryHint": "İki harfli ülke kodu (ör. DE)",
+      "payment": "Ödeme Bilgileri",
+      "paymentHint": "Size yapılacak ödemeler (ör. ders ücreti) için kullanılır.",
+      "accountHolder": "Hesap sahibi",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "bankName": "Banka",
+      "keepHint": "Boş bırakırsanız kayıtlı değer korunur.",
+      "clearIban": "Kayıtlı IBAN'ı sil",
+      "invoice": "Fatura Bilgileri",
+      "invoiceHint": "Derneğe fatura kesiyorsanız (ör. serbest öğretmen) faturada görünecek bilgiler.",
+      "businessName": "Fatura adı / firma",
+      "taxNumber": "Vergi numarası (Steuernummer)",
+      "vatId": "KDV kimlik no (USt-IdNr.)",
+      "isSmallBusiness": "Küçük işletme (§ 19 UStG)",
+      "isSmallBusinessHint": "KDV'siz fatura kesiyorsanız işaretleyin.",
+      "clearTaxNumber": "Kayıtlı vergi numarasını sil",
+      "privacy": "IBAN ve vergi numaranız şifreli saklanır ve ekranda yalnızca maskeli gösterilir.",
+      "submit": "Profili kaydet",
+      "saved": "Profiliniz kaydedildi.",
+      "validation": {
+        "textMax": "Bu alan çok uzun.",
+        "country": "İki harfli büyük ülke kodu girin (ör. DE).",
+        "iban": "Geçerli bir IBAN girin.",
+        "bic": "Geçerli bir BIC girin (8 veya 11 karakter).",
+        "vatId": "Geçerli bir KDV kimlik numarası girin (ör. DE123456789)."
+      }
     }
   },
   "courses": {
@@ -4365,6 +4406,17 @@
       "needsApproval": {
         "title": "Bu modül erişim izni bekliyor",
         "description": "Modül başka modüllerin verilerine erişmek istiyor. Yönetici Modül Yönetimi'nden izin verene kadar kullanılamaz."
+      }
+    },
+    "releases": {
+      "title": "Sürüm notları",
+      "description": "Sistemdeki değişikliklerin sürüm sürüm listesi. Güncel sürüm: v{version}.",
+      "current": "Güncel",
+      "types": {
+        "feature": "Yeni",
+        "improvement": "İyileştirme",
+        "fix": "Düzeltme",
+        "security": "Güvenlik"
       }
     }
   },

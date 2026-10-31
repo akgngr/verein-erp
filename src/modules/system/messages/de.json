@@ -45,7 +45,8 @@
   },
   "nav": {
     "ayarlar": "Einstellungen",
-    "moduller": "Modulverwaltung"
+    "moduller": "Modulverwaltung",
+    "surumNotlari": "Versionshinweise"
   },
   "meta": {
     "settings": "Einstellungen",
@@ -93,6 +94,17 @@
     "needsApproval": {
       "title": "Dieses Modul wartet auf Zugriffsfreigabe",
       "description": "Das Modul möchte auf Daten anderer Module zugreifen. Es ist gesperrt, bis die Verwaltung den Zugriff in der Modulverwaltung freigibt."
+    }
+  },
+  "releases": {
+    "title": "Versionshinweise",
+    "description": "Änderungen am System nach Version. Aktuelle Version: v{version}.",
+    "current": "Aktuell",
+    "types": {
+      "feature": "Neu",
+      "improvement": "Verbesserung",
+      "fix": "Korrektur",
+      "security": "Sicherheit"
     }
   }
 }

@@ -178,3 +178,7 @@ export function createAction<I, T>(
     }
   };
 }
+
+// Kullanıcı profili: diğer modüller (ör. kurslar → öğretmen ödemesi) yalnızca bu girişleri kullanır.
+export { getProfileView, getPaymentProfile } from "./services/profile";
+export { saveProfileAction } from "./actions/profile";
