@@ -17,10 +17,10 @@ try {
   // .env yoksa değişkenler dışarıdan verilmelidir.
 }
 
-import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 
 import { hashPassword } from "../src/shared/security/password";
+import { createPrismaClient } from "../src/shared/db-client";
 
 const envSchema = z.object({
   DATABASE_URL: z.string().min(1),
@@ -36,7 +36,7 @@ if (!parsed.success) {
 }
 const env = parsed.data;
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 
 async function main() {
   const email = env.ADMIN_EMAIL.toLowerCase();

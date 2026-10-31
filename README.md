@@ -58,10 +58,10 @@ panelin hiçbir sayfasına gidemez.
 
 ## 4. Neon (yönetilen PostgreSQL) ve sunucuya taşıma
 
-- Neon kullanılırsa `.env` içine `DATABASE_URL` (pooler) ve `DIRECT_URL` ekleyin,
-  ardından `prisma/schema/base.prisma` içindeki `datasource db` bloğuna
-  `directUrl = env("DIRECT_URL")` satırını ekleyin ve `pnpm db:migrate` çalıştırın.
-  (Bu satır varsayılan olarak yoktur; yalnızca Neon'a geçildiğinde eklenir.)
+- Neon kullanılırsa `.env` içine iki adres girin: `DATABASE_URL` = **havuzlu (pooled)** adres
+  (uygulama kullanır), `DIRECT_URL` = **havuzsuz (direct)** adres (`pnpm db:deploy` / `db:migrate` kullanır).
+  Başka bir ayar gerekmez; `prisma.config.ts` `DIRECT_URL` varsa onu, yoksa `DATABASE_URL`'i kullanır.
+  Prisma 7 ile `pgbouncer=true` parametresi gerekmez (zararsızdır, uygulama tarafında yok sayılır).
 - Yerelden sunucuya veri taşıma:
 
 ```bash

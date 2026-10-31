@@ -2,6 +2,31 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.15.0",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Prisma 7",
+        "de": "Prisma 7"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Veritabanı katmanı Prisma 7'ye yükseltildi (Rust sorgu motoru yok; node-postgres adaptörü). Şemalar, sorgular ve migration'lar değişmedi.",
+          "de": "Datenbankschicht auf Prisma 7 aktualisiert (ohne Rust-Query-Engine; node-postgres-Adapter). Schemas, Abfragen und Migrationen unverändert."
+        },
+        {
+          "type": "improvement",
+          "tr": "Neon: uygulama DATABASE_URL (havuzlu), migration'lar varsa DIRECT_URL (havuzsuz) kullanır; pgbouncer=true gerekmez.",
+          "de": "Neon: Die Anwendung nutzt DATABASE_URL (Pooler), Migrationen DIRECT_URL (direkt), falls gesetzt; pgbouncer=true ist nicht mehr nötig."
+        },
+        {
+          "type": "fix",
+          "tr": "Docker imajı: açılıştaki migration ve bütünlük kontrolü için gereken paketler ve şema dosyaları imaja doğru kopyalanıyor.",
+          "de": "Docker-Image: Pakete und Schemadateien für Migration und Integritätsprüfung beim Start werden korrekt übernommen."
+        }
+      ]
+    },
+    {
       "version": "0.14.1",
       "date": "2026-10-31",
       "title": {

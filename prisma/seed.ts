@@ -14,10 +14,10 @@ try {
   // .env dosyası yoksa ortam değişkenleri dışarıdan verilmiş olmalıdır.
 }
 
-import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 
 import { hashPassword } from "../src/shared/security/password";
+import { createPrismaClient } from "../src/shared/db-client";
 
 const seedEnvSchema = z.object({
   DATABASE_URL: z.string().min(1, "DATABASE_URL gerekli (.env dosyasını hazırlayın)."),
@@ -42,7 +42,7 @@ function loadSeedEnv() {
 
 const seedEnv = loadSeedEnv();
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 
 /** Evrak kategorileri (Faz 1): idempotent upsert ile oluşur; ad benzersizdir. */
 const DOCUMENT_CATEGORIES = [
