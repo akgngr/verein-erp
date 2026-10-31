@@ -1,4 +1,4 @@
-import { CheckCircle2, CircleSlash } from "lucide-react";
+import { CheckCircle2, CircleSlash, Puzzle } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
@@ -57,10 +57,15 @@ export async function AiSettingsView() {
   const moduleLabel = (key: string) => (tRoot.has(`${key}.module.label`) ? tRoot(`${key}.module.label`) : (allModules.find((mod) => mod.key === key)?.label ?? key));
   // Matris: asistanın kendisi hariç tüm modüller; asistanın aracı olanlar önce.
   const supported = supportedOperations();
+  const moduleDescription = (key: string) => (tRoot.has(`${key}.module.description`) ? tRoot(`${key}.module.description`) : (allModules.find((mod) => mod.key === key)?.description ?? ""));
   const matrixModules = allModules
     .filter((mod) => mod.key !== "ai")
-    .map((mod) => ({ key: mod.key, label: moduleLabel(mod.key) }))
-    .sort((a, b) => Number(Boolean(supported[b.key])) - Number(Boolean(supported[a.key])) || a.label.localeCompare(b.label));
+    .map((mod) => {
+      // İkon sunucuda çizilir (bileşen fonksiyonları istemciye gönderilemez).
+      const Icon = mod.nav[0]?.icon ?? Puzzle;
+      return { key: mod.key, label: moduleLabel(mod.key), description: moduleDescription(mod.key), icon: <Icon aria-hidden /> };
+    })
+    .sort((a, b) => a.label.localeCompare(b.label));
   const areas = [...new Set(tools.map((tool) => tool.module))];
 
   return (

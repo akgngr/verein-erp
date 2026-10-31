@@ -944,19 +944,10 @@
       "settings": "Yapay zekâ asistanı"
     },
     "access": {
-      "accounting": "Gelir-gider toplamlarını ve hesap bakiyelerini okur; rapor bağlantısı verir (fiş ayrıntısı ve kişi verisi okunmaz).",
       "members": "Yalnızca üye sayılarını ve aidat tahsilat istatistiğini okur; hiçbir üyenin adı veya bilgisi okunmaz. Kayıtlı adlar yalnızca maskeleme için sunucuda kullanılır.",
-      "events": "Yaklaşan etkinliklerin başlık, tarih, yer ve katılım sayılarını okur; izin verilirse kullanıcı onayıyla taslak etkinlik oluşturur. Katılımcı isimleri okunmaz.",
-      "tasks": "Açık görevlerin başlık ve durumunu okur; izin verilirse kullanıcı onayıyla görev oluşturur, tamamlar veya siler.",
-      "courses": "Yalnızca kurs istatistiklerini okur (öğretmen, öğrenci, veli adı yok); izin verilirse kullanıcı onayıyla kurs oluşturur, durumunu değiştirir veya siler.",
       "system": "Hangi modüllerin etkin ve asistana izinli olduğunu okur (asistan yalnızca bunlara erişir).",
       "students": "Yalnızca öğrenci ve veli sayılarını okur.",
       "auth": "Yalnızca maskeleme için kullanıcı adlarını sunucuda okur ve oturumu doğrular; adlar yapay zekâya gönderilmez.",
-      "meetings": "Toplantı listesi, gündem ve kararları okur (katılımcı isimleri hariç); izin verilirse kullanıcı onayıyla toplantı oluşturur, durumunu değiştirir veya siler.",
-      "documents": "Evrak kayıtlarını ve eklerin metnini okur (kişisel tanımlayıcılar maskelenir); izin verilirse kullanıcı onayıyla evrak ekler, durumunu değiştirir veya siler.",
-      "donations": "Yalnızca bağış toplamlarını ve makbuz sayılarını okur; bağışçı bilgisi okunmaz.",
-      "inventory": "Envanter kalemlerini ve toplamları okur (zimmetli üye hariç); izin verilirse kullanıcı onayıyla kalem ekler, durumunu değiştirir veya siler.",
-      "progress": "Yalnızca devam ve değerlendirme istatistiklerini okur.",
       "organization": "Derneğin kamuya açık ana verilerini okur; vergi numarası ve vergi dairesi bilgileri hariç."
     },
     "errors": {
@@ -1074,7 +1065,7 @@
       "credentialSave": "Kaydet",
       "credentialSaved": "Bağlantı bilgisi kaydedildi (anahtar şifreli saklanır).",
       "permissionsTitle": "Asistanın izinleri (modül bazında)",
-      "permissionsHelp": "Her modül için okuma, yazma, güncelleme ve silme iznini ayrı ayrı seçin. Varsayılan olarak hepsi kapalıdır. Yazma, güncelleme ve silme işlemlerini asistan yalnızca önerir; işlem kullanıcı karttan onaylayınca ve kullanıcının kendi yetkisi varsa yapılır. Okuma izni verilse bile kişisel veri okunmaz.",
+      "permissionsHelp": "Asistanın her modülde neler yapabileceğini seçin. Karta tıklayarak izinleri düzenleyin; renkli olanlar açık, gri olanlar kapalıdır. Varsayılan olarak hepsi kapalıdır.",
       "areasSave": "İzinleri kaydet",
       "areasSaved": "İzinler kaydedildi.",
       "fields": {
@@ -1089,15 +1080,44 @@
         "baseUrlHelp": "Yalnızca dernek ağındaki adresler kabul edilir (ör. localhost, 192.168.x.x, Docker servis adı)."
       },
       "matrix": {
-        "noTools": "Asistanın bu modülde henüz aracı yok; izin verilemez.",
-        "unsupported": "Desteklenmiyor",
-        "allow": "İzin ver",
-        "deny": "İzin verme",
         "operations": {
           "read": "Okuma",
           "create": "Yazma (oluşturma)",
           "update": "Güncelleme",
           "delete": "Silme"
+        },
+        "saved": "İzinler kaydedildi.",
+        "allowAll": "Tümüne izin ver",
+        "denyAll": "Tümünü kapat",
+        "allowAllTitle": "Tüm izinler açılsın mı?",
+        "allowAllMessage": "Asistan tüm modüllerde okuyabilecek ve oluşturma, güncelleme, silme önerebilecek. Öneriler yine karttan onayınızla ve sizin yetkinizle uygulanır; kişisel veri döndürülmez. Devam edilsin mi?",
+        "noToolsList": "Asistanın henüz aracı olmayan modüller: {modules}",
+        "selectAll": "Tümünü seç",
+        "cancel": "Vazgeç",
+        "save": "Kaydet",
+        "riskBadge": "Onay gerektirir",
+        "short": {
+          "read": "Okuma",
+          "create": "Oluşturma",
+          "update": "Güncelleme",
+          "delete": "Silme"
+        },
+        "explain": {
+          "read": "Sayılar, listeler ve özetler; kişisel veri dönmez.",
+          "create": "Yeni kayıt önerir; kayıt karttan onaylayınca oluşur.",
+          "update": "Durum değişikliği gibi güncellemeler önerir; onayınız gerekir.",
+          "delete": "Kayıt silmeyi önerir; onayınız ve silme yetkiniz gerekir."
+        },
+        "notes": {
+          "noPersonal": "Asistan bu modülden ad, iletişim, adres, banka veya kimlik bilgisi almaz.",
+          "confirmCard": "Oluşturma, güncelleme ve silme yalnızca öneri kartıdır; işlem siz onaylayınca ve yetkiniz varsa yapılır.",
+          "sensitive": "Bu modül kişisel veya mali veriye yakındır; izinleri dikkatle verin."
+        },
+        "risk": {
+          "title": "Emin misiniz?",
+          "confirm": "Evet, izin ver",
+          "sensitive": "{module} kişisel veya mali veriye yakın bir modül. Asistana şu izinler verilecek: {operations}. Kişisel veri yine döndürülmez ve yazma işlemleri onayınız olmadan yapılmaz.",
+          "write": "Asistan {module} modülünde şunları önerebilecek: {operations}. Her öneri karttan onayınızla ve sizin yetkinizle uygulanır."
         }
       },
       "deleteHistory": "Tüm sohbet geçmişimi sil",

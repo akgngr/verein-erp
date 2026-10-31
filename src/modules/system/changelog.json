@@ -2,6 +2,36 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.13.2",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Asistan izinleri yeni görünüm, yükleme iskeleti",
+        "de": "Neue Ansicht der KI-Berechtigungen, Ladeskelett"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Asistan izinleri kompakt modül kartlarında: ikon, ad, kısa açıklama ve renkli/gri izin etiketleri; düzenleme modalda.",
+          "de": "KI-Berechtigungen in kompakten Modulkarten: Symbol, Name, Kurzbeschreibung und farbige/graue Berechtigungen; Bearbeitung im Dialog."
+        },
+        {
+          "type": "feature",
+          "tr": "\"Tümüne izin ver\" ve \"Tümünü kapat\"; güncelleme, silme ve kişisel/mali veriye yakın modüllerdeki izinler için onay sorusu.",
+          "de": "„Alle erlauben“ und „Alle sperren“; Rückfrage bei Ändern, Löschen und bei personen- oder finanznahen Modulen."
+        },
+        {
+          "type": "improvement",
+          "tr": "Sayfa geçişlerinde yükleme iskeleti gösterilir.",
+          "de": "Beim Seitenwechsel wird ein Ladeskelett angezeigt."
+        },
+        {
+          "type": "security",
+          "tr": "Asistan modülünün modül erişim listesi yalnızca gerçekten kullandığı modüllere indirildi; modül işlemleri her modülün kendi ai.ts dosyasından ve izin matrisinden gelir.",
+          "de": "Die Modulzugriffe des Assistenten wurden auf tatsächlich genutzte Module reduziert; Modulaktionen kommen aus der ai.ts des jeweiligen Moduls und der Berechtigungsmatrix."
+        }
+      ]
+    },
+    {
       "version": "0.13.1",
       "date": "2026-10-31",
       "title": {

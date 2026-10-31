@@ -10,19 +10,10 @@
     "settings": "KI-Assistent"
   },
   "access": {
-    "accounting": "Liest Einnahmen-/Ausgabensummen und Kontostände; liefert Berichtslinks (keine Buchungsdetails, keine Personendaten).",
     "members": "Liest nur Mitgliederzahlen und Beitragsstatistik; keine Namen oder Daten einzelner Mitglieder. Registrierte Namen werden nur serverseitig zur Maskierung verwendet.",
-    "events": "Liest Titel, Datum, Ort und Teilnehmerzahlen kommender Veranstaltungen; legt bei Freigabe nach Bestätigung Entwürfe an. Keine Teilnehmernamen.",
-    "tasks": "Liest Titel und Status offener Aufgaben; legt bei Freigabe nach Bestätigung Aufgaben an, erledigt oder löscht sie.",
-    "courses": "Liest nur Kursstatistiken (keine Namen von Lehrkräften, Schülern, Eltern); legt bei Freigabe nach Bestätigung Kurse an, ändert den Status oder löscht.",
     "system": "Liest, welche Module aktiv und für den Assistenten freigegeben sind (nur darauf wird zugegriffen).",
     "students": "Liest nur Schüler- und Elternzahlen.",
     "auth": "Liest Benutzernamen nur serverseitig zur Maskierung und prüft die Sitzung; Namen werden nie an die KI gesendet.",
-    "meetings": "Liest Sitzungen, Tagesordnung und Beschlüsse (ohne Teilnehmernamen); legt bei Freigabe nach Bestätigung Sitzungen an, ändert den Status oder löscht.",
-    "documents": "Liest Schriftverkehr und den Text von Anhängen (Personenkennungen maskiert); legt bei Freigabe nach Bestätigung Einträge an, ändert den Status oder löscht.",
-    "donations": "Liest nur Spendensummen und Anzahl der Bestätigungen; keine Spenderdaten.",
-    "inventory": "Liest Inventarposten und Summen (ohne zugeordnetes Mitglied); legt bei Freigabe nach Bestätigung Posten an, ändert den Status oder löscht.",
-    "progress": "Liest nur Anwesenheits- und Bewertungsstatistiken.",
     "organization": "Liest die öffentlichen Stammdaten des Vereins; ohne Steuernummer und Finanzamt."
   },
   "errors": {
@@ -140,7 +131,7 @@
     "credentialSave": "Speichern",
     "credentialSaved": "Verbindungsdaten gespeichert (Schlüssel verschlüsselt abgelegt).",
     "permissionsTitle": "Berechtigungen des Assistenten (je Modul)",
-    "permissionsHelp": "Wählen Sie für jedes Modul Lesen, Schreiben, Aktualisieren und Löschen einzeln. Standardmäßig ist alles deaktiviert. Schreib-, Änderungs- und Löschvorgänge schlägt der Assistent nur vor; ausgeführt werden sie erst nach Bestätigung und mit den eigenen Rechten der Person. Auch mit Leserecht werden keine Personendaten gelesen.",
+    "permissionsHelp": "Legen Sie fest, was der Assistent in jedem Modul darf. Klicken Sie auf eine Karte, um die Berechtigungen zu bearbeiten; farbige sind aktiv, graue inaktiv. Standardmäßig ist alles deaktiviert.",
     "areasSave": "Berechtigungen speichern",
     "areasSaved": "Berechtigungen gespeichert.",
     "fields": {
@@ -155,15 +146,44 @@
       "baseUrlHelp": "Nur Adressen im Vereinsnetz werden akzeptiert (z. B. localhost, 192.168.x.x, Docker-Dienstname)."
     },
     "matrix": {
-      "noTools": "Der Assistent hat für dieses Modul noch keine Werkzeuge; keine Freigabe möglich.",
-      "unsupported": "Nicht unterstützt",
-      "allow": "Erlauben",
-      "deny": "Nicht erlauben",
       "operations": {
         "read": "Lesen",
         "create": "Schreiben (anlegen)",
         "update": "Aktualisieren",
         "delete": "Löschen"
+      },
+      "saved": "Berechtigungen gespeichert.",
+      "allowAll": "Alle erlauben",
+      "denyAll": "Alle sperren",
+      "allowAllTitle": "Alle Berechtigungen aktivieren?",
+      "allowAllMessage": "Der Assistent kann in allen Modulen lesen sowie Anlegen, Ändern und Löschen vorschlagen. Vorschläge werden weiterhin nur nach Ihrer Bestätigung und mit Ihren Rechten ausgeführt; personenbezogene Daten werden nicht zurückgegeben. Fortfahren?",
+      "noToolsList": "Module ohne Assistenz-Werkzeuge: {modules}",
+      "selectAll": "Alle auswählen",
+      "cancel": "Abbrechen",
+      "save": "Speichern",
+      "riskBadge": "Erfordert Bestätigung",
+      "short": {
+        "read": "Lesen",
+        "create": "Anlegen",
+        "update": "Ändern",
+        "delete": "Löschen"
+      },
+      "explain": {
+        "read": "Zahlen, Listen und Übersichten; keine personenbezogenen Daten.",
+        "create": "Schlägt neue Einträge vor; angelegt wird erst nach Ihrer Bestätigung.",
+        "update": "Schlägt Änderungen wie Statuswechsel vor; Ihre Bestätigung ist nötig.",
+        "delete": "Schlägt das Löschen vor; Bestätigung und Löschrecht erforderlich."
+      },
+      "notes": {
+        "noPersonal": "Der Assistent erhält aus diesem Modul keine Namen, Kontakt-, Adress-, Bank- oder Ausweisdaten.",
+        "confirmCard": "Anlegen, Ändern und Löschen sind nur Vorschläge; ausgeführt wird erst nach Ihrer Bestätigung und mit Ihren Rechten.",
+        "sensitive": "Dieses Modul enthält personen- oder finanznahe Daten; vergeben Sie Berechtigungen mit Bedacht."
+      },
+      "risk": {
+        "title": "Sind Sie sicher?",
+        "confirm": "Ja, erlauben",
+        "sensitive": "{module} enthält personen- oder finanznahe Daten. Der Assistent erhält: {operations}. Personenbezogene Daten werden weiterhin nicht zurückgegeben, und Schreibvorgänge erfolgen nur mit Ihrer Bestätigung.",
+        "write": "Der Assistent kann im Modul {module} Folgendes vorschlagen: {operations}. Jeder Vorschlag wird nur nach Ihrer Bestätigung und mit Ihren Rechten ausgeführt."
       }
     },
     "deleteHistory": "Gesamten Chatverlauf löschen",
