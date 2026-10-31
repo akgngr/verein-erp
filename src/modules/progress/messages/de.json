@@ -134,6 +134,10 @@
     "progress": {
       "label": "Lernfortschritt",
       "description": "Anwesenheit, Noten, Entwicklungsnotizen und Elternbericht."
+    },
+    "progressNotesAll": {
+      "label": "Alle Entwicklungsnotizen",
+      "description": "Notizen anderer löschen; ohne Berechtigung nur eigene Notizen."
     }
   }
 }

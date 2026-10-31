@@ -3,13 +3,17 @@ import "server-only";
 import type { Role } from "@/shared/roles";
 
 import { getDb } from "@/shared/db";
+import { can } from "@/shared/permissions/define";
+
+import { coursesAllPermissions } from "../permissions";
 
 /**
- * Öğretmen kapsamı: TEACHER rolündeki kullanıcı yalnızca bağlı olduğu kursları görür.
+ * Kurs kapsamı: "Tüm kurslar" izni (coursesAll:view) olmayan kullanıcı yalnızca öğretmeni
+ * olduğu kursları görür (rol adına değil izne bakılır; özel roller de böyle çalışır).
  * Dönen değer null ise kullanıcı tüm kursları görebilir; dizi ise yalnızca o kurs kimliklerini.
  */
 export async function teacherCourseScope(user: { id: string; role: Role }): Promise<string[] | null> {
-  if (user.role !== "TEACHER") return null;
+  if (can(user.role, coursesAllPermissions, "view")) return null;
   const teacher = await getDb().courseTeacher.findUnique({
     where: { userId: user.id },
     select: { courses: { select: { courseId: true } } },

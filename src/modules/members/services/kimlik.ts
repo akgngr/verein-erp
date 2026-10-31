@@ -1,6 +1,9 @@
 import "server-only";
 
+import { can } from "@/shared/permissions/define";
 import type { Role } from "@/shared/roles";
+
+import { memberIdentityPermissions } from "../permissions";
 
 /**
  * Kimlik no alanının role göre maskelenmesi.
@@ -15,10 +18,10 @@ import type { Role } from "@/shared/roles";
  * (DSGVO) gereği kimlikNo'yu GÖREMEZ (maskeleme genişletildi); VIEWER'da önceki
  * gibi null döner.
  */
-const FULL_ACCESS_ROLES: Role[] = ["ADMIN", "BOARD", "SECRETARY"];
 
+/** İzin: memberIdentity:view (varsayılan ADMIN, BOARD, SECRETARY; yönetici değiştirebilir). */
 export function canSeeKimlikNo(role: Role): boolean {
-  return FULL_ACCESS_ROLES.includes(role);
+  return can(role, memberIdentityPermissions, "view");
 }
 
 /** VIEWER için null döndürür; diğer roller için değeri geçirir. */

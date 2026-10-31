@@ -379,6 +379,10 @@
     "courses": {
       "label": "Kurse",
       "description": "Kurse und Nachhilfe, Anmeldungen."
+    },
+    "coursesAll": {
+      "label": "Alle Kurse",
+      "description": "Ohne diese Berechtigung sieht der Benutzer nur Kurse, in denen er Lehrkraft ist, samt Terminen und Lernfortschritt."
     }
   }
 }

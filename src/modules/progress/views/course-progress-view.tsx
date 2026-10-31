@@ -13,7 +13,7 @@ import { cn } from "@/shared/utils";
 import { AttendancePanel } from "../components/attendance-panel";
 import { GradesPanel } from "../components/grades-panel";
 import { NotesPanel } from "../components/notes-panel";
-import { progressPermissions } from "../permissions";
+import { progressNotesAllPermissions, progressPermissions } from "../permissions";
 import { getAttendanceMap, listAssessments, listNotes, summarizeAttendance } from "../queries/progress";
 import { loadRosterFor } from "../services/access";
 
@@ -73,7 +73,7 @@ export async function CourseProgressView({ courseId, searchParams }: { courseId:
         today={today}
         canEdit={can(user.role, progressPermissions, "create")}
         currentUserId={user.id}
-        isAdmin={user.role === "ADMIN"}
+        canDeleteAnyNote={can(user.role, progressNotesAllPermissions, "delete")}
       />
     );
   } else {

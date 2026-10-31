@@ -224,6 +224,15 @@ kullanılabilir tüm modüllerden **otomatik** oluşur; modül eklemek için bu 
    modüllerin `permissions.ts` dosyalarında `TEACHER: [...]` ile varsayılan olarak verin.
 4. Yetki denetimi her zaman `can(user.role, tanım, işlem)` / `requirePermission(...)` ile yapılır;
    rol adına göre (`role === "BOARD"`) karar vermeyin — özel roller ve yöneticinin değişiklikleri devre dışı kalır.
+   Doğrulayıcı `user.role === "…"` ve `ROLLER.includes(role)` kalıplarını hata sayar.
+5. **Kapsam kuralları da izindir.** "Öğretmen yalnızca kendi kurslarını görür", "kimlik no'yu yalnızca
+   yönetim görür" gibi kurallar için ayrı bir izin kaynağı tanımlayın ve onu denetleyin:
+   ```ts
+   export const coursesAllPermissions = definePermissions("coursesAll", { ADMIN: ["view"], …, TEACHER: [] });
+   if (can(user.role, coursesAllPermissions, "view")) return null; // tümü; değilse yalnızca kendi kursları
+   ```
+   Örnekler: `coursesAll` (tüm kurslar), `memberIdentity` (kimlik numaraları), `progressNotesAll`
+   (başkalarının notlarını silme). Böylece yönetici bu kuralları da rol bazında açıp kapatabilir.
 
 **Çalışma kuralları**
 

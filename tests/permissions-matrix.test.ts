@@ -54,4 +54,16 @@ describe("Roller ve izinler (veritabanı politikası)", () => {
     assert.equal(can("C_KOORDINATOR", sample, "create", policy), false);
     assert.equal(can("C_BASKA", sample, "view", policy), false);
   });
+
+  test("kapsam izinleri bugünkü davranışla aynı varsayılanlara sahiptir", () => {
+    const find = (resource: string) => all.find((item) => item.definition.resource === resource)!.definition;
+    const coursesAll = find("coursesAll");
+    assert.equal(can("TEACHER", coursesAll, "view", empty), false, "öğretmen yalnızca kendi kurslarını görür");
+    for (const role of SYSTEM_ROLES) assert.equal(can(role, coursesAll, "view", empty), true);
+    const identity = find("memberIdentity");
+    assert.deepEqual(SYSTEM_ROLES.filter((role) => can(role, identity, "view", empty)), ["ADMIN", "BOARD", "SECRETARY"]);
+    assert.deepEqual(SYSTEM_ROLES.filter((role) => can(role, find("progressNotesAll"), "delete", empty)), ["ADMIN"]);
+    // Yönetici bir özel role "tüm kurslar" verebilir.
+    assert.equal(can("C_X", coursesAll, "view", { overrides: { C_X: { coursesAll: ["view"] } }, unavailableRoles: [] }), true);
+  });
 });

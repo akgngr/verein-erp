@@ -25,7 +25,7 @@ export const authConfig = {
           id: string;
           name: string | null;
           email: string | null;
-          role: "ADMIN" | "BOARD" | "SECRETARY" | "VIEWER" | "TREASURER" | "AUDITOR" | "TEACHER";
+          role: string;
           mustChangePassword: boolean;
         }>;
         token.id = authorizedUser.id;
@@ -55,7 +55,7 @@ export const authConfig = {
       // JWT claim alanları burada tek noktadan anlık görüntüyle okunur.
       const claims = token as Partial<{
         id: string;
-        role: "ADMIN" | "BOARD" | "SECRETARY" | "VIEWER" | "TREASURER" | "AUDITOR" | "TEACHER";
+        role: string;
         mustChangePassword: boolean;
       }>;
       session.user.id = claims.id ?? "";

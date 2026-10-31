@@ -2,6 +2,26 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.13.1",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Kapsam kuralları da izin",
+        "de": "Auch Sichtbarkeitsregeln sind Berechtigungen"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "\"Yalnızca kendi kursları\", \"kimlik numaralarını görme\" ve \"başkalarının notlarını silme\" artık rol adına değil izne bağlı; Roller ve İzinler ekranından her rol için ayarlanabilir.",
+          "de": "„Nur eigene Kurse“, „Ausweisnummern sehen“ und „Notizen anderer löschen“ hängen nun an Berechtigungen statt am Rollennamen und sind je Rolle einstellbar."
+        },
+        {
+          "type": "improvement",
+          "tr": "Doğrulayıcı, rol adına göre yetki kontrolünü hata olarak işaretler.",
+          "de": "Der Validator meldet Berechtigungsprüfungen anhand des Rollennamens als Fehler."
+        }
+      ]
+    },
+    {
       "version": "0.13.0",
       "date": "2026-10-31",
       "title": {
