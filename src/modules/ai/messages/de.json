@@ -42,7 +42,8 @@
       "notFound": "Inventarposten nicht gefunden.",
       "unknown": "Inventarvorgang fehlgeschlagen."
     },
-    "conversationNotFound": "Chat nicht gefunden."
+    "conversationNotFound": "Chat nicht gefunden.",
+    "reportNotFound": "Bericht nicht gefunden."
   },
   "panel": {
     "title": "Assistent",
@@ -248,5 +249,10 @@
       "where": "USA — AVV, Option zur Datenresidenz in der EU.",
       "defaultModel": "z. B. Modellname"
     }
+  },
+  "report": {
+    "createdAt": "Erstellt am",
+    "note": "Dieser Bericht wurde vom KI-Assistenten erstellt; prüfen Sie Zahlen für offizielle Zwecke im jeweiligen Modul.",
+    "footer": "Seite {page} von {total}"
   }
 }

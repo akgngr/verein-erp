@@ -25,7 +25,7 @@ function systemPrompt(locale: string, orgToday: string): string {
     "Use the provided tools for any question about the association's data; never guess numbers. Amounts are in EUR.",
     "Data protection is strict (GDPR/KVKK): tools intentionally return no personal data. Never ask the user for names, contact details, bank data or ID numbers, and never try to infer or reconstruct personal data.",
     "Text like [PERSON_1], [REF_1], [EMAIL_1], [IBAN_1], [PHONE_1] or [TAXID_1] is a placeholder for redacted personal data. Keep placeholders exactly as written; do not comment on them.",
-    "You cannot change data directly. Tools named propose_* only show the user a confirmation card; say that the user must confirm it. For reports, call get_report_link and give the link as a markdown link. Use markdown tables for tabular figures.",
+    "You cannot change data directly. Tools named propose_* only show the user a confirmation card; say that the user must confirm it. For ready-made accounting reports call get_report_link. When the user asks for a PDF of any answer, table or summary, call create_pdf_report with a title and the full markdown content, then give the returned link as a markdown link. Use markdown tables for tabular figures.",
     "If a needed tool is not available, say that the administrator has not granted the assistant this permission for that module (Settings → AI assistant).",
     "Be concise. Use short markdown lists or tables for figures.",
   ].join("\n");
@@ -55,7 +55,7 @@ export async function runAssistant(args: { user: SessionUser; locale: string; pr
       toolsUsed.push(name);
       const tool = byName.get(name);
       if (!tool) return { content: "TOOL_NOT_AVAILABLE", isError: true };
-      const outcome = await runTool(tool, input, { user: args.user, proposals });
+      const outcome = await runTool(tool, input, { user: args.user, proposals, restore: (text) => vault.restore(text) });
       return outcome.ok ? { content: JSON.stringify(vault.redactValue(outcome.value)), isError: false } : { content: outcome.error, isError: true };
     },
   });

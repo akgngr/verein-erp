@@ -965,7 +965,8 @@
         "notFound": "Envanter kalemi bulunamadı.",
         "unknown": "Envanter işlemi tamamlanamadı."
       },
-      "conversationNotFound": "Sohbet bulunamadı."
+      "conversationNotFound": "Sohbet bulunamadı.",
+      "reportNotFound": "Rapor bulunamadı."
     },
     "panel": {
       "title": "Asistan",
@@ -1171,6 +1172,11 @@
         "where": "ABD — AVV, AB veri yerleşimi seçeneği.",
         "defaultModel": "ör. model adı"
       }
+    },
+    "report": {
+      "createdAt": "Oluşturulma",
+      "note": "Bu rapor yapay zekâ asistanı tarafından hazırlanmıştır; resmi işlemlerde rakamları ilgili modülden kontrol edin.",
+      "footer": "Sayfa {page} / {total}"
     }
   },
   "audit": {

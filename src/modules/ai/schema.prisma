@@ -60,3 +60,15 @@ model AiMessage {
   @@index([conversationId, createdAt])
   @@map("ai_messages")
 }
+
+/// Asistanın hazırladığı PDF raporları (kullanıcıya özel, şifreli, sohbetlerle aynı saklama süresi).
+model AiReport {
+  id         String   @id @default(cuid())
+  userId     String // FK DEĞİL (yumuşak referans)
+  titleEnc   String
+  contentEnc String
+  createdAt  DateTime @default(now())
+
+  @@index([userId, createdAt])
+  @@map("ai_reports")
+}
