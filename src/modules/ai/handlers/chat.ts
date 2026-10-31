@@ -72,7 +72,7 @@ export async function aiChatHandler(request: Request): Promise<Response> {
     conversationId ??= await createConversation(user.id, message);
     await appendTurns(conversationId, [
       { role: "user", content: message },
-      { role: "assistant", content: result.reply, proposals: result.proposals },
+      { role: "assistant", content: result.reply, proposals: result.proposals, files: result.files },
     ]);
     await writeAudit({
       userId: user.id,
@@ -82,7 +82,7 @@ export async function aiChatHandler(request: Request): Promise<Response> {
       entityId: null,
       after: { provider, tools: result.toolsUsed, inputTokens: result.usage.inputTokens, outputTokens: result.usage.outputTokens, redactedValues: result.redactions },
     });
-    return NextResponse.json({ ok: true, conversationId, reply: result.reply, proposals: result.proposals });
+    return NextResponse.json({ ok: true, conversationId, reply: result.reply, proposals: result.proposals, files: result.files });
   } catch (error) {
     if (error instanceof ProviderError) {
       console.error(`[ai] Sağlayıcı hatası (${provider}): ${error.kind}`);

@@ -3,7 +3,7 @@ import "server-only";
 import { getDb } from "@/shared/db";
 import { openSecret, sealSecret } from "@/shared/security/secret-box";
 
-import type { AiProposal } from "../types";
+import type { AiFile, AiProposal } from "../types";
 
 /** Sohbetler bu süreden sonra otomatik silinir (veri minimizasyonu). */
 export const AI_CONVERSATION_RETENTION_DAYS = 180;
@@ -14,7 +14,16 @@ const PURPOSE = "ai-chat-history";
 const seal = (text: string) => sealSecret(PURPOSE, text);
 const open = (payload: string) => openSecret(PURPOSE, payload) ?? "";
 
-export type StoredTurn = { id: string; role: "user" | "assistant"; content: string; proposals: AiProposal[]; createdAt: Date };
+export type StoredTurn = { id: string; role: "user" | "assistant"; content: string; proposals: AiProposal[]; files: AiFile[]; createdAt: Date };
+
+/** Eski kayıtlar yalnızca öneri dizisi saklar; yenileri { proposals, files }. */
+function parseExtras(raw: string | null): { proposals: AiProposal[]; files: AiFile[] } {
+  if (!raw) return { proposals: [], files: [] };
+  const value = JSON.parse(open(raw) || "[]") as unknown;
+  if (Array.isArray(value)) return { proposals: value as AiProposal[], files: [] };
+  const extras = value as { proposals?: AiProposal[]; files?: AiFile[] };
+  return { proposals: extras.proposals ?? [], files: extras.files ?? [] };
+}
 
 async function purgeExpired(userId: string): Promise<void> {
   const cutoff = new Date(Date.now() - AI_CONVERSATION_RETENTION_DAYS * 86_400_000);
@@ -41,7 +50,7 @@ export async function getConversation(userId: string, conversationId: string): P
       id: message.id,
       role: message.role === "assistant" ? "assistant" : "user",
       content: open(message.contentEnc),
-      proposals: message.proposalsEnc ? (JSON.parse(open(message.proposalsEnc) || "[]") as AiProposal[]) : [],
+      ...parseExtras(message.proposalsEnc),
       createdAt: message.createdAt,
     })),
   };
@@ -53,7 +62,7 @@ export async function createConversation(userId: string, firstMessage: string): 
   return row.id;
 }
 
-export async function appendTurns(conversationId: string, turns: { role: "user" | "assistant"; content: string; proposals?: AiProposal[] }[]): Promise<void> {
+export async function appendTurns(conversationId: string, turns: { role: "user" | "assistant"; content: string; proposals?: AiProposal[]; files?: AiFile[] }[]): Promise<void> {
   const db = getDb();
   await db.$transaction([
     ...turns.map((turn) =>
@@ -62,7 +71,7 @@ export async function appendTurns(conversationId: string, turns: { role: "user" 
           conversationId,
           role: turn.role,
           contentEnc: seal(turn.content),
-          proposalsEnc: turn.proposals?.length ? seal(JSON.stringify(turn.proposals)) : null,
+          proposalsEnc: turn.proposals?.length || turn.files?.length ? seal(JSON.stringify({ proposals: turn.proposals ?? [], files: turn.files ?? [] })) : null,
         },
       }),
     ),

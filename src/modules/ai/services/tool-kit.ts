@@ -4,13 +4,15 @@ import { z } from "zod";
 
 import type { SessionUser } from "@/modules/auth";
 
-import type { AiProposal } from "../types";
+import type { AiFile, AiProposal } from "../types";
 import type { AiOperation } from "./permissions";
 
 /** Asistan araçlarının ortak tanımları (tools.ts ve tools-extended.ts). */
 export type ToolContext = {
   user: SessionUser;
   proposals: AiProposal[];
+  /** Oluşturulan dosyalar yanıtın altında indirme düğmesi olarak gösterilir. */
+  files: AiFile[];
   /** Model girdisindeki yer tutucuları ([PERSON_1] …) gerçek değerlere çevirir (yalnızca sunucuda). */
   restore: (text: string) => string;
 };
