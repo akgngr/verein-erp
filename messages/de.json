@@ -944,19 +944,10 @@
       "settings": "KI-Assistent"
     },
     "access": {
-      "accounting": "Liest Einnahmen-/Ausgabensummen und Kontostände; liefert Berichtslinks (keine Buchungsdetails, keine Personendaten).",
       "members": "Liest nur Mitgliederzahlen und Beitragsstatistik; keine Namen oder Daten einzelner Mitglieder. Registrierte Namen werden nur serverseitig zur Maskierung verwendet.",
-      "events": "Liest Titel, Datum, Ort und Teilnehmerzahlen kommender Veranstaltungen; legt bei Freigabe nach Bestätigung Entwürfe an. Keine Teilnehmernamen.",
-      "tasks": "Liest Titel und Status offener Aufgaben; legt bei Freigabe nach Bestätigung Aufgaben an, erledigt oder löscht sie.",
-      "courses": "Liest nur Kursstatistiken (keine Namen von Lehrkräften, Schülern, Eltern); legt bei Freigabe nach Bestätigung Kurse an, ändert den Status oder löscht.",
       "system": "Liest, welche Module aktiv und für den Assistenten freigegeben sind (nur darauf wird zugegriffen).",
       "students": "Liest nur Schüler- und Elternzahlen.",
       "auth": "Liest Benutzernamen nur serverseitig zur Maskierung und prüft die Sitzung; Namen werden nie an die KI gesendet.",
-      "meetings": "Liest Sitzungen, Tagesordnung und Beschlüsse (ohne Teilnehmernamen); legt bei Freigabe nach Bestätigung Sitzungen an, ändert den Status oder löscht.",
-      "documents": "Liest Schriftverkehr und den Text von Anhängen (Personenkennungen maskiert); legt bei Freigabe nach Bestätigung Einträge an, ändert den Status oder löscht.",
-      "donations": "Liest nur Spendensummen und Anzahl der Bestätigungen; keine Spenderdaten.",
-      "inventory": "Liest Inventarposten und Summen (ohne zugeordnetes Mitglied); legt bei Freigabe nach Bestätigung Posten an, ändert den Status oder löscht.",
-      "progress": "Liest nur Anwesenheits- und Bewertungsstatistiken.",
       "organization": "Liest die öffentlichen Stammdaten des Vereins; ohne Steuernummer und Finanzamt."
     },
     "errors": {

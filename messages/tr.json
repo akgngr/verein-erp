@@ -944,19 +944,10 @@
       "settings": "Yapay zekâ asistanı"
     },
     "access": {
-      "accounting": "Gelir-gider toplamlarını ve hesap bakiyelerini okur; rapor bağlantısı verir (fiş ayrıntısı ve kişi verisi okunmaz).",
       "members": "Yalnızca üye sayılarını ve aidat tahsilat istatistiğini okur; hiçbir üyenin adı veya bilgisi okunmaz. Kayıtlı adlar yalnızca maskeleme için sunucuda kullanılır.",
-      "events": "Yaklaşan etkinliklerin başlık, tarih, yer ve katılım sayılarını okur; izin verilirse kullanıcı onayıyla taslak etkinlik oluşturur. Katılımcı isimleri okunmaz.",
-      "tasks": "Açık görevlerin başlık ve durumunu okur; izin verilirse kullanıcı onayıyla görev oluşturur, tamamlar veya siler.",
-      "courses": "Yalnızca kurs istatistiklerini okur (öğretmen, öğrenci, veli adı yok); izin verilirse kullanıcı onayıyla kurs oluşturur, durumunu değiştirir veya siler.",
       "system": "Hangi modüllerin etkin ve asistana izinli olduğunu okur (asistan yalnızca bunlara erişir).",
       "students": "Yalnızca öğrenci ve veli sayılarını okur.",
       "auth": "Yalnızca maskeleme için kullanıcı adlarını sunucuda okur ve oturumu doğrular; adlar yapay zekâya gönderilmez.",
-      "meetings": "Toplantı listesi, gündem ve kararları okur (katılımcı isimleri hariç); izin verilirse kullanıcı onayıyla toplantı oluşturur, durumunu değiştirir veya siler.",
-      "documents": "Evrak kayıtlarını ve eklerin metnini okur (kişisel tanımlayıcılar maskelenir); izin verilirse kullanıcı onayıyla evrak ekler, durumunu değiştirir veya siler.",
-      "donations": "Yalnızca bağış toplamlarını ve makbuz sayılarını okur; bağışçı bilgisi okunmaz.",
-      "inventory": "Envanter kalemlerini ve toplamları okur (zimmetli üye hariç); izin verilirse kullanıcı onayıyla kalem ekler, durumunu değiştirir veya siler.",
-      "progress": "Yalnızca devam ve değerlendirme istatistiklerini okur.",
       "organization": "Derneğin kamuya açık ana verilerini okur; vergi numarası ve vergi dairesi bilgileri hariç."
     },
     "errors": {
