@@ -379,6 +379,10 @@
     "courses": {
       "label": "Kurslar",
       "description": "Kurs ve Nachhilfe kayıtları, kayıtlar (öğrenci)."
+    },
+    "coursesAll": {
+      "label": "Tüm kurslar",
+      "description": "Kapalıysa kullanıcı yalnızca öğretmeni olduğu kursları, derslerini ve öğrenci takibini görür."
     }
   }
 }

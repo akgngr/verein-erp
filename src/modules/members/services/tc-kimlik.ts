@@ -1,6 +1,9 @@
 import "server-only";
 
+import { can } from "@/shared/permissions/define";
 import type { Role } from "@/shared/roles";
+
+import { memberIdentityPermissions } from "../permissions";
 
 /**
  * T.C. kimlik no alanının role göre maskelenmesi.
@@ -9,10 +12,10 @@ import type { Role } from "@/shared/roles";
  * ADMIN/BOARD/SECRETARY tam değeri görür. Bu, "hassas alanlar yanıtta geçmez"
  * kuralının üyeler için tcKimlikNo özelinde genişletilmiş halidir.
  */
-const FULL_ACCESS_ROLES: Role[] = ["ADMIN", "BOARD", "SECRETARY"];
 
+/** İzin: memberIdentity:view (varsayılan ADMIN, BOARD, SECRETARY; yönetici değiştirebilir). */
 export function canSeeTcKimlikNo(role: Role): boolean {
-  return FULL_ACCESS_ROLES.includes(role);
+  return can(role, memberIdentityPermissions, "view");
 }
 
 /**VIEWER için null döndürür; diğer roller için değeri geçirir. */

@@ -10,3 +10,14 @@ export const progressPermissions = definePermissions("progress", {
   TEACHER: ["view", "create", "update", "delete"],
   VIEWER: [],
 });
+
+/** Başkalarının gelişim notlarını silme (varsayılan: herkes yalnızca kendi notunu siler). */
+export const progressNotesAllPermissions = definePermissions("progressNotesAll", {
+  ADMIN: ["delete"],
+  BOARD: [],
+  SECRETARY: [],
+  TREASURER: [],
+  AUDITOR: [],
+  TEACHER: [],
+  VIEWER: [],
+});

@@ -1731,6 +1731,10 @@
       "courses": {
         "label": "Kurse",
         "description": "Kurse und Nachhilfe, Anmeldungen."
+      },
+      "coursesAll": {
+        "label": "Alle Kurse",
+        "description": "Ohne diese Berechtigung sieht der Benutzer nur Kurse, in denen er Lehrkraft ist, samt Terminen und Lernfortschritt."
       }
     }
   },
@@ -4114,6 +4118,10 @@
       "members": {
         "label": "Mitgliederdaten",
         "description": "Profile, Kontaktdaten und Mitgliedschaftsstatus der Vereinsmitglieder."
+      },
+      "memberIdentity": {
+        "label": "Ausweisnummern",
+        "description": "Ausweisnummern der Mitglieder sehen; ohne Berechtigung bleibt das Feld leer."
       }
     }
   },
@@ -4316,6 +4324,10 @@
       "progress": {
         "label": "Lernfortschritt",
         "description": "Anwesenheit, Noten, Entwicklungsnotizen und Elternbericht."
+      },
+      "progressNotesAll": {
+        "label": "Alle Entwicklungsnotizen",
+        "description": "Notizen anderer löschen; ohne Berechtigung nur eigene Notizen."
       }
     }
   },

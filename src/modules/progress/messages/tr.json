@@ -134,6 +134,10 @@
     "progress": {
       "label": "Öğrenci takibi",
       "description": "Yoklama, notlar, gelişim kayıtları ve veli raporu."
+    },
+    "progressNotesAll": {
+      "label": "Tüm gelişim notları",
+      "description": "Başkalarının yazdığı gelişim notlarını silme; kapalıysa yalnızca kendi notları."
     }
   }
 }

@@ -36,3 +36,14 @@ export const memberTypesPermissions = definePermissions("memberTypes", {
   AUDITOR: ["view"],
   TEACHER: [],
 });
+
+/** Kimlik numaralarını tam görme (DSGVO veri minimalizmi; diğerlerinde alan boş döner). */
+export const memberIdentityPermissions = definePermissions("memberIdentity", {
+  ADMIN: ["view"],
+  BOARD: ["view"],
+  SECRETARY: ["view"],
+  TREASURER: [],
+  AUDITOR: [],
+  TEACHER: [],
+  VIEWER: [],
+});

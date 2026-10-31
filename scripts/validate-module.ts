@@ -124,6 +124,32 @@ export function checkModuleAi(moduleDir: string, problems: string[]): string[] {
   return actions.flatMap((action) => ["kind", "confirm", "done"].map((part) => `ai.${action}.${part}`));
 }
 
+/**
+ * Yetki rol ADINA göre verilmez: `user.role === "BOARD"` gibi karşılaştırmalar özel rolleri ve
+ * yöneticinin değişikliklerini devre dışı bırakır. Bunun yerine can(user.role, tanım, işlem).
+ * İstisna: kullanıcılar modülü (kilitli Yönetici rolünün korunması çekirdek kuraldır).
+ */
+export function checkRoleNameChecks(moduleDir: string, moduleKey: string): string[] {
+  if (moduleKey === "users") return [];
+  const problems: string[] = [];
+  const pattern = /\b(?:user|session\.user|currentUser|actor)\.role\s*[!=]==?\s*["'][A-Z_]+["']|["'][A-Z_]+["']\s*[!=]==?\s*(?:user|session\.user|currentUser|actor)\.role\b|ROLES?\b[^\n]*\.includes\(\s*(?:user\.)?role\s*\)/;
+  const walk = (dir: string) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) walk(fullPath);
+      else if (/\.(ts|tsx)$/.test(entry.name)) {
+        fs.readFileSync(fullPath, "utf8").split("\n").forEach((line, index) => {
+          if (pattern.test(line) && !line.includes("role-name-ok")) {
+            problems.push(`${path.relative(moduleDir, fullPath)}:${index + 1} yetki rol adına göre denetleniyor; can(user.role, …) kullanın (rehber §8b).`);
+          }
+        });
+      }
+    }
+  };
+  walk(moduleDir);
+  return problems;
+}
+
 /** Modüllerin birbirinin `server` API'sini onaysız kullanmasını engelleyen erişim denetimi. */
 const ACCESS_EXEMPT_MODULES = new Set(["auth"]); // oturum ve createAction: her modülün altyapısı
 
@@ -362,6 +388,7 @@ export function validateModule(moduleKey: string, customModulesDir?: string): Mo
       }
       info.hasTranslations = true;
       errors.push(...checkModuleMessages(moduleDir, trJson, deJson));
+      errors.push(...checkRoleNameChecks(moduleDir, moduleKey));
       const accessConfigPath = path.join(moduleDir, "module.config.ts");
       if (fs.existsSync(accessConfigPath)) {
         errors.push(...checkModuleAccess(moduleDir, moduleKey, fs.readFileSync(accessConfigPath, "utf8"), trJson, deJson));

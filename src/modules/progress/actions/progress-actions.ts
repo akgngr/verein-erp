@@ -6,7 +6,8 @@ import { buildUserLabel } from "@/shared/utils";
 
 import { ActionError, createAction } from "@/modules/auth/server";
 
-import { progressPermissions } from "../permissions";
+import { can } from "@/shared/permissions/define";
+import { progressNotesAllPermissions, progressPermissions } from "../permissions";
 import {
   assessmentDeleteSchema,
   assessmentSchema,
@@ -161,7 +162,7 @@ export async function deleteNoteAction(input: unknown): Promise<ActionResult<{ i
       const note = await db.progressNote.findUnique({ where: { id: input.id } });
       if (!note) throw new ActionError("progress.errors.noteNotFound");
       await loadRosterFor(user, note.courseId);
-      if (note.authorId !== user.id && user.role !== "ADMIN") throw new ActionError("progress.errors.noteNotYours");
+      if (note.authorId !== user.id && !can(user.role, progressNotesAllPermissions, "delete")) throw new ActionError("progress.errors.noteNotYours");
       await db.progressNote.delete({ where: { id: note.id } });
       await audit({ action: "NOTE_DELETE", entity: "ProgressNote", entityId: note.id });
       return { id: note.id };

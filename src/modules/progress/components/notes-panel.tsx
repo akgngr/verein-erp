@@ -21,7 +21,7 @@ export function NotesPanel({
   today,
   canEdit,
   currentUserId,
-  isAdmin,
+  canDeleteAnyNote,
 }: {
   courseId: string;
   enrollments: Enrollment[];
@@ -29,7 +29,7 @@ export function NotesPanel({
   today: string;
   canEdit: boolean;
   currentUserId: string;
-  isAdmin: boolean;
+  canDeleteAnyNote: boolean;
 }) {
   const t = useTranslations("progress.notes");
   const router = useRouter();
@@ -116,7 +116,7 @@ export function NotesPanel({
                         ))}
                       </span>
                     ) : null}
-                    {canEdit && (isAdmin || note.authorId === currentUserId) ? (
+                    {canEdit && (canDeleteAnyNote || note.authorId === currentUserId) ? (
                       <Button
                         isIconOnly
                         size="sm"
