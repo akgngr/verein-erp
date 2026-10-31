@@ -1,25 +1,18 @@
 "use client";
 
-import { addToast, Button, Textarea } from "@heroui/react";
-import {
-  ListPlus,
-  Lock,
-  PanelRight,
-  Send,
-  ShieldCheck,
-  Sparkles,
-  Trash2,
-  X,
-} from "lucide-react";
+import { addToast, Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Textarea } from "@heroui/react";
+import { History, ListPlus, Lock, MessageSquarePlus, PanelRight, Send, ShieldCheck, Sparkles, Trash2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect, useRef, useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
 
 import { announceSidePanel } from "@/shared/components/side-panel-events";
 import { cn } from "@/shared/utils";
 
 import { acceptAiConsentAction } from "../actions/consent-actions";
 import { executeAiProposalAction } from "../actions/execute-proposal";
+import { deleteAiConversationAction, getAiConversationAction, listAiConversationsAction } from "../actions/history-actions";
+import { AI_PANEL_COOKIE, AI_PANEL_MAX_WIDTH, AI_PANEL_MIN_WIDTH, encodePanelState, type AiPanelState } from "../panel-state";
 import { parseMarkdown } from "../services/markdown";
 import type { AiProposal } from "../types";
 
@@ -27,6 +20,8 @@ type Turn = {
   role: "user" | "assistant";
   content: string;
   proposals?: AiProposal[];
+  /** Geçmişten yüklendi: öneri kartları yeniden uygulanamaz (çift kayıt önlenir). */
+  restored?: boolean;
 };
 
 /** Satır içi biçim: **kalın** ve yalnızca uygulama içi [metin](/yol) bağlantıları (dış bağlantı çizilmez). */
@@ -63,6 +58,19 @@ function proposalDetails(proposal: AiProposal, t: ReturnType<typeof useTranslati
       return [t(`proposal.priority.${proposal.priority}`), proposal.dueDate ?? ""].filter(Boolean);
     case "createEvent":
       return [proposal.startDate.replace("T", " "), proposal.isOnline ? t("proposal.online") : (proposal.location ?? "")].filter(Boolean);
+    case "createDocument":
+      return [proposal.direction, proposal.documentDate, proposal.counterparty].filter(Boolean);
+    case "createMeeting":
+      return [proposal.type, [proposal.meetingDate, proposal.startTime].filter(Boolean).join(" "), proposal.location ?? ""].filter(Boolean);
+    case "createInventory":
+      return [proposal.category, `× ${proposal.quantity}`, proposal.location ?? ""].filter(Boolean);
+    case "createCourse":
+      return [proposal.courseKind, [proposal.startDate, proposal.endDate].filter(Boolean).join(" – ")].filter(Boolean);
+    case "changeDocumentStatus":
+    case "changeMeetingStatus":
+    case "changeInventoryStatus":
+    case "changeCourseStatus":
+      return [`${t("proposal.newStatus")}: ${proposal.status}`];
     default:
       return [];
   }
@@ -129,14 +137,18 @@ function MessageBody({ text }: { text: string }) {
 }
 
 /**
- * Sağ panel sohbet alanı. KVKK/DSGVO: sohbet yalnızca bu sekmenin belleğinde tutulur
- * (sunucuda ve tarayıcı deposunda saklanmaz); panel kapatılıp "Temizle" denince silinir.
+ * Sağ panel sohbet alanı: içerikten bağımsız kayan sütun; genişliği sürüklenerek ayarlanır, açık
+ * durumu, genişliği ve etkin sohbet çerezde tutulur (sayfa yenilense de, sayfalar arasında da sabit).
+ * Sohbet geçmişi sunucuda kullanıcıya özel ve şifreli saklanır (services/history.ts).
  */
 export function AiChatPanel({
   consented,
   provider,
+  initialState,
   children,
 }: {
+  /** Sunucunun çerezden okuduğu panel durumu (yenilemede titreme olmaz). */
+  initialState: AiPanelState;
   /** Uygulamanın içerik sütunu; asistan onu sarar. */
   children: ReactNode;
   consented: boolean;
@@ -146,7 +158,10 @@ export function AiChatPanel({
   const t = useTranslations("ai.panel");
   const tProvider = useTranslations("ai.providers");
   const router = useRouter();
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(initialState.open);
+  const [width, setWidth] = useState(initialState.width);
+  const [conversationId, setConversationId] = useState<string | null>(initialState.conversationId);
+  const [conversations, setConversations] = useState<{ id: string; title: string; updatedAt: string }[]>([]);
   const [turns, setTurns] = useState<Turn[]>([]);
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
@@ -160,12 +175,69 @@ export function AiChatPanel({
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [turns, busy]);
   // Sohbet sütunu açılınca sol menü daralır, kapanınca eski hâline döner.
+  // KARAR: bildirim bir kare sonra gönderilir — sayfa yenilendiğinde sol menü dinleyicisi
+  // (üst bileşenin efekti) bu efektten sonra bağlanır.
   useEffect(() => {
-    announceSidePanel(open);
+    const frame = requestAnimationFrame(() => announceSidePanel(open));
+    return () => cancelAnimationFrame(frame);
   }, [open]);
   useEffect(() => {
     return () => announceSidePanel(false);
   }, []);
+  // Durum çerezde: sunucu bir sonraki sayfa yüklemesinde paneli aynı hâliyle çizer.
+  useEffect(() => {
+    document.cookie = `${AI_PANEL_COOKIE}=${encodePanelState({ open, width, conversationId })}; path=/; max-age=31536000; samesite=lax`;
+  }, [open, width, conversationId]);
+  // Kayıtlı sohbet sayfa açılışında sunucudan (şifresi çözülmüş) yüklenir.
+  useEffect(() => {
+    if (!consented || !provider || !initialState.conversationId) return;
+    void getAiConversationAction({ id: initialState.conversationId }).then((result) => {
+      if (result.ok) setTurns(result.data.turns.map((turn) => ({ ...turn, restored: true })));
+      else setConversationId(null);
+    });
+  }, [consented, provider, initialState.conversationId]);
+
+  const refreshConversations = async () => {
+    const result = await listAiConversationsAction();
+    if (result.ok) setConversations(result.data);
+  };
+  const openConversation = async (id: string) => {
+    const result = await getAiConversationAction({ id });
+    if (!result.ok) return void addToast({ title: result.error, color: "danger" });
+    setConversationId(id);
+    setTurns(result.data.turns.map((turn) => ({ ...turn, restored: true })));
+    setDone(new Set());
+  };
+  const newConversation = () => {
+    setConversationId(null);
+    setTurns([]);
+    setDone(new Set());
+  };
+  const removeConversation = async () => {
+    if (!conversationId) return newConversation();
+    const result = await deleteAiConversationAction({ id: conversationId });
+    if (!result.ok) return void addToast({ title: result.error, color: "danger" });
+    addToast({ title: t("conversationDeleted"), color: "success" });
+    newConversation();
+  };
+
+  // Sol kenardan sürükleyerek genişlik ayarı (masaüstü).
+  const startResize = (event: ReactPointerEvent<HTMLDivElement>) => {
+    event.preventDefault();
+    const startX = event.clientX;
+    const startWidth = width;
+    const onMove = (move: PointerEvent) => {
+      setWidth(Math.min(AI_PANEL_MAX_WIDTH, Math.max(AI_PANEL_MIN_WIDTH, startWidth + (startX - move.clientX))));
+    };
+    const onUp = () => {
+      window.removeEventListener("pointermove", onMove);
+      window.removeEventListener("pointerup", onUp);
+      document.body.style.removeProperty("user-select");
+    };
+    document.body.style.userSelect = "none";
+    window.addEventListener("pointermove", onMove);
+    window.addEventListener("pointerup", onUp);
+  };
 
   const send = async (text?: string) => {
     const content = (text ?? draft).trim();
@@ -178,14 +250,11 @@ export function AiChatPanel({
       const response = await fetch("/api/ai/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          turns: next
-            .slice(-40)
-            .map(({ role, content: text }) => ({ role, content: text })),
-        }),
+        body: JSON.stringify({ conversationId, message: content }),
       });
       const data = (await response.json()) as {
         ok: boolean;
+        conversationId?: string;
         reply?: string;
         proposals?: AiProposal[];
         error?: string;
@@ -198,6 +267,7 @@ export function AiChatPanel({
         setDraft(content);
         return;
       }
+      if (data.conversationId) setConversationId(data.conversationId);
       setTurns([
         ...next,
         {
@@ -283,25 +353,54 @@ export function AiChatPanel({
       {open ? (
         <aside
           aria-label={t("title")}
-          className="fixed inset-0 z-50 flex flex-col bg-background md:sticky md:top-0 md:z-auto md:h-dvh md:w-[400px] md:shrink-0 md:border-l md:border-default-200"
+          style={{ "--ai-panel-width": `${width}px` } as CSSProperties}
+          className="fixed inset-0 z-50 flex flex-col bg-background md:sticky md:top-0 md:z-auto md:h-dvh md:w-[var(--ai-panel-width)] md:shrink-0 md:border-l md:border-default-200"
         >
+          <div
+            role="separator"
+            aria-orientation="vertical"
+            aria-label={t("resize")}
+            title={t("resize")}
+            onPointerDown={startResize}
+            className="absolute inset-y-0 left-0 z-10 hidden w-1.5 -translate-x-1/2 cursor-col-resize hover:bg-primary/30 md:block"
+          />
           <header className="flex items-center justify-between gap-2 border-b border-default-200 px-4 py-3">
             <div className="flex items-center gap-2">
               <Sparkles className="h-4 w-4 text-primary" aria-hidden />
               <span className="text-small font-semibold">{t("title")}</span>
             </div>
             <div className="flex items-center gap-1">
-              {turns.length > 0 ? (
-                <Button
-                  isIconOnly
-                  size="sm"
-                  variant="light"
-                  aria-label={t("clear")}
-                  title={t("clear")}
-                  onPress={() => setTurns([])}
-                >
-                  <Trash2 className="h-4 w-4" aria-hidden />
-                </Button>
+              {consented && provider ? (
+                <>
+                  <Dropdown onOpenChange={(isOpen) => isOpen && void refreshConversations()}>
+                    <DropdownTrigger>
+                      <Button isIconOnly size="sm" variant="light" aria-label={t("history")} title={t("history")}>
+                        <History className="h-4 w-4" aria-hidden />
+                      </Button>
+                    </DropdownTrigger>
+                    <DropdownMenu
+                      aria-label={t("history")}
+                      emptyContent={t("historyEmpty")}
+                      items={conversations}
+                      onAction={(key) => void openConversation(String(key))}
+                      className="max-h-80 overflow-y-auto"
+                    >
+                      {(item) => (
+                        <DropdownItem key={item.id} description={new Date(item.updatedAt).toLocaleString()} textValue={item.title}>
+                          <span className="line-clamp-1">{item.title}</span>
+                        </DropdownItem>
+                      )}
+                    </DropdownMenu>
+                  </Dropdown>
+                  <Button isIconOnly size="sm" variant="light" aria-label={t("newConversation")} title={t("newConversation")} onPress={newConversation}>
+                    <MessageSquarePlus className="h-4 w-4" aria-hidden />
+                  </Button>
+                  {conversationId ? (
+                    <Button isIconOnly size="sm" variant="light" color="danger" aria-label={t("deleteConversation")} title={t("deleteConversation")} onPress={() => void removeConversation()}>
+                      <Trash2 className="h-4 w-4" aria-hidden />
+                    </Button>
+                  ) : null}
+                </>
               ) : null}
               <Button
                 isIconOnly
@@ -423,15 +522,15 @@ export function AiChatPanel({
                           <Button
                             size="sm"
                             color="primary"
-                            variant={done.has(key) ? "flat" : "solid"}
+                            variant={done.has(key) || turn.restored ? "flat" : "solid"}
                             className="mt-2"
-                            isDisabled={done.has(key)}
+                            isDisabled={done.has(key) || turn.restored}
                             startContent={
                               <ListPlus className="h-4 w-4" aria-hidden />
                             }
                             onPress={() => confirmProposal(key, proposal)}
                           >
-                            {done.has(key) ? t("proposal.applied") : t(`proposal.confirm.${proposal.kind}`)}
+                            {done.has(key) ? t("proposal.applied") : turn.restored ? t("proposal.restored") : t(`proposal.confirm.${proposal.kind}`)}
                           </Button>
                         </div>
                       );

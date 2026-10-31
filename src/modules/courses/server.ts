@@ -5,3 +5,6 @@ export { coursesPermissions, courseSessionsPermissions, courseFeesPermissions, c
 export { getCourseRoster, listCourseOptions } from "./queries/courses";
 export { teacherCourseScope, canAccessCourse } from "./services/teacher-scope";
 export type { CourseRoster } from "./types";
+export { getCourseStats } from "./queries/stats";
+export { getCourse } from "./queries/courses";
+export { createCourseAction, updateCourseAction, deleteCourseAction } from "./actions/course-actions";

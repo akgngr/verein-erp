@@ -18,17 +18,21 @@ export const moduleConfig: ModuleConfig = {
   // Başka modüllerden istenen erişim (yönetici onayı gerekir; gerekçe: messages → access.<modül>).
   access: [
     { module: "accounting", operations: ["read"] },
-    { module: "members", operations: ["read"] },
-    { module: "events", operations: ["read", "write"] },
-    { module: "tasks", operations: ["read", "write", "delete"] },
-    { module: "meetings", operations: ["read"] },
-    { module: "documents", operations: ["read"] },
-    { module: "donations", operations: ["read"] },
-    { module: "courses", operations: ["read"] },
-    { module: "system", operations: ["read"] },
-    { module: "students", operations: ["read"] },
     { module: "auth", operations: ["read"] },
+    { module: "courses", operations: ["read", "write", "delete"] },
+    { module: "documents", operations: ["read", "write", "delete"] },
+    { module: "donations", operations: ["read"] },
+    { module: "events", operations: ["read", "write"] },
+    { module: "inventory", operations: ["read", "write", "delete"] },
+    { module: "meetings", operations: ["read", "write", "delete"] },
+    { module: "members", operations: ["read"] },
+    { module: "organization", operations: ["read"] },
+    { module: "progress", operations: ["read"] },
+    { module: "students", operations: ["read"] },
+    { module: "system", operations: ["read"] },
+    { module: "tasks", operations: ["read", "write", "delete"] },
   ],
+
   nav: [
     {
       href: "/ayarlar/yapay-zeka",

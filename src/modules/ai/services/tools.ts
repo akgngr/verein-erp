@@ -21,7 +21,10 @@ import { getMeetingStats } from "@/modules/meetings/server";
 import { listUsableModuleKeys } from "@/modules/system/server";
 import { getTask, listTasks, TASK_DEFAULT_SORT, TASK_SORTABLE_FIELDS, tasksPermissions } from "@/modules/tasks/server";
 
+import type { AiProposal } from "../types";
 import { getAiPermissions, isAllowed, type AiOperation } from "./permissions";
+import { EXTENDED_TOOLS } from "./tools-extended";
+import { define, euros, YEAR_INPUT, yearSchema, type ToolContext } from "./tool-kit";
 
 /**
  * Asistanın araçları. KURAL (KVKK/DSGVO): hiçbir araç kişi adı, iletişim bilgisi, adres,
@@ -32,56 +35,30 @@ import { getAiPermissions, isAllowed, type AiOperation } from "./permissions";
  * işlem kullanıcı onaylayınca executeAiProposalAction ile onun yetkisiyle yapılır.
  */
 
-export type AssistantProposal =
-  | { kind: "createTask"; title: string; description: string | null; priority: "LOW" | "NORMAL" | "HIGH"; dueDate: string | null }
-  | { kind: "completeTask"; taskId: string; title: string }
-  | { kind: "deleteTask"; taskId: string; title: string }
-  | {
-      kind: "createEvent";
-      title: string;
-      description: string | null;
-      type: "WORKSHOP" | "SEMINAR" | "SOCIAL" | "CULTURAL" | "SPORTS" | "OTHER";
-      startDate: string;
-      endDate: string | null;
-      location: string | null;
-      isOnline: boolean;
-    };
+export type AssistantProposal = AiProposal;
 
 /** Önerinin hangi modül + işlem iznine bağlı olduğu (yürütmede yeniden denetlenir). */
-export const PROPOSAL_PERMISSION: Record<AssistantProposal["kind"], { module: string; operation: AiOperation }> = {
+export const PROPOSAL_PERMISSION: Record<AiProposal["kind"], { module: string; operation: AiOperation }> = {
   createTask: { module: "tasks", operation: "create" },
   completeTask: { module: "tasks", operation: "update" },
   deleteTask: { module: "tasks", operation: "delete" },
   createEvent: { module: "events", operation: "create" },
+  createDocument: { module: "documents", operation: "create" },
+  changeDocumentStatus: { module: "documents", operation: "update" },
+  deleteDocument: { module: "documents", operation: "delete" },
+  createMeeting: { module: "meetings", operation: "create" },
+  changeMeetingStatus: { module: "meetings", operation: "update" },
+  deleteMeeting: { module: "meetings", operation: "delete" },
+  createInventory: { module: "inventory", operation: "create" },
+  changeInventoryStatus: { module: "inventory", operation: "update" },
+  deleteInventory: { module: "inventory", operation: "delete" },
+  createCourse: { module: "courses", operation: "create" },
+  changeCourseStatus: { module: "courses", operation: "update" },
+  deleteCourse: { module: "courses", operation: "delete" },
 };
 
-type ToolContext = { user: SessionUser; proposals: AssistantProposal[] };
 
-type ToolDefinition<S extends z.ZodType> = {
-  name: string;
-  module: string;
-  /** İzin matrisindeki işlem (kapalıysa araç modele hiç sunulmaz). */
-  operation: AiOperation;
-  allowed: (user: SessionUser) => boolean;
-  description: string;
-  schema: S;
-  inputSchema: JsonSchema;
-  run: (input: z.infer<S>, context: ToolContext) => Promise<unknown>;
-};
-
-type JsonSchema = Record<string, unknown>;
-
-const define = <S extends z.ZodType>(tool: ToolDefinition<S>) => tool;
-const yearSchema = z.object({ year: z.number().int().min(2000).max(2100) });
-const YEAR_INPUT: JsonSchema = {
-  type: "object",
-  properties: { year: { type: "integer", description: "Fiscal year, e.g. 2026" } }, // i18n-ignore (model-facing tool text)
-  required: ["year"],
-  additionalProperties: false,
-};
-const euros = (cents: number) => Math.round(cents) / 100;
-
-const TOOLS = [
+const BASE_TOOLS = [
   define({
     name: "get_accounting_summary",
     operation: "read",
@@ -357,6 +334,8 @@ const TOOLS = [
     },
   }),
 ];
+
+const TOOLS = [...BASE_TOOLS, ...EXTENDED_TOOLS];
 
 /** Bu kullanıcı için şu an kullanılabilir araçlar (modül izni + kullanıcı yetkisi). */
 export async function availableTools(user: SessionUser) {

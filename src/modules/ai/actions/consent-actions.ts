@@ -8,6 +8,7 @@ import type { ActionResult } from "@/shared/types/action";
 import { ActionError, createAction } from "@/modules/auth/server";
 
 import { aiPermissions } from "../permissions";
+import { deleteAllConversations } from "../services/history";
 import { AI_OPERATIONS, sanitizeMatrix, setAiPermissions } from "../services/permissions";
 import { supportedOperations } from "../services/tools";
 import { AI_PROVIDER_IDS, isPrivateEndpoint, isProviderReady, saveProviderCredential } from "../services/providers";
@@ -39,6 +40,8 @@ export async function revokeAiConsentAction(): Promise<ActionResult> {
     schema: empty,
     handler: async ({ user, audit }) => {
       await revokeAiConsent(user.id);
+      // Onay geri alınınca sohbet geçmişi de silinir.
+      await deleteAllConversations(user.id);
       await audit({ action: "AI_CONSENT_REVOKED", entity: "AiUserConsent", entityId: user.id });
       revalidatePath("/", "layout");
       return undefined;
