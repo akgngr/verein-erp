@@ -206,5 +206,12 @@
       "registered": "Angemeldet",
       "attended": "Teilgenommen"
     }
+  },
+  "ai": {
+    "create": {
+      "kind": "Veranstaltungsvorschlag (Entwurf)",
+      "confirm": "Entwurf anlegen",
+      "done": "Veranstaltungsentwurf angelegt."
+    }
   }
 }

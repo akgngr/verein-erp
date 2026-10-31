@@ -249,18 +249,30 @@ export const cards = defineCards([
 
 ## 9b. Assistant (AI) contract (`ai.ts`)
 
-A module declares what the assistant may do with it in **its own `ai.ts`** (TypeScript rather than
-YAML/JSON: schemas and functions are type-checked and read by the validator). `pnpm module:sync`
-generates `src/ai-registry.ts`; nothing changes by hand in the AI module. Reference:
-`src/modules/tasks/ai.ts`. Types: `src/shared/ai/define.ts`.
+**Everything** the assistant can do with a module is defined in that module's own `ai.ts`; the AI
+module has no module-specific code. (TypeScript rather than YAML/JSON: schemas and functions are
+type-checked, read by the validator and cannot drift apart.) `pnpm module:sync` collects all `ai.ts`
+files into the generated `src/ai-registry.ts`. Types and shared helpers: `src/shared/ai/define.ts`.
+
+Modules with a contract: `tasks`, `documents`, `meetings`, `inventory`, `courses`, `events` (read +
+proposals); `accounting`, `members`, `donations`, `students`, `progress`, `organization` (read only).
+See the Turkish guide for a full template.
 
 Rules:
-- `operation` (read/create/update/delete) maps to the admin's permission matrix row (default: off).
-- Write tools never change data; they `propose` a confirmation card. On confirm, `actions[action].execute`
-  runs after the matrix is re-checked and the payload re-validated; the module action checks the user's own role.
-- Tools never return names, contact, address, bank or ID data (GDPR).
+- `operation` (read/create/update/delete) maps to the module row in Settings → AI; default off.
+- Write tools never change data; they call `propose(...)` and return `PROPOSED`. On confirm, the action
+  is looked up in the module, its operation is taken from the definition (not the client), the matrix is
+  re-checked, the payload re-validated with `schema`, and the module action checks the user's own role.
+- `execute` returns `{ ok, error? }` where `error` is a translation key.
+- Tools never return names, contact, address, bank or ID data (GDPR); masks in `title`, `details` and
+  `payload` are restored automatically.
 - Each action needs `ai.<action>.kind|confirm|done` in `messages/{tr,de}.json`.
-- Access to other modules still goes through the `access` approval in §8.
+- `ai.ts` only uses its own `./server` and `./permissions`; other modules go through the §8 `access` approval.
+- `pnpm module:validate` checks: `server-only`, `defineModuleAi`, `module` = folder name, snake_case tool
+  names, every proposed action defined, action translations.
+
+Checklist: create `ai.ts` → add translations → `pnpm module:sync && pnpm module:validate && pnpm typecheck`
+→ enable the row in Settings → AI.
 
 ## 10. Verification (CI runs the same steps)
 

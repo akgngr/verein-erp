@@ -206,5 +206,12 @@
       "registered": "Kayıtlı",
       "attended": "Katıldı"
     }
+  },
+  "ai": {
+    "create": {
+      "kind": "Etkinlik önerisi (taslak)",
+      "confirm": "Taslak etkinlik oluştur",
+      "done": "Taslak etkinlik oluşturuldu."
+    }
   }
 }

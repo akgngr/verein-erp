@@ -293,5 +293,22 @@
       "message": "{count} Dokumente haben die Bearbeitungsfrist überschritten.",
       "action": "Überfällige Dokumente anzeigen"
     }
+  },
+  "ai": {
+    "create": {
+      "kind": "Schriftverkehr anlegen",
+      "confirm": "Eintragen",
+      "done": "Schriftstück eingetragen."
+    },
+    "changeStatus": {
+      "kind": "Status des Schriftstücks",
+      "confirm": "Status ändern",
+      "done": "Status geändert."
+    },
+    "delete": {
+      "kind": "Schriftstück löschen",
+      "confirm": "Löschen",
+      "done": "Schriftstück gelöscht."
+    }
   }
 }

@@ -5,7 +5,8 @@ import type { SessionUser } from "@/modules/auth";
 import { loadKnownIdentifiers } from "./known-identifiers";
 import { PseudonymVault } from "./privacy";
 import { adapterFor, getProviderSettings, type AiProviderId } from "./providers";
-import { availableTools, runTool, type AssistantProposal } from "./tools";
+import type { AiProposal as AssistantProposal } from "../types";
+import { availableTools, runTool } from "./tools";
 
 const MAX_TOOL_ROUNDS = 6;
 
@@ -64,12 +65,20 @@ export async function runAssistant(args: { user: SessionUser; locale: string; pr
   return {
     reply: result.refused ? refusal : vault.restore(result.text),
     // Önerilerdeki metinler kullanıcıya dönerken yer tutuculardan çözülür.
-    proposals: proposals.map(
-      (proposal) =>
-        Object.fromEntries(Object.entries(proposal).map(([key, value]) => [key, typeof value === "string" ? vault.restore(value) : value])) as AssistantProposal,
-    ),
+    // payload iç içe olabilir: tüm metin alanları derinlemesine çözülür.
+    proposals: proposals.map((proposal) => restoreDeep(proposal, (value) => vault.restore(value))),
     toolsUsed,
     usage: { inputTokens: result.inputTokens, outputTokens: result.outputTokens },
     redactions: vault.size,
   };
+}
+
+/** Nesne/dizi içindeki tüm metinlere `restore` uygular (önerilerin payload'ı iç içedir). */
+function restoreDeep<T>(value: T, restore: (text: string) => string): T {
+  if (typeof value === "string") return restore(value) as T;
+  if (Array.isArray(value)) return value.map((item) => restoreDeep(item, restore)) as T;
+  if (value && typeof value === "object") {
+    return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, restoreDeep(item, restore)])) as T;
+  }
+  return value;
 }

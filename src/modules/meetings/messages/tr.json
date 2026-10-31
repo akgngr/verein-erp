@@ -529,5 +529,22 @@
   "access": {
     "members": "Toplantıya katılımcı eklemek için üye listesini okur.",
     "organization": "Tutanak PDF'inde dernek antetini kullanır."
+  },
+  "ai": {
+    "create": {
+      "kind": "Toplantı önerisi",
+      "confirm": "Toplantıyı oluştur",
+      "done": "Toplantı oluşturuldu."
+    },
+    "changeStatus": {
+      "kind": "Toplantı durumu",
+      "confirm": "Durumu değiştir",
+      "done": "Toplantı durumu değiştirildi."
+    },
+    "delete": {
+      "kind": "Toplantıyı silme",
+      "confirm": "Toplantıyı sil",
+      "done": "Toplantı silindi."
+    }
   }
 }

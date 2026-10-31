@@ -51,31 +51,6 @@ function inline(text: string): ReactNode[] {
   return parts;
 }
 
-/** Öneri kartındaki kısa ayrıntılar (öncelik, tarih, yer …). */
-function proposalDetails(proposal: AiProposal, t: ReturnType<typeof useTranslations>): string[] {
-  switch (proposal.kind) {
-    case "module":
-      return proposal.details;
-    case "createEvent":
-      return [proposal.startDate.replace("T", " "), proposal.isOnline ? t("proposal.online") : (proposal.location ?? "")].filter(Boolean);
-    case "createDocument":
-      return [proposal.direction, proposal.documentDate, proposal.counterparty].filter(Boolean);
-    case "createMeeting":
-      return [proposal.type, [proposal.meetingDate, proposal.startTime].filter(Boolean).join(" "), proposal.location ?? ""].filter(Boolean);
-    case "createInventory":
-      return [proposal.category, `× ${proposal.quantity}`, proposal.location ?? ""].filter(Boolean);
-    case "createCourse":
-      return [proposal.courseKind, [proposal.startDate, proposal.endDate].filter(Boolean).join(" – ")].filter(Boolean);
-    case "changeDocumentStatus":
-    case "changeMeetingStatus":
-    case "changeInventoryStatus":
-    case "changeCourseStatus":
-      return [`${t("proposal.newStatus")}: ${proposal.status}`];
-    default:
-      return [];
-  }
-}
-
 function MessageBody({ text }: { text: string }) {
   return (
     <div className="flex flex-col gap-2">
@@ -159,10 +134,9 @@ export function AiChatPanel({
   const tProvider = useTranslations("ai.providers");
   const tRoot = useTranslations();
   /** Kart metinleri: modül önerilerinde modülün kendi çevirisi (<modül>.ai.<eylem>.kind|confirm|done). */
-  const proposalText = (proposal: AiProposal, part: "kinds" | "confirm" | "done") =>
-    proposal.kind === "module"
-      ? tRoot(`${proposal.module}.ai.${proposal.action}.${part === "kinds" ? "kind" : part}`)
-      : t(`proposal.${part}.${proposal.kind}`);
+  // Eski sürümde kaydedilmiş (modül standardı öncesi) öneriler geçmişte yalnızca başlıkla gösterilir.
+  const proposalText = (proposal: AiProposal, part: "kind" | "confirm" | "done") =>
+    proposal.kind === "module" ? tRoot(`${proposal.module}.ai.${proposal.action}.${part}`) : t("proposal.legacy");
   const router = useRouter();
   const [open, setOpen] = useState(initialState.open);
   const [width, setWidth] = useState(initialState.width);
@@ -518,13 +492,10 @@ export function AiChatPanel({
                           className="w-[90%] rounded-medium border border-primary-200 bg-primary-50/50 p-3 dark:border-primary-500/30 dark:bg-primary-500/10"
                         >
                           <p className="text-tiny font-semibold uppercase text-primary">
-                            {proposalText(proposal, "kinds")}
+                            {proposalText(proposal, "kind")}
                           </p>
                           <p className="font-medium">{proposal.title}</p>
-                          {"description" in proposal && proposal.description ? (
-                            <p className="text-default-600">{proposal.description}</p>
-                          ) : null}
-                          <p className="text-tiny text-default-500">{proposalDetails(proposal, t).join(" · ")}</p>
+                          <p className="text-tiny text-default-500">{(proposal.details ?? []).join(" · ")}</p>
                           <Button
                             size="sm"
                             color="primary"

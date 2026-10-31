@@ -2,6 +2,31 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.10.0",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Tüm modüller AI standardında",
+        "de": "Alle Module im KI-Standard"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Evrak, toplantı, envanter, kurs, etkinlik, muhasebe, üye, bağış, öğrenci, öğrenci takibi ve dernek bilgisi araçları kendi modüllerinin ai.ts dosyasına taşındı.",
+          "de": "Die Werkzeuge für Schriftverkehr, Sitzungen, Inventar, Kurse, Veranstaltungen, Buchhaltung, Mitglieder, Spenden, Schüler, Lernfortschritt und Vereinsdaten liegen jetzt in der ai.ts ihres Moduls."
+        },
+        {
+          "type": "improvement",
+          "tr": "Onay kartlarının metinleri artık ilgili modülün çevirilerinden gelir; rehbere şablon ve kontrol listesi eklendi.",
+          "de": "Die Texte der Bestätigungskarten stammen aus den Übersetzungen des jeweiligen Moduls; der Leitfaden enthält Vorlage und Checkliste."
+        },
+        {
+          "type": "fix",
+          "tr": "Onay kartlarındaki iç içe alanlarda maskelenmiş değerler artık doğru çözülüyor.",
+          "de": "Maskierte Werte in verschachtelten Feldern der Bestätigungskarten werden jetzt korrekt aufgelöst."
+        }
+      ]
+    },
+    {
       "version": "0.9.0",
       "date": "2026-10-31",
       "title": {

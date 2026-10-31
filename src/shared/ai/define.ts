@@ -1,5 +1,5 @@
 import type { Role } from "@prisma/client";
-import type { z } from "zod";
+import { z } from "zod";
 
 /**
  * MODÜL AI STANDARDI — her modül, asistanın kendisiyle neler yapabileceğini KENDİ klasöründeki
@@ -65,3 +65,16 @@ export const defineModuleAi = (definition: ModuleAi): ModuleAi => definition;
 
 /** Yaygın not: öneri yapıldıktan sonra modele dönen sonuç. */
 export const PROPOSED = { status: "proposed", note: "A confirmation card was shown to the user; nothing changes until they confirm." } as const; // i18n-ignore (model-facing tool text)
+
+/** Ortak girdi şemaları ve yardımcılar (modül ai.ts dosyaları için). */
+export const NO_INPUT: JsonSchema = { type: "object", properties: {}, required: [], additionalProperties: false };
+export const DATE_RE = /^\d{4}-\d{2}-\d{2}$/;
+export const isoDay = (value: Date | null) => (value ? value.toISOString().slice(0, 10) : null);
+export const euros = (cents: number) => Math.round(cents) / 100;
+export const YEAR_INPUT: JsonSchema = {
+  type: "object",
+  properties: { year: { type: "integer", description: "Fiscal year, e.g. 2026" } }, // i18n-ignore (model-facing tool text)
+  required: ["year"],
+  additionalProperties: false,
+};
+export const yearSchema = z.object({ year: z.number().int().min(2000).max(2100) });

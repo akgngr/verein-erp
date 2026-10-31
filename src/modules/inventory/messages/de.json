@@ -115,5 +115,22 @@
   "module": {
     "label": "Inventar",
     "description": "Verwaltung von Inventar, technischer Ausstattung und Ausgaben an Personen."
+  },
+  "ai": {
+    "create": {
+      "kind": "Inventarposten anlegen",
+      "confirm": "Posten anlegen",
+      "done": "Inventarposten angelegt."
+    },
+    "changeStatus": {
+      "kind": "Inventarstatus",
+      "confirm": "Status ändern",
+      "done": "Inventarstatus geändert."
+    },
+    "delete": {
+      "kind": "Inventarposten löschen",
+      "confirm": "Posten löschen",
+      "done": "Inventarposten gelöscht."
+    }
   }
 }

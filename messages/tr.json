@@ -989,69 +989,9 @@
         "q4": "Yıllık rapor (Kassenbericht) PDF'ini ver."
       },
       "proposal": {
-        "kinds": {
-          "createTask": "Görev önerisi",
-          "completeTask": "Görevi tamamlama",
-          "deleteTask": "Görevi silme",
-          "createEvent": "Etkinlik önerisi (taslak)",
-          "createDocument": "Evrak kaydı önerisi",
-          "changeDocumentStatus": "Evrak durumu",
-          "deleteDocument": "Evrakı silme",
-          "createMeeting": "Toplantı önerisi",
-          "changeMeetingStatus": "Toplantı durumu",
-          "deleteMeeting": "Toplantıyı silme",
-          "createInventory": "Envanter kalemi önerisi",
-          "changeInventoryStatus": "Envanter durumu",
-          "deleteInventory": "Envanter kalemini silme",
-          "createCourse": "Kurs önerisi (planlanan)",
-          "changeCourseStatus": "Kurs durumu",
-          "deleteCourse": "Kursu silme"
-        },
-        "confirm": {
-          "createTask": "Görevi oluştur",
-          "completeTask": "Tamamlandı olarak işaretle",
-          "deleteTask": "Görevi sil",
-          "createEvent": "Taslak etkinlik oluştur",
-          "createDocument": "Evrakı kaydet",
-          "changeDocumentStatus": "Durumu değiştir",
-          "deleteDocument": "Evrakı sil",
-          "createMeeting": "Toplantıyı oluştur",
-          "changeMeetingStatus": "Durumu değiştir",
-          "deleteMeeting": "Toplantıyı sil",
-          "createInventory": "Kalemi ekle",
-          "changeInventoryStatus": "Durumu değiştir",
-          "deleteInventory": "Kalemi sil",
-          "createCourse": "Kursu oluştur",
-          "changeCourseStatus": "Durumu değiştir",
-          "deleteCourse": "Kursu sil"
-        },
-        "done": {
-          "createTask": "Görev oluşturuldu.",
-          "completeTask": "Görev tamamlandı.",
-          "deleteTask": "Görev silindi.",
-          "createEvent": "Taslak etkinlik oluşturuldu.",
-          "createDocument": "Evrak kaydedildi.",
-          "changeDocumentStatus": "Evrak durumu değiştirildi.",
-          "deleteDocument": "Evrak silindi.",
-          "createMeeting": "Toplantı oluşturuldu.",
-          "changeMeetingStatus": "Toplantı durumu değiştirildi.",
-          "deleteMeeting": "Toplantı silindi.",
-          "createInventory": "Envanter kalemi eklendi.",
-          "changeInventoryStatus": "Envanter durumu değiştirildi.",
-          "deleteInventory": "Envanter kalemi silindi.",
-          "createCourse": "Kurs oluşturuldu.",
-          "changeCourseStatus": "Kurs durumu değiştirildi.",
-          "deleteCourse": "Kurs silindi."
-        },
         "applied": "Uygulandı",
-        "online": "Çevrim içi",
-        "priority": {
-          "LOW": "Düşük öncelik",
-          "NORMAL": "Normal öncelik",
-          "HIGH": "Yüksek öncelik"
-        },
-        "newStatus": "Yeni durum",
-        "restored": "Geçmiş öneri (yeniden uygulamak için tekrar isteyin)"
+        "restored": "Geçmiş öneri (yeniden uygulamak için tekrar isteyin)",
+        "legacy": "Önceki sürümden öneri"
       },
       "consent": {
         "title": "Veri koruma bilgilendirmesi",
@@ -1708,6 +1648,23 @@
       "mail": "Öğretmen davet e-postası gönderir.",
       "students": "Kursa kaydedilecek öğrencileri ve ödeme sorumlularını okur.",
       "users": "Davet edilen öğretmen için Öğretmen rolünde kullanıcı hesabı açar; hesabı olan öğretmenin ad ve e-postasını kullanıcı kaydından okur."
+    },
+    "ai": {
+      "create": {
+        "kind": "Kurs önerisi (planlanan)",
+        "confirm": "Kursu oluştur",
+        "done": "Kurs oluşturuldu."
+      },
+      "changeStatus": {
+        "kind": "Kurs durumu",
+        "confirm": "Durumu değiştir",
+        "done": "Kurs durumu değiştirildi."
+      },
+      "delete": {
+        "kind": "Kursu silme",
+        "confirm": "Kursu sil",
+        "done": "Kurs silindi."
+      }
     }
   },
   "documents": {
@@ -2001,6 +1958,23 @@
         "description": "Son işlem tarihi geçmiş evrak varsa uyarı gösterir.",
         "message": "Son işlem tarihi geçmiş {count} evrak bekliyor.",
         "action": "Geciken evrakları gör"
+      }
+    },
+    "ai": {
+      "create": {
+        "kind": "Evrak kaydı önerisi",
+        "confirm": "Evrakı kaydet",
+        "done": "Evrak kaydedildi."
+      },
+      "changeStatus": {
+        "kind": "Evrak durumu",
+        "confirm": "Durumu değiştir",
+        "done": "Evrak durumu değiştirildi."
+      },
+      "delete": {
+        "kind": "Evrakı silme",
+        "confirm": "Evrakı sil",
+        "done": "Evrak silindi."
       }
     }
   },
@@ -2691,6 +2665,13 @@
         "registered": "Kayıtlı",
         "attended": "Katıldı"
       }
+    },
+    "ai": {
+      "create": {
+        "kind": "Etkinlik önerisi (taslak)",
+        "confirm": "Taslak etkinlik oluştur",
+        "done": "Taslak etkinlik oluşturuldu."
+      }
     }
   },
   "inventory": {
@@ -2807,6 +2788,23 @@
     "module": {
       "label": "Envanter ve Demirbaş",
       "description": "Dernek demirbaşları, teknik ekipmanlar ve zimmet kayıtlarının takibi."
+    },
+    "ai": {
+      "create": {
+        "kind": "Envanter kalemi önerisi",
+        "confirm": "Kalemi ekle",
+        "done": "Envanter kalemi eklendi."
+      },
+      "changeStatus": {
+        "kind": "Envanter durumu",
+        "confirm": "Durumu değiştir",
+        "done": "Envanter durumu değiştirildi."
+      },
+      "delete": {
+        "kind": "Envanter kalemini silme",
+        "confirm": "Kalemi sil",
+        "done": "Envanter kalemi silindi."
+      }
     }
   },
   "mail": {
@@ -3458,6 +3456,23 @@
     "access": {
       "members": "Toplantıya katılımcı eklemek için üye listesini okur.",
       "organization": "Tutanak PDF'inde dernek antetini kullanır."
+    },
+    "ai": {
+      "create": {
+        "kind": "Toplantı önerisi",
+        "confirm": "Toplantıyı oluştur",
+        "done": "Toplantı oluşturuldu."
+      },
+      "changeStatus": {
+        "kind": "Toplantı durumu",
+        "confirm": "Durumu değiştir",
+        "done": "Toplantı durumu değiştirildi."
+      },
+      "delete": {
+        "kind": "Toplantıyı silme",
+        "confirm": "Toplantıyı sil",
+        "done": "Toplantı silindi."
+      }
     }
   },
   "members": {

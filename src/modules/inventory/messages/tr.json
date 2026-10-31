@@ -115,5 +115,22 @@
   "module": {
     "label": "Envanter ve Demirbaş",
     "description": "Dernek demirbaşları, teknik ekipmanlar ve zimmet kayıtlarının takibi."
+  },
+  "ai": {
+    "create": {
+      "kind": "Envanter kalemi önerisi",
+      "confirm": "Kalemi ekle",
+      "done": "Envanter kalemi eklendi."
+    },
+    "changeStatus": {
+      "kind": "Envanter durumu",
+      "confirm": "Durumu değiştir",
+      "done": "Envanter durumu değiştirildi."
+    },
+    "delete": {
+      "kind": "Envanter kalemini silme",
+      "confirm": "Kalemi sil",
+      "done": "Envanter kalemi silindi."
+    }
   }
 }
