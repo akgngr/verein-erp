@@ -99,6 +99,7 @@
     "evrak": "Dokumente",
     "bagislar": "Spenden",
     "events": "Veranstaltungen",
+    "exports": "Meine Dateien",
     "inventory": "Inventar",
     "mail": "E-Mail",
     "toplantilar": "Sitzungen",
@@ -2673,6 +2674,45 @@
         "confirm": "Entwurf anlegen",
         "done": "Veranstaltungsentwurf angelegt."
       }
+    }
+  },
+  "exports": {
+    "module": {
+      "label": "Meine Dateien",
+      "description": "Erstellte PDF-, Excel-, Word-, Markdown- und CSV-Dateien; verschlüsselt gespeichert und nach Ablauf gelöscht."
+    },
+    "access": {
+      "organization": "Verwendet den Briefkopf des Vereins (Name, Adresse, Logo) in PDF-Dateien."
+    },
+    "title": "Meine Dateien",
+    "description": "Dateien, die der Assistent oder die Module für Sie erstellt haben. Nur Sie können sie sehen; sie werden nach {days} Tagen automatisch gelöscht.",
+    "empty": "Noch keine Dateien",
+    "emptyHint": "Bitten Sie den Assistenten, eine Tabelle oder Zusammenfassung als PDF, Excel oder Word zu erstellen.",
+    "columns": {
+      "title": "Titel",
+      "format": "Format",
+      "source": "Quelle",
+      "size": "Größe",
+      "created": "Erstellt",
+      "expires": "Löschung",
+      "actions": "Aktionen"
+    },
+    "sources": {
+      "ai": "Assistent"
+    },
+    "download": "Herunterladen",
+    "delete": "Löschen",
+    "deleted": "Datei gelöscht.",
+    "deleteTitle": "Datei löschen",
+    "deleteMessage": "\"{title}\" endgültig löschen?",
+    "document": {
+      "createdAt": "Erstellt",
+      "note": "Dieses Dokument wurde von Verein ERP erstellt.",
+      "aiNote": "Dieses Dokument wurde vom KI-Assistenten erstellt; prüfen Sie Zahlen für offizielle Zwecke im jeweiligen Modul.",
+      "footer": "Seite {page} / {total}"
+    },
+    "errors": {
+      "notFound": "Datei nicht gefunden oder abgelaufen."
     }
   },
   "inventory": {

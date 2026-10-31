@@ -268,6 +268,7 @@ Türler ve ortak yardımcılar: `src/shared/ai/define.ts`.
 | `accounting` | gelir-gider özeti, rapor bağlantısı | — |
 | `members`, `donations`, `students`, `progress` | yalnızca istatistik | — |
 | `organization` | kamuya açık ana veriler | — |
+| `exports` | — | `create_file`: PDF/Excel/Word/Markdown/CSV dosyası (onay kartı yok; bkz. §9c) |
 
 ### Şablon
 
@@ -343,6 +344,27 @@ export const ai = defineModuleAi({
 2. Eylem çevirilerini `messages/tr.json` ve `messages/de.json` içine ekleyin.
 3. `pnpm module:sync` → `pnpm module:validate` → `pnpm typecheck`.
 4. Ayarlar → Yapay zekâ ekranında modül satırının çıktığını görün ve izinleri açın.
+
+## 9c. Dosya üretme (`exports` modülü — "Dosyalarım")
+
+PDF, Excel, Word, Markdown veya CSV dosyası üretmek için modüller **kendi kodunu yazmaz**; `exports`
+modülünün servisini kullanır. Dosya şifreli saklanır, yalnızca sahibi indirir, 30 gün sonra silinir ve
+kullanıcının **Dosyalarım** (`/dosyalar`) sayfasında listelenir.
+
+```ts
+// module.config.ts → access: [{ module: "exports", operations: ["write"] }]
+import { createGeneratedFile } from "@/modules/exports/server";
+
+const file = await createGeneratedFile({ ownerId: user.id, title, format: "xlsx", markdown, source: "members" });
+// file.url → indirme bağlantısı (/api/exports/<id>), yalnızca sahibine çalışır
+```
+
+- İçerik **markdown** olarak verilir (başlık, paragraf, liste, tablo). Her format aynı içeriği çizer:
+  `pdf` (dernek antetli), `xlsx` (her tablo bir sayfa, sayılar gerçek sayı), `docx`, `md`, `csv` (`;` ayırıcı, tablolar).
+- **Yeni format eklentisi:** `src/modules/exports/formats/<ad>.ts` içinde `defineFormat({ id, mimeType, extension, render })`,
+  ardından `formats/index.ts` listesine ve `FILE_FORMATS`'a ekleyin. Başka bir yer değişmez; asistan da yeni formatı otomatik kullanır.
+- Asistan dosyaları `create_file` aracıyla üretir (izin matrisi: **Dosyalarım → oluşturma**). Bağlantı modele verilmez;
+  yanıtın altında indirme düğmesi çıkar. Dernek verisini değiştirmediği için onay kartı istemez.
 
 ## 10. Doğrulama (CI aynı adımları çalıştırır)
 

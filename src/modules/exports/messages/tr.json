@@ -1,0 +1,23 @@
+{
+  "nav": { "exports": "Dosyalarım" },
+  "module": { "label": "Dosyalarım", "description": "Oluşturulan PDF, Excel, Word, Markdown ve CSV dosyaları; şifreli saklanır ve süre sonunda silinir." },
+  "access": { "organization": "PDF dosyalarında dernek antetini (ad, adres, logo) kullanır." },
+  "title": "Dosyalarım",
+  "description": "Asistanın veya modüllerin sizin için oluşturduğu dosyalar. Yalnızca siz görebilirsiniz; {days} gün sonra otomatik silinir.",
+  "empty": "Henüz dosya yok",
+  "emptyHint": "Asistandan bir tabloyu veya özeti PDF, Excel ya da Word olarak isteyebilirsiniz.",
+  "columns": { "title": "Başlık", "format": "Biçim", "source": "Kaynak", "size": "Boyut", "created": "Oluşturulma", "expires": "Silinme", "actions": "İşlemler" },
+  "sources": { "ai": "Asistan" },
+  "download": "İndir",
+  "delete": "Sil",
+  "deleted": "Dosya silindi.",
+  "deleteTitle": "Dosyayı sil",
+  "deleteMessage": "\"{title}\" kalıcı olarak silinsin mi?",
+  "document": {
+    "createdAt": "Oluşturulma",
+    "note": "Bu belge Dernek ERP tarafından oluşturulmuştur.",
+    "aiNote": "Bu belge yapay zekâ asistanı tarafından hazırlanmıştır; resmi işlemlerde rakamları ilgili modülden kontrol edin.",
+    "footer": "Sayfa {page} / {total}"
+  },
+  "errors": { "notFound": "Dosya bulunamadı veya süresi doldu." }
+}

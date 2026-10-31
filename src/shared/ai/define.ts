@@ -29,6 +29,10 @@ export type ModuleAiContext = {
   user: AiUser;
   /** Bir onay kartı önerir; hiçbir veri değişmez. */
   propose: (proposal: ModuleAiProposalInput) => void;
+  /** Model girdisindeki maskeleri ([PERSON_1] …) gerçek değerlere çevirir (yalnızca sunucuda kullanın). */
+  restore: (text: string) => string;
+  /** Oluşturulan dosyayı yanıtın altında indirme düğmesi olarak gösterir (bağlantı modele verilmez). */
+  attachFile: (file: { title: string; url: string; format: string }) => void;
 };
 
 export type ModuleAiTool<S extends z.ZodType = z.ZodType> = {

@@ -1,0 +1,17 @@
+/// Kullanıcının oluşturduğu dosyalar (asistan veya modüller). KARAR (KVKK/DSGVO): içerik diskte
+/// AES-256-GCM ile ŞİFRELİ (UPLOAD_DIR/generated/<id>.bin), başlık şifreli; yalnızca sahibi
+/// indirebilir. FILES_RETENTION_DAYS gün sonra otomatik silinir.
+model GeneratedFile {
+  id         String   @id @default(cuid())
+  ownerId    String // FK DEĞİL (yumuşak referans)
+  titleEnc   String
+  format     String // pdf | xlsx | docx | md | csv
+  sizeBytes  Int
+  source     String // "ai" veya modül anahtarı
+  createdAt  DateTime @default(now())
+  expiresAt  DateTime
+
+  @@index([ownerId, createdAt])
+  @@index([expiresAt])
+  @@map("generated_files")
+}

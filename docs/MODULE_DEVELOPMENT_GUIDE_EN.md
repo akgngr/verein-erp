@@ -274,6 +274,15 @@ Rules:
 Checklist: create `ai.ts` → add translations → `pnpm module:sync && pnpm module:validate && pnpm typecheck`
 → enable the row in Settings → AI.
 
+## 9c. Generating files (`exports` module — "My files")
+
+Modules never write their own PDF/Excel/Word code: declare `access: [{ module: "exports", operations: ["write"] }]`
+and call `createGeneratedFile({ ownerId, title, format, markdown, source })` from `@/modules/exports/server`.
+Files are encrypted, owner-only, deleted after 30 days and listed at `/dosyalar`. Formats: `pdf` (letterhead),
+`xlsx` (one sheet per table, numeric cells), `docx`, `md`, `csv`. New format plugin: `formats/<name>.ts` with
+`defineFormat(...)` + one line in `formats/index.ts` and `FILE_FORMATS`. The assistant uses `create_file`
+(matrix: My files → create); the download button is shown under the answer.
+
 ## 10. Verification (CI runs the same steps)
 
 ```bash
