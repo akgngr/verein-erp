@@ -6,3 +6,4 @@ export { SettingsOverviewView } from "./views/settings-overview-view";
 export { LanguageSettingCard } from "./components/language-setting-card";
 export { ThemeSettingCard } from "./components/theme-setting-card";
 export { DashboardView } from "./views/dashboard-view";
+export { ReleaseNotesView } from "./views/release-notes-view";

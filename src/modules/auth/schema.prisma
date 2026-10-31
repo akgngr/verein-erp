@@ -1,0 +1,25 @@
+/// Kullanıcının kendi doldurduğu profil: iletişim, adres, ödeme (IBAN) ve fatura bilgileri.
+/// Örn. öğretmenlere ödeme yapmak ve onların derneğe kestiği faturaları işlemek için.
+/// KARAR (KVKK/DSGVO): IBAN ve vergi numarası AES-256-GCM ile ŞİFRELİ saklanır; ekranda
+/// maskeli gösterilir. Kayıt yoksa profil boştur.
+model UserProfile {
+  userId          String   @id // FK DEĞİL (yumuşak referans)
+  phone           String?
+  mobile          String?
+  street          String?
+  houseNumber     String?
+  postalCode      String?
+  city            String?
+  country         String?
+  accountHolder   String?
+  ibanEnc         String?
+  bic             String?
+  bankName        String?
+  businessName    String? // fatura üzerindeki ad / firma (boşsa kişinin adı)
+  taxNumberEnc    String?
+  vatId           String? // USt-IdNr.
+  isSmallBusiness Boolean  @default(false) // § 19 UStG Kleinunternehmer
+  updatedAt       DateTime @updatedAt
+
+  @@map("user_profiles")
+}

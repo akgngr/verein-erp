@@ -32,3 +32,4 @@ export {
 export { uploadFileHandler } from "./handlers/upload-file";
 export { downloadFileHandler } from "./handlers/download-file";
 export { exportDocumentsHandler } from "./handlers/export-documents";
+export { getDocumentFileText } from "./queries/file-text";

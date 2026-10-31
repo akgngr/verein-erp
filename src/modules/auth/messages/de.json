@@ -22,7 +22,9 @@
     "currentPassword": "Aktuelles Passwort",
     "newPassword": "Neues Passwort",
     "submit": "Passwort aktualisieren",
-    "updated": "Ihr Passwort wurde aktualisiert."
+    "updated": "Ihr Passwort wurde aktualisiert.",
+    "details": "Meine Profildaten",
+    "detailsHint": "Kontakt-, Adress-, Zahlungs- und Rechnungsdaten. Nur Sie und berechtigte Verantwortliche können sie sehen."
   },
   "errors": {
     "sessionInvalid": "Ihre Sitzung ist ungültig. Bitte melden Sie sich erneut an.",
@@ -40,5 +42,43 @@
   "module": {
     "label": "Authentifizierung",
     "description": "Anmeldung, Sitzungsverwaltung und Passwortsicherheit."
+  },
+  "profileForm": {
+    "contact": "Kontakt",
+    "phone": "Telefon",
+    "mobile": "Mobil",
+    "address": "Adresse",
+    "street": "Straße",
+    "houseNumber": "Hausnummer",
+    "postalCode": "PLZ",
+    "city": "Ort",
+    "country": "Land",
+    "countryHint": "Zweistelliger Ländercode (z. B. DE)",
+    "payment": "Zahlungsdaten",
+    "paymentHint": "Für Zahlungen an Sie (z. B. Honorare).",
+    "accountHolder": "Kontoinhaber",
+    "iban": "IBAN",
+    "bic": "BIC",
+    "bankName": "Bank",
+    "keepHint": "Leer lassen, um den gespeicherten Wert zu behalten.",
+    "clearIban": "Gespeicherte IBAN löschen",
+    "invoice": "Rechnungsdaten",
+    "invoiceHint": "Angaben auf Ihren Rechnungen an den Verein (z. B. als freie Lehrkraft).",
+    "businessName": "Rechnungsname / Firma",
+    "taxNumber": "Steuernummer",
+    "vatId": "USt-IdNr.",
+    "isSmallBusiness": "Kleinunternehmer (§ 19 UStG)",
+    "isSmallBusinessHint": "Aktivieren, wenn Sie ohne Umsatzsteuer abrechnen.",
+    "clearTaxNumber": "Gespeicherte Steuernummer löschen",
+    "privacy": "IBAN und Steuernummer werden verschlüsselt gespeichert und nur maskiert angezeigt.",
+    "submit": "Profil speichern",
+    "saved": "Ihr Profil wurde gespeichert.",
+    "validation": {
+      "textMax": "Dieses Feld ist zu lang.",
+      "country": "Bitte zweistelligen Ländercode in Großbuchstaben angeben (z. B. DE).",
+      "iban": "Bitte eine gültige IBAN eingeben.",
+      "bic": "Bitte eine gültige BIC eingeben (8 oder 11 Zeichen).",
+      "vatId": "Bitte eine gültige USt-IdNr. eingeben (z. B. DE123456789)."
+    }
   }
 }

@@ -45,7 +45,8 @@
   },
   "nav": {
     "ayarlar": "Ayarlar",
-    "moduller": "Modül Yönetimi"
+    "moduller": "Modül Yönetimi",
+    "surumNotlari": "Sürüm notları"
   },
   "meta": {
     "settings": "Ayarlar",
@@ -95,6 +96,17 @@
     "needsApproval": {
       "title": "Bu modül erişim izni bekliyor",
       "description": "Modül başka modüllerin verilerine erişmek istiyor. Yönetici Modül Yönetimi'nden izin verene kadar kullanılamaz."
+    }
+  },
+  "releases": {
+    "title": "Sürüm notları",
+    "description": "Sistemdeki değişikliklerin sürüm sürüm listesi. Güncel sürüm: v{version}.",
+    "current": "Güncel",
+    "types": {
+      "feature": "Yeni",
+      "improvement": "İyileştirme",
+      "fix": "Düzeltme",
+      "security": "Güvenlik"
     }
   }
 }

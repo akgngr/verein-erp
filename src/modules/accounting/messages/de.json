@@ -313,6 +313,7 @@
     "title": "Kontensalden"
   },
   "menu": {
+    "invoices": "Rechnungen",
     "sync": "Mitgliedsbeiträge übernehmen",
     "reports": "Berichte",
     "budget": "Haushaltsplan",
@@ -460,7 +461,8 @@
       "MEMBER_PAYMENT": "Mitgliedsbeitrag (automatisch)",
       "DONATION": "Spende (automatisch)",
       "DONATION_WAIVER": "Aufwandsspende – Aufwand (automatisch)",
-      "COURSE_FEE": "Kursgebühr (automatisch)"
+      "COURSE_FEE": "Kursgebühr (automatisch)",
+      "INVOICE": "Rechnungszahlung"
     }
   },
   "export": {
@@ -517,5 +519,142 @@
   "access": {
     "members": "Liest Mitgliedsbeitragszahlungen, um sie in die Buchhaltung zu übernehmen.",
     "organization": "Verwendet den Vereinsbriefkopf in PDF-Berichten."
+  },
+  "pdf": {
+    "voucher": {
+      "INCOME": "Quittung (PDF)",
+      "EXPENSE": "Auszahlungsbeleg (PDF)",
+      "TRANSFER": "Umbuchungsbeleg (PDF)"
+    },
+    "list": "PDF",
+    "excel": "Excel"
+  },
+  "invoices": {
+    "title": "Rechnungen",
+    "description": "Rechnungen und Proforma-Rechnungen erstellen, als PDF ausgeben und Zahlungseingänge als Einnahme buchen.",
+    "newInvoice": "Neue Rechnung",
+    "newProforma": "Neue Proforma",
+    "search": "Nummer, Empfänger oder Betreff suchen",
+    "empty": "Noch keine Rechnungen.",
+    "open": "Öffnen",
+    "draftNumber": "Entwurf",
+    "overdue": "Überfällig",
+    "taxTotal": "USt. gesamt",
+    "fromProforma": "Aus Proforma",
+    "paymentBooking": "Zahlungsbuchung",
+    "cancelled": "Storniert",
+    "createdBy": "Erstellt von",
+    "kind": {
+      "INVOICE": "Rechnung",
+      "PROFORMA": "Proforma"
+    },
+    "status": {
+      "DRAFT": "Entwurf",
+      "ISSUED": "Gestellt",
+      "PAID": "Bezahlt",
+      "CANCELLED": "Storniert"
+    },
+    "columns": {
+      "number": "Nummer",
+      "kind": "Art",
+      "issueDate": "Datum",
+      "recipient": "Empfänger",
+      "gross": "Betrag",
+      "status": "Status"
+    },
+    "form": {
+      "kind": "Art",
+      "category": "Einnahmekategorie",
+      "categoryHelp": "Kategorie der Einnahmebuchung beim Zahlungseingang.",
+      "issueDate": "Rechnungsdatum",
+      "dueDate": "Zahlbar bis",
+      "serviceDate": "Leistungsdatum/-zeitraum",
+      "serviceDatePlaceholder": "z. B. März 2026",
+      "subject": "Betreff",
+      "recipientTitle": "Empfänger",
+      "recipientName": "Name / Organisation",
+      "recipientEmail": "E-Mail",
+      "recipientAddress": "Anschrift",
+      "recipientAddressPlaceholder": "Straße Nr.\nPLZ Ort",
+      "introText": "Einleitungstext",
+      "linesTitle": "Positionen",
+      "lineDescription": "Bezeichnung",
+      "quantity": "Menge",
+      "unit": "Einheit",
+      "unitPrice": "Einzelpreis (€)",
+      "taxRate": "USt.",
+      "removeLine": "Position entfernen",
+      "addLine": "Position hinzufügen",
+      "net": "Netto",
+      "tax": "{rate} % USt.",
+      "gross": "Gesamt",
+      "taxNote": "Steuerhinweis",
+      "taxNoteHelp": "Begründung, falls keine USt. berechnet wird, z. B. „Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.“",
+      "footerText": "Schlusstext",
+      "created": "Entwurf gespeichert.",
+      "updated": "Rechnung aktualisiert.",
+      "draftHint": "Wird als Entwurf gespeichert; beim Stellen wird die Nummer vergeben, danach ist keine Änderung mehr möglich.",
+      "editTitle": "Entwurf bearbeiten"
+    },
+    "actions": {
+      "pdf": "PDF",
+      "previewPdf": "Vorschau (PDF)",
+      "edit": "Bearbeiten",
+      "issue": "Stellen",
+      "issueTitle": "Rechnung stellen",
+      "issueConfirm": "Das Dokument erhält die nächste fortlaufende Nummer. Danach kann es nicht mehr geändert, nur storniert werden. Fortfahren?",
+      "issued": "Gestellt als {number}.",
+      "deleteDraft": "Entwurf löschen",
+      "deleteTitle": "Entwurf löschen",
+      "deleteConfirm": "Der Entwurf wird endgültig gelöscht. Fortfahren?",
+      "deleted": "Entwurf gelöscht.",
+      "recordPayment": "Zahlung erfassen",
+      "paymentTitle": "{number} – Zahlungseingang",
+      "paymentHelp": "Es wird eine Einnahmebuchung über den Rechnungsbetrag angelegt und die Rechnung als bezahlt markiert. Die Quittung erhalten Sie auf der Buchungsseite.",
+      "paidDate": "Zahlungsdatum",
+      "account": "Konto (Kasse/Bank)",
+      "category": "Einnahmekategorie",
+      "paid": "Zahlung erfasst (Buchung {bookingNumber}).",
+      "convert": "In Rechnung umwandeln",
+      "openInvoice": "Rechnung öffnen",
+      "cancel": "Stornieren",
+      "cancelTitle": "{number} stornieren",
+      "cancelHelp": "Die Nummer bleibt erhalten; das PDF trägt den Stempel STORNIERT.",
+      "cancelPaidHelp": "Das Dokument wird storniert und die Zahlungsbuchung gegengebucht.",
+      "reason": "Stornogrund",
+      "cancelled": "Dokument storniert.",
+      "close": "Schließen"
+    },
+    "settings": {
+      "title": "Rechnungseinstellungen",
+      "description": "Vorgaben für neue Rechnungen.",
+      "defaultTaxRate": "Standard-USt.-Satz",
+      "paymentDays": "Zahlungsziel (Tage)",
+      "taxNote": "Steuerhinweis",
+      "taxNoteHelp": "Falls der Verein nicht umsatzsteuerpflichtig ist, z. B. „Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.“",
+      "incomeCategory": "Standard-Einnahmekategorie",
+      "bankDetails": "Bankverbindung (PDF-Fußzeile)",
+      "bankDetailsPlaceholder": "IBAN: DE..\nBIC: ...\nBank",
+      "footerText": "Standard-Schlusstext",
+      "saved": "Rechnungseinstellungen gespeichert."
+    },
+    "errors": {
+      "notFound": "Rechnung nicht gefunden.",
+      "notDraft": "Nur Entwürfe können bearbeitet oder gelöscht werden.",
+      "cannotConvert": "Nur eine gestellte Proforma kann umgewandelt werden.",
+      "alreadyConverted": "Aus dieser Proforma wurde bereits eine Rechnung erstellt.",
+      "notPayable": "Zahlungen können nur für gestellte, offene Rechnungen erfasst werden.",
+      "cannotCancel": "Entwürfe werden gelöscht, nicht storniert; stornierte Dokumente können nicht erneut storniert werden."
+    },
+    "validation": {
+      "textMax": "Text ist zu lang.",
+      "lineDescription": "Bezeichnung ist erforderlich.",
+      "quantity": "Gültige Menge eingeben (z. B. 1 oder 2,5).",
+      "price": "Gültigen Preis eingeben (z. B. 12,50).",
+      "recipient": "Empfänger ist erforderlich.",
+      "lines": "Mindestens eine Position hinzufügen.",
+      "reason": "Grund muss mindestens 3 Zeichen haben.",
+      "paymentDays": "Anzahl Tage eingeben."
+    }
   }
 }

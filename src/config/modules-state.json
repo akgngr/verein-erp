@@ -9,5 +9,6 @@
   "documents": true,
   "meetings": true,
   "donations": true,
-  "test_dummy_module": true
+  "test_dummy_module": true,
+  "ai": false
 }

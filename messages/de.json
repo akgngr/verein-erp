@@ -93,6 +93,7 @@
     "panel": "Dashboard",
     "profil": "Profil",
     "muhasebe": "Buchhaltung",
+    "ai": "KI-Assistent",
     "denetimKaydi": "Prüfprotokoll",
     "courses": "Kurse",
     "evrak": "Dokumente",
@@ -107,6 +108,7 @@
     "students": "Schüler",
     "ayarlar": "Einstellungen",
     "moduller": "Modulverwaltung",
+    "surumNotlari": "Versionshinweise",
     "tasks": "Aufgaben",
     "kullanicilar": "Benutzer"
   },
@@ -581,6 +583,7 @@
       "title": "Kontensalden"
     },
     "menu": {
+      "invoices": "Rechnungen",
       "sync": "Mitgliedsbeiträge übernehmen",
       "reports": "Berichte",
       "budget": "Haushaltsplan",
@@ -725,7 +728,8 @@
         "MEMBER_PAYMENT": "Mitgliedsbeitrag (automatisch)",
         "DONATION": "Spende (automatisch)",
         "DONATION_WAIVER": "Aufwandsspende – Aufwand (automatisch)",
-        "COURSE_FEE": "Kursgebühr (automatisch)"
+        "COURSE_FEE": "Kursgebühr (automatisch)",
+        "INVOICE": "Rechnungszahlung"
       }
     },
     "export": {
@@ -782,6 +786,398 @@
     "access": {
       "members": "Liest Mitgliedsbeitragszahlungen, um sie in die Buchhaltung zu übernehmen.",
       "organization": "Verwendet den Vereinsbriefkopf in PDF-Berichten."
+    },
+    "pdf": {
+      "voucher": {
+        "INCOME": "Quittung (PDF)",
+        "EXPENSE": "Auszahlungsbeleg (PDF)",
+        "TRANSFER": "Umbuchungsbeleg (PDF)"
+      },
+      "list": "PDF",
+      "excel": "Excel"
+    },
+    "invoices": {
+      "title": "Rechnungen",
+      "description": "Rechnungen und Proforma-Rechnungen erstellen, als PDF ausgeben und Zahlungseingänge als Einnahme buchen.",
+      "newInvoice": "Neue Rechnung",
+      "newProforma": "Neue Proforma",
+      "search": "Nummer, Empfänger oder Betreff suchen",
+      "empty": "Noch keine Rechnungen.",
+      "open": "Öffnen",
+      "draftNumber": "Entwurf",
+      "overdue": "Überfällig",
+      "taxTotal": "USt. gesamt",
+      "fromProforma": "Aus Proforma",
+      "paymentBooking": "Zahlungsbuchung",
+      "cancelled": "Storniert",
+      "createdBy": "Erstellt von",
+      "kind": {
+        "INVOICE": "Rechnung",
+        "PROFORMA": "Proforma"
+      },
+      "status": {
+        "DRAFT": "Entwurf",
+        "ISSUED": "Gestellt",
+        "PAID": "Bezahlt",
+        "CANCELLED": "Storniert"
+      },
+      "columns": {
+        "number": "Nummer",
+        "kind": "Art",
+        "issueDate": "Datum",
+        "recipient": "Empfänger",
+        "gross": "Betrag",
+        "status": "Status"
+      },
+      "form": {
+        "kind": "Art",
+        "category": "Einnahmekategorie",
+        "categoryHelp": "Kategorie der Einnahmebuchung beim Zahlungseingang.",
+        "issueDate": "Rechnungsdatum",
+        "dueDate": "Zahlbar bis",
+        "serviceDate": "Leistungsdatum/-zeitraum",
+        "serviceDatePlaceholder": "z. B. März 2026",
+        "subject": "Betreff",
+        "recipientTitle": "Empfänger",
+        "recipientName": "Name / Organisation",
+        "recipientEmail": "E-Mail",
+        "recipientAddress": "Anschrift",
+        "recipientAddressPlaceholder": "Straße Nr.\nPLZ Ort",
+        "introText": "Einleitungstext",
+        "linesTitle": "Positionen",
+        "lineDescription": "Bezeichnung",
+        "quantity": "Menge",
+        "unit": "Einheit",
+        "unitPrice": "Einzelpreis (€)",
+        "taxRate": "USt.",
+        "removeLine": "Position entfernen",
+        "addLine": "Position hinzufügen",
+        "net": "Netto",
+        "tax": "{rate} % USt.",
+        "gross": "Gesamt",
+        "taxNote": "Steuerhinweis",
+        "taxNoteHelp": "Begründung, falls keine USt. berechnet wird, z. B. „Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.“",
+        "footerText": "Schlusstext",
+        "created": "Entwurf gespeichert.",
+        "updated": "Rechnung aktualisiert.",
+        "draftHint": "Wird als Entwurf gespeichert; beim Stellen wird die Nummer vergeben, danach ist keine Änderung mehr möglich.",
+        "editTitle": "Entwurf bearbeiten"
+      },
+      "actions": {
+        "pdf": "PDF",
+        "previewPdf": "Vorschau (PDF)",
+        "edit": "Bearbeiten",
+        "issue": "Stellen",
+        "issueTitle": "Rechnung stellen",
+        "issueConfirm": "Das Dokument erhält die nächste fortlaufende Nummer. Danach kann es nicht mehr geändert, nur storniert werden. Fortfahren?",
+        "issued": "Gestellt als {number}.",
+        "deleteDraft": "Entwurf löschen",
+        "deleteTitle": "Entwurf löschen",
+        "deleteConfirm": "Der Entwurf wird endgültig gelöscht. Fortfahren?",
+        "deleted": "Entwurf gelöscht.",
+        "recordPayment": "Zahlung erfassen",
+        "paymentTitle": "{number} – Zahlungseingang",
+        "paymentHelp": "Es wird eine Einnahmebuchung über den Rechnungsbetrag angelegt und die Rechnung als bezahlt markiert. Die Quittung erhalten Sie auf der Buchungsseite.",
+        "paidDate": "Zahlungsdatum",
+        "account": "Konto (Kasse/Bank)",
+        "category": "Einnahmekategorie",
+        "paid": "Zahlung erfasst (Buchung {bookingNumber}).",
+        "convert": "In Rechnung umwandeln",
+        "openInvoice": "Rechnung öffnen",
+        "cancel": "Stornieren",
+        "cancelTitle": "{number} stornieren",
+        "cancelHelp": "Die Nummer bleibt erhalten; das PDF trägt den Stempel STORNIERT.",
+        "cancelPaidHelp": "Das Dokument wird storniert und die Zahlungsbuchung gegengebucht.",
+        "reason": "Stornogrund",
+        "cancelled": "Dokument storniert.",
+        "close": "Schließen"
+      },
+      "settings": {
+        "title": "Rechnungseinstellungen",
+        "description": "Vorgaben für neue Rechnungen.",
+        "defaultTaxRate": "Standard-USt.-Satz",
+        "paymentDays": "Zahlungsziel (Tage)",
+        "taxNote": "Steuerhinweis",
+        "taxNoteHelp": "Falls der Verein nicht umsatzsteuerpflichtig ist, z. B. „Gemäß § 19 UStG wird keine Umsatzsteuer berechnet.“",
+        "incomeCategory": "Standard-Einnahmekategorie",
+        "bankDetails": "Bankverbindung (PDF-Fußzeile)",
+        "bankDetailsPlaceholder": "IBAN: DE..\nBIC: ...\nBank",
+        "footerText": "Standard-Schlusstext",
+        "saved": "Rechnungseinstellungen gespeichert."
+      },
+      "errors": {
+        "notFound": "Rechnung nicht gefunden.",
+        "notDraft": "Nur Entwürfe können bearbeitet oder gelöscht werden.",
+        "cannotConvert": "Nur eine gestellte Proforma kann umgewandelt werden.",
+        "alreadyConverted": "Aus dieser Proforma wurde bereits eine Rechnung erstellt.",
+        "notPayable": "Zahlungen können nur für gestellte, offene Rechnungen erfasst werden.",
+        "cannotCancel": "Entwürfe werden gelöscht, nicht storniert; stornierte Dokumente können nicht erneut storniert werden."
+      },
+      "validation": {
+        "textMax": "Text ist zu lang.",
+        "lineDescription": "Bezeichnung ist erforderlich.",
+        "quantity": "Gültige Menge eingeben (z. B. 1 oder 2,5).",
+        "price": "Gültigen Preis eingeben (z. B. 12,50).",
+        "recipient": "Empfänger ist erforderlich.",
+        "lines": "Mindestens eine Position hinzufügen.",
+        "reason": "Grund muss mindestens 3 Zeichen haben.",
+        "paymentDays": "Anzahl Tage eingeben."
+      }
+    }
+  },
+  "ai": {
+    "module": {
+      "label": "KI-Assistent",
+      "description": "Chat im rechten Panel, der nur aggregierte Daten freigegebener Module liest."
+    },
+    "meta": {
+      "settings": "KI-Assistent"
+    },
+    "access": {
+      "accounting": "Liest Einnahmen-/Ausgabensummen und Kontostände; liefert Berichtslinks (keine Buchungsdetails, keine Personendaten).",
+      "members": "Liest nur Mitgliederzahlen und Beitragsstatistik; keine Namen oder Daten einzelner Mitglieder. Registrierte Namen werden nur serverseitig zur Maskierung verwendet.",
+      "events": "Liest Titel, Datum, Ort und Teilnehmerzahlen kommender Veranstaltungen; legt bei Freigabe nach Bestätigung Entwürfe an. Keine Teilnehmernamen.",
+      "tasks": "Liest Titel und Status offener Aufgaben; legt bei Freigabe nach Bestätigung Aufgaben an, erledigt oder löscht sie.",
+      "courses": "Liest nur Kursstatistiken (keine Namen von Lehrkräften, Schülern, Eltern); legt bei Freigabe nach Bestätigung Kurse an, ändert den Status oder löscht.",
+      "system": "Liest, welche Module aktiv und für den Assistenten freigegeben sind (nur darauf wird zugegriffen).",
+      "students": "Liest nur Schüler- und Elternzahlen.",
+      "auth": "Liest Benutzernamen nur serverseitig zur Maskierung und prüft die Sitzung; Namen werden nie an die KI gesendet.",
+      "meetings": "Liest Sitzungen, Tagesordnung und Beschlüsse (ohne Teilnehmernamen); legt bei Freigabe nach Bestätigung Sitzungen an, ändert den Status oder löscht.",
+      "documents": "Liest Schriftverkehr und den Text von Anhängen (Personenkennungen maskiert); legt bei Freigabe nach Bestätigung Einträge an, ändert den Status oder löscht.",
+      "donations": "Liest nur Spendensummen und Anzahl der Bestätigungen; keine Spenderdaten.",
+      "inventory": "Liest Inventarposten und Summen (ohne zugeordnetes Mitglied); legt bei Freigabe nach Bestätigung Posten an, ändert den Status oder löscht.",
+      "progress": "Liest nur Anwesenheits- und Bewertungsstatistiken.",
+      "organization": "Liest die öffentlichen Stammdaten des Vereins; ohne Steuernummer und Finanzamt."
+    },
+    "errors": {
+      "consentRequired": "Bitte bestätigen Sie zuerst den Datenschutzhinweis.",
+      "notConfigured": "Der Assistent ist noch nicht eingerichtet: Ein Administrator muss unter Einstellungen → KI-Assistent einen Anbieter verbinden.",
+      "rateLimited": "Zu viele Anfragen; bitte kurz warten.",
+      "invalidRequest": "Ungültige Anfrage.",
+      "unavailable": "Der Assistent ist gerade nicht erreichbar; bitte später erneut versuchen.",
+      "providerNotReady": "Dieser Anbieter ist nicht bereit (Schlüssel oder Modell fehlt bzw. lokale Adresse nicht im privaten Netz).",
+      "baseUrlRequired": "Für das lokale Modell ist eine Serveradresse erforderlich.",
+      "baseUrlNotPrivate": "Diese Adresse liegt nicht im Vereinsnetz. Aus Datenschutzgründen sind nur lokale/private Adressen zulässig.",
+      "providerAuth": "Der Anbieter hat den API-Schlüssel abgelehnt (ungültig, abgelaufen oder ohne Zugriff auf dieses Modell). Ein Administrator sollte Schlüssel und Modell unter Einstellungen → KI-Assistent prüfen.",
+      "permissionRevoked": "Die Freigabe für diesen Vorgang wurde entzogen; der Vorschlag wurde nicht ausgeführt.",
+      "inventory": {
+        "forbidden": "Keine Berechtigung für diesen Vorgang.",
+        "validation": "Ungültige Inventardaten.",
+        "notFound": "Inventarposten nicht gefunden.",
+        "unknown": "Inventarvorgang fehlgeschlagen."
+      },
+      "conversationNotFound": "Chat nicht gefunden.",
+      "reportNotFound": "Bericht nicht gefunden."
+    },
+    "panel": {
+      "title": "Assistent",
+      "open": "Assistent öffnen",
+      "close": "Schließen",
+      "clear": "Chat leeren",
+      "input": "Fragen oder bitten Sie um etwas…",
+      "send": "Senden",
+      "thinking": "Antwort wird erstellt…",
+      "error": "Assistent nicht erreichbar.",
+      "empty": "(leere Antwort)",
+      "welcome": "Hallo! Fragen Sie zu den Vereinsdaten, fordern Sie Berichte an oder lassen Sie sich Aufgaben vorschlagen. Beispiele:",
+      "privacyNote": "Personendaten werden maskiert; der Chat wird nur für Sie verschlüsselt gespeichert.",
+      "notConfigured": "Der Assistent ist noch nicht eingerichtet: Ein Administrator muss unter Einstellungen → KI-Assistent einen Anbieter verbinden.",
+      "examples": {
+        "q1": "Fasse die Einnahmen und Ausgaben dieses Jahres zusammen.",
+        "q2": "Wie steht es um die Beitragszahlungen?",
+        "q3": "Welche Veranstaltungen stehen an?",
+        "q4": "Gib mir den Kassenbericht als PDF."
+      },
+      "proposal": {
+        "kinds": {
+          "createTask": "Aufgabenvorschlag",
+          "completeTask": "Aufgabe erledigen",
+          "deleteTask": "Aufgabe löschen",
+          "createEvent": "Veranstaltungsvorschlag (Entwurf)",
+          "createDocument": "Schriftverkehr anlegen",
+          "changeDocumentStatus": "Status des Schriftstücks",
+          "deleteDocument": "Schriftstück löschen",
+          "createMeeting": "Sitzungsvorschlag",
+          "changeMeetingStatus": "Sitzungsstatus",
+          "deleteMeeting": "Sitzung löschen",
+          "createInventory": "Inventarposten anlegen",
+          "changeInventoryStatus": "Inventarstatus",
+          "deleteInventory": "Inventarposten löschen",
+          "createCourse": "Kursvorschlag (geplant)",
+          "changeCourseStatus": "Kursstatus",
+          "deleteCourse": "Kurs löschen"
+        },
+        "confirm": {
+          "createTask": "Aufgabe anlegen",
+          "completeTask": "Als erledigt markieren",
+          "deleteTask": "Aufgabe löschen",
+          "createEvent": "Entwurf anlegen",
+          "createDocument": "Eintragen",
+          "changeDocumentStatus": "Status ändern",
+          "deleteDocument": "Löschen",
+          "createMeeting": "Sitzung anlegen",
+          "changeMeetingStatus": "Status ändern",
+          "deleteMeeting": "Sitzung löschen",
+          "createInventory": "Posten anlegen",
+          "changeInventoryStatus": "Status ändern",
+          "deleteInventory": "Posten löschen",
+          "createCourse": "Kurs anlegen",
+          "changeCourseStatus": "Status ändern",
+          "deleteCourse": "Kurs löschen"
+        },
+        "done": {
+          "createTask": "Aufgabe angelegt.",
+          "completeTask": "Aufgabe erledigt.",
+          "deleteTask": "Aufgabe gelöscht.",
+          "createEvent": "Veranstaltungsentwurf angelegt.",
+          "createDocument": "Schriftstück eingetragen.",
+          "changeDocumentStatus": "Status geändert.",
+          "deleteDocument": "Schriftstück gelöscht.",
+          "createMeeting": "Sitzung angelegt.",
+          "changeMeetingStatus": "Sitzungsstatus geändert.",
+          "deleteMeeting": "Sitzung gelöscht.",
+          "createInventory": "Inventarposten angelegt.",
+          "changeInventoryStatus": "Inventarstatus geändert.",
+          "deleteInventory": "Inventarposten gelöscht.",
+          "createCourse": "Kurs angelegt.",
+          "changeCourseStatus": "Kursstatus geändert.",
+          "deleteCourse": "Kurs gelöscht."
+        },
+        "applied": "Ausgeführt",
+        "online": "Online",
+        "priority": {
+          "LOW": "Niedrige Priorität",
+          "NORMAL": "Normale Priorität",
+          "HIGH": "Hohe Priorität"
+        },
+        "newStatus": "Neuer Status",
+        "restored": "Früherer Vorschlag (zum Ausführen erneut anfragen)"
+      },
+      "consent": {
+        "title": "Datenschutzhinweis",
+        "intro": "Bitte lesen und bestätigen Sie vor der Nutzung:",
+        "accept": "Gelesen und einverstanden",
+        "points": {
+          "noPersonal": "Der Assistent liest keine Namen, Kontaktdaten, Adressen, Bank- oder Ausweisdaten; nur Summen, Zahlen und Vereinsdaten (Veranstaltungen, Aufgaben, Kursnamen).",
+          "masking": "Registrierte Personennamen (Mitglieder, Nutzer, Schüler, Eltern) und Mitglieds-/Schülernummern sowie E-Mail-Adressen, IBANs, Telefon- und Steuernummern in Ihren Nachrichten werden vor dem Versand an die KI maskiert.",
+          "ownRights": "Der Assistent greift nur auf Module zu, für die Sie berechtigt sind und die der Administrator freigegeben hat.",
+          "noStorage": "Ihre Chats werden nur für Sie und verschlüsselt gespeichert und nach 180 Tagen automatisch gelöscht. Sie können einzelne Chats oder den gesamten Verlauf jederzeit löschen.",
+          "noChanges": "Der Assistent kann keine Daten ändern; Vorschläge werden nur nach Ihrer Bestätigung in Ihrem Namen ausgeführt.",
+          "provider": "Antworten werden mit dem gewählten Anbieter erzeugt: {provider} — {where}",
+          "revoke": "Sie können Ihre Einwilligung jederzeit unter Einstellungen → KI-Assistent widerrufen."
+        }
+      },
+      "barPlaceholder": "Den Assistenten fragen oder um etwas bitten…",
+      "resize": "Zum Anpassen der Breite ziehen",
+      "history": "Chatverlauf",
+      "historyEmpty": "Noch keine gespeicherten Chats.",
+      "newConversation": "Neuer Chat",
+      "deleteConversation": "Diesen Chat löschen",
+      "conversationDeleted": "Chat gelöscht."
+    },
+    "settings": {
+      "title": "KI-Assistent",
+      "description": "Status, freigegebene Bereiche und Datenschutzregeln des Assistenten.",
+      "accept": "Einwilligen",
+      "revoke": "Einwilligung widerrufen",
+      "accepted": "Einwilligung gespeichert.",
+      "revoked": "Einwilligung widerrufen; der Assistent ist für Sie deaktiviert.",
+      "myConsent": "Meine Einwilligung",
+      "enableHint": "Der Assistent ist eine Erweiterung und standardmäßig deaktiviert. Ein Administrator kann ihn nach Prüfung der Zugriffsrechte aktivieren:",
+      "modulesLink": "Einstellungen → Module",
+      "areasTitle": "Zugängliche Bereiche (für Sie)",
+      "areasHelp": "Nur vom Administrator freigegebene Bereiche, für die Sie berechtigt sind. In keinem Bereich werden Personendaten gelesen.",
+      "areasNone": "Derzeit kein Bereich freigegeben.",
+      "privacyTitle": "Datenschutz (DSGVO)",
+      "status": {
+        "module": "Modul",
+        "key": "Anbieter",
+        "keyOk": "Aktiver Anbieter eingerichtet ({provider}); Schlüssel wird nicht angezeigt.",
+        "keyMissing": "Kein Anbieter bereit: unten Verbindungsdaten eines Anbieters eingeben und aktivieren.",
+        "consent": "Persönliche Einwilligung",
+        "consentOk": "Sie haben eingewilligt.",
+        "consentMissing": "Noch keine Einwilligung.",
+        "availability": {
+          "available": "Aktiv und Zugriff freigegeben.",
+          "inactive": "Deaktiviert.",
+          "needsApproval": "Wartet auf Zugriffsfreigabe."
+        }
+      },
+      "privacy": {
+        "noPersonal": "Werkzeuge liefern keine Personendaten: nur Summen, Zahlen und Vereinsdaten.",
+        "masking": "Registrierte Personennamen (Mitglieder, Nutzer, Schüler, Eltern) und Mitglieds-/Schülernummern sowie E-Mail-Adressen, IBANs, Telefon- und Steuernummern in Ihren Nachrichten werden vor dem Versand an die KI maskiert.",
+        "ownRights": "Jede Anfrage ist auf die Rolle des Nutzers und die Modulfreigabe des Administrators beschränkt.",
+        "noStorage": "Der Chatverlauf wird personenbezogen und AES-256-GCM-verschlüsselt gespeichert und nach 180 Tagen automatisch gelöscht. Nutzer können einzelne Chats oder alles löschen; beim Widerruf der Einwilligung wird der Verlauf gelöscht.",
+        "noChanges": "Der Assistent ändert keine Daten; Vorschläge werden nur nach Bestätigung ausgeführt.",
+        "audit": "Im Audit-Log stehen nur Metadaten: verwendete Werkzeuge, Tokenzahlen und Anzahl maskierter Werte.",
+        "provider": "Der Administrator wählt den Anbieter ausschließlich aus der zugelassenen Liste: eigener Server, Mistral (EU), Claude oder OpenAI. API-Schlüssel werden verschlüsselt in der Datenbank gespeichert und nirgends angezeigt. Der Verein muss mit dem gewählten Anbieter einen AVV/DPA abschließen.",
+        "revoke": "Jede Person willigt selbst ein und kann jederzeit widerrufen; der Administrator kann den Assistenten durch Deaktivieren des Moduls für alle stoppen."
+      },
+      "providerTitle": "KI-Anbieter",
+      "providerHelp": "Nur datenschutzrechtlich geeignete Anbieter sind aufgeführt. Cloud-APIs mit Sitz in China (DeepSeek, GLM) sind bewusst ausgeschlossen; diese Modelle nur auf dem eigenen Server. Bei einem Anbieterwechsel muss jede Person erneut einwilligen.",
+      "providerActive": "Aktiv",
+      "providerReady": "Bereit · Modell: {model}",
+      "providerMissing": "Nicht eingerichtet",
+      "providerUse": "Diesen Anbieter verwenden",
+      "providerChanged": "Anbieter geändert; Nutzer müssen erneut einwilligen.",
+      "credentialSave": "Speichern",
+      "credentialSaved": "Verbindungsdaten gespeichert (Schlüssel verschlüsselt abgelegt).",
+      "permissionsTitle": "Berechtigungen des Assistenten (je Modul)",
+      "permissionsHelp": "Wählen Sie für jedes Modul Lesen, Schreiben, Aktualisieren und Löschen einzeln. Standardmäßig ist alles deaktiviert. Schreib-, Änderungs- und Löschvorgänge schlägt der Assistent nur vor; ausgeführt werden sie erst nach Bestätigung und mit den eigenen Rechten der Person. Auch mit Leserecht werden keine Personendaten gelesen.",
+      "areasSave": "Berechtigungen speichern",
+      "areasSaved": "Berechtigungen gespeichert.",
+      "fields": {
+        "apiKey": "API-Schlüssel",
+        "apiKeyOptional": "API-Schlüssel (optional)",
+        "apiKeyKept": "Gespeicherter Schlüssel bleibt erhalten; zum Ändern neuen eingeben",
+        "keyStored": "Schlüssel verschlüsselt gespeichert; Wert wird nicht angezeigt.",
+        "keyUnreadable": "Gespeicherter Schlüssel nicht lesbar (Server-Geheimnis evtl. geändert); bitte erneut eingeben.",
+        "clearKey": "Gespeicherten Schlüssel löschen",
+        "model": "Modell",
+        "baseUrl": "Serveradresse",
+        "baseUrlHelp": "Nur Adressen im Vereinsnetz werden akzeptiert (z. B. localhost, 192.168.x.x, Docker-Dienstname)."
+      },
+      "matrix": {
+        "noTools": "Der Assistent hat für dieses Modul noch keine Werkzeuge; keine Freigabe möglich.",
+        "unsupported": "Nicht unterstützt",
+        "allow": "Erlauben",
+        "deny": "Nicht erlauben",
+        "operations": {
+          "read": "Lesen",
+          "create": "Schreiben (anlegen)",
+          "update": "Aktualisieren",
+          "delete": "Löschen"
+        }
+      },
+      "deleteHistory": "Gesamten Chatverlauf löschen",
+      "historyDeleted": "{count} Chats gelöscht."
+    },
+    "providers": {
+      "local": {
+        "name": "Eigener Server (lokales Modell)",
+        "where": "Daten verlassen den Vereinsserver nie. Strengste Option.",
+        "defaultModel": "z. B. mistral-small"
+      },
+      "mistral": {
+        "name": "Mistral AI",
+        "where": "EU (Frankreich) — Verarbeitung in der EU, AVV möglich.",
+        "defaultModel": "mistral-large-latest"
+      },
+      "anthropic": {
+        "name": "Claude (Anthropic)",
+        "where": "USA — AVV und EU-US Data Privacy Framework (DPF).",
+        "defaultModel": "claude-opus-5-5"
+      },
+      "openai": {
+        "name": "OpenAI (ChatGPT)",
+        "where": "USA — AVV, Option zur Datenresidenz in der EU.",
+        "defaultModel": "z. B. Modellname"
+      }
+    },
+    "report": {
+      "createdAt": "Erstellt am",
+      "note": "Dieser Bericht wurde vom KI-Assistenten erstellt; prüfen Sie Zahlen für offizielle Zwecke im jeweiligen Modul.",
+      "footer": "Seite {page} von {total}"
     }
   },
   "audit": {
@@ -914,7 +1310,9 @@
       "currentPassword": "Aktuelles Passwort",
       "newPassword": "Neues Passwort",
       "submit": "Passwort aktualisieren",
-      "updated": "Ihr Passwort wurde aktualisiert."
+      "updated": "Ihr Passwort wurde aktualisiert.",
+      "details": "Meine Profildaten",
+      "detailsHint": "Kontakt-, Adress-, Zahlungs- und Rechnungsdaten. Nur Sie und berechtigte Verantwortliche können sie sehen."
     },
     "errors": {
       "sessionInvalid": "Ihre Sitzung ist ungültig. Bitte melden Sie sich erneut an.",
@@ -932,6 +1330,44 @@
     "module": {
       "label": "Authentifizierung",
       "description": "Anmeldung, Sitzungsverwaltung und Passwortsicherheit."
+    },
+    "profileForm": {
+      "contact": "Kontakt",
+      "phone": "Telefon",
+      "mobile": "Mobil",
+      "address": "Adresse",
+      "street": "Straße",
+      "houseNumber": "Hausnummer",
+      "postalCode": "PLZ",
+      "city": "Ort",
+      "country": "Land",
+      "countryHint": "Zweistelliger Ländercode (z. B. DE)",
+      "payment": "Zahlungsdaten",
+      "paymentHint": "Für Zahlungen an Sie (z. B. Honorare).",
+      "accountHolder": "Kontoinhaber",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "bankName": "Bank",
+      "keepHint": "Leer lassen, um den gespeicherten Wert zu behalten.",
+      "clearIban": "Gespeicherte IBAN löschen",
+      "invoice": "Rechnungsdaten",
+      "invoiceHint": "Angaben auf Ihren Rechnungen an den Verein (z. B. als freie Lehrkraft).",
+      "businessName": "Rechnungsname / Firma",
+      "taxNumber": "Steuernummer",
+      "vatId": "USt-IdNr.",
+      "isSmallBusiness": "Kleinunternehmer (§ 19 UStG)",
+      "isSmallBusinessHint": "Aktivieren, wenn Sie ohne Umsatzsteuer abrechnen.",
+      "clearTaxNumber": "Gespeicherte Steuernummer löschen",
+      "privacy": "IBAN und Steuernummer werden verschlüsselt gespeichert und nur maskiert angezeigt.",
+      "submit": "Profil speichern",
+      "saved": "Ihr Profil wurde gespeichert.",
+      "validation": {
+        "textMax": "Dieses Feld ist zu lang.",
+        "country": "Bitte zweistelligen Ländercode in Großbuchstaben angeben (z. B. DE).",
+        "iban": "Bitte eine gültige IBAN eingeben.",
+        "bic": "Bitte eine gültige BIC eingeben (8 oder 11 Zeichen).",
+        "vatId": "Bitte eine gültige USt-IdNr. eingeben (z. B. DE123456789)."
+      }
     }
   },
   "courses": {
@@ -3972,6 +4408,17 @@
       "needsApproval": {
         "title": "Dieses Modul wartet auf Zugriffsfreigabe",
         "description": "Das Modul möchte auf Daten anderer Module zugreifen. Es ist gesperrt, bis die Verwaltung den Zugriff in der Modulverwaltung freigibt."
+      }
+    },
+    "releases": {
+      "title": "Versionshinweise",
+      "description": "Änderungen am System nach Version. Aktuelle Version: v{version}.",
+      "current": "Aktuell",
+      "types": {
+        "feature": "Neu",
+        "improvement": "Verbesserung",
+        "fix": "Korrektur",
+        "security": "Sicherheit"
       }
     }
   },

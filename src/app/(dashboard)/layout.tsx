@@ -3,6 +3,7 @@ import { redirect } from "next/navigation";
 
 import type { SessionUser } from "@/modules/auth";
 import { requireUser, signOutAction } from "@/modules/auth/server";
+import { AiAssistantSlot } from "@/modules/ai/ui";
 import { listUsableModuleKeys } from "@/modules/system/server";
 
 import {
@@ -45,10 +46,14 @@ export default async function DashboardLayout({
           userEmail={user.email}
           onSignOut={signOutAction}
         />
-        <div className="flex min-w-0 flex-1 flex-col">
-          <MobileHeader />
-          <main className="flex-1 px-4 py-6 md:px-6">{children}</main>
-        </div>
+        {/* AI asistanı içerik sütununu sarar: altta yüzen giriş çubuğu, sağda sohbet sütunu.
+            Modül kapalıysa, rol izinli değilse sütun olduğu gibi döner. */}
+        <AiAssistantSlot user={user}>
+          <div className="flex min-w-0 flex-1 flex-col">
+            <MobileHeader />
+            <main className="flex-1 px-4 py-6 md:px-6">{children}</main>
+          </div>
+        </AiAssistantSlot>
         <MobileSidebar
           role={user.role}
           activeModuleKeys={activeModuleKeys}
