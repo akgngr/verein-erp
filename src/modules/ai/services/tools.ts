@@ -23,6 +23,7 @@ import { getTask, listTasks, TASK_DEFAULT_SORT, TASK_SORTABLE_FIELDS, tasksPermi
 
 import type { AiProposal } from "../types";
 import { getAiPermissions, isAllowed, type AiOperation } from "./permissions";
+import { saveReport } from "./reports";
 import { EXTENDED_TOOLS } from "./tools-extended";
 import { define, euros, YEAR_INPUT, yearSchema, type ToolContext } from "./tool-kit";
 
@@ -335,12 +336,35 @@ const BASE_TOOLS = [
   }),
 ];
 
-const TOOLS = [...BASE_TOOLS, ...EXTENDED_TOOLS];
+const AI_TOOLS = [
+  define({
+    name: "create_pdf_report",
+    module: "ai",
+    operation: "read",
+    allowed: () => true,
+    description:
+      "Creates a PDF (with the association letterhead) from markdown you provide — headings, paragraphs, lists and tables — and returns a download link. Use it whenever the user asks for a PDF of an answer, table or summary. Put the complete content into markdown; it does not fetch any data itself.", // i18n-ignore (model-facing tool text)
+    schema: z.object({ title: z.string().min(1).max(150), markdown: z.string().min(1).max(60_000) }),
+    inputSchema: {
+      type: "object",
+      properties: { title: { type: "string" }, markdown: { type: "string", description: "Full report content in markdown (tables allowed)" } }, // i18n-ignore (model-facing tool text)
+      required: ["title", "markdown"],
+      additionalProperties: false,
+    },
+    run: async ({ title, markdown }, { user, restore }) => {
+      const id = await saveReport(user.id, restore(title), restore(markdown));
+      return { url: `/api/ai/reports/${id}/pdf`, note: "Give this link to the user as a markdown link." }; // i18n-ignore (model-facing tool text)
+    },
+  }),
+];
+
+const TOOLS = [...BASE_TOOLS, ...EXTENDED_TOOLS, ...AI_TOOLS];
 
 /** Bu kullanıcı için şu an kullanılabilir araçlar (modül izni + kullanıcı yetkisi). */
 export async function availableTools(user: SessionUser) {
   const [usable, matrix] = await Promise.all([listUsableModuleKeys().then((keys) => new Set(keys)), getAiPermissions()]);
-  return TOOLS.filter((tool) => isAllowed(matrix, tool.module, tool.operation) && usable.has(tool.module) && tool.allowed(user));
+  // "ai" modülünün kendi araçları (ör. PDF raporu) başka modülün verisine erişmez; matristen bağımsızdır.
+  return TOOLS.filter((tool) => (tool.module === "ai" || isAllowed(matrix, tool.module, tool.operation)) && usable.has(tool.module) && tool.allowed(user));
 }
 
 /** Matristeki her modül için asistanın gerçekten aracı olan işlemler (ayarlar ekranı). */
