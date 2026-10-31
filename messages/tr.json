@@ -4504,6 +4504,23 @@
     "access": {
       "members": "Görev sorumlusu seçmek için üye listesini okur.",
       "meetings": "Görevi bir toplantıya bağlamak için toplantı listesini okur."
+    },
+    "ai": {
+      "create": {
+        "kind": "Görev önerisi",
+        "confirm": "Görevi oluştur",
+        "done": "Görev oluşturuldu."
+      },
+      "complete": {
+        "kind": "Görevi tamamlama",
+        "confirm": "Tamamlandı olarak işaretle",
+        "done": "Görev tamamlandı."
+      },
+      "delete": {
+        "kind": "Görevi silme",
+        "confirm": "Görevi sil",
+        "done": "Görev silindi."
+      }
     }
   },
   "users": {

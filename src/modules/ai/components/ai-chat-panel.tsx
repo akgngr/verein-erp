@@ -54,8 +54,8 @@ function inline(text: string): ReactNode[] {
 /** Öneri kartındaki kısa ayrıntılar (öncelik, tarih, yer …). */
 function proposalDetails(proposal: AiProposal, t: ReturnType<typeof useTranslations>): string[] {
   switch (proposal.kind) {
-    case "createTask":
-      return [t(`proposal.priority.${proposal.priority}`), proposal.dueDate ?? ""].filter(Boolean);
+    case "module":
+      return proposal.details;
     case "createEvent":
       return [proposal.startDate.replace("T", " "), proposal.isOnline ? t("proposal.online") : (proposal.location ?? "")].filter(Boolean);
     case "createDocument":
@@ -157,6 +157,12 @@ export function AiChatPanel({
 }) {
   const t = useTranslations("ai.panel");
   const tProvider = useTranslations("ai.providers");
+  const tRoot = useTranslations();
+  /** Kart metinleri: modül önerilerinde modülün kendi çevirisi (<modül>.ai.<eylem>.kind|confirm|done). */
+  const proposalText = (proposal: AiProposal, part: "kinds" | "confirm" | "done") =>
+    proposal.kind === "module"
+      ? tRoot(`${proposal.module}.ai.${proposal.action}.${part === "kinds" ? "kind" : part}`)
+      : t(`proposal.${part}.${proposal.kind}`);
   const router = useRouter();
   const [open, setOpen] = useState(initialState.open);
   const [width, setWidth] = useState(initialState.width);
@@ -292,7 +298,7 @@ export function AiChatPanel({
       return;
     }
     setDone(new Set(done).add(key));
-    addToast({ title: t(`proposal.done.${proposal.kind}`), color: "success" });
+    addToast({ title: proposalText(proposal, "done"), color: "success" });
   };
 
   return (
@@ -512,7 +518,7 @@ export function AiChatPanel({
                           className="w-[90%] rounded-medium border border-primary-200 bg-primary-50/50 p-3 dark:border-primary-500/30 dark:bg-primary-500/10"
                         >
                           <p className="text-tiny font-semibold uppercase text-primary">
-                            {t(`proposal.kinds.${proposal.kind}`)}
+                            {proposalText(proposal, "kinds")}
                           </p>
                           <p className="font-medium">{proposal.title}</p>
                           {"description" in proposal && proposal.description ? (
@@ -530,7 +536,7 @@ export function AiChatPanel({
                             }
                             onPress={() => confirmProposal(key, proposal)}
                           >
-                            {done.has(key) ? t("proposal.applied") : turn.restored ? t("proposal.restored") : t(`proposal.confirm.${proposal.kind}`)}
+                            {done.has(key) ? t("proposal.applied") : turn.restored ? t("proposal.restored") : proposalText(proposal, "confirm")}
                           </Button>
                         </div>
                       );

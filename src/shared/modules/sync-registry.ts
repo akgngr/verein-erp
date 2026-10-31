@@ -5,6 +5,7 @@ const ROOT_DIR = process.cwd();
 const MODULES_DIR = path.join(ROOT_DIR, "src", "modules");
 const REGISTRY_FILE = path.join(ROOT_DIR, "src", "registry.ts");
 const CARDS_FILE = path.join(ROOT_DIR, "src", "dashboard-cards.ts");
+const AI_FILE = path.join(ROOT_DIR, "src", "ai-registry.ts");
 
 // Sabit öncelikli sıralama (çekirdek ve resmi modüller üstte)
 const PRIORITY_ORDER = [
@@ -84,6 +85,7 @@ export const registry: ModuleConfig[] = allModules;
   }
 
   syncDashboardCards(validModules);
+  syncModuleAi(validModules);
 
   return { registered: validModules };
 }
@@ -115,5 +117,31 @@ export const dashboardCards: { moduleKey: string; cards: DashboardCardDefinition
     if (current !== content) fs.writeFileSync(CARDS_FILE, content, "utf8");
   } catch (err) {
     console.error("[sync-registry] Failed to write src/dashboard-cards.ts:", err);
+  }
+}
+
+/**
+ * Asistan kaydı: `ai.ts` dosyası olan modüllerin `ai` sözleşmesini src/ai-registry.ts içinde
+ * toplar (bkz. src/shared/ai/define.ts). AI modülü araçları ve onay eylemlerini yalnızca buradan alır.
+ */
+function syncModuleAi(modules: string[]): void {
+  const withAi = modules.filter((mod) => fs.existsSync(path.join(MODULES_DIR, mod, "ai.ts")));
+  const imports = withAi.map((mod) => `import { ai as ${mod}Ai } from "@/modules/${mod}/ai";`).join("\n");
+  const listItems = withAi.map((mod) => `  ${mod}Ai,`).join("\n");
+
+  const content = `// Bu dosya syncModuleRegistry tarafından otomatik üretilir (pnpm module:sync); elle düzenlemeyin.
+import "server-only";
+
+import type { ModuleAi } from "@/shared/ai/define";
+${imports ? `\n${imports}\n` : ""}
+/** Modüllerin asistana sunduğu araçlar ve onay eylemleri (src/modules/<modül>/ai.ts). */
+export const moduleAiRegistry: ModuleAi[] = ${listItems ? `[\n${listItems}\n]` : "[]"};
+`;
+
+  try {
+    const current = fs.existsSync(AI_FILE) ? fs.readFileSync(AI_FILE, "utf8") : "";
+    if (current !== content) fs.writeFileSync(AI_FILE, content, "utf8");
+  } catch (err) {
+    console.error("[sync-registry] Failed to write src/ai-registry.ts:", err);
   }
 }

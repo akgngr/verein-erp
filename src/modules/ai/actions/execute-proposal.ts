@@ -10,19 +10,17 @@ import { changeStatusAction as changeDocumentStatusAction, createDocumentAction,
 import { createEventAction } from "@/modules/events/server";
 import { createInventoryAction, deleteInventoryAction, updateInventoryStatusAction } from "@/modules/inventory/server";
 import { changeMeetingStatusAction, createMeetingAction, deleteMeetingAction } from "@/modules/meetings/server";
-import { completeTaskAction, createTaskAction, deleteTaskAction } from "@/modules/tasks/server";
+import { moduleAiRegistry } from "@/ai-registry";
 
 import { aiPermissions } from "../permissions";
-import { getAiPermissions, isAllowed } from "../services/permissions";
+import { getAiPermissions, isAllowed, type AiOperation } from "../services/permissions";
 import { PROPOSAL_PERMISSION } from "../services/tools";
 import type { AiProposal } from "../types";
 
 const id = z.string().min(1).max(100);
 const title = z.string().max(400);
 const proposalSchema = z.discriminatedUnion("kind", [
-  z.object({ kind: z.literal("createTask"), title: z.string().min(1).max(200), description: z.string().max(2000).nullable(), priority: z.enum(["LOW", "NORMAL", "HIGH"]), dueDate: z.string().nullable() }),
-  z.object({ kind: z.literal("completeTask"), taskId: id, title }),
-  z.object({ kind: z.literal("deleteTask"), taskId: id, title }),
+  z.object({ kind: z.literal("module"), module: id, action: id, operation: z.enum(["read", "create", "update", "delete"]), title, details: z.array(z.string().max(400)).max(10), payload: z.unknown() }),
   z.object({
     kind: z.literal("createEvent"),
     title: z.string().min(3).max(200),
@@ -47,18 +45,30 @@ const proposalSchema = z.discriminatedUnion("kind", [
   z.object({ kind: z.literal("deleteCourse"), courseId: id, title }),
 ]);
 
+const findModuleAction = (module: string, action: string) =>
+  moduleAiRegistry.find((entry) => entry.module === module)?.actions[action];
+
+/** Önerinin izin matrisi anahtarı: modül önerilerinde işlem, modülün eylem tanımından okunur. */
+function requiredPermission(proposal: AiProposal): { module: string; operation: AiOperation } | null {
+  if (proposal.kind !== "module") return PROPOSAL_PERMISSION[proposal.kind];
+  const action = findModuleAction(proposal.module, proposal.action);
+  return action ? { module: proposal.module, operation: action.operation } : null;
+}
+
 type Outcome = { ok: boolean; error?: string };
 const isoDay = (value: Date | null) => (value ? value.toISOString().slice(0, 10) : "");
 
 /** Modül eylemini çağırır; her modül eylemi kullanıcının KENDİ rol yetkisini ayrıca denetler. */
 async function apply(proposal: AiProposal): Promise<Outcome> {
   switch (proposal.kind) {
-    case "createTask":
-      return createTaskAction({ title: proposal.title, description: proposal.description, status: "OPEN", priority: proposal.priority, dueDate: proposal.dueDate });
-    case "completeTask":
-      return completeTaskAction({ id: proposal.taskId });
-    case "deleteTask":
-      return deleteTaskAction({ id: proposal.taskId });
+    case "module": {
+      // İşlem türü istemciden değil, modülün kendi eylem tanımından gelir (sahteciliğe karşı).
+      const action = findModuleAction(proposal.module, proposal.action);
+      if (!action) return { ok: false, error: "common.errors.unexpected" };
+      const payload = action.schema.safeParse(proposal.payload);
+      if (!payload.success) return { ok: false, error: "common.errors.formInvalid" };
+      return action.execute(payload.data);
+    }
     case "createEvent": {
       const created = await createEventAction({ title: proposal.title, description: proposal.description, type: proposal.type, status: "DRAFT", startDate: proposal.startDate, endDate: proposal.endDate, location: proposal.location, isOnline: proposal.isOnline });
       return { ok: created.success, error: created.error ?? undefined };
@@ -143,11 +153,12 @@ export async function executeAiProposalAction(input: unknown): Promise<ActionRes
     permission: { definition: aiPermissions, action: "view" },
     schema: proposalSchema,
     handler: async ({ input, audit }) => {
-      const required = PROPOSAL_PERMISSION[input.kind];
+      const required = requiredPermission(input as AiProposal);
+      if (!required) throw new ActionError("common.errors.unexpected");
       if (!isAllowed(await getAiPermissions(), required.module, required.operation)) throw new ActionError("ai.errors.permissionRevoked");
       const result = await apply(input as AiProposal);
       if (!result.ok) throw new ActionError(result.error ?? "common.errors.unexpected");
-      await audit({ action: "AI_PROPOSAL_APPLIED", entity: "AiAssistant", entityId: undefined, after: { kind: input.kind, module: required.module, operation: required.operation } });
+      await audit({ action: "AI_PROPOSAL_APPLIED", entity: "AiAssistant", entityId: undefined, after: { kind: input.kind, action: input.kind === "module" ? input.action : undefined, module: required.module, operation: required.operation } });
       return undefined;
     },
   });
