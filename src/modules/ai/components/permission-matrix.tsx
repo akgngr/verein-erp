@@ -23,7 +23,7 @@ const isRisky = (module: string, operation: Operation) => operation === "update"
 /** İzin çipinin rengi: açık izinler işlem türüne göre renkli, kapalılar gri. */
 const CHIP_COLOR: Record<Operation, "primary" | "success" | "warning" | "danger"> = { read: "primary", create: "success", update: "warning", delete: "danger" };
 
-export type PermissionModule = { key: string; label: string; description: string; icon: ReactNode };
+export type PermissionModule = { key: string; label: string; description: string; icon: ReactNode; availability: "available" | "inactive" | "needsApproval" };
 
 type Matrix = Record<string, Operation[]>;
 
@@ -126,11 +126,14 @@ export function PermissionMatrix({
               className="flex flex-col gap-3 rounded-large border border-default-200 bg-content1 p-4 text-left transition hover:border-primary hover:shadow-medium focus-visible:outline-2 focus-visible:outline-primary"
             >
               <ModuleHead module={module} />
+              {module.availability !== "available" ? <ModuleStatus availability={module.availability} /> : null}
               <div className="flex flex-wrap gap-1.5">
                 {OPERATIONS.filter((op) => available.includes(op)).map((op) => {
-                  const on = allowed.includes(op);
+                  // Modül kullanılamıyorsa izin açık olsa da etkin değildir: gri ve üstü çizili.
+                  const on = allowed.includes(op) && module.availability === "available";
+                  const pausedOn = allowed.includes(op) && module.availability !== "available";
                   return (
-                    <Chip key={op} size="sm" variant={on ? "flat" : "bordered"} color={on ? CHIP_COLOR[op] : "default"} className={on ? "" : "text-default-400"}>
+                    <Chip key={op} size="sm" variant={on ? "flat" : "bordered"} color={on ? CHIP_COLOR[op] : "default"} className={on ? "" : pausedOn ? "text-default-400 line-through" : "text-default-400"}>
                       {t(`short.${op}`)}
                     </Chip>
                   );
@@ -154,6 +157,7 @@ export function PermissionMatrix({
                   <ModuleHead module={open} />
                 </ModalHeader>
                 <ModalBody className="gap-4">
+                  {open.availability !== "available" ? <ModuleStatus availability={open.availability} detailed /> : null}
                   <div className="flex gap-2 rounded-medium bg-default-100 p-3 text-small text-default-600">
                     <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
                     <div className="flex flex-col gap-1">
@@ -231,6 +235,27 @@ export function PermissionMatrix({
           await save(allSupported);
         }}
       />
+    </div>
+  );
+}
+
+/** Modül kullanılamıyorsa: neden ve nereden açılacağı (Modül Yönetimi). */
+function ModuleStatus({ availability, detailed = false }: { availability: "inactive" | "needsApproval"; detailed?: boolean }) {
+  const t = useTranslations("ai.settings.matrix.status");
+  return (
+    <div className="flex items-start gap-2 rounded-medium bg-warning-50 p-2 text-tiny text-warning-700 dark:bg-warning-500/10 dark:text-warning-400">
+      <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
+      <span>
+        {t(availability)}
+        {detailed ? (
+          <>
+            {" "}
+            <a href="/ayarlar/moduller" className="font-medium underline">
+              {t("link")}
+            </a>
+          </>
+        ) : null}
+      </span>
     </div>
   );
 }
