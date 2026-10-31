@@ -91,5 +91,22 @@
   "access": {
     "members": "Liest die Mitgliederliste, um Verantwortliche auszuwählen.",
     "meetings": "Liest die Sitzungsliste, um Aufgaben einer Sitzung zuzuordnen."
+  },
+  "ai": {
+    "create": {
+      "kind": "Aufgabenvorschlag",
+      "confirm": "Aufgabe anlegen",
+      "done": "Aufgabe angelegt."
+    },
+    "complete": {
+      "kind": "Aufgabe abschließen",
+      "confirm": "Als erledigt markieren",
+      "done": "Aufgabe erledigt."
+    },
+    "delete": {
+      "kind": "Aufgabe löschen",
+      "confirm": "Aufgabe löschen",
+      "done": "Aufgabe gelöscht."
+    }
   }
 }

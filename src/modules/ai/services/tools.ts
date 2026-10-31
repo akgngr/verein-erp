@@ -3,7 +3,6 @@ import "server-only";
 import { z } from "zod";
 
 import { can } from "@/shared/permissions/define";
-import { parseListParams } from "@/shared/list-params";
 
 import type { SessionUser } from "@/modules/auth";
 import { accountingPermissions } from "@/modules/accounting";
@@ -19,7 +18,7 @@ import { getDonationStats } from "@/modules/donations/server";
 import { meetingsPermissions } from "@/modules/meetings";
 import { getMeetingStats } from "@/modules/meetings/server";
 import { listUsableModuleKeys } from "@/modules/system/server";
-import { getTask, listTasks, TASK_DEFAULT_SORT, TASK_SORTABLE_FIELDS, tasksPermissions } from "@/modules/tasks/server";
+import { moduleAiRegistry } from "@/ai-registry";
 
 import type { AiProposal } from "../types";
 import { getAiPermissions, isAllowed, type AiOperation } from "./permissions";
@@ -39,10 +38,7 @@ import { define, euros, YEAR_INPUT, yearSchema, type ToolContext } from "./tool-
 export type AssistantProposal = AiProposal;
 
 /** Önerinin hangi modül + işlem iznine bağlı olduğu (yürütmede yeniden denetlenir). */
-export const PROPOSAL_PERMISSION: Record<AiProposal["kind"], { module: string; operation: AiOperation }> = {
-  createTask: { module: "tasks", operation: "create" },
-  completeTask: { module: "tasks", operation: "update" },
-  deleteTask: { module: "tasks", operation: "delete" },
+export const PROPOSAL_PERMISSION: Record<Exclude<AiProposal["kind"], "module">, { module: string; operation: AiOperation }> = {
   createEvent: { module: "events", operation: "create" },
   createDocument: { module: "documents", operation: "create" },
   changeDocumentStatus: { module: "documents", operation: "update" },
@@ -142,30 +138,6 @@ const BASE_TOOLS = [
     },
   }),
   define({
-    name: "list_open_tasks",
-    operation: "read",
-    module: "tasks",
-    allowed: (user) => can(user.role, tasksPermissions, "view"),
-    description: "Open and in-progress tasks: id, title, status, priority, due date, overdue flag. No assignee data. Use the id for propose_complete_task / propose_delete_task. mine=true returns only the current user's tasks.",
-    schema: z.object({ mine: z.boolean() }),
-    inputSchema: {
-      type: "object",
-      properties: { mine: { type: "boolean", description: "Only tasks assigned to the current user" } }, // i18n-ignore (model-facing tool text)
-      required: ["mine"],
-      additionalProperties: false,
-    },
-    run: async ({ mine }, { user }) => {
-      const params = parseListParams(
-        { pageSize: "50", ...(mine ? { mine: "1" } : {}) },
-        { sortableFields: TASK_SORTABLE_FIELDS, defaultSort: TASK_DEFAULT_SORT, filterKeys: ["status", "priority", "memberId", "mine", "overdue"] },
-      );
-      const result = await listTasks(params, user);
-      return result.rows
-        .filter((task) => task.status === "OPEN" || task.status === "IN_PROGRESS")
-        .map((task) => ({ id: task.id, title: task.title, status: task.status, priority: task.priority, dueDate: task.dueDate, overdue: task.isOverdue }));
-    },
-  }),
-  define({
     name: "list_courses",
     operation: "read",
     module: "courses",
@@ -203,35 +175,6 @@ const BASE_TOOLS = [
         annual_report_pdf: `/api/accounting/reports/annual/pdf?year=${year}`,
       }[report];
       return { url, note: "Give this link to the user; it opens in their browser with their own session." };
-    },
-  }),
-  define({
-    name: "propose_task",
-    operation: "create",
-    module: "tasks",
-    allowed: (user) => can(user.role, tasksPermissions, "create"),
-    description:
-      "PROPOSES a new task to the user. Nothing is created: the user confirms it from a card in the panel, with their own permissions. Do not put personal names or contact details in it.",
-    schema: z.object({
-      title: z.string().min(1).max(200),
-      description: z.string().max(2000).nullable(),
-      priority: z.enum(["LOW", "NORMAL", "HIGH"]),
-      dueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).nullable(),
-    }),
-    inputSchema: {
-      type: "object",
-      properties: {
-        title: { type: "string" },
-        description: { type: ["string", "null"] },
-        priority: { type: "string", enum: ["LOW", "NORMAL", "HIGH"] },
-        dueDate: { type: ["string", "null"], description: "YYYY-MM-DD" },
-      },
-      required: ["title", "description", "priority", "dueDate"],
-      additionalProperties: false,
-    },
-    run: async (input, { proposals }) => {
-      proposals.push({ kind: "createTask", ...input });
-      return { status: "proposed", note: "A confirmation card was shown to the user; the task is not created until they confirm." };
     },
   }),
   define({
@@ -304,36 +247,6 @@ const BASE_TOOLS = [
       return { status: "proposed", note: "A confirmation card was shown to the user; nothing is created until they confirm." }; // i18n-ignore (model-facing tool text)
     },
   }),
-  define({
-    name: "propose_complete_task",
-    module: "tasks",
-    operation: "update",
-    allowed: (user) => can(user.role, tasksPermissions, "update"),
-    description: "PROPOSES marking a task as done (id from list_open_tasks). Nothing changes until the user confirms.", // i18n-ignore (model-facing tool text)
-    schema: z.object({ taskId: z.string().min(1).max(100) }),
-    inputSchema: { type: "object", properties: { taskId: { type: "string" } }, required: ["taskId"], additionalProperties: false },
-    run: async ({ taskId }, { proposals }) => {
-      const task = await getTask(taskId);
-      if (!task) return { status: "not_found" };
-      proposals.push({ kind: "completeTask", taskId: task.id, title: task.title });
-      return { status: "proposed" };
-    },
-  }),
-  define({
-    name: "propose_delete_task",
-    module: "tasks",
-    operation: "delete",
-    allowed: (user) => can(user.role, tasksPermissions, "delete"),
-    description: "PROPOSES deleting a task (id from list_open_tasks). Nothing is deleted until the user confirms.", // i18n-ignore (model-facing tool text)
-    schema: z.object({ taskId: z.string().min(1).max(100) }),
-    inputSchema: { type: "object", properties: { taskId: { type: "string" } }, required: ["taskId"], additionalProperties: false },
-    run: async ({ taskId }, { proposals }) => {
-      const task = await getTask(taskId);
-      if (!task) return { status: "not_found" };
-      proposals.push({ kind: "deleteTask", taskId: task.id, title: task.title });
-      return { status: "proposed" };
-    },
-  }),
 ];
 
 const AI_TOOLS = [
@@ -358,7 +271,34 @@ const AI_TOOLS = [
   }),
 ];
 
-const TOOLS = [...BASE_TOOLS, ...EXTENDED_TOOLS, ...AI_TOOLS];
+/**
+ * Modül AI standardı: her modülün ai.ts dosyasındaki araçlar (src/ai-registry.ts üretilir).
+ * Araç `propose` çağırdığında genel bir onay kartı oluşur; eylem onayda yeniden denetlenir.
+ */
+const MODULE_TOOLS = moduleAiRegistry.flatMap((entry) =>
+  entry.tools.map((tool) =>
+    define({
+      name: tool.name,
+      module: entry.module,
+      operation: tool.operation,
+      allowed: (user) => tool.allowed(user),
+      description: tool.description,
+      schema: tool.schema,
+      inputSchema: tool.inputSchema,
+      run: (input, { user, proposals }) =>
+        tool.run(input, {
+          user,
+          propose: (proposal) => {
+            const action = entry.actions[proposal.action];
+            if (!action) throw new Error(`[ai] ${entry.module}: bilinmeyen eylem ${proposal.action}`); // i18n-ignore (geliştirici hatası)
+            proposals.push({ kind: "module", module: entry.module, action: proposal.action, operation: action.operation, title: proposal.title, details: proposal.details ?? [], payload: proposal.payload });
+          },
+        }),
+    }),
+  ),
+);
+
+const TOOLS = [...BASE_TOOLS, ...EXTENDED_TOOLS, ...AI_TOOLS, ...MODULE_TOOLS];
 
 /** Bu kullanıcı için şu an kullanılabilir araçlar (modül izni + kullanıcı yetkisi). */
 export async function availableTools(user: SessionUser) {

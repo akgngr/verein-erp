@@ -3,9 +3,8 @@
  * executeAiProposalAction uygular). Kişi adı içermez; başlıklar kaydın kendi başlığıdır.
  */
 export type AiProposal =
-  | { kind: "createTask"; title: string; description: string | null; priority: "LOW" | "NORMAL" | "HIGH"; dueDate: string | null }
-  | { kind: "completeTask"; taskId: string; title: string }
-  | { kind: "deleteTask"; taskId: string; title: string }
+  /** Modül AI standardı (src/modules/<modül>/ai.ts): genel onay kartı. */
+  | { kind: "module"; module: string; action: string; operation: "read" | "create" | "update" | "delete"; title: string; details: string[]; payload: unknown }
   | {
       kind: "createEvent";
       title: string;
