@@ -105,5 +105,11 @@
   "module": {
     "label": "Denetim Kayıtları",
     "description": "Sistem işlemlerinin değiştirilemez güvenlik ve denetim logları."
+  },
+  "permissions": {
+    "audit": {
+      "label": "Güvenlik & Değişiklik Günlüğü",
+      "description": "Değiştirilemez sistemsel denetim izleri ve güvenlik kayıtları."
+    }
   }
 }

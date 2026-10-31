@@ -108,5 +108,11 @@
       "confirm": "Görevi sil",
       "done": "Görev silindi."
     }
+  },
+  "permissions": {
+    "tasks": {
+      "label": "Görevler",
+      "description": "Görev oluşturma, atama ve takip."
+    }
   }
 }

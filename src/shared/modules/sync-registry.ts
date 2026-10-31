@@ -6,6 +6,7 @@ const MODULES_DIR = path.join(ROOT_DIR, "src", "modules");
 const REGISTRY_FILE = path.join(ROOT_DIR, "src", "registry.ts");
 const CARDS_FILE = path.join(ROOT_DIR, "src", "dashboard-cards.ts");
 const AI_FILE = path.join(ROOT_DIR, "src", "ai-registry.ts");
+const PERMISSIONS_FILE = path.join(ROOT_DIR, "src", "permissions-registry.ts");
 
 // Sabit öncelikli sıralama (çekirdek ve resmi modüller üstte)
 const PRIORITY_ORDER = [
@@ -86,6 +87,7 @@ export const registry: ModuleConfig[] = allModules;
 
   syncDashboardCards(validModules);
   syncModuleAi(validModules);
+  syncPermissionResources(validModules);
 
   return { registered: validModules };
 }
@@ -143,5 +145,42 @@ export const moduleAiRegistry: ModuleAi[] = ${listItems ? `[\n${listItems}\n]` :
     if (current !== content) fs.writeFileSync(AI_FILE, content, "utf8");
   } catch (err) {
     console.error("[sync-registry] Failed to write src/ai-registry.ts:", err);
+  }
+}
+
+/**
+ * İzin kaynakları kaydı: her modülün `permissions.ts` dosyasındaki tüm definePermissions
+ * çıktılarını src/permissions-registry.ts içinde toplar. "Roller ve İzinler" ekranı ve rol
+ * politikası kaynakları buradan okur; yeni modülün izinleri elle eklenmeden görünür.
+ */
+function syncPermissionResources(modules: string[]): void {
+  const withPermissions = modules.filter((mod) => fs.existsSync(path.join(MODULES_DIR, mod, "permissions.ts")));
+  const imports = withPermissions.map((mod) => `import * as ${mod}PermissionExports from "@/modules/${mod}/permissions";`).join("\n");
+  const listItems = withPermissions.map((mod) => `  { moduleKey: "${mod}", definitions: definitionsOf(${mod}PermissionExports) },`).join("\n");
+
+  const content = `// Bu dosya syncModuleRegistry tarafından otomatik üretilir (pnpm module:sync); elle düzenlemeyin.
+import type { PermissionDefinition } from "@/shared/permissions/define";
+import { settingsPermissions, systemPermissions } from "@/shared/permissions/system";
+${imports ? `\n${imports}\n` : ""}
+const isDefinition = (value: unknown): value is PermissionDefinition =>
+  typeof value === "object" && value !== null && "resource" in value && "grants" in value;
+const definitionsOf = (exports: Record<string, unknown>) => Object.values(exports).filter(isDefinition);
+
+/** Modül → izin kaynakları (definePermissions). Sistem ayarları "system" altında. */
+export const permissionResources: { moduleKey: string; definitions: PermissionDefinition[] }[] = [
+${listItems}
+  { moduleKey: "system", definitions: [systemPermissions, settingsPermissions] },
+].map((entry, index, all) => ({
+  // Aynı kaynak birden fazla yerde dışa aktarılmışsa yalnızca ilk görüldüğü modülde listelenir.
+  ...entry,
+  definitions: entry.definitions.filter((definition) => !all.slice(0, index).some((other) => other.definitions.some((seen) => seen.resource === definition.resource))),
+}));
+`;
+
+  try {
+    const current = fs.existsSync(PERMISSIONS_FILE) ? fs.readFileSync(PERMISSIONS_FILE, "utf8") : "";
+    if (current !== content) fs.writeFileSync(PERMISSIONS_FILE, content, "utf8");
+  } catch (err) {
+    console.error("[sync-registry] Failed to write src/permissions-registry.ts:", err);
   }
 }

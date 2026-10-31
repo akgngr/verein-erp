@@ -108,5 +108,11 @@
       "confirm": "Aufgabe löschen",
       "done": "Aufgabe gelöscht."
     }
+  },
+  "permissions": {
+    "tasks": {
+      "label": "Aufgaben",
+      "description": "Aufgaben anlegen, zuweisen und verfolgen."
+    }
   }
 }

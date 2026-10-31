@@ -65,11 +65,14 @@
     "selfDeactivate": "Sie können sich nicht selbst deaktivieren.",
     "lastAdmin": "Im System muss mindestens ein aktiver Administrator verbleiben.",
     "selfDemote": "Sie können Ihre eigene Rolle nicht herabstufen.",
-    "selfDelete": "Sie können sich nicht selbst löschen."
+    "selfDelete": "Sie können sich nicht selbst löschen.",
+    "roleUnavailable": "Diese Rolle kann nicht zugewiesen werden: Sie existiert nicht oder ihr Modul ist nicht aktiv.",
+    "adminOnly": "Nur ein Administrator kann die Administratorrolle vergeben oder ändern."
   },
   "validation": {
     "nameRequired": "Name ist erforderlich.",
-    "nameMax": "Der Name darf höchstens 100 Zeichen lang sein."
+    "nameMax": "Der Name darf höchstens 100 Zeichen lang sein.",
+    "roleRequired": "Bitte eine Rolle wählen."
   },
   "matrix": {
     "title": "Rollen- und Berechtigungsverwaltung",
@@ -129,11 +132,6 @@
         "label": "Leser",
         "shortDesc": "Darf grundlegende Schriftgut- und Sitzungsdaten einsehen.",
         "legalContext": "Keine Änderungsrechte und kein Einblick in Finanzdaten."
-      },
-      "TEACHER": {
-        "label": "Lehrkraft (Öğretmen)",
-        "shortDesc": "Nur eigene Kurse sowie Anwesenheit, Noten und Lernfortschritt der eigenen Schüler.",
-        "legalContext": "Kein Zugriff auf Kursgebühren und Vereinsdaten; Schülerdaten werden gemäß DSGVO nur zu Unterrichtszwecken verarbeitet."
       }
     },
     "modules": {
@@ -209,5 +207,71 @@
   "module": {
     "label": "Benutzer",
     "description": "Benutzerkonten, Rollen und Zugriffsrechte."
+  },
+  "permissions": {
+    "users": {
+      "label": "Benutzerkonten",
+      "description": "Systembenutzer, Anmeldekonten und Passwort-Zurücksetzung."
+    }
+  },
+  "access": {
+    "system": "Liest installierte und aktive Module, um zu prüfen, ob Modulrollen (z. B. Lehrkraft) verfügbar sind."
+  },
+  "roles": {
+    "newRole": "Neue Rolle",
+    "kinds": {
+      "system": "Systemrollen",
+      "module": "Modulrollen",
+      "custom": "Eigene Rollen"
+    },
+    "kind": {
+      "system": "Systemrolle",
+      "module": "Modulrolle",
+      "custom": "Eigene Rolle"
+    },
+    "kindModule": "Modulrolle: {module}",
+    "summary": "{users} Benutzer · {permissions} Berechtigungen",
+    "unavailable": "Das Modul dieser Rolle ist nicht aktiv: Die Rolle kann nicht vergeben werden, und Benutzer mit dieser Rolle haben keine Berechtigungen.",
+    "locked": "Gesperrt",
+    "lockedHint": "Die Administratorrolle ist gesperrt; sie hat alle Rechte und kann nicht geändert werden.",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "reset": "Auf Standard zurücksetzen",
+    "search": "Modul oder Berechtigung suchen …",
+    "customized": "Geändert",
+    "deleteTitle": "Rolle löschen",
+    "deleteMessage": "Rolle „{role}“ löschen? Rollen mit zugewiesenen Benutzern können nicht gelöscht werden.",
+    "resetTitle": "Standardberechtigungen wiederherstellen",
+    "resetMessage": "Alle Änderungen an der Rolle „{role}“ verwerfen und die Standardberechtigungen der Module wiederherstellen?",
+    "deleted": "Rolle gelöscht.",
+    "resetDone": "Standardberechtigungen wiederhergestellt.",
+    "created": "Rolle angelegt.",
+    "updated": "Rolle aktualisiert.",
+    "editTitle": "Rolle bearbeiten",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "fields": {
+      "label": "Rollenname",
+      "labelPlaceholder": "z. B. Kurskoordination",
+      "description": "Kurzbeschreibung",
+      "descriptionPlaceholder": "Was macht diese Rolle?",
+      "color": "Farbe",
+      "sample": "Beispiel",
+      "copyFrom": "Berechtigungen kopieren",
+      "copyFromNone": "Leer beginnen (keine Berechtigungen)",
+      "copyFromHint": "Die aktuellen Berechtigungen der gewählten Rolle werden übernommen; Sie können sie danach ändern."
+    },
+    "validation": {
+      "labelMin": "Der Rollenname muss mindestens 2 Zeichen haben.",
+      "labelMax": "Der Rollenname darf höchstens 60 Zeichen haben.",
+      "descriptionMax": "Die Beschreibung darf höchstens 200 Zeichen haben."
+    },
+    "errors": {
+      "locked": "Die Berechtigungen der Administratorrolle können nicht geändert werden.",
+      "unknownRole": "Rolle nicht gefunden.",
+      "unknownResource": "Berechtigung nicht gefunden oder Modul nicht aktiv.",
+      "notCustom": "Nur eigene Rollen können bearbeitet und gelöscht werden.",
+      "inUse": "Dieser Rolle sind Benutzer zugewiesen; weisen Sie ihnen zuerst eine andere Rolle zu."
+    }
   }
 }

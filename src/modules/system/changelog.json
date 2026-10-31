@@ -2,6 +2,41 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.13.0",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Roller ve izinler veritabanında",
+        "de": "Rollen und Berechtigungen in der Datenbank"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Özel roller: ad, açıklama ve renk verilerek oluşturulur; başka bir rolün izinleri kopyalanabilir.",
+          "de": "Eigene Rollen mit Name, Beschreibung und Farbe; Berechtigungen einer anderen Rolle können übernommen werden."
+        },
+        {
+          "type": "feature",
+          "tr": "Rol izinleri ekrandan değiştirilebilir; değişiklikler işaretlenir ve varsayılana döndürülebilir. Yönetici rolü kilitlidir.",
+          "de": "Rollenberechtigungen sind in der Oberfläche änderbar, Änderungen werden markiert und können zurückgesetzt werden. Die Administratorrolle ist gesperrt."
+        },
+        {
+          "type": "improvement",
+          "tr": "Modüller kendi rollerini getirir (Öğretmen → Kurslar); modül pasifken rol atanamaz ve izin vermez.",
+          "de": "Module bringen eigene Rollen mit (Lehrkraft → Kurse); ist das Modul inaktiv, ist die Rolle nicht vergebbar und ohne Rechte."
+        },
+        {
+          "type": "improvement",
+          "tr": "Roller ve İzinler ekranı kurulu tüm modüllerden otomatik oluşur.",
+          "de": "Die Ansicht „Rollen und Berechtigungen“ entsteht automatisch aus allen installierten Modulen."
+        },
+        {
+          "type": "security",
+          "tr": "Yönetici rolünü yalnızca bir yönetici atayabilir.",
+          "de": "Nur Administratoren können die Administratorrolle vergeben."
+        }
+      ]
+    },
+    {
       "version": "0.11.0",
       "date": "2026-10-31",
       "title": {

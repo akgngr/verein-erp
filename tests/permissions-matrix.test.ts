@@ -1,66 +1,57 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
-import {
-  ALL_RESOURCES_META,
-  ALL_ROLES_META,
-} from "../src/modules/users/permissions-matrix";
-import { can } from "../src/shared/permissions/define";
-import type { Role } from "../src/shared/roles";
 
-describe("Roles and Permissions Matrix", () => {
-  const allRoles: Role[] = ["ADMIN", "BOARD", "SECRETARY", "TREASURER", "AUDITOR", "VIEWER", "TEACHER"];
+import { permissionResources } from "../src/permissions-registry";
+import { can, definePermissions, effectiveActions, type PermissionPolicy } from "../src/shared/permissions/define";
+import { SYSTEM_ROLES } from "../src/shared/roles";
 
-  test("all 7 system roles are documented with metadata", () => {
-    assert.strictEqual(ALL_ROLES_META.length, 7);
-    const documentedRoles = ALL_ROLES_META.map((r) => r.role);
-    for (const role of allRoles) {
-      assert.ok(documentedRoles.includes(role), `${role} rolü dokümante edilmiş olmalıdır`);
+const all = permissionResources.flatMap((entry) => entry.definitions.map((definition) => ({ moduleKey: entry.moduleKey, definition })));
+const empty: PermissionPolicy = { overrides: {}, unavailableRoles: [] };
+
+describe("Roller ve izinler (veritabanı politikası)", () => {
+  test("kayıt tüm modüllerin izin kaynaklarını otomatik toplar ve tekrar etmez", () => {
+    assert.ok(all.length >= 20, "en az 20 kaynak beklenir");
+    const resources = all.map((item) => item.definition.resource);
+    assert.equal(new Set(resources).size, resources.length, "kaynaklar benzersiz olmalı");
+    for (const key of ["courses", "progress", "students", "exports", "events", "tasks"]) assert.ok(resources.includes(key), `${key} kaynağı listede olmalı`);
+  });
+
+  test("her kaynak sistem rollerinin hepsini tanımlar ve ADMIN tüm desteklenen işlemlere sahiptir", () => {
+    for (const { definition } of all) {
+      for (const role of SYSTEM_ROLES) assert.ok(Array.isArray(definition.grants[role]), `${definition.resource}: ${role} tanımlı olmalı`);
+      for (const action of definition.grants.ADMIN) assert.equal(can("ADMIN", definition, action, empty), true);
     }
   });
 
-  test("all registered resources have valid definitions and supported actions", () => {
-    assert.ok(ALL_RESOURCES_META.length >= 10, "En az 10 kaynak tanımlı olmalıdır");
-    for (const res of ALL_RESOURCES_META) {
-      assert.ok(res.moduleKey, "moduleKey zorunludur");
-      assert.ok(res.resourceKey, "resourceKey zorunludur");
-      assert.ok(res.definition, "definition zorunludur");
-      assert.ok(Array.isArray(res.supportedActions), "supportedActions dizi olmalıdır");
-      assert.ok(res.supportedActions.length > 0, "en az bir eylem olmalıdır");
-
-      // Her rol ve eylem için can() hatasız boolean dönmelidir
-      for (const role of allRoles) {
-        for (const action of res.supportedActions) {
-          const result = can(role, res.definition, action);
-          assert.strictEqual(typeof result, "boolean");
-        }
-      }
+  test("AUDITOR varsayılan olarak kayıt oluşturamaz/silemez (kendi dosyaları hariç)", () => {
+    for (const { definition } of all.filter((item) => item.definition.resource !== "exports")) {
+      assert.equal(can("AUDITOR", definition, "create", empty), false, `${definition.resource}: create`);
+      assert.equal(can("AUDITOR", definition, "delete", empty), false, `${definition.resource}: delete`);
     }
   });
 
-  test("ADMIN has unrestricted access across core operational resources", () => {
-    for (const res of ALL_RESOURCES_META) {
-      for (const action of res.supportedActions) {
-        assert.strictEqual(
-          can("ADMIN", res.definition, action),
-          true,
-          `ADMIN ${res.resourceKey}:${action} yetkisine sahip olmalıdır`,
-        );
-      }
-    }
+  const sample = definePermissions("sample", { ADMIN: ["view", "create", "delete"], BOARD: ["view"], SECRETARY: [], TREASURER: [], AUDITOR: [], VIEWER: [], TEACHER: ["view"] });
+
+  test("yönetici değişikliği varsayılanı ezer; desteklenmeyen işlem verilemez", () => {
+    const policy: PermissionPolicy = { overrides: { BOARD: { sample: ["view", "create", "approve"] } }, unavailableRoles: [] };
+    assert.deepEqual(effectiveActions("BOARD", sample, policy), ["view", "create"]);
+    assert.equal(can("SECRETARY", sample, "view", policy), false);
   });
 
-  test("AUDITOR cannot modify or delete any resources", () => {
-    for (const res of ALL_RESOURCES_META) {
-      assert.strictEqual(
-        can("AUDITOR", res.definition, "create"),
-        false,
-        `AUDITOR ${res.resourceKey} üzerinde oluşturma yapamamalıdır`,
-      );
-      assert.strictEqual(
-        can("AUDITOR", res.definition, "delete"),
-        false,
-        `AUDITOR ${res.resourceKey} üzerinde silme yapamamalıdır`,
-      );
-    }
+  test("ADMIN kilitlidir: değişiklik ve pasif modül onu etkilemez", () => {
+    const policy: PermissionPolicy = { overrides: { ADMIN: { sample: [] } }, unavailableRoles: ["ADMIN"] };
+    assert.equal(can("ADMIN", sample, "delete", policy), true);
+  });
+
+  test("modülü kullanılamayan rolün hiçbir izni yoktur", () => {
+    assert.equal(can("TEACHER", sample, "view", empty), true);
+    assert.equal(can("TEACHER", sample, "view", { overrides: {}, unavailableRoles: ["TEACHER"] }), false);
+  });
+
+  test("özel rol yalnızca verilen izinlere sahiptir", () => {
+    const policy: PermissionPolicy = { overrides: { C_KOORDINATOR: { sample: ["view"] } }, unavailableRoles: [] };
+    assert.equal(can("C_KOORDINATOR", sample, "view", policy), true);
+    assert.equal(can("C_KOORDINATOR", sample, "create", policy), false);
+    assert.equal(can("C_BASKA", sample, "view", policy), false);
   });
 });

@@ -1,6 +1,7 @@
+import { isAssignableRole } from "./roles";
 import "server-only";
 
-import type { Role } from "@prisma/client";
+import type { Role } from "@/shared/roles";
 
 import { getDb } from "@/shared/db";
 import { hashPassword } from "@/shared/security/password";
@@ -17,6 +18,7 @@ export async function createUserAccount(input: { name: string; email: string; ro
   if (await db.user.findUnique({ where: { email }, select: { id: true } })) {
     throw new ActionError("users.errors.emailTaken");
   }
+  if (!(await isAssignableRole(input.role))) throw new ActionError("users.errors.roleUnavailable");
   const created = await db.user.create({
     data: {
       name: input.name,

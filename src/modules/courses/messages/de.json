@@ -356,5 +356,29 @@
       "confirm": "Kurs löschen",
       "done": "Kurs gelöscht."
     }
+  },
+  "roles": {
+    "TEACHER": {
+      "label": "Lehrkraft",
+      "shortDesc": "Sieht nur eigene Kurse, Termine und den Lernfortschritt."
+    }
+  },
+  "permissions": {
+    "courseFees": {
+      "label": "Kursgebühren",
+      "description": "Gebührenforderungen, Zahlungen und Übergabe an die Buchhaltung."
+    },
+    "courseSessions": {
+      "label": "Kurstermine",
+      "description": "Terminplan und Termineinträge."
+    },
+    "courseTeachers": {
+      "label": "Lehrkräfte",
+      "description": "Lehrkräfte und Kurszuordnungen."
+    },
+    "courses": {
+      "label": "Kurse",
+      "description": "Kurse und Nachhilfe, Anmeldungen."
+    }
   }
 }

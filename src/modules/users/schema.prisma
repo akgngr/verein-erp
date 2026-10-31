@@ -1,19 +1,9 @@
-enum Role {
-  ADMIN
-  BOARD
-  SECRETARY
-  VIEWER
-  TREASURER // Sayman (Faz 4 — muhasebe)
-  AUDITOR // Denetçi (Faz 4 — denetim okuma)
-  TEACHER // Öğretmen — yalnızca kurs ve öğrenci takibi modülleri
-}
-
 model User {
   id                 String    @id @default(cuid())
   name               String
   email              String    @unique
   passwordHash       String
-  role               Role      @default(VIEWER)
+  role               String    @default("VIEWER") // rol anahtarı: sistem, modül veya özel rol (bkz. src/shared/roles.ts)
   isActive           Boolean   @default(true)
   mustChangePassword Boolean   @default(true)
   failedLoginCount   Int       @default(0)
@@ -22,4 +12,28 @@ model User {
   locale             String    @default("tr") // arayüz dili (de | tr)
   createdAt          DateTime  @default(now())
   updatedAt          DateTime  @updatedAt
+}
+
+/// Yöneticinin oluşturduğu özel roller. Sistem ve modül rolleri kodda tanımlıdır; burada saklanmaz.
+model CustomRole {
+  key         String   @id // "C_" önekli, otomatik üretilir
+  label       String
+  description String?
+  color       String   @default("default")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("custom_roles")
+}
+
+/// Rol bazında, koddaki varsayılandan FARKLI izinler (rol + kaynak). Kayıt yoksa varsayılan geçerlidir.
+/// Yönetici (ADMIN) rolü için kayıt tutulmaz; değiştirilemez.
+model RoleGrant {
+  roleKey   String
+  resource  String
+  actions   String[]
+  updatedAt DateTime @updatedAt
+
+  @@id([roleKey, resource])
+  @@map("role_grants")
 }

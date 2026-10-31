@@ -188,5 +188,15 @@
       "guardians": "Veli",
       "withoutPayer": "Ödeme sorumlusu yok"
     }
+  },
+  "permissions": {
+    "studentsDatev": {
+      "label": "DATEV aktarımı",
+      "description": "Öğrenci/veli verilerinin DATEV için dışa aktarımı."
+    },
+    "students": {
+      "label": "Öğrenciler",
+      "description": "Öğrenci ve veli kayıtları."
+    }
   }
 }

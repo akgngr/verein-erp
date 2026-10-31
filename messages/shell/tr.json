@@ -227,8 +227,7 @@
     "SECRETARY": "Sekreter",
     "VIEWER": "Salt okunur",
     "TREASURER": "Sayman",
-    "AUDITOR": "Denetçi",
-    "TEACHER": "Öğretmen"
+    "AUDITOR": "Denetçi"
   },
   "validation": {
     "passwordMin": "Parola en az 10 karakter olmalıdır.",

@@ -356,5 +356,29 @@
       "confirm": "Kursu sil",
       "done": "Kurs silindi."
     }
+  },
+  "roles": {
+    "TEACHER": {
+      "label": "Öğretmen",
+      "shortDesc": "Yalnızca kendi kurslarını, derslerini ve öğrenci takibini görür."
+    }
+  },
+  "permissions": {
+    "courseFees": {
+      "label": "Kurs ücretleri",
+      "description": "Ücret tahakkukları, tahsilat ve muhasebe aktarımı."
+    },
+    "courseSessions": {
+      "label": "Dersler",
+      "description": "Ders takvimi ve ders kayıtları."
+    },
+    "courseTeachers": {
+      "label": "Öğretmenler",
+      "description": "Öğretmen kayıtları ve kurs atamaları."
+    },
+    "courses": {
+      "label": "Kurslar",
+      "description": "Kurs ve Nachhilfe kayıtları, kayıtlar (öğrenci)."
+    }
   }
 }

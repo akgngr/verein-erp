@@ -10,6 +10,8 @@ export const moduleConfig: ModuleConfig = {
   category: "CORE",
   isProtected: true,
   hasSchema: true,
+  // Rol dizini: modül rollerinin kullanılabilirliği için kurulu/etkin modüller okunur.
+  access: [{ module: "system", operations: ["read"] }],
   nav: [
     {
       href: "/ayarlar/kullanicilar",

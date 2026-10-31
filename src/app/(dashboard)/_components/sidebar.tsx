@@ -32,7 +32,8 @@ import { createContext, useContext, useEffect, useRef, useState, type ReactNode 
 import { useTranslations } from "next-intl";
 
 import { registry } from "@/registry";
-import { ROLE_COLORS, type Role } from "@/shared/roles";
+import { RoleChip } from "@/shared/components/roles/roles-provider";
+import type { Role } from "@/shared/roles";
 import { can } from "@/shared/permissions/define";
 import {
   MODULE_HOME_KEY,
@@ -460,7 +461,6 @@ function SidebarUserFooter({
   onNavigate?: () => void;
   collapsed?: boolean;
 }) {
-  const tRoles = useTranslations("roles");
   const tNav = useTranslations("nav");
   const tCommon = useTranslations("common");
   const tSidebar = useTranslations("sidebar");
@@ -495,14 +495,7 @@ function SidebarUserFooter({
                     {email}
                   </span>
                 </div>
-                <Chip
-                  size="sm"
-                  variant="flat"
-                  color={ROLE_COLORS[role]}
-                  className="h-5 text-[10px] shrink-0"
-                >
-                  {tRoles(role)}
-                </Chip>
+                <RoleChip role={role} className="h-5 text-[10px] shrink-0" />
               </>
             )}
           </button>
@@ -512,9 +505,7 @@ function SidebarUserFooter({
             <div className="flex flex-col gap-1 py-1">
               <p className="text-small font-semibold text-foreground">{name}</p>
               <p className="text-tiny text-default-500">{email}</p>
-              <Chip color={ROLE_COLORS[role]} size="sm" variant="flat" className="mt-1 self-start">
-                {tRoles(role)}
-              </Chip>
+              <RoleChip role={role} className="mt-1 self-start" />
             </div>
           </DropdownItem>
           <DropdownItem

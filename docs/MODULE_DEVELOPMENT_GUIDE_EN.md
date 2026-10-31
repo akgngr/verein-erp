@@ -50,7 +50,7 @@ Template source: `scripts/scaffold-templates.ts` (test: `tests/scaffold.test.ts`
 ```text
 src/modules/<key>/
 ├── module.config.ts     # identity, nav (sidebar), menu (module sub-menu)
-├── permissions.ts       # permission matrix for the 7 roles (definePermissions)
+├── permissions.ts       # default permissions (definePermissions; see §8b)
 ├── schema.prisma        # models; table names @@map("<key>_...")
 ├── index.ts | server.ts | ui.ts
 ├── page.tsx             # module home     → /<key>
@@ -145,8 +145,8 @@ The root `messages/<locale>.json` is **generated** from `messages/shell/<locale>
 
 ## 7. Other rules
 
-- **Permissions:** `permissions.ts` defines all 7 roles (ADMIN, BOARD, SECRETARY, TREASURER, AUDITOR, VIEWER, TEACHER).
-  TEACHER only sees the courses and student-progress modules; other modules use `TEACHER: []`.
+- **Permissions:** `permissions.ts` defines the 6 system roles (ADMIN, BOARD, SECRETARY, TREASURER, AUDITOR, VIEWER);
+  module roles (e.g. TEACHER) are added only where relevant. These are **defaults**; admins can change them (§8b).
   Mutations use `createAction({ permission, schema, handler })`, which handles permission, schema
   validation, audit log (`audit`) and error translation.
 - **User label:** for fields like `createdByLabel` use `buildUserLabel(user.name, user.email)`
@@ -198,6 +198,15 @@ access: [
   the approval lapses and is asked for again. Approvals are stored in the database (`system_settings`, `module-access:<module>`); official modules come approved, extensions wait for consent.
 
 ---
+
+## 8b. Roles and permissions (database)
+
+Users → Roles & Permissions is built automatically from all installed modules. Role kinds: system roles
+(locked ADMIN + BOARD, SECRETARY, TREASURER, AUDITOR, VIEWER), module roles (`module.config.ts → roles`,
+e.g. courses → TEACHER, with `messages → roles.<KEY>.label/shortDesc`) and custom roles created by admins.
+Each `definePermissions` resource needs `messages → permissions.<resource>.label/description`. Code values are
+defaults; admin changes are stored in `role_grants` ("Reset to default" removes them). When a module is
+inactive, its roles cannot be assigned and grant nothing. Always check permissions with `can(...)`, never by role name.
 
 ## 9. Dashboard cards (`cards/`)
 

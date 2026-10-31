@@ -52,6 +52,16 @@ export type ModuleAccessRequest = {
   operations: ModuleAccessOperation[];
 };
 
+/**
+ * Modülün getirdiği rol (örn. kurslar → TEACHER). Etiket ve kısa açıklama modül mesajlarında
+ * `roles.<KEY>.label` ve `roles.<KEY>.shortDesc`. Varsayılan izinler, modüllerin permissions.ts
+ * dosyalarında bu rol anahtarıyla verilir. Modül kullanılamaz olduğunda rol atanamaz ve izinsizdir.
+ */
+export type ModuleRole = {
+  key: string;
+  color: "default" | "primary" | "secondary" | "success" | "warning" | "danger";
+};
+
 export type ModuleConfig = {
   key: string;
   label: string;
@@ -64,6 +74,8 @@ export type ModuleConfig = {
   hasSchema?: boolean;
   /** Başka modüllerden istenen erişimler (bkz. ModuleAccessRequest). */
   access?: ModuleAccessRequest[];
+  /** Modülün getirdiği roller (bkz. ModuleRole). */
+  roles?: ModuleRole[];
   /**
    * Modül sayfalarının bağlandığı rota kökü (örn. "/profil"). Verilmezse ilk nav `href`'i
    * kullanılır; menüde görünmeyen (nav'ı olmayan) modüllerin sayfaları için gereklidir.

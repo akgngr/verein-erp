@@ -11,14 +11,13 @@ import { useState } from "react";
 import { DataTable } from "@/shared/components/data-table/data-table";
 import type { DataTableColumn } from "@/shared/components/data-table/types";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
-import { ROLE_COLORS } from "@/shared/roles";
+import { RoleChip, useRoles } from "@/shared/components/roles/roles-provider";
 import { formatDateTime } from "@/shared/utils";
 
 import { ResetPasswordDialog } from "./reset-password-dialog";
 import { deleteUserAction } from "../actions/delete-user";
 import { setUserActiveAction } from "../actions/set-active";
 import type { UserRow } from "../queries/list-users";
-import { ROLES } from "@/shared/roles";
 
 /**
  * Kullanıcı listesi: ortak DataTable üzerinde modüle özel kolonlar,
@@ -45,7 +44,7 @@ export function UsersTable({
   canUpdate: boolean;
   canDelete: boolean;
 }) {
-  const tRoles = useTranslations("roles");
+  const roleDirectory = useRoles();
   const t = useTranslations("users.table");
   const tCommon = useTranslations("common");
   const router = useRouter();
@@ -64,9 +63,7 @@ export function UsersTable({
       label: t("role"),
       sortable: true,
       render: (row) => (
-        <Chip color={ROLE_COLORS[row.role]} size="sm" variant="flat">
-          {tRoles(row.role)}
-        </Chip>
+        <RoleChip role={row.role} />
       ),
     },
     {
@@ -130,7 +127,7 @@ export function UsersTable({
         q={q}
         searchPlaceholder={t("search")}
         filters={[
-          { key: "role", label: t("role"), options: ROLES.map((role) => ({ value: role as string, label: tRoles(role) })) },
+          { key: "role", label: t("role"), options: roleDirectory.roles.map((role) => ({ value: role.key, label: roleDirectory.label(role.key) })) },
           {
             key: "status",
             label: t("status"),

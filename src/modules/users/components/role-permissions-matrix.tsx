@@ -1,502 +1,398 @@
 "use client";
 
-import { useTranslations } from "next-intl";
-
-import { useMemo, useState } from "react";
 import {
+  addToast,
   Button,
-  Card,
-  CardBody,
-  CardHeader,
+  Checkbox,
   Chip,
   Input,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
   Select,
   SelectItem,
-  Tab,
-  Tabs,
+  Textarea,
 } from "@heroui/react";
-import {
-  Check,
-  Search,
-  Shield,
-  ShieldCheck,
-  UserCheck,
-  X,
-} from "lucide-react";
+import { Lock, Pencil, Plus, RotateCcw, Search, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useTranslations } from "next-intl";
+import { useMemo, useState } from "react";
 
-import { can, type PermissionAction } from "@/shared/permissions/define";
-import type { Role } from "@/shared/roles";
-import { ROLE_COLORS } from "@/shared/roles";
+import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
+import { RoleChip, usePermissionResources, useRoles, type PermissionResourceRef } from "@/shared/components/roles/roles-provider";
+import { effectiveActions, PERMISSION_ACTIONS, type PermissionAction, type PermissionPolicy } from "@/shared/permissions/define";
+import { CHIP_COLORS, LOCKED_ROLE, type ChipColor, type RoleInfo } from "@/shared/roles";
 
-import {
-  ALL_RESOURCES_META,
-  ALL_ROLES_META,
-  type PermissionResourceMeta,
-} from "../permissions-matrix";
-import type { UserRow } from "../queries/list-users";
+import { createRoleAction, deleteRoleAction, resetRoleGrantsAction, setRoleGrantAction, updateRoleAction } from "../actions/roles";
 
-const ACTION_COLORS: Record<PermissionAction, "default" | "primary" | "secondary" | "success" | "warning" | "danger"> = {
-  view: "default",
-  create: "primary",
-  update: "secondary",
-  delete: "danger",
-  approve: "success",
-};
+const KIND_ORDER: RoleInfo["kind"][] = ["system", "module", "custom"];
+const DOT: Record<ChipColor, string> = { default: "bg-default-400", primary: "bg-primary", secondary: "bg-secondary", success: "bg-success", warning: "bg-warning", danger: "bg-danger" };
 
-/** Matris metinleri `users.matrix` çevirilerinden okunur (permissions-matrix.ts yalnızca yapı taşır). */
-function useMatrixLabels() {
-  const t = useTranslations("users.matrix");
-  return useMemo(() => ({
-    t,
-    action: (action: PermissionAction) => t(`actions.${action}`),
-    roleLabel: (role: Role) => t(`roles.${role}.label`),
-    roleShort: (role: Role) => t(`roles.${role}.shortDesc`),
-    roleLegal: (role: Role) => t(`roles.${role}.legalContext`),
-    module: (res: PermissionResourceMeta) => t(`modules.${res.moduleKey}`),
-    resource: (res: PermissionResourceMeta) => t(`resources.${res.resourceKey}.label`),
-    description: (res: PermissionResourceMeta) => t(`resources.${res.resourceKey}.description`),
-  }), [t]);
+/** Kaynak etiketi: modülün kendi mesajları → permissions.<kaynak>.label/description. */
+function useResourceText() {
+  const t = useTranslations();
+  return {
+    label: (ref: PermissionResourceRef) => {
+      const key = `${ref.moduleKey}.permissions.${ref.definition.resource}.label`;
+      return t.has(key) ? t(key) : ref.definition.resource;
+    },
+    description: (ref: PermissionResourceRef) => {
+      const key = `${ref.moduleKey}.permissions.${ref.definition.resource}.description`;
+      return t.has(key) ? t(key) : "";
+    },
+    module: (moduleKey: string) => (t.has(`${moduleKey}.module.label`) ? t(`${moduleKey}.module.label`) : moduleKey),
+  };
 }
 
-export function RolePermissionsMatrix({
-  users = [],
-  roleCounts = {
-    ADMIN: 0,
-    BOARD: 0,
-    SECRETARY: 0,
-    TREASURER: 0,
-    AUDITOR: 0,
-    TEACHER: 0,
-    VIEWER: 0,
-  },
-}: {
-  users?: UserRow[];
-  roleCounts?: Record<Role, number>;
-}) {
-  const tRoles = useTranslations("roles");
-  const labels = useMatrixLabels();
-  const { t } = labels;
-  const [selectedRole, setSelectedRole] = useState<Role>("ADMIN");
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedUserFilter, setSelectedUserFilter] = useState<string>("");
-  const [viewMode, setViewMode] = useState<string>("role-detail");
+/** Rol açıklaması: sistem → users.matrix.roles.<KEY>.shortDesc, modül → <modül>.roles.<KEY>.shortDesc, özel → kendi açıklaması. */
+function useRoleDescription() {
+  const t = useTranslations();
+  return (role: RoleInfo | undefined) => {
+    if (!role) return "";
+    if (role.kind === "custom") return role.description ?? "";
+    const key = role.kind === "system" ? `users.matrix.roles.${role.key}.shortDesc` : `${role.moduleKey}.roles.${role.key}.shortDesc`;
+    return t.has(key) ? t(key) : "";
+  };
+}
 
-  const currentRoleMeta = useMemo(
-    () => ALL_ROLES_META.find((r) => r.role === selectedRole) || ALL_ROLES_META[0],
-    [selectedRole],
-  );
+/**
+ * Roller ve İzinler: sol tarafta roller (sistem, modül, özel), sağda seçili rolün modül bazında
+ * izinleri. Kaynaklar kurulu ve kullanılabilir tüm modüllerden otomatik gelir. Değişiklik anında
+ * kaydedilir; koddaki varsayılandan farklı olanlar işaretlenir. Yönetici rolü kilitlidir.
+ */
+export function RolePermissionsMatrix({ userCounts, canManage }: { userCounts: Record<string, number>; canManage: boolean }) {
+  const t = useTranslations("users.roles");
+  const tActions = useTranslations("users.matrix.actions");
+  const router = useRouter();
+  const { roles, label, find } = useRoles();
+  const { resources, policy } = usePermissionResources();
+  const text = useResourceText();
+  const describe = useRoleDescription();
 
-  const selectedUser = useMemo(
-    () => users.find((u) => u.id === selectedUserFilter),
-    [users, selectedUserFilter],
-  );
+  const [selected, setSelected] = useState<string>(roles.find((role) => role.key !== LOCKED_ROLE)?.key ?? LOCKED_ROLE);
+  const [overrides, setOverrides] = useState<PermissionPolicy["overrides"]>(policy.overrides);
+  // Sunucudan yeni politika gelince (kaydet → yenile) yerel kopya eşitlenir (render sırasında ayarlama).
+  const [syncedFrom, setSyncedFrom] = useState(policy.overrides);
+  if (syncedFrom !== policy.overrides) {
+    setSyncedFrom(policy.overrides);
+    setOverrides(policy.overrides);
+  }
+  const [query, setQuery] = useState("");
+  const [busyKey, setBusyKey] = useState<string | null>(null);
+  const [editor, setEditor] = useState<{ mode: "create" | "edit"; role?: RoleInfo } | null>(null);
+  const [confirm, setConfirm] = useState<"delete" | "reset" | null>(null);
 
-  // Filtrelenmiş kaynaklar
-  const filteredResources = useMemo(() => {
-    const q = searchQuery.toLowerCase().trim();
-    if (!q) return ALL_RESOURCES_META;
-    return ALL_RESOURCES_META.filter(
-      (res) =>
-        labels.module(res).toLowerCase().includes(q) ||
-        labels.resource(res).toLowerCase().includes(q) ||
-        labels.description(res).toLowerCase().includes(q) ||
-        res.resourceKey.toLowerCase().includes(q),
-    );
-  }, [searchQuery, labels]);
+  const role = find(selected);
+  const locked = selected === LOCKED_ROLE;
+  const localPolicy: PermissionPolicy = { overrides, unavailableRoles: [] };
 
-  // Kaynakları modül bazında grupla
-  const groupedResources = useMemo(() => {
-    const map = new Map<string, PermissionResourceMeta[]>();
-    for (const res of filteredResources) {
-      const list = map.get(res.moduleKey) || [];
-      list.push(res);
-      map.set(res.moduleKey, list);
+  const groups = useMemo(() => {
+    const needle = query.trim().toLocaleLowerCase();
+    const map = new Map<string, PermissionResourceRef[]>();
+    for (const ref of resources) {
+      const haystack = `${text.module(ref.moduleKey)} ${text.label(ref)} ${text.description(ref)}`.toLocaleLowerCase();
+      if (needle && !haystack.includes(needle)) continue;
+      map.set(ref.moduleKey, [...(map.get(ref.moduleKey) ?? []), ref]);
     }
-    return Array.from(map.entries());
-  }, [filteredResources]);
+    return [...map.entries()].sort((a, b) => text.module(a[0]).localeCompare(text.module(b[0])));
+  }, [resources, query, text]);
 
-  // Aktif role ait toplam yetki sayısı
-  const totalPermissionsForRole = useMemo(() => {
-    let count = 0;
-    for (const res of ALL_RESOURCES_META) {
-      for (const act of res.supportedActions) {
-        if (can(selectedRole, res.definition, act)) count++;
-      }
+  const isCustomized = (ref: PermissionResourceRef) => Boolean(overrides[selected]?.[ref.definition.resource]);
+  const anyCustomized = Object.keys(overrides[selected] ?? {}).length > 0;
+  const totalAllowed = resources.reduce((sum, ref) => sum + effectiveActions(selected, ref.definition, localPolicy).length, 0);
+
+  const toggle = async (ref: PermissionResourceRef, action: PermissionAction, checked: boolean) => {
+    const current = effectiveActions(selected, ref.definition, localPolicy);
+    const next = PERMISSION_ACTIONS.filter((item) => (item === action ? checked : current.includes(item)));
+    const previous = overrides;
+    const defaults = ref.definition.grants[selected] ?? [];
+    const isDefault = next.length === defaults.length && next.every((item) => defaults.includes(item));
+    const roleOverrides = { ...(overrides[selected] ?? {}) };
+    if (isDefault) delete roleOverrides[ref.definition.resource];
+    else roleOverrides[ref.definition.resource] = next;
+    setOverrides({ ...overrides, [selected]: roleOverrides });
+    setBusyKey(`${ref.definition.resource}:${action}`);
+    const result = await setRoleGrantAction({ role: selected, resource: ref.definition.resource, actions: next });
+    setBusyKey(null);
+    if (!result.ok) {
+      setOverrides(previous);
+      addToast({ title: result.error, color: "danger" });
+      return;
     }
-    return count;
-  }, [selectedRole]);
+    router.refresh();
+  };
 
   return (
-    <div className="flex flex-col gap-6">
-      {/* Üst Bilgi Başlığı */}
-      <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
-        <div>
-          <h2 className="text-xl font-bold tracking-tight text-foreground flex items-center gap-2">
-            <ShieldCheck className="h-5 w-5 text-primary" />
-            {t("title")}
-          </h2>
-          <p className="text-small text-default-500">
-            {t("subtitle")}
-          </p>
-        </div>
-
-        {/* Görünüm Sekmeleri */}
-        <Tabs
-          selectedKey={viewMode}
-          onSelectionChange={(k) => setViewMode(k as string)}
-          variant="bordered"
-          size="sm"
-          color="primary"
-        >
-          <Tab key="role-detail" title={t("viewRole")} />
-          <Tab key="matrix-table" title={t("viewMatrix")} />
-        </Tabs>
-      </div>
-
-      {/* Rol Seçim Kartları */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
-        {ALL_ROLES_META.map((meta) => {
-          const isSelected = selectedRole === meta.role;
-          const userCount = roleCounts[meta.role] ?? 0;
+    <div className="grid grid-cols-1 gap-4 lg:grid-cols-[280px_1fr]">
+      {/* Roller */}
+      <aside className="flex flex-col gap-3">
+        {canManage ? (
+          <Button color="primary" variant="flat" startContent={<Plus className="h-4 w-4" aria-hidden />} onPress={() => setEditor({ mode: "create" })}>
+            {t("newRole")}
+          </Button>
+        ) : null}
+        {KIND_ORDER.map((kind) => {
+          const list = roles.filter((item) => item.kind === kind);
+          if (!list.length) return null;
           return (
-            <Card
-              key={meta.role}
-              isPressable
-              onPress={() => setSelectedRole(meta.role)}
-              className={`border transition-all cursor-pointer ${
-                isSelected
-                  ? "border-primary bg-primary-50/40 dark:bg-primary-950/20 shadow-xs ring-2 ring-primary/20"
-                  : "border-default-200/80 hover:border-default-300 hover:bg-default-50"
-              }`}
-            >
-              <CardBody className="p-3.5 flex flex-col gap-2">
-                <div className="flex items-center justify-between">
-                  <Chip size="sm" color={meta.badgeColor} variant={isSelected ? "solid" : "flat"}>
-                    {tRoles(meta.role)}
-                  </Chip>
-                  <span className="text-[11px] font-semibold text-default-400">
-                    {t("memberCount", { count: userCount })}
+            <div key={kind} className="flex flex-col gap-1">
+              <span className="px-1 text-tiny font-semibold uppercase text-default-400">{t(`kinds.${kind}`)}</span>
+              {list.map((item) => (
+                <button
+                  key={item.key}
+                  type="button"
+                  onClick={() => setSelected(item.key)}
+                  className={`flex items-center justify-between gap-2 rounded-medium px-3 py-2 text-left text-small transition ${
+                    item.key === selected ? "bg-primary-50 font-semibold text-primary dark:bg-primary-500/15" : "hover:bg-default-100"
+                  }`}
+                >
+                  <span className="flex min-w-0 items-center gap-2">
+                    <span className={`h-2 w-2 shrink-0 rounded-full ${DOT[item.color]}`} aria-hidden />
+                    <span className={`truncate ${item.available ? "" : "text-default-400 line-through"}`}>{label(item.key)}</span>
+                    {item.key === LOCKED_ROLE ? <Lock className="h-3 w-3 shrink-0 text-default-400" aria-label={t("locked")} /> : null}
                   </span>
-                </div>
-                <p className="text-xs text-default-600 line-clamp-2 leading-relaxed">
-                  {labels.roleShort(meta.role)}
-                </p>
-              </CardBody>
-            </Card>
+                  <span className="shrink-0 text-tiny text-default-400">{userCounts[item.key] ?? 0}</span>
+                </button>
+              ))}
+            </div>
           );
         })}
-      </div>
+      </aside>
 
-      {/* Arama ve Kullanıcı Simülatörü Araç Çubuğu */}
-      <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between bg-default-50 p-3 rounded-xl border border-default-200/70">
-        <div className="flex items-center gap-2 flex-1 max-w-md">
-          <Input
-            size="sm"
-            placeholder={t("search")}
-            startContent={<Search className="h-4 w-4 text-default-400" />}
-            value={searchQuery}
-            onValueChange={setSearchQuery}
-            isClearable
-            className="w-full"
-          />
+      {/* Seçili rolün izinleri */}
+      <section className="flex min-w-0 flex-col gap-4">
+        <div className="flex flex-wrap items-start justify-between gap-3 rounded-large border border-default-200 bg-content1 p-4">
+          <div className="flex min-w-0 flex-col gap-1">
+            <div className="flex flex-wrap items-center gap-2">
+              <RoleChip role={selected} size="md" />
+              <Chip size="sm" variant="bordered">
+                {role?.kind === "module" ? t("kindModule", { module: text.module(role.moduleKey ?? "") }) : t(`kind.${role?.kind ?? "system"}`)}
+              </Chip>
+              <span className="text-tiny text-default-500">{t("summary", { users: userCounts[selected] ?? 0, permissions: totalAllowed })}</span>
+            </div>
+            <p className="text-small text-default-500">{describe(role)}</p>
+            {role && !role.available ? <p className="text-small text-warning-600">{t("unavailable")}</p> : null}
+            {locked ? <p className="flex items-center gap-1 text-small text-default-500"><Lock className="h-3.5 w-3.5" aria-hidden />{t("lockedHint")}</p> : null}
+          </div>
+          {canManage && !locked ? (
+            <div className="flex flex-wrap gap-2">
+              {role?.kind === "custom" ? (
+                <>
+                  <Button size="sm" variant="flat" startContent={<Pencil className="h-4 w-4" aria-hidden />} onPress={() => setEditor({ mode: "edit", role })}>
+                    {t("edit")}
+                  </Button>
+                  <Button size="sm" variant="flat" color="danger" startContent={<Trash2 className="h-4 w-4" aria-hidden />} onPress={() => setConfirm("delete")}>
+                    {t("delete")}
+                  </Button>
+                </>
+              ) : null}
+              {anyCustomized && role?.kind !== "custom" ? (
+                <Button size="sm" variant="flat" startContent={<RotateCcw className="h-4 w-4" aria-hidden />} onPress={() => setConfirm("reset")}>
+                  {t("reset")}
+                </Button>
+              ) : null}
+            </div>
+          ) : null}
         </div>
 
-        {users.length > 0 && (
-          <div className="flex items-center gap-2">
-            <span className="text-xs font-medium text-default-500 shrink-0 flex items-center gap-1">
-              <UserCheck className="h-3.5 w-3.5 text-primary" />
-              {t("previewUser")}
-            </span>
-            <Select
-              id="users-permission-preview-user"
-              size="sm"
-              placeholder={t("selectUser")}
-              aria-label={t("selectUser")}
-              className="w-56"
-              selectedKeys={selectedUserFilter ? [selectedUserFilter] : []}
-              onSelectionChange={(keys) => {
-                const id = Array.from(keys)[0] as string;
-                setSelectedUserFilter(id || "");
-                const found = users.find((u) => u.id === id);
-                if (found) setSelectedRole(found.role);
-              }}
-            >
-              {users.map((u) => (
-                <SelectItem key={u.id} textValue={`${u.name} (${tRoles(u.role)})`}>
-                  <div className="flex items-center justify-between">
-                    <span className="truncate">{u.name}</span>
-                    <Chip size="sm" variant="dot" color={ROLE_COLORS[u.role]}>
-                      {tRoles(u.role)}
-                    </Chip>
-                  </div>
-                </SelectItem>
-              ))}
-            </Select>
-            {selectedUserFilter && (
-              <Button
-                size="sm"
-                isIconOnly
-                variant="light"
-                aria-label={t("clearUser")}
-                onPress={() => setSelectedUserFilter("")}
-              >
-                <X className="h-4 w-4" />
-              </Button>
-            )}
-          </div>
-        )}
-      </div>
+        <Input
+          size="sm"
+          value={query}
+          onValueChange={setQuery}
+          placeholder={t("search")}
+          aria-label={t("search")}
+          startContent={<Search className="h-4 w-4 text-default-400" aria-hidden />}
+          isClearable
+          onClear={() => setQuery("")}
+        />
 
-      {/* 1. Görünüm: Rol Detay İncelemesi */}
-      {viewMode === "role-detail" && (
-        <div className="flex flex-col gap-5">
-          {/* Seçili Rol Özet Kartı */}
-          <div className="bg-gradient-to-r from-default-100 to-default-50/50 p-4 rounded-xl border border-default-200/80 flex flex-col md:flex-row md:items-center justify-between gap-4">
-            <div className="flex items-center gap-3">
-              <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary text-primary-foreground font-bold shadow-xs">
-                <Shield className="h-6 w-6" />
-              </div>
-              <div className="flex flex-col">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-base font-bold text-foreground">
-                    {labels.roleLabel(currentRoleMeta.role)}
-                  </h3>
-                  <Chip size="sm" color={currentRoleMeta.badgeColor} variant="solid">
-                    {tRoles(selectedRole)}
-                  </Chip>
-                  {selectedUser && (
-                    <Chip size="sm" variant="flat" color="success">
-                      {t("simulated", { name: selectedUser.name })}
-                    </Chip>
-                  )}
-                </div>
-                <p className="text-xs text-default-500 mt-0.5">
-                  {labels.roleLegal(currentRoleMeta.role)}
-                </p>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3 shrink-0">
-              <div className="text-right">
-                <span className="text-xs text-default-400 block font-medium">{t("totalActive")}</span>
-                <span className="text-lg font-bold text-primary">
-                  {t("actionCount", { count: totalPermissionsForRole })}
-                </span>
-              </div>
-            </div>
-          </div>
-
-          {/* Modül Gruplu Yetki Listesi */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            {groupedResources.map(([moduleKey, resources]) => (
-              <Card key={moduleKey} className="border border-default-200/80 shadow-xs">
-                <CardHeader className="bg-default-50/80 border-b border-default-200/60 py-2.5 px-4 flex items-center justify-between">
-                  <span className="text-sm font-semibold text-foreground flex items-center gap-2">
-                    <span className="h-2 w-2 rounded-full bg-primary" />
-                    {labels.module(resources[0])}
-                  </span>
-                  <span className="text-xs text-default-400 font-medium">
-                    {t("resourceCount", { count: resources.length })}
-                  </span>
-                </CardHeader>
-                <CardBody className="p-4 flex flex-col gap-4">
-                  {resources.map((res) => (
-                    <div
-                      key={res.resourceKey}
-                      className="flex flex-col gap-2 pb-3 border-b border-default-100 last:border-0 last:pb-0"
-                    >
-                      <div className="flex items-center justify-between">
-                        <span className="text-xs font-semibold text-foreground">
-                          {labels.resource(res)}
-                        </span>
-                        <code className="text-[10px] font-mono bg-default-100 text-default-600 px-1.5 py-0.5 rounded">
-                          {res.resourceKey}
-                        </code>
-                      </div>
-                      <p className="text-[11px] text-default-400 leading-snug">
-                        {labels.description(res)}
-                      </p>
-
-                      {/* Eylem Rozetleri */}
-                      <div className="flex flex-wrap gap-1.5 pt-1">
-                        {res.supportedActions.map((action) => {
-                          const isGranted = can(selectedRole, res.definition, action);
-                          return (
-                            <Chip
-                              key={action}
-                              size="sm"
-                              variant={isGranted ? "flat" : "bordered"}
-                              color={isGranted ? ACTION_COLORS[action] : "default"}
-                              startContent={
-                                isGranted ? (
-                                  <Check className="h-3 w-3 shrink-0 ml-1" />
-                                ) : (
-                                  <X className="h-3 w-3 shrink-0 ml-1 text-default-300" />
-                                )
-                              }
-                              className={`text-[11px] ${
-                                !isGranted ? "opacity-40 border-dashed" : "font-medium"
-                              }`}
-                            >
-                              {labels.action(action)}
-                            </Chip>
-                          );
-                        })}
-                      </div>
-                    </div>
-                  ))}
-                </CardBody>
-              </Card>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* 2. Görünüm: Tüm Roller Karşılaştırma Matrisi */}
-      {viewMode === "matrix-table" && (
-        <Card className="border border-default-200/80 shadow-xs overflow-hidden">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
-              <thead className="bg-default-100 text-default-700 uppercase tracking-wider text-[11px] font-semibold border-b border-default-200">
-                <tr>
-                  <th className="py-3 px-4 w-64">{t("colResource")}</th>
-                  <th className="py-3 px-3 w-36">{t("colAction")}</th>
-                  {ALL_ROLES_META.map((meta) => (
-                    <th
-                      key={meta.role}
-                      className={`py-3 px-3 text-center ${
-                        selectedRole === meta.role ? "bg-primary-50 dark:bg-primary-950/30 text-primary font-bold" : ""
-                      }`}
-                    >
-                      <div className="flex flex-col items-center gap-0.5">
-                        <span>{tRoles(meta.role)}</span>
-                        <span className="text-[9px] text-default-400 font-normal lowercase">
-                          {meta.role}
-                        </span>
-                      </div>
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-default-100">
-                {filteredResources.flatMap((res) =>
-                  res.supportedActions.map((action, actionIdx) => {
-                    return (
-                      <tr
-                        key={`${res.resourceKey}-${action}`}
-                        className="hover:bg-default-50/70 transition-colors"
-                      >
-                        {actionIdx === 0 ? (
-                          <td
-                            rowSpan={res.supportedActions.length}
-                            className="py-3 px-4 align-top font-medium border-r border-default-100 bg-background/50"
-                          >
-                            <div className="flex flex-col gap-0.5">
-                              <span className="text-default-400 text-[10px] uppercase font-semibold">
-                                {labels.module(res)}
-                              </span>
-                              <span className="font-semibold text-foreground text-xs">
-                                {labels.resource(res)}
-                              </span>
-                              <code className="text-[10px] text-default-400 font-mono mt-0.5">
-                                {res.resourceKey}
-                              </code>
-                            </div>
-                          </td>
-                        ) : null}
-                        <td className="py-2.5 px-3 border-r border-default-100">
-                          <Chip size="sm" variant="flat" color={ACTION_COLORS[action]} className="text-[10px] h-6">
-                            {labels.action(action)}
+        {groups.map(([moduleKey, refs]) => (
+          <div key={moduleKey} className="overflow-hidden rounded-large border border-default-200 bg-content1">
+            <div className="border-b border-default-100 bg-default-50 px-4 py-2 text-small font-semibold dark:bg-default-100/40">{text.module(moduleKey)}</div>
+            <div className="divide-y divide-default-100">
+              {refs.map((ref) => {
+                const supported = ref.definition.grants[LOCKED_ROLE] ?? [];
+                const allowed = effectiveActions(selected, ref.definition, localPolicy);
+                return (
+                  <div key={ref.definition.resource} className="flex flex-col gap-2 px-4 py-3 md:flex-row md:items-center md:justify-between">
+                    <div className="flex min-w-0 flex-col">
+                      <span className="flex items-center gap-2 text-small font-medium">
+                        {text.label(ref)}
+                        {isCustomized(ref) ? (
+                          <Chip size="sm" variant="flat" color="warning" className="h-5 text-[10px]">
+                            {t("customized")}
                           </Chip>
-                        </td>
-                        {ALL_ROLES_META.map((meta) => {
-                          const isGranted = can(meta.role, res.definition, action);
-                          const isSelectedColumn = selectedRole === meta.role;
-                          return (
-                            <td
-                              key={meta.role}
-                              className={`py-2.5 px-3 text-center ${
-                                isSelectedColumn ? "bg-primary-50/30 dark:bg-primary-950/20" : ""
-                              }`}
-                            >
-                              {isGranted ? (
-                                <span className="inline-flex items-center justify-center h-6 w-6 rounded-full bg-success-50 text-success-600 dark:bg-success-950/40">
-                                  <Check className="h-3.5 w-3.5" />
-                                </span>
-                              ) : (
-                                <span className="inline-flex items-center justify-center h-6 w-6 rounded-full text-default-300">
-                                  —
-                                </span>
-                              )}
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    );
-                  }),
-                )}
-              </tbody>
-            </table>
+                        ) : null}
+                      </span>
+                      <span className="text-tiny text-default-500">{text.description(ref)}</span>
+                    </div>
+                    <div className="flex flex-wrap gap-x-4 gap-y-1">
+                      {PERMISSION_ACTIONS.filter((action) => supported.includes(action)).map((action) => (
+                        <Checkbox
+                          key={action}
+                          size="sm"
+                          isSelected={allowed.includes(action)}
+                          isDisabled={!canManage || locked || busyKey !== null}
+                          onValueChange={(checked) => void toggle(ref, action, checked)}
+                          color={action === "delete" ? "danger" : action === "approve" ? "warning" : "primary"}
+                        >
+                          <span className="text-small">{tActions(action)}</span>
+                        </Checkbox>
+                      ))}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </Card>
-      )}
+        ))}
+      </section>
+
+      {editor ? (
+        <RoleEditor
+          mode={editor.mode}
+          role={editor.role}
+          roles={roles}
+          roleLabel={label}
+          onClose={() => setEditor(null)}
+          onSaved={(key) => {
+            setEditor(null);
+            if (key) setSelected(key);
+            router.refresh();
+          }}
+        />
+      ) : null}
+
+      <ConfirmDialog
+        isOpen={confirm !== null}
+        onOpenChange={(open) => !open && setConfirm(null)}
+        title={confirm === "delete" ? t("deleteTitle") : t("resetTitle")}
+        message={confirm === "delete" ? t("deleteMessage", { role: label(selected) }) : t("resetMessage", { role: label(selected) })}
+        confirmLabel={confirm === "delete" ? t("delete") : t("reset")}
+        confirmColor={confirm === "delete" ? "danger" : "warning"}
+        onConfirm={async () => {
+          const result = confirm === "delete" ? await deleteRoleAction({ key: selected }) : await resetRoleGrantsAction({ role: selected });
+          if (!result.ok) {
+            addToast({ title: result.error, color: "danger" });
+            return;
+          }
+          addToast({ title: confirm === "delete" ? t("deleted") : t("resetDone"), color: "success" });
+          if (confirm === "delete") setSelected(LOCKED_ROLE);
+          else setOverrides({ ...overrides, [selected]: {} });
+          setConfirm(null);
+          router.refresh();
+        }}
+      />
     </div>
   );
 }
 
-/** Form içinde canlı rol yetki önizleme bileşeni */
-export function RolePermissionsPreview({ role }: { role: Role }) {
-  const meta = ALL_ROLES_META.find((r) => r.role === role) || ALL_ROLES_META[0];
-  const labels = useMatrixLabels();
-  const { t } = labels;
+function RoleEditor({
+  mode,
+  role,
+  roles,
+  roleLabel,
+  onClose,
+  onSaved,
+}: {
+  mode: "create" | "edit";
+  role?: RoleInfo;
+  roles: RoleInfo[];
+  roleLabel: (key: string) => string;
+  onClose: () => void;
+  onSaved: (key: string | null) => void;
+}) {
+  const t = useTranslations("users.roles");
+  const [labelValue, setLabelValue] = useState(role?.label ?? "");
+  const [description, setDescription] = useState(role?.description ?? "");
+  const [color, setColor] = useState<ChipColor>(role?.color ?? "secondary");
+  const [copyFrom, setCopyFrom] = useState<string>("");
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  const permissionsCount = useMemo(() => {
-    let count = 0;
-    for (const res of ALL_RESOURCES_META) {
-      for (const act of res.supportedActions) {
-        if (can(role, res.definition, act)) count++;
-      }
+  const submit = async () => {
+    setBusy(true);
+    setError(null);
+    const payload = { label: labelValue, description: description || null, color };
+    const result = mode === "create" ? await createRoleAction({ ...payload, copyFrom: copyFrom || null }) : await updateRoleAction({ ...payload, key: role?.key });
+    setBusy(false);
+    if (!result.ok) {
+      setError(result.fieldErrors?.label?.[0] ?? result.error);
+      return;
     }
-    return count;
-  }, [role]);
+    addToast({ title: mode === "create" ? t("created") : t("updated"), color: "success" });
+    onSaved(mode === "create" && result.data && typeof result.data === "object" && "key" in result.data ? String(result.data.key) : null);
+  };
 
   return (
-    <div className="rounded-xl border border-default-200/80 bg-default-50/60 p-3.5 flex flex-col gap-2">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Shield className="h-4 w-4 text-primary" />
-          <span className="text-xs font-semibold text-foreground">
-            {t("previewTitle", { role: labels.roleLabel(meta.role) })}
-          </span>
-        </div>
-        <Chip size="sm" color={meta.badgeColor} variant="flat">
-          {t("previewCount", { count: permissionsCount })}
-        </Chip>
-      </div>
-      <p className="text-xs text-default-500 leading-relaxed">
-        {labels.roleLegal(meta.role)}
-      </p>
-      <div className="flex flex-wrap gap-1.5 pt-1">
-        {ALL_RESOURCES_META.slice(0, 6).map((res) => {
-          const hasView = can(role, res.definition, "view");
-          const hasWrite =
-            can(role, res.definition, "create") ||
-            can(role, res.definition, "update") ||
-            can(role, res.definition, "delete");
-
-          return (
-            <Chip
-              key={res.resourceKey}
-              size="sm"
-              variant={hasView ? "flat" : "bordered"}
-              color={hasWrite ? "primary" : hasView ? "default" : "danger"}
-              className={`text-[10px] h-5 ${!hasView ? "opacity-30" : ""}`}
+    <Modal isOpen onOpenChange={(open) => !open && onClose()} size="md">
+      <ModalContent>
+        <ModalHeader>{mode === "create" ? t("newRole") : t("editTitle")}</ModalHeader>
+        <ModalBody className="gap-4">
+          <Input label={t("fields.label")} labelPlacement="outside" placeholder={t("fields.labelPlaceholder")} value={labelValue} onValueChange={setLabelValue} isRequired errorMessage={error ?? undefined} isInvalid={Boolean(error)} />
+          <Textarea label={t("fields.description")} labelPlacement="outside" placeholder={t("fields.descriptionPlaceholder")} value={description} onValueChange={setDescription} minRows={2} />
+          <div className="flex flex-col gap-2">
+            <span className="text-small">{t("fields.color")}</span>
+            <div className="flex flex-wrap gap-2">
+              {CHIP_COLORS.map((option) => (
+                <button key={option} type="button" onClick={() => setColor(option)} aria-pressed={color === option} className={`rounded-full p-0.5 ${color === option ? "ring-2 ring-primary" : ""}`}>
+                  <Chip size="sm" variant="flat" color={option}>
+                    {labelValue || t("fields.sample")}
+                  </Chip>
+                </button>
+              ))}
+            </div>
+          </div>
+          {mode === "create" ? (
+            <Select
+              label={t("fields.copyFrom")}
+              labelPlacement="outside"
+              placeholder={t("fields.copyFromNone")}
+              description={t("fields.copyFromHint")}
+              selectedKeys={copyFrom ? [copyFrom] : []}
+              onSelectionChange={(keys) => setCopyFrom(String([...keys][0] ?? ""))}
             >
-              {labels.module(res)}: {t(hasWrite ? "accessFull" : hasView ? "accessRead" : "accessNone")}
-            </Chip>
-          );
-        })}
-      </div>
+              {roles.map((item) => (
+                <SelectItem key={item.key}>{roleLabel(item.key)}</SelectItem>
+              ))}
+            </Select>
+          ) : null}
+        </ModalBody>
+        <ModalFooter>
+          <Button variant="flat" onPress={onClose}>
+            {t("cancel")}
+          </Button>
+          <Button color="primary" isLoading={busy} isDisabled={labelValue.trim().length < 2} onPress={() => void submit()}>
+            {t("save")}
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+}
+
+/** Kullanıcı formunda seçili rolün modül bazında özeti (Tam / Okuma / Yok). */
+export function RolePermissionsPreview({ role }: { role: string }) {
+  const t = useTranslations("users.matrix");
+  const { resources, policy } = usePermissionResources();
+  const text = useResourceText();
+  const byModule = new Map<string, PermissionAction[]>();
+  for (const ref of resources) byModule.set(ref.moduleKey, [...(byModule.get(ref.moduleKey) ?? []), ...effectiveActions(role, ref.definition, policy)]);
+  const entries = [...byModule.entries()].sort((a, b) => text.module(a[0]).localeCompare(text.module(b[0])));
+  if (!role) return null;
+  return (
+    <div className="flex flex-wrap gap-1.5">
+      {entries.map(([moduleKey, actions]) => {
+        const write = actions.some((action) => action !== "view");
+        const view = actions.includes("view");
+        return (
+          <Chip key={moduleKey} size="sm" variant="flat" color={write ? "success" : view ? "primary" : "default"} className={write || view ? "" : "text-default-400"}>
+            {text.module(moduleKey)}: {t(write ? "accessFull" : view ? "accessRead" : "accessNone")}
+          </Chip>
+        );
+      })}
     </div>
   );
 }

@@ -20,6 +20,7 @@ const MODULE_INTERNAL_IMPORTS = {
     "!@/modules/*/edge",
     "!@/modules/*/cards",
     "!@/modules/*/ai",
+    "!@/modules/*/permissions",
     "!@/modules/*/routes",
     "!@/modules/*/routes/**",
     "!@/modules/*/api",

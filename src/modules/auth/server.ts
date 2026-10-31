@@ -29,6 +29,15 @@ export { handlers, auth, signIn, signOut, unstable_update } from "./auth";
 export { signOutAction } from "./actions/logout";
 export { setLocaleAction } from "./actions/set-locale";
 
+/**
+ * Rol/izin politikasını (veritabanı) yükler; can(...) bu istekte yöneticinin ayarlarını görür.
+ * Döngüsel içe aktarmayı önlemek için dinamik yüklenir (users modülü auth'u kullanır).
+ */
+async function loadPolicy(): Promise<void> {
+  const { loadPermissionPolicy } = await import("@/modules/users/server");
+  await loadPermissionPolicy();
+}
+
 /** Mevcut oturum kullanıcısını veritabanından tazeleyerek döner; pasif kullanıcı null döner. */
 export async function getCurrentUser(): Promise<SessionUser | null> {
   const session = await auth();
@@ -36,6 +45,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
 
   const dbUser = await getDb().user.findUnique({ where: { id: session.user.id } });
   if (!dbUser || !dbUser.isActive) return null;
+  await loadPolicy();
 
   return {
     id: dbUser.id,
@@ -58,6 +68,7 @@ export async function requireUser(): Promise<SessionUser> {
   if (!dbUser || !dbUser.isActive) {
     throw new UnauthorizedError("auth.errors.sessionInvalid");
   }
+  await loadPolicy();
 
   return {
     id: dbUser.id,

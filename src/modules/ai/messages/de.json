@@ -195,5 +195,11 @@
     "createdAt": "Erstellt am",
     "note": "Dieser Bericht wurde vom KI-Assistenten erstellt; prüfen Sie Zahlen für offizielle Zwecke im jeweiligen Modul.",
     "footer": "Seite {page} von {total}"
+  },
+  "permissions": {
+    "ai": {
+      "label": "KI-Assistent",
+      "description": "Assistent nutzen und Einstellungen (Anbieter, Berechtigungen) verwalten."
+    }
   }
 }

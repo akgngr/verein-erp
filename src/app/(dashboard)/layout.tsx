@@ -5,6 +5,8 @@ import type { SessionUser } from "@/modules/auth";
 import { requireUser, signOutAction } from "@/modules/auth/server";
 import { AiAssistantSlot } from "@/modules/ai/ui";
 import { listUsableModuleKeys } from "@/modules/system/server";
+import { listPermissionResources, listRoleDirectory, loadPermissionPolicy } from "@/modules/users/server";
+import { RolesProvider } from "@/shared/components/roles/roles-provider";
 
 import {
   DesktopSidebar,
@@ -33,10 +35,11 @@ export default async function DashboardLayout({
   }
 
   // Menüde yalnızca kullanılabilir modüller: çekirdek + etkin ve erişim izni onaylı olanlar.
-  const activeModuleKeys = await listUsableModuleKeys();
+  const [activeModuleKeys, roles, policy, resources] = await Promise.all([listUsableModuleKeys(), listRoleDirectory(), loadPermissionPolicy(), listPermissionResources()]);
   const collapsed = (await cookies()).get(SIDEBAR_COLLAPSED_COOKIE)?.value === "1";
 
   return (
+    <RolesProvider roles={roles} policy={policy} resources={resources.map(({ moduleKey, definition }) => ({ moduleKey, definition }))}>
     <SidebarProvider initialCollapsed={collapsed}>
       <div className="flex min-h-dvh">
         <DesktopSidebar
@@ -63,5 +66,6 @@ export default async function DashboardLayout({
         />
       </div>
     </SidebarProvider>
+    </RolesProvider>
   );
 }

@@ -132,5 +132,11 @@
       "confirm": "Kalemi sil",
       "done": "Envanter kalemi silindi."
     }
+  },
+  "permissions": {
+    "inventory": {
+      "label": "Envanter",
+      "description": "Demirbaş kayıtları, zimmet ve hurdaya ayırma onayı."
+    }
   }
 }

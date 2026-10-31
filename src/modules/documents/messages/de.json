@@ -310,5 +310,15 @@
       "confirm": "Löschen",
       "done": "Schriftstück gelöscht."
     }
+  },
+  "permissions": {
+    "documentCategories": {
+      "label": "Schriftgutkategorien",
+      "description": "Verwaltung der Kategorien und des Aktenplans."
+    },
+    "documents": {
+      "label": "Ein- / ausgehendes Schriftgut",
+      "description": "Erfassung, Nummerierung und Archivierung offizieller Schriftstücke."
+    }
   }
 }

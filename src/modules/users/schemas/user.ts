@@ -2,7 +2,8 @@ import { z } from "zod";
 
 import { passwordSchema } from "@/shared/security/password";
 
-const roleSchema = z.enum(["ADMIN", "BOARD", "SECRETARY", "VIEWER", "TREASURER", "AUDITOR", "TEACHER"]);
+/** Rol anahtarı; var olup atanabilir olduğu sunucuda ayrıca denetlenir (isAssignableRole). */
+const roleSchema = z.string().trim().min(1, "users.validation.roleRequired").max(40);
 
 export const userCreateSchema = z.object({
   name: z.string().trim().min(1, "users.validation.nameRequired").max(100, "users.validation.nameMax"),

@@ -1,6 +1,7 @@
 import "server-only";
 
-import type { Prisma, Role } from "@prisma/client";
+import type { Prisma } from "@prisma/client";
+import type { Role } from "@/shared/roles";
 
 import { getDb } from "@/shared/db";
 import type { ListParams, ListResult } from "@/shared/list-params";
@@ -71,26 +72,4 @@ export async function getUserById(id: string): Promise<UserRow | null> {
     select: USER_SELECT,
   });
   return user ?? null;
-}
-
-/** Rol bazlı kullanıcı dağılım sayıları */
-export async function getUserCountsByRole(): Promise<Record<Role, number>> {
-  const db = getDb();
-  const groups = await db.user.groupBy({
-    by: ["role"],
-    _count: { _all: true },
-  });
-  const counts: Record<Role, number> = {
-    ADMIN: 0,
-    BOARD: 0,
-    SECRETARY: 0,
-    TREASURER: 0,
-    AUDITOR: 0,
-    TEACHER: 0,
-    VIEWER: 0,
-  };
-  for (const g of groups) {
-    counts[g.role] = g._count._all;
-  }
-  return counts;
 }

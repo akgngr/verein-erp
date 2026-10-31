@@ -213,5 +213,11 @@
       "confirm": "Taslak etkinlik oluştur",
       "done": "Taslak etkinlik oluşturuldu."
     }
+  },
+  "permissions": {
+    "events": {
+      "label": "Etkinlikler",
+      "description": "Etkinlik planlama, katılımcı kayıtları ve onay."
+    }
   }
 }

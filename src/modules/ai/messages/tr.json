@@ -195,5 +195,11 @@
     "createdAt": "Oluşturulma",
     "note": "Bu rapor yapay zekâ asistanı tarafından hazırlanmıştır; resmi işlemlerde rakamları ilgili modülden kontrol edin.",
     "footer": "Sayfa {page} / {total}"
+  },
+  "permissions": {
+    "ai": {
+      "label": "Yapay zekâ asistanı",
+      "description": "Asistanı kullanma ve asistan ayarlarını (sağlayıcı, izinler) yönetme."
+    }
   }
 }

@@ -132,5 +132,11 @@
       "confirm": "Posten löschen",
       "done": "Inventarposten gelöscht."
     }
+  },
+  "permissions": {
+    "inventory": {
+      "label": "Inventar",
+      "description": "Inventarverzeichnis, Ausgaben und Aussonderung."
+    }
   }
 }

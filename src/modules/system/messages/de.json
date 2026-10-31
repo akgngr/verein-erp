@@ -108,5 +108,15 @@
       "fix": "Korrektur",
       "security": "Sicherheit"
     }
+  },
+  "permissions": {
+    "settings": {
+      "label": "Systemeinstellungen",
+      "description": "Allgemeine System- und Plattformparameter."
+    },
+    "system": {
+      "label": "Modulverwaltung",
+      "description": "Erweiterungen installieren, Module aktivieren und deaktivieren."
+    }
   }
 }

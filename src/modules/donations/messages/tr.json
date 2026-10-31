@@ -481,5 +481,11 @@
     "accounting": "Bağışları gelir fişi olarak yazar ve iptal eder.",
     "members": "Bağış makbuzu için üye adresini ve aidat ödemelerini okur.",
     "organization": "Bağış makbuzunda dernek bilgilerini kullanır."
+  },
+  "permissions": {
+    "donations": {
+      "label": "Bağış ve Makbuzlar",
+      "description": "Bağış tahsilatları ve resmi Zuwendungsbestätigung makbuz üretimi."
+    }
   }
 }

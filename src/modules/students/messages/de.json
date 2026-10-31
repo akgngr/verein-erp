@@ -188,5 +188,15 @@
       "guardians": "Erziehungsberechtigte",
       "withoutPayer": "Ohne Zahlungspflichtige"
     }
+  },
+  "permissions": {
+    "studentsDatev": {
+      "label": "DATEV-Export",
+      "description": "Export der Schüler- und Elterndaten für DATEV."
+    },
+    "students": {
+      "label": "Schüler",
+      "description": "Schüler- und Elterndaten."
+    }
   }
 }
