@@ -58,6 +58,8 @@ function messages(n: ScaffoldNames, locale: "tr" | "de") {
   return {
     nav: { [n.key]: label },
     module: { label, description: tr ? n.descriptionTr : n.descriptionDe },
+    // Roller ve İzinler ekranındaki kaynak etiketi (rehber §8b).
+    permissions: { [n.key]: { label, description: tr ? n.descriptionTr : n.descriptionDe } },
     meta: { list: label },
     title: label,
     description: tr ? n.descriptionTr : n.descriptionDe,

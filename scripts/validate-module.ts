@@ -1,6 +1,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { pathToFileURL } from "node:url";
+import { checkModuleDependencies } from "../src/shared/modules/module-deps";
 
 const ROOT_DIR = process.cwd();
 const MODULES_DIR = path.join(ROOT_DIR, "src", "modules");
@@ -389,6 +390,8 @@ export function validateModule(moduleKey: string, customModulesDir?: string): Mo
       info.hasTranslations = true;
       errors.push(...checkModuleMessages(moduleDir, trJson, deJson));
       errors.push(...checkRoleNameChecks(moduleDir, moduleKey));
+      const dependencyConfigPath = path.join(moduleDir, "module.config.ts");
+      if (fs.existsSync(dependencyConfigPath)) errors.push(...checkModuleDependencies(moduleDir, moduleKey, fs.readFileSync(dependencyConfigPath, "utf8")));
       const accessConfigPath = path.join(moduleDir, "module.config.ts");
       if (fs.existsSync(accessConfigPath)) {
         errors.push(...checkModuleAccess(moduleDir, moduleKey, fs.readFileSync(accessConfigPath, "utf8"), trJson, deJson));
