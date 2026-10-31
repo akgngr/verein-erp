@@ -18,6 +18,14 @@ export function stripPrismaOnlyParams(url: string): string {
   try {
     const parsed = new URL(url);
     for (const key of ["pgbouncer", "connection_limit", "pool_timeout", "statement_cache_size", "schema", "socket_timeout"]) parsed.searchParams.delete(key);
+    // KARAR: pg 8 'require' / 'prefer' / 'verify-ca' modlarını zaten 'verify-full' (sertifika + ana
+    // makine doğrulaması) olarak uygular ve gelecekte zayıflayacağı için uyarır. Bugünkü güvenli
+    // davranışı açıkça istiyoruz; Neon gibi geçerli sertifikalı sunucularda sorunsuzdur.
+    // `uselibpqcompat=true` verilmişse kullanıcı libpq anlamını bilinçli seçmiştir; dokunulmaz.
+    const sslmode = parsed.searchParams.get("sslmode");
+    if (sslmode && ["require", "prefer", "verify-ca"].includes(sslmode) && parsed.searchParams.get("uselibpqcompat") !== "true") {
+      parsed.searchParams.set("sslmode", "verify-full");
+    }
     return parsed.toString();
   } catch {
     return url;

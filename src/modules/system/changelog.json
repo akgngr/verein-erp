@@ -2,6 +2,21 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.15.1",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Veritabanı SSL uyarısı",
+        "de": "Datenbank-SSL-Warnung"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "sslmode=require içeren adreslerde (Neon) görünen pg güvenlik uyarısı giderildi; bağlantı aynı şekilde tam sertifika doğrulamasıyla (verify-full) kurulur.",
+          "de": "Die pg-Sicherheitswarnung bei Adressen mit sslmode=require (Neon) ist behoben; die Verbindung nutzt weiterhin volle Zertifikatsprüfung (verify-full)."
+        }
+      ]
+    },
+    {
       "version": "0.15.0",
       "date": "2026-10-31",
       "title": {
