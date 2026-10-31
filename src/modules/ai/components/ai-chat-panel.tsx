@@ -13,7 +13,7 @@ import { acceptAiConsentAction } from "../actions/consent-actions";
 import { executeAiProposalAction } from "../actions/execute-proposal";
 import { deleteAiConversationAction, getAiConversationAction, listAiConversationsAction } from "../actions/history-actions";
 import { AI_PANEL_COOKIE, AI_PANEL_MAX_WIDTH, AI_PANEL_MIN_WIDTH, encodePanelState, type AiPanelState } from "../panel-state";
-import { parseMarkdown } from "../services/markdown";
+import { parseMarkdown } from "@/shared/markdown/parse";
 import type { AiFile, AiProposal } from "../types";
 
 type Turn = {

@@ -1,7 +1,7 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 
-import { parseMarkdown } from "../src/modules/ai/services/markdown";
+import { parseMarkdown } from "../src/shared/markdown/parse";
 
 describe("Sohbet markdown çözümleyici", () => {
   test("GFM tablo, hizalama ve eksik hücreler", () => {

@@ -42,3 +42,26 @@ export function openSecret(purpose: string, payload: string): string | null {
     return null;
   }
 }
+
+/** Dosya içerikleri için: AES-256-GCM, çıktı `iv(12) | tag(16) | şifreli` baytları. */
+export function sealBytes(purpose: string, data: Uint8Array): Buffer {
+  const value = secret();
+  if (!value) throw new Error("Encryption key is not available"); // i18n-ignore (geliştirici hatası; kullanıcıya gösterilmez)
+  const iv = randomBytes(12);
+  const cipher = createCipheriv("aes-256-gcm", keyFor(purpose, value), iv);
+  const encrypted = Buffer.concat([cipher.update(data), cipher.final()]);
+  return Buffer.concat([iv, cipher.getAuthTag(), encrypted]);
+}
+
+export function openBytes(purpose: string, payload: Uint8Array): Buffer | null {
+  const value = secret();
+  if (!value || payload.length < 28) return null;
+  const buffer = Buffer.from(payload);
+  try {
+    const decipher = createDecipheriv("aes-256-gcm", keyFor(purpose, value), buffer.subarray(0, 12));
+    decipher.setAuthTag(buffer.subarray(12, 28));
+    return Buffer.concat([decipher.update(buffer.subarray(28)), decipher.final()]);
+  } catch {
+    return null;
+  }
+}

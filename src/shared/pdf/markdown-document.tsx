@@ -2,13 +2,13 @@ import { Document, Page, StyleSheet, Text, View } from "@react-pdf/renderer";
 
 import { Letterhead, type LetterheadProfile } from "@/shared/pdf/letterhead";
 
-import { parseMarkdown } from "../services/markdown";
+import { parseMarkdown } from "@/shared/markdown/parse";
 
 /**
- * Asistan raporu PDF'i: sohbetteki markdown (başlık, paragraf, liste, tablo) dernek antetiyle.
+ * Markdown → PDF (asistan raporları, Dosyalar modülü): markdown (başlık, paragraf, liste, tablo) dernek antetiyle.
  * Ham HTML yok; **kalın** desteklenir, bağlantılar yalnızca metin olarak basılır.
  */
-export type AiReportPdfData = {
+export type MarkdownPdfData = {
   organization: LetterheadProfile;
   title: string;
   markdown: string;
@@ -51,7 +51,7 @@ function Inline({ text }: { text: string }) {
   );
 }
 
-export function AiReportDocument({ data }: { data: AiReportPdfData }) {
+export function MarkdownPdfDocument({ data }: { data: MarkdownPdfData }) {
   const created = data.createdAt.toLocaleString("de-DE", { timeZone: "Europe/Berlin" });
   return (
     <Document title={data.title} author={data.organization.name}>

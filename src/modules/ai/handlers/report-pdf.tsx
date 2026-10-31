@@ -14,7 +14,7 @@ import type { SessionUser } from "@/modules/auth";
 import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 import { getOrganizationLogoDataUri, getOrganizationProfile } from "@/modules/organization/server";
 
-import { AiReportDocument } from "../pdf/report-document";
+import { MarkdownPdfDocument } from "@/shared/pdf/markdown-document";
 import { aiPermissions } from "../permissions";
 import { hasAiConsent } from "../services/consent";
 import { getReport } from "../services/reports";
@@ -39,7 +39,7 @@ async function render(user: SessionUser, title: string, markdown: string, create
   const [profile, logoDataUri, t] = await Promise.all([getOrganizationProfile(), getOrganizationLogoDataUri(), getTranslations("ai.report")]);
   registerSharedPdfFonts();
   const buffer = await renderToBuffer(
-    <AiReportDocument
+    <MarkdownPdfDocument
       data={{
         organization: { name: profile.name, street: profile.street, postalCode: profile.postalCode, city: profile.city, registerCourt: profile.registerCourt, registerNumber: profile.registerNumber, logoDataUri },
         title,

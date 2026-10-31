@@ -1,6 +1,6 @@
 import "server-only";
 
-import { z } from "zod";
+import type { z } from "zod";
 
 import { can } from "@/shared/permissions/define";
 
@@ -9,7 +9,6 @@ import { listUsableModuleKeys } from "@/modules/system/server";
 import { moduleAiRegistry } from "@/ai-registry";
 
 import { getAiPermissions, isAllowed, type AiOperation } from "./permissions";
-import { saveReport } from "./reports";
 import { define, type ToolContext } from "./tool-kit";
 
 /**
@@ -19,30 +18,6 @@ import { define, type ToolContext } from "./tool-kit";
  * matrisinde (modül + işlem) açık, hedef modül kullanılabilir ve kullanıcının kendi yetkisi var.
  * Araçlar veriyi DEĞİŞTİRMEZ; yazma araçları yalnızca onay kartı önerir.
  */
-const AI_TOOLS = [
-  define({
-    name: "create_pdf_report",
-    module: "ai",
-    operation: "read",
-    allowed: () => true,
-    description:
-      "Creates a PDF (with the association letterhead) from markdown you provide — headings, paragraphs, lists and tables — and returns a download link. Use it whenever the user asks for a PDF of an answer, table or summary. Put the complete content into markdown; it does not fetch any data itself.", // i18n-ignore (model-facing tool text)
-    schema: z.object({ title: z.string().min(1).max(150), markdown: z.string().min(1).max(60_000) }),
-    inputSchema: {
-      type: "object",
-      properties: { title: { type: "string" }, markdown: { type: "string", description: "Full report content in markdown (tables allowed)" } }, // i18n-ignore (model-facing tool text)
-      required: ["title", "markdown"],
-      additionalProperties: false,
-    },
-    run: async ({ title, markdown }, { user, restore, files }) => {
-      const id = await saveReport(user.id, restore(title), restore(markdown));
-      // Bağlantı modele değil arayüze verilir: yanıtın altında indirme düğmesi çıkar.
-      files.push({ title, url: `/api/ai/reports/${id}/pdf`, format: "pdf" });
-      return { status: "created", note: "The PDF is ready. A download button is shown below your answer automatically. Do NOT write any link, URL or path; just say the PDF is ready." }; // i18n-ignore (model-facing tool text)
-    },
-  }),
-];
-
 /**
  * Modül AI standardı: her modülün ai.ts dosyasındaki araçlar (src/ai-registry.ts üretilir).
  * Araç `propose` çağırdığında genel bir onay kartı oluşur; eylem onayda yeniden denetlenir.
@@ -57,9 +32,11 @@ const MODULE_TOOLS = moduleAiRegistry.flatMap((entry) =>
       description: tool.description,
       schema: tool.schema,
       inputSchema: tool.inputSchema,
-      run: (input, { user, proposals }) =>
+      run: (input, { user, proposals, files, restore }) =>
         tool.run(input, {
           user,
+          restore,
+          attachFile: (file) => files.push(file),
           propose: (proposal) => {
             const action = entry.actions[proposal.action];
             if (!action) throw new Error(`[ai] ${entry.module}: bilinmeyen eylem ${proposal.action}`); // i18n-ignore (geliştirici hatası)
@@ -70,13 +47,12 @@ const MODULE_TOOLS = moduleAiRegistry.flatMap((entry) =>
   ),
 );
 
-const TOOLS = [...AI_TOOLS, ...MODULE_TOOLS];
+const TOOLS = MODULE_TOOLS;
 
 /** Bu kullanıcı için şu an kullanılabilir araçlar (modül izni + kullanıcı yetkisi). */
 export async function availableTools(user: SessionUser) {
   const [usable, matrix] = await Promise.all([listUsableModuleKeys().then((keys) => new Set(keys)), getAiPermissions()]);
-  // "ai" modülünün kendi araçları (ör. PDF raporu) başka modülün verisine erişmez; matristen bağımsızdır.
-  return TOOLS.filter((tool) => (tool.module === "ai" || isAllowed(matrix, tool.module, tool.operation)) && usable.has(tool.module) && tool.allowed(user));
+  return TOOLS.filter((tool) => isAllowed(matrix, tool.module, tool.operation) && usable.has(tool.module) && tool.allowed(user));
 }
 
 /** Matristeki her modül için asistanın gerçekten aracı olan işlemler (ayarlar ekranı). */
