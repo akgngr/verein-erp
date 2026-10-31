@@ -1,6 +1,6 @@
 {
   "name": "dernek-yonetim-sistemi",
-  "version": "0.14.0",
+  "version": "0.14.1",
   "private": true,
   "packageManager": "pnpm@10.34.9",
   "engines": {
@@ -60,6 +60,7 @@
     "zod": "^4.0.2"
   },
   "devDependencies": {
+    "@next/env": "16.4.3",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^24.0.0",
     "@types/nodemailer": "^8.0.2",
@@ -73,9 +74,6 @@
     "tailwindcss": "^4",
     "tsx": "^4.19.2",
     "typescript": "^5"
-  },
-  "prisma": {
-    "schema": "prisma/schema"
   },
   "overrides": {
     "@internationalized/date": "3.12.4"
