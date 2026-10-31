@@ -43,6 +43,7 @@ export function ModuleList({
   initialModules,
   stats,
   canManage,
+  devTools,
 }: {
   initialModules: ModuleItem[];
   stats: {
@@ -54,6 +55,8 @@ export function ModuleList({
     inactive: number;
   };
   canManage: boolean;
+  /** Dosya yazan araçlar (şema senkronu, eklenti silme) yalnızca geliştirmede. */
+  devTools: boolean;
 }) {
   const router = useRouter();
   const t = useTranslations("system");
@@ -279,7 +282,7 @@ export function ModuleList({
           </Tabs>
         </div>
 
-        {canManage ? (
+        {canManage && devTools ? (
           <Button
             size="sm"
             variant="bordered"
@@ -391,7 +394,7 @@ export function ModuleList({
                     )}
                   </div>
 
-                  {mod.category === "EXTENSION" && canManage ? (
+                  {mod.category === "EXTENSION" && canManage && devTools ? (
                     <Button
                       isIconOnly
                       size="sm"

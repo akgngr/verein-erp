@@ -4377,7 +4377,9 @@
       "onlyExtensionsDeletable": "Nur externe Erweiterungen (EXTENSION) können gelöscht werden. Kern- und offizielle Module nicht.",
       "deleteFailed": "Beim Löschen des Moduls ist ein Fehler aufgetreten.",
       "noAccessRequested": "Dieses Modul fordert keinen Zugriff auf andere Module an.",
-      "accessNotApproved": "Bitte zuerst den angeforderten Zugriff freigeben."
+      "accessNotApproved": "Bitte zuerst den angeforderten Zugriff freigeben.",
+      "devToolsOnly": "Diese Aktion ist nur in der Entwicklungsumgebung möglich; im Produktivsystem werden die Schemas beim Build automatisch synchronisiert.",
+      "syncFailed": "Schemas konnten nicht synchronisiert werden. Details im Server-Log."
     },
     "access": {
       "pending": "Freigabe ausstehend",
