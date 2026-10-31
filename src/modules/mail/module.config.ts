@@ -10,6 +10,8 @@ export const moduleConfig: ModuleConfig = {
   category: "CORE",
   isProtected: true,
   hasSchema: true,
+  // SMTP gönderimi (`pnpm module:deps` kök package.json'a ekler).
+  dependencies: { nodemailer: "^10.2.1" },
   nav: [
     {
       href: "/mail",

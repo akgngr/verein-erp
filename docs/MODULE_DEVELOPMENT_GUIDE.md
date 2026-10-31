@@ -242,6 +242,37 @@ kullanılabilir tüm modüllerden **otomatik** oluşur; modül eklemek için bu 
 - Özel rol oluşturulurken başka bir rolün izinleri kopyalanabilir; boş da başlayabilir.
 - Yönetici rolünü yalnızca bir yönetici atayabilir/değiştirebilir (yetki yükseltme koruması).
 
+## 8c. Ek npm paketleri (`dependencies`)
+
+Modül çekirdekte olmayan bir npm paketine ihtiyaç duyarsa onu **kendi** `module.config.ts` dosyasında bildirir;
+kök `package.json`'a elle eklenmez.
+
+```ts
+// src/modules/rozetler/module.config.ts
+export const moduleConfig: ModuleConfig = {
+  key: "rozetler",
+  // …
+  dependencies: { qrcode: "^1.5.4" },
+};
+```
+
+```bash
+pnpm module:deps          # bildirilen paketleri kurar, kaldırılan modüllerin paketlerini siler
+pnpm module:deps --check  # yalnızca kontrol (CI / değişiklik yapmaz)
+```
+
+Ardından `package.json` ve `pnpm-lock.yaml` commit'lenir. Kurallar:
+
+- **Tek kurulum:** paketler kök `package.json`'a eklenir (Next.js modülleri tek uygulama olarak derler);
+  hangi modülün eklediği `package.json → moduleDependencies` alanında tutulur. Bu alanı elle düzenlemeyin.
+- **Çekirdek paketler** (modüller dışındaki kodun kullandıkları: Next, React, HeroUI, Prisma, zod, exceljs…)
+  bildirilmeden kullanılabilir. Modül bunları bildirirse yalnızca sürüm uyumu denetlenir; **çekirdek sürümü
+  modülden değiştirilemez** ve modül kaldırılınca silinmez.
+- **Doğrulayıcı** (`pnpm module:validate`, CI'da da çalışır): bildirilmemiş dış paket, kurulmamış bildirim,
+  geçersiz/uyumsuz sürüm ve eksik sahiplik kaydı hata verir.
+- **Güvenlik:** paketler `--ignore-scripts` ile kurulur (kurulum betikleri çalışmaz). İki modül aynı paketin
+  uyumsuz sürümlerini isterse komut durur. Dışarıdan gelen modüllerde paket listesi kurulumdan önce incelenmelidir.
+
 ## 9. Panel kartları (`cards/`)
 
 Modül panele (`/`) kart sunabilir. Kullanıcı "Paneli düzenle" ile kartları ekler, kaldırır ve

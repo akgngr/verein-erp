@@ -63,6 +63,8 @@ KURALLAR (her biri CI'da otomatik denetlenir):
     (`@/shared/ai/define`, rehber §9b). Okuma araçları kişisel veri döndürmez; yazma araçları yalnızca
     `propose(...)` ile onay kartı önerir, işi `actions.<eylem>.execute` modül eylemiyle yapar.
     Her eylem için `ai.<eylem>.kind|confirm|done` çevirileri zorunlu.
+19. Ek npm paketi gerekiyorsa `module.config.ts → dependencies: { "paket": "^x.y.z" }` ve `pnpm module:deps`;
+    kök package.json'a elle ekleme (rehber §8c).
 
 ÜRETECEĞİN DOSYALAR (tam yol + eksiksiz kod, TODO bırakma):
 module.config.ts, permissions.ts, schema.prisma, types.ts, index.ts, server.ts ("server-only"), ui.ts,
