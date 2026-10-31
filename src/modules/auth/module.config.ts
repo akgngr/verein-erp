@@ -6,7 +6,7 @@ export const moduleConfig: ModuleConfig = {
   description: "Kullanıcı girişi, oturum yönetimi ve parola güvenliği.",
   category: "CORE",
   isProtected: true,
-  hasSchema: false,
+  hasSchema: true,
   // Menüde görünmeyen profil sayfası (/profil) bu köke bağlanır.
   basePath: "/profil",
   nav: [],

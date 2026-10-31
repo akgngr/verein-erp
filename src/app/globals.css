@@ -44,3 +44,37 @@ body {
 .dark ::-webkit-scrollbar-thumb:hover {
   background: rgba(156, 163, 175, 0.5);
 }
+
+/* ── Form alanı kenarlıkları ────────────────────────────────────────────────
+   KARAR: HeroUI "flat" alanlar odaklanmadan zemin rengiyle neredeyse aynı görünüyordu. Tüm
+   input/textarea/tarih/select alanlarına ince bir kenarlık verilir — açık temada orta gri,
+   koyu temada hafif neon cyan. Odakta birincil renk, hatada kırmızı. Global olduğu için
+   modüllerdeki doğrudan <Input>/<Select> kullanımları da aynı görünümü alır. */
+:root {
+  --field-border: #c4c4cc;
+  --field-border-hover: #9f9fa9;
+}
+.dark {
+  --field-border: rgba(34, 211, 238, 0.42);
+  --field-border-hover: rgba(34, 211, 238, 0.7);
+}
+[data-slot="input-wrapper"],
+button[data-slot="trigger"][aria-haspopup="listbox"] {
+  border-width: 1px;
+  border-style: solid;
+  border-color: var(--field-border);
+}
+[data-slot="input-wrapper"]:hover,
+button[data-slot="trigger"][aria-haspopup="listbox"]:hover {
+  border-color: var(--field-border-hover);
+}
+[data-slot="input-wrapper"]:focus-within,
+[data-slot="input-wrapper"][data-focus="true"],
+button[data-slot="trigger"][aria-haspopup="listbox"][data-focus="true"],
+button[data-slot="trigger"][aria-haspopup="listbox"][aria-expanded="true"] {
+  border-color: hsl(var(--heroui-primary));
+}
+[data-invalid="true"] [data-slot="input-wrapper"],
+[data-invalid="true"] button[data-slot="trigger"][aria-haspopup="listbox"] {
+  border-color: hsl(var(--heroui-danger));
+}
