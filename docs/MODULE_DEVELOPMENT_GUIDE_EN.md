@@ -247,6 +247,21 @@ export const cards = defineCards([
 
 ---
 
+## 9b. Assistant (AI) contract (`ai.ts`)
+
+A module declares what the assistant may do with it in **its own `ai.ts`** (TypeScript rather than
+YAML/JSON: schemas and functions are type-checked and read by the validator). `pnpm module:sync`
+generates `src/ai-registry.ts`; nothing changes by hand in the AI module. Reference:
+`src/modules/tasks/ai.ts`. Types: `src/shared/ai/define.ts`.
+
+Rules:
+- `operation` (read/create/update/delete) maps to the admin's permission matrix row (default: off).
+- Write tools never change data; they `propose` a confirmation card. On confirm, `actions[action].execute`
+  runs after the matrix is re-checked and the payload re-validated; the module action checks the user's own role.
+- Tools never return names, contact, address, bank or ID data (GDPR).
+- Each action needs `ai.<action>.kind|confirm|done` in `messages/{tr,de}.json`.
+- Access to other modules still goes through the `access` approval in §8.
+
 ## 10. Verification (CI runs the same steps)
 
 ```bash
