@@ -17,6 +17,7 @@ import { assertNoNegativeCash, assertNoNegativeCashWithReplacement, toDecimal } 
 import { BookingRuleError, assertBookingDateAllowed, assertCategoryMatches } from "../services/booking-guards";
 import { allocateBookingNumber, runWithBookingNumberRetry } from "../services/booking-number";
 import { berlinYear, parseDateOnly } from "../utils";
+import { effectiveTaxRate, getTaxSettings, taxColumnsFromGross } from "../services/tax";
 
 function ruleError(error: unknown): never {
   if (error instanceof BookingRuleError) {
@@ -100,6 +101,8 @@ export async function createBookingAction(
             }
 
             const { sequence, bookingNumber } = await allocateBookingNumber(tx, year);
+            // Virmanda KDV olmaz; § 19 küçük işletmede oran 0'a zorlanır.
+            const taxRate = input.type === "TRANSFER" ? 0 : effectiveTaxRate(input.taxRate, await getTaxSettings(tx));
 
             const booking = await tx.accountingBooking.create({
               data: {
@@ -113,6 +116,7 @@ export async function createBookingAction(
                 categoryId: input.type === "TRANSFER" ? null : input.categoryId,
                 projectId: input.projectId ?? null,
                 amount: toDecimal(cents),
+                ...taxColumnsFromGross(cents, taxRate),
                 description: input.description,
                 counterparty: input.counterparty ?? null,
                 receiptReference: input.receiptReference ?? null,
@@ -212,6 +216,7 @@ export async function updateBookingAction(input: unknown): Promise<ActionResult>
             await assertCategoryMatches(input.categoryId, existing.type, tx);
           }
 
+          const taxRate = existing.type === "TRANSFER" ? 0 : effectiveTaxRate(input.taxRate, await getTaxSettings(tx));
           await tx.accountingBooking.update({
             where: { id: existing.id },
             data: {
@@ -221,6 +226,7 @@ export async function updateBookingAction(input: unknown): Promise<ActionResult>
               categoryId: existing.type === "TRANSFER" ? null : input.categoryId,
               projectId: input.projectId ?? null,
               amount: toDecimal(cents),
+              ...taxColumnsFromGross(cents, taxRate),
               description: input.description,
               counterparty: input.counterparty ?? null,
               receiptReference: input.receiptReference ?? null,

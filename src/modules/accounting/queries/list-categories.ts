@@ -21,6 +21,7 @@ export async function listCategoryOptions(
       sphere: true,
       isActive: true,
       helpText: true,
+      defaultTaxRate: true,
     },
   });
   return rows;
@@ -36,6 +37,8 @@ export async function listAllCategories(): Promise<Array<{
   isActive: boolean;
   bookingCount: number;
   sortOrder: number;
+  accountNumber: string | null;
+  defaultTaxRate: number;
 }>> {
   const db = getDb();
   const rows = await db.accountingCategory.findMany({
@@ -48,6 +51,8 @@ export async function listAllCategories(): Promise<Array<{
       helpText: true,
       isActive: true,
       sortOrder: true,
+      accountNumber: true,
+      defaultTaxRate: true,
       _count: { select: { bookings: true } },
     },
   });

@@ -10,6 +10,7 @@ import { ActionError, createAction } from "@/modules/auth/server";
 
 import { accountingSetupPermissions } from "../permissions";
 import { categoryCreateSchema, categoryUpdateSchema } from "../schemas/category";
+import { definedOnly } from "../schemas/chart";
 
 /** Kategori oluştur (§ 8 md. 12): ad benzersiz. */
 export async function createCategoryAction(
@@ -28,6 +29,8 @@ export async function createCategoryAction(
             sphere: input.sphere,
             helpText: input.helpText ?? null,
             sortOrder: 100,
+            accountNumber: input.accountNumber ?? null,
+            defaultTaxRate: input.defaultTaxRate ?? 0,
           },
         });
         await audit({
@@ -58,6 +61,8 @@ const categoryEditSchema = z.object({
   sphere: categoryUpdateSchema.shape.sphere,
   helpText: categoryUpdateSchema.shape.helpText,
   isActive: categoryUpdateSchema.shape.isActive,
+  accountNumber: categoryUpdateSchema.shape.accountNumber,
+  defaultTaxRate: categoryUpdateSchema.shape.defaultTaxRate,
 });
 
 /**
@@ -98,6 +103,7 @@ export async function updateCategoryAction(input: unknown): Promise<ActionResult
           sphere: input.sphere,
           helpText: input.helpText ?? null,
           isActive: input.isActive ?? existing.isActive,
+          ...definedOnly({ accountNumber: input.accountNumber, defaultTaxRate: input.defaultTaxRate }),
         },
       });
 

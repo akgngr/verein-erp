@@ -11,6 +11,7 @@ import { listPaymentsForAccounting } from "@/modules/members/server";
 
 import { PAYMENT_METHOD_ACCOUNT } from "../constants";
 import { allocateBookingNumber } from "./booking-number";
+import { taxColumnsFromGross } from "./tax";
 import { BookingRuleError } from "./booking-guards";
 import { ActionError } from "@/modules/auth/server";
 
@@ -227,6 +228,8 @@ export async function runMemberSync(
               accountId,
               categoryId: settings.memberFeeCategoryId!,
               amount: (payment.amountCents / 100).toFixed(2),
+              // Üye aidatı KDV'siz (ideeller Bereich).
+              ...taxColumnsFromGross(payment.amountCents, 0),
               description,
               receiptReference: payment.receiptNumber,
               sourceType: "MEMBER_PAYMENT",

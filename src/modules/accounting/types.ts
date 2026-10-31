@@ -57,6 +57,10 @@ export type BookingDetail = BookingListItem & {
   updatedByLabel: string | null;
   updatedAt: Date;
   files: BookingFileRow[];
+  /** ACC-1: KDV oranı ve tutarları (amountCents brüttür). */
+  taxRate: number;
+  netCents: number;
+  taxCents: number;
 };
 
 /** Hesap + bakiye çipi (§ 11.1). */
@@ -84,6 +88,8 @@ export type CategoryOption = {
   sphere: Sphere;
   isActive: boolean;
   helpText: string | null;
+  /** ACC-1: fiş formunda varsayılan KDV oranı. */
+  defaultTaxRate: number;
 };
 
 /** Proje seçenekleri (form). */

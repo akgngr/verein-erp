@@ -41,6 +41,7 @@ export async function listAllAccounts(): Promise<Array<{
   openingDate: Date;
   isActive: boolean;
   bookingCount: number;
+  accountNumber: string | null;
 }>> {
   const db = getDb();
   const accounts = await db.accountingAccount.findMany({
@@ -52,6 +53,7 @@ export async function listAllAccounts(): Promise<Array<{
       openingBalance: true,
       openingDate: true,
       isActive: true,
+      accountNumber: true,
       _count: { select: { bookings: true } },
     },
   });
@@ -65,6 +67,7 @@ export async function listAllAccounts(): Promise<Array<{
       openingDate: account.openingDate,
       isActive: account.isActive,
       bookingCount: account._count.bookings,
+      accountNumber: account.accountNumber,
     });
   }
   return result;

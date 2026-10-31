@@ -225,19 +225,29 @@ export async function recordInvoicePaymentAction(input: unknown): Promise<Action
       const bookingNumber = await getDb().$transaction(async (tx) => {
         const invoice = await loadInvoice(input.id, tx);
         if (invoice.kind !== "INVOICE" || invoice.status !== "ISSUED") throw new ActionError("accounting.invoices.errors.notPayable");
-        const booking = await createSourcedBooking({
-          tx,
-          actor: { id: user.id, label: buildUserLabel(user.name, user.email) },
-          type: "INCOME",
-          sourceType: INVOICE_SOURCE,
-          sourceId: invoice.id,
-          bookingDate: paidDate,
-          accountId: input.accountId,
-          categoryId: input.categoryId,
-          amountCents: invoice.grossCents,
-          description: `Rechnung ${invoice.number} – ${invoice.recipientName}`.slice(0, 300), // i18n-ignore: Buchungstext (Almanca muhasebe kaydı, arayüz metni değil)
-          receiptReference: invoice.number,
-        });
+        // KDV oranı başına bir gelir fişi (UStVA'da her oran ayrı Kennzahl'a gider); ilk fiş faturaya bağlanır.
+        const lines = await tx.accountingInvoiceLine.findMany({ where: { invoiceId: invoice.id }, orderBy: { position: "asc" } });
+        const { byRate } = calculateInvoiceTotals(lines.map((line) => ({ quantity: Number(line.quantity), unitPriceCents: line.unitPriceCents, taxRate: line.taxRate })));
+        const groups = byRate.filter((group) => group.netCents + group.taxCents !== 0);
+        let booking: { id: string; bookingNumber: string } | null = null;
+        for (const [index, group] of (groups.length ? groups : [{ rate: 0, netCents: invoice.grossCents, taxCents: 0 }]).entries()) {
+          const created = await createSourcedBooking({
+            tx,
+            actor: { id: user.id, label: buildUserLabel(user.name, user.email) },
+            type: "INCOME",
+            sourceType: INVOICE_SOURCE,
+            sourceId: index === 0 ? invoice.id : `${invoice.id}:${index + 1}`,
+            bookingDate: paidDate,
+            accountId: input.accountId,
+            categoryId: input.categoryId,
+            amountCents: group.netCents + group.taxCents,
+            tax: { rate: group.rate, netCents: group.netCents, taxCents: group.taxCents },
+            description: `Rechnung ${invoice.number} – ${invoice.recipientName}${groups.length > 1 ? ` (${group.rate} % USt)` : ""}`.slice(0, 300), // i18n-ignore: Buchungstext (Almanca muhasebe kaydı, arayüz metni değil)
+            receiptReference: invoice.number,
+          });
+          booking ??= created;
+        }
+        if (!booking) throw new ActionError("common.errors.unexpected");
         await tx.accountingInvoice.update({
           where: { id: invoice.id },
           data: { status: "PAID", paidAt: paidDate, bookingId: booking.id, categoryId: input.categoryId },

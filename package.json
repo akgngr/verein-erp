@@ -1,6 +1,6 @@
 {
   "name": "dernek-yonetim-sistemi",
-  "version": "0.15.1",
+  "version": "0.16.0",
   "private": true,
   "packageManager": "pnpm@10.34.9",
   "engines": {

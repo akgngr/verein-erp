@@ -2,6 +2,8 @@ import "server-only";
 
 import { getDb } from "@/shared/db";
 
+import { getTaxSettings, type TaxSettings } from "../services/tax";
+
 /** Muhasebe ayarları (§ 11.7): id + ad anlık görüntüsüyle. */
 export async function getSettings(): Promise<{
   memberFeeCategoryId: string | null;
@@ -13,6 +15,8 @@ export async function getSettings(): Promise<{
   /** Faz 5 (§ 6): bağış kategorisi. */
   donationCategoryId: string | null;
   donationCategoryName: string | null;
+  /** ACC-1: vergi ayarları (SKR, §19, Ist/Soll, UStVA dönemi). */
+  tax: TaxSettings;
 }> {
   const db = getDb();
   const settings = await db.accountingSettings.findUnique({
@@ -46,6 +50,7 @@ export async function getSettings(): Promise<{
         })
       : null,
   ]);
+  const tax = await getTaxSettings(db);
 
   return {
     memberFeeCategoryId: settings?.memberFeeCategoryId ?? null,
@@ -56,5 +61,6 @@ export async function getSettings(): Promise<{
     bankAccountName: bankAccount?.name ?? null,
     donationCategoryId: settings?.donationCategoryId ?? null,
     donationCategoryName: donationCategory?.name ?? null,
+    tax,
   };
 }

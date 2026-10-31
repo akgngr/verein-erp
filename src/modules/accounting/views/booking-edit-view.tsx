@@ -11,6 +11,8 @@ import { listCategoryOptions } from "../queries/list-categories";
 import { listProjectOptions } from "../queries/list-projects";
 import { accountingPermissions } from "../permissions";
 import { BookingForm } from "../components/booking-form";
+import { getTaxSettings } from "../services/tax";
+import { getDb } from "@/shared/db";
 
 /** Fiş düzenleme (§ 11.2): ters/kilitli/kaynak fişlerde açıklayıcı engel. */
 export async function AccountingEditView({ id }: { id: string }) {
@@ -21,11 +23,12 @@ export async function AccountingEditView({ id }: { id: string }) {
     throw error;
   }
 
-  const [booking, accounts, categories, projects] = await Promise.all([
+  const [booking, accounts, categories, projects, taxSettings] = await Promise.all([
     getBooking(id),
     listAccountOptions(),
     listCategoryOptions(),
     listProjectOptions(),
+    getTaxSettings(getDb()),
   ]);
   if (!booking) notFound();
   const t = await getTranslations("accounting.form");
@@ -51,6 +54,7 @@ export async function AccountingEditView({ id }: { id: string }) {
     <FormDrawer title={t("editTitle")} description={booking.bookingNumber}>
       <BookingForm
         mode="edit"
+        smallBusiness={taxSettings.smallBusiness}
         accounts={accounts}
         categories={categories}
         projects={projects}
@@ -65,6 +69,7 @@ export async function AccountingEditView({ id }: { id: string }) {
           categoryId: booking.categoryId ?? "",
           projectId: booking.projectId ?? "",
           amount: (booking.amountCents / 100).toFixed(2),
+          taxRate: String(booking.taxRate),
           description: booking.description,
           counterparty: booking.counterparty ?? "",
           receiptReference: booking.receiptReference ?? "",

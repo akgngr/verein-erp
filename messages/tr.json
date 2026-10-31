@@ -359,7 +359,11 @@
       "editBlockedSource": "Otomatik fiş düzenlenemez; üyelik aktarımı yönetir.",
       "toastSaved": "Fiş kaydedildi: {number}",
       "toastUpdated": "Fiş güncellendi.",
-      "toastReversed": "Fiş iptal edildi."
+      "toastReversed": "Fiş iptal edildi.",
+      "amountGross": "Tutar (brüt, KDV dahil)",
+      "taxRate": "KDV oranı",
+      "taxPreview": "Net {net} + %{rate} KDV {tax}",
+      "smallBusinessNote": "Kleinunternehmer (§ 19 UStG) etkin: KDV hesaplanmaz."
     },
     "reverse": {
       "title": "Fişi iptal et (Storno)",
@@ -385,7 +389,8 @@
         "createdBy": "Oluşturan",
         "updatedBy": "Güncelleyen",
         "source": "Kaynak",
-        "reverseInfo": "İptal bilgisi"
+        "reverseInfo": "İptal bilgisi",
+        "tax": "KDV"
       },
       "reversedBy": "{label} — {date}",
       "reason": "Neden: {reason}",
@@ -397,7 +402,8 @@
         "upload": "Belge yükle",
         "delete": "Sil",
         "download": "İndir"
-      }
+      },
+      "taxLine": "Net {net} · %{rate} KDV {tax}"
     },
     "setup": {
       "title": "Muhasebe ayarları",
@@ -421,7 +427,9 @@
         "typeCASH": "Kasa (Kasse)",
         "typeBANK": "Banka hesabı (Girokonto)",
         "typeOTHER": "Diğer (Sonstiges)",
-        "saved": "Hesap kaydedildi."
+        "saved": "Hesap kaydedildi.",
+        "accountNumber": "Hesap numarası (SKR)",
+        "accountNumberHint": "{chart} önerisi: {number}"
       },
       "categories": {
         "name": "Kategori",
@@ -440,7 +448,9 @@
         "sphereASSET_MANAGEMENT": "Varlık yönetimi",
         "spherePURPOSE_OPERATION": "Amaca bağlı işletme",
         "sphereECONOMIC_OPERATION": "Ticari işletme",
-        "saved": "Kategori kaydedildi."
+        "saved": "Kategori kaydedildi.",
+        "accountNumber": "Hesap numarası (SKR)",
+        "defaultTaxRate": "Varsayılan KDV oranı"
       },
       "projects": {
         "name": "Proje",
@@ -461,6 +471,40 @@
         "save": "Kaydet",
         "toastSaved": "Ayarlar kaydedildi.",
         "donationCategory": "Bağış kategorisi"
+      },
+      "tax": {
+        "title": "Vergi ayarları",
+        "hint": "Hesap planı, KDV yöntemi ve beyan dönemi. DATEV ve UStVA bu ayarları kullanır.",
+        "chart": "Hesap planı",
+        "chartHint": "Vereinler ve şirketler çoğunlukla SKR03, bazı şirketler SKR04 kullanır.",
+        "method": "Vergilendirme",
+        "methodHint": "Ist: tahsilatta, Soll: faturada KDV doğar.",
+        "methodIST": "Ist-Versteuerung (tahsilat)",
+        "methodSOLL": "Soll-Versteuerung (fatura)",
+        "period": "UStVA dönemi",
+        "periodMONTH": "Aylık",
+        "periodQUARTER": "Üç aylık",
+        "periodYEAR": "Yıllık",
+        "smallBusiness": "Kleinunternehmer (§ 19 UStG)",
+        "smallBusinessHint": "Açıkken yeni fişlerde KDV %0 yazılır; faturalarda KDV gösterilmez.",
+        "save": "Kaydet",
+        "saved": "Vergi ayarları kaydedildi."
+      },
+      "skr": {
+        "revenue19": "Satış %19",
+        "revenue7": "Satış %7",
+        "revenueExempt": "KDV'siz gelir",
+        "smallBusinessRevenue": "§19 geliri",
+        "rent": "Kira",
+        "officeSupplies": "Kırtasiye",
+        "telecom": "Telefon/İnternet",
+        "insurance": "Sigorta",
+        "advertising": "Reklam",
+        "travel": "Seyahat",
+        "legalConsulting": "Hukuk/Danışmanlık",
+        "bankFees": "Banka masrafı",
+        "cash": "Kasa",
+        "bank": "Banka"
       }
     },
     "budget": {
@@ -697,7 +741,9 @@
       "feeCategoryRequired": "Aidat kategorisi seçin.",
       "cashAccountRequired": "Kasa hesabı seçin.",
       "bankAccountRequired": "Banka hesabı seçin.",
-      "donationCategoryRequired": "Bağış kategorisi seçin."
+      "donationCategoryRequired": "Bağış kategorisi seçin.",
+      "taxRateInvalid": "KDV oranı 0, 7 veya 19 olmalı.",
+      "accountNumberInvalid": "Hesap numarası 4–8 haneli rakam olmalı."
     },
     "module": {
       "label": "Muhasebe",
