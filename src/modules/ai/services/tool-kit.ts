@@ -30,11 +30,3 @@ export type ToolDefinition<S extends z.ZodType> = {
 export type JsonSchema = Record<string, unknown>;
 
 export const define = <S extends z.ZodType>(tool: ToolDefinition<S>) => tool;
-export const yearSchema = z.object({ year: z.number().int().min(2000).max(2100) });
-export const YEAR_INPUT: JsonSchema = {
-  type: "object",
-  properties: { year: { type: "integer", description: "Fiscal year, e.g. 2026" } }, // i18n-ignore (model-facing tool text)
-  required: ["year"],
-  additionalProperties: false,
-};
-export const euros = (cents: number) => Math.round(cents) / 100;

@@ -249,33 +249,100 @@ export const cards = defineCards([
 
 ## 9b. Asistan (AI) sözleşmesi (`ai.ts`)
 
-Modül, asistanın kendisiyle neler yapabileceğini **kendi klasöründeki `ai.ts`** dosyasında bildirir
-(YAML/JSON yerine TypeScript: şemalar ve fonksiyonlar tip denetimli, doğrulayıcı tarafından okunur).
-`pnpm module:sync` dosyayı bulur ve `src/ai-registry.ts`'i üretir; AI modülünde elle bir şey değişmez.
-Referans örnek: `src/modules/tasks/ai.ts`. Türler: `src/shared/ai/define.ts`.
+Asistanın bir modülle yapabileceği **her şey** o modülün kendi klasöründeki `ai.ts` dosyasında
+tanımlıdır; AI modülünde modüle özel tek satır kod yoktur. (YAML/JSON yerine TypeScript: şemalar ve
+fonksiyonlar tip denetimli, doğrulayıcı tarafından okunur, ikisi birbirinden kopamaz.)
+`pnpm module:sync` tüm `ai.ts` dosyalarını bulur ve `src/ai-registry.ts`'i üretir (elle düzenlenmez).
+Türler ve ortak yardımcılar: `src/shared/ai/define.ts`.
+
+**Mevcut modüller** (örnek olarak bakın):
+
+| Modül | Okuma | Oluşturma / güncelleme / silme (onay kartı) |
+|---|---|---|
+| `tasks` | açık görevler | görev oluştur, tamamla, sil |
+| `documents` | liste, ayrıntı, ek dosya metni, istatistik | evrak kaydı, durum, sil |
+| `meetings` | liste, gündem + kararlar, istatistik | toplantı, durum, sil |
+| `inventory` | özet, kalem listesi | kalem, durum, sil |
+| `courses` | kurs listesi, istatistik | kurs (planlanan), durum, sil |
+| `events` | yaklaşan etkinlikler | taslak etkinlik |
+| `accounting` | gelir-gider özeti, rapor bağlantısı | — |
+| `members`, `donations`, `students`, `progress` | yalnızca istatistik | — |
+| `organization` | kamuya açık ana veriler | — |
+
+### Şablon
 
 ```ts
 import "server-only";
+
+import { z } from "zod";
+
+import { aiAction, aiTool, defineModuleAi, NO_INPUT, PROPOSED } from "@/shared/ai/define";
+import { can } from "@/shared/permissions/define";
+
+import { examplePermissions } from "./permissions";
+import { createThingAction, listThings } from "./server";
+
+const createSchema = z.object({ title: z.string().min(1).max(200) });
+
 export const ai = defineModuleAi({
-  module: "tasks",                      // klasör adıyla aynı
+  module: "example",                         // klasör adıyla AYNI
   tools: [
-    aiTool({ name: "list_open_tasks", operation: "read", allowed, description, schema, inputSchema, run }),
-    aiTool({ name: "propose_task", operation: "create", ...,
-      run: async (input, { propose }) => { propose({ action: "create", title, details, payload: input }); return PROPOSED; } }),
+    aiTool({
+      name: "list_things",                   // snake_case, tüm modüllerde benzersiz
+      operation: "read",
+      allowed: (user) => can(user.role, examplePermissions, "view"),
+      description: "Things: id, title, status. No personal data.",   // modele yönelik, İngilizce
+      schema: z.object({}),
+      inputSchema: NO_INPUT,                  // modele gönderilen JSON şeması
+      run: async () => (await listThings()).map(({ id, title, status }) => ({ id, title, status })),
+    }),
+    aiTool({
+      name: "propose_thing",
+      operation: "create",
+      allowed: (user) => can(user.role, examplePermissions, "create"),
+      description: "PROPOSES a new thing. Nothing is created until the user confirms.",
+      schema: createSchema,
+      inputSchema: { type: "object", properties: { title: { type: "string" } }, required: ["title"], additionalProperties: false },
+      run: async (input, { propose }) => {
+        propose({ action: "create", title: input.title, details: [], payload: input });
+        return PROPOSED;
+      },
+    }),
   ],
   actions: {
-    create: aiAction({ operation: "create", schema, execute: (payload) => createTaskAction(payload) }),
+    create: aiAction({ operation: "create", schema: createSchema, execute: (input) => createThingAction(input) }),
   },
 });
 ```
 
-Kurallar:
-- `operation` (read/create/update/delete) yöneticinin **Ayarlar → Asistan** izin matrisindeki satırı belirler; varsayılan kapalıdır.
-- Yazma araçları veriyi değiştirmez, yalnızca `propose` ile onay kartı üretir. Kullanıcı onaylayınca `actions[eylem].execute`
-  çalışır: matris yeniden denetlenir, payload şemayla yeniden doğrulanır, modül eylemi kullanıcının kendi yetkisini denetler.
-- Araçlar kişi adı, iletişim, adres, banka veya kimlik verisi **döndürmez** (KVKK/DSGVO).
-- Her eylem için `messages/{tr,de}.json` içinde `ai.<eylem>.kind`, `ai.<eylem>.confirm`, `ai.<eylem>.done` zorunludur.
-- Başka modülün verisine erişim yine §8'deki `access` onayıyla olur; `ai.ts` yalnızca kendi `server` girişini ve onaylı erişimleri kullanır.
+### Kurallar
+
+- **İzin matrisi:** `operation` (read/create/update/delete), yöneticinin **Ayarlar → Yapay zekâ** ekranındaki
+  modül satırını belirler. Varsayılan kapalıdır; kapalı işlemin aracı modele hiç sunulmaz. Modülde bir
+  işlem için araç yoksa o kutu ekranda çıkmaz.
+- **Yazma yok, öneri var:** yazma araçları veriyi değiştirmez; `propose(...)` ile onay kartı üretir ve
+  `PROPOSED` döner. Kullanıcı onaylayınca `actions[eylem].execute` çalışır. Onayda: eylem modülde
+  tanımlı mı, işlem türü (istemciden değil) eylem tanımından okunur, matris yeniden denetlenir,
+  payload `schema` ile yeniden doğrulanır, çağrılan modül eylemi kullanıcının kendi rol yetkisini denetler.
+- **`execute`** `{ ok: boolean; error?: string }` döner; `error` bir çeviri anahtarıdır. Modülün
+  `createAction` ile yazılmış eylemleri bu biçimi zaten döner.
+- **KVKK/DSGVO:** araçlar kişi adı, iletişim, adres, banka veya kimlik verisi **döndürmez**; yalnızca
+  sayılar, kurumsal kayıtlar ve başlıklar. Kart `details` satırları da kişisel veri içermez.
+  Kullanıcıya giden metinlerdeki maskeler (`title`, `details`, `payload`) AI modülünce otomatik çözülür.
+- **Çeviriler:** her eylem için `messages/{tr,de}.json` içinde `ai.<eylem>.kind` (kart başlığı),
+  `ai.<eylem>.confirm` (düğme) ve `ai.<eylem>.done` (bildirim) zorunludur.
+- **Modüller arası erişim:** `ai.ts` yalnızca **kendi** `./server` ve `./permissions` dosyalarını kullanır.
+  Başka modülün verisi gerekiyorsa §8'deki `access` onayı ve o modülün `server` girişi kullanılır.
+- **Doğrulayıcı** (`pnpm module:validate`) şunları denetler: `server-only`, `export const ai = defineModuleAi(...)`,
+  `module` = klasör adı, snake_case araç adları, `propose` edilen her eylemin `actions` içinde tanımlı olması
+  ve eylem çevirileri.
+
+### Yeni modüle asistan desteği ekleme (kontrol listesi)
+
+1. `src/modules/<modül>/ai.ts` dosyasını yukarıdaki şablonla oluşturun.
+2. Eylem çevirilerini `messages/tr.json` ve `messages/de.json` içine ekleyin.
+3. `pnpm module:sync` → `pnpm module:validate` → `pnpm typecheck`.
+4. Ayarlar → Yapay zekâ ekranında modül satırının çıktığını görün ve izinleri açın.
 
 ## 10. Doğrulama (CI aynı adımları çalıştırır)
 

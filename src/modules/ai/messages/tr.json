@@ -65,69 +65,9 @@
       "q4": "Yıllık rapor (Kassenbericht) PDF'ini ver."
     },
     "proposal": {
-      "kinds": {
-        "createTask": "Görev önerisi",
-        "completeTask": "Görevi tamamlama",
-        "deleteTask": "Görevi silme",
-        "createEvent": "Etkinlik önerisi (taslak)",
-        "createDocument": "Evrak kaydı önerisi",
-        "changeDocumentStatus": "Evrak durumu",
-        "deleteDocument": "Evrakı silme",
-        "createMeeting": "Toplantı önerisi",
-        "changeMeetingStatus": "Toplantı durumu",
-        "deleteMeeting": "Toplantıyı silme",
-        "createInventory": "Envanter kalemi önerisi",
-        "changeInventoryStatus": "Envanter durumu",
-        "deleteInventory": "Envanter kalemini silme",
-        "createCourse": "Kurs önerisi (planlanan)",
-        "changeCourseStatus": "Kurs durumu",
-        "deleteCourse": "Kursu silme"
-      },
-      "confirm": {
-        "createTask": "Görevi oluştur",
-        "completeTask": "Tamamlandı olarak işaretle",
-        "deleteTask": "Görevi sil",
-        "createEvent": "Taslak etkinlik oluştur",
-        "createDocument": "Evrakı kaydet",
-        "changeDocumentStatus": "Durumu değiştir",
-        "deleteDocument": "Evrakı sil",
-        "createMeeting": "Toplantıyı oluştur",
-        "changeMeetingStatus": "Durumu değiştir",
-        "deleteMeeting": "Toplantıyı sil",
-        "createInventory": "Kalemi ekle",
-        "changeInventoryStatus": "Durumu değiştir",
-        "deleteInventory": "Kalemi sil",
-        "createCourse": "Kursu oluştur",
-        "changeCourseStatus": "Durumu değiştir",
-        "deleteCourse": "Kursu sil"
-      },
-      "done": {
-        "createTask": "Görev oluşturuldu.",
-        "completeTask": "Görev tamamlandı.",
-        "deleteTask": "Görev silindi.",
-        "createEvent": "Taslak etkinlik oluşturuldu.",
-        "createDocument": "Evrak kaydedildi.",
-        "changeDocumentStatus": "Evrak durumu değiştirildi.",
-        "deleteDocument": "Evrak silindi.",
-        "createMeeting": "Toplantı oluşturuldu.",
-        "changeMeetingStatus": "Toplantı durumu değiştirildi.",
-        "deleteMeeting": "Toplantı silindi.",
-        "createInventory": "Envanter kalemi eklendi.",
-        "changeInventoryStatus": "Envanter durumu değiştirildi.",
-        "deleteInventory": "Envanter kalemi silindi.",
-        "createCourse": "Kurs oluşturuldu.",
-        "changeCourseStatus": "Kurs durumu değiştirildi.",
-        "deleteCourse": "Kurs silindi."
-      },
       "applied": "Uygulandı",
-      "online": "Çevrim içi",
-      "priority": {
-        "LOW": "Düşük öncelik",
-        "NORMAL": "Normal öncelik",
-        "HIGH": "Yüksek öncelik"
-      },
-      "newStatus": "Yeni durum",
-      "restored": "Geçmiş öneri (yeniden uygulamak için tekrar isteyin)"
+      "restored": "Geçmiş öneri (yeniden uygulamak için tekrar isteyin)",
+      "legacy": "Önceki sürümden öneri"
     },
     "consent": {
       "title": "Veri koruma bilgilendirmesi",

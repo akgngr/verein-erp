@@ -529,5 +529,22 @@
   "access": {
     "members": "Liest die Mitgliederliste, um Teilnehmende hinzuzufügen.",
     "organization": "Verwendet den Vereinsbriefkopf im Protokoll-PDF."
+  },
+  "ai": {
+    "create": {
+      "kind": "Sitzungsvorschlag",
+      "confirm": "Sitzung anlegen",
+      "done": "Sitzung angelegt."
+    },
+    "changeStatus": {
+      "kind": "Sitzungsstatus",
+      "confirm": "Status ändern",
+      "done": "Sitzungsstatus geändert."
+    },
+    "delete": {
+      "kind": "Sitzung löschen",
+      "confirm": "Sitzung löschen",
+      "done": "Sitzung gelöscht."
+    }
   }
 }

@@ -65,69 +65,9 @@
       "q4": "Gib mir den Kassenbericht als PDF."
     },
     "proposal": {
-      "kinds": {
-        "createTask": "Aufgabenvorschlag",
-        "completeTask": "Aufgabe erledigen",
-        "deleteTask": "Aufgabe löschen",
-        "createEvent": "Veranstaltungsvorschlag (Entwurf)",
-        "createDocument": "Schriftverkehr anlegen",
-        "changeDocumentStatus": "Status des Schriftstücks",
-        "deleteDocument": "Schriftstück löschen",
-        "createMeeting": "Sitzungsvorschlag",
-        "changeMeetingStatus": "Sitzungsstatus",
-        "deleteMeeting": "Sitzung löschen",
-        "createInventory": "Inventarposten anlegen",
-        "changeInventoryStatus": "Inventarstatus",
-        "deleteInventory": "Inventarposten löschen",
-        "createCourse": "Kursvorschlag (geplant)",
-        "changeCourseStatus": "Kursstatus",
-        "deleteCourse": "Kurs löschen"
-      },
-      "confirm": {
-        "createTask": "Aufgabe anlegen",
-        "completeTask": "Als erledigt markieren",
-        "deleteTask": "Aufgabe löschen",
-        "createEvent": "Entwurf anlegen",
-        "createDocument": "Eintragen",
-        "changeDocumentStatus": "Status ändern",
-        "deleteDocument": "Löschen",
-        "createMeeting": "Sitzung anlegen",
-        "changeMeetingStatus": "Status ändern",
-        "deleteMeeting": "Sitzung löschen",
-        "createInventory": "Posten anlegen",
-        "changeInventoryStatus": "Status ändern",
-        "deleteInventory": "Posten löschen",
-        "createCourse": "Kurs anlegen",
-        "changeCourseStatus": "Status ändern",
-        "deleteCourse": "Kurs löschen"
-      },
-      "done": {
-        "createTask": "Aufgabe angelegt.",
-        "completeTask": "Aufgabe erledigt.",
-        "deleteTask": "Aufgabe gelöscht.",
-        "createEvent": "Veranstaltungsentwurf angelegt.",
-        "createDocument": "Schriftstück eingetragen.",
-        "changeDocumentStatus": "Status geändert.",
-        "deleteDocument": "Schriftstück gelöscht.",
-        "createMeeting": "Sitzung angelegt.",
-        "changeMeetingStatus": "Sitzungsstatus geändert.",
-        "deleteMeeting": "Sitzung gelöscht.",
-        "createInventory": "Inventarposten angelegt.",
-        "changeInventoryStatus": "Inventarstatus geändert.",
-        "deleteInventory": "Inventarposten gelöscht.",
-        "createCourse": "Kurs angelegt.",
-        "changeCourseStatus": "Kursstatus geändert.",
-        "deleteCourse": "Kurs gelöscht."
-      },
       "applied": "Ausgeführt",
-      "online": "Online",
-      "priority": {
-        "LOW": "Niedrige Priorität",
-        "NORMAL": "Normale Priorität",
-        "HIGH": "Hohe Priorität"
-      },
-      "newStatus": "Neuer Status",
-      "restored": "Früherer Vorschlag (zum Ausführen erneut anfragen)"
+      "restored": "Früherer Vorschlag (zum Ausführen erneut anfragen)",
+      "legacy": "Vorschlag aus einer früheren Version"
     },
     "consent": {
       "title": "Datenschutzhinweis",

@@ -293,5 +293,22 @@
       "message": "Son işlem tarihi geçmiş {count} evrak bekliyor.",
       "action": "Geciken evrakları gör"
     }
+  },
+  "ai": {
+    "create": {
+      "kind": "Evrak kaydı önerisi",
+      "confirm": "Evrakı kaydet",
+      "done": "Evrak kaydedildi."
+    },
+    "changeStatus": {
+      "kind": "Evrak durumu",
+      "confirm": "Durumu değiştir",
+      "done": "Evrak durumu değiştirildi."
+    },
+    "delete": {
+      "kind": "Evrakı silme",
+      "confirm": "Evrakı sil",
+      "done": "Evrak silindi."
+    }
   }
 }
