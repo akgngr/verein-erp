@@ -9,11 +9,11 @@ try {
   // .env yoksa değişkenler dışarıdan verilmelidir.
 }
 
-import { PrismaClient } from "@prisma/client";
 
 import { hashPassword } from "../src/shared/security/password";
+import { createPrismaClient } from "../src/shared/db-client";
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 
 const TEST_USERS = [
   { email: "sekreter@dernek.local", name: "Test Sekreter", role: "SECRETARY" as const, password: "Sekreter1234" },

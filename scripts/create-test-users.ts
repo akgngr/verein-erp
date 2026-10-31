@@ -12,9 +12,9 @@ try {
 }
 
 import bcrypt from "bcryptjs";
-import { PrismaClient } from "@prisma/client";
+import { createPrismaClient } from "../src/shared/db-client";
 
-const prisma = new PrismaClient();
+const prisma = createPrismaClient();
 
 const USERS = [
   { email: "sekreter@dernek.local", name: "Test Sekreter", role: "SECRETARY" as const },

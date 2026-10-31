@@ -15,6 +15,7 @@ import path from "node:path";
 
 // @prisma/client CommonJS olduğu için ESM'de varsayılan import ile alınır.
 import prismaClientPackage from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 import nextEnv from "@next/env";
 
 // .env / .env.local, Next.js ve prisma.config.ts ile aynı kuralla (ortamdaki değişkenler önceliklidir).
@@ -61,7 +62,7 @@ async function main() {
     process.exit(1);
   }
 
-  const db = new PrismaClient();
+  const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }) });
   const problems = [];
 
   try {

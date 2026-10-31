@@ -2,7 +2,8 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// Prisma 7: bağlantı adresi şemada değil — CLI için prisma.config.ts (datasource.url),
+// uygulama için src/shared/db.ts (@prisma/adapter-pg) kullanır.
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }

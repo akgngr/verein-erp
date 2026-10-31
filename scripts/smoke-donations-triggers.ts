@@ -1,7 +1,7 @@
 /** Faz 5 Adım 7 smoke testi: şema + tetikleyiciler. */
-import { PrismaClient } from "@prisma/client";
+import { createPrismaClient } from "../src/shared/db-client";
 
-const db = new PrismaClient();
+const db = createPrismaClient();
 
 async function main() {
   const donor = await db.donor.create({

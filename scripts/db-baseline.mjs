@@ -26,6 +26,7 @@ import path from "node:path";
 import { spawnSync } from "node:child_process";
 
 import prismaClientPackage from "@prisma/client";
+import { PrismaPg } from "@prisma/adapter-pg";
 import nextEnv from "@next/env";
 
 // .env / .env.local, Next.js ve prisma.config.ts ile aynı kuralla (ortamdaki değişkenler önceliklidir).
@@ -67,7 +68,7 @@ function run(command, args, { allowFailure = false, quiet = false } = {}) {
 
 /** _prisma_migrations satırları; tablo yoksa null. */
 async function readMigrationRows() {
-  const db = new PrismaClient();
+  const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }) });
   try {
     return await db.$queryRawUnsafe(
       `SELECT migration_name, finished_at, rolled_back_at FROM "_prisma_migrations"`,
@@ -137,7 +138,7 @@ async function main() {
   console.log("[db:baseline] Checking that the database matches prisma/schema exactly…");
   const diff = run(
     "prisma",
-    ["migrate", "diff", "--from-url", process.env.DATABASE_URL, "--to-schema-datamodel", SCHEMA_DIR, "--exit-code", "--script"],
+    ["migrate", "diff", "--from-config-datasource", "--to-schema", SCHEMA_DIR, "--exit-code", "--script"],
     { allowFailure: true, quiet: true },
   );
   if (diff.status === 2) {
@@ -177,7 +178,7 @@ async function main() {
   // 5b) Atlanan migration'ların idempotent veri tamamlamalarını çalıştır
   const backfills = toMarkApplied.filter((name) => name in IDEMPOTENT_BACKFILLS);
   if (backfills.length > 0) {
-    const db = new PrismaClient();
+    const db = new PrismaClient({ adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }) });
     try {
       for (const name of backfills) {
         const affected = await db.$executeRawUnsafe(IDEMPOTENT_BACKFILLS[name]);

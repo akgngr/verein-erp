@@ -1,6 +1,8 @@
 import "server-only";
 
-import { PrismaClient } from "@prisma/client";
+import type { PrismaClient } from "@prisma/client";
+
+import { createPrismaClient } from "./db-client";
 
 import { getEnv } from "./env";
 
@@ -15,7 +17,7 @@ export function getDb(): PrismaClient {
   getEnv(); // Eksik/geçersiz ortam değişkeninde açıklayıcı hata ile durur.
 
   if (!globalForPrisma.prisma) {
-    globalForPrisma.prisma = new PrismaClient();
+    globalForPrisma.prisma = createPrismaClient(process.env.DATABASE_URL);
   }
   return globalForPrisma.prisma;
 }

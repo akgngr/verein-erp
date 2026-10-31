@@ -83,8 +83,7 @@ jobs:
           set +e
           pnpm exec prisma migrate diff \
             --from-migrations prisma/schema/migrations \
-            --to-schema-datamodel prisma/schema \
-            --shadow-database-url "$SHADOW_DATABASE_URL" \
+            --to-schema prisma/schema \
             --exit-code --script > migration-drift.sql
           status=$?
           set -e
