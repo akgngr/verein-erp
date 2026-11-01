@@ -65,6 +65,12 @@ export function SyncPanel({
                 </p>
               </div>
               <div className="rounded-medium border border-default-200 p-3">
+                <p className="text-tiny uppercase tracking-wide text-default-400">{t("toCorrect")}</p>
+                <p className="text-small">
+                  {t("count", { count: preview.toCorrect.count })} — {t("total", { total: format(preview.toCorrect.totalCents) })}
+                </p>
+              </div>
+              <div className="rounded-medium border border-default-200 p-3">
                 <p className="text-tiny uppercase tracking-wide text-default-400">{t("skippedLocked")}</p>
                 <p className="text-small">{preview.skippedLockedYear}</p>
               </div>
@@ -95,7 +101,7 @@ export function SyncPanel({
                 className="self-start"
                 onPress={run}
                 isLoading={busy}
-                isDisabled={!preview.configured || (preview.toImport.count === 0 && preview.toReverse.count === 0)}
+                isDisabled={!preview.configured || (preview.toImport.count === 0 && preview.toReverse.count === 0 && preview.toCorrect.count === 0)}
               >
                 {t("run")}
               </Button>

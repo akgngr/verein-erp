@@ -26,6 +26,7 @@ import type { MemberStatus } from "@prisma/client";
 import { changeMemberStatusAction } from "../actions/change-status";
 import { MEMBER_STATUS_VALUES } from "../constants";
 import { berlinToday } from "../utils";
+import { describeActionError } from "@/shared/components/forms/action-result";
 
 /**
  * Üye durum değiştirme menüsü.
@@ -38,9 +39,12 @@ import { berlinToday } from "../utils";
 export function StatusChangeMenu({
   memberId,
   current,
+  joinDate,
 }: {
   memberId: string;
   current: MemberStatus;
+  /** "yyyy-MM-dd" — ayrılış tarihi bundan önce olamaz. */
+  joinDate: string;
 }) {
   const router = useRouter();
   const t = useTranslations("members");
@@ -74,7 +78,7 @@ export function StatusChangeMenu({
     });
     setBusy(false);
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      addToast({ title: describeActionError(result), color: "danger" });
       return;
     }
     addToast({ title: t("statusChange.updatedToast", { status: t(`status.${status}`) }), color: "success" });
@@ -159,11 +163,13 @@ export function StatusChangeMenu({
           </ModalHeader>
           <ModalBody className="flex flex-col gap-4">
             <DatePicker
+              showMonthAndYearPickers
               label={t("statusChange.exitDateLabel")}
               labelPlacement="outside"
               granularity="day"
               value={parse(exitDate)}
               onChange={(value) => setExitDate(value ? value.toString() : "")}
+              minValue={parse(joinDate) ?? undefined}
               hideTimeZone
               isRequired
             />
@@ -177,6 +183,7 @@ export function StatusChangeMenu({
             />
             {pendingExitStatus === "RESIGNED" ? (
               <DatePicker
+                showMonthAndYearPickers
                 label={t("statusMenu.cancellationReceivedAtLabel")}
                 labelPlacement="outside"
                 description={t("statusMenu.cancellationReceivedAtHint")}

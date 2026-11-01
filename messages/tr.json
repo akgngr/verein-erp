@@ -572,7 +572,8 @@
       "toastRun": "Aktarım tamamlandı: {created} fiş, {reversed} ters kayıt.",
       "empty": "Aktarılacak ödeme yok.",
       "receipt": "Makbuz No",
-      "reason": "Neden"
+      "reason": "Neden",
+      "toCorrect": "Tutarı düzeltilecek (eski fiş ters kayıt + doğru tutarla yeni fiş)"
     },
     "reports": {
       "title": "Raporlar",
@@ -4042,7 +4043,9 @@
       "importDupPersonDb": "Mükerrer kayıt: aynı ad, soyad ve doğum tarihiyle kayıtlı bir üye zaten var.",
       "importDupPersonFile": "Mükerrer kayıt: aynı ad, soyad ve doğum tarihi dosyada birden çok kez geçiyor.",
       "paymentNotSpecified": "Ödeme belirtilmedi.",
-      "paymentNotFound2": "Ödeme bulunamadı."
+      "paymentNotFound2": "Ödeme bulunamadı.",
+      "datesInvalid": "Tarihler tutarlı değil; işaretli alanları kontrol edin.",
+      "exitDateRequired": "Ayrılan veya vefat eden üye için ayrılış tarihi girin."
     },
     "validation": {
       "yearMinPrev": "Yıl en fazla bir önceki yıl olabilir.",
@@ -4086,7 +4089,26 @@
       "paymentDateInvalid": "Geçerli bir ödeme tarihi girin.",
       "referenceMax": "Referans en fazla 100 karakter olabilir.",
       "voidReasonMin": "İptal nedeni en az 5 karakter olmalıdır.",
-      "voidReasonMax": "İptal nedeni en fazla 300 karakter olabilir."
+      "voidReasonMax": "İptal nedeni en fazla 300 karakter olabilir.",
+      "exitDateRequired": "Ayrılış tarihi zorunlu.",
+      "amountBelowPaid": "Tutar en az ödenen tutar kadar olmalıdır.",
+      "amountInvalid": "0'dan büyük bir tutar girin (en fazla 2 ondalık).",
+      "annualDueInvalid": "Geçerli bir tutar girin (en fazla 2 ondalık, negatif olamaz).",
+      "birthDateFuture": "Doğum tarihi bugünden sonra olamaz.",
+      "dateTooOld": "1900'den önceki bir tarih girilemez.",
+      "dueDateBeforeYear": "Son ödeme tarihi aidat yılı içinde veya sonrasında olmalıdır.",
+      "dueYearOutsideMembership": "Aidat yılı üyelik dönemi dışında (giriş yılından önce veya ayrılış yılından sonra).",
+      "duesExists": "Bu yıl için aidat satırı zaten mevcut.",
+      "joinAfterPayments": "Giriş tarihi, üyenin mevcut ödemelerinden sonraya alınamaz.",
+      "joinBeforeBirth": "Giriş tarihi doğum tarihinden önce olamaz.",
+      "joinTooFarFuture": "Giriş tarihi en fazla 1 yıl sonrası olabilir.",
+      "memberRequired": "Geçerli bir üye seçin.",
+      "noticeAfterExit": "Fesih bildirimi ayrılış tarihinden sonra olamaz.",
+      "paymentBeforeJoin": "Ödeme tarihi üyenin giriş tarihinden önce olamaz.",
+      "paymentDateFuture": "Ödeme tarihi bugünden sonra olamaz.",
+      "waiveHasPayments": "Önce ödemeleri iptal edin veya satırı muaf yapmayın.",
+      "yearTooFarFuture": "Aidat yılı gelecek yıldan büyük olamaz.",
+      "yearTooOld": "Yıl 2000'den küçük olamaz."
     },
     "module": {
       "label": "Üyeler",

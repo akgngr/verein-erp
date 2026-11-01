@@ -18,13 +18,14 @@ import { Ban, Plus } from "lucide-react";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
-import { parseDate, type DateValue } from "@internationalized/date";
+import { type DateValue, getLocalTimeZone, parseDate, today } from "@internationalized/date";
 
 import { PdfSplitButton } from "@/shared/components/ui/pdf-split-button";
 
 import type { PaymentRow } from "../types";
 import { createPaymentAction } from "../actions/create-payment";
 import { voidPaymentAction } from "../actions/void-payment";
+import { describeActionError } from "@/shared/components/forms/action-result";
 
 const PAYMENT_METHODS = ["CASH", "BANK_TRANSFER", "CARD", "OTHER"] as const;
 
@@ -37,11 +38,14 @@ type MethodKey = (typeof PAYMENT_METHODS)[number];
  */
 export function PaymentsPanel({
   memberId,
+  joinDate,
   payments,
   canCreate,
   canDelete,
 }: {
   memberId: string;
+  /** "yyyy-MM-dd": ödeme tarihi bundan önce olamaz (sunucu da denetler). */
+  joinDate: string;
   payments: PaymentRow[];
   canCreate: boolean;
   canDelete: boolean;
@@ -74,7 +78,7 @@ export function PaymentsPanel({
         reference,
       });
       if (!result.ok) {
-        setFormError(result.error);
+        setFormError(describeActionError(result));
         return;
       }
       addToast({ title: t("toastSaved", { receipt: result.data.receiptNumber }), color: "success" });
@@ -91,7 +95,7 @@ export function PaymentsPanel({
     if (!voidTarget) return;
     const result = await voidPaymentAction({ id: voidTarget.id, reason: voidReason });
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      addToast({ title: describeActionError(result), color: "danger" });
       return;
     }
     addToast({ title: t("toastVoided"), color: "success" });
@@ -248,6 +252,7 @@ export function PaymentsPanel({
               </Select>
               {/* KARAR: FormDatePicker kalıbı — değer "yyyy-MM-dd" string; CalendarDate'e çevrilir. */}
               <DatePicker
+                showMonthAndYearPickers
                 label={t("form.paidAt")}
                 labelPlacement="outside"
                 value={(() => {
@@ -259,6 +264,8 @@ export function PaymentsPanel({
                   }
                 })()}
                 onChange={(next) => setPaidAt(next ? next.toString() : "")}
+                minValue={parseDate(joinDate) as DateValue}
+                maxValue={today(getLocalTimeZone()) as DateValue}
               />
               <Textarea
                 label={t("form.reference")}

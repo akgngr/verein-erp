@@ -38,6 +38,9 @@ export async function changeMemberStatusAction(input: unknown): Promise<ActionRe
             exitDate: ["members.validation.exitDateInvalid"],
           });
         }
+        if (parsed.getTime() < member.joinDate.getTime()) {
+          throw new ActionError("members.errors.datesInvalid", { exitDate: ["members.validation.exitBeforeJoin"] });
+        }
         exitDate = parsed;
       }
 
@@ -48,12 +51,12 @@ export async function changeMemberStatusAction(input: unknown): Promise<ActionRe
           const parsed = parseDateOnly(input.cancellationReceivedAt);
           if (!parsed) {
             throw new ActionError("members.errors.noticeDateInvalid", {
-              cancellationReceivedAt: ["Geçerli bir tarih girin."],
+              cancellationReceivedAt: ["members.validation.noticeDateInvalid"],
             });
           }
           if (exitDate && parsed.getTime() > exitDate.getTime()) {
             throw new ActionError("members.errors.noticeAfterExit", {
-              cancellationReceivedAt: ["Ayrılış tarihinden sonra olamaz."],
+              cancellationReceivedAt: ["members.validation.noticeAfterExit"],
             });
           }
           cancellationReceivedAt = parsed;
@@ -62,10 +65,7 @@ export async function changeMemberStatusAction(input: unknown): Promise<ActionRe
 
       if (newStatus === "RESIGNED" || newStatus === "DECEASED") {
         if (!exitDate) {
-          throw new ActionError(
-            `${newStatus === "RESIGNED" ? "Ayrılan" : "Vefat eden"} üye için ayrılış tarihi girin.`,
-            { exitDate: ["Ayrılış tarihi zorunlu."] },
-          );
+          throw new ActionError("members.errors.exitDateRequired", { exitDate: ["members.validation.exitDateRequired"] });
         }
       }
 

@@ -19,12 +19,15 @@ import { StatusChangeMenu } from "./status-change-menu";
  */
 export function MemberDetailActions({
   memberId,
+  joinDate,
   membershipNumber,
   status,
   canUpdate,
   canDelete,
 }: {
   memberId: string;
+  /** "yyyy-MM-dd" — ayrılış tarihi bundan önce olamaz. */
+  joinDate: string;
   membershipNumber: string;
   status: MemberStatus;
   canUpdate: boolean;
@@ -63,7 +66,7 @@ export function MemberDetailActions({
           </Button>
         ) : null}
         {canUpdate ? (
-          <StatusChangeMenu memberId={memberId} current={status} />
+          <StatusChangeMenu memberId={memberId} current={status} joinDate={joinDate} />
         ) : null}
         {canDelete ? (
           <Button

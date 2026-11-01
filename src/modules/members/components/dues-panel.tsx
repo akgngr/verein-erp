@@ -26,6 +26,7 @@ import { formatMoney } from "@/shared/money";
 import { addDueAction, deleteDueAction, updateDueAction } from "../actions/dues-actions";
 import type { DueRow } from "../types";
 import { DuesStatusBadge } from "./dues-status-badge";
+import { describeActionError } from "@/shared/components/forms/action-result";
 
 /**
  * Üye detay aidat satırları paneli (Faz 3 eklemeleri): yıllık beklenen tutar,
@@ -85,7 +86,7 @@ export function DuesPanel({
     try {
       const result = await addDueAction({ memberId, year, amount, dueDate, note });
       if (!result.ok) {
-        setFormError(result.error);
+        setFormError(describeActionError(result));
         return;
       }
       addToast({ title: t("toastAdded"), color: "success" });
@@ -109,7 +110,7 @@ export function DuesPanel({
         waived,
       });
       if (!result.ok) {
-        setFormError(result.error);
+        setFormError(describeActionError(result));
         return;
       }
       addToast({ title: t("toastUpdated"), color: "success" });
@@ -124,7 +125,7 @@ export function DuesPanel({
     if (!deleteTarget) return;
     const result = await deleteDueAction({ id: deleteTarget.id });
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      addToast({ title: describeActionError(result), color: "danger" });
       return;
     }
     addToast({ title: t("toastDeleted"), color: "success" });
@@ -244,6 +245,7 @@ export function DuesPanel({
                     onValueChange={setAmount}
                   />
                   <DatePicker
+                    showMonthAndYearPickers
                     label={t("colDueDate")}
                     labelPlacement="outside"
                     value={dueDate ? (parseDate(dueDate) as DateValue) : null}
@@ -288,6 +290,7 @@ export function DuesPanel({
                     onValueChange={setAmount}
                   />
                   <DatePicker
+                    showMonthAndYearPickers
                     label={t("colDueDate")}
                     labelPlacement="outside"
                     value={dueDate ? (parseDate(dueDate) as DateValue) : null}
