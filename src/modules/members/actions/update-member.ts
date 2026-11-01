@@ -34,6 +34,7 @@ const TRACKED_FIELDS = [
   "exitDate",
   "exitReason",
   "notes",
+  "bulkMailOptOut",
   // kimlikNo bilerek YOK — audit'e yazmıyoruz (hassas alan).
 ] as const;
 
@@ -105,6 +106,7 @@ export async function updateMemberAction(
           exitDate,
           exitReason: input.exitReason,
           notes: input.notes,
+          bulkMailOptOut: input.bulkMailOptOut,
           updatedById: user.id,
           updatedByLabel,
         },
@@ -131,6 +133,7 @@ export async function updateMemberAction(
         exitDate: isoDate(member.exitDate),
         exitReason: member.exitReason,
         notes: member.notes,
+        bulkMailOptOut: member.bulkMailOptOut,
       };
       const incoming: Record<TrackedKey, unknown> = {
         type: updated.type,
@@ -150,6 +153,7 @@ export async function updateMemberAction(
         exitDate: isoDate(updated.exitDate),
         exitReason: updated.exitReason,
         notes: updated.notes,
+        bulkMailOptOut: updated.bulkMailOptOut,
       };
       for (const field of TRACKED_FIELDS) {
         if (current[field] !== incoming[field]) {

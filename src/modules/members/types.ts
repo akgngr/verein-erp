@@ -83,6 +83,7 @@ export type MemberDetail = {
   updatedByLabel: string | null;
   updatedAt: Date;
   memberNotes: MemberNoteItem[];
+  bulkMailOptOut: boolean;
 };
 
 /** Üye detay ödeme paneli satırı (Faz 4, 4.6). */

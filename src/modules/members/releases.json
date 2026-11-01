@@ -2,6 +2,27 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.1.0",
+      "date": "2026-11-01",
+      "appVersion": "0.31.0",
+      "title": {
+        "tr": "Toplu e-posta",
+        "de": "Rundmail"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Toplu e-posta (Üyeler → Toplu e-posta): durum/tür filtresi, {firstName} gibi yer tutucular, alıcı özeti, kendine test gönderimi ve arka planda kişiye özel gönderim; gönderim geçmişi.",
+          "de": "Rundmail (Mitglieder → Rundmail): Filter nach Status/Art, Platzhalter wie {firstName}, Empfängerübersicht, Testversand an sich selbst und personalisierter Versand im Hintergrund; Versandverlauf."
+        },
+        {
+          "type": "security",
+          "tr": "Üye kartında \"Toplu e-posta istemiyor\" (DSGVO Art. 21 itirazı); bu üyeler ve e-postası olmayanlar otomatik atlanır. Her alıcıya ayrı e-posta gider; denetim kaydına alıcı listesi yazılmaz.",
+          "de": "Neues Feld „Keine Rundmails“ (Widerspruch nach Art. 21 DSGVO); diese Mitglieder und solche ohne E-Mail werden übersprungen. Jede Person erhält eine eigene E-Mail; das Audit-Log enthält keine Empfängerliste."
+        }
+      ]
+    },
+    {
       "version": "1.0.1",
       "date": "2026-10-31",
       "title": {

@@ -78,7 +78,9 @@
     "country": "Ülke (Land)",
     "countryDescription": "Boş bırakılırsa veya Almanya ise posta kodu 5 haneli girilmelidir.",
     "cancellationReceivedAt": "Fesih bildirimi tarihi (Kündigung eingegangen am)",
-    "cancellationReceivedAtDescription": "Kullanıcının istifa bildiriminin derneğe ulaştığı tarih; ayrılış tarihinden sonra olamaz."
+    "cancellationReceivedAtDescription": "Kullanıcının istifa bildiriminin derneğe ulaştığı tarih; ayrılış tarihinden sonra olamaz.",
+    "bulkMailOptOut": "Toplu e-posta istemiyor",
+    "bulkMailOptOutDescription": "Üye duyuru/toplu e-postalara itiraz etti (DSGVO Art. 21). Bireysel yazışmalar etkilenmez."
   },
   "detail": {
     "membershipNumberLabel": "Üyelik numarası",
@@ -321,7 +323,8 @@
     "dues": "Aidat raporu",
     "types": "Üyelik türleri",
     "import": "İçe aktar",
-    "export": "Excel'e aktar"
+    "export": "Excel'e aktar",
+    "mailing": "Toplu e-posta"
   },
   "nav": {
     "uyeler": "Üyeler"
@@ -495,7 +498,8 @@
     }
   },
   "access": {
-    "organization": "Makbuz ve belgelerde dernek antetini kullanır."
+    "organization": "Makbuz ve belgelerde dernek antetini kullanır.",
+    "mail": "Toplu e-posta (duyuru) göndermek ve e-posta ayarlarının hazır olup olmadığını okumak için."
   },
   "permissions": {
     "memberPayments": {
@@ -513,6 +517,53 @@
     "memberIdentity": {
       "label": "Kimlik numaraları",
       "description": "Üyelerin kimlik numaralarını görme; kapalıysa alan boş gösterilir."
+    },
+    "memberMailings": {
+      "label": "Toplu e-posta",
+      "description": "Üyelere duyuru gönderme (oluştur) ve gönderim geçmişi (gör)."
+    }
+  },
+  "mailing": {
+    "title": "Toplu e-posta",
+    "description": "Üyelere duyuru gönderin. E-postası olmayan ve toplu e-postaya itiraz eden üyeler otomatik atlanır; her alıcıya ayrı e-posta gider (alıcılar birbirini görmez).",
+    "notConfigured": "E-posta gönderimi ayarlanmamış.",
+    "openSettings": "E-posta ayarlarını aç",
+    "statuses": "Üyelik durumu",
+    "types": "Üyelik türü",
+    "typesHelp": "Seçilmezse tüm türler.",
+    "preview": "{eligible} alıcı (filtreye uyan {matched} üyeden {noEmail} e-postasız, {optOut} itiraz etmiş).",
+    "subject": "Konu",
+    "body": "Metin",
+    "placeholders": "Yer tutucular:",
+    "defaultBody": "Merhaba {firstName},\n\n\n\nSaygılarımızla\nYönetim kurulu\n\n—\nBu e-postayı dernek üyeliğiniz nedeniyle alıyorsunuz. Toplu e-posta almak istemiyorsanız bu e-postayı yanıtlayın.",
+    "test": "Kendime test gönder",
+    "testSent": "Test e-postası {to} adresine gönderildi.",
+    "send": "{count} kişiye gönder",
+    "confirmTitle": "Toplu e-posta gönderilsin mi?",
+    "confirmText": "{count} üyeye ayrı ayrı e-posta gönderilecek. Gönderim arka planda sürer; sonucu aşağıdaki geçmişte ve E-posta → Gönderim kayıtları'nda görebilirsiniz.",
+    "started": "Gönderim başladı: {count} alıcı.",
+    "history": "Gönderim geçmişi",
+    "noHistory": "Henüz toplu e-posta gönderilmedi.",
+    "columns": {
+      "date": "Tarih",
+      "subject": "Konu",
+      "result": "Sonuç",
+      "status": "Durum",
+      "by": "Gönderen"
+    },
+    "result": "{sent}/{total} gönderildi, {failed} hata",
+    "skipped": "Atlanan: {noEmail} e-postasız, {optOut} itiraz",
+    "statusLabels": {
+      "SENDING": "Gönderiliyor",
+      "DONE": "Tamamlandı",
+      "FAILED": "Başarısız"
+    },
+    "errors": {
+      "subject": "Konu 3–200 karakter olmalı.",
+      "body": "Metin en az 10 karakter olmalı.",
+      "notConfigured": "E-posta gönderimi ayarlanmamış.",
+      "sendFailed": "Test e-postası gönderilemedi; E-posta → Gönderim kayıtları'na bakın.",
+      "noRecipients": "Filtreye uyan alıcı yok."
     }
   }
 }

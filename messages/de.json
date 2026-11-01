@@ -4655,7 +4655,9 @@
       "country": "Land",
       "countryDescription": "Leer oder Deutschland: Postleitzahl muss 5-stellig sein.",
       "cancellationReceivedAt": "Kündigung eingegangen am",
-      "cancellationReceivedAtDescription": "Datum des Eingangs der Kündigung; darf nicht nach dem Austrittsdatum liegen."
+      "cancellationReceivedAtDescription": "Datum des Eingangs der Kündigung; darf nicht nach dem Austrittsdatum liegen.",
+      "bulkMailOptOut": "Keine Rundmails",
+      "bulkMailOptOutDescription": "Das Mitglied hat Rundmails widersprochen (Art. 21 DSGVO). Einzelne Schreiben sind nicht betroffen."
     },
     "detail": {
       "membershipNumberLabel": "Mitgliedsnummer",
@@ -4898,7 +4900,8 @@
       "dues": "Beitragsbericht",
       "types": "Mitgliedsarten",
       "import": "Importieren",
-      "export": "Excel-Export"
+      "export": "Excel-Export",
+      "mailing": "Rundmail"
     },
     "meta": {
       "list": "Mitglieder",
@@ -5069,7 +5072,8 @@
       }
     },
     "access": {
-      "organization": "Verwendet den Vereinsbriefkopf in Quittungen und Dokumenten."
+      "organization": "Verwendet den Vereinsbriefkopf in Quittungen und Dokumenten.",
+      "mail": "Zum Versand von Rundmails und zur Prüfung, ob der E-Mail-Versand eingerichtet ist."
     },
     "permissions": {
       "memberPayments": {
@@ -5087,6 +5091,53 @@
       "memberIdentity": {
         "label": "Ausweisnummern",
         "description": "Ausweisnummern der Mitglieder sehen; ohne Berechtigung bleibt das Feld leer."
+      },
+      "memberMailings": {
+        "label": "Rundmails",
+        "description": "Rundmails an Mitglieder senden (anlegen) und Versandverlauf (ansehen)."
+      }
+    },
+    "mailing": {
+      "title": "Rundmail an Mitglieder",
+      "description": "Mitteilungen an Mitglieder senden. Mitglieder ohne E-Mail oder mit Widerspruch werden automatisch übersprungen; jede Person erhält eine eigene E-Mail (keine sichtbaren Empfängerlisten).",
+      "notConfigured": "Der E-Mail-Versand ist nicht eingerichtet.",
+      "openSettings": "E-Mail-Einstellungen öffnen",
+      "statuses": "Mitgliedsstatus",
+      "types": "Mitgliedsart",
+      "typesHelp": "Ohne Auswahl alle Arten.",
+      "preview": "{eligible} Empfänger ({matched} passende Mitglieder, davon {noEmail} ohne E-Mail, {optOut} mit Widerspruch).",
+      "subject": "Betreff",
+      "body": "Text",
+      "placeholders": "Platzhalter:",
+      "defaultBody": "Hallo {firstName},\n\n\n\nViele Grüße\nDer Vorstand\n\n—\nSie erhalten diese E-Mail als Mitglied unseres Vereins. Wenn Sie keine Rundmails mehr erhalten möchten, antworten Sie bitte auf diese E-Mail.",
+      "test": "Test an mich senden",
+      "testSent": "Test-E-Mail an {to} gesendet.",
+      "send": "An {count} Personen senden",
+      "confirmTitle": "Rundmail senden?",
+      "confirmText": "{count} Mitglieder erhalten je eine eigene E-Mail. Der Versand läuft im Hintergrund; das Ergebnis sehen Sie unten im Verlauf und unter E-Mail → Versandprotokoll.",
+      "started": "Versand gestartet: {count} Empfänger.",
+      "history": "Versandverlauf",
+      "noHistory": "Noch keine Rundmails versendet.",
+      "columns": {
+        "date": "Datum",
+        "subject": "Betreff",
+        "result": "Ergebnis",
+        "status": "Status",
+        "by": "Von"
+      },
+      "result": "{sent}/{total} gesendet, {failed} Fehler",
+      "skipped": "Übersprungen: {noEmail} ohne E-Mail, {optOut} Widerspruch",
+      "statusLabels": {
+        "SENDING": "Wird gesendet",
+        "DONE": "Abgeschlossen",
+        "FAILED": "Fehlgeschlagen"
+      },
+      "errors": {
+        "subject": "Betreff: 3–200 Zeichen.",
+        "body": "Text: mindestens 10 Zeichen.",
+        "notConfigured": "E-Mail-Versand ist nicht eingerichtet.",
+        "sendFailed": "Test-E-Mail konnte nicht gesendet werden; siehe E-Mail → Versandprotokoll.",
+        "noRecipients": "Keine passenden Empfänger."
       }
     }
   },

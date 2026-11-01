@@ -7,3 +7,4 @@ export { MemberEditView } from "./views/member-edit-view";
 export { DuesReportView } from "./views/dues-report-view";
 export { MemberTypeListView } from "./views/member-type-list-view";
 export { ImportView } from "./views/import-view";
+export { MailingView } from "./views/mailing-view";
