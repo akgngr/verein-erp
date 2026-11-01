@@ -51,8 +51,8 @@ async function seedOnce(user: { id: string; label: string }): Promise<{ created:
 }
 
 /**
- * Tüm demo kayıtlarını siler (bağımlılar önce: üretim sırasının tersi). Silinemeyen kayıtlar
- * (sonradan gerçek veriye bağlanmışsa) listede kalır ve sayısı döndürülür.
+ * Tüm demo kayıtlarını siler (bağımlılar önce: üretim sırasının tersi). Silinemeyen kayıtların
+ * (GoBD korumalı veya gerçek veriye bağlı) sayısı döndürülür.
  */
 export async function clearDemoData(): Promise<{ removed: number; remaining: number }> {
   const db = getDb();
@@ -60,6 +60,7 @@ export async function clearDemoData(): Promise<{ removed: number; remaining: num
   if (records.length === 0) return { removed: 0, remaining: 0 };
   const providers = [...moduleDemoRegistry].sort((a, b) => b.order - a.order);
   let removed = 0;
+  let remaining = 0;
   for (const provider of providers) {
     const own = records.filter((r) => r.moduleKey === provider.moduleKey);
     if (own.length === 0) continue;
@@ -70,10 +71,11 @@ export async function clearDemoData(): Promise<{ removed: number; remaining: num
     } catch (err) {
       console.error(`[demo] clear failed for ${provider.moduleKey}:`, err);
     }
-    const failedKeys = new Set(failed.map((f) => `${f.model}:${f.id}`));
-    const done = own.filter((r) => !failedKeys.has(`${r.model}:${r.recordId}`));
-    await db.demoRecord.deleteMany({ where: { id: { in: done.map((r) => r.id) } } });
-    removed += done.length;
+    // Silinemeyenler (GoBD korumalı kayıtlar veya sonradan gerçek veriye bağlananlar) veritabanında
+    // kalır; takipleri yine de bırakılır ki demo yeniden yüklenebilsin.
+    removed += own.length - failed.length;
+    remaining += failed.length;
+    await db.demoRecord.deleteMany({ where: { id: { in: own.map((r) => r.id) } } });
   }
-  return { removed, remaining: await db.demoRecord.count() };
+  return { removed, remaining };
 }

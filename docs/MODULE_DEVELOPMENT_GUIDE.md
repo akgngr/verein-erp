@@ -446,7 +446,7 @@ const file = await createGeneratedFile({ ownerId: user.id, title, format: "xlsx"
   - Oluşturduğunuz her kaydı **hemen** `ctx.refs.push({ model, id })` ile ekleyin (yarıda kalırsa da temizlenir).
   - Yalnızca kendi tablolarınıza yazın; başka modülün kaydı gerekiyorsa `ctx.created.<modül>` içindeki ref'leri (label/number) kullanın.
   - KVKK: yalnızca `demoPerson()`, `DEMO_IBAN` gibi kurgusal veriler; `@example.com` e-postalar.
-  - GoBD gereği silinemeyen kayıtlar (muhasebe kaydı, fatura, bağış) **üretmeyin**.
+  - GoBD gereği silinemeyen kayıtlar (muhasebe kaydı, bağış) üretilebilir ama demo kapatılınca test veritabanında kalır; silme korumasını asla gevşetmeyin.
   - `clear` için `clearRefs(refs, { model: (ids) => ... })`: modeller ters sırada silinir, silinemeyenler döner.
 - **`lifecycle.ts`**: `defineLifecycle({ moduleKey, onDisable })`. Yönetici modülü kapattığında sistem `onDisable`'ı çağırır
   (`src/lifecycle-registry.ts`). Demo modülü bununla tüm demo kayıtlarını siler.

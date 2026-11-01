@@ -11,13 +11,13 @@
       "changes": [
         {
           "type": "feature",
-          "tr": "Demo veri modülü: etkinken Ayarlar → Demo veri sayfasından tek tıkla kurgusal örnek kayıt yüklenir (üyeler, öğrenciler/veliler, cariler, bağışçılar için 30'ar; kurslar, etkinlikler, envanter, görevler, toplantılar, projeler için 10'ar). Modül kapatılınca tüm demo kayıtlar otomatik silinir.",
-          "de": "Demodaten-Modul: Bei Aktivierung lädt Einstellungen → Demodaten fiktive Beispieldatensätze per Klick (je 30 Mitglieder, Schüler/Eltern, Kontakte, Spender; je 10 Kurse, Veranstaltungen, Inventar, Aufgaben, Sitzungen, Projekte). Beim Deaktivieren werden alle Demodaten automatisch gelöscht."
+          "tr": "Demo veri modülü: etkinken Ayarlar → Demo veri sayfasından tek tıkla kurgusal örnek kayıt yüklenir (üyeler, öğrenciler/veliler, cariler, bağışçılar, bağışlar, muhasebe kayıtları için 30'ar; 15 fatura/teklif/proforma; kurslar, etkinlikler, envanter, görevler, toplantılar, projeler için 10'ar). Modül kapatılınca demo kayıtlar otomatik silinir.",
+          "de": "Demodaten-Modul: Bei Aktivierung lädt Einstellungen → Demodaten fiktive Beispieldatensätze per Klick (je 30 Mitglieder, Schüler/Eltern, Kontakte, Spender, Spenden, Buchungen; 15 Rechnungen/Angebote/Proformas; je 10 Kurse, Veranstaltungen, Inventar, Aufgaben, Sitzungen, Projekte). Beim Deaktivieren werden die Demodaten automatisch gelöscht."
         },
         {
           "type": "security",
-          "tr": "Demo veriler tamamen kurgusaldır (example.com e-postaları, örnek IBAN); GoBD gereği silinemeyen muhasebe kaydı, fatura ve bağış üretilmez.",
-          "de": "Demodaten sind vollständig fiktiv (example.com-Adressen, Beispiel-IBAN); nicht löschbare Buchungen, Rechnungen und Spenden werden nicht erzeugt."
+          "tr": "Demo veriler tamamen kurgusaldır (example.com e-postaları, örnek IBAN). GoBD silme koruması değiştirilmedi: demo muhasebe kayıtları ve bağışlar silinemez, test veritabanında kalır.",
+          "de": "Demodaten sind vollständig fiktiv (example.com-Adressen, Beispiel-IBAN). Der GoBD-Löschschutz bleibt unverändert: Demo-Buchungen und -Spenden bleiben in der Testdatenbank."
         },
         {
           "type": "improvement",
