@@ -47,7 +47,8 @@
     "ayarlar": "Einstellungen",
     "moduller": "Modulverwaltung",
     "surumNotlari": "Versionshinweise",
-    "kurulum": "Einrichtungsassistent"
+    "kurulum": "Einrichtungsassistent",
+    "modulPaketleri": "Modulpakete"
   },
   "meta": {
     "settings": "Einstellungen",
@@ -203,5 +204,46 @@
       "accountingOff": "Für die Buchhaltungsvorbereitung muss das Modul Buchhaltung ausgewählt sein."
     }
   },
-  "releaseNotes": "Versionshinweise"
+  "releaseNotes": "Versionshinweise",
+  "packages": {
+    "title": "Modulpakete",
+    "description": "Signierte Modulpakete (.vmod) hochladen und prüfen. Der Inhalt wird auf dem Server nicht ausgeführt; ein gültiges Paket wird mit dem angezeigten Befehl installiert, danach wird die Anwendung neu gebaut und veröffentlicht.",
+    "upload": ".vmod-Paket hochladen",
+    "empty": "Noch keine Pakete hochgeladen.",
+    "verified": "Signatur gültig",
+    "rejected": "Abgelehnt",
+    "installed": "Installiert",
+    "installedOther": "Installierte Version: {version}",
+    "verifiedToast": "Paket geprüft.",
+    "rejectedToast": "Paket abgelehnt; Details in der Liste.",
+    "meta": "Herausgeber: {publisher} · Kategorie: {category} · {date} · {by}",
+    "installHelp": "Installation (auf dem Server/in der CI, danach pnpm db:deploy und Neubau):",
+    "copy": "Kopieren",
+    "delete": "Löschen",
+    "trustedTitle": "Vertrauenswürdige Herausgeber",
+    "official": "offiziell",
+    "noTrusted": "Noch keine vertrauenswürdigen Herausgeber; alle Pakete werden abgelehnt.",
+    "trustedHelp": "Die Vertrauensliste liegt in src/config/trusted-publishers.json und ändert sich nur per Code-Review (nicht über die Oberfläche). Nicht-offizielle Herausgeber dürfen nur EXTENSION-Module veröffentlichen; deren Zugriffe auf andere Module brauchen zusätzlich die Freigabe der Administration.",
+    "errorCodes": {
+      "format": "Unbekanntes Paketformat.",
+      "manifest": "Manifest fehlt oder ist fehlerhaft.",
+      "key": "Ungültiger Modulschlüssel.",
+      "version": "Ungültige Version.",
+      "category": "Ungültige Kategorie.",
+      "files": "Dateiliste leer oder zu groß.",
+      "moduleConfig": "module.config.ts fehlt.",
+      "appVersion": "Das Paket benötigt eine neuere Anwendungsversion.",
+      "untrusted": "Herausgeber ist nicht vertrauenswürdig.",
+      "signature": "Signatur ungültig (Paket möglicherweise verändert).",
+      "publisher": "Herausgeber im Manifest passt nicht zur Signatur.",
+      "categoryNotAllowed": "Dieser Herausgeber darf nur EXTENSION-Module veröffentlichen.",
+      "unreadable": "Paket nicht lesbar.",
+      "path": "Unsicherer Dateipfad: {file}",
+      "hash": "Datei verändert: {file}",
+      "mismatch": "Datei nicht im Manifest/fehlt: {file}"
+    },
+    "errors": {
+      "file": "Bitte eine gültige .vmod-Datei wählen (max. 25 MB)."
+    }
+  }
 }

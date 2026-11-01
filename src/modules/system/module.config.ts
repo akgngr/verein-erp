@@ -1,4 +1,4 @@
-import { Boxes, History, Settings, Wand2 } from "lucide-react";
+import { Boxes, History, Settings, Wand2, PackageCheck } from "lucide-react";
 import type { ModuleConfig } from "@/shared/types/module";
 import { settingsPermissions, systemPermissions } from "@/shared/permissions/system";
 
@@ -30,6 +30,15 @@ export const moduleConfig: ModuleConfig = {
       icon: Boxes,
       group: "settings",
       order: 3,
+      permission: { definition: systemPermissions, action: "view" },
+    },
+    {
+      href: "/ayarlar/moduller/paketler",
+      label: "Modül paketleri",
+      labelKey: "modulPaketleri",
+      icon: PackageCheck,
+      group: "settings",
+      order: 4,
       permission: { definition: systemPermissions, action: "view" },
     },
     {

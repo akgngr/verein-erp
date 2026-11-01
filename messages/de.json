@@ -115,6 +115,7 @@
     "moduller": "Modulverwaltung",
     "surumNotlari": "Versionshinweise",
     "kurulum": "Einrichtungsassistent",
+    "modulPaketleri": "Modulpakete",
     "tasks": "Aufgaben",
     "kullanicilar": "Benutzer"
   },
@@ -3634,7 +3635,8 @@
       "description": "Erstellte PDF-, Excel-, Word-, Markdown- und CSV-Dateien; verschlüsselt gespeichert und nach Ablauf gelöscht."
     },
     "access": {
-      "organization": "Verwendet den Briefkopf des Vereins (Name, Adresse, Logo) in PDF-Dateien."
+      "organization": "Verwendet den Briefkopf des Vereins (Name, Adresse, Logo) in PDF-Dateien.",
+      "system": "Liest Modulzustände, damit Format-Plugins anderer Module nur bei aktivem Modul genutzt werden."
     },
     "title": "Meine Dateien",
     "description": "Dateien, die der Assistent oder die Module für Sie erstellt haben. Nur Sie können sie sehen; sie werden nach {days} Tagen automatisch gelöscht.",
@@ -3664,7 +3666,8 @@
       "footer": "Seite {page} / {total}"
     },
     "errors": {
-      "notFound": "Datei nicht gefunden oder abgelaufen."
+      "notFound": "Datei nicht gefunden oder abgelaufen.",
+      "formatUnavailable": "Dieses Dateiformat ist derzeit nicht verfügbar (Modul des Plugins deaktiviert)."
     },
     "permissions": {
       "exports": {
@@ -5815,7 +5818,48 @@
         "accountingOff": "Für die Buchhaltungsvorbereitung muss das Modul Buchhaltung ausgewählt sein."
       }
     },
-    "releaseNotes": "Versionshinweise"
+    "releaseNotes": "Versionshinweise",
+    "packages": {
+      "title": "Modulpakete",
+      "description": "Signierte Modulpakete (.vmod) hochladen und prüfen. Der Inhalt wird auf dem Server nicht ausgeführt; ein gültiges Paket wird mit dem angezeigten Befehl installiert, danach wird die Anwendung neu gebaut und veröffentlicht.",
+      "upload": ".vmod-Paket hochladen",
+      "empty": "Noch keine Pakete hochgeladen.",
+      "verified": "Signatur gültig",
+      "rejected": "Abgelehnt",
+      "installed": "Installiert",
+      "installedOther": "Installierte Version: {version}",
+      "verifiedToast": "Paket geprüft.",
+      "rejectedToast": "Paket abgelehnt; Details in der Liste.",
+      "meta": "Herausgeber: {publisher} · Kategorie: {category} · {date} · {by}",
+      "installHelp": "Installation (auf dem Server/in der CI, danach pnpm db:deploy und Neubau):",
+      "copy": "Kopieren",
+      "delete": "Löschen",
+      "trustedTitle": "Vertrauenswürdige Herausgeber",
+      "official": "offiziell",
+      "noTrusted": "Noch keine vertrauenswürdigen Herausgeber; alle Pakete werden abgelehnt.",
+      "trustedHelp": "Die Vertrauensliste liegt in src/config/trusted-publishers.json und ändert sich nur per Code-Review (nicht über die Oberfläche). Nicht-offizielle Herausgeber dürfen nur EXTENSION-Module veröffentlichen; deren Zugriffe auf andere Module brauchen zusätzlich die Freigabe der Administration.",
+      "errorCodes": {
+        "format": "Unbekanntes Paketformat.",
+        "manifest": "Manifest fehlt oder ist fehlerhaft.",
+        "key": "Ungültiger Modulschlüssel.",
+        "version": "Ungültige Version.",
+        "category": "Ungültige Kategorie.",
+        "files": "Dateiliste leer oder zu groß.",
+        "moduleConfig": "module.config.ts fehlt.",
+        "appVersion": "Das Paket benötigt eine neuere Anwendungsversion.",
+        "untrusted": "Herausgeber ist nicht vertrauenswürdig.",
+        "signature": "Signatur ungültig (Paket möglicherweise verändert).",
+        "publisher": "Herausgeber im Manifest passt nicht zur Signatur.",
+        "categoryNotAllowed": "Dieser Herausgeber darf nur EXTENSION-Module veröffentlichen.",
+        "unreadable": "Paket nicht lesbar.",
+        "path": "Unsicherer Dateipfad: {file}",
+        "hash": "Datei verändert: {file}",
+        "mismatch": "Datei nicht im Manifest/fehlt: {file}"
+      },
+      "errors": {
+        "file": "Bitte eine gültige .vmod-Datei wählen (max. 25 MB)."
+      }
+    }
   },
   "tasks": {
     "module": {

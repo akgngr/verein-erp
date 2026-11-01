@@ -7,7 +7,8 @@
     "description": "Oluşturulan PDF, Excel, Word, Markdown ve CSV dosyaları; şifreli saklanır ve süre sonunda silinir."
   },
   "access": {
-    "organization": "PDF dosyalarında dernek antetini (ad, adres, logo) kullanır."
+    "organization": "PDF dosyalarında dernek antetini (ad, adres, logo) kullanır.",
+    "system": "Başka modüllerin dosya formatı eklentilerinin yalnızca modül etkinken kullanılması için modül durumlarını okur."
   },
   "title": "Dosyalarım",
   "description": "Asistanın veya modüllerin sizin için oluşturduğu dosyalar. Yalnızca siz görebilirsiniz; {days} gün sonra otomatik silinir.",
@@ -37,7 +38,8 @@
     "footer": "Sayfa {page} / {total}"
   },
   "errors": {
-    "notFound": "Dosya bulunamadı veya süresi doldu."
+    "notFound": "Dosya bulunamadı veya süresi doldu.",
+    "formatUnavailable": "Bu dosya formatı şu anda kullanılamıyor (eklentinin modülü kapalı)."
   },
   "permissions": {
     "exports": {

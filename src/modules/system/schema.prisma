@@ -28,3 +28,26 @@ model SystemDashboardLayout {
 
   @@map("system_dashboard_layouts")
 }
+
+/// İmzalı modül paketi (.vmod) yüklemesi. Kurulum sunucuda değil, yönetici makinesinde/CI'da
+/// `pnpm module:install <dosya>` ile yapılır (derleme gerektirir); burada doğrulama sonucu tutulur.
+model SystemModulePackage {
+  id            String   @id @default(cuid())
+  moduleKey     String
+  version       String
+  name          String
+  publisher     String
+  category      String
+  sha256        String   @unique
+  size          Int
+  verified      Boolean
+  /// Doğrulama hata kodları (boş = geçerli)
+  errors        String[]
+  storagePath   String?
+  uploadedById  String
+  uploadedByLabel String
+  createdAt     DateTime @default(now())
+
+  @@index([moduleKey])
+  @@map("system_module_packages")
+}

@@ -47,7 +47,8 @@
     "ayarlar": "Ayarlar",
     "moduller": "Modül Yönetimi",
     "surumNotlari": "Sürüm notları",
-    "kurulum": "Kurulum sihirbazı"
+    "kurulum": "Kurulum sihirbazı",
+    "modulPaketleri": "Modül paketleri"
   },
   "meta": {
     "settings": "Ayarlar",
@@ -203,5 +204,46 @@
       "accountingOff": "Muhasebe hazırlığı için Muhasebe modülü seçili olmalı."
     }
   },
-  "releaseNotes": "Sürüm notları"
+  "releaseNotes": "Sürüm notları",
+  "packages": {
+    "title": "Modül paketleri",
+    "description": "İmzalı modül paketlerini (.vmod) yükleyip doğrulayın. Paket içeriği sunucuda çalıştırılmaz; geçerli paket, gösterilen komutla kurulur ve uygulama yeniden derlenip yayımlanır.",
+    "upload": ".vmod paketi yükle",
+    "empty": "Henüz paket yüklenmedi.",
+    "verified": "İmza geçerli",
+    "rejected": "Reddedildi",
+    "installed": "Kurulu",
+    "installedOther": "Kurulu sürüm: {version}",
+    "verifiedToast": "Paket doğrulandı.",
+    "rejectedToast": "Paket reddedildi; ayrıntılar listede.",
+    "meta": "Yayıncı: {publisher} · Kategori: {category} · {date} · {by}",
+    "installHelp": "Kurulum (sunucu/CI ortamında, ardından pnpm db:deploy ve yeniden derleme):",
+    "copy": "Kopyala",
+    "delete": "Sil",
+    "trustedTitle": "Güvenilen yayıncılar",
+    "official": "resmî",
+    "noTrusted": "Henüz güvenilen yayıncı yok; tüm paketler reddedilir.",
+    "trustedHelp": "Güven listesi src/config/trusted-publishers.json dosyasındadır ve yalnızca kod incelemesiyle değişir (arayüzden eklenemez). Resmî olmayan yayıncılar yalnızca EXTENSION modül yayımlayabilir; bu modüllerin başka modüllere erişimi ayrıca yönetici onayı ister.",
+    "errorCodes": {
+      "format": "Bilinmeyen paket biçimi.",
+      "manifest": "Manifest eksik veya hatalı.",
+      "key": "Geçersiz modül anahtarı.",
+      "version": "Geçersiz sürüm.",
+      "category": "Geçersiz kategori.",
+      "files": "Dosya listesi boş veya çok büyük.",
+      "moduleConfig": "module.config.ts yok.",
+      "appVersion": "Paket daha yeni bir uygulama sürümü gerektiriyor.",
+      "untrusted": "Yayıncı güvenilenler listesinde değil.",
+      "signature": "İmza geçersiz (paket değiştirilmiş olabilir).",
+      "publisher": "Manifestteki yayıncı imzalayanla aynı değil.",
+      "categoryNotAllowed": "Bu yayıncı yalnızca EXTENSION modül yayımlayabilir.",
+      "unreadable": "Paket okunamadı.",
+      "path": "Güvensiz dosya yolu: {file}",
+      "hash": "Dosya değiştirilmiş: {file}",
+      "mismatch": "Manifestte olmayan/eksik dosya: {file}"
+    },
+    "errors": {
+      "file": "Geçerli bir .vmod dosyası seçin (en fazla 25 MB)."
+    }
+  }
 }

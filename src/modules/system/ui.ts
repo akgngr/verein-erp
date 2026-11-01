@@ -8,3 +8,4 @@ export { ThemeSettingCard } from "./components/theme-setting-card";
 export { DashboardView } from "./views/dashboard-view";
 export { ReleaseNotesView } from "./views/release-notes-view";
 export { SetupView } from "./views/setup-view";
+export { PackagesView } from "./views/packages-view";

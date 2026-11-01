@@ -24,7 +24,7 @@ if (!file || !fs.existsSync(file)) {
 }
 const appVersion = JSON.parse(fs.readFileSync(path.join(ROOT, "package.json"), "utf8")).version as string;
 const pkg = readPackage(fs.readFileSync(file));
-const result = verifyPackage(pkg, loadTrustedPublishers(ROOT), { appVersion });
+const result = verifyPackage(pkg, loadTrustedPublishers(), { appVersion });
 if (!result.ok || !result.manifest) {
   console.error(`Paket reddedildi: ${result.errors.join(", ")}`);
   process.exit(1);

@@ -23,6 +23,7 @@ const MODULE_INTERNAL_IMPORTS = {
     "!@/modules/*/ai",
     "!@/modules/*/demo",
     "!@/modules/*/lifecycle",
+    "!@/modules/*/formats",
     "!@/modules/*/releases.json",
     "!@/modules/*/permissions",
     "!@/modules/*/routes",
