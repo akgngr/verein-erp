@@ -1,0 +1,213 @@
+{
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
+  "releases": [
+    {
+      "version": "1.7.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "Modül sürümleri ve sürüm notları",
+        "de": "Modulversionen und Versionshinweise"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Her modülün kendi sürümü ve sürüm notları (releases.json): Modül Yönetimi'nde sürüme tıklayınca o modülün notları açılır; Ayarlar → Sürüm notları'nda modül seçilebilir.",
+          "de": "Jede Modul hat eine eigene Version und Versionshinweise (releases.json): Klick auf die Version in der Modulverwaltung öffnet die Hinweise; unter Einstellungen → Versionshinweise ist das Modul wählbar."
+        },
+        {
+          "type": "improvement",
+          "tr": "Geliştirme kuralı: değişen her modülün sürümü artırılmalı (module:check ve CI denetler).",
+          "de": "Entwicklungsregel: Jedes geänderte Modul muss seine Version erhöhen (module:check und CI prüfen das)."
+        }
+      ],
+      "appVersion": "0.28.0"
+    },
+    {
+      "version": "1.6.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "Kurulum sihirbazı",
+        "de": "Einrichtungsassistent"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Kurulum sihirbazı: Dernek, Küçük işletme, Orta ölçekli işletme, Freelancer veya Etüt/Nachhilfe seçin; uygun modüller açılır, muhasebe için hesap planı, § 19 ayarı, SKR numaralı kategoriler ve Kasse/Bank hesapları hazırlanır. Mevcut kayıtlar korunur; sihirbaz tekrar çalıştırılabilir.",
+          "de": "Einrichtungsassistent: Verein, Kleingewerbe, Mittelstand, Freelancer oder Nachhilfe wählen; passende Module werden aktiviert, Kontenrahmen, § 19-Einstellung, Kategorien mit SKR-Nummern sowie Kasse- und Bankkonto werden vorbereitet. Vorhandene Daten bleiben erhalten; der Assistent kann erneut ausgeführt werden."
+        },
+        {
+          "type": "improvement",
+          "tr": "Kurulum tamamlanmadıysa panelde yöneticiye bilgi bandı; Ayarlar merkezinde \"Kurulum sihirbazı\" bağlantısı.",
+          "de": "Hinweis auf dem Dashboard für Administratoren, solange die Einrichtung offen ist; Eintrag „Einrichtungsassistent“ im Einstellungsbereich."
+        }
+      ],
+      "appVersion": "0.25.0"
+    },
+    {
+      "version": "1.5.0",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Modüllerin kendi npm paketleri",
+        "de": "Eigene npm-Pakete für Module"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Modüller ek npm paketlerini module.config.ts → dependencies ile bildirir; pnpm module:deps kurar ve kaldırılan modüllerin paketlerini temizler.",
+          "de": "Module deklarieren zusätzliche npm-Pakete in module.config.ts → dependencies; pnpm module:deps installiert sie und entfernt Pakete entfernter Module."
+        },
+        {
+          "type": "security",
+          "tr": "Paketler kurulum betikleri çalıştırılmadan eklenir; çekirdek paket sürümleri modülden değiştirilemez; bildirilmemiş paketler doğrulamada hata verir.",
+          "de": "Pakete werden ohne Installationsskripte hinzugefügt; Kernversionen sind durch Module nicht änderbar; nicht deklarierte Pakete schlagen in der Validierung fehl."
+        }
+      ],
+      "appVersion": "0.14.0"
+    },
+    {
+      "version": "1.4.1",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Kapsam kuralları da izin",
+        "de": "Auch Sichtbarkeitsregeln sind Berechtigungen"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "\"Yalnızca kendi kursları\", \"kimlik numaralarını görme\" ve \"başkalarının notlarını silme\" artık rol adına değil izne bağlı; Roller ve İzinler ekranından her rol için ayarlanabilir.",
+          "de": "„Nur eigene Kurse“, „Ausweisnummern sehen“ und „Notizen anderer löschen“ hängen nun an Berechtigungen statt am Rollennamen und sind je Rolle einstellbar."
+        },
+        {
+          "type": "improvement",
+          "tr": "Doğrulayıcı, rol adına göre yetki kontrolünü hata olarak işaretler.",
+          "de": "Der Validator meldet Berechtigungsprüfungen anhand des Rollennamens als Fehler."
+        }
+      ],
+      "appVersion": "0.13.1"
+    },
+    {
+      "version": "1.4.0",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Roller ve izinler veritabanında",
+        "de": "Rollen und Berechtigungen in der Datenbank"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Özel roller: ad, açıklama ve renk verilerek oluşturulur; başka bir rolün izinleri kopyalanabilir.",
+          "de": "Eigene Rollen mit Name, Beschreibung und Farbe; Berechtigungen einer anderen Rolle können übernommen werden."
+        },
+        {
+          "type": "feature",
+          "tr": "Rol izinleri ekrandan değiştirilebilir; değişiklikler işaretlenir ve varsayılana döndürülebilir. Yönetici rolü kilitlidir.",
+          "de": "Rollenberechtigungen sind in der Oberfläche änderbar, Änderungen werden markiert und können zurückgesetzt werden. Die Administratorrolle ist gesperrt."
+        },
+        {
+          "type": "improvement",
+          "tr": "Modüller kendi rollerini getirir (Öğretmen → Kurslar); modül pasifken rol atanamaz ve izin vermez.",
+          "de": "Module bringen eigene Rollen mit (Lehrkraft → Kurse); ist das Modul inaktiv, ist die Rolle nicht vergebbar und ohne Rechte."
+        },
+        {
+          "type": "improvement",
+          "tr": "Roller ve İzinler ekranı kurulu tüm modüllerden otomatik oluşur.",
+          "de": "Die Ansicht „Rollen und Berechtigungen“ entsteht automatisch aus allen installierten Modulen."
+        },
+        {
+          "type": "security",
+          "tr": "Yönetici rolünü yalnızca bir yönetici atayabilir.",
+          "de": "Nur Administratoren können die Administratorrolle vergeben."
+        }
+      ],
+      "appVersion": "0.13.0"
+    },
+    {
+      "version": "1.3.0",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Profil, sürüm notları ve form görünümü",
+        "de": "Profil, Versionshinweise und Formularansicht"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Profil sayfası: iletişim, adres, ödeme (IBAN) ve fatura bilgileri; hassas alanlar şifreli saklanır.",
+          "de": "Profilseite: Kontakt, Anschrift, Zahlungs- (IBAN) und Rechnungsdaten; sensible Felder verschlüsselt gespeichert."
+        },
+        {
+          "type": "feature",
+          "tr": "Ayarlar → Sürüm notları sayfası.",
+          "de": "Einstellungen → Versionshinweise."
+        },
+        {
+          "type": "improvement",
+          "tr": "Form alanlarına açık temada gri, koyu temada neon mavi ince kenarlık.",
+          "de": "Formularfelder mit dünnem Rahmen: grau im hellen, neonblau im dunklen Design."
+        }
+      ],
+      "appVersion": "0.8.0"
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-10-30",
+      "title": {
+        "tr": "Modül izinleri ve modül rotaları",
+        "de": "Modulberechtigungen und Modulrouten"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Modüller arası erişim yönetici onayına bağlı; onaylar veritabanında.",
+          "de": "Modulübergreifender Zugriff nur mit Freigabe des Administrators; Freigaben in der Datenbank."
+        },
+        {
+          "type": "improvement",
+          "tr": "Üretilen modül rotaları (modules) klasöründe, her derlemede temiz kurulur.",
+          "de": "Generierte Modulrouten im Ordner (modules), bei jedem Build sauber neu erstellt."
+        },
+        {
+          "type": "fix",
+          "tr": "Öğretmen bilgileri kullanıcı kaydıyla senkron; sabit seçenekli alanlar seçim kutusu.",
+          "de": "Lehrkraftdaten mit dem Benutzerkonto synchron; Felder mit festen Optionen als Auswahl."
+        }
+      ],
+      "appVersion": "0.4.0"
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-10-30",
+      "title": {
+        "tr": "Ayarlar merkezi ve panel kartları",
+        "de": "Einstellungszentrale und Dashboard-Karten"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Tek ayarlar girişi ve ayarlar merkezi; düzenlenebilir panel kartları.",
+          "de": "Ein Einstieg für Einstellungen und Einstellungszentrale; anpassbare Dashboard-Karten."
+        },
+        {
+          "type": "feature",
+          "tr": "Toplantılara üye katılımcı; parola üretme ve göster/gizle.",
+          "de": "Mitglieder als Sitzungsteilnehmende; Passwort erzeugen und ein-/ausblenden."
+        }
+      ],
+      "appVersion": "0.2.0"
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-10-29",
+      "title": {
+        "tr": "İlk sürüm",
+        "de": "Erste Version"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "İlk sürüm.",
+          "de": "Erste Version."
+        }
+      ]
+    }
+  ]
+}

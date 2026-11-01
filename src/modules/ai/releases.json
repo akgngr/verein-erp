@@ -1,0 +1,187 @@
+{
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
+  "releases": [
+    {
+      "version": "1.3.3",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Asistan: kapalı yeteneklerin gerçek sebebi",
+        "de": "Assistent: tatsächlicher Grund für gesperrte Funktionen"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Asistan bir işi yapamadığında gerçek sebebi söyler: modül etkin değil / erişim onayı bekliyor, asistan izni kapalı ya da kullanıcının rolünde izin yok — ve nereden açılacağını.",
+          "de": "Kann der Assistent etwas nicht, nennt er den tatsächlichen Grund (Modul inaktiv/Freigabe ausstehend, KI-Berechtigung aus oder fehlende Rollenberechtigung) und wo es geändert wird."
+        },
+        {
+          "type": "improvement",
+          "tr": "Asistan izinleri ekranı, etkin olmayan veya onay bekleyen modülleri uyarıyla gösterir; bu modüllerdeki açık izinler üstü çizili görünür.",
+          "de": "Die KI-Berechtigungsansicht kennzeichnet inaktive oder nicht freigegebene Module; dort aktivierte Berechtigungen werden durchgestrichen angezeigt."
+        }
+      ],
+      "appVersion": "0.14.2"
+    },
+    {
+      "version": "1.3.2",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Asistan izinleri yeni görünüm, yükleme iskeleti",
+        "de": "Neue Ansicht der KI-Berechtigungen, Ladeskelett"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Asistan izinleri kompakt modül kartlarında: ikon, ad, kısa açıklama ve renkli/gri izin etiketleri; düzenleme modalda.",
+          "de": "KI-Berechtigungen in kompakten Modulkarten: Symbol, Name, Kurzbeschreibung und farbige/graue Berechtigungen; Bearbeitung im Dialog."
+        },
+        {
+          "type": "feature",
+          "tr": "\"Tümüne izin ver\" ve \"Tümünü kapat\"; güncelleme, silme ve kişisel/mali veriye yakın modüllerdeki izinler için onay sorusu.",
+          "de": "„Alle erlauben“ und „Alle sperren“; Rückfrage bei Ändern, Löschen und bei personen- oder finanznahen Modulen."
+        },
+        {
+          "type": "improvement",
+          "tr": "Sayfa geçişlerinde yükleme iskeleti gösterilir.",
+          "de": "Beim Seitenwechsel wird ein Ladeskelett angezeigt."
+        },
+        {
+          "type": "security",
+          "tr": "Asistan modülünün modül erişim listesi yalnızca gerçekten kullandığı modüllere indirildi; modül işlemleri her modülün kendi ai.ts dosyasından ve izin matrisinden gelir.",
+          "de": "Die Modulzugriffe des Assistenten wurden auf tatsächlich genutzte Module reduziert; Modulaktionen kommen aus der ai.ts des jeweiligen Moduls und der Berechtigungsmatrix."
+        }
+      ],
+      "appVersion": "0.13.2"
+    },
+    {
+      "version": "1.3.1",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Asistan dosya indirme düzeltmesi",
+        "de": "Korrektur: Dateidownload im Assistenten"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Asistanın oluşturduğu PDF artık yanıtın altında indirme düğmesi olarak görünür ve sohbet geçmişinde kalır.",
+          "de": "Vom Assistenten erstellte PDFs erscheinen als Download-Schaltfläche unter der Antwort und bleiben im Verlauf erhalten."
+        },
+        {
+          "type": "fix",
+          "tr": "Asistan yanıtındaki \"//api/…\" biçimindeki hatalı bağlantılar artık doğru açılıyor.",
+          "de": "Fehlerhafte Links der Form \"//api/…\" in Antworten öffnen jetzt korrekt."
+        }
+      ],
+      "appVersion": "0.10.1"
+    },
+    {
+      "version": "1.3.0",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Tüm modüller AI standardında",
+        "de": "Alle Module im KI-Standard"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Evrak, toplantı, envanter, kurs, etkinlik, muhasebe, üye, bağış, öğrenci, öğrenci takibi ve dernek bilgisi araçları kendi modüllerinin ai.ts dosyasına taşındı.",
+          "de": "Die Werkzeuge für Schriftverkehr, Sitzungen, Inventar, Kurse, Veranstaltungen, Buchhaltung, Mitglieder, Spenden, Schüler, Lernfortschritt und Vereinsdaten liegen jetzt in der ai.ts ihres Moduls."
+        },
+        {
+          "type": "improvement",
+          "tr": "Onay kartlarının metinleri artık ilgili modülün çevirilerinden gelir; rehbere şablon ve kontrol listesi eklendi.",
+          "de": "Die Texte der Bestätigungskarten stammen aus den Übersetzungen des jeweiligen Moduls; der Leitfaden enthält Vorlage und Checkliste."
+        },
+        {
+          "type": "fix",
+          "tr": "Onay kartlarındaki iç içe alanlarda maskelenmiş değerler artık doğru çözülüyor.",
+          "de": "Maskierte Werte in verschachtelten Feldern der Bestätigungskarten werden jetzt korrekt aufgelöst."
+        }
+      ],
+      "appVersion": "0.10.0"
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Modül AI standardı",
+        "de": "KI-Standard für Module"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Modüller asistan araçlarını ve onay eylemlerini kendi ai.ts dosyasında tanımlar; kayıt otomatik üretilir.",
+          "de": "Module definieren Assistenz-Werkzeuge und Bestätigungsaktionen in ihrer eigenen ai.ts; die Registrierung wird automatisch erzeugt."
+        },
+        {
+          "type": "improvement",
+          "tr": "Görevler modülü yeni standarda taşındı; doğrulayıcı ai.ts kurallarını denetler.",
+          "de": "Das Aufgabenmodul nutzt den neuen Standard; der Validator prüft die ai.ts-Regeln."
+        }
+      ],
+      "appVersion": "0.9.0"
+    },
+    {
+      "version": "1.1.0",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Yapay zekâ asistanı: tüm modüller, belge okuma, PDF rapor",
+        "de": "KI-Assistent: alle Module, Dokumente lesen, PDF-Berichte"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Evrak, toplantı, envanter ve kurs modülleri için okuma/yazma/güncelleme/silme araçları; öğrenci ve devam istatistikleri; dernek bilgileri.",
+          "de": "Lese-/Schreib-/Änderungs-/Löschwerkzeuge für Schriftverkehr, Sitzungen, Inventar und Kurse; Schüler- und Anwesenheitsstatistik; Vereinsdaten."
+        },
+        {
+          "type": "feature",
+          "tr": "Evrak eklerinin (PDF, Word, Excel) içeriğini okuma ve özetleme.",
+          "de": "Inhalte von Anhängen (PDF, Word, Excel) lesen und zusammenfassen."
+        },
+        {
+          "type": "feature",
+          "tr": "Sohbet geçmişi: kullanıcıya özel, şifreli, 180 gün saklama.",
+          "de": "Chatverlauf: personenbezogen, verschlüsselt, 180 Tage Aufbewahrung."
+        },
+        {
+          "type": "feature",
+          "tr": "Asistan istendiğinde antetli PDF rapor hazırlar.",
+          "de": "Der Assistent erstellt auf Wunsch PDF-Berichte mit Briefkopf."
+        },
+        {
+          "type": "improvement",
+          "tr": "Sohbet paneli genişletilebilir; durum sayfa geçişlerinde ve yenilemede korunur. Yanıtlarda tablolar.",
+          "de": "Chatbereich in der Breite anpassbar; Zustand bleibt bei Navigation und Neuladen erhalten. Tabellen in Antworten."
+        }
+      ],
+      "appVersion": "0.7.0"
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-10-30",
+      "title": {
+        "tr": "Yapay zekâ asistanı (KVKK/DSGVO öncelikli)",
+        "de": "KI-Assistent (Datenschutz zuerst)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Sağ panelde sohbet; yöneticinin modül bazında izin matrisi ve kullanıcı rızası.",
+          "de": "Chat im rechten Bereich; Berechtigungsmatrix je Modul und Einwilligung der Nutzer."
+        },
+        {
+          "type": "feature",
+          "tr": "Sağlayıcı seçimi: kendi sunucu, Mistral, Claude, OpenAI; anahtarlar ayarlardan girilir ve şifreli saklanır.",
+          "de": "Anbieterwahl: eigener Server, Mistral, Claude, OpenAI; Schlüssel in den Einstellungen, verschlüsselt gespeichert."
+        },
+        {
+          "type": "security",
+          "tr": "Kişisel veriler modele gitmeden maskelenir; araçlar kişisel veri döndürmez.",
+          "de": "Personendaten werden vor dem Versand maskiert; Werkzeuge liefern keine Personendaten."
+        }
+      ],
+      "appVersion": "0.6.0"
+    }
+  ]
+}

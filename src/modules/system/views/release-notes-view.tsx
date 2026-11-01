@@ -1,12 +1,13 @@
+import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
 
+import { moduleReleases } from "@/module-releases";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { cn } from "@/shared/utils";
 
 import changelog from "../changelog.json";
 
-type Change = { type: "feature" | "improvement" | "fix" | "security"; tr: string; de: string };
-type Release = { version: string; date: string; title: { tr: string; de: string }; changes: Change[] };
+import type { ModuleRelease as Release, ReleaseChange as Change } from "@/shared/modules/releases";
 
 const TYPE_STYLE: Record<Change["type"], string> = {
   feature: "bg-primary-50 text-primary-700 dark:bg-primary-500/15 dark:text-primary-300",
@@ -15,16 +16,40 @@ const TYPE_STYLE: Record<Change["type"], string> = {
   security: "bg-success-50 text-success-700 dark:bg-success-500/15 dark:text-success-300",
 };
 
-/** Sürüm notları: changelog.json'daki sürüm serisi, en yeni üstte; metinler arayüz diline göre. */
-export async function ReleaseNotesView() {
-  const [t, locale] = await Promise.all([getTranslations("system.releases"), getLocale()]);
+/**
+ * Sürüm notları: uygulamanın (changelog.json) veya ?modul=<anahtar> ile bir modülün (releases.json)
+ * sürüm serisi, en yeni üstte; metinler arayüz diline göre.
+ */
+export async function ReleaseNotesView({ moduleKey }: { moduleKey?: string | null } = {}) {
+  const [t, tRoot, locale] = await Promise.all([getTranslations("system.releases"), getTranslations(), getLocale()]);
   const lang = locale === "de" ? "de" : "tr";
-  const releases = (changelog as { releases: Release[] }).releases;
+  const selected = moduleReleases.find((entry) => entry.moduleKey === moduleKey) ?? null;
+  const releases: Release[] = selected ? selected.releases : (changelog as { releases: Release[] }).releases;
+  const moduleLabel = (key: string) => tRoot(`${key}.module.label` as never);
+  const modules = [...moduleReleases].sort((a, b) => moduleLabel(a.moduleKey).localeCompare(moduleLabel(b.moduleKey), lang));
+  const pill = (active: boolean) =>
+    cn(
+      "rounded-full border px-3 py-1 text-small transition-colors",
+      active ? "border-primary bg-primary text-primary-foreground" : "border-default-200 text-default-600 hover:bg-default-100",
+    );
   const dateFormat = new Intl.DateTimeFormat(lang === "de" ? "de-DE" : "tr-TR", { dateStyle: "long", timeZone: "UTC" });
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title={t("title")} description={t("description", { version: releases[0]?.version ?? "" })} />
+      <PageHeader
+        title={selected ? t("moduleTitle", { module: moduleLabel(selected.moduleKey) }) : t("title")}
+        description={selected ? t("moduleDescription", { version: releases[0]?.version ?? "" }) : t("description", { version: releases[0]?.version ?? "" })}
+      />
+      <nav aria-label={t("filterLabel")} className="flex flex-wrap gap-2">
+        <Link href="/ayarlar/surum-notlari" className={pill(!selected)}>
+          {t("application")}
+        </Link>
+        {modules.map((entry) => (
+          <Link key={entry.moduleKey} href={`/ayarlar/surum-notlari?modul=${entry.moduleKey}`} className={pill(selected?.moduleKey === entry.moduleKey)}>
+            {moduleLabel(entry.moduleKey)} <span className="opacity-70">v{entry.releases[0]?.version}</span>
+          </Link>
+        ))}
+      </nav>
       <ol className="relative flex flex-col gap-6 border-l border-default-200 pl-6">
         {releases.map((release, index) => (
           <li key={release.version} className="relative">
@@ -35,6 +60,7 @@ export async function ReleaseNotesView() {
               <time dateTime={release.date} className="text-small text-default-500">
                 {dateFormat.format(new Date(`${release.date}T00:00:00Z`))}
               </time>
+              {selected && release.appVersion ? <span className="text-tiny text-default-400">{t("appVersion", { version: release.appVersion })}</span> : null}
             </div>
             <p className="mt-1 text-small font-medium text-foreground">{release.title[lang]}</p>
             <ul className="mt-2 flex flex-col gap-1.5">

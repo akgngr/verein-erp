@@ -1,0 +1,31 @@
+{
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
+  "releases": [
+    {
+      "version": "1.0.0",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Dosyalarım: PDF, Excel, Word, Markdown, CSV",
+        "de": "Meine Dateien: PDF, Excel, Word, Markdown, CSV"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yeni Dosyalarım modülü: oluşturulan dosyalar şifreli saklanır, yalnızca sahibi indirir ve 30 gün sonra silinir.",
+          "de": "Neues Modul „Meine Dateien“: erstellte Dateien werden verschlüsselt gespeichert, nur der Ersteller kann sie herunterladen; Löschung nach 30 Tagen."
+        },
+        {
+          "type": "feature",
+          "tr": "Asistan istenen içeriği PDF, Excel, Word, Markdown veya CSV dosyası olarak hazırlar; indirme düğmesi yanıtın altında çıkar.",
+          "de": "Der Assistent erstellt Inhalte als PDF, Excel, Word, Markdown oder CSV; die Download-Schaltfläche erscheint unter der Antwort."
+        },
+        {
+          "type": "improvement",
+          "tr": "Format eklentileri tek arayüzle çalışır; modüller dosya üretmek için bu servisi kullanır (rehber §9c).",
+          "de": "Format-Plugins nutzen eine gemeinsame Schnittstelle; Module erzeugen Dateien über diesen Dienst (Leitfaden §9c)."
+        }
+      ],
+      "appVersion": "0.11.0"
+    }
+  ]
+}

@@ -109,7 +109,13 @@
       "improvement": "İyileştirme",
       "fix": "Düzeltme",
       "security": "Güvenlik"
-    }
+    },
+    "moduleTitle": "{module} — sürüm notları",
+    "moduleDescription": "Modülün güncel sürümü: v{version}",
+    "filterLabel": "Sürüm notu kaynağı",
+    "application": "Uygulama",
+    "appVersion": "uygulama v{version}",
+    "moduleNotes": "Sürüm notları"
   },
   "permissions": {
     "settings": {
@@ -196,5 +202,6 @@
     "errors": {
       "accountingOff": "Muhasebe hazırlığı için Muhasebe modülü seçili olmalı."
     }
-  }
+  },
+  "releaseNotes": "Sürüm notları"
 }

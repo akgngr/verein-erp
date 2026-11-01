@@ -1,0 +1,26 @@
+{
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
+  "releases": [
+    {
+      "version": "1.0.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "Geri bildirim modülü",
+        "de": "Feedback-Modul"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Sağ altta geri bildirim butonu: ilk açılışta kısa bir sesle kendini tanıtır; hata bildirimi veya öneri gönderilebilir, isteğe bağlı ekran görüntüsü eklenir. Sayfa adresi ve tarayıcı bilgisi otomatik eklenir.",
+          "de": "Feedback-Schaltfläche unten rechts: stellt sich beim ersten Besuch mit einem kurzen Ton vor; Fehlermeldungen oder Vorschläge mit optionalem Screenshot. Seitenadresse und Browserinfo werden automatisch ergänzt."
+        },
+        {
+          "type": "feature",
+          "tr": "Geri bildirim listesi: herkes kendi kayıtlarını, yöneticiler tümünü görür; durum, öncelik ve cevap yönetimi. Ekran görüntüleri yalnızca yetkililere açıktır.",
+          "de": "Feedback-Liste: Nutzer sehen eigene Einträge, Administratoren alle; Status, Priorität und Antwort. Screenshots nur für Berechtigte sichtbar."
+        }
+      ],
+      "appVersion": "0.26.0"
+    }
+  ]
+}

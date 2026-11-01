@@ -151,6 +151,50 @@ export function checkRoleNameChecks(moduleDir: string, moduleKey: string): strin
   return problems;
 }
 
+const SEMVER = /^\d+\.\d+\.\d+$/;
+const RELEASE_TYPES = new Set(["feature", "improvement", "fix", "security"]);
+
+/** "1.2.3" karşılaştırması: a > b ise pozitif. */
+export function compareSemver(a: string, b: string): number {
+  const pa = a.split(".").map(Number);
+  const pb = b.split(".").map(Number);
+  for (let i = 0; i < 3; i++) if (pa[i] !== pb[i]) return pa[i] - pb[i];
+  return 0;
+}
+
+/** Modül sürüm notları (releases.json): biçim, azalan sürüm sırası ve module.config.ts 'version' eşleşmesi. */
+export function checkModuleReleases(moduleDir: string): string[] {
+  const file = path.join(moduleDir, "releases.json");
+  if (!fs.existsSync(file)) return ["Zorunlu 'releases.json' (modül sürüm notları) eksik."];
+  const problems: string[] = [];
+  let releases: { version?: string; date?: string; title?: { tr?: string; de?: string }; changes?: { type?: string; tr?: string; de?: string }[] }[];
+  try {
+    releases = JSON.parse(fs.readFileSync(file, "utf8")).releases;
+  } catch (err) {
+    return [`'releases.json' okunamadı: ${err instanceof Error ? err.message : String(err)}`];
+  }
+  if (!Array.isArray(releases) || releases.length === 0) return ["'releases.json' en az bir sürüm içermeli."];
+  releases.forEach((release, index) => {
+    const label = release.version ?? `#${index + 1}`;
+    if (!release.version || !SEMVER.test(release.version)) problems.push(`releases.json: geçersiz sürüm '${label}' (x.y.z).`);
+    if (!release.date || !/^\d{4}-\d{2}-\d{2}$/.test(release.date)) problems.push(`releases.json ${label}: tarih YYYY-MM-DD olmalı.`);
+    if (!release.title?.tr || !release.title?.de) problems.push(`releases.json ${label}: title.tr ve title.de zorunlu.`);
+    if (!release.changes?.length) problems.push(`releases.json ${label}: en az bir değişiklik olmalı.`);
+    for (const change of release.changes ?? []) {
+      if (!change.type || !RELEASE_TYPES.has(change.type) || !change.tr || !change.de) problems.push(`releases.json ${label}: her değişiklikte type (feature|improvement|fix|security), tr ve de olmalı.`);
+    }
+    const next = releases[index + 1];
+    if (next?.version && release.version && SEMVER.test(release.version) && SEMVER.test(next.version) && compareSemver(release.version, next.version) <= 0) {
+      problems.push(`releases.json: sürümler yeniden eskiye sıralı olmalı (${release.version} ≤ ${next.version}).`);
+    }
+  });
+  const configText = fs.readFileSync(path.join(moduleDir, "module.config.ts"), "utf8");
+  const version = configText.match(/^\s*version:\s*["']([^"']+)["']/m)?.[1];
+  if (!version) problems.push("module.config.ts içinde 'version' eksik (releases.json en üstteki sürümle aynı olmalı).");
+  else if (version !== releases[0].version) problems.push(`module.config.ts version (${version}) releases.json en üstteki sürümle (${releases[0].version}) aynı değil.`);
+  return [...new Set(problems)];
+}
+
 /** Modüllerin birbirinin `server` API'sini onaysız kullanmasını engelleyen erişim denetimi. */
 const ACCESS_EXEMPT_MODULES = new Set(["auth"]); // oturum ve createAction: her modülün altyapısı
 
@@ -421,6 +465,8 @@ export function validateModule(moduleKey: string, customModulesDir?: string): Mo
       warnings.push("'server.ts' dosyasının başında 'import \"server-only\";' bulunmalıdır.");
     }
   }
+
+  errors.push(...checkModuleReleases(moduleDir));
 
   const uiPath = path.join(moduleDir, "ui.ts");
   if (!fs.existsSync(uiPath)) {

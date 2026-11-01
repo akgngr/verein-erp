@@ -7,6 +7,8 @@ import { feedbackPermissions } from "./permissions";
 /** Test aşaması için hata ve öneri kaydı: sağ altta yüzen buton + yönetici listesi. */
 export const moduleConfig: ModuleConfig = {
   key: "feedback",
+  // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
+  version: "1.0.0",
   label: "Geri bildirim",
   description: "Test kullanıcılarının hata ve önerilerini toplar.",
   category: "OFFICIAL",

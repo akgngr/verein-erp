@@ -25,6 +25,7 @@ import {
   Trash2,
   Zap,
 } from "lucide-react";
+import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useMemo, useState, useTransition } from "react";
@@ -326,9 +327,13 @@ export function ModuleList({
                         {mod.key}
                       </span>
                       {getCategoryBadge(mod.category)}
-                      <span className="text-[11px] text-default-400 font-medium">
+                      <Link
+                        href={`/ayarlar/surum-notlari?modul=${mod.key}`}
+                        className="text-[11px] text-default-400 font-medium underline-offset-2 hover:text-primary hover:underline"
+                        title={t("releaseNotes")}
+                      >
                         v{mod.version}
-                      </span>
+                      </Link>
                     </div>
                     <p className="text-tiny text-default-500 mt-0.5 line-clamp-1">
                       {mod.description ?? t("noDescription")}

@@ -2,6 +2,26 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.28.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "Modül sürümleri ve sürüm notları",
+        "de": "Modulversionen und Versionshinweise"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Her modülün kendi sürümü ve sürüm notları (releases.json): Modül Yönetimi'nde sürüme tıklayınca o modülün notları açılır; Ayarlar → Sürüm notları'nda modül seçilebilir.",
+          "de": "Jede Modul hat eine eigene Version und Versionshinweise (releases.json): Klick auf die Version in der Modulverwaltung öffnet die Hinweise; unter Einstellungen → Versionshinweise ist das Modul wählbar."
+        },
+        {
+          "type": "improvement",
+          "tr": "Geliştirme kuralı: değişen her modülün sürümü artırılmalı (module:check ve CI denetler).",
+          "de": "Entwicklungsregel: Jedes geänderte Modul muss seine Version erhöhen (module:check und CI prüfen das)."
+        }
+      ]
+    },
+    {
       "version": "0.27.0",
       "date": "2026-11-01",
       "title": {
