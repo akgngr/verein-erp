@@ -152,6 +152,44 @@ export function checkRoleNameChecks(moduleDir: string, moduleKey: string): strin
 }
 
 const SEMVER = /^\d+\.\d+\.\d+$/;
+
+/** requires/recommends: hedef modüller var olmalı, kendine bağımlılık ve döngü olmamalı. */
+export function checkModuleRequires(moduleDir: string, moduleKey: string): string[] {
+  const modulesDir = path.dirname(moduleDir);
+  const read = (key: string) => {
+    const file = path.join(modulesDir, key, "module.config.ts");
+    return fs.existsSync(file) ? fs.readFileSync(file, "utf8") : null;
+  };
+  const requiresOf = (text: string | null) => {
+    const block = text?.match(/requires:\s*\[([\s\S]*?)\]\s*,/)?.[1] ?? "";
+    return [...block.matchAll(/module:\s*["']([a-z0-9-]+)["'](?:\s*,\s*version:\s*["']([^"']+)["'])?/g)].map((m) => ({ module: m[1], version: m[2] }));
+  };
+  const text = read(moduleKey);
+  const problems: string[] = [];
+  const reqs = requiresOf(text);
+  const recommends = [...(text?.match(/recommends:\s*\[([^\]]*)\]/)?.[1] ?? "").matchAll(/["']([a-z0-9-]+)["']/g)].map((m) => m[1]);
+  for (const req of reqs) {
+    if (req.module === moduleKey) problems.push("Modül kendine bağımlı olamaz (requires).");
+    else if (!read(req.module)) problems.push(`requires: bilinmeyen modül '${req.module}' (kurulu olmalı).`);
+    if (req.version && !/^(>=\s*)?\d+\.\d+\.\d+$/.test(req.version)) problems.push(`requires: geçersiz sürüm koşulu '${req.version}' (ör. ">=1.1.0").`);
+  }
+  for (const rec of recommends) if (!read(rec)) problems.push(`recommends: bilinmeyen modül '${rec}'.`);
+  // Döngü: bu modülden zorunlu zincir tekrar bu modüle dönmemeli.
+  const seen = new Set<string>();
+  const walk = (key: string, trail: string[]): void => {
+    for (const req of requiresOf(read(key))) {
+      if (req.module === moduleKey) {
+        problems.push(`Zorunlu bağımlılık döngüsü: ${[...trail, req.module].join(" → ")}`);
+        continue;
+      }
+      if (seen.has(req.module)) continue;
+      seen.add(req.module);
+      walk(req.module, [...trail, req.module]);
+    }
+  };
+  walk(moduleKey, [moduleKey]);
+  return [...new Set(problems)];
+}
 const RELEASE_TYPES = new Set(["feature", "improvement", "fix", "security"]);
 
 /** "1.2.3" karşılaştırması: a > b ise pozitif. */
@@ -467,6 +505,7 @@ export function validateModule(moduleKey: string, customModulesDir?: string): Mo
   }
 
   errors.push(...checkModuleReleases(moduleDir));
+  errors.push(...checkModuleRequires(moduleDir, moduleKey));
 
   const uiPath = path.join(moduleDir, "ui.ts");
   if (!fs.existsSync(uiPath)) {

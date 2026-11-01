@@ -246,5 +246,25 @@
       "file": "Geçerli bir .vmod dosyası seçin (en fazla 25 MB)."
     }
   },
-  "installModule": "Yeni modül kur"
+  "installModule": "Yeni modül kur",
+  "dependencies": {
+    "enableTitle": "{label} etkinleştiriliyor",
+    "disableTitle": "{label} kapatılıyor",
+    "requiredTitle": "{label} şu modüllere ihtiyaç duyuyor; birlikte etkinleştirilecek:",
+    "recommendedTitle": "Önerilen (onsuz da çalışır, birlikte açmanız önerilir):",
+    "dependentsTitle": "Bu modüller {label} olmadan çalışamaz ve birlikte kapatılacak:",
+    "missingTitle": "Gerekli modüller kurulu değil veya sürümü yetersiz; önce yükleyin:",
+    "notInstalled": "{module} (kurulu değil) {required}",
+    "versionTooLow": "{module}: kurulu {installed}, gerekli {required}",
+    "installLink": "Yeni modül kur",
+    "needsApproval": "erişim izni de verilecek: {modules}",
+    "enableAll": "Hepsini etkinleştir",
+    "disableAll": "Birlikte kapat",
+    "cancel": "Vazgeç",
+    "errors": {
+      "missing": "Gerekli modüller kurulu değil.",
+      "required": "Bu modül başka modüllere ihtiyaç duyuyor; Modül Yönetimi'nden etkinleştirin.",
+      "dependentsActive": "Bu modüle bağlı modüller açık; Modül Yönetimi'nden birlikte kapatın."
+    }
+  }
 }

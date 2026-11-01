@@ -13,6 +13,7 @@ import fs from "node:fs";
 import path from "node:path";
 
 import { packageFiles, readPackage, verifyPackage } from "../src/shared/marketplace/package";
+import { satisfiesVersion } from "../src/shared/modules/dependencies";
 import { loadTrustedPublishers } from "../src/shared/marketplace/trust";
 import { compareSemver, validateModule } from "./validate-module";
 
@@ -35,6 +36,18 @@ const configVersion = packageFiles(pkg)["module.config.ts"].toString("utf8").mat
 if (configVersion !== manifest.version) {
   console.error(`module.config.ts sürümü (${configVersion}) manifest sürümüyle (${manifest.version}) aynı değil.`);
   process.exit(1);
+}
+
+// Zorunlu bağımlılıklar kurulu ve sürümü yeterli olmalı (module.config.ts → requires).
+const packageConfig = packageFiles(pkg)["module.config.ts"].toString("utf8");
+const requiredBlock = packageConfig.match(/requires:\s*\[([\s\S]*?)\]\s*,/)?.[1] ?? "";
+for (const match of requiredBlock.matchAll(/module:\s*["']([a-z0-9-]+)["'](?:\s*,\s*version:\s*["']([^"']+)["'])?/g)) {
+  const configFile = path.join(ROOT, "src", "modules", match[1], "module.config.ts");
+  const installed = fs.existsSync(configFile) ? fs.readFileSync(configFile, "utf8").match(/^\s*version:\s*["']([^"']+)["']/m)?.[1] : undefined;
+  if (!installed || !satisfiesVersion(installed, match[2])) {
+    console.error(`Önce '${match[1]}' modülünü ${match[2] ? `(${match[2]}) ` : ""}kurun${installed ? ` (kurulu: ${installed})` : ""}.`);
+    process.exit(1);
+  }
 }
 
 let backup: string | null = null;

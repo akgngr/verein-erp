@@ -6,6 +6,7 @@ import { z } from "zod";
 import { ActionError, createAction } from "@/modules/auth/server";
 import { applyAccountingPreset } from "@/modules/accounting/server";
 import { allModules } from "@/registry";
+import { withRequirements } from "@/shared/modules/dependencies";
 import { getDb } from "@/shared/db";
 import { isAccessApproved } from "@/shared/modules/module-access";
 import { systemPermissions } from "@/shared/permissions/system";
@@ -33,7 +34,8 @@ export async function applySetupAction(input: unknown): Promise<ActionResult<{ e
     permission: { definition: systemPermissions, action: "update" },
     schema: setupSchema,
     handler: async ({ input, audit }) => {
-      const wanted = new Set(input.modules);
+      // Zorunlu bağımlılıklar otomatik eklenir (örn. Kurslar → Öğrenciler).
+      const wanted = new Set(withRequirements(input.modules, allModules));
       const enabled: string[] = [];
       const disabled: string[] = [];
       const needsApproval: string[] = [];

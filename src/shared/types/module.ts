@@ -82,6 +82,14 @@ export type ModuleConfig = {
   /** Başka modüllerden istenen erişimler (bkz. ModuleAccessRequest). */
   access?: ModuleAccessRequest[];
   /**
+   * ZORUNLU bağımlılıklar: modül bunlar olmadan çalışamaz (örn. Kurslar → Öğrenciler). Etkinleştirirken
+   * eksikler birlikte açılır; bunlardan biri kapatılırken bu modül de (onayla) kapanır.
+   * version: en düşük sürüm (">=1.1.0" veya "1.1.0").
+   */
+  requires?: { module: string; version?: string }[];
+  /** ÖNERİLEN modüller: onsuz çalışır ama eksik kalır; etkinleştirirken birlikte açmak önerilir. */
+  recommends?: string[];
+  /**
    * Modülün ihtiyaç duyduğu ek npm paketleri: { "qrcode": "^1.5.4" }. Çekirdekte olmayan her dış
    * paket burada bildirilmelidir (doğrulayıcı denetler). `pnpm module:deps` bunları kök
    * package.json'a ekler ve kurar; tek node_modules ve tek kilit dosyası kullanılır.
