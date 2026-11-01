@@ -341,3 +341,69 @@ model AccountingInvoicePayment {
 
   @@index([invoiceId])
 }
+
+enum BankTransactionStatus {
+  OPEN // öneri bekliyor
+  BOOKED // fişe / fatura tahsilatına bağlandı
+  PRIVATE // özel (Privatentnahme/-einlage) — EÜR dışı, fiş yok
+  IGNORED // kullanıcı yok saydı (ör. mükerrer, iç virman başka yerde)
+}
+
+enum BankRuleField {
+  COUNTERPARTY
+  PURPOSE
+}
+
+/// ACC-4: banka ekstresi içe aktarımı (dosya içeriği SAKLANMAZ; yalnızca satırlar).
+model AccountingBankImport {
+  id             String   @id @default(cuid())
+  accountId      String
+  format         String // CAMT053 | MT940 | CSV
+  fileName       String
+  totalCount     Int
+  newCount       Int
+  createdById    String
+  createdByLabel String
+  createdAt      DateTime @default(now())
+
+  transactions AccountingBankTransaction[]
+}
+
+/// ACC-4: ekstre satırı. hash = hesap + tarih + tutar + IBAN + referans + açıklama → mükerrer engeli.
+model AccountingBankTransaction {
+  id               String                @id @default(cuid())
+  importId         String
+  import           AccountingBankImport  @relation(fields: [importId], references: [id], onDelete: Cascade)
+  accountId        String
+  hash             String                @unique
+  bookingDate      DateTime              @db.Date
+  valueDate        DateTime?             @db.Date
+  amountCents      Int // işaretli: + gelen, − giden
+  currency         String                @default("EUR")
+  counterpartyName String?
+  counterpartyIban String?
+  purpose          String
+  reference        String?
+  status           BankTransactionStatus @default(OPEN)
+  bookingIds       String? // virgülle ayrılmış fiş id'leri
+  invoiceId        String?
+  note             String?
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+
+  @@index([accountId, status, bookingDate])
+}
+
+/// ACC-4: öğrenilmiş eşleştirme kuralı ("karşı taraf/açıklama içerir → kategori + KDV").
+model AccountingBankRule {
+  id         String        @id @default(cuid())
+  field      BankRuleField
+  pattern    String
+  direction  BookingType
+  categoryId String
+  taxRate    Int           @default(0)
+  hits       Int           @default(0)
+  createdAt  DateTime      @default(now())
+
+  @@unique([field, pattern, direction])
+}

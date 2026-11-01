@@ -642,7 +642,8 @@
       "settings": "Einstellungen",
       "export": "Excel-Export",
       "tax": "Steuern",
-      "contacts": "Kontakte"
+      "contacts": "Kontakte",
+      "bank": "Bank"
     },
     "meta": {
       "list": "Buchhaltung",
@@ -655,7 +656,8 @@
       "settings": "Buchhaltungseinstellungen",
       "memberSync": "Übernahme der Mitgliedsbeiträge",
       "tax": "Steuern",
-      "contacts": "Kontakte"
+      "contacts": "Kontakte",
+      "bank": "Bank"
     },
     "errors": {
       "openingDateInvalid": "Das Eröffnungsdatum ist ungültig.",
@@ -1134,6 +1136,86 @@
       "errors": {
         "notFound": "Kontakt nicht gefunden.",
         "rangeExhausted": "Nummernkreis erschöpft."
+      }
+    },
+    "bank": {
+      "title": "Bank",
+      "description": "Kontoauszüge importieren (CAMT.053, MT940, CSV) und Vorschläge bestätigt verbuchen oder offenen Rechnungen zuordnen.",
+      "import": {
+        "title": "Kontoauszug importieren",
+        "hint": "Laden Sie den CAMT.053- (XML), MT940- oder CSV-Export aus Ihrem Online-Banking hoch. Bereits importierte Umsätze werden übersprungen.",
+        "account": "Konto",
+        "format": "Format",
+        "file": "Datei",
+        "submit": "Importieren",
+        "done": "{format}: {created} von {total} Umsätzen neu importiert.",
+        "tooLarge": "Datei zu groß (max. ca. 5 MB).",
+        "privacy": "Die Datei selbst wird nicht gespeichert, nur Datum, Betrag, Gegenpartei, IBAN und Verwendungszweck.",
+        "formats": {
+          "AUTO": "Automatisch erkennen",
+          "CAMT053": "CAMT.053 (XML)",
+          "MT940": "MT940",
+          "CSV": "CSV"
+        }
+      },
+      "status": {
+        "OPEN": "Offen",
+        "BOOKED": "Verbucht",
+        "PRIVATE": "Privat",
+        "IGNORED": "Ignoriert"
+      },
+      "empty": "Keine Umsätze in diesem Status.",
+      "unknownParty": "(keine Gegenpartei)",
+      "booked": "Buchung {number} angelegt.",
+      "reasons": {
+        "invoiceNumber": "Rechnungsnr.",
+        "amount": "Betrag",
+        "name": "Name",
+        "rule": "Regel"
+      },
+      "actions": {
+        "book": "Verbuchen",
+        "private": "Privat",
+        "ignore": "Ignorieren",
+        "reopen": "Wieder öffnen",
+        "openBooking": "Buchung öffnen"
+      },
+      "modal": {
+        "title": "Bankumsatz verbuchen",
+        "invoice": "Offene Rechnung",
+        "category": "Kategorie",
+        "invoiceSelect": "Rechnung",
+        "categorySelect": "Kategorie",
+        "taxRate": "Steuersatz",
+        "learn": "Regel lernen",
+        "learnHint": "Ähnliche Umsätze werden künftig automatisch vorgeschlagen.",
+        "learnNone": "Keine Regel",
+        "learnCounterparty": "Für diese Gegenpartei",
+        "learnPurpose": "Für diesen Verwendungszweck",
+        "closeRemainder": "Rest von {amount} als Skonto/Ausfall ausbuchen",
+        "cancel": "Abbrechen",
+        "submit": "Buchung anlegen"
+      },
+      "rules": {
+        "title": "Gelernte Regeln",
+        "field": {
+          "COUNTERPARTY": "Gegenpartei enthält",
+          "PURPOSE": "Verwendungszweck enthält"
+        },
+        "hits": "{count}×",
+        "delete": "Regel löschen"
+      },
+      "note": "Es wird nichts automatisch gebucht; jeder Vorschlag wird von Ihnen bestätigt. „Privat“-Umsätze (Privatentnahme/-einlage) gehen nicht in EÜR und UStVA ein.",
+      "errors": {
+        "empty": "Die Datei ist leer.",
+        "tooLarge": "Die Datei ist zu groß.",
+        "parse": "Die Datei konnte nicht gelesen werden. Bitte Format prüfen (CAMT.053, MT940 oder CSV mit Kopfzeile).",
+        "noRows": "Keine Umsätze in der Datei gefunden.",
+        "currency": "Es werden nur EUR-Umsätze unterstützt.",
+        "notFound": "Umsatz nicht gefunden.",
+        "notOpen": "Der Umsatz ist nicht mehr offen.",
+        "invoiceRequired": "Bitte eine Rechnung wählen.",
+        "invoiceNeedsCredit": "Nur Zahlungseingänge können Rechnungen zugeordnet werden."
       }
     }
   },

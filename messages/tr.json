@@ -642,7 +642,8 @@
       "settings": "Ayarlar",
       "export": "Excel'e aktar",
       "tax": "Vergi",
-      "contacts": "Cariler"
+      "contacts": "Cariler",
+      "bank": "Banka"
     },
     "meta": {
       "list": "Muhasebe",
@@ -655,7 +656,8 @@
       "settings": "Muhasebe ayarları",
       "memberSync": "Üyelik aktarımı",
       "tax": "Vergi",
-      "contacts": "Cariler"
+      "contacts": "Cariler",
+      "bank": "Banka"
     },
     "errors": {
       "openingDateInvalid": "Açılış tarihi geçersiz.",
@@ -1134,6 +1136,86 @@
       "errors": {
         "notFound": "Cari kart bulunamadı.",
         "rangeExhausted": "Numara aralığı doldu."
+      }
+    },
+    "bank": {
+      "title": "Banka",
+      "description": "Ekstreleri içe aktarın (CAMT.053, MT940, CSV), önerileri onaylayarak fişe veya açık faturaya bağlayın.",
+      "import": {
+        "title": "Ekstre içe aktar",
+        "hint": "Bankanızın online bankacılığından CAMT.053 (XML), MT940 veya CSV dışa aktarımını yükleyin. Aynı satırlar ikinci kez eklenmez.",
+        "account": "Hesap",
+        "format": "Biçim",
+        "file": "Dosya",
+        "submit": "İçe aktar",
+        "done": "{format}: {total} satırdan {created} yeni satır eklendi.",
+        "tooLarge": "Dosya çok büyük (en fazla ~5 MB).",
+        "privacy": "Dosyanın kendisi saklanmaz; yalnızca tarih, tutar, karşı taraf, IBAN ve açıklama kaydedilir.",
+        "formats": {
+          "AUTO": "Otomatik tanı",
+          "CAMT053": "CAMT.053 (XML)",
+          "MT940": "MT940",
+          "CSV": "CSV"
+        }
+      },
+      "status": {
+        "OPEN": "Açık",
+        "BOOKED": "Fişe bağlı",
+        "PRIVATE": "Özel",
+        "IGNORED": "Yok sayılan"
+      },
+      "empty": "Bu durumda satır yok.",
+      "unknownParty": "(karşı taraf yok)",
+      "booked": "Fiş {number} oluşturuldu.",
+      "reasons": {
+        "invoiceNumber": "fatura no.",
+        "amount": "tutar",
+        "name": "ad",
+        "rule": "kural"
+      },
+      "actions": {
+        "book": "Fişe bağla",
+        "private": "Özel",
+        "ignore": "Yok say",
+        "reopen": "Geri aç",
+        "openBooking": "Fişi aç"
+      },
+      "modal": {
+        "title": "Banka hareketini fişe bağla",
+        "invoice": "Açık fatura",
+        "category": "Kategori",
+        "invoiceSelect": "Fatura",
+        "categorySelect": "Kategori",
+        "taxRate": "KDV oranı",
+        "learn": "Kural öğren",
+        "learnHint": "Benzer hareketler gelecekte otomatik önerilir.",
+        "learnNone": "Kural yok",
+        "learnCounterparty": "Bu karşı taraf için",
+        "learnPurpose": "Bu açıklama için",
+        "closeRemainder": "Kalan {amount} Skonto/kayıp olarak kapatılsın",
+        "cancel": "Vazgeç",
+        "submit": "Fişi oluştur"
+      },
+      "rules": {
+        "title": "Öğrenilmiş kurallar",
+        "field": {
+          "COUNTERPARTY": "Karşı taraf içerir",
+          "PURPOSE": "Açıklama içerir"
+        },
+        "hits": "{count} kez",
+        "delete": "Kuralı sil"
+      },
+      "note": "Hiçbir fiş otomatik yazılmaz; her öneriyi siz onaylarsınız. \"Özel\" satırlar (Privatentnahme/-einlage) EÜR ve UStVA'ya girmez.",
+      "errors": {
+        "empty": "Dosya boş.",
+        "tooLarge": "Dosya çok büyük.",
+        "parse": "Dosya okunamadı. Biçimi kontrol edin (CAMT.053, MT940 veya başlık satırlı CSV).",
+        "noRows": "Dosyada hareket bulunamadı.",
+        "currency": "Yalnızca EUR hareketleri desteklenir.",
+        "notFound": "Hareket bulunamadı.",
+        "notOpen": "Hareket artık açık değil.",
+        "invoiceRequired": "Fatura seçin.",
+        "invoiceNeedsCredit": "Faturaya yalnızca gelen ödemeler bağlanabilir."
       }
     }
   },

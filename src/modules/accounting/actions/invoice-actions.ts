@@ -23,11 +23,10 @@ import {
 } from "../schemas/invoice";
 import { calculateInvoiceTotals } from "../services/invoice-calc";
 import { allocateInvoiceNumber } from "../services/invoice-number";
-import { allocatePayment, openCents } from "../services/invoice-payments";
-import { createSourcedBooking, reverseSourcedBooking } from "../services/sourced-bookings";
+import { applyInvoicePayment, INVOICE_SOURCE } from "../services/invoice-payment-service";
+import { reverseSourcedBooking } from "../services/sourced-bookings";
 import { parseDateOnly } from "../utils";
 
-const INVOICE_SOURCE = "INVOICE";
 
 function dateOrThrow(value: string): Date {
   const date = parseDateOnly(value);
@@ -231,70 +230,17 @@ export async function recordInvoicePaymentAction(input: unknown): Promise<Action
     handler: async ({ input, user, audit }) => {
       const paidDate = dateOrThrow(input.paidDate);
       const actor = { id: user.id, label: buildUserLabel(user.name, user.email) };
-      const result = await getDb().$transaction(async (tx) => {
-        const invoice = await loadInvoice(input.id, tx);
-        if (invoice.kind !== "INVOICE" || invoice.status !== "ISSUED") throw new ActionError("accounting.invoices.errors.notPayable");
-        const open = openCents(invoice);
-        const amountCents = input.amount ? toCents(input.amount) : open;
-        if (amountCents === null || amountCents <= 0 || amountCents > open) {
-          throw new ActionError("accounting.invoices.errors.amountInvalid", { amount: ["accounting.invoices.errors.amountInvalid"] });
-        }
-        const lines = await tx.accountingInvoiceLine.findMany({ where: { invoiceId: invoice.id }, orderBy: { position: "asc" } });
-        const { byRate } = calculateInvoiceTotals(lines.map((line) => ({ quantity: Number(line.quantity), unitPriceCents: line.unitPriceCents, taxRate: line.taxRate })));
-        const parts = allocatePayment(byRate, amountCents).filter((part) => part.netCents + part.taxCents !== 0);
-        const existing = await tx.accountingBooking.count({
-          where: { sourceType: INVOICE_SOURCE, OR: [{ sourceId: invoice.id }, { sourceId: { startsWith: `${invoice.id}:` } }] },
-        });
-        const partial = amountCents < invoice.grossCents;
-        const bookings: Array<{ id: string; bookingNumber: string }> = [];
-        for (const [index, part] of parts.entries()) {
-          const seq = existing + index;
-          const label = [parts.length > 1 ? `${part.rate} % USt` : "", partial ? "Teilzahlung" : ""].filter(Boolean).join(", "); // i18n-ignore: Buchungstext (Almanca muhasebe kaydı)
-          bookings.push(
-            await createSourcedBooking({
-              tx,
-              actor,
-              type: "INCOME",
-              sourceType: INVOICE_SOURCE,
-              sourceId: seq === 0 ? invoice.id : `${invoice.id}:${seq + 1}`,
-              bookingDate: paidDate,
-              accountId: input.accountId,
-              categoryId: input.categoryId,
-              amountCents: part.netCents + part.taxCents,
-              tax: { rate: part.rate, netCents: part.netCents, taxCents: part.taxCents },
-              description: `Rechnung ${invoice.number} – ${invoice.recipientName}${label ? ` (${label})` : ""}`.slice(0, 300), // i18n-ignore: Buchungstext
-              receiptReference: invoice.number,
-            }),
-          );
-        }
-        const first = bookings[0];
-        if (!first) throw new ActionError("common.errors.unexpected");
-        const skontoCents = input.closeRemainder ? open - amountCents : 0;
-        const settled = amountCents + skontoCents === open;
-        await tx.accountingInvoicePayment.create({
-          data: {
-            invoiceId: invoice.id,
-            paidDate,
-            amountCents,
-            skontoCents,
-            accountId: input.accountId,
-            bookingNumbers: bookings.map((booking) => booking.bookingNumber).join(", "),
-            createdById: actor.id,
-            createdByLabel: actor.label,
-          },
-        });
-        await tx.accountingInvoice.update({
-          where: { id: invoice.id },
-          data: {
-            paidCents: { increment: amountCents },
-            skontoCents: { increment: skontoCents },
-            categoryId: input.categoryId,
-            bookingId: invoice.bookingId ?? first.id,
-            ...(settled ? { status: "PAID" as const, paidAt: paidDate } : {}),
-          },
-        });
-        return { bookingNumber: first.bookingNumber, amountCents, skontoCents, settled };
-      });
+      const result = await getDb().$transaction((tx) =>
+        applyInvoicePayment(tx, {
+          invoiceId: input.id,
+          paidDate,
+          accountId: input.accountId,
+          categoryId: input.categoryId,
+          amountCents: input.amount ? toCents(input.amount) : null,
+          closeRemainder: input.closeRemainder,
+          actor,
+        }),
+      );
       await audit({ action: "INVOICE_PAID", entity: "AccountingInvoice", entityId: input.id, after: result });
       refresh(input.id);
       revalidatePath("/muhasebe");

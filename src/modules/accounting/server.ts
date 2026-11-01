@@ -56,6 +56,7 @@ export { MemberSyncView } from "./views/member-sync-view";
 export { ReportsView } from "./views/reports-view";
 export { TaxView } from "./views/tax-view";
 export { ContactsView } from "./views/contacts-view";
+export { BankView } from "./views/bank-view";
 export { exportDatevHandler } from "./handlers/export-datev";
 // Faturalar / proformalar ve belge çıktıları.
 export { invoicePdfHandler } from "./handlers/invoice-pdf";
