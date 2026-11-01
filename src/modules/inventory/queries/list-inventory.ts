@@ -37,6 +37,7 @@ function toInventoryItemRow(item: InventoryRecord): InventoryItemRow {
     purchasePrice: item.purchasePrice === null ? null : item.purchasePrice.toNumber(),
     description: item.description,
     assignedMemberId: item.assignedMemberId,
+    trackAsAsset: item.trackAsAsset,
     createdAt: item.createdAt.toISOString(),
     updatedAt: item.updatedAt.toISOString(),
   };

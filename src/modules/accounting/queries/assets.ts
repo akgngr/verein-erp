@@ -13,7 +13,7 @@ const asAsset = (row: { costCents: number; acquisitionDate: Date; usefulLifeMont
   disposalDate: row.disposalDate,
 });
 
-export type AssetRow = { id: string; name: string; acquisitionDate: Date; costCents: number; usefulLifeMonths: number; method: AssetMethod; disposalDate: Date | null; notes: string | null; afaCents: number; bookValueEndCents: number };
+export type AssetRow = { id: string; name: string; acquisitionDate: Date; costCents: number; usefulLifeMonths: number; method: AssetMethod; disposalDate: Date | null; notes: string | null; afaCents: number; bookValueEndCents: number; inventoryItemId: string | null };
 
 /** Anlagenverzeichnis: yıl için AfA ve yıl sonu defter değeri. */
 export async function listAssets(year: number): Promise<AssetRow[]> {
@@ -21,7 +21,7 @@ export async function listAssets(year: number): Promise<AssetRow[]> {
   return rows.map((row) => {
     const asset = asAsset(row);
     const { amountCents, bookValueEndCents } = depreciationForYear(asset, year);
-    return { id: row.id, name: row.name, acquisitionDate: row.acquisitionDate, costCents: row.costCents, usefulLifeMonths: row.usefulLifeMonths, method: asset.method, disposalDate: row.disposalDate, notes: row.notes, afaCents: amountCents, bookValueEndCents };
+    return { id: row.id, name: row.name, acquisitionDate: row.acquisitionDate, costCents: row.costCents, usefulLifeMonths: row.usefulLifeMonths, method: asset.method, disposalDate: row.disposalDate, notes: row.notes, afaCents: amountCents, bookValueEndCents, inventoryItemId: row.inventoryItemId };
   });
 }
 

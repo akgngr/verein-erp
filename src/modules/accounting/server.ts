@@ -89,3 +89,5 @@ export type { ParsedTransaction as BankTransactionInput } from "./services/bank-
 // Gelen faturalar kutusuna belge alma (e-posta içe aktarma da bunu kullanır).
 export { importPayableFile } from "./services/payable-import";
 export { PAYABLE_FILE_EXTENSIONS } from "./handlers/payable-files";
+// Envanter ↔ demirbaş senkronu (envanter modülü çağırır).
+export { saveAssetForInventoryItem, unlinkAssetFromInventoryItem } from "./services/inventory-assets";

@@ -14,3 +14,5 @@ export {
   deleteInventoryAction,
 } from "./actions/inventory-actions";
 export { getInventoryAbilities, exportInventoryCsv } from "./services/inventory-service";
+// Muhasebe → envanter demirbaş senkronu (muhasebe modülü çağırır).
+export { saveItemForAsset, markItemScrapped } from "./services/asset-sync";

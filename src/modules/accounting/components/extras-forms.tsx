@@ -9,7 +9,7 @@ import { useState } from "react";
 import { toCents } from "@/shared/money";
 import type { ActionResult } from "@/shared/types/action";
 
-import { addFlatRateAction, deleteFlatRateAction, disposeAssetAction, releaseReserveAction, saveAssetAction, saveReserveAction } from "../actions/extras-actions";
+import { addFlatRateAction, deleteFlatRateAction, disposeAssetAction, linkAssetsToInventoryAction, releaseReserveAction, saveAssetAction, saveReserveAction } from "../actions/extras-actions";
 import { selectionKey } from "./bank-import-card";
 
 const today = () => new Date().toISOString().slice(0, 10);
@@ -67,6 +67,17 @@ export function DisposeAssetButton({ id }: { id: string }) {
   return (
     <Button size="sm" variant="light" isLoading={busy} onPress={() => submit(() => disposeAssetAction({ id, disposalDate: today(), note: "" }), t("disposed"))}>
       {t("dispose")}
+    </Button>
+  );
+}
+
+/** Envanter modülü etkinken: bağlantısız demirbaşları envantere ekler. */
+export function LinkInventoryButton() {
+  const t = useTranslations("accounting.extras.assets");
+  const { busy, submit } = useSubmit();
+  return (
+    <Button size="sm" variant="flat" isLoading={busy} onPress={() => submit(async () => { const r = await linkAssetsToInventoryAction({}); return r.ok ? { ok: true as const, data: undefined } : r; }, t("inventoryLinked"))}>
+      {t("linkInventory")}
     </Button>
   );
 }

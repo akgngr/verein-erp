@@ -590,7 +590,9 @@
   },
   "access": {
     "members": "Liest Mitgliedsbeitragszahlungen, um sie in die Buchhaltung zu übernehmen.",
-    "organization": "Verwendet den Vereinsbriefkopf in PDF-Berichten."
+    "organization": "Verwendet den Vereinsbriefkopf in PDF-Berichten.",
+    "inventory": "Hält Anlagen mit Inventargegenständen synchron (Name, Datum, Kosten, Ausmusterung).",
+    "system": "Liest, ob das Inventarmodul aktiv ist."
   },
   "pdf": {
     "voucher": {
@@ -1228,7 +1230,11 @@
         "GWG": "GWG (≤ 800 €)",
         "POOL": "Sammelposten (5 Jahre)"
       },
-      "hint": "Die Anschaffung auf eine als „Anlagegut“ markierte Ausgabenkategorie buchen: in der EÜR zählt dann nicht der Kaufpreis, sondern die jährliche AfA von hier. GWG bis 800 € netto (sofort), Sammelposten 250,01–1.000 € (5 Jahre je 1/5), sonst linear nach Nutzungsdauer (AfA-Tabelle), monatsgenau."
+      "hint": "Die Anschaffung auf eine als „Anlagegut“ markierte Ausgabenkategorie buchen: in der EÜR zählt dann nicht der Kaufpreis, sondern die jährliche AfA von hier. GWG bis 800 € netto (sofort), Sammelposten 250,01–1.000 € (5 Jahre je 1/5), sonst linear nach Nutzungsdauer (AfA-Tabelle), monatsgenau.",
+      "inventorySync": "Inventarmodul aktiv: Anlagen werden mit dem Inventar abgeglichen (Name, Datum, Kosten, Abgang). AfA-Methode und Nutzungsdauer bleiben in der Buchhaltung.",
+      "linkInventory": "Mit Inventar abgleichen",
+      "inventoryLinked": "Anlagen ins Inventar übernommen.",
+      "inInventory": "Inventar"
     },
     "flat": {
       "kind": "Art",

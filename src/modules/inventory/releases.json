@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.1.0",
+      "date": "2026-11-01",
+      "appVersion": "0.35.0",
+      "title": {
+        "tr": "Muhasebe demirbaş senkronu",
+        "de": "Abgleich mit Anlagen der Buchhaltung"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "\"Muhasebede demirbaş (AfA) olarak izle\": muhasebe modülü etkinse eşya demirbaş olarak açılır; ad, alım tarihi, bedel ve hurdaya çıkarma senkron.",
+          "de": "„In der Buchhaltung als Anlage führen“: bei aktivem Buchhaltungsmodul wird der Gegenstand als Anlage geführt; Name, Kaufdatum, Preis und Ausmusterung synchron."
+        }
+      ]
+    },
+    {
       "version": "1.0.0",
       "date": "2026-10-29",
       "title": {

@@ -2,6 +2,26 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.35.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "Envanter ↔ demirbaş senkronu",
+        "de": "Inventar ↔ Anlagen-Abgleich"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Demirbaş ↔ envanter senkronu: envanter modülü etkinse demirbaş eklemek/çıkarmak envantere de yansır; \"Envanterle eşitle\" mevcut demirbaşları envantere ekler. Envanter kapalıysa demirbaş muhasebede bağımsız çalışır.",
+          "de": "Abgleich Anlagen ↔ Inventar: Bei aktivem Inventarmodul werden Anlage/Abgang ins Inventar übernommen; „Mit Inventar abgleichen“ überträgt bestehende Anlagen. Ohne Inventarmodul arbeiten Anlagen eigenständig."
+        },
+        {
+          "type": "feature",
+          "tr": "\"Muhasebede demirbaş (AfA) olarak izle\": muhasebe modülü etkinse eşya demirbaş olarak açılır; ad, alım tarihi, bedel ve hurdaya çıkarma senkron.",
+          "de": "„In der Buchhaltung als Anlage führen“: bei aktivem Buchhaltungsmodul wird der Gegenstand als Anlage geführt; Name, Kaufdatum, Preis und Ausmusterung synchron."
+        }
+      ]
+    },
+    {
       "version": "0.34.0",
       "date": "2026-11-01",
       "title": {

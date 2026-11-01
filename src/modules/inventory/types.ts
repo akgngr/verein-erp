@@ -24,6 +24,8 @@ export interface InventoryItemRow {
   purchasePrice: number | null;
   description: string | null;
   assignedMemberId: string | null;
+  /** Muhasebede demirbaş (AfA) olarak izleniyor mu. */
+  trackAsAsset: boolean;
   /** ISO timestamp */
   createdAt: string;
   /** ISO timestamp */

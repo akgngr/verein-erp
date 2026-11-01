@@ -863,7 +863,9 @@
     },
     "access": {
       "members": "Üye aidat ödemelerini muhasebeye aktarmak için ödemeleri okur.",
-      "organization": "PDF raporlarında dernek antetini kullanır."
+      "organization": "PDF raporlarında dernek antetini kullanır.",
+      "inventory": "Demirbaşları envanter eşyalarıyla senkron tutar (ad, tarih, bedel, hurdaya çıkarma).",
+      "system": "Envanter modülünün etkin olup olmadığını okur."
     },
     "pdf": {
       "voucher": {
@@ -1501,7 +1503,11 @@
           "GWG": "GWG (≤ 800 €)",
           "POOL": "Sammelposten (5 yıl)"
         },
-        "hint": "Demirbaş alım fişini \"Anlagegut\" işaretli bir gider kategorisine yazın: EÜR'de alım gider sayılmaz, yerine buradaki yıllık AfA girer. GWG ≤ 800 € net (alım yılında tamamı), Sammelposten 250,01–1.000 € (5 yıl, yılda 1/5), diğerleri doğrusal (AfA tablosundaki faydalı ömre göre, aylık)."
+        "hint": "Demirbaş alım fişini \"Anlagegut\" işaretli bir gider kategorisine yazın: EÜR'de alım gider sayılmaz, yerine buradaki yıllık AfA girer. GWG ≤ 800 € net (alım yılında tamamı), Sammelposten 250,01–1.000 € (5 yıl, yılda 1/5), diğerleri doğrusal (AfA tablosundaki faydalı ömre göre, aylık).",
+        "inventorySync": "Envanter modülü etkin: demirbaşlar envanterle senkron (ad, tarih, bedel, elden çıkarma). AfA yöntemi ve süre muhasebede kalır.",
+        "linkInventory": "Envanterle eşitle",
+        "inventoryLinked": "Demirbaşlar envantere eklendi.",
+        "inInventory": "Envanter"
       },
       "flat": {
         "kind": "Tür",
@@ -3781,7 +3787,8 @@
       "purchasePrice": "Alım Bedeli",
       "description": "Açıklama",
       "assignedMemberId": "Zimmetli Üye",
-      "createdAt": "Kayıt Tarihi"
+      "createdAt": "Kayıt Tarihi",
+      "trackAsAsset": "Muhasebede demirbaş (AfA) olarak izle"
     },
     "placeholders": {
       "search": "Ad, seri no, konum veya açıklamada ara…",
@@ -3792,7 +3799,8 @@
       "description": "Ek bilgiler, garanti notları vb."
     },
     "hints": {
-      "assignedMemberId": "Opsiyonel: demirbaşın zimmetlendiği üyenin ID'si."
+      "assignedMemberId": "Opsiyonel: demirbaşın zimmetlendiği üyenin ID'si.",
+      "trackAsAsset": "Muhasebe modülü etkinse alım tarihi ve bedeli olan eşya muhasebede demirbaş olarak açılır ve senkron kalır (≤ 800 € GWG, aksi 36 ay doğrusal; muhasebeden değiştirilebilir). Hurdaya çıkarma elden çıkarma olarak işlenir."
     },
     "categories": {
       "ELECTRONICS": "Elektronik",
@@ -3899,6 +3907,10 @@
         "label": "Envanter",
         "description": "Demirbaş kayıtları, zimmet ve hurdaya ayırma onayı."
       }
+    },
+    "access": {
+      "accounting": "İşaretli eşyaları muhasebede demirbaş (AfA) olarak açar ve senkron tutar.",
+      "system": "Muhasebe modülünün etkin olup olmadığını okur."
     }
   },
   "mail": {

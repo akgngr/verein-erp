@@ -538,6 +538,8 @@ model AccountingAsset {
   disposalDate     DateTime? @db.Date
   disposalNote     String?
   notes            String?
+  /// Envanter modülündeki eşya (FK değil; modül sınırı). Doluysa ad/tarih/bedel ve elden çıkarma senkron tutulur.
+  inventoryItemId  String?   @unique
   createdAt        DateTime  @default(now())
   updatedAt        DateTime  @updatedAt
 

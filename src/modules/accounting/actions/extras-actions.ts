@@ -11,6 +11,7 @@ import { ActionError, createAction } from "@/modules/auth/server";
 
 import { accountingPermissions } from "../permissions";
 import { flatRateAmountCents, type FlatRateKind } from "../services/afa";
+import { linkAllAssetsToInventory, syncAssetToInventory } from "../services/inventory-link";
 import { parseDateOnly } from "../utils";
 
 const DATE = /^\d{4}-\d{2}-\d{2}$/;
@@ -47,6 +48,7 @@ export async function saveAssetAction(input: unknown): Promise<ActionResult> {
       const data = { name: input.name, acquisitionDate: date(input.acquisitionDate), costCents, method: input.method, usefulLifeMonths: input.usefulLifeMonths, notes: input.notes || null };
       const db = getDb();
       const saved = input.id ? await db.accountingAsset.update({ where: { id: input.id }, data }) : await db.accountingAsset.create({ data });
+      await syncAssetToInventory(saved.id);
       await audit({ action: input.id ? "UPDATE" : "CREATE", entity: "AccountingAsset", entityId: saved.id, after: { costCents, method: input.method } });
       refresh();
       return undefined;
@@ -62,6 +64,7 @@ export async function disposeAssetAction(input: unknown): Promise<ActionResult> 
     schema: z.object({ id: z.string().min(1), disposalDate: z.string().regex(DATE, "accounting.validation.bookingDateInvalid"), note: z.string().trim().max(300).default("") }),
     handler: async ({ input, audit }) => {
       await getDb().accountingAsset.update({ where: { id: input.id }, data: { disposalDate: date(input.disposalDate), disposalNote: input.note || null } });
+      await syncAssetToInventory(input.id);
       await audit({ action: "UPDATE", entity: "AccountingAsset", entityId: input.id, after: { disposal: input.disposalDate } });
       refresh();
       return undefined;
@@ -139,4 +142,20 @@ export async function releaseReserveAction(input: unknown): Promise<ActionResult
     },
   });
   return run(input) as Promise<ActionResult>;
+}
+
+/** Envanter modülü etkinse: bağlantısız demirbaşları envantere eşya olarak ekler ve bağlar. */
+export async function linkAssetsToInventoryAction(input: unknown): Promise<ActionResult<{ linked: number }>> {
+  const run = createAction({
+    permission: { definition: accountingPermissions, action: "update" },
+    schema: z.object({}).strict(),
+    handler: async ({ audit }) => {
+      const linked = await linkAllAssetsToInventory();
+      await audit({ action: "UPDATE", entity: "AccountingAsset", after: { inventoryLinked: linked } });
+      refresh();
+      revalidatePath("/inventory");
+      return { linked };
+    },
+  });
+  return run(input ?? {});
 }
