@@ -5179,7 +5179,7 @@
       "subject": "Konu",
       "body": "Metin",
       "placeholders": "Yer tutucular:",
-      "defaultBody": "Merhaba {firstName},\n\n\n\nSaygılarımızla\nYönetim kurulu\n\n—\nBu e-postayı dernek üyeliğiniz nedeniyle alıyorsunuz. Toplu e-posta almak istemiyorsanız bu e-postayı yanıtlayın.",
+      "defaultBody": "Merhaba '{firstName}',\n\n\n\nSaygılarımızla\nYönetim kurulu\n\n—\nBu e-postayı dernek üyeliğiniz nedeniyle alıyorsunuz. Toplu e-posta almak istemiyorsanız bu e-postayı yanıtlayın.",
       "test": "Kendime test gönder",
       "testSent": "Test e-postası {to} adresine gönderildi.",
       "send": "{count} kişiye gönder",
