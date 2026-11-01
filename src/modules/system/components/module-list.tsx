@@ -2,6 +2,7 @@
 
 import {
   Button,
+  Checkbox,
   Chip,
   Input,
   Modal,
@@ -37,7 +38,7 @@ import { cn } from "@/shared/utils";
 import { deleteModuleAction } from "../actions/delete-module";
 import { syncSchemasAction } from "../actions/sync-schemas-action";
 import { approveModuleAccessAction, revokeModuleAccessAction } from "../actions/module-access";
-import { toggleModuleAction } from "../actions/toggle-module";
+import { getModuleTogglePlanAction, toggleModuleAction, type ModuleTogglePlan } from "../actions/toggle-module";
 import type { ModuleItem } from "../queries/get-modules";
 
 export function ModuleList({
@@ -66,6 +67,9 @@ export function ModuleList({
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [deletingModule, setDeletingModule] = useState<ModuleItem | null>(null);
   const [consentModule, setConsentModule] = useState<ModuleItem | null>(null);
+  const [dependencyDialog, setDependencyDialog] = useState<{ mod: ModuleItem; isActive: boolean; plan: ModuleTogglePlan } | null>(null);
+  const [selectedRecommended, setSelectedRecommended] = useState<string[]>([]);
+  const tDeps = useTranslations("system.dependencies");
   const tAccess = useTranslations("system.access");
 
   const filteredModules = useMemo(() => {
@@ -90,32 +94,66 @@ export function ModuleList({
       setConsentModule(mod);
       return;
     }
-
-    startTransition(async () => {
-      const result = await toggleModuleAction({ key: mod.key, isActive: newActive });
-      if (!result.ok) {
-        addToast({ title: result.error, color: "danger" });
-        return;
-      }
-      addToast({
-        title: newActive
-          ? t("status.activatedToast", { label: mod.label })
-          : t("status.deactivatedToast", { label: mod.label }),
-        color: "success",
-      });
-      router.refresh();
-    });
+    startTransition(() => planAndToggle(mod, newActive));
   };
 
-  const approveAccess = async (mod: ModuleItem) => {
-    const result = await approveModuleAccessAction({ key: mod.key, activate: true });
+  /** Bağımlılık planı: gerekiyorsa pencere açılır, yoksa doğrudan aç/kapat. */
+  const planAndToggle = async (mod: ModuleItem, newActive: boolean) => {
+    const plan = await getModuleTogglePlanAction({ key: mod.key, isActive: newActive });
+    if (!plan.ok) {
+      addToast({ title: plan.error, color: "danger" });
+      return;
+    }
+    const { enable, missing, recommended, disable } = plan.data;
+    if (enable.length || missing.length || recommended.length || disable.length) {
+      setDependencyDialog({ mod, isActive: newActive, plan: plan.data });
+      setSelectedRecommended(recommended.map((item) => item.key));
+      return;
+    }
+    await runToggle(mod, newActive, false, []);
+  };
+
+  const runToggle = async (mod: ModuleItem, newActive: boolean, confirmed: boolean, extras: string[]) => {
+    const result = await toggleModuleAction({ key: mod.key, isActive: newActive, confirmed, recommended: extras });
     if (!result.ok) {
       addToast({ title: result.error, color: "danger" });
       return;
     }
-    addToast({ title: tAccess("approvedToast", { label: mod.label }), color: "success" });
-    setConsentModule(null);
+    addToast({
+      title: newActive ? t("status.activatedToast", { label: mod.label }) : t("status.deactivatedToast", { label: mod.label }),
+      color: "success",
+    });
+    setDependencyDialog(null);
     router.refresh();
+  };
+
+  /** Pencerede onay: izin bekleyen bağımlılıklara izin verilir, sonra hepsi birlikte açılır/kapanır. */
+  const confirmDependencies = async () => {
+    if (!dependencyDialog) return;
+    const { mod, isActive, plan } = dependencyDialog;
+    const needApproval = [...plan.enable, ...plan.recommended.filter((item) => selectedRecommended.includes(item.key))].filter((item) => item.needsApproval);
+    for (const item of needApproval) {
+      const approved = await approveModuleAccessAction({ key: item.key, activate: false });
+      if (!approved.ok) {
+        addToast({ title: approved.error, color: "danger" });
+        return;
+      }
+    }
+    await runToggle(mod, isActive, true, selectedRecommended);
+  };
+
+  const labelOf = (key: string) => initialModules.find((item) => item.key === key)?.label ?? key;
+  const accessOf = (key: string) => initialModules.find((item) => item.key === key)?.access ?? [];
+
+  const approveAccess = async (mod: ModuleItem) => {
+    // İzin verilir; etkinleştirme bağımlılık planından geçer (zorunlular birlikte açılır).
+    const result = await approveModuleAccessAction({ key: mod.key, activate: false });
+    if (!result.ok) {
+      addToast({ title: result.error, color: "danger" });
+      return;
+    }
+    setConsentModule(null);
+    await planAndToggle({ ...mod, accessStatus: "approved" }, true);
   };
 
   const revokeAccess = (mod: ModuleItem) =>
@@ -456,6 +494,96 @@ export function ModuleList({
             </Button>
             <Button color="warning" isLoading={isPending} onPress={() => consentModule && startTransition(() => approveAccess(consentModule))}>
               {tAccess("allow")}
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+
+
+      {/* Bağımlılık penceresi */}
+      <Modal isOpen={dependencyDialog !== null} onOpenChange={(open) => !open && setDependencyDialog(null)} size="lg">
+        <ModalContent>
+          <ModalHeader>
+            {dependencyDialog
+              ? dependencyDialog.isActive
+                ? tDeps("enableTitle", { label: dependencyDialog.mod.label })
+                : tDeps("disableTitle", { label: dependencyDialog.mod.label })
+              : null}
+          </ModalHeader>
+          <ModalBody>
+            {dependencyDialog ? (
+              <div className="flex flex-col gap-4 text-small">
+                {dependencyDialog.plan.missing.length ? (
+                  <div className="rounded-medium bg-danger-50 p-3 text-danger-700">
+                    <p className="font-medium">{tDeps("missingTitle")}</p>
+                    <ul className="mt-1 list-disc pl-5">
+                      {dependencyDialog.plan.missing.map((item) => (
+                        <li key={item.module}>
+                          {item.installed
+                            ? tDeps("versionTooLow", { module: labelOf(item.module), installed: item.installed, required: item.version ?? "" })
+                            : tDeps("notInstalled", { module: item.module, required: item.version ?? "" })}
+                        </li>
+                      ))}
+                    </ul>
+                    <Link href="/ayarlar/moduller/paketler" className="mt-2 inline-block underline">
+                      {tDeps("installLink")}
+                    </Link>
+                  </div>
+                ) : null}
+                {dependencyDialog.plan.enable.length ? (
+                  <div>
+                    <p className="font-medium">{tDeps("requiredTitle", { label: dependencyDialog.mod.label })}</p>
+                    <ul className="mt-1 flex flex-col gap-1">
+                      {dependencyDialog.plan.enable.map((item) => (
+                        <li key={item.key} className="flex flex-wrap items-center gap-2">
+                          <Chip size="sm" variant="flat" color="primary">{labelOf(item.key)}</Chip>
+                          {item.needsApproval ? <span className="text-tiny text-warning-600">{tDeps("needsApproval", { modules: accessOf(item.key).map((request) => request.moduleLabel).join(", ") })}</span> : null}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+                {dependencyDialog.plan.recommended.length ? (
+                  <div>
+                    <p className="font-medium">{tDeps("recommendedTitle")}</p>
+                    <div className="mt-1 flex flex-col gap-1">
+                      {dependencyDialog.plan.recommended.map((item) => (
+                        <Checkbox
+                          key={item.key}
+                          isSelected={selectedRecommended.includes(item.key)}
+                          onValueChange={(checked) => setSelectedRecommended((current) => (checked ? [...current, item.key] : current.filter((key) => key !== item.key)))}
+                        >
+                          {labelOf(item.key)}
+                          {item.needsApproval ? <span className="ml-2 text-tiny text-warning-600">{tDeps("needsApproval", { modules: accessOf(item.key).map((request) => request.moduleLabel).join(", ") })}</span> : null}
+                        </Checkbox>
+                      ))}
+                    </div>
+                  </div>
+                ) : null}
+                {dependencyDialog.plan.disable.length ? (
+                  <div className="rounded-medium bg-warning-50 p-3 text-warning-800">
+                    <p className="font-medium">{tDeps("dependentsTitle", { label: dependencyDialog.mod.label })}</p>
+                    <ul className="mt-1 list-disc pl-5">
+                      {dependencyDialog.plan.disable.map((key) => (
+                        <li key={key}>{labelOf(key)}</li>
+                      ))}
+                    </ul>
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+          </ModalBody>
+          <ModalFooter>
+            <Button variant="light" onPress={() => setDependencyDialog(null)}>
+              {tDeps("cancel")}
+            </Button>
+            <Button
+              color={dependencyDialog?.isActive ? "primary" : "warning"}
+              isDisabled={Boolean(dependencyDialog?.plan.missing.length)}
+              isLoading={isPending}
+              onPress={() => startTransition(confirmDependencies)}
+            >
+              {dependencyDialog?.isActive ? tDeps("enableAll") : tDeps("disableAll")}
             </Button>
           </ModalFooter>
         </ModalContent>

@@ -2,6 +2,26 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.37.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "Modül bağımlılıkları",
+        "de": "Modulabhängigkeiten"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Modül bağımlılıkları: zorunlu (requires) ve önerilen (recommends). Etkinleştirirken eksik zorunlu modüller birlikte açılır (gerekirse erişim izni aynı pencerede), önerilenler işaretli seçenek olarak sunulur; kurulu değilse \"Yeni modül kur\"a yönlendirilir. Kapatırken bağlı modüller onayla birlikte kapanır.",
+          "de": "Modulabhängigkeiten: erforderlich (requires) und empfohlen (recommends). Beim Aktivieren werden fehlende Pflichtmodule mit aktiviert (Zugriffsfreigabe im selben Dialog), Empfehlungen vorausgewählt angeboten; fehlt ein Modul, Hinweis auf „Neues Modul installieren“. Beim Deaktivieren werden abhängige Module nach Bestätigung mit deaktiviert."
+        },
+        {
+          "type": "improvement",
+          "tr": "Kurulum sihirbazı zorunlu bağımlılıkları otomatik ekler; module:check bilinmeyen/döngüsel bağımlılığı, module:install eksik veya eski bağımlılığı reddeder.",
+          "de": "Der Einrichtungsassistent ergänzt Pflichtmodule automatisch; module:check meldet unbekannte/zyklische Abhängigkeiten, module:install lehnt fehlende oder zu alte Abhängigkeiten ab."
+        }
+      ]
+    },
+    {
       "version": "0.36.0",
       "date": "2026-11-01",
       "title": {

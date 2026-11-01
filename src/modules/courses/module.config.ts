@@ -11,12 +11,15 @@ import { courseFeesPermissions, coursePayoutsPermissions, coursesPermissions, co
 export const moduleConfig: ModuleConfig = {
   key: "courses",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.2.0",
+  version: "1.3.0",
   label: "Kurslar",
   description: "Gönüllü kurslar ve Nachhilfe: öğretmenler, dersler, kayıtlar, ücretler ve muhasebe aktarımı.",
   category: "OFFICIAL",
   hasSchema: true,
   // Başka modüllerden istenen erişim (yönetici onayı gerekir; gerekçe: messages → access.<modül>).
+  // Zorunlu: kurs kayıtları öğrenci kaydına bağlıdır. Önerilen: yoklama/not/veli raporu.
+  requires: [{ module: "students" }],
+  recommends: ["progress"],
   access: [
     { module: "accounting", operations: ["read", "write"] },
     { module: "mail", operations: ["read", "write"] },

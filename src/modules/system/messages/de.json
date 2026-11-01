@@ -246,5 +246,25 @@
       "file": "Bitte eine gültige .vmod-Datei wählen (max. 25 MB)."
     }
   },
-  "installModule": "Neues Modul installieren"
+  "installModule": "Neues Modul installieren",
+  "dependencies": {
+    "enableTitle": "{label} wird aktiviert",
+    "disableTitle": "{label} wird deaktiviert",
+    "requiredTitle": "{label} benötigt folgende Module; sie werden mit aktiviert:",
+    "recommendedTitle": "Empfohlen (funktioniert auch ohne, gemeinsame Aktivierung empfohlen):",
+    "dependentsTitle": "Diese Module funktionieren nicht ohne {label} und werden mit deaktiviert:",
+    "missingTitle": "Benötigte Module fehlen oder sind zu alt; bitte zuerst installieren:",
+    "notInstalled": "{module} (nicht installiert) {required}",
+    "versionTooLow": "{module}: installiert {installed}, benötigt {required}",
+    "installLink": "Neues Modul installieren",
+    "needsApproval": "Zugriffsfreigabe wird mit erteilt: {modules}",
+    "enableAll": "Alle aktivieren",
+    "disableAll": "Gemeinsam deaktivieren",
+    "cancel": "Abbrechen",
+    "errors": {
+      "missing": "Benötigte Module fehlen.",
+      "required": "Dieses Modul benötigt weitere Module; bitte in der Modulverwaltung aktivieren.",
+      "dependentsActive": "Abhängige Module sind aktiv; bitte in der Modulverwaltung gemeinsam deaktivieren."
+    }
+  }
 }

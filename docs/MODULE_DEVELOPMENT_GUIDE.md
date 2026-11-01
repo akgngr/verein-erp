@@ -273,6 +273,15 @@ Ardından `package.json` ve `pnpm-lock.yaml` commit'lenir. Kurallar:
 - **Güvenlik:** paketler `--ignore-scripts` ile kurulur (kurulum betikleri çalışmaz). İki modül aynı paketin
   uyumsuz sürümlerini isterse komut durur. Dışarıdan gelen modüllerde paket listesi kurulumdan önce incelenmelidir.
 
+## 8d. Modül bağımlılıkları (`requires` / `recommends`)
+
+- `requires: [{ module: "students", version: ">=1.1.0" }]` — ZORUNLU: modül bunlar olmadan çalışamaz. Etkinleştirirken eksikler birlikte açılır
+  (izin gerekiyorsa aynı pencerede onaylanır); bunlardan biri kapatılırken bu modül de onayla kapanır; kurulum sihirbazı otomatik ekler;
+  `module:install` eksik/eski bağımlılıkta durur.
+- `recommends: ["progress"]` — ÖNERİLEN: onsuz çalışır ama eksik kalır; etkinleştirirken işaretli seçenek olarak sunulur.
+- `module:check`: bilinmeyen modül, kendine bağımlılık ve döngü (A → B → A) hatadır. Mantık: `@/shared/modules/dependencies`.
+- Zorunlu bağımlılığın sunucu API'sini kullanıyorsanız `access` bildirimi ayrıca gereklidir (izin ≠ bağımlılık).
+
 ## 9. Panel kartları (`cards/`)
 
 Modül panele (`/`) kart sunabilir. Kullanıcı "Paneli düzenle" ile kartları ekler, kaldırır ve
