@@ -181,7 +181,15 @@ export type EuerResult = {
 };
 
 /** EÜR (§ 4 Abs. 3 EStG) özeti: kategori (SKR hesabı) bazında net toplamlar + USt/VSt satırları. */
-export function computeEuer(rows: TaxBookingRow[]): EuerResult {
+export type EuerAdjustments = {
+  /** Anlagegut kategorileri: alım gideri EÜR'e girmez (AfA ile dağıtılır). */
+  assetCategoryIds: Set<string>;
+  /** Nakit dışı giderler: AfA, götürüler (anahtar → cent). */
+  nonCash: Array<{ key: string; cents: number }>;
+};
+
+export function computeEuer(allRows: TaxBookingRow[], adjustments?: EuerAdjustments): EuerResult {
+  const rows = adjustments ? allRows.filter((row) => !(row.type === "EXPENSE" && row.categoryId && adjustments.assetCategoryIds.has(row.categoryId))) : allRows;
   const group = (type: "INCOME" | "EXPENSE") => {
     const map = new Map<string, EuerLine>();
     for (const row of rows.filter((item) => item.type === type)) {
@@ -195,11 +203,14 @@ export function computeEuer(rows: TaxBookingRow[]): EuerResult {
   };
   const income = group("INCOME");
   const expense = group("EXPENSE");
+  for (const item of adjustments?.nonCash ?? []) {
+    if (item.cents) expense.push({ categoryId: `noncash:${item.key}`, name: item.key, accountNumber: null, netCents: item.cents, count: 0 });
+  }
   const total = (type: "INCOME" | "EXPENSE", key: "netCents" | "taxCents") =>
     rows.filter((row) => row.type === type).reduce((sum, row) => sum + row[key], 0);
   const incomeNetCents = total("INCOME", "netCents");
   const outputTaxCents = total("INCOME", "taxCents");
-  const expenseNetCents = total("EXPENSE", "netCents");
+  const expenseNetCents = total("EXPENSE", "netCents") + (adjustments?.nonCash ?? []).reduce((sum, item) => sum + item.cents, 0);
   const inputTaxCents = total("EXPENSE", "taxCents");
   return { income, expense, incomeNetCents, outputTaxCents, expenseNetCents, inputTaxCents, resultCents: incomeNetCents + outputTaxCents - expenseNetCents - inputTaxCents };
 }

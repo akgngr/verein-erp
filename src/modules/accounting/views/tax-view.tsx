@@ -11,8 +11,9 @@ import { formatMoney } from "@/shared/money";
 
 import { accountingPermissions } from "../permissions";
 import { getSmallBusinessCheck, listTaxRows } from "../queries/tax-reports";
+import { getEuerAdjustments } from "../queries/assets";
 import { getTaxSettings } from "../services/tax";
-import { computeEuer, computeUstva, datevIssues, SMALL_BUSINESS_LIMITS, vatPeriods, type TaxBookingRow, type UstvaKey } from "../services/tax-reports";
+import { computeEuer, computeUstva, datevIssues, SMALL_BUSINESS_LIMITS, vatPeriods, type EuerAdjustments, type TaxBookingRow, type UstvaKey } from "../services/tax-reports";
 
 export type TaxTab = "ustva" | "euer" | "datev";
 
@@ -92,7 +93,7 @@ export async function TaxView({ tab, year, period }: { tab: TaxTab; year: number
         {tab === "ustva" ? (
           <UstvaSection rows={rows} periods={periods.map((item) => ({ key: item.key, label: periodLabel(item.key), href: href({ period: item.key }), active: item.key === selected.key }))} money={money} t={t} smallBusiness={settings.smallBusiness} />
         ) : null}
-        {tab === "euer" ? <EuerSection rows={rows} money={money} t={t} /> : null}
+        {tab === "euer" ? <EuerSection rows={rows} money={money} t={t} adjustments={await getEuerAdjustments(year)} /> : null}
         {tab === "datev" ? (
           <DatevSection rows={rows} year={year} money={money} t={t} hasNumbers={Boolean(settings.datevConsultantNo && settings.datevClientNo)} periods={periods} periodLabel={periodLabel} />
         ) : null}
@@ -189,8 +190,10 @@ function UstvaSection({
   );
 }
 
-function EuerSection({ rows, money, t }: { rows: TaxBookingRow[]; money: (cents: number) => string; t: T }) {
-  const result = computeEuer(rows);
+function EuerSection({ rows, money, t, adjustments }: { rows: TaxBookingRow[]; money: (cents: number) => string; t: T; adjustments: EuerAdjustments }) {
+  const result = computeEuer(rows, adjustments);
+  // Nakit dışı satırlar (AfA, götürüler) çevrilmiş adla gösterilir.
+  for (const line of result.expense) if (line.categoryId?.startsWith("noncash:")) line.name = t(`euer.noncash.${line.name}`);
   const block = (title: string, lines: typeof result.income, taxLabel: string, taxCents: number, totalCents: number) => (
     <section className="flex flex-col gap-1">
       <h3 className="text-small font-semibold uppercase tracking-wide text-default-500">{title}</h3>

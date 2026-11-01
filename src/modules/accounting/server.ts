@@ -59,6 +59,8 @@ export { ContactsView } from "./views/contacts-view";
 export { BankView } from "./views/bank-view";
 export { gobdExportHandler, gobdProcedureHandler } from "./handlers/gobd-export";
 export { GobdView } from "./views/gobd-view";
+export { auditorReportHandler } from "./handlers/auditor-report";
+export { ExtrasView } from "./views/extras-view";
 export { dunningPdfHandler } from "./handlers/dunning-pdf";
 export { paymentRunHandler } from "./handlers/payment-run";
 export { uploadPayableHandler, downloadPayableFileHandler } from "./handlers/payable-files";

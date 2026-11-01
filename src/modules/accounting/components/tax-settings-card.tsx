@@ -76,6 +76,12 @@ export function TaxSettingsCard({ settings, canUpdate }: { settings: TaxSettings
             <span className="text-tiny text-default-500">{t("smallBusinessHint")}</span>
           </div>
         </Switch>
+        <Switch id="accounting-tax-extension" isDisabled={!canUpdate} isSelected={value.vatExtension} onValueChange={(vatExtension) => setValue((current) => ({ ...current, vatExtension }))}>
+          <div className="flex flex-col">
+            <span className="text-small">{t("vatExtension")}</span>
+            <span className="text-tiny text-default-500">{t("vatExtensionHint")}</span>
+          </div>
+        </Switch>
         <Divider />
         <div className="flex flex-col gap-1">
           <h3 className="text-small font-semibold">{t("datevTitle")}</h3>

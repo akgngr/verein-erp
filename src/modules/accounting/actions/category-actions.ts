@@ -31,6 +31,7 @@ export async function createCategoryAction(
             sortOrder: 100,
             accountNumber: input.accountNumber ?? null,
             defaultTaxRate: input.defaultTaxRate ?? 0,
+            isAsset: input.isAsset ?? false,
           },
         });
         await audit({
@@ -63,6 +64,7 @@ const categoryEditSchema = z.object({
   isActive: categoryUpdateSchema.shape.isActive,
   accountNumber: categoryUpdateSchema.shape.accountNumber,
   defaultTaxRate: categoryUpdateSchema.shape.defaultTaxRate,
+  isAsset: categoryUpdateSchema.shape.isAsset,
 });
 
 /**
@@ -103,7 +105,7 @@ export async function updateCategoryAction(input: unknown): Promise<ActionResult
           sphere: input.sphere,
           helpText: input.helpText ?? null,
           isActive: input.isActive ?? existing.isActive,
-          ...definedOnly({ accountNumber: input.accountNumber, defaultTaxRate: input.defaultTaxRate }),
+          ...definedOnly({ accountNumber: input.accountNumber, defaultTaxRate: input.defaultTaxRate, isAsset: input.isAsset }),
         },
       });
 

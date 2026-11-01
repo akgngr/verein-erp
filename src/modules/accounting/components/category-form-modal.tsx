@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Textarea, addToast } from "@heroui/react";
+import { Button, Input, Modal, Switch, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Textarea, addToast } from "@heroui/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -23,6 +23,7 @@ type CategoryRow = {
   isActive: boolean;
   accountNumber?: string | null;
   defaultTaxRate?: number;
+  isAsset?: boolean;
 };
 
 /** Kategori oluştur/düzenle modalı (§ 11.4): yön/alan fişli kategoride kilitli. */
@@ -49,6 +50,7 @@ export function CategoryFormModal({
   const [helpText, setHelpText] = useState(category?.helpText ?? "");
   const [accountNumber, setAccountNumber] = useState(category?.accountNumber ?? "");
   const [defaultTaxRate, setDefaultTaxRate] = useState(String(category?.defaultTaxRate ?? 0));
+  const [isAsset, setIsAsset] = useState(category?.isAsset ?? false);
   const [busy, setBusy] = useState(false);
   const tSkr = useTranslations("accounting.setup.skr");
   const suggestions = SKR_SUGGESTIONS[chart][direction === "INCOME" ? "income" : "expense"];
@@ -74,6 +76,7 @@ export function CategoryFormModal({
             isActive: category.isActive,
             accountNumber,
             defaultTaxRate,
+            isAsset: direction === "EXPENSE" && isAsset,
           })
         : await createCategoryAction({
             name,
@@ -82,6 +85,7 @@ export function CategoryFormModal({
             helpText: helpText || undefined,
             accountNumber,
             defaultTaxRate,
+            isAsset: direction === "EXPENSE" && isAsset,
           });
       if (!result.ok) {
         addToast({ title: result.error, color: "danger" });
@@ -159,6 +163,14 @@ export function CategoryFormModal({
               ))}
             </Select>
           </div>
+          {direction === "EXPENSE" ? (
+            <Switch size="sm" isSelected={isAsset} onValueChange={setIsAsset}>
+              <span className="flex flex-col">
+                <span className="text-small">{t("isAsset")}</span>
+                <span className="text-tiny text-default-500">{t("isAssetHint")}</span>
+              </span>
+            </Switch>
+          ) : null}
           <div className="flex flex-wrap gap-1.5">
             {suggestions.map((suggestion) => (
               <Button

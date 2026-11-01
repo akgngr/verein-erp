@@ -99,7 +99,7 @@ export async function saveTaxSettingsAction(input: unknown): Promise<ActionResul
         action: "UPDATE",
         entity: "AccountingSettings",
         entityId: "singleton",
-        before: before ? { chartOfAccounts: before.chartOfAccounts, smallBusiness: before.smallBusiness, taxMethod: before.taxMethod, vatPeriod: before.vatPeriod, datevConsultantNo: before.datevConsultantNo, datevClientNo: before.datevClientNo, datevTaxKeys: before.datevTaxKeys } : undefined,
+        before: before ? { chartOfAccounts: before.chartOfAccounts, smallBusiness: before.smallBusiness, taxMethod: before.taxMethod, vatPeriod: before.vatPeriod, datevConsultantNo: before.datevConsultantNo, datevClientNo: before.datevClientNo, datevTaxKeys: before.datevTaxKeys, vatExtension: before.vatExtension } : undefined,
         after: input,
       });
       return undefined;

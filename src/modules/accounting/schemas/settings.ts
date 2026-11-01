@@ -27,6 +27,7 @@ export const taxSettingsSchema = z.object({
   datevConsultantNo: z.string().trim().refine((value) => value === "" || /^\d{4,7}$/.test(value), "accounting.validation.consultantNoInvalid").default(""),
   datevClientNo: z.string().trim().refine((value) => value === "" || /^\d{1,5}$/.test(value), "accounting.validation.clientNoInvalid").default(""),
   datevTaxKeys: z.boolean().default(false),
+  vatExtension: z.boolean().default(false),
 });
 export type TaxSettingsInput = z.infer<typeof taxSettingsSchema>;
 

@@ -20,9 +20,11 @@ export type TaxSettings = {
   datevConsultantNo: string;
   datevClientNo: string;
   datevTaxKeys: boolean;
+  /** ACC-8: UStVA Dauerfristverlängerung. */
+  vatExtension: boolean;
 };
 
-export const DEFAULT_TAX_SETTINGS: TaxSettings = { chartOfAccounts: "SKR03", smallBusiness: false, taxMethod: "IST", vatPeriod: "QUARTER", datevConsultantNo: "", datevClientNo: "", datevTaxKeys: false };
+export const DEFAULT_TAX_SETTINGS: TaxSettings = { chartOfAccounts: "SKR03", smallBusiness: false, taxMethod: "IST", vatPeriod: "QUARTER", datevConsultantNo: "", datevClientNo: "", datevTaxKeys: false, vatExtension: false };
 
 /** Brütten net + KDV (kuruş). Net yuvarlanır, KDV = brüt − net (kuruş kaybı olmaz). */
 export function splitGross(grossCents: number, rate: number): { netCents: number; taxCents: number } {
@@ -58,5 +60,6 @@ export async function getTaxSettings(db: Pick<Prisma.TransactionClient, "account
     datevConsultantNo: row.datevConsultantNo,
     datevClientNo: row.datevClientNo,
     datevTaxKeys: row.datevTaxKeys,
+    vatExtension: row.vatExtension,
   };
 }

@@ -39,6 +39,7 @@ export async function listAllCategories(): Promise<Array<{
   sortOrder: number;
   accountNumber: string | null;
   defaultTaxRate: number;
+  isAsset: boolean;
 }>> {
   const db = getDb();
   const rows = await db.accountingCategory.findMany({
@@ -53,6 +54,7 @@ export async function listAllCategories(): Promise<Array<{
       sortOrder: true,
       accountNumber: true,
       defaultTaxRate: true,
+      isAsset: true,
       _count: { select: { bookings: true } },
     },
   });
