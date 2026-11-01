@@ -28,7 +28,10 @@
     "db:baseline": "tsx scripts/sync-schemas.ts && node scripts/db-baseline.mjs",
     "db:push:dev": "tsx scripts/sync-schemas.ts && node scripts/db-push-dev.mjs",
     "db:seed": "tsx prisma/seed.ts",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "module:keygen": "tsx scripts/module-keygen.ts",
+    "module:pack": "tsx scripts/module-pack.ts",
+    "module:install": "tsx scripts/module-install.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.3.0",

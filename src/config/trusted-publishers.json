@@ -1,0 +1,4 @@
+{
+  "_comment": "Güvenilen modül yayıncıları (Ed25519 public key, PEM). Ekleme/çıkarma yalnızca kod incelemesiyle yapılır; arayüzden güven eklenemez. keyId = pnpm module:keygen çıktısı. official: true olan yayıncı CORE/OFFICIAL modül yayımlayabilir, diğerleri yalnızca EXTENSION.",
+  "publishers": []
+}
