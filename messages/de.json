@@ -110,6 +110,7 @@
     "ayarlar": "Einstellungen",
     "moduller": "Modulverwaltung",
     "surumNotlari": "Versionshinweise",
+    "kurulum": "Einrichtungsassistent",
     "tasks": "Aufgaben",
     "kullanicilar": "Benutzer"
   },
@@ -5274,7 +5275,8 @@
         "read": "lesen",
         "write": "schreiben",
         "delete": "löschen"
-      }
+      },
+      "accounting": "Der Einrichtungsassistent legt je nach Organisationsform Buchhaltungskategorien, Konten und Steuereinstellungen an."
     },
     "gate": {
       "manage": "Zur Modulverwaltung",
@@ -5306,6 +5308,82 @@
       "system": {
         "label": "Modulverwaltung",
         "description": "Erweiterungen installieren, Module aktivieren und deaktivieren."
+      }
+    },
+    "setup": {
+      "title": "Einrichtungsassistent",
+      "description": "Wählen Sie Ihre Organisationsform; passende Module und Buchhaltungseinstellungen (Kontenrahmen, Kategorien, Konten) werden vorbereitet.",
+      "descriptionDone": "Die Einrichtung ist abgeschlossen. Sie können den Assistenten erneut ausführen, um Art oder Module zu ändern; vorhandene Daten bleiben erhalten.",
+      "bannerTitle": "Einrichtung abschließen",
+      "bannerText": "Wählen Sie in wenigen Schritten Ihre Organisationsform – Module und Buchhaltung werden für Sie vorbereitet.",
+      "bannerAction": "Assistent starten",
+      "steps": {
+        "type": "Organisationsform",
+        "basics": "Steuer",
+        "modules": "Module",
+        "summary": "Übersicht"
+      },
+      "types": {
+        "VEREIN": {
+          "title": "Verein",
+          "description": "Mitglieder, Beiträge und Spenden, Sitzungen, Veranstaltungen; Buchhaltung nach vier Sphären.",
+          "taxHint": "Vereine sind meist umsatzsteuerfrei (Beiträge und Spenden sind nicht steuerbar). Nur ein wirtschaftlicher Geschäftsbetrieb (z. B. Verkauf/Bewirtung) löst Umsatzsteuer aus."
+        },
+        "KLEINGEWERBE": {
+          "title": "Kleingewerbe",
+          "description": "Rechnungen, Eingangsrechnungen, Bank, EÜR; häufig Kleinunternehmer (§ 19).",
+          "taxHint": "Lag der Vorjahresumsatz unter 25.000 €, können Sie Kleinunternehmer (§ 19 UStG) sein: keine Umsatzsteuer auf Rechnungen."
+        },
+        "MITTELSTAND": {
+          "title": "Mittelständisches Unternehmen",
+          "description": "Volle Umsatzsteuer, Soll-Versteuerung, monatliche UStVA, SKR04; Team und Sitzungen.",
+          "taxHint": "Bei höheren Umsätzen meist Soll-Versteuerung und monatliche Voranmeldung; Kontenrahmen häufig SKR04. Bitte mit der Steuerberatung abstimmen."
+        },
+        "FREELANCER": {
+          "title": "Freiberufler / Freelancer",
+          "description": "Honorarrechnungen, Ausgabenbelege, Pauschalen (Homeoffice, km), EÜR.",
+          "taxHint": "Freiberufler versteuern meist nach vereinnahmten Entgelten (Ist) mit vierteljährlicher UStVA; bei geringem Umsatz ist die Kleinunternehmerregelung möglich."
+        },
+        "NACHHILFE": {
+          "title": "Nachhilfe / Lernstudio",
+          "description": "Schüler und Eltern, Kurse und Gebühren, Anwesenheit und Lernfortschritt.",
+          "taxHint": "Unterrichtsleistungen sind unter Voraussetzungen umsatzsteuerfrei (§ 4 Nr. 21 UStG, mit Bescheinigung der zuständigen Behörde); sonst oft Kleinunternehmer. Bitte mit der Steuerberatung klären."
+        }
+      },
+      "smallBusiness": "Kleinunternehmer (§ 19 UStG)",
+      "smallBusinessHint": "Wenn aktiv, wird auf Rechnungen und Buchungen keine Umsatzsteuer berechnet.",
+      "chart": "Kontenrahmen",
+      "chartHint": "Für Kategorien und Konten werden SKR-Nummern nach diesem Kontenrahmen vorgeschlagen.",
+      "accountingPreset": "Buchhaltungskategorien sowie Kasse- und Bankkonto anlegen",
+      "accountingPresetHint": "Passende Kategorien (mit SKR-Nummern) werden ergänzt; vorhandene Kategorien und Konten gleichen Namens bleiben unverändert.",
+      "modulesHint": "Für Ihre Organisationsform empfohlene Module sind vorausgewählt. Sie können sie jederzeit in der Modulverwaltung ändern.",
+      "needsApproval": "(Zugriffsfreigabe nötig)",
+      "summary": {
+        "type": "Organisationsform",
+        "tax": "Steuer",
+        "modules": "Aktivierte Module",
+        "accounting": "Buchhaltung vorbereiten",
+        "smallBusinessOn": "Kleinunternehmer",
+        "smallBusinessOff": "Regelbesteuerung",
+        "presetOn": "Kategorien und Konten werden angelegt",
+        "presetOff": "nein",
+        "note": "Nicht ausgewählte optionale Module werden deaktiviert (Daten bleiben erhalten)."
+      },
+      "back": "Zurück",
+      "next": "Weiter",
+      "apply": "Übernehmen",
+      "done": {
+        "title": "Einrichtung abgeschlossen",
+        "modules": "Aktive Module: {enabled}",
+        "needsApproval": "Module mit ausstehender Zugriffsfreigabe (in der Modulverwaltung freigeben): {modules}",
+        "accounting": "{categories} Kategorien und {accounts} Konten angelegt.",
+        "profile": "Organisationsdaten erfassen",
+        "accountingSettings": "Buchhaltungseinstellungen",
+        "modulesPage": "Modulverwaltung",
+        "dashboard": "Zum Dashboard"
+      },
+      "errors": {
+        "accountingOff": "Für die Buchhaltungsvorbereitung muss das Modul Buchhaltung ausgewählt sein."
       }
     }
   },

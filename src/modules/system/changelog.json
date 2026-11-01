@@ -2,6 +2,26 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.25.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "Kurulum sihirbazı",
+        "de": "Einrichtungsassistent"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Kurulum sihirbazı: Dernek, Küçük işletme, Orta ölçekli işletme, Freelancer veya Etüt/Nachhilfe seçin; uygun modüller açılır, muhasebe için hesap planı, § 19 ayarı, SKR numaralı kategoriler ve Kasse/Bank hesapları hazırlanır. Mevcut kayıtlar korunur; sihirbaz tekrar çalıştırılabilir.",
+          "de": "Einrichtungsassistent: Verein, Kleingewerbe, Mittelstand, Freelancer oder Nachhilfe wählen; passende Module werden aktiviert, Kontenrahmen, § 19-Einstellung, Kategorien mit SKR-Nummern sowie Kasse- und Bankkonto werden vorbereitet. Vorhandene Daten bleiben erhalten; der Assistent kann erneut ausgeführt werden."
+        },
+        {
+          "type": "improvement",
+          "tr": "Kurulum tamamlanmadıysa panelde yöneticiye bilgi bandı; Ayarlar merkezinde \"Kurulum sihirbazı\" bağlantısı.",
+          "de": "Hinweis auf dem Dashboard für Administratoren, solange die Einrichtung offen ist; Eintrag „Einrichtungsassistent“ im Einstellungsbereich."
+        }
+      ]
+    },
+    {
       "version": "0.24.0",
       "date": "2026-11-01",
       "title": {
