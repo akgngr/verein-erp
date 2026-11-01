@@ -83,3 +83,6 @@ export {
 } from "./actions/invoice-actions";
 
 export { applyAccountingPreset, ACCOUNTING_PRESETS, type OrganizationType } from "./services/setup-preset";
+// Banka bağlantısı (banking modülü) hareketleri aynı eşleştirme akışına buradan aktarır.
+export { importBankTransactions } from "./services/bank-import";
+export type { ParsedTransaction as BankTransactionInput } from "./services/bank-parsers";

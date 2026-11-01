@@ -95,6 +95,7 @@
     "muhasebe": "Buchhaltung",
     "ai": "KI-Assistent",
     "denetimKaydi": "Prüfprotokoll",
+    "bankaBaglantisi": "Bankverbindung",
     "courses": "Kurse",
     "demoVeri": "Demodaten",
     "evrak": "Dokumente",
@@ -1995,6 +1996,86 @@
         "bic": "Bitte eine gültige BIC eingeben (8 oder 11 Zeichen).",
         "vatId": "Bitte eine gültige USt-IdNr. eingeben (z. B. DE123456789)."
       }
+    }
+  },
+  "banking": {
+    "module": {
+      "label": "Bankverbindung",
+      "description": "Verbindet Bankkonten über einen lizenzierten PSD2-Anbieter und übernimmt Umsätze in die Buchhaltung."
+    },
+    "title": "Bankverbindung",
+    "description": "Verbinden Sie Ihre Bankkonten über einen lizenzierten PSD2-Anbieter; Umsätze erscheinen unter Buchhaltung → Bank zum Abgleich. Es wird nichts automatisch gebucht.",
+    "empty": "Noch keine Bankverbindung.",
+    "notConfigured": "Bitte zuerst unten die Anbieter-Zugangsdaten speichern.",
+    "noBankAccounts": "In der Buchhaltung gibt es kein Konto vom Typ „Bank“; bitte zuerst ein Bankkonto anlegen.",
+    "privacy": "Ihre Bank-Zugangsdaten erreichen diese Anwendung nie: Die Freigabe erfolgt auf der Seite Ihrer Bank. Der Zugriff ist nur lesend (Kontodaten und Umsätze) und höchstens 90 Tage gültig; beim Entfernen wird die Freigabe auch beim Anbieter widerrufen.",
+    "refresh": "Status aktualisieren",
+    "sync": "Umsätze abrufen",
+    "remove": "Entfernen",
+    "removeTitle": "Bankverbindung entfernen?",
+    "removeMessage": "Die Freigabe beim Anbieter wird widerrufen und die Verbindung gelöscht. Bereits importierte Umsätze bleiben in der Buchhaltung.",
+    "consentUntil": "Freigabe gültig bis",
+    "lastSync": "Letzter Abruf",
+    "lastError": "Letzter Fehler",
+    "expiredHelp": "Die Freigabe ist abgelaufen. Verbindung entfernen und neu verbinden.",
+    "pendingHelp": "Freigabe der Bank ausstehend. Wenn Sie sie abgeschlossen haben, „Status aktualisieren“ wählen.",
+    "synced": "{created} neue Umsätze übernommen ({total} gelesen). Abgleich unter Buchhaltung → Bank.",
+    "syncNoAccounts": "Kein zugeordnetes Konto: bitte zuerst ein Buchhaltungskonto zuordnen.",
+    "mapped": "Zuordnung gespeichert.",
+    "notMapped": "Nicht zugeordnet",
+    "newRows": "{count} neu",
+    "columns": {
+      "account": "Bankkonto",
+      "mapping": "Buchhaltungskonto",
+      "lastSync": "Letzter Abruf"
+    },
+    "status": {
+      "PENDING": "Freigabe ausstehend",
+      "LINKED": "Verbunden",
+      "EXPIRED": "Abgelaufen",
+      "ERROR": "Fehler"
+    },
+    "result": {
+      "baglandi": "Bank verbunden. Ordnen Sie die Konten Buchhaltungskonten zu und rufen Sie Umsätze ab.",
+      "bekliyor": "Die Freigabe ist noch nicht abgeschlossen.",
+      "hata": "Die Verbindung konnte nicht abgeschlossen werden. Bitte erneut versuchen."
+    },
+    "connect": {
+      "button": "Bank verbinden",
+      "title": "Bank auswählen",
+      "help": "Sie werden zur Freigabeseite Ihrer Bank weitergeleitet; Ihre Zugangsdaten erreichen diese Anwendung nicht.",
+      "search": "Bankname oder BIC suchen",
+      "empty": "Keine Bank gefunden."
+    },
+    "settings": {
+      "title": "Anbieter-Einstellungen",
+      "provider": "Anbieter",
+      "providers": {
+        "GOCARDLESS": "GoCardless Bank Account Data (PSD2, lizenziert)",
+        "MOCK": "Testanbieter (keine echte Bank)"
+      },
+      "secretId": "Secret ID",
+      "secretKey": "Secret Key",
+      "storedPlaceholder": "Gespeichert — zum Ändern neuen Wert eingeben",
+      "help": "Die Schlüssel erhalten Sie im Portal von GoCardless Bank Account Data. Sie werden verschlüsselt gespeichert und nicht wieder angezeigt.",
+      "mockHelp": "Der Testanbieter erzeugt fiktive Konten und Umsätze; in Produktion nicht verfügbar.",
+      "save": "Speichern",
+      "saved": "Einstellungen gespeichert."
+    },
+    "errors": {
+      "credentials": "Die Anbieter-Schlüssel wurden abgelehnt. Bitte Einstellungen prüfen.",
+      "provider": "Der Bankanbieter ist nicht erreichbar oder hat die Anfrage abgelehnt. Bitte später erneut versuchen.",
+      "notConfigured": "Anbieter nicht eingerichtet.",
+      "mockDisabled": "Der Testanbieter ist in dieser Umgebung nicht verfügbar."
+    },
+    "permissions": {
+      "banking": {
+        "label": "Bankverbindung",
+        "description": "Ansehen; Umsätze abrufen (bearbeiten); Verbindungen anlegen/entfernen und Anbieter-Schlüssel (freigeben)."
+      }
+    },
+    "access": {
+      "accounting": "Um Bankumsätze in den Abgleich unter Buchhaltung → Bank zu übernehmen und Bankkonten aufzulisten."
     }
   },
   "courses": {

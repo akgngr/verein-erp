@@ -14,6 +14,7 @@ import { moduleConfig as systemModule } from "@/modules/system";
 import { moduleConfig as auditModule } from "@/modules/audit";
 import { moduleConfig as authModule } from "@/modules/auth";
 import { moduleConfig as aiModule } from "@/modules/ai";
+import { moduleConfig as bankingModule } from "@/modules/banking";
 import { moduleConfig as coursesModule } from "@/modules/courses";
 import { moduleConfig as demoModule } from "@/modules/demo";
 import { moduleConfig as eventsModule } from "@/modules/events";
@@ -40,6 +41,7 @@ export const allModules: ModuleConfig[] = [
   auditModule,
   authModule,
   aiModule,
+  bankingModule,
   coursesModule,
   demoModule,
   eventsModule,

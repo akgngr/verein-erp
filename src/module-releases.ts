@@ -12,6 +12,7 @@ import systemReleases from "@/modules/system/releases.json";
 import auditReleases from "@/modules/audit/releases.json";
 import authReleases from "@/modules/auth/releases.json";
 import aiReleases from "@/modules/ai/releases.json";
+import bankingReleases from "@/modules/banking/releases.json";
 import coursesReleases from "@/modules/courses/releases.json";
 import demoReleases from "@/modules/demo/releases.json";
 import eventsReleases from "@/modules/events/releases.json";
@@ -36,6 +37,7 @@ export const moduleReleases: { moduleKey: string; releases: ModuleRelease[] }[] 
   { moduleKey: "audit", releases: auditReleases.releases as ModuleRelease[] },
   { moduleKey: "auth", releases: authReleases.releases as ModuleRelease[] },
   { moduleKey: "ai", releases: aiReleases.releases as ModuleRelease[] },
+  { moduleKey: "banking", releases: bankingReleases.releases as ModuleRelease[] },
   { moduleKey: "courses", releases: coursesReleases.releases as ModuleRelease[] },
   { moduleKey: "demo", releases: demoReleases.releases as ModuleRelease[] },
   { moduleKey: "events", releases: eventsReleases.releases as ModuleRelease[] },

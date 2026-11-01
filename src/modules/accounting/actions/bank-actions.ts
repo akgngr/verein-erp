@@ -1,7 +1,5 @@
 "use server";
 
-import { createHash } from "node:crypto";
-
 import { revalidatePath } from "next/cache";
 
 import { getDb } from "@/shared/db";
@@ -12,7 +10,8 @@ import { ActionError, createAction } from "@/modules/auth/server";
 
 import { accountingPermissions } from "../permissions";
 import { bankBookSchema, bankImportSchema, bankRuleIdSchema, bankStatusSchema } from "../schemas/bank";
-import { BankParseError, detectFormat, parseStatement, transactionKey } from "../services/bank-parsers";
+import { importBankTransactions } from "../services/bank-import";
+import { BankParseError, detectFormat, parseStatement } from "../services/bank-parsers";
 import { applyInvoicePayment } from "../services/invoice-payment-service";
 import { applyPayablePayment } from "../services/payable-payment-service";
 import { createSourcedBooking } from "../services/sourced-bookings";
@@ -42,51 +41,16 @@ export async function importBankStatementAction(input: unknown): Promise<ActionR
       }
       if (!parsed.length) throw new ActionError("accounting.bank.errors.noRows");
       if (parsed.some((row) => row.currency !== "EUR")) throw new ActionError("accounting.bank.errors.currency");
-      const rows = parsed.map((row) => ({
-        ...row,
-        hash: createHash("sha256").update(transactionKey(input.accountId, row)).digest("hex"),
-      }));
-      const existing = new Set(
-        (await db.accountingBankTransaction.findMany({ where: { hash: { in: rows.map((row) => row.hash) } }, select: { hash: true } })).map((row) => row.hash),
-      );
-      // Aynı dosyada birebir aynı iki satır: ikinciye sıra eki (gerçekten iki ayrı ödeme olabilir).
-      const seen = new Map<string, number>();
-      const fresh = rows
-        .map((row) => {
-          const count = seen.get(row.hash) ?? 0;
-          seen.set(row.hash, count + 1);
-          return count ? { ...row, hash: `${row.hash}:${count}` } : row;
-        })
-        .filter((row) => !existing.has(row.hash));
-      const actorLabel = buildUserLabel(user.name, user.email);
-      const created = await db.accountingBankImport.create({
-        data: {
-          accountId: input.accountId,
-          format,
-          fileName: input.fileName,
-          totalCount: rows.length,
-          newCount: fresh.length,
-          createdById: user.id,
-          createdByLabel: actorLabel,
-          transactions: {
-            create: fresh.map((row) => ({
-              accountId: input.accountId,
-              hash: row.hash,
-              bookingDate: new Date(`${row.bookingDate}T00:00:00Z`),
-              valueDate: row.valueDate ? new Date(`${row.valueDate}T00:00:00Z`) : null,
-              amountCents: row.amountCents,
-              currency: row.currency,
-              counterpartyName: row.counterpartyName?.slice(0, 200) ?? null,
-              counterpartyIban: row.counterpartyIban?.slice(0, 34) ?? null,
-              purpose: row.purpose.slice(0, 500),
-              reference: row.reference?.slice(0, 100) ?? null,
-            })),
-          },
-        },
+      const created = await importBankTransactions({
+        accountId: input.accountId,
+        format,
+        fileName: input.fileName,
+        rows: parsed,
+        actor: { id: user.id, label: buildUserLabel(user.name, user.email) },
       });
-      await audit({ action: "IMPORT", entity: "AccountingBankImport", entityId: created.id, after: { format, total: rows.length, created: fresh.length } });
+      await audit({ action: "IMPORT", entity: "AccountingBankImport", entityId: created.importId, after: { format, total: created.total, created: created.created } });
       refresh();
-      return { total: rows.length, created: fresh.length, format };
+      return { total: created.total, created: created.created, format };
     },
   });
   return run(input);

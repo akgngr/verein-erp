@@ -1,0 +1,83 @@
+{
+  "module": {
+    "label": "Banka bağlantısı",
+    "description": "Banka hesaplarını lisanslı PSD2 sağlayıcısı üzerinden bağlar, hareketleri muhasebeye aktarır."
+  },
+  "nav": {
+    "bankaBaglantisi": "Banka bağlantısı"
+  },
+  "title": "Banka bağlantısı",
+  "description": "Banka hesaplarınızı lisanslı bir PSD2 sağlayıcısı üzerinden bağlayın; hareketler Muhasebe → Banka ekranına eşleştirme için gelir. Fiş otomatik yazılmaz.",
+  "empty": "Henüz banka bağlantısı yok.",
+  "notConfigured": "Önce aşağıdan sağlayıcı anahtarlarını kaydedin.",
+  "noBankAccounts": "Muhasebede \"Banka\" türünde hesap yok; eşleme için önce bir banka hesabı oluşturun.",
+  "privacy": "Banka giriş bilgileriniz bu uygulamaya hiç gelmez: onayı bankanın kendi sayfasında verirsiniz. Erişim salt okunurdur (hesap bilgisi ve hareketler) ve en fazla 90 gün geçerlidir; bağlantıyı kaldırınca onay sağlayıcıda da iptal edilir.",
+  "refresh": "Durumu yenile",
+  "sync": "Hareketleri çek",
+  "remove": "Kaldır",
+  "removeTitle": "Banka bağlantısı kaldırılsın mı?",
+  "removeMessage": "Sağlayıcıdaki onay iptal edilir ve bağlantı silinir. Daha önce içe aktarılan hareketler muhasebede kalır.",
+  "consentUntil": "Onay geçerliliği",
+  "lastSync": "Son senkronizasyon",
+  "lastError": "Son hata",
+  "expiredHelp": "Onay süresi doldu. Bağlantıyı kaldırıp yeniden bağlayın.",
+  "pendingHelp": "Banka onayı bekleniyor. Onayı tamamladıysanız \"Durumu yenile\"ye basın.",
+  "synced": "{created} yeni hareket aktarıldı ({total} okundu). Muhasebe → Banka'da eşleştirebilirsiniz.",
+  "syncNoAccounts": "Eşlenmiş hesap yok: önce hesabı bir muhasebe hesabıyla eşleyin.",
+  "mapped": "Eşleme kaydedildi.",
+  "notMapped": "Eşlenmedi",
+  "newRows": "{count} yeni",
+  "columns": {
+    "account": "Banka hesabı",
+    "mapping": "Muhasebe hesabı",
+    "lastSync": "Son çekme"
+  },
+  "status": {
+    "PENDING": "Onay bekliyor",
+    "LINKED": "Bağlı",
+    "EXPIRED": "Süresi doldu",
+    "ERROR": "Hata"
+  },
+  "result": {
+    "baglandi": "Banka bağlandı. Hesapları muhasebe hesaplarıyla eşleyip hareketleri çekebilirsiniz.",
+    "bekliyor": "Onay henüz tamamlanmadı.",
+    "hata": "Bağlantı tamamlanamadı. Lütfen tekrar deneyin."
+  },
+  "connect": {
+    "button": "Banka bağla",
+    "title": "Bankanızı seçin",
+    "help": "Bankanızın onay sayfasına yönlendirileceksiniz; giriş bilgileriniz bu uygulamaya gelmez.",
+    "search": "Banka adı veya BIC ara",
+    "empty": "Banka bulunamadı."
+  },
+  "settings": {
+    "title": "Sağlayıcı ayarları",
+    "provider": "Sağlayıcı",
+    "providers": {
+      "GOCARDLESS": "GoCardless Bank Account Data (PSD2, lisanslı)",
+      "MOCK": "Test sağlayıcısı (gerçek banka yok)"
+    },
+    "secretId": "Secret ID",
+    "secretKey": "Secret Key",
+    "storedPlaceholder": "Kayıtlı — değiştirmek için yeni değer girin",
+    "help": "Anahtarları GoCardless Bank Account Data portalından alın. Şifreli saklanır, ekranda bir daha gösterilmez.",
+    "mockHelp": "Test sağlayıcısı kurgusal hesap ve hareket üretir; üretim ortamında kullanılamaz.",
+    "save": "Kaydet",
+    "saved": "Ayarlar kaydedildi."
+  },
+  "errors": {
+    "credentials": "Sağlayıcı anahtarları reddedildi. Ayarları kontrol edin.",
+    "provider": "Banka sağlayıcısına ulaşılamadı veya istek reddedildi. Daha sonra tekrar deneyin.",
+    "notConfigured": "Sağlayıcı ayarlanmamış.",
+    "mockDisabled": "Test sağlayıcısı bu ortamda kullanılamaz."
+  },
+  "permissions": {
+    "banking": {
+      "label": "Banka bağlantısı",
+      "description": "Görme; hareket çekme (güncelle); bağlantı kurma/kaldırma ve sağlayıcı anahtarları (onayla)."
+    }
+  },
+  "access": {
+    "accounting": "Banka hareketlerini muhasebe → Banka eşleştirmesine aktarmak ve banka hesaplarını listelemek için."
+  }
+}
