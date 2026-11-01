@@ -1,3 +1,4 @@
+import { recordJournal } from "./journal";
 import "server-only";
 
 import { getMessageTranslator } from "@/shared/i18n/translate-message";
@@ -261,12 +262,13 @@ export async function runMemberSync(
                 reverseReason: `Betragskorrektur: ${(bookingCents(existing) / 100).toFixed(2)} → ${(payment.amountCents / 100).toFixed(2)}`,
               },
             });
+            await recordJournal(tx, [existing.id], "REVERSE", actor);
           }
 
           const { sequence, bookingNumber } = await allocateBookingNumber(tx, year);
           const description = `Mitgliedsbeitrag ${payment.dueYear} – Mitglied Nr. ${payment.memberNumber} – ${payment.receiptNumber}`;
 
-          await tx.accountingBooking.create({
+          const createdBooking = await tx.accountingBooking.create({
             data: {
               year,
               sequence,
@@ -290,6 +292,7 @@ export async function runMemberSync(
           });
 
           await assertNoNegativeCash(accountId, tx);
+          await recordJournal(tx, [createdBooking.id], "CREATE", actor);
         });
         createdCount += 1;
       } catch (error) {
@@ -324,6 +327,7 @@ export async function runMemberSync(
             reverseReason: `Quittung storniert: ${payment.voidReason ?? ""}`.trim(),
           },
         });
+        await recordJournal(tx, [existing.id], "REVERSE", actor);
       });
       reversedCount += 1;
     }

@@ -65,6 +65,8 @@ model AccountingCategory {
   accountNumber  String?
   /// Bu kategoride yeni fişin varsayılan KDV oranı (yüzde: 0, 7, 19).
   defaultTaxRate Int           @default(0)
+  /// ACC-8: Anlagegut kategorisi — bu kategorideki giderler EÜR'de gider sayılmaz, AfA ile dağıtılır.
+  isAsset        Boolean       @default(false)
   sortOrder  Int               @default(0)
   isActive   Boolean           @default(true)
   createdAt  DateTime          @default(now())
@@ -192,6 +194,8 @@ model AccountingSettings {
   datevConsultantNo   String  @default("")
   datevClientNo       String  @default("")
   datevTaxKeys        Boolean @default(false)
+  /// ACC-8: UStVA Dauerfristverlängerung (+1 ay).
+  vatExtension        Boolean @default(false)
   updatedAt           DateTime @updatedAt
 }
 
@@ -487,4 +491,83 @@ model AccountingDunning {
 
   @@unique([invoiceId, level])
   @@index([dunningDate])
+}
+
+/// ACC-7 GoBD: yalnızca eklenebilir, zincirlenmiş fiş günlüğü (UPDATE/DELETE DB tetikleyicisiyle engelli).
+model AccountingJournal {
+  seq           Int      @id
+  bookingId     String
+  bookingNumber String
+  event         String // CREATE | UPDATE | REVERSE | SEAL
+  snapshot      Json
+  snapshotHash  String
+  prevHash      String
+  hash          String   @unique
+  actorId       String?
+  actorLabel    String?
+  createdAt     DateTime
+
+  @@index([bookingId])
+}
+
+/// ACC-7 Kasa günlük kapanışı (Kassenbuch-Tagesabschluss): kapanan güne ve öncesine o kasa hesabında fiş yazılamaz.
+model AccountingCashClosing {
+  id                 String   @id @default(cuid())
+  accountId          String
+  closingDate        DateTime @db.Date
+  bookBalanceCents   Int
+  countedBalanceCents Int
+  differenceCents    Int
+  note               String?
+  createdById        String
+  createdByLabel     String
+  createdAt          DateTime @default(now())
+
+  @@unique([accountId, closingDate])
+}
+
+/// ACC-8 Anlagenverzeichnis: yıllık AfA EÜR'e eklenir (nakit hareketi değil).
+model AccountingAsset {
+  id               String    @id @default(cuid())
+  name             String
+  acquisitionDate  DateTime  @db.Date
+  costCents        Int // net (Vorsteuer hariç; § 19'da brüt)
+  usefulLifeMonths Int       @default(36)
+  method           String    @default("LINEAR") // LINEAR | GWG | POOL
+  bookingId        String? // alım fişi (isteğe bağlı)
+  disposalDate     DateTime? @db.Date
+  disposalNote     String?
+  notes            String?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@index([acquisitionDate])
+}
+
+/// ACC-8 götürü giderler (Homeoffice, km, Verpflegung) — nakit hareketi değil, EÜR'de gider.
+model AccountingFlatRate {
+  id          String   @id @default(cuid())
+  date        DateTime @db.Date
+  kind        String // HOME_OFFICE | MILEAGE | MEALS_8H | MEALS_24H
+  quantity    Decimal  @db.Decimal(10, 2)
+  amountCents Int
+  note        String?
+  createdAt   DateTime @default(now())
+
+  @@index([date])
+}
+
+/// ACC-8 Verein: § 62 AO yedekleri (Rücklagen) kaydı.
+model AccountingReserve {
+  id             String   @id @default(cuid())
+  year           Int
+  kind           String // FREE | PURPOSE | REPLACEMENT | OPERATING
+  amountCents    Int
+  purpose        String
+  plannedUseYear Int?
+  releasedYear   Int?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@index([year])
 }

@@ -44,6 +44,7 @@ type CategoryRow = {
   sortOrder: number;
   accountNumber: string | null;
   defaultTaxRate: number;
+  isAsset: boolean;
 };
 type ProjectRow = { id: string; name: string; note: string | null; isActive: boolean; bookingCount: number };
 type SettingsData = {

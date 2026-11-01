@@ -8,6 +8,7 @@ import { can } from "@/shared/permissions/define";
 import { accountingPermissions } from "./permissions";
 import { getIncomeExpenseReport, listAccountBalances } from "./server";
 import { listTaxRows } from "./queries/tax-reports";
+import { getEuerAdjustments } from "./queries/assets";
 import { listOpenItems } from "./queries/invoices";
 import { AGING_BUCKETS } from "./services/invoice-payments";
 import { berlinToday } from "./utils";
@@ -61,7 +62,7 @@ export const ai = defineModuleAi({
           const result = computeUstva(rows.filter((row) => row.bookingDate >= period.from && row.bookingDate <= period.to));
           return { period: period.key, kz81BaseEur: result.kz81BaseEuros, kz86BaseEur: result.kz86BaseEuros, kz66Eur: euros(result.kz66Cents), kz83Eur: euros(result.kz83Cents) };
         });
-        const euer = computeEuer(rows);
+        const euer = computeEuer(rows, await getEuerAdjustments(year));
         return {
           year,
           chartOfAccounts: settings.chartOfAccounts,

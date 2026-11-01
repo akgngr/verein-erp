@@ -450,7 +450,9 @@
         "sphereECONOMIC_OPERATION": "Wirtschaftlicher Geschäftsbetrieb",
         "saved": "Kategorie gespeichert.",
         "accountNumber": "Kontonummer (SKR)",
-        "defaultTaxRate": "Standard-Steuersatz"
+        "defaultTaxRate": "Standard-Steuersatz",
+        "isAsset": "Kategorie für Anlagegüter",
+        "isAssetHint": "Anschaffungen in dieser Kategorie sind keine Betriebsausgabe; sie werden über die AfA verteilt."
       },
       "projects": {
         "name": "Projekt",
@@ -494,7 +496,9 @@
         "consultantNo": "Beraternummer",
         "clientNo": "Mandantennummer",
         "datevTaxKeys": "BU-Schlüssel ausgeben",
-        "datevTaxKeysHint": "Nur aktivieren, wenn Sie keine Automatikkonten (z. B. 8400/4400) verwenden — sonst doppelte Steuer."
+        "datevTaxKeysHint": "Nur aktivieren, wenn Sie keine Automatikkonten (z. B. 8400/4400) verwenden — sonst doppelte Steuer.",
+        "vatExtension": "Dauerfristverlängerung",
+        "vatExtensionHint": "Fristen der Voranmeldung verschieben sich um einen Monat (Antrag beim Finanzamt nötig)."
       },
       "skr": {
         "revenue19": "Erlöse 19 %",
@@ -644,7 +648,9 @@
       "tax": "Steuern",
       "contacts": "Kontakte",
       "bank": "Bank",
-      "payables": "Eingangsrechnungen"
+      "payables": "Eingangsrechnungen",
+      "gobd": "GoBD",
+      "extras": "Anlagen & Extras"
     },
     "meta": {
       "list": "Buchhaltung",
@@ -659,7 +665,9 @@
       "tax": "Steuern",
       "contacts": "Kontakte",
       "bank": "Bank",
-      "payables": "Eingangsrechnungen"
+      "payables": "Eingangsrechnungen",
+      "gobd": "GoBD",
+      "extras": "Anlagen & Extras"
     },
     "errors": {
       "openingDateInvalid": "Das Eröffnungsdatum ist ungültig.",
@@ -720,7 +728,8 @@
       "categorySphereLocked": "Bei Kategorien mit Buchungen ist die Sphäre fest.",
       "bookingNotFound2": "Buchung nicht gefunden.",
       "reversedNoFile": "Einer stornierten Buchung können keine Belege hinzugefügt werden.",
-      "reversedSuffix": "STORNIERT"
+      "reversedSuffix": "STORNIERT",
+      "cashClosed": "Die Kasse ist bis {date} abgeschlossen; für diesen Zeitraum sind keine Änderungen mehr möglich."
     },
     "settings": {
       "donationShort": "Spende"
@@ -1112,7 +1121,14 @@
         "total": "Summe",
         "profit": "Gewinn",
         "loss": "Verlust",
-        "note": "Vereinfachte EÜR-Übersicht (§ 4 Abs. 3 EStG); Zuordnung zu den Zeilen der Anlage EÜR sowie USt-Zahlungen/-Erstattungen folgen in späteren Phasen."
+        "note": "Vereinfachte EÜR-Übersicht (§ 4 Abs. 3 EStG); Zuordnung zu den Zeilen der Anlage EÜR sowie USt-Zahlungen/-Erstattungen folgen in späteren Phasen.",
+        "noncash": {
+          "afa": "AfA (Abschreibungen)",
+          "flat_HOME_OFFICE": "Homeoffice-Pauschale",
+          "flat_MILEAGE": "Fahrtkosten (km-Pauschale)",
+          "flat_MEALS_8H": "Verpflegungsmehraufwand (> 8 Std.)",
+          "flat_MEALS_24H": "Verpflegungsmehraufwand (24 Std.)"
+        }
       },
       "datev": {
         "intro": "Buchungen werden im DATEV-Format EXTF (Buchungsstapel) exportiert und können von Ihrer Steuerberatung direkt importiert werden.",
@@ -1392,6 +1408,166 @@
         "input": "Ungültige Auswahl oder Datum (nicht in der Vergangenheit).",
         "ownIban": "In den Rechnungseinstellungen ist keine gültige IBAN hinterlegt.",
         "invalid": "Eine der ausgewählten Rechnungen kann nicht bezahlt werden (Status oder IBAN)."
+      }
+    },
+    "gobd": {
+      "title": "GoBD",
+      "description": "Unveränderbarkeit, Vollständigkeit und Prüfungsbereitschaft: hash-verkettetes Buchungsprotokoll, Kontrollen, Kassenabschluss und Datenträgerüberlassung.",
+      "journal": {
+        "title": "Unveränderbares Protokoll",
+        "ok": "Kette intakt: {entries} Einträge, {bookings} Buchungen — keine Buchung wurde außerhalb des Protokolls geändert.",
+        "unjournaled": "{count} Buchungen stammen aus der Zeit vor dem Protokoll.",
+        "sealHint": "Bestand einmalig „versiegeln“; danach wird jede Änderung automatisch protokolliert.",
+        "problems": "{count} Auffälligkeiten — Daten wurden möglicherweise außerhalb der Anwendung geändert!",
+        "hint": "Jede Erfassung, Änderung und Stornierung wird per SHA-256 verkettet protokolliert; Einträge können nicht gelöscht oder geändert werden (Datenbank-Trigger).",
+        "kind": {
+          "brokenChain": "Kette unterbrochen (Eintrag {seq})",
+          "gap": "Eintrag fehlt (Nr. {seq})",
+          "snapshotMismatch": "Protokolleintrag verändert: {number}",
+          "modifiedAfterJournal": "Buchung außerhalb des Protokolls geändert: {number}",
+          "unjournaled": "Buchung ohne Protokolleintrag: {number}"
+        }
+      },
+      "seal": "Bestand versiegeln",
+      "sealed": "{count} Buchungen ins Protokoll übernommen.",
+      "checks": {
+        "title": "Vollständigkeitsprüfung",
+        "receipts": "Buchungen ohne Beleg: {count}",
+        "gaps": "Nummernlücken: {list}",
+        "noGaps": "Buchungsnummern lückenlos.",
+        "bank": "Unbearbeitete Bankumsätze älter als 30 Tage: {count}",
+        "payables": "Eingangsrechnungen seit über 14 Tagen in Prüfung: {count}"
+      },
+      "cash": {
+        "title": "Kassenbuch – Tagesabschluss",
+        "balance": "Buchbestand {amount}",
+        "last": "letzter Abschluss {date}",
+        "difference": "Differenz {amount}",
+        "unclosed": "Tage mit Bewegungen ohne Abschluss: {count}",
+        "date": "Tag",
+        "counted": "Gezählter Bestand (€)",
+        "note": "Notiz",
+        "close": "Tag abschließen",
+        "closed": "Tag abgeschlossen; Buch- und Zählbestand stimmen überein.",
+        "closedDifference": "Tag abgeschlossen; Differenz {amount} protokolliert.",
+        "none": "Keine aktive Kasse.",
+        "hint": "Der Abschluss ist endgültig: für diesen Tag und davor können in dieser Kasse keine Buchungen mehr erfasst, geändert oder storniert werden. Differenzen am Folgetag per Korrekturbuchung erfassen."
+      },
+      "exports": {
+        "title": "Betriebsprüfung",
+        "z3": "Z3-Datenpaket {year} (GDPdU)",
+        "procedure": "Verfahrensdokumentation (Vorlage)",
+        "hint": "Z3: index.xml + CSV (Buchungen, Konten, Rechnungen, Protokoll) — direkt in Prüfsoftware importierbar. Die Verfahrensdokumentation ist eine mit Systemdaten vorbefüllte Markdown-Vorlage; bitte Lücken ergänzen."
+      },
+      "errors": {
+        "closingDate": "Das Abschlussdatum darf nicht in der Zukunft liegen.",
+        "notCash": "Abschlüsse sind nur für Kassenkonten möglich.",
+        "alreadyClosed": "Dieser oder ein späterer Tag ist bereits abgeschlossen.",
+        "year": "Ungültiges Jahr."
+      }
+    },
+    "extras": {
+      "title": "Anlagen & Extras",
+      "description": "Anlagenverzeichnis mit AfA, Pauschalen, Steuerfristen, Rücklagen für Vereine und Kassenprüfungsbericht.",
+      "total": "Summe",
+      "tabs": {
+        "anlagen": "Anlagen (AfA)",
+        "pauschalen": "Pauschalen",
+        "fristen": "Steuerfristen",
+        "ruecklagen": "Rücklagen (§ 62 AO)",
+        "pruefung": "Kassenprüfung"
+      },
+      "assets": {
+        "name": "Anlagegut",
+        "date": "Anschaffung",
+        "cost": "Anschaffungskosten netto (€)",
+        "method": "Methode",
+        "months": "Nutzungsdauer (Monate)",
+        "add": "Anlage hinzufügen",
+        "saved": "Anlage gespeichert.",
+        "afa": "AfA {year}",
+        "bookValue": "Restbuchwert",
+        "dispose": "Abgang",
+        "disposed": "Abgang erfasst; der Restbuchwert wird in diesem Jahr Aufwand.",
+        "disposedOn": "Abgang {date}",
+        "methods": {
+          "LINEAR": "Linear",
+          "GWG": "GWG (≤ 800 €)",
+          "POOL": "Sammelposten (5 Jahre)"
+        },
+        "hint": "Die Anschaffung auf eine als „Anlagegut“ markierte Ausgabenkategorie buchen: in der EÜR zählt dann nicht der Kaufpreis, sondern die jährliche AfA von hier. GWG bis 800 € netto (sofort), Sammelposten 250,01–1.000 € (5 Jahre je 1/5), sonst linear nach Nutzungsdauer (AfA-Tabelle), monatsgenau."
+      },
+      "flat": {
+        "kind": "Art",
+        "date": "Datum",
+        "note": "Notiz",
+        "add": "Hinzufügen",
+        "saved": "Pauschale erfasst.",
+        "delete": "Löschen",
+        "capped": "erfasst {amount}, Höchstbetrag angewendet",
+        "kinds": {
+          "HOME_OFFICE": "Homeoffice-Tag",
+          "MILEAGE": "Dienstreise (km)",
+          "MEALS_8H": "Verpflegung > 8 Std.",
+          "MEALS_24H": "Verpflegung 24 Std."
+        },
+        "unit": {
+          "HOME_OFFICE": "Anzahl Tage",
+          "MILEAGE": "Kilometer",
+          "MEALS_8H": "Anzahl Tage",
+          "MEALS_24H": "Anzahl Tage"
+        },
+        "unitShort": {
+          "HOME_OFFICE": "Tage",
+          "MILEAGE": "km",
+          "MEALS_8H": "Tage",
+          "MEALS_24H": "Tage"
+        },
+        "hint": "Ohne Zahlung als Betriebsausgabe in der EÜR. Werte ab 2024: Homeoffice 6 €/Tag (max. 1.260 €/Jahr), Dienstreise mit Privat-PKW 0,30 €/km, Verpflegungsmehraufwand 14 € (> 8 Std.) / 28 € (24 Std.). Bitte für das Jahr mit der Steuerberatung abstimmen."
+      },
+      "deadlines": {
+        "hint": "UStVA: 10. des Folgemonats nach Zeitraumende (mit Dauerfristverlängerung +1 Monat); Jahreserklärungen ohne Berater bis 31. Juli. Wochenende → Montag; Feiertage werden nicht berücksichtigt.",
+        "kinds": {
+          "ustva": "UStVA {period}",
+          "annualVat": "USt-Jahreserklärung {period}",
+          "incomeTax": "ESt-/KSt-Erklärung + EÜR {period}"
+        },
+        "past": "vorbei",
+        "inDays": "in {days} Tagen",
+        "open": "UStVA öffnen"
+      },
+      "reserves": {
+        "kind": "Art",
+        "amount": "Betrag (€)",
+        "purpose": "Zweck",
+        "plannedUse": "Geplante Verwendung (Jahr)",
+        "add": "Rücklage bilden",
+        "saved": "Rücklage gespeichert.",
+        "release": "Auflösen",
+        "released": "Rücklage aufgelöst.",
+        "releasedIn": "aufgelöst {year}",
+        "planned": "geplant {year}",
+        "kinds": {
+          "FREE": "Freie Rücklage (§ 62 I Nr. 3)",
+          "PURPOSE": "Projektrücklage (§ 62 I Nr. 1)",
+          "REPLACEMENT": "Wiederbeschaffungsrücklage (§ 62 I Nr. 2)",
+          "OPERATING": "Betriebsmittelrücklage"
+        },
+        "limit": "Höchstbetrag freie Rücklage (Richtwert): {limit} — in diesem Jahr gebildet {used}. Berechnung: Überschuss Vermögensverwaltung {asset} × 1/3 + sonstige Mittel {other} × 10 %.",
+        "hint": "Gemeinnützige Vereine müssen Mittel spätestens in den zwei Folgejahren verwenden (§ 55 I Nr. 5 AO); Rücklagen sind die Ausnahme und müssen zweckbezogen dokumentiert werden."
+      },
+      "auditor": {
+        "intro": "Jahresbericht für die Kassenprüfer: je Konto Anfangsbestand, Einnahmen, Ausgaben, Umbuchungen und Endbestand; Prüfung von Protokoll, Belegvollständigkeit, Nummernlücken und Kassenabschlüssen; Unterschriftenfelder.",
+        "download": "Prüfungsbericht {year} ({lang})"
+      },
+      "validation": {
+        "name": "Der Name muss mindestens 2 Zeichen haben.",
+        "quantity": "Ungültige Menge.",
+        "purpose": "Der Zweck muss mindestens 3 Zeichen haben."
+      },
+      "errors": {
+        "gwgLimit": "GWG nur bis 800 € netto.",
+        "poolRange": "Sammelposten nur von 250,01 bis 1.000 € netto."
       }
     }
   },

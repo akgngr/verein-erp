@@ -20,6 +20,8 @@ export const categoryCreateSchema = z.object({
     .transform((value) => (value ? value : undefined)),
   accountNumber: accountNumberSchema,
   defaultTaxRate: defaultTaxRateSchema,
+  /** ACC-8: Anlagegut kategorisi (EÜR'de gider değil, AfA). */
+  isAsset: z.boolean().optional(),
 });
 
 export const categoryUpdateSchema = categoryCreateSchema.extend({

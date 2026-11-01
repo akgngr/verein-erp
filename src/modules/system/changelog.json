@@ -2,6 +2,66 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.24.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "Muhasebe: demirbaş/AfA, götürüler, vergi takvimi, dernek ekleri",
+        "de": "Buchhaltung: Anlagen/AfA, Pauschalen, Steuerfristen, Vereins-Extras"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Demirbaş listesi ve AfA: GWG (≤ 800 €), Sammelposten (5 yıl), doğrusal (aylık); elden çıkarma. \"Anlagegut\" kategorisindeki alımlar EÜR'de gider sayılmaz, yerine yıllık AfA girer.",
+          "de": "Anlagenverzeichnis mit AfA: GWG (≤ 800 €), Sammelposten (5 Jahre), linear (monatsgenau); Abgang. Anschaffungen in „Anlagegut“-Kategorien sind in der EÜR keine Ausgabe, stattdessen fließt die jährliche AfA ein."
+        },
+        {
+          "type": "feature",
+          "tr": "Götürü giderler: ev ofisi (6 €/gün, yıllık en fazla 1.260 €), km (0,30 €), yemek (14/28 €) — EÜR'e eklenir.",
+          "de": "Pauschalen: Homeoffice (6 €/Tag, max. 1.260 €/Jahr), km-Pauschale (0,30 €), Verpflegung (14/28 €) — fließen in die EÜR ein."
+        },
+        {
+          "type": "feature",
+          "tr": "Vergi takvimi: UStVA ve yıllık beyan son tarihleri (Dauerfristverlängerung ayarı ile).",
+          "de": "Steuerfristen: UStVA- und Jahreserklärungs-Termine (mit Einstellung Dauerfristverlängerung)."
+        },
+        {
+          "type": "feature",
+          "tr": "Dernekler için § 62 AO yedekleri (serbest yedek üst sınırı önerisiyle) ve kasa denetim raporu (PDF, imza alanlarıyla).",
+          "de": "Für Vereine: Rücklagen nach § 62 AO (mit Richtwert für die freie Rücklage) und Kassenprüfungsbericht (PDF mit Unterschriftenfeldern)."
+        }
+      ]
+    },
+    {
+      "version": "0.23.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "Muhasebe: GoBD paketi",
+        "de": "Buchhaltung: GoBD-Paket"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Değişmez fiş günlüğü: her oluşturma, değişiklik ve iptal SHA-256 zinciriyle kaydedilir; günlük silinemez/değiştirilemez (veritabanı tetikleyicisi). GoBD sayfası zinciri ve uygulama dışı değişiklikleri doğrular; eski fişler bir kez mühürlenir.",
+          "de": "Unveränderbares Buchungsprotokoll: jede Erfassung, Änderung und Stornierung wird SHA-256-verkettet protokolliert; das Protokoll ist nicht lösch- oder änderbar (Datenbank-Trigger). Die GoBD-Seite prüft die Kette und Änderungen außerhalb der Anwendung; Altbestand wird einmalig versiegelt."
+        },
+        {
+          "type": "feature",
+          "tr": "Kasa günlük kapanışı: sayım ile defter bakiyesi karşılaştırılır, fark kaydedilir; kapanan güne ve öncesine o kasada işlem yapılamaz.",
+          "de": "Kassenbuch-Tagesabschluss mit Zählbestand und Differenz; danach sind Buchungen für diesen Tag und davor in der Kasse gesperrt."
+        },
+        {
+          "type": "feature",
+          "tr": "Tamlık kontrolleri: belgesi eksik fişler, numara boşlukları, bekleyen banka hareketleri ve gelen faturalar.",
+          "de": "Vollständigkeitsprüfung: Buchungen ohne Beleg, Nummernlücken, liegengebliebene Bankumsätze und Eingangsrechnungen."
+        },
+        {
+          "type": "feature",
+          "tr": "Vergi denetimi için Z3 veri paketi (GDPdU: index.xml + CSV) ve sistem bilgileriyle önceden doldurulmuş Verfahrensdokumentation şablonu.",
+          "de": "Z3-Datenpaket für die Betriebsprüfung (GDPdU: index.xml + CSV) und vorbefüllte Vorlage für die Verfahrensdokumentation."
+        }
+      ]
+    },
+    {
       "version": "0.22.0",
       "date": "2026-11-01",
       "title": {

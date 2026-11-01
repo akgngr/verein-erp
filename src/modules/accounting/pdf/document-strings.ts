@@ -44,6 +44,8 @@ export type DocumentStrings = {
   /** ACC-6 ihtar mektubu */
   dunningTitles: [string, string, string];
   dunningSalutation: string;
+  /** ACC-8 Kassenprüfungsbericht */
+  auditor: { title: string; intro: (year: number) => string; account: string; opening: string; income: string; expense: string; transfer: string; closing: string; total: string; checks: string; result: string; resultText: string; auditor: string; place: string; checkJournal: string; checkReceipts: string; checkGaps: string; checkCash: string; ok: string; issues: (count: number) => string; missing: (count: number) => string };
   dunningIntro: (number: string, date: string) => string;
   dunningInvoiceOpen: string;
   dunningFee: string;
@@ -124,6 +126,16 @@ export const DOCUMENT_STRINGS: { de: DocumentStrings; tr: DocumentStrings } = {
     invoiceTitle: "RECHNUNG",
     dunningTitles: ["ZAHLUNGSERINNERUNG", "1. MAHNUNG", "2. MAHNUNG"],
     dunningSalutation: "Sehr geehrte Damen und Herren,",
+    auditor: {
+      title: "Kassenprüfungsbericht",
+      intro: (year) => `Die Kassenprüfer haben die Buchführung für das Geschäftsjahr ${year} geprüft. Grundlage waren die Buchungen, Belege, Kontoauszüge und Kassenabschlüsse.`,
+      account: "Konto", opening: "Anfangsbestand", income: "Einnahmen", expense: "Ausgaben", transfer: "Umbuchungen", closing: "Endbestand", total: "Summe",
+      checks: "Prüfungsfeststellungen (automatisch)", result: "Ergebnis der Prüfung",
+      resultText: "Die Kasse wurde ordnungsgemäß geführt; Bestände und Belege stimmen überein. Die Kassenprüfer empfehlen der Mitgliederversammlung die Entlastung des Vorstands. (Bitte bei Beanstandungen anpassen.)",
+      auditor: "Kassenprüfer/in", place: "Ort, Datum",
+      checkJournal: "Unveränderbares Protokoll", checkReceipts: "Belege vollständig", checkGaps: "Buchungsnummern lückenlos", checkCash: "Kassenabschlüsse (offene Tage)",
+      ok: "in Ordnung", issues: (count) => `${count} Auffälligkeiten`, missing: (count) => `${count} Buchungen ohne Beleg`,
+    },
     dunningIntro: (number, date) => `sicher ist es Ihrer Aufmerksamkeit entgangen: Unsere Rechnung ${number} vom ${date} ist noch nicht (vollständig) beglichen.`,
     dunningInvoiceOpen: "Offener Rechnungsbetrag",
     dunningFee: "Mahngebühr",
@@ -202,6 +214,16 @@ export const DOCUMENT_STRINGS: { de: DocumentStrings; tr: DocumentStrings } = {
     invoiceTitle: "FATURA (RECHNUNG)",
     dunningTitles: ["ÖDEME HATIRLATMASI", "1. İHTAR", "2. İHTAR"],
     dunningSalutation: "Sayın ilgili,",
+    auditor: {
+      title: "Kasa Denetim Raporu (Kassenprüfungsbericht)",
+      intro: (year) => `Kasa denetçileri ${year} mali yılının muhasebesini denetlemiştir. Fişler, belgeler, banka ekstreleri ve kasa kapanışları esas alınmıştır.`,
+      account: "Hesap", opening: "Açılış", income: "Gelir", expense: "Gider", transfer: "Virman", closing: "Kapanış", total: "Toplam",
+      checks: "Denetim tespitleri (otomatik)", result: "Denetim sonucu",
+      resultText: "Kasa usulüne uygun tutulmuştur; bakiyeler ve belgeler uyumludur. Denetçiler genel kurula yönetim kurulunun ibrasını önerir. (Bulgu varsa düzenleyin.)",
+      auditor: "Kasa denetçisi", place: "Yer, tarih",
+      checkJournal: "Değişmez günlük", checkReceipts: "Belgeler tam", checkGaps: "Fiş numaraları kesintisiz", checkCash: "Kasa kapanışları (açık gün)",
+      ok: "uygun", issues: (count) => `${count} bulgu`, missing: (count) => `${count} belgesiz fiş`,
+    },
     dunningIntro: (number, date) => `${date} tarihli ${number} numaralı faturamız henüz (tamamen) ödenmemiştir.`,
     dunningInvoiceOpen: "Açık fatura tutarı",
     dunningFee: "İhtar ücreti",
