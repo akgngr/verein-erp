@@ -21,3 +21,13 @@ export function applyActionResult<T extends FieldValues>(
   }
   return result.error;
 }
+
+/**
+ * react-hook-form kullanmayan küçük formlar için: genel hata + alan hataları tek metinde
+ * ("Tarihler tutarlı değil — Ödeme tarihi üyenin giriş tarihinden önce olamaz.").
+ */
+export function describeActionError(result: ActionResult<unknown>): string | null {
+  if (result.ok) return null;
+  const details = [...new Set(Object.values(result.fieldErrors ?? {}).flat())].filter((message) => message && message !== result.error);
+  return details.length ? `${result.error} — ${details.join(" ")}` : result.error;
+}

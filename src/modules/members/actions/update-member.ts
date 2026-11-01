@@ -10,7 +10,8 @@ import { ActionError, createAction } from "@/modules/auth/server";
 
 import { membersPermissions } from "../permissions";
 import { memberUpdateSchema } from "../schemas/member";
-import { parseDateOnly } from "../utils";
+import { parseDateOnly, berlinToday } from "../utils";
+import { checkMemberDates, hasProblems } from "../services/date-rules";
 
 const UPDATE_SCHEMA = memberUpdateSchema.extend({ id: z.string().min(1) });
 
@@ -71,11 +72,14 @@ export async function updateMemberAction(
       const exitDate = input.exitDate ? parseDateOnly(input.exitDate) : null;
 
       if ((input.status === "RESIGNED" || input.status === "DECEASED") && !exitDate) {
-        throw new ActionError(
-          `${input.status === "RESIGNED" ? "Ayrılan" : "Vefat eden"} üye için ayrılış tarihi girin.`,
-          { exitDate: ["Ayrılış tarihi zorunlu."] },
-        );
+        throw new ActionError("members.errors.exitDateRequired", { exitDate: ["members.validation.exitDateRequired"] });
       }
+
+      const dateProblems = checkMemberDates({ birthDate, joinDate, exitDate, today: berlinToday() });
+      // Giriş tarihi, üyenin mevcut ödemelerinden sonraya alınamaz (ödeme üyelikten önce kalırdı).
+      const firstPayment = await db.memberPayment.findFirst({ where: { memberId: member.id, voidedAt: null }, orderBy: { paidAt: "asc" }, select: { paidAt: true } });
+      if (firstPayment && firstPayment.paidAt.getTime() < joinDate.getTime()) (dateProblems.joinDate ??= []).push("members.validation.joinAfterPayments");
+      if (hasProblems(dateProblems)) throw new ActionError("members.errors.datesInvalid", dateProblems);
 
       const updatedByLabel = buildUserLabel(user.name, user.email);
 

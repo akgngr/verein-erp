@@ -258,7 +258,8 @@
     "toastRun": "Aktarım tamamlandı: {created} fiş, {reversed} ters kayıt.",
     "empty": "Aktarılacak ödeme yok.",
     "receipt": "Makbuz No",
-    "reason": "Neden"
+    "reason": "Neden",
+    "toCorrect": "Tutarı düzeltilecek (eski fiş ters kayıt + doğru tutarla yeni fiş)"
   },
   "reports": {
     "title": "Raporlar",

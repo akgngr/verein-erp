@@ -113,6 +113,7 @@ export function AccountFormModal({
             inputMode="decimal"
           />
           <DatePicker
+            showMonthAndYearPickers
             label={t("openingDate")}
             labelPlacement="outside"
             granularity="day"

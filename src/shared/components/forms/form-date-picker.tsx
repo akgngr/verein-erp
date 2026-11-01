@@ -13,6 +13,18 @@ export type FormDatePickerProps<T extends FieldValues> = {
   isRequired?: boolean;
   isDisabled?: boolean;
   labelPlacement?: "inside" | "outside" | "outside-left";
+  /** İzin verilen en erken / en geç tarih ("yyyy-MM-dd"); takvimde dışındaki günler seçilemez. */
+  minValue?: string | null;
+  maxValue?: string | null;
+};
+
+const toDate = (raw: string | null | undefined): DateValue | undefined => {
+  if (!raw) return undefined;
+  try {
+    return parseDate(raw);
+  } catch {
+    return undefined;
+  }
 };
 
 /**
@@ -30,6 +42,8 @@ export function FormDatePicker<T extends FieldValues>({
   isRequired,
   isDisabled,
   labelPlacement = "outside",
+  minValue,
+  maxValue,
 }: FormDatePickerProps<T>) {
   const translateMessage = useTranslateMessage();
   return (
@@ -55,6 +69,10 @@ export function FormDatePicker<T extends FieldValues>({
             isRequired={isRequired}
             isDisabled={isDisabled}
             value={value}
+            // Doğum tarihi gibi uzak tarihlerde yıl ve ay açılır listeden hızlıca seçilir.
+            showMonthAndYearPickers
+            minValue={toDate(minValue)}
+            maxValue={toDate(maxValue)}
             onChange={(next) => field.onChange(next ? next.toString() : "")}
             isInvalid={Boolean(fieldState.error)}
             errorMessage={translateMessage(fieldState.error?.message)}

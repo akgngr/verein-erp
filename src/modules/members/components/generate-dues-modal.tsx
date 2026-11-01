@@ -90,6 +90,7 @@ export function GenerateDuesModal({ currentYear }: { currentYear: number }) {
                     ))}
                   </Select>
                   <DatePicker
+                    showMonthAndYearPickers
                     label={t("dueDate")}
                     labelPlacement="outside"
                     value={dueDate ? (parseDate(dueDate) as DateValue) : null}

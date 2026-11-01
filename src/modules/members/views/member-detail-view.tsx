@@ -69,6 +69,7 @@ export async function MemberDetailView({
         actions={
           <MemberDetailActions
             memberId={member.id}
+            joinDate={member.joinDate.toISOString().slice(0, 10)}
             membershipNumber={member.membershipNumber}
             status={member.status}
             canUpdate={canUpdate}
@@ -155,6 +156,7 @@ export async function MemberDetailView({
         <div className="lg:col-span-3">
           <PaymentsPanel
             memberId={member.id}
+            joinDate={member.joinDate.toISOString().slice(0, 10)}
             payments={payments}
             canCreate={canCreatePayment}
             canDelete={canVoidPayment}
