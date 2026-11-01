@@ -5,7 +5,13 @@ import { requireUser } from "@/modules/auth/server";
 import { allModules } from "@/registry";
 import { moduleHome } from "@/shared/navigation/module-nav";
 
+import Link from "next/link";
+
+import { can } from "@/shared/permissions/define";
+import { systemPermissions } from "@/shared/permissions/system";
+
 import { DashboardBoard, type DashboardBoardCard } from "../components/dashboard-board";
+import { getSetupState } from "../services/setup";
 import { getDashboardLayout, listAvailableDashboardCards, type AvailableDashboardCard } from "../queries/dashboard";
 
 /**
@@ -65,12 +71,29 @@ export async function DashboardView() {
   const placedIds = new Set(layout);
   const addable = available.filter((entry) => !placedIds.has(entry.id)).map(describe);
 
+  // Kurulum tamamlanmadıysa yöneticiye sihirbaz bandı.
+  const setup = can(user.role, systemPermissions, "update") ? await getSetupState() : null;
+  const tSetup = await getTranslations("system.setup");
+
   return (
-    <DashboardBoard
-      title={t("overviewTitle")}
-      description={t("overviewDescription")}
-      placed={placed}
-      available={addable}
-    />
+    <>
+      {setup && !setup.completedAt ? (
+        <div className="mb-4 flex flex-wrap items-center justify-between gap-3 rounded-large border border-primary-200 bg-primary-50 p-4 dark:bg-primary-500/10">
+          <div className="flex flex-col">
+            <span className="font-semibold">{tSetup("bannerTitle")}</span>
+            <span className="text-small text-default-600">{tSetup("bannerText")}</span>
+          </div>
+          <Link href="/ayarlar/kurulum" className="rounded-medium bg-primary px-4 py-2 text-small font-medium text-white">
+            {tSetup("bannerAction")}
+          </Link>
+        </div>
+      ) : null}
+      <DashboardBoard
+        title={t("overviewTitle")}
+        description={t("overviewDescription")}
+        placed={placed}
+        available={addable}
+      />
+    </>
   );
 }

@@ -1,4 +1,4 @@
-import { Boxes, History, Settings } from "lucide-react";
+import { Boxes, History, Settings, Wand2 } from "lucide-react";
 import type { ModuleConfig } from "@/shared/types/module";
 import { settingsPermissions, systemPermissions } from "@/shared/permissions/system";
 
@@ -9,6 +9,8 @@ export const moduleConfig: ModuleConfig = {
   category: "CORE",
   isProtected: true,
   hasSchema: true,
+  // Kurulum sihirbazı muhasebe hazır ayarlarını (kategori/hesap/vergi) yazar.
+  access: [{ module: "accounting", operations: ["read", "write"] }],
   nav: [
     {
       href: "/ayarlar",
@@ -27,6 +29,15 @@ export const moduleConfig: ModuleConfig = {
       group: "settings",
       order: 3,
       permission: { definition: systemPermissions, action: "view" },
+    },
+    {
+      href: "/ayarlar/kurulum",
+      label: "Kurulum sihirbazı",
+      labelKey: "kurulum",
+      icon: Wand2,
+      group: "settings",
+      order: 1,
+      permission: { definition: systemPermissions, action: "update" },
     },
     {
       href: "/ayarlar/surum-notlari",

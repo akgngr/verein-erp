@@ -110,6 +110,7 @@
     "ayarlar": "Ayarlar",
     "moduller": "Modül Yönetimi",
     "surumNotlari": "Sürüm notları",
+    "kurulum": "Kurulum sihirbazı",
     "tasks": "Görevler",
     "kullanicilar": "Kullanıcılar"
   },
@@ -5274,7 +5275,8 @@
         "read": "okuma",
         "write": "yazma",
         "delete": "silme"
-      }
+      },
+      "accounting": "Kurulum sihirbazı, seçilen kurum türüne göre muhasebe kategorilerini, hesaplarını ve vergi ayarlarını oluşturur."
     },
     "gate": {
       "manage": "Modül yönetimine git",
@@ -5306,6 +5308,82 @@
       "system": {
         "label": "Modül Yönetimi",
         "description": "Eklenti yükleme, modül aktifleştirme ve pasifleştirme."
+      }
+    },
+    "setup": {
+      "title": "Kurulum sihirbazı",
+      "description": "Kurum türünüzü seçin; uygun modüller ve muhasebe ayarları (hesap planı, kategoriler, hesaplar) hazırlanır.",
+      "descriptionDone": "Kurulum tamamlandı. Türü veya modülleri değiştirmek için sihirbazı tekrar çalıştırabilirsiniz; mevcut kayıtlar silinmez.",
+      "bannerTitle": "Kurulumu tamamlayın",
+      "bannerText": "Birkaç adımda kurum türünüzü seçin; modüller ve muhasebe sizin için hazırlansın.",
+      "bannerAction": "Sihirbazı başlat",
+      "steps": {
+        "type": "Kurum türü",
+        "basics": "Vergi",
+        "modules": "Modüller",
+        "summary": "Özet"
+      },
+      "types": {
+        "VEREIN": {
+          "title": "Dernek (Verein)",
+          "description": "Üyeler, aidat ve bağışlar, toplantılar, etkinlikler; dört alanlı (sphere) muhasebe.",
+          "taxHint": "Dernekler çoğunlukla KDV'siz çalışır (aidat ve bağışlar vergi dışı). Ekonomik işletme (ör. satış/bewirtung) varsa KDV yalnızca orada doğar."
+        },
+        "KLEINGEWERBE": {
+          "title": "Küçük işletme (Kleingewerbe)",
+          "description": "Faturalar, gelen faturalar, banka, EÜR; çoğunlukla Kleinunternehmer (§ 19).",
+          "taxHint": "Önceki yıl cirosu 25.000 €'nun altındaysa Kleinunternehmer (§ 19 UStG) olabilirsiniz: faturada KDV gösterilmez."
+        },
+        "MITTELSTAND": {
+          "title": "Orta ölçekli işletme",
+          "description": "Ciroya dayalı tam KDV, Soll-Versteuerung, aylık UStVA, SKR04; ekip ve toplantılar.",
+          "taxHint": "Daha yüksek cirolarda genellikle Soll-Versteuerung ve aylık UStVA; hesap planı çoğunlukla SKR04. Vergi danışmanınızla doğrulayın."
+        },
+        "FREELANCER": {
+          "title": "Serbest meslek (Freelancer)",
+          "description": "Honorar faturaları, gider belgeleri, götürüler (ev ofisi, km), EÜR.",
+          "taxHint": "Serbest meslekte genellikle Ist-Versteuerung ve çeyreklik UStVA; ciro düşükse Kleinunternehmer seçilebilir."
+        },
+        "NACHHILFE": {
+          "title": "Etüt / Nachhilfe",
+          "description": "Öğrenciler ve veliler, kurslar ve ücretler, devam ve gelişim takibi.",
+          "taxHint": "Eğitim hizmetleri bazı koşullarda KDV'den muaftır (§ 4 Nr. 21 UStG, ilgili makam belgesiyle); değilse çoğu zaman Kleinunternehmer. Danışmanınızla netleştirin."
+        }
+      },
+      "smallBusiness": "Kleinunternehmer (§ 19 UStG)",
+      "smallBusinessHint": "Açıkken faturalarda ve fişlerde KDV hesaplanmaz.",
+      "chart": "Hesap planı",
+      "chartHint": "Kategori ve hesaplara bu plana göre SKR numaraları önerilir.",
+      "accountingPreset": "Muhasebe kategorilerini ve Kasse/Bank hesaplarını hazırla",
+      "accountingPresetHint": "Türünüze uygun kategoriler (SKR numaralı) eklenir; aynı ada sahip mevcut kategoriler ve hesaplar korunur.",
+      "modulesHint": "Türünüze göre önerilen modüller işaretli. İstediğiniz zaman Modül Yönetimi'nden değiştirebilirsiniz.",
+      "needsApproval": "(erişim onayı gerekli)",
+      "summary": {
+        "type": "Tür",
+        "tax": "Vergi",
+        "modules": "Açılacak modüller",
+        "accounting": "Muhasebe hazırlığı",
+        "smallBusinessOn": "Kleinunternehmer",
+        "smallBusinessOff": "normal KDV",
+        "presetOn": "kategoriler ve hesaplar eklenecek",
+        "presetOff": "yok",
+        "note": "Listede olmayan isteğe bağlı modüller kapatılır (veriler silinmez)."
+      },
+      "back": "Geri",
+      "next": "İleri",
+      "apply": "Uygula",
+      "done": {
+        "title": "Kurulum tamamlandı",
+        "modules": "Açık modüller: {enabled}",
+        "needsApproval": "Erişim onayı bekleyen modüller (Modül Yönetimi'nden onaylayın): {modules}",
+        "accounting": "{categories} kategori ve {accounts} hesap eklendi.",
+        "profile": "Kurum bilgilerini gir",
+        "accountingSettings": "Muhasebe ayarları",
+        "modulesPage": "Modül Yönetimi",
+        "dashboard": "Panele dön"
+      },
+      "errors": {
+        "accountingOff": "Muhasebe hazırlığı için Muhasebe modülü seçili olmalı."
       }
     }
   },
