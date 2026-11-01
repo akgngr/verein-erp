@@ -88,7 +88,7 @@ export async function InvoicesView({ searchParams }: { searchParams: Promise<Raw
           {t("views.opos")}
         </Link>
       </nav>
-      {view === "opos" ? <OpenItemsTable rows={openItems} /> : <InvoiceTable rows={rows} q={first(raw.q)} />}
+      {view === "opos" ? <OpenItemsTable rows={openItems} canDun={canUpdate} /> : <InvoiceTable rows={rows} q={first(raw.q)} />}
 
       {canCreate && (newParam === "fatura" || newParam === "proforma" || newParam === "teklif") ? (
         <FormDrawer size="4xl" title={newParam === "proforma" ? t("newProforma") : newParam === "teklif" ? t("newQuote") : t("newInvoice")} description={t("form.draftHint")}>

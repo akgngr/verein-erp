@@ -2,6 +2,26 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.21.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "Muhasebe: ihtar ve SEPA ödeme listesi",
+        "de": "Buchhaltung: Mahnwesen und SEPA-Zahlungslauf"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "İhtar: açık kalemlerde vadesi geçen faturalar için kademe önerisi (hatırlatma → 1. → 2. ihtar), tek tıkla mektup (PDF). Ücretler ayarlanabilir; 1. ihtardan itibaren § 288 BGB gecikme faizi (tüketici +5, işletme +9 puan) ve isteğe bağlı 40 € B2B götürü.",
+          "de": "Mahnwesen: Mahnvorschläge in den offenen Posten (Erinnerung → 1. → 2. Mahnung), Mahnschreiben (PDF) per Klick. Gebühren einstellbar; ab der 1. Mahnung Verzugszinsen nach § 288 BGB (Verbraucher +5, Unternehmen +9 Prozentpunkte) und optional 40 € Pauschale (B2B)."
+        },
+        {
+          "type": "feature",
+          "tr": "SEPA ödeme listesi: açık gelen faturalardan seçim yapıp bankaya yüklenecek pain.001 dosyası; IBAN kontrolü. Ödeme, banka ekstresi içe aktarılınca eşleşir.",
+          "de": "SEPA-Zahlungslauf: offene Eingangsrechnungen auswählen und pain.001-Datei für das Online-Banking erzeugen; IBAN-Prüfung. Die Zahlung wird beim Kontoauszug-Import zugeordnet."
+        }
+      ]
+    },
+    {
       "version": "0.20.1",
       "date": "2026-11-01",
       "title": {

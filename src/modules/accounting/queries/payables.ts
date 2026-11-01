@@ -6,6 +6,7 @@ import { getDb } from "@/shared/db";
 
 import { section14Checks, type Section14Check } from "../services/einvoice-in";
 import { PAYABLE_SOURCE, payableRates } from "../services/payable-payment-service";
+import { isValidIban } from "../services/sepa";
 
 export type PayableRow = {
   id: string;
@@ -128,4 +129,19 @@ export async function listOpenPayables(): Promise<Array<{ id: string; number: st
 
 export async function listSupplierOptions() {
   return getDb().accountingContact.findMany({ where: { type: "SUPPLIER", isActive: true }, orderBy: { name: "asc" }, select: { id: true, number: true, name: true, address: true, vatId: true } });
+}
+
+/** ACC-6 ödeme listesi satırları: açık gelen faturalar + IBAN geçerliliği. */
+export async function listPaymentRunRows(): Promise<Array<{ id: string; supplierName: string; number: string | null; dueDate: string | null; openCents: number; ibanOk: boolean }>> {
+  const items = await getDb().accountingPayable.findMany({ where: { status: "OPEN" }, orderBy: [{ dueDate: "asc" }, { createdAt: "asc" }] });
+  return items
+    .filter((item) => item.grossCents > item.paidCents)
+    .map((item) => ({
+      id: item.id,
+      supplierName: item.supplierName,
+      number: item.number,
+      dueDate: item.dueDate ? item.dueDate.toISOString().slice(0, 10) : null,
+      openCents: item.grossCents - item.paidCents,
+      ibanOk: Boolean(item.supplierIban && isValidIban(item.supplierIban)),
+    }));
 }

@@ -14,7 +14,9 @@ import { PayableUploadButton } from "../components/payable-upload-button";
 import { accountingPermissions } from "../permissions";
 import { listAccountOptions } from "../queries/list-accounts";
 import { listCategoryOptions } from "../queries/list-categories";
-import { getPayable, listPayables, listSupplierOptions } from "../queries/payables";
+import { getPayable, listPayables, listPaymentRunRows, listSupplierOptions } from "../queries/payables";
+import { PaymentRunCard } from "../components/payment-run-card";
+import { berlinToday } from "../utils";
 
 const STATUSES = ["DRAFT", "OPEN", "PAID", "CANCELLED"] as const;
 const euro = (cents: number) => (cents / 100).toLocaleString("de-DE", { style: "currency", currency: "EUR" });
@@ -35,6 +37,10 @@ export async function PayablesView({ status }: { status: (typeof STATUSES)[numbe
   if (!user) return <AccessDenied />;
   const t = await getTranslations("accounting.payables");
   const { rows, counts } = await listPayables(status ?? undefined);
+  const canPay = can(user.role, accountingPermissions, "create");
+  const runRows = status === "OPEN" && canPay ? await listPaymentRunRows() : [];
+  const today = berlinToday();
+  const iso = (date: Date) => date.toISOString().slice(0, 10);
   return (
     <div className="flex flex-col gap-4">
       <PageHeader title={t("title")} description={t("description")} actions={can(user.role, accountingPermissions, "create") ? <PayableUploadButton /> : null} />
@@ -48,6 +54,7 @@ export async function PayablesView({ status }: { status: (typeof STATUSES)[numbe
           </Link>
         ))}
       </nav>
+      {runRows.length ? <PaymentRunCard rows={runRows} defaultDate={iso(new Date(today.getTime() + 86_400_000))} horizon={iso(new Date(today.getTime() + 7 * 86_400_000))} /> : null}
       {rows.length ? (
         <div className="overflow-x-auto rounded-medium border border-default-200 bg-content1">
           <table className="w-full text-small">

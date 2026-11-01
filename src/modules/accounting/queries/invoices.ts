@@ -4,6 +4,7 @@ import type { InvoiceKind, InvoiceStatus } from "@prisma/client";
 
 import { getDb } from "@/shared/db";
 
+import { nextDunningLevel } from "../services/dunning";
 import { aging, openCents, type AgingBucket } from "../services/invoice-payments";
 
 export type InvoiceListRow = {
@@ -62,6 +63,7 @@ export type InvoiceDetail = InvoiceListRow & {
   contactNumber: number | null;
   buyerReference: string | null;
   payments: InvoicePaymentRow[];
+  dunnings: Array<{ id: string; level: number; dunningDate: Date; feeCents: number; interestCents: number; flatFeeCents: number }>;
 };
 
 export type InvoiceSettingsData = {
@@ -74,6 +76,12 @@ export type InvoiceSettingsData = {
   sellerVatId: string | null;
   iban: string | null;
   bic: string | null;
+  dunningIntervalDays: number;
+  dunningFeeReminder: number;
+  dunningFeeFirst: number;
+  dunningFeeSecond: number;
+  baseInterestRate: number;
+  dunningFlatFeeB2B: boolean;
 };
 
 const isOverdue = (status: InvoiceStatus, dueDate: Date | null) =>
@@ -111,7 +119,7 @@ export async function listInvoices(filters: { kind?: string; status?: string; q?
 
 export async function getInvoice(id: string): Promise<InvoiceDetail | null> {
   const db = getDb();
-  const row = await db.accountingInvoice.findUnique({ where: { id }, include: { lines: { orderBy: { position: "asc" } }, payments: { orderBy: { createdAt: "asc" } }, contact: { select: { number: true } } } });
+  const row = await db.accountingInvoice.findUnique({ where: { id }, include: { lines: { orderBy: { position: "asc" } }, payments: { orderBy: { createdAt: "asc" } }, dunnings: { orderBy: { level: "asc" } }, contact: { select: { number: true } } } });
   if (!row) return null;
   const [booking, proforma, converted] = await Promise.all([
     row.bookingId ? db.accountingBooking.findUnique({ where: { id: row.bookingId }, select: { bookingNumber: true } }) : null,
@@ -135,6 +143,7 @@ export async function getInvoice(id: string): Promise<InvoiceDetail | null> {
     contactId: row.contactId,
     buyerReference: row.buyerReference,
     contactNumber: row.contact?.number ?? null,
+    dunnings: row.dunnings.map((dunning) => ({ id: dunning.id, level: dunning.level, dunningDate: dunning.dunningDate, feeCents: dunning.feeCents, interestCents: dunning.interestCents, flatFeeCents: dunning.flatFeeCents })),
     payments: row.payments.map((payment) => ({
       id: payment.id,
       paidDate: payment.paidDate,
@@ -188,6 +197,12 @@ export async function getInvoiceSettings(): Promise<InvoiceSettingsData> {
     sellerVatId: row?.sellerVatId ?? null,
     iban: row?.iban ?? null,
     bic: row?.bic ?? null,
+    dunningIntervalDays: row?.dunningIntervalDays ?? 14,
+    dunningFeeReminder: row?.dunningFeeReminder ?? 0,
+    dunningFeeFirst: row?.dunningFeeFirst ?? 500,
+    dunningFeeSecond: row?.dunningFeeSecond ?? 1000,
+    baseInterestRate: row ? Number(row.baseInterestRate) : 0,
+    dunningFlatFeeB2B: row?.dunningFlatFeeB2B ?? false,
   };
 }
 
@@ -202,6 +217,9 @@ export type OpenItemRow = {
   openCents: number;
   daysOverdue: number;
   bucket: AgingBucket;
+  /** ACC-6: son ihtar kademesi ve önerilen sonraki kademe (yoksa null). */
+  lastDunningLevel: number;
+  nextDunningLevel: number | null;
 };
 
 /** ACC-3 OPOS: kesinleşmiş, kapanmamış faturalar; vade (yoksa fatura tarihi) bazlı yaşlandırma. */
@@ -209,8 +227,9 @@ export async function listOpenItems(today: Date): Promise<OpenItemRow[]> {
   const rows = await getDb().accountingInvoice.findMany({
     where: { kind: "INVOICE", status: "ISSUED" },
     orderBy: [{ dueDate: "asc" }, { issueDate: "asc" }],
-    include: { contact: { select: { number: true } } },
+    include: { contact: { select: { number: true } }, dunnings: { orderBy: { level: "desc" }, take: 1 } },
   });
+  const intervalDays = (await getDb().accountingInvoiceSettings.findUnique({ where: { id: "singleton" }, select: { dunningIntervalDays: true } }))?.dunningIntervalDays ?? 14;
   return rows
     .map((row) => {
       const due = row.dueDate ?? row.issueDate;
@@ -226,6 +245,8 @@ export async function listOpenItems(today: Date): Promise<OpenItemRow[]> {
         openCents: openCents(row),
         daysOverdue,
         bucket,
+        lastDunningLevel: row.dunnings[0]?.level ?? 0,
+        nextDunningLevel: nextDunningLevel({ dueDate: due, today, last: row.dunnings[0] ?? null, intervalDays }),
       };
     })
     .filter((row) => row.openCents > 0);

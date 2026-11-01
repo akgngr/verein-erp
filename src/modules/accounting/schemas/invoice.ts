@@ -62,6 +62,13 @@ export const invoiceSettingsSchema = z.object({
   /** ACC-5: XRechnung satıcı bilgileri. */
   sellerVatId: z.string().trim().refine((value) => value === "" || /^[A-Z]{2}[A-Z0-9]{2,13}$/.test(value.replace(/\s/g, "").toUpperCase()), "accounting.contacts.validation.vatId"),
   iban: z.string().trim().refine((value) => value === "" || /^[A-Z]{2}\d{2}[A-Z0-9]{10,30}$/.test(value.replace(/\s/g, "").toUpperCase()), "accounting.invoices.validation.iban"),
+  // ACC-6 ihtar ayarları
+  dunningIntervalDays: z.string().trim().regex(/^\d{1,3}$/, "accounting.invoices.validation.paymentDays"),
+  dunningFeeReminder: z.string().trim().refine((value) => value === "" || DECIMAL.test(value), "accounting.invoices.validation.price"),
+  dunningFeeFirst: z.string().trim().refine((value) => value === "" || DECIMAL.test(value), "accounting.invoices.validation.price"),
+  dunningFeeSecond: z.string().trim().refine((value) => value === "" || DECIMAL.test(value), "accounting.invoices.validation.price"),
+  baseInterestRate: z.string().trim().regex(/^-?\d{1,2}([.,]\d{1,2})?$/, "accounting.invoices.validation.baseRate"),
+  dunningFlatFeeB2B: z.boolean(),
   bic: z.string().trim().refine((value) => value === "" || /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/.test(value.replace(/\s/g, "").toUpperCase()), "accounting.invoices.validation.bic"),
 });
 

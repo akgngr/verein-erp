@@ -298,6 +298,12 @@ export async function saveInvoiceSettingsAction(input: unknown): Promise<ActionR
         sellerVatId: input.sellerVatId ? input.sellerVatId.replace(/\s/g, "").toUpperCase() : null,
         iban: input.iban ? input.iban.replace(/\s/g, "").toUpperCase() : null,
         bic: input.bic ? input.bic.replace(/\s/g, "").toUpperCase() : null,
+        dunningIntervalDays: Number(input.dunningIntervalDays),
+        dunningFeeReminder: input.dunningFeeReminder ? toCents(input.dunningFeeReminder) ?? 0 : 0,
+        dunningFeeFirst: input.dunningFeeFirst ? toCents(input.dunningFeeFirst) ?? 0 : 0,
+        dunningFeeSecond: input.dunningFeeSecond ? toCents(input.dunningFeeSecond) ?? 0 : 0,
+        baseInterestRate: input.baseInterestRate.replace(",", "."),
+        dunningFlatFeeB2B: input.dunningFlatFeeB2B,
       };
       await getDb().accountingInvoiceSettings.upsert({ where: { id: "singleton" }, create: { id: "singleton", ...data }, update: data });
       await audit({ action: "UPDATE", entity: "AccountingInvoiceSettings", entityId: "singleton", after: { defaultTaxRate: data.defaultTaxRate, paymentDays: data.paymentDays } });

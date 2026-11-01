@@ -11,6 +11,7 @@ import { applyActionResult } from "@/shared/components/forms/action-result";
 import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
 import { FormErrorSummary } from "@/shared/components/forms/form-error-summary";
 import { FormInput } from "@/shared/components/forms/form-input";
+import { FormSwitch } from "@/shared/components/forms/form-switch";
 import { FormSelect } from "@/shared/components/forms/form-select";
 import { FormTextarea } from "@/shared/components/forms/form-textarea";
 import { SubmitButton } from "@/shared/components/forms/submit-button";
@@ -21,6 +22,8 @@ import type { InvoiceSettingsData } from "../queries/invoices";
 import { invoiceSettingsSchema, type InvoiceSettingsInput } from "../schemas/invoice";
 
 /** Fatura varsayılanları: KDV oranı, muafiyet notu, ödeme süresi, banka bilgisi, alt metin, gelir kategorisi. */
+const money = (cents: number) => (cents ? (cents / 100).toFixed(2).replace(".", ",") : "");
+
 export function InvoiceSettingsForm({ settings, categoryOptions }: { settings: InvoiceSettingsData; categoryOptions: { value: string; label: string }[] }) {
   const t = useTranslations("accounting.invoices.settings");
   const tCommon = useTranslations("common");
@@ -39,6 +42,12 @@ export function InvoiceSettingsForm({ settings, categoryOptions }: { settings: I
       sellerVatId: settings.sellerVatId ?? "",
       iban: settings.iban ?? "",
       bic: settings.bic ?? "",
+      dunningIntervalDays: String(settings.dunningIntervalDays),
+      dunningFeeReminder: money(settings.dunningFeeReminder),
+      dunningFeeFirst: money(settings.dunningFeeFirst),
+      dunningFeeSecond: money(settings.dunningFeeSecond),
+      baseInterestRate: String(settings.baseInterestRate).replace(".", ","),
+      dunningFlatFeeB2B: settings.dunningFlatFeeB2B,
     },
   });
   const close = () => (closeDrawer ? closeDrawer() : router.push("/muhasebe/faturalar"));
@@ -67,6 +76,16 @@ export function InvoiceSettingsForm({ settings, categoryOptions }: { settings: I
           <FormInput name="bic" label={t("bic")} control={form.control} />
         </div>
         <p className="text-tiny text-default-500">{t("xrechnungHint")}</p>
+        <h3 className="pt-2 text-small font-semibold">{t("dunningTitle")}</h3>
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
+          <FormInput name="dunningIntervalDays" label={t("dunningIntervalDays")} control={form.control} type="number" />
+          <FormInput name="dunningFeeReminder" label={t("dunningFeeReminder")} control={form.control} placeholder="0,00" />
+          <FormInput name="dunningFeeFirst" label={t("dunningFeeFirst")} control={form.control} placeholder="0,00" />
+          <FormInput name="dunningFeeSecond" label={t("dunningFeeSecond")} control={form.control} placeholder="0,00" />
+          <FormInput name="baseInterestRate" label={t("baseInterestRate")} control={form.control} placeholder="0,00" />
+        </div>
+        <FormSwitch name="dunningFlatFeeB2B" label={t("dunningFlatFeeB2B")} control={form.control} description={t("dunningFlatFeeB2BHint")} />
+        <p className="text-tiny text-default-500">{t("dunningHint")}</p>
         <FormTextarea name="footerText" label={t("footerText")} control={form.control} />
         <FormErrorSummary message={formError} />
         <div className="flex items-center gap-2">

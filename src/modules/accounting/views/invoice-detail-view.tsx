@@ -114,6 +114,23 @@ export async function InvoiceDetailView({ id, searchParams }: { id: string; sear
               ) : null}
             </div>
           </div>
+          {invoice.dunnings.length ? (
+            <div className="rounded-medium border border-default-200 bg-content1 p-5 shadow-sm">
+              <h3 className="mb-2 text-small font-semibold">{t("dunningsTitle")}</h3>
+              <ul className="flex flex-col gap-1 text-small">
+                {invoice.dunnings.map((dunning) => (
+                  <li key={dunning.id} className="flex flex-wrap items-center justify-between gap-2 border-t border-default-100 py-1.5">
+                    <span>{formatDate(dunning.dunningDate)}</span>
+                    <span>{t(`dunningLevel.${dunning.level}`)}</span>
+                    <span className="text-default-500">{euro(dunning.feeCents + dunning.interestCents + dunning.flatFeeCents)}</span>
+                    <a className="text-primary hover:underline" href={`/api/accounting/dunnings/${dunning.id}/pdf`} target="_blank" rel="noopener noreferrer">
+                      PDF
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : null}
           {invoice.payments.length ? (
             <div className="rounded-medium border border-default-200 bg-content1 p-5 shadow-sm">
               <h3 className="mb-2 text-small font-semibold">{t("paymentsTitle")}</h3>

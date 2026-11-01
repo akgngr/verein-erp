@@ -979,7 +979,16 @@
         "sellerVatId": "USt-IdNr.",
         "iban": "IBAN",
         "bic": "BIC",
-        "xrechnungHint": "Für die XRechnung werden IBAN sowie USt-IdNr. oder die Steuernummer aus dem Organisationsprofil benötigt."
+        "xrechnungHint": "Für die XRechnung werden IBAN sowie USt-IdNr. oder die Steuernummer aus dem Organisationsprofil benötigt.",
+        "dunningTitle": "Mahnwesen",
+        "dunningIntervalDays": "Abstand der Stufen (Tage)",
+        "dunningFeeReminder": "Gebühr Erinnerung (€)",
+        "dunningFeeFirst": "Gebühr 1. Mahnung (€)",
+        "dunningFeeSecond": "Gebühr 2. Mahnung (€)",
+        "baseInterestRate": "Basiszinssatz (%)",
+        "dunningFlatFeeB2B": "40 € Verzugspauschale bei B2B",
+        "dunningFlatFeeB2BHint": "§ 288 Abs. 5 BGB; Empfänger mit USt-IdNr. gelten als Unternehmen.",
+        "dunningHint": "Verzugszinsen ab der 1. Mahnung: Verbraucher Basiszinssatz + 5, Unternehmen + 9 Prozentpunkte. Der Basiszinssatz wird zum 1. Januar und 1. Juli von der Bundesbank bekanntgegeben – bitte aktuell halten."
       },
       "errors": {
         "notFound": "Rechnung nicht gefunden.",
@@ -1000,7 +1009,8 @@
         "reason": "Grund muss mindestens 3 Zeichen haben.",
         "paymentDays": "Anzahl Tage eingeben.",
         "iban": "Ungültige IBAN.",
-        "bic": "Ungültige BIC."
+        "bic": "Ungültige BIC.",
+        "baseRate": "Ungültiger Zinssatz (z. B. 1,27 oder -0,88)."
       },
       "newQuote": "Neues Angebot",
       "views": {
@@ -1042,6 +1052,12 @@
           "iban": "IBAN (Rechnungseinstellungen)",
           "dueOrTerms": "Fälligkeitsdatum"
         }
+      },
+      "dunningsTitle": "Mahnungen",
+      "dunningLevel": {
+        "1": "Zahlungserinnerung",
+        "2": "1. Mahnung",
+        "3": "2. Mahnung"
       }
     },
     "permissions": {
@@ -1341,6 +1357,40 @@
         "locked": "Bezahlte oder stornierte Rechnungen können nicht geändert werden.",
         "amountRequired": "Bitte mindestens einen Nettobetrag angeben.",
         "notEInvoice": "Die Datei ist keine E-Rechnung."
+      }
+    },
+    "dunning": {
+      "column": "Mahnung",
+      "created": "{level} erstellt; das Schreiben öffnet sich in einem neuen Tab.",
+      "levels": {
+        "1": "Zahlungserinnerung",
+        "2": "1. Mahnung",
+        "3": "2. Mahnung"
+      },
+      "create": {
+        "1": "Erinnerung senden",
+        "2": "1. Mahnung",
+        "3": "2. Mahnung"
+      },
+      "errors": {
+        "notDunnable": "Für diesen Beleg kann keine Mahnung erstellt werden.",
+        "notDue": "Derzeit ist keine weitere Mahnstufe fällig (Fälligkeit/Intervall).",
+        "notFound": "Mahnung nicht gefunden."
+      }
+    },
+    "paymentRun": {
+      "title": "Zahlungslauf (SEPA)",
+      "hint": "Für die ausgewählten Rechnungen wird eine SEPA-Überweisungsdatei (pain.001) zum Hochladen ins Online-Banking erstellt. Die Zahlung wird beim Kontoauszug-Import zugeordnet.",
+      "due": "fällig {date}",
+      "noIban": "IBAN fehlt/ungültig",
+      "executionDate": "Ausführungsdatum",
+      "download": "{count} Zahlungen · {total} — Datei herunterladen",
+      "done": "SEPA-Datei mit {count} Zahlungen heruntergeladen.",
+      "failed": "Datei konnte nicht erstellt werden.",
+      "errors": {
+        "input": "Ungültige Auswahl oder Datum (nicht in der Vergangenheit).",
+        "ownIban": "In den Rechnungseinstellungen ist keine gültige IBAN hinterlegt.",
+        "invalid": "Eine der ausgewählten Rechnungen kann nicht bezahlt werden (Status oder IBAN)."
       }
     }
   },
