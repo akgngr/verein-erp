@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.1.0",
+      "date": "2026-11-01",
+      "appVersion": "0.33.0",
+      "title": {
+        "tr": "Format eklentileri",
+        "de": "Format-Plugins"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Dosya formatı eklentileri: modüller formats.ts ile \"Dosyalarım\"a ve asistanın create_file aracına yeni format ekleyebilir (modül kapalıysa kullanılmaz; yerleşik formatlar ezilemez).",
+          "de": "Dateiformat-Plugins: Module können per formats.ts neue Formate für „Meine Dateien“ und das Assistenz-Werkzeug create_file bereitstellen (nur bei aktivem Modul; eingebaute Formate nicht überschreibbar)."
+        }
+      ]
+    },
+    {
       "version": "1.0.0",
       "date": "2026-10-31",
       "title": {
