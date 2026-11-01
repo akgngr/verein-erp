@@ -535,7 +535,7 @@
     "subject": "Betreff",
     "body": "Text",
     "placeholders": "Platzhalter:",
-    "defaultBody": "Hallo {firstName},\n\n\n\nViele Grüße\nDer Vorstand\n\n—\nSie erhalten diese E-Mail als Mitglied unseres Vereins. Wenn Sie keine Rundmails mehr erhalten möchten, antworten Sie bitte auf diese E-Mail.",
+    "defaultBody": "Hallo '{firstName}',\n\n\n\nViele Grüße\nDer Vorstand\n\n—\nSie erhalten diese E-Mail als Mitglied unseres Vereins. Wenn Sie keine Rundmails mehr erhalten möchten, antworten Sie bitte auf diese E-Mail.",
     "test": "Test an mich senden",
     "testSent": "Test-E-Mail an {to} gesendet.",
     "send": "An {count} Personen senden",
