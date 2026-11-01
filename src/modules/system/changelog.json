@@ -2,6 +2,26 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.29.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "Banka bağlantısı (PSD2)",
+        "de": "Bankverbindung (PSD2)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yeni Banka bağlantısı modülü (Ayarlar → Banka bağlantısı): lisanslı PSD2 sağlayıcısı GoCardless Bank Account Data ile banka seçip bankanın sayfasında onay verin; hesapları muhasebe hesaplarıyla eşleyin, hareketleri tek tıkla çekin. Hareketler Muhasebe → Banka eşleştirmesine düşer, fiş otomatik yazılmaz.",
+          "de": "Neues Modul Bankverbindung (Einstellungen → Bankverbindung): Bank über den lizenzierten PSD2-Anbieter GoCardless Bank Account Data wählen und auf der Bankseite freigeben; Konten zuordnen und Umsätze per Klick abrufen. Umsätze erscheinen im Abgleich unter Buchhaltung → Bank, es wird nichts automatisch gebucht."
+        },
+        {
+          "type": "security",
+          "tr": "Banka giriş bilgileri uygulamaya gelmez; erişim salt okunur, en fazla 90 gün. Sağlayıcı anahtarları şifreli; bağlantı kaldırılınca onay sağlayıcıda da iptal edilir.",
+          "de": "Bank-Zugangsdaten erreichen die Anwendung nie; nur lesender Zugriff, max. 90 Tage. Anbieter-Schlüssel verschlüsselt; beim Entfernen wird die Freigabe auch beim Anbieter widerrufen."
+        }
+      ]
+    },
+    {
       "version": "0.28.0",
       "date": "2026-11-01",
       "title": {

@@ -1,0 +1,57 @@
+enum BankConnectionStatus {
+  PENDING // banka onayı bekleniyor
+  LINKED // onaylandı, hesaplar okunabilir
+  EXPIRED // PSD2 onayı süresi doldu (genelde 90 gün) — yenilenmeli
+  ERROR
+}
+
+/// Lisanslı PSD2 sağlayıcısı (AISP) üzerinden banka bağlantısı. Banka giriş bilgileri ASLA burada
+/// tutulmaz; kullanıcı bankanın kendi sayfasında onay verir, biz yalnızca onay (requisition) kimliğini saklarız.
+model BankConnection {
+  id               String               @id @default(cuid())
+  provider         String // GOCARDLESS | MOCK
+  institutionId    String
+  institutionName  String
+  externalId       String?              @unique // sağlayıcıdaki onay (requisition) kimliği
+  reference        String               @unique // geri dönüş eşleştirmesi için tek kullanımlık rastgele değer
+  status           BankConnectionStatus @default(PENDING)
+  consentExpiresAt DateTime?
+  lastSyncAt       DateTime?
+  lastError        String?
+  createdById      String
+  createdByLabel   String
+  createdAt        DateTime             @default(now())
+  updatedAt        DateTime             @updatedAt
+
+  accounts BankConnectionAccount[]
+
+  @@map("banking_connections")
+}
+
+model BankConnectionAccount {
+  id                  String         @id @default(cuid())
+  connectionId        String
+  connection          BankConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  externalId          String // sağlayıcıdaki hesap kimliği
+  iban                String?
+  name                String?
+  currency            String         @default("EUR")
+  accountingAccountId String? // eşlenen muhasebe hesabı (Bank); boşsa senkronize edilmez
+  lastSyncAt          DateTime?
+  lastSyncCount       Int?
+  createdAt           DateTime       @default(now())
+
+  @@unique([connectionId, externalId])
+  @@map("banking_connection_accounts")
+}
+
+/// Sağlayıcı ayarları (tekil satır). Anahtarlar secret-box ile şifreli saklanır, ekrana geri yazılmaz.
+model BankingSettings {
+  id              String   @id @default("singleton")
+  provider        String   @default("GOCARDLESS")
+  secretIdSealed  String?
+  secretKeySealed String?
+  updatedAt       DateTime @updatedAt
+
+  @@map("banking_settings")
+}

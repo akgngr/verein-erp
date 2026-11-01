@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.11.0",
+      "date": "2026-11-01",
+      "appVersion": "0.29.0",
+      "title": {
+        "tr": "Banka bağlantısından hareket aktarımı",
+        "de": "Umsatzübernahme aus der Bankverbindung"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Banka ekstresi içe aktarma ortak servise ayrıldı; Banka bağlantısı modülünün çektiği hareketler aynı mükerrer kontrolü ve eşleştirme akışından geçer.",
+          "de": "Der Kontoauszugsimport ist ein gemeinsamer Dienst; Umsätze aus dem Modul Bankverbindung durchlaufen dieselbe Dublettenprüfung und denselben Abgleich."
+        }
+      ]
+    },
+    {
       "version": "1.10.0",
       "date": "2026-11-01",
       "title": {

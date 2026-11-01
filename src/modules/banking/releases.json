@@ -1,0 +1,26 @@
+{
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
+  "releases": [
+    {
+      "version": "1.0.0",
+      "date": "2026-11-01",
+      "appVersion": "0.29.0",
+      "title": {
+        "tr": "Banka bağlantısı (PSD2)",
+        "de": "Bankverbindung (PSD2)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Lisanslı PSD2 sağlayıcısı (GoCardless Bank Account Data) ile banka bağlama; hesap eşleme ve hareket çekme. Hareketler Muhasebe → Banka eşleştirmesine düşer.",
+          "de": "Bankverbindung über lizenzierten PSD2-Anbieter (GoCardless Bank Account Data); Kontozuordnung und Umsatzabruf. Umsätze erscheinen im Abgleich unter Buchhaltung → Bank."
+        },
+        {
+          "type": "security",
+          "tr": "Banka giriş bilgileri uygulamaya gelmez; erişim salt okunur ve 90 günle sınırlı. Sağlayıcı anahtarları şifreli saklanır; IBAN ekranda maskelenir.",
+          "de": "Bank-Zugangsdaten erreichen die Anwendung nie; Zugriff nur lesend, max. 90 Tage. Anbieter-Schlüssel verschlüsselt gespeichert; IBAN maskiert angezeigt."
+        }
+      ]
+    }
+  ]
+}
