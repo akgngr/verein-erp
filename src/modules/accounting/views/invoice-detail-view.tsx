@@ -167,7 +167,7 @@ export async function InvoiceDetailView({ id, searchParams }: { id: string; sear
         </div>
       </div>
       {editing ? (
-        <FormDrawer title={t("form.editTitle")}>
+        <FormDrawer size="4xl" title={t("form.editTitle")}>
           <InvoiceForm invoice={invoice} settings={settings} categoryOptions={categoryOptions} contacts={contacts} />
         </FormDrawer>
       ) : null}

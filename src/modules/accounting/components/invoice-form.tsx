@@ -168,24 +168,24 @@ export function InvoiceForm({
         <h3 className="text-small font-semibold text-foreground">{t("linesTitle")}</h3>
         <div className="flex flex-col gap-3">
           {fields.map((field, index) => (
-            <div key={field.id} className="grid grid-cols-12 items-start gap-2 rounded-medium border border-default-200 p-3">
-              <div className="col-span-12 sm:col-span-5">
+            <div key={field.id} className="grid grid-cols-12 items-start gap-x-3 gap-y-2 rounded-medium border border-default-200 p-3">
+              <div className="col-span-12">
                 <FormInput name={`lines.${index}.description`} label={t("lineDescription")} control={form.control} isRequired />
               </div>
-              <div className="col-span-4 sm:col-span-2">
+              <div className="col-span-6 sm:col-span-2">
                 <FormInput name={`lines.${index}.quantity`} label={t("quantity")} control={form.control} isRequired />
               </div>
-              <div className="col-span-4 sm:col-span-1">
+              <div className="col-span-6 sm:col-span-2">
                 <FormInput name={`lines.${index}.unit`} label={t("unit")} control={form.control} />
               </div>
-              <div className="col-span-4 sm:col-span-2">
+              <div className="col-span-6 sm:col-span-3">
                 <FormInput name={`lines.${index}.unitPrice`} label={t("unitPrice")} control={form.control} isRequired />
               </div>
-              <div className="col-span-8 sm:col-span-1">
+              <div className="col-span-6 sm:col-span-2">
                 <FormSelect name={`lines.${index}.taxRate`} label={t("taxRate")} control={form.control} options={taxOptions} />
               </div>
-              <div className="col-span-4 flex items-end justify-end gap-2 sm:col-span-1 sm:flex-col sm:items-end">
-                <span className="text-small font-medium">{euro(totals.lineTotals[index] ?? 0)}</span>
+              <div className="col-span-12 flex items-center justify-end gap-2 self-end sm:col-span-3 sm:h-10">
+                <span className="text-small font-semibold tabular-nums">{euro(totals.lineTotals[index] ?? 0)}</span>
                 <Button isIconOnly size="sm" variant="light" color="danger" aria-label={t("removeLine")} isDisabled={fields.length === 1} onPress={() => remove(index)}>
                   <Trash2 className="h-4 w-4" aria-hidden />
                 </Button>

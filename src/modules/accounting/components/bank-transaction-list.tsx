@@ -198,11 +198,12 @@ export function BankTransactionList({
                           <SelectItem key={rate}>{`${rate} %`}</SelectItem>
                         ))}
                       </Select>
-                      <Select id="bank-book-rule" label={t("modal.learn")} labelPlacement="outside" selectedKeys={[learnRule]} onSelectionChange={(keys) => setLearnRule((selectionKey(keys) || "NONE") as typeof learnRule)} description={t("modal.learnHint")}>
+                      <Select id="bank-book-rule" label={t("modal.learn")} labelPlacement="outside" selectedKeys={[learnRule]} onSelectionChange={(keys) => setLearnRule((selectionKey(keys) || "NONE") as typeof learnRule)}>
                         <SelectItem key="NONE">{t("modal.learnNone")}</SelectItem>
                         <SelectItem key="COUNTERPARTY">{t("modal.learnCounterparty")}</SelectItem>
                         <SelectItem key="PURPOSE">{t("modal.learnPurpose")}</SelectItem>
                       </Select>
+                      <p className="-mt-2 px-1 text-tiny text-default-500">{t("modal.learnHint")}</p>
                     </>
                   ) : selectedInvoice && remainder > 0 ? (
                     <Checkbox isSelected={closeRemainder} onValueChange={setCloseRemainder} size="sm">
