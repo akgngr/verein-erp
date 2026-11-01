@@ -86,3 +86,6 @@ export { applyAccountingPreset, ACCOUNTING_PRESETS, type OrganizationType } from
 // Banka bağlantısı (banking modülü) hareketleri aynı eşleştirme akışına buradan aktarır.
 export { importBankTransactions } from "./services/bank-import";
 export type { ParsedTransaction as BankTransactionInput } from "./services/bank-parsers";
+// Gelen faturalar kutusuna belge alma (e-posta içe aktarma da bunu kullanır).
+export { importPayableFile } from "./services/payable-import";
+export { PAYABLE_FILE_EXTENSIONS } from "./handlers/payable-files";

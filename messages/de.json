@@ -105,6 +105,7 @@
     "geriBildirim": "Feedback",
     "inventory": "Inventar",
     "mail": "E-Mail",
+    "gelenKutusu": "Posteingang",
     "toplantilar": "Sitzungen",
     "uyeler": "Mitglieder",
     "organization": "Vereinsdaten",
@@ -4005,7 +4006,8 @@
     },
     "menu": {
       "settings": "Einstellungen",
-      "logs": "Versandprotokoll"
+      "logs": "Versandprotokoll",
+      "inbox": "Posteingang"
     },
     "meta": {
       "settings": "E-Mail-Einstellungen",
@@ -4019,6 +4021,74 @@
       "mail": {
         "label": "E-Mail-Infrastruktur",
         "description": "SMTP-Einstellungen und E-Mail-Vorlagen."
+      },
+      "mailInbox": {
+        "label": "Posteingang",
+        "description": "Eingehende E-Mails ansehen; abrufen und Anhänge übernehmen (anlegen); IMAP-Einstellungen (bearbeiten); löschen."
+      }
+    },
+    "access": {
+      "accounting": "Übernimmt Rechnungs-/Belegdateien aus eingehenden E-Mails in den Belegeingang der Buchhaltung.",
+      "system": "Liest, ob das Buchhaltungsmodul aktiv ist (Übernahme nur dann möglich)."
+    },
+    "inbox": {
+      "title": "Posteingang",
+      "description": "Beleg-E-Mails (Rechnungen, Quittungen) per IMAP abrufen oder .eml-Datei hochladen; PDF/XML/Bild-Anhänge per Klick in den Belegeingang der Buchhaltung übernehmen. XRechnung/ZUGFeRD werden automatisch gelesen.",
+      "fetch": "E-Mails abrufen",
+      "uploadEml": ".eml hochladen",
+      "fetched": "{fetched} E-Mails gelesen, {created} neu.",
+      "emlImported": "E-Mail importiert ({attachments} Beleganhänge).",
+      "emlDuplicate": "Diese E-Mail wurde bereits importiert.",
+      "imported": "Als Entwurf in den Belegeingang übernommen.",
+      "importDuplicate": "Dieser Beleg ist bereits im Belegeingang; verknüpft.",
+      "importToAccounting": "In Buchhaltung übernehmen",
+      "importedChip": "Übernommen",
+      "accountingOff": "Das Buchhaltungsmodul ist deaktiviert; Anhänge können nicht übernommen werden.",
+      "empty": "Keine E-Mails in dieser Ansicht.",
+      "noSubject": "(kein Betreff)",
+      "filters": {
+        "NEW": "Neu",
+        "DONE": "Erledigt",
+        "ALL": "Alle"
+      },
+      "status": {
+        "NEW": "Neu",
+        "DONE": "Erledigt"
+      },
+      "markDone": "Als erledigt markieren",
+      "markNew": "Wieder als neu markieren",
+      "delete": "Löschen",
+      "deleteTitle": "E-Mail löschen?",
+      "deleteText": "E-Mail und gespeicherte Anhänge werden gelöscht. Bereits übernommene Belege und die E-Mail auf dem Server bleiben erhalten.",
+      "lastFetch": "Letzter Abruf: {date}",
+      "privacy": "Datenschutz: Der E-Mail-Text wird nicht gespeichert (nur Absender, Betreff, Datum, kurzer Auszug); nur Belegdateien (PDF, XML, JPG, PNG) werden gespeichert. Das Postfach wird nur lesend geöffnet, nichts wird gelöscht oder als gelesen markiert.",
+      "settings": {
+        "title": "IMAP-Einstellungen",
+        "host": "Server",
+        "port": "Port",
+        "security": "Sicherheit",
+        "securities": {
+          "SSL": "SSL/TLS",
+          "STARTTLS": "STARTTLS",
+          "NONE": "Keine (nicht empfohlen)"
+        },
+        "username": "Benutzername",
+        "password": "Passwort",
+        "passwordStored": "Gespeichert — zum Ändern neues Passwort eingeben",
+        "mailbox": "Ordner",
+        "mailboxHelp": "z. B. INBOX oder ein eigener Ordner „Belege“.",
+        "save": "Speichern",
+        "saved": "IMAP-Einstellungen gespeichert.",
+        "help": "Empfehlung: ein eigenes Postfach für Belege (z. B. belege@…). Das Passwort wird verschlüsselt gespeichert. Beim ersten Abruf die letzten 30 Tage, danach nur neue E-Mails (max. 100 pro Abruf)."
+      },
+      "errors": {
+        "notConfigured": "IMAP-Einstellungen unvollständig.",
+        "passwordUnreadable": "Gespeichertes Passwort nicht lesbar; bitte neu eingeben.",
+        "connectionFailed": "Verbindung zum Mailserver fehlgeschlagen oder Anmeldung abgelehnt.",
+        "encryptionKeyMissing": "Kein Verschlüsselungsschlüssel (AUTH_SECRET).",
+        "emlInvalid": "Keine gültige .eml-Datei.",
+        "accountingOff": "Das Buchhaltungsmodul ist deaktiviert.",
+        "notFound": "Nicht gefunden."
       }
     }
   },

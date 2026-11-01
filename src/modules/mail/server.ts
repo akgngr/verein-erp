@@ -13,3 +13,12 @@ export {
   sendTestMailAction,
 } from "./actions/mail-actions";
 export type { MailMessage, MailSendResult } from "./types";
+export { mailInboxPermissions } from "./permissions";
+export { uploadEmlHandler, downloadAttachmentHandler } from "./services/inbox-handlers";
+export {
+  saveInboxSettingsAction,
+  fetchInboxAction,
+  importAttachmentAction,
+  setInboxStatusAction,
+  deleteInboxMessageAction,
+} from "./actions/inbox-actions";

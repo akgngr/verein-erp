@@ -32,3 +32,59 @@ model MailLog {
   @@index([createdAt])
   @@map("mail_logs")
 }
+
+/// IMAP gelen kutusu ayarları (tekil). Şifre AES-GCM ile şifreli; ekrana geri gelmez.
+model MailInboxSettings {
+  id                String   @id @default("default")
+  host              String?
+  port              Int      @default(993)
+  security          String   @default("SSL") // SSL | STARTTLS | NONE
+  username          String?
+  passwordEncrypted String?
+  mailbox           String   @default("INBOX")
+  /// Son okunan UID ve klasörün UIDVALIDITY değeri (değişirse baştan okunur).
+  lastUid           Int?
+  uidValidity       String?
+  lastFetchAt       DateTime?
+  lastError         String?
+  updatedAt         DateTime @updatedAt
+
+  @@map("mail_inbox_settings")
+}
+
+/// İçe aktarılan e-posta. KVKK: yalnızca gönderen, konu, tarih ve kısa özet tutulur; gövde saklanmaz.
+model MailInboxMessage {
+  id          String              @id @default(cuid())
+  source      String // IMAP | EML
+  externalKey String              @unique // IMAP: "<uidValidity>:<uid>", EML: sha256
+  messageId   String?
+  fromAddress String?
+  fromName    String?
+  subject     String
+  receivedAt  DateTime
+  snippet     String?
+  status      String              @default("NEW") // NEW | DONE
+  createdAt   DateTime            @default(now())
+
+  attachments MailInboxAttachment[]
+
+  @@index([status, receivedAt])
+  @@map("mail_inbox_messages")
+}
+
+model MailInboxAttachment {
+  id          String           @id @default(cuid())
+  messageId   String
+  message     MailInboxMessage @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  fileName    String
+  mimeType    String
+  extension   String
+  size        Int
+  storagePath String
+  /// Aktarıldığı kayıt, ör. "accounting.payable:<id>"
+  importedTo  String?
+  importedAt  DateTime?
+
+  @@index([messageId])
+  @@map("mail_inbox_attachments")
+}
