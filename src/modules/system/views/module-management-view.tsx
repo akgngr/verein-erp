@@ -3,6 +3,8 @@ import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { can } from "@/shared/permissions/define";
 import { systemPermissions } from "@/shared/permissions/system";
+import { PackagePlus } from "lucide-react";
+import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
 import { ModuleList } from "../components/module-list";
@@ -27,6 +29,14 @@ export async function ModuleManagementView() {
       <PageHeader
         title={t("title")}
         description={t("subtitle")}
+        actions={
+          <Link
+            href="/ayarlar/moduller/paketler"
+            className="inline-flex h-10 items-center gap-2 rounded-medium bg-primary px-4 text-small font-medium text-primary-foreground hover:opacity-90"
+          >
+            <PackagePlus size={16} aria-hidden /> {t("installModule")}
+          </Link>
+        }
       />
 
       <ModuleList

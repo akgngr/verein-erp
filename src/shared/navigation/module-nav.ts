@@ -75,14 +75,19 @@ export function findActiveModule(
   searchParams?: URLSearchParams,
 ): ModuleConfig | undefined {
   let best: { mod: ModuleConfig; score: number } | undefined;
+  // Eşit özgüllükte: kendi alt menüsü olan sahibi (nav) > başka modülün menüsündeki bağlantı > menüsüz sahip.
+  // Böylece Öğrenciler kendi menüsünü, menüsüz Öğrenci takibi ise onu bağlayan Kurslar menüsünü gösterir.
   for (const mod of modules) {
+    const ownerBonus = hasModuleMenu(mod) ? 2 : 0;
     const hrefs = [
-      ...mod.nav.map((item) => item.href),
-      ...(mod.menu ?? []).filter((item) => !item.isDownload).map((item) => item.href),
+      ...mod.nav.map((item) => ({ href: item.href, bonus: ownerBonus })),
+      ...(mod.menu ?? []).filter((item) => !item.isDownload).map((item) => ({ href: item.href, bonus: 1 })),
     ];
-    for (const href of hrefs) {
-      const score = matchScore(href, pathname, searchParams);
-      if (score >= 0 && (!best || score > best.score)) best = { mod, score };
+    for (const { href, bonus } of hrefs) {
+      const raw = matchScore(href, pathname, searchParams);
+      if (raw < 0) continue;
+      const score = raw * 10 + bonus;
+      if (!best || score > best.score) best = { mod, score };
     }
   }
   return best?.mod;

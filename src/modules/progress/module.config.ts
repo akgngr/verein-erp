@@ -8,7 +8,7 @@ import { progressPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "progress",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.0.0",
+  version: "1.0.1",
   label: "Öğrenci takibi",
   description: "Kurs öğrencilerinin yoklaması, sınav ve notları, gelişim notları ve veli raporu.",
   category: "OFFICIAL",
@@ -27,6 +27,8 @@ export const moduleConfig: ModuleConfig = {
       group: "main",
       order: 29,
       permission: { definition: progressPermissions, action: "view" },
+      // Ana menüde değil, Kurslar menüsünde gösterilir (kurslarla ilişkili; menü kalabalığı olmasın).
+      hidden: true,
     },
   ],
 };

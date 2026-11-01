@@ -2,6 +2,41 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.34.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "Menü düzeni",
+        "de": "Menüaufräumung"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Öğrenciler ana menüde değil, Kurslar menüsünde.",
+          "de": "Schüler erscheinen nicht mehr im Hauptmenü, sondern im Menü Kurse."
+        },
+        {
+          "type": "improvement",
+          "tr": "Öğrenci takibi ana menüde değil, Kurslar menüsünde.",
+          "de": "Lernfortschritt erscheint im Menü Kurse statt im Hauptmenü."
+        },
+        {
+          "type": "improvement",
+          "tr": "Kurslar menüsüne Öğrenciler ve Öğrenci takibi bağlantıları eklendi (modül kapalıysa gizlenir).",
+          "de": "Kursmenü enthält Schüler und Lernfortschritt (ausgeblendet, wenn das Modul deaktiviert ist)."
+        },
+        {
+          "type": "improvement",
+          "tr": "Modül paketleri ayrı menüde değil; Modül Yönetimi'ndeki \"Yeni modül kur\" butonundan açılır. Menü öğeleri gizlenebilir (hidden) ve başka modülün sayfasına bağlanabilir (module).",
+          "de": "Modulpakete ohne eigenen Menüeintrag; erreichbar über „Neues Modul installieren“ in der Modulverwaltung. Menüeinträge können ausgeblendet (hidden) und mit Seiten anderer Module verknüpft werden (module)."
+        },
+        {
+          "type": "improvement",
+          "tr": "Dosyalarım artık çekirdek (CORE) modül: kapatılamaz, her zaman kullanılabilir.",
+          "de": "Meine Dateien ist jetzt ein Kernmodul (CORE): nicht deaktivierbar, immer verfügbar."
+        }
+      ]
+    },
+    {
       "version": "0.33.0",
       "date": "2026-11-01",
       "title": {

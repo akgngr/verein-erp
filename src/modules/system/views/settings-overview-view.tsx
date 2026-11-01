@@ -32,7 +32,7 @@ export async function SettingsOverviewView() {
   const general = modules
     .flatMap((mod) =>
       mod.nav
-        .filter((item) => item.group === "settings" && item.href !== HUB_HREF)
+        .filter((item) => item.group === "settings" && !item.hidden && item.href !== HUB_HREF)
         .filter((item) => can(user.role, item.permission.definition, item.permission.action))
         .map((item) => ({ mod, item })),
     )

@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.9.0",
+      "date": "2026-11-01",
+      "appVersion": "0.34.0",
+      "title": {
+        "tr": "Yeni modül kur",
+        "de": "Neues Modul installieren"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Modül paketleri ayrı menüde değil; Modül Yönetimi'ndeki \"Yeni modül kur\" butonundan açılır. Menü öğeleri gizlenebilir (hidden) ve başka modülün sayfasına bağlanabilir (module).",
+          "de": "Modulpakete ohne eigenen Menüeintrag; erreichbar über „Neues Modul installieren“ in der Modulverwaltung. Menüeinträge können ausgeblendet (hidden) und mit Seiten anderer Module verknüpft werden (module)."
+        }
+      ]
+    },
+    {
       "version": "1.8.0",
       "date": "2026-11-01",
       "appVersion": "0.33.0",
