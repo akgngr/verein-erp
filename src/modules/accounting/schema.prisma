@@ -264,8 +264,9 @@ model AccountingInvoice {
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
 
-  lines    AccountingInvoiceLine[]
-  payments AccountingInvoicePayment[]
+  lines     AccountingInvoiceLine[]
+  payments  AccountingInvoicePayment[]
+  dunnings  AccountingDunning[]
 
   @@unique([kind, year, sequence])
   @@index([status])
@@ -301,6 +302,13 @@ model AccountingInvoiceSettings {
   sellerVatId       String?
   iban              String?
   bic               String?
+  /// ACC-6 ihtar: kademe aralığı (gün), kademe ücretleri (cent), Basiszinssatz (% — Bundesbank'ın ilan ettiği güncel değer), B2B 40 € götürü.
+  dunningIntervalDays Int     @default(14)
+  dunningFeeReminder  Int     @default(0)
+  dunningFeeFirst     Int     @default(500)
+  dunningFeeSecond    Int     @default(1000)
+  baseInterestRate    Decimal @default(0) @db.Decimal(5, 2)
+  dunningFlatFeeB2B   Boolean @default(false)
   updatedAt         DateTime @updatedAt
 }
 
@@ -458,4 +466,25 @@ model AccountingPayable {
 
   @@index([status, dueDate])
   @@index([sha256])
+}
+
+/// ACC-6: gönderilmiş ihtar (Zahlungserinnerung / Mahnung). Faturayı değiştirmez; ücret ve faiz mektupta talep edilir.
+model AccountingDunning {
+  id             String            @id @default(cuid())
+  invoiceId      String
+  invoice        AccountingInvoice @relation(fields: [invoiceId], references: [id], onDelete: Restrict)
+  level          Int
+  dunningDate    DateTime          @db.Date
+  newDueDate     DateTime          @db.Date
+  openCents      Int
+  feeCents       Int
+  interestCents  Int
+  interestRate   Decimal           @db.Decimal(5, 2)
+  flatFeeCents   Int               @default(0)
+  createdById    String
+  createdByLabel String
+  createdAt      DateTime          @default(now())
+
+  @@unique([invoiceId, level])
+  @@index([dunningDate])
 }

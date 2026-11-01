@@ -979,7 +979,16 @@
         "sellerVatId": "USt-IdNr.",
         "iban": "IBAN",
         "bic": "BIC",
-        "xrechnungHint": "XRechnung (e-fatura) için IBAN ve USt-IdNr. ya da kurum profilindeki vergi numarası gerekir."
+        "xrechnungHint": "XRechnung (e-fatura) için IBAN ve USt-IdNr. ya da kurum profilindeki vergi numarası gerekir.",
+        "dunningTitle": "İhtar",
+        "dunningIntervalDays": "Kademe aralığı (gün)",
+        "dunningFeeReminder": "Hatırlatma ücreti (€)",
+        "dunningFeeFirst": "1. ihtar ücreti (€)",
+        "dunningFeeSecond": "2. ihtar ücreti (€)",
+        "baseInterestRate": "Basiszinssatz (%)",
+        "dunningFlatFeeB2B": "B2B'de 40 € gecikme götürü bedeli",
+        "dunningFlatFeeB2BHint": "§ 288 Abs. 5 BGB; alıcının USt-IdNr.'si varsa işletme sayılır.",
+        "dunningHint": "Gecikme faizi 1. ihtardan itibaren: tüketici Basiszinssatz + 5, işletme + 9 yüzde puanı. Basiszinssatz Bundesbank tarafından her 1 Ocak ve 1 Temmuz'da ilan edilir; burada güncel tutun."
       },
       "errors": {
         "notFound": "Fatura bulunamadı.",
@@ -1000,7 +1009,8 @@
         "reason": "Gerekçe en az 3 karakter olmalı.",
         "paymentDays": "Gün sayısı girin.",
         "iban": "Geçersiz IBAN.",
-        "bic": "Geçersiz BIC."
+        "bic": "Geçersiz BIC.",
+        "baseRate": "Geçersiz oran (ör. 1,27 veya -0,88)."
       },
       "newQuote": "Yeni teklif",
       "views": {
@@ -1042,6 +1052,12 @@
           "iban": "IBAN (Fatura ayarları)",
           "dueOrTerms": "vade tarihi"
         }
+      },
+      "dunningsTitle": "İhtarlar",
+      "dunningLevel": {
+        "1": "Ödeme hatırlatması",
+        "2": "1. ihtar",
+        "3": "2. ihtar"
       }
     },
     "permissions": {
@@ -1341,6 +1357,40 @@
         "locked": "Ödenmiş veya iptal edilmiş fatura değiştirilemez.",
         "amountRequired": "En az bir net tutar girin.",
         "notEInvoice": "Dosya e-fatura değil."
+      }
+    },
+    "dunning": {
+      "column": "İhtar",
+      "created": "{level} oluşturuldu; mektup yeni sekmede açılıyor.",
+      "levels": {
+        "1": "Ödeme hatırlatması",
+        "2": "1. ihtar",
+        "3": "2. ihtar"
+      },
+      "create": {
+        "1": "Hatırlatma gönder",
+        "2": "1. ihtar",
+        "3": "2. ihtar"
+      },
+      "errors": {
+        "notDunnable": "Bu belge için ihtar oluşturulamaz.",
+        "notDue": "Şu an yeni bir ihtar kademesi önerilmiyor (vade/aralık).",
+        "notFound": "İhtar bulunamadı."
+      }
+    },
+    "paymentRun": {
+      "title": "Ödeme listesi (SEPA)",
+      "hint": "Seçili faturalar için bankanıza yükleyeceğiniz SEPA havale dosyası (pain.001) oluşturulur. Ödeme, banka ekstresi içe aktarılınca eşleştirilir.",
+      "due": "vade {date}",
+      "noIban": "IBAN eksik/geçersiz",
+      "executionDate": "Ödeme tarihi",
+      "download": "{count} ödeme · {total} — dosyayı indir",
+      "done": "{count} ödemelik SEPA dosyası indirildi.",
+      "failed": "Dosya oluşturulamadı.",
+      "errors": {
+        "input": "Geçersiz seçim veya tarih (bugünden önce olamaz).",
+        "ownIban": "Fatura ayarlarında geçerli bir IBAN yok.",
+        "invalid": "Seçilen faturalardan biri ödenemez (durum veya IBAN)."
       }
     }
   },

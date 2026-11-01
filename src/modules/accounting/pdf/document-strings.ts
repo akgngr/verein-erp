@@ -41,6 +41,17 @@ export type DocumentStrings = {
   truncated: (max: number) => string;
   /** Fatura */
   invoiceTitle: string;
+  /** ACC-6 ihtar mektubu */
+  dunningTitles: [string, string, string];
+  dunningSalutation: string;
+  dunningIntro: (number: string, date: string) => string;
+  dunningInvoiceOpen: string;
+  dunningFee: string;
+  dunningInterest: (rate: string, from: string) => string;
+  dunningFlatFee: string;
+  dunningTotal: string;
+  dunningPayBy: (date: string) => string;
+  dunningAlreadyPaid: string;
   proformaTitle: string;
   quoteTitle: string;
   quoteNumber: string;
@@ -111,6 +122,16 @@ export const DOCUMENT_STRINGS: { de: DocumentStrings; tr: DocumentStrings } = {
     balance: "Überschuss / Fehlbetrag",
     truncated: (max) => `Hinweis: Nur die ersten ${max} Buchungen sind enthalten.`,
     invoiceTitle: "RECHNUNG",
+    dunningTitles: ["ZAHLUNGSERINNERUNG", "1. MAHNUNG", "2. MAHNUNG"],
+    dunningSalutation: "Sehr geehrte Damen und Herren,",
+    dunningIntro: (number, date) => `sicher ist es Ihrer Aufmerksamkeit entgangen: Unsere Rechnung ${number} vom ${date} ist noch nicht (vollständig) beglichen.`,
+    dunningInvoiceOpen: "Offener Rechnungsbetrag",
+    dunningFee: "Mahngebühr",
+    dunningInterest: (rate, from) => `Verzugszinsen ${rate} % p. a. (§ 288 BGB) seit ${from}`,
+    dunningFlatFee: "Verzugspauschale (§ 288 Abs. 5 BGB)",
+    dunningTotal: "Zu zahlender Betrag",
+    dunningPayBy: (date) => `Bitte überweisen Sie den Betrag bis zum ${date} unter Angabe der Rechnungsnummer.`,
+    dunningAlreadyPaid: "Sollten Sie die Zahlung bereits veranlasst haben, betrachten Sie dieses Schreiben bitte als gegenstandslos.",
     proformaTitle: "PROFORMA-RECHNUNG",
     quoteTitle: "ANGEBOT",
     quoteNumber: "Angebots-Nr.",
@@ -179,6 +200,16 @@ export const DOCUMENT_STRINGS: { de: DocumentStrings; tr: DocumentStrings } = {
     balance: "Fazla / eksik",
     truncated: (max) => `Not: Yalnızca ilk ${max} fiş listelenmiştir.`,
     invoiceTitle: "FATURA (RECHNUNG)",
+    dunningTitles: ["ÖDEME HATIRLATMASI", "1. İHTAR", "2. İHTAR"],
+    dunningSalutation: "Sayın ilgili,",
+    dunningIntro: (number, date) => `${date} tarihli ${number} numaralı faturamız henüz (tamamen) ödenmemiştir.`,
+    dunningInvoiceOpen: "Açık fatura tutarı",
+    dunningFee: "İhtar ücreti",
+    dunningInterest: (rate, from) => `Gecikme faizi yıllık %${rate} (§ 288 BGB), ${from} tarihinden itibaren`,
+    dunningFlatFee: "Gecikme götürü bedeli (§ 288 Abs. 5 BGB)",
+    dunningTotal: "Ödenecek tutar",
+    dunningPayBy: (date) => `Lütfen tutarı fatura numarasını belirterek ${date} tarihine kadar havale ediniz.`,
+    dunningAlreadyPaid: "Ödemeyi zaten yaptıysanız bu yazıyı dikkate almayınız.",
     proformaTitle: "PROFORMA FATURA",
     quoteTitle: "TEKLİF (ANGEBOT)",
     quoteNumber: "Teklif No.",

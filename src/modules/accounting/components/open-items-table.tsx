@@ -3,13 +3,15 @@ import Link from "next/link";
 
 import type { OpenItemRow } from "../queries/invoices";
 import { AGING_BUCKETS } from "../services/invoice-payments";
+import { DunningButton } from "./dunning-button";
 
 const euro = (cents: number) => (cents / 100).toLocaleString("de-DE", { style: "currency", currency: "EUR" });
 const day = (date: Date) => date.toISOString().slice(0, 10).split("-").reverse().join(".");
 
 /** ACC-3 OPOS: yaşlandırma özeti + açık kalem listesi (vadeye göre). */
-export async function OpenItemsTable({ rows }: { rows: OpenItemRow[] }) {
+export async function OpenItemsTable({ rows, canDun = false }: { rows: OpenItemRow[]; canDun?: boolean }) {
   const t = await getTranslations("accounting.invoices.opos");
+  const tDunning = await getTranslations("accounting.dunning");
   const totals = AGING_BUCKETS.map((bucket) => ({ bucket, cents: rows.filter((row) => row.bucket === bucket).reduce((sum, row) => sum + row.openCents, 0) }));
   const total = rows.reduce((sum, row) => sum + row.openCents, 0);
   return (
@@ -37,6 +39,7 @@ export async function OpenItemsTable({ rows }: { rows: OpenItemRow[] }) {
                 <th className="p-3 text-right">{t("days")}</th>
                 <th className="p-3 text-right">{t("gross")}</th>
                 <th className="p-3 text-right">{t("open")}</th>
+                <th className="p-3">{tDunning("column")}</th>
               </tr>
             </thead>
             <tbody>
@@ -52,6 +55,12 @@ export async function OpenItemsTable({ rows }: { rows: OpenItemRow[] }) {
                   <td className={`p-3 text-right tabular-nums ${row.daysOverdue > 30 ? "text-danger" : row.daysOverdue > 0 ? "text-warning-600" : ""}`}>{row.daysOverdue || "—"}</td>
                   <td className="p-3 text-right tabular-nums">{euro(row.grossCents)}</td>
                   <td className="p-3 text-right font-semibold tabular-nums">{euro(row.openCents)}</td>
+                  <td className="p-3">
+                    <div className="flex flex-wrap items-center gap-2">
+                      {row.lastDunningLevel ? <span className="text-tiny text-default-500">{tDunning(`levels.${row.lastDunningLevel}`)}</span> : null}
+                      {canDun && row.nextDunningLevel ? <DunningButton invoiceId={row.id} level={row.nextDunningLevel} /> : null}
+                    </div>
+                  </td>
                 </tr>
               ))}
             </tbody>
