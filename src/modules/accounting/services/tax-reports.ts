@@ -91,7 +91,10 @@ export function buildDatevBookingsCsv(rows: TaxBookingRow[], options: DatevOptio
 }
 
 /** EXTF Kontenbeschriftungen (Datenkategorie 20, Formatversion 2). */
-export function buildDatevAccountLabelsCsv(labels: Array<{ number: string; name: string }>, options: Omit<DatevOptions, "useTaxKeys" | "label">): Uint8Array {
+export type AccountLabel = { number: string; name: string };
+export type DatevLabelOptions = Omit<DatevOptions, "useTaxKeys" | "label">;
+
+export function buildDatevAccountLabelsCsv(labels: AccountLabel[], options: DatevLabelOptions): Uint8Array {
   const header = [
     '"EXTF"', "700", "20", '"Kontenbeschriftungen"', "2", datevTimestamp(options.now ?? new Date()), "", '"RE"', '""', '""',
     options.consultantNo, options.clientNo, datevDate(options.fiscalYearStart), String(options.accountLength),
