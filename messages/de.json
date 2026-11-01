@@ -6335,5 +6335,17 @@
         "inUse": "Dieser Rolle sind Benutzer zugewiesen; weisen Sie ihnen zuerst eine andere Rolle zu."
       }
     }
+  },
+  "automation": {
+    "module": {
+      "label": "Automatisierung",
+      "description": "Dauerhafte Hintergrundaufgaben und Arbeitsabläufe."
+    },
+    "permissions": {
+      "automation": {
+        "label": "Automatisierung",
+        "description": "Hintergrundaufgaben und Arbeitsabläufe anzeigen und verwalten."
+      }
+    }
   }
 }
