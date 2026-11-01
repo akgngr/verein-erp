@@ -2,6 +2,21 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.22.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "ZUGFeRD / Factur-X e-fatura PDF'i",
+        "de": "ZUGFeRD-/Factur-X-PDF"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Kesinleşmiş faturalar için ZUGFeRD-PDF: normal fatura PDF'i + gömülü CII XML (Factur-X, profil EN 16931), PDF/A-3 meta verisi. Alıcı PDF olarak okur, yazılımı XML'i otomatik işler.",
+          "de": "ZUGFeRD-PDF für gestellte Rechnungen: normales Rechnungs-PDF mit eingebettetem CII-XML (Factur-X, Profil EN 16931) und PDF/A-3-Metadaten. Empfänger lesen das PDF, ihre Software verarbeitet das XML automatisch."
+        }
+      ]
+    },
+    {
       "version": "0.21.0",
       "date": "2026-11-01",
       "title": {

@@ -1051,7 +1051,8 @@
           "buyerAddress": "alıcı adresi (PLZ ve şehir)",
           "iban": "IBAN (Fatura ayarları)",
           "dueOrTerms": "vade tarihi"
-        }
+        },
+        "zugferd": "ZUGFeRD-PDF"
       },
       "dunningsTitle": "İhtarlar",
       "dunningLevel": {

@@ -15,6 +15,7 @@ export const moduleConfig: ModuleConfig = {
     { module: "members", operations: ["read"] },
     { module: "organization", operations: ["read"] },
   ],
+  dependencies: { "pdf-lib": "1.17.1" },
   nav: [
     {
       href: "/muhasebe",
