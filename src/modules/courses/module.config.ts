@@ -1,14 +1,14 @@
-import { BookOpen, Coins, Presentation, Settings2 } from "lucide-react";
+import { BookOpen, Coins, HandCoins, Presentation, Settings2 } from "lucide-react";
 
 import type { ModuleConfig } from "@/shared/types/module";
 
-import { courseFeesPermissions, coursesPermissions, courseTeachersPermissions } from "./permissions";
+import { courseFeesPermissions, coursePayoutsPermissions, coursesPermissions, courseTeachersPermissions } from "./permissions";
 
 /** label/description yalnızca yedektir; görünen adlar messages/<dil>.json'dan gelir. */
 export const moduleConfig: ModuleConfig = {
   key: "courses",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.0.0",
+  version: "1.1.0",
   label: "Kurslar",
   description: "Gönüllü kurslar ve Nachhilfe: öğretmenler, dersler, kayıtlar, ücretler ve muhasebe aktarımı.",
   category: "OFFICIAL",
@@ -17,6 +17,7 @@ export const moduleConfig: ModuleConfig = {
   access: [
     { module: "accounting", operations: ["read", "write"] },
     { module: "mail", operations: ["read", "write"] },
+    { module: "organization", operations: ["read"] },
     { module: "students", operations: ["read"] },
     { module: "users", operations: ["read", "write"] },
   ],
@@ -47,6 +48,13 @@ export const moduleConfig: ModuleConfig = {
       href: "/kurslar/odemeler",
       icon: Coins,
       permission: { definition: courseFeesPermissions, action: "view" },
+    },
+    {
+      key: "payouts",
+      label: "Öğretmen hakedişleri",
+      href: "/kurslar/hakedisler",
+      icon: HandCoins,
+      permission: { definition: coursePayoutsPermissions, action: "view" },
     },
     {
       key: "settings",

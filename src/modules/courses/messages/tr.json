@@ -9,7 +9,8 @@
   "menu": {
     "teachers": "Öğretmenler",
     "fees": "Ücretler ve tahsilat",
-    "settings": "Ayarlar"
+    "settings": "Ayarlar",
+    "payouts": "Öğretmen hakedişleri"
   },
   "meta": {
     "list": "Kurslar",
@@ -231,7 +232,23 @@
     "done": "Tamam",
     "createTitle": "Yeni öğretmen",
     "createDescription": "Gönüllü ya da ücretli eğitmen.",
-    "editTitle": "Öğretmeni düzenle"
+    "editTitle": "Öğretmeni düzenle",
+    "compensation": "Ücret türü",
+    "compensations": {
+      "NONE": "Ücretsiz / gönüllü",
+      "HONORAR": "Serbest (Honorar)",
+      "UEBUNGSLEITER": "Übungsleiter (§ 3 Nr. 26 EStG)",
+      "EHRENAMT": "Ehrenamt (§ 3 Nr. 26a EStG)"
+    },
+    "rate": "Ücret (€)",
+    "rateUnit": "Birim",
+    "rateUnits": {
+      "HOUR": "Saat başı",
+      "SESSION": "Ders başı"
+    },
+    "paymentProfileOk": "Ödeme bilgileri (IBAN vb.) öğretmenin kendi profilinden alınır — kayıtlı.",
+    "paymentProfileMissing": "Öğretmenin profilinde IBAN yok; öğretmen Profil sayfasından girmeli.",
+    "paymentProfileNoAccount": "Ödeme bilgileri öğretmenin kullanıcı profilinden gelir; hesabı yoksa davet edin."
   },
   "invite": {
     "title": "Öğretmen hesabı açıldı",
@@ -272,7 +289,14 @@
     "incomeCategory": "Gelir kategorisi",
     "chooseCategory": "Kategori seçin…",
     "incomeCategoryHelp": "Kurs ücretleri bu kategoriye gelir olarak yazılır (genellikle Zweckbetrieb). Kasa ve banka hesabı muhasebe ayarlarından gelir.",
-    "saved": "Ayarlar kaydedildi."
+    "saved": "Ayarlar kaydedildi.",
+    "payoutTitle": "Öğretmen hakedişleri",
+    "payoutCategory": "Hakediş gider kategorisi",
+    "payoutCategoryHelp": "Ödenen hakedişler bu gider kategorisine, banka hesabından yazılır.",
+    "defaultSessionMinutes": "Varsayılan ders süresi (dk)",
+    "uebungsleiterLimit": "Übungsleiter yıllık sınır (€)",
+    "ehrenamtLimit": "Ehrenamt yıllık sınır (€)",
+    "limitsHelp": "§ 3 Nr. 26 ve 26a EStG yıllık muafiyet sınırları; aşan hakedişler listede uyarıyla gösterilir. Varsayılanlar 3.300 € / 960 € — güncel yasaya göre kontrol edin."
   },
   "errors": {
     "notFound": "Kurs bulunamadı.",
@@ -309,7 +333,9 @@
     "reasonMin": "Gerekçe en az 5 karakter olmalıdır.",
     "firstNameRequired": "Ad zorunludur.",
     "lastNameRequired": "Soyad zorunludur.",
-    "emailForInvite": "Davet için e-posta zorunludur."
+    "emailForInvite": "Davet için e-posta zorunludur.",
+    "rateInvalid": "Geçerli bir tutar girin (ör. 25,50).",
+    "rateRequired": "Ücretli türde tutar zorunlu."
   },
   "cards": {
     "overview": {
@@ -335,10 +361,11 @@
     }
   },
   "access": {
-    "accounting": "Kurs ücreti tahsilatlarını gelir fişi olarak yazar ve geri alır; kasa/banka hesaplarını ve gelir kategorilerini okur.",
+    "accounting": "Kurs ücreti tahsilatlarını gelir fişi olarak yazar ve geri alır; kasa/banka hesaplarını ve gelir kategorilerini okur. Ödenen öğretmen hakedişlerini gider fişi olarak yazar.",
     "mail": "Öğretmen davet e-postası gönderir.",
     "students": "Kursa kaydedilecek öğrencileri ve ödeme sorumlularını okur.",
-    "users": "Davet edilen öğretmen için Öğretmen rolünde kullanıcı hesabı açar; hesabı olan öğretmenin ad ve e-postasını kullanıcı kaydından okur."
+    "users": "Davet edilen öğretmen için Öğretmen rolünde kullanıcı hesabı açar; hesabı olan öğretmenin ad ve e-postasını kullanıcı kaydından okur.",
+    "organization": "Öğretmen hakediş PDF'inin antetinde dernek bilgilerini ve logosunu okur."
   },
   "ai": {
     "create": {
@@ -383,6 +410,74 @@
     "coursesAll": {
       "label": "Tüm kurslar",
       "description": "Kapalıysa kullanıcı yalnızca öğretmeni olduğu kursları, derslerini ve öğrenci takibini görür."
+    },
+    "coursePayouts": {
+      "label": "Öğretmen hakedişleri",
+      "description": "Hakediş görme; hesaplama/ödeme (oluştur/güncelle/sil); onay (onayla). Öğretmen yalnızca kendi kayıtlarını görür."
+    },
+    "coursePayoutsAll": {
+      "label": "Tüm öğretmenlerin hakedişleri (kapsam)",
+      "description": "Kapalıysa kullanıcı yalnızca kendi hakedişlerini görür."
+    }
+  },
+  "payouts": {
+    "title": "Öğretmen hakedişleri",
+    "description": "Dönemin yapılan derslerinden öğretmen ücretlerini hesaplayın, onaylayın (Gutschrift numarası) ve ödendi olarak işaretleyin (muhasebeye gider fişi).",
+    "descriptionOwn": "Kendi hakedişleriniz. Ödeme bilgileriniz Profil sayfanızdan alınır.",
+    "ownProfileMissing": "Profilinizde IBAN yok. Ödeme alabilmek için sağ üstten Profil sayfasında banka bilgilerinizi girin.",
+    "period": "Dönem",
+    "generate": "Hesapla",
+    "generated": "{created} yeni, {updated} güncellendi, {skipped} onaylı olduğu için atlandı.",
+    "empty": "Bu dönem için hakediş yok. Ücretli öğretmenler ve yapılan dersler varsa \"Hesapla\"ya basın.",
+    "columns": {
+      "teacher": "Öğretmen",
+      "type": "Tür",
+      "sessions": "Ders",
+      "amount": "Tutar",
+      "status": "Durum",
+      "actions": "İşlemler"
+    },
+    "compensations": {
+      "NONE": "—",
+      "HONORAR": "Honorar",
+      "UEBUNGSLEITER": "Übungsleiter",
+      "EHRENAMT": "Ehrenamt"
+    },
+    "status": {
+      "DRAFT": "Taslak",
+      "APPROVED": "Onaylandı",
+      "PAID": "Ödendi",
+      "CANCELLED": "İptal"
+    },
+    "hours": "{hours} saat",
+    "noNumber": "Numara onayda verilir",
+    "noProfile": "Profilde IBAN yok",
+    "limitExceeded": "Yıllık muafiyet sınırı aşıldı",
+    "pdf": "PDF",
+    "approve": "Onayla",
+    "approved": "Onaylandı: {number}",
+    "markPaid": "Ödendi",
+    "markPaidTitle": "Ödendi olarak işaretle",
+    "markPaidText": "{name} için {amount} banka hesabından gider olarak yazılacak.",
+    "paidAt": "Ödeme tarihi",
+    "paid": "Gider fişi: {bookingNumber}",
+    "delete": "Sil",
+    "cancel": "İptal et",
+    "deleteTitle": "Taslak silinsin mi?",
+    "cancelTitle": "Hakediş iptal edilsin mi?",
+    "cancelText": "Hakediş iptal edilir; numarası korunur.",
+    "cancelPaidText": "Ödenmiş hakediş iptal edilir ve gider fişi ters kayıtla geri alınır.",
+    "reason": "Gerekçe",
+    "cancelled": "İşlem tamamlandı.",
+    "close": "Kapat",
+    "errors": {
+      "notDraft": "Yalnızca taslak onaylanabilir.",
+      "notApproved": "Yalnızca onaylı hakediş ödenebilir.",
+      "notFound": "Hakediş bulunamadı.",
+      "categoryMissing": "Önce Kurslar → Ayarlar'da hakediş gider kategorisini seçin.",
+      "period": "Geçersiz dönem.",
+      "date": "Geçersiz tarih.",
+      "reason": "Gerekçe en az 3 karakter olmalı."
     }
   }
 }

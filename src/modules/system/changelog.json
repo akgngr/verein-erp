@@ -2,6 +2,36 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.30.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "Öğretmen ücretleri ve hakedişler",
+        "de": "Lehrkräfte-Vergütung und Honorarabrechnungen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Öğretmen ücretleri: öğretmene ücret türü (Honorar, Übungsleiter § 3 Nr. 26, Ehrenamt § 3 Nr. 26a) ve saat/ders başı ücret tanımlanır.",
+          "de": "Vergütung von Lehrkräften: Vergütungsart (Honorar, Übungsleiter § 3 Nr. 26, Ehrenamt § 3 Nr. 26a) und Satz pro Stunde/Unterrichtseinheit."
+        },
+        {
+          "type": "feature",
+          "tr": "Aylık öğretmen hakedişleri (Kurslar → Öğretmen hakedişleri): yapılan derslerden hesaplama, onay (HA-numaralı Gutschrift PDF'i, öğretmenin profilindeki IBAN/vergi bilgileri ve § 19 notu ile), ödendi → muhasebeye gider fişi, iptal → ters kayıt.",
+          "de": "Monatliche Honorarabrechnungen (Kurse → Honorarabrechnungen): Berechnung aus gehaltenen Stunden, Freigabe (Gutschrift-PDF mit HA-Nummer, IBAN/Steuerdaten aus dem Profil der Lehrkraft und § 19-Hinweis), bezahlt → Ausgabenbuchung, Storno → Gegenbuchung."
+        },
+        {
+          "type": "improvement",
+          "tr": "Öğretmen kendi hakedişlerini görür ve PDF'ini indirir; profilinde IBAN yoksa uyarı alır. Übungsleiter/Ehrenamt yıllık sınırı aşılınca uyarı.",
+          "de": "Lehrkräfte sehen eigene Abrechnungen samt PDF; Hinweis bei fehlender IBAN im Profil. Warnung bei Überschreitung des Jahresfreibetrags."
+        },
+        {
+          "type": "security",
+          "tr": "IBAN hakedişte saklanmaz; yalnızca PDF üretilirken şifreli profilden okunur.",
+          "de": "Die IBAN wird nicht in der Abrechnung gespeichert, sondern nur für das PDF aus dem verschlüsselten Profil gelesen."
+        }
+      ]
+    },
+    {
       "version": "0.29.0",
       "date": "2026-11-01",
       "title": {

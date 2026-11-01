@@ -2086,7 +2086,8 @@
     "menu": {
       "teachers": "Lehrkräfte",
       "fees": "Gebühren und Zahlungen",
-      "settings": "Einstellungen"
+      "settings": "Einstellungen",
+      "payouts": "Honorarabrechnungen"
     },
     "meta": {
       "list": "Kurse",
@@ -2308,7 +2309,23 @@
       "done": "Fertig",
       "createTitle": "Neue Lehrkraft",
       "createDescription": "Ehrenamtliche oder bezahlte Lehrkraft.",
-      "editTitle": "Lehrkraft bearbeiten"
+      "editTitle": "Lehrkraft bearbeiten",
+      "compensation": "Vergütungsart",
+      "compensations": {
+        "NONE": "Unentgeltlich",
+        "HONORAR": "Honorarkraft",
+        "UEBUNGSLEITER": "Übungsleiter (§ 3 Nr. 26 EStG)",
+        "EHRENAMT": "Ehrenamt (§ 3 Nr. 26a EStG)"
+      },
+      "rate": "Vergütung (€)",
+      "rateUnit": "Einheit",
+      "rateUnits": {
+        "HOUR": "pro Stunde",
+        "SESSION": "pro Unterrichtseinheit"
+      },
+      "paymentProfileOk": "Zahlungsdaten (IBAN usw.) stammen aus dem Profil der Lehrkraft — vorhanden.",
+      "paymentProfileMissing": "Im Profil der Lehrkraft fehlt die IBAN; sie trägt sie selbst im Profil ein.",
+      "paymentProfileNoAccount": "Zahlungsdaten kommen aus dem Benutzerprofil der Lehrkraft; ohne Konto bitte einladen."
     },
     "invite": {
       "title": "Lehrkraft-Konto angelegt",
@@ -2349,7 +2366,14 @@
       "incomeCategory": "Einnahmekategorie",
       "chooseCategory": "Kategorie wählen…",
       "incomeCategoryHelp": "Kursgebühren werden in dieser Kategorie als Einnahme gebucht (meist Zweckbetrieb). Kassen- und Bankkonto kommen aus den Buchhaltungseinstellungen.",
-      "saved": "Einstellungen gespeichert."
+      "saved": "Einstellungen gespeichert.",
+      "payoutTitle": "Honorare der Lehrkräfte",
+      "payoutCategory": "Ausgabenkategorie für Honorare",
+      "payoutCategoryHelp": "Ausgezahlte Honorare werden in dieser Kategorie vom Bankkonto gebucht.",
+      "defaultSessionMinutes": "Standard-Unterrichtsdauer (Min.)",
+      "uebungsleiterLimit": "Übungsleiterpauschale/Jahr (€)",
+      "ehrenamtLimit": "Ehrenamtspauschale/Jahr (€)",
+      "limitsHelp": "Jahresfreibeträge nach § 3 Nr. 26 und 26a EStG; Überschreitungen werden in der Liste markiert. Voreinstellung 3.300 € / 960 € — bitte mit der aktuellen Rechtslage abgleichen."
     },
     "errors": {
       "notFound": "Kurs nicht gefunden.",
@@ -2386,7 +2410,9 @@
       "reasonMin": "Die Begründung muss mindestens 5 Zeichen haben.",
       "firstNameRequired": "Vorname ist erforderlich.",
       "lastNameRequired": "Nachname ist erforderlich.",
-      "emailForInvite": "Für die Einladung ist eine E-Mail erforderlich."
+      "emailForInvite": "Für die Einladung ist eine E-Mail erforderlich.",
+      "rateInvalid": "Bitte gültigen Betrag eingeben (z. B. 25,50).",
+      "rateRequired": "Für eine vergütete Tätigkeit ist ein Betrag erforderlich."
     },
     "cards": {
       "overview": {
@@ -2412,10 +2438,11 @@
       }
     },
     "access": {
-      "accounting": "Bucht Kursgebühren als Einnahmen und storniert sie; liest Kassen-/Bankkonten und Einnahmekategorien.",
+      "accounting": "Bucht Kursgebühren als Einnahmen und storniert sie; liest Kassen-/Bankkonten und Einnahmekategorien. Bucht ausgezahlte Honorare als Ausgabe.",
       "mail": "Versendet Einladungs-E-Mails an Lehrkräfte.",
       "students": "Liest Schüler und Zahlungspflichtige für Kursanmeldungen.",
-      "users": "Legt für eingeladene Lehrkräfte ein Benutzerkonto mit der Rolle Lehrkraft an und liest Name und E-Mail verknüpfter Lehrkräfte aus dem Benutzerkonto."
+      "users": "Legt für eingeladene Lehrkräfte ein Benutzerkonto mit der Rolle Lehrkraft an und liest Name und E-Mail verknüpfter Lehrkräfte aus dem Benutzerkonto.",
+      "organization": "Liest Vereinsdaten und Logo für den Briefkopf der Honorarabrechnung."
     },
     "ai": {
       "create": {
@@ -2460,6 +2487,74 @@
       "coursesAll": {
         "label": "Alle Kurse",
         "description": "Ohne diese Berechtigung sieht der Benutzer nur Kurse, in denen er Lehrkraft ist, samt Terminen und Lernfortschritt."
+      },
+      "coursePayouts": {
+        "label": "Honorarabrechnungen",
+        "description": "Abrechnungen ansehen; berechnen/bezahlen (anlegen/bearbeiten/löschen); freigeben. Lehrkräfte sehen nur eigene."
+      },
+      "coursePayoutsAll": {
+        "label": "Alle Honorarabrechnungen (Umfang)",
+        "description": "Ohne dieses Recht nur eigene Abrechnungen."
+      }
+    },
+    "payouts": {
+      "title": "Honorarabrechnungen",
+      "description": "Honorare aus den gehaltenen Stunden des Zeitraums berechnen, freigeben (Gutschrift-Nummer) und als bezahlt markieren (Ausgabenbuchung).",
+      "descriptionOwn": "Ihre Honorarabrechnungen. Die Zahlungsdaten stammen aus Ihrem Profil.",
+      "ownProfileMissing": "In Ihrem Profil fehlt die IBAN. Bitte Bankverbindung im Profil eintragen, damit ausgezahlt werden kann.",
+      "period": "Zeitraum",
+      "generate": "Berechnen",
+      "generated": "{created} neu, {updated} aktualisiert, {skipped} bereits freigegeben (übersprungen).",
+      "empty": "Keine Abrechnungen für diesen Zeitraum. Bei vergüteten Lehrkräften mit Stunden „Berechnen“ wählen.",
+      "columns": {
+        "teacher": "Lehrkraft",
+        "type": "Art",
+        "sessions": "Stunden",
+        "amount": "Betrag",
+        "status": "Status",
+        "actions": "Aktionen"
+      },
+      "compensations": {
+        "NONE": "—",
+        "HONORAR": "Honorar",
+        "UEBUNGSLEITER": "Übungsleiter",
+        "EHRENAMT": "Ehrenamt"
+      },
+      "status": {
+        "DRAFT": "Entwurf",
+        "APPROVED": "Freigegeben",
+        "PAID": "Bezahlt",
+        "CANCELLED": "Storniert"
+      },
+      "hours": "{hours} Std.",
+      "noNumber": "Nummer bei Freigabe",
+      "noProfile": "Keine IBAN im Profil",
+      "limitExceeded": "Jahresfreibetrag überschritten",
+      "pdf": "PDF",
+      "approve": "Freigeben",
+      "approved": "Freigegeben: {number}",
+      "markPaid": "Bezahlt",
+      "markPaidTitle": "Als bezahlt markieren",
+      "markPaidText": "Für {name} werden {amount} als Ausgabe vom Bankkonto gebucht.",
+      "paidAt": "Zahlungsdatum",
+      "paid": "Ausgabenbuchung: {bookingNumber}",
+      "delete": "Löschen",
+      "cancel": "Stornieren",
+      "deleteTitle": "Entwurf löschen?",
+      "cancelTitle": "Abrechnung stornieren?",
+      "cancelText": "Die Abrechnung wird storniert; die Nummer bleibt erhalten.",
+      "cancelPaidText": "Die bezahlte Abrechnung wird storniert und die Ausgabenbuchung per Gegenbuchung aufgehoben.",
+      "reason": "Begründung",
+      "cancelled": "Erledigt.",
+      "close": "Schließen",
+      "errors": {
+        "notDraft": "Nur Entwürfe können freigegeben werden.",
+        "notApproved": "Nur freigegebene Abrechnungen können bezahlt werden.",
+        "notFound": "Abrechnung nicht gefunden.",
+        "categoryMissing": "Bitte zuerst unter Kurse → Einstellungen die Ausgabenkategorie wählen.",
+        "period": "Ungültiger Zeitraum.",
+        "date": "Ungültiges Datum.",
+        "reason": "Begründung mit mindestens 3 Zeichen angeben."
       }
     }
   },

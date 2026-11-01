@@ -57,3 +57,28 @@ export const coursesAllPermissions = definePermissions("coursesAll", {
   TEACHER: [],
   VIEWER: ["view"],
 });
+
+/**
+ * Öğretmen hakedişleri (Honorarabrechnung). Öğretmen yalnızca kendi hakedişlerini görür
+ * (sorguda süzülür); hesaplama/onay/ödeme sayman ve yöneticidedir.
+ */
+export const coursePayoutsPermissions = definePermissions("coursePayouts", {
+  ADMIN: ["view", "create", "update", "delete", "approve"],
+  BOARD: ["view"],
+  SECRETARY: ["view"],
+  TREASURER: ["view", "create", "update", "delete", "approve"],
+  AUDITOR: ["view"],
+  TEACHER: ["view"],
+  VIEWER: [],
+});
+
+/** Kapsam: tüm öğretmenlerin hakedişlerini görme (kapalıysa yalnızca kendi). */
+export const coursePayoutsAllPermissions = definePermissions("coursePayoutsAll", {
+  ADMIN: ["view"],
+  BOARD: ["view"],
+  SECRETARY: ["view"],
+  TREASURER: ["view"],
+  AUDITOR: ["view"],
+  TEACHER: [],
+  VIEWER: [],
+});

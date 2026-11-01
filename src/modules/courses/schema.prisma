@@ -61,6 +61,13 @@ model CoursesCounter {
 model CoursesSettings {
   id               String   @id @default("singleton")
   incomeCategoryId String? // FK DEĞİL; muhasebe gelir kategorisi
+  /// Öğretmen hakedişleri: gider kategorisi (FK DEĞİL; muhasebe).
+  payoutCategoryId String?
+  /// Saati girilmemiş ders için varsayılan süre (dakika).
+  defaultSessionMinutes Int @default(60)
+  /// Yıllık vergiden muaf üst sınırlar (cent): § 3 Nr. 26 EStG (Übungsleiter) ve § 3 Nr. 26a (Ehrenamt).
+  uebungsleiterLimitCents Int @default(330000)
+  ehrenamtLimitCents      Int @default(96000)
   updatedAt        DateTime @updatedAt
 
   @@map("courses_settings")
@@ -76,11 +83,16 @@ model CourseTeacher {
   subjects  String? // örn. "Matematik, Almanca"
   note      String?
   isActive  Boolean  @default(true)
+  /// Ücret: NONE = ücretsiz/gönüllü; ödeme bilgileri (IBAN, vergi no, § 19) kullanıcı profilinden okunur.
+  compensation TeacherCompensation @default(NONE)
+  rateCents    Int?
+  rateUnit     TeacherRateUnit     @default(HOUR)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   courses  CourseTeacherLink[]
   sessions CourseSession[]
+  payouts  CourseTeacherPayout[]
 
   @@index([lastName, firstName])
   @@map("courses_teachers")
@@ -219,4 +231,58 @@ model CoursePayment {
 
   @@index([chargeId])
   @@map("courses_payments")
+}
+
+enum TeacherCompensation {
+  NONE // ücret yok
+  HONORAR // serbest çalışan (Honorarkraft)
+  UEBUNGSLEITER // § 3 Nr. 26 EStG Übungsleiterpauschale
+  EHRENAMT // § 3 Nr. 26a EStG Ehrenamtspauschale
+}
+
+enum TeacherRateUnit {
+  HOUR
+  SESSION
+}
+
+enum TeacherPayoutStatus {
+  DRAFT // hesaplandı, düzenlenebilir/yeniden hesaplanabilir
+  APPROVED // onaylandı, numara verildi (Gutschrift)
+  PAID // ödendi, muhasebeye gider fişi yazıldı
+  CANCELLED
+}
+
+/// Öğretmen hakedişi (aylık Honorarabrechnung / Gutschrift). Ödeme bilgileri (IBAN) SAKLANMAZ:
+/// PDF ve ödeme anında öğretmenin kullanıcı profilinden şifreli olarak okunur.
+model CourseTeacherPayout {
+  id           String              @id @default(cuid())
+  teacherId    String
+  teacher      CourseTeacher       @relation(fields: [teacherId], references: [id], onDelete: Restrict)
+  period       String // "YYYY-MM"
+  status       TeacherPayoutStatus @default(DRAFT)
+  number       String?             @unique // HA-2026-0001 (onayda verilir)
+  year         Int?
+  sequence     Int?
+  compensation TeacherCompensation
+  rateCents    Int
+  rateUnit     TeacherRateUnit
+  sessionCount Int
+  minutes      Int
+  amountCents  Int
+  /// Satırlar: [{ sessionId, date, courseCode, courseTitle, minutes, amountCents }]
+  lines        Json
+  bookingNumber String?
+  approvedAt   DateTime?
+  approvedByLabel String?
+  paidAt       DateTime?
+  cancelledAt  DateTime?
+  createdById  String
+  createdByLabel String
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+
+  @@unique([year, sequence])
+  @@index([teacherId, period])
+  @@index([period, status])
+  @@map("courses_teacher_payouts")
 }
