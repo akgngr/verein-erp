@@ -6,6 +6,8 @@ const MODULES_DIR = path.join(ROOT_DIR, "src", "modules");
 const REGISTRY_FILE = path.join(ROOT_DIR, "src", "registry.ts");
 const CARDS_FILE = path.join(ROOT_DIR, "src", "dashboard-cards.ts");
 const AI_FILE = path.join(ROOT_DIR, "src", "ai-registry.ts");
+const DEMO_FILE = path.join(ROOT_DIR, "src", "demo-registry.ts");
+const LIFECYCLE_FILE = path.join(ROOT_DIR, "src", "lifecycle-registry.ts");
 const PERMISSIONS_FILE = path.join(ROOT_DIR, "src", "permissions-registry.ts");
 
 // Sabit öncelikli sıralama (çekirdek ve resmi modüller üstte)
@@ -87,6 +89,8 @@ export const registry: ModuleConfig[] = allModules;
 
   syncDashboardCards(validModules);
   syncModuleAi(validModules);
+  syncConventionFile(validModules, "demo.ts", "demo", DEMO_FILE, "ModuleDemo", "@/shared/demo/define", "moduleDemoRegistry", "Modüllerin örnek veri üreticileri (src/modules/<modül>/demo.ts).");
+  syncConventionFile(validModules, "lifecycle.ts", "lifecycle", LIFECYCLE_FILE, "ModuleLifecycle", "@/shared/modules/lifecycle", "moduleLifecycleRegistry", "Modül yaşam döngüsü kancaları (src/modules/<modül>/lifecycle.ts), ör. kapatılırken temizlik.");
   syncPermissionResources(validModules);
 
   return { registered: validModules };
@@ -119,6 +123,40 @@ export const dashboardCards: { moduleKey: string; cards: DashboardCardDefinition
     if (current !== content) fs.writeFileSync(CARDS_FILE, content, "utf8");
   } catch (err) {
     console.error("[sync-registry] Failed to write src/dashboard-cards.ts:", err);
+  }
+}
+
+/**
+ * Sözleşme dosyası kaydı: `<file>` içeren modüllerin `<exportName>` dışa aktarımını tek listede toplar.
+ */
+function syncConventionFile(
+  modules: string[],
+  file: string,
+  exportName: string,
+  target: string,
+  typeName: string,
+  typeModule: string,
+  listName: string,
+  doc: string,
+): void {
+  const base = file.replace(/\.ts$/, "");
+  const withFile = modules.filter((mod) => fs.existsSync(path.join(MODULES_DIR, mod, file)));
+  const suffix = exportName.charAt(0).toUpperCase() + exportName.slice(1);
+  const imports = withFile.map((mod) => `import { ${exportName} as ${mod}${suffix} } from "@/modules/${mod}/${base}";`).join("\n");
+  const listItems = withFile.map((mod) => `  ${mod}${suffix},`).join("\n");
+  const content = `// Bu dosya syncModuleRegistry tarafından otomatik üretilir (pnpm module:sync); elle düzenlemeyin.
+import "server-only";
+
+import type { ${typeName} } from "${typeModule}";
+${imports ? `\n${imports}\n` : ""}
+/** ${doc} */
+export const ${listName}: ${typeName}[] = ${listItems ? `[\n${listItems}\n]` : "[]"};
+`;
+  try {
+    const current = fs.existsSync(target) ? fs.readFileSync(target, "utf8") : "";
+    if (current !== content) fs.writeFileSync(target, content, "utf8");
+  } catch (err) {
+    console.error(`[sync-registry] Failed to write ${path.relative(ROOT_DIR, target)}:`, err);
   }
 }
 

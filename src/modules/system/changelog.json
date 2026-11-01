@@ -2,6 +2,31 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.27.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "Demo veri modülü",
+        "de": "Demodaten-Modul"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Demo veri modülü: etkinken Ayarlar → Demo veri sayfasından tek tıkla kurgusal örnek kayıt yüklenir (üyeler, öğrenciler/veliler, cariler, bağışçılar, bağışlar, muhasebe kayıtları için 30'ar; 15 fatura/teklif/proforma; kurslar, etkinlikler, envanter, görevler, toplantılar, projeler için 10'ar). Modül kapatılınca demo kayıtlar otomatik silinir.",
+          "de": "Demodaten-Modul: Bei Aktivierung lädt Einstellungen → Demodaten fiktive Beispieldatensätze per Klick (je 30 Mitglieder, Schüler/Eltern, Kontakte, Spender, Spenden, Buchungen; 15 Rechnungen/Angebote/Proformas; je 10 Kurse, Veranstaltungen, Inventar, Aufgaben, Sitzungen, Projekte). Beim Deaktivieren werden die Demodaten automatisch gelöscht."
+        },
+        {
+          "type": "security",
+          "tr": "Demo veriler tamamen kurgusaldır (example.com e-postaları, örnek IBAN). GoBD silme koruması değiştirilmedi: demo muhasebe kayıtları ve bağışlar silinemez, test veritabanında kalır.",
+          "de": "Demodaten sind vollständig fiktiv (example.com-Adressen, Beispiel-IBAN). Der GoBD-Löschschutz bleibt unverändert: Demo-Buchungen und -Spenden bleiben in der Testdatenbank."
+        },
+        {
+          "type": "improvement",
+          "tr": "Modül geliştiricileri için demo.ts ve lifecycle.ts sözleşmeleri (kapatılırken temizlik kancası).",
+          "de": "Neue Modul-Schnittstellen demo.ts und lifecycle.ts (Aufräum-Hook beim Deaktivieren)."
+        }
+      ]
+    },
+    {
       "version": "0.26.0",
       "date": "2026-11-01",
       "title": {

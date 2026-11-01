@@ -1,0 +1,12 @@
+// Demo modülü: üretilen örnek kayıtların listesi (modül kapatılınca bunlar silinir).
+model DemoRecord {
+  id        String   @id @default(cuid())
+  moduleKey String
+  model     String
+  recordId  String
+  createdAt DateTime @default(now())
+
+  @@unique([model, recordId])
+  @@index([moduleKey])
+  @@map("demo_records")
+}

@@ -439,6 +439,18 @@ const file = await createGeneratedFile({ ownerId: user.id, title, format: "xlsx"
 - Asistan dosyaları `create_file` aracıyla üretir (izin matrisi: **Dosyalarım → oluşturma**). Bağlantı modele verilmez;
   yanıtın altında indirme düğmesi çıkar. Dernek verisini değiştirmediği için onay kartı istemez.
 
+## 9d. Demo veri (`demo.ts`) ve yaşam döngüsü (`lifecycle.ts`)
+
+- **`demo.ts`**: modül, `defineDemo({ moduleKey, order, seed, clear })` ile kendi tablolarına kurgusal örnek kayıt üretir.
+  `pnpm module:sync` bunu `src/demo-registry.ts`'e ekler; "Demo veri" modülü (Ayarlar → Demo veri) yalnızca oradan çağırır.
+  - Oluşturduğunuz her kaydı **hemen** `ctx.refs.push({ model, id })` ile ekleyin (yarıda kalırsa da temizlenir).
+  - Yalnızca kendi tablolarınıza yazın; başka modülün kaydı gerekiyorsa `ctx.created.<modül>` içindeki ref'leri (label/number) kullanın.
+  - KVKK: yalnızca `demoPerson()`, `DEMO_IBAN` gibi kurgusal veriler; `@example.com` e-postalar.
+  - GoBD gereği silinemeyen kayıtlar (muhasebe kaydı, bağış) üretilebilir ama demo kapatılınca test veritabanında kalır; silme korumasını asla gevşetmeyin.
+  - `clear` için `clearRefs(refs, { model: (ids) => ... })`: modeller ters sırada silinir, silinemeyenler döner.
+- **`lifecycle.ts`**: `defineLifecycle({ moduleKey, onDisable })`. Yönetici modülü kapattığında sistem `onDisable`'ı çağırır
+  (`src/lifecycle-registry.ts`). Demo modülü bununla tüm demo kayıtlarını siler.
+
 ## 10. Doğrulama (CI aynı adımları çalıştırır)
 
 ```bash

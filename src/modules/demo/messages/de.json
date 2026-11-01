@@ -1,0 +1,43 @@
+{
+  "module": {
+    "label": "Demodaten",
+    "description": "Lädt fiktive Beispieldaten zum Testen; beim Deaktivieren wird alles gelöscht."
+  },
+  "nav": {
+    "demoVeri": "Demodaten"
+  },
+  "title": "Demodaten",
+  "description": "Fügen Sie aktiven Modulen fiktive Beispieldatensätze hinzu, um die Testumgebung auszuprobieren. Beim Deaktivieren des Moduls werden alle Demodaten automatisch gelöscht.",
+  "statusEmpty": "Derzeit keine Demodaten.",
+  "statusLoaded": "{count} Demodatensätze geladen.",
+  "seed": "Demodaten laden",
+  "clear": "Demodaten löschen",
+  "confirmSeedTitle": "Demodaten laden?",
+  "confirmSeed": "Aktive Module erhalten fiktive Datensätze (je 30 Mitglieder, Schüler, Kontakte, Spender, Spenden und Buchungen; 15 Rechnungen; sonst je 10). Buchungen und Spenden sind nach GoBD nicht löschbar und bleiben beim Deaktivieren in dieser Datenbank. Nur in Testdatenbanken verwenden.",
+  "confirmClearTitle": "Demodaten löschen?",
+  "confirmClear": "Die vom Demo-Modul erzeugten Datensätze werden gelöscht. GoBD-geschützte Buchungen und Spenden (mit ihren Spendern) können nicht gelöscht werden und bleiben erhalten. Echte Daten bleiben unberührt.",
+  "seeded": "{count} Demodatensätze erstellt.",
+  "cleared": "{count} Demodatensätze gelöscht.",
+  "clearedPartial": "{removed} Demodatensätze gelöscht; {remaining} Datensätze (GoBD-geschützte Buchungen/Spenden oder verknüpfte Daten) bleiben in der Datenbank.",
+  "privacyNote": "Alle Demodaten sind fiktiv: E-Mails unter example.com, die IBAN ist die Beispielnummer aus Bankdokumentationen. Es werden keine echten Personendaten verwendet.",
+  "moduleActive": "Aktiv",
+  "moduleInactive": "Inaktiv (keine Daten)",
+  "columns": {
+    "module": "Modul",
+    "state": "Status",
+    "records": "Demodatensätze"
+  },
+  "errors": {
+    "inactive": "Das Demo-Modul ist deaktiviert.",
+    "alreadySeeded": "Demodaten sind bereits geladen; bitte zuerst löschen."
+  },
+  "permissions": {
+    "demo": {
+      "label": "Demodaten",
+      "description": "Fiktive Beispieldaten laden und löschen."
+    }
+  },
+  "access": {
+    "system": "Liest Modulzustände, um nur für aktive Module Daten zu erzeugen."
+  }
+}

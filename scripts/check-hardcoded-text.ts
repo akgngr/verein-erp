@@ -25,6 +25,7 @@ const SKIP_FILE = [
   /\/handlers\//, // Excel/PDF dışa aktarma başlıkları; ayrı ele alınır
   /module\.config\.ts$/, // label/description yedek metinlerdir (çeviri nav/menu'den)
   /permissions-matrix\.ts$/,
+  /\/demo\.ts$/, // kurgusal örnek veri içeriği (UI metni değil)
 ];
 const UI_PROPS = [
   "label", "title", "placeholder", "description", "aria-label", "emptyMessage", "emptyContent",

@@ -14,6 +14,7 @@ import * as auditPermissionExports from "@/modules/audit/permissions";
 import * as authPermissionExports from "@/modules/auth/permissions";
 import * as aiPermissionExports from "@/modules/ai/permissions";
 import * as coursesPermissionExports from "@/modules/courses/permissions";
+import * as demoPermissionExports from "@/modules/demo/permissions";
 import * as eventsPermissionExports from "@/modules/events/permissions";
 import * as exportsPermissionExports from "@/modules/exports/permissions";
 import * as feedbackPermissionExports from "@/modules/feedback/permissions";
@@ -41,6 +42,7 @@ export const permissionResources: { moduleKey: string; definitions: PermissionDe
   { moduleKey: "auth", definitions: definitionsOf(authPermissionExports) },
   { moduleKey: "ai", definitions: definitionsOf(aiPermissionExports) },
   { moduleKey: "courses", definitions: definitionsOf(coursesPermissionExports) },
+  { moduleKey: "demo", definitions: definitionsOf(demoPermissionExports) },
   { moduleKey: "events", definitions: definitionsOf(eventsPermissionExports) },
   { moduleKey: "exports", definitions: definitionsOf(exportsPermissionExports) },
   { moduleKey: "feedback", definitions: definitionsOf(feedbackPermissionExports) },
