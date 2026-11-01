@@ -64,10 +64,13 @@ export async function pdfResponse(args: {
   document: ReactElement;
   fileName: string;
   audit: { entity: string; entityId: string | null; after: Record<string, unknown> };
+  transform?: (pdf: Uint8Array) => Promise<Uint8Array>;
 }): Promise<Response> {
   registerSharedPdfFonts();
   // react-pdf Document öğesi bekler; çağıranlar <XxxDocument /> geçirir.
-  const buffer = await renderToBuffer(args.document as Parameters<typeof renderToBuffer>[0]);
+  const rendered = await renderToBuffer(args.document as Parameters<typeof renderToBuffer>[0]);
+  // İsteğe bağlı son işlem (ör. ZUGFeRD: XML eki + PDF/A-3 meta verisi).
+  const buffer = args.transform ? await args.transform(new Uint8Array(rendered)) : rendered;
   await writeAudit({
     userId: args.user.id,
     userLabel: buildUserLabel(args.user.name, args.user.email),

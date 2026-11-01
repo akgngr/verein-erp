@@ -1051,7 +1051,8 @@
           "buyerAddress": "Empfängeranschrift (PLZ und Ort)",
           "iban": "IBAN (Rechnungseinstellungen)",
           "dueOrTerms": "Fälligkeitsdatum"
-        }
+        },
+        "zugferd": "ZUGFeRD-PDF"
       },
       "dunningsTitle": "Mahnungen",
       "dunningLevel": {

@@ -60,7 +60,12 @@ export async function InvoiceDetailView({ id, searchParams }: { id: string; sear
         description={invoice.recipientName}
         actions={
           <div className="flex flex-wrap items-center gap-2">
-          {invoice.kind === "INVOICE" && invoice.number && invoice.status !== "DRAFT" ? <XRechnungButton invoiceId={invoice.id} number={invoice.number} /> : null}
+          {invoice.kind === "INVOICE" && invoice.number && invoice.status !== "DRAFT" ? (
+            <>
+              <XRechnungButton invoiceId={invoice.id} number={invoice.number} format="zugferd" />
+              <XRechnungButton invoiceId={invoice.id} number={invoice.number} />
+            </>
+          ) : null}
           <InvoiceActions
             invoice={{ ...invoice, categoryId: invoice.categoryId ?? settings.incomeCategoryId }}
             can={permissions}

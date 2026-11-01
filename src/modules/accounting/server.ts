@@ -60,7 +60,7 @@ export { BankView } from "./views/bank-view";
 export { dunningPdfHandler } from "./handlers/dunning-pdf";
 export { paymentRunHandler } from "./handlers/payment-run";
 export { uploadPayableHandler, downloadPayableFileHandler } from "./handlers/payable-files";
-export { xrechnungHandler } from "./handlers/xrechnung";
+export { xrechnungHandler, zugferdHandler } from "./handlers/xrechnung";
 export { PayablesView, PayableDetailView } from "./views/payables-view";
 export { exportDatevHandler } from "./handlers/export-datev";
 // Faturalar / proformalar ve belge çıktıları.
