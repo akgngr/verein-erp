@@ -37,12 +37,13 @@ export function FormDrawer({
   title,
   description,
   children,
-  size = "2xl",
+  size = "3xl",
 }: {
   title: string;
   description?: string;
   children: ReactNode;
-  size?: "md" | "lg" | "xl" | "2xl" | "3xl";
+  /** Varsayılan 3xl (≈768 px); çok sütunlu formlar (ör. fatura kalemleri) 4xl/5xl ister. */
+  size?: "md" | "lg" | "xl" | "2xl" | "3xl" | "4xl" | "5xl";
 }) {
   const router = useRouter();
   const pathname = usePathname();

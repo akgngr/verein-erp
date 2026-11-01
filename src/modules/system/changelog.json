@@ -22,6 +22,26 @@
       ]
     },
     {
+      "version": "0.20.1",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "Form çekmecesi düzeltmeleri",
+        "de": "Korrekturen am Formular-Drawer"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Açıklamalı seçim alanlarında etiketin alanın içine kayması giderildi (tüm formlar).",
+          "de": "Bei Auswahlfeldern mit Hilfetext rutschte die Beschriftung ins Feld – behoben (alle Formulare)."
+        },
+        {
+          "type": "improvement",
+          "tr": "Form çekmecesi varsayılan olarak daha geniş; fatura/teklif formu ekstra geniş, kalem satırları iki satırlı düzenle sıkışmıyor.",
+          "de": "Der Formular-Drawer ist standardmäßig breiter; Rechnungs-/Angebotsformular extra breit, Positionszeilen zweizeilig ohne Quetschen."
+        }
+      ]
+    },
+    {
       "version": "0.20.0",
       "date": "2026-11-01",
       "title": {

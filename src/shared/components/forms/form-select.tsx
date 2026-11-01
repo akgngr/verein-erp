@@ -40,12 +40,16 @@ export function FormSelect<T extends FieldValues>({
       control={control}
       render={({ field, fieldState }) => {
         const value = field.value ? String(field.value) : "";
+        const error = translateMessage(fieldState.error?.message);
+        // KARAR: HeroUI Select'te labelPlacement="outside" + description/errorMessage birlikte
+        // verilince etiket alanın içine kayıyor (yükseklik hesabı hatası). Yardım ve hata metni
+        // bu yüzden Select'in DIŞINDA, aynı görünümle çizilir.
         return (
+          <div className="flex flex-col gap-1">
           <Select
             id={`form-select-${String(name)}`}
             label={label}
             labelPlacement={labelPlacement}
-            description={description}
             isRequired={isRequired}
             placeholder={placeholder ?? tCommon("selectPlaceholder")}
             isDisabled={isDisabled}
@@ -55,7 +59,7 @@ export function FormSelect<T extends FieldValues>({
               field.onChange(key !== undefined ? String(key) : "");
             }}
             isInvalid={Boolean(fieldState.error)}
-            errorMessage={translateMessage(fieldState.error?.message)}
+            aria-describedby={error || description ? `form-select-${String(name)}-help` : undefined}
             classNames={{
               label: "text-small font-medium text-foreground pb-1",
               trigger: "shadow-xs border-default-200 hover:border-default-400 focus-within:!border-primary transition-colors bg-default-50/50 hover:bg-default-100/50 focus-within:!bg-background",
@@ -67,6 +71,12 @@ export function FormSelect<T extends FieldValues>({
               </SelectItem>
             ))}
           </Select>
+          {error || description ? (
+            <p id={`form-select-${String(name)}-help`} className={`px-1 text-tiny ${error ? "text-danger" : "text-default-500"}`}>
+              {error || description}
+            </p>
+          ) : null}
+          </div>
         );
       }}
     />

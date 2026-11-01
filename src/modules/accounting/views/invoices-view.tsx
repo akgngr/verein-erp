@@ -91,7 +91,7 @@ export async function InvoicesView({ searchParams }: { searchParams: Promise<Raw
       {view === "opos" ? <OpenItemsTable rows={openItems} canDun={canUpdate} /> : <InvoiceTable rows={rows} q={first(raw.q)} />}
 
       {canCreate && (newParam === "fatura" || newParam === "proforma" || newParam === "teklif") ? (
-        <FormDrawer title={newParam === "proforma" ? t("newProforma") : newParam === "teklif" ? t("newQuote") : t("newInvoice")} description={t("form.draftHint")}>
+        <FormDrawer size="4xl" title={newParam === "proforma" ? t("newProforma") : newParam === "teklif" ? t("newQuote") : t("newInvoice")} description={t("form.draftHint")}>
           <InvoiceForm kind={newParam === "proforma" ? "PROFORMA" : newParam === "teklif" ? "QUOTE" : "INVOICE"} settings={settings} categoryOptions={categoryOptions} contacts={contacts} />
         </FormDrawer>
       ) : null}
@@ -101,7 +101,7 @@ export async function InvoicesView({ searchParams }: { searchParams: Promise<Raw
         </FormDrawer>
       ) : null}
       {canUpdate && editId ? (
-        <FormDrawer title={t("form.editTitle")}>
+        <FormDrawer size="4xl" title={t("form.editTitle")}>
           {editing && editing.status === "DRAFT" ? (
             <InvoiceForm invoice={editing} settings={settings} categoryOptions={categoryOptions} contacts={contacts} />
           ) : (
