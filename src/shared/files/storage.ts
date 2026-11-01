@@ -1,7 +1,7 @@
 import "server-only";
 
 import { createReadStream } from "node:fs";
-import { mkdir, unlink, writeFile } from "node:fs/promises";
+import { mkdir, readFile as readDiskFile, unlink, writeFile } from "node:fs/promises";
 import path from "node:path";
 import { Readable } from "node:stream";
 import { createHash, randomUUID } from "node:crypto";
@@ -54,6 +54,11 @@ export async function removeFile(storagePath: string): Promise<void> {
   } catch (error) {
     console.error("[shared/files] Geçici dosya temizlenemedi:", error);
   }
+}
+
+/** Dosyayı belleğe okur (küçük belgeler için; büyük dosyada openReadStream kullanın). */
+export async function readFile(storagePath: string): Promise<Buffer> {
+  return readDiskFile(resolveSafePath(storagePath));
 }
 
 /** İndirme/önizleme için dosyayı akış (stream) olarak açar. */

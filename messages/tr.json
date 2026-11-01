@@ -105,6 +105,7 @@
     "geriBildirim": "Geri bildirim",
     "inventory": "Envanter",
     "mail": "E-posta",
+    "gelenKutusu": "Gelen kutusu",
     "toplantilar": "Toplantılar",
     "uyeler": "Üyeler",
     "organization": "Dernek Bilgileri",
@@ -4005,7 +4006,8 @@
     },
     "menu": {
       "settings": "Ayarlar",
-      "logs": "Gönderim kayıtları"
+      "logs": "Gönderim kayıtları",
+      "inbox": "Gelen kutusu"
     },
     "meta": {
       "settings": "E-posta ayarları",
@@ -4019,6 +4021,74 @@
       "mail": {
         "label": "E-posta altyapısı",
         "description": "SMTP ayarları ve e-posta şablonları."
+      },
+      "mailInbox": {
+        "label": "Gelen kutusu",
+        "description": "Gelen e-postaları görme; e-posta alma ve eki muhasebeye aktarma (oluştur); IMAP ayarları (güncelle); e-posta silme (sil)."
+      }
+    },
+    "access": {
+      "accounting": "Gelen e-postalardaki fatura/belge eklerini muhasebe → gelen faturalar kutusuna aktarır.",
+      "system": "Muhasebe modülünün etkin olup olmadığını okur (aktarma düğmesi yalnızca etkinken gösterilir)."
+    },
+    "inbox": {
+      "title": "Gelen kutusu",
+      "description": "Belge e-postalarını (fatura, makbuz) IMAP ile alın veya kayıtlı .eml dosyası yükleyin; PDF/XML/görsel eklerini tek tıkla muhasebe → gelen faturalara aktarın. XRechnung/ZUGFeRD otomatik okunur.",
+      "fetch": "E-postaları al",
+      "uploadEml": ".eml yükle",
+      "fetched": "{fetched} e-posta okundu, {created} yeni.",
+      "emlImported": "E-posta içe aktarıldı ({attachments} belge eki).",
+      "emlDuplicate": "Bu e-posta zaten içe aktarılmış.",
+      "imported": "Gelen faturalara taslak olarak aktarıldı.",
+      "importDuplicate": "Bu belge zaten gelen faturalarda var; bağlantı kuruldu.",
+      "importToAccounting": "Muhasebeye aktar",
+      "importedChip": "Aktarıldı",
+      "accountingOff": "Muhasebe modülü kapalı; ekler aktarılamaz.",
+      "empty": "Bu görünümde e-posta yok.",
+      "noSubject": "(konu yok)",
+      "filters": {
+        "NEW": "Yeni",
+        "DONE": "Tamamlanan",
+        "ALL": "Tümü"
+      },
+      "status": {
+        "NEW": "Yeni",
+        "DONE": "Tamamlandı"
+      },
+      "markDone": "Tamamlandı işaretle",
+      "markNew": "Yeniye al",
+      "delete": "Sil",
+      "deleteTitle": "E-posta silinsin mi?",
+      "deleteText": "E-posta ve saklanan ekleri silinir. Muhasebeye aktarılmış belgeler etkilenmez; posta sunucusundaki e-posta da silinmez.",
+      "lastFetch": "Son alma: {date}",
+      "privacy": "KVKK/DSGVO: e-posta gövdesi saklanmaz (yalnızca gönderen, konu, tarih ve kısa özet); yalnızca belge türündeki ekler (PDF, XML, JPG, PNG) saklanır. Posta sunucusu salt okunur açılır, hiçbir e-posta silinmez veya okundu işaretlenmez.",
+      "settings": {
+        "title": "IMAP ayarları",
+        "host": "Sunucu",
+        "port": "Port",
+        "security": "Güvenlik",
+        "securities": {
+          "SSL": "SSL/TLS",
+          "STARTTLS": "STARTTLS",
+          "NONE": "Yok (önerilmez)"
+        },
+        "username": "Kullanıcı adı",
+        "password": "Şifre",
+        "passwordStored": "Kayıtlı — değiştirmek için yeni şifre girin",
+        "mailbox": "Klasör",
+        "mailboxHelp": "Ör. INBOX veya ayrı bir \"Belege\" klasörü.",
+        "save": "Kaydet",
+        "saved": "IMAP ayarları kaydedildi.",
+        "help": "Öneri: belgeler için ayrı bir posta kutusu (ör. belege@…) kullanın. Şifre şifreli saklanır. İlk almada son 30 gün, sonra yalnızca yeni e-postalar okunur (her seferde en fazla 100)."
+      },
+      "errors": {
+        "notConfigured": "IMAP ayarları eksik.",
+        "passwordUnreadable": "Kayıtlı şifre çözülemedi; yeniden girin.",
+        "connectionFailed": "Posta sunucusuna bağlanılamadı veya giriş reddedildi.",
+        "encryptionKeyMissing": "Şifreleme anahtarı yok (AUTH_SECRET).",
+        "emlInvalid": "Geçerli bir .eml dosyası değil.",
+        "accountingOff": "Muhasebe modülü kapalı.",
+        "notFound": "Bulunamadı."
       }
     }
   },

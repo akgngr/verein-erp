@@ -2,6 +2,26 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.32.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "E-posta gelen kutusu (IMAP)",
+        "de": "E-Mail-Posteingang (IMAP)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "E-posta → Gelen kutusu: IMAP ile belge e-postalarını alma (salt okunur, ilk seferde son 30 gün) veya .eml yükleme; PDF/XML/görsel ekleri tek tıkla Muhasebe → Gelen faturalara (XRechnung/ZUGFeRD otomatik okunur, mükerrer engellenir).",
+          "de": "E-Mail → Posteingang: Beleg-E-Mails per IMAP abrufen (nur lesend, beim ersten Mal 30 Tage) oder .eml hochladen; PDF/XML/Bild-Anhänge per Klick in den Belegeingang (XRechnung/ZUGFeRD automatisch, Dubletten verhindert)."
+        },
+        {
+          "type": "security",
+          "tr": "KVKK: e-posta gövdesi saklanmaz (yalnızca gönderen, konu, tarih, kısa özet); yalnızca belge ekleri saklanır. IMAP şifresi şifreli; sunucuda hiçbir şey silinmez/okundu işaretlenmez. Yeni izin: Gelen kutusu (Yönetici, Sayman).",
+          "de": "Datenschutz: kein Speichern des E-Mail-Texts (nur Absender, Betreff, Datum, Auszug); nur Belegdateien. IMAP-Passwort verschlüsselt; auf dem Server wird nichts gelöscht/als gelesen markiert. Neues Recht: Posteingang (Admin, Kassenwart)."
+        }
+      ]
+    },
+    {
       "version": "0.31.0",
       "date": "2026-11-01",
       "title": {
