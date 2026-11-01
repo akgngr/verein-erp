@@ -1,0 +1,43 @@
+{
+  "module": {
+    "label": "Demodaten",
+    "description": "Lädt fiktive Beispieldaten zum Testen; beim Deaktivieren wird alles gelöscht."
+  },
+  "nav": {
+    "demoVeri": "Demodaten"
+  },
+  "title": "Demodaten",
+  "description": "Fügen Sie aktiven Modulen fiktive Beispieldatensätze hinzu, um die Testumgebung auszuprobieren. Beim Deaktivieren des Moduls werden alle Demodaten automatisch gelöscht.",
+  "statusEmpty": "Derzeit keine Demodaten.",
+  "statusLoaded": "{count} Demodatensätze geladen.",
+  "seed": "Demodaten laden",
+  "clear": "Demodaten löschen",
+  "confirmSeedTitle": "Demodaten laden?",
+  "confirmSeed": "Aktive Module erhalten fiktive Datensätze (je 30 für Mitglieder, Schüler, Kontakte und Spender, sonst je 10). Es werden keine Buchungen, Rechnungen oder Spenden erzeugt.",
+  "confirmClearTitle": "Demodaten löschen?",
+  "confirmClear": "Alle vom Demo-Modul erzeugten Datensätze werden gelöscht. Echte Daten bleiben unberührt.",
+  "seeded": "{count} Demodatensätze erstellt.",
+  "cleared": "{count} Demodatensätze gelöscht.",
+  "clearedPartial": "{removed} Demodatensätze gelöscht; {remaining} sind mit echten Daten verknüpft und wurden nicht gelöscht.",
+  "privacyNote": "Alle Demodaten sind fiktiv: E-Mails unter example.com, die IBAN ist die Beispielnummer aus Bankdokumentationen. Es werden keine echten Personendaten verwendet.",
+  "moduleActive": "Aktiv",
+  "moduleInactive": "Inaktiv (keine Daten)",
+  "columns": {
+    "module": "Modul",
+    "state": "Status",
+    "records": "Demodatensätze"
+  },
+  "errors": {
+    "inactive": "Das Demo-Modul ist deaktiviert.",
+    "alreadySeeded": "Demodaten sind bereits geladen; bitte zuerst löschen."
+  },
+  "permissions": {
+    "demo": {
+      "label": "Demodaten",
+      "description": "Fiktive Beispieldaten laden und löschen."
+    }
+  },
+  "access": {
+    "system": "Liest Modulzustände, um nur für aktive Module Daten zu erzeugen."
+  }
+}

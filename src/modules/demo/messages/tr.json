@@ -1,0 +1,43 @@
+{
+  "module": {
+    "label": "Demo veri",
+    "description": "Test için kurgusal örnek veri yükler; modül kapatılınca hepsini siler."
+  },
+  "nav": {
+    "demoVeri": "Demo veri"
+  },
+  "title": "Demo veri",
+  "description": "Test ortamını denemek için etkin modüllere kurgusal örnek kayıtlar ekleyin. Modül kapatıldığında tüm demo kayıtlar otomatik silinir.",
+  "statusEmpty": "Şu anda demo veri yok.",
+  "statusLoaded": "{count} demo kayıt yüklü.",
+  "seed": "Demo veri yükle",
+  "clear": "Demo verileri sil",
+  "confirmSeedTitle": "Demo veri yüklensin mi?",
+  "confirmSeed": "Etkin modüllere kurgusal kayıtlar eklenecek (üyeler, öğrenciler, cariler ve bağışçılar için 30'ar, diğerleri için 10'ar). Muhasebe kaydı, fatura ve bağış oluşturulmaz.",
+  "confirmClearTitle": "Demo veriler silinsin mi?",
+  "confirmClear": "Demo modülünün oluşturduğu tüm kayıtlar silinecek. Gerçek kayıtlara dokunulmaz.",
+  "seeded": "{count} demo kayıt oluşturuldu.",
+  "cleared": "{count} demo kayıt silindi.",
+  "clearedPartial": "{removed} demo kayıt silindi; {remaining} kayıt gerçek verilere bağlandığı için silinemedi.",
+  "privacyNote": "Tüm demo veriler kurgusaldır: e-postalar example.com, IBAN banka dokümantasyonundaki örnek numaradır. Gerçek kişi verisi kullanılmaz.",
+  "moduleActive": "Etkin",
+  "moduleInactive": "Kapalı (veri üretilmez)",
+  "columns": {
+    "module": "Modül",
+    "state": "Durum",
+    "records": "Demo kayıt"
+  },
+  "errors": {
+    "inactive": "Demo modülü kapalı.",
+    "alreadySeeded": "Demo veri zaten yüklü; önce silin."
+  },
+  "permissions": {
+    "demo": {
+      "label": "Demo veri",
+      "description": "Kurgusal örnek veri yükleme ve silme."
+    }
+  },
+  "access": {
+    "system": "Yalnızca etkin modüllere veri üretmek için modül durumlarını okur."
+  }
+}
