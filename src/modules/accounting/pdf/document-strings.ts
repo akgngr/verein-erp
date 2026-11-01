@@ -42,6 +42,9 @@ export type DocumentStrings = {
   /** Fatura */
   invoiceTitle: string;
   proformaTitle: string;
+  quoteTitle: string;
+  quoteNumber: string;
+  quoteNote: string;
   cancelledStamp: string;
   invoiceNumber: string;
   proformaNumber: string;
@@ -109,6 +112,9 @@ export const DOCUMENT_STRINGS: { de: DocumentStrings; tr: DocumentStrings } = {
     truncated: (max) => `Hinweis: Nur die ersten ${max} Buchungen sind enthalten.`,
     invoiceTitle: "RECHNUNG",
     proformaTitle: "PROFORMA-RECHNUNG",
+    quoteTitle: "ANGEBOT",
+    quoteNumber: "Angebots-Nr.",
+    quoteNote: "Dieses Angebot ist freibleibend. Wir freuen uns auf Ihren Auftrag.",
     cancelledStamp: "STORNIERT",
     invoiceNumber: "Rechnungsnr.",
     proformaNumber: "Proforma-Nr.",
@@ -174,6 +180,9 @@ export const DOCUMENT_STRINGS: { de: DocumentStrings; tr: DocumentStrings } = {
     truncated: (max) => `Not: Yalnızca ilk ${max} fiş listelenmiştir.`,
     invoiceTitle: "FATURA (RECHNUNG)",
     proformaTitle: "PROFORMA FATURA",
+    quoteTitle: "TEKLİF (ANGEBOT)",
+    quoteNumber: "Teklif No.",
+    quoteNote: "Bu teklif bağlayıcı değildir. Siparişinizi bekleriz.",
     cancelledStamp: "İPTAL EDİLDİ",
     invoiceNumber: "Fatura No",
     proformaNumber: "Proforma No",

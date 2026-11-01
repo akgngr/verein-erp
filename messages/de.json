@@ -641,7 +641,8 @@
       "yearClosing": "Jahresabschluss",
       "settings": "Einstellungen",
       "export": "Excel-Export",
-      "tax": "Steuern"
+      "tax": "Steuern",
+      "contacts": "Kontakte"
     },
     "meta": {
       "list": "Buchhaltung",
@@ -653,7 +654,8 @@
       "yearClosing": "Jahresabschluss",
       "settings": "Buchhaltungseinstellungen",
       "memberSync": "Übernahme der Mitgliedsbeiträge",
-      "tax": "Steuern"
+      "tax": "Steuern",
+      "contacts": "Kontakte"
     },
     "errors": {
       "openingDateInvalid": "Das Eröffnungsdatum ist ungültig.",
@@ -870,7 +872,8 @@
       "createdBy": "Erstellt von",
       "kind": {
         "INVOICE": "Rechnung",
-        "PROFORMA": "Proforma"
+        "PROFORMA": "Proforma",
+        "QUOTE": "Angebot"
       },
       "status": {
         "DRAFT": "Entwurf",
@@ -884,7 +887,8 @@
         "issueDate": "Datum",
         "recipient": "Empfänger",
         "gross": "Betrag",
-        "status": "Status"
+        "status": "Status",
+        "open": "Offen"
       },
       "form": {
         "kind": "Art",
@@ -918,7 +922,9 @@
         "created": "Entwurf gespeichert.",
         "updated": "Rechnung aktualisiert.",
         "draftHint": "Wird als Entwurf gespeichert; beim Stellen wird die Nummer vergeben, danach ist keine Änderung mehr möglich.",
-        "editTitle": "Entwurf bearbeiten"
+        "editTitle": "Entwurf bearbeiten",
+        "contact": "Kontakt (Kunde)",
+        "contactHelp": "Bei Auswahl werden Empfängerdaten und Zahlungsziel übernommen."
       },
       "actions": {
         "pdf": "PDF",
@@ -934,7 +940,7 @@
         "deleted": "Entwurf gelöscht.",
         "recordPayment": "Zahlung erfassen",
         "paymentTitle": "{number} – Zahlungseingang",
-        "paymentHelp": "Es wird eine Einnahmebuchung über den Rechnungsbetrag angelegt und die Rechnung als bezahlt markiert. Die Quittung erhalten Sie auf der Buchungsseite.",
+        "paymentHelp": "Für den Zahlbetrag wird eine Einnahmebuchung angelegt (nach Steuersätzen aufgeteilt). Ist der Betrag kleiner als der offene Betrag, bleibt die Rechnung offen – oder Sie buchen den Rest als Skonto/Ausfall aus.",
         "paidDate": "Zahlungsdatum",
         "account": "Konto (Kasse/Bank)",
         "category": "Einnahmekategorie",
@@ -947,7 +953,10 @@
         "cancelPaidHelp": "Das Dokument wird storniert und die Zahlungsbuchung gegengebucht.",
         "reason": "Stornogrund",
         "cancelled": "Dokument storniert.",
-        "close": "Schließen"
+        "close": "Schließen",
+        "amount": "Zahlbetrag",
+        "openAmount": "Offen: {amount} €",
+        "closeRemainder": "Rest von {amount} € als Skonto/Ausfall ausbuchen"
       },
       "settings": {
         "title": "Rechnungseinstellungen",
@@ -968,7 +977,8 @@
         "cannotConvert": "Nur eine gestellte Proforma kann umgewandelt werden.",
         "alreadyConverted": "Aus dieser Proforma wurde bereits eine Rechnung erstellt.",
         "notPayable": "Zahlungen können nur für gestellte, offene Rechnungen erfasst werden.",
-        "cannotCancel": "Entwürfe werden gelöscht, nicht storniert; stornierte Dokumente können nicht erneut storniert werden."
+        "cannotCancel": "Entwürfe werden gelöscht, nicht storniert; stornierte Dokumente können nicht erneut storniert werden.",
+        "amountInvalid": "Der Betrag muss größer 0 und höchstens der offene Betrag sein."
       },
       "validation": {
         "textMax": "Text ist zu lang.",
@@ -979,7 +989,34 @@
         "lines": "Mindestens eine Position hinzufügen.",
         "reason": "Grund muss mindestens 3 Zeichen haben.",
         "paymentDays": "Anzahl Tage eingeben."
-      }
+      },
+      "newQuote": "Neues Angebot",
+      "views": {
+        "list": "Alle Belege",
+        "opos": "Offene Posten"
+      },
+      "opos": {
+        "buckets": {
+          "notDue": "Nicht fällig",
+          "d1_30": "1–30 Tage",
+          "d31_60": "31–60 Tage",
+          "d61_90": "61–90 Tage",
+          "d90plus": "über 90 Tage"
+        },
+        "total": "Summe offen",
+        "number": "Nr.",
+        "recipient": "Empfänger",
+        "due": "Fällig",
+        "days": "Verzug (Tage)",
+        "gross": "Brutto",
+        "open": "Offen",
+        "empty": "Keine offenen Posten."
+      },
+      "paidTotal": "Bezahlt",
+      "skontoTotal": "Skonto / ausgebucht",
+      "openTotal": "Offen",
+      "paymentsTitle": "Zahlungseingänge",
+      "skontoShort": "Skonto"
     },
     "permissions": {
       "accounting": {
@@ -1055,6 +1092,48 @@
           "numbers": "Berater-/Mandantennummer fehlt.",
           "missingNumbers": "Einigen Buchungen fehlen Kontonummern."
         }
+      }
+    },
+    "contacts": {
+      "title": "Kontakte",
+      "description": "Kunden (Debitoren) und Lieferanten (Kreditoren) mit DATEV-Personenkonto.",
+      "newCustomer": "Neuer Kunde",
+      "newSupplier": "Neuer Lieferant",
+      "edit": "Kontakt bearbeiten",
+      "search": "Name, E-Mail oder Nummer suchen",
+      "empty": "Noch keine Kontakte.",
+      "saved": "Kontakt gespeichert.",
+      "save": "Speichern",
+      "privacy": "Enthält personenbezogene Daten: nur mit Buchhaltungsrecht sichtbar; wird nicht an den Assistenten übermittelt.",
+      "type": {
+        "CUSTOMER": "Kunde",
+        "SUPPLIER": "Lieferant"
+      },
+      "fields": {
+        "type": "Art",
+        "number": "Nr.",
+        "name": "Name / Firma",
+        "contactPerson": "Ansprechpartner",
+        "email": "E-Mail",
+        "phone": "Telefon",
+        "vatId": "USt-IdNr.",
+        "paymentTermDays": "Zahlungsziel (Tage)",
+        "paymentTermHint": "Leer = Standard aus den Rechnungseinstellungen",
+        "address": "Anschrift",
+        "notes": "Notizen",
+        "isActive": "Aktiv",
+        "invoices": "Rechnungen",
+        "open": "Offen",
+        "numberAuto": "Die Nummer wird automatisch vergeben (Kunden ab 10000, Lieferanten ab 70000).",
+        "numberFixed": "Nummer: {number} (unveränderlich)"
+      },
+      "validation": {
+        "name": "Der Name muss mindestens 2 Zeichen haben.",
+        "vatId": "Ungültige USt-IdNr. (z. B. DE123456789)."
+      },
+      "errors": {
+        "notFound": "Kontakt nicht gefunden.",
+        "rangeExhausted": "Nummernkreis erschöpft."
       }
     }
   },

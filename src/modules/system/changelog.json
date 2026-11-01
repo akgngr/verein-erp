@@ -2,6 +2,41 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.18.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "Muhasebe: cariler, teklifler, kısmi ödeme ve açık kalemler",
+        "de": "Buchhaltung: Kontakte, Angebote, Teilzahlungen und offene Posten"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Cari kartlar (müşteri/tedarikçi): DATEV kişi hesabı numarası otomatik (müşteri 10000+, tedarikçi 70000+), USt-IdNr., ödeme vadesi. Faturada cari seçilince alıcı ve vade doldurulur.",
+          "de": "Kontakte (Kunden/Lieferanten): automatische DATEV-Personenkontonummer (Kunden ab 10000, Lieferanten ab 70000), USt-IdNr., Zahlungsziel. Bei Auswahl in der Rechnung werden Empfänger und Fälligkeit übernommen."
+        },
+        {
+          "type": "feature",
+          "tr": "Teklif (Angebot, AN-…): PDF ve tek tıkla faturaya dönüştürme.",
+          "de": "Angebote (AN-…): PDF und Umwandlung in eine Rechnung per Klick."
+        },
+        {
+          "type": "feature",
+          "tr": "Kısmi ödeme: tahsilat KDV oranlarına orantılı bölünür; kalan Skonto/kayıp olarak kapatılabilir. Faturada tahsilat geçmişi ve açık tutar.",
+          "de": "Teilzahlungen: der Zahlbetrag wird anteilig auf die Steuersätze verteilt; der Rest kann als Skonto/Ausfall ausgebucht werden. Zahlungsverlauf und offener Betrag an der Rechnung."
+        },
+        {
+          "type": "feature",
+          "tr": "Açık kalemler (OPOS) ve yaşlandırma (vadesi gelmemiş, 1–30, 31–60, 61–90, 90+ gün).",
+          "de": "Offene Posten (OPOS) mit Altersstruktur (nicht fällig, 1–30, 31–60, 61–90, über 90 Tage)."
+        },
+        {
+          "type": "improvement",
+          "tr": "Asistan açık kalem özetini (yalnızca toplamlar) verebilir.",
+          "de": "Der Assistent liefert eine OPOS-Übersicht (nur Summen)."
+        }
+      ]
+    },
+    {
       "version": "0.17.0",
       "date": "2026-10-31",
       "title": {

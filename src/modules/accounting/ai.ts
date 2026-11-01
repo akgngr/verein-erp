@@ -8,6 +8,9 @@ import { can } from "@/shared/permissions/define";
 import { accountingPermissions } from "./permissions";
 import { getIncomeExpenseReport, listAccountBalances } from "./server";
 import { listTaxRows } from "./queries/tax-reports";
+import { listOpenItems } from "./queries/invoices";
+import { AGING_BUCKETS } from "./services/invoice-payments";
+import { berlinToday } from "./utils";
 import { getTaxSettings } from "./services/tax";
 import { computeEuer, computeUstva, vatPeriods } from "./services/tax-reports";
 import { getDb } from "@/shared/db";
@@ -67,6 +70,26 @@ export const ai = defineModuleAi({
           periods,
           euer: { incomeNetEur: euros(euer.incomeNetCents), outputTaxEur: euros(euer.outputTaxCents), expenseNetEur: euros(euer.expenseNetCents), inputTaxEur: euros(euer.inputTaxCents), resultEur: euros(euer.resultCents) },
           page: `/muhasebe/vergi?yil=${year}`,
+        };
+      },
+    }),
+    aiTool({
+      name: "get_open_items_summary",
+      operation: "read",
+      allowed: (user) => can(user.role, accountingPermissions, "view"),
+      description:
+        "Accounts receivable (open invoices / OPOS) aging summary: count and open amount (EUR) per aging bucket (not due, 1-30, 31-60, 61-90, >90 days overdue). Totals only — no customer names or invoice details.",
+      schema: z.object({}),
+      inputSchema: { type: "object", properties: {}, additionalProperties: false },
+      run: async () => {
+        const rows = await listOpenItems(berlinToday());
+        return {
+          buckets: AGING_BUCKETS.map((bucket) => {
+            const items = rows.filter((row) => row.bucket === bucket);
+            return { bucket, count: items.length, openEur: euros(items.reduce((sum, row) => sum + row.openCents, 0)) };
+          }),
+          totalOpenEur: euros(rows.reduce((sum, row) => sum + row.openCents, 0)),
+          page: "/muhasebe/faturalar?gorunum=opos",
         };
       },
     }),

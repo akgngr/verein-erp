@@ -204,6 +204,7 @@ model AccountingSettings {
 enum InvoiceKind {
   INVOICE // Rechnung: R-2026-0001
   PROFORMA // Proforma-Rechnung: PF-2026-0001
+  QUOTE // Angebot: AN-2026-0001 (ACC-3)
 }
 
 enum InvoiceStatus {
@@ -246,6 +247,12 @@ model AccountingInvoice {
   bookingId        String?
   // Proformadan dönüştürülen faturada kaynak proforma.
   sourceProformaId String?
+  /// ACC-3: cari kart (isteğe bağlı; alıcı alanları anlık görüntü olarak kalır).
+  contactId        String?
+  contact          AccountingContact? @relation(fields: [contactId], references: [id], onDelete: Restrict)
+  /// ACC-3: tahsil edilen ve Skonto/silinen tutar (cent); açık = grossCents − paidCents − skontoCents.
+  paidCents        Int           @default(0)
+  skontoCents      Int           @default(0)
   issuedAt         DateTime?
   paidAt           DateTime?
   cancelledAt      DateTime?
@@ -255,7 +262,8 @@ model AccountingInvoice {
   createdAt        DateTime      @default(now())
   updatedAt        DateTime      @updatedAt
 
-  lines AccountingInvoiceLine[]
+  lines    AccountingInvoiceLine[]
+  payments AccountingInvoicePayment[]
 
   @@unique([kind, year, sequence])
   @@index([status])
@@ -288,4 +296,48 @@ model AccountingInvoiceSettings {
   footerText        String?
   incomeCategoryId  String? // ödeme fişi için varsayılan gelir kategorisi
   updatedAt         DateTime @updatedAt
+}
+
+enum ContactType {
+  CUSTOMER // Debitor (10000–69999)
+  SUPPLIER // Kreditor (70000–99999)
+}
+
+/// ACC-3: cari kart (müşteri/tedarikçi). Kişisel veri içerir — yalnızca muhasebe izinleriyle görülür.
+model AccountingContact {
+  id              String      @id @default(cuid())
+  type            ContactType
+  number          Int         @unique // DATEV Personenkonto
+  name            String
+  contactPerson   String?
+  address         String? // çok satırlı
+  email           String?
+  phone           String?
+  vatId           String? // USt-IdNr.
+  paymentTermDays Int?
+  notes           String?
+  isActive        Boolean     @default(true)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  invoices AccountingInvoice[]
+
+  @@index([type, name])
+}
+
+/// ACC-3: fatura tahsilatı (kısmi ödeme + isteğe bağlı Skonto/kalan kapatma).
+model AccountingInvoicePayment {
+  id             String   @id @default(cuid())
+  invoiceId      String
+  invoice        AccountingInvoice @relation(fields: [invoiceId], references: [id], onDelete: Restrict)
+  paidDate       DateTime @db.Date
+  amountCents    Int
+  skontoCents    Int      @default(0)
+  accountId      String
+  bookingNumbers String // virgülle ayrılmış fiş numaraları (gösterim)
+  createdById    String
+  createdByLabel String
+  createdAt      DateTime @default(now())
+
+  @@index([invoiceId])
 }

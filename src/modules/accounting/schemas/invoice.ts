@@ -32,6 +32,8 @@ export const invoiceSchema = z.object({
   footerText: text(1000),
   taxNote: text(300),
   categoryId: text(64),
+  /** ACC-3: cari kart (boş = serbest alıcı). */
+  contactId: text(64),
   lines: z.array(invoiceLineSchema).min(1, "accounting.invoices.validation.lines").max(INVOICE_MAX_LINES),
 });
 
@@ -43,6 +45,10 @@ export const invoicePaymentSchema = z.object({
   paidDate: z.string().trim().regex(DATE_ONLY, "accounting.validation.bookingDateInvalid"),
   accountId: z.string().trim().min(1, "accounting.validation.accountRequired"),
   categoryId: z.string().trim().min(1, "accounting.validation.categoryRequired"),
+  /** ACC-3: kısmi ödeme; boş = açık tutarın tamamı. */
+  amount: z.string().trim().refine((value) => value === "" || DECIMAL.test(value), "accounting.invoices.validation.price").default(""),
+  /** Kalanı Skonto/kayıp olarak kapat (fatura ödendi sayılır). */
+  closeRemainder: z.boolean().default(false),
 });
 export const invoiceSettingsSchema = z.object({
   defaultTaxRate: z.enum(INVOICE_TAX_RATES.map(String) as [string, ...string[]]),

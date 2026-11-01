@@ -641,7 +641,8 @@
       "yearClosing": "Yıl kapanışı",
       "settings": "Ayarlar",
       "export": "Excel'e aktar",
-      "tax": "Vergi"
+      "tax": "Vergi",
+      "contacts": "Cariler"
     },
     "meta": {
       "list": "Muhasebe",
@@ -653,7 +654,8 @@
       "yearClosing": "Yıl kapanışı",
       "settings": "Muhasebe ayarları",
       "memberSync": "Üyelik aktarımı",
-      "tax": "Vergi"
+      "tax": "Vergi",
+      "contacts": "Cariler"
     },
     "errors": {
       "openingDateInvalid": "Açılış tarihi geçersiz.",
@@ -870,7 +872,8 @@
       "createdBy": "Oluşturan",
       "kind": {
         "INVOICE": "Fatura",
-        "PROFORMA": "Proforma"
+        "PROFORMA": "Proforma",
+        "QUOTE": "Teklif"
       },
       "status": {
         "DRAFT": "Taslak",
@@ -884,7 +887,8 @@
         "issueDate": "Tarih",
         "recipient": "Alıcı",
         "gross": "Tutar",
-        "status": "Durum"
+        "status": "Durum",
+        "open": "Açık"
       },
       "form": {
         "kind": "Tür",
@@ -918,7 +922,9 @@
         "created": "Taslak kaydedildi.",
         "updated": "Fatura güncellendi.",
         "draftHint": "Taslak olarak kaydedilir; kesinleştirince numara verilir ve artık değiştirilemez.",
-        "editTitle": "Taslağı düzenle"
+        "editTitle": "Taslağı düzenle",
+        "contact": "Cari (müşteri)",
+        "contactHelp": "Seçilince alıcı bilgileri ve vade karttan doldurulur."
       },
       "actions": {
         "pdf": "PDF",
@@ -934,7 +940,7 @@
         "deleted": "Taslak silindi.",
         "recordPayment": "Ödeme alındı",
         "paymentTitle": "{number} – ödeme kaydı",
-        "paymentHelp": "Fatura tutarı kadar bir gelir fişi oluşturulur ve fatura \"ödendi\" olur. Fişin makbuzunu fiş sayfasından alabilirsiniz.",
+        "paymentHelp": "Tahsil edilen tutar için gelir fişi yazılır (KDV oranlarına göre bölünür). Tutar açık tutardan azsa fatura açık kalır; isterseniz kalanı Skonto/kayıp olarak kapatabilirsiniz.",
         "paidDate": "Ödeme tarihi",
         "account": "Hesap (kasa/banka)",
         "category": "Gelir kategorisi",
@@ -947,7 +953,10 @@
         "cancelPaidHelp": "Belge iptal edilir ve tahsilat fişi ters kaydedilir (Storno).",
         "reason": "İptal gerekçesi",
         "cancelled": "Belge iptal edildi.",
-        "close": "Kapat"
+        "close": "Kapat",
+        "amount": "Tahsil edilen tutar",
+        "openAmount": "Açık tutar: {amount} €",
+        "closeRemainder": "Kalan {amount} € Skonto/kayıp olarak kapatılsın"
       },
       "settings": {
         "title": "Fatura ayarları",
@@ -968,7 +977,8 @@
         "cannotConvert": "Yalnızca kesinleşmiş bir proforma faturaya dönüştürülebilir.",
         "alreadyConverted": "Bu proformadan zaten bir fatura oluşturuldu.",
         "notPayable": "Yalnızca kesilmiş (ödenmemiş) bir faturaya ödeme kaydedilebilir.",
-        "cannotCancel": "Taslak iptal edilmez, silinir; iptal edilmiş belge yeniden iptal edilemez."
+        "cannotCancel": "Taslak iptal edilmez, silinir; iptal edilmiş belge yeniden iptal edilemez.",
+        "amountInvalid": "Tutar 0'dan büyük ve açık tutardan küçük/eşit olmalı."
       },
       "validation": {
         "textMax": "Metin çok uzun.",
@@ -979,7 +989,34 @@
         "lines": "En az bir kalem ekleyin.",
         "reason": "Gerekçe en az 3 karakter olmalı.",
         "paymentDays": "Gün sayısı girin."
-      }
+      },
+      "newQuote": "Yeni teklif",
+      "views": {
+        "list": "Tüm belgeler",
+        "opos": "Açık kalemler"
+      },
+      "opos": {
+        "buckets": {
+          "notDue": "Vadesi gelmemiş",
+          "d1_30": "1–30 gün",
+          "d31_60": "31–60 gün",
+          "d61_90": "61–90 gün",
+          "d90plus": "90+ gün"
+        },
+        "total": "Toplam açık",
+        "number": "No.",
+        "recipient": "Alıcı",
+        "due": "Vade",
+        "days": "Gecikme (gün)",
+        "gross": "Brüt",
+        "open": "Açık",
+        "empty": "Açık kalem yok."
+      },
+      "paidTotal": "Tahsil edilen",
+      "skontoTotal": "Skonto / kapatılan",
+      "openTotal": "Açık",
+      "paymentsTitle": "Tahsilatlar",
+      "skontoShort": "Skonto"
     },
     "permissions": {
       "accounting": {
@@ -1055,6 +1092,48 @@
           "numbers": "Berater-/Mandantennummer eksik.",
           "missingNumbers": "Bazı fişlerde hesap numarası eksik."
         }
+      }
+    },
+    "contacts": {
+      "title": "Cariler",
+      "description": "Müşteri (Debitor) ve tedarikçi (Kreditor) kartları; DATEV kişi hesabı numarasıyla.",
+      "newCustomer": "Yeni müşteri",
+      "newSupplier": "Yeni tedarikçi",
+      "edit": "Cariyi düzenle",
+      "search": "Ad, e-posta veya numara ara",
+      "empty": "Henüz cari kart yok.",
+      "saved": "Cari kart kaydedildi.",
+      "save": "Kaydet",
+      "privacy": "Kişisel veri içerir: yalnızca muhasebe izni olanlar görür; asistana gönderilmez.",
+      "type": {
+        "CUSTOMER": "Müşteri",
+        "SUPPLIER": "Tedarikçi"
+      },
+      "fields": {
+        "type": "Tür",
+        "number": "No.",
+        "name": "Ad / Firma",
+        "contactPerson": "İlgili kişi",
+        "email": "E-posta",
+        "phone": "Telefon",
+        "vatId": "USt-IdNr.",
+        "paymentTermDays": "Ödeme vadesi (gün)",
+        "paymentTermHint": "Boş = fatura ayarlarındaki varsayılan",
+        "address": "Adres",
+        "notes": "Notlar",
+        "isActive": "Aktif",
+        "invoices": "Faturalar",
+        "open": "Açık",
+        "numberAuto": "Numara otomatik verilir (müşteri 10000+, tedarikçi 70000+).",
+        "numberFixed": "Numara: {number} (değişmez)"
+      },
+      "validation": {
+        "name": "Ad en az 2 karakter olmalı.",
+        "vatId": "Geçersiz USt-IdNr. (ör. DE123456789)."
+      },
+      "errors": {
+        "notFound": "Cari kart bulunamadı.",
+        "rangeExhausted": "Numara aralığı doldu."
       }
     }
   },

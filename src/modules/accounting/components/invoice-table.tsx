@@ -33,6 +33,7 @@ export function InvoiceTable({ rows, q }: { rows: InvoiceListRow[]; q?: string }
     { key: "issueDate", label: t("columns.issueDate"), render: (row) => formatDate(row.issueDate) },
     { key: "recipientName", label: t("columns.recipient"), render: (row) => (row.subject ? `${row.recipientName} · ${row.subject}` : row.recipientName) },
     { key: "grossCents", label: t("columns.gross"), align: "end", render: (row) => euro(row.grossCents) },
+    { key: "openCents", label: t("columns.open"), align: "end", render: (row) => (row.openCents > 0 ? <span className={row.overdue ? "text-danger" : ""}>{euro(row.openCents)}</span> : "—") },
     {
       key: "status",
       label: t("columns.status"),

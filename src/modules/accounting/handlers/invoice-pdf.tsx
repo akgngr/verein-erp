@@ -22,7 +22,7 @@ export async function invoicePdfHandler(request: Request, id: string): Promise<R
   }
   const lang = resolvePdfLang(request);
   const [letterhead, profile, settings] = await Promise.all([loadLetterhead(), getOrganizationProfile(), getInvoiceSettings()]);
-  const prefix = invoice.kind === "PROFORMA" ? "proforma" : "rechnung";
+  const prefix = invoice.kind === "PROFORMA" ? "proforma" : invoice.kind === "QUOTE" ? "angebot" : "rechnung";
   return pdfResponse({
     user,
     document: (

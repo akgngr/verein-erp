@@ -49,13 +49,15 @@ const W = { pos: 30, item: 205, qty: 55, price: 70, tax: 40, total: 75 };
 export function InvoiceDocument({ data }: { data: InvoicePdfData }) {
   const { strings: s, invoice, lang, settings, organization: org } = data;
   const isProforma = invoice.kind === "PROFORMA";
+  const isQuote = invoice.kind === "QUOTE";
+  const title = isQuote ? s.quoteTitle : isProforma ? s.proformaTitle : s.invoiceTitle;
   const totals = calculateInvoiceTotals(invoice.lines);
   const number = invoice.number ?? s.draftNumber;
   const cell = (width: number, align: "left" | "right" = "left") => ({ width, textAlign: align, paddingHorizontal: 2 });
   const hasTax = totals.taxCents > 0;
 
   return (
-    <Document title={`${isProforma ? s.proformaTitle : s.invoiceTitle} ${number}`} author={org.name} language={lang}>
+    <Document title={`${title} ${number}`} author={org.name} language={lang}>
       <Page size="A4" style={styles.page}>
         <Letterhead profile={org} />
         <View style={styles.head}>
@@ -66,7 +68,7 @@ export function InvoiceDocument({ data }: { data: InvoicePdfData }) {
           </View>
           <View style={styles.meta}>
             <View style={styles.metaRow}>
-              <Text style={styles.metaLabel}>{isProforma ? s.proformaNumber : s.invoiceNumber}</Text>
+              <Text style={styles.metaLabel}>{isQuote ? s.quoteNumber : isProforma ? s.proformaNumber : s.invoiceNumber}</Text>
               <Text>{number}</Text>
             </View>
             <View style={styles.metaRow}>
@@ -88,7 +90,7 @@ export function InvoiceDocument({ data }: { data: InvoicePdfData }) {
           </View>
         </View>
 
-        <Text style={styles.title}>{isProforma ? s.proformaTitle : s.invoiceTitle}</Text>
+        <Text style={styles.title}>{title}</Text>
         {invoice.subject ? <Text style={styles.subject}>{invoice.subject}</Text> : null}
         {invoice.introText ? <Text style={styles.paragraph}>{invoice.introText}</Text> : null}
 
@@ -141,7 +143,8 @@ export function InvoiceDocument({ data }: { data: InvoicePdfData }) {
 
         {invoice.taxNote ? <Text style={styles.note}>{invoice.taxNote}</Text> : null}
         {isProforma ? <Text style={styles.note}>{s.proformaNote}</Text> : null}
-        {!isProforma && invoice.dueDate && invoice.number ? (
+        {isQuote ? <Text style={styles.note}>{s.quoteNote}</Text> : null}
+        {!isProforma && !isQuote && invoice.dueDate && invoice.number ? (
           <Text style={styles.note}>{s.paymentNote(formatPdfDate(invoice.dueDate, lang), invoice.number)}</Text>
         ) : null}
         {invoice.footerText ? <Text style={styles.note}>{invoice.footerText}</Text> : null}

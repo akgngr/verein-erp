@@ -1,12 +1,13 @@
 "use client";
 
-import { addToast, Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Textarea } from "@heroui/react";
+import { addToast, Button, Checkbox, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Select, SelectItem, Textarea } from "@heroui/react";
 import { Ban, CheckCircle2, FileOutput, HandCoins, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
+import { toCents } from "@/shared/money";
 import { PdfSplitButton } from "@/shared/components/ui/pdf-split-button";
 
 import {
@@ -19,6 +20,9 @@ import {
 
 type Option = { value: string; label: string };
 
+/** HeroUI seçimi: normalde Set; gizli native <select> (otomatik doldurma) düz string verir. */
+const firstKey = (keys: unknown): string => (typeof keys === "string" ? keys : String(Array.from(keys as Iterable<unknown>)[0] ?? ""));
+
 /** Fatura detay aksiyonları: PDF, düzenle/kesinleştir/sil (taslak), ödeme al, faturaya dönüştür, iptal. */
 export function InvoiceActions({
   invoice,
@@ -26,7 +30,7 @@ export function InvoiceActions({
   accountOptions,
   categoryOptions,
 }: {
-  invoice: { id: string; kind: "INVOICE" | "PROFORMA"; status: "DRAFT" | "ISSUED" | "PAID" | "CANCELLED"; number: string | null; categoryId: string | null; convertedInvoiceId: string | null };
+  invoice: { id: string; kind: "INVOICE" | "PROFORMA" | "QUOTE"; status: "DRAFT" | "ISSUED" | "PAID" | "CANCELLED"; number: string | null; categoryId: string | null; convertedInvoiceId: string | null; openCents: number };
   can: { update: boolean; create: boolean; delete: boolean };
   accountOptions: Option[];
   categoryOptions: Option[];
@@ -41,6 +45,11 @@ export function InvoiceActions({
   const [accountId, setAccountId] = useState(accountOptions[0]?.value ?? "");
   const [categoryId, setCategoryId] = useState(invoice.categoryId ?? "");
   const [reason, setReason] = useState("");
+  const openLabel = (invoice.openCents / 100).toFixed(2).replace(".", ",");
+  const [amount, setAmount] = useState(openLabel);
+  const [closeRemainder, setCloseRemainder] = useState(false);
+  const amountCents = toCents(amount);
+  const partial = amountCents !== null && amountCents > 0 && amountCents < invoice.openCents;
 
   const done = (message: string) => {
     addToast({ title: message, color: "success" });
@@ -74,7 +83,7 @@ export function InvoiceActions({
           {t("recordPayment")}
         </Button>
       ) : null}
-      {invoice.kind === "PROFORMA" && (invoice.status === "ISSUED" || invoice.status === "PAID") && can.create ? (
+      {(invoice.kind === "PROFORMA" || invoice.kind === "QUOTE") && (invoice.status === "ISSUED" || invoice.status === "PAID") && can.create ? (
         invoice.convertedInvoiceId ? (
           <Button as="a" href={`/muhasebe/faturalar/${invoice.convertedInvoiceId}`} size="sm" variant="flat" startContent={<FileOutput className="h-4 w-4" aria-hidden />}>
             {t("openInvoice")}
@@ -132,13 +141,27 @@ export function InvoiceActions({
               <ModalHeader>{t("paymentTitle", { number: invoice.number ?? "" })}</ModalHeader>
               <ModalBody>
                 <p className="text-small text-default-500">{t("paymentHelp")}</p>
+                <Input
+                  label={t("amount")}
+                  labelPlacement="outside"
+                  value={amount}
+                  onValueChange={setAmount}
+                  inputMode="decimal"
+                  description={t("openAmount", { amount: openLabel })}
+                  isRequired
+                />
+                {partial ? (
+                  <Checkbox isSelected={closeRemainder} onValueChange={setCloseRemainder} size="sm">
+                    <span className="text-small">{t("closeRemainder", { amount: (((invoice.openCents - (amountCents ?? 0)) / 100).toFixed(2)).replace(".", ",") })}</span>
+                  </Checkbox>
+                ) : null}
                 <Input type="date" label={t("paidDate")} labelPlacement="outside" value={paidDate} onValueChange={setPaidDate} isRequired />
-                <Select label={t("account")} labelPlacement="outside" selectedKeys={accountId ? [accountId] : []} onSelectionChange={(keys) => setAccountId(String(Array.from(keys)[0] ?? ""))} isRequired>
+                <Select label={t("account")} labelPlacement="outside" selectedKeys={accountId ? [accountId] : []} onSelectionChange={(keys) => setAccountId(firstKey(keys))} isRequired>
                   {accountOptions.map((option) => (
                     <SelectItem key={option.value}>{option.label}</SelectItem>
                   ))}
                 </Select>
-                <Select label={t("category")} labelPlacement="outside" selectedKeys={categoryId ? [categoryId] : []} onSelectionChange={(keys) => setCategoryId(String(Array.from(keys)[0] ?? ""))} isRequired>
+                <Select label={t("category")} labelPlacement="outside" selectedKeys={categoryId ? [categoryId] : []} onSelectionChange={(keys) => setCategoryId(firstKey(keys))} isRequired>
                   {categoryOptions.map((option) => (
                     <SelectItem key={option.value}>{option.label}</SelectItem>
                   ))}
@@ -151,10 +174,10 @@ export function InvoiceActions({
                 <Button
                   color="success"
                   isLoading={busy}
-                  isDisabled={!paidDate || !accountId || !categoryId}
+                  isDisabled={!paidDate || !accountId || !categoryId || amountCents === null || amountCents <= 0 || amountCents > invoice.openCents}
                   onPress={async () => {
                     setBusy(true);
-                    const result = await recordInvoicePaymentAction({ id: invoice.id, paidDate, accountId, categoryId });
+                    const result = await recordInvoicePaymentAction({ id: invoice.id, paidDate, accountId, categoryId, amount, closeRemainder: partial && closeRemainder });
                     setBusy(false);
                     if (!result.ok) return fail(result.error);
                     onClose();
