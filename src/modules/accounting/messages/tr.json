@@ -373,7 +373,8 @@
     "export": "Excel'e aktar",
     "tax": "Vergi",
     "contacts": "Cariler",
-    "bank": "Banka"
+    "bank": "Banka",
+    "payables": "Gelen faturalar"
   },
   "nav": {
     "muhasebe": "Muhasebe"
@@ -390,7 +391,8 @@
     "memberSync": "Üyelik aktarımı",
     "tax": "Vergi",
     "contacts": "Cariler",
-    "bank": "Banka"
+    "bank": "Banka",
+    "payables": "Gelen faturalar"
   },
   "errors": {
     "openingDateInvalid": "Açılış tarihi geçersiz.",
@@ -659,7 +661,9 @@
       "draftHint": "Taslak olarak kaydedilir; kesinleştirince numara verilir ve artık değiştirilemez.",
       "editTitle": "Taslağı düzenle",
       "contact": "Cari (müşteri)",
-      "contactHelp": "Seçilince alıcı bilgileri ve vade karttan doldurulur."
+      "contactHelp": "Seçilince alıcı bilgileri ve vade karttan doldurulur.",
+      "buyerReference": "Leitweg-ID / alıcı referansı",
+      "buyerReferenceHint": "Kamu kurumları için zorunlu (XRechnung)."
     },
     "actions": {
       "pdf": "PDF",
@@ -704,7 +708,11 @@
       "bankDetails": "Banka bilgileri (PDF alt bilgisi)",
       "bankDetailsPlaceholder": "IBAN: DE..\nBIC: ...\nBanka adı",
       "footerText": "Varsayılan alt metin",
-      "saved": "Fatura ayarları kaydedildi."
+      "saved": "Fatura ayarları kaydedildi.",
+      "sellerVatId": "USt-IdNr.",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "xrechnungHint": "XRechnung (e-fatura) için IBAN ve USt-IdNr. ya da kurum profilindeki vergi numarası gerekir."
     },
     "errors": {
       "notFound": "Fatura bulunamadı.",
@@ -723,7 +731,9 @@
       "recipient": "Alıcı adı gerekli.",
       "lines": "En az bir kalem ekleyin.",
       "reason": "Gerekçe en az 3 karakter olmalı.",
-      "paymentDays": "Gün sayısı girin."
+      "paymentDays": "Gün sayısı girin.",
+      "iban": "Geçersiz IBAN.",
+      "bic": "Geçersiz BIC."
     },
     "newQuote": "Yeni teklif",
     "views": {
@@ -751,7 +761,21 @@
     "skontoTotal": "Skonto / kapatılan",
     "openTotal": "Açık",
     "paymentsTitle": "Tahsilatlar",
-    "skontoShort": "Skonto"
+    "skontoShort": "Skonto",
+    "xrechnung": {
+      "download": "XRechnung",
+      "failed": "XRechnung oluşturulamadı.",
+      "notIssued": "XRechnung yalnızca kesinleşmiş faturalar için oluşturulur.",
+      "incomplete": "XRechnung için eksik bilgiler:",
+      "issues": {
+        "sellerAddress": "kurum adresi (Kurum profili)",
+        "sellerTaxId": "USt-IdNr. veya vergi no. (Fatura ayarları / Kurum profili)",
+        "sellerContact": "kurum e-posta ve telefonu (Kurum profili)",
+        "buyerAddress": "alıcı adresi (PLZ ve şehir)",
+        "iban": "IBAN (Fatura ayarları)",
+        "dueOrTerms": "vade tarihi"
+      }
+    }
   },
   "permissions": {
     "accounting": {
@@ -927,7 +951,9 @@
       "learnPurpose": "Bu açıklama için",
       "closeRemainder": "Kalan {amount} Skonto/kayıp olarak kapatılsın",
       "cancel": "Vazgeç",
-      "submit": "Fişi oluştur"
+      "submit": "Fişi oluştur",
+      "payable": "Gelen fatura",
+      "payableSelect": "Gelen fatura"
     },
     "rules": {
       "title": "Öğrenilmiş kurallar",
@@ -948,7 +974,106 @@
       "notFound": "Hareket bulunamadı.",
       "notOpen": "Hareket artık açık değil.",
       "invoiceRequired": "Fatura seçin.",
-      "invoiceNeedsCredit": "Faturaya yalnızca gelen ödemeler bağlanabilir."
+      "invoiceNeedsCredit": "Faturaya yalnızca gelen ödemeler bağlanabilir.",
+      "payableRequired": "Gelen fatura seçin.",
+      "payableNeedsDebit": "Gelen faturaya yalnızca giden ödemeler bağlanabilir."
+    }
+  },
+  "payables": {
+    "title": "Gelen faturalar",
+    "description": "Tedarikçi faturaları ve belgeler: yükleyin, e-faturalar (XRechnung/ZUGFeRD) otomatik okunur, kontrol edip ödeyin.",
+    "upload": "Belge yükle",
+    "uploadedManual": "Belge yüklendi; bilgileri girin.",
+    "uploadedEInvoice": "{source} e-fatura okundu; lütfen kontrol edin.",
+    "unnamed": "(tedarikçi yok)",
+    "empty": "Henüz gelen fatura yok.",
+    "status": {
+      "ALL": "Tümü",
+      "DRAFT": "Kontrol bekliyor",
+      "OPEN": "Ödenecek",
+      "PAID": "Ödendi",
+      "CANCELLED": "İptal"
+    },
+    "columns": {
+      "supplier": "Tedarikçi",
+      "number": "Fatura no.",
+      "issueDate": "Tarih",
+      "dueDate": "Vade",
+      "status": "Durum",
+      "gross": "Brüt",
+      "open": "Açık"
+    },
+    "draftManual": "Belge e-fatura değil: bilgileri belgeye bakarak girin ve kaydedin.",
+    "draftEInvoice": "Bilgiler e-faturadan okundu. Kontrol edip kategoriyi seçin ve kaydedin.",
+    "form": {
+      "contact": "Cari (tedarikçi)",
+      "supplierName": "Tedarikçi",
+      "number": "Fatura no.",
+      "supplierVatId": "USt-IdNr.",
+      "supplierTaxNumber": "Vergi no. (Steuernummer)",
+      "supplierIban": "IBAN",
+      "category": "Gider kategorisi",
+      "issueDate": "Fatura tarihi",
+      "dueDate": "Vade",
+      "serviceDate": "Hizmet tarihi / dönemi",
+      "serviceDatePlaceholder": "ör. Ekim 2026",
+      "supplierAddress": "Adres",
+      "amounts": "Tutarlar (net, KDV oranına göre)",
+      "net19": "Net %19",
+      "tax19": "KDV %19",
+      "net7": "Net %7",
+      "tax7": "KDV %7",
+      "net0": "Net %0",
+      "gross": "Brüt toplam: {amount}",
+      "notes": "Notlar",
+      "submit": "Kaydet ve onayla",
+      "saved": "Gelen fatura kaydedildi."
+    },
+    "rateLine": "Net %{rate}",
+    "paidTotal": "Ödenen",
+    "document": "Belge",
+    "bookings": "Ödeme fişleri",
+    "createdBy": "{label} · {date}",
+    "checks": {
+      "title": "§ 14 UStG kontrolü",
+      "hint": "Vorsteuer indirimi için zorunlu bilgiler.",
+      "small": "Küçük tutarlı fatura (≤ 250 €, § 33 UStDV): sadeleştirilmiş kontrol.",
+      "sellerName": "Tedarikçi adı",
+      "sellerAddress": "Tedarikçi adresi",
+      "sellerTaxId": "Vergi no. veya USt-IdNr.",
+      "number": "Fatura numarası",
+      "issueDate": "Fatura tarihi",
+      "serviceDate": "Hizmet tarihi",
+      "taxBreakdown": "Oran başına net ve KDV"
+    },
+    "actions": {
+      "edit": "Düzenle",
+      "pay": "Öde",
+      "payTitle": "Ödeme kaydet",
+      "amount": "Tutar",
+      "open": "Açık: {amount} €",
+      "paidDate": "Ödeme tarihi",
+      "account": "Hesap (Kasa/Banka)",
+      "close": "Kapat",
+      "paid": "Fiş {number} oluşturuldu.",
+      "cancel": "İptal et",
+      "cancelTitle": "Gelen faturayı iptal et",
+      "cancelHelp": "Ödeme fişleri varsa ters kaydedilir; belge saklanmaya devam eder.",
+      "reason": "Gerekçe",
+      "deleteDraft": "Taslağı sil",
+      "deleteConfirm": "Yüklenen belge ve taslak silinsin mi?"
+    },
+    "validation": {
+      "supplier": "Tedarikçi adı en az 2 karakter olmalı."
+    },
+    "errors": {
+      "upload": "Yükleme başarısız.",
+      "duplicate": "Bu belge zaten yüklenmiş.",
+      "notFound": "Gelen fatura bulunamadı.",
+      "notPayable": "Bu fatura ödenemez (önce kaydedip onaylayın).",
+      "locked": "Ödenmiş veya iptal edilmiş fatura değiştirilemez.",
+      "amountRequired": "En az bir net tutar girin.",
+      "notEInvoice": "Dosya e-fatura değil."
     }
   }
 }

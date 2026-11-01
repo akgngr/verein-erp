@@ -19,6 +19,11 @@ export const bankBookSchema = z.discriminatedUnion("mode", [
     closeRemainder: z.boolean().default(false),
   }),
   z.object({
+    mode: z.literal("payable"),
+    id: z.string().min(1),
+    payableId: z.string().min(1, "accounting.bank.errors.payableRequired"),
+  }),
+  z.object({
     mode: z.literal("category"),
     id: z.string().min(1),
     categoryId: z.string().trim().min(1, "accounting.validation.categoryRequired"),

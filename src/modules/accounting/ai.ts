@@ -110,6 +110,28 @@ export const ai = defineModuleAi({
       },
     }),
     aiTool({
+      name: "get_payables_summary",
+      operation: "read",
+      allowed: (user) => can(user.role, accountingPermissions, "view"),
+      description:
+        "Incoming invoices (payables) by status: counts, gross and open amounts (EUR), and how many are overdue. Totals only — no supplier names or invoice details.",
+      schema: z.object({}),
+      inputSchema: { type: "object", properties: {}, additionalProperties: false },
+      run: async () => {
+        const items = await getDb().accountingPayable.findMany({ select: { status: true, grossCents: true, paidCents: true, dueDate: true } });
+        const today = berlinToday();
+        return {
+          statuses: (["DRAFT", "OPEN", "PAID", "CANCELLED"] as const).map((status) => {
+            const list = items.filter((item) => item.status === status);
+            return { status, count: list.length, grossEur: euros(list.reduce((sum, item) => sum + item.grossCents, 0)) };
+          }),
+          openEur: euros(items.filter((item) => item.status === "OPEN").reduce((sum, item) => sum + item.grossCents - item.paidCents, 0)),
+          overdueCount: items.filter((item) => item.status === "OPEN" && item.dueDate && item.dueDate < today).length,
+          page: "/muhasebe/gelen-faturalar",
+        };
+      },
+    }),
+    aiTool({
       name: "get_report_link",
       operation: "read",
       allowed: (user) => can(user.role, accountingPermissions, "view"),

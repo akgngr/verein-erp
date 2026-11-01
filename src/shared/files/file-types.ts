@@ -46,6 +46,8 @@ export const FILE_TYPE_RULES: FileTypeRule[] = [
     signature: "zip",
   },
   { extensions: ["txt"], mimes: ["text/plain"], signature: "none" },
+  // E-fatura (XRechnung/ZUGFeRD XML). Yalnızca açıkça izin veren modüller kabul eder; hiçbir zaman inline sunulmaz.
+  { extensions: ["xml"], mimes: ["application/xml", "text/xml"], signature: "none" },
 ];
 
 /** Magic byte imzaları (dosyanın ilk baytları). */

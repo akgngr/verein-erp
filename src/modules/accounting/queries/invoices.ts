@@ -60,6 +60,7 @@ export type InvoiceDetail = InvoiceListRow & {
   lines: InvoiceLineRow[];
   contactId: string | null;
   contactNumber: number | null;
+  buyerReference: string | null;
   payments: InvoicePaymentRow[];
 };
 
@@ -70,6 +71,9 @@ export type InvoiceSettingsData = {
   bankDetails: string | null;
   footerText: string | null;
   incomeCategoryId: string | null;
+  sellerVatId: string | null;
+  iban: string | null;
+  bic: string | null;
 };
 
 const isOverdue = (status: InvoiceStatus, dueDate: Date | null) =>
@@ -129,6 +133,7 @@ export async function getInvoice(id: string): Promise<InvoiceDetail | null> {
     skontoCents: row.skontoCents,
     openCents: row.status === "ISSUED" && row.kind === "INVOICE" ? openCents(row) : 0,
     contactId: row.contactId,
+    buyerReference: row.buyerReference,
     contactNumber: row.contact?.number ?? null,
     payments: row.payments.map((payment) => ({
       id: payment.id,
@@ -180,6 +185,9 @@ export async function getInvoiceSettings(): Promise<InvoiceSettingsData> {
     bankDetails: row?.bankDetails ?? null,
     footerText: row?.footerText ?? null,
     incomeCategoryId: row?.incomeCategoryId ?? null,
+    sellerVatId: row?.sellerVatId ?? null,
+    iban: row?.iban ?? null,
+    bic: row?.bic ?? null,
   };
 }
 

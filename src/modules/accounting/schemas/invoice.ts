@@ -34,6 +34,8 @@ export const invoiceSchema = z.object({
   categoryId: text(64),
   /** ACC-3: cari kart (boş = serbest alıcı). */
   contactId: text(64),
+  /** ACC-5: Leitweg-ID (B2G) / Käuferreferenz — XRechnung BT-10. */
+  buyerReference: text(100),
   lines: z.array(invoiceLineSchema).min(1, "accounting.invoices.validation.lines").max(INVOICE_MAX_LINES),
 });
 
@@ -57,6 +59,10 @@ export const invoiceSettingsSchema = z.object({
   bankDetails: text(400),
   footerText: text(1000),
   incomeCategoryId: text(64),
+  /** ACC-5: XRechnung satıcı bilgileri. */
+  sellerVatId: z.string().trim().refine((value) => value === "" || /^[A-Z]{2}[A-Z0-9]{2,13}$/.test(value.replace(/\s/g, "").toUpperCase()), "accounting.contacts.validation.vatId"),
+  iban: z.string().trim().refine((value) => value === "" || /^[A-Z]{2}\d{2}[A-Z0-9]{10,30}$/.test(value.replace(/\s/g, "").toUpperCase()), "accounting.invoices.validation.iban"),
+  bic: z.string().trim().refine((value) => value === "" || /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/.test(value.replace(/\s/g, "").toUpperCase()), "accounting.invoices.validation.bic"),
 });
 
 export type InvoiceInput = z.infer<typeof invoiceSchema>;
