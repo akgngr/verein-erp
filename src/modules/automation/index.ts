@@ -1,5 +1,6 @@
 // automation modülü — izomorfik public giriş (istemci + sunucu)
-export { moduleConfig, automationPermissions } from "./module.config";
+export { moduleConfig } from "./module.config";
+export { automationPermissions } from "./permissions";
 export type {
   TaskDefinition,
   TaskExecutionContext,
