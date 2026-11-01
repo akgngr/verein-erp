@@ -24,7 +24,7 @@ describe("Automation task contracts", () => {
   test("rejects unnamespaced task keys", () => {
     assert.throws(() =>
       defineTask({
-        key: "sendCampaign",
+        key: "sendCampaign" as `${string}.${string}`,
         version: 1,
         description: "Invalid key",
         inputSchema: z.object({}),
