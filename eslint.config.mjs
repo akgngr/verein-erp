@@ -24,6 +24,7 @@ const MODULE_INTERNAL_IMPORTS = {
     "!@/modules/*/demo",
     "!@/modules/*/lifecycle",
     "!@/modules/*/formats",
+    "!@/modules/*/recipients",
     "!@/modules/*/releases.json",
     "!@/modules/*/permissions",
     "!@/modules/*/routes",

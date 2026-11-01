@@ -198,5 +198,19 @@
       "label": "Öğrenciler",
       "description": "Öğrenci ve veli kayıtları."
     }
+  },
+  "recipients": {
+    "guardians": {
+      "label": "Veliler",
+      "filters": {
+        "scope": {
+          "label": "Kapsam",
+          "options": {
+            "WITH_STUDENTS": "Öğrencisi olan veliler",
+            "ALL": "Tüm veliler"
+          }
+        }
+      }
+    }
   }
 }

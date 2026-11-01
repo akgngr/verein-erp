@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.2.0",
+      "date": "2026-11-01",
+      "appVersion": "0.36.0",
+      "title": {
+        "tr": "Toplu e-posta ayrı modülde",
+        "de": "Rundmail im eigenen Modul"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Toplu e-posta Toplu e-posta modülüne taşındı; Üyeler bir alıcı listesi sunar (durum/tür filtresi, itiraz). Geçmiş kayıtlar taşındı.",
+          "de": "Rundmail ist in das Rundmail-Modul umgezogen; Mitglieder liefern eine Empfängerliste (Status/Art, Widerspruch). Verlauf übernommen."
+        }
+      ]
+    },
+    {
       "version": "1.1.0",
       "date": "2026-11-01",
       "appVersion": "0.31.0",

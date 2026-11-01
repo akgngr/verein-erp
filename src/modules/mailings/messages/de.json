@@ -1,0 +1,62 @@
+{
+  "module": {
+    "label": "Rundmail",
+    "description": "Personalisierte Rundmails an Mitglieder, Eltern und Empfängerlisten anderer Module."
+  },
+  "nav": {
+    "topluEposta": "Rundmail"
+  },
+  "title": "Rundmail",
+  "description": "Empfängerliste wählen, filtern und personalisierte Mitteilung senden. Personen ohne E-Mail oder mit Widerspruch werden übersprungen; jede Person erhält eine eigene E-Mail.",
+  "notConfigured": "Der E-Mail-Versand ist nicht eingerichtet.",
+  "openSettings": "E-Mail-Einstellungen öffnen",
+  "noSources": "Keine verfügbare Empfängerliste (Modul deaktiviert oder keine Berechtigung).",
+  "source": "Empfängerliste",
+  "filterHelp": "Ohne Auswahl alle.",
+  "preview": "{eligible} Empfänger ({matched} passende, davon {noEmail} ohne E-Mail, {optOut} mit Widerspruch).",
+  "subject": "Betreff",
+  "body": "Text",
+  "placeholders": "Platzhalter:",
+  "defaultBody": "Hallo '{firstName}',\n\n\n\nViele Grüße\nDer Vorstand\n\n—\nSie erhalten diese E-Mail aufgrund Ihrer Verbindung zu unserem Verein. Wenn Sie keine Rundmails mehr erhalten möchten, antworten Sie bitte auf diese E-Mail.",
+  "test": "Test an mich senden",
+  "testSent": "Test-E-Mail an {to} gesendet.",
+  "send": "An {count} Personen senden",
+  "confirmTitle": "Rundmail senden?",
+  "confirmText": "{count} Personen erhalten je eine eigene E-Mail. Der Versand läuft im Hintergrund; das Ergebnis sehen Sie unten und im Versandprotokoll.",
+  "started": "Versand gestartet: {count} Empfänger.",
+  "history": "Versandverlauf",
+  "noHistory": "Noch keine Rundmails versendet.",
+  "columns": {
+    "date": "Datum",
+    "source": "Liste",
+    "subject": "Betreff",
+    "result": "Ergebnis",
+    "status": "Status",
+    "by": "Von"
+  },
+  "result": "{sent}/{total} gesendet, {failed} Fehler",
+  "skipped": "Übersprungen: {noEmail} ohne E-Mail, {optOut} Widerspruch",
+  "statusLabels": {
+    "SENDING": "Wird gesendet",
+    "DONE": "Abgeschlossen",
+    "FAILED": "Fehlgeschlagen"
+  },
+  "errors": {
+    "subject": "Betreff: 3–200 Zeichen.",
+    "body": "Text: mindestens 10 Zeichen.",
+    "notConfigured": "E-Mail-Versand ist nicht eingerichtet.",
+    "sendFailed": "Test-E-Mail konnte nicht gesendet werden; siehe Versandprotokoll.",
+    "noRecipients": "Keine passenden Empfänger.",
+    "source": "Diese Empfängerliste ist nicht verfügbar."
+  },
+  "permissions": {
+    "mailings": {
+      "label": "Rundmail",
+      "description": "Rundmails senden (anlegen) und Verlauf (ansehen). Jede Empfängerliste verlangt zusätzlich das Leserecht ihres Moduls."
+    }
+  },
+  "access": {
+    "mail": "Zum Versand und zur Prüfung der E-Mail-Einrichtung.",
+    "system": "Liest Modulzustände, um nur Listen aktiver Module anzuzeigen."
+  }
+}

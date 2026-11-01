@@ -1,0 +1,62 @@
+{
+  "module": {
+    "label": "Toplu e-posta",
+    "description": "Üyelere, velilere ve diğer modüllerin alıcı listelerine kişiye özel toplu e-posta."
+  },
+  "nav": {
+    "topluEposta": "Toplu e-posta"
+  },
+  "title": "Toplu e-posta",
+  "description": "Bir alıcı listesi seçin, filtreleyin ve kişiye özel duyuru gönderin. E-postası olmayanlar ve itiraz edenler atlanır; her alıcıya ayrı e-posta gider (alıcılar birbirini görmez).",
+  "notConfigured": "E-posta gönderimi ayarlanmamış.",
+  "openSettings": "E-posta ayarlarını aç",
+  "noSources": "Kullanabileceğiniz bir alıcı listesi yok (ilgili modül kapalı veya yetkiniz yok).",
+  "source": "Alıcı listesi",
+  "filterHelp": "Seçilmezse hepsi.",
+  "preview": "{eligible} alıcı (filtreye uyan {matched} kişiden {noEmail} e-postasız, {optOut} itiraz etmiş).",
+  "subject": "Konu",
+  "body": "Metin",
+  "placeholders": "Yer tutucular:",
+  "defaultBody": "Merhaba '{firstName}',\n\n\n\nSaygılarımızla\nYönetim kurulu\n\n—\nBu e-postayı derneğimizle ilişkiniz nedeniyle alıyorsunuz. Toplu e-posta almak istemiyorsanız bu e-postayı yanıtlayın.",
+  "test": "Kendime test gönder",
+  "testSent": "Test e-postası {to} adresine gönderildi.",
+  "send": "{count} kişiye gönder",
+  "confirmTitle": "Toplu e-posta gönderilsin mi?",
+  "confirmText": "{count} kişiye ayrı ayrı e-posta gönderilecek. Gönderim arka planda sürer; sonucu aşağıda ve E-posta → Gönderim kayıtları'nda görebilirsiniz.",
+  "started": "Gönderim başladı: {count} alıcı.",
+  "history": "Gönderim geçmişi",
+  "noHistory": "Henüz toplu e-posta gönderilmedi.",
+  "columns": {
+    "date": "Tarih",
+    "source": "Liste",
+    "subject": "Konu",
+    "result": "Sonuç",
+    "status": "Durum",
+    "by": "Gönderen"
+  },
+  "result": "{sent}/{total} gönderildi, {failed} hata",
+  "skipped": "Atlanan: {noEmail} e-postasız, {optOut} itiraz",
+  "statusLabels": {
+    "SENDING": "Gönderiliyor",
+    "DONE": "Tamamlandı",
+    "FAILED": "Başarısız"
+  },
+  "errors": {
+    "subject": "Konu 3–200 karakter olmalı.",
+    "body": "Metin en az 10 karakter olmalı.",
+    "notConfigured": "E-posta gönderimi ayarlanmamış.",
+    "sendFailed": "Test e-postası gönderilemedi; Gönderim kayıtları'na bakın.",
+    "noRecipients": "Uygun alıcı yok.",
+    "source": "Bu alıcı listesini kullanamazsınız."
+  },
+  "permissions": {
+    "mailings": {
+      "label": "Toplu e-posta",
+      "description": "Toplu e-posta gönderme (oluştur) ve geçmiş (gör). Her alıcı listesi ayrıca kendi modülünün görme iznini ister."
+    }
+  },
+  "access": {
+    "mail": "E-postaları göndermek ve e-posta ayarlarının hazır olup olmadığını okumak için.",
+    "system": "Yalnızca etkin modüllerin alıcı listelerini göstermek için modül durumlarını okur."
+  }
+}

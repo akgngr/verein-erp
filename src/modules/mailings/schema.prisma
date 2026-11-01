@@ -1,0 +1,29 @@
+enum MailingStatus {
+  SENDING
+  DONE
+  FAILED
+}
+
+/// Toplu e-posta gönderimi. Alıcı başına sonuç mail_logs'ta (module=mailings, reference=id).
+/// KVKK: alıcı listesi saklanmaz; yalnızca kaynak, filtre ve sayılar.
+model MailingCampaign {
+  id             String        @id @default(cuid())
+  /// "<modül>:<kaynak>" (ör. members:members) veya programatik çağrıda "<modül>:api"
+  source         String
+  filter         Json          @default("{}")
+  subject        String
+  body           String
+  status         MailingStatus @default(SENDING)
+  recipientCount Int           @default(0)
+  sentCount      Int           @default(0)
+  failedCount    Int           @default(0)
+  skippedNoEmail Int           @default(0)
+  skippedOptOut  Int           @default(0)
+  createdById    String
+  createdByLabel String
+  createdAt      DateTime      @default(now())
+  finishedAt     DateTime?
+
+  @@index([createdAt])
+  @@map("mailings_campaigns")
+}

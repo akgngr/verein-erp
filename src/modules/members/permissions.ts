@@ -48,13 +48,3 @@ export const memberIdentityPermissions = definePermissions("memberIdentity", {
   VIEWER: [],
 });
 
-/** Toplu e-posta (duyuru): gönderim ve geçmiş. Kişisel veri işlendiği için dar tutulur. */
-export const memberMailingsPermissions = definePermissions("memberMailings", {
-  ADMIN: ["view", "create"],
-  BOARD: ["view", "create"],
-  SECRETARY: ["view", "create"],
-  VIEWER: [],
-  TREASURER: [],
-  AUDITOR: ["view"],
-  TEACHER: [],
-});

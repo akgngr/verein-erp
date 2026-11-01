@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.1.0",
+      "date": "2026-11-01",
+      "appVersion": "0.36.0",
+      "title": {
+        "tr": "Veliler alıcı listesi",
+        "de": "Empfängerliste Eltern"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Toplu e-posta için Veliler alıcı listesi (öğrencisi olan / tüm veliler).",
+          "de": "Empfängerliste Eltern für Rundmails (mit Schüler/in / alle)."
+        }
+      ]
+    },
+    {
       "version": "1.0.1",
       "date": "2026-11-01",
       "appVersion": "0.34.0",

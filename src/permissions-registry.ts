@@ -21,6 +21,7 @@ import * as exportsPermissionExports from "@/modules/exports/permissions";
 import * as feedbackPermissionExports from "@/modules/feedback/permissions";
 import * as inventoryPermissionExports from "@/modules/inventory/permissions";
 import * as mailPermissionExports from "@/modules/mail/permissions";
+import * as mailingsPermissionExports from "@/modules/mailings/permissions";
 import * as progressPermissionExports from "@/modules/progress/permissions";
 import * as studentsPermissionExports from "@/modules/students/permissions";
 import * as tasksPermissionExports from "@/modules/tasks/permissions";
@@ -50,6 +51,7 @@ export const permissionResources: { moduleKey: string; definitions: PermissionDe
   { moduleKey: "feedback", definitions: definitionsOf(feedbackPermissionExports) },
   { moduleKey: "inventory", definitions: definitionsOf(inventoryPermissionExports) },
   { moduleKey: "mail", definitions: definitionsOf(mailPermissionExports) },
+  { moduleKey: "mailings", definitions: definitionsOf(mailingsPermissionExports) },
   { moduleKey: "progress", definitions: definitionsOf(progressPermissionExports) },
   { moduleKey: "students", definitions: definitionsOf(studentsPermissionExports) },
   { moduleKey: "tasks", definitions: definitionsOf(tasksPermissionExports) },
