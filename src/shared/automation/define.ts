@@ -42,6 +42,18 @@ export type TaskDefinition<TSchema extends z.ZodType = z.ZodType, TResult = unkn
   handler: (input: z.output<TSchema>, context: TaskExecutionContext) => Promise<TResult>;
 };
 
+/**
+ * Kayıt defterinde heterojen Zod şemalarını ve handler sonuçlarını güvenle tutmak için
+ * kullanılan erased tür. Handler hiçbir zaman bu tür üzerinden çağrılmaz; çalıştırma
+ * sırasında kayıtlı tanımın kendi şemasıyla doğrulanmış girdisi kullanılır.
+ */
+export type RegisteredTaskDefinition =
+  Omit<TaskDefinition<z.ZodType, unknown>, "inputSchema" | "handler" | "idempotencyKey"> & {
+    inputSchema: z.ZodType;
+    handler: (input: never, context: TaskExecutionContext) => Promise<unknown>;
+    idempotencyKey?: (input: never) => string;
+  };
+
 const TASK_KEY = /^[a-z][a-z0-9-]*\.[a-z][a-z0-9_]*$/;
 
 export function defineTask<TSchema extends z.ZodType, TResult>(
@@ -59,5 +71,3 @@ export function defineTask<TSchema extends z.ZodType, TResult>(
   }
   return Object.freeze(definition);
 }
-
-export type AnyTaskDefinition = TaskDefinition<z.ZodType, unknown>;
