@@ -13,6 +13,11 @@ export type NavItem = {
   group: "main" | "settings";
   order: number;
   permission: PermissionRequirement;
+  /**
+   * true: sol panelde (ana menü/Ayarlar) gösterilmez; sayfa ve yetki tanımı geçerli kalır.
+   * Başka bir modülün menüsünden bağlanan alt modüller için (örn. Öğrenciler → Kurslar menüsü).
+   */
+  hidden?: boolean;
 };
 
 export type PermissionRequirement = { definition: PermissionDefinition; action: PermissionAction };
@@ -37,6 +42,8 @@ export type ModuleMenuItem = {
   permission?: PermissionRequirement;
   /** true ise dosya indirme bağlantısıdır (API rotası); istemci yönlendirmesi yapılmaz. */
   isDownload?: boolean;
+  /** Başka modülün sayfasına bağlantı: o modül kullanılamıyorsa (kapalı) bağlantı gizlenir. */
+  module?: string;
 };
 
 /** Başka bir modülün verisine erişim türü (o modülün `server` API'si üzerinden). */

@@ -245,5 +245,6 @@
     "errors": {
       "file": "Geçerli bir .vmod dosyası seçin (en fazla 25 MB)."
     }
-  }
+  },
+  "installModule": "Yeni modül kur"
 }

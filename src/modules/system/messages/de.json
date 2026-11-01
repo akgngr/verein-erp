@@ -245,5 +245,6 @@
     "errors": {
       "file": "Bitte eine gültige .vmod-Datei wählen (max. 25 MB)."
     }
-  }
+  },
+  "installModule": "Neues Modul installieren"
 }

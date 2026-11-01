@@ -10,7 +10,9 @@
     "teachers": "Öğretmenler",
     "fees": "Ücretler ve tahsilat",
     "settings": "Ayarlar",
-    "payouts": "Öğretmen hakedişleri"
+    "payouts": "Öğretmen hakedişleri",
+    "students": "Öğrenciler",
+    "progress": "Öğrenci takibi"
   },
   "meta": {
     "list": "Kurslar",

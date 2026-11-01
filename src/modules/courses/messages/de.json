@@ -10,7 +10,9 @@
     "teachers": "Lehrkräfte",
     "fees": "Gebühren und Zahlungen",
     "settings": "Einstellungen",
-    "payouts": "Honorarabrechnungen"
+    "payouts": "Honorarabrechnungen",
+    "students": "Schüler",
+    "progress": "Lernfortschritt"
   },
   "meta": {
     "list": "Kurse",

@@ -5,7 +5,7 @@ import { settingsPermissions, systemPermissions } from "@/shared/permissions/sys
 export const moduleConfig: ModuleConfig = {
   key: "system",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.8.0",
+  version: "1.9.0",
   label: "Modül Yönetimi",
   description: "Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.",
   category: "CORE",
@@ -40,6 +40,8 @@ export const moduleConfig: ModuleConfig = {
       group: "settings",
       order: 4,
       permission: { definition: systemPermissions, action: "view" },
+      // Ayrı menü yok: Modül Yönetimi ekranındaki "Yeni modül kur" butonundan açılır.
+      hidden: true,
     },
     {
       href: "/ayarlar/kurulum",

@@ -1,4 +1,7 @@
-import { BookOpen, Coins, HandCoins, Presentation, Settings2 } from "lucide-react";
+import { BookOpen, ClipboardCheck, Coins, GraduationCap, HandCoins, Presentation, Settings2 } from "lucide-react";
+
+import { progressPermissions } from "@/modules/progress";
+import { studentsPermissions } from "@/modules/students";
 
 import type { ModuleConfig } from "@/shared/types/module";
 
@@ -8,7 +11,7 @@ import { courseFeesPermissions, coursePayoutsPermissions, coursesPermissions, co
 export const moduleConfig: ModuleConfig = {
   key: "courses",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.1.0",
+  version: "1.2.0",
   label: "Kurslar",
   description: "Gönüllü kurslar ve Nachhilfe: öğretmenler, dersler, kayıtlar, ücretler ve muhasebe aktarımı.",
   category: "OFFICIAL",
@@ -35,6 +38,22 @@ export const moduleConfig: ModuleConfig = {
     },
   ],
   menu: [
+    {
+      key: "students",
+      label: "Öğrenciler",
+      href: "/ogrenciler",
+      icon: GraduationCap,
+      module: "students",
+      permission: { definition: studentsPermissions, action: "view" },
+    },
+    {
+      key: "progress",
+      label: "Öğrenci takibi",
+      href: "/ogrenci-takibi",
+      icon: ClipboardCheck,
+      module: "progress",
+      permission: { definition: progressPermissions, action: "view" },
+    },
     {
       key: "teachers",
       label: "Öğretmenler",

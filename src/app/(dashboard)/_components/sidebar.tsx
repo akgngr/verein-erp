@@ -200,7 +200,7 @@ function SidebarContent({
   );
 
   // Menü yetkiye göre süzülür ve group + order ile sıralanır (7.4, 8. bölüm).
-  const visibleItems = [...visibleModules.flatMap((mod) => mod.nav), PANEL_ITEM]
+  const visibleItems = [...visibleModules.flatMap((mod) => mod.nav.filter((item) => !item.hidden)), PANEL_ITEM]
     .filter((item) => allowed(item.permission))
     .sort((a, b) => (a.group === b.group ? a.order - b.order : a.group === "main" ? -1 : 1));
   const mainItems = visibleItems.filter((item) => item.group === "main");
@@ -247,6 +247,7 @@ function SidebarContent({
   const moduleLinks: MenuLink[] = shownModule
     ? moduleMenuItems(shownModule)
         .filter((item) => allowed(item.permission ?? moduleHome(shownModule)!.permission))
+        .filter((item) => !item.module || !activeModuleKeys || activeModuleKeys.includes(item.module))
         .map((item) => {
           if (shownModule.key === SETTINGS_KEY && item.key !== MODULE_HOME_KEY) {
             return { ...item, label: navLabel(settings!.items.find((nav) => nav.href === item.href)!) };

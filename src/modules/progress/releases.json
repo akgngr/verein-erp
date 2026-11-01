@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.0.1",
+      "date": "2026-11-01",
+      "appVersion": "0.34.0",
+      "title": {
+        "tr": "Menü: Kurslar altında",
+        "de": "Menü: unter Kurse"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Öğrenci takibi ana menüde değil, Kurslar menüsünde.",
+          "de": "Lernfortschritt erscheint im Menü Kurse statt im Hauptmenü."
+        }
+      ]
+    },
+    {
       "version": "1.0.0",
       "date": "2026-10-30",
       "title": {

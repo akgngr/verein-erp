@@ -2089,7 +2089,9 @@
       "teachers": "Lehrkräfte",
       "fees": "Gebühren und Zahlungen",
       "settings": "Einstellungen",
-      "payouts": "Honorarabrechnungen"
+      "payouts": "Honorarabrechnungen",
+      "students": "Schüler",
+      "progress": "Lernfortschritt"
     },
     "meta": {
       "list": "Kurse",
@@ -5859,7 +5861,8 @@
       "errors": {
         "file": "Bitte eine gültige .vmod-Datei wählen (max. 25 MB)."
       }
-    }
+    },
+    "installModule": "Neues Modul installieren"
   },
   "tasks": {
     "module": {

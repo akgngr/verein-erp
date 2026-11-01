@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.2.0",
+      "date": "2026-11-01",
+      "appVersion": "0.34.0",
+      "title": {
+        "tr": "Öğrenciler ve öğrenci takibi Kurslar menüsünde",
+        "de": "Schüler und Lernfortschritt im Kursmenü"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Kurslar menüsüne Öğrenciler ve Öğrenci takibi bağlantıları eklendi (modül kapalıysa gizlenir).",
+          "de": "Kursmenü enthält Schüler und Lernfortschritt (ausgeblendet, wenn das Modul deaktiviert ist)."
+        }
+      ]
+    },
+    {
       "version": "1.1.0",
       "date": "2026-11-01",
       "appVersion": "0.30.0",
