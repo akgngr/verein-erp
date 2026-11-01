@@ -1,0 +1,20 @@
+{
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
+  "releases": [
+    {
+      "version": "1.0.0",
+      "date": "2026-10-29",
+      "title": {
+        "tr": "İlk sürüm",
+        "de": "Erste Version"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "İlk sürüm.",
+          "de": "Erste Version."
+        }
+      ]
+    }
+  ]
+}

@@ -8,6 +8,7 @@ const CARDS_FILE = path.join(ROOT_DIR, "src", "dashboard-cards.ts");
 const AI_FILE = path.join(ROOT_DIR, "src", "ai-registry.ts");
 const DEMO_FILE = path.join(ROOT_DIR, "src", "demo-registry.ts");
 const LIFECYCLE_FILE = path.join(ROOT_DIR, "src", "lifecycle-registry.ts");
+const RELEASES_FILE = path.join(ROOT_DIR, "src", "module-releases.ts");
 const PERMISSIONS_FILE = path.join(ROOT_DIR, "src", "permissions-registry.ts");
 
 // Sabit öncelikli sıralama (çekirdek ve resmi modüller üstte)
@@ -89,6 +90,7 @@ export const registry: ModuleConfig[] = allModules;
 
   syncDashboardCards(validModules);
   syncModuleAi(validModules);
+  syncModuleReleases(validModules);
   syncConventionFile(validModules, "demo.ts", "demo", DEMO_FILE, "ModuleDemo", "@/shared/demo/define", "moduleDemoRegistry", "Modüllerin örnek veri üreticileri (src/modules/<modül>/demo.ts).");
   syncConventionFile(validModules, "lifecycle.ts", "lifecycle", LIFECYCLE_FILE, "ModuleLifecycle", "@/shared/modules/lifecycle", "moduleLifecycleRegistry", "Modül yaşam döngüsü kancaları (src/modules/<modül>/lifecycle.ts), ör. kapatılırken temizlik.");
   syncPermissionResources(validModules);
@@ -123,6 +125,25 @@ export const dashboardCards: { moduleKey: string; cards: DashboardCardDefinition
     if (current !== content) fs.writeFileSync(CARDS_FILE, content, "utf8");
   } catch (err) {
     console.error("[sync-registry] Failed to write src/dashboard-cards.ts:", err);
+  }
+}
+
+/** Modül sürüm notları kaydı: her modülün releases.json dosyası (Ayarlar → Sürüm notları). */
+function syncModuleReleases(modules: string[]): void {
+  const withReleases = modules.filter((mod) => fs.existsSync(path.join(MODULES_DIR, mod, "releases.json")));
+  const imports = withReleases.map((mod) => `import ${mod}Releases from "@/modules/${mod}/releases.json";`).join("\n");
+  const listItems = withReleases.map((mod) => `  { moduleKey: "${mod}", releases: ${mod}Releases.releases as ModuleRelease[] },`).join("\n");
+  const content = `// Bu dosya syncModuleRegistry tarafından otomatik üretilir (pnpm module:sync); elle düzenlemeyin.
+import type { ModuleRelease } from "@/shared/modules/releases";
+${imports ? `\n${imports}\n` : ""}
+/** Modüllerin sürüm notları (src/modules/<modül>/releases.json), en yeni sürüm üstte. */
+export const moduleReleases: { moduleKey: string; releases: ModuleRelease[] }[] = ${listItems ? `[\n${listItems}\n]` : "[]"};
+`;
+  try {
+    const current = fs.existsSync(RELEASES_FILE) ? fs.readFileSync(RELEASES_FILE, "utf8") : "";
+    if (current !== content) fs.writeFileSync(RELEASES_FILE, content, "utf8");
+  } catch (err) {
+    console.error("[sync-registry] Failed to write src/module-releases.ts:", err);
   }
 }
 

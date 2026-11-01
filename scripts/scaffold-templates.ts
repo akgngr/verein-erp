@@ -107,6 +107,22 @@ export function moduleFiles(n: ScaffoldNames): Record<string, string> {
   const perm = `${model.replace(/Item$/, "")}Permissions`;
   const files: Record<string, string> = {};
 
+  files["releases.json"] = `${JSON.stringify(
+    {
+      _comment: "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
+      releases: [
+        {
+          version: "1.0.0",
+          date: new Date().toISOString().slice(0, 10),
+          title: { tr: "İlk sürüm", de: "Erste Version" },
+          changes: [{ type: "feature", tr: n.descriptionTr || "İlk sürüm.", de: n.descriptionDe || "Erste Version." }],
+        },
+      ],
+    },
+    null,
+    2,
+  )}\n`;
+
   files["permissions.ts"] = `import { definePermissions } from "@/shared/permissions/define";
 
 export const ${perm} = definePermissions("${key}", {
@@ -132,6 +148,8 @@ import { ${perm} } from "./permissions";
  */
 export const moduleConfig: ModuleConfig = {
   key: "${key}",
+  // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
+  version: "1.0.0",
   label: "${n.labelTr}",
   description: "${n.descriptionTr}",
   category: "EXTENSION",

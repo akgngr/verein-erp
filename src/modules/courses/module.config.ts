@@ -7,6 +7,8 @@ import { courseFeesPermissions, coursesPermissions, courseTeachersPermissions } 
 /** label/description yalnızca yedektir; görünen adlar messages/<dil>.json'dan gelir. */
 export const moduleConfig: ModuleConfig = {
   key: "courses",
+  // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
+  version: "1.0.0",
   label: "Kurslar",
   description: "Gönüllü kurslar ve Nachhilfe: öğretmenler, dersler, kayıtlar, ücretler ve muhasebe aktarımı.",
   category: "OFFICIAL",

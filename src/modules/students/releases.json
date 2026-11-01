@@ -1,0 +1,26 @@
+{
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
+  "releases": [
+    {
+      "version": "1.0.0",
+      "date": "2026-10-30",
+      "title": {
+        "tr": "Kurslar, öğrenciler ve öğrenci takibi",
+        "de": "Kurse, Schüler und Lernverlauf"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Kurs ve özel ders yönetimi, öğretmen rolü, ücretler ve muhasebe aktarımı.",
+          "de": "Kurs- und Nachhilfeverwaltung, Lehrkraftrolle, Gebühren und Buchhaltungsübergabe."
+        },
+        {
+          "type": "feature",
+          "tr": "Öğrenci ve veli kayıtları (DATEV uyumlu); devam, not ve değerlendirme takibi.",
+          "de": "Schüler- und Elternverwaltung (DATEV-kompatibel); Anwesenheit, Notizen und Bewertungen."
+        }
+      ],
+      "appVersion": "0.3.0"
+    }
+  ]
+}

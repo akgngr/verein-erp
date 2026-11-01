@@ -5,6 +5,8 @@ import { documentCategoriesPermissions, documentsPermissions } from "./permissio
 
 export const moduleConfig: ModuleConfig = {
   key: "documents",
+  // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
+  version: "1.0.0",
   label: "Evrak Kayıt",
   description: "Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi.",
   category: "OFFICIAL",

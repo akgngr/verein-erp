@@ -6,7 +6,8 @@ export async function generateMetadata() {
   return { title: t("title") };
 }
 
-/** Sürüm notları — ince sayfa. */
-export default async function ReleaseNotesPage() {
-  return <ReleaseNotesView />;
+/** Sürüm notları — ince sayfa (?modul=<anahtar> ile modülün sürüm notları). */
+export default async function ReleaseNotesPage({ searchParams }: { searchParams: Promise<{ modul?: string }> }) {
+  const { modul } = await searchParams;
+  return <ReleaseNotesView moduleKey={modul ?? null} />;
 }

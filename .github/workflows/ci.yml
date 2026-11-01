@@ -46,6 +46,8 @@ jobs:
 
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # modül sürüm denetimi ana dalla karşılaştırır
 
       - uses: pnpm/action-setup@v4 # sürüm package.json "packageManager" alanından okunur
 
@@ -110,6 +112,11 @@ jobs:
 
       - name: Module standards
         run: pnpm module:validate
+
+      - name: Module versions (changed module => new version)
+        run: pnpm exec tsx scripts/check-module-versions.ts
+        env:
+          BASE_REF: ${{ github.event_name == 'pull_request' && format('origin/{0}', github.base_ref) || 'HEAD~1' }}
 
       - name: Tests
         run: pnpm test

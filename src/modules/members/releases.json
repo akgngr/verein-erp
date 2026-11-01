@@ -1,0 +1,56 @@
+{
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
+  "releases": [
+    {
+      "version": "1.0.1",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Üyeler: tarih kuralları ve aidat tutarı düzeltmesi",
+        "de": "Mitglieder: Datumsregeln und Korrektur der Beitragsbeträge"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Aidat ödemeleri 100 katı tutarla kaydediliyordu (50 € → 5.000 €). Düzeltildi; mevcut kayıtlar migration ile düzeltilir, aidat durumları yeniden hesaplanır.",
+          "de": "Beitragszahlungen wurden mit dem 100-fachen Betrag gespeichert (50 € → 5.000 €). Behoben; bestehende Datensätze werden per Migration korrigiert, Beitragsstatus neu berechnet."
+        },
+        {
+          "type": "fix",
+          "tr": "Üyelik aktarımı yanlış tutarlı fişleri düzeltir: eski fiş ters kaydedilir (Betragskorrektur), doğru tutarla yeni fiş açılır.",
+          "de": "Der Mitgliedsbeitrags-Export korrigiert falsche Belege: Storno des alten Belegs (Betragskorrektur) und neuer Beleg mit richtigem Betrag."
+        },
+        {
+          "type": "fix",
+          "tr": "Ödeme tarihi üyenin giriş tarihinden önce olamaz; aidat yılı üyelik dönemi içinde olmalı; doğum, giriş ve ayrılış tarihleri birbiriyle tutarlı olmalı.",
+          "de": "Zahlungen dürfen nicht vor dem Eintritt liegen; Beitragsjahre müssen in der Mitgliedschaft liegen; Geburts-, Eintritts- und Austrittsdaten müssen stimmig sein."
+        },
+        {
+          "type": "improvement",
+          "tr": "Tüm tarih seçicilerde yıl ve ay açılır listeden seçilebilir; izin verilmeyen tarihler seçilemez.",
+          "de": "In allen Datumsauswahlen sind Jahr und Monat per Liste wählbar; unzulässige Daten sind gesperrt."
+        },
+        {
+          "type": "improvement",
+          "tr": "Üye hata mesajları Türkçe/Almanca çevrildi; ödeme panelinde hatanın asıl sebebi gösterilir.",
+          "de": "Fehlermeldungen im Mitgliedermodul sind übersetzt; im Zahlungsdialog wird der konkrete Grund angezeigt."
+        }
+      ],
+      "appVersion": "0.15.2"
+    },
+    {
+      "version": "1.0.0",
+      "date": "2026-10-29",
+      "title": {
+        "tr": "İlk sürüm",
+        "de": "Erste Version"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "İlk sürüm.",
+          "de": "Erste Version."
+        }
+      ]
+    }
+  ]
+}

@@ -451,6 +451,18 @@ const file = await createGeneratedFile({ ownerId: user.id, title, format: "xlsx"
 - **`lifecycle.ts`**: `defineLifecycle({ moduleKey, onDisable })`. Yönetici modülü kapattığında sistem `onDisable`'ı çağırır
   (`src/lifecycle-registry.ts`). Demo modülü bununla tüm demo kayıtlarını siler.
 
+## 9e. Modül sürümü ve sürüm notları (`releases.json`)
+
+Modüldeki her değişiklik bir **modül sürümüdür**:
+
+1. `src/modules/<modül>/releases.json` dosyasının EN ÜSTÜNE yeni sürüm ekleyin (`version`, `date`, `title.tr/de`,
+   `changes[]` → `type`: feature | improvement | fix | security, `tr`, `de`; isteğe bağlı `appVersion`).
+2. `module.config.ts` içindeki `version` aynı sürüm olmalı (`pnpm module:check` denetler).
+3. Sürümleme: yeni özellik → minor (1.2.0 → 1.3.0), düzeltme → patch (1.3.0 → 1.3.1), uyumsuz değişiklik → major.
+4. CI (`scripts/check-module-versions.ts`): ana dala göre dosyası değişen her modülün sürümü artmış olmalı.
+5. Uygulama genel notları `src/modules/system/changelog.json`'da kalır (package.json sürümü). Modül notları
+   Ayarlar → Sürüm notları → modül seçimi (`?modul=<anahtar>`) ve Modül Yönetimi'ndeki sürüm bağlantısında görünür.
+
 ## 10. Doğrulama (CI aynı adımları çalıştırır)
 
 ```bash
@@ -458,6 +470,7 @@ pnpm module:sync                                  # köprüler, şema, çeviri, 
 pnpm module:validate                              # modül standardı + çeviri bütünlüğü + migration
 pnpm exec tsx scripts/check-i18n-keys.ts          # kullanılan her anahtar tr/de'de var; ICU geçerli
 pnpm exec tsx scripts/check-hardcoded-text.ts     # arayüzde sabit metin yok
+pnpm exec tsx scripts/check-module-versions.ts    # değişen modülün sürümü arttı mı (ana dala göre)
 pnpm typecheck && pnpm lint && pnpm test
 ```
 

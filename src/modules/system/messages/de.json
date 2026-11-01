@@ -109,7 +109,13 @@
       "improvement": "Verbesserung",
       "fix": "Korrektur",
       "security": "Sicherheit"
-    }
+    },
+    "moduleTitle": "{module} — Versionshinweise",
+    "moduleDescription": "Aktuelle Modulversion: v{version}",
+    "filterLabel": "Quelle der Versionshinweise",
+    "application": "Anwendung",
+    "appVersion": "Anwendung v{version}",
+    "moduleNotes": "Versionshinweise"
   },
   "permissions": {
     "settings": {
@@ -196,5 +202,6 @@
     "errors": {
       "accountingOff": "Für die Buchhaltungsvorbereitung muss das Modul Buchhaltung ausgewählt sein."
     }
-  }
+  },
+  "releaseNotes": "Versionshinweise"
 }
