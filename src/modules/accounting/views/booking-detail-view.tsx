@@ -92,6 +92,11 @@ export async function AccountingDetailView({
                 {formatAmount(booking.amountCents)}
               </span>
             </InfoRow>
+            {booking.taxRate > 0 ? (
+              <InfoRow label={t("detail.fields.tax")}>
+                {t("detail.taxLine", { net: formatAmount(booking.netCents), tax: formatAmount(booking.taxCents), rate: booking.taxRate })}
+              </InfoRow>
+            ) : null}
             <InfoRow label={t("detail.fields.account")}>
               {booking.transferLine ?? booking.accountName}
             </InfoRow>

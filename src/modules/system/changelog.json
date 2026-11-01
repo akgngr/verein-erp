@@ -2,6 +2,36 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.16.0",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Muhasebe: KDV temeli ve SKR hesap numaraları",
+        "de": "Buchhaltung: Umsatzsteuer-Grundlage und SKR-Kontonummern"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Fişlerde KDV oranı (%0/7/19): tutar brüt girilir, net ve KDV ayrı saklanır; formda canlı net/KDV önizlemesi, detayda KDV satırı.",
+          "de": "Buchungen mit Umsatzsteuersatz (0/7/19 %): Betrag wird brutto erfasst, Netto und Steuer werden getrennt gespeichert; Live-Vorschau im Formular, Steuerzeile in der Detailansicht."
+        },
+        {
+          "type": "feature",
+          "tr": "Vergi ayarları: hesap planı (SKR03/SKR04), Kleinunternehmer (§ 19 UStG), Ist/Soll-Versteuerung ve UStVA dönemi. § 19 açıkken KDV seçimi gizlenir ve oran sunucuda 0'a zorlanır.",
+          "de": "Steuereinstellungen: Kontenrahmen (SKR03/SKR04), Kleinunternehmer (§ 19 UStG), Ist-/Soll-Versteuerung und Voranmeldungszeitraum. Mit § 19 wird der Steuersatz ausgeblendet und serverseitig auf 0 gesetzt."
+        },
+        {
+          "type": "feature",
+          "tr": "Hesap ve kategorilere SKR hesap numarası; kategorilerde varsayılan KDV oranı ve tek tıkla SKR önerileri.",
+          "de": "SKR-Kontonummern für Konten und Kategorien; Standard-Steuersatz je Kategorie und SKR-Vorschläge per Klick."
+        },
+        {
+          "type": "improvement",
+          "tr": "Karma KDV oranlı faturanın ödemesi oran başına ayrı gelir fişi oluşturur; storno tüm fişleri ters kaydeder.",
+          "de": "Zahlungen auf Rechnungen mit gemischten Steuersätzen erzeugen je Steuersatz eine Einnahmebuchung; ein Storno bucht alle zurück."
+        }
+      ]
+    },
+    {
       "version": "0.15.2",
       "date": "2026-10-31",
       "title": {

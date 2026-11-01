@@ -21,6 +21,8 @@ import {
   bookingUpdateSchema,
 } from "../schemas/booking";
 import { createBookingAction, updateBookingAction } from "../actions/booking-actions";
+import { splitGross, TAX_RATES } from "../services/tax";
+import { formatMoney, toCents } from "@/shared/money";
 
 /** Form değerleri string taşır; boş string sunucuda null'a çevrilir. */
 export type BookingFormValues = {
@@ -34,6 +36,8 @@ export type BookingFormValues = {
   description: string;
   counterparty: string;
   receiptReference: string;
+  /** ACC-1: KDV oranı ("0" | "7" | "19"); tutar brüttür. */
+  taxRate: string;
   /** Yalnızca edit: eşzamanlılık + id. */
   id?: string;
   updatedAt?: string;
@@ -47,6 +51,8 @@ type Props = {
   categories: CategoryOption[];
   projects: ProjectOption[];
   initial?: Partial<BookingEditData> & Pick<BookingEditData, "type">;
+  /** § 19 UStG: Kleinunternehmer → KDV seçimi gizlenir, oran 0. */
+  smallBusiness?: boolean;
 };
 
 /**
@@ -54,7 +60,7 @@ type Props = {
  * virmanda kaynak/hedef hesap + kategori/proje yok; gelir/giderde kategori
  * yöne göre filtrelenir, seçenek etiketi alanı (sphere) gösterir.
  */
-export function BookingForm({ mode, accounts, categories, projects, initial }: Props) {
+export function BookingForm({ mode, accounts, categories, projects, initial, smallBusiness = false }: Props) {
   const router = useRouter();
   const closeDrawer = useFormDrawerClose();
   const t = useTranslations("accounting.form");
@@ -80,6 +86,7 @@ export function BookingForm({ mode, accounts, categories, projects, initial }: P
     description: initial?.description ?? "",
     counterparty: initial?.counterparty ?? "",
     receiptReference: initial?.receiptReference ?? "",
+    taxRate: initial?.taxRate ?? "0",
     id: initial?.id,
     updatedAt: initial?.updatedAt,
   };
@@ -91,6 +98,23 @@ export function BookingForm({ mode, accounts, categories, projects, initial }: P
       : zodResolver(bookingCreateSchema)) as unknown as Resolver<BookingFormValues>,
     defaultValues,
   });
+
+  const showTax = !isTransfer && !smallBusiness;
+  const [amountValue, taxRateValue, categoryIdValue] = form.watch(["amount", "taxRate", "categoryId"]);
+  // Kategori DEĞİŞİNCE varsayılan KDV oranı önerilir (kullanıcı değiştirebilir; ilk yüklemede dokunulmaz).
+  const [lastCategoryId, setLastCategoryId] = useState(defaultValues.categoryId);
+  if (categoryIdValue !== lastCategoryId) {
+    setLastCategoryId(categoryIdValue);
+    const category = categoryOptions.find((item) => item.id === categoryIdValue);
+    if (category && showTax) form.setValue("taxRate", String(category.defaultTaxRate));
+  }
+  const preview = (() => {
+    const cents = toCents(amountValue ?? "");
+    const rate = Number(taxRateValue);
+    if (!showTax || cents === null || !rate) return null;
+    const { netCents, taxCents } = splitGross(cents, rate);
+    return t("taxPreview", { net: formatMoney(netCents), tax: formatMoney(taxCents), rate });
+  })();
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(null);
@@ -106,6 +130,7 @@ export function BookingForm({ mode, accounts, categories, projects, initial }: P
         description: values.description,
         counterparty: values.counterparty || null,
         receiptReference: values.receiptReference || null,
+        taxRate: showTax ? values.taxRate : "0",
         updatedAt: values.updatedAt,
       });
       if (!result.ok) {
@@ -134,6 +159,7 @@ export function BookingForm({ mode, accounts, categories, projects, initial }: P
       description: values.description,
       counterparty: values.counterparty || null,
       receiptReference: values.receiptReference || null,
+      taxRate: showTax ? values.taxRate : "0",
     });
     if (!result.ok) {
       setFormError(applyActionResult(result, form.setError));
@@ -155,11 +181,22 @@ export function BookingForm({ mode, accounts, categories, projects, initial }: P
           />
           <FormInput
             name="amount"
-            label={t("amount")}
+            label={showTax ? t("amountGross") : t("amount")}
             control={form.control}
             isRequired
             placeholder="120,00"
+            description={preview ?? undefined}
           />
+          {showTax ? (
+            <FormSelect
+              name="taxRate"
+              label={t("taxRate")}
+              control={form.control}
+              options={TAX_RATES.map((rate) => ({ value: String(rate), label: `${rate} %` }))}
+            />
+          ) : !isTransfer ? (
+            <p className="text-tiny text-default-500">{t("smallBusinessNote")}</p>
+          ) : null}
           <FormSelect
             name="accountId"
             label={isTransfer ? t("sourceAccount") : t("account")}

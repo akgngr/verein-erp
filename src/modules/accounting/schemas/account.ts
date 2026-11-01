@@ -1,5 +1,7 @@
 import { z } from "zod";
 
+import { accountNumberSchema } from "./chart";
+
 /** Hesap şemaları (§ 8 md. 11): ad benzersiz; açılış bakiyesi/tarihi yalnızca
  * fişi olmayan hesapta düzenlenebilir (aksiyonda denetlenir). */
 
@@ -28,9 +30,11 @@ export const accountCreateSchema = z.object({
     .string()
     .trim()
     .regex(DATE_ONLY, "accounting.validation.openingDateInvalid"),
+  accountNumber: accountNumberSchema,
 });
 
 export const accountUpdateSchema = z.object({
+  accountNumber: accountNumberSchema,
   name: z
     .string()
     .trim()

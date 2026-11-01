@@ -17,4 +17,13 @@ export const accountingSettingsSchema = z.object({
   donationCategoryId: emptyToNull(z.string().trim().min(1, "accounting.validation.donationCategoryRequired").nullable()),
 });
 
+/** ACC-1 vergi ayarları. */
+export const taxSettingsSchema = z.object({
+  chartOfAccounts: z.enum(["SKR03", "SKR04"]),
+  smallBusiness: z.boolean(),
+  taxMethod: z.enum(["IST", "SOLL"]),
+  vatPeriod: z.enum(["MONTH", "QUARTER", "YEAR"]),
+});
+export type TaxSettingsInput = z.infer<typeof taxSettingsSchema>;
+
 export type AccountingSettingsInput = z.infer<typeof accountingSettingsSchema>;

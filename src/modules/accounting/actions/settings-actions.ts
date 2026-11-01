@@ -7,7 +7,7 @@ import type { ActionResult } from "@/shared/types/action";
 import { ActionError, createAction } from "@/modules/auth/server";
 
 import { accountingSetupPermissions } from "../permissions";
-import { accountingSettingsSchema } from "../schemas/settings";
+import { accountingSettingsSchema, taxSettingsSchema } from "../schemas/settings";
 
 /**
  * Muhasebe ayarları güncelleme (§ 11.7): aidat kategorisi aktif INCOME kategorisi
@@ -80,5 +80,30 @@ export async function saveSettingsAction(input: unknown): Promise<ActionResult> 
     },
   });
 
+  return run(input) as Promise<ActionResult>;
+}
+
+/**
+ * Vergi ayarları (ACC-1): hesap planı, § 19 küçük işletme, Ist/Soll, UStVA dönemi.
+ * KARAR: Geçmiş fişler değişmez; § 19 yalnızca yeni fişlerde KDV'yi 0'a zorlar.
+ */
+export async function saveTaxSettingsAction(input: unknown): Promise<ActionResult> {
+  const run = createAction({
+    permission: { definition: accountingSetupPermissions, action: "update" },
+    schema: taxSettingsSchema,
+    handler: async ({ input, audit }) => {
+      const db = getDb();
+      const before = await db.accountingSettings.findUnique({ where: { id: "singleton" } });
+      await db.accountingSettings.upsert({ where: { id: "singleton" }, update: input, create: { id: "singleton", ...input } });
+      await audit({
+        action: "UPDATE",
+        entity: "AccountingSettings",
+        entityId: "singleton",
+        before: before ? { chartOfAccounts: before.chartOfAccounts, smallBusiness: before.smallBusiness, taxMethod: before.taxMethod, vatPeriod: before.vatPeriod } : undefined,
+        after: input,
+      });
+      return undefined;
+    },
+  });
   return run(input) as Promise<ActionResult>;
 }

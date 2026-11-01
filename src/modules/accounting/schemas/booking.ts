@@ -31,6 +31,13 @@ export const bookingAmountSchema = z
   .min(1, "accounting.validation.amountRequired")
   .max(14, "accounting.validation.amountTooLarge");
 
+/** KDV oranı (yüzde); § 19 küçük işletmede sunucu 0'a zorlar. */
+export const taxRateSchema = z.coerce
+  .number()
+  .int()
+  .refine((value) => [0, 7, 19].includes(value), "accounting.validation.taxRateInvalid")
+  .default(0);
+
 const sharedTextFields = {
   description: z
     .string()
@@ -54,6 +61,7 @@ export const bookingIncomeExpenseSchema = z.object({
   categoryId: z.string().trim().min(1, "accounting.validation.categoryRequired"),
   ...sharedTextFields,
   amount: bookingAmountSchema,
+  taxRate: taxRateSchema,
 });
 
 /** Virman fişi oluşturma (§ 8 md. 1): kategori/proje yok, hedef hesap zorunlu. */
@@ -81,6 +89,7 @@ export const bookingUpdateSchema = z.object({
   categoryId: emptyToNull(z.string().trim().min(1).nullable()),
   ...sharedTextFields,
   amount: bookingAmountSchema,
+  taxRate: taxRateSchema,
   /** Eşzamanlılık koruması: formun taşıdığı kaydın updatedAt'i. */
   updatedAt: z.string().min(1, "accounting.validation.versionMissing"),
 });

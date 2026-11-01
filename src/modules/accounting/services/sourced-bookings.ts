@@ -11,6 +11,7 @@ import { PAYMENT_METHOD_ACCOUNT } from "../constants";
 import { allocateBookingNumber } from "./booking-number";
 import { assertBookingDateAllowed, isYearLocked } from "./booking-guards";
 import { assertNoNegativeCash } from "./balances";
+import { effectiveTaxRate, getTaxSettings, taxColumnsFromGross } from "./tax";
 import { ActionError } from "@/modules/auth/server";
 
 /**
@@ -29,7 +30,12 @@ export type SourcedBookingInput = {
   bookingDate: Date;
   accountId: string;
   categoryId: string;
+  /** BRÜT tutar (kuruş). */
   amountCents: number;
+  /** KDV oranı (varsayılan 0: bağış ve aidat KDV'siz). § 19'da 0'a zorlanır. */
+  taxRate?: number;
+  /** Kesin KDV dökümü (ör. faturadan: oran başına net ve vergi); verilirse brütten yeniden hesaplanmaz. */
+  tax?: { rate: number; netCents: number; taxCents: number };
   description: string;
   receiptReference?: string | null;
 };
@@ -75,6 +81,9 @@ export async function createSourcedBooking(
         accountId: input.accountId,
         categoryId: input.categoryId,
         amount: centsToDecimalString(input.amountCents),
+        ...(input.tax && input.tax.netCents + input.tax.taxCents === input.amountCents
+          ? { taxRate: input.tax.rate, netAmount: centsToDecimalString(input.tax.netCents), taxAmount: centsToDecimalString(input.tax.taxCents) }
+          : taxColumnsFromGross(input.amountCents, effectiveTaxRate(input.taxRate ?? 0, await getTaxSettings(tx)))),
         description: input.description,
         receiptReference: input.receiptReference ?? null,
         sourceType: input.sourceType,
@@ -107,19 +116,20 @@ export async function reverseSourcedBooking(input: {
   reason: string;
 }): Promise<void> {
   const run = async (tx: Prisma.TransactionClient): Promise<void> => {
-    const booking = await tx.accountingBooking.findFirst({
-      where: { sourceType: input.sourceType, sourceId: input.sourceId },
-      select: { id: true, reversedAt: true, year: true },
+    // Aynı kaynağın tüm fişleri: "<id>" ve oran başına ek fişler "<id>:<n>" (ör. karışık oranlı fatura).
+    const bookings = await tx.accountingBooking.findMany({
+      where: { sourceType: input.sourceType, OR: [{ sourceId: input.sourceId }, { sourceId: { startsWith: `${input.sourceId}:` } }], reversedAt: null },
+      select: { id: true, year: true },
     });
-    if (!booking || booking.reversedAt) return; // idempotent no-op
+    if (!bookings.length) return; // idempotent no-op
 
-    if (await isYearLocked(booking.year, tx)) {
-      throw new ActionError(
-        "accounting.errors.reverseYearLockedYear", undefined, { year: booking.year },
-      );
+    for (const booking of bookings) {
+      if (await isYearLocked(booking.year, tx)) {
+        throw new ActionError("accounting.errors.reverseYearLockedYear", undefined, { year: booking.year });
+      }
     }
-    await tx.accountingBooking.update({
-      where: { id: booking.id },
+    await tx.accountingBooking.updateMany({
+      where: { id: { in: bookings.map((booking) => booking.id) } },
       data: {
         reversedAt: new Date(),
         reversedById: input.actor.id,

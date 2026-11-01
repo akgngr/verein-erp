@@ -89,7 +89,11 @@
     "editBlockedSource": "Automatisch erstellte Buchungen können nicht bearbeitet werden.",
     "toastSaved": "Buchung erfasst: {number}",
     "toastUpdated": "Buchung aktualisiert.",
-    "toastReversed": "Buchung storniert."
+    "toastReversed": "Buchung storniert.",
+    "amountGross": "Betrag (brutto, inkl. USt)",
+    "taxRate": "Umsatzsteuersatz",
+    "taxPreview": "Netto {net} + {rate} % USt {tax}",
+    "smallBusinessNote": "Kleinunternehmerregelung (§ 19 UStG) aktiv: keine Umsatzsteuer."
   },
   "reverse": {
     "title": "Buchung stornieren",
@@ -115,7 +119,8 @@
       "createdBy": "Erstellt von",
       "updatedBy": "Aktualisiert von",
       "source": "Quelle",
-      "reverseInfo": "Stornoinfo"
+      "reverseInfo": "Stornoinfo",
+      "tax": "Umsatzsteuer"
     },
     "reversedBy": "{label} — {date}",
     "reason": "Grund: {reason}",
@@ -127,7 +132,8 @@
       "upload": "Beleg hochladen",
       "delete": "Löschen",
       "download": "Herunterladen"
-    }
+    },
+    "taxLine": "Netto {net} · {rate} % USt {tax}"
   },
   "setup": {
     "title": "Buchhaltung Einstellungen",
@@ -151,7 +157,9 @@
       "typeCASH": "Kasse",
       "typeBANK": "Girokonto",
       "typeOTHER": "Sonstiges",
-      "saved": "Konto gespeichert."
+      "saved": "Konto gespeichert.",
+      "accountNumber": "Kontonummer (SKR)",
+      "accountNumberHint": "Vorschlag {chart}: {number}"
     },
     "categories": {
       "name": "Kategorie",
@@ -170,7 +178,9 @@
       "sphereASSET_MANAGEMENT": "Vermögensverwaltung",
       "spherePURPOSE_OPERATION": "Zweckbetrieb",
       "sphereECONOMIC_OPERATION": "Wirtschaftlicher Geschäftsbetrieb",
-      "saved": "Kategorie gespeichert."
+      "saved": "Kategorie gespeichert.",
+      "accountNumber": "Kontonummer (SKR)",
+      "defaultTaxRate": "Standard-Steuersatz"
     },
     "projects": {
       "name": "Projekt",
@@ -191,6 +201,40 @@
       "save": "Speichern",
       "toastSaved": "Einstellungen gespeichert.",
       "donationCategory": "Spendenkategorie"
+    },
+    "tax": {
+      "title": "Steuereinstellungen",
+      "hint": "Kontenrahmen, Versteuerungsart und Voranmeldungszeitraum. DATEV-Export und UStVA nutzen diese Einstellungen.",
+      "chart": "Kontenrahmen",
+      "chartHint": "Vereine und Unternehmen nutzen meist SKR03, manche Unternehmen SKR04.",
+      "method": "Versteuerung",
+      "methodHint": "Ist: bei Zahlungseingang, Soll: bei Rechnungsstellung.",
+      "methodIST": "Ist-Versteuerung",
+      "methodSOLL": "Soll-Versteuerung",
+      "period": "Voranmeldungszeitraum",
+      "periodMONTH": "Monatlich",
+      "periodQUARTER": "Vierteljährlich",
+      "periodYEAR": "Jährlich",
+      "smallBusiness": "Kleinunternehmer (§ 19 UStG)",
+      "smallBusinessHint": "Wenn aktiv, werden neue Buchungen mit 0 % USt erfasst; Rechnungen ohne USt-Ausweis.",
+      "save": "Speichern",
+      "saved": "Steuereinstellungen gespeichert."
+    },
+    "skr": {
+      "revenue19": "Erlöse 19 %",
+      "revenue7": "Erlöse 7 %",
+      "revenueExempt": "Steuerfreie Erlöse",
+      "smallBusinessRevenue": "Erlöse § 19",
+      "rent": "Miete",
+      "officeSupplies": "Bürobedarf",
+      "telecom": "Telefon/Internet",
+      "insurance": "Versicherungen",
+      "advertising": "Werbekosten",
+      "travel": "Reisekosten",
+      "legalConsulting": "Rechts-/Beratungskosten",
+      "bankFees": "Nebenkosten Geldverkehr",
+      "cash": "Kasse",
+      "bank": "Bank"
     }
   },
   "budget": {
@@ -431,7 +475,9 @@
     "feeCategoryRequired": "Bitte eine Beitragskategorie wählen.",
     "cashAccountRequired": "Bitte ein Kassenkonto wählen.",
     "bankAccountRequired": "Bitte ein Bankkonto wählen.",
-    "donationCategoryRequired": "Bitte eine Spendenkategorie wählen."
+    "donationCategoryRequired": "Bitte eine Spendenkategorie wählen.",
+    "taxRateInvalid": "Der Steuersatz muss 0, 7 oder 19 sein.",
+    "accountNumberInvalid": "Die Kontonummer muss 4–8 Ziffern haben."
   },
   "module": {
     "label": "Buchhaltung",

@@ -11,6 +11,7 @@ import { parseDate } from "@internationalized/date";
 import type { AccountType } from "@prisma/client";
 
 import { createAccountAction, updateAccountAction } from "../actions/account-actions";
+import { SKR_SUGGESTIONS, type ChartOfAccounts } from "../services/skr";
 
 const TYPES: AccountType[] = ["CASH", "BANK", "OTHER"];
 
@@ -21,6 +22,7 @@ type AccountRow = {
   openingBalanceCents: number;
   openingDate: Date | string;
   isActive: boolean;
+  accountNumber?: string | null;
 };
 
 /**
@@ -32,10 +34,12 @@ export function AccountFormModal({
   isOpen,
   onOpenChange,
   account,
+  chart = "SKR03",
 }: {
   isOpen: boolean;
   onOpenChange: (open: boolean) => void;
   account?: AccountRow | null;
+  chart?: ChartOfAccounts;
 }) {
   const tCommon = useTranslations("common");
   const t = useTranslations("accounting.setup.accounts");
@@ -52,7 +56,9 @@ export function AccountFormModal({
         : account.openingDate.toISOString().slice(0, 10)
       : new Date().toISOString().slice(0, 10),
   );
+  const [accountNumber, setAccountNumber] = useState(account?.accountNumber ?? "");
   const [busy, setBusy] = useState(false);
+  const moneySuggestion = SKR_SUGGESTIONS[chart].money.find((item) => item.key === (type === "CASH" ? "cash" : "bank"));
 
   const submit = async () => {
     setBusy(true);
@@ -65,8 +71,9 @@ export function AccountFormModal({
             openingBalance,
             openingDate,
             isActive: account.isActive,
+            accountNumber,
           })
-        : await createAccountAction({ name, type, openingBalance, openingDate });
+        : await createAccountAction({ name, type, openingBalance, openingDate, accountNumber });
       if (!result.ok) {
         addToast({ title: result.error, color: "danger" });
         return;
@@ -105,6 +112,16 @@ export function AccountFormModal({
               <SelectItem key={value}>{t(`type${value}`)}</SelectItem>
             ))}
           </Select>
+          <Input
+            label={t("accountNumber")}
+            labelPlacement="outside"
+            value={accountNumber}
+            onValueChange={setAccountNumber}
+            inputMode="numeric"
+            maxLength={8}
+            placeholder={moneySuggestion?.number}
+            description={moneySuggestion ? t("accountNumberHint", { chart, number: moneySuggestion.number }) : chart}
+          />
           <Input
             label={t("openingBalance")}
             labelPlacement="outside"

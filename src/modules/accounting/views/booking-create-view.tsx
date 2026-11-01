@@ -9,6 +9,8 @@ import { listCategoryOptions } from "../queries/list-categories";
 import { listProjectOptions } from "../queries/list-projects";
 import { accountingPermissions } from "../permissions";
 import { BookingForm } from "../components/booking-form";
+import { getTaxSettings } from "../services/tax";
+import { getDb } from "@/shared/db";
 
 /** Yeni fiş (§ 11.2): ?tur=gelir|gider|virman → tür; alan seti türle uyarlanır. */
 export async function AccountingCreateView({
@@ -26,16 +28,17 @@ export async function AccountingCreateView({
   }
   void canCreate;
 
-  const [accounts, categories, projects] = await Promise.all([
+  const [accounts, categories, projects, taxSettings] = await Promise.all([
     listAccountOptions(),
     listCategoryOptions(),
     listProjectOptions(),
+    getTaxSettings(getDb()),
   ]);
   const t = await getTranslations("accounting.form");
 
   return (
     <FormDrawer title={t("createTitle")} description={type === "INCOME" ? t("typeIncome") : type === "EXPENSE" ? t("typeExpense") : t("typeTransfer")}>
-      <BookingForm mode="create" accounts={accounts} categories={categories} projects={projects} initial={{ type }} />
+      <BookingForm smallBusiness={taxSettings.smallBusiness} mode="create" accounts={accounts} categories={categories} projects={projects} initial={{ type }} />
     </FormDrawer>
   );
 }

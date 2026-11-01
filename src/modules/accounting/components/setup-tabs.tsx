@@ -15,6 +15,8 @@ import { saveSettingsAction } from "../actions/settings-actions";
 import { AccountFormModal } from "./account-form-modal";
 import { CategoryFormModal } from "./category-form-modal";
 import { ProjectFormModal } from "./project-form-modal";
+import { TaxSettingsCard } from "./tax-settings-card";
+import type { TaxSettings } from "../services/tax";
 
 /**
  * Ayarlar sekmeleri (§ 11.4): hesaplar/kategoriler/projeler tabloları +
@@ -29,6 +31,7 @@ type AccountRow = {
   openingDate: Date | string;
   isActive: boolean;
   bookingCount: number;
+  accountNumber: string | null;
 };
 type CategoryRow = {
   id: string;
@@ -39,6 +42,8 @@ type CategoryRow = {
   isActive: boolean;
   bookingCount: number;
   sortOrder: number;
+  accountNumber: string | null;
+  defaultTaxRate: number;
 };
 type ProjectRow = { id: string; name: string; note: string | null; isActive: boolean; bookingCount: number };
 type SettingsData = {
@@ -50,6 +55,7 @@ type SettingsData = {
   bankAccountName: string | null;
   donationCategoryId: string | null;
   donationCategoryName: string | null;
+  tax: TaxSettings;
 };
 
 export function SetupTabs({
@@ -310,6 +316,9 @@ export function SetupTabs({
         </Tab>
       </Tabs>
 
+      {/* Vergi ayarları (ACC-1) */}
+      <TaxSettingsCard settings={settings.tax} canUpdate={canUpdate} />
+
       {/* Üyelik aktarımı ayar kartı (§ 11.7) */}
       <SyncSettingsCard
         settings={settings}
@@ -326,11 +335,13 @@ export function SetupTabs({
         isOpen={accountModal.open}
         onOpenChange={(open) => setAccountModal({ open })}
         account={accountModal.account}
+        chart={settings.tax.chartOfAccounts}
       />
       <CategoryFormModal
         isOpen={categoryModal.open}
         onOpenChange={(open) => setCategoryModal({ open })}
         category={categoryModal.category}
+        chart={settings.tax.chartOfAccounts}
       />
       <ProjectFormModal
         isOpen={projectModal.open}

@@ -12,6 +12,7 @@ import { ActionError, createAction } from "@/modules/auth/server";
 import { accountingSetupPermissions } from "../permissions";
 import { accountCreateSchema, accountUpdateSchema } from "../schemas/account";
 import { parseDateOnly } from "../utils";
+import { definedOnly } from "../schemas/chart";
 
 /** Hesap oluştur (§ 8 md. 11): ad benzersiz (P2002), açılış bakiyesi ≥ 0 (CASH Kassenminus). */
 export async function createAccountAction(
@@ -42,6 +43,7 @@ export async function createAccountAction(
             type: input.type,
             openingBalance: (openingCents / 100).toFixed(2),
             openingDate,
+            accountNumber: input.accountNumber ?? null,
           },
         });
         await audit({
@@ -73,6 +75,7 @@ const accountEditSchema = z.object({
   openingBalance: accountUpdateSchema.shape.openingBalance.optional(),
   openingDate: accountUpdateSchema.shape.openingDate.optional(),
   isActive: accountUpdateSchema.shape.isActive,
+  accountNumber: accountUpdateSchema.shape.accountNumber,
 });
 
 /**
@@ -96,6 +99,7 @@ export async function updateAccountAction(input: unknown): Promise<ActionResult>
         name: input.name,
         type: input.type,
         isActive: input.isActive ?? existing.isActive,
+        ...definedOnly({ accountNumber: input.accountNumber }),
       };
 
       if (input.openingDate) {
