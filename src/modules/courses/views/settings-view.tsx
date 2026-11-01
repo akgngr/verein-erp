@@ -17,11 +17,11 @@ export async function CoursesSettingsView() {
     throw error;
   }
   const t = await getTranslations("courses.settings");
-  const [settings, categories] = await Promise.all([getCoursesSettings(), listActiveCategoryOptions("INCOME")]);
+  const [settings, categories, expenseCategories] = await Promise.all([getCoursesSettings(), listActiveCategoryOptions("INCOME"), listActiveCategoryOptions("EXPENSE")]);
   return (
     <div className="flex flex-col gap-6">
       <PageHeader title={t("title")} description={t("description")} />
-      <CoursesSettingsForm initialCategoryId={settings.incomeCategoryId} categories={categories} />
+      <CoursesSettingsForm settings={settings} categories={categories} expenseCategories={expenseCategories} />
     </div>
   );
 }

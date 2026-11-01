@@ -12,7 +12,7 @@ import { isMailConfigured, sendMail } from "@/modules/mail/server";
 import { createUserAccount } from "@/modules/users/server";
 
 import { courseTeachersPermissions } from "../permissions";
-import { teacherInviteSchema, teacherSchema, teacherUpdateSchema, type TeacherInput } from "../schemas/teacher";
+import { teacherInviteSchema, teacherSchema, teacherUpdateSchema, type TeacherInput, rateToCents } from "../schemas/teacher";
 
 type InviteResult = { temporaryPassword: string; mailSent: boolean };
 
@@ -25,6 +25,9 @@ function teacherData(input: TeacherInput) {
     subjects: input.subjects || null,
     note: input.note || null,
     isActive: input.isActive,
+    compensation: input.compensation,
+    rateCents: input.compensation === "NONE" ? null : rateToCents(input.rate),
+    rateUnit: input.rateUnit,
   };
 }
 

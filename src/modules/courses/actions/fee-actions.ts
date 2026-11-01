@@ -113,13 +113,15 @@ export async function saveCoursesSettingsAction(input: unknown): Promise<ActionR
     permission: { definition: courseFeesPermissions, action: "update" },
     schema: settingsSchema,
     handler: async ({ input, audit }) => {
-      const incomeCategoryId = input.incomeCategoryId || null;
-      await getDb().coursesSettings.upsert({
-        where: { id: "singleton" },
-        create: { id: "singleton", incomeCategoryId },
-        update: { incomeCategoryId },
-      });
-      await audit({ action: "SETTINGS_UPDATE", entity: "CoursesSettings", entityId: "singleton", after: { incomeCategoryId } });
+      const data = {
+        incomeCategoryId: input.incomeCategoryId || null,
+        payoutCategoryId: input.payoutCategoryId || null,
+        defaultSessionMinutes: input.defaultSessionMinutes,
+        uebungsleiterLimitCents: input.uebungsleiterLimitCents,
+        ehrenamtLimitCents: input.ehrenamtLimitCents,
+      };
+      await getDb().coursesSettings.upsert({ where: { id: "singleton" }, create: { id: "singleton", ...data }, update: data });
+      await audit({ action: "SETTINGS_UPDATE", entity: "CoursesSettings", entityId: "singleton", after: data });
       return { ok: true as const };
     },
   });

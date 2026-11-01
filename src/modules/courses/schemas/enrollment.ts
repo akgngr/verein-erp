@@ -31,4 +31,10 @@ export const waiveChargeSchema = z.object({
   reason: z.string().trim().min(5, "courses.validation.reasonMin").max(300, "courses.validation.textMax"),
 });
 
-export const settingsSchema = z.object({ incomeCategoryId: z.string().trim() });
+export const settingsSchema = z.object({
+  incomeCategoryId: z.string().trim(),
+  payoutCategoryId: z.string().trim().default(""),
+  defaultSessionMinutes: z.coerce.number().int().min(5).max(600).default(60),
+  uebungsleiterLimitCents: z.coerce.number().int().min(0).max(10_000_000).default(330000),
+  ehrenamtLimitCents: z.coerce.number().int().min(0).max(10_000_000).default(96000),
+});

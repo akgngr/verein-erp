@@ -113,6 +113,11 @@ export type TeacherRow = {
   note: string | null;
   isActive: boolean;
   courseCount: number;
+  compensation: "NONE" | "HONORAR" | "UEBUNGSLEITER" | "EHRENAMT";
+  rateCents: number | null;
+  rateUnit: "HOUR" | "SESSION";
+  /** Bağlı kullanıcının profilinde IBAN kayıtlı mı (IBAN'ın kendisi dönmez). */
+  hasPaymentProfile: boolean;
 };
 
 /** Öğrenci takibi modülü için: kursun yoklama/not listesi. */

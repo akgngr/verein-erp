@@ -11,6 +11,7 @@ import { applyActionResult } from "@/shared/components/forms/action-result";
 import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
 import { FormErrorSummary } from "@/shared/components/forms/form-error-summary";
 import { FormInput } from "@/shared/components/forms/form-input";
+import { FormSelect } from "@/shared/components/forms/form-select";
 import { FormSwitch } from "@/shared/components/forms/form-switch";
 import { FormTextarea } from "@/shared/components/forms/form-textarea";
 import { SubmitButton } from "@/shared/components/forms/submit-button";
@@ -39,9 +40,13 @@ export function TeacherForm({ teacher }: { teacher?: TeacherRow }) {
       note: teacher?.note ?? "",
       isActive: teacher?.isActive ?? true,
       invite: false,
+      compensation: teacher?.compensation ?? "NONE",
+      rate: teacher?.rateCents ? (teacher.rateCents / 100).toFixed(2).replace(".", ",") : "",
+      rateUnit: teacher?.rateUnit ?? "HOUR",
     },
   });
   const wantsInvite = useWatch({ control: form.control, name: "invite" });
+  const compensation = useWatch({ control: form.control, name: "compensation" });
   // Hesabı olan öğretmenin adı ve e-postası kullanıcı kaydından senkronlanır; burada düzenlenmez.
   const linked = Boolean(teacher?.userId);
 
@@ -91,6 +96,26 @@ export function TeacherForm({ teacher }: { teacher?: TeacherRow }) {
         <FormInput name="subjects" label={t("subjects")} control={form.control} placeholder={t("subjectsPlaceholder")} />
         <FormTextarea name="note" label={t("note")} control={form.control} />
         <FormSwitch name="isActive" label={t("isActive")} control={form.control} />
+        <div className="flex flex-col gap-3 rounded-medium border border-default-200 p-3">
+          <FormSelect
+            name="compensation"
+            label={t("compensation")}
+            control={form.control}
+            options={(["NONE", "HONORAR", "UEBUNGSLEITER", "EHRENAMT"] as const).map((value) => ({ value, label: t(`compensations.${value}`) }))}
+          />
+          {compensation !== "NONE" ? (
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <FormInput name="rate" label={t("rate")} control={form.control} isRequired />
+              <FormSelect
+                name="rateUnit"
+                label={t("rateUnit")}
+                control={form.control}
+                options={(["HOUR", "SESSION"] as const).map((value) => ({ value, label: t(`rateUnits.${value}`) }))}
+              />
+            </div>
+          ) : null}
+          <p className="text-tiny text-default-500">{teacher?.userId ? (teacher.hasPaymentProfile ? t("paymentProfileOk") : t("paymentProfileMissing")) : t("paymentProfileNoAccount")}</p>
+        </div>
         {!teacher ? (
           <div className="flex flex-col gap-1 rounded-medium border border-primary-200 bg-primary-50/40 p-3 dark:border-primary-500/30 dark:bg-primary-500/10">
             <FormSwitch name="invite" label={t("invite")} control={form.control} />

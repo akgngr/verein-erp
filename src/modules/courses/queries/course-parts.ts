@@ -2,6 +2,7 @@ import "server-only";
 
 import type { Prisma } from "@prisma/client";
 
+import { getPaymentProfile } from "@/modules/auth/server";
 import { getDb } from "@/shared/db";
 import type { ListParams, ListResult } from "@/shared/list-params";
 
@@ -126,10 +127,20 @@ export async function listTeachers(): Promise<TeacherRow[]> {
     orderBy: [{ isActive: "desc" }, { lastName: "asc" }, { firstName: "asc" }],
     include: { _count: { select: { courses: true } } },
   });
-  return rows.map(toTeacherRow);
+  const withProfile = await teachersWithPaymentProfile(rows.map((row) => row.userId));
+  return rows.map((row) => toTeacherRow(row, withProfile));
 }
 
-function toTeacherRow(row: Prisma.CourseTeacherGetPayload<{ include: { _count: { select: { courses: true } } } }>): TeacherRow {
+/** Profilinde IBAN kayıtlı öğretmen hesapları (IBAN'ın kendisi bu modülde tutulmaz/dönmez). */
+async function teachersWithPaymentProfile(userIds: (string | null)[]): Promise<Set<string>> {
+  const result = new Set<string>();
+  for (const userId of userIds) {
+    if (userId && (await getPaymentProfile(userId))?.iban) result.add(userId);
+  }
+  return result;
+}
+
+function toTeacherRow(row: Prisma.CourseTeacherGetPayload<{ include: { _count: { select: { courses: true } } } }>, withProfile: Set<string>): TeacherRow { // i18n-ignore (tip imzası)
   return {
     id: row.id,
     userId: row.userId,
@@ -141,12 +152,16 @@ function toTeacherRow(row: Prisma.CourseTeacherGetPayload<{ include: { _count: {
     note: row.note,
     isActive: row.isActive,
     courseCount: row._count.courses,
+    compensation: row.compensation,
+    rateCents: row.rateCents,
+    rateUnit: row.rateUnit,
+    hasPaymentProfile: Boolean(row.userId && withProfile.has(row.userId)),
   };
 }
 
 export async function getTeacher(id: string): Promise<TeacherRow | null> {
   const row = await getDb().courseTeacher.findUnique({ where: { id }, include: { _count: { select: { courses: true } } } });
-  return row ? toTeacherRow(row) : null;
+  return row ? toTeacherRow(row, await teachersWithPaymentProfile([row.userId])) : null;
 }
 
 export async function listTeacherOptions(): Promise<{ id: string; label: string }[]> {
@@ -158,7 +173,21 @@ export async function listTeacherOptions(): Promise<{ id: string; label: string 
   return rows.map((row) => ({ id: row.id, label: `${`${row.firstName} ${row.lastName}`.trim()}${row.subjects ? ` (${row.subjects})` : ""}` }));
 }
 
-export async function getCoursesSettings(): Promise<{ incomeCategoryId: string }> {
+export type CoursesSettingsData = {
+  incomeCategoryId: string;
+  payoutCategoryId: string;
+  defaultSessionMinutes: number;
+  uebungsleiterLimitCents: number;
+  ehrenamtLimitCents: number;
+};
+
+export async function getCoursesSettings(): Promise<CoursesSettingsData> {
   const row = await getDb().coursesSettings.findUnique({ where: { id: "singleton" } });
-  return { incomeCategoryId: row?.incomeCategoryId ?? "" };
+  return {
+    incomeCategoryId: row?.incomeCategoryId ?? "",
+    payoutCategoryId: row?.payoutCategoryId ?? "",
+    defaultSessionMinutes: row?.defaultSessionMinutes ?? 60,
+    uebungsleiterLimitCents: row?.uebungsleiterLimitCents ?? 330000,
+    ehrenamtLimitCents: row?.ehrenamtLimitCents ?? 96000,
+  };
 }
