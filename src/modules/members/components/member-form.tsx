@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, addToast } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm, type Resolver } from "react-hook-form";
+import { useForm, type Resolver, useWatch } from "react-hook-form";
 import { useTranslations } from "next-intl";
 
 import type { MembershipType } from "@prisma/client";
@@ -164,6 +164,10 @@ export function MemberForm(props: MemberFormProps) {
       : (zodResolver(memberCreateSchema) as unknown as Resolver<MemberFormValues>),
     defaultValues,
   });
+  // Tarih seçicilerin sınırları (sunucu aynı kuralları ayrıca denetler; bkz. services/date-rules.ts).
+  const watchedBirthDate = useWatch({ control: form.control, name: "birthDate" }) as string | null | undefined;
+  const watchedJoinDate = useWatch({ control: form.control, name: "joinDate" }) as string | null | undefined;
+  const todayIso = new Date().toISOString().slice(0, 10);
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(null);
@@ -260,6 +264,8 @@ export function MemberForm(props: MemberFormProps) {
               label={t("form.birthDate")}
               control={form.control}
               description={t("form.birthDateDescription")}
+              minValue="1900-01-01"
+              maxValue={todayIso}
             />
           </div>
 
@@ -343,12 +349,14 @@ export function MemberForm(props: MemberFormProps) {
               label={t("form.joinDate")}
               control={form.control}
               isRequired
+              minValue={watchedBirthDate || "1900-01-01"}
             />
             <FormDatePicker
               name="exitDate"
               label={t("form.exitDate")}
               control={form.control}
               description={t("form.exitDateDescription")}
+              minValue={watchedJoinDate || undefined}
             />
           </div>
 

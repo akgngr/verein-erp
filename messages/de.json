@@ -578,7 +578,8 @@
       "toastRun": "Übernahme fertig: {created} Buchungen, {reversed} Gegenbuchungen.",
       "empty": "Keine Zahlungen zu übernehmen.",
       "receipt": "Quittungs-Nr.",
-      "reason": "Grund"
+      "reason": "Grund",
+      "toCorrect": "Betrag zu korrigieren (Storno des alten Belegs + neuer Beleg mit richtigem Betrag)"
     },
     "reports": {
       "title": "Berichte",
@@ -4118,7 +4119,9 @@
       "importDupPersonDb": "Duplikat: Ein Mitglied mit gleichem Vor-, Nachnamen und Geburtsdatum existiert bereits.",
       "importDupPersonFile": "Duplikat: Gleicher Vor-, Nachname und Geburtsdatum kommen mehrfach in der Datei vor.",
       "paymentNotSpecified": "Keine Zahlung angegeben.",
-      "paymentNotFound2": "Zahlung nicht gefunden."
+      "paymentNotFound2": "Zahlung nicht gefunden.",
+      "datesInvalid": "Die Datumsangaben sind nicht stimmig; bitte markierte Felder prüfen.",
+      "exitDateRequired": "Für ausgetretene oder verstorbene Mitglieder ist ein Austrittsdatum erforderlich."
     },
     "validation": {
       "yearMinPrev": "Das Jahr darf höchstens das Vorjahr sein.",
@@ -4162,7 +4165,26 @@
       "paymentDateInvalid": "Bitte ein gültiges Zahlungsdatum eingeben.",
       "referenceMax": "Die Referenz darf höchstens 100 Zeichen lang sein.",
       "voidReasonMin": "Der Stornogrund muss mindestens 5 Zeichen lang sein.",
-      "voidReasonMax": "Der Stornogrund darf höchstens 300 Zeichen lang sein."
+      "voidReasonMax": "Der Stornogrund darf höchstens 300 Zeichen lang sein.",
+      "exitDateRequired": "Austrittsdatum ist erforderlich.",
+      "amountBelowPaid": "Der Betrag muss mindestens dem bereits gezahlten Betrag entsprechen.",
+      "amountInvalid": "Bitte einen Betrag größer 0 eingeben (höchstens 2 Nachkommastellen).",
+      "annualDueInvalid": "Bitte einen gültigen Betrag eingeben (höchstens 2 Nachkommastellen, nicht negativ).",
+      "birthDateFuture": "Das Geburtsdatum darf nicht in der Zukunft liegen.",
+      "dateTooOld": "Datumsangaben vor 1900 sind nicht zulässig.",
+      "dueDateBeforeYear": "Die Fälligkeit muss im Beitragsjahr oder danach liegen.",
+      "dueYearOutsideMembership": "Das Beitragsjahr liegt außerhalb der Mitgliedschaft (vor dem Eintritts- oder nach dem Austrittsjahr).",
+      "duesExists": "Für dieses Jahr gibt es bereits eine Beitragszeile.",
+      "joinAfterPayments": "Das Eintrittsdatum darf nicht nach bereits erfassten Zahlungen liegen.",
+      "joinBeforeBirth": "Das Eintrittsdatum darf nicht vor dem Geburtsdatum liegen.",
+      "joinTooFarFuture": "Das Eintrittsdatum darf höchstens ein Jahr in der Zukunft liegen.",
+      "memberRequired": "Bitte ein gültiges Mitglied wählen.",
+      "noticeAfterExit": "Die Kündigung darf nicht nach dem Austrittsdatum eingehen.",
+      "paymentBeforeJoin": "Das Zahlungsdatum darf nicht vor dem Eintrittsdatum liegen.",
+      "paymentDateFuture": "Das Zahlungsdatum darf nicht in der Zukunft liegen.",
+      "waiveHasPayments": "Bitte zuerst die Zahlungen stornieren oder die Zeile nicht befreien.",
+      "yearTooFarFuture": "Das Beitragsjahr darf nicht nach dem nächsten Jahr liegen.",
+      "yearTooOld": "Das Jahr darf nicht vor 2000 liegen."
     },
     "module": {
       "label": "Mitglieder",

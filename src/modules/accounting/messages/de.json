@@ -308,7 +308,8 @@
     "toastRun": "Übernahme fertig: {created} Buchungen, {reversed} Gegenbuchungen.",
     "empty": "Keine Zahlungen zu übernehmen.",
     "receipt": "Quittungs-Nr.",
-    "reason": "Grund"
+    "reason": "Grund",
+    "toCorrect": "Betrag zu korrigieren (Storno des alten Belegs + neuer Beleg mit richtigem Betrag)"
   },
   "reports": {
     "title": "Berichte",

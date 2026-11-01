@@ -112,6 +112,7 @@ export type AccountingStats = {
 export type MemberSyncPreview = {
   toImport: { count: number; totalCents: number };
   toReverse: { count: number; totalCents: number };
+  toCorrect: { count: number; totalCents: number };
   skippedLockedYear: number;
   skippedBeforeOpening: number;
   conflicts: Array<{ receiptNumber: string; reason: string }>;

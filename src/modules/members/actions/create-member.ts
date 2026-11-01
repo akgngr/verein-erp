@@ -12,7 +12,8 @@ import {
   allocateMembershipNumber,
   runWithMembershipNumberRetry,
 } from "../services/membership-number";
-import { berlinYear, parseDateOnly } from "../utils";
+import { berlinYear, parseDateOnly, berlinToday } from "../utils";
+import { checkMemberDates, hasProblems } from "../services/date-rules";
 
 /**
  * Yeni üye kaydı: üyelik numarası ve sıra yıl bazında sayacın atomik
@@ -44,11 +45,11 @@ export async function createMemberAction(
       const status = input.status ?? "ACTIVE";
 
       if ((status === "RESIGNED" || status === "DECEASED") && !exitDate) {
-        throw new ActionError(
-          `${status === "RESIGNED" ? "Ayrılan" : "Vefat eden"} üye için ayrılış tarihi girin.`,
-          { exitDate: ["Ayrılış tarihi zorunlu."] },
-        );
+        throw new ActionError("members.errors.exitDateRequired", { exitDate: ["members.validation.exitDateRequired"] });
       }
+
+      const dateProblems = checkMemberDates({ birthDate, joinDate, exitDate, today: berlinToday() });
+      if (hasProblems(dateProblems)) throw new ActionError("members.errors.datesInvalid", dateProblems);
 
       const createdByLabel = buildUserLabel(user.name, user.email);
       const createdAt = new Date();
