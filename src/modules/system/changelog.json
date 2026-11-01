@@ -2,6 +2,36 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.36.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "Toplu e-posta modülü",
+        "de": "Rundmail-Modul"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Ayrı Toplu e-posta modülü: modüllerin alıcı listeleri (Üyeler, Veliler…) arasından seçim, filtre, kişiselleştirme, test, arka planda gönderim ve geçmiş. Diğer modüller sendBulkMail ile izinli kullanabilir.",
+          "de": "Eigenes Rundmail-Modul: Auswahl aus Empfängerlisten der Module (Mitglieder, Eltern …), Filter, Personalisierung, Test, Versand im Hintergrund und Verlauf. Andere Module nutzen sendBulkMail mit Freigabe."
+        },
+        {
+          "type": "security",
+          "tr": "Alıcı listesi yalnızca kaynağın izni olan kullanıcıya görünür; itiraz edenler ve e-postasızlar atlanır; alıcı listesi saklanmaz.",
+          "de": "Empfängerlisten nur mit Berechtigung der Quelle; Widersprüche und Personen ohne E-Mail werden übersprungen; keine Speicherung der Empfängerliste."
+        },
+        {
+          "type": "improvement",
+          "tr": "Toplu e-posta Toplu e-posta modülüne taşındı; Üyeler bir alıcı listesi sunar (durum/tür filtresi, itiraz). Geçmiş kayıtlar taşındı.",
+          "de": "Rundmail ist in das Rundmail-Modul umgezogen; Mitglieder liefern eine Empfängerliste (Status/Art, Widerspruch). Verlauf übernommen."
+        },
+        {
+          "type": "feature",
+          "tr": "Toplu e-posta için Veliler alıcı listesi (öğrencisi olan / tüm veliler).",
+          "de": "Empfängerliste Eltern für Rundmails (mit Schüler/in / alle)."
+        }
+      ]
+    },
+    {
       "version": "0.35.0",
       "date": "2026-11-01",
       "title": {

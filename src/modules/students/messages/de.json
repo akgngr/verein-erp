@@ -198,5 +198,19 @@
       "label": "Schüler",
       "description": "Schüler- und Elterndaten."
     }
+  },
+  "recipients": {
+    "guardians": {
+      "label": "Eltern / Zahlungspflichtige",
+      "filters": {
+        "scope": {
+          "label": "Umfang",
+          "options": {
+            "WITH_STUDENTS": "Mit Schüler/in",
+            "ALL": "Alle"
+          }
+        }
+      }
+    }
   }
 }

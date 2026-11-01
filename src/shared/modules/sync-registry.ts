@@ -8,6 +8,7 @@ const CARDS_FILE = path.join(ROOT_DIR, "src", "dashboard-cards.ts");
 const AI_FILE = path.join(ROOT_DIR, "src", "ai-registry.ts");
 const DEMO_FILE = path.join(ROOT_DIR, "src", "demo-registry.ts");
 const FORMATS_FILE = path.join(ROOT_DIR, "src", "format-registry.ts");
+const RECIPIENTS_FILE = path.join(ROOT_DIR, "src", "recipient-registry.ts");
 const LIFECYCLE_FILE = path.join(ROOT_DIR, "src", "lifecycle-registry.ts");
 const RELEASES_FILE = path.join(ROOT_DIR, "src", "module-releases.ts");
 const PERMISSIONS_FILE = path.join(ROOT_DIR, "src", "permissions-registry.ts");
@@ -94,6 +95,7 @@ export const registry: ModuleConfig[] = allModules;
   syncModuleReleases(validModules);
   syncConventionFile(validModules, "demo.ts", "demo", DEMO_FILE, "ModuleDemo", "@/shared/demo/define", "moduleDemoRegistry", "Modüllerin örnek veri üreticileri (src/modules/<modül>/demo.ts).");
   syncConventionFile(validModules, "formats.ts", "formats", FORMATS_FILE, "ModuleFormats", "@/shared/formats/define", "moduleFormatRegistry", "Modüllerin dosya formatı eklentileri (src/modules/<modül>/formats.ts).");
+  syncConventionFile(validModules, "recipients.ts", "recipients", RECIPIENTS_FILE, "ModuleRecipients", "@/shared/mailings/define", "moduleRecipientRegistry", "Toplu e-posta alıcı kaynakları (src/modules/<modül>/recipients.ts).");
   syncConventionFile(validModules, "lifecycle.ts", "lifecycle", LIFECYCLE_FILE, "ModuleLifecycle", "@/shared/modules/lifecycle", "moduleLifecycleRegistry", "Modül yaşam döngüsü kancaları (src/modules/<modül>/lifecycle.ts), ör. kapatılırken temizlik.");
   syncPermissionResources(validModules);
 

@@ -483,6 +483,14 @@ pnpm db:deploy && pnpm build                       # ardından yayımla
 - Yalnızca daha yüksek sürüm kurulur; önceki sürüm `.module-backups/` altına alınır; doğrulama başarısızsa kurulum geri alınır.
 - Ayarlar → Modül paketleri: yükle ve doğrula (içerik çalıştırılmaz), kurulum komutunu kopyala.
 
+## 9g. Toplu e-posta alıcı kaynakları (`recipients.ts`)
+
+Modül, "Toplu e-posta" modülüne alıcı listesi sunar:
+`export const recipients = defineRecipients("<modül>", [{ key, permission, placeholders, filters, sampleVars, resolve }])` (`@/shared/mailings/define`).
+`resolve(filter)` → `{ id, email, name, optOut, vars }[]`. Kaynağı yalnızca `permission` yetkisi olan görür; modül kapalıysa listelenmez.
+Etiketler: `<modül>.recipients.<kaynak>.label`, `...filters.<filtre>.label`, `...filters.<filtre>.options.<değer>`. İtiraz (`optOut`) ve e-postasızlar atlanır.
+Programatik gönderim: `import { sendBulkMail } from "@/modules/mailings/server"` (+ `access: [{ module: "mailings", operations: ["write"] }]`).
+
 ## 10. Doğrulama (CI aynı adımları çalıştırır)
 
 ```bash
