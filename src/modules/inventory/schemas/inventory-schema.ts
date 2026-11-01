@@ -35,6 +35,8 @@ export const inventoryCreateSchema = z.object({
     .nullable(),
   description: optionalText(2000),
   assignedMemberId: optionalText(100),
+  /** Muhasebede demirbaş (AfA) olarak izle (muhasebe modülü etkinse). */
+  trackAsAsset: z.boolean(),
 });
 
 export const inventoryUpdateSchema = inventoryCreateSchema.extend({

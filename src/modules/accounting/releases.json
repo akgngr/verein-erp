@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.13.0",
+      "date": "2026-11-01",
+      "appVersion": "0.35.0",
+      "title": {
+        "tr": "Envanterle demirbaş senkronu",
+        "de": "Anlagen-Abgleich mit Inventar"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Demirbaş ↔ envanter senkronu: envanter modülü etkinse demirbaş eklemek/çıkarmak envantere de yansır; \"Envanterle eşitle\" mevcut demirbaşları envantere ekler. Envanter kapalıysa demirbaş muhasebede bağımsız çalışır.",
+          "de": "Abgleich Anlagen ↔ Inventar: Bei aktivem Inventarmodul werden Anlage/Abgang ins Inventar übernommen; „Mit Inventar abgleichen“ überträgt bestehende Anlagen. Ohne Inventarmodul arbeiten Anlagen eigenständig."
+        }
+      ]
+    },
+    {
       "version": "1.12.0",
       "date": "2026-11-01",
       "appVersion": "0.32.0",

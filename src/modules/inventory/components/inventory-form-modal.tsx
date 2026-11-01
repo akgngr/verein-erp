@@ -13,6 +13,7 @@ import {
   DrawerContent,
   DrawerFooter,
   DrawerHeader,
+  Switch,
   Textarea,
 } from "@heroui/react";
 import { ChevronDown } from "lucide-react";
@@ -47,6 +48,8 @@ export function InventoryFormModal({ isOpen, onClose, item = null }: InventoryFo
     register,
     handleSubmit,
     reset,
+    watch,
+    setValue,
     formState: { errors },
   } = useForm<InventoryFormValues>({
     resolver: zodResolver(inventoryCreateSchema),
@@ -222,6 +225,13 @@ export function InventoryFormModal({ isOpen, onClose, item = null }: InventoryFo
                 errorMessage={errorText(errors.description?.message)}
                 className="sm:col-span-2"
               />
+
+              <div className="flex flex-col gap-1 sm:col-span-2">
+                <Switch isSelected={watch("trackAsAsset")} onValueChange={(value) => setValue("trackAsAsset", value, { shouldDirty: true })}>
+                  {t("fields.trackAsAsset")}
+                </Switch>
+                <p className="text-tiny text-default-500">{t("hints.trackAsAsset")}</p>
+              </div>
             </div>
 
             {submitError ? (

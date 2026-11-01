@@ -14,6 +14,7 @@ import {
 } from "../schemas/inventory-schema";
 import { toInventoryWriteData } from "../helpers/inventory-helpers";
 import type { InventoryActionResult } from "../types";
+import { syncItemToAccounting } from "../services/asset-sync";
 
 function toErrorResult(error: unknown): InventoryActionResult {
   // Let Next.js control-flow errors (redirect / notFound from auth) propagate.
@@ -44,7 +45,8 @@ export async function createInventoryAction(input: unknown): Promise<InventoryAc
     if (!parsed.success) return { ok: false, error: "validation" };
 
     const db = getDb();
-    await db.inventoryItem.create({ data: toInventoryWriteData(parsed.data) });
+    const created = await db.inventoryItem.create({ data: toInventoryWriteData(parsed.data), select: { id: true } });
+    await syncItemToAccounting(created.id);
 
     revalidatePath(INVENTORY_BASE_PATH);
     return { ok: true };
@@ -65,6 +67,7 @@ export async function updateInventoryAction(input: unknown): Promise<InventoryAc
 
     const db = getDb();
     await db.inventoryItem.update({ where: { id }, data: toInventoryWriteData(values) });
+    await syncItemToAccounting(id);
 
     revalidatePath(INVENTORY_BASE_PATH);
     return { ok: true };
@@ -85,6 +88,7 @@ export async function updateInventoryStatusAction(input: unknown): Promise<Inven
 
     const db = getDb();
     await db.inventoryItem.update({ where: { id }, data: { status } });
+    await syncItemToAccounting(id);
 
     revalidatePath(INVENTORY_BASE_PATH);
     return { ok: true };
@@ -105,6 +109,7 @@ export async function deleteInventoryAction(input: unknown): Promise<InventoryAc
 
     const db = getDb();
     await db.inventoryItem.delete({ where: { id } });
+    await syncItemToAccounting(id, { deleted: true });
 
     revalidatePath(INVENTORY_BASE_PATH);
     return { ok: true };

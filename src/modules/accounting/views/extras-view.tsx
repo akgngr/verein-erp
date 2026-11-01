@@ -8,7 +8,8 @@ import { PageHeader } from "@/shared/components/ui/page-header";
 import { getDb } from "@/shared/db";
 import { can } from "@/shared/permissions/define";
 
-import { AssetForm, DeleteFlatRateButton, DisposeAssetButton, FlatRateForm, ReleaseReserveButton, ReserveForm } from "../components/extras-forms";
+import { AssetForm, DeleteFlatRateButton, DisposeAssetButton, FlatRateForm, ReleaseReserveButton, ReserveForm, LinkInventoryButton } from "../components/extras-forms";
+import { isInventoryUsable } from "../services/inventory-link";
 import { accountingPermissions } from "../permissions";
 import { getReserveOverview, listAssets, listFlatRates } from "../queries/assets";
 import { flatRateYearTotals, type FlatRateKind } from "../services/afa";
@@ -40,17 +41,24 @@ export async function ExtrasView({ tab, year }: { tab: ExtrasTab; year: number }
 
   let body: React.ReactNode = null;
   if (tab === "anlagen") {
-    const assets = await listAssets(year);
+    const [assets, inventoryOn] = await Promise.all([listAssets(year), isInventoryUsable()]);
+    const unlinked = assets.filter((asset) => !asset.inventoryItemId && !asset.disposalDate).length;
     body = (
       <>
         {canEdit ? <AssetForm /> : null}
         <p className="text-tiny text-default-500">{t("assets.hint")}</p>
+        {inventoryOn ? (
+          <div className="flex flex-wrap items-center gap-2 rounded-medium bg-primary-50 p-3 text-small text-primary-700 dark:bg-primary-500/10">
+            <span>{t("assets.inventorySync")}</span>
+            {canEdit && unlinked > 0 ? <LinkInventoryButton /> : null}
+          </div>
+        ) : null}
         <table className={table}>
           <thead><tr><th className={th}>{t("assets.name")}</th><th className={th}>{t("assets.date")}</th><th className={th}>{t("assets.method")}</th><th className={`${th} text-right`}>{t("assets.cost")}</th><th className={`${th} text-right`}>{t("assets.afa", { year })}</th><th className={`${th} text-right`}>{t("assets.bookValue")}</th><th className={th} /></tr></thead>
           <tbody>
             {assets.map((asset) => (
               <tr key={asset.id}>
-                <td className={td}>{asset.name}{asset.disposalDate ? <span className="ml-2 text-tiny text-default-400">{t("assets.disposedOn", { date: day(asset.disposalDate) })}</span> : null}</td>
+                <td className={td}>{asset.name}{asset.inventoryItemId ? <span className="ml-2 rounded-small bg-default-100 px-1.5 text-tiny text-default-600">{t("assets.inInventory")}</span> : null}{asset.disposalDate ? <span className="ml-2 text-tiny text-default-400">{t("assets.disposedOn", { date: day(asset.disposalDate) })}</span> : null}</td>
                 <td className={td}>{day(asset.acquisitionDate)}</td>
                 <td className={td}>{t(`assets.methods.${asset.method}`)}{asset.method === "LINEAR" ? ` · ${asset.usefulLifeMonths} M.` : ""}</td>
                 <td className={`${td} text-right tabular-nums`}>{euro(asset.costCents)}</td>

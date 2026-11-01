@@ -863,7 +863,9 @@
     },
     "access": {
       "members": "Liest Mitgliedsbeitragszahlungen, um sie in die Buchhaltung zu übernehmen.",
-      "organization": "Verwendet den Vereinsbriefkopf in PDF-Berichten."
+      "organization": "Verwendet den Vereinsbriefkopf in PDF-Berichten.",
+      "inventory": "Hält Anlagen mit Inventargegenständen synchron (Name, Datum, Kosten, Ausmusterung).",
+      "system": "Liest, ob das Inventarmodul aktiv ist."
     },
     "pdf": {
       "voucher": {
@@ -1501,7 +1503,11 @@
           "GWG": "GWG (≤ 800 €)",
           "POOL": "Sammelposten (5 Jahre)"
         },
-        "hint": "Die Anschaffung auf eine als „Anlagegut“ markierte Ausgabenkategorie buchen: in der EÜR zählt dann nicht der Kaufpreis, sondern die jährliche AfA von hier. GWG bis 800 € netto (sofort), Sammelposten 250,01–1.000 € (5 Jahre je 1/5), sonst linear nach Nutzungsdauer (AfA-Tabelle), monatsgenau."
+        "hint": "Die Anschaffung auf eine als „Anlagegut“ markierte Ausgabenkategorie buchen: in der EÜR zählt dann nicht der Kaufpreis, sondern die jährliche AfA von hier. GWG bis 800 € netto (sofort), Sammelposten 250,01–1.000 € (5 Jahre je 1/5), sonst linear nach Nutzungsdauer (AfA-Tabelle), monatsgenau.",
+        "inventorySync": "Inventarmodul aktiv: Anlagen werden mit dem Inventar abgeglichen (Name, Datum, Kosten, Abgang). AfA-Methode und Nutzungsdauer bleiben in der Buchhaltung.",
+        "linkInventory": "Mit Inventar abgleichen",
+        "inventoryLinked": "Anlagen ins Inventar übernommen.",
+        "inInventory": "Inventar"
       },
       "flat": {
         "kind": "Art",
@@ -3781,7 +3787,8 @@
       "purchasePrice": "Anschaffungspreis",
       "description": "Beschreibung",
       "assignedMemberId": "Ausgegeben an (Mitglied)",
-      "createdAt": "Erfasst am"
+      "createdAt": "Erfasst am",
+      "trackAsAsset": "In der Buchhaltung als Anlage (AfA) führen"
     },
     "placeholders": {
       "search": "Bezeichnung, Seriennummer, Standort oder Beschreibung durchsuchen…",
@@ -3792,7 +3799,8 @@
       "description": "Zusätzliche Angaben, Garantiehinweise usw."
     },
     "hints": {
-      "assignedMemberId": "Optional: ID des Mitglieds, an das der Gegenstand ausgegeben wurde."
+      "assignedMemberId": "Optional: ID des Mitglieds, an das der Gegenstand ausgegeben wurde.",
+      "trackAsAsset": "Bei aktivem Buchhaltungsmodul wird ein Gegenstand mit Kaufdatum und -preis als Anlage geführt und synchron gehalten (≤ 800 € GWG, sonst 36 Monate linear; in der Buchhaltung änderbar). Ausmusterung wird als Abgang gebucht."
     },
     "categories": {
       "ELECTRONICS": "Elektronik",
@@ -3899,6 +3907,10 @@
         "label": "Inventar",
         "description": "Inventarverzeichnis, Ausgaben und Aussonderung."
       }
+    },
+    "access": {
+      "accounting": "Führt markierte Gegenstände als Anlagen (AfA) in der Buchhaltung und hält sie synchron.",
+      "system": "Liest, ob das Buchhaltungsmodul aktiv ist."
     }
   },
   "mail": {

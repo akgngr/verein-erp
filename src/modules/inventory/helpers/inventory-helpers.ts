@@ -256,6 +256,7 @@ export function toInventoryFormValues(item: InventoryItemRow | null): InventoryF
     purchasePrice: item?.purchasePrice ?? null,
     description: item?.description ?? "",
     assignedMemberId: item?.assignedMemberId ?? "",
+    trackAsAsset: item?.trackAsAsset ?? false,
   };
 }
 
@@ -271,6 +272,7 @@ export function toInventoryWriteData(values: InventoryFormValues) {
     purchasePrice: values.purchasePrice,
     description: emptyToNull(values.description),
     assignedMemberId: emptyToNull(values.assignedMemberId),
+    trackAsAsset: values.trackAsAsset ?? false,
   };
 }
 

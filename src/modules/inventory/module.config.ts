@@ -5,11 +5,16 @@ import { inventoryPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "inventory",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.0.0",
+  version: "1.1.0",
   label: "Envanter ve Demirbaş",
   description: "Dernek demirbaşları, teknik ekipmanlar ve zimmet kayıtlarının takibi.",
   category: "OFFICIAL",
   hasSchema: true,
+  // Demirbaş senkronu (muhasebe ↔ envanter); karşı modül etkin mi diye modül durumunu okur.
+  access: [
+    { module: "accounting", operations: ["write"] },
+    { module: "system", operations: ["read"] },
+  ],
   nav: [
     {
       href: "/inventory",

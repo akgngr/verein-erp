@@ -7,13 +7,15 @@ import { accountingPermissions, accountingSetupPermissions } from "./permissions
 export const moduleConfig: ModuleConfig = {
   key: "accounting",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.12.0",
+  version: "1.13.0",
   label: "Muhasebe",
   description: "Alman dernek mevzuatına uygun çift taraflı defter tutma, fiş ve bütçe yönetimi.",
   category: "OFFICIAL",
   hasSchema: true,
   // Başka modüllerden istenen erişim (yönetici onayı gerekir; gerekçe: messages → access.<modül>).
   access: [
+    { module: "system", operations: ["read"] },
+    { module: "inventory", operations: ["write"] },
     { module: "members", operations: ["read"] },
     { module: "organization", operations: ["read"] },
   ],
