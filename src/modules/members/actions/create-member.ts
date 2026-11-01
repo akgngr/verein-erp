@@ -82,6 +82,7 @@ export async function createMemberAction(
               exitDate,
               exitReason: input.exitReason,
               notes: input.notes,
+              bulkMailOptOut: input.bulkMailOptOut,
               createdById: user.id,
               createdByLabel,
               updatedById: user.id,

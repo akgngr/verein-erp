@@ -16,6 +16,7 @@ import { FormErrorSummary } from "@/shared/components/forms/form-error-summary";
 import { FormInput } from "@/shared/components/forms/form-input";
 import { FormSelect } from "@/shared/components/forms/form-select";
 import { FormTextarea } from "@/shared/components/forms/form-textarea";
+import { FormSwitch } from "@/shared/components/forms/form-switch";
 import { SubmitButton } from "@/shared/components/forms/submit-button";
 
 import { createMemberAction } from "../actions/create-member";
@@ -48,6 +49,7 @@ type MemberFormValues = {
   exitDate: string;
   exitReason: string;
   notes: string;
+  bulkMailOptOut: boolean;
   /** Yalnızca edit: eşzamanlılık koruması — ISO string. */
   updatedAt?: string;
 };
@@ -74,6 +76,7 @@ export type MemberEditFormData = {
   exitDate: Date | null;
   exitReason: string | null;
   notes: string | null;
+  bulkMailOptOut: boolean;
   updatedAt: Date;
 };
 
@@ -134,6 +137,7 @@ export function MemberForm(props: MemberFormProps) {
               : "",
         exitReason: member.exitReason ?? "",
         notes: member.notes ?? "",
+        bulkMailOptOut: member.bulkMailOptOut,
       }
     : {
         type: "ASIL",
@@ -155,6 +159,7 @@ export function MemberForm(props: MemberFormProps) {
         exitDate: "",
         exitReason: "",
         notes: "",
+        bulkMailOptOut: false,
       };
 
   // KARAR: documents kalıbıyla aynı — z.preprocess'li şemayı resolver'a uyarla.
@@ -374,6 +379,13 @@ export function MemberForm(props: MemberFormProps) {
             control={form.control}
             rows={3}
             description={t("form.notesDescription")}
+          />
+
+          <FormSwitch
+            name="bulkMailOptOut"
+            label={t("form.bulkMailOptOut")}
+            control={form.control}
+            description={t("form.bulkMailOptOutDescription")}
           />
 
           <FormErrorSummary message={formError} />

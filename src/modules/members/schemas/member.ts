@@ -100,6 +100,7 @@ const baseFields = {
   notes: emptyToNull(
     z.string().trim().max(2000, "members.validation.notesMax").nullable(),
   ),
+  bulkMailOptOut: z.boolean().default(false),
 };
 
 /** Faz 4 (4.6): Ülke boş veya Almanya ise PLZ 5 haneli olmalıdır; aksi halde serbest ≤10. */

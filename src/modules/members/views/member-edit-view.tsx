@@ -55,6 +55,7 @@ export async function MemberEditView({ id }: { id: string }) {
           exitDate: member.exitDate,
           exitReason: member.exitReason,
           notes: member.notes,
+          bulkMailOptOut: member.bulkMailOptOut,
           updatedAt: member.updatedAt,
         }}
       />

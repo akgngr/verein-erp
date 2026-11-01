@@ -105,6 +105,8 @@ model Member {
   exitReason String?
 
   notes String? // serbest metin: üye kartındaki genel not
+  /// Toplu e-posta (duyuru) almak istemiyor — DSGVO Art. 21 itirazı; bireysel/zorunlu yazışmalar etkilenmez.
+  bulkMailOptOut Boolean @default(false)
 
   createdById    String
   createdByLabel String
@@ -217,4 +219,33 @@ model MemberNote {
   createdAt   DateTime @default(now())
 
   @@index([memberId, createdAt])
+}
+
+enum MemberMailingStatus {
+  SENDING
+  DONE
+  FAILED
+}
+
+/// Üyelere toplu e-posta (duyuru). Alıcı başına gönderim sonucu mail_logs'ta (module=members, reference=id).
+model MemberMailing {
+  id             String              @id @default(cuid())
+  subject        String
+  body           String
+  /// Filtre: durumlar ve üyelik türleri (boş = hepsi)
+  statuses       String[]
+  types          String[]
+  status         MemberMailingStatus @default(SENDING)
+  recipientCount Int                 @default(0)
+  sentCount      Int                 @default(0)
+  failedCount    Int                 @default(0)
+  skippedNoEmail Int                 @default(0)
+  skippedOptOut  Int                 @default(0)
+  createdById    String
+  createdByLabel String
+  createdAt      DateTime            @default(now())
+  finishedAt     DateTime?
+
+  @@index([createdAt])
+  @@map("members_mailings")
 }
