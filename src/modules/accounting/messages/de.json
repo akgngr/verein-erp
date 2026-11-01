@@ -218,7 +218,13 @@
       "smallBusiness": "Kleinunternehmer (§ 19 UStG)",
       "smallBusinessHint": "Wenn aktiv, werden neue Buchungen mit 0 % USt erfasst; Rechnungen ohne USt-Ausweis.",
       "save": "Speichern",
-      "saved": "Steuereinstellungen gespeichert."
+      "saved": "Steuereinstellungen gespeichert.",
+      "datevTitle": "DATEV",
+      "datevHint": "Für den EXTF-Kopf; erhalten Sie von Ihrer Steuerberatung.",
+      "consultantNo": "Beraternummer",
+      "clientNo": "Mandantennummer",
+      "datevTaxKeys": "BU-Schlüssel ausgeben",
+      "datevTaxKeysHint": "Nur aktivieren, wenn Sie keine Automatikkonten (z. B. 8400/4400) verwenden — sonst doppelte Steuer."
     },
     "skr": {
       "revenue19": "Erlöse 19 %",
@@ -364,7 +370,8 @@
     "budget": "Haushaltsplan",
     "yearClosing": "Jahresabschluss",
     "settings": "Einstellungen",
-    "export": "Excel-Export"
+    "export": "Excel-Export",
+    "tax": "Steuern"
   },
   "nav": {
     "muhasebe": "Buchhaltung"
@@ -378,7 +385,8 @@
     "budget": "Haushaltsplan",
     "yearClosing": "Jahresabschluss",
     "settings": "Buchhaltungseinstellungen",
-    "memberSync": "Übernahme der Mitgliedsbeiträge"
+    "memberSync": "Übernahme der Mitgliedsbeiträge",
+    "tax": "Steuern"
   },
   "errors": {
     "openingDateInvalid": "Das Eröffnungsdatum ist ungültig.",
@@ -477,7 +485,9 @@
     "bankAccountRequired": "Bitte ein Bankkonto wählen.",
     "donationCategoryRequired": "Bitte eine Spendenkategorie wählen.",
     "taxRateInvalid": "Der Steuersatz muss 0, 7 oder 19 sein.",
-    "accountNumberInvalid": "Die Kontonummer muss 4–8 Ziffern haben."
+    "accountNumberInvalid": "Die Kontonummer muss 4–8 Ziffern haben.",
+    "consultantNoInvalid": "Die Beraternummer muss 4–7 Stellen haben.",
+    "clientNoInvalid": "Die Mandantennummer muss 1–5 Stellen haben."
   },
   "module": {
     "label": "Buchhaltung",
@@ -712,6 +722,72 @@
     "accountingSetup": {
       "label": "Kontenplan & Budget",
       "description": "Kontenplan (SKR49/SKR42), Budgetplanung und Finanzeinstellungen."
+    }
+  },
+  "tax": {
+    "title": "Steuern",
+    "subtitle": "{chart} · {method}",
+    "methodIST": "Ist-Versteuerung",
+    "methodSOLL": "Soll-Versteuerung",
+    "prevYear": "Vorjahr",
+    "nextYear": "Folgejahr",
+    "tabs": {
+      "ustva": "UStVA",
+      "euer": "EÜR",
+      "datev": "DATEV"
+    },
+    "periodYear": "Jahr",
+    "periodQuarter": "{q}. Quartal",
+    "periodMonth": "Monat {m}",
+    "smallBusiness": {
+      "nextYear": "§ 19 UStG: Der Umsatz dieses Jahres ({current}) übersteigt {limitPrevious} — im Folgejahr ist die Kleinunternehmerregelung nicht mehr anwendbar. (Richtwert; ohne Mitgliedsbeiträge und Spenden.)",
+      "lost": "§ 19 UStG: Vorjahr {previous} (Grenze {limitPrevious}) bzw. laufendes Jahr {current} (Grenze {limitCurrent}) — die Kleinunternehmerregelung ist nicht mehr anwendbar. Bitte Steuerberatung hinzuziehen."
+    },
+    "ustva": {
+      "kz": "Kz",
+      "label": "Bezeichnung",
+      "base": "Bemessungsgrundlage",
+      "tax": "Steuer",
+      "kz81": "Umsätze zu 19 %",
+      "kz86": "Umsätze zu 7 %",
+      "kz66": "Abziehbare Vorsteuer",
+      "kz83Pay": "Umsatzsteuer-Vorauszahlung",
+      "kz83Refund": "Erstattung",
+      "count": "{count} Buchungen",
+      "smallBusiness": "Kleinunternehmer (§ 19) aktiv: in der Regel keine Voranmeldung.",
+      "note": "Die Bemessungsgrundlage wird wie im Formular auf volle Euro abgerundet; die Steuer daraus berechnet (gebuchte Umsatzsteuer: {booked}). 0-%-Buchungen (Beiträge, Spenden, steuerfreie Einnahmen) gehen nicht ein. Keine Elster-Übermittlung — Werte prüfen und in Elster eintragen."
+    },
+    "euer": {
+      "income": "Betriebseinnahmen (netto)",
+      "expense": "Betriebsausgaben (netto)",
+      "outputTax": "Vereinnahmte Umsatzsteuer",
+      "inputTax": "Gezahlte Vorsteuer",
+      "total": "Summe",
+      "profit": "Gewinn",
+      "loss": "Verlust",
+      "note": "Vereinfachte EÜR-Übersicht (§ 4 Abs. 3 EStG); Zuordnung zu den Zeilen der Anlage EÜR sowie USt-Zahlungen/-Erstattungen folgen in späteren Phasen."
+    },
+    "datev": {
+      "intro": "Buchungen werden im DATEV-Format EXTF (Buchungsstapel) exportiert und können von Ihrer Steuerberatung direkt importiert werden.",
+      "numbersMissing": "Bitte zuerst Berater- und Mandantennummer hinterlegen.",
+      "toSettings": "Zu den Einstellungen",
+      "issues": "{count} Buchungen ohne Kontonummer",
+      "issuesHint": "SKR-Nummern bei Konten und Kategorien hinterlegen (Einstellungen → Konten/Kategorien).",
+      "reason": {
+        "accountMissing": "Geldkonto ohne Nummer",
+        "categoryMissing": "Kategorie ohne Nummer",
+        "counterMissing": "Zielkonto ohne Nummer"
+      },
+      "summary": "{year}: {count} Buchungen, Summe {total}",
+      "downloadYear": "Buchungsstapel {year}",
+      "downloadAccounts": "Kontenbeschriftungen",
+      "noteGross": "Beträge sind brutto; die Steuer wird in DATEV über Automatikkonten oder (falls aktiviert) über BU-Schlüssel getrennt.",
+      "noteReversed": "Stornierte Buchungen werden nicht exportiert; wurde ein Zeitraum bereits übergeben, bitte erneut exportieren.",
+      "errors": {
+        "period": "Ungültiger Zeitraum (muss innerhalb eines Wirtschaftsjahres liegen).",
+        "numbers": "Berater-/Mandantennummer fehlt.",
+        "missingNumbers": "Einigen Buchungen fehlen Kontonummern."
+      }
     }
   }
 }

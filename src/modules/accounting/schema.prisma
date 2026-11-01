@@ -188,6 +188,10 @@ model AccountingSettings {
   taxMethod           String  @default("IST")
   /// UStVA dönemi: "MONTH" | "QUARTER" | "YEAR".
   vatPeriod           String  @default("QUARTER")
+  /// ACC-2: DATEV EXTF başlığı (Beraternummer 4–7, Mandantennummer 1–5 hane) ve BU-Schlüssel kullanımı.
+  datevConsultantNo   String  @default("")
+  datevClientNo       String  @default("")
+  datevTaxKeys        Boolean @default(false)
   updatedAt           DateTime @updatedAt
 }
 

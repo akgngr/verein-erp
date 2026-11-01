@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Card, CardBody, Select, SelectItem, Switch, addToast } from "@heroui/react";
+import { Button, Card, CardBody, Divider, Input, Select, SelectItem, Switch, addToast } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -74,6 +74,21 @@ export function TaxSettingsCard({ settings, canUpdate }: { settings: TaxSettings
           <div className="flex flex-col">
             <span className="text-small">{t("smallBusiness")}</span>
             <span className="text-tiny text-default-500">{t("smallBusinessHint")}</span>
+          </div>
+        </Switch>
+        <Divider />
+        <div className="flex flex-col gap-1">
+          <h3 className="text-small font-semibold">{t("datevTitle")}</h3>
+          <p className="text-tiny text-default-500">{t("datevHint")}</p>
+        </div>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <Input id="accounting-tax-consultant" label={t("consultantNo")} labelPlacement="outside" inputMode="numeric" maxLength={7} isDisabled={!canUpdate} value={value.datevConsultantNo} onValueChange={(datevConsultantNo) => setValue((current) => ({ ...current, datevConsultantNo }))} />
+          <Input id="accounting-tax-client" label={t("clientNo")} labelPlacement="outside" inputMode="numeric" maxLength={5} isDisabled={!canUpdate} value={value.datevClientNo} onValueChange={(datevClientNo) => setValue((current) => ({ ...current, datevClientNo }))} />
+        </div>
+        <Switch id="accounting-tax-datevKeys" isDisabled={!canUpdate} isSelected={value.datevTaxKeys} onValueChange={(datevTaxKeys) => setValue((current) => ({ ...current, datevTaxKeys }))}>
+          <div className="flex flex-col">
+            <span className="text-small">{t("datevTaxKeys")}</span>
+            <span className="text-tiny text-default-500">{t("datevTaxKeysHint")}</span>
           </div>
         </Switch>
         {canUpdate ? (

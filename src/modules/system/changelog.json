@@ -2,6 +2,41 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.17.0",
+      "date": "2026-10-31",
+      "title": {
+        "tr": "Muhasebe: UStVA, EÜR ve DATEV dışa aktarımı",
+        "de": "Buchhaltung: UStVA, EÜR und DATEV-Export"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yeni \"Vergi\" sayfası: UStVA Kennzahlen (Kz 81/86/66/83) seçilen döneme göre; her satırdan ilgili fişlere inilebilir.",
+          "de": "Neue Seite „Steuern“: UStVA-Kennzahlen (Kz 81/86/66/83) je Voranmeldungszeitraum, mit Drill-down zu den Buchungen."
+        },
+        {
+          "type": "feature",
+          "tr": "EÜR özeti: SKR hesabına göre net gelir/gider, tahsil edilen KDV ve ödenen Vorsteuer, kâr/zarar.",
+          "de": "EÜR-Übersicht: Einnahmen/Ausgaben netto je SKR-Konto, vereinnahmte USt und gezahlte Vorsteuer, Gewinn/Verlust."
+        },
+        {
+          "type": "feature",
+          "tr": "DATEV EXTF dışa aktarımı (Buchungsstapel ve Kontenbeschriftungen); Berater-/Mandantennummer ayarları, isteğe bağlı BU-Schlüssel, eksik hesap numarası ön kontrolü. Her dışa aktarım denetim kaydına yazılır.",
+          "de": "DATEV-EXTF-Export (Buchungsstapel und Kontenbeschriftungen); Berater-/Mandantennummer, optionale BU-Schlüssel, Vorprüfung fehlender Kontonummern. Jeder Export wird protokolliert."
+        },
+        {
+          "type": "feature",
+          "tr": "§ 19 UStG sınır uyarısı (25.000 € / 100.000 €, Richtwert).",
+          "de": "Warnung zu den Grenzen des § 19 UStG (25.000 € / 100.000 €, Richtwert)."
+        },
+        {
+          "type": "improvement",
+          "tr": "Asistan yıllık KDV özetini (yalnızca toplamlar) ve DATEV indirme bağlantısını verebilir.",
+          "de": "Der Assistent kann eine Jahres-USt-Übersicht (nur Summen) und den DATEV-Download-Link liefern."
+        }
+      ]
+    },
+    {
       "version": "0.16.0",
       "date": "2026-10-31",
       "title": {
