@@ -205,3 +205,13 @@ export type BudgetLineRow = {
 
 /** Ödeme yöntemi etiketi helper'ı — members modülü PaymentMethod; sunucu içi. */
 export type PaymentMethodKey = PaymentMethod;
+
+/** ACC-3: fatura formunda cari seçimi. */
+export type ContactOption = {
+  id: string;
+  number: number;
+  name: string;
+  address: string | null;
+  email: string | null;
+  paymentTermDays: number | null;
+};

@@ -1,4 +1,5 @@
-import { FilePlus2, FileText, Settings2 } from "lucide-react";
+import { FilePlus2, FileSignature, FileText, Settings2 } from "lucide-react";
+import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
@@ -15,6 +16,10 @@ import { InvoiceTable } from "../components/invoice-table";
 import { accountingPermissions, accountingSetupPermissions } from "../permissions";
 import { getInvoice, getInvoiceSettings, listInvoices } from "../queries/invoices";
 import { listCategoryOptions } from "../queries/list-categories";
+import { listCustomerOptions } from "../queries/contacts";
+import { listOpenItems } from "../queries/invoices";
+import { OpenItemsTable } from "../components/open-items-table";
+import { berlinToday } from "../utils";
 
 const first = (value: string | string[] | undefined) => (Array.isArray(value) ? value[0] : value);
 
@@ -36,11 +41,14 @@ export async function InvoicesView({ searchParams }: { searchParams: Promise<Raw
   const editId = first(raw.duzenle);
   const needsForm = newParam !== undefined || Boolean(editId);
 
-  const [rows, settings, categories, editing] = await Promise.all([
-    listInvoices({ kind: first(raw.kind), status: first(raw.status), q: first(raw.q) }),
+  const view = first(raw.gorunum) === "opos" ? "opos" : "list";
+  const [rows, settings, categories, editing, contacts, openItems] = await Promise.all([
+    view === "list" ? listInvoices({ kind: first(raw.kind), status: first(raw.status), q: first(raw.q) }) : [],
     getInvoiceSettings(),
     needsForm ? listCategoryOptions("INCOME") : [],
     editId ? getInvoice(editId) : null,
+    needsForm ? listCustomerOptions() : [],
+    view === "opos" ? listOpenItems(berlinToday()) : [],
   ]);
   const categoryOptions = categories.map((category) => ({ value: category.id, label: category.name }));
 
@@ -59,6 +67,9 @@ export async function InvoicesView({ searchParams }: { searchParams: Promise<Raw
                 <FormDrawerButton param="yeni" value="proforma" color="secondary" startIcon={<FileText className="h-4 w-4" />}>
                   {t("newProforma")}
                 </FormDrawerButton>
+                <FormDrawerButton param="yeni" value="teklif" variant="flat" startIcon={<FileSignature className="h-4 w-4" />}>
+                  {t("newQuote")}
+                </FormDrawerButton>
               </>
             ) : null}
             {canSettings ? (
@@ -69,11 +80,19 @@ export async function InvoicesView({ searchParams }: { searchParams: Promise<Raw
           </div>
         }
       />
-      <InvoiceTable rows={rows} q={first(raw.q)} />
+      <nav className="mb-4 flex flex-wrap gap-2 text-small">
+        <Link href="/muhasebe/faturalar" className={`rounded-medium px-3 py-1.5 ${view === "list" ? "bg-primary text-white" : "border border-default-200"}`}>
+          {t("views.list")}
+        </Link>
+        <Link href="/muhasebe/faturalar?gorunum=opos" className={`rounded-medium px-3 py-1.5 ${view === "opos" ? "bg-primary text-white" : "border border-default-200"}`}>
+          {t("views.opos")}
+        </Link>
+      </nav>
+      {view === "opos" ? <OpenItemsTable rows={openItems} /> : <InvoiceTable rows={rows} q={first(raw.q)} />}
 
-      {canCreate && (newParam === "fatura" || newParam === "proforma") ? (
-        <FormDrawer title={newParam === "proforma" ? t("newProforma") : t("newInvoice")} description={t("form.draftHint")}>
-          <InvoiceForm kind={newParam === "proforma" ? "PROFORMA" : "INVOICE"} settings={settings} categoryOptions={categoryOptions} />
+      {canCreate && (newParam === "fatura" || newParam === "proforma" || newParam === "teklif") ? (
+        <FormDrawer title={newParam === "proforma" ? t("newProforma") : newParam === "teklif" ? t("newQuote") : t("newInvoice")} description={t("form.draftHint")}>
+          <InvoiceForm kind={newParam === "proforma" ? "PROFORMA" : newParam === "teklif" ? "QUOTE" : "INVOICE"} settings={settings} categoryOptions={categoryOptions} contacts={contacts} />
         </FormDrawer>
       ) : null}
       {canSettings && newParam === "ayarlar" ? (
@@ -84,7 +103,7 @@ export async function InvoicesView({ searchParams }: { searchParams: Promise<Raw
       {canUpdate && editId ? (
         <FormDrawer title={t("form.editTitle")}>
           {editing && editing.status === "DRAFT" ? (
-            <InvoiceForm invoice={editing} settings={settings} categoryOptions={categoryOptions} />
+            <InvoiceForm invoice={editing} settings={settings} categoryOptions={categoryOptions} contacts={contacts} />
           ) : (
             <EmptyState title={t("errors.notDraft")} />
           )}

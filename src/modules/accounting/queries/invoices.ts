@@ -4,6 +4,8 @@ import type { InvoiceKind, InvoiceStatus } from "@prisma/client";
 
 import { getDb } from "@/shared/db";
 
+import { aging, openCents, type AgingBucket } from "../services/invoice-payments";
+
 export type InvoiceListRow = {
   id: string;
   kind: InvoiceKind;
@@ -15,7 +17,13 @@ export type InvoiceListRow = {
   subject: string | null;
   grossCents: number;
   overdue: boolean;
+  /** ACC-3: tahsil edilen + Skonto; açık tutar. */
+  paidCents: number;
+  skontoCents: number;
+  openCents: number;
 };
+
+export type InvoicePaymentRow = { id: string; paidDate: Date; amountCents: number; skontoCents: number; bookingNumbers: string; createdByLabel: string };
 
 export type InvoiceLineRow = {
   id: string;
@@ -50,6 +58,9 @@ export type InvoiceDetail = InvoiceListRow & {
   createdByLabel: string;
   createdAt: Date;
   lines: InvoiceLineRow[];
+  contactId: string | null;
+  contactNumber: number | null;
+  payments: InvoicePaymentRow[];
 };
 
 export type InvoiceSettingsData = {
@@ -68,7 +79,7 @@ export async function listInvoices(filters: { kind?: string; status?: string; q?
   const q = filters.q?.trim();
   const rows = await getDb().accountingInvoice.findMany({
     where: {
-      ...(filters.kind === "INVOICE" || filters.kind === "PROFORMA" ? { kind: filters.kind } : {}),
+      ...(filters.kind === "INVOICE" || filters.kind === "PROFORMA" || filters.kind === "QUOTE" ? { kind: filters.kind } : {}),
       ...(filters.status && ["DRAFT", "ISSUED", "PAID", "CANCELLED"].includes(filters.status) ? { status: filters.status as InvoiceStatus } : {}),
       ...(q
         ? { OR: [{ number: { contains: q, mode: "insensitive" } }, { recipientName: { contains: q, mode: "insensitive" } }, { subject: { contains: q, mode: "insensitive" } }] }
@@ -88,17 +99,20 @@ export async function listInvoices(filters: { kind?: string; status?: string; q?
     subject: row.subject,
     grossCents: row.grossCents,
     overdue: isOverdue(row.status, row.dueDate),
+    paidCents: row.paidCents,
+    skontoCents: row.skontoCents,
+    openCents: row.status === "ISSUED" && row.kind === "INVOICE" ? openCents(row) : 0,
   }));
 }
 
 export async function getInvoice(id: string): Promise<InvoiceDetail | null> {
   const db = getDb();
-  const row = await db.accountingInvoice.findUnique({ where: { id }, include: { lines: { orderBy: { position: "asc" } } } });
+  const row = await db.accountingInvoice.findUnique({ where: { id }, include: { lines: { orderBy: { position: "asc" } }, payments: { orderBy: { createdAt: "asc" } }, contact: { select: { number: true } } } });
   if (!row) return null;
   const [booking, proforma, converted] = await Promise.all([
     row.bookingId ? db.accountingBooking.findUnique({ where: { id: row.bookingId }, select: { bookingNumber: true } }) : null,
     row.sourceProformaId ? db.accountingInvoice.findUnique({ where: { id: row.sourceProformaId }, select: { number: true } }) : null,
-    row.kind === "PROFORMA" ? db.accountingInvoice.findFirst({ where: { sourceProformaId: row.id }, select: { id: true } }) : null,
+    row.kind === "PROFORMA" || row.kind === "QUOTE" ? db.accountingInvoice.findFirst({ where: { sourceProformaId: row.id }, select: { id: true } }) : null,
   ]);
   return {
     id: row.id,
@@ -111,6 +125,19 @@ export async function getInvoice(id: string): Promise<InvoiceDetail | null> {
     subject: row.subject,
     grossCents: row.grossCents,
     overdue: isOverdue(row.status, row.dueDate),
+    paidCents: row.paidCents,
+    skontoCents: row.skontoCents,
+    openCents: row.status === "ISSUED" && row.kind === "INVOICE" ? openCents(row) : 0,
+    contactId: row.contactId,
+    contactNumber: row.contact?.number ?? null,
+    payments: row.payments.map((payment) => ({
+      id: payment.id,
+      paidDate: payment.paidDate,
+      amountCents: payment.amountCents,
+      skontoCents: payment.skontoCents,
+      bookingNumbers: payment.bookingNumbers,
+      createdByLabel: payment.createdByLabel,
+    })),
     serviceDate: row.serviceDate,
     recipientAddress: row.recipientAddress,
     recipientEmail: row.recipientEmail,
@@ -154,4 +181,44 @@ export async function getInvoiceSettings(): Promise<InvoiceSettingsData> {
     footerText: row?.footerText ?? null,
     incomeCategoryId: row?.incomeCategoryId ?? null,
   };
+}
+
+export type OpenItemRow = {
+  id: string;
+  number: string | null;
+  recipientName: string;
+  contactNumber: number | null;
+  issueDate: Date;
+  dueDate: Date;
+  grossCents: number;
+  openCents: number;
+  daysOverdue: number;
+  bucket: AgingBucket;
+};
+
+/** ACC-3 OPOS: kesinleşmiş, kapanmamış faturalar; vade (yoksa fatura tarihi) bazlı yaşlandırma. */
+export async function listOpenItems(today: Date): Promise<OpenItemRow[]> {
+  const rows = await getDb().accountingInvoice.findMany({
+    where: { kind: "INVOICE", status: "ISSUED" },
+    orderBy: [{ dueDate: "asc" }, { issueDate: "asc" }],
+    include: { contact: { select: { number: true } } },
+  });
+  return rows
+    .map((row) => {
+      const due = row.dueDate ?? row.issueDate;
+      const { daysOverdue, bucket } = aging(due, today);
+      return {
+        id: row.id,
+        number: row.number,
+        recipientName: row.recipientName,
+        contactNumber: row.contact?.number ?? null,
+        issueDate: row.issueDate,
+        dueDate: due,
+        grossCents: row.grossCents,
+        openCents: openCents(row),
+        daysOverdue,
+        bucket,
+      };
+    })
+    .filter((row) => row.openCents > 0);
 }

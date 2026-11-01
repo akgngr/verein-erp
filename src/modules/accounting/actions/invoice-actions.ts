@@ -23,6 +23,7 @@ import {
 } from "../schemas/invoice";
 import { calculateInvoiceTotals } from "../services/invoice-calc";
 import { allocateInvoiceNumber } from "../services/invoice-number";
+import { allocatePayment, openCents } from "../services/invoice-payments";
 import { createSourcedBooking, reverseSourcedBooking } from "../services/sourced-bookings";
 import { parseDateOnly } from "../utils";
 
@@ -58,6 +59,7 @@ function invoiceData(input: InvoiceInput) {
       footerText: input.footerText || null,
       taxNote: input.taxNote || null,
       categoryId: input.categoryId || null,
+      contactId: input.contactId || null,
       netCents: totals.netCents,
       taxCents: totals.taxCents,
       grossCents: totals.grossCents,
@@ -173,7 +175,7 @@ export async function convertProformaAction(input: unknown): Promise<ActionResul
       const db = getDb();
       const proforma = await db.accountingInvoice.findUnique({ where: { id: input.id }, include: { lines: true } });
       if (!proforma) throw new ActionError("accounting.invoices.errors.notFound");
-      if (proforma.kind !== "PROFORMA" || proforma.status === "DRAFT" || proforma.status === "CANCELLED") {
+      if ((proforma.kind !== "PROFORMA" && proforma.kind !== "QUOTE") || proforma.status === "DRAFT" || proforma.status === "CANCELLED") {
         throw new ActionError("accounting.invoices.errors.cannotConvert");
       }
       if (await db.accountingInvoice.findFirst({ where: { sourceProformaId: proforma.id, status: { not: "CANCELLED" } } })) {
@@ -194,6 +196,7 @@ export async function convertProformaAction(input: unknown): Promise<ActionResul
           footerText: proforma.footerText,
           taxNote: proforma.taxNote,
           categoryId: proforma.categoryId,
+          contactId: proforma.contactId,
           netCents: proforma.netCents,
           taxCents: proforma.taxCents,
           grossCents: proforma.grossCents,
@@ -207,7 +210,7 @@ export async function convertProformaAction(input: unknown): Promise<ActionResul
           },
         },
       });
-      await audit({ action: "CREATE", entity: "AccountingInvoice", entityId: created.id, after: { fromProforma: proforma.number } });
+      await audit({ action: "CREATE", entity: "AccountingInvoice", entityId: created.id, after: { from: proforma.number, kind: proforma.kind } });
       refresh(proforma.id);
       return { id: created.id };
     },
@@ -215,49 +218,87 @@ export async function convertProformaAction(input: unknown): Promise<ActionResul
   return run(input);
 }
 
-/** Ödeme alındı: gelir fişi (kaynak INVOICE) oluşturulur, fatura "ödendi" olur. */
+/**
+ * Tahsilat (ACC-3): kısmi ödeme desteklenir. Tutar fatura brütündeki KDV oran paylarına göre
+ * bölünür; oran başına bir gelir fişi yazılır (sourceId: ilk fiş = fatura id, sonrakiler
+ * "<id>:<n>"). "Kalanı kapat" ile açık kalan Skonto/kayıp olarak kapanır — gelir ve KDV yalnızca
+ * tahsil edilen tutar kadar oluşur. Açık tutar 0 olunca fatura PAID olur.
+ */
 export async function recordInvoicePaymentAction(input: unknown): Promise<ActionResult<{ bookingNumber: string }>> {
   const run = createAction({
     permission: { definition: accountingPermissions, action: "create" },
     schema: invoicePaymentSchema,
     handler: async ({ input, user, audit }) => {
       const paidDate = dateOrThrow(input.paidDate);
-      const bookingNumber = await getDb().$transaction(async (tx) => {
+      const actor = { id: user.id, label: buildUserLabel(user.name, user.email) };
+      const result = await getDb().$transaction(async (tx) => {
         const invoice = await loadInvoice(input.id, tx);
         if (invoice.kind !== "INVOICE" || invoice.status !== "ISSUED") throw new ActionError("accounting.invoices.errors.notPayable");
-        // KDV oranı başına bir gelir fişi (UStVA'da her oran ayrı Kennzahl'a gider); ilk fiş faturaya bağlanır.
+        const open = openCents(invoice);
+        const amountCents = input.amount ? toCents(input.amount) : open;
+        if (amountCents === null || amountCents <= 0 || amountCents > open) {
+          throw new ActionError("accounting.invoices.errors.amountInvalid", { amount: ["accounting.invoices.errors.amountInvalid"] });
+        }
         const lines = await tx.accountingInvoiceLine.findMany({ where: { invoiceId: invoice.id }, orderBy: { position: "asc" } });
         const { byRate } = calculateInvoiceTotals(lines.map((line) => ({ quantity: Number(line.quantity), unitPriceCents: line.unitPriceCents, taxRate: line.taxRate })));
-        const groups = byRate.filter((group) => group.netCents + group.taxCents !== 0);
-        let booking: { id: string; bookingNumber: string } | null = null;
-        for (const [index, group] of (groups.length ? groups : [{ rate: 0, netCents: invoice.grossCents, taxCents: 0 }]).entries()) {
-          const created = await createSourcedBooking({
-            tx,
-            actor: { id: user.id, label: buildUserLabel(user.name, user.email) },
-            type: "INCOME",
-            sourceType: INVOICE_SOURCE,
-            sourceId: index === 0 ? invoice.id : `${invoice.id}:${index + 1}`,
-            bookingDate: paidDate,
-            accountId: input.accountId,
-            categoryId: input.categoryId,
-            amountCents: group.netCents + group.taxCents,
-            tax: { rate: group.rate, netCents: group.netCents, taxCents: group.taxCents },
-            description: `Rechnung ${invoice.number} – ${invoice.recipientName}${groups.length > 1 ? ` (${group.rate} % USt)` : ""}`.slice(0, 300), // i18n-ignore: Buchungstext (Almanca muhasebe kaydı, arayüz metni değil)
-            receiptReference: invoice.number,
-          });
-          booking ??= created;
+        const parts = allocatePayment(byRate, amountCents).filter((part) => part.netCents + part.taxCents !== 0);
+        const existing = await tx.accountingBooking.count({
+          where: { sourceType: INVOICE_SOURCE, OR: [{ sourceId: invoice.id }, { sourceId: { startsWith: `${invoice.id}:` } }] },
+        });
+        const partial = amountCents < invoice.grossCents;
+        const bookings: Array<{ id: string; bookingNumber: string }> = [];
+        for (const [index, part] of parts.entries()) {
+          const seq = existing + index;
+          const label = [parts.length > 1 ? `${part.rate} % USt` : "", partial ? "Teilzahlung" : ""].filter(Boolean).join(", "); // i18n-ignore: Buchungstext (Almanca muhasebe kaydı)
+          bookings.push(
+            await createSourcedBooking({
+              tx,
+              actor,
+              type: "INCOME",
+              sourceType: INVOICE_SOURCE,
+              sourceId: seq === 0 ? invoice.id : `${invoice.id}:${seq + 1}`,
+              bookingDate: paidDate,
+              accountId: input.accountId,
+              categoryId: input.categoryId,
+              amountCents: part.netCents + part.taxCents,
+              tax: { rate: part.rate, netCents: part.netCents, taxCents: part.taxCents },
+              description: `Rechnung ${invoice.number} – ${invoice.recipientName}${label ? ` (${label})` : ""}`.slice(0, 300), // i18n-ignore: Buchungstext
+              receiptReference: invoice.number,
+            }),
+          );
         }
-        if (!booking) throw new ActionError("common.errors.unexpected");
+        const first = bookings[0];
+        if (!first) throw new ActionError("common.errors.unexpected");
+        const skontoCents = input.closeRemainder ? open - amountCents : 0;
+        const settled = amountCents + skontoCents === open;
+        await tx.accountingInvoicePayment.create({
+          data: {
+            invoiceId: invoice.id,
+            paidDate,
+            amountCents,
+            skontoCents,
+            accountId: input.accountId,
+            bookingNumbers: bookings.map((booking) => booking.bookingNumber).join(", "),
+            createdById: actor.id,
+            createdByLabel: actor.label,
+          },
+        });
         await tx.accountingInvoice.update({
           where: { id: invoice.id },
-          data: { status: "PAID", paidAt: paidDate, bookingId: booking.id, categoryId: input.categoryId },
+          data: {
+            paidCents: { increment: amountCents },
+            skontoCents: { increment: skontoCents },
+            categoryId: input.categoryId,
+            bookingId: invoice.bookingId ?? first.id,
+            ...(settled ? { status: "PAID" as const, paidAt: paidDate } : {}),
+          },
         });
-        return booking.bookingNumber;
+        return { bookingNumber: first.bookingNumber, amountCents, skontoCents, settled };
       });
-      await audit({ action: "INVOICE_PAID", entity: "AccountingInvoice", entityId: input.id, after: { bookingNumber } });
+      await audit({ action: "INVOICE_PAID", entity: "AccountingInvoice", entityId: input.id, after: result });
       refresh(input.id);
       revalidatePath("/muhasebe");
-      return { bookingNumber };
+      return { bookingNumber: result.bookingNumber };
     },
   });
   return run(input);
@@ -272,7 +313,7 @@ export async function cancelInvoiceAction(input: unknown): Promise<ActionResult>
       await getDb().$transaction(async (tx) => {
         const invoice = await loadInvoice(input.id, tx);
         if (invoice.status === "DRAFT" || invoice.status === "CANCELLED") throw new ActionError("accounting.invoices.errors.cannotCancel");
-        if (invoice.status === "PAID") {
+        if (invoice.status === "PAID" || invoice.paidCents > 0) {
           await reverseSourcedBooking({
             tx,
             actor: { id: user.id, label: buildUserLabel(user.name, user.email) },

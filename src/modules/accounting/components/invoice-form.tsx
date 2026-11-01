@@ -23,6 +23,7 @@ import { INVOICE_KIND_VALUES, INVOICE_TAX_RATES } from "../constants";
 import type { InvoiceDetail, InvoiceSettingsData } from "../queries/invoices";
 import { invoiceSchema, parseDecimal, type InvoiceInput } from "../schemas/invoice";
 import { calculateInvoiceTotals } from "../services/invoice-calc";
+import type { ContactOption } from "../types";
 
 const isoDate = (date: Date) => date.toISOString().slice(0, 10);
 const euro = (cents: number) => (cents / 100).toLocaleString("de-DE", { style: "currency", currency: "EUR" });
@@ -34,11 +35,14 @@ export function InvoiceForm({
   kind,
   settings,
   categoryOptions,
+  contacts = [],
 }: {
   invoice?: InvoiceDetail;
-  kind?: "INVOICE" | "PROFORMA";
+  kind?: "INVOICE" | "PROFORMA" | "QUOTE";
   settings: InvoiceSettingsData;
   categoryOptions: { value: string; label: string }[];
+  /** ACC-3: müşteri cari kartları; seçilince alıcı alanları ve vade doldurulur. */
+  contacts?: ContactOption[];
 }) {
   const t = useTranslations("accounting.invoices.form");
   const tKind = useTranslations("accounting.invoices.kind");
@@ -65,6 +69,7 @@ export function InvoiceForm({
           footerText: invoice.footerText ?? "",
           taxNote: invoice.taxNote ?? "",
           categoryId: invoice.categoryId ?? "",
+          contactId: invoice.contactId ?? "",
           lines: invoice.lines.map((line) => ({
             description: line.description,
             quantity: String(line.quantity).replace(".", ","),
@@ -86,9 +91,25 @@ export function InvoiceForm({
           footerText: settings.footerText ?? "",
           taxNote: settings.taxNote ?? "",
           categoryId: settings.incomeCategoryId ?? "",
+          contactId: "",
           lines: [{ description: "", quantity: "1", unit: "", unitPrice: "", taxRate: String(settings.defaultTaxRate) }],
         },
   });
+  // Cari seçimi DEĞİŞİNCE alıcı alanları ve vade karttan doldurulur (sonra elle düzenlenebilir).
+  const contactId = useWatch({ control: form.control, name: "contactId" });
+  const [lastContactId, setLastContactId] = useState(form.getValues("contactId"));
+  if (contactId !== lastContactId) {
+    setLastContactId(contactId);
+    const contact = contacts.find((item) => item.id === contactId);
+    if (contact) {
+      form.setValue("recipientName", contact.name);
+      form.setValue("recipientAddress", contact.address ?? "");
+      form.setValue("recipientEmail", contact.email ?? "");
+      const days = contact.paymentTermDays ?? settings.paymentDays;
+      const issue = new Date(`${form.getValues("issueDate") || isoDate(today)}T00:00:00Z`);
+      form.setValue("dueDate", isoDate(new Date(issue.getTime() + days * 86_400_000)));
+    }
+  }
   const { fields, append, remove } = useFieldArray({ control: form.control, name: "lines" });
   const lines = useWatch({ control: form.control, name: "lines" }) ?? [];
   const totals = calculateInvoiceTotals(
@@ -125,6 +146,15 @@ export function InvoiceForm({
         </div>
 
         <h3 className="text-small font-semibold text-foreground">{t("recipientTitle")}</h3>
+        {contacts.length ? (
+          <FormSelect
+            name="contactId"
+            label={t("contact")}
+            control={form.control}
+            description={t("contactHelp")}
+            options={[{ value: "", label: "—" }, ...contacts.map((contact) => ({ value: contact.id, label: `${contact.number} · ${contact.name}` }))]}
+          />
+        ) : null}
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormInput name="recipientName" label={t("recipientName")} control={form.control} isRequired />
           <FormInput name="recipientEmail" label={t("recipientEmail")} control={form.control} type="email" />

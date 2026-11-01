@@ -1,5 +1,5 @@
 import { BarChart3,
-  Landmark, CalendarCheck, Download, FileText, PieChart, SlidersHorizontal, Users, Wallet } from "lucide-react";
+  Contact, Landmark, CalendarCheck, Download, FileText, PieChart, SlidersHorizontal, Users, Wallet } from "lucide-react";
 
 import type { ModuleConfig } from "@/shared/types/module";
 import { accountingPermissions, accountingSetupPermissions } from "./permissions";
@@ -28,6 +28,7 @@ export const moduleConfig: ModuleConfig = {
   ],
   menu: [
     { key: "invoices", label: "Faturalar", href: "/muhasebe/faturalar", icon: FileText },
+    { key: "contacts", label: "Cariler", href: "/muhasebe/cariler", icon: Contact },
     { key: "sync", label: "Üyelik aktarımı", href: "/muhasebe/uyelik-aktarimi", icon: Users },
     { key: "reports", label: "Raporlar", href: "/muhasebe/raporlar", icon: BarChart3 },
     { key: "tax", label: "Vergi", href: "/muhasebe/vergi", icon: Landmark },
