@@ -247,6 +247,8 @@ model AccountingInvoice {
   bookingId        String?
   // Proformadan dönüştürülen faturada kaynak proforma.
   sourceProformaId String?
+  /// ACC-5: XRechnung BT-10 (Leitweg-ID / Käuferreferenz); boşsa fatura no.
+  buyerReference   String?
   /// ACC-3: cari kart (isteğe bağlı; alıcı alanları anlık görüntü olarak kalır).
   contactId        String?
   contact          AccountingContact? @relation(fields: [contactId], references: [id], onDelete: Restrict)
@@ -295,6 +297,10 @@ model AccountingInvoiceSettings {
   bankDetails       String? // IBAN / BIC / Bank
   footerText        String?
   incomeCategoryId  String? // ödeme fişi için varsayılan gelir kategorisi
+  /// ACC-5: XRechnung için satıcı USt-IdNr. ve banka bilgisi (yapılandırılmış).
+  sellerVatId       String?
+  iban              String?
+  bic               String?
   updatedAt         DateTime @updatedAt
 }
 
@@ -406,4 +412,50 @@ model AccountingBankRule {
   createdAt  DateTime      @default(now())
 
   @@unique([field, pattern, direction])
+}
+
+enum PayableStatus {
+  DRAFT // yüklendi, kontrol bekliyor
+  OPEN // onaylandı, ödenecek
+  PAID
+  CANCELLED
+}
+
+/// ACC-5: gelen fatura / belge (Eingangsrechnung). Dosya Beleg olarak saklanır; e-faturadan alanlar önerilir.
+model AccountingPayable {
+  id                String        @id @default(cuid())
+  status            PayableStatus @default(DRAFT)
+  source            String        @default("MANUAL") // MANUAL | XRECHNUNG | ZUGFERD
+  contactId         String?
+  supplierName      String        @default("")
+  supplierVatId     String?
+  supplierTaxNumber String?
+  supplierAddress   String?
+  supplierIban      String?
+  number            String?
+  issueDate         DateTime?     @db.Date
+  dueDate           DateTime?     @db.Date
+  serviceDate       String?
+  categoryId        String?
+  /// Oran başına net/KDV: [{ rate, netCents, taxCents }]
+  byRate            Json          @default("[]")
+  netCents          Int           @default(0)
+  taxCents          Int           @default(0)
+  grossCents        Int           @default(0)
+  paidCents         Int           @default(0)
+  notes             String?
+  originalName      String?
+  storagePath       String?
+  mimeType          String?
+  size              Int?
+  sha256            String?
+  paidAt            DateTime?     @db.Date
+  cancelledAt       DateTime?
+  createdById       String
+  createdByLabel    String
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+
+  @@index([status, dueDate])
+  @@index([sha256])
 }

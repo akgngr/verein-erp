@@ -44,7 +44,7 @@ const decodeXml = (value: string) =>
     .trim();
 
 /** İlk eşleşen etiketin içeriği; yol "A/B/C" (namespace öneki yok sayılır). */
-function xmlPath(xml: string, path: string): string | null {
+export function xmlPath(xml: string, path: string): string | null {
   let scope = xml;
   for (const tag of path.split("/")) {
     const match = new RegExp(`<(?:\\w+:)?${tag}(?:\\s[^>]*)?>([\\s\\S]*?)</(?:\\w+:)?${tag}>`).exec(scope);
@@ -54,7 +54,7 @@ function xmlPath(xml: string, path: string): string | null {
   return decodeXml(scope);
 }
 
-function xmlAll(xml: string, tag: string): string[] {
+export function xmlAll(xml: string, tag: string): string[] {
   return [...xml.matchAll(new RegExp(`<(?:\\w+:)?${tag}(?:\\s[^>]*)?>([\\s\\S]*?)</(?:\\w+:)?${tag}>`, "g"))].map((match) => match[1]);
 }
 

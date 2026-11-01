@@ -14,6 +14,7 @@ import { accountingPermissions } from "../permissions";
 import { bankBookSchema, bankImportSchema, bankRuleIdSchema, bankStatusSchema } from "../schemas/bank";
 import { BankParseError, detectFormat, parseStatement, transactionKey } from "../services/bank-parsers";
 import { applyInvoicePayment } from "../services/invoice-payment-service";
+import { applyPayablePayment } from "../services/payable-payment-service";
 import { createSourcedBooking } from "../services/sourced-bookings";
 
 const BANK_SOURCE = "BANK";
@@ -119,6 +120,11 @@ export async function bookBankTransactionAction(input: unknown): Promise<ActionR
           bookingNumber = paid.bookingNumber;
           bookingIds = paid.bookingIds;
           invoiceId = input.invoiceId;
+        } else if (input.mode === "payable") {
+          if (row.amountCents >= 0) throw new ActionError("accounting.bank.errors.payableNeedsDebit");
+          const paid = await applyPayablePayment(tx, { payableId: input.payableId, paidDate: row.bookingDate, accountId: row.accountId, amountCents: -row.amountCents, actor });
+          bookingNumber = paid.bookingNumber;
+          bookingIds = paid.bookingIds;
         } else {
           const text = [row.counterpartyName, row.purpose].filter(Boolean).join(" – ");
           const booking = await createSourcedBooking({

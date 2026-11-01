@@ -13,6 +13,7 @@ import { BankTransactionList } from "../components/bank-transaction-list";
 import { accountingPermissions } from "../permissions";
 import { listBankRules, listBankTransactions, listOpenInvoiceOptions } from "../queries/bank";
 import { getInvoiceSettings } from "../queries/invoices";
+import { listOpenPayables } from "../queries/payables";
 import { listAccountOptions } from "../queries/list-accounts";
 import { listCategoryOptions } from "../queries/list-categories";
 
@@ -37,6 +38,7 @@ export async function BankView({ status }: { status: (typeof STATUSES)[number] }
     listBankRules(),
     getInvoiceSettings(),
   ]);
+  const payables = status === "OPEN" ? await listOpenPayables() : [];
   const options = (direction: "INCOME" | "EXPENSE") => categories.filter((category) => category.direction === direction).map((category) => ({ value: category.id, label: category.name }));
 
   return (
@@ -56,6 +58,7 @@ export async function BankView({ status }: { status: (typeof STATUSES)[number] }
         incomeCategories={options("INCOME")}
         expenseCategories={options("EXPENSE")}
         invoices={invoices}
+        payables={payables.map((payable) => ({ value: payable.id, label: `${payable.number ?? "—"} · ${payable.supplierName}`, openCents: payable.openCents }))}
         defaultIncomeCategoryId={settings.incomeCategoryId}
       />
       {rules.length ? (

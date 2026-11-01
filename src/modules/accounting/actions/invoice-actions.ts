@@ -59,6 +59,7 @@ function invoiceData(input: InvoiceInput) {
       taxNote: input.taxNote || null,
       categoryId: input.categoryId || null,
       contactId: input.contactId || null,
+      buyerReference: input.buyerReference || null,
       netCents: totals.netCents,
       taxCents: totals.taxCents,
       grossCents: totals.grossCents,
@@ -294,6 +295,9 @@ export async function saveInvoiceSettingsAction(input: unknown): Promise<ActionR
         bankDetails: input.bankDetails || null,
         footerText: input.footerText || null,
         incomeCategoryId: input.incomeCategoryId || null,
+        sellerVatId: input.sellerVatId ? input.sellerVatId.replace(/\s/g, "").toUpperCase() : null,
+        iban: input.iban ? input.iban.replace(/\s/g, "").toUpperCase() : null,
+        bic: input.bic ? input.bic.replace(/\s/g, "").toUpperCase() : null,
       };
       await getDb().accountingInvoiceSettings.upsert({ where: { id: "singleton" }, create: { id: "singleton", ...data }, update: data });
       await audit({ action: "UPDATE", entity: "AccountingInvoiceSettings", entityId: "singleton", after: { defaultTaxRate: data.defaultTaxRate, paymentDays: data.paymentDays } });

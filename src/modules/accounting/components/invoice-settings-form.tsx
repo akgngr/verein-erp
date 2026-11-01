@@ -36,6 +36,9 @@ export function InvoiceSettingsForm({ settings, categoryOptions }: { settings: I
       bankDetails: settings.bankDetails ?? "",
       footerText: settings.footerText ?? "",
       incomeCategoryId: settings.incomeCategoryId ?? "",
+      sellerVatId: settings.sellerVatId ?? "",
+      iban: settings.iban ?? "",
+      bic: settings.bic ?? "",
     },
   });
   const close = () => (closeDrawer ? closeDrawer() : router.push("/muhasebe/faturalar"));
@@ -58,6 +61,12 @@ export function InvoiceSettingsForm({ settings, categoryOptions }: { settings: I
         <FormInput name="taxNote" label={t("taxNote")} control={form.control} description={t("taxNoteHelp")} />
         <FormSelect name="incomeCategoryId" label={t("incomeCategory")} control={form.control} options={categoryOptions} />
         <FormTextarea name="bankDetails" label={t("bankDetails")} control={form.control} placeholder={t("bankDetailsPlaceholder")} />
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
+          <FormInput name="sellerVatId" label={t("sellerVatId")} control={form.control} placeholder="DE123456789" />
+          <FormInput name="iban" label={t("iban")} control={form.control} />
+          <FormInput name="bic" label={t("bic")} control={form.control} />
+        </div>
+        <p className="text-tiny text-default-500">{t("xrechnungHint")}</p>
         <FormTextarea name="footerText" label={t("footerText")} control={form.control} />
         <FormErrorSummary message={formError} />
         <div className="flex items-center gap-2">

@@ -11,6 +11,7 @@ import { can } from "@/shared/permissions/define";
 import { formatDate, formatDateTime } from "@/shared/utils";
 
 import { InvoiceActions } from "../components/invoice-actions";
+import { XRechnungButton } from "../components/xrechnung-button";
 import { InvoiceForm } from "../components/invoice-form";
 import { InvoiceStatusChip } from "../components/invoice-table";
 import { accountingPermissions } from "../permissions";
@@ -58,12 +59,15 @@ export async function InvoiceDetailView({ id, searchParams }: { id: string; sear
         title={`${t(`kind.${invoice.kind}`)} ${invoice.number ?? t("draftNumber")}`}
         description={invoice.recipientName}
         actions={
+          <div className="flex flex-wrap items-center gap-2">
+          {invoice.kind === "INVOICE" && invoice.number && invoice.status !== "DRAFT" ? <XRechnungButton invoiceId={invoice.id} number={invoice.number} /> : null}
           <InvoiceActions
             invoice={{ ...invoice, categoryId: invoice.categoryId ?? settings.incomeCategoryId }}
             can={permissions}
             accountOptions={accounts.map((account) => ({ value: account.id, label: account.name }))}
             categoryOptions={categoryOptions}
           />
+          </div>
         }
       />
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">

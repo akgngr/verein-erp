@@ -100,3 +100,13 @@ test("eşleştirme: fatura no + tutar, kural", () => {
   const forDebit = suggestMatches(debit, invoices, rules);
   assert.deepEqual(forDebit.map((item) => item.kind), ["rule"]);
 });
+
+test("eşleştirme: giden ödeme ↔ açık gelen fatura", () => {
+  const debit = { amountCents: -29750, counterpartyName: "Buerobedarf Mueller GmbH", purpose: "RE LIEF-4711 Kd 99" };
+  const result = suggestMatches(debit, [], [], [
+    { id: "p1", number: "LIEF-4711", supplierName: "Bürobedarf Müller GmbH", openCents: 29750 },
+    { id: "p2", number: "X-1", supplierName: "Andere", openCents: 10000 },
+  ]);
+  assert.equal(result.length, 1);
+  assert.deepEqual(result[0].kind === "payable" && result[0].reasons, ["invoiceNumber", "amount", "name"]);
+});

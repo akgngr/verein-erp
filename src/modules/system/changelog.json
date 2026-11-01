@@ -2,6 +2,41 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.20.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "Muhasebe: gelen faturalar ve e-fatura (XRechnung/ZUGFeRD)",
+        "de": "Buchhaltung: Eingangsrechnungen und E-Rechnung (XRechnung/ZUGFeRD)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Gelen faturalar: PDF, XML veya foto yükleyin; XRechnung (UBL/CII) ve ZUGFeRD/Factur-X PDF'leri otomatik okunur, tedarikçi karttan eşleşir. Aynı belge iki kez yüklenmez.",
+          "de": "Eingangsrechnungen: PDF, XML oder Foto hochladen; XRechnung (UBL/CII) und ZUGFeRD/Factur-X-PDFs werden automatisch gelesen und dem Lieferanten zugeordnet. Doppelte Belege werden erkannt."
+        },
+        {
+          "type": "feature",
+          "tr": "§ 14 UStG kontrol listesi (Vorsteuer için zorunlu bilgiler; 250 €'ya kadar sadeleştirilmiş).",
+          "de": "Prüfliste nach § 14 UStG (Pflichtangaben für den Vorsteuerabzug; vereinfacht bis 250 €)."
+        },
+        {
+          "type": "feature",
+          "tr": "Gelen fatura ödemesi: oran başına gider fişi (Vorsteuer ayrı), kısmi ödeme; banka hareketinden eşleştirme (fatura no., tutar, ad).",
+          "de": "Bezahlung von Eingangsrechnungen: Ausgabenbuchung je Steuersatz (Vorsteuer getrennt), Teilzahlungen; Zuordnung aus Bankumsätzen (Rechnungsnr., Betrag, Name)."
+        },
+        {
+          "type": "feature",
+          "tr": "Giden e-fatura: kesinleşmiş faturalar için XRechnung 3.0 (UBL) indirme; eksik zorunlu bilgiler açıkça listelenir. Fatura ayarlarına USt-IdNr./IBAN/BIC, faturaya Leitweg-ID.",
+          "de": "Ausgangs-E-Rechnung: XRechnung 3.0 (UBL) für gestellte Rechnungen; fehlende Pflichtangaben werden benannt. USt-IdNr./IBAN/BIC in den Rechnungseinstellungen, Leitweg-ID an der Rechnung."
+        },
+        {
+          "type": "improvement",
+          "tr": "Banka eşleştirmesi umlaut yazımlarını (ü/ue) eşit sayar.",
+          "de": "Der Bankabgleich behandelt Umlaut-Schreibweisen (ü/ue) gleich."
+        }
+      ]
+    },
+    {
       "version": "0.19.0",
       "date": "2026-11-01",
       "title": {

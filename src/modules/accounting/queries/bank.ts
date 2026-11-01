@@ -6,6 +6,7 @@ import { getDb } from "@/shared/db";
 
 import { suggestMatches, type Suggestion } from "../services/bank-matching";
 import { openCents } from "../services/invoice-payments";
+import { listOpenPayables } from "./payables";
 
 export type BankRow = {
   id: string;
@@ -39,6 +40,8 @@ export async function listBankTransactions(filters: { status: BankTransactionSta
     filters.status === "OPEN" ? db.accountingBankRule.findMany() : [],
     db.accountingCategory.findMany({ select: { id: true, name: true } }),
   ]);
+  const payables = filters.status === "OPEN" ? await listOpenPayables() : [];
+  const payableLabel = new Map(payables.map((payable) => [payable.id, `${payable.number ?? "—"} · ${payable.supplierName}`]));
   const accountName = new Map(accounts.map((account) => [account.id, account.name]));
   const categoryName = new Map(categories.map((category) => [category.id, category.name]));
   const openInvoices = invoices.map((invoice) => ({ id: invoice.id, number: invoice.number, recipientName: invoice.recipientName, openCents: openCents(invoice) })).filter((invoice) => invoice.openCents > 0);
@@ -65,9 +68,14 @@ export async function listBankTransactions(filters: { status: BankTransactionSta
       invoiceId: row.invoiceId,
       suggestions:
         row.status === "OPEN"
-          ? suggestMatches(row, openInvoices, matchRules).map((suggestion) => ({
+          ? suggestMatches(row, openInvoices, matchRules, payables).map((suggestion) => ({
               ...suggestion,
-              label: suggestion.kind === "invoice" ? invoiceLabel.get(suggestion.invoiceId) ?? "" : `${categoryName.get(suggestion.categoryId) ?? "—"} · ${suggestion.taxRate} %`,
+              label:
+                suggestion.kind === "invoice"
+                  ? invoiceLabel.get(suggestion.invoiceId) ?? ""
+                  : suggestion.kind === "payable"
+                    ? payableLabel.get(suggestion.payableId) ?? ""
+                    : `${categoryName.get(suggestion.categoryId) ?? "—"} · ${suggestion.taxRate} %`,
             }))
           : [],
     })),

@@ -70,6 +70,7 @@ export function InvoiceForm({
           taxNote: invoice.taxNote ?? "",
           categoryId: invoice.categoryId ?? "",
           contactId: invoice.contactId ?? "",
+          buyerReference: invoice.buyerReference ?? "",
           lines: invoice.lines.map((line) => ({
             description: line.description,
             quantity: String(line.quantity).replace(".", ","),
@@ -92,6 +93,7 @@ export function InvoiceForm({
           taxNote: settings.taxNote ?? "",
           categoryId: settings.incomeCategoryId ?? "",
           contactId: "",
+          buyerReference: "",
           lines: [{ description: "", quantity: "1", unit: "", unitPrice: "", taxRate: String(settings.defaultTaxRate) }],
         },
   });
@@ -143,6 +145,7 @@ export function InvoiceForm({
           <FormDatePicker name="dueDate" label={t("dueDate")} control={form.control} />
           <FormInput name="serviceDate" label={t("serviceDate")} control={form.control} placeholder={t("serviceDatePlaceholder")} />
           <FormInput name="subject" label={t("subject")} control={form.control} />
+          <FormInput name="buyerReference" label={t("buyerReference")} control={form.control} description={t("buyerReferenceHint")} />
         </div>
 
         <h3 className="text-small font-semibold text-foreground">{t("recipientTitle")}</h3>

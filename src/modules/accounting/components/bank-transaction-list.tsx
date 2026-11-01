@@ -21,6 +21,7 @@ export function BankTransactionList({
   incomeCategories,
   expenseCategories,
   invoices,
+  payables,
   defaultIncomeCategoryId,
 }: {
   rows: BankRow[];
@@ -28,12 +29,14 @@ export function BankTransactionList({
   incomeCategories: Option[];
   expenseCategories: Option[];
   invoices: Array<Option & { openCents: number }>;
+  payables: Array<Option & { openCents: number }>;
   defaultIncomeCategoryId: string | null;
 }) {
   const t = useTranslations("accounting.bank");
   const router = useRouter();
   const [active, setActive] = useState<BankRow | null>(null);
-  const [mode, setMode] = useState<"invoice" | "category">("category");
+  const [mode, setMode] = useState<"invoice" | "payable" | "category">("category");
+  const [payableId, setPayableId] = useState("");
   const [invoiceId, setInvoiceId] = useState("");
   const [categoryId, setCategoryId] = useState("");
   const [taxRate, setTaxRate] = useState("0");
@@ -41,8 +44,10 @@ export function BankTransactionList({
   const [closeRemainder, setCloseRemainder] = useState(false);
   const [busy, setBusy] = useState(false);
 
-  const open = (row: BankRow, preferInvoice?: string, rule?: { categoryId: string; taxRate: number }) => {
+  const open = (row: BankRow, preferInvoice?: string, rule?: { categoryId: string; taxRate: number }, preferPayable?: string) => {
     setActive(row);
+    const payableSuggestion = preferPayable ?? (rule ? undefined : row.suggestions.find((item) => item.kind === "payable")?.payableId);
+    setPayableId(payableSuggestion ?? "");
     const invoiceSuggestion = preferInvoice ?? row.suggestions.find((item) => item.kind === "invoice")?.invoiceId;
     const ruleSuggestion = rule ?? row.suggestions.find((item) => item.kind === "rule");
     setMode(row.amountCents > 0 && invoiceSuggestion && !rule ? "invoice" : "category");
@@ -51,6 +56,7 @@ export function BankTransactionList({
     setTaxRate(String(ruleSuggestion?.taxRate ?? 0));
     setLearnRule(ruleSuggestion ? "NONE" : row.counterpartyName ? "COUNTERPARTY" : "NONE");
     setCloseRemainder(false);
+    if (row.amountCents < 0 && payableSuggestion) setMode("payable");
   };
 
   const setStatus = async (row: BankRow, status: "OPEN" | "PRIVATE" | "IGNORED") => {
@@ -65,7 +71,9 @@ export function BankTransactionList({
     const result =
       mode === "invoice"
         ? await bookBankTransactionAction({ mode, id: active.id, invoiceId, categoryId, closeRemainder })
-        : await bookBankTransactionAction({ mode, id: active.id, categoryId, taxRate, learnRule });
+        : mode === "payable"
+          ? await bookBankTransactionAction({ mode, id: active.id, payableId })
+          : await bookBankTransactionAction({ mode, id: active.id, categoryId, taxRate, learnRule });
     setBusy(false);
     if (!result.ok) return addToast({ title: result.error, color: "danger" });
     addToast({ title: t("booked", { number: result.data.bookingNumber }), color: "success" });
@@ -75,6 +83,7 @@ export function BankTransactionList({
 
   const categories = active && active.amountCents < 0 ? expenseCategories : incomeCategories;
   const selectedInvoice = invoices.find((invoice) => invoice.value === invoiceId);
+  const selectedPayable = payables.find((payable) => payable.value === payableId);
   const remainder = active && selectedInvoice ? selectedInvoice.openCents - active.amountCents : 0;
 
   if (!rows.length) return <p className="py-6 text-center text-small text-default-500">{t("empty")}</p>;
@@ -95,12 +104,12 @@ export function BankTransactionList({
                 <div className="flex flex-wrap gap-1.5">
                   {row.suggestions.map((suggestion) => (
                     <Chip
-                      key={suggestion.kind === "invoice" ? suggestion.invoiceId : suggestion.ruleId}
+                      key={suggestion.kind === "invoice" ? suggestion.invoiceId : suggestion.kind === "payable" ? suggestion.payableId : suggestion.ruleId}
                       size="sm"
                       variant="flat"
                       color={suggestion.score >= 60 ? "success" : "primary"}
                       className={canEdit ? "cursor-pointer" : ""}
-                      onClick={canEdit ? () => (suggestion.kind === "invoice" ? open(row, suggestion.invoiceId) : open(row, undefined, suggestion)) : undefined}
+                      onClick={canEdit ? () => (suggestion.kind === "invoice" ? open(row, suggestion.invoiceId) : suggestion.kind === "payable" ? open(row, undefined, undefined, suggestion.payableId) : open(row, undefined, suggestion)) : undefined}
                     >
                       {suggestion.label} · {suggestion.reasons.map((reason) => t(`reasons.${reason}`)).join(", ")}
                     </Chip>
@@ -155,6 +164,18 @@ export function BankTransactionList({
                       <Tab key="invoice" title={t("modal.invoice")} />
                       <Tab key="category" title={t("modal.category")} />
                     </Tabs>
+                  ) : payables.length ? (
+                    <Tabs selectedKey={mode} onSelectionChange={(key) => setMode(key as "payable" | "category")} aria-label={t("modal.title")}>
+                      <Tab key="payable" title={t("modal.payable")} />
+                      <Tab key="category" title={t("modal.category")} />
+                    </Tabs>
+                  ) : null}
+                  {mode === "payable" ? (
+                    <Select id="bank-book-payable" label={t("modal.payableSelect")} labelPlacement="outside" selectedKeys={payableId ? [payableId] : []} onSelectionChange={(keys) => setPayableId(selectionKey(keys))}>
+                      {payables.map((payable) => (
+                        <SelectItem key={payable.value}>{`${payable.label} — ${euro(payable.openCents)}`}</SelectItem>
+                      ))}
+                    </Select>
                   ) : null}
                   {mode === "invoice" ? (
                     <Select id="bank-book-invoice" label={t("modal.invoiceSelect")} labelPlacement="outside" selectedKeys={invoiceId ? [invoiceId] : []} onSelectionChange={(keys) => setInvoiceId(selectionKey(keys))}>
@@ -163,11 +184,13 @@ export function BankTransactionList({
                       ))}
                     </Select>
                   ) : null}
+                  {mode !== "payable" ? (
                   <Select id="bank-book-category" label={t("modal.categorySelect")} labelPlacement="outside" selectedKeys={categoryId ? [categoryId] : []} onSelectionChange={(keys) => setCategoryId(selectionKey(keys))}>
                     {categories.map((category) => (
                       <SelectItem key={category.value}>{category.label}</SelectItem>
                     ))}
                   </Select>
+                  ) : null}
                   {mode === "category" ? (
                     <>
                       <Select id="bank-book-tax" label={t("modal.taxRate")} labelPlacement="outside" selectedKeys={[taxRate]} onSelectionChange={(keys) => setTaxRate(selectionKey(keys) || "0")}>
@@ -191,7 +214,7 @@ export function BankTransactionList({
                   <Button variant="light" onPress={close}>
                     {t("modal.cancel")}
                   </Button>
-                  <Button color="primary" isLoading={busy} isDisabled={!categoryId || (mode === "invoice" && (!invoiceId || remainder < 0))} onPress={submit}>
+                  <Button color="primary" isLoading={busy} isDisabled={mode === "payable" ? !payableId || (selectedPayable ? selectedPayable.openCents < -active.amountCents : true) : !categoryId || (mode === "invoice" && (!invoiceId || remainder < 0))} onPress={submit}>
                     {t("modal.submit")}
                   </Button>
                 </ModalFooter>

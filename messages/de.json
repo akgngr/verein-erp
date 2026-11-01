@@ -643,7 +643,8 @@
       "export": "Excel-Export",
       "tax": "Steuern",
       "contacts": "Kontakte",
-      "bank": "Bank"
+      "bank": "Bank",
+      "payables": "Eingangsrechnungen"
     },
     "meta": {
       "list": "Buchhaltung",
@@ -657,7 +658,8 @@
       "memberSync": "Übernahme der Mitgliedsbeiträge",
       "tax": "Steuern",
       "contacts": "Kontakte",
-      "bank": "Bank"
+      "bank": "Bank",
+      "payables": "Eingangsrechnungen"
     },
     "errors": {
       "openingDateInvalid": "Das Eröffnungsdatum ist ungültig.",
@@ -926,7 +928,9 @@
         "draftHint": "Wird als Entwurf gespeichert; beim Stellen wird die Nummer vergeben, danach ist keine Änderung mehr möglich.",
         "editTitle": "Entwurf bearbeiten",
         "contact": "Kontakt (Kunde)",
-        "contactHelp": "Bei Auswahl werden Empfängerdaten und Zahlungsziel übernommen."
+        "contactHelp": "Bei Auswahl werden Empfängerdaten und Zahlungsziel übernommen.",
+        "buyerReference": "Leitweg-ID / Käuferreferenz",
+        "buyerReferenceHint": "Bei öffentlichen Auftraggebern Pflicht (XRechnung)."
       },
       "actions": {
         "pdf": "PDF",
@@ -971,7 +975,11 @@
         "bankDetails": "Bankverbindung (PDF-Fußzeile)",
         "bankDetailsPlaceholder": "IBAN: DE..\nBIC: ...\nBank",
         "footerText": "Standard-Schlusstext",
-        "saved": "Rechnungseinstellungen gespeichert."
+        "saved": "Rechnungseinstellungen gespeichert.",
+        "sellerVatId": "USt-IdNr.",
+        "iban": "IBAN",
+        "bic": "BIC",
+        "xrechnungHint": "Für die XRechnung werden IBAN sowie USt-IdNr. oder die Steuernummer aus dem Organisationsprofil benötigt."
       },
       "errors": {
         "notFound": "Rechnung nicht gefunden.",
@@ -990,7 +998,9 @@
         "recipient": "Empfänger ist erforderlich.",
         "lines": "Mindestens eine Position hinzufügen.",
         "reason": "Grund muss mindestens 3 Zeichen haben.",
-        "paymentDays": "Anzahl Tage eingeben."
+        "paymentDays": "Anzahl Tage eingeben.",
+        "iban": "Ungültige IBAN.",
+        "bic": "Ungültige BIC."
       },
       "newQuote": "Neues Angebot",
       "views": {
@@ -1018,7 +1028,21 @@
       "skontoTotal": "Skonto / ausgebucht",
       "openTotal": "Offen",
       "paymentsTitle": "Zahlungseingänge",
-      "skontoShort": "Skonto"
+      "skontoShort": "Skonto",
+      "xrechnung": {
+        "download": "XRechnung",
+        "failed": "XRechnung konnte nicht erstellt werden.",
+        "notIssued": "XRechnung nur für gestellte Rechnungen.",
+        "incomplete": "Für die XRechnung fehlen:",
+        "issues": {
+          "sellerAddress": "Anschrift (Organisationsprofil)",
+          "sellerTaxId": "USt-IdNr. oder Steuernummer (Rechnungseinstellungen / Organisationsprofil)",
+          "sellerContact": "E-Mail und Telefon (Organisationsprofil)",
+          "buyerAddress": "Empfängeranschrift (PLZ und Ort)",
+          "iban": "IBAN (Rechnungseinstellungen)",
+          "dueOrTerms": "Fälligkeitsdatum"
+        }
+      }
     },
     "permissions": {
       "accounting": {
@@ -1194,7 +1218,9 @@
         "learnPurpose": "Für diesen Verwendungszweck",
         "closeRemainder": "Rest von {amount} als Skonto/Ausfall ausbuchen",
         "cancel": "Abbrechen",
-        "submit": "Buchung anlegen"
+        "submit": "Buchung anlegen",
+        "payable": "Eingangsrechnung",
+        "payableSelect": "Eingangsrechnung"
       },
       "rules": {
         "title": "Gelernte Regeln",
@@ -1215,7 +1241,106 @@
         "notFound": "Umsatz nicht gefunden.",
         "notOpen": "Der Umsatz ist nicht mehr offen.",
         "invoiceRequired": "Bitte eine Rechnung wählen.",
-        "invoiceNeedsCredit": "Nur Zahlungseingänge können Rechnungen zugeordnet werden."
+        "invoiceNeedsCredit": "Nur Zahlungseingänge können Rechnungen zugeordnet werden.",
+        "payableRequired": "Bitte eine Eingangsrechnung wählen.",
+        "payableNeedsDebit": "Nur Zahlungsausgänge können Eingangsrechnungen zugeordnet werden."
+      }
+    },
+    "payables": {
+      "title": "Eingangsrechnungen",
+      "description": "Lieferantenrechnungen und Belege: hochladen, E-Rechnungen (XRechnung/ZUGFeRD) werden automatisch gelesen, prüfen und bezahlen.",
+      "upload": "Beleg hochladen",
+      "uploadedManual": "Beleg hochgeladen; bitte Daten erfassen.",
+      "uploadedEInvoice": "{source}-E-Rechnung gelesen; bitte prüfen.",
+      "unnamed": "(kein Lieferant)",
+      "empty": "Noch keine Eingangsrechnungen.",
+      "status": {
+        "ALL": "Alle",
+        "DRAFT": "Zu prüfen",
+        "OPEN": "Zu zahlen",
+        "PAID": "Bezahlt",
+        "CANCELLED": "Storniert"
+      },
+      "columns": {
+        "supplier": "Lieferant",
+        "number": "Rechnungsnr.",
+        "issueDate": "Datum",
+        "dueDate": "Fällig",
+        "status": "Status",
+        "gross": "Brutto",
+        "open": "Offen"
+      },
+      "draftManual": "Der Beleg ist keine E-Rechnung: bitte die Daten vom Beleg übernehmen und speichern.",
+      "draftEInvoice": "Die Daten wurden aus der E-Rechnung gelesen. Bitte prüfen, Kategorie wählen und speichern.",
+      "form": {
+        "contact": "Kontakt (Lieferant)",
+        "supplierName": "Lieferant",
+        "number": "Rechnungsnr.",
+        "supplierVatId": "USt-IdNr.",
+        "supplierTaxNumber": "Steuernummer",
+        "supplierIban": "IBAN",
+        "category": "Ausgabenkategorie",
+        "issueDate": "Rechnungsdatum",
+        "dueDate": "Fällig am",
+        "serviceDate": "Leistungsdatum / -zeitraum",
+        "serviceDatePlaceholder": "z. B. Oktober 2026",
+        "supplierAddress": "Anschrift",
+        "amounts": "Beträge (netto je Steuersatz)",
+        "net19": "Netto 19 %",
+        "tax19": "USt 19 %",
+        "net7": "Netto 7 %",
+        "tax7": "USt 7 %",
+        "net0": "Netto 0 %",
+        "gross": "Brutto gesamt: {amount}",
+        "notes": "Notizen",
+        "submit": "Speichern und freigeben",
+        "saved": "Eingangsrechnung gespeichert."
+      },
+      "rateLine": "Netto {rate} %",
+      "paidTotal": "Bezahlt",
+      "document": "Beleg",
+      "bookings": "Zahlungsbuchungen",
+      "createdBy": "{label} · {date}",
+      "checks": {
+        "title": "Prüfung nach § 14 UStG",
+        "hint": "Pflichtangaben für den Vorsteuerabzug.",
+        "small": "Kleinbetragsrechnung (≤ 250 €, § 33 UStDV): vereinfachte Prüfung.",
+        "sellerName": "Name des Lieferanten",
+        "sellerAddress": "Anschrift des Lieferanten",
+        "sellerTaxId": "Steuernummer oder USt-IdNr.",
+        "number": "Rechnungsnummer",
+        "issueDate": "Rechnungsdatum",
+        "serviceDate": "Leistungsdatum",
+        "taxBreakdown": "Netto und Steuer je Steuersatz"
+      },
+      "actions": {
+        "edit": "Bearbeiten",
+        "pay": "Bezahlen",
+        "payTitle": "Zahlung erfassen",
+        "amount": "Betrag",
+        "open": "Offen: {amount} €",
+        "paidDate": "Zahlungsdatum",
+        "account": "Konto (Kasse/Bank)",
+        "close": "Schließen",
+        "paid": "Buchung {number} angelegt.",
+        "cancel": "Stornieren",
+        "cancelTitle": "Eingangsrechnung stornieren",
+        "cancelHelp": "Vorhandene Zahlungsbuchungen werden gegengebucht; der Beleg bleibt aufbewahrt.",
+        "reason": "Grund",
+        "deleteDraft": "Entwurf löschen",
+        "deleteConfirm": "Hochgeladenen Beleg und Entwurf löschen?"
+      },
+      "validation": {
+        "supplier": "Der Lieferant muss mindestens 2 Zeichen haben."
+      },
+      "errors": {
+        "upload": "Upload fehlgeschlagen.",
+        "duplicate": "Dieser Beleg wurde bereits hochgeladen.",
+        "notFound": "Eingangsrechnung nicht gefunden.",
+        "notPayable": "Diese Rechnung kann nicht bezahlt werden (zuerst speichern und freigeben).",
+        "locked": "Bezahlte oder stornierte Rechnungen können nicht geändert werden.",
+        "amountRequired": "Bitte mindestens einen Nettobetrag angeben.",
+        "notEInvoice": "Die Datei ist keine E-Rechnung."
       }
     }
   },
