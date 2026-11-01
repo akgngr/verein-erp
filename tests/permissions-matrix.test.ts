@@ -24,7 +24,7 @@ describe("Roller ve izinler (veritabanı politikası)", () => {
   });
 
   test("AUDITOR varsayılan olarak kayıt oluşturamaz/silemez (kendi dosyaları hariç)", () => {
-    for (const { definition } of all.filter((item) => item.definition.resource !== "exports")) {
+    for (const { definition } of all.filter((item) => !["exports", "feedback"].includes(item.definition.resource))) {
       assert.equal(can("AUDITOR", definition, "create", empty), false, `${definition.resource}: create`);
       assert.equal(can("AUDITOR", definition, "delete", empty), false, `${definition.resource}: delete`);
     }

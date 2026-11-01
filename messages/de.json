@@ -100,6 +100,7 @@
     "bagislar": "Spenden",
     "events": "Veranstaltungen",
     "exports": "Meine Dateien",
+    "geriBildirim": "Feedback",
     "inventory": "Inventar",
     "mail": "E-Mail",
     "toplantilar": "Sitzungen",
@@ -3452,6 +3453,90 @@
         "label": "Meine Dateien",
         "description": "Eigene erstellte Dateien (PDF, Excel, Word …)."
       }
+    }
+  },
+  "feedback": {
+    "module": {
+      "label": "Feedback",
+      "description": "Sammelt Fehlermeldungen und Vorschläge von Testnutzern."
+    },
+    "widget": {
+      "open": "Fehler oder Vorschlag melden",
+      "close": "Schließen",
+      "mute": "Ton aus",
+      "unmute": "Ton an",
+      "introTitle": "Hallo! 👋",
+      "introText": "Wenn du einen Fehler findest oder eine Idee hast, schreib mir.",
+      "bug": "Fehler melden",
+      "suggestion": "Vorschlag senden",
+      "bugHint": "Etwas funktioniert nicht oder ist falsch",
+      "suggestionHint": "Etwas könnte besser sein",
+      "title": "Feedback",
+      "fieldTitle": "Kurzer Titel",
+      "fieldDescription": "Beschreibung",
+      "bugPlaceholder": "Was hast du gemacht, was hast du erwartet, was ist passiert?",
+      "suggestionPlaceholder": "Was sollen wir wie verbessern?",
+      "screenshot": "Screenshot anhängen (optional)",
+      "screenshotHint": "PNG/JPG, max. 5 MB. Bitte personenbezogene Daten schwärzen.",
+      "context": "Wird automatisch ergänzt: Seite {page}, Browser, Bildschirmgröße und Version. Formularinhalte werden nicht übertragen.",
+      "cancel": "Abbrechen",
+      "send": "Senden",
+      "sent": "Danke! Meldung #{number} wurde angelegt.",
+      "failed": "Senden fehlgeschlagen."
+    },
+    "titleAll": "Feedback",
+    "titleMine": "Meine Meldungen",
+    "descriptionAll": "Fehlermeldungen und Vorschläge der Testnutzer.",
+    "descriptionMine": "Deine Fehlermeldungen und Vorschläge; Antworten erscheinen hier.",
+    "empty": "Noch keine Meldungen. Über den Button unten rechts kannst du eine senden.",
+    "status": {
+      "ALL": "Alle",
+      "NEW": "Neu",
+      "IN_PROGRESS": "In Bearbeitung",
+      "DONE": "Erledigt",
+      "REJECTED": "Abgelehnt"
+    },
+    "type": {
+      "BUG": "Fehler",
+      "SUGGESTION": "Vorschlag"
+    },
+    "priority": {
+      "LOW": "Niedrig",
+      "NORMAL": "Normal",
+      "HIGH": "Hoch"
+    },
+    "replied": "beantwortet",
+    "replyFrom": "Antwort ({label}, {date})",
+    "contextTitle": "Kontext",
+    "save": "Speichern",
+    "saved": "Gespeichert.",
+    "fields": {
+      "status": "Status",
+      "priority": "Priorität",
+      "reply": "Antwort an den Tester",
+      "reporter": "Gemeldet von",
+      "page": "Seite",
+      "viewport": "Bildschirm",
+      "version": "Version",
+      "screenshot": "Screenshot"
+    },
+    "validation": {
+      "title": "Der Titel muss mindestens 3 Zeichen haben.",
+      "titleMax": "Der Titel ist zu lang.",
+      "description": "Die Beschreibung muss mindestens 5 Zeichen haben.",
+      "descriptionMax": "Die Beschreibung ist zu lang."
+    },
+    "errors": {
+      "notFound": "Meldung nicht gefunden."
+    },
+    "permissions": {
+      "feedback": {
+        "label": "Feedback",
+        "description": "Fehlermeldungen und Vorschläge; „freigeben“ verwaltet alle Meldungen."
+      }
+    },
+    "access": {
+      "system": "Liest den Modulstatus, damit der schwebende Button nur bei aktivem Modul erscheint."
     }
   },
   "inventory": {

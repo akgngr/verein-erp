@@ -1,0 +1,46 @@
+enum FeedbackType {
+  BUG
+  SUGGESTION
+}
+
+enum FeedbackStatus {
+  NEW
+  IN_PROGRESS
+  DONE
+  REJECTED
+}
+
+enum FeedbackPriority {
+  LOW
+  NORMAL
+  HIGH
+}
+
+/// Test kullanıcısının hata/öneri kaydı. Bağlam (sayfa, tarayıcı, sürüm) otomatik eklenir;
+/// form içerikleri kaydedilmez. Ekran görüntüsü isteğe bağlıdır ve yalnızca yöneticiler görür.
+model FeedbackItem {
+  id             String           @id @default(cuid())
+  number         Int              @unique @default(autoincrement())
+  type           FeedbackType
+  status         FeedbackStatus   @default(NEW)
+  priority       FeedbackPriority @default(NORMAL)
+  title          String
+  description    String
+  pageUrl        String?
+  userAgent      String?
+  viewport       String?
+  appVersion     String?
+  screenshotPath String?
+  screenshotName String?
+  screenshotMime String?
+  reporterId     String
+  reporterLabel  String
+  adminReply     String?
+  repliedAt      DateTime?
+  repliedByLabel String?
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  @@index([status, createdAt])
+  @@index([reporterId])
+}
