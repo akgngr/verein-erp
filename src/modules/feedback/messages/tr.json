@@ -1,0 +1,87 @@
+{
+  "module": {
+    "label": "Geri bildirim",
+    "description": "Test kullanıcılarının hata ve önerilerini toplar."
+  },
+  "nav": {
+    "geriBildirim": "Geri bildirim"
+  },
+  "widget": {
+    "open": "Hata veya öneri bildir",
+    "close": "Kapat",
+    "mute": "Sesi kapat",
+    "unmute": "Sesi aç",
+    "introTitle": "Merhaba! 👋",
+    "introText": "Bir hata bulduğunda ya da aklına bir fikir geldiğinde bana yaz.",
+    "bug": "Hata kaydı aç",
+    "suggestion": "Öneri gönder",
+    "bugHint": "Bir şey çalışmıyor veya yanlış",
+    "suggestionHint": "Bir şey daha iyi olabilir",
+    "title": "Geri bildirim",
+    "fieldTitle": "Kısa başlık",
+    "fieldDescription": "Açıklama",
+    "bugPlaceholder": "Ne yaptın, ne bekliyordun, ne oldu?",
+    "suggestionPlaceholder": "Neyi nasıl geliştirelim?",
+    "screenshot": "Ekran görüntüsü ekle (isteğe bağlı)",
+    "screenshotHint": "PNG/JPG, en fazla 5 MB. Kişisel veri görünüyorsa lütfen karartın.",
+    "context": "Otomatik eklenecek: sayfa {page}, tarayıcı, ekran boyutu ve sürüm. Form içerikleri gönderilmez.",
+    "cancel": "Vazgeç",
+    "send": "Gönder",
+    "sent": "Teşekkürler! Kayıt #{number} oluşturuldu.",
+    "failed": "Gönderilemedi."
+  },
+  "titleAll": "Geri bildirimler",
+  "titleMine": "Geri bildirimlerim",
+  "descriptionAll": "Test kullanıcılarının hata kayıtları ve önerileri.",
+  "descriptionMine": "Gönderdiğin hata kayıtları ve öneriler; cevaplar burada görünür.",
+  "empty": "Henüz kayıt yok. Sağ alttaki butonla gönderebilirsin.",
+  "status": {
+    "ALL": "Tümü",
+    "NEW": "Yeni",
+    "IN_PROGRESS": "İnceleniyor",
+    "DONE": "Çözüldü",
+    "REJECTED": "Reddedildi"
+  },
+  "type": {
+    "BUG": "Hata",
+    "SUGGESTION": "Öneri"
+  },
+  "priority": {
+    "LOW": "Düşük",
+    "NORMAL": "Normal",
+    "HIGH": "Yüksek"
+  },
+  "replied": "cevaplandı",
+  "replyFrom": "Cevap ({label}, {date})",
+  "contextTitle": "Bağlam",
+  "save": "Kaydet",
+  "saved": "Kaydedildi.",
+  "fields": {
+    "status": "Durum",
+    "priority": "Öncelik",
+    "reply": "Testçiye cevap",
+    "reporter": "Bildiren",
+    "page": "Sayfa",
+    "viewport": "Ekran",
+    "version": "Sürüm",
+    "screenshot": "Ekran görüntüsü"
+  },
+  "validation": {
+    "title": "Başlık en az 3 karakter olmalı.",
+    "titleMax": "Başlık çok uzun.",
+    "description": "Açıklama en az 5 karakter olmalı.",
+    "descriptionMax": "Açıklama çok uzun."
+  },
+  "errors": {
+    "notFound": "Kayıt bulunamadı."
+  },
+  "permissions": {
+    "feedback": {
+      "label": "Geri bildirim",
+      "description": "Hata ve öneri kayıtları; \"onayla\" tüm kayıtları yönetir."
+    }
+  },
+  "access": {
+    "system": "Yüzen butonun yalnızca modül etkinken görünmesi için modül durumunu okur."
+  }
+}

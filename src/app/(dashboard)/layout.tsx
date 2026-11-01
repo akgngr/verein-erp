@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import type { SessionUser } from "@/modules/auth";
 import { requireUser, signOutAction } from "@/modules/auth/server";
 import { AiAssistantSlot } from "@/modules/ai/ui";
+import { FeedbackSlot } from "@/modules/feedback/ui";
 import { listUsableModuleKeys } from "@/modules/system/server";
 import { listPermissionResources, listRoleDirectory, loadPermissionPolicy } from "@/modules/users/server";
 import { RolesProvider } from "@/shared/components/roles/roles-provider";
@@ -57,6 +58,8 @@ export default async function DashboardLayout({
             <main className="flex-1 px-4 py-6 md:px-6">{children}</main>
           </div>
         </AiAssistantSlot>
+        {/* Test aşaması: sağ altta yüzen hata/öneri butonu (modül kapalıysa çizilmez). */}
+        <FeedbackSlot user={user} />
         <MobileSidebar
           role={user.role}
           activeModuleKeys={activeModuleKeys}

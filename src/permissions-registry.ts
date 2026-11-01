@@ -17,6 +17,7 @@ import * as coursesPermissionExports from "@/modules/courses/permissions";
 import * as demoPermissionExports from "@/modules/demo/permissions";
 import * as eventsPermissionExports from "@/modules/events/permissions";
 import * as exportsPermissionExports from "@/modules/exports/permissions";
+import * as feedbackPermissionExports from "@/modules/feedback/permissions";
 import * as inventoryPermissionExports from "@/modules/inventory/permissions";
 import * as mailPermissionExports from "@/modules/mail/permissions";
 import * as progressPermissionExports from "@/modules/progress/permissions";
@@ -44,6 +45,7 @@ export const permissionResources: { moduleKey: string; definitions: PermissionDe
   { moduleKey: "demo", definitions: definitionsOf(demoPermissionExports) },
   { moduleKey: "events", definitions: definitionsOf(eventsPermissionExports) },
   { moduleKey: "exports", definitions: definitionsOf(exportsPermissionExports) },
+  { moduleKey: "feedback", definitions: definitionsOf(feedbackPermissionExports) },
   { moduleKey: "inventory", definitions: definitionsOf(inventoryPermissionExports) },
   { moduleKey: "mail", definitions: definitionsOf(mailPermissionExports) },
   { moduleKey: "progress", definitions: definitionsOf(progressPermissionExports) },
