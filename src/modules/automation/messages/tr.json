@@ -2,5 +2,11 @@
   "module": {
     "label": "Otomasyon",
     "description": "Kalıcı arka plan görevleri ve iş akışları."
+  },
+  "permissions": {
+    "automation": {
+      "label": "Otomasyon",
+      "description": "Arka plan görevleri ve iş akışlarını görüntüleme ve yönetme."
+    }
   }
 }
