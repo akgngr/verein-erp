@@ -1,5 +1,6 @@
 "use server";
 
+import { recordJournal } from "../services/journal";
 import { getDb } from "@/shared/db";
 import { toCents } from "@/shared/money";
 import { buildUserLabel } from "@/shared/utils";
@@ -14,7 +15,7 @@ import {
   bookingUpdateSchema,
 } from "../schemas/booking";
 import { assertNoNegativeCash, assertNoNegativeCashWithReplacement, toDecimal } from "../services/balances";
-import { BookingRuleError, assertBookingDateAllowed, assertCategoryMatches } from "../services/booking-guards";
+import { BookingRuleError, assertBookingDateAllowed, assertCashNotClosed, assertCategoryMatches } from "../services/booking-guards";
 import { allocateBookingNumber, runWithBookingNumberRetry } from "../services/booking-number";
 import { berlinYear, parseDateOnly } from "../utils";
 import { effectiveTaxRate, getTaxSettings, taxColumnsFromGross } from "../services/tax";
@@ -131,6 +132,7 @@ export async function createBookingAction(
             if (input.type === "TRANSFER") {
               await assertNoNegativeCash(input.counterAccountId, tx);
             }
+            await recordJournal(tx, [booking.id], "CREATE", { id: user.id, label: createdByLabel });
 
             return booking;
           }),
@@ -205,6 +207,7 @@ export async function updateBookingAction(input: unknown): Promise<ActionResult>
               ? [input.accountId, input.counterAccountId ?? existing.counterAccountId ?? ""]
               : [input.accountId];
           await assertBookingDateAllowed({ bookingDate, year, accountIds, tx });
+          await assertCashNotClosed(tx, [existing.accountId, existing.counterAccountId], existing.bookingDate);
 
           if (existing.type === "TRANSFER") {
             if (input.categoryId) {
@@ -234,6 +237,7 @@ export async function updateBookingAction(input: unknown): Promise<ActionResult>
               updatedByLabel,
             },
           });
+          await recordJournal(tx, [existing.id], "UPDATE", { id: user.id, label: updatedByLabel });
 
           // Kassenminus: eski etkisini çıkar, yeni hareketi koy (§ 8 md. 9).
           if (existing.type === "TRANSFER") {
@@ -327,6 +331,7 @@ export async function reverseBookingAction(input: unknown): Promise<ActionResult
             );
           }
 
+          await assertCashNotClosed(tx, [existing.accountId, existing.counterAccountId], existing.bookingDate);
           await tx.accountingBooking.update({
             where: { id: existing.id },
             data: {
@@ -336,6 +341,7 @@ export async function reverseBookingAction(input: unknown): Promise<ActionResult
               reverseReason: input.reason,
             },
           });
+          await recordJournal(tx, [existing.id], "REVERSE", { id: user.id, label });
 
           await assertNoNegativeCash(existing.accountId, tx);
           if (existing.type === "TRANSFER" && existing.counterAccountId) {

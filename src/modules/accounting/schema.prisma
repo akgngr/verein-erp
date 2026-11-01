@@ -488,3 +488,36 @@ model AccountingDunning {
   @@unique([invoiceId, level])
   @@index([dunningDate])
 }
+
+/// ACC-7 GoBD: yalnızca eklenebilir, zincirlenmiş fiş günlüğü (UPDATE/DELETE DB tetikleyicisiyle engelli).
+model AccountingJournal {
+  seq           Int      @id
+  bookingId     String
+  bookingNumber String
+  event         String // CREATE | UPDATE | REVERSE | SEAL
+  snapshot      Json
+  snapshotHash  String
+  prevHash      String
+  hash          String   @unique
+  actorId       String?
+  actorLabel    String?
+  createdAt     DateTime
+
+  @@index([bookingId])
+}
+
+/// ACC-7 Kasa günlük kapanışı (Kassenbuch-Tagesabschluss): kapanan güne ve öncesine o kasa hesabında fiş yazılamaz.
+model AccountingCashClosing {
+  id                 String   @id @default(cuid())
+  accountId          String
+  closingDate        DateTime @db.Date
+  bookBalanceCents   Int
+  countedBalanceCents Int
+  differenceCents    Int
+  note               String?
+  createdById        String
+  createdByLabel     String
+  createdAt          DateTime @default(now())
+
+  @@unique([accountId, closingDate])
+}

@@ -54,6 +54,8 @@ export async function assertBookingDateAllowed(args: {
     throw new BookingRuleError("accounting.errors.bookingDateFuture");
   }
 
+  await assertCashNotClosed(tx, accountIds, bookingDate);
+
   const accounts = await tx.accountingAccount.findMany({
     where: { id: { in: accountIds } },
     select: { id: true, name: true, openingDate: true, isActive: true },
@@ -71,6 +73,21 @@ export async function assertBookingDateAllowed(args: {
       );
     }
   }
+}
+
+/**
+ * ACC-7 Kassenbuch: kapanış yapılmış güne (ve öncesine) o kasa hesabında yazma/değiştirme/iptal
+ * yapılamaz (GoBD: Tagesabschluss sonrası değişmezlik).
+ */
+export async function assertCashNotClosed(tx: Prisma.TransactionClient, accountIds: Array<string | null | undefined>, date: Date): Promise<void> {
+  const ids = accountIds.filter((id): id is string => Boolean(id));
+  if (!ids.length) return;
+  const closing = await tx.accountingCashClosing.findFirst({
+    where: { accountId: { in: ids }, closingDate: { gte: date } },
+    orderBy: { closingDate: "desc" },
+    select: { closingDate: true },
+  });
+  if (closing) throw new BookingRuleError("accounting.errors.cashClosed", undefined, { date: closing.closingDate.toISOString().slice(0, 10).split("-").reverse().join(".") });
 }
 
 /** Kategori uygunluğu (§ 8 md. 1): aktif + yön uyar + virmanda kategori yok. */

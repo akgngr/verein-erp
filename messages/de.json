@@ -644,7 +644,8 @@
       "tax": "Steuern",
       "contacts": "Kontakte",
       "bank": "Bank",
-      "payables": "Eingangsrechnungen"
+      "payables": "Eingangsrechnungen",
+      "gobd": "GoBD"
     },
     "meta": {
       "list": "Buchhaltung",
@@ -659,7 +660,8 @@
       "tax": "Steuern",
       "contacts": "Kontakte",
       "bank": "Bank",
-      "payables": "Eingangsrechnungen"
+      "payables": "Eingangsrechnungen",
+      "gobd": "GoBD"
     },
     "errors": {
       "openingDateInvalid": "Das Eröffnungsdatum ist ungültig.",
@@ -720,7 +722,8 @@
       "categorySphereLocked": "Bei Kategorien mit Buchungen ist die Sphäre fest.",
       "bookingNotFound2": "Buchung nicht gefunden.",
       "reversedNoFile": "Einer stornierten Buchung können keine Belege hinzugefügt werden.",
-      "reversedSuffix": "STORNIERT"
+      "reversedSuffix": "STORNIERT",
+      "cashClosed": "Die Kasse ist bis {date} abgeschlossen; für diesen Zeitraum sind keine Änderungen mehr möglich."
     },
     "settings": {
       "donationShort": "Spende"
@@ -1392,6 +1395,62 @@
         "input": "Ungültige Auswahl oder Datum (nicht in der Vergangenheit).",
         "ownIban": "In den Rechnungseinstellungen ist keine gültige IBAN hinterlegt.",
         "invalid": "Eine der ausgewählten Rechnungen kann nicht bezahlt werden (Status oder IBAN)."
+      }
+    },
+    "gobd": {
+      "title": "GoBD",
+      "description": "Unveränderbarkeit, Vollständigkeit und Prüfungsbereitschaft: hash-verkettetes Buchungsprotokoll, Kontrollen, Kassenabschluss und Datenträgerüberlassung.",
+      "journal": {
+        "title": "Unveränderbares Protokoll",
+        "ok": "Kette intakt: {entries} Einträge, {bookings} Buchungen — keine Buchung wurde außerhalb des Protokolls geändert.",
+        "unjournaled": "{count} Buchungen stammen aus der Zeit vor dem Protokoll.",
+        "sealHint": "Bestand einmalig „versiegeln“; danach wird jede Änderung automatisch protokolliert.",
+        "problems": "{count} Auffälligkeiten — Daten wurden möglicherweise außerhalb der Anwendung geändert!",
+        "hint": "Jede Erfassung, Änderung und Stornierung wird per SHA-256 verkettet protokolliert; Einträge können nicht gelöscht oder geändert werden (Datenbank-Trigger).",
+        "kind": {
+          "brokenChain": "Kette unterbrochen (Eintrag {seq})",
+          "gap": "Eintrag fehlt (Nr. {seq})",
+          "snapshotMismatch": "Protokolleintrag verändert: {number}",
+          "modifiedAfterJournal": "Buchung außerhalb des Protokolls geändert: {number}",
+          "unjournaled": "Buchung ohne Protokolleintrag: {number}"
+        }
+      },
+      "seal": "Bestand versiegeln",
+      "sealed": "{count} Buchungen ins Protokoll übernommen.",
+      "checks": {
+        "title": "Vollständigkeitsprüfung",
+        "receipts": "Buchungen ohne Beleg: {count}",
+        "gaps": "Nummernlücken: {list}",
+        "noGaps": "Buchungsnummern lückenlos.",
+        "bank": "Unbearbeitete Bankumsätze älter als 30 Tage: {count}",
+        "payables": "Eingangsrechnungen seit über 14 Tagen in Prüfung: {count}"
+      },
+      "cash": {
+        "title": "Kassenbuch – Tagesabschluss",
+        "balance": "Buchbestand {amount}",
+        "last": "letzter Abschluss {date}",
+        "difference": "Differenz {amount}",
+        "unclosed": "Tage mit Bewegungen ohne Abschluss: {count}",
+        "date": "Tag",
+        "counted": "Gezählter Bestand (€)",
+        "note": "Notiz",
+        "close": "Tag abschließen",
+        "closed": "Tag abgeschlossen; Buch- und Zählbestand stimmen überein.",
+        "closedDifference": "Tag abgeschlossen; Differenz {amount} protokolliert.",
+        "none": "Keine aktive Kasse.",
+        "hint": "Der Abschluss ist endgültig: für diesen Tag und davor können in dieser Kasse keine Buchungen mehr erfasst, geändert oder storniert werden. Differenzen am Folgetag per Korrekturbuchung erfassen."
+      },
+      "exports": {
+        "title": "Betriebsprüfung",
+        "z3": "Z3-Datenpaket {year} (GDPdU)",
+        "procedure": "Verfahrensdokumentation (Vorlage)",
+        "hint": "Z3: index.xml + CSV (Buchungen, Konten, Rechnungen, Protokoll) — direkt in Prüfsoftware importierbar. Die Verfahrensdokumentation ist eine mit Systemdaten vorbefüllte Markdown-Vorlage; bitte Lücken ergänzen."
+      },
+      "errors": {
+        "closingDate": "Das Abschlussdatum darf nicht in der Zukunft liegen.",
+        "notCash": "Abschlüsse sind nur für Kassenkonten möglich.",
+        "alreadyClosed": "Dieser oder ein späterer Tag ist bereits abgeschlossen.",
+        "year": "Ungültiges Jahr."
       }
     }
   },

@@ -9,9 +9,11 @@ import { centsToDecimalString } from "@/shared/money";
 
 import { PAYMENT_METHOD_ACCOUNT } from "../constants";
 import { allocateBookingNumber } from "./booking-number";
-import { assertBookingDateAllowed, isYearLocked } from "./booking-guards";
+import { assertBookingDateAllowed, assertCashNotClosed, isYearLocked } from "./booking-guards";
 import { assertNoNegativeCash } from "./balances";
 import { effectiveTaxRate, getTaxSettings, taxColumnsFromGross } from "./tax";
+import { recordJournal } from "./journal";
+
 import { ActionError } from "@/modules/auth/server";
 
 /**
@@ -95,6 +97,7 @@ export async function createSourcedBooking(
       },
     });
     await assertNoNegativeCash(input.accountId, tx);
+    await recordJournal(tx, [created.id], "CREATE", input.actor);
     return { id: created.id, bookingNumber: created.bookingNumber };
   };
 
@@ -119,9 +122,10 @@ export async function reverseSourcedBooking(input: {
     // Aynı kaynağın tüm fişleri: "<id>" ve oran başına ek fişler "<id>:<n>" (ör. karışık oranlı fatura).
     const bookings = await tx.accountingBooking.findMany({
       where: { sourceType: input.sourceType, OR: [{ sourceId: input.sourceId }, { sourceId: { startsWith: `${input.sourceId}:` } }], reversedAt: null },
-      select: { id: true, year: true },
+      select: { id: true, year: true, accountId: true, bookingDate: true },
     });
     if (!bookings.length) return; // idempotent no-op
+    for (const booking of bookings) await assertCashNotClosed(tx, [booking.accountId], booking.bookingDate);
 
     for (const booking of bookings) {
       if (await isYearLocked(booking.year, tx)) {
@@ -137,6 +141,7 @@ export async function reverseSourcedBooking(input: {
         reverseReason: input.reason,
       },
     });
+    await recordJournal(tx, bookings.map((booking) => booking.id), "REVERSE", input.actor);
   };
 
   if (input.tx) return run(input.tx);

@@ -644,7 +644,8 @@
       "tax": "Vergi",
       "contacts": "Cariler",
       "bank": "Banka",
-      "payables": "Gelen faturalar"
+      "payables": "Gelen faturalar",
+      "gobd": "GoBD"
     },
     "meta": {
       "list": "Muhasebe",
@@ -659,7 +660,8 @@
       "tax": "Vergi",
       "contacts": "Cariler",
       "bank": "Banka",
-      "payables": "Gelen faturalar"
+      "payables": "Gelen faturalar",
+      "gobd": "GoBD"
     },
     "errors": {
       "openingDateInvalid": "Açılış tarihi geçersiz.",
@@ -720,7 +722,8 @@
       "categorySphereLocked": "Fişi olan kategoride alan değişmez.",
       "bookingNotFound2": "Fiş bulunamadı.",
       "reversedNoFile": "İptal edilmiş fişe belge eklenemez.",
-      "reversedSuffix": "İPTAL EDİLDİ"
+      "reversedSuffix": "İPTAL EDİLDİ",
+      "cashClosed": "Kasa {date} tarihinde kapatıldı; o güne veya öncesine bu kasada işlem yapılamaz."
     },
     "settings": {
       "donationShort": "Bağış"
@@ -1392,6 +1395,62 @@
         "input": "Geçersiz seçim veya tarih (bugünden önce olamaz).",
         "ownIban": "Fatura ayarlarında geçerli bir IBAN yok.",
         "invalid": "Seçilen faturalardan biri ödenemez (durum veya IBAN)."
+      }
+    },
+    "gobd": {
+      "title": "GoBD",
+      "description": "Değişmezlik, tamlık ve denetime hazırlık: zincirlenmiş fiş günlüğü, kontroller, kasa kapanışı ve vergi denetimi için veri paketi.",
+      "journal": {
+        "title": "Değişmez günlük",
+        "ok": "Zincir sağlam: {entries} kayıt, {bookings} fiş — hiçbir fiş günlük dışında değiştirilmemiş.",
+        "unjournaled": "{count} fiş günlük başlamadan önce oluşturulmuş.",
+        "sealHint": "Mevcut fişleri günlüğe bir kez \"mühürleyin\"; bundan sonra her değişiklik otomatik kaydedilir.",
+        "problems": "{count} sorun bulundu — veriler günlük dışında değiştirilmiş olabilir!",
+        "hint": "Her fiş oluşturma, değişiklik ve iptal SHA-256 ile zincirlenerek kaydedilir; kayıtlar silinemez/değiştirilemez (veritabanı tetikleyicisi).",
+        "kind": {
+          "brokenChain": "Zincir kırık (kayıt {seq})",
+          "gap": "Kayıt eksik (sıra {seq})",
+          "snapshotMismatch": "Günlük kaydı değiştirilmiş: {number}",
+          "modifiedAfterJournal": "Fiş günlük dışında değiştirilmiş: {number}",
+          "unjournaled": "Günlükte olmayan fiş: {number}"
+        }
+      },
+      "seal": "Mevcut fişleri mühürle",
+      "sealed": "{count} fiş günlüğe alındı.",
+      "checks": {
+        "title": "Tamlık kontrolleri",
+        "receipts": "Belgesi (Beleg) eksik fiş: {count}",
+        "gaps": "Numara boşlukları: {list}",
+        "noGaps": "Fiş numaraları kesintisiz.",
+        "bank": "30 günden eski, işlenmemiş banka hareketi: {count}",
+        "payables": "14 günden uzun kontrol bekleyen gelen fatura: {count}"
+      },
+      "cash": {
+        "title": "Kasa günlük kapanışı",
+        "balance": "Defter bakiyesi {amount}",
+        "last": "son kapanış {date}",
+        "difference": "fark {amount}",
+        "unclosed": "Kapanışı yapılmamış hareketli gün: {count}",
+        "date": "Gün",
+        "counted": "Sayılan tutar (€)",
+        "note": "Not",
+        "close": "Günü kapat",
+        "closed": "Gün kapatıldı; defter ve sayım eşit.",
+        "closedDifference": "Gün kapatıldı; fark {amount} kaydedildi.",
+        "none": "Aktif kasa hesabı yok.",
+        "hint": "Kapanış kesindir: o gün ve öncesi için bu kasada fiş yazılamaz, değiştirilemez, iptal edilemez. Fark varsa düzeltme fişi bir sonraki gün girilir."
+      },
+      "exports": {
+        "title": "Vergi denetimi",
+        "z3": "Z3 veri paketi {year} (GDPdU)",
+        "procedure": "Verfahrensdokumentation (şablon)",
+        "hint": "Z3: index.xml + CSV (fişler, hesaplar, faturalar, günlük) — denetim yazılımı doğrudan içe aktarır. Verfahrensdokumentation sistem bilgileriyle önceden doldurulmuş bir Markdown şablonudur; eksik yerleri tamamlayın."
+      },
+      "errors": {
+        "closingDate": "Kapanış tarihi bugünden sonra olamaz.",
+        "notCash": "Kapanış yalnızca kasa hesapları için yapılır.",
+        "alreadyClosed": "Bu gün veya daha sonrası zaten kapatılmış.",
+        "year": "Geçersiz yıl."
       }
     }
   },

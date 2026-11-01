@@ -1,5 +1,5 @@
 import { BarChart3,
-  Banknote, Contact, Inbox, Landmark, CalendarCheck, Download, FileText, PieChart, SlidersHorizontal, Users, Wallet } from "lucide-react";
+  Banknote, ShieldCheck, Contact, Inbox, Landmark, CalendarCheck, Download, FileText, PieChart, SlidersHorizontal, Users, Wallet } from "lucide-react";
 
 import type { ModuleConfig } from "@/shared/types/module";
 import { accountingPermissions, accountingSetupPermissions } from "./permissions";
@@ -36,6 +36,7 @@ export const moduleConfig: ModuleConfig = {
     { key: "reports", label: "Raporlar", href: "/muhasebe/raporlar", icon: BarChart3 },
     { key: "tax", label: "Vergi", href: "/muhasebe/vergi", icon: Landmark },
     { key: "budget", label: "Bütçe", href: "/muhasebe/butce", icon: PieChart, permission: { definition: accountingSetupPermissions, action: "view" } },
+    { key: "gobd", label: "GoBD", href: "/muhasebe/gobd", icon: ShieldCheck },
     { key: "yearClosing", label: "Yıl kapanışı", href: "/muhasebe/yil-kapanisi", icon: CalendarCheck },
     { key: "settings", label: "Ayarlar", href: "/muhasebe/ayarlar", icon: SlidersHorizontal, permission: { definition: accountingSetupPermissions, action: "view" } },
     { key: "export", label: "Excel'e aktar", href: "/api/accounting/export", icon: Download, isDownload: true },

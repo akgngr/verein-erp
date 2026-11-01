@@ -2,6 +2,36 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.23.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "Muhasebe: GoBD paketi",
+        "de": "Buchhaltung: GoBD-Paket"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Değişmez fiş günlüğü: her oluşturma, değişiklik ve iptal SHA-256 zinciriyle kaydedilir; günlük silinemez/değiştirilemez (veritabanı tetikleyicisi). GoBD sayfası zinciri ve uygulama dışı değişiklikleri doğrular; eski fişler bir kez mühürlenir.",
+          "de": "Unveränderbares Buchungsprotokoll: jede Erfassung, Änderung und Stornierung wird SHA-256-verkettet protokolliert; das Protokoll ist nicht lösch- oder änderbar (Datenbank-Trigger). Die GoBD-Seite prüft die Kette und Änderungen außerhalb der Anwendung; Altbestand wird einmalig versiegelt."
+        },
+        {
+          "type": "feature",
+          "tr": "Kasa günlük kapanışı: sayım ile defter bakiyesi karşılaştırılır, fark kaydedilir; kapanan güne ve öncesine o kasada işlem yapılamaz.",
+          "de": "Kassenbuch-Tagesabschluss mit Zählbestand und Differenz; danach sind Buchungen für diesen Tag und davor in der Kasse gesperrt."
+        },
+        {
+          "type": "feature",
+          "tr": "Tamlık kontrolleri: belgesi eksik fişler, numara boşlukları, bekleyen banka hareketleri ve gelen faturalar.",
+          "de": "Vollständigkeitsprüfung: Buchungen ohne Beleg, Nummernlücken, liegengebliebene Bankumsätze und Eingangsrechnungen."
+        },
+        {
+          "type": "feature",
+          "tr": "Vergi denetimi için Z3 veri paketi (GDPdU: index.xml + CSV) ve sistem bilgileriyle önceden doldurulmuş Verfahrensdokumentation şablonu.",
+          "de": "Z3-Datenpaket für die Betriebsprüfung (GDPdU: index.xml + CSV) und vorbefüllte Vorlage für die Verfahrensdokumentation."
+        }
+      ]
+    },
+    {
       "version": "0.22.0",
       "date": "2026-11-01",
       "title": {
