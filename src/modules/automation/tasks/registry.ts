@@ -1,10 +1,8 @@
-import type { RegisteredTaskDefinition } from "@/shared/automation/define";
-
 /**
  * Görevler yalnızca bu statik kayıt listesine uygulama kodundan eklenir.
  * Kullanıcı tanımlı import yolu veya çalıştırılabilir kod desteklenmez.
  */
-export function defineTaskRegistry<const T extends readonly RegisteredTaskDefinition[]>(tasks: T): T {
+export function defineTaskRegistry<const T extends readonly { key: string }[]>(tasks: T): T {
   const keys = new Set<string>();
   for (const task of tasks) {
     if (keys.has(task.key)) {
