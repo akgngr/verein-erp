@@ -11,7 +11,10 @@ import { openBytes, openSecret, sealBytes, sealSecret } from "@/shared/security/
 import { getOrganizationLogoDataUri, getOrganizationProfile } from "@/modules/organization/server";
 
 import { FILES_RETENTION_DAYS } from "../constants";
-import { FORMAT_PLUGINS } from "../formats";
+import { ActionError } from "@/modules/auth/server";
+import { listUsableModuleKeys } from "@/modules/system/server";
+
+import { findFormat } from "../formats/index";
 import type { FileFormatId } from "../formats/types";
 
 const PURPOSE = "generated-file";
@@ -36,7 +39,8 @@ export async function purgeExpiredFiles(): Promise<number> {
  */
 export async function createGeneratedFile(args: { ownerId: string; title: string; format: FileFormatId; markdown: string; source: string }): Promise<GeneratedFileItem> {
   await purgeExpiredFiles();
-  const plugin = FORMAT_PLUGINS[args.format];
+  const plugin = findFormat(args.format, await listUsableModuleKeys());
+  if (!plugin) throw new ActionError("exports.errors.formatUnavailable");
   const createdAt = new Date();
   const t = await getTranslations("exports.document");
   const bytes = await plugin.render(
@@ -81,7 +85,7 @@ export async function listGeneratedFiles(ownerId: string): Promise<GeneratedFile
 export async function readGeneratedFile(ownerId: string, id: string): Promise<{ title: string; bytes: Buffer; mimeType: string; extension: string } | null> {
   const row = await getDb().generatedFile.findFirst({ where: { id, ownerId, expiresAt: { gt: new Date() } } });
   if (!row) return null;
-  const plugin = FORMAT_PLUGINS[row.format as FileFormatId];
+  const plugin = findFormat(row.format, await listUsableModuleKeys());
   if (!plugin) return null;
   const encrypted = await readFile(resolveSafePath(storagePath(row.id))).catch(() => null);
   const bytes = encrypted ? openBytes(PURPOSE, encrypted) : null;

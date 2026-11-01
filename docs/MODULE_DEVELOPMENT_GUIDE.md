@@ -463,6 +463,26 @@ Modüldeki her değişiklik bir **modül sürümüdür**:
 5. Uygulama genel notları `src/modules/system/changelog.json`'da kalır (package.json sürümü). Modül notları
    Ayarlar → Sürüm notları → modül seçimi (`?modul=<anahtar>`) ve Modül Yönetimi'ndeki sürüm bağlantısında görünür.
 
+## 9f. Format eklentileri (`formats.ts`) ve imzalı paketler (`.vmod`)
+
+**Format eklentisi:** `src/modules/<modül>/formats.ts` → `export const formats = defineFormats("<modül>", [defineFormat({ id, mimeType, extension, hint, render })])`
+(`@/shared/formats/define`). `render(content, context)` başlık + markdown'dan `Buffer` üretir. `pnpm module:sync` `src/format-registry.ts`'i
+üretir; format "Dosyalarım"da ve asistanın `create_file` aracında kullanılır. Modül kapalıysa format kullanılamaz; yerleşik kimlikler (pdf, xlsx, docx, md, csv) ezilemez.
+
+**Paketleme ve kurulum:**
+
+```bash
+pnpm module:keygen <yayıncı>                       # <yayıncı>.private.pem (gizli) + trusted-publishers girdisi
+pnpm module:pack <modül> --key <yayıncı>.private.pem --publisher <yayıncı> [--migration <klasör>]...
+pnpm module:install <dosya.vmod>                   # doğrula → yerleştir → module:sync + module:deps
+pnpm db:deploy && pnpm build                       # ardından yayımla
+```
+
+- Güvenilen yayıncılar `src/config/trusted-publishers.json`'da; değişiklik yalnızca kod incelemesiyle. `official: true` olmayan yayıncı yalnızca `EXTENSION` yayımlar.
+- Paket: dosya yolları güvenli olmalı (göreli, `..`/gizli dosya/`node_modules` yok, izinli uzantılar), her dosyanın SHA-256'sı manifestte, manifest Ed25519 ile imzalı.
+- Yalnızca daha yüksek sürüm kurulur; önceki sürüm `.module-backups/` altına alınır; doğrulama başarısızsa kurulum geri alınır.
+- Ayarlar → Modül paketleri: yükle ve doğrula (içerik çalıştırılmaz), kurulum komutunu kopyala.
+
 ## 10. Doğrulama (CI aynı adımları çalıştırır)
 
 ```bash

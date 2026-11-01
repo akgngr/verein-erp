@@ -75,3 +75,5 @@ download/*.zip
 /mini-services/
 /download/
 /.env
+.module-backups/
+*.private.pem

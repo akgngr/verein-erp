@@ -2,6 +2,36 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.33.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "Modül pazarı: imzalı paketler ve format eklentileri",
+        "de": "Modul-Marktplatz: signierte Pakete und Format-Plugins"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "İmzalı modül paketleri (.vmod, Ed25519): pnpm module:keygen / module:pack / module:install. Kurulum imzayı, güvenilen yayıncıyı (src/config/trusted-publishers.json), dosya yollarını/hash'leri, kategoriyi ve sürümü doğrular; hata olursa geri alır.",
+          "de": "Signierte Modulpakete (.vmod, Ed25519): pnpm module:keygen / module:pack / module:install. Die Installation prüft Signatur, vertrauenswürdigen Herausgeber (src/config/trusted-publishers.json), Pfade/Hashes, Kategorie und Version und rollt bei Fehlern zurück."
+        },
+        {
+          "type": "feature",
+          "tr": "Ayarlar → Modül paketleri: .vmod yükle, doğrulama sonucunu ve kurulum komutunu gör; güvenilen yayıncı listesi. Paket içeriği sunucuda çalıştırılmaz.",
+          "de": "Einstellungen → Modulpakete: .vmod hochladen, Prüfergebnis und Installationsbefehl sehen; Liste der vertrauenswürdigen Herausgeber. Paketinhalte werden auf dem Server nicht ausgeführt."
+        },
+        {
+          "type": "feature",
+          "tr": "Dosya formatı eklentileri: modüller formats.ts ile \"Dosyalarım\"a ve asistanın create_file aracına yeni format ekleyebilir (modül kapalıysa kullanılmaz; yerleşik formatlar ezilemez).",
+          "de": "Dateiformat-Plugins: Module können per formats.ts neue Formate für „Meine Dateien“ und das Assistenz-Werkzeug create_file bereitstellen (nur bei aktivem Modul; eingebaute Formate nicht überschreibbar)."
+        },
+        {
+          "type": "security",
+          "tr": "Güven listesi yalnızca kod incelemesiyle değişir; resmî olmayan yayıncılar yalnızca EXTENSION modül yayımlayabilir; kurcalanmış/güvenilmeyen paketler reddedilir.",
+          "de": "Die Vertrauensliste ändert sich nur per Code-Review; nicht-offizielle Herausgeber dürfen nur EXTENSION-Module veröffentlichen; veränderte/nicht vertrauenswürdige Pakete werden abgelehnt."
+        }
+      ]
+    },
+    {
       "version": "0.32.0",
       "date": "2026-11-01",
       "title": {
