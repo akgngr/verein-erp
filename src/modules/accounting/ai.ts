@@ -94,6 +94,22 @@ export const ai = defineModuleAi({
       },
     }),
     aiTool({
+      name: "get_bank_inbox_summary",
+      operation: "read",
+      allowed: (user) => can(user.role, accountingPermissions, "view"),
+      description:
+        "Imported bank statement lines by status (open / booked / private / ignored) with counts and sums (EUR). Totals only — no counterparties, IBANs or purposes. Booking happens only on the bank page after user confirmation.",
+      schema: z.object({}),
+      inputSchema: { type: "object", properties: {}, additionalProperties: false },
+      run: async () => {
+        const groups = await getDb().accountingBankTransaction.groupBy({ by: ["status"], _count: { _all: true }, _sum: { amountCents: true } });
+        return {
+          statuses: groups.map((group) => ({ status: group.status, count: group._count._all, sumEur: euros(group._sum.amountCents ?? 0) })),
+          page: "/muhasebe/banka",
+        };
+      },
+    }),
+    aiTool({
       name: "get_report_link",
       operation: "read",
       allowed: (user) => can(user.role, accountingPermissions, "view"),

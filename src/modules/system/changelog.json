@@ -2,6 +2,36 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.19.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "Muhasebe: banka ekstresi içe aktarma ve eşleştirme",
+        "de": "Buchhaltung: Kontoauszug-Import und Abgleich"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Banka ekstresi içe aktarma: CAMT.053 (XML), MT940 ve Alman bankalarının CSV dışa aktarımları (biçim ve kodlama otomatik tanınır). Aynı satır ikinci kez eklenmez; dosyanın kendisi saklanmaz.",
+          "de": "Kontoauszug-Import: CAMT.053 (XML), MT940 und CSV-Exporte deutscher Banken (Format und Zeichensatz werden erkannt). Doppelte Umsätze werden übersprungen; die Datei selbst wird nicht gespeichert."
+        },
+        {
+          "type": "feature",
+          "tr": "Gerekçeli eşleştirme önerileri: açık fatura (fatura no., tutar, ad) ve öğrenilmiş kurallar (karşı taraf/açıklama → kategori + KDV). Hiçbir fiş otomatik yazılmaz.",
+          "de": "Abgleichvorschläge mit Begründung: offene Rechnungen (Rechnungsnr., Betrag, Name) und gelernte Regeln (Gegenpartei/Verwendungszweck → Kategorie + Steuersatz). Es wird nichts automatisch gebucht."
+        },
+        {
+          "type": "feature",
+          "tr": "Banka hareketinden fatura tahsilatı (kısmi/Skonto dahil) veya kategori fişi; özel (Privatentnahme/-einlage) ve yok say durumları.",
+          "de": "Aus Bankumsätzen Rechnungszahlungen (auch Teilzahlung/Skonto) oder Kategorie-Buchungen anlegen; Status „Privat“ (Privatentnahme/-einlage) und „Ignoriert“."
+        },
+        {
+          "type": "improvement",
+          "tr": "Asistan banka kutusunun durum özetini (yalnızca sayılar ve toplamlar) verebilir.",
+          "de": "Der Assistent liefert eine Statusübersicht der Bankumsätze (nur Anzahl und Summen)."
+        }
+      ]
+    },
+    {
       "version": "0.18.0",
       "date": "2026-11-01",
       "title": {
