@@ -19,7 +19,11 @@ try {
   process.exit(0);
 }
 
-const changed = git("diff", "--name-only", mergeBase, "HEAD").split("\n").filter(Boolean);
+// Uygulama genel sürüm notları (system/changelog.json) modül değişikliği sayılmaz.
+const APP_LEVEL_FILES = new Set(["src/modules/system/changelog.json"]);
+const changed = git("diff", "--name-only", mergeBase, "HEAD")
+  .split("\n")
+  .filter((file) => file && !APP_LEVEL_FILES.has(file));
 const modules = new Set(changed.map((file) => file.match(/^src\/modules\/([^/]+)\//)?.[1]).filter((key): key is string => Boolean(key)));
 
 const topVersion = (text: string | null) => (text ? (JSON.parse(text).releases?.[0]?.version as string | undefined) : undefined);
