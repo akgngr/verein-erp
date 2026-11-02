@@ -89,22 +89,30 @@ export async function processCampaign(campaignId: string, context: TaskExecution
   const campaign = await db.mailingCampaign.findUnique({ where: { id: campaignId } });
   if (!campaign || campaign.status !== "SENDING") return { skipped: true };
 
+  const failCampaign = async (errorCode: string) => {
+    await db.mailingCampaign.updateMany({
+      where: { id: campaign.id, status: "SENDING" },
+      data: { status: "FAILED", finishedAt: new Date() },
+    });
+    return { failed: true, errorCode };
+  };
+
   const usable = new Set(await listUsableModuleKeys());
   if (!usable.has("mailings") || !usable.has("mail") || !usable.has("automation")) {
-    throw new Error("MAILING_MODULE_UNAVAILABLE");
+    return failCampaign("MAILING_MODULE_UNAVAILABLE");
   }
 
   const creator = campaign.createdById === context.requestedById
     ? await db.user.findUnique({ where: { id: campaign.createdById }, select: { id: true, role: true, isActive: true } })
     : null;
-  if (!creator?.isActive) throw new Error("MAILING_ACTOR_INACTIVE");
+  if (!creator?.isActive) return failCampaign("MAILING_ACTOR_INACTIVE");
 
   await loadPermissionPolicy();
   const role = creator.role as Role;
-  if (!can(role, mailingsPermissions, "create")) throw new Error("MAILING_PERMISSION_REVOKED");
+  if (!can(role, mailingsPermissions, "create")) return failCampaign("MAILING_PERMISSION_REVOKED");
 
   const source = await findSource(role, campaign.source);
-  if (!source) throw new Error("MAILING_SOURCE_PERMISSION_REVOKED");
+  if (!source) return failCampaign("MAILING_SOURCE_PERMISSION_REVOKED");
 
   const filterResult = z.record(z.string().max(40), z.array(z.string().max(40)).max(20)).safeParse(campaign.filter);
   if (!filterResult.success) throw new Error("MAILING_FILTER_INVALID");
@@ -126,7 +134,15 @@ export async function processCampaign(campaignId: string, context: TaskExecution
     context: { module: "mailings", reference: campaign.id },
   }));
 
-  const results = await sendMailBatch(messages);
+  let results;
+  try {
+    results = await sendMailBatch(messages);
+  } catch (error) {
+    if (context.attempt >= 3) {
+      await failCampaign("MAILING_SEND_ATTEMPTS_EXHAUSTED");
+    }
+    throw error;
+  }
   const sent = delivered.size + results.filter((result) => result.ok).length;
   const failed = results.filter((result) => !result.ok).length;
   await db.mailingCampaign.update({
