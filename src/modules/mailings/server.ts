@@ -4,4 +4,3 @@ import "server-only";
 export { mailingsPermissions } from "./permissions";
 export { sendBulkMail } from "./services/campaigns";
 export { previewMailingAction, sendMailingTestAction, startMailingAction } from "./actions/mailing-actions";
-export { sendCampaignTask } from "./automation";
