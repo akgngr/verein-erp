@@ -39,4 +39,4 @@ Task handlers must be registered in trusted application code through the existin
 - Worker kampanyayı ve oluşturan kullanıcıyı DB'den okur; kullanıcının aktifliğini, toplu e-posta iznini, kaynak iznini ve gerekli modüllerin etkinliğini yeniden kontrol eder.
 - Alıcı kaynağı worker çalıştığı anda tekrar çözülür; e-posta istemeyenler ve adresi olmayanlar yeniden filtrelenir.
 - Önceki denemelerde `SENT` veya `LOGGED` olarak kaydedilmiş alıcılar tekrar gönderilmez. SMTP sunucusunun kabulü ile log yazımı arasındaki çok kısa çökme aralığı dağıtık sistemlerde kesin olarak kapatılamaz; teslimat semantiği bu nedenle at-least-once'dur.
-- `pnpm dev:full` yerel web + worker süreçlerini birlikte başlatır. Worker kuyruğa bağlanamıyorsa kampanya SENDING durumunda kalmamalı; worker logları ve Automation execution kayıtları kontrol edilmelidir.
+- `mailings` modülünün kullanılabilmesi için `automation` modülü de etkin olmalıdır. `pnpm dev:full` yerel web + worker süreçlerini birlikte başlatır. Worker kapalıysa kampanya SENDING durumunda bekler; worker logları ve Automation execution kayıtları kontrol edilmelidir.
