@@ -125,6 +125,7 @@ export async function processCampaign(campaignId: string, context: TaskExecution
     select: { toAddress: true },
   });
   const delivered = new Set(deliveredLogs.map((log) => log.toAddress.trim().toLowerCase()));
+  const alreadySent = eligible.filter((row) => delivered.has((row.email ?? "").trim().toLowerCase())).length;
   const pending = eligible.filter((row) => !delivered.has((row.email ?? "").trim().toLowerCase()));
   const messages = pending.map((row) => ({
     to: row.email as string,
@@ -143,7 +144,7 @@ export async function processCampaign(campaignId: string, context: TaskExecution
     }
     throw error;
   }
-  const sent = delivered.size + results.filter((result) => result.ok).length;
+  const sent = alreadySent + results.filter((result) => result.ok).length;
   const failed = results.filter((result) => !result.ok).length;
   await db.mailingCampaign.update({
     where: { id: campaign.id },
