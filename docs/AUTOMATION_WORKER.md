@@ -12,7 +12,7 @@ Automation uses the existing ERP module, Prisma models and transactional outbox.
 
    pnpm dev:full
 
-   This command runs the existing predev preparation once, then starts the web process and the independent worker process. It enables automation for this command only when the environment has not explicitly set either flag. Explicit .env values are respected.
+   This command runs the existing predev preparation once, then starts the web process and the independent worker process. It explicitly enables both automation flags for these local child processes; production environment settings are not changed.
 
 3. Stop both processes with Ctrl+C.
 
@@ -28,6 +28,6 @@ Do not start the worker from a Next.js route, Server Action, or instrumentation 
 
 ## Delivery guarantees
 
-The outbox dispatcher publishes only minimal execution identifiers. A stable pg-boss singleton key prevents duplicate queue jobs when a process stops between publishing and marking the outbox row. The worker claims execution rows transactionally and treats completed executions as no-ops. pg-boss retry/backoff handles transient task failures; the ERP execution record remains authoritative.
+The outbox dispatcher publishes only minimal execution identifiers. A stable pg-boss singleton key prevents duplicate queue jobs when a process stops between publishing and marking the outbox row. The worker claims execution rows transactionally and treats completed executions as no-ops. Delivery is at-least-once, so task handlers must be idempotent and should use the provided stable execution ID for downstream deduplication. pg-boss retry/backoff handles transient task failures; the ERP execution record remains authoritative.
 
 Task handlers must be registered in trusted application code through the existing automation task registry. Never accept user-provided JavaScript, import paths, or executable workflow payloads.
