@@ -8,5 +8,8 @@
       "label": "Automatisierung",
       "description": "Hintergrundaufgaben und Arbeitsabläufe anzeigen und verwalten."
     }
+  },
+  "access": {
+    "mailings": "Zur Registrierung der vertrauenswürdigen Kampagnenaufgabe des Rundmail-Moduls im Worker-Aufgabenverzeichnis."
   }
 }
