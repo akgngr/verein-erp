@@ -4156,7 +4156,8 @@
       "notConfigured": "E-Mail-Versand ist nicht eingerichtet.",
       "sendFailed": "Test-E-Mail konnte nicht gesendet werden; siehe Versandprotokoll.",
       "noRecipients": "Keine passenden Empfänger.",
-      "source": "Diese Empfängerliste ist nicht verfügbar."
+      "source": "Diese Empfängerliste ist nicht verfügbar.",
+      "segmentName": "Segmentname: 2–80 Zeichen."
     },
     "permissions": {
       "mailings": {
@@ -4167,7 +4168,16 @@
     "access": {
       "mail": "Zum Versand und zur Prüfung der E-Mail-Einrichtung.",
       "system": "Liest Modulzustände, um nur Listen aktiver Module anzuzeigen."
-    }
+    },
+    "segment": "Gespeichertes Segment",
+    "segmentNone": "Segment wählen (optional)",
+    "segmentSaveAs": "Segmentname",
+    "segmentSave": "Als Segment speichern",
+    "segmentSaved": "Segment gespeichert.",
+    "segmentDelete": "Segment löschen",
+    "filterEmpty": "Keine Werte vorhanden.",
+    "editorHint": "„/“ fügt Blöcke ein (Überschrift, Button, Spalten, Trenner …); markierter Text öffnet das Formatierungsmenü.",
+    "editorPlaceholder": "E-Mail-Inhalt schreiben …"
   },
   "meetings": {
     "pageTitle": "Sitzungen",
@@ -5259,6 +5269,21 @@
               "ONURSAL": "Ehrenmitglied",
               "FAHRI": "Ehrenamtlich",
               "DESTEKCI": "Fördermitglied"
+            }
+          },
+          "city": {
+            "label": "Ort",
+            "options": {}
+          },
+          "joinYear": {
+            "label": "Eintrittsjahr",
+            "options": {}
+          },
+          "dues": {
+            "label": "Beitragsstatus",
+            "options": {
+              "OPEN": "Mit offenem Beitrag",
+              "NONE": "Ohne offenen Beitrag"
             }
           }
         }

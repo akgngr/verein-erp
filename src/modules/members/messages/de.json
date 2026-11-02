@@ -539,6 +539,21 @@
             "FAHRI": "Ehrenamtlich",
             "DESTEKCI": "Fördermitglied"
           }
+        },
+        "city": {
+          "label": "Ort",
+          "options": {}
+        },
+        "joinYear": {
+          "label": "Eintrittsjahr",
+          "options": {}
+        },
+        "dues": {
+          "label": "Beitragsstatus",
+          "options": {
+            "OPEN": "Mit offenem Beitrag",
+            "NONE": "Ohne offenen Beitrag"
+          }
         }
       }
     }

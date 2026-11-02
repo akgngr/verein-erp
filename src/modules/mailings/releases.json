@@ -2,6 +2,32 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.2.0",
+      "date": "2026-11-02",
+      "appVersion": "0.38.0",
+      "title": {
+        "tr": "Görsel editör ve segmentler",
+        "de": "Visueller Editor und Segmente"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "React Email görsel editörü: başlık, liste, bağlantı, buton, sütunlar, ayırıcı; \"/\" blok menüsü; yer tutucular tek tıkla. E-posta uyumlu HTML + düz metin birlikte gönderilir.",
+          "de": "Visueller React-Email-Editor: Überschriften, Listen, Links, Buttons, Spalten, Trenner; „/“-Blockmenü; Platzhalter per Klick. Versand als E-Mail-taugliches HTML plus Textversion."
+        },
+        {
+          "type": "feature",
+          "tr": "Segmentler: filtre kombinasyonları adla kaydedilir ve tekrar kullanılır; her gönderimde güncel veriden yeniden hesaplanır. Dinamik filtreler (ör. şehir) verideki değerlerden gelir.",
+          "de": "Segmente: Filterkombinationen speichern und wiederverwenden; bei jedem Versand aus aktuellen Daten neu berechnet. Dynamische Filter (z. B. Ort) aus vorhandenen Werten."
+        },
+        {
+          "type": "security",
+          "tr": "Kişiselleştirilen değerler HTML'de kaçışlanır; editörde görsel yükleme kapalı (dosyalar dış sunucuya gitmez).",
+          "de": "Personalisierte Werte werden im HTML maskiert; Bild-Upload im Editor deaktiviert (keine Dateien an externe Server)."
+        }
+      ]
+    },
+    {
       "version": "1.1.0",
       "date": "2026-11-01",
       "appVersion": "0.37.0",

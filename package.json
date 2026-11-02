@@ -1,6 +1,6 @@
 {
   "name": "dernek-yonetim-sistemi",
-  "version": "0.37.0",
+  "version": "0.38.0",
   "private": true,
   "packageManager": "pnpm@10.34.9",
   "engines": {
@@ -42,6 +42,7 @@
     "@mistralai/mistralai": "^3.4.0",
     "@prisma/adapter-pg": "7.10.1",
     "@prisma/client": "^7.10.1",
+    "@react-email/editor": "^1.7.18",
     "@react-pdf/renderer": "^4.9.0",
     "bcryptjs": "^3.0.2",
     "date-fns": "^4.1.0",
@@ -111,6 +112,9 @@
     ],
     "mailparser": [
       "mail"
+    ],
+    "@react-email/editor": [
+      "mailings"
     ]
   }
 }

@@ -13,6 +13,8 @@ model MailingCampaign {
   filter         Json          @default("{}")
   subject        String
   body           String
+  /// Editörden gelen e-posta HTML'i (yer tutuculu); düz metin sürümü `body`.
+  bodyHtml       String?
   status         MailingStatus @default(SENDING)
   recipientCount Int           @default(0)
   sentCount      Int           @default(0)
@@ -26,4 +28,21 @@ model MailingCampaign {
 
   @@index([createdAt])
   @@map("mailings_campaigns")
+}
+
+/// Kayıtlı segment: bir alıcı kaynağı için adlandırılmış filtre. Kişi listesi DEĞİL; her gönderimde güncel
+/// veriden yeniden hesaplanır.
+model MailingSegment {
+  id             String   @id @default(cuid())
+  name           String
+  /// "<modül>:<kaynak>"
+  source         String
+  filter         Json     @default("{}")
+  createdById    String
+  createdByLabel String
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@unique([source, name])
+  @@map("mailings_segments")
 }

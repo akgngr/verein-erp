@@ -8,7 +8,16 @@ import { can } from "@/shared/permissions/define";
 
 import { MailingComposer, type ComposerSource } from "../components/mailing-composer";
 import { mailingsPermissions } from "../permissions";
-import { isMailConfigured, listCampaigns, listSources } from "../services/campaigns";
+import { isMailConfigured, listCampaigns, listSegments, listSources } from "../services/campaigns";
+
+/** Varsayılan metni editör için paragraflara çevirir (yer tutucular korunur). */
+function textToHtml(text: string): string {
+  const escape = (value: string) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  return text
+    .split(/\n{2,}/)
+    .map((block) => `<p>${block.split("\n").map(escape).join("<br>")}</p>`)
+    .join("");
+}
 
 /** Toplu e-posta (?kaynak=<modül>:<kaynak>): yeni gönderim ve geçmiş. */
 export async function MailingsView({ sourceId }: { sourceId?: string | null }) {
@@ -20,7 +29,7 @@ export async function MailingsView({ sourceId }: { sourceId?: string | null }) {
     throw error;
   }
   const [t, tRoot, format] = await Promise.all([getTranslations("mailings"), getTranslations(), getFormatter()]);
-  const [configured, campaigns, rawSources] = await Promise.all([isMailConfigured(), listCampaigns(), listSources(user.role)]);
+  const [configured, campaigns, rawSources, segments] = await Promise.all([isMailConfigured(), listCampaigns(), listSources(user.role), listSegments(user.role)]);
   const label = (key: string) => tRoot(key as never);
   const sources: ComposerSource[] = rawSources.map((source) => {
     const base = `${source.moduleKey}.recipients.${source.key}`;
@@ -32,7 +41,8 @@ export async function MailingsView({ sourceId }: { sourceId?: string | null }) {
         key: filter.key,
         label: label(`${base}.filters.${filter.key}.label`),
         defaults: filter.defaults,
-        options: filter.options.map((value) => ({ value, label: label(`${base}.filters.${filter.key}.options.${value}`) })),
+        // Dinamik seçeneklerde (ör. şehir) değer aynı zamanda etikettir.
+        options: filter.options.map((value) => ({ value, label: filter.dynamic ? value : label(`${base}.filters.${filter.key}.options.${value}`) })),
       })),
     };
   });
@@ -52,7 +62,7 @@ export async function MailingsView({ sourceId }: { sourceId?: string | null }) {
           </Link>
         </p>
       ) : null}
-      {can(user.role, mailingsPermissions, "create") ? <MailingComposer sources={sources} initialSourceId={sourceId ?? null} defaultBody={t("defaultBody")} /> : null}
+      {can(user.role, mailingsPermissions, "create") ? <MailingComposer sources={sources} segments={segments} initialSourceId={sourceId ?? null} defaultHtml={textToHtml(t("defaultBody"))} /> : null}
       <section className="flex flex-col gap-2">
         <h2 className="text-medium font-semibold">{t("history")}</h2>
         {campaigns.length === 0 ? (

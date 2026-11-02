@@ -539,6 +539,21 @@
             "FAHRI": "Fahri",
             "DESTEKCI": "Destekçi"
           }
+        },
+        "city": {
+          "label": "Şehir",
+          "options": {}
+        },
+        "joinYear": {
+          "label": "Üyelik yılı",
+          "options": {}
+        },
+        "dues": {
+          "label": "Aidat durumu",
+          "options": {
+            "OPEN": "Açık aidatı olanlar",
+            "NONE": "Açık aidatı olmayanlar"
+          }
         }
       }
     }

@@ -47,7 +47,8 @@
     "notConfigured": "E-posta gönderimi ayarlanmamış.",
     "sendFailed": "Test e-postası gönderilemedi; Gönderim kayıtları'na bakın.",
     "noRecipients": "Uygun alıcı yok.",
-    "source": "Bu alıcı listesini kullanamazsınız."
+    "source": "Bu alıcı listesini kullanamazsınız.",
+    "segmentName": "Segment adı 2–80 karakter olmalı."
   },
   "permissions": {
     "mailings": {
@@ -58,5 +59,14 @@
   "access": {
     "mail": "E-postaları göndermek ve e-posta ayarlarının hazır olup olmadığını okumak için.",
     "system": "Yalnızca etkin modüllerin alıcı listelerini göstermek için modül durumlarını okur."
-  }
+  },
+  "segment": "Kayıtlı segment",
+  "segmentNone": "Segment seçin (isteğe bağlı)",
+  "segmentSaveAs": "Segment adı",
+  "segmentSave": "Segment olarak kaydet",
+  "segmentSaved": "Segment kaydedildi.",
+  "segmentDelete": "Segmenti sil",
+  "filterEmpty": "Bu alanda veri yok.",
+  "editorHint": "\"/\" ile blok ekleyin (başlık, buton, sütun, ayırıcı…); metni seçince biçimlendirme menüsü açılır.",
+  "editorPlaceholder": "E-posta içeriğini yazın…"
 }
