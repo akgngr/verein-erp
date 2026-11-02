@@ -24,7 +24,7 @@ export type CreateTaskExecutionRecordInput = {
  *
  * This is an internal persistence primitive, not a public enqueue API. Callers must perform
  * actor permission checks and module-availability checks before invoking it. A separate worker
- * process will publish the outbox event to pg-boss.
+ * process publishes the outbox event to pg-boss.
  */
 export async function createTaskExecutionRecord(input: CreateTaskExecutionRecordInput) {
   if (!getAutomationRuntimeConfig().enabled) {
@@ -66,6 +66,7 @@ export async function createTaskExecutionRecord(input: CreateTaskExecutionRecord
         eventKey: `automation.task.requested:${execution.id}`,
         eventType: "automation.task.requested",
         executionId: execution.id,
+        availableAt: input.scheduledAt ?? new Date(),
         payload: {
           executionId: execution.id,
           taskKey: input.taskKey,
