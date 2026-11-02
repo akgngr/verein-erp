@@ -66,6 +66,7 @@ export async function createTaskExecutionRecord(input: CreateTaskExecutionRecord
         eventKey: `automation.task.requested:${execution.id}`,
         eventType: "automation.task.requested",
         executionId: execution.id,
+        availableAt: input.scheduledAt ?? new Date(),
         payload: {
           executionId: execution.id,
           taskKey: input.taskKey,
