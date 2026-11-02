@@ -2018,9 +2018,7 @@
         "description": "Hintergrundaufgaben und Arbeitsabläufe anzeigen und verwalten."
       }
     },
-    "access": {
-      "mailings": "Zum Registrieren der vertrauenswürdigen Kampagnenaufgabe des Rundmail-Moduls im Worker-Aufgabenverzeichnis."
-    }
+    "access": {}
   },
   "banking": {
     "module": {
