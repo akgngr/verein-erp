@@ -125,12 +125,54 @@ jobs:
         run: pnpm build
 
   docker:
-    name: Docker image builds
+    name: Build and publish Docker images
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 45
     needs: quality
+    # PR'larda Docker build/push yapılmaz. Yalnızca main CI tamamen başarılı olunca yayınlanır.
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions:
+      contents: read
+      packages: write
     steps:
       - uses: actions/checkout@v4
-      - name: Build image
-        run: docker build --tag verein-erp:ci .
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      # Web uygulaması: Coolify sunucusu bu imajı build etmez, yalnızca registry'den çeker.
+      - name: Build and push web image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          target: runner
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ghcr.io/akgngr/verein-erp:latest
+            ghcr.io/akgngr/verein-erp:sha-${{ github.sha }}
+          cache-from: type=gha,scope=verein-erp-runner
+          cache-to: type=gha,mode=max,scope=verein-erp-runner
+
+      # Worker: aynı Dockerfile ve kaynak; ayrı target/tag, ayrı Coolify servisi.
+      - name: Build and push automation worker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          target: worker
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ghcr.io/akgngr/verein-erp:worker-latest
+            ghcr.io/akgngr/verein-erp:worker-sha-${{ github.sha }}
+          cache-from: type=gha,scope=verein-erp-worker
+          cache-to: type=gha,mode=max,scope=verein-erp-worker

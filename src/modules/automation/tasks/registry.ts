@@ -1,3 +1,5 @@
+import { sendCampaignTask } from "@/modules/mailings/automation";
+
 /**
  * Görevler yalnızca bu statik kayıt listesine uygulama kodundan eklenir.
  * Kullanıcı tanımlı import yolu veya çalıştırılabilir kod desteklenmez.
@@ -13,5 +15,7 @@ export function defineTaskRegistry<const T extends readonly { key: string }[]>(t
   return Object.freeze([...tasks]) as unknown as T;
 }
 
-/** Modüllerin güvenilir görevleri sonraki entegrasyon PR'larında buraya kaydedilir. */
-export const automationTasks = defineTaskRegistry([]);
+/** Güvenilir modül görevleri. Yeni entegrasyonlar kendi modül task tanımlarını ekler. */
+export const automationTasks = defineTaskRegistry([
+  sendCampaignTask,
+]);

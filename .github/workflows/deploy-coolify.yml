@@ -1,0 +1,48 @@
+name: Deploy to Coolify
+
+on:
+  workflow_dispatch:
+    inputs:
+      confirm_production:
+        description: "I confirm that the latest successfully published main image may be deployed to production."
+        required: true
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: coolify-production-deploy
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy published images
+    if: github.ref == 'refs/heads/main' && inputs.confirm_production == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    environment: production
+    steps:
+      - name: Check deployment secrets
+        env:
+          COOLIFY_DEPLOY_WEBHOOK: ${{ secrets.COOLIFY_DEPLOY_WEBHOOK }}
+          COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+        run: |
+          test -n "$COOLIFY_DEPLOY_WEBHOOK" || {
+            echo "::error::Missing environment secret COOLIFY_DEPLOY_WEBHOOK"
+            exit 1
+          }
+          test -n "$COOLIFY_TOKEN" || {
+            echo "::error::Missing environment secret COOLIFY_TOKEN"
+            exit 1
+          }
+
+      - name: Trigger Coolify deployment
+        env:
+          COOLIFY_DEPLOY_WEBHOOK: ${{ secrets.COOLIFY_DEPLOY_WEBHOOK }}
+          COOLIFY_TOKEN: ${{ secrets.COOLIFY_TOKEN }}
+        run: |
+          curl --fail --silent --show-error \
+            --request GET "$COOLIFY_DEPLOY_WEBHOOK" \
+            --header "Authorization: Bearer $COOLIFY_TOKEN"

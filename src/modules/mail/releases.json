@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.2.0",
+      "date": "2026-11-02",
+      "appVersion": "0.37.0",
+      "title": {
+        "tr": "Gönderim tekrar kontrolü",
+        "de": "Prüfung bereits versendeter Nachrichten"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Toplu e-posta otomasyonunun güvenli tekrar denemeleri için başarılı alıcı kayıtlarını sunucu API'si üzerinden sorgulama desteği eklendi.",
+          "de": "Für sichere Wiederholungen der Rundmail-Automatisierung wurde eine Server-API zum Abrufen erfolgreich versendeter Empfänger ergänzt."
+        }
+      ]
+    },
+    {
       "version": "1.1.0",
       "date": "2026-11-01",
       "appVersion": "0.32.0",

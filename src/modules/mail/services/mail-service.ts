@@ -174,3 +174,11 @@ export async function isMailConfigured(): Promise<boolean> {
   const resolution = await resolveStoredMailConfig();
   return resolution.ok;
 }
+/** Successful recipients for an existing campaign/task retry. */
+export async function listSuccessfulMailRecipients(module: string, reference: string): Promise<string[]> {
+  const logs = await getDb().mailLog.findMany({
+    where: { module, reference, status: { in: ["SENT", "LOGGED"] } },
+    select: { toAddress: true },
+  });
+  return logs.map((log) => log.toAddress);
+}

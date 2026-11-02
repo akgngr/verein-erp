@@ -1,13 +1,18 @@
 import "server-only";
 
 import type { Prisma } from "@prisma/client";
+import { z } from "zod";
 
 import { moduleRecipientRegistry } from "@/recipient-registry";
-import { isMailConfigured, sendMail, sendMailBatch } from "@/modules/mail/server";
+import { isMailConfigured, sendMail, sendMailBatch, listSuccessfulMailRecipients } from "@/modules/mail/server";
+import { createTaskExecutionRecord } from "@/modules/automation/server";
+import { loadPermissionPolicy, getUserById } from "@/modules/users/server";
 import { listUsableModuleKeys } from "@/modules/system/server";
 import { getDb } from "@/shared/db";
 import { renderMailTemplate, type Recipient, type RecipientSource } from "@/shared/mailings/define";
 import { can } from "@/shared/permissions/define";
+import { mailingsPermissions } from "../permissions";
+import type { TaskExecutionContext } from "@/shared/automation/define";
 import type { Role } from "@/shared/roles";
 
 export type SourceInfo = { id: string; moduleKey: string; key: string; placeholders: string[]; filters: { key: string; options: string[]; defaults: string[] }[] };
@@ -63,7 +68,7 @@ export async function sendTest(role: Role, input: { sourceId: string; filter: Re
 export async function startCampaign(role: Role, input: { sourceId: string; filter: Record<string, string[]>; subject: string; body: string; actor: Actor }): Promise<{ id: string; recipients: number } | null> {
   const source = await findSource(role, input.sourceId);
   if (!source) return null;
-  return createAndRun({ source: input.sourceId, filter: input.filter, subject: input.subject, body: input.body, actor: input.actor, list: await source.resolve(input.filter) });
+  return createAndQueueCampaign({ source: input.sourceId, filter: input.filter, subject: input.subject, body: input.body, actor: input.actor, list: await source.resolve(input.filter) });
 }
 
 /**
@@ -72,6 +77,128 @@ export async function startCampaign(role: Role, input: { sourceId: string; filte
  */
 export async function sendBulkMail(input: { moduleKey: string; recipients: Recipient[]; subject: string; body: string; actor: Actor }): Promise<{ id: string; recipients: number }> {
   return createAndRun({ source: `${input.moduleKey}:api`, filter: {}, subject: input.subject, body: input.body, actor: input.actor, list: input.recipients });
+}
+
+/**
+ * Worker entry point. Re-resolves the source at execution time and rechecks the
+ * creator's active account, mailing permission, source permission and module gates.
+ * Recipient addresses are never copied into the automation payload.
+ */
+export async function processCampaign(campaignId: string, context: TaskExecutionContext) {
+  const db = getDb();
+  const campaign = await db.mailingCampaign.findUnique({ where: { id: campaignId } });
+  if (!campaign || campaign.status !== "SENDING") return { skipped: true };
+
+  const failCampaign = async (errorCode: string) => {
+    await db.mailingCampaign.updateMany({
+      where: { id: campaign.id, status: "SENDING" },
+      data: { status: "FAILED", finishedAt: new Date() },
+    });
+    return { failed: true, errorCode };
+  };
+
+  const usable = new Set(await listUsableModuleKeys());
+  if (!usable.has("mailings") || !usable.has("mail") || !usable.has("automation")) {
+    return failCampaign("MAILING_MODULE_UNAVAILABLE");
+  }
+
+  const creator = campaign.createdById === context.requestedById
+    ? await getUserById(campaign.createdById)
+    : null;
+  if (!creator?.isActive) return failCampaign("MAILING_ACTOR_INACTIVE");
+
+  await loadPermissionPolicy();
+  const role = creator.role as Role;
+  if (!can(role, mailingsPermissions, "create")) return failCampaign("MAILING_PERMISSION_REVOKED");
+
+  const source = await findSource(role, campaign.source);
+  if (!source) return failCampaign("MAILING_SOURCE_PERMISSION_REVOKED");
+
+  const filterResult = z.record(z.string().max(40), z.array(z.string().max(40)).max(20)).safeParse(campaign.filter);
+  if (!filterResult.success) throw new Error("MAILING_FILTER_INVALID");
+  const filter = filterResult.data;
+  const { eligible, noEmail, optOut } = split(await source.resolve(filter));
+  // A retry after a worker restart must not resend recipients whose successful delivery
+  // was already durably logged for this campaign.
+  const delivered = new Set((await listSuccessfulMailRecipients("mailings", campaign.id)).map((address) => address.trim().toLowerCase()));
+  const alreadySent = eligible.filter((row) => delivered.has((row.email ?? "").trim().toLowerCase())).length;
+  const pending = eligible.filter((row) => !delivered.has((row.email ?? "").trim().toLowerCase()));
+  const messages = pending.map((row) => ({
+    to: row.email as string,
+    toName: row.name,
+    subject: renderMailTemplate(campaign.subject, row.vars),
+    text: renderMailTemplate(campaign.body, row.vars),
+    context: { module: "mailings", reference: campaign.id },
+  }));
+
+  let results: Awaited<ReturnType<typeof sendMailBatch>>;
+  try {
+    results = await sendMailBatch(messages);
+  } catch (error) {
+    if (context.attempt >= 3) {
+      await failCampaign("MAILING_SEND_ATTEMPTS_EXHAUSTED");
+    }
+    throw error;
+  }
+  const sent = alreadySent + results.filter((result) => result.ok).length;
+  const failed = results.filter((result) => !result.ok).length;
+  await db.mailingCampaign.update({
+    where: { id: campaign.id },
+    data: {
+      recipientCount: eligible.length,
+      skippedNoEmail: noEmail,
+      skippedOptOut: optOut,
+      sentCount: sent,
+      failedCount: failed,
+      status: sent === 0 && failed > 0 ? "FAILED" : "DONE",
+      finishedAt: new Date(),
+    },
+  });
+  return { recipients: eligible.length, sent, failed, skippedNoEmail: noEmail, skippedOptOut: optOut };
+}
+
+async function createAndQueueCampaign(input: { source: string; filter: Record<string, string[]>; subject: string; body: string; actor: Actor; list: Recipient[] }) {
+  const { eligible, noEmail, optOut } = split(input.list);
+  if (eligible.length === 0) return { id: "", recipients: 0 };
+
+  const db = getDb();
+  const campaign = await db.mailingCampaign.create({
+    data: {
+      source: input.source,
+      filter: input.filter as Prisma.InputJsonValue,
+      subject: input.subject,
+      body: input.body,
+      recipientCount: eligible.length,
+      skippedNoEmail: noEmail,
+      skippedOptOut: optOut,
+      createdById: input.actor.id,
+      createdByLabel: input.actor.label,
+    },
+    select: { id: true },
+  });
+
+  try {
+    await createTaskExecutionRecord({
+      taskKey: "mailings.send_campaign",
+      taskVersion: 1,
+      organizationId: "default",
+      requestedById: input.actor.id,
+      sourceModule: "mailings",
+      correlationId: `mailings:${campaign.id}`,
+      idempotencyKey: `mailings:campaign:${campaign.id}`,
+      input: { campaignId: campaign.id },
+      context: { locale: "tr" },
+      maxAttempts: 3,
+    });
+  } catch (error) {
+    await db.mailingCampaign.update({
+      where: { id: campaign.id },
+      data: { status: "FAILED", finishedAt: new Date() },
+    });
+    throw error;
+  }
+
+  return { id: campaign.id, recipients: eligible.length };
 }
 
 async function createAndRun(input: { source: string; filter: Record<string, string[]>; subject: string; body: string; actor: Actor; list: Recipient[] }) {
