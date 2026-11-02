@@ -21,6 +21,8 @@ export const moduleConfig: ModuleConfig = {
   access: [
     { module: "mail", operations: ["read", "write"] },
     { module: "system", operations: ["read"] },
+    { module: "automation", operations: ["write"] },
+    { module: "users", operations: ["read"] },
   ],
   nav: [
     {
