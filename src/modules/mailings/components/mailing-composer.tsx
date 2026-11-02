@@ -72,6 +72,7 @@ export function MailingComposer({ sources, segments, initialSourceId, defaultHtm
     <section className="flex flex-col gap-4 rounded-large border border-default-200 bg-content1 p-4">
       <div className="grid gap-3 md:grid-cols-2">
         <Select
+          id="mailing-source-select"
           label={t("source")}
           labelPlacement="outside"
           selectedKeys={[sourceId]}
@@ -88,6 +89,7 @@ export function MailingComposer({ sources, segments, initialSourceId, defaultHtm
           ))}
         </Select>
         <Select
+          id="mailing-segment-select"
           label={t("segment")}
           labelPlacement="outside"
           placeholder={t("segmentNone")}
@@ -133,7 +135,7 @@ export function MailingComposer({ sources, segments, initialSourceId, defaultHtm
       ) : null}
       {preview ? <p className="rounded-medium bg-default-100 p-3 text-small">{t("preview", preview)}</p> : null}
       <div className="flex flex-wrap items-end gap-2">
-        <Input size="sm" label={t("segmentSaveAs")} labelPlacement="outside" value={segmentName} onValueChange={setSegmentName} className="max-w-xs" />
+        <Input id="mailing-segment-name-input" size="sm" label={t("segmentSaveAs")} labelPlacement="outside" value={segmentName} onValueChange={setSegmentName} className="max-w-xs" />
         <Button
           size="sm"
           variant="flat"
@@ -169,7 +171,7 @@ export function MailingComposer({ sources, segments, initialSourceId, defaultHtm
           </Button>
         ) : null}
       </div>
-      <Input label={t("subject")} labelPlacement="outside" value={subject} onValueChange={setSubject} isRequired />
+      <Input id="mailing-subject-input" label={t("subject")} labelPlacement="outside" value={subject} onValueChange={setSubject} isRequired />
       <div className="flex flex-col gap-2">
         <div className="flex flex-wrap items-center gap-2 text-tiny text-default-500">
           <span>{t("placeholders")}</span>
