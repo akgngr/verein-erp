@@ -2007,6 +2007,18 @@
       }
     }
   },
+  "automation": {
+    "module": {
+      "label": "Automatisierung",
+      "description": "Dauerhafte Hintergrundaufgaben und Arbeitsabläufe."
+    },
+    "permissions": {
+      "automation": {
+        "label": "Automatisierung",
+        "description": "Hintergrundaufgaben und Arbeitsabläufe anzeigen und verwalten."
+      }
+    }
+  },
   "banking": {
     "module": {
       "label": "Bankverbindung",

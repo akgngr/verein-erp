@@ -13,6 +13,7 @@ import * as systemPermissionExports from "@/modules/system/permissions";
 import * as auditPermissionExports from "@/modules/audit/permissions";
 import * as authPermissionExports from "@/modules/auth/permissions";
 import * as aiPermissionExports from "@/modules/ai/permissions";
+import * as automationPermissionExports from "@/modules/automation/permissions";
 import * as bankingPermissionExports from "@/modules/banking/permissions";
 import * as coursesPermissionExports from "@/modules/courses/permissions";
 import * as demoPermissionExports from "@/modules/demo/permissions";
@@ -43,6 +44,7 @@ export const permissionResources: { moduleKey: string; definitions: PermissionDe
   { moduleKey: "audit", definitions: definitionsOf(auditPermissionExports) },
   { moduleKey: "auth", definitions: definitionsOf(authPermissionExports) },
   { moduleKey: "ai", definitions: definitionsOf(aiPermissionExports) },
+  { moduleKey: "automation", definitions: definitionsOf(automationPermissionExports) },
   { moduleKey: "banking", definitions: definitionsOf(bankingPermissionExports) },
   { moduleKey: "courses", definitions: definitionsOf(coursesPermissionExports) },
   { moduleKey: "demo", definitions: definitionsOf(demoPermissionExports) },
