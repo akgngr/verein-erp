@@ -2,7 +2,6 @@ import fs from "node:fs";
 import path from "node:path";
 
 const ROOT_DIR = process.cwd();
-const MODULES_DIR = path.join(ROOT_DIR, "src", "modules");
 const APP_DIR = path.join(ROOT_DIR, "src", "app");
 /**
  * Üretilen köprülerin TEK yeri (rota grupları URL'ye eklenmez):
@@ -20,6 +19,15 @@ export const AUTO_ROUTE_BANNER =
 const MODULE_SUBPAGES_DIR = "routes";
 /** Modül içi API klasörü: src/modules/<module>/api/<alt/yol>/route.ts */
 const MODULE_API_DIR = "api";
+
+export interface SyncModuleRoutesOptions {
+  /**
+   * Senkronizasyonun uygulanacağı kök dizin.
+   * Varsayılan: process.cwd()
+   * Testlerde izole geçici klasör (fs.mkdtempSync) ile yan etkisiz paralel test için kullanılır.
+   */
+  rootDir?: string;
+}
 
 export interface SyncRoutesResult {
   syncedRoutes: string[];
@@ -41,17 +49,23 @@ export interface SyncRoutesResult {
  *
  * <rota>: module.config.ts'teki basePath, yoksa ilk nav href'i, yoksa modül anahtarı.
  */
-export function syncModuleRoutes(): SyncRoutesResult {
+export function syncModuleRoutes(options?: SyncModuleRoutesOptions): SyncRoutesResult {
+  const rootDir = options?.rootDir ?? ROOT_DIR;
+  const modulesDir = path.join(rootDir, "src", "modules");
+  const appDir = path.join(rootDir, "src", "app");
+  const generatedPagesDir = path.join(appDir, "(dashboard)", "(modules)");
+  const generatedApiDir = path.join(appDir, "api", "(modules)");
+
   const result: SyncRoutesResult = { syncedRoutes: [], rebuilt: false, cleanedRoutes: [] };
-  if (!fs.existsSync(MODULES_DIR)) return result;
+  if (!fs.existsSync(modulesDir)) return result;
 
-  const pages = new Map<string, string>(); // GENERATED_PAGES_DIR'e göre yol → içerik
-  const apis = new Map<string, string>(); // GENERATED_API_DIR'e göre yol → içerik
+  const pages = new Map<string, string>(); // generatedPagesDir'e göre yol → içerik
+  const apis = new Map<string, string>(); // generatedApiDir'e göre yol → içerik
 
-  for (const entry of fs.readdirSync(MODULES_DIR, { withFileTypes: true })) {
+  for (const entry of fs.readdirSync(modulesDir, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue;
     const moduleName = entry.name;
-    const moduleDir = path.join(MODULES_DIR, moduleName);
+    const moduleDir = path.join(modulesDir, moduleName);
     const configPath = path.join(moduleDir, "module.config.ts");
     const configText = fs.existsSync(configPath) ? fs.readFileSync(configPath, "utf8") : "";
     // Çekirdek modüller her zaman açıktır; diğerlerinin köprüleri erişim kapısından geçer
@@ -60,14 +74,14 @@ export function syncModuleRoutes(): SyncRoutesResult {
 
     for (const subPath of findFiles(path.join(moduleDir, MODULE_API_DIR), "route.ts")) {
       const source = `src/modules/${moduleName}/${MODULE_API_DIR}/${subPath}/route.ts`;
-      apis.set(path.join(moduleName, subPath, "route.ts"), apiBridge(source, `@/modules/${moduleName}/${MODULE_API_DIR}/${subPath}/route`, gated ? moduleName : null));
+      apis.set(path.join(moduleName, subPath, "route.ts"), apiBridge(source, `@/modules/${moduleName}/${MODULE_API_DIR}/${subPath}/route`, gated ? moduleName : null, rootDir));
       result.syncedRoutes.push(`${moduleName} -> /api/${moduleName}/${subPath}`);
     }
 
     if (!fs.existsSync(path.join(moduleDir, "page.tsx"))) continue;
     const routeSegment = (configText && resolveRouteSegment(configText)) || moduleName;
 
-    pages.set(path.join(routeSegment, "page.tsx"), pageBridge(`src/modules/${moduleName}/page.tsx`, `@/modules/${moduleName}/page`, gated ? moduleName : null));
+    pages.set(path.join(routeSegment, "page.tsx"), pageBridge(`src/modules/${moduleName}/page.tsx`, `@/modules/${moduleName}/page`, gated ? moduleName : null, rootDir));
     result.syncedRoutes.push(`${moduleName} -> /${routeSegment}`);
 
     for (const subPath of findFiles(path.join(moduleDir, MODULE_SUBPAGES_DIR), "page.tsx")) {
@@ -77,15 +91,16 @@ export function syncModuleRoutes(): SyncRoutesResult {
           `src/modules/${moduleName}/${MODULE_SUBPAGES_DIR}/${subPath}/page.tsx`,
           `@/modules/${moduleName}/${MODULE_SUBPAGES_DIR}/${subPath}/page`,
           gated ? moduleName : null,
+          rootDir,
         ),
       );
       result.syncedRoutes.push(`${moduleName} -> /${routeSegment}/${subPath}`);
     }
   }
 
-  removeLegacyBridges(result);
-  const pagesRebuilt = rebuildDir(GENERATED_PAGES_DIR, pages);
-  const apisRebuilt = rebuildDir(GENERATED_API_DIR, apis);
+  removeLegacyBridges(result, rootDir, appDir, generatedPagesDir, generatedApiDir);
+  const pagesRebuilt = rebuildDir(generatedPagesDir, pages);
+  const apisRebuilt = rebuildDir(generatedApiDir, apis);
   result.rebuilt = pagesRebuilt || apisRebuilt;
   return result;
 }
@@ -117,8 +132,8 @@ const SEGMENT_CONFIG_KEYS = [
   "maxDuration",
 ];
 
-export function segmentConfig(sourceRelPath: string): string {
-  const sourcePath = path.join(ROOT_DIR, sourceRelPath);
+export function segmentConfig(sourceRelPath: string, rootDir: string = ROOT_DIR): string {
+  const sourcePath = path.join(rootDir, sourceRelPath);
   if (!fs.existsSync(sourcePath)) return "";
   const pattern = new RegExp(`^export const (${SEGMENT_CONFIG_KEYS.join("|")})\\s*=\\s*[^;\\n]+;?$`, "gm");
   const lines = fs.readFileSync(sourcePath, "utf8").match(pattern) ?? [];
@@ -129,13 +144,13 @@ export function segmentConfig(sourceRelPath: string): string {
  * Sayfa köprüsü: tüm dışa aktarımlar (metadata, generateMetadata…) + segment config. `gateKey`
  * verilirse varsayılan bileşen system modülünün erişim kapısıyla sarılır.
  */
-function pageBridge(source: string, importPath: string, gateKey: string | null): string {
+function pageBridge(source: string, importPath: string, gateKey: string | null, rootDir: string = ROOT_DIR): string {
   if (!gateKey) {
     return `${AUTO_ROUTE_BANNER}
 // Kaynak: ${source}
 export { default } from "${importPath}";
 export * from "${importPath}";
-${segmentConfig(source)}`;
+${segmentConfig(source, rootDir)}`;
   }
   return `${AUTO_ROUTE_BANNER}
 // Kaynak: ${source}
@@ -144,14 +159,14 @@ import Page from "${importPath}";
 
 export * from "${importPath}";
 export default withModuleGate("${gateKey}", Page);
-${segmentConfig(source)}`;
+${segmentConfig(source, rootDir)}`;
 }
 
 const HTTP_METHODS = ["GET", "POST", "PUT", "PATCH", "DELETE", "HEAD", "OPTIONS"];
 
 /** Kaynak route.ts'in dışa aktardığı HTTP yöntemleri (fonksiyon, const ya da destructuring). */
-export function exportedMethods(sourceRelPath: string): string[] {
-  const sourcePath = path.join(ROOT_DIR, sourceRelPath);
+export function exportedMethods(sourceRelPath: string, rootDir: string = ROOT_DIR): string[] {
+  const sourcePath = path.join(rootDir, sourceRelPath);
   if (!fs.existsSync(sourcePath)) return [];
   const text = fs.readFileSync(sourcePath, "utf8");
   const found = new Set<string>();
@@ -166,21 +181,21 @@ export function exportedMethods(sourceRelPath: string): string[] {
 }
 
 /** API köprüsü; `gateKey` verilirse her HTTP yöntemi erişim kapısıyla sarılır. */
-function apiBridge(source: string, importPath: string, gateKey: string | null): string {
+function apiBridge(source: string, importPath: string, gateKey: string | null, rootDir: string = ROOT_DIR): string {
   if (!gateKey) {
     return `${AUTO_ROUTE_BANNER}
 // Kaynak: ${source}
 export * from "${importPath}";
-${segmentConfig(source)}`;
+${segmentConfig(source, rootDir)}`;
   }
-  const methods = exportedMethods(source);
+  const methods = exportedMethods(source, rootDir);
   return `${AUTO_ROUTE_BANNER}
 // Kaynak: ${source}
 import { gateRouteHandler } from "@/modules/system/server";
 import * as route from "${importPath}";
 
 ${methods.map((method) => `export const ${method} = gateRouteHandler("${gateKey}", route.${method});`).join("\n")}
-${segmentConfig(source)}`;
+${segmentConfig(source, rootDir)}`;
 }
 
 /** Bir dizindeki, adı `fileName` olan dosyaların göreli klasör yollarını döndürür. */
@@ -245,8 +260,14 @@ function rebuildDir(targetDir: string, files: Map<string, string>): boolean {
  * dosyaları (aynı URL'yi iki kez tanımlayıp derlemeyi kırarlar). Elle yazılmış dosyalara dokunmaz;
  * boşalan klasörleri kaldırır.
  */
-function removeLegacyBridges(result: SyncRoutesResult): void {
-  const generated = [GENERATED_PAGES_DIR, GENERATED_API_DIR];
+function removeLegacyBridges(
+  result: SyncRoutesResult,
+  rootDir: string = ROOT_DIR,
+  appDir: string = APP_DIR,
+  generatedPagesDir: string = GENERATED_PAGES_DIR,
+  generatedApiDir: string = GENERATED_API_DIR,
+): void {
+  const generated = [generatedPagesDir, generatedApiDir];
   const walk = (dir: string): void => {
     if (!fs.existsSync(dir) || generated.some((root) => dir === root || dir.startsWith(`${root}.tmp-`))) return;
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -259,8 +280,8 @@ function removeLegacyBridges(result: SyncRoutesResult): void {
       if (entry.name !== "page.tsx" && entry.name !== "route.ts") continue;
       if (!fs.readFileSync(fullPath, "utf8").startsWith(AUTO_ROUTE_BANNER)) continue;
       fs.unlinkSync(fullPath);
-      result.cleanedRoutes.push(path.relative(ROOT_DIR, fullPath));
+      result.cleanedRoutes.push(path.relative(rootDir, fullPath));
     }
   };
-  walk(APP_DIR);
+  walk(appDir);
 }

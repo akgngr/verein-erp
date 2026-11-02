@@ -1,26 +1,28 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
+import os from "node:os";
 import path from "node:path";
 import {
   AUTO_ROUTE_BANNER,
-  GENERATED_PAGES_DIR,
   resolveRouteSegment,
   segmentConfig,
   syncModuleRoutes,
 } from "../src/shared/modules/sync-routes";
 
 describe("Module Route Synchronizer", () => {
-  test("syncModuleRoutes connects module pages to dashboard routes", () => {
-    const dummyModuleDir = path.join(process.cwd(), "src", "modules", "temp-dummy-mod");
+  test("syncModuleRoutes connects module pages to dashboard routes (isolated sandbox)", () => {
+    const sandbox = fs.mkdtempSync(path.join(os.tmpdir(), "verein-sync-routes-"));
+    const dummyModuleDir = path.join(sandbox, "src", "modules", "temp-dummy-mod");
     const dummyPage = path.join(dummyModuleDir, "page.tsx");
-    const expectedBridge = path.join(GENERATED_PAGES_DIR, "temp-dummy-mod", "page.tsx");
+    const generatedPagesDir = path.join(sandbox, "src", "app", "(dashboard)", "(modules)");
+    const expectedBridge = path.join(generatedPagesDir, "temp-dummy-mod", "page.tsx");
 
     try {
       fs.mkdirSync(dummyModuleDir, { recursive: true });
       fs.writeFileSync(dummyPage, "export default function DummyPage() { return null; }", "utf8");
 
-      const result = syncModuleRoutes();
+      const result = syncModuleRoutes({ rootDir: sandbox });
       assert.strictEqual(Array.isArray(result.syncedRoutes), true);
 
       assert.ok(fs.existsSync(expectedBridge), "Köprü rotası oluşturulmuş olmalıdır");
@@ -32,21 +34,20 @@ describe("Module Route Synchronizer", () => {
           content.includes('export * from "@/modules/temp-dummy-mod/page";'),
         "çekirdek olmayan modülün sayfası erişim kapısıyla sarılmalı; tüm dışa aktarımlar (generateMetadata) köprülenmelidir",
       );
-    } finally {
-      if (fs.existsSync(dummyPage)) {
-        fs.unlinkSync(dummyPage);
-      }
-      if (fs.existsSync(dummyModuleDir)) {
-        fs.rmdirSync(dummyModuleDir);
-      }
+
       // Kaynak silindi: yeniden senkronda klasör temiz kurulur, köprü kalmaz.
-      syncModuleRoutes();
+      fs.unlinkSync(dummyPage);
+      fs.rmdirSync(dummyModuleDir);
+      syncModuleRoutes({ rootDir: sandbox });
       assert.ok(!fs.existsSync(expectedBridge), "kaynağı silinen köprü temiz kurulumda kalkmalıdır");
+    } finally {
+      fs.rmSync(sandbox, { recursive: true, force: true });
     }
   });
 
-  test("syncModuleRoutes preserves custom user pages without overwriting", () => {
-    const testRouteDir = path.join(process.cwd(), "src", "app", "(dashboard)", "temp-test-route");
+  test("syncModuleRoutes preserves custom user pages without overwriting (isolated sandbox)", () => {
+    const sandbox = fs.mkdtempSync(path.join(os.tmpdir(), "verein-sync-custom-"));
+    const testRouteDir = path.join(sandbox, "src", "app", "(dashboard)", "temp-test-route");
     const testPage = path.join(testRouteDir, "page.tsx");
     const customContent = "// Özel kullanıcı sayfası - üzerine yazılmamalıdır\nexport default function CustomPage() { return null; }";
 
@@ -55,17 +56,12 @@ describe("Module Route Synchronizer", () => {
       fs.writeFileSync(testPage, customContent, "utf8");
 
       // syncModuleRoutes çalıştırıldığında özel sayfa korunmalı
-      syncModuleRoutes();
+      syncModuleRoutes({ rootDir: sandbox });
 
       const currentContent = fs.readFileSync(testPage, "utf8");
       assert.strictEqual(currentContent, customContent, "Özel kullanıcı sayfası korunmalıdır");
     } finally {
-      if (fs.existsSync(testPage)) {
-        fs.unlinkSync(testPage);
-      }
-      if (fs.existsSync(testRouteDir)) {
-        fs.rmdirSync(testRouteDir);
-      }
+      fs.rmSync(sandbox, { recursive: true, force: true });
     }
   });
 
@@ -80,8 +76,9 @@ describe("Module Route Synchronizer", () => {
     assert.equal(resolveRouteSegment("nav: []"), undefined);
   });
 
-  test("segment config (runtime, maxDuration…) kaynaktan köprüye kopyalanır", () => {
-    const dir = path.join(process.cwd(), "src", "modules", "temp-segment-mod");
+  test("segment config (runtime, maxDuration…) kaynaktan köprüye kopyalanır (isolated sandbox)", () => {
+    const sandbox = fs.mkdtempSync(path.join(os.tmpdir(), "verein-segment-mod-"));
+    const dir = path.join(sandbox, "src", "modules", "temp-segment-mod");
     const file = path.join(dir, "route.ts");
     try {
       fs.mkdirSync(dir, { recursive: true });
@@ -90,12 +87,12 @@ describe("Module Route Synchronizer", () => {
         'export const runtime = "nodejs";\nexport const maxDuration = 60\nconst runtimeHelper = 1;\nexport async function GET() {}\n',
       );
       assert.equal(
-        segmentConfig("src/modules/temp-segment-mod/route.ts"),
+        segmentConfig("src/modules/temp-segment-mod/route.ts", sandbox),
         'export const runtime = "nodejs";\nexport const maxDuration = 60;\n',
       );
-      assert.equal(segmentConfig("src/modules/temp-segment-mod/yok.ts"), "");
+      assert.equal(segmentConfig("src/modules/temp-segment-mod/yok.ts", sandbox), "");
     } finally {
-      fs.rmSync(dir, { recursive: true, force: true });
+      fs.rmSync(sandbox, { recursive: true, force: true });
     }
   });
 });
