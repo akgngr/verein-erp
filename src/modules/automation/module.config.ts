@@ -10,7 +10,6 @@ export const moduleConfig: ModuleConfig = {
   description: "Kalıcı arka plan görevleri ve iş akışları.",
   category: "EXTENSION",
   hasSchema: true,
-  access: [{ module: "mailings", operations: ["write"] }],
   dependencies: {
     "pg-boss": "12.38.0",
   },
