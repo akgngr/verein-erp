@@ -4,10 +4,14 @@ import type { Prisma } from "@prisma/client";
 
 import { moduleRecipientRegistry } from "@/recipient-registry";
 import { isMailConfigured, sendMail, sendMailBatch } from "@/modules/mail/server";
+import { createTaskExecutionRecord } from "@/modules/automation/server";
+import { loadPermissionPolicy } from "@/modules/users/server";
 import { listUsableModuleKeys } from "@/modules/system/server";
 import { getDb } from "@/shared/db";
 import { renderMailTemplate, type Recipient, type RecipientSource } from "@/shared/mailings/define";
 import { can } from "@/shared/permissions/define";
+import { mailingsPermissions } from "../permissions";
+import type { TaskExecutionContext } from "@/shared/automation/define";
 import type { Role } from "@/shared/roles";
 
 export type SourceInfo = { id: string; moduleKey: string; key: string; placeholders: string[]; filters: { key: string; options: string[]; defaults: string[] }[] };
@@ -63,7 +67,7 @@ export async function sendTest(role: Role, input: { sourceId: string; filter: Re
 export async function startCampaign(role: Role, input: { sourceId: string; filter: Record<string, string[]>; subject: string; body: string; actor: Actor }): Promise<{ id: string; recipients: number } | null> {
   const source = await findSource(role, input.sourceId);
   if (!source) return null;
-  return createAndRun({ source: input.sourceId, filter: input.filter, subject: input.subject, body: input.body, actor: input.actor, list: await source.resolve(input.filter) });
+  return createAndQueueCampaign({ source: input.sourceId, filter: input.filter, subject: input.subject, body: input.body, actor: input.actor, list: await source.resolve(input.filter) });
 }
 
 /**
@@ -72,6 +76,107 @@ export async function startCampaign(role: Role, input: { sourceId: string; filte
  */
 export async function sendBulkMail(input: { moduleKey: string; recipients: Recipient[]; subject: string; body: string; actor: Actor }): Promise<{ id: string; recipients: number }> {
   return createAndRun({ source: `${input.moduleKey}:api`, filter: {}, subject: input.subject, body: input.body, actor: input.actor, list: input.recipients });
+}
+
+/**
+ * Worker entry point. Re-resolves the source at execution time and rechecks the
+ * creator's active account, mailing permission, source permission and module gates.
+ * Recipient addresses are never copied into the automation payload.
+ */
+export async function processCampaign(campaignId: string, context: TaskExecutionContext) {
+  const db = getDb();
+  const campaign = await db.mailingCampaign.findUnique({ where: { id: campaignId } });
+  if (!campaign || campaign.status !== "SENDING") return { skipped: true };
+
+  const usable = new Set(await listUsableModuleKeys());
+  if (!usable.has("mailings") || !usable.has("mail") || !usable.has("automation")) {
+    throw new Error("MAILING_MODULE_UNAVAILABLE");
+  }
+
+  const creator = campaign.createdById === context.requestedById
+    ? await db.user.findUnique({ where: { id: campaign.createdById }, select: { id: true, role: true, isActive: true } })
+    : null;
+  if (!creator?.isActive) throw new Error("MAILING_ACTOR_INACTIVE");
+
+  await loadPermissionPolicy();
+  const role = creator.role as Role;
+  if (!can(role, mailingsPermissions, "create")) throw new Error("MAILING_PERMISSION_REVOKED");
+
+  const source = await findSource(role, campaign.source);
+  if (!source) throw new Error("MAILING_SOURCE_PERMISSION_REVOKED");
+
+  const filter = campaign.filter && typeof campaign.filter === "object" && !Array.isArray(campaign.filter)
+    ? campaign.filter as Record<string, string[]>
+    : {};
+  const { eligible, noEmail, optOut } = split(await source.resolve(filter));
+  const messages = eligible.map((row) => ({
+    to: row.email as string,
+    toName: row.name,
+    subject: renderMailTemplate(campaign.subject, row.vars),
+    text: renderMailTemplate(campaign.body, row.vars),
+    context: { module: "mailings", reference: campaign.id },
+  }));
+
+  const results = await sendMailBatch(messages);
+  const sent = results.filter((result) => result.ok).length;
+  const failed = results.length - sent;
+  await db.mailingCampaign.update({
+    where: { id: campaign.id },
+    data: {
+      recipientCount: eligible.length,
+      skippedNoEmail: noEmail,
+      skippedOptOut: optOut,
+      sentCount: sent,
+      failedCount: failed,
+      status: sent === 0 && failed > 0 ? "FAILED" : "DONE",
+      finishedAt: new Date(),
+    },
+  });
+  return { recipients: eligible.length, sent, failed, skippedNoEmail: noEmail, skippedOptOut: optOut };
+}
+
+async function createAndQueueCampaign(input: { source: string; filter: Record<string, string[]>; subject: string; body: string; actor: Actor; list: Recipient[] }) {
+  const { eligible, noEmail, optOut } = split(input.list);
+  if (eligible.length === 0) return { id: "", recipients: 0 };
+
+  const db = getDb();
+  const campaign = await db.mailingCampaign.create({
+    data: {
+      source: input.source,
+      filter: input.filter as Prisma.InputJsonValue,
+      subject: input.subject,
+      body: input.body,
+      recipientCount: eligible.length,
+      skippedNoEmail: noEmail,
+      skippedOptOut: optOut,
+      createdById: input.actor.id,
+      createdByLabel: input.actor.label,
+    },
+    select: { id: true },
+  });
+
+  try {
+    await createTaskExecutionRecord({
+      taskKey: "mailings.send_campaign",
+      taskVersion: 1,
+      organizationId: "default",
+      requestedById: input.actor.id,
+      sourceModule: "mailings",
+      correlationId: `mailings:${campaign.id}`,
+      idempotencyKey: `mailings:campaign:${campaign.id}`,
+      input: { campaignId: campaign.id },
+      context: { locale: "tr" },
+      maxAttempts: 3,
+    });
+  } catch (error) {
+    await db.mailingCampaign.update({
+      where: { id: campaign.id },
+      data: { status: "FAILED", finishedAt: new Date() },
+    });
+    throw error;
+  }
+
+  return { id: campaign.id, recipients: eligible.length };
 }
 
 async function createAndRun(input: { source: string; filter: Record<string, string[]>; subject: string; body: string; actor: Actor; list: Recipient[] }) {
