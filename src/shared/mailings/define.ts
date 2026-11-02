@@ -10,7 +10,18 @@ import type { PermissionRequirement } from "@/shared/types/module";
  * - Metin/etiketler modülün mesajlarındadır: <modül>.recipients.<kaynak>.label, ...filters.<filtre>.label,
  *   ...filters.<filtre>.options.<değer>.
  */
-export type RecipientFilter = { key: string; options: string[]; /** Seçilmezse hepsi. Varsayılan seçili değerler. */ defaults?: string[] };
+export type RecipientFilter = {
+  key: string;
+  /** Sabit seçenekler (etiketleri mesajlarda: ...filters.<filtre>.options.<değer>). */
+  options: string[];
+  /** Seçilmezse hepsi. Varsayılan seçili değerler. */
+  defaults?: string[];
+  /**
+   * Dinamik seçenekler (ör. verideki şehirler): değer aynı zamanda etikettir. Verilirse `options` yerine
+   * kullanılır; KVKK: yalnızca gruplama değerleri dönmeli (kişi adı vb. değil).
+   */
+  loadOptions?: () => Promise<string[]>;
+};
 
 export type Recipient = {
   /** Kaynaktaki kayıt kimliği (gönderim kaydı/MailLog referansı için). */
@@ -40,4 +51,11 @@ export const defineRecipients = (moduleKey: string, sources: RecipientSource[]):
 /** Yer tutucu doldurma; bilinmeyenler olduğu gibi kalır. */
 export function renderMailTemplate(text: string, vars: Record<string, string>): string {
   return text.replace(/\{(\w+)\}/g, (match, key: string) => (key in vars ? vars[key] : match));
+}
+
+const HTML_ESCAPES: Record<string, string> = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" };
+
+/** HTML gövde için: değerler kaçışlanır (ör. "<b>" adlı kişi HTML enjekte edemez). */
+export function renderMailTemplateHtml(html: string, vars: Record<string, string>): string {
+  return html.replace(/\{(\w+)\}/g, (match, key: string) => (key in vars ? vars[key].replace(/[&<>"']/g, (ch) => HTML_ESCAPES[ch]) : match));
 }

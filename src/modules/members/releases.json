@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.3.0",
+      "date": "2026-11-02",
+      "appVersion": "0.38.0",
+      "title": {
+        "tr": "Yeni toplu e-posta filtreleri",
+        "de": "Neue Rundmail-Filter"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Üye alıcı listesinde şehir, üyelik yılı ve aidat durumu (açık aidatı olanlar/olmayanlar) filtreleri; {city} yer tutucusu.",
+          "de": "Mitglieder-Empfängerliste mit Filtern nach Ort, Eintrittsjahr und Beitragsstatus (offen/kein offener Beitrag); Platzhalter {city}."
+        }
+      ]
+    },
+    {
       "version": "1.2.0",
       "date": "2026-11-01",
       "appVersion": "0.36.0",
