@@ -583,7 +583,7 @@ export function validateModule(moduleKey: string, customModulesDir?: string): Mo
   for (const file of tsFiles) {
     const content = fs.readFileSync(file, "utf8");
 
-    // Yasak 1: Başka modüllerin iç dosyalarına erişim (sadece @/modules/<target>, @/modules/<target>/server, @/modules/<target>/ui, @/modules/<target>/page, @/modules/<target>/edge serbesttir)
+    // Yasak 1: Başka modüllerin iç dosyalarına erişim (sadece @/modules/<target>, @/modules/<target>/server, @/modules/<target>/ui, @/modules/<target>/page, @/modules/<target>/edge, @/modules/<target>/automation serbesttir)
     const importMatches = [...content.matchAll(/from\s+["']@\/modules\/([^"']+)["']/g)];
     for (const match of importMatches) {
       const importPath = match[1];
@@ -595,12 +595,12 @@ export function validateModule(moduleKey: string, customModulesDir?: string): Mo
       if (targetModule === moduleKey) continue;
 
       // Public giriş noktaları serbest
-      if (!subPath || subPath === "server" || subPath === "ui" || subPath === "edge" || subPath === "page") {
+      if (!subPath || subPath === "server" || subPath === "ui" || subPath === "edge" || subPath === "page" || subPath === "automation") {
         continue;
       }
 
       errors.push(
-        `Kural ihlali (${path.relative(ROOT_DIR, file)}): Başka modülün iç dosyası doğrudan import edilmiş -> "@/modules/${importPath}". Sadece public girişler serbesttir (@/modules/${targetModule}, @/modules/${targetModule}/server, @/modules/${targetModule}/ui).`,
+        `Kural ihlali (${path.relative(ROOT_DIR, file)}): Başka modülün iç dosyası doğrudan import edilmiş -> "@/modules/${importPath}". Sadece public girişler serbesttir (@/modules/${targetModule}, @/modules/${targetModule}/server, @/modules/${targetModule}/ui, @/modules/${targetModule}/automation).`,
       );
     }
 
