@@ -31,3 +31,14 @@ Do not start the worker from a Next.js route, Server Action, or instrumentation 
 The outbox dispatcher publishes only minimal execution identifiers. A stable pg-boss singleton key prevents duplicate queue jobs when a process stops between publishing and marking the outbox row. The worker claims execution rows transactionally and treats completed executions as no-ops. Delivery is at-least-once, so task handlers must be idempotent and should use the provided stable execution ID for downstream deduplication. pg-boss retry/backoff handles transient task failures; the ERP execution record remains authoritative.
 
 Task handlers must be registered in trusted application code through the existing automation task registry. Never accept user-provided JavaScript, import paths, or executable workflow payloads.
+
+## İlk görev entegrasyonu: toplu e-posta
+
+- `mailings.send_campaign@1` statik görev kaydıdır; queue payload yalnızca kampanya kimliği taşır.
+- Alıcı adresleri ve kişiselleştirilmiş gövdeler automation execution/outbox payload'ına yazılmaz.
+- Worker kampanyayı ve oluşturan kullanıcıyı DB'den okur; kullanıcının aktifliğini, toplu e-posta iznini, kaynak iznini ve gerekli modüllerin etkinliğini yeniden kontrol eder.
+- Alıcı kaynağı worker çalıştığı anda tekrar çözülür; e-posta istemeyenler ve adresi olmayanlar yeniden filtrelenir.
+- Önceki denemelerde `SENT` veya `LOGGED` olarak kaydedilmiş alıcılar tekrar gönderilmez. SMTP sunucusunun kabulü ile log yazımı arasındaki çok kısa çökme aralığı dağıtık sistemlerde kesin olarak kapatılamaz; teslimat semantiği bu nedenle at-least-once'dur.
+- `mailings` modülünün kullanılabilmesi için `automation` modülü de etkin olmalıdır. `pnpm dev:full` yerel web + worker süreçlerini birlikte başlatır. Worker kapalıysa kampanya SENDING durumunda bekler; worker logları ve Automation execution kayıtları kontrol edilmelidir.
+
+Feature modules declare trusted tasks in `src/modules/<module>/automation.ts`. The central registry imports only this narrow declaration entrypoint; task handlers dynamically load their own module services when executed. This keeps queue registration static without importing UI or Server Action modules into the worker.

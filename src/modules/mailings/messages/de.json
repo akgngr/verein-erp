@@ -57,6 +57,8 @@
   },
   "access": {
     "mail": "Zum Versand und zur Prüfung der E-Mail-Einrichtung.",
-    "system": "Liest Modulzustände, um nur Listen aktiver Module anzuzeigen."
+    "system": "Liest Modulzustände, um nur Listen aktiver Module anzuzeigen.",
+    "automation": "Zum Einreihen von Kampagnen in die dauerhafte Hintergrundwarteschlange und zum Erstellen der Ausführungsdatensätze.",
+    "users": "Zur erneuten Prüfung des aktiven Kontos und der aktuellen Rolle des auslösenden Benutzers während der Worker-Ausführung."
   }
 }

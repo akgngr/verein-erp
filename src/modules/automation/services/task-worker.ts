@@ -6,7 +6,8 @@ import { getDb } from "@/shared/db";
 import { automationTasks } from "../tasks/registry";
 import type { AutomationTaskQueuePayload } from "../worker/queue";
 
-const RUNNING_STALE_AFTER_MS = 15 * 60 * 1000;
+// Keep the lease longer than the maximum task timeout so long mailing batches are not reclaimed.
+const RUNNING_STALE_AFTER_MS = 2 * 60 * 60 * 1000;
 const registeredTasks = automationTasks as unknown as readonly TaskDefinition[];
 
 function errorCode(error: unknown): string {
