@@ -63,13 +63,13 @@
     "openai": "^7.45.1",
     "pdf-lib": "1.17.1",
     "pg": "^8.23.1",
+    "pg-boss": "12.38.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "react-hook-form": "^7.60.0",
     "server-only": "^0.0.1",
     "unpdf": "^2.1.0",
-    "zod": "^4.0.2",
-    "pg-boss": "12.38.0"
+    "zod": "^4.0.2"
   },
   "devDependencies": {
     "@next/env": "16.4.3",
@@ -115,6 +115,9 @@
     ],
     "mailparser": [
       "mail"
+    ],
+    "pg-boss": [
+      "automation"
     ]
   }
 }
