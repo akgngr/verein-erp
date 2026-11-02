@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.5.0",
+      "date": "2026-11-02",
+      "title": {
+        "tr": "Güvenilir görev kayıt sınırı",
+        "de": "Abgrenzung der vertrauenswürdigen Aufgabenregistrierung"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Görev kayıt listesi worker içinde tutuldu; modül sunucu giriş noktası yalnızca görev yürütme kayıt API'sini sunar. Modüller arası bağımlılık döngüleri önlendi.",
+          "de": "Die Aufgabenregistrierung bleibt intern im Worker; der Server-Einstieg des Moduls stellt nur die API für Ausführungsdatensätze bereit. Zirkuläre Modulabhängigkeiten werden vermieden."
+        }
+      ]
+    },
+    {
       "version": "0.4.0",
       "date": "2026-11-02",
       "title": {
