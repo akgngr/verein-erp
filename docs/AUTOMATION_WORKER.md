@@ -22,7 +22,7 @@ For isolated debugging, use pnpm dev for the web application or pnpm automation:
 
 - Vercel: keep AUTOMATION_ENABLED=false and AUTOMATION_WORKER_ENABLED=false.
 - Coolify web service: set AUTOMATION_ENABLED=true and AUTOMATION_WORKER_ENABLED=false.
-- Coolify worker service: use the same application image and database environment, with AUTOMATION_ENABLED=true, AUTOMATION_WORKER_ENABLED=true, and the command pnpm automation:worker.
+- Coolify worker service: build the same Dockerfile with build target worker, use the same database environment, and set AUTOMATION_ENABLED=true plus AUTOMATION_WORKER_ENABLED=true. The worker target has its own TSX entrypoint; do not override it with the web runner's standalone command.
 
 Do not start the worker from a Next.js route, Server Action, or instrumentation hook. It is a separate long-lived process.
 
