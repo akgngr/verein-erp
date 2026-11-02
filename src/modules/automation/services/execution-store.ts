@@ -2,7 +2,8 @@ import "server-only";
 
 import type { Prisma } from "@prisma/client";
 
-import { getDb } from "@/shared/db";\nimport { getAutomationRuntimeConfig } from "../runtime-config";
+import { getDb } from "@/shared/db";
+import { getAutomationRuntimeConfig } from "../runtime-config";
 
 export type CreateTaskExecutionRecordInput = {
   taskKey: string;
@@ -26,6 +27,10 @@ export type CreateTaskExecutionRecordInput = {
  * process will publish the outbox event to pg-boss.
  */
 export async function createTaskExecutionRecord(input: CreateTaskExecutionRecordInput) {
+  if (!getAutomationRuntimeConfig().enabled) {
+    throw new Error("AUTOMATION_DISABLED");
+  }
+
   return getDb().$transaction(async (tx) => {
     const execution = await tx.automationExecution.create({
       data: {
