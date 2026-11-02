@@ -7,7 +7,7 @@ import { processCampaign } from "./services/campaigns";
 export const sendCampaignTask = defineTask({
   key: "mailings.send_campaign",
   version: 1,
-  description: "Send a mailing campaign through the durable automation worker.",
+  description: "mailings.send_campaign",
   inputSchema: z.object({ campaignId: z.string().min(1).max(128) }).strict(),
   timeoutSeconds: 60 * 60,
   retry: {
