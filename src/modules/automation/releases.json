@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.4.0",
+      "date": "2026-11-02",
+      "title": {
+        "tr": "PostgreSQL worker çalışma zamanı",
+        "de": "PostgreSQL-Worker-Laufzeit"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "pg-boss tabanlı kuyruk worker'ı, transactional outbox dağıtıcısı ve pnpm dev:full ile tek terminalden yerel web+worker geliştirme akışı eklendi. Mevcut modül kayıt sistemi korunur.",
+          "de": "pg-boss-basierter Queue-Worker, transaktionaler Outbox-Dispatcher und lokaler Web+Worker-Entwicklungsablauf mit pnpm dev:full in einem Terminal hinzugefügt. Das bestehende Modulregistrierungssystem bleibt unverändert."
+        }
+      ]
+    },
+    {
       "version": "0.3.0",
       "date": "2026-11-02",
       "title": {
