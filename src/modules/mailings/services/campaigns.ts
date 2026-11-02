@@ -4,9 +4,9 @@ import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 
 import { moduleRecipientRegistry } from "@/recipient-registry";
-import { isMailConfigured, sendMail, sendMailBatch } from "@/modules/mail/server";
+import { isMailConfigured, sendMail, sendMailBatch, listSuccessfulMailRecipients } from "@/modules/mail/server";
 import { createTaskExecutionRecord } from "@/modules/automation/server";
-import { loadPermissionPolicy } from "@/modules/users/server";
+import { loadPermissionPolicy, getUserById } from "@/modules/users/server";
 import { listUsableModuleKeys } from "@/modules/system/server";
 import { getDb } from "@/shared/db";
 import { renderMailTemplate, type Recipient, type RecipientSource } from "@/shared/mailings/define";
@@ -103,7 +103,7 @@ export async function processCampaign(campaignId: string, context: TaskExecution
   }
 
   const creator = campaign.createdById === context.requestedById
-    ? await db.user.findUnique({ where: { id: campaign.createdById }, select: { id: true, role: true, isActive: true } })
+    ? await getUserById(campaign.createdById)
     : null;
   if (!creator?.isActive) return failCampaign("MAILING_ACTOR_INACTIVE");
 
@@ -120,11 +120,7 @@ export async function processCampaign(campaignId: string, context: TaskExecution
   const { eligible, noEmail, optOut } = split(await source.resolve(filter));
   // A retry after a worker restart must not resend recipients whose successful delivery
   // was already durably logged for this campaign.
-  const deliveredLogs = await db.mailLog.findMany({
-    where: { module: "mailings", reference: campaign.id, status: { in: ["SENT", "LOGGED"] } },
-    select: { toAddress: true },
-  });
-  const delivered = new Set(deliveredLogs.map((log) => log.toAddress.trim().toLowerCase()));
+  const delivered = new Set((await listSuccessfulMailRecipients("mailings", campaign.id)).map((address) => address.trim().toLowerCase()));
   const alreadySent = eligible.filter((row) => delivered.has((row.email ?? "").trim().toLowerCase())).length;
   const pending = eligible.filter((row) => !delivered.has((row.email ?? "").trim().toLowerCase()));
   const messages = pending.map((row) => ({
