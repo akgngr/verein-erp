@@ -1,6 +1,7 @@
 import "server-only";
 
 import type { Prisma } from "@prisma/client";
+import { z } from "zod";
 
 import { moduleRecipientRegistry } from "@/recipient-registry";
 import { isMailConfigured, sendMail, sendMailBatch } from "@/modules/mail/server";
@@ -105,11 +106,19 @@ export async function processCampaign(campaignId: string, context: TaskExecution
   const source = await findSource(role, campaign.source);
   if (!source) throw new Error("MAILING_SOURCE_PERMISSION_REVOKED");
 
-  const filter = campaign.filter && typeof campaign.filter === "object" && !Array.isArray(campaign.filter)
-    ? campaign.filter as Record<string, string[]>
-    : {};
+  const filterResult = z.record(z.string().max(40), z.array(z.string().max(40)).max(20)).safeParse(campaign.filter);
+  if (!filterResult.success) throw new Error("MAILING_FILTER_INVALID");
+  const filter = filterResult.data;
   const { eligible, noEmail, optOut } = split(await source.resolve(filter));
-  const messages = eligible.map((row) => ({
+  // A retry after a worker restart must not resend recipients whose successful delivery
+  // was already durably logged for this campaign.
+  const deliveredLogs = await db.mailLog.findMany({
+    where: { module: "mailings", reference: campaign.id, status: { in: ["SENT", "LOGGED"] } },
+    select: { toAddress: true },
+  });
+  const delivered = new Set(deliveredLogs.map((log) => log.toAddress.trim().toLowerCase()));
+  const pending = eligible.filter((row) => !delivered.has((row.email ?? "").trim().toLowerCase()));
+  const messages = pending.map((row) => ({
     to: row.email as string,
     toName: row.name,
     subject: renderMailTemplate(campaign.subject, row.vars),
@@ -118,8 +127,8 @@ export async function processCampaign(campaignId: string, context: TaskExecution
   }));
 
   const results = await sendMailBatch(messages);
-  const sent = results.filter((result) => result.ok).length;
-  const failed = results.length - sent;
+  const sent = delivered.size + results.filter((result) => result.ok).length;
+  const failed = results.filter((result) => !result.ok).length;
   await db.mailingCampaign.update({
     where: { id: campaign.id },
     data: {
