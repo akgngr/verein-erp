@@ -39,6 +39,25 @@ COPY --from=builder /app/scripts/verify-db-integrity.mjs ./scripts/verify-db-int
 RUN node_modules/.bin/prisma generate
 
 
+# ---------- worker ----------
+# Aynı kaynak ve bağımlılıklarla ayrı, uzun ömürlü automation worker imaj hedefi.
+# Web runner standalone çıktısını kullanır; worker ise tsx + kaynak modüllerini gerektirir.
+FROM node:22-alpine AS worker
+WORKDIR /app
+ENV NODE_ENV=production
+ENV NODE_OPTIONS=--conditions=react-server
+
+RUN addgroup --system --gid 1001 nodejs \
+  && adduser --system --uid 1001 nextjs
+
+COPY --from=builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+COPY --from=builder --chown=nextjs:nodejs /app/src ./src
+COPY --from=builder --chown=nextjs:nodejs /app/tsconfig.json ./tsconfig.json
+COPY --from=builder --chown=nextjs:nodejs /app/package.json ./package.json
+
+USER nextjs
+CMD ["./node_modules/.bin/tsx", "src/modules/automation/worker/main.ts"]
+
 # ---------- runner ----------
 FROM node:22-alpine AS runner
 RUN corepack enable
