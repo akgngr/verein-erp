@@ -134,7 +134,7 @@ export async function processCampaign(campaignId: string, context: TaskExecution
     context: { module: "mailings", reference: campaign.id },
   }));
 
-  let results;
+  let results: Awaited<ReturnType<typeof sendMailBatch>>;
   try {
     results = await sendMailBatch(messages);
   } catch (error) {
