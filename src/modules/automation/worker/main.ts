@@ -44,7 +44,7 @@ export async function runAutomationWorker(): Promise<void> {
     retryDelay: 600,
     retryDelayMax: 60 * 60,
     retryBackoff: true,
-    expireInSeconds: 24 * 60 * 60,
+    expireInSeconds: 60 * 60,
     heartbeatSeconds: 60,
     deleteAfterSeconds: 60 * 60 * 24 * 7,
   });
@@ -72,8 +72,8 @@ export async function runAutomationWorker(): Promise<void> {
 
   console.info("[automation:worker] Kapatılıyor...");
   dispatcherAbort.abort();
-  await boss.stop({ graceful: true, timeout: 30 });
   await dispatcher;
+  await boss.stop({ graceful: true, timeout: 30 });
   console.info("[automation:worker] Güvenli şekilde durduruldu.");
 }
 
