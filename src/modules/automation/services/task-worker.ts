@@ -30,7 +30,7 @@ async function markTerminal(
   result?: unknown,
 ): Promise<void> {
   const db = getDb();
-  const storedResult = result === undefined
+  const storedResult = result == null
     ? Prisma.JsonNull
     : JSON.parse(JSON.stringify(result)) as Prisma.InputJsonValue;
 
