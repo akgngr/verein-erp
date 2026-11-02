@@ -2,7 +2,7 @@ import "server-only";
 
 import type { Prisma } from "@prisma/client";
 
-import { getDb } from "@/shared/db";
+import { getDb } from "@/shared/db";\nimport { getAutomationRuntimeConfig } from "../runtime-config";
 
 export type CreateTaskExecutionRecordInput = {
   taskKey: string;
