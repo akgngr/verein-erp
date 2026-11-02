@@ -1,7 +1,6 @@
 import { z } from "zod";
 
 import { defineTask } from "@/shared/automation/define";
-import { processCampaign } from "./services/campaigns";
 
 /** Queue payload stores only the campaign ID; recipient data stays in the source module. */
 export const sendCampaignTask = defineTask({
@@ -17,5 +16,8 @@ export const sendCampaignTask = defineTask({
     backoffMultiplier: 2,
   },
   idempotencyKey: (input) => `mailings:campaign:${input.campaignId}`,
-  handler: async (input, context) => processCampaign(input.campaignId, context),
+  handler: async (input, context) => {
+    const { processCampaign } = await import("./services/campaigns");
+    return processCampaign(input.campaignId, context);
+  },
 });
