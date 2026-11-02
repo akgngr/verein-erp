@@ -7,7 +7,7 @@ import { automationTasks } from "../tasks/registry";
 import type { AutomationTaskQueuePayload } from "../worker/queue";
 
 const RUNNING_STALE_AFTER_MS = 15 * 60 * 1000;
-const registeredTasks = automationTasks as readonly TaskDefinition[];
+const registeredTasks = automationTasks as unknown as readonly TaskDefinition[];
 
 function errorCode(error: unknown): string {
   if (error && typeof error === "object" && "code" in error && typeof error.code === "string") {
@@ -124,6 +124,11 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
   if (!execution) return;
 
   const attempt = execution.attempt;
+  if (attempt > execution.maxAttempts) {
+    await markTerminal(payload.executionId, "FAILED", "TASK_ATTEMPTS_EXHAUSTED");
+    return;
+  }
+
   const task = registeredTasks.find((item) => item.key === payload.taskKey);
 
   if (!task) {
