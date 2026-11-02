@@ -6,7 +6,6 @@ import nextTypescript from "eslint-config-next/typescript";
 //   @/modules/<modül>/server   → sunucu girişi
 //   @/modules/<modül>/ui       → UI girişi
 //   @/modules/<modül>/page     → Dashboard sayfa girişi (otomatik senkronize)
-//   @/modules/<modül>/automation → yalnızca güvenilir görev tanımları (automation registry)
 //   @/modules/<modül>/edge     → yalnızca auth modülü (middleware)
 //   @/modules/<modül>/cards    → panel kartları (yalnızca üretilen src/dashboard-cards.ts)
 //   @/modules/<modül>/demo, /lifecycle → yalnızca üretilen src/demo-registry.ts, src/lifecycle-registry.ts
@@ -19,7 +18,6 @@ const MODULE_INTERNAL_IMPORTS = {
     "!@/modules/*/server",
     "!@/modules/*/ui",
     "!@/modules/*/page",
-    "!@/modules/*/automation",
     "!@/modules/*/edge",
     "!@/modules/*/cards",
     "!@/modules/*/ai",
@@ -35,7 +33,7 @@ const MODULE_INTERNAL_IMPORTS = {
     "!@/modules/*/api/**",
   ],
   message:
-    "Modül iç dosyalarına doğrudan erişim yasaktır. Public girişler: @/modules/<modül>, @/modules/<modül>/server, @/modules/<modül>/ui, @/modules/<modül>/page, @/modules/<modül>/automation",
+    "Modül iç dosyalarına doğrudan erişim yasaktır. Public girişler: @/modules/<modül>, @/modules/<modül>/server, @/modules/<modül>/ui, @/modules/<modül>/page",
 };
 
 const eslintConfig = [
