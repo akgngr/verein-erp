@@ -24,7 +24,7 @@ export type CreateTaskExecutionRecordInput = {
  *
  * This is an internal persistence primitive, not a public enqueue API. Callers must perform
  * actor permission checks and module-availability checks before invoking it. A separate worker
- * process will publish the outbox event to pg-boss.
+ * process publishes the outbox event to pg-boss.
  */
 export async function createTaskExecutionRecord(input: CreateTaskExecutionRecordInput) {
   if (!getAutomationRuntimeConfig().enabled) {
