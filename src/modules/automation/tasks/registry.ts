@@ -1,4 +1,4 @@
-import { sendCampaignTask } from "@/modules/mailings/automation";
+import { sendCampaignTask } from "@/modules/mailings/server";
 
 /**
  * Görevler yalnızca bu statik kayıt listesine uygulama kodundan eklenir.
