@@ -81,7 +81,7 @@ export async function dispatchAutomationOutboxBatch(boss: PgBoss): Promise<numbe
       await boss.send(AUTOMATION_TASK_QUEUE, parsed.data, {
         singletonKey: event.eventKey,
         singletonSeconds: 60 * 60 * 24 * 30,
-        retryLimit: Math.max(0, execution.maxAttempts - 1),
+        retryLimit: execution.maxAttempts + 2,
         retryDelay: 600,
         retryDelayMax: 60 * 60,
         retryBackoff: true,
