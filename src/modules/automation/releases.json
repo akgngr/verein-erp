@@ -5,14 +5,14 @@
       "version": "0.5.0",
       "date": "2026-11-02",
       "title": {
-        "tr": "Güvenilir görev kayıt sınırı",
-        "de": "Abgrenzung der vertrauenswürdigen Aufgabenregistrierung"
+        "tr": "Uzun görevlerin güvenli yürütülmesi",
+        "de": "Sichere Ausführung lang laufender Aufgaben"
       },
       "changes": [
         {
           "type": "improvement",
-          "tr": "Görev kayıt listesi worker içinde tutuldu; modül sunucu giriş noktası yalnızca görev yürütme kayıt API'sini sunar. Modüller arası bağımlılık döngüleri önlendi.",
-          "de": "Die Aufgabenregistrierung bleibt intern im Worker; der Server-Einstieg des Moduls stellt nur die API für Ausführungsdatensätze bereit. Zirkuläre Modulabhängigkeiten werden vermieden."
+          "tr": "Uzun süren görevlerin erken stale kabul edilip yeniden başlatılmasını önlemek için worker kurtarma penceresi iki saate çıkarıldı. Modüller güvenilir görev tanımlarını automation.ts giriş noktasından sunabilir.",
+          "de": "Das Wiederherstellungsfenster des Workers wurde auf zwei Stunden erhöht, damit lang laufende Aufgaben nicht vorzeitig als veraltet erneut gestartet werden. Module können vertrauenswürdige Aufgabendefinitionen über den automation.ts-Einstieg bereitstellen."
         }
       ]
     },
