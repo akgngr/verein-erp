@@ -2018,9 +2018,7 @@
         "description": "Arka plan görevleri ve iş akışlarını görüntüleme ve yönetme."
       }
     },
-    "access": {
-      "mailings": "Toplu e-posta modülünün güvenilir kampanya görev tanımını worker kayıt listesine eklemek için."
-    }
+    "access": {}
   },
   "banking": {
     "module": {
