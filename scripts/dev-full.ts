@@ -6,9 +6,9 @@ loadEnvConfig(process.cwd());
 const env = {
   ...process.env,
   // Local full-stack development is opt-in through this command only.
-  // Explicit .env values (including false) always win.
-  AUTOMATION_ENABLED: process.env.AUTOMATION_ENABLED ?? "true",
-  AUTOMATION_WORKER_ENABLED: process.env.AUTOMATION_WORKER_ENABLED ?? "true",
+  // This command explicitly means full-stack local testing, so both local gates are on.
+  AUTOMATION_ENABLED: "true",
+  AUTOMATION_WORKER_ENABLED: "true",
 };
 
 const pnpm = process.platform === "win32" ? "pnpm.cmd" : "pnpm";
