@@ -40,3 +40,5 @@ Task handlers must be registered in trusted application code through the existin
 - Alıcı kaynağı worker çalıştığı anda tekrar çözülür; e-posta istemeyenler ve adresi olmayanlar yeniden filtrelenir.
 - Önceki denemelerde `SENT` veya `LOGGED` olarak kaydedilmiş alıcılar tekrar gönderilmez. SMTP sunucusunun kabulü ile log yazımı arasındaki çok kısa çökme aralığı dağıtık sistemlerde kesin olarak kapatılamaz; teslimat semantiği bu nedenle at-least-once'dur.
 - `mailings` modülünün kullanılabilmesi için `automation` modülü de etkin olmalıdır. `pnpm dev:full` yerel web + worker süreçlerini birlikte başlatır. Worker kapalıysa kampanya SENDING durumunda bekler; worker logları ve Automation execution kayıtları kontrol edilmelidir.
+
+Feature modules declare trusted tasks in `src/modules/<module>/automation.ts`. The central registry imports only this narrow declaration entrypoint; task handlers dynamically load their own module services when executed. This keeps queue registration static without importing UI or Server Action modules into the worker.
