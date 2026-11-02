@@ -40,11 +40,11 @@ export async function runAutomationWorker(): Promise<void> {
 
   await boss.start({ attempts: 10 });
   await boss.createQueue(AUTOMATION_TASK_QUEUE, {
-    retryLimit: 2,
+    retryLimit: 5,
     retryDelay: 600,
     retryDelayMax: 60 * 60,
     retryBackoff: true,
-    expireInSeconds: 60 * 60,
+    expireInSeconds: 24 * 60 * 60,
     heartbeatSeconds: 60,
     deleteAfterSeconds: 60 * 60 * 24 * 7,
   });
