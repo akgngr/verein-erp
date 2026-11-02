@@ -2,6 +2,36 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.3.0",
+      "date": "2026-11-02",
+      "title": {
+        "tr": "Ortam bazlı güvenli etkinleştirme",
+        "de": "Sichere umgebungsbasierte Aktivierung"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Otomasyon ve worker için birbirinden bağımsız ortam anahtarları eklendi. Her iki özellik de varsayılan olarak kapalıdır; worker yalnızca otomasyon da etkinse açılabilir.",
+          "de": "Unabhängige Umgebungsvariablen für Automatisierung und Worker hinzugefügt. Beide Funktionen sind standardmäßig deaktiviert; der Worker kann nur aktiviert werden, wenn auch die Automatisierung aktiviert ist."
+        }
+      ]
+    },
+    {
+      "version": "0.2.0",
+      "date": "2026-11-02",
+      "title": {
+        "tr": "Kalıcı yürütme kayıtları",
+        "de": "Dauerhafte Ausführungsdatensätze"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Görev çalıştırmaları, adım geçmişi ve transactional outbox için PostgreSQL modelleri ve migration eklendi. Görev kaydı ile kuyruk gönderim niyeti tek transaction içinde yazılır.",
+          "de": "PostgreSQL-Modelle und Migration für Aufgabenausführungen, Schritthistorie und transaktionale Outbox hinzugefügt. Aufgaben-Datensatz und Versandabsicht werden in einer Transaktion gespeichert."
+        }
+      ]
+    },
+    {
       "version": "0.1.0",
       "date": "2026-11-01",
       "title": {
