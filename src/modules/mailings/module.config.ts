@@ -11,7 +11,7 @@ import { mailingsPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "mailings",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.2.0",
+  version: "1.3.0",
   label: "Toplu e-posta",
   description: "Üyelere, velilere ve diğer modüllerin alıcı listelerine kişiye özel toplu e-posta.",
   category: "OFFICIAL",
@@ -19,10 +19,12 @@ export const moduleConfig: ModuleConfig = {
   dependencies: { "@react-email/editor": "^1.7.18" },
   hasSchema: true,
   // Zorunlu: gönderim e-posta altyapısıyla yapılır.
-  requires: [{ module: "mail" }],
+  requires: [{ module: "mail" }, { module: "automation" }],
   access: [
     { module: "mail", operations: ["read", "write"] },
     { module: "system", operations: ["read"] },
+    { module: "automation", operations: ["write"] },
+    { module: "users", operations: ["read"] },
   ],
   nav: [
     {

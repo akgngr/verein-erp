@@ -1,23 +1,23 @@
 # syntax=docker/dockerfile:1
 
-# Yalnızca sunucuda (Coolify) imaj üretmek içindir; yerel geliştirme Docker kullanmaz (13. bölüm).
+# GitHub Actions build eder; Coolify yalnızca hazır imajı çeker.
+# Yerel geliştirme Docker kullanmaz (13. bölüm).
 
 # ---------- deps ----------
 FROM node:22-alpine AS deps
 RUN corepack enable
 WORKDIR /app
 COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
-# Prisma client postinstall, şema yoksa uyarıyla atlar (builder aşamasında üretilir).
+# Prisma client postinstall, şema yoksa uyarıyla atlar (ilgili build aşamasında üretilir).
 RUN pnpm install --frozen-lockfile
 
-# ---------- build ----------
+# ---------- web build ----------
 FROM node:22-alpine AS builder
 RUN corepack enable
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
-# prisma generate build aşamasında (13. bölüm)
 RUN pnpm exec prisma generate
 RUN pnpm build
 # Migrator için şema bağlantılarını gerçek dosyalara çevir.
@@ -38,6 +38,34 @@ COPY --from=builder /app/scripts/verify-db-integrity.mjs ./scripts/verify-db-int
 # Şemayı doğrulayan bütünlük betiği için istemci (veritabanı adresi gerekmez).
 RUN node_modules/.bin/prisma generate
 
+# ---------- worker build ----------
+# Worker Next.js sayfalarını derlemez; yalnızca kaynakları ve Prisma client'ı hazırlar.
+# Böylece worker imajı oluşturulurken gereksiz ikinci bir Next.js build çalışmaz.
+FROM node:22-alpine AS worker-builder
+RUN corepack enable
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+RUN pnpm exec tsx scripts/sync-schemas.ts \
+  && pnpm exec prisma generate
+
+# ---------- worker ----------
+# Ayrı ve uzun ömürlü automation worker imajı.
+FROM node:22-alpine AS worker
+WORKDIR /app
+ENV NODE_ENV=production
+ENV NODE_OPTIONS=--conditions=react-server
+
+RUN addgroup --system --gid 1001 nodejs \
+  && adduser --system --uid 1001 nextjs
+
+COPY --from=worker-builder --chown=nextjs:nodejs /app/node_modules ./node_modules
+COPY --from=worker-builder --chown=nextjs:nodejs /app/src ./src
+COPY --from=worker-builder --chown=nextjs:nodejs /app/tsconfig.json ./tsconfig.json
+COPY --from=worker-builder --chown=nextjs:nodejs /app/package.json ./package.json
+
+USER nextjs
+CMD ["./node_modules/.bin/tsx", "src/modules/automation/worker/main.ts"]
 
 # ---------- runner ----------
 FROM node:22-alpine AS runner

@@ -2,7 +2,7 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
-      "version": "1.2.0",
+      "version": "1.3.0",
       "date": "2026-11-02",
       "appVersion": "0.38.0",
       "title": {
@@ -24,6 +24,22 @@
           "type": "security",
           "tr": "Kişiselleştirilen değerler HTML'de kaçışlanır; editörde görsel yükleme kapalı (dosyalar dış sunucuya gitmez).",
           "de": "Personalisierte Werte werden im HTML maskiert; Bild-Upload im Editor deaktiviert (keine Dateien an externe Server)."
+        }
+      ]
+    },
+    {
+      "version": "1.2.0",
+      "date": "2026-11-02",
+      "appVersion": "0.37.0",
+      "title": {
+        "tr": "Kalıcı arka plan gönderimi",
+        "de": "Dauerhafter Hintergrundversand"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Toplu e-posta kampanyaları PostgreSQL outbox ve automation worker kuyruğuna alındı; alıcı listesi görev yüküne kopyalanmaz ve worker gönderim öncesinde kullanıcı/kaynak izinlerini yeniden doğrular.",
+          "de": "Rundmail-Kampagnen werden über PostgreSQL-Outbox und Automation-Worker-Warteschlange verarbeitet; Empfängerlisten werden nicht in die Aufgaben-Payload kopiert und Berechtigungen werden vor dem Versand erneut geprüft."
         }
       ]
     },

@@ -2007,6 +2007,21 @@
       }
     }
   },
+  "automation": {
+    "module": {
+      "label": "Otomasyon",
+      "description": "Kalıcı arka plan görevleri ve iş akışları."
+    },
+    "permissions": {
+      "automation": {
+        "label": "Otomasyon",
+        "description": "Arka plan görevleri ve iş akışlarını görüntüleme ve yönetme."
+      }
+    },
+    "access": {
+      "mailings": "Toplu e-posta modülünün güvenilir kampanya görev tanımını worker görev listesine kaydetmek için."
+    }
+  },
   "banking": {
     "module": {
       "label": "Banka bağlantısı",
@@ -4167,7 +4182,9 @@
     },
     "access": {
       "mail": "E-postaları göndermek ve e-posta ayarlarının hazır olup olmadığını okumak için.",
-      "system": "Yalnızca etkin modüllerin alıcı listelerini göstermek için modül durumlarını okur."
+      "system": "Yalnızca etkin modüllerin alıcı listelerini göstermek için modül durumlarını okur.",
+      "automation": "Kampanyaları kalıcı arka plan kuyruğuna eklemek ve yürütme kayıtlarını oluşturmak için.",
+      "users": "Gönderimi başlatan kullanıcının hesabını ve güncel rolünü worker çalışırken yeniden doğrulamak için."
     },
     "segment": "Kayıtlı segment",
     "segmentNone": "Segment seçin (isteğe bağlı)",

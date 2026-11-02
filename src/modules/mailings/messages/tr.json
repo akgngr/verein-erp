@@ -58,7 +58,9 @@
   },
   "access": {
     "mail": "E-postaları göndermek ve e-posta ayarlarının hazır olup olmadığını okumak için.",
-    "system": "Yalnızca etkin modüllerin alıcı listelerini göstermek için modül durumlarını okur."
+    "system": "Yalnızca etkin modüllerin alıcı listelerini göstermek için modül durumlarını okur.",
+    "automation": "Kampanyaları kalıcı arka plan kuyruğuna eklemek ve yürütme kayıtlarını oluşturmak için.",
+    "users": "Gönderimi başlatan kullanıcının hesabını ve güncel rolünü worker çalışırken yeniden doğrulamak için."
   },
   "segment": "Kayıtlı segment",
   "segmentNone": "Segment seçin (isteğe bağlı)",

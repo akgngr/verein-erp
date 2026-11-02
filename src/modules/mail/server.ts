@@ -2,7 +2,7 @@ import "server-only";
 
 // Public e-mail API for other modules:
 //   import { sendMail, sendMailBatch, isMailConfigured } from "@/modules/mail/server";
-export { sendMail, sendMailBatch, isMailConfigured } from "./services/mail-service";
+export { sendMail, sendMailBatch, isMailConfigured, listSuccessfulMailRecipients } from "./services/mail-service";
 
 export { mailPermissions } from "./permissions";
 export { getMailSettings } from "./queries/get-mail-settings";

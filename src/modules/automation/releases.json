@@ -1,0 +1,80 @@
+{
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
+  "releases": [
+    {
+      "version": "0.5.0",
+      "date": "2026-11-02",
+      "title": {
+        "tr": "Uzun görevlerin güvenli yürütülmesi",
+        "de": "Sichere Ausführung lang laufender Aufgaben"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Uzun süren görevlerin erken stale kabul edilip yeniden başlatılmasını önlemek için worker kurtarma penceresi iki saate çıkarıldı. Modüller güvenilir görev tanımlarını automation.ts giriş noktasından sunabilir.",
+          "de": "Das Wiederherstellungsfenster des Workers wurde auf zwei Stunden erhöht, damit lang laufende Aufgaben nicht vorzeitig als veraltet erneut gestartet werden. Module können vertrauenswürdige Aufgabendefinitionen über den automation.ts-Einstieg bereitstellen."
+        }
+      ]
+    },
+    {
+      "version": "0.4.0",
+      "date": "2026-11-02",
+      "title": {
+        "tr": "PostgreSQL worker çalışma zamanı",
+        "de": "PostgreSQL-Worker-Laufzeit"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "pg-boss tabanlı kuyruk worker'ı, transactional outbox dağıtıcısı ve pnpm dev:full ile tek terminalden yerel web+worker geliştirme akışı eklendi. Mevcut modül kayıt sistemi korunur.",
+          "de": "pg-boss-basierter Queue-Worker, transaktionaler Outbox-Dispatcher und lokaler Web+Worker-Entwicklungsablauf mit pnpm dev:full in einem Terminal hinzugefügt. Das bestehende Modulregistrierungssystem bleibt unverändert."
+        }
+      ]
+    },
+    {
+      "version": "0.3.0",
+      "date": "2026-11-02",
+      "title": {
+        "tr": "Ortam bazlı güvenli etkinleştirme",
+        "de": "Sichere umgebungsbasierte Aktivierung"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Otomasyon ve worker için birbirinden bağımsız ortam anahtarları eklendi. Her iki özellik de varsayılan olarak kapalıdır; worker yalnızca otomasyon da etkinse açılabilir.",
+          "de": "Unabhängige Umgebungsvariablen für Automatisierung und Worker hinzugefügt. Beide Funktionen sind standardmäßig deaktiviert; der Worker kann nur aktiviert werden, wenn auch die Automatisierung aktiviert ist."
+        }
+      ]
+    },
+    {
+      "version": "0.2.0",
+      "date": "2026-11-02",
+      "title": {
+        "tr": "Kalıcı yürütme kayıtları",
+        "de": "Dauerhafte Ausführungsdatensätze"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Görev çalıştırmaları, adım geçmişi ve transactional outbox için PostgreSQL modelleri ve migration eklendi. Görev kaydı ile kuyruk gönderim niyeti tek transaction içinde yazılır.",
+          "de": "PostgreSQL-Modelle und Migration für Aufgabenausführungen, Schritthistorie und transaktionale Outbox hinzugefügt. Aufgaben-Datensatz und Versandabsicht werden in einer Transaktion gespeichert."
+        }
+      ]
+    },
+    {
+      "version": "0.1.0",
+      "date": "2026-11-01",
+      "title": {
+        "tr": "Otomasyon modülü temeli",
+        "de": "Grundlage des Automatisierungsmoduls"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Güvenilir arka plan görevleri için modül iskeleti ve tip güvenli görev tanımlama sözleşmesi eklendi. Kuyruk ve worker henüz bu sürümün kapsamında değildir.",
+          "de": "Modulgerüst und typsicherer Aufgabenvertrag für vertrauenswürdige Hintergrundaufgaben hinzugefügt. Queue und Worker sind noch nicht Bestandteil dieser Version."
+        }
+      ]
+    }
+  ]
+}

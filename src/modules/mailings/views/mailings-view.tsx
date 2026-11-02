@@ -8,7 +8,7 @@ import { can } from "@/shared/permissions/define";
 
 import { MailingComposer, type ComposerSource } from "../components/mailing-composer";
 import { mailingsPermissions } from "../permissions";
-import { isMailConfigured, listCampaigns, listSegments, listSources } from "../services/campaigns";
+import { isMailConfigured, listCampaigns, listSegments, listSourcesWithOptions } from "../services/campaigns";
 
 /** Varsayılan metni editör için paragraflara çevirir (yer tutucular korunur). */
 function textToHtml(text: string): string {
@@ -29,7 +29,7 @@ export async function MailingsView({ sourceId }: { sourceId?: string | null }) {
     throw error;
   }
   const [t, tRoot, format] = await Promise.all([getTranslations("mailings"), getTranslations(), getFormatter()]);
-  const [configured, campaigns, rawSources, segments] = await Promise.all([isMailConfigured(), listCampaigns(), listSources(user.role), listSegments(user.role)]);
+  const [configured, campaigns, rawSources, segments] = await Promise.all([isMailConfigured(), listCampaigns(), listSourcesWithOptions(user.role), listSegments(user.role)]);
   const label = (key: string) => tRoot(key as never);
   const sources: ComposerSource[] = rawSources.map((source) => {
     const base = `${source.moduleKey}.recipients.${source.key}`;

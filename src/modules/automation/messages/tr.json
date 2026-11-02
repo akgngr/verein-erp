@@ -1,0 +1,15 @@
+{
+  "module": {
+    "label": "Otomasyon",
+    "description": "Kalıcı arka plan görevleri ve iş akışları."
+  },
+  "permissions": {
+    "automation": {
+      "label": "Otomasyon",
+      "description": "Arka plan görevleri ve iş akışlarını görüntüleme ve yönetme."
+    }
+  },
+  "access": {
+    "mailings": "Toplu e-posta modülünün güvenilir kampanya görev tanımını worker görev listesine kaydetmek için."
+  }
+}
