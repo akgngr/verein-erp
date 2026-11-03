@@ -1,4 +1,3 @@
-import { Chip } from "@heroui/react";
 import { getFormatter, getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
@@ -6,6 +5,7 @@ import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
 
 import { automationPermissions } from "../permissions";
+import { ExecutionStatusChip } from "../components/execution-status-chip";
 import { listAutomationExecutions } from "../queries/list-executions";
 
 export async function AutomationMonitorView() {
@@ -50,9 +50,10 @@ export async function AutomationMonitorView() {
                   {format.dateTime(execution.createdAt, { dateStyle: "medium", timeStyle: "short" })} · {execution.sourceModule}
                 </p>
               </div>
-              <Chip size="sm" variant="flat" color={statusColor(execution.status)}>
-                {t(`status.${execution.status}` as never)}
-              </Chip>
+              <ExecutionStatusChip
+                status={execution.status}
+                label={t(`status.${execution.status}` as never)}
+              />
             </div>
 
             <div className="mt-3 flex flex-wrap gap-x-5 gap-y-1 text-small text-default-600">
@@ -129,9 +130,3 @@ function resultErrorCode(value: unknown): string | null {
   return result.failed === true && typeof result.errorCode === "string" ? result.errorCode : null;
 }
 
-function statusColor(status: string): "success" | "danger" | "warning" | "default" {
-  if (status === "SUCCEEDED") return "success";
-  if (status === "FAILED") return "danger";
-  if (status === "RUNNING") return "warning";
-  return "default";
-}
