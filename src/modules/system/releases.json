@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.10.1",
+      "date": "2026-11-03",
+      "title": {
+        "tr": "Worker uyumlu modül kullanılabilirliği API'si",
+        "de": "Worker-kompatible API für Modulverfügbarkeit"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Arka plan worker'larının Next.js bağımlılığı içeren geniş server barrel'larını yüklemeden modül kullanılabilirliğini sorgulaması için automation giriş noktası eklendi.",
+          "de": "Ein Automation-Einstiegspunkt ermöglicht Hintergrund-Workern die Abfrage der Modulverfügbarkeit ohne umfangreiche Server-Barrels mit Next.js-Abhängigkeiten."
+        }
+      ]
+    },
+    {
       "version": "1.10.0",
       "date": "2026-11-01",
       "appVersion": "0.37.0",
