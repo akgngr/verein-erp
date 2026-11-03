@@ -59,6 +59,11 @@ export async function AutomationMonitorView() {
               {execution.finishedAt ? <span>{t("finished", { date: format.dateTime(execution.finishedAt, { dateStyle: "short", timeStyle: "short" }) })}</span> : null}
               {execution.lastErrorCode ? <span className="font-medium text-danger">{execution.lastErrorCode}</span> : null}
             </div>
+            {resultErrorCode(execution.steps[0]?.result) ? (
+              <p className="mt-2 text-small font-medium text-danger">
+                {t("taskResultError", { code: resultErrorCode(execution.steps[0]?.result) })}
+              </p>
+            ) : null}
 
             {execution.campaign ? (
               <div className="mt-3 rounded-medium bg-default-50 p-3 text-small">
@@ -113,6 +118,12 @@ function Metric({ label, value }: { label: string; value: number }) {
       <p className="mt-1 text-2xl font-semibold tabular-nums">{value}</p>
     </div>
   );
+}
+
+function resultErrorCode(value: unknown): string | null {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return null;
+  const result = value as Record<string, unknown>;
+  return result.failed === true && typeof result.errorCode === "string" ? result.errorCode : null;
 }
 
 function statusColor(status: string): "success" | "danger" | "warning" | "default" {
