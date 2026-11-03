@@ -7,7 +7,11 @@ import type { ReactNode } from "react";
 
 import { getModuleAvailability, type ModuleAvailability } from "./module-availability";
 
-export { getModuleAvailability, listUsableModuleKeys } from "./module-availability";
+export {
+  getModuleAvailability,
+  listUsableModuleKeys,
+  type ModuleAvailability,
+} from "./module-availability";
 
 async function ModuleUnavailable({ status }: { status: Exclude<ModuleAvailability, "available"> }) {
   const t = await getTranslations("system.gate");
