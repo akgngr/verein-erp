@@ -5,7 +5,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import type { ReactNode } from "react";
 
-import { getModuleAvailability, listUsableModuleKeys, type ModuleAvailability } from "./module-availability";
+import { getModuleAvailability, type ModuleAvailability } from "./module-availability";
 
 export { getModuleAvailability, listUsableModuleKeys } from "./module-availability";
 
