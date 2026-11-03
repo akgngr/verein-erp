@@ -98,7 +98,7 @@ export async function sendBulkMail(input: { moduleKey: string; recipients: Recip
  * creator's active account, mailing permission, source permission and module gates.
  * Recipient addresses are never copied into the automation payload.
  */
-export async function processCampaign(campaignId: string, context: TaskExecutionContext) {
+async function processCampaignAttempt(campaignId: string, context: TaskExecutionContext) {
   const db = getDb();
   const campaign = await db.mailingCampaign.findUnique({ where: { id: campaignId } });
   if (!campaign || campaign.status !== "SENDING") return { skipped: true };
@@ -171,6 +171,25 @@ export async function processCampaign(campaignId: string, context: TaskExecution
     },
   });
   return { recipients: eligible.length, sent, failed, skippedNoEmail: noEmail, skippedOptOut: optOut };
+}
+
+
+/**
+ * Ensure terminal worker failures cannot leave a campaign permanently in SENDING.
+ * Intermediate attempts remain retryable; only the final attempt closes the campaign.
+ */
+export async function processCampaign(campaignId: string, context: TaskExecutionContext) {
+  try {
+    return await processCampaignAttempt(campaignId, context);
+  } catch (error) {
+    if (context.attempt >= 3) {
+      await getDb().mailingCampaign.updateMany({
+        where: { id: campaignId, status: "SENDING" },
+        data: { status: "FAILED", finishedAt: new Date() },
+      });
+    }
+    throw error;
+  }
 }
 
 async function createAndQueueCampaign(input: { source: string; filter: Record<string, string[]>; subject: string; body: string; bodyHtml?: string; actor: Actor; list: Recipient[] }) {
