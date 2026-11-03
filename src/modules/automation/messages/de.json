@@ -43,5 +43,8 @@
   "access": {
     "mailings": "Zur Registrierung der vertrauenswürdigen Kampagnenaufgabe des Rundmail-Moduls im Worker-Aufgabenverzeichnis.",
     "mail": "Zum Anzeigen von Versandfehlern und SMTP-Ergebnissen."
+  },
+  "Automation": {
+    "taskStarted": "Aufgabenversuch {attempt}/{maxAttempts} gestartet."
   }
 }
