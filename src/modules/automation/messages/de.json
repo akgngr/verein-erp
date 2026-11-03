@@ -37,7 +37,8 @@
     "mailResult": "{total} Empfänger · {sent} erfolgreich · {failed} fehlgeschlagen",
     "mailErrors": "E-Mail-Versandfehler ({count})",
     "unknownError": "Keine Fehlerdetails verfügbar.",
-    "eventLog": "Ereignisverlauf"
+    "eventLog": "Ereignisverlauf",
+    "taskResultError": "Fehlercode des Aufgabenergebnisses: {code}"
   },
   "access": {
     "mailings": "Zur Registrierung der vertrauenswürdigen Kampagnenaufgabe des Rundmail-Moduls im Worker-Aufgabenverzeichnis.",
