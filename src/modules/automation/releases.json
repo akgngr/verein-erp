@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.5.2",
+      "date": "2026-11-03",
+      "title": {
+        "tr": "Otomasyon izleme ve kalıcı hata kayıtları",
+        "de": "Automatisierungsüberwachung und dauerhafte Fehlerprotokolle"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Worker görevlerinin başlangıç, tekrar deneme, başarı ve hata olayları kalıcı olarak kaydedilir. Otomasyon izleme ekranı görev durumlarını ve toplu e-posta alıcı hatalarını gösterir.",
+          "de": "Start-, Wiederholungs-, Erfolgs- und Fehlerereignisse von Worker-Aufgaben werden dauerhaft protokolliert. Die Überwachungsseite zeigt Aufgabenstatus und Fehler beim Rundmail-Versand."
+        }
+      ]
+    },
+    {
       "version": "0.5.1",
       "date": "2026-11-03",
       "title": {
