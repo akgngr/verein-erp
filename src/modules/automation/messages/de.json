@@ -1,4 +1,7 @@
 {
+  "nav": {
+    "monitor": "Automatisierungsüberwachung"
+  },
   "module": {
     "label": "Automatisierung",
     "description": "Dauerhafte Hintergrundaufgaben und Arbeitsabläufe."
