@@ -4,7 +4,6 @@ import { revalidatePath } from "next/cache";
 
 import { moduleLifecycleRegistry } from "@/lifecycle-registry";
 import { getDb } from "@/shared/db";
-import { getEffectiveModuleStates } from "./module-state-reader";
 
 export { getEffectiveModuleStates, listActiveModuleKeys } from "./module-state-reader";
 
