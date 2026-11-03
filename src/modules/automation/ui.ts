@@ -1,2 +1,1 @@
-// Otomasyon UI public girişi; Workflow Builder editörü ayrı bir PR'da eklenecek.
-export {};
+export { AutomationMonitorView } from "./views/automation-monitor-view";

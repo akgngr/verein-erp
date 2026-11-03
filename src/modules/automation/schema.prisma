@@ -51,6 +51,7 @@ model AutomationExecution {
   createdAt        DateTime                  @default(now())
   updatedAt        DateTime                  @updatedAt
   steps            AutomationStepRun[]
+  logs             AutomationLog[]
 
   @@unique([organizationId, idempotencyKey])
   @@index([status, scheduledAt])
@@ -81,6 +82,22 @@ model AutomationStepRun {
   @@unique([executionId, stepKey])
   @@index([status, createdAt])
   @@map("automation_step_runs")
+}
+
+/// Append-only operational events for worker execution and troubleshooting.
+model AutomationLog {
+  id          String              @id @default(cuid())
+  executionId String
+  level       String              @default("INFO")
+  event       String
+  message     String
+  details     Json?
+  createdAt   DateTime            @default(now())
+  execution   AutomationExecution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+
+  @@index([executionId, createdAt])
+  @@index([level, createdAt])
+  @@map("automation_logs")
 }
 
 /// Transactional outbox. A later worker PR publishes pending rows to pg-boss.

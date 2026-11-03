@@ -9,6 +9,33 @@
       "description": "Hintergrundaufgaben und Arbeitsabläufe anzeigen und verwalten."
     }
   },
+  "monitor": {
+    "title": "Automatisierungsüberwachung",
+    "description": "Status, Wiederholungsversuche und Fehlerdetails von Hintergrundaufgaben überwachen.",
+    "recent": "Letzte Aufgabenausführungen",
+    "empty": "Es wurden noch keine Automatisierungsaufgaben ausgeführt.",
+    "metrics": {
+      "running": "In Bearbeitung",
+      "failed": "Fehlgeschlagen",
+      "completed": "Abgeschlossen"
+    },
+    "status": {
+      "PENDING": "Ausstehend",
+      "RUNNING": "In Bearbeitung",
+      "WAITING": "Wartend",
+      "SUCCEEDED": "Erfolgreich",
+      "FAILED": "Fehlgeschlagen",
+      "CANCELLED": "Abgebrochen"
+    },
+    "attempt": "Versuch {current}/{max}",
+    "started": "Gestartet: {date}",
+    "finished": "Beendet: {date}",
+    "mailing": "Rundmail",
+    "mailResult": "{total} Empfänger · {sent} erfolgreich · {failed} fehlgeschlagen",
+    "mailErrors": "E-Mail-Versandfehler ({count})",
+    "unknownError": "Keine Fehlerdetails verfügbar.",
+    "eventLog": "Ereignisverlauf"
+  },
   "access": {
     "mailings": "Zur Registrierung der vertrauenswürdigen Kampagnenaufgabe des Rundmail-Moduls im Worker-Aufgabenverzeichnis."
   }
