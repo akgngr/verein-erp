@@ -4,7 +4,7 @@ import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 
 import { moduleRecipientRegistry } from "@/recipient-registry";
-import { isMailConfigured, sendMail, sendMailBatch, listSuccessfulMailRecipients } from "@/modules/mail/services/mail-service";
+import { isMailConfigured, sendMail, sendMailBatch, listSuccessfulMailRecipients } from "@/modules/mail/automation";
 import { createTaskExecutionRecord } from "@/modules/automation/server";
 import { loadPermissionPolicy, getUserById } from "@/modules/users/server";
 import { listUsableModuleKeys } from "@/modules/system/automation";
