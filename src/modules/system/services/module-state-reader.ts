@@ -1,7 +1,7 @@
 import "server-only";
 
 import { getDb } from "@/shared/db";
-import { getModuleStates } from "@/shared/modules/module-store";
+import { getModuleStates } from "@/shared/modules/module-state-config";
 
 /**
  * Read-only module state access for server services and background workers.
