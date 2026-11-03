@@ -13,7 +13,7 @@ import { CHIP_COLORS, LOCKED_ROLE, SYSTEM_ROLES, SYSTEM_ROLE_COLORS, type ChipCo
 
 import { permissionResources } from "@/permissions-registry";
 import { allModules } from "@/registry";
-import { listUsableModuleKeys } from "@/modules/system/server";
+import { listUsableModuleKeys } from "@/modules/system/automation";
 
 /**
  * Roller ve izinler (veritabanı). Politika = yöneticinin değiştirdiği izinler + modülü

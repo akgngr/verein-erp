@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.2.1",
+      "date": "2026-11-03",
+      "title": {
+        "tr": "Worker için güvenli e-posta API'si",
+        "de": "Worker-sichere E-Mail-API"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Arka plan worker'larının Next.js arayüz ve action bağımlılıklarını yüklemeden e-posta gönderebilmesi için dar kapsamlı, server-only automation giriş noktası eklendi.",
+          "de": "Ein eng begrenzter, server-only Automation-Einstiegspunkt ermöglicht E-Mail-Versand durch Hintergrund-Worker ohne Next.js-UI- oder Action-Abhängigkeiten."
+        }
+      ]
+    },
+    {
       "version": "1.2.0",
       "date": "2026-11-02",
       "appVersion": "0.37.0",

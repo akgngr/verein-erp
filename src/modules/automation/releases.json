@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.5.1",
+      "date": "2026-11-03",
+      "title": {
+        "tr": "Worker için dar public API",
+        "de": "Schlanke öffentliche API für Worker"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Worker'ın görev yürütme kayıtlarına, Next.js ve görev kayıt defteri bağımlılıklarını yüklemeyen dar automation giriş noktasından erişmesi sağlandı.",
+          "de": "Der Worker greift über einen schlanken Automation-Einstieg auf Ausführungsdatensätze zu, ohne Next.js- oder Task-Registry-Abhängigkeiten zu laden."
+        }
+      ]
+    },
+    {
       "version": "0.5.0",
       "date": "2026-11-02",
       "title": {

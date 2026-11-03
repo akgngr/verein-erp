@@ -4,10 +4,10 @@ import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 
 import { moduleRecipientRegistry } from "@/recipient-registry";
-import { isMailConfigured, sendMail, sendMailBatch, listSuccessfulMailRecipients } from "@/modules/mail/services/mail-service";
-import { createTaskExecutionRecord } from "@/modules/automation/server";
-import { loadPermissionPolicy, getUserById } from "@/modules/users/server";
-import { listUsableModuleKeys } from "@/modules/system/services/module-availability";
+import { isMailConfigured, sendMail, sendMailBatch, listSuccessfulMailRecipients } from "@/modules/mail/automation";
+import { createTaskExecutionRecord } from "@/modules/automation/automation";
+import { loadPermissionPolicy, getUserById } from "@/modules/users/automation";
+import { listUsableModuleKeys } from "@/modules/system/automation";
 import { getDb } from "@/shared/db";
 import { renderMailTemplate, renderMailTemplateHtml, type Recipient, type RecipientSource } from "@/shared/mailings/define";
 import { can } from "@/shared/permissions/define";

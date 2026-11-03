@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.3.2",
+      "date": "2026-11-03",
+      "title": {
+        "tr": "Worker bağımlılıklarının ayrıştırılması",
+        "de": "Entkopplung der Worker-Abhängigkeiten"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Toplu e-posta kampanyalarının worker servisleri, e-posta gönderimi ve modül kullanılabilirliği için yalnızca izin verilen public automation API'lerini kullanacak şekilde güncellendi.",
+          "de": "Die Worker-Dienste für Rundmail-Kampagnen verwenden für E-Mail-Versand und Modulverfügbarkeit ausschließlich zulässige öffentliche Automation-APIs."
+        }
+      ]
+    },
+    {
       "version": "1.3.1",
       "date": "2026-11-02",
       "appVersion": "0.38.0",
