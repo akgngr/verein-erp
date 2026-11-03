@@ -37,6 +37,7 @@
     "eventLog": "Olay geçmişi"
   },
   "access": {
-    "mailings": "Toplu e-posta modülünün güvenilir kampanya görev tanımını worker görev listesine kaydetmek için."
+    "mailings": "Toplu e-posta modülünün güvenilir kampanya görev tanımını worker görev listesine kaydetmek için.",
+    "mail": "Gönderim hatalarını ve SMTP sonuçlarını göstermek için."
   }
 }
