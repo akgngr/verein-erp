@@ -38,7 +38,9 @@ export async function AutomationMonitorView() {
         <h2 className="text-medium font-semibold">{t("recent")}</h2>
         {executions.length === 0 ? (
           <p className="rounded-large border border-default-200 p-5 text-small text-default-500">{t("empty")}</p>
-        ) : executions.map((execution) => (
+        ) : executions.map((execution) => {
+          const taskResultError = resultErrorCode(execution.steps[0]?.result);
+          return (
           <article key={execution.id} className="rounded-large border border-default-200 bg-content1 p-4">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="min-w-0">
@@ -59,9 +61,9 @@ export async function AutomationMonitorView() {
               {execution.finishedAt ? <span>{t("finished", { date: format.dateTime(execution.finishedAt, { dateStyle: "short", timeStyle: "short" }) })}</span> : null}
               {execution.lastErrorCode ? <span className="font-medium text-danger">{execution.lastErrorCode}</span> : null}
             </div>
-            {resultErrorCode(execution.steps[0]?.result) ? (
+            {taskResultError ? (
               <p className="mt-2 text-small font-medium text-danger">
-                {t("taskResultError", { code: resultErrorCode(execution.steps[0]?.result) })}
+                {t("taskResultError", { code: taskResultError })}
               </p>
             ) : null}
 
@@ -105,7 +107,8 @@ export async function AutomationMonitorView() {
               </div>
             ) : null}
           </article>
-        ))}
+          );
+        })}
       </section>
     </div>
   );
