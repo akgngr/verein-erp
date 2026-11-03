@@ -4,7 +4,7 @@ import { allModules } from "@/registry";
 import { isAccessApproved } from "@/shared/modules/module-access";
 
 import { getAccessRecords } from "./module-access-store";
-import { listActiveModuleKeys } from "./module-state-store";
+import { listActiveModuleKeys } from "./module-state-reader";
 
 export type ModuleAvailability = "available" | "inactive" | "needsApproval";
 
