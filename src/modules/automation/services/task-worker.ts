@@ -133,6 +133,12 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
   if (!execution) return;
 
   const attempt = execution.attempt;
+  await recordAutomationLog({
+    executionId: execution.id,
+    event: "ATTEMPT_STARTED",
+    message: `Görev denemesi ${attempt}/${execution.maxAttempts} başlatıldı.`,
+    details: { attempt, maxAttempts: execution.maxAttempts, taskKey: execution.definitionKey },
+  });
   if (attempt > execution.maxAttempts) {
     await markTerminal(payload.executionId, "FAILED", "TASK_ATTEMPTS_EXHAUSTED");
     return;
