@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.2.2",
+      "date": "2026-11-03",
+      "title": {
+        "tr": "Otomasyon izleme API'si",
+        "de": "API für die Automatisierungsüberwachung"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Otomasyon izleme ekranı için kampanyaya bağlı başarısız e-posta kayıtlarını sunucu API'si üzerinden sunar.",
+          "de": "Stellt fehlgeschlagene, kampagnenbezogene E-Mail-Protokolle für die Automatisierungsüberwachung über eine Server-API bereit."
+        }
+      ]
+    },
+    {
       "version": "1.2.1",
       "date": "2026-11-03",
       "title": {

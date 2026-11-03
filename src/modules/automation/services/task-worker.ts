@@ -4,7 +4,9 @@ import { Prisma } from "@prisma/client";
 import type { TaskDefinition, TaskExecutionContext } from "@/shared/automation/define";
 import { getDb } from "@/shared/db";
 import { automationTasks } from "../tasks/registry";
+import { recordAutomationLog } from "./log-store";
 import type { AutomationTaskQueuePayload } from "../worker/queue";
+import { getTranslations } from "next-intl/server";
 
 // Keep the lease longer than the maximum task timeout so long mailing batches are not reclaimed.
 const RUNNING_STALE_AFTER_MS = 2 * 60 * 60 * 1000;
@@ -54,6 +56,13 @@ async function markTerminal(
       },
     }),
   ]);
+  await recordAutomationLog({
+    executionId,
+    level: status === "FAILED" ? "ERROR" : "INFO",
+    event: status === "FAILED" ? "EXECUTION_FAILED" : "EXECUTION_SUCCEEDED",
+    message: status === "FAILED" ? `Task failed: ${code ?? "TASK_FAILED"}` : "Task completed successfully.",
+    details: { status, errorCode: code },
+  });
 }
 
 /**
@@ -124,7 +133,15 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
   });
   if (!execution) return;
 
+  const t = await getTranslations('automation.Automation');
+
   const attempt = execution.attempt;
+  await recordAutomationLog({
+    executionId: execution.id,
+    event: "ATTEMPT_STARTED",
+    message: t('taskStarted', { attempt, maxAttempts: execution.maxAttempts }),
+    details: { attempt, maxAttempts: execution.maxAttempts, taskKey: execution.definitionKey },
+  });
   if (attempt > execution.maxAttempts) {
     await markTerminal(payload.executionId, "FAILED", "TASK_ATTEMPTS_EXHAUSTED");
     return;
@@ -175,6 +192,13 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
     await markTerminal(payload.executionId, "SUCCEEDED", null, result);
   } catch (error) {
     const code = errorCode(error);
+    await recordAutomationLog({
+      executionId: payload.executionId,
+      level: "ERROR",
+      event: attempt >= execution.maxAttempts ? "ATTEMPT_FAILED_FINAL" : "ATTEMPT_FAILED_RETRYING",
+      message: (error instanceof Error ? error.message : String(error)).slice(0, 1000),
+      details: { errorCode: code, attempt, maxAttempts: execution.maxAttempts },
+    });
     if (attempt >= execution.maxAttempts) {
       await markTerminal(payload.executionId, "FAILED", code);
       return;

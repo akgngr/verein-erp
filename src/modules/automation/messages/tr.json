@@ -1,4 +1,7 @@
 {
+  "nav": {
+    "monitor": "Otomasyon izleme"
+  },
   "module": {
     "label": "Otomasyon",
     "description": "Kalıcı arka plan görevleri ve iş akışları."
@@ -9,7 +12,39 @@
       "description": "Arka plan görevleri ve iş akışlarını görüntüleme ve yönetme."
     }
   },
+  "monitor": {
+    "title": "Otomasyon izleme",
+    "description": "Arka plan görevlerinin durumunu, deneme geçmişini ve hata ayrıntılarını izleyin.",
+    "recent": "Son görev çalıştırmaları",
+    "empty": "Henüz otomasyon görevi çalıştırılmamış.",
+    "metrics": {
+      "running": "Çalışıyor",
+      "failed": "Başarısız",
+      "completed": "Tamamlandı"
+    },
+    "status": {
+      "PENDING": "Bekliyor",
+      "RUNNING": "Çalışıyor",
+      "WAITING": "Beklemede",
+      "SUCCEEDED": "Başarılı",
+      "FAILED": "Başarısız",
+      "CANCELLED": "İptal edildi"
+    },
+    "attempt": "Deneme {current}/{max}",
+    "started": "Başlangıç: {date}",
+    "finished": "Bitiş: {date}",
+    "mailing": "Toplu e-posta",
+    "mailResult": "{total} alıcı · {sent} başarılı · {failed} hatalı",
+    "mailErrors": "E-posta gönderim hataları ({count})",
+    "unknownError": "Hata ayrıntısı mevcut değil.",
+    "eventLog": "Olay geçmişi",
+    "taskResultError": "Görev sonucu hata kodu: {code}"
+  },
   "access": {
-    "mailings": "Toplu e-posta modülünün güvenilir kampanya görev tanımını worker görev listesine kaydetmek için."
+    "mailings": "Toplu e-posta modülünün güvenilir kampanya görev tanımını worker görev listesine kaydetmek için.",
+    "mail": "Gönderim hatalarını ve SMTP sonuçlarını göstermek için."
+  },
+  "Automation": {
+    "taskStarted": "Görev denemesi {attempt}/{maxAttempts} başlatıldı."
   }
 }
