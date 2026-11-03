@@ -37,7 +37,8 @@
     "mailResult": "{total} alıcı · {sent} başarılı · {failed} hatalı",
     "mailErrors": "E-posta gönderim hataları ({count})",
     "unknownError": "Hata ayrıntısı mevcut değil.",
-    "eventLog": "Olay geçmişi"
+    "eventLog": "Olay geçmişi",
+    "taskResultError": "Görev sonucu hata kodu: {code}"
   },
   "access": {
     "mailings": "Toplu e-posta modülünün güvenilir kampanya görev tanımını worker görev listesine kaydetmek için.",
