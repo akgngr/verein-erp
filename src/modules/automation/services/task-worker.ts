@@ -6,7 +6,7 @@ import { getDb } from "@/shared/db";
 import { automationTasks } from "../tasks/registry";
 import { recordAutomationLog } from "./log-store";
 import type { AutomationTaskQueuePayload } from "../worker/queue";
-import { getFormatter, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 
 // Keep the lease longer than the maximum task timeout so long mailing batches are not reclaimed.
 const RUNNING_STALE_AFTER_MS = 2 * 60 * 60 * 1000;
@@ -133,13 +133,13 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
   });
   if (!execution) return;
 
-  const t = await getTranslations('Automation');
+  const t = await getTranslations('automation.Automation');
 
   const attempt = execution.attempt;
   await recordAutomationLog({
     executionId: execution.id,
     event: "ATTEMPT_STARTED",
-    message: `t('taskStarted', { attempt: attempt, maxAttempts: execution.maxAttempts })`,
+    message: t('taskStarted', { attempt, maxAttempts: execution.maxAttempts }),
     details: { attempt, maxAttempts: execution.maxAttempts, taskKey: execution.definitionKey },
   });
   if (attempt > execution.maxAttempts) {
