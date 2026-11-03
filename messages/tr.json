@@ -2050,6 +2050,9 @@
     "access": {
       "mailings": "Toplu e-posta modülünün güvenilir kampanya görev tanımını worker görev listesine kaydetmek için.",
       "mail": "Gönderim hatalarını ve SMTP sonuçlarını göstermek için."
+    },
+    "Automation": {
+      "taskStarted": "Görev denemesi {attempt}/{maxAttempts} başlatıldı."
     }
   },
   "banking": {
