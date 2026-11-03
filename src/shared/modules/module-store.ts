@@ -6,6 +6,8 @@ import { getModuleStates } from "./module-state-config";
 
 export { getModuleStates } from "./module-state-config";
 
+const ROOT_DIR = process.cwd();
+const CONFIG_FILE = path.join(ROOT_DIR, "src", "config", "modules-state.json");
 const MODULES_DIR = path.join(ROOT_DIR, "src", "modules");
 
 export function isModuleActive(key: string): boolean {
