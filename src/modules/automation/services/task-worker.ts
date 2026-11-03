@@ -3,8 +3,8 @@ import "server-only";
 import { Prisma } from "@prisma/client";
 import type { TaskDefinition, TaskExecutionContext } from "@/shared/automation/define";
 import { getDb } from "@/shared/db";
-import { recordAutomationLog } from "./log-store";
 import { automationTasks } from "../tasks/registry";
+import { recordAutomationLog } from "./log-store";
 import type { AutomationTaskQueuePayload } from "../worker/queue";
 
 // Keep the lease longer than the maximum task timeout so long mailing batches are not reclaimed.
