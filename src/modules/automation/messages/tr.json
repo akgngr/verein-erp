@@ -1,4 +1,7 @@
 {
+  "nav": {
+    "monitor": "Otomasyon izleme"
+  },
   "module": {
     "label": "Otomasyon",
     "description": "Kalıcı arka plan görevleri ve iş akışları."
