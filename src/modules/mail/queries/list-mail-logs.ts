@@ -93,3 +93,14 @@ export async function listMailLogModules(): Promise<string[]> {
   const groups = await db.mailLog.groupBy({ by: ["module"], orderBy: { module: "asc" } });
   return groups.map((group) => group.module);
 }
+
+/** Failed mailing-campaign logs for the automation monitor. */
+export async function listFailedMailLogsForCampaigns(campaignIds: string[]) {
+  if (campaignIds.length === 0) return [];
+  return getDb().mailLog.findMany({
+    where: { module: "mailings", status: "FAILED", reference: { in: campaignIds } },
+    orderBy: { createdAt: "desc" },
+    take: 150,
+    select: { id: true, reference: true, subject: true, error: true, createdAt: true },
+  });
+}

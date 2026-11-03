@@ -1,5 +1,7 @@
 import "server-only";
 
+import { listFailedMailLogsForCampaigns } from "@/modules/mail/server";
+import { listCampaignSummaries } from "@/modules/mailings/server";
 import { getDb } from "@/shared/db";
 
 export async function listAutomationExecutions() {
@@ -22,16 +24,8 @@ export async function listAutomationExecutions() {
   if (campaignIds.length === 0) return executions.map((execution) => ({ ...execution, campaign: null, mailErrors: [] }));
 
   const [campaigns, mailErrors] = await Promise.all([
-    db.mailingCampaign.findMany({
-      where: { id: { in: campaignIds } },
-      select: { id: true, subject: true, status: true, recipientCount: true, sentCount: true, failedCount: true },
-    }),
-    db.mailLog.findMany({
-      where: { module: "mailings", status: "FAILED", reference: { in: campaignIds } },
-      orderBy: { createdAt: "desc" },
-      take: 150,
-      select: { id: true, reference: true, subject: true, error: true, createdAt: true },
-    }),
+    listCampaignSummaries(campaignIds),
+    listFailedMailLogsForCampaigns(campaignIds),
   ]);
 
   const campaignById = new Map(campaigns.map((campaign) => [campaign.id, campaign]));

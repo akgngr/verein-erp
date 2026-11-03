@@ -7,6 +7,7 @@ export { sendMail, sendMailBatch, isMailConfigured, listSuccessfulMailRecipients
 export { mailPermissions } from "./permissions";
 export { getMailSettings } from "./queries/get-mail-settings";
 export { listMailLogs, listMailLogModules } from "./queries/list-mail-logs";
+export { listFailedMailLogsForCampaigns } from "./queries/list-mail-logs";
 export {
   saveMailSettingsAction,
   verifyMailConnectionAction,

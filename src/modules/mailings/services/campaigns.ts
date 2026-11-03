@@ -304,4 +304,12 @@ export async function listCampaigns() {
   return getDb().mailingCampaign.findMany({ orderBy: { createdAt: "desc" }, take: 50 });
 }
 
+export async function listCampaignSummaries(campaignIds: string[]) {
+  if (campaignIds.length === 0) return [];
+  return getDb().mailingCampaign.findMany({
+    where: { id: { in: campaignIds } },
+    select: { id: true, subject: true, status: true, recipientCount: true, sentCount: true, failedCount: true },
+  });
+}
+
 export { isMailConfigured };
