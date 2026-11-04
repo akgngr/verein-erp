@@ -1,7 +1,7 @@
 import "server-only";
 
 import { Prisma } from "@prisma/client";
-import type { TaskDefinition, TaskExecutionContext } from "@/shared/automation/define";
+import { resolveTaskRetryPolicy, type TaskDefinition, type TaskExecutionContext, type TaskRetryPolicy } from "@/shared/automation/define";
 import { getDb } from "@/shared/db";
 import { automationTasks } from "../tasks/registry";
 import { recordAutomationLog } from "./log-store";
@@ -129,6 +129,9 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
   // Use the record loaded before the atomic claim. The claim increments the persisted
   // attempt, so the current attempt is the previous value + 1.
   const execution = existing;
+  const retryPolicy = resolveTaskRetryPolicy(
+    asObject(execution.retryPolicy) as Partial<TaskRetryPolicy>,
+  );
   const attempt = execution.attempt + 1;
   let timeout: ReturnType<typeof setTimeout> | undefined;
 
@@ -139,9 +142,9 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
       executionId: execution.id,
       event: "ATTEMPT_STARTED",
       message: payload.taskKey,
-      details: { attempt, maxAttempts: execution.maxAttempts, taskKey: execution.definitionKey },
+      details: { attempt, maxAttempts: retryPolicy.maxAttempts, taskKey: execution.definitionKey },
     });
-  if (attempt > execution.maxAttempts) {
+  if (attempt > retryPolicy.maxAttempts) {
     await markTerminal(payload.executionId, "FAILED", "TASK_ATTEMPTS_EXHAUSTED");
     return;
   }
@@ -192,11 +195,11 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
     await recordAutomationLog({
       executionId: payload.executionId,
       level: "ERROR",
-      event: attempt >= execution.maxAttempts ? "ATTEMPT_FAILED_FINAL" : "ATTEMPT_FAILED_RETRYING",
+      event: attempt >= retryPolicy.maxAttempts ? "ATTEMPT_FAILED_FINAL" : "ATTEMPT_FAILED_RETRYING",
       message: (error instanceof Error ? error.message : String(error)).slice(0, 1000),
-      details: { errorCode: code, attempt, maxAttempts: execution.maxAttempts },
+      details: { errorCode: code, attempt, maxAttempts: retryPolicy.maxAttempts },
     });
-    if (attempt >= execution.maxAttempts) {
+    if (attempt >= retryPolicy.maxAttempts) {
       await markTerminal(payload.executionId, "FAILED", code);
       return;
     }
