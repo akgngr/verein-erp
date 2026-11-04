@@ -71,7 +71,7 @@ export async function dispatchAutomationOutboxBatch(boss: PgBoss): Promise<numbe
 
       const execution = await db.automationExecution.findUnique({
         where: { id: parsed.data.executionId },
-        select: { maxAttempts: true, retryPolicy: true, scheduledAt: true, status: true },
+        select: { retryPolicy: true, scheduledAt: true, status: true },
       });
 
       if (!execution || ["FAILED", "SUCCEEDED", "CANCELLED"].includes(execution.status)) {
