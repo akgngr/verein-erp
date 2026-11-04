@@ -6,6 +6,7 @@ import { z } from "zod";
 import { moduleRecipientRegistry } from "@/recipient-registry";
 import { isMailConfigured, sendMail, sendMailBatch, listSuccessfulMailRecipients } from "@/modules/mail/automation";
 import { createTaskExecutionRecord } from "@/modules/automation/automation";
+import { sendCampaignTask } from "../automation";
 import { loadPermissionPolicy, getUserById } from "@/modules/users/automation";
 import { listUsableModuleKeys } from "@/modules/system/automation";
 import { getDb } from "@/shared/db";
@@ -215,16 +216,13 @@ async function createAndQueueCampaign(input: { source: string; filter: Record<st
 
   try {
     await createTaskExecutionRecord({
-      taskKey: "mailings.send_campaign",
-      taskVersion: 1,
+      task: sendCampaignTask,
       organizationId: "default",
       requestedById: input.actor.id,
       sourceModule: "mailings",
       correlationId: `mailings:${campaign.id}`,
-      idempotencyKey: `mailings:campaign:${campaign.id}`,
       input: { campaignId: campaign.id },
       context: { locale: "tr" },
-      maxAttempts: 3,
     });
   } catch (error) {
     await db.mailingCampaign.update({
