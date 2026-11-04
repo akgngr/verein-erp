@@ -50,6 +50,22 @@ describe("Automation task contracts", () => {
     });
   });
 
+  test("keeps idempotency key generation inside the task definition", () => {
+    const task = defineTask({
+      key: "mailings.send_campaign",
+      version: 1,
+      description: "Send a mailing campaign",
+      inputSchema: z.object({ campaignId: z.string().min(1) }),
+      idempotencyKey: (input) => `mailings:campaign:${input.campaignId}`,
+      handler: async () => undefined,
+    });
+
+    assert.equal(
+      task.idempotencyKey?.({ campaignId: "campaign-42" }),
+      "mailings:campaign:campaign-42",
+    );
+  });
+
   test("rejects retry policies that cannot be represented by the queue transport", () => {
     assert.throws(() => resolveTaskRetryPolicy({ maxAttempts: 0 }));
     assert.throws(() => resolveTaskRetryPolicy({ initialDelaySeconds: -1 }));
