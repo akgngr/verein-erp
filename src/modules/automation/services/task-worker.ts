@@ -130,6 +130,7 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
   // attempt, so the current attempt is the previous value + 1.
   const execution = existing;
   const attempt = execution.attempt + 1;
+  let timeout: ReturnType<typeof setTimeout> | undefined;
 
   // Everything after claiming must be inside this try/catch. In particular, this worker
   // runs outside a Next.js request and must not depend on next-intl request context.
@@ -165,7 +166,6 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
   const storedContext = asObject(execution.context);
   const controller = new AbortController();
   const timeoutSeconds = task.timeoutSeconds ?? 300;
-  let timeout: ReturnType<typeof setTimeout> | undefined;
 
   const context: TaskExecutionContext = {
     executionId: execution.id,
