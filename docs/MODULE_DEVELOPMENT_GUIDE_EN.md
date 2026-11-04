@@ -301,6 +301,164 @@ Files are encrypted, owner-only, deleted after 30 days and listed at `/dosyalar`
 `defineFormat(...)` + one line in `formats/index.ts` and `FILE_FORMATS`. The assistant uses `create_file`
 (matrix: My files → create); the download button is shown under the answer.
 
+## 9d. Background automation and task contract (`automation.ts`)
+
+Modules that need background work define their task in the owning module; they do not implement
+another queue or worker. The platform separates task definitions, durable execution records,
+the transactional outbox and the pg-boss worker.
+
+### Do not confuse the two `automation.ts` entrypoints
+
+- `src/modules/<business-module>/automation.ts` is the module's **task definition**. It uses
+  `defineTask(...)` to declare a namespaced key, version, input schema, timeout, retry policy,
+  idempotency key and handler. Example: `src/modules/mailings/automation.ts`.
+- `src/modules/automation/automation.ts` is the automation infrastructure's **narrow worker API**.
+  It exposes primitives such as execution-record creation without importing the task registry or
+  Next.js UI.
+- `server.ts` is the module's general server API for web pages and Server Actions. Do not add
+  every worker dependency to this broad barrel; expose only the worker-safe functions through a
+  separate `automation.ts` entrypoint.
+
+### Define a task
+
+Use this pattern in `src/modules/<business-module>/automation.ts`:
+
+```ts
+import "server-only";
+
+import { z } from "zod";
+import { defineTask } from "@/shared/automation/define";
+
+export const processExampleTask = defineTask({
+  key: "example.process_item",
+  version: 1,
+  description: "example.process_item",
+  inputSchema: z.object({ itemId: z.string().min(1).max(128) }).strict(),
+  timeoutSeconds: 300,
+  retry: {
+    maxAttempts: 3, // includes the first attempt
+    initialDelaySeconds: 30,
+    maxDelaySeconds: 900,
+    backoffMultiplier: 2,
+  },
+  idempotencyKey: (input) => `example:item:${input.itemId}`,
+  handler: async (input, context) => {
+    const { processItem } = await import("./services/process-item");
+    return processItem(input.itemId, context);
+  },
+});
+```
+
+- Task keys are namespaced as `<module>.<task_name>`. Keep keys stable; increment `version`
+  when the task input/output contract changes incompatibly.
+- The queue input is validated by `inputSchema` before the handler runs. Use `.strict()` to
+  reject unexpected properties.
+- Keep queue input and execution context minimal: record IDs, tenant/organization scope and
+  correlation metadata only. Never put email addresses, recipient lists, identity numbers,
+  bank data, session tokens or other PII into queue payloads. Keep sensitive business data in
+  its source module and resolve it again inside the handler.
+- Handlers are trusted application code. Never derive an import path, function name, code or
+  executable handler from user input. Register tasks statically in
+  `src/modules/automation/tasks/registry.ts`.
+- Keep business logic in the owning module's `services/` layer; `automation.ts` should define
+  the contract and connect it to the service.
+- Execution-level idempotency does not guarantee exactly-once delivery of every email, payment
+  or external side effect. Add recipient/transaction-level deduplication and partial-failure
+  recovery where needed.
+
+### Start and dispatch a task
+
+Execution creation and the dispatch intent are persisted in one database transaction. A separate
+worker process publishes transactional outbox events to pg-boss. A feature module must not create
+its own queue table, cron mechanism or pg-boss connection.
+
+Call `createTaskExecutionRecord` from the automation module's narrow API:
+
+```ts
+import { createTaskExecutionRecord } from "@/modules/automation/automation";
+
+// Check the actor's permission, module availability and business rules first.
+const execution = await createTaskExecutionRecord({
+  taskKey: "example.process_item",
+  taskVersion: 1,
+  organizationId,
+  requestedById: user.id,
+  sourceModule: "example",
+  correlationId,
+  idempotencyKey: `example:item:${itemId}`,
+  input: { itemId },
+  maxAttempts: 3,
+});
+```
+
+This is an **internal persistence primitive**, not a public enqueue API. It does not independently
+check the caller's permission or source-module availability; the calling service must do so first.
+Handle uniqueness conflicts for repeated idempotency keys.
+
+### Worker-safe API and dependency boundary
+
+The worker runs outside a Next.js request context. APIs used by it must:
+
+- start with `import "server-only"`;
+- not transitively import Next.js UI, React, `next-intl/server`, `next/headers`,
+  `next/cache`, Server Actions or request-context-dependent code;
+- expose only the functions needed by the worker instead of re-exporting a broad `server.ts` barrel;
+- keep read-only queries and business services clearly separated.
+
+Examples include `@/modules/mail/automation`, `@/modules/users/automation`,
+`@/modules/system/automation` and `@/modules/automation/automation`. Add new worker-facing
+functions to these narrow entrypoints; do not move UI/action/cache dependencies into them.
+Keep the relevant `module.config.ts → access` declaration and translated access reason for
+cross-module calls.
+
+### Failure handling, retries and execution state
+
+- **Everything after the claim** must be inside the same `try/catch` boundary: start logging,
+  task lookup, input validation, timeout setup and handler execution. An exception outside that
+  boundary can leave an execution stuck in `RUNNING`.
+- Do not call translation or context APIs that require a Next.js request from the worker. Translate
+  user-facing text in the UI; use stable task keys and error codes in worker logs.
+- Define total attempts, initial delay, maximum delay and backoff explicitly. Retry transient
+  failures; after attempts are exhausted, mark the execution and step terminal `FAILED`.
+  Successful work becomes `SUCCEEDED`.
+- Claiming must be atomic so two workers cannot run the same execution concurrently. Set stale/
+  lease windows according to the task timeout and actual runtime.
+- A fix that prevents future stuck executions does not automatically make previously stuck
+  `RUNNING` records safe to replay. Inspect prior side effects and deduplication state first,
+  especially for partially sent email or payment jobs.
+
+### Durable logs and monitoring
+
+- Persist worker events through `AutomationLog`: at minimum attempt started, retryable failure,
+  final failure, success and terminal failure.
+- Logging is **best-effort**. A log-write failure must never change the job's outcome.
+- Keep log fields bounded and sanitized. Never store PII, recipient addresses, access tokens or
+  complete sensitive payload copies; cap message and details sizes.
+- Protect the monitoring page with a view permission. The current page shows the latest 100
+  executions, up to 8 recent logs per execution, and campaign summaries/failed-send details for
+  the mailings integration. It does not show recipient email addresses.
+- The current page reads data when rendered; it does not guarantee real-time polling. Design
+  refresh behavior separately if required.
+
+### Background-task TODO checklist for module authors
+
+- [ ] Confirm that the work genuinely needs a background worker.
+- [ ] Define the input and tenant/organization scope; carry only required IDs and metadata.
+- [ ] Define the task contract, strict Zod schema and task version in `automation.ts`.
+- [ ] Set timeout, total attempts and backoff based on the actual job duration.
+- [ ] Define a stable, PII-free idempotency key.
+- [ ] Add side-effect-level deduplication and partial-success recovery for email, payment or APIs.
+- [ ] Keep business logic in `services/`; keep the handler thin and register it statically.
+- [ ] Expose worker dependencies through a narrow `automation.ts` API, not a broad `server.ts`
+      barrel or Next.js request-context code.
+- [ ] Declare cross-module access in `module.config.ts → access` and add TR/DE reason strings.
+- [ ] Recheck permissions, module availability, tenant isolation and source-record validity at execution time.
+- [ ] Verify that logs contain no PII and log failures do not affect job outcomes.
+- [ ] Test success, retryable/final failure, timeout, invalid payload, unknown task/version,
+      concurrent claims and partial side effects.
+- [ ] Bump `module.config.ts` and add a TR/DE entry at the top of `releases.json`.
+- [ ] Run module sync/validation, i18n and hard-coded-text checks, typecheck, lint and tests.
+
 ## 10. Verification (CI runs the same steps)
 
 ```bash

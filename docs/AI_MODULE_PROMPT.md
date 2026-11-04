@@ -66,6 +66,19 @@ KURALLAR (her biri CI'da otomatik denetlenir):
 19. Ek npm paketi gerekiyorsa `module.config.ts → dependencies: { "paket": "^x.y.z" }` ve `pnpm module:deps`;
     kök package.json'a elle ekleme (rehber §8c).
 
+20. Arka plan işi gerekiyorsa rehber §9h'yi uygula. Görev tanımı modülün kendi
+    `automation.ts` dosyasında `defineTask` ile yapılır; `key` modül ad alanlı, `version`
+    pozitif, `inputSchema` strict Zod şeması olmalıdır. Payload yalnızca gerekli ID/metadata taşır;
+    PII/alıcı listesi/token taşımaz. Retry, timeout ve PII içermeyen idempotency anahtarı tanımla.
+    Handler güvenilir uygulama kodu olmalı ve statik `src/modules/automation/tasks/registry.ts`
+    listesine eklenmelidir. İş mantığını `services/` içinde tut.
+21. Worker, Next.js request context dışında çalışır. Worker'ın çağırdığı fonksiyonları ayrı,
+    `import "server-only"` içeren dar `automation.ts` public girişinden sun; `next-intl/server`,
+    `next/headers`, `next/cache`, UI veya Server Action bağımlılıklarını bu girişe taşımama.
+    Gerekli modüller arası `access` izinlerini bildir. Claim sonrası tüm işlemleri try/catch içine
+    al; log yazımını best-effort yap; PII loglama. Dış yan etkilerde retry/idempotency'yi ayrıca ele al.
+    Ayrıntılar ve TODO listesi: `docs/MODULE_DEVELOPMENT_GUIDE.md` §9h.
+
 ÜRETECEĞİN DOSYALAR (tam yol + eksiksiz kod, TODO bırakma):
 module.config.ts, permissions.ts, schema.prisma, types.ts, index.ts, server.ts ("server-only"), ui.ts,
 page.tsx, messages/tr.json, messages/de.json, schemas/item-schema.ts, queries/list-items.ts,
