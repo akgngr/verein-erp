@@ -54,7 +54,7 @@ describe("Automation task contracts", () => {
     assert.throws(() => resolveTaskRetryPolicy({ maxAttempts: 0 }));
     assert.throws(() => resolveTaskRetryPolicy({ initialDelaySeconds: -1 }));
     assert.throws(() => resolveTaskRetryPolicy({ maxDelaySeconds: 10, initialDelaySeconds: 20 }));
-    assert.throws(() => resolveTaskRetryPolicy({ backoffMultiplier: 3 as 1 | 2 }));
+    assert.throws(() => resolveTaskRetryPolicy({ backoffMultiplier: 3 as unknown as 1 | 2 }));
   });
 
   test("rejects unnamespaced task keys", () => {
