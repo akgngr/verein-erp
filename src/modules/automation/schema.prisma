@@ -29,29 +29,30 @@ enum AutomationOutboxStatus {
 
 /// ERP-owned durable execution record. Queue transport metadata stays in pg-boss.
 model AutomationExecution {
-  id               String                    @id @default(cuid())
-  kind             AutomationExecutionKind   @default(TASK)
-  status           AutomationExecutionStatus @default(PENDING)
-  definitionKey    String
+  id                String                    @id @default(cuid())
+  kind              AutomationExecutionKind   @default(TASK)
+  status            AutomationExecutionStatus @default(PENDING)
+  definitionKey     String
   definitionVersion Int
-  organizationId   String
-  requestedById    String?
-  sourceModule     String
-  correlationId    String
-  idempotencyKey   String?
-  /// Only minimal identifiers and execution metadata; never persist recipient/PII lists here.
-  input            Json                      @default("{}")
-  context          Json                      @default("{}")
-  attempt          Int                       @default(0)
-  maxAttempts      Int                       @default(3)
-  scheduledAt      DateTime?
-  startedAt        DateTime?
-  finishedAt       DateTime?
-  lastErrorCode    String?
-  createdAt        DateTime                  @default(now())
-  updatedAt        DateTime                  @updatedAt
-  steps            AutomationStepRun[]
-  logs             AutomationLog[]
+  organizationId    String
+  requestedById     String?
+  sourceModule      String
+  correlationId     String
+  idempotencyKey    String?
+  /// Only minimal identifiers and execution metadata; never persist recipient/PII lists.
+  input             Json                      @default("{}")
+  context           Json                      @default("{}")
+  retryPolicy       Json                      @default("{\"maxAttempts\":3,\"initialDelaySeconds\":30,\"maxDelaySeconds\":1800,\"backoffMultiplier\":2}")
+  attempt           Int                       @default(0)
+  maxAttempts       Int                       @default(3)
+  scheduledAt       DateTime?
+  startedAt         DateTime?
+  finishedAt        DateTime?
+  lastErrorCode     String?
+  createdAt         DateTime                  @default(now())
+  updatedAt         DateTime                  @updatedAt
+  steps             AutomationStepRun[]
+  logs              AutomationLog[]
 
   @@unique([organizationId, idempotencyKey])
   @@index([status, scheduledAt])
@@ -70,6 +71,7 @@ model AutomationStepRun {
   status         AutomationStepStatus @default(PENDING)
   input          Json                 @default("{}")
   result         Json?
+  retryPolicy    Json                 @default("{\"maxAttempts\":3,\"initialDelaySeconds\":30,\"maxDelaySeconds\":1800,\"backoffMultiplier\":2}")
   attempt        Int                  @default(0)
   maxAttempts    Int                  @default(3)
   startedAt      DateTime?
@@ -102,18 +104,18 @@ model AutomationLog {
 
 /// Transactional outbox. A later worker PR publishes pending rows to pg-boss.
 model AutomationOutbox {
-  id             String                 @id @default(cuid())
-  eventKey       String                 @unique
-  eventType      String
-  executionId    String?
-  payload        Json
-  status         AutomationOutboxStatus @default(PENDING)
-  attempts       Int                    @default(0)
-  availableAt    DateTime               @default(now())
-  publishedAt    DateTime?
-  lastErrorCode  String?
-  createdAt      DateTime               @default(now())
-  updatedAt      DateTime               @updatedAt
+  id            String                 @id @default(cuid())
+  eventKey      String                 @unique
+  eventType     String
+  executionId   String?
+  payload       Json
+  status        AutomationOutboxStatus @default(PENDING)
+  attempts      Int                    @default(0)
+  availableAt   DateTime               @default(now())
+  publishedAt   DateTime?
+  lastErrorCode String?
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
 
   @@index([status, availableAt, createdAt])
   @@index([executionId])
