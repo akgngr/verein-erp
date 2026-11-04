@@ -4,6 +4,10 @@ import type { PgBoss } from "pg-boss";
 
 import { getDb } from "@/shared/db";
 import {
+  resolveTaskRetryPolicy,
+  type TaskRetryPolicy,
+} from "@/shared/automation/define";
+import {
   automationTaskQueuePayloadSchema,
   AUTOMATION_TASK_QUEUE,
 } from "../worker/queue";
@@ -20,6 +24,12 @@ function errorCode(error: unknown): string {
 
 function retryDelaySeconds(attempt: number): number {
   return Math.min(30 * 60, 5 * 2 ** Math.max(0, attempt - 1));
+}
+
+function asObject(value: unknown): Record<string, unknown> {
+  return value !== null && typeof value === "object" && !Array.isArray(value)
+    ? value as Record<string, unknown>
+    : {};
 }
 
 /**
@@ -61,7 +71,7 @@ export async function dispatchAutomationOutboxBatch(boss: PgBoss): Promise<numbe
 
       const execution = await db.automationExecution.findUnique({
         where: { id: parsed.data.executionId },
-        select: { maxAttempts: true, scheduledAt: true, status: true },
+        select: { maxAttempts: true, retryPolicy: true, scheduledAt: true, status: true },
       });
 
       if (!execution || ["FAILED", "SUCCEEDED", "CANCELLED"].includes(execution.status)) {
@@ -78,13 +88,18 @@ export async function dispatchAutomationOutboxBatch(boss: PgBoss): Promise<numbe
 
       if (execution.scheduledAt && execution.scheduledAt > new Date()) continue;
 
+      const retryPolicy = resolveTaskRetryPolicy(
+        asObject(execution.retryPolicy) as Partial<TaskRetryPolicy>,
+      );
+
       await boss.send(AUTOMATION_TASK_QUEUE, parsed.data, {
         singletonKey: event.eventKey,
         singletonSeconds: 60 * 60 * 24 * 30,
-        retryLimit: execution.maxAttempts + 2,
-        retryDelay: 600,
-        retryDelayMax: 60 * 60,
-        retryBackoff: true,
+        // maxAttempts includes the first run; pg-boss retryLimit counts retries.
+        retryLimit: Math.max(0, retryPolicy.maxAttempts - 1),
+        retryDelay: retryPolicy.initialDelaySeconds,
+        retryDelayMax: retryPolicy.maxDelaySeconds,
+        retryBackoff: retryPolicy.backoffMultiplier === 2,
         expireInSeconds: 60 * 60,
         deleteAfterSeconds: 60 * 60 * 24 * 7,
       });
