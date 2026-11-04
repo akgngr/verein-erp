@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.5.4",
+      "date": "2026-11-05",
+      "title": {
+        "tr": "Görev retry ve idempotency politikasının merkezileştirilmesi",
+        "de": "Zentralisierte Retry- und Idempotenzrichtlinie für Aufgaben"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Görev retry politikası görev tanımından normalize edilip execution ve step kayıtlarında saklanır; kuyruk ayarları aynı politikadan türetilir. Idempotency anahtarı görev tanımından otomatik üretilir ve eşzamanlı yinelenen istekler mevcut execution kaydına yönlendirilir.",
+          "de": "Die Retry-Richtlinie wird aus der Aufgabendefinition normalisiert und in Execution- und Step-Datensätzen gespeichert; Queue-Einstellungen werden daraus abgeleitet. Idempotenzschlüssel werden automatisch aus der Aufgabendefinition erzeugt und parallele Duplikatanfragen auf den bestehenden Execution-Datensatz gelenkt."
+        }
+      ]
+    },
+    {
       "version": "0.5.3",
       "date": "2026-11-04",
       "title": {

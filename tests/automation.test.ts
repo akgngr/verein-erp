@@ -2,7 +2,7 @@ import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 import { z } from "zod";
 
-import { defineTask } from "../src/shared/automation/define";
+import { defineTask, resolveTaskRetryPolicy } from "../src/shared/automation/define";
 import { defineTaskRegistry } from "../src/modules/automation/tasks/registry";
 
 describe("Automation task contracts", () => {
@@ -19,6 +19,58 @@ describe("Automation task contracts", () => {
     assert.equal(task.version, 1);
     assert.equal(task.inputSchema.parse({ campaignId: "campaign-1" }).campaignId, "campaign-1");
     assert.throws(() => task.inputSchema.parse({ campaignId: "" }));
+  });
+
+  test("normalizes retry policy and keeps queue settings within the supported contract", () => {
+    const task = defineTask({
+      key: "mailings.send_campaign",
+      version: 1,
+      description: "Send a mailing campaign",
+      inputSchema: z.object({ campaignId: z.string().min(1) }),
+      retry: {
+        maxAttempts: 4,
+        initialDelaySeconds: 5,
+        maxDelaySeconds: 60,
+        backoffMultiplier: 1,
+      },
+      handler: async () => undefined,
+    });
+
+    assert.deepEqual(task.retry, {
+      maxAttempts: 4,
+      initialDelaySeconds: 5,
+      maxDelaySeconds: 60,
+      backoffMultiplier: 1,
+    });
+    assert.deepEqual(resolveTaskRetryPolicy(), {
+      maxAttempts: 3,
+      initialDelaySeconds: 30,
+      maxDelaySeconds: 1800,
+      backoffMultiplier: 2,
+    });
+  });
+
+  test("keeps idempotency key generation inside the task definition", () => {
+    const task = defineTask({
+      key: "mailings.send_campaign",
+      version: 1,
+      description: "Send a mailing campaign",
+      inputSchema: z.object({ campaignId: z.string().min(1) }),
+      idempotencyKey: (input) => `mailings:campaign:${input.campaignId}`,
+      handler: async () => undefined,
+    });
+
+    assert.equal(
+      task.idempotencyKey?.({ campaignId: "campaign-42" }),
+      "mailings:campaign:campaign-42",
+    );
+  });
+
+  test("rejects retry policies that cannot be represented by the queue transport", () => {
+    assert.throws(() => resolveTaskRetryPolicy({ maxAttempts: 0 }));
+    assert.throws(() => resolveTaskRetryPolicy({ initialDelaySeconds: -1 }));
+    assert.throws(() => resolveTaskRetryPolicy({ maxDelaySeconds: 10, initialDelaySeconds: 20 }));
+    assert.throws(() => resolveTaskRetryPolicy({ backoffMultiplier: 3 as unknown as 1 | 2 }));
   });
 
   test("rejects unnamespaced task keys", () => {
