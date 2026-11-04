@@ -138,7 +138,7 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
     await recordAutomationLog({
       executionId: execution.id,
       event: "ATTEMPT_STARTED",
-      message: `Task started (attempt ${attempt}/${execution.maxAttempts}).`,
+      message: payload.taskKey,
       details: { attempt, maxAttempts: execution.maxAttempts, taskKey: execution.definitionKey },
     });
   if (attempt > execution.maxAttempts) {
