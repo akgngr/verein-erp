@@ -10,7 +10,7 @@ import {
 } from "@/shared/automation/define";
 import { getAutomationRuntimeConfig } from "../runtime-config";
 
-export type CreateTaskExecutionRecordInput<TSchema extends z.ZodType> = {
+export type CreateTaskExecutionRecordInput<TSchema extends z.ZodType = z.ZodType> = {
   task: TaskDefinition<TSchema>;
   organizationId: string;
   requestedById?: string | null;
