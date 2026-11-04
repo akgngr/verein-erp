@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.5.3",
+      "date": "2026-11-04",
+      "title": {
+        "tr": "Worker görevlerinin takılı kalmasının önlenmesi",
+        "de": "Verhindern festhängender Worker-Aufgaben"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Worker'ın Next.js istek bağlamına ihtiyaç duyan çeviri yüklemesi kaldırıldı. Görev yürütme işlemleri hata yakalama kapsamına alındı; böylece worker hatalarında yürütmeler RUNNING durumunda takılı kalmaz.",
+          "de": "Das Laden von Übersetzungen mit Abhängigkeit vom Next.js-Anfragekontext wurde aus dem Worker entfernt. Die Aufgabenausführung liegt nun innerhalb der Fehlerbehandlung, damit Ausführungen bei Worker-Fehlern nicht im Status RUNNING hängen bleiben."
+        }
+      ]
+    },
+    {
       "version": "0.5.2",
       "date": "2026-11-03",
       "title": {

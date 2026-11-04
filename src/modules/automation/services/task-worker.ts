@@ -6,7 +6,6 @@ import { getDb } from "@/shared/db";
 import { automationTasks } from "../tasks/registry";
 import { recordAutomationLog } from "./log-store";
 import type { AutomationTaskQueuePayload } from "../worker/queue";
-import { getTranslations } from "next-intl/server";
 
 // Keep the lease longer than the maximum task timeout so long mailing batches are not reclaimed.
 const RUNNING_STALE_AFTER_MS = 2 * 60 * 60 * 1000;
@@ -127,21 +126,21 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
 
   if (!claimed) return;
 
-  const execution = await db.automationExecution.findUnique({
-    where: { id: payload.executionId },
-    include: { steps: true },
-  });
-  if (!execution) return;
+  // Use the record loaded before the atomic claim. The claim increments the persisted
+  // attempt, so the current attempt is the previous value + 1.
+  const execution = existing;
+  const attempt = execution.attempt + 1;
+  let timeout: ReturnType<typeof setTimeout> | undefined;
 
-  const t = await getTranslations('automation.Automation');
-
-  const attempt = execution.attempt;
-  await recordAutomationLog({
-    executionId: execution.id,
-    event: "ATTEMPT_STARTED",
-    message: t('taskStarted', { attempt, maxAttempts: execution.maxAttempts }),
-    details: { attempt, maxAttempts: execution.maxAttempts, taskKey: execution.definitionKey },
-  });
+  // Everything after claiming must be inside this try/catch. In particular, this worker
+  // runs outside a Next.js request and must not depend on next-intl request context.
+  try {
+    await recordAutomationLog({
+      executionId: execution.id,
+      event: "ATTEMPT_STARTED",
+      message: payload.taskKey,
+      details: { attempt, maxAttempts: execution.maxAttempts, taskKey: execution.definitionKey },
+    });
   if (attempt > execution.maxAttempts) {
     await markTerminal(payload.executionId, "FAILED", "TASK_ATTEMPTS_EXHAUSTED");
     return;
@@ -167,7 +166,6 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
   const storedContext = asObject(execution.context);
   const controller = new AbortController();
   const timeoutSeconds = task.timeoutSeconds ?? 300;
-  let timeout: ReturnType<typeof setTimeout> | undefined;
 
   const context: TaskExecutionContext = {
     executionId: execution.id,
@@ -180,7 +178,6 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
     signal: controller.signal,
   };
 
-  try {
     const handler = task.handler(parsedInput.data, context);
     const timedOut = new Promise<never>((_, reject) => {
       timeout = setTimeout(() => {
