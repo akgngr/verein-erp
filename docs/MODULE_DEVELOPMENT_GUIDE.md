@@ -500,6 +500,176 @@ Modül, "Toplu e-posta" modülüne alıcı listesi sunar:
 Etiketler: `<modül>.recipients.<kaynak>.label`, `...filters.<filtre>.label`, `...filters.<filtre>.options.<değer>`. İtiraz (`optOut`) ve e-postasızlar atlanır.
 Programatik gönderim: `import { sendBulkMail } from "@/modules/mailings/server"` (+ `access: [{ module: "mailings", operations: ["write"] }]`).
 
+## 9h. Arka plan otomasyonu ve görev sözleşmesi (`automation.ts`)
+
+Arka plan işi gereken modüller, işi kendi modülünde tanımlar; kuyruk/worker altyapısını yeniden
+uygulamaz. Verein ERP'de görev tanımı, kalıcı yürütme kaydı, transactional outbox ve pg-boss worker
+birbirinden ayrıdır.
+
+### İki farklı `automation.ts` girişini karıştırmayın
+
+- `src/modules/<iş-modülü>/automation.ts`: Modülün otomasyon sistemine sunduğu **görev tanımıdır**.
+  `defineTask(...)` ile görev anahtarı, sürüm, girdi şeması, timeout, retry politikası, idempotency
+  anahtarı ve handler tanımlanır. Örnek: `src/modules/mailings/automation.ts`.
+- `src/modules/automation/automation.ts`: Otomasyon altyapısının diğer sunucu kodlarına sunduğu
+  **dar worker API'sidir**. Yürütme kaydı oluşturma gibi altyapı fonksiyonlarını dışa aktarır; görev
+  registry'sini veya Next.js arayüzünü içe aktarmaz.
+- `server.ts`: Web uygulaması, sayfalar ve Server Actions için modülün genel sunucu API'sidir.
+  Worker'ın ihtiyacı olan her şeyi buraya eklemek yerine, yalnızca gerekli fonksiyonları içeren
+  ayrı bir `automation.ts` giriş noktası oluşturun.
+
+### Görev tanımı
+
+`src/modules/<iş-modülü>/automation.ts` için temel kalıp:
+
+```ts
+import "server-only";
+
+import { z } from "zod";
+import { defineTask } from "@/shared/automation/define";
+
+export const processExampleTask = defineTask({
+  key: "example.process_item", // <modül>.<task>, kararlı ve benzersiz
+  version: 1,                  // girdi/çıktı sözleşmesi uyumsuz değişirse artır
+  description: "example.process_item",
+  inputSchema: z.object({
+    itemId: z.string().min(1).max(128),
+  }).strict(),
+  timeoutSeconds: 300,
+  retry: {
+    maxAttempts: 3,            // ilk deneme DAHİL toplam deneme sayısı
+    initialDelaySeconds: 30,
+    maxDelaySeconds: 900,
+    backoffMultiplier: 2,
+  },
+  idempotencyKey: (input) => `example:item:${input.itemId}`,
+  handler: async (input, context) => {
+    const { processItem } = await import("./services/process-item");
+    return processItem(input.itemId, context);
+  },
+});
+```
+
+- Görev anahtarı modül ad alanlı olmalıdır: `<modül>.<task_name>`. Görev anahtarını yeniden
+  adlandırmak yerine sözleşme uyumsuz değiştiğinde `version` artırılır.
+- `inputSchema` kuyruktan gelen veriyi handler'a ulaşmadan doğrular. Gereksiz alanları reddetmek
+  için `.strict()` kullanın.
+- Kuyruk girdisi ve yürütme bağlamı yalnızca iş için gereken en az bilgiyi taşımalıdır: kayıt
+  kimlikleri, tenant/organizasyon kimliği ve korelasyon bilgisi. E-posta adresleri, alıcı listeleri,
+  kimlik numaraları, banka verileri, oturum token'ları veya başka PII verilerini payload'a koymayın.
+  Hassas/çoklanan iş verisini kaynak modülde saklayıp handler içinde tekrar çözümleyin.
+- Handler yalnızca güvenilir uygulama kodudur. Kullanıcı girdisinden import yolu, fonksiyon adı,
+  kod veya çalıştırılabilir handler üretmeyin. Görevler statik registry'ye eklenir:
+  `src/modules/automation/tasks/registry.ts`.
+- Handler iş mantığını modülün `services/` katmanında tutun. `automation.ts` yalnızca sözleşmeyi
+  ve gerekli bağlantıyı tanımlasın.
+- `idempotencyKey` aynı mantıksal yürütmenin yinelenmesini önlemeye yarar; tek başına e-posta,
+  ödeme veya başka dış yan etkilerin alıcı/işlem bazında tam bir kez gerçekleşmesini garanti etmez.
+  Kısmi başarısızlık ve retry ihtimali varsa yan etki düzeyinde ayrıca tekilleştirme yapın.
+
+### Görev başlatma ve kuyruk akışı
+
+Görev oluşturma ve kuyruk gönderim niyeti aynı veritabanı transaction'ında kaydedilir. Worker ayrı
+bir süreçtir; transactional outbox kayıtlarını pg-boss kuyruğuna aktarır. Yeni modül kendi kuyruk
+tablosunu, cron mekanizmasını veya pg-boss bağlantısını oluşturmaz.
+
+`createTaskExecutionRecord`, otomasyon modülünün dar API'sinden alınır:
+
+```ts
+import { createTaskExecutionRecord } from "@/modules/automation/automation";
+
+// Önce çağıran kullanıcının yetkisini, modülün etkinliğini ve iş kurallarını doğrulayın.
+const execution = await createTaskExecutionRecord({
+  taskKey: "example.process_item",
+  taskVersion: 1,
+  organizationId,
+  requestedById: user.id,
+  sourceModule: "example",
+  correlationId,
+  idempotencyKey: `example:item:${itemId}`,
+  input: { itemId },
+  maxAttempts: 3,
+});
+```
+
+Bu fonksiyon bir **iç persistence primitive**'idir; kullanıcı yetkisini veya kaynak modülün
+erişilebilirliğini kendi başına doğrulamaz. Çağıran servis bu kontrolleri çağrıdan önce yapmalıdır.
+Aynı idempotency anahtarının veritabanı benzersizlik kuralıyla çakışabileceğini iş akışında ele alın.
+
+### Worker için dar API ve bağımlılık sınırı
+
+Worker, Next.js request context'i dışında çalışır. Bu nedenle worker'ın kullandığı modül API'leri:
+
+- `import "server-only"` ile işaretlenmeli;
+- Next.js UI, React, `next-intl/server`, `next/headers`, `next/cache`, Server Action veya
+  istek bağlamına bağlı kodu transitif olarak içe aktarmamalı;
+- geniş `server.ts` barrel'ı yerine yalnızca worker'ın ihtiyaç duyduğu fonksiyonları dışa aktarmalı;
+- salt-okunur sorgu ve iş servisi sınırlarını açıkça ayırmalıdır.
+
+Örnek worker girişleri: `@/modules/mail/automation`,
+`@/modules/users/automation`, `@/modules/system/automation` ve
+`@/modules/automation/automation`. Worker kullanan bir modülde yeni API gerekiyorsa bu dar
+girişe ekleyin; UI/action/cache bağımlılıklarını buraya taşımayın. Modüller arası erişim için
+ilgili `module.config.ts → access` bildirimi ve gerekçe çevirileri de korunur.
+
+### Hata yönetimi, retry ve yürütme durumu
+
+- Claim işleminden sonra yapılan **bütün** işler aynı `try/catch` hata sınırında olmalıdır.
+  Başlangıç logu, görev çözümleme, şema doğrulama, timeout kurulumu ve handler çağrısı bu kapsama
+  dahildir. Claim sonrası hata yakalama dışında kalan bir işlem yürütmeyi `RUNNING` durumunda
+  bırakabilir.
+- Worker, Next.js isteğine bağlı çeviri/context fonksiyonlarını çağırmamalıdır. Kullanıcıya
+  gösterilecek metinleri UI katmanında çevirin; worker loglarında kararlı task key ve hata kodu
+  kullanın.
+- Retry politikası toplam deneme sayısını, ilk gecikmeyi, üst gecikme sınırını ve backoff
+  çarpanını açıkça tanımlar. Geçici hata retry edilir; deneme hakkı bittiğinde yürütme ve adım
+  terminal `FAILED` durumuna alınır. Başarıda `SUCCEEDED` kaydedilir.
+- Worker claim işlemi atomik olmalı; aynı yürütmenin eşzamanlı iki worker tarafından alınması
+  engellenmelidir. Uzun işlerde stale/lease süresini görevin timeout ve gerçek çalışma süresine
+  göre belirleyin.
+- Bir worker düzeltmesi gelecekteki takılmaları önlese bile geçmişte `RUNNING` kalmış kayıtları
+  otomatik olarak güvenle yeniden çalıştırdığı anlamına gelmez. Özellikle e-posta/ödeme gibi
+  kısmen gerçekleşmiş dış yan etkilerde önce işlem geçmişini ve tekilleştirme durumunu inceleyin.
+
+### Kalıcı loglar ve izleme
+
+- Worker olayları `AutomationLog` üzerinden kalıcı kaydedilir. En azından başlangıç, retry
+  edilecek hata, son hata, başarı ve terminal başarısızlık olayları izlenebilir olmalıdır.
+- Log yazımı **best-effort** olmalıdır: log veritabanına yazılamazsa asıl işin sonucu değişmemeli,
+  log hatası görevi başarılı/başarısız olmaktan çıkarmamalıdır.
+- Log alanları kısa ve sınırlı tutulmalı; PII, alıcı adresleri, erişim token'ları veya tam hassas
+  payload kopyaları yazılmamalıdır. Hata mesajları ve `details` için boyut/sanitizasyon sınırı koyun.
+- İzleme ekranı yalnızca görüntüleme yetkisiyle korunmalıdır. Mevcut otomasyon ekranı son 100
+  yürütmeyi, her yürütmenin son 8 log kaydını ve mailings entegrasyonunda kampanya özeti/başarısız
+  gönderim hata detaylarını gösterir; alıcı e-posta adreslerini göstermez.
+- Bu ekranın sayfa render'ında veri okuduğunu unutmayın: mevcut uygulamada gerçek zamanlı polling
+  garantisi yoktur. Gerekirse yenileme davranışını ayrıca tasarlayın.
+
+### Modül geliştiricisi için otomasyon TODO listesi
+
+Yeni modülde arka plan görevi gerekiyorsa:
+
+- [ ] İşin gerçekten arka planda çalışması gerekip gerekmediğini belirle; normal request içinde
+      bitebilen işi gereksiz yere kuyruğa taşıma.
+- [ ] İş girdisini ve tenant/organizasyon kapsamını tanımla; yalnızca gerekli ID ve metadata'yı taşı.
+- [ ] `automation.ts` içinde `defineTask` sözleşmesini, strict Zod şemasını ve görev sürümünü tanımla.
+- [ ] Timeout, toplam retry sayısı ve backoff değerlerini işin gerçek süresine göre belirle.
+- [ ] Idempotency anahtarını kararlı ve PII içermeyen biçimde tanımla.
+- [ ] E-posta/ödeme/dış API gibi yan etkiler için işlem/alıcı düzeyinde tekrar önleme ve kısmi başarı
+      kurtarma stratejisi ekle.
+- [ ] İş mantığını `services/` içine al; handler'ı ince tut ve yalnızca statik task registry'ye kaydet.
+- [ ] Gerekli worker fonksiyonlarını ayrı `automation.ts` public girişinden sun; geniş `server.ts`
+      barrel'ına veya Next.js request-context koduna bağlama.
+- [ ] Her modüller arası erişimi `module.config.ts → access` içinde bildir ve TR/DE gerekçelerini ekle.
+- [ ] Yetki, modül etkinliği, tenant izolasyonu ve kaynak kaydın hâlâ kullanılabilir olduğunu
+      yürütme anında yeniden doğrula.
+- [ ] Loglarda PII olmadığını; log yazma hatasının iş sonucunu etkilemediğini test et.
+- [ ] Başarı, geçici hata/retry, son hata, timeout, geçersiz payload, bilinmeyen task/version,
+      eşzamanlı claim ve kısmi yan etki senaryolarını test et.
+- [ ] `module.config.ts` sürümünü artır ve `releases.json` dosyasının en üstüne TR/DE sürüm notu ekle.
+- [ ] `pnpm module:sync`, `pnpm module:validate`, i18n/hardcoded-text kontrolleri, typecheck,
+      lint ve testleri çalıştır.
+
 ## 10. Doğrulama (CI aynı adımları çalıştırır)
 
 ```bash
