@@ -13,6 +13,7 @@ import {
   EXECUTION_HEARTBEAT_INTERVAL_MS,
   EXECUTION_LEASE_DURATION_MS,
   getExecutionLeaseExpiry,
+  getLegacyExecutionStaleBefore,
 } from "@/shared/automation/lease";
 import { getDb } from "@/shared/db";
 import type { AutomationTaskQueuePayload } from "../worker/queue";
@@ -149,8 +150,16 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
         id: payload.executionId,
         OR: [
           { status: "PENDING" },
-          // Null leases are legacy RUNNING rows from before this migration.
-          { status: "RUNNING", leaseExpiresAt: null },
+          // Preserve the previous two-hour stale window for legacy rows that
+          // predate lease fields; do not steal work during a rolling deployment.
+          {
+            status: "RUNNING",
+            leaseExpiresAt: null,
+            OR: [
+              { startedAt: null },
+              { startedAt: { lt: getLegacyExecutionStaleBefore(now) } },
+            ],
+          },
           { status: "RUNNING", leaseExpiresAt: { lt: now } },
         ],
       },
