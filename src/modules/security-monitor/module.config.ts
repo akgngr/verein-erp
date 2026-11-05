@@ -9,6 +9,7 @@ export const moduleConfig: ModuleConfig = {
   description: "Regularly runs system security tests and monitors results",
   category: "OFFICIAL",
   isProtected: false,
+  hasSchema: true,
   dependencies: {
     "cron": "^3.5.0"
   },
