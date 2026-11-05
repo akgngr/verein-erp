@@ -11,8 +11,8 @@
       "changes": [
         {
           "type": "fix",
-          "tr": "Worker görevleri heartbeat ile lease sahipliğini yeniler ve artan fencing token ile eski worker'ların yeni yürütme durumunu değiştirmesi engellenir. Outbox kayıtları PostgreSQL SKIP LOCKED ile atomik sahiplenilir; süresi dolan dispatcher claim'leri kurtarılabilir.",
-          "de": "Worker-Aufgaben verlängern ihre Lease per Heartbeat; ein monoton steigendes Fencing-Token verhindert, dass veraltete Worker den Status neuer Ausführungen überschreiben. Outbox-Einträge werden mit PostgreSQL SKIP LOCKED atomar übernommen; abgelaufene Dispatcher-Claims können wiederhergestellt werden."
+          "tr": "Worker görevleri heartbeat ile lease sahipliğini yeniler; fencing token eski worker'ların yeni yürütme durumunu değiştirmesini engeller. Süresi dolan görevler otomatik olarak yeniden kuyruğa alınır veya deneme bütçesi tükendiyse başarısız işaretlenir. Outbox kayıtları PostgreSQL SKIP LOCKED ile atomik sahiplenilir ve süresi dolan dispatcher claim'leri kurtarılır.",
+          "de": "Worker-Aufgaben verlängern ihre Lease per Heartbeat; Fencing-Tokens verhindern, dass veraltete Worker den Status neuer Ausführungen überschreiben. Abgelaufene Aufgaben werden automatisch erneut eingereiht oder bei ausgeschöpftem Versuchslimit als fehlgeschlagen markiert. Outbox-Einträge werden mit PostgreSQL SKIP LOCKED atomar übernommen und abgelaufene Dispatcher-Claims wiederhergestellt."
         }
       ]
     },
