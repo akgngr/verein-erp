@@ -137,6 +137,9 @@
     ],
     "pg-boss": [
       "automation"
+    ],
+    "cron": [
+      "security-monitor"
     ]
   }
 }
