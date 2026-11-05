@@ -221,7 +221,7 @@ export async function recoverUndeliveredPendingExecutions(): Promise<number> {
 
     const eventKey = getPendingRecoveryEventKey(execution.id, execution.attempt, now);
     try {
-      await db.$transaction(async (tx) => {
+      const created = await db.$transaction(async (tx) => {
         const current = await tx.automationExecution.findFirst({
           where: {
             id: execution.id,
@@ -231,7 +231,7 @@ export async function recoverUndeliveredPendingExecutions(): Promise<number> {
           },
           select: { id: true },
         });
-        if (!current) return;
+        if (!current) return false;
 
         await tx.automationOutbox.create({
           data: {
@@ -246,8 +246,10 @@ export async function recoverUndeliveredPendingExecutions(): Promise<number> {
             },
           },
         });
+        return true;
       });
 
+      if (!created) continue;
       requeued += 1;
       await recordAutomationLog({
         executionId: execution.id,
