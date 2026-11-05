@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.0.1",
+      "date": "2026-11-05",
+      "title": {
+        "tr": "Güvenlik ve oturum sağlamlaştırması",
+        "de": "Sicherheits- und Sitzungshärtung"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Giriş denemesi kilitleme politikası ortaklaştırıldı ve test edilebilir hale getirildi.",
+          "de": "Die Sperrlogik für Anmeldeversuche wurde zentralisiert und testbar gemacht."
+        },
+        {
+          "type": "fix",
+          "tr": "Dosya yolu doğrulaması Windows ayraçlarını ve kontrol karakterlerini güvenli biçimde işler.",
+          "de": "Die Dateipfadvalidierung behandelt Windows-Trennzeichen und Steuerzeichen sicher."
+        }
+      ]
+    },
+    {
       "version": "1.0.0",
       "date": "2026-10-29",
       "title": {
