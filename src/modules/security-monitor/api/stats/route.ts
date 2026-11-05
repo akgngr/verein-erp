@@ -11,9 +11,9 @@ export async function GET(request: Request) {
     const statistics = await getTestStatistics();
 
     return NextResponse.json(statistics);
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
-      { error: error.message || "Failed to fetch statistics" },
+      { error: error instanceof Error ? error.message : "Failed to fetch statistics" },
       { status: 400 }
     );
   }
