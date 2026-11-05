@@ -16,9 +16,9 @@ export async function POST(
     const alert = await resolveSecurityAlert(id, userId);
 
     return NextResponse.json(alert);
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
-      { error: error.message || "Failed to resolve alert" },
+      { error: error instanceof Error ? error.message : "Failed to resolve alert" },
       { status: 400 }
     );
   }
