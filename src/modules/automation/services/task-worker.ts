@@ -16,8 +16,8 @@ import {
   getLegacyExecutionStaleBefore,
 } from "@/shared/automation/lease";
 import { getDb } from "@/shared/db";
-import type { AutomationTaskQueuePayload } from "../worker/queue";
 import { automationTasks } from "../tasks/registry";
+import type { AutomationTaskQueuePayload } from "../worker/queue";
 import { recordAutomationLog } from "./log-store";
 
 const WORKER_ID = randomUUID();
