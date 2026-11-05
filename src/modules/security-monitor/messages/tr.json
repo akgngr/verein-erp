@@ -1,6 +1,6 @@
 {
   "nav": {
-    "monitor": "Güvenlik İzleme"
+    "securityMonitor": "Güvenlik İzleme"
   },
   "module": {
     "label": "Güvenlik İzleme",

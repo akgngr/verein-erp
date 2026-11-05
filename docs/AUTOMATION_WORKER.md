@@ -55,7 +55,28 @@ Feature modules declare trusted tasks in `src/modules/<module>/automation.ts`. T
 - **Zamanlama:** Görev `schedule: { input, minIntervalMinutes }` bildirirse yöneticiler (`automation:approve`) Otomasyon ekranından aralık seçerek zamanlayabilir. Girdi her dilim için güvenilir koddan üretilir. Her dilim `schedule:<id>:<slotISO>` idempotency anahtarı kullanır; eşzamanlı worker'lar veya çökme aynı dilimi iki kez çalıştıramaz. Kaçırılan dilimler toplu çalıştırılmaz.
 - **Saklama:** Worker saatte bir; SUCCEEDED/CANCELLED kayıtları 90 gün, FAILED kayıtları 180 gün, PUBLISHED/FAILED outbox satırlarını 14 gün sonra siler.
 
-### Henüz yapılmayanlar (spec Aşama 3–4)
+## Görsel iş akışları (0.7.0)
 
-- Olay tetikleyicileri ve kalıcı bekle/devam (wait/resume) düğümleri.
-- Görsel Workflow Builder (`@workflowbuilder/sdk`): React 19 uyumluluğu CI'da doğrulanmadan etkinleştirilmemeli; ayrı PR olarak planlanmıştır.
+**Ekranlar:** Ayarlar → İş akışları (`/automation/workflows`). Onay bekleyen adımlar Otomasyon İzleme ekranının üstünde listelenir.
+
+**Yetkiler:** `view` listeyi ve çalıştırmaları görür; `create` akış oluşturur; `update` taslak kaydeder ve elle başlatır; `approve` yayımlar, açar/kapatır ve onay kararı verir; `delete` siler.
+
+**Akış modeli:**
+- Düzenleyici (`@workflowbuilder/sdk`, `props` kalıcılık stratejisi) yalnızca *taslak JSON* üretir; bu JSON asla çalıştırılmaz.
+- Yayımlama, taslağı `src/shared/automation/workflow-graph.ts` içindeki derleyiciyle kanonik grafa çevirir, sunucuda doğrular ve değiştirilemez bir `AutomationWorkflowVersion` olarak saklar. Çalışma zamanı yalnızca bu grafı yürütür.
+- Düğümler: `trigger` (elle / olay), `task` (yalnızca `workflow` bildiren kayıtlı görevler), `condition`, `parallel`, `delay` (süre veya ISO tarih), `approval`. Kod düğümü yoktur.
+- Görev girdisi JSON'dur; değerler yalnızca tam dize başvurusu olabilir: `{{trigger.alan}}`, `{{steps.<düğüm>.alan}}`, `{{uuid}}`. İfade dili yoktur.
+- Koşul sağlanmazsa veya onay reddedilirse sonraki dal atlanır (dead-path elimination). Else dalı için ters koşullu ikinci bir koşul kullanılır. Birleşme düğümü, tüm gelen dallar çözülene kadar bekler.
+- Sınırlar: 50 düğüm, 100 kenar, derinlik 25, düğüm başına 10 çıkış, 32 KB yük, en çok 90 gün bekleme, çalıştırma başına en çok 120 gün.
+
+**Çalışma zamanı:**
+- Bir çalıştırma `kind=WORKFLOW` execution'dır ve etkinken `WAITING` durumundadır (görev kurtarma yolları bu kayıtlara dokunmaz). Adımlar `AutomationStepRun` satırlarıdır (`stepKey` = düğüm kimliği).
+- İlerletme (`advanceWorkflowRun`) satır kilidiyle seri çalışır ve her seferinde durumu baştan hesaplar; tekrar çağrılması güvenlidir.
+- Görev düğümleri, aynı transaction içinde `workflow:<run>:<düğüm>` idempotency anahtarlı alt görev oluşturur. Alt görev bittiğinde worker aynı commit içinde ilerletme olayı yazar.
+- Bekleme adımları `waitUntil` ile kalıcıdır; worker 15 saniyede bir süresi dolanları ilerletir. Onay kararı da outbox üzerinden ilerletme olayı yazar.
+- Çalıştırma iptali bekleyen adımları ve çalışan alt görevleri iptal eder. İş akışı çalıştırmaları "yeniden dene" ile tekrarlanamaz; yeni çalıştırma başlatılır.
+
+**Olaylar:**
+- Modüller `automation.ts` içinde `defineEvent({ key, payloadSchema })` ile olay bildirir ve `emitAutomationEvent(event, data, tx)` ile iş transaction'ı içinde yayımlar. Otomasyon kapalıysa veya modül kullanılamıyorsa çağrı hiçbir şey yapmaz.
+- Yükler yalnızca kimlik ve kişisel olmayan değerler taşır. Mevcut olaylar: `members.created`, `mailings.campaign_finished`.
+- Worker olayı, tetikleyicisi bu olay olan etkin akışlar için `event:<outbox>:<akış>` anahtarıyla bir kez başlatır.

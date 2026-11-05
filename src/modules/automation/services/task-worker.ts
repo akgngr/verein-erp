@@ -20,6 +20,7 @@ import { automationTasks } from "../tasks/registry";
 import type { AutomationTaskQueuePayload } from "../worker/queue";
 import { assertTaskModulesUsable } from "./execution-control";
 import { recordAutomationLog } from "./log-store";
+import { queueWorkflowAdvance } from "./workflow-runtime";
 
 const WORKER_ID = randomUUID();
 const registeredTasks = automationTasks as unknown as readonly TaskDefinition[];
@@ -70,6 +71,11 @@ async function markTerminal(
     });
 
     if (update.count === 0) return false;
+
+    // Workflow child task finished: advance the parent run in the same commit.
+    const finished = await tx.automationExecution.findUnique({ where: { id: executionId }, select: { context: true } });
+    const workflowRunId = asObject(finished?.context).workflowRunId;
+    if (typeof workflowRunId === "string") await queueWorkflowAdvance(tx, workflowRunId, "child-finished");
 
     await tx.automationStepRun.updateMany({
       where: { executionId, stepKey: "main", status: "RUNNING" },

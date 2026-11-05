@@ -3,7 +3,7 @@ import { requirePermission } from "@/modules/auth/server";
 import { securityMonitorPermissions } from "../../permissions";
 import { getTestStatistics } from "../../services/test-runner";
 
-// GET /api/modules/security-monitor/stats - Get test statistics
+// GET /api/security-monitor/stats - Get test statistics
 export async function GET() {
   try {
     await requirePermission(securityMonitorPermissions, "view");

@@ -2,6 +2,21 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.40.0",
+      "date": "2026-11-06",
+      "title": {
+        "tr": "Görsel iş akışları",
+        "de": "Visuelle Workflows"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Ayarlar → İş akışları: tetikleyici, görev, koşul, bekleme ve onay adımlarıyla görsel otomasyon akışları tasarlayın, yayımlayın ve çalıştırmaları izleyin. Akışlar elle veya modül olaylarıyla (ör. yeni üye) başlar.",
+          "de": "Einstellungen → Workflows: Abläufe mit Auslöser, Aufgaben, Bedingungen, Wartezeiten und Freigaben visuell gestalten, veröffentlichen und Ausführungen verfolgen. Start manuell oder durch Modulereignisse (z. B. neues Mitglied)."
+        }
+      ]
+    },
+    {
       "version": "0.39.0",
       "date": "2026-11-05",
       "title": {

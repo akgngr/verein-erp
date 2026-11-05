@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.3.0",
+      "date": "2026-11-06",
+      "title": {
+        "tr": "İş akışı görevi: bildirim e-postası",
+        "de": "Workflow-Aufgabe: Benachrichtigungs-E-Mail"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "İş akışlarında sabit bir adrese tek bildirim e-postası gönderen mail.send_notification görevi eklendi.",
+          "de": "Neue Workflow-Aufgabe mail.send_notification sendet eine einzelne Benachrichtigung an eine feste Adresse."
+        }
+      ]
+    },
+    {
       "version": "1.2.2",
       "date": "2026-11-03",
       "title": {

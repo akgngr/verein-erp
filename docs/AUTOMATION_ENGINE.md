@@ -1,6 +1,6 @@
 # Automation Engine — Architecture and Delivery Plan
 
-Status: design baseline for implementation. This document is normative for the first implementation stages.
+Status: implemented through Stage 4 (see docs/AUTOMATION_WORKER.md for operational details). Stage 5 hardening items beyond retention remain open: per-module quotas, metrics and backup/restore tests.
 
 ## Goals
 

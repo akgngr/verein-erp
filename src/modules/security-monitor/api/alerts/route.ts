@@ -3,7 +3,7 @@ import { requirePermission } from "@/modules/auth/server";
 import { securityMonitorPermissions } from "../../permissions";
 import { getSecurityTestAlerts, acknowledgeSecurityAlert } from "../../server";
 
-// GET /api/modules/security-monitor/alerts - List alerts
+// GET /api/security-monitor/alerts - List alerts
 export async function GET(request: Request) {
   try {
     await requirePermission(securityMonitorPermissions, "view");
@@ -30,7 +30,7 @@ export async function GET(request: Request) {
   }
 }
 
-// POST /api/modules/security-monitor/alerts/:id/acknowledge - Acknowledge alert
+// POST /api/security-monitor/alerts/:id/acknowledge - Acknowledge alert
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> }

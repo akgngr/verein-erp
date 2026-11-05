@@ -3,6 +3,8 @@
 import { getDb } from "@/shared/db";
 import { buildUserLabel } from "@/shared/utils";
 import type { ActionResult } from "@/shared/types/action";
+import { emitAutomationEvent } from "@/shared/automation/emit";
+import { memberCreatedEvent } from "../automation";
 
 import { ActionError, createAction } from "@/modules/auth/server";
 
@@ -58,7 +60,7 @@ export async function createMemberAction(
       const created = await runWithMembershipNumberRetry(() =>
         db.$transaction(async (tx) => {
           const { sequence, membershipNumber } = await allocateMembershipNumber(tx, year);
-          return tx.member.create({
+          const member = await tx.member.create({
             data: {
               year,
               sequence,
@@ -89,6 +91,8 @@ export async function createMemberAction(
               updatedByLabel: createdByLabel,
             },
           });
+          await emitAutomationEvent(memberCreatedEvent, { memberId: member.id, type: member.type, status: member.status }, tx);
+          return member;
         }),
       );
 

@@ -1,6 +1,6 @@
 {
   "nav": {
-    "monitor": "Sicherheitsüberwachung"
+    "securityMonitor": "Sicherheitsüberwachung"
   },
   "module": {
     "label": "Sicherheitsüberwachung",

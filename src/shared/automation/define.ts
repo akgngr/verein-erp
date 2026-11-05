@@ -49,6 +49,15 @@ export type TaskDefinition<TSchema extends z.ZodType = z.ZodType, TResult = unkn
     /** Lower bound for the interval chosen in the UI. Default 60 minutes. */
     minIntervalMinutes?: number;
   };
+  /**
+   * Optional: expose this task as a node in the visual workflow editor. Inputs
+   * entered in the editor are validated against inputSchema at publish (when
+   * static) and again when the worker claims the job.
+   */
+  workflow?: {
+    /** Example/default input shown in the editor. */
+    defaultInput?: Record<string, unknown>;
+  };
   /** Trusted application handler registered statically. */
   handler: (input: z.output<TSchema>, context: TaskExecutionContext) => Promise<TResult>;
 };
@@ -100,6 +109,32 @@ export function taskModuleKey(taskKey: string): string {
 export function isTaskDefinition(value: unknown): value is TaskDefinition {
   return typeof value === "object" && value !== null &&
     "key" in value && "handler" in value && "inputSchema" in value && "version" in value;
+}
+
+/**
+ * Domain event a module may emit (e.g. "members.created"). Payloads must carry
+ * only identifiers and small, non-sensitive values; workflows triggered by the
+ * event receive the validated payload as `trigger`.
+ */
+export type EventDefinition<TSchema extends z.ZodType = z.ZodType> = {
+  kind: "automation.event";
+  key: `${string}.${string}`;
+  description: string;
+  payloadSchema: TSchema;
+};
+
+export function defineEvent<TSchema extends z.ZodType>(
+  definition: Omit<EventDefinition<TSchema>, "kind">,
+): EventDefinition<TSchema> {
+  if (!TASK_KEY.test(definition.key)) {
+    throw new Error(`Geçersiz olay anahtarı: ${definition.key}`);
+  }
+  return Object.freeze({ ...definition, kind: "automation.event" as const });
+}
+
+export function isEventDefinition(value: unknown): value is EventDefinition {
+  return typeof value === "object" && value !== null &&
+    (value as { kind?: unknown }).kind === "automation.event";
 }
 
 const TASK_KEY = /^[a-z][a-z0-9-]*\.[a-z][a-z0-9_]*$/;

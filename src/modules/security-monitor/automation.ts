@@ -24,6 +24,7 @@ export const runSecurityTestsTask = defineTask({
     maxDelaySeconds: 0,
     backoffMultiplier: 1,
   },
+  workflow: { defaultInput: { requestId: "{{uuid}}", testSuite: "security" } },
   // Administrators may run the suite on a recurring schedule (e.g. nightly).
   schedule: {
     input: () => ({ requestId: randomUUID(), testSuite: "security" as const }),

@@ -2,7 +2,7 @@ import "server-only";
 
 import { z } from "zod";
 
-import { defineTask } from "@/shared/automation/define";
+import { defineEvent, defineTask } from "@/shared/automation/define";
 
 /** Queue payload stores only the campaign ID; recipient data stays in the source module. */
 export const sendCampaignTask = defineTask({
@@ -22,4 +22,15 @@ export const sendCampaignTask = defineTask({
     const { processCampaign } = await import("./services/campaigns");
     return processCampaign(input.campaignId, context);
   },
+});
+
+/** Kampanya tamamlandı. Yük yalnızca sayılar ve kampanya kimliği taşır. */
+export const campaignFinishedEvent = defineEvent({
+  key: "mailings.campaign_finished",
+  description: "mailings.campaign_finished",
+  payloadSchema: z.object({
+    campaignId: z.string().min(1).max(128),
+    sent: z.number().int().min(0),
+    failed: z.number().int().min(0),
+  }).strict(),
 });

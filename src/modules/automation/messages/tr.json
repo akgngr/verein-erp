@@ -1,6 +1,7 @@
 {
   "nav": {
-    "monitor": "Otomasyon izleme"
+    "automationMonitor": "Otomasyon izleme",
+    "automationWorkflows": "İş akışları"
   },
   "module": {
     "label": "Otomasyon",
@@ -75,5 +76,92 @@
     "interval": "Aralık bu görev için izin verilen sınırların dışında.",
     "scheduleNotFound": "Zamanlama bulunamadı.",
     "disabled": "Otomasyon bu ortamda kapalı."
+  },
+  "approvals": {
+    "title": "Onay bekleyen adımlar",
+    "approve": "Onayla",
+    "reject": "Reddet",
+    "approved": "Onaylandı.",
+    "rejected": "Reddedildi."
+  },
+  "workflows": {
+    "title": "İş akışları",
+    "description": "Görsel düzenleyiciyle tetikleyici, görev, koşul, bekleme ve onay adımlarından oluşan akışlar tasarlayın.",
+    "empty": "Henüz iş akışı yok.",
+    "name": "Akış adı",
+    "create": "Akış oluştur",
+    "version": "Sürüm {version}",
+    "draftOnly": "Yalnızca taslak",
+    "manualTrigger": "Elle başlatma",
+    "active": "Etkin",
+    "inactive": "Kapalı",
+    "activeVersion": "Etkin sürüm: {version}",
+    "saveHint": "Düzenleyicideki Kaydet taslağı sunucuya kaydeder ve doğrular. Çalışan akışlar yalnızca yayımlanmış sürümü kullanır.",
+    "enabled": "Etkin",
+    "publish": "Yayımla",
+    "publishBlocked": "Akış doğrulanamadı; sorunları düzeltin.",
+    "published": "Sürüm {version} yayımlandı.",
+    "delete": "Sil",
+    "deleteTitle": "Akış silinsin mi?",
+    "deleteDescription": "Akış ve tüm sürümleri silinir. Geçmiş çalıştırma kayıtları korunur.",
+    "valid": "Taslak geçerli, yayımlanabilir.",
+    "issues": "Doğrulama sorunları",
+    "runInput": "Başlangıç verisi (JSON, isteğe bağlı)",
+    "runInputHint": "Akışta '{{trigger.alan}}' ile kullanılabilir. Kişisel veri yerine kimlik kullanın.",
+    "run": "Şimdi çalıştır",
+    "started": "Akış başlatıldı.",
+    "runs": "Son çalıştırmalar",
+    "noRuns": "Henüz çalıştırma yok.",
+    "stepStatus": {
+      "PENDING": "Bekliyor",
+      "RUNNING": "Çalışıyor",
+      "WAITING": "Bekliyor (zaman/onay)",
+      "SKIPPED": "Atlandı",
+      "RETRYING": "Yeniden deneniyor",
+      "SUCCEEDED": "Tamamlandı",
+      "FAILED": "Başarısız",
+      "CANCELLED": "İptal"
+    },
+    "errors": {
+      "notFound": "Akış bulunamadı.",
+      "tooLarge": "Akış veya veri çok büyük.",
+      "notPublished": "Önce akışı yayımlayın.",
+      "notActive": "Akış etkin değil veya yayımlanmamış.",
+      "notManual": "Bu akış elle başlatılamaz; bir olayla tetiklenir.",
+      "approvalNotFound": "Onay adımı bulunamadı.",
+      "approvalDecided": "Bu adım için zaten karar verildi.",
+      "invalid": "Akış geçersiz.",
+      "inputJson": "Başlangıç verisi geçerli JSON değil.",
+      "name": "Ad en az 2 karakter olmalı."
+    },
+    "nodes": {
+      "group": "Adımlar",
+      "trigger": "Tetikleyici",
+      "triggerDesc": "Akış elle veya bir modül olayıyla başlar.",
+      "triggerType": "Tetikleme türü",
+      "manual": "Elle",
+      "event": "Olay",
+      "eventKey": "Olay",
+      "task": "Görev",
+      "taskDesc": "Kayıtlı bir modül görevini çalıştırır.",
+      "taskKey": "Görev",
+      "input": "Girdi (JSON, '{{trigger.alan}}' başvuruları desteklenir)",
+      "condition": "Koşul",
+      "conditionDesc": "Koşul sağlanmazsa sonraki dal atlanır. Değilse dalı için ters koşullu ikinci bir koşul ekleyin.",
+      "field": "Alan (ör. trigger.status, steps.n1.sent)",
+      "operator": "Karşılaştırma",
+      "value": "Değer",
+      "parallel": "Paralel",
+      "parallelDesc": "Birden fazla dala ayırır; dallar birleştiğinde hepsi beklenir.",
+      "delay": "Bekle",
+      "delayDesc": "Belirli bir süre veya tarihe kadar bekler.",
+      "minutes": "Dakika",
+      "until": "Veya tarih (ISO, ör. 2026-12-01T09:00:00+01:00)",
+      "approval": "Onay",
+      "approvalDesc": "Yetkili bir kişi onaylayana kadar bekler; reddedilirse dal atlanır.",
+      "note": "Onaylayana not",
+      "name": "Ad",
+      "description": "Açıklama"
+    }
   }
 }
