@@ -69,8 +69,8 @@ async function claimOutboxBatch(): Promise<ClaimedOutboxEvent[]> {
           )
         )
       ORDER BY "availableAt" ASC, "createdAt" ASC
-      FOR UPDATE SKIP LOCKED
       LIMIT ${OUTBOX_BATCH_SIZE}
+      FOR UPDATE SKIP LOCKED
     )
     UPDATE "automation_outbox" AS outbox
     SET
