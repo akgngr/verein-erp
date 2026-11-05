@@ -55,6 +55,7 @@
     "runNow": "Şimdi Çalıştır",
     "statistics": "İstatistikler",
     "environment": "Ortam",
-    "duration": "Süre"
+    "duration": "Süre",
+    "queued": "Güvenlik testleri kalıcı kuyruğa alındı; sonuçlar tamamlandığında burada görünecek."
   }
 }
