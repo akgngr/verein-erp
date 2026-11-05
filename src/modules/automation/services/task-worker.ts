@@ -15,8 +15,8 @@ import { recordAutomationLog } from "./log-store";
 import type { AutomationTaskQueuePayload } from "../worker/queue";
 
 const WORKER_ID = randomUUID();
-const LEASE_DURATION_MS = 90_000;
-const HEARTBEAT_INTERVAL_MS = 25_000;
+const LEASE_DURATION_MS = 45_000;
+const HEARTBEAT_INTERVAL_MS = 10_000;
 const registeredTasks = automationTasks as unknown as readonly TaskDefinition[];
 
 function errorCode(error: unknown): string {
@@ -196,6 +196,7 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
   let timeout: ReturnType<typeof setTimeout> | undefined;
   let heartbeat: ReturnType<typeof setInterval> | undefined;
   let heartbeatBusy = false;
+  let lastConfirmedHeartbeatAt = Date.now();
   let leaseLost = false;
   let rejectLeaseLost!: (error: Error) => void;
 
@@ -270,11 +271,18 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
         if (!await renewLease(execution.id, leaseToken)) {
           controller.abort();
           loseLease();
+        } else {
+          lastConfirmedHeartbeatAt = Date.now();
         }
-      } catch {
-        // Conservatively stop work if lease ownership cannot be confirmed.
-        controller.abort();
-        loseLease();
+      } catch (error) {
+        // A transient database error is retried on the next heartbeat. Stop only
+        // after the last confirmed lease could have expired.
+        if (Date.now() - lastConfirmedHeartbeatAt >= LEASE_DURATION_MS) {
+          controller.abort();
+          loseLease();
+        } else {
+          console.warn("[automation:worker] Lease heartbeat geçici hata:", errorCode(error));
+        }
       } finally {
         heartbeatBusy = false;
       }
