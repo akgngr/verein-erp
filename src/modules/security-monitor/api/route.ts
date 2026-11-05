@@ -36,14 +36,14 @@ export async function GET(request: Request) {
 // POST /api/modules/security-monitor/runs - Run tests
 export async function POST(request: Request) {
   try {
-    await requirePermission(securityMonitorPermissions, "create");
+    const user = await requirePermission(securityMonitorPermissions, "create");
 
     const body = await request.json();
-    const { testSuite = "security", triggeredBy = "manual" } = body;
+    const { testSuite = "security" } = body;
 
     const result = await runSecurityTests({
       testSuite,
-      triggeredBy,
+      triggeredBy: user.id,
     });
 
     return NextResponse.json(result);
