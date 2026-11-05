@@ -13,3 +13,21 @@ export function getLegacyExecutionStaleBefore(now: Date): Date {
 export function isExecutionAttemptExhausted(attempt: number, maxAttempts: number): boolean {
   return attempt >= maxAttempts;
 }
+
+ 
+export const PENDING_EXECUTION_RECOVERY_AFTER_MS = 2 * 60 * 1000;
+export const PENDING_EXECUTION_RECOVERY_INTERVAL_MS = 60 * 1000;
+
+export function getPendingExecutionRecoveryBefore(now: Date): Date {
+  return new Date(now.getTime() - PENDING_EXECUTION_RECOVERY_AFTER_MS);
+}
+
+/** One recovery outbox event per execution/attempt and minute bucket. */
+export function getPendingRecoveryEventKey(
+  executionId: string,
+  attempt: number,
+  now: Date,
+): string {
+  const bucket = Math.floor(now.getTime() / PENDING_EXECUTION_RECOVERY_INTERVAL_MS);
+  return `automation.task.pending-recovery:${executionId}:${attempt}:${bucket}`;
+}
