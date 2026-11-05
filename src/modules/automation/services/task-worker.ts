@@ -10,13 +10,16 @@ import {
   type TaskRetryPolicy,
 } from "@/shared/automation/define";
 import { getDb } from "@/shared/db";
+import {
+  EXECUTION_HEARTBEAT_INTERVAL_MS,
+  EXECUTION_LEASE_DURATION_MS,
+  getExecutionLeaseExpiry,
+} from "@/shared/automation/lease";
 import { automationTasks } from "../tasks/registry";
 import { recordAutomationLog } from "./log-store";
 import type { AutomationTaskQueuePayload } from "../worker/queue";
 
 const WORKER_ID = randomUUID();
-const LEASE_DURATION_MS = 45_000;
-const HEARTBEAT_INTERVAL_MS = 10_000;
 const registeredTasks = automationTasks as unknown as readonly TaskDefinition[];
 
 function errorCode(error: unknown): string {
@@ -101,7 +104,7 @@ async function renewLease(executionId: string, leaseToken: number): Promise<bool
     },
     data: {
       heartbeatAt: now,
-      leaseExpiresAt: new Date(now.getTime() + LEASE_DURATION_MS),
+      leaseExpiresAt: getExecutionLeaseExpiry(now),
     },
   });
   return result.count === 1;
@@ -157,7 +160,7 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
         startedAt: now,
         heartbeatAt: now,
         leaseOwner: WORKER_ID,
-        leaseExpiresAt: new Date(now.getTime() + LEASE_DURATION_MS),
+        leaseExpiresAt: getExecutionLeaseExpiry(now),
         leaseToken: { increment: 1 },
         finishedAt: null,
         lastErrorCode: null,
@@ -277,7 +280,7 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
       } catch (error) {
         // A transient database error is retried on the next heartbeat. Stop only
         // after the last confirmed lease could have expired.
-        if (Date.now() - lastConfirmedHeartbeatAt >= LEASE_DURATION_MS) {
+        if (Date.now() - lastConfirmedHeartbeatAt >= EXECUTION_LEASE_DURATION_MS) {
           controller.abort();
           loseLease();
         } else {
@@ -288,7 +291,7 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
       }
     };
 
-    heartbeat = setInterval(() => { void heartbeatOnce(); }, HEARTBEAT_INTERVAL_MS);
+    heartbeat = setInterval(() => { void heartbeatOnce(); }, EXECUTION_HEARTBEAT_INTERVAL_MS);
     void heartbeatOnce();
 
     const handler = Promise.resolve().then(() => task.handler(parsedInput.data, context));
