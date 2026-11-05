@@ -27,3 +27,16 @@ export function getLoginFailureState(
     shouldLock,
   };
 }
+
+export type LoginAccessStatus = "inactive" | "locked" | "allowed";
+
+/** Pure account-access decision used by credentials authentication. */
+export function getLoginAccessStatus(
+  isActive: boolean,
+  lockedUntil: Date | null,
+  now: Date,
+): LoginAccessStatus {
+  if (!isActive) return "inactive";
+  if (lockedUntil && lockedUntil > now) return "locked";
+  return "allowed";
+}
