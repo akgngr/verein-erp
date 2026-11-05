@@ -61,6 +61,7 @@ model AutomationExecution {
 
   @@unique([organizationId, idempotencyKey])
   @@index([status, scheduledAt])
+  @@index([status, updatedAt])
   @@index([status, leaseExpiresAt])
   @@index([sourceModule, createdAt])
   @@index([correlationId])

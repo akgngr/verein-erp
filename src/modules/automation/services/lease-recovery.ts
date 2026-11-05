@@ -1,17 +1,24 @@
 import "server-only";
 
+import { Prisma } from "@prisma/client";
+
 import {
   resolveTaskRetryPolicy,
   type TaskRetryPolicy,
 } from "@/shared/automation/define";
 import {
   getLegacyExecutionStaleBefore,
+  getPendingExecutionRecoveryBefore,
+  getPendingRecoveryEventKey,
   isExecutionAttemptExhausted,
 } from "@/shared/automation/lease";
 import { getDb } from "@/shared/db";
+import { AUTOMATION_TASK_QUEUE } from "../worker/queue";
 import { recordAutomationLog } from "./log-store";
 
 const RECOVERY_BATCH_SIZE = 100;
+const PENDING_DELIVERY_RECOVERED_LOG_MESSAGE =
+  "No live queue delivery was found for a stale pending execution; a recovery outbox event was created.";
 
 function asObject(value: unknown): Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value)
@@ -163,4 +170,108 @@ export async function recoverExpiredAutomationExecutions(): Promise<number> {
   }
 
   return recovered;
+}
+
+
+/**
+ * Recover PENDING executions whose pg-boss delivery has no live job.
+ *
+ * A PENDING execution is normally waiting for a queued/retrying pg-boss job.
+ * If transport retries are exhausted before the handler can claim it, that
+ * job becomes terminal while the ERP execution remains PENDING. We detect
+ * this by checking pg-boss's live states, then create a minute-bucketed
+ * outbox event. The event key prevents concurrent dispatchers from creating
+ * duplicates in the same recovery window.
+ */
+export async function recoverUndeliveredPendingExecutions(): Promise<number> {
+  const db = getDb();
+  const now = new Date();
+  const staleBefore = getPendingExecutionRecoveryBefore(now);
+  const candidates = await db.automationExecution.findMany({
+    where: {
+      status: "PENDING",
+      updatedAt: { lt: staleBefore },
+      OR: [{ scheduledAt: null }, { scheduledAt: { lte: now } }],
+    },
+    orderBy: { updatedAt: "asc" },
+    take: RECOVERY_BATCH_SIZE,
+    select: {
+      id: true,
+      definitionKey: true,
+      definitionVersion: true,
+      attempt: true,
+      updatedAt: true,
+    },
+  });
+
+  if (candidates.length === 0) return 0;
+
+  const executionIds = candidates.map((item) => item.id);
+  const liveJobs = await db.$queryRaw<Array<{ executionId: string }>>(Prisma.sql`
+    SELECT DISTINCT job.data ->> 'executionId' AS "executionId"
+    FROM "pgboss"."job" AS job
+    WHERE job.name = ${AUTOMATION_TASK_QUEUE}
+      AND job.state IN ('created', 'retry', 'active')
+      AND job.data ->> 'executionId' IN (${Prisma.join(executionIds)})
+  `);
+  const liveExecutionIds = new Set(liveJobs.map((job) => job.executionId));
+
+  let requeued = 0;
+
+  for (const execution of candidates) {
+    if (liveExecutionIds.has(execution.id)) continue;
+
+    const eventKey = getPendingRecoveryEventKey(execution.id, execution.attempt, now);
+    try {
+      const created = await db.$transaction(async (tx) => {
+        const current = await tx.automationExecution.findFirst({
+          where: {
+            id: execution.id,
+            status: "PENDING",
+            updatedAt: execution.updatedAt,
+            OR: [{ scheduledAt: null }, { scheduledAt: { lte: now } }],
+          },
+          select: { id: true },
+        });
+        if (!current) return false;
+
+        await tx.automationOutbox.create({
+          data: {
+            eventKey,
+            eventType: "automation.task.requested",
+            executionId: execution.id,
+            availableAt: now,
+            payload: {
+              executionId: execution.id,
+              taskKey: execution.definitionKey,
+              taskVersion: execution.definitionVersion,
+            },
+          },
+        });
+        return true;
+      });
+
+      if (!created) continue;
+      requeued += 1;
+      await recordAutomationLog({
+        executionId: execution.id,
+        level: "WARN",
+        event: "PENDING_DELIVERY_RECOVERED",
+        message: PENDING_DELIVERY_RECOVERED_LOG_MESSAGE,
+        details: {
+          attempt: execution.attempt,
+          eventKey,
+          staleSince: execution.updatedAt.toISOString(),
+        },
+      });
+    } catch (error) {
+      // Another dispatcher may have created the same minute-bucketed event.
+      // Unique conflicts are expected coordination, not a failed execution.
+      if (!(error && typeof error === "object" && "code" in error && error.code === "P2002")) {
+        throw error;
+      }
+    }
+  }
+
+  return requeued;
 }
