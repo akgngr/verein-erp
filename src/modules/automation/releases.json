@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.5.6",
+      "date": "2026-11-05",
+      "title": {
+        "tr": "PENDING görevlerin kuyruk teslimatı kurtarması",
+        "de": "Wiederherstellung der Queue-Zustellung für PENDING-Aufgaben"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "pg-boss teslimat denemeleri görevi çalıştırmaya başlamadan tükenirse PENDING execution kayıtları artık canlı kuyruk işleriyle karşılaştırılır ve sahipsiz kalanlar transactional outbox üzerinden güvenli biçimde yeniden kuyruğa alınır.",
+          "de": "Wenn pg-boss-Zustellversuche erschöpft sind, bevor eine Aufgabe gestartet wurde, werden PENDING-Ausführungen nun mit aktiven Queue-Jobs abgeglichen. Verwaiste Ausführungen werden über die transaktionale Outbox sicher erneut eingereiht."
+        }
+      ]
+    },
+    {
       "version": "0.5.5",
       "date": "2026-11-05",
       "title": {
