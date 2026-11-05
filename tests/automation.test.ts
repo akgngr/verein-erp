@@ -6,7 +6,9 @@ import { defineTask, resolveTaskRetryPolicy } from "../src/shared/automation/def
 import {
   EXECUTION_HEARTBEAT_INTERVAL_MS,
   EXECUTION_LEASE_DURATION_MS,
+  LEGACY_EXECUTION_STALE_AFTER_MS,
   getExecutionLeaseExpiry,
+  getLegacyExecutionStaleBefore,
   isExecutionAttemptExhausted,
 } from "../src/shared/automation/lease";
 import { defineTaskRegistry } from "../src/modules/automation/tasks/registry";
@@ -23,6 +25,15 @@ describe("Automation worker lease policy", () => {
     assert.equal(
       getExecutionLeaseExpiry(now).toISOString(),
       "2026-11-05T12:00:45.000Z",
+    );
+  });
+
+  test("preserves the two-hour recovery window for legacy RUNNING rows", () => {
+    const now = new Date("2026-11-05T12:00:00.000Z");
+    assert.equal(LEGACY_EXECUTION_STALE_AFTER_MS, 2 * 60 * 60 * 1000);
+    assert.equal(
+      getLegacyExecutionStaleBefore(now).toISOString(),
+      "2026-11-05T10:00:00.000Z",
     );
   });
 
