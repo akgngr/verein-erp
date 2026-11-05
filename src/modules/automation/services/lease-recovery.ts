@@ -17,6 +17,8 @@ import { AUTOMATION_TASK_QUEUE } from "../worker/queue";
 import { recordAutomationLog } from "./log-store";
 
 const RECOVERY_BATCH_SIZE = 100;
+const PENDING_DELIVERY_RECOVERED_LOG_MESSAGE =
+  "No live queue delivery was found for a stale pending execution; a recovery outbox event was created.";
 
 function asObject(value: unknown): Record<string, unknown> {
   return value !== null && typeof value === "object" && !Array.isArray(value)
@@ -255,7 +257,7 @@ export async function recoverUndeliveredPendingExecutions(): Promise<number> {
         executionId: execution.id,
         level: "WARN",
         event: "PENDING_DELIVERY_RECOVERED",
-        message: "No live queue delivery was found for a stale pending execution; a recovery outbox event was created.",
+        message: PENDING_DELIVERY_RECOVERED_LOG_MESSAGE,
         details: {
           attempt: execution.attempt,
           eventKey,
