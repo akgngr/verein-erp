@@ -9,12 +9,12 @@ import {
   type TaskExecutionContext,
   type TaskRetryPolicy,
 } from "@/shared/automation/define";
-import { getDb } from "@/shared/db";
 import {
   EXECUTION_HEARTBEAT_INTERVAL_MS,
   EXECUTION_LEASE_DURATION_MS,
   getExecutionLeaseExpiry,
 } from "@/shared/automation/lease";
+import { getDb } from "@/shared/db";
 import { automationTasks } from "../tasks/registry";
 import { recordAutomationLog } from "./log-store";
 import type { AutomationTaskQueuePayload } from "../worker/queue";
