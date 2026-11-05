@@ -60,7 +60,8 @@ export async function authorize(
       entityId: user.id,
     });
     throw new InvalidCredentialsError();
-  }  const now = new Date();
+  }
+
   const userLabel = buildUserLabel(user.name, user.email);
 
   if (accessStatus === "locked") {
