@@ -46,20 +46,18 @@ export async function recoverExpiredAutomationExecutions(): Promise<number> {
 
   for (const execution of expired) {
     let retryPolicy: TaskRetryPolicy;
+    let policyInvalid = false;
     try {
       retryPolicy = resolveTaskRetryPolicy(
         asObject(execution.retryPolicy) as Partial<TaskRetryPolicy>,
       );
     } catch {
+      policyInvalid = true;
       retryPolicy = { maxAttempts: execution.attempt, initialDelaySeconds: 0, maxDelaySeconds: 0, backoffMultiplier: 1 };
     }
 
-    const exhausted = execution.attempt >= retryPolicy.maxAttempts;
-    const errorCode = retryPolicy.maxAttempts === execution.attempt &&
-      retryPolicy.initialDelaySeconds === 0 &&
-      retryPolicy.maxDelaySeconds === 0
-      ? "TASK_RETRY_POLICY_INVALID"
-      : "TASK_LEASE_EXPIRED";
+    const exhausted = policyInvalid || execution.attempt >= retryPolicy.maxAttempts;
+    const errorCode = policyInvalid ? "TASK_RETRY_POLICY_INVALID" : "TASK_LEASE_EXPIRED";
 
     const result = await db.$transaction(async (tx) => {
       const update = await tx.automationExecution.updateMany({
