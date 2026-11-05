@@ -5,6 +5,7 @@ import { Prisma } from "@prisma/client";
 import type { PgBoss } from "pg-boss";
 
 import { getDb } from "@/shared/db";
+import { recoverExpiredAutomationExecutions } from "./lease-recovery";
 import {
   resolveTaskRetryPolicy,
   type TaskRetryPolicy,
@@ -203,8 +204,15 @@ export async function runAutomationOutboxDispatcher(
   boss: PgBoss,
   signal: AbortSignal,
 ): Promise<void> {
+  let nextLeaseRecoveryAt = 0;
+
   while (!signal.aborted) {
     try {
+      if (Date.now() >= nextLeaseRecoveryAt) {
+        await recoverExpiredAutomationExecutions();
+        nextLeaseRecoveryAt = Date.now() + 15_000;
+      }
+
       const published = await dispatchAutomationOutboxBatch(boss);
       if (published === 0) await wait(1_000, signal);
     } catch (error) {
