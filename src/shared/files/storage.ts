@@ -24,11 +24,11 @@ export function getUploadRoot(): string {
 /** storagePath'i UPLOAD_DIR altındaki mutlak yola çözer; yol dışına çıkışı reddeder. */
 export function resolveSafePath(storagePath: string): string {
   const root = getUploadRoot();
-  if (/[\\u0000-\\u001f\\u007f]/.test(storagePath)) {
+  if (/[\u0000-\u001f\u007f]/.test(storagePath)) {
     throw new Error("Geçersiz depolama yolu.");
   }
   // Treat Windows separators as separators on every platform before resolving.
-  const normalizedPath = storagePath.replace(/\\\\/g, path.sep);
+  const normalizedPath = storagePath.replace(/\\/g, path.sep);
   const resolved = path.resolve(root, normalizedPath);
   if (resolved !== root && !resolved.startsWith(root + path.sep)) {
     throw new Error("Geçersiz depolama yolu.");
