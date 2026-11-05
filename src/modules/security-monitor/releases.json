@@ -1,0 +1,31 @@
+{
+  "releases": [
+    {
+      "version": "1.0.0",
+      "date": "2026-11-05",
+      "title": { "tr": "Güvenlik İzleme Modülü", "de": "Sicherheitsüberwachungsmodul" },
+      "changes": [
+        { 
+          "type": "feature",
+          "tr": "Güvenlik testleri çalıştırma ve sonuçları saklama",
+          "de": "Sicherheitstests ausführen und Ergebnisse speichern"
+        },
+        { 
+          "type": "feature",
+          "tr": "Uyarı sistemi ile kritik hataların bildirimi",
+          "de": "Warnsystem für Benachrichtigungen über kritische Fehler"
+        },
+        { 
+          "type": "feature",
+          "tr": "Test geçmişi ve istatistikler",
+          "de": "Testverlauf und Statistiken"
+        },
+        { 
+          "type": "feature",
+          "tr": "Zamanlanmış test çalıştırmaları",
+          "de": "Geplante Testausführungen"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+// Security Monitor Module - Test Results Schema
+
+model SecurityTestRun {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Test run information
+  testSuite   String    // e.g., "security", "all", "accounting"
+  status      String    // "passed", "failed", "error", "skipped"
+  durationMs  Int       // Test run duration in milliseconds
+  
+  // Test statistics
+  totalTests  Int       @default(0)
+  passed      Int       @default(0)
+  failed      Int       @default(0)
+  skipped     Int       @default(0)
+  
+  // Environment information
+  environment String    // e.g., "development", "production", "ci"
+  nodeVersion String
+  osPlatform  String
+  
+  // Test results details (JSON)
+  results     Json      // Detailed test results
+  
+  // Logs
+  logs        Json      // Test execution logs
+  
+  // Metadata
+  triggeredBy String    // "manual", "scheduled", "ci"
+  commitHash  String?   // Git commit hash if available
+  branch      String?   // Git branch if available
+  
+  // Related alerts (back-relation)
+  alerts      SecurityTestAlert[]
+  
+  // Indexes
+  @@index([testSuite, createdAt])
+  @@index([status, createdAt])
+  @@index([environment, createdAt])
+}
+
+model SecurityTestAlert {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Alert information
+  severity    String    // "critical", "high", "medium", "low"
+  type        String    // e.g., "test_failure", "security_vulnerability"
+  message     String
+  description String?
+  
+  // Related test run
+  testRunId   String
+  testRun     SecurityTestRun @relation(fields: [testRunId], references: [id])
+  
+  // Alert status
+  status      String    @default("open") // "open", "acknowledged", "resolved", "closed"
+  acknowledgedBy String?
+  acknowledgedAt DateTime?
+  resolvedBy   String?
+  resolvedAt   DateTime?
+  
+  // Metadata
+  metadata    Json?     // Additional alert metadata
+  
+  // Indexes
+  @@index([severity, status, createdAt])
+  @@index([testRunId])
+}
+
+model SecurityTestSchedule {
+  id          String    @id @default(cuid())
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  
+  // Schedule configuration
+  name        String    // e.g., "Daily Security Tests", "Hourly Quick Check"
+  testSuite   String    // Which test suite to run
+  cronExpression String  // Cron expression for scheduling
+  enabled     Boolean   @default(true)
+  
+  // Last execution
+  lastRunAt   DateTime?
+  lastRunId   String?
+  
+  // Next execution
+  nextRunAt   DateTime?
+  
+  // Configuration
+  timeoutMs   Int       @default(300000) // 5 minutes default timeout
+  retryCount  Int       @default(3)
+  
+  // Indexes
+  @@index([name])
+  @@index([enabled, nextRunAt])
+}
