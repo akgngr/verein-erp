@@ -36,7 +36,7 @@ interface Alert {
 }
 
 export default function SecurityMonitorPage() {
-  const t = useTranslations("security-monitor");
+  const t = useTranslations("security-monitor.monitor");
   const [statistics, setStatistics] = useState<TestStatistics | null>(null);
   const [recentRuns, setRecentRuns] = useState<TestRun[]>([]);
   const [alerts, setAlerts] = useState<Alert[]>([]);

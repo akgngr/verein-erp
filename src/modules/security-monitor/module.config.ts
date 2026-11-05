@@ -17,7 +17,7 @@ export const moduleConfig: ModuleConfig = {
     {
       href: "/guvenlik-izleme",
       label: "Security Monitor",
-      labelKey: "modules.securityMonitor.title",
+      labelKey: "monitor",
       icon: ShieldCheck,
       group: "settings",
       order: 100,

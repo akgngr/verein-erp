@@ -5,8 +5,6 @@ export const securityMonitorPermissions = definePermissions("security-monitor", 
   BOARD: [],
   SECRETARY: [],
   TREASURER: [],
-  AUDITOR: ["view", "create"],
+  AUDITOR: ["view"],
   VIEWER: [],
 });
-
-export default securityMonitorPermissions;
