@@ -13,7 +13,7 @@ export async function GET(request: Request) {
     return NextResponse.json(statistics);
   } catch (error) {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to fetch statistics" } // i18n-ignore,
+      { error: error instanceof Error ? error.message : "Failed to fetch statistics" },, // i18n-ignore
       { status: 400 }
     );
   }
