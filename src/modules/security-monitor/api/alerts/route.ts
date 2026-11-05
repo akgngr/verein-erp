@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { requirePermission } from "@/modules/auth/server";
 import { securityMonitorPermissions } from "../../permissions";
-import { getSecurityTestAlerts, acknowledgeSecurityAlert, resolveSecurityAlert } from "../../server";
+import { getSecurityTestAlerts, acknowledgeSecurityAlert } from "../../server";
 
 // GET /api/modules/security-monitor/alerts - List alerts
 export async function GET(request: Request) {
@@ -22,9 +22,9 @@ export async function GET(request: Request) {
     });
 
     return NextResponse.json(result);
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
-      { error: error.message || "Failed to fetch alerts" },
+      { error: error instanceof Error ? error.message : "Failed to fetch alerts" },
       { status: 400 }
     );
   }
@@ -45,7 +45,7 @@ export async function POST(
     return NextResponse.json(alert);
   } catch (error: any) {
     return NextResponse.json(
-      { error: error.message || "Failed to acknowledge alert" },
+      { error: error instanceof Error ? error.message : "Failed to acknowledge alert" },
       { status: 400 }
     );
   }
