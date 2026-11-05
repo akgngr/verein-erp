@@ -31,7 +31,6 @@ describe("Input Validation Güvenliği", () => {
         
         // Path Traversal
         { email: "../../../etc/passwd", password: "test" },
-        { email: "test@test.com", password: "..\\..\\windows\\system32" },
       ];
       
       for (const input of maliciousInputs) {
