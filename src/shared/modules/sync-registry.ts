@@ -11,6 +11,7 @@ const FORMATS_FILE = path.join(ROOT_DIR, "src", "format-registry.ts");
 const RECIPIENTS_FILE = path.join(ROOT_DIR, "src", "recipient-registry.ts");
 const LIFECYCLE_FILE = path.join(ROOT_DIR, "src", "lifecycle-registry.ts");
 const RELEASES_FILE = path.join(ROOT_DIR, "src", "module-releases.ts");
+const AUTOMATION_FILE = path.join(ROOT_DIR, "src", "automation-registry.ts");
 const PERMISSIONS_FILE = path.join(ROOT_DIR, "src", "permissions-registry.ts");
 
 // Sabit öncelikli sıralama (çekirdek ve resmi modüller üstte)
@@ -101,6 +102,7 @@ export const registry: ModuleConfig[] = allModules;
   syncConventionFile(validModules, "recipients.ts", "recipients", RECIPIENTS_FILE, "ModuleRecipients", "@/shared/mailings/define", "moduleRecipientRegistry", "Toplu e-posta alıcı kaynakları (src/modules/<modül>/recipients.ts).");
   syncConventionFile(validModules, "lifecycle.ts", "lifecycle", LIFECYCLE_FILE, "ModuleLifecycle", "@/shared/modules/lifecycle", "moduleLifecycleRegistry", "Modül yaşam döngüsü kancaları (src/modules/<modül>/lifecycle.ts), ör. kapatılırken temizlik.");
   syncPermissionResources(validModules);
+  syncAutomationTasks(validModules);
 
   return { registered: validModules };
 }
@@ -251,5 +253,37 @@ ${listItems}
     if (current !== content) fs.writeFileSync(PERMISSIONS_FILE, content, "utf8");
   } catch (err) {
     console.error("[sync-registry] Failed to write src/permissions-registry.ts:", err);
+  }
+}
+
+/**
+ * Otomasyon görev kaydı: `automation.ts` dosyası olan modüllerin defineTask çıktılarını
+ * src/automation-registry.ts içinde toplar. automation modülünün kendi automation.ts'i
+ * görev değil, dar enqueue API'sidir; bu yüzden hariç tutulur.
+ */
+function syncAutomationTasks(modules: string[]): void {
+  const withTasks = modules.filter((mod) => mod !== "automation" && fs.existsSync(path.join(MODULES_DIR, mod, "automation.ts")));
+  const toValidVarName = (mod: string) => mod.replace(/-/g, "");
+  const imports = withTasks.map((mod) => `import * as ${toValidVarName(mod)}AutomationExports from "@/modules/${mod}/automation";`).join("\n");
+  const listItems = withTasks.map((mod) => `  ...tasksOf("${mod}", ${toValidVarName(mod)}AutomationExports),`).join("\n");
+  const content = `// Bu dosya syncModuleRegistry tarafından otomatik üretilir (pnpm module:sync); elle düzenlemeyin.
+import "server-only";
+
+import { isTaskDefinition, taskModuleKey, type TaskDefinition } from "@/shared/automation/define";
+${imports ? `\n${imports}\n` : ""}
+const tasksOf = (moduleKey: string, exports: Record<string, unknown>): TaskDefinition[] =>
+  Object.values(exports).filter(isTaskDefinition).map((task) => {
+    if (taskModuleKey(task.key) !== moduleKey) throw new Error(\`AUTOMATION_TASK_MODULE_MISMATCH: \${task.key}\`);
+    return task;
+  });
+
+/** Modüllerin güvenilir arka plan görevleri (src/modules/<modül>/automation.ts). */
+export const moduleAutomationTasks: TaskDefinition[] = ${listItems ? `[\n${listItems}\n]` : "[]"};
+`;
+  try {
+    const current = fs.existsSync(AUTOMATION_FILE) ? fs.readFileSync(AUTOMATION_FILE, "utf8") : "";
+    if (current !== content) fs.writeFileSync(AUTOMATION_FILE, content, "utf8");
+  } catch (err) {
+    console.error("[sync-registry] Failed to write src/automation-registry.ts:", err);
   }
 }

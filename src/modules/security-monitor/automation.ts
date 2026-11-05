@@ -1,5 +1,6 @@
 import "server-only";
 
+import { randomUUID } from "node:crypto";
 import { z } from "zod";
 
 import { defineTask } from "@/shared/automation/define";
@@ -22,6 +23,11 @@ export const runSecurityTestsTask = defineTask({
     initialDelaySeconds: 0,
     maxDelaySeconds: 0,
     backoffMultiplier: 1,
+  },
+  // Administrators may run the suite on a recurring schedule (e.g. nightly).
+  schedule: {
+    input: () => ({ requestId: randomUUID(), testSuite: "security" as const }),
+    minIntervalMinutes: 60,
   },
   idempotencyKey: (input) => `security-monitor:run:${input.requestId}`,
   handler: async (input, context) => {

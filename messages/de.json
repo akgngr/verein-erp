@@ -2045,7 +2045,11 @@
       "mailErrors": "E-Mail-Versandfehler ({count})",
       "unknownError": "Keine Fehlerdetails verfügbar.",
       "eventLog": "Ereignisverlauf",
-      "taskResultError": "Fehlercode des Aufgabenergebnisses: {code}"
+      "taskResultError": "Fehlercode des Aufgabenergebnisses: {code}",
+      "cancel": "Abbrechen",
+      "retry": "Erneut versuchen",
+      "cancelled": "Aufgabe abgebrochen.",
+      "retried": "Aufgabe erneut eingereiht."
     },
     "access": {
       "mailings": "Zur Registrierung der vertrauenswürdigen Kampagnenaufgabe des Rundmail-Moduls im Worker-Aufgabenverzeichnis.",
@@ -2053,6 +2057,31 @@
     },
     "Automation": {
       "taskStarted": "Aufgabenversuch {attempt}/{maxAttempts} gestartet."
+    },
+    "schedules": {
+      "title": "Geplante Aufgaben",
+      "description": "Nur Aufgaben, die ein Modul dafür freigibt, können in festen Abständen automatisch laufen.",
+      "task": "Aufgabe",
+      "intervalHours": "Intervall (Stunden)",
+      "add": "Planen",
+      "created": "Zeitplan erstellt.",
+      "updated": "Zeitplan aktualisiert.",
+      "deleted": "Zeitplan gelöscht.",
+      "empty": "Noch keine geplanten Aufgaben.",
+      "every": "Alle {hours} Stunden",
+      "next": "Nächster Lauf: {date}",
+      "last": "Letzter Lauf: {date}",
+      "enabled": "Aktiv",
+      "delete": "Löschen"
+    },
+    "errors": {
+      "notCancellable": "Diese Aufgabe kann nicht mehr abgebrochen werden.",
+      "notRetryable": "Nur fehlgeschlagene oder abgebrochene Aufgaben können erneut versucht werden.",
+      "moduleUnavailable": "Das Modul der Aufgabe ist nicht aktiv oder nicht freigegeben.",
+      "notSchedulable": "Diese Aufgabe kann nicht geplant werden.",
+      "interval": "Das Intervall liegt außerhalb der erlaubten Grenzen.",
+      "scheduleNotFound": "Zeitplan nicht gefunden.",
+      "disabled": "Automation ist in dieser Umgebung deaktiviert."
     }
   },
   "banking": {

@@ -7,3 +7,11 @@ export {
   getTaskExecutionRecord,
   type CreateTaskExecutionRecordInput,
 } from "./services/execution-store";
+export {
+  enqueueTask,
+  getExecution,
+  cancelExecution,
+  retryExecution,
+  type EnqueueTaskOptions,
+} from "./services/execution-control";
+export { scheduleTask, listSchedules, listSchedulableTasks } from "./services/schedules";

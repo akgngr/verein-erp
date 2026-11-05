@@ -46,3 +46,16 @@ Task handlers must be registered in trusted application code through the existin
 - `mailings` modülünün kullanılabilmesi için `automation` modülü de etkin olmalıdır. `pnpm dev:full` yerel web + worker süreçlerini birlikte başlatır. Worker kapalıysa kampanya SENDING durumunda bekler; worker logları ve Automation execution kayıtları kontrol edilmelidir.
 
 Feature modules declare trusted tasks in `src/modules/<module>/automation.ts`. The central registry imports only this narrow declaration entrypoint; task handlers dynamically load their own module services when executed. This keeps queue registration static without importing UI or Server Action modules into the worker.
+
+## Modül görev sözleşmesi ve merkezi API (0.6.0)
+
+- **Kayıt:** `src/modules/<modül>/automation.ts` içinden dışa aktarılan her `defineTask(...)` `pnpm module:sync` ile `src/automation-registry.ts` dosyasına otomatik eklenir. Görev anahtarının ön eki modül klasör adıyla aynı olmalıdır (`mailings.send_campaign` → `mailings`). Aynı dosyadaki fonksiyon dışa aktarımları (ör. worker için dar API'ler) görev sayılmaz.
+- **Kuyruğa alma:** `enqueueTask(task, input, options)` (`@/modules/automation/automation`). Görevin modülü, istek yapan modül ve `automation` etkin ve erişim onaylı olmalıdır; yetki kontrolü çağıran action'ın sorumluluğundadır. Worker aynı kontrolü çalıştırma anında tekrarlar; modül sonradan kapatıldıysa execution `FAILED / MODULE_UNAVAILABLE` olur ve izleme ekranından yeniden denenebilir.
+- **Kontrol:** `cancelExecution`, `retryExecution`, `getExecution`. İptal çalışan bir görevde kira yenilemesini başarısız kılar; worker sinyali iptal eder ve fencing nedeniyle durumu üzerine yazamaz. Yeniden deneme aynı execution kaydını yeni deneme bütçesiyle ve yeni outbox olayıyla tekrar kuyruğa alır.
+- **Zamanlama:** Görev `schedule: { input, minIntervalMinutes }` bildirirse yöneticiler (`automation:approve`) Otomasyon ekranından aralık seçerek zamanlayabilir. Girdi her dilim için güvenilir koddan üretilir. Her dilim `schedule:<id>:<slotISO>` idempotency anahtarı kullanır; eşzamanlı worker'lar veya çökme aynı dilimi iki kez çalıştıramaz. Kaçırılan dilimler toplu çalıştırılmaz.
+- **Saklama:** Worker saatte bir; SUCCEEDED/CANCELLED kayıtları 90 gün, FAILED kayıtları 180 gün, PUBLISHED/FAILED outbox satırlarını 14 gün sonra siler.
+
+### Henüz yapılmayanlar (spec Aşama 3–4)
+
+- Olay tetikleyicileri ve kalıcı bekle/devam (wait/resume) düğümleri.
+- Görsel Workflow Builder (`@workflowbuilder/sdk`): React 19 uyumluluğu CI'da doğrulanmadan etkinleştirilmemeli; ayrı PR olarak planlanmıştır.

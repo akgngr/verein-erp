@@ -2,6 +2,26 @@
   "_comment": "Sürüm notları. Yeni sürümü EN ÜSTE ekleyin; package.json 'version' ile aynı olmalı (testler denetler). type: feature | improvement | fix | security",
   "releases": [
     {
+      "version": "0.39.0",
+      "date": "2026-11-05",
+      "title": {
+        "tr": "Otomasyon: zamanlanmış görevler, iptal ve yeniden dene",
+        "de": "Automation: geplante Aufgaben, Abbrechen und Wiederholen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Otomasyon modülü tamamlandı: görevler otomatik keşfediliyor, izleme ekranından iptal/yeniden deneme yapılabiliyor ve izin verilen görevler zamanlanabiliyor.",
+          "de": "Automation erweitert: Aufgaben werden automatisch erkannt, lassen sich in der Überwachung abbrechen/wiederholen und freigegebene Aufgaben können geplant werden."
+        },
+        {
+          "type": "fix",
+          "tr": "Güvenlik testleri artık worker kuyruğunda takılı kalmıyor.",
+          "de": "Sicherheitstests bleiben nicht mehr in der Worker-Warteschlange hängen."
+        }
+      ]
+    },
+    {
       "version": "0.38.0",
       "date": "2026-11-02",
       "title": {

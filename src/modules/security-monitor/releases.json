@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. En üst sürüm module.config.ts ile aynı olmalı.",
   "releases": [
     {
+      "version": "1.2.0",
+      "date": "2026-11-05",
+      "title": {
+        "tr": "Güvenlik testleri zamanlanabilir",
+        "de": "Sicherheitstests planbar"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Güvenlik testleri Otomasyon ekranından düzenli aralıklarla (en az saatlik) çalışacak şekilde zamanlanabilir.",
+          "de": "Sicherheitstests können in der Automation-Ansicht regelmäßig (mindestens stündlich) geplant werden."
+        }
+      ]
+    },
+    {
       "version": "1.1.1",
       "date": "2026-11-05",
       "title": {

@@ -131,3 +131,23 @@ model AutomationOutbox {
   @@index([executionId])
   @@map("automation_outbox")
 }
+
+/// Recurring task schedule. Only tasks that declare `schedule` in trusted code
+/// can be scheduled; the payload for every slot is produced by that code.
+model AutomationSchedule {
+  id              String    @id @default(cuid())
+  taskKey         String
+  taskVersion     Int
+  organizationId  String    @default("default")
+  intervalMinutes Int
+  enabled         Boolean   @default(true)
+  nextRunAt       DateTime
+  lastRunAt       DateTime?
+  lastExecutionId String?
+  createdById     String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([enabled, nextRunAt])
+  @@map("automation_schedules")
+}

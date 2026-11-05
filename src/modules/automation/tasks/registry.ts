@@ -1,9 +1,9 @@
-import { sendCampaignTask } from "@/modules/mailings/automation";
-import { runSecurityTestsTask } from "@/modules/security-monitor/automation";
+import { moduleAutomationTasks } from "@/automation-registry";
 
 /**
- * Görevler yalnızca bu statik kayıt listesine uygulama kodundan eklenir.
- * Kullanıcı tanımlı import yolu veya çalıştırılabilir kod desteklenmez.
+ * Görevler yalnızca modüllerin `automation.ts` dosyalarından, `pnpm module:sync`
+ * ile üretilen statik kayıttan gelir. Kullanıcı tanımlı import yolu veya
+ * çalıştırılabilir kod desteklenmez.
  */
 export function defineTaskRegistry<const T extends readonly { key: string }[]>(tasks: T): T {
   const keys = new Set<string>();
@@ -16,8 +16,9 @@ export function defineTaskRegistry<const T extends readonly { key: string }[]>(t
   return Object.freeze([...tasks]) as unknown as T;
 }
 
-/** Güvenilir modül görevleri. Yeni entegrasyonlar kendi modül task tanımlarını ekler. */
-export const automationTasks = defineTaskRegistry([
-  sendCampaignTask,
-  runSecurityTestsTask,
-]);
+/** Güvenilir modül görevleri (otomatik keşif). */
+export const automationTasks = defineTaskRegistry(moduleAutomationTasks);
+
+export function findAutomationTask(key: string) {
+  return automationTasks.find((task) => task.key === key);
+}

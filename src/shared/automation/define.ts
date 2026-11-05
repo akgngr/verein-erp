@@ -39,6 +39,16 @@ export type TaskDefinition<TSchema extends z.ZodType = z.ZodType, TResult = unkn
   retry?: Partial<TaskRetryPolicy>;
   /** Stable, PII-free key preventing duplicate logical work. */
   idempotencyKey?: (input: z.output<TSchema>) => string;
+  /**
+   * Optional: allow administrators to run this task on a recurring schedule.
+   * The input is produced by trusted code for every slot; users only choose
+   * the interval, never the payload.
+   */
+  schedule?: {
+    input: (slot: { scheduleId: string; slotAt: Date }) => z.input<TSchema>;
+    /** Lower bound for the interval chosen in the UI. Default 60 minutes. */
+    minIntervalMinutes?: number;
+  };
   /** Trusted application handler registered statically. */
   handler: (input: z.output<TSchema>, context: TaskExecutionContext) => Promise<TResult>;
 };
@@ -79,6 +89,17 @@ export function resolveTaskRetryPolicy(
   }
 
   return Object.freeze(policy);
+}
+
+/** Owning module key derived from the namespaced task key. */
+export function taskModuleKey(taskKey: string): string {
+  return taskKey.slice(0, taskKey.indexOf("."));
+}
+
+/** Runtime guard used by the generated registry to collect task exports. */
+export function isTaskDefinition(value: unknown): value is TaskDefinition {
+  return typeof value === "object" && value !== null &&
+    "key" in value && "handler" in value && "inputSchema" in value && "version" in value;
 }
 
 const TASK_KEY = /^[a-z][a-z0-9-]*\.[a-z][a-z0-9_]*$/;
