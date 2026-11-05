@@ -1,3 +1,4 @@
+import type { Prisma } from "@prisma/client";
 import { getDb } from "@/shared/db";
 
 export async function getSecurityTestRuns(options: {
@@ -11,7 +12,7 @@ export async function getSecurityTestRuns(options: {
   
   const db = getDb();
   
-  const where: Record<string, any> = {};
+  const where: Prisma.SecurityTestRunWhereInput = {};
   if (testSuite) where.testSuite = testSuite;
   if (status) where.status = status;
   if (environment) where.environment = environment;
@@ -59,7 +60,7 @@ export async function getSecurityTestAlerts(options: {
   
   const db = getDb();
   
-  const where: Record<string, any> = {};
+  const where: Prisma.SecurityTestAlertWhereInput = {};
   if (severity) where.severity = severity;
   if (status) where.status = status;
   
