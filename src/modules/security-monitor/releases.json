@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. En üst sürüm module.config.ts ile aynı olmalı.",
   "releases": [
     {
+      "version": "1.1.1",
+      "date": "2026-11-05",
+      "title": {
+        "tr": "Güvenlik izleme API hata ayıklama iyileştirmesi",
+        "de": "Verbesserte Fehlerdiagnose für die Security-Monitor-API"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "İstatistik, test geçmişi ve uyarı API'lerinden gelen hatalarda HTTP durumu ve sunucu hata ayrıntıları artık konsola yansıtılıyor.",
+          "de": "Bei Fehlern der Statistik-, Testverlaufs- und Warnungs-APIs werden HTTP-Status und Serverdetails nun in der Konsole angezeigt."
+        }
+      ]
+    },
+    {
       "version": "1.1.0",
       "date": "2026-11-05",
       "title": {
@@ -29,7 +44,10 @@
     {
       "version": "1.0.0",
       "date": "2026-11-05",
-      "title": { "tr": "Güvenlik İzleme Modülü", "de": "Sicherheitsüberwachungsmodul" },
+      "title": {
+        "tr": "Güvenlik İzleme Modülü",
+        "de": "Sicherheitsüberwachungsmodul"
+      },
       "changes": [
         {
           "type": "feature",

@@ -49,8 +49,39 @@ export function SecurityMonitorView() {
       fetch("/api/modules/security-monitor/alerts?limit=10&status=open"),
     ]);
 
-    if (!statsResponse.ok || !runsResponse.ok || !alertsResponse.ok) {
-      throw new Error("SECURITY_MONITOR_FETCH_FAILED");
+    const responses = [
+      { endpoint: "stats", response: statsResponse },
+      { endpoint: "runs", response: runsResponse },
+      { endpoint: "alerts", response: alertsResponse },
+    ];
+
+    const failures = await Promise.all(
+      responses
+        .filter(({ response }) => !response.ok)
+        .map(async ({ endpoint, response }) => {
+          const body = await response.text().catch(() => "");
+          let detail = body;
+
+          try {
+            const parsed: unknown = JSON.parse(body);
+            if (
+              typeof parsed === "object" &&
+              parsed !== null &&
+              "error" in parsed &&
+              typeof parsed.error === "string"
+            ) {
+              detail = parsed.error;
+            }
+          } catch {
+            // Keep the raw response body when it is not JSON.
+          }
+
+          return `${endpoint} returned HTTP ${response.status}${detail ? `: ${detail.slice(0, 500)}` : ""}`;
+        }),
+    );
+
+    if (failures.length > 0) {
+      throw new Error(`SECURITY_MONITOR_FETCH_FAILED: ${failures.join("; ")}`);
     }
 
     const [stats, runsData, alertsData] = await Promise.all([
