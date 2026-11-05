@@ -3,7 +3,7 @@ import { promisify } from "node:util";
 import { getDb } from "@/shared/db";
 
 const execFileAsync = promisify(execFile);
-const SUPPORTED_TEST_SUITES = ["security", "all"] as const;
+const SUPPORTED_TEST_SUITES = ["security"] as const;
 type SupportedTestSuite = (typeof SUPPORTED_TEST_SUITES)[number];
 
 interface TestResult {
@@ -20,7 +20,7 @@ interface TestResult {
 }
 
 function isSupportedTestSuite(value: string): value is SupportedTestSuite {
-  return SUPPORTED_TEST_SUITES.includes(value as SupportedTestSuite);
+  return value === "security";
 }
 
 function formatExecutionFailure(error: Error): string {
@@ -67,7 +67,7 @@ export async function runSecurityTests(options: {
     logs.push(`Starting ${testSuite} tests at ${new Date().toISOString()}`);
 
     // execFile does not invoke a shell, and the command is selected from a fixed allowlist.
-    const testPattern = testSuite === "all" ? "tests/**/*.test.ts" : "tests/security/*.test.ts";
+    const testPattern = "tests/security/*.test.ts";
     logs.push(`Running test suite: ${testSuite}`);
 
     const { stdout, stderr } = await execFileAsync(
