@@ -1,5 +1,5 @@
 {
-  "securityMonitor": {
+  "SecurityMonitor": {
     "title": "Sicherheitsüberwachung",
     "description": "Führt regelmäßig System-Sicherheitstests durch und überwacht die Ergebnisse",
     "loading": "Wird geladen...",
