@@ -139,6 +139,11 @@ export async function dispatchAutomationOutboxBatch(boss: PgBoss): Promise<numbe
 
   for (const event of events) {
     try {
+      if (event.attempts > OUTBOX_MAX_ATTEMPTS) {
+        await failClaim(event, "OUTBOX_ATTEMPTS_EXHAUSTED");
+        continue;
+      }
+
       const parsed = automationTaskQueuePayloadSchema.safeParse(event.payload);
       if (!parsed.success || !event.executionId || parsed.data.executionId !== event.executionId) {
         await failClaim(event, "OUTBOX_PAYLOAD_INVALID");
