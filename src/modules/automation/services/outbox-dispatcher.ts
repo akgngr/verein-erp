@@ -9,11 +9,11 @@ import {
   type TaskRetryPolicy,
 } from "@/shared/automation/define";
 import { getDb } from "@/shared/db";
-import { recoverExpiredAutomationExecutions } from "./lease-recovery";
 import {
   automationTaskQueuePayloadSchema,
   AUTOMATION_TASK_QUEUE,
 } from "../worker/queue";
+import { recoverExpiredAutomationExecutions } from "./lease-recovery";
 
 const OUTBOX_BATCH_SIZE = 25;
 const OUTBOX_MAX_ATTEMPTS = 10;
