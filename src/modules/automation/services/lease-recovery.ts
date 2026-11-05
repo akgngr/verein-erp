@@ -1,7 +1,7 @@
 import "server-only";
 
-import { getDb } from "@/shared/db";
 import { isExecutionAttemptExhausted } from "@/shared/automation/lease";
+import { getDb } from "@/shared/db";
 import {
   resolveTaskRetryPolicy,
   type TaskRetryPolicy,
@@ -54,10 +54,16 @@ export async function recoverExpiredAutomationExecutions(): Promise<number> {
       );
     } catch {
       policyInvalid = true;
-      retryPolicy = { maxAttempts: execution.attempt, initialDelaySeconds: 0, maxDelaySeconds: 0, backoffMultiplier: 1 };
+      retryPolicy = {
+        maxAttempts: execution.attempt,
+        initialDelaySeconds: 0,
+        maxDelaySeconds: 0,
+        backoffMultiplier: 1,
+      };
     }
 
-    const exhausted = policyInvalid || isExecutionAttemptExhausted(execution.attempt, retryPolicy.maxAttempts);
+    const exhausted = policyInvalid ||
+      isExecutionAttemptExhausted(execution.attempt, retryPolicy.maxAttempts);
     const errorCode = policyInvalid ? "TASK_RETRY_POLICY_INVALID" : "TASK_LEASE_EXPIRED";
 
     const result = await db.$transaction(async (tx) => {
