@@ -23,6 +23,14 @@ function isSupportedTestSuite(value: string): value is SupportedTestSuite {
   return SUPPORTED_TEST_SUITES.includes(value as SupportedTestSuite);
 }
 
+function formatExecutionFailure(error: Error): string {
+  return `Security test execution failed: ${error.message}`;
+}
+
+function formatSuiteFailure(testSuite: SupportedTestSuite): string {
+  return `Failed to run test suite: ${testSuite}`;
+}
+
 function hasStatus(value: unknown, status: string): boolean {
   return typeof value === "object" && value !== null && "status" in value && value.status === status;
 }
@@ -188,8 +196,8 @@ export async function runSecurityTests(options: {
       data: {
         severity: "critical",
         type: "test_error",
-        message: `Security test execution failed: ${failure.message}`,
-        description: `Failed to run test suite: ${testSuite}`,
+        message: formatExecutionFailure(failure),
+        description: formatSuiteFailure(testSuite),
         testRunId: testRun.id,
         metadata: { error: failure.message },
       },
