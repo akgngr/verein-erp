@@ -7,7 +7,7 @@ import {
 } from "../../server";
 
 // GET /api/modules/security-monitor/schedules - List schedules
-export async function GET(request: Request) {
+export async function GET() {
   try {
     await requirePermission(securityMonitorPermissions, "view");
 
