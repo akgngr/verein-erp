@@ -1,9 +1,16 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 
+import { toInternalMarkdownHref } from "../src/shared/markdown/links";
 import { parseMarkdown } from "../src/shared/markdown/parse";
 
 describe("Sohbet markdown çözümleyici", () => {
+  test("markdown bağlantıları uygulama içinde kalır", () => {
+    assert.equal(toInternalMarkdownHref("/members"), "/members");
+    assert.equal(toInternalMarkdownHref("//evil.example"), "/evil.example");
+    assert.equal(toInternalMarkdownHref("/\\\\evil.example"), "/evil.example");
+  });
+
   test("GFM tablo, hizalama ve eksik hücreler", () => {
     const blocks = parseMarkdown("**Toplam:** 1\n\n| Statü | Sayısı |\n|-------|-------:|\n| Aktif üye | 1 |\n| Pasif üye |\n\nSon.");
     assert.equal(blocks.length, 3);
