@@ -1,26 +1,52 @@
 {
+  "_comment": "Modül sürüm notları. En üst sürüm module.config.ts ile aynı olmalı.",
   "releases": [
+    {
+      "version": "1.1.0",
+      "date": "2026-11-05",
+      "title": {
+        "tr": "Modül standardı ve kalıcı test yürütme",
+        "de": "Modulstandard und dauerhafte Testausführung"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "İstemci, sunucu ve arayüz public API girişleri ayrıştırıldı.",
+          "de": "Die öffentlichen Client-, Server- und UI-Einstiegspunkte wurden getrennt."
+        },
+        {
+          "type": "improvement",
+          "tr": "Güvenlik testleri HTTP isteği içinde çalıştırılmak yerine Automation worker kuyruğuna alındı.",
+          "de": "Sicherheitstests werden nun über den Automation-Worker ausgeführt statt innerhalb einer HTTP-Anfrage."
+        },
+        {
+          "type": "fix",
+          "tr": "Automation modül bağımlılığı ve yönetici erişim onayı tanımlandı.",
+          "de": "Die Abhängigkeit vom Automation-Modul und die erforderliche Zugriffsfreigabe wurden definiert."
+        }
+      ]
+    },
     {
       "version": "1.0.0",
       "date": "2026-11-05",
       "title": { "tr": "Güvenlik İzleme Modülü", "de": "Sicherheitsüberwachungsmodul" },
       "changes": [
-        { 
+        {
           "type": "feature",
           "tr": "Güvenlik testleri çalıştırma ve sonuçları saklama",
           "de": "Sicherheitstests ausführen und Ergebnisse speichern"
         },
-        { 
+        {
           "type": "feature",
           "tr": "Uyarı sistemi ile kritik hataların bildirimi",
           "de": "Warnsystem für Benachrichtigungen über kritische Fehler"
         },
-        { 
+        {
           "type": "feature",
           "tr": "Test geçmişi ve istatistikler",
           "de": "Testverlauf und Statistiken"
         },
-        { 
+        {
           "type": "feature",
           "tr": "Zamanlanmış test çalıştırmaları",
           "de": "Geplante Testausführungen"

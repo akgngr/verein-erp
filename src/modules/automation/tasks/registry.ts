@@ -1,4 +1,5 @@
 import { sendCampaignTask } from "@/modules/mailings/automation";
+import { runSecurityTestsTask } from "@/modules/security-monitor/automation";
 
 /**
  * Görevler yalnızca bu statik kayıt listesine uygulama kodundan eklenir.
@@ -18,4 +19,5 @@ export function defineTaskRegistry<const T extends readonly { key: string }[]>(t
 /** Güvenilir modül görevleri. Yeni entegrasyonlar kendi modül task tanımlarını ekler. */
 export const automationTasks = defineTaskRegistry([
   sendCampaignTask,
+  runSecurityTestsTask,
 ]);
