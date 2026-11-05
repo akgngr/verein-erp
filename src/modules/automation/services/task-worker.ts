@@ -15,9 +15,9 @@ import {
   getExecutionLeaseExpiry,
 } from "@/shared/automation/lease";
 import { getDb } from "@/shared/db";
+import type { AutomationTaskQueuePayload } from "../worker/queue";
 import { automationTasks } from "../tasks/registry";
 import { recordAutomationLog } from "./log-store";
-import type { AutomationTaskQueuePayload } from "../worker/queue";
 
 const WORKER_ID = randomUUID();
 const registeredTasks = automationTasks as unknown as readonly TaskDefinition[];
