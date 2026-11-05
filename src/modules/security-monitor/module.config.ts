@@ -2,7 +2,7 @@ import { ModuleConfig } from "@/shared/types/module";
 import { ShieldCheck } from "lucide-react";
 import { securityMonitorPermissions } from "./permissions";
 
-export default {
+export const moduleConfig: ModuleConfig = {
   key: "security-monitor",
   version: "1.0.0",
   label: "Security Monitor",
@@ -23,4 +23,8 @@ export default {
       permission: { definition: securityMonitorPermissions, action: "view" },
     },
   ],
-} satisfies ModuleConfig;
+};
+
+export default moduleConfig;
+
+export { securityMonitorPermissions };
