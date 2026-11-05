@@ -4,7 +4,10 @@ import {
   resolveTaskRetryPolicy,
   type TaskRetryPolicy,
 } from "@/shared/automation/define";
-import { isExecutionAttemptExhausted } from "@/shared/automation/lease";
+import {
+  getLegacyExecutionStaleBefore,
+  isExecutionAttemptExhausted,
+} from "@/shared/automation/lease";
 import { getDb } from "@/shared/db";
 import { recordAutomationLog } from "./log-store";
 
@@ -26,10 +29,20 @@ function asObject(value: unknown): Record<string, unknown> {
 export async function recoverExpiredAutomationExecutions(): Promise<number> {
   const db = getDb();
   const now = new Date();
+  const legacyStaleBefore = getLegacyExecutionStaleBefore(now);
   const expired = await db.automationExecution.findMany({
     where: {
       status: "RUNNING",
-      leaseExpiresAt: { lt: now },
+      OR: [
+        { leaseExpiresAt: { lt: now } },
+        {
+          leaseExpiresAt: null,
+          OR: [
+            { startedAt: null },
+            { startedAt: { lt: legacyStaleBefore } },
+          ],
+        },
+      ],
     },
     orderBy: { leaseExpiresAt: "asc" },
     take: RECOVERY_BATCH_SIZE,
@@ -40,6 +53,7 @@ export async function recoverExpiredAutomationExecutions(): Promise<number> {
       attempt: true,
       retryPolicy: true,
       leaseToken: true,
+      startedAt: true,
     },
   });
 
@@ -72,7 +86,16 @@ export async function recoverExpiredAutomationExecutions(): Promise<number> {
           id: execution.id,
           status: "RUNNING",
           leaseToken: execution.leaseToken,
-          leaseExpiresAt: { lt: now },
+          OR: [
+            { leaseExpiresAt: { lt: now } },
+            {
+              leaseExpiresAt: null,
+              OR: [
+                { startedAt: null },
+                { startedAt: { lt: legacyStaleBefore } },
+              ],
+            },
+          ],
         },
         data: {
           status: exhausted ? "FAILED" : "PENDING",
