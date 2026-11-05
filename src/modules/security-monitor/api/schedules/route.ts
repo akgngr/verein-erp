@@ -39,7 +39,7 @@ export async function POST(request: Request) {
     });
 
     return NextResponse.json(schedule, { status: 201 });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to create schedule" }, // i18n-ignore
       { status: 400 }
