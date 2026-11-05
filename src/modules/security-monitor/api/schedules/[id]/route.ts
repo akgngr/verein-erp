@@ -24,9 +24,9 @@ export async function PUT(
     });
 
     return NextResponse.json(schedule);
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
-      { error: error.message || "Failed to update schedule" },
+      { error: error instanceof Error ? error.message : "Failed to update schedule" },
       { status: 400 }
     );
   }
@@ -47,7 +47,7 @@ export async function DELETE(
     return NextResponse.json({ success: true });
   } catch (error: any) {
     return NextResponse.json(
-      { error: error.message || "Failed to delete schedule" },
+      { error: error instanceof Error ? error.message : "Failed to delete schedule" },
       { status: 400 }
     );
   }
