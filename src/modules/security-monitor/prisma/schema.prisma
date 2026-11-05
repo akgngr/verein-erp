@@ -32,6 +32,9 @@ model SecurityTestRun {
   commitHash  String?   // Git commit hash if available
   branch      String?   // Git branch if available
   
+  // Related alerts (back-relation)
+  alerts      SecurityTestAlert[]
+  
   // Indexes
   @@index([testSuite, createdAt])
   @@index([status, createdAt])
