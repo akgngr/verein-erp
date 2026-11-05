@@ -4,8 +4,6 @@ import { securityMonitorPermissions } from "../../permissions";
 import {
   getSecurityTestSchedules,
   createSecurityTestSchedule,
-  updateSecurityTestSchedule,
-  deleteSecurityTestSchedule,
 } from "../../server";
 
 // GET /api/modules/security-monitor/schedules - List schedules
@@ -16,9 +14,9 @@ export async function GET(request: Request) {
     const schedules = await getSecurityTestSchedules();
 
     return NextResponse.json(schedules);
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
-      { error: error.message || "Failed to fetch schedules" },
+      { error: error instanceof Error ? error.message : "Failed to fetch schedules" },
       { status: 400 }
     );
   }
@@ -43,7 +41,7 @@ export async function POST(request: Request) {
     return NextResponse.json(schedule, { status: 201 });
   } catch (error: any) {
     return NextResponse.json(
-      { error: error.message || "Failed to create schedule" },
+      { error: error instanceof Error ? error.message : "Failed to create schedule" },
       { status: 400 }
     );
   }
