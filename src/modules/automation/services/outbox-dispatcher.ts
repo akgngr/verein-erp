@@ -1,19 +1,33 @@
 import "server-only";
 
+import { randomUUID } from "node:crypto";
+import { Prisma } from "@prisma/client";
 import type { PgBoss } from "pg-boss";
 
-import { getDb } from "@/shared/db";
 import {
   resolveTaskRetryPolicy,
   type TaskRetryPolicy,
 } from "@/shared/automation/define";
+import { getDb } from "@/shared/db";
 import {
   automationTaskQueuePayloadSchema,
   AUTOMATION_TASK_QUEUE,
 } from "../worker/queue";
+import { recoverExpiredAutomationExecutions } from "./lease-recovery";
 
 const OUTBOX_BATCH_SIZE = 25;
 const OUTBOX_MAX_ATTEMPTS = 10;
+const OUTBOX_CLAIM_DURATION_MS = 5 * 60 * 1000;
+const DISPATCHER_ID = randomUUID();
+
+type ClaimedOutboxEvent = {
+  id: string;
+  eventKey: string;
+  eventType: string;
+  executionId: string | null;
+  payload: Prisma.JsonValue;
+  attempts: number;
+};
 
 function errorCode(error: unknown): string {
   if (error && typeof error === "object" && "code" in error && typeof error.code === "string") {
@@ -33,39 +47,106 @@ function asObject(value: unknown): Record<string, unknown> {
 }
 
 /**
+ * Atomically claim a batch using PostgreSQL row locks and SKIP LOCKED.
+ * Expired PROCESSING claims are recoverable after a dispatcher crash.
+ */
+async function claimOutboxBatch(): Promise<ClaimedOutboxEvent[]> {
+  const now = new Date();
+  const claimExpiresAt = new Date(now.getTime() + OUTBOX_CLAIM_DURATION_MS);
+
+  return getDb().$queryRaw<ClaimedOutboxEvent[]>(Prisma.sql`
+    WITH candidates AS (
+      SELECT "id"
+      FROM "automation_outbox"
+      WHERE "eventType" = 'automation.task.requested'
+        AND "availableAt" <= ${now}
+        AND (
+          "status" = 'PENDING'
+          OR (
+            "status" = 'PROCESSING'
+            AND "claimExpiresAt" IS NOT NULL
+            AND "claimExpiresAt" < ${now}
+          )
+        )
+      ORDER BY "availableAt" ASC, "createdAt" ASC
+      LIMIT ${OUTBOX_BATCH_SIZE}
+      FOR UPDATE SKIP LOCKED
+    )
+    UPDATE "automation_outbox" AS outbox
+    SET
+      "status" = 'PROCESSING',
+      "claimOwner" = ${DISPATCHER_ID},
+      "claimExpiresAt" = ${claimExpiresAt},
+      "attempts" = outbox."attempts" + 1,
+      "updatedAt" = ${now}
+    FROM candidates
+    WHERE outbox."id" = candidates."id"
+    RETURNING
+      outbox."id",
+      outbox."eventKey",
+      outbox."eventType",
+      outbox."executionId",
+      outbox."payload",
+      outbox."attempts"
+  `);
+}
+
+async function releaseClaim(
+  eventId: string,
+  data: {
+    status: "PENDING" | "FAILED" | "PUBLISHED";
+    availableAt?: Date;
+    publishedAt?: Date;
+    lastErrorCode: string | null;
+  },
+): Promise<boolean> {
+  const result = await getDb().automationOutbox.updateMany({
+    where: {
+      id: eventId,
+      status: "PROCESSING",
+      claimOwner: DISPATCHER_ID,
+    },
+    data: {
+      status: data.status,
+      ...(data.availableAt ? { availableAt: data.availableAt } : {}),
+      ...(data.publishedAt ? { publishedAt: data.publishedAt } : {}),
+      lastErrorCode: data.lastErrorCode,
+      claimOwner: null,
+      claimExpiresAt: null,
+    },
+  });
+  return result.count === 1;
+}
+
+async function failClaim(event: ClaimedOutboxEvent, code: string): Promise<void> {
+  await releaseClaim(event.id, {
+    status: "FAILED",
+    lastErrorCode: code,
+  });
+}
+
+/**
  * Publish pending ERP outbox rows to pg-boss.
  *
- * pg-boss is transport only. ERP execution records remain the source of truth.
- * A crash after send but before marking the outbox row published is safe: the
- * stable singleton key suppresses duplicate queue entries, and execution claims
- * are independently guarded in PostgreSQL.
+ * The database claim prevents concurrent dispatchers from working the same row.
+ * The stable pg-boss singleton key still protects the crash window after send
+ * succeeds but before the outbox row is marked PUBLISHED.
  */
 export async function dispatchAutomationOutboxBatch(boss: PgBoss): Promise<number> {
   const db = getDb();
-  const events = await db.automationOutbox.findMany({
-    where: {
-      status: "PENDING",
-      eventType: "automation.task.requested",
-      availableAt: { lte: new Date() },
-    },
-    orderBy: [{ availableAt: "asc" }, { createdAt: "asc" }],
-    take: OUTBOX_BATCH_SIZE,
-  });
-
+  const events = await claimOutboxBatch();
   let published = 0;
 
   for (const event of events) {
     try {
+      if (event.attempts > OUTBOX_MAX_ATTEMPTS) {
+        await failClaim(event, "OUTBOX_ATTEMPTS_EXHAUSTED");
+        continue;
+      }
+
       const parsed = automationTaskQueuePayloadSchema.safeParse(event.payload);
       if (!parsed.success || !event.executionId || parsed.data.executionId !== event.executionId) {
-        await db.automationOutbox.updateMany({
-          where: { id: event.id, status: "PENDING" },
-          data: {
-            status: "FAILED",
-            attempts: { increment: 1 },
-            lastErrorCode: "OUTBOX_PAYLOAD_INVALID",
-          },
-        });
+        await failClaim(event, "OUTBOX_PAYLOAD_INVALID");
         continue;
       }
 
@@ -75,18 +156,18 @@ export async function dispatchAutomationOutboxBatch(boss: PgBoss): Promise<numbe
       });
 
       if (!execution || ["FAILED", "SUCCEEDED", "CANCELLED"].includes(execution.status)) {
-        await db.automationOutbox.updateMany({
-          where: { id: event.id, status: "PENDING" },
-          data: {
-            status: "FAILED",
-            attempts: { increment: 1 },
-            lastErrorCode: "EXECUTION_NOT_DISPATCHABLE",
-          },
-        });
+        await failClaim(event, "EXECUTION_NOT_DISPATCHABLE");
         continue;
       }
 
-      if (execution.scheduledAt && execution.scheduledAt > new Date()) continue;
+      if (execution.scheduledAt && execution.scheduledAt > new Date()) {
+        await releaseClaim(event.id, {
+          status: "PENDING",
+          availableAt: execution.scheduledAt,
+          lastErrorCode: null,
+        });
+        continue;
+      }
 
       const retryPolicy = resolveTaskRetryPolicy(
         asObject(execution.retryPolicy) as Partial<TaskRetryPolicy>,
@@ -104,26 +185,19 @@ export async function dispatchAutomationOutboxBatch(boss: PgBoss): Promise<numbe
         deleteAfterSeconds: 60 * 60 * 24 * 7,
       });
 
-      await db.automationOutbox.updateMany({
-        where: { id: event.id, status: "PENDING" },
-        data: {
-          status: "PUBLISHED",
-          attempts: { increment: 1 },
-          publishedAt: new Date(),
-          lastErrorCode: null,
-        },
+      const didPublish = await releaseClaim(event.id, {
+        status: "PUBLISHED",
+        publishedAt: new Date(),
+        lastErrorCode: null,
       });
-      published += 1;
+      if (didPublish) published += 1;
     } catch (error) {
-      const attempts = event.attempts + 1;
-      await db.automationOutbox.updateMany({
-        where: { id: event.id, status: "PENDING" },
-        data: {
-          attempts,
-          availableAt: new Date(Date.now() + retryDelaySeconds(attempts) * 1000),
-          lastErrorCode: errorCode(error),
-          ...(attempts >= OUTBOX_MAX_ATTEMPTS ? { status: "FAILED" as const } : {}),
-        },
+      const code = errorCode(error);
+      const attempts = event.attempts;
+      await releaseClaim(event.id, {
+        status: attempts >= OUTBOX_MAX_ATTEMPTS ? "FAILED" : "PENDING",
+        availableAt: new Date(Date.now() + retryDelaySeconds(attempts) * 1000),
+        lastErrorCode: code,
       });
     }
   }
@@ -135,8 +209,15 @@ export async function runAutomationOutboxDispatcher(
   boss: PgBoss,
   signal: AbortSignal,
 ): Promise<void> {
+  let nextLeaseRecoveryAt = 0;
+
   while (!signal.aborted) {
     try {
+      if (Date.now() >= nextLeaseRecoveryAt) {
+        await recoverExpiredAutomationExecutions();
+        nextLeaseRecoveryAt = Date.now() + 15_000;
+      }
+
       const published = await dispatchAutomationOutboxBatch(boss);
       if (published === 0) await wait(1_000, signal);
     } catch (error) {

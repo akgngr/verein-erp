@@ -3,7 +3,47 @@ import assert from "node:assert/strict";
 import { z } from "zod";
 
 import { defineTask, resolveTaskRetryPolicy } from "../src/shared/automation/define";
+import {
+  EXECUTION_HEARTBEAT_INTERVAL_MS,
+  EXECUTION_LEASE_DURATION_MS,
+  LEGACY_EXECUTION_STALE_AFTER_MS,
+  getExecutionLeaseExpiry,
+  getLegacyExecutionStaleBefore,
+  isExecutionAttemptExhausted,
+} from "../src/shared/automation/lease";
 import { defineTaskRegistry } from "../src/modules/automation/tasks/registry";
+
+describe("Automation worker lease policy", () => {
+  test("heartbeat interval stays safely below the lease duration", () => {
+    assert.ok(EXECUTION_HEARTBEAT_INTERVAL_MS < EXECUTION_LEASE_DURATION_MS);
+    assert.equal(EXECUTION_LEASE_DURATION_MS, 45_000);
+    assert.equal(EXECUTION_HEARTBEAT_INTERVAL_MS, 10_000);
+  });
+
+  test("computes lease expiry from the current timestamp", () => {
+    const now = new Date("2026-11-05T12:00:00.000Z");
+    assert.equal(
+      getExecutionLeaseExpiry(now).toISOString(),
+      "2026-11-05T12:00:45.000Z",
+    );
+  });
+
+  test("preserves the two-hour recovery window for legacy RUNNING rows", () => {
+    const now = new Date("2026-11-05T12:00:00.000Z");
+    assert.equal(LEGACY_EXECUTION_STALE_AFTER_MS, 2 * 60 * 60 * 1000);
+    assert.equal(
+      getLegacyExecutionStaleBefore(now).toISOString(),
+      "2026-11-05T10:00:00.000Z",
+    );
+  });
+
+  test("recovery stops when the persisted attempt budget is exhausted", () => {
+    assert.equal(isExecutionAttemptExhausted(1, 3), false);
+    assert.equal(isExecutionAttemptExhausted(2, 3), false);
+    assert.equal(isExecutionAttemptExhausted(3, 3), true);
+    assert.equal(isExecutionAttemptExhausted(4, 3), true);
+  });
+});
 
 describe("Automation task contracts", () => {
   test("defines a versioned task with schema-validated input", () => {

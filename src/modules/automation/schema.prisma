@@ -23,6 +23,7 @@ enum AutomationStepStatus {
 
 enum AutomationOutboxStatus {
   PENDING
+  PROCESSING
   PUBLISHED
   FAILED
 }
@@ -47,6 +48,10 @@ model AutomationExecution {
   maxAttempts       Int                       @default(3)
   scheduledAt       DateTime?
   startedAt         DateTime?
+  heartbeatAt       DateTime?
+  leaseOwner        String?
+  leaseExpiresAt    DateTime?
+  leaseToken        Int                       @default(0)
   finishedAt        DateTime?
   lastErrorCode     String?
   createdAt         DateTime                  @default(now())
@@ -56,6 +61,7 @@ model AutomationExecution {
 
   @@unique([organizationId, idempotencyKey])
   @@index([status, scheduledAt])
+  @@index([status, leaseExpiresAt])
   @@index([sourceModule, createdAt])
   @@index([correlationId])
   @@map("automation_executions")
@@ -112,12 +118,15 @@ model AutomationOutbox {
   status        AutomationOutboxStatus @default(PENDING)
   attempts      Int                    @default(0)
   availableAt   DateTime               @default(now())
+  claimOwner    String?
+  claimExpiresAt DateTime?
   publishedAt   DateTime?
   lastErrorCode String?
   createdAt     DateTime               @default(now())
   updatedAt     DateTime               @updatedAt
 
   @@index([status, availableAt, createdAt])
+  @@index([status, claimExpiresAt])
   @@index([executionId])
   @@map("automation_outbox")
 }

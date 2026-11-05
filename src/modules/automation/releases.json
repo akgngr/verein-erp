@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.5.5",
+      "date": "2026-11-05",
+      "title": {
+        "tr": "Worker lease ve atomik outbox sahiplenme",
+        "de": "Worker-Leases und atomare Outbox-Übernahme"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Worker görevleri heartbeat ile lease sahipliğini yeniler; fencing token eski worker'ların yeni yürütme durumunu değiştirmesini engeller. Süresi dolan görevler otomatik olarak yeniden kuyruğa alınır veya deneme bütçesi tükendiyse başarısız işaretlenir. Outbox kayıtları PostgreSQL SKIP LOCKED ile atomik sahiplenilir ve süresi dolan dispatcher claim'leri kurtarılır.",
+          "de": "Worker-Aufgaben verlängern ihre Lease per Heartbeat; Fencing-Tokens verhindern, dass veraltete Worker den Status neuer Ausführungen überschreiben. Abgelaufene Aufgaben werden automatisch erneut eingereiht oder bei ausgeschöpftem Versuchslimit als fehlgeschlagen markiert. Outbox-Einträge werden mit PostgreSQL SKIP LOCKED atomar übernommen und abgelaufene Dispatcher-Claims wiederhergestellt."
+        }
+      ]
+    },
+    {
       "version": "0.5.4",
       "date": "2026-11-05",
       "title": {
