@@ -40,6 +40,7 @@ export function SecurityMonitorView() {
   const [alerts, setAlerts] = useState<Alert[]>([]);
   const [loading, setLoading] = useState(true);
   const [running, setRunning] = useState(false);
+  const [queueMessage, setQueueMessage] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
     try {
@@ -82,6 +83,7 @@ export function SecurityMonitorView() {
 
       if (!response.ok) throw new Error("SECURITY_MONITOR_QUEUE_FAILED");
       await response.json();
+      setQueueMessage(t("queued"));
       await fetchData();
     } catch (error) {
       console.error("Failed to queue security tests:", error);
@@ -123,6 +125,8 @@ export function SecurityMonitorView() {
           {t("runTests")}
         </Button>
       </div>
+
+      {queueMessage ? <p className="text-small text-success">{queueMessage}</p> : null}
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <Card shadow="sm">
