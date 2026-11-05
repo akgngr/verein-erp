@@ -1,3 +1,3 @@
-// Security Monitor public entry point: keep exports safe for client-side registry imports.
+// Client-safe public entry point.
 export { moduleConfig } from "./module.config";
 export { securityMonitorPermissions } from "./permissions";
