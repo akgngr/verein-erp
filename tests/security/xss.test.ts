@@ -172,7 +172,7 @@ describe("XSS Koruması", () => {
         assert.ok(
           !escaped.includes("<") &&
           !escaped.includes(">") &&
-          !escaped.includes("&"),
+          escaped.includes("&lt;"),
           `XSS payload escape edilmemiş: ${escaped}`
         );
       }
