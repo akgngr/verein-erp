@@ -27,7 +27,7 @@ export async function GET(request: Request) {
     return NextResponse.json(result);
   } catch (error) {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to fetch test runs" } // i18n-ignore,
+      { error: error instanceof Error ? error.message : "Failed to fetch test runs" },, // i18n-ignore
       { status: 400 }
     );
   }
@@ -49,7 +49,7 @@ export async function POST(request: Request) {
     return NextResponse.json(result);
   } catch (error: any) {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to run tests" } // i18n-ignore,
+      { error: error instanceof Error ? error.message : "Failed to run tests" },, // i18n-ignore
       { status: 400 }
     );
   }
