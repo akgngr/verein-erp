@@ -45,7 +45,7 @@ export async function DELETE(
     await deleteSecurityTestSchedule(id);
 
     return NextResponse.json({ success: true });
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to delete schedule" }, // i18n-ignore
       { status: 400 }
