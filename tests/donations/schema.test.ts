@@ -1,8 +1,8 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 
-import { donorCreateSchema, donorUpdateSchema } from "../../src/modules/donations/schemas/donor";
-import { issueConfirmationSchema } from "../../src/modules/donations/schemas/confirmation";
+import { donorCreateSchema, donorUpdateSchema } from "@/modules/donations/schemas/donor";
+import { issueConfirmationSchema } from "@/modules/donations/schemas/confirmation";
 
 /** Bağışçı formunun gönderdiği değerler (formda memberId alanı yoktur). */
 const formValues = {

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { aging, allocatePayment, nextContactNumber, openCents } from "../../src/modules/accounting/services/invoice-payments";
+import { aging, allocatePayment, nextContactNumber, openCents } from "@/modules/accounting/services/invoice-payments";
 
 test("kısmi ödeme oranlara orantılı dağılır, toplam korunur", () => {
   const groups = [{ rate: 19, netCents: 10000, taxCents: 1900 }, { rate: 7, netCents: 5000, taxCents: 350 }];

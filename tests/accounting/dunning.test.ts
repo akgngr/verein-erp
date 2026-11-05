@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { defaultInterestRate, dunningFeeCents, lateInterestCents, nextDunningLevel } from "../../src/modules/accounting/services/dunning";
-import { buildPain001, isValidIban, sepaText } from "../../src/modules/accounting/services/sepa";
+import { defaultInterestRate, dunningFeeCents, lateInterestCents, nextDunningLevel } from "@/modules/accounting/services/dunning";
+import { buildPain001, isValidIban, sepaText } from "@/modules/accounting/services/sepa";
 
 const d = (iso: string) => new Date(`${iso}T00:00:00Z`);
 

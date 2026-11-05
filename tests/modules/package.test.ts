@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { generateKeyPairSync } from "node:crypto";
 import { test } from "node:test";
 
-import { buildPackage, isSafePackagePath, keyIdOf, readPackage, verifyPackage, type TrustedPublisher } from "../../src/shared/marketplace/package";
+import { buildPackage, isSafePackagePath, keyIdOf, readPackage, verifyPackage, type TrustedPublisher } from "@/shared/marketplace/package";
 
 const { publicKey, privateKey } = generateKeyPairSync("ed25519");
 const publicKeyPem = publicKey.export({ type: "spki", format: "pem" }).toString();

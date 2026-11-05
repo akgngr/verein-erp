@@ -1,7 +1,7 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 
-import { decodePanelState, encodePanelState } from "../../src/modules/ai/panel-state";
+import { decodePanelState, encodePanelState } from "@/modules/ai/panel-state";
 
 describe("AI panel durumu (çerez)", () => {
   test("gidip gelir ve genişlik sınırlanır", () => {

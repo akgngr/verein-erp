@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { gdpduCell, gdpduCsv, gdpduIndex, type GdpduTable } from "../../src/modules/accounting/services/gdpdu";
-import { GENESIS_HASH, chainHash, snapshotHash, verifyJournal } from "../../src/modules/accounting/services/journal";
-import { buildZip, crc32 } from "../../src/modules/accounting/services/zip";
+import { gdpduCell, gdpduCsv, gdpduIndex, type GdpduTable } from "@/modules/accounting/services/gdpdu";
+import { GENESIS_HASH, chainHash, snapshotHash, verifyJournal } from "@/modules/accounting/services/journal";
+import { buildZip, crc32 } from "@/modules/accounting/services/zip";
 
 
 test("CRC-32 ve ZIP yapısı", () => {

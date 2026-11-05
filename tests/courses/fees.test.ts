@@ -1,8 +1,8 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 
-import { applyDiscount, planCharges } from "../../src/modules/courses/services/charge-plan";
-import { buildDatevDebtorsCsv, encodeCp1252 } from "../../src/modules/students/services/datev-export";
+import { applyDiscount, planCharges } from "@/modules/courses/services/charge-plan";
+import { buildDatevDebtorsCsv, encodeCp1252 } from "@/modules/students/services/datev-export";
 
 const d = (iso: string) => new Date(`${iso}T00:00:00Z`);
 

@@ -8,7 +8,7 @@ import {
   getModuleStates,
   isModuleActive,
   setModuleActive,
-} from "../../src/shared/modules/module-store";
+} from "@/shared/modules/module-store";
 
 describe("Module Store & State Management", () => {
   test("getModuleStates returns active states with required modules", () => {

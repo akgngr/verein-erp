@@ -5,15 +5,15 @@ import path from "node:path";
 
 import { LayoutGrid } from "lucide-react";
 
-import { allModules } from "../../src/registry";
+import { allModules } from "@/registry";
 import {
   MODULE_HOME_KEY,
   findActiveKey,
   findActiveModule,
   moduleMenuItems,
-} from "../../src/shared/navigation/module-nav";
-import { definePermissions } from "../../src/shared/permissions/define";
-import type { ModuleConfig } from "../../src/shared/types/module";
+} from "@/shared/navigation/module-nav";
+import { definePermissions } from "@/shared/permissions/define";
+import type { ModuleConfig } from "@/shared/types/module";
 
 const APP_DIR = path.join(process.cwd(), "src", "app");
 

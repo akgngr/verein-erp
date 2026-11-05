@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { detectFormat, parseAmount, parseCamt053, parseCsv, parseDate, parseMt940, transactionKey } from "../../src/modules/accounting/services/bank-parsers";
-import { suggestMatches } from "../../src/modules/accounting/services/bank-matching";
+import { detectFormat, parseAmount, parseCamt053, parseCsv, parseDate, parseMt940, transactionKey } from "@/modules/accounting/services/bank-parsers";
+import { suggestMatches } from "@/modules/accounting/services/bank-matching";
 
 const CAMT = `<?xml version="1.0" encoding="UTF-8"?>
 <Document xmlns="urn:iso:std:iso:20022:tech:xsd:camt.053.001.02"><BkToCstmrStmt><Stmt><Acct><Id><IBAN>DE02120300000000202051</IBAN></Id><Ccy>EUR</Ccy></Acct>

@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { calculatePayout, exceedsLimit, isValidPeriod, periodRange, sessionMinutes } from "../../src/modules/courses/services/payout-calc";
+import { calculatePayout, exceedsLimit, isValidPeriod, periodRange, sessionMinutes } from "@/modules/courses/services/payout-calc";
 
 const s = (id: string, date: string, startTime: string | null, endTime: string | null) => ({ id, date, startTime, endTime, courseCode: "K-1", courseTitle: "Mathe" });
 

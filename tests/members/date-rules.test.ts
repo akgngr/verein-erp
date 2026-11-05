@@ -1,7 +1,7 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 
-import { checkDueYear, checkMemberDates, checkPaymentDate, dueYearRange } from "../../src/modules/members/services/date-rules";
+import { checkDueYear, checkMemberDates, checkPaymentDate, dueYearRange } from "@/modules/members/services/date-rules";
 
 const d = (value: string) => new Date(`${value}T00:00:00.000Z`);
 const today = d("2026-10-31");

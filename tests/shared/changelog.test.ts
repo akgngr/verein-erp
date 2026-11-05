@@ -2,7 +2,7 @@ import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 
-import changelog from "../../src/modules/system/changelog.json";
+import changelog from "@/modules/system/changelog.json";
 
 describe("Sürüm notları", () => {
   test("en üstteki sürüm package.json sürümüyle aynıdır", () => {
