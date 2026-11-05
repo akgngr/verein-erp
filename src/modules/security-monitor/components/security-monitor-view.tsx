@@ -43,35 +43,49 @@ export function SecurityMonitorView() {
   const [queueMessage, setQueueMessage] = useState<string | null>(null);
 
   const fetchData = useCallback(async () => {
-    try {
-      const [statsResponse, runsResponse, alertsResponse] = await Promise.all([
-        fetch("/api/modules/security-monitor/stats"),
-        fetch("/api/modules/security-monitor/runs?limit=10"),
-        fetch("/api/modules/security-monitor/alerts?limit=10&status=open"),
-      ]);
+    const [statsResponse, runsResponse, alertsResponse] = await Promise.all([
+      fetch("/api/modules/security-monitor/stats"),
+      fetch("/api/modules/security-monitor/runs?limit=10"),
+      fetch("/api/modules/security-monitor/alerts?limit=10&status=open"),
+    ]);
 
-      if (!statsResponse.ok || !runsResponse.ok || !alertsResponse.ok) {
-        throw new Error("SECURITY_MONITOR_FETCH_FAILED");
-      }
-
-      const [stats, runsData, alertsData] = await Promise.all([
-        statsResponse.json(),
-        runsResponse.json(),
-        alertsResponse.json(),
-      ]);
-
-      setStatistics(stats);
-      setRecentRuns(runsData.runs || []);
-      setAlerts(alertsData.alerts || []);
-    } catch (error) {
-      console.error("Failed to fetch security monitor data:", error);
-    } finally {
-      setLoading(false);
+    if (!statsResponse.ok || !runsResponse.ok || !alertsResponse.ok) {
+      throw new Error("SECURITY_MONITOR_FETCH_FAILED");
     }
+
+    const [stats, runsData, alertsData] = await Promise.all([
+      statsResponse.json(),
+      runsResponse.json(),
+      alertsResponse.json(),
+    ]);
+
+    return {
+      statistics: stats as TestStatistics,
+      recentRuns: (runsData.runs || []) as TestRun[],
+      alerts: (alertsData.alerts || []) as Alert[],
+    };
   }, []);
 
   useEffect(() => {
-    void fetchData();
+    let active = true;
+
+    void fetchData()
+      .then((data) => {
+        if (!active) return;
+        setStatistics(data.statistics);
+        setRecentRuns(data.recentRuns);
+        setAlerts(data.alerts);
+      })
+      .catch((error) => {
+        console.error("Failed to fetch security monitor data:", error);
+      })
+      .finally(() => {
+        if (active) setLoading(false);
+      });
+
+    return () => {
+      active = false;
+    };
   }, [fetchData]);
 
   const runTests = async () => {
@@ -84,7 +98,10 @@ export function SecurityMonitorView() {
       if (!response.ok) throw new Error("SECURITY_MONITOR_QUEUE_FAILED");
       await response.json();
       setQueueMessage(t("queued"));
-      await fetchData();
+      const data = await fetchData();
+      setStatistics(data.statistics);
+      setRecentRuns(data.recentRuns);
+      setAlerts(data.alerts);
     } catch (error) {
       console.error("Failed to queue security tests:", error);
     } finally {
