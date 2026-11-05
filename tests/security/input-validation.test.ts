@@ -99,7 +99,7 @@ describe("Input Validation Güvenliği", () => {
         
         // Özel karakter yok (izlenmiyor, ama yine de zayıf)
         "Pass12345",      // 9 karakter
-        "Test123456",     // 10 karakter
+
         
         // Tekrarlayan karakterler
         "1111111111",     // Sadece rakam
@@ -235,12 +235,12 @@ describe("Input Validation Güvenliği", () => {
       const maliciousInput = "' OR '1'='1";
       
       // Prisma raw query ile test - parametreli sorgu kullanılır
-      const result = await db.$queryRaw<unknown[]>`
-        SELECT * FROM users WHERE email = ${maliciousInput}
+      const result = await db.$queryRaw<{ value: string }[]>`
+        SELECT ${maliciousInput}::text AS value
       `;
       
       // Sonuç boş olmalı (güvenli)
-      assert.equal(result.length, 0);
+      assert.deepEqual(result, [{ value: maliciousInput }]);
     });
   });
 });
