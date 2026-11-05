@@ -5547,7 +5547,7 @@
     }
   },
   "security-monitor": {
-    "securityMonitor": {
+    "SecurityMonitor": {
       "title": "Güvenlik İzleme",
       "description": "Sistem güvenlik testlerini düzenli olarak çalıştırır ve sonuçları izler",
       "loading": "Yükleniyor...",
