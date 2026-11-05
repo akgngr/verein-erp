@@ -12,6 +12,9 @@
       "description": "Güvenlik testlerini ve izleme uyarılarını yönetir."
     }
   },
+  "access": {
+    "automation": "Güvenlik testlerini web isteği dışında, kalıcı Automation worker kuyruğunda çalıştırmak için."
+  },
   "monitor": {
     "title": "Güvenlik İzleme",
     "description": "Sistem güvenlik testlerini düzenli olarak çalıştırır ve sonuçları izler",
