@@ -1,4 +1,5 @@
 import { CronJob } from "cron";
+import type { Prisma, SecurityTestSchedule } from "@prisma/client";
 import { getDb } from "@/shared/db";
 import { runSecurityTests } from "./test-runner";
 
@@ -36,7 +37,7 @@ export async function initializeScheduler() {
 /**
  * Setup a cron job for a schedule
  */
-async function setupScheduleJob(schedule: any) {
+async function setupScheduleJob(schedule: Pick<SecurityTestSchedule, "id" | "cronExpression" | "name" | "testSuite">) {
   try {
     // Check if job already exists
     if (scheduledJobs.has(schedule.id)) {
@@ -88,7 +89,7 @@ async function setupScheduleJob(schedule: any) {
 /**
  * Add a new schedule
  */
-export async function addSchedule(schedule: any) {
+export async function addSchedule(schedule: Prisma.SecurityTestScheduleCreateInput) {
   try {
     const db = getDb();
     
@@ -110,7 +111,7 @@ export async function addSchedule(schedule: any) {
 /**
  * Update a schedule
  */
-export async function updateSchedule(id: string, updates: any) {
+export async function updateSchedule(id: string, updates: Prisma.SecurityTestScheduleUpdateInput) {
   try {
     const db = getDb();
     
