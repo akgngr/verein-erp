@@ -124,13 +124,17 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
 
   if (!existing || ["SUCCEEDED", "FAILED", "CANCELLED"].includes(existing.status)) return;
   if (existing.definitionKey !== payload.taskKey || existing.definitionVersion !== payload.taskVersion) {
-    await db.automationExecution.updateMany({
-      where: { id: payload.executionId, status: { in: ["PENDING", "RUNNING"] } },
-      data: { status: "FAILED", finishedAt: new Date(), lastErrorCode: "TASK_ENVELOPE_MISMATCH" },
-    });
-    await db.automationStepRun.updateMany({
-      where: { executionId: payload.executionId, stepKey: "main", status: { in: ["PENDING", "RUNNING", "RETRYING"] } },
-      data: { status: "FAILED", finishedAt: new Date(), lastErrorCode: "TASK_ENVELOPE_MISMATCH" },
+    await db.$transaction(async (tx) => {
+      const failed = await tx.automationExecution.updateMany({
+        where: { id: payload.executionId, status: "PENDING" },
+        data: { status: "FAILED", finishedAt: new Date(), lastErrorCode: "TASK_ENVELOPE_MISMATCH" },
+      });
+      if (failed.count === 0) return;
+
+      await tx.automationStepRun.updateMany({
+        where: { executionId: payload.executionId, stepKey: "main", status: { in: ["PENDING", "RETRYING"] } },
+        data: { status: "FAILED", finishedAt: new Date(), lastErrorCode: "TASK_ENVELOPE_MISMATCH" },
+      });
     });
     return;
   }
