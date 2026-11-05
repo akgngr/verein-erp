@@ -43,7 +43,7 @@ export async function POST(
     const alert = await acknowledgeSecurityAlert(id, userId);
 
     return NextResponse.json(alert);
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Failed to acknowledge alert" }, // i18n-ignore
       { status: 400 }
