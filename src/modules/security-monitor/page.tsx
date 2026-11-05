@@ -45,8 +45,6 @@ export default function SecurityMonitorPage() {
 
   const fetchData = useCallback(async () => {
     try {
-      setLoading(true);
-
       const statsResponse = await fetch("/api/modules/security-monitor/stats");
       const stats = await statsResponse.json();
       setStatistics(stats);
