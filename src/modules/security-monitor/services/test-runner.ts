@@ -53,7 +53,7 @@ export async function runSecurityTests(options: {
   } = options;
 
   if (!isSupportedTestSuite(testSuite)) {
-    throw new Error(`Unsupported test suite: ${testSuite}`);
+    throw new Error(`Unsupported test suite: ${testSuite}`); // i18n-ignore
   }
 
   const startTime = Date.now();
@@ -138,7 +138,7 @@ export async function runSecurityTests(options: {
         data: {
           severity: "high",
           type: "test_failure",
-          message: `${failed} security tests failed`,
+          message: `${failed} security tests failed`, // i18n-ignore
           description: `Security test suite "${testSuite}" has ${failed} failures`,
           testRunId: testRun.id,
           metadata: {
