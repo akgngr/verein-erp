@@ -55,6 +55,7 @@
     "runNow": "Jetzt ausführen",
     "statistics": "Statistiken",
     "environment": "Umgebung",
-    "duration": "Dauer"
+    "duration": "Dauer",
+    "queued": "Die Sicherheitstests wurden dauerhaft eingereiht; die Ergebnisse erscheinen nach Abschluss hier."
   }
 }
