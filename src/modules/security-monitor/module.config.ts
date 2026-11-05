@@ -4,12 +4,13 @@ import { securityMonitorPermissions } from "./permissions";
 
 export default {
   key: "security-monitor",
+  version: "1.0.0",
   label: "Security Monitor",
   description: "Regularly runs system security tests and monitors results",
   category: "OFFICIAL",
   isProtected: false,
   dependencies: {
-    "cron": "^3.0.0"
+    "cron": "^3.5.0"
   },
   nav: [
     {
