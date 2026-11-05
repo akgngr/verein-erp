@@ -90,8 +90,9 @@ describe("CSRF Koruması", () => {
       // NextAuth.js v5, varsayılan olarak CSRF koruması sağlar
       // Bu test, CSRF koruma mekanizmasının varlığını doğrulamak içindir
       
-      const { auth } = await import("@/modules/auth/auth");
-      assert.ok(auth, "NextAuth.js yapılandırması mevcut olmalıdır");
+      const { authConfig } = await import("@/modules/auth/auth.config");
+      assert.equal(authConfig.session?.strategy, "jwt");
+      assert.equal(Object.hasOwn(authConfig, "csrf"), false);
     });
   });
   
