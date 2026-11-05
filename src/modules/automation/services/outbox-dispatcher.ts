@@ -9,6 +9,7 @@ import {
   type TaskRetryPolicy,
 } from "@/shared/automation/define";
 import { getDb } from "@/shared/db";
+import { purgeAutomationHistory, runDueSchedules } from "./scheduler";
 import {
   automationTaskQueuePayloadSchema,
   AUTOMATION_TASK_QUEUE,
@@ -135,6 +136,21 @@ async function failClaim(event: ClaimedOutboxEvent, code: string): Promise<void>
  * The stable pg-boss singleton key still protects the crash window after send
  * succeeds but before the outbox row is marked PUBLISHED.
  */
+/**
+ * Map the persisted retry policy onto pg-boss options. maxAttempts includes the
+ * first run; pg-boss retryLimit counts retries. pg-boss rejects retryDelayMax
+ * unless exponential backoff is enabled, so constant-delay tasks omit it.
+ */
+export function queueRetryOptions(policy: TaskRetryPolicy) {
+  return {
+    retryLimit: Math.max(0, policy.maxAttempts - 1),
+    retryDelay: policy.initialDelaySeconds,
+    ...(policy.backoffMultiplier === 2
+      ? { retryBackoff: true, retryDelayMax: policy.maxDelaySeconds }
+      : { retryBackoff: false }),
+  };
+}
+
 export async function dispatchAutomationOutboxBatch(boss: PgBoss): Promise<number> {
   const db = getDb();
   const events = await claimOutboxBatch();
@@ -181,11 +197,7 @@ export async function dispatchAutomationOutboxBatch(boss: PgBoss): Promise<numbe
         // Short dedupe window: active jobs are checked by the pending watchdog;
         // a terminally failed transport delivery must become enqueueable again.
         singletonSeconds: 60,
-        // maxAttempts includes the first run; pg-boss retryLimit counts retries.
-        retryLimit: Math.max(0, retryPolicy.maxAttempts - 1),
-        retryDelay: retryPolicy.initialDelaySeconds,
-        retryDelayMax: retryPolicy.maxDelaySeconds,
-        retryBackoff: retryPolicy.backoffMultiplier === 2,
+        ...queueRetryOptions(retryPolicy),
         expireInSeconds: 60 * 60,
         deleteAfterSeconds: 60 * 60 * 24 * 7,
       });
@@ -215,6 +227,8 @@ export async function runAutomationOutboxDispatcher(
   signal: AbortSignal,
 ): Promise<void> {
   let nextLeaseRecoveryAt = 0;
+  let nextScheduleAt = 0;
+  let nextPurgeAt = Date.now() + 60_000;
 
   while (!signal.aborted) {
     try {
@@ -222,6 +236,16 @@ export async function runAutomationOutboxDispatcher(
         await recoverExpiredAutomationExecutions();
         await recoverUndeliveredPendingExecutions();
         nextLeaseRecoveryAt = Date.now() + 15_000;
+      }
+
+      if (Date.now() >= nextScheduleAt) {
+        await runDueSchedules();
+        nextScheduleAt = Date.now() + 30_000;
+      }
+
+      if (Date.now() >= nextPurgeAt) {
+        await purgeAutomationHistory();
+        nextPurgeAt = Date.now() + 60 * 60_000;
       }
 
       const published = await dispatchAutomationOutboxBatch(boss);

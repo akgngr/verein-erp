@@ -38,7 +38,11 @@
     "mailErrors": "E-posta gönderim hataları ({count})",
     "unknownError": "Hata ayrıntısı mevcut değil.",
     "eventLog": "Olay geçmişi",
-    "taskResultError": "Görev sonucu hata kodu: {code}"
+    "taskResultError": "Görev sonucu hata kodu: {code}",
+    "cancel": "İptal et",
+    "retry": "Yeniden dene",
+    "cancelled": "Görev iptal edildi.",
+    "retried": "Görev yeniden kuyruğa alındı."
   },
   "access": {
     "mailings": "Toplu e-posta modülünün güvenilir kampanya görev tanımını worker görev listesine kaydetmek için.",
@@ -46,5 +50,30 @@
   },
   "Automation": {
     "taskStarted": "Görev denemesi {attempt}/{maxAttempts} başlatıldı."
+  },
+  "schedules": {
+    "title": "Zamanlanmış görevler",
+    "description": "Yalnızca modüllerin izin verdiği görevler belirli aralıklarla otomatik çalıştırılabilir.",
+    "task": "Görev",
+    "intervalHours": "Aralık (saat)",
+    "add": "Zamanla",
+    "created": "Zamanlama oluşturuldu.",
+    "updated": "Zamanlama güncellendi.",
+    "deleted": "Zamanlama silindi.",
+    "empty": "Henüz zamanlanmış görev yok.",
+    "every": "Her {hours} saatte",
+    "next": "Sonraki: {date}",
+    "last": "Son: {date}",
+    "enabled": "Etkin",
+    "delete": "Sil"
+  },
+  "errors": {
+    "notCancellable": "Bu görev artık iptal edilemez.",
+    "notRetryable": "Yalnızca başarısız veya iptal edilmiş görevler yeniden denenebilir.",
+    "moduleUnavailable": "Görevin modülü etkin değil veya onaylanmamış.",
+    "notSchedulable": "Bu görev zamanlanamaz.",
+    "interval": "Aralık bu görev için izin verilen sınırların dışında.",
+    "scheduleNotFound": "Zamanlama bulunamadı.",
+    "disabled": "Otomasyon bu ortamda kapalı."
   }
 }

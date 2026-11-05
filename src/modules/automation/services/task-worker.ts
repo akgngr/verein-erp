@@ -18,6 +18,7 @@ import {
 import { getDb } from "@/shared/db";
 import { automationTasks } from "../tasks/registry";
 import type { AutomationTaskQueuePayload } from "../worker/queue";
+import { assertTaskModulesUsable } from "./execution-control";
 import { recordAutomationLog } from "./log-store";
 
 const WORKER_ID = randomUUID();
@@ -248,6 +249,17 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
     }
     if (task.version !== payload.taskVersion) {
       if (!await markTerminal(payload.executionId, leaseToken, "FAILED", "TASK_VERSION_NOT_REGISTERED")) {
+        throw new Error("TASK_LEASE_LOST");
+      }
+      return;
+    }
+
+    // Execution-time check: a module disabled or unapproved after enqueue must
+    // not run its work. The execution can be retried manually once usable.
+    try {
+      await assertTaskModulesUsable(task.key, execution.sourceModule);
+    } catch {
+      if (!await markTerminal(payload.executionId, leaseToken, "FAILED", "MODULE_UNAVAILABLE")) {
         throw new Error("TASK_LEASE_LOST");
       }
       return;

@@ -1,26 +1,35 @@
 import { getFormatter, getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
+import { can } from "@/shared/permissions/define";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
 
 import { automationPermissions } from "../permissions";
+import { ExecutionActions } from "../components/execution-actions";
 import { ExecutionStatusChip } from "../components/execution-status-chip";
+import { SchedulesPanel } from "../components/schedules-panel";
+import { listSchedulableTasks, listSchedules } from "../services/schedules";
 import { listAutomationExecutions } from "../queries/list-executions";
 
 export async function AutomationMonitorView() {
+  let user;
   try {
-    await requirePermission(automationPermissions, "view");
+    user = await requirePermission(automationPermissions, "view");
   } catch (error) {
     if (error instanceof ForbiddenError) return <AccessDenied />;
     throw error;
   }
 
-  const [t, format, executions] = await Promise.all([
+  const [t, format, executions, schedules, canUpdate, canApprove] = await Promise.all([
     getTranslations("automation.monitor"),
     getFormatter(),
     listAutomationExecutions(),
+    listSchedules(),
+    Promise.resolve(can(user.role, automationPermissions, "update")),
+    Promise.resolve(can(user.role, automationPermissions, "approve")),
   ]);
+  const fmt = (date: Date) => format.dateTime(date, { dateStyle: "short", timeStyle: "short" });
   const failed = executions.filter((item) => item.status === "FAILED").length;
   const running = executions.filter((item) => item.status === "RUNNING").length;
   const completed = executions.filter((item) => item.status === "SUCCEEDED").length;
@@ -33,6 +42,19 @@ export async function AutomationMonitorView() {
         <Metric label={t("metrics.failed")} value={failed} />
         <Metric label={t("metrics.completed")} value={completed} />
       </div>
+
+      <SchedulesPanel
+        canManage={canApprove}
+        tasks={listSchedulableTasks()}
+        schedules={schedules.map((schedule) => ({
+          id: schedule.id,
+          taskKey: schedule.taskKey,
+          intervalMinutes: schedule.intervalMinutes,
+          enabled: schedule.enabled,
+          nextRun: fmt(schedule.nextRunAt),
+          lastRun: schedule.lastRunAt ? fmt(schedule.lastRunAt) : null,
+        }))}
+      />
 
       <section className="flex flex-col gap-3">
         <h2 className="text-medium font-semibold">{t("recent")}</h2>
@@ -91,6 +113,8 @@ export async function AutomationMonitorView() {
                 </ul>
               </div>
             ) : null}
+
+            {canUpdate ? <ExecutionActions id={execution.id} status={execution.status} /> : null}
 
             {execution.logs.length > 0 ? (
               <div className="mt-3 border-t border-default-100 pt-3">

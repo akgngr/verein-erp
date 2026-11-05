@@ -19,6 +19,8 @@ export type CreateTaskExecutionRecordInput<TSchema extends z.ZodType = z.ZodType
   input: Prisma.InputJsonValue;
   context?: Prisma.InputJsonValue;
   scheduledAt?: Date;
+  /** Overrides the task-defined idempotency key (e.g. one key per schedule slot). */
+  idempotencyKey?: string;
 };
 
 function isUniqueConstraintError(error: unknown): boolean {
@@ -48,7 +50,7 @@ export async function createTaskExecutionRecord<TSchema extends z.ZodType>(
     throw new Error("TASK_INPUT_INVALID");
   }
 
-  const idempotencyKey = input.task.idempotencyKey?.(parsedInput.data) ?? null;
+  const idempotencyKey = input.idempotencyKey ?? input.task.idempotencyKey?.(parsedInput.data) ?? null;
   if (idempotencyKey !== null &&
       (typeof idempotencyKey !== "string" ||
         idempotencyKey.trim().length === 0 ||

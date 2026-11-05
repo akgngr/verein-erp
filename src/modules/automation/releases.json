@@ -2,6 +2,47 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.6.0",
+      "date": "2026-11-05",
+      "appVersion": "0.39.0",
+      "title": {
+        "tr": "Görev kaydı otomatik keşif, iptal/yeniden dene ve zamanlanmış görevler",
+        "de": "Automatische Task-Registry, Abbrechen/Wiederholen und geplante Aufgaben"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Modüllerin automation.ts dosyalarındaki görevler pnpm module:sync ile otomatik kaydedilir (src/automation-registry.ts); yeni görev için merkezi listeyi elle düzenlemek gerekmez. Görev anahtarı sahibi modülle eşleşmezse kayıt reddedilir.",
+          "de": "Aufgaben aus den automation.ts-Dateien der Module werden per pnpm module:sync automatisch registriert (src/automation-registry.ts); die zentrale Liste muss nicht mehr manuell gepflegt werden. Passt der Schlüssel nicht zum Modul, wird die Registrierung abgelehnt."
+        },
+        {
+          "type": "feature",
+          "tr": "Merkezi API: enqueueTask, getExecution, cancelExecution, retryExecution ve scheduleTask. Kuyruğa alma ve çalıştırma anında görevin modülünün etkin ve erişim onaylı olduğu kontrol edilir.",
+          "de": "Zentrale API: enqueueTask, getExecution, cancelExecution, retryExecution und scheduleTask. Beim Einreihen und bei der Ausführung wird geprüft, ob das Modul aktiv und freigegeben ist."
+        },
+        {
+          "type": "feature",
+          "tr": "İzleme ekranında bekleyen/çalışan görevler iptal edilebilir, başarısız/iptal edilenler yeniden denenebilir. Çalışan görev iptal edildiğinde worker kira (lease) kontrolüyle durur.",
+          "de": "In der Überwachung lassen sich wartende/laufende Aufgaben abbrechen und fehlgeschlagene/abgebrochene erneut starten. Laufende Aufgaben stoppen über die Lease-Prüfung."
+        },
+        {
+          "type": "feature",
+          "tr": "Zamanlanmış görevler: modülün izin verdiği görevler (ör. güvenlik testleri) sabit aralıklarla çalışır. Girdi güvenilir koddan üretilir; kullanıcı yalnızca aralığı seçer. Her zaman dilimi tekil anahtarla kuyruğa alınır, kaçırılan dilimler toplu tekrar edilmez.",
+          "de": "Geplante Aufgaben: freigegebene Aufgaben (z. B. Sicherheitstests) laufen in festen Intervallen. Die Eingabe erzeugt vertrauenswürdiger Code; Nutzer wählen nur das Intervall. Jeder Slot hat einen eindeutigen Schlüssel, verpasste Slots werden nicht nachgeholt."
+        },
+        {
+          "type": "improvement",
+          "tr": "Saklama süresi: başarılı/iptal kayıtlar 90 gün, başarısızlar 180 gün, yayımlanmış outbox satırları 14 gün sonra silinir.",
+          "de": "Aufbewahrung: erfolgreiche/abgebrochene Ausführungen 90 Tage, fehlgeschlagene 180 Tage, veröffentlichte Outbox-Einträge 14 Tage."
+        },
+        {
+          "type": "fix",
+          "tr": "Sabit gecikmeli (üstel olmayan) yeniden deneme politikasına sahip görevler pg-boss'a gönderilemiyordu (retryDelayMax hatası); güvenlik testleri bu yüzden kuyrukta bekliyordu.",
+          "de": "Aufgaben mit konstanter Wiederholungsverzögerung konnten nicht an pg-boss übergeben werden (retryDelayMax-Fehler); Sicherheitstests blieben deshalb in der Warteschlange."
+        }
+      ]
+    },
+    {
       "version": "0.5.7",
       "date": "2026-11-05",
       "title": {
