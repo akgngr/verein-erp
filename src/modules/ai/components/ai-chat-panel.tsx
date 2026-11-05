@@ -13,6 +13,7 @@ import { acceptAiConsentAction } from "../actions/consent-actions";
 import { executeAiProposalAction } from "../actions/execute-proposal";
 import { deleteAiConversationAction, getAiConversationAction, listAiConversationsAction } from "../actions/history-actions";
 import { AI_PANEL_COOKIE, AI_PANEL_MAX_WIDTH, AI_PANEL_MIN_WIDTH, encodePanelState, type AiPanelState } from "../panel-state";
+import { toInternalMarkdownHref } from "@/shared/markdown/links";
 import { parseMarkdown } from "@/shared/markdown/parse";
 import type { AiFile, AiProposal } from "../types";
 
@@ -30,7 +31,6 @@ function inline(text: string): ReactNode[] {
   const parts: ReactNode[] = [];
   const pattern = /\*\*([^*]+)\*\*|\[([^\]]+)\]\((\/[^)\s]*)\)|`([^`]+)`/g;
   // KARAR: "//api/..." tarayıcıda başka bir SUNUCU adresidir; yalnızca uygulama içi tek "/" yolları.
-  const internal = (href: string) => `/${href.replace(/^\/+/, "")}`;
   let last = 0;
   for (const match of text.matchAll(pattern)) {
     if (match.index > last) parts.push(text.slice(last, match.index));
@@ -40,7 +40,7 @@ function inline(text: string): ReactNode[] {
       parts.push(
         <a
           key={match.index}
-          href={internal(match[3])}
+          href={toInternalMarkdownHref(match[3])}
           target="_blank"
           rel="noopener"
           className="font-medium text-primary underline"

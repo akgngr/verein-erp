@@ -2,6 +2,27 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.3.4",
+      "date": "2026-11-05",
+      "title": {
+        "tr": "Asistan bağlantılarında yönlendirme güvenliği",
+        "de": "Sichere Navigation für Assistenten-Links"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Markdown bağlantıları URL normalizasyonundan sonra da doğrulanır; kodlanmış nokta segmentleriyle uygulama dışındaki adreslere yönlendirme engellenir.",
+          "de": "Markdown-Links werden auch nach der URL-Normalisierung geprüft; Weiterleitungen zu externen Hosts über kodierte Punktsegmente werden verhindert."
+        },
+        {
+          "type": "fix",
+          "tr": "Kodlanmış ve normalleştirilmiş yol geçişleri için güvenlik testleri eklendi.",
+          "de": "Sicherheitstests für kodierte und normalisierte Pfad-Traversierungen wurden ergänzt."
+        }
+      ],
+      "appVersion": "0.14.2"
+    },
+    {
       "version": "1.3.3",
       "date": "2026-10-31",
       "title": {
