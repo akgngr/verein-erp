@@ -1,5 +1,5 @@
 {
-  "securityMonitor": {
+  "SecurityMonitor": {
     "title": "Security Monitor",
     "description": "Regularly runs system security tests and monitors results",
     "loading": "Loading...",
