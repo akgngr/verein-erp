@@ -30,7 +30,7 @@ Do not start the worker from a Next.js route, Server Action, or instrumentation 
 
 The outbox dispatcher publishes only minimal execution identifiers. It claims rows atomically with PostgreSQL `FOR UPDATE SKIP LOCKED`; a claim expires after five minutes so another dispatcher can recover it after a crash. A stable pg-boss singleton key protects the crash window between publishing and marking the outbox row as PUBLISHED.
 
-The worker claims execution rows with a 90-second lease and renews ownership every 25 seconds. Each claim increments a fencing token. Heartbeat, retry, and terminal-state writes are conditional on the current worker ID and fencing token, so an expired worker cannot overwrite a newer worker's execution state. A worker whose lease cannot be renewed aborts its task signal and leaves recovery to the queue retry path.
+The worker claims execution rows with a 45-second lease and renews ownership every 10 seconds. Each claim increments a fencing token. Heartbeat, retry, and terminal-state writes are conditional on the current worker ID and fencing token, so an expired worker cannot overwrite a newer worker's execution state. A worker whose lease cannot be renewed aborts its task signal and leaves recovery to the queue retry path.
 
 Delivery remains at-least-once. Task handlers must honor `context.signal`, be idempotent, and use stable downstream idempotency keys for external side effects. A process can lose its lease while an external request is already in flight; fencing protects ERP state but cannot roll back an already accepted email, payment, or webhook. The ERP execution record remains authoritative.
 
