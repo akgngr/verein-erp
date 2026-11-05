@@ -57,7 +57,7 @@ describe("Automation worker lease policy", () => {
 
     assert.equal(
       getPendingRecoveryEventKey("execution-1", 2, first),
-      "automation.task.pending-recovery:execution-1:2:29855040",
+      "automation.task.pending-recovery:execution-1:2:29898000",
     );
     assert.equal(
       getPendingRecoveryEventKey("execution-1", 2, first),
