@@ -1,4 +1,4 @@
-import { ModuleConfig } from "@/shared/types/module";
+import type { ModuleConfig } from "@/shared/types/module";
 import { ShieldCheck } from "lucide-react";
 import { securityMonitorPermissions } from "./permissions";
 
