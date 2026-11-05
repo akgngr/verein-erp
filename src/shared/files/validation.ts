@@ -35,7 +35,7 @@ export function sanitizeOriginalName(fileName: string): string {
     .split(/[\\/]/)
     .pop()!
     .replace(/[\u0000-\u001f\u007f]/g, "")
-    .replace(/[<>]/g, "")
+    .replace(/<[^>]*>?/g, "")
     .replace(/^\.+/, "")
     .trim();
   if (!cleaned || cleaned === "." || cleaned === "..") return "dosya";
