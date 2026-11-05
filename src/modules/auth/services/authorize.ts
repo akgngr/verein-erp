@@ -6,7 +6,7 @@ import { writeAudit } from "@/shared/audit/write-audit";
 import { getDb } from "@/shared/db";
 import { getEnv } from "@/shared/env";
 import { verifyPassword } from "@/shared/security/password";
-import { getLoginFailureState } from "@/shared/security/login-lockout";
+import { getLoginAccessStatus, getLoginFailureState } from "@/shared/security/login-lockout";
 import { buildUserLabel } from "@/shared/utils";
 
 import { loginSchema } from "../schemas/login";
@@ -43,16 +43,27 @@ export async function authorize(
   const db = getDb();
   const user = await db.user.findUnique({ where: { email } });
 
-  if (!user || !user.isActive) {
-    // Kullanıcı bulunamadı ya da pasif: aynı genel hata döner.
+  if (!user) {
     await writeAudit({ action: "LOGIN_FAILED", entity: "Auth", userLabel: email });
     throw new InvalidCredentialsError();
   }
 
   const now = new Date();
+  const accessStatus = getLoginAccessStatus(user.isActive, user.lockedUntil, now);
+
+  if (accessStatus === "inactive") {
+    await writeAudit({
+      userId: user.id,
+      userLabel: buildUserLabel(user.name, user.email),
+      action: "LOGIN_FAILED",
+      entity: "Auth",
+      entityId: user.id,
+    });
+    throw new InvalidCredentialsError();
+  }  const now = new Date();
   const userLabel = buildUserLabel(user.name, user.email);
 
-  if (user.lockedUntil && user.lockedUntil > now) {
+  if (accessStatus === "locked") {
     await writeAudit({
       userId: user.id,
       userLabel,
