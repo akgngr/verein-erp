@@ -12,9 +12,6 @@ export const moduleConfig: ModuleConfig = {
   category: "OFFICIAL",
   isProtected: false,
   hasSchema: true,
-  dependencies: {
-    cron: "^3.5.0",
-  },
   requires: [{ module: "automation" }],
   access: [{ module: "automation", operations: ["write"] }],
   nav: [
