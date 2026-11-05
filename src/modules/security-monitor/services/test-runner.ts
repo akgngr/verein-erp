@@ -1,25 +1,35 @@
-import { exec } from "node:child_process";
+import { execFile } from "node:child_process";
 import { promisify } from "node:util";
 import { getDb } from "@/shared/db";
-import { getCurrentUser } from "@/modules/auth/server";
 
-const execAsync = promisify(exec);
+const execFileAsync = promisify(execFile);
+const SUPPORTED_TEST_SUITES = ["security", "all"] as const;
+type SupportedTestSuite = (typeof SUPPORTED_TEST_SUITES)[number];
 
 interface TestResult {
   success: boolean;
-  testSuite: string;
+  testSuite: SupportedTestSuite;
   totalTests: number;
   passed: number;
   failed: number;
   skipped: number;
   durationMs: number;
-  results: any[];
+  results: unknown[];
   logs: string[];
   errors: string[];
 }
 
+function isSupportedTestSuite(value: string): value is SupportedTestSuite {
+  return SUPPORTED_TEST_SUITES.includes(value as SupportedTestSuite);
+}
+
+function hasStatus(value: unknown, status: string): boolean {
+  return typeof value === "object" && value !== null && "status" in value && value.status === status;
+}
+
 /**
- * Run security tests and store results
+ * Run security tests and store results.
+ * Only predefined package scripts are executable; user input is never passed to a shell.
  */
 export async function runSecurityTests(options: {
   testSuite?: string;
@@ -34,62 +44,54 @@ export async function runSecurityTests(options: {
     branch,
   } = options;
 
+  if (!isSupportedTestSuite(testSuite)) {
+    throw new Error(`Unsupported test suite: ${testSuite}`);
+  }
+
   const startTime = Date.now();
   const logs: string[] = [];
   const errors: string[] = [];
+  const environment = process.env.NODE_ENV || "development";
+  const nodeVersion = process.version;
+  const osPlatform = process.platform;
 
   try {
     logs.push(`Starting ${testSuite} tests at ${new Date().toISOString()}`);
-    
-    // Get environment info
-    const environment = process.env.NODE_ENV || "development";
-    const nodeVersion = process.version;
-    const osPlatform = process.platform;
 
-    // Build the test command
-    const testCommand = `NODE_OPTIONS="--conditions=react-server" tsx --test "tests/${testSuite}/*.test.ts" --reporter=json`;
-    
-    logs.push(`Running command: ${testCommand}`);
-    
-    // Execute tests
-    const { stdout, stderr } = await execAsync(testCommand, {
+    // execFile does not invoke a shell, and the command is selected from a fixed allowlist.
+    const script = testSuite === "all" ? "test" : "test:security";
+    logs.push(`Running pnpm ${script}`);
+
+    const { stdout, stderr } = await execFileAsync("pnpm", [script], {
       cwd: process.cwd(),
-      timeout: 300000, // 5 minutes
-      maxBuffer: 1024 * 1024 * 10, // 10MB
+      timeout: 300000,
+      maxBuffer: 10 * 1024 * 1024,
+      env: {
+        ...process.env,
+        NODE_OPTIONS: "--conditions=react-server",
+      },
     });
 
     const durationMs = Date.now() - startTime;
-
-    // Parse test results
-    let results: any[] = [];
-    let totalTests = 0;
-    let passed = 0;
-    let failed = 0;
-    let skipped = 0;
+    let results: unknown[] = [];
 
     try {
-      if (stdout) {
-        const parsed = JSON.parse(stdout);
-        if (Array.isArray(parsed)) {
-          results = parsed;
-          totalTests = results.length;
-          passed = results.filter((r) => r.status === "passed").length;
-          failed = results.filter((r) => r.status === "failed").length;
-          skipped = results.filter((r) => r.status === "skipped").length;
-        }
+      if (stdout.trim()) {
+        const parsed: unknown = JSON.parse(stdout);
+        if (Array.isArray(parsed)) results = parsed;
       }
-    } catch (e) {
-      logs.push(`Failed to parse test results: ${e}`);
+    } catch (error) {
+      logs.push(`Failed to parse test results: ${String(error)}`);
     }
 
-    if (stderr) {
-      logs.push(`Test stderr: ${stderr}`);
-    }
+    if (stderr) logs.push(`Test stderr: ${stderr}`);
 
-    // Determine overall status
+    const totalTests = results.length;
+    const passed = results.filter((result) => hasStatus(result, "passed")).length;
+    const failed = results.filter((result) => hasStatus(result, "failed")).length;
+    const skipped = results.filter((result) => hasStatus(result, "skipped")).length;
     const status = failed > 0 ? "failed" : totalTests > 0 ? "passed" : "error";
 
-    // Store results in database
     const db = getDb();
     const testRun = await db.securityTestRun.create({
       data: {
@@ -103,15 +105,14 @@ export async function runSecurityTests(options: {
         environment,
         nodeVersion,
         osPlatform,
-        results: results,
-        logs: logs,
+        results: results as object[],
+        logs,
         triggeredBy,
         commitHash,
         branch,
       },
     });
 
-    // Create alerts for failures
     if (failed > 0) {
       await db.securityTestAlert.create({
         data: {
@@ -121,7 +122,7 @@ export async function runSecurityTests(options: {
           description: `Security test suite "${testSuite}" has ${failed} failures`,
           testRunId: testRun.id,
           metadata: {
-            failedTests: results.filter((r) => r.status === "failed"),
+            failedTests: results.filter((result) => hasStatus(result, "failed")) as object[],
           },
         },
       });
@@ -141,17 +142,17 @@ export async function runSecurityTests(options: {
       logs,
       errors,
     };
-  } catch (error: any) {
+  } catch (error) {
     const durationMs = Date.now() - startTime;
-    const errorMessage = error.message || String(error);
-    
-    errors.push(errorMessage);
-    if (error.stdout) errors.push(error.stdout);
-    if (error.stderr) errors.push(error.stderr);
+    const failure = error instanceof Error ? error : new Error(String(error));
+    const processFailure = error as { stdout?: unknown; stderr?: unknown };
 
-    // Store error in database
+    errors.push(failure.message);
+    if (typeof processFailure.stdout === "string") errors.push(processFailure.stdout);
+    if (typeof processFailure.stderr === "string") errors.push(processFailure.stderr);
+
     const db = getDb();
-    await db.securityTestRun.create({
+    const testRun = await db.securityTestRun.create({
       data: {
         testSuite,
         status: "error",
@@ -160,26 +161,25 @@ export async function runSecurityTests(options: {
         passed: 0,
         failed: 0,
         skipped: 0,
-        environment: process.env.NODE_ENV || "development",
-        nodeVersion: process.version,
-        osPlatform: process.platform,
+        environment,
+        nodeVersion,
+        osPlatform,
         results: [],
-        logs: logs,
+        logs,
         triggeredBy,
         commitHash,
         branch,
       },
     });
 
-    // Create critical alert
     await db.securityTestAlert.create({
       data: {
         severity: "critical",
         type: "test_error",
-        message: `Security test execution failed: ${errorMessage}`,
-        description: `Failed to run security test suite: ${testSuite}`,
-        testRunId: "",
-        metadata: { error: errorMessage },
+        message: `Security test execution failed: ${failure.message}`,
+        description: `Failed to run test suite: ${testSuite}`,
+        testRunId: testRun.id,
+        metadata: { error: failure.message },
       },
     });
 
@@ -199,7 +199,7 @@ export async function runSecurityTests(options: {
 }
 
 /**
- * Get test statistics
+ * Get test statistics.
  */
 export async function getTestStatistics() {
   const db = getDb();
@@ -226,12 +226,12 @@ export async function getTestStatistics() {
 }
 
 /**
- * Get test history for a specific suite
+ * Get test history for a specific suite.
  */
-export async function getTestHistory(testSuite: string, limit: number = 30) {
+export async function getTestHistory(testSuite: string, limit = 30) {
   const db = getDb();
 
-  const runs = await db.securityTestRun.findMany({
+  return db.securityTestRun.findMany({
     where: { testSuite },
     orderBy: { createdAt: "desc" },
     take: limit,
@@ -245,6 +245,4 @@ export async function getTestHistory(testSuite: string, limit: number = 30) {
       durationMs: true,
     },
   });
-
-  return runs;
 }
