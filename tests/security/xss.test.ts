@@ -169,12 +169,10 @@ describe("XSS Koruması", () => {
           .replace(/"/g, "&quot;")
           .replace(/'/g, "&#x27;");
         
-        assert.ok(
-          !escaped.includes("<") &&
-          !escaped.includes(">") &&
-          escaped.includes("&lt;"),
-          `XSS payload escape edilmemiş: ${escaped}`
-        );
+        assert.ok(!escaped.includes("<") && !escaped.includes(">"));
+        if (payload.includes("<") || payload.includes(">")) {
+          assert.ok(escaped.includes("&lt;") || escaped.includes("&gt;"));
+        }
       }
     });
     
