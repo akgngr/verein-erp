@@ -26,9 +26,21 @@ export const runSecurityTestsTask = defineTask({
   idempotencyKey: (input) => `security-monitor:run:${input.requestId}`,
   handler: async (input, context) => {
     const { runSecurityTests } = await import("./services/test-runner");
-    return runSecurityTests({
+    const result = await runSecurityTests({
       testSuite: input.testSuite,
       triggeredBy: context.requestedById ?? "automation",
     });
+
+    // Keep large test logs and detailed results in SecurityTestRun, not in
+    // the Automation execution payload.
+    return {
+      success: result.success,
+      testSuite: result.testSuite,
+      totalTests: result.totalTests,
+      passed: result.passed,
+      failed: result.failed,
+      skipped: result.skipped,
+      durationMs: result.durationMs,
+    };
   },
 });
