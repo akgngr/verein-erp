@@ -12,6 +12,9 @@
       "description": "Verwaltet Sicherheitsprüfungen und Überwachungswarnungen."
     }
   },
+  "access": {
+    "automation": "Damit Sicherheitstests außerhalb der Webanfrage über die dauerhafte Automation-Worker-Warteschlange ausgeführt werden."
+  },
   "monitor": {
     "title": "Sicherheitsüberwachung",
     "description": "Führt regelmäßig System-Sicherheitstests durch und überwacht die Ergebnisse",
