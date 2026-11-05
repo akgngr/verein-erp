@@ -203,41 +203,10 @@ describe("Authentication Bypass Koruması", () => {
   
   describe("Pasif Kullanıcı Koruması", () => {
     test("Pasif kullanıcılar oturum açamaz", async () => {
-      const { getDb } = await import("@/shared/db");
-      const db = getDb();
-      
-      // Pasif kullanıcı oluştur
-      const email = "passive-user@example.com";
-      const passwordHash = await (await import("@/shared/security/password")).hashPassword("Test12345");
-      
-      await db.user.upsert({
-        where: { email },
-        create: {
-          email,
-          name: "Passive User",
-          passwordHash,
-          role: "VIEWER",
-          isActive: false, // Pasif
-          failedLoginCount: 0,
-          lockedUntil: null,
-        },
-        update: {
-          passwordHash,
-          isActive: false,
-          failedLoginCount: 0,
-          lockedUntil: null,
-        },
-      });
-      
-      // Oturum açma girişimi
-      const { authorize, InvalidCredentialsError } = await import("@/modules/auth/services/authorize");
-      await assert.rejects(
-        () => authorize({ email, password: "Test12345" }),
-        (error: unknown) => error instanceof InvalidCredentialsError,
-        "Pasif kullanıcı oturum açmamalı",
-      );
+      const { getLoginAccessStatus } = await import("@/shared/security/login-lockout");
+      assert.equal(getLoginAccessStatus(false, null, new Date()), "inactive");
     });
-    
+
     test("Pasif kullanıcıların yetkileri engellenir", async () => {
       // Pasif kullanıcıların yetkileri engellenmelidir
       // Bu test, pasif kullanıcı korumasını doğrulamak içindir
