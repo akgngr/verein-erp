@@ -4,12 +4,12 @@ import { randomUUID } from "node:crypto";
 import { Prisma } from "@prisma/client";
 import type { PgBoss } from "pg-boss";
 
-import { getDb } from "@/shared/db";
-import { recoverExpiredAutomationExecutions } from "./lease-recovery";
 import {
   resolveTaskRetryPolicy,
   type TaskRetryPolicy,
 } from "@/shared/automation/define";
+import { getDb } from "@/shared/db";
+import { recoverExpiredAutomationExecutions } from "./lease-recovery";
 import {
   automationTaskQueuePayloadSchema,
   AUTOMATION_TASK_QUEUE,
