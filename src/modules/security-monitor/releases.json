@@ -1,34 +1,31 @@
-[
-  {
-    "version": "1.0.0",
-    "date": "2026-11-05",
-    "title": { "tr": "Güvenlik İzleme Modülü", "en": "Security Monitor Module", "de": "Sicherheitsüberwachungsmodul" },
-    "description": { 
-      "tr": "Sistem güvenlik testlerini düzenli olarak çalıştırır ve sonuçları izler. Uyarılar oluşturur ve test geçmişini saklar.",
-      "en": "Regularly runs system security tests and monitors results. Creates alerts and stores test history.",
-      "de": "Führt regelmäßig System-Sicherheitstests durch und überwacht die Ergebnisse. Erstellt Warnungen und speichert den Testverlauf."
-    },
-    "changes": [
-      { 
-        "tr": "Güvenlik testleri çalıştırma ve sonuçları saklama",
-        "en": "Run security tests and store results",
-        "de": "Sicherheitstests ausführen und Ergebnisse speichern"
-      },
-      { 
-        "tr": "Uyarı sistemi ile kritik hataların bildirimi",
-        "en": "Alert system for critical failure notifications",
-        "de": "Warnsystem für Benachrichtigungen über kritische Fehler"
-      },
-      { 
-        "tr": "Test geçmişi ve istatistikler",
-        "en": "Test history and statistics",
-        "de": "Testverlauf und Statistiken"
-      },
-      { 
-        "tr": "Zamanlanmış test çalıştırmaları",
-        "en": "Scheduled test runs",
-        "de": "Geplante Testausführungen"
-      }
-    ]
-  }
-]
+{
+  "releases": [
+    {
+      "version": "1.0.0",
+      "date": "2026-11-05",
+      "title": { "tr": "Güvenlik İzleme Modülü", "de": "Sicherheitsüberwachungsmodul" },
+      "changes": [
+        { 
+          "type": "feature",
+          "tr": "Güvenlik testleri çalıştırma ve sonuçları saklama",
+          "de": "Sicherheitstests ausführen und Ergebnisse speichern"
+        },
+        { 
+          "type": "feature",
+          "tr": "Uyarı sistemi ile kritik hataların bildirimi",
+          "de": "Warnsystem für Benachrichtigungen über kritische Fehler"
+        },
+        { 
+          "type": "feature",
+          "tr": "Test geçmişi ve istatistikler",
+          "de": "Testverlauf und Statistiken"
+        },
+        { 
+          "type": "feature",
+          "tr": "Zamanlanmış test çalıştırmaları",
+          "de": "Geplante Testausführungen"
+        }
+      ]
+    }
+  ]
+}

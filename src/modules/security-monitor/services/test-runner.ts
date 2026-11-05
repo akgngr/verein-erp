@@ -1,7 +1,7 @@
 import { exec } from "node:child_process";
 import { promisify } from "node:util";
 import { getDb } from "@/shared/db";
-import { getCurrentUserId } from "@/modules/auth/server";
+import { getCurrentUser } from "@/modules/auth/server";
 
 const execAsync = promisify(exec);
 

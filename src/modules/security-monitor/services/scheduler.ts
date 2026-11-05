@@ -64,9 +64,9 @@ async function setupScheduleJob(schedule: any) {
             },
           });
 
-          console.log(`[Security Monitor] Scheduled test completed: ${schedule.name} - ${result.status}`);
+          console.log(`[Security Monitor] Scheduled test completed: ${schedule.name} - ${result.success ? "success" : "failed"}`);
         } catch (error) {
-          console.error(`[Security Monitor] Scheduled test failed: ${schedule.name}:", error);
+          console.error(`[Security Monitor] Scheduled test failed: ${schedule.name}:`, error);
         }
       },
       null,
@@ -81,7 +81,7 @@ async function setupScheduleJob(schedule: any) {
 
     console.log(`[Security Monitor] Scheduled job: ${schedule.name} (${schedule.cronExpression})`);
   } catch (error) {
-    console.error(`[Security Monitor] Failed to setup schedule: ${schedule.name}:", error);
+    console.error(`[Security Monitor] Failed to setup schedule: ${schedule.name}:`, error);
   }
 }
 

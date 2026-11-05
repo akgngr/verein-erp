@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { requirePermission } from "@/modules/auth/server";
+import { securityMonitorPermissions } from "../../../permissions";
 import { resolveSecurityAlert } from "../../../server";
 
 // POST /api/modules/security-monitor/alerts/:id/resolve - Resolve alert
@@ -8,10 +9,8 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await requirePermission("security-monitor", "write");
-
+    const user = await requirePermission(securityMonitorPermissions, "update");
     const { id } = await params;
-    const user = await requirePermission("security-monitor", "write");
     const userId = user.id;
 
     const alert = await resolveSecurityAlert(id, userId);

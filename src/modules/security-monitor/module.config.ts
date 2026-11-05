@@ -1,15 +1,25 @@
 import { ModuleConfig } from "@/shared/types/module";
+import { ShieldCheck } from "lucide-react";
+import { securityMonitorPermissions } from "./permissions";
 
 export default {
   key: "security-monitor",
-  label: { tr: "Güvenlik İzleme", en: "Security Monitor", de: "Sicherheitsüberwachung" },
-  description: {
-    tr: "Sistem güvenlik testlerini düzenli olarak çalıştırır ve sonuçları izler",
-    en: "Regularly runs system security tests and monitors results",
-    de: "Führt regelmäßig System-Sicherheitstests durch und überwacht die Ergebnisse",
+  label: "Security Monitor",
+  description: "Regularly runs system security tests and monitors results",
+  category: "OFFICIAL",
+  isProtected: false,
+  dependencies: {
+    "cron": "^3.0.0"
   },
-  category: "system",
-  access: "admin",
-  icon: "ShieldCheck",
-  order: 100,
+  nav: [
+    {
+      href: "/guvenlik-izleme",
+      label: "Security Monitor",
+      labelKey: "modules.securityMonitor.title",
+      icon: ShieldCheck,
+      group: "settings",
+      order: 100,
+      permission: { definition: securityMonitorPermissions, action: "view" },
+    },
+  ],
 } satisfies ModuleConfig;

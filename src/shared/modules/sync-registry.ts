@@ -60,11 +60,14 @@ export function syncModuleRegistry(): { registered: string[] } {
     return a.localeCompare(b);
   });
 
+  // Convert module name to valid TypeScript variable name (remove hyphens)
+  const toValidVarName = (mod: string) => mod.replace(/-/g, "");
+
   const imports = validModules
-    .map((mod) => `import { moduleConfig as ${mod}Module } from "@/modules/${mod}";`)
+    .map((mod) => `import { moduleConfig as ${toValidVarName(mod)}Module } from "@/modules/${mod}";`)
     .join("\n");
 
-  const listItems = validModules.map((mod) => `  ${mod}Module,`).join("\n");
+  const listItems = validModules.map((mod) => `  ${toValidVarName(mod)}Module,`).join("\n");
 
   const content = `// Bu dosya scripts/sync-schemas.ts ve syncModuleRegistry tarafından otomatik üretilir.
 // Dışarıdan modül ekleyen AI agentlar veya geliştiriciler elle düzenlemek zorunda değildir.
@@ -135,8 +138,9 @@ export const dashboardCards: { moduleKey: string; cards: DashboardCardDefinition
 /** Modül sürüm notları kaydı: her modülün releases.json dosyası (Ayarlar → Sürüm notları). */
 function syncModuleReleases(modules: string[]): void {
   const withReleases = modules.filter((mod) => fs.existsSync(path.join(MODULES_DIR, mod, "releases.json")));
-  const imports = withReleases.map((mod) => `import ${mod}Releases from "@/modules/${mod}/releases.json";`).join("\n");
-  const listItems = withReleases.map((mod) => `  { moduleKey: "${mod}", releases: ${mod}Releases.releases as ModuleRelease[] },`).join("\n");
+  const toValidVarName = (mod: string) => mod.replace(/-/g, "");
+  const imports = withReleases.map((mod) => `import ${toValidVarName(mod)}Releases from "@/modules/${mod}/releases.json";`).join("\n");
+  const listItems = withReleases.map((mod) => `  { moduleKey: "${mod}", releases: ${toValidVarName(mod)}Releases.releases as ModuleRelease[] },`).join("\n");
   const content = `// Bu dosya syncModuleRegistry tarafından otomatik üretilir (pnpm module:sync); elle düzenlemeyin.
 import type { ModuleRelease } from "@/shared/modules/releases";
 ${imports ? `\n${imports}\n` : ""}
@@ -167,8 +171,9 @@ function syncConventionFile(
   const base = file.replace(/\.ts$/, "");
   const withFile = modules.filter((mod) => fs.existsSync(path.join(MODULES_DIR, mod, file)));
   const suffix = exportName.charAt(0).toUpperCase() + exportName.slice(1);
-  const imports = withFile.map((mod) => `import { ${exportName} as ${mod}${suffix} } from "@/modules/${mod}/${base}";`).join("\n");
-  const listItems = withFile.map((mod) => `  ${mod}${suffix},`).join("\n");
+  const toValidVarName = (mod: string) => mod.replace(/-/g, "");
+  const imports = withFile.map((mod) => `import { ${exportName} as ${toValidVarName(mod)}${suffix} } from "@/modules/${mod}/${base}";`).join("\n");
+  const listItems = withFile.map((mod) => `  ${toValidVarName(mod)}${suffix},`).join("\n");
   const content = `// Bu dosya syncModuleRegistry tarafından otomatik üretilir (pnpm module:sync); elle düzenlemeyin.
 import "server-only";
 
@@ -218,8 +223,9 @@ export const moduleAiRegistry: ModuleAi[] = ${listItems ? `[\n${listItems}\n]` :
  */
 function syncPermissionResources(modules: string[]): void {
   const withPermissions = modules.filter((mod) => fs.existsSync(path.join(MODULES_DIR, mod, "permissions.ts")));
-  const imports = withPermissions.map((mod) => `import * as ${mod}PermissionExports from "@/modules/${mod}/permissions";`).join("\n");
-  const listItems = withPermissions.map((mod) => `  { moduleKey: "${mod}", definitions: definitionsOf(${mod}PermissionExports) },`).join("\n");
+  const toValidVarName = (mod: string) => mod.replace(/-/g, "");
+  const imports = withPermissions.map((mod) => `import * as ${toValidVarName(mod)}PermissionExports from "@/modules/${mod}/permissions";`).join("\n");
+  const listItems = withPermissions.map((mod) => `  { moduleKey: "${mod}", definitions: definitionsOf(${toValidVarName(mod)}PermissionExports) },`).join("\n");
 
   const content = `// Bu dosya syncModuleRegistry tarafından otomatik üretilir (pnpm module:sync); elle düzenlemeyin.
 import type { PermissionDefinition } from "@/shared/permissions/define";

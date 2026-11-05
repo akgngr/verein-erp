@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { requirePermission } from "@/modules/auth/server";
+import { securityMonitorPermissions } from "../../permissions";
 import {
   getSecurityTestSchedules,
   createSecurityTestSchedule,
@@ -10,7 +11,7 @@ import {
 // GET /api/modules/security-monitor/schedules - List schedules
 export async function GET(request: Request) {
   try {
-    await requirePermission("security-monitor", "read");
+    await requirePermission(securityMonitorPermissions, "view");
 
     const schedules = await getSecurityTestSchedules();
 
@@ -26,7 +27,7 @@ export async function GET(request: Request) {
 // POST /api/modules/security-monitor/schedules - Create schedule
 export async function POST(request: Request) {
   try {
-    await requirePermission("security-monitor", "write");
+    await requirePermission(securityMonitorPermissions, "create");
 
     const body = await request.json();
     

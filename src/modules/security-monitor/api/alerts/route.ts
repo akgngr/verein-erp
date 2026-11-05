@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { requirePermission } from "@/modules/auth/server";
+import { securityMonitorPermissions } from "../../permissions";
 import { getSecurityTestAlerts, acknowledgeSecurityAlert, resolveSecurityAlert } from "../../server";
 
 // GET /api/modules/security-monitor/alerts - List alerts
 export async function GET(request: Request) {
   try {
-    await requirePermission("security-monitor", "read");
+    await requirePermission(securityMonitorPermissions, "view");
 
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get("limit") || "50");
@@ -35,10 +36,8 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> }
 ) {
   try {
-    await requirePermission("security-monitor", "write");
-
+    const user = await requirePermission(securityMonitorPermissions, "update");
     const { id } = await params;
-    const user = await requirePermission("security-monitor", "write");
     const userId = user.id;
 
     const alert = await acknowledgeSecurityAlert(id, userId);

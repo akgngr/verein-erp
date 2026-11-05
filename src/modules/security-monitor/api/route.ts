@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { requirePermission } from "@/modules/auth/server";
+import { securityMonitorPermissions } from "../permissions";
 import {
   getSecurityTestRuns,
   getSecurityTestRun,
@@ -16,7 +17,7 @@ import { runSecurityTests, getTestStatistics, getTestHistory } from "../services
 // GET /api/modules/security-monitor/runs - List test runs
 export async function GET(request: Request) {
   try {
-    await requirePermission("security-monitor", "read");
+    await requirePermission(securityMonitorPermissions, "view");
 
     const { searchParams } = new URL(request.url);
     const limit = parseInt(searchParams.get("limit") || "50");
@@ -45,7 +46,7 @@ export async function GET(request: Request) {
 // POST /api/modules/security-monitor/runs - Run tests
 export async function POST(request: Request) {
   try {
-    await requirePermission("security-monitor", "write");
+    await requirePermission(securityMonitorPermissions, "create");
 
     const body = await request.json();
     const { testSuite = "security", triggeredBy = "manual" } = body;
