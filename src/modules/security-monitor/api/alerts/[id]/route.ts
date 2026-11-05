@@ -18,7 +18,7 @@ export async function POST(
     return NextResponse.json(alert);
   } catch (error) {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to resolve alert" },, // i18n-ignore
+      { error: error instanceof Error ? error.message : "Failed to resolve alert" }, // i18n-ignore
       { status: 400 }
     );
   }
