@@ -1,0 +1,53 @@
+import { NextResponse } from "next/server";
+import { requirePermission } from "@/modules/auth/server";
+import { getSecurityTestAlerts, acknowledgeSecurityAlert, resolveSecurityAlert } from "../../server";
+
+// GET /api/modules/security-monitor/alerts - List alerts
+export async function GET(request: Request) {
+  try {
+    await requirePermission("security-monitor", "read");
+
+    const { searchParams } = new URL(request.url);
+    const limit = parseInt(searchParams.get("limit") || "50");
+    const severity = searchParams.get("severity") || undefined;
+    const status = searchParams.get("status") || undefined;
+    const page = parseInt(searchParams.get("page") || "1");
+
+    const result = await getSecurityTestAlerts({
+      limit,
+      severity,
+      status,
+      page,
+    });
+
+    return NextResponse.json(result);
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: error.message || "Failed to fetch alerts" },
+      { status: 400 }
+    );
+  }
+}
+
+// POST /api/modules/security-monitor/alerts/:id/acknowledge - Acknowledge alert
+export async function POST(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    await requirePermission("security-monitor", "write");
+
+    const { id } = await params;
+    const user = await requirePermission("security-monitor", "write");
+    const userId = user.id;
+
+    const alert = await acknowledgeSecurityAlert(id, userId);
+
+    return NextResponse.json(alert);
+  } catch (error: any) {
+    return NextResponse.json(
+      { error: error.message || "Failed to acknowledge alert" },
+      { status: 400 }
+    );
+  }
+}
