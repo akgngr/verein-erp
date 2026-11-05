@@ -44,7 +44,7 @@ export async function getSecurityTestRun(id: string) {
   });
   
   if (!run) {
-    throw new Error(`Test run not found: ${id}`);
+    throw new Error(`Test run not found: ${id}`); // i18n-ignore
   }
   
   return run;
