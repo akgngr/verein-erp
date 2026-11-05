@@ -59,10 +59,13 @@ export async function runSecurityTests(options: {
     logs.push(`Starting ${testSuite} tests at ${new Date().toISOString()}`);
 
     // execFile does not invoke a shell, and the command is selected from a fixed allowlist.
-    const script = testSuite === "all" ? "test" : "test:security";
-    logs.push(`Running pnpm ${script}`);
+    const testPattern = testSuite === "all" ? "tests/**/*.test.ts" : "tests/security/*.test.ts";
+    logs.push(`Running test suite: ${testSuite}`);
 
-    const { stdout, stderr } = await execFileAsync("pnpm", [script], {
+    const { stdout, stderr } = await execFileAsync(
+      "pnpm",
+      ["exec", "tsx", "--test", "--test-reporter=json", testPattern],
+      {
       cwd: process.cwd(),
       timeout: 300000,
       maxBuffer: 10 * 1024 * 1024,
@@ -74,22 +77,31 @@ export async function runSecurityTests(options: {
 
     const durationMs = Date.now() - startTime;
     let results: unknown[] = [];
+    let totalTests = 0;
+    let passed = 0;
+    let failed = 0;
+    let skipped = 0;
 
     try {
       if (stdout.trim()) {
         const parsed: unknown = JSON.parse(stdout);
-        if (Array.isArray(parsed)) results = parsed;
+        if (typeof parsed === "object" && parsed !== null) {
+          const report = parsed as {
+            tests?: unknown[];
+            stats?: { tests?: number; pass?: number; fail?: number; skipped?: number };
+          };
+          results = Array.isArray(report.tests) ? report.tests : [];
+          totalTests = report.stats?.tests ?? results.length;
+          passed = report.stats?.pass ?? results.filter((result) => hasStatus(result, "passed")).length;
+          failed = report.stats?.fail ?? results.filter((result) => hasStatus(result, "failed")).length;
+          skipped = report.stats?.skipped ?? results.filter((result) => hasStatus(result, "skipped")).length;
+        }
       }
     } catch (error) {
       logs.push(`Failed to parse test results: ${String(error)}`);
     }
 
     if (stderr) logs.push(`Test stderr: ${stderr}`);
-
-    const totalTests = results.length;
-    const passed = results.filter((result) => hasStatus(result, "passed")).length;
-    const failed = results.filter((result) => hasStatus(result, "failed")).length;
-    const skipped = results.filter((result) => hasStatus(result, "skipped")).length;
     const status = failed > 0 ? "failed" : totalTests > 0 ? "passed" : "error";
 
     const db = getDb();
