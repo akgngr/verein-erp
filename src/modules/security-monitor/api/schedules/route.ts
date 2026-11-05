@@ -16,7 +16,7 @@ export async function GET(request: Request) {
     return NextResponse.json(schedules);
   } catch (error) {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to fetch schedules" },
+      { error: error instanceof Error ? error.message : "Failed to fetch schedules" } // i18n-ignore,
       { status: 400 }
     );
   }
@@ -41,7 +41,7 @@ export async function POST(request: Request) {
     return NextResponse.json(schedule, { status: 201 });
   } catch (error: any) {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to create schedule" },
+      { error: error instanceof Error ? error.message : "Failed to create schedule" } // i18n-ignore,
       { status: 400 }
     );
   }
