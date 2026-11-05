@@ -24,7 +24,7 @@ export async function GET(request: Request) {
     return NextResponse.json(result);
   } catch (error) {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to fetch alerts" } // i18n-ignore,
+      { error: error instanceof Error ? error.message : "Failed to fetch alerts" },, // i18n-ignore
       { status: 400 }
     );
   }
@@ -45,7 +45,7 @@ export async function POST(
     return NextResponse.json(alert);
   } catch (error: any) {
     return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to acknowledge alert" } // i18n-ignore,
+      { error: error instanceof Error ? error.message : "Failed to acknowledge alert" },, // i18n-ignore
       { status: 400 }
     );
   }
