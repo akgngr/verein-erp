@@ -1,7 +1,7 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 
-import { PseudonymVault } from "../../src/modules/ai/services/privacy";
+import { PseudonymVault } from "@/modules/ai/services/privacy";
 
 describe("AI gizlilik katmanı", () => {
   test("e-posta, IBAN ve telefon maskelenir, yanıtta geri çözülür", () => {
@@ -53,7 +53,7 @@ describe("AI gizlilik katmanı – kayıtlı kişiler", () => {
 
 describe("AI sağlayıcı izinli listesi", () => {
   test("yerel model yalnızca özel ağ adresinde kabul edilir", async () => {
-    const { isPrivateEndpoint, AI_PROVIDER_IDS } = await import("../../src/modules/ai/services/providers/registry");
+    const { isPrivateEndpoint, AI_PROVIDER_IDS } = await import("@/modules/ai/services/providers/registry");
     for (const url of ["http://localhost:11434/v1", "http://127.0.0.1:8000/v1", "http://ollama:11434/v1", "http://10.0.0.5/v1", "http://172.20.1.2:8000/v1", "http://192.168.1.20/v1", "http://llm.internal/v1", "http://[::1]:8080/v1"]) {
       assert.equal(isPrivateEndpoint(url), true, url);
     }

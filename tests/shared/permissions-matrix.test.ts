@@ -1,9 +1,9 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 
-import { permissionResources } from "../../src/permissions-registry";
-import { can, definePermissions, effectiveActions, type PermissionPolicy } from "../../src/shared/permissions/define";
-import { SYSTEM_ROLES } from "../../src/shared/roles";
+import { permissionResources } from "@/permissions-registry";
+import { can, definePermissions, effectiveActions, type PermissionPolicy } from "@/shared/permissions/define";
+import { SYSTEM_ROLES } from "@/shared/roles";
 
 const all = permissionResources.flatMap((entry) => entry.definitions.map((definition) => ({ moduleKey: entry.moduleKey, definition })));
 const empty: PermissionPolicy = { overrides: {}, unavailableRoles: [] };

@@ -1,8 +1,8 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { depreciationForYear, depreciationSchedule, flatRateAmountCents, flatRateYearTotals, suggestMethod } from "../../src/modules/accounting/services/afa";
-import { freeReserveLimitCents, nextBusinessDay, taxDeadlines } from "../../src/modules/accounting/services/tax-calendar";
+import { depreciationForYear, depreciationSchedule, flatRateAmountCents, flatRateYearTotals, suggestMethod } from "@/modules/accounting/services/afa";
+import { freeReserveLimitCents, nextBusinessDay, taxDeadlines } from "@/modules/accounting/services/tax-calendar";
 
 const d = (iso: string) => new Date(`${iso}T00:00:00Z`);
 

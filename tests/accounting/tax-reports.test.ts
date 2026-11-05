@@ -11,7 +11,7 @@ import {
   datevTaxKey,
   vatPeriods,
   type TaxBookingRow,
-} from "../../src/modules/accounting/services/tax-reports";
+} from "@/modules/accounting/services/tax-reports";
 
 const row = (over: Partial<TaxBookingRow>): TaxBookingRow => ({
   id: "b1",

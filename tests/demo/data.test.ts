@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { clearRefs, demoPerson } from "../../src/shared/demo/define";
+import { clearRefs, demoPerson } from "@/shared/demo/define";
 
 test("demo kişiler kurgusaldır (example.com, 000 telefon)", () => {
   for (let i = 0; i < 60; i++) {

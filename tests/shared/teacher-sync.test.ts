@@ -1,7 +1,7 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 
-import { splitUserName } from "../../src/modules/courses/utils";
+import { splitUserName } from "@/modules/courses/utils";
 
 describe("Öğretmen ↔ kullanıcı ad senkronu", () => {
   test("son kelime soyad, kalanı ad olur", () => {

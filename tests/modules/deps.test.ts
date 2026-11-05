@@ -1,7 +1,7 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 
-import { declaredDependencies, externalPackagesIn, packageNameOf, rangesCompatible } from "../../src/shared/modules/module-deps";
+import { declaredDependencies, externalPackagesIn, packageNameOf, rangesCompatible } from "@/shared/modules/module-deps";
 
 describe("Modül npm bağımlılıkları", () => {
   test("paket adı içe aktarma yolundan çıkarılır", () => {

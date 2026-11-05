@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { mapGoCardlessTransaction } from "../../src/modules/banking/services/providers/gocardless";
+import { mapGoCardlessTransaction } from "@/modules/banking/services/providers/gocardless";
 
 test("gelen ödeme: karşı taraf borçlu (debtor)", () => {
   const row = mapGoCardlessTransaction({

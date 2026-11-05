@@ -1,9 +1,9 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 
-import { allModules } from "../../src/registry";
-import { accessSignature, isAccessApproved } from "../../src/shared/modules/module-access";
-import { exportedMethods } from "../../src/shared/modules/sync-routes";
+import { allModules } from "@/registry";
+import { accessSignature, isAccessApproved } from "@/shared/modules/module-access";
+import { exportedMethods } from "@/shared/modules/sync-routes";
 import { declaredAccess, findServerImports, operationFor } from "../../scripts/validate-module";
 
 describe("Modüller arası erişim izni", () => {

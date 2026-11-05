@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
 
-import { AUTO_ROUTE_BANNER, GENERATED_API_DIR, GENERATED_PAGES_DIR } from "../../src/shared/modules/sync-routes";
+import { AUTO_ROUTE_BANNER, GENERATED_API_DIR, GENERATED_PAGES_DIR } from "@/shared/modules/sync-routes";
 
 const ROOT_DIR = process.cwd();
 const APP_DIR = path.join(ROOT_DIR, "src", "app");

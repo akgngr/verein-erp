@@ -8,7 +8,7 @@ import {
   resolveRouteSegment,
   segmentConfig,
   syncModuleRoutes,
-} from "../../src/shared/modules/sync-routes";
+} from "@/shared/modules/sync-routes";
 
 describe("Module Route Synchronizer", () => {
   test("syncModuleRoutes connects module pages to dashboard routes (isolated sandbox)", () => {

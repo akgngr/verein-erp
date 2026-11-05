@@ -2,8 +2,8 @@ import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-import { isLocale, toLocale, DEFAULT_LOCALE, SUPPORTED_LOCALES } from "../../src/i18n/config";
-import { syncModuleTranslations } from "../../src/shared/modules/sync-i18n";
+import { isLocale, toLocale, DEFAULT_LOCALE, SUPPORTED_LOCALES } from "@/i18n/config";
+import { syncModuleTranslations } from "@/shared/modules/sync-i18n";
 
 describe("i18n Multilang Configuration & Parity", () => {
   test("locale validator and fallback work correctly", () => {

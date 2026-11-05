@@ -1,10 +1,10 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { effectiveTaxRate, grossFromNet, splitGross, taxColumnsFromGross, DEFAULT_TAX_SETTINGS } from "../../src/modules/accounting/services/tax";
-import { SKR_SUGGESTIONS } from "../../src/modules/accounting/services/skr";
-import { bookingCreateSchema } from "../../src/modules/accounting/schemas/booking";
-import { accountNumberSchema } from "../../src/modules/accounting/schemas/chart";
+import { effectiveTaxRate, grossFromNet, splitGross, taxColumnsFromGross, DEFAULT_TAX_SETTINGS } from "@/modules/accounting/services/tax";
+import { SKR_SUGGESTIONS } from "@/modules/accounting/services/skr";
+import { bookingCreateSchema } from "@/modules/accounting/schemas/booking";
+import { accountNumberSchema } from "@/modules/accounting/schemas/chart";
 
 test("splitGross: brüt = net + KDV, kuruş kayması yok", () => {
   assert.deepEqual(splitGross(11900, 19), { netCents: 10000, taxCents: 1900 });

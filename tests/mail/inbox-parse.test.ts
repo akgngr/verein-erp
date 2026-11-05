@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { parseInboxMessage } from "../../src/modules/mail/services/inbox-parse";
+import { parseInboxMessage } from "@/modules/mail/services/inbox-parse";
 
 const pdf = Buffer.from("%PDF-1.4\n% test\n").toString("base64");
 const raw = [

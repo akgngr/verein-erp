@@ -3,10 +3,10 @@ import { test } from "node:test";
 
 import { PDFDocument } from "pdf-lib";
 
-import { buildCiiInvoice } from "../../src/modules/accounting/services/einvoice-cii";
-import { extractEmbeddedInvoiceXml, parseEInvoice } from "../../src/modules/accounting/services/einvoice-in";
-import type { XInvoiceData } from "../../src/modules/accounting/services/einvoice-out";
-import { toZugferdPdf } from "../../src/modules/accounting/services/zugferd-pdf";
+import { buildCiiInvoice } from "@/modules/accounting/services/einvoice-cii";
+import { extractEmbeddedInvoiceXml, parseEInvoice } from "@/modules/accounting/services/einvoice-in";
+import type { XInvoiceData } from "@/modules/accounting/services/einvoice-out";
+import { toZugferdPdf } from "@/modules/accounting/services/zugferd-pdf";
 
 const party = { name: "Verein & Co e.V.", street: "Hauptstr. 1", postalCode: "10115", city: "Berlin", countryCode: "DE", vatId: "DE123456789", taxNumber: "12/345/67890", email: "info@verein.de", phone: "030 123", contactName: null };
 const data: XInvoiceData = {

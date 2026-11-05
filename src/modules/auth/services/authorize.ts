@@ -6,6 +6,7 @@ import { writeAudit } from "@/shared/audit/write-audit";
 import { getDb } from "@/shared/db";
 import { getEnv } from "@/shared/env";
 import { verifyPassword } from "@/shared/security/password";
+import { getLoginAccessStatus, getLoginFailureState } from "@/shared/security/login-lockout";
 import { buildUserLabel } from "@/shared/utils";
 
 import { loginSchema } from "../schemas/login";
@@ -19,9 +20,6 @@ export class InvalidCredentialsError extends CredentialsSignin {
 export class AccountLockedError extends CredentialsSignin {
   code = "account_locked";
 }
-
-const MAX_FAILED_ATTEMPTS = 5;
-const LOCK_MINUTES = 15;
 
 /**
  * Credentials provider authorize akışı (kilitleme mantığı dahil).
@@ -45,16 +43,28 @@ export async function authorize(
   const db = getDb();
   const user = await db.user.findUnique({ where: { email } });
 
-  if (!user || !user.isActive) {
-    // Kullanıcı bulunamadı ya da pasif: aynı genel hata döner.
+  if (!user) {
     await writeAudit({ action: "LOGIN_FAILED", entity: "Auth", userLabel: email });
     throw new InvalidCredentialsError();
   }
 
   const now = new Date();
+  const accessStatus = getLoginAccessStatus(user.isActive, user.lockedUntil, now);
+
+  if (accessStatus === "inactive") {
+    await writeAudit({
+      userId: user.id,
+      userLabel: buildUserLabel(user.name, user.email),
+      action: "LOGIN_FAILED",
+      entity: "Auth",
+      entityId: user.id,
+    });
+    throw new InvalidCredentialsError();
+  }
+
   const userLabel = buildUserLabel(user.name, user.email);
 
-  if (user.lockedUntil && user.lockedUntil > now) {
+  if (accessStatus === "locked") {
     await writeAudit({
       userId: user.id,
       userLabel,
@@ -69,17 +79,13 @@ export async function authorize(
   if (!passwordOk) {
     // KARAR: Kilit süresi dolmuşsa hata sayacı sıfırdan başlar;
     // 5. ardışık hata hesabı 15 dakika boyunca kilitler.
-    const expiredLock = Boolean(user.lockedUntil && user.lockedUntil <= now);
-    const failedCount = (expiredLock ? 0 : user.failedLoginCount) + 1;
-    const shouldLock = failedCount >= MAX_FAILED_ATTEMPTS;
+    const lockout = getLoginFailureState(user.failedLoginCount, user.lockedUntil, now);
 
     await db.user.update({
       where: { id: user.id },
       data: {
-        failedLoginCount: shouldLock ? 0 : failedCount,
-        lockedUntil: shouldLock
-          ? new Date(now.getTime() + LOCK_MINUTES * 60_000)
-          : user.lockedUntil,
+        failedLoginCount: lockout.failedLoginCount,
+        lockedUntil: lockout.lockedUntil,
       },
     });
 

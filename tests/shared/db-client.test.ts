@@ -1,7 +1,7 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 
-import { stripPrismaOnlyParams } from "../../src/shared/db-client";
+import { stripPrismaOnlyParams } from "@/shared/db-client";
 
 describe("Prisma 7 bağlantı adresi", () => {
   test("eski sorgu motoruna özgü parametreler pg sürücüsüne gitmez", () => {

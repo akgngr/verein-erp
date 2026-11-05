@@ -1,7 +1,7 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 
-import { resolveAutomationRuntimeConfig } from "../../src/modules/automation/runtime-config";
+import { resolveAutomationRuntimeConfig } from "@/modules/automation/runtime-config";
 
 describe("Automation runtime gates", () => {
   test("keeps automation and worker disabled when no variables are configured", () => {

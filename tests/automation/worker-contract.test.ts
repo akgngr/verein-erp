@@ -1,7 +1,7 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 
-import { automationTaskQueuePayloadSchema } from "../../src/modules/automation/worker/queue";
+import { automationTaskQueuePayloadSchema } from "@/modules/automation/worker/queue";
 
 describe("Automation worker queue contract", () => {
   test("accepts only the minimal execution envelope", () => {

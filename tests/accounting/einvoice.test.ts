@@ -2,8 +2,8 @@ import assert from "node:assert/strict";
 import { deflateSync } from "node:zlib";
 import { test } from "node:test";
 
-import { buildXRechnungUbl, unitCode, xrechnungIssues, type XInvoiceData } from "../../src/modules/accounting/services/einvoice-out";
-import { extractEmbeddedInvoiceXml, isEInvoiceXml, parseEInvoice, section14Checks } from "../../src/modules/accounting/services/einvoice-in";
+import { buildXRechnungUbl, unitCode, xrechnungIssues, type XInvoiceData } from "@/modules/accounting/services/einvoice-out";
+import { extractEmbeddedInvoiceXml, isEInvoiceXml, parseEInvoice, section14Checks } from "@/modules/accounting/services/einvoice-in";
 
 const party = { name: "Verein & Co e.V.", street: "Hauptstr. 1", postalCode: "10115", city: "Berlin", countryCode: "DE", vatId: "DE123456789", taxNumber: "12/345/67890", email: "info@verein.de", phone: "030 123", contactName: "Kasse" };
 const data: XInvoiceData = {
@@ -92,7 +92,7 @@ test("§ 14 UStG kontrolleri (Kleinbetragsrechnung gevşek)", () => {
   assert.deepEqual(big.filter((check) => !check.ok).map((check) => check.key), ["sellerTaxId", "number", "serviceDate"]);
 });
 
-import { parseFreeAddress } from "../../src/modules/accounting/services/einvoice-out";
+import { parseFreeAddress } from "@/modules/accounting/services/einvoice-out";
 
 test("serbest alıcı adresi ayrıştırma", () => {
   assert.deepEqual(parseFreeAddress("Kunde GmbH\nMusterweg 5\n12345 Musterstadt", "Kunde GmbH"), { street: "Musterweg 5", postalCode: "12345", city: "Musterstadt", countryCode: "DE" });

@@ -4,50 +4,50 @@ import { Prisma } from "@prisma/client";
 
 import {
   formatMembershipNumber,
-} from "../../src/modules/members/services/membership-number";
+} from "@/modules/members/services/membership-number";
 import {
   formatReceiptNumber,
-} from "../../src/modules/members/services/receipt-number";
+} from "@/modules/members/services/receipt-number";
 import {
   canSeeKimlikNo,
   maskKimlikNo,
-} from "../../src/modules/members/services/kimlik";
+} from "@/modules/members/services/kimlik";
 import {
   canSeeTcKimlikNo,
   maskTcKimlikNo,
-} from "../../src/modules/members/services/tc-kimlik";
+} from "@/modules/members/services/tc-kimlik";
 import {
   decimalToCents,
   deriveDueStatus,
-} from "../../src/modules/members/services/dues-calculation";
+} from "@/modules/members/services/dues-calculation";
 import {
   berlinToday,
   berlinMonthRange,
   berlinYear,
   parseDateOnly,
   formatAddress,
-} from "../../src/modules/members/utils";
+} from "@/modules/members/utils";
 import {
   memberCreateSchema,
   memberUpdateSchema,
   changeStatusSchema,
-} from "../../src/modules/members/schemas/member";
+} from "@/modules/members/schemas/member";
 import {
   dueAddSchema,
   generateDuesSchema,
-} from "../../src/modules/members/schemas/dues";
+} from "@/modules/members/schemas/dues";
 import {
   paymentCreateSchema,
   paymentVoidSchema,
-} from "../../src/modules/members/schemas/payment";
+} from "@/modules/members/schemas/payment";
 import {
   membersPermissions,
   memberPaymentsPermissions,
   memberTypesPermissions,
-} from "../../src/modules/members/permissions";
-import { buildMemberWhere } from "../../src/modules/members/queries/list-members";
-import { buildDuesWhere } from "../../src/modules/members/queries/list-dues";
-import { can } from "../../src/shared/permissions/define";
+} from "@/modules/members/permissions";
+import { buildMemberWhere } from "@/modules/members/queries/list-members";
+import { buildDuesWhere } from "@/modules/members/queries/list-dues";
+import { can } from "@/shared/permissions/define";
 
 describe("Members Module - Core Services & Utilities", () => {
   describe("Membership Number Generation", () => {

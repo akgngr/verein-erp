@@ -48,6 +48,14 @@ const eslintConfig = [
     },
   },
   {
+    // Testler modüllerin gerçek iç servislerini doğrular; bu nedenle testlerde
+    // public olmayan modül dosyalarına doğrudan import bilinçli olarak serbesttir.
+    files: ["tests/**/*.{ts,tsx}"],
+    rules: {
+      "no-restricted-imports": "off",
+    },
+  },
+  {
     // shared katmanı: hiçbir modülü ve src/app'i import edemez (3.1)
     files: ["src/shared/**/*.{ts,tsx}"],
     rules: {

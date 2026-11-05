@@ -1,9 +1,9 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { ACCOUNTING_PRESETS } from "../../src/modules/accounting/services/setup-preset";
-import { SKR_SUGGESTIONS } from "../../src/modules/accounting/services/skr";
-import { MODULE_PRESETS, ORGANIZATION_TYPES, PRESET_MANAGED_MODULES } from "../../src/modules/system/services/setup";
+import { ACCOUNTING_PRESETS } from "@/modules/accounting/services/setup-preset";
+import { SKR_SUGGESTIONS } from "@/modules/accounting/services/skr";
+import { MODULE_PRESETS, ORGANIZATION_TYPES, PRESET_MANAGED_MODULES } from "@/modules/system/services/setup";
 
 test("her kurum türünün modül ve muhasebe hazır ayarı var", () => {
   for (const type of ORGANIZATION_TYPES) {

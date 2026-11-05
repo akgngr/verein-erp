@@ -1,7 +1,7 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 
-import { calculateInvoiceTotals } from "../../src/modules/accounting/services/invoice-calc";
+import { calculateInvoiceTotals } from "@/modules/accounting/services/invoice-calc";
 
 describe("Fatura hesapları", () => {
   test("satır neti yuvarlanır, KDV oran başına bir kez hesaplanır", () => {

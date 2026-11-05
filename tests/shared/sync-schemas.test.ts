@@ -2,7 +2,7 @@ import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 import fs from "node:fs";
 import path from "node:path";
-import { syncModuleSchemas } from "../../src/shared/modules/sync-schemas";
+import { syncModuleSchemas } from "@/shared/modules/sync-schemas";
 
 describe("Modular Prisma Schemas Synchronizer", () => {
   test("syncModuleSchemas links module schemas into prisma/schema/", () => {

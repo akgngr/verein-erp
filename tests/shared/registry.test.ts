@@ -1,6 +1,6 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
-import { allModules } from "../../src/registry";
+import { allModules } from "@/registry";
 
 describe("Module Registry Integrity", () => {
   test("all registered modules have valid metadata and categories", () => {

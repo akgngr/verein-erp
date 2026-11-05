@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-import { enabledDependents, findDependencyCycles, planEnable, satisfiesVersion, withRequirements } from "../../src/shared/modules/dependencies";
+import { enabledDependents, findDependencyCycles, planEnable, satisfiesVersion, withRequirements } from "@/shared/modules/dependencies";
 
 const mods = [
   { key: "students", version: "1.1.0" },

@@ -1,7 +1,7 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 
-import { sendCampaignTask } from "../../src/modules/mailings/automation";
+import { sendCampaignTask } from "@/modules/mailings/automation";
 
 describe("Mailings automation task contract", () => {
   test("accepts only a campaign identifier and rejects recipient data", () => {

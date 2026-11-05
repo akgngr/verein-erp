@@ -1,8 +1,8 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 
-import { toInternalMarkdownHref } from "../../src/shared/markdown/links";
-import { parseMarkdown } from "../../src/shared/markdown/parse";
+import { toInternalMarkdownHref } from "@/shared/markdown/links";
+import { parseMarkdown } from "@/shared/markdown/parse";
 
 describe("Sohbet markdown çözümleyici", () => {
   test("markdown bağlantıları uygulama içinde kalır", () => {

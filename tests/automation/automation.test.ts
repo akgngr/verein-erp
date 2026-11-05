@@ -2,7 +2,7 @@ import test, { describe } from "node:test";
 import assert from "node:assert/strict";
 import { z } from "zod";
 
-import { defineTask, resolveTaskRetryPolicy } from "../../src/shared/automation/define";
+import { defineTask, resolveTaskRetryPolicy } from "@/shared/automation/define";
 import {
   EXECUTION_HEARTBEAT_INTERVAL_MS,
   EXECUTION_LEASE_DURATION_MS,
@@ -14,8 +14,8 @@ import {
   getPendingExecutionRecoveryBefore,
   getPendingRecoveryEventKey,
   isExecutionAttemptExhausted,
-} from "../../src/shared/automation/lease";
-import { defineTaskRegistry } from "../../src/modules/automation/tasks/registry";
+} from "@/shared/automation/lease";
+import { defineTaskRegistry } from "@/modules/automation/tasks/registry";
 
 describe("Automation worker lease policy", () => {
   test("heartbeat interval stays safely below the lease duration", () => {
