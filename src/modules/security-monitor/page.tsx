@@ -3,9 +3,9 @@
 import { Card, CardBody } from "@heroui/react";
 import { Button } from "@heroui/react";
 import { Badge } from "@heroui/react";
-import { AlertTriangle, CheckCircle, Clock, XCircle, ShieldCheck, PlayCircle } from "lucide-react";
+import { Clock, ShieldCheck, PlayCircle } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 
 interface TestStatistics {
   totalRuns: number;
@@ -43,14 +43,10 @@ export default function SecurityMonitorPage() {
   const [loading, setLoading] = useState(true);
   const [running, setRunning] = useState(false);
 
-  useEffect(() => {
-    fetchData();
-  }, []);
-
-  const fetchData = async () => {
+  const fetchData = useCallback(async () => {
     try {
       setLoading(true);
-      
+
       const statsResponse = await fetch("/api/modules/security-monitor/stats");
       const stats = await statsResponse.json();
       setStatistics(stats);
@@ -67,7 +63,11 @@ export default function SecurityMonitorPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    void fetchData();
+  }, [fetchData]);
 
   const runTests = async () => {
     try {
@@ -85,15 +85,6 @@ export default function SecurityMonitorPage() {
       console.error("Failed to run tests:", error);
     } finally {
       setRunning(false);
-    }
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "passed": return "bg-success-100 text-success-800";
-      case "failed": return "bg-danger-100 text-danger-800";
-      case "error": return "bg-warning-100 text-warning-800";
-      default: return "bg-default-100 text-default-800";
     }
   };
 
