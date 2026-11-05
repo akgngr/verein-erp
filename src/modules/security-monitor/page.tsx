@@ -64,7 +64,11 @@ export default function SecurityMonitorPage() {
   }, []);
 
   useEffect(() => {
-    void fetchData();
+    const timeoutId = window.setTimeout(() => {
+      void fetchData();
+    }, 0);
+
+    return () => window.clearTimeout(timeoutId);
   }, [fetchData]);
 
   const runTests = async () => {
