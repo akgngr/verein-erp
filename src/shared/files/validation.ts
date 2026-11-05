@@ -33,7 +33,7 @@ export function getExtension(fileName: string): string {
 export function sanitizeOriginalName(fileName: string): string {
   // Remove markup before splitting path separators because closing tags contain "/".
   const cleaned = fileName
-    .replace(/<[^>]*>?/g, "")
+    .replace(/[<>]/g, "")
     .split(/[\\/]/)
     .pop()!
     .replace(/[\u0000-\u001f\u007f]/g, "")
