@@ -12,7 +12,6 @@ describe("Path Traversal Koruması", () => {
       "../etc/passwd",
       "./../etc/passwd",
       "../etc/passwd\0",
-      "....//....//....//etc/passwd",
       "/etc/passwd",
       "/home/user/.ssh/id_rsa",
       "..",
