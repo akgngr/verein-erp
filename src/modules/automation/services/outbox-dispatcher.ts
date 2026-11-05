@@ -13,7 +13,10 @@ import {
   automationTaskQueuePayloadSchema,
   AUTOMATION_TASK_QUEUE,
 } from "../worker/queue";
-import { recoverExpiredAutomationExecutions } from "./lease-recovery";
+import {
+  recoverExpiredAutomationExecutions,
+  recoverUndeliveredPendingExecutions,
+} from "./lease-recovery";
 
 const OUTBOX_BATCH_SIZE = 25;
 const OUTBOX_MAX_ATTEMPTS = 10;
@@ -174,8 +177,10 @@ export async function dispatchAutomationOutboxBatch(boss: PgBoss): Promise<numbe
       );
 
       await boss.send(AUTOMATION_TASK_QUEUE, parsed.data, {
-        singletonKey: event.eventKey,
-        singletonSeconds: 60 * 60 * 24 * 30,
+        singletonKey: `automation.execution:${parsed.data.executionId}`,
+        // Short dedupe window: active jobs are checked by the pending watchdog;
+        // a terminally failed transport delivery must become enqueueable again.
+        singletonSeconds: 60,
         // maxAttempts includes the first run; pg-boss retryLimit counts retries.
         retryLimit: Math.max(0, retryPolicy.maxAttempts - 1),
         retryDelay: retryPolicy.initialDelaySeconds,
@@ -215,6 +220,7 @@ export async function runAutomationOutboxDispatcher(
     try {
       if (Date.now() >= nextLeaseRecoveryAt) {
         await recoverExpiredAutomationExecutions();
+        await recoverUndeliveredPendingExecutions();
         nextLeaseRecoveryAt = Date.now() + 15_000;
       }
 
