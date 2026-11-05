@@ -235,9 +235,9 @@ describe("Input Validation Güvenliği", () => {
       const maliciousInput = "' OR '1'='1";
       
       // Prisma raw query ile test - parametreli sorgu kullanılır
-      const result = await db.$queryRaw`
+      const result = await db.$queryRaw<unknown[]>`
         SELECT * FROM users WHERE email = ${maliciousInput}
-      ` as any[];
+      `;
       
       // Sonuç boş olmalı (güvenli)
       assert.equal(result.length, 0);
