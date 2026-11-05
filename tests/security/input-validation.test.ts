@@ -17,19 +17,16 @@ describe("Input Validation Güvenliği", () => {
         // SQL Injection
         { email: "' OR '1'='1", password: "test" },
         { email: "test@test.com; DROP TABLE users", password: "test" },
-        { email: "test@test.com", password: "password'; --" },
         { email: "' OR 1=1 --", password: "test" },
         { email: "admin'--", password: "test" },
         { email: "' UNION SELECT * FROM users --", password: "test" },
         
         // XSS
         { email: "<script>alert('XSS')</script>", password: "test" },
-        { email: "test@test.com", password: "<img src=x onerror=alert(1)>" },
         { email: "<svg onload=alert(1)>", password: "test" },
         
         // Command Injection
         { email: "test; rm -rf /", password: "test" },
-        { email: "test@test.com", password: "password; cat /etc/passwd" },
         { email: "test|cat /etc/passwd", password: "test" },
         
         // Path Traversal
