@@ -53,10 +53,11 @@ describe("Path Traversal Koruması", () => {
         resolveSafePath(path);
         assert.fail(`Path traversal engellenmedi: ${path}`);
       } catch (error) {
+        const err = error as Error;
         assert.ok(
-          error.message.includes("Geçersiz depolama yolu") ||
-          error.message.includes("invalid"),
-          `Beklenmeyen hata mesajı: ${error.message}`
+          err.message.includes("Geçersiz depolama yolu") ||
+          err.message.includes("invalid"),
+          `Beklenmeyen hata mesajı: ${err.message}`
         );
       }
     }

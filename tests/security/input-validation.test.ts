@@ -237,7 +237,7 @@ describe("Input Validation Güvenliği", () => {
       // Prisma raw query ile test - parametreli sorgu kullanılır
       const result = await db.$queryRaw`
         SELECT * FROM users WHERE email = ${maliciousInput}
-      `;
+      ` as any[];
       
       // Sonuç boş olmalı (güvenli)
       assert.equal(result.length, 0);

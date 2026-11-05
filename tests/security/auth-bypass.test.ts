@@ -58,9 +58,13 @@ describe("Authentication Bypass Koruması", () => {
       const { definePermissions } = await import("@/shared/permissions/define");
       
       // ADMIN rolü, tüm yetkilere sahip olmalıdır
+      // Tüm sistem rollerini içermesi gerekiyor
       const testPermissions = definePermissions("test", {
         ADMIN: ["view", "create", "update", "delete"],
         BOARD: ["view", "create"],
+        SECRETARY: ["view"],
+        TREASURER: ["view"],
+        AUDITOR: ["view"],
         VIEWER: ["view"],
       });
       
@@ -78,6 +82,9 @@ describe("Authentication Bypass Koruması", () => {
       const testPermissions = definePermissions("test", {
         ADMIN: ["view", "create", "update", "delete"],
         BOARD: ["view", "create"],
+        SECRETARY: ["view"],
+        TREASURER: ["view"],
+        AUDITOR: ["view"],
         VIEWER: ["view"],
       });
       
@@ -166,6 +173,9 @@ describe("Authentication Bypass Koruması", () => {
       const permissions = definePermissions("test", {
         ADMIN: ["view", "create", "update", "delete"],
         BOARD: ["view", "create"],
+        SECRETARY: ["view"],
+        TREASURER: ["view"],
+        AUDITOR: ["view"],
         VIEWER: ["view"],
       });
       
@@ -231,7 +241,7 @@ describe("Authentication Bypass Koruması", () => {
         });
         assert.fail("Pasif kullanıcı oturum açmamalı");
       } catch (error) {
-        assert.equal(error.code, "invalid_credentials");
+        assert.equal((error as { code?: string }).code, "invalid_credentials");
       }
     });
     
