@@ -1,18 +1,8 @@
 import { NextResponse } from "next/server";
 import { requirePermission } from "@/modules/auth/server";
 import { securityMonitorPermissions } from "../permissions";
-import {
-  getSecurityTestRuns,
-  getSecurityTestRun,
-  getSecurityTestAlerts,
-  getSecurityTestSchedules,
-  createSecurityTestSchedule,
-  updateSecurityTestSchedule,
-  deleteSecurityTestSchedule,
-  acknowledgeSecurityAlert,
-  resolveSecurityAlert,
-} from "../server";
-import { runSecurityTests, getTestStatistics, getTestHistory } from "../services/test-runner";
+import { getSecurityTestRuns } from "../server";
+import { runSecurityTests } from "../services/test-runner";
 
 // GET /api/modules/security-monitor/runs - List test runs
 export async function GET(request: Request) {
@@ -35,9 +25,9 @@ export async function GET(request: Request) {
     });
 
     return NextResponse.json(result);
-  } catch (error: any) {
+  } catch (error) {
     return NextResponse.json(
-      { error: error.message || "Failed to fetch test runs" },
+      { error: error instanceof Error ? error.message : "Failed to fetch test runs" },
       { status: 400 }
     );
   }
@@ -59,7 +49,7 @@ export async function POST(request: Request) {
     return NextResponse.json(result);
   } catch (error: any) {
     return NextResponse.json(
-      { error: error.message || "Failed to run tests" },
+      { error: error instanceof Error ? error.message : "Failed to run tests" },
       { status: 400 }
     );
   }
