@@ -1,143 +1,60 @@
 import test, { describe } from "node:test";
 import assert from "node:assert/strict";
+import { randomUUID } from "node:crypto";
 
-/**
- * Rate Limiting Güvenlik Testleri
- * 
- * AMAÇ: Brute force saldırılarına karşı koruma sağlamak
- * KAPSAM: Login girişimleri, API istekleri
- */
+import { getLoginFailureState, LOCK_MINUTES, MAX_FAILED_ATTEMPTS } from "@/shared/security/login-lockout";
+import { getDb } from "@/shared/db";
+import { writeAudit } from "@/shared/audit/write-audit";
 
 describe("Rate Limiting Koruması", () => {
-  describe("Login Girişimleri", () => {
-    test("Rate limiting konfigürasyonu doğru ayarlanmış", async () => {
-      // MAX_FAILED_ATTEMPTS ve LOCK_MINUTES değerleri doğru olmalı
-      // Bu test, rate limiting konfigürasyonunu doğrulamak içindir
-      
-      // authorize fonksiyonunda tanımlı değerler
-      const MAX_FAILED_ATTEMPTS = 5;
-      const LOCK_MINUTES = 15;
-      
-      assert.equal(MAX_FAILED_ATTEMPTS, 5);
-      assert.equal(LOCK_MINUTES, 15);
-    });
-    
-    test("Rate limiting mekanizması mevcuttur", async () => {
-      // authorize fonksiyonu, rate limiting uygular
-      const { authorize } = await import("@/modules/auth/services/authorize");
-      
-      // Fonksiyonun var olduğunu doğrula
-      assert.ok(typeof authorize === "function");
-    });
-  });
-  
-  describe("Rate Limiting Konfigürasyonu", () => {
-    test("Maksimum başarısız girişim sayısı doğru ayarlanmış", async () => {
-      // MAX_FAILED_ATTEMPTS = 5
-      const MAX_FAILED_ATTEMPTS = 5;
-      assert.equal(MAX_FAILED_ATTEMPTS, 5);
-    });
-    
-    test("Kilit süresi doğru ayarlanmış", async () => {
-      // LOCK_MINUTES = 15
-      const LOCK_MINUTES = 15;
-      assert.equal(LOCK_MINUTES, 15);
-    });
-  });
-  
-  describe("Denetim Kaydı (Audit Log)", () => {
-    test("Başarılı giriş denetim kaydına yazılır", async () => {
-      const { getDb } = await import("@/shared/db");
-      const db = getDb();
-      
-      // Test kullanıcısı oluştur
-      const email = "test-audit-success@example.com";
-      const passwordHash = await (await import("@/shared/security/password")).hashPassword("Test12345");
-      
-      await db.user.upsert({
-        where: { email },
-        create: {
-          email,
-          name: "Test User",
-          passwordHash,
-          role: "VIEWER",
-          isActive: true,
-          failedLoginCount: 0,
-          lockedUntil: null,
-        },
-        update: {
-          passwordHash,
-          failedLoginCount: 0,
-          lockedUntil: null,
-          isActive: true,
-        },
-      });
-      
-      // Başarılı giriş
-      await (await import("@/modules/auth/services/authorize")).authorize({
-        email,
-        password: "Test12345",
-      });
-      
-      // Denetim kaydında LOGIN_SUCCESS olmalı
-      const auditLog = await db.auditLog.findFirst({
-        where: {
-          action: "LOGIN_SUCCESS",
-          entity: "Auth",
-        },
-        orderBy: { createdAt: "desc" },
-      });
-      
-      assert.ok(auditLog);
-    });
-    
-    test("Başarısız giriş denetim kaydına yazılır", async () => {
-      const { getDb } = await import("@/shared/db");
-      const db = getDb();
-      
-      // Test kullanıcısı oluştur
-      const email = "test-audit-fail@example.com";
-      const passwordHash = await (await import("@/shared/security/password")).hashPassword("Test12345");
-      
-      await db.user.upsert({
-        where: { email },
-        create: {
-          email,
-          name: "Test User",
-          passwordHash,
-          role: "VIEWER",
-          isActive: true,
-          failedLoginCount: 0,
-          lockedUntil: null,
-        },
-        update: {
-          passwordHash,
-          failedLoginCount: 0,
-          lockedUntil: null,
-          isActive: true,
-        },
-      });
-      
-      // Başarısız giriş
-      try {
-        await (await import("@/modules/auth/services/authorize")).authorize({
-          email,
-          password: "wrong",
-        });
-      } catch {
-        // Expected
+  test("ardışık beş başarısız girişten sonra hesap 15 dakika kilitlenir", () => {
+    const now = new Date("2026-11-05T12:00:00.000Z");
+    let state = { failedLoginCount: 0, lockedUntil: null as Date | null, shouldLock: false };
+
+    for (let attempt = 1; attempt <= MAX_FAILED_ATTEMPTS; attempt += 1) {
+      state = getLoginFailureState(state.failedLoginCount, state.lockedUntil, now);
+      if (attempt < MAX_FAILED_ATTEMPTS) {
+        assert.equal(state.shouldLock, false);
+        assert.equal(state.failedLoginCount, attempt);
       }
-      
-      // Denetim kaydında LOGIN_FAILED olmalı
-      const auditLog = await db.auditLog.findFirst({
-        where: {
-          action: "LOGIN_FAILED",
-          entity: "Auth",
-        },
-        orderBy: { createdAt: "desc" },
-      });
-      
-      assert.ok(auditLog);
+    }
+
+    assert.equal(state.shouldLock, true);
+    assert.equal(state.failedLoginCount, 0);
+    assert.equal(state.lockedUntil?.getTime(), now.getTime() + LOCK_MINUTES * 60_000);
+  });
+
+  test("süresi dolan kilit yeni başarısız giriş sayacını sıfırdan başlatır", () => {
+    const now = new Date("2026-11-05T12:00:00.000Z");
+    const expiredLock = new Date(now.getTime() - 1);
+    const state = getLoginFailureState(4, expiredLock, now);
+
+    assert.equal(state.shouldLock, false);
+    assert.equal(state.failedLoginCount, 1);
+    assert.equal(state.lockedUntil, null);
+  });
+
+  test("denetim kaydı hassas parola alanlarını saklamaz", async () => {
+    const db = getDb();
+    const entityId = randomUUID();
+
+    await writeAudit({
+      action: "SECURITY_TEST_AUDIT",
+      entity: "Auth",
+      entityId,
+      after: {
+        email: "security-test@example.com",
+        password: "must-not-be-stored",
+        passwordHash: "must-not-be-stored",
+      },
+      ip: "127.0.0.1",
+    });
+
+    const audit = await db.auditLog.findFirst({ where: { entityId, action: "SECURITY_TEST_AUDIT" } });
+    assert.ok(audit);
+    assert.deepEqual(audit.changes, {
+      before: null,
+      after: { email: "security-test@example.com" },
     });
   });
 });
