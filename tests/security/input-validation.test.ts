@@ -18,7 +18,7 @@ describe("Input Validation Güvenliği", () => {
         { email: "' OR '1'='1", password: "test" },
         { email: "test@test.com; DROP TABLE users", password: "test" },
         { email: "test@test.com", password: "password'; --" },
-        { email: "" OR 1=1 --", password: "test" },
+        { email: "' OR 1=1 --", password: "test" },
         { email: "admin'--", password: "test" },
         { email: "' UNION SELECT * FROM users --", password: "test" },
         
