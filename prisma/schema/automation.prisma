@@ -1,1 +1,133 @@
-../../src/modules/automation/schema.prisma
+enum AutomationExecutionKind {
+  TASK
+  WORKFLOW
+}
+
+enum AutomationExecutionStatus {
+  PENDING
+  RUNNING
+  WAITING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
+
+enum AutomationStepStatus {
+  PENDING
+  RUNNING
+  RETRYING
+  SUCCEEDED
+  FAILED
+  CANCELLED
+}
+
+enum AutomationOutboxStatus {
+  PENDING
+  PROCESSING
+  PUBLISHED
+  FAILED
+}
+
+/// ERP-owned durable execution record. Queue transport metadata stays in pg-boss.
+model AutomationExecution {
+  id                String                    @id @default(cuid())
+  kind              AutomationExecutionKind   @default(TASK)
+  status            AutomationExecutionStatus @default(PENDING)
+  definitionKey     String
+  definitionVersion Int
+  organizationId    String
+  requestedById     String?
+  sourceModule      String
+  correlationId     String
+  idempotencyKey    String?
+  /// Only minimal identifiers and execution metadata; never persist recipient/PII lists.
+  input             Json                      @default("{}")
+  context           Json                      @default("{}")
+  retryPolicy       Json                      @default("{\"maxAttempts\":3,\"initialDelaySeconds\":30,\"maxDelaySeconds\":1800,\"backoffMultiplier\":2}")
+  attempt           Int                       @default(0)
+  maxAttempts       Int                       @default(3)
+  scheduledAt       DateTime?
+  startedAt         DateTime?
+  heartbeatAt       DateTime?
+  leaseOwner        String?
+  leaseExpiresAt    DateTime?
+  leaseToken        Int                       @default(0)
+  finishedAt        DateTime?
+  lastErrorCode     String?
+  createdAt         DateTime                  @default(now())
+  updatedAt         DateTime                  @updatedAt
+  steps             AutomationStepRun[]
+  logs              AutomationLog[]
+
+  @@unique([organizationId, idempotencyKey])
+  @@index([status, scheduledAt])
+  @@index([status, updatedAt])
+  @@index([status, leaseExpiresAt])
+  @@index([sourceModule, createdAt])
+  @@index([correlationId])
+  @@map("automation_executions")
+}
+
+/// Per-step execution history. A retry updates the same logical step record.
+model AutomationStepRun {
+  id             String               @id @default(cuid())
+  executionId    String
+  stepKey        String
+  taskKey        String
+  taskVersion    Int
+  status         AutomationStepStatus @default(PENDING)
+  input          Json                 @default("{}")
+  result         Json?
+  retryPolicy    Json                 @default("{\"maxAttempts\":3,\"initialDelaySeconds\":30,\"maxDelaySeconds\":1800,\"backoffMultiplier\":2}")
+  attempt        Int                  @default(0)
+  maxAttempts    Int                  @default(3)
+  startedAt      DateTime?
+  finishedAt     DateTime?
+  lastErrorCode  String?
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  execution      AutomationExecution  @relation(fields: [executionId], references: [id], onDelete: Cascade)
+
+  @@unique([executionId, stepKey])
+  @@index([status, createdAt])
+  @@map("automation_step_runs")
+}
+
+/// Append-only operational events for worker execution and troubleshooting.
+model AutomationLog {
+  id          String              @id @default(cuid())
+  executionId String
+  level       String              @default("INFO")
+  event       String
+  message     String
+  details     Json?
+  createdAt   DateTime            @default(now())
+  execution   AutomationExecution @relation(fields: [executionId], references: [id], onDelete: Cascade)
+
+  @@index([executionId, createdAt])
+  @@index([level, createdAt])
+  @@map("automation_logs")
+}
+
+/// Transactional outbox. A later worker PR publishes pending rows to pg-boss.
+model AutomationOutbox {
+  id            String                 @id @default(cuid())
+  eventKey      String                 @unique
+  eventType     String
+  executionId   String?
+  payload       Json
+  status        AutomationOutboxStatus @default(PENDING)
+  attempts      Int                    @default(0)
+  availableAt   DateTime               @default(now())
+  claimOwner    String?
+  claimExpiresAt DateTime?
+  publishedAt   DateTime?
+  lastErrorCode String?
+  createdAt     DateTime               @default(now())
+  updatedAt     DateTime               @updatedAt
+
+  @@index([status, availableAt, createdAt])
+  @@index([status, claimExpiresAt])
+  @@index([executionId])
+  @@map("automation_outbox")
+}
