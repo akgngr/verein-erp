@@ -6,6 +6,8 @@ import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 
+import { useHydrated } from "@/shared/hooks/use-hydrated";
+
 import { createScheduleAction, deleteScheduleAction, toggleScheduleAction } from "../actions/automation-actions";
 
 export type ScheduleRow = {
@@ -30,6 +32,8 @@ export function SchedulesPanel({ schedules, tasks, canManage }: Props) {
   const [pending, startTransition] = useTransition();
   const [taskKey, setTaskKey] = useState(tasks[0]?.key ?? "");
   const [hours, setHours] = useState("24");
+  // HeroUI Select ids differ between SSR and client here; render the form after hydration.
+  const hydrated = useHydrated();
 
   const run = (promise: () => Promise<{ ok: boolean; error?: string }>, success: string) => startTransition(async () => {
     const response = await promise();
@@ -45,7 +49,7 @@ export function SchedulesPanel({ schedules, tasks, canManage }: Props) {
         <p className="text-small text-default-500">{t("description")}</p>
       </div>
 
-      {canManage && tasks.length > 0 ? (
+      {hydrated && canManage && tasks.length > 0 ? (
         <div className="flex flex-wrap items-end gap-2 rounded-large border border-default-200 bg-content1 p-4">
           <Select label={t("task")} size="sm" className="max-w-xs" selectedKeys={taskKey ? [taskKey] : []}
             onSelectionChange={(keys) => setTaskKey(String(Array.from(keys)[0] ?? ""))}>

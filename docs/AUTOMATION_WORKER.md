@@ -80,3 +80,21 @@ Feature modules declare trusted tasks in `src/modules/<module>/automation.ts`. T
 - Modüller `automation.ts` içinde `defineEvent({ key, payloadSchema })` ile olay bildirir ve `emitAutomationEvent(event, data, tx)` ile iş transaction'ı içinde yayımlar. Otomasyon kapalıysa veya modül kullanılamıyorsa çağrı hiçbir şey yapmaz.
 - Yükler yalnızca kimlik ve kişisel olmayan değerler taşır. Mevcut olaylar: `members.created`, `mailings.campaign_finished`.
 - Worker olayı, tetikleyicisi bu olay olan etkin akışlar için `event:<outbox>:<akış>` anahtarıyla bir kez başlatır.
+
+## Sorun giderme: terminal izleme logları
+
+Web ve worker süreçleri `[automation:…]` önekli izleme satırları yazar (kapatmak için `AUTOMATION_TRACE=false`). Kişisel veri yazılmaz; e-posta adresleri maskelenir (`b***@ornek.de`).
+
+Bir iş akışının adım adım izlenmesi:
+
+| Satır | Süreç | Anlamı |
+|---|---|---|
+| `[automation:event] queued in outbox` | web | Olay (ör. yeni üye) kaydedildi. |
+| `[automation:event] skipped: AUTOMATION_ENABLED is not true` | web | Web sürecinde otomasyon kapalı; `pnpm dev:full` kullanın veya `.env` içinde `AUTOMATION_ENABLED=true` yapın. |
+| `[automation:workflow] event received … matchingWorkflows=…` | worker | Olayı dinleyen yayımlanmış ve açık akışlar. `none` ise akış yayımlanmamış/kapalı ya da tetikleyici olayı farklı. |
+| `[automation:workflow] step task queued` | worker | Adımın görevi kuyruğa alındı. |
+| `[automation:task] attempt started / succeeded / failed code=…` | worker | Görev denemesi ve sonucu; `willRetry` yeniden deneme olup olmayacağını gösterir. |
+| `[automation:mail] sending / sent / send failed smtpError=…` | worker | SMTP sonucu; `mailLog` E-posta günlüğündeki kaydın kimliğidir. |
+| `[automation:mail] not configured` | worker | Ayarlar → E-posta doldurulmamış. |
+
+Worker çalışmıyorsa olaylar outbox'ta bekler ve hiçbir `[automation:workflow]` satırı görünmez; `pnpm dev:full` veya `pnpm automation:worker` ile başlatın. Kod değiştikten sonra worker yeniden başlatılmalıdır.

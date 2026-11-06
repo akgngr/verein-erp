@@ -1,4 +1,5 @@
 import "server-only";
+import { automationTrace } from "@/shared/automation/trace";
 
 import { randomUUID } from "node:crypto";
 import { Prisma } from "@prisma/client";
@@ -235,6 +236,7 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
   // Everything after claiming stays inside the error boundary. The worker runs
   // outside a Next.js request and must not depend on request-scoped services.
   try {
+    automationTrace("task", "attempt started", { task: payload.taskKey, execution: execution.id, attempt, max: retryPolicy.maxAttempts });
     await recordAutomationLog({
       executionId: execution.id,
       event: "ATTEMPT_STARTED",
@@ -333,6 +335,7 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
     });
 
     const result = await Promise.race([handler, timedOut, leaseLostPromise]);
+    automationTrace("task", "succeeded", { task: payload.taskKey, execution: execution.id });
     if (!await markTerminal(payload.executionId, leaseToken, "SUCCEEDED", null, result)) {
       throw new Error("TASK_LEASE_LOST");
     }
@@ -344,6 +347,14 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
       throw new Error("TASK_LEASE_LOST");
     }
 
+    automationTrace("task", "failed", {
+      task: payload.taskKey,
+      execution: payload.executionId,
+      attempt,
+      code,
+      willRetry: !(attempt >= retryPolicy.maxAttempts || isPermanentTaskError(error)),
+      message: (error instanceof Error ? error.message : String(error)).slice(0, 300),
+    });
     await recordAutomationLog({
       executionId: payload.executionId,
       level: "ERROR",

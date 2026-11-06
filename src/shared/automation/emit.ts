@@ -1,4 +1,5 @@
 import "server-only";
+import { automationTrace } from "./trace";
 
 import { randomUUID } from "node:crypto";
 import type { Prisma } from "@prisma/client";
@@ -24,14 +25,22 @@ export async function emitAutomationEvent<TSchema extends z.ZodType>(
   data: z.input<TSchema>,
   tx?: Tx,
 ): Promise<boolean> {
-  if (process.env.AUTOMATION_ENABLED !== "true") return false;
+  if (process.env.AUTOMATION_ENABLED !== "true") {
+    automationTrace("event", "skipped: AUTOMATION_ENABLED is not true in this process", { event: event.key });
+    return false;
+  }
   const parsed = event.payloadSchema.safeParse(data);
   if (!parsed.success) throw new Error("EVENT_PAYLOAD_INVALID");
 
   try {
     const { getModuleAvailability } = await import("@/modules/system/automation");
-    if (await getModuleAvailability("automation") !== "available") return false;
-  } catch {
+    const availability = await getModuleAvailability("automation");
+    if (availability !== "available") {
+      automationTrace("event", "skipped: automation module not usable", { event: event.key, availability });
+      return false;
+    }
+  } catch (error) {
+    automationTrace("event", "skipped: availability check failed", { event: event.key, error: error instanceof Error ? error.message : "unknown" });
     return false;
   }
 
@@ -43,5 +52,6 @@ export async function emitAutomationEvent<TSchema extends z.ZodType>(
       payload: JSON.parse(JSON.stringify({ eventKey: event.key, data: parsed.data })) as Prisma.InputJsonValue,
     },
   });
+  automationTrace("event", "queued in outbox (worker will pick it up)", { event: event.key });
   return true;
 }
