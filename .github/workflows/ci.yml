@@ -124,6 +124,24 @@ jobs:
       - name: Build
         run: pnpm build
 
+      # Hydration hataları yalnızca gerçek tarayıcıda görülür: derlenmiş uygulamayı başlatıp
+      # tüm statik panel sayfalarını gezer; hydration veya sayfa hatası varsa CI düşer.
+      - name: Hydration smoke test
+        env:
+          ADMIN_NAME: CI Admin
+          ADMIN_EMAIL: ci-admin@example.test
+          # Yalnızca CI veritabanı için; gerçek bir sır değildir.
+          ADMIN_PASSWORD: Ci-Hydration-Test-1
+          AUTH_URL: http://localhost:3000
+          AUTH_TRUST_HOST: "true"
+        run: |
+          pnpm exec playwright install --with-deps chromium
+          pnpm exec tsx scripts/reset-admin.ts
+          psql "postgresql://verein:verein@localhost:5432/verein_ci" -c "UPDATE \"User\" SET \"mustChangePassword\" = false WHERE email = 'ci-admin@example.test';"
+          pnpm start > next-start.log 2>&1 &
+          for i in $(seq 1 60); do curl -sf -o /dev/null http://localhost:3000/giris && break; sleep 2; done
+          E2E_EMAIL=ci-admin@example.test E2E_PASSWORD=Ci-Hydration-Test-1 pnpm test:hydration || { tail -50 next-start.log; exit 1; }
+
   docker:
     name: Build and publish Docker images
     runs-on: ubuntu-latest

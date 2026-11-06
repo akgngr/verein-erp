@@ -48,7 +48,8 @@
     "module:install": "tsx scripts/module-install.ts",
     "dev:web": "next dev -p 3000",
     "dev:full": "tsx scripts/dev-full.ts",
-    "automation:worker": "NODE_OPTIONS=--conditions=react-server tsx src/modules/automation/worker/main.ts"
+    "automation:worker": "NODE_OPTIONS=--conditions=react-server tsx src/modules/automation/worker/main.ts",
+    "test:hydration": "tsx scripts/check-hydration.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^1.3.0",
@@ -101,6 +102,7 @@
     "@types/semver": "^7.8.0",
     "eslint": "^9",
     "eslint-config-next": "^16.1.1",
+    "playwright": "1.63.0",
     "prisma": "^7.10.1",
     "semver": "^7.8.5",
     "tailwindcss": "^4",

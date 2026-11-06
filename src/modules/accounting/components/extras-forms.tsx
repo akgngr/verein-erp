@@ -1,10 +1,11 @@
 "use client";
 
-import { addToast, Button, Input, Select, SelectItem } from "@heroui/react";
+import { addToast, Button, Input, SelectItem } from "@heroui/react";
 import { Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { ClientSelect } from "@/shared/components/ui/client-select";
 
 import { toCents } from "@/shared/money";
 import type { ActionResult } from "@/shared/types/action";
@@ -48,11 +49,11 @@ export function AssetForm() {
       <Input className="sm:col-span-2" size="sm" label={t("name")} labelPlacement="outside" value={name} onValueChange={setName} />
       <Input size="sm" type="date" label={t("date")} labelPlacement="outside" value={date} onValueChange={setDate} />
       <Input size="sm" label={t("cost")} labelPlacement="outside" value={cost} onValueChange={setCost} placeholder="0,00" />
-      <Select size="sm" label={t("method")} labelPlacement="outside" selectedKeys={[method]} onSelectionChange={(keys) => setMethod((selectionKey(keys) || "LINEAR") as typeof method)}>
+      <ClientSelect size="sm" label={t("method")} labelPlacement="outside" selectedKeys={[method]} onSelectionChange={(keys) => setMethod((selectionKey(keys) || "LINEAR") as typeof method)}>
         {(["LINEAR", "GWG", "POOL"] as const).map((value) => (
           <SelectItem key={value}>{t(`methods.${value}`)}</SelectItem>
         ))}
-      </Select>
+      </ClientSelect>
       <Input size="sm" type="number" label={t("months")} labelPlacement="outside" value={months} onValueChange={setMonths} isDisabled={method !== "LINEAR"} />
       <Button className="sm:col-span-6 sm:justify-self-start" size="sm" color="primary" startContent={<Plus className="h-4 w-4" aria-hidden />} isLoading={busy} isDisabled={name.trim().length < 2 || !costCents} onPress={() => submit(() => saveAssetAction({ name, acquisitionDate: date, cost, method, usefulLifeMonths: method === "LINEAR" ? months : "1", notes: "" }), t("saved"), () => { setName(""); setCost(""); })}>
         {t("add")}
@@ -91,11 +92,11 @@ export function FlatRateForm() {
   const [note, setNote] = useState("");
   return (
     <div className="grid grid-cols-1 items-end gap-3 sm:grid-cols-5">
-      <Select size="sm" label={t("kind")} labelPlacement="outside" selectedKeys={[kind]} onSelectionChange={(keys) => setKind((selectionKey(keys) || "HOME_OFFICE") as typeof kind)}>
+      <ClientSelect size="sm" label={t("kind")} labelPlacement="outside" selectedKeys={[kind]} onSelectionChange={(keys) => setKind((selectionKey(keys) || "HOME_OFFICE") as typeof kind)}>
         {(["HOME_OFFICE", "MILEAGE", "MEALS_8H", "MEALS_24H"] as const).map((value) => (
           <SelectItem key={value}>{t(`kinds.${value}`)}</SelectItem>
         ))}
-      </Select>
+      </ClientSelect>
       <Input size="sm" type="date" label={t("date")} labelPlacement="outside" value={date} onValueChange={setDate} />
       <Input size="sm" label={t(`unit.${kind}`)} labelPlacement="outside" value={quantity} onValueChange={setQuantity} />
       <Input size="sm" label={t("note")} labelPlacement="outside" value={note} onValueChange={setNote} />
@@ -124,11 +125,11 @@ export function ReserveForm({ year }: { year: number }) {
   const [planned, setPlanned] = useState("");
   return (
     <div className="grid grid-cols-1 items-end gap-3 sm:grid-cols-5">
-      <Select size="sm" label={t("kind")} labelPlacement="outside" selectedKeys={[kind]} onSelectionChange={(keys) => setKind((selectionKey(keys) || "PURPOSE") as typeof kind)}>
+      <ClientSelect size="sm" label={t("kind")} labelPlacement="outside" selectedKeys={[kind]} onSelectionChange={(keys) => setKind((selectionKey(keys) || "PURPOSE") as typeof kind)}>
         {(["PURPOSE", "REPLACEMENT", "OPERATING", "FREE"] as const).map((value) => (
           <SelectItem key={value}>{t(`kinds.${value}`)}</SelectItem>
         ))}
-      </Select>
+      </ClientSelect>
       <Input size="sm" label={t("amount")} labelPlacement="outside" value={amount} onValueChange={setAmount} placeholder="0,00" />
       <Input size="sm" className="sm:col-span-2" label={t("purpose")} labelPlacement="outside" value={purpose} onValueChange={setPurpose} />
       <Input size="sm" label={t("plannedUse")} labelPlacement="outside" value={planned} onValueChange={setPlanned} placeholder={String(year + 2)} />

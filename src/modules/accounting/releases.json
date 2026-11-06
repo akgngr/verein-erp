@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.13.1",
+      "date": "2026-11-06",
+      "title": {
+        "tr": "Hydration düzeltmesi",
+        "de": "Hydration-Korrektur"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Ekler sayfasındaki (demirbaş/AfA) seçim alanlarında oluşan hydration hatası giderildi.",
+          "de": "Hydration-Fehler in den Auswahlfeldern der Seite Extras (Anlagen/AfA) behoben."
+        }
+      ]
+    },
+    {
       "version": "1.13.0",
       "date": "2026-11-01",
       "appVersion": "0.35.0",

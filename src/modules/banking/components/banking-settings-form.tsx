@@ -1,9 +1,10 @@
 "use client";
 
-import { addToast, Button, Input, Select, SelectItem } from "@heroui/react";
+import { addToast, Button, Input, SelectItem } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { ClientSelect } from "@/shared/components/ui/client-select";
 
 import { saveBankingSettingsAction } from "../actions/banking-actions";
 
@@ -29,7 +30,7 @@ export function BankingSettingsForm({ provider, hasCredentials, mockAllowed }: {
 
   return (
     <div className="grid gap-3 md:grid-cols-2">
-      <Select
+      <ClientSelect
         label={t("provider")}
         labelPlacement="outside"
         selectedKeys={[value]}
@@ -43,7 +44,7 @@ export function BankingSettingsForm({ provider, hasCredentials, mockAllowed }: {
           <SelectItem key="GOCARDLESS">{t("providers.GOCARDLESS")}</SelectItem>,
           ...(mockAllowed ? [<SelectItem key="MOCK">{t("providers.MOCK")}</SelectItem>] : []),
         ]}
-      </Select>
+      </ClientSelect>
       {value === "GOCARDLESS" ? (
         <>
           <Input
