@@ -2,6 +2,31 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.1.0",
+      "date": "2026-11-06",
+      "title": {
+        "tr": "Dış takvim senkronu",
+        "de": "Externe Kalender-Synchronisation"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Google, Outlook ve Apple takvimleri eklenti modülleriyle salt okunur bağlanabilir; kayıtlar yalnız sahibine görünür.",
+          "de": "Google-, Outlook- und Apple-Kalender lassen sich per Plugin schreibgeschützt verbinden; Einträge sieht nur der Inhaber."
+        },
+        {
+          "type": "security",
+          "tr": "Erişim bilgileri ve uygulama anahtarları şifreli saklanır; OAuth dönüşü tek kullanımlık ve kullanıcıya bağlı durum değeriyle doğrulanır; yalnız izinli sağlayıcı adreslerine bağlanılır.",
+          "de": "Zugangsdaten und App-Secrets werden verschlüsselt gespeichert; die OAuth-Rückkehr wird mit einem einmaligen, benutzergebundenen State geprüft; nur erlaubte Anbieter-Hosts werden kontaktiert."
+        },
+        {
+          "type": "feature",
+          "tr": "\"Dış takvimleri senkronla\" otomasyon görevi zamanlanabilir (en az 15 dakika).",
+          "de": "Automatisierungsaufgabe „Externe Kalender synchronisieren“ planbar (mind. 15 Minuten)."
+        }
+      ]
+    },
+    {
       "version": "1.0.1",
       "date": "2026-11-06",
       "title": {

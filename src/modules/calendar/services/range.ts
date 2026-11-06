@@ -9,6 +9,7 @@ import { getDb } from "@/shared/db";
 import { expandOccurrences } from "../lib/recurrence";
 import type { CalendarItemView, CalendarSourceView } from "../types";
 import { canWriteCalendar, ensurePersonalCalendar, listVisibleCalendars, type CalendarUser } from "./calendars";
+import { loadSyncedRange } from "./sync";
 
 /** All sources (own calendars + module sources) the user may see. */
 export async function listSources(user: CalendarUser): Promise<CalendarSourceView[]> {
@@ -29,7 +30,15 @@ export async function listSources(user: CalendarUser): Promise<CalendarSourceVie
       const key = `${entry.module}.calendar.${source.key}`;
       return { id: `${entry.module}:${source.key}`, label: t.has(key as never) ? t(key as never) : source.key, color: source.color, kind: "MODULE" as const, editable: false };
     }));
-  return [...own, ...modules];
+  const { calendars: synced } = await loadSyncedRange(user.id, new Date(0), new Date(0));
+  const external: CalendarSourceView[] = synced.map((calendar) => ({
+    id: `sync:${calendar.id}`,
+    label: `${calendar.name} · ${calendar.account.accountLabel || calendar.account.provider}`,
+    color: calendar.color,
+    kind: "EXTERNAL" as const,
+    editable: false,
+  }));
+  return [...own, ...modules, ...external];
 }
 
 /** Items in [from, to): expanded own entries plus read-only module items. */
@@ -109,5 +118,26 @@ export async function loadRange(user: CalendarUser, from: Date, to: Date): Promi
         return [];
       }
     })));
-  return [...items, ...results.flat()].sort((a, b) => a.start.localeCompare(b.start));
+  const synced = await loadSyncedRange(user.id, from, to).catch(() => ({ calendars: [], events: [] }));
+  const colors = new Map(synced.calendars.map((calendar) => [calendar.id, calendar.color]));
+  const external = synced.events.map((event): CalendarItemView => ({
+    id: `sync:${event.id}`,
+    entryId: null,
+    sourceId: `sync:${event.calendarId}`,
+    title: event.title,
+    start: event.startsAt.toISOString(),
+    end: event.endsAt.toISOString(),
+    allDay: event.allDay,
+    location: event.location,
+    description: event.description,
+    color: colors.get(event.calendarId) ?? "#64748b",
+    href: null,
+    editable: false,
+    recurrence: "NONE",
+    recurrenceInterval: 1,
+    recurrenceUntil: null,
+    eventId: null,
+    calendarId: null,
+  }));
+  return [...items, ...results.flat(), ...external].sort((a, b) => a.start.localeCompare(b.start));
 }

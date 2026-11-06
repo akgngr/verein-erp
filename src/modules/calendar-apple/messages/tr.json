@@ -1,0 +1,12 @@
+{
+  "module": {
+    "label": "Apple Takvim",
+    "description": "iCloud takvimini CalDAV ile salt okunur bağlar (Apple ID + uygulamaya özel parola)."
+  },
+  "permissions": {
+    "calendar-apple": {
+      "label": "Apple Takvim",
+      "description": "Takvim senkron eklentisi."
+    }
+  }
+}

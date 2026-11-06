@@ -12,6 +12,7 @@ const RECIPIENTS_FILE = path.join(ROOT_DIR, "src", "recipient-registry.ts");
 const LIFECYCLE_FILE = path.join(ROOT_DIR, "src", "lifecycle-registry.ts");
 const RELEASES_FILE = path.join(ROOT_DIR, "src", "module-releases.ts");
 const CALENDAR_FILE = path.join(ROOT_DIR, "src", "calendar-registry.ts");
+const CALENDAR_SYNC_FILE = path.join(ROOT_DIR, "src", "calendar-sync-registry.ts");
 const AUTOMATION_FILE = path.join(ROOT_DIR, "src", "automation-registry.ts");
 const PERMISSIONS_FILE = path.join(ROOT_DIR, "src", "permissions-registry.ts");
 
@@ -104,6 +105,7 @@ export const registry: ModuleConfig[] = allModules;
   syncConventionFile(validModules, "lifecycle.ts", "lifecycle", LIFECYCLE_FILE, "ModuleLifecycle", "@/shared/modules/lifecycle", "moduleLifecycleRegistry", "Modül yaşam döngüsü kancaları (src/modules/<modül>/lifecycle.ts), ör. kapatılırken temizlik.");
   syncPermissionResources(validModules);
   syncConventionFile(validModules, "calendar.ts", "calendar", CALENDAR_FILE, "ModuleCalendar", "@/shared/calendar/define", "moduleCalendarRegistry", "Takvime kayıt sunan modüller (src/modules/<modül>/calendar.ts).");
+  syncConventionFile(validModules, "calendar-sync.ts", "calendarSync", CALENDAR_SYNC_FILE, "ModuleCalendarSync", "@/shared/calendar/sync", "moduleCalendarSyncRegistry", "Takvim senkron eklentileri (src/modules/<modül>/calendar-sync.ts).");
   syncAutomationTasks(validModules);
 
   return { registered: validModules };

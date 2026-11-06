@@ -1,0 +1,12 @@
+{
+  "module": {
+    "label": "Google Takvim",
+    "description": "Google Takvim hesabını takvime salt okunur bağlar (OAuth; yönetici kendi Google Cloud uygulamasını girer)."
+  },
+  "permissions": {
+    "calendar-google": {
+      "label": "Google Takvim",
+      "description": "Takvim senkron eklentisi."
+    }
+  }
+}

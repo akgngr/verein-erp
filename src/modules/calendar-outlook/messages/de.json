@@ -1,0 +1,12 @@
+{
+  "module": {
+    "label": "Outlook-Kalender",
+    "description": "Verbindet Microsoft 365 / Outlook schreibgeschützt (OAuth; der Admin hinterlegt eine eigene Azure-App)."
+  },
+  "permissions": {
+    "calendar-outlook": {
+      "label": "Outlook-Kalender",
+      "description": "Kalender-Sync-Plugin."
+    }
+  }
+}

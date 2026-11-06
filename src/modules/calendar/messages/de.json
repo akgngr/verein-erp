@@ -87,7 +87,6 @@
     "feedCreate": "Link erstellen",
     "feedRotate": "Neuen Link erstellen (alter wird ungültig)",
     "feedRevoke": "Link widerrufen",
-    "feedPlugins": "Zwei-Wege-Synchronisation folgt später über eigene Plugin-Module.",
     "personalTitle": "Persönlicher Kalender",
     "color": "Farbe",
     "sharedTitle": "Gemeinsame Kalender",
@@ -118,9 +117,73 @@
           "location": "Ort"
         }
       }
+    },
+    "tasks": {
+      "sync_external": {
+        "label": "Externe Kalender synchronisieren",
+        "description": "Holt Einträge aus verbundenen Google-, Outlook- und Apple-Kalendern (schreibgeschützt)."
+      }
     }
   },
   "access": {
     "events": "Um einen Kalendereintrag per Klick in einen Veranstaltungsentwurf umzuwandeln."
+  },
+  "sync": {
+    "title": "Verbundene Kalender",
+    "description": "Google-, Outlook- oder Apple-Kalender schreibgeschützt hier anzeigen. Die Einträge siehst nur du.",
+    "noPlugins": "Aktiviere in der Modulverwaltung das Plugin Google Kalender, Outlook-Kalender oder Apple Kalender.",
+    "providers": {
+      "google": "Google Kalender",
+      "outlook": "Outlook-Kalender",
+      "apple": "Apple Kalender (iCloud)"
+    },
+    "status": {
+      "ACTIVE": "Verbunden",
+      "ERROR": "Fehler",
+      "REAUTH": "Neu verbinden",
+      "PENDING": "Ausstehend"
+    },
+    "connect": "Verbinden",
+    "reconnect": "Neu verbinden",
+    "disconnect": "Verbindung trennen",
+    "syncNow": "Jetzt synchronisieren",
+    "synced": "{count} Einträge übernommen.",
+    "connected": "Kalender verbunden.",
+    "lastSync": "Letzte Synchronisation: {date}",
+    "appMissingHint": "Der Admin hat für diesen Anbieter noch keine App-Daten hinterlegt.",
+    "appPasswordHint": "Nicht dein Apple-ID-Passwort: Erstelle unter appleid.apple.com → Anmelden und Sicherheit → App-spezifische Passwörter ein eigenes Passwort.",
+    "username": "Apple-ID (E-Mail)",
+    "appPassword": "App-spezifisches Passwort",
+    "appsTitle": "Anbieter-Apps (Admin)",
+    "appsDescription": "Lege je Anbieter eine eigene OAuth-App an und trage sie hier ein. Die Weiterleitungsadresse beim Anbieter hinterlegen. Das Secret wird verschlüsselt gespeichert und nie wieder angezeigt.",
+    "redirectUri": "Weiterleitungsadresse (Redirect-URI)",
+    "clientId": "Client-ID",
+    "clientSecret": "Client-Secret",
+    "secretKept": "Gespeichert (zum Ändern neu eingeben)",
+    "tenant": "Tenant",
+    "save": "Speichern",
+    "appSaved": "App-Daten gespeichert.",
+    "codes": {
+      "SYNC_AUTH": "Zugriff verweigert; bitte Konto neu verbinden.",
+      "SYNC_CREDENTIALS_UNREADABLE": "Gespeicherte Zugangsdaten nicht lesbar; bitte neu verbinden.",
+      "SYNC_FAILED": "Synchronisation fehlgeschlagen; es wird später erneut versucht.",
+      "SYNC_DISCOVERY": "Kalenderserver nicht gefunden.",
+      "SYNC_HOST_NOT_ALLOWED": "Verbindung zu diesem Server nicht erlaubt.",
+      "SYNC_PROVIDER_UNAVAILABLE": "Plugin ist deaktiviert.",
+      "SYNC_HTTP_400": "Anbieter meldete Fehler (400); es wird später erneut versucht.",
+      "SYNC_HTTP_404": "Anbieter meldete Fehler (404); es wird später erneut versucht.",
+      "SYNC_HTTP_429": "Anbieter meldete Fehler (429); es wird später erneut versucht.",
+      "SYNC_HTTP_500": "Anbieter meldete Fehler (500); es wird später erneut versucht.",
+      "SYNC_HTTP_502": "Anbieter meldete Fehler (502); es wird später erneut versucht.",
+      "SYNC_HTTP_503": "Anbieter meldete Fehler (503); es wird später erneut versucht."
+    },
+    "errors": {
+      "appMissing": "App-Daten für diesen Anbieter fehlen.",
+      "encryption": "Auf dem Server fehlt der Verschlüsselungsschlüssel; bitte Admin kontaktieren.",
+      "unavailable": "Dieses Plugin ist nicht aktiv.",
+      "secretRequired": "Beim ersten Speichern ist das Client-Secret erforderlich.",
+      "auth": "Zugangsdaten abgelehnt.",
+      "failed": "Kalender konnte nicht verbunden werden."
+    }
   }
 }

@@ -1,0 +1,12 @@
+{
+  "module": {
+    "label": "Outlook Takvim",
+    "description": "Microsoft 365 / Outlook takvimini salt okunur bağlar (OAuth; yönetici kendi Azure uygulamasını girer)."
+  },
+  "permissions": {
+    "calendar-outlook": {
+      "label": "Outlook Takvim",
+      "description": "Takvim senkron eklentisi."
+    }
+  }
+}

@@ -2563,7 +2563,6 @@
       "feedCreate": "Bağlantı oluştur",
       "feedRotate": "Yeni bağlantı oluştur (eskisi geçersiz olur)",
       "feedRevoke": "Bağlantıyı iptal et",
-      "feedPlugins": "Çift yönlü senkronizasyon ileride ayrı eklenti modülleriyle gelecek.",
       "personalTitle": "Kişisel takvim",
       "color": "Renk",
       "sharedTitle": "Ortak takvimler",
@@ -2594,10 +2593,110 @@
             "location": "Konum"
           }
         }
+      },
+      "tasks": {
+        "sync_external": {
+          "label": "Dış takvimleri senkronla",
+          "description": "Bağlı Google, Outlook ve Apple takvimlerinden kayıtları alır (salt okunur)."
+        }
       }
     },
     "access": {
       "events": "Takvim kaydını tek tıkla etkinlik taslağına dönüştürmek için."
+    },
+    "sync": {
+      "title": "Bağlı takvimler",
+      "description": "Google, Outlook veya Apple takvimini salt okunur olarak buraya getir. Kayıtlar yalnız sana görünür.",
+      "noPlugins": "Takvim senkronu için Modül Yönetimi'nden Google Takvim, Outlook Takvim veya Apple Takvim eklentisini etkinleştirin.",
+      "providers": {
+        "google": "Google Takvim",
+        "outlook": "Outlook Takvim",
+        "apple": "Apple Takvim (iCloud)"
+      },
+      "status": {
+        "ACTIVE": "Bağlı",
+        "ERROR": "Hata",
+        "REAUTH": "Yeniden bağlanmalı",
+        "PENDING": "Bekliyor"
+      },
+      "connect": "Bağla",
+      "reconnect": "Yeniden bağla",
+      "disconnect": "Bağlantıyı kaldır",
+      "syncNow": "Şimdi senkronla",
+      "synced": "{count} kayıt alındı.",
+      "connected": "Takvim bağlandı.",
+      "lastSync": "Son senkron: {date}",
+      "appMissingHint": "Yönetici henüz bu sağlayıcı için uygulama bilgilerini girmedi.",
+      "appPasswordHint": "Apple ID parolanızı değil, appleid.apple.com → Giriş ve Güvenlik → Uygulamaya özel parolalar bölümünde oluşturduğunuz parolayı girin.",
+      "username": "Apple ID (e-posta)",
+      "appPassword": "Uygulamaya özel parola",
+      "appsTitle": "Sağlayıcı uygulamaları (yönetici)",
+      "appsDescription": "Her sağlayıcı için kendi OAuth uygulamanızı oluşturup buraya girin. Yönlendirme adresini sağlayıcıya ekleyin. Gizli anahtar şifreli saklanır ve bir daha gösterilmez.",
+      "redirectUri": "Yönlendirme (redirect) adresi",
+      "clientId": "Client ID",
+      "clientSecret": "Client secret",
+      "secretKept": "Kayıtlı (değiştirmek için yazın)",
+      "tenant": "Tenant",
+      "save": "Kaydet",
+      "appSaved": "Uygulama bilgileri kaydedildi.",
+      "codes": {
+        "SYNC_AUTH": "Erişim reddedildi; hesabı yeniden bağlayın.",
+        "SYNC_CREDENTIALS_UNREADABLE": "Kayıtlı bilgiler çözülemedi; hesabı yeniden bağlayın.",
+        "SYNC_FAILED": "Senkronizasyon başarısız oldu; daha sonra yeniden denenecek.",
+        "SYNC_DISCOVERY": "Takvim sunucusu bulunamadı.",
+        "SYNC_HOST_NOT_ALLOWED": "Bu sunucuya bağlanmaya izin verilmiyor.",
+        "SYNC_PROVIDER_UNAVAILABLE": "Eklenti kapalı.",
+        "SYNC_HTTP_400": "Sağlayıcı hata döndürdü (400); daha sonra yeniden denenecek.",
+        "SYNC_HTTP_404": "Sağlayıcı hata döndürdü (404); daha sonra yeniden denenecek.",
+        "SYNC_HTTP_429": "Sağlayıcı hata döndürdü (429); daha sonra yeniden denenecek.",
+        "SYNC_HTTP_500": "Sağlayıcı hata döndürdü (500); daha sonra yeniden denenecek.",
+        "SYNC_HTTP_502": "Sağlayıcı hata döndürdü (502); daha sonra yeniden denenecek.",
+        "SYNC_HTTP_503": "Sağlayıcı hata döndürdü (503); daha sonra yeniden denenecek."
+      },
+      "errors": {
+        "appMissing": "Bu sağlayıcı için uygulama bilgileri eksik.",
+        "encryption": "Sunucuda şifreleme anahtarı yok; yöneticiye başvurun.",
+        "unavailable": "Bu eklenti etkin değil.",
+        "secretRequired": "İlk kayıtta client secret zorunludur.",
+        "auth": "Giriş bilgileri reddedildi.",
+        "failed": "Takvim bağlanamadı."
+      }
+    }
+  },
+  "calendar-apple": {
+    "module": {
+      "label": "Apple Takvim",
+      "description": "iCloud takvimini CalDAV ile salt okunur bağlar (Apple ID + uygulamaya özel parola)."
+    },
+    "permissions": {
+      "calendar-apple": {
+        "label": "Apple Takvim",
+        "description": "Takvim senkron eklentisi."
+      }
+    }
+  },
+  "calendar-google": {
+    "module": {
+      "label": "Google Takvim",
+      "description": "Google Takvim hesabını takvime salt okunur bağlar (OAuth; yönetici kendi Google Cloud uygulamasını girer)."
+    },
+    "permissions": {
+      "calendar-google": {
+        "label": "Google Takvim",
+        "description": "Takvim senkron eklentisi."
+      }
+    }
+  },
+  "calendar-outlook": {
+    "module": {
+      "label": "Outlook Takvim",
+      "description": "Microsoft 365 / Outlook takvimini salt okunur bağlar (OAuth; yönetici kendi Azure uygulamasını girer)."
+    },
+    "permissions": {
+      "calendar-outlook": {
+        "label": "Outlook Takvim",
+        "description": "Takvim senkron eklentisi."
+      }
     }
   },
   "courses": {

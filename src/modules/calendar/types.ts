@@ -26,6 +26,19 @@ export type CalendarSourceView = {
   id: string;
   label: string;
   color: string;
-  kind: "PERSONAL" | "SHARED" | "MODULE";
+  kind: "PERSONAL" | "SHARED" | "MODULE" | "EXTERNAL";
   editable: boolean;
 };
+
+export type SyncProviderView = { key: string; auth: "oauth" | "password"; defaultServerUrl: string | null; appConfigured: boolean };
+export type SyncAccountView = {
+  id: string;
+  provider: string;
+  accountLabel: string;
+  status: "PENDING" | "ACTIVE" | "ERROR" | "REAUTH";
+  lastSyncAt: string | null;
+  lastError: string | null;
+  calendars: { id: string; name: string; color: string; enabled: boolean }[];
+};
+export type SyncAppView = { provider: string; configured: boolean; clientId: string | null; tenant: string | null; redirectUri: string };
+export type SyncSettingsData = { providers: SyncProviderView[]; accounts: SyncAccountView[]; apps: SyncAppView[] | null };

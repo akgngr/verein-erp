@@ -1,0 +1,12 @@
+{
+  "module": {
+    "label": "Google Kalender",
+    "description": "Verbindet Google Kalender schreibgeschützt mit dem Kalender (OAuth; der Admin hinterlegt eine eigene Google-Cloud-App)."
+  },
+  "permissions": {
+    "calendar-google": {
+      "label": "Google Kalender",
+      "description": "Kalender-Sync-Plugin."
+    }
+  }
+}
