@@ -5,7 +5,6 @@ import { CalendarApp } from "../components/calendar-app";
 import { calendarPermissions } from "../permissions";
 import { canManageSharedCalendars } from "../services/calendars";
 import { hasFeedToken } from "../services/feed";
-import { publicOrigin } from "../services/origin";
 import { listSources } from "../services/range";
 import { syncSettingsFor } from "../services/sync";
 
@@ -18,6 +17,6 @@ export async function CalendarView() {
     throw error;
   }
   const canManage = canManageSharedCalendars(user);
-  const [sources, hasFeed, sync] = await Promise.all([listSources(user), hasFeedToken(user.id), syncSettingsFor(user.id, canManage, await publicOrigin())]);
+  const [sources, hasFeed, sync] = await Promise.all([listSources(user), hasFeedToken(user.id), syncSettingsFor(user.id, canManage)]);
   return <CalendarApp sources={sources} canManageShared={canManage} hasFeed={hasFeed} sync={sync} />;
 }
