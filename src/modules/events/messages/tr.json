@@ -219,5 +219,8 @@
       "label": "Etkinlikler",
       "description": "Etkinlik planlama, katılımcı kayıtları ve onay."
     }
+  },
+  "calendar": {
+    "events": "Etkinlikler"
   }
 }

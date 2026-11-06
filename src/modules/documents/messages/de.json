@@ -320,5 +320,8 @@
       "label": "Ein- / ausgehendes Schriftgut",
       "description": "Erfassung, Nummerierung und Archivierung offizieller Schriftstücke."
     }
+  },
+  "calendar": {
+    "due": "Schriftstück-Fristen"
   }
 }

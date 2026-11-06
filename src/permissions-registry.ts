@@ -15,6 +15,7 @@ import * as authPermissionExports from "@/modules/auth/permissions";
 import * as aiPermissionExports from "@/modules/ai/permissions";
 import * as automationPermissionExports from "@/modules/automation/permissions";
 import * as bankingPermissionExports from "@/modules/banking/permissions";
+import * as calendarPermissionExports from "@/modules/calendar/permissions";
 import * as coursesPermissionExports from "@/modules/courses/permissions";
 import * as demoPermissionExports from "@/modules/demo/permissions";
 import * as eventsPermissionExports from "@/modules/events/permissions";
@@ -47,6 +48,7 @@ export const permissionResources: { moduleKey: string; definitions: PermissionDe
   { moduleKey: "ai", definitions: definitionsOf(aiPermissionExports) },
   { moduleKey: "automation", definitions: definitionsOf(automationPermissionExports) },
   { moduleKey: "banking", definitions: definitionsOf(bankingPermissionExports) },
+  { moduleKey: "calendar", definitions: definitionsOf(calendarPermissionExports) },
   { moduleKey: "courses", definitions: definitionsOf(coursesPermissionExports) },
   { moduleKey: "demo", definitions: definitionsOf(demoPermissionExports) },
   { moduleKey: "events", definitions: definitionsOf(eventsPermissionExports) },

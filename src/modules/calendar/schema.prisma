@@ -1,0 +1,65 @@
+enum CalendarKind {
+  PERSONAL
+  SHARED
+}
+
+enum CalendarRecurrence {
+  NONE
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
+}
+
+/// Takvim: kişisel (yalnız sahibi görür) veya ortak (takvim yetkisi olan herkes görür).
+model Calendar {
+  id          String          @id @default(cuid())
+  kind        CalendarKind    @default(PERSONAL)
+  name        String
+  color       String          @default("#3b82f6")
+  ownerId     String? // PERSONAL: kullanıcı kimliği (FK değil: modüller arası bağımsızlık)
+  isActive    Boolean         @default(true)
+  createdAt   DateTime        @default(now())
+  updatedAt   DateTime        @updatedAt
+  entries     CalendarEntry[]
+
+  @@index([kind, ownerId])
+  @@map("calendar_calendars")
+}
+
+/// Randevu / hatırlatma. Tekrarlayan kayıtlar görüntülenirken aralığa göre açılır.
+model CalendarEntry {
+  id                 String             @id @default(cuid())
+  calendarId         String
+  calendar           Calendar           @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+  title              String
+  description        String?
+  location           String?
+  startsAt           DateTime
+  endsAt             DateTime
+  allDay             Boolean            @default(false)
+  recurrence         CalendarRecurrence @default(NONE)
+  recurrenceInterval Int                @default(1)
+  recurrenceUntil    DateTime?
+  /// Etkinliğe dönüştürüldüyse events modülündeki kayıt (FK değil).
+  eventId            String?
+  createdById        String
+  createdByLabel     String
+  createdAt          DateTime           @default(now())
+  updatedAt          DateTime           @updatedAt
+
+  @@index([calendarId, startsAt])
+  @@index([startsAt, endsAt])
+  @@map("calendar_entries")
+}
+
+/// Kişisel ICS abonelik anahtarı. Yalnız SHA-256 özeti saklanır; düz anahtar bir kez gösterilir.
+model CalendarFeedToken {
+  id         String    @id @default(cuid())
+  userId     String    @unique
+  tokenHash  String    @unique
+  createdAt  DateTime  @default(now())
+  lastUsedAt DateTime?
+
+  @@map("calendar_feed_tokens")
+}

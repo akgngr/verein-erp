@@ -114,5 +114,8 @@
       "label": "Görevler",
       "description": "Görev oluşturma, atama ve takip."
     }
+  },
+  "calendar": {
+    "due": "Görev bitiş tarihleri"
   }
 }
