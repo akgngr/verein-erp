@@ -15,6 +15,6 @@ export const config = {
   // middleware'in yönlendirmesine değil, handler'ın 401/403 JSON yanıtına
   // düşmesi gerekir (7. bölüm: "Handler'lar yönlendirme yapmaz").
   matcher: [
-    "/((?!api/health|api/auth|api/documents|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt)$).*)",
+    "/((?!api/health|api/auth|api/documents|api/calendar/feed|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt)$).*)",
   ],
 };

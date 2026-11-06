@@ -1,0 +1,126 @@
+{
+  "nav": {
+    "calendar": "Kalender"
+  },
+  "module": {
+    "label": "Kalender",
+    "description": "Persönliche und gemeinsame Kalender; zeigt Veranstaltungen, Sitzungen, Aufgaben und Kurstermine in einer Ansicht."
+  },
+  "permissions": {
+    "calendar": {
+      "label": "Kalender",
+      "description": "Kalendereinträge ansehen und bearbeiten; Freigabe verwaltet gemeinsame Kalender."
+    }
+  },
+  "meta": {
+    "title": "Kalender"
+  },
+  "personalName": "Mein Kalender",
+  "feedName": "Vereinskalender",
+  "today": "Heute",
+  "previous": "Zurück",
+  "next": "Weiter",
+  "previousYear": "Vorheriges Jahr",
+  "nextYear": "Nächstes Jahr",
+  "week": "KW {week}",
+  "views": {
+    "day": "Tag",
+    "week": "Woche",
+    "month": "Monat",
+    "agenda": "Agenda"
+  },
+  "newEntry": "Neuer Eintrag",
+  "editEntry": "Eintrag bearbeiten",
+  "search": "Suchen...",
+  "calendars": "Kalender",
+  "more": "+{count} weitere",
+  "emptyAgenda": "Keine Einträge in diesem Zeitraum.",
+  "allDay": "Ganztägig",
+  "title": "Kalender",
+  "recurrence": {
+    "NONE": "Keine Wiederholung",
+    "DAILY": "Täglich",
+    "WEEKLY": "Wöchentlich",
+    "MONTHLY": "Monatlich",
+    "YEARLY": "Jährlich"
+  },
+  "fields": {
+    "title": "Titel",
+    "calendar": "Kalender",
+    "start": "Beginn",
+    "end": "Ende",
+    "recurrence": "Wiederholung",
+    "interval": "Intervall",
+    "intervalHelp": "z. B. 2 = alle zwei Wochen",
+    "until": "Enddatum",
+    "untilHelp": "Leer lassen für unbegrenzte Wiederholung",
+    "location": "Ort",
+    "description": "Beschreibung"
+  },
+  "save": "Speichern",
+  "cancel": "Abbrechen",
+  "saved": "Eintrag gespeichert.",
+  "edit": "Bearbeiten",
+  "delete": "Löschen",
+  "deleteTitle": "Eintrag löschen",
+  "deleteMessage": "\"{title}\" wird gelöscht. Fortfahren?",
+  "deleteSeries": "Bei einem Serientermin wird die gesamte Serie gelöscht.",
+  "convertToEvent": "In Veranstaltung umwandeln",
+  "converted": "Veranstaltungsentwurf erstellt.",
+  "linkedToEvent": "Mit Veranstaltung verknüpft",
+  "readOnlySource": "Dieser Eintrag stammt aus einem anderen Modul und ist hier schreibgeschützt.",
+  "openRecord": "Datensatz öffnen",
+  "errors": {
+    "range": "Ungültiger Zeitraum.",
+    "title": "Titel ist erforderlich.",
+    "endBeforeStart": "Ende darf nicht vor dem Beginn liegen.",
+    "forbidden": "Keine Berechtigung für diesen Kalender.",
+    "convertFailed": "Umwandlung fehlgeschlagen.",
+    "name": "Name muss mindestens 2 Zeichen haben."
+  },
+  "settings": {
+    "title": "Kalendereinstellungen",
+    "feedTitle": "Kalender-Abo (ICS)",
+    "feedDescription": "Mit diesem Link siehst du deinen Kalender schreibgeschützt in Google, Apple oder Outlook. Teile den Link mit niemandem.",
+    "feedOnce": "Der Link wird nur jetzt angezeigt; kopiere ihn und bewahre ihn sicher auf.",
+    "feedActive": "Du hast einen aktiven Abo-Link.",
+    "feedCreate": "Link erstellen",
+    "feedRotate": "Neuen Link erstellen (alter wird ungültig)",
+    "feedRevoke": "Link widerrufen",
+    "feedPlugins": "Zwei-Wege-Synchronisation folgt später über eigene Plugin-Module.",
+    "personalTitle": "Persönlicher Kalender",
+    "color": "Farbe",
+    "sharedTitle": "Gemeinsame Kalender",
+    "sharedDescription": "Gemeinsame Kalender sehen alle Berechtigten.",
+    "sharedName": "Kalendername",
+    "sharedAdd": "Gemeinsamen Kalender hinzufügen",
+    "sharedCreated": "Gemeinsamer Kalender gespeichert."
+  },
+  "automation": {
+    "events": {
+      "entry_created": {
+        "label": "Wenn ein Kalendereintrag erstellt wird",
+        "fields": {
+          "entryId": "Eintrags-ID",
+          "calendarKind": "Kalenderart",
+          "allDay": "Ganztägig"
+        },
+        "options": {
+          "calendarKind": {
+            "PERSONAL": "Persönlich",
+            "SHARED": "Gemeinsam"
+          }
+        },
+        "variables": {
+          "title": "Titel",
+          "startsAt": "Beginn",
+          "endsAt": "Ende",
+          "location": "Ort"
+        }
+      }
+    }
+  },
+  "access": {
+    "events": "Um einen Kalendereintrag per Klick in einen Veranstaltungsentwurf umzuwandeln."
+  }
+}

@@ -11,6 +11,7 @@ const FORMATS_FILE = path.join(ROOT_DIR, "src", "format-registry.ts");
 const RECIPIENTS_FILE = path.join(ROOT_DIR, "src", "recipient-registry.ts");
 const LIFECYCLE_FILE = path.join(ROOT_DIR, "src", "lifecycle-registry.ts");
 const RELEASES_FILE = path.join(ROOT_DIR, "src", "module-releases.ts");
+const CALENDAR_FILE = path.join(ROOT_DIR, "src", "calendar-registry.ts");
 const AUTOMATION_FILE = path.join(ROOT_DIR, "src", "automation-registry.ts");
 const PERMISSIONS_FILE = path.join(ROOT_DIR, "src", "permissions-registry.ts");
 
@@ -102,6 +103,7 @@ export const registry: ModuleConfig[] = allModules;
   syncConventionFile(validModules, "recipients.ts", "recipients", RECIPIENTS_FILE, "ModuleRecipients", "@/shared/mailings/define", "moduleRecipientRegistry", "Toplu e-posta alıcı kaynakları (src/modules/<modül>/recipients.ts).");
   syncConventionFile(validModules, "lifecycle.ts", "lifecycle", LIFECYCLE_FILE, "ModuleLifecycle", "@/shared/modules/lifecycle", "moduleLifecycleRegistry", "Modül yaşam döngüsü kancaları (src/modules/<modül>/lifecycle.ts), ör. kapatılırken temizlik.");
   syncPermissionResources(validModules);
+  syncConventionFile(validModules, "calendar.ts", "calendar", CALENDAR_FILE, "ModuleCalendar", "@/shared/calendar/define", "moduleCalendarRegistry", "Takvime kayıt sunan modüller (src/modules/<modül>/calendar.ts).");
   syncAutomationTasks(validModules);
 
   return { registered: validModules };

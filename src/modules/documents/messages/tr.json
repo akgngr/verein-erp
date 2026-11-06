@@ -320,5 +320,8 @@
       "label": "Gelen / Giden Evraklar",
       "description": "Resmi evrakların sisteme kaydedilmesi, numaralandırılması ve arşivlenmesi."
     }
+  },
+  "calendar": {
+    "due": "Evrak son tarihleri"
   }
 }

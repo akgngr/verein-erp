@@ -114,5 +114,8 @@
       "label": "Aufgaben",
       "description": "Aufgaben anlegen, zuweisen und verfolgen."
     }
+  },
+  "calendar": {
+    "due": "Aufgaben-Fälligkeiten"
   }
 }

@@ -98,6 +98,7 @@
     "automationMonitor": "Otomasyon izleme",
     "automationWorkflows": "İş akışları",
     "bankaBaglantisi": "Banka bağlantısı",
+    "calendar": "Takvim",
     "courses": "Kurslar",
     "demoVeri": "Demo veri",
     "evrak": "Evrak Kayıt",
@@ -2469,6 +2470,129 @@
       "accounting": "Banka hareketlerini muhasebe → Banka eşleştirmesine aktarmak ve banka hesaplarını listelemek için."
     }
   },
+  "calendar": {
+    "module": {
+      "label": "Takvim",
+      "description": "Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve kurs tarihlerini tek görünümde toplar."
+    },
+    "permissions": {
+      "calendar": {
+        "label": "Takvim",
+        "description": "Takvim kayıtlarını görme ve düzenleme; onay yetkisi ortak takvimleri yönetir."
+      }
+    },
+    "meta": {
+      "title": "Takvim"
+    },
+    "personalName": "Kişisel takvimim",
+    "feedName": "Dernek takvimi",
+    "today": "Bugün",
+    "previous": "Önceki",
+    "next": "Sonraki",
+    "previousYear": "Önceki yıl",
+    "nextYear": "Sonraki yıl",
+    "week": "{week}. hafta",
+    "views": {
+      "day": "Gün",
+      "week": "Hafta",
+      "month": "Ay",
+      "agenda": "Ajanda"
+    },
+    "newEntry": "Yeni kayıt",
+    "editEntry": "Kaydı düzenle",
+    "search": "Ara...",
+    "calendars": "Takvimler",
+    "more": "+{count} daha",
+    "emptyAgenda": "Bu aralıkta kayıt yok.",
+    "allDay": "Tüm gün",
+    "title": "Takvim",
+    "recurrence": {
+      "NONE": "Tekrarlanmaz",
+      "DAILY": "Her gün",
+      "WEEKLY": "Her hafta",
+      "MONTHLY": "Her ay",
+      "YEARLY": "Her yıl"
+    },
+    "fields": {
+      "title": "Başlık",
+      "calendar": "Takvim",
+      "start": "Başlangıç",
+      "end": "Bitiş",
+      "recurrence": "Tekrar",
+      "interval": "Aralık",
+      "intervalHelp": "Örn. 2 = iki haftada bir",
+      "until": "Bitiş tarihi",
+      "untilHelp": "Boş bırakılırsa süresiz tekrarlar",
+      "location": "Konum",
+      "description": "Açıklama"
+    },
+    "save": "Kaydet",
+    "cancel": "Vazgeç",
+    "saved": "Kayıt kaydedildi.",
+    "edit": "Düzenle",
+    "delete": "Sil",
+    "deleteTitle": "Kaydı sil",
+    "deleteMessage": "\"{title}\" silinecek. Onaylıyor musunuz?",
+    "deleteSeries": "Tekrarlanan kayıt silinirse tüm seri silinir.",
+    "convertToEvent": "Etkinliğe dönüştür",
+    "converted": "Etkinlik taslağı oluşturuldu.",
+    "linkedToEvent": "Etkinliğe bağlı",
+    "readOnlySource": "Bu kayıt başka bir modülden gelir ve burada salt okunurdur.",
+    "openRecord": "Kaydı aç",
+    "errors": {
+      "range": "Geçersiz tarih aralığı.",
+      "title": "Başlık zorunludur.",
+      "endBeforeStart": "Bitiş başlangıçtan önce olamaz.",
+      "forbidden": "Bu takvim için yetkiniz yok.",
+      "convertFailed": "Etkinliğe dönüştürülemedi.",
+      "name": "Ad en az 2 karakter olmalı."
+    },
+    "settings": {
+      "title": "Takvim ayarları",
+      "feedTitle": "Takvim aboneliği (ICS)",
+      "feedDescription": "Bu bağlantıyla takvimini Google, Apple veya Outlook'ta salt okunur olarak görebilirsin. Bağlantıyı kimseyle paylaşma.",
+      "feedOnce": "Bağlantı yalnızca şimdi gösterilir; kopyala ve güvenli sakla.",
+      "feedActive": "Aktif bir abonelik bağlantın var.",
+      "feedCreate": "Bağlantı oluştur",
+      "feedRotate": "Yeni bağlantı oluştur (eskisi geçersiz olur)",
+      "feedRevoke": "Bağlantıyı iptal et",
+      "feedPlugins": "Çift yönlü senkronizasyon ileride ayrı eklenti modülleriyle gelecek.",
+      "personalTitle": "Kişisel takvim",
+      "color": "Renk",
+      "sharedTitle": "Ortak takvimler",
+      "sharedDescription": "Ortak takvimleri yetkili herkes görür.",
+      "sharedName": "Takvim adı",
+      "sharedAdd": "Ortak takvim ekle",
+      "sharedCreated": "Ortak takvim kaydedildi."
+    },
+    "automation": {
+      "events": {
+        "entry_created": {
+          "label": "Takvime kayıt eklendiğinde",
+          "fields": {
+            "entryId": "Kayıt kimliği",
+            "calendarKind": "Takvim türü",
+            "allDay": "Tüm gün"
+          },
+          "options": {
+            "calendarKind": {
+              "PERSONAL": "Kişisel",
+              "SHARED": "Ortak"
+            }
+          },
+          "variables": {
+            "title": "Başlık",
+            "startsAt": "Başlangıç",
+            "endsAt": "Bitiş",
+            "location": "Konum"
+          }
+        }
+      }
+    },
+    "access": {
+      "events": "Takvim kaydını tek tıkla etkinlik taslağına dönüştürmek için."
+    }
+  },
   "courses": {
     "module": {
       "label": "Kurslar",
@@ -2949,6 +3073,9 @@
         "date": "Geçersiz tarih.",
         "reason": "Gerekçe en az 3 karakter olmalı."
       }
+    },
+    "calendar": {
+      "sessions": "Kurs dersleri"
     }
   },
   "demo": {
@@ -3310,6 +3437,9 @@
         "label": "Gelen / Giden Evraklar",
         "description": "Resmi evrakların sisteme kaydedilmesi, numaralandırılması ve arşivlenmesi."
       }
+    },
+    "calendar": {
+      "due": "Evrak son tarihleri"
     }
   },
   "donations": {
@@ -4018,6 +4148,9 @@
         "label": "Etkinlikler",
         "description": "Etkinlik planlama, katılımcı kayıtları ve onay."
       }
+    },
+    "calendar": {
+      "events": "Etkinlikler"
     }
   },
   "exports": {
@@ -5143,6 +5276,9 @@
         "label": "Toplantı ve Kararlar",
         "description": "Toplantı takvimi, gündem maddeleri, tutanaklar, kararlar ve onaylama."
       }
+    },
+    "calendar": {
+      "meetings": "Toplantılar"
     }
   },
   "members": {
@@ -6606,6 +6742,9 @@
         "label": "Görevler",
         "description": "Görev oluşturma, atama ve takip."
       }
+    },
+    "calendar": {
+      "due": "Görev bitiş tarihleri"
     }
   },
   "users": {

@@ -6,6 +6,7 @@ import { isEventDefinition, isTaskDefinition, taskModuleKey, type EventDefinitio
 import * as membersAutomationExports from "@/modules/members/automation";
 import * as usersAutomationExports from "@/modules/users/automation";
 import * as systemAutomationExports from "@/modules/system/automation";
+import * as calendarAutomationExports from "@/modules/calendar/automation";
 import * as mailAutomationExports from "@/modules/mail/automation";
 import * as mailingsAutomationExports from "@/modules/mailings/automation";
 import * as securitymonitorAutomationExports from "@/modules/security-monitor/automation";
@@ -27,6 +28,7 @@ export const moduleAutomationTasks: TaskDefinition[] = [
   ...tasksOf("members", membersAutomationExports),
   ...tasksOf("users", usersAutomationExports),
   ...tasksOf("system", systemAutomationExports),
+  ...tasksOf("calendar", calendarAutomationExports),
   ...tasksOf("mail", mailAutomationExports),
   ...tasksOf("mailings", mailingsAutomationExports),
   ...tasksOf("security-monitor", securitymonitorAutomationExports),
@@ -37,6 +39,7 @@ export const moduleAutomationEvents: EventDefinition[] = [
   ...eventsOf("members", membersAutomationExports),
   ...eventsOf("users", usersAutomationExports),
   ...eventsOf("system", systemAutomationExports),
+  ...eventsOf("calendar", calendarAutomationExports),
   ...eventsOf("mail", mailAutomationExports),
   ...eventsOf("mailings", mailingsAutomationExports),
   ...eventsOf("security-monitor", securitymonitorAutomationExports),
