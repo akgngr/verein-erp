@@ -16,54 +16,56 @@ CAMT.053/MT940, SEPA pain.001/pain.008, GoBD.
 
 | Var | Eksik |
 |---|---|
-| Gelir/gider/transfer fişleri, değiştirilemezlik (tetikleyici), yıl kapanışı, bütçe, projeler, faturalar (PDF), vergi alanları ve Kassenbericht, bağış/aidat aktarımı, fiş ekleri | KDV, hesap planı, DATEV, UStVA, EÜR, cari hesaplar, açık kalemler, banka içe aktarma, e-fatura, ihtarname, hash zinciri, Z3, AfA |
+| ACC-1 … ACC-8 uygulandı (KDV, SKR03/04, DATEV, UStVA, EÜR, cari hesaplar, OPOS, banka içe aktarma, e-fatura, ihtarname, hash zinciri, Z3, AfA, vergi takvimi) | SEPA Lastschrift (pain.008) + mandat, hibe/Verwendungsnachweis |
 
 ## İş akışı (her aşama ayrı PR; sırayla)
 
 ### ACC-1 — Vergi temeli *(sonrakilerin hepsi buna dayanır)*
-- [ ] Fişte KDV: oran (0/7/19 %), net + vergi + brüt; gelirde USt, giderde Vorsteuer
-- [ ] Ayarlar: §19 küçük işletme (KDV 0, uyarı), Ist/Soll-Versteuerung, Kontenrahmen (SKR03 / SKR04)
-- [ ] Kategoriye SKR hesap numarası + varsayılan vergi anahtarı; hesap (kasa/banka) SKR numarası
-- [ ] Mevcut fişler: KDV 0 olarak taşınır (migration), raporlar değişmez
-- [ ] Faturalar: kalem KDV'si fişe net/vergi olarak aktarılır
+- [x] Fişte KDV: oran (0/7/19 %), net + vergi + brüt; gelirde USt, giderde Vorsteuer
+- [x] Ayarlar: §19 küçük işletme (KDV 0, uyarı), Ist/Soll-Versteuerung, Kontenrahmen (SKR03 / SKR04)
+- [x] Kategoriye SKR hesap numarası + varsayılan vergi anahtarı; hesap (kasa/banka) SKR numarası
+- [x] Mevcut fişler: KDV 0 olarak taşınır (migration), raporlar değişmez
+- [x] Faturalar: kalem KDV'si fişe net/vergi olarak aktarılır
 
 ### ACC-2 — Dışa aktarma ve vergi raporları
-- [ ] DATEV EXTF Buchungsstapel v7 (CSV, başlık satırı, BU-Schlüssel) + Kontenbeschriftungen
-- [ ] UStVA Kennzahlen (81, 86, 35/36, 41, 21, 66, 83 …), ay/çeyrek, her rakamın kaynağı (drill-down)
-- [ ] EÜR raporu (Anlage-EÜR satırlarına yakın gruplama)
-- [ ] §19 ciro sınırı uyarısı (panel kartı)
+- [x] DATEV EXTF Buchungsstapel v7 (CSV, başlık satırı, BU-Schlüssel) + Kontenbeschriftungen
+- [x] UStVA Kennzahlen (81, 86, 35/36, 41, 21, 66, 83 …), ay/çeyrek, her rakamın kaynağı (drill-down)
+- [x] EÜR raporu (Anlage-EÜR satırlarına yakın gruplama)
+- [x] §19 ciro sınırı uyarısı (panel kartı)
 
 ### ACC-3 — Cari hesaplar ve açık kalemler
-- [ ] Müşteri/tedarikçi kartı (adres, IBAN, USt-IdNr, vade), faturadan otomatik öneri
-- [ ] Teklif (Angebot) → fatura; gelen fatura kaydı
-- [ ] Açık kalemler (OPOS), yaşlandırma, kısmi/toplu ödeme, Skonto
+- [x] Müşteri/tedarikçi kartı (adres, IBAN, USt-IdNr, vade), faturadan otomatik öneri
+- [x] Teklif (Angebot) → fatura; gelen fatura kaydı
+- [x] Açık kalemler (OPOS), yaşlandırma, kısmi/toplu ödeme, Skonto
 
 ### ACC-4 — Banka içe aktarma ve eşleştirme
-- [ ] CSV profilleri (otomatik tanıma, kullanıcı şablonu), CAMT.053, MT940
-- [ ] Eşleştirme önerisi: referans → tam tutar → yakın; "neden" açıklaması; kısmi/toplu
-- [ ] Özel/ticari ayrımı (Privatentnahme/Einlage) — serbest çalışan için
-- [ ] Düzeltmelerden kural öğrenme
+- [x] CSV profilleri (otomatik tanıma, kullanıcı şablonu), CAMT.053, MT940
+- [x] Eşleştirme önerisi: referans → tam tutar → yakın; "neden" açıklaması; kısmi/toplu
+- [x] Özel/ticari ayrımı (Privatentnahme/Einlage) — serbest çalışan için
+- [x] Düzeltmelerden kural öğrenme
 
 ### ACC-5 — Belge kutusu ve e-fatura
-- [ ] Belge yükleme, çift kayıt tespiti, fişe bağlama
-- [ ] Gelen XRechnung/ZUGFeRD okuma → fiş önerisi; isteğe bağlı AI (izin matrisiyle)
-- [ ] Giden fatura: XRechnung XML + ZUGFeRD PDF/A-3, §14 UStG zorunlu alan kontrolü
+- [x] Belge yükleme, çift kayıt tespiti, fişe bağlama
+- [x] Gelen XRechnung/ZUGFeRD okuma → fiş önerisi; isteğe bağlı AI (izin matrisiyle)
+- [x] Giden fatura: XRechnung XML + ZUGFeRD PDF/A-3, §14 UStG zorunlu alan kontrolü
 
 ### ACC-6 — İhtarname ve ödeme
-- [ ] İhtar seviyeleri, ücret, gecikme faizi (§288 BGB), PDF/e-posta
-- [ ] Ödeme önerisi (Skonto önce), SEPA pain.001; aidatlar için pain.008 (mandat)
+- [x] İhtar seviyeleri, ücret, gecikme faizi (§288 BGB), PDF/e-posta
+- [x] Ödeme önerisi (Skonto önce), SEPA pain.001
+- [ ] Aidatlar için SEPA Lastschrift pain.008 + mandat yönetimi — **eksik**
 
 ### ACC-7 — GoBD paketi
-- [ ] Zincirleme SHA-256 kayıt (fiş, storno, dışa aktarma) + doğrulama ekranı
-- [ ] Z3 veri teslimi ZIP (CSV + sağlama), yıllık arşiv
-- [ ] Kasa defteri günlük kapanış (Soll/Ist farkı)
-- [ ] Bütünlük kontrolleri: belgesiz fiş, numara boşluğu, vadesi geçmiş fatura
+- [x] Zincirleme SHA-256 kayıt (fiş, storno, dışa aktarma) + doğrulama ekranı
+- [x] Z3 veri teslimi ZIP (CSV + sağlama), yıllık arşiv
+- [x] Kasa defteri günlük kapanış (Soll/Ist farkı)
+- [x] Bütünlük kontrolleri: belgesiz fiş, numara boşluğu, vadesi geçmiş fatura
 
 ### ACC-8 — Ek özellikler
-- [ ] Duran varlık + doğrusal AfA, GWG / Sammelposten
-- [ ] Götürü giderler (ev ofisi, km, harcırah)
-- [ ] Vergi takvimi + iCal
-- [ ] Dernek: §62 AO rezervler, hibe ve Verwendungsnachweis, Kassenprüfer raporu, SKR49
+- [x] Duran varlık + doğrusal AfA, GWG / Sammelposten
+- [x] Götürü giderler (ev ofisi, km, harcırah)
+- [x] Vergi takvimi + iCal
+- [x] Dernek: §62 AO rezervler, Kassenprüfer raporu, SKR49
+- [ ] Hibe ve Verwendungsnachweis raporu — **eksik**
 
 ## Her aşamada
 - Veri modeli değişikliği → migration + mevcut veriyle test; değiştirilemez kayıtlar storno ile düzeltilir.

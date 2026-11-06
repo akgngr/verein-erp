@@ -4,6 +4,7 @@ import { createHash, randomBytes } from "node:crypto";
 
 import { moduleCalendarSyncRegistry } from "@/calendar-sync-registry";
 import { listUsableModuleKeys } from "@/modules/system/automation";
+import { getUserById } from "@/modules/users/automation";
 import { MAX_REMOTE_EVENTS, SyncAuthError, type CalendarSyncProvider, type SyncAppConfig, type SyncCredentials } from "@/shared/calendar/sync";
 import { getDb } from "@/shared/db";
 import { canEncryptSecrets, openSecret, sealSecret } from "@/shared/security/secret-box";
@@ -170,6 +171,14 @@ export async function syncAccount(accountId: string): Promise<{ events: number }
   const db = getDb();
   const account = await db.calendarSyncAccount.findUnique({ where: { id: accountId }, include: { calendars: true } });
   if (!account) throw new Error("SYNC_NOT_FOUND");
+  // Deleted user: remove the connection and its imported data (credentials included).
+  // Deactivated user: keep it, but do not contact the provider on their behalf.
+  const owner = await getUserById(account.userId);
+  if (!owner) {
+    await db.calendarSyncAccount.delete({ where: { id: accountId } });
+    return { events: 0 };
+  }
+  if (!owner.isActive) return { events: 0 };
   const provider = await providerOrThrow(account.provider);
   const app = provider.auth === "oauth" ? await getApp(account.provider) : null;
   let credentials = openCredentials(account.credentialsEnc);

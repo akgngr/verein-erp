@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.1.1",
+      "date": "2026-11-06",
+      "title": {
+        "tr": "Güvenlik düzeltmesi",
+        "de": "Sicherheitskorrektur"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Silinen kullanıcının dış takvim bağlantısı ve alınan kayıtları silinir; pasif kullanıcı adına senkron yapılmaz.",
+          "de": "Externe Kalenderverbindungen gelöschter Benutzer werden samt importierter Einträge entfernt; für deaktivierte Benutzer wird nicht synchronisiert."
+        }
+      ]
+    },
+    {
       "version": "1.1.0",
       "date": "2026-11-06",
       "title": {
