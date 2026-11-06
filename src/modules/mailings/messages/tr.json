@@ -55,7 +55,9 @@
     "name": "Kampanya adı 2–120 karakter olmalı.",
     "channelNotConfigured": "Bu kanal henüz ayarlanmamış.",
     "notCancellable": "Yalnız taslak veya planlı kampanyalar iptal edilebilir.",
-    "notDeletable": "Yalnız taslak veya iptal edilmiş kampanyalar silinebilir."
+    "notDeletable": "Yalnız taslak veya iptal edilmiş kampanyalar silinebilir.",
+    "channelUnknown": "Bilinmeyen kanal.",
+    "channelSetup": "Ayarlar kaydedildi ama sağlayıcıya bağlanılamadı; bilgileri kontrol edin."
   },
   "permissions": {
     "mailings": {
@@ -103,6 +105,18 @@
     "email": {
       "label": "E-posta",
       "description": "Görsel editörle kişiye özel e-posta; her alıcıya ayrı gönderilir."
+    },
+    "sms": {
+      "label": "SMS",
+      "description": "Kısa metin mesajı; yalnız SMS izni olan ve telefonu kayıtlı kişilere."
+    },
+    "whatsapp": {
+      "label": "WhatsApp",
+      "description": "Meta onaylı şablonla; yalnız WhatsApp izni olan kişilere."
+    },
+    "telegram": {
+      "label": "Telegram",
+      "description": "Botunuza abone olanlara; davet için e-postada {telegramLink} kullanın."
     }
   },
   "board": {
@@ -180,5 +194,46 @@
   },
   "calendar": {
     "scheduled": "Planlı kampanyalar"
+  },
+  "channelSettings": {
+    "sms": {
+      "provider": "Sağlayıcı",
+      "apiKey": "API anahtarı / Auth token",
+      "accountSid": "Twilio Account SID (yalnız Twilio)",
+      "sender": "Gönderen (ad veya numara)",
+      "countryCode": "Varsayılan ülke kodu"
+    },
+    "whatsapp": {
+      "phoneNumberId": "Telefon numarası kimliği (Phone number ID)",
+      "accessToken": "Erişim belirteci (access token)",
+      "templateName": "Şablon adı (gövdede tek değişken '{{1}}')",
+      "templateLanguage": "Şablon dili",
+      "countryCode": "Varsayılan ülke kodu"
+    },
+    "telegram": {
+      "botToken": "Bot anahtarı (BotFather)",
+      "botUsername": "Bot kullanıcı adı"
+    }
+  },
+  "channelOptions": {
+    "sms": {
+      "provider": {
+        "seven": "seven.io",
+        "twilio": "Twilio"
+      }
+    }
+  },
+  "settings": {
+    "title": "Kampanya kanalları",
+    "description": "SMS, Telegram ve WhatsApp eklentilerinin sağlayıcı bilgileri. Anahtarlar şifreli saklanır ve bir daha gösterilmez. E-posta ayarları E-posta modülündedir.",
+    "noChannels": "Ayarı olan bir kanal eklentisi etkin değil. Modül Yönetimi'nden SMS, Telegram veya WhatsApp eklentisini açın.",
+    "configured": "Hazır",
+    "notConfigured": "Ayarlanmadı",
+    "secretKept": "Kayıtlı (değiştirmek için yazın)",
+    "save": "Kaydet",
+    "saved": "Kanal ayarları kaydedildi."
+  },
+  "menu": {
+    "settings": "Ayarlar"
   }
 }

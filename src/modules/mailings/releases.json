@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "2.1.0",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "Kanal eklentileri",
+        "de": "Kanal-Plugins"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "SMS, Telegram ve WhatsApp eklentileri kampanyalara otomatik eklenir; Kampanyalar → Ayarlar'da sağlayıcı bilgileri (şifreli).",
+          "de": "SMS-, Telegram- und WhatsApp-Plugins erscheinen automatisch in Kampagnen; Anbieterdaten (verschlüsselt) unter Kampagnen → Einstellungen."
+        },
+        {
+          "type": "feature",
+          "tr": "E-posta dışı kanallarda gönderim kaydı ile yeniden denemede çift gönderim önlenir; {telegramLink} yer tutucusuyla e-postadan Telegram'a davet.",
+          "de": "Versandprotokoll für Nicht-E-Mail-Kanäle verhindert Doppelversand bei Wiederholung; Einladung zu Telegram per E-Mail mit {telegramLink}."
+        }
+      ]
+    },
+    {
       "version": "2.0.0",
       "date": "2026-11-07",
       "title": {

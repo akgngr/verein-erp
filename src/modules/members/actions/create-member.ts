@@ -85,6 +85,7 @@ export async function createMemberAction(
               exitReason: input.exitReason,
               notes: input.notes,
               bulkMailOptOut: input.bulkMailOptOut,
+              messagingConsents: input.messagingConsents,
               createdById: user.id,
               createdByLabel,
               updatedById: user.id,

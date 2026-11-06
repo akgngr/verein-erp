@@ -19,6 +19,9 @@ import * as calendarPermissionExports from "@/modules/calendar/permissions";
 import * as calendarapplePermissionExports from "@/modules/calendar-apple/permissions";
 import * as calendargooglePermissionExports from "@/modules/calendar-google/permissions";
 import * as calendaroutlookPermissionExports from "@/modules/calendar-outlook/permissions";
+import * as campaignsmsPermissionExports from "@/modules/campaign-sms/permissions";
+import * as campaigntelegramPermissionExports from "@/modules/campaign-telegram/permissions";
+import * as campaignwhatsappPermissionExports from "@/modules/campaign-whatsapp/permissions";
 import * as coursesPermissionExports from "@/modules/courses/permissions";
 import * as demoPermissionExports from "@/modules/demo/permissions";
 import * as eventsPermissionExports from "@/modules/events/permissions";
@@ -55,6 +58,9 @@ export const permissionResources: { moduleKey: string; definitions: PermissionDe
   { moduleKey: "calendar-apple", definitions: definitionsOf(calendarapplePermissionExports) },
   { moduleKey: "calendar-google", definitions: definitionsOf(calendargooglePermissionExports) },
   { moduleKey: "calendar-outlook", definitions: definitionsOf(calendaroutlookPermissionExports) },
+  { moduleKey: "campaign-sms", definitions: definitionsOf(campaignsmsPermissionExports) },
+  { moduleKey: "campaign-telegram", definitions: definitionsOf(campaigntelegramPermissionExports) },
+  { moduleKey: "campaign-whatsapp", definitions: definitionsOf(campaignwhatsappPermissionExports) },
   { moduleKey: "courses", definitions: definitionsOf(coursesPermissionExports) },
   { moduleKey: "demo", definitions: definitionsOf(demoPermissionExports) },
   { moduleKey: "events", definitions: definitionsOf(eventsPermissionExports) },

@@ -55,7 +55,9 @@
     "name": "Kampagnenname muss 2–120 Zeichen haben.",
     "channelNotConfigured": "Dieser Kanal ist noch nicht eingerichtet.",
     "notCancellable": "Nur Entwürfe oder geplante Kampagnen können abgebrochen werden.",
-    "notDeletable": "Nur Entwürfe oder abgebrochene Kampagnen können gelöscht werden."
+    "notDeletable": "Nur Entwürfe oder abgebrochene Kampagnen können gelöscht werden.",
+    "channelUnknown": "Unbekannter Kanal.",
+    "channelSetup": "Gespeichert, aber der Anbieter war nicht erreichbar; Angaben prüfen."
   },
   "permissions": {
     "mailings": {
@@ -103,6 +105,18 @@
     "email": {
       "label": "E-Mail",
       "description": "Personalisierte E-Mail mit visuellem Editor; jede Person erhält eine eigene Nachricht."
+    },
+    "sms": {
+      "label": "SMS",
+      "description": "Kurznachricht; nur an Personen mit SMS-Einwilligung und Telefonnummer."
+    },
+    "whatsapp": {
+      "label": "WhatsApp",
+      "description": "Mit freigegebener Meta-Vorlage; nur an Personen mit WhatsApp-Einwilligung."
+    },
+    "telegram": {
+      "label": "Telegram",
+      "description": "An Abonnenten Ihres Bots; Einladung per E-Mail mit {telegramLink}."
     }
   },
   "board": {
@@ -180,5 +194,46 @@
   },
   "calendar": {
     "scheduled": "Geplante Kampagnen"
+  },
+  "channelSettings": {
+    "sms": {
+      "provider": "Anbieter",
+      "apiKey": "API-Schlüssel / Auth-Token",
+      "accountSid": "Twilio Account SID (nur Twilio)",
+      "sender": "Absender (Name oder Nummer)",
+      "countryCode": "Standard-Ländervorwahl"
+    },
+    "whatsapp": {
+      "phoneNumberId": "Phone-Number-ID",
+      "accessToken": "Zugriffstoken",
+      "templateName": "Vorlagenname (eine Variable '{{1}}' im Text)",
+      "templateLanguage": "Vorlagensprache",
+      "countryCode": "Standard-Ländervorwahl"
+    },
+    "telegram": {
+      "botToken": "Bot-Token (BotFather)",
+      "botUsername": "Bot-Benutzername"
+    }
+  },
+  "channelOptions": {
+    "sms": {
+      "provider": {
+        "seven": "seven.io",
+        "twilio": "Twilio"
+      }
+    }
+  },
+  "settings": {
+    "title": "Kampagnenkanäle",
+    "description": "Anbieterdaten der SMS-, Telegram- und WhatsApp-Plugins. Schlüssel werden verschlüsselt gespeichert und nie wieder angezeigt. E-Mail-Einstellungen liegen im E-Mail-Modul.",
+    "noChannels": "Kein Kanal-Plugin mit Einstellungen aktiv. Aktiviere in der Modulverwaltung SMS, Telegram oder WhatsApp.",
+    "configured": "Bereit",
+    "notConfigured": "Nicht eingerichtet",
+    "secretKept": "Gespeichert (zum Ändern neu eingeben)",
+    "save": "Speichern",
+    "saved": "Kanaleinstellungen gespeichert."
+  },
+  "menu": {
+    "settings": "Einstellungen"
   }
 }

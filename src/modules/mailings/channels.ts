@@ -11,6 +11,7 @@ export const channels = defineChannels("mailings", [
     capabilities: { subject: true, html: true },
     address: (recipient) => recipient.email?.trim() || null,
     allowed: (recipient) => !recipient.optOut,
+    // SMTP ayarları mail modülündedir; burada ek ayar yok.
     isConfigured: () => isMailConfigured(),
     sendBatch: (messages) => sendMailBatch(messages.map((message) => ({
       to: message.to,

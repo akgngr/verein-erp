@@ -53,6 +53,7 @@ type Preview = { matched: number; eligible: number; noEmail: number; optOut: num
 
 const ICONS = { Mail, MessageSquare, Send, MessageCircle };
 const STEPS = ["audience", "channel", "content", "send"] as const;
+const CONTENT_GRID = "grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]";
 type Step = (typeof STEPS)[number];
 
 /** Düz metni editör için paragraflara çevirir (ör. asistanın önerdiği taslak). */
@@ -275,7 +276,7 @@ export function CampaignWizard({
 
               {/* İçerik adımı açık kalır (gizlenir): editörün içeriği sonraki adımlarda da okunabilmeli. */}
               {index >= STEPS.indexOf("content") ? (
-                <div className={step === "content" ? "grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]" : "hidden"}>
+                <div className={step === "content" ? CONTENT_GRID : "hidden"}>
                   <div className="flex min-w-0 flex-col gap-4">
                     {channel?.capabilities.subject ? <Input label={t("subject")} labelPlacement="outside" placeholder={t("wizard.subjectPlaceholder")} value={subject} onValueChange={setSubject} isRequired /> : null}
                     <div className="flex flex-wrap items-center gap-2 text-tiny text-default-500">

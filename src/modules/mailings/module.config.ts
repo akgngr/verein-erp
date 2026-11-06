@@ -1,4 +1,4 @@
-import { Send } from "lucide-react";
+import { Send, SlidersHorizontal } from "lucide-react";
 
 import type { ModuleConfig } from "@/shared/types/module";
 
@@ -11,7 +11,7 @@ import { mailingsPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "mailings",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "2.0.0",
+  version: "2.1.0",
   label: "Toplu e-posta",
   description: "Üyelere, velilere ve diğer modüllerin alıcı listelerine kişiye özel toplu e-posta.",
   category: "OFFICIAL",
@@ -36,5 +36,9 @@ export const moduleConfig: ModuleConfig = {
       order: 92,
       permission: { definition: mailingsPermissions, action: "view" },
     },
+  ],
+  // Kanal eklentilerinin (SMS, Telegram, WhatsApp) sağlayıcı ayarları.
+  menu: [
+    { key: "settings", label: "Ayarlar", href: "/toplu-eposta/ayarlar", icon: SlidersHorizontal, permission: { definition: mailingsPermissions, action: "approve" } },
   ],
 };

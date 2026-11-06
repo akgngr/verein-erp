@@ -8,7 +8,8 @@ import { moduleChannelRegistry } from "@/campaign-channel-registry";
 import { moduleRecipientRegistry } from "@/recipient-registry";
 import { isMailConfigured, sendMail, sendMailBatch } from "@/modules/mail/automation";
 import { createWorkflow, publishWorkflow, saveWorkflowDraft, setWorkflowEnabled, startWorkflow } from "@/modules/automation/automation";
-import { splitForChannel, type CampaignChannel } from "@/shared/campaigns/channel";
+import { splitForChannel, type CampaignChannel, type ChannelConfig } from "@/shared/campaigns/channel";
+import { canEncryptSecrets, openSecret, sealSecret } from "@/shared/security/secret-box";
 import { campaignFinishedEvent, sendCampaignTask } from "../automation";
 import { loadPermissionPolicy, getUserById } from "@/modules/users/automation";
 import { listUsableModuleKeys } from "@/modules/system/automation";
@@ -32,14 +33,95 @@ export async function findChannel(key: string): Promise<CampaignChannel | null> 
   return (await availableChannels()).find((channel) => channel.key === key) ?? null;
 }
 
+const SECRET_PURPOSE = "mailings-channel-secrets";
+
+/** Kanal ayarları: düz değerler + çözülmüş gizliler (yalnız sunucu). */
+export async function getChannelConfig(key: string): Promise<ChannelConfig> {
+  const row = await getDb().mailingChannelConfig.findUnique({ where: { channel: key } });
+  if (!row) return {};
+  const plain = (row.settings ?? {}) as Record<string, string>;
+  const secrets = row.secretsEnc ? (JSON.parse(openSecret(SECRET_PURPOSE, row.secretsEnc) ?? "{}") as Record<string, string>) : {};
+  return { ...plain, ...secrets };
+}
+
+/** Yönetici: kanal ayarlarını kaydeder. Boş gelen gizli alan mevcut değeri korur. */
+export async function saveChannelConfig(key: string, values: Record<string, string>, actorId: string, origin?: string): Promise<boolean> {
+  const channel = await findChannel(key);
+  if (!channel?.settings) return false;
+  if (!canEncryptSecrets()) throw new Error("MAILING_NO_ENCRYPTION");
+  const current = await getChannelConfig(key);
+  const plain: Record<string, string> = {};
+  const secrets: Record<string, string> = {};
+  for (const setting of channel.settings) {
+    const value = (values[setting.key] ?? "").trim().slice(0, 2000);
+    if (setting.options && value && !setting.options.includes(value)) continue;
+    if (setting.secret) secrets[setting.key] = value || current[setting.key] || "";
+    else plain[setting.key] = value;
+  }
+  const secretsEnc = sealSecret(SECRET_PURPOSE, JSON.stringify(secrets));
+  await getDb().mailingChannelConfig.upsert({
+    where: { channel: key },
+    create: { channel: key, settings: plain, secretsEnc, updatedById: actorId },
+    update: { settings: plain, secretsEnc, updatedById: actorId },
+  });
+  if (channel.setup && origin) {
+    const config = await getChannelConfig(key);
+    if (await channel.isConfigured(config)) await channel.setup(config, origin);
+  }
+  return true;
+}
+
+/** Ayar ekranı: değerler (gizliler yalnız "kayıtlı mı" olarak). */
+export async function listChannelSettings() {
+  const channels = (await availableChannels()).filter((channel) => channel.settings?.length);
+  return Promise.all(channels.map(async (channel) => {
+    const config = await getChannelConfig(channel.key);
+    return {
+      key: channel.key,
+      configured: await channel.isConfigured(config),
+      settings: (channel.settings ?? []).map((setting) => ({
+        key: setting.key,
+        secret: Boolean(setting.secret),
+        options: setting.options ? [...setting.options] : null,
+        value: setting.secret ? "" : (config[setting.key] ?? setting.defaultValue ?? ""),
+        stored: Boolean(config[setting.key]),
+      })),
+    };
+  }));
+}
+
 /** Sihirbaz için: kanal, yapılandırma durumu ve yetenekleri. */
 export async function listChannelInfo() {
   return Promise.all((await availableChannels()).map(async (channel) => ({
     key: channel.key,
     icon: channel.icon,
     capabilities: channel.capabilities,
-    configured: await channel.isConfigured(),
+    configured: await channel.isConfigured(await getChannelConfig(channel.key)),
   })));
+}
+
+/**
+ * Kaynak listesini kanal için hazırlar: kanal zenginleştirmesi (ör. Telegram eşleşmesi) ve tüm etkin
+ * kanalların ek yer tutucuları ({telegramLink} gibi) değişkenlere eklenir.
+ */
+async function prepareRecipients(sourceId: string, list: Recipient[], channel: CampaignChannel): Promise<Recipient[]> {
+  const enriched = channel.enrich ? await channel.enrich(list, await getChannelConfig(channel.key), sourceId) : list;
+  const providers = (await availableChannels()).filter((item) => item.placeholders);
+  if (!providers.length) return enriched;
+  const keys = enriched.map((row) => `${sourceId}:${row.id}`);
+  const extra = await Promise.all(providers.map(async (item) => {
+    const config = await getChannelConfig(item.key);
+    return (await item.isConfigured(config)) ? item.placeholders!.values(keys, config) : ({} as Record<string, Record<string, string>>);
+  }));
+  return enriched.map((row, index) => ({
+    ...row,
+    vars: Object.assign({}, ...extra.map((values) => values[keys[index]] ?? {}), row.vars),
+  }));
+}
+
+/** Etkin kanalların sunduğu ek yer tutucu adları (sihirbazda gösterilir). */
+export async function channelPlaceholderKeys(): Promise<string[]> {
+  return (await availableChannels()).flatMap((channel) => [...(channel.placeholders?.keys ?? [])]);
 }
 
 /** Kullanıcının kullanabildiği kaynaklar: modül etkin + kaynağın izni. */
@@ -90,7 +172,7 @@ export async function previewSource(role: Role, sourceId: string, filter: Record
   const source = await findSource(role, sourceId);
   const channel = await findChannel(channelKey);
   if (!source || !channel) return null;
-  const list = await source.resolve(filter);
+  const list = await prepareRecipients(sourceId, await source.resolve(filter), channel);
   const { eligible, noAddress, optOut } = splitForChannel(channel, list);
   return { matched: list.length, eligible: eligible.length, noEmail: noAddress, optOut };
 }
@@ -164,7 +246,7 @@ export async function launchCampaign(
   const source = await findSource(role, input.sourceId);
   const channel = await findChannel(input.channel);
   if (!source || !channel) return null;
-  const { eligible, noAddress, optOut } = splitForChannel(channel, await source.resolve(input.filter));
+  const { eligible, noAddress, optOut } = splitForChannel(channel, await prepareRecipients(input.sourceId, await source.resolve(input.filter), channel));
   if (eligible.length === 0) return { id: "", recipients: 0, workflowId: "" };
 
   const scheduledAt = input.scheduledAt && input.scheduledAt.getTime() > Date.now() + 60_000 ? input.scheduledAt : null;
@@ -273,11 +355,16 @@ async function processCampaignAttempt(campaignId: string, context: TaskExecution
   const filter = filterResult.data;
   const channel = await findChannel(campaign.channel);
   if (!channel) return failCampaign("MAILING_CHANNEL_UNAVAILABLE");
-  const { eligible, noAddress: noEmail, optOut } = splitForChannel(channel, await source.resolve(filter));
+  const config = await getChannelConfig(channel.key);
+  if (!(await channel.isConfigured(config))) return failCampaign("MAILING_CHANNEL_NOT_CONFIGURED");
+  const { eligible, noAddress: noEmail, optOut } = splitForChannel(channel, await prepareRecipients(campaign.source, await source.resolve(filter), channel));
   // A retry after a worker restart must not resend recipients whose successful delivery
   // was already durably logged for this campaign.
   const normalize = (value: string) => value.trim().toLowerCase();
-  const delivered = new Set((await channel.delivered(campaign.id)).map(normalize));
+  const deliveredList = channel.delivered
+    ? await channel.delivered(campaign.id)
+    : (await db.mailingDelivery.findMany({ where: { campaignId: campaign.id }, select: { address: true } })).map((row) => row.address);
+  const delivered = new Set(deliveredList.map(normalize));
   const alreadySent = eligible.filter((row) => delivered.has(normalize(channel.address(row) ?? ""))).length;
   const pending = eligible.filter((row) => !delivered.has(normalize(channel.address(row) ?? "")));
   const messages = pending.map((row) => ({
@@ -292,7 +379,11 @@ async function processCampaignAttempt(campaignId: string, context: TaskExecution
 
   let results: Awaited<ReturnType<CampaignChannel["sendBatch"]>>;
   try {
-    results = await channel.sendBatch(messages);
+    results = await channel.sendBatch(messages, config);
+    if (!channel.delivered) {
+      const ok = messages.flatMap((message, index) => (results[index]?.ok ? [{ campaignId: campaign.id, channel: channel.key, address: message.to.slice(0, 200), providerId: results[index].providerId?.slice(0, 200) ?? null }] : []));
+      if (ok.length) await db.mailingDelivery.createMany({ data: ok, skipDuplicates: true });
+    }
   } catch (error) {
     if (context.attempt >= 3) {
       await failCampaign("MAILING_SEND_ATTEMPTS_EXHAUSTED");

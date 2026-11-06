@@ -2708,6 +2708,50 @@
       }
     }
   },
+  "campaign-sms": {
+    "module": {
+      "label": "SMS",
+      "description": "SMS-Kanal für Kampagnen (seven.io oder Twilio). Nur an Personen mit SMS-Einwilligung."
+    },
+    "permissions": {
+      "campaign-sms": {
+        "label": "SMS",
+        "description": "Kampagnen-Kanal-Plugin."
+      }
+    }
+  },
+  "campaign-telegram": {
+    "module": {
+      "label": "Telegram",
+      "description": "Telegram-Kanal für Kampagnen (Bot-API). Personen abonnieren per Einladungslink; /stop beendet das Abo."
+    },
+    "permissions": {
+      "campaign-telegram": {
+        "label": "Telegram",
+        "description": "Kampagnen-Kanal-Plugin."
+      }
+    },
+    "access": {
+      "mailings": "Um im Webhook die (verschlüsselten) Bot-Einstellungen zu lesen."
+    },
+    "replies": {
+      "linked": "✅ Abo bestätigt. Zum Beenden /stop senden.",
+      "stopped": "Abo beendet.",
+      "unknown": "Link ungültig oder abgelaufen."
+    }
+  },
+  "campaign-whatsapp": {
+    "module": {
+      "label": "WhatsApp",
+      "description": "WhatsApp-Kanal für Kampagnen (Meta Cloud API, mit freigegebener Vorlage). Nur an Personen mit WhatsApp-Einwilligung."
+    },
+    "permissions": {
+      "campaign-whatsapp": {
+        "label": "WhatsApp",
+        "description": "Kampagnen-Kanal-Plugin."
+      }
+    }
+  },
   "courses": {
     "module": {
       "label": "Kurse",
@@ -4902,7 +4946,9 @@
       "name": "Kampagnenname muss 2–120 Zeichen haben.",
       "channelNotConfigured": "Dieser Kanal ist noch nicht eingerichtet.",
       "notCancellable": "Nur Entwürfe oder geplante Kampagnen können abgebrochen werden.",
-      "notDeletable": "Nur Entwürfe oder abgebrochene Kampagnen können gelöscht werden."
+      "notDeletable": "Nur Entwürfe oder abgebrochene Kampagnen können gelöscht werden.",
+      "channelUnknown": "Unbekannter Kanal.",
+      "channelSetup": "Gespeichert, aber der Anbieter war nicht erreichbar; Angaben prüfen."
     },
     "permissions": {
       "mailings": {
@@ -4950,6 +4996,18 @@
       "email": {
         "label": "E-Mail",
         "description": "Personalisierte E-Mail mit visuellem Editor; jede Person erhält eine eigene Nachricht."
+      },
+      "sms": {
+        "label": "SMS",
+        "description": "Kurznachricht; nur an Personen mit SMS-Einwilligung und Telefonnummer."
+      },
+      "whatsapp": {
+        "label": "WhatsApp",
+        "description": "Mit freigegebener Meta-Vorlage; nur an Personen mit WhatsApp-Einwilligung."
+      },
+      "telegram": {
+        "label": "Telegram",
+        "description": "An Abonnenten Ihres Bots; Einladung per E-Mail mit {telegramLink}."
       }
     },
     "board": {
@@ -5027,6 +5085,47 @@
     },
     "calendar": {
       "scheduled": "Geplante Kampagnen"
+    },
+    "channelSettings": {
+      "sms": {
+        "provider": "Anbieter",
+        "apiKey": "API-Schlüssel / Auth-Token",
+        "accountSid": "Twilio Account SID (nur Twilio)",
+        "sender": "Absender (Name oder Nummer)",
+        "countryCode": "Standard-Ländervorwahl"
+      },
+      "whatsapp": {
+        "phoneNumberId": "Phone-Number-ID",
+        "accessToken": "Zugriffstoken",
+        "templateName": "Vorlagenname (eine Variable '{{1}}' im Text)",
+        "templateLanguage": "Vorlagensprache",
+        "countryCode": "Standard-Ländervorwahl"
+      },
+      "telegram": {
+        "botToken": "Bot-Token (BotFather)",
+        "botUsername": "Bot-Benutzername"
+      }
+    },
+    "channelOptions": {
+      "sms": {
+        "provider": {
+          "seven": "seven.io",
+          "twilio": "Twilio"
+        }
+      }
+    },
+    "settings": {
+      "title": "Kampagnenkanäle",
+      "description": "Anbieterdaten der SMS-, Telegram- und WhatsApp-Plugins. Schlüssel werden verschlüsselt gespeichert und nie wieder angezeigt. E-Mail-Einstellungen liegen im E-Mail-Modul.",
+      "noChannels": "Kein Kanal-Plugin mit Einstellungen aktiv. Aktiviere in der Modulverwaltung SMS, Telegram oder WhatsApp.",
+      "configured": "Bereit",
+      "notConfigured": "Nicht eingerichtet",
+      "secretKept": "Gespeichert (zum Ändern neu eingeben)",
+      "save": "Speichern",
+      "saved": "Kanaleinstellungen gespeichert."
+    },
+    "menu": {
+      "settings": "Einstellungen"
     }
   },
   "meetings": {
@@ -5693,7 +5792,14 @@
       "cancellationReceivedAt": "Kündigung eingegangen am",
       "cancellationReceivedAtDescription": "Datum des Eingangs der Kündigung; darf nicht nach dem Austrittsdatum liegen.",
       "bulkMailOptOut": "Keine Rundmails",
-      "bulkMailOptOutDescription": "Das Mitglied hat Rundmails widersprochen (Art. 21 DSGVO). Einzelne Schreiben sind nicht betroffen."
+      "bulkMailOptOutDescription": "Das Mitglied hat Rundmails widersprochen (Art. 21 DSGVO). Einzelne Schreiben sind nicht betroffen.",
+      "messagingConsents": "Einwilligungen für Nachrichtenkanäle",
+      "messagingConsentsDescription": "Kanäle mit ausdrücklicher Einwilligung. Kampagnen senden SMS, WhatsApp und Telegram nur an Personen mit Einwilligung.",
+      "messagingChannels": {
+        "sms": "SMS",
+        "whatsapp": "WhatsApp",
+        "telegram": "Telegram"
+      }
     },
     "detail": {
       "membershipNumberLabel": "Mitgliedsnummer",

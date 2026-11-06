@@ -1,0 +1,12 @@
+{
+  "module": {
+    "label": "SMS",
+    "description": "SMS-Kanal für Kampagnen (seven.io oder Twilio). Nur an Personen mit SMS-Einwilligung."
+  },
+  "permissions": {
+    "campaign-sms": {
+      "label": "SMS",
+      "description": "Kampagnen-Kanal-Plugin."
+    }
+  }
+}

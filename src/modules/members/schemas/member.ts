@@ -101,6 +101,7 @@ const baseFields = {
     z.string().trim().max(2000, "members.validation.notesMax").nullable(),
   ),
   bulkMailOptOut: z.boolean().default(false),
+  messagingConsents: z.array(z.enum(["sms", "whatsapp", "telegram"])).max(3).default([]),
 };
 
 /** Faz 4 (4.6): Ülke boş veya Almanya ise PLZ 5 haneli olmalıdır; aksi halde serbest ≤10. */

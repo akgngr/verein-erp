@@ -80,7 +80,14 @@
     "cancellationReceivedAt": "Kündigung eingegangen am",
     "cancellationReceivedAtDescription": "Datum des Eingangs der Kündigung; darf nicht nach dem Austrittsdatum liegen.",
     "bulkMailOptOut": "Keine Rundmails",
-    "bulkMailOptOutDescription": "Das Mitglied hat Rundmails widersprochen (Art. 21 DSGVO). Einzelne Schreiben sind nicht betroffen."
+    "bulkMailOptOutDescription": "Das Mitglied hat Rundmails widersprochen (Art. 21 DSGVO). Einzelne Schreiben sind nicht betroffen.",
+    "messagingConsents": "Einwilligungen für Nachrichtenkanäle",
+    "messagingConsentsDescription": "Kanäle mit ausdrücklicher Einwilligung. Kampagnen senden SMS, WhatsApp und Telegram nur an Personen mit Einwilligung.",
+    "messagingChannels": {
+      "sms": "SMS",
+      "whatsapp": "WhatsApp",
+      "telegram": "Telegram"
+    }
   },
   "detail": {
     "membershipNumberLabel": "Mitgliedsnummer",
