@@ -3,11 +3,11 @@ import { NextResponse } from "next/server";
 import { createTaskExecutionRecord } from "@/modules/automation/automation";
 import { requirePermission } from "@/modules/auth/server";
 
-import { securityMonitorPermissions } from "../permissions";
-import { runSecurityTestsTask } from "../automation";
-import { getSecurityTestRuns } from "../server";
+import { securityMonitorPermissions } from "../../permissions";
+import { runSecurityTestsTask } from "../../automation";
+import { getSecurityTestRuns } from "../../server";
 
-// GET /api/modules/security-monitor/runs - List test runs
+// GET /api/security-monitor/runs - List test runs
 export async function GET(request: Request) {
   try {
     await requirePermission(securityMonitorPermissions, "view");
@@ -36,7 +36,7 @@ export async function GET(request: Request) {
   }
 }
 
-// POST /api/modules/security-monitor/runs - Queue security tests for the Automation worker.
+// POST /api/security-monitor/runs - Queue security tests for the Automation worker.
 export async function POST() {
   try {
     const user = await requirePermission(securityMonitorPermissions, "create");

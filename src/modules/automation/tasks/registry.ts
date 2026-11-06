@@ -1,4 +1,7 @@
-import { moduleAutomationTasks } from "@/automation-registry";
+import { moduleAutomationEvents, moduleAutomationTasks } from "@/automation-registry";
+import type { TaskDefinition } from "@/shared/automation/define";
+
+import { builtinTasks } from "./builtin";
 
 /**
  * Görevler yalnızca modüllerin `automation.ts` dosyalarından, `pnpm module:sync`
@@ -17,7 +20,14 @@ export function defineTaskRegistry<const T extends readonly { key: string }[]>(t
 }
 
 /** Güvenilir modül görevleri (otomatik keşif). */
-export const automationTasks = defineTaskRegistry(moduleAutomationTasks);
+export const automationTasks = defineTaskRegistry([...builtinTasks, ...moduleAutomationTasks] as TaskDefinition[]);
+
+/** Modüllerin yayımladığı olaylar (iş akışı tetikleyicileri). */
+export const automationEvents = defineTaskRegistry(moduleAutomationEvents);
+
+export function findAutomationEvent(key: string) {
+  return automationEvents.find((event) => event.key === key);
+}
 
 export function findAutomationTask(key: string) {
   return automationTasks.find((task) => task.key === key);

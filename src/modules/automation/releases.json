@@ -2,6 +2,42 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.7.0",
+      "date": "2026-11-06",
+      "appVersion": "0.40.0",
+      "title": {
+        "tr": "Görsel iş akışları, olay tetikleyicileri, bekleme ve onay adımları",
+        "de": "Visuelle Workflows, Ereignis-Auslöser, Warte- und Freigabeschritte"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Workflow Builder tabanlı görsel düzenleyici: Tetikleyici, Görev, Koşul, Paralel, Bekle ve Onay adımları. Paletteki görevler yalnızca kayıtlı ve iş akışına açılmış modül görevleridir; kod düğümü yoktur.",
+          "de": "Visueller Editor auf Basis von Workflow Builder: Auslöser, Aufgabe, Bedingung, Parallel, Warten und Freigabe. Die Palette enthält nur registrierte, für Workflows freigegebene Modulaufgaben; es gibt keine Code-Knoten."
+        },
+        {
+          "type": "feature",
+          "tr": "Taslaklar sunucuda kaydedilir; yayımlarken kanonik grafa derlenip doğrulanır (döngü, erişilebilirlik, düğüm/derinlik/dallanma sınırları, görev girdisi şeması) ve değiştirilemez bir sürüm olarak saklanır. Çalışma zamanı yalnızca bu sürümü yürütür.",
+          "de": "Entwürfe werden serverseitig gespeichert; beim Veröffentlichen in einen kanonischen Graphen übersetzt und geprüft (Zyklen, Erreichbarkeit, Grenzen, Eingabeschema) und als unveränderliche Version gespeichert. Ausgeführt wird nur diese Version."
+        },
+        {
+          "type": "feature",
+          "tr": "Olay tetikleyicileri: modüller olayları transactional outbox ile yayımlar (members.created, mailings.campaign_finished). Olay yükü yalnızca kimlik ve sayı taşır.",
+          "de": "Ereignis-Auslöser: Module veröffentlichen Ereignisse über die transaktionale Outbox (members.created, mailings.campaign_finished). Nutzdaten enthalten nur IDs und Zahlen."
+        },
+        {
+          "type": "feature",
+          "tr": "Kalıcı bekleme ve onay: Bekle adımları süre/tarih dolunca, Onay adımları yetkili kararıyla devam eder; worker'ı meşgul etmez. Reddedilen veya sağlanmayan koşul dalı atlanır.",
+          "de": "Dauerhaftes Warten und Freigaben: Warteschritte laufen nach Ablauf weiter, Freigaben nach Entscheidung; der Worker wird nicht blockiert. Abgelehnte oder nicht erfüllte Zweige werden übersprungen."
+        },
+        {
+          "type": "feature",
+          "tr": "Yeni iş akışı görevleri: automation.log_message ve mail.send_notification (sabit bir adrese bildirim e-postası).",
+          "de": "Neue Workflow-Aufgaben: automation.log_message und mail.send_notification (Benachrichtigung an eine feste Adresse)."
+        }
+      ]
+    },
+    {
       "version": "0.6.0",
       "date": "2026-11-05",
       "appVersion": "0.39.0",

@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.4.0",
+      "date": "2026-11-06",
+      "title": {
+        "tr": "Otomasyon olayı: yeni üye",
+        "de": "Automation-Ereignis: neues Mitglied"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yeni üye kaydı members.created olayını (yalnızca üye kimliği, tür ve durum) yayımlar; iş akışları bununla tetiklenebilir.",
+          "de": "Neue Mitglieder lösen das Ereignis members.created aus (nur ID, Art und Status); Workflows können darauf reagieren."
+        }
+      ]
+    },
+    {
       "version": "1.3.0",
       "date": "2026-11-02",
       "appVersion": "0.38.0",

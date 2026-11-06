@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.4.0",
+      "date": "2026-11-06",
+      "title": {
+        "tr": "Otomasyon olayı: kampanya tamamlandı",
+        "de": "Automation-Ereignis: Kampagne abgeschlossen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Kampanya bitince mailings.campaign_finished olayı (kampanya kimliği ve sayılar) yayımlanır.",
+          "de": "Nach Abschluss einer Kampagne wird mailings.campaign_finished (Kampagnen-ID und Zahlen) veröffentlicht."
+        }
+      ]
+    },
+    {
       "version": "1.3.4",
       "date": "2026-11-05",
       "title": {

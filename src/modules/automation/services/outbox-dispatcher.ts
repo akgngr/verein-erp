@@ -10,6 +10,7 @@ import {
 } from "@/shared/automation/define";
 import { getDb } from "@/shared/db";
 import { purgeAutomationHistory, runDueSchedules } from "./scheduler";
+import { processWorkflowOutboxBatch, wakeDueWorkflowSteps } from "./workflow-runtime";
 import {
   automationTaskQueuePayloadSchema,
   AUTOMATION_TASK_QUEUE,
@@ -228,6 +229,7 @@ export async function runAutomationOutboxDispatcher(
 ): Promise<void> {
   let nextLeaseRecoveryAt = 0;
   let nextScheduleAt = 0;
+  let nextWakeAt = 0;
   let nextPurgeAt = Date.now() + 60_000;
 
   while (!signal.aborted) {
@@ -249,7 +251,12 @@ export async function runAutomationOutboxDispatcher(
       }
 
       const published = await dispatchAutomationOutboxBatch(boss);
-      if (published === 0) await wait(1_000, signal);
+      const workflowEvents = await processWorkflowOutboxBatch();
+      if (Date.now() >= nextWakeAt) {
+        await wakeDueWorkflowSteps();
+        nextWakeAt = Date.now() + 15_000;
+      }
+      if (published === 0 && workflowEvents === 0) await wait(1_000, signal);
     } catch (error) {
       console.error("[automation:worker] Outbox dispatcher geçici hata:", errorCode(error));
       await wait(2_000, signal);

@@ -15,6 +15,8 @@ enum AutomationExecutionStatus {
 enum AutomationStepStatus {
   PENDING
   RUNNING
+  WAITING
+  SKIPPED
   RETRYING
   SUCCEEDED
   FAILED
@@ -83,6 +85,12 @@ model AutomationStepRun {
   maxAttempts    Int                  @default(3)
   startedAt      DateTime?
   finishedAt     DateTime?
+  /// Workflow delay steps: resume time. Approval steps leave it null.
+  waitUntil      DateTime?
+  /// Workflow task steps: child task execution.
+  childExecutionId String?
+  /// Approval steps: decision actor.
+  decidedById    String?
   lastErrorCode  String?
   createdAt      DateTime             @default(now())
   updatedAt      DateTime             @updatedAt
@@ -90,6 +98,8 @@ model AutomationStepRun {
 
   @@unique([executionId, stepKey])
   @@index([status, createdAt])
+  @@index([status, waitUntil])
+  @@index([childExecutionId])
   @@map("automation_step_runs")
 }
 
@@ -150,4 +160,39 @@ model AutomationSchedule {
 
   @@index([enabled, nextRunAt])
   @@map("automation_schedules")
+}
+
+/// Visual workflow. `draft` is editor authoring JSON and is never executed.
+model AutomationWorkflow {
+  id              String    @id @default(cuid())
+  organizationId  String    @default("default")
+  name            String
+  description     String    @default("")
+  draft           Json      @default("{}")
+  enabled         Boolean   @default(false)
+  activeVersionId String?
+  /// Cached from the active version for fast event lookup.
+  triggerEvent    String?
+  createdById     String?
+  updatedById     String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  versions        AutomationWorkflowVersion[]
+
+  @@index([enabled, triggerEvent])
+  @@map("automation_workflows")
+}
+
+/// Immutable published version: canonical, validated graph only.
+model AutomationWorkflowVersion {
+  id          String             @id @default(cuid())
+  workflowId  String
+  version     Int
+  graph       Json
+  publishedById String?
+  createdAt   DateTime           @default(now())
+  workflow    AutomationWorkflow @relation(fields: [workflowId], references: [id], onDelete: Cascade)
+
+  @@unique([workflowId, version])
+  @@map("automation_workflow_versions")
 }
