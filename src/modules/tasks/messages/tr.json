@@ -141,5 +141,8 @@
         }
       }
     }
+  },
+  "calendar": {
+    "due": "Görev bitiş tarihleri"
   }
 }

@@ -219,5 +219,8 @@
       "label": "Veranstaltungen",
       "description": "Veranstaltungsplanung, Anmeldungen und Freigabe."
     }
+  },
+  "calendar": {
+    "events": "Veranstaltungen"
   }
 }

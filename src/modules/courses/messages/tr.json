@@ -481,5 +481,8 @@
       "date": "Geçersiz tarih.",
       "reason": "Gerekçe en az 3 karakter olmalı."
     }
+  },
+  "calendar": {
+    "sessions": "Kurs dersleri"
   }
 }
