@@ -63,3 +63,75 @@ model CalendarFeedToken {
 
   @@map("calendar_feed_tokens")
 }
+
+enum CalendarSyncStatus {
+  PENDING
+  ACTIVE
+  ERROR
+  REAUTH
+}
+
+/// OAuth application per sync provider (admin). Client secret sealed (secret-box).
+model CalendarSyncApp {
+  provider        String   @id
+  clientId        String
+  clientSecretEnc String
+  tenant          String?
+  updatedById     String
+  updatedAt       DateTime @updatedAt
+
+  @@map("calendar_sync_apps")
+}
+
+/// A user's connected external calendar account. Credentials sealed; never sent to the client.
+model CalendarSyncAccount {
+  id             String             @id @default(cuid())
+  provider       String
+  userId         String
+  accountLabel   String             @default("")
+  credentialsEnc String?
+  /// SHA-256 of the one-time OAuth state while status = PENDING.
+  stateHash      String?            @unique
+  status         CalendarSyncStatus @default(PENDING)
+  lastSyncAt     DateTime?
+  lastError      String?
+  createdAt      DateTime           @default(now())
+  updatedAt      DateTime           @updatedAt
+  calendars      CalendarSyncCalendar[]
+
+  @@unique([provider, userId])
+  @@map("calendar_sync_accounts")
+}
+
+/// Remote calendar of a connected account; only enabled ones are imported.
+model CalendarSyncCalendar {
+  id        String              @id @default(cuid())
+  accountId String
+  account   CalendarSyncAccount @relation(fields: [accountId], references: [id], onDelete: Cascade)
+  remoteId  String
+  name      String
+  color     String              @default("#64748b")
+  enabled   Boolean             @default(true)
+  events    CalendarSyncEvent[]
+
+  @@unique([accountId, remoteId])
+  @@map("calendar_sync_calendars")
+}
+
+/// Imported, read-only occurrence (window: now-60d … now+365d, replaced on each sync).
+model CalendarSyncEvent {
+  id          String               @id @default(cuid())
+  calendarId  String
+  calendar    CalendarSyncCalendar @relation(fields: [calendarId], references: [id], onDelete: Cascade)
+  remoteId    String
+  title       String
+  description String?
+  location    String?
+  startsAt    DateTime
+  endsAt      DateTime
+  allDay      Boolean              @default(false)
+
+  @@unique([calendarId, remoteId])
+  @@index([calendarId, startsAt])
+  @@map("calendar_sync_events")
+}

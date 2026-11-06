@@ -1,0 +1,12 @@
+{
+  "module": {
+    "label": "Apple Kalender",
+    "description": "Verbindet iCloud-Kalender per CalDAV schreibgeschützt (Apple-ID + app-spezifisches Passwort)."
+  },
+  "permissions": {
+    "calendar-apple": {
+      "label": "Apple Kalender",
+      "description": "Kalender-Sync-Plugin."
+    }
+  }
+}

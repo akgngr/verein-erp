@@ -16,6 +16,9 @@ import * as aiPermissionExports from "@/modules/ai/permissions";
 import * as automationPermissionExports from "@/modules/automation/permissions";
 import * as bankingPermissionExports from "@/modules/banking/permissions";
 import * as calendarPermissionExports from "@/modules/calendar/permissions";
+import * as calendarapplePermissionExports from "@/modules/calendar-apple/permissions";
+import * as calendargooglePermissionExports from "@/modules/calendar-google/permissions";
+import * as calendaroutlookPermissionExports from "@/modules/calendar-outlook/permissions";
 import * as coursesPermissionExports from "@/modules/courses/permissions";
 import * as demoPermissionExports from "@/modules/demo/permissions";
 import * as eventsPermissionExports from "@/modules/events/permissions";
@@ -49,6 +52,9 @@ export const permissionResources: { moduleKey: string; definitions: PermissionDe
   { moduleKey: "automation", definitions: definitionsOf(automationPermissionExports) },
   { moduleKey: "banking", definitions: definitionsOf(bankingPermissionExports) },
   { moduleKey: "calendar", definitions: definitionsOf(calendarPermissionExports) },
+  { moduleKey: "calendar-apple", definitions: definitionsOf(calendarapplePermissionExports) },
+  { moduleKey: "calendar-google", definitions: definitionsOf(calendargooglePermissionExports) },
+  { moduleKey: "calendar-outlook", definitions: definitionsOf(calendaroutlookPermissionExports) },
   { moduleKey: "courses", definitions: definitionsOf(coursesPermissionExports) },
   { moduleKey: "demo", definitions: definitionsOf(demoPermissionExports) },
   { moduleKey: "events", definitions: definitionsOf(eventsPermissionExports) },

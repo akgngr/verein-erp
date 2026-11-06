@@ -9,7 +9,7 @@ import { useHydrated } from "@/shared/hooks/use-hydrated";
 
 import { loadRangeAction } from "../actions/calendar-actions";
 import { isoWeek, monthGrid, sameDay, shiftAnchor, startOfDay, type CalendarView, viewRange } from "../lib/dates";
-import type { CalendarItemView, CalendarSourceView } from "../types";
+import type { CalendarItemView, CalendarSourceView, SyncSettingsData } from "../types";
 import { AgendaList } from "./agenda-list";
 import { CalendarSettings } from "./calendar-settings";
 import { EntryDrawer, type DrawerState } from "./entry-drawer";
@@ -22,6 +22,7 @@ type Props = {
   sources: CalendarSourceView[];
   canManageShared: boolean;
   hasFeed: boolean;
+  sync: SyncSettingsData;
 };
 
 export function CalendarApp(props: Props) {
@@ -32,7 +33,7 @@ export function CalendarApp(props: Props) {
   return <CalendarAppInner {...props} />;
 }
 
-function CalendarAppInner({ sources, canManageShared, hasFeed }: Props) {
+function CalendarAppInner({ sources, canManageShared, hasFeed, sync }: Props) {
   const t = useTranslations("calendar");
   const locale = useLocale();
   const [view, setView] = useState<CalendarView>("week");
@@ -48,7 +49,16 @@ function CalendarAppInner({ sources, canManageShared, hasFeed }: Props) {
   });
   const [query, setQuery] = useState("");
   const [drawer, setDrawer] = useState<DrawerState | null>(null);
-  const [settingsOpen, setSettingsOpen] = useState(false);
+  // Returning from an OAuth consent screen: ?sync=connected|error opens the settings once.
+  const [syncResult] = useState(() => new URLSearchParams(window.location.search).get("sync"));
+  const [settingsOpen, setSettingsOpen] = useState(Boolean(syncResult));
+  useEffect(() => {
+    if (!syncResult) return;
+    addToast({ title: t(syncResult === "connected" ? "sync.connected" : "sync.errors.failed"), color: syncResult === "connected" ? "success" : "danger" });
+    const url = new URL(window.location.href);
+    url.searchParams.delete("sync");
+    window.history.replaceState(null, "", url);
+  }, [syncResult, t]);
   const [loading, startLoading] = useTransition();
 
   const range = useMemo(() => viewRange(view, anchor), [view, anchor]);
@@ -72,7 +82,7 @@ function CalendarAppInner({ sources, canManageShared, hasFeed }: Props) {
   }, [items, hidden, query, locale]);
 
   const sourceById = useMemo(() => new Map(sources.map((source) => [source.id, source])), [sources]);
-  const writable = sources.filter((source) => source.editable && source.kind !== "MODULE");
+  const writable = sources.filter((source) => source.editable && (source.kind === "PERSONAL" || source.kind === "SHARED"));
 
   const title = new Intl.DateTimeFormat(locale, view === "day" ? { day: "numeric", month: "long", year: "numeric" } : { month: "long", year: "numeric" }).format(anchor);
   const today = new Date();
@@ -179,7 +189,7 @@ function CalendarAppInner({ sources, canManageShared, hasFeed }: Props) {
         onEdit={(item) => setDrawer({ mode: "edit", item })}
         onSaved={() => { setDrawer(null); reload(); }}
       />
-      <CalendarSettings isOpen={settingsOpen} onOpenChange={setSettingsOpen} sources={sources} canManageShared={canManageShared} hasFeed={hasFeed} />
+      <CalendarSettings isOpen={settingsOpen} onOpenChange={setSettingsOpen} sources={sources} canManageShared={canManageShared} hasFeed={hasFeed} sync={sync} />
     </div>
   );
 }

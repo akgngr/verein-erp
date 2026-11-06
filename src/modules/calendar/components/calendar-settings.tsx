@@ -7,11 +7,12 @@ import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 
 import { revokeFeedAction, rotateFeedAction, saveSharedCalendarAction, setPersonalColorAction } from "../actions/calendar-actions";
-import type { CalendarSourceView } from "../types";
+import type { CalendarSourceView, SyncSettingsData } from "../types";
+import { SyncSettings } from "./sync-settings";
 
-type Props = { isOpen: boolean; onOpenChange: (open: boolean) => void; sources: CalendarSourceView[]; canManageShared: boolean; hasFeed: boolean };
+type Props = { isOpen: boolean; onOpenChange: (open: boolean) => void; sources: CalendarSourceView[]; canManageShared: boolean; hasFeed: boolean; sync: SyncSettingsData };
 
-export function CalendarSettings({ isOpen, onOpenChange, sources, canManageShared, hasFeed }: Props) {
+export function CalendarSettings({ isOpen, onOpenChange, sources, canManageShared, hasFeed, sync }: Props) {
   const t = useTranslations("calendar.settings");
   const router = useRouter();
   const [pending, startTransition] = useTransition();
@@ -60,8 +61,9 @@ export function CalendarSettings({ isOpen, onOpenChange, sources, canManageShare
                 </Button>
               ) : null}
             </div>
-            <p className="text-tiny text-default-500">{t("feedPlugins")}</p>
           </section>
+
+          <SyncSettings data={sync} />
 
           {personal ? (
             <section className="flex flex-col gap-2">
