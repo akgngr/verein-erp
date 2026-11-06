@@ -3,7 +3,7 @@ import { requirePermission } from "@/modules/auth/server";
 import { securityMonitorPermissions } from "../../../permissions";
 import { resolveSecurityAlert } from "../../../server";
 
-// POST /api/modules/security-monitor/alerts/:id/resolve - Resolve alert
+// POST /api/security-monitor/alerts/:id/resolve - Resolve alert
 export async function POST(
   request: Request,
   { params }: { params: Promise<{ id: string }> }

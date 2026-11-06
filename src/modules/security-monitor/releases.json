@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. En üst sürüm module.config.ts ile aynı olmalı.",
   "releases": [
     {
+      "version": "1.3.0",
+      "date": "2026-11-06",
+      "title": {
+        "tr": "Güvenlik testleri iş akışlarında; API adresleri düzeltildi",
+        "de": "Sicherheitstests in Workflows; API-Pfade korrigiert"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Güvenlik testleri iş akışı düzenleyicisinde görev olarak kullanılabilir.",
+          "de": "Sicherheitstests sind im Workflow-Editor als Aufgabe verfügbar."
+        },
+        {
+          "type": "fix",
+          "tr": "Güvenlik İzleme ekranı var olmayan /api/modules/... adreslerini çağırdığı için 404 alıyordu; istatistik, çalıştırma ve uyarı istekleri ile test kuyruğa alma artık doğru /api/security-monitor/... adreslerini kullanıyor. Menü etiketi Otomasyon İzleme ile çakışmıyor.",
+          "de": "Die Sicherheitsübersicht rief nicht existierende /api/modules/...-Pfade auf (404); Statistiken, Läufe, Warnungen und das Einreihen von Tests nutzen nun /api/security-monitor/.... Das Menülabel kollidiert nicht mehr mit der Automation-Überwachung."
+        }
+      ]
+    },
+    {
       "version": "1.2.0",
       "date": "2026-11-05",
       "title": {

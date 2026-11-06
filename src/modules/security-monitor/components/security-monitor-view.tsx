@@ -44,9 +44,9 @@ export function SecurityMonitorView() {
 
   const fetchData = useCallback(async () => {
     const [statsResponse, runsResponse, alertsResponse] = await Promise.all([
-      fetch("/api/modules/security-monitor/stats"),
-      fetch("/api/modules/security-monitor/runs?limit=10"),
-      fetch("/api/modules/security-monitor/alerts?limit=10&status=open"),
+      fetch("/api/security-monitor/stats"),
+      fetch("/api/security-monitor/runs?limit=10"),
+      fetch("/api/security-monitor/alerts?limit=10&status=open"),
     ]);
 
     const responses = [
@@ -122,7 +122,7 @@ export function SecurityMonitorView() {
   const runTests = async () => {
     try {
       setRunning(true);
-      const response = await fetch("/api/modules/security-monitor/runs", {
+      const response = await fetch("/api/security-monitor/runs", {
         method: "POST",
       });
 

@@ -9,6 +9,8 @@ import { automationPermissions } from "../permissions";
 import { ExecutionActions } from "../components/execution-actions";
 import { ExecutionStatusChip } from "../components/execution-status-chip";
 import { SchedulesPanel } from "../components/schedules-panel";
+import { ApprovalsPanel } from "../components/approvals-panel";
+import { listPendingApprovals } from "../services/workflows";
 import { listSchedulableTasks, listSchedules } from "../services/schedules";
 import { listAutomationExecutions } from "../queries/list-executions";
 
@@ -21,11 +23,12 @@ export async function AutomationMonitorView() {
     throw error;
   }
 
-  const [t, format, executions, schedules, canUpdate, canApprove] = await Promise.all([
+  const [t, format, executions, schedules, approvals, canUpdate, canApprove] = await Promise.all([
     getTranslations("automation.monitor"),
     getFormatter(),
     listAutomationExecutions(),
     listSchedules(),
+    listPendingApprovals(),
     Promise.resolve(can(user.role, automationPermissions, "update")),
     Promise.resolve(can(user.role, automationPermissions, "approve")),
   ]);
@@ -42,6 +45,21 @@ export async function AutomationMonitorView() {
         <Metric label={t("metrics.failed")} value={failed} />
         <Metric label={t("metrics.completed")} value={completed} />
       </div>
+
+      <ApprovalsPanel
+        canDecide={canApprove}
+        approvals={approvals.map((step) => {
+          const ctx = (step.execution.context ?? {}) as Record<string, unknown>;
+          const input = (step.input ?? {}) as Record<string, unknown>;
+          return {
+            stepId: step.id,
+            workflowName: typeof ctx.workflowName === "string" ? ctx.workflowName : step.execution.id,
+            label: step.stepKey,
+            note: typeof input.note === "string" ? input.note : "",
+            createdAt: fmt(step.createdAt),
+          };
+        })}
+      />
 
       <SchedulesPanel
         canManage={canApprove}

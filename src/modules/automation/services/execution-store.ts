@@ -58,59 +58,21 @@ export async function createTaskExecutionRecord<TSchema extends z.ZodType>(
     throw new Error("TASK_IDEMPOTENCY_KEY_INVALID");
   }
 
-  const retryPolicy = resolveTaskRetryPolicy(input.task.retry);
   const storedInput = JSON.parse(JSON.stringify(parsedInput.data ?? {})) as Prisma.InputJsonValue;
   const db = getDb();
 
   try {
-    return await db.$transaction(async (tx) => {
-      const execution = await tx.automationExecution.create({
-        data: {
-          kind: "TASK",
-          status: "PENDING",
-          definitionKey: input.task.key,
-          definitionVersion: input.task.version,
-          organizationId: input.organizationId,
-          requestedById: input.requestedById ?? null,
-          sourceModule: input.sourceModule,
-          correlationId: input.correlationId,
-          idempotencyKey,
-          input: storedInput,
-          context: input.context ?? {},
-          retryPolicy: retryPolicy as Prisma.InputJsonValue,
-          maxAttempts: retryPolicy.maxAttempts,
-          scheduledAt: input.scheduledAt,
-          steps: {
-            create: {
-              stepKey: "main",
-              taskKey: input.task.key,
-              taskVersion: input.task.version,
-              status: "PENDING",
-              input: storedInput,
-              retryPolicy: retryPolicy as Prisma.InputJsonValue,
-              maxAttempts: retryPolicy.maxAttempts,
-            },
-          },
-        },
-        select: { id: true },
-      });
-
-      await tx.automationOutbox.create({
-        data: {
-          eventKey: `automation.task.requested:${execution.id}`,
-          eventType: "automation.task.requested",
-          executionId: execution.id,
-          availableAt: input.scheduledAt ?? new Date(),
-          payload: {
-            executionId: execution.id,
-            taskKey: input.task.key,
-            taskVersion: input.task.version,
-          },
-        },
-      });
-
-      return execution;
-    });
+    return await db.$transaction((tx) => insertTaskExecution(tx, {
+      task: input.task,
+      organizationId: input.organizationId,
+      requestedById: input.requestedById ?? null,
+      sourceModule: input.sourceModule,
+      correlationId: input.correlationId,
+      idempotencyKey,
+      input: storedInput,
+      context: input.context ?? {},
+      scheduledAt: input.scheduledAt,
+    }));
   } catch (error) {
     // Concurrent requests with the same organization + idempotency key race at
     // the database unique index. Return the committed execution, never create a
@@ -142,4 +104,71 @@ export async function getTaskExecutionRecord(id: string, organizationId: string)
     where: { id, organizationId },
     include: { steps: { orderBy: { createdAt: "asc" } } },
   });
+}
+
+/**
+ * Insert execution + main step + outbox row inside an existing transaction.
+ * Input must already be validated by the caller.
+ */
+export async function insertTaskExecution(
+  tx: Prisma.TransactionClient,
+  args: {
+    task: TaskDefinition;
+    organizationId: string;
+    requestedById: string | null;
+    sourceModule: string;
+    correlationId: string;
+    idempotencyKey: string | null;
+    input: Prisma.InputJsonValue;
+    context: Prisma.InputJsonValue;
+    scheduledAt?: Date;
+  },
+) {
+  const retryPolicy = resolveTaskRetryPolicy(args.task.retry);
+  const execution = await tx.automationExecution.create({
+    data: {
+      kind: "TASK",
+      status: "PENDING",
+      definitionKey: args.task.key,
+      definitionVersion: args.task.version,
+      organizationId: args.organizationId,
+      requestedById: args.requestedById,
+      sourceModule: args.sourceModule,
+      correlationId: args.correlationId,
+      idempotencyKey: args.idempotencyKey,
+      input: args.input,
+      context: args.context,
+      retryPolicy: retryPolicy as Prisma.InputJsonValue,
+      maxAttempts: retryPolicy.maxAttempts,
+      scheduledAt: args.scheduledAt,
+      steps: {
+        create: {
+          stepKey: "main",
+          taskKey: args.task.key,
+          taskVersion: args.task.version,
+          status: "PENDING",
+          input: args.input,
+          retryPolicy: retryPolicy as Prisma.InputJsonValue,
+          maxAttempts: retryPolicy.maxAttempts,
+        },
+      },
+    },
+    select: { id: true },
+  });
+
+  await tx.automationOutbox.create({
+    data: {
+      eventKey: `automation.task.requested:${execution.id}`,
+      eventType: "automation.task.requested",
+      executionId: execution.id,
+      availableAt: args.scheduledAt ?? new Date(),
+      payload: {
+        executionId: execution.id,
+        taskKey: args.task.key,
+        taskVersion: args.task.version,
+      },
+    },
+  });
+
+  return execution;
 }

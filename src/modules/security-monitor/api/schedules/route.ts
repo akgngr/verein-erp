@@ -6,7 +6,7 @@ import {
   createSecurityTestSchedule,
 } from "../../server";
 
-// GET /api/modules/security-monitor/schedules - List schedules
+// GET /api/security-monitor/schedules - List schedules
 export async function GET() {
   try {
     await requirePermission(securityMonitorPermissions, "view");
@@ -22,7 +22,7 @@ export async function GET() {
   }
 }
 
-// POST /api/modules/security-monitor/schedules - Create schedule
+// POST /api/security-monitor/schedules - Create schedule
 export async function POST(request: Request) {
   try {
     await requirePermission(securityMonitorPermissions, "create");

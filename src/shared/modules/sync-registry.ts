@@ -266,10 +266,11 @@ function syncAutomationTasks(modules: string[]): void {
   const toValidVarName = (mod: string) => mod.replace(/-/g, "");
   const imports = withTasks.map((mod) => `import * as ${toValidVarName(mod)}AutomationExports from "@/modules/${mod}/automation";`).join("\n");
   const listItems = withTasks.map((mod) => `  ...tasksOf("${mod}", ${toValidVarName(mod)}AutomationExports),`).join("\n");
+  const eventItems = withTasks.map((mod) => `  ...eventsOf("${mod}", ${toValidVarName(mod)}AutomationExports),`).join("\n");
   const content = `// Bu dosya syncModuleRegistry tarafından otomatik üretilir (pnpm module:sync); elle düzenlemeyin.
 import "server-only";
 
-import { isTaskDefinition, taskModuleKey, type TaskDefinition } from "@/shared/automation/define";
+import { isEventDefinition, isTaskDefinition, taskModuleKey, type EventDefinition, type TaskDefinition } from "@/shared/automation/define";
 ${imports ? `\n${imports}\n` : ""}
 const tasksOf = (moduleKey: string, exports: Record<string, unknown>): TaskDefinition[] =>
   Object.values(exports).filter(isTaskDefinition).map((task) => {
@@ -277,8 +278,17 @@ const tasksOf = (moduleKey: string, exports: Record<string, unknown>): TaskDefin
     return task;
   });
 
+const eventsOf = (moduleKey: string, exports: Record<string, unknown>): EventDefinition[] =>
+  Object.values(exports).filter(isEventDefinition).map((event) => {
+    if (taskModuleKey(event.key) !== moduleKey) throw new Error(\`AUTOMATION_EVENT_MODULE_MISMATCH: \${event.key}\`);
+    return event;
+  });
+
 /** Modüllerin güvenilir arka plan görevleri (src/modules/<modül>/automation.ts). */
 export const moduleAutomationTasks: TaskDefinition[] = ${listItems ? `[\n${listItems}\n]` : "[]"};
+
+/** Modüllerin yayımladığı olaylar (iş akışı tetikleyicileri). */
+export const moduleAutomationEvents: EventDefinition[] = ${eventItems ? `[\n${eventItems}\n]` : "[]"};
 `;
   try {
     const current = fs.existsSync(AUTOMATION_FILE) ? fs.readFileSync(AUTOMATION_FILE, "utf8") : "";

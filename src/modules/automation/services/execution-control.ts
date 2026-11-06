@@ -9,6 +9,7 @@ import { getDb } from "@/shared/db";
 
 import { createTaskExecutionRecord } from "./execution-store";
 import { recordAutomationLog } from "./log-store";
+import { queueWorkflowAdvance } from "./workflow-runtime";
 
 const TERMINAL = ["SUCCEEDED", "FAILED", "CANCELLED"] as const;
 
@@ -87,8 +88,18 @@ export async function cancelExecution(executionId: string, reason: string, actor
       },
     });
     if (update.count === 0) return false;
+    const cancelledRow = await tx.automationExecution.findUnique({ where: { id: executionId }, select: { context: true, kind: true } });
+    const parentRunId = (cancelledRow?.context as Record<string, unknown> | null)?.workflowRunId;
+    if (typeof parentRunId === "string") await queueWorkflowAdvance(tx, parentRunId, "child-cancelled");
+    if (cancelledRow?.kind === "WORKFLOW") {
+      // Cancel running child tasks of a cancelled workflow run.
+      await tx.automationExecution.updateMany({
+        where: { correlationId: { startsWith: "workflow:" }, status: { notIn: [...TERMINAL] }, context: { path: ["workflowRunId"], equals: executionId } },
+        data: { status: "CANCELLED", finishedAt: now, leaseOwner: null, leaseExpiresAt: null, lastErrorCode: "CANCELLED" },
+      });
+    }
     await tx.automationStepRun.updateMany({
-      where: { executionId, status: { notIn: ["SUCCEEDED", "FAILED", "CANCELLED"] } },
+      where: { executionId, status: { notIn: ["SUCCEEDED", "FAILED", "CANCELLED", "SKIPPED"] } },
       data: { status: "CANCELLED", finishedAt: now, lastErrorCode: "CANCELLED" },
     });
     await tx.automationOutbox.updateMany({
@@ -115,9 +126,9 @@ export async function retryExecution(executionId: string, actorId: string | null
   const db = getDb();
   const execution = await db.automationExecution.findUnique({
     where: { id: executionId },
-    select: { status: true, definitionKey: true, definitionVersion: true, sourceModule: true },
+    select: { status: true, definitionKey: true, definitionVersion: true, sourceModule: true, kind: true },
   });
-  if (!execution || (execution.status !== "FAILED" && execution.status !== "CANCELLED")) {
+  if (!execution || execution.kind !== "TASK" || (execution.status !== "FAILED" && execution.status !== "CANCELLED")) {
     throw new Error("AUTOMATION_NOT_RETRYABLE");
   }
   await assertTaskModulesUsable(execution.definitionKey, execution.sourceModule);

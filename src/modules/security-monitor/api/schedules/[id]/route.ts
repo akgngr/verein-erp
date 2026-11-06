@@ -3,7 +3,7 @@ import { requirePermission } from "@/modules/auth/server";
 import { securityMonitorPermissions } from "../../../permissions";
 import { updateSecurityTestSchedule, deleteSecurityTestSchedule } from "../../../server";
 
-// PUT /api/modules/security-monitor/schedules/:id - Update schedule
+// PUT /api/security-monitor/schedules/:id - Update schedule
 export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -32,7 +32,7 @@ export async function PUT(
   }
 }
 
-// DELETE /api/modules/security-monitor/schedules/:id - Delete schedule
+// DELETE /api/security-monitor/schedules/:id - Delete schedule
 export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }

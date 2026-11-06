@@ -6,7 +6,7 @@ import { securityMonitorPermissions } from "./permissions";
 
 export const moduleConfig: ModuleConfig = {
   key: "security-monitor",
-  version: "1.2.0",
+  version: "1.3.0",
   label: "Security Monitor",
   description: "Regularly runs system security tests and monitors results",
   category: "OFFICIAL",
@@ -18,7 +18,7 @@ export const moduleConfig: ModuleConfig = {
     {
       href: "/guvenlik-izleme",
       label: "Security Monitor",
-      labelKey: "monitor",
+      labelKey: "securityMonitor",
       icon: ShieldCheck,
       group: "settings",
       order: 100,
