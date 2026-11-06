@@ -155,7 +155,6 @@ export default function WorkflowEditor({ name, locale, initialDraft, catalog, la
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <style>{"body{overflow:auto}"}</style>
       <WorkflowBuilder.Root
         name={name}
         nodeTypes={nodeTypes}

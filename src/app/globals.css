@@ -18,6 +18,15 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/*
+ * İş akışı editörünün (@workflowbuilder/sdk) global CSS'i `body{overflow:hidden}` içerir; CSS bir kez
+ * yüklenince editör kapansa da kalır ve sayfa kaydırılamaz. Daha özgül seçiciyle varsayılanı koru.
+ * Modal açıkken kaydırma kilidini HeroUI kendi satır içi stiliyle ayrıca yönetir.
+ */
+html body {
+  overflow: visible;
+}
+
 /* Özel ince ve estetik kaydırma çubuğu */
 ::-webkit-scrollbar {
   width: 6px;

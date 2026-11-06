@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.9.1",
+      "date": "2026-11-06",
+      "title": {
+        "tr": "Düzeltme",
+        "de": "Fehlerbehebung"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "İş akışı editörü kapandıktan sonra sayfanın kaydırılamaması giderildi.",
+          "de": "Seite ließ sich nach dem Schließen des Workflow-Editors nicht mehr scrollen – behoben."
+        }
+      ]
+    },
+    {
       "version": "0.9.0",
       "date": "2026-11-06",
       "title": {
