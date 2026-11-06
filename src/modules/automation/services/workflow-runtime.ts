@@ -1,4 +1,5 @@
 import "server-only";
+import { automationTrace } from "@/shared/automation/trace";
 
 import { randomUUID } from "node:crypto";
 import { Prisma } from "@prisma/client";
@@ -206,6 +207,12 @@ export async function advanceWorkflowRun(runId: string, now = new Date()): Promi
           const input = resolveTemplates(node.config.input, context, randomUUID);
           const parsedInput = task?.workflow ? task.inputSchema.safeParse(input) : null;
           if (!task || !task.workflow || !parsedInput?.success) {
+            automationTrace("workflow", "step input invalid after resolving references", {
+              run: runId,
+              step: node.label || node.id,
+              task: node.config.taskKey,
+              fields: parsedInput && !parsedInput.success ? parsedInput.error.issues.map((issue) => issue.path.join(".")).join(",") : undefined,
+            });
             steps.set(node.id, await tx.automationStepRun.create({
               data: { ...base, status: "FAILED", finishedAt: now, lastErrorCode: task ? "TASK_INPUT_INVALID" : "TASK_NOT_REGISTERED" },
             }));
@@ -225,6 +232,7 @@ export async function advanceWorkflowRun(runId: string, now = new Date()): Promi
             data: { ...base, taskVersion: task.version, status: "RUNNING", startedAt: now, input: json(parsedInput.data), childExecutionId: child.id },
           }));
           events.push({ level: "INFO", event: "WORKFLOW_TASK_STARTED", message: `${node.id}: ${task.key}` });
+          automationTrace("workflow", "step task queued", { run: runId, step: node.label || node.id, task: task.key, childExecution: child.id });
         }
       }
     }
@@ -241,6 +249,9 @@ export async function advanceWorkflowRun(runId: string, now = new Date()): Promi
 
   for (const event of events) {
     await recordAutomationLog({ executionId: runId, ...event });
+    if (event.event === "WORKFLOW_SUCCEEDED" || event.event === "WORKFLOW_FAILED" || event.event === "WORKFLOW_STEP_WAITING") {
+      automationTrace("workflow", event.event.toLowerCase(), { run: runId, detail: event.message });
+    }
   }
 }
 
@@ -267,6 +278,7 @@ export async function handleDomainEvent(eventId: string, eventKey: string, data:
   const workflows = await db.automationWorkflow.findMany({
     where: { enabled: true, triggerEvent: eventKey, activeVersionId: { not: null } },
   });
+  automationTrace("workflow", "event received", { event: eventKey, matchingWorkflows: workflows.map((w) => w.name).join(", ") || "none (check: published + enabled + trigger event)" });
   let started = 0;
   for (const workflow of workflows) {
     const version = await db.automationWorkflowVersion.findUnique({ where: { id: workflow.activeVersionId! } });
@@ -283,6 +295,7 @@ export async function handleDomainEvent(eventId: string, eventKey: string, data:
         idempotencyKey: `event:${eventId}:${workflow.id}`,
       }));
       started += 1;
+      automationTrace("workflow", "run started", { workflow: workflow.name, version: version.version });
     } catch (error) {
       // Unique violation = this event already started this workflow.
       if (!(error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002")) throw error;

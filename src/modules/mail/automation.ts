@@ -1,4 +1,5 @@
 import "server-only";
+import { automationTrace, maskEmail } from "@/shared/automation/trace";
 
 import { z } from "zod";
 
@@ -27,7 +28,11 @@ export const sendNotificationTask = defineTask({
   workflow: { defaultInput: { to: "", subject: "", body: "" } },
   handler: async (input, context) => {
     const { sendMail, isMailConfigured } = await import("./services/mail-service");
-    if (!(await isMailConfigured())) throw new PermanentTaskError("MAIL_NOT_CONFIGURED");
+    if (!(await isMailConfigured())) {
+      automationTrace("mail", "not configured (Settings → E-Mail)", { execution: context.executionId });
+      throw new PermanentTaskError("MAIL_NOT_CONFIGURED");
+    }
+    automationTrace("mail", "sending", { execution: context.executionId, to: maskEmail(input.to) });
     const result = await sendMail({
       to: input.to,
       subject: input.subject,
@@ -35,6 +40,12 @@ export const sendNotificationTask = defineTask({
       context: { module: "automation", reference: context.executionId },
     });
     // SMTP details are in the mail log (E-Mail → Protokoll); keep the code generic here.
+    automationTrace("mail", result.ok ? "sent" : "send failed", {
+      execution: context.executionId,
+      to: maskEmail(input.to),
+      ...(result.ok ? { messageId: result.messageId } : { smtpError: result.error.slice(0, 300) }),
+      mailLog: result.logId,
+    });
     if (!result.ok) throw new Error("MAIL_SEND_FAILED");
     return { sent: true };
   },

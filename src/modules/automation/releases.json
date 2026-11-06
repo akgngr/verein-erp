@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.7.3",
+      "date": "2026-11-06",
+      "title": {
+        "tr": "İzleme logları",
+        "de": "Trace-Protokolle"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Terminal izleme logları ([automation:…]) ile olaydan e-postaya kadar her adım takip edilebilir; Otomasyon İzleme'deki zamanlama formunda hydration hatası giderildi.",
+          "de": "Terminal-Trace ([automation:…]) macht jeden Schritt vom Ereignis bis zur E-Mail nachvollziehbar; Hydration-Fehler im Zeitplan-Formular der Überwachung behoben."
+        }
+      ]
+    },
+    {
       "version": "0.7.2",
       "date": "2026-11-06",
       "title": {

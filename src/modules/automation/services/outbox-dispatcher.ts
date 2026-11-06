@@ -1,4 +1,5 @@
 import "server-only";
+import { automationTrace } from "@/shared/automation/trace";
 
 import { randomUUID } from "node:crypto";
 import { Prisma } from "@prisma/client";
@@ -208,7 +209,10 @@ export async function dispatchAutomationOutboxBatch(boss: PgBoss): Promise<numbe
         publishedAt: new Date(),
         lastErrorCode: null,
       });
-      if (didPublish) published += 1;
+      if (didPublish) {
+        published += 1;
+        automationTrace("dispatch", "task sent to queue", { task: parsed.data.taskKey, execution: parsed.data.executionId });
+      }
     } catch (error) {
       const code = errorCode(error);
       const attempts = event.attempts;
