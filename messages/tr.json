@@ -2241,7 +2241,8 @@
         "manual": "Elle",
         "event": "Olay",
         "retrying": "\"{step}\" yeniden deneniyor ({attempt}/{max}): {code}",
-        "running": "\"{step}\" çalışıyor"
+        "running": "\"{step}\" çalışıyor",
+        "conditionNotMet": "\"{step}\" koşulu sağlanmadı, sonraki adımlar atlandı: {field} beklenen „{expected}“, gelen „{actual}“"
       },
       "durationSeconds": "{count} sn",
       "durationMinutes": "{count} dk",
