@@ -5,6 +5,8 @@ import { listMemberOptions } from "@/modules/members/server";
 import { getDb } from "@/shared/db";
 import type { ActionResult } from "@/shared/types/action";
 import { buildUserLabel } from "@/shared/utils";
+import { emitAutomationEvent } from "@/shared/automation/emit";
+import { taskCreatedEvent } from "../automation";
 
 import { tasksPermissions } from "../permissions";
 import {
@@ -50,6 +52,7 @@ export async function createTaskAction(input: unknown): Promise<ActionResult<{ i
           createdByLabel: userLabel,
         },
       });
+      await emitAutomationEvent(taskCreatedEvent, { taskId: created.id, priority: created.priority, hasDueDate: created.dueDate !== null }).catch(() => false);
 
       await audit({
         action: "CREATE",

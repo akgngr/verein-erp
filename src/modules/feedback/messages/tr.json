@@ -83,5 +83,36 @@
   },
   "access": {
     "system": "Yüzen butonun yalnızca modül etkinken görünmesi için modül durumunu okur."
+  },
+  "automation": {
+    "events": {
+      "created": {
+        "label": "Geri bildirim gönderildiğinde",
+        "fields": {
+          "feedbackId": "Kayıt kimliği",
+          "type": "Tür",
+          "priority": "Öncelik"
+        },
+        "options": {
+          "type": {
+            "BUG": "Hata",
+            "SUGGESTION": "Öneri"
+          },
+          "priority": {
+            "LOW": "Düşük",
+            "NORMAL": "Normal",
+            "HIGH": "Yüksek"
+          }
+        },
+        "variables": {
+          "number": "Kayıt numarası",
+          "title": "Başlık",
+          "pageUrl": "Sayfa"
+        },
+        "help": {
+          "feedbackId": "Kayıt kimliği; genellikle koşulda kullanılmaz"
+        }
+      }
+    }
   }
 }

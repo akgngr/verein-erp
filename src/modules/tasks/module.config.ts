@@ -11,7 +11,7 @@ import { tasksPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "tasks",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.0.0",
+  version: "1.1.0",
   label: "Görevler",
   description: "Görev ve iş takibi yönetimi.",
   category: "EXTENSION",

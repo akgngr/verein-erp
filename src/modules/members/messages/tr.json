@@ -588,6 +588,9 @@
           "membershipNumber": "Üye numarası",
           "email": "E-posta",
           "joinDate": "Giriş tarihi"
+        },
+        "help": {
+          "memberId": "Üye kimliği; genellikle koşulda kullanılmaz"
         }
       }
     }

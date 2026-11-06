@@ -588,6 +588,9 @@
           "membershipNumber": "Mitgliedsnummer",
           "email": "E-Mail",
           "joinDate": "Eintrittsdatum"
+        },
+        "help": {
+          "memberId": "Mitglieds-ID; meist nicht für Bedingungen"
         }
       }
     }

@@ -1,4 +1,6 @@
 import "server-only";
+import { emitAutomationEvent } from "@/shared/automation/emit";
+import { feedbackCreatedEvent } from "../automation";
 
 import { NextResponse } from "next/server";
 
@@ -83,6 +85,7 @@ export async function createFeedbackHandler(request: Request): Promise<Response>
         reporterLabel: label,
       },
     });
+    await emitAutomationEvent(feedbackCreatedEvent, { feedbackId: created.id, type: created.type, priority: created.priority }).catch(() => false);
     await writeAudit({ userId: user.id, userLabel: label, action: "CREATE", entity: "FeedbackItem", entityId: created.id, after: { number: created.number, type: created.type } });
     return NextResponse.json({ ok: true, id: created.id, number: created.number });
   } catch (error) {

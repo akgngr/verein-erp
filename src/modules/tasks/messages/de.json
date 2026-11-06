@@ -114,5 +114,32 @@
       "label": "Aufgaben",
       "description": "Aufgaben anlegen, zuweisen und verfolgen."
     }
+  },
+  "automation": {
+    "events": {
+      "created": {
+        "label": "Wenn eine Aufgabe angelegt wird",
+        "fields": {
+          "taskId": "Aufgaben-ID",
+          "priority": "Priorität",
+          "hasDueDate": "Hat Fälligkeit"
+        },
+        "options": {
+          "priority": {
+            "LOW": "Niedrig",
+            "NORMAL": "Normal",
+            "HIGH": "Hoch"
+          }
+        },
+        "variables": {
+          "title": "Titel",
+          "dueDate": "Fällig am",
+          "createdBy": "Erstellt von"
+        },
+        "help": {
+          "hasDueDate": "true oder false"
+        }
+      }
+    }
   }
 }

@@ -18,7 +18,7 @@ export type EditorCatalog = {
     module: string;
     label: string;
     /** Payload fields; `options` for enum fields (used by condition value lists). */
-    fields: { name: string; label: string; options?: { value: string; label: string }[] }[];
+    fields: { name: string; label: string; type: "string" | "number" | "boolean"; help: string; options?: { value: string; label: string }[] }[];
     /** Record fields usable as {{namespace.field}} in task texts (loaded at send time). */
     variables?: { namespace: string; fields: { name: string; label: string }[] };
   }[];

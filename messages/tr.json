@@ -2295,7 +2295,7 @@
         "field": "Hangi bilgi kontrol edilsin?",
         "customField": "Alan yolu",
         "customFieldHelp": "Ör. steps.adim1.sent",
-        "customFieldOption": "Diğer (alan yolunu yaz)",
+        "customFieldOption": "Diğer alan (yolunu yaz)",
         "operator": "Karşılaştırma",
         "value": "Değer",
         "valueHelp": "Ör. ACTIVE veya 10",
@@ -2327,7 +2327,14 @@
           "exists": "dolu",
           "notExists": "boş"
         },
-        "variablesHint": "Kullanılabilir alanlar"
+        "variablesHint": "Kullanılabilir alanlar",
+        "customValueOption": "Diğer (elle yaz)",
+        "manualValue": "Değeri elle yazın",
+        "booleanHelp": "true (evet) veya false (hayır)",
+        "numberHelp": "Sayı, ör. 100 (büyüktür/küçüktür ile kullanın)",
+        "textHelp": "Karşılaştırılacak metin",
+        "manualTriggerFieldHelp": "Elle başlatmada verilen alan, ör. trigger.memberId veya steps.adim1.sent",
+        "possibleValues": "Olası değerler"
       },
       "describe": {
         "triggerEvent": "Akış şu olduğunda başlar: {event}",
@@ -3310,6 +3317,34 @@
         "label": "Gelen / Giden Evraklar",
         "description": "Resmi evrakların sisteme kaydedilmesi, numaralandırılması ve arşivlenmesi."
       }
+    },
+    "automation": {
+      "events": {
+        "registered": {
+          "label": "Evrak kaydedildiğinde",
+          "fields": {
+            "documentId": "Evrak kimliği",
+            "direction": "Yön",
+            "hasDueDate": "Son tarihi var mı"
+          },
+          "options": {
+            "direction": {
+              "INCOMING": "Gelen",
+              "OUTGOING": "Giden"
+            }
+          },
+          "variables": {
+            "registryNumber": "Kayıt numarası",
+            "subject": "Konu",
+            "counterparty": "Gönderen/alıcı",
+            "documentDate": "Evrak tarihi",
+            "dueDate": "Son tarih"
+          },
+          "help": {
+            "hasDueDate": "true veya false"
+          }
+        }
+      }
     }
   },
   "donations": {
@@ -3798,6 +3833,38 @@
         "label": "Bağış ve Makbuzlar",
         "description": "Bağış tahsilatları ve resmi Zuwendungsbestätigung makbuz üretimi."
       }
+    },
+    "automation": {
+      "events": {
+        "received": {
+          "label": "Bağış kaydedildiğinde",
+          "fields": {
+            "donationId": "Bağış kimliği",
+            "method": "Ödeme yöntemi",
+            "amount": "Tutar (€)"
+          },
+          "options": {
+            "method": {
+              "CASH": "Nakit",
+              "BANK_TRANSFER": "Havale",
+              "CARD": "Kart",
+              "PAYPAL": "PayPal",
+              "REIMBURSEMENT_WAIVER": "Gider vazgeçimi",
+              "OTHER": "Diğer"
+            }
+          },
+          "variables": {
+            "donationNumber": "Bağış numarası",
+            "amount": "Tutar",
+            "receivedAt": "Bağış tarihi",
+            "donorName": "Bağışçı",
+            "purposeNote": "Amaç notu"
+          },
+          "help": {
+            "amount": "Euro olarak sayı, ör. 100 veya 49.90 (büyüktür/küçüktür ile kullanın)"
+          }
+        }
+      }
     }
   },
   "events": {
@@ -4149,6 +4216,37 @@
     },
     "access": {
       "system": "Yüzen butonun yalnızca modül etkinken görünmesi için modül durumunu okur."
+    },
+    "automation": {
+      "events": {
+        "created": {
+          "label": "Geri bildirim gönderildiğinde",
+          "fields": {
+            "feedbackId": "Kayıt kimliği",
+            "type": "Tür",
+            "priority": "Öncelik"
+          },
+          "options": {
+            "type": {
+              "BUG": "Hata",
+              "SUGGESTION": "Öneri"
+            },
+            "priority": {
+              "LOW": "Düşük",
+              "NORMAL": "Normal",
+              "HIGH": "Yüksek"
+            }
+          },
+          "variables": {
+            "number": "Kayıt numarası",
+            "title": "Başlık",
+            "pageUrl": "Sayfa"
+          },
+          "help": {
+            "feedbackId": "Kayıt kimliği; genellikle koşulda kullanılmaz"
+          }
+        }
+      }
     }
   },
   "inventory": {
@@ -5143,6 +5241,32 @@
         "label": "Toplantı ve Kararlar",
         "description": "Toplantı takvimi, gündem maddeleri, tutanaklar, kararlar ve onaylama."
       }
+    },
+    "automation": {
+      "events": {
+        "created": {
+          "label": "Toplantı planlandığında",
+          "fields": {
+            "meetingId": "Toplantı kimliği",
+            "type": "Toplantı türü"
+          },
+          "options": {
+            "type": {
+              "BOARD": "Yönetim Kurulu",
+              "GENERAL_ASSEMBLY": "Genel Kurul",
+              "COMMITTEE": "Komisyon",
+              "OTHER": "Diğer"
+            }
+          },
+          "variables": {
+            "meetingNumber": "Toplantı numarası",
+            "title": "Başlık",
+            "meetingDate": "Tarih",
+            "startTime": "Başlangıç saati",
+            "location": "Yer"
+          }
+        }
+      }
     }
   },
   "members": {
@@ -5732,6 +5856,9 @@
             "membershipNumber": "Üye numarası",
             "email": "E-posta",
             "joinDate": "Giriş tarihi"
+          },
+          "help": {
+            "memberId": "Üye kimliği; genellikle koşulda kullanılmaz"
           }
         }
       }
@@ -6605,6 +6732,33 @@
       "tasks": {
         "label": "Görevler",
         "description": "Görev oluşturma, atama ve takip."
+      }
+    },
+    "automation": {
+      "events": {
+        "created": {
+          "label": "Görev oluşturulduğunda",
+          "fields": {
+            "taskId": "Görev kimliği",
+            "priority": "Öncelik",
+            "hasDueDate": "Son tarihi var mı"
+          },
+          "options": {
+            "priority": {
+              "LOW": "Düşük",
+              "NORMAL": "Normal",
+              "HIGH": "Yüksek"
+            }
+          },
+          "variables": {
+            "title": "Başlık",
+            "dueDate": "Son tarih",
+            "createdBy": "Oluşturan"
+          },
+          "help": {
+            "hasDueDate": "true veya false"
+          }
+        }
       }
     }
   },

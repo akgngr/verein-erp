@@ -552,5 +552,31 @@
       "label": "Sitzungen und Beschlüsse",
       "description": "Sitzungskalender, Tagesordnung, Protokolle, Beschlüsse und Freigabe."
     }
+  },
+  "automation": {
+    "events": {
+      "created": {
+        "label": "Wenn eine Sitzung geplant wird",
+        "fields": {
+          "meetingId": "Sitzungs-ID",
+          "type": "Sitzungsart"
+        },
+        "options": {
+          "type": {
+            "BOARD": "Vorstand",
+            "GENERAL_ASSEMBLY": "Mitgliederversammlung",
+            "COMMITTEE": "Ausschuss",
+            "OTHER": "Sonstige"
+          }
+        },
+        "variables": {
+          "meetingNumber": "Sitzungsnummer",
+          "title": "Titel",
+          "meetingDate": "Datum",
+          "startTime": "Beginn",
+          "location": "Ort"
+        }
+      }
+    }
   }
 }

@@ -2295,7 +2295,7 @@
         "field": "Welche Angabe prüfen?",
         "customField": "Feldpfad",
         "customFieldHelp": "z. B. steps.schritt1.sent",
-        "customFieldOption": "Andere (Feldpfad eingeben)",
+        "customFieldOption": "Anderes Feld (Pfad eingeben)",
         "operator": "Vergleich",
         "value": "Wert",
         "valueHelp": "z. B. ACTIVE oder 10",
@@ -2327,7 +2327,14 @@
           "exists": "ist ausgefüllt",
           "notExists": "ist leer"
         },
-        "variablesHint": "Verfügbare Felder"
+        "variablesHint": "Verfügbare Felder",
+        "customValueOption": "Andere (manuell eingeben)",
+        "manualValue": "Wert manuell eingeben",
+        "booleanHelp": "true (ja) oder false (nein)",
+        "numberHelp": "Zahl, z. B. 100 (mit größer/kleiner verwenden)",
+        "textHelp": "Zu vergleichender Text",
+        "manualTriggerFieldHelp": "Feld aus dem manuellen Start, z. B. trigger.memberId oder steps.schritt1.sent",
+        "possibleValues": "Mögliche Werte"
       },
       "describe": {
         "triggerEvent": "Startet, wenn: {event}",
@@ -3310,6 +3317,34 @@
         "label": "Ein- / ausgehendes Schriftgut",
         "description": "Erfassung, Nummerierung und Archivierung offizieller Schriftstücke."
       }
+    },
+    "automation": {
+      "events": {
+        "registered": {
+          "label": "Wenn ein Dokument registriert wird",
+          "fields": {
+            "documentId": "Dokument-ID",
+            "direction": "Richtung",
+            "hasDueDate": "Hat Frist"
+          },
+          "options": {
+            "direction": {
+              "INCOMING": "Eingang",
+              "OUTGOING": "Ausgang"
+            }
+          },
+          "variables": {
+            "registryNumber": "Registernummer",
+            "subject": "Betreff",
+            "counterparty": "Absender/Empfänger",
+            "documentDate": "Dokumentdatum",
+            "dueDate": "Frist"
+          },
+          "help": {
+            "hasDueDate": "true oder false"
+          }
+        }
+      }
     }
   },
   "donations": {
@@ -3798,6 +3833,38 @@
         "label": "Spenden und Bestätigungen",
         "description": "Spendeneingänge und Erstellung amtlicher Zuwendungsbestätigungen."
       }
+    },
+    "automation": {
+      "events": {
+        "received": {
+          "label": "Wenn eine Spende erfasst wird",
+          "fields": {
+            "donationId": "Spenden-ID",
+            "method": "Zahlungsart",
+            "amount": "Betrag (€)"
+          },
+          "options": {
+            "method": {
+              "CASH": "Bar",
+              "BANK_TRANSFER": "Überweisung",
+              "CARD": "Karte",
+              "PAYPAL": "PayPal",
+              "REIMBURSEMENT_WAIVER": "Aufwandsspende",
+              "OTHER": "Sonstige"
+            }
+          },
+          "variables": {
+            "donationNumber": "Spendennummer",
+            "amount": "Betrag",
+            "receivedAt": "Zuwendungsdatum",
+            "donorName": "Spender",
+            "purposeNote": "Zweck"
+          },
+          "help": {
+            "amount": "Zahl in Euro, z. B. 100 oder 49.90 (mit größer/kleiner verwenden)"
+          }
+        }
+      }
     }
   },
   "events": {
@@ -4149,6 +4216,37 @@
     },
     "access": {
       "system": "Liest den Modulstatus, damit der schwebende Button nur bei aktivem Modul erscheint."
+    },
+    "automation": {
+      "events": {
+        "created": {
+          "label": "Wenn Feedback eingereicht wird",
+          "fields": {
+            "feedbackId": "Eintrags-ID",
+            "type": "Art",
+            "priority": "Priorität"
+          },
+          "options": {
+            "type": {
+              "BUG": "Fehler",
+              "SUGGESTION": "Vorschlag"
+            },
+            "priority": {
+              "LOW": "Niedrig",
+              "NORMAL": "Normal",
+              "HIGH": "Hoch"
+            }
+          },
+          "variables": {
+            "number": "Nummer",
+            "title": "Titel",
+            "pageUrl": "Seite"
+          },
+          "help": {
+            "feedbackId": "Eintrags-ID; meist nicht für Bedingungen"
+          }
+        }
+      }
     }
   },
   "inventory": {
@@ -5143,6 +5241,32 @@
         "label": "Sitzungen und Beschlüsse",
         "description": "Sitzungskalender, Tagesordnung, Protokolle, Beschlüsse und Freigabe."
       }
+    },
+    "automation": {
+      "events": {
+        "created": {
+          "label": "Wenn eine Sitzung geplant wird",
+          "fields": {
+            "meetingId": "Sitzungs-ID",
+            "type": "Sitzungsart"
+          },
+          "options": {
+            "type": {
+              "BOARD": "Vorstand",
+              "GENERAL_ASSEMBLY": "Mitgliederversammlung",
+              "COMMITTEE": "Ausschuss",
+              "OTHER": "Sonstige"
+            }
+          },
+          "variables": {
+            "meetingNumber": "Sitzungsnummer",
+            "title": "Titel",
+            "meetingDate": "Datum",
+            "startTime": "Beginn",
+            "location": "Ort"
+          }
+        }
+      }
     }
   },
   "members": {
@@ -5732,6 +5856,9 @@
             "membershipNumber": "Mitgliedsnummer",
             "email": "E-Mail",
             "joinDate": "Eintrittsdatum"
+          },
+          "help": {
+            "memberId": "Mitglieds-ID; meist nicht für Bedingungen"
           }
         }
       }
@@ -6605,6 +6732,33 @@
       "tasks": {
         "label": "Aufgaben",
         "description": "Aufgaben anlegen, zuweisen und verfolgen."
+      }
+    },
+    "automation": {
+      "events": {
+        "created": {
+          "label": "Wenn eine Aufgabe angelegt wird",
+          "fields": {
+            "taskId": "Aufgaben-ID",
+            "priority": "Priorität",
+            "hasDueDate": "Hat Fälligkeit"
+          },
+          "options": {
+            "priority": {
+              "LOW": "Niedrig",
+              "NORMAL": "Normal",
+              "HIGH": "Hoch"
+            }
+          },
+          "variables": {
+            "title": "Titel",
+            "dueDate": "Fällig am",
+            "createdBy": "Erstellt von"
+          },
+          "help": {
+            "hasDueDate": "true oder false"
+          }
+        }
       }
     }
   },

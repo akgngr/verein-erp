@@ -320,5 +320,33 @@
       "label": "Ein- / ausgehendes Schriftgut",
       "description": "Erfassung, Nummerierung und Archivierung offizieller Schriftstücke."
     }
+  },
+  "automation": {
+    "events": {
+      "registered": {
+        "label": "Wenn ein Dokument registriert wird",
+        "fields": {
+          "documentId": "Dokument-ID",
+          "direction": "Richtung",
+          "hasDueDate": "Hat Frist"
+        },
+        "options": {
+          "direction": {
+            "INCOMING": "Eingang",
+            "OUTGOING": "Ausgang"
+          }
+        },
+        "variables": {
+          "registryNumber": "Registernummer",
+          "subject": "Betreff",
+          "counterparty": "Absender/Empfänger",
+          "documentDate": "Dokumentdatum",
+          "dueDate": "Frist"
+        },
+        "help": {
+          "hasDueDate": "true oder false"
+        }
+      }
+    }
   }
 }

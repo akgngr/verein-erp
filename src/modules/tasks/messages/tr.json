@@ -114,5 +114,32 @@
       "label": "Görevler",
       "description": "Görev oluşturma, atama ve takip."
     }
+  },
+  "automation": {
+    "events": {
+      "created": {
+        "label": "Görev oluşturulduğunda",
+        "fields": {
+          "taskId": "Görev kimliği",
+          "priority": "Öncelik",
+          "hasDueDate": "Son tarihi var mı"
+        },
+        "options": {
+          "priority": {
+            "LOW": "Düşük",
+            "NORMAL": "Normal",
+            "HIGH": "Yüksek"
+          }
+        },
+        "variables": {
+          "title": "Başlık",
+          "dueDate": "Son tarih",
+          "createdBy": "Oluşturan"
+        },
+        "help": {
+          "hasDueDate": "true veya false"
+        }
+      }
+    }
   }
 }

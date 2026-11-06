@@ -83,5 +83,36 @@
   },
   "access": {
     "system": "Liest den Modulstatus, damit der schwebende Button nur bei aktivem Modul erscheint."
+  },
+  "automation": {
+    "events": {
+      "created": {
+        "label": "Wenn Feedback eingereicht wird",
+        "fields": {
+          "feedbackId": "Eintrags-ID",
+          "type": "Art",
+          "priority": "Priorität"
+        },
+        "options": {
+          "type": {
+            "BUG": "Fehler",
+            "SUGGESTION": "Vorschlag"
+          },
+          "priority": {
+            "LOW": "Niedrig",
+            "NORMAL": "Normal",
+            "HIGH": "Hoch"
+          }
+        },
+        "variables": {
+          "number": "Nummer",
+          "title": "Titel",
+          "pageUrl": "Seite"
+        },
+        "help": {
+          "feedbackId": "Eintrags-ID; meist nicht für Bedingungen"
+        }
+      }
+    }
   }
 }

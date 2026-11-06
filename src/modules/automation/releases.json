@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.9.0",
+      "date": "2026-11-06",
+      "title": {
+        "tr": "İş akışı tetikleyicileri",
+        "de": "Workflow-Auslöser"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Koşul adımı tetikleyiciye göre yalnızca o olayın alanlarını listeler; değer listeden seçilir veya \"Diğer (elle yaz)\" ile girilir. Yardım metinleri alanın altında gösterilir. Modül olayları için standart ve test eklendi.",
+          "de": "Die Bedingung zeigt nur Felder des Auslöser-Ereignisses; Werte aus einer Liste oder über „Andere (manuell)“. Hilfetexte unter dem Feld. Standard und Test für Modulereignisse ergänzt."
+        }
+      ]
+    },
+    {
       "version": "0.8.0",
       "date": "2026-11-06",
       "title": {

@@ -1,6 +1,6 @@
 import { NodeType, type PaletteItemOrGroup } from "@workflowbuilder/sdk";
 
-import { CONDITION_OPERATORS, conditionValueKey, TASK_NODE_PREFIX } from "@/shared/automation/workflow-graph";
+import { CONDITION_OPERATORS, conditionKeys, CUSTOM_FIELD, CUSTOM_VALUE, TASK_NODE_PREFIX } from "@/shared/automation/workflow-graph";
 
 import type { EditorCatalog } from "./catalog-types";
 
@@ -22,7 +22,7 @@ export type NodeLabels = Record<
   | "condition" | "conditionDesc" | "field" | "customField" | "customFieldHelp" | "customFieldOption" | "operator" | "value" | "valueHelp"
   | "parallel" | "parallelDesc"
   | "delay" | "delayDesc" | "delayMode" | "delayDuration" | "delayUntil" | "amount" | "unit" | "minutesUnit" | "hoursUnit" | "daysUnit" | "until"
-  | "approval" | "approvalDesc" | "note" | "variablesHint"
+  | "approval" | "approvalDesc" | "note" | "variablesHint" | "customValueOption" | "possibleValues" | "manualValue" | "booleanHelp" | "numberHelp" | "textHelp" | "manualTriggerFieldHelp"
   | "name",
   string
 > & { operators: Record<(typeof CONDITION_OPERATORS)[number], string> };
@@ -33,7 +33,24 @@ const control = (scope: string, label: string, type = "Text", extra: Record<stri
 const showWhen = (scope: string, value: string) => ({
   rule: { effect: "SHOW", condition: { scope: `#/properties/${scope}`, schema: { const: value } } },
 });
-const layout = (...elements: unknown[]) => ({ type: "VerticalLayout", elements });
+const layout = (...elements: unknown[]) => ({ type: "VerticalLayout", elements: elements.flat() });
+
+const escapeHtml = (text: string) => text.replace(/[&<>"']/g, (char) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[char]!);
+
+/**
+ * A control followed by its help text shown below the field (not as a
+ * placeholder). The help shares the control's visibility rule.
+ */
+const withHelp = (element: Record<string, unknown>, help: string | undefined): unknown[] => {
+  if (!help) return [element];
+  // RichText ignores rules, so group control + help in a layout carrying the rule.
+  const { rule, ...control } = element;
+  return [{
+    type: "VerticalLayout",
+    elements: [control, { type: "RichText", text: escapeHtml(help) }],
+    ...(rule ? { rule } : {}),
+  }];
+};
 const nameField = (labels: NodeLabels) => ({ label: { type: "string", label: labels.name }, description: { type: "string", label: "" } });
 
 /**
@@ -42,14 +59,6 @@ const nameField = (labels: NodeLabels) => ({ label: { type: "string", label: lab
  * a task cannot be combined with another task's input.
  */
 export function buildNodeTypes(catalog: EditorCatalog, labels: NodeLabels): PaletteItemOrGroup[] {
-  const triggerFields = catalog.events.flatMap((event) => event.fields.map((field) =>
-    option(`trigger.${field.name}`, `${event.label} → ${field.label}`)));
-  const uniqueTriggerFields = [...new Map(triggerFields.map((item) => [item.value, item])).values()];
-  // Enum fields (e.g. membership status) get a value list instead of free text.
-  const enumFields = [...new Map(catalog.events.flatMap((event) => event.fields
-    .filter((field) => field.options?.length)
-    .map((field) => [`trigger.${field.name}`, { path: `trigger.${field.name}`, label: field.label, options: field.options! }] as const))).values()];
-  const enumPaths = enumFields.map((field) => field.path);
   // References offered in text fields: trigger fields plus record variables.
   const references = [...new Set(catalog.events.flatMap((event) => [
     ...event.fields.map((field) => `{{trigger.${field.name}}}`),
@@ -98,13 +107,15 @@ export function buildNodeTypes(catalog: EditorCatalog, labels: NodeLabels): Pale
       schema: { type: "object", properties: { ...nameField(labels), ...properties } },
       uischema: layout(
         control("label", labels.name),
-        ...visible.map((field) => control(
-          field.name,
-          field.required ? `${field.label} *` : field.label,
-          field.options ? "Select" : field.multiline ? "TextArea" : field.type === "boolean" ? "Switch" : "Text",
+        ...visible.map((field) => withHelp(
+          control(
+            field.name,
+            field.required ? `${field.label} *` : field.label,
+            field.options ? "Select" : field.multiline ? "TextArea" : field.type === "boolean" ? "Switch" : "Text",
+          ),
           field.type === "string" && !field.options
-            ? { placeholder: [field.help, field.multiline || field.name !== "to" ? referenceHint : ""].filter(Boolean).join(" · ") }
-            : field.help ? { placeholder: field.help } : {},
+            ? [field.help, field.multiline || field.name !== "to" ? referenceHint : ""].filter(Boolean).join(" · ")
+            : field.help,
         )),
       ),
       defaultPropertiesData: {
@@ -115,43 +126,84 @@ export function buildNodeTypes(catalog: EditorCatalog, labels: NodeLabels): Pale
     };
   });
 
+  // Trigger-aware condition: the editor keeps `triggerEvent` in sync with the
+  // workflow's trigger, so only that event's fields (and their values) show.
+  const condProps: Record<string, unknown> = {
+    ...nameField(labels),
+    triggerEvent: { type: "string", label: "" },
+    customField: { type: "string", label: labels.customField },
+    operator: { type: "string", label: labels.operator, options: CONDITION_OPERATORS.map((op) => option(op, labels.operators[op])) },
+    value: { type: "string", label: labels.value },
+  };
+  const condControls: unknown[] = [control("label", labels.name)];
+  const condDefaults: Record<string, unknown> = { label: labels.condition, description: "", triggerEvent: "", customField: "", operator: "eq", value: "" };
+  const fieldHelp = (field: EditorCatalog["events"][number]["fields"][number]) => {
+    const base = field.help || (field.type === "number" ? labels.numberHelp : field.type === "boolean" ? labels.booleanHelp : labels.textHelp);
+    // For list fields typed manually, show the stored codes next to their labels.
+    const codes = field.options?.map((item) => `${item.value} (${item.label})`).join(", ");
+    return codes ? `${base} — ${labels.possibleValues}: ${codes}` : base;
+  };
+  const whenTrigger = (eventKey: string) => ({ scope: "#/properties/triggerEvent", schema: { const: eventKey } });
+  const whenField = (eventKey: string, field: string) => ({ scope: `#/properties/${conditionKeys.field(eventKey)}`, schema: { const: field } });
+  const showAll = (...conditions: unknown[]) => ({ rule: { effect: "SHOW", condition: { type: "AND", conditions } } });
+
+  for (const event of catalog.events) {
+    const fieldKey = conditionKeys.field(event.key);
+    condProps[fieldKey] = {
+      type: "string",
+      label: labels.field,
+      options: [...event.fields.map((field) => option(field.name, field.label)), option(CUSTOM_FIELD, labels.customFieldOption)],
+    };
+    condControls.push(control(fieldKey, labels.field, "Select", { rule: { effect: "SHOW", condition: whenTrigger(event.key) } }));
+    const preferred = event.fields.find((field) => field.options?.length) ?? event.fields[0];
+    condDefaults[fieldKey] = preferred?.name ?? CUSTOM_FIELD;
+
+    for (const field of event.fields) {
+      const textKey = conditionKeys.text(event.key, field.name);
+      condProps[textKey] = { type: "string", label: labels.manualValue };
+      if (field.options?.length) {
+        const valueKey = conditionKeys.value(event.key, field.name);
+        condProps[valueKey] = { type: "string", label: labels.value, options: [...field.options, option(CUSTOM_VALUE, labels.customValueOption)] };
+        condDefaults[valueKey] = field.options[0]?.value ?? "";
+        condControls.push(control(valueKey, labels.value, "Select", showAll(whenTrigger(event.key), whenField(event.key, field.name))));
+        condControls.push(...withHelp(control(textKey, labels.manualValue, "Text", {
+          ...showAll(whenTrigger(event.key), whenField(event.key, field.name), { scope: `#/properties/${valueKey}`, schema: { const: CUSTOM_VALUE } }),
+        }), fieldHelp(field)));
+      } else {
+        condControls.push(...withHelp(control(textKey, labels.value, "Text", {
+          ...showAll(whenTrigger(event.key), whenField(event.key, field.name)),
+        }), fieldHelp(field)));
+      }
+    }
+  }
+
+  // Manual trigger or "other field": free field path + value with guidance.
+  const eventKeys = catalog.events.map((event) => event.key);
+  const customVisible = {
+    rule: {
+      effect: "SHOW",
+      condition: {
+        type: "OR",
+        conditions: [
+          { scope: "#/properties/triggerEvent", schema: { not: { enum: eventKeys } } },
+          ...catalog.events.map((event) => ({ type: "AND", conditions: [whenTrigger(event.key), whenField(event.key, CUSTOM_FIELD)] })),
+        ],
+      },
+    },
+  };
+  condControls.push(...withHelp(control("customField", labels.customField, "Text", customVisible), labels.manualTriggerFieldHelp));
+  condControls.push(control("operator", labels.operator, "Select"));
+  condControls.push(...withHelp(control("value", labels.value, "Text", customVisible), labels.valueHelp));
+
   const condition = {
     type: "condition",
     icon: NODE_ICONS.condition,
     label: labels.condition,
     description: labels.conditionDesc,
     templateType: NodeType.Node,
-    schema: {
-      type: "object",
-      properties: {
-        ...nameField(labels),
-        field: { type: "string", label: labels.field, options: [...uniqueTriggerFields, option("custom", labels.customFieldOption)] },
-        customField: { type: "string", label: labels.customField },
-        operator: { type: "string", label: labels.operator, options: CONDITION_OPERATORS.map((op) => option(op, labels.operators[op])) },
-        value: { type: "string", label: labels.value },
-        ...Object.fromEntries(enumFields.map((field) => [conditionValueKey(field.path), { type: "string", label: labels.value, options: field.options }])),
-      },
-    },
-    uischema: layout(
-      control("label", labels.name),
-      control("field", labels.field, "Select"),
-      control("customField", labels.customField, "Text", { ...showWhen("field", "custom"), placeholder: labels.customFieldHelp }),
-      control("operator", labels.operator, "Select"),
-      control("value", labels.value, "Text", {
-        placeholder: labels.valueHelp,
-        ...(enumPaths.length ? { rule: { effect: "HIDE", condition: { scope: "#/properties/field", schema: { enum: enumPaths } } } } : {}),
-      }),
-      ...enumFields.map((field) => control(conditionValueKey(field.path), labels.value, "Select", showWhen("field", field.path))),
-    ),
-    defaultPropertiesData: {
-      label: labels.condition,
-      description: "",
-      field: uniqueTriggerFields[0]?.value ?? "custom",
-      customField: "",
-      operator: "eq",
-      value: "",
-      ...Object.fromEntries(enumFields.map((field) => [conditionValueKey(field.path), field.options[0]?.value ?? ""])),
-    },
+    schema: { type: "object", properties: condProps },
+    uischema: layout(...condControls),
+    defaultPropertiesData: condDefaults,
   };
 
   const delay = {

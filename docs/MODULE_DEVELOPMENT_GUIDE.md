@@ -695,3 +695,46 @@ Testlerin yakaladıkları: elle yazılmış `src/app` dosyası (`zero-touch`), i
 - HeroUI `Select` sunucu ve istemcide farklı react-aria `id` üretebilir. Sunucuda render edilen istemci bileşenlerinde `Select` yerine `@/shared/components/ui/client-select` içindeki `ClientSelect`'i kullanın (aynı props ve children).
 - Yalnızca istemcide anlamlı içerik için `@/shared/hooks/use-hydrated` (`useHydrated()`) kullanın; `typeof window` dallanması, `Date.now()`/`Math.random()` ile render, tarayıcı yerel ayarına bağlı tarih biçimi hydration hatasına yol açar.
 - **Test:** `pnpm test:hydration` tüm statik panel sayfalarını gerçek tarayıcıda açar ve hydration ya da sayfa hatasında başarısız olur (CI'da da çalışır). Yerelde: uygulamayı başlatın, sonra `E2E_EMAIL=… E2E_PASSWORD=… BASE_URL=http://localhost:3000 pnpm test:hydration`. Tek sayfa için `HYDRATION_ROUTES=/automation`. İlk kullanımda tarayıcı: `pnpm exec playwright install chromium`.
+
+## Otomasyon olayları (iş akışı tetikleyicileri)
+
+Bir modül kendi olaylarını yayımlayabilir; bu olaylar İş akışları düzenleyicisinde **tetikleyici** olarak, alanları da **koşul** ve **metin değişkeni** olarak otomatik görünür. Merkezi bir dosyayı düzenlemek gerekmez (`pnpm module:sync` olayları `src/automation-registry.ts`'e ekler).
+
+1. **Tanım** — `src/modules/<modül>/automation.ts`:
+
+   ```ts
+   export const feedbackCreatedEvent = defineEvent({
+     key: "feedback.created",                 // önek = modül anahtarı
+     description: "feedback.created",
+     payloadSchema: z.object({                // yalnızca kimlik ve sınıflandırma
+       feedbackId: z.string(),
+       type: z.enum(["BUG", "SUGGESTION"]),   // enum → koşulda seçenek listesi
+       priority: z.enum(["LOW", "NORMAL", "HIGH"]),
+     }).strict(),
+     variables: {                             // isteğe bağlı: {{feedback.title}} vb.
+       namespace: "feedback",
+       fields: ["number", "title"],
+       load: async (payload) => { /* kaydı oku, düz değerler döndür */ },
+     },
+   });
+   ```
+
+2. **Yayımlama** — kaydı oluşturan işlemde, mümkünse aynı transaction ile:
+
+   ```ts
+   await emitAutomationEvent(feedbackCreatedEvent, { feedbackId: item.id, type: item.type, priority: item.priority }, tx);
+   ```
+
+   Otomasyon kapalıysa çağrı hiçbir şey yapmaz; modül Automation'a bağımlı olmaz.
+
+3. **Çeviriler** — `messages/{tr,de}.json` → `automation.events.<ad>`:
+   - `label` (ör. "Geri bildirim gönderildiğinde"),
+   - `fields.<alan>`, enum alanlar için `options.<alan>.<DEĞER>`,
+   - `variables.<alan>`, isteğe bağlı `help.<alan>` (elle değer girerken gösterilen ipucu).
+
+**Kurallar (testle denetlenir: `tests/automation/module-events.test.ts`):**
+- Yükte (payload) kişisel veri yoktur: ad, e-posta, telefon, adres, not vb. alanlar `variables.load` ile **gönderim anında** okunur, kuyruğa/kayda yazılmaz.
+- Her olayın tr/de adı, alan ve seçenek etiketleri vardır.
+- Olay modülün kodunda `emitAutomationEvent(<olay>, …)` ile gerçekten yayımlanır.
+
+**Düzenleyicide:** Koşul adımı tetikleyicinin olayına göre yalnızca o olayın alanlarını listeler; enum alanlarda değer seçenekli gelir, "Diğer (elle yaz)" ile manuel girilebilir (ipucu `help.<alan>` veya alan türünden gelir).

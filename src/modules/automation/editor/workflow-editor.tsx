@@ -3,6 +3,7 @@
 import "@workflowbuilder/sdk/style.css";
 
 import {
+  useStore,
   useWorkflowBuilderActions,
   WorkflowBuilder,
   type IntegrationDataFormat,
@@ -11,6 +12,8 @@ import {
 } from "@workflowbuilder/sdk";
 import { useMessages } from "next-intl";
 import { useEffect, useMemo, type ReactNode } from "react";
+
+import { conditionKeys, conditionValueKey, CUSTOM_FIELD, CUSTOM_VALUE } from "@/shared/automation/workflow-graph";
 
 import { buildNodeTypes, NODE_ICONS, type EditorCatalogProps, type NodeLabels } from "./node-types";
 import { applyEditorLocale } from "./sdk-i18n";
@@ -28,6 +31,61 @@ export type WorkflowEditorProps = {
   /** Our own toolbar (rendered inside the SDK root so it can trigger save). */
   toolbar: (props: EditorToolbarProps) => ReactNode;
 };
+
+type AnyNode = { id: string; data?: { type?: string; properties?: Record<string, unknown> } };
+
+function triggerEventOf(nodes: readonly AnyNode[]): string {
+  const props = nodes.find((node) => node.data?.type === "trigger")?.data?.properties ?? {};
+  return props.triggerType === "event" && typeof props.eventKey === "string" ? props.eventKey : "";
+}
+
+/**
+ * Keeps every condition node's hidden `triggerEvent` equal to the workflow
+ * trigger's event, so the condition form shows only that event's fields.
+ */
+function TriggerSync() {
+  useEffect(() => {
+    const sync = () => {
+      const state = useStore.getState();
+      const eventKey = triggerEventOf(state.nodes as AnyNode[]);
+      for (const node of state.nodes as AnyNode[]) {
+        const props = node.data?.properties;
+        if (node.data?.type === "condition" && props && props.triggerEvent !== eventKey) {
+          state.setNodeProperties(node.id, { ...props, triggerEvent: eventKey });
+        }
+      }
+    };
+    sync();
+    return useStore.subscribe(sync);
+  }, []);
+  return null;
+}
+
+function migrateCondition(node: WorkflowBuilderNode, eventKey: string, catalog: EditorCatalogProps): WorkflowBuilderNode {
+  const props = (node.data.properties ?? {}) as Record<string, unknown>;
+  if (!eventKey || props[conditionKeys.field(eventKey)] !== undefined) return node;
+  const legacy = typeof props.field === "string" ? props.field : "";
+  const event = catalog.events.find((item) => item.key === eventKey);
+  const name = legacy.startsWith("trigger.") ? legacy.slice("trigger.".length) : "";
+  const field = event?.fields.find((item) => item.name === name);
+  const next: Record<string, unknown> = { ...props, triggerEvent: eventKey };
+  if (!field) {
+    if (legacy && legacy !== CUSTOM_FIELD) next.customField = legacy;
+    next[conditionKeys.field(eventKey)] = CUSTOM_FIELD;
+  } else {
+    const legacyValue = String(props[conditionValueKey(legacy)] ?? props.value ?? "");
+    next[conditionKeys.field(eventKey)] = field.name;
+    if (field.options?.some((option) => option.value === legacyValue)) {
+      next[conditionKeys.value(eventKey, field.name)] = legacyValue;
+    } else if (field.options?.length) {
+      next[conditionKeys.value(eventKey, field.name)] = CUSTOM_VALUE;
+      next[conditionKeys.text(eventKey, field.name)] = legacyValue;
+    } else {
+      next[conditionKeys.text(eventKey, field.name)] = legacyValue;
+    }
+  }
+  return { ...node, data: { ...node.data, properties: next } } as WorkflowBuilderNode;
+}
 
 const REACT_FLOW_PROPS = { fitView: true, fitViewOptions: { padding: 0.3, maxZoom: 1 } };
 
@@ -57,6 +115,7 @@ export default function WorkflowEditor({ name, locale, initialDraft, catalog, la
   const sdkBundle = messages.automation?.workflows?.sdk;
   useEffect(() => applyEditorLocale(locale, sdkBundle ?? {}), [locale, sdkBundle]);
   const nodeTypes = useMemo(() => buildNodeTypes(catalog, labels), [catalog, labels]);
+  const triggerEvent = triggerEventOf((initialDraft.nodes ?? []) as AnyNode[]);
   const initialNodes = useMemo(() => (initialDraft.nodes ?? []).map((raw, index) => {
     let node = raw as WorkflowBuilderNode;
     // Legacy generic "task" node (taskKey + JSON input) → per-task node with form fields.
@@ -79,11 +138,13 @@ export default function WorkflowEditor({ name, locale, initialDraft, catalog, la
       const kind = node.data.type.startsWith("task.") ? "task" : node.data.type;
       node = { ...node, data: { ...node.data, icon: NODE_ICONS[kind] ?? "Gear" } } as WorkflowBuilderNode;
     }
+    // Legacy condition (single "field" select) → trigger-aware keys.
+    if (node.data?.type === "condition") node = migrateCondition(node, triggerEvent, catalog);
     // xyflow renders unknown/missing types as empty boxes: use the SDK templates.
     if (!node.type) node = { ...node, type: node.data?.type === "trigger" ? "start-node" : "node" } as WorkflowBuilderNode;
     const valid = node.position && Number.isFinite(node.position.x) && Number.isFinite(node.position.y);
     return valid ? node : { ...node, position: { x: (index % 4) * 320, y: Math.floor(index / 4) * 200 } };
-  }), [initialDraft.nodes, catalog.tasks]);
+  }), [initialDraft.nodes, catalog, triggerEvent]);
   const integration = useMemo(() => ({
     strategy: "props" as const,
     onDataSave: async (data: IntegrationDataFormat) => {
@@ -103,6 +164,7 @@ export default function WorkflowEditor({ name, locale, initialDraft, catalog, la
         initialEdges={(initialDraft.edges ?? []) as WorkflowBuilderEdge[]}
         reactFlowProps={REACT_FLOW_PROPS}
       >
+        <TriggerSync />
         <Toolbar
           render={toolbar}
           openLabels={[

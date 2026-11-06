@@ -99,9 +99,51 @@ function asRecord(value: unknown): Record<string, unknown> {
 
 export const TASK_NODE_PREFIX = "task.";
 
-/** Editor property holding the chosen value for an enum field ("trigger.status" → "value_trigger_status"). */
+/** Editor property holding the chosen value for an enum field ("trigger.status" → "value_trigger_status"). Legacy (pre trigger-aware conditions). */
 export function conditionValueKey(field: string): string {
   return `value_${field.replace(/[^A-Za-z0-9]/g, "_")}`;
+}
+
+/** Sentinel option meaning "enter the value manually". */
+export const CUSTOM_VALUE = "__custom__";
+/** Sentinel field option meaning "type a field path manually". */
+export const CUSTOM_FIELD = "custom";
+
+const slug = (value: string) => value.replace(/[^A-Za-z0-9]/g, "_");
+
+/**
+ * Editor property names of trigger-aware conditions. Each event gets its own
+ * field list, and each field its own value list and manual text, so the form
+ * can show only what fits the workflow's trigger.
+ */
+export const conditionKeys = {
+  field: (eventKey: string) => `field__${slug(eventKey)}`,
+  value: (eventKey: string, field: string) => `value__${slug(eventKey)}__${slug(field)}`,
+  text: (eventKey: string, field: string) => `valueText__${slug(eventKey)}__${slug(field)}`,
+};
+
+function str(value: unknown): string {
+  return value === undefined || value === null ? "" : String(value);
+}
+
+/** Resolve the condition's field path and value from editor properties. */
+export function resolveConditionProps(props: Record<string, unknown>, triggerEventKey: string): { field: unknown; value: string } {
+  const chosen = triggerEventKey ? props[conditionKeys.field(triggerEventKey)] : undefined;
+  if (typeof chosen === "string" && chosen && chosen !== CUSTOM_FIELD) {
+    const listed = props[conditionKeys.value(triggerEventKey, chosen)];
+    const value = typeof listed === "string" && listed && listed !== CUSTOM_VALUE
+      ? listed
+      : str(props[conditionKeys.text(triggerEventKey, chosen)]);
+    return { field: `trigger.${chosen}`, value };
+  }
+  if (chosen === CUSTOM_FIELD || triggerEventKey === "" && typeof props.customField === "string" && props.customField) {
+    return { field: typeof props.customField === "string" ? props.customField.trim() : props.customField, value: str(props.value) };
+  }
+  // Legacy shape: a single "field" select (+ optional per-field enum list).
+  const legacyField = props.field === CUSTOM_FIELD ? props.customField : props.field;
+  const legacyList = typeof props.field === "string" ? props[conditionValueKey(props.field)] : undefined;
+  const value = legacyList !== undefined && legacyList !== null && legacyList !== "" ? legacyList : props.value;
+  return { field: typeof legacyField === "string" ? legacyField.trim() : legacyField, value: str(value) };
 }
 const RESERVED_PROPS = new Set(["label", "description", "errors", "customErrors"]);
 
@@ -138,6 +180,10 @@ export function compileWorkflow(editor: unknown): { graph?: CanonicalGraph; issu
     return { issues: ["WORKFLOW_TOO_LARGE"] };
   }
 
+  // Condition fields depend on the trigger's event; read it once up front.
+  const triggerProps = asRecord(asRecord(asRecord(rawNodes.find((raw) => asRecord(asRecord(raw).data).type === "trigger")).data).properties);
+  const triggerEventKey = triggerProps.triggerType === "event" && typeof triggerProps.eventKey === "string" ? triggerProps.eventKey : "";
+
   const nodes: unknown[] = rawNodes.map((raw) => {
     const node = asRecord(raw);
     const data = asRecord(node.data);
@@ -161,11 +207,8 @@ export function compileWorkflow(editor: unknown): { graph?: CanonicalGraph; issu
         return { ...base, kind: type, config: { taskKey: props.taskKey, input: typeof input === "symbol" ? {} : input } };
       }
       case "condition": {
-        const field = props.field === "custom" ? props.customField : props.field;
-        // Enum fields have their own value list property (see conditionValueKey).
-        const listed = typeof props.field === "string" ? props[conditionValueKey(props.field)] : undefined;
-        const value = listed !== undefined && listed !== null && listed !== "" ? listed : props.value;
-        return { ...base, kind: type, config: { field: typeof field === "string" ? field.trim() : field, operator: props.operator, value: value === undefined || value === null ? "" : String(value) } };
+        const resolved = resolveConditionProps(props, triggerEventKey);
+        return { ...base, kind: type, config: { field: resolved.field, operator: props.operator, value: resolved.value } };
       }
       case "parallel":
         return { ...base, kind: type, config: {} };

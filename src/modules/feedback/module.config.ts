@@ -8,7 +8,7 @@ import { feedbackPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "feedback",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.0.0",
+  version: "1.1.0",
   label: "Geri bildirim",
   description: "Test kullanıcılarının hata ve önerilerini toplar.",
   category: "OFFICIAL",
