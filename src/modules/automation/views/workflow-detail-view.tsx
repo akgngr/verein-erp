@@ -6,12 +6,13 @@ import { getFormatter, getTranslations } from "next-intl/server";
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { can } from "@/shared/permissions/define";
-import { compileWorkflow, CONDITION_OPERATORS, type CanonicalGraph } from "@/shared/automation/workflow-graph";
+import { compileWorkflow, CONDITION_OPERATORS, stableStringify, type CanonicalGraph } from "@/shared/automation/workflow-graph";
 
 import { ExecutionStatusChip } from "../components/execution-status-chip";
 import { WorkflowHeaderActions } from "../components/workflow-header-actions";
 import { WorkflowTabs } from "../components/workflow-tabs";
 import type { NodeLabels } from "../editor/node-types";
+import { getDb } from "@/shared/db";
 import { automationPermissions } from "../permissions";
 import { buildEditorCatalog } from "../services/workflow-catalog";
 import { describeGraph } from "../services/workflow-describe";
@@ -37,17 +38,23 @@ export async function WorkflowDetailView({ id }: { id: string }) {
   const workflow = await getWorkflow(id);
   if (!workflow) notFound();
 
-  const [t, tn, tops, tm, format, runs, versions, stats, catalog] = await Promise.all([
+  const [t, tn, tops, tm, terr, format, runs, versions, stats, catalog] = await Promise.all([
     getTranslations("automation.workflows"),
     getTranslations("automation.workflows.nodes"),
     getTranslations("automation.workflows.nodes.operators"),
     getTranslations("automation.monitor"),
+    getTranslations("automation.errorCodes"),
     getFormatter(),
     listWorkflowRuns(id),
     listWorkflowVersions(id),
     workflowStats(id),
     buildEditorCatalog(),
   ]);
+  const childIds = runs.flatMap((run) => run.steps.map((step) => step.childExecutionId).filter((value): value is string => Boolean(value)));
+  const children = childIds.length
+    ? await getDb().automationExecution.findMany({ where: { id: { in: childIds } }, select: { id: true, status: true, attempt: true, maxAttempts: true, lastErrorCode: true } })
+    : [];
+  const explain = (code: string | null | undefined) => !code ? "" : terr.has(code as never) ? terr(code as never) : code;
   const labels = {
     ...Object.fromEntries(NODE_LABEL_KEYS.map((key) => [key, tn(key)])),
     operators: Object.fromEntries(CONDITION_OPERATORS.map((op) => [op, tops(op)])),
@@ -56,9 +63,11 @@ export async function WorkflowDetailView({ id }: { id: string }) {
   const activeVersion = versions.find((version) => version.id === workflow.activeVersionId) ?? null;
   const activeGraph = (activeVersion?.graph ?? null) as CanonicalGraph | null;
   const draftGraph = compileWorkflow(workflow.draft).graph ?? null;
-  const draftDiffers = Boolean(draftGraph) && JSON.stringify(draftGraph) !== JSON.stringify(activeGraph);
+  const draftDiffers = Boolean(draftGraph) && stableStringify(draftGraph) !== stableStringify(activeGraph);
   const trigger = activeGraph?.nodes.find((node) => node.kind === "trigger");
   const manualTrigger = trigger?.kind === "trigger" && trigger.config.triggerType === "manual";
+  const describedActive = activeGraph ? await describeGraph(activeGraph, catalog) : null;
+  const graphTitles = new Map((describedActive?.nodes ?? []).map((node) => [node.id, node.title]));
   const date = (value: Date) => format.dateTime(value, { dateStyle: "medium", timeStyle: "short" });
   const status = !activeVersion ? "draft" : workflow.enabled ? "active" : "inactive";
 
@@ -109,7 +118,7 @@ export async function WorkflowDetailView({ id }: { id: string }) {
       <p className="-mt-4 text-tiny text-default-500">{t("stats.window")}</p>
 
       <WorkflowTabs
-        active={activeGraph ? await describeGraph(activeGraph, catalog) : null}
+        active={describedActive}
         draft={draftGraph ? await describeGraph(draftGraph, catalog) : null}
         draftDiffers={draftDiffers}
         versions={await Promise.all(versions.map(async (version) => ({
@@ -146,8 +155,15 @@ export async function WorkflowDetailView({ id }: { id: string }) {
                   const skipped = run.steps.filter((step) => step.status === "SKIPPED").length;
                   const failedStep = run.steps.find((step) => step.status === "FAILED");
                   const waitingStep = run.steps.find((step) => step.status === "WAITING");
+                  const runningStep = run.steps.find((step) => step.status === "RUNNING");
+                  const runningChild = children.find((child) => child.id === runningStep?.childExecutionId);
+                  const stepName = (key: string) => graphTitles.get(key) ?? key;
                   const result = failedStep
-                    ? t("runs_.failedAt", { step: failedStep.stepKey, code: failedStep.lastErrorCode ?? "" })
+                    ? t("runs_.failedAt", { step: stepName(failedStep.stepKey), code: explain(failedStep.lastErrorCode) })
+                    : runningStep && runningChild?.lastErrorCode
+                      ? t("runs_.retrying", { step: stepName(runningStep.stepKey), code: explain(runningChild.lastErrorCode), attempt: runningChild.attempt, max: runningChild.maxAttempts })
+                    : runningStep
+                      ? t("runs_.running", { step: stepName(runningStep.stepKey) })
                     : waitingStep
                       ? t(waitingStep.taskKey === "workflow.approval" ? "runs_.waitingApproval" : "runs_.waitingDelay")
                       : t("runs_.stepsDone", { done, skipped });

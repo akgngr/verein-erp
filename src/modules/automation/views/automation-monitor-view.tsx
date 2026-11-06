@@ -23,8 +23,9 @@ export async function AutomationMonitorView() {
     throw error;
   }
 
-  const [t, format, executions, schedules, approvals, canUpdate, canApprove] = await Promise.all([
+  const [t, terr, format, executions, schedules, approvals, canUpdate, canApprove] = await Promise.all([
     getTranslations("automation.monitor"),
+    getTranslations("automation.errorCodes"),
     getFormatter(),
     listAutomationExecutions(),
     listSchedules(),
@@ -84,7 +85,11 @@ export async function AutomationMonitorView() {
           <article key={execution.id} className="rounded-large border border-default-200 bg-content1 p-4">
             <div className="flex flex-wrap items-start justify-between gap-3">
               <div className="min-w-0">
-                <p className="font-semibold">{execution.definitionKey}</p>
+                <p className="font-semibold">
+                  {execution.kind === "WORKFLOW" && typeof (execution.context as Record<string, unknown> | null)?.workflowName === "string"
+                    ? String((execution.context as Record<string, unknown>).workflowName)
+                    : execution.definitionKey}
+                </p>
                 <p className="mt-1 break-all text-tiny text-default-500">{execution.id}</p>
                 <p className="mt-1 text-small text-default-500">
                   {format.dateTime(execution.createdAt, { dateStyle: "medium", timeStyle: "short" })} · {execution.sourceModule}
@@ -100,7 +105,11 @@ export async function AutomationMonitorView() {
               <span>{t("attempt", { current: execution.attempt, max: execution.maxAttempts })}</span>
               {execution.startedAt ? <span>{t("started", { date: format.dateTime(execution.startedAt, { dateStyle: "short", timeStyle: "short" }) })}</span> : null}
               {execution.finishedAt ? <span>{t("finished", { date: format.dateTime(execution.finishedAt, { dateStyle: "short", timeStyle: "short" }) })}</span> : null}
-              {execution.lastErrorCode ? <span className="font-medium text-danger">{execution.lastErrorCode}</span> : null}
+              {execution.lastErrorCode ? (
+                <span className="font-medium text-danger">
+                  {terr.has(execution.lastErrorCode as never) ? terr(execution.lastErrorCode as never) : execution.lastErrorCode}
+                </span>
+              ) : null}
             </div>
             {taskResultError ? (
               <p className="mt-2 text-small font-medium text-danger">

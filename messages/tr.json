@@ -2239,7 +2239,9 @@
         "waitingDelay": "Bekleme süresinde",
         "stepsDone": "{done} adım tamamlandı, {skipped} atlandı",
         "manual": "Elle",
-        "event": "Olay"
+        "event": "Olay",
+        "retrying": "\"{step}\" yeniden deneniyor ({attempt}/{max}): {code}",
+        "running": "\"{step}\" çalışıyor"
       },
       "durationSeconds": "{count} sn",
       "durationMinutes": "{count} dk",
@@ -2370,6 +2372,18 @@
           }
         }
       }
+    },
+    "errorCodes": {
+      "MAIL_NOT_CONFIGURED": "E-posta gönderim ayarları yapılmamış (Ayarlar → E-posta).",
+      "MAIL_SEND_FAILED": "E-posta sunucusu iletiyi kabul etmedi; ayrıntılar E-posta günlüğünde.",
+      "MODULE_UNAVAILABLE": "Görevin modülü kapalı veya erişim onayı bekliyor.",
+      "TASK_INPUT_INVALID": "Adımın alanları eksik veya hatalı.",
+      "TASK_TIMEOUT": "Görev zaman aşımına uğradı.",
+      "TASK_NOT_REGISTERED": "Görev artık mevcut değil.",
+      "TASK_ATTEMPTS_EXHAUSTED": "Tüm denemeler başarısız oldu.",
+      "CANCELLED": "İptal edildi.",
+      "WORKFLOW_RUN_EXPIRED": "Akış izin verilen en uzun süreyi aştı.",
+      "WORKFLOW_VERSION_INVALID": "Akış sürümü okunamadı."
     }
   },
   "banking": {

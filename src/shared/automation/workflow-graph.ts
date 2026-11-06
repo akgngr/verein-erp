@@ -451,3 +451,12 @@ export function planWorkflow(
   }
   return actions;
 }
+
+/** Key-order independent JSON (PostgreSQL jsonb reorders object keys). */
+export function stableStringify(value: unknown): string {
+  if (Array.isArray(value)) return `[${value.map(stableStringify).join(",")}]`;
+  if (value && typeof value === "object") {
+    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stableStringify((value as Record<string, unknown>)[key])}`).join(",")}}`;
+  }
+  return JSON.stringify(value ?? null);
+}

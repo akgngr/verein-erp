@@ -4,6 +4,7 @@ import { randomUUID } from "node:crypto";
 import { Prisma } from "@prisma/client";
 
 import {
+  isPermanentTaskError,
   resolveTaskRetryPolicy,
   type TaskDefinition,
   type TaskExecutionContext,
@@ -31,6 +32,8 @@ function errorCode(error: unknown): string {
   }
   if (error instanceof Error && error.message === "TASK_TIMEOUT") return "TASK_TIMEOUT";
   if (error instanceof Error && error.message === "TASK_LEASE_LOST") return "TASK_LEASE_LOST";
+  // Handlers signal reasons with UPPER_SNAKE messages (e.g. MAIL_NOT_CONFIGURED).
+  if (error instanceof Error && /^[A-Z][A-Z0-9_]{2,79}$/.test(error.message)) return error.message;
   return error instanceof Error ? error.name.slice(0, 80) : "TASK_FAILED";
 }
 
@@ -344,12 +347,14 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
     await recordAutomationLog({
       executionId: payload.executionId,
       level: "ERROR",
-      event: attempt >= retryPolicy.maxAttempts ? "ATTEMPT_FAILED_FINAL" : "ATTEMPT_FAILED_RETRYING",
+      event: attempt >= retryPolicy.maxAttempts || isPermanentTaskError(error) ? "ATTEMPT_FAILED_FINAL" : "ATTEMPT_FAILED_RETRYING",
       message: (error instanceof Error ? error.message : String(error)).slice(0, 1000),
       details: { errorCode: code, attempt, maxAttempts: retryPolicy.maxAttempts, leaseToken },
     });
 
-    if (attempt >= retryPolicy.maxAttempts) {
+    // Permanent errors (e.g. missing configuration) fail at once instead of
+    // retrying for minutes with the real reason hidden.
+    if (attempt >= retryPolicy.maxAttempts || isPermanentTaskError(error)) {
       if (!await markTerminal(payload.executionId, leaseToken, "FAILED", code)) {
         throw new Error("TASK_LEASE_LOST");
       }

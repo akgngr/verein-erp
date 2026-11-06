@@ -156,3 +156,10 @@ describe("Per-task palette nodes", () => {
     assert.deepEqual(validateWorkflow(result.graph!, catalog), []);
   });
 });
+
+describe("Draft vs published comparison", () => {
+  test("stableStringify ignores key order (jsonb reorders keys)", async () => {
+    const { stableStringify } = await import("@/shared/automation/workflow-graph");
+    assert.equal(stableStringify({ b: 1, a: { d: [1, { y: 2, x: 1 }], c: null } }), stableStringify({ a: { c: null, d: [1, { x: 1, y: 2 }] }, b: 1 }));
+  });
+});

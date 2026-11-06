@@ -158,3 +158,19 @@ export function defineTask<TSchema extends z.ZodType, TResult>(
     retry: resolveTaskRetryPolicy(definition.retry),
   });
 }
+
+/**
+ * Throw from a task handler when retrying cannot help (missing configuration,
+ * invalid recipient). The execution fails immediately with this code.
+ */
+export class PermanentTaskError extends Error {
+  readonly permanent = true;
+  constructor(code: string) {
+    super(code);
+    this.name = "PermanentTaskError";
+  }
+}
+
+export function isPermanentTaskError(error: unknown): boolean {
+  return typeof error === "object" && error !== null && (error as { permanent?: unknown }).permanent === true;
+}

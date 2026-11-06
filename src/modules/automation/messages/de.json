@@ -231,7 +231,9 @@
       "waitingDelay": "In Wartezeit",
       "stepsDone": "{done} Schritte erledigt, {skipped} übersprungen",
       "manual": "Manuell",
-      "event": "Ereignis"
+      "event": "Ereignis",
+      "retrying": "„{step}“ wird erneut versucht ({attempt}/{max}): {code}",
+      "running": "„{step}“ läuft"
     },
     "durationSeconds": "{count} s",
     "durationMinutes": "{count} min",
@@ -362,5 +364,17 @@
         }
       }
     }
+  },
+  "errorCodes": {
+    "MAIL_NOT_CONFIGURED": "Der E-Mail-Versand ist nicht eingerichtet (Einstellungen → E-Mail).",
+    "MAIL_SEND_FAILED": "Der Mailserver hat die Nachricht abgelehnt; Details im E-Mail-Protokoll.",
+    "MODULE_UNAVAILABLE": "Das Modul der Aufgabe ist deaktiviert oder wartet auf Freigabe.",
+    "TASK_INPUT_INVALID": "Felder des Schritts fehlen oder sind ungültig.",
+    "TASK_TIMEOUT": "Zeitüberschreitung der Aufgabe.",
+    "TASK_NOT_REGISTERED": "Die Aufgabe existiert nicht mehr.",
+    "TASK_ATTEMPTS_EXHAUSTED": "Alle Versuche sind fehlgeschlagen.",
+    "CANCELLED": "Abgebrochen.",
+    "WORKFLOW_RUN_EXPIRED": "Der Workflow hat die maximale Laufzeit überschritten.",
+    "WORKFLOW_VERSION_INVALID": "Die Workflow-Version ist nicht lesbar."
   }
 }
