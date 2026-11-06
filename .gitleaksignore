@@ -1,0 +1,3 @@
+# CI-only test admin password for the throwaway CI database (see ci.yml); not a real secret.
+0d475f0396a8c8465cd820cd7bea6849050c1abb:.github/workflows/ci.yml:generic-api-key:134
+0d475f0396a8c8465cd820cd7bea6849050c1abb:.github/workflows/ci.yml:generic-api-key:143
