@@ -208,8 +208,8 @@
           "body": "Mesaj"
         },
         "help": {
-          "to": "Ör. yonetim@dernek.de",
-          "body": "Akış verisini eklemek için alanın tamamına '{{trigger.memberId}}' gibi bir başvuru yazabilirsiniz."
+          "to": "Ör. yonetim@dernek.de veya yeni üyeye göndermek için '{{member.email}}'",
+          "body": "Metne '{{member.fullName}}' gibi alanlar ekleyebilirsiniz; liste aşağıda. Kişisel bilgiler yalnızca gönderim anında okunur, saklanmaz."
         }
       }
     }

@@ -566,6 +566,28 @@
           "memberId": "Mitglieds-ID",
           "type": "Mitgliedsart",
           "status": "Mitgliedsstatus"
+        },
+        "options": {
+          "status": {
+            "ACTIVE": "Aktiv",
+            "PASSIVE": "Passiv",
+            "RESIGNED": "Ausgetreten",
+            "DECEASED": "Verstorben"
+          },
+          "type": {
+            "ASIL": "Ordentlich",
+            "ONURSAL": "Ehrenmitglied",
+            "FAHRI": "Ehrenamtlich",
+            "DESTEKCI": "Fördermitglied"
+          }
+        },
+        "variables": {
+          "firstName": "Vorname",
+          "lastName": "Nachname",
+          "fullName": "Vor- und Nachname",
+          "membershipNumber": "Mitgliedsnummer",
+          "email": "E-Mail",
+          "joinDate": "Eintrittsdatum"
         }
       }
     }

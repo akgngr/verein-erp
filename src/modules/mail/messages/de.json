@@ -208,8 +208,8 @@
           "body": "Nachricht"
         },
         "help": {
-          "to": "z. B. vorstand@verein.de",
-          "body": "Für Workflow-Daten das ganze Feld als Verweis wie '{{trigger.memberId}}' angeben."
+          "to": "z. B. vorstand@verein.de oder '{{member.email}}' für das neue Mitglied",
+          "body": "Felder wie '{{member.fullName}}' können in den Text eingefügt werden; Liste siehe unten. Personenbezogene Daten werden nur beim Versand gelesen, nicht gespeichert."
         }
       }
     }

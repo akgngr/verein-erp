@@ -566,6 +566,28 @@
           "memberId": "Üye kimliği",
           "type": "Üyelik türü",
           "status": "Üyelik durumu"
+        },
+        "options": {
+          "status": {
+            "ACTIVE": "Aktif",
+            "PASSIVE": "Pasif",
+            "RESIGNED": "Ayrıldı",
+            "DECEASED": "Vefat"
+          },
+          "type": {
+            "ASIL": "Asıl",
+            "ONURSAL": "Onursal",
+            "FAHRI": "Fahri",
+            "DESTEKCI": "Destekçi"
+          }
+        },
+        "variables": {
+          "firstName": "Ad",
+          "lastName": "Soyad",
+          "fullName": "Ad soyad",
+          "membershipNumber": "Üye numarası",
+          "email": "E-posta",
+          "joinDate": "Giriş tarihi"
         }
       }
     }

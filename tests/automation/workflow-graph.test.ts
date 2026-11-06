@@ -80,9 +80,13 @@ describe("Workflow compiler and validator", () => {
 describe("Templates and conditions", () => {
   const context = { trigger: { status: "ACTIVE", count: "5" }, steps: { a: { sent: 3 } } };
 
-  test("resolves whole-string references only and keeps types", () => {
-    const resolved = resolveTemplates({ a: "{{steps.a.sent}}", b: "x {{trigger.status}}", c: "{{uuid}}" }, context, () => "U");
-    assert.deepEqual(resolved, { a: 3, b: "x {{trigger.status}}", c: "U" });
+  test("whole-string references keep types; inline references are rendered; others are deferred", () => {
+    const resolved = resolveTemplates(
+      { a: "{{steps.a.sent}}", b: "x {{trigger.status}} y", c: "{{uuid}}", d: "Hi {{member.fullName}}, {{trigger.status}}", e: "{{member.email}}" },
+      context,
+      () => "U",
+    );
+    assert.deepEqual(resolved, { a: 3, b: "x ACTIVE y", c: "U", d: "Hi {{member.fullName}}, ACTIVE", e: "{{member.email}}" });
   });
 
   test("compares numerically when both sides are numbers", () => {
@@ -161,5 +165,33 @@ describe("Draft vs published comparison", () => {
   test("stableStringify ignores key order (jsonb reorders keys)", async () => {
     const { stableStringify } = await import("@/shared/automation/workflow-graph");
     assert.equal(stableStringify({ b: 1, a: { d: [1, { y: 2, x: 1 }], c: null } }), stableStringify({ a: { c: null, d: [1, { x: 1, y: 2 }] }, b: 1 }));
+  });
+});
+
+describe("Condition value lists", () => {
+  test("enum field value comes from its own list property", async () => {
+    const { conditionValueKey } = await import("@/shared/automation/workflow-graph");
+    const result = compileWorkflow({
+      nodes: [
+        node("t", "trigger", { triggerType: "event", eventKey: "members.created" }),
+        node("c", "condition", { field: "trigger.status", operator: "eq", value: "true", [conditionValueKey("trigger.status")]: "ACTIVE" }),
+        node("a", "task.automation.log_message", { message: "Hi {{member.fullName}}" }),
+      ],
+      edges: [edge("t", "c"), edge("c", "a")],
+    });
+    assert.deepEqual(result.issues, []);
+    assert.equal((result.graph!.nodes[1].config as { value: string }).value, "ACTIVE");
+    assert.equal(conditionValueKey("trigger.status"), "value_trigger_status");
+  });
+});
+
+describe("Reference validation", () => {
+  test("unknown {{...}} references are reported at publish", () => {
+    const refs: WorkflowCatalog = { ...catalog, references: new Map([["members.created", new Set(["trigger.memberId", "member.fullName"])]]) };
+    const graph = compile(
+      [node("t", "trigger", { triggerType: "event", eventKey: "members.created" }), node("a", "task.automation.log_message", { message: "Hi {{members.name}} {{member.fullName}}" })],
+      [edge("t", "a")],
+    );
+    assert.deepEqual(validateWorkflow(graph, refs), ["TASK_UNKNOWN_REFERENCE:a:members.name"]);
   });
 });

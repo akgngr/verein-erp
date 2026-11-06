@@ -1,6 +1,7 @@
 import "server-only";
 
 import type { Prisma } from "@prisma/client";
+import { z } from "zod";
 
 import { getDb } from "@/shared/db";
 import {
@@ -26,6 +27,13 @@ export function workflowCatalog(): WorkflowCatalog {
   return {
     tasks: new Map(automationTasks.map((task) => [task.key, { inputSchema: task.inputSchema, workflowEnabled: Boolean(task.workflow) }])),
     events: new Set(automationEvents.map((event) => event.key)),
+    references: new Map(automationEvents.map((event) => {
+      const shape = event.payloadSchema instanceof z.ZodObject ? Object.keys(event.payloadSchema.shape) : [];
+      return [event.key, new Set([
+        ...shape.map((field) => `trigger.${field}`),
+        ...(event.variables?.fields.map((field) => `${event.variables!.namespace}.${field}`) ?? []),
+      ])];
+    })),
   };
 }
 

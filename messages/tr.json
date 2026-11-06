@@ -2326,7 +2326,8 @@
           "contains": "içerir",
           "exists": "dolu",
           "notExists": "boş"
-        }
+        },
+        "variablesHint": "Kullanılabilir alanlar"
       },
       "describe": {
         "triggerEvent": "Akış şu olduğunda başlar: {event}",
@@ -2360,7 +2361,8 @@
         "tooLarge": "Akış çok büyük.",
         "tooFewSteps": "Akışta tetikleyiciden sonra en az bir adım olmalı.",
         "schema": "Bir adımın ayarları geçersiz ({detail}).",
-        "generic": "Doğrulama hatası: {code}"
+        "generic": "Doğrulama hatası: {code}",
+        "unknownReference": "\"{step}\" adımında bilinmeyen alan: {refs}. Kullanılabilir alanlar: {available}"
       }
     },
     "automation": {
@@ -4500,8 +4502,8 @@
             "body": "Mesaj"
           },
           "help": {
-            "to": "Ör. yonetim@dernek.de",
-            "body": "Akış verisini eklemek için alanın tamamına '{{trigger.memberId}}' gibi bir başvuru yazabilirsiniz."
+            "to": "Ör. yonetim@dernek.de veya yeni üyeye göndermek için '{{member.email}}'",
+            "body": "Metne '{{member.fullName}}' gibi alanlar ekleyebilirsiniz; liste aşağıda. Kişisel bilgiler yalnızca gönderim anında okunur, saklanmaz."
           }
         }
       }
@@ -5708,6 +5710,28 @@
             "memberId": "Üye kimliği",
             "type": "Üyelik türü",
             "status": "Üyelik durumu"
+          },
+          "options": {
+            "status": {
+              "ACTIVE": "Aktif",
+              "PASSIVE": "Pasif",
+              "RESIGNED": "Ayrıldı",
+              "DECEASED": "Vefat"
+            },
+            "type": {
+              "ASIL": "Asıl",
+              "ONURSAL": "Onursal",
+              "FAHRI": "Fahri",
+              "DESTEKCI": "Destekçi"
+            }
+          },
+          "variables": {
+            "firstName": "Ad",
+            "lastName": "Soyad",
+            "fullName": "Ad soyad",
+            "membershipNumber": "Üye numarası",
+            "email": "E-posta",
+            "joinDate": "Giriş tarihi"
           }
         }
       }

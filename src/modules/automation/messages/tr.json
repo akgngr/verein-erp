@@ -318,7 +318,8 @@
         "contains": "içerir",
         "exists": "dolu",
         "notExists": "boş"
-      }
+      },
+      "variablesHint": "Kullanılabilir alanlar"
     },
     "describe": {
       "triggerEvent": "Akış şu olduğunda başlar: {event}",
@@ -352,7 +353,8 @@
       "tooLarge": "Akış çok büyük.",
       "tooFewSteps": "Akışta tetikleyiciden sonra en az bir adım olmalı.",
       "schema": "Bir adımın ayarları geçersiz ({detail}).",
-      "generic": "Doğrulama hatası: {code}"
+      "generic": "Doğrulama hatası: {code}",
+      "unknownReference": "\"{step}\" adımında bilinmeyen alan: {refs}. Kullanılabilir alanlar: {available}"
     }
   },
   "automation": {

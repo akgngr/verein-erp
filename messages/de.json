@@ -2326,7 +2326,8 @@
           "contains": "enthält",
           "exists": "ist ausgefüllt",
           "notExists": "ist leer"
-        }
+        },
+        "variablesHint": "Verfügbare Felder"
       },
       "describe": {
         "triggerEvent": "Startet, wenn: {event}",
@@ -2360,7 +2361,8 @@
         "tooLarge": "Der Workflow ist zu groß.",
         "tooFewSteps": "Nach dem Auslöser muss mindestens ein Schritt folgen.",
         "schema": "Die Einstellungen eines Schritts sind ungültig ({detail}).",
-        "generic": "Prüffehler: {code}"
+        "generic": "Prüffehler: {code}",
+        "unknownReference": "Unbekanntes Feld in „{step}“: {refs}. Verfügbar: {available}"
       }
     },
     "automation": {
@@ -4500,8 +4502,8 @@
             "body": "Nachricht"
           },
           "help": {
-            "to": "z. B. vorstand@verein.de",
-            "body": "Für Workflow-Daten das ganze Feld als Verweis wie '{{trigger.memberId}}' angeben."
+            "to": "z. B. vorstand@verein.de oder '{{member.email}}' für das neue Mitglied",
+            "body": "Felder wie '{{member.fullName}}' können in den Text eingefügt werden; Liste siehe unten. Personenbezogene Daten werden nur beim Versand gelesen, nicht gespeichert."
           }
         }
       }
@@ -5708,6 +5710,28 @@
             "memberId": "Mitglieds-ID",
             "type": "Mitgliedsart",
             "status": "Mitgliedsstatus"
+          },
+          "options": {
+            "status": {
+              "ACTIVE": "Aktiv",
+              "PASSIVE": "Passiv",
+              "RESIGNED": "Ausgetreten",
+              "DECEASED": "Verstorben"
+            },
+            "type": {
+              "ASIL": "Ordentlich",
+              "ONURSAL": "Ehrenmitglied",
+              "FAHRI": "Ehrenamtlich",
+              "DESTEKCI": "Fördermitglied"
+            }
+          },
+          "variables": {
+            "firstName": "Vorname",
+            "lastName": "Nachname",
+            "fullName": "Vor- und Nachname",
+            "membershipNumber": "Mitgliedsnummer",
+            "email": "E-Mail",
+            "joinDate": "Eintrittsdatum"
           }
         }
       }

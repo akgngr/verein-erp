@@ -5,7 +5,7 @@ import { mailInboxPermissions, mailPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "mail",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.3.4",
+  version: "1.4.0",
   label: "E-posta Altyapısı",
   description:
     "Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gönderim kayıtları.",
