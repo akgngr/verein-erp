@@ -688,3 +688,10 @@ yeni rota eklenince oluşan `.next/dev/types/routes.d.ts … TS1128` hatası bö
 Testlerin yakaladıkları: elle yazılmış `src/app` dosyası (`zero-touch`), ilk satırda olmayan direktif
 (`directives`), "use client" olmadan HeroUI (`heroui-client-only`), sayfası olmayan menü bağlantısı
 (`navigation`), iskelet şablonlarının kurallara uyumu (`scaffold`).
+
+
+## Hydration hataları (SSR ↔ istemci uyuşmazlığı)
+
+- HeroUI `Select` sunucu ve istemcide farklı react-aria `id` üretebilir. Sunucuda render edilen istemci bileşenlerinde `Select` yerine `@/shared/components/ui/client-select` içindeki `ClientSelect`'i kullanın (aynı props ve children).
+- Yalnızca istemcide anlamlı içerik için `@/shared/hooks/use-hydrated` (`useHydrated()`) kullanın; `typeof window` dallanması, `Date.now()`/`Math.random()` ile render, tarayıcı yerel ayarına bağlı tarih biçimi hydration hatasına yol açar.
+- **Test:** `pnpm test:hydration` tüm statik panel sayfalarını gerçek tarayıcıda açar ve hydration ya da sayfa hatasında başarısız olur (CI'da da çalışır). Yerelde: uygulamayı başlatın, sonra `E2E_EMAIL=… E2E_PASSWORD=… BASE_URL=http://localhost:3000 pnpm test:hydration`. Tek sayfa için `HYDRATION_ROUTES=/automation`. İlk kullanımda tarayıcı: `pnpm exec playwright install chromium`.

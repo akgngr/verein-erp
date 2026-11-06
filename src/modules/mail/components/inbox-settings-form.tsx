@@ -1,9 +1,10 @@
 "use client";
 
-import { addToast, Button, Input, Select, SelectItem } from "@heroui/react";
+import { addToast, Button, Input, SelectItem } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
+import { ClientSelect } from "@/shared/components/ui/client-select";
 
 import { saveInboxSettingsAction } from "../actions/inbox-actions";
 
@@ -24,7 +25,7 @@ export function InboxSettingsForm({ initial }: { initial: { host: string | null;
       <Input label={t("host")} labelPlacement="outside" placeholder="imap.example.com" value={host} onValueChange={setHost} />
       <div className="grid grid-cols-2 gap-3">
         <Input type="number" label={t("port")} labelPlacement="outside" value={port} onValueChange={setPort} />
-        <Select
+        <ClientSelect
           label={t("security")}
           labelPlacement="outside"
           selectedKeys={[security]}
@@ -39,7 +40,7 @@ export function InboxSettingsForm({ initial }: { initial: { host: string | null;
           {["SSL", "STARTTLS", "NONE"].map((value) => (
             <SelectItem key={value}>{t(`securities.${value}`)}</SelectItem>
           ))}
-        </Select>
+        </ClientSelect>
       </div>
       <Input label={t("username")} labelPlacement="outside" autoComplete="off" value={username} onValueChange={setUsername} />
       <Input type="password" label={t("password")} labelPlacement="outside" autoComplete="new-password" placeholder={initial.hasPassword ? t("passwordStored") : ""} value={password} onValueChange={setPassword} />
