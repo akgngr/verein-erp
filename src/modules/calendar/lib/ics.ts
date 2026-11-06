@@ -18,7 +18,7 @@ const utc = (date: Date) =>
 const day = (date: Date) => `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}`;
 
 export function escapeIcs(text: string): string {
-  return text.replace(/\\/g, "\\\\").replace(/;/g, "\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+  return text.replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
 }
 
 /** Fold lines longer than 75 octets (RFC 5545 §3.1). */
