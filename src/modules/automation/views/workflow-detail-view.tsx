@@ -158,12 +158,16 @@ export async function WorkflowDetailView({ id }: { id: string }) {
                   const runningStep = run.steps.find((step) => step.status === "RUNNING");
                   const runningChild = children.find((child) => child.id === runningStep?.childExecutionId);
                   const stepName = (key: string) => graphTitles.get(key) ?? key;
+                  const unmet = run.steps.find((step) => step.taskKey === "workflow.condition" && (step.result as { passed?: boolean } | null)?.passed === false);
+                  const unmetOut = ((unmet?.result as { output?: Record<string, unknown> } | null)?.output ?? {}) as Record<string, unknown>;
                   const result = failedStep
                     ? t("runs_.failedAt", { step: stepName(failedStep.stepKey), code: explain(failedStep.lastErrorCode) })
                     : runningStep && runningChild?.lastErrorCode
                       ? t("runs_.retrying", { step: stepName(runningStep.stepKey), code: explain(runningChild.lastErrorCode), attempt: runningChild.attempt, max: runningChild.maxAttempts })
                     : runningStep
                       ? t("runs_.running", { step: stepName(runningStep.stepKey) })
+                    : unmet
+                      ? t("runs_.conditionNotMet", { step: stepName(unmet.stepKey), field: String(unmetOut.field ?? ""), expected: String(unmetOut.expected ?? ""), actual: String(unmetOut.actual ?? "") })
                     : waitingStep
                       ? t(waitingStep.taskKey === "workflow.approval" ? "runs_.waitingApproval" : "runs_.waitingDelay")
                       : t("runs_.stepsDone", { done, skipped });

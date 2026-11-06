@@ -2241,7 +2241,8 @@
         "manual": "Manuell",
         "event": "Ereignis",
         "retrying": "„{step}“ wird erneut versucht ({attempt}/{max}): {code}",
-        "running": "„{step}“ läuft"
+        "running": "„{step}“ läuft",
+        "conditionNotMet": "Bedingung „{step}“ nicht erfüllt, folgende Schritte übersprungen: {field} erwartet „{expected}“, erhalten „{actual}“"
       },
       "durationSeconds": "{count} s",
       "durationMinutes": "{count} min",

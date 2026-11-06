@@ -8,6 +8,7 @@ import { getDb } from "@/shared/db";
 import {
   canonicalGraphSchema,
   planWorkflow,
+  readPath,
   resolveTemplates,
   WORKFLOW_LIMITS,
   type CanonicalGraph,
@@ -190,10 +191,24 @@ export async function advanceWorkflowRun(runId: string, now = new Date()): Promi
           maxAttempts: 1,
         };
         if (action.type === "complete") {
+          let output = action.result;
+          if (node.kind === "condition") {
+            // Keep what was compared so a skipped branch is explainable.
+            const actual = readPath(context, node.config.field);
+            const shown = actual === undefined ? "(missing)" : String(typeof actual === "object" ? JSON.stringify(actual) : actual).slice(0, 80);
+            output = { passed: action.passed, field: node.config.field, operator: node.config.operator, expected: node.config.value, actual: shown };
+            automationTrace("workflow", action.passed ? "condition passed" : "condition NOT met → following branch is skipped", {
+              run: runId, step: node.label || node.id, field: node.config.field, operator: node.config.operator, expected: node.config.value, actual: shown,
+            });
+            if (!action.passed) {
+              events.push({ level: "INFO", event: "WORKFLOW_CONDITION_NOT_MET", message: `${node.label || node.id}: ${node.config.field} ${node.config.operator} "${node.config.value}" (actual: ${shown})` });
+            }
+          }
           steps.set(node.id, await tx.automationStepRun.create({
-            data: { ...base, status: "SUCCEEDED", startedAt: now, finishedAt: now, result: json({ passed: action.passed, output: action.result }) },
+            data: { ...base, status: "SUCCEEDED", startedAt: now, finishedAt: now, result: json({ passed: action.passed, output }) },
           }));
         } else if (action.type === "skip") {
+          automationTrace("workflow", "step skipped (its branch is inactive)", { run: runId, step: node.label || node.id, kind: node.kind });
           steps.set(node.id, await tx.automationStepRun.create({
             data: { ...base, status: "SKIPPED", finishedAt: now },
           }));
