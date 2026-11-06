@@ -578,5 +578,8 @@
         }
       }
     }
+  },
+  "calendar": {
+    "meetings": "Sitzungen"
   }
 }

@@ -1,0 +1,30 @@
+{
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
+  "releases": [
+    {
+      "version": "1.0.0",
+      "date": "2026-11-06",
+      "title": {
+        "tr": "İlk sürüm",
+        "de": "Erste Version"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Gün, hafta, ay ve ajanda görünümleri; kişisel ve ortak takvimler; tekrarlanan kayıtlar.",
+          "de": "Tages-, Wochen-, Monats- und Agendaansicht; persönliche und gemeinsame Kalender; Serientermine."
+        },
+        {
+          "type": "feature",
+          "tr": "Etkinlik, toplantı, görev, evrak ve kurs tarihleri tek takvimde; kayıt tek tıkla etkinliğe dönüşür.",
+          "de": "Veranstaltungen, Sitzungen, Aufgaben, Schriftstücke und Kurstermine in einem Kalender; Eintrag per Klick in Veranstaltung umwandeln."
+        },
+        {
+          "type": "security",
+          "tr": "Kişisel ICS aboneliği: gizli bağlantı yalnız hash olarak saklanır, istenince yenilenir veya iptal edilir.",
+          "de": "Persönliches ICS-Abo: geheimer Link nur als Hash gespeichert, jederzeit erneuer- oder widerrufbar."
+        }
+      ]
+    }
+  ]
+}
