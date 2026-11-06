@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.1.0",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "Silinme hakkı",
+        "de": "Recht auf Löschung"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Kullanıcı silinirken tüm modüllerin kişisel verileri de silinir (KVKK md. 7 / DSGVO Art. 17); kurumsal kayıtlar yasal saklama gereği kalır. Temizlenemeyen modüller denetim kaydına yazılır.",
+          "de": "Beim Löschen eines Benutzers werden auch seine persönlichen Daten in allen Modulen gelöscht (Art. 17 DSGVO); Geschäftsunterlagen bleiben wegen Aufbewahrungspflichten erhalten. Fehlgeschlagene Bereinigungen werden im Audit-Log vermerkt."
+        }
+      ]
+    },
+    {
       "version": "1.0.2",
       "date": "2026-11-03",
       "title": {

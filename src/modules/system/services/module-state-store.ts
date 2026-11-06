@@ -28,3 +28,21 @@ export async function setModuleEnabled(key: string, isEnabled: boolean): Promise
   }
   revalidatePath("/", "layout");
 }
+
+/**
+ * Kullanıcı silinmeden önce tüm modüllerin `onUserDeleted` kancalarını çalıştırır (modül kapalı olsa da;
+ * veri durur). Bir kanca hata verirse diğerleri yine çalışır; başarısız modüller döndürülür.
+ */
+export async function runUserDeletionHooks(userId: string): Promise<{ failed: string[] }> {
+  const failed: string[] = [];
+  for (const lifecycle of moduleLifecycleRegistry) {
+    if (!lifecycle.onUserDeleted) continue;
+    try {
+      await lifecycle.onUserDeleted(userId);
+    } catch (error) {
+      failed.push(lifecycle.moduleKey);
+      console.error(`[lifecycle] ${lifecycle.moduleKey}.onUserDeleted:`, error instanceof Error ? error.message.slice(0, 120) : "failed");
+    }
+  }
+  return { failed };
+}

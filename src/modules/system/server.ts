@@ -9,3 +9,4 @@ export { getModuleAvailability, listUsableModuleKeys, withModuleGate, gateRouteH
 export { approveModuleAccessAction, revokeModuleAccessAction } from "./actions/module-access";
 export { uploadPackageHandler } from "./services/package-handlers";
 export { deleteModulePackageAction } from "./actions/package-actions";
+export { runUserDeletionHooks } from "./services/module-state-store";

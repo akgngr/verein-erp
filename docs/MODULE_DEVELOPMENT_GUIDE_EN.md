@@ -476,3 +476,14 @@ directly, run `rm -rf .next/types .next/dev/types` first.
 Tests catch: hand-written `src/app` files (`zero-touch`), directives not on the first line
 (`directives`), HeroUI without "use client" (`heroui-client-only`), menu links without a page
 (`navigation`), scaffold templates breaking the rules (`scaffold`).
+
+## Right to erasure (`lifecycle.ts → onUserDeleted`)
+
+Before a user is deleted, the system calls every module's `onUserDeleted(userId)` hook (even for disabled modules).
+
+- Rows that belong to a single user (conversations, profile, personal calendar, personal files, preferences):
+  set `personalOwnerField` in `DATA_POLICY` and delete them in the hook (`x.deleteMany({ where: { userId } })`).
+- Business records (bookings, meetings, members, shared calendar entries) are kept for legal retention;
+  `createdById` is a soft reference and `…ByLabel` keeps the name.
+- A table with `userId`/`ownerId` that is kept goes into `USER_LINK_RETAINED` with a reason.
+- `tests/shared/user-deletion.test.ts` enforces this decision and the hook for every such table.

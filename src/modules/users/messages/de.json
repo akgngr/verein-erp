@@ -215,7 +215,7 @@
     }
   },
   "access": {
-    "system": "Liest installierte und aktive Module, um zu prüfen, ob Modulrollen (z. B. Lehrkraft) verfügbar sind."
+    "system": "Liest installierte und aktive Module, um zu prüfen, ob Modulrollen (z. B. Lehrkraft) verfügbar sind. Startet beim Löschen eines Benutzers die Bereinigung personenbezogener Daten in den Modulen (Recht auf Löschung)."
   },
   "roles": {
     "newRole": "Neue Rolle",
