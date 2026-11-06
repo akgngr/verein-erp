@@ -6,6 +6,12 @@
 export type ModuleLifecycle = {
   moduleKey: string;
   onDisable?: () => Promise<void>;
+  /**
+   * Kullanıcı silinmeden hemen önce çağrılır (KVKK md. 7 / DSGVO Art. 17). Yalnız o kullanıcıya ait kişisel
+   * verileri siler (veri politikasında `personalOwnerField` olan tablolar). Kurumsal kayıtlar (fiş, toplantı,
+   * üye…) yasal saklama gereği kalır; içlerindeki ad etiketleri korunur. Modül kapalı olsa da çağrılır.
+   */
+  onUserDeleted?: (userId: string) => Promise<void>;
 };
 
 export function defineLifecycle(lifecycle: ModuleLifecycle): ModuleLifecycle {

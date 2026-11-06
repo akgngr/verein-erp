@@ -2,6 +2,7 @@
 
 import { z } from "zod";
 
+import { runUserDeletionHooks } from "@/modules/system/server";
 import { getDb } from "@/shared/db";
 import type { ActionResult } from "@/shared/types/action";
 
@@ -12,7 +13,8 @@ const DELETE_SCHEMA = z.object({ id: z.string().min(1) });
 
 /**
  * Kalıcı silme. Kısıtlar: kendini silemez; son aktif ADMIN silinemez.
- * Diğer modüller kullanıcıya yumuşak referansla bağlıdır (FK yok); kayıtlarındaki ad etiketleri korunur.
+ * Önce modüllerin `onUserDeleted` kancaları kişisel verileri siler (KVKK/DSGVO); kurumsal kayıtlar
+ * yumuşak referansla kalır, ad etiketleri korunur (bkz. DATA_POLICY.personalOwnerField / USER_LINK_RETAINED).
  * Denetim kaydında kullanıcının adı ve e-postası saklanır.
  */
 export async function deleteUserAction(input: unknown): Promise<ActionResult> {
@@ -30,12 +32,15 @@ export async function deleteUserAction(input: unknown): Promise<ActionResult> {
         if (activeAdmins <= 1) throw new ActionError("users.errors.lastAdmin");
       }
 
+      // Kişisel veriler (AI sohbetleri, profil, kişisel takvim, dosyalar…) önce modüllerce silinir.
+      const cleanup = await runUserDeletionHooks(target.id);
       await db.user.delete({ where: { id: target.id } });
       await audit({
         action: "DELETE",
         entity: "User",
         entityId: target.id,
         before: { name: target.name, email: target.email, role: target.role, isActive: target.isActive },
+        ...(cleanup.failed.length ? { after: { personalDataCleanupFailed: cleanup.failed } } : {}),
       });
       return undefined;
     },

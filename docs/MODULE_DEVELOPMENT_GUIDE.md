@@ -459,6 +459,14 @@ const file = await createGeneratedFile({ ownerId: user.id, title, format: "xlsx"
   - `clear` için `clearRefs(refs, { model: (ids) => ... })`: modeller ters sırada silinir, silinemeyenler döner.
 - **`lifecycle.ts`**: `defineLifecycle({ moduleKey, onDisable })`. Yönetici modülü kapattığında sistem `onDisable`'ı çağırır
   (`src/lifecycle-registry.ts`). Demo modülü bununla tüm demo kayıtlarını siler.
+- **Silinme hakkı (`onUserDeleted`, zorunlu):** Kullanıcı silinmeden hemen önce sistem her modülün
+  `onUserDeleted(userId)` kancasını çağırır (modül kapalı olsa da). Kural:
+  - Tablo satırları tek bir kullanıcıya aitse (sohbet, profil, kişisel takvim, kişisel dosya, tercih…)
+    `DATA_POLICY` girişine `personalOwnerField: "userId"` yaz ve kancada `x.deleteMany({ where: { userId } })` ile sil.
+  - Kurumsal kayıtlar (fiş, toplantı, üye, ortak takvim kaydı…) yasal saklama gereği **kalır**; `createdById`
+    yumuşak referanstır, ad etiketi (`…ByLabel`) korunur.
+  - `userId`/`ownerId` taşıyan ama silinmeyecek tablo `USER_LINK_RETAINED` listesine gerekçesiyle eklenir.
+  - `tests/shared/user-deletion.test.ts` her `userId`/`ownerId` tablosu için bu kararı ve kancayı zorunlu tutar.
 
 ## 9e. Modül sürümü ve sürüm notları (`releases.json`)
 

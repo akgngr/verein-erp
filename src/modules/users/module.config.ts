@@ -6,14 +6,14 @@ import { usersPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "users",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.0.2",
+  version: "1.1.0",
   label: "Kullanıcılar",
   description: "Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri.",
   category: "CORE",
   isProtected: true,
   hasSchema: true,
   // Rol dizini: modül rollerinin kullanılabilirliği için kurulu/etkin modüller okunur.
-  access: [{ module: "system", operations: ["read"] }],
+  access: [{ module: "system", operations: ["read", "write"] }],
   nav: [
     {
       href: "/ayarlar/kullanicilar",

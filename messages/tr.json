@@ -7223,7 +7223,7 @@
       }
     },
     "access": {
-      "system": "Modül rollerinin (örn. Öğretmen) kullanılabilir olup olmadığını görmek için kurulu ve etkin modülleri okur."
+      "system": "Modül rollerinin (örn. Öğretmen) kullanılabilir olup olmadığını görmek için kurulu ve etkin modülleri okur. Kullanıcı silinirken modüllerin kişisel veri temizliğini başlatır (KVKK/DSGVO silinme hakkı)."
     },
     "roles": {
       "newRole": "Yeni rol",

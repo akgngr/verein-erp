@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "2.0.1",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "Silinme hakkı",
+        "de": "Recht auf Löschung"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Kullanıcı silinince silinir: \"Dosyalarım\" kayıtları ve dosyaları.",
+          "de": "Wird beim Löschen des Benutzers entfernt: Einträge und Dateien unter „Meine Dateien“."
+        }
+      ]
+    },
+    {
       "version": "2.0.0",
       "date": "2026-11-01",
       "appVersion": "0.34.0",

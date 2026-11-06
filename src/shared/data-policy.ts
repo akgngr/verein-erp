@@ -32,6 +32,11 @@ export type TablePolicy = {
   sensitiveFields: readonly string[];
   /** Sahibi dışında doğrudan Prisma erişimine izinli modüller ("shared" = src/shared altyapısı). */
   directAccess?: readonly string[];
+  /**
+   * Satırlar tek bir kullanıcıya aitse o alan (ör. "userId", "ownerId"). Kullanıcı silinince sahibi modülün
+   * `lifecycle.ts → onUserDeleted` kancası bu satırları siler (KVKK md. 7 / DSGVO Art. 17). Test zorunlu tutar.
+   */
+  personalOwnerField?: string;
 };
 
 /** Personel/kullanıcı adı taşıyan denetim alanları her tabloda hassastır (…ByLabel). */
@@ -40,10 +45,10 @@ export const GLOBAL_SENSITIVE_FIELD = /ByLabel$/;
 export const DATA_POLICY = {
   // ── K0 ──
   AccountingBookingFile: { owner: "accounting", category: "K0", reason: "Fiş/makbuz görüntüleri", sensitiveFields: [] },
-  AiConversation: { owner: "ai", category: "K0", reason: "Kullanıcı sohbetleri", sensitiveFields: [] },
+  AiConversation: { owner: "ai", category: "K0", reason: "Kullanıcı sohbetleri", sensitiveFields: [], personalOwnerField: "userId" },
   AiMessage: { owner: "ai", category: "K0", reason: "Kullanıcı sohbetleri", sensitiveFields: [] },
   AiProviderCredential: { owner: "ai", category: "K0", reason: "API anahtarı (şifreli)", sensitiveFields: [] },
-  AiUserConsent: { owner: "ai", category: "K0", reason: "Kullanıcı rızaları", sensitiveFields: [] },
+  AiUserConsent: { owner: "ai", category: "K0", reason: "Kullanıcı rızaları", sensitiveFields: [], personalOwnerField: "userId" },
   AuditLog: { owner: "audit", category: "K0", reason: "Değiştirilemez denetim izi", sensitiveFields: [], directAccess: ["shared"] },
   BankConnection: { owner: "banking", category: "K0", reason: "Banka erişim tokenları", sensitiveFields: [] },
   BankConnectionAccount: { owner: "banking", category: "K0", reason: "Banka hesap verisi", sensitiveFields: ["iban"] },
@@ -58,7 +63,7 @@ export const DATA_POLICY = {
   ProgressNote: { owner: "progress", category: "K0", reason: "Çocuklara ilişkin değerlendirme notları", sensitiveFields: ["goals", "text"] },
   SystemSetting: { owner: "system", category: "K0", reason: "Yapılandırma ve erişim onayları (sır içerebilir)", sensitiveFields: [] },
   User: { owner: "users", category: "K0", reason: "Kimlik doğrulama sırları (parola hash, kilit)", sensitiveFields: ["passwordHash", "email"], directAccess: ["auth"] },
-  UserProfile: { owner: "auth", category: "K0", reason: "Banka ve iletişim verisi", sensitiveFields: ["accountHolder", "bic", "city", "houseNumber", "ibanEnc", "mobile", "phone", "postalCode", "street", "taxNumberEnc"] },
+  UserProfile: { owner: "auth", category: "K0", reason: "Banka ve iletişim verisi", sensitiveFields: ["accountHolder", "bic", "city", "houseNumber", "ibanEnc", "mobile", "phone", "postalCode", "street", "taxNumberEnc"], personalOwnerField: "userId" },
   // ── K1 ──
   AccountingBankImport: { owner: "accounting", category: "K1", reason: "Banka ekstresi dosyaları", sensitiveFields: [] },
   AccountingContact: { owner: "accounting", category: "K1", reason: "Müşteri/tedarikçi kişisel verisi", sensitiveFields: ["address", "contactPerson", "email", "notes", "phone", "vatId"] },
@@ -75,7 +80,7 @@ export const DATA_POLICY = {
   Donor: { owner: "donations", category: "K1", reason: "Bağışçı kişisel verisi", sensitiveFields: ["firstName", "lastName", "organizationName", "email", "phone", "street", "postalCode", "city"] },
   EventAttendee: { owner: "events", category: "K1", reason: "Katılımcı adları", sensitiveFields: ["email", "firstName", "lastName", "phone"] },
   FeedbackItem: { owner: "feedback", category: "K1", reason: "Hata/öneri metni ve ekran görüntüsü", sensitiveFields: ["reporterLabel", "screenshotPath"] },
-  GeneratedFile: { owner: "exports", category: "K1", reason: "Oluşturulan dosyalar (kişisel veri içerebilir)", sensitiveFields: [] },
+  GeneratedFile: { owner: "exports", category: "K1", reason: "Oluşturulan dosyalar (kişisel veri içerebilir)", sensitiveFields: [], personalOwnerField: "ownerId" },
   MailLog: { owner: "mail", category: "K1", reason: "Alıcı adresleri", sensitiveFields: ["toAddress", "toName"] },
   MailingCampaign: { owner: "mailings", category: "K1", reason: "Kampanya içeriği", sensitiveFields: [] },
   MailingSegment: { owner: "mailings", category: "K1", reason: "Alıcı filtreleri", sensitiveFields: [] },
@@ -103,13 +108,13 @@ export const DATA_POLICY = {
   Document: { owner: "documents", category: "K3", reason: "Evrak; yapay zekâya konu ve karşı taraf maskeli", sensitiveFields: ["assigneeId", "assigneeLabel"] },
   DocumentFile: { owner: "documents", category: "K3", reason: "Evrak ekleri; yapay zekâ metni yalnız maskeli ve documents:read izniyle okur", sensitiveFields: ["storagePath"] },
   Donation: { owner: "donations", category: "K3", reason: "Bağışlar; yapay zekâya yalnız toplam/adet/dağılım", sensitiveFields: ["donorId", "reference", "purposeNote"] },
-  Calendar: { owner: "calendar", category: "K2", reason: "Takvim adları ve renkleri; kişisel takvim sahibine bağlı", sensitiveFields: ["ownerId"] },
+  Calendar: { owner: "calendar", category: "K2", reason: "Takvim adları ve renkleri; kişisel takvim sahibine bağlı", sensitiveFields: ["ownerId"], personalOwnerField: "ownerId" },
   CalendarEntry: { owner: "calendar", category: "K1", reason: "Kişisel randevular özel hayat bilgisi içerebilir", sensitiveFields: ["title", "description", "location", "createdByLabel"] },
   CalendarSyncApp: { owner: "calendar", category: "K0", reason: "Sağlayıcı OAuth uygulaması; client secret şifreli", sensitiveFields: ["clientSecretEnc"] },
-  CalendarSyncAccount: { owner: "calendar", category: "K0", reason: "Kullanıcının dış takvim erişim bilgileri (şifreli token/parola)", sensitiveFields: ["credentialsEnc", "stateHash", "accountLabel"] },
+  CalendarSyncAccount: { owner: "calendar", category: "K0", reason: "Kullanıcının dış takvim erişim bilgileri (şifreli token/parola)", sensitiveFields: ["credentialsEnc", "stateHash", "accountLabel"], personalOwnerField: "userId" },
   CalendarSyncCalendar: { owner: "calendar", category: "K1", reason: "Kullanıcının dış takvim adları", sensitiveFields: ["name"] },
   CalendarSyncEvent: { owner: "calendar", category: "K1", reason: "Dış takvimden alınan kişisel randevular; yalnız sahibi görür", sensitiveFields: ["title", "description", "location"] },
-  CalendarFeedToken: { owner: "calendar", category: "K0", reason: "ICS abonelik sırrı (yalnız hash)", sensitiveFields: ["tokenHash"] },
+  CalendarFeedToken: { owner: "calendar", category: "K0", reason: "ICS abonelik sırrı (yalnız hash)", sensitiveFields: ["tokenHash"], personalOwnerField: "userId" },
   Meeting: { owner: "meetings", category: "K3", reason: "Toplantılar; kişi adları yok", sensitiveFields: ["createdByLabel", "approvedByLabel"] },
   MeetingDecision: { owner: "meetings", category: "K3", reason: "Kararlar", sensitiveFields: [] },
   Member: { owner: "members", category: "K3", reason: "Üye kişisel verisi; yapay zekâya yalnız sayım/dağılım", sensitiveFields: ["firstName", "lastName", "email", "phone", "street", "houseNumber", "postalCode", "city", "birthDate", "kimlikNo", "notes"] },
@@ -132,7 +137,7 @@ export const DATA_POLICY = {
   AccountingReserve: { owner: "accounting", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
   AccountingSettings: { owner: "accounting", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
   AccountingYear: { owner: "accounting", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
-  AiReport: { owner: "ai", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
+  AiReport: { owner: "ai", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [], personalOwnerField: "userId" },
   AiSettings: { owner: "ai", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
   AutomationSchedule: { owner: "automation", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
   AutomationWorkflow: { owner: "automation", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
@@ -155,7 +160,7 @@ export const DATA_POLICY = {
   OrganizationProfile: { owner: "organization", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
   StudentsCounter: { owner: "students", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
   StudentsSettings: { owner: "students", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
-  SystemDashboardLayout: { owner: "system", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
+  SystemDashboardLayout: { owner: "system", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [], personalOwnerField: "userId" },
   SystemModulePackage: { owner: "system", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
   SystemModuleState: { owner: "system", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
 } as const satisfies Record<string, TablePolicy>;
@@ -169,6 +174,16 @@ export type AiToolPolicy = {
 };
 
 /** Her yapay zekâ aracı okuduğu tabloları beyan eder; beyansız araç testi düşürür. */
+/**
+ * `userId`/`ownerId` taşıyan ama kullanıcı silinince SİLİNMEYEN tablolar ve gerekçesi. Yeni bir tablo bu
+ * alanlardan birini taşıyorsa ya `personalOwnerField` (silinir) ya da buraya kayıt (kalır) gerekir.
+ */
+export const USER_LINK_RETAINED: Record<string, string> = {
+  AuditLog: "Denetim izi; yasal ispat yükümlülüğü (GoBD, KVKK md. 12). Ad/e-posta silme anında kaydedilir.",
+  CourseTeacher: "Öğretmen kaydı kurumsal; kullanıcı bağlantısı yalnız giriş eşleştirmesi, ödeme geçmişi saklanır.",
+  MeetingAttendee: "Toplantı tutanağının parçası; katılımcı adı tutanakta korunur.",
+};
+
 export const AI_TOOL_POLICY = {
   // accounting
   get_accounting_summary: { module: "accounting", reads: ["AccountingBooking", "AccountingAccount", "AccountingYear", "AccountingCategory"] },
