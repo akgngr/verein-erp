@@ -7,11 +7,14 @@ import { ActionError, createAction } from "@/modules/auth/server";
 import type { ActionResult } from "@/shared/types/action";
 
 import { automationPermissions } from "../permissions";
+import { buildEditorCatalog } from "../services/workflow-catalog";
+import { describeIssues } from "../services/workflow-describe";
 import {
   checkWorkflowDraft,
   createWorkflow,
   decideApproval,
   deleteWorkflow,
+  getWorkflow,
   publishWorkflow,
   renameWorkflow,
   saveWorkflowDraft,
@@ -66,7 +69,8 @@ export async function saveWorkflowDraftAction(input: unknown): Promise<ActionRes
     schema: z.object({ id, draft }),
     handler: async ({ input, user }) => {
       await saveWorkflowDraft(input.id, input.draft, user.id).catch(mapError);
-      return { issues: checkWorkflowDraft(input.draft).issues };
+      revalidate(input.id);
+      return { issues: await describeIssues(checkWorkflowDraft(input.draft).issues, input.draft, await buildEditorCatalog()) };
     },
   })(input);
 }
@@ -93,7 +97,10 @@ export async function publishWorkflowAction(input: unknown): Promise<ActionResul
         revalidate(input.id);
         return { version: version.version, issues: [] };
       } catch (error) {
-        if (error instanceof WorkflowPublishError) return { version: 0, issues: error.issues };
+        if (error instanceof WorkflowPublishError) {
+          const workflow = await getWorkflow(input.id);
+          return { version: 0, issues: await describeIssues(error.issues, workflow?.draft, await buildEditorCatalog()) };
+        }
         return mapError(error);
       }
     },

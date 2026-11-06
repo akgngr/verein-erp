@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. En üst sürüm module.config.ts ile aynı olmalı.",
   "releases": [
     {
+      "version": "1.3.1",
+      "date": "2026-11-06",
+      "title": {
+        "tr": "İş akışı etiketleri",
+        "de": "Workflow-Beschriftungen"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Güvenlik testleri adımı için okunur ad ve alan etiketleri eklendi.",
+          "de": "Klartextname und Feldbeschriftungen für den Schritt Sicherheitstests."
+        }
+      ]
+    },
+    {
       "version": "1.3.0",
       "date": "2026-11-06",
       "title": {

@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.7.1",
+      "date": "2026-11-06",
+      "title": {
+        "tr": "İş akışı ekranları ve kolay düzenleyici",
+        "de": "Workflow-Ansichten und einfacher Editor"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Shopify tarzı liste ve detay sayfası, tam ekran Türkçe/Almanca düzenleyici, görev başına form alanları ve okunur doğrulama mesajları.",
+          "de": "Shopify-artige Liste und Detailseite, Vollbild-Editor auf Deutsch/Türkisch, Formularfelder je Aufgabe und verständliche Prüfmeldungen."
+        }
+      ]
+    },
+    {
       "version": "0.7.0",
       "date": "2026-11-06",
       "appVersion": "0.40.0",
@@ -34,6 +49,26 @@
           "type": "feature",
           "tr": "Yeni iş akışı görevleri: automation.log_message ve mail.send_notification (sabit bir adrese bildirim e-postası).",
           "de": "Neue Workflow-Aufgaben: automation.log_message und mail.send_notification (Benachrichtigung an eine feste Adresse)."
+        },
+        {
+          "type": "improvement",
+          "tr": "İş akışları ana menüde. Liste ekranı Tümü/Etkin/Kapalı sekmeleri, arama, son çalıştırma, 30 günlük çalıştırma sayısı ve okunur tetikleyici adıyla tablo halinde.",
+          "de": "Workflows im Hauptmenü. Die Liste zeigt Tabs Alle/Aktiv/Inaktiv, Suche, letzte Ausführung, Ausführungen in 30 Tagen und den Auslöser im Klartext."
+        },
+        {
+          "type": "improvement",
+          "tr": "Detay sayfası: durum, açma/kapama, Düzenle, Diğer işlemler; 30 günlük istatistikler; adımları düz cümlelerle gösteren akış görünümü; sürüm geçmişi; son çalıştırmalar tablosu.",
+          "de": "Detailseite: Status, Ein/Aus, Bearbeiten, weitere Aktionen; 30-Tage-Statistik; Ablaufansicht mit Schritten im Klartext; Versionsverlauf; Tabelle der letzten Ausführungen."
+        },
+        {
+          "type": "improvement",
+          "tr": "Düzenleyici tam ekran açılır ve Türkçe/Almanca'dır. Her eylem ayrı bir adımdır ve kendi alanlarına sahiptir (JSON yazmak gerekmez). Tetikleyici, koşul ve bekleme alanları sade seçeneklerle gelir. Doğrulama hataları adım ve alan adıyla açıklanır.",
+          "de": "Der Editor öffnet im Vollbild und ist deutsch/türkisch. Jede Aktion ist ein eigener Schritt mit eigenen Feldern (kein JSON). Auslöser, Bedingung und Warten nutzen verständliche Auswahlen. Prüffehler nennen Schritt und Feld."
+        },
+        {
+          "type": "fix",
+          "tr": "Görev değiştirildiğinde önceki görevin girdisi kaldığı için yayımlama TASK_INPUT_INVALID ile başarısız oluyordu; eski taslaklar açılırken yeni adım biçimine otomatik dönüştürülür.",
+          "de": "Beim Wechsel der Aufgabe blieb die alte Eingabe stehen und die Veröffentlichung scheiterte mit TASK_INPUT_INVALID; ältere Entwürfe werden beim Öffnen automatisch umgestellt."
         }
       ]
     },

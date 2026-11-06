@@ -70,5 +70,17 @@
   "segmentDelete": "Segment löschen",
   "filterEmpty": "Keine Werte vorhanden.",
   "editorHint": "„/“ fügt Blöcke ein (Überschrift, Button, Spalten, Trenner …); markierter Text öffnet das Formatierungsmenü.",
-  "editorPlaceholder": "E-Mail-Inhalt schreiben …"
+  "editorPlaceholder": "E-Mail-Inhalt schreiben …",
+  "automation": {
+    "events": {
+      "campaign_finished": {
+        "label": "Wenn eine Rundmail fertig versendet ist",
+        "fields": {
+          "campaignId": "Kampagnen-ID",
+          "sent": "Anzahl gesendet",
+          "failed": "Anzahl fehlgeschlagen"
+        }
+      }
+    }
+  }
 }

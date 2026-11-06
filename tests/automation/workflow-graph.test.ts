@@ -64,7 +64,7 @@ describe("Workflow compiler and validator", () => {
 
   test("validates static task input against the task schema", () => {
     const graph = compile([node("t", "trigger"), node("a", "task", { taskKey: "automation.log_message", input: '{"message":""}' })], [edge("t", "a")]);
-    assert.ok(validateWorkflow(graph, catalog).includes("TASK_INPUT_INVALID:a"));
+    assert.ok(validateWorkflow(graph, catalog).includes("TASK_INPUT_INVALID:a:message"));
     const referenced = compile([node("t", "trigger"), node("a", "task", { taskKey: "automation.log_message", input: '{"message":"{{trigger.text}}"}' })], [edge("t", "a")]);
     assert.deepEqual(validateWorkflow(referenced, catalog), []);
   });
@@ -135,5 +135,24 @@ describe("Planner (dead-path elimination)", () => {
     assert.ok(log.includes("skip:a"));
     assert.ok(log.includes("wait:b"));
     assert.ok(!log.some((entry) => entry.endsWith(":join")));
+  });
+});
+
+describe("Per-task palette nodes", () => {
+  test("task.<key> nodes use form fields as input and convert delay units", () => {
+    const result = compileWorkflow({
+      nodes: [
+        node("t", "trigger", { triggerType: "manual", eventKey: "members.created" }),
+        node("a", "task.automation.log_message", { message: "{{trigger.memberId}}", description: "" }),
+        node("d", "delay", { mode: "duration", amount: 2, unit: "days" }),
+      ],
+      edges: [edge("t", "a"), edge("a", "d")],
+    });
+    assert.deepEqual(result.issues, []);
+    const [trigger, task, delay] = result.graph!.nodes;
+    assert.deepEqual(trigger.config, { triggerType: "manual" });
+    assert.deepEqual(task.config, { taskKey: "automation.log_message", input: { message: "{{trigger.memberId}}" } });
+    assert.deepEqual(delay.config, { minutes: 2880 });
+    assert.deepEqual(validateWorkflow(result.graph!, catalog), []);
   });
 });

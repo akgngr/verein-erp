@@ -196,5 +196,22 @@
       "accountingOff": "Das Buchhaltungsmodul ist deaktiviert.",
       "notFound": "Nicht gefunden."
     }
+  },
+  "automation": {
+    "tasks": {
+      "send_notification": {
+        "label": "Benachrichtigungs-E-Mail senden",
+        "description": "Sendet eine E-Mail an eine feste Adresse (z. B. Vorstand). Für Rundmails an Mitglieder das Rundmail-Modul verwenden.",
+        "fields": {
+          "to": "Empfängeradresse",
+          "subject": "Betreff",
+          "body": "Nachricht"
+        },
+        "help": {
+          "to": "z. B. vorstand@verein.de",
+          "body": "Für Workflow-Daten das ganze Feld als Verweis wie '{{trigger.memberId}}' angeben."
+        }
+      }
+    }
   }
 }

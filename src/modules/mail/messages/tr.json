@@ -196,5 +196,22 @@
       "accountingOff": "Muhasebe modülü kapalı.",
       "notFound": "Bulunamadı."
     }
+  },
+  "automation": {
+    "tasks": {
+      "send_notification": {
+        "label": "Bildirim e-postası gönder",
+        "description": "Belirlediğiniz tek bir adrese (ör. yönetim kurulu) e-posta gönderir. Üyelere toplu e-posta için Toplu e-posta modülünü kullanın.",
+        "fields": {
+          "to": "Alıcı e-posta adresi",
+          "subject": "Konu",
+          "body": "Mesaj"
+        },
+        "help": {
+          "to": "Ör. yonetim@dernek.de",
+          "body": "Akış verisini eklemek için alanın tamamına '{{trigger.memberId}}' gibi bir başvuru yazabilirsiniz."
+        }
+      }
+    }
   }
 }

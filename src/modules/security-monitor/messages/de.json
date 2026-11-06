@@ -57,5 +57,21 @@
     "environment": "Umgebung",
     "duration": "Dauer",
     "queued": "Die Sicherheitstests wurden dauerhaft eingereiht; die Ergebnisse erscheinen nach Abschluss hier."
+  },
+  "automation": {
+    "tasks": {
+      "run_tests": {
+        "label": "Sicherheitstests ausführen",
+        "description": "Führt die Sicherheitstests im Hintergrund aus; Ergebnisse erscheinen in der Sicherheitsübersicht.",
+        "fields": {
+          "testSuite": "Testpaket"
+        },
+        "options": {
+          "testSuite": {
+            "security": "Sicherheit"
+          }
+        }
+      }
+    }
   }
 }
