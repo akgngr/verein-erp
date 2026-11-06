@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.4.1",
+      "date": "2026-11-06",
+      "title": {
+        "tr": "İş akışı etiketleri",
+        "de": "Workflow-Beschriftungen"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Kampanya tamamlandı olayı için okunur ad ve alan etiketleri eklendi.",
+          "de": "Klartextname und Feldbeschriftungen für das Ereignis Kampagne abgeschlossen."
+        }
+      ]
+    },
+    {
       "version": "1.4.0",
       "date": "2026-11-06",
       "title": {

@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.7.1",
+      "date": "2026-11-06",
+      "title": {
+        "tr": "İş akışı ekranları ve kolay düzenleyici",
+        "de": "Workflow-Ansichten und einfacher Editor"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Shopify tarzı liste ve detay sayfası, tam ekran Türkçe/Almanca düzenleyici, görev başına form alanları ve okunur doğrulama mesajları.",
+          "de": "Shopify-artige Liste und Detailseite, Vollbild-Editor auf Deutsch/Türkisch, Formularfelder je Aufgabe und verständliche Prüfmeldungen."
+        }
+      ]
+    },
+    {
       "version": "0.7.0",
       "date": "2026-11-06",
       "appVersion": "0.40.0",
