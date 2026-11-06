@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.3.2",
+      "date": "2026-11-06",
+      "title": {
+        "tr": "İş akışı hata düzeltmeleri",
+        "de": "Workflow-Fehlerbehebungen"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Bildirim e-postası adımı, e-posta ayarlanmamışsa yeniden denemeden hemen MAIL_NOT_CONFIGURED ile başarısız olur.",
+          "de": "Der Schritt Benachrichtigungs-E-Mail schlägt ohne Wiederholung mit MAIL_NOT_CONFIGURED fehl, wenn kein Versand eingerichtet ist."
+        }
+      ]
+    },
+    {
       "version": "1.3.1",
       "date": "2026-11-06",
       "title": {

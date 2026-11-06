@@ -2,7 +2,7 @@ import "server-only";
 
 import { z } from "zod";
 
-import { defineTask } from "@/shared/automation/define";
+import { defineTask, PermanentTaskError } from "@/shared/automation/define";
 
 // mail modülü — worker/otomasyonlar için framework bağımsız sunucu API'si.
 // Next.js action, route veya UI modüllerini bu girişe eklemeyin.
@@ -27,13 +27,14 @@ export const sendNotificationTask = defineTask({
   workflow: { defaultInput: { to: "", subject: "", body: "" } },
   handler: async (input, context) => {
     const { sendMail, isMailConfigured } = await import("./services/mail-service");
-    if (!(await isMailConfigured())) throw new Error("MAIL_NOT_CONFIGURED");
+    if (!(await isMailConfigured())) throw new PermanentTaskError("MAIL_NOT_CONFIGURED");
     const result = await sendMail({
       to: input.to,
       subject: input.subject,
       text: input.body,
       context: { module: "automation", reference: context.executionId },
     });
+    // SMTP details are in the mail log (E-Mail → Protokoll); keep the code generic here.
     if (!result.ok) throw new Error("MAIL_SEND_FAILED");
     return { sent: true };
   },

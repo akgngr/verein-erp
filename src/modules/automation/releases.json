@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.7.2",
+      "date": "2026-11-06",
+      "title": {
+        "tr": "İş akışı hata düzeltmeleri",
+        "de": "Workflow-Fehlerbehebungen"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Kaydettikten sonra yanlışlıkla \"yayımlanmamış değişiklikler var\" uyarısı çıkıyordu (veritabanı anahtar sırası); düzeltildi. Kalıcı hatalarda (ör. e-posta ayarlanmamış) görev boşuna yeniden denenmez, akış hemen nedeniyle başarısız olur. Hata kodları detay sayfasında ve izleme ekranında Türkçe açıklanır; yeniden denenen adımlar deneme sayısıyla gösterilir; izleme ekranı akış adını gösterir.",
+          "de": "Nach dem Speichern erschien fälschlich „unveröffentlichte Änderungen“ (Schlüsselreihenfolge in der Datenbank); behoben. Bei dauerhaften Fehlern (z. B. E-Mail nicht eingerichtet) wird nicht mehr sinnlos wiederholt, der Workflow schlägt sofort mit Grund fehl. Fehlercodes werden in Detailseite und Überwachung erklärt; Wiederholungen zeigen den Versuch; die Überwachung zeigt den Workflow-Namen."
+        }
+      ]
+    },
+    {
       "version": "0.7.1",
       "date": "2026-11-06",
       "title": {
