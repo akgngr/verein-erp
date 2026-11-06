@@ -41,4 +41,4 @@ export type SyncAccountView = {
   calendars: { id: string; name: string; color: string; enabled: boolean }[];
 };
 export type SyncAppView = { provider: string; configured: boolean; clientId: string | null; tenant: string | null; redirectUri: string };
-export type SyncSettingsData = { providers: SyncProviderView[]; accounts: SyncAccountView[]; apps: SyncAppView[] | null };
+export type SyncSettingsData = { providers: SyncProviderView[]; accounts: SyncAccountView[]; canManage: boolean };

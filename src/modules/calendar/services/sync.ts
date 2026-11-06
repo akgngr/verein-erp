@@ -9,7 +9,7 @@ import { MAX_REMOTE_EVENTS, SyncAuthError, type CalendarSyncProvider, type SyncA
 import { getDb } from "@/shared/db";
 import { canEncryptSecrets, openSecret, sealSecret } from "@/shared/security/secret-box";
 
-import type { SyncAccountView, SyncSettingsData } from "../types";
+import type { SyncAccountView, SyncAppView, SyncSettingsData } from "../types";
 
 const PURPOSE_CREDENTIALS = "calendar-sync-credentials";
 const PURPOSE_APP = "calendar-sync-app";
@@ -270,8 +270,8 @@ export async function loadSyncedRange(userId: string, from: Date, to: Date) {
   return { calendars, events };
 }
 
-/** Everything the settings dialog needs; app config only for managers, never secrets. */
-export async function syncSettingsFor(userId: string, canManage: boolean, origin: string): Promise<SyncSettingsData> {
+/** Everything the settings dialog needs; never secrets. */
+export async function syncSettingsFor(userId: string, canManage: boolean): Promise<SyncSettingsData> {
   const providers = await availableProviders();
   const apps = await listAppStatus();
   return {
@@ -282,6 +282,11 @@ export async function syncSettingsFor(userId: string, canManage: boolean, origin
       appConfigured: provider.auth === "password" || apps.some((app) => app.provider === provider.key && app.configured),
     })),
     accounts: await listUserAccounts(userId),
-    apps: canManage ? apps.map((app) => ({ ...app, redirectUri: redirectUri(origin, app.provider) })) : null,
+    canManage,
   };
+}
+
+/** Calendar → Settings page (managers): OAuth app status with the redirect URI to register. */
+export async function listAppsForSettings(origin: string): Promise<SyncAppView[]> {
+  return (await listAppStatus()).map((app) => ({ ...app, redirectUri: redirectUri(origin, app.provider) }));
 }

@@ -1,7 +1,8 @@
 "use client";
 
 import { addToast, Button, Chip, Input, Snippet, Switch } from "@heroui/react";
-import { KeyRound, Link2, RefreshCw, Unlink } from "lucide-react";
+import { KeyRound, Link2, RefreshCw, Settings2, Unlink } from "lucide-react";
+import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { useFormatter, useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
@@ -9,12 +10,11 @@ import { useState, useTransition } from "react";
 import {
   connectPasswordAction,
   disconnectSyncAction,
-  saveSyncAppAction,
   startOAuthAction,
   syncNowAction,
   toggleSyncCalendarAction,
 } from "../actions/sync-actions";
-import type { SyncAccountView, SyncAppView, SyncProviderView, SyncSettingsData } from "../types";
+import type { SyncAccountView, SyncProviderView, SyncSettingsData } from "../types";
 
 const STATUS_COLOR = { ACTIVE: "success", ERROR: "warning", REAUTH: "danger", PENDING: "default" } as const;
 
@@ -36,22 +36,13 @@ export function SyncSettings({ data }: { data: SyncSettingsData }) {
         <p className="text-small text-default-600">{t("description")}</p>
       </div>
       {data.providers.map((provider) => (
-        <ProviderRow key={provider.key} provider={provider} account={data.accounts.find((account) => account.provider === provider.key) ?? null} />
+        <ProviderRow key={provider.key} provider={provider} canManage={data.canManage} account={data.accounts.find((account) => account.provider === provider.key) ?? null} />
       ))}
-      {data.apps?.length ? (
-        <div className="flex flex-col gap-3 border-t border-default-200 pt-3">
-          <div>
-            <h4 className="text-small font-semibold">{t("appsTitle")}</h4>
-            <p className="text-tiny text-default-500">{t("appsDescription")}</p>
-          </div>
-          {data.apps.map((app) => <AppForm key={app.provider} app={app} />)}
-        </div>
-      ) : null}
     </section>
   );
 }
 
-function ProviderRow({ provider, account }: { provider: SyncProviderView; account: SyncAccountView | null }) {
+function ProviderRow({ provider, account, canManage }: { provider: SyncProviderView; account: SyncAccountView | null; canManage: boolean }) {
   const t = useTranslations("calendar.sync");
   const format = useFormatter();
   const router = useRouter();
@@ -106,7 +97,16 @@ function ProviderRow({ provider, account }: { provider: SyncProviderView; accoun
           ) : null}
         </div>
       </div>
-      {!provider.appConfigured ? <p className="text-tiny text-warning-700">{t("appMissingHint")}</p> : null}
+      {!provider.appConfigured ? (
+        <div className="flex flex-wrap items-center gap-2">
+          <p className="text-tiny text-warning-700">{t(canManage ? "appMissingAdmin" : "appMissingHint")}</p>
+          {canManage ? (
+            <Button as={NextLink} href="/calendar/ayarlar" size="sm" variant="flat" color="warning" startContent={<Settings2 className="h-4 w-4" />}>
+              {t("openSettings")}
+            </Button>
+          ) : null}
+        </div>
+      ) : null}
       {account?.lastError ? <p className="text-tiny text-danger">{t(`codes.${account.lastError}` as never)}</p> : null}
       {account?.lastSyncAt ? <p className="text-tiny text-default-500">{t("lastSync", { date: format.dateTime(new Date(account.lastSyncAt), { dateStyle: "medium", timeStyle: "short" }) })}</p> : null}
 
@@ -144,41 +144,6 @@ function ProviderRow({ provider, account }: { provider: SyncProviderView; accoun
           ))}
         </ul>
       ) : null}
-    </div>
-  );
-}
-
-function AppForm({ app }: { app: SyncAppView }) {
-  const t = useTranslations("calendar.sync");
-  const router = useRouter();
-  const [pending, startTransition] = useTransition();
-  const [clientId, setClientId] = useState(app.clientId ?? "");
-  const [clientSecret, setClientSecret] = useState("");
-  const [tenant, setTenant] = useState(app.tenant ?? "");
-
-  return (
-    <div className="flex flex-col gap-2">
-      <span className="text-small font-medium">{t(`providers.${app.provider}` as never)}</span>
-      <div className="flex flex-col gap-1">
-        <span className="text-tiny text-default-500">{t("redirectUri")}</span>
-        <Snippet symbol="" size="sm" className="max-w-full" classNames={{ pre: "truncate" }}>{app.redirectUri}</Snippet>
-      </div>
-      <div className="flex flex-wrap items-end gap-2">
-        <Input size="sm" className="max-w-xs" label={t("clientId")} value={clientId} onValueChange={setClientId} autoComplete="off" />
-        <Input size="sm" className="max-w-xs" type="password" label={t("clientSecret")} placeholder={app.configured ? t("secretKept") : undefined}
-          value={clientSecret} onValueChange={setClientSecret} autoComplete="new-password" />
-        {app.provider === "outlook" ? <Input size="sm" className="max-w-[12rem]" label={t("tenant")} placeholder="common" value={tenant} onValueChange={setTenant} /> : null}
-        <Button size="sm" color="primary" variant="flat" isLoading={pending} isDisabled={clientId.trim().length < 5 || (!app.configured && !clientSecret)}
-          onPress={() => startTransition(async () => {
-            const response = await saveSyncAppAction({ provider: app.provider, clientId, clientSecret, tenant });
-            if (!response.ok) return void addToast({ title: response.error, color: "danger" });
-            setClientSecret("");
-            addToast({ title: t("appSaved"), color: "success" });
-            router.refresh();
-          })}>
-          {t("save")}
-        </Button>
-      </div>
     </div>
   );
 }

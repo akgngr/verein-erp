@@ -1,4 +1,4 @@
-import { CalendarRange } from "lucide-react";
+import { CalendarRange, SlidersHorizontal } from "lucide-react";
 
 import type { ModuleConfig } from "@/shared/types/module";
 
@@ -10,7 +10,7 @@ import { calendarPermissions } from "./permissions";
  */
 export const moduleConfig: ModuleConfig = {
   key: "calendar",
-  version: "1.1.1",
+  version: "1.2.0",
   label: "Takvim",
   description: "Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve son tarihler tek görünümde.",
   category: "OFFICIAL",
@@ -27,6 +27,10 @@ export const moduleConfig: ModuleConfig = {
       order: 24,
       permission: { definition: calendarPermissions, action: "view" },
     },
+  ],
+  // Senkron eklentilerinin OAuth uygulamaları; ayar merkezinde "Modül ayarları" altında listelenir.
+  menu: [
+    { key: "settings", label: "Ayarlar", href: "/calendar/ayarlar", icon: SlidersHorizontal, permission: { definition: calendarPermissions, action: "approve" } },
   ],
 };
 

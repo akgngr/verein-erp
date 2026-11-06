@@ -154,7 +154,6 @@
     "appPasswordHint": "Apple ID parolanızı değil, appleid.apple.com → Giriş ve Güvenlik → Uygulamaya özel parolalar bölümünde oluşturduğunuz parolayı girin.",
     "username": "Apple ID (e-posta)",
     "appPassword": "Uygulamaya özel parola",
-    "appsTitle": "Sağlayıcı uygulamaları (yönetici)",
     "appsDescription": "Her sağlayıcı için kendi OAuth uygulamanızı oluşturup buraya girin. Yönlendirme adresini sağlayıcıya ekleyin. Gizli anahtar şifreli saklanır ve bir daha gösterilmez.",
     "redirectUri": "Yönlendirme (redirect) adresi",
     "clientId": "Client ID",
@@ -184,6 +183,16 @@
       "secretRequired": "İlk kayıtta client secret zorunludur.",
       "auth": "Giriş bilgileri reddedildi.",
       "failed": "Takvim bağlanamadı."
-    }
+    },
+    "settingsTitle": "Takvim ayarları",
+    "settingsDescription": "Google ve Outlook senkronu için kendi OAuth uygulamalarınızın bilgileri. Kullanıcılar hesaplarını takvimdeki ayarlardan bağlar.",
+    "noOAuthPlugins": "OAuth gerektiren senkron eklentisi etkin değil. Modül Yönetimi'nden Google Takvim veya Outlook Takvim eklentisini açın.",
+    "appConfigured": "Ayarlandı",
+    "appNotConfigured": "Ayarlanmadı",
+    "appMissingAdmin": "Bu sağlayıcı için uygulama bilgileri henüz girilmedi.",
+    "openSettings": "Ayarlara git"
+  },
+  "menu": {
+    "settings": "Ayarlar"
   }
 }

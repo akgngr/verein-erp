@@ -154,7 +154,6 @@
     "appPasswordHint": "Nicht dein Apple-ID-Passwort: Erstelle unter appleid.apple.com → Anmelden und Sicherheit → App-spezifische Passwörter ein eigenes Passwort.",
     "username": "Apple-ID (E-Mail)",
     "appPassword": "App-spezifisches Passwort",
-    "appsTitle": "Anbieter-Apps (Admin)",
     "appsDescription": "Lege je Anbieter eine eigene OAuth-App an und trage sie hier ein. Die Weiterleitungsadresse beim Anbieter hinterlegen. Das Secret wird verschlüsselt gespeichert und nie wieder angezeigt.",
     "redirectUri": "Weiterleitungsadresse (Redirect-URI)",
     "clientId": "Client-ID",
@@ -184,6 +183,16 @@
       "secretRequired": "Beim ersten Speichern ist das Client-Secret erforderlich.",
       "auth": "Zugangsdaten abgelehnt.",
       "failed": "Kalender konnte nicht verbunden werden."
-    }
+    },
+    "settingsTitle": "Kalendereinstellungen",
+    "settingsDescription": "Daten eurer eigenen OAuth-Apps für die Google- und Outlook-Synchronisation. Benutzer verbinden ihre Konten in den Kalendereinstellungen.",
+    "noOAuthPlugins": "Kein Sync-Plugin mit OAuth aktiv. Aktiviere in der Modulverwaltung Google Kalender oder Outlook-Kalender.",
+    "appConfigured": "Eingerichtet",
+    "appNotConfigured": "Nicht eingerichtet",
+    "appMissingAdmin": "Für diesen Anbieter sind noch keine App-Daten hinterlegt.",
+    "openSettings": "Zu den Einstellungen"
+  },
+  "menu": {
+    "settings": "Einstellungen"
   }
 }
