@@ -11,6 +11,7 @@ import nextTypescript from "eslint-config-next/typescript";
 //   @/modules/<modül>/cards    → panel kartları (yalnızca üretilen src/dashboard-cards.ts)
 //   @/modules/<modül>/calendar → takvim kaynakları (yalnızca üretilen src/calendar-registry.ts)
 //   @/modules/<modül>/calendar-sync → takvim senkron eklentileri (yalnızca üretilen src/calendar-sync-registry.ts)
+//   @/modules/<modül>/channels → kampanya kanalları (yalnızca üretilen src/campaign-channel-registry.ts)
 //   @/modules/<modül>/demo, /lifecycle → yalnızca üretilen src/demo-registry.ts, src/lifecycle-registry.ts
 // KARAR: Desen; "@ /modules/x/queries/y" gibi derin içe aktarmaları da kapsasın diye
 // "@ /modules/*/**" ile genişletildi. İstisnalar yalnızca tam public giriş yollarıdır.
@@ -31,6 +32,7 @@ const MODULE_INTERNAL_IMPORTS = {
     "!@/modules/*/recipients",
     "!@/modules/*/calendar",
     "!@/modules/*/calendar-sync",
+    "!@/modules/*/channels",
     "!@/modules/*/releases.json",
     "!@/modules/*/permissions",
     "!@/modules/*/routes",

@@ -1,13 +1,24 @@
 enum MailingStatus {
+  DRAFT
+  SCHEDULED
   SENDING
   DONE
   FAILED
+  CANCELLED
 }
 
 /// Toplu e-posta gönderimi. Alıcı başına sonuç mail_logs'ta (module=mailings, reference=id).
 /// KVKK: alıcı listesi saklanmaz; yalnızca kaynak, filtre ve sayılar.
 model MailingCampaign {
   id             String        @id @default(cuid())
+  /// Kampanya adı (panoda görünür). Eski kayıtlarda boş: konu gösterilir.
+  name           String        @default("")
+  /// Gönderim kanalı (channels.ts eklentisi): "email", ileride "sms" | "telegram" | "whatsapp".
+  channel        String        @default("email")
+  /// Kampanya bir iş akışı olarak çalışır (automation_workflows.id). Programatik gönderimlerde boş.
+  workflowId     String?
+  /// Planlı gönderim zamanı (iş akışındaki bekleme adımı).
+  scheduledAt    DateTime?
   /// "<modül>:<kaynak>" (ör. members:members) veya programatik çağrıda "<modül>:api"
   source         String
   filter         Json          @default("{}")
@@ -27,6 +38,7 @@ model MailingCampaign {
   finishedAt     DateTime?
 
   @@index([createdAt])
+  @@index([status])
   @@map("mailings_campaigns")
 }
 

@@ -1,14 +1,15 @@
 import Link from "next/link";
-import { getFormatter, getTranslations } from "next-intl/server";
+import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { can } from "@/shared/permissions/define";
 
-import { MailingComposer, type ComposerSource } from "../components/mailing-composer";
+import { CampaignBoard, type BoardCampaign } from "../components/campaign-board";
+import type { WizardSource } from "../components/campaign-wizard";
 import { mailingsPermissions } from "../permissions";
-import { isMailConfigured, listCampaigns, listSegments, listSourcesWithOptions } from "../services/campaigns";
+import { isMailConfigured, listCampaigns, listChannelInfo, listSegments, listSourcesWithOptions } from "../services/campaigns";
 
 /** Varsayılan metni editör için paragraflara çevirir (yer tutucular korunur). */
 function textToHtml(text: string): string {
@@ -19,7 +20,7 @@ function textToHtml(text: string): string {
     .join("");
 }
 
-/** Toplu e-posta (?kaynak=<modül>:<kaynak>): yeni gönderim ve geçmiş. */
+/** Kampanyalar (?kaynak=<modül>:<kaynak> sihirbazı o listeyle açar): pano + tam ekran sihirbaz. */
 export async function MailingsView({ sourceId }: { sourceId?: string | null }) {
   let user;
   try {
@@ -28,10 +29,10 @@ export async function MailingsView({ sourceId }: { sourceId?: string | null }) {
     if (error instanceof ForbiddenError) return <AccessDenied />;
     throw error;
   }
-  const [t, tRoot, format] = await Promise.all([getTranslations("mailings"), getTranslations(), getFormatter()]);
-  const [configured, campaigns, rawSources, segments] = await Promise.all([isMailConfigured(), listCampaigns(), listSourcesWithOptions(user.role), listSegments(user.role)]);
+  const [t, tRoot] = await Promise.all([getTranslations("mailings"), getTranslations()]);
+  const [configured, campaigns, rawSources, segments, channels] = await Promise.all([isMailConfigured(), listCampaigns(), listSourcesWithOptions(user.role), listSegments(user.role), listChannelInfo()]);
   const label = (key: string) => tRoot(key as never);
-  const sources: ComposerSource[] = rawSources.map((source) => {
+  const sources: WizardSource[] = rawSources.map((source) => {
     const base = `${source.moduleKey}.recipients.${source.key}`;
     return {
       id: source.id,
@@ -50,6 +51,26 @@ export async function MailingsView({ sourceId }: { sourceId?: string | null }) {
     const [moduleKey, key] = id.split(":");
     return key === "api" ? label(`${moduleKey}.module.label`) : (sources.find((source) => source.id === id)?.label ?? id);
   };
+  const board: BoardCampaign[] = campaigns.map((row) => ({
+    id: row.id,
+    name: row.name,
+    subject: row.subject,
+    channel: row.channel,
+    sourceLabel: sourceLabel(row.source),
+    status: row.status,
+    recipientCount: row.recipientCount,
+    sentCount: row.sentCount,
+    failedCount: row.failedCount,
+    skippedNoEmail: row.skippedNoEmail,
+    skippedOptOut: row.skippedOptOut,
+    createdAt: row.createdAt.toISOString(),
+    scheduledAt: row.scheduledAt?.toISOString() ?? null,
+    workflowId: row.workflowId,
+    createdByLabel: row.createdByLabel,
+    draft: row.status === "DRAFT"
+      ? { id: row.id, name: row.name, channel: row.channel, sourceId: row.source, filter: row.filter as Record<string, string[]>, subject: row.subject, body: row.body, bodyHtml: row.bodyHtml, scheduledAt: row.scheduledAt?.toISOString() ?? null }
+      : null,
+  }));
 
   return (
     <div className="flex flex-col gap-6">
@@ -62,43 +83,16 @@ export async function MailingsView({ sourceId }: { sourceId?: string | null }) {
           </Link>
         </p>
       ) : null}
-      {can(user.role, mailingsPermissions, "create") ? <MailingComposer sources={sources} segments={segments} initialSourceId={sourceId ?? null} defaultHtml={textToHtml(t("defaultBody"))} /> : null}
-      <section className="flex flex-col gap-2">
-        <h2 className="text-medium font-semibold">{t("history")}</h2>
-        {campaigns.length === 0 ? (
-          <p className="text-small text-default-500">{t("noHistory")}</p>
-        ) : (
-          <div className="overflow-x-auto rounded-large border border-default-200 bg-content1">
-            <table className="w-full text-small">
-              <thead>
-                <tr className="text-left text-tiny text-default-500">
-                  <th className="px-3 py-2">{t("columns.date")}</th>
-                  <th className="px-3 py-2">{t("columns.source")}</th>
-                  <th className="px-3 py-2">{t("columns.subject")}</th>
-                  <th className="px-3 py-2 text-right">{t("columns.result")}</th>
-                  <th className="px-3 py-2">{t("columns.status")}</th>
-                  <th className="px-3 py-2">{t("columns.by")}</th>
-                </tr>
-              </thead>
-              <tbody>
-                {campaigns.map((row) => (
-                  <tr key={row.id} className="border-t border-default-100">
-                    <td className="whitespace-nowrap px-3 py-2">{format.dateTime(row.createdAt, { dateStyle: "medium", timeStyle: "short" })}</td>
-                    <td className="px-3 py-2 text-default-600">{sourceLabel(row.source)}</td>
-                    <td className="px-3 py-2">{row.subject}</td>
-                    <td className="px-3 py-2 text-right tabular-nums">
-                      {t("result", { sent: row.sentCount, total: row.recipientCount, failed: row.failedCount })}
-                      <div className="text-tiny text-default-500">{t("skipped", { noEmail: row.skippedNoEmail, optOut: row.skippedOptOut })}</div>
-                    </td>
-                    <td className="px-3 py-2">{t(`statusLabels.${row.status}`)}</td>
-                    <td className="px-3 py-2 text-default-500">{row.createdByLabel}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        )}
-      </section>
+      <CampaignBoard
+        campaigns={board}
+        canCreate={can(user.role, mailingsPermissions, "create")}
+        sources={sources}
+        segments={segments}
+        channels={channels}
+        defaultHtml={textToHtml(t("defaultBody"))}
+        defaultText={t("defaultBody")}
+        initialSourceId={sourceId ?? null}
+      />
     </div>
   );
 }

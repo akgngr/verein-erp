@@ -2,6 +2,36 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "2.0.0",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "Kampanyalar",
+        "de": "Kampagnen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Toplu e-posta, Kampanyalar modülüne dönüştü: pano (taslak, planlı, gönderiliyor, tamamlanan) ve tam ekran 4 adımlı sihirbaz.",
+          "de": "Sammel-E-Mail wird zu Kampagnen: Board (Entwürfe, geplant, wird gesendet, abgeschlossen) und 4-stufiger Vollbild-Assistent."
+        },
+        {
+          "type": "feature",
+          "tr": "Her kampanya bir iş akışı olarak çalışır; planlı gönderim iş akışındaki bekleme adımıyla yapılır.",
+          "de": "Jede Kampagne läuft als Workflow; geplanter Versand über den Warteschritt des Workflows."
+        },
+        {
+          "type": "feature",
+          "tr": "Taslak kaydetme, planlı gönderimi iptal etme; kanal altyapısı (SMS, Telegram, WhatsApp eklentileri için).",
+          "de": "Entwürfe speichern, geplanten Versand abbrechen; Kanal-Infrastruktur für SMS-, Telegram- und WhatsApp-Plugins."
+        },
+        {
+          "type": "feature",
+          "tr": "Yapay zekâ: kampanya istatistikleri, liste ve taslak önerisi; planlı kampanyalar takvimde.",
+          "de": "KI: Kampagnenstatistik, Liste und Entwurfsvorschlag; geplante Kampagnen im Kalender."
+        }
+      ]
+    },
+    {
       "version": "1.4.1",
       "date": "2026-11-06",
       "title": {

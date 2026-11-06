@@ -17,6 +17,8 @@ export const sendCampaignTask = defineTask({
     maxDelaySeconds: 15 * 60,
     backoffMultiplier: 2,
   },
+  // Kampanyalar iş akışı olarak çalışır: sihirbaz bu adımı içeren bir akış oluşturur.
+  workflow: { defaultInput: { campaignId: "" } },
   idempotencyKey: (input) => `mailings:campaign:${input.campaignId}`,
   handler: async (input, context) => {
     const { processCampaign } = await import("./services/campaigns");

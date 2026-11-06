@@ -4,9 +4,11 @@ import { emitAutomationEvent } from "@/shared/automation/emit";
 import type { Prisma } from "@prisma/client";
 import { z } from "zod";
 
+import { moduleChannelRegistry } from "@/campaign-channel-registry";
 import { moduleRecipientRegistry } from "@/recipient-registry";
-import { isMailConfigured, sendMail, sendMailBatch, listSuccessfulMailRecipients } from "@/modules/mail/automation";
-import { createTaskExecutionRecord } from "@/modules/automation/automation";
+import { isMailConfigured, sendMail, sendMailBatch } from "@/modules/mail/automation";
+import { createWorkflow, publishWorkflow, saveWorkflowDraft, setWorkflowEnabled, startWorkflow } from "@/modules/automation/automation";
+import { splitForChannel, type CampaignChannel } from "@/shared/campaigns/channel";
 import { campaignFinishedEvent, sendCampaignTask } from "../automation";
 import { loadPermissionPolicy, getUserById } from "@/modules/users/automation";
 import { listUsableModuleKeys } from "@/modules/system/automation";
@@ -19,6 +21,26 @@ import type { Role } from "@/shared/roles";
 
 export type SourceInfo = { id: string; moduleKey: string; key: string; placeholders: string[]; filters: { key: string; options: string[]; defaults: string[]; dynamic: boolean }[] };
 type Actor = { id: string; label: string };
+
+/** Etkin modüllerin kampanya kanalları. */
+export async function availableChannels(): Promise<CampaignChannel[]> {
+  const usable = new Set(await listUsableModuleKeys());
+  return moduleChannelRegistry.filter((entry) => usable.has(entry.module)).flatMap((entry) => entry.channels);
+}
+
+export async function findChannel(key: string): Promise<CampaignChannel | null> {
+  return (await availableChannels()).find((channel) => channel.key === key) ?? null;
+}
+
+/** Sihirbaz için: kanal, yapılandırma durumu ve yetenekleri. */
+export async function listChannelInfo() {
+  return Promise.all((await availableChannels()).map(async (channel) => ({
+    key: channel.key,
+    icon: channel.icon,
+    capabilities: channel.capabilities,
+    configured: await channel.isConfigured(),
+  })));
+}
 
 /** Kullanıcının kullanabildiği kaynaklar: modül etkin + kaynağın izni. */
 export async function listSources(role: Role): Promise<SourceInfo[]> {
@@ -64,12 +86,13 @@ function split(list: Recipient[]) {
   return { eligible: list.filter((row) => row.email && !row.optOut), noEmail, optOut };
 }
 
-export async function previewSource(role: Role, sourceId: string, filter: Record<string, string[]>) {
+export async function previewSource(role: Role, sourceId: string, filter: Record<string, string[]>, channelKey = "email") {
   const source = await findSource(role, sourceId);
-  if (!source) return null;
+  const channel = await findChannel(channelKey);
+  if (!source || !channel) return null;
   const list = await source.resolve(filter);
-  const { eligible, noEmail, optOut } = split(list);
-  return { matched: list.length, eligible: eligible.length, noEmail, optOut };
+  const { eligible, noAddress, optOut } = splitForChannel(channel, list);
+  return { matched: list.length, eligible: eligible.length, noEmail: noAddress, optOut };
 }
 
 export async function sendTest(role: Role, input: { sourceId: string; filter: Record<string, string[]>; subject: string; body: string; bodyHtml?: string; to: string; toName: string }) {
@@ -80,11 +103,122 @@ export async function sendTest(role: Role, input: { sourceId: string; filter: Re
   return sendMail({ to: input.to, toName: input.toName, subject: `[Test] ${renderMailTemplate(input.subject, vars)}`, text: renderMailTemplate(input.body, vars), html: input.bodyHtml ? renderMailTemplateHtml(input.bodyHtml, vars) : undefined, context: { module: "mailings", reference: "test" } });
 }
 
-/** Kaynaktan gönderim başlatır (arka planda). Uygun alıcı yoksa kayıt oluşturulmaz. */
-export async function startCampaign(role: Role, input: { sourceId: string; filter: Record<string, string[]>; subject: string; body: string; bodyHtml?: string; actor: Actor }): Promise<{ id: string; recipients: number } | null> {
+export type CampaignInput = {
+  id?: string;
+  name: string;
+  channel: string;
+  sourceId: string;
+  filter: Record<string, string[]>;
+  subject: string;
+  body: string;
+  bodyHtml?: string;
+  scheduledAt?: Date | null;
+};
+
+/** Taslak kaydet (oluştur/güncelle). Yalnız DRAFT kampanyalar düzenlenebilir. */
+export async function saveDraft(role: Role, input: CampaignInput, actor: Actor): Promise<{ id: string } | null> {
+  if (!(await findSource(role, input.sourceId)) || !(await findChannel(input.channel))) return null;
+  const db = getDb();
+  const data = {
+    name: input.name,
+    channel: input.channel,
+    source: input.sourceId,
+    filter: input.filter as Prisma.InputJsonValue,
+    subject: input.subject,
+    body: input.body,
+    bodyHtml: input.bodyHtml ?? null,
+    scheduledAt: input.scheduledAt ?? null,
+  };
+  if (input.id) {
+    const updated = await db.mailingCampaign.updateMany({ where: { id: input.id, status: "DRAFT" }, data });
+    return updated.count ? { id: input.id } : null;
+  }
+  return db.mailingCampaign.create({ data: { ...data, status: "DRAFT", createdById: actor.id, createdByLabel: actor.label }, select: { id: true } });
+}
+
+/** İş akışı taslağı: tetikleyici (elle) → [planlıysa bekle] → kampanyayı gönder. */
+export function campaignWorkflowDraft(campaignId: string, labels: { trigger: string; wait: string; send: string }, scheduledAt: Date | null) {
+  const nodes: unknown[] = [{ id: "trigger", data: { type: "trigger", properties: { label: labels.trigger, triggerType: "manual" } } }];
+  const edges: unknown[] = [];
+  let previous = "trigger";
+  if (scheduledAt) {
+    nodes.push({ id: "wait", data: { type: "delay", properties: { label: labels.wait, mode: "until", until: scheduledAt.toISOString() } } });
+    edges.push({ id: "trigger-wait", source: "trigger", target: "wait" });
+    previous = "wait";
+  }
+  nodes.push({ id: "send", data: { type: `task.${sendCampaignTask.key}`, properties: { label: labels.send, campaignId } } });
+  edges.push({ id: `${previous}-send`, source: previous, target: "send" });
+  return { nodes, edges };
+}
+
+/**
+ * Kampanyayı başlatır: kaydı (taslaktan veya yeni) SCHEDULED/SENDING yapar, onu çalıştıran bir iş akışı
+ * oluşturup yayımlar ve başlatır. Alıcı listesi saklanmaz; gönderimde güncel veriden yeniden hesaplanır.
+ */
+export async function launchCampaign(
+  role: Role,
+  input: CampaignInput,
+  actor: Actor,
+  labels: { workflow: string; trigger: string; wait: string; send: string },
+): Promise<{ id: string; recipients: number; workflowId: string } | null> {
   const source = await findSource(role, input.sourceId);
-  if (!source) return null;
-  return createAndQueueCampaign({ source: input.sourceId, filter: input.filter, subject: input.subject, body: input.body, bodyHtml: input.bodyHtml, actor: input.actor, list: await source.resolve(input.filter) });
+  const channel = await findChannel(input.channel);
+  if (!source || !channel) return null;
+  const { eligible, noAddress, optOut } = splitForChannel(channel, await source.resolve(input.filter));
+  if (eligible.length === 0) return { id: "", recipients: 0, workflowId: "" };
+
+  const scheduledAt = input.scheduledAt && input.scheduledAt.getTime() > Date.now() + 60_000 ? input.scheduledAt : null;
+  const draft = input.id ? await saveDraft(role, input, actor) : null;
+  if (input.id && !draft) return null;
+  const db = getDb();
+  const data = {
+    name: input.name,
+    channel: input.channel,
+    source: input.sourceId,
+    filter: input.filter as Prisma.InputJsonValue,
+    subject: input.subject,
+    body: input.body,
+    bodyHtml: input.bodyHtml ?? null,
+    scheduledAt,
+    status: (scheduledAt ? "SCHEDULED" : "SENDING") as "SCHEDULED" | "SENDING",
+    recipientCount: eligible.length,
+    skippedNoEmail: noAddress,
+    skippedOptOut: optOut,
+  };
+  const campaign = draft
+    ? await db.mailingCampaign.update({ where: { id: draft.id }, data, select: { id: true } })
+    : await db.mailingCampaign.create({ data: { ...data, createdById: actor.id, createdByLabel: actor.label }, select: { id: true } });
+
+  try {
+    const workflow = await createWorkflow({ name: labels.workflow.slice(0, 200), description: "", actorId: actor.id });
+    await saveWorkflowDraft(workflow.id, campaignWorkflowDraft(campaign.id, labels, scheduledAt), actor.id);
+    await publishWorkflow(workflow.id, actor.id);
+    await db.mailingCampaign.update({ where: { id: campaign.id }, data: { workflowId: workflow.id } });
+    await startWorkflow(workflow.id, { campaignId: campaign.id }, { actorId: actor.id });
+    return { id: campaign.id, recipients: eligible.length, workflowId: workflow.id };
+  } catch (error) {
+    await db.mailingCampaign.update({ where: { id: campaign.id }, data: { status: "FAILED", finishedAt: new Date() } });
+    throw error;
+  }
+}
+
+/** Taslak veya planlı kampanyayı iptal eder; planlı akış devre dışı kalır, bekleme bitince gönderim atlanır. */
+export async function cancelCampaign(id: string, actorId: string): Promise<boolean> {
+  const db = getDb();
+  const campaign = await db.mailingCampaign.findUnique({ where: { id }, select: { status: true, workflowId: true } });
+  if (!campaign || !["DRAFT", "SCHEDULED"].includes(campaign.status)) return false;
+  await db.mailingCampaign.update({ where: { id }, data: { status: "CANCELLED", finishedAt: new Date() } });
+  if (campaign.workflowId) await setWorkflowEnabled(campaign.workflowId, false, actorId).catch(() => undefined);
+  return true;
+}
+
+export async function deleteDraft(id: string): Promise<boolean> {
+  const result = await getDb().mailingCampaign.deleteMany({ where: { id, status: { in: ["DRAFT", "CANCELLED"] } } });
+  return result.count > 0;
+}
+
+export async function getCampaign(id: string) {
+  return getDb().mailingCampaign.findUnique({ where: { id } });
 }
 
 /**
@@ -102,8 +236,12 @@ export async function sendBulkMail(input: { moduleKey: string; recipients: Recip
  */
 async function processCampaignAttempt(campaignId: string, context: TaskExecutionContext) {
   const db = getDb();
-  const campaign = await db.mailingCampaign.findUnique({ where: { id: campaignId } });
-  if (!campaign || campaign.status !== "SENDING") return { skipped: true };
+  const found = await db.mailingCampaign.findUnique({ where: { id: campaignId } });
+  if (!found || (found.status !== "SENDING" && found.status !== "SCHEDULED")) return { skipped: true };
+  // Planlı kampanya: bekleme adımı bitti, gönderim başlıyor.
+  const campaign = found.status === "SCHEDULED"
+    ? await db.mailingCampaign.update({ where: { id: found.id }, data: { status: "SENDING" } })
+    : found;
 
   const failCampaign = async (errorCode: string) => {
     await db.mailingCampaign.updateMany({
@@ -133,25 +271,28 @@ async function processCampaignAttempt(campaignId: string, context: TaskExecution
   const filterResult = z.record(z.string().max(40), z.array(z.string().max(40)).max(20)).safeParse(campaign.filter);
   if (!filterResult.success) throw new Error("MAILING_FILTER_INVALID");
   const filter = filterResult.data;
-  const { eligible, noEmail, optOut } = split(await source.resolve(filter));
+  const channel = await findChannel(campaign.channel);
+  if (!channel) return failCampaign("MAILING_CHANNEL_UNAVAILABLE");
+  const { eligible, noAddress: noEmail, optOut } = splitForChannel(channel, await source.resolve(filter));
   // A retry after a worker restart must not resend recipients whose successful delivery
   // was already durably logged for this campaign.
-  const delivered = new Set((await listSuccessfulMailRecipients("mailings", campaign.id)).map((address) => address.trim().toLowerCase()));
-  const alreadySent = eligible.filter((row) => delivered.has((row.email ?? "").trim().toLowerCase())).length;
-  const pending = eligible.filter((row) => !delivered.has((row.email ?? "").trim().toLowerCase()));
+  const normalize = (value: string) => value.trim().toLowerCase();
+  const delivered = new Set((await channel.delivered(campaign.id)).map(normalize));
+  const alreadySent = eligible.filter((row) => delivered.has(normalize(channel.address(row) ?? ""))).length;
+  const pending = eligible.filter((row) => !delivered.has(normalize(channel.address(row) ?? "")));
   const messages = pending.map((row) => ({
-    to: row.email as string,
+    to: channel.address(row) as string,
     toName: row.name,
     subject: renderMailTemplate(campaign.subject, row.vars),
     text: renderMailTemplate(campaign.body, row.vars),
     // HTML gövde (editör) worker'da da kişiselleştirilir; değerler HTML'de kaçışlanır.
-    html: campaign.bodyHtml ? renderMailTemplateHtml(campaign.bodyHtml, row.vars) : undefined,
-    context: { module: "mailings", reference: campaign.id },
+    html: channel.capabilities.html && campaign.bodyHtml ? renderMailTemplateHtml(campaign.bodyHtml, row.vars) : undefined,
+    reference: campaign.id,
   }));
 
-  let results: Awaited<ReturnType<typeof sendMailBatch>>;
+  let results: Awaited<ReturnType<CampaignChannel["sendBatch"]>>;
   try {
-    results = await sendMailBatch(messages);
+    results = await channel.sendBatch(messages);
   } catch (error) {
     if (context.attempt >= 3) {
       await failCampaign("MAILING_SEND_ATTEMPTS_EXHAUSTED");
@@ -193,48 +334,6 @@ export async function processCampaign(campaignId: string, context: TaskExecution
     }
     throw error;
   }
-}
-
-async function createAndQueueCampaign(input: { source: string; filter: Record<string, string[]>; subject: string; body: string; bodyHtml?: string; actor: Actor; list: Recipient[] }) {
-  const { eligible, noEmail, optOut } = split(input.list);
-  if (eligible.length === 0) return { id: "", recipients: 0 };
-
-  const db = getDb();
-  const campaign = await db.mailingCampaign.create({
-    data: {
-      source: input.source,
-      filter: input.filter as Prisma.InputJsonValue,
-      subject: input.subject,
-      body: input.body,
-      bodyHtml: input.bodyHtml ?? null,
-      recipientCount: eligible.length,
-      skippedNoEmail: noEmail,
-      skippedOptOut: optOut,
-      createdById: input.actor.id,
-      createdByLabel: input.actor.label,
-    },
-    select: { id: true },
-  });
-
-  try {
-    await createTaskExecutionRecord({
-      task: sendCampaignTask,
-      organizationId: "default",
-      requestedById: input.actor.id,
-      sourceModule: "mailings",
-      correlationId: `mailings:${campaign.id}`,
-      input: { campaignId: campaign.id },
-      context: { locale: "tr" },
-    });
-  } catch (error) {
-    await db.mailingCampaign.update({
-      where: { id: campaign.id },
-      data: { status: "FAILED", finishedAt: new Date() },
-    });
-    throw error;
-  }
-
-  return { id: campaign.id, recipients: eligible.length };
 }
 
 async function createAndRun(input: { source: string; filter: Record<string, string[]>; subject: string; body: string; bodyHtml?: string; actor: Actor; list: Recipient[] }) {
@@ -301,7 +400,7 @@ export async function deleteSegment(id: string) {
 }
 
 export async function listCampaigns() {
-  return getDb().mailingCampaign.findMany({ orderBy: { createdAt: "desc" }, take: 50 });
+  return getDb().mailingCampaign.findMany({ orderBy: { createdAt: "desc" }, take: 100 });
 }
 
 export async function listCampaignSummaries(campaignIds: string[]) {
