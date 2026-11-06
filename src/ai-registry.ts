@@ -9,6 +9,7 @@ import { ai as membersAi } from "@/modules/members/ai";
 import { ai as accountingAi } from "@/modules/accounting/ai";
 import { ai as donationsAi } from "@/modules/donations/ai";
 import { ai as organizationAi } from "@/modules/organization/ai";
+import { ai as calendarAi } from "@/modules/calendar/ai";
 import { ai as coursesAi } from "@/modules/courses/ai";
 import { ai as eventsAi } from "@/modules/events/ai";
 import { ai as exportsAi } from "@/modules/exports/ai";
@@ -25,6 +26,7 @@ export const moduleAiRegistry: ModuleAi[] = [
   accountingAi,
   donationsAi,
   organizationAi,
+  calendarAi,
   coursesAi,
   eventsAi,
   exportsAi,
