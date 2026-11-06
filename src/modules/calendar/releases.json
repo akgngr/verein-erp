@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.0.1",
+      "date": "2026-11-06",
+      "title": {
+        "tr": "Düzeltme",
+        "de": "Fehlerbehebung"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Kayıt silme onayında başlık gösterilirken oluşan hata giderildi.",
+          "de": "Fehler bei der Titelanzeige im Löschdialog behoben."
+        }
+      ]
+    },
+    {
       "version": "1.0.0",
       "date": "2026-11-06",
       "title": {

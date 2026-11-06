@@ -101,7 +101,7 @@ function EntryDetail({ item, source, onEdit, onChanged }: { item: CalendarItemVi
         isOpen={confirm}
         onOpenChange={setConfirm}
         title={t("deleteTitle")}
-        message={item.recurrence !== "NONE" ? t("deleteSeries") : t("deleteMessage")}
+        message={item.recurrence !== "NONE" ? t("deleteSeries") : t("deleteMessage", { title: item.title })}
         confirmLabel={t("delete")}
         confirmColor="danger"
         onConfirm={async () => {
