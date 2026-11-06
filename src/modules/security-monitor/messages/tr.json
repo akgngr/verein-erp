@@ -57,5 +57,21 @@
     "environment": "Ortam",
     "duration": "Süre",
     "queued": "Güvenlik testleri kalıcı kuyruğa alındı; sonuçlar tamamlandığında burada görünecek."
+  },
+  "automation": {
+    "tasks": {
+      "run_tests": {
+        "label": "Güvenlik testlerini çalıştır",
+        "description": "Güvenlik test paketini arka planda çalıştırır; sonuçlar Güvenlik İzleme ekranında görünür.",
+        "fields": {
+          "testSuite": "Test paketi"
+        },
+        "options": {
+          "testSuite": {
+            "security": "Güvenlik"
+          }
+        }
+      }
+    }
   }
 }

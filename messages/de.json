@@ -2112,8 +2112,7 @@
       "delete": "Löschen",
       "deleteTitle": "Workflow löschen?",
       "deleteDescription": "Workflow und alle Versionen werden gelöscht. Bisherige Ausführungen bleiben erhalten.",
-      "valid": "Entwurf gültig, kann veröffentlicht werden.",
-      "issues": "Prüfprobleme",
+      "valid": "Workflow ist gültig und kann veröffentlicht werden.",
       "runInput": "Startdaten (JSON, optional)",
       "runInputHint": "Im Workflow über '{{trigger.feld}}' nutzbar. IDs statt personenbezogener Daten verwenden.",
       "run": "Jetzt ausführen",
@@ -2142,34 +2141,234 @@
         "inputJson": "Startdaten sind kein gültiges JSON.",
         "name": "Name muss mindestens 2 Zeichen haben."
       },
-      "nodes": {
-        "group": "Schritte",
-        "trigger": "Auslöser",
-        "triggerDesc": "Start manuell oder durch ein Modulereignis.",
-        "triggerType": "Auslöserart",
+      "sdk": {
+        "common": {
+          "close": "Schließen",
+          "open": "Öffnen",
+          "cancel": "Abbrechen",
+          "collapse": "Einklappen",
+          "expand": "Ausklappen",
+          "edit": "Bearbeiten",
+          "remove": "Entfernen",
+          "save": "Speichern",
+          "name": "Name",
+          "description": "Beschreibung",
+          "type": "Typ",
+          "notFound": "Keine Treffer."
+        },
+        "palette": {
+          "templates": "Vorlagen",
+          "nodesLibrary": "Schritte"
+        },
+        "propertiesBar": {
+          "label": "Schritt-Einstellungen",
+          "deleteNode": "Schritt löschen",
+          "deleteEdge": "Verbindung löschen"
+        },
+        "deleteConfirmation": {
+          "cancel": "Abbrechen",
+          "delete": "Löschen",
+          "node": "Schritt",
+          "nodes": "Schritte",
+          "edge": "Verbindung",
+          "edges": "Verbindungen",
+          "andConnected": "und verbundene",
+          "selected": "ausgewählt",
+          "selectedPlural": "ausgewählt",
+          "deleteSelection": "Auswahl löschen?",
+          "dontShowMeThisAgain": "Nicht mehr anzeigen"
+        },
+        "loader": {
+          "text": "Wird geladen..."
+        },
+        "tooltips": {
+          "layout": "Automatisch anordnen",
+          "open": "Öffnen",
+          "close": "Schließen",
+          "palette": "Schritte",
+          "propSidebar": "Schritt-Einstellungen",
+          "remove": "Entfernen",
+          "openPalette": "Schritte öffnen",
+          "closePalette": "Schritte schließen",
+          "openPropertiesBar": "Einstellungen öffnen",
+          "closePropertiesBar": "Einstellungen schließen",
+          "save": "Speichern",
+          "copy": "Kopieren"
+        },
+        "snackbar": {
+          "saveDiagramSuccess": "Entwurf gespeichert",
+          "saveDiagramError": "Entwurf konnte nicht gespeichert werden",
+          "cantEditReadOnlyMode": "Im Nur-Lese-Modus nicht bearbeitbar.",
+          "contentCopied": "In die Zwischenablage kopiert",
+          "wrongDiagramFormat": "Ungültiges Workflow-Format"
+        }
+      },
+      "back": "Zurück",
+      "lastUpdated": "Zuletzt aktualisiert: {date}",
+      "statusLabel": {
+        "active": "Aktiv",
+        "inactive": "Inaktiv",
+        "draft": "Entwurf"
+      },
+      "unpublishedChanges": "Es gibt unveröffentlichte Änderungen. Der laufende Workflow nutzt weiter die aktive Version; im Editor mit „Speichern und veröffentlichen“ übernehmen.",
+      "stats": {
+        "runs": "Ausführungen",
+        "succeeded": "Erfolgreich",
+        "failed": "Fehlgeschlagen",
+        "successRate": "Erfolgsquote",
+        "avgDuration": "Ø Dauer",
+        "window": "Letzte 30 Tage"
+      },
+      "activeWorkflow": "Aktiver Workflow",
+      "draftWorkflow": "Entwurf",
+      "emptyFlow": "Noch keine Schritte. Über Bearbeiten den Workflow anlegen.",
+      "unpublishedDraft": "Unveröffentlichter Entwurf",
+      "versionHistory": "Versionsverlauf",
+      "noVersions": "Noch keine veröffentlichte Version.",
+      "recentRuns": "Letzte Ausführungen",
+      "retentionHint": "Erfolgreiche Ausführungen werden 90 Tage, fehlgeschlagene 180 Tage aufbewahrt.",
+      "runs_": {
+        "start": "Start",
+        "status": "Status",
+        "result": "Ergebnis",
+        "duration": "Dauer",
+        "version": "Version",
+        "trigger": "Auslösung",
+        "failedAt": "Fehler in Schritt {step}: {code}",
+        "waitingApproval": "Wartet auf Freigabe",
+        "waitingDelay": "In Wartezeit",
+        "stepsDone": "{done} Schritte erledigt, {skipped} übersprungen",
         "manual": "Manuell",
-        "event": "Ereignis",
+        "event": "Ereignis"
+      },
+      "durationSeconds": "{count} s",
+      "durationMinutes": "{count} min",
+      "durationHours": "{count} h",
+      "edit": "Bearbeiten",
+      "moreActions": "Weitere Aktionen",
+      "runOnlyManual": "Nur für manuell gestartete Workflows",
+      "turnOff": "Workflow ausschalten",
+      "turnOn": "Workflow einschalten",
+      "publishAndTurnOn": "Veröffentlichen und einschalten",
+      "turnedOff": "Workflow ausgeschaltet.",
+      "turnedOn": "Workflow eingeschaltet.",
+      "editorHint": "Schritte links hineinziehen, verbinden und rechts konfigurieren.",
+      "saveDraft": "Entwurf speichern",
+      "saveAndPublish": "Speichern und veröffentlichen",
+      "close": "Schließen",
+      "cancel": "Abbrechen",
+      "filter": {
+        "all": "Alle",
+        "active": "Aktiv",
+        "inactive": "Inaktiv"
+      },
+      "search": "Workflow suchen",
+      "columns": {
+        "workflow": "Workflow",
+        "status": "Status",
+        "lastRun": "Letzte Ausführung",
+        "runs30d": "In 30 Tagen",
+        "updated": "Zuletzt aktualisiert",
+        "trigger": "Auslöser"
+      },
+      "notRecentlyRun": "Nicht kürzlich ausgeführt",
+      "editedBy": "{name} · {date}",
+      "showing": "{shown} von {total} Workflows",
+      "triggerNotDefined": "Kein Auslöser definiert",
+      "descriptionLabel": "Beschreibung (optional)",
+      "createAndEdit": "Erstellen und bearbeiten",
+      "nodes": {
+        "groupStart": "Start",
+        "groupActions": "Aktionen",
+        "groupLogic": "Ablaufsteuerung",
+        "trigger": "Auslöser",
+        "triggerDesc": "Legt fest, wann der Workflow startet.",
+        "triggerType": "Wann soll der Workflow starten?",
+        "manual": "Wenn ich ihn manuell starte",
+        "event": "Wenn ein Ereignis eintritt",
         "eventKey": "Ereignis",
-        "task": "Aufgabe",
-        "taskDesc": "Führt eine registrierte Modulaufgabe aus.",
-        "taskKey": "Aufgabe",
-        "input": "Eingabe (JSON, '{{trigger.feld}}'-Verweise möglich)",
         "condition": "Bedingung",
-        "conditionDesc": "Ist sie nicht erfüllt, wird der folgende Zweig übersprungen. Für den Sonst-Zweig eine zweite, umgekehrte Bedingung anlegen.",
-        "field": "Feld (z. B. trigger.status, steps.n1.sent)",
+        "conditionDesc": "Ist sie erfüllt, geht es weiter, sonst wird dieser Zweig übersprungen. Für „Sonst“ eine zweite, umgekehrte Bedingung anlegen.",
+        "field": "Welche Angabe prüfen?",
+        "customField": "Feldpfad",
+        "customFieldHelp": "z. B. steps.schritt1.sent",
+        "customFieldOption": "Andere (Feldpfad eingeben)",
         "operator": "Vergleich",
         "value": "Wert",
-        "parallel": "Parallel",
-        "parallelDesc": "Teilt in mehrere Zweige; beim Zusammenführen wird auf alle gewartet.",
+        "valueHelp": "z. B. ACTIVE oder 10",
+        "parallel": "Parallele Zweige",
+        "parallelDesc": "Teilt den Workflow in gleichzeitig laufende Zweige.",
         "delay": "Warten",
         "delayDesc": "Wartet eine Dauer oder bis zu einem Zeitpunkt.",
-        "minutes": "Minuten",
-        "until": "Oder Zeitpunkt (ISO, z. B. 2026-12-01T09:00:00+01:00)",
-        "approval": "Freigabe",
+        "delayMode": "Wie warten?",
+        "delayDuration": "Eine bestimmte Dauer",
+        "delayUntil": "Bis zu einem Zeitpunkt",
+        "amount": "Dauer",
+        "unit": "Einheit",
+        "minutesUnit": "Minuten",
+        "hoursUnit": "Stunden",
+        "daysUnit": "Tage",
+        "until": "Datum und Uhrzeit",
+        "approval": "Freigabe anfordern",
         "approvalDesc": "Wartet auf die Freigabe einer berechtigten Person; bei Ablehnung wird der Zweig übersprungen.",
         "note": "Hinweis für Freigebende",
-        "name": "Name",
-        "description": "Beschreibung"
+        "name": "Name des Schritts",
+        "operators": {
+          "eq": "ist gleich",
+          "neq": "ist ungleich",
+          "gt": "ist größer als",
+          "gte": "ist größer oder gleich",
+          "lt": "ist kleiner als",
+          "lte": "ist kleiner oder gleich",
+          "contains": "enthält",
+          "exists": "ist ausgefüllt",
+          "notExists": "ist leer"
+        }
+      },
+      "describe": {
+        "triggerEvent": "Startet, wenn: {event}",
+        "triggerManual": "Wird manuell gestartet.",
+        "triggerManualTitle": "Manueller Start",
+        "conditionTitle": "Bedingung",
+        "delayTitle": "Warten",
+        "waitUntil": "Wartet bis {date}",
+        "waitDays": "Wartet {count} Tage",
+        "waitHours": "Wartet {count} Stunden",
+        "waitMinutes": "Wartet {count} Minuten",
+        "approvalTitle": "Freigabe",
+        "approvalSummary": "Wartet auf die Freigabe einer berechtigten Person",
+        "parallelTitle": "Parallele Zweige",
+        "parallelSummary": "Die folgenden Schritte laufen gleichzeitig"
+      },
+      "issues": {
+        "taskInputFields": "Im Schritt „{step}“ fehlen oder sind ungültig: {fields}",
+        "taskInput": "Die Einstellungen von „{step}“ sind unvollständig oder ungültig.",
+        "taskNotAvailable": "Die Aktion in „{step}“ ist nicht mehr verfügbar.",
+        "unreachable": "„{step}“ ist nicht verbunden; ziehen Sie eine Verbindung vom Auslöser.",
+        "unsupported": "„{step}“ wird nicht unterstützt.",
+        "inputJson": "Die Eingabe von „{step}“ ist ungültig.",
+        "triggerCount": "Der Workflow braucht genau einen Auslöser.",
+        "triggerIncoming": "Der Auslöser darf keine eingehende Verbindung haben.",
+        "triggerEvent": "Bitte ein Ereignis für den Auslöser wählen.",
+        "cycle": "Der Workflow enthält eine Schleife.",
+        "tooDeep": "Der Workflow ist zu lang.",
+        "fanOut": "Aus „{step}“ gehen zu viele Zweige.",
+        "selfLoop": "„{step}“ ist mit sich selbst verbunden.",
+        "tooLarge": "Der Workflow ist zu groß.",
+        "tooFewSteps": "Nach dem Auslöser muss mindestens ein Schritt folgen.",
+        "schema": "Die Einstellungen eines Schritts sind ungültig ({detail}).",
+        "generic": "Prüffehler: {code}"
+      }
+    },
+    "automation": {
+      "tasks": {
+        "log_message": {
+          "label": "Notiz ins Ausführungsprotokoll",
+          "description": "Fügt dem Protokoll der Ausführung eine Notiz hinzu; nützlich zum Testen und Nachverfolgen.",
+          "fields": {
+            "message": "Notiz"
+          }
+        }
       }
     }
   },
@@ -4274,6 +4473,23 @@
         "accountingOff": "Das Buchhaltungsmodul ist deaktiviert.",
         "notFound": "Nicht gefunden."
       }
+    },
+    "automation": {
+      "tasks": {
+        "send_notification": {
+          "label": "Benachrichtigungs-E-Mail senden",
+          "description": "Sendet eine E-Mail an eine feste Adresse (z. B. Vorstand). Für Rundmails an Mitglieder das Rundmail-Modul verwenden.",
+          "fields": {
+            "to": "Empfängeradresse",
+            "subject": "Betreff",
+            "body": "Nachricht"
+          },
+          "help": {
+            "to": "z. B. vorstand@verein.de",
+            "body": "Für Workflow-Daten das ganze Feld als Verweis wie '{{trigger.memberId}}' angeben."
+          }
+        }
+      }
     }
   },
   "mailings": {
@@ -4345,7 +4561,19 @@
     "segmentDelete": "Segment löschen",
     "filterEmpty": "Keine Werte vorhanden.",
     "editorHint": "„/“ fügt Blöcke ein (Überschrift, Button, Spalten, Trenner …); markierter Text öffnet das Formatierungsmenü.",
-    "editorPlaceholder": "E-Mail-Inhalt schreiben …"
+    "editorPlaceholder": "E-Mail-Inhalt schreiben …",
+    "automation": {
+      "events": {
+        "campaign_finished": {
+          "label": "Wenn eine Rundmail fertig versendet ist",
+          "fields": {
+            "campaignId": "Kampagnen-ID",
+            "sent": "Anzahl gesendet",
+            "failed": "Anzahl fehlgeschlagen"
+          }
+        }
+      }
+    }
   },
   "meetings": {
     "pageTitle": "Sitzungen",
@@ -5456,6 +5684,18 @@
           }
         }
       }
+    },
+    "automation": {
+      "events": {
+        "created": {
+          "label": "Wenn ein Mitglied angelegt wird",
+          "fields": {
+            "memberId": "Mitglieds-ID",
+            "type": "Mitgliedsart",
+            "status": "Mitgliedsstatus"
+          }
+        }
+      }
     }
   },
   "organization": {
@@ -5720,6 +5960,22 @@
       "environment": "Umgebung",
       "duration": "Dauer",
       "queued": "Die Sicherheitstests wurden dauerhaft eingereiht; die Ergebnisse erscheinen nach Abschluss hier."
+    },
+    "automation": {
+      "tasks": {
+        "run_tests": {
+          "label": "Sicherheitstests ausführen",
+          "description": "Führt die Sicherheitstests im Hintergrund aus; Ergebnisse erscheinen in der Sicherheitsübersicht.",
+          "fields": {
+            "testSuite": "Testpaket"
+          },
+          "options": {
+            "testSuite": {
+              "security": "Sicherheit"
+            }
+          }
+        }
+      }
     }
   },
   "students": {

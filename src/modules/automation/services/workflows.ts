@@ -1,10 +1,8 @@
 import "server-only";
 
 import type { Prisma } from "@prisma/client";
-import { z } from "zod";
 
 import { getDb } from "@/shared/db";
-import { taskModuleKey } from "@/shared/automation/define";
 import {
   compileWorkflow,
   validateWorkflow,
@@ -28,25 +26,6 @@ export function workflowCatalog(): WorkflowCatalog {
   return {
     tasks: new Map(automationTasks.map((task) => [task.key, { inputSchema: task.inputSchema, workflowEnabled: Boolean(task.workflow) }])),
     events: new Set(automationEvents.map((event) => event.key)),
-  };
-}
-
-export type EditorCatalog = {
-  tasks: { key: string; module: string; defaultInput: Record<string, unknown> }[];
-  events: { key: string; module: string; fields: string[] }[];
-};
-
-/** What the editor may offer: only workflow-enabled tasks and registered events. */
-export function editorCatalog(): EditorCatalog {
-  return {
-    tasks: automationTasks
-      .filter((task) => task.workflow)
-      .map((task) => ({ key: task.key, module: taskModuleKey(task.key), defaultInput: task.workflow?.defaultInput ?? {} })),
-    events: automationEvents.map((event) => ({
-      key: event.key,
-      module: taskModuleKey(event.key),
-      fields: event.payloadSchema instanceof z.ZodObject ? Object.keys(event.payloadSchema.shape) : [],
-    })),
   };
 }
 
@@ -208,7 +187,53 @@ export async function listWorkflowRuns(workflowId: string, organizationId = "def
   return getDb().automationExecution.findMany({
     where: { kind: "WORKFLOW", definitionKey: workflowId, organizationId },
     orderBy: { createdAt: "desc" },
-    take: 25,
+    take: 50,
     include: { steps: { orderBy: { createdAt: "asc" } } },
+  });
+}
+
+/** Last run and 30-day run count per workflow for the list view. */
+export async function workflowRunSummaries(organizationId = "default") {
+  const since = new Date(Date.now() - 30 * 86_400_000);
+  const db = getDb();
+  const [last, recent] = await Promise.all([
+    db.automationExecution.groupBy({ by: ["definitionKey"], where: { kind: "WORKFLOW", organizationId }, _max: { createdAt: true } }),
+    db.automationExecution.groupBy({ by: ["definitionKey"], where: { kind: "WORKFLOW", organizationId, createdAt: { gte: since } }, _count: { _all: true } }),
+  ]);
+  return new Map([...new Set([...last, ...recent].map((row) => row.definitionKey))].map((key) => [key, {
+    lastRunAt: last.find((row) => row.definitionKey === key)?._max.createdAt ?? null,
+    runs30d: recent.find((row) => row.definitionKey === key)?._count._all ?? 0,
+  }]));
+}
+
+/** 30-day statistics for one workflow. */
+export async function workflowStats(workflowId: string, organizationId = "default") {
+  const since = new Date(Date.now() - 30 * 86_400_000);
+  const runs = await getDb().automationExecution.findMany({
+    where: { kind: "WORKFLOW", definitionKey: workflowId, organizationId, createdAt: { gte: since } },
+    select: { status: true, createdAt: true, finishedAt: true },
+  });
+  const count = (status: string) => runs.filter((run) => run.status === status).length;
+  const finished = runs.filter((run) => run.status === "SUCCEEDED" && run.finishedAt);
+  const avgMs = finished.length
+    ? finished.reduce((sum, run) => sum + (run.finishedAt!.getTime() - run.createdAt.getTime()), 0) / finished.length
+    : null;
+  const terminal = count("SUCCEEDED") + count("FAILED");
+  return {
+    total: runs.length,
+    succeeded: count("SUCCEEDED"),
+    failed: count("FAILED"),
+    waiting: count("WAITING"),
+    cancelled: count("CANCELLED"),
+    successRate: terminal ? Math.round((count("SUCCEEDED") / terminal) * 100) : null,
+    avgMs,
+  };
+}
+
+export async function listWorkflowVersions(workflowId: string) {
+  return getDb().automationWorkflowVersion.findMany({
+    where: { workflowId },
+    orderBy: { version: "desc" },
+    select: { id: true, version: true, createdAt: true, publishedById: true, graph: true },
   });
 }

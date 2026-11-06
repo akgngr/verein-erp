@@ -70,5 +70,17 @@
   "segmentDelete": "Segmenti sil",
   "filterEmpty": "Bu alanda veri yok.",
   "editorHint": "\"/\" ile blok ekleyin (başlık, buton, sütun, ayırıcı…); metni seçince biçimlendirme menüsü açılır.",
-  "editorPlaceholder": "E-posta içeriğini yazın…"
+  "editorPlaceholder": "E-posta içeriğini yazın…",
+  "automation": {
+    "events": {
+      "campaign_finished": {
+        "label": "Toplu e-posta gönderimi bittiğinde",
+        "fields": {
+          "campaignId": "Kampanya kimliği",
+          "sent": "Gönderilen sayısı",
+          "failed": "Başarısız sayısı"
+        }
+      }
+    }
+  }
 }

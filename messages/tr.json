@@ -2112,8 +2112,7 @@
       "delete": "Sil",
       "deleteTitle": "Akış silinsin mi?",
       "deleteDescription": "Akış ve tüm sürümleri silinir. Geçmiş çalıştırma kayıtları korunur.",
-      "valid": "Taslak geçerli, yayımlanabilir.",
-      "issues": "Doğrulama sorunları",
+      "valid": "Akış geçerli, yayımlanabilir.",
       "runInput": "Başlangıç verisi (JSON, isteğe bağlı)",
       "runInputHint": "Akışta '{{trigger.alan}}' ile kullanılabilir. Kişisel veri yerine kimlik kullanın.",
       "run": "Şimdi çalıştır",
@@ -2142,34 +2141,234 @@
         "inputJson": "Başlangıç verisi geçerli JSON değil.",
         "name": "Ad en az 2 karakter olmalı."
       },
-      "nodes": {
-        "group": "Adımlar",
-        "trigger": "Tetikleyici",
-        "triggerDesc": "Akış elle veya bir modül olayıyla başlar.",
-        "triggerType": "Tetikleme türü",
+      "sdk": {
+        "common": {
+          "close": "Kapat",
+          "open": "Aç",
+          "cancel": "Vazgeç",
+          "collapse": "Daralt",
+          "expand": "Genişlet",
+          "edit": "Düzenle",
+          "remove": "Kaldır",
+          "save": "Kaydet",
+          "name": "Ad",
+          "description": "Açıklama",
+          "type": "Tür",
+          "notFound": "Sonuç bulunamadı."
+        },
+        "palette": {
+          "templates": "Şablonlar",
+          "nodesLibrary": "Adımlar"
+        },
+        "propertiesBar": {
+          "label": "Adım ayarları",
+          "deleteNode": "Adımı sil",
+          "deleteEdge": "Bağlantıyı sil"
+        },
+        "deleteConfirmation": {
+          "cancel": "Vazgeç",
+          "delete": "Sil",
+          "node": "adım",
+          "nodes": "adım",
+          "edge": "bağlantı",
+          "edges": "bağlantı",
+          "andConnected": "ve bağlı",
+          "selected": "seçili",
+          "selectedPlural": "seçili",
+          "deleteSelection": "Seçim silinsin mi?",
+          "dontShowMeThisAgain": "Bir daha gösterme"
+        },
+        "loader": {
+          "text": "Yükleniyor..."
+        },
+        "tooltips": {
+          "layout": "Otomatik yerleştir",
+          "open": "Aç",
+          "close": "Kapat",
+          "palette": "Adımlar",
+          "propSidebar": "Adım ayarları",
+          "remove": "Kaldır",
+          "openPalette": "Adımları aç",
+          "closePalette": "Adımları kapat",
+          "openPropertiesBar": "Ayarları aç",
+          "closePropertiesBar": "Ayarları kapat",
+          "save": "Kaydet",
+          "copy": "Kopyala"
+        },
+        "snackbar": {
+          "saveDiagramSuccess": "Taslak kaydedildi",
+          "saveDiagramError": "Taslak kaydedilemedi",
+          "cantEditReadOnlyMode": "Salt okunur modda düzenlenemez.",
+          "contentCopied": "Panoya kopyalandı",
+          "wrongDiagramFormat": "Geçersiz akış biçimi"
+        }
+      },
+      "back": "Geri",
+      "lastUpdated": "Son güncelleme: {date}",
+      "statusLabel": {
+        "active": "Etkin",
+        "inactive": "Kapalı",
+        "draft": "Taslak"
+      },
+      "unpublishedChanges": "Yayımlanmamış değişiklikler var. Çalışan akış hâlâ etkin sürümü kullanıyor; değişiklikleri düzenleyicide \"Kaydet ve yayımla\" ile etkinleştirin.",
+      "stats": {
+        "runs": "Çalıştırma",
+        "succeeded": "Başarılı",
+        "failed": "Başarısız",
+        "successRate": "Başarı oranı",
+        "avgDuration": "Ort. süre",
+        "window": "Son 30 gün"
+      },
+      "activeWorkflow": "Etkin akış",
+      "draftWorkflow": "Taslak",
+      "emptyFlow": "Henüz adım yok. Düzenle ile akışı oluşturun.",
+      "unpublishedDraft": "Yayımlanmamış taslak",
+      "versionHistory": "Sürüm geçmişi",
+      "noVersions": "Henüz yayımlanmış sürüm yok.",
+      "recentRuns": "Son çalıştırmalar",
+      "retentionHint": "Başarılı çalıştırmalar 90 gün, başarısız olanlar 180 gün saklanır.",
+      "runs_": {
+        "start": "Başlangıç",
+        "status": "Durum",
+        "result": "Sonuç",
+        "duration": "Süre",
+        "version": "Sürüm",
+        "trigger": "Tetikleme",
+        "failedAt": "{step} adımında hata: {code}",
+        "waitingApproval": "Onay bekliyor",
+        "waitingDelay": "Bekleme süresinde",
+        "stepsDone": "{done} adım tamamlandı, {skipped} atlandı",
         "manual": "Elle",
-        "event": "Olay",
+        "event": "Olay"
+      },
+      "durationSeconds": "{count} sn",
+      "durationMinutes": "{count} dk",
+      "durationHours": "{count} sa",
+      "edit": "Düzenle",
+      "moreActions": "Diğer işlemler",
+      "runOnlyManual": "Yalnızca elle başlatılan akışlar",
+      "turnOff": "Akışı kapat",
+      "turnOn": "Akışı aç",
+      "publishAndTurnOn": "Yayımla ve aç",
+      "turnedOff": "Akış kapatıldı.",
+      "turnedOn": "Akış açıldı.",
+      "editorHint": "Soldan adım sürükleyin, adımları birbirine bağlayın, ayarları sağ panelden yapın.",
+      "saveDraft": "Taslağı kaydet",
+      "saveAndPublish": "Kaydet ve yayımla",
+      "close": "Kapat",
+      "cancel": "Vazgeç",
+      "filter": {
+        "all": "Tümü",
+        "active": "Etkin",
+        "inactive": "Kapalı"
+      },
+      "search": "Akış ara",
+      "columns": {
+        "workflow": "Akış",
+        "status": "Durum",
+        "lastRun": "Son çalıştırma",
+        "runs30d": "30 günde",
+        "updated": "Son güncelleme",
+        "trigger": "Tetikleyici"
+      },
+      "notRecentlyRun": "Yakın zamanda çalışmadı",
+      "editedBy": "{name} · {date}",
+      "showing": "{total} akıştan {shown} gösteriliyor",
+      "triggerNotDefined": "Tetikleyici tanımlı değil",
+      "descriptionLabel": "Açıklama (isteğe bağlı)",
+      "createAndEdit": "Oluştur ve düzenle",
+      "nodes": {
+        "groupStart": "Başlangıç",
+        "groupActions": "Eylemler",
+        "groupLogic": "Akış kontrolü",
+        "trigger": "Tetikleyici",
+        "triggerDesc": "Akışın ne zaman başlayacağını belirler.",
+        "triggerType": "Akış ne zaman başlasın?",
+        "manual": "Elle başlattığımda",
+        "event": "Bir olay gerçekleştiğinde",
         "eventKey": "Olay",
-        "task": "Görev",
-        "taskDesc": "Kayıtlı bir modül görevini çalıştırır.",
-        "taskKey": "Görev",
-        "input": "Girdi (JSON, '{{trigger.alan}}' başvuruları desteklenir)",
         "condition": "Koşul",
-        "conditionDesc": "Koşul sağlanmazsa sonraki dal atlanır. Değilse dalı için ters koşullu ikinci bir koşul ekleyin.",
-        "field": "Alan (ör. trigger.status, steps.n1.sent)",
+        "conditionDesc": "Koşul sağlanırsa devam eder, sağlanmazsa bu dal atlanır. \"Değilse\" için ters koşullu ikinci bir Koşul ekleyin.",
+        "field": "Hangi bilgi kontrol edilsin?",
+        "customField": "Alan yolu",
+        "customFieldHelp": "Ör. steps.adim1.sent",
+        "customFieldOption": "Diğer (alan yolunu yaz)",
         "operator": "Karşılaştırma",
         "value": "Değer",
-        "parallel": "Paralel",
-        "parallelDesc": "Birden fazla dala ayırır; dallar birleştiğinde hepsi beklenir.",
+        "valueHelp": "Ör. ACTIVE veya 10",
+        "parallel": "Paralel dallar",
+        "parallelDesc": "Akışı aynı anda çalışan birden fazla dala ayırır.",
         "delay": "Bekle",
-        "delayDesc": "Belirli bir süre veya tarihe kadar bekler.",
-        "minutes": "Dakika",
-        "until": "Veya tarih (ISO, ör. 2026-12-01T09:00:00+01:00)",
-        "approval": "Onay",
-        "approvalDesc": "Yetkili bir kişi onaylayana kadar bekler; reddedilirse dal atlanır.",
+        "delayDesc": "Bir süre veya belirli bir tarihe kadar bekler.",
+        "delayMode": "Nasıl beklensin?",
+        "delayDuration": "Belirli bir süre",
+        "delayUntil": "Belirli bir tarihe kadar",
+        "amount": "Süre",
+        "unit": "Birim",
+        "minutesUnit": "Dakika",
+        "hoursUnit": "Saat",
+        "daysUnit": "Gün",
+        "until": "Tarih ve saat",
+        "approval": "Onay iste",
+        "approvalDesc": "Yetkili bir kişi onaylayana kadar bekler; reddedilirse bu dal atlanır.",
         "note": "Onaylayana not",
-        "name": "Ad",
-        "description": "Açıklama"
+        "name": "Adım adı",
+        "operators": {
+          "eq": "eşittir",
+          "neq": "eşit değildir",
+          "gt": "büyüktür",
+          "gte": "büyük veya eşittir",
+          "lt": "küçüktür",
+          "lte": "küçük veya eşittir",
+          "contains": "içerir",
+          "exists": "dolu",
+          "notExists": "boş"
+        }
+      },
+      "describe": {
+        "triggerEvent": "Akış şu olduğunda başlar: {event}",
+        "triggerManual": "Akış elle başlatılır.",
+        "triggerManualTitle": "Elle başlatma",
+        "conditionTitle": "Koşul",
+        "delayTitle": "Bekle",
+        "waitUntil": "{date} tarihine kadar bekler",
+        "waitDays": "{count} gün bekler",
+        "waitHours": "{count} saat bekler",
+        "waitMinutes": "{count} dakika bekler",
+        "approvalTitle": "Onay",
+        "approvalSummary": "Yetkili bir kişinin onayını bekler",
+        "parallelTitle": "Paralel dallar",
+        "parallelSummary": "Sonraki adımlar aynı anda çalışır"
+      },
+      "issues": {
+        "taskInputFields": "\"{step}\" adımında şu alanlar eksik veya hatalı: {fields}",
+        "taskInput": "\"{step}\" adımının ayarları eksik veya hatalı.",
+        "taskNotAvailable": "\"{step}\" adımındaki eylem artık kullanılamıyor.",
+        "unreachable": "\"{step}\" adımı akışa bağlı değil; tetikleyiciden bu adıma bir bağlantı çizin.",
+        "unsupported": "\"{step}\" adımı desteklenmiyor.",
+        "inputJson": "\"{step}\" adımının girdisi geçerli değil.",
+        "triggerCount": "Akışta tam olarak bir tetikleyici olmalı.",
+        "triggerIncoming": "Tetikleyiciye gelen bağlantı olamaz.",
+        "triggerEvent": "Tetikleyici için bir olay seçin.",
+        "cycle": "Akışta döngü var; adımlar geri bağlanamaz.",
+        "tooDeep": "Akış çok uzun.",
+        "fanOut": "\"{step}\" adımından çok fazla dal çıkıyor.",
+        "selfLoop": "\"{step}\" adımı kendine bağlanmış.",
+        "tooLarge": "Akış çok büyük.",
+        "tooFewSteps": "Akışta tetikleyiciden sonra en az bir adım olmalı.",
+        "schema": "Bir adımın ayarları geçersiz ({detail}).",
+        "generic": "Doğrulama hatası: {code}"
+      }
+    },
+    "automation": {
+      "tasks": {
+        "log_message": {
+          "label": "Çalışma kaydına not yaz",
+          "description": "Akış çalıştırmasının kaydına bir not ekler; test ve izleme için kullanışlıdır.",
+          "fields": {
+            "message": "Not"
+          }
+        }
       }
     }
   },
@@ -4274,6 +4473,23 @@
         "accountingOff": "Muhasebe modülü kapalı.",
         "notFound": "Bulunamadı."
       }
+    },
+    "automation": {
+      "tasks": {
+        "send_notification": {
+          "label": "Bildirim e-postası gönder",
+          "description": "Belirlediğiniz tek bir adrese (ör. yönetim kurulu) e-posta gönderir. Üyelere toplu e-posta için Toplu e-posta modülünü kullanın.",
+          "fields": {
+            "to": "Alıcı e-posta adresi",
+            "subject": "Konu",
+            "body": "Mesaj"
+          },
+          "help": {
+            "to": "Ör. yonetim@dernek.de",
+            "body": "Akış verisini eklemek için alanın tamamına '{{trigger.memberId}}' gibi bir başvuru yazabilirsiniz."
+          }
+        }
+      }
     }
   },
   "mailings": {
@@ -4345,7 +4561,19 @@
     "segmentDelete": "Segmenti sil",
     "filterEmpty": "Bu alanda veri yok.",
     "editorHint": "\"/\" ile blok ekleyin (başlık, buton, sütun, ayırıcı…); metni seçince biçimlendirme menüsü açılır.",
-    "editorPlaceholder": "E-posta içeriğini yazın…"
+    "editorPlaceholder": "E-posta içeriğini yazın…",
+    "automation": {
+      "events": {
+        "campaign_finished": {
+          "label": "Toplu e-posta gönderimi bittiğinde",
+          "fields": {
+            "campaignId": "Kampanya kimliği",
+            "sent": "Gönderilen sayısı",
+            "failed": "Başarısız sayısı"
+          }
+        }
+      }
+    }
   },
   "meetings": {
     "pageTitle": "Toplantılar",
@@ -5456,6 +5684,18 @@
           }
         }
       }
+    },
+    "automation": {
+      "events": {
+        "created": {
+          "label": "Yeni üye eklendiğinde",
+          "fields": {
+            "memberId": "Üye kimliği",
+            "type": "Üyelik türü",
+            "status": "Üyelik durumu"
+          }
+        }
+      }
     }
   },
   "organization": {
@@ -5720,6 +5960,22 @@
       "environment": "Ortam",
       "duration": "Süre",
       "queued": "Güvenlik testleri kalıcı kuyruğa alındı; sonuçlar tamamlandığında burada görünecek."
+    },
+    "automation": {
+      "tasks": {
+        "run_tests": {
+          "label": "Güvenlik testlerini çalıştır",
+          "description": "Güvenlik test paketini arka planda çalıştırır; sonuçlar Güvenlik İzleme ekranında görünür.",
+          "fields": {
+            "testSuite": "Test paketi"
+          },
+          "options": {
+            "testSuite": {
+              "security": "Güvenlik"
+            }
+          }
+        }
+      }
     }
   },
   "students": {

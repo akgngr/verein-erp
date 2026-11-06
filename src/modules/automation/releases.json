@@ -34,6 +34,26 @@
           "type": "feature",
           "tr": "Yeni iş akışı görevleri: automation.log_message ve mail.send_notification (sabit bir adrese bildirim e-postası).",
           "de": "Neue Workflow-Aufgaben: automation.log_message und mail.send_notification (Benachrichtigung an eine feste Adresse)."
+        },
+        {
+          "type": "improvement",
+          "tr": "İş akışları ana menüde. Liste ekranı Tümü/Etkin/Kapalı sekmeleri, arama, son çalıştırma, 30 günlük çalıştırma sayısı ve okunur tetikleyici adıyla tablo halinde.",
+          "de": "Workflows im Hauptmenü. Die Liste zeigt Tabs Alle/Aktiv/Inaktiv, Suche, letzte Ausführung, Ausführungen in 30 Tagen und den Auslöser im Klartext."
+        },
+        {
+          "type": "improvement",
+          "tr": "Detay sayfası: durum, açma/kapama, Düzenle, Diğer işlemler; 30 günlük istatistikler; adımları düz cümlelerle gösteren akış görünümü; sürüm geçmişi; son çalıştırmalar tablosu.",
+          "de": "Detailseite: Status, Ein/Aus, Bearbeiten, weitere Aktionen; 30-Tage-Statistik; Ablaufansicht mit Schritten im Klartext; Versionsverlauf; Tabelle der letzten Ausführungen."
+        },
+        {
+          "type": "improvement",
+          "tr": "Düzenleyici tam ekran açılır ve Türkçe/Almanca'dır. Her eylem ayrı bir adımdır ve kendi alanlarına sahiptir (JSON yazmak gerekmez). Tetikleyici, koşul ve bekleme alanları sade seçeneklerle gelir. Doğrulama hataları adım ve alan adıyla açıklanır.",
+          "de": "Der Editor öffnet im Vollbild und ist deutsch/türkisch. Jede Aktion ist ein eigener Schritt mit eigenen Feldern (kein JSON). Auslöser, Bedingung und Warten nutzen verständliche Auswahlen. Prüffehler nennen Schritt und Feld."
+        },
+        {
+          "type": "fix",
+          "tr": "Görev değiştirildiğinde önceki görevin girdisi kaldığı için yayımlama TASK_INPUT_INVALID ile başarısız oluyordu; eski taslaklar açılırken yeni adım biçimine otomatik dönüştürülür.",
+          "de": "Beim Wechsel der Aufgabe blieb die alte Eingabe stehen und die Veröffentlichung scheiterte mit TASK_INPUT_INVALID; ältere Entwürfe werden beim Öffnen automatisch umgestellt."
         }
       ]
     },

@@ -557,5 +557,17 @@
         }
       }
     }
+  },
+  "automation": {
+    "events": {
+      "created": {
+        "label": "Wenn ein Mitglied angelegt wird",
+        "fields": {
+          "memberId": "Mitglieds-ID",
+          "type": "Mitgliedsart",
+          "status": "Mitgliedsstatus"
+        }
+      }
+    }
   }
 }

@@ -95,6 +95,16 @@ function asRecord(value: unknown): Record<string, unknown> {
     : {};
 }
 
+export const TASK_NODE_PREFIX = "task.";
+const RESERVED_PROPS = new Set(["label", "description", "errors", "customErrors"]);
+
+/** Date inputs may omit the offset ("2026-12-01T09:00"); interpret them in the server time zone. */
+function normalizeDateTime(value: string): string {
+  if (/[zZ]|[+-]\d{2}:\d{2}$/.test(value)) return value;
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? value : date.toISOString();
+}
+
 function parseInputText(value: unknown): unknown {
   if (typeof value !== "string") return value ?? {};
   const trimmed = value.trim();
@@ -125,27 +135,42 @@ export function compileWorkflow(editor: unknown): { graph?: CanonicalGraph; issu
     const node = asRecord(raw);
     const data = asRecord(node.data);
     const props = asRecord(data.properties);
-    const kind = data.type;
-    const base = { id: node.id, kind, label: typeof props.label === "string" ? props.label : "" };
-    switch (kind) {
+    const type = typeof data.type === "string" ? data.type : "";
+    const base = { id: node.id, label: typeof props.label === "string" ? props.label : "" };
+
+    // One palette item per task: "task.<taskKey>"; form fields are the input.
+    if (type.startsWith(TASK_NODE_PREFIX)) {
+      const input = Object.fromEntries(Object.entries(props)
+        .filter(([key, value]) => !RESERVED_PROPS.has(key) && value !== "" && value !== undefined && value !== null));
+      return { ...base, kind: "task", config: { taskKey: type.slice(TASK_NODE_PREFIX.length), input } };
+    }
+
+    switch (type) {
       case "trigger":
-        return { ...base, config: { triggerType: props.triggerType ?? "manual", ...(props.eventKey ? { eventKey: props.eventKey } : {}) } };
+        return { ...base, kind: type, config: { triggerType: props.triggerType ?? "manual", ...(props.triggerType === "event" && props.eventKey ? { eventKey: props.eventKey } : {}) } };
       case "task": {
         const input = parseInputText(props.input);
         if (input === Symbol.for("invalid-json")) issues.push(`NODE_INPUT_JSON_INVALID:${String(node.id)}`);
-        return { ...base, config: { taskKey: props.taskKey, input: typeof input === "symbol" ? {} : input } };
+        return { ...base, kind: type, config: { taskKey: props.taskKey, input: typeof input === "symbol" ? {} : input } };
       }
-      case "condition":
-        return { ...base, config: { field: props.field, operator: props.operator, value: props.value === undefined ? "" : String(props.value) } };
+      case "condition": {
+        const field = props.field === "custom" ? props.customField : props.field;
+        return { ...base, kind: type, config: { field: typeof field === "string" ? field.trim() : field, operator: props.operator, value: props.value === undefined || props.value === null ? "" : String(props.value) } };
+      }
       case "parallel":
-        return { ...base, config: {} };
+        return { ...base, kind: type, config: {} };
       case "delay": {
-        const minutes = props.minutes === undefined || props.minutes === "" || props.minutes === null ? undefined : Number(props.minutes);
-        const until = typeof props.until === "string" && props.until.trim() ? props.until.trim() : undefined;
-        return { ...base, config: { ...(minutes !== undefined ? { minutes } : {}), ...(until ? { until } : {}) } };
+        if (props.mode === "until") {
+          const until = typeof props.until === "string" && props.until.trim() ? props.until.trim() : undefined;
+          return { ...base, kind: type, config: until ? { until: normalizeDateTime(until) } : {} };
+        }
+        const amount = props.amount ?? props.minutes;
+        const factor = props.unit === "days" ? 1440 : props.unit === "hours" ? 60 : 1;
+        const minutes = amount === undefined || amount === "" || amount === null ? undefined : Math.round(Number(amount) * factor);
+        return { ...base, kind: type, config: minutes !== undefined ? { minutes } : {} };
       }
       case "approval":
-        return { ...base, config: { note: typeof props.note === "string" ? props.note : "" } };
+        return { ...base, kind: type, config: { note: typeof props.note === "string" ? props.note : "" } };
       default:
         issues.push(`NODE_KIND_UNSUPPORTED:${String(node.id)}`);
         return null;
@@ -250,8 +275,10 @@ export function validateWorkflow(graph: CanonicalGraph, catalog: WorkflowCatalog
       continue;
     }
     // Inputs with references are checked again at runtime after resolution.
-    if (!hasReference(node.config.input) && !task.inputSchema.safeParse(node.config.input).success) {
-      issues.push(`TASK_INPUT_INVALID:${node.id}`);
+    const checked = task.inputSchema.safeParse(stripReferences(node.config.input, task.inputSchema));
+    if (!checked.success) {
+      const fields = [...new Set(checked.error.issues.map((issue) => String(issue.path[0] ?? "")))].filter(Boolean);
+      issues.push(`TASK_INPUT_INVALID:${node.id}${fields.length ? `:${fields.join(",")}` : ""}`);
     }
     if (JSON.stringify(node.config.input).length > WORKFLOW_LIMITS.maxPayloadBytes) {
       issues.push(`TASK_INPUT_TOO_LARGE:${node.id}`);
@@ -263,12 +290,23 @@ export function validateWorkflow(graph: CanonicalGraph, catalog: WorkflowCatalog
 
 const REFERENCE = /^\{\{\s*([A-Za-z0-9_.-]+)\s*\}\}$/;
 
-function hasReference(value: unknown): boolean {
-  if (typeof value === "string") return REFERENCE.test(value);
-  if (Array.isArray(value)) return value.some(hasReference);
-  if (value && typeof value === "object") return Object.values(value).some(hasReference);
-  return false;
+/**
+ * Validate static values now; referenced values are only known at runtime, so
+ * they are dropped from the check unless the field is otherwise missing.
+ */
+function stripReferences(input: Record<string, unknown>, schema: z.ZodType): Record<string, unknown> {
+  const shape = schema instanceof z.ZodObject ? schema.shape as Record<string, z.ZodType> : {};
+  return Object.fromEntries(Object.entries(input).map(([key, value]) => {
+    if (typeof value !== "string" || !REFERENCE.test(value)) return [key, value];
+    // Replace with a sample that satisfies the field so only static values are judged.
+    const field = shape[key];
+    const sample = field?.safeParse("x@example.org").success ? "x@example.org"
+      : field?.safeParse("00000000-0000-4000-8000-000000000000").success ? "00000000-0000-4000-8000-000000000000"
+      : field?.safeParse(1).success ? 1 : "x";
+    return [key, sample];
+  }));
 }
+
 
 export type RunContext = { trigger: unknown; steps: Record<string, unknown> };
 

@@ -21,6 +21,7 @@ export const moduleConfig: ModuleConfig = {
     "@workflowbuilder/sdk": "3.0.0",
     "@xyflow/react": "12.10.2",
     zustand: "5.0.8",
+    i18next: "24.2.3",
   },
   basePath: "/automation",
   nav: [
@@ -38,8 +39,8 @@ export const moduleConfig: ModuleConfig = {
       label: "İş Akışları",
       labelKey: "automationWorkflows",
       icon: Workflow,
-      group: "settings",
-      order: 31,
+      group: "main",
+      order: 93,
       permission: { definition: automationPermissions, action: "view" },
     },
   ],
