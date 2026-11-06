@@ -81,6 +81,8 @@ export type CanonicalGraph = z.infer<typeof canonicalGraphSchema>;
 export type WorkflowCatalog = {
   tasks: Map<string, { inputSchema: z.ZodType; workflowEnabled: boolean }>;
   events: Set<string>;
+  /** Allowed {{...}} references per event key, e.g. "trigger.memberId", "member.fullName". */
+  references?: Map<string, Set<string>>;
 };
 
 export class WorkflowValidationError extends Error {
@@ -96,6 +98,11 @@ function asRecord(value: unknown): Record<string, unknown> {
 }
 
 export const TASK_NODE_PREFIX = "task.";
+
+/** Editor property holding the chosen value for an enum field ("trigger.status" → "value_trigger_status"). */
+export function conditionValueKey(field: string): string {
+  return `value_${field.replace(/[^A-Za-z0-9]/g, "_")}`;
+}
 const RESERVED_PROPS = new Set(["label", "description", "errors", "customErrors"]);
 
 /** Date inputs may omit the offset ("2026-12-01T09:00"); interpret them in the server time zone. */
@@ -155,7 +162,10 @@ export function compileWorkflow(editor: unknown): { graph?: CanonicalGraph; issu
       }
       case "condition": {
         const field = props.field === "custom" ? props.customField : props.field;
-        return { ...base, kind: type, config: { field: typeof field === "string" ? field.trim() : field, operator: props.operator, value: props.value === undefined || props.value === null ? "" : String(props.value) } };
+        // Enum fields have their own value list property (see conditionValueKey).
+        const listed = typeof props.field === "string" ? props[conditionValueKey(props.field)] : undefined;
+        const value = listed !== undefined && listed !== null && listed !== "" ? listed : props.value;
+        return { ...base, kind: type, config: { field: typeof field === "string" ? field.trim() : field, operator: props.operator, value: value === undefined || value === null ? "" : String(value) } };
       }
       case "parallel":
         return { ...base, kind: type, config: {} };
@@ -280,6 +290,17 @@ export function validateWorkflow(graph: CanonicalGraph, catalog: WorkflowCatalog
       const fields = [...new Set(checked.error.issues.map((issue) => String(issue.path[0] ?? "")))].filter(Boolean);
       issues.push(`TASK_INPUT_INVALID:${node.id}${fields.length ? `:${fields.join(",")}` : ""}`);
     }
+    // Unknown {{...}} references would be sent verbatim; catch typos at publish.
+    const triggerEvent = trigger?.kind === "trigger" ? trigger.config.eventKey : undefined;
+    if (catalog.references) {
+      // Event triggers have a known payload; manual triggers accept any {{trigger.*}}.
+      const allowed = triggerEvent ? catalog.references.get(triggerEvent) ?? new Set<string>() : null;
+      const unknown = Object.values(node.config.input)
+        .filter((value): value is string => typeof value === "string")
+        .flatMap(templatePaths)
+        .filter((path) => path !== "uuid" && !path.startsWith("steps.") && (allowed ? !allowed.has(path) : !path.startsWith("trigger.")));
+      if (unknown.length) issues.push(`TASK_UNKNOWN_REFERENCE:${node.id}:${[...new Set(unknown)].join(",")}`);
+    }
     if (JSON.stringify(node.config.input).length > WORKFLOW_LIMITS.maxPayloadBytes) {
       issues.push(`TASK_INPUT_TOO_LARGE:${node.id}`);
     }
@@ -328,15 +349,46 @@ export function readPath(context: RunContext, dotted: string): unknown {
 export function resolveTemplates(value: unknown, context: RunContext, uuid: () => string): unknown {
   if (typeof value === "string") {
     const match = REFERENCE.exec(value);
-    if (!match) return value;
-    if (match[1] === "uuid") return uuid();
-    return readPath(context, match[1]);
+    if (match) {
+      if (match[1] === "uuid") return uuid();
+      // Only run-context namespaces are resolved here; others (e.g. {{member.x}})
+      // are deferred to the task, which loads them without persisting them.
+      return isRunPath(match[1]) ? readPath(context, match[1]) : value;
+    }
+    return renderInlineTemplate(value, (path) => {
+      if (path === "uuid") return uuid();
+      return isRunPath(path) ? readPath(context, path) : undefined;
+    });
   }
   if (Array.isArray(value)) return value.map((item) => resolveTemplates(item, context, uuid));
   if (value && typeof value === "object") {
     return Object.fromEntries(Object.entries(value).map(([key, item]) => [key, resolveTemplates(item, context, uuid)]));
   }
   return value;
+}
+
+const INLINE_REFERENCE = /\{\{\s*([A-Za-z0-9_.-]+)\s*\}\}/g;
+
+function isRunPath(path: string): boolean {
+  return path.startsWith("trigger.") || path.startsWith("steps.");
+}
+
+/**
+ * Replace every {{path}} inside a text. Unresolved references (lookup returns
+ * undefined) are kept verbatim so a later stage can fill them.
+ */
+export function renderInlineTemplate(text: string, lookup: (path: string) => unknown): string {
+  return text.replace(INLINE_REFERENCE, (whole, path: string) => {
+    const value = lookup(path);
+    if (value === undefined) return whole;
+    if (value === null) return "";
+    return typeof value === "object" ? JSON.stringify(value) : String(value);
+  });
+}
+
+/** Paths referenced in a text, e.g. ["member.fullName"]. */
+export function templatePaths(text: string): string[] {
+  return [...text.matchAll(INLINE_REFERENCE)].map((match) => match[1]);
 }
 
 export function evaluateCondition(

@@ -121,6 +121,17 @@ export type EventDefinition<TSchema extends z.ZodType = z.ZodType> = {
   key: `${string}.${string}`;
   description: string;
   payloadSchema: TSchema;
+  /**
+   * Optional record fields usable as {{<namespace>.<field>}} in task texts
+   * (e.g. {{member.fullName}}). Loaded by trusted module code only when a task
+   * renders its text in the worker; values are never written to queue
+   * payloads or execution records.
+   */
+  variables?: {
+    namespace: string;
+    fields: readonly string[];
+    load: (payload: z.output<TSchema>) => Promise<Record<string, string | number | null>>;
+  };
 };
 
 export function defineEvent<TSchema extends z.ZodType>(

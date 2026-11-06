@@ -19,7 +19,11 @@ export const sendNotificationTask = defineTask({
   version: 1,
   description: "mail.send_notification",
   inputSchema: z.object({
-    to: z.string().trim().email().max(254),
+    // A fixed address, or a record reference resolved at send time (e.g. {{member.email}}).
+    to: z.string().trim().max(254).refine(
+      (value) => z.string().email().safeParse(value).success || /^\{\{\s*[a-z]+\.[A-Za-z0-9_]+\s*\}\}$/.test(value),
+      "MAIL_RECIPIENT_INVALID",
+    ),
     subject: z.string().trim().min(1).max(200),
     body: z.string().trim().min(1).max(5000),
   }).strict(),
@@ -32,17 +36,24 @@ export const sendNotificationTask = defineTask({
       automationTrace("mail", "not configured (Settings → E-Mail)", { execution: context.executionId });
       throw new PermanentTaskError("MAIL_NOT_CONFIGURED");
     }
-    automationTrace("mail", "sending", { execution: context.executionId, to: maskEmail(input.to) });
+    // Fill {{member.fullName}}-style fields in memory only (never stored).
+    const { renderWorkflowVariables } = await import("@/shared/automation/variables");
+    const text = await renderWorkflowVariables(context.executionId, { to: input.to, subject: input.subject, body: input.body });
+    if (!z.string().email().safeParse(text.to.trim()).success) {
+      automationTrace("mail", "recipient is not a valid address after rendering", { execution: context.executionId, to: text.to.startsWith("{{") ? text.to : maskEmail(text.to) });
+      throw new PermanentTaskError("MAIL_RECIPIENT_INVALID");
+    }
+    automationTrace("mail", "sending", { execution: context.executionId, to: maskEmail(text.to) });
     const result = await sendMail({
-      to: input.to,
-      subject: input.subject,
-      text: input.body,
+      to: text.to.trim(),
+      subject: text.subject,
+      text: text.body,
       context: { module: "automation", reference: context.executionId },
     });
     // SMTP details are in the mail log (E-Mail → Protokoll); keep the code generic here.
     automationTrace("mail", result.ok ? "sent" : "send failed", {
       execution: context.executionId,
-      to: maskEmail(input.to),
+      to: maskEmail(text.to),
       ...(result.ok ? { messageId: result.messageId } : { smtpError: result.error.slice(0, 300) }),
       mailLog: result.logId,
     });

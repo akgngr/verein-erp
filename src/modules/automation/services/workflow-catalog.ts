@@ -64,12 +64,22 @@ export async function buildEditorCatalog(): Promise<EditorCatalog> {
     const moduleKey = taskModuleKey(event.key);
     const name = event.key.slice(moduleKey.length + 1);
     const tr = await translatorFor(moduleKey);
-    const shape = event.payloadSchema instanceof z.ZodObject ? Object.keys(event.payloadSchema.shape) : [];
+    const json = z.toJSONSchema(event.payloadSchema) as { properties?: Record<string, JsonProp> };
     events.push({
       key: event.key,
       module: moduleKey,
       label: tr(`events.${name}.label`, humanize(name)),
-      fields: shape.map((field) => ({ name: field, label: tr(`events.${name}.fields.${field}`, humanize(field)) })),
+      fields: Object.entries(json.properties ?? {}).map(([field, prop]) => ({
+        name: field,
+        label: tr(`events.${name}.fields.${field}`, humanize(field)),
+        options: prop.enum?.map((value) => ({ value: String(value), label: tr(`events.${name}.options.${field}.${String(value)}`, String(value)) })),
+      })),
+      variables: event.variables
+        ? {
+          namespace: event.variables.namespace,
+          fields: event.variables.fields.map((field) => ({ name: field, label: tr(`events.${name}.variables.${field}`, humanize(field)) })),
+        }
+        : undefined,
     });
   }
   return { tasks, events };

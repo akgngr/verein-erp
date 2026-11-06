@@ -1,6 +1,6 @@
 import { NodeType, type PaletteItemOrGroup } from "@workflowbuilder/sdk";
 
-import { CONDITION_OPERATORS, TASK_NODE_PREFIX } from "@/shared/automation/workflow-graph";
+import { CONDITION_OPERATORS, conditionValueKey, TASK_NODE_PREFIX } from "@/shared/automation/workflow-graph";
 
 import type { EditorCatalog } from "./catalog-types";
 
@@ -22,7 +22,7 @@ export type NodeLabels = Record<
   | "condition" | "conditionDesc" | "field" | "customField" | "customFieldHelp" | "customFieldOption" | "operator" | "value" | "valueHelp"
   | "parallel" | "parallelDesc"
   | "delay" | "delayDesc" | "delayMode" | "delayDuration" | "delayUntil" | "amount" | "unit" | "minutesUnit" | "hoursUnit" | "daysUnit" | "until"
-  | "approval" | "approvalDesc" | "note"
+  | "approval" | "approvalDesc" | "note" | "variablesHint"
   | "name",
   string
 > & { operators: Record<(typeof CONDITION_OPERATORS)[number], string> };
@@ -45,6 +45,17 @@ export function buildNodeTypes(catalog: EditorCatalog, labels: NodeLabels): Pale
   const triggerFields = catalog.events.flatMap((event) => event.fields.map((field) =>
     option(`trigger.${field.name}`, `${event.label} → ${field.label}`)));
   const uniqueTriggerFields = [...new Map(triggerFields.map((item) => [item.value, item])).values()];
+  // Enum fields (e.g. membership status) get a value list instead of free text.
+  const enumFields = [...new Map(catalog.events.flatMap((event) => event.fields
+    .filter((field) => field.options?.length)
+    .map((field) => [`trigger.${field.name}`, { path: `trigger.${field.name}`, label: field.label, options: field.options! }] as const))).values()];
+  const enumPaths = enumFields.map((field) => field.path);
+  // References offered in text fields: trigger fields plus record variables.
+  const references = [...new Set(catalog.events.flatMap((event) => [
+    ...event.fields.map((field) => `{{trigger.${field.name}}}`),
+    ...(event.variables?.fields.map((field) => `{{${event.variables!.namespace}.${field.name}}}`) ?? []),
+  ]))];
+  const referenceHint = references.length ? `${labels.variablesHint}: ${references.join(" ")}` : "";
 
   const trigger = {
     type: "trigger",
@@ -91,7 +102,9 @@ export function buildNodeTypes(catalog: EditorCatalog, labels: NodeLabels): Pale
           field.name,
           field.required ? `${field.label} *` : field.label,
           field.options ? "Select" : field.multiline ? "TextArea" : field.type === "boolean" ? "Switch" : "Text",
-          field.help ? { placeholder: field.help } : {},
+          field.type === "string" && !field.options
+            ? { placeholder: [field.help, field.multiline || field.name !== "to" ? referenceHint : ""].filter(Boolean).join(" · ") }
+            : field.help ? { placeholder: field.help } : {},
         )),
       ),
       defaultPropertiesData: {
@@ -116,6 +129,7 @@ export function buildNodeTypes(catalog: EditorCatalog, labels: NodeLabels): Pale
         customField: { type: "string", label: labels.customField },
         operator: { type: "string", label: labels.operator, options: CONDITION_OPERATORS.map((op) => option(op, labels.operators[op])) },
         value: { type: "string", label: labels.value },
+        ...Object.fromEntries(enumFields.map((field) => [conditionValueKey(field.path), { type: "string", label: labels.value, options: field.options }])),
       },
     },
     uischema: layout(
@@ -123,9 +137,21 @@ export function buildNodeTypes(catalog: EditorCatalog, labels: NodeLabels): Pale
       control("field", labels.field, "Select"),
       control("customField", labels.customField, "Text", { ...showWhen("field", "custom"), placeholder: labels.customFieldHelp }),
       control("operator", labels.operator, "Select"),
-      control("value", labels.value, "Text", { placeholder: labels.valueHelp }),
+      control("value", labels.value, "Text", {
+        placeholder: labels.valueHelp,
+        ...(enumPaths.length ? { rule: { effect: "HIDE", condition: { scope: "#/properties/field", schema: { enum: enumPaths } } } } : {}),
+      }),
+      ...enumFields.map((field) => control(conditionValueKey(field.path), labels.value, "Select", showWhen("field", field.path))),
     ),
-    defaultPropertiesData: { label: labels.condition, description: "", field: uniqueTriggerFields[0]?.value ?? "custom", customField: "", operator: "eq", value: "" },
+    defaultPropertiesData: {
+      label: labels.condition,
+      description: "",
+      field: uniqueTriggerFields[0]?.value ?? "custom",
+      customField: "",
+      operator: "eq",
+      value: "",
+      ...Object.fromEntries(enumFields.map((field) => [conditionValueKey(field.path), field.options[0]?.value ?? ""])),
+    },
   };
 
   const delay = {

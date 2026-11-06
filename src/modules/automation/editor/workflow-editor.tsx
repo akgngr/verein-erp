@@ -31,16 +31,19 @@ export type WorkflowEditorProps = {
 
 const REACT_FLOW_PROPS = { fitView: true, fitViewOptions: { padding: 0.3, maxZoom: 1 } };
 
-function Toolbar({ render, openPaletteLabel }: { render: WorkflowEditorProps["toolbar"]; openPaletteLabel?: string }) {
+function Toolbar({ render, openLabels }: { render: WorkflowEditorProps["toolbar"]; openLabels: string[] }) {
   const actions = useWorkflowBuilderActions();
-  // The SDK palette starts collapsed in custom layouts; open it once on mount.
+  // The SDK palette and properties panel start collapsed in custom layouts and
+  // do not open on selection; open both once on mount.
+  const key = openLabels.join("|");
   useEffect(() => {
-    if (!openPaletteLabel) return;
     const timer = setTimeout(() => {
-      document.querySelector<HTMLButtonElement>(`button[aria-label="${openPaletteLabel}"]`)?.click();
+      for (const label of key.split("|").filter(Boolean)) {
+        document.querySelector<HTMLButtonElement>(`button[aria-label="${label}"]`)?.click();
+      }
     }, 300);
     return () => clearTimeout(timer);
-  }, [openPaletteLabel]);
+  }, [key]);
   return <>{render({ save: actions.save })}</>;
 }
 
@@ -100,7 +103,13 @@ export default function WorkflowEditor({ name, locale, initialDraft, catalog, la
         initialEdges={(initialDraft.edges ?? []) as WorkflowBuilderEdge[]}
         reactFlowProps={REACT_FLOW_PROPS}
       >
-        <Toolbar render={toolbar} openPaletteLabel={(sdkBundle?.tooltips as { openPalette?: string } | undefined)?.openPalette} />
+        <Toolbar
+          render={toolbar}
+          openLabels={[
+            (sdkBundle?.tooltips as { openPalette?: string } | undefined)?.openPalette ?? "",
+            (sdkBundle?.tooltips as { openPropertiesBar?: string } | undefined)?.openPropertiesBar ?? "",
+          ]}
+        />
         {/* SDK panels float over the canvas; the container only provides the size. */}
         <div className="relative min-h-0 flex-1 overflow-hidden">
           <div className="absolute inset-0">

@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.4.0",
+      "date": "2026-11-06",
+      "title": {
+        "tr": "İş akışı alanları ve değişkenler",
+        "de": "Workflow-Felder und Variablen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Bildirim e-postası metinlerinde üye alanları kullanılabilir; alıcı olarak {{member.email}} ile yeni üyeye de gönderilebilir.",
+          "de": "In Benachrichtigungs-E-Mails sind Mitgliedsfelder nutzbar; mit {{member.email}} kann auch an das neue Mitglied gesendet werden."
+        }
+      ]
+    },
+    {
       "version": "1.3.4",
       "date": "2026-11-06",
       "title": {

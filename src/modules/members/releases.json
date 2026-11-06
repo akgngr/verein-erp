@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.5.0",
+      "date": "2026-11-06",
+      "title": {
+        "tr": "İş akışı alanları ve değişkenler",
+        "de": "Workflow-Felder und Variablen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yeni üye olayı üyelik durumu ve türünü seçenekli olarak sunar; iş akışı metinlerinde {{member.fullName}}, {{member.firstName}}, {{member.membershipNumber}}, {{member.email}} gibi alanlar kullanılabilir (yalnızca gönderim anında okunur).",
+          "de": "Das Ereignis neues Mitglied bietet Status und Art als Auswahl; in Workflow-Texten sind {{member.fullName}}, {{member.firstName}}, {{member.membershipNumber}}, {{member.email}} usw. nutzbar (nur beim Versand gelesen)."
+        }
+      ]
+    },
+    {
       "version": "1.4.1",
       "date": "2026-11-06",
       "title": {

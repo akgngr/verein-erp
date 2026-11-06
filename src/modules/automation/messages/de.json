@@ -318,7 +318,8 @@
         "contains": "enthält",
         "exists": "ist ausgefüllt",
         "notExists": "ist leer"
-      }
+      },
+      "variablesHint": "Verfügbare Felder"
     },
     "describe": {
       "triggerEvent": "Startet, wenn: {event}",
@@ -352,7 +353,8 @@
       "tooLarge": "Der Workflow ist zu groß.",
       "tooFewSteps": "Nach dem Auslöser muss mindestens ein Schritt folgen.",
       "schema": "Die Einstellungen eines Schritts sind ungültig ({detail}).",
-      "generic": "Prüffehler: {code}"
+      "generic": "Prüffehler: {code}",
+      "unknownReference": "Unbekanntes Feld in „{step}“: {refs}. Verfügbar: {available}"
     }
   },
   "automation": {

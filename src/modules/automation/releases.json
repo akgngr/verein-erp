@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.8.0",
+      "date": "2026-11-06",
+      "title": {
+        "tr": "İş akışı alanları ve değişkenler",
+        "de": "Workflow-Felder und Variablen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Koşulda üyelik durumu/türü gibi alanların değeri artık hazır seçenekli listeden seçilir. Görev metinlerinde {{trigger.status}} gibi başvurular metnin içinde de çalışır; {{member.fullName}} gibi üye alanları gönderim anında doldurulur ve saklanmaz. Bilinmeyen başvurular yayımlarken kullanılabilir alanlarla birlikte bildirilir.",
+          "de": "Bei Bedingungen werden Werte wie Mitgliedsstatus/-art aus einer Liste gewählt. Verweise wie {{trigger.status}} funktionieren auch im Fließtext; Mitgliedsfelder wie {{member.fullName}} werden erst beim Versand gefüllt und nicht gespeichert. Unbekannte Verweise werden beim Veröffentlichen mit den verfügbaren Feldern gemeldet."
+        }
+      ]
+    },
+    {
       "version": "0.7.5",
       "date": "2026-11-06",
       "title": {

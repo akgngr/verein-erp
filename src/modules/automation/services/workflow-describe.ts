@@ -27,6 +27,14 @@ export async function describeGraph(graph: CanonicalGraph, catalog: EditorCatalo
     return path;
   };
 
+  const valueLabel = (path: string, value: string) => {
+    for (const event of catalog.events) {
+      const option = event.fields.find((item) => `trigger.${item.name}` === path)?.options?.find((item) => item.value === value);
+      if (option) return option.label;
+    }
+    return value;
+  };
+
   const describe = (node: CanonicalNode): { title: string; summary: string } => {
     switch (node.kind) {
       case "trigger": {
@@ -48,7 +56,7 @@ export async function describeGraph(graph: CanonicalGraph, catalog: EditorCatalo
           title: node.label || t("conditionTitle"),
           summary: ["exists", "notExists"].includes(node.config.operator)
             ? `${fieldLabel(node.config.field)} ${ops(node.config.operator)}`
-            : `${fieldLabel(node.config.field)} ${ops(node.config.operator)} „${node.config.value}“`,
+            : `${fieldLabel(node.config.field)} ${ops(node.config.operator)} „${valueLabel(node.config.field, node.config.value)}“`,
         };
       case "delay": {
         if (node.config.until) {
@@ -106,6 +114,13 @@ export async function describeIssues(issues: string[], draft: unknown, catalog: 
         return extra
           ? t("taskInputFields", { step: stepName(id), fields: extra.split(",").map((field) => fieldName(id, field)).join(", ") })
           : t("taskInput", { step: stepName(id) });
+      case "TASK_UNKNOWN_REFERENCE": {
+        const event = catalog.events.find((item) => rawNodes.some((node) => node.data?.type === "trigger" && (node.data?.properties as { eventKey?: string } | undefined)?.eventKey === item.key));
+        const available = event
+          ? [...event.fields.map((field) => `{{trigger.${field.name}}}`), ...(event.variables?.fields.map((field) => `{{${event.variables!.namespace}.${field.name}}}`) ?? [])].join(" ")
+          : "";
+        return t("unknownReference", { step: stepName(id), refs: extra.split(",").map((ref) => `{{${ref}}}`).join(", "), available });
+      }
       case "TASK_NOT_AVAILABLE": return t("taskNotAvailable", { step: stepName(id) });
       case "NODE_UNREACHABLE": return t("unreachable", { step: stepName(id) });
       case "NODE_KIND_UNSUPPORTED": return t("unsupported", { step: stepName(id) });
