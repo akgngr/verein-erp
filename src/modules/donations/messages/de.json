@@ -487,5 +487,37 @@
       "label": "Spenden und Bestätigungen",
       "description": "Spendeneingänge und Erstellung amtlicher Zuwendungsbestätigungen."
     }
+  },
+  "automation": {
+    "events": {
+      "received": {
+        "label": "Wenn eine Spende erfasst wird",
+        "fields": {
+          "donationId": "Spenden-ID",
+          "method": "Zahlungsart",
+          "amount": "Betrag (€)"
+        },
+        "options": {
+          "method": {
+            "CASH": "Bar",
+            "BANK_TRANSFER": "Überweisung",
+            "CARD": "Karte",
+            "PAYPAL": "PayPal",
+            "REIMBURSEMENT_WAIVER": "Aufwandsspende",
+            "OTHER": "Sonstige"
+          }
+        },
+        "variables": {
+          "donationNumber": "Spendennummer",
+          "amount": "Betrag",
+          "receivedAt": "Zuwendungsdatum",
+          "donorName": "Spender",
+          "purposeNote": "Zweck"
+        },
+        "help": {
+          "amount": "Zahl in Euro, z. B. 100 oder 49.90 (mit größer/kleiner verwenden)"
+        }
+      }
+    }
   }
 }

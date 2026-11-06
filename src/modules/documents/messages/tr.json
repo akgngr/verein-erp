@@ -320,5 +320,33 @@
       "label": "Gelen / Giden Evraklar",
       "description": "Resmi evrakların sisteme kaydedilmesi, numaralandırılması ve arşivlenmesi."
     }
+  },
+  "automation": {
+    "events": {
+      "registered": {
+        "label": "Evrak kaydedildiğinde",
+        "fields": {
+          "documentId": "Evrak kimliği",
+          "direction": "Yön",
+          "hasDueDate": "Son tarihi var mı"
+        },
+        "options": {
+          "direction": {
+            "INCOMING": "Gelen",
+            "OUTGOING": "Giden"
+          }
+        },
+        "variables": {
+          "registryNumber": "Kayıt numarası",
+          "subject": "Konu",
+          "counterparty": "Gönderen/alıcı",
+          "documentDate": "Evrak tarihi",
+          "dueDate": "Son tarih"
+        },
+        "help": {
+          "hasDueDate": "true veya false"
+        }
+      }
+    }
   }
 }

@@ -1,6 +1,8 @@
 "use server";
 
 import { z } from "zod";
+import { emitAutomationEvent } from "@/shared/automation/emit";
+import { meetingCreatedEvent } from "../automation";
 
 import { getDb } from "@/shared/db";
 import { buildUserLabel } from "@/shared/utils";
@@ -112,7 +114,7 @@ export async function createMeetingAction(
       const created = await runWithNumberRetry(() =>
         db.$transaction(async (tx) => {
           const { sequence, meetingNumber } = await allocateMeetingNumber(tx, year);
-          return tx.meeting.create({
+          const meeting = await tx.meeting.create({
             data: {
               year,
               sequence,
@@ -158,6 +160,8 @@ export async function createMeetingAction(
                 : {}),
             },
           });
+          await emitAutomationEvent(meetingCreatedEvent, { meetingId: meeting.id, type: meeting.type }, tx);
+          return meeting;
         }),
       );
 

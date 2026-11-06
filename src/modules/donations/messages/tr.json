@@ -487,5 +487,37 @@
       "label": "Bağış ve Makbuzlar",
       "description": "Bağış tahsilatları ve resmi Zuwendungsbestätigung makbuz üretimi."
     }
+  },
+  "automation": {
+    "events": {
+      "received": {
+        "label": "Bağış kaydedildiğinde",
+        "fields": {
+          "donationId": "Bağış kimliği",
+          "method": "Ödeme yöntemi",
+          "amount": "Tutar (€)"
+        },
+        "options": {
+          "method": {
+            "CASH": "Nakit",
+            "BANK_TRANSFER": "Havale",
+            "CARD": "Kart",
+            "PAYPAL": "PayPal",
+            "REIMBURSEMENT_WAIVER": "Gider vazgeçimi",
+            "OTHER": "Diğer"
+          }
+        },
+        "variables": {
+          "donationNumber": "Bağış numarası",
+          "amount": "Tutar",
+          "receivedAt": "Bağış tarihi",
+          "donorName": "Bağışçı",
+          "purposeNote": "Amaç notu"
+        },
+        "help": {
+          "amount": "Euro olarak sayı, ör. 100 veya 49.90 (büyüktür/küçüktür ile kullanın)"
+        }
+      }
+    }
   }
 }

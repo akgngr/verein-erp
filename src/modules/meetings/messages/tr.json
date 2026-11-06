@@ -552,5 +552,31 @@
       "label": "Toplantı ve Kararlar",
       "description": "Toplantı takvimi, gündem maddeleri, tutanaklar, kararlar ve onaylama."
     }
+  },
+  "automation": {
+    "events": {
+      "created": {
+        "label": "Toplantı planlandığında",
+        "fields": {
+          "meetingId": "Toplantı kimliği",
+          "type": "Toplantı türü"
+        },
+        "options": {
+          "type": {
+            "BOARD": "Yönetim Kurulu",
+            "GENERAL_ASSEMBLY": "Genel Kurul",
+            "COMMITTEE": "Komisyon",
+            "OTHER": "Diğer"
+          }
+        },
+        "variables": {
+          "meetingNumber": "Toplantı numarası",
+          "title": "Başlık",
+          "meetingDate": "Tarih",
+          "startTime": "Başlangıç saati",
+          "location": "Yer"
+        }
+      }
+    }
   }
 }

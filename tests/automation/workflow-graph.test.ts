@@ -195,3 +195,20 @@ describe("Reference validation", () => {
     assert.deepEqual(validateWorkflow(graph, refs), ["TASK_UNKNOWN_REFERENCE:a:members.name"]);
   });
 });
+
+describe("Trigger-aware conditions", () => {
+  test("field and value come from the trigger event's own lists; manual value via 'other'", async () => {
+    const { conditionKeys, CUSTOM_VALUE } = await import("@/shared/automation/workflow-graph");
+    const ev = "members.created";
+    const make = (props: Record<string, unknown>) => compileWorkflow({
+      nodes: [node("t", "trigger", { triggerType: "event", eventKey: ev }), node("c", "condition", { operator: "eq", ...props }), node("a", "parallel")],
+      edges: [edge("t", "c"), edge("c", "a")],
+    }).graph!.nodes[1].config as { field: string; value: string };
+
+    assert.deepEqual(make({ [conditionKeys.field(ev)]: "status", [conditionKeys.value(ev, "status")]: "PASSIVE" }), { field: "trigger.status", operator: "eq", value: "PASSIVE" });
+    assert.deepEqual(make({ [conditionKeys.field(ev)]: "status", [conditionKeys.value(ev, "status")]: CUSTOM_VALUE, [conditionKeys.text(ev, "status")]: "ACTIVE" }), { field: "trigger.status", operator: "eq", value: "ACTIVE" });
+    assert.deepEqual(make({ [conditionKeys.field(ev)]: "custom", customField: "steps.x.sent", value: "3" }), { field: "steps.x.sent", operator: "eq", value: "3" });
+    // Legacy single-select shape keeps working.
+    assert.deepEqual(make({ field: "trigger.status", value: "ACTIVE" }), { field: "trigger.status", operator: "eq", value: "ACTIVE" });
+  });
+});

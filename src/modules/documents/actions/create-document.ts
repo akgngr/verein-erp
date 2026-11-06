@@ -3,6 +3,8 @@
 import { getDb } from "@/shared/db";
 import { buildUserLabel } from "@/shared/utils";
 import type { ActionResult } from "@/shared/types/action";
+import { emitAutomationEvent } from "@/shared/automation/emit";
+import { documentRegisteredEvent } from "../automation";
 
 import { ActionError, createAction } from "@/modules/auth/server";
 
@@ -53,7 +55,7 @@ export async function createDocumentAction(
             input.direction,
             year,
           );
-          return tx.document.create({
+          const document = await tx.document.create({
             data: {
               direction: input.direction,
               year,
@@ -78,6 +80,8 @@ export async function createDocumentAction(
               updatedByLabel: createdByLabel,
             },
           });
+          await emitAutomationEvent(documentRegisteredEvent, { documentId: document.id, direction: document.direction, hasDueDate: document.dueDate !== null }, tx);
+          return document;
         }),
       );
 

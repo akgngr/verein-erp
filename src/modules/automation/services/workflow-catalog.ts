@@ -72,6 +72,8 @@ export async function buildEditorCatalog(): Promise<EditorCatalog> {
       fields: Object.entries(json.properties ?? {}).map(([field, prop]) => ({
         name: field,
         label: tr(`events.${name}.fields.${field}`, humanize(field)),
+        type: (prop.type === "number" || prop.type === "integer" ? "number" : prop.type === "boolean" ? "boolean" : "string") as "string" | "number" | "boolean",
+        help: tr(`events.${name}.help.${field}`, ""),
         options: prop.enum?.map((value) => ({ value: String(value), label: tr(`events.${name}.options.${field}.${String(value)}`, String(value)) })),
       })),
       variables: event.variables

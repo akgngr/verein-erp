@@ -287,7 +287,7 @@
       "field": "Hangi bilgi kontrol edilsin?",
       "customField": "Alan yolu",
       "customFieldHelp": "Ör. steps.adim1.sent",
-      "customFieldOption": "Diğer (alan yolunu yaz)",
+      "customFieldOption": "Diğer alan (yolunu yaz)",
       "operator": "Karşılaştırma",
       "value": "Değer",
       "valueHelp": "Ör. ACTIVE veya 10",
@@ -319,7 +319,14 @@
         "exists": "dolu",
         "notExists": "boş"
       },
-      "variablesHint": "Kullanılabilir alanlar"
+      "variablesHint": "Kullanılabilir alanlar",
+      "customValueOption": "Diğer (elle yaz)",
+      "manualValue": "Değeri elle yazın",
+      "booleanHelp": "true (evet) veya false (hayır)",
+      "numberHelp": "Sayı, ör. 100 (büyüktür/küçüktür ile kullanın)",
+      "textHelp": "Karşılaştırılacak metin",
+      "manualTriggerFieldHelp": "Elle başlatmada verilen alan, ör. trigger.memberId veya steps.adim1.sent",
+      "possibleValues": "Olası değerler"
     },
     "describe": {
       "triggerEvent": "Akış şu olduğunda başlar: {event}",

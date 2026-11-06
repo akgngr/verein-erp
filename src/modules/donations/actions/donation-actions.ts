@@ -4,6 +4,8 @@ import { getDb } from "@/shared/db";
 import { toCents } from "@/shared/money";
 import { buildUserLabel } from "@/shared/utils";
 import type { ActionResult } from "@/shared/types/action";
+import { emitAutomationEvent } from "@/shared/automation/emit";
+import { donationReceivedEvent } from "../automation";
 
 import { ActionError, createAction } from "@/modules/auth/server";
 
@@ -105,6 +107,7 @@ export async function createDonationAction(
               updatedByLabel: createdByLabel,
             },
           });
+          await emitAutomationEvent(donationReceivedEvent, { donationId: donation.id, method: donation.method, amount: Number(donation.amount) }, tx);
 
           // Muhasebe fişleri (§ 11 md. 5) — hata bağışı durdurur.
           const bookings = await createDonationBookings(tx, {
