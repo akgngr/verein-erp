@@ -13,8 +13,8 @@ export const moduleConfig: ModuleConfig = {
   key: "online-forms",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
   version: "1.0.0",
-  label: "Online formlar",
-  description: "Kişiye süreli bağlantı gönderip formu tamamlatma, Datenschutz onayı ve imza.",
+  label: "e-Sign",
+  description: "e-Sign: kişiye süreli bağlantı, form tamamlama, Datenschutz onayı, imza ve imzalı PDF belgeleri.",
   category: "OFFICIAL",
   hasSchema: true,
   requires: [{ module: "mailings" }],
@@ -30,7 +30,7 @@ export const moduleConfig: ModuleConfig = {
   nav: [
     {
       href: "/online-formlar",
-      label: "Online formlar",
+      label: "e-Sign",
       labelKey: "online-forms",
       icon: FileSignature,
       group: "main",

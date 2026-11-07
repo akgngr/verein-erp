@@ -1,7 +1,7 @@
 "use client";
 
 import { addToast } from "@heroui/react";
-import { Pencil, Trash2 } from "lucide-react";
+import { FileSignature, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -24,6 +24,7 @@ export function GuardianTable({
   q,
   canUpdate,
   canDelete,
+  canSign = false,
 }: {
   rows: GuardianRow[];
   total: number;
@@ -34,6 +35,8 @@ export function GuardianTable({
   q?: string;
   canUpdate: boolean;
   canDelete: boolean;
+  /** e-Sign (online-forms) bağlantısı gönderme yetkisi; modül kapalıysa sayfa bunu söyler. */
+  canSign?: boolean;
 }) {
   const t = useTranslations("students.guardianTable");
   const router = useRouter();
@@ -68,6 +71,7 @@ export function GuardianTable({
         searchPlaceholder={t("search")}
         emptyMessage={t("empty")}
         rowActions={(row) => [
+          { key: "sign", label: t("sendSign"), icon: <FileSignature className="h-4 w-4" />, href: `/online-formlar?gonder=GUARDIAN:${row.id}`, hidden: !canSign || !canUpdate },
           { key: "edit", label: t("edit"), icon: <Pencil className="h-4 w-4" />, href: drawerHref("duzenle", row.id), hidden: !canUpdate },
           { key: "delete", label: t("delete"), icon: <Trash2 className="h-4 w-4" />, color: "danger", onPress: () => setDeleting(row), hidden: !canDelete },
         ]}
