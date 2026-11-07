@@ -260,24 +260,21 @@ function SidebarContent({
 
   const itemClass = (active: boolean) =>
     cn(
-      "group relative flex items-center gap-3 rounded-lg py-2.5 text-small font-medium transition-all duration-150",
-      collapsed ? "justify-center px-0" : "px-3",
+      "group relative flex items-center gap-3 rounded-xl py-2.5 text-small font-medium transition-all duration-150",
+      collapsed ? "justify-center px-0" : "px-3.5",
       active
-        ? "bg-primary-50 text-primary-700 shadow-xs dark:bg-primary-500/15 dark:text-primary-300 font-semibold"
-        : "text-default-600 hover:bg-default-100/80 hover:text-foreground",
+        ? "bg-white font-semibold text-primary-700 shadow-[0_6px_16px_-6px_rgba(10,20,60,0.45)]"
+        : "text-white/80 hover:bg-white/10 hover:text-white",
     );
 
   const renderLink = (link: MenuLink, active: boolean, onClick?: () => void) => {
     const Icon = link.icon;
     const content = (
       <>
-        {active && (
-          <span className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full bg-primary" aria-hidden />
-        )}
         <Icon
           className={cn(
-            "h-4 w-4 shrink-0 transition-colors",
-            active ? "text-primary" : "text-default-400 group-hover:text-default-600",
+            "h-[18px] w-[18px] shrink-0 transition-colors",
+            active ? "text-primary-600" : "text-white/70 group-hover:text-white",
           )}
           aria-hidden
         />
@@ -325,7 +322,7 @@ function SidebarContent({
   };
 
   const switchButtonClass = cn(
-    "flex w-full items-center gap-2 rounded-lg border border-default-200/80 bg-default-50 py-2 text-small font-medium text-default-600 transition-colors hover:bg-default-100 hover:text-foreground",
+    "flex w-full items-center gap-2 rounded-xl border border-white/15 bg-white/10 py-2 text-small font-medium text-white/90 transition-colors hover:bg-white/15 hover:text-white",
     collapsed ? "justify-center px-0" : "px-3",
   );
 
@@ -366,7 +363,7 @@ function SidebarContent({
           : null}
         <div className="flex flex-col gap-1">{mainItems.map(renderMainItem)}</div>
         {settings ? (
-          <div className="flex flex-col gap-1 border-t border-default-200/80 pt-3">
+          <div className="flex flex-col gap-1 border-t border-white/15 pt-3">
             {renderMainItem(settings.hub)}
           </div>
         ) : null}
@@ -399,17 +396,17 @@ function SidebarContent({
               </button>,
             )}
             {/* Daraltılmışken başlık ikonu ilk bağlantıyla karışır: yerine ayraç (ad ekran okuyucuda kalır). */}
-            {collapsed ? <hr className="mx-2 border-default-200/80" aria-hidden /> : null}
-            <div className={cn("flex items-center gap-2", collapsed ? "sr-only" : "px-3")}>
+            {collapsed ? <hr className="mx-2 border-white/15" aria-hidden /> : null}
+            <div className={cn("flex items-center gap-2", collapsed ? "sr-only" : "px-3.5")}>
               {(() => {
                 const ModuleIcon = moduleHome(shownModule)?.icon;
-                return ModuleIcon ? <ModuleIcon className="h-4 w-4 shrink-0 text-primary" aria-hidden /> : null;
+                return ModuleIcon ? <ModuleIcon className="h-4 w-4 shrink-0 text-white/80" aria-hidden /> : null;
               })()}
               <span
                 className={
                   collapsed
                     ? "sr-only"
-                    : "truncate text-[11px] font-semibold uppercase tracking-wider text-default-500"
+                    : "truncate text-[11px] font-semibold uppercase tracking-wider text-white/60"
                 }
               >
                 {moduleLabel(shownModule)}
@@ -430,16 +427,16 @@ function Brand({ collapsed = false }: { collapsed?: boolean }) {
   return (
     <div
       className={cn(
-        "flex items-center gap-3 border-b border-default-200/80 py-4",
-        collapsed ? "justify-center px-2" : "px-5",
+        "mx-3 flex items-center gap-3 border-b border-white/15 py-5",
+        collapsed ? "justify-center px-0" : "px-2",
       )}
     >
-      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-primary text-primary-foreground shadow-xs">
+      <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-white text-primary-600 shadow-md">
         <Building2 className="h-5 w-5" aria-hidden />
       </div>
       <div className={collapsed ? "sr-only" : "flex flex-col min-w-0"}>
-        <span className="text-small font-bold tracking-tight text-foreground truncate">{BRAND}</span>
-        <span className="text-[11px] font-medium text-default-400 leading-none truncate">
+        <span className="text-medium font-bold tracking-tight text-white truncate">{BRAND}</span>
+        <span className="text-[11px] font-medium text-white/60 leading-none truncate">
           {tSidebar.has("brand") ? tSidebar("brand") : "Yönetim Sistemi"}
         </span>
       </div>
@@ -472,31 +469,31 @@ function SidebarUserFooter({
     .join("");
 
   return (
-    <div className={cn("border-t border-default-200/80 bg-default-50/50 shrink-0", collapsed ? "p-2" : "p-3")}>
+    <div className={cn("mx-3 border-t border-white/15 shrink-0", collapsed ? "p-2" : "p-3")}>
       <Dropdown placement={collapsed ? "right-end" : "top-start"}>
         <DropdownTrigger>
           <button
             type="button"
             className={cn(
-              "group flex w-full items-center gap-2.5 rounded-xl text-left transition-all duration-150 hover:bg-default-100/90 cursor-pointer",
+              "group flex w-full items-center gap-2.5 rounded-xl text-left transition-all duration-150 hover:bg-white/10 cursor-pointer",
               collapsed ? "justify-center p-1" : "p-2",
             )}
             aria-label={tSidebar.has("userMenu") ? tSidebar("userMenu") : "Kullanıcı menüsü"}
           >
-            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground font-semibold text-small shadow-xs group-hover:scale-105 transition-transform">
+            <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white/15 text-white ring-1 ring-white/25 font-semibold text-small group-hover:scale-105 transition-transform">
               {initials || "?"}
             </div>
             {collapsed ? null : (
               <>
                 <div className="flex min-w-0 flex-1 flex-col">
-                  <span className="truncate text-small font-semibold text-foreground leading-tight">
+                  <span className="truncate text-small font-semibold text-white leading-tight">
                     {name}
                   </span>
-                  <span className="truncate text-tiny text-default-400 leading-tight">
+                  <span className="truncate text-tiny text-white/60 leading-tight">
                     {email}
                   </span>
                 </div>
-                <RoleChip role={role} className="h-5 text-[10px] shrink-0" />
+                <RoleChip role={role} className="h-5 shrink-0 bg-white/15 text-[10px] text-white" />
               </>
             )}
           </button>
@@ -560,8 +557,8 @@ function DesktopSidebar({
   return (
     <aside
       className={cn(
-        "sticky top-0 hidden h-dvh shrink-0 flex-col border-r border-default-200/80 bg-background/95 backdrop-blur-sm transition-[width] duration-200 ease-out lg:flex",
-        collapsed ? "w-[72px]" : "w-64",
+        "sidebar-surface sticky top-0 hidden h-dvh shrink-0 flex-col transition-[width] duration-200 ease-out lg:flex",
+        collapsed ? "w-[76px]" : "w-[272px]",
       )}
     >
       <Brand collapsed={collapsed} />
@@ -574,14 +571,15 @@ function DesktopSidebar({
             isIconOnly
             size="sm"
             variant="light"
+            className="data-[hover=true]:bg-white/10"
             aria-label={toggleLabel}
             aria-expanded={!collapsed}
             onPress={toggleCollapsed}
           >
             {collapsed ? (
-              <PanelLeftOpen className="h-4 w-4 text-default-500" aria-hidden />
+              <PanelLeftOpen className="h-4 w-4 text-white/70" aria-hidden />
             ) : (
-              <PanelLeftClose className="h-4 w-4 text-default-500" aria-hidden />
+              <PanelLeftClose className="h-4 w-4 text-white/70" aria-hidden />
             )}
           </Button>
         </Tooltip>
@@ -622,7 +620,7 @@ function MobileSidebar({
       size="xs"
       hideCloseButton
     >
-      <DrawerContent>
+      <DrawerContent className="sidebar-surface">
         {(onClose) => (
           <div className="flex h-full flex-col">
             <DrawerHeader className="flex flex-col items-start px-0 pb-0">

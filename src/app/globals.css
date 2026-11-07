@@ -110,3 +110,22 @@ button[data-slot="trigger"][aria-haspopup="listbox"][aria-expanded="true"] {
 .word-page .tableWrapper { overflow-x: auto; }
 .word-page td, .word-page th { position: relative; }
 .word-page p.is-editor-empty:first-child::before { content: attr(data-placeholder); color: #a1a1aa; float: left; height: 0; pointer-events: none; }
+
+/* Sidebar: marka renginde koyu zemin, hafif ışık geçişi. */
+.sidebar-surface {
+  color: #fff;
+  background:
+    radial-gradient(120% 60% at 0% 0%, rgba(255, 255, 255, 0.12), transparent 60%),
+    linear-gradient(180deg, #2f54d6 0%, #2843b8 55%, #233587 100%);
+}
+.dark .sidebar-surface {
+  background:
+    radial-gradient(120% 60% at 0% 0%, rgba(95, 132, 242, 0.18), transparent 60%),
+    linear-gradient(180deg, #172452 0%, #111a3d 100%);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+/* Renk verilmemiş kenarlıklar (Tailwind v4 varsayılanı currentColor) yumuşak griye çekilir. */
+@layer base {
+  *, ::before, ::after { border-color: hsl(var(--heroui-default-200)); }
+}
