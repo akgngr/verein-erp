@@ -218,11 +218,11 @@ export async function loadPublicForm(token: string): Promise<PublicForm | null> 
 }
 
 /** İmzalı formu uygular: istek önce atomik olarak kapatılır (çift gönderim olmaz), sonra kayıtlar güncellenir. */
-const KEY_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+const DOC_CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 /** Okunaklı benzersiz anahtar: ES-<yıl>-<8 karakter> (karışan 0/O, 1/I yok). */
 function newDocumentKey(year: number): string {
   const bytes = randomBytes(8);
-  return `ES-${year}-${Array.from(bytes, (byte) => KEY_ALPHABET[byte % KEY_ALPHABET.length]).join("")}`;
+  return `ES-${year}-${Array.from(bytes, (byte) => DOC_CODE_CHARS[byte % DOC_CODE_CHARS.length]).join("")}`;
 }
 
 
