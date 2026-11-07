@@ -1,0 +1,20 @@
+{
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
+  "releases": [
+    {
+      "version": "1.0.0",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "İlk sürüm",
+        "de": "Erste Version"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Hibeler: finansman planı (kategori eşlemeli), ödemeler, plan/gerçekleşen ve %20 sapma uyarısı, belge listesi, faaliyet raporu ve Verwendungsnachweis PDF'i; rapor tarihleri takvimde.",
+          "de": "Fördermittel: Finanzierungsplan (mit Kategoriezuordnung), Mittelabrufe, Soll-Ist mit 20-%-Abweichungshinweis, Belegliste, Sachbericht und Verwendungsnachweis als PDF; Fristen im Kalender."
+        }
+      ]
+    }
+  ]
+}

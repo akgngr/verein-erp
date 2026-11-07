@@ -1,0 +1,72 @@
+enum GrantStatus {
+  PLANNED
+  APPLIED
+  APPROVED
+  ACTIVE
+  REPORTED
+  CLOSED
+  REJECTED
+}
+
+/// Hibe / Zuwendung. Harcamalar muhasebedeki bağlı projeden okunur (kopyalanmaz).
+model Grant {
+  id                String        @id @default(cuid())
+  name              String
+  /// Zuwendungsgeber (ör. Stadt, Land, Stiftung)
+  funder            String
+  /// Aktenzeichen / Förderkennzeichen
+  fileNumber        String?
+  purpose           String?
+  status            GrantStatus   @default(PLANNED)
+  approvedCents     Int?
+  ownShareCents     Int           @default(0)
+  thirdPartyCents   Int           @default(0)
+  periodStart       DateTime      @db.Date
+  periodEnd         DateTime      @db.Date
+  /// Verwendungsnachweis teslim tarihi
+  reportDueAt       DateTime?     @db.Date
+  /// Muhasebe projesi (yumuşak referans)
+  projectId         String?
+  /// Vorsteuerabzug varsa harcamalar net, yoksa brüt sayılır
+  useNetAmounts     Boolean       @default(false)
+  /// Sachbericht
+  reportText        String?
+  reportSubmittedAt DateTime?
+  createdById       String
+  createdByLabel    String
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  lines             GrantBudgetLine[]
+  payouts           GrantPayout[]
+
+  @@index([status])
+  @@map("grants")
+}
+
+/// Finansman planı kalemi; muhasebe kategorileriyle eşlenir.
+model GrantBudgetLine {
+  id           String   @id @default(cuid())
+  grantId      String
+  grant        Grant    @relation(fields: [grantId], references: [id], onDelete: Cascade)
+  label        String
+  plannedCents Int
+  categoryIds  String[] @default([])
+  sortOrder    Int      @default(0)
+
+  @@index([grantId])
+  @@map("grant_budget_lines")
+}
+
+/// Mittelabruf / ödeme.
+model GrantPayout {
+  id          String    @id @default(cuid())
+  grantId     String
+  grant       Grant     @relation(fields: [grantId], references: [id], onDelete: Cascade)
+  requestedAt DateTime  @db.Date
+  amountCents Int
+  receivedAt  DateTime? @db.Date
+  note        String?
+
+  @@index([grantId])
+  @@map("grant_payouts")
+}

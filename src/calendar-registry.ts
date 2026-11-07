@@ -8,6 +8,7 @@ import { calendar as meetingsCalendar } from "@/modules/meetings/calendar";
 import { calendar as coursesCalendar } from "@/modules/courses/calendar";
 import { calendar as crmCalendar } from "@/modules/crm/calendar";
 import { calendar as eventsCalendar } from "@/modules/events/calendar";
+import { calendar as grantsCalendar } from "@/modules/grants/calendar";
 import { calendar as mailingsCalendar } from "@/modules/mailings/calendar";
 import { calendar as tasksCalendar } from "@/modules/tasks/calendar";
 
@@ -18,6 +19,7 @@ export const moduleCalendarRegistry: ModuleCalendar[] = [
   coursesCalendar,
   crmCalendar,
   eventsCalendar,
+  grantsCalendar,
   mailingsCalendar,
   tasksCalendar,
 ];
