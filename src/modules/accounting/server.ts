@@ -94,3 +94,4 @@ export { saveAssetForInventoryItem, unlinkAssetFromInventoryItem } from "./servi
 // CRM ve diğer modüller için cari özeti/arama (banka ve vergi bilgisi içermez).
 export { getContactSummaries, searchContacts, type ContactSummary } from "./queries/contact-summaries";
 export { listProjectBookings, type ProjectBookingRow } from "./queries/project-bookings";
+export { getSepaCreditorSettings } from "./queries/sepa-creditor";

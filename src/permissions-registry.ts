@@ -35,6 +35,7 @@ import * as mailingsPermissionExports from "@/modules/mailings/permissions";
 import * as onlineformsPermissionExports from "@/modules/online-forms/permissions";
 import * as progressPermissionExports from "@/modules/progress/permissions";
 import * as securitymonitorPermissionExports from "@/modules/security-monitor/permissions";
+import * as sepaPermissionExports from "@/modules/sepa/permissions";
 import * as studentsPermissionExports from "@/modules/students/permissions";
 import * as tasksPermissionExports from "@/modules/tasks/permissions";
 
@@ -77,6 +78,7 @@ export const permissionResources: { moduleKey: string; definitions: PermissionDe
   { moduleKey: "online-forms", definitions: definitionsOf(onlineformsPermissionExports) },
   { moduleKey: "progress", definitions: definitionsOf(progressPermissionExports) },
   { moduleKey: "security-monitor", definitions: definitionsOf(securitymonitorPermissionExports) },
+  { moduleKey: "sepa", definitions: definitionsOf(sepaPermissionExports) },
   { moduleKey: "students", definitions: definitionsOf(studentsPermissionExports) },
   { moduleKey: "tasks", definitions: definitionsOf(tasksPermissionExports) },
   { moduleKey: "system", definitions: [systemPermissions, settingsPermissions] },

@@ -36,6 +36,7 @@ import { moduleConfig as mailingsModule } from "@/modules/mailings";
 import { moduleConfig as onlineformsModule } from "@/modules/online-forms";
 import { moduleConfig as progressModule } from "@/modules/progress";
 import { moduleConfig as securitymonitorModule } from "@/modules/security-monitor";
+import { moduleConfig as sepaModule } from "@/modules/sepa";
 import { moduleConfig as studentsModule } from "@/modules/students";
 import { moduleConfig as tasksModule } from "@/modules/tasks";
 
@@ -76,6 +77,7 @@ export const allModules: ModuleConfig[] = [
   onlineformsModule,
   progressModule,
   securitymonitorModule,
+  sepaModule,
   studentsModule,
   tasksModule,
 ];

@@ -20,7 +20,7 @@ export type ReceiptStrings = {
   voidedMark: string;
   voidedLine: (date: string, reason: string) => string;
   disclaimer: string;
-  methodLabels: Record<"CASH" | "BANK_TRANSFER" | "CARD" | "OTHER", string>;
+  methodLabels: Record<"CASH" | "BANK_TRANSFER" | "CARD" | "SEPA_DEBIT" | "OTHER", string>;
   none: string;
 };
 
@@ -40,6 +40,7 @@ export const RECEIPT_STRINGS: { de: ReceiptStrings; tr: ReceiptStrings } = {
     methodLabels: {
       CASH: "Bar",
       BANK_TRANSFER: "Überweisung",
+      SEPA_DEBIT: "SEPA-Lastschrift",
       CARD: "Kartenzahlung",
       OTHER: "Sonstige",
     },
@@ -60,6 +61,7 @@ export const RECEIPT_STRINGS: { de: ReceiptStrings; tr: ReceiptStrings } = {
     methodLabels: {
       CASH: "Nakit (Bar)",
       BANK_TRANSFER: "Banka havalesi (Überweisung)",
+      SEPA_DEBIT: "SEPA otomatik ödeme (Lastschrift)",
       CARD: "Kart (Kartenzahlung)",
       OTHER: "Diğer (Sonstige)",
     },

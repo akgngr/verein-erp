@@ -76,6 +76,7 @@ export type InvoiceSettingsData = {
   sellerVatId: string | null;
   iban: string | null;
   bic: string | null;
+  sepaCreditorId: string | null;
   dunningIntervalDays: number;
   dunningFeeReminder: number;
   dunningFeeFirst: number;
@@ -197,6 +198,7 @@ export async function getInvoiceSettings(): Promise<InvoiceSettingsData> {
     sellerVatId: row?.sellerVatId ?? null,
     iban: row?.iban ?? null,
     bic: row?.bic ?? null,
+    sepaCreditorId: row?.sepaCreditorId ?? null,
     dunningIntervalDays: row?.dunningIntervalDays ?? 14,
     dunningFeeReminder: row?.dunningFeeReminder ?? 0,
     dunningFeeFirst: row?.dunningFeeFirst ?? 500,

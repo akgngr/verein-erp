@@ -60,7 +60,7 @@ export type AccountingPaymentRow = {
   memberNumber: string;
   dueYear: number;
   amountCents: number;
-  method: "CASH" | "BANK_TRANSFER" | "CARD" | "OTHER";
+  method: "CASH" | "BANK_TRANSFER" | "CARD" | "SEPA_DEBIT" | "OTHER";
   /** YYYY-MM-DD (date-only, saat kayması yok) */
   paidAt: string;
   voidedAt: Date | null;
@@ -282,3 +282,4 @@ export async function findMemberIdsByEmail(email: string): Promise<string[]> {
 }
 export { getMemberSelfService, applyMemberSelfService } from "./services/online-form";
 export type { MemberSelfService, MemberSelfServiceInput } from "./services/online-form";
+export { listDebitableDues, recordSepaDuePayments, voidSepaDuePayment, type DebitableDue } from "./services/sepa-debit";

@@ -732,7 +732,9 @@
       "baseInterestRate": "Basiszinssatz (%)",
       "dunningFlatFeeB2B": "B2B'de 40 € gecikme götürü bedeli",
       "dunningFlatFeeB2BHint": "§ 288 Abs. 5 BGB; alıcının USt-IdNr.'si varsa işletme sayılır.",
-      "dunningHint": "Gecikme faizi 1. ihtardan itibaren: tüketici Basiszinssatz + 5, işletme + 9 yüzde puanı. Basiszinssatz Bundesbank tarafından her 1 Ocak ve 1 Temmuz'da ilan edilir; burada güncel tutun."
+      "dunningHint": "Gecikme faizi 1. ihtardan itibaren: tüketici Basiszinssatz + 5, işletme + 9 yüzde puanı. Basiszinssatz Bundesbank tarafından her 1 Ocak ve 1 Temmuz'da ilan edilir; burada güncel tutun.",
+      "sepaCreditorId": "SEPA alacaklı kimlik no (Gläubiger-ID)",
+      "sepaCreditorIdHelp": "SEPA otomatik ödeme için Bundesbank'tan alınan numara (ör. DE98ZZZ09999999999)."
     },
     "errors": {
       "notFound": "Fatura bulunamadı.",
@@ -754,7 +756,8 @@
       "paymentDays": "Gün sayısı girin.",
       "iban": "Geçersiz IBAN.",
       "bic": "Geçersiz BIC.",
-      "baseRate": "Geçersiz oran (ör. 1,27 veya -0,88)."
+      "baseRate": "Geçersiz oran (ör. 1,27 veya -0,88).",
+      "creditorId": "Geçersiz Gläubiger-ID."
     },
     "newQuote": "Yeni teklif",
     "views": {
