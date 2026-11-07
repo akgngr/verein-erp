@@ -38,6 +38,8 @@ export type Theme = "light" | "dark" | "system";
 export type ResolvedTheme = "light" | "dark";
 
 export const THEME_STORAGE_KEY = "theme";
+/** @workflowbuilder/sdk tema anahtarı; uygulama temasıyla eşit tutulur. */
+const WORKFLOW_THEME_KEY = "wb-theme";
 
 type ThemeContextValue = {
   /** Depolanmış tercih; "system" olabilir. Sunucuda varsayılan "system". */
@@ -55,7 +57,7 @@ const ThemeContext = createContext<ThemeContextValue | null>(null);
  * system tercihini çözümler ve <html> elemanına class/colorScheme yazar.
  * try/catch: localStorage erişilemezse (gizli mod vb.) sessizce geçer.
  */
-export const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem("${THEME_STORAGE_KEY}")||"system";var m=window.matchMedia("(prefers-color-scheme: dark)").matches;var r=t==="system"?(m?"dark":"light"):t;var c=document.documentElement.classList;c.remove("light","dark");c.add(r);document.documentElement.style.colorScheme=r;}catch(e){}})();`;
+export const THEME_INIT_SCRIPT = `(function(){try{var t=localStorage.getItem("${THEME_STORAGE_KEY}")||"system";var m=window.matchMedia("(prefers-color-scheme: dark)").matches;var r=t==="system"?(m?"dark":"light"):t;var c=document.documentElement.classList;c.remove("light","dark");c.add(r);document.documentElement.style.colorScheme=r;document.documentElement.dataset.theme=r;localStorage.setItem("wb-theme",r);}catch(e){}})();`;
 
 /* ------------------------------------------------------------------ */
 /* Dışsal store (localStorage + prefers-color-scheme)                  */
@@ -152,6 +154,13 @@ function applyThemeToDom(theme: Theme): void {
   root.classList.remove("light", "dark");
   root.classList.add(resolved);
   root.style.colorScheme = resolved;
+  // İş akışı editörü (@workflowbuilder/sdk) temayı html[data-theme] ve kendi "wb-theme" anahtarından okur.
+  root.dataset.theme = resolved;
+  try {
+    localStorage.setItem(WORKFLOW_THEME_KEY, resolved);
+  } catch {
+    // Depolama yoksa yalnız data-theme yeterli.
+  }
 }
 
 /* ------------------------------------------------------------------ */
@@ -171,7 +180,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   // tercih değiştiğinde (veya hydrate sonrası ilk eşitleme için) çalışır.
   useEffect(() => {
     applyThemeToDom(theme);
-  }, [theme]);
+  }, [theme, resolvedTheme]);
 
   const setTheme = useCallback((next: Theme) => {
     try {
