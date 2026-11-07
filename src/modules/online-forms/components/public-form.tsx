@@ -77,12 +77,12 @@ export function PublicOnlineForm({ token, form }: { token: string; form: Form })
       <div className="sm:col-span-2">{field(scope, values, set, "postalCode")}</div>
       <div className="sm:col-span-4">{field(scope, values, set, "city")}</div>
       <div className="sm:col-span-3">
-        <Select label={t("fields.state")} labelPlacement="outside" placeholder={t("select")} selectedKeys={values.state ? [String(values.state)] : []} onSelectionChange={(keys) => set({ ...values, state: String(Array.from(keys)[0] ?? "") })} isInvalid={Boolean(errors[`${scope}.state`])} errorMessage={translate(errors[`${scope}.state`])}>
+        <Select id={`${scope}-state`} label={t("fields.state")} labelPlacement="outside" placeholder={t("select")} selectedKeys={values.state ? [String(values.state)] : []} onSelectionChange={(keys) => set({ ...values, state: String(Array.from(keys)[0] ?? "") })} isInvalid={Boolean(errors[`${scope}.state`])} errorMessage={translate(errors[`${scope}.state`])}>
           {BUNDESLAENDER.map((item) => <SelectItem key={item}>{item}</SelectItem>)}
         </Select>
       </div>
       <div className="sm:col-span-3">
-        <Select label={t("fields.country")} labelPlacement="outside" selectedKeys={values.country ? [String(values.country)] : []} onSelectionChange={(keys) => set({ ...values, country: String(Array.from(keys)[0] ?? "") })}>
+        <Select id={`${scope}-country`} label={t("fields.country")} labelPlacement="outside" selectedKeys={values.country ? [String(values.country)] : []} onSelectionChange={(keys) => set({ ...values, country: String(Array.from(keys)[0] ?? "") })}>
           {countries.map((item) => <SelectItem key={countryMode === "code" ? item.code : item.name}>{item.label}</SelectItem>)}
         </Select>
       </div>
