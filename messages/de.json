@@ -2670,6 +2670,13 @@
     },
     "menu": {
       "settings": "Einstellungen"
+    },
+    "ai": {
+      "create": {
+        "kind": "Kalendereintrag-Vorschlag",
+        "confirm": "Eintrag anlegen",
+        "done": "Kalendereintrag angelegt."
+      }
     }
   },
   "calendar-apple": {
