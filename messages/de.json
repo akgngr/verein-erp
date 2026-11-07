@@ -2335,7 +2335,10 @@
         "numberHelp": "Zahl, z. B. 100 (mit größer/kleiner verwenden)",
         "textHelp": "Zu vergleichender Text",
         "manualTriggerFieldHelp": "Feld aus dem manuellen Start, z. B. trigger.memberId oder steps.schritt1.sent",
-        "possibleValues": "Mögliche Werte"
+        "possibleValues": "Mögliche Werte",
+        "yes": "Ja",
+        "no": "Nein",
+        "selectValue": "Wert auswählen"
       },
       "describe": {
         "triggerEvent": "Startet, wenn: {event}",
@@ -2370,7 +2373,8 @@
         "tooFewSteps": "Nach dem Auslöser muss mindestens ein Schritt folgen.",
         "schema": "Die Einstellungen eines Schritts sind ungültig ({detail}).",
         "generic": "Prüffehler: {code}",
-        "unknownReference": "Unbekanntes Feld in „{step}“: {refs}. Verfügbar: {available}"
+        "unknownReference": "Unbekanntes Feld in „{step}“: {refs}. Verfügbar: {available}",
+        "conditionValueMissing": "In der Bedingung „{step}“ ist kein Vergleichswert gewählt."
       }
     },
     "automation": {

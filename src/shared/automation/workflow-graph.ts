@@ -104,6 +104,16 @@ export function conditionValueKey(field: string): string {
   return `value_${field.replace(/[^A-Za-z0-9]/g, "_")}`;
 }
 
+/**
+ * Koşul değeri seçenekleri: liste (enum) alanları kendi seçenekleri, evet/hayır alanları true/false;
+ * diğerleri elle yazılır (undefined).
+ */
+export function conditionValueChoices(field: { type: string; options?: { value: string; label: string }[] }, labels: { yes: string; no: string }): { value: string; label: string }[] | undefined {
+  if (field.options?.length) return field.options;
+  if (field.type === "boolean") return [{ value: "true", label: labels.yes }, { value: "false", label: labels.no }];
+  return undefined;
+}
+
 /** Sentinel option meaning "enter the value manually". */
 export const CUSTOM_VALUE = "__custom__";
 /** Sentinel field option meaning "type a field path manually". */
@@ -208,6 +218,8 @@ export function compileWorkflow(editor: unknown): { graph?: CanonicalGraph; issu
       }
       case "condition": {
         const resolved = resolveConditionProps(props, triggerEventKey);
+        // Değer gerektiren karşılaştırmada boş değer: yayımlamadan önce açıkça uyar (sessizce "" ile karşılaştırma).
+        if (props.operator !== "exists" && props.operator !== "notExists" && resolved.value === "") issues.push(`CONDITION_VALUE_MISSING:${String(node.id)}`);
         return { ...base, kind: type, config: { field: resolved.field, operator: props.operator, value: resolved.value } };
       }
       case "parallel":

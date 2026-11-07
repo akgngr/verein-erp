@@ -1,6 +1,6 @@
 import { NodeType, type PaletteItemOrGroup } from "@workflowbuilder/sdk";
 
-import { CONDITION_OPERATORS, conditionKeys, CUSTOM_FIELD, CUSTOM_VALUE, TASK_NODE_PREFIX } from "@/shared/automation/workflow-graph";
+import { CONDITION_OPERATORS, conditionKeys, conditionValueChoices, CUSTOM_FIELD, CUSTOM_VALUE, TASK_NODE_PREFIX } from "@/shared/automation/workflow-graph";
 
 import type { EditorCatalog } from "./catalog-types";
 
@@ -22,7 +22,7 @@ export type NodeLabels = Record<
   | "condition" | "conditionDesc" | "field" | "customField" | "customFieldHelp" | "customFieldOption" | "operator" | "value" | "valueHelp"
   | "parallel" | "parallelDesc"
   | "delay" | "delayDesc" | "delayMode" | "delayDuration" | "delayUntil" | "amount" | "unit" | "minutesUnit" | "hoursUnit" | "daysUnit" | "until"
-  | "approval" | "approvalDesc" | "note" | "variablesHint" | "customValueOption" | "possibleValues" | "manualValue" | "booleanHelp" | "numberHelp" | "textHelp" | "manualTriggerFieldHelp"
+  | "approval" | "approvalDesc" | "note" | "variablesHint" | "customValueOption" | "possibleValues" | "manualValue" | "booleanHelp" | "numberHelp" | "textHelp" | "manualTriggerFieldHelp" | "yes" | "no" | "selectValue"
   | "name",
   string
 > & { operators: Record<(typeof CONDITION_OPERATORS)[number], string> };
@@ -161,11 +161,13 @@ export function buildNodeTypes(catalog: EditorCatalog, labels: NodeLabels): Pale
     for (const field of event.fields) {
       const textKey = conditionKeys.text(event.key, field.name);
       condProps[textKey] = { type: "string", label: labels.manualValue };
-      if (field.options?.length) {
+      // Liste alanları ve evet/hayır alanları seçimle girilir (elle "true"/"false" yazmak gerekmez).
+      const choices = conditionValueChoices(field, labels);
+      if (choices) {
         const valueKey = conditionKeys.value(event.key, field.name);
-        condProps[valueKey] = { type: "string", label: labels.value, options: [...field.options, option(CUSTOM_VALUE, labels.customValueOption)] };
-        condDefaults[valueKey] = field.options[0]?.value ?? "";
-        condControls.push(control(valueKey, labels.value, "Select", showAll(whenTrigger(event.key), whenField(event.key, field.name))));
+        condProps[valueKey] = { type: "string", label: labels.value, options: [...choices, option(CUSTOM_VALUE, labels.customValueOption)] };
+        condDefaults[valueKey] = choices[0]?.value ?? "";
+        condControls.push(control(valueKey, labels.value, "Select", { ...showAll(whenTrigger(event.key), whenField(event.key, field.name)), placeholder: labels.selectValue }));
         condControls.push(...withHelp(control(textKey, labels.manualValue, "Text", {
           ...showAll(whenTrigger(event.key), whenField(event.key, field.name), { scope: `#/properties/${valueKey}`, schema: { const: CUSTOM_VALUE } }),
         }), fieldHelp(field)));

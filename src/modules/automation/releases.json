@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.9.2",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "Koşul değerleri düzeltmesi",
+        "de": "Korrektur Bedingungswerte"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Evet/hayır alanları (ör. \"Tüm gün\") koşulda artık Evet/Hayır listesiyle seçiliyor; elle true/false yazmak gerekmiyor.",
+          "de": "Ja/Nein-Felder (z. B. „Ganztägig“) werden in Bedingungen per Ja/Nein-Liste gewählt; true/false muss nicht mehr getippt werden."
+        },
+        {
+          "type": "fix",
+          "tr": "Değeri seçilmemiş koşul yayımlanırken adım adıyla uyarı verir (sessizce boş değerle karşılaştırılmaz); boş liste \"Bir değer seçin\" gösterir.",
+          "de": "Bedingungen ohne gewählten Wert melden beim Veröffentlichen einen Hinweis mit Schrittnamen; leere Listen zeigen „Wert auswählen“."
+        }
+      ]
+    },
+    {
       "version": "0.9.1",
       "date": "2026-11-06",
       "title": {

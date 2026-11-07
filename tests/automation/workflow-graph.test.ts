@@ -212,3 +212,28 @@ describe("Trigger-aware conditions", () => {
     assert.deepEqual(make({ field: "trigger.status", value: "ACTIVE" }), { field: "trigger.status", operator: "eq", value: "ACTIVE" });
   });
 });
+
+describe("Condition values (editor fixes)", () => {
+  test("a comparison without a value is reported instead of silently comparing with an empty string", async () => {
+    const { conditionKeys } = await import("@/shared/automation/workflow-graph");
+    const ev = "members.created";
+    const result = compileWorkflow({
+      nodes: [node("t", "trigger", { triggerType: "event", eventKey: ev }), node("c", "condition", { operator: "eq", [conditionKeys.field(ev)]: "status" }), node("a", "parallel")],
+      edges: [edge("t", "c"), edge("c", "a")],
+    });
+    assert.ok(result.issues.includes("CONDITION_VALUE_MISSING:c"));
+    const exists = compileWorkflow({
+      nodes: [node("t", "trigger", { triggerType: "event", eventKey: ev }), node("c", "condition", { operator: "exists", [conditionKeys.field(ev)]: "status" }), node("a", "parallel")],
+      edges: [edge("t", "c"), edge("c", "a")],
+    });
+    assert.ok(!exists.issues.some((issue) => issue.startsWith("CONDITION_VALUE_MISSING")));
+  });
+
+  test("yes/no trigger fields get a value list instead of a free-text box", async () => {
+    const { conditionValueChoices } = await import("@/shared/automation/workflow-graph");
+    const labels = { yes: "Evet", no: "Hayır" };
+    assert.deepEqual(conditionValueChoices({ type: "boolean" }, labels), [{ value: "true", label: "Evet" }, { value: "false", label: "Hayır" }]);
+    assert.deepEqual(conditionValueChoices({ type: "enum", options: [{ value: "A", label: "a" }] }, labels), [{ value: "A", label: "a" }]);
+    assert.equal(conditionValueChoices({ type: "string" }, labels), undefined);
+  });
+});

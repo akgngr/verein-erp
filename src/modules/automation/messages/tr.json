@@ -326,7 +326,10 @@
       "numberHelp": "Sayı, ör. 100 (büyüktür/küçüktür ile kullanın)",
       "textHelp": "Karşılaştırılacak metin",
       "manualTriggerFieldHelp": "Elle başlatmada verilen alan, ör. trigger.memberId veya steps.adim1.sent",
-      "possibleValues": "Olası değerler"
+      "possibleValues": "Olası değerler",
+      "yes": "Evet",
+      "no": "Hayır",
+      "selectValue": "Bir değer seçin"
     },
     "describe": {
       "triggerEvent": "Akış şu olduğunda başlar: {event}",
@@ -361,7 +364,8 @@
       "tooFewSteps": "Akışta tetikleyiciden sonra en az bir adım olmalı.",
       "schema": "Bir adımın ayarları geçersiz ({detail}).",
       "generic": "Doğrulama hatası: {code}",
-      "unknownReference": "\"{step}\" adımında bilinmeyen alan: {refs}. Kullanılabilir alanlar: {available}"
+      "unknownReference": "\"{step}\" adımında bilinmeyen alan: {refs}. Kullanılabilir alanlar: {available}",
+      "conditionValueMissing": "\"{step}\" koşulunda karşılaştırılacak değer seçilmemiş."
     }
   },
   "automation": {
