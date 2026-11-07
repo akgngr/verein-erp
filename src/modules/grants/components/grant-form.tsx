@@ -19,7 +19,7 @@ const euros = (cents: number | null) => (cents === null ? "" : String(cents / 10
 const toCents = (value: string) => (value.trim() === "" ? null : Math.round(Number(value.replace(",", ".")) * 100));
 
 /** Hibe temel bilgileri (yeni ve düzenleme). */
-export function GrantForm({ initial, projects, onSaved, canEdit }: { initial: GrantFormValue; projects: { id: string; name: string }[]; onSaved?: (id: string) => void; canEdit: boolean }) {
+export function GrantForm({ initial, projects, openAfterSave = false, canEdit }: { initial: GrantFormValue; projects: { id: string; name: string }[]; openAfterSave?: boolean; canEdit: boolean }) {
   const t = useTranslations("grants");
   const translate = useTranslateMessage();
   const router = useRouter();
@@ -48,9 +48,13 @@ export function GrantForm({ initial, projects, onSaved, canEdit }: { initial: Gr
         {dateField("periodStart")}
         {dateField("periodEnd")}
         {dateField("reportDueAt")}
-        <Select id="grant-project" label={t("fields.project")} labelPlacement="outside" placeholder={t("noProject")} description={t("projectHelp")} selectedKeys={value.projectId ? [value.projectId] : []} isDisabled={!canEdit} onSelectionChange={(keys) => set({ projectId: String(Array.from(keys)[0] ?? "") || null })}>
+        <div className="flex flex-col gap-1">
+        <Select id="grant-project" label={t("fields.project")} labelPlacement="outside" placeholder={t("noProject")} selectedKeys={value.projectId ? [value.projectId] : []} isDisabled={!canEdit} onSelectionChange={(keys) => set({ projectId: String(Array.from(keys)[0] ?? "") || null })}>
           {projects.map((project) => <SelectItem key={project.id}>{project.name}</SelectItem>)}
         </Select>
+        {/* HeroUI: outside etiket + description birlikte etiketi kaydırıyor; açıklama dışarıda. */}
+        <p className="px-1 text-tiny text-default-500">{t("projectHelp")}</p>
+        </div>
         {money("approved", t("fields.approved"))}
         {money("own", t("fields.ownShare"))}
         {money("third", t("fields.thirdParty"))}
@@ -66,7 +70,7 @@ export function GrantForm({ initial, projects, onSaved, canEdit }: { initial: Gr
           });
           if (!response.ok) return void addToast({ title: translate(response.error), color: "danger" });
           addToast({ title: t("saved"), color: "success" });
-          if (onSaved) onSaved(response.data.id);
+          if (openAfterSave) router.push(`/muhasebe/hibeler/${response.data.id}`);
           else router.refresh();
         })}>{t("save")}</Button>
       ) : null}

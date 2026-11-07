@@ -8,6 +8,6 @@ export async function generateMetadata() {
 }
 
 /** /hibeler — ince rota. */
-export default function GrantsPage() {
-  return <GrantsListView />;
+export default function GrantsPage({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  return <GrantsListView searchParams={searchParams} />;
 }
