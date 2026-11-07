@@ -18,6 +18,11 @@
           "type": "feature",
           "tr": "e-Sign adı; Datenschutz ve fotoğraf izni metinleri ayarlanabilir ve formda gösterilir; doğum tarihi gün/ay/yıl seçimi; imzalı PDF (gömülü imza, onaylar, metinler) imza anında üretilip şifreli saklanır; benzersiz belge anahtarı; kişi sayfalarından belgelere bağlantı; veli listesinden gönderim.",
           "de": "Name e-Sign; Datenschutz- und Fototexte einstellbar und im Formular angezeigt; Geburtsdatum per Tag/Monat/Jahr; unterschriebenes PDF (eingebettete Unterschrift, Einwilligungen, Texte) wird bei Unterschrift erzeugt und verschlüsselt gespeichert; eindeutiger Dokumentschlüssel; Links zu Dokumenten auf Personenseiten; Versand aus der Elternliste."
+        },
+        {
+          "type": "improvement",
+          "tr": "İmzalı PDF arka planda (worker) üretilir; imzalayan beklemez. Otomasyon kapalıysa doğrudan üretilir.",
+          "de": "Das unterschriebene PDF wird im Hintergrund (Worker) erzeugt; die unterschreibende Person wartet nicht. Ist die Automatisierung aus, wird es direkt erzeugt."
         }
       ]
     }

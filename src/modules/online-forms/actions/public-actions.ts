@@ -2,7 +2,7 @@
 
 import { getTranslations } from "next-intl/server";
 
-import { storeEvidencePdf } from "../handlers/evidence-pdf";
+import { queueSignedPdf } from "../services/pdf-queue";
 import { submitSchema } from "../lib/schemas";
 import { submitPublicForm } from "../services/requests";
 
@@ -25,7 +25,7 @@ export async function submitOnlineFormAction(input: unknown): Promise<{ ok: true
   }));
   if (result === "textsChanged") return { ok: false, error: "online-forms.errors.textsChanged" };
   if (!result) return { ok: false, error: "online-forms.errors.linkInvalid" };
-  // Belge imzadan sonra üretilip saklanır; üretilemezse kanıt kaydından sonradan üretilir.
-  await storeEvidencePdf(result).catch(() => undefined);
+  // PDF arka planda (worker) üretilip saklanır; kuyruk yoksa burada üretilir. İndirmede yoksa kanıt kaydından üretilir.
+  await queueSignedPdf(result);
   return { ok: true };
 }

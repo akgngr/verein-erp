@@ -26,13 +26,13 @@ import { getDb } from "@/shared/db";
 import { openSecret, sealSecret } from "@/shared/security/secret-box";
 
 import { onlineFormCompletedEvent } from "../automation";
+import { EVIDENCE_PURPOSE, SIGNATURE_PURPOSE, type EvidenceSnapshot } from "./evidence-store";
 import { getFormTexts, textVersion } from "./settings";
 import type { submitSchema } from "../lib/schemas";
 import type { z } from "zod";
 
 export type Actor = { id: string; label: string };
 export const LINK_DAYS = 14;
-const SIGNATURE_PURPOSE = "online-forms-signature";
 const hashToken = (token: string) => createHash("sha256").update(token).digest("hex");
 
 /** e-posta/telefonu maskeler (listede ve kanıtta tam adres tutulmaz). */
@@ -218,26 +218,6 @@ export async function loadPublicForm(token: string): Promise<PublicForm | null> 
 }
 
 /** İmzalı formu uygular: istek önce atomik olarak kapatılır (çift gönderim olmaz), sonra kayıtlar güncellenir. */
-/** PDF kanıt belgesinin içeriği (şifreli saklanır). IBAN maskelenir. */
-export type EvidenceSnapshot = {
-  v: 1;
-  orgName: string;
-  kind: OnlineFormKind;
-  signerRole: string;
-  subjectName: string;
-  signerName: string;
-  signedAt: string;
-  channel: string;
-  sentTo: string;
-  consents: string[];
-  textVersion: string;
-  documentKey: string;
-  evidenceHash: string;
-  texts: { privacyLong: string | null; photoLong: string | null; privacy: string; photo: string; sepa: string };
-  data: { member?: Record<string, unknown>; student?: Record<string, unknown>; guardian?: Record<string, unknown> };
-};
-const EVIDENCE_PURPOSE = "online-forms-evidence";
-const DOCUMENT_PURPOSE = "online-forms-document";
 const KEY_ALPHABET = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
 /** Okunaklı benzersiz anahtar: ES-<yıl>-<8 karakter> (karışan 0/O, 1/I yok). */
 function newDocumentKey(year: number): string {
@@ -245,25 +225,8 @@ function newDocumentKey(year: number): string {
   return `ES-${year}-${Array.from(bytes, (byte) => KEY_ALPHABET[byte % KEY_ALPHABET.length]).join("")}`;
 }
 
-/** İmza anında üretilen PDF'i saklar (şifreli). */
-export async function storeDocument(id: string, pdf: Uint8Array) {
-  await getDb().onlineFormRequest.update({ where: { id }, data: { documentEnc: sealSecret(DOCUMENT_PURPOSE, Buffer.from(pdf).toString("base64")) } });
-}
 
-/** Saklanan PDF (yoksa null; o zaman kanıt kaydından yeniden üretilir). */
-export async function getStoredDocument(id: string): Promise<Uint8Array | null> {
-  const row = await getDb().onlineFormRequest.findUnique({ where: { id }, select: { documentEnc: true } });
-  const base64 = row?.documentEnc ? openSecret(DOCUMENT_PURPOSE, row.documentEnc) : null;
-  return base64 ? new Uint8Array(Buffer.from(base64, "base64")) : null;
-}
 
-export async function getEvidence(id: string): Promise<{ snapshot: EvidenceSnapshot; signature: string } | null> {
-  const row = await getDb().onlineFormRequest.findUnique({ where: { id }, select: { evidenceEnc: true, signatureEnc: true } });
-  if (!row?.evidenceEnc || !row.signatureEnc) return null;
-  const json = openSecret(EVIDENCE_PURPOSE, row.evidenceEnc);
-  const signature = openSecret(SIGNATURE_PURPOSE, row.signatureEnc);
-  return json && signature ? { snapshot: JSON.parse(json) as EvidenceSnapshot, signature } : null;
-}
 
 export async function submitPublicForm(input: z.output<typeof submitSchema>, labelFor: (name: string) => string, shown: (orgName: string) => { privacy: string; photo: string; sepa: string }): Promise<string | false | "textsChanged"> {
   const row = await findOpen(input.token);

@@ -166,6 +166,15 @@
           }
         }
       }
+    },
+    "tasks": {
+      "render_pdf": {
+        "label": "İmzalı form PDF'ini üret",
+        "description": "İmzalanan formun PDF belgesini kanıt kaydından üretir ve şifreli saklar.",
+        "fields": {
+          "requestId": "Form isteği kimliği"
+        }
+      }
     }
   },
   "access": {
@@ -173,7 +182,8 @@
     "students": "Öğrenci ve veli alanlarını okur, imzalanan formu kayda yazar; reşit olmayan öğrencide veliyi bulur.",
     "mailings": "Form bağlantısını e-posta, SMS veya WhatsApp kanalından tek kişiye gönderir.",
     "organization": "Mesajda ve formda kuruluş adını kullanır.",
-    "system": "Kaynak modüllerin açık olup olmadığını kontrol eder."
+    "system": "Kaynak modüllerin açık olup olmadığını kontrol eder.",
+    "automation": "İmzalı form PDF'ini arka planda üretmek için iş kuyruğunu kullanır."
   },
   "settings": {
     "title": "Form metinleri",

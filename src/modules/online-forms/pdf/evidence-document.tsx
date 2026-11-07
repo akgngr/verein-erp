@@ -2,7 +2,7 @@ import { Document, Image, Page, StyleSheet, Text, View } from "@react-pdf/render
 
 import { Letterhead, type LetterheadProfile } from "@/shared/pdf/letterhead";
 
-import type { EvidenceSnapshot } from "../services/requests";
+import type { EvidenceSnapshot } from "../services/evidence-store";
 
 export type EvidencePdfLabels = {
   title: string;
