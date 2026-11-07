@@ -22,7 +22,8 @@ export async function validateWithKosit(url: string, xml: string): Promise<Kosit
     const messages = [...report.matchAll(/<rep:message\b([^>]*)>([\s\S]*?)<\/rep:message>/g)].slice(0, 50).map((match) => ({
       code: /\bcode="([^"]+)"/.exec(match[1])?.[1] ?? "",
       level: /\blevel="([^"]+)"/.exec(match[1])?.[1] ?? "",
-      text: match[2].replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim().slice(0, 400),
+      // Düz metin: tüm açılı ayraçlar kaldırılır (arayüzde ayrıca React kaçışıyla gösterilir).
+      text: match[2].replace(/[<>]/g, " ").replace(/\s+/g, " ").trim().slice(0, 400),
     }));
     return { ok: true, valid: response.status === 200, messages };
   } catch {
