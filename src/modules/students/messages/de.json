@@ -84,7 +84,8 @@
     "delete": "Löschen",
     "deleteTitle": "Erziehungsberechtigte löschen",
     "deleteMessage": "{name} (#{number}) löschen? Verknüpfungen zu Schülern werden entfernt; die Debitorennummer wird nicht wiederverwendet.",
-    "deleted": "Erziehungsberechtigte gelöscht."
+    "deleted": "Erziehungsberechtigte gelöscht.",
+    "sendSign": "e-Sign-Formular senden"
   },
   "guardianForm": {
     "salutation": "Anrede",
@@ -224,6 +225,7 @@
     }
   },
   "onlineForm": {
-    "send": "Online-Formular senden"
+    "send": "e-Sign-Formular senden",
+    "documents": "e-Sign-Dokumente"
   }
 }

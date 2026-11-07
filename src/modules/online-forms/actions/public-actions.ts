@@ -2,6 +2,7 @@
 
 import { getTranslations } from "next-intl/server";
 
+import { storeEvidencePdf } from "../handlers/evidence-pdf";
 import { submitSchema } from "../lib/schemas";
 import { submitPublicForm } from "../services/requests";
 
@@ -17,6 +18,14 @@ export async function submitOnlineFormAction(input: unknown): Promise<{ ok: true
     return { ok: false, error: "online-forms.errors.invalid", fields };
   }
   const t = await getTranslations("online-forms");
-  const ok = await submitPublicForm(parsed.data, (name) => t("updatedBy", { name }));
-  return ok ? { ok: true } : { ok: false, error: "online-forms.errors.linkInvalid" };
+  const result = await submitPublicForm(parsed.data, (name) => t("updatedBy", { name }), (org) => ({
+    privacy: t("public.privacy", { org }),
+    photo: t(parsed.data.student && !parsed.data.member && parsed.data.guardian ? "public.photoChild" : "public.photo"),
+    sepa: t("public.sepaMandate", { org }),
+  }));
+  if (result === "textsChanged") return { ok: false, error: "online-forms.errors.textsChanged" };
+  if (!result) return { ok: false, error: "online-forms.errors.linkInvalid" };
+  // Belge imzadan sonra üretilip saklanır; üretilemezse kanıt kaydından sonradan üretilir.
+  await storeEvidencePdf(result).catch(() => undefined);
+  return { ok: true };
 }

@@ -1,15 +1,17 @@
 "use client";
 
-import { Button, Card, CardBody, Checkbox, CheckboxGroup, Input, Select, SelectItem } from "@heroui/react";
+import { Button, Card, CardBody, Checkbox, CheckboxGroup, Input, Select, SelectItem, Spinner } from "@heroui/react";
 import { CheckCircle2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useMemo, useState, useTransition } from "react";
 
 import { BUNDESLAENDER, COUNTRY_CODES, countryNameDe, normalizeCountryName } from "@/shared/geo/germany";
+import { useHydrated } from "@/shared/hooks/use-hydrated";
 import { useTranslateMessage } from "@/shared/i18n/use-translate-message";
 
 import { submitOnlineFormAction } from "../actions/public-actions";
 import type { PublicForm as Form } from "../services/requests";
+import { BirthDateSelect } from "./birth-date-select";
 import { SignaturePad } from "./signature-pad";
 
 type Values = Record<string, string | boolean | string[]>;
@@ -47,6 +49,11 @@ export function PublicOnlineForm({ token, form }: { token: string; form: Form })
     return COUNTRY_CODES.map((code) => ({ code, name: countryNameDe(code), label: display.of(code) ?? code }));
   }, [locale]);
 
+  // KARAR: react-aria seçim kutularının otomatik kimlikleri sunucu/istemci arasında kayıyor (hydration
+  // uyarısı); form yalnız istemcide çizilir. Sayfa arama motoruna açık değildir, SSR kazancı yok.
+  const hydrated = useHydrated();
+  if (!hydrated) return <div className="flex justify-center p-10"><Spinner /></div>;
+
   if (done) {
     return (
       <Card className="mx-auto max-w-xl"><CardBody className="flex flex-col items-center gap-3 p-8 text-center">
@@ -68,6 +75,18 @@ export function PublicOnlineForm({ token, form }: { token: string; form: Form })
       onValueChange={(value) => set({ ...values, [name]: value })}
       isInvalid={Boolean(errors[`${scope}.${name}`])}
       errorMessage={translate(errors[`${scope}.${name}`])}
+    />
+  );
+  const birthDate = (scope: string, values: Values, set: (next: Values) => void) => (
+    <BirthDateSelect
+      key={`${scope}.birthDate`}
+      id={`${scope}-birthDate`}
+      label={t("fields.birthDate")}
+      value={String(values.birthDate ?? "")}
+      onChange={(value) => set({ ...values, birthDate: value })}
+      isInvalid={Boolean(errors[`${scope}.birthDate`])}
+      errorMessage={translate(errors[`${scope}.birthDate`])}
+      labels={{ day: t("date.day"), month: t("date.month"), year: t("date.year") }}
     />
   );
   const address = (scope: string, values: Values, set: (next: Values) => void, countryMode: "code" | "name") => (
@@ -97,10 +116,11 @@ export function PublicOnlineForm({ token, form }: { token: string; form: Form })
     </div>
   );
 
+  const legal = (text: string | null) => (text ? <div className="max-h-48 overflow-y-auto whitespace-pre-line rounded-medium border border-default-200 bg-default-50 p-3 text-tiny text-default-700">{text}</div> : null);
   const submit = () => {
     setFormError(null);
     start(async () => {
-      const response = await submitOnlineFormAction({ token, signerName, signature: signature ?? "", privacy, ...(member ? { member } : {}), ...(student ? { student } : {}), ...(guardian ? { guardian } : {}) });
+      const response = await submitOnlineFormAction({ token, textVersion: form.textVersion, signerName, signature: signature ?? "", privacy, ...(member ? { member } : {}), ...(student ? { student } : {}), ...(guardian ? { guardian } : {}) });
       if (response.ok) return setDone(true);
       setErrors(response.fields ?? {});
       setFormError(response.error);
@@ -127,7 +147,7 @@ export function PublicOnlineForm({ token, form }: { token: string; form: Form })
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             {field("member", member, setMember, "email", { type: "email" })}
             {field("member", member, setMember, "phone", { type: "tel" })}
-            {field("member", member, setMember, "birthDate", { type: "date" })}
+            {birthDate("member", member, setMember)}
             {field("member", member, setMember, "profession")}
           </div>
           {address("member", member, setMember, "name")}
@@ -135,7 +155,7 @@ export function PublicOnlineForm({ token, form }: { token: string; form: Form })
       ))}
       {student && section(form.signerRole === "guardian" ? t("sections.child") : t("sections.person"), (
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {field("student", student, setStudent, "birthDate", { type: "date" })}
+          {birthDate("student", student, setStudent)}
           {field("student", student, setStudent, "school")}
           {field("student", student, setStudent, "gradeLevel")}
           {field("student", student, setStudent, "email", { type: "email" })}
@@ -164,10 +184,12 @@ export function PublicOnlineForm({ token, form }: { token: string; form: Form })
 
       {section(t("sections.consents"), (
         <>
+          {legal(form.privacyText)}
           <Checkbox isSelected={privacy} onValueChange={setPrivacy} isInvalid={Boolean(errors.privacy)}>
             <span className="text-small">{t("privacy", { org: form.orgName })}</span>
           </Checkbox>
           {errors.privacy ? <p className="text-tiny text-danger">{translate(errors.privacy)}</p> : null}
+          {(member || student) ? legal(form.photoText) : null}
           {member ? <Checkbox isSelected={Boolean(member.photoConsent)} onValueChange={(value) => setMember({ ...member, photoConsent: value })}><span className="text-small">{t("photo")}</span></Checkbox> : null}
           {student ? <Checkbox isSelected={Boolean(student.photoConsent)} onValueChange={(value) => setStudent({ ...student, photoConsent: value })}><span className="text-small">{form.signerRole === "guardian" ? t("photoChild") : t("photo")}</span></Checkbox> : null}
           {member ? messaging(member, setMember) : guardian ? messaging(guardian, setGuardian) : null}

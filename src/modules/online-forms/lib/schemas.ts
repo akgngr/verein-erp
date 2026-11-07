@@ -25,6 +25,7 @@ export const guardianDataSchema = z.object({
 
 export const submitSchema = z.object({
   token: z.string().min(20).max(100),
+  textVersion: z.string().regex(/^[a-f0-9]{64}$/),
   signerName: z.string().trim().min(3, "online-forms.validation.signerName").max(120),
   /** PNG imza (≈ en çok 300 KB). */
   signature: z.string().regex(/^data:image\/png;base64,[A-Za-z0-9+/=]+$/, "online-forms.validation.signature").max(400_000, "online-forms.validation.signature"),

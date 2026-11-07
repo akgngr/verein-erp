@@ -16,6 +16,7 @@ import { buildUserLabel } from "@/shared/utils";
 import { CHANNELS, KINDS } from "../lib/schemas";
 import { onlineFormsPermissions } from "../permissions";
 import { cancelRequest, createAndSend, getSignature, previewTarget } from "../services/requests";
+import { saveFormTexts } from "../services/settings";
 
 const id = z.string().min(1).max(64);
 const target = z.object({ kind: z.enum(KINDS), subjectId: id });
@@ -83,6 +84,19 @@ export async function getOnlineFormSignatureAction(input: unknown) {
       if (!signature) throw new ActionError("online-forms.errors.notFound");
       await audit({ action: "VIEW", entity: "OnlineFormRequest", entityId: input.id });
       return { signature };
+    },
+  })(input);
+}
+
+export async function saveOnlineFormTextsAction(input: unknown): Promise<ActionResult<null>> {
+  return createAction({
+    permission: { definition: onlineFormsPermissions, action: "approve" },
+    schema: z.object({ privacyText: z.string().trim().max(20_000), photoText: z.string().trim().max(10_000) }),
+    handler: async ({ input, user, audit }) => {
+      await saveFormTexts({ privacyText: input.privacyText || null, photoText: input.photoText || null }, user.id);
+      await audit({ action: "UPDATE", entity: "OnlineFormSettings", entityId: "default" });
+      revalidatePath("/online-formlar/ayarlar");
+      return null;
     },
   })(input);
 }

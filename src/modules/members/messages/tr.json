@@ -602,6 +602,7 @@
     }
   },
   "onlineForm": {
-    "send": "Online form gönder"
+    "send": "e-Sign formu gönder",
+    "documents": "e-Sign belgeleri"
   }
 }

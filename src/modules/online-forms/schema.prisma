@@ -33,6 +33,14 @@ model OnlineFormRequest {
   /// İmza görseli (PNG data URL), secret-box ile şifreli
   signatureEnc   String?
   consents       String[]         @default([])
+  /// Onaylanan Datenschutz/fotoğraf metinlerinin SHA-256 özeti (hangi metin sürümü kabul edildi)
+  textVersion    String?
+  /// Benzersiz belge anahtarı (ör. ES-2026-7KQ4M2XA); imzalanınca verilir, PDF'te ve listede görünür
+  documentKey    String?          @unique
+  /// İmza anında üretilen PDF (base64), secret-box ile şifreli
+  documentEnc    String?
+  /// İmza anında gösterilen/girilen her şeyin şifreli anlık görüntüsü (PDF kanıt belgesi için; DSGVO Art. 7 (1) ispat)
+  evidenceEnc    String?
   /// Uygulanan veri + onaylar + imzanın SHA-256 özeti (değiştirilmezlik kanıtı)
   evidenceHash   String?
   createdById    String
@@ -42,4 +50,15 @@ model OnlineFormRequest {
   @@index([kind, subjectId])
   @@index([status, expiresAt])
   @@map("online_form_requests")
+}
+
+/// Formda onay kutularının yanında gösterilen metinler (tek satır, id = "default"). Boşsa yerleşik kısa metin kullanılır.
+model OnlineFormSettings {
+  id           String   @id @default("default")
+  privacyText  String?
+  photoText    String?
+  updatedById  String?
+  updatedAt    DateTime @updatedAt
+
+  @@map("online_form_settings")
 }
