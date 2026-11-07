@@ -14,6 +14,7 @@ import * as crmAutomationExports from "@/modules/crm/automation";
 import * as feedbackAutomationExports from "@/modules/feedback/automation";
 import * as mailAutomationExports from "@/modules/mail/automation";
 import * as mailingsAutomationExports from "@/modules/mailings/automation";
+import * as onlineformsAutomationExports from "@/modules/online-forms/automation";
 import * as securitymonitorAutomationExports from "@/modules/security-monitor/automation";
 import * as tasksAutomationExports from "@/modules/tasks/automation";
 
@@ -42,6 +43,7 @@ export const moduleAutomationTasks: TaskDefinition[] = [
   ...tasksOf("feedback", feedbackAutomationExports),
   ...tasksOf("mail", mailAutomationExports),
   ...tasksOf("mailings", mailingsAutomationExports),
+  ...tasksOf("online-forms", onlineformsAutomationExports),
   ...tasksOf("security-monitor", securitymonitorAutomationExports),
   ...tasksOf("tasks", tasksAutomationExports),
 ];
@@ -59,6 +61,7 @@ export const moduleAutomationEvents: EventDefinition[] = [
   ...eventsOf("feedback", feedbackAutomationExports),
   ...eventsOf("mail", mailAutomationExports),
   ...eventsOf("mailings", mailingsAutomationExports),
+  ...eventsOf("online-forms", onlineformsAutomationExports),
   ...eventsOf("security-monitor", securitymonitorAutomationExports),
   ...eventsOf("tasks", tasksAutomationExports),
 ];

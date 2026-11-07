@@ -16,8 +16,9 @@ export const config = {
   // düşmesi gerekir (7. bölüm: "Handler'lar yönlendirme yapmaz").
   // Oturumsuz uçlar (her biri kendi yöntemiyle doğrular): takvim ICS aboneliği (gizli belirteç),
   // Telegram/SMS/WhatsApp webhook'ları (imza veya gizli yol) ve e-posta izleme
-  // (api/mailings/t: rastgele belirteç; tıklamada imzalı hedef).
+  // (api/mailings/t: rastgele belirteç; tıklamada imzalı hedef) ve uzaktan form sayfası
+  // (formular/<belirteç>: 32 bayt rastgele, tek kullanımlık, süreli; online-forms modülü).
   matcher: [
-    "/((?!api/health|api/auth|api/documents|api/calendar/feed|api/campaign-telegram/webhook|api/campaign-sms/webhook|api/campaign-whatsapp/webhook|api/mailings/t/|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt)$).*)",
+    "/((?!api/health|api/auth|api/documents|api/calendar/feed|api/campaign-telegram/webhook|api/campaign-sms/webhook|api/campaign-whatsapp/webhook|api/mailings/t/|formular/|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt)$).*)",
   ],
 };

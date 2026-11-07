@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.4.0",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "Online form: öğrenci/veli bilgilerini tamamlama ve imza; reşit olmayan öğrencide veli onayı",
+        "de": "Online-Formular: Schüler- und Elternangaben ergänzen und unterschreiben; bei Minderjährigen bestätigen die Erziehungsberechtigten"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Online form: öğrenci/veli bilgilerini tamamlama ve imza; reşit olmayan öğrencide veli onayı",
+          "de": "Online-Formular: Schüler- und Elternangaben ergänzen und unterschreiben; bei Minderjährigen bestätigen die Erziehungsberechtigten"
+        }
+      ]
+    },
+    {
       "version": "1.3.0",
       "date": "2026-11-07",
       "title": {

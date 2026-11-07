@@ -4,6 +4,8 @@ import { getTranslations } from "next-intl/server";
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
+import { onlineFormsPermissions } from "@/modules/online-forms";
+import { LinkButton } from "@/shared/components/ui/link-button";
 import { can } from "@/shared/permissions/define";
 import { formatDateTime, formatDate } from "@/shared/utils";
 
@@ -60,6 +62,7 @@ export async function MemberDetailView({
 
   const canUpdate = can(user.role, membersPermissions, "update");
   const canDelete = can(user.role, membersPermissions, "delete");
+  const formHref = canUpdate ? (can(user.role, onlineFormsPermissions, "create") ? `/online-formlar?gonder=MEMBER:${member.id}` : null) : null;
 
   return (
     <div>
@@ -67,6 +70,8 @@ export async function MemberDetailView({
         title={member.membershipNumber}
         description={`${member.firstName} ${member.lastName}`}
         actions={
+          <div className="flex flex-wrap items-center gap-2">
+          {formHref ? <LinkButton href={formHref} variant="bordered">{t("onlineForm.send")}</LinkButton> : null}
           <MemberDetailActions
             memberId={member.id}
             joinDate={member.joinDate.toISOString().slice(0, 10)}
@@ -75,6 +80,7 @@ export async function MemberDetailView({
             canUpdate={canUpdate}
             canDelete={canDelete}
           />
+          </div>
         }
       />
 

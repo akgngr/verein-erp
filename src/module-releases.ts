@@ -30,6 +30,7 @@ import feedbackReleases from "@/modules/feedback/releases.json";
 import inventoryReleases from "@/modules/inventory/releases.json";
 import mailReleases from "@/modules/mail/releases.json";
 import mailingsReleases from "@/modules/mailings/releases.json";
+import onlineformsReleases from "@/modules/online-forms/releases.json";
 import progressReleases from "@/modules/progress/releases.json";
 import securitymonitorReleases from "@/modules/security-monitor/releases.json";
 import studentsReleases from "@/modules/students/releases.json";
@@ -66,6 +67,7 @@ export const moduleReleases: { moduleKey: string; releases: ModuleRelease[] }[] 
   { moduleKey: "inventory", releases: inventoryReleases.releases as ModuleRelease[] },
   { moduleKey: "mail", releases: mailReleases.releases as ModuleRelease[] },
   { moduleKey: "mailings", releases: mailingsReleases.releases as ModuleRelease[] },
+  { moduleKey: "online-forms", releases: onlineformsReleases.releases as ModuleRelease[] },
   { moduleKey: "progress", releases: progressReleases.releases as ModuleRelease[] },
   { moduleKey: "security-monitor", releases: securitymonitorReleases.releases as ModuleRelease[] },
   { moduleKey: "students", releases: studentsReleases.releases as ModuleRelease[] },

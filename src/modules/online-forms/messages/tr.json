@@ -1,0 +1,171 @@
+{
+  "nav": {
+    "online-forms": "Online formlar"
+  },
+  "module": {
+    "label": "Online formlar",
+    "description": "Kişiye süreli bağlantı gönderip formu tamamlatma, Datenschutz onayı ve imza."
+  },
+  "permissions": {
+    "online-forms": {
+      "label": "Online formlar",
+      "description": "Form bağlantısı gönderme ve imzalı formları görme."
+    }
+  },
+  "title": "Online formlar",
+  "description": "Üye, öğrenci ve velilere form bağlantısı gönderin; kişi eksik bilgileri ve Datenschutz onaylarını doldurup imzalar.",
+  "empty": "Henüz bağlantı gönderilmedi. Üye, öğrenci veya veli kaydındaki 'Online form gönder' ile başlayın.",
+  "columns": {
+    "subject": "Kişi",
+    "kind": "Form",
+    "channel": "Kanal",
+    "status": "Durum",
+    "sent": "Gönderildi",
+    "completed": "İmzalandı"
+  },
+  "kinds": {
+    "MEMBER": "Üye",
+    "STUDENT": "Öğrenci",
+    "GUARDIAN": "Veli"
+  },
+  "channels": {
+    "email": "E-posta",
+    "sms": "SMS",
+    "whatsapp": "WhatsApp"
+  },
+  "status": {
+    "PENDING": "Bekliyor",
+    "COMPLETED": "İmzalandı",
+    "CANCELLED": "İptal",
+    "EXPIRED": "Süresi doldu"
+  },
+  "consents": {
+    "privacy": "Datenschutz",
+    "photo": "Fotoğraf",
+    "sepa": "SEPA yetkisi",
+    "sms": "SMS",
+    "whatsapp": "WhatsApp",
+    "telegram": "Telegram"
+  },
+  "viaGuardian": "Veli doldurur ve onaylar",
+  "opened": "Açıldı",
+  "showSignature": "İmza",
+  "signature": "İmza",
+  "cancel": "İptal et",
+  "close": "Kapat",
+  "sendTitle": "Online form gönder",
+  "sendIntro": "{name} için kişiye özel, 14 gün geçerli bir form bağlantısı gönderilecek.",
+  "sendIntroGuardian": "{name} reşit değil: bağlantı veliye gider, veli formu doldurup onaylar.",
+  "guardian": "Veli",
+  "channel": "Kanal",
+  "noAddress": "Adres yok",
+  "noChannels": "Yapılandırılmış gönderim kanalı yok (Kampanyalar → Ayarlar).",
+  "sendHint": "Önceki bekleyen bağlantı iptal edilir. Form imzalanınca kayıt güncellenir ve onaylar kaydedilir.",
+  "send": "Gönder",
+  "sent": "Bağlantı gönderildi.",
+  "updatedBy": "Online form: {name}",
+  "message": {
+    "subject": "{org}: Bilgilerinizi tamamlayın",
+    "text": "Merhaba {name},\n\n{org} kaydınızı tamamlamak ve onaylamak için lütfen aşağıdaki bağlantıyı açın:\n{link}\n\nBağlantı {until} tarihine kadar geçerlidir ve yalnız size özeldir."
+  },
+  "errors": {
+    "forbidden": "Bu kaydı güncelleme yetkiniz yok.",
+    "notFound": "Kayıt bulunamadı veya modül kapalı.",
+    "noAddress": "Seçilen kanal için adres yok.",
+    "sendFailed": "Mesaj gönderilemedi. Kanal ayarlarını kontrol edin.",
+    "noEncryption": "İmzaları şifrelemek için anahtar ayarlı değil (AUTH_SECRET).",
+    "invalid": "Lütfen işaretli alanları kontrol edin.",
+    "linkInvalid": "Bağlantı geçersiz, süresi dolmuş veya zaten kullanılmış."
+  },
+  "validation": {
+    "tooLong": "Çok uzun.",
+    "date": "Geçerli bir tarih girin.",
+    "email": "Geçerli bir e-posta girin.",
+    "state": "Listeden bir eyalet seçin.",
+    "country": "Ülke seçin.",
+    "iban": "Geçerli bir IBAN girin.",
+    "bic": "Geçerli bir BIC girin.",
+    "signerName": "Adınızı ve soyadınızı yazın.",
+    "signature": "Lütfen imza alanına imzanızı atın.",
+    "privacy": "Datenschutz onayı zorunludur."
+  },
+  "public": {
+    "title": "Kayıt formu",
+    "intro": "{name}, lütfen bilgilerinizi kontrol edip tamamlayın, onayları verin ve imzalayın.",
+    "introGuardian": "{name} için veli olarak bilgileri kontrol edip tamamlayın, onayları verin ve imzalayın.",
+    "validUntil": "Bağlantı {date} tarihine kadar geçerli.",
+    "select": "Seçin",
+    "sections": {
+      "person": "Kişisel bilgiler",
+      "child": "Çocuğun bilgileri",
+      "guardian": "Veli bilgileri",
+      "bank": "Banka bilgisi (SEPA)",
+      "consents": "Onaylar",
+      "signature": "İmza"
+    },
+    "fields": {
+      "email": "E-posta",
+      "phone": "Telefon",
+      "birthDate": "Doğum tarihi",
+      "profession": "Meslek",
+      "street": "Sokak (Straße)",
+      "houseNumber": "Kapı no",
+      "postalCode": "Posta kodu (PLZ)",
+      "city": "Şehir (Ort)",
+      "state": "Eyalet (Bundesland)",
+      "country": "Ülke",
+      "school": "Okul",
+      "gradeLevel": "Sınıf",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "accountHolder": "Hesap sahibi"
+    },
+    "ibanKnown": "Kayıtlı hesap: {iban}. Değiştirmek istemiyorsanız boş bırakın.",
+    "sepaMandate": "{org} kuruluşunun ödemeleri hesabımdan SEPA temel borçlandırmasıyla çekmesine izin veriyorum. Bankama da bu ödemeleri karşılama talimatı veriyorum. Borçlandırma tarihinden itibaren 8 hafta içinde iade talep edebilirim.",
+    "privacy": "{org} kuruluşunun kişisel verilerimi üyelik/kayıt ilişkisinin yürütülmesi için DSGVO Art. 6 (1) b uyarınca işlemesine dair bilgilendirmeyi okudum ve kabul ediyorum.",
+    "photo": "Etkinliklerde çekilen fotoğraf ve videolarımın kuruluşun internet sitesi ve yayınlarında kullanılmasına izin veriyorum (KUG §22).",
+    "photoChild": "Etkinliklerde çekilen fotoğraf ve videolarda çocuğumun görünmesine ve kuruluşun yayınlarında kullanılmasına izin veriyorum (KUG §22).",
+    "messagingLabel": "Duyurular için aşağıdaki kanallardan mesaj almak istiyorum (isteğe bağlı):",
+    "bulkMailOptOut": "Toplu duyuru e-postası almak istemiyorum.",
+    "withdraw": "İsteğe bağlı onayları istediğiniz zaman gelecek için geri alabilirsiniz (DSGVO Art. 7 (3)).",
+    "signerName": "Ad soyad (imzalayan)",
+    "signatureArea": "İmza alanı",
+    "clearSignature": "Temizle",
+    "signatureHint": "İmzanız ve onaylarınız zaman bilgisiyle birlikte şifreli olarak saklanır.",
+    "submit": "Onayla ve imzala",
+    "doneTitle": "Teşekkürler!",
+    "doneText": "Bilgileriniz {org} kuruluşuna iletildi. Bu sayfayı kapatabilirsiniz.",
+    "invalidTitle": "Bağlantı geçersiz",
+    "invalidText": "Bu bağlantının süresi dolmuş, iptal edilmiş veya form zaten imzalanmış olabilir. Lütfen kuruluşla iletişime geçin.",
+    "channels": {
+      "sms": "SMS",
+      "whatsapp": "WhatsApp",
+      "telegram": "Telegram"
+    }
+  },
+  "automation": {
+    "events": {
+      "completed": {
+        "label": "Online form imzalandığında",
+        "fields": {
+          "requestId": "İstek kimliği",
+          "kind": "Form türü"
+        },
+        "options": {
+          "kind": {
+            "MEMBER": "Üye",
+            "STUDENT": "Öğrenci",
+            "GUARDIAN": "Veli"
+          }
+        }
+      }
+    }
+  },
+  "access": {
+    "members": "Üyenin formdaki alanlarını okur ve imzalanan formu üye kaydına yazar.",
+    "students": "Öğrenci ve veli alanlarını okur, imzalanan formu kayda yazar; reşit olmayan öğrencide veliyi bulur.",
+    "mailings": "Form bağlantısını e-posta, SMS veya WhatsApp kanalından tek kişiye gönderir.",
+    "organization": "Mesajda ve formda kuruluş adını kullanır.",
+    "system": "Kaynak modüllerin açık olup olmadığını kontrol eder."
+  }
+}

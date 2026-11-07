@@ -6,6 +6,8 @@ import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { FormDrawer, FormDrawerButton } from "@/shared/components/forms/form-drawer";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
+import { onlineFormsPermissions } from "@/modules/online-forms";
+import { LinkButton } from "@/shared/components/ui/link-button";
 import { can } from "@/shared/permissions/define";
 import { formatDate } from "@/shared/utils";
 
@@ -27,6 +29,7 @@ export async function StudentDetailView({ id, editOpen }: { id: string; editOpen
   const student = await getStudent(id);
   if (!student) notFound();
   const canUpdate = can(user.role, studentsPermissions, "update");
+  const formHref = canUpdate ? (can(user.role, onlineFormsPermissions, "create") ? `/online-formlar?gonder=STUDENT:${student.id}` : null) : null;
   const guardianOptions = canUpdate ? await listGuardianOptions() : [];
 
   const facts: [string, string][] = [
@@ -45,11 +48,14 @@ export async function StudentDetailView({ id, editOpen }: { id: string; editOpen
         title={`${student.firstName} ${student.lastName}`}
         description={`${student.studentNumber} · ${t("detail.createdBy", { label: student.createdByLabel })}`}
         actions={
-          canUpdate ? (
-            <FormDrawerButton param="duzenle" startIcon={<Pencil className="h-4 w-4" />}>
-              {t("detail.edit")}
-            </FormDrawerButton>
-          ) : null
+          <div className="flex flex-wrap items-center gap-2">
+            {formHref ? <LinkButton href={formHref} variant="bordered">{t("onlineForm.send")}</LinkButton> : null}
+            {canUpdate ? (
+              <FormDrawerButton param="duzenle" startIcon={<Pencil className="h-4 w-4" />}>
+                {t("detail.edit")}
+              </FormDrawerButton>
+            ) : null}
+          </div>
         }
       />
       <section className="grid grid-cols-1 gap-3 rounded-xl border border-default-200 bg-content1 p-5 sm:grid-cols-2 lg:grid-cols-3">

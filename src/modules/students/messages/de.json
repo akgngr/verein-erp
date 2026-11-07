@@ -222,5 +222,8 @@
         }
       }
     }
+  },
+  "onlineForm": {
+    "send": "Online-Formular senden"
   }
 }

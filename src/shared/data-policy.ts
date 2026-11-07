@@ -90,6 +90,7 @@ export const DATA_POLICY = {
   CrmParty: { owner: "crm", category: "K1", reason: "Kişiye bağlı ilişki kaydı (aşama, etiket); ad/iletişim kaynakta", sensitiveFields: ["tags", "sourceId"] },
   CrmActivity: { owner: "crm", category: "K1", reason: "Görüşme/arama notları", sensitiveFields: ["summary", "createdByLabel"] },
   CrmFollowUp: { owner: "crm", category: "K1", reason: "Kişiye bağlı takip notları", sensitiveFields: ["note"] },
+  OnlineFormRequest: { owner: "online-forms", category: "K1", reason: "Form bağlantısı kanıtı: maskeli alıcı, imzalayan adı, imza (şifreli), onaylar", sensitiveFields: ["sentTo", "signerName", "signatureEnc", "tokenHash", "evidenceHash"] },
   MeetingAttendee: { owner: "meetings", category: "K1", reason: "Katılımcı adları", sensitiveFields: [ "note"] },
   MemberDue: { owner: "members", category: "K1", reason: "Kişi bazlı aidatlar", sensitiveFields: [] },
   MemberPayment: { owner: "members", category: "K1", reason: "Kişi bazlı ödemeler", sensitiveFields: [] },

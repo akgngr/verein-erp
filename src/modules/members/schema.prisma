@@ -109,6 +109,10 @@ model Member {
   bulkMailOptOut Boolean @default(false)
   /// Açık rıza verilen mesaj kanalları ("sms", "whatsapp", "telegram"); kampanyalar yalnız bunlara gönderir (UWG §7, DSGVO Art. 6/7).
   messagingConsents String[] @default([])
+  /// Datenschutz (DSGVO) bilgilendirmesini onayladığı gün (online form imzası veya elle).
+  privacyConsentAt DateTime? @db.Date
+  /// Fotoğraf/video yayın izni (KUG §22).
+  photoConsent     Boolean   @default(false)
 
   createdById    String
   createdByLabel String

@@ -1,0 +1,17 @@
+{
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
+  "releases": [
+    {
+      "version": "1.0.0",
+      "date": "2026-11-07",
+      "title": { "tr": "İlk sürüm", "de": "Erste Version" },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Üye, öğrenci ve veliye e-posta/SMS/WhatsApp ile süreli form bağlantısı; kişi eksik bilgileri, Datenschutz ve isteğe bağlı onayları doldurup imzalar, kayıt güncellenir. Reşit olmayan öğrencide veli onaylar.",
+          "de": "Befristeter Formular-Link per E-Mail/SMS/WhatsApp an Mitglieder, Schüler:innen und Erziehungsberechtigte; Angaben, Datenschutz und freiwillige Einwilligungen werden ergänzt und unterschrieben, der Datensatz wird aktualisiert. Bei Minderjährigen bestätigen die Erziehungsberechtigten."
+        }
+      ]
+    }
+  ]
+}

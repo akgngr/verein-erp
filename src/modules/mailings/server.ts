@@ -10,3 +10,4 @@ export { getChannelConfig } from "./services/campaigns";
 export { campaignShortcutHref } from "./services/shortcuts";
 // Kanal eklentilerinin teslim/okundu bildirimleri için.
 export { recordProviderStatus } from "./services/tracking";
+export { listDirectChannels, sendDirectMessage } from "./services/direct";
