@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.7.0",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "Adres: Bundesland seçimi, ülke varsayılanı Deutschland",
+        "de": "Adresse: Bundesland-Auswahl, Land standardmäßig Deutschland"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Adres: Bundesland seçimi, ülke varsayılanı Deutschland",
+          "de": "Adresse: Bundesland-Auswahl, Land standardmäßig Deutschland"
+        }
+      ]
+    },
+    {
       "version": "1.6.2",
       "date": "2026-11-07",
       "title": {

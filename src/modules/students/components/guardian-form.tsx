@@ -12,6 +12,7 @@ import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-
 import { FormDatePicker } from "@/shared/components/forms/form-date-picker";
 import { FormSwitch } from "@/shared/components/forms/form-switch";
 import { FormErrorSummary } from "@/shared/components/forms/form-error-summary";
+import { FormCountrySelect, FormStateSelect } from "@/shared/components/forms/form-address-selects";
 import { FormInput } from "@/shared/components/forms/form-input";
 import { FormSelect } from "@/shared/components/forms/form-select";
 import { FormTextarea } from "@/shared/components/forms/form-textarea";
@@ -46,6 +47,7 @@ export function GuardianForm({ guardian }: { guardian?: GuardianRow }) {
       houseNumber: guardian?.houseNumber ?? "",
       postalCode: guardian?.postalCode ?? "",
       city: guardian?.city ?? "",
+      state: guardian?.state ?? "",
       country: guardian?.country ?? "DE",
       email: guardian?.email ?? "",
       phone: guardian?.phone ?? "",
@@ -108,11 +110,14 @@ export function GuardianForm({ guardian }: { guardian?: GuardianRow }) {
             <div className="sm:col-span-2">
               <FormInput name="postalCode" label={t("postalCode")} control={form.control} />
             </div>
-            <div className="sm:col-span-3">
+            <div className="sm:col-span-4">
               <FormInput name="city" label={t("city")} control={form.control} />
             </div>
-            <div className="sm:col-span-1">
-              <FormInput name="country" label={t("country")} control={form.control} description={t("countryHelp")} />
+            <div className="sm:col-span-3">
+              <FormStateSelect name="state" label={t("state")} control={form.control} />
+            </div>
+            <div className="sm:col-span-3">
+              <FormCountrySelect name="country" store="code" label={t("country")} control={form.control} />
             </div>
           </div>
         </section>

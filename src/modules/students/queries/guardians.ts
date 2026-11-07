@@ -21,6 +21,7 @@ function toRow(row: Prisma.StudentGuardianGetPayload<{ include: { _count: { sele
     street: row.street,
     houseNumber: row.houseNumber,
     postalCode: row.postalCode,
+    state: row.state,
     city: row.city,
     country: row.country,
     email: row.email,

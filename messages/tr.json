@@ -6053,7 +6053,6 @@
       "city": "Şehir / Ort",
       "cityPlaceholder": "örn. Berlin",
       "state": "Bundesland / Eyalet / İl",
-      "statePlaceholder": "örn. Berlin, Bayern, Nordrhein-Westfalen",
       "profession": "Meslek",
       "professionPlaceholder": "örn. Avukat, Mühendis, Öğretmen",
       "joinDate": "Katılım tarihi",
@@ -6070,7 +6069,7 @@
       "save": "Değişiklikleri kaydet",
       "cancel": "Vazgeç",
       "country": "Ülke (Land)",
-      "countryDescription": "Boş bırakılırsa veya Almanya ise posta kodu 5 haneli girilmelidir.",
+      "countryDescription": "Almanya ise posta kodu 5 haneli girilmelidir.",
       "cancellationReceivedAt": "Fesih bildirimi tarihi (Kündigung eingegangen am)",
       "cancellationReceivedAtDescription": "Kullanıcının istifa bildiriminin derneğe ulaştığı tarih; ayrılış tarihinden sonra olamaz.",
       "bulkMailOptOut": "Toplu e-posta istemiyor",
@@ -6969,7 +6968,6 @@
       "postalCode": "Posta kodu",
       "city": "Şehir",
       "country": "Ülke",
-      "countryHelp": "ISO kodu, ör. DE",
       "email": "E-posta",
       "phone": "Telefon",
       "bankTitle": "Banka ve SEPA talimatı",
@@ -6998,7 +6996,8 @@
         "sms": "SMS",
         "whatsapp": "WhatsApp",
         "telegram": "Telegram"
-      }
+      },
+      "state": "Eyalet (Bundesland)"
     },
     "guardianList": {
       "title": "Veliler",

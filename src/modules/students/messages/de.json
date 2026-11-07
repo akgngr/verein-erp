@@ -96,7 +96,6 @@
     "postalCode": "PLZ",
     "city": "Ort",
     "country": "Land",
-    "countryHelp": "ISO-Code, z. B. DE",
     "email": "E-Mail",
     "phone": "Telefon",
     "bankTitle": "Bank und SEPA-Mandat",
@@ -125,7 +124,8 @@
       "sms": "SMS",
       "whatsapp": "WhatsApp",
       "telegram": "Telegram"
-    }
+    },
+    "state": "Bundesland"
   },
   "guardianList": {
     "title": "Erziehungsberechtigte",

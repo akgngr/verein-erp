@@ -14,6 +14,7 @@ export const guardianSchema = z.object({
   houseNumber: text(20),
   postalCode: text(10),
   city: text(80),
+  state: text(40),
   country: z.string().trim().regex(/^[A-Z]{2}$/, "students.validation.countryInvalid"),
   email: z.string().trim().refine((value) => value === "" || z.email().safeParse(value).success, "validation.emailInvalid"),
   phone: text(40),

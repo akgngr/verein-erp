@@ -54,6 +54,7 @@ export type GuardianRow = {
   street: string | null;
   houseNumber: string | null;
   postalCode: string | null;
+  state: string | null;
   city: string | null;
   country: string;
   email: string | null;
