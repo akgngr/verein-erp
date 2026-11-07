@@ -709,7 +709,8 @@
       "close": "Schließen",
       "amount": "Zahlbetrag",
       "openAmount": "Offen: {amount} €",
-      "closeRemainder": "Rest von {amount} € als Skonto/Ausfall ausbuchen"
+      "closeRemainder": "Rest von {amount} € als Skonto/Ausfall ausbuchen",
+      "cancelCreditNoteHint": "Ausgestellte Rechnungen werden nicht gelöscht: Beim Stornieren wird eine Stornorechnung (ST-…) mit denselben Positionen erstellt, auch als E-Rechnung abrufbar."
     },
     "settings": {
       "title": "Rechnungseinstellungen",
@@ -811,8 +812,7 @@
       "3": "2. Mahnung"
     },
     "creditNoteCreated": "Diese Rechnung wurde storniert; Stornorechnung {number} wurde erstellt.",
-    "creditNoteFor": "Dieses Dokument ist die Stornorechnung zur Rechnung {number}.",
-    "cancelCreditNoteHint": "Ausgestellte Rechnungen werden nicht gelöscht: Beim Stornieren wird eine Stornorechnung (ST-…) mit denselben Positionen erstellt, auch als E-Rechnung abrufbar."
+    "creditNoteFor": "Dieses Dokument ist die Stornorechnung zur Rechnung {number}."
   },
   "permissions": {
     "accounting": {
