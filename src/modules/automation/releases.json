@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.10.0",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "Modüller için iş akışı API'si",
+        "de": "Workflow-API für Module"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Diğer modüller (ör. Kampanyalar) kendi iş akışlarını oluşturup yayımlayabilir ve başlatabilir; yetki denetimi çağıran modüldedir.",
+          "de": "Andere Module (z. B. Kampagnen) können eigene Workflows anlegen, veröffentlichen und starten; die Berechtigungsprüfung liegt beim aufrufenden Modul."
+        }
+      ]
+    },
+    {
       "version": "0.9.1",
       "date": "2026-11-06",
       "title": {

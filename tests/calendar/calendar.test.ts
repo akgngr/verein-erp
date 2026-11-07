@@ -80,7 +80,7 @@ describe("calendar ICS", () => {
 describe("module calendar sources", () => {
   test("each source module is registered with unique keys", () => {
     const modules = moduleCalendarRegistry.map((item) => item.module).sort();
-    assert.deepEqual(modules, ["courses", "documents", "events", "meetings", "tasks"]);
+    assert.deepEqual(modules, ["courses", "documents", "events", "mailings", "meetings", "tasks"]);
     for (const item of moduleCalendarRegistry) {
       const keys = item.sources.map((source) => source.key);
       assert.equal(new Set(keys).size, keys.length);

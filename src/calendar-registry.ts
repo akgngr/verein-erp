@@ -7,6 +7,7 @@ import { calendar as documentsCalendar } from "@/modules/documents/calendar";
 import { calendar as meetingsCalendar } from "@/modules/meetings/calendar";
 import { calendar as coursesCalendar } from "@/modules/courses/calendar";
 import { calendar as eventsCalendar } from "@/modules/events/calendar";
+import { calendar as mailingsCalendar } from "@/modules/mailings/calendar";
 import { calendar as tasksCalendar } from "@/modules/tasks/calendar";
 
 /** Takvime kayıt sunan modüller (src/modules/<modül>/calendar.ts). */
@@ -15,5 +16,6 @@ export const moduleCalendarRegistry: ModuleCalendar[] = [
   meetingsCalendar,
   coursesCalendar,
   eventsCalendar,
+  mailingsCalendar,
   tasksCalendar,
 ];

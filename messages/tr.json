@@ -109,7 +109,7 @@
     "inventory": "Envanter",
     "mail": "E-posta",
     "gelenKutusu": "Gelen kutusu",
-    "topluEposta": "Toplu e-posta",
+    "topluEposta": "Kampanyalar",
     "toplantilar": "Toplantılar",
     "uyeler": "Üyeler",
     "organization": "Dernek Bilgileri",
@@ -4857,11 +4857,11 @@
   },
   "mailings": {
     "module": {
-      "label": "Toplu e-posta",
-      "description": "Üyelere, velilere ve diğer modüllerin alıcı listelerine kişiye özel toplu e-posta."
+      "label": "Kampanyalar",
+      "description": "Üyelere, velilere ve diğer modüllerin alıcı listelerine kişiye özel kampanyalar; her kampanya bir iş akışı olarak çalışır."
     },
-    "title": "Toplu e-posta",
-    "description": "Bir alıcı listesi seçin, filtreleyin ve kişiye özel duyuru gönderin. E-postası olmayanlar ve itiraz edenler atlanır; her alıcıya ayrı e-posta gider (alıcılar birbirini görmez).",
+    "title": "Kampanyalar",
+    "description": "Hedef kitleyi seçin, kanalı ve içeriği belirleyin; hemen ya da planlı gönderin. Her kampanya bir iş akışı olarak çalışır; itiraz edenler ve adresi olmayanlar atlanır.",
     "notConfigured": "E-posta gönderimi ayarlanmamış.",
     "openSettings": "E-posta ayarlarını aç",
     "noSources": "Kullanabileceğiniz bir alıcı listesi yok (ilgili modül kapalı veya yetkiniz yok).",
@@ -4875,11 +4875,11 @@
     "test": "Kendime test gönder",
     "testSent": "Test e-postası {to} adresine gönderildi.",
     "send": "{count} kişiye gönder",
-    "confirmTitle": "Toplu e-posta gönderilsin mi?",
+    "confirmTitle": "Kampanya başlatılsın mı?",
     "confirmText": "{count} kişiye ayrı ayrı e-posta gönderilecek. Gönderim arka planda sürer; sonucu aşağıda ve E-posta → Gönderim kayıtları'nda görebilirsiniz.",
     "started": "Gönderim başladı: {count} alıcı.",
-    "history": "Gönderim geçmişi",
-    "noHistory": "Henüz toplu e-posta gönderilmedi.",
+    "history": "Kampanyalar",
+    "noHistory": "Henüz kampanya yok.",
     "columns": {
       "date": "Tarih",
       "source": "Liste",
@@ -4891,9 +4891,12 @@
     "result": "{sent}/{total} gönderildi, {failed} hata",
     "skipped": "Atlanan: {noEmail} e-postasız, {optOut} itiraz",
     "statusLabels": {
+      "DRAFT": "Taslak",
+      "SCHEDULED": "Planlandı",
       "SENDING": "Gönderiliyor",
       "DONE": "Tamamlandı",
-      "FAILED": "Başarısız"
+      "FAILED": "Başarısız",
+      "CANCELLED": "İptal edildi"
     },
     "errors": {
       "subject": "Konu 3–200 karakter olmalı.",
@@ -4902,18 +4905,22 @@
       "sendFailed": "Test e-postası gönderilemedi; Gönderim kayıtları'na bakın.",
       "noRecipients": "Uygun alıcı yok.",
       "source": "Bu alıcı listesini kullanamazsınız.",
-      "segmentName": "Segment adı 2–80 karakter olmalı."
+      "segmentName": "Segment adı 2–80 karakter olmalı.",
+      "name": "Kampanya adı 2–120 karakter olmalı.",
+      "channelNotConfigured": "Bu kanal henüz ayarlanmamış.",
+      "notCancellable": "Yalnız taslak veya planlı kampanyalar iptal edilebilir.",
+      "notDeletable": "Yalnız taslak veya iptal edilmiş kampanyalar silinebilir."
     },
     "permissions": {
       "mailings": {
-        "label": "Toplu e-posta",
+        "label": "Kampanyalar",
         "description": "Toplu e-posta gönderme (oluştur) ve geçmiş (gör). Her alıcı listesi ayrıca kendi modülünün görme iznini ister."
       }
     },
     "access": {
       "mail": "E-postaları göndermek ve e-posta ayarlarının hazır olup olmadığını okumak için.",
       "system": "Yalnızca etkin modüllerin alıcı listelerini göstermek için modül durumlarını okur.",
-      "automation": "Kampanyaları kalıcı arka plan kuyruğuna eklemek ve yürütme kayıtlarını oluşturmak için.",
+      "automation": "Kampanyaları iş akışı olarak oluşturmak, yayımlamak ve arka plan kuyruğunda çalıştırmak için.",
       "users": "Gönderimi başlatan kullanıcının hesabını ve güncel rolünü worker çalışırken yeniden doğrulamak için."
     },
     "segment": "Kayıtlı segment",
@@ -4928,14 +4935,105 @@
     "automation": {
       "events": {
         "campaign_finished": {
-          "label": "Toplu e-posta gönderimi bittiğinde",
+          "label": "Kampanya gönderimi bittiğinde",
           "fields": {
             "campaignId": "Kampanya kimliği",
             "sent": "Gönderilen sayısı",
             "failed": "Başarısız sayısı"
           }
         }
+      },
+      "tasks": {
+        "send_campaign": {
+          "label": "Kampanyayı gönder",
+          "description": "Kampanyanın alıcılarını gönderim anındaki güncel veriden hesaplar ve kişiye özel mesajları gönderir.",
+          "fields": {
+            "campaignId": "Kampanya kimliği"
+          }
+        }
       }
+    },
+    "channels": {
+      "email": {
+        "label": "E-posta",
+        "description": "Görsel editörle kişiye özel e-posta; her alıcıya ayrı gönderilir."
+      }
+    },
+    "board": {
+      "newCampaign": "Yeni kampanya",
+      "totalCampaigns": "{count} kampanya",
+      "totalSent": "{count} mesaj gönderildi",
+      "totalScheduled": "{count} planlı",
+      "columns": {
+        "draft": "Taslaklar",
+        "scheduled": "Planlı",
+        "sending": "Gönderiliyor",
+        "finished": "Tamamlanan"
+      },
+      "empty": "Kampanya yok",
+      "progress": "Gönderim ilerlemesi",
+      "scheduledFor": "Gönderim: {date}",
+      "workflow": "İş akışı",
+      "cancel": "İptal et",
+      "delete": "Sil",
+      "cancelTitle": "Kampanya iptal edilsin mi?",
+      "cancelMessage": "Planlı gönderim yapılmayacak; iş akışı devre dışı bırakılır.",
+      "deleteTitle": "Kampanya silinsin mi?",
+      "deleteMessage": "Taslak ya da iptal edilmiş kampanya kalıcı olarak silinir."
+    },
+    "wizard": {
+      "title": "Yeni kampanya",
+      "editTitle": "Kampanyayı düzenle",
+      "subtitle": "Hedef kitle → kanal → içerik → gönderim. Başlatılan kampanya bir iş akışı olarak kaydedilir.",
+      "steps": "Adımlar",
+      "step": {
+        "audience": "Hedef kitle",
+        "channel": "Kanal",
+        "content": "İçerik",
+        "send": "Gönderim"
+      },
+      "name": "Kampanya adı",
+      "namePlaceholder": "ör. Yaz şenliği daveti",
+      "reach": "{count} alıcı",
+      "reachDetail": "Filtreye uyan {matched} kişiden {noEmail} adressiz, {optOut} itiraz/izinsiz.",
+      "channel": "Kanal",
+      "channelNotConfigured": "Ayarlanmamış",
+      "moreChannels": "SMS, Telegram ve WhatsApp kanalları ayrı eklenti modülleri olarak etkinleştirildiğinde burada görünür.",
+      "previewTitle": "Önizleme",
+      "previewEmail": "E-posta, editördeki tasarımla her alıcıya kişiselleştirilerek gönderilir.",
+      "length": "{count}/{max} karakter",
+      "recipients": "Alıcılar",
+      "when": "Ne zaman?",
+      "now": "Hemen gönder",
+      "later": "İleri bir tarihte",
+      "scheduledAt": "Gönderim zamanı",
+      "scheduleFuture": "En az 1 dakika sonrası olmalı.",
+      "workflowHint": "Kampanya başlatıldığında bir iş akışı oluşturulur (tetikleyici → [bekle] → gönder). İş akışları ekranından izleyebilir, ileri düzey adımlar ekleyebilirsiniz.",
+      "test": "Kendime test gönder",
+      "schedule": "{count} kişiye planla",
+      "scheduled": "Kampanya planlandı: {count} alıcı.",
+      "saveDraft": "Taslağı kaydet",
+      "draftSaved": "Taslak kaydedildi.",
+      "close": "Kapat",
+      "back": "Geri",
+      "next": "İleri",
+      "subjectPlaceholder": "ör. Yaz şenliğine davetlisiniz"
+    },
+    "workflow": {
+      "name": "Kampanya: {name}",
+      "trigger": "Kampanya başlatıldı",
+      "wait": "Planlanan zamana kadar bekle",
+      "send": "Kampanyayı gönder"
+    },
+    "ai": {
+      "draft": {
+        "kind": "Kampanya taslağı",
+        "confirm": "Taslağı oluştur",
+        "done": "Kampanya taslağı oluşturuldu; Kampanyalar'da açıp gönderebilirsiniz."
+      }
+    },
+    "calendar": {
+      "scheduled": "Planlı kampanyalar"
     }
   },
   "meetings": {

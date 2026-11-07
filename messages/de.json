@@ -109,7 +109,7 @@
     "inventory": "Inventar",
     "mail": "E-Mail",
     "gelenKutusu": "Posteingang",
-    "topluEposta": "Rundmail",
+    "topluEposta": "Kampagnen",
     "toplantilar": "Sitzungen",
     "uyeler": "Mitglieder",
     "organization": "Vereinsdaten",
@@ -4857,11 +4857,11 @@
   },
   "mailings": {
     "module": {
-      "label": "Rundmail",
-      "description": "Personalisierte Rundmails an Mitglieder, Eltern und Empfängerlisten anderer Module."
+      "label": "Kampagnen",
+      "description": "Personalisierte Kampagnen an Mitglieder, Erziehungsberechtigte und Empfängerlisten anderer Module; jede Kampagne läuft als Workflow."
     },
-    "title": "Rundmail",
-    "description": "Empfängerliste wählen, filtern und personalisierte Mitteilung senden. Personen ohne E-Mail oder mit Widerspruch werden übersprungen; jede Person erhält eine eigene E-Mail.",
+    "title": "Kampagnen",
+    "description": "Zielgruppe wählen, Kanal und Inhalt festlegen; sofort oder geplant senden. Jede Kampagne läuft als Workflow; Widersprüche und fehlende Adressen werden übersprungen.",
     "notConfigured": "Der E-Mail-Versand ist nicht eingerichtet.",
     "openSettings": "E-Mail-Einstellungen öffnen",
     "noSources": "Keine verfügbare Empfängerliste (Modul deaktiviert oder keine Berechtigung).",
@@ -4875,11 +4875,11 @@
     "test": "Test an mich senden",
     "testSent": "Test-E-Mail an {to} gesendet.",
     "send": "An {count} Personen senden",
-    "confirmTitle": "Rundmail senden?",
+    "confirmTitle": "Kampagne starten?",
     "confirmText": "{count} Personen erhalten je eine eigene E-Mail. Der Versand läuft im Hintergrund; das Ergebnis sehen Sie unten und im Versandprotokoll.",
     "started": "Versand gestartet: {count} Empfänger.",
-    "history": "Versandverlauf",
-    "noHistory": "Noch keine Rundmails versendet.",
+    "history": "Kampagnen",
+    "noHistory": "Noch keine Kampagnen.",
     "columns": {
       "date": "Datum",
       "source": "Liste",
@@ -4891,9 +4891,12 @@
     "result": "{sent}/{total} gesendet, {failed} Fehler",
     "skipped": "Übersprungen: {noEmail} ohne E-Mail, {optOut} Widerspruch",
     "statusLabels": {
+      "DRAFT": "Entwurf",
+      "SCHEDULED": "Geplant",
       "SENDING": "Wird gesendet",
       "DONE": "Abgeschlossen",
-      "FAILED": "Fehlgeschlagen"
+      "FAILED": "Fehlgeschlagen",
+      "CANCELLED": "Abgebrochen"
     },
     "errors": {
       "subject": "Betreff: 3–200 Zeichen.",
@@ -4902,18 +4905,22 @@
       "sendFailed": "Test-E-Mail konnte nicht gesendet werden; siehe Versandprotokoll.",
       "noRecipients": "Keine passenden Empfänger.",
       "source": "Diese Empfängerliste ist nicht verfügbar.",
-      "segmentName": "Segmentname: 2–80 Zeichen."
+      "segmentName": "Segmentname: 2–80 Zeichen.",
+      "name": "Kampagnenname muss 2–120 Zeichen haben.",
+      "channelNotConfigured": "Dieser Kanal ist noch nicht eingerichtet.",
+      "notCancellable": "Nur Entwürfe oder geplante Kampagnen können abgebrochen werden.",
+      "notDeletable": "Nur Entwürfe oder abgebrochene Kampagnen können gelöscht werden."
     },
     "permissions": {
       "mailings": {
-        "label": "Rundmail",
+        "label": "Kampagnen",
         "description": "Rundmails senden (anlegen) und Verlauf (ansehen). Jede Empfängerliste verlangt zusätzlich das Leserecht ihres Moduls."
       }
     },
     "access": {
       "mail": "Zum Versand und zur Prüfung der E-Mail-Einrichtung.",
       "system": "Liest Modulzustände, um nur Listen aktiver Module anzuzeigen.",
-      "automation": "Zum Einreihen von Kampagnen in die dauerhafte Hintergrundwarteschlange und zum Erstellen der Ausführungsdatensätze.",
+      "automation": "Um Kampagnen als Workflows anzulegen, zu veröffentlichen und in der Hintergrundwarteschlange auszuführen.",
       "users": "Zur erneuten Prüfung des aktiven Kontos und der aktuellen Rolle des auslösenden Benutzers während der Worker-Ausführung."
     },
     "segment": "Gespeichertes Segment",
@@ -4928,14 +4935,105 @@
     "automation": {
       "events": {
         "campaign_finished": {
-          "label": "Wenn eine Rundmail fertig versendet ist",
+          "label": "Wenn ein Kampagnenversand abgeschlossen ist",
           "fields": {
             "campaignId": "Kampagnen-ID",
             "sent": "Anzahl gesendet",
             "failed": "Anzahl fehlgeschlagen"
           }
         }
+      },
+      "tasks": {
+        "send_campaign": {
+          "label": "Kampagne senden",
+          "description": "Berechnet die Empfänger aus den aktuellen Daten und sendet personalisierte Nachrichten.",
+          "fields": {
+            "campaignId": "Kampagnen-ID"
+          }
+        }
       }
+    },
+    "channels": {
+      "email": {
+        "label": "E-Mail",
+        "description": "Personalisierte E-Mail mit visuellem Editor; jede Person erhält eine eigene Nachricht."
+      }
+    },
+    "board": {
+      "newCampaign": "Neue Kampagne",
+      "totalCampaigns": "{count} Kampagnen",
+      "totalSent": "{count} Nachrichten gesendet",
+      "totalScheduled": "{count} geplant",
+      "columns": {
+        "draft": "Entwürfe",
+        "scheduled": "Geplant",
+        "sending": "Wird gesendet",
+        "finished": "Abgeschlossen"
+      },
+      "empty": "Keine Kampagnen",
+      "progress": "Sendefortschritt",
+      "scheduledFor": "Versand: {date}",
+      "workflow": "Workflow",
+      "cancel": "Abbrechen",
+      "delete": "Löschen",
+      "cancelTitle": "Kampagne abbrechen?",
+      "cancelMessage": "Der geplante Versand entfällt; der Workflow wird deaktiviert.",
+      "deleteTitle": "Kampagne löschen?",
+      "deleteMessage": "Entwurf oder abgebrochene Kampagne wird endgültig gelöscht."
+    },
+    "wizard": {
+      "title": "Neue Kampagne",
+      "editTitle": "Kampagne bearbeiten",
+      "subtitle": "Zielgruppe → Kanal → Inhalt → Versand. Eine gestartete Kampagne wird als Workflow gespeichert.",
+      "steps": "Schritte",
+      "step": {
+        "audience": "Zielgruppe",
+        "channel": "Kanal",
+        "content": "Inhalt",
+        "send": "Versand"
+      },
+      "name": "Kampagnenname",
+      "namePlaceholder": "z. B. Einladung Sommerfest",
+      "reach": "{count} Empfänger",
+      "reachDetail": "Von {matched} passenden Personen: {noEmail} ohne Adresse, {optOut} Widerspruch/ohne Einwilligung.",
+      "channel": "Kanal",
+      "channelNotConfigured": "Nicht eingerichtet",
+      "moreChannels": "SMS-, Telegram- und WhatsApp-Kanäle erscheinen hier, sobald die jeweiligen Plugin-Module aktiv sind.",
+      "previewTitle": "Vorschau",
+      "previewEmail": "Die E-Mail wird im Editor-Design für jede Person personalisiert versendet.",
+      "length": "{count}/{max} Zeichen",
+      "recipients": "Empfänger",
+      "when": "Wann?",
+      "now": "Sofort senden",
+      "later": "Zu einem späteren Zeitpunkt",
+      "scheduledAt": "Versandzeitpunkt",
+      "scheduleFuture": "Muss mindestens 1 Minute in der Zukunft liegen.",
+      "workflowHint": "Beim Start wird ein Workflow angelegt (Auslöser → [warten] → senden). Unter Workflows kannst du ihn verfolgen und erweitern.",
+      "test": "Test an mich senden",
+      "schedule": "An {count} Personen planen",
+      "scheduled": "Kampagne geplant: {count} Empfänger.",
+      "saveDraft": "Entwurf speichern",
+      "draftSaved": "Entwurf gespeichert.",
+      "close": "Schließen",
+      "back": "Zurück",
+      "next": "Weiter",
+      "subjectPlaceholder": "z. B. Einladung zum Sommerfest"
+    },
+    "workflow": {
+      "name": "Kampagne: {name}",
+      "trigger": "Kampagne gestartet",
+      "wait": "Bis zum geplanten Zeitpunkt warten",
+      "send": "Kampagne senden"
+    },
+    "ai": {
+      "draft": {
+        "kind": "Kampagnenentwurf",
+        "confirm": "Entwurf anlegen",
+        "done": "Kampagnenentwurf angelegt; unter Kampagnen öffnen und senden."
+      }
+    },
+    "calendar": {
+      "scheduled": "Geplante Kampagnen"
     }
   },
   "meetings": {
