@@ -63,7 +63,7 @@ export { auditorReportHandler } from "./handlers/auditor-report";
 export { ExtrasView } from "./views/extras-view";
 export { dunningPdfHandler } from "./handlers/dunning-pdf";
 export { paymentRunHandler } from "./handlers/payment-run";
-export { uploadPayableHandler, downloadPayableFileHandler } from "./handlers/payable-files";
+export { uploadPayableHandler, downloadPayableFileHandler, payableEInvoicePdfHandler } from "./handlers/payable-files";
 export { xrechnungHandler, zugferdHandler } from "./handlers/xrechnung";
 export { PayablesView, PayableDetailView } from "./views/payables-view";
 export { exportDatevHandler } from "./handlers/export-datev";

@@ -8,7 +8,10 @@ import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { can } from "@/shared/permissions/define";
 
+import { EInvoiceDocumentView } from "../components/einvoice-document-view";
+import { buildEInvoiceViewLabels } from "../lib/einvoice-view-labels";
 import { PayableActions } from "../components/payable-actions";
+import { loadPayableEInvoice } from "../services/einvoice-view";
 import { PayableForm } from "../components/payable-form";
 import { PayableUploadButton } from "../components/payable-upload-button";
 import { accountingPermissions } from "../permissions";
@@ -112,6 +115,9 @@ export async function PayableDetailView({ id, editing }: { id: string; editing: 
     listAccountOptions(),
   ]);
   const fileHref = `/api/accounting/payables/${payable.id}/file`;
+  const einvoice = await loadPayableEInvoice(payable.id);
+  const tView = await getTranslations("accounting.einvoice.view");
+  const viewLabels = einvoice ? buildEInvoiceViewLabels((key, values) => tView(key as never, values as never), einvoice.document, einvoice.sha256) : null;
   return (
     <div className="flex flex-col gap-4">
       <PageHeader
@@ -176,6 +182,12 @@ export async function PayableDetailView({ id, editing }: { id: string; editing: 
             ) : (
               <p className="text-small text-default-500">—</p>
             )}
+            {einvoice ? (
+              <a href={`/api/accounting/payables/${payable.id}/einvoice-pdf`} target="_blank" rel="noopener noreferrer" className="mt-2 flex items-center gap-2 text-small text-primary hover:underline">
+                <FileText className="h-4 w-4" aria-hidden />
+                {tView("pdf")}
+              </a>
+            ) : null}
           </section>
           <section className="rounded-medium border border-default-200 bg-content1 p-5 shadow-sm">
             {payable.einvoiceIssues ? (
@@ -222,6 +234,7 @@ export async function PayableDetailView({ id, editing }: { id: string; editing: 
           <p className="text-tiny text-default-400">{t("createdBy", { label: payable.createdByLabel, date: day(payable.createdAt) })}</p>
         </div>
       </div>
+      {einvoice && viewLabels ? <EInvoiceDocumentView document={einvoice.document} labels={viewLabels} /> : null}
     </div>
   );
 }
