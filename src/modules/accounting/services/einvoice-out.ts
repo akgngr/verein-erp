@@ -36,6 +36,10 @@ export type XInvoiceData = {
   taxCents: number;
   grossCents: number;
   paidCents: number;
+  /** 380 fatura, 381 iptal faturası (Gutschrift/Storno). */
+  typeCode?: 380 | 381;
+  /** BT-25/BT-26: iptal faturasının ilgili olduğu fatura. */
+  precedingInvoice?: { number: string; issueDate: string } | null;
 };
 
 export type XInvoiceIssue = "sellerAddress" | "sellerTaxId" | "sellerContact" | "buyerAddress" | "iban" | "dueOrTerms";
@@ -81,6 +85,8 @@ function party(p: XInvoiceParty, role: "seller" | "buyer"): string {
 }
 
 export function buildXRechnungUbl(data: XInvoiceData): string {
+  // KARAR: iptal faturası UBL'de ayrı kök belge (CreditNote); satırlar CreditNoteLine/CreditedQuantity, DueDate yok.
+  const credit = data.typeCode === 381;
   const exemption = data.smallBusiness ? "Kein Ausweis von Umsatzsteuer, da Kleinunternehmer gemäß § 19 UStG" : "Nicht steuerbar / steuerfrei"; // i18n-ignore: XRechnung-Pflichttext (Almanca)
   const subtotals = data.byRate
     .map((group) => {
@@ -91,22 +97,23 @@ export function buildXRechnungUbl(data: XInvoiceData): string {
   const lines = data.lines
     .map(
       (line) =>
-        `<cac:InvoiceLine><cbc:ID>${line.position}</cbc:ID><cbc:InvoicedQuantity unitCode="${unitCode(line.unit)}">${line.quantity}</cbc:InvoicedQuantity><cbc:LineExtensionAmount currencyID="EUR">${amount(line.netCents)}</cbc:LineExtensionAmount><cac:Item>${tag("cbc:Name", line.description.slice(0, 200))}<cac:ClassifiedTaxCategory><cbc:ID>${category(line.taxRate, data.smallBusiness)}</cbc:ID><cbc:Percent>${line.taxRate}</cbc:Percent><cac:TaxScheme><cbc:ID>VAT</cbc:ID></cac:TaxScheme></cac:ClassifiedTaxCategory></cac:Item><cac:Price><cbc:PriceAmount currencyID="EUR">${amount(line.unitPriceCents)}</cbc:PriceAmount></cac:Price></cac:InvoiceLine>`,
+        `<cac:${credit ? "CreditNoteLine" : "InvoiceLine"}><cbc:ID>${line.position}</cbc:ID><cbc:${credit ? "CreditedQuantity" : "InvoicedQuantity"} unitCode="${unitCode(line.unit)}">${line.quantity}</cbc:${credit ? "CreditedQuantity" : "InvoicedQuantity"}><cbc:LineExtensionAmount currencyID="EUR">${amount(line.netCents)}</cbc:LineExtensionAmount><cac:Item>${tag("cbc:Name", line.description.slice(0, 200))}<cac:ClassifiedTaxCategory><cbc:ID>${category(line.taxRate, data.smallBusiness)}</cbc:ID><cbc:Percent>${line.taxRate}</cbc:Percent><cac:TaxScheme><cbc:ID>VAT</cbc:ID></cac:TaxScheme></cac:ClassifiedTaxCategory></cac:Item><cac:Price><cbc:PriceAmount currencyID="EUR">${amount(line.unitPriceCents)}</cbc:PriceAmount></cac:Price></cac:${credit ? "CreditNoteLine" : "InvoiceLine"}>`,
     )
     .join("");
   const notes = [data.note, data.serviceDate ? `Leistungszeitraum: ${data.serviceDate}` : null].filter(Boolean) as string[]; // i18n-ignore: Rechnungstext
   return [
     '<?xml version="1.0" encoding="UTF-8"?>',
-    '<ubl:Invoice xmlns:ubl="urn:oasis:names:specification:ubl:schema:xsd:Invoice-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">',
+    `<ubl:${credit ? "CreditNote" : "Invoice"} xmlns:ubl="urn:oasis:names:specification:ubl:schema:xsd:${credit ? "CreditNote" : "Invoice"}-2" xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2" xmlns:cbc="urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2">`,
     tag("cbc:CustomizationID", XRECHNUNG_CUSTOMIZATION),
     tag("cbc:ProfileID", PEPPOL_PROFILE),
     tag("cbc:ID", data.number),
     tag("cbc:IssueDate", data.issueDate),
-    tag("cbc:DueDate", data.dueDate),
-    "<cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>",
+    credit ? "" : tag("cbc:DueDate", data.dueDate),
+    credit ? "<cbc:CreditNoteTypeCode>381</cbc:CreditNoteTypeCode>" : "<cbc:InvoiceTypeCode>380</cbc:InvoiceTypeCode>",
     notes.map((note) => tag("cbc:Note", note)).join(""),
     "<cbc:DocumentCurrencyCode>EUR</cbc:DocumentCurrencyCode>",
     tag("cbc:BuyerReference", data.buyerReference ?? data.number),
+    data.precedingInvoice ? `<cac:BillingReference><cac:InvoiceDocumentReference>${tag("cbc:ID", data.precedingInvoice.number)}${tag("cbc:IssueDate", data.precedingInvoice.issueDate)}</cac:InvoiceDocumentReference></cac:BillingReference>` : "",
     `<cac:AccountingSupplierParty>${party(data.seller, "seller")}</cac:AccountingSupplierParty>`,
     `<cac:AccountingCustomerParty>${party(data.buyer, "buyer")}</cac:AccountingCustomerParty>`,
     data.iban
@@ -116,7 +123,7 @@ export function buildXRechnungUbl(data: XInvoiceData): string {
     `<cac:TaxTotal><cbc:TaxAmount currencyID="EUR">${amount(data.taxCents)}</cbc:TaxAmount>${subtotals}</cac:TaxTotal>`,
     `<cac:LegalMonetaryTotal><cbc:LineExtensionAmount currencyID="EUR">${amount(data.netCents)}</cbc:LineExtensionAmount><cbc:TaxExclusiveAmount currencyID="EUR">${amount(data.netCents)}</cbc:TaxExclusiveAmount><cbc:TaxInclusiveAmount currencyID="EUR">${amount(data.grossCents)}</cbc:TaxInclusiveAmount>${data.paidCents ? `<cbc:PrepaidAmount currencyID="EUR">${amount(data.paidCents)}</cbc:PrepaidAmount>` : ""}<cbc:PayableAmount currencyID="EUR">${amount(data.grossCents - data.paidCents)}</cbc:PayableAmount></cac:LegalMonetaryTotal>`,
     lines,
-    "</ubl:Invoice>",
+    credit ? "</ubl:CreditNote>" : "</ubl:Invoice>",
   ].join("\n");
 }
 

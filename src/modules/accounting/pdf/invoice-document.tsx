@@ -50,7 +50,8 @@ export function InvoiceDocument({ data }: { data: InvoicePdfData }) {
   const { strings: s, invoice, lang, settings, organization: org } = data;
   const isProforma = invoice.kind === "PROFORMA";
   const isQuote = invoice.kind === "QUOTE";
-  const title = isQuote ? s.quoteTitle : isProforma ? s.proformaTitle : s.invoiceTitle;
+  const isCredit = invoice.kind === "CREDIT_NOTE";
+  const title = isCredit ? s.creditNoteTitle : isQuote ? s.quoteTitle : isProforma ? s.proformaTitle : s.invoiceTitle;
   const totals = calculateInvoiceTotals(invoice.lines);
   const number = invoice.number ?? s.draftNumber;
   const cell = (width: number, align: "left" | "right" = "left") => ({ width, textAlign: align, paddingHorizontal: 2 });
@@ -68,7 +69,7 @@ export function InvoiceDocument({ data }: { data: InvoicePdfData }) {
           </View>
           <View style={styles.meta}>
             <View style={styles.metaRow}>
-              <Text style={styles.metaLabel}>{isQuote ? s.quoteNumber : isProforma ? s.proformaNumber : s.invoiceNumber}</Text>
+              <Text style={styles.metaLabel}>{isCredit ? s.creditNoteNumber : isQuote ? s.quoteNumber : isProforma ? s.proformaNumber : s.invoiceNumber}</Text>
               <Text>{number}</Text>
             </View>
             <View style={styles.metaRow}>
@@ -92,6 +93,7 @@ export function InvoiceDocument({ data }: { data: InvoicePdfData }) {
 
         <Text style={styles.title}>{title}</Text>
         {invoice.subject ? <Text style={styles.subject}>{invoice.subject}</Text> : null}
+        {isCredit && invoice.correctsInvoice?.number ? <Text style={[styles.paragraph, { fontWeight: 700 }]}>{s.creditNoteRef(invoice.correctsInvoice.number, formatPdfDate(invoice.correctsInvoice.issueDate, lang))}</Text> : null}
         {invoice.introText ? <Text style={styles.paragraph}>{invoice.introText}</Text> : null}
 
         <View style={styles.table}>

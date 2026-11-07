@@ -60,7 +60,7 @@ export async function InvoiceDetailView({ id, searchParams }: { id: string; sear
         description={invoice.recipientName}
         actions={
           <div className="flex flex-wrap items-center gap-2">
-          {invoice.kind === "INVOICE" && invoice.number && invoice.status !== "DRAFT" ? (
+          {(invoice.kind === "INVOICE" || invoice.kind === "CREDIT_NOTE") && invoice.number && invoice.status !== "DRAFT" ? (
             <>
               <XRechnungButton invoiceId={invoice.id} number={invoice.number} format="zugferd" />
               <XRechnungButton invoiceId={invoice.id} number={invoice.number} />
@@ -75,6 +75,14 @@ export async function InvoiceDetailView({ id, searchParams }: { id: string; sear
           </div>
         }
       />
+      {invoice.creditNote || invoice.correctsInvoice ? (
+        <p className="mb-4 rounded-medium bg-warning-50 p-3 text-small text-warning-700">
+          {invoice.creditNote
+            ? t("creditNoteCreated", { number: invoice.creditNote.number ?? "" })
+            : t("creditNoteFor", { number: invoice.correctsInvoice?.number ?? "" })}{" "}
+          <a className="font-medium underline" href={`/muhasebe/faturalar/${invoice.creditNote?.id ?? invoice.correctsInvoice?.id}`}>{t("open")}</a>
+        </p>
+      ) : null}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <div className="flex flex-col gap-4 lg:col-span-2">
           <div className="overflow-x-auto rounded-medium border border-default-200 bg-content1 p-5 shadow-sm">

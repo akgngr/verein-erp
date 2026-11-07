@@ -30,7 +30,7 @@ export function InvoiceActions({
   accountOptions,
   categoryOptions,
 }: {
-  invoice: { id: string; kind: "INVOICE" | "PROFORMA" | "QUOTE"; status: "DRAFT" | "ISSUED" | "PAID" | "CANCELLED"; number: string | null; categoryId: string | null; convertedInvoiceId: string | null; openCents: number };
+  invoice: { id: string; kind: "INVOICE" | "PROFORMA" | "QUOTE" | "CREDIT_NOTE"; status: "DRAFT" | "ISSUED" | "PAID" | "CANCELLED"; number: string | null; categoryId: string | null; convertedInvoiceId: string | null; openCents: number };
   can: { update: boolean; create: boolean; delete: boolean };
   accountOptions: Option[];
   categoryOptions: Option[];
@@ -107,7 +107,7 @@ export function InvoiceActions({
           </Button>
         )
       ) : null}
-      {(invoice.status === "ISSUED" || invoice.status === "PAID") && can.delete ? (
+      {invoice.kind !== "CREDIT_NOTE" && (invoice.status === "ISSUED" || invoice.status === "PAID") && can.delete ? (
         <Button size="sm" variant="flat" color="danger" startContent={<Ban className="h-4 w-4" aria-hidden />} onPress={() => setCancelOpen(true)}>
           {t("cancel")}
         </Button>
@@ -199,6 +199,7 @@ export function InvoiceActions({
               <ModalHeader>{t("cancelTitle", { number: invoice.number ?? "" })}</ModalHeader>
               <ModalBody>
                 <p className="text-small text-default-500">{invoice.status === "PAID" ? t("cancelPaidHelp") : t("cancelHelp")}</p>
+                {invoice.kind === "INVOICE" ? <p className="text-tiny text-default-500">{t("cancelCreditNoteHint")}</p> : null}
                 <Textarea label={t("reason")} labelPlacement="outside" value={reason} onValueChange={setReason} isRequired minRows={2} />
               </ModalBody>
               <ModalFooter>

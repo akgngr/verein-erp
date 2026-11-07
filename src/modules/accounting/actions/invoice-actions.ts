@@ -82,6 +82,43 @@ async function loadInvoice(id: string, tx: Prisma.TransactionClient = getDb()) {
   return invoice;
 }
 
+/** İptal faturası (Stornorechnung): aynı alıcı ve kalemler, yeni ST- numarası, orijinale bağlı. */
+async function createCreditNote(tx: Prisma.TransactionClient, invoiceId: string, reason: string, actor: { id: string; label: string }) {
+  const original = await tx.accountingInvoice.findUniqueOrThrow({ where: { id: invoiceId }, include: { lines: { orderBy: { position: "asc" } } } });
+  const now = new Date();
+  const year = Number(new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Berlin", year: "numeric" }).format(now));
+  const allocated = await allocateInvoiceNumber(tx, "CREDIT_NOTE", year);
+  await tx.accountingInvoice.create({
+    data: {
+      kind: "CREDIT_NOTE",
+      status: "ISSUED",
+      number: allocated.number,
+      year,
+      sequence: allocated.sequence,
+      issueDate: new Date(`${new Intl.DateTimeFormat("en-CA", { timeZone: "Europe/Berlin" }).format(now)}T00:00:00Z`),
+      serviceDate: original.serviceDate,
+      recipientName: original.recipientName,
+      recipientAddress: original.recipientAddress,
+      recipientEmail: original.recipientEmail,
+      subject: original.subject,
+      introText: reason,
+      footerText: original.footerText,
+      taxNote: original.taxNote,
+      netCents: original.netCents,
+      taxCents: original.taxCents,
+      grossCents: original.grossCents,
+      categoryId: original.categoryId,
+      buyerReference: original.buyerReference,
+      contactId: original.contactId,
+      correctsInvoiceId: original.id,
+      issuedAt: now,
+      createdById: actor.id,
+      createdByLabel: actor.label,
+      lines: { create: original.lines.map((line) => ({ position: line.position, description: line.description, quantity: line.quantity, unit: line.unit, unitPriceCents: line.unitPriceCents, taxRate: line.taxRate, totalCents: line.totalCents })) },
+    },
+  });
+}
+
 const refresh = (id?: string) => {
   revalidatePath("/muhasebe/faturalar");
   if (id) revalidatePath(`/muhasebe/faturalar/${id}`);
@@ -259,7 +296,7 @@ export async function cancelInvoiceAction(input: unknown): Promise<ActionResult>
     handler: async ({ input, user, audit }) => {
       await getDb().$transaction(async (tx) => {
         const invoice = await loadInvoice(input.id, tx);
-        if (invoice.status === "DRAFT" || invoice.status === "CANCELLED") throw new ActionError("accounting.invoices.errors.cannotCancel");
+        if (invoice.status === "DRAFT" || invoice.status === "CANCELLED" || invoice.kind === "CREDIT_NOTE") throw new ActionError("accounting.invoices.errors.cannotCancel");
         if (invoice.status === "PAID" || invoice.paidCents > 0) {
           await reverseSourcedBooking({
             tx,
@@ -273,6 +310,8 @@ export async function cancelInvoiceAction(input: unknown): Promise<ActionResult>
           where: { id: invoice.id },
           data: { status: "CANCELLED", cancelledAt: new Date(), cancelReason: input.reason },
         });
+        // Kesilmiş faturanın iptali yeni bir belgeyle yapılır (GoBD; e-faturada TypeCode 381 + BT-25 referansı).
+        if (invoice.kind === "INVOICE" && invoice.number) await createCreditNote(tx, invoice.id, input.reason, { id: user.id, label: buildUserLabel(user.name, user.email) });
       });
       await audit({ action: "INVOICE_CANCEL", entity: "AccountingInvoice", entityId: input.id, after: { reason: input.reason } });
       refresh(input.id);

@@ -99,3 +99,21 @@ test("serbest alıcı adresi ayrıştırma", () => {
   assert.deepEqual(parseFreeAddress("Ringstr. 2, A-1010 Wien, Österreich", "X"), { street: "Ringstr. 2", postalCode: "1010", city: "Wien", countryCode: "AT" });
   assert.equal(parseFreeAddress(null, "X").postalCode, null);
 });
+
+import { buildCiiInvoice } from "@/modules/accounting/services/einvoice-cii";
+
+test("iptal faturası: UBL CreditNote 381 + BillingReference, CII 381 + InvoiceReferencedDocument", () => {
+  const credit: XInvoiceData = { ...data, number: "ST-2026-0001", paidCents: 0, typeCode: 381, precedingInvoice: { number: "R-2026-0007", issueDate: "2026-10-01" } };
+  const ubl = buildXRechnungUbl(credit);
+  assert.match(ubl, /<ubl:CreditNote xmlns:ubl="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2"/);
+  assert.match(ubl, /<cbc:CreditNoteTypeCode>381<\/cbc:CreditNoteTypeCode>/);
+  assert.match(ubl, /<cac:BillingReference><cac:InvoiceDocumentReference><cbc:ID>R-2026-0007<\/cbc:ID><cbc:IssueDate>2026-10-01<\/cbc:IssueDate>/);
+  assert.match(ubl, /<cac:CreditNoteLine>.*<cbc:CreditedQuantity/s);
+  assert.doesNotMatch(ubl, /<cbc:DueDate>|<cac:InvoiceLine>|<\/ubl:Invoice>/);
+  assert.match(ubl, /<\/ubl:CreditNote>$/);
+  const cii = buildCiiInvoice(credit);
+  assert.match(cii, /<ram:TypeCode>381<\/ram:TypeCode><ram:IssueDateTime>/);
+  assert.match(cii, /<ram:InvoiceReferencedDocument><ram:IssuerAssignedID>R-2026-0007<\/ram:IssuerAssignedID><ram:FormattedIssueDateTime><qdt:DateTimeString format="102">20261001<\/qdt:DateTimeString>/);
+  // normal fatura değişmedi
+  assert.match(buildXRechnungUbl(data), /<cbc:InvoiceTypeCode>380<\/cbc:InvoiceTypeCode>/);
+});

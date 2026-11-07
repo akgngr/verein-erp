@@ -209,6 +209,7 @@ enum InvoiceKind {
   INVOICE // Rechnung: R-2026-0001
   PROFORMA // Proforma-Rechnung: PF-2026-0001
   QUOTE // Angebot: AN-2026-0001 (ACC-3)
+  CREDIT_NOTE // Stornorechnung: ST-2026-0001 (e-fatura TypeCode 381; kesilmiş faturanın iptali)
 }
 
 enum InvoiceStatus {
@@ -251,6 +252,8 @@ model AccountingInvoice {
   bookingId        String?
   // Proformadan dönüştürülen faturada kaynak proforma.
   sourceProformaId String?
+  /// İptal faturasında: iptal edilen fatura (BT-25). Bir faturanın en çok bir iptal faturası olur.
+  correctsInvoiceId String?      @unique
   /// ACC-5: XRechnung BT-10 (Leitweg-ID / Käuferreferenz); boşsa fatura no.
   buyerReference   String?
   /// ACC-3: cari kart (isteğe bağlı; alıcı alanları anlık görüntü olarak kalır).
