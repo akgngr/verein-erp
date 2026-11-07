@@ -1,3 +1,8 @@
 # CI-only test admin password for the throwaway CI database (see ci.yml); not a real secret.
 0d475f0396a8c8465cd820cd7bea6849050c1abb:.github/workflows/ci.yml:generic-api-key:134
 0d475f0396a8c8465cd820cd7bea6849050c1abb:.github/workflows/ci.yml:generic-api-key:143
+
+# e-Sign belge anahtarı için okunaklı harf listesi (harf listesi sabiti); sır değil.
+# Sabit sonraki commit'te DOC_CODE_CHARS olarak yeniden adlandırıldı; bu iki eski commit kaydı yanlış alarmdır.
+93f569c379fef8d62344218f5ab311b086222868:src/modules/online-forms/services/requests.ts:generic-api-key:241
+b6557fe9c38f00d7fa8235ff2ba00c614ac10ff6:src/modules/online-forms/services/requests.ts:generic-api-key:241

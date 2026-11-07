@@ -113,7 +113,7 @@
     "topluEposta": "Kampagnen",
     "toplantilar": "Sitzungen",
     "uyeler": "Mitglieder",
-    "online-forms": "Online-Formulare",
+    "online-forms": "e-Sign",
     "organization": "Vereinsdaten",
     "progress": "Lernfortschritt",
     "securityMonitor": "Sicherheitsüberwachung",
@@ -6594,30 +6594,32 @@
       }
     },
     "onlineForm": {
-      "send": "Online-Formular senden"
+      "send": "e-Sign-Formular senden",
+      "documents": "e-Sign-Dokumente"
     }
   },
   "online-forms": {
     "module": {
-      "label": "Online-Formulare",
+      "label": "e-Sign",
       "description": "Personen per befristetem Link Formulare vervollständigen, Datenschutz bestätigen und unterschreiben lassen."
     },
     "permissions": {
       "online-forms": {
-        "label": "Online-Formulare",
+        "label": "e-Sign",
         "description": "Formular-Links versenden und unterschriebene Formulare einsehen."
       }
     },
-    "title": "Online-Formulare",
-    "description": "Senden Sie Mitgliedern, Schüler:innen und Erziehungsberechtigten einen Formular-Link; sie ergänzen ihre Daten, bestätigen den Datenschutz und unterschreiben.",
-    "empty": "Noch keine Links versendet. Starten Sie mit 'Online-Formular senden' im Mitglieds-, Schüler- oder Elterndatensatz.",
+    "title": "e-Sign",
+    "description": "Senden Sie einen Formular-Link; die Person ergänzt ihre Angaben, erteilt Datenschutz- und weitere Einwilligungen und unterschreibt. Unterschriebene Dokumente werden hier mit eindeutigem Schlüssel und PDF gespeichert.",
+    "empty": "Noch keine Links versendet. Starten Sie mit 'e-Sign-Formular senden' im Mitglieds-, Schüler- oder Elterndatensatz.",
     "columns": {
       "subject": "Person",
       "kind": "Formular",
       "channel": "Kanal",
       "status": "Status",
       "sent": "Gesendet",
-      "completed": "Unterschrieben"
+      "completed": "Unterschrieben",
+      "document": "Dokument"
     },
     "kinds": {
       "MEMBER": "Mitglied",
@@ -6649,7 +6651,7 @@
     "signature": "Unterschrift",
     "cancel": "Stornieren",
     "close": "Schließen",
-    "sendTitle": "Online-Formular senden",
+    "sendTitle": "e-Sign-Formular senden",
     "sendIntro": "Für {name} wird ein persönlicher, 14 Tage gültiger Formular-Link gesendet.",
     "sendIntroGuardian": "{name} ist minderjährig: Der Link geht an die Erziehungsberechtigten, die das Formular ausfüllen und bestätigen.",
     "guardian": "Erziehungsberechtigte:r",
@@ -6659,7 +6661,7 @@
     "sendHint": "Ein noch offener Link wird storniert. Nach der Unterschrift wird der Datensatz aktualisiert und die Einwilligungen gespeichert.",
     "send": "Senden",
     "sent": "Link gesendet.",
-    "updatedBy": "Online-Formular: {name}",
+    "updatedBy": "e-Sign: {name}",
     "message": {
       "subject": "{org}: Bitte ergänzen Sie Ihre Angaben",
       "text": "Hallo {name},\n\nbitte öffnen Sie den folgenden Link, um Ihre Angaben bei {org} zu vervollständigen und zu bestätigen:\n{link}\n\nDer Link ist bis {until} gültig und nur für Sie bestimmt."
@@ -6671,7 +6673,8 @@
       "sendFailed": "Die Nachricht konnte nicht gesendet werden. Bitte Kanaleinstellungen prüfen.",
       "noEncryption": "Zum Verschlüsseln der Unterschriften ist kein Schlüssel eingerichtet (AUTH_SECRET).",
       "invalid": "Bitte prüfen Sie die markierten Felder.",
-      "linkInvalid": "Der Link ist ungültig, abgelaufen oder wurde bereits verwendet."
+      "linkInvalid": "Der Link ist ungültig, abgelaufen oder wurde bereits verwendet.",
+      "textsChanged": "Die Formulartexte wurden inzwischen geändert. Bitte Seite neu laden, Text lesen und erneut unterschreiben."
     },
     "validation": {
       "tooLong": "Zu lang.",
@@ -6737,12 +6740,17 @@
         "sms": "SMS",
         "whatsapp": "WhatsApp",
         "telegram": "Telegram"
+      },
+      "date": {
+        "day": "Tag",
+        "month": "Monat",
+        "year": "Jahr"
       }
     },
     "automation": {
       "events": {
         "completed": {
-          "label": "Wenn ein Online-Formular unterschrieben wurde",
+          "label": "Wenn ein e-Sign-Formular unterschrieben wurde",
           "fields": {
             "requestId": "Anfrage-ID",
             "kind": "Formularart"
@@ -6755,6 +6763,15 @@
             }
           }
         }
+      },
+      "tasks": {
+        "render_pdf": {
+          "label": "PDF des unterschriebenen Formulars erzeugen",
+          "description": "Erzeugt das PDF des unterschriebenen Formulars aus dem Nachweisdatensatz und speichert es verschlüsselt.",
+          "fields": {
+            "requestId": "Formularanfrage-ID"
+          }
+        }
       }
     },
     "access": {
@@ -6762,8 +6779,39 @@
       "students": "Liest Schüler- und Elternfelder, schreibt das unterschriebene Formular in den Datensatz und ermittelt bei Minderjährigen die Erziehungsberechtigten.",
       "mailings": "Sendet den Formular-Link per E-Mail, SMS oder WhatsApp an eine einzelne Person.",
       "organization": "Verwendet den Vereinsnamen in Nachricht und Formular.",
-      "system": "Prüft, ob die Quellmodule aktiv sind."
-    }
+      "system": "Prüft, ob die Quellmodule aktiv sind.",
+      "automation": "Nutzt die Auftragswarteschlange, um das PDF des unterschriebenen Formulars im Hintergrund zu erzeugen."
+    },
+    "settings": {
+      "title": "Formulartexte",
+      "description": "Datenschutz- und Fototexte, die im Online-Formular über den Einwilligungsfeldern angezeigt werden.",
+      "privacyText": "Datenschutzhinweise (Art. 13 DSGVO)",
+      "privacyPlaceholder": "Verantwortlicher, Zwecke, Rechtsgrundlage, Speicherdauer, Ihre Rechte …",
+      "privacyHelp": "Wird im Formular in einem scrollbaren Feld über der Datenschutz-Einwilligung angezeigt. Leer: nur der kurze Einwilligungssatz.",
+      "photoText": "Text zur Foto-/Videoeinwilligung (§ 22 KUG)",
+      "photoPlaceholder": "Welche Aufnahmen, wo veröffentlicht, Widerruf …",
+      "photoHelp": "Wird über dem Feld zur Fotoeinwilligung angezeigt.",
+      "versionHint": "Bei jeder Unterschrift wird ein Hash (Version) des angezeigten Textes als Nachweis gespeichert. Ändert sich der Text, müssen offene Formulare vor dem Unterschreiben neu geladen werden.",
+      "save": "Speichern",
+      "saved": "Texte gespeichert."
+    },
+    "pdf": {
+      "title": "e-Sign – unterschriebene Erklärung",
+      "subtitle": "{kind}: {name}",
+      "evidence": "Nachweisdaten",
+      "messaging": "Mitteilungskanäle (Einwilligung)",
+      "yes": "Ja",
+      "no": "Nein",
+      "signer": "Unterzeichner:in",
+      "signedAt": "Zeitpunkt der Unterschrift",
+      "textVersion": "Textversion (SHA-256)",
+      "evidenceHash": "Nachweis-Hash (SHA-256)",
+      "note": "Dieses Dokument wurde aus dem verschlüsselt gespeicherten Datensatz des Formulars erstellt, das die Person über ihren persönlichen Link ausgefüllt und handschriftlich unterschrieben hat.",
+      "download": "PDF",
+      "documentKey": "Dokumentschlüssel"
+    },
+    "filteredPerson": "Nur Einträge für {name}",
+    "showAll": "Alle anzeigen"
   },
   "organization": {
     "pageTitle": "Vereinsdaten",
@@ -7128,7 +7176,8 @@
       "delete": "Löschen",
       "deleteTitle": "Erziehungsberechtigte löschen",
       "deleteMessage": "{name} (#{number}) löschen? Verknüpfungen zu Schülern werden entfernt; die Debitorennummer wird nicht wiederverwendet.",
-      "deleted": "Erziehungsberechtigte gelöscht."
+      "deleted": "Erziehungsberechtigte gelöscht.",
+      "sendSign": "e-Sign-Formular senden"
     },
     "guardianForm": {
       "salutation": "Anrede",
@@ -7268,7 +7317,8 @@
       }
     },
     "onlineForm": {
-      "send": "Online-Formular senden"
+      "send": "e-Sign-Formular senden",
+      "documents": "e-Sign-Dokumente"
     }
   },
   "system": {

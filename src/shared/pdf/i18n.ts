@@ -30,3 +30,6 @@ function getEnvPdfLang(): PdfLang {
   const value = getEnv().DOCUMENT_LANGUAGE;
   return value === "tr" ? "tr" : "de";
 }
+
+/** Ortam varsayılan belge dili (istek olmadan; ör. arka planda üretilen belgeler). */
+export const getEnvPdfLangDefault = (): PdfLang => getEnvPdfLang();

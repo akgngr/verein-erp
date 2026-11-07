@@ -1,27 +1,28 @@
 {
   "nav": {
-    "online-forms": "Online formlar"
+    "online-forms": "e-Sign"
   },
   "module": {
-    "label": "Online formlar",
+    "label": "e-Sign",
     "description": "Kişiye süreli bağlantı gönderip formu tamamlatma, Datenschutz onayı ve imza."
   },
   "permissions": {
     "online-forms": {
-      "label": "Online formlar",
+      "label": "e-Sign",
       "description": "Form bağlantısı gönderme ve imzalı formları görme."
     }
   },
-  "title": "Online formlar",
-  "description": "Üye, öğrenci ve velilere form bağlantısı gönderin; kişi eksik bilgileri ve Datenschutz onaylarını doldurup imzalar.",
-  "empty": "Henüz bağlantı gönderilmedi. Üye, öğrenci veya veli kaydındaki 'Online form gönder' ile başlayın.",
+  "title": "e-Sign",
+  "description": "Form bağlantısı gönderin; kişi bilgilerini, Datenschutz ve diğer onayları doldurup imzalar. İmzalı belgeler benzersiz anahtar ve PDF ile burada saklanır.",
+  "empty": "Henüz bağlantı gönderilmedi. Üye, öğrenci veya veli kaydındaki 'e-Sign formu gönder' ile başlayın.",
   "columns": {
     "subject": "Kişi",
     "kind": "Form",
     "channel": "Kanal",
     "status": "Durum",
     "sent": "Gönderildi",
-    "completed": "İmzalandı"
+    "completed": "İmzalandı",
+    "document": "Belge"
   },
   "kinds": {
     "MEMBER": "Üye",
@@ -53,7 +54,7 @@
   "signature": "İmza",
   "cancel": "İptal et",
   "close": "Kapat",
-  "sendTitle": "Online form gönder",
+  "sendTitle": "e-Sign formu gönder",
   "sendIntro": "{name} için kişiye özel, 14 gün geçerli bir form bağlantısı gönderilecek.",
   "sendIntroGuardian": "{name} reşit değil: bağlantı veliye gider, veli formu doldurup onaylar.",
   "guardian": "Veli",
@@ -63,7 +64,7 @@
   "sendHint": "Önceki bekleyen bağlantı iptal edilir. Form imzalanınca kayıt güncellenir ve onaylar kaydedilir.",
   "send": "Gönder",
   "sent": "Bağlantı gönderildi.",
-  "updatedBy": "Online form: {name}",
+  "updatedBy": "e-Sign: {name}",
   "message": {
     "subject": "{org}: Bilgilerinizi tamamlayın",
     "text": "Merhaba {name},\n\n{org} kaydınızı tamamlamak ve onaylamak için lütfen aşağıdaki bağlantıyı açın:\n{link}\n\nBağlantı {until} tarihine kadar geçerlidir ve yalnız size özeldir."
@@ -75,7 +76,8 @@
     "sendFailed": "Mesaj gönderilemedi. Kanal ayarlarını kontrol edin.",
     "noEncryption": "İmzaları şifrelemek için anahtar ayarlı değil (AUTH_SECRET).",
     "invalid": "Lütfen işaretli alanları kontrol edin.",
-    "linkInvalid": "Bağlantı geçersiz, süresi dolmuş veya zaten kullanılmış."
+    "linkInvalid": "Bağlantı geçersiz, süresi dolmuş veya zaten kullanılmış.",
+    "textsChanged": "Form metinleri bu arada güncellendi. Lütfen sayfayı yenileyip metni okuyarak yeniden imzalayın."
   },
   "validation": {
     "tooLong": "Çok uzun.",
@@ -141,12 +143,17 @@
       "sms": "SMS",
       "whatsapp": "WhatsApp",
       "telegram": "Telegram"
+    },
+    "date": {
+      "day": "Gün",
+      "month": "Ay",
+      "year": "Yıl"
     }
   },
   "automation": {
     "events": {
       "completed": {
-        "label": "Online form imzalandığında",
+        "label": "e-Sign formu imzalandığında",
         "fields": {
           "requestId": "İstek kimliği",
           "kind": "Form türü"
@@ -159,6 +166,15 @@
           }
         }
       }
+    },
+    "tasks": {
+      "render_pdf": {
+        "label": "İmzalı form PDF'ini üret",
+        "description": "İmzalanan formun PDF belgesini kanıt kaydından üretir ve şifreli saklar.",
+        "fields": {
+          "requestId": "Form isteği kimliği"
+        }
+      }
     }
   },
   "access": {
@@ -166,6 +182,37 @@
     "students": "Öğrenci ve veli alanlarını okur, imzalanan formu kayda yazar; reşit olmayan öğrencide veliyi bulur.",
     "mailings": "Form bağlantısını e-posta, SMS veya WhatsApp kanalından tek kişiye gönderir.",
     "organization": "Mesajda ve formda kuruluş adını kullanır.",
-    "system": "Kaynak modüllerin açık olup olmadığını kontrol eder."
-  }
+    "system": "Kaynak modüllerin açık olup olmadığını kontrol eder.",
+    "automation": "İmzalı form PDF'ini arka planda üretmek için iş kuyruğunu kullanır."
+  },
+  "settings": {
+    "title": "Form metinleri",
+    "description": "e-Sign formunda onay kutularının üstünde gösterilen Datenschutz ve fotoğraf izni metinleri.",
+    "privacyText": "Datenschutz bilgilendirmesi (DSGVO Art. 13)",
+    "privacyPlaceholder": "Sorumlu, işleme amaçları, hukuki dayanak, saklama süresi, haklarınız …",
+    "privacyHelp": "Formda Datenschutz onay kutusunun üstünde kaydırılabilir kutuda gösterilir. Boş bırakılırsa yalnız kısa onay cümlesi görünür.",
+    "photoText": "Fotoğraf/video izni metni (KUG §22)",
+    "photoPlaceholder": "Hangi fotoğraflar, nerede yayımlanır, geri alma …",
+    "photoHelp": "Fotoğraf izni kutusunun üstünde gösterilir.",
+    "versionHint": "Her imzada o an gösterilen metnin özeti (sürümü) kanıt olarak saklanır. Metin değişirse açık formlar yeniden yüklenmeden imzalanamaz.",
+    "save": "Kaydet",
+    "saved": "Metinler kaydedildi."
+  },
+  "pdf": {
+    "title": "e-Sign – imzalı belge",
+    "subtitle": "{kind}: {name}",
+    "evidence": "Kanıt bilgileri",
+    "messaging": "Mesaj kanalları (izin)",
+    "yes": "Evet",
+    "no": "Hayır",
+    "signer": "İmzalayan",
+    "signedAt": "İmza zamanı",
+    "textVersion": "Metin sürümü (SHA-256)",
+    "evidenceHash": "Kanıt özeti (SHA-256)",
+    "note": "Bu belge, kişinin kendisine gönderilen kişisel bağlantı üzerinden doldurup elle imzaladığı formun sistemde şifreli saklanan kaydından oluşturulmuştur.",
+    "download": "PDF",
+    "documentKey": "Belge anahtarı"
+  },
+  "filteredPerson": "Yalnız {name} için kayıtlar",
+  "showAll": "Tümünü göster"
 }

@@ -26,12 +26,13 @@ import { getDb } from "@/shared/db";
 import { openSecret, sealSecret } from "@/shared/security/secret-box";
 
 import { onlineFormCompletedEvent } from "../automation";
+import { EVIDENCE_PURPOSE, SIGNATURE_PURPOSE, type EvidenceSnapshot } from "./evidence-store";
+import { getFormTexts, textVersion } from "./settings";
 import type { submitSchema } from "../lib/schemas";
 import type { z } from "zod";
 
 export type Actor = { id: string; label: string };
 export const LINK_DAYS = 14;
-const SIGNATURE_PURPOSE = "online-forms-signature";
 const hashToken = (token: string) => createHash("sha256").update(token).digest("hex");
 
 /** e-posta/telefonu maskeler (listede ve kanıtta tam adres tutulmaz). */
@@ -138,8 +139,8 @@ export async function cancelRequest(id: string) {
 }
 
 /** Yönetici listesi: konu adları kaynaktan okunur. */
-export async function listRequests() {
-  const rows = await getDb().onlineFormRequest.findMany({ orderBy: { createdAt: "desc" }, take: 300, select: { id: true, kind: true, subjectId: true, signerRole: true, channel: true, sentTo: true, status: true, expiresAt: true, openedAt: true, completedAt: true, signerName: true, consents: true, createdByLabel: true, createdAt: true } });
+export async function listRequests(filter: { kind: OnlineFormKind; subjectId: string } | null = null) {
+  const rows = await getDb().onlineFormRequest.findMany({ where: filter ? { OR: [{ kind: filter.kind, subjectId: filter.subjectId }, ...(filter.kind === "GUARDIAN" ? [{ signerId: filter.subjectId }] : [])] } : {}, orderBy: { createdAt: "desc" }, take: 300, select: { id: true, documentKey: true, kind: true, subjectId: true, signerRole: true, channel: true, sentTo: true, status: true, expiresAt: true, openedAt: true, completedAt: true, signerName: true, consents: true, createdByLabel: true, createdAt: true } });
   const names = new Map<string, string>();
   for (const row of rows) {
     const key = `${row.kind}:${row.subjectId}`;
@@ -172,6 +173,11 @@ export type PublicForm = {
   member: Omit<MemberSelfService, "id"> | null;
   student: Omit<StudentSelfService, "id" | "guardians" | "minor"> | null;
   guardian: Omit<GuardianSelfService, "id"> | null;
+  /** Yönetici metinleri (boşsa formda yerleşik kısa metin). */
+  privacyText: string | null;
+  photoText: string | null;
+  /** Gösterilen metin sürümü; imzada aynısı gönderilmezse (metin bu arada değişti) imza reddedilir. */
+  textVersion: string;
 };
 
 async function findOpen(token: string) {
@@ -196,7 +202,10 @@ export async function loadPublicForm(token: string): Promise<PublicForm | null> 
   const student = studentRaw ? (({ guardians: _g, minor: _m, ...rest }) => strip(rest))(studentRaw) : null;
   const guardianId = row.kind === "GUARDIAN" ? row.subjectId : row.signerId;
   const org = await getOrganizationProfile();
+  const texts = await getFormTexts();
   return {
+    ...texts,
+    textVersion: textVersion(texts),
     kind: row.kind,
     signerRole: row.signerRole === "guardian" ? "guardian" : "self",
     orgName: org.name,
@@ -209,7 +218,17 @@ export async function loadPublicForm(token: string): Promise<PublicForm | null> 
 }
 
 /** İmzalı formu uygular: istek önce atomik olarak kapatılır (çift gönderim olmaz), sonra kayıtlar güncellenir. */
-export async function submitPublicForm(input: z.output<typeof submitSchema>, labelFor: (name: string) => string): Promise<boolean> {
+const DOC_CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+/** Okunaklı benzersiz anahtar: ES-<yıl>-<8 karakter> (karışan 0/O, 1/I yok). */
+function newDocumentKey(year: number): string {
+  const bytes = randomBytes(8);
+  return `ES-${year}-${Array.from(bytes, (byte) => DOC_CODE_CHARS[byte % DOC_CODE_CHARS.length]).join("")}`;
+}
+
+
+
+
+export async function submitPublicForm(input: z.output<typeof submitSchema>, labelFor: (name: string) => string, shown: (orgName: string) => { privacy: string; photo: string; sepa: string }): Promise<string | false | "textsChanged"> {
   const row = await findOpen(input.token);
   if (!row) return false;
   const needs = { member: row.kind === "MEMBER", student: row.kind === "STUDENT", guardian: row.kind === "GUARDIAN" || row.signerRole === "guardian" };
@@ -223,12 +242,25 @@ export async function submitPublicForm(input: z.output<typeof submitSchema>, lab
   for (const channel of input.member?.messagingConsents ?? input.guardian?.messagingConsents ?? []) consents.push(channel);
   const applied = { member: needs.member ? input.member : undefined, student: needs.student ? input.student : undefined, guardian: needs.guardian ? input.guardian : undefined };
   const signatureHash = createHash("sha256").update(input.signature).digest("hex");
-  const evidenceHash = createHash("sha256").update(JSON.stringify({ request: row.id, signedAt: signedAt.toISOString(), signerName: input.signerName, consents, applied, signatureHash })).digest("hex");
+  const texts = await getFormTexts();
+  const version = textVersion(texts);
+  if (version !== input.textVersion) return "textsChanged";
+  const evidenceHash = createHash("sha256").update(JSON.stringify({ request: row.id, signedAt: signedAt.toISOString(), signerName: input.signerName, consents, textVersion: version, applied, signatureHash })).digest("hex");
 
+  const documentKey = newDocumentKey(signedAt.getUTCFullYear());
+  const target = await resolveTarget(row.kind, row.subjectId, row.signerId);
+  const orgName = (await getOrganizationProfile()).name;
+  const maskIban = (value: unknown) => (typeof value === "string" && value ? `•••• ${value.replace(/\s/g, "").slice(-4)}` : value);
+  const snapshot: EvidenceSnapshot = {
+    v: 1, orgName, kind: row.kind, signerRole: row.signerRole, subjectName: target?.subjectName ?? "—", signerName: input.signerName,
+    signedAt: signedAt.toISOString(), channel: row.channel, sentTo: row.sentTo, consents, textVersion: version, documentKey, evidenceHash,
+    texts: { privacyLong: texts.privacyText, photoLong: texts.photoText, ...shown(orgName) },
+    data: { member: applied.member, student: applied.student, guardian: applied.guardian ? { ...applied.guardian, iban: maskIban(applied.guardian.iban) } : undefined },
+  };
   const db = getDb();
   const claimed = await db.onlineFormRequest.updateMany({
     where: { id: row.id, status: "PENDING" },
-    data: { status: "COMPLETED", completedAt: signedAt, signerName: input.signerName, signatureEnc: sealSecret(SIGNATURE_PURPOSE, input.signature), consents, evidenceHash },
+    data: { status: "COMPLETED", completedAt: signedAt, signerName: input.signerName, signatureEnc: sealSecret(SIGNATURE_PURPOSE, input.signature), consents, textVersion: version, documentKey, evidenceHash, evidenceEnc: sealSecret(EVIDENCE_PURPOSE, JSON.stringify(snapshot)) },
   });
   if (claimed.count !== 1) return false;
   try {
@@ -237,9 +269,9 @@ export async function submitPublicForm(input: z.output<typeof submitSchema>, lab
     if (applied.student) await applyStudentSelfService(row.subjectId, applied.student, signedAt);
     if (applied.guardian) await applyGuardianSelfService(row.kind === "GUARDIAN" ? row.subjectId : row.signerId!, applied.guardian, signedAt);
   } catch (error) {
-    await db.onlineFormRequest.update({ where: { id: row.id }, data: { status: "PENDING", completedAt: null, signerName: null, signatureEnc: null, consents: [], evidenceHash: null } });
+    await db.onlineFormRequest.update({ where: { id: row.id }, data: { status: "PENDING", completedAt: null, signerName: null, signatureEnc: null, consents: [], textVersion: null, documentKey: null, evidenceHash: null, evidenceEnc: null } });
     throw error;
   }
   await emitAutomationEvent(onlineFormCompletedEvent, { requestId: row.id, kind: row.kind });
-  return true;
+  return row.id;
 }

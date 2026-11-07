@@ -2,3 +2,4 @@
 import "server-only";
 
 export { onlineFormsPermissions } from "./permissions";
+export { evidencePdfHandler } from "./handlers/evidence-pdf";

@@ -1,7 +1,7 @@
 "use client";
 
 import { addToast, Button, Chip, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Radio, RadioGroup, Spinner } from "@heroui/react";
-import { FileSignature, PenLine, X } from "lucide-react";
+import { FileDown, FileSignature, PenLine, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useFormatter, useTranslations } from "next-intl";
 import { useEffect, useState, useTransition } from "react";
@@ -11,11 +11,11 @@ import { useTranslateMessage } from "@/shared/i18n/use-translate-message";
 import { cancelOnlineFormAction, getOnlineFormSignatureAction, previewOnlineFormAction, sendOnlineFormAction } from "../actions/online-form-actions";
 
 type Kind = "MEMBER" | "STUDENT" | "GUARDIAN";
-type Row = { id: string; kind: Kind; subjectName: string; signerRole: string; channel: string; sentTo: string; status: "PENDING" | "COMPLETED" | "CANCELLED" | "EXPIRED"; expiresAt: string; openedAt: string | null; completedAt: string | null; signerName: string | null; consents: string[]; createdByLabel: string; createdAt: string };
+type Row = { id: string; documentKey: string | null; kind: Kind; subjectName: string; signerRole: string; channel: string; sentTo: string; status: "PENDING" | "COMPLETED" | "CANCELLED" | "EXPIRED"; expiresAt: string; openedAt: string | null; completedAt: string | null; signerName: string | null; consents: string[]; createdByLabel: string; createdAt: string };
 type Preview = Extract<Awaited<ReturnType<typeof previewOnlineFormAction>>, { ok: true }>["data"];
 const STATUS_COLOR = { PENDING: "primary", COMPLETED: "success", CANCELLED: "default", EXPIRED: "warning" } as const;
 
-export function OnlineFormsApp({ rows, send, channels, can }: { rows: Row[]; send: { kind: Kind; subjectId: string } | null; channels: string[]; can: { update: boolean } }) {
+export function OnlineFormsApp({ rows, send, channels, can, filtered }: { filtered: boolean; rows: Row[]; send: { kind: Kind; subjectId: string } | null; channels: string[]; can: { update: boolean } }) {
   const t = useTranslations("online-forms");
   const format = useFormatter();
   const router = useRouter();
@@ -25,6 +25,12 @@ export function OnlineFormsApp({ rows, send, channels, can }: { rows: Row[]; sen
   return (
     <div className="flex flex-col gap-4">
       {send ? <SendDialog target={send} channels={channels} onClose={() => router.replace("/online-formlar")} /> : null}
+      {filtered ? (
+        <div className="flex items-center gap-2 text-small text-default-600">
+          <span>{t("filteredPerson", { name: rows[0]?.subjectName ?? "—" })}</span>
+          <Button size="sm" variant="light" onPress={() => router.replace("/online-formlar")}>{t("showAll")}</Button>
+        </div>
+      ) : null}
       {rows.length === 0 ? (
         <div className="flex flex-col items-center gap-2 rounded-large border border-dashed border-default-300 p-10 text-center text-default-500">
           <FileSignature className="size-8" />
@@ -34,18 +40,22 @@ export function OnlineFormsApp({ rows, send, channels, can }: { rows: Row[]; sen
         <div className="overflow-x-auto rounded-large border border-default-200">
           <table className="w-full text-small">
             <thead className="bg-default-50 text-start text-default-500">
-              <tr>{(["subject", "kind", "channel", "status", "sent", "completed", ""] as const).map((key) => <th key={key} className="px-3 py-2 text-start font-medium">{key ? t(`columns.${key}`) : ""}</th>)}</tr>
+              <tr>{(["subject", "kind", "document", "channel", "status", "sent", "completed", ""] as const).map((key) => <th key={key} className="px-3 py-2 text-start font-medium">{key ? t(`columns.${key}`) : ""}</th>)}</tr>
             </thead>
             <tbody>
               {rows.map((row) => (
                 <tr key={row.id} className="border-t border-default-100">
                   <td className="px-3 py-2"><span className="font-medium">{row.subjectName}</span>{row.signerRole === "guardian" ? <span className="block text-tiny text-default-500">{t("viaGuardian")}</span> : null}</td>
                   <td className="px-3 py-2">{t(`kinds.${row.kind}`)}</td>
+                  <td className="px-3 py-2">{row.documentKey ? <a href={`/api/online-forms/${row.id}/pdf`} target="_blank" rel="noopener" className="font-mono text-tiny text-primary underline-offset-2 hover:underline">{row.documentKey}</a> : <span className="text-default-400">—</span>}</td>
                   <td className="px-3 py-2">{t(`channels.${row.channel}` as never)}<span className="block text-tiny text-default-500">{row.sentTo}</span></td>
                   <td className="px-3 py-2"><Chip size="sm" variant="flat" color={STATUS_COLOR[row.status]}>{t(`status.${row.status}`)}</Chip>{row.status === "PENDING" && row.openedAt ? <span className="block text-tiny text-default-500">{t("opened")}</span> : null}</td>
                   <td className="px-3 py-2 text-default-600">{date(row.createdAt)}<span className="block text-tiny text-default-500">{row.createdByLabel}</span></td>
                   <td className="px-3 py-2 text-default-600">{row.completedAt ? <>{date(row.completedAt)}<span className="block text-tiny text-default-500">{row.signerName} · {row.consents.map((item) => t(`consents.${item}` as never)).join(", ")}</span></> : "—"}</td>
                   <td className="px-3 py-2 text-end">
+                    {row.status === "COMPLETED" ? (
+                      <Button as="a" href={`/api/online-forms/${row.id}/pdf`} target="_blank" rel="noopener" size="sm" variant="flat" className="me-2" startContent={<FileDown className="size-4" />}>{t("pdf.download")}</Button>
+                    ) : null}
                     {row.status === "COMPLETED" ? (
                       <Button size="sm" variant="flat" startContent={<PenLine className="size-4" />} onPress={async () => {
                         const response = await getOnlineFormSignatureAction({ id: row.id });

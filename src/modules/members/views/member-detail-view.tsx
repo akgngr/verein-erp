@@ -62,6 +62,7 @@ export async function MemberDetailView({
 
   const canUpdate = can(user.role, membersPermissions, "update");
   const canDelete = can(user.role, membersPermissions, "delete");
+  const signView = can(user.role, onlineFormsPermissions, "view");
   const formHref = canUpdate ? (can(user.role, onlineFormsPermissions, "create") ? `/online-formlar?gonder=MEMBER:${member.id}` : null) : null;
 
   return (
@@ -71,7 +72,8 @@ export async function MemberDetailView({
         description={`${member.firstName} ${member.lastName}`}
         actions={
           <div className="flex flex-wrap items-center gap-2">
-          {formHref ? <LinkButton href={formHref} variant="bordered">{t("onlineForm.send")}</LinkButton> : null}
+          {signView ? <LinkButton href={`/online-formlar?kisi=MEMBER:${member.id}`} variant="light">{t("onlineForm.documents")}</LinkButton> : null}
+            {formHref ? <LinkButton href={formHref} variant="bordered">{t("onlineForm.send")}</LinkButton> : null}
           <MemberDetailActions
             memberId={member.id}
             joinDate={member.joinDate.toISOString().slice(0, 10)}

@@ -602,6 +602,7 @@
     }
   },
   "onlineForm": {
-    "send": "Online-Formular senden"
+    "send": "e-Sign-Formular senden",
+    "documents": "e-Sign-Dokumente"
   }
 }

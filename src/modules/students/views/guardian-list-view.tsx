@@ -7,6 +7,7 @@ import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { parseListParams, type RawSearchParams } from "@/shared/list-params";
+import { onlineFormsPermissions } from "@/modules/online-forms";
 import { can } from "@/shared/permissions/define";
 
 import { GuardianForm } from "../components/guardian-form";
@@ -56,6 +57,7 @@ export async function GuardianListView({ searchParams }: { searchParams: Promise
         q={params.q}
         canUpdate={canUpdate}
         canDelete={can(user.role, studentsPermissions, "delete")}
+        canSign={can(user.role, onlineFormsPermissions, "create")}
       />
       {canCreate && raw.yeni !== undefined ? (
         <FormDrawer title={tForm("createTitle")} description={tForm("createDescription")}>

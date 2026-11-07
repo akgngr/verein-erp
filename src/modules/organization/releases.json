@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.0.1",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "Worker girişi",
+        "de": "Worker-Einstieg"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Arka plan görevleri için kurum profili ve logo okuma girişi (antetli PDF'ler).",
+          "de": "Einstieg für Hintergrundaufgaben zum Lesen von Vereinsprofil und Logo (PDFs mit Briefkopf)."
+        }
+      ]
+    },
+    {
       "version": "1.0.0",
       "date": "2026-10-29",
       "title": {

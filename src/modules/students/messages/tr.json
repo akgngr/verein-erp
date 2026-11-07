@@ -84,7 +84,8 @@
     "delete": "Sil",
     "deleteTitle": "Veliyi sil",
     "deleteMessage": "{name} (#{number}) silinsin mi? Öğrencilerle bağı kaldırılır; Debitor numarası tekrar kullanılmaz.",
-    "deleted": "Veli silindi."
+    "deleted": "Veli silindi.",
+    "sendSign": "e-Sign formu gönder"
   },
   "guardianForm": {
     "salutation": "Hitap",
@@ -224,6 +225,7 @@
     }
   },
   "onlineForm": {
-    "send": "Online form gönder"
+    "send": "e-Sign formu gönder",
+    "documents": "e-Sign belgeleri"
   }
 }

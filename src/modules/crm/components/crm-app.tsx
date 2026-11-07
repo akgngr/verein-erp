@@ -94,7 +94,7 @@ export function CrmApp({ parties, deals, followUps, stats, can }: { parties: Par
           <div className="flex flex-wrap gap-2">
             <Input size="sm" className="max-w-xs" startContent={<Search className="h-4 w-4" />} placeholder={t("search")} value={query} onValueChange={setQuery} />
             {hydrated ? (
-              <Select size="sm" className="max-w-[200px]" aria-label={t("stage")} placeholder={t("allStages")} selectedKeys={stage ? [stage] : []} onSelectionChange={(keys) => setStage(String(Array.from(keys)[0] ?? ""))}>
+              <Select id="crm-stage-filter" size="sm" className="max-w-[200px]" aria-label={t("stage")} placeholder={t("allStages")} selectedKeys={stage ? [stage] : []} onSelectionChange={(keys) => setStage(String(Array.from(keys)[0] ?? ""))}>
                 {STAGES.map((item) => <SelectItem key={item}>{t(`stages.${item}`)}</SelectItem>)}
               </Select>
             ) : null}
@@ -289,7 +289,7 @@ function PartyDrawer({ id, onClose, can, onChanged }: { id: string | null; onClo
           {detail ? (
             <>
               <div className="flex flex-wrap items-end gap-2">
-                <Select size="sm" className="max-w-[200px]" label={t("stage")} selectedKeys={[detail.stage]} isDisabled={!can.update}
+                <Select id="crm-party-stage" size="sm" className="max-w-[200px]" label={t("stage")} selectedKeys={[detail.stage]} isDisabled={!can.update}
                   onSelectionChange={(keys) => { const value = Array.from(keys)[0]; if (value) void run(() => updatePartyAction({ id: detail.id, stage: value })); }}>
                   {STAGES.map((item) => <SelectItem key={item}>{t(`stages.${item}`)}</SelectItem>)}
                 </Select>

@@ -29,6 +29,7 @@ export async function StudentDetailView({ id, editOpen }: { id: string; editOpen
   const student = await getStudent(id);
   if (!student) notFound();
   const canUpdate = can(user.role, studentsPermissions, "update");
+  const signView = can(user.role, onlineFormsPermissions, "view");
   const formHref = canUpdate ? (can(user.role, onlineFormsPermissions, "create") ? `/online-formlar?gonder=STUDENT:${student.id}` : null) : null;
   const guardianOptions = canUpdate ? await listGuardianOptions() : [];
 
@@ -49,6 +50,7 @@ export async function StudentDetailView({ id, editOpen }: { id: string; editOpen
         description={`${student.studentNumber} · ${t("detail.createdBy", { label: student.createdByLabel })}`}
         actions={
           <div className="flex flex-wrap items-center gap-2">
+            {signView ? <LinkButton href={`/online-formlar?kisi=STUDENT:${student.id}`} variant="light">{t("onlineForm.documents")}</LinkButton> : null}
             {formHref ? <LinkButton href={formHref} variant="bordered">{t("onlineForm.send")}</LinkButton> : null}
             {canUpdate ? (
               <FormDrawerButton param="duzenle" startIcon={<Pencil className="h-4 w-4" />}>
