@@ -101,6 +101,9 @@ export const DATA_POLICY = {
   ZuwendungConfirmation: { owner: "donations", category: "K1", reason: "Bağış makbuzları (vergi)", sensitiveFields: [] },
   ZuwendungConfirmationItem: { owner: "donations", category: "K1", reason: "Bağış makbuz kalemleri", sensitiveFields: [] },
   // ── K3 ──
+  Grant: { owner: "grants", category: "K3", reason: "Hibeler; yapay zekâya yalnız durum sayıları ve toplam tutar", sensitiveFields: ["reportText", "purpose", "fileNumber"] },
+  GrantBudgetLine: { owner: "grants", category: "K2", reason: "Finansman planı kalemleri (kişi verisi yok)", sensitiveFields: [] },
+  GrantPayout: { owner: "grants", category: "K2", reason: "Hibe ödemeleri (kişi verisi yok)", sensitiveFields: [] },
   CrmDeal: { owner: "crm", category: "K3", reason: "Fırsatlar; yapay zekâya yalnız aşama bazlı sayı/toplam", sensitiveFields: ["title"] },
   AccountingBankTransaction: { owner: "accounting", category: "K3", reason: "Banka hareketleri; yapay zekâya yalnız durum bazlı sayım/toplam", sensitiveFields: ["counterpartyName", "counterpartyIban", "purpose"] },
   AccountingBooking: { owner: "accounting", category: "K3", reason: "Muhasebe kayıtları; yapay zekâya toplamlar, metinler maskeli", sensitiveFields: ["counterparty"] },
@@ -203,6 +206,8 @@ export const AI_TOOL_POLICY = {
   get_bank_inbox_summary: { module: "accounting", reads: ["AccountingBankTransaction"] },
   get_payables_summary: { module: "accounting", reads: ["AccountingPayable"] },
   get_report_link: { module: "accounting", reads: [] },
+  // grants
+  get_grant_overview: { module: "grants", reads: ["Grant"] },
   // crm
   get_crm_pipeline: { module: "crm", reads: ["CrmDeal"] },
   // courses

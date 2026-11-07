@@ -1,0 +1,141 @@
+{
+  "nav": {
+    "grants": "Hibeler"
+  },
+  "module": {
+    "label": "Hibeler",
+    "description": "Hibe ve proje fonları: finansman planı, ödemeler ve Verwendungsnachweis."
+  },
+  "permissions": {
+    "grants": {
+      "label": "Hibeler",
+      "description": "Hibeler, finansman planı ve kullanım raporu."
+    }
+  },
+  "title": "Hibeler",
+  "description": "Hibe ve proje fonlarını izleyin; harcamalar muhasebedeki bağlı projeden okunur, kullanım raporu (Verwendungsnachweis) otomatik hazırlanır.",
+  "newGrant": "Yeni hibe",
+  "empty": "Henüz hibe yok. 'Yeni hibe' ile başlayın.",
+  "submitted": "Teslim edildi",
+  "save": "Kaydet",
+  "saved": "Kaydedildi.",
+  "delete": "Sil",
+  "add": "Ekle",
+  "deleteConfirm": "\"{name}\" hibesi ve finansman planı silinecek (muhasebe fişleri etkilenmez). Emin misiniz?",
+  "noProject": "Proje seçin",
+  "projectHelp": "Harcamalar bu muhasebe projesinin fişlerinden okunur.",
+  "otherLine": "Plana atanmamış harcamalar",
+  "columns": {
+    "name": "Hibe",
+    "funder": "Veren kurum",
+    "period": "Dönem",
+    "approved": "Onaylanan",
+    "received": "Alınan",
+    "reportDue": "Rapor teslimi",
+    "status": "Durum"
+  },
+  "status": {
+    "PLANNED": "Planlandı",
+    "APPLIED": "Başvuruldu",
+    "APPROVED": "Onaylandı",
+    "ACTIVE": "Yürütülüyor",
+    "REPORTED": "Rapor verildi",
+    "CLOSED": "Kapandı",
+    "REJECTED": "Reddedildi"
+  },
+  "fields": {
+    "name": "Hibe / proje adı",
+    "funder": "Veren kurum (Zuwendungsgeber)",
+    "fileNumber": "Dosya no (Aktenzeichen)",
+    "status": "Durum",
+    "periodStart": "Dönem başı",
+    "periodEnd": "Dönem sonu",
+    "reportDueAt": "Rapor teslim tarihi",
+    "project": "Muhasebe projesi",
+    "approved": "Onaylanan hibe",
+    "ownShare": "Öz katkı (Eigenmittel)",
+    "thirdParty": "Diğer finansman (Drittmittel)",
+    "useNetAmounts": "Dernek KDV indirimi yapabiliyor: harcamalar net tutarla sayılsın",
+    "purpose": "Hibenin amacı",
+    "lineLabel": "Kalem",
+    "planned": "Plan",
+    "categories": "Muhasebe kategorileri",
+    "requestedAt": "Talep tarihi",
+    "amount": "Tutar",
+    "receivedAt": "Alındı",
+    "note": "Not"
+  },
+  "tabs": {
+    "general": "Genel",
+    "plan": "Finansman planı",
+    "payouts": "Ödemeler",
+    "report": "Kullanım raporu"
+  },
+  "planHelp": "Her kalemi bir veya daha fazla muhasebe gider kategorisiyle eşleyin. Projedeki fişler bu eşlemeye göre kalemlere dağıtılır.",
+  "addLine": "Kalem ekle",
+  "removeLine": "Kalemi sil",
+  "planTotal": "Plan toplamı",
+  "markReceived": "Alındı işaretle",
+  "pending": "Bekliyor",
+  "notLinked": "Hibe bir muhasebe projesine bağlı değil; gerçekleşen tutarlar boş. Genel sekmesinden proje seçin.",
+  "reportPdf": "Verwendungsnachweis (PDF)",
+  "submittedAt": "Teslim: {date}",
+  "missingReceipts": "{count} fişte belge yok",
+  "deviationHint": "%20'yi aşan kalem sapmaları işaretlenir; birçok hibe koşulunda (ANBest-P) veren kurumun onayı gerekir.",
+  "overpaid": "Alınan hibe, gerçek ihtiyacın {amount} üzerinde; iade gerekebilir.",
+  "markSubmitted": "Teslim edildi olarak işaretle",
+  "unsubmit": "Teslimi geri al",
+  "submittedToast": "Rapor teslim edildi olarak işaretlendi.",
+  "report": {
+    "numbers": "Sayısal kanıt (zahlenmäßiger Nachweis)",
+    "line": "Kalem",
+    "planned": "Plan",
+    "actual": "Gerçekleşen",
+    "diff": "Fark",
+    "total": "Toplam",
+    "vouchers": "Belge listesi (Belegliste)",
+    "date": "Tarih",
+    "number": "Fiş no",
+    "lineCol": "Kalem",
+    "description": "Açıklama",
+    "amount": "Tutar",
+    "receipt": "Belge",
+    "narrative": "Faaliyet raporu (Sachbericht)",
+    "narrativePlaceholder": "Yapılan faaliyetler, ulaşılan hedefler, katılımcı sayıları, plandan sapmaların gerekçeleri …"
+  },
+  "financing": {
+    "approvedCents": "Onaylanan hibe",
+    "receivedCents": "Alınan hibe",
+    "ownShareCents": "Öz katkı",
+    "thirdPartyCents": "Diğer finansman",
+    "otherIncomeCents": "Projedeki diğer gelirler",
+    "neededGrantCents": "Gerçek hibe ihtiyacı"
+  },
+  "pdf": {
+    "title": "Verwendungsnachweis",
+    "period": "Dönem",
+    "financing": "Finansman",
+    "netNote": "Tutarlar net (KDV hariç).",
+    "grossNote": "Tutarlar brüt (KDV dahil).",
+    "signature": "İmza (yetkili)",
+    "place": "Yer, tarih",
+    "created": "Oluşturma: {date}"
+  },
+  "errors": {
+    "notFound": "Hibe bulunamadı.",
+    "name": "Ad en az 2 karakter olmalıdır.",
+    "funder": "Veren kurumu girin.",
+    "date": "Geçerli bir tarih girin.",
+    "period": "Dönem sonu, başlangıçtan önce olamaz.",
+    "lineLabel": "Kalem adı boş olamaz.",
+    "amount": "Tutar sıfırdan büyük olmalıdır.",
+    "reportEmpty": "Teslimden önce faaliyet raporunu yazın."
+  },
+  "calendar": {
+    "reports": "Hibe raporları"
+  },
+  "access": {
+    "accounting": "Bağlı projenin fişlerini (tarih, kategori, tutar, açıklama, belge var mı) ve proje/kategori listesini okur.",
+    "organization": "Rapor PDF'inde dernek antetini kullanır."
+  }
+}

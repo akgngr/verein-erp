@@ -27,6 +27,7 @@ import demoReleases from "@/modules/demo/releases.json";
 import eventsReleases from "@/modules/events/releases.json";
 import exportsReleases from "@/modules/exports/releases.json";
 import feedbackReleases from "@/modules/feedback/releases.json";
+import grantsReleases from "@/modules/grants/releases.json";
 import inventoryReleases from "@/modules/inventory/releases.json";
 import mailReleases from "@/modules/mail/releases.json";
 import mailingsReleases from "@/modules/mailings/releases.json";
@@ -64,6 +65,7 @@ export const moduleReleases: { moduleKey: string; releases: ModuleRelease[] }[] 
   { moduleKey: "events", releases: eventsReleases.releases as ModuleRelease[] },
   { moduleKey: "exports", releases: exportsReleases.releases as ModuleRelease[] },
   { moduleKey: "feedback", releases: feedbackReleases.releases as ModuleRelease[] },
+  { moduleKey: "grants", releases: grantsReleases.releases as ModuleRelease[] },
   { moduleKey: "inventory", releases: inventoryReleases.releases as ModuleRelease[] },
   { moduleKey: "mail", releases: mailReleases.releases as ModuleRelease[] },
   { moduleKey: "mailings", releases: mailingsReleases.releases as ModuleRelease[] },

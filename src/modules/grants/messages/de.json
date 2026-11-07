@@ -1,0 +1,141 @@
+{
+  "nav": {
+    "grants": "Fördermittel"
+  },
+  "module": {
+    "label": "Fördermittel",
+    "description": "Zuwendungen und Projektförderung: Finanzierungsplan, Mittelabrufe und Verwendungsnachweis."
+  },
+  "permissions": {
+    "grants": {
+      "label": "Fördermittel",
+      "description": "Zuwendungen, Finanzierungsplan und Verwendungsnachweis."
+    }
+  },
+  "title": "Fördermittel",
+  "description": "Zuwendungen verwalten; Ausgaben kommen aus dem verknüpften Buchhaltungsprojekt, der Verwendungsnachweis wird automatisch erstellt.",
+  "newGrant": "Neue Zuwendung",
+  "empty": "Noch keine Zuwendungen. Mit 'Neue Zuwendung' beginnen.",
+  "submitted": "Eingereicht",
+  "save": "Speichern",
+  "saved": "Gespeichert.",
+  "delete": "Löschen",
+  "add": "Hinzufügen",
+  "deleteConfirm": "Zuwendung \"{name}\" und Finanzierungsplan werden gelöscht (Buchungen bleiben unverändert). Fortfahren?",
+  "noProject": "Projekt wählen",
+  "projectHelp": "Ausgaben werden aus den Buchungen dieses Projekts gelesen.",
+  "otherLine": "Keiner Planposition zugeordnet",
+  "columns": {
+    "name": "Zuwendung",
+    "funder": "Zuwendungsgeber",
+    "period": "Bewilligungszeitraum",
+    "approved": "Bewilligt",
+    "received": "Erhalten",
+    "reportDue": "Nachweis fällig",
+    "status": "Status"
+  },
+  "status": {
+    "PLANNED": "Geplant",
+    "APPLIED": "Beantragt",
+    "APPROVED": "Bewilligt",
+    "ACTIVE": "Laufend",
+    "REPORTED": "Nachweis eingereicht",
+    "CLOSED": "Abgeschlossen",
+    "REJECTED": "Abgelehnt"
+  },
+  "fields": {
+    "name": "Zuwendung / Projekt",
+    "funder": "Zuwendungsgeber",
+    "fileNumber": "Aktenzeichen",
+    "status": "Status",
+    "periodStart": "Beginn",
+    "periodEnd": "Ende",
+    "reportDueAt": "Nachweis fällig am",
+    "project": "Buchhaltungsprojekt",
+    "approved": "Bewilligte Zuwendung",
+    "ownShare": "Eigenmittel",
+    "thirdParty": "Drittmittel",
+    "useNetAmounts": "Verein ist vorsteuerabzugsberechtigt: Ausgaben netto ansetzen",
+    "purpose": "Zuwendungszweck",
+    "lineLabel": "Position",
+    "planned": "Plan",
+    "categories": "Buchhaltungskategorien",
+    "requestedAt": "Abgerufen am",
+    "amount": "Betrag",
+    "receivedAt": "Eingegangen",
+    "note": "Notiz"
+  },
+  "tabs": {
+    "general": "Allgemein",
+    "plan": "Finanzierungsplan",
+    "payouts": "Mittelabrufe",
+    "report": "Verwendungsnachweis"
+  },
+  "planHelp": "Ordnen Sie jeder Position eine oder mehrere Ausgabenkategorien zu. Die Buchungen des Projekts werden danach den Positionen zugeordnet.",
+  "addLine": "Position hinzufügen",
+  "removeLine": "Position entfernen",
+  "planTotal": "Summe Plan",
+  "markReceived": "Als eingegangen markieren",
+  "pending": "Ausstehend",
+  "notLinked": "Die Zuwendung ist mit keinem Buchhaltungsprojekt verknüpft; Ist-Werte sind leer. Projekt unter 'Allgemein' wählen.",
+  "reportPdf": "Verwendungsnachweis (PDF)",
+  "submittedAt": "Eingereicht: {date}",
+  "missingReceipts": "{count} Buchungen ohne Beleg",
+  "deviationHint": "Abweichungen über 20 % je Position werden markiert; nach vielen Nebenbestimmungen (ANBest-P) ist dafür die Zustimmung des Zuwendungsgebers nötig.",
+  "overpaid": "Die erhaltene Zuwendung übersteigt den tatsächlichen Bedarf um {amount}; ggf. Rückforderung.",
+  "markSubmitted": "Als eingereicht markieren",
+  "unsubmit": "Einreichung zurücknehmen",
+  "submittedToast": "Nachweis als eingereicht markiert.",
+  "report": {
+    "numbers": "Zahlenmäßiger Nachweis",
+    "line": "Position",
+    "planned": "Plan",
+    "actual": "Ist",
+    "diff": "Abweichung",
+    "total": "Summe",
+    "vouchers": "Belegliste",
+    "date": "Datum",
+    "number": "Buchung",
+    "lineCol": "Position",
+    "description": "Buchungstext",
+    "amount": "Betrag",
+    "receipt": "Beleg",
+    "narrative": "Sachbericht",
+    "narrativePlaceholder": "Durchgeführte Maßnahmen, erreichte Ziele, Teilnehmendenzahlen, Begründung von Abweichungen …"
+  },
+  "financing": {
+    "approvedCents": "Bewilligte Zuwendung",
+    "receivedCents": "Erhaltene Zuwendung",
+    "ownShareCents": "Eigenmittel",
+    "thirdPartyCents": "Drittmittel",
+    "otherIncomeCents": "Sonstige Projekteinnahmen",
+    "neededGrantCents": "Tatsächlicher Zuwendungsbedarf"
+  },
+  "pdf": {
+    "title": "Verwendungsnachweis",
+    "period": "Bewilligungszeitraum",
+    "financing": "Finanzierung",
+    "netNote": "Beträge netto (ohne Umsatzsteuer).",
+    "grossNote": "Beträge brutto (inkl. Umsatzsteuer).",
+    "signature": "Rechtsverbindliche Unterschrift",
+    "place": "Ort, Datum",
+    "created": "Erstellt am {date}"
+  },
+  "errors": {
+    "notFound": "Zuwendung nicht gefunden.",
+    "name": "Der Name muss mindestens 2 Zeichen lang sein.",
+    "funder": "Bitte Zuwendungsgeber angeben.",
+    "date": "Bitte ein gültiges Datum eingeben.",
+    "period": "Das Ende darf nicht vor dem Beginn liegen.",
+    "lineLabel": "Positionsname darf nicht leer sein.",
+    "amount": "Der Betrag muss größer als null sein.",
+    "reportEmpty": "Bitte vor dem Einreichen den Sachbericht schreiben."
+  },
+  "calendar": {
+    "reports": "Verwendungsnachweise"
+  },
+  "access": {
+    "accounting": "Liest die Buchungen des verknüpften Projekts (Datum, Kategorie, Betrag, Text, Beleg vorhanden) sowie Projekt- und Kategorielisten.",
+    "organization": "Verwendet den Briefkopf im PDF."
+  }
+}

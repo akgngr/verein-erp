@@ -93,3 +93,4 @@ export { PAYABLE_FILE_EXTENSIONS } from "./handlers/payable-files";
 export { saveAssetForInventoryItem, unlinkAssetFromInventoryItem } from "./services/inventory-assets";
 // CRM ve diğer modüller için cari özeti/arama (banka ve vergi bilgisi içermez).
 export { getContactSummaries, searchContacts, type ContactSummary } from "./queries/contact-summaries";
+export { listProjectBookings, type ProjectBookingRow } from "./queries/project-bookings";
