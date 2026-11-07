@@ -15,6 +15,9 @@ import { CampaignWizard, type WizardChannel, type WizardDraft, type WizardSegmen
 
 export type BoardCampaign = {
   id: string;
+  tracking: boolean;
+  /** Teslim / açılma-okunma / tıklama sayıları (gönderim kayıtlarından). */
+  stats: { delivered: number; read: number; clicked: number } | null;
   name: string;
   subject: string;
   channel: string;
@@ -114,6 +117,7 @@ export function CampaignBoard(props: {
                         <>
                           <Progress size="sm" aria-label={t("board.progress")} value={progress} color={item.failedCount ? "warning" : "success"} />
                           <p className="text-tiny text-default-600">{t("result", { sent: item.sentCount, total: item.recipientCount, failed: item.failedCount })}</p>
+                          {item.stats && item.sentCount ? <Funnel item={item} /> : null}
                         </>
                       ) : null}
                       <p className="text-tiny text-default-400">
@@ -164,6 +168,28 @@ export function CampaignBoard(props: {
           router.refresh();
         }}
       />
+    </div>
+  );
+}
+
+/** Teslim → açıldı/okundu → tıkladı; kanalın desteklemediği adımlar gösterilmez. */
+function Funnel({ item }: { item: BoardCampaign }) {
+  const t = useTranslations("mailings.board.funnel");
+  const stats = item.stats!;
+  const percent = (value: number) => (item.sentCount ? Math.round((value / item.sentCount) * 100) : 0);
+  const steps = [
+    { key: "delivered", value: stats.delivered, show: true },
+    // E-postada açılma (izleme açıksa), WhatsApp'ta okundu bildirimi; SMS ve Telegram'da yok.
+    { key: item.channel === "email" ? "opened" : "read", value: stats.read, show: (item.channel === "email" && item.tracking) || item.channel === "whatsapp" },
+    { key: "clicked", value: stats.clicked, show: item.channel === "email" && item.tracking },
+  ].filter((step) => step.show);
+  return (
+    <div className="flex flex-wrap gap-1">
+      {steps.map((step) => (
+        <Chip key={step.key} size="sm" variant="flat" color={step.key === "clicked" ? "secondary" : step.key === "delivered" ? "success" : "primary"}>
+          {t(step.key, { count: step.value, percent: percent(step.value) })}
+        </Chip>
+      ))}
     </div>
   );
 }

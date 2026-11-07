@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.1.0",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "Teslim ve okundu bildirimi",
+        "de": "Zustell- und Lesebestätigung"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Meta webhook ile teslim edildi / okundu / başarısız (App Secret imzası doğrulanır).",
+          "de": "Zugestellt / gelesen / fehlgeschlagen über Meta-Webhook (App-Secret-Signatur wird geprüft)."
+        }
+      ]
+    },
+    {
       "version": "1.0.0",
       "date": "2026-11-07",
       "title": {

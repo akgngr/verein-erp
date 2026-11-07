@@ -8,5 +8,8 @@
       "label": "WhatsApp",
       "description": "Kampanya kanal eklentisi."
     }
+  },
+  "access": {
+    "mailings": "Sağlayıcının teslim/okundu bildirimlerini doğrulayıp kampanya gönderim kaydına yazmak için."
   }
 }

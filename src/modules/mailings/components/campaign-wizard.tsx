@@ -15,6 +15,7 @@ import {
   Radio,
   RadioGroup,
   SelectItem,
+  Switch,
   Spinner,
   Textarea,
 } from "@heroui/react";
@@ -105,6 +106,7 @@ export function CampaignWizard({
   const [when, setWhen] = useState<"now" | "later">(draft?.scheduledAt ? "later" : "now");
   const [scheduledAt, setScheduledAt] = useState(toLocalInput(draft?.scheduledAt ?? null));
   const [preview, setPreview] = useState<Preview | null>(null);
+  const [tracking, setTracking] = useState(true);
   const [busy, setBusy] = useState<string | null>(null);
   const [openedAt] = useState(() => Date.now());
   const sourceSegments = segments.filter((segment) => segment.source === sourceId);
@@ -139,6 +141,7 @@ export function CampaignWizard({
       bodyHtml: html ? email.html : undefined,
       design: html ? design : undefined,
       scheduledAt: when === "later" && scheduledAt ? new Date(scheduledAt).toISOString() : null,
+      tracking: channelKey === "email" ? tracking : false,
     };
   };
 
@@ -327,6 +330,14 @@ export function CampaignWizard({
                   {when === "later" ? (
                     <Input type="datetime-local" label={t("wizard.scheduledAt")} labelPlacement="outside" className="max-w-xs" value={scheduledAt} onValueChange={setScheduledAt}
                       isInvalid={Boolean(scheduledAt) && !scheduleValid} errorMessage={t("wizard.scheduleFuture")} />
+                  ) : null}
+                  {channelKey === "email" ? (
+                    <Switch isSelected={tracking} onValueChange={setTracking} size="sm">
+                      <span className="flex flex-col">
+                        <span className="text-small">{t("wizard.tracking")}</span>
+                        <span className="text-tiny text-default-500">{t("wizard.trackingHelp")}</span>
+                      </span>
+                    </Switch>
                   ) : null}
                   <p className="rounded-medium bg-default-100 p-3 text-small text-default-600">{t("wizard.workflowHint")}</p>
                   {channelKey === "email" ? (

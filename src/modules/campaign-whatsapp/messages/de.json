@@ -8,5 +8,8 @@
       "label": "WhatsApp",
       "description": "Kampagnen-Kanal-Plugin."
     }
+  },
+  "access": {
+    "mailings": "Um Zustell-/Lesebestätigungen des Anbieters zu prüfen und im Kampagnen-Versandprotokoll zu speichern."
   }
 }

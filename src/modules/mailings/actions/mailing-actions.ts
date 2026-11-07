@@ -56,6 +56,7 @@ const campaignSchema = contentSchema.extend({
   scheduledAt: z.string().datetime().nullable().optional(),
   // Blok tasarımı: şema doğrulanır (bilinmeyen/zararlı alanlar reddedilir).
   design: designSchema.optional(),
+  tracking: z.boolean().optional(),
 });
 const draftSchema = campaignSchema.extend({
   subject: z.string().trim().max(200, "mailings.errors.subject"),
@@ -88,12 +89,15 @@ export async function launchCampaignAction(input: unknown): Promise<ActionResult
       if (!channel || !(await channel.isConfigured(await getChannelConfig(channel.key)))) throw new ActionError(input.channel === "email" ? "mailings.errors.notConfigured" : "mailings.errors.channelNotConfigured");
       const t = await getTranslations("mailings.workflow");
       const scheduledAt = input.scheduledAt ? new Date(input.scheduledAt) : null;
+      const h = await headers();
+      const host = h.get("x-forwarded-host") ?? h.get("host");
+      const proto = h.get("x-forwarded-proto") ?? (host?.startsWith("localhost") ? "http" : "https");
       const result = await launchCampaign(user.role, { ...input, scheduledAt }, actorOf(user), {
         workflow: t("name", { name: input.name }),
         trigger: t("trigger"),
         wait: t("wait"),
         send: t("send"),
-      });
+      }, host ? `${proto}://${host}` : undefined);
       if (!result) throw new ActionError("mailings.errors.source");
       if (result.recipients === 0) throw new ActionError("mailings.errors.noRecipients");
       // KVKK: denetim kaydına alıcı listesi değil, kaynak, filtre ve sayı yazılır.

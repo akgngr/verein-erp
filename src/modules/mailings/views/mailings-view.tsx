@@ -9,6 +9,7 @@ import { can } from "@/shared/permissions/define";
 import { CampaignBoard, type BoardCampaign } from "../components/campaign-board";
 import type { WizardSource } from "../components/campaign-wizard";
 import { mailingsPermissions } from "../permissions";
+import { deliveryStats } from "../services/tracking";
 import { channelPlaceholderKeys, isMailConfigured, listCampaigns, listChannelInfo, listSegments, listSourcesWithOptions } from "../services/campaigns";
 
 /** Kampanyalar (?kaynak=<modül>:<kaynak> sihirbazı o listeyle açar): pano + tam ekran sihirbaz. */
@@ -44,7 +45,10 @@ export async function MailingsView({ sourceId, initialFilter }: { sourceId?: str
     const [moduleKey, key] = id.split(":");
     return key === "api" ? label(`${moduleKey}.module.label`) : (sources.find((source) => source.id === id)?.label ?? id);
   };
+  const stats = await deliveryStats(campaigns.map((row) => row.id));
   const board: BoardCampaign[] = campaigns.map((row) => ({
+    tracking: row.tracking,
+    stats: stats.get(row.id) ?? null,
     id: row.id,
     name: row.name,
     subject: row.subject,

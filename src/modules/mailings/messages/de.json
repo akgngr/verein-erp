@@ -138,7 +138,13 @@
     "cancelMessage": "Der geplante Versand entfällt; der Workflow wird deaktiviert.",
     "deleteTitle": "Kampagne löschen?",
     "deleteMessage": "Entwurf oder abgebrochene Kampagne wird endgültig gelöscht.",
-    "edit": "Bearbeiten"
+    "edit": "Bearbeiten",
+    "funnel": {
+      "delivered": "Zugestellt {count} ({percent} %)",
+      "opened": "Geöffnet {count} ({percent} %)",
+      "read": "Gelesen {count} ({percent} %)",
+      "clicked": "Geklickt {count} ({percent} %)"
+    }
   },
   "wizard": {
     "title": "Neue Kampagne",
@@ -176,7 +182,9 @@
     "close": "Schließen",
     "back": "Zurück",
     "next": "Weiter",
-    "subjectPlaceholder": "z. B. Einladung zum Sommerfest"
+    "subjectPlaceholder": "z. B. Einladung zum Sommerfest",
+    "tracking": "Öffnungs- und Klickverfolgung",
+    "trackingHelp": "Die E-Mail erhält ein unsichtbares Bild und verfolgbare Links; wer geöffnet/geklickt hat, erscheint im Board. In Deutschland (TTDSG §25) bist du dafür verantwortlich, Empfänger zu informieren und ggf. eine Einwilligung einzuholen."
   },
   "workflow": {
     "name": "Kampagne: {name}",
@@ -207,7 +215,9 @@
       "accessToken": "Zugriffstoken",
       "templateName": "Vorlagenname (eine Variable '{{1}}' im Text)",
       "templateLanguage": "Vorlagensprache",
-      "countryCode": "Standard-Ländervorwahl"
+      "countryCode": "Standard-Ländervorwahl",
+      "appSecret": "App Secret (Signatur der Benachrichtigungen)",
+      "verifyToken": "Verify-Token (identisch bei Meta eintragen, mind. 8 Zeichen)"
     },
     "telegram": {
       "botToken": "Bot-Token (BotFather)",
@@ -230,7 +240,12 @@
     "notConfigured": "Nicht eingerichtet",
     "secretKept": "Gespeichert (zum Ändern neu eingeben)",
     "save": "Speichern",
-    "saved": "Kanaleinstellungen gespeichert."
+    "saved": "Kanaleinstellungen gespeichert.",
+    "webhooks": {
+      "sevenDlr": "Adresse für seven.io → Einstellungen → Webhooks (Event: dlr)",
+      "twilioStatus": "Twilio-Statusadresse (wird bei jeder Nachricht automatisch mitgesendet)",
+      "metaWebhook": "Meta → WhatsApp → Configuration → Webhook-URL (Feld: messages)"
+    }
   },
   "menu": {
     "settings": "Einstellungen"

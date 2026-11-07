@@ -1,3 +1,4 @@
+import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
@@ -7,6 +8,13 @@ import { PageHeader } from "@/shared/components/ui/page-header";
 import { ChannelSettings } from "../components/channel-settings";
 import { mailingsPermissions } from "../permissions";
 import { listChannelSettings } from "../services/campaigns";
+
+async function requestOrigin(): Promise<string> {
+  const h = await headers();
+  const host = h.get("x-forwarded-host") ?? h.get("host");
+  const proto = h.get("x-forwarded-proto") ?? (host?.startsWith("localhost") ? "http" : "https");
+  return host ? `${proto}://${host}` : "";
+}
 
 /** Kampanyalar → Ayarlar: SMS, Telegram, WhatsApp eklentilerinin sağlayıcı ayarları. */
 export async function MailingsSettingsView() {
@@ -20,7 +28,7 @@ export async function MailingsSettingsView() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader title={t("title")} description={t("description")} />
-      <ChannelSettings channels={await listChannelSettings()} />
+      <ChannelSettings channels={await listChannelSettings(await requestOrigin())} />
     </div>
   );
 }
