@@ -33,7 +33,7 @@ export function parseStatement(text: string, format: BankFormat = detectFormat(t
 
 // ---------------------------------------------------------------- helpers
 
-const decodeXml = (value: string) =>
+export const decodeXml = (value: string) =>
   value
     .replace(/<!\[CDATA\[([\s\S]*?)\]\]>/g, "$1")
     .replace(/&lt;/g, "<")

@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.19.0",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "Gelen e-fatura okunabilir görünüm ve PDF",
+        "de": "Sichtansicht und PDF für eingehende E-Rechnungen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Gelen XRechnung/ZUGFeRD faturalarının detayında satıcı, alıcı, kalemler, KDV dökümü, ödeme bilgileri ve notlarla okunabilir görünüm. Görünüm her zaman saklanan orijinal XML'den üretilir.",
+          "de": "Eingehende XRechnung/ZUGFeRD-Rechnungen zeigen eine lesbare Ansicht mit Verkäufer, Käufer, Positionen, USt-Aufschlüsselung, Zahlungsinformationen und Bemerkungen – stets aus dem gespeicherten Original-XML erzeugt."
+        },
+        {
+          "type": "feature",
+          "tr": "Aynı içerikten saklama ve denetim için PDF indirilebilir.",
+          "de": "Aus demselben Inhalt lässt sich eine PDF für Archiv und Prüfung herunterladen."
+        }
+      ]
+    },
+    {
       "version": "1.18.0",
       "date": "2026-11-07",
       "title": {

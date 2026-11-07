@@ -1,6 +1,9 @@
 import "server-only";
 
+import { renderToBuffer } from "@react-pdf/renderer";
+import { getTranslations } from "next-intl/server";
 import { NextResponse } from "next/server";
+import { createElement } from "react";
 
 import { getDb } from "@/shared/db";
 import { getEnv } from "@/shared/env";
@@ -12,7 +15,11 @@ import { buildUserLabel } from "@/shared/utils";
 import { UnauthorizedError, requireUser } from "@/modules/auth/server";
 
 import { accountingPermissions } from "../permissions";
+import { buildEInvoiceViewLabels } from "../lib/einvoice-view-labels";
+import { EInvoiceViewDocument } from "../pdf/einvoice-view-document";
+import { loadPayableEInvoice } from "../services/einvoice-view";
 import { importPayableFile } from "../services/payable-import";
+import { registerSharedPdfFonts } from "@/shared/pdf/fonts";
 
 export const PAYABLE_FILE_EXTENSIONS = ["pdf", "xml", "jpg", "jpeg", "png"] as const;
 
@@ -65,4 +72,23 @@ export async function downloadPayableFileHandler(request: Request, id: string): 
   if (!payable?.storagePath || !payable.originalName) return NextResponse.json({ ok: false, error: await translateMessage("accounting.payables.errors.notFound") }, { status: 404 });
   const inline = new URL(request.url).searchParams.get("inline") === "1";
   return buildDownloadResponse({ stream: openReadStream(payable.storagePath), originalName: payable.originalName, mimeType: payable.mimeType ?? "application/octet-stream", inline });
+}
+
+/**
+ * GET /api/accounting/payables/[id]/einvoice-pdf — EI-3: gelen e-faturanın okunabilir PDF'i,
+ * her seferinde saklanan orijinal XML'den üretilir (veritabanı alanlarından değil).
+ */
+export async function payableEInvoicePdfHandler(id: string): Promise<Response> {
+  const auth = await authorize("view");
+  if ("error" in auth) return auth.error as Response;
+  const loaded = await loadPayableEInvoice(id);
+  if (!loaded) return NextResponse.json({ ok: false, error: await translateMessage("accounting.payables.errors.notFound") }, { status: 404 });
+  const t = await getTranslations("accounting.einvoice.view");
+  const labels = buildEInvoiceViewLabels((key, values) => t(key as never, values as never), loaded.document, loaded.sha256);
+  registerSharedPdfFonts();
+  const buffer = await renderToBuffer(createElement(EInvoiceViewDocument, { document: loaded.document, labels }) as Parameters<typeof renderToBuffer>[0]);
+  const fileName = `e-rechnung-${(loaded.document.number ?? id).replace(/[^\w.-]/g, "_")}.pdf`;
+  return new Response(new Uint8Array(buffer), {
+    headers: { "Content-Type": "application/pdf", "Content-Disposition": `inline; filename="${fileName}"`, "Cache-Control": "no-store" },
+  });
 }
