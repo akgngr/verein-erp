@@ -623,7 +623,8 @@
     "kind": {
       "INVOICE": "Rechnung",
       "PROFORMA": "Proforma",
-      "QUOTE": "Angebot"
+      "QUOTE": "Angebot",
+      "CREDIT_NOTE": "Stornorechnung"
     },
     "status": {
       "DRAFT": "Entwurf",
@@ -708,7 +709,8 @@
       "close": "Schließen",
       "amount": "Zahlbetrag",
       "openAmount": "Offen: {amount} €",
-      "closeRemainder": "Rest von {amount} € als Skonto/Ausfall ausbuchen"
+      "closeRemainder": "Rest von {amount} € als Skonto/Ausfall ausbuchen",
+      "cancelCreditNoteHint": "Ausgestellte Rechnungen werden nicht gelöscht: Beim Stornieren wird eine Stornorechnung (ST-…) mit denselben Positionen erstellt, auch als E-Rechnung abrufbar."
     },
     "settings": {
       "title": "Rechnungseinstellungen",
@@ -808,7 +810,9 @@
       "1": "Zahlungserinnerung",
       "2": "1. Mahnung",
       "3": "2. Mahnung"
-    }
+    },
+    "creditNoteCreated": "Diese Rechnung wurde storniert; Stornorechnung {number} wurde erstellt.",
+    "creditNoteFor": "Dieses Dokument ist die Stornorechnung zur Rechnung {number}."
   },
   "permissions": {
     "accounting": {

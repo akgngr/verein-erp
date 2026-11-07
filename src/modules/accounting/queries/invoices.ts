@@ -38,6 +38,9 @@ export type InvoiceLineRow = {
 };
 
 export type InvoiceDetail = InvoiceListRow & {
+  /** İptal faturası ↔ iptal edilen fatura bağlantısı. */
+  creditNote: { id: string; number: string | null } | null;
+  correctsInvoice: { id: string; number: string | null; issueDate: Date } | null;
   serviceDate: string | null;
   recipientAddress: string | null;
   recipientEmail: string | null;
@@ -122,12 +125,16 @@ export async function getInvoice(id: string): Promise<InvoiceDetail | null> {
   const db = getDb();
   const row = await db.accountingInvoice.findUnique({ where: { id }, include: { lines: { orderBy: { position: "asc" } }, payments: { orderBy: { createdAt: "asc" } }, dunnings: { orderBy: { level: "asc" } }, contact: { select: { number: true } } } });
   if (!row) return null;
-  const [booking, proforma, converted] = await Promise.all([
+  const [booking, proforma, converted, creditNote, correctsInvoice] = await Promise.all([
     row.bookingId ? db.accountingBooking.findUnique({ where: { id: row.bookingId }, select: { bookingNumber: true } }) : null,
     row.sourceProformaId ? db.accountingInvoice.findUnique({ where: { id: row.sourceProformaId }, select: { number: true } }) : null,
     row.kind === "PROFORMA" || row.kind === "QUOTE" ? db.accountingInvoice.findFirst({ where: { sourceProformaId: row.id }, select: { id: true } }) : null,
+    row.kind === "INVOICE" ? db.accountingInvoice.findUnique({ where: { correctsInvoiceId: row.id }, select: { id: true, number: true } }) : null,
+    row.correctsInvoiceId ? db.accountingInvoice.findUnique({ where: { id: row.correctsInvoiceId }, select: { id: true, number: true, issueDate: true } }) : null,
   ]);
   return {
+    creditNote,
+    correctsInvoice,
     id: row.id,
     kind: row.kind,
     status: row.status,

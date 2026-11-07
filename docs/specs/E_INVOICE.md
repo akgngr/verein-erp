@@ -105,9 +105,9 @@ ve küçük işletme kullanıcıları için eksiksiz karşılamak: e-fatura **al
 
 ## 7. Yapılacaklar
 
-- [ ] **EI-1** İptal faturası: şema (`kind CREDIT_NOTE`, `correctsInvoiceId`, numara serisi `ST-`)
-- [ ] EI-1 UBL `CreditNote` ve CII `381` üretimi + BT-25/26 referansı, birim testleri
-- [ ] EI-1 iptal akışı: ters fiş, açık kalem, arayüz (iptal → iptal faturası bağlantısı), PDF
+- [x] **EI-1** İptal faturası: şema (`kind CREDIT_NOTE`, `correctsInvoiceId`, numara serisi `ST-`)
+- [x] EI-1 UBL `CreditNote` ve CII `381` üretimi + BT-25/26 referansı, birim testleri
+- [x] EI-1 iptal akışı: ters fiş, açık kalem, arayüz (iptal → iptal faturası bağlantısı), PDF
 - [ ] **EI-2** TS doğrulayıcı (BR-*, BR-CO-*, KDV kategorileri, BR-DE-*), testler
 - [ ] EI-2 giden faturada kesme öncesi doğrulama; gelen faturada sonuç kaydı ve listede rozet
 - [ ] EI-2 isteğe bağlı KoSIT doğrulayıcı adresi (ayar + HTTP istemcisi + zaman aşımı)

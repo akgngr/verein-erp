@@ -623,7 +623,8 @@
     "kind": {
       "INVOICE": "Fatura",
       "PROFORMA": "Proforma",
-      "QUOTE": "Teklif"
+      "QUOTE": "Teklif",
+      "CREDIT_NOTE": "İptal faturası"
     },
     "status": {
       "DRAFT": "Taslak",
@@ -708,7 +709,8 @@
       "close": "Kapat",
       "amount": "Tahsil edilen tutar",
       "openAmount": "Açık tutar: {amount} €",
-      "closeRemainder": "Kalan {amount} € Skonto/kayıp olarak kapatılsın"
+      "closeRemainder": "Kalan {amount} € Skonto/kayıp olarak kapatılsın",
+      "cancelCreditNoteHint": "Kesilmiş fatura silinmez: iptal edildiğinde aynı kalemlerle bir iptal faturası (Stornorechnung, ST-…) oluşturulur ve e-fatura olarak da indirilebilir."
     },
     "settings": {
       "title": "Fatura ayarları",
@@ -808,7 +810,9 @@
       "1": "Ödeme hatırlatması",
       "2": "1. ihtar",
       "3": "2. ihtar"
-    }
+    },
+    "creditNoteCreated": "Bu fatura iptal edildi; iptal faturası {number} oluşturuldu.",
+    "creditNoteFor": "Bu belge {number} numaralı faturanın iptal faturasıdır."
   },
   "permissions": {
     "accounting": {

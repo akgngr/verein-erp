@@ -57,7 +57,8 @@ export function InvoiceForm({
     resolver: zodResolver(invoiceSchema),
     defaultValues: invoice
       ? {
-          kind: invoice.kind,
+          // İptal faturası taslak olmaz, formla düzenlenmez.
+          kind: invoice.kind as InvoiceInput["kind"],
           issueDate: isoDate(invoice.issueDate),
           dueDate: invoice.dueDate ? isoDate(invoice.dueDate) : "",
           serviceDate: invoice.serviceDate ?? "",

@@ -55,6 +55,9 @@ export type DocumentStrings = {
   dunningPayBy: (date: string) => string;
   dunningAlreadyPaid: string;
   proformaTitle: string;
+  creditNoteTitle: string;
+  creditNoteNumber: string;
+  creditNoteRef: (number: string, date: string) => string;
   quoteTitle: string;
   quoteNumber: string;
   quoteNote: string;
@@ -145,6 +148,9 @@ export const DOCUMENT_STRINGS: { de: DocumentStrings; tr: DocumentStrings } = {
     dunningPayBy: (date) => `Bitte überweisen Sie den Betrag bis zum ${date} unter Angabe der Rechnungsnummer.`,
     dunningAlreadyPaid: "Sollten Sie die Zahlung bereits veranlasst haben, betrachten Sie dieses Schreiben bitte als gegenstandslos.",
     proformaTitle: "PROFORMA-RECHNUNG",
+    creditNoteTitle: "STORNORECHNUNG",
+    creditNoteNumber: "Storno-Nr.",
+    creditNoteRef: (number, date) => `Diese Stornorechnung hebt die Rechnung ${number} vom ${date} vollständig auf.`,
     quoteTitle: "ANGEBOT",
     quoteNumber: "Angebots-Nr.",
     quoteNote: "Dieses Angebot ist freibleibend. Wir freuen uns auf Ihren Auftrag.",
@@ -233,6 +239,9 @@ export const DOCUMENT_STRINGS: { de: DocumentStrings; tr: DocumentStrings } = {
     dunningPayBy: (date) => `Lütfen tutarı fatura numarasını belirterek ${date} tarihine kadar havale ediniz.`,
     dunningAlreadyPaid: "Ödemeyi zaten yaptıysanız bu yazıyı dikkate almayınız.",
     proformaTitle: "PROFORMA FATURA",
+    creditNoteTitle: "İPTAL FATURASI (STORNORECHNUNG)",
+    creditNoteNumber: "İptal No.",
+    creditNoteRef: (number, date) => `Bu iptal faturası ${date} tarihli ${number} numaralı faturayı tamamen iptal eder.`,
     quoteTitle: "TEKLİF (ANGEBOT)",
     quoteNumber: "Teklif No.",
     quoteNote: "Bu teklif bağlayıcı değildir. Siparişinizi bekleriz.",
