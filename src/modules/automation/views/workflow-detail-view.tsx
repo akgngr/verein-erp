@@ -24,7 +24,7 @@ const NODE_LABEL_KEYS = [
   "condition", "conditionDesc", "field", "customField", "customFieldHelp", "customFieldOption", "operator", "value", "valueHelp",
   "parallel", "parallelDesc",
   "delay", "delayDesc", "delayMode", "delayDuration", "delayUntil", "amount", "unit", "minutesUnit", "hoursUnit", "daysUnit", "until",
-  "approval", "approvalDesc", "note", "variablesHint", "customValueOption", "possibleValues", "manualValue", "booleanHelp", "numberHelp", "textHelp", "manualTriggerFieldHelp", "name",
+  "approval", "approvalDesc", "note", "variablesHint", "customValueOption", "possibleValues", "manualValue", "booleanHelp", "numberHelp", "textHelp", "manualTriggerFieldHelp", "yes", "no", "selectValue", "name",
 ] as const;
 
 export async function WorkflowDetailView({ id }: { id: string }) {

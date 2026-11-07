@@ -116,6 +116,11 @@ export default function WorkflowEditor({ name, locale, initialDraft, catalog, la
   useEffect(() => applyEditorLocale(locale, sdkBundle ?? {}), [locale, sdkBundle]);
   const nodeTypes = useMemo(() => buildNodeTypes(catalog, labels), [catalog, labels]);
   const triggerEvent = triggerEventOf((initialDraft.nodes ?? []) as AnyNode[]);
+  const defaultsByType = useMemo(() => new Map(
+    (nodeTypes as unknown as { groupItems?: { type: string; defaultPropertiesData?: Record<string, unknown> }[] }[])
+      .flatMap((group) => group.groupItems ?? [])
+      .map((item) => [item.type, Object.fromEntries(Object.entries(item.defaultPropertiesData ?? {}).filter(([key]) => key !== "label" && key !== "description"))] as const),
+  ), [nodeTypes]);
   const initialNodes = useMemo(() => (initialDraft.nodes ?? []).map((raw, index) => {
     let node = raw as WorkflowBuilderNode;
     // Legacy generic "task" node (taskKey + JSON input) → per-task node with form fields.
@@ -140,11 +145,19 @@ export default function WorkflowEditor({ name, locale, initialDraft, catalog, la
     }
     // Legacy condition (single "field" select) → trigger-aware keys.
     if (node.data?.type === "condition") node = migrateCondition(node, triggerEvent, catalog);
+    // Yeni eklenen alanların (ör. sonradan gelen modül olayları) varsayılanları eski adımlarda eksik olabilir:
+    // eksik/boş olanlar palet varsayılanıyla doldurulur, girilmiş değerlere dokunulmaz.
+    const defaults = defaultsByType.get(String(node.data?.type ?? ""));
+    if (defaults && node.data) {
+      const props = (node.data.properties ?? {}) as Record<string, unknown>;
+      const missing = Object.fromEntries(Object.entries(defaults).filter(([key]) => props[key] === undefined || props[key] === null || props[key] === ""));
+      if (Object.keys(missing).length) node = { ...node, data: { ...node.data, properties: { ...props, ...missing } } } as WorkflowBuilderNode;
+    }
     // xyflow renders unknown/missing types as empty boxes: use the SDK templates.
     if (!node.type) node = { ...node, type: node.data?.type === "trigger" ? "start-node" : "node" } as WorkflowBuilderNode;
     const valid = node.position && Number.isFinite(node.position.x) && Number.isFinite(node.position.y);
     return valid ? node : { ...node, position: { x: (index % 4) * 320, y: Math.floor(index / 4) * 200 } };
-  }), [initialDraft.nodes, catalog, triggerEvent]);
+  }), [initialDraft.nodes, catalog, triggerEvent, defaultsByType]);
   const integration = useMemo(() => ({
     strategy: "props" as const,
     onDataSave: async (data: IntegrationDataFormat) => {

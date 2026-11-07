@@ -122,6 +122,7 @@ export async function describeIssues(issues: string[], draft: unknown, catalog: 
         return t("unknownReference", { step: stepName(id), refs: extra.split(",").map((ref) => `{{${ref}}}`).join(", "), available });
       }
       case "TASK_NOT_AVAILABLE": return t("taskNotAvailable", { step: stepName(id) });
+      case "CONDITION_VALUE_MISSING": return t("conditionValueMissing", { step: stepName(id) });
       case "NODE_UNREACHABLE": return t("unreachable", { step: stepName(id) });
       case "NODE_KIND_UNSUPPORTED": return t("unsupported", { step: stepName(id) });
       case "NODE_INPUT_JSON_INVALID": return t("inputJson", { step: stepName(id) });
