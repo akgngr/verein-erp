@@ -84,6 +84,7 @@ export type MemberDetail = {
   updatedAt: Date;
   memberNotes: MemberNoteItem[];
   bulkMailOptOut: boolean;
+  messagingConsents: string[];
 };
 
 /** Üye detay ödeme paneli satırı (Faz 4, 4.6). */

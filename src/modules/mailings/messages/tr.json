@@ -1,13 +1,13 @@
 {
   "module": {
-    "label": "Toplu e-posta",
-    "description": "Üyelere, velilere ve diğer modüllerin alıcı listelerine kişiye özel toplu e-posta."
+    "label": "Kampanyalar",
+    "description": "Üyelere, velilere ve diğer modüllerin alıcı listelerine kişiye özel kampanyalar; her kampanya bir iş akışı olarak çalışır."
   },
   "nav": {
-    "topluEposta": "Toplu e-posta"
+    "topluEposta": "Kampanyalar"
   },
-  "title": "Toplu e-posta",
-  "description": "Bir alıcı listesi seçin, filtreleyin ve kişiye özel duyuru gönderin. E-postası olmayanlar ve itiraz edenler atlanır; her alıcıya ayrı e-posta gider (alıcılar birbirini görmez).",
+  "title": "Kampanyalar",
+  "description": "Hedef kitleyi seçin, kanalı ve içeriği belirleyin; hemen ya da planlı gönderin. Her kampanya bir iş akışı olarak çalışır; itiraz edenler ve adresi olmayanlar atlanır.",
   "notConfigured": "E-posta gönderimi ayarlanmamış.",
   "openSettings": "E-posta ayarlarını aç",
   "noSources": "Kullanabileceğiniz bir alıcı listesi yok (ilgili modül kapalı veya yetkiniz yok).",
@@ -21,11 +21,11 @@
   "test": "Kendime test gönder",
   "testSent": "Test e-postası {to} adresine gönderildi.",
   "send": "{count} kişiye gönder",
-  "confirmTitle": "Toplu e-posta gönderilsin mi?",
+  "confirmTitle": "Kampanya başlatılsın mı?",
   "confirmText": "{count} kişiye ayrı ayrı e-posta gönderilecek. Gönderim arka planda sürer; sonucu aşağıda ve E-posta → Gönderim kayıtları'nda görebilirsiniz.",
   "started": "Gönderim başladı: {count} alıcı.",
-  "history": "Gönderim geçmişi",
-  "noHistory": "Henüz toplu e-posta gönderilmedi.",
+  "history": "Kampanyalar",
+  "noHistory": "Henüz kampanya yok.",
   "columns": {
     "date": "Tarih",
     "source": "Liste",
@@ -37,9 +37,12 @@
   "result": "{sent}/{total} gönderildi, {failed} hata",
   "skipped": "Atlanan: {noEmail} e-postasız, {optOut} itiraz",
   "statusLabels": {
+    "DRAFT": "Taslak",
+    "SCHEDULED": "Planlandı",
     "SENDING": "Gönderiliyor",
     "DONE": "Tamamlandı",
-    "FAILED": "Başarısız"
+    "FAILED": "Başarısız",
+    "CANCELLED": "İptal edildi"
   },
   "errors": {
     "subject": "Konu 3–200 karakter olmalı.",
@@ -48,18 +51,24 @@
     "sendFailed": "Test e-postası gönderilemedi; Gönderim kayıtları'na bakın.",
     "noRecipients": "Uygun alıcı yok.",
     "source": "Bu alıcı listesini kullanamazsınız.",
-    "segmentName": "Segment adı 2–80 karakter olmalı."
+    "segmentName": "Segment adı 2–80 karakter olmalı.",
+    "name": "Kampanya adı 2–120 karakter olmalı.",
+    "channelNotConfigured": "Bu kanal henüz ayarlanmamış.",
+    "notCancellable": "Yalnız taslak veya planlı kampanyalar iptal edilebilir.",
+    "notDeletable": "Yalnız taslak veya iptal edilmiş kampanyalar silinebilir.",
+    "channelUnknown": "Bilinmeyen kanal.",
+    "channelSetup": "Ayarlar kaydedildi ama sağlayıcıya bağlanılamadı; bilgileri kontrol edin."
   },
   "permissions": {
     "mailings": {
-      "label": "Toplu e-posta",
+      "label": "Kampanyalar",
       "description": "Toplu e-posta gönderme (oluştur) ve geçmiş (gör). Her alıcı listesi ayrıca kendi modülünün görme iznini ister."
     }
   },
   "access": {
     "mail": "E-postaları göndermek ve e-posta ayarlarının hazır olup olmadığını okumak için.",
     "system": "Yalnızca etkin modüllerin alıcı listelerini göstermek için modül durumlarını okur.",
-    "automation": "Kampanyaları kalıcı arka plan kuyruğuna eklemek ve yürütme kayıtlarını oluşturmak için.",
+    "automation": "Kampanyaları iş akışı olarak oluşturmak, yayımlamak ve arka plan kuyruğunda çalıştırmak için.",
     "users": "Gönderimi başlatan kullanıcının hesabını ve güncel rolünü worker çalışırken yeniden doğrulamak için."
   },
   "segment": "Kayıtlı segment",
@@ -69,18 +78,238 @@
   "segmentSaved": "Segment kaydedildi.",
   "segmentDelete": "Segmenti sil",
   "filterEmpty": "Bu alanda veri yok.",
-  "editorHint": "\"/\" ile blok ekleyin (başlık, buton, sütun, ayırıcı…); metni seçince biçimlendirme menüsü açılır.",
-  "editorPlaceholder": "E-posta içeriğini yazın…",
   "automation": {
     "events": {
       "campaign_finished": {
-        "label": "Toplu e-posta gönderimi bittiğinde",
+        "label": "Kampanya gönderimi bittiğinde",
         "fields": {
           "campaignId": "Kampanya kimliği",
           "sent": "Gönderilen sayısı",
           "failed": "Başarısız sayısı"
         }
       }
+    },
+    "tasks": {
+      "send_campaign": {
+        "label": "Kampanyayı gönder",
+        "description": "Kampanyanın alıcılarını gönderim anındaki güncel veriden hesaplar ve kişiye özel mesajları gönderir.",
+        "fields": {
+          "campaignId": "Kampanya kimliği"
+        }
+      }
     }
+  },
+  "channels": {
+    "email": {
+      "label": "E-posta",
+      "description": "Görsel editörle kişiye özel e-posta; her alıcıya ayrı gönderilir."
+    },
+    "sms": {
+      "label": "SMS",
+      "description": "Kısa metin mesajı; yalnız SMS izni olan ve telefonu kayıtlı kişilere."
+    },
+    "whatsapp": {
+      "label": "WhatsApp",
+      "description": "Meta onaylı şablonla; yalnız WhatsApp izni olan kişilere."
+    },
+    "telegram": {
+      "label": "Telegram",
+      "description": "Botunuza abone olanlara; davet için e-postada {telegramLink} kullanın."
+    }
+  },
+  "board": {
+    "newCampaign": "Yeni kampanya",
+    "totalCampaigns": "{count} kampanya",
+    "totalSent": "{count} mesaj gönderildi",
+    "totalScheduled": "{count} planlı",
+    "columns": {
+      "draft": "Taslaklar",
+      "scheduled": "Planlı",
+      "sending": "Gönderiliyor",
+      "finished": "Tamamlanan"
+    },
+    "empty": "Kampanya yok",
+    "progress": "Gönderim ilerlemesi",
+    "scheduledFor": "Gönderim: {date}",
+    "workflow": "İş akışı",
+    "cancel": "İptal et",
+    "delete": "Sil",
+    "cancelTitle": "Kampanya iptal edilsin mi?",
+    "cancelMessage": "Planlı gönderim yapılmayacak; iş akışı devre dışı bırakılır.",
+    "deleteTitle": "Kampanya silinsin mi?",
+    "deleteMessage": "Taslak ya da iptal edilmiş kampanya kalıcı olarak silinir.",
+    "edit": "Düzenle"
+  },
+  "wizard": {
+    "title": "Yeni kampanya",
+    "editTitle": "Kampanyayı düzenle",
+    "subtitle": "Hedef kitle → kanal → içerik → gönderim. Başlatılan kampanya bir iş akışı olarak kaydedilir.",
+    "steps": "Adımlar",
+    "step": {
+      "audience": "Hedef kitle",
+      "channel": "Kanal",
+      "content": "İçerik",
+      "send": "Gönderim"
+    },
+    "name": "Kampanya adı",
+    "namePlaceholder": "ör. Yaz şenliği daveti",
+    "reach": "{count} alıcı",
+    "reachDetail": "Filtreye uyan {matched} kişiden {noEmail} adressiz, {optOut} itiraz/izinsiz.",
+    "channel": "Kanal",
+    "channelNotConfigured": "Ayarlanmamış",
+    "moreChannels": "SMS, Telegram ve WhatsApp kanalları ayrı eklenti modülleri olarak etkinleştirildiğinde burada görünür.",
+    "previewTitle": "Önizleme",
+    "previewEmail": "E-posta, editördeki tasarımla her alıcıya kişiselleştirilerek gönderilir.",
+    "length": "{count}/{max} karakter",
+    "recipients": "Alıcılar",
+    "when": "Ne zaman?",
+    "now": "Hemen gönder",
+    "later": "İleri bir tarihte",
+    "scheduledAt": "Gönderim zamanı",
+    "scheduleFuture": "En az 1 dakika sonrası olmalı.",
+    "workflowHint": "Kampanya başlatıldığında bir iş akışı oluşturulur (tetikleyici → [bekle] → gönder). İş akışları ekranından izleyebilir, ileri düzey adımlar ekleyebilirsiniz.",
+    "test": "Kendime test gönder",
+    "schedule": "{count} kişiye planla",
+    "scheduled": "Kampanya planlandı: {count} alıcı.",
+    "saveDraft": "Taslağı kaydet",
+    "draftSaved": "Taslak kaydedildi.",
+    "close": "Kapat",
+    "back": "Geri",
+    "next": "İleri",
+    "subjectPlaceholder": "ör. Yaz şenliğine davetlisiniz"
+  },
+  "workflow": {
+    "name": "Kampanya: {name}",
+    "trigger": "Kampanya başlatıldı",
+    "wait": "Planlanan zamana kadar bekle",
+    "send": "Kampanyayı gönder"
+  },
+  "ai": {
+    "draft": {
+      "kind": "Kampanya taslağı",
+      "confirm": "Taslağı oluştur",
+      "done": "Kampanya taslağı oluşturuldu; Kampanyalar'da açıp gönderebilirsiniz."
+    }
+  },
+  "calendar": {
+    "scheduled": "Planlı kampanyalar"
+  },
+  "channelSettings": {
+    "sms": {
+      "provider": "Sağlayıcı",
+      "apiKey": "API anahtarı / Auth token",
+      "accountSid": "Twilio Account SID (yalnız Twilio)",
+      "sender": "Gönderen (ad veya numara)",
+      "countryCode": "Varsayılan ülke kodu"
+    },
+    "whatsapp": {
+      "phoneNumberId": "Telefon numarası kimliği (Phone number ID)",
+      "accessToken": "Erişim belirteci (access token)",
+      "templateName": "Şablon adı (gövdede tek değişken '{{1}}')",
+      "templateLanguage": "Şablon dili",
+      "countryCode": "Varsayılan ülke kodu"
+    },
+    "telegram": {
+      "botToken": "Bot anahtarı (BotFather)",
+      "botUsername": "Bot kullanıcı adı"
+    }
+  },
+  "channelOptions": {
+    "sms": {
+      "provider": {
+        "seven": "seven.io",
+        "twilio": "Twilio"
+      }
+    }
+  },
+  "settings": {
+    "title": "Kampanya kanalları",
+    "description": "SMS, Telegram ve WhatsApp eklentilerinin sağlayıcı bilgileri. Anahtarlar şifreli saklanır ve bir daha gösterilmez. E-posta ayarları E-posta modülündedir.",
+    "noChannels": "Ayarı olan bir kanal eklentisi etkin değil. Modül Yönetimi'nden SMS, Telegram veya WhatsApp eklentisini açın.",
+    "configured": "Hazır",
+    "notConfigured": "Ayarlanmadı",
+    "secretKept": "Kayıtlı (değiştirmek için yazın)",
+    "save": "Kaydet",
+    "saved": "Kanal ayarları kaydedildi."
+  },
+  "menu": {
+    "settings": "Ayarlar"
+  },
+  "builder": {
+    "components": "Bileşenler",
+    "addHint": "Tıklayın: seçili bloğun altına eklenir. Sütuna eklemek için önce sütunu seçin.",
+    "addingToColumn": "{column}. sütuna ekleniyor",
+    "mode": "Görünüm",
+    "edit": "Düzenle",
+    "desktop": "Masaüstü",
+    "mobile": "Mobil",
+    "preview": "Önizleme",
+    "empty": "Soldan bir bileşen ekleyin.",
+    "columnEmpty": "Sütunu seçip soldan ekleyin",
+    "moveUp": "Yukarı",
+    "moveDown": "Aşağı",
+    "duplicate": "Çoğalt",
+    "remove": "Sil",
+    "imageEmpty": "Görsel adresi girin",
+    "placeholderText": "Metin yazın…",
+    "align": "Hizalama",
+    "aligns": {
+      "left": "Sola",
+      "center": "Ortaya",
+      "right": "Sağa"
+    },
+    "types": {
+      "heading": "Başlık",
+      "text": "Metin",
+      "button": "Buton",
+      "image": "Görsel",
+      "divider": "Ayırıcı",
+      "spacer": "Boşluk",
+      "columns": "Sütunlar",
+      "footer": "Alt bilgi"
+    },
+    "defaults": {
+      "heading": "Merhaba '{firstName}'",
+      "text": "Mesajınızı buraya yazın.",
+      "button": "Daha fazla bilgi",
+      "footer": "Bu e-postayı derneğimizle ilişkiniz nedeniyle alıyorsunuz. Almak istemiyorsanız bu e-postayı yanıtlayın."
+    },
+    "fields": {
+      "text": "Metin",
+      "level": "Başlık düzeyi",
+      "color": "Renk",
+      "fontSize": "Yazı boyutu",
+      "label": "Buton metni",
+      "url": "Bağlantı",
+      "background": "Arka plan",
+      "textColor": "Yazı rengi",
+      "radius": "Köşe yuvarlaklığı",
+      "src": "Görsel adresi (https)",
+      "alt": "Alternatif metin",
+      "href": "Tıklanınca açılacak bağlantı",
+      "width": "Genişlik (%)",
+      "thickness": "Kalınlık",
+      "height": "Yükseklik",
+      "gap": "Sütun aralığı",
+      "pageBackground": "Sayfa arka planı",
+      "contentBackground": "İçerik arka planı",
+      "linkColor": "Bağlantı rengi",
+      "font": "Yazı tipi",
+      "contentWidth": "İçerik genişliği"
+    },
+    "fonts": {
+      "sans": "Sans-serif",
+      "serif": "Serif",
+      "mono": "Sabit genişlik"
+    },
+    "markupHelp": "**kalın**, *italik*, [bağlantı metni](https://…). Yer tutucular gönderimde kişiye göre doldurulur.",
+    "urlHelp": "https://, mailto: veya '{'yer tutucu'}' ile başlamalı.",
+    "imageHelp": "Herkese açık bir görsel adresi (https). Görseller sunucumuza yüklenmez.",
+    "footerHelp": "İtiraz/abonelikten çıkma bilgisi DSGVO gereği önerilir.",
+    "twoColumns": "2 sütun",
+    "threeColumns": "3 sütun",
+    "columnsHelp": "İçerik eklemek için tuvalde bir sütuna tıklayın, sonra soldan bileşen seçin. Mobilde sütunlar alt alta dizilir.",
+    "designSettings": "Genel tasarım",
+    "selectHint": "Bir bloğu düzenlemek için tuvalde üzerine tıklayın."
   }
 }

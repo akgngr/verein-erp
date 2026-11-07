@@ -20,6 +20,9 @@ import { moduleConfig as calendarModule } from "@/modules/calendar";
 import { moduleConfig as calendarappleModule } from "@/modules/calendar-apple";
 import { moduleConfig as calendargoogleModule } from "@/modules/calendar-google";
 import { moduleConfig as calendaroutlookModule } from "@/modules/calendar-outlook";
+import { moduleConfig as campaignsmsModule } from "@/modules/campaign-sms";
+import { moduleConfig as campaigntelegramModule } from "@/modules/campaign-telegram";
+import { moduleConfig as campaignwhatsappModule } from "@/modules/campaign-whatsapp";
 import { moduleConfig as coursesModule } from "@/modules/courses";
 import { moduleConfig as demoModule } from "@/modules/demo";
 import { moduleConfig as eventsModule } from "@/modules/events";
@@ -54,6 +57,9 @@ export const allModules: ModuleConfig[] = [
   calendarappleModule,
   calendargoogleModule,
   calendaroutlookModule,
+  campaignsmsModule,
+  campaigntelegramModule,
+  campaignwhatsappModule,
   coursesModule,
   demoModule,
   eventsModule,

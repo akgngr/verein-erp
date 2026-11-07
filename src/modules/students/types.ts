@@ -64,6 +64,8 @@ export type GuardianRow = {
   sepaMandateReference: string | null;
   sepaMandateDate: Date | null;
   note: string | null;
+  bulkMailOptOut: boolean;
+  messagingConsents: string[];
   studentCount: number;
   updatedAt: Date;
 };

@@ -1,0 +1,12 @@
+{
+  "module": {
+    "label": "SMS",
+    "description": "Kampanyalar için SMS kanalı (seven.io veya Twilio). Yalnız SMS izni verenlere gider."
+  },
+  "permissions": {
+    "campaign-sms": {
+      "label": "SMS",
+      "description": "Kampanya kanal eklentisi."
+    }
+  }
+}

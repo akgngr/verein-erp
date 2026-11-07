@@ -31,6 +31,15 @@ export type Recipient = {
   optOut: boolean;
   /** Yer tutucu değerleri ({firstName} vb.). */
   vars: Record<string, string>;
+  /** E.164 telefon (SMS/WhatsApp kanalları için; kaynak sunarsa). */
+  phone?: string | null;
+  /** Telegram sohbet kimliği (kişi botla eşleştiyse). */
+  telegramChatId?: string | null;
+  /**
+   * Kanal başına açık rıza (KVKK/DSGVO, UWG §7). E-posta dışındaki kanallar yalnız `true` ise gönderir;
+   * e-posta mevcut davranışla `optOut` ile yönetilir.
+   */
+  consents?: Partial<Record<string, boolean>>;
 };
 
 export type RecipientSource = {

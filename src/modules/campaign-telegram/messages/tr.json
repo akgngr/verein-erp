@@ -1,0 +1,20 @@
+{
+  "module": {
+    "label": "Telegram",
+    "description": "Kampanyalar için Telegram kanalı (Bot API). Kişi davet bağlantısıyla abone olur; /stop ile ayrılır."
+  },
+  "permissions": {
+    "campaign-telegram": {
+      "label": "Telegram",
+      "description": "Kampanya kanal eklentisi."
+    }
+  },
+  "access": {
+    "mailings": "Webhook'ta bot ayarlarını (şifreli) okumak için."
+  },
+  "replies": {
+    "linked": "✅ Abonelik onaylandı. Ayrılmak için /stop yazın.",
+    "stopped": "Abonelik sonlandırıldı.",
+    "unknown": "Bağlantı geçersiz veya süresi dolmuş."
+  }
+}

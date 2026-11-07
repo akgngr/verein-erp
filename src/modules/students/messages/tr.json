@@ -115,6 +115,16 @@
       "Frau": "Frau (Bayan)",
       "Herr": "Herr (Bay)",
       "NONE": "Belirtmek istemiyor"
+    },
+    "communicationTitle": "İletişim izinleri",
+    "bulkMailOptOut": "Kampanya e-postası istemiyor",
+    "bulkMailOptOutDescription": "İşaretliyse duyuru/kampanya e-postası gönderilmez; faturalar ve zorunlu yazışmalar etkilenmez (DSGVO Art. 21).",
+    "messagingConsents": "Mesaj kanalı izinleri",
+    "messagingConsentsDescription": "Velinin açık rıza verdiği kanallar; kampanyalar SMS, WhatsApp ve Telegram'a yalnız bunlara gönderir.",
+    "messagingChannels": {
+      "sms": "SMS",
+      "whatsapp": "WhatsApp",
+      "telegram": "Telegram"
     }
   },
   "guardianList": {

@@ -5,12 +5,14 @@ import { eventsPermissions } from "./permissions"
 export const moduleConfig: ModuleConfig = {
   key: "events",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.1.0",
+  version: "1.2.0",
   label: "Etkinlikler",
   description:
     "Dernek etkinlikleri, seminerler, atölyeler ve katılımcı yönetimi.",
   category: "OFFICIAL",
   hasSchema: true,
+  // Üyeye bağlı katılımcıların iletişim izinleri (kampanya duyuruları) üyeler modülünden okunur.
+  access: [{ module: "members", operations: ["read"] }, { module: "mailings", operations: ["read"] }],
   nav: [
     {
       href: "/events",

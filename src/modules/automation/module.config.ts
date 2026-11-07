@@ -7,7 +7,7 @@ import { automationPermissions } from "./permissions";
 /** Kalıcı arka plan işleri ve workflow altyapısı. */
 export const moduleConfig: ModuleConfig = {
   key: "automation",
-  version: "0.9.2",
+  version: "0.10.1",
   label: "Otomasyon",
   description: "Kalıcı arka plan görevleri ve iş akışları.",
   category: "EXTENSION",

@@ -18,6 +18,9 @@ import calendarReleases from "@/modules/calendar/releases.json";
 import calendarappleReleases from "@/modules/calendar-apple/releases.json";
 import calendargoogleReleases from "@/modules/calendar-google/releases.json";
 import calendaroutlookReleases from "@/modules/calendar-outlook/releases.json";
+import campaignsmsReleases from "@/modules/campaign-sms/releases.json";
+import campaigntelegramReleases from "@/modules/campaign-telegram/releases.json";
+import campaignwhatsappReleases from "@/modules/campaign-whatsapp/releases.json";
 import coursesReleases from "@/modules/courses/releases.json";
 import demoReleases from "@/modules/demo/releases.json";
 import eventsReleases from "@/modules/events/releases.json";
@@ -50,6 +53,9 @@ export const moduleReleases: { moduleKey: string; releases: ModuleRelease[] }[] 
   { moduleKey: "calendar-apple", releases: calendarappleReleases.releases as ModuleRelease[] },
   { moduleKey: "calendar-google", releases: calendargoogleReleases.releases as ModuleRelease[] },
   { moduleKey: "calendar-outlook", releases: calendaroutlookReleases.releases as ModuleRelease[] },
+  { moduleKey: "campaign-sms", releases: campaignsmsReleases.releases as ModuleRelease[] },
+  { moduleKey: "campaign-telegram", releases: campaigntelegramReleases.releases as ModuleRelease[] },
+  { moduleKey: "campaign-whatsapp", releases: campaignwhatsappReleases.releases as ModuleRelease[] },
   { moduleKey: "courses", releases: coursesReleases.releases as ModuleRelease[] },
   { moduleKey: "demo", releases: demoReleases.releases as ModuleRelease[] },
   { moduleKey: "events", releases: eventsReleases.releases as ModuleRelease[] },

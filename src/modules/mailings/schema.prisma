@@ -1,13 +1,24 @@
 enum MailingStatus {
+  DRAFT
+  SCHEDULED
   SENDING
   DONE
   FAILED
+  CANCELLED
 }
 
 /// Toplu e-posta gönderimi. Alıcı başına sonuç mail_logs'ta (module=mailings, reference=id).
 /// KVKK: alıcı listesi saklanmaz; yalnızca kaynak, filtre ve sayılar.
 model MailingCampaign {
   id             String        @id @default(cuid())
+  /// Kampanya adı (panoda görünür). Eski kayıtlarda boş: konu gösterilir.
+  name           String        @default("")
+  /// Gönderim kanalı (channels.ts eklentisi): "email", ileride "sms" | "telegram" | "whatsapp".
+  channel        String        @default("email")
+  /// Kampanya bir iş akışı olarak çalışır (automation_workflows.id). Programatik gönderimlerde boş.
+  workflowId     String?
+  /// Planlı gönderim zamanı (iş akışındaki bekleme adımı).
+  scheduledAt    DateTime?
   /// "<modül>:<kaynak>" (ör. members:members) veya programatik çağrıda "<modül>:api"
   source         String
   filter         Json          @default("{}")
@@ -15,6 +26,8 @@ model MailingCampaign {
   body           String
   /// Editörden gelen e-posta HTML'i (yer tutuculu); düz metin sürümü `body`.
   bodyHtml       String?
+  /// Blok tabanlı e-posta tasarımı (editörde yeniden açmak için); gönderim bodyHtml ile yapılır.
+  design         Json?
   status         MailingStatus @default(SENDING)
   recipientCount Int           @default(0)
   sentCount      Int           @default(0)
@@ -27,6 +40,7 @@ model MailingCampaign {
   finishedAt     DateTime?
 
   @@index([createdAt])
+  @@index([status])
   @@map("mailings_campaigns")
 }
 
@@ -45,4 +59,29 @@ model MailingSegment {
 
   @@unique([source, name])
   @@map("mailings_segments")
+}
+
+/// Kampanya kanalı ayarları (SMS/Telegram/WhatsApp eklentileri). Gizli değerler secret-box ile şifreli.
+model MailingChannelConfig {
+  channel     String   @id
+  settings    Json     @default("{}")
+  secretsEnc  String?
+  updatedById String
+  updatedAt   DateTime @updatedAt
+
+  @@map("mailings_channel_configs")
+}
+
+/// E-posta dışı kanallarda başarılı gönderim kaydı (yeniden denemede çift gönderimi önler).
+model MailingDelivery {
+  id         String   @id @default(cuid())
+  campaignId String
+  channel    String
+  address    String
+  providerId String?
+  createdAt  DateTime @default(now())
+
+  @@unique([campaignId, address])
+  @@index([createdAt])
+  @@map("mailings_deliveries")
 }

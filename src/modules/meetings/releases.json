@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.3.0",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "Katılımcılara duyuru",
+        "de": "Teilnehmende benachrichtigen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Toplantı sayfasında \"Katılımcılara duyur\": üye katılımcılara kampanya (izinlere uyarak).",
+          "de": "„Teilnehmende benachrichtigen“ auf der Sitzungsseite: Kampagne an teilnehmende Mitglieder (Einwilligungen werden beachtet)."
+        }
+      ]
+    },
+    {
       "version": "1.2.0",
       "date": "2026-11-06",
       "title": {

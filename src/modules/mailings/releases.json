@@ -2,6 +2,81 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "2.2.0",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "E-posta şablon editörü, yeni hedef kitleler",
+        "de": "E-Mail-Vorlagen-Editor, neue Zielgruppen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yeni blok tabanlı e-posta editörü: solda bileşenler (başlık, metin, buton, görsel, ayırıcı, boşluk, 2/3 sütun, alt bilgi), ortada tuval, sağda seçili bloğun ayarları ve modülün yer tutucuları; masaüstü/mobil önizleme. Çıktı e-posta istemcileriyle uyumlu tablo düzenli HTML.",
+          "de": "Neuer blockbasierter E-Mail-Editor: links Bausteine (Überschrift, Text, Button, Bild, Trennlinie, Abstand, 2/3 Spalten, Fußzeile), Mitte Arbeitsbereich, rechts Einstellungen des gewählten Blocks und die Platzhalter des Moduls; Desktop-/Mobil-Vorschau. Ausgabe als tabellenbasiertes, mailclient-taugliches HTML."
+        },
+        {
+          "type": "feature",
+          "tr": "Etkinlik ve toplantı katılımcıları hedef kitle olarak; diğer modüllerden sihirbaz ön seçimle açılabilir.",
+          "de": "Veranstaltungs- und Sitzungsteilnehmende als Zielgruppen; der Assistent lässt sich aus anderen Modulen vorausgefüllt öffnen."
+        },
+        {
+          "type": "fix",
+          "tr": "Kampanya kartlarında iç içe düğme (hydration) hatası giderildi; taslaklar \"Düzenle\" ile açılır.",
+          "de": "Verschachtelte Buttons (Hydration-Fehler) auf Kampagnenkarten behoben; Entwürfe öffnen über „Bearbeiten“."
+        }
+      ]
+    },
+    {
+      "version": "2.1.0",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "Kanal eklentileri",
+        "de": "Kanal-Plugins"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "SMS, Telegram ve WhatsApp eklentileri kampanyalara otomatik eklenir; Kampanyalar → Ayarlar'da sağlayıcı bilgileri (şifreli).",
+          "de": "SMS-, Telegram- und WhatsApp-Plugins erscheinen automatisch in Kampagnen; Anbieterdaten (verschlüsselt) unter Kampagnen → Einstellungen."
+        },
+        {
+          "type": "feature",
+          "tr": "E-posta dışı kanallarda gönderim kaydı ile yeniden denemede çift gönderim önlenir; {telegramLink} yer tutucusuyla e-postadan Telegram'a davet.",
+          "de": "Versandprotokoll für Nicht-E-Mail-Kanäle verhindert Doppelversand bei Wiederholung; Einladung zu Telegram per E-Mail mit {telegramLink}."
+        }
+      ]
+    },
+    {
+      "version": "2.0.0",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "Kampanyalar",
+        "de": "Kampagnen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Toplu e-posta, Kampanyalar modülüne dönüştü: pano (taslak, planlı, gönderiliyor, tamamlanan) ve tam ekran 4 adımlı sihirbaz.",
+          "de": "Sammel-E-Mail wird zu Kampagnen: Board (Entwürfe, geplant, wird gesendet, abgeschlossen) und 4-stufiger Vollbild-Assistent."
+        },
+        {
+          "type": "feature",
+          "tr": "Her kampanya bir iş akışı olarak çalışır; planlı gönderim iş akışındaki bekleme adımıyla yapılır.",
+          "de": "Jede Kampagne läuft als Workflow; geplanter Versand über den Warteschritt des Workflows."
+        },
+        {
+          "type": "feature",
+          "tr": "Taslak kaydetme, planlı gönderimi iptal etme; kanal altyapısı (SMS, Telegram, WhatsApp eklentileri için).",
+          "de": "Entwürfe speichern, geplanten Versand abbrechen; Kanal-Infrastruktur für SMS-, Telegram- und WhatsApp-Plugins."
+        },
+        {
+          "type": "feature",
+          "tr": "Yapay zekâ: kampanya istatistikleri, liste ve taslak önerisi; planlı kampanyalar takvimde.",
+          "de": "KI: Kampagnenstatistik, Liste und Entwurfsvorschlag; geplante Kampagnen im Kalender."
+        }
+      ]
+    },
+    {
       "version": "1.4.1",
       "date": "2026-11-06",
       "title": {

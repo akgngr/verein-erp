@@ -1,0 +1,12 @@
+{
+  "module": {
+    "label": "WhatsApp",
+    "description": "WhatsApp-Kanal für Kampagnen (Meta Cloud API, mit freigegebener Vorlage). Nur an Personen mit WhatsApp-Einwilligung."
+  },
+  "permissions": {
+    "campaign-whatsapp": {
+      "label": "WhatsApp",
+      "description": "Kampagnen-Kanal-Plugin."
+    }
+  }
+}

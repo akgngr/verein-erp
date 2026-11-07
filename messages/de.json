@@ -109,7 +109,7 @@
     "inventory": "Inventar",
     "mail": "E-Mail",
     "gelenKutusu": "Posteingang",
-    "topluEposta": "Rundmail",
+    "topluEposta": "Kampagnen",
     "toplantilar": "Sitzungen",
     "uyeler": "Mitglieder",
     "organization": "Vereinsdaten",
@@ -2719,6 +2719,50 @@
       }
     }
   },
+  "campaign-sms": {
+    "module": {
+      "label": "SMS",
+      "description": "SMS-Kanal für Kampagnen (seven.io oder Twilio). Nur an Personen mit SMS-Einwilligung."
+    },
+    "permissions": {
+      "campaign-sms": {
+        "label": "SMS",
+        "description": "Kampagnen-Kanal-Plugin."
+      }
+    }
+  },
+  "campaign-telegram": {
+    "module": {
+      "label": "Telegram",
+      "description": "Telegram-Kanal für Kampagnen (Bot-API). Personen abonnieren per Einladungslink; /stop beendet das Abo."
+    },
+    "permissions": {
+      "campaign-telegram": {
+        "label": "Telegram",
+        "description": "Kampagnen-Kanal-Plugin."
+      }
+    },
+    "access": {
+      "mailings": "Um im Webhook die (verschlüsselten) Bot-Einstellungen zu lesen."
+    },
+    "replies": {
+      "linked": "✅ Abo bestätigt. Zum Beenden /stop senden.",
+      "stopped": "Abo beendet.",
+      "unknown": "Link ungültig oder abgelaufen."
+    }
+  },
+  "campaign-whatsapp": {
+    "module": {
+      "label": "WhatsApp",
+      "description": "WhatsApp-Kanal für Kampagnen (Meta Cloud API, mit freigegebener Vorlage). Nur an Personen mit WhatsApp-Einwilligung."
+    },
+    "permissions": {
+      "campaign-whatsapp": {
+        "label": "WhatsApp",
+        "description": "Kampagnen-Kanal-Plugin."
+      }
+    }
+  },
   "courses": {
     "module": {
       "label": "Kurse",
@@ -4337,7 +4381,30 @@
     },
     "calendar": {
       "events": "Veranstaltungen"
-    }
+    },
+    "recipients": {
+      "attendees": {
+        "label": "Veranstaltungsteilnehmende",
+        "filters": {
+          "event": {
+            "label": "Veranstaltung"
+          },
+          "status": {
+            "label": "Status",
+            "options": {
+              "REGISTERED": "Angemeldet",
+              "ATTENDED": "Teilgenommen",
+              "CANCELLED": "Abgesagt"
+            }
+          }
+        }
+      }
+    },
+    "access": {
+      "members": "Um Kommunikationseinwilligungen mitgliedsverknüpfter Teilnehmender (Kampagnen) zu lesen.",
+      "mailings": "Öffnet den Kampagnen-Assistenten mit den Teilnehmenden als Zielgruppe."
+    },
+    "announce": "Teilnehmende benachrichtigen"
   },
   "exports": {
     "module": {
@@ -4861,11 +4928,11 @@
   },
   "mailings": {
     "module": {
-      "label": "Rundmail",
-      "description": "Personalisierte Rundmails an Mitglieder, Eltern und Empfängerlisten anderer Module."
+      "label": "Kampagnen",
+      "description": "Personalisierte Kampagnen an Mitglieder, Erziehungsberechtigte und Empfängerlisten anderer Module; jede Kampagne läuft als Workflow."
     },
-    "title": "Rundmail",
-    "description": "Empfängerliste wählen, filtern und personalisierte Mitteilung senden. Personen ohne E-Mail oder mit Widerspruch werden übersprungen; jede Person erhält eine eigene E-Mail.",
+    "title": "Kampagnen",
+    "description": "Zielgruppe wählen, Kanal und Inhalt festlegen; sofort oder geplant senden. Jede Kampagne läuft als Workflow; Widersprüche und fehlende Adressen werden übersprungen.",
     "notConfigured": "Der E-Mail-Versand ist nicht eingerichtet.",
     "openSettings": "E-Mail-Einstellungen öffnen",
     "noSources": "Keine verfügbare Empfängerliste (Modul deaktiviert oder keine Berechtigung).",
@@ -4879,11 +4946,11 @@
     "test": "Test an mich senden",
     "testSent": "Test-E-Mail an {to} gesendet.",
     "send": "An {count} Personen senden",
-    "confirmTitle": "Rundmail senden?",
+    "confirmTitle": "Kampagne starten?",
     "confirmText": "{count} Personen erhalten je eine eigene E-Mail. Der Versand läuft im Hintergrund; das Ergebnis sehen Sie unten und im Versandprotokoll.",
     "started": "Versand gestartet: {count} Empfänger.",
-    "history": "Versandverlauf",
-    "noHistory": "Noch keine Rundmails versendet.",
+    "history": "Kampagnen",
+    "noHistory": "Noch keine Kampagnen.",
     "columns": {
       "date": "Datum",
       "source": "Liste",
@@ -4895,9 +4962,12 @@
     "result": "{sent}/{total} gesendet, {failed} Fehler",
     "skipped": "Übersprungen: {noEmail} ohne E-Mail, {optOut} Widerspruch",
     "statusLabels": {
+      "DRAFT": "Entwurf",
+      "SCHEDULED": "Geplant",
       "SENDING": "Wird gesendet",
       "DONE": "Abgeschlossen",
-      "FAILED": "Fehlgeschlagen"
+      "FAILED": "Fehlgeschlagen",
+      "CANCELLED": "Abgebrochen"
     },
     "errors": {
       "subject": "Betreff: 3–200 Zeichen.",
@@ -4906,18 +4976,24 @@
       "sendFailed": "Test-E-Mail konnte nicht gesendet werden; siehe Versandprotokoll.",
       "noRecipients": "Keine passenden Empfänger.",
       "source": "Diese Empfängerliste ist nicht verfügbar.",
-      "segmentName": "Segmentname: 2–80 Zeichen."
+      "segmentName": "Segmentname: 2–80 Zeichen.",
+      "name": "Kampagnenname muss 2–120 Zeichen haben.",
+      "channelNotConfigured": "Dieser Kanal ist noch nicht eingerichtet.",
+      "notCancellable": "Nur Entwürfe oder geplante Kampagnen können abgebrochen werden.",
+      "notDeletable": "Nur Entwürfe oder abgebrochene Kampagnen können gelöscht werden.",
+      "channelUnknown": "Unbekannter Kanal.",
+      "channelSetup": "Gespeichert, aber der Anbieter war nicht erreichbar; Angaben prüfen."
     },
     "permissions": {
       "mailings": {
-        "label": "Rundmail",
+        "label": "Kampagnen",
         "description": "Rundmails senden (anlegen) und Verlauf (ansehen). Jede Empfängerliste verlangt zusätzlich das Leserecht ihres Moduls."
       }
     },
     "access": {
       "mail": "Zum Versand und zur Prüfung der E-Mail-Einrichtung.",
       "system": "Liest Modulzustände, um nur Listen aktiver Module anzuzeigen.",
-      "automation": "Zum Einreihen von Kampagnen in die dauerhafte Hintergrundwarteschlange und zum Erstellen der Ausführungsdatensätze.",
+      "automation": "Um Kampagnen als Workflows anzulegen, zu veröffentlichen und in der Hintergrundwarteschlange auszuführen.",
       "users": "Zur erneuten Prüfung des aktiven Kontos und der aktuellen Rolle des auslösenden Benutzers während der Worker-Ausführung."
     },
     "segment": "Gespeichertes Segment",
@@ -4927,19 +5003,239 @@
     "segmentSaved": "Segment gespeichert.",
     "segmentDelete": "Segment löschen",
     "filterEmpty": "Keine Werte vorhanden.",
-    "editorHint": "„/“ fügt Blöcke ein (Überschrift, Button, Spalten, Trenner …); markierter Text öffnet das Formatierungsmenü.",
-    "editorPlaceholder": "E-Mail-Inhalt schreiben …",
     "automation": {
       "events": {
         "campaign_finished": {
-          "label": "Wenn eine Rundmail fertig versendet ist",
+          "label": "Wenn ein Kampagnenversand abgeschlossen ist",
           "fields": {
             "campaignId": "Kampagnen-ID",
             "sent": "Anzahl gesendet",
             "failed": "Anzahl fehlgeschlagen"
           }
         }
+      },
+      "tasks": {
+        "send_campaign": {
+          "label": "Kampagne senden",
+          "description": "Berechnet die Empfänger aus den aktuellen Daten und sendet personalisierte Nachrichten.",
+          "fields": {
+            "campaignId": "Kampagnen-ID"
+          }
+        }
       }
+    },
+    "channels": {
+      "email": {
+        "label": "E-Mail",
+        "description": "Personalisierte E-Mail mit visuellem Editor; jede Person erhält eine eigene Nachricht."
+      },
+      "sms": {
+        "label": "SMS",
+        "description": "Kurznachricht; nur an Personen mit SMS-Einwilligung und Telefonnummer."
+      },
+      "whatsapp": {
+        "label": "WhatsApp",
+        "description": "Mit freigegebener Meta-Vorlage; nur an Personen mit WhatsApp-Einwilligung."
+      },
+      "telegram": {
+        "label": "Telegram",
+        "description": "An Abonnenten Ihres Bots; Einladung per E-Mail mit {telegramLink}."
+      }
+    },
+    "board": {
+      "newCampaign": "Neue Kampagne",
+      "totalCampaigns": "{count} Kampagnen",
+      "totalSent": "{count} Nachrichten gesendet",
+      "totalScheduled": "{count} geplant",
+      "columns": {
+        "draft": "Entwürfe",
+        "scheduled": "Geplant",
+        "sending": "Wird gesendet",
+        "finished": "Abgeschlossen"
+      },
+      "empty": "Keine Kampagnen",
+      "progress": "Sendefortschritt",
+      "scheduledFor": "Versand: {date}",
+      "workflow": "Workflow",
+      "cancel": "Abbrechen",
+      "delete": "Löschen",
+      "cancelTitle": "Kampagne abbrechen?",
+      "cancelMessage": "Der geplante Versand entfällt; der Workflow wird deaktiviert.",
+      "deleteTitle": "Kampagne löschen?",
+      "deleteMessage": "Entwurf oder abgebrochene Kampagne wird endgültig gelöscht.",
+      "edit": "Bearbeiten"
+    },
+    "wizard": {
+      "title": "Neue Kampagne",
+      "editTitle": "Kampagne bearbeiten",
+      "subtitle": "Zielgruppe → Kanal → Inhalt → Versand. Eine gestartete Kampagne wird als Workflow gespeichert.",
+      "steps": "Schritte",
+      "step": {
+        "audience": "Zielgruppe",
+        "channel": "Kanal",
+        "content": "Inhalt",
+        "send": "Versand"
+      },
+      "name": "Kampagnenname",
+      "namePlaceholder": "z. B. Einladung Sommerfest",
+      "reach": "{count} Empfänger",
+      "reachDetail": "Von {matched} passenden Personen: {noEmail} ohne Adresse, {optOut} Widerspruch/ohne Einwilligung.",
+      "channel": "Kanal",
+      "channelNotConfigured": "Nicht eingerichtet",
+      "moreChannels": "SMS-, Telegram- und WhatsApp-Kanäle erscheinen hier, sobald die jeweiligen Plugin-Module aktiv sind.",
+      "previewTitle": "Vorschau",
+      "previewEmail": "Die E-Mail wird im Editor-Design für jede Person personalisiert versendet.",
+      "length": "{count}/{max} Zeichen",
+      "recipients": "Empfänger",
+      "when": "Wann?",
+      "now": "Sofort senden",
+      "later": "Zu einem späteren Zeitpunkt",
+      "scheduledAt": "Versandzeitpunkt",
+      "scheduleFuture": "Muss mindestens 1 Minute in der Zukunft liegen.",
+      "workflowHint": "Beim Start wird ein Workflow angelegt (Auslöser → [warten] → senden). Unter Workflows kannst du ihn verfolgen und erweitern.",
+      "test": "Test an mich senden",
+      "schedule": "An {count} Personen planen",
+      "scheduled": "Kampagne geplant: {count} Empfänger.",
+      "saveDraft": "Entwurf speichern",
+      "draftSaved": "Entwurf gespeichert.",
+      "close": "Schließen",
+      "back": "Zurück",
+      "next": "Weiter",
+      "subjectPlaceholder": "z. B. Einladung zum Sommerfest"
+    },
+    "workflow": {
+      "name": "Kampagne: {name}",
+      "trigger": "Kampagne gestartet",
+      "wait": "Bis zum geplanten Zeitpunkt warten",
+      "send": "Kampagne senden"
+    },
+    "ai": {
+      "draft": {
+        "kind": "Kampagnenentwurf",
+        "confirm": "Entwurf anlegen",
+        "done": "Kampagnenentwurf angelegt; unter Kampagnen öffnen und senden."
+      }
+    },
+    "calendar": {
+      "scheduled": "Geplante Kampagnen"
+    },
+    "channelSettings": {
+      "sms": {
+        "provider": "Anbieter",
+        "apiKey": "API-Schlüssel / Auth-Token",
+        "accountSid": "Twilio Account SID (nur Twilio)",
+        "sender": "Absender (Name oder Nummer)",
+        "countryCode": "Standard-Ländervorwahl"
+      },
+      "whatsapp": {
+        "phoneNumberId": "Phone-Number-ID",
+        "accessToken": "Zugriffstoken",
+        "templateName": "Vorlagenname (eine Variable '{{1}}' im Text)",
+        "templateLanguage": "Vorlagensprache",
+        "countryCode": "Standard-Ländervorwahl"
+      },
+      "telegram": {
+        "botToken": "Bot-Token (BotFather)",
+        "botUsername": "Bot-Benutzername"
+      }
+    },
+    "channelOptions": {
+      "sms": {
+        "provider": {
+          "seven": "seven.io",
+          "twilio": "Twilio"
+        }
+      }
+    },
+    "settings": {
+      "title": "Kampagnenkanäle",
+      "description": "Anbieterdaten der SMS-, Telegram- und WhatsApp-Plugins. Schlüssel werden verschlüsselt gespeichert und nie wieder angezeigt. E-Mail-Einstellungen liegen im E-Mail-Modul.",
+      "noChannels": "Kein Kanal-Plugin mit Einstellungen aktiv. Aktiviere in der Modulverwaltung SMS, Telegram oder WhatsApp.",
+      "configured": "Bereit",
+      "notConfigured": "Nicht eingerichtet",
+      "secretKept": "Gespeichert (zum Ändern neu eingeben)",
+      "save": "Speichern",
+      "saved": "Kanaleinstellungen gespeichert."
+    },
+    "menu": {
+      "settings": "Einstellungen"
+    },
+    "builder": {
+      "components": "Bausteine",
+      "addHint": "Klicken: wird unter dem ausgewählten Block eingefügt. Für Spalten zuerst die Spalte wählen.",
+      "addingToColumn": "Wird in Spalte {column} eingefügt",
+      "mode": "Ansicht",
+      "edit": "Bearbeiten",
+      "desktop": "Desktop",
+      "mobile": "Mobil",
+      "preview": "Vorschau",
+      "empty": "Füge links einen Baustein hinzu.",
+      "columnEmpty": "Spalte wählen, dann links hinzufügen",
+      "moveUp": "Nach oben",
+      "moveDown": "Nach unten",
+      "duplicate": "Duplizieren",
+      "remove": "Löschen",
+      "imageEmpty": "Bildadresse eingeben",
+      "placeholderText": "Text eingeben…",
+      "align": "Ausrichtung",
+      "aligns": {
+        "left": "Links",
+        "center": "Zentriert",
+        "right": "Rechts"
+      },
+      "types": {
+        "heading": "Überschrift",
+        "text": "Text",
+        "button": "Button",
+        "image": "Bild",
+        "divider": "Trennlinie",
+        "spacer": "Abstand",
+        "columns": "Spalten",
+        "footer": "Fußzeile"
+      },
+      "defaults": {
+        "heading": "Hallo '{firstName}'",
+        "text": "Schreibe hier deine Nachricht.",
+        "button": "Mehr erfahren",
+        "footer": "Du erhältst diese E-Mail aufgrund deiner Verbindung zu unserem Verein. Wenn du keine weiteren E-Mails möchtest, antworte einfach auf diese Nachricht."
+      },
+      "fields": {
+        "text": "Text",
+        "level": "Überschriftenebene",
+        "color": "Farbe",
+        "fontSize": "Schriftgröße",
+        "label": "Button-Text",
+        "url": "Link",
+        "background": "Hintergrund",
+        "textColor": "Textfarbe",
+        "radius": "Eckenradius",
+        "src": "Bildadresse (https)",
+        "alt": "Alternativtext",
+        "href": "Link beim Anklicken",
+        "width": "Breite (%)",
+        "thickness": "Stärke",
+        "height": "Höhe",
+        "gap": "Spaltenabstand",
+        "pageBackground": "Seitenhintergrund",
+        "contentBackground": "Inhaltshintergrund",
+        "linkColor": "Linkfarbe",
+        "font": "Schriftart",
+        "contentWidth": "Inhaltsbreite"
+      },
+      "fonts": {
+        "sans": "Serifenlos",
+        "serif": "Serif",
+        "mono": "Monospace"
+      },
+      "markupHelp": "**fett**, *kursiv*, [Linktext](https://…). Platzhalter werden beim Versand pro Person ersetzt.",
+      "urlHelp": "Muss mit https://, mailto: oder einem '{'Platzhalter'}' beginnen.",
+      "imageHelp": "Öffentliche Bildadresse (https). Bilder werden nicht auf unseren Server hochgeladen.",
+      "footerHelp": "Ein Hinweis zum Widerspruch/Abbestellen wird nach DSGVO empfohlen.",
+      "twoColumns": "2 Spalten",
+      "threeColumns": "3 Spalten",
+      "columnsHelp": "Zum Befüllen auf eine Spalte im Arbeitsbereich klicken, dann links einen Baustein wählen. Mobil werden Spalten untereinander angezeigt.",
+      "designSettings": "Allgemeines Design",
+      "selectHint": "Zum Bearbeiten auf einen Block im Arbeitsbereich klicken."
     }
   },
   "meetings": {
@@ -5468,8 +5764,9 @@
       }
     },
     "access": {
-      "members": "Liest die Mitgliederliste, um Teilnehmende hinzuzufügen.",
-      "organization": "Verwendet den Vereinsbriefkopf im Protokoll-PDF."
+      "members": "Liest die Mitgliederliste, um Teilnehmende hinzuzufügen. Liest für Ankündigungskampagnen Kontaktdaten und Einwilligungen teilnehmender Mitglieder.",
+      "organization": "Verwendet den Vereinsbriefkopf im Protokoll-PDF.",
+      "mailings": "Öffnet den Kampagnen-Assistenten mit den Teilnehmenden als Zielgruppe."
     },
     "ai": {
       "create": {
@@ -5522,6 +5819,28 @@
     },
     "calendar": {
       "meetings": "Sitzungen"
+    },
+    "recipients": {
+      "attendees": {
+        "label": "Sitzungsteilnehmende",
+        "filters": {
+          "meeting": {
+            "label": "Sitzung"
+          },
+          "attendance": {
+            "label": "Teilnahme",
+            "options": {
+              "INVITED": "Eingeladen",
+              "PRESENT": "Anwesend",
+              "ABSENT_EXCUSED": "Entschuldigt",
+              "ABSENT": "Abwesend"
+            }
+          }
+        }
+      }
+    },
+    "campaign": {
+      "announce": "Teilnehmende benachrichtigen"
     }
   },
   "members": {
@@ -5606,7 +5925,14 @@
       "cancellationReceivedAt": "Kündigung eingegangen am",
       "cancellationReceivedAtDescription": "Datum des Eingangs der Kündigung; darf nicht nach dem Austrittsdatum liegen.",
       "bulkMailOptOut": "Keine Rundmails",
-      "bulkMailOptOutDescription": "Das Mitglied hat Rundmails widersprochen (Art. 21 DSGVO). Einzelne Schreiben sind nicht betroffen."
+      "bulkMailOptOutDescription": "Das Mitglied hat Rundmails widersprochen (Art. 21 DSGVO). Einzelne Schreiben sind nicht betroffen.",
+      "messagingConsents": "Einwilligungen für Nachrichtenkanäle",
+      "messagingConsentsDescription": "Kanäle mit ausdrücklicher Einwilligung. Kampagnen senden SMS, WhatsApp und Telegram nur an Personen mit Einwilligung.",
+      "messagingChannels": {
+        "sms": "SMS",
+        "whatsapp": "WhatsApp",
+        "telegram": "Telegram"
+      }
     },
     "detail": {
       "membershipNumberLabel": "Mitgliedsnummer",
@@ -6513,6 +6839,16 @@
         "Frau": "Frau",
         "Herr": "Herr",
         "NONE": "Keine Angabe"
+      },
+      "communicationTitle": "Kommunikationseinwilligungen",
+      "bulkMailOptOut": "Keine Kampagnen-E-Mails",
+      "bulkMailOptOutDescription": "Wenn markiert, erhält die Person keine Rundschreiben/Kampagnen-E-Mails; Rechnungen und Pflichtschreiben sind nicht betroffen (Art. 21 DSGVO).",
+      "messagingConsents": "Einwilligungen für Nachrichtenkanäle",
+      "messagingConsentsDescription": "Kanäle mit ausdrücklicher Einwilligung; Kampagnen senden SMS, WhatsApp und Telegram nur an diese.",
+      "messagingChannels": {
+        "sms": "SMS",
+        "whatsapp": "WhatsApp",
+        "telegram": "Telegram"
       }
     },
     "guardianList": {

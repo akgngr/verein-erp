@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.2.0",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "Veli iletişim izinleri",
+        "de": "Kommunikationseinwilligungen für Erziehungsberechtigte"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Veli kartına kampanya e-postası itirazı ve SMS/WhatsApp/Telegram izinleri eklendi; kampanyalar bunlara uyar.",
+          "de": "Karte der Erziehungsberechtigten erhält Widerspruch gegen Kampagnen-E-Mails sowie SMS-/WhatsApp-/Telegram-Einwilligungen; Kampagnen beachten sie."
+        }
+      ]
+    },
+    {
       "version": "1.1.0",
       "date": "2026-11-01",
       "appVersion": "0.36.0",

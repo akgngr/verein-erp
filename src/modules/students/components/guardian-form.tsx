@@ -1,15 +1,16 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addToast, Button } from "@heroui/react";
+import { addToast, Button, Checkbox, CheckboxGroup } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 
 import { applyActionResult } from "@/shared/components/forms/action-result";
 import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
 import { FormDatePicker } from "@/shared/components/forms/form-date-picker";
+import { FormSwitch } from "@/shared/components/forms/form-switch";
 import { FormErrorSummary } from "@/shared/components/forms/form-error-summary";
 import { FormInput } from "@/shared/components/forms/form-input";
 import { FormSelect } from "@/shared/components/forms/form-select";
@@ -54,6 +55,8 @@ export function GuardianForm({ guardian }: { guardian?: GuardianRow }) {
       sepaMandateReference: guardian?.sepaMandateReference ?? "",
       sepaMandateDate: formatDateOnly(guardian?.sepaMandateDate),
       note: guardian?.note ?? "",
+      bulkMailOptOut: guardian?.bulkMailOptOut ?? false,
+      messagingConsents: (guardian?.messagingConsents ?? []) as ("sms" | "whatsapp" | "telegram")[],
     },
   });
 
@@ -128,6 +131,21 @@ export function GuardianForm({ guardian }: { guardian?: GuardianRow }) {
           </div>
         </section>
         <FormTextarea name="note" label={t("note")} control={form.control} />
+        <section className="flex flex-col gap-3 rounded-medium border border-default-200 p-3">
+          <p className="text-small font-medium">{t("communicationTitle")}</p>
+          <FormSwitch name="bulkMailOptOut" label={t("bulkMailOptOut")} description={t("bulkMailOptOutDescription")} control={form.control} />
+          <Controller
+            name="messagingConsents"
+            control={form.control}
+            render={({ field }) => (
+              <CheckboxGroup label={t("messagingConsents")} description={t("messagingConsentsDescription")} orientation="horizontal" value={field.value ?? []} onValueChange={field.onChange}>
+                {(["sms", "whatsapp", "telegram"] as const).map((channel) => (
+                  <Checkbox key={channel} value={channel}>{t(`messagingChannels.${channel}`)}</Checkbox>
+                ))}
+              </CheckboxGroup>
+            )}
+          />
+        </section>
         <FormErrorSummary message={formError} />
         <div className="flex items-center gap-2">
           <SubmitButton isSubmitting={form.formState.isSubmitting}>{tCommon("save")}</SubmitButton>
