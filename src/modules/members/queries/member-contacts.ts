@@ -27,3 +27,17 @@ export async function getMemberContacts(ids: string[]): Promise<Map<string, Memb
   });
   return new Map(rows.map((row) => [row.id, row]));
 }
+
+/** CRM / seçiciler için ad, üye no veya e-postaya göre arama (silinmişler hariç). */
+export async function searchMemberContacts(query: string, take = 20): Promise<(MemberContact & { membershipNumber: string })[]> {
+  const q = query.trim().slice(0, 80);
+  return getDb().member.findMany({
+    where: {
+      deletedAt: null,
+      ...(q ? { OR: [{ firstName: { contains: q, mode: "insensitive" } }, { lastName: { contains: q, mode: "insensitive" } }, { email: { contains: q, mode: "insensitive" } }, { membershipNumber: { contains: q, mode: "insensitive" } }] } : {}),
+    },
+    select: { id: true, firstName: true, lastName: true, email: true, phone: true, bulkMailOptOut: true, messagingConsents: true, membershipNumber: true },
+    orderBy: [{ lastName: "asc" }, { firstName: "asc" }],
+    take: Math.min(take, 50),
+  });
+}

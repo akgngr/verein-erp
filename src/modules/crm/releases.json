@@ -1,0 +1,20 @@
+{
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
+  "releases": [
+    {
+      "version": "1.0.0",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "İlk sürüm",
+        "de": "Erste Version"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Üyeler ve cari hesaplar üzerinde ilişki yönetimi: aşamalar, etiketler, fırsat panosu, zaman akışı, takipler (takvimde), iş akışı olayı ve AI için toplu fırsat sayıları.",
+          "de": "Beziehungsmanagement für Mitglieder und Geschäftspartner: Phasen, Tags, Chancen-Board, Verlauf, Wiedervorlagen (im Kalender), Workflow-Ereignis und aggregierte Chancenzahlen für die KI."
+        }
+      ]
+    }
+  ]
+}

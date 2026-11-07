@@ -41,4 +41,4 @@ export const memberCreatedEvent = defineEvent({
   },
 });
 // Kampanya alıcıları (toplantı/etkinlik kaynakları) için; worker da içe aktarır, UI/Next içermez.
-export { getMemberContacts, type MemberContact } from "./queries/member-contacts";
+export { getMemberContacts, searchMemberContacts, type MemberContact } from "./queries/member-contacts";

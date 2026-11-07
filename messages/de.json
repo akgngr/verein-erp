@@ -100,6 +100,7 @@
     "bankaBaglantisi": "Bankverbindung",
     "calendar": "Kalender",
     "courses": "Kurse",
+    "crm": "CRM",
     "demoVeri": "Demodaten",
     "evrak": "Dokumente",
     "bagislar": "Spenden",
@@ -3248,6 +3249,133 @@
     },
     "calendar": {
       "sessions": "Kurstermine"
+    }
+  },
+  "crm": {
+    "module": {
+      "label": "CRM",
+      "description": "Beziehungsmanagement mit Personen und Organisationen: Phasen, Chancen, Verlauf und Wiedervorlagen."
+    },
+    "permissions": {
+      "crm": {
+        "label": "CRM",
+        "description": "Beziehungsmanagement mit Personen und Organisationen."
+      }
+    },
+    "meta": {
+      "list": "CRM"
+    },
+    "title": "CRM",
+    "description": "Beziehungen, Chancen und Wiedervorlagen zu Mitgliedern und Geschäftspartnern verwalten.",
+    "stats": {
+      "parties": "Kontakte",
+      "openDeals": "Offene Chancen",
+      "pipeline": "Offenes Volumen",
+      "overdue": "Überfällige Wiedervorlagen"
+    },
+    "tabs": {
+      "parties": "Kontakte",
+      "deals": "Chancen",
+      "followUps": "Wiedervorlagen"
+    },
+    "addParty": "Kontakt hinzufügen",
+    "search": "Name oder Tag suchen...",
+    "stage": "Phase",
+    "allStages": "Alle Phasen",
+    "stages": {
+      "LEAD": "Interessent",
+      "ACTIVE": "Aktiv",
+      "CUSTOMER": "Kunde / Förderer",
+      "INACTIVE": "Inaktiv"
+    },
+    "dealStages": {
+      "OPEN": "Offen",
+      "PROPOSAL": "Angebot",
+      "WON": "Gewonnen",
+      "LOST": "Verloren"
+    },
+    "kinds": {
+      "NOTE": "Notiz",
+      "CALL": "Anruf",
+      "MEETING": "Termin",
+      "EMAIL": "E-Mail",
+      "OTHER": "Sonstiges"
+    },
+    "sources": {
+      "members": "Mitglied",
+      "accounting": "Geschäftspartner"
+    },
+    "columns": {
+      "name": "Name",
+      "source": "Quelle",
+      "openDeals": "Offene Chancen",
+      "nextFollowUp": "Nächste Wiedervorlage",
+      "tags": "Tags"
+    },
+    "empty": "Noch keine CRM-Kontakte. Mit 'Kontakt hinzufügen' aus Mitgliedern oder Geschäftspartnern übernehmen.",
+    "noDeals": "Keine Chancen.",
+    "noFollowUps": "Keine offenen Wiedervorlagen.",
+    "markDone": "Erledigt",
+    "searchSources": "Mitglied oder Geschäftspartner suchen...",
+    "open": "Öffnen",
+    "add": "Hinzufügen",
+    "remove": "Aus CRM entfernen",
+    "dealTitle": "Titel der Chance",
+    "amount": "Betrag (€)",
+    "expectedClose": "Erwarteter Abschluss",
+    "addDeal": "Chance hinzufügen",
+    "dueAt": "Fällig am",
+    "followUpNote": "Notiz",
+    "addFollowUp": "Wiedervorlage hinzufügen",
+    "timeline": "Verlauf",
+    "activityPlaceholder": "Gesprächsnotiz, Anrufzusammenfassung...",
+    "addActivity": "Speichern",
+    "noActivities": "Noch keine Einträge.",
+    "dealMoved": "Phase der Chance: {stage}",
+    "calendar": {
+      "followUps": "CRM-Wiedervorlagen",
+      "deals": "CRM-Abschlüsse"
+    },
+    "errors": {
+      "sourceMissing": "Quelldatensatz nicht gefunden oder Modul deaktiviert.",
+      "notFound": "Eintrag nicht gefunden.",
+      "summary": "Bitte mindestens 2 Zeichen eingeben.",
+      "title": "Der Titel muss mindestens 2 Zeichen lang sein."
+    },
+    "access": {
+      "members": "Liest Name und Kontaktdaten der CRM-Kontakte aus dem Mitgliedsdatensatz (ohne Kopie).",
+      "accounting": "Liest Name und Kontaktdaten von Geschäftspartnern aus der Buchhaltung (ohne Kopie).",
+      "system": "Prüft, welche Quellmodule aktiv sind."
+    },
+    "automation": {
+      "events": {
+        "deal_stage_changed": {
+          "label": "Wenn sich die Phase einer CRM-Chance ändert",
+          "fields": {
+            "dealId": "Chancen-ID",
+            "from": "Vorherige Phase",
+            "to": "Neue Phase"
+          },
+          "options": {
+            "from": {
+              "OPEN": "Offen",
+              "PROPOSAL": "Angebot",
+              "WON": "Gewonnen",
+              "LOST": "Verloren"
+            },
+            "to": {
+              "OPEN": "Offen",
+              "PROPOSAL": "Angebot",
+              "WON": "Gewonnen",
+              "LOST": "Verloren"
+            }
+          },
+          "variables": {
+            "title": "Titel der Chance",
+            "amount": "Betrag"
+          }
+        }
+      }
     }
   },
   "demo": {

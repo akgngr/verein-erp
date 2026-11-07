@@ -1,0 +1,94 @@
+enum CrmStage {
+  LEAD
+  ACTIVE
+  CUSTOMER
+  INACTIVE
+}
+
+enum CrmDealStage {
+  OPEN
+  PROPOSAL
+  WON
+  LOST
+}
+
+enum CrmActivityKind {
+  NOTE
+  CALL
+  MEETING
+  EMAIL
+  OTHER
+}
+
+/// CRM kişisi: yalnız ilişki bilgisi. Kişinin kendisi kaynak modülde (üyeler / muhasebe carisi) kalır;
+/// ad, e-posta, telefon kopyalanmaz, her gösterimde kaynaktan okunur.
+model CrmParty {
+  id           String        @id @default(cuid())
+  /// "members" | "accounting"
+  sourceModule String
+  sourceId     String
+  stage        CrmStage      @default(LEAD)
+  /// Sorumlu kullanıcı (yumuşak referans).
+  ownerId      String?
+  tags         String[]      @default([])
+  createdById  String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  deals        CrmDeal[]
+  activities   CrmActivity[]
+  followUps    CrmFollowUp[]
+
+  @@unique([sourceModule, sourceId])
+  @@index([stage])
+  @@map("crm_parties")
+}
+
+/// Fırsat (satış, sponsorluk, bağış görüşmesi …).
+model CrmDeal {
+  id              String       @id @default(cuid())
+  partyId         String
+  party           CrmParty     @relation(fields: [partyId], references: [id], onDelete: Cascade)
+  title           String
+  amountCents     Int?
+  stage           CrmDealStage @default(OPEN)
+  expectedCloseAt DateTime?
+  ownerId         String?
+  closedAt        DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@index([stage])
+  @@map("crm_deals")
+}
+
+/// Zaman akışı kaydı (not, arama, görüşme, e-posta …).
+model CrmActivity {
+  id             String          @id @default(cuid())
+  partyId        String
+  party          CrmParty        @relation(fields: [partyId], references: [id], onDelete: Cascade)
+  dealId         String?
+  kind           CrmActivityKind @default(NOTE)
+  summary        String
+  occurredAt     DateTime        @default(now())
+  createdById    String
+  createdByLabel String
+
+  @@index([partyId, occurredAt])
+  @@map("crm_activities")
+}
+
+/// Takip (hatırlatma); takvimde görünür.
+model CrmFollowUp {
+  id         String    @id @default(cuid())
+  partyId    String
+  party      CrmParty  @relation(fields: [partyId], references: [id], onDelete: Cascade)
+  dealId     String?
+  dueAt      DateTime
+  note       String
+  assigneeId String?
+  doneAt     DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([dueAt, doneAt])
+  @@map("crm_follow_ups")
+}

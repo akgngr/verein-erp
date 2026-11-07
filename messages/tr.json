@@ -100,6 +100,7 @@
     "bankaBaglantisi": "Banka bağlantısı",
     "calendar": "Takvim",
     "courses": "Kurslar",
+    "crm": "CRM",
     "demoVeri": "Demo veri",
     "evrak": "Evrak Kayıt",
     "bagislar": "Bağışlar",
@@ -3248,6 +3249,133 @@
     },
     "calendar": {
       "sessions": "Kurs dersleri"
+    }
+  },
+  "crm": {
+    "module": {
+      "label": "CRM",
+      "description": "Kişi ve kurumlarla ilişki yönetimi: aşamalar, fırsatlar, zaman akışı ve takipler."
+    },
+    "permissions": {
+      "crm": {
+        "label": "CRM",
+        "description": "Kişi ve kurumlarla ilişki yönetimi."
+      }
+    },
+    "meta": {
+      "list": "CRM"
+    },
+    "title": "CRM",
+    "description": "Üyeler ve cari hesaplarla ilişkileri, fırsatları ve takipleri yönetin.",
+    "stats": {
+      "parties": "Kişiler",
+      "openDeals": "Açık fırsatlar",
+      "pipeline": "Açık fırsat tutarı",
+      "overdue": "Geciken takipler"
+    },
+    "tabs": {
+      "parties": "Kişiler",
+      "deals": "Fırsatlar",
+      "followUps": "Takipler"
+    },
+    "addParty": "Kişi ekle",
+    "search": "Ad veya etiket ara...",
+    "stage": "Aşama",
+    "allStages": "Tüm aşamalar",
+    "stages": {
+      "LEAD": "Aday",
+      "ACTIVE": "Aktif",
+      "CUSTOMER": "Müşteri / Destekçi",
+      "INACTIVE": "Pasif"
+    },
+    "dealStages": {
+      "OPEN": "Açık",
+      "PROPOSAL": "Teklif",
+      "WON": "Kazanıldı",
+      "LOST": "Kaybedildi"
+    },
+    "kinds": {
+      "NOTE": "Not",
+      "CALL": "Arama",
+      "MEETING": "Görüşme",
+      "EMAIL": "E-posta",
+      "OTHER": "Diğer"
+    },
+    "sources": {
+      "members": "Üye",
+      "accounting": "Cari hesap"
+    },
+    "columns": {
+      "name": "Ad",
+      "source": "Kaynak",
+      "openDeals": "Açık fırsat",
+      "nextFollowUp": "Sonraki takip",
+      "tags": "Etiketler"
+    },
+    "empty": "Henüz CRM kişisi yok. 'Kişi ekle' ile üyelerden veya cari hesaplardan ekleyin.",
+    "noDeals": "Fırsat yok.",
+    "noFollowUps": "Açık takip yok.",
+    "markDone": "Tamamlandı",
+    "searchSources": "Üye veya cari hesap ara...",
+    "open": "Aç",
+    "add": "Ekle",
+    "remove": "CRM'den çıkar",
+    "dealTitle": "Fırsat başlığı",
+    "amount": "Tutar (€)",
+    "expectedClose": "Beklenen kapanış",
+    "addDeal": "Fırsat ekle",
+    "dueAt": "Takip zamanı",
+    "followUpNote": "Takip notu",
+    "addFollowUp": "Takip ekle",
+    "timeline": "Zaman akışı",
+    "activityPlaceholder": "Görüşme notu, arama özeti...",
+    "addActivity": "Kaydet",
+    "noActivities": "Henüz kayıt yok.",
+    "dealMoved": "Fırsat aşaması: {stage}",
+    "calendar": {
+      "followUps": "CRM takipleri",
+      "deals": "CRM fırsat kapanışları"
+    },
+    "errors": {
+      "sourceMissing": "Kaynak kayıt bulunamadı veya modül kapalı.",
+      "notFound": "Kayıt bulunamadı.",
+      "summary": "En az 2 karakter girin.",
+      "title": "Başlık en az 2 karakter olmalıdır."
+    },
+    "access": {
+      "members": "CRM kişilerinin adını ve iletişim bilgisini üye kaydından okur (kopyalamaz).",
+      "accounting": "Cari hesap adını ve iletişim bilgisini muhasebeden okur (kopyalamaz).",
+      "system": "Hangi kaynak modüllerin açık olduğunu kontrol eder."
+    },
+    "automation": {
+      "events": {
+        "deal_stage_changed": {
+          "label": "CRM fırsat aşaması değiştiğinde",
+          "fields": {
+            "dealId": "Fırsat kimliği",
+            "from": "Önceki aşama",
+            "to": "Yeni aşama"
+          },
+          "options": {
+            "from": {
+              "OPEN": "Açık",
+              "PROPOSAL": "Teklif",
+              "WON": "Kazanıldı",
+              "LOST": "Kaybedildi"
+            },
+            "to": {
+              "OPEN": "Açık",
+              "PROPOSAL": "Teklif",
+              "WON": "Kazanıldı",
+              "LOST": "Kaybedildi"
+            }
+          },
+          "variables": {
+            "title": "Fırsat başlığı",
+            "amount": "Tutar"
+          }
+        }
+      }
     }
   },
   "demo": {

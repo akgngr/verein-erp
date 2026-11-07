@@ -23,6 +23,7 @@ import * as campaignsmsPermissionExports from "@/modules/campaign-sms/permission
 import * as campaigntelegramPermissionExports from "@/modules/campaign-telegram/permissions";
 import * as campaignwhatsappPermissionExports from "@/modules/campaign-whatsapp/permissions";
 import * as coursesPermissionExports from "@/modules/courses/permissions";
+import * as crmPermissionExports from "@/modules/crm/permissions";
 import * as demoPermissionExports from "@/modules/demo/permissions";
 import * as eventsPermissionExports from "@/modules/events/permissions";
 import * as exportsPermissionExports from "@/modules/exports/permissions";
@@ -62,6 +63,7 @@ export const permissionResources: { moduleKey: string; definitions: PermissionDe
   { moduleKey: "campaign-telegram", definitions: definitionsOf(campaigntelegramPermissionExports) },
   { moduleKey: "campaign-whatsapp", definitions: definitionsOf(campaignwhatsappPermissionExports) },
   { moduleKey: "courses", definitions: definitionsOf(coursesPermissionExports) },
+  { moduleKey: "crm", definitions: definitionsOf(crmPermissionExports) },
   { moduleKey: "demo", definitions: definitionsOf(demoPermissionExports) },
   { moduleKey: "events", definitions: definitionsOf(eventsPermissionExports) },
   { moduleKey: "exports", definitions: definitionsOf(exportsPermissionExports) },
