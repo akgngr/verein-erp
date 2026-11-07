@@ -1,5 +1,6 @@
 "use server";
 
+import { documentHtmlToText } from "../lib/sanitize";
 import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
@@ -92,7 +93,7 @@ const documentSchema = z.object({
   id: id.nullable(),
   title: z.string().trim().min(2, "online-forms.documents.errors.title").max(200),
   purpose: z.enum(["PRIVACY", "PHOTO", "OTHER"]),
-  contentHtml: z.string().max(300_000).refine((value) => value.replace(/<[^>]*>/g, "").replace(/[<>]/g, "").trim().length > 0, "online-forms.documents.errors.content"),
+  contentHtml: z.string().max(300_000).refine((value) => documentHtmlToText(value).length > 0, "online-forms.documents.errors.content"),
   requiresConsent: z.boolean(),
   required: z.boolean(),
   appliesTo: z.array(z.enum(KINDS)).min(1, "online-forms.documents.errors.appliesTo"),
