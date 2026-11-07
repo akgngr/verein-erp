@@ -139,7 +139,8 @@
     "cancelTitle": "Kampagne abbrechen?",
     "cancelMessage": "Der geplante Versand entfällt; der Workflow wird deaktiviert.",
     "deleteTitle": "Kampagne löschen?",
-    "deleteMessage": "Entwurf oder abgebrochene Kampagne wird endgültig gelöscht."
+    "deleteMessage": "Entwurf oder abgebrochene Kampagne wird endgültig gelöscht.",
+    "edit": "Bearbeiten"
   },
   "wizard": {
     "title": "Neue Kampagne",

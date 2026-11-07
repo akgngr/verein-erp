@@ -139,7 +139,8 @@
     "cancelTitle": "Kampanya iptal edilsin mi?",
     "cancelMessage": "Planlı gönderim yapılmayacak; iş akışı devre dışı bırakılır.",
     "deleteTitle": "Kampanya silinsin mi?",
-    "deleteMessage": "Taslak ya da iptal edilmiş kampanya kalıcı olarak silinir."
+    "deleteMessage": "Taslak ya da iptal edilmiş kampanya kalıcı olarak silinir.",
+    "edit": "Düzenle"
   },
   "wizard": {
     "title": "Yeni kampanya",
