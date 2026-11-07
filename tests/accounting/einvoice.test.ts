@@ -108,7 +108,7 @@ test("iptal faturası: UBL CreditNote 381 + BillingReference, CII 381 + InvoiceR
   assert.match(ubl, /<ubl:CreditNote xmlns:ubl="urn:oasis:names:specification:ubl:schema:xsd:CreditNote-2"/);
   assert.match(ubl, /<cbc:CreditNoteTypeCode>381<\/cbc:CreditNoteTypeCode>/);
   assert.match(ubl, /<cac:BillingReference><cac:InvoiceDocumentReference><cbc:ID>R-2026-0007<\/cbc:ID><cbc:IssueDate>2026-10-01<\/cbc:IssueDate>/);
-  assert.match(ubl, /<cac:CreditNoteLine>.*<cbc:CreditedQuantity/s);
+  assert.match(ubl, /<cac:CreditNoteLine>[\s\S]*<cbc:CreditedQuantity/);
   assert.doesNotMatch(ubl, /<cbc:DueDate>|<cac:InvoiceLine>|<\/ubl:Invoice>/);
   assert.match(ubl, /<\/ubl:CreditNote>$/);
   const cii = buildCiiInvoice(credit);
