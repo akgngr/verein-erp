@@ -64,6 +64,7 @@ export const PAYMENT_METHOD_ACCOUNT: Record<
 > = {
   CASH: "cashAccountId",
   BANK_TRANSFER: "bankAccountId",
+  SEPA_DEBIT: "bankAccountId",
   CARD: "bankAccountId",
   OTHER: "bankAccountId",
 };

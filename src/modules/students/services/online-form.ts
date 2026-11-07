@@ -102,3 +102,16 @@ export async function applyGuardianSelfService(id: string, input: GuardianSelfSe
   await db.studentGuardian.update({ where: { id }, data: { ...rest, ...bank, ...mandate } });
   return true;
 }
+
+/** SEPA modülü için: Debitor numarasına göre velinin yetki bilgisi (IBAN tam; yalnız sunucuda kullanılır). */
+export async function getGuardianMandates(debtorNumbers: number[]) {
+  const rows = await getDb().studentGuardian.findMany({
+    where: { debtorNumber: { in: debtorNumbers } },
+    select: { debtorNumber: true, firstName: true, lastName: true, iban: true, bic: true, accountHolder: true, sepaMandateReference: true, sepaMandateDate: true },
+  });
+  return new Map(rows.map((row) => [row.debtorNumber, {
+    name: `${row.firstName} ${row.lastName}`.trim(),
+    iban: row.iban, bic: row.bic, accountHolder: row.accountHolder ?? `${row.firstName} ${row.lastName}`.trim(),
+    mandateReference: row.sepaMandateReference, mandateDate: row.sepaMandateDate?.toISOString().slice(0, 10) ?? null,
+  }]));
+}

@@ -298,6 +298,7 @@ export async function saveInvoiceSettingsAction(input: unknown): Promise<ActionR
         sellerVatId: input.sellerVatId ? input.sellerVatId.replace(/\s/g, "").toUpperCase() : null,
         iban: input.iban ? input.iban.replace(/\s/g, "").toUpperCase() : null,
         bic: input.bic ? input.bic.replace(/\s/g, "").toUpperCase() : null,
+        sepaCreditorId: input.sepaCreditorId ? input.sepaCreditorId.replace(/\s/g, "").toUpperCase() : null,
         dunningIntervalDays: Number(input.dunningIntervalDays),
         dunningFeeReminder: input.dunningFeeReminder ? toCents(input.dunningFeeReminder) ?? 0 : 0,
         dunningFeeFirst: input.dunningFeeFirst ? toCents(input.dunningFeeFirst) ?? 0 : 0,

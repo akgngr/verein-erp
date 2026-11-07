@@ -174,6 +174,7 @@
     "method": {
       "CASH": "Bar",
       "BANK_TRANSFER": "Überweisung",
+      "SEPA_DEBIT": "SEPA-Lastschrift",
       "CARD": "Kartenzahlung",
       "OTHER": "Sonstige"
     },
@@ -604,5 +605,33 @@
   "onlineForm": {
     "send": "e-Sign-Formular senden",
     "documents": "e-Sign-Dokumente"
+  },
+  "mandate": {
+    "title": "SEPA-Lastschriftmandat",
+    "add": "Mandat erfassen",
+    "edit": "Bearbeiten",
+    "none": "Kein SEPA-Mandat hinterlegt. Für den Beitragseinzug per Lastschrift Mandatsdaten erfassen.",
+    "help": "Daten des unterschriebenen SEPA-Lastschriftmandats. Die Mandatsreferenz muss je Mitglied eindeutig sein; eine Änderung wird der Bank als neues Mandat gemeldet.",
+    "ibanKeep": "Leer lassen, um die hinterlegte IBAN beizubehalten.",
+    "remove": "Mandat entfernen",
+    "cancel": "Abbrechen",
+    "save": "Speichern",
+    "saved": "SEPA-Mandat gespeichert.",
+    "fields": {
+      "iban": "IBAN",
+      "bic": "BIC (optional)",
+      "accountHolder": "Kontoinhaber:in",
+      "reference": "Mandatsreferenz",
+      "date": "Datum der Unterschrift"
+    },
+    "errors": {
+      "invalid": "Bitte die markierten Felder prüfen.",
+      "iban": "Bitte eine gültige IBAN eingeben.",
+      "bic": "Bitte eine gültige BIC eingeben.",
+      "holder": "Bitte Kontoinhaber:in angeben.",
+      "reference": "Die Referenz darf nur Buchstaben, Ziffern und + ? / : ( ) . , ' - enthalten.",
+      "referenceTaken": "Diese Mandatsreferenz wird bereits bei einem anderen Mitglied verwendet.",
+      "date": "Das Mandatsdatum darf nicht in der Zukunft liegen."
+    }
   }
 }

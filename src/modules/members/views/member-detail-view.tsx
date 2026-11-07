@@ -16,6 +16,8 @@ import { listMemberPayments } from "../queries/list-payments";
 import { listMemberDues } from "../queries/get-member-dues";
 import { MemberDetailActions } from "../components/member-detail-actions";
 import { DuesPanel } from "../components/dues-panel";
+import { MandateCard } from "../components/mandate-card";
+import { getMemberMandate } from "../services/sepa-mandate";
 import { NotesTimeline } from "../components/notes-timeline";
 import { PaymentsPanel } from "../components/payments-panel";
 import { StatusBadge } from "../components/status-badge";
@@ -57,6 +59,7 @@ export async function MemberDetailView({
     listMemberDues(member.id),
   ]);
   const canCreatePayment = can(user.role, memberPaymentsPermissions, "create");
+  const mandate = can(user.role, memberPaymentsPermissions, "view") ? await getMemberMandate(member.id) : null;
   const canVoidPayment = can(user.role, memberPaymentsPermissions, "delete");
   const canUpdatePayment = can(user.role, memberPaymentsPermissions, "update");
 
@@ -170,6 +173,13 @@ export async function MemberDetailView({
             canDelete={canVoidPayment}
           />
         </div>
+
+        {/* SEPA-Lastschriftmandat (yalnız aidat yetkisi olanlara) */}
+        {mandate ? (
+          <div className="lg:col-span-3">
+            <MandateCard memberId={member.id} mandate={mandate} canEdit={canUpdatePayment} />
+          </div>
+        ) : null}
 
         {/* Yıllık aidat satırları (Faz 3 eklemeleri) */}
         <div className="lg:col-span-3">

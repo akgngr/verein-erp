@@ -1,0 +1,65 @@
+enum SepaRunSource {
+  MEMBER_DUES
+  COURSE_FEES
+}
+
+enum SepaRunStatus {
+  CREATED
+  COLLECTED
+  CANCELLED
+}
+
+enum SepaItemStatus {
+  PENDING
+  COLLECTED
+  RETURNED
+}
+
+/// SEPA-Lastschrift tahsilat çalıştırması. XML dosyası şifreli saklanır (IBAN içerir).
+model SepaDebitRun {
+  id             String         @id @default(cuid())
+  /// LS-2026-0001 (MsgId)
+  number         String         @unique
+  year           Int
+  sequence       Int
+  source         SepaRunSource
+  /// Kaynak parametresi: aidat yılı ("2026") veya kurs ücretleri için son vade ("2026-11-30")
+  sourceParam    String
+  collectionDate DateTime       @db.Date
+  status         SepaRunStatus  @default(CREATED)
+  totalCents     Int
+  itemCount      Int
+  xmlEnc         String
+  collectedAt    DateTime?      @db.Date
+  createdById    String
+  createdByLabel String
+  createdAt      DateTime       @default(now())
+  items          SepaDebitItem[]
+
+  @@unique([year, sequence])
+  @@map("sepa_debit_runs")
+}
+
+/// Tahsilat kalemi. IBAN maskeli tutulur; tam IBAN yalnız şifreli XML'dedir.
+model SepaDebitItem {
+  id               String         @id @default(cuid())
+  runId            String
+  run              SepaDebitRun   @relation(fields: [runId], references: [id], onDelete: Cascade)
+  /// "<memberId>:<yıl>" veya "<chargeId>"
+  sourceKey        String
+  debtorName       String
+  ibanMasked       String
+  mandateReference String
+  amountCents      Int
+  /// EndToEndId (ödeme kaydında referans olarak da kullanılır)
+  endToEndId       String         @unique
+  remittance       String
+  status           SepaItemStatus @default(PENDING)
+  /// Makbuz veya muhasebe fiş numarası
+  receipt          String?
+  returnReason     String?
+
+  @@index([runId])
+  @@index([sourceKey, status])
+  @@map("sepa_debit_items")
+}

@@ -732,7 +732,9 @@
       "baseInterestRate": "Basiszinssatz (%)",
       "dunningFlatFeeB2B": "40 € Verzugspauschale bei B2B",
       "dunningFlatFeeB2BHint": "§ 288 Abs. 5 BGB; Empfänger mit USt-IdNr. gelten als Unternehmen.",
-      "dunningHint": "Verzugszinsen ab der 1. Mahnung: Verbraucher Basiszinssatz + 5, Unternehmen + 9 Prozentpunkte. Der Basiszinssatz wird zum 1. Januar und 1. Juli von der Bundesbank bekanntgegeben – bitte aktuell halten."
+      "dunningHint": "Verzugszinsen ab der 1. Mahnung: Verbraucher Basiszinssatz + 5, Unternehmen + 9 Prozentpunkte. Der Basiszinssatz wird zum 1. Januar und 1. Juli von der Bundesbank bekanntgegeben – bitte aktuell halten.",
+      "sepaCreditorId": "Gläubiger-Identifikationsnummer",
+      "sepaCreditorIdHelp": "Von der Bundesbank vergebene Nummer für SEPA-Lastschriften (z. B. DE98ZZZ09999999999)."
     },
     "errors": {
       "notFound": "Rechnung nicht gefunden.",
@@ -754,7 +756,8 @@
       "paymentDays": "Anzahl Tage eingeben.",
       "iban": "Ungültige IBAN.",
       "bic": "Ungültige BIC.",
-      "baseRate": "Ungültiger Zinssatz (z. B. 1,27 oder -0,88)."
+      "baseRate": "Ungültiger Zinssatz (z. B. 1,27 oder -0,88).",
+      "creditorId": "Ungültige Gläubiger-ID."
     },
     "newQuote": "Neues Angebot",
     "views": {

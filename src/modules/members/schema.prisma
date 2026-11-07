@@ -114,6 +114,15 @@ model Member {
   /// Fotoğraf/video yayın izni (KUG §22).
   photoConsent     Boolean   @default(false)
 
+  /// SEPA-Lastschriftmandat (aidat otomatik ödeme). IBAN yalnız aidat yetkisi olan rollere gösterilir.
+  sepaIban             String?
+  sepaBic              String?
+  sepaAccountHolder    String?
+  /// Mandatsreferenz (benzersiz; varsayılan M-<üyelik no>)
+  sepaMandateReference String?   @unique
+  /// Mandat imza tarihi
+  sepaMandateDate      DateTime? @db.Date
+
   createdById    String
   createdByLabel String
   updatedById    String?
@@ -171,6 +180,7 @@ enum PaymentMethod {
   CASH // Nakit (Bar)
   BANK_TRANSFER // Banka havalesi (Überweisung)
   CARD // Kart (Kartenzahlung)
+  SEPA_DEBIT // SEPA otomatik ödeme (Lastschrift)
   OTHER // Diğer (Sonstige)
 }
 

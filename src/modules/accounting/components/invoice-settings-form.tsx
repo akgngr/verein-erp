@@ -42,6 +42,7 @@ export function InvoiceSettingsForm({ settings, categoryOptions }: { settings: I
       sellerVatId: settings.sellerVatId ?? "",
       iban: settings.iban ?? "",
       bic: settings.bic ?? "",
+      sepaCreditorId: settings.sepaCreditorId ?? "",
       dunningIntervalDays: String(settings.dunningIntervalDays),
       dunningFeeReminder: money(settings.dunningFeeReminder),
       dunningFeeFirst: money(settings.dunningFeeFirst),
@@ -74,6 +75,7 @@ export function InvoiceSettingsForm({ settings, categoryOptions }: { settings: I
           <FormInput name="sellerVatId" label={t("sellerVatId")} control={form.control} placeholder="DE123456789" />
           <FormInput name="iban" label={t("iban")} control={form.control} />
           <FormInput name="bic" label={t("bic")} control={form.control} />
+          <FormInput name="sepaCreditorId" label={t("sepaCreditorId")} description={t("sepaCreditorIdHelp")} control={form.control} />
         </div>
         <p className="text-tiny text-default-500">{t("xrechnungHint")}</p>
         <h3 className="pt-2 text-small font-semibold">{t("dunningTitle")}</h3>

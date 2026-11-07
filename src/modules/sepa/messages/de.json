@@ -1,0 +1,100 @@
+{
+  "nav": {
+    "sepa": "SEPA-Lastschrift"
+  },
+  "module": {
+    "label": "SEPA-Lastschrift",
+    "description": "Einzug von Mitgliedsbeiträgen und Kursgebühren per SEPA-Lastschrift (pain.008)."
+  },
+  "permissions": {
+    "sepa": {
+      "label": "SEPA-Lastschrift",
+      "description": "Lastschriftdateien erstellen und Einzüge buchen."
+    }
+  },
+  "title": "SEPA-Lastschrift",
+  "description": "Offene Beiträge von Mitgliedern mit Mandat und Kursgebühren von Erziehungsberechtigten per SEPA-Lastschriftdatei (pain.008) einziehen.",
+  "openSettings": "Einstellungen öffnen",
+  "newRun": "Neuer Einzug",
+  "source": "Quelle",
+  "sources": {
+    "MEMBER_DUES": "Mitgliedsbeiträge",
+    "COURSE_FEES": "Kursgebühren"
+  },
+  "year": "Beitragsjahr",
+  "dueUntil": "Fällig bis",
+  "collectionDate": "Fälligkeitsdatum (Einzug)",
+  "collectionHelp": "Mindestens 2 Bankarbeitstage Vorlauf empfohlen.",
+  "preview": "Vorschau",
+  "previewSummary": "{count} Posten über {total} einziehbar; {skipped} Posten übersprungen.",
+  "skippedTitle": "{count} übersprungene Posten",
+  "skip": {
+    "noMandate": "Kein SEPA-Mandat",
+    "invalidIban": "IBAN ungültig",
+    "alreadyInRun": "Bereits in einem offenen Einzug"
+  },
+  "createRun": "Lastschriftdatei erstellen",
+  "created": "{number} erstellt.",
+  "history": "Einzüge",
+  "empty": "Noch keine Einzüge.",
+  "returnedCount": "{count} zurückgegeben",
+  "columns": {
+    "number": "Nr.",
+    "source": "Quelle",
+    "collectionDate": "Einzugsdatum",
+    "items": "Posten",
+    "total": "Summe",
+    "status": "Status",
+    "debtor": "Zahlungspflichtige:r",
+    "iban": "IBAN",
+    "mandate": "Mandatsref.",
+    "amount": "Betrag",
+    "receipt": "Quittung / Buchung"
+  },
+  "status": {
+    "CREATED": "Erstellt",
+    "COLLECTED": "Eingezogen",
+    "CANCELLED": "Storniert"
+  },
+  "itemStatus": {
+    "PENDING": "Offen",
+    "COLLECTED": "Eingezogen",
+    "RETURNED": "Rücklastschrift"
+  },
+  "downloadXml": "XML herunterladen (pain.008)",
+  "uploadHint": "Datei im Online-Banking hochladen. Nach dem Einzug durch die Bank mit 'Als eingezogen markieren' die Zahlungen buchen.",
+  "collectedAt": "Eingangsdatum",
+  "markCollected": "Als eingezogen markieren",
+  "collectConfirm": "{count} Posten werden als Zahlung gebucht (Quittung/Buchung wird erstellt). Fortfahren?",
+  "collectedToast": "Zahlungen gebucht.",
+  "cancelRun": "Einzug stornieren",
+  "cancelConfirm": "Dieser Einzug wird storniert. Nur fortfahren, wenn die Datei nicht bei der Bank eingereicht wurde.",
+  "markReturned": "Rücklastschrift",
+  "returnPrompt": "Rückgabegrund (z. B. AC04 Konto erloschen, MD06 Widerspruch, AM04 keine Deckung):",
+  "returnedToast": "Rücklastschrift erfasst; Zahlung storniert, Forderung wieder offen.",
+  "collectedOn": "Eingezogen am {date}",
+  "remittance": {
+    "dues": "Mitgliedsbeitrag {year}",
+    "course": "Kursgebuehr {code} {label}"
+  },
+  "errors": {
+    "ownIban": "Vereins-IBAN fehlt oder ist ungültig (Buchhaltung → Rechnungen → Einstellungen).",
+    "creditorId": "Gläubiger-ID fehlt oder ist ungültig (Buchhaltung → Rechnungen → Einstellungen).",
+    "date": "Bitte ein gültiges Datum eingeben.",
+    "year": "Bitte ein gültiges Jahr eingeben.",
+    "pastDate": "Das Einzugsdatum darf nicht in der Vergangenheit liegen.",
+    "nothingToCollect": "Keine einziehbaren Posten.",
+    "notOpen": "Der Einzug ist nicht offen.",
+    "notCollected": "Der Posten ist nicht eingezogen.",
+    "reason": "Bitte Grund angeben.",
+    "notFound": "Einzug nicht gefunden."
+  },
+  "access": {
+    "accounting": "Liest Vereins-IBAN und Gläubiger-ID.",
+    "members": "Liest offene Beiträge und SEPA-Mandate; bucht eingezogene Beiträge als Zahlung und storniert Rücklastschriften.",
+    "courses": "Liest fällige Kursgebühren; bucht eingezogene Gebühren (mit Buchung) und storniert Rücklastschriften.",
+    "students": "Liest das SEPA-Mandat der zahlenden Erziehungsberechtigten.",
+    "organization": "Verwendet den Vereinsnamen in der Datei.",
+    "system": "Prüft, ob die Quellmodule aktiv sind."
+  }
+}

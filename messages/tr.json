@@ -118,6 +118,7 @@
     "organization": "Dernek Bilgileri",
     "progress": "Öğrenci takibi",
     "securityMonitor": "Güvenlik İzleme",
+    "sepa": "SEPA otomatik ödeme",
     "students": "Öğrenciler",
     "ayarlar": "Ayarlar",
     "moduller": "Modül Yönetimi",
@@ -1013,7 +1014,9 @@
         "baseInterestRate": "Basiszinssatz (%)",
         "dunningFlatFeeB2B": "B2B'de 40 € gecikme götürü bedeli",
         "dunningFlatFeeB2BHint": "§ 288 Abs. 5 BGB; alıcının USt-IdNr.'si varsa işletme sayılır.",
-        "dunningHint": "Gecikme faizi 1. ihtardan itibaren: tüketici Basiszinssatz + 5, işletme + 9 yüzde puanı. Basiszinssatz Bundesbank tarafından her 1 Ocak ve 1 Temmuz'da ilan edilir; burada güncel tutun."
+        "dunningHint": "Gecikme faizi 1. ihtardan itibaren: tüketici Basiszinssatz + 5, işletme + 9 yüzde puanı. Basiszinssatz Bundesbank tarafından her 1 Ocak ve 1 Temmuz'da ilan edilir; burada güncel tutun.",
+        "sepaCreditorId": "SEPA alacaklı kimlik no (Gläubiger-ID)",
+        "sepaCreditorIdHelp": "SEPA otomatik ödeme için Bundesbank'tan alınan numara (ör. DE98ZZZ09999999999)."
       },
       "errors": {
         "notFound": "Fatura bulunamadı.",
@@ -1035,7 +1038,8 @@
         "paymentDays": "Gün sayısı girin.",
         "iban": "Geçersiz IBAN.",
         "bic": "Geçersiz BIC.",
-        "baseRate": "Geçersiz oran (ör. 1,27 veya -0,88)."
+        "baseRate": "Geçersiz oran (ör. 1,27 veya -0,88).",
+        "creditorId": "Geçersiz Gläubiger-ID."
       },
       "newQuote": "Yeni teklif",
       "views": {
@@ -6308,6 +6312,7 @@
       "method": {
         "CASH": "Nakit (Bar)",
         "BANK_TRANSFER": "Banka havalesi (Überweisung)",
+        "SEPA_DEBIT": "SEPA otomatik ödeme (Lastschrift)",
         "CARD": "Kart (Kartenzahlung)",
         "OTHER": "Diğer (Sonstige)"
       },
@@ -6735,6 +6740,34 @@
     "onlineForm": {
       "send": "e-Sign formu gönder",
       "documents": "e-Sign belgeleri"
+    },
+    "mandate": {
+      "title": "SEPA otomatik ödeme yetkisi",
+      "add": "Yetki ekle",
+      "edit": "Düzenle",
+      "none": "Kayıtlı SEPA yetkisi yok. Aidat otomatik ödemeyle tahsil edilecekse yetki bilgilerini girin.",
+      "help": "İmzalı SEPA-Lastschriftmandat bilgileri. Yetki referansı her üyede benzersiz olmalıdır; değiştirilirse bankaya yeni yetki olarak bildirilir.",
+      "ibanKeep": "Boş bırakılırsa kayıtlı IBAN korunur.",
+      "remove": "Yetkiyi kaldır",
+      "cancel": "Vazgeç",
+      "save": "Kaydet",
+      "saved": "SEPA yetkisi kaydedildi.",
+      "fields": {
+        "iban": "IBAN",
+        "bic": "BIC (isteğe bağlı)",
+        "accountHolder": "Hesap sahibi",
+        "reference": "Yetki referansı (Mandatsreferenz)",
+        "date": "Yetki tarihi"
+      },
+      "errors": {
+        "invalid": "Lütfen işaretli alanları kontrol edin.",
+        "iban": "Geçerli bir IBAN girin.",
+        "bic": "Geçerli bir BIC girin.",
+        "holder": "Hesap sahibini girin.",
+        "reference": "Referans yalnız harf, rakam ve + ? / : ( ) . , ' - içerebilir.",
+        "referenceTaken": "Bu yetki referansı başka bir üyede kullanılıyor.",
+        "date": "Yetki tarihi bugünden sonra olamaz."
+      }
     }
   },
   "online-forms": {
@@ -7230,6 +7263,103 @@
           }
         }
       }
+    }
+  },
+  "sepa": {
+    "module": {
+      "label": "SEPA otomatik ödeme",
+      "description": "Aidat ve kurs ücretleri için SEPA-Lastschrift (pain.008) tahsilatı."
+    },
+    "permissions": {
+      "sepa": {
+        "label": "SEPA otomatik ödeme",
+        "description": "Tahsilat dosyası oluşturma ve tahsilatı kaydetme."
+      }
+    },
+    "title": "SEPA otomatik ödeme",
+    "description": "Yetkisi olan üyelerin açık aidatlarını ve velilerin kurs ücretlerini SEPA-Lastschrift (pain.008) dosyasıyla bankadan tahsil edin.",
+    "openSettings": "Ayarları aç",
+    "newRun": "Yeni tahsilat",
+    "source": "Kaynak",
+    "sources": {
+      "MEMBER_DUES": "Üye aidatları",
+      "COURSE_FEES": "Kurs ücretleri"
+    },
+    "year": "Aidat yılı",
+    "dueUntil": "Vadesi şu tarihe kadar",
+    "collectionDate": "Tahsilat tarihi",
+    "collectionHelp": "En az 2 iş günü sonrası önerilir.",
+    "preview": "Önizle",
+    "previewSummary": "{count} kalem, toplam {total} tahsil edilebilir; {skipped} kalem atlandı.",
+    "skippedTitle": "Atlanan {count} kalem",
+    "skip": {
+      "noMandate": "SEPA yetkisi yok",
+      "invalidIban": "IBAN geçersiz",
+      "alreadyInRun": "Açık bir tahsilatta zaten var"
+    },
+    "createRun": "Tahsilat dosyası oluştur",
+    "created": "{number} oluşturuldu.",
+    "history": "Tahsilatlar",
+    "empty": "Henüz tahsilat yok.",
+    "returnedCount": "{count} geri döndü",
+    "columns": {
+      "number": "No",
+      "source": "Kaynak",
+      "collectionDate": "Tahsilat tarihi",
+      "items": "Kalem",
+      "total": "Toplam",
+      "status": "Durum",
+      "debtor": "Borçlu",
+      "iban": "IBAN",
+      "mandate": "Yetki ref.",
+      "amount": "Tutar",
+      "receipt": "Makbuz / fiş"
+    },
+    "status": {
+      "CREATED": "Oluşturuldu",
+      "COLLECTED": "Tahsil edildi",
+      "CANCELLED": "İptal"
+    },
+    "itemStatus": {
+      "PENDING": "Bekliyor",
+      "COLLECTED": "Tahsil edildi",
+      "RETURNED": "Geri döndü"
+    },
+    "downloadXml": "XML indir (pain.008)",
+    "uploadHint": "Dosyayı bankanızın online bankacılığına yükleyin. Banka tahsil ettiğinde 'Tahsil edildi' ile ödemeleri kaydedin.",
+    "collectedAt": "Tahsil tarihi",
+    "markCollected": "Tahsil edildi olarak işaretle",
+    "collectConfirm": "{count} kalem ödeme olarak kaydedilecek (makbuz/fiş oluşur). Devam edilsin mi?",
+    "collectedToast": "Ödemeler kaydedildi.",
+    "cancelRun": "Tahsilatı iptal et",
+    "cancelConfirm": "Bu tahsilat iptal edilecek. Dosyayı bankaya yüklemediyseniz devam edin.",
+    "markReturned": "Geri döndü",
+    "returnPrompt": "Geri dönüş nedeni (ör. AC04 hesap kapalı, MD06 itiraz, AM04 yetersiz bakiye):",
+    "returnedToast": "Kalem geri döndü; ödeme iptal edildi ve borç yeniden açıldı.",
+    "collectedOn": "Tahsil tarihi: {date}",
+    "remittance": {
+      "dues": "Mitgliedsbeitrag {year}",
+      "course": "Kursgebuehr {code} {label}"
+    },
+    "errors": {
+      "ownIban": "Derneğin IBAN'ı eksik veya geçersiz (Muhasebe → Faturalar → Ayarlar).",
+      "creditorId": "Gläubiger-ID eksik veya geçersiz (Muhasebe → Faturalar → Ayarlar).",
+      "date": "Geçerli bir tarih girin.",
+      "year": "Geçerli bir yıl girin.",
+      "pastDate": "Tahsilat tarihi geçmişte olamaz.",
+      "nothingToCollect": "Tahsil edilecek kalem yok.",
+      "notOpen": "Tahsilat açık değil.",
+      "notCollected": "Kalem tahsil edilmiş değil.",
+      "reason": "Nedeni girin.",
+      "notFound": "Tahsilat bulunamadı."
+    },
+    "access": {
+      "accounting": "Derneğin IBAN'ını ve Gläubiger-ID'yi okur.",
+      "members": "Açık aidatları ve üyelerin SEPA yetkisini okur; tahsil edilen aidatları ödeme olarak kaydeder, geri dönenleri iptal eder.",
+      "courses": "Vadesi gelmiş kurs ücretlerini okur; tahsil edilenleri ödeme olarak kaydeder (muhasebe fişiyle), geri dönenleri ters çevirir.",
+      "students": "Kurs ücretinin ödeyicisi olan velinin SEPA yetkisini okur.",
+      "organization": "Dosyada derneğin adını kullanır.",
+      "system": "Kaynak modüllerin açık olup olmadığını kontrol eder."
     }
   },
   "students": {

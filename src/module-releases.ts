@@ -34,6 +34,7 @@ import mailingsReleases from "@/modules/mailings/releases.json";
 import onlineformsReleases from "@/modules/online-forms/releases.json";
 import progressReleases from "@/modules/progress/releases.json";
 import securitymonitorReleases from "@/modules/security-monitor/releases.json";
+import sepaReleases from "@/modules/sepa/releases.json";
 import studentsReleases from "@/modules/students/releases.json";
 import tasksReleases from "@/modules/tasks/releases.json";
 
@@ -72,6 +73,7 @@ export const moduleReleases: { moduleKey: string; releases: ModuleRelease[] }[] 
   { moduleKey: "online-forms", releases: onlineformsReleases.releases as ModuleRelease[] },
   { moduleKey: "progress", releases: progressReleases.releases as ModuleRelease[] },
   { moduleKey: "security-monitor", releases: securitymonitorReleases.releases as ModuleRelease[] },
+  { moduleKey: "sepa", releases: sepaReleases.releases as ModuleRelease[] },
   { moduleKey: "students", releases: studentsReleases.releases as ModuleRelease[] },
   { moduleKey: "tasks", releases: tasksReleases.releases as ModuleRelease[] },
 ];
