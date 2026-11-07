@@ -77,7 +77,7 @@ export function SepaApp({ runs, defaults, sources, problems, canCreate }: { runs
                 const response = await createRunAction({ source, param: param[source], collectionDate, sourceKeys: null });
                 if (!response.ok) return void addToast({ title: translate(response.error), color: "danger" });
                 addToast({ title: t("created", { number: response.data.number }), color: "success" });
-                router.push(`/sepa/${response.data.id}`);
+                router.push(`/muhasebe/sepa/${response.data.id}`);
               })}>{t("createRun")}</Button>
             </div>
           ) : null}
@@ -92,7 +92,7 @@ export function SepaApp({ runs, defaults, sources, problems, canCreate }: { runs
             <tbody>
               {runs.map((run) => (
                 <tr key={run.id} className="border-t border-default-100">
-                  <td className="px-2 py-1"><Link className="font-mono text-primary hover:underline" href={`/sepa/${run.id}`}>{run.number}</Link></td>
+                  <td className="px-2 py-1"><Link className="font-mono text-primary hover:underline" href={`/muhasebe/sepa/${run.id}`}>{run.number}</Link></td>
                   <td className="px-2 py-1">{t(`sources.${run.source}`)} · {run.sourceParam}</td>
                   <td className="px-2 py-1">{date(run.collectionDate)}</td>
                   <td className="px-2 py-1">{run.itemCount}{run.returned ? <span className="text-danger"> ({t("returnedCount", { count: run.returned })})</span> : null}</td>

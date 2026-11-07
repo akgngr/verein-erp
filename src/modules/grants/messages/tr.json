@@ -1,7 +1,4 @@
 {
-  "nav": {
-    "grants": "Hibeler"
-  },
   "module": {
     "label": "Hibeler",
     "description": "Hibe ve proje fonları: finansman planı, ödemeler ve Verwendungsnachweis."

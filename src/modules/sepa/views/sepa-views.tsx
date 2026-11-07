@@ -49,7 +49,7 @@ export async function SepaRunView({ id }: { id: string }) {
   if (!run) notFound();
   return (
     <div>
-      <PageHeader title={run.number} description={`${t(`sources.${run.source}`)} · ${run.sourceParam} · ${run.createdByLabel}`} actions={<LinkButton href="/sepa" variant="bordered">{t("title")}</LinkButton>} />
+      <PageHeader title={run.number} description={`${t(`sources.${run.source}`)} · ${run.sourceParam} · ${run.createdByLabel}`} actions={<LinkButton href="/muhasebe/sepa" variant="bordered">{t("title")}</LinkButton>} />
       <SepaRunDetail run={run} can={{ download: can(user.role, sepaPermissions, "create"), update: can(user.role, sepaPermissions, "update"), cancel: can(user.role, sepaPermissions, "delete") }} />
     </div>
   );

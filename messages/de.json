@@ -107,7 +107,6 @@
     "events": "Veranstaltungen",
     "exports": "Meine Dateien",
     "geriBildirim": "Feedback",
-    "grants": "Fördermittel",
     "inventory": "Inventar",
     "mail": "E-Mail",
     "gelenKutusu": "Posteingang",
@@ -118,7 +117,6 @@
     "organization": "Vereinsdaten",
     "progress": "Lernfortschritt",
     "securityMonitor": "Sicherheitsüberwachung",
-    "sepa": "SEPA-Lastschrift",
     "students": "Schüler",
     "ayarlar": "Einstellungen",
     "moduller": "Modulverwaltung",
@@ -665,7 +663,9 @@
       "bank": "Bank",
       "payables": "Eingangsrechnungen",
       "gobd": "GoBD",
-      "extras": "Anlagen & Extras"
+      "extras": "Anlagen & Extras",
+      "grants": "Fördermittel",
+      "sepa": "SEPA-Lastschrift"
     },
     "meta": {
       "list": "Buchhaltung",

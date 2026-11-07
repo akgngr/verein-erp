@@ -1,7 +1,4 @@
 {
-  "nav": {
-    "sepa": "SEPA otomatik ödeme"
-  },
   "module": {
     "label": "SEPA otomatik ödeme",
     "description": "Aidat ve kurs ücretleri için SEPA-Lastschrift (pain.008) tahsilatı."

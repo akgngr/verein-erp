@@ -380,7 +380,9 @@
     "bank": "Banka",
     "payables": "Gelen faturalar",
     "gobd": "GoBD",
-    "extras": "Demirbaş ve ekler"
+    "extras": "Demirbaş ve ekler",
+    "grants": "Hibeler",
+    "sepa": "SEPA otomatik ödeme"
   },
   "nav": {
     "muhasebe": "Muhasebe"
