@@ -21,6 +21,8 @@ export function sanitizeDocumentHtml(html: string): string {
   }).slice(0, 200_000);
 }
 
+const ENTITIES: Record<string, string> = { nbsp: " ", amp: "&", lt: "<", gt: ">", quot: '"', "#39": "'" };
+
 /** PDF ve özet için düz metin: bloklar satır sonu, liste öğeleri madde işaretiyle. */
 export function documentHtmlToText(html: string): string {
   const withBreaks = html
@@ -29,6 +31,6 @@ export function documentHtmlToText(html: string): string {
     .replace(/<br\s*\/?>/gi, "\n")
     .replace(/<\/t[dh]>/gi, "\t");
   return sanitizeHtml(withBreaks, { allowedTags: [], allowedAttributes: {} })
-    .replace(/&nbsp;/g, " ").replace(/&amp;/g, "&").replace(/&lt;/g, "<").replace(/&gt;/g, ">").replace(/&quot;/g, '"').replace(/&#39;/g, "'")
+    .replace(/&(nbsp|amp|lt|gt|quot|#39);/g, (_, name: string) => ENTITIES[name] ?? "")
     .replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
 }

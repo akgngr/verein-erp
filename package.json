@@ -60,7 +60,6 @@
     "@mistralai/mistralai": "^3.4.0",
     "@prisma/adapter-pg": "7.10.1",
     "@prisma/client": "^7.10.1",
-    "@react-email/editor": "^1.7.18",
     "@react-pdf/renderer": "^4.9.0",
     "@tiptap/extension-highlight": "^3.33.0",
     "@tiptap/extension-table": "^3.33.0",
@@ -160,8 +159,26 @@
     "mailparser": [
       "mail"
     ],
-    "@react-email/editor": [
-      "mailings"
+    "@tiptap/extension-highlight": [
+      "online-forms"
+    ],
+    "@tiptap/extension-table": [
+      "online-forms"
+    ],
+    "@tiptap/extension-text-align": [
+      "online-forms"
+    ],
+    "@tiptap/pm": [
+      "online-forms"
+    ],
+    "@tiptap/react": [
+      "online-forms"
+    ],
+    "@tiptap/starter-kit": [
+      "online-forms"
+    ],
+    "sanitize-html": [
+      "online-forms"
     ]
   }
 }
