@@ -194,5 +194,12 @@
   },
   "menu": {
     "settings": "Ayarlar"
+  },
+  "ai": {
+    "create": {
+      "kind": "Takvim kaydı önerisi",
+      "confirm": "Kaydı ekle",
+      "done": "Takvim kaydı eklendi."
+    }
   }
 }

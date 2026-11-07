@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.3.0",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "Yapay zekâ desteği",
+        "de": "KI-Unterstützung"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Asistan ortak takvimleri ve kayıtlarını görebilir, randevu önerebilir (onayınızla eklenir). Kişisel ve dış takvim kayıtları asistana hiç verilmez.",
+          "de": "Der Assistent sieht gemeinsame Kalender und deren Einträge und kann Termine vorschlagen (Anlage nach Bestätigung). Persönliche und externe Kalendereinträge erhält er nie."
+        }
+      ]
+    },
+    {
       "version": "1.2.1",
       "date": "2026-11-07",
       "title": {
