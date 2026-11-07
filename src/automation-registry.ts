@@ -7,6 +7,7 @@ import * as documentsAutomationExports from "@/modules/documents/automation";
 import * as meetingsAutomationExports from "@/modules/meetings/automation";
 import * as membersAutomationExports from "@/modules/members/automation";
 import * as donationsAutomationExports from "@/modules/donations/automation";
+import * as organizationAutomationExports from "@/modules/organization/automation";
 import * as usersAutomationExports from "@/modules/users/automation";
 import * as systemAutomationExports from "@/modules/system/automation";
 import * as calendarAutomationExports from "@/modules/calendar/automation";
@@ -36,6 +37,7 @@ export const moduleAutomationTasks: TaskDefinition[] = [
   ...tasksOf("meetings", meetingsAutomationExports),
   ...tasksOf("members", membersAutomationExports),
   ...tasksOf("donations", donationsAutomationExports),
+  ...tasksOf("organization", organizationAutomationExports),
   ...tasksOf("users", usersAutomationExports),
   ...tasksOf("system", systemAutomationExports),
   ...tasksOf("calendar", calendarAutomationExports),
@@ -54,6 +56,7 @@ export const moduleAutomationEvents: EventDefinition[] = [
   ...eventsOf("meetings", meetingsAutomationExports),
   ...eventsOf("members", membersAutomationExports),
   ...eventsOf("donations", donationsAutomationExports),
+  ...eventsOf("organization", organizationAutomationExports),
   ...eventsOf("users", usersAutomationExports),
   ...eventsOf("system", systemAutomationExports),
   ...eventsOf("calendar", calendarAutomationExports),

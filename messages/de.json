@@ -6763,6 +6763,15 @@
             }
           }
         }
+      },
+      "tasks": {
+        "render_pdf": {
+          "label": "PDF des unterschriebenen Formulars erzeugen",
+          "description": "Erzeugt das PDF des unterschriebenen Formulars aus dem Nachweisdatensatz und speichert es verschlüsselt.",
+          "fields": {
+            "requestId": "Formularanfrage-ID"
+          }
+        }
       }
     },
     "access": {
@@ -6770,7 +6779,8 @@
       "students": "Liest Schüler- und Elternfelder, schreibt das unterschriebene Formular in den Datensatz und ermittelt bei Minderjährigen die Erziehungsberechtigten.",
       "mailings": "Sendet den Formular-Link per E-Mail, SMS oder WhatsApp an eine einzelne Person.",
       "organization": "Verwendet den Vereinsnamen in Nachricht und Formular.",
-      "system": "Prüft, ob die Quellmodule aktiv sind."
+      "system": "Prüft, ob die Quellmodule aktiv sind.",
+      "automation": "Nutzt die Auftragswarteschlange, um das PDF des unterschriebenen Formulars im Hintergrund zu erzeugen."
     },
     "settings": {
       "title": "Formulartexte",
