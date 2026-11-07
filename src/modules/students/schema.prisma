@@ -55,6 +55,10 @@ model StudentGuardian {
   sepaMandateDate      DateTime? @db.Date
   memberId             String? // FK DEĞİL; isteğe bağlı dernek üyesi bağlantısı
   note                 String?
+  /// Kampanya e-postası istemiyor (DSGVO Art. 21); fatura ve zorunlu yazışmalar etkilenmez.
+  bulkMailOptOut       Boolean   @default(false)
+  /// Açık rıza verilen mesaj kanalları ("sms", "whatsapp", "telegram").
+  messagingConsents    String[]  @default([])
   createdById          String
   createdByLabel       String
   createdAt            DateTime  @default(now())

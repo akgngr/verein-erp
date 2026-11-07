@@ -4377,7 +4377,30 @@
     },
     "calendar": {
       "events": "Veranstaltungen"
-    }
+    },
+    "recipients": {
+      "attendees": {
+        "label": "Veranstaltungsteilnehmende",
+        "filters": {
+          "event": {
+            "label": "Veranstaltung"
+          },
+          "status": {
+            "label": "Status",
+            "options": {
+              "REGISTERED": "Angemeldet",
+              "ATTENDED": "Teilgenommen",
+              "CANCELLED": "Abgesagt"
+            }
+          }
+        }
+      }
+    },
+    "access": {
+      "members": "Um Kommunikationseinwilligungen mitgliedsverknüpfter Teilnehmender (Kampagnen) zu lesen.",
+      "mailings": "Öffnet den Kampagnen-Assistenten mit den Teilnehmenden als Zielgruppe."
+    },
+    "announce": "Teilnehmende benachrichtigen"
   },
   "exports": {
     "module": {
@@ -4976,8 +4999,6 @@
     "segmentSaved": "Segment gespeichert.",
     "segmentDelete": "Segment löschen",
     "filterEmpty": "Keine Werte vorhanden.",
-    "editorHint": "„/“ fügt Blöcke ein (Überschrift, Button, Spalten, Trenner …); markierter Text öffnet das Formatierungsmenü.",
-    "editorPlaceholder": "E-Mail-Inhalt schreiben …",
     "automation": {
       "events": {
         "campaign_finished": {
@@ -5134,6 +5155,83 @@
     },
     "menu": {
       "settings": "Einstellungen"
+    },
+    "builder": {
+      "components": "Bausteine",
+      "addHint": "Klicken: wird unter dem ausgewählten Block eingefügt. Für Spalten zuerst die Spalte wählen.",
+      "addingToColumn": "Wird in Spalte {column} eingefügt",
+      "mode": "Ansicht",
+      "edit": "Bearbeiten",
+      "desktop": "Desktop",
+      "mobile": "Mobil",
+      "preview": "Vorschau",
+      "empty": "Füge links einen Baustein hinzu.",
+      "columnEmpty": "Spalte wählen, dann links hinzufügen",
+      "moveUp": "Nach oben",
+      "moveDown": "Nach unten",
+      "duplicate": "Duplizieren",
+      "remove": "Löschen",
+      "imageEmpty": "Bildadresse eingeben",
+      "placeholderText": "Text eingeben…",
+      "align": "Ausrichtung",
+      "aligns": {
+        "left": "Links",
+        "center": "Zentriert",
+        "right": "Rechts"
+      },
+      "types": {
+        "heading": "Überschrift",
+        "text": "Text",
+        "button": "Button",
+        "image": "Bild",
+        "divider": "Trennlinie",
+        "spacer": "Abstand",
+        "columns": "Spalten",
+        "footer": "Fußzeile"
+      },
+      "defaults": {
+        "heading": "Hallo '{firstName}'",
+        "text": "Schreibe hier deine Nachricht.",
+        "button": "Mehr erfahren",
+        "footer": "Du erhältst diese E-Mail aufgrund deiner Verbindung zu unserem Verein. Wenn du keine weiteren E-Mails möchtest, antworte einfach auf diese Nachricht."
+      },
+      "fields": {
+        "text": "Text",
+        "level": "Überschriftenebene",
+        "color": "Farbe",
+        "fontSize": "Schriftgröße",
+        "label": "Button-Text",
+        "url": "Link",
+        "background": "Hintergrund",
+        "textColor": "Textfarbe",
+        "radius": "Eckenradius",
+        "src": "Bildadresse (https)",
+        "alt": "Alternativtext",
+        "href": "Link beim Anklicken",
+        "width": "Breite (%)",
+        "thickness": "Stärke",
+        "height": "Höhe",
+        "gap": "Spaltenabstand",
+        "pageBackground": "Seitenhintergrund",
+        "contentBackground": "Inhaltshintergrund",
+        "linkColor": "Linkfarbe",
+        "font": "Schriftart",
+        "contentWidth": "Inhaltsbreite"
+      },
+      "fonts": {
+        "sans": "Serifenlos",
+        "serif": "Serif",
+        "mono": "Monospace"
+      },
+      "markupHelp": "**fett**, *kursiv*, [Linktext](https://…). Platzhalter werden beim Versand pro Person ersetzt.",
+      "urlHelp": "Muss mit https://, mailto: oder einem '{'Platzhalter'}' beginnen.",
+      "imageHelp": "Öffentliche Bildadresse (https). Bilder werden nicht auf unseren Server hochgeladen.",
+      "footerHelp": "Ein Hinweis zum Widerspruch/Abbestellen wird nach DSGVO empfohlen.",
+      "twoColumns": "2 Spalten",
+      "threeColumns": "3 Spalten",
+      "columnsHelp": "Zum Befüllen auf eine Spalte im Arbeitsbereich klicken, dann links einen Baustein wählen. Mobil werden Spalten untereinander angezeigt.",
+      "designSettings": "Allgemeines Design",
+      "selectHint": "Zum Bearbeiten auf einen Block im Arbeitsbereich klicken."
     }
   },
   "meetings": {
@@ -5662,8 +5760,9 @@
       }
     },
     "access": {
-      "members": "Liest die Mitgliederliste, um Teilnehmende hinzuzufügen.",
-      "organization": "Verwendet den Vereinsbriefkopf im Protokoll-PDF."
+      "members": "Liest die Mitgliederliste, um Teilnehmende hinzuzufügen. Liest für Ankündigungskampagnen Kontaktdaten und Einwilligungen teilnehmender Mitglieder.",
+      "organization": "Verwendet den Vereinsbriefkopf im Protokoll-PDF.",
+      "mailings": "Öffnet den Kampagnen-Assistenten mit den Teilnehmenden als Zielgruppe."
     },
     "ai": {
       "create": {
@@ -5716,6 +5815,28 @@
     },
     "calendar": {
       "meetings": "Sitzungen"
+    },
+    "recipients": {
+      "attendees": {
+        "label": "Sitzungsteilnehmende",
+        "filters": {
+          "meeting": {
+            "label": "Sitzung"
+          },
+          "attendance": {
+            "label": "Teilnahme",
+            "options": {
+              "INVITED": "Eingeladen",
+              "PRESENT": "Anwesend",
+              "ABSENT_EXCUSED": "Entschuldigt",
+              "ABSENT": "Abwesend"
+            }
+          }
+        }
+      }
+    },
+    "campaign": {
+      "announce": "Teilnehmende benachrichtigen"
     }
   },
   "members": {
@@ -6714,6 +6835,16 @@
         "Frau": "Frau",
         "Herr": "Herr",
         "NONE": "Keine Angabe"
+      },
+      "communicationTitle": "Kommunikationseinwilligungen",
+      "bulkMailOptOut": "Keine Kampagnen-E-Mails",
+      "bulkMailOptOutDescription": "Wenn markiert, erhält die Person keine Rundschreiben/Kampagnen-E-Mails; Rechnungen und Pflichtschreiben sind nicht betroffen (Art. 21 DSGVO).",
+      "messagingConsents": "Einwilligungen für Nachrichtenkanäle",
+      "messagingConsentsDescription": "Kanäle mit ausdrücklicher Einwilligung; Kampagnen senden SMS, WhatsApp und Telegram nur an diese.",
+      "messagingChannels": {
+        "sms": "SMS",
+        "whatsapp": "WhatsApp",
+        "telegram": "Telegram"
       }
     },
     "guardianList": {

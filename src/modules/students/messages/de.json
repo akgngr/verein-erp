@@ -115,6 +115,16 @@
       "Frau": "Frau",
       "Herr": "Herr",
       "NONE": "Keine Angabe"
+    },
+    "communicationTitle": "Kommunikationseinwilligungen",
+    "bulkMailOptOut": "Keine Kampagnen-E-Mails",
+    "bulkMailOptOutDescription": "Wenn markiert, erhält die Person keine Rundschreiben/Kampagnen-E-Mails; Rechnungen und Pflichtschreiben sind nicht betroffen (Art. 21 DSGVO).",
+    "messagingConsents": "Einwilligungen für Nachrichtenkanäle",
+    "messagingConsentsDescription": "Kanäle mit ausdrücklicher Einwilligung; Kampagnen senden SMS, WhatsApp und Telegram nur an diese.",
+    "messagingChannels": {
+      "sms": "SMS",
+      "whatsapp": "WhatsApp",
+      "telegram": "Telegram"
     }
   },
   "guardianList": {

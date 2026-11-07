@@ -19,35 +19,29 @@ import {
   Textarea,
 } from "@heroui/react";
 import { ArrowLeft, ArrowRight, Check, Mail, MessageCircle, MessageSquare, Save, Send, TestTube2, Users, X } from "lucide-react";
-import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { ClientSelect } from "@/shared/components/ui/client-select";
 
 import { launchCampaignAction, previewMailingAction, saveCampaignDraftAction, saveSegmentAction, sendMailingTestAction } from "../actions/mailing-actions";
-import type { EmailEditorFieldHandle } from "./email-editor-field";
+import { designFromText, designSchema, renderEmailHtml, renderEmailText, type EmailDesign } from "../lib/email-design";
+import { EmailBuilder } from "./email-builder";
 
-// Editör yalnızca tarayıcıda çalışır (Tiptap/DOM).
-const EmailEditorField = dynamic(() => import("./email-editor-field"), {
-  ssr: false,
-  loading: () => (
-    <div className="flex min-h-[320px] items-center justify-center rounded-medium border border-default-200">
-      <Spinner />
-    </div>
-  ),
-});
+
 
 export type WizardSource = {
   id: string;
   label: string;
   placeholders: string[];
   filters: { key: string; label: string; options: { value: string; label: string }[]; defaults: string[] }[];
+  /** Önizlemede yer tutucuların örnek değerleri. */
+  sampleVars: Record<string, string>;
 };
 export type WizardSegment = { id: string; name: string; source: string; filter: Record<string, string[]> };
 export type WizardChannel = { key: string; icon: "Mail" | "MessageSquare" | "Send" | "MessageCircle"; configured: boolean; capabilities: { subject: boolean; html: boolean; maxLength?: number } };
-export type WizardDraft = { id: string; name: string; channel: string; sourceId: string; filter: Record<string, string[]>; subject: string; body: string; bodyHtml: string | null; scheduledAt: string | null };
+export type WizardDraft = { id: string; name: string; channel: string; sourceId: string; filter: Record<string, string[]>; subject: string; body: string; bodyHtml: string | null; design: unknown; scheduledAt: string | null };
 
 type Preview = { matched: number; eligible: number; noEmail: number; optOut: number };
 
@@ -57,7 +51,6 @@ const CONTENT_GRID = "grid gap-6 xl:grid-cols-[minmax(0,1fr)_360px]";
 type Step = (typeof STEPS)[number];
 
 /** Düz metni editör için paragraflara çevirir (ör. asistanın önerdiği taslak). */
-const textToHtml = (text: string) => text.split(/\n{2,}/).map((block) => `<p>${block.split("\n").map((line) => line.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")).join("<br>")}</p>`).join("");
 
 const defaultsOf = (source: WizardSource | undefined) => Object.fromEntries((source?.filters ?? []).map((filter) => [filter.key, filter.defaults]));
 
@@ -79,33 +72,33 @@ export function CampaignWizard({
   sources,
   segments,
   channels,
-  defaultHtml,
   defaultText,
   draft,
   initialSourceId,
+  initialFilter,
 }: {
   isOpen: boolean;
   onClose: () => void;
   sources: WizardSource[];
   segments: WizardSegment[];
   channels: WizardChannel[];
-  defaultHtml: string;
   defaultText: string;
   draft: WizardDraft | null;
   initialSourceId: string | null;
+  /** Kısayoldan gelen ön filtre (ör. tek etkinlik); kaynağın varsayılanlarının üstüne yazılır. */
+  initialFilter?: Record<string, string[]> | null;
 }) {
   const t = useTranslations("mailings");
   const router = useRouter();
-  const editor = useRef<EmailEditorFieldHandle>(null);
   const firstSource = draft?.sourceId ?? (initialSourceId && sources.some((source) => source.id === initialSourceId) ? initialSourceId : (sources[0]?.id ?? ""));
   const [step, setStep] = useState<Step>("audience");
   const [draftId, setDraftId] = useState(draft?.id);
   const [name, setName] = useState(draft?.name ?? "");
   const [sourceId, setSourceId] = useState(firstSource);
   const source = useMemo(() => sources.find((item) => item.id === sourceId), [sources, sourceId]);
-  const [filter, setFilter] = useState<Record<string, string[]>>(() => draft?.filter ?? defaultsOf(sources.find((item) => item.id === firstSource)));
+  const [filter, setFilter] = useState<Record<string, string[]>>(() => draft?.filter ?? { ...defaultsOf(sources.find((item) => item.id === firstSource)), ...(initialFilter ?? {}) });
   const [segmentName, setSegmentName] = useState("");
-  const [channelKey, setChannelKey] = useState(draft?.channel ?? channels.find((channel) => channel.configured)?.key ?? channels[0]?.key ?? "email");
+  const [channelKey, setChannelKey] = useState(draft?.channel ?? (channels.find((channel) => channel.key === "email" && channel.configured) ?? channels.find((channel) => channel.configured))?.key ?? channels[0]?.key ?? "email");
   const channel = channels.find((item) => item.key === channelKey);
   const [subject, setSubject] = useState(draft?.subject ?? "");
   const [text, setText] = useState(draft?.body || defaultText);
@@ -116,6 +109,11 @@ export function CampaignWizard({
   const [openedAt] = useState(() => Date.now());
   const sourceSegments = segments.filter((segment) => segment.source === sourceId);
   const html = channel?.capabilities.html ?? false;
+  // Blok tasarımı: kayıtlı taslaktaki tasarım, yoksa taslak/varsayılan metinden başlangıç.
+  const [design, setDesign] = useState<EmailDesign>(() => {
+    const parsed = designSchema.safeParse(draft?.design);
+    return parsed.success ? parsed.data : designFromText(draft?.body || defaultText);
+  });
 
   useEffect(() => {
     if (!sourceId || !isOpen) return;
@@ -129,7 +127,7 @@ export function CampaignWizard({
   }, [sourceId, filter, channelKey, isOpen]);
 
   const payload = async () => {
-    const email = html ? ((await editor.current?.getEmail()) ?? { html: "", text: "" }) : { html: "", text };
+    const email = html ? { html: renderEmailHtml(design, subject), text: renderEmailText(design) } : { html: "", text };
     return {
       id: draftId,
       name,
@@ -139,6 +137,7 @@ export function CampaignWizard({
       subject: channel?.capabilities.subject ? subject : name,
       body: email.text,
       bodyHtml: html ? email.html : undefined,
+      design: html ? design : undefined,
       scheduledAt: when === "later" && scheduledAt ? new Date(scheduledAt).toISOString() : null,
     };
   };
@@ -276,28 +275,28 @@ export function CampaignWizard({
 
               {/* İçerik adımı açık kalır (gizlenir): editörün içeriği sonraki adımlarda da okunabilmeli. */}
               {index >= STEPS.indexOf("content") ? (
-                <div className={step === "content" ? CONTENT_GRID : "hidden"}>
+                <div className={step !== "content" ? "hidden" : html ? "flex flex-col" : CONTENT_GRID}>
                   <div className="flex min-w-0 flex-col gap-4">
                     {channel?.capabilities.subject ? <Input label={t("subject")} labelPlacement="outside" placeholder={t("wizard.subjectPlaceholder")} value={subject} onValueChange={setSubject} isRequired /> : null}
-                    <div className="flex flex-wrap items-center gap-2 text-tiny text-default-500">
-                      <span>{t("placeholders")}</span>
-                      {(source?.placeholders ?? []).map((key) => (
-                        <button key={key} type="button" className="rounded-medium bg-default-100 px-2 py-0.5 font-mono hover:bg-default-200"
-                          onMouseDown={(event) => event.preventDefault()}
-                          onClick={() => (html ? editor.current?.insertText(`{${key}}`) : setText((current) => `${current}{${key}}`))}>
-                          {`{${key}}`}
-                        </button>
-                      ))}
-                      {html ? <span className="ms-auto">{t("editorHint")}</span> : null}
-                    </div>
                     {html ? (
-                      <EmailEditorField handleRef={editor} initialHtml={draft?.bodyHtml || (draft?.body ? textToHtml(draft.body) : defaultHtml)} placeholder={t("editorPlaceholder")} />
+                      <EmailBuilder design={design} onChange={setDesign} placeholders={source?.placeholders ?? []} sampleVars={source?.sampleVars ?? {}} />
                     ) : (
-                      <Textarea minRows={8} value={text} onValueChange={setText} label={t("body")} labelPlacement="outside"
-                        description={channel?.capabilities.maxLength ? t("wizard.length", { count: text.length, max: channel.capabilities.maxLength }) : undefined} />
+                      <>
+                        <div className="flex flex-wrap items-center gap-2 text-tiny text-default-500">
+                          <span>{t("placeholders")}</span>
+                          {(source?.placeholders ?? []).map((key) => (
+                            <button key={key} type="button" className="rounded-medium bg-default-100 px-2 py-0.5 font-mono hover:bg-default-200"
+                              onMouseDown={(event) => event.preventDefault()} onClick={() => setText((current) => `${current}{${key}}`)}>
+                              {`{${key}}`}
+                            </button>
+                          ))}
+                        </div>
+                        <Textarea minRows={8} value={text} onValueChange={setText} label={t("body")} labelPlacement="outside"
+                          description={channel?.capabilities.maxLength ? t("wizard.length", { count: text.length, max: channel.capabilities.maxLength }) : undefined} />
+                      </>
                     )}
                   </div>
-                  <aside className="flex flex-col gap-2">
+                  <aside className={html ? "hidden" : "flex flex-col gap-2"}>
                     <span className="text-small font-semibold">{t("wizard.previewTitle")}</span>
                     <div className="rounded-[2rem] border-8 border-default-800 bg-default-50 p-3 shadow-medium dark:border-default-300">
                       <div className="mb-2 flex items-center gap-2 text-tiny text-default-500">

@@ -49,9 +49,9 @@ export function CampaignBoard(props: {
   sources: WizardSource[];
   segments: WizardSegment[];
   channels: WizardChannel[];
-  defaultHtml: string;
   defaultText: string;
   initialSourceId: string | null;
+  initialFilter: Record<string, string[]> | null;
 }) {
   const t = useTranslations("mailings");
   const format = useFormatter();
@@ -147,8 +147,8 @@ export function CampaignBoard(props: {
 
       {props.canCreate ? (
         <CampaignWizard key={wizard.key} isOpen={wizard.open} onClose={() => setWizard((current) => ({ ...current, open: false }))}
-          sources={props.sources} segments={props.segments} channels={props.channels} defaultHtml={props.defaultHtml} defaultText={props.defaultText}
-          draft={wizard.draft} initialSourceId={props.initialSourceId} />
+          sources={props.sources} segments={props.segments} channels={props.channels} defaultText={props.defaultText}
+          draft={wizard.draft} initialSourceId={props.initialSourceId} initialFilter={wizard.draft ? null : props.initialFilter} />
       ) : null}
 
       <ConfirmDialog

@@ -222,5 +222,28 @@
   },
   "calendar": {
     "events": "Etkinlikler"
-  }
+  },
+  "recipients": {
+    "attendees": {
+      "label": "Etkinlik katılımcıları",
+      "filters": {
+        "event": {
+          "label": "Etkinlik"
+        },
+        "status": {
+          "label": "Durum",
+          "options": {
+            "REGISTERED": "Kayıtlı",
+            "ATTENDED": "Katıldı",
+            "CANCELLED": "İptal"
+          }
+        }
+      }
+    }
+  },
+  "access": {
+    "members": "Üyeye bağlı katılımcıların iletişim izinlerini (kampanya duyuruları) okumak için.",
+    "mailings": "Katılımcılara duyuru için Kampanyalar sihirbazını hazır kaynakla açar."
+  },
+  "announce": "Katılımcılara duyur"
 }

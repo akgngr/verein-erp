@@ -1,10 +1,11 @@
 import { getTranslations } from "next-intl/server";
 import { MeetingEditView } from "./meeting-edit-view";
-import { FileText, Pencil } from "lucide-react";
+import { FileText, Megaphone, Pencil } from "lucide-react";
 import { notFound } from "next/navigation";
 
 import { ForbiddenError, listActiveUserOptions, requirePermission } from "@/modules/auth/server";
 import { membersPermissions } from "@/modules/members";
+import { campaignShortcutHref } from "@/modules/mailings/server";
 import { listMemberOptions } from "@/modules/members/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { LinkButton } from "@/shared/components/ui/link-button";
@@ -13,6 +14,7 @@ import { can } from "@/shared/permissions/define";
 import { formatDate, formatDateTime } from "@/shared/utils";
 
 import { getMeeting } from "../queries/get-meeting";
+import { meetingLabel } from "../recipients";
 import { meetingsPermissions } from "../permissions";
 import { MEETING_ALLOWED_EXTENSIONS } from "../constants";
 import { getEnv } from "@/shared/env";
@@ -54,6 +56,7 @@ export async function MeetingDetailView({
   const tStatus = await getTranslations("meetings.status");
   const tType = await getTranslations("meetings.type");
   const tCommon = await getTranslations("common");
+  const tCampaign = await getTranslations("meetings.campaign");
   const t = await getTranslations("meetings.detail");
   let user;
   try {
@@ -97,6 +100,9 @@ export async function MeetingDetailView({
       ? `${meeting.startTime}–${meeting.endTime}`
       : (meeting.startTime ?? "-");
 
+  // Kampanyalar etkin ve yetki varsa: katılımcılara duyuru sihirbazı bu toplantıyla açılır.
+  const announceHref = await campaignShortcutHref(user.role, "meetings:attendees", { meeting: meetingLabel(meeting) });
+
   return (
     <div>
       <PageHeader
@@ -112,6 +118,11 @@ export async function MeetingDetailView({
                 startIcon={<Pencil className="h-4 w-4" />}
               >
                 {tCommon("edit")}
+              </LinkButton>
+            ) : null}
+            {announceHref ? (
+              <LinkButton href={announceHref} color="default" variant="bordered" startIcon={<Megaphone className="h-4 w-4" />}>
+                {tCampaign("announce")}
               </LinkButton>
             ) : null}
             <StatusMenu

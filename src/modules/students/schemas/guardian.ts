@@ -23,6 +23,8 @@ export const guardianSchema = z.object({
   sepaMandateReference: text(35),
   sepaMandateDate: z.string().trim().refine((value) => value === "" || DATE_ONLY.test(value), "students.validation.dateInvalid"),
   note: text(2000),
+  bulkMailOptOut: z.boolean(),
+  messagingConsents: z.array(z.enum(["sms", "whatsapp", "telegram"])).max(3),
 });
 
 export const guardianUpdateSchema = guardianSchema.extend({ id: z.string().min(1) });

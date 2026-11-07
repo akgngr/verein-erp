@@ -527,8 +527,9 @@
     }
   },
   "access": {
-    "members": "Toplantıya katılımcı eklemek için üye listesini okur.",
-    "organization": "Tutanak PDF'inde dernek antetini kullanır."
+    "members": "Toplantıya katılımcı eklemek için üye listesini okur. Duyuru kampanyalarında üye katılımcıların iletişim bilgilerini ve izinlerini okur.",
+    "organization": "Tutanak PDF'inde dernek antetini kullanır.",
+    "mailings": "Katılımcılara duyuru için Kampanyalar sihirbazını hazır kaynakla açar."
   },
   "ai": {
     "create": {
@@ -581,5 +582,27 @@
   },
   "calendar": {
     "meetings": "Toplantılar"
+  },
+  "recipients": {
+    "attendees": {
+      "label": "Toplantı katılımcıları",
+      "filters": {
+        "meeting": {
+          "label": "Toplantı"
+        },
+        "attendance": {
+          "label": "Katılım",
+          "options": {
+            "INVITED": "Davetli",
+            "PRESENT": "Katıldı",
+            "ABSENT_EXCUSED": "Mazeretli",
+            "ABSENT": "Katılmadı"
+          }
+        }
+      }
+    }
+  },
+  "campaign": {
+    "announce": "Katılımcılara duyur"
   }
 }

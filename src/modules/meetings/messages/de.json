@@ -527,8 +527,9 @@
     }
   },
   "access": {
-    "members": "Liest die Mitgliederliste, um Teilnehmende hinzuzufügen.",
-    "organization": "Verwendet den Vereinsbriefkopf im Protokoll-PDF."
+    "members": "Liest die Mitgliederliste, um Teilnehmende hinzuzufügen. Liest für Ankündigungskampagnen Kontaktdaten und Einwilligungen teilnehmender Mitglieder.",
+    "organization": "Verwendet den Vereinsbriefkopf im Protokoll-PDF.",
+    "mailings": "Öffnet den Kampagnen-Assistenten mit den Teilnehmenden als Zielgruppe."
   },
   "ai": {
     "create": {
@@ -581,5 +582,27 @@
   },
   "calendar": {
     "meetings": "Sitzungen"
+  },
+  "recipients": {
+    "attendees": {
+      "label": "Sitzungsteilnehmende",
+      "filters": {
+        "meeting": {
+          "label": "Sitzung"
+        },
+        "attendance": {
+          "label": "Teilnahme",
+          "options": {
+            "INVITED": "Eingeladen",
+            "PRESENT": "Anwesend",
+            "ABSENT_EXCUSED": "Entschuldigt",
+            "ABSENT": "Abwesend"
+          }
+        }
+      }
+    }
+  },
+  "campaign": {
+    "announce": "Teilnehmende benachrichtigen"
   }
 }

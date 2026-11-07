@@ -20,7 +20,7 @@ import { mailingsPermissions } from "../permissions";
 import type { TaskExecutionContext } from "@/shared/automation/define";
 import type { Role } from "@/shared/roles";
 
-export type SourceInfo = { id: string; moduleKey: string; key: string; placeholders: string[]; filters: { key: string; options: string[]; defaults: string[]; dynamic: boolean }[] };
+export type SourceInfo = { id: string; moduleKey: string; key: string; placeholders: string[]; sampleVars: Record<string, string>; filters: { key: string; options: string[]; defaults: string[]; dynamic: boolean }[] };
 type Actor = { id: string; label: string };
 
 /** Etkin modüllerin kampanya kanalları. */
@@ -135,6 +135,7 @@ export async function listSources(role: Role): Promise<SourceInfo[]> {
         moduleKey: entry.moduleKey,
         key: source.key,
         placeholders: source.placeholders,
+        sampleVars: source.sampleVars,
         filters: source.filters.map((filter) => ({ key: filter.key, options: filter.options, defaults: filter.defaults ?? [], dynamic: Boolean(filter.loadOptions) })),
       });
     }
@@ -194,6 +195,8 @@ export type CampaignInput = {
   subject: string;
   body: string;
   bodyHtml?: string;
+  /** Blok tasarımı (yeniden düzenleme için); gönderimde bodyHtml kullanılır. */
+  design?: unknown;
   scheduledAt?: Date | null;
 };
 
@@ -209,6 +212,7 @@ export async function saveDraft(role: Role, input: CampaignInput, actor: Actor):
     subject: input.subject,
     body: input.body,
     bodyHtml: input.bodyHtml ?? null,
+    design: (input.design ?? undefined) as Prisma.InputJsonValue | undefined,
     scheduledAt: input.scheduledAt ?? null,
   };
   if (input.id) {
@@ -261,6 +265,7 @@ export async function launchCampaign(
     subject: input.subject,
     body: input.body,
     bodyHtml: input.bodyHtml ?? null,
+    design: (input.design ?? undefined) as Prisma.InputJsonValue | undefined,
     scheduledAt,
     status: (scheduledAt ? "SCHEDULED" : "SENDING") as "SCHEDULED" | "SENDING",
     recipientCount: eligible.length,

@@ -31,6 +31,8 @@ function toRow(row: Prisma.StudentGuardianGetPayload<{ include: { _count: { sele
     sepaMandateReference: row.sepaMandateReference,
     sepaMandateDate: row.sepaMandateDate,
     note: row.note,
+    bulkMailOptOut: row.bulkMailOptOut,
+    messagingConsents: row.messagingConsents,
     studentCount: row._count.students,
     updatedAt: row.updatedAt,
   };

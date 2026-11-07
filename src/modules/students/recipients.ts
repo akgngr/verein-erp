@@ -17,12 +17,12 @@ export const recipients = defineRecipients("students", [
       const onlyActive = !(filter.scope ?? []).includes("ALL");
       const rows = await getDb().studentGuardian.findMany({
         where: { deletedAt: null, ...(onlyActive ? { students: { some: { student: { deletedAt: null } } } } : {}) },
-        select: { id: true, email: true, firstName: true, lastName: true, salutation: true },
+        select: { id: true, email: true, phone: true, bulkMailOptOut: true, messagingConsents: true, firstName: true, lastName: true, salutation: true },
         orderBy: [{ lastName: "asc" }, { firstName: "asc" }],
       });
       return rows.map((row) => {
         const fullName = `${row.firstName} ${row.lastName}`.trim();
-        return { id: row.id, email: row.email, name: fullName, optOut: false, vars: { firstName: row.firstName, lastName: row.lastName, fullName, salutation: row.salutation ?? "" } };
+        return { id: row.id, email: row.email, phone: row.phone, consents: Object.fromEntries(row.messagingConsents.map((channel) => [channel, true])), name: fullName, optOut: row.bulkMailOptOut, vars: { firstName: row.firstName, lastName: row.lastName, fullName, salutation: row.salutation ?? "" } };
       });
     },
   },
