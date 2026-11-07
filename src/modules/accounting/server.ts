@@ -91,3 +91,5 @@ export { importPayableFile } from "./services/payable-import";
 export { PAYABLE_FILE_EXTENSIONS } from "./handlers/payable-files";
 // Envanter ↔ demirbaş senkronu (envanter modülü çağırır).
 export { saveAssetForInventoryItem, unlinkAssetFromInventoryItem } from "./services/inventory-assets";
+// CRM ve diğer modüller için cari özeti/arama (banka ve vergi bilgisi içermez).
+export { getContactSummaries, searchContacts, type ContactSummary } from "./queries/contact-summaries";

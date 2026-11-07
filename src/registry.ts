@@ -24,6 +24,7 @@ import { moduleConfig as campaignsmsModule } from "@/modules/campaign-sms";
 import { moduleConfig as campaigntelegramModule } from "@/modules/campaign-telegram";
 import { moduleConfig as campaignwhatsappModule } from "@/modules/campaign-whatsapp";
 import { moduleConfig as coursesModule } from "@/modules/courses";
+import { moduleConfig as crmModule } from "@/modules/crm";
 import { moduleConfig as demoModule } from "@/modules/demo";
 import { moduleConfig as eventsModule } from "@/modules/events";
 import { moduleConfig as exportsModule } from "@/modules/exports";
@@ -61,6 +62,7 @@ export const allModules: ModuleConfig[] = [
   campaigntelegramModule,
   campaignwhatsappModule,
   coursesModule,
+  crmModule,
   demoModule,
   eventsModule,
   exportsModule,

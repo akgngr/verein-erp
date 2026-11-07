@@ -7,6 +7,7 @@ import { lifecycle as systemLifecycle } from "@/modules/system/lifecycle";
 import { lifecycle as authLifecycle } from "@/modules/auth/lifecycle";
 import { lifecycle as aiLifecycle } from "@/modules/ai/lifecycle";
 import { lifecycle as calendarLifecycle } from "@/modules/calendar/lifecycle";
+import { lifecycle as crmLifecycle } from "@/modules/crm/lifecycle";
 import { lifecycle as demoLifecycle } from "@/modules/demo/lifecycle";
 import { lifecycle as exportsLifecycle } from "@/modules/exports/lifecycle";
 
@@ -16,6 +17,7 @@ export const moduleLifecycleRegistry: ModuleLifecycle[] = [
   authLifecycle,
   aiLifecycle,
   calendarLifecycle,
+  crmLifecycle,
   demoLifecycle,
   exportsLifecycle,
 ];

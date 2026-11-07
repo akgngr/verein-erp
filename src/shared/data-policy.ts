@@ -87,6 +87,9 @@ export const DATA_POLICY = {
   CampaignTelegramLink: { owner: "campaign-telegram", category: "K1", reason: "Telegram aboneliği: sohbet kimliği ve davet belirteci", sensitiveFields: ["chatId", "token", "recipientKey"] },
   MailingCampaign: { owner: "mailings", category: "K3", reason: "Kampanya özeti AI'ya yalnız ad, konu, kanal, durum ve sayılar olarak verilir; gövde, filtre ve oluşturan adı verilmez", sensitiveFields: ["body", "bodyHtml", "design", "filter", "createdByLabel"] },
   MailingSegment: { owner: "mailings", category: "K1", reason: "Alıcı filtreleri", sensitiveFields: [] },
+  CrmParty: { owner: "crm", category: "K1", reason: "Kişiye bağlı ilişki kaydı (aşama, etiket); ad/iletişim kaynakta", sensitiveFields: ["tags", "sourceId"] },
+  CrmActivity: { owner: "crm", category: "K1", reason: "Görüşme/arama notları", sensitiveFields: ["summary", "createdByLabel"] },
+  CrmFollowUp: { owner: "crm", category: "K1", reason: "Kişiye bağlı takip notları", sensitiveFields: ["note"] },
   MeetingAttendee: { owner: "meetings", category: "K1", reason: "Katılımcı adları", sensitiveFields: [ "note"] },
   MemberDue: { owner: "members", category: "K1", reason: "Kişi bazlı aidatlar", sensitiveFields: [] },
   MemberPayment: { owner: "members", category: "K1", reason: "Kişi bazlı ödemeler", sensitiveFields: [] },
@@ -96,6 +99,7 @@ export const DATA_POLICY = {
   ZuwendungConfirmation: { owner: "donations", category: "K1", reason: "Bağış makbuzları (vergi)", sensitiveFields: [] },
   ZuwendungConfirmationItem: { owner: "donations", category: "K1", reason: "Bağış makbuz kalemleri", sensitiveFields: [] },
   // ── K3 ──
+  CrmDeal: { owner: "crm", category: "K3", reason: "Fırsatlar; yapay zekâya yalnız aşama bazlı sayı/toplam", sensitiveFields: ["title"] },
   AccountingBankTransaction: { owner: "accounting", category: "K3", reason: "Banka hareketleri; yapay zekâya yalnız durum bazlı sayım/toplam", sensitiveFields: ["counterpartyName", "counterpartyIban", "purpose"] },
   AccountingBooking: { owner: "accounting", category: "K3", reason: "Muhasebe kayıtları; yapay zekâya toplamlar, metinler maskeli", sensitiveFields: ["counterparty"] },
   AccountingCashClosing: { owner: "accounting", category: "K3", reason: "Kasa kapanışları", sensitiveFields: [] },
@@ -184,6 +188,8 @@ export type AiToolPolicy = {
 export const USER_LINK_RETAINED: Record<string, string> = {
   AuditLog: "Denetim izi; yasal ispat yükümlülüğü (GoBD, KVKK md. 12). Ad/e-posta silme anında kaydedilir.",
   CourseTeacher: "Öğretmen kaydı kurumsal; kullanıcı bağlantısı yalnız giriş eşleştirmesi, ödeme geçmişi saklanır.",
+  CrmParty: "Sorumlu (ownerId) yumuşak referans; ilişki kaydı derneğe aittir, kullanıcı silinince sorumlu boşaltılır.",
+  CrmDeal: "Sorumlu (ownerId) yumuşak referans; fırsat derneğe aittir, kullanıcı silinince sorumlu boşaltılır.",
   MeetingAttendee: "Toplantı tutanağının parçası; katılımcı adı tutanakta korunur.",
 };
 
@@ -195,6 +201,8 @@ export const AI_TOOL_POLICY = {
   get_bank_inbox_summary: { module: "accounting", reads: ["AccountingBankTransaction"] },
   get_payables_summary: { module: "accounting", reads: ["AccountingPayable"] },
   get_report_link: { module: "accounting", reads: [] },
+  // crm
+  get_crm_pipeline: { module: "crm", reads: ["CrmDeal"] },
   // courses
   list_courses: { module: "courses", reads: ["Course", "CourseEnrollment", "CourseSession"] },
   get_course_statistics: { module: "courses", reads: ["Course", "CourseEnrollment", "CourseSession"] },
