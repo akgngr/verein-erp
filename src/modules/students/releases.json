@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.4.1",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "Öğrenci sayfasında e-Sign belgelerine bağlantı; veli listesinden e-Sign formu gönderme",
+        "de": "Link zu e-Sign-Dokumenten auf der Schülerseite; e-Sign-Formular aus der Elternliste senden"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Öğrenci sayfasında e-Sign belgelerine bağlantı; veli listesinden e-Sign formu gönderme",
+          "de": "Link zu e-Sign-Dokumenten auf der Schülerseite; e-Sign-Formular aus der Elternliste senden"
+        }
+      ]
+    },
+    {
       "version": "1.4.0",
       "date": "2026-11-07",
       "title": {

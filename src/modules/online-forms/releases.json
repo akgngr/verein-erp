@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.1.0",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "e-Sign: form metinleri, imzalı PDF, belge anahtarı",
+        "de": "e-Sign: Formulartexte, unterschriebenes PDF, Dokumentschlüssel"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "e-Sign adı; Datenschutz ve fotoğraf izni metinleri ayarlanabilir ve formda gösterilir; doğum tarihi gün/ay/yıl seçimi; imzalı PDF (gömülü imza, onaylar, metinler) imza anında üretilip şifreli saklanır; benzersiz belge anahtarı; kişi sayfalarından belgelere bağlantı; veli listesinden gönderim.",
+          "de": "Name e-Sign; Datenschutz- und Fototexte einstellbar und im Formular angezeigt; Geburtsdatum per Tag/Monat/Jahr; unterschriebenes PDF (eingebettete Unterschrift, Einwilligungen, Texte) wird bei Unterschrift erzeugt und verschlüsselt gespeichert; eindeutiger Dokumentschlüssel; Links zu Dokumenten auf Personenseiten; Versand aus der Elternliste."
+        },
+        {
+          "type": "improvement",
+          "tr": "İmzalı PDF arka planda (worker) üretilir; imzalayan beklemez. Otomasyon kapalıysa doğrudan üretilir.",
+          "de": "Das unterschriebene PDF wird im Hintergrund (Worker) erzeugt; die unterschreibende Person wartet nicht. Ist die Automatisierung aus, wird es direkt erzeugt."
+        }
+      ]
+    },
+    {
       "version": "1.0.0",
       "date": "2026-11-07",
       "title": {
@@ -13,16 +33,6 @@
           "type": "feature",
           "tr": "Üye, öğrenci ve veliye e-posta/SMS/WhatsApp ile süreli form bağlantısı; kişi eksik bilgileri, Datenschutz ve isteğe bağlı onayları doldurup imzalar, kayıt güncellenir. Reşit olmayan öğrencide veli onaylar.",
           "de": "Befristeter Formular-Link per E-Mail/SMS/WhatsApp an Mitglieder, Schüler:innen und Erziehungsberechtigte; Angaben, Datenschutz und freiwillige Einwilligungen werden ergänzt und unterschrieben, der Datensatz wird aktualisiert. Bei Minderjährigen bestätigen die Erziehungsberechtigten."
-        },
-        {
-          "type": "feature",
-          "tr": "e-Sign adı; Datenschutz ve fotoğraf izni metinleri ayarlanabilir ve formda gösterilir; doğum tarihi gün/ay/yıl seçimi; imzalı PDF (gömülü imza, onaylar, metinler) imza anında üretilip şifreli saklanır; benzersiz belge anahtarı; kişi sayfalarından belgelere bağlantı; veli listesinden gönderim.",
-          "de": "Name e-Sign; Datenschutz- und Fototexte einstellbar und im Formular angezeigt; Geburtsdatum per Tag/Monat/Jahr; unterschriebenes PDF (eingebettete Unterschrift, Einwilligungen, Texte) wird bei Unterschrift erzeugt und verschlüsselt gespeichert; eindeutiger Dokumentschlüssel; Links zu Dokumenten auf Personenseiten; Versand aus der Elternliste."
-        },
-        {
-          "type": "improvement",
-          "tr": "İmzalı PDF arka planda (worker) üretilir; imzalayan beklemez. Otomasyon kapalıysa doğrudan üretilir.",
-          "de": "Das unterschriebene PDF wird im Hintergrund (Worker) erzeugt; die unterschreibende Person wartet nicht. Ist die Automatisierung aus, wird es direkt erzeugt."
         }
       ]
     }
