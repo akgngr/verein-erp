@@ -12,7 +12,7 @@ import { onlineFormsPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "online-forms",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.1.0",
+  version: "1.1.1",
   label: "e-Sign",
   description: "e-Sign: kişiye süreli bağlantı, form tamamlama, Datenschutz onayı, imza ve imzalı PDF belgeleri.",
   category: "OFFICIAL",
