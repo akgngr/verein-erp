@@ -114,7 +114,7 @@
     },
     "telegram": {
       "label": "Telegram",
-      "description": "Botunuza abone olanlara; davet için e-postada {telegramLink} kullanın."
+      "description": "Botunuza abone olanlara; davet için e-postada '{telegramLink}' kullanın."
     }
   },
   "board": {
