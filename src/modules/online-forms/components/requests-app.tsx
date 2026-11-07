@@ -103,7 +103,9 @@ function SendDialog({ target, channels, onClose }: { target: { kind: Kind; subje
       <ModalContent>
         <ModalHeader>{t("sendTitle")}</ModalHeader>
         <ModalBody>
-          {error ? <p className="text-danger">{translate(error)}</p> : !preview ? <Spinner /> : (
+          {error ? <p className="text-danger">{translate(error)}</p> : null}
+          {!error && !preview ? <Spinner /> : null}
+          {!error && preview ? (
             <div className="flex flex-col gap-4">
               <p className="text-small text-default-600">
                 {preview.signerRole === "guardian" ? t("sendIntroGuardian", { name: preview.subjectName }) : t("sendIntro", { name: preview.subjectName })}
@@ -121,7 +123,7 @@ function SendDialog({ target, channels, onClose }: { target: { kind: Kind; subje
               {channels.length === 0 ? <p className="text-small text-warning">{t("noChannels")}</p> : null}
               <p className="text-tiny text-default-500">{t("sendHint")}</p>
             </div>
-          )}
+          ) : null}
         </ModalBody>
         <ModalFooter>
           <Button variant="light" onPress={onClose}>{t("close")}</Button>

@@ -91,9 +91,7 @@ export function PublicOnlineForm({ token, form }: { token: string; form: Form })
   const messaging = (values: Values, set: (next: Values) => void) => (
     <div className="flex flex-col gap-2">
       <CheckboxGroup label={t("messagingLabel")} orientation="horizontal" value={values.messagingConsents as string[]} onValueChange={(value) => set({ ...values, messagingConsents: value })}>
-        <Checkbox value="sms">SMS</Checkbox>
-        <Checkbox value="whatsapp">WhatsApp</Checkbox>
-        <Checkbox value="telegram">Telegram</Checkbox>
+        {(["sms", "whatsapp", "telegram"] as const).map((key) => <Checkbox key={key} value={key}>{t(`channels.${key}`)}</Checkbox>)}
       </CheckboxGroup>
       <Checkbox isSelected={Boolean(values.bulkMailOptOut)} onValueChange={(value) => set({ ...values, bulkMailOptOut: value })}>{t("bulkMailOptOut")}</Checkbox>
     </div>

@@ -6728,7 +6728,12 @@
       "doneTitle": "Teşekkürler!",
       "doneText": "Bilgileriniz {org} kuruluşuna iletildi. Bu sayfayı kapatabilirsiniz.",
       "invalidTitle": "Bağlantı geçersiz",
-      "invalidText": "Bu bağlantının süresi dolmuş, iptal edilmiş veya form zaten imzalanmış olabilir. Lütfen kuruluşla iletişime geçin."
+      "invalidText": "Bu bağlantının süresi dolmuş, iptal edilmiş veya form zaten imzalanmış olabilir. Lütfen kuruluşla iletişime geçin.",
+      "channels": {
+        "sms": "SMS",
+        "whatsapp": "WhatsApp",
+        "telegram": "Telegram"
+      }
     },
     "automation": {
       "events": {

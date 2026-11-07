@@ -6728,7 +6728,12 @@
       "doneTitle": "Vielen Dank!",
       "doneText": "Ihre Angaben wurden an {org} übermittelt. Sie können diese Seite schließen.",
       "invalidTitle": "Link ungültig",
-      "invalidText": "Dieser Link ist abgelaufen, wurde storniert oder das Formular wurde bereits unterschrieben. Bitte wenden Sie sich an den Verein."
+      "invalidText": "Dieser Link ist abgelaufen, wurde storniert oder das Formular wurde bereits unterschrieben. Bitte wenden Sie sich an den Verein.",
+      "channels": {
+        "sms": "SMS",
+        "whatsapp": "WhatsApp",
+        "telegram": "Telegram"
+      }
     },
     "automation": {
       "events": {
