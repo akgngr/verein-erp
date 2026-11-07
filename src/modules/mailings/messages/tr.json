@@ -78,8 +78,6 @@
   "segmentSaved": "Segment kaydedildi.",
   "segmentDelete": "Segmenti sil",
   "filterEmpty": "Bu alanda veri yok.",
-  "editorHint": "\"/\" ile blok ekleyin (başlık, buton, sütun, ayırıcı…); metni seçince biçimlendirme menüsü açılır.",
-  "editorPlaceholder": "E-posta içeriğini yazın…",
   "automation": {
     "events": {
       "campaign_finished": {
@@ -139,7 +137,8 @@
     "cancelTitle": "Kampanya iptal edilsin mi?",
     "cancelMessage": "Planlı gönderim yapılmayacak; iş akışı devre dışı bırakılır.",
     "deleteTitle": "Kampanya silinsin mi?",
-    "deleteMessage": "Taslak ya da iptal edilmiş kampanya kalıcı olarak silinir."
+    "deleteMessage": "Taslak ya da iptal edilmiş kampanya kalıcı olarak silinir.",
+    "edit": "Düzenle"
   },
   "wizard": {
     "title": "Yeni kampanya",
@@ -235,5 +234,82 @@
   },
   "menu": {
     "settings": "Ayarlar"
+  },
+  "builder": {
+    "components": "Bileşenler",
+    "addHint": "Tıklayın: seçili bloğun altına eklenir. Sütuna eklemek için önce sütunu seçin.",
+    "addingToColumn": "{column}. sütuna ekleniyor",
+    "mode": "Görünüm",
+    "edit": "Düzenle",
+    "desktop": "Masaüstü",
+    "mobile": "Mobil",
+    "preview": "Önizleme",
+    "empty": "Soldan bir bileşen ekleyin.",
+    "columnEmpty": "Sütunu seçip soldan ekleyin",
+    "moveUp": "Yukarı",
+    "moveDown": "Aşağı",
+    "duplicate": "Çoğalt",
+    "remove": "Sil",
+    "imageEmpty": "Görsel adresi girin",
+    "placeholderText": "Metin yazın…",
+    "align": "Hizalama",
+    "aligns": {
+      "left": "Sola",
+      "center": "Ortaya",
+      "right": "Sağa"
+    },
+    "types": {
+      "heading": "Başlık",
+      "text": "Metin",
+      "button": "Buton",
+      "image": "Görsel",
+      "divider": "Ayırıcı",
+      "spacer": "Boşluk",
+      "columns": "Sütunlar",
+      "footer": "Alt bilgi"
+    },
+    "defaults": {
+      "heading": "Merhaba '{firstName}'",
+      "text": "Mesajınızı buraya yazın.",
+      "button": "Daha fazla bilgi",
+      "footer": "Bu e-postayı derneğimizle ilişkiniz nedeniyle alıyorsunuz. Almak istemiyorsanız bu e-postayı yanıtlayın."
+    },
+    "fields": {
+      "text": "Metin",
+      "level": "Başlık düzeyi",
+      "color": "Renk",
+      "fontSize": "Yazı boyutu",
+      "label": "Buton metni",
+      "url": "Bağlantı",
+      "background": "Arka plan",
+      "textColor": "Yazı rengi",
+      "radius": "Köşe yuvarlaklığı",
+      "src": "Görsel adresi (https)",
+      "alt": "Alternatif metin",
+      "href": "Tıklanınca açılacak bağlantı",
+      "width": "Genişlik (%)",
+      "thickness": "Kalınlık",
+      "height": "Yükseklik",
+      "gap": "Sütun aralığı",
+      "pageBackground": "Sayfa arka planı",
+      "contentBackground": "İçerik arka planı",
+      "linkColor": "Bağlantı rengi",
+      "font": "Yazı tipi",
+      "contentWidth": "İçerik genişliği"
+    },
+    "fonts": {
+      "sans": "Sans-serif",
+      "serif": "Serif",
+      "mono": "Sabit genişlik"
+    },
+    "markupHelp": "**kalın**, *italik*, [bağlantı metni](https://…). Yer tutucular gönderimde kişiye göre doldurulur.",
+    "urlHelp": "https://, mailto: veya '{'yer tutucu'}' ile başlamalı.",
+    "imageHelp": "Herkese açık bir görsel adresi (https). Görseller sunucumuza yüklenmez.",
+    "footerHelp": "İtiraz/abonelikten çıkma bilgisi DSGVO gereği önerilir.",
+    "twoColumns": "2 sütun",
+    "threeColumns": "3 sütun",
+    "columnsHelp": "İçerik eklemek için tuvalde bir sütuna tıklayın, sonra soldan bileşen seçin. Mobilde sütunlar alt alta dizilir.",
+    "designSettings": "Genel tasarım",
+    "selectHint": "Bir bloğu düzenlemek için tuvalde üzerine tıklayın."
   }
 }

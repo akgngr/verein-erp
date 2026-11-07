@@ -7,3 +7,4 @@ export { listCampaignSummaries } from "./services/campaigns";
 export { previewMailingAction, sendMailingTestAction, launchCampaignAction } from "./actions/mailing-actions";
 // Kanal eklentileri için (ör. Telegram webhook): ayarlar yalnız sunucuda çözülür.
 export { getChannelConfig } from "./services/campaigns";
+export { campaignShortcutHref } from "./services/shortcuts";

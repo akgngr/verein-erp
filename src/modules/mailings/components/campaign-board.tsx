@@ -49,9 +49,9 @@ export function CampaignBoard(props: {
   sources: WizardSource[];
   segments: WizardSegment[];
   channels: WizardChannel[];
-  defaultHtml: string;
   defaultText: string;
   initialSourceId: string | null;
+  initialFilter: Record<string, string[]> | null;
 }) {
   const t = useTranslations("mailings");
   const format = useFormatter();
@@ -101,8 +101,8 @@ export function CampaignBoard(props: {
                 const ChannelIcon = CHANNEL_ICON[item.channel] ?? Send;
                 const progress = item.recipientCount ? Math.round(((item.sentCount + item.failedCount) / item.recipientCount) * 100) : 0;
                 return (
-                  <Card key={item.id} shadow="sm" isPressable={item.status === "DRAFT" && props.canCreate}
-                    onPress={() => item.draft && setWizard((current) => ({ open: true, draft: item.draft, key: current.key + 1 }))}>
+                  // Kart tıklanabilir değil (içinde düğmeler var; button içinde button geçersiz HTML).
+                  <Card key={item.id} shadow="sm">
                     <CardBody className="flex flex-col gap-2">
                       <div className="flex items-start gap-2">
                         <ChannelIcon className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
@@ -120,6 +120,12 @@ export function CampaignBoard(props: {
                         {item.status === "SCHEDULED" && item.scheduledAt ? t("board.scheduledFor", { date: date(item.scheduledAt) }) : date(item.createdAt)} · {item.createdByLabel}
                       </p>
                       <div className="flex flex-wrap gap-1">
+                        {props.canCreate && item.draft ? (
+                          <Button size="sm" variant="flat" color="primary" startContent={<FilePen className="h-3.5 w-3.5" />}
+                            onPress={() => setWizard((current) => ({ open: true, draft: item.draft, key: current.key + 1 }))}>
+                            {t("board.edit")}
+                          </Button>
+                        ) : null}
                         {item.workflowId ? (
                           <Button as={Link} href={`/automation/workflows/${item.workflowId}`} size="sm" variant="light" startContent={<Workflow className="h-3.5 w-3.5" />}>{t("board.workflow")}</Button>
                         ) : null}
@@ -141,8 +147,8 @@ export function CampaignBoard(props: {
 
       {props.canCreate ? (
         <CampaignWizard key={wizard.key} isOpen={wizard.open} onClose={() => setWizard((current) => ({ ...current, open: false }))}
-          sources={props.sources} segments={props.segments} channels={props.channels} defaultHtml={props.defaultHtml} defaultText={props.defaultText}
-          draft={wizard.draft} initialSourceId={props.initialSourceId} />
+          sources={props.sources} segments={props.segments} channels={props.channels} defaultText={props.defaultText}
+          draft={wizard.draft} initialSourceId={props.initialSourceId} initialFilter={wizard.draft ? null : props.initialFilter} />
       ) : null}
 
       <ConfirmDialog

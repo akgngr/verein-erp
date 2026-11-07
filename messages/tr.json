@@ -4377,7 +4377,30 @@
     },
     "calendar": {
       "events": "Etkinlikler"
-    }
+    },
+    "recipients": {
+      "attendees": {
+        "label": "Etkinlik katılımcıları",
+        "filters": {
+          "event": {
+            "label": "Etkinlik"
+          },
+          "status": {
+            "label": "Durum",
+            "options": {
+              "REGISTERED": "Kayıtlı",
+              "ATTENDED": "Katıldı",
+              "CANCELLED": "İptal"
+            }
+          }
+        }
+      }
+    },
+    "access": {
+      "members": "Üyeye bağlı katılımcıların iletişim izinlerini (kampanya duyuruları) okumak için.",
+      "mailings": "Katılımcılara duyuru için Kampanyalar sihirbazını hazır kaynakla açar."
+    },
+    "announce": "Katılımcılara duyur"
   },
   "exports": {
     "module": {
@@ -4976,8 +4999,6 @@
     "segmentSaved": "Segment kaydedildi.",
     "segmentDelete": "Segmenti sil",
     "filterEmpty": "Bu alanda veri yok.",
-    "editorHint": "\"/\" ile blok ekleyin (başlık, buton, sütun, ayırıcı…); metni seçince biçimlendirme menüsü açılır.",
-    "editorPlaceholder": "E-posta içeriğini yazın…",
     "automation": {
       "events": {
         "campaign_finished": {
@@ -5037,7 +5058,8 @@
       "cancelTitle": "Kampanya iptal edilsin mi?",
       "cancelMessage": "Planlı gönderim yapılmayacak; iş akışı devre dışı bırakılır.",
       "deleteTitle": "Kampanya silinsin mi?",
-      "deleteMessage": "Taslak ya da iptal edilmiş kampanya kalıcı olarak silinir."
+      "deleteMessage": "Taslak ya da iptal edilmiş kampanya kalıcı olarak silinir.",
+      "edit": "Düzenle"
     },
     "wizard": {
       "title": "Yeni kampanya",
@@ -5133,6 +5155,83 @@
     },
     "menu": {
       "settings": "Ayarlar"
+    },
+    "builder": {
+      "components": "Bileşenler",
+      "addHint": "Tıklayın: seçili bloğun altına eklenir. Sütuna eklemek için önce sütunu seçin.",
+      "addingToColumn": "{column}. sütuna ekleniyor",
+      "mode": "Görünüm",
+      "edit": "Düzenle",
+      "desktop": "Masaüstü",
+      "mobile": "Mobil",
+      "preview": "Önizleme",
+      "empty": "Soldan bir bileşen ekleyin.",
+      "columnEmpty": "Sütunu seçip soldan ekleyin",
+      "moveUp": "Yukarı",
+      "moveDown": "Aşağı",
+      "duplicate": "Çoğalt",
+      "remove": "Sil",
+      "imageEmpty": "Görsel adresi girin",
+      "placeholderText": "Metin yazın…",
+      "align": "Hizalama",
+      "aligns": {
+        "left": "Sola",
+        "center": "Ortaya",
+        "right": "Sağa"
+      },
+      "types": {
+        "heading": "Başlık",
+        "text": "Metin",
+        "button": "Buton",
+        "image": "Görsel",
+        "divider": "Ayırıcı",
+        "spacer": "Boşluk",
+        "columns": "Sütunlar",
+        "footer": "Alt bilgi"
+      },
+      "defaults": {
+        "heading": "Merhaba '{firstName}'",
+        "text": "Mesajınızı buraya yazın.",
+        "button": "Daha fazla bilgi",
+        "footer": "Bu e-postayı derneğimizle ilişkiniz nedeniyle alıyorsunuz. Almak istemiyorsanız bu e-postayı yanıtlayın."
+      },
+      "fields": {
+        "text": "Metin",
+        "level": "Başlık düzeyi",
+        "color": "Renk",
+        "fontSize": "Yazı boyutu",
+        "label": "Buton metni",
+        "url": "Bağlantı",
+        "background": "Arka plan",
+        "textColor": "Yazı rengi",
+        "radius": "Köşe yuvarlaklığı",
+        "src": "Görsel adresi (https)",
+        "alt": "Alternatif metin",
+        "href": "Tıklanınca açılacak bağlantı",
+        "width": "Genişlik (%)",
+        "thickness": "Kalınlık",
+        "height": "Yükseklik",
+        "gap": "Sütun aralığı",
+        "pageBackground": "Sayfa arka planı",
+        "contentBackground": "İçerik arka planı",
+        "linkColor": "Bağlantı rengi",
+        "font": "Yazı tipi",
+        "contentWidth": "İçerik genişliği"
+      },
+      "fonts": {
+        "sans": "Sans-serif",
+        "serif": "Serif",
+        "mono": "Sabit genişlik"
+      },
+      "markupHelp": "**kalın**, *italik*, [bağlantı metni](https://…). Yer tutucular gönderimde kişiye göre doldurulur.",
+      "urlHelp": "https://, mailto: veya '{'yer tutucu'}' ile başlamalı.",
+      "imageHelp": "Herkese açık bir görsel adresi (https). Görseller sunucumuza yüklenmez.",
+      "footerHelp": "İtiraz/abonelikten çıkma bilgisi DSGVO gereği önerilir.",
+      "twoColumns": "2 sütun",
+      "threeColumns": "3 sütun",
+      "columnsHelp": "İçerik eklemek için tuvalde bir sütuna tıklayın, sonra soldan bileşen seçin. Mobilde sütunlar alt alta dizilir.",
+      "designSettings": "Genel tasarım",
+      "selectHint": "Bir bloğu düzenlemek için tuvalde üzerine tıklayın."
     }
   },
   "meetings": {
@@ -5661,8 +5760,9 @@
       }
     },
     "access": {
-      "members": "Toplantıya katılımcı eklemek için üye listesini okur.",
-      "organization": "Tutanak PDF'inde dernek antetini kullanır."
+      "members": "Toplantıya katılımcı eklemek için üye listesini okur. Duyuru kampanyalarında üye katılımcıların iletişim bilgilerini ve izinlerini okur.",
+      "organization": "Tutanak PDF'inde dernek antetini kullanır.",
+      "mailings": "Katılımcılara duyuru için Kampanyalar sihirbazını hazır kaynakla açar."
     },
     "ai": {
       "create": {
@@ -5715,6 +5815,28 @@
     },
     "calendar": {
       "meetings": "Toplantılar"
+    },
+    "recipients": {
+      "attendees": {
+        "label": "Toplantı katılımcıları",
+        "filters": {
+          "meeting": {
+            "label": "Toplantı"
+          },
+          "attendance": {
+            "label": "Katılım",
+            "options": {
+              "INVITED": "Davetli",
+              "PRESENT": "Katıldı",
+              "ABSENT_EXCUSED": "Mazeretli",
+              "ABSENT": "Katılmadı"
+            }
+          }
+        }
+      }
+    },
+    "campaign": {
+      "announce": "Katılımcılara duyur"
     }
   },
   "members": {
@@ -6713,6 +6835,16 @@
         "Frau": "Frau (Bayan)",
         "Herr": "Herr (Bay)",
         "NONE": "Belirtmek istemiyor"
+      },
+      "communicationTitle": "İletişim izinleri",
+      "bulkMailOptOut": "Kampanya e-postası istemiyor",
+      "bulkMailOptOutDescription": "İşaretliyse duyuru/kampanya e-postası gönderilmez; faturalar ve zorunlu yazışmalar etkilenmez (DSGVO Art. 21).",
+      "messagingConsents": "Mesaj kanalı izinleri",
+      "messagingConsentsDescription": "Velinin açık rıza verdiği kanallar; kampanyalar SMS, WhatsApp ve Telegram'a yalnız bunlara gönderir.",
+      "messagingChannels": {
+        "sms": "SMS",
+        "whatsapp": "WhatsApp",
+        "telegram": "Telegram"
       }
     },
     "guardianList": {

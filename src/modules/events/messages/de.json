@@ -222,5 +222,28 @@
   },
   "calendar": {
     "events": "Veranstaltungen"
-  }
+  },
+  "recipients": {
+    "attendees": {
+      "label": "Veranstaltungsteilnehmende",
+      "filters": {
+        "event": {
+          "label": "Veranstaltung"
+        },
+        "status": {
+          "label": "Status",
+          "options": {
+            "REGISTERED": "Angemeldet",
+            "ATTENDED": "Teilgenommen",
+            "CANCELLED": "Abgesagt"
+          }
+        }
+      }
+    }
+  },
+  "access": {
+    "members": "Um Kommunikationseinwilligungen mitgliedsverknüpfter Teilnehmender (Kampagnen) zu lesen.",
+    "mailings": "Öffnet den Kampagnen-Assistenten mit den Teilnehmenden als Zielgruppe."
+  },
+  "announce": "Teilnehmende benachrichtigen"
 }

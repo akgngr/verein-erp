@@ -29,6 +29,8 @@ function guardianData(input: GuardianInput) {
     sepaMandateReference: input.sepaMandateReference || null,
     sepaMandateDate: parseDateOnly(input.sepaMandateDate),
     note: input.note || null,
+    bulkMailOptOut: input.bulkMailOptOut,
+    messagingConsents: input.messagingConsents,
   };
 }
 

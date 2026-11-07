@@ -2,6 +2,31 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "2.2.0",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "E-posta şablon editörü, yeni hedef kitleler",
+        "de": "E-Mail-Vorlagen-Editor, neue Zielgruppen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yeni blok tabanlı e-posta editörü: solda bileşenler (başlık, metin, buton, görsel, ayırıcı, boşluk, 2/3 sütun, alt bilgi), ortada tuval, sağda seçili bloğun ayarları ve modülün yer tutucuları; masaüstü/mobil önizleme. Çıktı e-posta istemcileriyle uyumlu tablo düzenli HTML.",
+          "de": "Neuer blockbasierter E-Mail-Editor: links Bausteine (Überschrift, Text, Button, Bild, Trennlinie, Abstand, 2/3 Spalten, Fußzeile), Mitte Arbeitsbereich, rechts Einstellungen des gewählten Blocks und die Platzhalter des Moduls; Desktop-/Mobil-Vorschau. Ausgabe als tabellenbasiertes, mailclient-taugliches HTML."
+        },
+        {
+          "type": "feature",
+          "tr": "Etkinlik ve toplantı katılımcıları hedef kitle olarak; diğer modüllerden sihirbaz ön seçimle açılabilir.",
+          "de": "Veranstaltungs- und Sitzungsteilnehmende als Zielgruppen; der Assistent lässt sich aus anderen Modulen vorausgefüllt öffnen."
+        },
+        {
+          "type": "fix",
+          "tr": "Kampanya kartlarında iç içe düğme (hydration) hatası giderildi; taslaklar \"Düzenle\" ile açılır.",
+          "de": "Verschachtelte Buttons (Hydration-Fehler) auf Kampagnenkarten behoben; Entwürfe öffnen über „Bearbeiten“."
+        }
+      ]
+    },
+    {
       "version": "2.1.0",
       "date": "2026-11-07",
       "title": {

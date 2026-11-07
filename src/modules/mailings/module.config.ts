@@ -11,12 +11,10 @@ import { mailingsPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "mailings",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "2.1.0",
+  version: "2.2.0",
   label: "Toplu e-posta",
   description: "Üyelere, velilere ve diğer modüllerin alıcı listelerine kişiye özel toplu e-posta.",
   category: "OFFICIAL",
-  // Görsel e-posta editörü (Tiptap + React Email; `pnpm module:deps` kök package.json'a ekler).
-  dependencies: { "@react-email/editor": "^1.7.18" },
   hasSchema: true,
   // Zorunlu: gönderim e-posta altyapısıyla yapılır.
   requires: [{ module: "mail" }, { module: "automation" }],

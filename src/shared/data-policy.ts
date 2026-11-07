@@ -85,7 +85,7 @@ export const DATA_POLICY = {
   MailingChannelConfig: { owner: "mailings", category: "K0", reason: "Kanal sağlayıcı anahtarları (şifreli)", sensitiveFields: ["secretsEnc"] },
   MailingDelivery: { owner: "mailings", category: "K1", reason: "Gönderim kaydı: telefon / sohbet kimliği", sensitiveFields: ["address"] },
   CampaignTelegramLink: { owner: "campaign-telegram", category: "K1", reason: "Telegram aboneliği: sohbet kimliği ve davet belirteci", sensitiveFields: ["chatId", "token", "recipientKey"] },
-  MailingCampaign: { owner: "mailings", category: "K3", reason: "Kampanya özeti AI'ya yalnız ad, konu, kanal, durum ve sayılar olarak verilir; gövde, filtre ve oluşturan adı verilmez", sensitiveFields: ["body", "bodyHtml", "filter", "createdByLabel"] },
+  MailingCampaign: { owner: "mailings", category: "K3", reason: "Kampanya özeti AI'ya yalnız ad, konu, kanal, durum ve sayılar olarak verilir; gövde, filtre ve oluşturan adı verilmez", sensitiveFields: ["body", "bodyHtml", "design", "filter", "createdByLabel"] },
   MailingSegment: { owner: "mailings", category: "K1", reason: "Alıcı filtreleri", sensitiveFields: [] },
   MeetingAttendee: { owner: "meetings", category: "K1", reason: "Katılımcı adları", sensitiveFields: [ "note"] },
   MemberDue: { owner: "members", category: "K1", reason: "Kişi bazlı aidatlar", sensitiveFields: [] },

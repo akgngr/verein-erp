@@ -9,6 +9,7 @@ import { ActionError, createAction } from "@/modules/auth/server";
 import type { ActionResult } from "@/shared/types/action";
 import { buildUserLabel } from "@/shared/utils";
 
+import { designSchema } from "../lib/email-design";
 import { mailingsPermissions } from "../permissions";
 import { cancelCampaign, deleteDraft, deleteSegment, findChannel, getChannelConfig, saveChannelConfig, isMailConfigured, launchCampaign, previewSource, saveDraft, saveSegment, sendTest } from "../services/campaigns";
 
@@ -53,6 +54,8 @@ const campaignSchema = contentSchema.extend({
   id: z.string().min(1).max(64).optional(),
   name: z.string().trim().min(2, "mailings.errors.name").max(120, "mailings.errors.name"),
   scheduledAt: z.string().datetime().nullable().optional(),
+  // Blok tasarımı: şema doğrulanır (bilinmeyen/zararlı alanlar reddedilir).
+  design: designSchema.optional(),
 });
 const draftSchema = campaignSchema.extend({
   subject: z.string().trim().max(200, "mailings.errors.subject"),

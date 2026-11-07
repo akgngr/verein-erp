@@ -7,11 +7,15 @@ import {
   ArrowLeft,
   Users,
   FileSpreadsheet,
+  Megaphone,
 } from "lucide-react"
 import { notFound } from "next/navigation"
 import { PageHeader } from "@/shared/components/ui/page-header"
 import { LinkButton } from "@/shared/components/ui/link-button"
+import { getCurrentUser } from "@/modules/auth/server"
+import { campaignShortcutHref } from "@/modules/mailings/server"
 import { getEventById } from "../queries/get-event"
+import { eventLabel } from "../recipients"
 import { AttendeeList } from "../components/attendee-list"
 import { EVENT_TYPES, EVENT_STATUSES } from "../constants"
 import {
@@ -34,6 +38,10 @@ export async function EventDetailView({ eventId }: EventDetailViewProps) {
   if (!event) {
     notFound()
   }
+
+  // Kampanyalar etkin ve yetki varsa: katılımcılara duyuru sihirbazı bu etkinlikle açılır.
+  const user = await getCurrentUser()
+  const announceHref = user ? await campaignShortcutHref(user.role, "events:attendees", { event: eventLabel(event) }) : null
 
   const typeMeta = EVENT_TYPES.find((t) => t.value === event.type)
   const statusMeta = EVENT_STATUSES.find((s) => s.value === event.status)
@@ -68,6 +76,11 @@ export async function EventDetailView({ eventId }: EventDetailViewProps) {
           }`}
           actions={
             <div className="flex items-center gap-2">
+              {announceHref ? (
+                <LinkButton href={announceHref} color="default" variant="bordered" startIcon={<Megaphone className="h-4 w-4" />}>
+                  {tEvents("announce")}
+                </LinkButton>
+              ) : null}
               <a
                 href="/api/events/export"
                 className="inline-flex items-center gap-1.5 rounded-medium border border-default-300 bg-content1 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-default-100 shadow-xs"

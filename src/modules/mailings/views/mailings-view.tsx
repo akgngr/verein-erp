@@ -11,17 +11,8 @@ import type { WizardSource } from "../components/campaign-wizard";
 import { mailingsPermissions } from "../permissions";
 import { channelPlaceholderKeys, isMailConfigured, listCampaigns, listChannelInfo, listSegments, listSourcesWithOptions } from "../services/campaigns";
 
-/** Varsayılan metni editör için paragraflara çevirir (yer tutucular korunur). */
-function textToHtml(text: string): string {
-  const escape = (value: string) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
-  return text
-    .split(/\n{2,}/)
-    .map((block) => `<p>${block.split("\n").map(escape).join("<br>")}</p>`)
-    .join("");
-}
-
 /** Kampanyalar (?kaynak=<modül>:<kaynak> sihirbazı o listeyle açar): pano + tam ekran sihirbaz. */
-export async function MailingsView({ sourceId }: { sourceId?: string | null }) {
+export async function MailingsView({ sourceId, initialFilter }: { sourceId?: string | null; initialFilter?: Record<string, string[]> }) {
   let user;
   try {
     user = await requirePermission(mailingsPermissions, "view");
@@ -39,6 +30,7 @@ export async function MailingsView({ sourceId }: { sourceId?: string | null }) {
       label: `${label(`${base}.label`)} (${label(`${source.moduleKey}.module.label`)})`,
       // Kanal eklentilerinin ek yer tutucuları (ör. {telegramLink}) her listede kullanılabilir.
       placeholders: [...source.placeholders, ...extraPlaceholders],
+      sampleVars: source.sampleVars,
       filters: source.filters.map((filter) => ({
         key: filter.key,
         label: label(`${base}.filters.${filter.key}.label`),
@@ -69,7 +61,7 @@ export async function MailingsView({ sourceId }: { sourceId?: string | null }) {
     workflowId: row.workflowId,
     createdByLabel: row.createdByLabel,
     draft: row.status === "DRAFT"
-      ? { id: row.id, name: row.name, channel: row.channel, sourceId: row.source, filter: row.filter as Record<string, string[]>, subject: row.subject, body: row.body, bodyHtml: row.bodyHtml, scheduledAt: row.scheduledAt?.toISOString() ?? null }
+      ? { id: row.id, name: row.name, channel: row.channel, sourceId: row.source, filter: row.filter as Record<string, string[]>, subject: row.subject, body: row.body, bodyHtml: row.bodyHtml, design: row.design, scheduledAt: row.scheduledAt?.toISOString() ?? null }
       : null,
   }));
 
@@ -90,9 +82,9 @@ export async function MailingsView({ sourceId }: { sourceId?: string | null }) {
         sources={sources}
         segments={segments}
         channels={channels}
-        defaultHtml={textToHtml(t("defaultBody"))}
         defaultText={t("defaultBody")}
         initialSourceId={sourceId ?? null}
+        initialFilter={initialFilter ?? null}
       />
     </div>
   );

@@ -26,6 +26,8 @@ model MailingCampaign {
   body           String
   /// Editörden gelen e-posta HTML'i (yer tutuculu); düz metin sürümü `body`.
   bodyHtml       String?
+  /// Blok tabanlı e-posta tasarımı (editörde yeniden açmak için); gönderim bodyHtml ile yapılır.
+  design         Json?
   status         MailingStatus @default(SENDING)
   recipientCount Int           @default(0)
   sentCount      Int           @default(0)
