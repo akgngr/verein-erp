@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "2.3.0",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "Teslim, açılma ve tıklama izleme",
+        "de": "Zustell-, Öffnungs- und Klickverfolgung"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Alıcı başına gönderim kaydı: gönderildi, teslim edildi, açıldı/okundu, tıkladı; panoda kampanya hunisi.",
+          "de": "Versandprotokoll je Person: gesendet, zugestellt, geöffnet/gelesen, geklickt; Kampagnen-Trichter im Board."
+        },
+        {
+          "type": "feature",
+          "tr": "E-postada açılma pikseli ve imzalı tıklama bağlantıları (kampanya başına açılıp kapatılabilir); SMS/WhatsApp sağlayıcı bildirimleri işlenir.",
+          "de": "E-Mail: Öffnungspixel und signierte Klick-Links (pro Kampagne abschaltbar); Statusmeldungen von SMS-/WhatsApp-Anbietern werden verarbeitet."
+        }
+      ]
+    },
+    {
       "version": "2.2.0",
       "date": "2026-11-07",
       "title": {

@@ -83,7 +83,7 @@ export const DATA_POLICY = {
   GeneratedFile: { owner: "exports", category: "K1", reason: "Oluşturulan dosyalar (kişisel veri içerebilir)", sensitiveFields: [], personalOwnerField: "ownerId" },
   MailLog: { owner: "mail", category: "K1", reason: "Alıcı adresleri", sensitiveFields: ["toAddress", "toName"] },
   MailingChannelConfig: { owner: "mailings", category: "K0", reason: "Kanal sağlayıcı anahtarları (şifreli)", sensitiveFields: ["secretsEnc"] },
-  MailingDelivery: { owner: "mailings", category: "K1", reason: "Gönderim kaydı: telefon / sohbet kimliği", sensitiveFields: ["address"] },
+  MailingDelivery: { owner: "mailings", category: "K1", reason: "Alıcı başına gönderim/teslim/açılma/tıklama kaydı (adres ve zamanlar)", sensitiveFields: ["address", "token"] },
   CampaignTelegramLink: { owner: "campaign-telegram", category: "K1", reason: "Telegram aboneliği: sohbet kimliği ve davet belirteci", sensitiveFields: ["chatId", "token", "recipientKey"] },
   MailingCampaign: { owner: "mailings", category: "K3", reason: "Kampanya özeti AI'ya yalnız ad, konu, kanal, durum ve sayılar olarak verilir; gövde, filtre ve oluşturan adı verilmez", sensitiveFields: ["body", "bodyHtml", "design", "filter", "createdByLabel"] },
   MailingSegment: { owner: "mailings", category: "K1", reason: "Alıcı filtreleri", sensitiveFields: [] },

@@ -17,6 +17,8 @@ export type ChannelMessage = {
   html?: string;
   /** Kampanya kimliği (gönderim kaydı referansı). */
   reference: string;
+  /** Uygulamanın genel adresi; sağlayıcıya mesaj başına durum bildirimi adresi verilebiliyorsa (Twilio). */
+  callbackBaseUrl?: string;
 };
 
 export type ChannelSendResult = { ok: boolean; error?: string; providerId?: string };
@@ -39,6 +41,8 @@ export type CampaignChannel = {
   /** Yönetici ayarları (Kampanyalar → Ayarlar). Yoksa ayar ekranında görünmez. */
   settings?: readonly ChannelSetting[];
   isConfigured(config: ChannelConfig): Promise<boolean>;
+  /** Sağlayıcı panelinde girilecek bildirim (webhook) adresleri; ayar ekranında gösterilir. */
+  webhookUrls?(config: ChannelConfig, origin: string): { key: string; url: string }[];
   /** Ayarlar kaydedildikten sonra (ör. Telegram webhook kaydı). `origin` = uygulamanın genel adresi. */
   setup?(config: ChannelConfig, origin: string): Promise<void>;
   sendBatch(messages: ChannelMessage[], config: ChannelConfig): Promise<ChannelSendResult[]>;

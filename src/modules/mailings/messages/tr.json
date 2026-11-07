@@ -138,7 +138,13 @@
     "cancelMessage": "Planlı gönderim yapılmayacak; iş akışı devre dışı bırakılır.",
     "deleteTitle": "Kampanya silinsin mi?",
     "deleteMessage": "Taslak ya da iptal edilmiş kampanya kalıcı olarak silinir.",
-    "edit": "Düzenle"
+    "edit": "Düzenle",
+    "funnel": {
+      "delivered": "Teslim {count} (%{percent})",
+      "opened": "Açıldı {count} (%{percent})",
+      "read": "Okundu {count} (%{percent})",
+      "clicked": "Tıkladı {count} (%{percent})"
+    }
   },
   "wizard": {
     "title": "Yeni kampanya",
@@ -176,7 +182,9 @@
     "close": "Kapat",
     "back": "Geri",
     "next": "İleri",
-    "subjectPlaceholder": "ör. Yaz şenliğine davetlisiniz"
+    "subjectPlaceholder": "ör. Yaz şenliğine davetlisiniz",
+    "tracking": "Açılma ve tıklama izleme",
+    "trackingHelp": "E-postaya görünmez bir görsel ve izlemeli bağlantılar eklenir; kim açtı/tıkladı panoda görünür. Almanya'da (TTDSG §25) alıcıların bu konuda bilgilendirilmesi ve gerekirse izin alınması sizin sorumluluğunuzdadır."
   },
   "workflow": {
     "name": "Kampanya: {name}",
@@ -207,7 +215,9 @@
       "accessToken": "Erişim belirteci (access token)",
       "templateName": "Şablon adı (gövdede tek değişken '{{1}}')",
       "templateLanguage": "Şablon dili",
-      "countryCode": "Varsayılan ülke kodu"
+      "countryCode": "Varsayılan ülke kodu",
+      "appSecret": "App Secret (bildirim imzası)",
+      "verifyToken": "Doğrulama belirteci (Meta'ya da aynısını girin, en az 8 karakter)"
     },
     "telegram": {
       "botToken": "Bot anahtarı (BotFather)",
@@ -230,7 +240,12 @@
     "notConfigured": "Ayarlanmadı",
     "secretKept": "Kayıtlı (değiştirmek için yazın)",
     "save": "Kaydet",
-    "saved": "Kanal ayarları kaydedildi."
+    "saved": "Kanal ayarları kaydedildi.",
+    "webhooks": {
+      "sevenDlr": "seven.io → Ayarlar → Webhooks'a girilecek adres (Event: dlr)",
+      "twilioStatus": "Twilio durum bildirimi adresi (her mesajda otomatik gönderilir)",
+      "metaWebhook": "Meta → WhatsApp → Configuration → Webhook adresi (alan: messages)"
+    }
   },
   "menu": {
     "settings": "Ayarlar"

@@ -21,7 +21,11 @@ export const channels = defineChannels("campaign-whatsapp", [
       { key: "templateName" },
       { key: "templateLanguage", defaultValue: "de" },
       { key: "countryCode", defaultValue: "49" },
+      // Teslim/okundu bildirimleri (Meta webhook): imza anahtarı ve doğrulama belirteci.
+      { key: "appSecret", secret: true },
+      { key: "verifyToken" },
     ],
+    webhookUrls: (_config, origin) => [{ key: "metaWebhook", url: `${origin}/api/campaign-whatsapp/webhook` }],
     // Ülke kodu ayardan: "0151 …" → "+49151…".
     enrich: async (list, config) => list.map((recipient) => ({ ...recipient, phone: normalizePhone(recipient.phone, config.countryCode || "49") })),
     address: (recipient) => normalizePhone(recipient.phone),

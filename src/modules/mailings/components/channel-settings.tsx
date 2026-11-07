@@ -1,6 +1,6 @@
 "use client";
 
-import { addToast, Button, Card, CardBody, CardHeader, Chip, Input, Select, SelectItem } from "@heroui/react";
+import { addToast, Button, Card, CardBody, CardHeader, Chip, Input, Select, SelectItem, Snippet } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
@@ -12,6 +12,7 @@ import { saveChannelSettingsAction } from "../actions/mailing-actions";
 export type ChannelSettingsView = {
   key: string;
   configured: boolean;
+  webhooks: { key: string; url: string }[];
   settings: { key: string; secret: boolean; options: string[] | null; value: string; stored: boolean }[];
 };
 
@@ -58,6 +59,12 @@ function ChannelCard({ channel }: { channel: ChannelSettingsView }) {
               value={values[setting.key] ?? ""} onValueChange={(value) => set(setting.key, value)} />
           );
         })}
+        {channel.webhooks.map((webhook) => (
+          <div key={webhook.key} className="flex flex-col gap-1">
+            <span className="text-tiny text-default-500">{t(`settings.webhooks.${webhook.key}` as never)}</span>
+            <Snippet symbol="" size="sm" className="max-w-full" classNames={{ pre: "truncate" }}>{webhook.url}</Snippet>
+          </div>
+        ))}
         <Button size="sm" color="primary" className="self-start" isLoading={pending}
           onPress={() => startTransition(async () => {
             const response = await saveChannelSettingsAction({ channel: channel.key, values });

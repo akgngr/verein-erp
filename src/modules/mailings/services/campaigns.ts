@@ -10,6 +10,7 @@ import { isMailConfigured, sendMail, sendMailBatch } from "@/modules/mail/automa
 import { createWorkflow, publishWorkflow, saveWorkflowDraft, setWorkflowEnabled, startWorkflow } from "@/modules/automation/automation";
 import { splitForChannel, type CampaignChannel, type ChannelConfig } from "@/shared/campaigns/channel";
 import { canEncryptSecrets, openSecret, sealSecret } from "@/shared/security/secret-box";
+import { injectTracking, newTrackingToken } from "./tracking";
 import { campaignFinishedEvent, sendCampaignTask } from "../automation";
 import { loadPermissionPolicy, getUserById } from "@/modules/users/automation";
 import { listUsableModuleKeys } from "@/modules/system/automation";
@@ -72,13 +73,14 @@ export async function saveChannelConfig(key: string, values: Record<string, stri
 }
 
 /** Ayar ekranı: değerler (gizliler yalnız "kayıtlı mı" olarak). */
-export async function listChannelSettings() {
+export async function listChannelSettings(origin = "") {
   const channels = (await availableChannels()).filter((channel) => channel.settings?.length);
   return Promise.all(channels.map(async (channel) => {
     const config = await getChannelConfig(channel.key);
     return {
       key: channel.key,
       configured: await channel.isConfigured(config),
+      webhooks: origin && channel.webhookUrls ? channel.webhookUrls(config, origin) : [],
       settings: (channel.settings ?? []).map((setting) => ({
         key: setting.key,
         secret: Boolean(setting.secret),
@@ -198,6 +200,8 @@ export type CampaignInput = {
   /** Blok tasarımı (yeniden düzenleme için); gönderimde bodyHtml kullanılır. */
   design?: unknown;
   scheduledAt?: Date | null;
+  /** E-posta açılma/tıklama izleme. */
+  tracking?: boolean;
 };
 
 /** Taslak kaydet (oluştur/güncelle). Yalnız DRAFT kampanyalar düzenlenebilir. */
@@ -214,6 +218,7 @@ export async function saveDraft(role: Role, input: CampaignInput, actor: Actor):
     bodyHtml: input.bodyHtml ?? null,
     design: (input.design ?? undefined) as Prisma.InputJsonValue | undefined,
     scheduledAt: input.scheduledAt ?? null,
+    tracking: input.tracking ?? true,
   };
   if (input.id) {
     const updated = await db.mailingCampaign.updateMany({ where: { id: input.id, status: "DRAFT" }, data });
@@ -246,6 +251,8 @@ export async function launchCampaign(
   input: CampaignInput,
   actor: Actor,
   labels: { workflow: string; trigger: string; wait: string; send: string },
+  /** İzleme bağlantılarının kökü (isteğin genel adresi). */
+  baseUrl?: string,
 ): Promise<{ id: string; recipients: number; workflowId: string } | null> {
   const source = await findSource(role, input.sourceId);
   const channel = await findChannel(input.channel);
@@ -268,6 +275,8 @@ export async function launchCampaign(
     design: (input.design ?? undefined) as Prisma.InputJsonValue | undefined,
     scheduledAt,
     status: (scheduledAt ? "SCHEDULED" : "SENDING") as "SCHEDULED" | "SENDING",
+    tracking: input.tracking ?? true,
+    trackingBaseUrl: baseUrl ?? null,
     recipientCount: eligible.length,
     skippedNoEmail: noAddress,
     skippedOptOut: optOut,
@@ -368,33 +377,60 @@ async function processCampaignAttempt(campaignId: string, context: TaskExecution
   const normalize = (value: string) => value.trim().toLowerCase();
   const deliveredList = channel.delivered
     ? await channel.delivered(campaign.id)
-    : (await db.mailingDelivery.findMany({ where: { campaignId: campaign.id }, select: { address: true } })).map((row) => row.address);
+    : (await db.mailingDelivery.findMany({ where: { campaignId: campaign.id, status: { in: ["SENT", "DELIVERED", "READ"] } }, select: { address: true } })).map((row) => row.address);
   const delivered = new Set(deliveredList.map(normalize));
   const alreadySent = eligible.filter((row) => delivered.has(normalize(channel.address(row) ?? ""))).length;
   const pending = eligible.filter((row) => !delivered.has(normalize(channel.address(row) ?? "")));
-  const messages = pending.map((row) => ({
-    to: channel.address(row) as string,
-    toName: row.name,
-    subject: renderMailTemplate(campaign.subject, row.vars),
-    text: renderMailTemplate(campaign.body, row.vars),
+
+  // Alıcı başına kayıt + izleme belirteci (yeniden denemede aynı belirteç kullanılır).
+  const addressOf = (row: Recipient) => (channel.address(row) as string).slice(0, 200);
+  if (pending.length) {
+    await db.mailingDelivery.createMany({
+      data: pending.map((row) => ({ campaignId: campaign.id, channel: channel.key, address: addressOf(row), token: newTrackingToken() })),
+      skipDuplicates: true,
+    });
+  }
+  const tokens = new Map((await db.mailingDelivery.findMany({
+    where: { campaignId: campaign.id, address: { in: pending.map(addressOf) } },
+    select: { address: true, token: true },
+  })).map((row) => [row.address, row.token]));
+  const track = channel.key === "email" && campaign.tracking && Boolean(campaign.trackingBaseUrl);
+
+  const messages = pending.map((row) => {
     // HTML gövde (editör) worker'da da kişiselleştirilir; değerler HTML'de kaçışlanır.
-    html: channel.capabilities.html && campaign.bodyHtml ? renderMailTemplateHtml(campaign.bodyHtml, row.vars) : undefined,
-    reference: campaign.id,
-  }));
+    const html = channel.capabilities.html && campaign.bodyHtml ? renderMailTemplateHtml(campaign.bodyHtml, row.vars) : undefined;
+    const token = tokens.get(addressOf(row));
+    return {
+      to: channel.address(row) as string,
+      toName: row.name,
+      subject: renderMailTemplate(campaign.subject, row.vars),
+      text: renderMailTemplate(campaign.body, row.vars),
+      html: html && track && token ? injectTracking(html, campaign.trackingBaseUrl!, token) : html,
+      reference: campaign.id,
+      callbackBaseUrl: campaign.trackingBaseUrl ?? undefined,
+    };
+  });
 
   let results: Awaited<ReturnType<CampaignChannel["sendBatch"]>>;
   try {
     results = await channel.sendBatch(messages, config);
-    if (!channel.delivered) {
-      const ok = messages.flatMap((message, index) => (results[index]?.ok ? [{ campaignId: campaign.id, channel: channel.key, address: message.to.slice(0, 200), providerId: results[index].providerId?.slice(0, 200) ?? null }] : []));
-      if (ok.length) await db.mailingDelivery.createMany({ data: ok, skipDuplicates: true });
-    }
   } catch (error) {
     if (context.attempt >= 3) {
       await failCampaign("MAILING_SEND_ATTEMPTS_EXHAUSTED");
     }
     throw error;
   }
+  // E-posta: SMTP sunucusu kabul ettiyse teslim edildi sayılır; SMS/WhatsApp teslimi sağlayıcı bildirir.
+  const now = new Date();
+  await db.$transaction(messages.map((message, index) => {
+    const result = results[index];
+    return db.mailingDelivery.update({
+      where: { campaignId_address: { campaignId: campaign.id, address: message.to.slice(0, 200) } },
+      data: result?.ok
+        ? { status: channel.key === "email" ? "DELIVERED" : "SENT", sentAt: now, ...(channel.key === "email" ? { deliveredAt: now } : {}), providerId: result.providerId?.slice(0, 200) ?? null, error: null }
+        : { status: "FAILED", error: (result?.error ?? "SEND_FAILED").slice(0, 80) },
+    });
+  }));
   const sent = alreadySent + results.filter((result) => result.ok).length;
   const failed = results.filter((result) => !result.ok).length;
   await db.mailingCampaign.update({

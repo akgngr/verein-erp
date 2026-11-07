@@ -19,6 +19,10 @@ model MailingCampaign {
   workflowId     String?
   /// Planlı gönderim zamanı (iş akışındaki bekleme adımı).
   scheduledAt    DateTime?
+  /// E-posta açılma/tıklama izleme (kampanya başına; varsayılan açık).
+  tracking       Boolean       @default(true)
+  /// İzleme bağlantılarının kökü (kampanyayı başlatan isteğin genel adresi; worker bunu kullanır).
+  trackingBaseUrl String?
   /// "<modül>:<kaynak>" (ör. members:members) veya programatik çağrıda "<modül>:api"
   source         String
   filter         Json          @default("{}")
@@ -72,16 +76,30 @@ model MailingChannelConfig {
   @@map("mailings_channel_configs")
 }
 
-/// E-posta dışı kanallarda başarılı gönderim kaydı (yeniden denemede çift gönderimi önler).
+/// Alıcı başına gönderim kaydı (tüm kanallar): durum, teslim, açılma/okunma, tıklama. Yeniden denemede
+/// çift gönderimi de önler. KVKK: adres ve zaman damgaları; içerik saklanmaz.
 model MailingDelivery {
-  id         String   @id @default(cuid())
-  campaignId String
-  channel    String
-  address    String
-  providerId String?
-  createdAt  DateTime @default(now())
+  id           String    @id @default(cuid())
+  campaignId   String
+  channel      String
+  address      String
+  /// İzleme bağlantılarındaki rastgele belirteç (tahmin edilemez).
+  token        String    @unique
+  /// QUEUED → SENT → DELIVERED → READ; ya da FAILED.
+  status       String    @default("QUEUED")
+  providerId   String?
+  error        String?
+  sentAt       DateTime?
+  deliveredAt  DateTime?
+  /// E-postada açılma (piksel), WhatsApp'ta okundu bildirimi.
+  readAt       DateTime?
+  openCount    Int       @default(0)
+  firstClickAt DateTime?
+  clickCount   Int       @default(0)
+  createdAt    DateTime  @default(now())
 
   @@unique([campaignId, address])
+  @@index([providerId])
   @@index([createdAt])
   @@map("mailings_deliveries")
 }

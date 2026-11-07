@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.1.0",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "Teslim raporları",
+        "de": "Zustellberichte"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "seven.io (webhook) ve Twilio (mesaj başına durum bildirimi, imza doğrulamalı) teslim raporları.",
+          "de": "Zustellberichte von seven.io (Webhook) und Twilio (Status-Callback je Nachricht, signaturgeprüft)."
+        }
+      ]
+    },
+    {
       "version": "1.0.0",
       "date": "2026-11-07",
       "title": {

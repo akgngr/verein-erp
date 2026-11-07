@@ -2,6 +2,8 @@ import "server-only";
 
 import { channelFetch, defineChannels, normalizePhone, type ChannelConfig, type ChannelMessage, type ChannelSendResult } from "@/shared/campaigns/channel";
 
+import { sevenWebhookSecret } from "./services/webhook";
+
 /**
  * SMS kanalı. Sağlayıcı yönetici ayarından seçilir: seven.io (Almanya) veya Twilio. Yalnız SMS izni
  * veren ve geçerli telefonu olan kişilere gider (UWG §7). Uzun mesajlar sağlayıcıda birleşik SMS olur.
@@ -27,7 +29,13 @@ async function sendTwilio(message: ChannelMessage, config: ChannelConfig): Promi
   const response = await channelFetch(["api.twilio.com"], `https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`, {
     method: "POST",
     headers: { Authorization: `Basic ${Buffer.from(`${sid}:${config.apiKey ?? ""}`).toString("base64")}`, "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({ To: message.to, From: config.sender ?? "", Body: message.text.slice(0, MAX_LENGTH) }),
+    body: new URLSearchParams({
+      To: message.to,
+      From: config.sender ?? "",
+      Body: message.text.slice(0, MAX_LENGTH),
+      // Mesaj başına teslim bildirimi (yalnız https genel adreste).
+      ...(message.callbackBaseUrl?.startsWith("https://") ? { StatusCallback: `${message.callbackBaseUrl}/api/campaign-sms/webhook/twilio` } : {}),
+    }),
   });
   if (!response.ok) return { ok: false, error: `SMS_HTTP_${response.status}` };
   const body = (await response.json().catch(() => ({}))) as { sid?: string };
@@ -48,6 +56,9 @@ export const channels = defineChannels("campaign-sms", [
     ],
     // Ülke kodu ayardan: "0151 …" → "+49151…".
     enrich: async (list, config) => list.map((recipient) => ({ ...recipient, phone: normalizePhone(recipient.phone, config.countryCode || "49") })),
+    webhookUrls: (config, origin) => config.provider === "seven" && config.apiKey
+      ? [{ key: "sevenDlr", url: `${origin}/api/campaign-sms/webhook/seven/${sevenWebhookSecret(config.apiKey)}` }]
+      : config.provider === "twilio" ? [{ key: "twilioStatus", url: `${origin}/api/campaign-sms/webhook/twilio` }] : [],
     address: (recipient) => normalizePhone(recipient.phone),
     allowed: (recipient) => recipient.consents?.sms === true,
     isConfigured: async (config) => Boolean(config.apiKey && PROVIDERS.includes(config.provider as never) && (config.provider !== "twilio" || (config.accountSid && config.sender))),
