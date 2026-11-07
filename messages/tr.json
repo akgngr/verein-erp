@@ -107,7 +107,6 @@
     "events": "Etkinlikler",
     "exports": "Dosyalarım",
     "geriBildirim": "Geri bildirim",
-    "grants": "Hibeler",
     "inventory": "Envanter",
     "mail": "E-posta",
     "gelenKutusu": "Gelen kutusu",
@@ -118,7 +117,6 @@
     "organization": "Dernek Bilgileri",
     "progress": "Öğrenci takibi",
     "securityMonitor": "Güvenlik İzleme",
-    "sepa": "SEPA otomatik ödeme",
     "students": "Öğrenciler",
     "ayarlar": "Ayarlar",
     "moduller": "Modül Yönetimi",
@@ -665,7 +663,9 @@
       "bank": "Banka",
       "payables": "Gelen faturalar",
       "gobd": "GoBD",
-      "extras": "Demirbaş ve ekler"
+      "extras": "Demirbaş ve ekler",
+      "grants": "Hibeler",
+      "sepa": "SEPA otomatik ödeme"
     },
     "meta": {
       "list": "Muhasebe",

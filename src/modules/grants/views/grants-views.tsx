@@ -48,7 +48,7 @@ export async function GrantDetailView({ id }: { id: string }) {
   const [report, projects, categories] = await Promise.all([buildReport(grant, t("otherLine")), listProjectOptions(), listCategoryOptions("EXPENSE")]);
   return (
     <div>
-      <PageHeader title={grant.name} description={`${grant.funder}${grant.fileNumber ? ` · ${grant.fileNumber}` : ""}`} actions={<LinkButton href="/hibeler" variant="bordered">{t("title")}</LinkButton>} />
+      <PageHeader title={grant.name} description={`${grant.funder}${grant.fileNumber ? ` · ${grant.fileNumber}` : ""}`} actions={<LinkButton href="/muhasebe/hibeler" variant="bordered">{t("title")}</LinkButton>} />
       <GrantDetailApp grant={grant} report={report} projects={projects} categories={categories.map((item) => ({ id: item.id, name: item.name }))} can={{ update: can(user.role, grantsPermissions, "update"), delete: can(user.role, grantsPermissions, "delete") }} today={berlinToday()} />
     </div>
   );

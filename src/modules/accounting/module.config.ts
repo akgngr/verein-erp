@@ -1,13 +1,15 @@
 import { BarChart3,
-  Banknote, Package, ShieldCheck, Contact, Inbox, Landmark, CalendarCheck, Download, FileText, PieChart, SlidersHorizontal, Users, Wallet } from "lucide-react";
+  Banknote, Package, ShieldCheck, Contact, Inbox, Landmark, CalendarCheck, Download, FileText, PieChart, SlidersHorizontal, Users, Wallet, HandCoins, Repeat } from "lucide-react";
 
+import { grantsPermissions } from "@/modules/grants";
+import { sepaPermissions } from "@/modules/sepa";
 import type { ModuleConfig } from "@/shared/types/module";
 import { accountingPermissions, accountingSetupPermissions } from "./permissions";
 
 export const moduleConfig: ModuleConfig = {
   key: "accounting",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.16.0",
+  version: "1.16.1",
   label: "Muhasebe",
   description: "Alman dernek mevzuatına uygun çift taraflı defter tutma, fiş ve bütçe yönetimi.",
   category: "OFFICIAL",
@@ -39,6 +41,8 @@ export const moduleConfig: ModuleConfig = {
     { key: "sync", label: "Üyelik aktarımı", href: "/muhasebe/uyelik-aktarimi", icon: Users },
     { key: "reports", label: "Raporlar", href: "/muhasebe/raporlar", icon: BarChart3 },
     { key: "tax", label: "Vergi", href: "/muhasebe/vergi", icon: Landmark },
+    { key: "grants", label: "Hibeler", href: "/muhasebe/hibeler", icon: HandCoins, module: "grants", permission: { definition: grantsPermissions, action: "view" } },
+    { key: "sepa", label: "SEPA otomatik ödeme", href: "/muhasebe/sepa", icon: Repeat, module: "sepa", permission: { definition: sepaPermissions, action: "view" } },
     { key: "budget", label: "Bütçe", href: "/muhasebe/butce", icon: PieChart, permission: { definition: accountingSetupPermissions, action: "view" } },
     { key: "extras", label: "Demirbaş ve ekler", href: "/muhasebe/ekler", icon: Package },
     { key: "gobd", label: "GoBD", href: "/muhasebe/gobd", icon: ShieldCheck },

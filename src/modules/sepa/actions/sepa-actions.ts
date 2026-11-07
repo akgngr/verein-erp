@@ -43,7 +43,7 @@ export async function createRunAction(input: unknown): Promise<ActionResult<{ id
       const run = await createRun(input.source, input.param, input.collectionDate, input.sourceKeys, actorOf(user), await labels());
       if (!run) throw new ActionError("sepa.errors.nothingToCollect");
       await audit({ action: "CREATE", entity: "SepaDebitRun", entityId: run.id, after: { number: run.number } });
-      revalidatePath("/sepa");
+      revalidatePath("/muhasebe/sepa");
       return run;
     },
   })(input);
@@ -56,7 +56,7 @@ export async function markCollectedAction(input: unknown): Promise<ActionResult<
     handler: async ({ input, user, audit }) => {
       if (!(await markCollected(input.id, input.collectedAt, actorOf(user)))) throw new ActionError("sepa.errors.notOpen");
       await audit({ action: "UPDATE", entity: "SepaDebitRun", entityId: input.id, after: { collectedAt: input.collectedAt } });
-      revalidatePath(`/sepa/${input.id}`);
+      revalidatePath(`/muhasebe/sepa/${input.id}`);
       return null;
     },
   })(input);
@@ -69,7 +69,7 @@ export async function markReturnedAction(input: unknown): Promise<ActionResult<n
     handler: async ({ input, user, audit }) => {
       if (!(await markReturned(input.itemId, input.reason, actorOf(user)))) throw new ActionError("sepa.errors.notCollected");
       await audit({ action: "UPDATE", entity: "SepaDebitItem", entityId: input.itemId, after: { returned: true } });
-      revalidatePath(`/sepa/${input.runId}`);
+      revalidatePath(`/muhasebe/sepa/${input.runId}`);
       return null;
     },
   })(input);
@@ -82,7 +82,7 @@ export async function cancelRunAction(input: unknown): Promise<ActionResult<null
     handler: async ({ input, audit }) => {
       if (!(await cancelRun(input.id))) throw new ActionError("sepa.errors.notOpen");
       await audit({ action: "UPDATE", entity: "SepaDebitRun", entityId: input.id, after: { cancelled: true } });
-      revalidatePath("/sepa");
+      revalidatePath("/muhasebe/sepa");
       return null;
     },
   })(input);

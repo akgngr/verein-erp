@@ -15,8 +15,8 @@ const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "grants.errors.date");
 const cents = z.number().int().min(0).max(10_000_000_000);
 const text = (max: number) => z.string().trim().max(max).transform((value) => value || null);
 const done = (grantId?: string) => {
-  revalidatePath("/hibeler");
-  if (grantId) revalidatePath(`/hibeler/${grantId}`);
+  revalidatePath("/muhasebe/hibeler");
+  if (grantId) revalidatePath(`/muhasebe/hibeler/${grantId}`);
 };
 
 const grantSchema = z.object({

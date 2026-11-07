@@ -33,7 +33,7 @@ export function GrantsList({ rows, projects, canCreate, today }: { rows: Row[]; 
                 const overdue = row.reportDueAt && !row.reportSubmittedAt && row.reportDueAt < today;
                 return (
                   <tr key={row.id} className="border-t border-default-100">
-                    <td className="px-3 py-2"><Link className="font-medium text-primary hover:underline" href={`/hibeler/${row.id}`}>{row.name}</Link>{row.fileNumber ? <span className="block text-tiny text-default-500">{row.fileNumber}</span> : null}</td>
+                    <td className="px-3 py-2"><Link className="font-medium text-primary hover:underline" href={`/muhasebe/hibeler/${row.id}`}>{row.name}</Link>{row.fileNumber ? <span className="block text-tiny text-default-500">{row.fileNumber}</span> : null}</td>
                     <td className="px-3 py-2">{row.funder}</td>
                     <td className="px-3 py-2 text-default-600">{date(row.periodStart)} – {date(row.periodEnd)}</td>
                     <td className="px-3 py-2">{money(row.approvedCents)}</td>
@@ -51,7 +51,7 @@ export function GrantsList({ rows, projects, canCreate, today }: { rows: Row[]; 
         <ModalContent>
           <ModalHeader>{t("newGrant")}</ModalHeader>
           <ModalBody className="pb-6">
-            <GrantForm canEdit projects={projects} initial={{ id: null, name: "", funder: "", fileNumber: null, purpose: null, status: "PLANNED", approvedCents: null, ownShareCents: 0, thirdPartyCents: 0, periodStart: today, periodEnd: today, reportDueAt: null, projectId: null, useNetAmounts: false }} onSaved={(id) => router.push(`/hibeler/${id}`)} />
+            <GrantForm canEdit projects={projects} initial={{ id: null, name: "", funder: "", fileNumber: null, purpose: null, status: "PLANNED", approvedCents: null, ownShareCents: 0, thirdPartyCents: 0, periodStart: today, periodEnd: today, reportDueAt: null, projectId: null, useNetAmounts: false }} onSaved={(id) => router.push(`/muhasebe/hibeler/${id}`)} />
           </ModalBody>
         </ModalContent>
       </Modal>

@@ -1,7 +1,4 @@
 {
-  "nav": {
-    "grants": "Fördermittel"
-  },
   "module": {
     "label": "Fördermittel",
     "description": "Zuwendungen und Projektförderung: Finanzierungsplan, Mittelabrufe und Verwendungsnachweis."

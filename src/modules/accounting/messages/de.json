@@ -380,7 +380,9 @@
     "bank": "Bank",
     "payables": "Eingangsrechnungen",
     "gobd": "GoBD",
-    "extras": "Anlagen & Extras"
+    "extras": "Anlagen & Extras",
+    "grants": "Fördermittel",
+    "sepa": "SEPA-Lastschrift"
   },
   "nav": {
     "muhasebe": "Buchhaltung"

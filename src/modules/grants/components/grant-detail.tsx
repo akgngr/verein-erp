@@ -45,7 +45,7 @@ export function GrantDetailApp({ grant, report, projects, categories, can, today
             if (!window.confirm(t("deleteConfirm", { name: grant.name }))) return;
             start(async () => {
               const response = await deleteGrantAction({ id: grant.id });
-              if (response.ok) router.push("/hibeler");
+              if (response.ok) router.push("/muhasebe/hibeler");
             });
           }}>{t("delete")}</Button>
         ) : null}

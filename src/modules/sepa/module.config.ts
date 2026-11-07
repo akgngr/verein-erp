@@ -1,8 +1,4 @@
-import { Landmark } from "lucide-react";
-
 import type { ModuleConfig } from "@/shared/types/module";
-
-import { sepaPermissions } from "./permissions";
 
 /**
  * SEPA-Lastschrift: yetkisi olan üyelerin açık aidatları ve velilerin kurs ücretleri için pain.008 tahsilat
@@ -11,14 +7,14 @@ import { sepaPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "sepa",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.0.0",
+  version: "1.0.1",
   label: "SEPA otomatik ödeme",
   description: "Aidat ve kurs ücretleri için SEPA-Lastschrift (pain.008) tahsilatı.",
   category: "OFFICIAL",
   hasSchema: true,
   requires: [{ module: "accounting" }],
   recommends: ["members", "courses"],
-  basePath: "/sepa",
+  basePath: "/muhasebe/sepa",
   access: [
     { module: "accounting", operations: ["read"] },
     { module: "members", operations: ["read", "write"] },
@@ -27,15 +23,6 @@ export const moduleConfig: ModuleConfig = {
     { module: "organization", operations: ["read"] },
     { module: "system", operations: ["read"] },
   ],
-  nav: [
-    {
-      href: "/sepa",
-      label: "SEPA otomatik ödeme",
-      labelKey: "sepa",
-      icon: Landmark,
-      group: "main",
-      order: 7,
-      permission: { definition: sepaPermissions, action: "view" },
-    },
-  ],
+  // Menüde Muhasebe alt menüsünde görünür (accounting/module.config.ts → menu).
+  nav: [],
 };

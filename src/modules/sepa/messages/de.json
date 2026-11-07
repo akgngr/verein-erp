@@ -1,7 +1,4 @@
 {
-  "nav": {
-    "sepa": "SEPA-Lastschrift"
-  },
   "module": {
     "label": "SEPA-Lastschrift",
     "description": "Einzug von Mitgliedsbeiträgen und Kursgebühren per SEPA-Lastschrift (pain.008)."
