@@ -6,3 +6,5 @@ export { listStudentOptions, getStudentPayer } from "./queries/students";
 export { listGuardianOptions } from "./queries/guardians";
 export type { StudentOption, StudentPayer } from "./types";
 export { getStudentStats } from "./queries/stats";
+export { getStudentSelfService, applyStudentSelfService, getGuardianSelfService, applyGuardianSelfService } from "./services/online-form";
+export type { StudentSelfService, StudentSelfServiceInput, GuardianSelfService, GuardianSelfServiceInput } from "./services/online-form";

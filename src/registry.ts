@@ -32,6 +32,7 @@ import { moduleConfig as feedbackModule } from "@/modules/feedback";
 import { moduleConfig as inventoryModule } from "@/modules/inventory";
 import { moduleConfig as mailModule } from "@/modules/mail";
 import { moduleConfig as mailingsModule } from "@/modules/mailings";
+import { moduleConfig as onlineformsModule } from "@/modules/online-forms";
 import { moduleConfig as progressModule } from "@/modules/progress";
 import { moduleConfig as securitymonitorModule } from "@/modules/security-monitor";
 import { moduleConfig as studentsModule } from "@/modules/students";
@@ -70,6 +71,7 @@ export const allModules: ModuleConfig[] = [
   inventoryModule,
   mailModule,
   mailingsModule,
+  onlineformsModule,
   progressModule,
   securitymonitorModule,
   studentsModule,

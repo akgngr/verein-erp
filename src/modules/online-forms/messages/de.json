@@ -1,0 +1,166 @@
+{
+  "nav": {
+    "online-forms": "Online-Formulare"
+  },
+  "module": {
+    "label": "Online-Formulare",
+    "description": "Personen per befristetem Link Formulare vervollständigen, Datenschutz bestätigen und unterschreiben lassen."
+  },
+  "permissions": {
+    "online-forms": {
+      "label": "Online-Formulare",
+      "description": "Formular-Links versenden und unterschriebene Formulare einsehen."
+    }
+  },
+  "title": "Online-Formulare",
+  "description": "Senden Sie Mitgliedern, Schüler:innen und Erziehungsberechtigten einen Formular-Link; sie ergänzen ihre Daten, bestätigen den Datenschutz und unterschreiben.",
+  "empty": "Noch keine Links versendet. Starten Sie mit 'Online-Formular senden' im Mitglieds-, Schüler- oder Elterndatensatz.",
+  "columns": {
+    "subject": "Person",
+    "kind": "Formular",
+    "channel": "Kanal",
+    "status": "Status",
+    "sent": "Gesendet",
+    "completed": "Unterschrieben"
+  },
+  "kinds": {
+    "MEMBER": "Mitglied",
+    "STUDENT": "Schüler:in",
+    "GUARDIAN": "Erziehungsberechtigte:r"
+  },
+  "channels": {
+    "email": "E-Mail",
+    "sms": "SMS",
+    "whatsapp": "WhatsApp"
+  },
+  "status": {
+    "PENDING": "Offen",
+    "COMPLETED": "Unterschrieben",
+    "CANCELLED": "Storniert",
+    "EXPIRED": "Abgelaufen"
+  },
+  "consents": {
+    "privacy": "Datenschutz",
+    "photo": "Foto",
+    "sepa": "SEPA-Mandat",
+    "sms": "SMS",
+    "whatsapp": "WhatsApp",
+    "telegram": "Telegram"
+  },
+  "viaGuardian": "Erziehungsberechtigte füllen aus und bestätigen",
+  "opened": "Geöffnet",
+  "showSignature": "Unterschrift",
+  "signature": "Unterschrift",
+  "cancel": "Stornieren",
+  "close": "Schließen",
+  "sendTitle": "Online-Formular senden",
+  "sendIntro": "Für {name} wird ein persönlicher, 14 Tage gültiger Formular-Link gesendet.",
+  "sendIntroGuardian": "{name} ist minderjährig: Der Link geht an die Erziehungsberechtigten, die das Formular ausfüllen und bestätigen.",
+  "guardian": "Erziehungsberechtigte:r",
+  "channel": "Kanal",
+  "noAddress": "Keine Adresse",
+  "noChannels": "Kein Versandkanal eingerichtet (Kampagnen → Einstellungen).",
+  "sendHint": "Ein noch offener Link wird storniert. Nach der Unterschrift wird der Datensatz aktualisiert und die Einwilligungen gespeichert.",
+  "send": "Senden",
+  "sent": "Link gesendet.",
+  "updatedBy": "Online-Formular: {name}",
+  "message": {
+    "subject": "{org}: Bitte ergänzen Sie Ihre Angaben",
+    "text": "Hallo {name},\n\nbitte öffnen Sie den folgenden Link, um Ihre Angaben bei {org} zu vervollständigen und zu bestätigen:\n{link}\n\nDer Link ist bis {until} gültig und nur für Sie bestimmt."
+  },
+  "errors": {
+    "forbidden": "Sie dürfen diesen Datensatz nicht ändern.",
+    "notFound": "Datensatz nicht gefunden oder Modul deaktiviert.",
+    "noAddress": "Für den gewählten Kanal ist keine Adresse hinterlegt.",
+    "sendFailed": "Die Nachricht konnte nicht gesendet werden. Bitte Kanaleinstellungen prüfen.",
+    "noEncryption": "Zum Verschlüsseln der Unterschriften ist kein Schlüssel eingerichtet (AUTH_SECRET).",
+    "invalid": "Bitte prüfen Sie die markierten Felder.",
+    "linkInvalid": "Der Link ist ungültig, abgelaufen oder wurde bereits verwendet."
+  },
+  "validation": {
+    "tooLong": "Zu lang.",
+    "date": "Bitte ein gültiges Datum eingeben.",
+    "email": "Bitte eine gültige E-Mail-Adresse eingeben.",
+    "state": "Bitte ein Bundesland aus der Liste wählen.",
+    "country": "Bitte ein Land wählen.",
+    "iban": "Bitte eine gültige IBAN eingeben.",
+    "bic": "Bitte eine gültige BIC eingeben.",
+    "signerName": "Bitte Vor- und Nachnamen eingeben.",
+    "signature": "Bitte im Unterschriftsfeld unterschreiben.",
+    "privacy": "Die Datenschutzerklärung muss bestätigt werden."
+  },
+  "public": {
+    "title": "Anmeldeformular",
+    "intro": "{name}, bitte prüfen und ergänzen Sie Ihre Angaben, erteilen Sie die Einwilligungen und unterschreiben Sie.",
+    "introGuardian": "Bitte prüfen und ergänzen Sie als Erziehungsberechtigte:r die Angaben für {name}, erteilen Sie die Einwilligungen und unterschreiben Sie.",
+    "validUntil": "Der Link ist bis {date} gültig.",
+    "select": "Bitte wählen",
+    "sections": {
+      "person": "Persönliche Angaben",
+      "child": "Angaben zum Kind",
+      "guardian": "Angaben der Erziehungsberechtigten",
+      "bank": "Bankverbindung (SEPA)",
+      "consents": "Einwilligungen",
+      "signature": "Unterschrift"
+    },
+    "fields": {
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "birthDate": "Geburtsdatum",
+      "profession": "Beruf",
+      "street": "Straße",
+      "houseNumber": "Hausnummer",
+      "postalCode": "PLZ",
+      "city": "Ort",
+      "state": "Bundesland",
+      "country": "Land",
+      "school": "Schule",
+      "gradeLevel": "Klasse",
+      "iban": "IBAN",
+      "bic": "BIC",
+      "accountHolder": "Kontoinhaber:in"
+    },
+    "ibanKnown": "Hinterlegtes Konto: {iban}. Leer lassen, wenn es unverändert bleiben soll.",
+    "sepaMandate": "Ich ermächtige {org}, Zahlungen von meinem Konto mittels SEPA-Lastschrift einzuziehen. Zugleich weise ich mein Kreditinstitut an, die Lastschriften einzulösen. Ich kann innerhalb von acht Wochen, beginnend mit dem Belastungsdatum, die Erstattung verlangen.",
+    "privacy": "Ich habe die Datenschutzhinweise von {org} zur Verarbeitung meiner personenbezogenen Daten für die Durchführung der Mitgliedschaft/Anmeldung gemäß Art. 6 Abs. 1 lit. b DSGVO gelesen und akzeptiere sie.",
+    "photo": "Ich willige ein, dass Fotos und Videos von Veranstaltungen, auf denen ich zu sehen bin, auf der Website und in Veröffentlichungen verwendet werden dürfen (§ 22 KUG).",
+    "photoChild": "Ich willige ein, dass mein Kind auf Fotos und Videos von Veranstaltungen zu sehen sein und diese veröffentlicht werden dürfen (§ 22 KUG).",
+    "messagingLabel": "Ich möchte Mitteilungen über folgende Kanäle erhalten (freiwillig):",
+    "bulkMailOptOut": "Ich möchte keine Rundmails erhalten.",
+    "withdraw": "Freiwillige Einwilligungen können Sie jederzeit mit Wirkung für die Zukunft widerrufen (Art. 7 Abs. 3 DSGVO).",
+    "signerName": "Vor- und Nachname (Unterzeichner:in)",
+    "signatureArea": "Unterschriftsfeld",
+    "clearSignature": "Löschen",
+    "signatureHint": "Ihre Unterschrift und Einwilligungen werden mit Zeitstempel verschlüsselt gespeichert.",
+    "submit": "Bestätigen und unterschreiben",
+    "doneTitle": "Vielen Dank!",
+    "doneText": "Ihre Angaben wurden an {org} übermittelt. Sie können diese Seite schließen.",
+    "invalidTitle": "Link ungültig",
+    "invalidText": "Dieser Link ist abgelaufen, wurde storniert oder das Formular wurde bereits unterschrieben. Bitte wenden Sie sich an den Verein."
+  },
+  "automation": {
+    "events": {
+      "completed": {
+        "label": "Wenn ein Online-Formular unterschrieben wurde",
+        "fields": {
+          "requestId": "Anfrage-ID",
+          "kind": "Formularart"
+        },
+        "options": {
+          "kind": {
+            "MEMBER": "Mitglied",
+            "STUDENT": "Schüler:in",
+            "GUARDIAN": "Erziehungsberechtigte:r"
+          }
+        }
+      }
+    }
+  },
+  "access": {
+    "members": "Liest die Formularfelder des Mitglieds und schreibt das unterschriebene Formular in den Mitgliedsdatensatz.",
+    "students": "Liest Schüler- und Elternfelder, schreibt das unterschriebene Formular in den Datensatz und ermittelt bei Minderjährigen die Erziehungsberechtigten.",
+    "mailings": "Sendet den Formular-Link per E-Mail, SMS oder WhatsApp an eine einzelne Person.",
+    "organization": "Verwendet den Vereinsnamen in Nachricht und Formular.",
+    "system": "Prüft, ob die Quellmodule aktiv sind."
+  }
+}

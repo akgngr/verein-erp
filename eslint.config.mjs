@@ -37,6 +37,8 @@ const MODULE_INTERNAL_IMPORTS = {
     "!@/modules/*/permissions",
     "!@/modules/*/routes",
     "!@/modules/*/routes/**",
+    "!@/modules/*/public",
+    "!@/modules/*/public/**",
     "!@/modules/*/api",
     "!@/modules/*/api/**",
   ],

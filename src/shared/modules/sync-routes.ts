@@ -11,12 +11,19 @@ const APP_DIR = path.join(ROOT_DIR, "src", "app");
  */
 export const GENERATED_PAGES_DIR = path.join(APP_DIR, "(dashboard)", "(modules)");
 export const GENERATED_API_DIR = path.join(APP_DIR, "api", "(modules)");
+/** Oturumsuz sayfalar: src/app/(public)/(modules)/<yol>/page.tsx → /<yol> (proxy.ts matcher'da muaf tutulmalı). */
+export const GENERATED_PUBLIC_DIR = path.join(APP_DIR, "(public)", "(modules)");
 
 export const AUTO_ROUTE_BANNER =
   "// Otomatik senkronize edilmiştir (scripts/sync-schemas.ts & syncModuleRoutes).";
 
 /** Modül içi alt sayfa klasörü: src/modules/<module>/routes/<alt/yol>/page.tsx */
 const MODULE_SUBPAGES_DIR = "routes";
+/**
+ * Modül içi OTURUMSUZ sayfa klasörü: src/modules/<module>/public/<yol>/page.tsx → /<yol>.
+ * Sayfa kendi doğrulamasını yapar (ör. gizli belirteç); yol src/proxy.ts matcher'ında muaf olmalıdır.
+ */
+const MODULE_PUBLIC_DIR = "public";
 /** Modül içi API klasörü: src/modules/<module>/api/<alt/yol>/route.ts */
 const MODULE_API_DIR = "api";
 
@@ -55,12 +62,14 @@ export function syncModuleRoutes(options?: SyncModuleRoutesOptions): SyncRoutesR
   const appDir = path.join(rootDir, "src", "app");
   const generatedPagesDir = path.join(appDir, "(dashboard)", "(modules)");
   const generatedApiDir = path.join(appDir, "api", "(modules)");
+  const generatedPublicDir = path.join(appDir, "(public)", "(modules)");
 
   const result: SyncRoutesResult = { syncedRoutes: [], rebuilt: false, cleanedRoutes: [] };
   if (!fs.existsSync(modulesDir)) return result;
 
   const pages = new Map<string, string>(); // generatedPagesDir'e göre yol → içerik
   const apis = new Map<string, string>(); // generatedApiDir'e göre yol → içerik
+  const publicPages = new Map<string, string>(); // generatedPublicDir'e göre yol → içerik
 
   for (const entry of fs.readdirSync(modulesDir, { withFileTypes: true })) {
     if (!entry.isDirectory()) continue;
@@ -76,6 +85,12 @@ export function syncModuleRoutes(options?: SyncModuleRoutesOptions): SyncRoutesR
       const source = `src/modules/${moduleName}/${MODULE_API_DIR}/${subPath}/route.ts`;
       apis.set(path.join(moduleName, subPath, "route.ts"), apiBridge(source, `@/modules/${moduleName}/${MODULE_API_DIR}/${subPath}/route`, gated ? moduleName : null, rootDir));
       result.syncedRoutes.push(`${moduleName} -> /api/${moduleName}/${subPath}`);
+    }
+
+    for (const subPath of findFiles(path.join(moduleDir, MODULE_PUBLIC_DIR), "page.tsx")) {
+      const source = `src/modules/${moduleName}/${MODULE_PUBLIC_DIR}/${subPath}/page.tsx`;
+      publicPages.set(path.join(subPath, "page.tsx"), pageBridge(source, `@/modules/${moduleName}/${MODULE_PUBLIC_DIR}/${subPath}/page`, gated ? moduleName : null, rootDir));
+      result.syncedRoutes.push(`${moduleName} -> /${subPath} (public)`);
     }
 
     if (!fs.existsSync(path.join(moduleDir, "page.tsx"))) continue;
@@ -101,7 +116,8 @@ export function syncModuleRoutes(options?: SyncModuleRoutesOptions): SyncRoutesR
   removeLegacyBridges(result, rootDir, appDir, generatedPagesDir, generatedApiDir);
   const pagesRebuilt = rebuildDir(generatedPagesDir, pages);
   const apisRebuilt = rebuildDir(generatedApiDir, apis);
-  result.rebuilt = pagesRebuilt || apisRebuilt;
+  const publicRebuilt = rebuildDir(generatedPublicDir, publicPages);
+  result.rebuilt = pagesRebuilt || apisRebuilt || publicRebuilt;
   return result;
 }
 
@@ -267,7 +283,7 @@ function removeLegacyBridges(
   generatedPagesDir: string = GENERATED_PAGES_DIR,
   generatedApiDir: string = GENERATED_API_DIR,
 ): void {
-  const generated = [generatedPagesDir, generatedApiDir];
+  const generated = [generatedPagesDir, generatedApiDir, path.join(appDir, "(public)", "(modules)")];
   const walk = (dir: string): void => {
     if (!fs.existsSync(dir) || generated.some((root) => dir === root || dir.startsWith(`${root}.tmp-`))) return;
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {

@@ -280,3 +280,5 @@ export async function findMemberIdsByEmail(email: string): Promise<string[]> {
   });
   return members.map((member) => member.id);
 }
+export { getMemberSelfService, applyMemberSelfService } from "./services/online-form";
+export type { MemberSelfService, MemberSelfServiceInput } from "./services/online-form";

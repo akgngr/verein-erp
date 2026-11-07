@@ -1,0 +1,45 @@
+enum OnlineFormKind {
+  MEMBER
+  STUDENT
+  GUARDIAN
+}
+
+enum OnlineFormStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+/// Uzaktan form isteği. Form verisi kopyalanmaz; imza anında kaynak kayda (üye/öğrenci/veli) yazılır.
+/// Burada yalnız kanıt kalır: onaylar, imza (şifreli), imzalayan adı, zaman ve içerik özeti (hash).
+model OnlineFormRequest {
+  id             String           @id @default(cuid())
+  kind           OnlineFormKind
+  subjectId      String
+  /// "self" | "guardian" (reşit olmayan öğrenci: veli doldurur ve onaylar)
+  signerRole     String
+  /// Veli imzalıyorsa velinin kimliği
+  signerId       String?
+  /// Bağlantı belirtecinin SHA-256 özeti (belirtecin kendisi saklanmaz)
+  tokenHash      String           @unique
+  channel        String
+  /// Maskeli alıcı (ör. a•••@example.org)
+  sentTo         String
+  status         OnlineFormStatus @default(PENDING)
+  expiresAt      DateTime
+  openedAt       DateTime?
+  completedAt    DateTime?
+  signerName     String?
+  /// İmza görseli (PNG data URL), secret-box ile şifreli
+  signatureEnc   String?
+  consents       String[]         @default([])
+  /// Uygulanan veri + onaylar + imzanın SHA-256 özeti (değiştirilmezlik kanıtı)
+  evidenceHash   String?
+  createdById    String
+  createdByLabel String
+  createdAt      DateTime         @default(now())
+
+  @@index([kind, subjectId])
+  @@index([status, expiresAt])
+  @@map("online_form_requests")
+}
