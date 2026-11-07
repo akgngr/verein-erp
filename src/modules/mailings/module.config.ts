@@ -11,7 +11,7 @@ import { mailingsPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "mailings",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "2.4.0",
+  version: "2.4.1",
   label: "Toplu e-posta",
   description: "Üyelere, velilere ve diğer modüllerin alıcı listelerine kişiye özel toplu e-posta.",
   category: "OFFICIAL",

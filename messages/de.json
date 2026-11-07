@@ -5174,7 +5174,7 @@
       },
       "telegram": {
         "label": "Telegram",
-        "description": "An Abonnenten Ihres Bots; Einladung per E-Mail mit {telegramLink}."
+        "description": "An Abonnenten Ihres Bots; Einladung per E-Mail mit '{telegramLink}'."
       }
     },
     "board": {
