@@ -87,3 +87,26 @@ button[data-slot="trigger"][aria-haspopup="listbox"][aria-expanded="true"] {
 [data-invalid="true"] button[data-slot="trigger"][aria-haspopup="listbox"] {
   border-color: hsl(var(--heroui-danger));
 }
+
+/* Zengin metin belgeleri (Tiptap editörü .word-page ve gösterim .doc-content): Tailwind preflight sıfırlamasına karşı
+   Word benzeri temel biçimler. */
+.word-page, .doc-content { overflow-wrap: anywhere; }
+.word-page { min-height: 860px; }
+:is(.word-page, .doc-content) > * + * { margin-top: 0.6em; }
+:is(.word-page, .doc-content) h1 { font-size: 1.6em; font-weight: 700; line-height: 1.25; }
+:is(.word-page, .doc-content) h2 { font-size: 1.3em; font-weight: 700; line-height: 1.3; }
+:is(.word-page, .doc-content) h3 { font-size: 1.1em; font-weight: 600; }
+:is(.word-page, .doc-content) ul { list-style: disc; padding-inline-start: 1.5em; }
+:is(.word-page, .doc-content) ol { list-style: decimal; padding-inline-start: 1.5em; }
+:is(.word-page, .doc-content) blockquote { border-inline-start: 3px solid #d4d4d8; padding-inline-start: 0.9em; color: #52525b; }
+:is(.word-page, .doc-content) hr { border: 0; border-top: 1px solid #d4d4d8; margin: 1em 0; }
+:is(.word-page, .doc-content) a { color: #2563eb; text-decoration: underline; }
+:is(.word-page, .doc-content) mark { background: #fef08a; padding: 0 0.1em; }
+:is(.word-page, .doc-content) table { border-collapse: collapse; width: 100%; table-layout: fixed; }
+:is(.word-page, .doc-content) th, :is(.word-page, .doc-content) td { border: 1px solid #a1a1aa; padding: 0.35em 0.5em; vertical-align: top; }
+:is(.word-page, .doc-content) th { background: #f4f4f5; font-weight: 600; }
+.word-page .selectedCell { background: #dbeafe; }
+.word-page .column-resize-handle { position: absolute; right: -2px; top: 0; bottom: 0; width: 4px; background: #60a5fa; pointer-events: none; }
+.word-page .tableWrapper { overflow-x: auto; }
+.word-page td, .word-page th { position: relative; }
+.word-page p.is-editor-empty:first-child::before { content: attr(data-placeholder); color: #a1a1aa; float: left; height: 0; pointer-events: none; }

@@ -90,7 +90,7 @@ export const DATA_POLICY = {
   CrmParty: { owner: "crm", category: "K1", reason: "Kişiye bağlı ilişki kaydı (aşama, etiket); ad/iletişim kaynakta", sensitiveFields: ["tags", "sourceId"] },
   CrmActivity: { owner: "crm", category: "K1", reason: "Görüşme/arama notları", sensitiveFields: ["summary", "createdByLabel"] },
   CrmFollowUp: { owner: "crm", category: "K1", reason: "Kişiye bağlı takip notları", sensitiveFields: ["note"] },
-  OnlineFormSettings: { owner: "online-forms", category: "K2", reason: "Kurumsal form metinleri (kişi verisi yok)", sensitiveFields: [] },
+  OnlineFormDocument: { owner: "online-forms", category: "K2", reason: "Kurumsal form belgeleri (kişi verisi yok)", sensitiveFields: ["updatedById"] },
   OnlineFormRequest: { owner: "online-forms", category: "K1", reason: "Form bağlantısı kanıtı: maskeli alıcı, imzalayan adı, imza (şifreli), onaylar", sensitiveFields: ["sentTo", "signerName", "signatureEnc", "evidenceEnc", "documentEnc", "documentKey", "tokenHash", "evidenceHash", "textVersion"] },
   SepaDebitRun: { owner: "sepa", category: "K1", reason: "Tahsilat dosyası (IBAN içeren XML şifreli)", sensitiveFields: ["xmlEnc", "createdByLabel"] },
   SepaDebitItem: { owner: "sepa", category: "K1", reason: "Kişi bazlı tahsilat kalemi (ad, maskeli IBAN, yetki ref.)", sensitiveFields: ["debtorName", "ibanMasked", "mandateReference", "remittance", "sourceKey", "returnReason"] },

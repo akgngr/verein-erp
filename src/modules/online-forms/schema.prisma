@@ -52,13 +52,32 @@ model OnlineFormRequest {
   @@map("online_form_requests")
 }
 
-/// Formda onay kutularının yanında gösterilen metinler (tek satır, id = "default"). Boşsa yerleşik kısa metin kullanılır.
-model OnlineFormSettings {
-  id           String   @id @default("default")
-  privacyText  String?
-  photoText    String?
-  updatedById  String?
-  updatedAt    DateTime @updatedAt
+enum OnlineFormDocumentPurpose {
+  /// Datenschutz bilgilendirmesi: onay kutusu "privacy" onayıdır, her zaman zorunludur
+  PRIVACY
+  /// Fotoğraf/video izni: onay kutusu kaydın fotoğraf iznine yazılır
+  PHOTO
+  /// Diğer belgeler (ör. aidat yönetmeliği, ev kuralları)
+  OTHER
+}
 
-  @@map("online_form_settings")
+/// Online formda gösterilen belge (zengin metin, Tiptap HTML; kaydederken ve gösterirken temizlenir).
+model OnlineFormDocument {
+  id              String                    @id @default(cuid())
+  title           String
+  purpose         OnlineFormDocumentPurpose @default(OTHER)
+  contentHtml     String
+  /// Altında onay kutusu gösterilsin mi (yalnız bilgi amaçlı belgeler için kapatılır)
+  requiresConsent Boolean                   @default(true)
+  /// Onay zorunlu mu (PRIVACY her zaman zorunlu sayılır)
+  required        Boolean                   @default(false)
+  appliesTo       OnlineFormKind[]          @default([MEMBER, STUDENT, GUARDIAN])
+  sortOrder       Int                       @default(0)
+  active          Boolean                   @default(true)
+  updatedById     String?
+  createdAt       DateTime                  @default(now())
+  updatedAt       DateTime                  @updatedAt
+
+  @@index([active, sortOrder])
+  @@map("online_form_documents")
 }

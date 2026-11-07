@@ -6982,7 +6982,8 @@
         "day": "Tag",
         "month": "Monat",
         "year": "Jahr"
-      }
+      },
+      "acceptDocument": "Ich habe das Dokument „{title}“ gelesen und akzeptiere es."
     },
     "automation": {
       "events": {
@@ -7020,17 +7021,8 @@
       "automation": "Nutzt die Auftragswarteschlange, um das PDF des unterschriebenen Formulars im Hintergrund zu erzeugen."
     },
     "settings": {
-      "title": "Formulartexte",
-      "description": "Datenschutz- und Fototexte, die im Online-Formular über den Einwilligungsfeldern angezeigt werden.",
-      "privacyText": "Datenschutzhinweise (Art. 13 DSGVO)",
-      "privacyPlaceholder": "Verantwortlicher, Zwecke, Rechtsgrundlage, Speicherdauer, Ihre Rechte …",
-      "privacyHelp": "Wird im Formular in einem scrollbaren Feld über der Datenschutz-Einwilligung angezeigt. Leer: nur der kurze Einwilligungssatz.",
-      "photoText": "Text zur Foto-/Videoeinwilligung (§ 22 KUG)",
-      "photoPlaceholder": "Welche Aufnahmen, wo veröffentlicht, Widerruf …",
-      "photoHelp": "Wird über dem Feld zur Fotoeinwilligung angezeigt.",
-      "versionHint": "Bei jeder Unterschrift wird ein Hash (Version) des angezeigten Textes als Nachweis gespeichert. Ändert sich der Text, müssen offene Formulare vor dem Unterschreiben neu geladen werden.",
-      "save": "Speichern",
-      "saved": "Texte gespeichert."
+      "title": "Formulardokumente",
+      "description": "Dokumente im e-Sign-Formular (Datenschutz, Fotoeinwilligung, Ordnungen usw.). Jedes Dokument wird mit einem Word-ähnlichen Editor bearbeitet."
     },
     "pdf": {
       "title": "e-Sign – unterschriebene Erklärung",
@@ -7045,10 +7037,86 @@
       "evidenceHash": "Nachweis-Hash (SHA-256)",
       "note": "Dieses Dokument wurde aus dem verschlüsselt gespeicherten Datensatz des Formulars erstellt, das die Person über ihren persönlichen Link ausgefüllt und handschriftlich unterschrieben hat.",
       "download": "PDF",
-      "documentKey": "Dokumentschlüssel"
+      "documentKey": "Dokumentschlüssel",
+      "accepted": "Akzeptiert",
+      "privacyText": "Datenschutzhinweise (Art. 13 DSGVO)",
+      "photoText": "Text zur Foto-/Videoeinwilligung (§ 22 KUG)"
     },
     "filteredPerson": "Nur Einträge für {name}",
-    "showAll": "Alle anzeigen"
+    "showAll": "Alle anzeigen",
+    "documents": {
+      "add": "Dokument hinzufügen",
+      "addTitle": "Neues Dokument",
+      "editTitle": "Dokument bearbeiten",
+      "edit": "Bearbeiten",
+      "delete": "Löschen",
+      "deleteConfirm": "Dokument „{title}“ löschen? Die Kopie in bereits unterschriebenen Nachweisen bleibt erhalten.",
+      "deleted": "Dokument gelöscht.",
+      "saved": "Dokument gespeichert.",
+      "save": "Speichern",
+      "cancel": "Abbrechen",
+      "empty": "Noch keine Dokumente. Im Formular erscheint nur die kurze Datenschutz-Einwilligung.",
+      "versionHint": "Bei jeder Unterschrift wird ein Hash (Version) der angezeigten Dokumente als Nachweis gespeichert. Ändert sich ein Dokument, müssen offene Formulare neu geladen werden.",
+      "moveUp": "Nach oben",
+      "moveDown": "Nach unten",
+      "inactive": "Inaktiv",
+      "requiredChip": "Pflicht-Einwilligung",
+      "optionalChip": "Freiwillige Einwilligung",
+      "infoOnlyChip": "Nur Information",
+      "purposes": {
+        "PRIVACY": "Datenschutz",
+        "PHOTO": "Foto-/Videoeinwilligung",
+        "OTHER": "Sonstiges"
+      },
+      "purposeHelp": {
+        "PRIVACY": "Datenschutzhinweise (Art. 13 DSGVO). Die Einwilligung ist immer Pflicht.",
+        "PHOTO": "Das Kontrollkästchen bestimmt die Fotoeinwilligung der Person (§ 22 KUG).",
+        "OTHER": "Ordnungen, Verträge, Hinweise usw. Optional mit Kontrollkästchen."
+      },
+      "fields": {
+        "title": "Titel",
+        "purpose": "Art",
+        "active": "Im Formular anzeigen",
+        "appliesTo": "In welchen Formularen",
+        "requiresConsent": "Kontrollkästchen anzeigen",
+        "required": "Einwilligung erforderlich",
+        "content": "Inhalt"
+      },
+      "errors": {
+        "title": "Der Titel muss mindestens 2 Zeichen haben.",
+        "content": "Der Inhalt darf nicht leer sein.",
+        "appliesTo": "Mindestens eine Formularart wählen."
+      },
+      "editor": {
+        "toolbar": "Formatierungsleiste",
+        "undo": "Rückgängig",
+        "redo": "Wiederholen",
+        "paragraph": "Absatz",
+        "heading1": "Überschrift 1",
+        "heading2": "Überschrift 2",
+        "heading3": "Überschrift 3",
+        "bold": "Fett",
+        "italic": "Kursiv",
+        "underline": "Unterstrichen",
+        "strike": "Durchgestrichen",
+        "highlight": "Hervorheben",
+        "alignLeft": "Linksbündig",
+        "alignCenter": "Zentriert",
+        "alignRight": "Rechtsbündig",
+        "alignJustify": "Blocksatz",
+        "bulletList": "Aufzählung",
+        "orderedList": "Nummerierte Liste",
+        "quote": "Zitat",
+        "rule": "Trennlinie",
+        "link": "Link",
+        "linkPrompt": "Linkadresse (https://…)",
+        "unlink": "Link entfernen",
+        "table": "Tabelle einfügen",
+        "addRow": "Zeile hinzufügen",
+        "addColumn": "Spalte hinzufügen",
+        "deleteTable": "Tabelle löschen"
+      }
+    }
   },
   "organization": {
     "pageTitle": "Vereinsdaten",

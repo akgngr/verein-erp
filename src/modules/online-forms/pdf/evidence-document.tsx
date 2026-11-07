@@ -11,6 +11,7 @@ export type EvidencePdfLabels = {
   fields: Record<string, string>;
   consents: Record<string, string>;
   yes: string;
+  accepted: string;
   no: string;
   meta: { documentKey: string; signer: string; signedAt: string; channel: string; textVersion: string; evidenceHash: string; note: string };
 };
@@ -93,6 +94,13 @@ export function EvidenceDocument({ snapshot, signature, organization, labels, da
           <Text>{snapshot.signerName} · {dateTime}</Text>
         </View>
 
+        {(snapshot.documents ?? []).map((doc, index) => (
+          <View key={index} style={styles.section}>
+            <Text style={styles.h2}>{doc.title}</Text>
+            <Text style={styles.longText}>{doc.text}</Text>
+            {doc.requiresConsent ? <Text>{labels.accepted}: {doc.accepted ? labels.yes : labels.no}</Text> : null}
+          </View>
+        ))}
         {texts.privacyLong ? <View style={styles.section}><Text style={styles.h2}>{labels.sections.privacyText}</Text><Text style={styles.longText}>{texts.privacyLong}</Text></View> : null}
         {texts.photoLong ? <View style={styles.section}><Text style={styles.h2}>{labels.sections.photoText}</Text><Text style={styles.longText}>{texts.photoLong}</Text></View> : null}
 

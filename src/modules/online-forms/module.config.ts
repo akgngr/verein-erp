@@ -12,7 +12,8 @@ import { onlineFormsPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "online-forms",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.1.1",
+  version: "1.2.0",
+  dependencies: { "@tiptap/extension-highlight": "^3.33.0", "@tiptap/extension-table": "^3.33.0", "@tiptap/extension-text-align": "^3.33.0", "@tiptap/pm": "^3.32.2", "@tiptap/react": "^3.32.2", "@tiptap/starter-kit": "^3.32.2", "sanitize-html": "^2.18.1" },
   label: "e-Sign",
   description: "e-Sign: kişiye süreli bağlantı, form tamamlama, Datenschutz onayı, imza ve imzalı PDF belgeleri.",
   category: "OFFICIAL",
