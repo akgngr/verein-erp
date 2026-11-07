@@ -1,6 +1,6 @@
 import "server-only";
 
-import { createHash, createHmac, timingSafeEqual } from "node:crypto";
+import { createHmac, timingSafeEqual } from "node:crypto";
 
 const equal = (a: string, b: string) => {
   const left = Buffer.from(a);
@@ -8,9 +8,13 @@ const equal = (a: string, b: string) => {
   return left.length === right.length && timingSafeEqual(left, right);
 };
 
-/** seven.io imza desteklemediği için gizli yol: API anahtarından türetilir (anahtar değişince değişir). */
+/**
+ * seven.io imza desteklemediği için gizli yol: uygulama sırrı (AUTH_SECRET) anahtarlı HMAC ile API anahtarından
+ * türetilir (anahtar veya uygulama sırrı değişince değişir). Yol tek başına API anahtarını açığa çıkarmaz.
+ */
 export function sevenWebhookSecret(apiKey: string): string {
-  return createHash("sha256").update(`verein-erp:seven-webhook:${apiKey}`).digest("base64url").slice(0, 32);
+  const appSecret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET ?? "";
+  return createHmac("sha256", apiKey).update(`verein-erp:seven-webhook:${appSecret}`).digest("base64url").slice(0, 32);
 }
 
 export const verifySevenSecret = (apiKey: string, given: string) => equal(sevenWebhookSecret(apiKey), given);
