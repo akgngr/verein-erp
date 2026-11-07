@@ -41,6 +41,8 @@ export type PayableDetail = PayableRow & {
   createdByLabel: string;
   createdAt: Date;
   checks: Section14Check[];
+  /** Gelen e-fatura doğrulama bulguları (içe alırken); e-fatura değilse null. */
+  einvoiceIssues: { rule: string; severity: "error" | "warning" }[] | null;
   bookings: Array<{ id: string; bookingNumber: string; bookingDate: Date; amountCents: number; reversed: boolean }>;
 };
 
@@ -106,6 +108,7 @@ export async function getPayable(id: string): Promise<PayableDetail | null> {
     mimeType: item.mimeType,
     createdByLabel: item.createdByLabel,
     createdAt: item.createdAt,
+    einvoiceIssues: Array.isArray(item.einvoiceIssues) ? (item.einvoiceIssues as { rule: string; severity: "error" | "warning" }[]) : null,
     checks: section14Checks({
       sellerName: item.supplierName || null,
       sellerAddress: item.supplierAddress,

@@ -101,6 +101,7 @@ export async function PayableDetailView({ id, editing }: { id: string; editing: 
   const user = await guard();
   if (!user) return <AccessDenied />;
   const t = await getTranslations("accounting.payables");
+  const tCheck = await getTranslations("accounting.einvoice");
   const payable = await getPayable(id);
   if (!payable) notFound();
   const canCreate = can(user.role, accountingPermissions, "create");
@@ -177,6 +178,20 @@ export async function PayableDetailView({ id, editing }: { id: string; editing: 
             )}
           </section>
           <section className="rounded-medium border border-default-200 bg-content1 p-5 shadow-sm">
+            {payable.einvoiceIssues ? (
+              <div className="mb-3">
+                <h3 className="mb-1 text-small font-semibold">{tCheck("check.incoming")}</h3>
+                {payable.einvoiceIssues.length === 0 ? <p className="text-small text-success-700">{tCheck("check.ok")}</p> : (
+                  <ul className="flex flex-col gap-1 text-small">
+                    {payable.einvoiceIssues.map((issue) => (
+                      <li key={issue.rule} className={issue.severity === "error" ? "text-danger" : "text-warning-700"}>
+                        <span className="font-mono">{issue.rule}</span> · {tCheck(`rules.${issue.rule}` as never)}
+                      </li>
+                    ))}
+                  </ul>
+                )}
+              </div>
+            ) : null}
             <h3 className="mb-1 text-small font-semibold">{t("checks.title")}</h3>
             <p className="mb-2 text-tiny text-default-500">{payable.grossCents <= 25000 ? t("checks.small") : t("checks.hint")}</p>
             <ul className="flex flex-col gap-1 text-small">

@@ -71,6 +71,7 @@ export const invoiceSettingsSchema = z.object({
   dunningFlatFeeB2B: z.boolean(),
   bic: z.string().trim().refine((value) => value === "" || /^[A-Z]{6}[A-Z0-9]{2}([A-Z0-9]{3})?$/.test(value.replace(/\s/g, "").toUpperCase()), "accounting.invoices.validation.bic"),
   sepaCreditorId: z.string().trim().refine((value) => value === "" || /^[A-Z]{2}\d{2}[A-Z0-9]{3}[A-Z0-9]{1,28}$/.test(value.replace(/\s/g, "").toUpperCase()), "accounting.invoices.validation.creditorId"),
+  kositValidatorUrl: z.string().trim().max(300).refine((value) => value === "" || /^https?:\/\/[^\s]+$/.test(value), "accounting.invoices.validation.kositUrl"),
 });
 
 export type InvoiceInput = z.infer<typeof invoiceSchema>;

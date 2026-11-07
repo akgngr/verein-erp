@@ -22,7 +22,10 @@ import {
   type InvoiceInput,
 } from "../schemas/invoice";
 import { calculateInvoiceTotals } from "../services/invoice-calc";
+import { loadEInvoiceData } from "../services/einvoice-data";
+import { buildXRechnungUbl } from "../services/einvoice-out";
 import { allocateInvoiceNumber } from "../services/invoice-number";
+import { validateWithKosit } from "../services/kosit";
 import { applyInvoicePayment, INVOICE_SOURCE } from "../services/invoice-payment-service";
 import { reverseSourcedBooking } from "../services/sourced-bookings";
 import { parseDateOnly } from "../utils";
@@ -338,6 +341,7 @@ export async function saveInvoiceSettingsAction(input: unknown): Promise<ActionR
         iban: input.iban ? input.iban.replace(/\s/g, "").toUpperCase() : null,
         bic: input.bic ? input.bic.replace(/\s/g, "").toUpperCase() : null,
         sepaCreditorId: input.sepaCreditorId ? input.sepaCreditorId.replace(/\s/g, "").toUpperCase() : null,
+        kositValidatorUrl: input.kositValidatorUrl || null,
         dunningIntervalDays: Number(input.dunningIntervalDays),
         dunningFeeReminder: input.dunningFeeReminder ? toCents(input.dunningFeeReminder) ?? 0 : 0,
         dunningFeeFirst: input.dunningFeeFirst ? toCents(input.dunningFeeFirst) ?? 0 : 0,
@@ -352,4 +356,23 @@ export async function saveInvoiceSettingsAction(input: unknown): Promise<ActionR
     },
   });
   return run(input) as Promise<ActionResult>;
+}
+
+/** İsteğe bağlı tam doğrulama: faturanın XRechnung XML'i ayarlardaki KoSIT doğrulayıcısına gönderilir. */
+export async function validateWithKositAction(input: unknown): Promise<ActionResult<{ valid: boolean; messages: { code: string; level: string; text: string }[] }>> {
+  const run = createAction({
+    permission: { definition: accountingPermissions, action: "view" },
+    schema: invoiceCancelSchema.pick({ id: true }),
+    handler: async ({ input }) => {
+      const settings = await getDb().accountingInvoiceSettings.findUnique({ where: { id: "singleton" }, select: { kositValidatorUrl: true } });
+      if (!settings?.kositValidatorUrl) throw new ActionError("accounting.einvoice.check.kositFailed");
+      const load = await loadEInvoiceData(input.id);
+      const data = load.ok ? load.data : load.reason === "incomplete" ? load.data : null;
+      if (!data) throw new ActionError("accounting.invoices.errors.notFound");
+      const result = await validateWithKosit(settings.kositValidatorUrl, buildXRechnungUbl(data));
+      if (!result.ok) throw new ActionError("accounting.einvoice.check.kositFailed");
+      return { valid: result.valid, messages: result.messages };
+    },
+  });
+  return run(input) as Promise<ActionResult<{ valid: boolean; messages: { code: string; level: string; text: string }[] }>>;
 }

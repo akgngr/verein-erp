@@ -1,5 +1,7 @@
 import "server-only";
 
+import { getTranslations } from "next-intl/server";
+
 import { NextResponse } from "next/server";
 
 import { writeAudit } from "@/shared/audit/write-audit";
@@ -37,8 +39,11 @@ async function failure(load: Exclude<EInvoiceLoad, { ok: true }>): Promise<Respo
   if (load.reason === "notFound") return NextResponse.json({ ok: false, error: await translateMessage("accounting.invoices.errors.notFound") }, { status: 404 });
   if (load.reason === "notIssued") return NextResponse.json({ ok: false, error: await translateMessage("accounting.invoices.xrechnung.notIssued") }, { status: 409 });
   if (load.reason !== "incomplete") return NextResponse.json({ ok: false }, { status: 500 });
-  const labels = await Promise.all(load.issues.map((issue) => translateMessage(`accounting.invoices.xrechnung.issues.${issue}`)));
-  return NextResponse.json({ ok: false, error: `${await translateMessage("accounting.invoices.xrechnung.incomplete")} ${labels.join(", ")}`, issues: load.issues }, { status: 422 });
+  const errors = load.issues.filter((issue) => issue.severity === "error");
+  // Kural kodları tire içerir (BR-DE-3); ortak anahtar algılayıcısı yerine ad alanından doğrudan çevrilir.
+  const tRules = await getTranslations("accounting.einvoice.rules");
+  const labels = errors.map((issue) => `${issue.rule}: ${tRules.has(issue.rule as never) ? tRules(issue.rule as never) : issue.rule}`);
+  return NextResponse.json({ ok: false, error: `${await translateMessage("accounting.invoices.xrechnung.incomplete")} ${labels.join("; ")}`, issues: errors.map((issue) => issue.rule) }, { status: 422 });
 }
 
 /** GET /api/accounting/invoices/[id]/xrechnung — XRechnung 3.0 (UBL). */
