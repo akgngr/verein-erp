@@ -3,12 +3,14 @@ import { getTranslations } from "next-intl/server";
 
 import { listCategoryOptions, listProjectOptions } from "@/modules/accounting/server";
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
+import { FormDrawer } from "@/shared/components/forms/form-drawer";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { LinkButton } from "@/shared/components/ui/link-button";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { can } from "@/shared/permissions/define";
 
 import { GrantDetailApp } from "../components/grant-detail";
+import { GrantForm } from "../components/grant-form";
 import { GrantsList } from "../components/grants-list";
 import { grantsPermissions } from "../permissions";
 import { buildReport, getGrant, listGrants } from "../services/grants";
@@ -25,7 +27,7 @@ async function guard() {
 }
 
 /** /hibeler */
-export async function GrantsListView() {
+export async function GrantsListView({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const user = await guard();
   if (!user) return <AccessDenied />;
   const t = await getTranslations("grants");
@@ -33,7 +35,12 @@ export async function GrantsListView() {
   return (
     <div>
       <PageHeader title={t("title")} description={t("description")} />
-      <GrantsList rows={rows} projects={projects} canCreate={can(user.role, grantsPermissions, "create")} today={berlinToday()} />
+      <GrantsList rows={rows} canCreate={can(user.role, grantsPermissions, "create")} today={berlinToday()} />
+      {can(user.role, grantsPermissions, "create") && (await searchParams).yeni !== undefined ? (
+        <FormDrawer title={t("newGrant")} description={t("description")}>
+          <GrantForm canEdit openAfterSave projects={projects} initial={{ id: null, name: "", funder: "", fileNumber: null, purpose: null, status: "PLANNED", approvedCents: null, ownShareCents: 0, thirdPartyCents: 0, periodStart: berlinToday(), periodEnd: berlinToday(), reportDueAt: null, projectId: null, useNetAmounts: false }} />
+        </FormDrawer>
+      ) : null}
     </div>
   );
 }

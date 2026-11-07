@@ -1,27 +1,25 @@
 "use client";
 
-import { Button, Chip, Modal, ModalBody, ModalContent, ModalHeader } from "@heroui/react";
+import { Chip } from "@heroui/react";
 import { HandCoins, Plus } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useFormatter, useTranslations } from "next-intl";
-import { useState } from "react";
 
-import { GrantForm, type GRANT_STATUSES } from "./grant-form";
+import { FormDrawerButton } from "@/shared/components/forms/form-drawer";
+
+import type { GRANT_STATUSES } from "./grant-form";
 
 type Row = { id: string; name: string; funder: string; fileNumber: string | null; status: (typeof GRANT_STATUSES)[number]; approvedCents: number | null; periodStart: string; periodEnd: string; reportDueAt: string | null; receivedCents: number; reportSubmittedAt: string | null };
 const COLOR = { PLANNED: "default", APPLIED: "secondary", APPROVED: "primary", ACTIVE: "primary", REPORTED: "success", CLOSED: "default", REJECTED: "danger" } as const;
 
-export function GrantsList({ rows, projects, canCreate, today }: { rows: Row[]; projects: { id: string; name: string }[]; canCreate: boolean; today: string }) {
+export function GrantsList({ rows, canCreate, today }: { rows: Row[]; canCreate: boolean; today: string }) {
   const t = useTranslations("grants");
   const format = useFormatter();
-  const router = useRouter();
-  const [open, setOpen] = useState(false);
   const money = (cents: number | null) => (cents === null ? "—" : format.number(cents / 100, { style: "currency", currency: "EUR" }));
   const date = (value: string | null) => (value ? format.dateTime(new Date(`${value}T12:00:00`), { dateStyle: "medium" }) : "—");
   return (
     <div className="flex flex-col gap-4">
-      {canCreate ? <Button color="primary" className="self-start" startContent={<Plus className="size-4" />} onPress={() => setOpen(true)}>{t("newGrant")}</Button> : null}
+      {canCreate ? <div><FormDrawerButton param="yeni" startIcon={<Plus className="size-4" />}>{t("newGrant")}</FormDrawerButton></div> : null}
       {rows.length === 0 ? (
         <div className="flex flex-col items-center gap-2 rounded-large border border-dashed border-default-300 p-10 text-center text-default-500"><HandCoins className="size-8" /><p>{t("empty")}</p></div>
       ) : (
@@ -47,14 +45,6 @@ export function GrantsList({ rows, projects, canCreate, today }: { rows: Row[]; 
           </table>
         </div>
       )}
-      <Modal isOpen={open} onOpenChange={setOpen} size="3xl" scrollBehavior="inside">
-        <ModalContent>
-          <ModalHeader>{t("newGrant")}</ModalHeader>
-          <ModalBody className="pb-6">
-            <GrantForm canEdit projects={projects} initial={{ id: null, name: "", funder: "", fileNumber: null, purpose: null, status: "PLANNED", approvedCents: null, ownShareCents: 0, thirdPartyCents: 0, periodStart: today, periodEnd: today, reportDueAt: null, projectId: null, useNetAmounts: false }} onSaved={(id) => router.push(`/muhasebe/hibeler/${id}`)} />
-          </ModalBody>
-        </ModalContent>
-      </Modal>
     </div>
   );
 }

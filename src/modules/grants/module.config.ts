@@ -7,7 +7,7 @@ import type { ModuleConfig } from "@/shared/types/module";
 export const moduleConfig: ModuleConfig = {
   key: "grants",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.0.1",
+  version: "1.0.2",
   label: "Hibeler",
   description: "Hibe ve proje fonları: finansman planı, ödemeler ve Verwendungsnachweis (kullanım raporu).",
   category: "OFFICIAL",
