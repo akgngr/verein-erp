@@ -109,7 +109,7 @@ export const DATA_POLICY = {
   DocumentFile: { owner: "documents", category: "K3", reason: "Evrak ekleri; yapay zekâ metni yalnız maskeli ve documents:read izniyle okur", sensitiveFields: ["storagePath"] },
   Donation: { owner: "donations", category: "K3", reason: "Bağışlar; yapay zekâya yalnız toplam/adet/dağılım", sensitiveFields: ["donorId", "reference", "purposeNote"] },
   Calendar: { owner: "calendar", category: "K2", reason: "Takvim adları ve renkleri; kişisel takvim sahibine bağlı", sensitiveFields: ["ownerId"], personalOwnerField: "ownerId" },
-  CalendarEntry: { owner: "calendar", category: "K1", reason: "Kişisel randevular özel hayat bilgisi içerebilir", sensitiveFields: ["title", "description", "location", "createdByLabel"] },
+  CalendarEntry: { owner: "calendar", category: "K3", reason: "Ortak takvim kayıtları AI'ya yalnız başlık ve zaman olarak verilir (araç SHARED filtresi); kişisel takvim kayıtları AI'ya hiç verilmez", sensitiveFields: ["description", "location", "createdByLabel"] },
   CalendarSyncApp: { owner: "calendar", category: "K0", reason: "Sağlayıcı OAuth uygulaması; client secret şifreli", sensitiveFields: ["clientSecretEnc"] },
   CalendarSyncAccount: { owner: "calendar", category: "K0", reason: "Kullanıcının dış takvim erişim bilgileri (şifreli token/parola)", sensitiveFields: ["credentialsEnc", "stateHash", "accountLabel"], personalOwnerField: "userId" },
   CalendarSyncCalendar: { owner: "calendar", category: "K1", reason: "Kullanıcının dış takvim adları", sensitiveFields: ["name"] },
@@ -222,6 +222,9 @@ export const AI_TOOL_POLICY = {
   // meetings
   get_meeting_statistics: { module: "meetings", reads: ["Meeting"] },
   list_meetings: { module: "meetings", reads: ["Meeting"] },
+  list_shared_calendars: { module: "calendar", reads: ["Calendar"] },
+  list_shared_calendar_entries: { module: "calendar", reads: ["Calendar", "CalendarEntry"] },
+  propose_calendar_entry: { module: "calendar", reads: ["Calendar"] },
   get_campaign_statistics: { module: "mailings", reads: ["MailingCampaign"] },
   list_campaigns: { module: "mailings", reads: ["MailingCampaign"] },
   list_campaign_audiences: { module: "mailings", reads: [] },
