@@ -148,7 +148,8 @@
       "day": "Gün",
       "month": "Ay",
       "year": "Yıl"
-    }
+    },
+    "acceptDocument": "„{title}“ belgesini okudum ve kabul ediyorum."
   },
   "automation": {
     "events": {
@@ -186,17 +187,8 @@
     "automation": "İmzalı form PDF'ini arka planda üretmek için iş kuyruğunu kullanır."
   },
   "settings": {
-    "title": "Form metinleri",
-    "description": "e-Sign formunda onay kutularının üstünde gösterilen Datenschutz ve fotoğraf izni metinleri.",
-    "privacyText": "Datenschutz bilgilendirmesi (DSGVO Art. 13)",
-    "privacyPlaceholder": "Sorumlu, işleme amaçları, hukuki dayanak, saklama süresi, haklarınız …",
-    "privacyHelp": "Formda Datenschutz onay kutusunun üstünde kaydırılabilir kutuda gösterilir. Boş bırakılırsa yalnız kısa onay cümlesi görünür.",
-    "photoText": "Fotoğraf/video izni metni (KUG §22)",
-    "photoPlaceholder": "Hangi fotoğraflar, nerede yayımlanır, geri alma …",
-    "photoHelp": "Fotoğraf izni kutusunun üstünde gösterilir.",
-    "versionHint": "Her imzada o an gösterilen metnin özeti (sürümü) kanıt olarak saklanır. Metin değişirse açık formlar yeniden yüklenmeden imzalanamaz.",
-    "save": "Kaydet",
-    "saved": "Metinler kaydedildi."
+    "title": "Form belgeleri",
+    "description": "e-Sign formunda gösterilen belgeler (Datenschutz, fotoğraf izni, kurallar vb.). Her belge Word benzeri editörle düzenlenir."
   },
   "pdf": {
     "title": "e-Sign – imzalı belge",
@@ -211,8 +203,84 @@
     "evidenceHash": "Kanıt özeti (SHA-256)",
     "note": "Bu belge, kişinin kendisine gönderilen kişisel bağlantı üzerinden doldurup elle imzaladığı formun sistemde şifreli saklanan kaydından oluşturulmuştur.",
     "download": "PDF",
-    "documentKey": "Belge anahtarı"
+    "documentKey": "Belge anahtarı",
+    "accepted": "Onaylandı",
+    "privacyText": "Datenschutz bilgilendirmesi (DSGVO Art. 13)",
+    "photoText": "Fotoğraf/video izni metni (KUG §22)"
   },
   "filteredPerson": "Yalnız {name} için kayıtlar",
-  "showAll": "Tümünü göster"
+  "showAll": "Tümünü göster",
+  "documents": {
+    "add": "Belge ekle",
+    "addTitle": "Yeni belge",
+    "editTitle": "Belgeyi düzenle",
+    "edit": "Düzenle",
+    "delete": "Sil",
+    "deleteConfirm": "„{title}“ belgesi silinsin mi? İmzalanmış kayıtlardaki kopyası korunur.",
+    "deleted": "Belge silindi.",
+    "saved": "Belge kaydedildi.",
+    "save": "Kaydet",
+    "cancel": "Vazgeç",
+    "empty": "Henüz belge yok. Formda yalnız kısa Datenschutz onayı gösterilir.",
+    "versionHint": "Her imzada o an gösterilen belgelerin özeti (sürümü) kanıt olarak saklanır. Belge değişirse açık formlar yeniden yüklenmeden imzalanamaz.",
+    "moveUp": "Yukarı taşı",
+    "moveDown": "Aşağı taşı",
+    "inactive": "Pasif",
+    "requiredChip": "Zorunlu onay",
+    "optionalChip": "İsteğe bağlı onay",
+    "infoOnlyChip": "Yalnız bilgi",
+    "purposes": {
+      "PRIVACY": "Datenschutz",
+      "PHOTO": "Fotoğraf/video izni",
+      "OTHER": "Diğer"
+    },
+    "purposeHelp": {
+      "PRIVACY": "Datenschutz bilgilendirmesi (DSGVO Art. 13). Onayı her zaman zorunludur.",
+      "PHOTO": "Onay kutusu kişinin fotoğraf iznini belirler (KUG §22).",
+      "OTHER": "Kurallar, sözleşme, bilgilendirme vb. İsterseniz onay kutusu eklenir."
+    },
+    "fields": {
+      "title": "Başlık",
+      "purpose": "Tür",
+      "active": "Formda göster",
+      "appliesTo": "Hangi formlarda",
+      "requiresConsent": "Onay kutusu göster",
+      "required": "Onay zorunlu",
+      "content": "İçerik"
+    },
+    "errors": {
+      "title": "Başlık en az 2 karakter olmalı.",
+      "content": "İçerik boş olamaz.",
+      "appliesTo": "En az bir form türü seçin."
+    },
+    "editor": {
+      "toolbar": "Biçimlendirme araç çubuğu",
+      "undo": "Geri al",
+      "redo": "Yinele",
+      "paragraph": "Paragraf",
+      "heading1": "Başlık 1",
+      "heading2": "Başlık 2",
+      "heading3": "Başlık 3",
+      "bold": "Kalın",
+      "italic": "İtalik",
+      "underline": "Altı çizili",
+      "strike": "Üstü çizili",
+      "highlight": "Vurgula",
+      "alignLeft": "Sola hizala",
+      "alignCenter": "Ortala",
+      "alignRight": "Sağa hizala",
+      "alignJustify": "İki yana yasla",
+      "bulletList": "Madde işaretli liste",
+      "orderedList": "Numaralı liste",
+      "quote": "Alıntı",
+      "rule": "Yatay çizgi",
+      "link": "Bağlantı",
+      "linkPrompt": "Bağlantı adresi (https://…)",
+      "unlink": "Bağlantıyı kaldır",
+      "table": "Tablo ekle",
+      "addRow": "Satır ekle",
+      "addColumn": "Sütun ekle",
+      "deleteTable": "Tabloyu sil"
+    }
+  }
 }

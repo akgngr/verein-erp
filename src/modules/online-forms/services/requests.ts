@@ -27,7 +27,8 @@ import { openSecret, sealSecret } from "@/shared/security/secret-box";
 
 import { onlineFormCompletedEvent } from "../automation";
 import { EVIDENCE_PURPOSE, SIGNATURE_PURPOSE, type EvidenceSnapshot } from "./evidence-store";
-import { getFormTexts, textVersion } from "./settings";
+import { documentHtmlToText } from "../lib/sanitize";
+import { documentsFor, textVersion } from "./settings";
 import type { submitSchema } from "../lib/schemas";
 import type { z } from "zod";
 
@@ -173,9 +174,8 @@ export type PublicForm = {
   member: Omit<MemberSelfService, "id"> | null;
   student: Omit<StudentSelfService, "id" | "guardians" | "minor"> | null;
   guardian: Omit<GuardianSelfService, "id"> | null;
-  /** Yönetici metinleri (boşsa formda yerleşik kısa metin). */
-  privacyText: string | null;
-  photoText: string | null;
+  /** Formda gösterilecek belgeler (temizlenmiş HTML). PRIVACY yoksa yerleşik kısa Datenschutz onayı kullanılır. */
+  documents: { id: string; title: string; purpose: "PRIVACY" | "PHOTO" | "OTHER"; contentHtml: string; requiresConsent: boolean; required: boolean }[];
   /** Gösterilen metin sürümü; imzada aynısı gönderilmezse (metin bu arada değişti) imza reddedilir. */
   textVersion: string;
 };
@@ -202,10 +202,10 @@ export async function loadPublicForm(token: string): Promise<PublicForm | null> 
   const student = studentRaw ? (({ guardians: _g, minor: _m, ...rest }) => strip(rest))(studentRaw) : null;
   const guardianId = row.kind === "GUARDIAN" ? row.subjectId : row.signerId;
   const org = await getOrganizationProfile();
-  const texts = await getFormTexts();
+  const documents = await documentsFor(row.kind);
   return {
-    ...texts,
-    textVersion: textVersion(texts),
+    documents: documents.map(({ id, title, purpose, contentHtml, requiresConsent, required }) => ({ id, title, purpose, contentHtml, requiresConsent, required })),
+    textVersion: textVersion(documents),
     kind: row.kind,
     signerRole: row.signerRole === "guardian" ? "guardian" : "self",
     orgName: org.name,
@@ -235,16 +235,25 @@ export async function submitPublicForm(input: z.output<typeof submitSchema>, lab
   if ((needs.member && !input.member) || (needs.student && !input.student) || (needs.guardian && !input.guardian)) return false;
 
   const signedAt = new Date();
+  const documents = await documentsFor(row.kind);
+  const version = textVersion(documents);
+  if (version !== input.textVersion) return "textsChanged";
+  const accepted = new Set(input.documents);
+  // Zorunlu belgeler onaylanmalı; PRIVACY belgesi yoksa yerleşik Datenschutz onayı (input.privacy) geçerlidir.
+  if (documents.some((doc) => doc.requiresConsent && doc.required && !accepted.has(doc.id))) return false;
+  const photoDoc = documents.find((doc) => doc.purpose === "PHOTO" && doc.requiresConsent);
+  if (photoDoc) {
+    if (input.member) input.member.photoConsent = accepted.has(photoDoc.id);
+    if (input.student) input.student.photoConsent = accepted.has(photoDoc.id);
+  }
   const consents = ["privacy"];
   const photo = input.member?.photoConsent ?? input.student?.photoConsent;
   if (photo) consents.push("photo");
+  for (const doc of documents) if (doc.purpose === "OTHER" && doc.requiresConsent && accepted.has(doc.id)) consents.push(`doc:${doc.title.slice(0, 60)}`);
   if (input.guardian?.sepaMandate) consents.push("sepa");
   for (const channel of input.member?.messagingConsents ?? input.guardian?.messagingConsents ?? []) consents.push(channel);
   const applied = { member: needs.member ? input.member : undefined, student: needs.student ? input.student : undefined, guardian: needs.guardian ? input.guardian : undefined };
   const signatureHash = createHash("sha256").update(input.signature).digest("hex");
-  const texts = await getFormTexts();
-  const version = textVersion(texts);
-  if (version !== input.textVersion) return "textsChanged";
   const evidenceHash = createHash("sha256").update(JSON.stringify({ request: row.id, signedAt: signedAt.toISOString(), signerName: input.signerName, consents, textVersion: version, applied, signatureHash })).digest("hex");
 
   const documentKey = newDocumentKey(signedAt.getUTCFullYear());
@@ -254,7 +263,8 @@ export async function submitPublicForm(input: z.output<typeof submitSchema>, lab
   const snapshot: EvidenceSnapshot = {
     v: 1, orgName, kind: row.kind, signerRole: row.signerRole, subjectName: target?.subjectName ?? "—", signerName: input.signerName,
     signedAt: signedAt.toISOString(), channel: row.channel, sentTo: row.sentTo, consents, textVersion: version, documentKey, evidenceHash,
-    texts: { privacyLong: texts.privacyText, photoLong: texts.photoText, ...shown(orgName) },
+    texts: shown(orgName),
+    documents: documents.map((doc) => ({ title: doc.title, purpose: doc.purpose, text: documentHtmlToText(doc.contentHtml), requiresConsent: doc.requiresConsent, accepted: !doc.requiresConsent || accepted.has(doc.id) })),
     data: { member: applied.member, student: applied.student, guardian: applied.guardian ? { ...applied.guardian, iban: maskIban(applied.guardian.iban) } : undefined },
   };
   const db = getDb();

@@ -28,7 +28,13 @@ export function PublicOnlineForm({ token, form }: { token: string; form: Form })
   const [formError, setFormError] = useState<string | null>(null);
   const [signature, setSignature] = useState<string | null>(null);
   const [signerName, setSignerName] = useState(form.signerRole === "guardian" && form.guardian ? `${form.guardian.firstName} ${form.guardian.lastName}` : form.subjectName);
-  const [privacy, setPrivacy] = useState(false);
+  const [privacyBuiltIn, setPrivacyBuiltIn] = useState(false);
+  const [acceptedDocs, setAcceptedDocs] = useState<string[]>([]);
+  const privacyDoc = form.documents.find((doc) => doc.purpose === "PRIVACY" && doc.requiresConsent);
+  const photoDoc = form.documents.find((doc) => doc.purpose === "PHOTO" && doc.requiresConsent);
+  const privacy = privacyDoc ? acceptedDocs.includes(privacyDoc.id) : privacyBuiltIn;
+  const missingRequired = form.documents.some((doc) => doc.requiresConsent && doc.required && !acceptedDocs.includes(doc.id));
+  const toggleDoc = (id: string, value: boolean) => setAcceptedDocs((current) => (value ? [...current.filter((item) => item !== id), id] : current.filter((item) => item !== id)));
 
   const [member, setMember] = useState<Values | null>(form.member && {
     email: str(form.member.email), phone: str(form.member.phone), street: str(form.member.street), houseNumber: str(form.member.houseNumber), postalCode: str(form.member.postalCode),
@@ -116,11 +122,15 @@ export function PublicOnlineForm({ token, form }: { token: string; form: Form })
     </div>
   );
 
-  const legal = (text: string | null) => (text ? <div className="max-h-48 overflow-y-auto whitespace-pre-line rounded-medium border border-default-200 bg-default-50 p-3 text-tiny text-default-700">{text}</div> : null);
+  const consentLabel = (doc: Form["documents"][number]) => {
+    if (doc.purpose === "PRIVACY") return t("privacy", { org: form.orgName });
+    if (doc.purpose === "PHOTO") return form.signerRole === "guardian" && student ? t("photoChild") : t("photo");
+    return t("acceptDocument", { title: doc.title });
+  };
   const submit = () => {
     setFormError(null);
     start(async () => {
-      const response = await submitOnlineFormAction({ token, textVersion: form.textVersion, signerName, signature: signature ?? "", privacy, ...(member ? { member } : {}), ...(student ? { student } : {}), ...(guardian ? { guardian } : {}) });
+      const response = await submitOnlineFormAction({ token, textVersion: form.textVersion, signerName, signature: signature ?? "", privacy, documents: acceptedDocs, ...(member ? { member } : {}), ...(student ? { student } : {}), ...(guardian ? { guardian } : {}) });
       if (response.ok) return setDone(true);
       setErrors(response.fields ?? {});
       setFormError(response.error);
@@ -184,14 +194,26 @@ export function PublicOnlineForm({ token, form }: { token: string; form: Form })
 
       {section(t("sections.consents"), (
         <>
-          {legal(form.privacyText)}
-          <Checkbox isSelected={privacy} onValueChange={setPrivacy} isInvalid={Boolean(errors.privacy)}>
-            <span className="text-small">{t("privacy", { org: form.orgName })}</span>
-          </Checkbox>
+          {form.documents.map((doc) => (
+            <div key={doc.id} className="flex flex-col gap-2">
+              <h3 className="text-small font-semibold">{doc.title}</h3>
+              {/* contentHtml sunucuda sanitize-html ile izin listesine göre temizlenmiştir. */}
+              <div className="doc-content max-h-64 overflow-y-auto rounded-medium border border-default-200 bg-default-50 p-3 text-small text-default-700" dangerouslySetInnerHTML={{ __html: doc.contentHtml }} />
+              {doc.requiresConsent ? (
+                <Checkbox isSelected={acceptedDocs.includes(doc.id)} onValueChange={(value) => toggleDoc(doc.id, value)} isInvalid={doc.purpose === "PRIVACY" && Boolean(errors.privacy)}>
+                  <span className="text-small">{consentLabel(doc)}{doc.required ? " *" : ""}</span>
+                </Checkbox>
+              ) : null}
+            </div>
+          ))}
+          {!privacyDoc ? (
+            <Checkbox isSelected={privacyBuiltIn} onValueChange={setPrivacyBuiltIn} isInvalid={Boolean(errors.privacy)}>
+              <span className="text-small">{t("privacy", { org: form.orgName })}</span>
+            </Checkbox>
+          ) : null}
           {errors.privacy ? <p className="text-tiny text-danger">{translate(errors.privacy)}</p> : null}
-          {(member || student) ? legal(form.photoText) : null}
-          {member ? <Checkbox isSelected={Boolean(member.photoConsent)} onValueChange={(value) => setMember({ ...member, photoConsent: value })}><span className="text-small">{t("photo")}</span></Checkbox> : null}
-          {student ? <Checkbox isSelected={Boolean(student.photoConsent)} onValueChange={(value) => setStudent({ ...student, photoConsent: value })}><span className="text-small">{form.signerRole === "guardian" ? t("photoChild") : t("photo")}</span></Checkbox> : null}
+          {!photoDoc && member ? <Checkbox isSelected={Boolean(member.photoConsent)} onValueChange={(value) => setMember({ ...member, photoConsent: value })}><span className="text-small">{t("photo")}</span></Checkbox> : null}
+          {!photoDoc && student ? <Checkbox isSelected={Boolean(student.photoConsent)} onValueChange={(value) => setStudent({ ...student, photoConsent: value })}><span className="text-small">{form.signerRole === "guardian" ? t("photoChild") : t("photo")}</span></Checkbox> : null}
           {member ? messaging(member, setMember) : guardian ? messaging(guardian, setGuardian) : null}
           <p className="text-tiny text-default-500">{t("withdraw")}</p>
         </>
@@ -206,7 +228,7 @@ export function PublicOnlineForm({ token, form }: { token: string; form: Form })
         </>
       ))}
 
-      <Button color="primary" size="lg" isLoading={pending} isDisabled={!privacy || !signature} onPress={submit}>{t("submit")}</Button>
+      <Button color="primary" size="lg" isLoading={pending} isDisabled={!privacy || missingRequired || !signature} onPress={submit}>{t("submit")}</Button>
     </div>
   );
 }

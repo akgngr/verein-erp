@@ -16,7 +16,7 @@ import { buildUserLabel } from "@/shared/utils";
 import { CHANNELS, KINDS } from "../lib/schemas";
 import { onlineFormsPermissions } from "../permissions";
 import { cancelRequest, createAndSend, getSignature, previewTarget } from "../services/requests";
-import { saveFormTexts } from "../services/settings";
+import { deleteFormDocument, reorderFormDocuments, saveFormDocument } from "../services/settings";
 
 const id = z.string().min(1).max(64);
 const target = z.object({ kind: z.enum(KINDS), subjectId: id });
@@ -88,13 +88,51 @@ export async function getOnlineFormSignatureAction(input: unknown) {
   })(input);
 }
 
-export async function saveOnlineFormTextsAction(input: unknown): Promise<ActionResult<null>> {
+const documentSchema = z.object({
+  id: id.nullable(),
+  title: z.string().trim().min(2, "online-forms.documents.errors.title").max(200),
+  purpose: z.enum(["PRIVACY", "PHOTO", "OTHER"]),
+  contentHtml: z.string().max(300_000).refine((value) => value.replace(/<[^>]*>/g, "").trim().length > 0, "online-forms.documents.errors.content"),
+  requiresConsent: z.boolean(),
+  required: z.boolean(),
+  appliesTo: z.array(z.enum(KINDS)).min(1, "online-forms.documents.errors.appliesTo"),
+  active: z.boolean(),
+});
+
+/** Form belgesi (Datenschutz, fotoğraf izni, diğer) kaydı; HTML sunucuda temizlenir. */
+export async function saveFormDocumentAction(input: unknown): Promise<ActionResult<{ id: string }>> {
   return createAction({
     permission: { definition: onlineFormsPermissions, action: "approve" },
-    schema: z.object({ privacyText: z.string().trim().max(20_000), photoText: z.string().trim().max(10_000) }),
+    schema: documentSchema,
     handler: async ({ input, user, audit }) => {
-      await saveFormTexts({ privacyText: input.privacyText || null, photoText: input.photoText || null }, user.id);
-      await audit({ action: "UPDATE", entity: "OnlineFormSettings", entityId: "default" });
+      const { id: documentId, ...data } = input;
+      const saved = await saveFormDocument(documentId, data, user.id);
+      await audit({ action: documentId ? "UPDATE" : "CREATE", entity: "OnlineFormDocument", entityId: saved.id });
+      revalidatePath("/online-formlar/ayarlar");
+      return saved;
+    },
+  })(input);
+}
+
+export async function deleteFormDocumentAction(input: unknown): Promise<ActionResult<null>> {
+  return createAction({
+    permission: { definition: onlineFormsPermissions, action: "approve" },
+    schema: z.object({ id }),
+    handler: async ({ input, audit }) => {
+      await deleteFormDocument(input.id);
+      await audit({ action: "DELETE", entity: "OnlineFormDocument", entityId: input.id });
+      revalidatePath("/online-formlar/ayarlar");
+      return null;
+    },
+  })(input);
+}
+
+export async function reorderFormDocumentsAction(input: unknown): Promise<ActionResult<null>> {
+  return createAction({
+    permission: { definition: onlineFormsPermissions, action: "approve" },
+    schema: z.object({ ids: z.array(id).max(200) }),
+    handler: async ({ input }) => {
+      await reorderFormDocuments(input.ids);
       revalidatePath("/online-formlar/ayarlar");
       return null;
     },

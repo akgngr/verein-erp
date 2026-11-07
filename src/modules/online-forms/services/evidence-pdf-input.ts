@@ -19,10 +19,10 @@ export async function buildEvidencePdfInput(snapshot: EvidenceSnapshot, signatur
   const labels: EvidencePdfLabels = {
     title: t("pdf.title"),
     subtitle: t("pdf.subtitle", { name: snapshot.subjectName, kind: t(`kinds.${snapshot.kind}`) }),
-    sections: { member: t("public.sections.person"), student: snapshot.signerRole === "guardian" ? t("public.sections.child") : t("public.sections.person"), guardian: t("public.sections.guardian"), consents: t("public.sections.consents"), privacyText: t("settings.privacyText"), photoText: t("settings.photoText"), signature: t("public.sections.signature"), evidence: t("pdf.evidence") },
+    sections: { member: t("public.sections.person"), student: snapshot.signerRole === "guardian" ? t("public.sections.child") : t("public.sections.person"), guardian: t("public.sections.guardian"), consents: t("public.sections.consents"), privacyText: t("pdf.privacyText"), photoText: t("pdf.photoText"), signature: t("public.sections.signature"), evidence: t("pdf.evidence") },
     fields: { ...Object.fromEntries(fieldKeys.map((key) => [key, t(`public.fields.${key}` as never)])), messagingConsents: t("pdf.messaging"), bulkMailOptOut: t("public.bulkMailOptOut") },
     consents: { sms: t("consents.sms"), whatsapp: t("consents.whatsapp"), telegram: t("consents.telegram") },
-    yes: t("pdf.yes"),
+    yes: t("pdf.yes"), accepted: t("pdf.accepted"),
     no: t("pdf.no"),
     meta: { documentKey: t("pdf.documentKey"), signer: t("pdf.signer"), signedAt: t("pdf.signedAt"), channel: t("columns.channel"), textVersion: t("pdf.textVersion"), evidenceHash: t("pdf.evidenceHash"), note: t("pdf.note") },
   };

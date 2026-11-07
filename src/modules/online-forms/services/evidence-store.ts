@@ -25,7 +25,10 @@ export type EvidenceSnapshot = {
   textVersion: string;
   documentKey: string;
   evidenceHash: string;
-  texts: { privacyLong: string | null; photoLong: string | null; privacy: string; photo: string; sepa: string };
+  /** Kısa onay cümleleri; privacyLong/photoLong yalnız eski (belge öncesi) kayıtlarda bulunur. */
+  texts: { privacyLong?: string | null; photoLong?: string | null; privacy: string; photo: string; sepa: string };
+  /** İmza anında gösterilen belgeler (düz metin) ve onay durumu. */
+  documents?: { title: string; purpose: string; text: string; requiresConsent: boolean; accepted: boolean }[];
   data: { member?: Record<string, unknown>; student?: Record<string, unknown>; guardian?: Record<string, unknown> };
 };
 
