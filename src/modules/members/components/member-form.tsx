@@ -13,7 +13,9 @@ import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-
 import { applyActionResult } from "@/shared/components/forms/action-result";
 import { FormDatePicker } from "@/shared/components/forms/form-date-picker";
 import { FormErrorSummary } from "@/shared/components/forms/form-error-summary";
+import { FormCountrySelect, FormStateSelect } from "@/shared/components/forms/form-address-selects";
 import { FormInput } from "@/shared/components/forms/form-input";
+import { DEFAULT_COUNTRY_NAME, normalizeCountryName } from "@/shared/geo/germany";
 import { FormSelect } from "@/shared/components/forms/form-select";
 import { FormTextarea } from "@/shared/components/forms/form-textarea";
 import { FormSwitch } from "@/shared/components/forms/form-switch";
@@ -124,7 +126,7 @@ export function MemberForm(props: MemberFormProps) {
         postalCode: member.postalCode ?? "",
         city: member.city ?? "",
         state: member.state ?? "",
-        country: member.country ?? "",
+        country: normalizeCountryName(member.country),
         birthDate:
           member.birthDate instanceof Date
             ? member.birthDate.toISOString().slice(0, 10)
@@ -157,7 +159,7 @@ export function MemberForm(props: MemberFormProps) {
         postalCode: "",
         city: "",
         state: "",
-        country: "",
+        country: DEFAULT_COUNTRY_NAME,
         birthDate: "",
         profession: "",
         joinDate: berlinToday().toISOString().slice(0, 10),
@@ -331,21 +333,9 @@ export function MemberForm(props: MemberFormProps) {
               placeholder={t("form.cityPlaceholder")}
               autoComplete="address-level2"
             />
-            <FormInput
-              name="state"
-              label={t("form.state")}
-              control={form.control}
-              placeholder={t("form.statePlaceholder")}
-              autoComplete="address-level1"
-            />
+            <FormStateSelect name="state" label={t("form.state")} control={form.control} />
           </div>
-          <FormInput
-            name="country"
-            label={t("form.country")}
-            control={form.control}
-            description={t("form.countryDescription")}
-            autoComplete="country-name"
-          />
+          <FormCountrySelect name="country" store="name" label={t("form.country")} control={form.control} description={t("form.countryDescription")} />
 
           <FormInput
             name="profession"

@@ -19,6 +19,7 @@ function guardianData(input: GuardianInput) {
     street: input.street || null,
     houseNumber: input.houseNumber || null,
     postalCode: input.postalCode || null,
+    state: input.state || null,
     city: input.city || null,
     country: input.country,
     email: input.email ? input.email.toLowerCase() : null,

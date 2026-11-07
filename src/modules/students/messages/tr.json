@@ -96,7 +96,6 @@
     "postalCode": "Posta kodu",
     "city": "Şehir",
     "country": "Ülke",
-    "countryHelp": "ISO kodu, ör. DE",
     "email": "E-posta",
     "phone": "Telefon",
     "bankTitle": "Banka ve SEPA talimatı",
@@ -125,7 +124,8 @@
       "sms": "SMS",
       "whatsapp": "WhatsApp",
       "telegram": "Telegram"
-    }
+    },
+    "state": "Eyalet (Bundesland)"
   },
   "guardianList": {
     "title": "Veliler",

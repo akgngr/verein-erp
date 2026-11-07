@@ -6049,7 +6049,6 @@
       "city": "Ort",
       "cityPlaceholder": "z.B. Berlin",
       "state": "Bundesland",
-      "statePlaceholder": "z.B. Berlin, Bayern, Nordrhein-Westfalen",
       "profession": "Beruf",
       "professionPlaceholder": "z.B. Rechtsanwalt, Ingenieur, Lehrer",
       "joinDate": "Beitrittsdatum",
@@ -6066,7 +6065,7 @@
       "save": "Änderungen speichern",
       "cancel": "Abbrechen",
       "country": "Land",
-      "countryDescription": "Leer oder Deutschland: Postleitzahl muss 5-stellig sein.",
+      "countryDescription": "Bei Deutschland muss die Postleitzahl 5-stellig sein.",
       "cancellationReceivedAt": "Kündigung eingegangen am",
       "cancellationReceivedAtDescription": "Datum des Eingangs der Kündigung; darf nicht nach dem Austrittsdatum liegen.",
       "bulkMailOptOut": "Keine Rundmails",
@@ -6965,7 +6964,6 @@
       "postalCode": "PLZ",
       "city": "Ort",
       "country": "Land",
-      "countryHelp": "ISO-Code, z. B. DE",
       "email": "E-Mail",
       "phone": "Telefon",
       "bankTitle": "Bank und SEPA-Mandat",
@@ -6994,7 +6992,8 @@
         "sms": "SMS",
         "whatsapp": "WhatsApp",
         "telegram": "Telegram"
-      }
+      },
+      "state": "Bundesland"
     },
     "guardianList": {
       "title": "Erziehungsberechtigte",
