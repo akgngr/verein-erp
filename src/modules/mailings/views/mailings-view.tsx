@@ -9,7 +9,7 @@ import { can } from "@/shared/permissions/define";
 import { CampaignBoard, type BoardCampaign } from "../components/campaign-board";
 import type { WizardSource } from "../components/campaign-wizard";
 import { mailingsPermissions } from "../permissions";
-import { isMailConfigured, listCampaigns, listChannelInfo, listSegments, listSourcesWithOptions } from "../services/campaigns";
+import { channelPlaceholderKeys, isMailConfigured, listCampaigns, listChannelInfo, listSegments, listSourcesWithOptions } from "../services/campaigns";
 
 /** Varsayılan metni editör için paragraflara çevirir (yer tutucular korunur). */
 function textToHtml(text: string): string {
@@ -30,14 +30,15 @@ export async function MailingsView({ sourceId }: { sourceId?: string | null }) {
     throw error;
   }
   const [t, tRoot] = await Promise.all([getTranslations("mailings"), getTranslations()]);
-  const [configured, campaigns, rawSources, segments, channels] = await Promise.all([isMailConfigured(), listCampaigns(), listSourcesWithOptions(user.role), listSegments(user.role), listChannelInfo()]);
+  const [configured, campaigns, rawSources, segments, channels, extraPlaceholders] = await Promise.all([isMailConfigured(), listCampaigns(), listSourcesWithOptions(user.role), listSegments(user.role), listChannelInfo(), channelPlaceholderKeys()]);
   const label = (key: string) => tRoot(key as never);
   const sources: WizardSource[] = rawSources.map((source) => {
     const base = `${source.moduleKey}.recipients.${source.key}`;
     return {
       id: source.id,
       label: `${label(`${base}.label`)} (${label(`${source.moduleKey}.module.label`)})`,
-      placeholders: source.placeholders,
+      // Kanal eklentilerinin ek yer tutucuları (ör. {telegramLink}) her listede kullanılabilir.
+      placeholders: [...source.placeholders, ...extraPlaceholders],
       filters: source.filters.map((filter) => ({
         key: filter.key,
         label: label(`${base}.filters.${filter.key}.label`),

@@ -58,3 +58,28 @@ model MailingSegment {
   @@unique([source, name])
   @@map("mailings_segments")
 }
+
+/// Kampanya kanalı ayarları (SMS/Telegram/WhatsApp eklentileri). Gizli değerler secret-box ile şifreli.
+model MailingChannelConfig {
+  channel     String   @id
+  settings    Json     @default("{}")
+  secretsEnc  String?
+  updatedById String
+  updatedAt   DateTime @updatedAt
+
+  @@map("mailings_channel_configs")
+}
+
+/// E-posta dışı kanallarda başarılı gönderim kaydı (yeniden denemede çift gönderimi önler).
+model MailingDelivery {
+  id         String   @id @default(cuid())
+  campaignId String
+  channel    String
+  address    String
+  providerId String?
+  createdAt  DateTime @default(now())
+
+  @@unique([campaignId, address])
+  @@index([createdAt])
+  @@map("mailings_deliveries")
+}

@@ -107,6 +107,8 @@ model Member {
   notes String? // serbest metin: üye kartındaki genel not
   /// Toplu e-posta (duyuru) almak istemiyor — DSGVO Art. 21 itirazı; bireysel/zorunlu yazışmalar etkilenmez.
   bulkMailOptOut Boolean @default(false)
+  /// Açık rıza verilen mesaj kanalları ("sms", "whatsapp", "telegram"); kampanyalar yalnız bunlara gönderir (UWG §7, DSGVO Art. 6/7).
+  messagingConsents String[] @default([])
 
   createdById    String
   createdByLabel String

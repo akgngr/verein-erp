@@ -1,0 +1,13 @@
+/// Telegram aboneliği: kişi kendi davet bağlantısıyla bota /start yazınca sohbet kimliği eşleşir (açık rıza).
+/// /stop ile abonelik biter. recipientKey = "<modül>:<kaynak>:<kayıt id>".
+model CampaignTelegramLink {
+  id           String    @id @default(cuid())
+  recipientKey String    @unique
+  /// Davet bağlantısındaki rastgele belirteç (tahmin edilemez).
+  token        String    @unique
+  chatId       String?
+  linkedAt     DateTime?
+  createdAt    DateTime  @default(now())
+
+  @@map("campaign_telegram_links")
+}

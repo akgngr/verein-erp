@@ -62,12 +62,12 @@ export const recipients = defineRecipients("members", [
       };
       const rows = await getDb().member.findMany({
         where,
-        select: { id: true, email: true, bulkMailOptOut: true, firstName: true, lastName: true, membershipNumber: true, city: true },
+        select: { id: true, email: true, phone: true, bulkMailOptOut: true, messagingConsents: true, firstName: true, lastName: true, membershipNumber: true, city: true },
         orderBy: [{ lastName: "asc" }, { firstName: "asc" }],
       });
       return rows.map((row) => {
         const fullName = `${row.firstName} ${row.lastName}`.trim();
-        return { id: row.id, email: row.email, name: fullName, optOut: row.bulkMailOptOut, vars: { firstName: row.firstName, lastName: row.lastName, fullName, membershipNumber: row.membershipNumber, city: row.city ?? "" } };
+        return { id: row.id, email: row.email, phone: row.phone, consents: Object.fromEntries(row.messagingConsents.map((channel) => [channel, true])), name: fullName, optOut: row.bulkMailOptOut, vars: { firstName: row.firstName, lastName: row.lastName, fullName, membershipNumber: row.membershipNumber, city: row.city ?? "" } };
       });
     },
   },

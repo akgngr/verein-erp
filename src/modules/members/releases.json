@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.6.0",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "Mesaj kanalı izinleri",
+        "de": "Einwilligungen für Nachrichtenkanäle"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Üye kartına SMS, WhatsApp ve Telegram için açık rıza seçimleri eklendi; kampanyalar bu kanallara yalnız izin verenlere gönderir.",
+          "de": "Mitgliedskarte erhält Einwilligungen für SMS, WhatsApp und Telegram; Kampagnen senden auf diesen Kanälen nur an Personen mit Einwilligung."
+        }
+      ]
+    },
+    {
       "version": "1.5.1",
       "date": "2026-11-06",
       "title": {

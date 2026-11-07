@@ -1,0 +1,20 @@
+{
+  "module": {
+    "label": "Telegram",
+    "description": "Telegram-Kanal für Kampagnen (Bot-API). Personen abonnieren per Einladungslink; /stop beendet das Abo."
+  },
+  "permissions": {
+    "campaign-telegram": {
+      "label": "Telegram",
+      "description": "Kampagnen-Kanal-Plugin."
+    }
+  },
+  "access": {
+    "mailings": "Um im Webhook die (verschlüsselten) Bot-Einstellungen zu lesen."
+  },
+  "replies": {
+    "linked": "✅ Abo bestätigt. Zum Beenden /stop senden.",
+    "stopped": "Abo beendet.",
+    "unknown": "Link ungültig oder abgelaufen."
+  }
+}

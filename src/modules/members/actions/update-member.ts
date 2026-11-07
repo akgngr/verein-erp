@@ -35,6 +35,7 @@ const TRACKED_FIELDS = [
   "exitReason",
   "notes",
   "bulkMailOptOut",
+  "messagingConsents",
   // kimlikNo bilerek YOK — audit'e yazmıyoruz (hassas alan).
 ] as const;
 
@@ -107,6 +108,7 @@ export async function updateMemberAction(
           exitReason: input.exitReason,
           notes: input.notes,
           bulkMailOptOut: input.bulkMailOptOut,
+          messagingConsents: input.messagingConsents,
           updatedById: user.id,
           updatedByLabel,
         },
@@ -134,6 +136,7 @@ export async function updateMemberAction(
         exitReason: member.exitReason,
         notes: member.notes,
         bulkMailOptOut: member.bulkMailOptOut,
+        messagingConsents: member.messagingConsents.join(","),
       };
       const incoming: Record<TrackedKey, unknown> = {
         type: updated.type,
@@ -154,6 +157,7 @@ export async function updateMemberAction(
         exitReason: updated.exitReason,
         notes: updated.notes,
         bulkMailOptOut: updated.bulkMailOptOut,
+        messagingConsents: updated.messagingConsents.join(","),
       };
       for (const field of TRACKED_FIELDS) {
         if (current[field] !== incoming[field]) {

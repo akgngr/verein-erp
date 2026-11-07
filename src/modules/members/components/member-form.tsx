@@ -1,10 +1,10 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, addToast } from "@heroui/react";
+import { Button, Checkbox, CheckboxGroup, addToast } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm, type Resolver, useWatch } from "react-hook-form";
+import { Controller, useForm, type Resolver, useWatch } from "react-hook-form";
 import { useTranslations } from "next-intl";
 
 import type { MembershipType } from "@prisma/client";
@@ -26,6 +26,8 @@ import {
   MEMBER_STATUS_VALUES,
 } from "../constants";
 import { memberCreateSchema, memberUpdateSchema } from "../schemas/member";
+
+const MESSAGING_CHANNELS = ["sms", "whatsapp", "telegram"] as const;
 import { berlinToday } from "../utils";
 
 /** Form alanları string taşır; boş string sunucu şemasında null'a çevrilir. */
@@ -50,6 +52,7 @@ type MemberFormValues = {
   exitReason: string;
   notes: string;
   bulkMailOptOut: boolean;
+  messagingConsents: string[];
   /** Yalnızca edit: eşzamanlılık koruması — ISO string. */
   updatedAt?: string;
 };
@@ -77,6 +80,7 @@ export type MemberEditFormData = {
   exitReason: string | null;
   notes: string | null;
   bulkMailOptOut: boolean;
+  messagingConsents: string[];
   updatedAt: Date;
 };
 
@@ -138,6 +142,7 @@ export function MemberForm(props: MemberFormProps) {
         exitReason: member.exitReason ?? "",
         notes: member.notes ?? "",
         bulkMailOptOut: member.bulkMailOptOut,
+        messagingConsents: member.messagingConsents,
       }
     : {
         type: "ASIL",
@@ -160,6 +165,7 @@ export function MemberForm(props: MemberFormProps) {
         exitReason: "",
         notes: "",
         bulkMailOptOut: false,
+        messagingConsents: [],
       };
 
   // KARAR: documents kalıbıyla aynı — z.preprocess'li şemayı resolver'a uyarla.
@@ -386,6 +392,24 @@ export function MemberForm(props: MemberFormProps) {
             label={t("form.bulkMailOptOut")}
             control={form.control}
             description={t("form.bulkMailOptOutDescription")}
+          />
+
+          <Controller
+            name="messagingConsents"
+            control={form.control}
+            render={({ field }) => (
+              <CheckboxGroup
+                label={t("form.messagingConsents")}
+                description={t("form.messagingConsentsDescription")}
+                orientation="horizontal"
+                value={field.value ?? []}
+                onValueChange={field.onChange}
+              >
+                {MESSAGING_CHANNELS.map((channel) => (
+                  <Checkbox key={channel} value={channel}>{t(`form.messagingChannels.${channel}`)}</Checkbox>
+                ))}
+              </CheckboxGroup>
+            )}
           />
 
           <FormErrorSummary message={formError} />

@@ -1,0 +1,12 @@
+{
+  "module": {
+    "label": "WhatsApp",
+    "description": "Kampanyalar için WhatsApp kanalı (Meta Cloud API, onaylı şablonla). Yalnız WhatsApp izni verenlere gider."
+  },
+  "permissions": {
+    "campaign-whatsapp": {
+      "label": "WhatsApp",
+      "description": "Kampanya kanal eklentisi."
+    }
+  }
+}

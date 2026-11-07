@@ -80,7 +80,14 @@
     "cancellationReceivedAt": "Fesih bildirimi tarihi (Kündigung eingegangen am)",
     "cancellationReceivedAtDescription": "Kullanıcının istifa bildiriminin derneğe ulaştığı tarih; ayrılış tarihinden sonra olamaz.",
     "bulkMailOptOut": "Toplu e-posta istemiyor",
-    "bulkMailOptOutDescription": "Üye duyuru/toplu e-postalara itiraz etti (DSGVO Art. 21). Bireysel yazışmalar etkilenmez."
+    "bulkMailOptOutDescription": "Üye duyuru/toplu e-postalara itiraz etti (DSGVO Art. 21). Bireysel yazışmalar etkilenmez.",
+    "messagingConsents": "Mesaj kanalı izinleri",
+    "messagingConsentsDescription": "Kişinin açık rıza verdiği kanallar. Kampanyalar SMS, WhatsApp ve Telegram'a yalnız izin verilenlere gönderir.",
+    "messagingChannels": {
+      "sms": "SMS",
+      "whatsapp": "WhatsApp",
+      "telegram": "Telegram"
+    }
   },
   "detail": {
     "membershipNumberLabel": "Üyelik numarası",

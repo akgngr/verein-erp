@@ -1,6 +1,7 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
+import { headers } from "next/headers";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
@@ -9,7 +10,7 @@ import type { ActionResult } from "@/shared/types/action";
 import { buildUserLabel } from "@/shared/utils";
 
 import { mailingsPermissions } from "../permissions";
-import { cancelCampaign, deleteDraft, deleteSegment, findChannel, isMailConfigured, launchCampaign, previewSource, saveDraft, saveSegment, sendTest } from "../services/campaigns";
+import { cancelCampaign, deleteDraft, deleteSegment, findChannel, getChannelConfig, saveChannelConfig, isMailConfigured, launchCampaign, previewSource, saveDraft, saveSegment, sendTest } from "../services/campaigns";
 
 const filterSchema = z.record(z.string().max(40), z.array(z.string().max(40)).max(20));
 const baseSchema = z.object({ sourceId: z.string().min(3).max(80), filter: filterSchema, channel: z.string().regex(/^[a-z0-9-]{2,30}$/).default("email") });
@@ -81,7 +82,7 @@ export async function launchCampaignAction(input: unknown): Promise<ActionResult
     schema: campaignSchema,
     handler: async ({ input, user, audit }) => {
       const channel = await findChannel(input.channel);
-      if (!channel || !(await channel.isConfigured())) throw new ActionError(input.channel === "email" ? "mailings.errors.notConfigured" : "mailings.errors.channelNotConfigured");
+      if (!channel || !(await channel.isConfigured(await getChannelConfig(channel.key)))) throw new ActionError(input.channel === "email" ? "mailings.errors.notConfigured" : "mailings.errors.channelNotConfigured");
       const t = await getTranslations("mailings.workflow");
       const scheduledAt = input.scheduledAt ? new Date(input.scheduledAt) : null;
       const result = await launchCampaign(user.role, { ...input, scheduledAt }, actorOf(user), {
@@ -151,6 +152,30 @@ export async function deleteSegmentAction(input: unknown): Promise<ActionResult<
     handler: async ({ input, audit }) => {
       await deleteSegment(input.id);
       await audit({ action: "DELETE", entity: "MailingSegment", entityId: input.id });
+      revalidatePath("/toplu-eposta");
+      return null;
+    },
+  });
+  return run(input);
+}
+
+/** Yönetici: kanal eklentisi ayarları (sağlayıcı anahtarları şifreli saklanır). */
+export async function saveChannelSettingsAction(input: unknown): Promise<ActionResult<null>> {
+  const run = createAction({
+    permission: { definition: mailingsPermissions, action: "approve" },
+    schema: z.object({ channel: z.string().regex(/^[a-z0-9-]{2,30}$/), values: z.record(z.string().max(60), z.string().max(2000)) }),
+    handler: async ({ input, user, audit }) => {
+      const h = await headers();
+      const host = h.get("x-forwarded-host") ?? h.get("host");
+      const proto = h.get("x-forwarded-proto") ?? (host?.startsWith("localhost") ? "http" : "https");
+      try {
+        if (!(await saveChannelConfig(input.channel, input.values, user.id, host ? `${proto}://${host}` : undefined))) throw new ActionError("mailings.errors.channelUnknown");
+      } catch (error) {
+        if (error instanceof ActionError) throw error;
+        throw new ActionError("mailings.errors.channelSetup");
+      }
+      // Denetim kaydına değerler değil, yalnız hangi kanalın değiştiği yazılır.
+      await audit({ action: "UPDATE", entity: "MailingChannelConfig", entityId: input.channel });
       revalidatePath("/toplu-eposta");
       return null;
     },
