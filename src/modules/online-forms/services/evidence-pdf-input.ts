@@ -53,7 +53,7 @@ async function renderInChildProcess(input: EvidencePdfInput): Promise<Uint8Array
       clearTimeout(timer);
       const pdf = Buffer.concat(out);
       if (code === 0 && pdf.subarray(0, 4).toString() === "%PDF") resolve(new Uint8Array(pdf));
-      else reject(new Error(`PDF_RENDER_FAILED code=${code} ${err.split("\n").slice(-3).join(" ")}`));
+      else reject(new Error(`PDF_RENDER_FAILED code=${code} ${err.split("\n").slice(0, 4).join(" ").slice(0, 600)}`));
     });
     child.stdin.end(JSON.stringify(input));
   });

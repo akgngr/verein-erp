@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.1.1",
+      "date": "2026-11-07",
+      "title": {
+        "tr": "Worker PDF düzeltmesi",
+        "de": "Korrektur Worker-PDF"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Gemeinnützigkeit tarihi girilmiş kurumlarda imzalı PDF worker'da üretilemiyordu (tarih alanı metin olarak geliyordu). Hata kaydı artık asıl hata mesajını gösteriyor.",
+          "de": "Bei Vereinen mit hinterlegtem Freistellungsbescheid-Datum schlug die PDF-Erzeugung im Worker fehl (Datum kam als Text an). Das Fehlerprotokoll zeigt jetzt die eigentliche Fehlermeldung."
+        }
+      ]
+    },
+    {
       "version": "1.1.0",
       "date": "2026-11-07",
       "title": {
