@@ -311,6 +311,8 @@ model AccountingInvoiceSettings {
   bic               String?
   /// SEPA-Lastschrift: Gläubiger-Identifikationsnummer (ör. DE98ZZZ09999999999)
   sepaCreditorId    String?
+  /// İsteğe bağlı: kendi sunucusundaki KoSIT doğrulayıcısının adresi (ör. http://kosit:8081/)
+  kositValidatorUrl String?
   /// ACC-6 ihtar: kademe aralığı (gün), kademe ücretleri (cent), Basiszinssatz (% — Bundesbank'ın ilan ettiği güncel değer), B2B 40 € götürü.
   dunningIntervalDays Int     @default(14)
   dunningFeeReminder  Int     @default(0)
@@ -460,6 +462,8 @@ model AccountingPayable {
   taxCents          Int           @default(0)
   grossCents        Int           @default(0)
   paidCents         Int           @default(0)
+  /// Gelen e-fatura doğrulama bulguları: [{ rule, severity }] (içe alırken)
+  einvoiceIssues    Json?
   notes             String?
   originalName      String?
   storagePath       String?

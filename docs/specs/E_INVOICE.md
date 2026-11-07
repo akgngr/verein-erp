@@ -41,7 +41,7 @@ ve küçük işletme kullanıcıları için eksiksiz karşılamak: e-fatura **al
 | E-postadan gelen fatura içe alma (IMAP) | ✓ | `mail` + `payable-import` |
 | Orijinal dosyanın saklanması (sha256) | ✓ | `AccountingPayable.storagePath/sha256` |
 | İptal/düzeltme faturası (Storno, TypeCode 381/384) | ✗ | İptal yalnız durumu `CANCELLED` yapıyor. |
-| EN 16931 / XRechnung kural doğrulaması (BR-*) | ✗ | Yalnız eksik alan kontrolü (`xrechnungIssues`). |
+| EN 16931 / XRechnung kural doğrulaması (BR-*) | ✓ | `services/einvoice-validate.ts` + isteğe bağlı KoSIT (`services/kosit.ts`). |
 | Gelen e-faturanın okunabilir görünümü | ✗ | Ayrıştırılan veri kayda yazılıyor, belge görünümü yok. |
 | Müşteriye göre biçim seçimi ve zorunluluk uyarısı | ✗ | Biçim kullanıcı seçimine kalmış. |
 | SEPA otomatik ödemede yetki bilgisi (PaymentMeans 59) | ✗ | Yalnız havale (58). |
@@ -108,9 +108,9 @@ ve küçük işletme kullanıcıları için eksiksiz karşılamak: e-fatura **al
 - [x] **EI-1** İptal faturası: şema (`kind CREDIT_NOTE`, `correctsInvoiceId`, numara serisi `ST-`)
 - [x] EI-1 UBL `CreditNote` ve CII `381` üretimi + BT-25/26 referansı, birim testleri
 - [x] EI-1 iptal akışı: ters fiş, açık kalem, arayüz (iptal → iptal faturası bağlantısı), PDF
-- [ ] **EI-2** TS doğrulayıcı (BR-*, BR-CO-*, KDV kategorileri, BR-DE-*), testler
-- [ ] EI-2 giden faturada kesme öncesi doğrulama; gelen faturada sonuç kaydı ve listede rozet
-- [ ] EI-2 isteğe bağlı KoSIT doğrulayıcı adresi (ayar + HTTP istemcisi + zaman aşımı)
+- [x] **EI-2** TS doğrulayıcı (BR-*, BR-CO-*, KDV kategorileri, BR-DE-*), testler
+- [x] EI-2 giden faturada kesme öncesi doğrulama; gelen faturada sonuç kaydı ve listede rozet
+- [x] EI-2 isteğe bağlı KoSIT doğrulayıcı adresi (ayar + HTTP istemcisi + zaman aşımı)
 - [ ] **EI-3** gelen e-fatura okunabilir görünümü (HTML) ve PDF, orijinal XML'den
 - [ ] **EI-4** cari türü (B2B/B2C/kamu), zorunluluk ayarları, kesmede varsayılan biçim ve uyarılar
 - [ ] **EI-5** SEPA_DEBIT ödeme yolu: PaymentMeans 59 + BT-89/90/91

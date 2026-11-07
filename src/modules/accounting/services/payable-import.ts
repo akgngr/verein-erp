@@ -5,6 +5,7 @@ import { getDb } from "@/shared/db";
 import { computeSha256, makeStoredName, removeFile, saveFile } from "@/shared/files";
 
 import { EInvoiceParseError, extractEmbeddedInvoiceXml, isEInvoiceXml, parseEInvoice, type ParsedEInvoice } from "./einvoice-in";
+import { validateIncoming } from "./einvoice-validate";
 
 const toDate = (value: string | null) => (value && /^\d{4}-\d{2}-\d{2}$/.test(value) ? new Date(`${value}T00:00:00Z`) : null);
 
@@ -78,6 +79,7 @@ export async function importPayableFile(input: {
         dueDate: toDate(einvoice?.dueDate ?? null),
         serviceDate: einvoice?.serviceDate ?? null,
         byRate: einvoice?.byRate ?? [],
+        einvoiceIssues: einvoice ? validateIncoming(einvoice) : undefined,
         netCents: einvoice?.netCents ?? 0,
         taxCents: einvoice?.taxCents ?? 0,
         grossCents: einvoice?.grossCents ?? 0,

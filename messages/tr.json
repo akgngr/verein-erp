@@ -1018,7 +1018,9 @@
         "dunningFlatFeeB2BHint": "§ 288 Abs. 5 BGB; alıcının USt-IdNr.'si varsa işletme sayılır.",
         "dunningHint": "Gecikme faizi 1. ihtardan itibaren: tüketici Basiszinssatz + 5, işletme + 9 yüzde puanı. Basiszinssatz Bundesbank tarafından her 1 Ocak ve 1 Temmuz'da ilan edilir; burada güncel tutun.",
         "sepaCreditorId": "SEPA alacaklı kimlik no (Gläubiger-ID)",
-        "sepaCreditorIdHelp": "SEPA otomatik ödeme için Bundesbank'tan alınan numara (ör. DE98ZZZ09999999999)."
+        "sepaCreditorIdHelp": "SEPA otomatik ödeme için Bundesbank'tan alınan numara (ör. DE98ZZZ09999999999).",
+        "kositValidatorUrl": "KoSIT doğrulayıcı adresi (isteğe bağlı)",
+        "kositValidatorUrlHelp": "Kendi sunucunuzda çalışan ücretsiz resmî doğrulayıcı (itplr-kosit/validator, daemon modu). Girilirse faturalar tam Schematron kurallarıyla da kontrol edilebilir."
       },
       "errors": {
         "notFound": "Fatura bulunamadı.",
@@ -1041,7 +1043,8 @@
         "iban": "Geçersiz IBAN.",
         "bic": "Geçersiz BIC.",
         "baseRate": "Geçersiz oran (ör. 1,27 veya -0,88).",
-        "creditorId": "Geçersiz Gläubiger-ID."
+        "creditorId": "Geçersiz Gläubiger-ID.",
+        "kositUrl": "Geçerli bir http(s) adresi girin."
       },
       "newQuote": "Yeni teklif",
       "views": {
@@ -1596,6 +1599,64 @@
       "errors": {
         "gwgLimit": "GWG yalnızca net 800 €'ya kadar.",
         "poolRange": "Sammelposten yalnızca net 250,01–1.000 € arası."
+      }
+    },
+    "einvoice": {
+      "rules": {
+        "BR-02": "Fatura numarası eksik.",
+        "BR-03": "Fatura tarihi eksik veya geçersiz.",
+        "BR-05": "Para birimi EUR olmalı.",
+        "BR-06": "Satıcı (dernek) adı eksik.",
+        "BR-07": "Alıcı adı eksik.",
+        "BR-08": "Satıcı adresinde sokak eksik.",
+        "BR-09": "Satıcı ülke kodu eksik.",
+        "BR-10": "Alıcı adresinde sokak eksik.",
+        "BR-11": "Alıcı ülke kodu eksik.",
+        "BR-16": "Faturada en az bir kalem olmalı.",
+        "BR-22": "Bir kalemin miktarı sıfır.",
+        "BR-25": "Bir kalemin açıklaması boş.",
+        "BR-27": "Kalem fiyatı negatif olamaz.",
+        "BR-55": "İptal faturasında orijinal faturaya referans yok.",
+        "BR-CO-09": "Satıcının USt-IdNr. biçimi geçersiz (ülke kodu + numara).",
+        "BR-CO-10": "Kalem net toplamları fatura net tutarına eşit değil.",
+        "BR-CO-13": "KDV dökümündeki matrahların toplamı net tutara eşit değil.",
+        "BR-CO-14": "KDV dökümündeki vergilerin toplamı toplam KDV'ye eşit değil.",
+        "BR-CO-15": "Brüt tutar = net + KDV olmalı.",
+        "BR-CO-16": "Ödenen tutar brüt tutardan büyük olamaz.",
+        "BR-CO-25": "Vade tarihi veya ödeme koşulu yok.",
+        "BR-S-02": "%7/%19 KDV'li faturada satıcının USt-IdNr. veya vergi numarası gerekli.",
+        "BR-S-08": "KDV oranı grubunun matrahı kalemlerle uyuşmuyor.",
+        "BR-S-09": "KDV tutarı matrah × oran ile uyuşmuyor.",
+        "BR-Z-08": "%0 KDV grubunun matrahı kalemlerle uyuşmuyor.",
+        "BR-Z-09": "%0 KDV grubunda vergi tutarı sıfır olmalı.",
+        "BR-E-08": "Muaf (§ 19) grubun matrahı kalemlerle uyuşmuyor.",
+        "BR-E-09": "Küçük işletme (§ 19 UStG) faturasında KDV olmamalı.",
+        "BR-DE-1": "Ödeme bilgisi eksik: fatura ayarlarına derneğin IBAN'ını girin.",
+        "BR-DE-3": "Satıcı adresinde şehir eksik (Dernek Bilgileri).",
+        "BR-DE-4": "Satıcı adresinde posta kodu eksik (Dernek Bilgileri).",
+        "BR-DE-6": "Satıcı iletişimi için telefon eksik (Dernek Bilgileri).",
+        "BR-DE-7": "Satıcı iletişimi için e-posta eksik (Dernek Bilgileri).",
+        "BR-DE-8": "Alıcı adresinde şehir eksik.",
+        "BR-DE-9": "Alıcı adresinde posta kodu eksik.",
+        "BR-DE-15": "Alıcı referansı (Leitweg-ID) yok; fatura numarası kullanılacak. Kamu kurumlarına faturada Leitweg-ID zorunludur.",
+        "BR-DE-16": "Satıcının USt-IdNr. veya vergi numarası eksik.",
+        "BR-DE-19": "Derneğin IBAN'ı geçersiz.",
+        "BR-LINE-NET": "Bir kalemde miktar × fiyat net tutarla uyuşmuyor."
+      },
+      "check": {
+        "title": "E-fatura kontrolü",
+        "ok": "EN 16931 / XRechnung temel kurallarına uygun.",
+        "errors": "{count} hata: düzeltilmeden XRechnung/ZUGFeRD üretilemez.",
+        "warnings": "{count} uyarı",
+        "error": "Hata",
+        "warning": "Uyarı",
+        "kositHint": "Tam resmî doğrulama için Ayarlar'da KoSIT doğrulayıcı adresi girilebilir.",
+        "kositRun": "KoSIT ile doğrula",
+        "kositValid": "KoSIT: geçerli",
+        "kositInvalid": "KoSIT: geçersiz",
+        "kositFailed": "KoSIT doğrulayıcısına ulaşılamadı.",
+        "kositMessages": "KoSIT bulguları",
+        "incoming": "Gelen e-fatura kontrolü"
       }
     }
   },

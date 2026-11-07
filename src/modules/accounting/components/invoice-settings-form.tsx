@@ -43,6 +43,7 @@ export function InvoiceSettingsForm({ settings, categoryOptions }: { settings: I
       iban: settings.iban ?? "",
       bic: settings.bic ?? "",
       sepaCreditorId: settings.sepaCreditorId ?? "",
+      kositValidatorUrl: settings.kositValidatorUrl ?? "",
       dunningIntervalDays: String(settings.dunningIntervalDays),
       dunningFeeReminder: money(settings.dunningFeeReminder),
       dunningFeeFirst: money(settings.dunningFeeFirst),
@@ -78,6 +79,7 @@ export function InvoiceSettingsForm({ settings, categoryOptions }: { settings: I
           <FormInput name="sepaCreditorId" label={t("sepaCreditorId")} description={t("sepaCreditorIdHelp")} control={form.control} />
         </div>
         <p className="text-tiny text-default-500">{t("xrechnungHint")}</p>
+        <FormInput name="kositValidatorUrl" label={t("kositValidatorUrl")} description={t("kositValidatorUrlHelp")} control={form.control} placeholder="http://kosit:8081/" />
         <h3 className="pt-2 text-small font-semibold">{t("dunningTitle")}</h3>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
           <FormInput name="dunningIntervalDays" label={t("dunningIntervalDays")} control={form.control} type="number" />

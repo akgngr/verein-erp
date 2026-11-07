@@ -738,7 +738,9 @@
       "dunningFlatFeeB2BHint": "§ 288 Abs. 5 BGB; Empfänger mit USt-IdNr. gelten als Unternehmen.",
       "dunningHint": "Verzugszinsen ab der 1. Mahnung: Verbraucher Basiszinssatz + 5, Unternehmen + 9 Prozentpunkte. Der Basiszinssatz wird zum 1. Januar und 1. Juli von der Bundesbank bekanntgegeben – bitte aktuell halten.",
       "sepaCreditorId": "Gläubiger-Identifikationsnummer",
-      "sepaCreditorIdHelp": "Von der Bundesbank vergebene Nummer für SEPA-Lastschriften (z. B. DE98ZZZ09999999999)."
+      "sepaCreditorIdHelp": "Von der Bundesbank vergebene Nummer für SEPA-Lastschriften (z. B. DE98ZZZ09999999999).",
+      "kositValidatorUrl": "Adresse des KoSIT-Validators (optional)",
+      "kositValidatorUrlHelp": "Kostenloser amtlicher Validator auf Ihrem eigenen Server (itplr-kosit/validator, Daemon-Modus). Wenn angegeben, können Rechnungen zusätzlich mit allen Schematron-Regeln geprüft werden."
     },
     "errors": {
       "notFound": "Rechnung nicht gefunden.",
@@ -761,7 +763,8 @@
       "iban": "Ungültige IBAN.",
       "bic": "Ungültige BIC.",
       "baseRate": "Ungültiger Zinssatz (z. B. 1,27 oder -0,88).",
-      "creditorId": "Ungültige Gläubiger-ID."
+      "creditorId": "Ungültige Gläubiger-ID.",
+      "kositUrl": "Bitte eine gültige http(s)-Adresse eingeben."
     },
     "newQuote": "Neues Angebot",
     "views": {
@@ -1316,6 +1319,64 @@
     "errors": {
       "gwgLimit": "GWG nur bis 800 € netto.",
       "poolRange": "Sammelposten nur von 250,01 bis 1.000 € netto."
+    }
+  },
+  "einvoice": {
+    "rules": {
+      "BR-02": "Rechnungsnummer fehlt.",
+      "BR-03": "Rechnungsdatum fehlt oder ist ungültig.",
+      "BR-05": "Währung muss EUR sein.",
+      "BR-06": "Name des Verkäufers fehlt.",
+      "BR-07": "Name des Käufers fehlt.",
+      "BR-08": "Straße in der Verkäuferanschrift fehlt.",
+      "BR-09": "Ländercode des Verkäufers fehlt.",
+      "BR-10": "Straße in der Käuferanschrift fehlt.",
+      "BR-11": "Ländercode des Käufers fehlt.",
+      "BR-16": "Die Rechnung muss mindestens eine Position enthalten.",
+      "BR-22": "Eine Position hat die Menge null.",
+      "BR-25": "Eine Position hat keine Bezeichnung.",
+      "BR-27": "Der Positionspreis darf nicht negativ sein.",
+      "BR-55": "In der Stornorechnung fehlt der Bezug zur Ursprungsrechnung.",
+      "BR-CO-09": "Format der USt-IdNr. des Verkäufers ungültig (Ländercode + Nummer).",
+      "BR-CO-10": "Summe der Positionsnettobeträge entspricht nicht dem Rechnungsnettobetrag.",
+      "BR-CO-13": "Summe der Steuerbemessungsgrundlagen entspricht nicht dem Nettobetrag.",
+      "BR-CO-14": "Summe der Steuerbeträge entspricht nicht der Gesamtsteuer.",
+      "BR-CO-15": "Bruttobetrag muss Netto + Umsatzsteuer sein.",
+      "BR-CO-16": "Der gezahlte Betrag darf den Bruttobetrag nicht übersteigen.",
+      "BR-CO-25": "Weder Fälligkeitsdatum noch Zahlungsbedingungen angegeben.",
+      "BR-S-02": "Bei umsatzsteuerpflichtigen Positionen ist USt-IdNr. oder Steuernummer des Verkäufers erforderlich.",
+      "BR-S-08": "Bemessungsgrundlage eines Steuersatzes stimmt nicht mit den Positionen überein.",
+      "BR-S-09": "Steuerbetrag entspricht nicht Bemessungsgrundlage × Steuersatz.",
+      "BR-Z-08": "Bemessungsgrundlage des Nullsatzes stimmt nicht mit den Positionen überein.",
+      "BR-Z-09": "Beim Nullsatz muss der Steuerbetrag null sein.",
+      "BR-E-08": "Bemessungsgrundlage der steuerbefreiten Positionen stimmt nicht.",
+      "BR-E-09": "Kleinunternehmerrechnung (§ 19 UStG) darf keine Umsatzsteuer enthalten.",
+      "BR-DE-1": "Zahlungsinformationen fehlen: IBAN des Vereins in den Rechnungseinstellungen eintragen.",
+      "BR-DE-3": "Ort in der Verkäuferanschrift fehlt (Vereinsdaten).",
+      "BR-DE-4": "Postleitzahl in der Verkäuferanschrift fehlt (Vereinsdaten).",
+      "BR-DE-6": "Telefonnummer des Verkäuferkontakts fehlt (Vereinsdaten).",
+      "BR-DE-7": "E-Mail-Adresse des Verkäuferkontakts fehlt (Vereinsdaten).",
+      "BR-DE-8": "Ort in der Käuferanschrift fehlt.",
+      "BR-DE-9": "Postleitzahl in der Käuferanschrift fehlt.",
+      "BR-DE-15": "Käuferreferenz (Leitweg-ID) fehlt; die Rechnungsnummer wird verwendet. Für öffentliche Auftraggeber ist die Leitweg-ID Pflicht.",
+      "BR-DE-16": "USt-IdNr. oder Steuernummer des Verkäufers fehlt.",
+      "BR-DE-19": "IBAN des Vereins ist ungültig.",
+      "BR-LINE-NET": "Bei einer Position stimmt Menge × Preis nicht mit dem Nettobetrag überein."
+    },
+    "check": {
+      "title": "E-Rechnungsprüfung",
+      "ok": "Entspricht den Grundregeln von EN 16931 / XRechnung.",
+      "errors": "{count} Fehler: XRechnung/ZUGFeRD kann erst nach Korrektur erzeugt werden.",
+      "warnings": "{count} Hinweise",
+      "error": "Fehler",
+      "warning": "Hinweis",
+      "kositHint": "Für die vollständige amtliche Prüfung kann in den Einstellungen die Adresse eines KoSIT-Validators eingetragen werden.",
+      "kositRun": "Mit KoSIT prüfen",
+      "kositValid": "KoSIT: gültig",
+      "kositInvalid": "KoSIT: ungültig",
+      "kositFailed": "KoSIT-Validator nicht erreichbar.",
+      "kositMessages": "KoSIT-Befunde",
+      "incoming": "Prüfung der eingegangenen E-Rechnung"
     }
   }
 }

@@ -4,7 +4,8 @@ import { getDb } from "@/shared/db";
 
 import { getOrganizationProfile } from "@/modules/organization/server";
 
-import { countryCodeOf, parseFreeAddress, xrechnungIssues, type XInvoiceData, type XInvoiceIssue } from "./einvoice-out";
+import { countryCodeOf, parseFreeAddress, type XInvoiceData } from "./einvoice-out";
+import { validateOutgoing, type EInvoiceIssue } from "./einvoice-validate";
 import { calculateInvoiceTotals } from "./invoice-calc";
 import { getTaxSettings } from "./tax";
 
@@ -13,10 +14,28 @@ const iso = (date: Date | null) => (date ? date.toISOString().slice(0, 10) : nul
 export type EInvoiceLoad =
   | { ok: true; data: XInvoiceData; invoiceId: string; number: string }
   | { ok: false; reason: "notFound" | "notIssued" }
-  | { ok: false; reason: "incomplete"; issues: XInvoiceIssue[] };
+  | { ok: false; reason: "incomplete"; issues: EInvoiceIssue[]; data: XInvoiceData };
 
 /** XRechnung ve ZUGFeRD için ortak fatura verisi (kurum profili + fatura ayarları + cari). */
+/**
+ * E-fatura verisi + doğrulama: hata (error) varsa dosya üretilmez; uyarılar (warning) yalnız gösterilir.
+ */
 export async function loadEInvoiceData(id: string): Promise<EInvoiceLoad> {
+  const built = await buildEInvoiceData(id);
+  if (!built.ok) return built;
+  const issues = validateOutgoing(built.data);
+  if (issues.some((issue) => issue.severity === "error")) return { ok: false, reason: "incomplete", issues, data: built.data };
+  return built;
+}
+
+/** Fatura ekranındaki kontrol paneli için: tüm bulgular (hata + uyarı). */
+export async function checkEInvoice(id: string): Promise<{ applicable: false } | { applicable: true; issues: EInvoiceIssue[] }> {
+  const built = await buildEInvoiceData(id);
+  if (!built.ok) return { applicable: false };
+  return { applicable: true, issues: validateOutgoing(built.data) };
+}
+
+async function buildEInvoiceData(id: string): Promise<{ ok: true; data: XInvoiceData; invoiceId: string; number: string } | { ok: false; reason: "notFound" | "notIssued" }> {
   const db = getDb();
   const invoice = await db.accountingInvoice.findUnique({ where: { id }, include: { lines: { orderBy: { position: "asc" } }, contact: true } });
   if (!invoice) return { ok: false, reason: "notFound" };
@@ -61,7 +80,5 @@ export async function loadEInvoiceData(id: string): Promise<EInvoiceLoad> {
     typeCode: credit ? 381 : 380,
     precedingInvoice: preceding?.number ? { number: preceding.number, issueDate: iso(preceding.issueDate) as string } : null,
   };
-  const issues = xrechnungIssues(data);
-  if (issues.length) return { ok: false, reason: "incomplete", issues };
   return { ok: true, data, invoiceId: invoice.id, number: invoice.number };
 }

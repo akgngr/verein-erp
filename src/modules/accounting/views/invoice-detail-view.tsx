@@ -10,7 +10,9 @@ import type { RawSearchParams } from "@/shared/list-params";
 import { can } from "@/shared/permissions/define";
 import { formatDate, formatDateTime } from "@/shared/utils";
 
+import { EInvoiceCheckPanel } from "../components/einvoice-check-panel";
 import { InvoiceActions } from "../components/invoice-actions";
+import { checkEInvoice } from "../services/einvoice-data";
 import { XRechnungButton } from "../components/xrechnung-button";
 import { InvoiceForm } from "../components/invoice-form";
 import { InvoiceStatusChip } from "../components/invoice-table";
@@ -50,7 +52,7 @@ export async function InvoiceDetailView({ id, searchParams }: { id: string; sear
     delete: can(user.role, accountingPermissions, "delete"),
   };
   const editing = Boolean(raw.duzenle) && invoice.status === "DRAFT" && permissions.update;
-  const [accounts, categories, settings, contacts] = await Promise.all([listAccountOptions(), listCategoryOptions("INCOME"), getInvoiceSettings(), listCustomerOptions()]);
+  const [accounts, categories, settings, contacts, einvoice] = await Promise.all([listAccountOptions(), listCategoryOptions("INCOME"), getInvoiceSettings(), listCustomerOptions(), checkEInvoice(invoice.id)]);
   const categoryOptions = categories.map((category) => ({ value: category.id, label: category.name }));
 
   return (
@@ -85,6 +87,7 @@ export async function InvoiceDetailView({ id, searchParams }: { id: string; sear
       ) : null}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <div className="flex flex-col gap-4 lg:col-span-2">
+          {einvoice.applicable ? <EInvoiceCheckPanel invoiceId={invoice.id} issues={einvoice.issues} kositEnabled={Boolean(settings.kositValidatorUrl)} /> : null}
           <div className="overflow-x-auto rounded-medium border border-default-200 bg-content1 p-5 shadow-sm">
             <table className="w-full text-small">
               <thead className="text-tiny uppercase text-default-400">

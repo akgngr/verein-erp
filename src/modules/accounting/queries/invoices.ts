@@ -80,6 +80,7 @@ export type InvoiceSettingsData = {
   iban: string | null;
   bic: string | null;
   sepaCreditorId: string | null;
+  kositValidatorUrl: string | null;
   dunningIntervalDays: number;
   dunningFeeReminder: number;
   dunningFeeFirst: number;
@@ -206,6 +207,7 @@ export async function getInvoiceSettings(): Promise<InvoiceSettingsData> {
     iban: row?.iban ?? null,
     bic: row?.bic ?? null,
     sepaCreditorId: row?.sepaCreditorId ?? null,
+    kositValidatorUrl: row?.kositValidatorUrl ?? null,
     dunningIntervalDays: row?.dunningIntervalDays ?? 14,
     dunningFeeReminder: row?.dunningFeeReminder ?? 0,
     dunningFeeFirst: row?.dunningFeeFirst ?? 500,
