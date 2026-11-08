@@ -17,7 +17,7 @@ export function buildEInvoiceViewLabels(
   document: { typeCode: string | null; payment: { meansCode: string | null }; syntax: string },
   sha256: string | null,
 ): EInvoiceViewLabels {
-  const labels = Object.fromEntries(EINVOICE_VIEW_FIELDS.map((field) => [field, t(`fields.${field}`)])) as Record<(typeof EINVOICE_VIEW_FIELDS)[number], string>;
+  const labels = Object.fromEntries(EINVOICE_VIEW_FIELDS.filter((field) => field !== "source").map((field) => [field, t(`fields.${field}`)])) as Record<(typeof EINVOICE_VIEW_FIELDS)[number], string>;
   const type = document.typeCode ?? "";
   const means = document.payment.meansCode ?? "";
   return {

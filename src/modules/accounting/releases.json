@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.20.1",
+      "date": "2026-11-08",
+      "title": {
+        "tr": "E-fatura görünümü düzeltmesi",
+        "de": "Korrektur E-Rechnungsansicht"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Gelen e-fatura görünümünde kaynak satırı çeviri hatası (FORMATTING_ERROR) giderildi.",
+          "de": "Übersetzungsfehler (FORMATTING_ERROR) in der Quellzeile der E-Rechnungsansicht behoben."
+        }
+      ]
+    },
+    {
       "version": "1.20.0",
       "date": "2026-11-08",
       "title": {
