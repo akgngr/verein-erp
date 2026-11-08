@@ -9,7 +9,7 @@ import { accountingPermissions, accountingSetupPermissions } from "./permissions
 export const moduleConfig: ModuleConfig = {
   key: "accounting",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.20.0",
+  version: "1.20.1",
   label: "Muhasebe",
   description: "Alman dernek mevzuatına uygun çift taraflı defter tutma, fiş ve bütçe yönetimi.",
   category: "OFFICIAL",
