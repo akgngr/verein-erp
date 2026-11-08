@@ -196,6 +196,10 @@ model AccountingSettings {
   datevTaxKeys        Boolean @default(false)
   /// ACC-8: UStVA Dauerfristverlängerung (+1 ay).
   vatExtension        Boolean @default(false)
+  /// EI-4 e-fatura kesme zorunluluğu: "AUTO" (2027/2028 kuralı + önceki yıl cirosu) | "ALWAYS" | "NEVER"
+  einvoiceMode        String  @default("AUTO")
+  /// Önceki yıl toplam cirosu (cent; 2027 için 800.000 € eşiği). Boşsa bilinmiyor.
+  previousYearRevenueCents Int?
   updatedAt           DateTime @updatedAt
 }
 
@@ -329,6 +333,13 @@ enum ContactType {
 }
 
 /// ACC-3: cari kart (müşteri/tedarikçi). Kişisel veri içerir — yalnızca muhasebe izinleriyle görülür.
+/// EI-4: e-fatura alıcı türü.
+enum EInvoiceRecipientType {
+  B2B
+  B2C
+  PUBLIC
+}
+
 model AccountingContact {
   id              String      @id @default(cuid())
   type            ContactType
@@ -339,6 +350,10 @@ model AccountingContact {
   email           String?
   phone           String?
   vatId           String? // USt-IdNr.
+  /// EI-4 e-fatura alıcı türü: B2B (işletme) · B2C (özel kişi) · PUBLIC (kamu; Leitweg-ID zorunlu)
+  einvoiceType    EInvoiceRecipientType @default(B2B)
+  /// Kamu alıcıları için Leitweg-ID (BT-10 BuyerReference), ör. 04011000-1234512345-06
+  leitwegId       String?
   paymentTermDays Int?
   notes           String?
   isActive        Boolean     @default(true)

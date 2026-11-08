@@ -1,5 +1,7 @@
 "use server";
 
+import { revalidatePath } from "next/cache";
+
 import { getDb } from "@/shared/db";
 import { buildUserLabel } from "@/shared/utils";
 import type { ActionResult } from "@/shared/types/action";
@@ -7,7 +9,7 @@ import type { ActionResult } from "@/shared/types/action";
 import { ActionError, createAction } from "@/modules/auth/server";
 
 import { accountingSetupPermissions } from "../permissions";
-import { accountingSettingsSchema, taxSettingsSchema } from "../schemas/settings";
+import { accountingSettingsSchema, einvoiceSettingsSchema, parseEuroToCents, taxSettingsSchema } from "../schemas/settings";
 
 /**
  * Muhasebe ayarları güncelleme (§ 11.7): aidat kategorisi aktif INCOME kategorisi
@@ -102,6 +104,23 @@ export async function saveTaxSettingsAction(input: unknown): Promise<ActionResul
         before: before ? { chartOfAccounts: before.chartOfAccounts, smallBusiness: before.smallBusiness, taxMethod: before.taxMethod, vatPeriod: before.vatPeriod, datevConsultantNo: before.datevConsultantNo, datevClientNo: before.datevClientNo, datevTaxKeys: before.datevTaxKeys, vatExtension: before.vatExtension } : undefined,
         after: input,
       });
+      return undefined;
+    },
+  });
+  return run(input) as Promise<ActionResult>;
+}
+
+/** EI-4: e-fatura kesme zorunluluğu ayarı (mod + önceki yıl cirosu). */
+export async function saveEInvoiceSettingsAction(input: unknown): Promise<ActionResult> {
+  const run = createAction({
+    permission: { definition: accountingSetupPermissions, action: "update" },
+    schema: einvoiceSettingsSchema,
+    handler: async ({ input, audit }) => {
+      const previousYearRevenueCents = input.previousYearRevenue === "" ? null : parseEuroToCents(input.previousYearRevenue);
+      const data = { einvoiceMode: input.mode, previousYearRevenueCents };
+      await getDb().accountingSettings.upsert({ where: { id: "singleton" }, update: data, create: { id: "singleton", ...data } });
+      await audit({ action: "UPDATE", entity: "AccountingSettings", entityId: "singleton", after: { einvoiceMode: input.mode, revenueSet: previousYearRevenueCents !== null } });
+      revalidatePath("/muhasebe/ayarlar");
       return undefined;
     },
   });

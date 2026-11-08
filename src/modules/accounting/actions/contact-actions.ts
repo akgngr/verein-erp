@@ -8,7 +8,7 @@ import type { ActionResult } from "@/shared/types/action";
 import { ActionError, createAction } from "@/modules/auth/server";
 
 import { accountingPermissions } from "../permissions";
-import { contactSchema, contactUpdateSchema, type ContactInput } from "../schemas/contact";
+import { contactCreateSchema, contactUpdateSchema, type ContactInput } from "../schemas/contact";
 import { nextContactNumber } from "../services/invoice-payments";
 
 const fields = (input: ContactInput) => ({
@@ -20,13 +20,15 @@ const fields = (input: ContactInput) => ({
   vatId: input.vatId ? input.vatId.replace(/\s/g, "").toUpperCase() : null,
   paymentTermDays: input.paymentTermDays ? Number(input.paymentTermDays) : null,
   notes: input.notes || null,
+  einvoiceType: input.einvoiceType ?? "B2B",
+  leitwegId: input.leitwegId ? input.leitwegId.trim().toUpperCase() : null,
 });
 
 /** Cari kart oluştur: numara türün DATEV aralığındaki sonraki boş numara (eşzamanlılıkta unique korur). */
 export async function createContactAction(input: unknown): Promise<ActionResult<{ id: string; number: number }>> {
   const run = createAction({
     permission: { definition: accountingPermissions, action: "create" },
-    schema: contactSchema,
+    schema: contactCreateSchema,
     handler: async ({ input, audit }) => {
       const db = getDb();
       const last = await db.accountingContact.findFirst({ where: { type: input.type }, orderBy: { number: "desc" }, select: { number: true } });

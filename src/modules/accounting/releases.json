@@ -2,6 +2,31 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.20.0",
+      "date": "2026-11-08",
+      "title": {
+        "tr": "E-fatura zorunluluğu ve alıcı türü",
+        "de": "E-Rechnungspflicht und Empfängerart"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Cari kartında e-fatura alıcı türü (işletme, özel kişi, kamu) ve kamu için Leitweg-ID.",
+          "de": "Empfängerart im Kontakt (Unternehmen, Privatperson, öffentlicher Auftraggeber) und Leitweg-ID für öffentliche Auftraggeber."
+        },
+        {
+          "type": "feature",
+          "tr": "Muhasebe ayarlarında e-fatura zorunluluğu (2027/2028 kuralı, önceki yıl cirosu) ve satıcı bilgileri hazırlık listesi.",
+          "de": "E-Rechnungspflicht in den Buchhaltungseinstellungen (Regel 2027/2028, Vorjahresumsatz) und Bereitschaftsprüfung der Verkäuferangaben."
+        },
+        {
+          "type": "feature",
+          "tr": "Fatura ekranında e-fatura gerekliliği uyarısı; B2C ve ≤ 250 € faturalar uyarı üretmez. Kamu alıcısına Leitweg-ID olmadan fatura kesilemez.",
+          "de": "Hinweis zur E-Rechnungspflicht auf der Rechnung; B2C und Rechnungen ≤ 250 € ohne Hinweis. Rechnungen an öffentliche Auftraggeber nur mit Leitweg-ID."
+        }
+      ]
+    },
+    {
       "version": "1.19.0",
       "date": "2026-11-07",
       "title": {

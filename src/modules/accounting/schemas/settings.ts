@@ -32,3 +32,18 @@ export const taxSettingsSchema = z.object({
 export type TaxSettingsInput = z.infer<typeof taxSettingsSchema>;
 
 export type AccountingSettingsInput = z.infer<typeof accountingSettingsSchema>;
+
+/** EI-4 e-fatura zorunluluk ayarı; ciro avro olarak girilir (boş = bilinmiyor). */
+export const einvoiceSettingsSchema = z.object({
+  mode: z.enum(["AUTO", "ALWAYS", "NEVER"]),
+  previousYearRevenue: z.string().trim().refine((value) => value === "" || parseEuroToCents(value) !== null, "accounting.einvoice.obligation.errors.revenue"),
+});
+
+/** "1.234.567,89" / "1234567.89" / "900000" → cent; geçersizse null. */
+export function parseEuroToCents(value: string): number | null {
+  const raw = value.replace(/\s|€/g, "");
+  if (!/^\d[\d.,]*$/.test(raw)) return null;
+  const normalized = raw.includes(",") ? raw.replace(/\./g, "").replace(",", ".") : /^\d{1,3}(\.\d{3})+$/.test(raw) ? raw.replace(/\./g, "") : raw;
+  const amount = Number(normalized);
+  return Number.isFinite(amount) && amount < 1e10 ? Math.round(amount * 100) : null;
+}

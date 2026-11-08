@@ -931,15 +931,26 @@
       "invoices": "Rechnungen",
       "open": "Offen",
       "numberAuto": "Die Nummer wird automatisch vergeben (Kunden ab 10000, Lieferanten ab 70000).",
-      "numberFixed": "Nummer: {number} (unveränderlich)"
+      "numberFixed": "Nummer: {number} (unveränderlich)",
+      "einvoiceType": "E-Rechnungsempfänger",
+      "einvoiceTypeHint": "Für öffentliche Auftraggeber (B2G) ist die Leitweg-ID Pflicht.",
+      "leitwegId": "Leitweg-ID",
+      "leitwegHint": "Vom öffentlichen Auftraggeber vergebene Käuferreferenz (BT-10)."
     },
     "validation": {
       "name": "Der Name muss mindestens 2 Zeichen haben.",
-      "vatId": "Ungültige USt-IdNr. (z. B. DE123456789)."
+      "vatId": "Ungültige USt-IdNr. (z. B. DE123456789).",
+      "leitwegId": "Ungültige Leitweg-ID (z. B. 04011000-1234512345-06).",
+      "leitwegRequired": "Für öffentliche Auftraggeber ist die Leitweg-ID erforderlich."
     },
     "errors": {
       "notFound": "Kontakt nicht gefunden.",
       "rangeExhausted": "Nummernkreis erschöpft."
+    },
+    "einvoiceType": {
+      "B2B": "Unternehmen (B2B)",
+      "B2C": "Privatperson (B2C)",
+      "PUBLIC": "Öffentlicher Auftraggeber (B2G)"
     }
   },
   "bank": {
@@ -1446,6 +1457,57 @@
         "58": "SEPA-Überweisung",
         "59": "SEPA-Lastschrift",
         "other": "Zahlungsart {code}"
+      }
+    },
+    "obligation": {
+      "title": "E-Rechnungspflicht (2027/2028)",
+      "hint": "Rechnungen an inländische Unternehmen (B2B) müssen ab 2027 (Vorjahresumsatz über 800.000 €) und ab 2028 für alle als E-Rechnung ausgestellt werden. Die Anwendung erinnert nur; die Entscheidung liegt bei Ihnen und Ihrer Steuerberatung.",
+      "required": "E-Rechnung ausstellen ist Pflicht",
+      "notRequired": "E-Rechnung ausstellen ist noch keine Pflicht",
+      "reasons": {
+        "always": "in den Einstellungen „immer“ gewählt",
+        "never": "in den Einstellungen „keine Pflicht“ gewählt",
+        "smallBusiness": "Kleinunternehmer (§ 19 UStG): Befreiung von der Ausstellungspflicht (§ 34a UStDV); Empfang ist Pflicht",
+        "from2028": "ab 2028 für alle Unternehmen",
+        "revenue2027": "Vorjahresumsatz über 800.000 €",
+        "below2027": "Vorjahresumsatz bis 800.000 € (Übergang bis 2028)",
+        "unknownRevenue2027": "Vorjahresumsatz nicht erfasst – über 800.000 € besteht Pflicht",
+        "transition": "Übergangszeit: Papier/PDF mit Zustimmung des Empfängers möglich; Empfang von E-Rechnungen ist Pflicht"
+      },
+      "mode": "Pflicht",
+      "modes": {
+        "AUTO": "Automatisch (nach Datum und Umsatz)",
+        "ALWAYS": "Immer E-Rechnung",
+        "NEVER": "Keine Pflicht (Befreiung)"
+      },
+      "revenue": "Gesamtumsatz des Vorjahres",
+      "revenueHint": "Für die Regel 2027 (Schwelle 800.000 €). Leer: unbekannt.",
+      "readinessTitle": "Bereitschaftsprüfung (Verkäuferangaben)",
+      "readiness": {
+        "sellerName": "Name der Organisation",
+        "sellerAddress": "Anschrift (Straße, PLZ, Ort)",
+        "sellerTaxId": "USt-IdNr. oder Steuernummer",
+        "sellerContact": "E-Mail und Telefon (BR-DE-6/7)",
+        "iban": "IBAN (Rechnungseinstellungen)"
+      },
+      "readinessHint": "Fehlendes im Organisationsprofil und in den Rechnungseinstellungen ergänzen.",
+      "save": "Speichern",
+      "saved": "E-Rechnungs-Einstellung gespeichert.",
+      "errors": {
+        "revenue": "Bitte einen gültigen Betrag eingeben (z. B. 850.000).",
+        "leitwegMissing": "Für öffentliche Auftraggeber ist eine gültige Leitweg-ID (Käuferreferenz) erforderlich. Im Kontakt oder in der Rechnung erfassen."
+      },
+      "invoice": {
+        "required": "Diese Rechnung muss als E-Rechnung versendet werden.",
+        "recommended": "E-Rechnung empfohlen.",
+        "notRequired": "Keine E-Rechnung erforderlich.",
+        "reasons": {
+          "public": "Öffentlicher Auftraggeber: XRechnung und Leitweg-ID sind Pflicht. Ein einfaches PDF ist keine E-Rechnung.",
+          "b2c": "Rechnung an Privatperson (B2C): PDF/Papier genügt.",
+          "small": "Kleinbetragsrechnung (≤ 250 €, § 33 UStDV): keine E-Rechnungspflicht.",
+          "b2bRequired": "Rechnung an ein Unternehmen (B2B) mit E-Rechnungspflicht: XRechnung oder ZUGFeRD senden. Ein einfaches PDF ist keine E-Rechnung.",
+          "b2bVoluntary": "Rechnung an ein Unternehmen (B2B): in der Übergangszeit ist PDF möglich, XRechnung/ZUGFeRD wird empfohlen."
+        }
       }
     }
   }
