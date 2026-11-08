@@ -13,6 +13,7 @@ import { formatDate, formatDateTime } from "@/shared/utils";
 import { EInvoiceCheckPanel } from "../components/einvoice-check-panel";
 import { InvoiceActions } from "../components/invoice-actions";
 import { checkEInvoice } from "../services/einvoice-data";
+import { getInvoiceRequirement } from "../services/einvoice-status";
 import { XRechnungButton } from "../components/xrechnung-button";
 import { InvoiceForm } from "../components/invoice-form";
 import { InvoiceStatusChip } from "../components/invoice-table";
@@ -52,7 +53,8 @@ export async function InvoiceDetailView({ id, searchParams }: { id: string; sear
     delete: can(user.role, accountingPermissions, "delete"),
   };
   const editing = Boolean(raw.duzenle) && invoice.status === "DRAFT" && permissions.update;
-  const [accounts, categories, settings, contacts, einvoice] = await Promise.all([listAccountOptions(), listCategoryOptions("INCOME"), getInvoiceSettings(), listCustomerOptions(), checkEInvoice(invoice.id)]);
+  const [accounts, categories, settings, contacts, einvoice, requirement] = await Promise.all([listAccountOptions(), listCategoryOptions("INCOME"), getInvoiceSettings(), listCustomerOptions(), checkEInvoice(invoice.id), getInvoiceRequirement(invoice.id)]);
+  const tObligation = await getTranslations("accounting.einvoice.obligation");
   const categoryOptions = categories.map((category) => ({ value: category.id, label: category.name }));
 
   return (
@@ -84,6 +86,16 @@ export async function InvoiceDetailView({ id, searchParams }: { id: string; sear
             : t("creditNoteFor", { number: invoice.correctsInvoice?.number ?? "" })}{" "}
           <a className="font-medium underline" href={`/muhasebe/faturalar/${invoice.creditNote?.id ?? invoice.correctsInvoice?.id}`}>{t("open")}</a>
         </p>
+      ) : null}
+      {requirement ? (
+        <div
+          role="note"
+          className={`mb-4 rounded-medium p-3 text-small ${requirement.missingLeitweg ? "bg-danger-50 text-danger-700" : requirement.level === "required" ? "bg-warning-50 text-warning-800" : requirement.level === "recommended" ? "bg-primary-50 text-primary-700" : "bg-default-100 text-default-600"}`}
+        >
+          <p className="font-medium">{tObligation(`invoice.${requirement.level}`)}</p>
+          <p>{tObligation(`invoice.reasons.${requirement.reason}`)}</p>
+          {requirement.missingLeitweg ? <p className="mt-1 font-medium">{tObligation("errors.leitwegMissing")}</p> : null}
+        </div>
       ) : null}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <div className="flex flex-col gap-4 lg:col-span-2">

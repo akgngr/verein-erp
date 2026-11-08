@@ -17,6 +17,8 @@ export type ContactRow = {
   email: string | null;
   phone: string | null;
   vatId: string | null;
+  einvoiceType: "B2B" | "B2C" | "PUBLIC";
+  leitwegId: string | null;
   paymentTermDays: number | null;
   notes: string | null;
   isActive: boolean;

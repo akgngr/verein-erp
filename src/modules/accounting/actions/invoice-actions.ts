@@ -21,6 +21,7 @@ import {
   parseDecimal,
   type InvoiceInput,
 } from "../schemas/invoice";
+import { missingLeitweg } from "../services/einvoice-obligation";
 import { calculateInvoiceTotals } from "../services/invoice-calc";
 import { loadEInvoiceData } from "../services/einvoice-data";
 import { buildXRechnungUbl } from "../services/einvoice-out";
@@ -190,11 +191,17 @@ export async function issueInvoiceAction(input: unknown): Promise<ActionResult<{
       const number = await getDb().$transaction(async (tx) => {
         const invoice = await loadInvoice(input.id, tx);
         if (invoice.status !== "DRAFT") throw new ActionError("accounting.invoices.errors.notDraft");
+        // EI-4: kamu alıcısında Leitweg-ID (BuyerReference) olmadan e-fatura kesilemez; boşsa carideki değer kullanılır.
+        const contact = invoice.contactId ? await tx.accountingContact.findUnique({ where: { id: invoice.contactId }, select: { einvoiceType: true, leitwegId: true } }) : null;
+        if (contact && (invoice.kind === "INVOICE" || invoice.kind === "CREDIT_NOTE") && missingLeitweg({ recipientType: contact.einvoiceType, buyerReference: invoice.buyerReference, contactLeitwegId: contact.leitwegId })) {
+          throw new ActionError("accounting.einvoice.obligation.errors.leitwegMissing");
+        }
+        const buyerReference = invoice.buyerReference || (contact?.einvoiceType === "PUBLIC" ? contact.leitwegId : null) || invoice.buyerReference;
         const year = invoice.issueDate.getUTCFullYear();
         const allocated = await allocateInvoiceNumber(tx, invoice.kind, year);
         await tx.accountingInvoice.update({
           where: { id: invoice.id },
-          data: { status: "ISSUED", number: allocated.number, year, sequence: allocated.sequence, issuedAt: new Date() },
+          data: { status: "ISSUED", number: allocated.number, year, sequence: allocated.sequence, issuedAt: new Date(), buyerReference },
         });
         return allocated.number;
       });

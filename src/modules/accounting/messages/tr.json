@@ -931,15 +931,26 @@
       "invoices": "Faturalar",
       "open": "Açık",
       "numberAuto": "Numara otomatik verilir (müşteri 10000+, tedarikçi 70000+).",
-      "numberFixed": "Numara: {number} (değişmez)"
+      "numberFixed": "Numara: {number} (değişmez)",
+      "einvoiceType": "E-fatura alıcı türü",
+      "einvoiceTypeHint": "Kamu (B2G) için Leitweg-ID zorunludur.",
+      "leitwegId": "Leitweg-ID",
+      "leitwegHint": "Kamu kurumunun verdiği alıcı referansı (BT-10)."
     },
     "validation": {
       "name": "Ad en az 2 karakter olmalı.",
-      "vatId": "Geçersiz USt-IdNr. (ör. DE123456789)."
+      "vatId": "Geçersiz USt-IdNr. (ör. DE123456789).",
+      "leitwegId": "Geçersiz Leitweg-ID (ör. 04011000-1234512345-06).",
+      "leitwegRequired": "Kamu alıcısı için Leitweg-ID gerekli."
     },
     "errors": {
       "notFound": "Cari kart bulunamadı.",
       "rangeExhausted": "Numara aralığı doldu."
+    },
+    "einvoiceType": {
+      "B2B": "İşletme (B2B)",
+      "B2C": "Özel kişi (B2C)",
+      "PUBLIC": "Kamu kurumu (B2G)"
     }
   },
   "bank": {
@@ -1446,6 +1457,57 @@
         "58": "SEPA havalesi",
         "59": "SEPA otomatik ödeme (Lastschrift)",
         "other": "Ödeme yolu {code}"
+      }
+    },
+    "obligation": {
+      "title": "E-fatura zorunluluğu (2027/2028)",
+      "hint": "Yurt içi işletmelere (B2B) kesilen faturalar 2027'den (önceki yıl cirosu 800.000 € üstü) ve 2028'den itibaren herkes için e-fatura olmalı. Uygulama yalnızca hatırlatır; karar sizin ve vergi danışmanınızındır.",
+      "required": "E-fatura kesmek zorunlu",
+      "notRequired": "E-fatura kesmek henüz zorunlu değil",
+      "reasons": {
+        "always": "ayarda \"her zaman\" seçildi",
+        "never": "ayarda \"zorunlu değil\" seçildi",
+        "smallBusiness": "Kleinunternehmer (§ 19 UStG): kesme yükümlülüğünden muafiyet (§ 34a UStDV); alabilmek zorunludur",
+        "from2028": "2028'den itibaren tüm işletmeler",
+        "revenue2027": "önceki yıl cirosu 800.000 €'nun üzerinde",
+        "below2027": "önceki yıl cirosu 800.000 € veya altında (2028'e kadar geçiş)",
+        "unknownRevenue2027": "önceki yıl cirosu girilmedi — 800.000 € üzerindeyse zorunludur",
+        "transition": "geçiş dönemi: alıcı onayıyla kâğıt/PDF fatura mümkün; e-fatura alabilmek zorunlu"
+      },
+      "mode": "Zorunluluk",
+      "modes": {
+        "AUTO": "Otomatik (tarih ve ciroya göre)",
+        "ALWAYS": "Her zaman e-fatura",
+        "NEVER": "Zorunlu değil (muafiyet)"
+      },
+      "revenue": "Önceki yıl toplam cirosu",
+      "revenueHint": "2027 kuralı için (800.000 € eşiği). Boş: bilinmiyor.",
+      "readinessTitle": "Hazırlık kontrolü (satıcı bilgileri)",
+      "readiness": {
+        "sellerName": "Kurum adı",
+        "sellerAddress": "Adres (sokak, posta kodu, şehir)",
+        "sellerTaxId": "USt-IdNr. veya vergi numarası",
+        "sellerContact": "E-posta ve telefon (BR-DE-6/7)",
+        "iban": "IBAN (fatura ayarları)"
+      },
+      "readinessHint": "Eksikler Kurum profili ve Fatura ayarlarından tamamlanır.",
+      "save": "Kaydet",
+      "saved": "E-fatura ayarı kaydedildi.",
+      "errors": {
+        "revenue": "Geçerli bir tutar girin (ör. 850.000).",
+        "leitwegMissing": "Kamu alıcısı için geçerli bir Leitweg-ID (alıcı referansı) gerekli. Cari kartına veya faturaya girin."
+      },
+      "invoice": {
+        "required": "Bu fatura e-fatura olarak gönderilmeli.",
+        "recommended": "E-fatura önerilir.",
+        "notRequired": "E-fatura gerekmiyor.",
+        "reasons": {
+          "public": "Kamu alıcısı: XRechnung ve Leitweg-ID zorunlu. Düz PDF e-fatura değildir.",
+          "b2c": "Özel kişiye (B2C) fatura: PDF/kâğıt yeterli.",
+          "small": "Küçük tutarlı fatura (≤ 250 €, § 33 UStDV): e-fatura zorunlu değil.",
+          "b2bRequired": "İşletmeye (B2B) fatura ve kurum için e-fatura zorunlu: XRechnung veya ZUGFeRD gönderin. Düz PDF e-fatura değildir.",
+          "b2bVoluntary": "İşletmeye (B2B) fatura: geçiş döneminde PDF mümkün, ancak XRechnung/ZUGFeRD önerilir."
+        }
       }
     }
   }

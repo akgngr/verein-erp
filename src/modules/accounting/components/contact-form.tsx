@@ -17,7 +17,7 @@ import { SubmitButton } from "@/shared/components/forms/submit-button";
 
 import { createContactAction, updateContactAction } from "../actions/contact-actions";
 import type { ContactRow } from "../queries/contacts";
-import { contactSchema, type ContactInput } from "../schemas/contact";
+import { contactCreateSchema, type ContactInput } from "../schemas/contact";
 
 /** ACC-3 cari kart formu. Numara kaydedilince DATEV aralığından otomatik verilir. */
 export function ContactForm({ contact, defaultType = "CUSTOMER" }: { contact?: ContactRow; defaultType?: "CUSTOMER" | "SUPPLIER" }) {
@@ -27,7 +27,7 @@ export function ContactForm({ contact, defaultType = "CUSTOMER" }: { contact?: C
   const [formError, setFormError] = useState<string | null>(null);
   const [isActive, setIsActive] = useState(contact?.isActive ?? true);
   const form = useForm<ContactInput>({
-    resolver: zodResolver(contactSchema),
+    resolver: zodResolver(contactCreateSchema),
     defaultValues: {
       type: contact?.type ?? defaultType,
       name: contact?.name ?? "",
@@ -38,6 +38,8 @@ export function ContactForm({ contact, defaultType = "CUSTOMER" }: { contact?: C
       vatId: contact?.vatId ?? "",
       paymentTermDays: contact?.paymentTermDays != null ? String(contact.paymentTermDays) : "",
       notes: contact?.notes ?? "",
+      einvoiceType: contact?.einvoiceType ?? "B2B",
+      leitwegId: contact?.leitwegId ?? "",
     },
   });
 
@@ -68,6 +70,18 @@ export function ContactForm({ contact, defaultType = "CUSTOMER" }: { contact?: C
           <FormInput name="email" label={t("fields.email")} control={form.control} type="email" />
           <FormInput name="phone" label={t("fields.phone")} control={form.control} type="tel" />
           <FormInput name="vatId" label={t("fields.vatId")} control={form.control} placeholder="DE123456789" />
+          {form.watch("type") === "CUSTOMER" ? (
+            <>
+              <FormSelect
+                name="einvoiceType"
+                label={t("fields.einvoiceType")}
+                control={form.control}
+                options={(["B2B", "B2C", "PUBLIC"] as const).map((value) => ({ value, label: t(`einvoiceType.${value}`) }))}
+                description={t("fields.einvoiceTypeHint")}
+              />
+              <FormInput name="leitwegId" label={t("fields.leitwegId")} control={form.control} placeholder="04011000-1234512345-06" isRequired={form.watch("einvoiceType") === "PUBLIC"} description={t("fields.leitwegHint")} />
+            </>
+          ) : null}
           <FormInput name="paymentTermDays" label={t("fields.paymentTermDays")} control={form.control} description={t("fields.paymentTermHint")} />
         </div>
         <FormTextarea name="address" label={t("fields.address")} control={form.control} />

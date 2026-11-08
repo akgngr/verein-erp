@@ -10,7 +10,9 @@ import { listAllCategories } from "../queries/list-categories";
 import { listAllProjects } from "../queries/list-projects";
 import { getSettings } from "../queries/get-settings";
 import { accountingSetupPermissions } from "../permissions";
+import { EInvoiceObligationCard } from "../components/einvoice-obligation-card";
 import { SetupTabs } from "../components/setup-tabs";
+import { getEInvoiceStatus } from "../services/einvoice-status";
 
 /** Ayarlar (§ 11.4): ?sekme=hesaplar|kategoriler|projeler + aktarım ayar kartı. */
 export async function AccountingSetupView({
@@ -32,6 +34,7 @@ export async function AccountingSetupView({
     listAllProjects(),
     getSettings(),
   ]);
+  const einvoiceStatus = await getEInvoiceStatus();
   const t = await getTranslations("accounting.setup");
 
   const canUpdate = can(user.role, accountingSetupPermissions, "update");
@@ -47,6 +50,7 @@ export async function AccountingSetupView({
         settings={settings}
         canUpdate={canUpdate}
       />
+      <EInvoiceObligationCard status={einvoiceStatus} canUpdate={canUpdate} />
     </div>
   );
 }

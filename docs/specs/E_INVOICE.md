@@ -43,7 +43,7 @@ ve küçük işletme kullanıcıları için eksiksiz karşılamak: e-fatura **al
 | İptal/düzeltme faturası (Storno, TypeCode 381/384) | ✗ | İptal yalnız durumu `CANCELLED` yapıyor. |
 | EN 16931 / XRechnung kural doğrulaması (BR-*) | ✓ | `services/einvoice-validate.ts` + isteğe bağlı KoSIT (`services/kosit.ts`). |
 | Gelen e-faturanın okunabilir görünümü | ✓ | `services/einvoice-document.ts`; detayda görünüm + PDF, orijinal XML'den. |
-| Müşteriye göre biçim seçimi ve zorunluluk uyarısı | ✗ | Biçim kullanıcı seçimine kalmış. |
+| Müşteriye göre biçim seçimi ve zorunluluk uyarısı | ✓ | Cari alıcı türü + Leitweg-ID; `services/einvoice-obligation.ts`; fatura ekranında uyarı. |
 | SEPA otomatik ödemede yetki bilgisi (PaymentMeans 59) | ✗ | Yalnız havale (58). |
 | Peppol gönderimi | ✗ | Kapsam dışı (ücretli aracı gerekir). |
 
@@ -112,7 +112,7 @@ ve küçük işletme kullanıcıları için eksiksiz karşılamak: e-fatura **al
 - [x] EI-2 giden faturada kesme öncesi doğrulama; gelen faturada sonuç kaydı ve listede rozet
 - [x] EI-2 isteğe bağlı KoSIT doğrulayıcı adresi (ayar + HTTP istemcisi + zaman aşımı)
 - [x] **EI-3** gelen e-fatura okunabilir görünümü (HTML) ve PDF, orijinal XML'den
-- [ ] **EI-4** cari türü (B2B/B2C/kamu), zorunluluk ayarları, kesmede varsayılan biçim ve uyarılar
+- [x] **EI-4** cari türü (B2B/B2C/kamu), zorunluluk ayarları, kesmede varsayılan biçim ve uyarılar
 - [ ] **EI-5** SEPA_DEBIT ödeme yolu: PaymentMeans 59 + BT-89/90/91
 - [ ] **EI-6** giden XML'in kesme anında dondurulması; Z3 dışa aktarımına ekleme
 - [ ] Belgeler: README, ACCOUNTING_ROADMAP, Verfahrensdokumentation metni güncellemesi
