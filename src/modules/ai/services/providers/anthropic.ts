@@ -7,7 +7,7 @@ import { ProviderError, type ProviderAdapter } from "./types";
 /** Claude (Anthropic Messages API; anahtar ayarlardan) — reddedilen isteklerde sunucu tarafı yedek model açık. */
 export function anthropicAdapter(apiKey: string): ProviderAdapter {
   return {
-    async run({ model, system, turns, tools, maxToolRounds, executeTool }) {
+    async run({ model, system, turns, tools, maxToolRounds, beforeRequest, executeTool }) {
       const client = new Anthropic({ apiKey });
       const messages: Anthropic.Beta.BetaMessageParam[] = turns.map((turn) => ({
         role: turn.role,
@@ -16,6 +16,7 @@ export function anthropicAdapter(apiKey: string): ProviderAdapter {
       const usage = { inputTokens: 0, outputTokens: 0 };
       try {
         for (let round = 0; ; round += 1) {
+          await beforeRequest();
           const response = await client.beta.messages.create({
             model,
             max_tokens: 16000,

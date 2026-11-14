@@ -226,5 +226,6 @@
       "label": "Yapay zekâ asistanı",
       "description": "Asistanı kullanma ve asistan ayarlarını (sağlayıcı, izinler) yönetme."
     }
-  }
+  },
+  "cleanup_history": "Süresi dolan sohbet ve raporları temizle"
 }

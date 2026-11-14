@@ -1,6 +1,6 @@
 /// Kullanıcının AI asistanı için verdiği açık rıza (KVKK/DSGVO). Kayıt yoksa asistan kullanılamaz.
 /// Rıza belirli bir sağlayıcıya verilir; yönetici sağlayıcıyı değiştirirse rıza yeniden istenir.
-/// Sohbet içeriği SAKLANMAZ; yalnızca rızanın kendisi, sürümü ve sağlayıcısı tutulur.
+/// Bu model yalnız rızayı tutar; sohbetler AiConversation/AiMessage içinde şifreli saklanır.
 model AiUserConsent {
   userId     String   @id // FK DEĞİL (yumuşak referans)
   version    Int

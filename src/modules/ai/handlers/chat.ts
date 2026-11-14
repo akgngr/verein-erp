@@ -9,7 +9,7 @@ import { translateMessage } from "@/shared/i18n/translate-message";
 import { can } from "@/shared/permissions/define";
 import { buildUserLabel } from "@/shared/utils";
 
-import { UnauthorizedError, requireUser } from "@/modules/auth/server";
+import { ActionError, UnauthorizedError, requireUser } from "@/modules/auth/server";
 
 import { aiPermissions } from "../permissions";
 import { runAssistant } from "../services/assistant";
@@ -42,7 +42,7 @@ const fail = async (key: string, status: number, code?: string) =>
  * POST /api/ai/chat — sohbet turu. Kapılar: oturum, rol yetkisi, kullanıcının açık rızası,
  * API anahtarı, hız sınırı (modülün etkin + onaylı olması köprüde denetlenir).
  * Denetim kaydına yalnızca meta veri yazılır: kullanılan araçlar, token sayısı, maskelenen
- * değer SAYISI. Mesaj içeriği hiçbir yerde saklanmaz.
+ * değer SAYISI. Mesaj içeriği audit kaydına yazılmaz; sohbet geçmişi şifreli saklanır.
  */
 export async function aiChatHandler(request: Request): Promise<Response> {
   let user;
@@ -65,7 +65,7 @@ export async function aiChatHandler(request: Request): Promise<Response> {
   try {
     const { message } = parsed.data;
     let conversationId = parsed.data.conversationId;
-    const previous = conversationId ? await getConversation(user.id, conversationId) : null;
+    const previous = conversationId ? await getConversation(user.id, conversationId, AI_HISTORY_WINDOW) : null;
     if (conversationId && !previous) return fail("ai.errors.conversationNotFound", 404);
     const history = (previous?.turns ?? []).slice(-(AI_HISTORY_WINDOW - 1)).map(({ role, content }) => ({ role, content }));
     const result = await runAssistant({ user, locale: await getLocale(), provider, turns: [...history, { role: "user", content: message }] });
@@ -84,6 +84,7 @@ export async function aiChatHandler(request: Request): Promise<Response> {
     });
     return NextResponse.json({ ok: true, conversationId, reply: result.reply, proposals: result.proposals, files: result.files });
   } catch (error) {
+    if (error instanceof ActionError) return fail(error.message, 403);
     if (error instanceof ProviderError) {
       console.error(`[ai] Sağlayıcı hatası (${provider}): ${error.kind}`);
       if (error.kind === "rateLimit") return fail("ai.errors.rateLimited", 429);

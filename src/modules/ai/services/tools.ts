@@ -2,7 +2,8 @@ import "server-only";
 
 import type { z } from "zod";
 
-import { can } from "@/shared/permissions/define";
+import { requireCurrentAiAccess } from "./access";
+import type { AiProviderId } from "./providers/registry";
 
 import type { SessionUser } from "@/modules/auth";
 import { listUsableModuleKeys } from "@/modules/system/server";
@@ -28,6 +29,7 @@ const MODULE_TOOLS = moduleAiRegistry.flatMap((entry) =>
       name: tool.name,
       module: entry.module,
       operation: tool.operation,
+      processing: tool.processing,
       allowed: (user) => tool.allowed(user),
       description: tool.description,
       schema: tool.schema,
@@ -50,12 +52,12 @@ const MODULE_TOOLS = moduleAiRegistry.flatMap((entry) =>
 const TOOLS = MODULE_TOOLS;
 
 /** Bu kullanıcı için şu an kullanılabilir araçlar (modül izni + kullanıcı yetkisi). */
-export async function availableTools(user: SessionUser) {
+export async function availableTools(user: SessionUser, provider?: AiProviderId) {
   const [usable, matrix] = await Promise.all([listUsableModuleKeys().then((keys) => new Set(keys)), getAiPermissions()]);
-  return TOOLS.filter((tool) => isAllowed(matrix, tool.module, tool.operation) && usable.has(tool.module) && tool.allowed(user));
+  return TOOLS.filter((tool) => isAllowed(matrix, tool.module, tool.operation) && usable.has(tool.module) && tool.allowed(user) && (tool.processing !== "local_only" || provider === "local"));
 }
 
-export type UnavailableReason = "module" | "matrix" | "role";
+export type UnavailableReason = "module" | "matrix" | "role" | "privacy";
 
 /**
  * Kullanıcının şu an KULLANAMADIĞI araçlar ve gerçek sebebi (ilk engelleyen kapı):
@@ -64,10 +66,10 @@ export type UnavailableReason = "module" | "matrix" | "role";
  *  - role: kullanıcının rolünde ilgili izin yok (Kullanıcılar → Roller ve İzinler)
  * Asistan böylece "neden yapamıyorum" sorusuna tahmin yerine doğru cevap verir.
  */
-export async function unavailableTools(user: SessionUser): Promise<{ name: string; module: string; operation: AiOperation; reason: UnavailableReason }[]> {
+export async function unavailableTools(user: SessionUser, provider?: AiProviderId): Promise<{ name: string; module: string; operation: AiOperation; reason: UnavailableReason }[]> {
   const [usable, matrix] = await Promise.all([listUsableModuleKeys().then((keys) => new Set(keys)), getAiPermissions()]);
   return TOOLS.flatMap((tool) => {
-    const reason: UnavailableReason | null = !usable.has(tool.module) ? "module" : !isAllowed(matrix, tool.module, tool.operation) ? "matrix" : !tool.allowed(user) ? "role" : null;
+    const reason: UnavailableReason | null = !usable.has(tool.module) ? "module" : !isAllowed(matrix, tool.module, tool.operation) ? "matrix" : !tool.allowed(user) ? "role" : tool.processing === "local_only" && provider !== "local" ? "privacy" : null;
     return reason ? [{ name: tool.name, module: tool.module, operation: tool.operation, reason }] : [];
   });
 }
@@ -85,13 +87,15 @@ export type AvailableTool = (typeof TOOLS)[number];
 
 
 /** Girdi şemayla doğrulanır; geçersizse model hata sonucu alır. */
-export async function runTool(tool: AvailableTool, rawInput: unknown, context: ToolContext): Promise<{ ok: true; value: unknown } | { ok: false; error: string }> {
+export async function runTool(tool: AvailableTool, rawInput: unknown, context: ToolContext, expectedProvider?: AiProviderId): Promise<{ ok: true; value: unknown } | { ok: false; error: string }> {
   const parsed = (tool.schema as z.ZodType).safeParse(rawInput);
   if (!parsed.success) return { ok: false, error: "INVALID_INPUT" };
   try {
-    return { ok: true, value: await (tool.run as (input: unknown, context: ToolContext) => Promise<unknown>)(parsed.data, context) };
-  } catch (error) {
-    console.error(`[ai] Araç hatası (${tool.name}):`, error);
+    const { user, modules, provider } = await requireCurrentAiAccess(context.user.id, expectedProvider);
+    if (!modules.includes(tool.module) || !isAllowed(await getAiPermissions(), tool.module, tool.operation) || !tool.allowed(user) || (tool.processing === "local_only" && provider !== "local")) return { ok: false, error: "TOOL_NOT_AVAILABLE" };
+    return { ok: true, value: await (tool.run as (input: unknown, context: ToolContext) => Promise<unknown>)(parsed.data, { ...context, user }) };
+  } catch {
+    console.error("[ai] TOOL_FAILED", { tool: tool.name });
     return { ok: false, error: "TOOL_FAILED" };
   }
 }

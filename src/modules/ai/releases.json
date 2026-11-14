@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.3.6",
+      "date": "2026-11-14",
+      "title": {
+        "tr": "Asistan güvenlik temeli",
+        "de": "Sicherheitsgrundlage des Assistenten"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Asistan güvenlik temeli",
+          "de": "Sicherheitsgrundlage des Assistenten"
+        }
+      ]
+    },
+    {
       "version": "1.3.5",
       "date": "2026-11-07",
       "title": {

@@ -1,5 +1,6 @@
 import "server-only";
 
+import { createLocalFetch } from "./secure-fetch";
 import { anthropicAdapter } from "./anthropic";
 import { mistralAdapter } from "./mistral";
 import { openAiCompatibleAdapter } from "./openai-compatible";
@@ -16,7 +17,7 @@ export function adapterFor(settings: ProviderSettings): ProviderAdapter {
     case "openai":
       return openAiCompatibleAdapter({ apiKey: settings.apiKey ?? "" });
     case "local":
-      return openAiCompatibleAdapter({ apiKey: settings.apiKey || "local", baseURL: settings.baseURL ?? undefined });
+      return openAiCompatibleAdapter({ apiKey: settings.apiKey || "local", baseURL: settings.baseURL ?? undefined, fetch: createLocalFetch(settings.baseURL ?? "") });
   }
 }
 

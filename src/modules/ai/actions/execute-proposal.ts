@@ -7,6 +7,7 @@ import type { ActionResult } from "@/shared/types/action";
 import { moduleAiRegistry } from "@/ai-registry";
 import { ActionError, createAction } from "@/modules/auth/server";
 
+import { requireCurrentAiAccess } from "../services/access";
 import { aiPermissions } from "../permissions";
 import { getAiPermissions, isAllowed } from "../services/permissions";
 
@@ -31,7 +32,9 @@ export async function executeAiProposalAction(input: unknown): Promise<ActionRes
   const run = createAction({
     permission: { definition: aiPermissions, action: "view" },
     schema: proposalSchema,
-    handler: async ({ input, audit }) => {
+    handler: async ({ input, user, audit }) => {
+      const access = await requireCurrentAiAccess(user.id);
+      if (!access.modules.includes(input.module)) throw new ActionError("ai.errors.permissionRevoked");
       const action = moduleAiRegistry.find((entry) => entry.module === input.module)?.actions[input.action];
       if (!action) throw new ActionError("common.errors.unexpected");
       if (!isAllowed(await getAiPermissions(), input.module, action.operation)) throw new ActionError("ai.errors.permissionRevoked");

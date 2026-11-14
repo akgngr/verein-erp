@@ -39,6 +39,8 @@ export type ModuleAiTool<S extends z.ZodType = z.ZodType> = {
   /** Modele görünen ad; tüm modüllerde benzersiz olmalı (snake_case). */
   name: string;
   operation: AiOperation;
+  /** Unstructured personal content is never sent to cloud providers. */
+  processing?: "local_only";
   /** Modele yönelik açıklama (İngilizce). */
   description: string;
   schema: S;
