@@ -8,7 +8,8 @@
   },
   "access": {
     "organization": "PDF dosyalarında dernek antetini (ad, adres, logo) kullanır.",
-    "system": "Başka modüllerin dosya formatı eklentilerinin yalnızca modül etkinken kullanılması için modül durumlarını okur."
+    "system": "Başka modüllerin dosya formatı eklentilerinin yalnızca modül etkinken kullanılması için modül durumlarını okur.",
+    "members": "Yetkili dosya üretimi ve çalışma anında izin kontrolü."
   },
   "title": "Dosyalarım",
   "description": "Asistanın veya modüllerin sizin için oluşturduğu dosyalar. Yalnızca siz görebilirsiniz; {days} gün sonra otomatik silinir.",
@@ -46,5 +47,13 @@
       "label": "Dosyalarım",
       "description": "Kişinin kendi oluşturduğu dosyalar (PDF, Excel, Word …)."
     }
-  }
+  },
+  "ai": {
+    "datasetExport": {
+      "kind": "Veri kümesi dışa aktarımı",
+      "confirm": "Dosyayı oluştur",
+      "done": "Dosya sıraya alındı"
+    }
+  },
+  "cleanup_files": "Süresi dolan ve sahipsiz dosyaları temizle"
 }

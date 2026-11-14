@@ -19,5 +19,7 @@ export async function saveReport(userId: string, title: string, markdown: string
 export async function getReport(userId: string, id: string): Promise<{ title: string; markdown: string; createdAt: Date } | null> {
   const row = await getDb().aiReport.findFirst({ where: { id, userId, createdAt: { gt: aiRetentionCutoff() } } });
   if (!row) return null;
-  return { title: openSecret(PURPOSE, row.titleEnc) ?? "", markdown: openSecret(PURPOSE, row.contentEnc) ?? "", createdAt: row.createdAt };
+  const title=openSecret(PURPOSE,row.titleEnc),markdown=openSecret(PURPOSE,row.contentEnc);
+  if(title===null||markdown===null)throw new Error("AI_REPORT_UNREADABLE");
+  return {title,markdown,createdAt:row.createdAt};
 }

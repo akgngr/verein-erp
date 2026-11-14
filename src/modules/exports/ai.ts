@@ -2,7 +2,7 @@ import "server-only";
 
 import { z } from "zod";
 
-import { aiTool, defineModuleAi } from "@/shared/ai/define";
+import { aiAction, aiTool, defineModuleAi,PROPOSED } from "@/shared/ai/define";
 import { can } from "@/shared/permissions/define";
 
 import { FILES_MAX_CONTENT_CHARS } from "./constants";
@@ -23,6 +23,12 @@ import { createGeneratedFile } from "./services/files";
 export const ai = defineModuleAi({
   module: "exports",
   tools: [
+    aiTool({name:"propose_dataset_export",operation:"create",allowed:user=>can(user.role,exportsPermissions,"create"),
+      description:"Propose exporting a server datasetRef to CSV/XLSX. Real names are inserted only on the server. Requires confirmation. Columns: member.fullName, dues.year, dues.overdueAmount.", // i18n-ignore (model-facing)
+      schema:z.object({datasetRef:z.string().min(1).max(100),format:z.enum(["csv","xlsx"]),columns:z.array(z.enum(["member.fullName","dues.year","dues.overdueAmount"])).min(1).max(3)}).strict(),
+      inputSchema:{type:"object",properties:{datasetRef:{type:"string"},format:{type:"string",enum:["csv","xlsx"]},columns:{type:"array",items:{type:"string",enum:["member.fullName","dues.year","dues.overdueAmount"]},minItems:1,maxItems:3}},required:["datasetRef","format","columns"],additionalProperties:false},
+      run:async(input,{propose})=>{propose({action:"datasetExport",title:input.format,details:input.columns,payload:input});return PROPOSED;},
+    }),
     aiTool({
       name: "create_file",
       operation: "create",
@@ -47,5 +53,9 @@ export const ai = defineModuleAi({
       },
     }),
   ],
-  actions: {},
+  actions: {
+    datasetExport:aiAction({operation:"create",schema:z.object({datasetRef:z.string().min(1).max(100),format:z.enum(["csv","xlsx"]),columns:z.array(z.string()).min(1).max(3)}).strict(),execute:async(input,context)=>{
+    if(!context)return {ok:false};
+    return {ok:true,jobId:await context.requestDatasetExport(input)};
+  }})},
 });

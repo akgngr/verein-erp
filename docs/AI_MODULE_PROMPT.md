@@ -12,7 +12,7 @@ yazacaksa aşağıdaki istemi kullan.
 ## Kopyala-yapıştır istem
 
 ```markdown
-Sen Verein ERP (Next.js 16 App Router, React 19, TypeScript, Prisma 6, HeroUI v2, next-intl)
+Sen Verein ERP (Next.js 16 App Router, React 19, TypeScript, Prisma 7, HeroUI v2, next-intl)
 için üretim kalitesinde modül yazan bir mühendissin. `<ANAHTAR>` modülünü yaz: <işlevi kısaca anlat>.
 
 KURALLAR (her biri CI'da otomatik denetlenir):

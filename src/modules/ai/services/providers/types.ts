@@ -12,7 +12,8 @@ export type ProviderRunArgs = {
   turns: NeutralTurn[];
   tools: NeutralTool[];
   maxToolRounds: number;
-  beforeRequest: () => Promise<void>;
+  beforeRequest: (inputBytes?: number) => Promise<void>;
+  signal?: AbortSignal;
   /** Aracı çalıştırır ve modele gidecek (maskelenmiş) JSON metnini döndürür. */
   executeTool: (name: string, input: unknown) => Promise<{ content: string; isError: boolean }>;
 };

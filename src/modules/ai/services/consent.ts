@@ -1,11 +1,13 @@
 import "server-only";
 
+import { revokeAiReferences } from "./references";
+import { providerRevision } from "./provider-revision";
 import { getDb } from "@/shared/db";
 
 import { AI_PROVIDER_IDS, isProviderReady, type AiProviderId } from "./providers";
 
 /** Bilgilendirme metni değişirse sürüm artırılır; eski rızalar geçersiz sayılır ve yeniden istenir. */
-export const AI_CONSENT_VERSION = 1;
+export const AI_CONSENT_VERSION = 2;
 
 const isProviderId = (value: string | null | undefined): value is AiProviderId =>
   Boolean(value) && (AI_PROVIDER_IDS as readonly string[]).includes(value as string);
@@ -30,18 +32,20 @@ export async function setActiveProvider(provider: AiProviderId): Promise<void> {
 /** Rıza yalnızca güncel sürüm VE şu anki sağlayıcı için geçerlidir. */
 export async function hasAiConsent(userId: string): Promise<boolean> {
   const [row, provider] = await Promise.all([getDb().aiUserConsent.findUnique({ where: { userId } }), getActiveProvider()]);
-  return Boolean(provider) && row?.version === AI_CONSENT_VERSION && row.provider === provider;
+  return Boolean(provider) && row?.version === AI_CONSENT_VERSION && row.provider === provider && row.policyRevision === await providerRevision(provider!);
 }
 
 export async function giveAiConsent(userId: string, provider: AiProviderId): Promise<void> {
+  const policyRevision = await providerRevision(provider);
   await getDb().aiUserConsent.upsert({
     where: { userId },
-    create: { userId, version: AI_CONSENT_VERSION, provider },
-    update: { version: AI_CONSENT_VERSION, provider, acceptedAt: new Date() },
+    create: { userId, version: AI_CONSENT_VERSION, provider, policyRevision },
+    update: { version: AI_CONSENT_VERSION, provider, policyRevision, acceptedAt: new Date() },
   });
 }
 
 export async function revokeAiConsent(userId: string): Promise<void> {
+  await revokeAiReferences(userId);
   await getDb().aiUserConsent.deleteMany({ where: { userId } });
 }
 

@@ -12,13 +12,19 @@ import { DATA_POLICY, USER_LINK_RETAINED, type TablePolicy } from "@/shared/data
 const policy = DATA_POLICY as Record<string, TablePolicy>;
 const accessor = (model: string) => model.charAt(0).toLowerCase() + model.slice(1);
 
-/** lifecycle.ts and the module files it imports relatively (one level). */
+/** Follow relative owner-module imports, including worker-safe cleanup helpers. */
 function lifecycleSources(moduleKey: string): string | null {
-  const file = path.join("src/modules", moduleKey, "lifecycle.ts");
-  if (!fs.existsSync(file)) return null;
-  const source = fs.readFileSync(file, "utf8");
-  const imported = [...source.matchAll(/from "(\.\/[^"]+)"/g)].map((match) => path.join(path.dirname(file), `${match[1]}.ts`)).filter((item) => fs.existsSync(item));
-  return [source, ...imported.map((item) => fs.readFileSync(item, "utf8"))].join("\n");
+  const root=path.resolve("src/modules",moduleKey),entry=path.join(root,"lifecycle.ts");
+  if(!fs.existsSync(entry))return null;
+  const visited=new Set<string>();
+  function visit(file:string):string {
+    if(visited.has(file)||!file.startsWith(`${root}${path.sep}`))return "";
+    visited.add(file);
+    const source=fs.readFileSync(file,"utf8");
+    const imported=[...source.matchAll(/from "(\.[^"]+)"/g)].map(match=>path.resolve(path.dirname(file),`${match[1]}.ts`)).filter(candidate=>fs.existsSync(candidate));
+    return [source,...imported.map(visit)].join("\n");
+  }
+  return visit(entry);
 }
 
 function modelsWithUserLink(): { model: string; owner: string; field: string }[] {

@@ -115,7 +115,7 @@ export async function saveAiProviderCredentialAction(input: unknown): Promise<Ac
 export async function setAiPermissionsAction(input: unknown): Promise<ActionResult> {
   const run = createAction({
     permission: { definition: aiPermissions, action: "update" },
-    schema: z.object({ matrix: z.record(z.string().max(40), z.array(z.enum(AI_OPERATIONS)).max(4)) }),
+    schema: z.object({ matrix: z.record(z.string().max(40), z.array(z.enum(AI_OPERATIONS)).max(AI_OPERATIONS.length)) }),
     handler: async ({ input, audit }) => {
       // Yalnızca asistanın gerçekten aracı olan modül/işlemler kaydedilir.
       const matrix = sanitizeMatrix(input.matrix, supportedOperations());

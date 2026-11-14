@@ -10,18 +10,18 @@ import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 
 import { setAiPermissionsAction } from "../actions/consent-actions";
 
-type Operation = "read" | "create" | "update" | "delete";
-const OPERATIONS: Operation[] = ["read", "create", "update", "delete"];
+type Operation = "read" | "create" | "update" | "delete" | "read_content";
+const OPERATIONS: Operation[] = ["read", "create", "update", "delete", "read_content"];
 
 /**
  * Kişisel veriye yakın modüller: bu modüllerde HER izin ve diğer modüllerde güncelleme/silme
  * işaretlenirken onay istenir. Okuma izni verilse bile araçlar kişisel veri döndürmez.
  */
 const SENSITIVE_MODULES = new Set(["members", "students", "progress", "accounting", "donations", "courses"]);
-const isRisky = (module: string, operation: Operation) => operation === "update" || operation === "delete" || SENSITIVE_MODULES.has(module);
+const isRisky = (module: string, operation: Operation) => operation === "read_content" || operation === "update" || operation === "delete" || SENSITIVE_MODULES.has(module);
 
 /** İzin çipinin rengi: açık izinler işlem türüne göre renkli, kapalılar gri. */
-const CHIP_COLOR: Record<Operation, "primary" | "success" | "warning" | "danger"> = { read: "primary", create: "success", update: "warning", delete: "danger" };
+const CHIP_COLOR: Record<Operation, "primary" | "success" | "warning" | "danger"> = { read_content:"danger", read: "primary", create: "success", update: "warning", delete: "danger" };
 
 export type PermissionModule = { key: string; label: string; description: string; icon: ReactNode; availability: "available" | "inactive" | "needsApproval" };
 
@@ -96,6 +96,7 @@ export function PermissionMatrix({
 
   const riskMessage = (module: PermissionModule, ops: Operation[]) => {
     const names = ops.map((op) => t(`operations.${op}`)).join(", ");
+    if(ops.includes("read_content"))return t("risk.content",{module:module.label,operations:names});
     return SENSITIVE_MODULES.has(module.key) ? t("risk.sensitive", { module: module.label, operations: names }) : t("risk.write", { module: module.label, operations: names });
   };
 

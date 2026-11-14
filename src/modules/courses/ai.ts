@@ -134,6 +134,7 @@ export const ai = defineModuleAi({
     }),
     changeStatus: aiAction({
       operation: "update",
+      snapshot: (input)=>getCourse(input.courseId),
       schema: z.object({ courseId: z.string().min(1).max(100), status: STATUS }),
       execute: async ({ courseId, status }) => {
         // Kurs güncellemesi tam form ister: mevcut değerler korunur, yalnızca durum değişir.
@@ -159,6 +160,6 @@ export const ai = defineModuleAi({
         });
       },
     }),
-    delete: aiAction({ operation: "delete", schema: z.object({ courseId: z.string().min(1).max(100) }), execute: ({ courseId }) => deleteCourseAction({ id: courseId }) }),
+    delete: aiAction({ operation: "delete", snapshot: (input)=>getCourse(input.courseId), schema: z.object({ courseId: z.string().min(1).max(100) }), execute: ({ courseId }) => deleteCourseAction({ id: courseId }) }),
   },
 });

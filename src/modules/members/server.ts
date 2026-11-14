@@ -283,3 +283,5 @@ export async function findMemberIdsByEmail(email: string): Promise<string[]> {
 export { getMemberSelfService, applyMemberSelfService } from "./services/online-form";
 export type { MemberSelfService, MemberSelfServiceInput } from "./services/online-form";
 export { listDebitableDues, recordSepaDuePayments, voidSepaDuePayment, type DebitableDue } from "./services/sepa-debit";
+
+export { loadDuesDataset, DUES_DATASET_COLUMNS } from "./services/ai-dataset";

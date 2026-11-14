@@ -151,6 +151,13 @@ export const DATA_POLICY = {
   AccountingReserve: { owner: "accounting", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
   AccountingSettings: { owner: "accounting", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
   AccountingYear: { owner: "accounting", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
+  AiExportRequest:{owner:"ai",category:"K1",reason:"Server-only export job",sensitiveFields:[],personalOwnerField:"userId"},
+  AiReferenceScope: {owner:"ai",category:"K0",reason:"Server-only reference scope",sensitiveFields:[],personalOwnerField:"userId"},
+  AiEntityReference: {owner:"ai",category:"K0",reason:"Server-only identity mapping; cascades with scope",sensitiveFields:[]},
+  AiDataset: {owner:"ai",category:"K1",reason:"Encrypted server-side selection; never model-visible",sensitiveFields:[]},
+  AiProposal: {owner:"ai",category:"K0",reason:"Encrypted server-owned confirmation payload",sensitiveFields:[],personalOwnerField:"userId"},
+  AiTurnClaim: {owner:"ai",category:"K0",reason:"Server-side request claims",sensitiveFields:[],personalOwnerField:"userId"},
+  AiUsageBucket: {owner:"ai",category:"K1",reason:"Rate usage counters; no content",sensitiveFields:[]},
   AiReport: { owner: "ai", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [], personalOwnerField: "userId" },
   AiSettings: { owner: "ai", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
   AutomationSchedule: { owner: "automation", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
@@ -185,6 +192,9 @@ export type AiToolPolicy = {
   module: string;
   /** Aracın okuduğu tablolar (yalnız K2/K3). Yazma araçları yalnız onay kartı önerir. */
   reads: readonly PolicyTable[];
+  /** Owner-service processing only; these columns never become model results. */
+  serverReads?:readonly PolicyTable[];
+  modelFields?:readonly string[];
 };
 
 /** Her yapay zekâ aracı okuduğu tabloları beyan eder; beyansız araç testi düşürür. */
@@ -201,6 +211,8 @@ export const USER_LINK_RETAINED: Record<string, string> = {
 };
 
 export const AI_TOOL_POLICY = {
+  create_dues_dataset:{module:"members",reads:[],serverReads:["Member","MemberDue","MemberPayment"],modelFields:["datasetRef","count"]},
+  propose_dataset_export:{module:"exports",reads:[]},
   // accounting
   get_accounting_summary: { module: "accounting", reads: ["AccountingBooking", "AccountingAccount", "AccountingYear", "AccountingCategory"] },
   get_vat_summary: { module: "accounting", reads: ["AccountingBooking", "AccountingSettings"] },

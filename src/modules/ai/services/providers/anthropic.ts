@@ -7,8 +7,8 @@ import { ProviderError, type ProviderAdapter } from "./types";
 /** Claude (Anthropic Messages API; anahtar ayarlardan) — reddedilen isteklerde sunucu tarafı yedek model açık. */
 export function anthropicAdapter(apiKey: string): ProviderAdapter {
   return {
-    async run({ model, system, turns, tools, maxToolRounds, beforeRequest, executeTool }) {
-      const client = new Anthropic({ apiKey });
+    async run({ model, system, turns, tools, maxToolRounds, beforeRequest, signal, executeTool }) {
+      const client = new Anthropic({ apiKey, maxRetries:0, timeout:30_000 });
       const messages: Anthropic.Beta.BetaMessageParam[] = turns.map((turn) => ({
         role: turn.role,
         content: turn.content,
@@ -16,12 +16,11 @@ export function anthropicAdapter(apiKey: string): ProviderAdapter {
       const usage = { inputTokens: 0, outputTokens: 0 };
       try {
         for (let round = 0; ; round += 1) {
-          await beforeRequest();
+          signal?.throwIfAborted();
+          await beforeRequest(Buffer.byteLength(JSON.stringify({system,tools,messages})));
           const response = await client.beta.messages.create({
             model,
-            max_tokens: 16000,
-            betas: ["server-side-fallback-2026-07-01"],
-            fallbacks: "default",
+            max_tokens: 4096,
             output_config: { effort: "low" },
             system,
             tools: tools.map((tool) => ({
@@ -31,7 +30,7 @@ export function anthropicAdapter(apiKey: string): ProviderAdapter {
               strict: true,
             })),
             messages,
-          });
+          }, { signal });
           usage.inputTokens += response.usage.input_tokens;
           usage.outputTokens += response.usage.output_tokens;
           if (response.stop_reason === "refusal")

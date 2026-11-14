@@ -5,7 +5,7 @@ import { readFile } from "node:fs/promises";
 import { getTranslations } from "next-intl/server";
 
 import { getDb } from "@/shared/db";
-import { removeFile, resolveSafePath, saveFile } from "@/shared/files/storage";
+import { resolveSafePath, saveFile } from "@/shared/files/storage";
 import { openBytes, openSecret, sealBytes, sealSecret } from "@/shared/security/secret-box";
 
 import { getOrganizationLogoDataUri, getOrganizationProfile } from "@/modules/organization/server";
@@ -25,13 +25,8 @@ export type GeneratedFileItem = { id: string; title: string; format: FileFormatI
 const downloadUrl = (id: string) => `/api/exports/${id}`;
 
 /** Süresi dolan dosyaları (kayıt + disk) siler. */
-export async function purgeExpiredFiles(): Promise<number> {
-  const expired = await getDb().generatedFile.findMany({ where: { expiresAt: { lt: new Date() } }, select: { id: true } });
-  if (!expired.length) return 0;
-  await getDb().generatedFile.deleteMany({ where: { id: { in: expired.map((row) => row.id) } } });
-  await Promise.all(expired.map((row) => removeFile(storagePath(row.id))));
-  return expired.length;
-}
+export { purgeExpiredFiles } from "./file-cleanup";
+import { purgeExpiredFiles,deleteStoredFile } from "./file-cleanup";
 
 /**
  * Başlık + markdown içerikten istenen formatta dosya üretir, şifreleyip saklar.
@@ -60,7 +55,8 @@ export async function createGeneratedFile(args: { ownerId: string; title: string
   try {
     await saveFile(storagePath(row.id), sealBytes(PURPOSE, bytes));
   } catch (error) {
-    await getDb().generatedFile.delete({ where: { id: row.id } });
+    await getDb().generatedFile.update({where:{id:row.id},data:{deletionPending:true}});
+    await deleteStoredFile(row.id).catch(()=>undefined);
     throw error;
   }
   return { id: row.id, title: args.title, format: args.format, sizeBytes: bytes.length, source: args.source, createdAt, expiresAt, url: downloadUrl(row.id) };
@@ -68,7 +64,7 @@ export async function createGeneratedFile(args: { ownerId: string; title: string
 
 export async function listGeneratedFiles(ownerId: string): Promise<GeneratedFileItem[]> {
   await purgeExpiredFiles();
-  const rows = await getDb().generatedFile.findMany({ where: { ownerId }, orderBy: { createdAt: "desc" }, take: 200 });
+  const rows = await getDb().generatedFile.findMany({ where: { ownerId,deletionPending:false }, orderBy: { createdAt: "desc" }, take: 200 });
   return rows.map((row) => ({
     id: row.id,
     title: openSecret(PURPOSE, row.titleEnc) ?? "",
@@ -82,26 +78,26 @@ export async function listGeneratedFiles(ownerId: string): Promise<GeneratedFile
 }
 
 /** İndirme: yalnızca sahibi; süresi dolmuşsa null. */
-export async function readGeneratedFile(ownerId: string, id: string): Promise<{ title: string; bytes: Buffer; mimeType: string; extension: string } | null> {
-  const row = await getDb().generatedFile.findFirst({ where: { id, ownerId, expiresAt: { gt: new Date() } } });
+export async function readGeneratedFile(ownerId: string, id: string): Promise<{ title: string; bytes: Buffer; mimeType: string; extension: string;source:string } | null> {
+  const row = await getDb().generatedFile.findFirst({ where: { id, ownerId, deletionPending:false, expiresAt: { gt: new Date() } } });
   if (!row) return null;
   const plugin = findFormat(row.format, await listUsableModuleKeys());
   if (!plugin) return null;
   const encrypted = await readFile(resolveSafePath(storagePath(row.id))).catch(() => null);
   const bytes = encrypted ? openBytes(PURPOSE, encrypted) : null;
   if (!bytes) return null;
-  return { title: openSecret(PURPOSE, row.titleEnc) ?? "file", bytes, mimeType: plugin.mimeType, extension: plugin.extension };
+  return { title: openSecret(PURPOSE, row.titleEnc) ?? "file", bytes, mimeType: plugin.mimeType, extension: plugin.extension,source:row.source };
 }
 
-export async function deleteGeneratedFile(ownerId: string, id: string): Promise<boolean> {
-  const result = await getDb().generatedFile.deleteMany({ where: { id, ownerId } });
-  if (result.count) await removeFile(storagePath(id));
-  return result.count > 0;
+export async function deleteGeneratedFile(ownerId:string,id:string):Promise<boolean> {
+  const result=await getDb().generatedFile.updateMany({where:{id,ownerId},data:{deletionPending:true}});
+  if(result.count)await deleteStoredFile(id);
+  return result.count>0;
 }
 
-/** Kullanıcı silindiğinde çağrılabilir (KVKK/DSGVO). */
-export async function deleteFilesOfOwner(ownerId: string): Promise<void> {
-  const rows = await getDb().generatedFile.findMany({ where: { ownerId }, select: { id: true } });
-  await getDb().generatedFile.deleteMany({ where: { ownerId } });
-  await Promise.all(rows.map((row) => removeFile(storagePath(row.id))));
+/** Keep tombstones until bytes are actually removed; failed disk operations are retryable. */
+export async function deleteFilesOfOwner(ownerId:string):Promise<void> {
+  const rows=await getDb().generatedFile.findMany({where:{ownerId},select:{id:true}});
+  await getDb().generatedFile.updateMany({where:{ownerId},data:{deletionPending:true}});
+  for(const row of rows)await deleteStoredFile(row.id,ownerId);
 }

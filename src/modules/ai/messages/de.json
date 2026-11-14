@@ -14,7 +14,10 @@
     "system": "Liest, welche Module aktiv und für den Assistenten freigegeben sind (nur darauf wird zugegriffen).",
     "students": "Liest nur Schüler- und Elternzahlen.",
     "auth": "Liest Benutzernamen nur serverseitig zur Maskierung und prüft die Sitzung; Namen werden nie an die KI gesendet.",
-    "organization": "Liest die öffentlichen Stammdaten des Vereins; ohne Steuernummer und Finanzamt."
+    "organization": "Liest die öffentlichen Stammdaten des Vereins; ohne Steuernummer und Finanzamt.",
+    "users": "Autorisierte Dateierstellung und Berechtigungsprüfung zur Laufzeit.",
+    "exports": "Autorisierte Dateierstellung und Berechtigungsprüfung zur Laufzeit.",
+    "automation": "Autorisierte Dateierstellung und Berechtigungsprüfung zur Laufzeit."
   },
   "errors": {
     "consentRequired": "Bitte bestätigen Sie zuerst den Datenschutzhinweis.",
@@ -34,7 +37,9 @@
       "unknown": "Inventarvorgang fehlgeschlagen."
     },
     "conversationNotFound": "Chat nicht gefunden.",
-    "reportNotFound": "Bericht nicht gefunden."
+    "reportNotFound": "Bericht nicht gefunden.",
+    "staleProposal": "Der Datensatz wurde geändert oder der Vorschlag ist abgelaufen. Bitte erstellen Sie einen neuen Vorschlag.",
+    "cloudIntentRequired": "Beim Cloud-Anbieter sind nur feste Anfragen wie „Mitgliederstatistik 2026“, „Spendenübersicht 2026“ oder „Beitragsdatei 2026“ verfügbar. Wählen Sie für Freitext einen lokalen Anbieter."
   },
   "panel": {
     "title": "Assistent",
@@ -81,7 +86,12 @@
     "newConversation": "Neuer Chat",
     "deleteConversation": "Diesen Chat löschen",
     "conversationDeleted": "Chat gelöscht.",
-    "downloadFile": "{title} ({format}) herunterladen"
+    "downloadFile": "{title} ({format}) herunterladen",
+    "exportJob": {
+      "download": "Datei herunterladen",
+      "failed": "Datei konnte nicht erstellt werden. Bitte erstellen Sie einen neuen Vorschlag.",
+      "queued": "Datei wird erstellt…"
+    }
   },
   "settings": {
     "title": "KI-Assistent",
@@ -150,7 +160,8 @@
         "read": "Lesen",
         "create": "Schreiben (anlegen)",
         "update": "Aktualisieren",
-        "delete": "Löschen"
+        "delete": "Löschen",
+        "read_content": "Dokumentinhalt lesen"
       },
       "saved": "Berechtigungen gespeichert.",
       "allowAll": "Alle erlauben",
@@ -166,13 +177,15 @@
         "read": "Lesen",
         "create": "Anlegen",
         "update": "Ändern",
-        "delete": "Löschen"
+        "delete": "Löschen",
+        "read_content": "Dokumentinhalt lesen"
       },
       "explain": {
         "read": "Zahlen, Listen und Übersichten; keine personenbezogenen Daten.",
         "create": "Schlägt neue Einträge vor; angelegt wird erst nach Ihrer Bestätigung.",
         "update": "Schlägt Änderungen wie Statuswechsel vor; Ihre Bestätigung ist nötig.",
-        "delete": "Schlägt das Löschen vor; Bestätigung und Löschrecht erforderlich."
+        "delete": "Schlägt das Löschen vor; Bestätigung und Löschrecht erforderlich.",
+        "read_content": "Dokumentinhalt lesen"
       },
       "notes": {
         "noPersonal": "Der Assistent erhält aus diesem Modul keine Namen, Kontakt-, Adress-, Bank- oder Ausweisdaten.",
@@ -183,7 +196,8 @@
         "title": "Sind Sie sicher?",
         "confirm": "Ja, erlauben",
         "sensitive": "{module} enthält personen- oder finanznahe Daten. Der Assistent erhält: {operations}. Personenbezogene Daten werden weiterhin nicht zurückgegeben, und Schreibvorgänge erfolgen nur mit Ihrer Bestätigung.",
-        "write": "Der Assistent kann im Modul {module} Folgendes vorschlagen: {operations}. Jeder Vorschlag wird nur nach Ihrer Bestätigung und mit Ihren Rechten ausgeführt."
+        "write": "Der Assistent kann im Modul {module} Folgendes vorschlagen: {operations}. Jeder Vorschlag wird nur nach Ihrer Bestätigung und mit Ihren Rechten ausgeführt.",
+        "content": "{module}: {operations}. Dokumenttexte können persönliche oder sensible Informationen enthalten; sie werden nur mit einem lokalen Anbieter und den bestehenden Benutzerrechten gelesen."
       },
       "status": {
         "inactive": "Modul ist nicht aktiv: Der Assistent kann es trotz Berechtigung nicht nutzen.",
@@ -227,5 +241,6 @@
       "description": "Assistent nutzen und Einstellungen (Anbieter, Berechtigungen) verwalten."
     }
   },
-  "cleanup_history": "Abgelaufene Unterhaltungen und Berichte bereinigen"
+  "cleanup_history": "Abgelaufene Unterhaltungen und Berichte bereinigen",
+  "export_dataset": "Datensatzdatei erstellen"
 }

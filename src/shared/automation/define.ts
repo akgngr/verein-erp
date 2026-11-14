@@ -48,6 +48,8 @@ export type TaskDefinition<TSchema extends z.ZodType = z.ZodType, TResult = unkn
     input: (slot: { scheduleId: string; slotAt: Date }) => z.input<TSchema>;
     /** Lower bound for the interval chosen in the UI. Default 60 minutes. */
     minIntervalMinutes?: number;
+    /** Trusted maintenance task installed automatically; administrator can disable it. */
+    automaticIntervalMinutes?: number;
   };
   /**
    * Optional: expose this task as a node in the visual workflow editor. Inputs

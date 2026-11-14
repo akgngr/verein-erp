@@ -7,6 +7,7 @@ model GeneratedFile {
   titleEnc   String
   format     String // pdf | xlsx | docx | md | csv
   sizeBytes  Int
+  deletionPending Boolean @default(false)
   source     String // "ai" veya modül anahtarı
   createdAt  DateTime @default(now())
   expiresAt  DateTime

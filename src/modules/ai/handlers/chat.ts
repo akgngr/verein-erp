@@ -11,6 +11,10 @@ import { buildUserLabel } from "@/shared/utils";
 
 import { ActionError, UnauthorizedError, requireUser } from "@/modules/auth/server";
 
+import { readAiRequestBody } from "../services/request-body";
+import { recordAiMetric } from "../services/metrics";
+import { reserveAiUsage } from "../services/usage";
+import { claimAiTurn, finishAiTurn } from "../services/turns";
 import { aiPermissions } from "../permissions";
 import { runAssistant } from "../services/assistant";
 import { getActiveProvider, hasAiConsent } from "../services/consent";
@@ -20,20 +24,9 @@ import { ProviderError } from "../services/providers";
 /** İstemci yalnızca yeni mesajı ve sohbet kimliğini gönderir; geçmiş sunucuda (şifreli) tutulur. */
 const bodySchema = z.object({
   conversationId: z.string().min(1).max(64).nullable(),
+  requestKey: z.string().uuid().optional(),
   message: z.string().trim().min(1).max(4000),
 });
-
-// Basit kötüye kullanım sınırı: kullanıcı başına dakikada 15 istek (süreç belleğinde).
-const WINDOW_MS = 60_000;
-const LIMIT = 15;
-const hits = new Map<string, number[]>();
-function rateLimited(userId: string): boolean {
-  const now = Date.now();
-  const recent = (hits.get(userId) ?? []).filter((time) => now - time < WINDOW_MS);
-  recent.push(now);
-  hits.set(userId, recent);
-  return recent.length > LIMIT;
-}
 
 const fail = async (key: string, status: number, code?: string) =>
   NextResponse.json({ ok: false, code, error: await translateMessage(key) }, { status });
@@ -57,9 +50,9 @@ export async function aiChatHandler(request: Request): Promise<Response> {
   if (!provider) return fail("ai.errors.notConfigured", 503, "notConfigured");
   // Rıza sağlayıcıya bağlıdır: yönetici sağlayıcıyı değiştirdiyse yeniden onay istenir.
   if (!(await hasAiConsent(user.id))) return fail("ai.errors.consentRequired", 403, "consentRequired");
-  if (rateLimited(user.id)) return fail("ai.errors.rateLimited", 429);
+  try { await reserveAiUsage(user.id,"request"); } catch { await recordAiMetric("usage_denied"); return fail("ai.errors.rateLimited",429); }
 
-  const parsed = bodySchema.safeParse(await request.json().catch(() => null));
+  const parsed = bodySchema.safeParse(await readAiRequestBody(request));
   if (!parsed.success) return fail("ai.errors.invalidRequest", 400);
 
   try {
@@ -68,8 +61,11 @@ export async function aiChatHandler(request: Request): Promise<Response> {
     const previous = conversationId ? await getConversation(user.id, conversationId, AI_HISTORY_WINDOW) : null;
     if (conversationId && !previous) return fail("ai.errors.conversationNotFound", 404);
     const history = (previous?.turns ?? []).slice(-(AI_HISTORY_WINDOW - 1)).map(({ role, content }) => ({ role, content }));
-    const result = await runAssistant({ user, locale: await getLocale(), provider, turns: [...history, { role: "user", content: message }] });
     conversationId ??= await createConversation(user.id, message);
+    const claim=await claimAiTurn(user.id,conversationId,parsed.data.requestKey ?? crypto.randomUUID());
+    if(claim.cached) return NextResponse.json(claim.cached);
+    try {
+    const result = await runAssistant({ conversationId, user, locale: await getLocale(), provider, turns: [...history, { role: "user", content: message }] });
     await appendTurns(conversationId, [
       { role: "user", content: message },
       { role: "assistant", content: result.reply, proposals: result.proposals, files: result.files },
@@ -82,8 +78,13 @@ export async function aiChatHandler(request: Request): Promise<Response> {
       entityId: null,
       after: { provider, tools: result.toolsUsed, inputTokens: result.usage.inputTokens, outputTokens: result.usage.outputTokens, redactedValues: result.redactions },
     });
-    return NextResponse.json({ ok: true, conversationId, reply: result.reply, proposals: result.proposals, files: result.files });
+    const response={ok:true,conversationId,reply:result.reply,proposals:result.proposals,files:result.files};
+    await finishAiTurn(user.id,conversationId,claim.id,response,true);
+    return NextResponse.json(response);
+    } catch(error) { await finishAiTurn(user.id,conversationId,claim.id,null,false); throw error; }
   } catch (error) {
+    await recordAiMetric(error instanceof ActionError?"request_denied":"request_failed");
+    if(error instanceof Error && ["AI_TURN_BUSY","AI_USAGE_LIMIT","AI_INPUT_BUDGET"].includes(error.message)) return fail("ai.errors.rateLimited",429);
     if (error instanceof ActionError) return fail(error.message, 403);
     if (error instanceof ProviderError) {
       console.error(`[ai] Sağlayıcı hatası (${provider}): ${error.kind}`);
