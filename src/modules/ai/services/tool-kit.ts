@@ -22,6 +22,7 @@ export type ToolDefinition<S extends z.ZodType> = {
   module: string;
   /** İzin matrisindeki işlem (kapalıysa araç modele hiç sunulmaz). */
   operation: AiOperation;
+  processing?: "local_only";
   allowed: (user: SessionUser) => boolean;
   description: string;
   schema: S;

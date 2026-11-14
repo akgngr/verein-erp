@@ -46,7 +46,7 @@ export async function AiSettingsView() {
   const [availability, consented, tools, active, providers, matrix, tRoot] = await Promise.all([
     getModuleAvailability("ai"),
     hasAiConsent(user.id),
-    availableTools(user),
+    getActiveProvider().then(provider => availableTools(user, provider ?? undefined)),
     getActiveProvider(),
     listProviderStatus(),
     getAiPermissions(),

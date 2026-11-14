@@ -8,10 +8,10 @@ import { ProviderError, type ProviderAdapter, type ProviderRunArgs } from "./typ
  * OpenAI Chat Completions biçimi: hem OpenAI hem de kendi sunucunuzdaki OpenAI uyumlu
  * uçlar (Ollama, vLLM, LM Studio …) için. İstemci, ayardaki baseURL/anahtar ile kurulur.
  */
-export function openAiCompatibleAdapter(options: { apiKey: string; baseURL?: string }): ProviderAdapter {
+export function openAiCompatibleAdapter(options: { apiKey: string; baseURL?: string; fetch?: typeof fetch }): ProviderAdapter {
   return {
-    async run({ model, system, turns, tools, maxToolRounds, executeTool }: ProviderRunArgs) {
-      const client = new OpenAI({ apiKey: options.apiKey, baseURL: options.baseURL });
+    async run({ model, system, turns, tools, maxToolRounds, beforeRequest, executeTool }: ProviderRunArgs) {
+      const client = new OpenAI({ apiKey: options.apiKey, baseURL: options.baseURL, fetch: options.fetch });
       const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
         { role: "system", content: system },
         ...turns.map((turn) => ({ role: turn.role, content: turn.content }) as OpenAI.Chat.ChatCompletionMessageParam),
@@ -19,6 +19,7 @@ export function openAiCompatibleAdapter(options: { apiKey: string; baseURL?: str
       const usage = { inputTokens: 0, outputTokens: 0 };
       try {
         for (let round = 0; ; round += 1) {
+          await beforeRequest();
           const response = await client.chat.completions.create({
             model,
             messages,

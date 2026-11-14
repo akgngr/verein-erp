@@ -2,6 +2,7 @@ import "server-only";
 
 import type { SessionUser } from "@/modules/auth";
 
+import { requireCurrentAiAccess } from "./access";
 import { loadKnownIdentifiers } from "./known-identifiers";
 import { PseudonymVault } from "./privacy";
 import { adapterFor, getProviderSettings, type AiProviderId } from "./providers";
@@ -38,11 +39,12 @@ function systemPrompt(locale: string, orgToday: string, blocked: string): string
 /**
  * Sohbet turu (sağlayıcıdan bağımsız): kullanıcı mesajları ve araç çıktıları maskelenir,
  * araçlar kullanıcının yetkisiyle çalışır, yanıt kullanıcıya dönerken yer tutucular çözülür.
- * Sunucu sohbeti saklamaz (geçmiş istemcide tutulur, her istekte yeniden gönderilir).
+ * Sohbet geçmişi sunucuda kullanıcıya özel ve şifreli saklanır.
  */
 export async function runAssistant(args: { user: SessionUser; locale: string; provider: AiProviderId; turns: ChatTurn[] }): Promise<AssistantResult> {
+  await requireCurrentAiAccess(args.user.id, args.provider);
   const vault = new PseudonymVault(await loadKnownIdentifiers());
-  const tools = await availableTools(args.user);
+  const tools = await availableTools(args.user, args.provider);
   const byName = new Map(tools.map((tool) => [tool.name, tool]));
   const proposals: AssistantProposal[] = [];
   const files: AiFile[] = [];
@@ -54,9 +56,10 @@ export async function runAssistant(args: { user: SessionUser; locale: string; pr
   const fixWhere: Record<string, string> = {
     module: "module inactive or access not approved → Settings → Modules", // i18n-ignore (model-facing prompt)
     matrix: "assistant permission off → Settings → AI assistant → module card", // i18n-ignore (model-facing prompt)
+    privacy: "document text requires the local provider → Settings → AI assistant → provider", // i18n-ignore (model-facing prompt)
     role: "the user's role lacks this permission → Users → Roles & permissions", // i18n-ignore (model-facing prompt)
   };
-  const blocked = (await unavailableTools(args.user))
+  const blocked = (await unavailableTools(args.user, args.provider))
     .map((tool) => `- ${tool.name} – ${tRoot.has(`${tool.module}.module.label`) ? tRoot(`${tool.module}.module.label`) : tool.module} – ${tool.operation} – ${fixWhere[tool.reason]}`)
     .join("\n");
 
@@ -67,11 +70,12 @@ export async function runAssistant(args: { user: SessionUser; locale: string; pr
     turns: args.turns.map((turn) => ({ role: turn.role, content: vault.redact(turn.content) })),
     tools: tools.map((tool) => ({ name: tool.name, description: tool.description, inputSchema: tool.inputSchema as Record<string, unknown> })),
     maxToolRounds: MAX_TOOL_ROUNDS,
+    beforeRequest: async () => { await requireCurrentAiAccess(args.user.id, args.provider); },
     executeTool: async (name, input) => {
       toolsUsed.push(name);
       const tool = byName.get(name);
       if (!tool) return { content: "TOOL_NOT_AVAILABLE", isError: true };
-      const outcome = await runTool(tool, input, { user: args.user, proposals, files, restore: (text) => vault.restore(text) });
+      const outcome = await runTool(tool, input, { user: args.user, proposals, files, restore: (text) => vault.restore(text) }, args.provider);
       return outcome.ok ? { content: JSON.stringify(vault.redactValue(outcome.value)), isError: false } : { content: outcome.error, isError: true };
     },
   });

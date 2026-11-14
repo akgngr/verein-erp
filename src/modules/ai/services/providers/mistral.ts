@@ -15,12 +15,13 @@ const textOf = (content: unknown): string =>
 /** Mistral (Fransa, AB içinde işleme) — resmi SDK, function calling. */
 export function mistralAdapter(apiKey: string): ProviderAdapter {
   return {
-    async run({ model, system, turns, tools, maxToolRounds, executeTool }) {
+    async run({ model, system, turns, tools, maxToolRounds, beforeRequest, executeTool }) {
       const client = new Mistral({ apiKey });
       const messages: Messages[] = [{ role: "system", content: system }, ...turns.map((turn) => ({ role: turn.role, content: turn.content }) as Messages)];
       const usage = { inputTokens: 0, outputTokens: 0 };
       try {
         for (let round = 0; ; round += 1) {
+          await beforeRequest();
           const response = await client.chat.complete({
             model,
             messages,

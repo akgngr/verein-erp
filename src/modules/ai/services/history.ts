@@ -5,10 +5,9 @@ import { openSecret, sealSecret } from "@/shared/security/secret-box";
 
 import type { AiFile, AiProposal } from "../types";
 
-/** Sohbetler bu süreden sonra otomatik silinir (veri minimizasyonu). */
-export const AI_CONVERSATION_RETENTION_DAYS = 180;
-/** Modele gönderilen en fazla geçmiş mesaj sayısı. */
-export const AI_HISTORY_WINDOW = 40;
+import { aiRetentionCutoff } from "./retention";
+import { cleanupAiHistory } from "./cleanup";
+export { AI_CONVERSATION_RETENTION_DAYS, AI_HISTORY_WINDOW } from "./retention";
 
 const PURPOSE = "ai-chat-history";
 const seal = (text: string) => sealSecret(PURPOSE, text);
@@ -25,28 +24,23 @@ function parseExtras(raw: string | null): { proposals: AiProposal[]; files: AiFi
   return { proposals: extras.proposals ?? [], files: extras.files ?? [] };
 }
 
-async function purgeExpired(userId: string): Promise<void> {
-  const cutoff = new Date(Date.now() - AI_CONVERSATION_RETENTION_DAYS * 86_400_000);
-  await getDb().aiConversation.deleteMany({ where: { userId, updatedAt: { lt: cutoff } } });
-}
-
 export async function listConversations(userId: string): Promise<{ id: string; title: string; updatedAt: Date }[]> {
-  await purgeExpired(userId);
+  await cleanupAiHistory(new Date(), userId);
   const rows = await getDb().aiConversation.findMany({ where: { userId }, orderBy: { updatedAt: "desc" }, take: 50, select: { id: true, titleEnc: true, updatedAt: true } });
   return rows.map((row) => ({ id: row.id, title: open(row.titleEnc), updatedAt: row.updatedAt }));
 }
 
 /** Sohbet yalnızca sahibine döner; başkasının kimliği verilirse null. */
-export async function getConversation(userId: string, conversationId: string): Promise<{ id: string; title: string; turns: StoredTurn[] } | null> {
+export async function getConversation(userId: string, conversationId: string, limit?: number): Promise<{ id: string; title: string; turns: StoredTurn[] } | null> {
   const row = await getDb().aiConversation.findFirst({
-    where: { id: conversationId, userId },
-    include: { messages: { orderBy: { createdAt: "asc" } } },
+    where: { id: conversationId, userId, updatedAt: { gt: aiRetentionCutoff() } },
+    include: { messages: { where: { createdAt: { gt: aiRetentionCutoff() } }, orderBy: [{ createdAt: "desc" }, { id: "desc" }], ...(limit ? { take: limit } : {}) } },
   });
   if (!row) return null;
   return {
     id: row.id,
     title: open(row.titleEnc),
-    turns: row.messages.map((message) => ({
+    turns: row.messages.reverse().map((message) => ({
       id: message.id,
       role: message.role === "assistant" ? "assistant" : "user",
       content: open(message.contentEnc),

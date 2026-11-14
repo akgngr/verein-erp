@@ -2017,7 +2017,8 @@
         "label": "KI-Assistent",
         "description": "Assistent nutzen und Einstellungen (Anbieter, Berechtigungen) verwalten."
       }
-    }
+    },
+    "cleanup_history": "Abgelaufene Unterhaltungen und Berichte bereinigen"
   },
   "audit": {
     "pageTitle": "Prüfprotokoll",

@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.2.1",
+      "date": "2026-11-14",
+      "title": {
+        "tr": "Belge verilerinin yerel işlenmesi",
+        "de": "Lokale Verarbeitung von Dokumentdaten"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Belge verilerinin yerel işlenmesi",
+          "de": "Lokale Verarbeitung von Dokumentdaten"
+        }
+      ]
+    },
+    {
       "version": "1.2.0",
       "date": "2026-11-06",
       "title": {
