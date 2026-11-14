@@ -1,6 +1,6 @@
 # Modül AI sözleşmesi v2 — onay taslağı
 
-Durum: İnceleme için hazırlanmıştır; uygulamaya bağlanmamış ve GitHub’a gönderilmemiştir.
+Durum: Kullanıcı onayıyla PR #143 içinde incelemeye sunulmuştur; uygulamaya bağlanmamıştır.
 Temel: main / 4bc9fdc16f9d9a01ff6d631cc2946319b746c26e.
 
 ## Amaç ve kapsam
@@ -386,8 +386,113 @@ modüllerini değiştirmediğinden tek başına modül sürümü artırmaz.
 - Prompt injection örnekleri yetkisiz araç ve kayıt erişimine yol açmaz.
 - Uygulama tamamlandığında ilgili testler, typecheck, module:sync ve modül sürüm kontrolleri çalışır.
 
+## Geçici kişi referansları ve sunucuda dosya üretimi
+
+### Tasarım kararı
+
+User, Member, StudentGuardian ve Student kayıtlarının mevcut id alanları sunucuda
+kullanılır. İsim/doğum tarihi şifrelenerek yeni kimlik üretilmez. Mevcut kişi tablolarına
+zorunlu bir aiKey/personRef sütunu eklenmez; mevcut kayıtlara backfill gerekmez.
+Kayıt ID'leri modele doğrudan verilmez. Bu karar veri alanlarını şifreli saklama
+konusundan ayrıdır; kişisel alanların DB'de şifrelenmesi ayrıca değerlendirilebilir.
+
+Model bir kişiyi takip etmek zorundaysa kullanıcı/konuşma/iş kapsamında CSPRNG ile
+üretilmiş en az 128 bit rastgele opaque token görür. Yalnızca rapor gerekiyorsa kişi
+tokenları dahi verilmez; tek datasetRef üzerinden sunucuda dosya oluşturulur.
+
+Aynı kişi user/member/guardian gibi birden fazla kayıtta bulunabilir. İsim veya doğum
+tarihinden otomatik kişi birleştirmesi yapılmaz. Mevcut açık ilişkiler veya kullanıcı
+tarafından doğrulanmış eşleştirmeler kullanılır. Global Person tablosu bu işin önkoşulu
+değildir; böyle bir normalizasyon ayrı proje ve migration olarak ele alınır.
+
+### Yeni yardımcı veri modelleri
+
+| Önerilen model | Amaç | Temel alanlar |
+| --- | --- | --- |
+| AiReferenceScope | Referansların sahibi ve yaşam döngüsü | id, userId, conversationId/jobId, deploymentId, purpose, expiresAt, revokedAt |
+| AiEntityReference | Geçici tokenı kaynak kayda bağlamak | tokenDigest (unique), scopeId, resource enum, recordId, expiresAt |
+| AiDataset | Sunucuda sorgu/sonuç kümesini tutmak | tokenDigest (unique), scopeId, definitionEnc, selectionEnc veya sürümlü seçim, allowedColumns, expiresAt |
+| AiProposal | Onaylanacak işlemi sunucuda tutmak | Önceki öneri protokolündeki alanlar |
+
+Bunlar örnek mantıksal model adlarıdır; fiziksel şema uygulama PR'ında mevcut
+konvansiyonlara göre netleştirilir. DB migration gerekir. AiProposal zaten v2
+planının parçasıdır. GeneratedFile ve automation altyapısı mümkün olduğunca yeniden
+kullanılır; dosya/iş bağlantısının ihtiyaç duyduğu ek alanlar o aşamada belirlenir.
+
+Ham token yalnızca yetkili çağrı bağlamında kullanılır, loglara yazılmaz; DB'de
+SHA-256 özeti aranır. Bu özet düşük entropili isimden değil rastgele tokendan
+üretilir. Eşleştirme tablosu modele/istemci liste API'lerine açılmaz. recordId
+şifrelenmek zorunda değildir; eşleştirme deposunun erişimi kısıtlanır. Hassas seçim
+ve sorgu içerikleri şifrelenir. Mevcut AUTH_SECRET'e bağımlı secret-box kullanılırsa
+anahtar değişiminde çözülememe davranışı hesaba katılır; key version ve rotation
+stratejisi ayrıca tanımlanır. Token üretimi şifreleme anahtarına bağımlı olmaz.
+
+### Araç ve çıktı sözleşmesi
+
+- create_dataset: modülün izinli sorgu şemasını kullanır; ham SQL/Prisma where kabul etmez.
+  Modele yalnızca datasetRef, izinli şema bilgisi ve gerekliyse güvenli toplamlar döner.
+- query_dataset: sadece model erişimine izinli projection/aggregate alanlarını döndürür.
+  Yetkili export alanları ile modele gönderilebilir alanlar ayrı listelerdir.
+- export_dataset: datasetRef, format, izinli sütun enumları, sıralama ve sınırlı düzen
+  tanımı alır. Kişisel sütunların verileri sunucuda çözülür ve dosyaya eklenir.
+- Kişi odaklı işlem gerekiyorsa geçici entityRef kullanılır; bu referans kendi başına
+  yetki değildir. Her kullanımda scope, sahiplik, süre ve kayıt/alan erişimi denetlenir.
+- Araç çıktısı yalnızca dosya/iş referansı ve durum içerir. Dosya URL'si yetkili UI
+  kanalına gider. Gerçek kişi bilgileriyle hazırlanmış içerik modele geri gönderilmez.
+
+Örnek model girdisi:
+
+```json
+{
+  "datasetRef": "opaque_random_token",
+  "format": "xlsx",
+  "columns": ["member.fullName", "dues.overdueAmount"],
+  "sort": "dues.overdueAmount_desc"
+}
+```
+
+member.fullName izinli bir dışa aktarma alanı olabilirken model çıktısında yasak
+olabilir. Bu ayrım sunucuda doğrulanır. LLM tarafından oluşturulan serbest sorgu,
+kod veya template ifadesi çalıştırılmaz. Rapor düzeni şemayla sınırlandırılır;
+CSV/Excel hücrelerinde formül enjeksiyonu önlenir. Dosya üretimi büyük veri için
+automation worker üzerinden, sınırlı bellek ve boyut bütçesiyle yapılır.
+
+### İsimli kullanıcı girdisi ve güven sınırı
+
+Kullanıcı bir kişinin adını yazarsa bulut modele gitmeden sunucuda çözümleme yapılır.
+Bilinen isimler için mevcut maskeleme kullanılabilir; fakat bilinmeyen isim ve serbest
+metin için regex garantisi verilmez. Güvenli aktarım sağlanamıyorsa kişi seçimi yetkili
+UI üzerinden istenir veya politika izin veriyorsa yerel işleme kullanılır. Birden
+fazla eşleşme model tahminiyle seçilmez. Belirsiz girdiler doğrudan buluta gönderilmez.
+
+Export worker hedef kayıtları ve alanları çalıştırma anında yeniden yetkilendirir.
+Silinmiş/erişimi kaldırılmış kayıtlar gizlice yeniden görünür olmaz. Kullanıcının
+onayladığı seçim değişirse önceki öneri protokolü uyarınca yeni onay gerekir.
+Önizleme, dosya, extractor, OCR, hata çıktısı ve sonraki sohbet araçları üzerinden
+kişisel verinin modele geri sızması ayrıca engellenir.
+
+Tokenlar ve datasetler kullanıcıya, konuşmaya veya işe bağlıdır; başka konuşmada,
+başka kullanıcıyla veya başka deployment kapsamında kullanılamaz. Kuyruk için ayrı
+sunucu yetki bağlamı taşınır; model tokenı sınırsız servis yetkisine dönüştürülmez.
+Süre aşımı ve rıza geri alma yeni okumaları/işleri engeller; worker düzenli temizler.
+
+### Ek kabul koşulları
+
+- Aynı kişi ayrı konuşmalarda farklı token alır; token gerçek isimden türetilmez.
+- Token sahipliği, resource türü, süre, revoke ve dataset/alan yetkisi negatif testleri.
+- Kişi ID ve adları provider request, model-visible tool output ve hata loglarında bulunmaz.
+- Dosyada yetkili kullanıcının istediği gerçek adlar bulunur; model sadece durum alır.
+- Yetkili bir export alanı query_dataset ile modele okunamaz.
+- Dosyanın sonraki araçlarla tekrar okunması aktarım politikasını aşamaz.
+- Aynı isimli iki kişi otomatik birleşmez; user/member/guardian bağları doğrulanır.
+- Token süre aşımı, worker yeniden denemesi, anahtar rotasyonu ve kayıt silme testleri.
+
+Bu yapı pseudonymisation sağlar; anonimlik veya tek başına GDPR uyumluluğu
+iddiası taşımaz. Tutar/yaş/kurs/aile ilişkisi gibi dolaylı tanımlayıcılar ve küçük
+gruplar için yeniden tanımlama riski ayrıca değerlendirilir.
+
 ## Bu taslağın onay kapsamı
 
-Bu dosyanın ayrı bir dokümantasyon PR’ı ile gönderilmesi önerilir. Bu onay, çalışma zamanı
+Bu dosya kullanıcı onayıyla PR #143 içinde gönderilmiştir. Bu onay, çalışma zamanı
 kodlarının değiştirilmesi veya PR’ın birleştirilmesi anlamına gelmez. Runtime geçişi yukarıdaki
-sırayla ayrı uygulama PR’larında yapılır. Kullanıcı onayı alınana kadar push/PR yapılmaz.
+sırayla ayrı uygulama PR’larında yapılır.
