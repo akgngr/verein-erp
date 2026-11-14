@@ -39,6 +39,7 @@ jobs:
 
     env:
       DATABASE_URL: postgresql://verein:verein@localhost:5432/verein_ci
+      AI_TEST_DATABASE_URL: postgresql://verein:verein@localhost:5432/verein_ci
       SHADOW_DATABASE_URL: postgresql://verein:verein@localhost:5432/verein_shadow
       # Yalnızca derleme/test için; gerçek bir sır değildir.
       AUTH_SECRET: ci-only-auth-secret-not-used-in-production

@@ -11,7 +11,7 @@ export { AI_CONVERSATION_RETENTION_DAYS, AI_HISTORY_WINDOW } from "./retention";
 
 const PURPOSE = "ai-chat-history";
 const seal = (text: string) => sealSecret(PURPOSE, text);
-const open = (payload: string) => openSecret(PURPOSE, payload) ?? "";
+const open = (payload:string) => { const value=openSecret(PURPOSE,payload); if(value===null)throw new Error("AI_HISTORY_UNREADABLE"); return value; };
 
 export type StoredTurn = { id: string; role: "user" | "assistant"; content: string; proposals: AiProposal[]; files: AiFile[]; createdAt: Date };
 

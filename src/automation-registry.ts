@@ -13,6 +13,7 @@ import * as systemAutomationExports from "@/modules/system/automation";
 import * as aiAutomationExports from "@/modules/ai/automation";
 import * as calendarAutomationExports from "@/modules/calendar/automation";
 import * as crmAutomationExports from "@/modules/crm/automation";
+import * as exportsAutomationExports from "@/modules/exports/automation";
 import * as feedbackAutomationExports from "@/modules/feedback/automation";
 import * as mailAutomationExports from "@/modules/mail/automation";
 import * as mailingsAutomationExports from "@/modules/mailings/automation";
@@ -44,6 +45,7 @@ export const moduleAutomationTasks: TaskDefinition[] = [
   ...tasksOf("ai", aiAutomationExports),
   ...tasksOf("calendar", calendarAutomationExports),
   ...tasksOf("crm", crmAutomationExports),
+  ...tasksOf("exports", exportsAutomationExports),
   ...tasksOf("feedback", feedbackAutomationExports),
   ...tasksOf("mail", mailAutomationExports),
   ...tasksOf("mailings", mailingsAutomationExports),
@@ -64,6 +66,7 @@ export const moduleAutomationEvents: EventDefinition[] = [
   ...eventsOf("ai", aiAutomationExports),
   ...eventsOf("calendar", calendarAutomationExports),
   ...eventsOf("crm", crmAutomationExports),
+  ...eventsOf("exports", exportsAutomationExports),
   ...eventsOf("feedback", feedbackAutomationExports),
   ...eventsOf("mail", mailAutomationExports),
   ...eventsOf("mailings", mailingsAutomationExports),

@@ -35,7 +35,7 @@ export { setLocaleAction } from "./actions/set-locale";
  */
 async function loadPolicy(): Promise<void> {
   const { loadPermissionPolicy } = await import("@/modules/users/server");
-  await loadPermissionPolicy();
+  await loadPermissionPolicy(true);
 }
 
 /** Mevcut oturum kullanıcısını veritabanından tazeleyerek döner; pasif kullanıcı null döner. */
@@ -184,7 +184,7 @@ export function createAction<I, T>(
       if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === "P2002") {
         return { ok: false, error: translate("common.errors.duplicate") };
       }
-      console.error("[action] Beklenmeyen hata:", error);
+      console.error("[action] ACTION_FAILED");
       return { ok: false, error: translate("common.errors.unexpected") };
     }
   };

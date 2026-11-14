@@ -1805,7 +1805,10 @@
       "system": "Hangi modüllerin etkin ve asistana izinli olduğunu okur (asistan yalnızca bunlara erişir).",
       "students": "Yalnızca öğrenci ve veli sayılarını okur.",
       "auth": "Yalnızca maskeleme için kullanıcı adlarını sunucuda okur ve oturumu doğrular; adlar yapay zekâya gönderilmez.",
-      "organization": "Derneğin kamuya açık ana verilerini okur; vergi numarası ve vergi dairesi bilgileri hariç."
+      "organization": "Derneğin kamuya açık ana verilerini okur; vergi numarası ve vergi dairesi bilgileri hariç.",
+      "users": "Yetkili dosya üretimi ve çalışma anında izin kontrolü.",
+      "exports": "Yetkili dosya üretimi ve çalışma anında izin kontrolü.",
+      "automation": "Yetkili dosya üretimi ve çalışma anında izin kontrolü."
     },
     "errors": {
       "consentRequired": "Asistanı kullanmak için önce veri koruma bilgilendirmesini onaylayın.",
@@ -1825,7 +1828,9 @@
         "unknown": "Envanter işlemi tamamlanamadı."
       },
       "conversationNotFound": "Sohbet bulunamadı.",
-      "reportNotFound": "Rapor bulunamadı."
+      "reportNotFound": "Rapor bulunamadı.",
+      "staleProposal": "Kayıt değişti veya önerinin süresi doldu. Lütfen yeni bir öneri oluşturun.",
+      "cloudIntentRequired": "Bulut sağlayıcıda yalnızca “Üye sayısı 2026”, “Bağış özeti 2026” veya “Aidat dosyası 2026” gibi hazır istekler kullanılabilir. Serbest metin için yerel sağlayıcıyı seçin."
     },
     "panel": {
       "title": "Asistan",
@@ -1872,7 +1877,12 @@
       "newConversation": "Yeni sohbet",
       "deleteConversation": "Bu sohbeti sil",
       "conversationDeleted": "Sohbet silindi.",
-      "downloadFile": "{title} ({format}) indir"
+      "downloadFile": "{title} ({format}) indir",
+      "exportJob": {
+        "download": "Dosyayı indir",
+        "failed": "Dosya üretilemedi. Lütfen yeni bir öneri oluşturun.",
+        "queued": "Dosya hazırlanıyor…"
+      }
     },
     "settings": {
       "title": "Yapay zekâ asistanı",
@@ -1941,7 +1951,8 @@
           "read": "Okuma",
           "create": "Yazma (oluşturma)",
           "update": "Güncelleme",
-          "delete": "Silme"
+          "delete": "Silme",
+          "read_content": "Belge içeriğini okuma"
         },
         "saved": "İzinler kaydedildi.",
         "allowAll": "Tümüne izin ver",
@@ -1957,13 +1968,15 @@
           "read": "Okuma",
           "create": "Oluşturma",
           "update": "Güncelleme",
-          "delete": "Silme"
+          "delete": "Silme",
+          "read_content": "Belge içeriğini okuma"
         },
         "explain": {
           "read": "Sayılar, listeler ve özetler; kişisel veri dönmez.",
           "create": "Yeni kayıt önerir; kayıt karttan onaylayınca oluşur.",
           "update": "Durum değişikliği gibi güncellemeler önerir; onayınız gerekir.",
-          "delete": "Kayıt silmeyi önerir; onayınız ve silme yetkiniz gerekir."
+          "delete": "Kayıt silmeyi önerir; onayınız ve silme yetkiniz gerekir.",
+          "read_content": "Belge içeriğini okuma"
         },
         "notes": {
           "noPersonal": "Asistan bu modülden ad, iletişim, adres, banka veya kimlik bilgisi almaz.",
@@ -1974,7 +1987,8 @@
           "title": "Emin misiniz?",
           "confirm": "Evet, izin ver",
           "sensitive": "{module} kişisel veya mali veriye yakın bir modül. Asistana şu izinler verilecek: {operations}. Kişisel veri yine döndürülmez ve yazma işlemleri onayınız olmadan yapılmaz.",
-          "write": "Asistan {module} modülünde şunları önerebilecek: {operations}. Her öneri karttan onayınızla ve sizin yetkinizle uygulanır."
+          "write": "Asistan {module} modülünde şunları önerebilecek: {operations}. Her öneri karttan onayınızla ve sizin yetkinizle uygulanır.",
+          "content": "{module}: {operations}. Belge metni kişisel veya hassas bilgi içerebilir; yalnız yerel sağlayıcıyla ve mevcut kullanıcı yetkileriyle okunur."
         },
         "status": {
           "inactive": "Modül etkin değil: izin açık olsa da asistan bu modülü kullanamaz.",
@@ -2018,7 +2032,8 @@
         "description": "Asistanı kullanma ve asistan ayarlarını (sağlayıcı, izinler) yönetme."
       }
     },
-    "cleanup_history": "Süresi dolan sohbet ve raporları temizle"
+    "cleanup_history": "Süresi dolan sohbet ve raporları temizle",
+    "export_dataset": "Veri kümesi dosyası oluştur"
   },
   "audit": {
     "pageTitle": "Denetim Kaydı",
@@ -4751,7 +4766,8 @@
     },
     "access": {
       "organization": "PDF dosyalarında dernek antetini (ad, adres, logo) kullanır.",
-      "system": "Başka modüllerin dosya formatı eklentilerinin yalnızca modül etkinken kullanılması için modül durumlarını okur."
+      "system": "Başka modüllerin dosya formatı eklentilerinin yalnızca modül etkinken kullanılması için modül durumlarını okur.",
+      "members": "Yetkili dosya üretimi ve çalışma anında izin kontrolü."
     },
     "title": "Dosyalarım",
     "description": "Asistanın veya modüllerin sizin için oluşturduğu dosyalar. Yalnızca siz görebilirsiniz; {days} gün sonra otomatik silinir.",
@@ -4789,7 +4805,15 @@
         "label": "Dosyalarım",
         "description": "Kişinin kendi oluşturduğu dosyalar (PDF, Excel, Word …)."
       }
-    }
+    },
+    "ai": {
+      "datasetExport": {
+        "kind": "Veri kümesi dışa aktarımı",
+        "confirm": "Dosyayı oluştur",
+        "done": "Dosya sıraya alındı"
+      }
+    },
+    "cleanup_files": "Süresi dolan ve sahipsiz dosyaları temizle"
   },
   "feedback": {
     "module": {

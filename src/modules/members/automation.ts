@@ -42,3 +42,5 @@ export const memberCreatedEvent = defineEvent({
 });
 // Kampanya alıcıları (toplantı/etkinlik kaynakları) için; worker da içe aktarır, UI/Next içermez.
 export { getMemberContacts, searchMemberContacts, type MemberContact } from "./queries/member-contacts";
+
+export { loadDuesDataset, DUES_DATASET_COLUMNS, memberPaymentsPermissions } from "./services/ai-dataset";

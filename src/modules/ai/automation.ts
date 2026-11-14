@@ -10,10 +10,17 @@ export const aiCleanupTask = defineTask({
   inputSchema: z.object({}).strict(),
   timeoutSeconds: 120,
   retry: { maxAttempts: 3, initialDelaySeconds: 30, maxDelaySeconds: 300, backoffMultiplier: 2 },
-  schedule: { input: () => ({}), minIntervalMinutes: 60 },
+  schedule: { input: () => ({}), minIntervalMinutes: 60, automaticIntervalMinutes:60 },
   idempotencyKey: () => `ai:cleanup:${Math.floor(Date.now() / 3_600_000)}`,
   handler: async () => {
     const { cleanupAiHistory } = await import("./services/cleanup");
     return cleanupAiHistory();
   },
+});
+
+export const aiDatasetExportTask=defineTask({
+ key:"ai.export_dataset",version:1,description:"ai.export_dataset",
+ inputSchema:z.object({generationId:z.string().min(1).max(128)}).strict(),
+ timeoutSeconds:120,retry:{maxAttempts:1},idempotencyKey:input=>`ai-export:${input.generationId}`,
+ handler:async(input,context)=>{const {runDatasetExport}=await import("./services/dataset-export");try{return await runDatasetExport(input.generationId,context.signal);}catch(error){const {recordAiMetric}=await import("./services/metrics");await recordAiMetric("export_failed");const {getDb}=await import("@/shared/db");await getDb().aiExportRequest.updateMany({where:{id:input.generationId,status:{not:"READY"}},data:{status:"FAILED"}});throw error;}},
 });

@@ -245,3 +245,7 @@
 - **Alan düzeyi kategori:** Şu an kategori tablo düzeyindedir; hassas alanlar ayrıca listelenir. Örneğin `Member.kimlikNo` için alan bazlı K0 ayrımı eklenebilir.
 - **Statik analizin sınırı:** Test `ai.ts` içindeki `.alan` erişimlerini ve doğrudan Prisma çağrılarını denetler. `name` gibi her tabloda bulunan genel alan adları ve `server` fonksiyonlarının iç detayı statik olarak ayırt edilemez; bunlar araç tasarımı ve `PseudonymVault` ile korunur.
 - **Saklama süreleri:** Tablo başına silme/anonimleştirme kuralları (ör. AI sohbetleri, e-posta logları, otomasyon çalıştırmaları).
+
+## AI v2 sunucu işleme ayrımı
+
+AI_TOOL_POLICY.serverReads kaynak sahibinin sunucu servisinde işleme yapmasını bildirir; bu veri modele açılmaz. K1 sınıfı K2'ye çevrilmez. `create_dues_dataset` yalnız geçici referans ve kayıt sayısı döndürür; adlar, iletişim alanları ve aidat satırları şifreli sunucu akışında kalır. `reads` model tarafına izin verilen mevcut K2/K3 projection beyanıdır. Yeni AiReferenceScope, AiEntityReference, AiProposal ve AiTurnClaim K0 sunucu kayıtlarıdır; AiDataset ve AiExportRequest K1'dir. AiUsageBucket yalnız kullanım sayaçlarıdır. Referans eşleştirmesi ve dosyalar yeniden modele okunamaz; dışa aktarma yetkisi model okuma yetkisi değildir.

@@ -5,7 +5,7 @@ import type { Prisma } from "@prisma/client";
 import { taskModuleKey } from "@/shared/automation/define";
 import { getDb } from "@/shared/db";
 
-import { findAutomationTask } from "../tasks/registry";
+import { automationTasks, findAutomationTask } from "../tasks/registry";
 import { assertTaskModulesUsable } from "./execution-control";
 import { createTaskExecutionRecord } from "./execution-store";
 
@@ -31,6 +31,13 @@ function errorCode(error: unknown): string {
  */
 export async function runDueSchedules(now = new Date()): Promise<number> {
   const db = getDb();
+  for(const task of automationTasks) {
+    const interval=task.schedule?.automaticIntervalMinutes;
+    if(!interval)continue;
+    if(!Number.isSafeInteger(interval)||interval<(task.schedule?.minIntervalMinutes ?? 60)||interval>MAX_INTERVAL_MINUTES)throw new Error("AUTOMATIC_SCHEDULE_INVALID");
+    try{await assertTaskModulesUsable(task.key);}catch{continue;}
+    await db.automationSchedule.upsert({where:{id:`maintenance:${task.key}`},create:{id:`maintenance:${task.key}`,taskKey:task.key,taskVersion:task.version,organizationId:"default",intervalMinutes:interval,nextRunAt:now,createdById:null},update:{taskVersion:task.version}});
+  }
   const due = await db.automationSchedule.findMany({
     where: { enabled: true, nextRunAt: { lte: now } },
     orderBy: { nextRunAt: "asc" },

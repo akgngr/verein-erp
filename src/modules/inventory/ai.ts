@@ -6,7 +6,7 @@ import { NO_INPUT, PROPOSED, aiAction, aiTool, defineModuleAi } from "@/shared/a
 import { can } from "@/shared/permissions/define";
 
 import { inventoryPermissions } from "./permissions";
-import { createInventoryAction, deleteInventoryAction, getInventoryCategorySummary, getInventoryStats, listInventoryItems, updateInventoryStatusAction } from "./server";
+import { getInventorySnapshot, createInventoryAction, deleteInventoryAction, getInventoryCategorySummary, getInventoryStats, listInventoryItems, updateInventoryStatusAction } from "./server";
 
 /** Envanter: zimmetli üye dönmez. Sözleşme: src/shared/ai/define.ts. */
 const STATUS = z.enum(["IN_USE", "IDLE", "BROKEN", "SCRAPPED"]);
@@ -123,9 +123,10 @@ export const ai = defineModuleAi({
     }),
     changeStatus: aiAction({
       operation: "update",
+      snapshot:({itemId})=>getInventorySnapshot(itemId),
       schema: z.object({ itemId: z.string().min(1).max(100), status: STATUS }),
       execute: async ({ itemId, status }) => outcome(await updateInventoryStatusAction({ id: itemId, status })),
     }),
-    delete: aiAction({ operation: "delete", schema: z.object({ itemId: z.string().min(1).max(100) }), execute: async ({ itemId }) => outcome(await deleteInventoryAction({ id: itemId })) }),
+    delete: aiAction({ operation: "delete", snapshot:({itemId})=>getInventorySnapshot(itemId), schema: z.object({ itemId: z.string().min(1).max(100) }), execute: async ({ itemId }) => outcome(await deleteInventoryAction({ id: itemId })) }),
   },
 });

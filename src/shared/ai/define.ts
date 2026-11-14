@@ -27,6 +27,7 @@ export type ModuleAiProposalInput = { action: string; title: string; details?: s
 
 export type ModuleAiContext = {
   user: AiUser;
+  createDataset: (args:{definition:unknown;selection:unknown;columns:string[]})=>Promise<string>;
   /** Bir onay kartı önerir; hiçbir veri değişmez. */
   propose: (proposal: ModuleAiProposalInput) => void;
   /** Model girdisindeki maskeleri ([PERSON_1] …) gerçek değerlere çevirir (yalnızca sunucuda kullanın). */
@@ -41,6 +42,7 @@ export type ModuleAiTool<S extends z.ZodType = z.ZodType> = {
   operation: AiOperation;
   /** Unstructured personal content is never sent to cloud providers. */
   processing?: "local_only";
+  requiresContent?: boolean;
   /** Modele yönelik açıklama (İngilizce). */
   description: string;
   schema: S;
@@ -49,16 +51,18 @@ export type ModuleAiTool<S extends z.ZodType = z.ZodType> = {
   run: (input: z.infer<S>, context: ModuleAiContext) => Promise<unknown>;
 };
 
-export type ModuleAiActionResult = { ok: boolean; error?: string };
+export type ModuleAiActionResult = { ok: boolean; error?: string; jobId?:string };
 
 export type ModuleAiAction<S extends z.ZodType = z.ZodType> = {
   operation: AiOperation;
   /** Onay sonrası payload bu şemayla yeniden doğrulanır. */
   schema: S;
-  execute: (payload: z.infer<S>) => Promise<ModuleAiActionResult>;
+  snapshot?: (payload: z.infer<S>) => Promise<unknown>;
+  execute: (payload: z.infer<S>, context?: {user:AiUser;conversationId:string;proposalId:string;requestDatasetExport:(plan:unknown)=>Promise<string>}) => Promise<ModuleAiActionResult>;
 };
 
 export type ModuleAi = {
+  contractVersion?: 1 | 2;
   module: string;
   tools: ModuleAiTool[];
   actions: Record<string, ModuleAiAction>;
@@ -67,7 +71,7 @@ export type ModuleAi = {
 /** Tip çıkarımı için yardımcılar. */
 export const aiTool = <S extends z.ZodType>(tool: ModuleAiTool<S>) => tool as unknown as ModuleAiTool;
 export const aiAction = <S extends z.ZodType>(action: ModuleAiAction<S>) => action as unknown as ModuleAiAction;
-export const defineModuleAi = (definition: ModuleAi): ModuleAi => definition;
+export const defineModuleAi = (definition: ModuleAi): ModuleAi => ({ ...definition, contractVersion: definition.contractVersion ?? 1 });
 
 /** Yaygın not: öneri yapıldıktan sonra modele dönen sonuç. */
 export const PROPOSED = { status: "proposed", note: "A confirmation card was shown to the user; nothing changes until they confirm." } as const; // i18n-ignore (model-facing tool text)

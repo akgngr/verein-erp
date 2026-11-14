@@ -42,6 +42,7 @@ export async function buildTaskWhere(
   }
 
   const statusFilter = params.filters.status;
+  if(statusFilter==="__open") conditions.push({status:{in:["OPEN","IN_PROGRESS"]}});
   if (statusFilter && statusFilter !== "*" && statusFilter !== "__all__") {
     if (TASK_STATUS_VALUES.includes(statusFilter as TaskStatus)) {
       conditions.push({ status: statusFilter as TaskStatus });

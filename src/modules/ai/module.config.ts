@@ -12,7 +12,7 @@ import { aiPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "ai",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.3.6",
+  version: "1.4.0",
   label: "Yapay zekâ asistanı",
   description: "Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuyan asistan.",
   category: "EXTENSION",
@@ -24,6 +24,10 @@ export const moduleConfig: ModuleConfig = {
   // Yapay zekâ sağlayıcı SDK'ları (`pnpm module:deps` kök package.json'a ekler).
   dependencies: { "@anthropic-ai/sdk": "^1.3.0", "@mistralai/mistralai": "^3.4.0", openai: "^7.45.1" },
   access: [
+    { module: "users", operations: ["read"] },
+    { module: "exports", operations: ["read", "write"] },
+    { module: "automation", operations: ["read", "write"] },
+
     { module: "auth", operations: ["read"] },
     { module: "members", operations: ["read"] }, // maskeleme: bilinen kişi adlarının listesi
     { module: "organization", operations: ["read"] }, // eski PDF raporlarında dernek anteti

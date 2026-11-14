@@ -5,6 +5,7 @@ model AiUserConsent {
   userId     String   @id // FK DEĞİL (yumuşak referans)
   version    Int
   provider   String   @default("")
+  policyRevision String @default("")
   acceptedAt DateTime @default(now())
 
   @@map("ai_user_consents")
@@ -40,6 +41,9 @@ model AiConversation {
   id        String      @id @default(cuid())
   userId    String // FK DEĞİL (yumuşak referans)
   titleEnc  String
+  revision Int @default(0)
+  activeTurnId String?
+  turnLeaseExpiresAt DateTime?
   createdAt DateTime    @default(now())
   updatedAt DateTime    @updatedAt
   messages  AiMessage[]
@@ -71,4 +75,119 @@ model AiReport {
 
   @@index([userId, createdAt])
   @@map("ai_reports")
+}
+
+/// Server-only scope. Tokens carry no identity and grant no permissions by themselves.
+model AiReferenceScope {
+  id             String @id @default(cuid())
+  userId         String
+  conversationId String?
+  deploymentId   String
+  purpose        String
+  policyRevision String
+  createdAt      DateTime @default(now())
+  expiresAt      DateTime
+  revokedAt      DateTime?
+  references     AiEntityReference[]
+  datasets       AiDataset[]
+
+  @@index([userId, expiresAt])
+  @@map("ai_reference_scopes")
+}
+
+model AiEntityReference {
+  id          String @id @default(cuid())
+  tokenDigest String @unique
+  scopeId     String
+  resource    String
+  recordId    String
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+  scope       AiReferenceScope @relation(fields: [scopeId], references: [id], onDelete: Cascade)
+
+  @@index([scopeId, resource, recordId])
+  @@map("ai_entity_references")
+}
+
+model AiDataset {
+  id             String @id @default(cuid())
+  tokenDigest    String @unique
+  scopeId        String
+  sourceModule   String
+  queryVersion   Int
+  definitionEnc  String
+  selectionEnc   String
+  selectionHash  String
+  allowedColumns Json
+  createdAt      DateTime @default(now())
+  expiresAt      DateTime
+  scope          AiReferenceScope @relation(fields: [scopeId], references: [id], onDelete: Cascade)
+
+  @@index([scopeId, expiresAt])
+  @@map("ai_datasets")
+}
+
+model AiProposal {
+  id               String @id @default(cuid())
+  userId           String
+  conversationId   String?
+  providerRevision String
+  moduleKey        String
+  actionKey        String
+  payloadEnc       String
+  previewEnc       String
+  payloadHash      String
+  preconditionsEnc String?
+  status           String @default("PENDING")
+  idempotencyKey   String @unique
+  executionId      String?
+  createdAt        DateTime @default(now())
+  expiresAt        DateTime
+  confirmedAt      DateTime?
+  completedAt      DateTime?
+
+  @@index([userId, expiresAt])
+  @@map("ai_proposals")
+}
+
+model AiTurnClaim {
+  id             String @id @default(cuid())
+  userId         String
+  conversationId String
+  requestKey     String
+  status         String @default("RUNNING")
+  leaseExpiresAt DateTime
+  resultEnc      String?
+  createdAt      DateTime @default(now())
+
+  @@unique([userId, conversationId, requestKey])
+  @@index([conversationId, status])
+  @@map("ai_turn_claims")
+}
+
+model AiUsageBucket {
+  scopeKey    String
+  windowStart DateTime
+  calls       Int @default(0)
+  tokens      Int @default(0)
+  @@id([scopeKey, windowStart])
+  @@map("ai_usage_buckets")
+}
+
+model AiExportRequest {
+  id String @id @default(cuid())
+  userId String
+  conversationId String
+  datasetId String
+  providerRevision String
+  format String
+  columns Json
+  status String @default("QUEUED")
+  proposalId String @unique
+  executionId String?
+  fileId String?
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+  @@index([userId,createdAt])
+  @@map("ai_export_requests")
 }

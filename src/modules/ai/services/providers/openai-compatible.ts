@@ -10,8 +10,8 @@ import { ProviderError, type ProviderAdapter, type ProviderRunArgs } from "./typ
  */
 export function openAiCompatibleAdapter(options: { apiKey: string; baseURL?: string; fetch?: typeof fetch }): ProviderAdapter {
   return {
-    async run({ model, system, turns, tools, maxToolRounds, beforeRequest, executeTool }: ProviderRunArgs) {
-      const client = new OpenAI({ apiKey: options.apiKey, baseURL: options.baseURL, fetch: options.fetch });
+    async run({ model, system, turns, tools, maxToolRounds, beforeRequest, signal, executeTool }: ProviderRunArgs) {
+      const client = new OpenAI({ apiKey: options.apiKey, baseURL: options.baseURL, fetch: options.fetch, maxRetries: 0, timeout: 30_000 });
       const messages: OpenAI.Chat.ChatCompletionMessageParam[] = [
         { role: "system", content: system },
         ...turns.map((turn) => ({ role: turn.role, content: turn.content }) as OpenAI.Chat.ChatCompletionMessageParam),
@@ -19,12 +19,14 @@ export function openAiCompatibleAdapter(options: { apiKey: string; baseURL?: str
       const usage = { inputTokens: 0, outputTokens: 0 };
       try {
         for (let round = 0; ; round += 1) {
-          await beforeRequest();
+          signal?.throwIfAborted();
+          await beforeRequest(Buffer.byteLength(JSON.stringify({system,tools,messages})));
           const response = await client.chat.completions.create({
             model,
+            max_completion_tokens: 4096,
             messages,
             tools: tools.map((tool) => ({ type: "function" as const, function: { name: tool.name, description: tool.description, parameters: tool.inputSchema } })),
-          });
+          }, { signal });
           usage.inputTokens += response.usage?.prompt_tokens ?? 0;
           usage.outputTokens += response.usage?.completion_tokens ?? 0;
           const choice = response.choices[0];

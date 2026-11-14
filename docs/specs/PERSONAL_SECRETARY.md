@@ -19,7 +19,7 @@ Durum: taslak · Hedef: KOBİ ve serbest çalışanlar için önerici asistan
 | S6 | Hızlı giriş (metin/ses) | tarayıcı Web Speech API | ayrıştırılmış kayıt taslağı |
 
 ## 3. Teknik yapı
-- `AssistantSuggestion` tablosu (K1): id, userId, kind, sourceModule, sourceId, payload (yalnız kimlikler + öneri alanları), status (PENDING, ACCEPTED, DISMISSED), expiresAt.
+- `AiProposal` tablosu (K1): id, userId, kind, sourceModule, sourceId, payload (yalnız kimlikler + öneri alanları), status (PENDING, ACCEPTED, DISMISSED), expiresAt.
 - Onaylanan öneri, hedef modülün mevcut server action'ını çağırır (izin kontrolleri aynen geçerli).
 - Brifing: pg-boss zamanlanmış görevi, kullanıcı başına; sonuç K1, 7 gün saklama.
 - OCR: yerel motor (Tesseract) öncelikli; dış AI yalnız kullanıcı açarsa ve maskelenmiş metinle.
@@ -27,7 +27,7 @@ Durum: taslak · Hedef: KOBİ ve serbest çalışanlar için önerici asistan
 
 ## 4. Yapılacaklar
 - [ ] Takvim senkron eklentileri (S4 ön koşulu) — devam ediyor
-- [ ] `AssistantSuggestion` modeli + öneri kutusu UI + veri politikası
+- [ ] `AiProposal` modeli + öneri kutusu UI + veri politikası
 - [ ] S1 günlük brifing (zamanlama + kart)
 - [ ] S3 Evrak yeniden tasarımı: OCR + AI doldurma anahtarı
 - [ ] S2 mail sınıflandırma önerileri
@@ -35,3 +35,7 @@ Durum: taslak · Hedef: KOBİ ve serbest çalışanlar için önerici asistan
 - [ ] S4 boş zaman bulma
 - [ ] S6 hızlı giriş
 - [ ] Her adımda: politika testi, tr/de, tarayıcı kontrolü
+
+## v2 uyumu
+
+Öneri deposunun tek uygulama kaynağı AiProposal modelidir. Durumlar PENDING, EXECUTING, APPLIED, FAILED, CANCELLED olarak yürütülür. Buradaki S1–S6 ürünleri çekirdek v2 sonrasında ayrı kabul testleriyle tamamlanır; tamamlandı olarak işaretlenmemiştir.

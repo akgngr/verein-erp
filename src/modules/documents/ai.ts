@@ -35,6 +35,7 @@ export const ai = defineModuleAi({
     aiTool({
       name: "list_documents",
       processing: "local_only",
+      requiresContent:true,
       operation: "read",
       allowed: (user) => can(user.role, documentsPermissions, "view"),
       description: "Search the correspondence register (incoming/outgoing letters). Returns id, registry number, dates, counterparty, subject, status, category and file count. Optional free-text query and filters.", // i18n-ignore (model-facing tool text)
@@ -76,6 +77,7 @@ export const ai = defineModuleAi({
     aiTool({
       name: "get_document",
       processing: "local_only",
+      requiresContent:true,
       operation: "read",
       allowed: (user) => can(user.role, documentsPermissions, "view"),
       description: "Details of one document: subject, summary, dates, status, category, reply chain and attached files (id, name, type). Use read_document_file to read an attachment.", // i18n-ignore (model-facing tool text)
@@ -104,6 +106,7 @@ export const ai = defineModuleAi({
     aiTool({
       name: "read_document_file",
       processing: "local_only",
+      requiresContent:true,
       operation: "read",
       allowed: (user) => can(user.role, documentsPermissions, "view"),
       description: "Reads the text of an attached file (PDF with text layer, Word .docx, Excel .xlsx) so you can summarise it or answer questions. Scanned PDFs and images have no text. Personal identifiers in the text are masked.", // i18n-ignore (model-facing tool text)
@@ -184,9 +187,10 @@ export const ai = defineModuleAi({
     create: aiAction({ operation: "create", schema: createSchema, execute: (input) => createDocumentAction(input) }),
     changeStatus: aiAction({
       operation: "update",
+      snapshot: (input)=>getDocumentDetail(input.documentId),
       schema: z.object({ documentId: z.string().min(1).max(100), status: STATUS }),
       execute: ({ documentId, status }) => changeStatusAction({ id: documentId, status }),
     }),
-    delete: aiAction({ operation: "delete", schema: z.object({ documentId: z.string().min(1).max(100) }), execute: ({ documentId }) => deleteDocumentAction({ id: documentId }) }),
+    delete: aiAction({ operation: "delete", snapshot: (input)=>getDocumentDetail(input.documentId), schema: z.object({ documentId: z.string().min(1).max(100) }), execute: ({ documentId }) => deleteDocumentAction({ id: documentId }) }),
   },
 });

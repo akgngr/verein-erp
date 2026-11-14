@@ -16,3 +16,5 @@ export {
 export { scheduleTask } from "./services/schedules";
 // Diğer modüllerin (ör. Kampanyalar) kendi iş akışlarını oluşturması için; yetki denetimi çağıranın action'ındadır.
 export { createWorkflow, saveWorkflowDraft, publishWorkflow, startWorkflow, setWorkflowEnabled, WorkflowPublishError } from "./services/workflows";
+export { insertTaskExecution } from "./services/execution-store";
+export { getAutomationRuntimeConfig } from "./runtime-config";

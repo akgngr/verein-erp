@@ -9,6 +9,7 @@ import { useEffect, useRef, useState, type CSSProperties, type PointerEvent as R
 import { announceSidePanel } from "@/shared/components/side-panel-events";
 import { cn } from "@/shared/utils";
 
+import { AiExportJob } from "./export-job";
 import { acceptAiConsentAction } from "../actions/consent-actions";
 import { executeAiProposalAction } from "../actions/execute-proposal";
 import { deleteAiConversationAction, getAiConversationAction, listAiConversationsAction } from "../actions/history-actions";
@@ -149,6 +150,7 @@ export function AiChatPanel({
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
   const [accepting, setAccepting] = useState(false);
+  const [exportJobs,setExportJobs]=useState<Record<string,string>>({});
   const [done, setDone] = useState<Set<string>>(new Set());
   const endRef = useRef<HTMLDivElement>(null);
 
@@ -233,7 +235,7 @@ export function AiChatPanel({
       const response = await fetch("/api/ai/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ conversationId, message: content }),
+        body: JSON.stringify({ requestKey:crypto.randomUUID(), conversationId, message: content }),
       });
       const data = (await response.json()) as {
         ok: boolean;
@@ -271,11 +273,12 @@ export function AiChatPanel({
   };
 
   const confirmProposal = async (key: string, proposal: AiProposal) => {
-    const result = await executeAiProposalAction(proposal);
+    const result = await executeAiProposalAction({proposalId:proposal.proposalId});
     if (!result.ok) {
       addToast({ title: result.error, color: "danger" });
       return;
     }
+    if(result.data.jobId)setExportJobs(previous=>({...previous,[key]:result.data.jobId!}));
     setDone(new Set(done).add(key));
     addToast({ title: proposalText(proposal, "done"), color: "success" });
   };
@@ -533,6 +536,7 @@ export function AiChatPanel({
                           >
                             {done.has(key) ? t("proposal.applied") : turn.restored ? t("proposal.restored") : proposalText(proposal, "confirm")}
                           </Button>
+                          {exportJobs[key]?<AiExportJob id={exportJobs[key]}/>:null}
                         </div>
                       );
                     })}

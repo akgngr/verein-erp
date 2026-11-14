@@ -2,11 +2,18 @@ import "server-only";
 
 import type { SessionUser } from "@/modules/auth";
 
+import { ActionError } from "@/modules/auth/server";
+import { canonicalCloudIntent } from "./cloud-policy";
+import { reserveAiUsage } from "./usage";
+import { prepareProposal } from "./proposal-store";
+import { providerRevision } from "./provider-revision";
+import { moduleAiRegistry } from "@/ai-registry";
+import type { AiProposal } from "../types";
 import { requireCurrentAiAccess } from "./access";
 import { loadKnownIdentifiers } from "./known-identifiers";
 import { PseudonymVault } from "./privacy";
 import { adapterFor, getProviderSettings, type AiProviderId } from "./providers";
-import type { AiFile, AiProposal as AssistantProposal } from "../types";
+import type { AiFile, AiProposalDraft as AssistantProposal } from "../types";
 import { availableTools, runTool, unavailableTools } from "./tools";
 import { getTranslations } from "next-intl/server";
 
@@ -15,7 +22,7 @@ const MAX_TOOL_ROUNDS = 6;
 export type ChatTurn = { role: "user" | "assistant"; content: string };
 export type AssistantResult = {
   reply: string;
-  proposals: AssistantProposal[];
+  proposals: AiProposal[];
   files: AiFile[];
   toolsUsed: string[];
   usage: { inputTokens: number; outputTokens: number };
@@ -41,9 +48,11 @@ function systemPrompt(locale: string, orgToday: string, blocked: string): string
  * araçlar kullanıcının yetkisiyle çalışır, yanıt kullanıcıya dönerken yer tutucular çözülür.
  * Sohbet geçmişi sunucuda kullanıcıya özel ve şifreli saklanır.
  */
-export async function runAssistant(args: { user: SessionUser; locale: string; provider: AiProviderId; turns: ChatTurn[] }): Promise<AssistantResult> {
+export async function runAssistant(args: { user: SessionUser; locale: string; provider: AiProviderId; conversationId: string; turns: ChatTurn[] }): Promise<AssistantResult> {
   await requireCurrentAiAccess(args.user.id, args.provider);
-  const vault = new PseudonymVault(await loadKnownIdentifiers());
+  const canonical=args.provider==="local"?null:canonicalCloudIntent(args.turns.at(-1)?.content ?? "",Number(new Date().toLocaleDateString("en-CA",{timeZone:"Europe/Berlin"}).slice(0,4)));
+  if(args.provider!=="local"&&!canonical)throw new ActionError("ai.errors.cloudIntentRequired");
+  const vault = new PseudonymVault(args.provider === "local" ? await loadKnownIdentifiers() : {});
   const tools = await availableTools(args.user, args.provider);
   const byName = new Map(tools.map((tool) => [tool.name, tool]));
   const proposals: AssistantProposal[] = [];
@@ -56,26 +65,34 @@ export async function runAssistant(args: { user: SessionUser; locale: string; pr
   const fixWhere: Record<string, string> = {
     module: "module inactive or access not approved → Settings → Modules", // i18n-ignore (model-facing prompt)
     matrix: "assistant permission off → Settings → AI assistant → module card", // i18n-ignore (model-facing prompt)
-    privacy: "document text requires the local provider → Settings → AI assistant → provider", // i18n-ignore (model-facing prompt)
+    feature:"personal export feature flag off → deployment configuration AI_PERSONAL_EXPORT_ENABLED", // i18n-ignore (model-facing)
+    privacy: "cloud processing is limited to approved numeric summaries → Settings → AI assistant → provider", // i18n-ignore (model-facing prompt)
     role: "the user's role lacks this permission → Users → Roles & permissions", // i18n-ignore (model-facing prompt)
   };
   const blocked = (await unavailableTools(args.user, args.provider))
     .map((tool) => `- ${tool.name} – ${tRoot.has(`${tool.module}.module.label`) ? tRoot(`${tool.module}.module.label`) : tool.module} – ${tool.operation} – ${fixWhere[tool.reason]}`)
     .join("\n");
 
+  let callCount=0;
+  const signal=AbortSignal.timeout(120_000);
+  const revision=await providerRevision(args.provider);
   const settings = await getProviderSettings(args.provider);
   const result = await adapterFor(settings).run({
     model: settings.model ?? "",
     system: systemPrompt(args.locale, today, blocked),
-    turns: args.turns.map((turn) => ({ role: turn.role, content: vault.redact(turn.content) })),
+    turns: canonical?[{role:"user",content:canonical}]:args.turns.map((turn) => ({ role: turn.role, content: vault.redact(turn.content) })),
     tools: tools.map((tool) => ({ name: tool.name, description: tool.description, inputSchema: tool.inputSchema as Record<string, unknown> })),
     maxToolRounds: MAX_TOOL_ROUNDS,
-    beforeRequest: async () => { await requireCurrentAiAccess(args.user.id, args.provider); },
+    signal,
+    beforeRequest: async (bytes=0) => { signal.throwIfAborted(); await requireCurrentAiAccess(args.user.id,args.provider); await reserveAiUsage(args.user.id,"model",bytes); },
     executeTool: async (name, input) => {
+      signal.throwIfAborted();
+      if(++callCount>20) return {content:"AI_TOOL_BUDGET",isError:true};
       toolsUsed.push(name);
       const tool = byName.get(name);
       if (!tool) return { content: "TOOL_NOT_AVAILABLE", isError: true };
-      const outcome = await runTool(tool, input, { user: args.user, proposals, files, restore: (text) => vault.restore(text) }, args.provider);
+      const outcome = await runTool(tool, input, { user: args.user,conversationId:args.conversationId,policyRevision:revision, proposals, files, restore: (text) => vault.restore(text) }, args.provider);
+      if(outcome.ok && Buffer.byteLength(JSON.stringify(outcome.value) ?? "")>65_536) return {content:"AI_OUTPUT_BYTE_LIMIT",isError:true};
       return outcome.ok ? { content: JSON.stringify(vault.redactValue(outcome.value)), isError: false } : { content: outcome.error, isError: true };
     },
   });
@@ -85,7 +102,14 @@ export async function runAssistant(args: { user: SessionUser; locale: string; pr
     reply: result.refused ? refusal : vault.restore(result.text),
     // Önerilerdeki metinler kullanıcıya dönerken yer tutuculardan çözülür.
     // payload iç içe olabilir: tüm metin alanları derinlemesine çözülür.
-    proposals: proposals.map((proposal) => restoreDeep(proposal, (value) => vault.restore(value))),
+    proposals: await Promise.all(proposals.map(async proposal => {
+      const draft = restoreDeep(proposal, value => vault.restore(value));
+      const action = moduleAiRegistry.find(entry => entry.module === draft.module)?.actions[draft.action];
+      const parsed = action?.schema.safeParse(draft.payload);
+      if (!action || !parsed?.success) throw new Error("AI_PROPOSAL_INVALID");
+      const state = action.snapshot ? await action.snapshot(parsed.data) : undefined;
+      return prepareProposal({userId:args.user.id,conversationId:args.conversationId,revision:await providerRevision(args.provider),draft:{...draft,payload:parsed.data},preconditions:state});
+    })),
     files: files.map((file) => ({ ...file, title: vault.restore(file.title) })),
     toolsUsed,
     usage: { inputTokens: result.inputTokens, outputTokens: result.outputTokens },

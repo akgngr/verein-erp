@@ -44,8 +44,8 @@ export async function extractTextFromBytes(data: Uint8Array, mimeType: string): 
     const normalized = text.replace(/\u0000/g, "").replace(/[ \t]+\n/g, "\n").replace(/\n{3,}/g, "\n\n").trim();
     if (!normalized) return { text: null, truncated: false, reason: "empty" };
     return { text: normalized.slice(0, MAX_EXTRACTED_CHARS), truncated: normalized.length > MAX_EXTRACTED_CHARS };
-  } catch (error) {
-    console.error("[shared/files] Metin çıkarılamadı:", (error as Error).message);
+  } catch {
+    console.error("[shared/files] TEXT_EXTRACTION_FAILED");
     return { text: null, truncated: false, reason: "failed" };
   }
 }

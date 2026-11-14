@@ -34,3 +34,24 @@ Kalıcı AiProposal/idempotency, scoped token/dataset, kişisel server-side expo
 Cleanup'ın otomatik schedule kurulumu, batching ve DB entegrasyon testleri tamamlanmalıdır.
 Tema değişikliği yapılmadı. Shopify benzeri sade, tutarlı ve zarif panel tasarımı güvenilirlik
 kabulü sonrasında ayrı çalışma olarak ele alınacaktır.
+
+## İkinci uygulama paketi — v2 runtime
+
+- Input/result/projection şemaları, alan allowlist'i, satır/byte/süre limitleri ve duplicate isim koruması. İlk canlı v2 araç: create_dues_dataset; eski araçlar açık legacy sürümüyle kalır.
+- Altı yeni çekirdek tablo ve AiExportRequest; kişi tablolarına aiKey eklenmedi. Migration ayrı test veritabanında hem temiz kurulum hem mevcut migration zincirinden yükseltme ile sınandı.
+- Şifreli ve kullanıcıya bağlı öneriler; sadece proposalId ile onay, atomik claim ve kaynak snapshot kontrolü.
+- 256 bit geçici referanslar, digest lookup, scope/TTL/revoke ve şifreli dataset seçimi.
+- Aidat CSV/XLSX planı → onay → atomik automation execution/outbox → yetkili worker → sunucuda kişi birleştirme → rolü yeniden kontrol eden indirme. Kişisel export bayrağı varsayılan kapalıdır.
+- Ortak kullanım sayaçları, request deadline, konuşma claim ve cevap tekrar kullanımı. EUR bütçe garantisi değildir.
+- Anahtar sürümü ve read-old/write-new desteği; dosya silmede tombstone ve aged orphan reconciliation.
+- Otomatik bakım zamanlamaları ve içerik taşımayan hata sayaçları.
+- Bulut istekleri hazır niyetlerden kanonikleştirilir; serbest kullanıcı metni ve eski sohbet geçmişi buluta gönderilmez. Belge metni için ek read_content izni gerekir.
+
+Üretim deploy/migration yapılmadı. Yerel tam üretim derlemesi bellek sınırına takıldı; CI kabulü olmadan hazır sürüm sayılmamalı. Gerçek sağlayıcı hesabının bölge, sözleşme ve saklama ayarları doğrulanmadı. Önceki bölümdeki eksikler için bu bölüm ve güncel TODO esas alınır.
+
+### Yerel doğrulama kaydı
+
+- Ayrı PostgreSQL 18 test DB'sinde eski migration zinciri → yeni migration yükseltmesi uygulandı. Şema drift kontrolü: fark yok.
+- 449 test, 107 suite, 449 başarılı, 0 başarısız ve 0 atlandı (DB testleri dahil). Sonraki yalnız çeviri metni değişikliği için i18n/type/lint yeniden kontrol edilir.
+- TypeScript, 36 modül doğrulaması, i18n/hardcoded text, hedefli ESLint geçti.
+- Yerel webpack üretim build'i varsayılan heap ile OOM, 6 GiB denemesinde ortam tarafından SIGKILL aldı. Build kabulü açık; bu yüzden paket taslak PR olarak sunulur.

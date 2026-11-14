@@ -146,9 +146,10 @@ export const ai = defineModuleAi({
     }),
     changeStatus: aiAction({
       operation: "update",
+      snapshot: (input)=>getMeeting(input.meetingId),
       schema: z.object({ meetingId: z.string().min(1).max(100), status: STATUS, reason: z.string().max(500).nullable() }),
       execute: (input) => changeMeetingStatusAction(input),
     }),
-    delete: aiAction({ operation: "delete", schema: z.object({ meetingId: z.string().min(1).max(100) }), execute: ({ meetingId }) => deleteMeetingAction({ id: meetingId }) }),
+    delete: aiAction({ operation: "delete", snapshot: (input)=>getMeeting(input.meetingId), schema: z.object({ meetingId: z.string().min(1).max(100) }), execute: ({ meetingId }) => deleteMeetingAction({ id: meetingId }) }),
   },
 });

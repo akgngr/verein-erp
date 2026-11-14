@@ -4,13 +4,15 @@ import { z } from "zod";
 
 import type { SessionUser } from "@/modules/auth";
 
-import type { AiFile, AiProposal } from "../types";
+import type { AiFile, AiProposalDraft } from "../types";
 import type { AiOperation } from "./permissions";
 
 /** Asistan araçlarının ortak tanımları (tools.ts ve tools-extended.ts). */
 export type ToolContext = {
   user: SessionUser;
-  proposals: AiProposal[];
+  conversationId:string;
+  policyRevision:string;
+  proposals: AiProposalDraft[];
   /** Oluşturulan dosyalar yanıtın altında indirme düğmesi olarak gösterilir. */
   files: AiFile[];
   /** Model girdisindeki yer tutucuları ([PERSON_1] …) gerçek değerlere çevirir (yalnızca sunucuda). */
@@ -19,10 +21,12 @@ export type ToolContext = {
 
 export type ToolDefinition<S extends z.ZodType> = {
   name: string;
+  contractVersion?:1|2;
   module: string;
   /** İzin matrisindeki işlem (kapalıysa araç modele hiç sunulmaz). */
   operation: AiOperation;
   processing?: "local_only";
+  requiresContent?:boolean;
   allowed: (user: SessionUser) => boolean;
   description: string;
   schema: S;

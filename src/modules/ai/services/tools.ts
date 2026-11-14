@@ -1,5 +1,9 @@
 import "server-only";
 
+import { AI_TOOL_POLICY,DATA_POLICY,type TablePolicy } from "@/shared/data-policy";
+import { cloudToolAllowed } from "./cloud-policy";
+import { createReferenceScope,saveDataset } from "./references";
+import { assertUniqueToolNames } from "@/shared/ai/v2";
 import type { z } from "zod";
 
 import { requireCurrentAiAccess } from "./access";
@@ -27,16 +31,25 @@ const MODULE_TOOLS = moduleAiRegistry.flatMap((entry) =>
   entry.tools.map((tool) =>
     define({
       name: tool.name,
+      contractVersion:"contractVersion" in tool && tool.contractVersion===2?2:1,
       module: entry.module,
       operation: tool.operation,
       processing: tool.processing,
+      requiresContent:tool.requiresContent,
       allowed: (user) => tool.allowed(user),
       description: tool.description,
       schema: tool.schema,
       inputSchema: tool.inputSchema,
-      run: (input, { user, proposals, files, restore }) =>
+      run: (input, { user, proposals, files, restore,conversationId,policyRevision }) =>
         tool.run(input, {
           user,
+          createDataset:async args=>{
+            const policy=AI_TOOL_POLICY[tool.name as keyof typeof AI_TOOL_POLICY];
+            if(!policy || !("serverReads" in policy) || !policy.serverReads.every(table=>DATA_POLICY[table].owner===entry.module && (DATA_POLICY as Record<string,TablePolicy>)[table].category!=="K0")) throw new Error("AI_DATASET_SOURCE_DENIED");
+            const actor={userId:user.id,conversationId,policyRevision};
+            const scope=await createReferenceScope(actor,"dataset-export");
+            return saveDataset(actor,{scopeId:scope.id,sourceModule:entry.module,...args});
+          },
           restore,
           attachFile: (file) => files.push(file),
           propose: (proposal) => {
@@ -49,15 +62,24 @@ const MODULE_TOOLS = moduleAiRegistry.flatMap((entry) =>
   ),
 );
 
+for(const entry of moduleAiRegistry)for(const tool of entry.tools){
+ if("contractVersion" in tool&&tool.contractVersion===2){
+  const registered=AI_TOOL_POLICY[tool.name as keyof typeof AI_TOOL_POLICY];
+  const policy="policy" in tool?tool.policy as {modelFields:readonly string[];serverReads:readonly string[]}:null;
+  if(!registered||registered.module!==entry.module||!("modelFields" in registered)||!policy||policy.modelFields.some(field=>!registered.modelFields.some(allowed=>allowed===field)))throw new Error("AI_V2_POLICY_MISMATCH");
+ }
+}
+assertUniqueToolNames(MODULE_TOOLS);
 const TOOLS = MODULE_TOOLS;
+const featureAvailable=(name:string)=>!["create_dues_dataset","propose_dataset_export"].includes(name)||process.env.AI_PERSONAL_EXPORT_ENABLED==="true";
 
 /** Bu kullanıcı için şu an kullanılabilir araçlar (modül izni + kullanıcı yetkisi). */
 export async function availableTools(user: SessionUser, provider?: AiProviderId) {
   const [usable, matrix] = await Promise.all([listUsableModuleKeys().then((keys) => new Set(keys)), getAiPermissions()]);
-  return TOOLS.filter((tool) => isAllowed(matrix, tool.module, tool.operation) && usable.has(tool.module) && tool.allowed(user) && (tool.processing !== "local_only" || provider === "local"));
+  return TOOLS.filter((tool) => isAllowed(matrix, tool.module, tool.operation) && (!tool.requiresContent||isAllowed(matrix,tool.module,"read_content")) && usable.has(tool.module) && tool.allowed(user) && featureAvailable(tool.name) && (provider === "local" || (tool.processing !== "local_only" && cloudToolAllowed(tool.name))));
 }
 
-export type UnavailableReason = "module" | "matrix" | "role" | "privacy";
+export type UnavailableReason = "module" | "matrix" | "role" | "privacy" | "feature";
 
 /**
  * Kullanıcının şu an KULLANAMADIĞI araçlar ve gerçek sebebi (ilk engelleyen kapı):
@@ -69,7 +91,7 @@ export type UnavailableReason = "module" | "matrix" | "role" | "privacy";
 export async function unavailableTools(user: SessionUser, provider?: AiProviderId): Promise<{ name: string; module: string; operation: AiOperation; reason: UnavailableReason }[]> {
   const [usable, matrix] = await Promise.all([listUsableModuleKeys().then((keys) => new Set(keys)), getAiPermissions()]);
   return TOOLS.flatMap((tool) => {
-    const reason: UnavailableReason | null = !usable.has(tool.module) ? "module" : !isAllowed(matrix, tool.module, tool.operation) ? "matrix" : !tool.allowed(user) ? "role" : tool.processing === "local_only" && provider !== "local" ? "privacy" : null;
+    const reason: UnavailableReason | null = !usable.has(tool.module) ? "module" : !isAllowed(matrix, tool.module, tool.operation) || (tool.requiresContent&&!isAllowed(matrix,tool.module,"read_content")) ? "matrix" : !tool.allowed(user) ? "role" : !featureAvailable(tool.name)?"feature":provider !== "local" && (tool.processing === "local_only" || !cloudToolAllowed(tool.name)) ? "privacy" : null;
     return reason ? [{ name: tool.name, module: tool.module, operation: tool.operation, reason }] : [];
   });
 }
@@ -78,7 +100,7 @@ export async function unavailableTools(user: SessionUser, provider?: AiProviderI
 export function supportedOperations(): Record<string, AiOperation[]> {
   const result: Record<string, AiOperation[]> = {};
   for (const tool of TOOLS) {
-    result[tool.module] = [...new Set([...(result[tool.module] ?? []), tool.operation])];
+    result[tool.module] = [...new Set([...(result[tool.module] ?? []), tool.operation,...(tool.requiresContent?["read_content" as const]:[])])];
   }
   return result;
 }
@@ -92,7 +114,8 @@ export async function runTool(tool: AvailableTool, rawInput: unknown, context: T
   if (!parsed.success) return { ok: false, error: "INVALID_INPUT" };
   try {
     const { user, modules, provider } = await requireCurrentAiAccess(context.user.id, expectedProvider);
-    if (!modules.includes(tool.module) || !isAllowed(await getAiPermissions(), tool.module, tool.operation) || !tool.allowed(user) || (tool.processing === "local_only" && provider !== "local")) return { ok: false, error: "TOOL_NOT_AVAILABLE" };
+    const matrix=await getAiPermissions();
+    if ((tool.requiresContent&&!isAllowed(matrix,tool.module,"read_content")) || !featureAvailable(tool.name) || !modules.includes(tool.module) || !isAllowed(await getAiPermissions(), tool.module, tool.operation) || !tool.allowed(user) || (provider !== "local" && (tool.processing === "local_only" || !cloudToolAllowed(tool.name)))) return { ok: false, error: "TOOL_NOT_AVAILABLE" };
     return { ok: true, value: await (tool.run as (input: unknown, context: ToolContext) => Promise<unknown>)(parsed.data, { ...context, user }) };
   } catch {
     console.error("[ai] TOOL_FAILED", { tool: tool.name });

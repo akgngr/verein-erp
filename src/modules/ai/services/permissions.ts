@@ -10,7 +10,7 @@ import { getDb } from "@/shared/db";
  * işaretlenmeyen hiçbir işlemin aracı modele sunulmaz. Yazma işlemleri ayrıca her seferinde
  * kullanıcının karttan onayını ve kendi rol yetkisini gerektirir.
  */
-export const AI_OPERATIONS = ["read", "create", "update", "delete"] as const;
+export const AI_OPERATIONS = ["read", "create", "update", "delete", "read_content"] as const;
 export type AiOperation = (typeof AI_OPERATIONS)[number];
 export type AiPermissionMatrix = Record<string, AiOperation[]>;
 

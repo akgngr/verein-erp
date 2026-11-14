@@ -5,7 +5,7 @@
 /** Asistanın oluşturduğu, kullanıcının indirebileceği dosya (yanıtın altında düğme olarak). */
 export type AiFile = { title: string; url: string; format: string };
 
-export type AiProposal = {
+export type AiProposalDraft = {
   kind: "module";
   module: string;
   action: string;
@@ -14,3 +14,5 @@ export type AiProposal = {
   details: string[];
   payload: unknown;
 };
+
+export type AiProposal = Omit<AiProposalDraft, "payload"> & { proposalId: string };

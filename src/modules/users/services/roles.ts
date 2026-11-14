@@ -55,8 +55,8 @@ async function build(): Promise<{ policy: PermissionPolicy; directory: RoleInfo[
 }
 
 /** Politikayı yükler ve sunucudaki can(...) için etkinleştirir. */
-export async function loadPermissionPolicy(): Promise<PermissionPolicy> {
-  if (!cache || Date.now() - cache.at > CACHE_MS) cache = { at: Date.now(), ...(await build()) };
+export async function loadPermissionPolicy(force=false): Promise<PermissionPolicy> {
+  if (force || !cache || Date.now() - cache.at > CACHE_MS) cache = { at: Date.now(), ...(await build()) };
   setActivePermissionPolicy(cache.policy);
   return cache.policy;
 }

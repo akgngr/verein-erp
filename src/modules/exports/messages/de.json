@@ -8,7 +8,8 @@
   },
   "access": {
     "organization": "Verwendet den Briefkopf des Vereins (Name, Adresse, Logo) in PDF-Dateien.",
-    "system": "Liest Modulzustände, damit Format-Plugins anderer Module nur bei aktivem Modul genutzt werden."
+    "system": "Liest Modulzustände, damit Format-Plugins anderer Module nur bei aktivem Modul genutzt werden.",
+    "members": "Autorisierte Dateierstellung und Berechtigungsprüfung zur Laufzeit."
   },
   "title": "Meine Dateien",
   "description": "Dateien, die der Assistent oder die Module für Sie erstellt haben. Nur Sie können sie sehen; sie werden nach {days} Tagen automatisch gelöscht.",
@@ -46,5 +47,13 @@
       "label": "Meine Dateien",
       "description": "Eigene erstellte Dateien (PDF, Excel, Word …)."
     }
-  }
+  },
+  "ai": {
+    "datasetExport": {
+      "kind": "Datensatz exportieren",
+      "confirm": "Datei erstellen",
+      "done": "Datei wurde eingereiht"
+    }
+  },
+  "cleanup_files": "Abgelaufene und verwaiste Dateien bereinigen"
 }

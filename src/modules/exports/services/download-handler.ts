@@ -2,6 +2,7 @@ import "server-only";
 
 import { NextResponse } from "next/server";
 
+import { memberPaymentsPermissions } from "@/modules/members/automation";
 import { writeAudit } from "@/shared/audit/write-audit";
 import { translateMessage } from "@/shared/i18n/translate-message";
 import { can } from "@/shared/permissions/define";
@@ -26,6 +27,7 @@ export async function downloadGeneratedFileHandler(id: string): Promise<Response
   if (!can(user.role, exportsPermissions, "view")) return NextResponse.json({ ok: false, error: await translateMessage("common.errors.forbidden") }, { status: 403 });
   const file = await readGeneratedFile(user.id, id);
   if (!file) return NextResponse.json({ ok: false, error: await translateMessage("exports.errors.notFound") }, { status: 404 });
+  if(file.source==="members.dues" && !can(user.role,memberPaymentsPermissions,"view")) return NextResponse.json({ok:false,error:await translateMessage("common.errors.forbidden")},{status:403});
   await writeAudit({ userId: user.id, userLabel: buildUserLabel(user.name, user.email), action: "FILE_DOWNLOAD", entity: "GeneratedFile", entityId: id });
   const name = safeName(file.title, file.extension);
   return new Response(new Uint8Array(file.bytes), {
