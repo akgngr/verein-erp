@@ -174,7 +174,7 @@ test("isolated AI proposal and aggregate queries never read protected or undecla
  const files=sourceFiles("src/modules").filter(file=>/services[\/]ai-(proposal-tools|statistics-tool)\.ts$/.test(file)||/queries[\/]ai-(target|stats)\.ts$/.test(file));
  for(const file of files){
   const moduleKey=areaOf(file)!,code=codeOnly(fs.readFileSync(file,"utf8"));
-  const declared=new Set(Object.values(tools).filter(tool=>tool.module===moduleKey).flatMap(tool=>tool.serverReads??[]));
+  const declared=new Set<string>(Object.values(tools).filter(tool=>tool.module===moduleKey).flatMap(tool=>tool.serverReads??[]));
   for(const [name,entry]of Object.entries(policy))if(PRISMA_CALL(name).test(code)){
    assert.notEqual(entry.category,"K0",`${file} reads protected source ${name}`);
    assert.equal(entry.owner,moduleKey,`${file} must use its own source`);
