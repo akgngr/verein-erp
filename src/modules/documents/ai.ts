@@ -1,6 +1,7 @@
 import "server-only";
 
 import { z } from "zod";
+import {aiListCursor,aiListPage,aiPageInfo} from "@/shared/ai/pagination";
 
 import { DATE_RE, PROPOSED, aiAction, aiTool, defineModuleAi, isoDay } from "@/shared/ai/define";
 import { parseListParams } from "@/shared/list-params";
@@ -39,10 +40,11 @@ export const ai = defineModuleAi({
       operation: "read",
       allowed: (user) => can(user.role, documentsPermissions, "view"),
       description: "Search the correspondence register (incoming/outgoing letters). Returns id, registry number, dates, counterparty, subject, status, category and file count. Optional free-text query and filters.", // i18n-ignore (model-facing tool text)
-      schema: z.object({ query: z.string().max(100).nullable(), status: z.enum(["OPEN", "IN_PROGRESS", "COMPLETED", "ARCHIVED"]).nullable(), direction: z.enum(["INCOMING", "OUTGOING"]).nullable() }),
+      schema: z.object({ cursor:aiListCursor, query: z.string().max(100).nullable(), status: z.enum(["OPEN", "IN_PROGRESS", "COMPLETED", "ARCHIVED"]).nullable(), direction: z.enum(["INCOMING", "OUTGOING"]).nullable() }),
       inputSchema: {
         type: "object",
         properties: {
+          cursor:{type:"string",pattern:"^[1-9]\\d{0,3}$"},
           query: { type: ["string", "null"] },
           status: { type: ["string", "null"], enum: ["OPEN", "IN_PROGRESS", "COMPLETED", "ARCHIVED", null] },
           direction: { type: ["string", "null"], enum: ["INCOMING", "OUTGOING", null] },
@@ -50,14 +52,14 @@ export const ai = defineModuleAi({
         required: ["query", "status", "direction"],
         additionalProperties: false,
       },
-      run: async ({ query, status, direction }, { user }) => {
+      run: async ({ cursor, query, status, direction }, { user }) => {
         const params = parseListParams(
-          { pageSize: "50", ...(query ? { q: query } : {}), ...(status ? { status } : {}), ...(direction ? { direction } : {}) },
+          { page:String(aiListPage(cursor)),pageSize: "50", ...(query ? { q: query } : {}), ...(status ? { "filter.status":status } : {}), ...(direction ? { "filter.direction":direction } : {}) },
           { sortableFields: DOCUMENT_SORTABLE_FIELDS, defaultSort: DOCUMENT_DEFAULT_SORT, defaultDir: "desc", filterKeys: ["direction", "status", "categoryId", "assigneeId", "from", "to", "mine", "overdue"] },
         );
         const result = await listDocuments(params, user.id);
         return {
-          total: result.total,
+          ...aiPageInfo(result.page,result.pageSize,result.total),
           documents: result.rows.map((row) => ({
             id: row.id,
             registryNumber: row.registryNumber,

@@ -1,6 +1,7 @@
 import "server-only";
 
 import { z } from "zod";
+import {aiListCursor,aiListPage,aiPageInfo} from "@/shared/ai/pagination";
 
 import { NO_INPUT, PROPOSED, aiAction, aiTool, defineModuleAi } from "@/shared/ai/define";
 import { can } from "@/shared/permissions/define";
@@ -39,17 +40,17 @@ export const ai = defineModuleAi({
       operation: "read",
       allowed: (user) => can(user.role, inventoryPermissions, "view"),
       description: "Lists inventory items: id, name, category, status, quantity, location, purchase date and price (EUR). Assigned member is not included.", // i18n-ignore (model-facing tool text)
-      schema: z.object({ query: z.string().max(100).nullable(), status: z.enum(["IN_USE", "IDLE", "BROKEN", "SCRAPPED"]).nullable() }),
+      schema: z.object({ cursor:aiListCursor, query: z.string().max(100).nullable(), status: z.enum(["IN_USE", "IDLE", "BROKEN", "SCRAPPED"]).nullable() }),
       inputSchema: {
         type: "object",
-        properties: { query: { type: ["string", "null"] }, status: { type: ["string", "null"], enum: ["IN_USE", "IDLE", "BROKEN", "SCRAPPED", null] } },
+        properties: { cursor:{type:"string",pattern:"^[1-9]\\d{0,3}$"},query: { type: ["string", "null"] }, status: { type: ["string", "null"], enum: ["IN_USE", "IDLE", "BROKEN", "SCRAPPED", null] } },
         required: ["query", "status"],
         additionalProperties: false,
       },
-      run: async ({ query, status }) => {
-        const result = await listInventoryItems({ search: query ?? "", category: null, status, sort: "name", direction: "asc", requestedSort: null, requestedDirection: null, page: 1, pageSize: 100 });
+      run: async ({ cursor,query, status }) => {
+        const result = await listInventoryItems({ search: query ?? "", category: null, status, sort: "name", direction: "asc", requestedSort: null, requestedDirection: null, page: aiListPage(cursor), pageSize: 100 });
         return {
-          total: result.total,
+          ...aiPageInfo(aiListPage(cursor),100,result.total),
           items: result.items.map((item) => ({ id: item.id, name: item.name, category: item.category, status: item.status, quantity: item.quantity, location: item.location, purchaseDate: item.purchaseDate, purchasePriceEur: item.purchasePrice })),
         };
       },

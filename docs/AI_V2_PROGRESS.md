@@ -1,57 +1,33 @@
 # AI v2 uygulama ilerlemesi
 
-## Güvenlik temeli — ilk uygulama paketi
+PR #143 şartname ve PR #144 güvenlik temeli main'e birleştirildi. Runtime PR #145 ile birleştirildi. Takip paketi: https://github.com/akgngr/verein-erp/pull/146 . Üretim deploy/migration yapılmadı. Tema çalışması güvenilirlik kabulünden sonra ele alınacak.
 
-Şartname PR #143 main dalına birleştirildi. Ayrıntılı audit, uygulama şartnamesi ve TODO bu paketle repoya eklenir.
+## Tamamlanan çekirdek
 
-Uygulananlar:
-- Belge listesi/detayı/ek metni için `processing: local_only`; bulut araç keşfi ve çalışma anında kapı.
-- Her model turu, araç çalıştırması ve öneri onayında güncel kullanıcı, AI rızası/modül/rol kontrolü.
-- Gerçek IP aralık kontrolü; http(s) zorunluluğu, credentials/link-local/metadata engeli.
-- Yerel HTTP transport: her istekte DNS doğrulama, doğrulanan IP'ye sabitleme, redirect yasağı, iptal ve yanıt boyutu sınırı.
-- Chat ve eski rapor okumalarında süre denetimi; aktif konuşmada da yaşlı mesaj temizliği.
-- `ai.cleanup_history` zamanlanabilir worker görevi; aynı automation scheduler kullanılır.
-- Chat çağrısı için geçmiş DB sorgusunda 40 mesaj sınırı; UI geçmişi ayrı okunur.
-- CSV metin formülü nötralizasyonu; sayılar korunur.
-- AI araç hatasında ham exception loglama kaldırıldı; bazı eski saklama açıklamaları düzeltildi.
+- Sürümlü v2 input/server result/model projection şemaları; JSON Schema üretimi, alan/satır/byte/süre sınırları ve benzersiz araç adı kontrolü.
+- Geçici owner/conversation/deployment/revision/TTL bağlı 256 bit referanslar; token yerine digest saklanır. Kişi tablolarına aiKey eklenmedi.
+- Şifreli, kalıcı proposal ve yalnız proposalId ile onay. Kaynak snapshot kontrolü, eşzamanlı onay claim'i; yarıda kalan genel yazma otomatik tekrar edilmez.
+- Members aidat için yıl/durum/min-max integer cent DSL, `create_dues_dataset` ve `query_dataset`; SQL veya kimlik araması modele açılmaz. Export kolonları ayrı enum'dur.
+- Onaydan sonra aynı transaction'da generation + mevcut automation execution/outbox. Kaynak ve izinleri yeniden kontrol eden worker; isimli CSV/XLSX yalnız sunucuda üretilir. İptal/abort/stale/aktör iptali, deterministik dosya kimliği ve tombstone temizliği.
+- Sohbet geçmişinde keyset UI cursor, DB'de sınırlı pencere, lease/request UUID ve mesaj+cached cevap için atomik commit. İlk istek cevabı ağ tekrarında yeni konuşma açmadan alınabilir.
+- Paylaşılan PostgreSQL request/token sayaçları, yapılandırılabilir deployment mikro-EUR rezervasyonu, 6 model turu/20 araç/120 saniye sınırı.
+- Buluta yalnız tanımlı kanonik niyet gider; serbest metin/geçmiş aktarılmaz. Belge listesi/detayı/ek metni local-only ve ayrı read_content iznine bağlıdır.
+- Provider/model/endpoint revision'a bağlı yenilenen rıza; iptalde pending işleri ve referansları durdurma. Eski şifreleme formatını okuyan, key ID ile yeni formatı yazan keyring.
+- Saatlik otomatik maintenance schedule, mesaj yaşına bağlı cleanup, silme tombstone/retry ve aged orphan reconciliation. Automation worker gereklidir.
+- students/progress/donations istatistikleri v2'ye taşındı. Öğrenci/veli için kişi listesi veya kişisel dosya açılmadı; çocuk istatistikleri local-only.
+- tasks/documents/meetings/inventory/events/calendar/courses/mailings listelerine sınırlı sayfalama metadata'sı eklendi; eksik `filter.*` parametreleri düzeltildi.
 
-## Operasyon
+## Doğrulama
 
-Üretim migration'ı bu pakette yoktur; şema değişikliği yalnız yorum düzeyindedir.
-Yeni migration veya üretim DB bağlantısı çalıştırılmadı.
-Mevcut automation worker çalışmalı. Yönetici otomasyon zamanlamalarında `ai.cleanup_history`
-görevini saatlik çalışacak şekilde eklemelidir; görev henüz kendiliğinden schedule oluşturmaz.
-Worker/schedule çalışmıyor olsa bile süresi dolan sohbet/rapor okumaları reddedilir.
-Yerel model ağı yalnızca loopback/RFC1918/IPv6 ULA olmalı; tüm DNS cevapları özel olmalıdır.
-Yerel model servisinin kendi dış bağlantılarını sınırlamak deployment sorumluluğudur.
+- PR #145 ilk runtime commit'i GitHub Quality gate, üretim build, hydration, secret scan ve dependency audit'ten geçti. Takip commit'leri aynı kontrolleri yeniden geçmelidir.
+- Son yerel tam suite: 448 test başarılı, 0 başarısız, 0 atlanan; 100 suite. Auth yer tutucu testlerinin yerine 7 gerçek Auth.js davranışını çalıştıran subprocess testi konduğundan eski test sayısıyla doğrudan kıyaslanmamalıdır.
+- İzole PostgreSQL 18'de mevcut migration zincirinden yükseltme ve şema drift kontrolü geçti. 102 gecikmiş satırlı CSV/XLSX, gerçek v2 araçtan fake-fetch sağlayıcı spy, aynı isimli ayrı kayıtlar, farklı durum filtreleri, eşzamanlı generation, onay cevabı kaybından toparlanma ve iptal senaryoları sınandı.
+- TypeScript ve TR/DE anahtar kontrolü geçti. Yerel üretim build'i bellek sınırına takıldığı için GitHub build sonucu kullanıldı.
 
-## Açık sınırlar
+## Açık kabul sınırları
 
-Kayıtsız kişisel serbest metin için tam DLP/anonimleştirme çözümü bu paket değildir.
-Kullanıcı mesajları hâlâ mevcut PseudonymVault'tan geçer; bulut kullanımında genel PII
-aktarımı sıfırlandı iddiası yoktur. Alan bazlı v2 projection ve güvenli kişi seçimi sıradadır.
-Kalıcı AiProposal/idempotency, scoped token/dataset, kişisel server-side export henüz yoktur.
-Cleanup'ın otomatik schedule kurulumu, batching ve DB entegrasyon testleri tamamlanmalıdır.
-Tema değişikliği yapılmadı. Shopify benzeri sade, tutarlı ve zarif panel tasarımı güvenilirlik
-kabulü sonrasında ayrı çalışma olarak ele alınacaktır.
+Bu paket tüm TODO'ların tamamı değildir. Tam durum `TODO_AI_ASSISTANT_V2.md` içindedir. Özellikle genel dosya generation facade/streaming, kalan legacy araçlar, çocuk verisi adapter'ları, sekreter S1–S6 ve aidat hatırlatma ürünü tamamlanmadı. Gerçek sağlayıcı hesabının DPA/bölge/retention/fiyat ayarları ve üretim pilotu dış doğrulama gerektirir.
 
-## İkinci uygulama paketi — v2 runtime
+`AI_PERSONAL_EXPORT_ENABLED=false` varsayılanı korunur. Kodun/testlerin geçmesi, otomatik Datenschutz uyumu veya tüm kişisel verinin anonim olduğu anlamına gelmez. Operatör sırası ve geri alma koşulları `operations/AI_V2_ROLLOUT.md` içindedir.
 
-- Input/result/projection şemaları, alan allowlist'i, satır/byte/süre limitleri ve duplicate isim koruması. İlk canlı v2 araç: create_dues_dataset; eski araçlar açık legacy sürümüyle kalır.
-- Altı yeni çekirdek tablo ve AiExportRequest; kişi tablolarına aiKey eklenmedi. Migration ayrı test veritabanında hem temiz kurulum hem mevcut migration zincirinden yükseltme ile sınandı.
-- Şifreli ve kullanıcıya bağlı öneriler; sadece proposalId ile onay, atomik claim ve kaynak snapshot kontrolü.
-- 256 bit geçici referanslar, digest lookup, scope/TTL/revoke ve şifreli dataset seçimi.
-- Aidat CSV/XLSX planı → onay → atomik automation execution/outbox → yetkili worker → sunucuda kişi birleştirme → rolü yeniden kontrol eden indirme. Kişisel export bayrağı varsayılan kapalıdır.
-- Ortak kullanım sayaçları, request deadline, konuşma claim ve cevap tekrar kullanımı. EUR bütçe garantisi değildir.
-- Anahtar sürümü ve read-old/write-new desteği; dosya silmede tombstone ve aged orphan reconciliation.
-- Otomatik bakım zamanlamaları ve içerik taşımayan hata sayaçları.
-- Bulut istekleri hazır niyetlerden kanonikleştirilir; serbest kullanıcı metni ve eski sohbet geçmişi buluta gönderilmez. Belge metni için ek read_content izni gerekir.
-
-Üretim deploy/migration yapılmadı. Yerel tam üretim derlemesi bellek sınırına takıldı; CI kabulü olmadan hazır sürüm sayılmamalı. Gerçek sağlayıcı hesabının bölge, sözleşme ve saklama ayarları doğrulanmadı. Önceki bölümdeki eksikler için bu bölüm ve güncel TODO esas alınır.
-
-### Yerel doğrulama kaydı
-
-- Ayrı PostgreSQL 18 test DB'sinde eski migration zinciri → yeni migration yükseltmesi uygulandı. Şema drift kontrolü: fark yok.
-- 449 test, 107 suite, 449 başarılı, 0 başarısız ve 0 atlandı (DB testleri dahil). Sonraki yalnız çeviri metni değişikliği için i18n/type/lint yeniden kontrol edilir.
-- TypeScript, 36 modül doğrulaması, i18n/hardcoded text, hedefli ESLint geçti.
-- Yerel webpack üretim build'i varsayılan heap ile OOM, 6 GiB denemesinde ortam tarafından SIGKILL aldı. Build kabulü açık; bu yüzden paket taslak PR olarak sunulur.
+PR #146 ilk CI turunda progress v2 kaynak tanımı K0 ProgressNote içerdiği için build başarısız oldu. AI sorgusu bu tabloyu hiç okumayan ayrı aggregate servisine taşındı; not sayısı model çıktısından çıkarıldı. Yeni kaynak politikası ve korumalı tabloya erişimi reddeden reader testi eklendi. Düzeltmenin production build/hydration sonucu beklenir.

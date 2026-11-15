@@ -30,3 +30,7 @@ export async function reconcileGeneratedStorage(now=new Date()):Promise<number> 
  }
  return count;
 }
+
+export async function markGeneratedFileForDeletion(id:string,ownerId:string) {
+ await getDb().generatedFile.updateMany({where:{id,ownerId},data:{deletionPending:true}});
+}

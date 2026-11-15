@@ -1882,7 +1882,8 @@
         "download": "Datei herunterladen",
         "failed": "Datei konnte nicht erstellt werden. Bitte erstellen Sie einen neuen Vorschlag.",
         "queued": "Datei wird erstellt…"
-      }
+      },
+      "loadOlder": "Ältere Nachrichten laden"
     },
     "settings": {
       "title": "KI-Assistent",

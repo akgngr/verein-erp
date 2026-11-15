@@ -1,6 +1,7 @@
 import "server-only";
 
 import { z } from "zod";
+import {aiListCursor,aiListPage,aiPageInfo} from "@/shared/ai/pagination";
 
 import { DATE_RE, PROPOSED, aiAction, aiTool, defineModuleAi, isoDay } from "@/shared/ai/define";
 import { parseListParams } from "@/shared/list-params";
@@ -40,15 +41,15 @@ export const ai = defineModuleAi({
       operation: "read",
       allowed: (user) => can(user.role, meetingsPermissions, "view"),
       description: "Lists meetings (newest first): id, number, type, title, date, time, location, status, decision and open action item counts. Optional date range YYYY-MM-DD.", // i18n-ignore (model-facing tool text)
-      schema: z.object({ from: z.string().regex(DATE_RE).nullable(), to: z.string().regex(DATE_RE).nullable() }),
-      inputSchema: { type: "object", properties: { from: { type: ["string", "null"] }, to: { type: ["string", "null"] } }, required: ["from", "to"], additionalProperties: false },
-      run: async ({ from, to }) => {
+      schema: z.object({ cursor:aiListCursor, from: z.string().regex(DATE_RE).nullable(), to: z.string().regex(DATE_RE).nullable() }),
+      inputSchema: { type: "object", properties: { cursor:{type:"string",pattern:"^[1-9]\\d{0,3}$"}, from: { type: ["string", "null"] }, to: { type: ["string", "null"] } }, required: ["from", "to"], additionalProperties: false },
+      run: async ({ cursor,from, to }) => {
         const params = parseListParams(
-          { pageSize: "50", ...(from ? { from } : {}), ...(to ? { to } : {}) },
+          { page:String(aiListPage(cursor)),pageSize: "50", ...(from ? { "filter.from":from } : {}), ...(to ? { "filter.to":to } : {}) },
           { sortableFields: MEETING_SORTABLE_FIELDS, defaultSort: MEETING_DEFAULT_SORT, defaultDir: "desc", filterKeys: ["type", "status", "from", "to"] },
         );
         const result = await listMeetings(params);
-        return result.rows.map((row) => ({ id: row.id, number: row.meetingNumber, type: row.type, title: row.title, date: isoDay(row.meetingDate), startTime: row.startTime, location: row.location, status: row.status, decisions: row.decisionCount, openActionItems: row.openActionItemCount }));
+        return {...aiPageInfo(result.page,result.pageSize,result.total),items:result.rows.map((row) => ({ id: row.id, number: row.meetingNumber, type: row.type, title: row.title, date: isoDay(row.meetingDate), startTime: row.startTime, location: row.location, status: row.status, decisions: row.decisionCount, openActionItems: row.openActionItemCount }))};
       },
     }),
     aiTool({

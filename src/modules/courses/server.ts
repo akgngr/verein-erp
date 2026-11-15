@@ -12,3 +12,5 @@ export { payoutPdfHandler } from "./services/payout-pdf-handler";
 export { listPayouts } from "./services/payouts";
 export { generatePayoutsAction, approvePayoutAction, markPayoutPaidAction, cancelPayoutAction } from "./actions/payout-actions";
 export { listDebitableCharges, recordSepaChargePayments, voidSepaChargePayment, type DebitableCharge } from "./services/sepa-debit";
+
+export {listAiCourses} from "./queries/ai-courses";

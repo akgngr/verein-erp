@@ -84,7 +84,7 @@ export async function runAssistant(args: { user: SessionUser; locale: string; pr
     tools: tools.map((tool) => ({ name: tool.name, description: tool.description, inputSchema: tool.inputSchema as Record<string, unknown> })),
     maxToolRounds: MAX_TOOL_ROUNDS,
     signal,
-    beforeRequest: async (bytes=0) => { signal.throwIfAborted(); await requireCurrentAiAccess(args.user.id,args.provider); await reserveAiUsage(args.user.id,"model",bytes); },
+    beforeRequest: async (bytes=0) => { signal.throwIfAborted(); await requireCurrentAiAccess(args.user.id,args.provider); await reserveAiUsage(args.user.id,"model",bytes,new Date(),{provider:args.provider,model:settings.model??""}); },
     executeTool: async (name, input) => {
       signal.throwIfAborted();
       if(++callCount>20) return {content:"AI_TOOL_BUDGET",isError:true};

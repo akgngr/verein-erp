@@ -29,6 +29,17 @@ export async function claimProposal(userId: string, proposalId: string, revision
     const row=await tx.aiProposal.findFirst({where:{id:proposalId,userId,providerRevision:revision,expiresAt:{gt:new Date()}}});
     if(!row) throw new Error("AI_PROPOSAL_UNAVAILABLE");
     if(row.status==="APPLIED") return {row,payload:null,applied:true as const};
+    // A committed export request is durable evidence that its transactional outbox exists.
+    // Recover only this read-only file workflow; never replay an uncertain domain write.
+    if(row.status==="EXECUTING"&&row.moduleKey==="exports"&&row.actionKey==="datasetExport"){
+      const generation=await tx.aiExportRequest.findFirst({where:{proposalId:row.id,userId,conversationId:row.conversationId??undefined}});
+      if(generation?.executionId){
+        const completedAt=new Date();
+        const recovered=await tx.aiProposal.updateMany({where:{id:row.id,userId,status:"EXECUTING"},data:{status:"APPLIED",executionId:generation.id,completedAt}});
+        if(recovered.count!==1)throw new Error("AI_PROPOSAL_UNAVAILABLE");
+        return {row:{...row,status:"APPLIED",executionId:generation.id,completedAt},payload:null,applied:true as const};
+      }
+    }
     const claimed=await tx.aiProposal.updateMany({where:{id:row.id,userId,status:"PENDING",expiresAt:{gt:new Date()}},data:{status:"EXECUTING",confirmedAt:new Date()}});
     if(claimed.count!==1) throw new Error("AI_PROPOSAL_UNAVAILABLE");
     const plain=openSecret(PURPOSE,row.payloadEnc);

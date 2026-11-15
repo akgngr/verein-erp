@@ -79,3 +79,59 @@ test("failed byte deletion keeps a retryable tombstone; aged orphan files are re
   await reconcileGeneratedStorage();await assert.rejects(access(orphan));
  }finally{await rmdir(file).catch(()=>{});await getDb().generatedFile.deleteMany({where:{id}});}
 });
+
+test("conversation pages are bounded and cursors cannot cross owner/conversation scope",{skip:!enabled},async()=>{
+ const {getConversation}=await import("@/modules/ai/services/history");
+ const {sealSecret}=await import("@/shared/security/secret-box");
+ const userId=`page-test-${randomUUID()}`,db=getDb();
+ const c=await db.aiConversation.create({data:{userId,titleEnc:sealSecret("ai-chat-history","Test")}});
+ try{
+  await db.aiMessage.createMany({data:Array.from({length:105},(_,i)=>({conversationId:c.id,role:"user",contentEnc:sealSecret("ai-chat-history",`line ${i}`),createdAt:new Date(Date.now()-200000+i*1000)}))});
+  const first=await getConversation(userId,c.id,40);assert.ok(first);assert.equal(first.turns.length,40);assert.equal(first.pageInfo.hasMore,true);
+  const second=await getConversation(userId,c.id,40,first.pageInfo.beforeCursor!);assert.ok(second);assert.equal(second.turns.length,40);
+  assert.equal(new Set([...first.turns,...second.turns].map(t=>t.id)).size,80);
+  assert.equal(await getConversation("other",c.id,40,first.pageInfo.beforeCursor!),null);
+  assert.equal(await getConversation(userId,c.id,40,"unrelated-cursor"),null);
+ }finally{await db.aiConversation.delete({where:{id:c.id}});}
+});
+test("turn messages and cached response commit atomically under the active lease",{skip:!enabled},async()=>{
+ const {claimAiTurn,commitAiTurn,getCachedAiTurn}=await import("@/modules/ai/services/turns");
+ const {sealSecret}=await import("@/shared/security/secret-box");const db=getDb(),userId=`commit-test-${randomUUID()}`;
+ const c=await db.aiConversation.create({data:{userId,titleEnc:sealSecret("ai-chat-history","Test")}});
+ try{
+  const claim=await claimAiTurn(userId,c.id,"fixed-key");
+  await commitAiTurn({userId,conversationId:c.id,id:claim.id,message:"hello",reply:"answer",proposals:[],files:[],response:{ok:true,conversationId:c.id}});
+  assert.equal(await db.aiMessage.count({where:{conversationId:c.id}}),2);
+  assert.deepEqual(await getCachedAiTurn(userId,"fixed-key",null),{ok:true,conversationId:c.id});
+  await assert.rejects(commitAiTurn({userId,conversationId:c.id,id:claim.id,message:"duplicate",reply:"duplicate",proposals:[],files:[],response:{}}));
+  assert.equal(await db.aiMessage.count({where:{conversationId:c.id}}),2);
+ }finally{await db.aiTurnClaim.deleteMany({where:{userId}});await db.aiConversation.delete({where:{id:c.id}});}
+});
+
+test("shared monetary reservations cannot overspend under concurrent model rounds",{skip:!enabled},async()=>{
+ const {reserveAiUsage}=await import("@/modules/ai/services/usage");
+ const userId=`cost-test-${randomUUID()}`,deployment=`cost-test-${randomUUID()}`;
+ const keys=["AI_DEPLOYMENT_ID","AI_DAILY_COST_BUDGET_MICRO_EUR","AI_MODEL_COSTS_JSON"] as const;
+ const old=Object.fromEntries(keys.map(key=>[key,process.env[key]]));
+ process.env.AI_DEPLOYMENT_ID=deployment;process.env.AI_DAILY_COST_BUDGET_MICRO_EUR="1000";
+ process.env.AI_MODEL_COSTS_JSON=JSON.stringify({"test:model":{inputMicroEurPerMillion:1000000,outputMicroEurPerMillion:0}});
+ try{
+  const results=await Promise.allSettled(Array.from({length:20},()=>reserveAiUsage(userId,"model",100,new Date(),{provider:"test",model:"model"})));
+  assert.equal(results.filter(r=>r.status==="fulfilled").length,10);
+  const bucket=await getDb().aiUsageBucket.findFirstOrThrow({where:{scopeKey:`cost:${deployment}`}});
+  assert.equal(bucket.costMicros,1000);assert.equal(bucket.calls,10);
+ }finally{
+  await getDb().aiUsageBucket.deleteMany({where:{scopeKey:{in:[`cost:${deployment}`,`model:${userId}`]}}});
+  for(const key of keys){if(old[key]===undefined)delete process.env[key];else process.env[key]=old[key];}
+ }
+});
+
+test("an interrupted domain write remains blocked instead of being executed again",{skip:!enabled},async()=>{
+ const userId=`uncertain-write-${randomUUID()}`,revision="test";
+ try{
+  const proposal=await prepareProposal({userId,conversationId:randomUUID(),revision,draft:{kind:"module",module:"tasks",action:"create",operation:"create",title:"Test",details:[],payload:{title:"Test"}}});
+  await claimProposal(userId,proposal.proposalId,revision);
+  await assert.rejects(claimProposal(userId,proposal.proposalId,revision),/AI_PROPOSAL_UNAVAILABLE/);
+  assert.equal((await getDb().aiProposal.findUniqueOrThrow({where:{id:proposal.proposalId}})).status,"EXECUTING");
+ }finally{await getDb().aiProposal.deleteMany({where:{userId}});}
+});

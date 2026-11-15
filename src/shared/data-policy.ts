@@ -211,6 +211,7 @@ export const USER_LINK_RETAINED: Record<string, string> = {
 };
 
 export const AI_TOOL_POLICY = {
+  query_dataset:{module:"members",reads:[],serverReads:["Member","MemberDue","MemberPayment"],modelFields:["datasetRef","count"]},
   create_dues_dataset:{module:"members",reads:[],serverReads:["Member","MemberDue","MemberPayment"],modelFields:["datasetRef","count"]},
   propose_dataset_export:{module:"exports",reads:[]},
   // accounting
@@ -239,7 +240,7 @@ export const AI_TOOL_POLICY = {
   propose_document_status: { module: "documents", reads: ["Document"] },
   propose_delete_document: { module: "documents", reads: ["Document"] },
   // donations
-  get_donation_statistics: { module: "donations", reads: ["Donation"] },
+  get_donation_statistics: {"module": "donations", "reads": [], "serverReads": ["Donation"], "modelFields": ["year", "totalEur", "count", "unconfirmedOver300", "confirmationsIssued", "confirmationWarnings"]},
   // events
   list_upcoming_events: { module: "events", reads: ["Event"] },
   propose_event: { module: "events", reads: [] },
@@ -270,9 +271,9 @@ export const AI_TOOL_POLICY = {
   // organization
   get_organization_info: { module: "organization", reads: ["OrganizationProfile"] },
   // progress
-  get_progress_statistics: { module: "progress", reads: ["ProgressAttendance", "ProgressGrade"] },
+  get_progress_statistics: {"module": "progress", "reads": [], "serverReads": ["ProgressAttendance", "ProgressAssessment"], "modelFields": ["days", "attendance.present", "attendance.late", "attendance.absent", "attendance.excused", "attendance.ratePercent", "assessments"]},
   // students
-  get_student_statistics: { module: "students", reads: ["Student"] },
+  get_student_statistics: {"module": "students", "reads": [], "serverReads": ["Student", "StudentGuardian"], "modelFields": ["active", "inactive", "guardians", "withSepaMandate"]},
   // tasks
   list_open_tasks: { module: "tasks", reads: ["Task"] },
   propose_task: { module: "tasks", reads: [] },

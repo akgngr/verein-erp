@@ -31,16 +31,20 @@ export async function listConversations(userId: string): Promise<{ id: string; t
 }
 
 /** Sohbet yalnızca sahibine döner; başkasının kimliği verilirse null. */
-export async function getConversation(userId: string, conversationId: string, limit?: number): Promise<{ id: string; title: string; turns: StoredTurn[] } | null> {
+export async function getConversation(userId: string, conversationId: string, limit=40, before?:string): Promise<{ id: string; title: string; turns: StoredTurn[];pageInfo:{beforeCursor:string|null;hasMore:boolean} } | null> {
+  const cursor=before?await getDb().aiMessage.findFirst({where:{id:before,conversationId,conversation:{userId}},select:{id:true,createdAt:true}}):null;
+  if(before&&!cursor)return null;
+  const take=Math.min(100,Math.max(1,limit));
   const row = await getDb().aiConversation.findFirst({
     where: { id: conversationId, userId, updatedAt: { gt: aiRetentionCutoff() } },
-    include: { messages: { where: { createdAt: { gt: aiRetentionCutoff() } }, orderBy: [{ createdAt: "desc" }, { id: "desc" }], ...(limit ? { take: limit } : {}) } },
+    include: { messages: { where: { createdAt: { gt: aiRetentionCutoff() },...(cursor?{OR:[{createdAt:{lt:cursor.createdAt}},{createdAt:cursor.createdAt,id:{lt:cursor.id}}]}:{}) }, orderBy: [{ createdAt: "desc" }, { id: "desc" }], take:take+1 } },
   });
   if (!row) return null;
   return {
     id: row.id,
     title: open(row.titleEnc),
-    turns: row.messages.reverse().map((message) => ({
+    pageInfo:{hasMore:row.messages.length>take,beforeCursor:row.messages.length>take?row.messages[take-1].id:null},
+    turns: row.messages.slice(0,take).reverse().map((message) => ({
       id: message.id,
       role: message.role === "assistant" ? "assistant" : "user",
       content: open(message.contentEnc),

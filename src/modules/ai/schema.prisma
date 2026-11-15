@@ -161,6 +161,7 @@ model AiTurnClaim {
   createdAt      DateTime @default(now())
 
   @@unique([userId, conversationId, requestKey])
+  @@unique([userId, requestKey])
   @@index([conversationId, status])
   @@map("ai_turn_claims")
 }
@@ -170,6 +171,7 @@ model AiUsageBucket {
   windowStart DateTime
   calls       Int @default(0)
   tokens      Int @default(0)
+  costMicros  Int @default(0)
   @@id([scopeKey, windowStart])
   @@map("ai_usage_buckets")
 }

@@ -9,7 +9,7 @@ Temel: main 4bc9fdc + PR #143 tasarımı.
 ## A — veri kapsamını genişletmeden önce
 
 - [x] A01 (AI-01, AI-07) K0–K3 ile model projection/export ayrımını tek politikada tanımla; K1'i K2'ye çevirme.
-- [ ] A02 (AI-01) Belge içeriğine ayrı izin ve varsayılan kapalı bulut aktarımı ekle; bilinmeyen PII preflight negatif testi.
+- [x] A02 (AI-01) Belge içeriğine ayrı izin ve varsayılan kapalı bulut aktarımı ekle; bilinmeyen PII preflight negatif testi.
 - [x] A03 (AI-03) Her araç/confirm/worker için güncel actor, modül, AI matris, rıza ve policy kontrolü kur.
 - [x] A04 (AI-04) Yerel URL'de gerçek IP/protokol/allowlist/DNS/redirect kontrolü ve metadata engeli; ağsız testler.
 - [x] A05 (AI-05) Chat/report read expiry + mesaj yaşına göre cleanup worker; kullanıcı listesi açılmadan test et.
@@ -34,10 +34,10 @@ Bitiş: mevcut araçlar bozulmadan taşınabilir; kişisel veri model kanalına 
 - [x] C01 AiReferenceScope, AiEntityReference, AiDataset, AiProposal modelleri ve indeksleri; kişi tablolarına aiKey ekleme.
 - [x] C02 DATA_POLICY, lifecycle, kullanıcı silme ve cleanup kapsamını tüm yeni modellere ekle.
 - [x] C03 256 bit rastgele token + digest lookup; scope/owner/TTL/revoke kapıları.
-- [ ] C04 İzinli query DSL + enum sütunlar; queryable/exportable ayrımı.
+- [x] C04 İzinli query DSL + enum sütunlar; queryable/exportable ayrımı.
 - [x] C05 Şifreli dataset seçim/snapshot ve kaynak precondition hash'i; büyük seçim boyutu limiti.
 - [x] C06 prepare/preview/confirm(proposalId); istemciden payload kabulünü kaldır.
-- [ ] C07 Atomik claim, idempotency ve automation outbox; çift onay/kuyruk tekrar testleri.
+- [x] C07 Atomik claim, idempotency ve automation outbox; çift onay/kuyruk tekrar testleri.
 - [ ] C08 User/member/guardian eşleşmesini yalnız doğrulanmış ilişkiyle çöz; aynı isimli kişiler testini ekle.
 - [x] C09 Additive migration'ı izole DB'de uygula; rollback flag ve mevcut format uyumunu doğrula.
 
@@ -45,7 +45,7 @@ Bitiş: IDOR/süre/revoke/çift onay negatif testleri geçer. Runtime migration 
 
 ## D — ilk uçtan uca kişisel dosya (A+B+C bağımlılığı)
 
-- [ ] D01 members public/worker-safe dataset adapter: yıl/gecikme/durum/tutar; Decimal ve tarih kuralları.
+- [x] D01 members public/worker-safe dataset adapter: yıl/gecikme/durum/tutar; Decimal ve tarih kuralları.
 - [x] D02 Kaynak servisinde kayıt kapsamı + alan projection + export izni; doğrudan cross-module Prisma yok.
 - [ ] D03 create_dataset/query_dataset/export_dataset araçlarını ve TR/DE açıklamalarını ekle.
 - [ ] D04 exports request-generation facade'ını mevcut merkezi dosya şartnamesiyle birleştir; ikinci queue kurma.
@@ -53,17 +53,17 @@ Bitiş: IDOR/süre/revoke/çift onay negatif testleri geçer. Runtime migration 
 - [ ] D06 Worker'da güncel izin/precondition, typed satır renderer, streaming ve kaynak limitleri.
 - [x] D07 UI preview, onay ve job durumu; gerçek isimli XLSX/CSV yalnız yetkili UI/dosyaya gider.
 - [x] D08 Download'da source/alan yetkisini ve sahipliği yeniden denetle; dosya read-to-model geri sızıntısını engelle.
-- [ ] D09 100+ kayıt, izin iptali, stale hedef ve provider spy ile tam senaryoyu test et.
+- [x] D09 100+ kayıt, izin iptali, stale hedef ve provider spy ile tam senaryoyu test et.
 
 Bitiş: AI sadece datasetRef/durum görür; dosyada doğru ad ve tutarlar bulunur.
 
 ## E — pilot yayın öncesi dayanıklılık
 
-- [ ] E01 (AI-08) PostgreSQL ortak request bucket, toplam araç/token/maliyet bütçesi ve deadline.
-- [ ] E02 (AI-09) DB'de geçmiş penceresi, UI cursor, conversation revision + turn claim/idempotency.
-- [ ] E03 (AI-10) Açık görevleri DB'de filtrele; liste araçlarına cursor/hasMore/completeness.
+- [x] E01 (AI-08) PostgreSQL ortak request bucket, toplam araç/token/maliyet bütçesi ve deadline.
+- [x] E02 (AI-09) DB'de geçmiş penceresi, UI cursor, conversation revision + turn claim/idempotency.
+- [x] E03 (AI-10) Açık görevleri DB'de filtrele; liste araçlarına cursor/hasMore/completeness.
 - [x] E04 (AI-13) deletion_pending/tombstone + disk retry + orphan reconciliation.
-- [ ] E05 (AI-14) keyId/keyring, eski format okuma ve read-old/write-new rotasyon; decrypt hata görünürlüğü.
+- [x] E05 (AI-14) keyId/keyring, eski format okuma ve read-old/write-new rotasyon; decrypt hata görünürlüğü.
 - [x] E06 (AI-16) Provider policy revision/model/endpoint/fallback ve yeniden onay kuralları.
 - [x] E07 (AI-16) Rıza iptalinde pending iş/ref/dataset revoke; eski dosya/rapor purpose bazlı yaşam döngüsü.
 - [ ] E08 Sağlayıcı timeout/retry/region/retention/fallback ayarlarını resmî belgeler ve gerçek hesapla doğrula.
@@ -88,4 +88,21 @@ hazırlamak kod geliştirme, push, PR merge veya deployment yapıldığı anlam�
 
 ## Bu paketin doğrulama sınırları
 
-İşaretli çekirdek maddeler `feat/ai-v2-runtime` kapsamında uygulanmıştır. Bunlar bütün ürün özelliklerinin tamamlandığı anlamına gelmez. A02 belge içerik izni ve bulut kanonikleştirme kodu eklendi; ilgili son entegrasyon kabulü açıktır. E05 keyring okuyucu/yazıcı ve rotasyon testleri vardır, toplu re-encryption operasyonu yoktur. E08 gerçek sağlayıcı hesabı olmadan kapanmaz. E11 yerel üretim build'i bellek nedeniyle doğrulanamadığı için açık. F ürün paketi ve eski araçların tamamının dönüşümü henüz bitmedi.
+İşaretli çekirdek maddeler birleştirilmiş `feat/ai-v2-runtime` ve takip dalı `feat/ai-v2-hardening` kapsamındadır. Bunlar bütün ürün özelliklerinin tamamlandığı anlamına gelmez. A02 belge içerik izni, bilinmeyen PII için fail-closed bulut niyeti ve negatif testler uygulandı. E05 read-old/write-new keyring ve okunamayan kayıtta kontrollü hata tamamlandı; bu, tüm eski kayıtların topluca döndürüldüğü veya eski anahtarın kaldırılabileceği anlamına gelmez. E08 gerçek sağlayıcı hesabı olmadan kapanmaz. E11 PR #145'in GitHub build/hydration dahil kontrolleri geçti; takip paketinin CI sonucu ayrıca beklenir. F ürün paketi ve eski araçların tamamının dönüşümü henüz bitmedi.
+
+## PR #145 takip paketi — 15.11.2026
+
+- Aidat DSL: yıl, durum ve min/max kalan tutar (integer cent). Kimlik araması, serbest SQL ve bilinmeyen alan reddedilir. Query alanları ile export kolonları ayrı allowlist'tir. `query_dataset` eski referanstan yeni seçim/referans oluşturur. İlk kaynak members aidattır; genel SQL motoru yoktur.
+- Aktarım 5.000 aday kayıtta fail-closed sınırlandırılır. Ödeme sonrası tutar filtresi bu sınırın içinde uygulanır; büyük veri streaming maddesi açık kalır.
+- Ortak bütçe: günlük token limiti ve isteğe bağlı deployment geneli mikro-EUR limiti. EUR limiti için gerçek hesaba ait model fiyatları operatörce tanımlanmalıdır; eksik fiyatla çağrı reddedilir. Bu iç rezervasyon sağlayıcının gerçek faturası/sözleşmesi değildir.
+- E02: kullanıcıya bağlı request UUID, ilk isteğin cached cevabı, lease, atomik mesaj+cevap commit'i ve UI keyset geçmiş cursor'u. Süresi dolan çalıştırma otomatik model tekrarına çevrilmez.
+- E03: tüm mevcut liste araçlarında sınır/eksiksizlik açık; takvim, kurs ve kampanya cursor sayfaları da eklendi. Legacy canlı listelerin cursor'u snapshot garantisi vermez. 500 kaynak/5000 oluşum sınırını aşan takvim aralığı sessizce kesilmez; refine_range döner.
+- C07/D09: 102 gecikmiş + aynı isimli farklı ücret durumu fixture'ı; gerçek v2 araç → sahte sağlayıcı fetch spy → şifreli dataset → tek automation outbox → CSV/XLSX typed dosya akışı sınandı. Export request commit'inden sonra kaybolan onay cevabı, mevcut generation kanıtıyla toparlanır. Genel yazmalarda belirsiz işlem otomatik tekrar edilmez; tam exactly-once domain transaction iddiası yoktur. Gerçek sağlayıcı hesabı E08'de ayrıdır.
+- students/progress/donations istatistik araçları v2 oldu. Çocuk verisi için yalnız sayılar, local-only ve açık çıktı şeması; kişisel öğrenci/veli dosyası açılmadı. F01/F02 bu yüzden açık.
+- Gerçek Auth.js token/çerez/yönlendirme testleri yer tutucu auth assert'lerinin yerini aldı. Son yerel suite: 441 başarılı, 0 başarısız, 0 atlanan; migration yükseltmesi ve şema drift kontrolü geçti.
+
+## PR #146 — takip kabulü
+
+https://github.com/akgngr/verein-erp/pull/146
+
+İlk CI turunda progress aracı K0 ProgressNote kaynağını tanımladığı için build durdu. Politika gevşetilmedi: AI için ayrı devam/değerlendirme aggregate sorgusu eklendi, not sayısı dahil ProgressNote okuması kaldırıldı. K0 kaynak bildirimi regresyon testi artık build'den önce bu hatayı yakalar. Kurs/takvim/kampanya sayfaları ve Berlin saatli/tüm gün sınırları DB testleriyle doğrulandı. Güncel commit'in CI build/hydration kabulü ayrıca beklenir.

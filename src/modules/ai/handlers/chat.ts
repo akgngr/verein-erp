@@ -14,11 +14,11 @@ import { ActionError, UnauthorizedError, requireUser } from "@/modules/auth/serv
 import { readAiRequestBody } from "../services/request-body";
 import { recordAiMetric } from "../services/metrics";
 import { reserveAiUsage } from "../services/usage";
-import { claimAiTurn, finishAiTurn } from "../services/turns";
+import { claimAiTurn, finishAiTurn, getCachedAiTurn, commitAiTurn } from "../services/turns";
 import { aiPermissions } from "../permissions";
 import { runAssistant } from "../services/assistant";
 import { getActiveProvider, hasAiConsent } from "../services/consent";
-import { AI_HISTORY_WINDOW, appendTurns, createConversation, getConversation } from "../services/history";
+import { AI_HISTORY_WINDOW, createConversation, getConversation } from "../services/history";
 import { ProviderError } from "../services/providers";
 
 /** İstemci yalnızca yeni mesajı ve sohbet kimliğini gönderir; geçmiş sunucuda (şifreli) tutulur. */
@@ -57,19 +57,18 @@ export async function aiChatHandler(request: Request): Promise<Response> {
 
   try {
     const { message } = parsed.data;
+    if(parsed.data.requestKey){const cached=await getCachedAiTurn(user.id,parsed.data.requestKey,parsed.data.conversationId);if(cached)return NextResponse.json(cached);}
     let conversationId = parsed.data.conversationId;
     const previous = conversationId ? await getConversation(user.id, conversationId, AI_HISTORY_WINDOW) : null;
     if (conversationId && !previous) return fail("ai.errors.conversationNotFound", 404);
-    const history = (previous?.turns ?? []).slice(-(AI_HISTORY_WINDOW - 1)).map(({ role, content }) => ({ role, content }));
     conversationId ??= await createConversation(user.id, message);
     const claim=await claimAiTurn(user.id,conversationId,parsed.data.requestKey ?? crypto.randomUUID());
     if(claim.cached) return NextResponse.json(claim.cached);
     try {
+    const current=await getConversation(user.id,conversationId,AI_HISTORY_WINDOW);
+    if(!current)throw new Error("AI_TURN_BUSY");
+    const history=current.turns.slice(-(AI_HISTORY_WINDOW-1)).map(({role,content})=>({role,content}));
     const result = await runAssistant({ conversationId, user, locale: await getLocale(), provider, turns: [...history, { role: "user", content: message }] });
-    await appendTurns(conversationId, [
-      { role: "user", content: message },
-      { role: "assistant", content: result.reply, proposals: result.proposals, files: result.files },
-    ]);
     await writeAudit({
       userId: user.id,
       userLabel: buildUserLabel(user.name, user.email),
@@ -79,12 +78,14 @@ export async function aiChatHandler(request: Request): Promise<Response> {
       after: { provider, tools: result.toolsUsed, inputTokens: result.usage.inputTokens, outputTokens: result.usage.outputTokens, redactedValues: result.redactions },
     });
     const response={ok:true,conversationId,reply:result.reply,proposals:result.proposals,files:result.files};
-    await finishAiTurn(user.id,conversationId,claim.id,response,true);
+    await commitAiTurn({userId:user.id,conversationId,id:claim.id,message,reply:result.reply,proposals:result.proposals,files:result.files,response});
     return NextResponse.json(response);
     } catch(error) { await finishAiTurn(user.id,conversationId,claim.id,null,false); throw error; }
   } catch (error) {
     await recordAiMetric(error instanceof ActionError?"request_denied":"request_failed");
-    if(error instanceof Error && ["AI_TURN_BUSY","AI_USAGE_LIMIT","AI_INPUT_BUDGET"].includes(error.message)) return fail("ai.errors.rateLimited",429);
+    if(error instanceof Error&&error.message==="AI_TURN_BUSY")return fail("ai.errors.rateLimited",409,"turnBusy");
+    if(error instanceof Error&&error.message==="AI_TURN_FAILED")return fail("ai.errors.unavailable",409,"turnFailed");
+    if(error instanceof Error && ["AI_USAGE_LIMIT","AI_INPUT_BUDGET"].includes(error.message)) return fail("ai.errors.rateLimited",429);
     if (error instanceof ActionError) return fail(error.message, 403);
     if (error instanceof ProviderError) {
       console.error(`[ai] Sağlayıcı hatası (${provider}): ${error.kind}`);

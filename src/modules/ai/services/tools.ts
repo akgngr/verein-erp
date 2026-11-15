@@ -2,7 +2,7 @@ import "server-only";
 
 import { AI_TOOL_POLICY,DATA_POLICY,type TablePolicy } from "@/shared/data-policy";
 import { cloudToolAllowed } from "./cloud-policy";
-import { createReferenceScope,saveDataset } from "./references";
+import { createReferenceScope,saveDataset,loadDataset } from "./references";
 import { assertUniqueToolNames } from "@/shared/ai/v2";
 import type { z } from "zod";
 
@@ -43,6 +43,11 @@ const MODULE_TOOLS = moduleAiRegistry.flatMap((entry) =>
       run: (input, { user, proposals, files, restore,conversationId,policyRevision }) =>
         tool.run(input, {
           user,
+          loadDatasetDefinition:async token=>{
+            const data=await loadDataset({userId:user.id,conversationId,policyRevision},token);
+            if(data.sourceModule!==entry.module)throw new Error("AI_DATASET_SOURCE_DENIED");
+            return data.definition;
+          },
           createDataset:async args=>{
             const policy=AI_TOOL_POLICY[tool.name as keyof typeof AI_TOOL_POLICY];
             if(!policy || !("serverReads" in policy) || !policy.serverReads.every(table=>DATA_POLICY[table].owner===entry.module && (DATA_POLICY as Record<string,TablePolicy>)[table].category!=="K0")) throw new Error("AI_DATASET_SOURCE_DENIED");
@@ -71,7 +76,7 @@ for(const entry of moduleAiRegistry)for(const tool of entry.tools){
 }
 assertUniqueToolNames(MODULE_TOOLS);
 const TOOLS = MODULE_TOOLS;
-const featureAvailable=(name:string)=>!["create_dues_dataset","propose_dataset_export"].includes(name)||process.env.AI_PERSONAL_EXPORT_ENABLED==="true";
+const featureAvailable=(name:string)=>!["create_dues_dataset","query_dataset","propose_dataset_export"].includes(name)||process.env.AI_PERSONAL_EXPORT_ENABLED==="true";
 
 /** Bu kullanıcı için şu an kullanılabilir araçlar (modül izni + kullanıcı yetkisi). */
 export async function availableTools(user: SessionUser, provider?: AiProviderId) {

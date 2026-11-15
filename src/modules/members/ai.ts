@@ -1,26 +1,30 @@
 import "server-only";
 import {z} from "zod";
 import {aiToolV2} from "@/shared/ai/v2";
+import {makeDuesDatasetTool} from "./services/dues-ai-tool";
 
 import { YEAR_INPUT, aiTool, defineModuleAi, euros, yearSchema } from "@/shared/ai/define";
 import { can } from "@/shared/permissions/define";
 
 import { memberPaymentsPermissions } from "./permissions";
 import { membersPermissions } from "./permissions";
-import { loadDuesDataset, DUES_DATASET_COLUMNS, getDuesStats, getMemberStats } from "./server";
+import { loadDuesDataset, parseDuesDatasetQuery, duesDatasetQuerySchema, DUES_DATASET_COLUMNS, getDuesStats, getMemberStats } from "./server";
 
 /** Üyeler: yalnızca sayılar; üye adı veya ayrıntısı dönmez. Sözleşme: src/shared/ai/define.ts. */
 export const ai = defineModuleAi({
   module: "members",
   tools: [
-    aiToolV2({name:"create_dues_dataset",operation:"read",allowed:user=>can(user.role,memberPaymentsPermissions,"view"),
-      description:"Prepare a server-side dataset of overdue dues. Returns only a temporary datasetRef and count; no identities. Use propose_dataset_export for a file with real names.", // i18n-ignore (model-facing)
-      input:yearSchema,result:z.object({datasetRef:z.string(),count:z.number().int()}),modelOutput:z.object({datasetRef:z.string(),count:z.number().int()}).strict(),
+    makeDuesDatasetTool({name:"create_dues_dataset"}),
+    aiToolV2({name:"query_dataset",operation:"read",allowed:user=>can(user.role,memberPaymentsPermissions,"view"),
+      description:"Refine a members dues dataset using an existing datasetRef and allowed status or integer-cent amount filters. Creates a fresh scoped reference and returns only a count. No personal identities or arbitrary SQL.", // i18n-ignore (model-facing)
+      input:duesDatasetQuerySchema.omit({year:true}).extend({datasetRef:z.string().regex(/^[A-Za-z0-9_-]{43}$/)}).strict(),
+      result:z.object({datasetRef:z.string(),count:z.number().int()}),modelOutput:z.object({datasetRef:z.string(),count:z.number().int()}).strict(),
       policy:{purpose:"dues-export",serverReads:["Member","MemberDue","MemberPayment"],modelFields:["datasetRef","count"],processing:"approved_provider"},projectForModel:result=>result,
-      run:async({year},context)=>{
-        const data=await loadDuesDataset(year);
-        const datasetRef=await context.createDataset({definition:{year},selection:{fingerprint:data.fingerprint},columns:[...DUES_DATASET_COLUMNS]});
-        return {datasetRef,count:data.rows.length};
+      run:async({datasetRef,...filters},context)=>{
+        const original=parseDuesDatasetQuery(await context.loadDatasetDefinition(datasetRef));
+        const query=parseDuesDatasetQuery({...original,...filters}),data=await loadDuesDataset(query);
+        const next=await context.createDataset({definition:query,selection:{fingerprint:data.fingerprint},columns:[...DUES_DATASET_COLUMNS]});
+        return {datasetRef:next,count:data.rows.length};
       },
     }),
     aiTool({

@@ -1882,7 +1882,8 @@
         "download": "Dosyayı indir",
         "failed": "Dosya üretilemedi. Lütfen yeni bir öneri oluşturun.",
         "queued": "Dosya hazırlanıyor…"
-      }
+      },
+      "loadOlder": "Daha eski mesajları yükle"
     },
     "settings": {
       "title": "Yapay zekâ asistanı",
