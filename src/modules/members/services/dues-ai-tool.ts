@@ -4,7 +4,7 @@ import {datasetResultSchema} from "@/shared/ai/dataset";
 import {aiToolV2} from "@/shared/ai/v2";
 import {can} from "@/shared/permissions/define";
 import {memberPaymentsPermissions} from "../permissions";
-import {describeDuesDataset,duesDatasetQuerySchema,DUES_DATASET_COLUMNS,loadDuesDataset} from "./ai-dataset";
+import {describeDuesDataset,duesDatasetQuerySchema,DUES_DATASET_COLUMNS,streamDuesDataset} from "./ai-dataset";
 
 /** Worker-safe definition shared by the live registry and provider-wire integration tests. */
 export function makeDuesDatasetTool(args:{name:"create_dues_dataset"|"create_dataset"}){
@@ -47,13 +47,18 @@ export function makePseudonymousDuesTool(args: { name: "list_dues_by_person" }) 
     run: async (query, context) => {
       if (!context.pseudonym) throw new Error("AI_PSEUDONYM_UNAVAILABLE");
       const { page, ...filter } = query;
-      const data = await loadDuesDataset(filter);
-      const slice = data.rows.slice((page - 1) * PAGE_SIZE, page * PAGE_SIZE);
+      // Akış: tüm seçim belleğe alınmaz; toplam sayılır, yalnız istenen sayfa toplanır.
+      const slice: Array<{ memberId: string; remainingCents: number; type: string; dueDate: string; status: string }> = [];
+      let total = 0;
+      for await (const item of streamDuesDataset(filter, { signal: context.signal })) {
+        if (total >= (page - 1) * PAGE_SIZE && slice.length < PAGE_SIZE) slice.push(item);
+        total++;
+      }
       const rows = [];
       for (const item of slice) {
         rows.push({ person: await context.pseudonym("members", item.memberId), remainingEur: Math.round(item.remainingCents / 100), membershipType: item.type, dueMonth: item.dueDate.slice(0, 7), status: item.status });
       }
-      return { year: filter.year, total: data.rows.length, page, hasMore: page * PAGE_SIZE < data.rows.length, rows };
+      return { year: filter.year, total, page, hasMore: page * PAGE_SIZE < total, rows };
     },
   });
 }
