@@ -12,6 +12,8 @@ gerektirmez.
 
 ---
 
+> 📚 **Dokümantasyon sitesi:** https://akgngr.github.io/verein-erp/ (kaynak: `website/`, modül kataloğu `pnpm docs:modules` ile üretilir)
+
 ## İçindekiler
 
 1. [Modüller](#1-modüller)

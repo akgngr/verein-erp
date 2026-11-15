@@ -29,6 +29,7 @@
     "test:all": "pnpm test:accounting && pnpm test:ai && pnpm test:automation && pnpm test:banking && pnpm test:courses && pnpm test:demo && pnpm test:donations && pnpm test:mail && pnpm test:mailings && pnpm test:members && pnpm test:modules && pnpm test:security && pnpm test:shared",
     "sync:schemas": "tsx scripts/sync-schemas.ts",
     "module:sync": "tsx scripts/sync-schemas.ts",
+    "docs:modules": "NODE_OPTIONS=\"--conditions=react-server\" tsx scripts/docs/generate-module-docs.ts",
     "module:create": "tsx scripts/scaffold-module.ts",
     "module:validate": "tsx scripts/validate-module.ts",
     "module:deps": "tsx scripts/module-deps.ts",

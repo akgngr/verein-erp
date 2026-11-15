@@ -105,6 +105,7 @@ const eslintConfig = [
       "skills/**",
       "download/**",
       "upload/**",
+      "website/**",
     ],
   },
 ];
