@@ -1,6 +1,6 @@
 # İkinci AI agent çalışması — kod incelemesi
 
-İncelenen sürüm: main `58adc1876ba6172e809214633a815998965adab2` (15.11.2026). Karşılaştırma: ilk v2 öneri paketinin `7ccbfbe` ağacı sonrası değişiklikler. Bu bir kod/negatif örnek incelemesidir; gerçek sağlayıcı hesabı veya üretim pilotu testi değildir. Eklenen sohbet dosyası agentin gerekçe notu değil, eski PR #152 CI logudur. Logdaki Set<string>/PolicyTable TypeScript hatası sonraki `860e19c` commit'inde düzeltilmiştir.
+İlk incelenen sürüm: main `58adc1876ba6172e809214633a815998965adab2` (15.11.2026). Takip incelemesi: `320a41e8bc62cc4ec08d9fb8e5e2bbc3c4ad52ff` (16.11.2026). Karşılaştırma: ilk v2 öneri paketinin `7ccbfbe` ağacı sonrası değişiklikler. Bu bir kod/negatif örnek incelemesidir; gerçek sağlayıcı hesabı veya üretim pilotu testi değildir. Eklenen sohbet dosyası agentin gerekçe notu değil, eski PR #152 CI logudur. Logdaki Set<string>/PolicyTable TypeScript hatası sonraki `860e19c` commit'inde düzeltilmiştir.
 
 ## Sonuç
 
@@ -53,7 +53,7 @@ Relay belgesi TODO'da F06'ya işaret eder; incelenen listede F06 yoktur. Beşten
 | E08 | Gerçek sağlayıcı hesabı, bölge/saklama/fiyat/timeout kabul kanıtı yok. |
 | E12 | Flag/runbook mevcut; gerçek pilot ve imzalı kabul matrisi tamamlanmış değil. |
 | F01 | Öğrenci/veli için label/alias helper'ları var; tam izinli çocuk adapter/export geçişi bitmemiş. |
-| F02 | 26 legacy okuma/dosya aracı ve registry fallback'i hâlâ var. PS araçları bunların yerine geçmemiş. |
+| F02 | İlk kontrolde 26 legacy araç vardı; #164 muhasebenin 6 aracını taşıdı. Güncel kalan sayı 20; registry fallback'i sürüyor. |
 | F03 | Aidat hatırlatma taslağı → bağımsız gönderim onayı → mailings akışı henüz yok. |
 | F04 | OCR/form doldurma/özet bir kısmı karşılıyor; brifing, inbox, uygun zaman, takip ve ses akışları bitmemiş. Ayrı v2 planı gereklidir. |
 | F05 | Bu çalışma GraphQL gereksinimini kanıtlamıyor; transport kararı ayrı kaydedilmeli. |
@@ -65,3 +65,12 @@ F04 orijinal görevde ayrı plan hazırlamayı ister; S1–S6'nın tamamı uygul
 ## Doğrulama
 
 Son birleşen PR #160 head `0c46da9`: CI run 43769397296 ve Security 43769397252 başarılı. Yerelde incelenen main üstünde baseline migration yükseltmesi/drift ve 488 test / 100 suite çalıştı: 488 başarılı, 0 başarısız, 0 atlanan. Bu testler yukarıdaki atlanan durumları kapsamadığından yeşil CI bulguları geçersiz kılmaz. Ek sentetik negatif örnekler ağ kullanmadan çalıştırıldı. Gerçek müşteri kaydı, üretim migration'ı veya dış mesaj gönderimi kullanılmadı.
+
+
+## 16.11.2026 — eşzamanlı yeni main güncellemesi
+
+PR #163 modüller arası bağları açıkça beyan edip sınır testi eklemiştir; bu, mimari denetlenebilirlik açısından olumlu bir gelişmedir. PR #164 muhasebenin 6 aracını v2'ye taşımış ve takma adlı üye profili aracı eklemiştir. Kalan legacy araç sayısı 20'dir. İlk test sayısı 488, 58adc18 ağacına aittir; yeni ağacın doğrulaması ayrıca yapılmalıdır. Önceki yüksek öncelikli iki bulgunun ilgili kodu bu iki PR'da değişmemiştir.
+
+Yeni üye profili girişinde `name` serbest ad parçası kabul eder. Bu, yalnız opaque referans üzerinden sorgu tasarımından farklı bir ürün kararıdır; kısmi adın bulut modeline aktarılması risk modeline açıkça yazılmalıdır. `overdueEur`, tüm borçların toplamı değil `listMemberDues(...).slice(0,5)` içindeki gecikmiş borçların toplamıdır. Beş yıldan eski borç varsa eksik toplam olarak anlaşılabilir; ya tüm izinli satırlardan aggregate hesaplanmalı ya kapsam alan adına/metadata'ya yansıtılmalıdır.
+
+Muhasebe aggregate DTO'larında kategori ve hesap adı gibi serbest metin etiketleri vardır. Bunları `aggregate` olarak işaretlemek, etiket içeriğinde kişisel veri olmayacağını tek başına garanti etmez. Bulut kapsamına yeni eklenen bu alanlar projection/content açısından ayrıca değerlendirilmelidir; bu bir üretim kaydında sızıntı gözlemi değil şema ve kaynak türünden çıkarılan risktir.
