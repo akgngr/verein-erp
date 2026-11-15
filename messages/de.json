@@ -3885,7 +3885,8 @@
       "deleteTitle": "Datei löschen",
       "deleteMessage": "Die Datei \"{name}\" wird aus dem Datensatz entfernt. Die Datei bleibt auf dem Datenträger erhalten. Bestätigen?",
       "deletedToast": "Datei gelöscht.",
-      "removeFromListAria": "{name} aus der Liste entfernen"
+      "removeFromListAria": "{name} aus der Liste entfernen",
+      "analyze": "Ausfüllen"
     },
     "notes": {
       "empty": "Noch keine Vermerke hinzugefügt.",
@@ -4041,6 +4042,36 @@
     },
     "calendar": {
       "due": "Schriftstück-Fristen"
+    },
+    "analyze": {
+      "button": "Aus Dokument ausfüllen",
+      "createHint": "Wählen Sie die Datei und nutzen Sie „Aus Dokument ausfüllen“, um Datum, Absender, Zeichen, Betreff und Frist vorzuschlagen. Scans und Fotos werden per OCR gelesen; die Datei wird erst beim Speichern abgelegt.",
+      "editHint": "Wählen Sie eine Dokumentdatei; gefundene Angaben werden vorgeschlagen (die Datei wird nicht angehängt).",
+      "title": "Im Dokument gefundene Angaben",
+      "hint": "Wählen Sie die Felder, die übernommen werden sollen. Links der aktuelle, rechts der vorgeschlagene Wert.",
+      "noText": "In dieser Datei wurde kein lesbarer Text gefunden.",
+      "nothingFound": "Text gelesen, aber keine passenden Angaben gefunden.",
+      "paymentHint": "Im Dokument wurde eine Zahlung (Betrag/IBAN) erkannt; sie wird in die Zusammenfassung übernommen. Die Übergabe an die Buchhaltung folgt in einer späteren Version.",
+      "showText": "Gelesenen Text anzeigen",
+      "cancel": "Abbrechen",
+      "apply": "Auswahl übernehmen ({count})",
+      "applied": "Vorschläge übernommen. Bitte prüfen und speichern.",
+      "failed": "Das Dokument konnte nicht analysiert werden.",
+      "confidence": "OCR-Sicherheit: {value} %",
+      "source": {
+        "text": "Textebene",
+        "ocr": "OCR",
+        "none": "Kein Text"
+      },
+      "kinds": {
+        "invoice": "Rechnung",
+        "reminder": "Zahlungserinnerung / Mahnung",
+        "notice": "Bescheid",
+        "letter": "Schreiben"
+      },
+      "summaryAmount": "Betrag {amount}",
+      "summaryDue": "Frist {date}",
+      "summaryIban": "IBAN {iban}"
     }
   },
   "donations": {

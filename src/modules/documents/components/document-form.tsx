@@ -5,8 +5,9 @@ import { useTranslations } from "next-intl";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Button, addToast } from "@heroui/react";
+import { Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm, type Resolver } from "react-hook-form";
 
 import { applyActionResult } from "@/shared/components/forms/action-result";
@@ -27,7 +28,9 @@ import type { AssigneeOption, CategoryOption, ReplyTargetOption } from "../types
 import { berlinToday } from "../utils";
 import { CounterpartyAutocomplete } from "./counterparty-autocomplete";
 import { DirectionBadge } from "./direction-badge";
+import { AnalysisDialog, APPLICABLE_FIELDS, type ApplicableField } from "./analysis-dialog";
 import { FileUploader, type UploadCommand } from "./file-uploader";
+import type { DocumentAnalysis } from "../services/document-analysis";
 import { ReplyToSelect } from "./reply-to-select";
 
 /** Form alanları string taşır; boş string sunucu şemasında null'a çevrilir. */
@@ -100,6 +103,27 @@ export function DocumentForm(props: DocumentFormProps) {
   const [formError, setFormError] = useState<string | null>(null);
   const [pendingFileCount, setPendingFileCount] = useState(0);
   const [uploadCommand, setUploadCommand] = useState<UploadCommand | null>(null);
+  const tAnalyze = useTranslations("documents.analyze");
+  const [analyzingId, setAnalyzingId] = useState<string | null>(null);
+  const [analysis, setAnalysis] = useState<DocumentAnalysis | null>(null);
+  const analyzeInput = useRef<HTMLInputElement>(null);
+
+  /** "Evraktan doldur": dosya kaydedilmeden analiz edilir (OCR gerekirse sunucuda). */
+  const analyzeFile = async (file: File, id: string) => {
+    setAnalyzingId(id);
+    try {
+      const body = new FormData();
+      body.append("file", file);
+      const response = await fetch("/api/documents/analyze", { method: "POST", body });
+      const result = (await response.json().catch(() => null)) as { ok: boolean; analysis?: DocumentAnalysis; error?: string } | null;
+      if (!result?.ok || !result.analysis) return void addToast({ title: result?.error ?? tAnalyze("failed"), color: "danger" });
+      setAnalysis(result.analysis);
+    } catch {
+      addToast({ title: tAnalyze("failed"), color: "danger" });
+    } finally {
+      setAnalyzingId(null);
+    }
+  };
 
   const isEdit = props.mode === "edit";
   const doc = isEdit ? props.document : null;
@@ -201,6 +225,14 @@ export function DocumentForm(props: DocumentFormProps) {
   });
 
   const counterpartyLabel = direction === "INCOMING" ? t("sender") : t("receiver");
+  const analysisLabels: Record<ApplicableField, string> = {
+    counterparty: counterpartyLabel,
+    documentDate: t("documentDate"),
+    referenceNumber: t("referenceNumber"),
+    subject: t("subject"),
+    dueDate: t("dueDate"),
+    summary: t("summary"),
+  };
 
   return (
     <FormSurface className="max-w-3xl">
@@ -215,6 +247,40 @@ export function DocumentForm(props: DocumentFormProps) {
         ) : null}
 
         <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
+          {/* Dosyalar üstte: seçilen evraktan form doldurulabilir (docs/specs/DOCUMENTS_AI.md). */}
+          {!isEdit ? (
+            <div className="flex flex-col gap-2">
+              <p className="text-small font-medium text-foreground">{t("filesSection")}</p>
+              <p className="text-tiny text-default-500">{tAnalyze("createHint")}</p>
+              <FileUploader
+                mode="create"
+                maxMb={props.maxMb}
+                onPendingCountChange={setPendingFileCount}
+                uploadCommand={uploadCommand}
+                onAnalyze={analyzeFile}
+                analyzingId={analyzingId}
+              />
+            </div>
+          ) : (
+            <div className="flex flex-wrap items-center gap-2">
+              <input
+                ref={analyzeInput}
+                type="file"
+                className="hidden"
+                accept=".pdf,.jpg,.jpeg,.png,.webp,.tif,.tiff,.docx,.xlsx,.txt"
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  event.target.value = "";
+                  if (file) void analyzeFile(file, "edit");
+                }}
+              />
+              <Button size="sm" variant="flat" color="primary" startContent={analyzingId ? null : <Sparkles className="h-4 w-4" aria-hidden />} isLoading={Boolean(analyzingId)} onPress={() => analyzeInput.current?.click()}>
+                {tAnalyze("button")}
+              </Button>
+              <span className="text-tiny text-default-500">{tAnalyze("editHint")}</span>
+            </div>
+          )}
+
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormDatePicker
               name="documentDate"
@@ -301,18 +367,6 @@ export function DocumentForm(props: DocumentFormProps) {
             />
           ) : null}
 
-          {!isEdit ? (
-            <div className="flex flex-col gap-2">
-              <p className="text-small font-medium text-foreground">{t("filesSection")}</p>
-              <FileUploader
-                mode="create"
-                maxMb={props.maxMb}
-                onPendingCountChange={setPendingFileCount}
-                uploadCommand={uploadCommand}
-              />
-            </div>
-          ) : null}
-
           <FormErrorSummary message={formError} />
 
           <div className="flex items-center gap-2">
@@ -327,6 +381,20 @@ export function DocumentForm(props: DocumentFormProps) {
             </Button>
           </div>
         </form>
+        {analysis ? (
+          <AnalysisDialog
+            analysis={analysis}
+            labels={analysisLabels}
+            current={Object.fromEntries(APPLICABLE_FIELDS.map((field) => [field, String(form.getValues(field) ?? "")])) as Record<ApplicableField, string>}
+            onApply={(values) => {
+              for (const [field, value] of Object.entries(values)) {
+                if (value) form.setValue(field as ApplicableField, value, { shouldDirty: true, shouldValidate: true });
+              }
+              addToast({ title: tAnalyze("applied"), color: "success" });
+            }}
+            onClose={() => setAnalysis(null)}
+          />
+        ) : null}
     </FormSurface>
   );
 }
