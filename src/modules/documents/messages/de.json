@@ -381,6 +381,24 @@
     },
     "summaryAmount": "Betrag {amount}",
     "summaryDue": "Frist {date}",
-    "summaryIban": "IBAN {iban}"
+    "summaryIban": "IBAN {iban}",
+    "aiSummarize": "Mit KI zusammenfassen",
+    "aiHint": "Kurzfassung, Dokumentart und Kategorievorschlag. Bei Cloud-Anbietern werden personenbezogene Angaben maskiert.",
+    "aiFailed": "KI-Zusammenfassung nicht verfügbar.",
+    "aiActionRequired": "Handlungsbedarf",
+    "aiKinds": {
+      "invoice": "Rechnung",
+      "reminder": "Erinnerung / Mahnung",
+      "notice": "Bescheid",
+      "contract": "Vertrag",
+      "invitation": "Einladung",
+      "information": "Information",
+      "letter": "Schreiben",
+      "other": "Sonstiges"
+    },
+    "aiProcessing": {
+      "local": "Mit lokalem Modell verarbeitet",
+      "cloud": "In der Cloud mit maskiertem Text verarbeitet"
+    }
   }
 }

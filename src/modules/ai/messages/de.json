@@ -292,5 +292,13 @@
       "LIKELY_NAME": "nicht erfasster Personenname",
       "SPECIAL_CATEGORY": "besondere Kategorie (Gesundheit, Religion usw.)"
     }
+  },
+  "documentSummary": {
+    "errors": {
+      "notAllowed": "Für die Verarbeitung von Dokumentinhalten muss die Administration in den KI-Berechtigungen „Posteingang → Inhalte lesen“ freigeben.",
+      "cloudNotAllowed": "Dokumentinhalte gehen nur im Modus „Geprüfter Freitext“ (maskiert) an einen Cloud-Anbieter. Die Administration kann ihn in den KI-Einstellungen aktivieren oder ein lokales Modell wählen.",
+      "specialCategory": "Das Dokument enthält besondere Daten zu einer Person (z. B. Gesundheit); es kann nur mit einem lokalen Modell verarbeitet werden.",
+      "unreadable": "Die Antwort des Assistenten war nicht lesbar; bitte erneut versuchen."
+    }
   }
 }

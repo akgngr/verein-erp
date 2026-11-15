@@ -2083,6 +2083,14 @@
         "LIKELY_NAME": "kayıtlı olmayan kişi adı",
         "SPECIAL_CATEGORY": "özel nitelikli veri (sağlık, din vb.)"
       }
+    },
+    "documentSummary": {
+      "errors": {
+        "notAllowed": "Evrak içeriğini asistanla işlemek için yöneticinin AI izinlerinde \"Evrak Kayıt → içerik okuma\" açık olmalı.",
+        "cloudNotAllowed": "Evrak içeriği bulut sağlayıcıya yalnız \"Denetimli serbest metin\" modunda (maskelenerek) gönderilir. Yönetici AI ayarlarından açabilir veya yerel model seçebilir.",
+        "specialCategory": "Evrakta kişiye ait özel nitelikli bilgi (ör. sağlık) var; yalnız yerel modelle işlenebilir.",
+        "unreadable": "Asistanın yanıtı okunamadı; lütfen tekrar deneyin."
+      }
     }
   },
   "audit": {
@@ -4071,7 +4079,25 @@
       },
       "summaryAmount": "tutar {amount}",
       "summaryDue": "termin {date}",
-      "summaryIban": "IBAN {iban}"
+      "summaryIban": "IBAN {iban}",
+      "aiSummarize": "AI ile özetle",
+      "aiHint": "Kısa özet, evrak türü ve kategori önerisi. Bulut sağlayıcıda kişisel bilgiler maskelenir.",
+      "aiFailed": "AI özeti alınamadı.",
+      "aiActionRequired": "İşlem gerekiyor",
+      "aiKinds": {
+        "invoice": "Fatura",
+        "reminder": "Hatırlatma / ihtar",
+        "notice": "Resmî karar / tebligat",
+        "contract": "Sözleşme",
+        "invitation": "Davet",
+        "information": "Bilgilendirme",
+        "letter": "Yazı",
+        "other": "Diğer"
+      },
+      "aiProcessing": {
+        "local": "Yerel modelle işlendi",
+        "cloud": "Bulutta, maskelenmiş metinle işlendi"
+      }
     }
   },
   "donations": {

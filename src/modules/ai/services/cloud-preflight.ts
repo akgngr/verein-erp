@@ -107,3 +107,11 @@ export function preflightCloudText(input: string, known: KnownPerson[], aliasFor
 export function findingKinds(findings: Finding[]): FindingKind[] {
   return [...new Set(findings.map((finding) => finding.kind))];
 }
+
+/** Metinde özel nitelikli veri (DSGVO Art. 9) anahtar kökü var mı? (evrak maskelemesi için). */
+export function hasSpecialCategory(text: string): boolean {
+  SPECIAL.lastIndex = 0;
+  const found = SPECIAL.test(text);
+  SPECIAL.lastIndex = 0;
+  return found;
+}

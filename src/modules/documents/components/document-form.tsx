@@ -232,6 +232,7 @@ export function DocumentForm(props: DocumentFormProps) {
     subject: t("subject"),
     dueDate: t("dueDate"),
     summary: t("summary"),
+    categoryId: t("category"),
   };
 
   return (
@@ -385,6 +386,7 @@ export function DocumentForm(props: DocumentFormProps) {
           <AnalysisDialog
             analysis={analysis}
             labels={analysisLabels}
+            categories={props.categories}
             current={Object.fromEntries(APPLICABLE_FIELDS.map((field) => [field, String(form.getValues(field) ?? "")])) as Record<ApplicableField, string>}
             onApply={(values) => {
               for (const [field, value] of Object.entries(values)) {

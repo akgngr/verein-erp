@@ -381,6 +381,24 @@
     },
     "summaryAmount": "tutar {amount}",
     "summaryDue": "termin {date}",
-    "summaryIban": "IBAN {iban}"
+    "summaryIban": "IBAN {iban}",
+    "aiSummarize": "AI ile özetle",
+    "aiHint": "Kısa özet, evrak türü ve kategori önerisi. Bulut sağlayıcıda kişisel bilgiler maskelenir.",
+    "aiFailed": "AI özeti alınamadı.",
+    "aiActionRequired": "İşlem gerekiyor",
+    "aiKinds": {
+      "invoice": "Fatura",
+      "reminder": "Hatırlatma / ihtar",
+      "notice": "Resmî karar / tebligat",
+      "contract": "Sözleşme",
+      "invitation": "Davet",
+      "information": "Bilgilendirme",
+      "letter": "Yazı",
+      "other": "Diğer"
+    },
+    "aiProcessing": {
+      "local": "Yerel modelle işlendi",
+      "cloud": "Bulutta, maskelenmiş metinle işlendi"
+    }
   }
 }
