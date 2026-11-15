@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.6.0",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Konuşma kapsamlı takma ad katmanı",
+        "de": "Gesprächsbezogene Pseudonym-Schicht"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Kişi kayıtları konuşmaya özel kısa takma adlarla ([[K7]]) eşlenebilir. Sohbet geçmişi takma adlı saklanır; kullanıcıya gösterilirken ad, izleyicinin o anki yetkisiyle sunucuda çözülür (yetki yoksa \"gizli kişi\"). Henüz bulut sohbetine bağlı değildir.",
+          "de": "Personendatensätze können gesprächsbezogenen Kurzpseudonymen ([[K7]]) zugeordnet werden. Der Verlauf bleibt pseudonymisiert; bei der Anzeige wird der Name auf dem Server mit der aktuellen Berechtigung aufgelöst (sonst „verborgene Person“). Noch nicht mit dem Cloud-Chat verbunden."
+        }
+      ]
+    },
+    {
       "version": "1.5.1",
       "date": "2026-11-15",
       "title": {
