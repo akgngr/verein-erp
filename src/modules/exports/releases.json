@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "2.1.7",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Dosyalarda gerçek adlar",
+        "de": "Echte Namen in Dateien"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Dosya oluşturma: takma adlar dosyada gerçek ada çevrilir.",
+          "de": "Dateierstellung: Aliase werden in der Datei in echte Namen aufgelöst."
+        }
+      ]
+    },
+    {
       "version": "2.1.6",
       "date": "2026-11-15",
       "title": {

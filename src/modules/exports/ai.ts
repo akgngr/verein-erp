@@ -34,8 +34,11 @@ export const ai = defineModuleAiV2({
       description:
         `Creates a downloadable file from markdown you provide (headings, paragraphs, lists, tables). Formats: pdf (letterhead), xlsx (every table becomes a sheet; numbers stay numeric), docx, md, csv (tables only)${EXTRA_HINTS.length ? `, ${EXTRA_HINTS.join(", ")}` : ""}. Use it whenever the user asks for a file/PDF/Excel/Word of an answer, table or summary. Put the complete content into markdown; it does not fetch data itself. A download button is shown to the user automatically: never write a link, URL or file path.`, // i18n-ignore (model-facing tool text)
       input: z.object({ format: z.enum(FORMAT_IDS), title: z.string().min(1).max(150), markdown: z.string().min(1).max(FILES_MAX_CONTENT_CHARS) }),
-      run: async ({ format, title, markdown }, { user, restore, attachFile }) => {
-        const file = await createGeneratedFile({ ownerId: user.id, title: restore(title), format, markdown: restore(markdown), source: "ai" });
+      run: async ({ format, title, markdown }, { user, restore, attachFile, revealAliases }) => {
+        // Maskeler ([PERSON_n]) ve takma adlar ([[Kn]]) yalnız sunucuda, kullanıcının canlı yetkisiyle gerçek değere çevrilir;
+        // dosya yalnız bu kullanıcıya aittir ve sonuç modele dönmez.
+        const reveal = async (text: string) => (revealAliases ? revealAliases(restore(text)) : restore(text));
+        const file = await createGeneratedFile({ ownerId: user.id, title: await reveal(title), format, markdown: await reveal(markdown), source: "ai" });
         attachFile({ title: file.title, url: file.url, format });
         return { status: "created", format, note: "The file is ready; a download button is shown below your answer. Do not write any link or path." }; // i18n-ignore (model-facing tool text)
       },
