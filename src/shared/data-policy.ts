@@ -216,6 +216,8 @@ export const AI_TOOL_POLICY = {
   export_dataset:{module:"exports",reads:[],serverReads:[],modelFields:["status","note"]},
   query_dataset:{module:"members",reads:[],serverReads:["Member","MemberDue","MemberPayment"],modelFields:["datasetRef","count"]},
   create_dues_dataset:{module:"members",reads:[],serverReads:["Member","MemberDue","MemberPayment"],modelFields:["datasetRef","count"]},
+  // Takma adlı kişi düzeyi (docs/architecture/ai-cloud-pseudonym-relay.md): ad/numara yok, yalnız [[Kn]] + kaba alanlar.
+  list_dues_by_person:{module:"members",reads:[],serverReads:["Member","MemberDue","MemberPayment"],modelFields:["year","total","page","hasMore","rows","rows.person","rows.remainingEur","rows.membershipType","rows.dueMonth","rows.status"]},
   propose_dataset_export:{module:"exports",reads:[],serverReads:[],modelFields:["status","note"]},
   // accounting
   get_accounting_summary: { module: "accounting", reads: ["AccountingBooking", "AccountingAccount", "AccountingYear", "AccountingCategory"] },
@@ -225,52 +227,52 @@ export const AI_TOOL_POLICY = {
   get_payables_summary: { module: "accounting", reads: ["AccountingPayable"] },
   get_report_link: { module: "accounting", reads: [] },
   // grants
-  get_grant_overview: { module: "grants", reads: ["Grant"] },
+  get_grant_overview: {"module":"grants","reads":[],"serverReads":["Grant"],"modelFields":["byStatus.PLANNED","byStatus.APPLIED","byStatus.APPROVED","byStatus.ACTIVE","byStatus.REPORTED","byStatus.CLOSED","byStatus.REJECTED","approvedTotal","reportsOverdue","reportsDueIn30Days"]},
   // crm
-  get_crm_pipeline: { module: "crm", reads: ["CrmDeal"] },
+  get_crm_pipeline: {"module":"crm","reads":[],"serverReads":["CrmDeal"],"modelFields":["deals.OPEN.count","deals.OPEN.amount","deals.PROPOSAL.count","deals.PROPOSAL.amount","deals.WON.count","deals.WON.amount","deals.LOST.count","deals.LOST.amount"]},
   // courses
   list_courses: { module: "courses", reads: ["Course", "CourseEnrollment", "CourseSession"] },
   get_course_statistics: { module: "courses", reads: ["Course", "CourseEnrollment", "CourseSession"] },
-  propose_course: { module: "courses", reads: [] },
-  propose_course_status: { module: "courses", reads: ["Course"] },
-  propose_delete_course: { module: "courses", reads: ["Course"] },
+  propose_course: {"module": "courses", "reads": [], "serverReads": [], "modelFields": ["status", "note"]},
+  propose_course_status: {"module": "courses", "reads": [], "serverReads": ["Course"], "modelFields": ["status", "note"]},
+  propose_delete_course: {"module": "courses", "reads": [], "serverReads": ["Course"], "modelFields": ["status", "note"]},
   // documents
   get_document_statistics: { module: "documents", reads: ["Document", "DocumentCategory"] },
   list_documents: { module: "documents", reads: ["Document", "DocumentCategory"] },
   get_document: { module: "documents", reads: ["Document", "DocumentCategory", "DocumentFile"] },
   read_document_file: { module: "documents", reads: ["DocumentFile"] },
-  propose_document: { module: "documents", reads: [] },
-  propose_document_status: { module: "documents", reads: ["Document"] },
-  propose_delete_document: { module: "documents", reads: ["Document"] },
+  propose_document: {"module": "documents", "reads": [], "serverReads": [], "modelFields": ["status", "note"]},
+  propose_document_status: {"module": "documents", "reads": [], "serverReads": ["Document"], "modelFields": ["status", "note"]},
+  propose_delete_document: {"module": "documents", "reads": [], "serverReads": ["Document"], "modelFields": ["status", "note"]},
   // donations
   get_donation_statistics: {"module": "donations", "reads": [], "serverReads": ["Donation"], "modelFields": ["year", "totalEur", "count", "unconfirmedOver300", "confirmationsIssued", "confirmationWarnings"]},
   // events
   list_upcoming_events: { module: "events", reads: ["Event"] },
-  propose_event: { module: "events", reads: [] },
+  propose_event: {"module": "events", "reads": [], "serverReads": [], "modelFields": ["status", "note"]},
   // exports
   create_file: { module: "exports", reads: [] },
   // inventory
   get_inventory_overview: { module: "inventory", reads: ["InventoryItem"] },
   list_inventory_items: { module: "inventory", reads: ["InventoryItem"] },
-  propose_inventory_item: { module: "inventory", reads: [] },
-  propose_inventory_status: { module: "inventory", reads: ["InventoryItem"] },
-  propose_delete_inventory_item: { module: "inventory", reads: ["InventoryItem"] },
+  propose_inventory_item: {"module": "inventory", "reads": [], "serverReads": [], "modelFields": ["status", "note"]},
+  propose_inventory_status: {"module": "inventory", "reads": [], "serverReads": [], "modelFields": ["status", "note"]},
+  propose_delete_inventory_item: {"module": "inventory", "reads": [], "serverReads": [], "modelFields": ["status", "note"]},
   // meetings
   get_meeting_statistics: { module: "meetings", reads: ["Meeting"] },
   list_meetings: { module: "meetings", reads: ["Meeting"] },
   list_shared_calendars: { module: "calendar", reads: ["Calendar"] },
   list_shared_calendar_entries: { module: "calendar", reads: ["Calendar", "CalendarEntry"] },
-  propose_calendar_entry: { module: "calendar", reads: ["Calendar"] },
+  propose_calendar_entry: {"module": "calendar", "reads": [], "serverReads": ["Calendar"], "modelFields": ["status", "note"]},
   get_campaign_statistics: { module: "mailings", reads: ["MailingCampaign"] },
   list_campaigns: { module: "mailings", reads: ["MailingCampaign"] },
   list_campaign_audiences: { module: "mailings", reads: [] },
-  propose_campaign_draft: { module: "mailings", reads: [] },
+  propose_campaign_draft: {"module": "mailings", "reads": [], "serverReads": [], "modelFields": ["status", "note"]},
   get_meeting: { module: "meetings", reads: ["Meeting", "AgendaItem", "MeetingDecision"] },
-  propose_meeting: { module: "meetings", reads: [] },
-  propose_meeting_status: { module: "meetings", reads: ["Meeting"] },
-  propose_delete_meeting: { module: "meetings", reads: ["Meeting"] },
+  propose_meeting: {"module": "meetings", "reads": [], "serverReads": [], "modelFields": ["status", "note"]},
+  propose_meeting_status: {"module": "meetings", "reads": [], "serverReads": ["Meeting"], "modelFields": ["status", "note"]},
+  propose_delete_meeting: {"module": "meetings", "reads": [], "serverReads": ["Meeting"], "modelFields": ["status", "note"]},
   // members
-  get_member_statistics: { module: "members", reads: ["Member", "MembershipTypeConfig"] },
+  get_member_statistics: {"module":"members","reads":[],"serverReads":["Member","MemberDue","MemberPayment"],"modelFields":["members.active","members.passive","members.resigned","members.newThisMonth","members.byType.type","members.byType.count","dues.year","dues.expectedEur","dues.collectedEur","dues.remainingEur","dues.collectionRatePercent","dues.openCount","dues.partialCount","dues.paidCount","dues.overdueCount"]},
   // organization
   get_organization_info: { module: "organization", reads: ["OrganizationProfile"] },
   // progress
@@ -279,7 +281,7 @@ export const AI_TOOL_POLICY = {
   get_student_statistics: {"module": "students", "reads": [], "serverReads": ["Student", "StudentGuardian"], "modelFields": ["active", "inactive", "guardians", "withSepaMandate"]},
   // tasks
   list_open_tasks: { module: "tasks", reads: ["Task"] },
-  propose_task: { module: "tasks", reads: [] },
-  propose_complete_task: { module: "tasks", reads: ["Task"] },
-  propose_delete_task: { module: "tasks", reads: ["Task"] },
+  propose_task: {"module": "tasks", "reads": [], "serverReads": [], "modelFields": ["status", "note"]},
+  propose_complete_task: {"module": "tasks", "reads": [], "serverReads": ["Task"], "modelFields": ["status", "note"]},
+  propose_delete_task: {"module": "tasks", "reads": [], "serverReads": ["Task"], "modelFields": ["status", "note"]},
 } as const satisfies Record<string, AiToolPolicy>;

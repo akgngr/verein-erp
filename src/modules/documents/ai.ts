@@ -1,9 +1,10 @@
 import "server-only";
+import {aiProposalTools} from "./services/ai-proposal-tools";
 
 import { z } from "zod";
 import {aiListCursor,aiListPage,aiPageInfo} from "@/shared/ai/pagination";
 
-import { DATE_RE, PROPOSED, aiAction, aiTool, defineModuleAi, isoDay } from "@/shared/ai/define";
+import {DATE_RE, aiAction, aiTool, defineModuleAi, isoDay} from "@/shared/ai/define";
 import { parseListParams } from "@/shared/list-params";
 import { can } from "@/shared/permissions/define";
 
@@ -87,7 +88,7 @@ export const ai = defineModuleAi({
       inputSchema: { type: "object", properties: { documentId: { type: "string" } }, required: ["documentId"], additionalProperties: false },
       run: async ({ documentId }) => {
         const doc = await getDocumentDetail(documentId);
-        if (!doc) return { status: "not_found" };
+        if (!doc) return { status: "not_found" } as const;
         return {
           id: doc.id,
           registryNumber: doc.registryNumber,
@@ -116,74 +117,12 @@ export const ai = defineModuleAi({
       inputSchema: { type: "object", properties: { fileId: { type: "string" } }, required: ["fileId"], additionalProperties: false },
       run: async ({ fileId }) => {
         const file = await getDocumentFileText(fileId);
-        if (!file) return { status: "not_found" };
+        if (!file) return { status: "not_found" } as const;
         return { name: file.originalName, mimeType: file.mimeType, text: file.text, truncated: file.truncated, unavailableReason: file.reason ?? null };
       },
     }),
-    aiTool({
-      name: "propose_document",
-      operation: "create",
-      allowed: (user) => can(user.role, documentsPermissions, "create"),
-      description: "PROPOSES registering a new incoming or outgoing document. Dates YYYY-MM-DD. Nothing is created until the user confirms.", // i18n-ignore (model-facing tool text)
-      schema: z.object({
-        direction: z.enum(["INCOMING", "OUTGOING"]),
-        documentDate: z.string().regex(DATE_RE),
-        counterparty: z.string().min(2).max(200),
-        subject: z.string().min(3).max(300),
-        summary: z.string().max(2000).nullable(),
-        dueDate: z.string().regex(DATE_RE).nullable(),
-      }),
-      inputSchema: {
-        type: "object",
-        properties: {
-          direction: { type: "string", enum: ["INCOMING", "OUTGOING"] },
-          documentDate: { type: "string" },
-          counterparty: { type: "string" },
-          subject: { type: "string" },
-          summary: { type: ["string", "null"] },
-          dueDate: { type: ["string", "null"] },
-        },
-        required: ["direction", "documentDate", "counterparty", "subject", "summary", "dueDate"],
-        additionalProperties: false,
-      },
-      run: async ({ subject, ...rest }, { propose }) => {
-        propose({ action: "create", title: subject, details: [rest.direction, rest.documentDate, rest.counterparty], payload: { subject, ...rest } });
-        return PROPOSED;
-      },
-    }),
-    aiTool({
-      name: "propose_document_status",
-      operation: "update",
-      allowed: (user) => can(user.role, documentsPermissions, "update"),
-      description: "PROPOSES changing a document's status (id from list_documents).", // i18n-ignore (model-facing tool text)
-      schema: z.object({ documentId: z.string().min(1).max(100), status: z.enum(["OPEN", "IN_PROGRESS", "COMPLETED", "ARCHIVED"]) }),
-      inputSchema: {
-        type: "object",
-        properties: { documentId: { type: "string" }, status: { type: "string", enum: ["OPEN", "IN_PROGRESS", "COMPLETED", "ARCHIVED"] } },
-        required: ["documentId", "status"],
-        additionalProperties: false,
-      },
-      run: async ({ documentId, status }, { propose }) => {
-        const doc = await getDocumentDetail(documentId);
-        if (!doc) return { status: "not_found" };
-        propose({ action: "changeStatus", title: `${doc.registryNumber} – ${doc.subject}`, details: [`→ ${status}`], payload: { documentId: doc.id, status } });
-        return PROPOSED;
-      },
-    }),
-    aiTool({
-      name: "propose_delete_document",
-      operation: "delete",
-      allowed: (user) => can(user.role, documentsPermissions, "delete"),
-      description: "PROPOSES deleting a document (id from list_documents).", // i18n-ignore (model-facing tool text)
-      schema: z.object({ documentId: z.string().min(1).max(100) }),
-      inputSchema: { type: "object", properties: { documentId: { type: "string" } }, required: ["documentId"], additionalProperties: false },
-      run: async ({ documentId }, { propose }) => {
-        const doc = await getDocumentDetail(documentId);
-        if (!doc) return { status: "not_found" };
-        propose({ action: "delete", title: `${doc.registryNumber} – ${doc.subject}`, payload: { documentId: doc.id } });
-        return PROPOSED;
-      },
-    }),
+    ...aiProposalTools,
+
   ],
   actions: {
     create: aiAction({ operation: "create", schema: createSchema, execute: (input) => createDocumentAction(input) }),

@@ -20,7 +20,7 @@ export const ai = defineModuleAiV2({
       allowed: (user) => can(user.role, donationsPermissions, "view"),
       description: "Donation statistics for a year: total (EUR), number of donations, confirmations issued and pending. No donor data.", // i18n-ignore (model-facing tool text)
       input:yearSchema,result:output,modelOutput:output,
-      policy:{"purpose": "donations-statistics", "serverReads": ["Donation"], "modelFields": ["year", "totalEur", "count", "unconfirmedOver300", "confirmationsIssued", "confirmationWarnings"], "processing": "approved_provider"},projectForModel:result=>result,
+      policy:{"purpose": "donations-statistics", "serverReads": ["Donation"], "modelFields": ["year", "totalEur", "count", "unconfirmedOver300", "confirmationsIssued", "confirmationWarnings"], "processing": "approved_provider", "modelDataClass": "aggregate"},projectForModel:result=>result,
       run: async ({ year }) => {
         const stats = await getDonationStats(year);
         return { year, totalEur: euros(stats.totalCents), count: stats.count, unconfirmedOver300: stats.unconfirmedOver300Count, confirmationsIssued: stats.issuedConfirmationCount, confirmationWarnings: stats.warningConfirmationCount };

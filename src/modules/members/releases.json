@@ -2,17 +2,57 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
-      "version": "1.10.4",
+      "version": "1.12.0",
       "date": "2026-11-15",
       "title": {
-        "tr": "Sınırlı ve şifreli dosya akışı",
-        "de": "Begrenzte verschlüsselte Dateiströme"
+        "tr": "AI v2 araç geçişi",
+        "de": "KI-v2-Werkzeugmigration"
       },
       "changes": [
+        {
+          "type": "security",
+          "tr": "Toplu istatistik araçları katı girdi, sunucu sonucu ve modele çıkacak alanların açık şemalarıyla v2 sözleşmesine taşındı; kişisel satırlar modele döndürülmez.",
+          "de": "Aggregierte Statistikwerkzeuge nutzen den v2-Vertrag mit strikten Eingaben sowie expliziten Server- und Modellausgabeschemata; personenbezogene Einzelzeilen werden nicht ausgegeben."
+        },
         {
           "type": "improvement",
           "tr": "Aidat veri kümesi 500 kayıtlık keyset sayfaları ve ödeme toplamlarıyla okunur; CSV/XLSX doğrudan şifreli akışa yazılır. İptal, süre ve boyut sınırları yayından önce doğrulanır.",
           "de": "Beitragsdaten werden in 500er-Keyset-Seiten mit Zahlungssummen gelesen; CSV/XLSX wird direkt verschlüsselt gestreamt. Abbruch, Fristen und Größenlimits werden vor Veröffentlichung geprüft."
+        },
+        {
+          "type": "feature",
+          "tr": "create_dataset/query_dataset/export_dataset araçları açık şema, TR/DE açıklamalar ve onay zorunluluğuyla sunulur; eski adlar uyum için korunur.",
+          "de": "create_dataset/query_dataset/export_dataset bieten explizite Schemata, TR/DE-Beschreibungen und Bestätigungspflicht; bisherige Namen bleiben kompatibel."
+        }
+      ]
+    },
+    {
+      "version": "1.11.0",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Takma adlı aidat listesi (AI)",
+        "de": "Pseudonymisierte Beitragsliste (KI)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "AI aracı list_dues_by_person: kişi başına aidat durumu (takma ad, tam avro, vade ayı, üyelik türü, durum); ad ve üye numarası modele gitmez.",
+          "de": "KI-Werkzeug list_dues_by_person: Beitragsstand pro Person (Pseudonym, ganze Euro, Fälligkeitsmonat, Mitgliedsart, Status); Name und Mitgliedsnummer gehen nicht an das Modell."
+        }
+      ]
+    },
+    {
+      "version": "1.10.4",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "AI veri sınıfı",
+        "de": "KI-Datenklasse"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Aidat veri kümesi araçları AI veri sınıfı \"internal\" olarak işaretlendi.",
+          "de": "Beitrags-Datensatzwerkzeuge als KI-Datenklasse „internal“ gekennzeichnet."
         }
       ]
     },
@@ -20,14 +60,14 @@
       "version": "1.10.3",
       "date": "2026-11-15",
       "title": {
-        "tr": "Sürümlü veri kümesi araçları",
-        "de": "Versionierte Datensatzwerkzeuge"
+        "tr": "AI takma ad çözümlemesi",
+        "de": "KI-Pseudonymauflösung"
       },
       "changes": [
         {
-          "type": "feature",
-          "tr": "create_dataset/query_dataset/export_dataset araçları açık şema, TR/DE açıklamalar ve onay zorunluluğuyla sunulur; eski adlar uyum için korunur.",
-          "de": "create_dataset/query_dataset/export_dataset bieten explizite Schemata, TR/DE-Beschreibungen und Bestätigungspflicht; bisherige Namen bleiben kompatibel."
+          "type": "improvement",
+          "tr": "AI asistanı için canlı üye adı sorgusu eklendi (yalnız AI modülünün sunucu tarafı kullanır).",
+          "de": "Abfrage aktueller Mitgliedernamen für den KI-Assistenten (nur serverseitig im KI-Modul)."
         }
       ]
     },

@@ -1,7 +1,9 @@
 import "server-only";
 
 import { AI_TOOL_POLICY,DATA_POLICY,type TablePolicy } from "@/shared/data-policy";
-import { cloudToolAllowed } from "./cloud-policy";
+import { cloudToolEligible } from "./cloud-policy";
+import { getCloudSettings } from "./cloud-settings";
+import { aliasFor } from "./aliases";
 import { createReferenceScope,saveDataset,loadDataset } from "./references";
 import { assertUniqueToolNames } from "@/shared/ai/v2";
 import type { z } from "zod";
@@ -35,6 +37,7 @@ const MODULE_TOOLS = moduleAiRegistry.flatMap((entry) =>
       module: entry.module,
       operation: tool.operation,
       processing: tool.processing,
+      modelDataClass: "policy" in tool ? (tool as { policy?: { modelDataClass?: "aggregate" | "internal" | "pseudonymous" } }).policy?.modelDataClass : undefined,
       requiresContent:tool.requiresContent,
       allowed: (user) => tool.allowed(user),
       description: tool.description,
@@ -57,6 +60,7 @@ const MODULE_TOOLS = moduleAiRegistry.flatMap((entry) =>
             return saveDataset(actor,{scopeId:scope.id,sourceModule:entry.module,...args});
           },
           restore,
+          pseudonym:(resource,recordId)=>aliasFor({userId:user.id,conversationId,policyRevision},resource,recordId),
           attachFile: (file) => files.push(file),
           propose: (proposal) => {
             const action = entry.actions[proposal.action];
@@ -81,8 +85,8 @@ const featureAvailable=(name:string)=>!["create_dataset","create_dues_dataset","
 
 /** Bu kullanıcı için şu an kullanılabilir araçlar (modül izni + kullanıcı yetkisi). */
 export async function availableTools(user: SessionUser, provider?: AiProviderId,translate?:(key:string)=>string|undefined) {
-  const [usable, matrix] = await Promise.all([listUsableModuleKeys().then((keys) => new Set(keys)), getAiPermissions()]);
-  return TOOLS.filter((tool) => isAllowed(matrix, tool.module, tool.operation) && (!tool.requiresContent||isAllowed(matrix,tool.module,"read_content")) && usable.has(tool.module) && tool.allowed(user) && featureAvailable(tool.name) && (provider === "local" || (tool.processing !== "local_only" && cloudToolAllowed(tool.name)))).map(tool=>tool.descriptionKey?{...tool,description:translate?.(tool.descriptionKey)??tool.description}:tool);
+  const [usable, matrix, cloud] = await Promise.all([listUsableModuleKeys().then((keys) => new Set(keys)), getAiPermissions(), getCloudSettings()]);
+  return TOOLS.filter((tool) => isAllowed(matrix, tool.module, tool.operation) && (!tool.requiresContent||isAllowed(matrix,tool.module,"read_content")) && usable.has(tool.module) && tool.allowed(user) && featureAvailable(tool.name) && (provider === "local" || cloudToolEligible(tool, cloud))).map(tool=>tool.descriptionKey?{...tool,description:translate?.(tool.descriptionKey)??tool.description}:tool);
 }
 
 export type UnavailableReason = "module" | "matrix" | "role" | "privacy" | "feature";
@@ -95,9 +99,9 @@ export type UnavailableReason = "module" | "matrix" | "role" | "privacy" | "feat
  * Asistan böylece "neden yapamıyorum" sorusuna tahmin yerine doğru cevap verir.
  */
 export async function unavailableTools(user: SessionUser, provider?: AiProviderId): Promise<{ name: string; module: string; operation: AiOperation; reason: UnavailableReason }[]> {
-  const [usable, matrix] = await Promise.all([listUsableModuleKeys().then((keys) => new Set(keys)), getAiPermissions()]);
+  const [usable, matrix, cloud] = await Promise.all([listUsableModuleKeys().then((keys) => new Set(keys)), getAiPermissions(), getCloudSettings()]);
   return TOOLS.flatMap((tool) => {
-    const reason: UnavailableReason | null = !usable.has(tool.module) ? "module" : !isAllowed(matrix, tool.module, tool.operation) || (tool.requiresContent&&!isAllowed(matrix,tool.module,"read_content")) ? "matrix" : !tool.allowed(user) ? "role" : !featureAvailable(tool.name)?"feature":provider !== "local" && (tool.processing === "local_only" || !cloudToolAllowed(tool.name)) ? "privacy" : null;
+    const reason: UnavailableReason | null = !usable.has(tool.module) ? "module" : !isAllowed(matrix, tool.module, tool.operation) || (tool.requiresContent&&!isAllowed(matrix,tool.module,"read_content")) ? "matrix" : !tool.allowed(user) ? "role" : !featureAvailable(tool.name)?"feature":provider !== "local" && !cloudToolEligible(tool, cloud) ? "privacy" : null;
     return reason ? [{ name: tool.name, module: tool.module, operation: tool.operation, reason }] : [];
   });
 }
@@ -121,7 +125,7 @@ export async function runTool(tool: AvailableTool, rawInput: unknown, context: T
   try {
     const { user, modules, provider } = await requireCurrentAiAccess(context.user.id, expectedProvider);
     const matrix=await getAiPermissions();
-    if ((tool.requiresContent&&!isAllowed(matrix,tool.module,"read_content")) || !featureAvailable(tool.name) || !modules.includes(tool.module) || !isAllowed(await getAiPermissions(), tool.module, tool.operation) || !tool.allowed(user) || (provider !== "local" && (tool.processing === "local_only" || !cloudToolAllowed(tool.name)))) return { ok: false, error: "TOOL_NOT_AVAILABLE" };
+    if ((tool.requiresContent&&!isAllowed(matrix,tool.module,"read_content")) || !featureAvailable(tool.name) || !modules.includes(tool.module) || !isAllowed(await getAiPermissions(), tool.module, tool.operation) || !tool.allowed(user) || (provider !== "local" && !cloudToolEligible(tool, await getCloudSettings()))) return { ok: false, error: "TOOL_NOT_AVAILABLE" };
     return { ok: true, value: await (tool.run as (input: unknown, context: ToolContext) => Promise<unknown>)(parsed.data, { ...context, user }) };
   } catch {
     console.error("[ai] TOOL_FAILED", { tool: tool.name });

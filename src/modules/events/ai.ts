@@ -1,9 +1,10 @@
 import "server-only";
+import {aiProposalTools} from "./services/ai-proposal-tools";
 
 import { z } from "zod";
 import {aiListCursor,aiListPage,aiPageInfo} from "@/shared/ai/pagination";
 
-import { PROPOSED, aiAction, aiTool, defineModuleAi } from "@/shared/ai/define";
+import {aiAction, aiTool, defineModuleAi} from "@/shared/ai/define";
 import { can } from "@/shared/permissions/define";
 
 import { eventsPermissions } from "./permissions";
@@ -50,39 +51,7 @@ export const ai = defineModuleAi({
         }))};
       },
     }),
-    aiTool({
-      name: "propose_event",
-      operation: "create",
-      allowed: (user) => can(user.role, eventsPermissions, "create"),
-      description: "PROPOSES a new event. Nothing is created until the user confirms the card. Dates as ISO 8601 local time (YYYY-MM-DDTHH:mm).", // i18n-ignore (model-facing tool text)
-      schema: z.object({
-        title: z.string().min(3).max(200),
-        description: z.string().max(2000).nullable(),
-        type: z.enum(["WORKSHOP", "SEMINAR", "SOCIAL", "CULTURAL", "SPORTS", "OTHER"]),
-        startDate: z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/),
-        endDate: z.string().regex(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}$/).nullable(),
-        location: z.string().max(200).nullable(),
-        isOnline: z.boolean(),
-      }),
-      inputSchema: {
-        type: "object",
-        properties: {
-          title: { type: "string" },
-          description: { type: ["string", "null"] },
-          type: { type: "string", enum: ["WORKSHOP", "SEMINAR", "SOCIAL", "CULTURAL", "SPORTS", "OTHER"] },
-          startDate: { type: "string", description: "YYYY-MM-DDTHH:mm" }, // i18n-ignore (model-facing tool text)
-          endDate: { type: ["string", "null"], description: "YYYY-MM-DDTHH:mm" }, // i18n-ignore (model-facing tool text)
-          location: { type: ["string", "null"] },
-          isOnline: { type: "boolean" },
-        },
-        required: ["title", "description", "type", "startDate", "endDate", "location", "isOnline"],
-        additionalProperties: false,
-      },
-      run: async (input, { propose }) => {
-        propose({ action: "create", title: input.title, details: [input.type, input.startDate.replace("T", " "), input.isOnline ? "online" : (input.location ?? "")].filter(Boolean), payload: input });
-        return PROPOSED;
-      },
-    }),
+    ...aiProposalTools,
   ],
   actions: {
     create: aiAction({

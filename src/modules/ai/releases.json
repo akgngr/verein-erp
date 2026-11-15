@@ -2,62 +2,112 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
-      "version": "1.4.6",
+      "version": "1.9.0",
       "date": "2026-11-15",
       "title": {
-        "tr": "Sınırlı ve şifreli dosya akışı",
-        "de": "Begrenzte verschlüsselte Dateiströme"
+        "tr": "AI v2 araç geçişi",
+        "de": "KI-v2-Werkzeugmigration"
       },
       "changes": [
         {
           "type": "improvement",
           "tr": "Aidat veri kümesi 500 kayıtlık keyset sayfaları ve ödeme toplamlarıyla okunur; CSV/XLSX doğrudan şifreli akışa yazılır. İptal, süre ve boyut sınırları yayından önce doğrulanır.",
           "de": "Beitragsdaten werden in 500er-Keyset-Seiten mit Zahlungssummen gelesen; CSV/XLSX wird direkt verschlüsselt gestreamt. Abbruch, Fristen und Größenlimits werden vor Veröffentlichung geprüft."
-        }
-      ]
-    },
-    {
-      "version": "1.4.5",
-      "date": "2026-11-15",
-      "title": {
-        "tr": "Merkezi dosya talebi ve güvenli publication",
-        "de": "Zentrale Dateianfragen und sichere Veröffentlichung"
-      },
-      "changes": [
+        },
         {
           "type": "security",
           "tr": "FileGeneration facade mevcut outbox ile atomiktir; yalnız geçerli worker lease dosyayı yayımlar, pending dosyalar liste/indirmeden gizlenir.",
           "de": "FileGeneration ist atomar mit der bestehenden Outbox; nur eine gültige Worker-Lease veröffentlicht Dateien, ausstehende Dateien bleiben unsichtbar."
-        }
-      ]
-    },
-    {
-      "version": "1.4.4",
-      "date": "2026-11-15",
-      "title": {
-        "tr": "Sürümlü veri kümesi araçları",
-        "de": "Versionierte Datensatzwerkzeuge"
-      },
-      "changes": [
+        },
         {
           "type": "feature",
           "tr": "create_dataset/query_dataset/export_dataset araçları açık şema, TR/DE açıklamalar ve onay zorunluluğuyla sunulur; eski adlar uyum için korunur.",
           "de": "create_dataset/query_dataset/export_dataset bieten explizite Schemata, TR/DE-Beschreibungen und Bestätigungspflicht; bisherige Namen bleiben kompatibel."
-        }
-      ]
-    },
-    {
-      "version": "1.4.3",
-      "date": "2026-11-15",
-      "title": {
-        "tr": "Worker toparlanması ve dosya hata durumu",
-        "de": "Worker-Wiederherstellung und Dateifehlerstatus"
-      },
-      "changes": [
+        },
         {
           "type": "fix",
           "tr": "Geçici export hataları sınırlı yeniden denenir; terminal/iptal durumları kuyrukta görünmez, başarısız geçici dosyalar temizlenir.",
           "de": "Temporäre Exportfehler werden begrenzt wiederholt; End-/Abbruchzustände bleiben nicht in der Warteschlange, fehlgeschlagene temporäre Dateien werden entfernt."
+        }
+      ]
+    },
+    {
+      "version": "1.8.0",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Takma adlı kişi verisi (bulut)",
+        "de": "Pseudonymisierte Personendaten (Cloud)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Denetimli modda \"Takma adlı kişi verisi\" açılabilir: kişi düzeyindeki araç sonuçları buluta yalnız [[K7]] gibi takma adlarla ve kabalaştırılmış alanlarla gider; model bunlarla rapor üretir, sonuç kullanıcıya gerçek adlarla (canlı yetkiyle) gösterilir.",
+          "de": "Im geprüften Modus können „Pseudonymisierte Personendaten“ eingeschaltet werden: Werkzeugergebnisse auf Personenebene gehen nur mit Pseudonymen wie [[K7]] und vergröberten Feldern in die Cloud; das Modell erstellt damit Berichte, die Nutzer mit echten Namen (aktuelle Berechtigung) sehen."
+        }
+      ]
+    },
+    {
+      "version": "1.7.0",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Denetimli serbest metin (bulut)",
+        "de": "Geprüfter Freitext (Cloud)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Bulut veri politikasında \"Denetimli serbest metin\" seçilebilir: her mesaj buluta gitmeden sunucuda taranır, kayıtlı kişiler konuşmanın takma adına ([[K7]]) çevrilir, kişisel veri içeren mesaj gönderilmez ve sebebi gösterilir. Önceki riskli mesajlar bağlama alınmaz. Buluttaki araçlar artık sabit liste yerine v2 veri sınıfına göre açılır.",
+          "de": "In der Cloud-Datenrichtlinie ist „Geprüfter Freitext“ wählbar: jede Nachricht wird vor dem Versand auf dem Server geprüft, erfasste Personen werden durch Gesprächspseudonyme ([[K7]]) ersetzt, Nachrichten mit personenbezogenen Daten werden mit Begründung nicht gesendet. Frühere riskante Nachrichten gelangen nicht in den Kontext. Cloud-Werkzeuge richten sich nach der v2-Datenklasse statt nach einer festen Liste."
+        }
+      ]
+    },
+    {
+      "version": "1.6.0",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Konuşma kapsamlı takma ad katmanı",
+        "de": "Gesprächsbezogene Pseudonym-Schicht"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Kişi kayıtları konuşmaya özel kısa takma adlarla ([[K7]]) eşlenebilir. Sohbet geçmişi takma adlı saklanır; kullanıcıya gösterilirken ad, izleyicinin o anki yetkisiyle sunucuda çözülür (yetki yoksa \"gizli kişi\"). Henüz bulut sohbetine bağlı değildir.",
+          "de": "Personendatensätze können gesprächsbezogenen Kurzpseudonymen ([[K7]]) zugeordnet werden. Der Verlauf bleibt pseudonymisiert; bei der Anzeige wird der Name auf dem Server mit der aktuellen Berechtigung aufgelöst (sonst „verborgene Person“). Noch nicht mit dem Cloud-Chat verbunden."
+        }
+      ]
+    },
+    {
+      "version": "1.5.1",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Bulut gönderim öncesi tarama (hazırlık)",
+        "de": "Vorabprüfung vor Cloud-Versand (Vorbereitung)"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Bulut modeline gidecek metni tarayan sunucu kütüphanesi eklendi: kayıtlı kişiler takma ada çevrilir; e-posta, telefon, IBAN, vergi no, adres, doğum tarihi, hitaplı veya yaygın adlar ve kişiyle birlikte geçen özel nitelikli veri bulunursa metin gönderilmez. Henüz sohbete bağlı değildir.",
+          "de": "Serverbibliothek zur Prüfung von Text vor dem Cloud-Versand: bekannte Personen werden pseudonymisiert; bei E-Mail, Telefon, IBAN, Steuernummer, Adresse, Geburtsdatum, Namen mit Anrede oder gängigen Vornamen sowie besonderen Kategorien zusammen mit einer Person wird nicht gesendet. Noch nicht mit dem Chat verbunden."
+        }
+      ]
+    },
+    {
+      "version": "1.5.0",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Bulut veri politikası ayarı",
+        "de": "Einstellung Cloud-Datenrichtlinie"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "AI ayarlarına bulut veri politikası eklendi: Kapalı (yalnız yerel model) veya Hazır sorular (varsayılan, mevcut davranış). Denetimli serbest metin ve takma adlı kişi verisi sonraki sürümlerde gelecek.",
+          "de": "Cloud-Datenrichtlinie in den KI-Einstellungen: Aus (nur lokales Modell) oder Vordefinierte Fragen (Standard, bisheriges Verhalten). Geprüfter Freitext und pseudonymisierte Personendaten folgen in späteren Versionen."
+        },
+        {
+          "type": "security",
+          "tr": "Politika değişikliği sağlayıcı politika sürümüne bağlıdır; kullanıcılar bilgilendirmeyi yeniden onaylar.",
+          "de": "Eine Änderung der Richtlinie ändert die Anbieter-Richtlinienversion; Nutzer bestätigen die Information erneut."
         }
       ]
     },

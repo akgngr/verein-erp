@@ -35,6 +35,11 @@ export type ModuleAiContext = {
   restore: (text: string) => string;
   /** Oluşturulan dosyayı yanıtın altında indirme düğmesi olarak gösterir (bağlantı modele verilmez). */
   attachFile: (file: { title: string; url: string; format: string }) => void;
+  /**
+   * Kişi kaydının konuşma kapsamlı takma adı ([[K7]]). Gerçek ad yalnız sunucuda, gösterimde
+   * izleyicinin canlı yetkisiyle çözülür. Takma adlı (pseudonymous) v2 araçları içindir.
+   */
+  pseudonym?: (resource: "members" | "students" | "guardians", recordId: string) => Promise<string>;
 };
 
 export type ModuleAiTool<S extends z.ZodType = z.ZodType> = {

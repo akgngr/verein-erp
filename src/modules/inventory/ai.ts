@@ -1,9 +1,10 @@
 import "server-only";
+import {aiProposalTools} from "./services/ai-proposal-tools";
 
 import { z } from "zod";
 import {aiListCursor,aiListPage,aiPageInfo} from "@/shared/ai/pagination";
 
-import { NO_INPUT, PROPOSED, aiAction, aiTool, defineModuleAi } from "@/shared/ai/define";
+import {NO_INPUT, aiAction, aiTool, defineModuleAi} from "@/shared/ai/define";
 import { can } from "@/shared/permissions/define";
 
 import { inventoryPermissions } from "./permissions";
@@ -55,66 +56,8 @@ export const ai = defineModuleAi({
         };
       },
     }),
-    aiTool({
-      name: "propose_inventory_item",
-      operation: "create",
-      allowed: (user) => can(user.role, inventoryPermissions, "create"),
-      description: "PROPOSES adding an inventory item. Nothing is created until the user confirms.", // i18n-ignore (model-facing tool text)
-      schema: z.object({
-        name: z.string().min(1).max(200),
-        category: z.enum(["ELECTRONICS", "FURNITURE", "KITCHEN", "OFFICE", "SPORTS", "OTHER"]),
-        quantity: z.number().int().min(1).max(100000),
-        status: z.enum(["IN_USE", "IDLE", "BROKEN", "SCRAPPED"]),
-        location: z.string().max(200).nullable(),
-        description: z.string().max(2000).nullable(),
-      }),
-      inputSchema: {
-        type: "object",
-        properties: {
-          name: { type: "string" },
-          category: { type: "string", enum: ["ELECTRONICS", "FURNITURE", "KITCHEN", "OFFICE", "SPORTS", "OTHER"] },
-          quantity: { type: "integer" },
-          status: { type: "string", enum: ["IN_USE", "IDLE", "BROKEN", "SCRAPPED"] },
-          location: { type: ["string", "null"] },
-          description: { type: ["string", "null"] },
-        },
-        required: ["name", "category", "quantity", "status", "location", "description"],
-        additionalProperties: false,
-      },
-      run: async ({ name, ...rest }, { propose }) => {
-        propose({ action: "create", title: name, details: [rest.category, `× ${rest.quantity}`, rest.location ?? ""].filter(Boolean), payload: { name, ...rest } });
-        return PROPOSED;
-      },
-    }),
-    aiTool({
-      name: "propose_inventory_status",
-      operation: "update",
-      allowed: (user) => can(user.role, inventoryPermissions, "update"),
-      description: "PROPOSES changing an inventory item's status (id from list_inventory_items).", // i18n-ignore (model-facing tool text)
-      schema: z.object({ itemId: z.string().min(1).max(100), name: z.string().max(200), status: z.enum(["IN_USE", "IDLE", "BROKEN", "SCRAPPED"]) }),
-      inputSchema: {
-        type: "object",
-        properties: { itemId: { type: "string" }, name: { type: "string", description: "Item name as listed" }, status: { type: "string", enum: ["IN_USE", "IDLE", "BROKEN", "SCRAPPED"] } }, // i18n-ignore (model-facing tool text)
-        required: ["itemId", "name", "status"],
-        additionalProperties: false,
-      },
-      run: async ({ itemId, name, status }, { propose }) => {
-        propose({ action: "changeStatus", title: name, details: [`→ ${status}`], payload: { itemId, status } });
-        return PROPOSED;
-      },
-    }),
-    aiTool({
-      name: "propose_delete_inventory_item",
-      operation: "delete",
-      allowed: (user) => can(user.role, inventoryPermissions, "delete"),
-      description: "PROPOSES deleting an inventory item (id from list_inventory_items).", // i18n-ignore (model-facing tool text)
-      schema: z.object({ itemId: z.string().min(1).max(100), name: z.string().max(200) }),
-      inputSchema: { type: "object", properties: { itemId: { type: "string" }, name: { type: "string" } }, required: ["itemId", "name"], additionalProperties: false },
-      run: async ({ itemId, name }, { propose }) => {
-        propose({ action: "delete", title: name, payload: { itemId } });
-        return PROPOSED;
-      },
-    }),
+    ...aiProposalTools,
+
   ],
   actions: {
     create: aiAction({
