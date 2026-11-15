@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.11.0",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Asistan: kişi sorularında takma adlı araç",
+        "de": "Assistent: Pseudonymes Werkzeug für Personenfragen"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Kişi soruldığında asistan reddetmek yerine takma adlı üye profili aracını kullanır; araçlar takma adı sunucuda kayda çevirebilir.",
+          "de": "Bei Personenfragen nutzt der Assistent das pseudonyme Mitgliederprofil statt abzulehnen; Werkzeuge können Aliase serverseitig auflösen."
+        }
+      ]
+    },
+    {
       "version": "1.10.0",
       "date": "2026-11-15",
       "title": {

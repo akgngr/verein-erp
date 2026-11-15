@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.22.0",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Asistan: gelir-gider özetleri bulutta da",
+        "de": "Assistent: Finanzübersichten auch in der Cloud"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Asistanın muhasebe araçları (gelir-gider, KDV, açık kalemler, banka, gelen faturalar, rapor bağlantısı) yeni veri sözleşmesine taşındı: yalnız toplamlar, kişi/karşı taraf yok. Denetimli bulut modunda da çalışırlar.",
+          "de": "Die Buchhaltungswerkzeuge des Assistenten (Einnahmen/Ausgaben, USt, offene Posten, Bank, Eingangsrechnungen, Berichtslink) nutzen den neuen Datenvertrag: nur Summen, keine Personen/Gegenparteien. Sie funktionieren auch im geprüften Cloud-Modus."
+        }
+      ]
+    },
+    {
       "version": "1.21.1",
       "date": "2026-11-15",
       "title": {

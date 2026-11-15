@@ -40,6 +40,8 @@ export type ModuleAiContext = {
    * izleyicinin canlı yetkisiyle çözülür. Takma adlı (pseudonymous) v2 araçları içindir.
    */
   pseudonym?: (resource: "members" | "students" | "guardians", recordId: string) => Promise<string>;
+  /** Modelin verdiği takma adı ([[K7]]) kayda çevirir; yalnız aynı kullanıcı + konuşma + kaynak türü. Bulunamazsa hata. */
+  resolvePseudonym?: (resource: "members" | "students" | "guardians", alias: string) => Promise<string>;
 };
 
 export type ModuleAiTool<S extends z.ZodType = z.ZodType> = {

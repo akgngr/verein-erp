@@ -218,14 +218,15 @@ export const AI_TOOL_POLICY = {
   create_dues_dataset:{module:"members",reads:[],serverReads:["Member","MemberDue","MemberPayment"],modelFields:["datasetRef","count"]},
   // Takma adlı kişi düzeyi (docs/architecture/ai-cloud-pseudonym-relay.md): ad/numara yok, yalnız [[Kn]] + kaba alanlar.
   list_dues_by_person:{module:"members",reads:[],serverReads:["Member","MemberDue","MemberPayment"],modelFields:["year","total","page","hasMore","rows","rows.person","rows.remainingEur","rows.membershipType","rows.dueMonth","rows.status"]},
+  get_member_profile:{module:"members",reads:[],serverReads:["Member","MemberDue","MemberPayment"],modelFields:["matches", "truncated", "people", "people.person", "people.status", "people.membershipType", "people.memberSinceYear", "people.exitYear", "people.dues", "people.dues.year", "people.dues.status", "people.dues.remainingEur", "people.dues.overdue", "people.overdueEur"]},
   propose_dataset_export:{module:"exports",reads:[],serverReads:[],modelFields:["status","note"]},
   // accounting
-  get_accounting_summary: { module: "accounting", reads: ["AccountingBooking", "AccountingAccount", "AccountingYear", "AccountingCategory"] },
-  get_vat_summary: { module: "accounting", reads: ["AccountingBooking", "AccountingSettings"] },
-  get_open_items_summary: { module: "accounting", reads: ["AccountingInvoice", "AccountingInvoicePayment"] },
-  get_bank_inbox_summary: { module: "accounting", reads: ["AccountingBankTransaction"] },
-  get_payables_summary: { module: "accounting", reads: ["AccountingPayable"] },
-  get_report_link: { module: "accounting", reads: [] },
+  get_accounting_summary: { module: "accounting", reads: ["AccountingBooking", "AccountingAccount", "AccountingYear", "AccountingCategory"], serverReads: ["AccountingBooking", "AccountingAccount", "AccountingYear", "AccountingCategory"], modelFields: ["year", "categories", "categories.category", "categories.sphere", "categories.direction", "categories.actualEur", "categories.planEur", "categories.previousYearEur", "economicOperationNotice", "accounts", "accounts.account", "accounts.type", "accounts.balanceEur"] },
+  get_vat_summary: { module: "accounting", reads: ["AccountingBooking", "AccountingSettings"], serverReads: ["AccountingBooking", "AccountingSettings"], modelFields: ["year", "chartOfAccounts", "smallBusiness", "taxMethod", "periods", "periods.period", "periods.kz81BaseEur", "periods.kz86BaseEur", "periods.kz66Eur", "periods.kz83Eur", "euer", "euer.incomeNetEur", "euer.outputTaxEur", "euer.expenseNetEur", "euer.inputTaxEur", "euer.resultEur", "page"] },
+  get_open_items_summary: { module: "accounting", reads: ["AccountingInvoice", "AccountingInvoicePayment"], serverReads: ["AccountingInvoice", "AccountingInvoicePayment"], modelFields: ["buckets", "buckets.bucket", "buckets.count", "buckets.openEur", "totalOpenEur", "page"] },
+  get_bank_inbox_summary: { module: "accounting", reads: ["AccountingBankTransaction"], serverReads: ["AccountingBankTransaction"], modelFields: ["statuses", "statuses.status", "statuses.count", "statuses.sumEur", "page"] },
+  get_payables_summary: { module: "accounting", reads: ["AccountingPayable"], serverReads: ["AccountingPayable"], modelFields: ["statuses", "statuses.status", "statuses.count", "statuses.grossEur", "openEur", "overdueCount", "page"] },
+  get_report_link: { module: "accounting", reads: [], serverReads: [], modelFields: ["url", "note"] },
   // grants
   get_grant_overview: {"module":"grants","reads":[],"serverReads":["Grant"],"modelFields":["byStatus.PLANNED","byStatus.APPLIED","byStatus.APPROVED","byStatus.ACTIVE","byStatus.REPORTED","byStatus.CLOSED","byStatus.REJECTED","approvedTotal","reportsOverdue","reportsDueIn30Days"]},
   // crm

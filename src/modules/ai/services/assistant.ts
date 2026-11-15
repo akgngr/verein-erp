@@ -133,5 +133,5 @@ function restoreDeep<T>(value: T, restore: (text: string) => string): T {
   return value;
 }
 
-const ALIAS_INSTRUCTION = "People appear only as aliases like [[K3]]. Copy aliases exactly; never guess, invent or ask for real identities. The server shows real names to authorised users."; // i18n-ignore (model-facing prompt)
+const ALIAS_INSTRUCTION = "People appear only as aliases like [[K3]]. Copy aliases exactly; never guess, invent or ask for real identities. The server shows real names to authorised users. When the user asks about a specific person (by a name they typed or by an alias), use get_member_profile if available instead of refusing; answer with the alias."; // i18n-ignore (model-facing prompt)
 
