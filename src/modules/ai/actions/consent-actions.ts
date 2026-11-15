@@ -132,14 +132,14 @@ export async function setAiPermissionsAction(input: unknown): Promise<ActionResu
 /**
  * Yönetici bulut veri politikasını seçer (docs/architecture/ai-cloud-pseudonym-relay.md).
  * Değişiklik sağlayıcı politika sürümünü değiştirir; kullanıcıların rızası yenilenir.
- * Takma adlı kişi verisi sonraki sürümde etkinleşir; şimdilik OFF/INTENTS/SCREENED seçilebilir.
+ * Takma adlı kişi verisi yalnız SCREENED ile açılabilir.
  */
 export async function setAiCloudPolicyAction(input: unknown): Promise<ActionResult> {
   const run = createAction({
     permission: { definition: aiPermissions, action: "update" },
     schema: z.object({ textMode: z.enum(CLOUD_TEXT_MODES), pseudonymousRecords: z.boolean() }),
     handler: async ({ input, audit }) => {
-      if (input.pseudonymousRecords) throw new ActionError("ai.cloudPolicy.errors.notYetAvailable");
+      if (input.pseudonymousRecords && input.textMode !== "SCREENED") throw new ActionError("ai.cloudPolicy.errors.recordsNeedScreened");
       const before = await getCloudSettings();
       await setCloudSettings(input);
       await audit({ action: "AI_CLOUD_POLICY_CHANGED", entity: "AiSettings", entityId: "singleton", before, after: input });

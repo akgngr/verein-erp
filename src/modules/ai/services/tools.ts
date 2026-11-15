@@ -3,6 +3,7 @@ import "server-only";
 import { AI_TOOL_POLICY,DATA_POLICY,type TablePolicy } from "@/shared/data-policy";
 import { cloudToolEligible } from "./cloud-policy";
 import { getCloudSettings } from "./cloud-settings";
+import { aliasFor } from "./aliases";
 import { createReferenceScope,saveDataset,loadDataset } from "./references";
 import { assertUniqueToolNames } from "@/shared/ai/v2";
 import type { z } from "zod";
@@ -58,6 +59,7 @@ const MODULE_TOOLS = moduleAiRegistry.flatMap((entry) =>
             return saveDataset(actor,{scopeId:scope.id,sourceModule:entry.module,...args});
           },
           restore,
+          pseudonym:(resource,recordId)=>aliasFor({userId:user.id,conversationId,policyRevision},resource,recordId),
           attachFile: (file) => files.push(file),
           propose: (proposal) => {
             const action = entry.actions[proposal.action];

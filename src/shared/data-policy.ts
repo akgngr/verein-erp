@@ -213,6 +213,8 @@ export const USER_LINK_RETAINED: Record<string, string> = {
 export const AI_TOOL_POLICY = {
   query_dataset:{module:"members",reads:[],serverReads:["Member","MemberDue","MemberPayment"],modelFields:["datasetRef","count"]},
   create_dues_dataset:{module:"members",reads:[],serverReads:["Member","MemberDue","MemberPayment"],modelFields:["datasetRef","count"]},
+  // Takma adlı kişi düzeyi (docs/architecture/ai-cloud-pseudonym-relay.md): ad/numara yok, yalnız [[Kn]] + kaba alanlar.
+  list_dues_by_person:{module:"members",reads:[],serverReads:["Member","MemberDue","MemberPayment"],modelFields:["year","total","page","hasMore","rows","rows.person","rows.remainingEur","rows.membershipType","rows.dueMonth","rows.status"]},
   propose_dataset_export:{module:"exports",reads:[]},
   // accounting
   get_accounting_summary: { module: "accounting", reads: ["AccountingBooking", "AccountingAccount", "AccountingYear", "AccountingCategory"] },
