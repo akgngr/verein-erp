@@ -13,6 +13,7 @@ import { formatDateTime } from "@/shared/utils";
 import { deleteFileAction } from "../actions/delete-file";
 import { INLINE_PREVIEW_EXTENSIONS } from "../constants";
 import type { DocumentFileItem } from "../types";
+import { TransferToAccountingButton } from "./transfer-to-accounting-button";
 
 function getExtension(name: string): string {
   const base = name.split(/[\\/]/).pop() ?? "";
@@ -30,9 +31,12 @@ function formatSize(size: number): string {
 export function FileList({
   files,
   canUpdate,
+  transfer,
 }: {
   files: DocumentFileItem[];
   canUpdate: boolean;
+  /** Gelen evrakta "Muhasebeye aktar" (EV-3). */
+  transfer?: { registryNumber: string; counterparty: string };
 }) {
   const tCommon = useTranslations("common");
   const t = useTranslations("documents.files");
@@ -97,6 +101,7 @@ export function FileList({
                     {t("preview")}
                   </Button>
                 ) : null}
+                {transfer ? <TransferToAccountingButton fileId={file.id} fileName={file.originalName} {...transfer} /> : null}
                 {canUpdate ? (
                   <Button
                     isIconOnly

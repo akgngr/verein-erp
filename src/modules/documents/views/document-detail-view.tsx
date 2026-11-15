@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { DocumentEditView } from "./document-edit-view";
-import { AlertTriangle, FileText, Link2, Paperclip } from "lucide-react";
+import { AlertTriangle, FileText, ListTodo, Link2, Paperclip } from "lucide-react";
+import { LinkButton } from "@/shared/components/ui/link-button";
 import { notFound } from "next/navigation";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
@@ -40,6 +41,7 @@ export async function DocumentDetailView({
 }) {
   const tDelivery = await getTranslations("documents.delivery");
   const t = await getTranslations("documents.detail");
+  const tActions = await getTranslations("documents.actions");
   let user;
   try {
     user = await requirePermission(documentsPermissions, "view");
@@ -111,6 +113,23 @@ export async function DocumentDetailView({
               {doc.updatedByLabel ? `${doc.updatedByLabel} — ${formatDateTime(doc.updatedAt)}` : "-"}
             </InfoRow>
           </div>
+          {doc.dueDate ? (
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              {/* EV-3: termin → görev önerisi (görevler modülünün yeni görev formu önceden dolu açılır). */}
+              <LinkButton
+                variant="flat"
+                startIcon={<ListTodo className="h-4 w-4" aria-hidden />}
+                href={`/tasks?yeni=1&${new URLSearchParams({
+                  baslik: tActions("taskTitle", { subject: doc.subject }).slice(0, 200),
+                  aciklama: tActions("taskDescription", { registryNumber: doc.registryNumber, counterparty: doc.counterparty }).slice(0, 2000),
+                  bitis: doc.dueDate.toISOString().slice(0, 10),
+                }).toString()}`}
+              >
+                {tActions("createTask")}
+              </LinkButton>
+              <span className="text-tiny text-default-500">{tActions("createTaskHint")}</span>
+            </div>
+          ) : null}
           {doc.summary ? (
             <div className="mt-3 rounded-medium bg-default-50 px-4 py-3">
               <p className="text-tiny font-medium uppercase tracking-wide text-default-400">{t("summary")}</p>
@@ -180,7 +199,7 @@ export async function DocumentDetailView({
           <Paperclip className="h-4 w-4 text-default-400" aria-hidden />
           {t("filesTitle")}
         </h2>
-        <FileList files={doc.files} canUpdate={canUpdate} />
+        <FileList files={doc.files} canUpdate={canUpdate} transfer={doc.direction === "INCOMING" ? { registryNumber: doc.registryNumber, counterparty: doc.counterparty } : undefined} />
         {canUpdate ? (
           <div className="mt-4">
             <FileUploader

@@ -20,6 +20,8 @@ export type ParsedUpload =
         head: Uint8Array;
         buffer: Buffer;
       };
+      /** Dosya dışındaki metin alanları (ör. ön doldurma JSON'u); her biri en çok 4 KB. */
+      fields: Record<string, string>;
     }
   | { ok: false; status: 400; error: string };
 
@@ -54,8 +56,13 @@ export async function parseSingleFileUpload(request: Request): Promise<ParsedUpl
   // head: imza (magic bytes) denetimi için ilk 64 KB — validateUpload'ın
   // en uzun imzası bu pencerede kalır.
   const head = new Uint8Array(buffer.subarray(0, 65_536));
+  const fields: Record<string, string> = {};
+  for (const [key, value] of formData.entries()) {
+    if (key !== "file" && typeof value === "string" && value.length <= 4096) fields[key] = value;
+  }
   return {
     ok: true,
+    fields,
     file: {
       originalName: file.name,
       declaredMime: file.type,

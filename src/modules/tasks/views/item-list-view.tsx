@@ -17,7 +17,7 @@ import {
   TASK_SORTABLE_FIELDS,
 } from "../queries/list-items";
 import type { TaskFilterKeys } from "../types";
-import { TasksItemCreateView } from "./item-create-view";
+import { TasksItemCreateView, taskPrefillFromParams } from "./item-create-view";
 import { TasksItemEditView } from "./item-edit-view";
 
 /**
@@ -88,7 +88,7 @@ export async function TasksListView({
         canUpdate={canUpdate}
         canDelete={canDelete}
       />
-      {canCreate && raw.yeni !== undefined ? <TasksItemCreateView /> : null}
+      {canCreate && raw.yeni !== undefined ? <TasksItemCreateView prefill={taskPrefillFromParams(raw)} /> : null}
       {canUpdate && typeof raw.duzenle === "string" && raw.duzenle ? (
         <TasksItemEditView id={raw.duzenle} />
       ) : null}
