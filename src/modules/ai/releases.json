@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.5.1",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Bulut gönderim öncesi tarama (hazırlık)",
+        "de": "Vorabprüfung vor Cloud-Versand (Vorbereitung)"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Bulut modeline gidecek metni tarayan sunucu kütüphanesi eklendi: kayıtlı kişiler takma ada çevrilir; e-posta, telefon, IBAN, vergi no, adres, doğum tarihi, hitaplı veya yaygın adlar ve kişiyle birlikte geçen özel nitelikli veri bulunursa metin gönderilmez. Henüz sohbete bağlı değildir.",
+          "de": "Serverbibliothek zur Prüfung von Text vor dem Cloud-Versand: bekannte Personen werden pseudonymisiert; bei E-Mail, Telefon, IBAN, Steuernummer, Adresse, Geburtsdatum, Namen mit Anrede oder gängigen Vornamen sowie besonderen Kategorien zusammen mit einer Person wird nicht gesendet. Noch nicht mit dem Chat verbunden."
+        }
+      ]
+    },
+    {
       "version": "1.5.0",
       "date": "2026-11-15",
       "title": {
