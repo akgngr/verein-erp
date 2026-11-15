@@ -50,7 +50,7 @@ Bitiş: IDOR/süre/revoke/çift onay negatif testleri geçer. Runtime migration 
 - [x] D03 create_dataset/query_dataset/export_dataset araçlarını ve TR/DE açıklamalarını ekle.
 - [x] D04 exports request-generation facade'ını mevcut merkezi dosya şartnamesiyle birleştir; ikinci queue kurma.
 - [x] D05 automation task payload'ını generationId/actorId metadata'sıyla sınırla; result/log PII taşımasın.
-- [ ] D06 Worker'da güncel izin/precondition, typed satır renderer, streaming ve kaynak limitleri.
+- [x] D06 Worker'da güncel izin/precondition, typed satır renderer, streaming ve kaynak limitleri.
 - [x] D07 UI preview, onay ve job durumu; gerçek isimli XLSX/CSV yalnız yetkili UI/dosyaya gider.
 - [x] D08 Download'da source/alan yetkisini ve sahipliği yeniden denetle; dosya read-to-model geri sızıntısını engelle.
 - [x] D09 100+ kayıt, izin iptali, stale hedef ve provider spy ile tam senaryoyu test et.
@@ -124,3 +124,8 @@ create_dataset (source=members.dues, query), query_dataset (datasetRef + izinli 
 ## D04 merkezi dosya sahibi
 
 FileGeneration metadata/requestGeneration facade'ı mevcut exports içine alındı; ikinci queue yoktur. Kaynak AiExportRequest + merkezi metadata + execution/outbox atomik kaydedilir. Fenced attempt dosyaları publicationPending ile gizlenir; eski worker yeni dosyayı silemez/yayımlayamaz. Eski dosya/talep backfill'i dolu legacy schema fixture'ıyla testlidir. Download/listeleme aynı published metadata kapısını kullanır; privacy cancellation ve lifecycle/cleanup yeni tabloyu kapsar. 456 test geçti. D06 streaming ve kaynak limit geliştirmesi ayrı; merkezi dosya planındaki tüm diğer producer/format geçişleri bu kutuyla tamamlanmış sayılmaz.
+
+
+## D06 sınırlı şifreli akış
+
+Yeni members.dues queryVersion=2, 500 adaylık keyset sayfaları, ödeme groupBy sum/max, sayfa transaction'ında 5s statement / 12s transaction timeout ve her sayfada güncel izin kontrolü kullanır. Count ve artımlı fingerprint dosya akışıyla eşleşmeden publication yapılmaz. CSV ve ExcelJS streaming writer çıktısı doğrudan AES-GCM ciphertext temp dosyaya gider; plaintext temp/whole-file render buffer yoktur. 100.000 aday/satır, 20 kolon, 32.767 bayt/hücre, 64 MiB ham girdi ve çıktı, worker deadline/TTL/AbortSignal sınırları fail-closed'dur. ZIP chunk tamponları nedeniyle sabit bellek garantisi verilmez. Eski queryVersion=1 işler 5.000 aday ve eski hash sırasıyla uyumludur; bilinmeyen sürüm reddedilir. Download GCM doğrulaması bitmeden plaintext stream etmez. 459 test başarılı; 6.001 kayıt, ödeme toplamları, snapshot değişimi, sayfa arası revoke/abort, typed XLSX/formül güvenli CSV, keyring/tamper, byte/row/cell limit ve gerçek worker stale reddi sınandı. Migration/drift, typecheck/lint, TR/DE ve sabit metin kontrolleri geçti. PR #150 CI/build/hydration ve Security başarılıdır; bu takip commit'i ayrıca CI kabulü gerektirir.

@@ -174,9 +174,14 @@ test("server export inserts private names only in the file, rejects stale datase
   await assert.rejects(resolveLinkedMemberReference({...actor,conversationId:"other"},guardianRef,"guardians"));
   await db.memberDue.update({where:{memberId_year:{memberId:member.id,year:2001}},data:{amountDue:140}});
   const stale=await requestDatasetExport({datasetRef,format:"csv",columns:["member.fullName"]},{userId:id,conversationId:actor.conversationId,proposalId:randomUUID()});
-  await assert.rejects(runDatasetExport(stale,new AbortController().signal),/AI_DATASET_STALE_PREVIEW/);
+  const staleJob=await db.aiExportRequest.findUniqueOrThrow({where:{id:stale}});
+  await executeAutomationTask({executionId:staleJob.executionId!,taskKey:"ai.export_dataset",taskVersion:1});
+  assert.equal((await db.automationExecution.findUniqueOrThrow({where:{id:staleJob.executionId!}})).lastErrorCode,"AI_DATASET_STALE_PREVIEW");
+  assert.equal(await db.generatedFile.count({where:{generationId:stale}}),0);
+  assert.equal((await db.fileGeneration.findUniqueOrThrow({where:{id:stale}})).status,"FAILED");
+  const revoked=await requestDatasetExport({datasetRef,format:"csv",columns:["member.fullName"]},{userId:id,conversationId:actor.conversationId,proposalId:randomUUID()});
   await db.user.update({where:{id},data:{isActive:false}});
-  await assert.rejects(runDatasetExport(stale,new AbortController().signal),/AI_EXPORT_ACCESS_REVOKED/);
+  await assert.rejects(runDatasetExport(revoked,new AbortController().signal),/AI_EXPORT_ACCESS_REVOKED/);
  }finally{
   const stored=await db.generatedFile.findMany({where:{ownerId:id},select:{id:true}});
   for(const fileId of new Set([...fileIds,...stored.map(row=>row.id)])){await rmdir(resolveSafePath(`generated/${fileId}.bin`)).catch(()=>{});await unlink(resolveSafePath(`generated/${fileId}.bin`)).catch(()=>{});await db.generatedFile.deleteMany({where:{id:fileId}});}

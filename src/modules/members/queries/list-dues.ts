@@ -212,3 +212,27 @@ function buildOrderBy(
       return { [params.sort]: params.dir } as Prisma.MemberDueOrderByWithRelationInput;
   }
 }
+
+
+/** AI v2: bounded keyset pages and DB-side payment aggregation; no unbounded payment list. */
+export async function* iterateDuesForDataset(params:ListParams<DuesListFilterKeys>,year:number,options:{signal:AbortSignal;beforeBatch?:()=>Promise<void>;maxCandidates?:number}) {
+  const db=getDb(),where=buildDuesWhere(params,year),today=berlinToday();
+  let after:string|undefined,candidates=0;
+  for(;;){
+    options.signal.throwIfAborted();await options.beforeBatch?.();
+    const batch=await db.$transaction(async tx=>{
+      await tx.$executeRaw`SET LOCAL statement_timeout = '5000ms'`;
+      const rows=await tx.memberDue.findMany({where:after?{AND:[where,{id:{gt:after}}]}:where,select:DUES_SELECT,orderBy:{id:"asc"},take:500});
+      const ids=rows.map(row=>row.member.id);
+      const payments=ids.length?await tx.memberPayment.groupBy({by:["memberId"],where:{dueYear:year,voidedAt:null,memberId:{in:ids}},_sum:{amount:true},_max:{paidAt:true}}):[];
+      const sums=new Map(payments.map(p=>[p.memberId,p]));
+      return rows.map(row=>{const p=sums.get(row.member.id);return toReportRow(row,p?decimalToCents(p._sum.amount):0,p?._max.paidAt?.toISOString().slice(0,10)??null,today);});
+    },{isolationLevel:"RepeatableRead",maxWait:5000,timeout:12000});
+    options.signal.throwIfAborted();await options.beforeBatch?.();
+    if(!batch.length)return;
+    candidates+=batch.length;if(candidates>(options.maxCandidates??100000))throw new Error("AI_DATASET_ROW_LIMIT");
+    for(const row of batch){options.signal.throwIfAborted();yield row;}
+    after=batch[batch.length-1].id;
+    if(batch.length<500)return;
+  }
+}

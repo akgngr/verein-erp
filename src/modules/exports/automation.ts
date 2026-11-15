@@ -11,3 +11,5 @@ export {markGeneratedFileForDeletion} from "./services/file-cleanup";
 export {datasetExportPlanSchema} from "./services/dataset-export-tool";
 export {prepareGenerationRequest,requestGeneration,startGeneration,finalizeGeneration,recordGenerationAttempt,cancelSourceGenerations,getGenerationState,generationAttemptFileId,type GenerationLease} from "./services/generation";
 export {getPublishedFileMetadata,listPublishedFileMetadata} from "./services/file-metadata";
+
+export {createStreamingTabularFile} from "./services/tabular-stream";

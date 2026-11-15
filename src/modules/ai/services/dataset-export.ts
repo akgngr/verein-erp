@@ -3,8 +3,8 @@ import { Prisma } from "@prisma/client";
 import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { getDb } from "@/shared/db";
-import { loadDuesDataset,parseDuesDatasetQuery,DUES_DATASET_COLUMNS } from "@/modules/members/automation";
-import { createTabularFile,markGeneratedFileForDeletion,datasetExportPlanSchema,prepareGenerationRequest,requestGeneration,startGeneration,finalizeGeneration,type GenerationLease } from "@/modules/exports/automation";
+import { streamDuesDataset,duesSnapshotHasher,loadDuesDataset,parseDuesDatasetQuery,DUES_DATASET_COLUMNS } from "@/modules/members/automation";
+import { createStreamingTabularFile,markGeneratedFileForDeletion,datasetExportPlanSchema,prepareGenerationRequest,requestGeneration,startGeneration,finalizeGeneration,type GenerationLease } from "@/modules/exports/automation";
 import { requireExportWorkerAccess } from "./export-worker-access";
 import { loadDataset,tokenDigest,referenceDeployment } from "./references";
 import { providerRevision } from "./provider-revision";
@@ -54,18 +54,28 @@ export async function runDatasetExport(generationId:string,signal:AbortSignal,ex
  const definition=parseDuesDatasetQuery(JSON.parse(openSecret("ai-dataset",dataset.definitionEnc)??"null"));
  const selectionText=openSecret("ai-dataset",dataset.selectionEnc);
  if(!selectionText||tokenDigest(selectionText)!==dataset.selectionHash||dataset.sourceModule!=="members")throw new Error("AI_DATASET_UNREADABLE");
- const selection=z.object({fingerprint:z.string()}).strict().parse(JSON.parse(openSecret("ai-dataset",dataset.selectionEnc)??"null"));
- const current=await loadDuesDataset(definition);
- if(current.fingerprint!==selection.fingerprint)throw new Error("AI_DATASET_STALE_PREVIEW");
+ const selection=z.object({fingerprint:z.string(),count:z.number().int().min(0).max(100000).optional()}).strict().parse(JSON.parse(selectionText));
+ if(dataset.queryVersion!==1&&dataset.queryVersion!==2)throw new Error("AI_DATASET_QUERY_VERSION_UNSUPPORTED");
+ // Legacy v1 hash/sort semantics remain unchanged for already-confirmed jobs.
+ const legacy=dataset.queryVersion===1?await loadDuesDataset(definition):null;
+ if(legacy&&legacy.fingerprint!==selection.fingerprint)throw new Error("AI_DATASET_STALE_PREVIEW");
  const columns=z.array(z.enum(DUES_DATASET_COLUMNS)).parse(job.columns);
- const rowValues=current.rows.map(row=>columns.map(column=>column==="member.fullName"?row.fullName:column==="dues.year"?row.year:row.remainingCents/100));
- signal.throwIfAborted();await requireExportWorkerAccess(job.userId,job.providerRevision);
+ const deadline=AbortSignal.any([signal,AbortSignal.timeout(Math.max(1,Math.min(120000,job.expiresAt.getTime()-Date.now())))]);
+ const authorize=async()=>{deadline.throwIfAborted();await requireExportWorkerAccess(job.userId,job.providerRevision);};
+ await authorize();
  if(!execution||!Number.isSafeInteger(execution.leaseToken)||execution.leaseToken!<1)throw new Error("FILE_GENERATION_LEASE_REQUIRED");
  const lease:GenerationLease={id:job.id,ownerId:job.userId,organizationId:referenceDeployment(),executionId:execution.executionId,leaseToken:execution.leaseToken!};
- const attemptId=await startGeneration(lease);
- const fileId=await createTabularFile({id:attemptId,generationId:job.id,ownerId:job.userId,format:z.enum(["csv","xlsx"]).parse(job.format),headers:columns,rows:rowValues,source:"members.dues"});
+ const attemptId=await startGeneration(lease),hash=duesSnapshotHasher();
+ async function* values(){
+  const rows=legacy?legacy.rows:streamDuesDataset(definition,{signal:deadline,beforeBatch:authorize});
+  for await(const row of rows){deadline.throwIfAborted();if(!legacy)hash.add(row);yield columns.map(column=>column==="member.fullName"?row.fullName:column==="dues.year"?row.year:row.remainingCents/100);}
+ }
+ const fileId=await createStreamingTabularFile({id:attemptId,generationId:job.id,ownerId:job.userId,format:z.enum(["csv","xlsx"]).parse(job.format),headers:columns,rows:values(),source:"members.dues",signal:deadline,beforeCommit:async()=>{
+  await authorize();
+  if(!legacy){const actual=hash.finish();if(actual.fingerprint!==selection.fingerprint||actual.count!==selection.count)throw new Error("AI_DATASET_STALE_PREVIEW");}
+ }});
  try {
-  signal.throwIfAborted();await requireExportWorkerAccess(job.userId,job.providerRevision);
+  await authorize();
   await db.$transaction(async tx=>{
   const scope=await tx.aiReferenceScope.findFirst({where:{id:dataset.scopeId,revokedAt:null,expiresAt:{gt:new Date()}}});
   if(!scope)throw new Error("AI_DATASET_UNAVAILABLE");

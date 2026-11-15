@@ -4,7 +4,7 @@ import {datasetResultSchema} from "@/shared/ai/dataset";
 import {aiToolV2} from "@/shared/ai/v2";
 import {can} from "@/shared/permissions/define";
 import {memberPaymentsPermissions} from "../permissions";
-import {loadDuesDataset,duesDatasetQuerySchema,DUES_DATASET_COLUMNS} from "./ai-dataset";
+import {describeDuesDataset,duesDatasetQuerySchema,DUES_DATASET_COLUMNS} from "./ai-dataset";
 
 /** Worker-safe definition shared by the live registry and provider-wire integration tests. */
 export function makeDuesDatasetTool(args:{name:"create_dues_dataset"|"create_dataset"}){
@@ -16,9 +16,9 @@ export function makeDuesDatasetTool(args:{name:"create_dues_dataset"|"create_dat
   policy:{purpose:"dues-export",serverReads:["Member","MemberDue","MemberPayment"],modelFields:["datasetRef","count"],processing:"approved_provider"},projectForModel:result=>result,
   run:async(raw,context)=>{
    const query=duesDatasetQuerySchema.parse("query" in raw?raw.query:raw);
-   const data=await loadDuesDataset(query);
-   const datasetRef=await context.createDataset({definition:query,selection:{fingerprint:data.fingerprint},columns:[...DUES_DATASET_COLUMNS]});
-   return {datasetRef,count:data.rows.length};
+   const data=await describeDuesDataset(query,context.signal);
+   const datasetRef=await context.createDataset({definition:query,selection:data,queryVersion:2,columns:[...DUES_DATASET_COLUMNS]});
+   return {datasetRef,count:data.count};
   },
  });
 }
