@@ -3,13 +3,14 @@ import {aiStatisticsTool} from "./services/ai-statistics-tool";
 import {z} from "zod";
 import {aiToolV2,defineModuleAiV2} from "@/shared/ai/v2";
 import {makeDuesDatasetTool,makePseudonymousDuesTool} from "./services/dues-ai-tool";
+import {memberProfileAiTool} from "./services/member-profile-ai-tool";
 
 import { can } from "@/shared/permissions/define";
 
 import { memberPaymentsPermissions } from "./permissions";
 import { describeDuesDataset, parseDuesDatasetQuery, duesDatasetQuerySchema, DUES_DATASET_COLUMNS } from "./server";
 
-/** Üyeler: yalnızca sayılar; üye adı veya ayrıntısı dönmez. Sözleşme: src/shared/ai/define.ts. */
+/** Üyeler: sayılar ve takma adlı ([[Kn]]) kişi verisi; üye adı veya iletişim bilgisi dönmez. Sözleşme: src/shared/ai/define.ts. */
 
 export const ai = defineModuleAiV2({
   module: "members",
@@ -17,6 +18,7 @@ export const ai = defineModuleAiV2({
     makeDuesDatasetTool({name:"create_dataset"}),
     makeDuesDatasetTool({name:"create_dues_dataset"}),
     makePseudonymousDuesTool({name:"list_dues_by_person"}),
+    memberProfileAiTool,
     aiToolV2({name:"query_dataset",descriptionKey:"members.ai.tools.query_dataset.description",operation:"read",allowed:user=>can(user.role,memberPaymentsPermissions,"view"),
       description:"Refine a members dues dataset using an existing datasetRef and allowed status or integer-cent amount filters. Creates a fresh scoped reference and returns only a count. No personal identities or arbitrary SQL.", // i18n-ignore (model-facing)
       input:duesDatasetQuerySchema.omit({year:true}).extend({datasetRef:z.string().regex(/^[A-Za-z0-9_-]{43}$/)}).strict(),

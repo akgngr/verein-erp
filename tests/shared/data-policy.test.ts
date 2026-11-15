@@ -104,7 +104,7 @@ describe("Data policy: module boundaries", () => {
 describe("Data policy: AI tools", () => {
   const aiFiles = sourceFiles("src/modules").filter((file) => file.endsWith(`${path.sep}ai.ts`));
 
-  const toolFiles=sourceFiles("src/modules").filter(file=>file.endsWith(`${path.sep}ai.ts`)||/services[\\/]ai-(proposal-tools|statistics-tool)\.ts$/.test(file));
+  const toolFiles=sourceFiles("src/modules").filter(file=>file.endsWith(`${path.sep}ai.ts`)||/services[\\/](ai-(proposal-tools|statistics-tool)|member-profile-ai-tool)\.ts$/.test(file));
 
   test("every AI tool is declared in AI_TOOL_POLICY with its module", () => {
     const found = new Map<string, string>();

@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.13.0",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Asistan: üye profili (takma adlı)",
+        "de": "Assistent: Mitgliederprofil (pseudonym)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Asistan ad parçasıyla ya da konuşmadaki takma adla üye bulabilir: durum, üyelik türü, giriş/çıkış yılı ve aidatlar. Buluta ad, iletişim, adres, doğum tarihi gitmez; kişi [[K3]] gibi görünür, size gerçek adıyla gösterilir. Bulutta yalnız \"takma adlı kişi verisi\" açıkken.",
+          "de": "Der Assistent findet Mitglieder per Namensteil oder Alias: Status, Mitgliedsart, Ein-/Austrittsjahr und Beiträge. In die Cloud gehen weder Name noch Kontakt, Adresse oder Geburtsdatum; die Person erscheint als [[K3]] und wird Ihnen mit echtem Namen angezeigt. In der Cloud nur bei aktivierten „pseudonymen Personendaten“."
+        }
+      ]
+    },
+    {
       "version": "1.12.0",
       "date": "2026-11-15",
       "title": {
