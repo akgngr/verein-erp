@@ -17,6 +17,21 @@
       ]
     },
     {
+      "version": "1.5.1",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Sürümlü AI öneri ve sonuç sınırları",
+        "de": "Versionierte KI-Vorschläge und Ergebnisgrenzen"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Öneri araçları katı Zod girdisi ve sabit model sonucu kullanır; salt öneri sorguları gereksiz kişi detaylarını okumaz. Kalan eski okuma araçlarının dönüşümü ayrı sürer.",
+          "de": "Vorschlagswerkzeuge verwenden strikte Zod-Eingaben und feste Modellergebnisse; reine Vorschlagsabfragen lesen keine unnötigen Personendetails. Die Migration übriger Lese-Werkzeuge läuft separat weiter."
+        }
+      ]
+    },
+    {
       "version": "1.5.0",
       "date": "2026-11-15",
       "title": {

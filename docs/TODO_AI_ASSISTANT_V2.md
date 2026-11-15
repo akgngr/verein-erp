@@ -47,10 +47,10 @@ Bitiş: IDOR/süre/revoke/çift onay negatif testleri geçer. Runtime migration 
 
 - [x] D01 members public/worker-safe dataset adapter: yıl/gecikme/durum/tutar; Decimal ve tarih kuralları.
 - [x] D02 Kaynak servisinde kayıt kapsamı + alan projection + export izni; doğrudan cross-module Prisma yok.
-- [ ] D03 create_dataset/query_dataset/export_dataset araçlarını ve TR/DE açıklamalarını ekle.
-- [ ] D04 exports request-generation facade'ını mevcut merkezi dosya şartnamesiyle birleştir; ikinci queue kurma.
+- [x] D03 create_dataset/query_dataset/export_dataset araçlarını ve TR/DE açıklamalarını ekle.
+- [x] D04 exports request-generation facade'ını mevcut merkezi dosya şartnamesiyle birleştir; ikinci queue kurma.
 - [x] D05 automation task payload'ını generationId/actorId metadata'sıyla sınırla; result/log PII taşımasın.
-- [ ] D06 Worker'da güncel izin/precondition, typed satır renderer, streaming ve kaynak limitleri.
+- [x] D06 Worker'da güncel izin/precondition, typed satır renderer, streaming ve kaynak limitleri.
 - [x] D07 UI preview, onay ve job durumu; gerçek isimli XLSX/CSV yalnız yetkili UI/dosyaya gider.
 - [x] D08 Download'da source/alan yetkisini ve sahipliği yeniden denetle; dosya read-to-model geri sızıntısını engelle.
 - [x] D09 100+ kayıt, izin iptali, stale hedef ve provider spy ile tam senaryoyu test et.
@@ -68,7 +68,7 @@ Bitiş: AI sadece datasetRef/durum görür; dosyada doğru ad ve tutarlar bulunu
 - [x] E07 (AI-16) Rıza iptalinde pending iş/ref/dataset revoke; eski dosya/rapor purpose bazlı yaşam döngüsü.
 - [ ] E08 Sağlayıcı timeout/retry/region/retention/fallback ayarlarını resmî belgeler ve gerçek hesapla doğrula.
 - [x] E09 Metrics/alerts: budget, denial, stale preview, cleanup hatası, orphan ve job gecikmesi.
-- [ ] E10 İzole DB entegrasyon ve worker recovery/cancellation testleri; ilgili yer tutucu auth testlerini gerçek davranış testine dönüştür.
+- [x] E10 İzole DB entegrasyon ve worker recovery/cancellation testleri; ilgili yer tutucu auth testlerini gerçek davranış testine dönüştür.
 - [x] E11 module:sync, modül sürüm/releases, typecheck, lint, ilgili testler, build ve TR/DE kontrollerini tamamla.
 - [ ] E12 Pilot feature flag, durdurma/rollback ve operatör runbook'u; kişisel export yayını için kabul matrisi.
 
@@ -112,3 +112,27 @@ https://github.com/akgngr/verein-erp/pull/146
 Owner-scoped kaynak referansından yalnız açık `Student.memberId` / `StudentGuardian.memberId` bağlantısı doğrulanır. Hedef üye silinmişse veya bağlantı yoksa ret gelir. Aynı ad/e-posta eşleştirme kanıtı değildir; veli/öğrenci ilişki kaydı aynı kişi olduklarını göstermez. User/member arasında doğrulanmış ilişki modeli bulunmadığı için kullanıcı otomatik üyeye çevrilmez. AI görev sorgusu e-posta eşleştirmesine düşmez; mine kapsamı açıkça created_by_actor olarak döner. Mevcut kullanıcı arayüzünün eski filtre uyumluluğu bu AI değişikliğinde topluca kaldırılmadı.
 
 PR #146 (494a50b) için production build/hydration dahil CI ve Security başarılıdır. Yeni takip paketleri ayrıca aynı kapılardan geçmelidir. C08 son yerel suite: 449 başarılı, 0 başarısız, 0 atlanan; kişi tablolarına yeni sütun eklenmedi.
+
+## E10 gerçek worker/pg-boss kabulü
+
+İzole PostgreSQL üzerinde gerçek automation worker subprocess'i başlatılır. Süresi dolmuş RUNNING lease fixture'ı gerçek dispatcher tarafından toparlanır; bir rename hatası EISDIR ile geçici hata üretilip engel kaldırılır, aynı generation üçüncü denemede tek dosyayla tamamlanır. Outbox PUBLISHED, execution SUCCEEDED, lease recovery log'u, dosyada doğru isim/tutar ve worker'ın temiz kapanışı doğrulanır. Deneme hakkı biten/iptal edilen iş UI'da QUEUED kalmaz. Geçici hata erken FAILED yapmaz; policy/TTL/stale/cancel/plan hataları kalıcıdır. Son yerel suite: 450 başarılı, 0 başarısız, 0 atlanan. Aktif eski worker ile eşzamanlı storage finalization fencing'i ve streaming D06'da açıktır.
+
+## D03 veri kümesi araç API'si
+
+create_dataset (source=members.dues, query), query_dataset (datasetRef + izinli filtreler) ve export_dataset (onay kartı) mevcut kaynak izinleri, feature flag ve v2 şemalarıyla çalışır. Model açıklamaları TR/DE'dir; eksik çeviride sabit açıklamaya düşer. create_dues_dataset / propose_dataset_export adları uyum için korunur. Export aracı dosyayı doğrudan üretmez. Ortak plan enum'u UI onayı ve worker yolunda aynı doğrulanır. 453 test geçti; gerçek kaynak aracı/fake-fetch ve gerçek worker akışı canonical create_dataset üzerinden de doğrulandı.
+
+## D04 merkezi dosya sahibi
+
+FileGeneration metadata/requestGeneration facade'ı mevcut exports içine alındı; ikinci queue yoktur. Kaynak AiExportRequest + merkezi metadata + execution/outbox atomik kaydedilir. Fenced attempt dosyaları publicationPending ile gizlenir; eski worker yeni dosyayı silemez/yayımlayamaz. Eski dosya/talep backfill'i dolu legacy schema fixture'ıyla testlidir. Download/listeleme aynı published metadata kapısını kullanır; privacy cancellation ve lifecycle/cleanup yeni tabloyu kapsar. 456 test geçti. D06 streaming ve kaynak limit geliştirmesi ayrı; merkezi dosya planındaki tüm diğer producer/format geçişleri bu kutuyla tamamlanmış sayılmaz.
+
+
+## D06 sınırlı şifreli akış
+
+Yeni members.dues queryVersion=2, 500 adaylık keyset sayfaları, ödeme groupBy sum/max, sayfa transaction'ında 5s statement / 12s transaction timeout ve her sayfada güncel izin kontrolü kullanır. Count ve artımlı fingerprint dosya akışıyla eşleşmeden publication yapılmaz. CSV ve ExcelJS streaming writer çıktısı doğrudan AES-GCM ciphertext temp dosyaya gider; plaintext temp/whole-file render buffer yoktur. 100.000 aday/satır, 20 kolon, 32.767 bayt/hücre, 64 MiB ham girdi ve çıktı, worker deadline/TTL/AbortSignal sınırları fail-closed'dur. ZIP chunk tamponları nedeniyle sabit bellek garantisi verilmez. Eski queryVersion=1 işler 5.000 aday ve eski hash sırasıyla uyumludur; bilinmeyen sürüm reddedilir. Download GCM doğrulaması bitmeden plaintext stream etmez. 459 test başarılı; 6.001 kayıt, ödeme toplamları, snapshot değişimi, sayfa arası revoke/abort, typed XLSX/formül güvenli CSV, keyring/tamper, byte/row/cell limit ve gerçek worker stale reddi sınandı. Migration/drift, typecheck/lint, TR/DE ve sabit metin kontrolleri geçti. PR #150 CI/build/hydration ve Security başarılıdır; bu takip commit'i ayrıca CI kabulü gerektirir.
+
+
+## F02 ilk dönüşüm paketi
+
+18 öneri aracı ve 3 istatistik aracı (members/dues, CRM, grants) v2 input/server-result/model-output sözleşmesine taşındı. Önerilerin model cevabı sabit PROPOSED veya kapalı durum enum'udur; kullanıcı kartına giden kaynak başlığı/payload modele geri dönmez. Öneri araçları local-only kalır. Courses/documents/meetings/tasks önerileri ayrı id/başlık metadata sorgularını kullanır: öğretmen/katılımcı/atama kimlikleri, evrak notları ve ekleri bu aşamada okunmaz. Domain action/snapshot/onay yolu korunur. Worker-safe tanımlar UI/Auth/PDF import zincirinden ayrıdır. CRM/hibe aggregate sorguları mevcut UI API'siyle re-export uyumunu koruyan dar girişlere taşındı. Üye aidat toplama oranının null olabilmesi açık şemada korunur.
+
+463 test başarılı; 17 bağımsız öneri için katı girdi, yalnız kart üretme, metadata select'leri, kişisel sentinel'in model cevabında bulunmaması ve eksik hedef reddi sınandı. İstatistiklerde nullable oran, tutar, bilinen aşama ve bilinmeyen aşamada fail-closed davranış sınandı. Kaynak taraması yeni tanım/query dosyalarını da kapsar; K0 sahiplik kuralı gevşetilmedi. Migration/drift, typecheck/lint, i18n/hardcoded text ve module:sync geçti. F02 tamamlanmadı: 26 legacy okuma/dosya aracı ve registry fallback'i sonraki pakettedir. PR #151 CI/build/hydration ve Security başarılıdır; bu paket ayrıca CI kabulü gerektirir.

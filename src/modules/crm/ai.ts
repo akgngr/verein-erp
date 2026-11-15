@@ -1,26 +1,13 @@
 import "server-only";
-
-import { z } from "zod";
-
-import { aiTool, defineModuleAi } from "@/shared/ai/define";
-import { can } from "@/shared/permissions/define";
-
-import { crmPermissions } from "./permissions";
-import { dealStageTotals } from "./services/crm";
+import {defineModuleAiV2} from "@/shared/ai/v2";
+import {aiStatisticsTool} from "./services/ai-statistics-tool";
 
 /** CRM: yalnız toplu sayılar; kişi adı, iletişim, not ve zaman akışı verilmez. */
-export const ai = defineModuleAi({
+
+export const ai = defineModuleAiV2({
   module: "crm",
   tools: [
-    aiTool({
-      name: "get_crm_pipeline",
-      operation: "read",
-      allowed: (user) => can(user.role, crmPermissions, "view"),
-      description: "CRM pipeline totals: deal count and amount (EUR) per stage (OPEN, PROPOSAL, WON, LOST), No titles, names or notes.", // i18n-ignore (model-facing tool text)
-      schema: z.object({}),
-      inputSchema: { type: "object", properties: {}, required: [], additionalProperties: false },
-      run: async () => ({ deals: await dealStageTotals() }),
-    }),
+    aiStatisticsTool,
   ],
   actions: {},
 });

@@ -1,7 +1,7 @@
 # Merkezi Dosya Üretim ve Dağıtım — TODO
 
 - **Şartname:** [CENTRALIZED_FILE_PIPELINE_SPEC.md](./specs/CENTRALIZED_FILE_PIPELINE_SPEC.md)
-- **Durum:** Planlandı — henüz uygulama yok
+- **Durum:** AI aidat pilotu için ilk facade/metadata/automation köprüsü uygulandı; genel geçiş açık
 - **Başlama koşulu:** Mevcut Automation P0 güvenilirlik işleri tamamlanmalı; P1 işleriyle bağımlılıklar netleştirilmeli.
 - **Kural:** Bu backlog tamamlanana kadar mevcut modüllerde doğrudan dosya üretim/indirme kodu için toplu refactor başlatılmayacak.
 
@@ -129,3 +129,7 @@
 - [ ] Tenant izolasyonu, retry/idempotency, recovery ve güvenlik testleri geçiyor.
 - [ ] CI ve production build başarılı.
 - [ ] Geçiş ve işletim dokümantasyonu tamamlandı.
+
+## İlk pilot notu
+
+15.11.2026: P0 worker/queue/lease/retry yolu gerçek pg-boss testiyle doğrulandıktan sonra AI aidat producer'ı mevcut exports içinde FileGeneration facade'ına bağlandı. Metadata ve execution/outbox tek transaction; dosya publication'ı current lease ile atomik. Bu dar pilot yukarıdaki genel FILE-0 envanterini, bütün formatları veya FILE-5 taşımalarını tamamlamaz. Kabul ve rollout: architecture/FILE_GENERATION_FACADE.md.

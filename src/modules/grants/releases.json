@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.0.3",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Sürümlü AI istatistik sözleşmesi",
+        "de": "Versionierter KI-Statistikvertrag"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Toplu istatistik araçları katı girdi, sunucu sonucu ve modele çıkacak alanların açık şemalarıyla v2 sözleşmesine taşındı; kişisel satırlar modele döndürülmez.",
+          "de": "Aggregierte Statistikwerkzeuge nutzen den v2-Vertrag mit strikten Eingaben sowie expliziten Server- und Modellausgabeschemata; personenbezogene Einzelzeilen werden nicht ausgegeben."
+        }
+      ]
+    },
+    {
       "version": "1.0.2",
       "date": "2026-11-07",
       "title": {

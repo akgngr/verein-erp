@@ -2,7 +2,7 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
-      "version": "1.11.1",
+      "version": "1.12.1",
       "date": "2026-11-15",
       "title": {
         "tr": "Uzaktan form bağı bildirildi",
@@ -13,6 +13,31 @@
           "type": "security",
           "tr": "Üye sayfasındaki e-imza bağlantıları artık bildirilmiş erişimle çalışır. Yönetici erişimi bir kez yeniden onaylar.",
           "de": "E-Signatur-Links auf der Mitgliederseite nutzen jetzt deklarierten Zugriff. Der Administrator bestätigt den Zugriff einmalig neu."
+        }
+      ]
+    },
+    {
+      "version": "1.12.0",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "AI v2 araç geçişi",
+        "de": "KI-v2-Werkzeugmigration"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Toplu istatistik araçları katı girdi, sunucu sonucu ve modele çıkacak alanların açık şemalarıyla v2 sözleşmesine taşındı; kişisel satırlar modele döndürülmez.",
+          "de": "Aggregierte Statistikwerkzeuge nutzen den v2-Vertrag mit strikten Eingaben sowie expliziten Server- und Modellausgabeschemata; personenbezogene Einzelzeilen werden nicht ausgegeben."
+        },
+        {
+          "type": "improvement",
+          "tr": "Aidat veri kümesi 500 kayıtlık keyset sayfaları ve ödeme toplamlarıyla okunur; CSV/XLSX doğrudan şifreli akışa yazılır. İptal, süre ve boyut sınırları yayından önce doğrulanır.",
+          "de": "Beitragsdaten werden in 500er-Keyset-Seiten mit Zahlungssummen gelesen; CSV/XLSX wird direkt verschlüsselt gestreamt. Abbruch, Fristen und Größenlimits werden vor Veröffentlichung geprüft."
+        },
+        {
+          "type": "feature",
+          "tr": "create_dataset/query_dataset/export_dataset araçları açık şema, TR/DE açıklamalar ve onay zorunluluğuyla sunulur; eski adlar uyum için korunur.",
+          "de": "create_dataset/query_dataset/export_dataset bieten explizite Schemata, TR/DE-Beschreibungen und Bestätigungspflicht; bisherige Namen bleiben kompatibel."
         }
       ]
     },

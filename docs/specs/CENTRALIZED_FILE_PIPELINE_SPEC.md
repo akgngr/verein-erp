@@ -1,6 +1,6 @@
 # Merkezi Dosya Üretim ve Dağıtım Altyapısı
 
-- **Durum:** Planlandı — uygulama başlamadı
+- **Durum:** İlk producer/facade uygulandı; genel format/modül geçişi sürüyor
 - **Proje anahtarı:** FILE
 - **Bağımlılık:** Automation Core
 - **Planlama kararı:** Automation P0 güvenilirlik işleri tamamlanmadan uygulamaya başlanmayacak; P1 gözlemlenebilirlik/kontrol işleriyle çakışma yaratmayacak şekilde sıralanacak.
@@ -285,3 +285,9 @@ Geçiş modül modül ve geriye uyumlu yapılmalıdır.
 - Dosya versiyonlarının aynı ManagedFile altında mı yoksa ayrı kayıtlarla mı tutulacağı.
 
 Bu kararlar mevcut kod, deployment ve test gereksinimleri incelendikten sonra kesinleştirilmelidir. Bu şartname uygulama sırasında gerekçeli PR kararlarıyla güncellenebilir.
+
+## AI pilot facade uygulaması — 15.11.2026
+
+Mevcut exports modülü merkezi dosya sahibi olarak kullanılır; ayrıca aynı görevi yapan bir files modülü açılmaz. FileGeneration metadata + mevcut automation execution/outbox atomik facade'ı AI aidat producer'ına bağlandı. Ayrı attempt ID, publicationPending ve execution lease fencing vardır. Eski tamamlanmış dosyaları koruyan backfill ve yarım byte gizleme test edildi. Ayrıntı: ../architecture/FILE_GENERATION_FACADE.md.
+
+FILE-0 tam envanter, bütün formatlar, streaming ve FILE-5 toplu taşıma henüz tamamlanmış sayılmaz. Bu ilk dar producer tüm module export handler'larını değiştirmez.

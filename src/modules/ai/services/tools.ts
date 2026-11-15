@@ -41,6 +41,7 @@ const MODULE_TOOLS = moduleAiRegistry.flatMap((entry) =>
       requiresContent:tool.requiresContent,
       allowed: (user) => tool.allowed(user),
       description: tool.description,
+      descriptionKey:tool.descriptionKey,
       schema: tool.schema,
       inputSchema: tool.inputSchema,
       run: (input, { user, proposals, files, restore,conversationId,policyRevision }) =>
@@ -80,12 +81,12 @@ for(const entry of moduleAiRegistry)for(const tool of entry.tools){
 }
 assertUniqueToolNames(MODULE_TOOLS);
 const TOOLS = MODULE_TOOLS;
-const featureAvailable=(name:string)=>!["create_dues_dataset","query_dataset","propose_dataset_export"].includes(name)||process.env.AI_PERSONAL_EXPORT_ENABLED==="true";
+const featureAvailable=(name:string)=>!["create_dataset","create_dues_dataset","query_dataset","export_dataset","propose_dataset_export"].includes(name)||process.env.AI_PERSONAL_EXPORT_ENABLED==="true";
 
 /** Bu kullanıcı için şu an kullanılabilir araçlar (modül izni + kullanıcı yetkisi). */
-export async function availableTools(user: SessionUser, provider?: AiProviderId) {
+export async function availableTools(user: SessionUser, provider?: AiProviderId,translate?:(key:string)=>string|undefined) {
   const [usable, matrix, cloud] = await Promise.all([listUsableModuleKeys().then((keys) => new Set(keys)), getAiPermissions(), getCloudSettings()]);
-  return TOOLS.filter((tool) => isAllowed(matrix, tool.module, tool.operation) && (!tool.requiresContent||isAllowed(matrix,tool.module,"read_content")) && usable.has(tool.module) && tool.allowed(user) && featureAvailable(tool.name) && (provider === "local" || cloudToolEligible(tool, cloud)));
+  return TOOLS.filter((tool) => isAllowed(matrix, tool.module, tool.operation) && (!tool.requiresContent||isAllowed(matrix,tool.module,"read_content")) && usable.has(tool.module) && tool.allowed(user) && featureAvailable(tool.name) && (provider === "local" || cloudToolEligible(tool, cloud))).map(tool=>tool.descriptionKey?{...tool,description:translate?.(tool.descriptionKey)??tool.description}:tool);
 }
 
 export type UnavailableReason = "module" | "matrix" | "role" | "privacy" | "feature";

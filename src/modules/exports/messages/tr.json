@@ -9,7 +9,8 @@
   "access": {
     "organization": "PDF dosyalarında dernek antetini (ad, adres, logo) kullanır.",
     "system": "Başka modüllerin dosya formatı eklentilerinin yalnızca modül etkinken kullanılması için modül durumlarını okur.",
-    "members": "Yetkili dosya üretimi ve çalışma anında izin kontrolü."
+    "members": "Yetkili dosya üretimi ve çalışma anında izin kontrolü.",
+    "automation": "Dosya taleplerini mevcut otomasyon kuyruğuna atomik kaydeder; iş durumu ve worker kilidini doğrular."
   },
   "title": "Dosyalarım",
   "description": "Asistanın veya modüllerin sizin için oluşturduğu dosyalar. Yalnızca siz görebilirsiniz; {days} gün sonra otomatik silinir.",
@@ -53,6 +54,14 @@
       "kind": "Veri kümesi dışa aktarımı",
       "confirm": "Dosyayı oluştur",
       "done": "Dosya sıraya alındı"
+    },
+    "tools": {
+      "export_dataset": {
+        "description": "Sunucudaki datasetRef için CSV/XLSX onay kartı hazırlar. Kullanıcı onaylamadan dosya üretilmez. İzinli kolonlar: member.fullName, dues.year, dues.overdueAmount. Gerçek kişi adlarını yalnız sunucu worker dosyaya ekler."
+      },
+      "propose_dataset_export": {
+        "description": "Eski uyum aracı: veri kümesinin CSV/XLSX aktarımı için onay kartı önerir; onay olmadan dosya üretmez. Yeni çağrılarda export_dataset kullan."
+      }
     }
   },
   "cleanup_files": "Süresi dolan ve sahipsiz dosyaları temizle"

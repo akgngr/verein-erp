@@ -23,6 +23,8 @@ export type TaskExecutionContext = {
   correlationId: string;
   locale: "tr" | "de";
   attempt: number;
+  /** Supplied by the worker, never by serialized task input. */
+  leaseToken?:number;
   signal: AbortSignal;
 };
 
