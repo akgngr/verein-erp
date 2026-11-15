@@ -6,11 +6,20 @@ import { documentCategoriesPermissions, documentsPermissions } from "./permissio
 export const moduleConfig: ModuleConfig = {
   key: "documents",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.5.1",
+  version: "1.6.0",
   dependencies: { "tesseract.js": "7.0.0", "@tesseract.js-data/deu": "1.0.0", "@tesseract.js-data/tur": "1.0.0", "@tesseract.js-data/eng": "1.0.0" },
   label: "Evrak Kayıt",
   description: "Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi.",
   category: "OFFICIAL",
+  // Bildirilmiş entegrasyonlar (docs/MODULE_DEVELOPMENT_GUIDE.md §8, §8e): "Muhasebeye aktar" muhasebenin sunucu
+  // API'sini kullanır; görev ve AI düğmeleri yalnız o modüller kullanılabilirse gösterilir.
+  recommends: ["accounting", "tasks", "ai"],
+  access: [
+    { module: "accounting", operations: ["read", "write"] },
+    { module: "tasks", operations: ["read"] },
+    { module: "ai", operations: ["read"] },
+    { module: "system", operations: ["read"] },
+  ],
   hasSchema: true,
   nav: [
     {

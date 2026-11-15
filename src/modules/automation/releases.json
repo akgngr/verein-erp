@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.10.5",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Sistem bağı bildirildi",
+        "de": "Systemverbindung deklariert"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Görev çalıştırmadan önceki modül durumu denetimi artık bildirilmiş erişimle yapılır. Yönetici erişimi bir kez yeniden onaylar.",
+          "de": "Die Modulstatusprüfung vor Aufgabenausführung nutzt jetzt deklarierten Zugriff. Der Administrator bestätigt den Zugriff einmalig neu."
+        }
+      ]
+    },
+    {
       "version": "0.10.4",
       "date": "2026-11-15",
       "title": {

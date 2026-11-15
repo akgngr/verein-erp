@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.6.0",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Modüller arası bağ bildirildi",
+        "de": "Modulübergreifende Verbindungen deklariert"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Muhasebe, görevler ve asistan bağlantıları artık bildirilmiş erişimle çalışır: \"Muhasebeye aktar\" sunucuda, muhasebe yetkiniz denetlenerek yapılır; düğmeler yalnız ilgili modül açık ve yetkiniz varsa görünür. Yönetici erişimleri bir kez yeniden onaylar.",
+          "de": "Verbindungen zu Buchhaltung, Aufgaben und Assistent laufen jetzt über deklarierten Zugriff: „An Buchhaltung übergeben“ erfolgt serverseitig mit Prüfung Ihrer Buchhaltungsrechte; Schaltflächen erscheinen nur, wenn das Modul aktiv ist und Sie berechtigt sind. Der Administrator bestätigt die Zugriffe einmalig neu."
+        }
+      ]
+    },
+    {
       "version": "1.5.1",
       "date": "2026-11-15",
       "title": {

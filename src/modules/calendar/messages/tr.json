@@ -126,7 +126,9 @@
     }
   },
   "access": {
-    "events": "Takvim kaydını tek tıkla etkinlik taslağına dönüştürmek için."
+    "events": "Takvim kaydını tek tıkla etkinlik taslağına dönüştürmek için.",
+    "users": "Takvim aboneliği ve senkronizasyonda kullanıcının adını ve yetkisini doğrulamak için.",
+    "system": "Takvime kaynak veren modüllerin kurulu ve açık olduğunu denetlemek için."
   },
   "sync": {
     "title": "Bağlı takvimler",

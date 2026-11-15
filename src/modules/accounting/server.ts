@@ -87,7 +87,9 @@ export { applyAccountingPreset, ACCOUNTING_PRESETS, type OrganizationType } from
 export { importBankTransactions } from "./services/bank-import";
 export type { ParsedTransaction as BankTransactionInput } from "./services/bank-parsers";
 // Gelen faturalar kutusuna belge alma (e-posta içe aktarma da bunu kullanır).
-export { importPayableFile } from "./services/payable-import";
+export { importPayableFile, payablePrefillSchema, type PayablePrefill } from "./services/payable-import";
+// Diğer modüllerin (ör. evrak → "Muhasebeye aktar") kullanıcı yetkisini denetlemesi için.
+export { accountingPermissions } from "./permissions";
 export { PAYABLE_FILE_EXTENSIONS } from "./handlers/payable-files";
 // Envanter ↔ demirbaş senkronu (envanter modülü çağırır).
 export { saveAssetForInventoryItem, unlinkAssetFromInventoryItem } from "./services/inventory-assets";

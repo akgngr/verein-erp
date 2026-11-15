@@ -45,6 +45,7 @@ export function AnalysisDialog({
   current,
   labels,
   categories,
+  aiAvailable,
   onApply,
   onClose,
 }: {
@@ -52,6 +53,7 @@ export function AnalysisDialog({
   current: Record<ApplicableField, string>;
   labels: Record<ApplicableField, string>;
   categories: Array<{ id: string; label: string }>;
+  aiAvailable: boolean;
   onApply: (values: Partial<Record<ApplicableField, string>>) => void;
   onClose: () => void;
 }) {
@@ -127,7 +129,7 @@ export function AnalysisDialog({
               ) : null}
             </>
           )}
-          {analysis.preview ? (
+          {analysis.preview && aiAvailable ? (
             <div className="flex flex-wrap items-center gap-2 rounded-medium border border-default-200 p-3">
               {ai ? (
                 <>

@@ -17,6 +17,21 @@
       ]
     },
     {
+      "version": "1.21.1",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Evrak aktarımı için sunucu API'si",
+        "de": "Server-API für Dokumentübernahme"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Gelen fatura taslağı içe aktarımı ve izin tanımı diğer modüllerin onaylı erişimine açıldı.",
+          "de": "Import von Eingangsrechnungsentwürfen und Berechtigungsdefinition für genehmigten Zugriff anderer Module freigegeben."
+        }
+      ]
+    },
+    {
       "version": "1.21.0",
       "date": "2026-11-15",
       "title": {
