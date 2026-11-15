@@ -1,47 +1,70 @@
 import { heroui } from "@heroui/react";
 
-// KARAR: Kurumsal, sakin bir lacivert-mavi marka paleti. Sayfa zemini hafif gri, kartlar beyaz;
-// böylece içerik kartları zeminden ayrışır. Sidebar marka renginde (koyu) zemin kullanır.
+// Quiet, commerce-inspired work surfaces: graphite, warm neutrals and a restrained forest accent.
 const brand = {
-  50: "#eef3ff",
-  100: "#dce6fe",
-  200: "#bccffd",
-  300: "#8fadf9",
-  400: "#5f84f2",
-  500: "#3d63e6",
-  600: "#2b4bd0",
-  700: "#253ca8",
-  800: "#233587",
-  900: "#20306b",
-  DEFAULT: "#2b4bd0",
+  50: "#edf5f0",
+  100: "#d9eade",
+  200: "#b6d4c0",
+  300: "#87b69a",
+  400: "#579575",
+  500: "#337b58",
+  600: "#206541",
+  700: "#1d5036",
+  800: "#1c402d",
+  900: "#173526",
+  DEFAULT: "#206541",
   foreground: "#ffffff",
 };
-
+const neutral = {
+  50: "#f7f8f6",
+  100: "#eef0ec",
+  200: "#dfe3dc",
+  300: "#c4cbc1",
+  400: "#929b90",
+  500: "#697367",
+  600: "#505b4f",
+  700: "#3b453b",
+  800: "#29322a",
+  900: "#1c241e",
+  DEFAULT: "#dfe3dc",
+  foreground: "#242b26",
+};
 export default heroui({
   layout: {
-    radius: { small: "6px", medium: "10px", large: "14px" },
+    radius: { small: "6px", medium: "8px", large: "12px" },
     boxShadow: {
-      small: "0 1px 2px rgba(16, 24, 40, 0.05), 0 1px 3px rgba(16, 24, 40, 0.06)",
-      medium: "0 4px 12px -2px rgba(16, 24, 40, 0.08), 0 2px 4px -2px rgba(16, 24, 40, 0.05)",
-      large: "0 16px 32px -8px rgba(16, 24, 40, 0.14), 0 4px 8px -4px rgba(16, 24, 40, 0.06)",
+      small:
+        "0 1px 2px rgba(25, 35, 28, 0.04), 0 0 0 1px rgba(25, 35, 28, 0.025)",
+      medium:
+        "0 4px 16px -4px rgba(25, 35, 28, 0.10), 0 1px 3px rgba(25, 35, 28, 0.04)",
+      large:
+        "0 20px 48px -12px rgba(12, 24, 17, 0.22), 0 4px 12px rgba(12, 24, 17, 0.06)",
     },
   },
   themes: {
     light: {
       colors: {
-        background: "#f5f7fb",
+        background: "#f4f5f2",
+        foreground: "#242b26",
         content1: "#ffffff",
+        content2: "#f7f8f5",
+        content3: "#edf0ea",
+        divider: "#e1e5de",
+        default: neutral,
         primary: brand,
         focus: brand[500],
       },
     },
     dark: {
       colors: {
-        background: "#0b1020",
-        content1: "#121a2e",
-        content2: "#18223a",
-        primary: { ...brand, DEFAULT: brand[400], foreground: "#0b1020" },
-        focus: brand[400],
+        background: "#111714",
+        foreground: "#e9eee9",
+        content1: "#1a221d",
+        content2: "#212b24",
+        content3: "#2b352d",
+        divider: "#334137",
+        primary: { ...brand, DEFAULT: "#91c5a3", foreground: "#102719" },
+        focus: "#91c5a3",
       },
     },
   },

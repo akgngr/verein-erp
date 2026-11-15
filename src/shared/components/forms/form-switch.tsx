@@ -1,7 +1,12 @@
 "use client";
 
-import { Switch } from "@heroui/react";
-import { Controller, type Control, type FieldValues, type Path } from "react-hook-form";
+import { Description, Label, Switch } from "@heroui-v3/react";
+import {
+  Controller,
+  type Control,
+  type FieldValues,
+  type Path,
+} from "react-hook-form";
 
 export type FormSwitchProps<T extends FieldValues> = {
   name: Path<T>;
@@ -24,18 +29,21 @@ export function FormSwitch<T extends FieldValues>({
       name={name}
       control={control}
       render={({ field }) => (
-        <div>
-          <Switch
-            id={`form-switch-${String(name)}`}
-            isSelected={Boolean(field.value)}
-            onValueChange={field.onChange}
-            onBlur={field.onBlur}
-            isDisabled={isDisabled}
-          >
-            {label}
-          </Switch>
-          {description ? <p className="mt-1 text-tiny text-default-400">{description}</p> : null}
-        </div>
+        <Switch
+          id={`form-switch-${String(name)}`}
+          isSelected={Boolean(field.value)}
+          onChange={field.onChange}
+          onBlur={field.onBlur}
+          isDisabled={isDisabled}
+        >
+          <Switch.Content ref={field.ref}>
+            <Switch.Control>
+              <Switch.Thumb />
+            </Switch.Control>
+            <Label>{label}</Label>
+          </Switch.Content>
+          {description ? <Description>{description}</Description> : null}
+        </Switch>
       )}
     />
   );

@@ -1,3 +1,5 @@
+import { getLocale } from "next-intl/server";
+import { WorkspaceHeader } from "./_components/workspace-header";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -6,7 +8,11 @@ import { requireUser, signOutAction } from "@/modules/auth/server";
 import { AiAssistantSlot } from "@/modules/ai/ui";
 import { FeedbackSlot } from "@/modules/feedback/ui";
 import { listUsableModuleKeys } from "@/modules/system/server";
-import { listPermissionResources, listRoleDirectory, loadPermissionPolicy } from "@/modules/users/server";
+import {
+  listPermissionResources,
+  listRoleDirectory,
+  loadPermissionPolicy,
+} from "@/modules/users/server";
 import { RolesProvider } from "@/shared/components/roles/roles-provider";
 
 import {
@@ -36,39 +42,62 @@ export default async function DashboardLayout({
   }
 
   // Menüde yalnızca kullanılabilir modüller: çekirdek + etkin ve erişim izni onaylı olanlar.
-  const [activeModuleKeys, roles, policy, resources] = await Promise.all([listUsableModuleKeys(), listRoleDirectory(), loadPermissionPolicy(), listPermissionResources()]);
-  const collapsed = (await cookies()).get(SIDEBAR_COLLAPSED_COOKIE)?.value === "1";
+  const [activeModuleKeys, roles, policy, resources] = await Promise.all([
+    listUsableModuleKeys(),
+    listRoleDirectory(),
+    loadPermissionPolicy(),
+    listPermissionResources(),
+  ]);
+  const locale = await getLocale();
+  const dateLabel = new Intl.DateTimeFormat(locale, {
+    weekday: "short",
+    day: "numeric",
+    month: "long",
+    timeZone: "Europe/Berlin",
+  }).format(new Date());
+  const collapsed =
+    (await cookies()).get(SIDEBAR_COLLAPSED_COOKIE)?.value === "1";
 
   return (
-    <RolesProvider roles={roles} policy={policy} resources={resources.map(({ moduleKey, definition }) => ({ moduleKey, definition }))}>
-    <SidebarProvider initialCollapsed={collapsed}>
-      <div className="flex min-h-dvh">
-        <DesktopSidebar
-          role={user.role}
-          activeModuleKeys={activeModuleKeys}
-          userName={user.name}
-          userEmail={user.email}
-          onSignOut={signOutAction}
-        />
-        {/* AI asistanı içerik sütununu sarar: altta yüzen giriş çubuğu, sağda sohbet sütunu.
+    <RolesProvider
+      roles={roles}
+      policy={policy}
+      resources={resources.map(({ moduleKey, definition }) => ({
+        moduleKey,
+        definition,
+      }))}
+    >
+      <SidebarProvider initialCollapsed={collapsed}>
+        <div className="workspace-shell flex min-h-dvh">
+          <DesktopSidebar
+            role={user.role}
+            activeModuleKeys={activeModuleKeys}
+            userName={user.name}
+            userEmail={user.email}
+            onSignOut={signOutAction}
+          />
+          {/* AI asistanı içerik sütununu sarar: altta yüzen giriş çubuğu, sağda sohbet sütunu.
             Modül kapalıysa, rol izinli değilse sütun olduğu gibi döner. */}
-        <AiAssistantSlot user={user}>
-          <div className="flex min-w-0 flex-1 flex-col">
-            <MobileHeader />
-            <main className="flex-1 px-4 py-6 md:px-6">{children}</main>
-          </div>
-        </AiAssistantSlot>
-        {/* Test aşaması: sağ altta yüzen hata/öneri butonu (modül kapalıysa çizilmez). */}
-        <FeedbackSlot user={user} />
-        <MobileSidebar
-          role={user.role}
-          activeModuleKeys={activeModuleKeys}
-          userName={user.name}
-          userEmail={user.email}
-          onSignOut={signOutAction}
-        />
-      </div>
-    </SidebarProvider>
+          <AiAssistantSlot user={user}>
+            <div className="flex min-w-0 flex-1 flex-col">
+              <MobileHeader />
+              <WorkspaceHeader dateLabel={dateLabel} />
+              <main className="workspace-main flex-1 px-4 py-6 md:px-7 lg:py-8">
+                {children}
+              </main>
+            </div>
+          </AiAssistantSlot>
+          {/* Test aşaması: sağ altta yüzen hata/öneri butonu (modül kapalıysa çizilmez). */}
+          <FeedbackSlot user={user} />
+          <MobileSidebar
+            role={user.role}
+            activeModuleKeys={activeModuleKeys}
+            userName={user.name}
+            userEmail={user.email}
+            onSignOut={signOutAction}
+          />
+        </div>
+      </SidebarProvider>
     </RolesProvider>
   );
 }

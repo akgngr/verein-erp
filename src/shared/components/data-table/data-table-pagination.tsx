@@ -1,6 +1,6 @@
 "use client";
 
-import { Pagination } from "@heroui/react";
+import { Pagination } from "@heroui-v3/react";
 import { ChevronDown } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -20,6 +20,14 @@ export function DataTablePagination({
   onPageSizeChange: (pageSize: number) => void;
 }) {
   const t = useTranslations("common");
+  const pageNumbers = [...new Set([1, totalPages, page - 1, page, page + 1])]
+    .filter((value) => value >= 1 && value <= totalPages)
+    .sort((a, b) => a - b);
+  const items: (number | string)[] = pageNumbers.flatMap((value, index) =>
+    index > 0 && value - pageNumbers[index - 1] > 1
+      ? [`gap-${value}`, value]
+      : [value],
+  );
 
   return (
     <div className="flex flex-col items-center justify-between gap-3 sm:flex-row">
@@ -45,14 +53,43 @@ export function DataTablePagination({
             aria-hidden="true"
           />
         </div>
-        <Pagination
-          page={page}
-          total={totalPages}
-          onChange={onPageChange}
-          showControls
-          size="sm"
-          isCompact
-        />
+        <Pagination size="sm" aria-label={t("table.label")}>
+          <Pagination.Content>
+            <Pagination.Item>
+              <Pagination.Previous
+                aria-label={t("table.previousPage")}
+                isDisabled={page <= 1}
+                onPress={() => onPageChange(page - 1)}
+              >
+                <Pagination.PreviousIcon />
+              </Pagination.Previous>
+            </Pagination.Item>
+            {items.map((item) => (
+              <Pagination.Item key={item}>
+                {typeof item === "number" ? (
+                  <Pagination.Link
+                    isActive={page === item}
+                    aria-label={t("table.pageNumber", { page: item })}
+                    onPress={() => onPageChange(item)}
+                  >
+                    {item}
+                  </Pagination.Link>
+                ) : (
+                  <Pagination.Ellipsis aria-hidden />
+                )}
+              </Pagination.Item>
+            ))}
+            <Pagination.Item>
+              <Pagination.Next
+                aria-label={t("table.nextPage")}
+                isDisabled={page >= totalPages}
+                onPress={() => onPageChange(page + 1)}
+              >
+                <Pagination.NextIcon />
+              </Pagination.Next>
+            </Pagination.Item>
+          </Pagination.Content>
+        </Pagination>
       </div>
     </div>
   );

@@ -1,7 +1,19 @@
 "use client";
 
-import { Input } from "@heroui/react";
-import { Controller, type Control, type FieldValues, type Path } from "react-hook-form";
+import {
+  TextField,
+  Input,
+  Label,
+  Description,
+  FieldError,
+} from "@heroui-v3/react";
+import {
+  Controller,
+  type Control,
+  type FieldValues,
+  type Path,
+} from "react-hook-form";
+import { cn } from "@/shared/utils";
 import { useTranslateMessage } from "@/shared/i18n/use-translate-message";
 
 export type FormInputProps<T extends FieldValues> = {
@@ -17,10 +29,7 @@ export type FormInputProps<T extends FieldValues> = {
   labelPlacement?: "inside" | "outside" | "outside-left";
 };
 
-/** HeroUI Input + react-hook-form Controller sarmalayıcısı (10.4). */
-// KARAR: HeroUI, labelPlacement="outside" iken placeholder YOKSA label'ı input'un İÇİNE
-// alır (giriş formunda E-posta dışarıda, Parola içeride görünüyordu). Dış yerleşimde
-// placeholder verilmemişse boşluk karakteri verilerek label tutarlı biçimde dışarıda kalır.
+/** HeroUI v3 field composition with controlled RHF value and native focus ref. */
 export function FormInput<T extends FieldValues>({
   name,
   label,
@@ -39,26 +48,36 @@ export function FormInput<T extends FieldValues>({
       name={name}
       control={control}
       render={({ field, fieldState }) => (
-        <Input
+        <TextField
           id={`form-input-${String(name)}`}
-          label={label}
-          labelPlacement={labelPlacement}
-          description={description}
-          isRequired={isRequired}
-          placeholder={placeholder ?? (labelPlacement === "outside" ? " " : undefined)}
-          type={type}
-          autoComplete={autoComplete}
-          isDisabled={isDisabled}
-          value={field.value === null || field.value === undefined ? "" : String(field.value)}
-          onValueChange={field.onChange}
+          name={field.name}
+          value={
+            field.value === null || field.value === undefined
+              ? ""
+              : String(field.value)
+          }
+          onChange={field.onChange}
           onBlur={field.onBlur}
+          isRequired={isRequired}
+          isDisabled={isDisabled}
           isInvalid={Boolean(fieldState.error)}
-          errorMessage={translateMessage(fieldState.error?.message)}
-          classNames={{
-            label: "text-small font-medium text-foreground pb-1",
-            inputWrapper: "shadow-xs border-default-200 hover:border-default-400 focus-within:!border-primary transition-colors bg-default-50/50 hover:bg-default-100/50 focus-within:!bg-background",
-          }}
-        />
+          className={cn(
+            "w-full",
+            labelPlacement === "outside-left" &&
+              "grid grid-cols-[minmax(7rem,1fr)_2fr] items-start gap-x-4",
+          )}
+        >
+          <Label className="text-[13px] font-medium">{label}</Label>
+          <Input
+            ref={field.ref}
+            type={type}
+            autoComplete={autoComplete}
+            placeholder={placeholder}
+            className="w-full"
+          />
+          {description ? <Description>{description}</Description> : null}
+          <FieldError>{translateMessage(fieldState.error?.message)}</FieldError>
+        </TextField>
       )}
     />
   );

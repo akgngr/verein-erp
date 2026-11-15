@@ -135,6 +135,7 @@ jobs:
           ADMIN_PASSWORD: Ci-Hydration-Test-1
           AUTH_URL: http://localhost:3000
           AUTH_TRUST_HOST: "true"
+          HYDRATION_CAPTURE_DIR: theme-preview
         run: |
           pnpm exec playwright install --with-deps chromium
           pnpm exec tsx scripts/reset-admin.ts
@@ -142,6 +143,15 @@ jobs:
           pnpm start > next-start.log 2>&1 &
           for i in $(seq 1 60); do curl -sf -o /dev/null http://localhost:3000/giris && break; sleep 2; done
           E2E_EMAIL=ci-admin@example.test E2E_PASSWORD=Ci-Hydration-Test-1 pnpm test:hydration || { tail -50 next-start.log; exit 1; }
+
+      - name: Theme acceptance screenshots
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: theme-preview
+          path: theme-preview/*.png
+          if-no-files-found: ignore
+          retention-days: 5
 
   docker:
     name: Build and publish Docker images
