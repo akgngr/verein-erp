@@ -18,7 +18,7 @@ import { accountingPermissions } from "../permissions";
 import { buildEInvoiceViewLabels } from "../lib/einvoice-view-labels";
 import { EInvoiceViewDocument } from "../pdf/einvoice-view-document";
 import { loadPayableEInvoice } from "../services/einvoice-view";
-import { importPayableFile } from "../services/payable-import";
+import { importPayableFile, payablePrefillSchema } from "../services/payable-import";
 import { registerSharedPdfFonts } from "@/shared/pdf/fonts";
 
 export const PAYABLE_FILE_EXTENSIONS = ["pdf", "xml", "jpg", "jpeg", "png"] as const;
@@ -52,7 +52,17 @@ export async function uploadPayableHandler(request: Request): Promise<Response> 
   });
   if (!validation.ok) return NextResponse.json({ ok: false, error: await uploadErrorMessage(validation) }, { status: 400 });
 
+  // İsteğe bağlı ön doldurma (ör. evrak modülünden "Muhasebeye aktar"): geçersizse yok sayılır.
+  let prefill: ReturnType<typeof payablePrefillSchema.parse> | undefined;
+  try {
+    const parsedPrefill = parsed.fields.prefill ? payablePrefillSchema.safeParse(JSON.parse(parsed.fields.prefill)) : null;
+    prefill = parsedPrefill?.success ? parsedPrefill.data : undefined;
+  } catch {
+    prefill = undefined;
+  }
   const result = await importPayableFile({
+    prefill,
+    channel: prefill ? "document" : undefined,
     buffer: Buffer.from(parsed.file.buffer),
     originalName: validation.file.originalName,
     extension: validation.file.extension,

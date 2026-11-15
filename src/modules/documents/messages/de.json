@@ -400,5 +400,16 @@
       "local": "Mit lokalem Modell verarbeitet",
       "cloud": "In der Cloud mit maskiertem Text verarbeitet"
     }
+  },
+  "actions": {
+    "transfer": "An Buchhaltung übergeben",
+    "transferred": "Entwurf einer Eingangsrechnung erstellt; bitte prüfen und Kategorie/USt ergänzen.",
+    "transferDuplicate": "Dieser Beleg ist in der Buchhaltung bereits vorhanden.",
+    "transferFailed": "Übergabe an die Buchhaltung fehlgeschlagen.",
+    "transferNote": "Aus Dokument {registryNumber} übernommen. Betrag laut Dokument: {amount}.",
+    "createTask": "Aufgabe für die Frist anlegen",
+    "createTaskHint": "Im Aufgabenmodul öffnet sich eine neue Aufgabe mit Fälligkeitsdatum.",
+    "taskTitle": "Dokument: {subject}",
+    "taskDescription": "Frist zu Dokument {registryNumber} ({counterparty})."
   }
 }

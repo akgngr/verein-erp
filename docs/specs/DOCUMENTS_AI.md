@@ -32,8 +32,8 @@ Hiçbir kayıt kullanıcı onayı olmadan değişmez.
 - [x] Sağlayıcı politikası: yerel ya da maskelenmiş metinle bulut; reddedilirse kural tabanlı sonuç kalır. (`ai/services/document-summary.ts`, `document-masking.ts`; AI matrisinde Evrak Kayıt → içerik okuma)
 
 ### EV-3 İş oluşturma
-- [ ] Ödeme tespiti → "Muhasebede gelen fatura taslağı oluştur" (tutar, IBAN, vade, ek dosya).
-- [ ] Termin tespiti → evrak `dueDate` + görev/takvim önerisi.
+- [x] Ödeme tespiti → "Muhasebeye aktar": gelen fatura taslağı (tedarikçi, numara, tarih, vade, IBAN, ek dosya; tutar notta — KDV dağılımı muhasebede).
+- [x] Termin → "Termin için görev oluştur" (görevler formu başlık/açıklama/son tarih dolu açılır).
 - [ ] Sohbetten: `analyze_document` aracı (yalnız yetkili, read_content kapısı).
 
 ## Kabul ölçütleri

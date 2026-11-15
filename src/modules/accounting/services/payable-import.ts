@@ -1,5 +1,7 @@
 import "server-only";
 
+import { z } from "zod";
+
 import { writeAudit } from "@/shared/audit/write-audit";
 import { getDb } from "@/shared/db";
 import { computeSha256, makeStoredName, removeFile, saveFile } from "@/shared/files";
@@ -14,6 +16,17 @@ const toDate = (value: string | null) => (value && /^\d{4}-\d{2}-\d{2}$/.test(va
  * ZUGFeRD PDF ise alanlar okunur; aynı dosya (SHA-256) ikinci kez alınmaz. Dosya yükleme ve
  * e-posta (IMAP) içe aktarma aynı yolu kullanır. Uzantı/tür doğrulaması çağıranın işidir.
  */
+/** Gelen fatura taslağı için dış öneriler (doğrulanmış). Tutar KDV dağılımı bilinmediği için notta kalır. */
+export const payablePrefillSchema = z.object({
+  supplierName: z.string().trim().min(1).max(150).optional(),
+  number: z.string().trim().min(1).max(64).optional(),
+  issueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  dueDate: z.string().regex(/^\d{4}-\d{2}-\d{2}$/).optional(),
+  iban: z.string().trim().regex(/^[A-Z]{2}\d{2}[A-Z0-9]{10,30}$/).optional(),
+  notes: z.string().trim().max(500).optional(),
+}).strict();
+export type PayablePrefill = z.infer<typeof payablePrefillSchema>;
+
 export async function importPayableFile(input: {
   buffer: Buffer;
   originalName: string;
@@ -21,8 +34,10 @@ export async function importPayableFile(input: {
   mimeType: string;
   size: number;
   actor: { id: string; label: string };
-  /** Denetim kaydı için kaynak (ör. "upload", "email"). */
+  /** Denetim kaydı için kaynak (ör. "upload", "email", "document"). */
   channel?: string;
+  /** E-fatura değilse taslağa yazılacak öneriler (ör. evrak OCR'ından); e-fatura her zaman önceliklidir. */
+  prefill?: PayablePrefill;
 }): Promise<{ ok: true; id: string; source: string } | { ok: false; reason: "duplicate"; id: string }> {
   const db = getDb();
   const sha256 = computeSha256(input.buffer);
@@ -69,14 +84,15 @@ export async function importPayableFile(input: {
         status: "DRAFT",
         source,
         contactId: contact?.id ?? null,
-        supplierName: einvoice?.sellerName ?? "",
+        supplierName: einvoice?.sellerName ?? input.prefill?.supplierName ?? "",
         supplierVatId: einvoice?.sellerVatId ?? null,
         supplierTaxNumber: einvoice?.sellerTaxNumber ?? null,
         supplierAddress: einvoice?.sellerAddress ?? null,
-        supplierIban: einvoice?.sellerIban ?? null,
-        number: einvoice?.number ?? null,
-        issueDate: toDate(einvoice?.issueDate ?? null),
-        dueDate: toDate(einvoice?.dueDate ?? null),
+        supplierIban: einvoice?.sellerIban ?? (einvoice ? null : input.prefill?.iban ?? null),
+        number: einvoice?.number ?? (einvoice ? null : input.prefill?.number ?? null),
+        issueDate: toDate(einvoice?.issueDate ?? (einvoice ? null : input.prefill?.issueDate ?? null)),
+        dueDate: toDate(einvoice?.dueDate ?? (einvoice ? null : input.prefill?.dueDate ?? null)),
+        notes: einvoice ? null : input.prefill?.notes ?? null,
         serviceDate: einvoice?.serviceDate ?? null,
         byRate: einvoice?.byRate ?? [],
         einvoiceIssues: einvoice ? validateIncoming(einvoice) : undefined,

@@ -33,10 +33,13 @@ export type TaskFormValues = {
 /** Oluşturma/düzenleme formu; sağ çekmecede açılır (views/item-*-view.tsx). */
 export function TasksItemForm({
   item,
+  prefill,
   memberOptions = [],
   meetingOptions = [],
 }: {
   item?: TasksRow;
+  /** Başka modülden gelen öneri (ör. evraktaki termin): yalnız yeni görevde varsayılan değerdir. */
+  prefill?: { title?: string; description?: string; dueDate?: string };
   memberOptions?: MemberOption[];
   meetingOptions?: MeetingOption[];
 }) {
@@ -48,11 +51,11 @@ export function TasksItemForm({
   const form = useForm<TaskFormValues>({
     resolver: zodResolver(taskSchema) as unknown as Resolver<TaskFormValues>,
     defaultValues: {
-      title: item?.title ?? "",
-      description: item?.description ?? "",
+      title: item?.title ?? prefill?.title ?? "",
+      description: item?.description ?? prefill?.description ?? "",
       status: item?.status ?? "OPEN",
       priority: item?.priority ?? "NORMAL",
-      dueDate: item?.dueDate ?? "",
+      dueDate: item?.dueDate ?? prefill?.dueDate ?? "",
       memberId: item?.memberId ?? "",
       meetingId: item?.meetingId ?? "",
     },

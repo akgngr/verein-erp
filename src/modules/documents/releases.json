@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.5.0",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Evraktan iş oluşturma",
+        "de": "Aufgaben aus Dokumenten"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Gelen evrak dosyalarında \"Muhasebeye aktar\": dosya analiz edilip muhasebede tedarikçi, numara, tarih, vade ve IBAN'ı dolu gelen fatura taslağı olarak açılır. Son işlem tarihi olan evrakta \"Termin için görev oluştur\".",
+          "de": "„An Buchhaltung übergeben“ bei Eingangsdokumenten: Datei wird analysiert und als Eingangsrechnungs-Entwurf mit Lieferant, Nummer, Datum, Fälligkeit und IBAN angelegt. Bei Dokumenten mit Frist „Aufgabe für die Frist anlegen“."
+        }
+      ]
+    },
+    {
       "version": "1.4.0",
       "date": "2026-11-15",
       "title": {
