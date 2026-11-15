@@ -42,6 +42,11 @@ export type ModuleAiContext = {
   pseudonym?: (resource: "members" | "students" | "guardians", recordId: string) => Promise<string>;
   /** Modelin verdiği takma adı ([[K7]]) kayda çevirir; yalnız aynı kullanıcı + konuşma + kaynak türü. Bulunamazsa hata. */
   resolvePseudonym?: (resource: "members" | "students" | "guardians", alias: string) => Promise<string>;
+  /**
+   * Metindeki [[Kn]] takma adlarını kullanıcının CANLI yetkisiyle gerçek ada çevirir (bağlantısız, düz ad).
+   * Yalnız kullanıcıya ait çıktılarda (ör. üretilen dosya) kullanın; sonucu modele geri vermeyin.
+   */
+  revealAliases?: (text: string) => Promise<string>;
 };
 
 export type ModuleAiTool<S extends z.ZodType = z.ZodType> = {

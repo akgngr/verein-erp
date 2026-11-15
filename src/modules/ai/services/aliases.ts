@@ -80,7 +80,7 @@ const escapeMarkdown = (value: string) => value.replace(/([\\[\]()*_`])/g, "\\$1
 
 /**
  * Gösterim: metindeki [[Kn]] takma adlarını izleyicinin CANLI yetkisiyle gerçek ada çevirir
- * (markdown bağlantısı). Yetki yoksa, kayıt silindiyse veya takma ad bilinmiyorsa yer tutucu metin.
+ * (markdown bağlantısı; `plain` ile yalnız ad — dosya içeriği için). Yetki yoksa, kayıt silindiyse veya takma ad bilinmiyorsa yer tutucu metin.
  * İzleyici konuşmanın sahibidir; başka kullanıcının kapsamı hiçbir zaman okunmaz.
  */
 export async function resolveAliasesForDisplay(
@@ -88,6 +88,7 @@ export async function resolveAliasesForDisplay(
   conversationId: string,
   texts: string[],
   labels: { hidden: string; unknown: string },
+  options: { plain?: boolean } = {},
 ): Promise<string[]> {
   const wanted = new Set<number>();
   for (const text of texts) for (const match of text.matchAll(ALIAS_PATTERN)) wanted.add(Number(match[1]));
@@ -108,7 +109,7 @@ export async function resolveAliasesForDisplay(
     const resource = ref.resource as AliasResource;
     if (!(resource in names)) continue;
     const name = readable(resource) ? names[resource].get(ref.recordId) : undefined;
-    display.set(ref.alias!, name ? `[${escapeMarkdown(name)}](${HREF[resource](ref.recordId)})` : labels.hidden);
+    display.set(ref.alias!, name ? (options.plain ? name : `[${escapeMarkdown(name)}](${HREF[resource](ref.recordId)})`) : labels.hidden);
   }
   return texts.map((text) => text.replace(ALIAS_PATTERN, (_token, number: string) => display.get(Number(number)) ?? labels.unknown));
 }
