@@ -1,12 +1,13 @@
 import "server-only";
 
 import { z } from "zod";
+import {aiListCursor,aiPageInfo} from "@/shared/ai/pagination";
 
 import { DATE_RE, NO_INPUT, PROPOSED, aiAction, aiTool, defineModuleAi, euros, isoDay } from "@/shared/ai/define";
 import { can } from "@/shared/permissions/define";
 
 import { coursesPermissions } from "./permissions";
-import { createCourseAction, deleteCourseAction, getCourse, getCourseStats, listCourseOptions, updateCourseAction } from "./server";
+import { createCourseAction, deleteCourseAction, getCourse, getCourseStats, listAiCourses, updateCourseAction } from "./server";
 
 /** Kurslar: yalnızca istatistik; öğretmen, öğrenci ve veli adı dönmez. Sözleşme: src/shared/ai/define.ts. */
 const STATUS = z.enum(["PLANNED", "ACTIVE", "COMPLETED", "CANCELLED"]);
@@ -27,9 +28,9 @@ export const ai = defineModuleAi({
       operation: "read",
       allowed: (user) => can(user.role, coursesPermissions, "view"),
       description: "Courses: code, title and status. No student data.", // i18n-ignore (model-facing tool text)
-      schema: z.object({}),
-      inputSchema: { type: "object", properties: {}, required: [], additionalProperties: false },
-      run: async () => (await listCourseOptions(null)).map((course) => ({ course: course.label, status: course.status })),
+      schema:z.object({cursor:aiListCursor}),
+      inputSchema:{type:"object",properties:{cursor:{type:"string",pattern:"^[1-9][0-9]{0,3}$"}},required:[],additionalProperties:false},
+      run:({cursor})=>listAiCourses(cursor),
     }),
     aiTool({
       name: "get_course_statistics",
@@ -40,7 +41,7 @@ export const ai = defineModuleAi({
       inputSchema: NO_INPUT,
       run: async () => {
         const stats = await getCourseStats();
-        return { ...stats, charges: { openEur: euros(stats.charges.openCents), paidEur: euros(stats.charges.paidCents), openCount: stats.charges.openCount } };
+        return { ...stats,courseListPageInfo:aiPageInfo(1,50,Object.values(stats.courses).reduce((total,count)=>total+count,0)), charges: { openEur: euros(stats.charges.openCents), paidEur: euros(stats.charges.paidCents), openCount: stats.charges.openCount } };
       },
     }),
     aiTool({

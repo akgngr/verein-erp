@@ -1,6 +1,7 @@
 import "server-only";
 
 import { z } from "zod";
+import {aiListCursor,aiListPage,aiPageInfo} from "@/shared/ai/pagination";
 
 import { PROPOSED, aiAction, aiTool, defineModuleAi } from "@/shared/ai/define";
 import { getDb } from "@/shared/db";
@@ -53,16 +54,18 @@ export const ai = defineModuleAi({
       operation: "read",
       allowed: (user) => can(user.role, mailingsPermissions, "view"),
       description: "Lists the latest 50 campaigns: name, subject, channel, status, recipient/sent/failed counts, created and scheduled time. Message bodies and recipients are not included.", // i18n-ignore (model-facing tool text)
-      schema: z.object({ status: z.enum(STATUSES).nullable() }),
-      inputSchema: { type: "object", properties: { status: { type: ["string", "null"], enum: [...STATUSES, null] } }, required: ["status"], additionalProperties: false },
-      run: async ({ status }) => {
+      schema: z.object({ status: z.enum(STATUSES).nullable(),cursor:aiListCursor }),
+      inputSchema: { type: "object", properties: { cursor:{type:"string",pattern:"^[1-9][0-9]{0,3}$"},status: { type: ["string", "null"], enum: [...STATUSES, null] } }, required: ["status"], additionalProperties: false },
+      run: async ({ status,cursor }) => {
+        const page=aiListPage(cursor);
         const rows = await getDb().mailingCampaign.findMany({
           where: status ? { status } : {},
-          orderBy: { createdAt: "desc" },
-          take: 50,
+          orderBy: [{ createdAt: "desc" },{id:"asc"}],
+          skip:(page-1)*50,take: 50,
           select: { id: true, name: true, subject: true, channel: true, status: true, recipientCount: true, sentCount: true, failedCount: true, createdAt: true, scheduledAt: true },
         });
-        return rows.map(({ createdAt, scheduledAt, ...row }) => ({ ...row, createdAt: createdAt.toISOString(), scheduledAt: scheduledAt?.toISOString() ?? null }));
+        const total=await getDb().mailingCampaign.count({where:status?{status}:{}});
+        return {...aiPageInfo(page,50,total),items:rows.map(({ createdAt, scheduledAt, ...row }) => ({ ...row, createdAt: createdAt.toISOString(), scheduledAt: scheduledAt?.toISOString() ?? null }))};
       },
     }),
     aiTool({

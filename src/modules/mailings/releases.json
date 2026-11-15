@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "2.4.2",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "AI listelerinde eksiksizlik ve sınır kontrolü",
+        "de": "Vollständigkeit und Grenzen der KI-Listen"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "AI listeleri sayfalama ve eksiksizlik bilgisi taşır; aşırı büyük takvim aralıkları kontrollü reddedilir.",
+          "de": "KI-Listen enthalten Paginierungs- und Vollständigkeitsangaben; übergroße Kalenderbereiche werden kontrolliert abgelehnt."
+        }
+      ]
+    },
+    {
       "version": "2.4.1",
       "date": "2026-11-07",
       "title": {

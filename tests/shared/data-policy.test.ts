@@ -156,3 +156,13 @@ describe("Data policy: AI tools", () => {
     assert.match(assistant, /vault\.redact\(turn\.content\)/, "user messages must be redacted");
   });
 });
+
+test("v2 source declarations exclude K0 and remain owned by their declared module",()=>{
+ for(const [name,entry] of Object.entries(AI_TOOL_POLICY)){
+  if(!("serverReads" in entry))continue;
+  for(const table of entry.serverReads){
+   assert.notEqual(DATA_POLICY[table].category,"K0",`${name} declares protected source ${table}`);
+   assert.equal(DATA_POLICY[table].owner,entry.module,`${name} must use its owner's adapter`);
+  }
+ }
+});

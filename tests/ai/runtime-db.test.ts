@@ -125,3 +125,13 @@ test("shared monetary reservations cannot overspend under concurrent model round
   for(const key of keys){if(old[key]===undefined)delete process.env[key];else process.env[key]=old[key];}
  }
 });
+
+test("an interrupted domain write remains blocked instead of being executed again",{skip:!enabled},async()=>{
+ const userId=`uncertain-write-${randomUUID()}`,revision="test";
+ try{
+  const proposal=await prepareProposal({userId,conversationId:randomUUID(),revision,draft:{kind:"module",module:"tasks",action:"create",operation:"create",title:"Test",details:[],payload:{title:"Test"}}});
+  await claimProposal(userId,proposal.proposalId,revision);
+  await assert.rejects(claimProposal(userId,proposal.proposalId,revision),/AI_PROPOSAL_UNAVAILABLE/);
+  assert.equal((await getDb().aiProposal.findUniqueOrThrow({where:{id:proposal.proposalId}})).status,"EXECUTING");
+ }finally{await getDb().aiProposal.deleteMany({where:{userId}});}
+});

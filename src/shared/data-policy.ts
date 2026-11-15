@@ -271,7 +271,7 @@ export const AI_TOOL_POLICY = {
   // organization
   get_organization_info: { module: "organization", reads: ["OrganizationProfile"] },
   // progress
-  get_progress_statistics: {"module": "progress", "reads": [], "serverReads": ["ProgressAttendance", "ProgressAssessment", "ProgressNote"], "modelFields": ["days", "attendance.present", "attendance.late", "attendance.absent", "attendance.excused", "attendance.ratePercent", "assessments", "notes"]},
+  get_progress_statistics: {"module": "progress", "reads": [], "serverReads": ["ProgressAttendance", "ProgressAssessment"], "modelFields": ["days", "attendance.present", "attendance.late", "attendance.absent", "attendance.excused", "attendance.ratePercent", "assessments"]},
   // students
   get_student_statistics: {"module": "students", "reads": [], "serverReads": ["Student", "StudentGuardian"], "modelFields": ["active", "inactive", "guardians", "withSepaMandate"]},
   // tasks

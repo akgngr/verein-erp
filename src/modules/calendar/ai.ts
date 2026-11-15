@@ -2,12 +2,13 @@ import "server-only";
 
 import { z } from "zod";
 
-import { DATE_RE, PROPOSED, aiAction, aiTool, defineModuleAi, isoDay } from "@/shared/ai/define";
+import { DATE_RE, PROPOSED, aiAction, aiTool, defineModuleAi } from "@/shared/ai/define";
 import { getDb } from "@/shared/db";
 import { can } from "@/shared/permissions/define";
 
 import { saveEntryAction } from "./actions/calendar-actions";
-import { expandOccurrences } from "./lib/recurrence";
+import {listAiSharedCalendars,listAiSharedCalendarEntries} from "./services/ai-lists";
+import {aiListCursor} from "@/shared/ai/pagination";
 import { calendarPermissions } from "./permissions";
 
 /**
@@ -17,7 +18,6 @@ import { calendarPermissions } from "./permissions";
  * Not: modülün K1 tablolarıyla aynı adlı alanlar (ad, başlık…) burada yalnız K2/K3 satırlardan ve
  * kullanıcının kendi öneri girdisinden gelir; bu yüzden nesne ayrıştırmayla okunur.
  */
-const MAX_DAYS = 120;
 const TIME_RE = /^\d{2}:\d{2}$/;
 
 const entrySchema = z.object({
@@ -45,46 +45,18 @@ export const ai = defineModuleAi({
       operation: "read",
       allowed: (user) => can(user.role, calendarPermissions, "view"),
       description: "Lists the organisation's shared calendars (id, name). Personal calendars are private and never listed.", // i18n-ignore (model-facing tool text)
-      schema: z.object({}),
-      inputSchema: { type: "object", properties: {}, required: [], additionalProperties: false },
-      run: async () => {
-        const rows = await getDb().calendar.findMany({ where: { kind: "SHARED", isActive: true }, select: { id: true, name: true } });
-        return rows.sort(({ name: a }, { name: b }) => a.localeCompare(b));
-      },
+      schema: z.object({cursor:aiListCursor}),
+      inputSchema: {type:"object",properties:{cursor:{type:"string",pattern:"^[1-9][0-9]{0,3}$"}},required:[],additionalProperties:false},
+      run:async({cursor})=>listAiSharedCalendars(cursor),
     }),
     aiTool({
       name: "list_shared_calendar_entries",
       operation: "read",
       allowed: (user) => can(user.role, calendarPermissions, "view"),
-      description: "Entries of shared calendars in a date range (YYYY-MM-DD, max 120 days; recurring entries expanded): calendar, title, start, end, allDay. Personal and externally synced entries are never included. Events, meetings, tasks and course sessions have their own tools.", // i18n-ignore (model-facing tool text)
-      schema: z.object({ from: z.string().regex(DATE_RE), to: z.string().regex(DATE_RE) }),
-      inputSchema: { type: "object", properties: { from: { type: "string" }, to: { type: "string" } }, required: ["from", "to"], additionalProperties: false },
-      run: async ({ from, to }) => {
-        const start = toInstant(from, null);
-        const end = toInstant(to, null, true);
-        if (!(end > start) || end.getTime() - start.getTime() > MAX_DAYS * 86_400_000) return { status: "invalid_range" };
-        const calendars = await getDb().calendar.findMany({ where: { kind: "SHARED", isActive: true }, select: { id: true, name: true } });
-        const names = new Map(calendars.map(({ id, name }) => [id, name]));
-        const entries = await getDb().calendarEntry.findMany({
-          where: {
-            calendarId: { in: [...names.keys()] },
-            startsAt: { lt: end },
-            OR: [{ recurrence: "NONE", endsAt: { gt: start } }, { recurrence: { not: "NONE" } }],
-          },
-          select: { id: true, calendarId: true, title: true, startsAt: true, endsAt: true, allDay: true, recurrence: true, recurrenceInterval: true, recurrenceUntil: true },
-          take: 500,
-        });
-        return entries
-          .flatMap(({ title, ...entry }) => expandOccurrences(entry, start, end).map((occurrence) => ({
-            calendar: names.get(entry.calendarId),
-            title,
-            start: entry.allDay ? isoDay(occurrence.start) ?? "" : occurrence.start.toISOString(),
-            end: entry.allDay ? isoDay(occurrence.end) ?? "" : occurrence.end.toISOString(),
-            allDay: entry.allDay,
-          })))
-          .sort((a, b) => a.start.localeCompare(b.start))
-          .slice(0, 300);
-      },
+      description: "Entries of shared calendars in a date range (YYYY-MM-DD, max 120 days; recurring entries expanded): calendar, title, start, end, allDay. Personal and externally synced entries are never included. Cursor pages are live, not a snapshot. A refine_range result requires a shorter date range. Events, meetings, tasks and course sessions have their own tools.", // i18n-ignore (model-facing tool text)
+      schema:z.object({from:z.string().regex(DATE_RE),to:z.string().regex(DATE_RE),cursor:aiListCursor}),
+      inputSchema:{type:"object",properties:{from:{type:"string"},to:{type:"string"},cursor:{type:"string",pattern:"^[1-9][0-9]{0,3}$"}},required:["from","to"],additionalProperties:false},
+      run:args=>listAiSharedCalendarEntries(args),
     }),
     aiTool({
       name: "propose_calendar_entry",

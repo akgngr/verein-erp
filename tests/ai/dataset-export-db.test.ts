@@ -7,8 +7,11 @@ import { allModules } from "@/registry";
 import { accessSignature } from "@/shared/modules/module-access";
 import { createReferenceScope,saveDataset } from "@/modules/ai/services/references";
 import { requestDatasetExport,runDatasetExport } from "@/modules/ai/services/dataset-export";
+import {prepareProposal,claimProposal} from "@/modules/ai/services/proposal-store";
 import { providerRevision } from "@/modules/ai/services/provider-revision";
 import { giveAiConsent } from "@/modules/ai/services/consent";
+import {makeDuesDatasetTool} from "@/modules/members/services/dues-ai-tool";
+import {openAiCompatibleAdapter} from "@/modules/ai/services/providers/openai-compatible";
 import { loadDuesDataset } from "@/modules/members/automation";
 import { openBytes } from "@/shared/security/secret-box";
 import { resolveSafePath } from "@/shared/files/storage";
@@ -39,12 +42,35 @@ test("server export inserts private names only in the file, rejects stale datase
   assert.equal((await loadDuesDataset({year:2001,minimumRemainingCents:12001})).rows.length,0);
   assert.equal((await loadDuesDataset({year:2001,maximumRemainingCents:12000})).rows.length,102);
   const current=await loadDuesDataset(2001),scope=await createReferenceScope(actor,"dues-export");
-  const datasetRef=await saveDataset(actor,{scopeId:scope.id,sourceModule:"members",definition:{year:2001},selection:{fingerprint:current.fingerprint},columns:["member.fullName","dues.overdueAmount"]});
+  const tool=makeDuesDatasetTool({name:"create_dues_dataset"});
+  const wire:string[]=[];let projected:{datasetRef:string;count:number}|undefined;
+  const adapter=openAiCompatibleAdapter({apiKey:"test-not-a-real-key",fetch:async(_url,init)=>{
+   wire.push(String(init?.body));
+   const message=wire.length===1?{role:"assistant",content:null,tool_calls:[{id:"dues-call",type:"function",function:{name:tool.name,arguments:JSON.stringify({year:2001})}}]}:{role:"assistant",content:"Ready"};
+   return new Response(JSON.stringify({id:"test",object:"chat.completion",created:0,model:"test",choices:[{index:0,finish_reason:wire.length===1?"tool_calls":"stop",message}]}),{headers:{"content-type":"application/json"}});
+  }});
+  await adapter.run({model:"test",system:"Prepare dues data without personal identities.",turns:[{role:"user",content:"Dues export 2001"}],tools:[{name:tool.name,description:tool.description,inputSchema:tool.inputSchema}],maxToolRounds:6,beforeRequest:async()=>{},executeTool:async(name,input)=>{
+   assert.equal(name,tool.name);
+   projected=await tool.run(input,{user:{id,name:"Actor",email:`${id}@example.test`,role:"ADMIN"},loadDatasetDefinition:async()=>{throw new Error("Not used");},createDataset:args=>saveDataset(actor,{scopeId:scope.id,sourceModule:"members",...args}),restore:value=>value,propose:()=>{throw new Error("Read tool cannot propose here");},attachFile:()=>{throw new Error("Read tool cannot attach here");}}) as {datasetRef:string;count:number};
+   return {content:JSON.stringify(projected),isError:false};
+  }});
+  assert.ok(projected);assert.equal(projected.count,102);assert.equal(wire.length,2);
+  assert.ok(!wire.join("\n").includes("PRIVATE_NAME_SENTINEL"));assert.ok(!wire.join("\n").includes("Only In File"));
+  assert.ok(wire[1].includes(projected.datasetRef));
+  const datasetRef=projected.datasetRef;
   assert.ok(!JSON.stringify({datasetRef,count:current.rows.length}).includes("PRIVATE_NAME_SENTINEL"));
-  const proposalId=randomUUID();
+  const proposal=await prepareProposal({userId:id,conversationId:actor.conversationId,revision,draft:{kind:"module",module:"exports",action:"datasetExport",operation:"create",title:"CSV",details:[],payload:{datasetRef,format:"csv",columns:["member.fullName","dues.overdueAmount"]}}});
+  const proposalId=proposal.proposalId;
+  assert.equal((await claimProposal(id,proposalId,revision)).applied,false);
   const jobs=await Promise.all(Array.from({length:2},()=>requestDatasetExport({datasetRef,format:"csv",columns:["member.fullName","dues.overdueAmount"]},{userId:id,conversationId:actor.conversationId,proposalId})));
   assert.equal(jobs[0],jobs[1]);const job=jobs[0];fileIds.push(job);
   assert.equal(await db.aiExportRequest.count({where:{proposalId}}),1);
+  const persisted=await db.aiExportRequest.findUniqueOrThrow({where:{proposalId}});
+  assert.equal(await db.automationExecution.count({where:{id:persisted.executionId!}}),1);
+  assert.equal(await db.automationOutbox.count({where:{executionId:persisted.executionId!}}),1);
+  // Simulate a web process disappearing after commit but before proposal finalization.
+  const recovered=await claimProposal(id,proposalId,revision);assert.equal(recovered.applied,true);assert.equal(recovered.row.executionId,job);
+  assert.equal((await claimProposal(id,proposalId,revision)).row.executionId,job);
   await assert.rejects(requestDatasetExport({datasetRef,format:"xlsx",columns:["member.fullName","dues.overdueAmount"]},{userId:id,conversationId:actor.conversationId,proposalId}),/AI_EXPORT_IDEMPOTENCY_CONFLICT/);
   const status=await runDatasetExport(job,new AbortController().signal);
   await runDatasetExport(job,new AbortController().signal);
@@ -73,7 +99,7 @@ test("server export inserts private names only in the file, rejects stale datase
   await assert.rejects(runDatasetExport(stale,new AbortController().signal),/AI_EXPORT_ACCESS_REVOKED/);
  }finally{
   for(const fileId of fileIds){await unlink(resolveSafePath(`generated/${fileId}.bin`)).catch(()=>{});await db.generatedFile.deleteMany({where:{id:fileId}});}
-  await db.aiExportRequest.deleteMany({where:{userId:id}});await db.aiReferenceScope.deleteMany({where:{userId:id}});await db.member.deleteMany({where:{id:{in:memberIds}}});await db.aiUserConsent.deleteMany({where:{userId:id}});await db.user.deleteMany({where:{id}});
+  await db.aiProposal.deleteMany({where:{userId:id}});await db.aiExportRequest.deleteMany({where:{userId:id}});await db.aiReferenceScope.deleteMany({where:{userId:id}});await db.member.deleteMany({where:{id:{in:memberIds}}});await db.aiUserConsent.deleteMany({where:{userId:id}});await db.user.deleteMany({where:{id}});
   if(oldFlag===undefined)delete process.env.AI_PERSONAL_EXPORT_ENABLED;else process.env.AI_PERSONAL_EXPORT_ENABLED=oldFlag;
   if(oldAuto===undefined)delete process.env.AUTOMATION_ENABLED;else process.env.AUTOMATION_ENABLED=oldAuto;
  }

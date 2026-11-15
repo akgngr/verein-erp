@@ -11,3 +11,7 @@ test("duplicate tool names are rejected across modules",()=>{assert.throws(()=>a
 test("unsupported model input transforms fail at definition time",()=>{
  assert.throws(()=>aiToolV2({name:"unsafe",description:"x",operation:"read",allowed:()=>true,input:z.object({q:z.string().transform(x=>x.length)}),result:z.number(),modelOutput:z.number(),policy:{purpose:"x",serverReads:[],modelFields:[],processing:"local_only"},run:async()=>1,projectForModel:x=>x}));
 });
+
+test("v2 rejects protected sources even when the proposed output is a numeric count",()=>{
+ assert.throws(()=>aiToolV2({name:"count_notes",description:"Count",operation:"read",allowed:()=>true,input:z.object({}),result:z.number(),modelOutput:z.number(),policy:{purpose:"count",serverReads:["ProgressNote"],modelFields:[],processing:"local_only"},run:async()=>1,projectForModel:r=>r}),/AI_SOURCE_DENIED/);
+});
