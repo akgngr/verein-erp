@@ -12,6 +12,7 @@ import { moduleAiRegistry } from "@/ai-registry";
 import type { AiProposal } from "../types";
 import { requireCurrentAiAccess } from "./access";
 import { loadKnownIdentifiers } from "./known-identifiers";
+import { screenTurnsForCloud } from "./cloud-screening";
 import { PseudonymVault } from "./privacy";
 import { adapterFor, getProviderSettings, type AiProviderId } from "./providers";
 import type { AiFile, AiProposalDraft as AssistantProposal } from "../types";
@@ -52,8 +53,11 @@ function systemPrompt(locale: string, orgToday: string, blocked: string): string
 export async function runAssistant(args: { user: SessionUser; locale: string; provider: AiProviderId; conversationId: string; turns: ChatTurn[] }): Promise<AssistantResult> {
   await requireCurrentAiAccess(args.user.id, args.provider);
   if (args.provider !== "local" && (await getCloudSettings()).textMode === "OFF") throw new ActionError("ai.errors.cloudDisabled");
-  const canonical=args.provider==="local"?null:canonicalCloudIntent(args.turns.at(-1)?.content ?? "",Number(new Date().toLocaleDateString("en-CA",{timeZone:"Europe/Berlin"}).slice(0,4)));
-  if(args.provider!=="local"&&!canonical)throw new ActionError("ai.errors.cloudIntentRequired");
+  const cloud = args.provider === "local" ? null : await getCloudSettings();
+  // SCREENED: serbest metin taramadan geçer; INTENTS: yalnız hazır niyetler (canonical).
+  const screened = cloud?.textMode === "SCREENED" ? await screenTurnsForCloud(args) : null;
+  const canonical=args.provider==="local"||screened?null:canonicalCloudIntent(args.turns.at(-1)?.content ?? "",Number(new Date().toLocaleDateString("en-CA",{timeZone:"Europe/Berlin"}).slice(0,4)));
+  if(args.provider!=="local"&&!canonical&&!screened)throw new ActionError("ai.errors.cloudIntentRequired");
   const vault = new PseudonymVault(args.provider === "local" ? await loadKnownIdentifiers() : {});
   const tools = await availableTools(args.user, args.provider);
   const byName = new Map(tools.map((tool) => [tool.name, tool]));
@@ -81,8 +85,8 @@ export async function runAssistant(args: { user: SessionUser; locale: string; pr
   const settings = await getProviderSettings(args.provider);
   const result = await adapterFor(settings).run({
     model: settings.model ?? "",
-    system: systemPrompt(args.locale, today, blocked),
-    turns: canonical?[{role:"user",content:canonical}]:args.turns.map((turn) => ({ role: turn.role, content: vault.redact(turn.content) })),
+    system: systemPrompt(args.locale, today, blocked) + (screened ? `\n${ALIAS_INSTRUCTION}` : ""),
+    turns: canonical?[{role:"user",content:canonical}]:(screened ?? args.turns).map((turn) => ({ role: turn.role, content: vault.redact(turn.content) })),
     tools: tools.map((tool) => ({ name: tool.name, description: tool.description, inputSchema: tool.inputSchema as Record<string, unknown> })),
     maxToolRounds: MAX_TOOL_ROUNDS,
     signal,
@@ -128,3 +132,6 @@ function restoreDeep<T>(value: T, restore: (text: string) => string): T {
   }
   return value;
 }
+
+const ALIAS_INSTRUCTION = "People appear only as aliases like [[K3]]. Copy aliases exactly; never guess, invent or ask for real identities. The server shows real names to authorised users."; // i18n-ignore (model-facing prompt)
+

@@ -34,11 +34,10 @@ export function CloudPolicyCard({ settings, canChange }: { settings: { textMode:
     <div className="flex flex-col gap-4 rounded-medium border border-default-200 bg-content1 p-4">
       <RadioGroup aria-label={t("modeLabel")} value={mode} onValueChange={(value) => setMode(value as Mode)} isDisabled={!canChange}>
         {(["OFF", "INTENTS", "SCREENED"] as const).map((value) => (
-          <Radio key={value} value={value} description={t(`modes.${value}.help`)} isDisabled={value === "SCREENED"}>
+          <Radio key={value} value={value} description={t(`modes.${value}.help`)}>
             <span className="flex items-center gap-2">
               {t(`modes.${value}.label`)}
               {value === "INTENTS" ? <Chip size="sm" variant="flat">{t("default")}</Chip> : null}
-              {value === "SCREENED" ? <Chip size="sm" variant="flat" color="warning">{t("comingSoon")}</Chip> : null}
             </span>
           </Radio>
         ))}

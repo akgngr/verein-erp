@@ -17,6 +17,7 @@ import { reserveAiUsage } from "../services/usage";
 import { claimAiTurn, finishAiTurn, getCachedAiTurn, commitAiTurn } from "../services/turns";
 import { aiPermissions } from "../permissions";
 import { resolveAliasesForDisplay } from "../services/aliases";
+import { CloudPreflightError } from "../services/cloud-preflight-error";
 import { runAssistant } from "../services/assistant";
 import { getActiveProvider, hasAiConsent } from "../services/consent";
 import { AI_HISTORY_WINDOW, createConversation, getConversation } from "../services/history";
@@ -90,6 +91,11 @@ export async function aiChatHandler(request: Request): Promise<Response> {
     if(error instanceof Error&&error.message==="AI_TURN_BUSY")return fail("ai.errors.rateLimited",409,"turnBusy");
     if(error instanceof Error&&error.message==="AI_TURN_FAILED")return fail("ai.errors.unavailable",409,"turnFailed");
     if(error instanceof Error && ["AI_USAGE_LIMIT","AI_INPUT_BUDGET"].includes(error.message)) return fail("ai.errors.rateLimited",429);
+    if (error instanceof CloudPreflightError) {
+      // Mesaj buluta gönderilmedi; kullanıcıya yalnız tür adları döner (metin parçası değil).
+      const t = await getTranslations("ai.preflight");
+      return NextResponse.json({ ok: false, code: "cloudPreflight", error: t("blocked", { reasons: error.kinds.map((kind) => t(`kinds.${kind}`)).join(", ") }) }, { status: 422 });
+    }
     if (error instanceof ActionError) return fail(error.message, 403);
     if (error instanceof ProviderError) {
       console.error(`[ai] Sağlayıcı hatası (${provider}): ${error.kind}`);

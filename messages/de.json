@@ -2070,6 +2070,20 @@
     "alias": {
       "hidden": "(verborgene Person)",
       "unknown": "(unbekannte Referenz)"
+    },
+    "preflight": {
+      "blocked": "Die Nachricht wurde nicht an die Cloud gesendet; sie enthält möglicherweise personenbezogene Daten ({reasons}). Schreiben Sie bei erfassten Personen den vollständigen Namen (das System pseudonymisiert ihn), entfernen Sie unbekannte personenbezogene Angaben oder nutzen Sie das lokale Modell.",
+      "kinds": {
+        "EMAIL": "E-Mail",
+        "PHONE": "Telefon",
+        "IBAN": "IBAN",
+        "TAXID": "Steuernummer",
+        "ADDRESS": "Adresse",
+        "BIRTHDATE": "Geburtsdatum",
+        "TITLED_NAME": "Name mit Anrede",
+        "LIKELY_NAME": "nicht erfasster Personenname",
+        "SPECIAL_CATEGORY": "besondere Kategorie (Gesundheit, Religion usw.)"
+      }
     }
   },
   "audit": {

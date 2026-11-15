@@ -29,3 +29,21 @@ export async function loadKnownIdentifiers(): Promise<{ names: string[]; referen
     references: [...members.map((member) => member.membershipNumber), ...students.map((student) => student.studentNumber)],
   };
 }
+
+/**
+ * Takma ad için kayıtlı kişiler (ad + numara + kaynak anahtarı "resource:id"). Yalnız sunucuda,
+ * gönderim öncesi taramada [[Kn]] üretmek için kullanılır; modele/istemciye gönderilmez.
+ */
+export async function loadKnownPersons(): Promise<Array<{ key: string; label: string; references: string[] }>> {
+  const usable = new Set(await listUsableModuleKeys());
+  const [members, students, guardians] = await Promise.all([
+    usable.has("members") ? listMemberOptions() : [],
+    usable.has("students") ? listStudentOptions() : [],
+    usable.has("students") ? listGuardianOptions() : [],
+  ]);
+  return [
+    ...members.map((member) => ({ key: `members:${member.id}`, label: member.label, references: [member.membershipNumber] })),
+    ...students.map((student) => ({ key: `students:${student.id}`, label: student.label, references: [student.studentNumber] })),
+    ...guardians.map((guardian) => ({ key: `guardians:${guardian.id}`, label: guardian.label.replace(/\s*\(\d+\)$/, ""), references: [] })),
+  ];
+}
