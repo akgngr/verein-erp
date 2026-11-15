@@ -30,6 +30,7 @@ export {
 
 // Route handler'lar (src/app/api dosyaları bu fonksiyonları çağıran ince sarmalayıcılardır).
 export { uploadFileHandler } from "./handlers/upload-file";
+export { analyzeFileHandler } from "./handlers/analyze-file";
 export { downloadFileHandler } from "./handlers/download-file";
 export { exportDocumentsHandler } from "./handlers/export-documents";
 export { getDocumentFileText } from "./queries/file-text";

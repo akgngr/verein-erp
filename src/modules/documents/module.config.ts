@@ -6,7 +6,8 @@ import { documentCategoriesPermissions, documentsPermissions } from "./permissio
 export const moduleConfig: ModuleConfig = {
   key: "documents",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.2.3",
+  version: "1.3.0",
+  dependencies: { "tesseract.js": "7.0.0", "@tesseract.js-data/deu": "1.0.0", "@tesseract.js-data/tur": "1.0.0", "@tesseract.js-data/eng": "1.0.0" },
   label: "Evrak Kayıt",
   description: "Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi.",
   category: "OFFICIAL",
