@@ -405,11 +405,16 @@
     "transfer": "Muhasebeye aktar",
     "transferred": "Gelen fatura taslağı oluşturuldu; kontrol edip kategori ve KDV'yi tamamlayın.",
     "transferDuplicate": "Bu belge muhasebede zaten var.",
-    "transferFailed": "Muhasebeye aktarılamadı.",
-    "transferNote": "Evrak {registryNumber} üzerinden aktarıldı. Evraktaki tutar: {amount}.",
     "createTask": "Termin için görev oluştur",
     "createTaskHint": "Görevler modülünde son tarihi dolu yeni görev açılır.",
     "taskTitle": "Evrak: {subject}",
-    "taskDescription": "Evrak {registryNumber} ({counterparty}) için son işlem tarihi."
+    "taskDescription": "Evrak {registryNumber} ({counterparty}) için son işlem tarihi.",
+    "transferNotAllowed": "Muhasebe modülü kapalı veya muhasebe yetkiniz yok."
+  },
+  "access": {
+    "accounting": "\"Muhasebeye aktar\": gelen evrak dosyasını muhasebede gelen fatura taslağı olarak açar (yalnız taslak; kesinleştirme muhasebede). Muhasebe yetkisi kullanıcıya göre ayrıca denetlenir.",
+    "tasks": "Yalnız kullanıcının görev oluşturma yetkisini okur; \"Termin için görev oluştur\" düğmesini göstermek için.",
+    "system": "Muhasebe, görevler ve asistan modüllerinin etkin olup olmadığını okur (düğmeler yalnız etkinse gösterilir).",
+    "ai": "\"AI ile özetle\": evrak metnini asistanın özet servisine gönderir; asistan veri politikası (yerel model ya da maskelenmiş bulut) ve kullanıcının asistan yetkisi sunucuda uygulanır."
   }
 }

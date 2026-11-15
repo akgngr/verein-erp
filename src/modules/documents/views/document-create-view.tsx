@@ -10,6 +10,7 @@ import { listActiveCategoryOptions } from "../queries/list-categories";
 import { listCounterparties } from "../queries/list-counterparties";
 import { searchReplyTargets } from "../queries/search-reply-targets";
 import { DocumentForm } from "../components/document-form";
+import { getDocumentIntegrations } from "../services/integrations";
 
 /**
  * Yeni evrak (8.2; sağ çekmece): yön listedeki `?yeni=gelen|giden` değerinden
@@ -17,8 +18,9 @@ import { DocumentForm } from "../components/document-form";
  */
 export async function DocumentCreateView({ direction }: { direction: "INCOMING" | "OUTGOING" }) {
   const t = await getTranslations("documents.form");
+  let user;
   try {
-    await requirePermission(documentsPermissions, "create");
+    user = await requirePermission(documentsPermissions, "create");
   } catch (error) {
     if (error instanceof ForbiddenError) return <FormDrawer title="">{<AccessDenied />}</FormDrawer>;
     throw error;
@@ -27,7 +29,8 @@ export async function DocumentCreateView({ direction }: { direction: "INCOMING" 
 
   // KARAR: "Yanıtlanan evrak" yalnızca giden evrakta görünür; aday gelen
   // evraklar yalnızca giden formda sorgulanır.
-  const [categories, assignees, counterparties, replyTargets] = await Promise.all([
+  const [integrations, categories, assignees, counterparties, replyTargets] = await Promise.all([
+    getDocumentIntegrations(user.role),
     listActiveCategoryOptions(),
     listActiveUserOptions(),
     listCounterparties(""),
@@ -44,6 +47,7 @@ export async function DocumentCreateView({ direction }: { direction: "INCOMING" 
         counterparties={counterparties.map((c) => c.value)}
         replyTargets={replyTargets}
         maxMb={getEnv().MAX_UPLOAD_MB}
+        aiAvailable={integrations.ai}
       />
     </FormDrawer>
   );

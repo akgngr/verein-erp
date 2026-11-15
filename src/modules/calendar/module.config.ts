@@ -10,13 +10,17 @@ import { calendarPermissions } from "./permissions";
  */
 export const moduleConfig: ModuleConfig = {
   key: "calendar",
-  version: "1.3.2",
+  version: "1.3.3",
   label: "Takvim",
   description: "Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve son tarihler tek görünümde.",
   category: "OFFICIAL",
   hasSchema: true,
   // Randevu → etkinlik dönüşümü events modülünün yetkili action'ı üzerinden yapılır.
-  access: [{ module: "events", operations: ["write"] }],
+  access: [
+    { module: "events", operations: ["write"] },
+    { module: "users", operations: ["read"] },
+    { module: "system", operations: ["read"] },
+  ],
   nav: [
     {
       href: "/calendar",

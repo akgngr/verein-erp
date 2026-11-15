@@ -12,6 +12,7 @@ import { listActiveCategoryOptions } from "../queries/list-categories";
 import { listCounterparties } from "../queries/list-counterparties";
 import { searchReplyTargets } from "../queries/search-reply-targets";
 import { DocumentForm } from "../components/document-form";
+import { getDocumentIntegrations } from "../services/integrations";
 
 /**
  * Düzenleme (8.4): yeni evrak formuyla aynı bileşen; yön/kayıt numarası salt
@@ -20,8 +21,9 @@ import { DocumentForm } from "../components/document-form";
  */
 export async function DocumentEditView({ id }: { id: string }) {
   const t = await getTranslations("documents.form");
+  let user;
   try {
-    await requirePermission(documentsPermissions, "update");
+    user = await requirePermission(documentsPermissions, "update");
   } catch (error) {
     if (error instanceof ForbiddenError) return <FormDrawer title="">{<AccessDenied />}</FormDrawer>;
     throw error;
@@ -33,7 +35,8 @@ export async function DocumentEditView({ id }: { id: string }) {
   // KARAR: Pasife alınmış kategori/sorumlu, kayıtta hâlâ seçiliyse formda
   // "(pasif)" etiketiyle seçenek listesine eklenir; böylece kayıt, bu alanları
   // değiştirmeden düzenlenebilir (validate-relations'taki karar ile uyumlu).
-  const [activeCategories, activeAssignees, counterparties] = await Promise.all([
+  const [integrations, activeCategories, activeAssignees, counterparties] = await Promise.all([
+    getDocumentIntegrations(user.role),
     listActiveCategoryOptions(),
     listActiveUserOptions(),
     listCounterparties(""),
@@ -96,6 +99,7 @@ export async function DocumentEditView({ id }: { id: string }) {
         counterparties={counterparties.map((c) => c.value)}
         replyTargets={replyTargets}
         maxMb={getEnv().MAX_UPLOAD_MB}
+        aiAvailable={integrations.ai}
       />
     </FormDrawer>
   );

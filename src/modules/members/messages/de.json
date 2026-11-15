@@ -505,7 +505,8 @@
     }
   },
   "access": {
-    "organization": "Verwendet den Vereinsbriefkopf in Quittungen und Dokumenten."
+    "organization": "Verwendet den Vereinsbriefkopf in Quittungen und Dokumenten.",
+    "online-forms": "Um von der Mitgliederseite E-Signatur-/Online-Formular-Links zu senden und signierte Dokumente anzuzeigen."
   },
   "permissions": {
     "memberPayments": {

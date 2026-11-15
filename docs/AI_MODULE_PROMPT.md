@@ -59,6 +59,10 @@ KURALLAR (her biri CI'da otomatik denetlenir):
 17. Başka modülün verisi yalnızca `@/modules/<m>/server` üzerinden ve `module.config.ts` içinde
     `access: [{ module: "<m>", operations: ["read" | "write" | "delete"] }]` bildirimiyle; gerekçe
     `messages → access.<m>`. Başka modülün tablosuna `getDb()` ile erişme. Yönetici onaylamadan modül açılmaz.
+    KATI KURAL (§8e): başka modüle her bağ bildirilir — içe aktarım ve `/api/<m>` çağrısı `access`'te, sayfa
+    bağlantısı `recommends`/`requires`'ta. İstemciden başka modülün API'sini çağırma; kendi server action'ında
+    `@/modules/<m>/server` kullan. Bağlantı/düğme yalnız hedef modül açık ve kullanıcı yetkiliyse gösterilir.
+    `tests/modules/module-boundaries.test.ts` bildirilmemiş her bağı reddeder.
 18. Asistan desteği (isteğe bağlı): `ai.ts` → `export const ai = defineModuleAi({ module, tools, actions })`
     (`@/shared/ai/define`, rehber §9b). Okuma araçları kişisel veri döndürmez; yazma araçları yalnızca
     `propose(...)` ile onay kartı önerir, işi `actions.<eylem>.execute` modül eylemiyle yapar.

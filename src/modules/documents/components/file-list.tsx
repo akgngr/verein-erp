@@ -35,8 +35,8 @@ export function FileList({
 }: {
   files: DocumentFileItem[];
   canUpdate: boolean;
-  /** Gelen evrakta "Muhasebeye aktar" (EV-3). */
-  transfer?: { registryNumber: string; counterparty: string };
+  /** Gelen evrakta "Muhasebeye aktar" (EV-3; yalnız muhasebe kullanılabilir ve yetki varsa). */
+  transfer?: boolean;
 }) {
   const tCommon = useTranslations("common");
   const t = useTranslations("documents.files");
@@ -101,7 +101,7 @@ export function FileList({
                     {t("preview")}
                   </Button>
                 ) : null}
-                {transfer ? <TransferToAccountingButton fileId={file.id} fileName={file.originalName} {...transfer} /> : null}
+                {transfer ? <TransferToAccountingButton fileId={file.id} /> : null}
                 {canUpdate ? (
                   <Button
                     isIconOnly

@@ -79,6 +79,8 @@ type DocumentFormProps =
       counterparties: string[];
       replyTargets: ReplyTargetOption[];
       maxMb: number;
+      /** AI modülü kullanılabilir mi (bildirilmiş entegrasyon; uç nokta kendi kapılarını ayrıca uygular). */
+      aiAvailable?: boolean;
     }
   | {
       mode: "edit";
@@ -88,6 +90,8 @@ type DocumentFormProps =
       counterparties: string[];
       replyTargets: ReplyTargetOption[];
       maxMb: number;
+      /** AI modülü kullanılabilir mi (bildirilmiş entegrasyon; uç nokta kendi kapılarını ayrıca uygular). */
+      aiAvailable?: boolean;
     };
 
 /**
@@ -387,6 +391,7 @@ export function DocumentForm(props: DocumentFormProps) {
             analysis={analysis}
             labels={analysisLabels}
             categories={props.categories}
+            aiAvailable={Boolean(props.aiAvailable)}
             current={Object.fromEntries(APPLICABLE_FIELDS.map((field) => [field, String(form.getValues(field) ?? "")])) as Record<ApplicableField, string>}
             onApply={(values) => {
               for (const [field, value] of Object.entries(values)) {

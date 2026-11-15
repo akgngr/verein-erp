@@ -126,7 +126,9 @@
     }
   },
   "access": {
-    "events": "Um einen Kalendereintrag per Klick in einen Veranstaltungsentwurf umzuwandeln."
+    "events": "Um einen Kalendereintrag per Klick in einen Veranstaltungsentwurf umzuwandeln.",
+    "users": "Zur Prüfung von Name und Berechtigung des Benutzers bei Kalenderabo und Synchronisierung.",
+    "system": "Um zu prüfen, ob die Module, die Kalenderquellen liefern, installiert und aktiv sind."
   },
   "sync": {
     "title": "Verbundene Kalender",

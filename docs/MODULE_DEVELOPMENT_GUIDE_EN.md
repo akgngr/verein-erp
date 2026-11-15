@@ -217,6 +217,33 @@ A module that needs a package not used by the core declares it in its own `modul
 versions cannot be changed by modules. `pnpm module:validate` rejects undeclared packages, missing installs,
 incompatible ranges and missing ownership records. `pnpm module:deps --check` changes nothing.
 
+## 8e. Cross-module links: declared only (STRICT RULE)
+
+How the zero-dependency principle is enforced: a module touches another module **only as far as it declares in
+`module.config.ts`**. A client-side HTTP call or a page link is a coupling just like a server import; "the API is
+open anyway" is not a reason to use it undeclared.
+
+| Coupling | Example | Required declaration |
+|---|---|---|
+| Import | `@/modules/x/server`, `@/modules/x/automation`, `@/modules/x` (permission definition) | `access` (or `requires`, menu `module`) |
+| API call | `fetch("/api/x/…")`, `href="/api/x/…"` | `access` |
+| Page link | `href="/x-page?…"`, `router.push("/x-page")` | `recommends` / `requires` / `access` / menu `module` |
+
+Also mandatory:
+- The client does not call another module's API directly; prefer doing the work in **your own server action** via
+  `@/modules/x/server` (and check the user's permission in x there).
+- A link or button is shown only if the target module is **installed and enabled** (`listUsableModuleKeys`) and the
+  user **has permission** in it (`can(role, xPermissions, …)`); computed on the server, only a `boolean` reaches the client.
+- Every `access` entry needs a rationale in `messages/tr.json` + `de.json` → `access.<module>`.
+- Changing `access` makes admins **re-approve** on existing installs (signature changes). This cost is intentional.
+- `auth` is infrastructure and exempt. Paths shared by several modules (e.g. `/ayarlar`) are exempt.
+
+Enforcement: `tests/modules/module-boundaries.test.ts` (run by `pnpm test` in CI) scans every module; any
+undeclared coupling fails the test and the message names the declaration to add. On a false positive, **do not
+loosen the test** — add the declaration or remove the coupling.
+
+---
+
 ## 9. Dashboard cards (`cards/`)
 
 A module can offer cards for the dashboard (`/`). With "Edit dashboard" the user adds, removes and

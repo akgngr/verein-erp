@@ -405,11 +405,16 @@
     "transfer": "An Buchhaltung übergeben",
     "transferred": "Entwurf einer Eingangsrechnung erstellt; bitte prüfen und Kategorie/USt ergänzen.",
     "transferDuplicate": "Dieser Beleg ist in der Buchhaltung bereits vorhanden.",
-    "transferFailed": "Übergabe an die Buchhaltung fehlgeschlagen.",
-    "transferNote": "Aus Dokument {registryNumber} übernommen. Betrag laut Dokument: {amount}.",
     "createTask": "Aufgabe für die Frist anlegen",
     "createTaskHint": "Im Aufgabenmodul öffnet sich eine neue Aufgabe mit Fälligkeitsdatum.",
     "taskTitle": "Dokument: {subject}",
-    "taskDescription": "Frist zu Dokument {registryNumber} ({counterparty})."
+    "taskDescription": "Frist zu Dokument {registryNumber} ({counterparty}).",
+    "transferNotAllowed": "Das Buchhaltungsmodul ist deaktiviert oder Ihnen fehlt die Berechtigung."
+  },
+  "access": {
+    "accounting": "„An Buchhaltung übergeben“: legt die Datei eines Eingangsdokuments als Entwurf einer Eingangsrechnung an (nur Entwurf; Festschreibung in der Buchhaltung). Buchhaltungsrechte werden je Nutzer geprüft.",
+    "tasks": "Liest nur, ob der Nutzer Aufgaben anlegen darf, um „Aufgabe für die Frist anlegen“ anzuzeigen.",
+    "system": "Liest, ob Buchhaltung, Aufgaben und Assistent aktiv sind (Schaltflächen nur dann sichtbar).",
+    "ai": "„Mit KI zusammenfassen“: sendet den Dokumenttext an den Zusammenfassungsdienst des Assistenten; dessen Datenrichtlinie (lokales Modell oder maskierte Cloud) und die Assistentenberechtigung des Benutzers werden serverseitig angewendet."
   }
 }

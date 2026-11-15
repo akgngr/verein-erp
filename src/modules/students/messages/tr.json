@@ -227,5 +227,8 @@
   "onlineForm": {
     "send": "e-Sign formu gönder",
     "documents": "e-Sign belgeleri"
+  },
+  "access": {
+    "online-forms": "Öğrenci ve veli sayfalarından e-imza/uzaktan form bağlantısı göndermek ve imzalı belgeleri göstermek için."
   }
 }
