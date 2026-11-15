@@ -45,11 +45,20 @@ export function parseSummaryJson(text: string, categories: string[]): z.infer<ty
  * metin" modunda ve maskelenmiş metinle; özel nitelikli veri kişiyle birlikte geçiyorsa yalnız yerel model.
  * Evrak metni GÜVENİLMEYEN içeriktir: talimat olarak kullanılmaz, araç verilmez.
  */
-export async function summarizeDocumentText(args: { userId: string; text: string; locale: string; categories: string[] }, requireAccess: AccessCheck = defaultAccess): Promise<DocumentSummary> {
+/** Test için bağımlılıklar (varsayılan: gerçek erişim denetimi, DB'deki AI matrisi ve sağlayıcı ayarları). */
+export type DocumentSummaryDeps = {
+  requireAccess?: AccessCheck;
+  permissions?: typeof getAiPermissions;
+  providerSettings?: typeof getProviderSettings;
+  reserveUsage?: typeof reserveAiUsage;
+};
+
+export async function summarizeDocumentText(args: { userId: string; text: string; locale: string; categories: string[] }, deps: DocumentSummaryDeps = {}): Promise<DocumentSummary> {
+  const requireAccess = deps.requireAccess ?? defaultAccess;
   const access = await requireAccess(args.userId);
   const modules = access.modules;
   const provider = access.provider as AiProviderId;
-  if (!modules.includes("documents") || !isAllowed(await getAiPermissions(), "documents", "read_content")) throw new DocumentSummaryError("ai.documentSummary.errors.notAllowed");
+  if (!modules.includes("documents") || !isAllowed(await (deps.permissions ?? getAiPermissions)(), "documents", "read_content")) throw new DocumentSummaryError("ai.documentSummary.errors.notAllowed");
 
   let input = args.text.slice(0, MAX_INPUT_CHARS);
   let restore = (value: string) => value;
@@ -72,7 +81,7 @@ export async function summarizeDocumentText(args: { userId: string; text: string
     `Allowed categories: ${args.categories.length ? args.categories.map((name) => JSON.stringify(name)).join(", ") : "none (use null)"}.`,
   ].join("\n"); // i18n-ignore (model-facing prompt)
 
-  const settings = await getProviderSettings(provider);
+  const settings = await (deps.providerSettings ?? getProviderSettings)(provider);
   const result = await adapterFor(settings).run({
     model: settings.model ?? "",
     system,
@@ -82,7 +91,7 @@ export async function summarizeDocumentText(args: { userId: string; text: string
     signal: AbortSignal.timeout(60_000),
     beforeRequest: async (bytes = 0) => {
       await requireAccess(args.userId, provider);
-      await reserveAiUsage(args.userId, "model", bytes, new Date(), { provider, model: settings.model ?? "" });
+      await (deps.reserveUsage ?? reserveAiUsage)(args.userId, "model", bytes, new Date(), { provider, model: settings.model ?? "" });
     },
     executeTool: async () => ({ content: "TOOL_NOT_AVAILABLE", isError: true }),
   });

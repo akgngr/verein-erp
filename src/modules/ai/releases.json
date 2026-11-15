@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.9.1",
+      "date": "2026-11-16",
+      "title": {
+        "tr": "Test yalıtımı",
+        "de": "Testisolierung"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Evrak özeti testi ortak AI ayarlarını değiştirmiyor; paralel çalışan dışa aktarma testinin rastgele \"erişim kaldırıldı\" hatası giderildi.",
+          "de": "Der Test der Dokumentzusammenfassung ändert keine gemeinsamen KI-Einstellungen mehr; sporadische „Zugriff entzogen“-Fehler des parallel laufenden Exporttests behoben."
+        }
+      ]
+    },
+    {
       "version": "1.9.0",
       "date": "2026-11-15",
       "title": {
