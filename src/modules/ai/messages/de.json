@@ -39,7 +39,8 @@
     "conversationNotFound": "Chat nicht gefunden.",
     "reportNotFound": "Bericht nicht gefunden.",
     "staleProposal": "Der Datensatz wurde geändert oder der Vorschlag ist abgelaufen. Bitte erstellen Sie einen neuen Vorschlag.",
-    "cloudIntentRequired": "Beim Cloud-Anbieter sind nur feste Anfragen wie „Mitgliederstatistik 2026“, „Spendenübersicht 2026“ oder „Beitragsdatei 2026“ verfügbar. Wählen Sie für Freitext einen lokalen Anbieter."
+    "cloudIntentRequired": "Beim Cloud-Anbieter sind nur feste Anfragen wie „Mitgliederstatistik 2026“, „Spendenübersicht 2026“ oder „Beitragsdatei 2026“ verfügbar. Wählen Sie für Freitext einen lokalen Anbieter.",
+    "cloudDisabled": "Die Cloud-Verarbeitung ist ausgeschaltet. Die Administration kann ein lokales Modell wählen oder Einstellungen → KI-Assistent → Cloud-Datenrichtlinie ändern."
   },
   "panel": {
     "title": "Assistent",
@@ -207,7 +208,9 @@
       }
     },
     "deleteHistory": "Gesamten Chatverlauf löschen",
-    "historyDeleted": "{count} Chats gelöscht."
+    "historyDeleted": "{count} Chats gelöscht.",
+    "cloudPolicyTitle": "Cloud-Datenrichtlinie",
+    "cloudPolicyHelp": "Legt fest, was an einen Cloud-Anbieter (Mistral, Anthropic, OpenAI) gesendet werden darf. Ein lokales Modell ist davon nicht betroffen."
   },
   "providers": {
     "local": {
@@ -243,5 +246,34 @@
     }
   },
   "cleanup_history": "Abgelaufene Unterhaltungen und Berichte bereinigen",
-  "export_dataset": "Datensatzdatei erstellen"
+  "export_dataset": "Datensatzdatei erstellen",
+  "cloudPolicy": {
+    "modeLabel": "Cloud-Modus",
+    "default": "Standard",
+    "comingSoon": "In Vorbereitung",
+    "saved": "Cloud-Datenrichtlinie gespeichert. Die Nutzer bestätigen die Information erneut.",
+    "save": "Speichern",
+    "modes": {
+      "OFF": {
+        "label": "Aus",
+        "help": "Es wird nichts in die Cloud gesendet; der Assistent arbeitet nur mit einem lokalen Modell."
+      },
+      "INTENTS": {
+        "label": "Vordefinierte Fragen",
+        "help": "Nur festgelegte Fragen (Mitgliederzahl, Spendenübersicht, Beitragsdatei) gehen in die Cloud; kein Freitext."
+      },
+      "SCREENED": {
+        "label": "Geprüfter Freitext",
+        "help": "Jede Nachricht wird vor dem Senden auf dem Server geprüft; bekannte Personen werden pseudonymisiert, Nachrichten mit unbekannten personenbezogenen Daten werden nicht gesendet."
+      }
+    },
+    "records": {
+      "label": "Pseudonymisierte Personendaten",
+      "help": "Werkzeugergebnisse auf Personenebene gehen nur mit Pseudonym (z. B. [[K7]]) und vergröberten Feldern in die Cloud; Namen werden nur auf dem Server mit Ihrer Berechtigung angezeigt. Nur im geprüften Modus möglich."
+    },
+    "legal": "Pseudonymisierte Daten bleiben nach DSGVO personenbezogene Daten. Vor dem Einschalten liegen Auftragsverarbeitungsvertrag (AVV), Rechtsgrundlage und Information der Mitglieder in der Verantwortung Ihrer Organisation. Besondere Kategorien (z. B. Gesundheit, Religion) und Daten von Kindern werden in keinem Modus an die Cloud gesendet.",
+    "errors": {
+      "notYetAvailable": "Diese Option wird in einer späteren Version freigeschaltet."
+    }
+  }
 }

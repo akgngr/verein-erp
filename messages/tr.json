@@ -1830,7 +1830,8 @@
       "conversationNotFound": "Sohbet bulunamadı.",
       "reportNotFound": "Rapor bulunamadı.",
       "staleProposal": "Kayıt değişti veya önerinin süresi doldu. Lütfen yeni bir öneri oluşturun.",
-      "cloudIntentRequired": "Bulut sağlayıcıda yalnızca “Üye sayısı 2026”, “Bağış özeti 2026” veya “Aidat dosyası 2026” gibi hazır istekler kullanılabilir. Serbest metin için yerel sağlayıcıyı seçin."
+      "cloudIntentRequired": "Bulut sağlayıcıda yalnızca “Üye sayısı 2026”, “Bağış özeti 2026” veya “Aidat dosyası 2026” gibi hazır istekler kullanılabilir. Serbest metin için yerel sağlayıcıyı seçin.",
+      "cloudDisabled": "Bulut işleme kapalı. Yönetici yerel bir model seçebilir veya Ayarlar → AI asistanı → Bulut veri politikası'nı değiştirebilir."
     },
     "panel": {
       "title": "Asistan",
@@ -1998,7 +1999,9 @@
         }
       },
       "deleteHistory": "Tüm sohbet geçmişimi sil",
-      "historyDeleted": "{count} sohbet silindi."
+      "historyDeleted": "{count} sohbet silindi.",
+      "cloudPolicyTitle": "Bulut veri politikası",
+      "cloudPolicyHelp": "Bulut sağlayıcısına (Mistral, Anthropic, OpenAI) ne gönderilebileceğini belirler. Yerel model bu ayardan etkilenmez."
     },
     "providers": {
       "local": {
@@ -2034,7 +2037,36 @@
       }
     },
     "cleanup_history": "Süresi dolan sohbet ve raporları temizle",
-    "export_dataset": "Veri kümesi dosyası oluştur"
+    "export_dataset": "Veri kümesi dosyası oluştur",
+    "cloudPolicy": {
+      "modeLabel": "Bulut modu",
+      "default": "Varsayılan",
+      "comingSoon": "Hazırlanıyor",
+      "saved": "Bulut veri politikası kaydedildi. Kullanıcılar bilgilendirmeyi yeniden onaylayacak.",
+      "save": "Kaydet",
+      "modes": {
+        "OFF": {
+          "label": "Kapalı",
+          "help": "Buluta hiçbir şey gönderilmez; asistan yalnız yerel modelle çalışır."
+        },
+        "INTENTS": {
+          "label": "Hazır sorular",
+          "help": "Yalnız tanımlı sorular (üye sayısı, bağış özeti, aidat dosyası) buluta gider; serbest metin gönderilmez."
+        },
+        "SCREENED": {
+          "label": "Denetimli serbest metin",
+          "help": "Her mesaj gönderilmeden önce sunucuda taranır; kayıtlı kişiler takma adla değiştirilir, bilinmeyen kişisel veri içeren mesaj gönderilmez."
+        }
+      },
+      "records": {
+        "label": "Takma adlı kişi verisi",
+        "help": "Kişi düzeyindeki araç sonuçları buluta yalnız takma adla ([[K7]] gibi) ve kabalaştırılmış alanlarla gider; adlar yalnız sunucuda, sizin yetkinizle gösterilir. Yalnız denetimli modda açılabilir."
+      },
+      "legal": "Takma adlı veri DSGVO'ya göre hâlâ kişisel veridir. Bulutu açmadan önce sağlayıcıyla veri işleme sözleşmesi (AVV/DPA), hukuki dayanak ve üyelere bilgilendirme kurumunuzun sorumluluğundadır. Sağlık, din gibi özel nitelikli veriler ve çocuk verileri hiçbir modda buluta gönderilmez.",
+      "errors": {
+        "notYetAvailable": "Bu seçenek sonraki sürümde etkinleşecek."
+      }
+    }
   },
   "audit": {
     "pageTitle": "Denetim Kaydı",

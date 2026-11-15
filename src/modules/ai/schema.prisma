@@ -18,6 +18,10 @@ model AiSettings {
   id          String   @id
   provider    String
   permissions Json     @default("{}")
+  /// Bulut veri politikası (docs/architecture/ai-cloud-pseudonym-relay.md): OFF | INTENTS | SCREENED
+  cloudTextMode String @default("INTENTS")
+  /// Takma adlı kişi düzeyi araç çıktıları buluta gidebilir mi (yalnız SCREENED ile; varsayılan kapalı)
+  cloudPseudonymousRecords Boolean @default(false)
   updatedAt   DateTime @updatedAt
 
   @@map("ai_settings")

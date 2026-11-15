@@ -4,6 +4,7 @@ import type { SessionUser } from "@/modules/auth";
 
 import { ActionError } from "@/modules/auth/server";
 import { canonicalCloudIntent } from "./cloud-policy";
+import { getCloudSettings } from "./cloud-settings";
 import { reserveAiUsage } from "./usage";
 import { prepareProposal } from "./proposal-store";
 import { providerRevision } from "./provider-revision";
@@ -50,6 +51,7 @@ function systemPrompt(locale: string, orgToday: string, blocked: string): string
  */
 export async function runAssistant(args: { user: SessionUser; locale: string; provider: AiProviderId; conversationId: string; turns: ChatTurn[] }): Promise<AssistantResult> {
   await requireCurrentAiAccess(args.user.id, args.provider);
+  if (args.provider !== "local" && (await getCloudSettings()).textMode === "OFF") throw new ActionError("ai.errors.cloudDisabled");
   const canonical=args.provider==="local"?null:canonicalCloudIntent(args.turns.at(-1)?.content ?? "",Number(new Date().toLocaleDateString("en-CA",{timeZone:"Europe/Berlin"}).slice(0,4)));
   if(args.provider!=="local"&&!canonical)throw new ActionError("ai.errors.cloudIntentRequired");
   const vault = new PseudonymVault(args.provider === "local" ? await loadKnownIdentifiers() : {});
