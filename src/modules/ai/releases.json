@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.7.0",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Denetimli serbest metin (bulut)",
+        "de": "Geprüfter Freitext (Cloud)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Bulut veri politikasında \"Denetimli serbest metin\" seçilebilir: her mesaj buluta gitmeden sunucuda taranır, kayıtlı kişiler konuşmanın takma adına ([[K7]]) çevrilir, kişisel veri içeren mesaj gönderilmez ve sebebi gösterilir. Önceki riskli mesajlar bağlama alınmaz. Buluttaki araçlar artık sabit liste yerine v2 veri sınıfına göre açılır.",
+          "de": "In der Cloud-Datenrichtlinie ist „Geprüfter Freitext“ wählbar: jede Nachricht wird vor dem Versand auf dem Server geprüft, erfasste Personen werden durch Gesprächspseudonyme ([[K7]]) ersetzt, Nachrichten mit personenbezogenen Daten werden mit Begründung nicht gesendet. Frühere riskante Nachrichten gelangen nicht in den Kontext. Cloud-Werkzeuge richten sich nach der v2-Datenklasse statt nach einer festen Liste."
+        }
+      ]
+    },
+    {
       "version": "1.6.0",
       "date": "2026-11-15",
       "title": {

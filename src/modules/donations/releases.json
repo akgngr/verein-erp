@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.1.2",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "AI veri sınıfı",
+        "de": "KI-Datenklasse"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Bağış istatistiği aracı AI veri sınıfı \"aggregate\" olarak işaretlendi.",
+          "de": "Spendenstatistik-Werkzeug als KI-Datenklasse „aggregate“ gekennzeichnet."
+        }
+      ]
+    },
+    {
       "version": "1.1.1",
       "date": "2026-11-15",
       "title": {
