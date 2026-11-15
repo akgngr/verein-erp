@@ -23,7 +23,7 @@ const ROLE: Record<string, string> = { ADMIN: "Yönetici", BOARD: "Yönetim Kuru
 type Messages = { access?: Record<string, string>; permissions?: Record<string, { label?: string; description?: string }> };
 type Release = { version: string; date?: string; title?: { tr?: string }; changes?: Array<{ type: string; tr: string }> };
 
-const esc = (text: string) => text.replace(/\|/g, "\\|").replace(/\r?\n/g, " ").replace(/</g, "&lt;");
+const esc = (text: string) => text.replace(/\\/g, "\\\\").replace(/\|/g, "\\|").replace(/\r?\n/g, " ").replace(/</g, "&lt;");
 const readJson = <T>(file: string, fallback: T): T => (fs.existsSync(file) ? (JSON.parse(fs.readFileSync(file, "utf8")) as T) : fallback);
 
 async function permissionDefinitions(key: string): Promise<PermissionDefinition[]> {
