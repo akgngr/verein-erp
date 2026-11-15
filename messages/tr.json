@@ -4098,6 +4098,17 @@
         "local": "Yerel modelle işlendi",
         "cloud": "Bulutta, maskelenmiş metinle işlendi"
       }
+    },
+    "actions": {
+      "transfer": "Muhasebeye aktar",
+      "transferred": "Gelen fatura taslağı oluşturuldu; kontrol edip kategori ve KDV'yi tamamlayın.",
+      "transferDuplicate": "Bu belge muhasebede zaten var.",
+      "transferFailed": "Muhasebeye aktarılamadı.",
+      "transferNote": "Evrak {registryNumber} üzerinden aktarıldı. Evraktaki tutar: {amount}.",
+      "createTask": "Termin için görev oluştur",
+      "createTaskHint": "Görevler modülünde son tarihi dolu yeni görev açılır.",
+      "taskTitle": "Evrak: {subject}",
+      "taskDescription": "Evrak {registryNumber} ({counterparty}) için son işlem tarihi."
     }
   },
   "donations": {
