@@ -1,9 +1,11 @@
 import "server-only";
+import {aiToolV2} from "@/shared/ai/v2";
+import {proposalAcknowledgementSchema} from "@/shared/ai/dataset";
 
 import { z } from "zod";
 import {aiListCursor,aiListPage,aiPageInfo} from "@/shared/ai/pagination";
 
-import { PROPOSED, aiAction, aiTool, defineModuleAi } from "@/shared/ai/define";
+import {PROPOSED, aiAction, aiTool, defineModuleAi} from "@/shared/ai/define";
 import { getDb } from "@/shared/db";
 import { can } from "@/shared/permissions/define";
 
@@ -80,21 +82,17 @@ export const ai = defineModuleAi({
         channels: (await availableChannels()).map((channel) => channel.key),
       }),
     }),
-    aiTool({
+    aiToolV2({
       name: "propose_campaign_draft",
       operation: "create",
       allowed: (user) => can(user.role, mailingsPermissions, "create"),
       description: "PROPOSES a campaign DRAFT (audience id and channel from list_campaign_audiences). The body may use the audience placeholders like {firstName}. Nothing is sent: the user reviews and starts it in the campaign wizard.", // i18n-ignore (model-facing tool text)
-      schema: draftSchema,
-      inputSchema: {
-        type: "object",
-        properties: { name: { type: "string" }, channel: { type: "string" }, sourceId: { type: "string" }, subject: { type: "string" }, body: { type: "string" } },
-        required: ["name", "channel", "sourceId", "subject", "body"],
-        additionalProperties: false,
-      },
+      input:(draftSchema).strict(),
+      result:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["audience_not_allowed","channel_not_available"])}).strict()]),modelOutput:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["audience_not_allowed","channel_not_available"])}).strict()]),
+      policy:{"purpose":"mailings-proposal","serverReads":[],"modelFields":["status","note"],"processing":"local_only"},projectForModel:result=>result,
       run: async (input, { user, propose }) => {
-        if (!(await listSources(user.role)).some((source) => source.id === input.sourceId)) return { status: "audience_not_allowed" };
-        if (!(await availableChannels()).some((channel) => channel.key === input.channel)) return { status: "channel_not_available" };
+        if (!(await listSources(user.role)).some((source) => source.id === input.sourceId)) return { status: "audience_not_allowed" } as const;
+        if (!(await availableChannels()).some((channel) => channel.key === input.channel)) return { status: "channel_not_available" } as const;
         propose({ action: "draft", title: input.name, details: input.subject ? [input.channel, input.subject] : [input.channel], payload: input });
         return PROPOSED;
       },

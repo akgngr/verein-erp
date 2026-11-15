@@ -17,7 +17,7 @@ test("takma adlı aidat listesi: sağlayıcıya ad gitmez, rapor gösterimde ger
   const memberIds: string[] = [];
   try {
     for (const [index, amount] of [120, 45].entries()) {
-      const member = await db.member.create({ data: { year: 2002, sequence: Math.floor(Math.random() * 1e8), membershipNumber: `${id}-${index}`, firstName: `Privatsentinel${index}`, lastName: "Nurimfile", joinDate: new Date("2002-01-01"), createdById: id, createdByLabel: "Test", dues: { create: { year: 2002, amountDue: amount, dueDate: new Date("2002-02-15"), createdById: id, createdByLabel: "Test" } } } });
+      const member = await db.member.create({ data: { year: 2097, sequence: Math.floor(Math.random() * 1e8), membershipNumber: `${id}-${index}`, firstName: `Privatsentinel${index}`, lastName: "Nurimfile", joinDate: new Date("2097-01-01"), createdById: id, createdByLabel: "Test", dues: { create: { year: 2097, amountDue: amount, dueDate: new Date("2097-02-15"), createdById: id, createdByLabel: "Test" } } } });
       memberIds.push(member.id);
     }
     const tool = makePseudonymousDuesTool({ name: "list_dues_by_person" });
@@ -31,14 +31,14 @@ test("takma adlı aidat listesi: sağlayıcıya ad gitmez, rapor gösterimde ger
         const top = toolResult ? (JSON.parse(toolResult).rows[0].person as string) : "";
         modelReply = `En yüksek borç: ${top}`;
         const message = wire.length === 1
-          ? { role: "assistant", content: null, tool_calls: [{ id: "c1", type: "function", function: { name: tool.name, arguments: JSON.stringify({ year: 2002 }) } }] }
+          ? { role: "assistant", content: null, tool_calls: [{ id: "c1", type: "function", function: { name: tool.name, arguments: JSON.stringify({ year: 2097, status: "ALL" }) } }] }
           : { role: "assistant", content: modelReply };
         return new Response(JSON.stringify({ id: "t", object: "chat.completion", created: 0, model: "test", choices: [{ index: 0, finish_reason: wire.length === 1 ? "tool_calls" : "stop", message }] }), { headers: { "content-type": "application/json" } });
       },
     });
     const user = { id, name: "Actor", email: `${id}@example.test`, role: "ADMIN" as const };
     const result = await adapter.run({
-      model: "test", system: "test", turns: [{ role: "user", content: "2002 aidat borçlularını sırala" }],
+      model: "test", system: "test", turns: [{ role: "user", content: "2097 aidat borçlularını sırala" }],
       tools: [{ name: tool.name, description: tool.description, inputSchema: tool.inputSchema }], maxToolRounds: 6, beforeRequest: async () => {},
       executeTool: async (_name, input) => {
         const output = await tool.run(input, { user, pseudonym: (resource, recordId) => aliasFor(actor, resource, recordId), restore: (v) => v, loadDatasetDefinition: async () => null, createDataset: async () => "", propose: () => {}, attachFile: () => {} });

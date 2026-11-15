@@ -3,7 +3,7 @@ import "server-only";
 import type { Prisma } from "@prisma/client";
 import type { z } from "zod";
 
-import { getModuleAvailability } from "@/modules/system/automation";
+import {assertTaskModulesUsable} from "./module-availability";
 import { taskModuleKey, type TaskDefinition } from "@/shared/automation/define";
 import { getDb } from "@/shared/db";
 
@@ -25,15 +25,7 @@ export type EnqueueTaskOptions = {
   idempotencyKey?: string;
 };
 
-/** Throws when the owning or requesting module is inactive or unapproved. */
-export async function assertTaskModulesUsable(taskKey: string, sourceModule?: string): Promise<void> {
-  const modules = new Set([taskModuleKey(taskKey), "automation", ...(sourceModule ? [sourceModule] : [])]);
-  for (const key of modules) {
-    if (await getModuleAvailability(key) !== "available") {
-      throw new Error("AUTOMATION_MODULE_UNAVAILABLE");
-    }
-  }
-}
+export {assertTaskModulesUsable} from "./module-availability";
 
 /**
  * Public enqueue API. Verifies module availability before the execution and
@@ -177,3 +169,5 @@ export async function retryExecution(executionId: string, actorId: string | null
     details: { actorId },
   });
 }
+
+export {getExecutionState,assertActiveExecutionLease} from "./execution-state";

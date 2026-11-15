@@ -8,7 +8,7 @@ import { exportsPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "exports",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "2.1.1",
+  version: "2.1.5",
   label: "Dosyalarım",
   description: "Oluşturulan PDF, Excel, Word, Markdown ve CSV dosyaları; şifreli saklanır.",
   category: "CORE",
@@ -16,6 +16,7 @@ export const moduleConfig: ModuleConfig = {
   hasSchema: true,
   // PDF antetinde dernek adı, adresi ve logosu.
   access: [
+    { module: "automation", operations: ["read", "write"] },
     { module: "members", operations: ["read"] },
 
     { module: "organization", operations: ["read"] },

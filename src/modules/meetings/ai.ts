@@ -1,9 +1,10 @@
 import "server-only";
+import {aiProposalTools} from "./services/ai-proposal-tools";
 
 import { z } from "zod";
 import {aiListCursor,aiListPage,aiPageInfo} from "@/shared/ai/pagination";
 
-import { DATE_RE, PROPOSED, aiAction, aiTool, defineModuleAi, isoDay } from "@/shared/ai/define";
+import {DATE_RE, aiAction, aiTool, defineModuleAi, isoDay} from "@/shared/ai/define";
 import { parseListParams } from "@/shared/list-params";
 import { can } from "@/shared/permissions/define";
 
@@ -61,7 +62,7 @@ export const ai = defineModuleAi({
       inputSchema: { type: "object", properties: { meetingId: { type: "string" } }, required: ["meetingId"], additionalProperties: false },
       run: async ({ meetingId }) => {
         const meeting = await getMeeting(meetingId);
-        if (!meeting) return { status: "not_found" };
+        if (!meeting) return { status: "not_found" } as const;
         return {
           number: meeting.meetingNumber,
           type: meeting.type,
@@ -74,70 +75,8 @@ export const ai = defineModuleAi({
         };
       },
     }),
-    aiTool({
-      name: "propose_meeting",
-      operation: "create",
-      allowed: (user) => can(user.role, meetingsPermissions, "create"),
-      description: "PROPOSES creating a meeting. Date YYYY-MM-DD, time HH:mm. Nothing is created until the user confirms.", // i18n-ignore (model-facing tool text)
-      schema: z.object({
-        type: z.enum(["BOARD", "GENERAL_ASSEMBLY", "COMMITTEE", "OTHER"]),
-        title: z.string().min(3).max(200),
-        meetingDate: z.string().regex(DATE_RE),
-        startTime: z.string().regex(/^\d{2}:\d{2}$/).nullable(),
-        location: z.string().max(200).nullable(),
-        description: z.string().max(2000).nullable(),
-      }),
-      inputSchema: {
-        type: "object",
-        properties: {
-          type: { type: "string", enum: ["BOARD", "GENERAL_ASSEMBLY", "COMMITTEE", "OTHER"] },
-          title: { type: "string" },
-          meetingDate: { type: "string" },
-          startTime: { type: ["string", "null"] },
-          location: { type: ["string", "null"] },
-          description: { type: ["string", "null"] },
-        },
-        required: ["type", "title", "meetingDate", "startTime", "location", "description"],
-        additionalProperties: false,
-      },
-      run: async (input, { propose }) => {
-        propose({ action: "create", title: input.title, details: [input.type, [input.meetingDate, input.startTime].filter(Boolean).join(" "), input.location ?? ""].filter(Boolean), payload: input });
-        return PROPOSED;
-      },
-    }),
-    aiTool({
-      name: "propose_meeting_status",
-      operation: "update",
-      allowed: (user) => can(user.role, meetingsPermissions, "update"),
-      description: "PROPOSES changing a meeting's status (PLANNED, HELD, APPROVED, CANCELLED). A reason (min. 5 chars) is required for cancelling.", // i18n-ignore (model-facing tool text)
-      schema: z.object({ meetingId: z.string().min(1).max(100), status: z.enum(["PLANNED", "HELD", "APPROVED", "CANCELLED"]), reason: z.string().max(500).nullable() }),
-      inputSchema: {
-        type: "object",
-        properties: { meetingId: { type: "string" }, status: { type: "string", enum: ["PLANNED", "HELD", "APPROVED", "CANCELLED"] }, reason: { type: ["string", "null"] } },
-        required: ["meetingId", "status", "reason"],
-        additionalProperties: false,
-      },
-      run: async ({ meetingId, status, reason }, { propose }) => {
-        const meeting = await getMeeting(meetingId);
-        if (!meeting) return { status: "not_found" };
-        propose({ action: "changeStatus", title: `${meeting.meetingNumber} – ${meeting.title}`, details: [`→ ${status}`], payload: { meetingId: meeting.id, status, reason } });
-        return PROPOSED;
-      },
-    }),
-    aiTool({
-      name: "propose_delete_meeting",
-      operation: "delete",
-      allowed: (user) => can(user.role, meetingsPermissions, "delete"),
-      description: "PROPOSES deleting a meeting (id from list_meetings).", // i18n-ignore (model-facing tool text)
-      schema: z.object({ meetingId: z.string().min(1).max(100) }),
-      inputSchema: { type: "object", properties: { meetingId: { type: "string" } }, required: ["meetingId"], additionalProperties: false },
-      run: async ({ meetingId }, { propose }) => {
-        const meeting = await getMeeting(meetingId);
-        if (!meeting) return { status: "not_found" };
-        propose({ action: "delete", title: `${meeting.meetingNumber} – ${meeting.title}`, payload: { meetingId: meeting.id } });
-        return PROPOSED;
-      },
-    }),
+    ...aiProposalTools,
+
   ],
   actions: {
     create: aiAction({

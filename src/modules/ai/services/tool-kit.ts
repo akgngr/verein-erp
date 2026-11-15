@@ -30,6 +30,7 @@ export type ToolDefinition<S extends z.ZodType> = {
   requiresContent?:boolean;
   allowed: (user: SessionUser) => boolean;
   description: string;
+  descriptionKey?:string;
   schema: S;
   inputSchema: JsonSchema;
   run: (input: z.infer<S>, context: ToolContext) => Promise<unknown>;

@@ -2,6 +2,36 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.10.0",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "AI v2 araç geçişi",
+        "de": "KI-v2-Werkzeugmigration"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Aidat veri kümesi 500 kayıtlık keyset sayfaları ve ödeme toplamlarıyla okunur; CSV/XLSX doğrudan şifreli akışa yazılır. İptal, süre ve boyut sınırları yayından önce doğrulanır.",
+          "de": "Beitragsdaten werden in 500er-Keyset-Seiten mit Zahlungssummen gelesen; CSV/XLSX wird direkt verschlüsselt gestreamt. Abbruch, Fristen und Größenlimits werden vor Veröffentlichung geprüft."
+        },
+        {
+          "type": "security",
+          "tr": "FileGeneration facade mevcut outbox ile atomiktir; yalnız geçerli worker lease dosyayı yayımlar, pending dosyalar liste/indirmeden gizlenir.",
+          "de": "FileGeneration ist atomar mit der bestehenden Outbox; nur eine gültige Worker-Lease veröffentlicht Dateien, ausstehende Dateien bleiben unsichtbar."
+        },
+        {
+          "type": "feature",
+          "tr": "create_dataset/query_dataset/export_dataset araçları açık şema, TR/DE açıklamalar ve onay zorunluluğuyla sunulur; eski adlar uyum için korunur.",
+          "de": "create_dataset/query_dataset/export_dataset bieten explizite Schemata, TR/DE-Beschreibungen und Bestätigungspflicht; bisherige Namen bleiben kompatibel."
+        },
+        {
+          "type": "fix",
+          "tr": "Geçici export hataları sınırlı yeniden denenir; terminal/iptal durumları kuyrukta görünmez, başarısız geçici dosyalar temizlenir.",
+          "de": "Temporäre Exportfehler werden begrenzt wiederholt; End-/Abbruchzustände bleiben nicht in der Warteschlange, fehlgeschlagene temporäre Dateien werden entfernt."
+        }
+      ]
+    },
+    {
       "version": "1.9.1",
       "date": "2026-11-16",
       "title": {

@@ -28,7 +28,7 @@ export type ModuleAiProposalInput = { action: string; title: string; details?: s
 export type ModuleAiContext = {
   user: AiUser;
   loadDatasetDefinition: (token:string)=>Promise<unknown>;
-  createDataset: (args:{definition:unknown;selection:unknown;columns:string[]})=>Promise<string>;
+  createDataset: (args:{definition:unknown;selection:unknown;columns:string[];queryVersion?:1|2})=>Promise<string>;
   /** Bir onay kartı önerir; hiçbir veri değişmez. */
   propose: (proposal: ModuleAiProposalInput) => void;
   /** Model girdisindeki maskeleri ([PERSON_1] …) gerçek değerlere çevirir (yalnızca sunucuda kullanın). */
@@ -49,8 +49,9 @@ export type ModuleAiTool<S extends z.ZodType = z.ZodType> = {
   /** Unstructured personal content is never sent to cloud providers. */
   processing?: "local_only";
   requiresContent?: boolean;
-  /** Modele yönelik açıklama (İngilizce). */
+  /** Sağlayıcı açıklaması; descriptionKey varsa istek dilinde yerelleştirilir. */
   description: string;
+  descriptionKey?: string;
   schema: S;
   inputSchema: JsonSchema;
   allowed: (user: AiUser) => boolean;

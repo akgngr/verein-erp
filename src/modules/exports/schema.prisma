@@ -8,11 +8,44 @@ model GeneratedFile {
   format     String // pdf | xlsx | docx | md | csv
   sizeBytes  Int
   deletionPending Boolean @default(false)
+  publicationPending Boolean @default(false)
+  generationId String?
+  sha256 String?
   source     String // "ai" veya modül anahtarı
   createdAt  DateTime @default(now())
   expiresAt  DateTime
 
   @@index([ownerId, createdAt])
+  @@index([generationId])
+  @@index([publicationPending, createdAt])
   @@index([expiresAt])
   @@map("generated_files")
+}
+
+/// Central generation metadata. Source-specific plans stay in the owning module.
+model FileGeneration {
+  id               String   @id @default(cuid())
+  organizationId   String
+  ownerId          String
+  sourceModule     String
+  purpose          String
+  generatorKey     String
+  generatorVersion Int
+  format           String
+  status           String   @default("QUEUED")
+  idempotencyKey   String
+  executionId      String?  @unique
+  fileId           String?
+  leaseToken       Int      @default(0)
+  errorCode        String?
+  deadlineAt       DateTime
+  expiresAt        DateTime
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@unique([organizationId, ownerId, sourceModule, idempotencyKey], name: "requestKey", map: "file_generation_request_key")
+  @@index([ownerId, createdAt])
+  @@index([status, deadlineAt])
+  @@index([expiresAt])
+  @@map("file_generations")
 }

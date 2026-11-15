@@ -1,5 +1,6 @@
 import "server-only";
 import { z } from "zod";
+import {AI_EXPORT_RETRY_POLICY} from "./services/export-retry-policy";
 import { defineTask } from "@/shared/automation/define";
 
 /** Administrator schedules cleanup with the existing automation scheduler. */
@@ -21,6 +22,10 @@ export const aiCleanupTask = defineTask({
 export const aiDatasetExportTask=defineTask({
  key:"ai.export_dataset",version:1,description:"ai.export_dataset",
  inputSchema:z.object({generationId:z.string().min(1).max(128)}).strict(),
- timeoutSeconds:120,retry:{maxAttempts:1},idempotencyKey:input=>`ai-export:${input.generationId}`,
- handler:async(input,context)=>{const {runDatasetExport}=await import("./services/dataset-export");try{return await runDatasetExport(input.generationId,context.signal);}catch(error){const {recordAiMetric}=await import("./services/metrics");await recordAiMetric("export_failed");const {getDb}=await import("@/shared/db");await getDb().aiExportRequest.updateMany({where:{id:input.generationId,status:"QUEUED"},data:{status:"FAILED"}});throw error;}},
+ timeoutSeconds:120,retry:AI_EXPORT_RETRY_POLICY,idempotencyKey:input=>`ai-export:${input.generationId}`,
+ handler:async(input,context)=>{
+  const {runDatasetExport}=await import("./services/dataset-export");
+  try{return await runDatasetExport(input.generationId,context.signal,{userId:context.requestedById??"",executionId:context.executionId,organizationId:context.organizationId,leaseToken:context.leaseToken});}
+  catch(error){const {failDatasetExportAttempt}=await import("./services/export-attempt");return failDatasetExportAttempt(input.generationId,context,error);}
+ },
 });

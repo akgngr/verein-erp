@@ -67,3 +67,23 @@ FROM (
   GROUP BY "userId", "requestKey" HAVING count(*) > 1
 ) conflicts;
 ```
+
+## Dosya worker retry ve terminal durum
+
+Yeni ai.export_dataset execution'ları en fazla 3 deneme, 5–30 saniye arası backoff kullanır. Eski execution'ların saklanmış retry politikası değiştirilmez. Yetki/rıza/TTL/snapshot/cancel veya plan/limit hataları kalıcıdır; disk/bağlantı gibi geçici hatalar bütçe içinde yeniden denenir. Başarısız yazımın şifreli geçici dosyası hemen temizlenir. Lease kaybetmiş/abort edilmiş handler istek durumunu FAILED olarak ezmez.
+
+Worker son denemede ölürse otomasyon recovery execution'ı FAILED yapar; dosya durum okuması bunu gözleyip UI'yı terminal duruma geçirir. CANCELLED ve süresi dolmuş işler QUEUED olarak gösterilmez. Kaynak değiştiyse yeni dataset/önizleme/onay gerekir; eski stale işlemi yeniden oynatmak çözüm değildir.
+
+450 testlik izole kabul; gerçek worker, expired lease fixture, bir EISDIR hatasından sonra retry ve SIGTERM ile temiz kapanışı içerir. Bu üretim pilotu veya tüm storage fencing/streaming kabulü değildir.
+
+## FileGeneration publication protokolü
+
+Yeni migration'dan önce AI_PERSONAL_EXPORT_ENABLED=false yap ve eski worker'ları durdur. Migration eski hazır dosyaları korur, yarım dosyaları gizler. Tüm web okuyucuları publicationPending filtresini destekleyen binary'ye güncellenmeden yeni worker/personal export açılmaz. exports modülünün automation read/write erişimi yeni onay gerektirir. Gen1 worker/reader binary'leri ile Gen2 publication protokolünü eşzamanlı kişisel export için kullanma; rollback'te bayrak kapalı ve worker durdurulmuş kalmalıdır.
+
+İlk producer request-generation facade'ına taşındı. Eski AiExportRequest ID ve execution/file bağları korunur; pending dosya girişleri genel dosya listesinde/indirmede yayımlanmaz. Finalization current execution lease'ini transaction'da kilitli doğrular. Her lease ayrı ciphertext nesnesi üretir; eski deneme cleanup'ı yeni dosyayı etkileyemez. Dolu legacy şema backfill'i ve eski/yeni worker fencing yarış fixture'ları izole DB'de doğrulandı. Genel streaming D06'da açıktır.
+
+## D06 akış sınırları
+
+Yeni members.dues dataset sürümü 2'dir; eski sürüm 1 okunur, bilinmeyen sürüm reddedilir. Yeni işler 500 adaylık keyset sayfalarıyla en fazla 100.000 aday okur. Ham hücre girdisi ve dosya çıktısı ayrı ayrı 64 MiB, hücre 32.767 bayt, kolon 20 ile sınırlıdır. Model kanalına satırlar çıkmaz. Kaynak sorguları 5s statement timeout / 12s transaction timeout kullanır; worker 120s ve dataset TTL ile sınırlıdır. Bu sınırı aşan seçim için dar sorgu ve yeni önizleme/onay gerekir.
+
+Dosya render/depolama sırasında plaintext geçici dosya oluşturulmaz. AES-GCM tag tamamlanmadan veya snapshot uyuşmadan dosya rename/publication yapılmaz. Download doğrulanmamış GCM plaintext'ini stream etmez; kişisel aidat dosyalarının okuması 64 MiB ile sınırlıdır. Eski worker/reader ile karışık yayın yapılmaması kuralı devam eder. Genel dosya sistemi geçişinin diğer format ve producer işleri ayrı listede açıktır.
