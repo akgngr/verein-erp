@@ -5,7 +5,8 @@ import { readFile,unlink } from "node:fs/promises";
 import { getDb } from "@/shared/db";
 import { allModules } from "@/registry";
 import { accessSignature } from "@/shared/modules/module-access";
-import { createReferenceScope,saveDataset } from "@/modules/ai/services/references";
+import {resolveLinkedMemberReference} from "@/modules/ai/services/identity-links";
+import { createReferenceScope,saveDataset,createEntityReference,resolveEntityReference } from "@/modules/ai/services/references";
 import { requestDatasetExport,runDatasetExport } from "@/modules/ai/services/dataset-export";
 import {prepareProposal,claimProposal} from "@/modules/ai/services/proposal-store";
 import { providerRevision } from "@/modules/ai/services/provider-revision";
@@ -18,18 +19,18 @@ import { resolveSafePath } from "@/shared/files/storage";
 const enabled=Boolean(process.env.AI_TEST_DATABASE_URL);
 if(enabled&&process.env.DATABASE_URL!==process.env.AI_TEST_DATABASE_URL)throw new Error("Use an isolated database");
 test("server export inserts private names only in the file, rejects stale datasets and revoked actors",{skip:!enabled},async()=>{
- const id=`dataset-test-${randomUUID()}`,memberIds:string[]=[],fileIds:string[]=[];
+ const id=`dataset-test-${randomUUID()}`,memberIds:string[]=[],fileIds:string[]=[],studentIds:string[]=[],guardianIds:string[]=[];
  const oldFlag=process.env.AI_PERSONAL_EXPORT_ENABLED,oldAuto=process.env.AUTOMATION_ENABLED;
  process.env.AI_PERSONAL_EXPORT_ENABLED="true";process.env.AUTOMATION_ENABLED="true";
  const db=getDb();
  try{
   await db.user.create({data:{id,name:"Test Actor",email:`${id}@example.test`,passwordHash:"test",role:"ADMIN"}});
-  for(const key of ["ai","members","exports","automation"]){
+  for(const key of ["ai","members","exports","automation","students"]){
    const mod=allModules.find(m=>m.key===key)!;
    await db.systemModuleState.upsert({where:{moduleKey:key},create:{moduleKey:key,isEnabled:true},update:{isEnabled:true}});
    await db.systemSetting.upsert({where:{key:`module-access:${key}`},create:{key:`module-access:${key}`,value:JSON.stringify({signature:accessSignature(mod.access),approvedAt:new Date().toISOString(),approvedBy:id})},update:{value:JSON.stringify({signature:accessSignature(mod.access),approvedAt:new Date().toISOString(),approvedBy:id})}});
   }
-  await db.aiSettings.upsert({where:{id:"singleton"},create:{id:"singleton",provider:"local",permissions:{members:["read"],exports:["create"]}},update:{provider:"local",permissions:{members:["read"],exports:["create"]}}});
+  await db.aiSettings.upsert({where:{id:"singleton"},create:{id:"singleton",provider:"local",permissions:{members:["read"],students:["read"],exports:["create"]}},update:{provider:"local",permissions:{members:["read"],students:["read"],exports:["create"]}}});
   await db.aiProviderCredential.upsert({where:{provider:"local"},create:{provider:"local",model:"test",baseUrl:"http://localhost/v1"},update:{model:"test",baseUrl:"http://localhost/v1"}});
   await giveAiConsent(id,"local");
   const revision=await providerRevision("local"),actor={userId:id,conversationId:randomUUID(),policyRevision:revision};
@@ -92,6 +93,22 @@ test("server export inserts private names only in the file, rejects stale datase
   const xlsxBytes=openBytes("generated-file",await readFile(resolveSafePath(`generated/${xlsx}.bin`)));assert.ok(xlsxBytes);
   await workbook.xlsx.load(xlsxBytes as never);const sheet=workbook.worksheets[0];
   assert.equal(sheet.rowCount,103);assert.equal(sheet.getCell("B2").value,120);assert.equal(typeof sheet.getCell("A2").value,"string");
+  const student=await db.student.create({data:{year:2001,sequence:123456789,studentNumber:`student-${id}`,firstName:"PRIVATE_NAME_SENTINEL",lastName:"Only In File",memberId:paid.id,createdById:id,createdByLabel:"Test"}});studentIds.push(student.id);
+  const guardian=await db.studentGuardian.create({data:{debtorNumber:50001,firstName:"PRIVATE_NAME_SENTINEL",lastName:"Only In File",memberId:member.id,createdById:id,createdByLabel:"Test"}});guardianIds.push(guardian.id);
+  await db.studentGuardianLink.create({data:{studentId:student.id,guardianId:guardian.id,relation:"MOTHER",isPayer:true}});
+  const studentRef=await createEntityReference(actor,scope.id,"students",student.id),guardianRef=await createEntityReference(actor,scope.id,"guardians",guardian.id);
+  const linkedStudent=await resolveLinkedMemberReference(actor,studentRef,"students"),linkedGuardian=await resolveLinkedMemberReference(actor,guardianRef,"guardians");
+  assert.equal(await resolveEntityReference(actor,linkedStudent,"members"),paid.id);
+  assert.equal(await resolveEntityReference(actor,linkedGuardian,"members"),member.id);
+  assert.notEqual(linkedStudent,linkedGuardian);
+  await db.student.update({where:{id:student.id},data:{memberId:null}});
+  await assert.rejects(resolveLinkedMemberReference(actor,studentRef,"students"),/AI_IDENTITY_UNLINKED/);
+  const userRef=await createEntityReference(actor,scope.id,"users",id);
+  await assert.rejects(resolveLinkedMemberReference(actor,userRef,"users"),/AI_IDENTITY_UNLINKED/);
+  await db.member.update({where:{id:member.id},data:{deletedAt:new Date()}});
+  await assert.rejects(resolveLinkedMemberReference(actor,guardianRef,"guardians"),/AI_IDENTITY_UNLINKED/);
+  await db.member.update({where:{id:member.id},data:{deletedAt:null}});
+  await assert.rejects(resolveLinkedMemberReference({...actor,conversationId:"other"},guardianRef,"guardians"));
   await db.memberDue.update({where:{memberId_year:{memberId:member.id,year:2001}},data:{amountDue:140}});
   const stale=await requestDatasetExport({datasetRef,format:"csv",columns:["member.fullName"]},{userId:id,conversationId:actor.conversationId,proposalId:randomUUID()});
   await assert.rejects(runDatasetExport(stale,new AbortController().signal),/AI_DATASET_STALE_PREVIEW/);
@@ -99,6 +116,7 @@ test("server export inserts private names only in the file, rejects stale datase
   await assert.rejects(runDatasetExport(stale,new AbortController().signal),/AI_EXPORT_ACCESS_REVOKED/);
  }finally{
   for(const fileId of fileIds){await unlink(resolveSafePath(`generated/${fileId}.bin`)).catch(()=>{});await db.generatedFile.deleteMany({where:{id:fileId}});}
+  await db.student.deleteMany({where:{id:{in:studentIds}}});await db.studentGuardian.deleteMany({where:{id:{in:guardianIds}}});
   await db.aiProposal.deleteMany({where:{userId:id}});await db.aiExportRequest.deleteMany({where:{userId:id}});await db.aiReferenceScope.deleteMany({where:{userId:id}});await db.member.deleteMany({where:{id:{in:memberIds}}});await db.aiUserConsent.deleteMany({where:{userId:id}});await db.user.deleteMany({where:{id}});
   if(oldFlag===undefined)delete process.env.AI_PERSONAL_EXPORT_ENABLED;else process.env.AI_PERSONAL_EXPORT_ENABLED=oldFlag;
   if(oldAuto===undefined)delete process.env.AUTOMATION_ENABLED;else process.env.AUTOMATION_ENABLED=oldAuto;

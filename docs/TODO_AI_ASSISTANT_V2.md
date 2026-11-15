@@ -38,7 +38,7 @@ Bitiş: mevcut araçlar bozulmadan taşınabilir; kişisel veri model kanalına 
 - [x] C05 Şifreli dataset seçim/snapshot ve kaynak precondition hash'i; büyük seçim boyutu limiti.
 - [x] C06 prepare/preview/confirm(proposalId); istemciden payload kabulünü kaldır.
 - [x] C07 Atomik claim, idempotency ve automation outbox; çift onay/kuyruk tekrar testleri.
-- [ ] C08 User/member/guardian eşleşmesini yalnız doğrulanmış ilişkiyle çöz; aynı isimli kişiler testini ekle.
+- [x] C08 User/member/guardian eşleşmesini yalnız doğrulanmış ilişkiyle çöz; aynı isimli kişiler testini ekle.
 - [x] C09 Additive migration'ı izole DB'de uygula; rollback flag ve mevcut format uyumunu doğrula.
 
 Bitiş: IDOR/süre/revoke/çift onay negatif testleri geçer. Runtime migration üretimde henüz uygulanmaz.
@@ -69,7 +69,7 @@ Bitiş: AI sadece datasetRef/durum görür; dosyada doğru ad ve tutarlar bulunu
 - [ ] E08 Sağlayıcı timeout/retry/region/retention/fallback ayarlarını resmî belgeler ve gerçek hesapla doğrula.
 - [x] E09 Metrics/alerts: budget, denial, stale preview, cleanup hatası, orphan ve job gecikmesi.
 - [ ] E10 İzole DB entegrasyon ve worker recovery/cancellation testleri; ilgili yer tutucu auth testlerini gerçek davranış testine dönüştür.
-- [ ] E11 module:sync, modül sürüm/releases, typecheck, lint, ilgili testler, build ve TR/DE kontrollerini tamamla.
+- [x] E11 module:sync, modül sürüm/releases, typecheck, lint, ilgili testler, build ve TR/DE kontrollerini tamamla.
 - [ ] E12 Pilot feature flag, durdurma/rollback ve operatör runbook'u; kişisel export yayını için kabul matrisi.
 
 ## F — sonraki ürün kapsamı
@@ -106,3 +106,9 @@ hazırlamak kod geliştirme, push, PR merge veya deployment yapıldığı anlam�
 https://github.com/akgngr/verein-erp/pull/146
 
 İlk CI turunda progress aracı K0 ProgressNote kaynağını tanımladığı için build durdu. Politika gevşetilmedi: AI için ayrı devam/değerlendirme aggregate sorgusu eklendi, not sayısı dahil ProgressNote okuması kaldırıldı. K0 kaynak bildirimi regresyon testi artık build'den önce bu hatayı yakalar. Kurs/takvim/kampanya sayfaları ve Berlin saatli/tüm gün sınırları DB testleriyle doğrulandı. Güncel commit'in CI build/hydration kabulü ayrıca beklenir.
+
+## C08 takip paketi
+
+Owner-scoped kaynak referansından yalnız açık `Student.memberId` / `StudentGuardian.memberId` bağlantısı doğrulanır. Hedef üye silinmişse veya bağlantı yoksa ret gelir. Aynı ad/e-posta eşleştirme kanıtı değildir; veli/öğrenci ilişki kaydı aynı kişi olduklarını göstermez. User/member arasında doğrulanmış ilişki modeli bulunmadığı için kullanıcı otomatik üyeye çevrilmez. AI görev sorgusu e-posta eşleştirmesine düşmez; mine kapsamı açıkça created_by_actor olarak döner. Mevcut kullanıcı arayüzünün eski filtre uyumluluğu bu AI değişikliğinde topluca kaldırılmadı.
+
+PR #146 (494a50b) için production build/hydration dahil CI ve Security başarılıdır. Yeni takip paketleri ayrıca aynı kapılardan geçmelidir. C08 son yerel suite: 449 başarılı, 0 başarısız, 0 atlanan; kişi tablolarına yeni sütun eklenmedi.

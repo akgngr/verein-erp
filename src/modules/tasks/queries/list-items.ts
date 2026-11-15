@@ -7,6 +7,8 @@ import { listMeetingOptions } from "@/modules/meetings/server";
 import { findMemberIdsByEmail, listMemberOptions } from "@/modules/members/server";
 import type { ListParams, ListResult } from "@/shared/list-params";
 
+import {resolveTaskAssigneeIds,type TaskActorIdentity} from "./assignee-identity";
+
 import { TASK_PRIORITY_VALUES, TASK_STATUS_VALUES } from "../constants";
 import type { MeetingOption, MemberOption, TaskFilterKeys, TaskPriority, TasksRow, TaskStatus } from "../types";
 import { berlinToday, formatDateOnly, isTaskOverdue } from "../utils";
@@ -27,7 +29,7 @@ export const TASK_DEFAULT_SORT = "updatedAt";
  */
 export async function buildTaskWhere(
   params: ListParams<TaskFilterKeys>,
-  currentUser?: { id: string; email: string } | null,
+  currentUser?: TaskActorIdentity | null,
 ): Promise<Prisma.TaskWhereInput> {
   const conditions: Prisma.TaskWhereInput[] = [];
 
@@ -63,7 +65,7 @@ export async function buildTaskWhere(
 
   // "Bana atananlar" filtresi: oturum kullanıcısına veya kullanıcının e-postasıyla eşleşen üyeye atanmışlar.
   if (params.filters.mine === "1" && currentUser) {
-    const candidateIds = [currentUser.id, ...(await findMemberIdsByEmail(currentUser.email))];
+    const candidateIds = await resolveTaskAssigneeIds(currentUser,findMemberIdsByEmail);
     conditions.push({
       OR: [
         { memberId: { in: candidateIds } },
@@ -88,7 +90,7 @@ export async function buildTaskWhere(
 /** Liste sorgusu: arama, filtreler, sıralama ve sayfalama. */
 export async function listTasks(
   params: ListParams<TaskFilterKeys>,
-  currentUser?: { id: string; email: string } | null,
+  currentUser?: TaskActorIdentity | null,
 ): Promise<ListResult<TasksRow>> {
   const where = await buildTaskWhere(params, currentUser);
   const db = getDb();

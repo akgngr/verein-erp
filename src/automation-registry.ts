@@ -19,6 +19,7 @@ import * as mailAutomationExports from "@/modules/mail/automation";
 import * as mailingsAutomationExports from "@/modules/mailings/automation";
 import * as onlineformsAutomationExports from "@/modules/online-forms/automation";
 import * as securitymonitorAutomationExports from "@/modules/security-monitor/automation";
+import * as studentsAutomationExports from "@/modules/students/automation";
 import * as tasksAutomationExports from "@/modules/tasks/automation";
 
 const tasksOf = (moduleKey: string, exports: Record<string, unknown>): TaskDefinition[] =>
@@ -51,6 +52,7 @@ export const moduleAutomationTasks: TaskDefinition[] = [
   ...tasksOf("mailings", mailingsAutomationExports),
   ...tasksOf("online-forms", onlineformsAutomationExports),
   ...tasksOf("security-monitor", securitymonitorAutomationExports),
+  ...tasksOf("students", studentsAutomationExports),
   ...tasksOf("tasks", tasksAutomationExports),
 ];
 
@@ -72,5 +74,6 @@ export const moduleAutomationEvents: EventDefinition[] = [
   ...eventsOf("mailings", mailingsAutomationExports),
   ...eventsOf("online-forms", onlineformsAutomationExports),
   ...eventsOf("security-monitor", securitymonitorAutomationExports),
+  ...eventsOf("students", studentsAutomationExports),
   ...eventsOf("tasks", tasksAutomationExports),
 ];

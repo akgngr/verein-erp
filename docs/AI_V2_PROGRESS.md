@@ -31,3 +31,9 @@ Bu paket tüm TODO'ların tamamı değildir. Tam durum `TODO_AI_ASSISTANT_V2.md`
 `AI_PERSONAL_EXPORT_ENABLED=false` varsayılanı korunur. Kodun/testlerin geçmesi, otomatik Datenschutz uyumu veya tüm kişisel verinin anonim olduğu anlamına gelmez. Operatör sırası ve geri alma koşulları `operations/AI_V2_ROLLOUT.md` içindedir.
 
 PR #146 ilk CI turunda progress v2 kaynak tanımı K0 ProgressNote içerdiği için build başarısız oldu. AI sorgusu bu tabloyu hiç okumayan ayrı aggregate servisine taşındı; not sayısı model çıktısından çıkarıldı. Yeni kaynak politikası ve korumalı tabloya erişimi reddeden reader testi eklendi. Düzeltmenin production build/hydration sonucu beklenir.
+
+## Açık kimlik bağlantıları — C08
+
+Student/guardian → member geçişi yalnız mevcut açık memberId, canlı kaynak/hedef ve güncel actor/matris/rıza doğrulamasıyla yeni scoped referans üretir. Veli ilişkisi aynı kişi anlamına gelmez. User/member bağlantı modeli yokken ad veya e-posta üzerinden eşleştirme yapılmaz. AI görevlerinin mine filtresi bu nedenle açıkça created_by_actor kapsamını bildirir; e-posta fallback'i kullanılmaz. Kişi tablolarında değişiklik yoktur. Bu paket öğrenci/veli kişisel dosyasını etkinleştirmez.
+
+C08 yerel doğrulaması: 449 test geçti; typecheck/lint/module:sync başarılı. PR #146'nın 494a50b commit'inde CI build/hydration ve Security başarıyla tamamlandı; C08 takip commit'i ayrıca CI'dan geçmelidir.
