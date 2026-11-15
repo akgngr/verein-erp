@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.4.5",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "AI takma ad çözümlemesi",
+        "de": "KI-Pseudonymauflösung"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "AI asistanı için canlı öğrenci ve veli adı sorgusu eklendi (yalnız AI modülünün sunucu tarafı kullanır).",
+          "de": "Abfrage aktueller Schüler- und Elternnamen für den KI-Assistenten (nur serverseitig im KI-Modul)."
+        }
+      ]
+    },
+    {
       "version": "1.4.4",
       "date": "2026-11-15",
       "title": {

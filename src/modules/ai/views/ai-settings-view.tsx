@@ -11,7 +11,9 @@ import { ConsentToggle } from "../components/consent-toggle";
 import { can } from "@/shared/permissions/define";
 
 import { aiPermissions } from "../permissions";
+import { CloudPolicyCard } from "../components/cloud-policy-card";
 import { ProviderSelect } from "../components/provider-select";
+import { getCloudSettings } from "../services/cloud-settings";
 import { getActiveProvider, hasAiConsent } from "../services/consent";
 import { allModules } from "@/registry";
 
@@ -91,6 +93,12 @@ export async function AiSettingsView() {
         <h2 className="text-medium font-semibold">{t("providerTitle")}</h2>
         <p className="text-small text-default-500">{t("providerHelp")}</p>
         <ProviderSelect providers={providers} active={active} canChange={canManage} />
+      </section>
+
+      <section className="flex flex-col gap-2">
+        <h2 className="text-medium font-semibold">{t("cloudPolicyTitle")}</h2>
+        <p className="text-small text-default-500">{t("cloudPolicyHelp")}</p>
+        <CloudPolicyCard settings={await getCloudSettings()} canChange={canManage} />
       </section>
 
       <section className="flex flex-col gap-2">

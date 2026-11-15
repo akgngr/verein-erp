@@ -8,6 +8,12 @@ export type AiDataPolicy = {
   /** Explicit allowlist, including nested fields expressed as dot paths. */
   modelFields: readonly string[];
   processing: "local_only" | "approved_provider";
+  /**
+   * Model-görünür çıktının sınıfı (docs/architecture/ai-cloud-pseudonym-relay.md). Bulutta denetimli
+   * modda: aggregate/internal açılır; pseudonymous yalnız "takma adlı kişi verisi" ayarı açıksa.
+   * Belirtilmezse araç denetimli modda bulutta kapalıdır.
+   */
+  modelDataClass?: "aggregate" | "internal" | "pseudonymous";
 };
 export type AiLimits = { maxOutputBytes: number; maxRows: number; timeoutMs: number };
 export const DEFAULT_AI_LIMITS: AiLimits = Object.freeze({ maxOutputBytes: 65_536, maxRows: 100, timeoutMs: 30_000 });
