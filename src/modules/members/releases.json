@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.11.0",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Takma adlı aidat listesi (AI)",
+        "de": "Pseudonymisierte Beitragsliste (KI)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "AI aracı list_dues_by_person: kişi başına aidat durumu (takma ad, tam avro, vade ayı, üyelik türü, durum); ad ve üye numarası modele gitmez.",
+          "de": "KI-Werkzeug list_dues_by_person: Beitragsstand pro Person (Pseudonym, ganze Euro, Fälligkeitsmonat, Mitgliedsart, Status); Name und Mitgliedsnummer gehen nicht an das Modell."
+        }
+      ]
+    },
+    {
       "version": "1.10.4",
       "date": "2026-11-15",
       "title": {

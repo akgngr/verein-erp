@@ -2041,7 +2041,6 @@
     "cloudPolicy": {
       "modeLabel": "Cloud-Modus",
       "default": "Standard",
-      "comingSoon": "In Vorbereitung",
       "saved": "Cloud-Datenrichtlinie gespeichert. Die Nutzer bestätigen die Information erneut.",
       "save": "Speichern",
       "modes": {
@@ -2064,7 +2063,7 @@
       },
       "legal": "Pseudonymisierte Daten bleiben nach DSGVO personenbezogene Daten. Vor dem Einschalten liegen Auftragsverarbeitungsvertrag (AVV), Rechtsgrundlage und Information der Mitglieder in der Verantwortung Ihrer Organisation. Besondere Kategorien (z. B. Gesundheit, Religion) und Daten von Kindern werden in keinem Modus an die Cloud gesendet.",
       "errors": {
-        "notYetAvailable": "Diese Option wird in einer späteren Version freigeschaltet."
+        "recordsNeedScreened": "Pseudonymisierte Personendaten sind nur mit dem Modus „Geprüfter Freitext“ möglich."
       }
     },
     "alias": {

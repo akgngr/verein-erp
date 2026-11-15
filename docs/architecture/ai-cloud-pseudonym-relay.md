@@ -1,6 +1,6 @@
 # Bulut AI için takma adlı veri akışı (pseudonym relay) — karar belgesi
 
-Durum: kabul edildi (15.11.2026). Temel: ai-contract-v2-proposal.md, AI v2 runtime (PR #145–#147).
+Durum: kabul edildi ve uygulandı (15.11.2026; PS1–PS5: PR #153–#156 ve takma adlı aidat aracı). Temel: ai-contract-v2-proposal.md, AI v2 runtime (PR #145–#147).
 İlgili TODO: TODO_AI_ASSISTANT_V2.md → F06 (PS1–PS5).
 
 ## Amaç
@@ -98,3 +98,12 @@ Belge/e-posta/görev **içeriği** (read_content) bulutta hiçbir modda açılma
 - Yetkisi olmayan kullanıcı aynı konuşma kaydını görse bile ad çözülmez.
 - Aynı kişi iki konuşmada farklı takma ad alır; takma ad başka konuşmada çözülmez.
 - Mod/ayar değişince rıza yeniden istenir; varsayılanlarla mevcut davranış birebir korunur.
+
+## Uygulama notları (PS5 sonrası)
+
+- İlk takma adlı araç: `list_dues_by_person` (members). Çıktı: `[[Kn]]`, tam avro kalan tutar, vade ayı,
+  üyelik türü, durum. Ad, üye numarası, kesin tarih ve kuruş modele gitmez.
+- Takma adlar sohbet yanıtında ve geçmişte çözülür. Dosya/rapor üretiminde (`create_file`) takma ad
+  çözümlemesi henüz yoktur; kişisel dosyalar mevcut dataset/export akışıyla üretilir.
+- Önerilerde (onay kartları) takma ad kullanan yazma işlemleri için `resolveAliasRecord` hazırdır;
+  ilk yazma aracı (ör. aidat hatırlatma) eklenirken bağlanacaktır.

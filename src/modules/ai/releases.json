@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.8.0",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Takma adlı kişi verisi (bulut)",
+        "de": "Pseudonymisierte Personendaten (Cloud)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Denetimli modda \"Takma adlı kişi verisi\" açılabilir: kişi düzeyindeki araç sonuçları buluta yalnız [[K7]] gibi takma adlarla ve kabalaştırılmış alanlarla gider; model bunlarla rapor üretir, sonuç kullanıcıya gerçek adlarla (canlı yetkiyle) gösterilir.",
+          "de": "Im geprüften Modus können „Pseudonymisierte Personendaten“ eingeschaltet werden: Werkzeugergebnisse auf Personenebene gehen nur mit Pseudonymen wie [[K7]] und vergröberten Feldern in die Cloud; das Modell erstellt damit Berichte, die Nutzer mit echten Namen (aktuelle Berechtigung) sehen."
+        }
+      ]
+    },
+    {
       "version": "1.7.0",
       "date": "2026-11-15",
       "title": {

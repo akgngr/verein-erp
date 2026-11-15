@@ -23,7 +23,7 @@ export function CloudPolicyCard({ settings, canChange }: { settings: { textMode:
 
   const save = async () => {
     setBusy(true);
-    const result = await setAiCloudPolicyAction({ textMode: mode, pseudonymousRecords: records });
+    const result = await setAiCloudPolicyAction({ textMode: mode, pseudonymousRecords: mode === "SCREENED" && records });
     setBusy(false);
     if (!result.ok) return void addToast({ title: translate(result.error), color: "danger" });
     addToast({ title: t("saved"), color: "success" });
@@ -43,10 +43,9 @@ export function CloudPolicyCard({ settings, canChange }: { settings: { textMode:
         ))}
       </RadioGroup>
       <div className="flex flex-col gap-1 border-t border-default-200 pt-3">
-        <Switch size="sm" isSelected={records} onValueChange={setRecords} isDisabled>
+        <Switch size="sm" isSelected={records && mode === "SCREENED"} onValueChange={setRecords} isDisabled={!canChange || mode !== "SCREENED"}>
           <span className="flex items-center gap-2 text-small">
             {t("records.label")}
-            <Chip size="sm" variant="flat" color="warning">{t("comingSoon")}</Chip>
           </span>
         </Switch>
         <p className="text-tiny text-default-500">{t("records.help")}</p>

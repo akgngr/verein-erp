@@ -250,7 +250,6 @@
   "cloudPolicy": {
     "modeLabel": "Bulut modu",
     "default": "Varsayılan",
-    "comingSoon": "Hazırlanıyor",
     "saved": "Bulut veri politikası kaydedildi. Kullanıcılar bilgilendirmeyi yeniden onaylayacak.",
     "save": "Kaydet",
     "modes": {
@@ -273,7 +272,7 @@
     },
     "legal": "Takma adlı veri DSGVO'ya göre hâlâ kişisel veridir. Bulutu açmadan önce sağlayıcıyla veri işleme sözleşmesi (AVV/DPA), hukuki dayanak ve üyelere bilgilendirme kurumunuzun sorumluluğundadır. Sağlık, din gibi özel nitelikli veriler ve çocuk verileri hiçbir modda buluta gönderilmez.",
     "errors": {
-      "notYetAvailable": "Bu seçenek sonraki sürümde etkinleşecek."
+      "recordsNeedScreened": "Takma adlı kişi verisi yalnız denetimli serbest metin moduyla açılabilir."
     }
   },
   "alias": {
