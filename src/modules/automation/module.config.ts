@@ -7,7 +7,7 @@ import { automationPermissions } from "./permissions";
 /** Kalıcı arka plan işleri ve workflow altyapısı. */
 export const moduleConfig: ModuleConfig = {
   key: "automation",
-  version: "0.10.2",
+  version: "0.10.3",
   label: "Otomasyon",
   description: "Kalıcı arka plan görevleri ve iş akışları.",
   category: "EXTENSION",
@@ -15,6 +15,7 @@ export const moduleConfig: ModuleConfig = {
   access: [
     { module: "mailings", operations: ["read", "write"] },
     { module: "mail", operations: ["read"] },
+    { module: "system", operations: ["read"] },
   ],
   dependencies: {
     "pg-boss": "12.38.0",

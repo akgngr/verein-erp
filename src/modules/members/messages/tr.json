@@ -505,7 +505,8 @@
     }
   },
   "access": {
-    "organization": "Makbuz ve belgelerde dernek antetini kullanır."
+    "organization": "Makbuz ve belgelerde dernek antetini kullanır.",
+    "online-forms": "Üye sayfasından e-imza/uzaktan form bağlantısı göndermek ve imzalı belgeleri göstermek için."
   },
   "permissions": {
     "memberPayments": {

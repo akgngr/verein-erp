@@ -2334,7 +2334,8 @@
     },
     "access": {
       "mailings": "Zur Registrierung der vertrauenswürdigen Kampagnenaufgabe des Rundmail-Moduls im Worker-Aufgabenverzeichnis.",
-      "mail": "Zum Anzeigen von Versandfehlern und SMTP-Ergebnissen."
+      "mail": "Zum Anzeigen von Versandfehlern und SMTP-Ergebnissen.",
+      "system": "Um vor dem Ausführen einer Aufgabe zu prüfen, ob das zugehörige Modul installiert und aktiv ist."
     },
     "Automation": {
       "taskStarted": "Aufgabenversuch {attempt}/{maxAttempts} gestartet."
@@ -2884,7 +2885,9 @@
       }
     },
     "access": {
-      "events": "Um einen Kalendereintrag per Klick in einen Veranstaltungsentwurf umzuwandeln."
+      "events": "Um einen Kalendereintrag per Klick in einen Veranstaltungsentwurf umzuwandeln.",
+      "users": "Zur Prüfung von Name und Berechtigung des Benutzers bei Kalenderabo und Synchronisierung.",
+      "system": "Um zu prüfen, ob die Module, die Kalenderquellen liefern, installiert und aktiv sind."
     },
     "sync": {
       "title": "Verbundene Kalender",
@@ -4103,12 +4106,17 @@
       "transfer": "An Buchhaltung übergeben",
       "transferred": "Entwurf einer Eingangsrechnung erstellt; bitte prüfen und Kategorie/USt ergänzen.",
       "transferDuplicate": "Dieser Beleg ist in der Buchhaltung bereits vorhanden.",
-      "transferFailed": "Übergabe an die Buchhaltung fehlgeschlagen.",
-      "transferNote": "Aus Dokument {registryNumber} übernommen. Betrag laut Dokument: {amount}.",
       "createTask": "Aufgabe für die Frist anlegen",
       "createTaskHint": "Im Aufgabenmodul öffnet sich eine neue Aufgabe mit Fälligkeitsdatum.",
       "taskTitle": "Dokument: {subject}",
-      "taskDescription": "Frist zu Dokument {registryNumber} ({counterparty})."
+      "taskDescription": "Frist zu Dokument {registryNumber} ({counterparty}).",
+      "transferNotAllowed": "Das Buchhaltungsmodul ist deaktiviert oder Ihnen fehlt die Berechtigung."
+    },
+    "access": {
+      "accounting": "„An Buchhaltung übergeben“: legt die Datei eines Eingangsdokuments als Entwurf einer Eingangsrechnung an (nur Entwurf; Festschreibung in der Buchhaltung). Buchhaltungsrechte werden je Nutzer geprüft.",
+      "tasks": "Liest nur, ob der Nutzer Aufgaben anlegen darf, um „Aufgabe für die Frist anlegen“ anzuzeigen.",
+      "system": "Liest, ob Buchhaltung, Aufgaben und Assistent aktiv sind (Schaltflächen nur dann sichtbar).",
+      "ai": "„Mit KI zusammenfassen“: sendet den Dokumenttext an den Zusammenfassungsdienst des Assistenten; dessen Datenrichtlinie (lokales Modell oder maskierte Cloud) und die Assistentenberechtigung des Benutzers werden serverseitig angewendet."
     }
   },
   "donations": {
@@ -6980,7 +6988,8 @@
       }
     },
     "access": {
-      "organization": "Verwendet den Vereinsbriefkopf in Quittungen und Dokumenten."
+      "organization": "Verwendet den Vereinsbriefkopf in Quittungen und Dokumenten.",
+      "online-forms": "Um von der Mitgliederseite E-Signatur-/Online-Formular-Links zu senden und signierte Dokumente anzuzeigen."
     },
     "permissions": {
       "memberPayments": {
@@ -7996,6 +8005,9 @@
     "onlineForm": {
       "send": "e-Sign-Formular senden",
       "documents": "e-Sign-Dokumente"
+    },
+    "access": {
+      "online-forms": "Um von Schüler- und Elternseiten E-Signatur-/Online-Formular-Links zu senden und signierte Dokumente anzuzeigen."
     }
   },
   "system": {

@@ -282,6 +282,34 @@ Ardından `package.json` ve `pnpm-lock.yaml` commit'lenir. Kurallar:
 - `module:check`: bilinmeyen modül, kendine bağımlılık ve döngü (A → B → A) hatadır. Mantık: `@/shared/modules/dependencies`.
 - Zorunlu bağımlılığın sunucu API'sini kullanıyorsanız `access` bildirimi ayrıca gereklidir (izin ≠ bağımlılık).
 
+## 8e. Modüller arası bağ: yalnız bildirimle (KATI KURAL)
+
+Sıfır bağımlılık ilkesinin uygulanış biçimi: bir modül başka bir modüle **yalnızca `module.config.ts`'de
+bildirdiği ölçüde** dokunur. Sunucu içe aktarımı kadar istemciden yapılan HTTP çağrısı ve sayfa bağlantısı da
+bir bağdır; "nasılsa API açık" diye bildirimsiz kullanılamaz.
+
+| Bağ türü | Örnek | Gerekli bildirim |
+|---|---|---|
+| İçe aktarım | `@/modules/x/server`, `@/modules/x/automation`, `@/modules/x` (izin tanımı) | `access` (ya da `requires`, menü `module`) |
+| API çağrısı | `fetch("/api/x/…")`, `href="/api/x/…"` | `access` |
+| Sayfa bağlantısı | `href="/x-sayfasi?…"`, `router.push("/x-sayfasi")` | `recommends` / `requires` / `access` / menü `module` |
+
+Ek zorunluluklar:
+- İstemci başka modülün API'sini doğrudan çağırmaz; mümkünse işi **kendi server action'ınızda** `@/modules/x/server`
+  üzerinden yapın (kullanıcının x yetkisini de orada denetleyin).
+- Bağlantı ya da düğme yalnız hedef modül **kurulu ve açıksa** (`listUsableModuleKeys`) ve kullanıcının hedef
+  modülde **yetkisi varsa** (`can(role, xPermissions, …)`) gösterilir; bu hesap sunucuda yapılır, istemciye
+  yalnız `boolean` iner.
+- Her `access` girdisinin `messages/tr.json` + `de.json` → `access.<modül>` gerekçesi zorunludur.
+- `access` değişince mevcut kurulumlarda yönetici **yeniden onay** verir (imza değişir). Bu bilinçli bir maliyettir.
+- `auth` altyapıdır, muaftır. Yolu birden çok modülün paylaştığı alanlar (ör. `/ayarlar`) muaftır.
+
+Denetim: `tests/modules/module-boundaries.test.ts` (CI'da `pnpm test`) her modülün kodunu tarar; bildirilmemiş
+her bağ testi kırar ve hata hangi bildirimin ekleneceğini söyler. Yanlış pozitif görürseniz **testi gevşetmeyin**,
+bildirimi ekleyin ya da bağı kaldırın.
+
+---
+
 ## 9. Panel kartları (`cards/`)
 
 Modül panele (`/`) kart sunabilir. Kullanıcı "Paneli düzenle" ile kartları ekler, kaldırır ve
@@ -695,7 +723,7 @@ yeni rota eklenince oluşan `.next/dev/types/routes.d.ts … TS1128` hatası bö
 
 Testlerin yakaladıkları: elle yazılmış `src/app` dosyası (`zero-touch`), ilk satırda olmayan direktif
 (`directives`), "use client" olmadan HeroUI (`heroui-client-only`), sayfası olmayan menü bağlantısı
-(`navigation`), iskelet şablonlarının kurallara uyumu (`scaffold`).
+(`navigation`), iskelet şablonlarının kurallara uyumu (`scaffold`), bildirilmemiş modüller arası bağ (`module-boundaries`, §8e).
 
 
 ## Hydration hataları (SSR ↔ istemci uyuşmazlığı)

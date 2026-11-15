@@ -8,11 +8,15 @@ import { studentsDatevPermissions, studentsPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "students",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.4.5",
+  version: "1.4.6",
   label: "Öğrenciler",
   description: "Kurs ve Nachhilfe öğrencileri, veliler ve DATEV uyumlu borçlu (Debitor) kayıtları.",
   category: "OFFICIAL",
   hasSchema: true,
+  // Başka modüllerden istenen erişim (yönetici onayı gerekir; gerekçe: messages → access.<modül>).
+  access: [{ module: "online-forms", operations: ["read"] }],
+  // Kurulu ve yetkiliyse kullanılır (e-imza bağlantısı); yoksa düğme gizlenir.
+  recommends: ["online-forms"],
   nav: [
     {
       href: "/ogrenciler",

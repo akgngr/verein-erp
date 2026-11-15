@@ -227,5 +227,8 @@
   "onlineForm": {
     "send": "e-Sign-Formular senden",
     "documents": "e-Sign-Dokumente"
+  },
+  "access": {
+    "online-forms": "Um von Schüler- und Elternseiten E-Signatur-/Online-Formular-Links zu senden und signierte Dokumente anzuzeigen."
   }
 }

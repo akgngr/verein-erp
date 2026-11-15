@@ -20,6 +20,7 @@ import { FileUploader } from "../components/file-uploader";
 import { NotesTimeline } from "../components/notes-timeline";
 import { StatusBadge } from "../components/status-badge";
 import { getEnv } from "@/shared/env";
+import { getDocumentIntegrations } from "../services/integrations";
 
 function InfoRow({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -50,7 +51,7 @@ export async function DocumentDetailView({
     throw error;
   }
 
-  const doc = await getDocumentDetail(id);
+  const [doc, integrations] = await Promise.all([getDocumentDetail(id), getDocumentIntegrations(user.role)]);
   if (!doc) notFound();
 
   const canUpdate = can(user.role, documentsPermissions, "update");
@@ -113,7 +114,7 @@ export async function DocumentDetailView({
               {doc.updatedByLabel ? `${doc.updatedByLabel} — ${formatDateTime(doc.updatedAt)}` : "-"}
             </InfoRow>
           </div>
-          {doc.dueDate ? (
+          {doc.dueDate && integrations.tasks ? (
             <div className="mt-3 flex flex-wrap items-center gap-2">
               {/* EV-3: termin → görev önerisi (görevler modülünün yeni görev formu önceden dolu açılır). */}
               <LinkButton
@@ -199,7 +200,7 @@ export async function DocumentDetailView({
           <Paperclip className="h-4 w-4 text-default-400" aria-hidden />
           {t("filesTitle")}
         </h2>
-        <FileList files={doc.files} canUpdate={canUpdate} transfer={doc.direction === "INCOMING" ? { registryNumber: doc.registryNumber, counterparty: doc.counterparty } : undefined} />
+        <FileList files={doc.files} canUpdate={canUpdate} transfer={doc.direction === "INCOMING" && integrations.accounting} />
         {canUpdate ? (
           <div className="mt-4">
             <FileUploader

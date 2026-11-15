@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.11.1",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Uzaktan form bağı bildirildi",
+        "de": "Online-Formular-Verbindung deklariert"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Üye sayfasındaki e-imza bağlantıları artık bildirilmiş erişimle çalışır. Yönetici erişimi bir kez yeniden onaylar.",
+          "de": "E-Signatur-Links auf der Mitgliederseite nutzen jetzt deklarierten Zugriff. Der Administrator bestätigt den Zugriff einmalig neu."
+        }
+      ]
+    },
+    {
       "version": "1.11.0",
       "date": "2026-11-15",
       "title": {
