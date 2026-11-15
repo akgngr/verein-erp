@@ -47,7 +47,7 @@ Bitiş: IDOR/süre/revoke/çift onay negatif testleri geçer. Runtime migration 
 
 - [x] D01 members public/worker-safe dataset adapter: yıl/gecikme/durum/tutar; Decimal ve tarih kuralları.
 - [x] D02 Kaynak servisinde kayıt kapsamı + alan projection + export izni; doğrudan cross-module Prisma yok.
-- [ ] D03 create_dataset/query_dataset/export_dataset araçlarını ve TR/DE açıklamalarını ekle.
+- [x] D03 create_dataset/query_dataset/export_dataset araçlarını ve TR/DE açıklamalarını ekle.
 - [ ] D04 exports request-generation facade'ını mevcut merkezi dosya şartnamesiyle birleştir; ikinci queue kurma.
 - [x] D05 automation task payload'ını generationId/actorId metadata'sıyla sınırla; result/log PII taşımasın.
 - [ ] D06 Worker'da güncel izin/precondition, typed satır renderer, streaming ve kaynak limitleri.
@@ -116,3 +116,7 @@ PR #146 (494a50b) için production build/hydration dahil CI ve Security başarı
 ## E10 gerçek worker/pg-boss kabulü
 
 İzole PostgreSQL üzerinde gerçek automation worker subprocess'i başlatılır. Süresi dolmuş RUNNING lease fixture'ı gerçek dispatcher tarafından toparlanır; bir rename hatası EISDIR ile geçici hata üretilip engel kaldırılır, aynı generation üçüncü denemede tek dosyayla tamamlanır. Outbox PUBLISHED, execution SUCCEEDED, lease recovery log'u, dosyada doğru isim/tutar ve worker'ın temiz kapanışı doğrulanır. Deneme hakkı biten/iptal edilen iş UI'da QUEUED kalmaz. Geçici hata erken FAILED yapmaz; policy/TTL/stale/cancel/plan hataları kalıcıdır. Son yerel suite: 450 başarılı, 0 başarısız, 0 atlanan. Aktif eski worker ile eşzamanlı storage finalization fencing'i ve streaming D06'da açıktır.
+
+## D03 veri kümesi araç API'si
+
+create_dataset (source=members.dues, query), query_dataset (datasetRef + izinli filtreler) ve export_dataset (onay kartı) mevcut kaynak izinleri, feature flag ve v2 şemalarıyla çalışır. Model açıklamaları TR/DE'dir; eksik çeviride sabit açıklamaya düşer. create_dues_dataset / propose_dataset_export adları uyum için korunur. Export aracı dosyayı doğrudan üretmez. Ortak plan enum'u UI onayı ve worker yolunda aynı doğrulanır. 453 test geçti; gerçek kaynak aracı/fake-fetch ve gerçek worker akışı canonical create_dataset üzerinden de doğrulandı.

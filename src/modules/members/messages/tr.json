@@ -633,5 +633,18 @@
       "referenceTaken": "Bu yetki referansı başka bir üyede kullanılıyor.",
       "date": "Yetki tarihi bugünden sonra olamaz."
     }
+  },
+  "ai": {
+    "tools": {
+      "create_dataset": {
+        "description": "İzinli members.dues kaynağından sunucuda bir aidat veri kümesi hazırlar. query içinde yıl, durum ve isteğe bağlı tamsayı sent cinsinden kalan tutar sınırlarını kullanır. Modele yalnız süreli datasetRef ve kayıt sayısı döner; kişi bilgisi dönmez."
+      },
+      "create_dues_dataset": {
+        "description": "Eski uyum aracı: yıl, durum ve isteğe bağlı tamsayı sent tutar sınırlarıyla aidat veri kümesi hazırlar. Yalnız datasetRef ve kayıt sayısı döner. Yeni çağrılarda create_dataset kullan."
+      },
+      "query_dataset": {
+        "description": "Mevcut aidat datasetRef seçimini izinli durum ve kalan tutar filtreleriyle daraltıp yeni süreli referans üretir. Kimlik seçicisi veya SQL kabul etmez; yalnız referans ve kayıt sayısı döner."
+      }
+    }
   }
 }

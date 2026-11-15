@@ -14,8 +14,9 @@ import { loadDuesDataset, parseDuesDatasetQuery, duesDatasetQuerySchema, DUES_DA
 export const ai = defineModuleAi({
   module: "members",
   tools: [
+    makeDuesDatasetTool({name:"create_dataset"}),
     makeDuesDatasetTool({name:"create_dues_dataset"}),
-    aiToolV2({name:"query_dataset",operation:"read",allowed:user=>can(user.role,memberPaymentsPermissions,"view"),
+    aiToolV2({name:"query_dataset",descriptionKey:"members.ai.tools.query_dataset.description",operation:"read",allowed:user=>can(user.role,memberPaymentsPermissions,"view"),
       description:"Refine a members dues dataset using an existing datasetRef and allowed status or integer-cent amount filters. Creates a fresh scoped reference and returns only a count. No personal identities or arbitrary SQL.", // i18n-ignore (model-facing)
       input:duesDatasetQuerySchema.omit({year:true}).extend({datasetRef:z.string().regex(/^[A-Za-z0-9_-]{43}$/)}).strict(),
       result:z.object({datasetRef:z.string(),count:z.number().int()}),modelOutput:z.object({datasetRef:z.string(),count:z.number().int()}).strict(),

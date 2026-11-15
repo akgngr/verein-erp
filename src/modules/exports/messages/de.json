@@ -53,6 +53,14 @@
       "kind": "Datensatz exportieren",
       "confirm": "Datei erstellen",
       "done": "Datei wurde eingereiht"
+    },
+    "tools": {
+      "export_dataset": {
+        "description": "Bereitet eine CSV/XLSX-Bestätigungskarte für eine serverseitige datasetRef vor. Ohne Bestätigung wird keine Datei erzeugt. Erlaubte Spalten: member.fullName, dues.year, dues.overdueAmount. Echte Namen fügt ausschließlich der Server-Worker in die Datei ein."
+      },
+      "propose_dataset_export": {
+        "description": "Kompatibilitätswerkzeug: Schlägt eine Bestätigungskarte zum CSV/XLSX-Export vor; erzeugt ohne Bestätigung keine Datei. Für neue Aufrufe export_dataset verwenden."
+      }
     }
   },
   "cleanup_files": "Abgelaufene und verwaiste Dateien bereinigen"
