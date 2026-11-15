@@ -140,6 +140,7 @@ jobs:
           pnpm exec playwright install --with-deps chromium
           pnpm exec tsx scripts/reset-admin.ts
           psql "postgresql://verein:verein@localhost:5432/verein_ci" -c "UPDATE \"User\" SET \"mustChangePassword\" = false WHERE email = 'ci-admin@example.test';"
+          pnpm exec tsx scripts/seed-theme-preview.ts
           pnpm start > next-start.log 2>&1 &
           for i in $(seq 1 60); do curl -sf -o /dev/null http://localhost:3000/giris && break; sleep 2; done
           E2E_EMAIL=ci-admin@example.test E2E_PASSWORD=Ci-Hydration-Test-1 pnpm test:hydration || { tail -50 next-start.log; exit 1; }

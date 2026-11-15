@@ -363,14 +363,39 @@ function SidebarContent({
         {content}
       </Link>
     );
-    return withTooltip(link.key, link.label, element);
+    if (!collapsed) return element;
+    return (
+      <Tooltip key={link.key} delay={300} closeDelay={0}>
+        <Tooltip.Trigger<"a">
+          role={undefined}
+          className={itemClass(active)}
+          render={(props) =>
+            link.isDownload ? (
+              <a {...props} href={link.href}>
+                {content}
+              </a>
+            ) : (
+              <Link
+                {...props}
+                href={link.href}
+                onClick={onClick}
+                aria-current={active ? "page" : undefined}
+              >
+                {content}
+              </Link>
+            )
+          }
+        />
+        <Tooltip.Content placement="right">{link.label}</Tooltip.Content>
+      </Tooltip>
+    );
   };
 
   /** Daraltılmış panelde etiket, öğenin sağında ipucu olarak görünür. */
   const withTooltip = (key: string, label: string, element: ReactNode) =>
     collapsed ? (
       <Tooltip key={key} delay={300} closeDelay={0}>
-        <Tooltip.Trigger className="block w-full">{element}</Tooltip.Trigger>
+        {element}
         <Tooltip.Content placement="right">{label}</Tooltip.Content>
       </Tooltip>
     ) : (
@@ -430,18 +455,18 @@ function SidebarContent({
               return withTooltip(
                 "back-to-module",
                 label,
-                <button
-                  type="button"
+                <Button
+                  variant="tertiary"
                   className={switchButtonClass}
                   aria-label={collapsed ? label : undefined}
-                  onClick={() => setOverride(null)}
+                  onPress={() => setOverride(null)}
                 >
                   {collapsed ? null : <span className="truncate">{label}</span>}
                   <ChevronRight
                     className={cn("h-4 w-4 shrink-0", !collapsed && "ml-auto")}
                     aria-hidden
                   />
-                </button>,
+                </Button>,
               );
             })()
           : null}
@@ -473,17 +498,17 @@ function SidebarContent({
             {withTooltip(
               "back-to-main",
               tSidebar("backToMain"),
-              <button
-                type="button"
+              <Button
+                variant="tertiary"
                 className={switchButtonClass}
                 aria-label={collapsed ? tSidebar("backToMain") : undefined}
-                onClick={() => setOverride("main")}
+                onPress={() => setOverride("main")}
               >
                 <ChevronLeft className="h-4 w-4 shrink-0" aria-hidden />
                 {collapsed ? null : (
                   <span className="truncate">{tSidebar("backToMain")}</span>
                 )}
-              </button>,
+              </Button>,
             )}
             {/* Daraltılmışken başlık ikonu ilk bağlantıyla karışır: yerine ayraç (ad ekran okuyucuda kalır). */}
             {collapsed ? (
@@ -700,23 +725,21 @@ function DesktopSidebar({
         )}
       >
         <Tooltip delay={300} closeDelay={0}>
-          <Tooltip.Trigger>
-            <Button
-              isIconOnly
-              size="sm"
-              variant="tertiary"
-              className="data-[hover=true]:bg-white/10"
-              aria-label={toggleLabel}
-              aria-expanded={!collapsed}
-              onPress={toggleCollapsed}
-            >
-              {collapsed ? (
-                <PanelLeftOpen className="h-4 w-4 text-white/70" aria-hidden />
-              ) : (
-                <PanelLeftClose className="h-4 w-4 text-white/70" aria-hidden />
-              )}
-            </Button>
-          </Tooltip.Trigger>
+          <Button
+            isIconOnly
+            size="sm"
+            variant="tertiary"
+            className="bg-transparent text-white/70 hover:bg-white/10 data-[hovered]:bg-white/10"
+            aria-label={toggleLabel}
+            aria-expanded={!collapsed}
+            onPress={toggleCollapsed}
+          >
+            {collapsed ? (
+              <PanelLeftOpen className="h-4 w-4 text-white/70" aria-hidden />
+            ) : (
+              <PanelLeftClose className="h-4 w-4 text-white/70" aria-hidden />
+            )}
+          </Button>
           <Tooltip.Content placement="right">{toggleLabel}</Tooltip.Content>
         </Tooltip>
       </div>

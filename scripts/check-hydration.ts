@@ -187,6 +187,7 @@ async function main() {
           (value) => document.documentElement.classList.contains(value),
           theme,
         );
+        await page.evaluate(() => window.scrollTo(0, 0));
         await page.screenshot({
           path: path.join(captureDir, `${label}-${theme}.png`),
           fullPage: true,
@@ -211,6 +212,33 @@ async function main() {
       const aside = document.querySelector("aside");
       return aside !== null && aside.getBoundingClientRect().width > 200;
     });
+    // The CI fixture has twelve synthetic members: exercise real table rows and pagination.
+    if (process.env.CI === "true") {
+      await page
+        .getByRole("button", { name: /^(Sonraki sayfa|Nächste Seite)$/ })
+        .click();
+      await page.waitForURL((url) => url.searchParams.get("page") === "2");
+      await page.waitForLoadState("networkidle");
+      if ((await page.getByRole("row").count()) !== 3)
+        throw new Error("V3_TABLE_PAGINATION_FAILED");
+      await page
+        .getByRole("button", { name: /^(Önceki sayfa|Vorherige Seite)$/ })
+        .click();
+      await page.waitForURL((url) => !url.searchParams.has("page"));
+      await page.locator("#dt-search-input").fill("Mitglied01");
+      await page.waitForURL(
+        (url) => url.searchParams.get("q") === "Mitglied01",
+      );
+      await page.waitForLoadState("networkidle");
+      if ((await page.getByRole("row").count()) !== 2)
+        throw new Error("V3_TABLE_SEARCH_FAILED");
+      await page
+        .getByRole("button", { name: /^(Satır işlemleri|Zeilenaktionen)$/ })
+        .click();
+      await page.getByRole("menu").waitFor();
+      await page.keyboard.press("Escape");
+      await page.getByRole("menu").waitFor({ state: "hidden" });
+    }
     current = "/uyeler?yeni";
     await page.goto(`${BASE_URL}/uyeler?yeni`, { waitUntil: "networkidle" });
     const memberDialog = page.getByRole("dialog");
@@ -238,8 +266,7 @@ async function main() {
     });
     await page.keyboard.press("Escape");
     await memberDialog.waitFor({ state: "hidden" });
-    if (new URL(page.url()).searchParams.has("yeni"))
-      throw new Error("FORM_DRAWER_URL_CLOSE_FAILED");
+    await page.waitForURL((url) => !url.searchParams.has("yeni"));
     await page.setViewportSize({ width: 390, height: 844 });
     await page.reload({ waitUntil: "networkidle" });
     if (

@@ -41,3 +41,5 @@ rg -l 'from "@heroui-v3/react"' src
 Typecheck, lint, translation checks, module validation and the DB-backed suite must pass. Actual browser checks and visual inspection must be recorded from CI before declaring this slice accepted. Local Chromium cannot launch in the current restricted environment; no local visual acceptance is claimed.
 
 Local validation on the #166 base: 497 tests across 100 suites passed, none skipped; baseline upgrade and migration drift checks passed. Typecheck, lint, translation and module checks passed. Browser acceptance is pending CI. Existing Tiptap and auth/mail peer warnings are unchanged; no HeroUI peer conflict was reported.
+
+The first CI browser run opened all static routes and captured dashboard/member light/dark screenshots. It caught duplicate interactive tooltip roles; native v3 buttons now act directly as tooltip triggers, while collapsed navigation forwards trigger props to the actual anchor. The follow-up adds twelve synthetic CI-only members to exercise pagination, debounced search and row menus. Fixture seeding refuses any non-CI/non-loopback/non-`verein_ci` database.

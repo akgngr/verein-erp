@@ -295,3 +295,10 @@ body {
   --field-border: #435447;
   --focus: #91c5a3;
 }
+
+@layer components {
+  /* Workspace actions use the same restrained corner radius as fields. */
+  .button {
+    border-radius: var(--radius);
+  }
+}

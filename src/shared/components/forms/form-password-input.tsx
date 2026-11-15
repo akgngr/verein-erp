@@ -80,37 +80,35 @@ export function FormPasswordInput<T extends FieldValues>({
               <InputGroup.Suffix className="gap-0.5">
                 {value ? (
                   <Tooltip delay={300}>
-                    <Tooltip.Trigger>
-                      <Button
-                        isIconOnly
-                        size="sm"
-                        variant="tertiary"
-                        aria-label={t("copy")}
-                        onPress={() => void copy()}
-                      >
-                        <Copy className="h-4 w-4" aria-hidden />
-                      </Button>
-                    </Tooltip.Trigger>
-                    <Tooltip.Content>{t("copy")}</Tooltip.Content>
-                  </Tooltip>
-                ) : null}
-                <Tooltip delay={300}>
-                  <Tooltip.Trigger>
                     <Button
                       isIconOnly
                       size="sm"
                       variant="tertiary"
-                      aria-label={visible ? t("hide") : t("show")}
-                      aria-pressed={visible}
-                      onPress={() => setVisible((current) => !current)}
+                      aria-label={t("copy")}
+                      onPress={() => void copy()}
                     >
-                      {visible ? (
-                        <EyeOff className="h-4 w-4" aria-hidden />
-                      ) : (
-                        <Eye className="h-4 w-4" aria-hidden />
-                      )}
+                      <Copy className="h-4 w-4" aria-hidden />
                     </Button>
-                  </Tooltip.Trigger>
+
+                    <Tooltip.Content>{t("copy")}</Tooltip.Content>
+                  </Tooltip>
+                ) : null}
+                <Tooltip delay={300}>
+                  <Button
+                    isIconOnly
+                    size="sm"
+                    variant="tertiary"
+                    aria-label={visible ? t("hide") : t("show")}
+                    aria-pressed={visible}
+                    onPress={() => setVisible((current) => !current)}
+                  >
+                    {visible ? (
+                      <EyeOff className="h-4 w-4" aria-hidden />
+                    ) : (
+                      <Eye className="h-4 w-4" aria-hidden />
+                    )}
+                  </Button>
+
                   <Tooltip.Content>
                     {visible ? t("hide") : t("show")}
                   </Tooltip.Content>

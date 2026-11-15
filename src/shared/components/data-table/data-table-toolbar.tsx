@@ -2,14 +2,13 @@
 
 import {
   Button,
-  InputGroup,
   Label,
   ListBox,
   Popover,
   SearchField,
   Select,
 } from "@heroui-v3/react";
-import { ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
+import { ChevronDown, SlidersHorizontal, X } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -119,18 +118,15 @@ export function DataTableToolbar({
             aria-label={tTable("searchLabel")}
             className="w-full"
           >
-            <InputGroup className="h-9">
-              <InputGroup.Prefix>
-                <Search className="h-4 w-4 text-default-400" aria-hidden />
-              </InputGroup.Prefix>
-              <InputGroup.Input
+            <SearchField.Group className="h-9">
+              <SearchField.SearchIcon />
+              <SearchField.Input
                 id="dt-search-input"
                 placeholder={searchPlaceholder ?? tTable("searchPlaceholder")}
               />
-              <InputGroup.Suffix>
-                <SearchField.ClearButton aria-label={tCommon("clear")} />
-              </InputGroup.Suffix>
-            </InputGroup>
+
+              <SearchField.ClearButton aria-label={tCommon("clear")} />
+            </SearchField.Group>
           </SearchField>
         </div>
 

@@ -252,50 +252,47 @@ export function DashboardBoard({
                   {editing ? (
                     <div className="flex shrink-0 items-center gap-0.5">
                       <Tooltip delay={300}>
-                        <Tooltip.Trigger>
-                          <Button
-                            isIconOnly
-                            size="sm"
-                            variant="tertiary"
-                            aria-label={t("moveUp")}
-                            isDisabled={index === 0 || pending}
-                            onPress={() => move(index, -1)}
-                          >
-                            <ArrowLeft className="h-4 w-4" aria-hidden />
-                          </Button>
-                        </Tooltip.Trigger>
+                        <Button
+                          isIconOnly
+                          size="sm"
+                          variant="tertiary"
+                          aria-label={t("moveUp")}
+                          isDisabled={index === 0 || pending}
+                          onPress={() => move(index, -1)}
+                        >
+                          <ArrowLeft className="h-4 w-4" aria-hidden />
+                        </Button>
+
                         <Tooltip.Content>{t("moveUp")}</Tooltip.Content>
                       </Tooltip>
                       <Tooltip delay={300}>
-                        <Tooltip.Trigger>
-                          <Button
-                            isIconOnly
-                            size="sm"
-                            variant="tertiary"
-                            aria-label={t("moveDown")}
-                            isDisabled={index === order.length - 1 || pending}
-                            onPress={() => move(index, 1)}
-                          >
-                            <ArrowRight className="h-4 w-4" aria-hidden />
-                          </Button>
-                        </Tooltip.Trigger>
+                        <Button
+                          isIconOnly
+                          size="sm"
+                          variant="tertiary"
+                          aria-label={t("moveDown")}
+                          isDisabled={index === order.length - 1 || pending}
+                          onPress={() => move(index, 1)}
+                        >
+                          <ArrowRight className="h-4 w-4" aria-hidden />
+                        </Button>
+
                         <Tooltip.Content>{t("moveDown")}</Tooltip.Content>
                       </Tooltip>
                       <Tooltip delay={300}>
-                        <Tooltip.Trigger>
-                          <Button
-                            isIconOnly
-                            size="sm"
-                            variant="danger-soft"
-                            aria-label={t("remove")}
-                            isDisabled={pending}
-                            onPress={() =>
-                              save(order.filter((id) => id !== card.id))
-                            }
-                          >
-                            <X className="h-4 w-4" aria-hidden />
-                          </Button>
-                        </Tooltip.Trigger>
+                        <Button
+                          isIconOnly
+                          size="sm"
+                          variant="danger-soft"
+                          aria-label={t("remove")}
+                          isDisabled={pending}
+                          onPress={() =>
+                            save(order.filter((id) => id !== card.id))
+                          }
+                        >
+                          <X className="h-4 w-4" aria-hidden />
+                        </Button>
+
                         <Tooltip.Content>{t("remove")}</Tooltip.Content>
                       </Tooltip>
                     </div>
