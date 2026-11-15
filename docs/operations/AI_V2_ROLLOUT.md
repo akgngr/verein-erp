@@ -67,3 +67,11 @@ FROM (
   GROUP BY "userId", "requestKey" HAVING count(*) > 1
 ) conflicts;
 ```
+
+## Dosya worker retry ve terminal durum
+
+Yeni ai.export_dataset execution'ları en fazla 3 deneme, 5–30 saniye arası backoff kullanır. Eski execution'ların saklanmış retry politikası değiştirilmez. Yetki/rıza/TTL/snapshot/cancel veya plan/limit hataları kalıcıdır; disk/bağlantı gibi geçici hatalar bütçe içinde yeniden denenir. Başarısız yazımın şifreli geçici dosyası hemen temizlenir. Lease kaybetmiş/abort edilmiş handler istek durumunu FAILED olarak ezmez.
+
+Worker son denemede ölürse otomasyon recovery execution'ı FAILED yapar; dosya durum okuması bunu gözleyip UI'yı terminal duruma geçirir. CANCELLED ve süresi dolmuş işler QUEUED olarak gösterilmez. Kaynak değiştiyse yeni dataset/önizleme/onay gerekir; eski stale işlemi yeniden oynatmak çözüm değildir.
+
+450 testlik izole kabul; gerçek worker, expired lease fixture, bir EISDIR hatasından sonra retry ve SIGTERM ile temiz kapanışı içerir. Bu üretim pilotu veya tüm storage fencing/streaming kabulü değildir.

@@ -42,9 +42,10 @@ export async function requestDatasetExport(args:z.infer<typeof exportPlanSchema>
   throw error;
  }
 }
-export async function runDatasetExport(generationId:string,signal:AbortSignal) {
+export async function runDatasetExport(generationId:string,signal:AbortSignal,execution?:{userId:string;executionId:string}) {
  if(process.env.AI_PERSONAL_EXPORT_ENABLED!=="true")throw new Error("AI_PERSONAL_EXPORT_DISABLED");
  const db=getDb(),job=await db.aiExportRequest.findUnique({where:{id:generationId}});if(!job)throw new Error("AI_EXPORT_NOT_FOUND");
+ if(execution&&(job.userId!==execution.userId||job.executionId!==execution.executionId))throw new Error("AI_EXPORT_EXECUTION_MISMATCH");
  if(job.status!=="QUEUED" && job.status!=="READY")throw new Error("AI_EXPORT_CANCELLED");
  if(job.status==="READY"&&job.fileId)return {generationId:job.id,status:"READY"};
  await requireExportWorkerAccess(job.userId,job.providerRevision);signal.throwIfAborted();

@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "2.1.2",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Worker toparlanması ve dosya hata durumu",
+        "de": "Worker-Wiederherstellung und Dateifehlerstatus"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Geçici export hataları sınırlı yeniden denenir; terminal/iptal durumları kuyrukta görünmez, başarısız geçici dosyalar temizlenir.",
+          "de": "Temporäre Exportfehler werden begrenzt wiederholt; End-/Abbruchzustände bleiben nicht in der Warteschlange, fehlgeschlagene temporäre Dateien werden entfernt."
+        }
+      ]
+    },
+    {
       "version": "2.1.1",
       "date": "2026-11-15",
       "title": {

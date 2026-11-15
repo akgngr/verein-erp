@@ -177,3 +177,8 @@ export async function retryExecution(executionId: string, actorId: string | null
     details: { actorId },
   });
 }
+
+/** Worker-safe status projection; does not expose inputs, logs or personal payloads. */
+export async function getExecutionState(executionId:string,organizationId:string){
+ return getDb().automationExecution.findFirst({where:{id:executionId,organizationId},select:{id:true,status:true,attempt:true,maxAttempts:true,definitionKey:true,requestedById:true}});
+}

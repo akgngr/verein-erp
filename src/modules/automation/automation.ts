@@ -18,3 +18,4 @@ export { scheduleTask } from "./services/schedules";
 export { createWorkflow, saveWorkflowDraft, publishWorkflow, startWorkflow, setWorkflowEnabled, WorkflowPublishError } from "./services/workflows";
 export { insertTaskExecution } from "./services/execution-store";
 export { getAutomationRuntimeConfig } from "./runtime-config";
+export {getExecutionState} from "./services/execution-control";
