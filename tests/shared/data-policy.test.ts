@@ -10,7 +10,7 @@ import { AI_TOOL_POLICY, DATA_POLICY, GLOBAL_SENSITIVE_FIELD, type PolicyTable, 
  * Belge: docs/veri-hassasiyeti.md · Kaynak: src/shared/data-policy.ts
  */
 const policy = DATA_POLICY as Record<string, TablePolicy>;
-const tools = AI_TOOL_POLICY as Record<string, { module: string; reads: readonly PolicyTable[] }>;
+const tools = AI_TOOL_POLICY as Record<string, { module: string; reads: readonly PolicyTable[];serverReads?:readonly PolicyTable[] }>;
 
 type Model = { name: string; owner: string; fields: Set<string> };
 
@@ -104,9 +104,11 @@ describe("Data policy: module boundaries", () => {
 describe("Data policy: AI tools", () => {
   const aiFiles = sourceFiles("src/modules").filter((file) => file.endsWith(`${path.sep}ai.ts`));
 
+  const toolFiles=sourceFiles("src/modules").filter(file=>file.endsWith(`${path.sep}ai.ts`)||/services[\\/]ai-(proposal-tools|statistics-tool)\.ts$/.test(file));
+
   test("every AI tool is declared in AI_TOOL_POLICY with its module", () => {
     const found = new Map<string, string>();
-    for (const file of aiFiles) {
+    for (const file of toolFiles) {
       for (const match of fs.readFileSync(file, "utf8").matchAll(/\bname:\s*"([a-z_]+)"/g)) found.set(match[1], areaOf(file)!);
     }
     for (const [tool, moduleKey] of found) {
@@ -163,6 +165,20 @@ test("v2 source declarations exclude K0 and remain owned by their declared modul
   for(const table of entry.serverReads){
    assert.notEqual(DATA_POLICY[table].category,"K0",`${name} declares protected source ${table}`);
    assert.equal(DATA_POLICY[table].owner,entry.module,`${name} must use its owner's adapter`);
+  }
+ }
+});
+
+
+test("isolated AI proposal and aggregate queries never read protected or undeclared source tables",()=>{
+ const files=sourceFiles("src/modules").filter(file=>/services[\/]ai-(proposal-tools|statistics-tool)\.ts$/.test(file)||/queries[\/]ai-(target|stats)\.ts$/.test(file));
+ for(const file of files){
+  const moduleKey=areaOf(file)!,code=codeOnly(fs.readFileSync(file,"utf8"));
+  const declared=new Set(Object.values(tools).filter(tool=>tool.module===moduleKey).flatMap(tool=>tool.serverReads??[]));
+  for(const [name,entry]of Object.entries(policy))if(PRISMA_CALL(name).test(code)){
+   assert.notEqual(entry.category,"K0",`${file} reads protected source ${name}`);
+   assert.equal(entry.owner,moduleKey,`${file} must use its own source`);
+   assert.ok(declared.has(name),`${file} reads undeclared v2 source ${name}`);
   }
  }
 });

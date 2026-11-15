@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.2.4",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Sürümlü AI öneri ve sonuç sınırları",
+        "de": "Versionierte KI-Vorschläge und Ergebnisgrenzen"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Öneri araçları katı Zod girdisi ve sabit model sonucu kullanır; salt öneri sorguları gereksiz kişi detaylarını okumaz. Kalan eski okuma araçlarının dönüşümü ayrı sürer.",
+          "de": "Vorschlagswerkzeuge verwenden strikte Zod-Eingaben und feste Modellergebnisse; reine Vorschlagsabfragen lesen keine unnötigen Personendetails. Die Migration übriger Lese-Werkzeuge läuft separat weiter."
+        }
+      ]
+    },
+    {
       "version": "1.2.3",
       "date": "2026-11-15",
       "title": {

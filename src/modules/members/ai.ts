@@ -1,17 +1,17 @@
 import "server-only";
+import {aiStatisticsTool} from "./services/ai-statistics-tool";
 import {z} from "zod";
-import {aiToolV2} from "@/shared/ai/v2";
+import {aiToolV2,defineModuleAiV2} from "@/shared/ai/v2";
 import {makeDuesDatasetTool} from "./services/dues-ai-tool";
 
-import { YEAR_INPUT, aiTool, defineModuleAi, euros, yearSchema } from "@/shared/ai/define";
 import { can } from "@/shared/permissions/define";
 
 import { memberPaymentsPermissions } from "./permissions";
-import { membersPermissions } from "./permissions";
-import { describeDuesDataset, parseDuesDatasetQuery, duesDatasetQuerySchema, DUES_DATASET_COLUMNS, getDuesStats, getMemberStats } from "./server";
+import { describeDuesDataset, parseDuesDatasetQuery, duesDatasetQuerySchema, DUES_DATASET_COLUMNS } from "./server";
 
 /** Üyeler: yalnızca sayılar; üye adı veya ayrıntısı dönmez. Sözleşme: src/shared/ai/define.ts. */
-export const ai = defineModuleAi({
+
+export const ai = defineModuleAiV2({
   module: "members",
   tools: [
     makeDuesDatasetTool({name:"create_dataset"}),
@@ -28,31 +28,7 @@ export const ai = defineModuleAi({
         return {datasetRef:next,count:data.count};
       },
     }),
-    aiTool({
-      name: "get_member_statistics",
-      operation: "read",
-      allowed: (user) => can(user.role, membersPermissions, "view"),
-      description: "Member counts by status and membership type, plus membership-fee collection statistics for a year. Numbers only; no member names or details.", // i18n-ignore (model-facing tool text)
-      schema: yearSchema,
-      inputSchema: YEAR_INPUT,
-      run: async ({ year }) => {
-        const [stats, dues] = await Promise.all([getMemberStats(), getDuesStats(year)]);
-        return {
-          members: stats,
-          dues: {
-            year: dues.year,
-            expectedEur: euros(dues.expectedCents),
-            collectedEur: euros(dues.collectedCents),
-            remainingEur: euros(dues.remainingCents),
-            collectionRatePercent: dues.collectionRate,
-            openCount: dues.openCount,
-            partialCount: dues.partialCount,
-            paidCount: dues.paidCount,
-            overdueCount: dues.overdueCount,
-          },
-        };
-      },
-    }),
+    aiStatisticsTool,
   ],
   actions: {},
 });

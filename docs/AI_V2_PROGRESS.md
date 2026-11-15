@@ -56,3 +56,10 @@ Mevcut exports merkezi metadata/publication sahibidir. AiExportRequest ile aynı
 Yeni veri kümesi sürümü 2, 500 adaylık keyset sayfaları ve DB ödeme toplamlarıyla seçim belleğini sınırlar. Önizleme count/fingerprint'i üretilen satırlarla doğrulanır. CSV/XLSX doğrudan 0600 ciphertext temp dosyaya akar; tag tamamlanmadan ve snapshot/izin kontrolü geçmeden rename/publication yoktur. Abort/süre/byte/row/cell sınırları, 64 MiB kimlikli download sınırı ve eski dataset/keyring format uyumu korunur. Genel HTTP streaming ve diğer format/producer geçişleri tamamlandı sayılmaz.
 
 459 test, 100 suite: tamamı başarılı, 0 skipped. 6.001 kayıtlık kaynak/format testleri, ödeme aggregation, revoke/abort, ciphertext-only temp, typed/formül güvenli hücreler, byte/row/cell sınırları, key rotation/tamper ve gerçek worker stale snapshot reddi doğrulandı. Additive migration upgrade/drift, TypeScript/lint ve TR/DE/sabit metin kontrolleri geçti. PR #150 production build/hydration ve Security başarılı; yeni takip commit'i CI'ı ayrıca geçmelidir. Üretim deploy/pilot yapılmadı.
+
+
+## F02 öneri ve aggregate araçları
+
+18 öneri + 3 toplu istatistik aracı açık v2 şemalarına geçti. Öneri tanımları worker-safe dar servislere ayrıldı; kaynak başlıkları yalnız onay kartında kalır, modele sabit acknowledgement gider. Kurs/evrak/toplantı/görev hedef sorguları gereksiz kişi/not/ek okumaz. İstatistiklerin nullable/tutar/enum sonuçları doğrulanır. Diğer okuma/dosya araçları ve legacy registry fallback'i açık kalır.
+
+463 test, 100 suite: tamamı başarılı, 0 atlanan. Yeni kaynak taraması ve metadata-only query spy testleri dahil. Typecheck/lint, module:sync, TR/DE, migration upgrade/drift geçti. PR #151 CI/build/hydration ve Security başarılıdır. Bu yeni paket için GitHub kabulü ayrıca izlenmelidir.
