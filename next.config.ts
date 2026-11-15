@@ -56,10 +56,27 @@ const nextConfig: NextConfig = {
     // edilir; @react-pdf/renderer dosyayı process.cwd() üzerinden okur.
     "/api/meetings/[id]/minutes-pdf": ["./src/modules/meetings/assets/fonts/**"],
     "/api/progress/report": ["./src/shared/pdf/fonts/**"],
+    // Evrak OCR (docs/specs/DOCUMENTS_AI.md): tesseract.js çalışanı, WASM çekirdeği ve dil paketleri
+    // çalışma anında dosya sisteminden yüklenir; standalone çıktıya açıkça dahil edilir.
+    "/api/documents/analyze": [
+      "./node_modules/tesseract.js/**",
+      "./node_modules/tesseract.js-core/**",
+      "./node_modules/@tesseract.js-data/**",
+      "./node_modules/.pnpm/tesseract.js*/**",
+      "./node_modules/.pnpm/@tesseract.js-data*/**",
+      // Worker betiği (worker_threads) çalışma anında yüklenir; bağımlılıkları tracing'e açıkça eklenir.
+      "./node_modules/.pnpm/wasm-feature-detect*/**",
+      "./node_modules/.pnpm/regenerator-runtime*/**",
+      "./node_modules/.pnpm/is-url*/**",
+      "./node_modules/.pnpm/bmp-js*/**",
+      "./node_modules/.pnpm/zlibjs*/**",
+      "./node_modules/.pnpm/idb-keyval*/**",
+      "./node_modules/.pnpm/node-fetch@2*/**",
+    ],
   },
   // KARAR (Faz 2, 9. bölüm): @react-pdf/renderer Next bundler'ıyla sorun
   // çıkarabildiği için sunucu paketinin dışında tutulur (serverExternalPackages).
-  serverExternalPackages: ["@react-pdf/renderer"],
+  serverExternalPackages: ["@react-pdf/renderer", "tesseract.js"],
   async headers() {
     return [
       {

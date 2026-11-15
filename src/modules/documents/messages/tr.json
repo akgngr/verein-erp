@@ -192,7 +192,8 @@
     "deleteTitle": "Dosyayı sil",
     "deleteMessage": "\"{name}\" dosyası kayıttan kaldırılacak. Diskteki dosya korunur. Onaylıyor musunuz?",
     "deletedToast": "Dosya silindi.",
-    "removeFromListAria": "{name} dosyasını listeden çıkar"
+    "removeFromListAria": "{name} dosyasını listeden çıkar",
+    "analyze": "Evraktan doldur"
   },
   "notes": {
     "empty": "Henüz işlem notu eklenmemiş.",
@@ -351,5 +352,53 @@
   },
   "calendar": {
     "due": "Evrak son tarihleri"
+  },
+  "analyze": {
+    "button": "Evraktan doldur",
+    "createHint": "Dosyayı seçin, ardından \"Evraktan doldur\" ile tarih, gönderen, sayı, konu ve termin önerilsin. Taranmış evrak ve fotoğraflar OCR ile okunur; dosya yalnız kaydettiğinizde saklanır.",
+    "editHint": "Bir evrak dosyası seçin; bulunan bilgiler forma önerilir (dosya eklenmez).",
+    "title": "Evraktan bulunan bilgiler",
+    "hint": "Forma yazılacak alanları seçin. Solda mevcut değer, sağda önerilen değer.",
+    "noText": "Bu dosyada okunabilir metin bulunamadı.",
+    "nothingFound": "Metin okundu ama forma uygun bilgi bulunamadı.",
+    "paymentHint": "Evrakta bir ödeme (tutar/IBAN) tespit edildi; bilgi özete yazılır. Muhasebeye aktarma sonraki sürümde gelecek.",
+    "showText": "Okunan metni göster",
+    "cancel": "Vazgeç",
+    "apply": "Seçilenleri uygula ({count})",
+    "applied": "Öneriler forma uygulandı. Kontrol edip kaydedin.",
+    "failed": "Evrak analiz edilemedi.",
+    "confidence": "OCR güveni: %{value}",
+    "source": {
+      "text": "Metin katmanı",
+      "ocr": "OCR",
+      "none": "Metin yok"
+    },
+    "kinds": {
+      "invoice": "Fatura",
+      "reminder": "Ödeme hatırlatması / ihtar",
+      "notice": "Resmî karar / tebligat",
+      "letter": "Yazı"
+    },
+    "summaryAmount": "tutar {amount}",
+    "summaryDue": "termin {date}",
+    "summaryIban": "IBAN {iban}",
+    "aiSummarize": "AI ile özetle",
+    "aiHint": "Kısa özet, evrak türü ve kategori önerisi. Bulut sağlayıcıda kişisel bilgiler maskelenir.",
+    "aiFailed": "AI özeti alınamadı.",
+    "aiActionRequired": "İşlem gerekiyor",
+    "aiKinds": {
+      "invoice": "Fatura",
+      "reminder": "Hatırlatma / ihtar",
+      "notice": "Resmî karar / tebligat",
+      "contract": "Sözleşme",
+      "invitation": "Davet",
+      "information": "Bilgilendirme",
+      "letter": "Yazı",
+      "other": "Diğer"
+    },
+    "aiProcessing": {
+      "local": "Yerel modelle işlendi",
+      "cloud": "Bulutta, maskelenmiş metinle işlendi"
+    }
   }
 }

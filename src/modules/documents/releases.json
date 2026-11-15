@@ -2,7 +2,7 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
-      "version": "1.2.4",
+      "version": "1.4.1",
       "date": "2026-11-15",
       "title": {
         "tr": "Sürümlü AI öneri ve sonuç sınırları",
@@ -13,6 +13,46 @@
           "type": "security",
           "tr": "Öneri araçları katı Zod girdisi ve sabit model sonucu kullanır; salt öneri sorguları gereksiz kişi detaylarını okumaz. Kalan eski okuma araçlarının dönüşümü ayrı sürer.",
           "de": "Vorschlagswerkzeuge verwenden strikte Zod-Eingaben und feste Modellergebnisse; reine Vorschlagsabfragen lesen keine unnötigen Personendetails. Die Migration übriger Lese-Werkzeuge läuft separat weiter."
+        }
+      ]
+    },
+    {
+      "version": "1.4.0",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Evraktan doldur: AI özeti",
+        "de": "Aus Dokument ausfüllen: KI-Zusammenfassung"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "\"Evraktan doldur\" penceresinde \"AI ile özetle\": kısa özet, evrak türü, işlem gerekip gerekmediği ve kategori önerisi; seçilen alanlar forma yazılır.",
+          "de": "„Mit KI zusammenfassen“ im Ausfüllen-Dialog: Kurzfassung, Dokumentart, Handlungsbedarf und Kategorievorschlag; ausgewählte Felder werden übernommen."
+        },
+        {
+          "type": "fix",
+          "tr": "OCR hata kaydı teşhis bilgisi (hata türü/kodu, evrak metni olmadan) içeriyor; dil dosyaları için ek arama yolu ve OCR_LANG_DIR; üretim paketine OCR worker bağımlılıkları eklendi.",
+          "de": "OCR-Fehlerprotokoll mit Diagnose (Fehlertyp/-code, ohne Dokumenttext); zusätzliche Suchpfade für Sprachdaten und OCR_LANG_DIR; OCR-Worker-Abhängigkeiten im Produktionspaket ergänzt."
+        }
+      ]
+    },
+    {
+      "version": "1.3.0",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Evraktan doldur (OCR)",
+        "de": "Aus Dokument ausfüllen (OCR)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yeni evrak formunda seçilen dosya için \"Evraktan doldur\": metin katmanı veya OCR (taranmış PDF, fotoğraf; Almanca/Türkçe/İngilizce) ile tarih, gönderen, karşı tarafın sayısı, konu, son işlem tarihi ve özet önerilir; seçilen alanlar forma yazılır. Düzenleme formunda da kullanılabilir.",
+          "de": "„Aus Dokument ausfüllen“ für die gewählte Datei: per Textebene oder OCR (Scan-PDF, Foto; Deutsch/Türkisch/Englisch) werden Datum, Absender, Zeichen, Betreff, Frist und Zusammenfassung vorgeschlagen; ausgewählte Felder werden übernommen. Auch im Bearbeiten-Formular verfügbar."
+        },
+        {
+          "type": "security",
+          "tr": "Analiz edilen dosya saklanmaz; OCR tamamen sunucuda yerel çalışır, metin dışarı gönderilmez ve loglanmaz.",
+          "de": "Die analysierte Datei wird nicht gespeichert; OCR läuft vollständig lokal auf dem Server, der Text wird weder versendet noch protokolliert."
         }
       ]
     },

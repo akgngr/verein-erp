@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 
 import { Button, addToast } from "@heroui/react";
-import { FileUp, Paperclip, Trash2, UploadCloud } from "lucide-react";
+import { FileUp, Paperclip, Sparkles, Trash2, UploadCloud } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState, type DragEvent } from "react";
 
@@ -53,8 +53,13 @@ export function FileUploader({
   onUploaded,
   onPendingCountChange,
   uploadCommand,
+  onAnalyze,
+  analyzingId,
 }: {
   mode: "create" | "detail";
+  /** "Evraktan doldur": seçilen (henüz yüklenmemiş) dosyayı formu doldurmak için analiz eder. */
+  onAnalyze?: (file: File, id: string) => void;
+  analyzingId?: string | null;
   documentId?: string;
   existingCount?: number;
   maxMb: number;
@@ -284,6 +289,19 @@ export function FileUploader({
                 {item.status === "error" ? (
                   <span className="text-tiny text-danger">{item.error ?? t("errorGeneric")}</span>
                 ) : null}
+                {onAnalyze && item.status === "pending" ? (
+                  <Button
+                    size="sm"
+                    variant="flat"
+                    color="primary"
+                    startContent={analyzingId === item.id ? null : <Sparkles className="h-4 w-4" aria-hidden />}
+                    isLoading={analyzingId === item.id}
+                    isDisabled={Boolean(analyzingId)}
+                    onPress={() => onAnalyze(item.file, item.id)}
+                  >
+                    {t("analyze")}
+                  </Button>
+                ) : null}
                 {item.status === "pending" || item.status === "error" ? (
                   <Button
                     isIconOnly
@@ -303,7 +321,7 @@ export function FileUploader({
 
       {mode === "detail" && busy ? (
         <p className="flex items-center gap-2 text-tiny text-default-500">
-          <FileUp className="h-4 w-4 animate-pulse" aria-hidden /> Yükleme sürüyor…
+          <FileUp className="h-4 w-4 animate-pulse" aria-hidden /> {t("uploading")}
         </p>
       ) : null}
     </div>
