@@ -29,3 +29,13 @@ Güvenli sıra: kişisel export bayrağını kapat, eski worker'ları durdur, mi
 ## Sınırlar
 
 Bu ilk producer/facade paketidir; tüm formatların ve modüllerin merkezi dosya pipeline'ına geçişi değildir. Kaynak 5.000 aday ve renderer 10 MiB ile sınırlı Buffer kullanır. Büyük veri streaming/row iterator D06'da ayrıdır. Queue teslimi en az bir defadır; iş/file state CAS ve lease fencing ile korunur. Harici yan etkiler için exactly-once iddiası yoktur.
+
+## D06: sınırlı şifreli akış
+
+Yeni members.dues seçimleri queryVersion=2 kullanır: PostgreSQL id ASC keyset sırası, 500 aday/sayfa, DB-side ödeme sum/max; her sayfanın transaction'ında statement_timeout=5s ve repeatable-read, transaction timeout=12s. Sayfalar arasında tek DB snapshot iddiası yoktur. Önizlemenin count + sürümlü artımlı SHA-256 satır fingerprint'i, dosyaya alınan akışla aynı olmalıdır; farkta dosya yayımlanmaz. Güncel actor/matris/rıza her sayfada ve publication öncesinde kontrol edilir. Eski queryVersion=1 işlerinin localeCompare/JSON fingerprint'i ve 5.000 aday sınırı korunur; bilinmeyen sürüm reddedilir.
+
+Yeni akışın üst sınırları: 100.000 aday/satır, 20 kolon, hücre başına 32.767 UTF-8 bayt, toplam ham hücre girdisi ve render çıktısı ayrı ayrı 64 MiB. Bu sınırlar sessiz kesme değil kontrollü hata üretir. CSV formül korumasını kullanır; XLSX sayıları sayı, adları metin tutar. ExcelJS streaming writer commit edilen satırları bırakır, sharedStrings/styles kapalıdır; ZIP kütüphanesinin chunk tamponları nedeniyle sabit bellek garantisi verilmez, ham girdi limiti de korunur.
+
+AES-GCM doğrudan 0600 modlu ciphertext geçici dosyaya akar. Kimlikli plaintext temp dosyası yoktur. Başlıkta ayrılmış tag alanı yalnız cipher.final sonrası doldurulur; snapshot ve izin kapısı geçildikten sonra sync/rename yapılır. SHA-256 ve boyut akışta hesaplanır. Abort, kaynak/renderer/limit/snapshot hatasında temp kaldırılır; metadata/publication önceki lease fencing protokolünü kullanır. Worker'ın mevcut 120s deadline'ına ek olarak signal ve dataset TTL sınırı kullanılır.
+
+Download GCM tag doğrulanmadan plaintext'i HTTP'ye akıtmaz; bu pilotta 64 MiB ile sınırlı ciphertext okunur ve doğrulanmış çıktı döndürülür. Genel formatların HTTP streaming'i veya bütün producer'ların geçişi bu uygulamanın kapsamı değildir. Yeni migration yoktur; mevcut keyring ve v1/VE2 byte formatları korunur.

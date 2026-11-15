@@ -2,7 +2,7 @@ import "server-only";
 import {createHash} from "node:crypto";
 import {getPublishedFileMetadata,listPublishedFileMetadata} from "./file-metadata";
 
-import { readFile } from "node:fs/promises";
+import { readFile,stat } from "node:fs/promises";
 
 import { getTranslations } from "next-intl/server";
 
@@ -85,7 +85,13 @@ export async function readGeneratedFile(ownerId: string, id: string): Promise<{ 
   if (!row) return null;
   const plugin = findFormat(row.format, await listUsableModuleKeys());
   if (!plugin) return null;
-  const encrypted = await readFile(resolveSafePath(storagePath(row.id))).catch(() => null);
+  const filePath=resolveSafePath(storagePath(row.id));
+  if(row.source==="members.dues"){
+    const disk=await stat(filePath).catch(()=>null);
+    // Authenticate GCM before returning plaintext; do not stream unauthenticated bytes to HTTP.
+    if(!disk||disk.size>64*1024*1024+256||row.sizeBytes>64*1024*1024)throw new Error("EXPORT_BYTE_LIMIT");
+  }
+  const encrypted = await readFile(filePath).catch(() => null);
   const bytes = encrypted ? openBytes(PURPOSE, encrypted) : null;
   if (!bytes) return null;
   if(row.sha256&&createHash("sha256").update(bytes).digest("hex")!==row.sha256)throw new Error("FILE_CHECKSUM_FAILED");

@@ -8,7 +8,7 @@ import { can } from "@/shared/permissions/define";
 
 import { memberPaymentsPermissions } from "./permissions";
 import { membersPermissions } from "./permissions";
-import { loadDuesDataset, parseDuesDatasetQuery, duesDatasetQuerySchema, DUES_DATASET_COLUMNS, getDuesStats, getMemberStats } from "./server";
+import { describeDuesDataset, parseDuesDatasetQuery, duesDatasetQuerySchema, DUES_DATASET_COLUMNS, getDuesStats, getMemberStats } from "./server";
 
 /** Üyeler: yalnızca sayılar; üye adı veya ayrıntısı dönmez. Sözleşme: src/shared/ai/define.ts. */
 export const ai = defineModuleAi({
@@ -23,9 +23,9 @@ export const ai = defineModuleAi({
       policy:{purpose:"dues-export",serverReads:["Member","MemberDue","MemberPayment"],modelFields:["datasetRef","count"],processing:"approved_provider"},projectForModel:result=>result,
       run:async({datasetRef,...filters},context)=>{
         const original=parseDuesDatasetQuery(await context.loadDatasetDefinition(datasetRef));
-        const query=parseDuesDatasetQuery({...original,...filters}),data=await loadDuesDataset(query);
-        const next=await context.createDataset({definition:query,selection:{fingerprint:data.fingerprint},columns:[...DUES_DATASET_COLUMNS]});
-        return {datasetRef:next,count:data.rows.length};
+        const query=parseDuesDatasetQuery({...original,...filters}),data=await describeDuesDataset(query,context.signal);
+        const next=await context.createDataset({definition:query,selection:data,queryVersion:2,columns:[...DUES_DATASET_COLUMNS]});
+        return {datasetRef:next,count:data.count};
       },
     }),
     aiTool({

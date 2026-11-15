@@ -64,14 +64,20 @@ export function openSecret(purpose: string, payload: string): string | null {
 
 /** Dosya içerikleri için: AES-256-GCM, çıktı `iv(12) | tag(16) | şifreli` baytları. */
 export function sealBytes(purpose: string, data: Uint8Array): Buffer {
-  const ring = keyring();
-  const value = ring ? ring.keys[ring.current] : secret();
-  if (!value) throw new Error("Encryption key is not available"); // i18n-ignore (geliştirici hatası; kullanıcıya gösterilmez)
-  const iv = randomBytes(12);
-  const cipher = createCipheriv("aes-256-gcm", keyFor(purpose, value), iv);
-  const encrypted = Buffer.concat([cipher.update(data), cipher.final()]);
-  const header=ring ? Buffer.from(`VE2:${ring.current}:`,"ascii") : Buffer.alloc(0);
-  return Buffer.concat([header, iv, cipher.getAuthTag(), encrypted]);
+  const {cipher,header}=createByteSealer(purpose);
+  const encrypted=Buffer.concat([cipher.update(data),cipher.final()]);
+  const sealedHeader=Buffer.from(header);
+  cipher.getAuthTag().copy(sealedHeader,sealedHeader.length-16);
+  return Buffer.concat([sealedHeader,encrypted]);
+}
+
+/** Header has a reserved tag. Persist only ciphertext; patch tag after final(), before publication. */
+export function createByteSealer(purpose:string) {
+  const ring=keyring(),value=ring?ring.keys[ring.current]:secret();
+  if(!value)throw new Error("DATA_ENCRYPTION_KEY_UNAVAILABLE");
+  const iv=randomBytes(12),cipher=createCipheriv("aes-256-gcm",keyFor(purpose,value),iv);
+  const header=Buffer.concat([ring?Buffer.from(`VE2:${ring.current}:`,"ascii"):Buffer.alloc(0),iv,Buffer.alloc(16)]);
+  return {cipher,header};
 }
 
 export function openBytes(purpose: string, payload: Uint8Array): Buffer | null {

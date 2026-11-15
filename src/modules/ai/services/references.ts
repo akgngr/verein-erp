@@ -32,14 +32,15 @@ export async function resolveEntityReferenceDetails(actor:ReferenceActor,token:s
 export async function resolveEntityReference(actor:ReferenceActor,token:string,resource:string) {
   return (await resolveEntityReferenceDetails(actor,token,resource)).recordId;
 }
-export async function saveDataset(actor:ReferenceActor,args:{scopeId:string;sourceModule:string;definition:unknown;selection:unknown;columns:string[]}) {
+export async function saveDataset(actor:ReferenceActor,args:{scopeId:string;sourceModule:string;definition:unknown;selection:unknown;columns:string[];queryVersion?:1|2}) {
   const db=getDb();
   const scope=await db.aiReferenceScope.findFirst({where:{id:args.scopeId,...scopeWhere(actor)}});
   if(!scope) throw new Error("AI_REFERENCE_UNAVAILABLE");
+  if(args.queryVersion!==undefined&&![1,2].includes(args.queryVersion))throw new Error("AI_DATASET_QUERY_VERSION_UNSUPPORTED");
   const definition=JSON.stringify(args.definition),selection=JSON.stringify(args.selection);
   if(Buffer.byteLength(definition)+Buffer.byteLength(selection)>1_048_576) throw new Error("AI_DATASET_TOO_LARGE");
   const token=newOpaqueToken();
-  await db.aiDataset.create({data:{scopeId:scope.id,sourceModule:args.sourceModule,queryVersion:1,tokenDigest:tokenDigest(token),definitionEnc:sealSecret("ai-dataset",definition),selectionEnc:sealSecret("ai-dataset",selection),selectionHash:tokenDigest(selection),allowedColumns:args.columns,expiresAt:scope.expiresAt}});
+  await db.aiDataset.create({data:{scopeId:scope.id,sourceModule:args.sourceModule,queryVersion:args.queryVersion??1,tokenDigest:tokenDigest(token),definitionEnc:sealSecret("ai-dataset",definition),selectionEnc:sealSecret("ai-dataset",selection),selectionHash:tokenDigest(selection),allowedColumns:args.columns,expiresAt:scope.expiresAt}});
   return token;
 }
 export async function loadDataset(actor:ReferenceActor,token:string) {

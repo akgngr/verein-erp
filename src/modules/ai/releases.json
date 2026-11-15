@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.4.6",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Sınırlı ve şifreli dosya akışı",
+        "de": "Begrenzte verschlüsselte Dateiströme"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Aidat veri kümesi 500 kayıtlık keyset sayfaları ve ödeme toplamlarıyla okunur; CSV/XLSX doğrudan şifreli akışa yazılır. İptal, süre ve boyut sınırları yayından önce doğrulanır.",
+          "de": "Beitragsdaten werden in 500er-Keyset-Seiten mit Zahlungssummen gelesen; CSV/XLSX wird direkt verschlüsselt gestreamt. Abbruch, Fristen und Größenlimits werden vor Veröffentlichung geprüft."
+        }
+      ]
+    },
+    {
       "version": "1.4.5",
       "date": "2026-11-15",
       "title": {
