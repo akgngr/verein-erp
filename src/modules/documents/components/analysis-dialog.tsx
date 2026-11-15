@@ -1,13 +1,14 @@
 "use client";
 
-import { Button, Checkbox, Chip, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
-import { useTranslations } from "next-intl";
+import { Button, Checkbox, Chip, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, addToast } from "@heroui/react";
+import { Sparkles } from "lucide-react";
+import { useLocale, useTranslations } from "next-intl";
 import { useState } from "react";
 
 import type { DocumentAnalysis } from "../services/document-analysis";
 
 /** Forma uygulanabilir alanlar (tutar ve IBAN bilgi amaçlıdır; EV-3'te muhasebeye aktarılacak). */
-export const APPLICABLE_FIELDS = ["counterparty", "documentDate", "referenceNumber", "subject", "dueDate", "summary"] as const;
+export const APPLICABLE_FIELDS = ["counterparty", "documentDate", "referenceNumber", "subject", "dueDate", "summary", "categoryId"] as const;
 export type ApplicableField = (typeof APPLICABLE_FIELDS)[number];
 
 const euro = (cents: number) => (cents / 100).toLocaleString("de-DE", { style: "currency", currency: "EUR" });
@@ -32,6 +33,9 @@ export function analysisValues(analysis: DocumentAnalysis, t: (key: string, valu
   };
 }
 
+/** AI özeti (EV-2): /api/ai/document-summary yanıtı. */
+type AiSummary = { summary: string; kind: string; category: string | null; actionRequired: boolean; processing: "local" | "cloud" };
+
 /**
  * "Evraktan doldur" öneri penceresi: bulunan değerler mevcut form değerleriyle yan yana gösterilir;
  * yalnız işaretlenen alanlar forma yazılır (kayıt yine normal form doğrulamasıyla yapılır).
@@ -40,21 +44,51 @@ export function AnalysisDialog({
   analysis,
   current,
   labels,
+  categories,
   onApply,
   onClose,
 }: {
   analysis: DocumentAnalysis;
   current: Record<ApplicableField, string>;
   labels: Record<ApplicableField, string>;
+  categories: Array<{ id: string; label: string }>;
   onApply: (values: Partial<Record<ApplicableField, string>>) => void;
   onClose: () => void;
 }) {
   const t = useTranslations("documents.analyze");
-  const values = analysisValues(analysis, (key, params) => t(key as never, params as never));
+  const locale = useLocale();
+  const [ai, setAi] = useState<AiSummary | null>(null);
+  const [aiBusy, setAiBusy] = useState(false);
+  const base = analysisValues(analysis, (key, params) => t(key as never, params as never));
+  const categoryId = ai?.category ? categories.find((category) => category.label === ai.category)?.id : undefined;
+  // AI özeti varsa kural tabanlı bilgiler (tutar, termin, IBAN) özetin sonuna eklenir.
+  const values: Partial<Record<ApplicableField, string>> = ai ? { ...base, summary: [ai.summary, base.summary].filter(Boolean).join("\n"), categoryId } : base;
   const found = APPLICABLE_FIELDS.filter((field) => values[field]);
   // Varsayılan: boş alanlar ve farklı değerler seçili; aynı değer seçili değil.
   const [selected, setSelected] = useState<string[]>(found.filter((field) => values[field] !== current[field]));
-  const show = (field: ApplicableField, value: string | undefined) => (value && (field === "documentDate" || field === "dueDate") ? day(value) : value || "—");
+  const categoryLabel = (id: string | undefined) => categories.find((category) => category.id === id)?.label;
+  const show = (field: ApplicableField, value: string | undefined) =>
+    field === "categoryId" ? (categoryLabel(value) ?? "—") : value && (field === "documentDate" || field === "dueDate") ? day(value) : value || "—";
+
+  /** AI özeti: evrak metni (önizleme) AI modülüne gider; bulutta maskelenir, politika sunucuda uygulanır. */
+  const summarize = async () => {
+    setAiBusy(true);
+    try {
+      const response = await fetch("/api/ai/document-summary", {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ text: analysis.preview, locale: locale === "de" ? "de" : "tr", categories: categories.map((category) => category.label) }),
+      });
+      const result = (await response.json().catch(() => null)) as { ok: boolean; summary?: AiSummary; error?: string } | null;
+      if (!result?.ok || !result.summary) return void addToast({ title: result?.error ?? t("aiFailed"), color: "danger" });
+      setAi(result.summary);
+      setSelected((list) => [...new Set([...list, "summary", ...(result.summary!.category ? ["categoryId"] : [])])]);
+    } catch {
+      addToast({ title: t("aiFailed"), color: "danger" });
+    } finally {
+      setAiBusy(false);
+    }
+  };
 
   return (
     <Modal isOpen onOpenChange={(open) => !open && onClose()} size="2xl" scrollBehavior="inside">
@@ -93,6 +127,24 @@ export function AnalysisDialog({
               ) : null}
             </>
           )}
+          {analysis.preview ? (
+            <div className="flex flex-wrap items-center gap-2 rounded-medium border border-default-200 p-3">
+              {ai ? (
+                <>
+                  <Chip size="sm" variant="flat" color="secondary">{t(`aiKinds.${ai.kind}`)}</Chip>
+                  {ai.actionRequired ? <Chip size="sm" variant="flat" color="warning">{t("aiActionRequired")}</Chip> : null}
+                  <span className="text-tiny text-default-500">{t(`aiProcessing.${ai.processing}`)}</span>
+                </>
+              ) : (
+                <>
+                  <Button size="sm" variant="flat" color="secondary" startContent={aiBusy ? null : <Sparkles className="h-4 w-4" aria-hidden />} isLoading={aiBusy} onPress={summarize}>
+                    {t("aiSummarize")}
+                  </Button>
+                  <span className="text-tiny text-default-500">{t("aiHint")}</span>
+                </>
+              )}
+            </div>
+          ) : null}
           {analysis.preview ? (
             <details className="text-tiny text-default-500">
               <summary className="cursor-pointer">{t("showText")}</summary>

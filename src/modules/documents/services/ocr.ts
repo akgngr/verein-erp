@@ -54,8 +54,27 @@ async function languageDirectory(): Promise<string> {
     const file = path.join(target, `${lang}.traineddata.gz`);
     const exists = await stat(file).then((info) => info.size > 0, () => false);
     if (exists) continue;
-    const packageDir = path.dirname(require.resolve(`@tesseract.js-data/${lang}/package.json`));
-    await copyFile(path.join(packageDir, "4.0.0_best_int", `${lang}.traineddata.gz`), file);
+    // Sıra: OCR_LANG_DIR (işletmeci), paket çözümlemesi, çalışma klasöründeki node_modules.
+    const candidates = [
+      process.env.OCR_LANG_DIR ? path.join(process.env.OCR_LANG_DIR, `${lang}.traineddata.gz`) : null,
+      (() => {
+        try {
+          return path.join(path.dirname(require.resolve(`@tesseract.js-data/${lang}/package.json`)), "4.0.0_best_int", `${lang}.traineddata.gz`);
+        } catch {
+          return null;
+        }
+      })(),
+      path.join(process.cwd(), "node_modules", "@tesseract.js-data", lang, "4.0.0_best_int", `${lang}.traineddata.gz`),
+    ].filter((candidate): candidate is string => Boolean(candidate));
+    let copied = false;
+    for (const candidate of candidates) {
+      if (await stat(candidate).then((info) => info.size > 0, () => false)) {
+        await copyFile(candidate, file);
+        copied = true;
+        break;
+      }
+    }
+    if (!copied) throw new Error(`OCR_LANGUAGE_DATA_MISSING:${lang}`);
   }
   return target;
 }

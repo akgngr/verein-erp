@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.9.0",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Evrak özeti (AI)",
+        "de": "Dokumentzusammenfassung (KI)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Evrak metni için AI özeti, tür ve kategori önerisi (POST /api/ai/document-summary). Yerel modelde doğrudan; bulutta yalnız \"Denetimli serbest metin\" modunda, adlar/adres/IBAN/e-posta maskelenerek. Kişiyle birlikte özel nitelikli veri varsa yalnız yerel model. AI matrisinde Evrak Kayıt → içerik okuma gerekir.",
+          "de": "KI-Zusammenfassung, Dokumentart und Kategorievorschlag für Dokumenttext (POST /api/ai/document-summary). Lokal direkt; in der Cloud nur im Modus „Geprüfter Freitext“ mit maskierten Namen/Adressen/IBAN/E-Mails. Besondere Kategorien zu einer Person nur lokal. Erfordert in der KI-Matrix Posteingang → Inhalte lesen."
+        }
+      ]
+    },
+    {
       "version": "1.8.0",
       "date": "2026-11-15",
       "title": {

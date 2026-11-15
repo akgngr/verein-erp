@@ -52,8 +52,10 @@ export async function analyzeFileHandler(request: Request): Promise<Response> {
       after: { fileName: validation.file.originalName, size: validation.file.size, source: analysis.source, fields: Object.keys(analysis.suggestions) },
     });
     return NextResponse.json({ ok: true, analysis });
-  } catch {
-    console.error("[documents] ANALYZE_FAILED");
+  } catch (error) {
+    // Teşhis için yalnız hata türü/kodu ve ilk satır loglanır; evrak metni hata mesajlarına girmez.
+    const detail = error instanceof Error ? { name: error.name, code: (error as { code?: string }).code, message: error.message.split("\n")[0].slice(0, 200) } : { name: typeof error };
+    console.error("[documents] ANALYZE_FAILED", detail);
     return NextResponse.json({ ok: false, error: await translateMessage("documents.analyze.failed") }, { status: 500 });
   }
 }

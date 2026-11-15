@@ -292,5 +292,13 @@
       "LIKELY_NAME": "kayıtlı olmayan kişi adı",
       "SPECIAL_CATEGORY": "özel nitelikli veri (sağlık, din vb.)"
     }
+  },
+  "documentSummary": {
+    "errors": {
+      "notAllowed": "Evrak içeriğini asistanla işlemek için yöneticinin AI izinlerinde \"Evrak Kayıt → içerik okuma\" açık olmalı.",
+      "cloudNotAllowed": "Evrak içeriği bulut sağlayıcıya yalnız \"Denetimli serbest metin\" modunda (maskelenerek) gönderilir. Yönetici AI ayarlarından açabilir veya yerel model seçebilir.",
+      "specialCategory": "Evrakta kişiye ait özel nitelikli bilgi (ör. sağlık) var; yalnız yerel modelle işlenebilir.",
+      "unreadable": "Asistanın yanıtı okunamadı; lütfen tekrar deneyin."
+    }
   }
 }

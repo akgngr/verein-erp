@@ -28,8 +28,8 @@ Hiçbir kayıt kullanıcı onayı olmadan değişmez.
 - [x] Form: seçilen dosyanın yanında "Evraktan doldur" → öneri penceresi → seçilen alanlar forma.
 
 ### EV-2 AI özet ve sınıflandırma
-- [ ] Özet (2–3 cümle), evrak türü (fatura, resmî yazı, sözleşme, bilgilendirme), kategori önerisi.
-- [ ] Sağlayıcı politikası: yerel ya da maskelenmiş metinle bulut; reddedilirse kural tabanlı sonuç kalır.
+- [x] Özet (2–3 cümle), evrak türü (fatura, resmî yazı, sözleşme, bilgilendirme), kategori önerisi.
+- [x] Sağlayıcı politikası: yerel ya da maskelenmiş metinle bulut; reddedilirse kural tabanlı sonuç kalır. (`ai/services/document-summary.ts`, `document-masking.ts`; AI matrisinde Evrak Kayıt → içerik okuma)
 
 ### EV-3 İş oluşturma
 - [ ] Ödeme tespiti → "Muhasebede gelen fatura taslağı oluştur" (tutar, IBAN, vade, ek dosya).
