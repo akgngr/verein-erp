@@ -1,5 +1,6 @@
 import "server-only";
 import { createHash, randomBytes } from "node:crypto";
+import {cancelSourceGenerations} from "@/modules/exports/automation";
 import { getDb } from "@/shared/db";
 import { sealSecret, openSecret } from "@/shared/security/secret-box";
 
@@ -50,9 +51,10 @@ export async function loadDataset(actor:ReferenceActor,token:string) {
 }
 export async function revokeAiReferences(userId:string) {
   const db=getDb();
-  await db.$transaction([
-    db.aiReferenceScope.updateMany({where:{userId,revokedAt:null},data:{revokedAt:new Date()}}),
-    db.aiProposal.updateMany({where:{userId,status:"PENDING"},data:{status:"CANCELLED"}}),
-    db.aiExportRequest.updateMany({where:{userId,status:"QUEUED"},data:{status:"CANCELLED"}}),
-  ]);
+  await db.$transaction(async tx=>{
+    await tx.aiReferenceScope.updateMany({where:{userId,revokedAt:null},data:{revokedAt:new Date()}});
+    await tx.aiProposal.updateMany({where:{userId,status:"PENDING"},data:{status:"CANCELLED"}});
+    await tx.aiExportRequest.updateMany({where:{userId,status:"QUEUED"},data:{status:"CANCELLED"}});
+    await cancelSourceGenerations(tx,userId,"ai");
+  });
 }

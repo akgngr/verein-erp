@@ -80,6 +80,7 @@ export const DATA_POLICY = {
   Donor: { owner: "donations", category: "K1", reason: "Bağışçı kişisel verisi", sensitiveFields: ["firstName", "lastName", "organizationName", "email", "phone", "street", "postalCode", "city"] },
   EventAttendee: { owner: "events", category: "K1", reason: "Katılımcı adları", sensitiveFields: ["email", "firstName", "lastName", "phone"] },
   FeedbackItem: { owner: "feedback", category: "K1", reason: "Hata/öneri metni ve ekran görüntüsü", sensitiveFields: ["reporterLabel", "screenshotPath"] },
+  FileGeneration: {owner:"exports",category:"K1",reason:"File request owner, purpose and execution metadata",sensitiveFields:[],personalOwnerField:"ownerId"},
   GeneratedFile: { owner: "exports", category: "K1", reason: "Oluşturulan dosyalar (kişisel veri içerebilir)", sensitiveFields: [], personalOwnerField: "ownerId" },
   MailLog: { owner: "mail", category: "K1", reason: "Alıcı adresleri", sensitiveFields: ["toAddress", "toName"] },
   MailingChannelConfig: { owner: "mailings", category: "K0", reason: "Kanal sağlayıcı anahtarları (şifreli)", sensitiveFields: ["secretsEnc"] },

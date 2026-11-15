@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.10.4",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Merkezi dosya talebi ve güvenli publication",
+        "de": "Zentrale Dateianfragen und sichere Veröffentlichung"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "FileGeneration facade mevcut outbox ile atomiktir; yalnız geçerli worker lease dosyayı yayımlar, pending dosyalar liste/indirmeden gizlenir.",
+          "de": "FileGeneration ist atomar mit der bestehenden Outbox; nur eine gültige Worker-Lease veröffentlicht Dateien, ausstehende Dateien bleiben unsichtbar."
+        }
+      ]
+    },
+    {
       "version": "0.10.3",
       "date": "2026-11-15",
       "title": {

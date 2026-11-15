@@ -25,7 +25,7 @@ export const aiDatasetExportTask=defineTask({
  timeoutSeconds:120,retry:AI_EXPORT_RETRY_POLICY,idempotencyKey:input=>`ai-export:${input.generationId}`,
  handler:async(input,context)=>{
   const {runDatasetExport}=await import("./services/dataset-export");
-  try{return await runDatasetExport(input.generationId,context.signal,{userId:context.requestedById??"",executionId:context.executionId});}
+  try{return await runDatasetExport(input.generationId,context.signal,{userId:context.requestedById??"",executionId:context.executionId,organizationId:context.organizationId,leaseToken:context.leaseToken});}
   catch(error){const {failDatasetExportAttempt}=await import("./services/export-attempt");return failDatasetExportAttempt(input.generationId,context,error);}
  },
 });

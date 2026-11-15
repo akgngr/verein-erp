@@ -48,7 +48,7 @@ Bitiş: IDOR/süre/revoke/çift onay negatif testleri geçer. Runtime migration 
 - [x] D01 members public/worker-safe dataset adapter: yıl/gecikme/durum/tutar; Decimal ve tarih kuralları.
 - [x] D02 Kaynak servisinde kayıt kapsamı + alan projection + export izni; doğrudan cross-module Prisma yok.
 - [x] D03 create_dataset/query_dataset/export_dataset araçlarını ve TR/DE açıklamalarını ekle.
-- [ ] D04 exports request-generation facade'ını mevcut merkezi dosya şartnamesiyle birleştir; ikinci queue kurma.
+- [x] D04 exports request-generation facade'ını mevcut merkezi dosya şartnamesiyle birleştir; ikinci queue kurma.
 - [x] D05 automation task payload'ını generationId/actorId metadata'sıyla sınırla; result/log PII taşımasın.
 - [ ] D06 Worker'da güncel izin/precondition, typed satır renderer, streaming ve kaynak limitleri.
 - [x] D07 UI preview, onay ve job durumu; gerçek isimli XLSX/CSV yalnız yetkili UI/dosyaya gider.
@@ -120,3 +120,7 @@ PR #146 (494a50b) için production build/hydration dahil CI ve Security başarı
 ## D03 veri kümesi araç API'si
 
 create_dataset (source=members.dues, query), query_dataset (datasetRef + izinli filtreler) ve export_dataset (onay kartı) mevcut kaynak izinleri, feature flag ve v2 şemalarıyla çalışır. Model açıklamaları TR/DE'dir; eksik çeviride sabit açıklamaya düşer. create_dues_dataset / propose_dataset_export adları uyum için korunur. Export aracı dosyayı doğrudan üretmez. Ortak plan enum'u UI onayı ve worker yolunda aynı doğrulanır. 453 test geçti; gerçek kaynak aracı/fake-fetch ve gerçek worker akışı canonical create_dataset üzerinden de doğrulandı.
+
+## D04 merkezi dosya sahibi
+
+FileGeneration metadata/requestGeneration facade'ı mevcut exports içine alındı; ikinci queue yoktur. Kaynak AiExportRequest + merkezi metadata + execution/outbox atomik kaydedilir. Fenced attempt dosyaları publicationPending ile gizlenir; eski worker yeni dosyayı silemez/yayımlayamaz. Eski dosya/talep backfill'i dolu legacy schema fixture'ıyla testlidir. Download/listeleme aynı published metadata kapısını kullanır; privacy cancellation ve lifecycle/cleanup yeni tabloyu kapsar. 456 test geçti. D06 streaming ve kaynak limit geliştirmesi ayrı; merkezi dosya planındaki tüm diğer producer/format geçişleri bu kutuyla tamamlanmış sayılmaz.

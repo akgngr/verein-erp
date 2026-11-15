@@ -4,8 +4,7 @@ import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { getDb } from "@/shared/db";
 import { loadDuesDataset,parseDuesDatasetQuery,DUES_DATASET_COLUMNS } from "@/modules/members/automation";
-import { createTabularFile,markGeneratedFileForDeletion,datasetExportPlanSchema } from "@/modules/exports/automation";
-import { insertTaskExecution } from "@/modules/automation/automation";
+import { createTabularFile,markGeneratedFileForDeletion,datasetExportPlanSchema,prepareGenerationRequest,requestGeneration,startGeneration,finalizeGeneration,type GenerationLease } from "@/modules/exports/automation";
 import { requireExportWorkerAccess } from "./export-worker-access";
 import { loadDataset,tokenDigest,referenceDeployment } from "./references";
 import { providerRevision } from "./provider-revision";
@@ -30,10 +29,11 @@ export async function requestDatasetExport(args:z.infer<typeof exportPlanSchema>
  };
  const existing=await recover();if(existing)return existing;
  const id=randomUUID();
+ const prepared=await prepareGenerationRequest({id,ownerId:context.userId,organizationId:referenceDeployment(),sourceModule:"ai",purpose:"members.dues",format:args.format,idempotencyKey:context.proposalId,deadlineAt:dataset.expiresAt,task:aiDatasetExportTask});
  try{return await db.$transaction(async tx=>{
   const generation=await tx.aiExportRequest.create({data:{id,userId:context.userId,conversationId:context.conversationId,datasetId:dataset.id,providerRevision:revision,format:args.format,columns:args.columns,proposalId:context.proposalId,expiresAt:dataset.expiresAt}});
-  const execution=await insertTaskExecution(tx,{task:aiDatasetExportTask,organizationId:referenceDeployment(),requestedById:context.userId,sourceModule:"ai",correlationId:id,idempotencyKey:`ai-export:${id}`,input:{generationId:id},context:{}});
-  await tx.aiExportRequest.update({where:{id},data:{executionId:execution.id}});
+  const fileGeneration=await requestGeneration(prepared,tx);
+  await tx.aiExportRequest.update({where:{id},data:{executionId:fileGeneration.executionId}});
   return generation.id;
  });}catch(error){
   if(error instanceof Prisma.PrismaClientKnownRequestError&&error.code==="P2002"){
@@ -42,10 +42,10 @@ export async function requestDatasetExport(args:z.infer<typeof exportPlanSchema>
   throw error;
  }
 }
-export async function runDatasetExport(generationId:string,signal:AbortSignal,execution?:{userId:string;executionId:string}) {
+export async function runDatasetExport(generationId:string,signal:AbortSignal,execution?:{userId:string;executionId:string;organizationId?:string;leaseToken?:number}) {
  if(process.env.AI_PERSONAL_EXPORT_ENABLED!=="true")throw new Error("AI_PERSONAL_EXPORT_DISABLED");
  const db=getDb(),job=await db.aiExportRequest.findUnique({where:{id:generationId}});if(!job)throw new Error("AI_EXPORT_NOT_FOUND");
- if(execution&&(job.userId!==execution.userId||job.executionId!==execution.executionId))throw new Error("AI_EXPORT_EXECUTION_MISMATCH");
+ if(execution&&(job.userId!==execution.userId||job.executionId!==execution.executionId||(execution.organizationId!==undefined&&execution.organizationId!==referenceDeployment())))throw new Error("AI_EXPORT_EXECUTION_MISMATCH");
  if(job.status!=="QUEUED" && job.status!=="READY")throw new Error("AI_EXPORT_CANCELLED");
  if(job.status==="READY"&&job.fileId)return {generationId:job.id,status:"READY"};
  await requireExportWorkerAccess(job.userId,job.providerRevision);signal.throwIfAborted();
@@ -60,13 +60,19 @@ export async function runDatasetExport(generationId:string,signal:AbortSignal,ex
  const columns=z.array(z.enum(DUES_DATASET_COLUMNS)).parse(job.columns);
  const rowValues=current.rows.map(row=>columns.map(column=>column==="member.fullName"?row.fullName:column==="dues.year"?row.year:row.remainingCents/100));
  signal.throwIfAborted();await requireExportWorkerAccess(job.userId,job.providerRevision);
- const fileId=await createTabularFile({id:job.id,ownerId:job.userId,format:z.enum(["csv","xlsx"]).parse(job.format),headers:columns,rows:rowValues,source:"members.dues"});
+ if(!execution||!Number.isSafeInteger(execution.leaseToken)||execution.leaseToken!<1)throw new Error("FILE_GENERATION_LEASE_REQUIRED");
+ const lease:GenerationLease={id:job.id,ownerId:job.userId,organizationId:referenceDeployment(),executionId:execution.executionId,leaseToken:execution.leaseToken!};
+ const attemptId=await startGeneration(lease);
+ const fileId=await createTabularFile({id:attemptId,generationId:job.id,ownerId:job.userId,format:z.enum(["csv","xlsx"]).parse(job.format),headers:columns,rows:rowValues,source:"members.dues"});
  try {
   signal.throwIfAborted();await requireExportWorkerAccess(job.userId,job.providerRevision);
-  const scope=await db.aiReferenceScope.findFirst({where:{id:dataset.scopeId,revokedAt:null,expiresAt:{gt:new Date()}}});
+  await db.$transaction(async tx=>{
+  const scope=await tx.aiReferenceScope.findFirst({where:{id:dataset.scopeId,revokedAt:null,expiresAt:{gt:new Date()}}});
   if(!scope)throw new Error("AI_DATASET_UNAVAILABLE");
-  const committed=await db.aiExportRequest.updateMany({where:{id:job.id,status:"QUEUED",expiresAt:{gt:new Date()}},data:{status:"READY",fileId}});
+  await finalizeGeneration(tx,lease,fileId);
+  const committed=await tx.aiExportRequest.updateMany({where:{id:job.id,status:"QUEUED",expiresAt:{gt:new Date()}},data:{status:"READY",fileId}});
   if(committed.count!==1)throw new Error("AI_EXPORT_CANCELLED");
+  });
  }catch(error){
   await markGeneratedFileForDeletion(fileId,job.userId);
   throw error;
