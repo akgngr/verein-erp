@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.0.3",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Asistan araçları yeni veri sözleşmesinde",
+        "de": "Assistent-Werkzeuge im neuen Datenvertrag"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Asistan araçları v2 veri sözleşmesine taşındı: modele giden her alan açıkça listelenir ve veri sınıfı bildirilir. Toplam ve kurumsal veriler denetimli bulut modunda da kullanılabilir; serbest kişisel içerik yalnız yerel modelde kalır.",
+          "de": "Assistent-Werkzeuge nutzen den v2-Datenvertrag: Jedes Feld an das Modell ist explizit gelistet und die Datenklasse deklariert. Summen und Organisationsdaten sind auch im geprüften Cloud-Modus verfügbar; freie personenbezogene Inhalte bleiben beim lokalen Modell."
+        }
+      ]
+    },
+    {
       "version": "1.0.2",
       "date": "2026-11-15",
       "title": {

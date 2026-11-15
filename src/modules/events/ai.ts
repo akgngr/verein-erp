@@ -1,10 +1,11 @@
 import "server-only";
+import { aiToolV2, defineModuleAiV2 } from "@/shared/ai/v2";
 import {aiProposalTools} from "./services/ai-proposal-tools";
 
 import { z } from "zod";
 import {aiListCursor,aiListPage,aiPageInfo} from "@/shared/ai/pagination";
 
-import {aiAction, aiTool, defineModuleAi} from "@/shared/ai/define";
+import {aiAction} from "@/shared/ai/define";
 import { can } from "@/shared/permissions/define";
 
 import { eventsPermissions } from "./permissions";
@@ -22,21 +23,15 @@ const createSchema = z.object({
   isOnline: z.boolean(),
 });
 
-export const ai = defineModuleAi({
+export const ai = defineModuleAiV2({
   module: "events",
   tools: [
-    aiTool({
+    aiToolV2({
       name: "list_upcoming_events",
       operation: "read",
       allowed: (user) => can(user.role, eventsPermissions, "view"),
       description: "Upcoming events: title, type, status, dates, location, registered count and capacity. No attendee names.", // i18n-ignore (model-facing tool text)
-      schema: z.object({ cursor:aiListCursor,limit: z.number().int().min(1).max(25) }),
-      inputSchema: {
-        type: "object",
-        properties: { cursor:{type:"string",pattern:"^[1-9]\\d{0,3}$"},limit: { type: "integer", description: "Maximum number of events (1-25)" } }, // i18n-ignore (model-facing tool text)
-        required: ["limit"],
-        additionalProperties: false,
-      },
+      input: z.object({ cursor:aiListCursor,limit: z.number().int().min(1).max(25) }),
       run: async ({ cursor,limit }) => {
         const result = await listEvents({ timeFilter: "upcoming", sort: "startDate", dir: "asc", page:aiListPage(cursor),pageSize: limit });
         return {...aiPageInfo(result.page,result.pageSize,result.total),items:result.items.map((event) => ({
@@ -50,6 +45,8 @@ export const ai = defineModuleAi({
           capacity: event.capacity,
         }))};
       },
+      result: z.unknown(), modelOutput: z.unknown(), projectForModel: (result) => result,
+      policy: {"purpose": "events-list-upcoming-events", "serverReads": ["Event"], "modelFields": ["page", "pageSize", "total", "hasMore", "nextCursor", "completeness", "items", "items.title", "items.type", "items.status", "items.start", "items.end", "items.location", "items.registered", "items.capacity"], "processing": "approved_provider", "modelDataClass": "internal"},
     }),
     ...aiProposalTools,
   ],

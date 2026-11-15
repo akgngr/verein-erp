@@ -1,11 +1,11 @@
 import "server-only";
-import {aiToolV2} from "@/shared/ai/v2";
+import { aiToolV2, defineModuleAiV2 } from "@/shared/ai/v2";
 import {proposalAcknowledgementSchema} from "@/shared/ai/dataset";
 
 import { z } from "zod";
 import {aiListCursor,aiListPage,aiPageInfo} from "@/shared/ai/pagination";
 
-import {PROPOSED, aiAction, aiTool, defineModuleAi} from "@/shared/ai/define";
+import {PROPOSED, aiAction} from "@/shared/ai/define";
 import { getDb } from "@/shared/db";
 import { can } from "@/shared/permissions/define";
 
@@ -28,16 +28,15 @@ const draftSchema = z.object({
   body: z.string().max(20000),
 });
 
-export const ai = defineModuleAi({
+export const ai = defineModuleAiV2({
   module: "mailings",
   tools: [
-    aiTool({
+    aiToolV2({
       name: "get_campaign_statistics",
       operation: "read",
       allowed: (user) => can(user.role, mailingsPermissions, "view"),
       description: "Campaign statistics: number of campaigns per status, messages sent and failed in the last 30 days, scheduled campaigns. No recipients.", // i18n-ignore (model-facing tool text)
-      schema: z.object({}),
-      inputSchema: { type: "object", properties: {}, required: [], additionalProperties: false },
+      input: z.object({}),
       run: async () => {
         const db = getDb();
         const since = new Date(Date.now() - 30 * 86_400_000);
@@ -50,14 +49,15 @@ export const ai = defineModuleAi({
           last30Days: { campaigns: recent._count._all, sent: recent._sum.sentCount ?? 0, failed: recent._sum.failedCount ?? 0 },
         };
       },
+      result: z.unknown(), modelOutput: z.unknown(), projectForModel: (result) => result,
+      policy: {"purpose": "mailings-get-campaign-statistics", "serverReads": ["MailingCampaign"], "modelFields": ["perStatus", "perStatus.DRAFT", "perStatus.SCHEDULED", "perStatus.SENDING", "perStatus.DONE", "perStatus.FAILED", "perStatus.CANCELLED", "last30Days", "last30Days.campaigns", "last30Days.sent", "last30Days.failed"], "processing": "approved_provider", "modelDataClass": "aggregate"},
     }),
-    aiTool({
+    aiToolV2({
       name: "list_campaigns",
       operation: "read",
       allowed: (user) => can(user.role, mailingsPermissions, "view"),
       description: "Lists the latest 50 campaigns: name, subject, channel, status, recipient/sent/failed counts, created and scheduled time. Message bodies and recipients are not included.", // i18n-ignore (model-facing tool text)
-      schema: z.object({ status: z.enum(STATUSES).nullable(),cursor:aiListCursor }),
-      inputSchema: { type: "object", properties: { cursor:{type:"string",pattern:"^[1-9][0-9]{0,3}$"},status: { type: ["string", "null"], enum: [...STATUSES, null] } }, required: ["status"], additionalProperties: false },
+      input: z.object({ status: z.enum(STATUSES).nullable(),cursor:aiListCursor }),
       run: async ({ status,cursor }) => {
         const page=aiListPage(cursor);
         const rows = await getDb().mailingCampaign.findMany({
@@ -69,18 +69,21 @@ export const ai = defineModuleAi({
         const total=await getDb().mailingCampaign.count({where:status?{status}:{}});
         return {...aiPageInfo(page,50,total),items:rows.map(({ createdAt, scheduledAt, ...row }) => ({ ...row, createdAt: createdAt.toISOString(), scheduledAt: scheduledAt?.toISOString() ?? null }))};
       },
+      result: z.unknown(), modelOutput: z.unknown(), projectForModel: (result) => result,
+      policy: {"purpose": "mailings-list-campaigns", "serverReads": ["MailingCampaign"], "modelFields": ["page", "pageSize", "total", "hasMore", "nextCursor", "completeness", "items", "items.id", "items.name", "items.subject", "items.channel", "items.status", "items.recipientCount", "items.sentCount", "items.failedCount", "items.createdAt", "items.scheduledAt"], "processing": "approved_provider", "modelDataClass": "internal"},
     }),
-    aiTool({
+    aiToolV2({
       name: "list_campaign_audiences",
       operation: "read",
       allowed: (user) => can(user.role, mailingsPermissions, "create"),
       description: "Audiences (recipient lists) and channels the user may use for a campaign: audience ids with their placeholders, channel keys. No people.", // i18n-ignore (model-facing tool text)
-      schema: z.object({}),
-      inputSchema: { type: "object", properties: {}, required: [], additionalProperties: false },
+      input: z.object({}),
       run: async (_input, { user }) => ({
         audiences: (await listSources(user.role)).map((source) => ({ id: source.id, placeholders: source.placeholders })),
         channels: (await availableChannels()).map((channel) => channel.key),
       }),
+      result: z.unknown(), modelOutput: z.unknown(), projectForModel: (result) => result,
+      policy: {"purpose": "mailings-list-campaign-audiences", "serverReads": [], "modelFields": ["audiences", "audiences.id", "audiences.placeholders", "channels"], "processing": "approved_provider", "modelDataClass": "internal"},
     }),
     aiToolV2({
       name: "propose_campaign_draft",

@@ -455,6 +455,42 @@ export const ai = defineModuleAi({
 3. `pnpm module:sync` → `pnpm module:validate` → `pnpm typecheck`.
 4. Ayarlar → Yapay zekâ ekranında modül satırının çıktığını görün ve izinleri açın.
 
+### Katı kural: yalnız v2 araç sözleşmesi (veri sınıfı zorunlu)
+
+Yeni ya da değişen her asistan aracı **`aiToolV2`** ile, modül **`defineModuleAiV2`** ile tanımlanır.
+Eski `aiTool` / `defineModuleAi` (v1) modüllerde **yasaktır** (eylemler için `aiAction` serbest).
+
+```ts
+aiToolV2({
+  name: "get_sponsor_statistics",
+  operation: "read",
+  allowed: (user) => can(user.role, sponsorsPermissions, "view"),
+  description: "Sponsor totals per status. No names.", // i18n-ignore (model-facing)
+  input: yearSchema, result: output, modelOutput: output,
+  policy: {
+    purpose: "sponsors-statistics",
+    serverReads: ["Sponsor"],                       // sunucunun okuduğu tablolar (K0 yasak)
+    modelFields: ["year", "byStatus", "byStatus.status", "byStatus.count"], // modele giden alanların TAM listesi
+    processing: "approved_provider",                // ya da "local_only"
+    modelDataClass: "aggregate",                    // aggregate | internal | pseudonymous
+  },
+  projectForModel: (result) => result,
+  run: async ({ year }) => getSponsorStats(year),
+});
+```
+
+- `modelFields`: modele giden her alan (iç içe alanlar nokta ile) açıkça listelenir; listede olmayan alan
+  çalışma anında reddedilir (`AI_OUTPUT_FIELD_DENIED`). Aynı liste `src/shared/data-policy.ts` →
+  `AI_TOOL_POLICY.<araç>` içine `serverReads` ile birlikte yazılır (merkezi inceleme tablosu).
+- Veri sınıfı (`modelDataClass`) — bulutta hangi modda açılacağını belirler:
+  - `aggregate`: yalnız sayı/toplam (kişi yok) · `internal`: kurumsal kayıtlar (başlık, durum, tarih; kişi alanı yok)
+  - `pseudonymous`: kişi düzeyinde veri, kişi yalnız `[[Kn]]` takma adıyla (`context.pseudonym(...)`); ad, iletişim,
+    adres, doğum tarihi, kimlik/IBAN, not **asla**. Bulutta yalnız "takma adlı kişi verisi" açıkken.
+  - Serbest kişisel içerik (evrak metni, toplantı tartışma notları, notlar): `processing: "local_only"` — yalnız yerel model.
+- Sınıf bildirmeyen `approved_provider` araç yüklenirken hata verir (`AI_TOOL_DATA_CLASS_REQUIRED`).
+- Denetim: `tests/ai/ai-contract-v2-only.test.ts` (v1 kullanımı, eksik sınıf, eksik `AI_TOOL_POLICY` kaydı),
+  `tests/shared/data-policy.test.ts`, `tests/ai/v2-contract.test.ts`. Testi gevşetmeyin; aracı düzeltin.
+
 ## 9c. Dosya üretme (`exports` modülü — "Dosyalarım")
 
 PDF, Excel, Word, Markdown veya CSV dosyası üretmek için modüller **kendi kodunu yazmaz**; `exports`

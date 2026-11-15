@@ -1,24 +1,23 @@
 import "server-only";
+import { aiToolV2, defineModuleAiV2 } from "@/shared/ai/v2";
 
 import { z } from "zod";
 
-import { NO_INPUT, aiTool, defineModuleAi } from "@/shared/ai/define";
 import { can } from "@/shared/permissions/define";
 
 import { organizationPermissions } from "./permissions";
 import { getOrganizationProfile } from "./server";
 
 /** Dernek bilgileri: kamuya açık ana veriler; vergi bilgileri hariç. Sözleşme: src/shared/ai/define.ts. */
-export const ai = defineModuleAi({
+export const ai = defineModuleAiV2({
   module: "organization",
   tools: [
-    aiTool({
+    aiToolV2({
       name: "get_organization_info",
       operation: "read",
       allowed: (user) => can(user.role, organizationPermissions, "view"),
       description: "The association's public master data: name, address, contact, register court/number, charitable purposes. Tax number and tax-office data are excluded.", // i18n-ignore (model-facing tool text)
-      schema: z.object({}),
-      inputSchema: NO_INPUT,
+      input: z.object({}),
       run: async () => {
         const profile = await getOrganizationProfile();
         // KARAR: vergi numarası, vergi dairesi ve muafiyet belgesi ayrıntıları bilinçli olarak hariç.
@@ -34,6 +33,8 @@ export const ai = defineModuleAi({
           membershipFeesDeductible: profile.membershipFeesDeductible,
         };
       },
+      result: z.unknown(), modelOutput: z.unknown(), projectForModel: (result) => result,
+      policy: {"purpose": "organization-get-organization-info", "serverReads": ["OrganizationProfile"], "modelFields": ["name", "address", "email", "phone", "website", "registerCourt", "registerNumber", "charitablePurposes", "membershipFeesDeductible"], "processing": "approved_provider", "modelDataClass": "internal"},
     }),
   ],
   actions: {},
