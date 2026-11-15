@@ -68,7 +68,7 @@ Bitiş: AI sadece datasetRef/durum görür; dosyada doğru ad ve tutarlar bulunu
 - [x] E07 (AI-16) Rıza iptalinde pending iş/ref/dataset revoke; eski dosya/rapor purpose bazlı yaşam döngüsü.
 - [ ] E08 Sağlayıcı timeout/retry/region/retention/fallback ayarlarını resmî belgeler ve gerçek hesapla doğrula.
 - [x] E09 Metrics/alerts: budget, denial, stale preview, cleanup hatası, orphan ve job gecikmesi.
-- [ ] E10 İzole DB entegrasyon ve worker recovery/cancellation testleri; ilgili yer tutucu auth testlerini gerçek davranış testine dönüştür.
+- [x] E10 İzole DB entegrasyon ve worker recovery/cancellation testleri; ilgili yer tutucu auth testlerini gerçek davranış testine dönüştür.
 - [x] E11 module:sync, modül sürüm/releases, typecheck, lint, ilgili testler, build ve TR/DE kontrollerini tamamla.
 - [ ] E12 Pilot feature flag, durdurma/rollback ve operatör runbook'u; kişisel export yayını için kabul matrisi.
 
@@ -112,3 +112,7 @@ https://github.com/akgngr/verein-erp/pull/146
 Owner-scoped kaynak referansından yalnız açık `Student.memberId` / `StudentGuardian.memberId` bağlantısı doğrulanır. Hedef üye silinmişse veya bağlantı yoksa ret gelir. Aynı ad/e-posta eşleştirme kanıtı değildir; veli/öğrenci ilişki kaydı aynı kişi olduklarını göstermez. User/member arasında doğrulanmış ilişki modeli bulunmadığı için kullanıcı otomatik üyeye çevrilmez. AI görev sorgusu e-posta eşleştirmesine düşmez; mine kapsamı açıkça created_by_actor olarak döner. Mevcut kullanıcı arayüzünün eski filtre uyumluluğu bu AI değişikliğinde topluca kaldırılmadı.
 
 PR #146 (494a50b) için production build/hydration dahil CI ve Security başarılıdır. Yeni takip paketleri ayrıca aynı kapılardan geçmelidir. C08 son yerel suite: 449 başarılı, 0 başarısız, 0 atlanan; kişi tablolarına yeni sütun eklenmedi.
+
+## E10 gerçek worker/pg-boss kabulü
+
+İzole PostgreSQL üzerinde gerçek automation worker subprocess'i başlatılır. Süresi dolmuş RUNNING lease fixture'ı gerçek dispatcher tarafından toparlanır; bir rename hatası EISDIR ile geçici hata üretilip engel kaldırılır, aynı generation üçüncü denemede tek dosyayla tamamlanır. Outbox PUBLISHED, execution SUCCEEDED, lease recovery log'u, dosyada doğru isim/tutar ve worker'ın temiz kapanışı doğrulanır. Deneme hakkı biten/iptal edilen iş UI'da QUEUED kalmaz. Geçici hata erken FAILED yapmaz; policy/TTL/stale/cancel/plan hataları kalıcıdır. Son yerel suite: 450 başarılı, 0 başarısız, 0 atlanan. Aktif eski worker ile eşzamanlı storage finalization fencing'i ve streaming D06'da açıktır.

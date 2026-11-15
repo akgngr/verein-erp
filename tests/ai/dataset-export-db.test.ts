@@ -1,7 +1,9 @@
 import test from "node:test";
+import {runExportThroughWorker} from "./fixtures/export-worker";
+import {getAiExportStatus} from "@/modules/ai/services/export-status";
 import assert from "node:assert/strict";
 import { randomUUID } from "node:crypto";
-import { readFile,unlink } from "node:fs/promises";
+import { readFile,unlink,mkdir,rmdir } from "node:fs/promises";
 import { getDb } from "@/shared/db";
 import { allModules } from "@/registry";
 import { accessSignature } from "@/shared/modules/module-access";
@@ -87,12 +89,37 @@ test("server export inserts private names only in the file, rejects stale datase
   const stopped=new AbortController();stopped.abort();
   const aborted=await requestDatasetExport({datasetRef,format:"csv",columns:["member.fullName"]},{userId:id,conversationId:actor.conversationId,proposalId:randomUUID()});
   await assert.rejects(runDatasetExport(aborted,stopped.signal));assert.equal(await db.generatedFile.count({where:{id:aborted}}),0);
+  await db.aiExportRequest.update({where:{id:aborted},data:{status:"CANCELLED"}});
   const xlsx=await requestDatasetExport({datasetRef,format:"xlsx",columns:["member.fullName","dues.overdueAmount"]},{userId:id,conversationId:actor.conversationId,proposalId:randomUUID()});fileIds.push(xlsx);
   await runDatasetExport(xlsx,new AbortController().signal);
   const {default:ExcelJS}=await import("exceljs"),workbook=new ExcelJS.Workbook();
   const xlsxBytes=openBytes("generated-file",await readFile(resolveSafePath(`generated/${xlsx}.bin`)));assert.ok(xlsxBytes);
   await workbook.xlsx.load(xlsxBytes as never);const sheet=workbook.worksheets[0];
   assert.equal(sheet.rowCount,103);assert.equal(sheet.getCell("B2").value,120);assert.equal(typeof sheet.getCell("A2").value,"string");
+  const workerJob=await requestDatasetExport({datasetRef,format:"csv",columns:["member.fullName","dues.overdueAmount"]},{userId:id,conversationId:actor.conversationId,proposalId:randomUUID()});fileIds.push(workerJob);
+  const workerRequest=await db.aiExportRequest.findUniqueOrThrow({where:{id:workerJob}});assert.ok(workerRequest.executionId);
+  // A previous worker disappeared after claiming, before generating bytes.
+  await db.automationExecution.update({where:{id:workerRequest.executionId},data:{status:"RUNNING",attempt:1,leaseToken:1,leaseOwner:"dead-worker-fixture",startedAt:new Date(0),heartbeatAt:new Date(0),leaseExpiresAt:new Date(0),steps:{updateMany:{where:{stepKey:"main"},data:{status:"RUNNING",attempt:1}}}}});
+  const exhausted=await requestDatasetExport({datasetRef,format:"csv",columns:["member.fullName"]},{userId:id,conversationId:actor.conversationId,proposalId:randomUUID()});
+  const exhaustedRequest=await db.aiExportRequest.findUniqueOrThrow({where:{id:exhausted}});assert.ok(exhaustedRequest.executionId);
+  await db.automationExecution.update({where:{id:exhaustedRequest.executionId},data:{status:"RUNNING",attempt:1,maxAttempts:1,retryPolicy:{maxAttempts:1,initialDelaySeconds:0,maxDelaySeconds:0,backoffMultiplier:1},leaseToken:1,leaseOwner:"exhausted-worker-fixture",startedAt:new Date(0),leaseExpiresAt:new Date(0),steps:{updateMany:{where:{stepKey:"main"},data:{status:"RUNNING",attempt:1}}}}});
+  // Force one transient rename failure after recovery, then allow the bounded retry.
+  const marker=resolveSafePath(`generated/${workerJob}.bin`);await mkdir(marker,{recursive:true});let transientRetries=0;
+  await runExportThroughWorker(workerJob,workerRequest.executionId,{onRetry:async execution=>{
+   if(execution.status==="PENDING"&&execution.lastErrorCode==="EISDIR"&&transientRetries===0){
+    assert.equal((await db.aiExportRequest.findUniqueOrThrow({where:{id:workerJob}})).status,"QUEUED");
+    transientRetries++;await rmdir(marker);
+   }
+  }});
+  assert.equal(transientRetries,1);
+  assert.equal((await db.automationExecution.findUniqueOrThrow({where:{id:workerRequest.executionId}})).attempt,3);
+  assert.equal(await db.automationLog.count({where:{executionId:workerRequest.executionId,event:"LEASE_EXPIRED_RECOVERED"}}),1);
+  assert.equal((await getAiExportStatus(id,workerJob))?.status,"READY");
+  assert.equal(await getAiExportStatus("other",workerJob),null);
+  assert.equal((await getAiExportStatus(id,exhausted))?.status,"FAILED");
+  assert.equal((await getAiExportStatus(id,cancelled))?.status,"FAILED");
+  assert.equal(await db.generatedFile.count({where:{id:exhausted}}),0);
+  assert.ok(openBytes("generated-file",await readFile(resolveSafePath(`generated/${workerJob}.bin`)))?.toString().includes("PRIVATE_NAME_SENTINEL"));
   const student=await db.student.create({data:{year:2001,sequence:123456789,studentNumber:`student-${id}`,firstName:"PRIVATE_NAME_SENTINEL",lastName:"Only In File",memberId:paid.id,createdById:id,createdByLabel:"Test"}});studentIds.push(student.id);
   const guardian=await db.studentGuardian.create({data:{debtorNumber:50001,firstName:"PRIVATE_NAME_SENTINEL",lastName:"Only In File",memberId:member.id,createdById:id,createdByLabel:"Test"}});guardianIds.push(guardian.id);
   await db.studentGuardianLink.create({data:{studentId:student.id,guardianId:guardian.id,relation:"MOTHER",isPayer:true}});
@@ -115,7 +142,7 @@ test("server export inserts private names only in the file, rejects stale datase
   await db.user.update({where:{id},data:{isActive:false}});
   await assert.rejects(runDatasetExport(stale,new AbortController().signal),/AI_EXPORT_ACCESS_REVOKED/);
  }finally{
-  for(const fileId of fileIds){await unlink(resolveSafePath(`generated/${fileId}.bin`)).catch(()=>{});await db.generatedFile.deleteMany({where:{id:fileId}});}
+  for(const fileId of fileIds){await rmdir(resolveSafePath(`generated/${fileId}.bin`)).catch(()=>{});await unlink(resolveSafePath(`generated/${fileId}.bin`)).catch(()=>{});await db.generatedFile.deleteMany({where:{id:fileId}});}
   await db.student.deleteMany({where:{id:{in:studentIds}}});await db.studentGuardian.deleteMany({where:{id:{in:guardianIds}}});
   await db.aiProposal.deleteMany({where:{userId:id}});await db.aiExportRequest.deleteMany({where:{userId:id}});await db.aiReferenceScope.deleteMany({where:{userId:id}});await db.member.deleteMany({where:{id:{in:memberIds}}});await db.aiUserConsent.deleteMany({where:{userId:id}});await db.user.deleteMany({where:{id}});
   if(oldFlag===undefined)delete process.env.AI_PERSONAL_EXPORT_ENABLED;else process.env.AI_PERSONAL_EXPORT_ENABLED=oldFlag;
