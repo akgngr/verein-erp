@@ -41,3 +41,7 @@ C08 yerel doğrulaması: 449 test geçti; typecheck/lint/module:sync başarılı
 ## Gerçek worker kabulü — E10
 
 450 test başarılı, 0 başarısız, 0 atlanan. Fake-fetch model kanalından gerçek dosya kuyruğuna kadar fixture genişletildi: gerçek worker/pg-boss, ölü lease toparlama, geçici disk hatası, aynı generation üzerinde sınırlı retry, tek dosya, tükenen deneme bütçesi ve temiz worker kapanışı. UI, otomasyonun terminal durumunu dar metadata API'sinden okuyarak kuyrukta kalma sorununu giderir. Kaynak snapshot, actor ve execution bağları her denemede yeniden denetlenir.
+
+## Ortak dataset API — D03
+
+Canonical create_dataset/query_dataset/export_dataset, v2 input/output planları ve TR/DE sağlayıcı açıklamaları eklendi. İlk kaynak members.dues'tir; tanımsız kaynak, SQL, kişi arama alanı veya IBAN kolonu kabul edilmez. Export yalnız onay kartı üretir. Eski araç adları v2 uyum alias'ları olarak kalır. 453 test başarılı; yeni commit'in CI kabulü beklenir.

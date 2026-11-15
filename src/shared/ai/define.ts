@@ -44,8 +44,9 @@ export type ModuleAiTool<S extends z.ZodType = z.ZodType> = {
   /** Unstructured personal content is never sent to cloud providers. */
   processing?: "local_only";
   requiresContent?: boolean;
-  /** Modele yönelik açıklama (İngilizce). */
+  /** Sağlayıcı açıklaması; descriptionKey varsa istek dilinde yerelleştirilir. */
   description: string;
+  descriptionKey?: string;
   schema: S;
   inputSchema: JsonSchema;
   allowed: (user: AiUser) => boolean;

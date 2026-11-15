@@ -29,6 +29,7 @@ export function aiToolV2<I extends z.ZodType, R extends z.ZodType, M extends z.Z
   name: string;
   operation: AiOperation;
   description: string;
+  descriptionKey?:string;
   allowed: (user: AiUser) => boolean;
   input: I;
   result: R;
@@ -54,6 +55,7 @@ export function aiToolV2<I extends z.ZodType, R extends z.ZodType, M extends z.Z
   return {
     contractVersion: 2,
     name: definition.name, operation: definition.operation, description: definition.description,
+    descriptionKey:definition.descriptionKey,
     allowed: definition.allowed, schema: definition.input, inputSchema,
     policy: definition.policy,
     processing: definition.policy.processing === "local_only" ? "local_only" : undefined,

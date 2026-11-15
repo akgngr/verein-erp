@@ -53,7 +53,8 @@ export async function runAssistant(args: { user: SessionUser; locale: string; pr
   const canonical=args.provider==="local"?null:canonicalCloudIntent(args.turns.at(-1)?.content ?? "",Number(new Date().toLocaleDateString("en-CA",{timeZone:"Europe/Berlin"}).slice(0,4)));
   if(args.provider!=="local"&&!canonical)throw new ActionError("ai.errors.cloudIntentRequired");
   const vault = new PseudonymVault(args.provider === "local" ? await loadKnownIdentifiers() : {});
-  const tools = await availableTools(args.user, args.provider);
+  const tRoot = await getTranslations();
+  const tools = await availableTools(args.user, args.provider,key=>tRoot.has(key)?tRoot(key):undefined);
   const byName = new Map(tools.map((tool) => [tool.name, tool]));
   const proposals: AssistantProposal[] = [];
   const files: AiFile[] = [];
@@ -61,7 +62,6 @@ export async function runAssistant(args: { user: SessionUser; locale: string; pr
   const today = new Date().toLocaleDateString("de-DE", { timeZone: "Europe/Berlin" });
 
   // Kapalı araçların gerçek sebebi (modül pasif / yönetici izni / kullanıcının rolü), modül adıyla.
-  const tRoot = await getTranslations();
   const fixWhere: Record<string, string> = {
     module: "module inactive or access not approved → Settings → Modules", // i18n-ignore (model-facing prompt)
     matrix: "assistant permission off → Settings → AI assistant → module card", // i18n-ignore (model-facing prompt)

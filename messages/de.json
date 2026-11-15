@@ -4812,6 +4812,14 @@
         "kind": "Datensatz exportieren",
         "confirm": "Datei erstellen",
         "done": "Datei wurde eingereiht"
+      },
+      "tools": {
+        "export_dataset": {
+          "description": "Bereitet eine CSV/XLSX-Bestätigungskarte für eine serverseitige datasetRef vor. Ohne Bestätigung wird keine Datei erzeugt. Erlaubte Spalten: member.fullName, dues.year, dues.overdueAmount. Echte Namen fügt ausschließlich der Server-Worker in die Datei ein."
+        },
+        "propose_dataset_export": {
+          "description": "Kompatibilitätswerkzeug: Schlägt eine Bestätigungskarte zum CSV/XLSX-Export vor; erzeugt ohne Bestätigung keine Datei. Für neue Aufrufe export_dataset verwenden."
+        }
       }
     },
     "cleanup_files": "Abgelaufene und verwaiste Dateien bereinigen"
@@ -6990,6 +6998,19 @@
         "reference": "Die Referenz darf nur Buchstaben, Ziffern und + ? / : ( ) . , ' - enthalten.",
         "referenceTaken": "Diese Mandatsreferenz wird bereits bei einem anderen Mitglied verwendet.",
         "date": "Das Mandatsdatum darf nicht in der Zukunft liegen."
+      }
+    },
+    "ai": {
+      "tools": {
+        "create_dataset": {
+          "description": "Erstellt serverseitig einen Beitragsdatensatz aus der erlaubten Quelle members.dues. query enthält Jahr, Status und optionale Restbetragsgrenzen in ganzzahligen Cent. Das Modell erhält nur eine befristete datasetRef und die Anzahl; keine Personenangaben."
+        },
+        "create_dues_dataset": {
+          "description": "Kompatibilitätswerkzeug: Erstellt einen Beitragsdatensatz mit Jahr, Status und optionalen Cent-Grenzen. Liefert nur datasetRef und Anzahl. Für neue Aufrufe create_dataset verwenden."
+        },
+        "query_dataset": {
+          "description": "Verfeinert eine bestehende Beitrags-datasetRef mit erlaubten Status- und Restbetragsfiltern und erzeugt eine neue befristete Referenz. Keine Identitätsselektoren oder SQL; nur Referenz und Anzahl."
+        }
       }
     }
   },

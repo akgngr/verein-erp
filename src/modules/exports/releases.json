@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "2.1.3",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Sürümlü veri kümesi araçları",
+        "de": "Versionierte Datensatzwerkzeuge"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "create_dataset/query_dataset/export_dataset araçları açık şema, TR/DE açıklamalar ve onay zorunluluğuyla sunulur; eski adlar uyum için korunur.",
+          "de": "create_dataset/query_dataset/export_dataset bieten explizite Schemata, TR/DE-Beschreibungen und Bestätigungspflicht; bisherige Namen bleiben kompatibel."
+        }
+      ]
+    },
+    {
       "version": "2.1.2",
       "date": "2026-11-15",
       "title": {

@@ -211,9 +211,11 @@ export const USER_LINK_RETAINED: Record<string, string> = {
 };
 
 export const AI_TOOL_POLICY = {
+  create_dataset:{module:"members",reads:[],serverReads:["Member","MemberDue","MemberPayment"],modelFields:["datasetRef","count"]},
+  export_dataset:{module:"exports",reads:[],serverReads:[],modelFields:["status","note"]},
   query_dataset:{module:"members",reads:[],serverReads:["Member","MemberDue","MemberPayment"],modelFields:["datasetRef","count"]},
   create_dues_dataset:{module:"members",reads:[],serverReads:["Member","MemberDue","MemberPayment"],modelFields:["datasetRef","count"]},
-  propose_dataset_export:{module:"exports",reads:[]},
+  propose_dataset_export:{module:"exports",reads:[],serverReads:[],modelFields:["status","note"]},
   // accounting
   get_accounting_summary: { module: "accounting", reads: ["AccountingBooking", "AccountingAccount", "AccountingYear", "AccountingCategory"] },
   get_vat_summary: { module: "accounting", reads: ["AccountingBooking", "AccountingSettings"] },

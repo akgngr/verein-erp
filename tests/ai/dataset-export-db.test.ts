@@ -45,11 +45,11 @@ test("server export inserts private names only in the file, rejects stale datase
   assert.equal((await loadDuesDataset({year:2001,minimumRemainingCents:12001})).rows.length,0);
   assert.equal((await loadDuesDataset({year:2001,maximumRemainingCents:12000})).rows.length,102);
   const current=await loadDuesDataset(2001),scope=await createReferenceScope(actor,"dues-export");
-  const tool=makeDuesDatasetTool({name:"create_dues_dataset"});
+  const tool=makeDuesDatasetTool({name:"create_dataset"});
   const wire:string[]=[];let projected:{datasetRef:string;count:number}|undefined;
   const adapter=openAiCompatibleAdapter({apiKey:"test-not-a-real-key",fetch:async(_url,init)=>{
    wire.push(String(init?.body));
-   const message=wire.length===1?{role:"assistant",content:null,tool_calls:[{id:"dues-call",type:"function",function:{name:tool.name,arguments:JSON.stringify({year:2001})}}]}:{role:"assistant",content:"Ready"};
+   const message=wire.length===1?{role:"assistant",content:null,tool_calls:[{id:"dues-call",type:"function",function:{name:tool.name,arguments:JSON.stringify({source:"members.dues",query:{year:2001}})}}]}:{role:"assistant",content:"Ready"};
    return new Response(JSON.stringify({id:"test",object:"chat.completion",created:0,model:"test",choices:[{index:0,finish_reason:wire.length===1?"tool_calls":"stop",message}]}),{headers:{"content-type":"application/json"}});
   }});
   await adapter.run({model:"test",system:"Prepare dues data without personal identities.",turns:[{role:"user",content:"Dues export 2001"}],tools:[{name:tool.name,description:tool.description,inputSchema:tool.inputSchema}],maxToolRounds:6,beforeRequest:async()=>{},executeTool:async(name,input)=>{

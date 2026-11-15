@@ -4,7 +4,7 @@ import { randomUUID } from "node:crypto";
 import { z } from "zod";
 import { getDb } from "@/shared/db";
 import { loadDuesDataset,parseDuesDatasetQuery,DUES_DATASET_COLUMNS } from "@/modules/members/automation";
-import { createTabularFile,markGeneratedFileForDeletion } from "@/modules/exports/automation";
+import { createTabularFile,markGeneratedFileForDeletion,datasetExportPlanSchema } from "@/modules/exports/automation";
 import { insertTaskExecution } from "@/modules/automation/automation";
 import { requireExportWorkerAccess } from "./export-worker-access";
 import { loadDataset,tokenDigest,referenceDeployment } from "./references";
@@ -14,7 +14,7 @@ import { openSecret } from "@/shared/security/secret-box";
 import { getAutomationRuntimeConfig } from "@/modules/automation/automation";
 import { aiDatasetExportTask } from "../automation";
 
-export const exportPlanSchema=z.object({datasetRef:z.string().regex(/^[A-Za-z0-9_-]{43}$/),format:z.enum(["csv","xlsx"]),columns:z.array(z.enum(DUES_DATASET_COLUMNS)).min(1).max(3)}).strict();
+export const exportPlanSchema=datasetExportPlanSchema;
 export async function requestDatasetExport(args:z.infer<typeof exportPlanSchema>,context:{userId:string;conversationId:string;proposalId:string}) {
  if(process.env.AI_PERSONAL_EXPORT_ENABLED!=="true"||!getAutomationRuntimeConfig().enabled)throw new Error("AI_PERSONAL_EXPORT_DISABLED");
  const provider=await getActiveProvider();if(!provider)throw new Error("AI_EXPORT_ACCESS_REVOKED");
