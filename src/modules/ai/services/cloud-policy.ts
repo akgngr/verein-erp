@@ -12,3 +12,19 @@ export function canonicalCloudIntent(message:string,year:number):string|null {
 export function cloudToolAllowed(name:string):boolean {
  return ["get_member_statistics","get_donation_statistics","create_dues_dataset","query_dataset","propose_dataset_export"].includes(name);
 }
+
+/**
+ * Bulut araç kapısı (docs/architecture/ai-cloud-pseudonym-relay.md). Yerel model bu kapıdan geçmez.
+ * OFF: hiçbiri · INTENTS: yalnız hazır niyet araçları · SCREENED: ayrıca veri sınıfı aggregate/internal
+ * olan v2 araçlar; pseudonymous yalnız "takma adlı kişi verisi" açıksa. local_only hiçbir modda bulutta değil.
+ */
+export function cloudToolEligible(
+  tool: { name: string; contractVersion?: 1 | 2; processing?: "local_only"; modelDataClass?: "aggregate" | "internal" | "pseudonymous" },
+  settings: { textMode: "OFF" | "INTENTS" | "SCREENED"; pseudonymousRecords: boolean },
+): boolean {
+  if (settings.textMode === "OFF" || tool.processing === "local_only") return false;
+  if (cloudToolAllowed(tool.name)) return true;
+  if (settings.textMode !== "SCREENED" || tool.contractVersion !== 2) return false;
+  if (tool.modelDataClass === "aggregate" || tool.modelDataClass === "internal") return true;
+  return tool.modelDataClass === "pseudonymous" && settings.pseudonymousRecords;
+}

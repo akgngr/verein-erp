@@ -279,5 +279,19 @@
   "alias": {
     "hidden": "(gizli kişi)",
     "unknown": "(bilinmeyen referans)"
+  },
+  "preflight": {
+    "blocked": "Mesaj buluta gönderilmedi; kişisel veri içeriyor olabilir ({reasons}). Kayıtlı kişiler için adı tam yazın (sistem takma ada çevirir), bilinmeyen kişisel bilgileri çıkarın veya yerel modeli kullanın.",
+    "kinds": {
+      "EMAIL": "e-posta",
+      "PHONE": "telefon",
+      "IBAN": "IBAN",
+      "TAXID": "vergi numarası",
+      "ADDRESS": "adres",
+      "BIRTHDATE": "doğum tarihi",
+      "TITLED_NAME": "hitaplı ad",
+      "LIKELY_NAME": "kayıtlı olmayan kişi adı",
+      "SPECIAL_CATEGORY": "özel nitelikli veri (sağlık, din vb.)"
+    }
   }
 }

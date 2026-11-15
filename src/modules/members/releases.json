@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.10.4",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "AI veri sınıfı",
+        "de": "KI-Datenklasse"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Aidat veri kümesi araçları AI veri sınıfı \"internal\" olarak işaretlendi.",
+          "de": "Beitrags-Datensatzwerkzeuge als KI-Datenklasse „internal“ gekennzeichnet."
+        }
+      ]
+    },
+    {
       "version": "1.10.3",
       "date": "2026-11-15",
       "title": {

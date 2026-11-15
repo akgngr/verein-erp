@@ -19,7 +19,7 @@ export const ai = defineModuleAi({
       description:"Refine a members dues dataset using an existing datasetRef and allowed status or integer-cent amount filters. Creates a fresh scoped reference and returns only a count. No personal identities or arbitrary SQL.", // i18n-ignore (model-facing)
       input:duesDatasetQuerySchema.omit({year:true}).extend({datasetRef:z.string().regex(/^[A-Za-z0-9_-]{43}$/)}).strict(),
       result:z.object({datasetRef:z.string(),count:z.number().int()}),modelOutput:z.object({datasetRef:z.string(),count:z.number().int()}).strict(),
-      policy:{purpose:"dues-export",serverReads:["Member","MemberDue","MemberPayment"],modelFields:["datasetRef","count"],processing:"approved_provider"},projectForModel:result=>result,
+      policy:{purpose:"dues-export",serverReads:["Member","MemberDue","MemberPayment"],modelFields:["datasetRef","count"],processing:"approved_provider",modelDataClass:"internal"},projectForModel:result=>result,
       run:async({datasetRef,...filters},context)=>{
         const original=parseDuesDatasetQuery(await context.loadDatasetDefinition(datasetRef));
         const query=parseDuesDatasetQuery({...original,...filters}),data=await loadDuesDataset(query);
