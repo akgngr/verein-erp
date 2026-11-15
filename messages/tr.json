@@ -2066,6 +2066,10 @@
       "errors": {
         "notYetAvailable": "Bu seçenek sonraki sürümde etkinleşecek."
       }
+    },
+    "alias": {
+      "hidden": "(gizli kişi)",
+      "unknown": "(bilinmeyen referans)"
     }
   },
   "audit": {

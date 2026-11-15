@@ -44,5 +44,5 @@ export const memberCreatedEvent = defineEvent({
 export { getMemberContacts, searchMemberContacts, type MemberContact } from "./queries/member-contacts";
 
 export { loadDuesDataset, duesDatasetQuerySchema, parseDuesDatasetQuery, DUES_DATASET_COLUMNS, memberPaymentsPermissions } from "./services/ai-dataset";
-export {getLiveMemberIdentity} from "./services/identity-link";
+export {getLiveMemberIdentity,getLiveMemberLabels} from "./services/identity-link";
 export {membersPermissions} from "./permissions";

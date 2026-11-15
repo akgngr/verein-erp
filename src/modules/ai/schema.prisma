@@ -105,10 +105,13 @@ model AiEntityReference {
   scopeId     String
   resource    String
   recordId    String
+  /// Konuşma içi kısa takma ad numarası ([[K7]] → 7). Yalnız "conversation-alias" kapsamında; kişiden türetilmez.
+  alias       Int?
   createdAt   DateTime @default(now())
   expiresAt   DateTime
   scope       AiReferenceScope @relation(fields: [scopeId], references: [id], onDelete: Cascade)
 
+  @@unique([scopeId, alias])
   @@index([scopeId, resource, recordId])
   @@map("ai_entity_references")
 }

@@ -1,5 +1,6 @@
 "use server";
 
+import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
 import type { ActionResult } from "@/shared/types/action";
@@ -7,6 +8,7 @@ import type { ActionResult } from "@/shared/types/action";
 import { ActionError, createAction } from "@/modules/auth/server";
 
 import { aiPermissions } from "../permissions";
+import { resolveAliasesForDisplay } from "../services/aliases";
 import { deleteAllConversations, deleteConversation, getConversation, listConversations } from "../services/history";
 import type { AiFile, AiProposal } from "../types";
 
@@ -30,7 +32,10 @@ export async function getAiConversationAction(input: unknown): Promise<ActionRes
     handler: async ({ input, user }) => {
       const conversation = await getConversation(user.id,input.id,40,input.before);
       if (!conversation) throw new ActionError("ai.errors.conversationNotFound");
-      return { id: conversation.id,pageInfo:conversation.pageInfo, turns: conversation.turns.map(({ role, content, proposals, files }) => ({ role, content, proposals, files })) };
+      // Takma adlar ([[Kn]]) yalnız gösterimde, izleyicinin canlı yetkisiyle gerçek ada çözülür.
+      const tAlias = await getTranslations("ai.alias");
+      const contents = await resolveAliasesForDisplay(user, conversation.id, conversation.turns.map((turn) => turn.content), { hidden: tAlias("hidden"), unknown: tAlias("unknown") });
+      return { id: conversation.id,pageInfo:conversation.pageInfo, turns: conversation.turns.map(({ role, proposals, files }, index) => ({ role, content: contents[index], proposals, files })) };
     },
   });
   return run(input);
