@@ -14,6 +14,6 @@ export const aiStatisticsTool=aiToolV2({
       description: "CRM pipeline totals: deal count and amount (EUR) per stage (OPEN, PROPOSAL, WON, LOST), No titles, names or notes.", // i18n-ignore (model-facing tool text)
       input:(z.object({})).strict(),
       result:get_crm_pipelineOutput,modelOutput:get_crm_pipelineOutput,
-      policy:{"purpose":"crm-statistics","serverReads":["CrmDeal"],"modelFields":["deals.OPEN.count","deals.OPEN.amount","deals.PROPOSAL.count","deals.PROPOSAL.amount","deals.WON.count","deals.WON.amount","deals.LOST.count","deals.LOST.amount"],"processing":"approved_provider"},projectForModel:result=>result,
+      policy:{"purpose":"crm-statistics","serverReads":["CrmDeal"],"modelFields":["deals.OPEN.count","deals.OPEN.amount","deals.PROPOSAL.count","deals.PROPOSAL.amount","deals.WON.count","deals.WON.amount","deals.LOST.count","deals.LOST.amount"],"processing":"approved_provider","modelDataClass":"aggregate"},projectForModel:result=>result,
       run: async () => ({ deals: await dealStageTotals() }),
     });

@@ -13,7 +13,7 @@ export function makeDatasetExportTool(args:{name:"export_dataset"|"propose_datas
   description:"Prepare an export confirmation for a server-side datasetRef. This does not generate a file until the user confirms. Formats CSV/XLSX; columns member.fullName, dues.year, dues.overdueAmount. Real names are inserted only by the server worker.", // i18n-ignore (model-facing)
   descriptionKey:`exports.ai.tools.${args.name}.description`,
   input:datasetExportPlanSchema,result:proposalAcknowledgementSchema,modelOutput:proposalAcknowledgementSchema,
-  policy:{purpose:"dataset-export",serverReads:[],modelFields:["status","note"],processing:"approved_provider"},projectForModel:result=>result,
+  policy:{purpose:"dataset-export",serverReads:[],modelFields:["status","note"],processing:"approved_provider",modelDataClass:"internal"},projectForModel:result=>result,
   run:async(input,{propose})=>{propose({action:"datasetExport",title:input.format,details:input.columns,payload:input});return PROPOSED;},
  });
 }

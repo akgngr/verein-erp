@@ -78,8 +78,10 @@ export type ModuleAi = {
 };
 
 /** Tip çıkarımı için yardımcılar. */
+/** @deprecated v1 araç sözleşmesi; modüllerde yasak (MODULE_DEVELOPMENT_GUIDE.md §9b). `aiToolV2` kullanın. */
 export const aiTool = <S extends z.ZodType>(tool: ModuleAiTool<S>) => tool as unknown as ModuleAiTool;
 export const aiAction = <S extends z.ZodType>(action: ModuleAiAction<S>) => action as unknown as ModuleAiAction;
+/** @deprecated v1; modüllerde yasak (§9b). `defineModuleAiV2` kullanın. */
 export const defineModuleAi = (definition: ModuleAi): ModuleAi => ({ ...definition, contractVersion: definition.contractVersion ?? 1 });
 
 /** Yaygın not: öneri yapıldıktan sonra modele dönen sonuç. */

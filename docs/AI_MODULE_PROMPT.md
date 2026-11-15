@@ -63,7 +63,7 @@ KURALLAR (her biri CI'da otomatik denetlenir):
     bağlantısı `recommends`/`requires`'ta. İstemciden başka modülün API'sini çağırma; kendi server action'ında
     `@/modules/<m>/server` kullan. Bağlantı/düğme yalnız hedef modül açık ve kullanıcı yetkiliyse gösterilir.
     `tests/modules/module-boundaries.test.ts` bildirilmemiş her bağı reddeder.
-18. Asistan desteği (isteğe bağlı): `ai.ts` → `export const ai = defineModuleAi({ module, tools, actions })`
+18. Asistan desteği (isteğe bağlı): `ai.ts` → `export const ai = defineModuleAiV2({ module, tools, actions })`; araçlar YALNIZ `aiToolV2` ile (KATI KURAL §9b): her araçta `policy` = `serverReads`, tam `modelFields` listesi, `processing` (`approved_provider` | `local_only`) ve `modelDataClass` (`aggregate` | `internal` | `pseudonymous`); aynı alanları `src/shared/data-policy.ts` → `AI_TOOL_POLICY`'ye ekle. Kişi yalnız `[[Kn]]` takma adıyla; serbest kişisel metin → `local_only`. v1 `aiTool`/`defineModuleAi` yasak
     (`@/shared/ai/define`, rehber §9b). Okuma araçları kişisel veri döndürmez; yazma araçları yalnızca
     `propose(...)` ile onay kartı önerir, işi `actions.<eylem>.execute` modül eylemiyle yapar.
     Her eylem için `ai.<eylem>.kind|confirm|done` çevirileri zorunlu.

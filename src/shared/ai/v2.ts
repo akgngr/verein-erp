@@ -36,6 +36,8 @@ export function aiToolV2<I extends z.ZodType, R extends z.ZodType, M extends z.Z
   operation: AiOperation;
   description: string;
   descriptionKey?:string;
+  /** Kayıt içeriği okur (evrak metni vb.): AI izin matrisinde ayrıca "read_content" gerekir. */
+  requiresContent?: boolean;
   allowed: (user: AiUser) => boolean;
   input: I;
   result: R;
@@ -47,6 +49,8 @@ export function aiToolV2<I extends z.ZodType, R extends z.ZodType, M extends z.Z
 }): ModuleAiTool & { contractVersion: 2; policy: AiDataPolicy } {
   if (!/^[a-z][a-z0-9_]{0,63}$/.test(definition.name)) throw new Error("AI_TOOL_NAME_INVALID");
   if (!definition.policy.purpose.trim()) throw new Error("AI_TOOL_PURPOSE_REQUIRED");
+  // Sözleşme (MODULE_DEVELOPMENT_GUIDE.md §9b): buluta açılabilen her araç çıktısının veri sınıfını bildirir.
+  if (definition.policy.processing === "approved_provider" && !definition.policy.modelDataClass) throw new Error("AI_TOOL_DATA_CLASS_REQUIRED");
   for (const table of definition.policy.serverReads) {
     // Authentication and secret data never become generic AI source adapters.
     if (!DATA_POLICY[table] || DATA_POLICY[table].category === "K0") throw new Error("AI_SOURCE_DENIED");
@@ -62,6 +66,7 @@ export function aiToolV2<I extends z.ZodType, R extends z.ZodType, M extends z.Z
     contractVersion: 2,
     name: definition.name, operation: definition.operation, description: definition.description,
     descriptionKey:definition.descriptionKey,
+    requiresContent: definition.requiresContent,
     allowed: definition.allowed, schema: definition.input, inputSchema,
     policy: definition.policy,
     processing: definition.policy.processing === "local_only" ? "local_only" : undefined,

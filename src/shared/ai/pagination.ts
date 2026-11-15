@@ -9,3 +9,6 @@ export function aiPageInfo(page:number,pageSize:number,total:number){
  const hasMore=page*pageSize<total;
  return {page,pageSize,total,hasMore,nextCursor:hasMore&&page<9999?String(page+1):null,completeness:page===1&&!hasMore?"complete":"partial"};
 }
+
+/** aiPageInfo alanları (v2 modelFields listelerinde kullanın). */
+export const AI_PAGE_FIELDS = ["page", "pageSize", "total", "hasMore", "nextCursor", "completeness"] as const;

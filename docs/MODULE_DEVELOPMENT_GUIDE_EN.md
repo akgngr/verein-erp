@@ -319,6 +319,22 @@ Rules:
 Checklist: create `ai.ts` → add translations → `pnpm module:sync && pnpm module:validate && pnpm typecheck`
 → enable the row in Settings → AI.
 
+### Strict rule: v2 tool contract only (data class required)
+
+Every new or changed assistant tool is defined with **`aiToolV2`**, the module with **`defineModuleAiV2`**.
+The old `aiTool` / `defineModuleAi` (v1) are **forbidden** in modules (`aiAction` for actions is fine).
+
+- `policy.modelFields`: the complete list of fields that reach the model (nested as dot paths); anything else is
+  rejected at runtime (`AI_OUTPUT_FIELD_DENIED`). Register the same list with `serverReads` in
+  `src/shared/data-policy.ts` → `AI_TOOL_POLICY.<tool>`.
+- `policy.modelDataClass` decides cloud availability: `aggregate` (numbers only), `internal` (organisational records, no
+  person fields), `pseudonymous` (person-level, people only as `[[Kn]]` via `context.pseudonym(...)`; never names,
+  contact data, addresses, birth dates, IDs/IBANs or notes; in the cloud only with "pseudonymous person data" enabled).
+  Free personal content (document text, meeting discussion notes, notes) → `processing: "local_only"`.
+- An `approved_provider` tool without a class fails on load (`AI_TOOL_DATA_CLASS_REQUIRED`).
+- Enforced by `tests/ai/ai-contract-v2-only.test.ts`, `tests/shared/data-policy.test.ts`, `tests/ai/v2-contract.test.ts`.
+  Do not loosen the tests; fix the tool.
+
 ## 9c. Generating files (`exports` module — "My files")
 
 Modules never write their own PDF/Excel/Word code: declare `access: [{ module: "exports", operations: ["write"] }]`

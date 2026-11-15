@@ -16,7 +16,7 @@ export const aiStatisticsTool=aiToolV2({
       description: "Member counts by status and membership type, plus membership-fee collection statistics for a year. Numbers only; no member names or details.", // i18n-ignore (model-facing tool text)
       input:(yearSchema).strict(),
       result:get_member_statisticsOutput,modelOutput:get_member_statisticsOutput,
-      policy:{"purpose":"members-statistics","serverReads":["Member","MemberDue","MemberPayment"],"modelFields":["members.active","members.passive","members.resigned","members.newThisMonth","members.byType.type","members.byType.count","dues.year","dues.expectedEur","dues.collectedEur","dues.remainingEur","dues.collectionRatePercent","dues.openCount","dues.partialCount","dues.paidCount","dues.overdueCount"],"processing":"approved_provider"},projectForModel:result=>result,
+      policy:{"purpose":"members-statistics","serverReads":["Member","MemberDue","MemberPayment"],"modelFields":["members.active","members.passive","members.resigned","members.newThisMonth","members.byType.type","members.byType.count","dues.year","dues.expectedEur","dues.collectedEur","dues.remainingEur","dues.collectionRatePercent","dues.openCount","dues.partialCount","dues.paidCount","dues.overdueCount"],"processing":"approved_provider","modelDataClass":"aggregate"},projectForModel:result=>result,
       run: async ({ year }) => {
         const [stats, dues] = await Promise.all([getMemberStats(), getDuesStats(year)]);
         return {

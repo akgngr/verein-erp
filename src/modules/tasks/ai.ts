@@ -1,10 +1,11 @@
 import "server-only";
+import { aiToolV2, defineModuleAiV2 } from "@/shared/ai/v2";
 import {aiProposalTools,taskId,createSchema} from "./services/ai-proposal-tools";
 
 import { z } from "zod";
 import {aiListCursor,aiListPage,aiPageInfo} from "@/shared/ai/pagination";
 
-import {aiAction, aiTool, defineModuleAi} from "@/shared/ai/define";
+import {aiAction} from "@/shared/ai/define";
 import { parseListParams } from "@/shared/list-params";
 import { can } from "@/shared/permissions/define";
 
@@ -12,21 +13,15 @@ import { completeTaskAction, createTaskAction, deleteTaskAction, getTask, listTa
 
 /** Görevler modülünün asistan sözleşmesi (bkz. src/shared/ai/define.ts). Atanan kişi verisi dönmez. */
 
-export const ai = defineModuleAi({
+export const ai = defineModuleAiV2({
   module: "tasks",
   tools: [
-    aiTool({
+    aiToolV2({
       name: "list_open_tasks",
       operation: "read",
       allowed: (user) => can(user.role, tasksPermissions, "view"),
       description: "Open and in-progress tasks: id, title, status, priority, due date, overdue flag. No assignee data. Use the id for propose_complete_task / propose_delete_task. mine=true returns tasks created by the current user; user/member assignments are not inferred from email or name.", // i18n-ignore (model-facing tool text)
-      schema: z.object({ mine: z.boolean(), cursor:aiListCursor, page:z.number().int().min(1).max(1000).optional() }),
-      inputSchema: {
-        type: "object",
-        properties: { cursor:{type:"string",pattern:"^[1-9]\\d{0,3}$"},page:{type:"integer",minimum:1,maximum:1000}, mine: { type: "boolean", description: "Only tasks created by the current user" } }, // i18n-ignore (model-facing tool text)
-        required: ["mine"],
-        additionalProperties: false,
-      },
+      input: z.object({ mine: z.boolean(), cursor:aiListCursor, page:z.number().int().min(1).max(1000).optional() }),
       run: async ({ mine, cursor, page:requestedPage }, { user }) => {
         const page=cursor?aiListPage(cursor):requestedPage??1;
         const params = parseListParams(
@@ -36,6 +31,8 @@ export const ai = defineModuleAi({
         const result = await listTasks(params, {...user,verifiedMemberIds:[]});
         return {...aiPageInfo(page,50,result.total),scope:mine?"created_by_actor":"accessible_tasks",assignmentIdentity:"unlinked",items:result.rows.map((task) => ({ id: task.id, title: task.title, status: task.status, priority: task.priority, dueDate: task.dueDate, overdue: task.isOverdue }))};
       },
+      result: z.unknown(), modelOutput: z.unknown(), projectForModel: (result) => result,
+      policy: {"purpose": "tasks-list-open-tasks", "serverReads": ["Task"], "modelFields": ["page", "pageSize", "total", "hasMore", "nextCursor", "completeness", "scope", "assignmentIdentity", "items", "items.id", "items.title", "items.status", "items.priority", "items.dueDate", "items.overdue"], "processing": "approved_provider", "modelDataClass": "internal"},
     }),
     ...aiProposalTools,
 

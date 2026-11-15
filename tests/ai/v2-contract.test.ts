@@ -4,7 +4,7 @@ import { z } from "zod";
 import { aiToolV2, assertUniqueToolNames } from "@/shared/ai/v2";
 import type { ModuleAiContext } from "@/shared/ai/define";
 const context: ModuleAiContext={loadDatasetDefinition:async()=>({year:2026}),createDataset:async()=>"opaque",user:{id:"u",name:"Private",email:"private@example.test",role:"ADMIN"},restore:x=>x,propose:()=>{},attachFile:()=>{}};
-const make=(maxOutputBytes=65536)=>aiToolV2({name:"get_total",description:"Total",operation:"read",allowed:()=>true,input:z.object({}).strict(),result:z.object({total:z.number(),name:z.string()}),modelOutput:z.object({total:z.number()}).strict(),policy:{purpose:"aggregate",serverReads:["Member"],modelFields:["total"],processing:"approved_provider"},limits:{maxOutputBytes},run:async()=>({total:2,name:"PRIVATE_PERSON"}),projectForModel:r=>({total:r.total})});
+const make=(maxOutputBytes=65536)=>aiToolV2({name:"get_total",description:"Total",operation:"read",allowed:()=>true,input:z.object({}).strict(),result:z.object({total:z.number(),name:z.string()}),modelOutput:z.object({total:z.number()}).strict(),policy:{purpose:"aggregate",serverReads:["Member"],modelFields:["total"],processing:"approved_provider",modelDataClass:"aggregate"},limits:{maxOutputBytes},run:async()=>({total:2,name:"PRIVATE_PERSON"}),projectForModel:r=>({total:r.total})});
 test("v2 server result never automatically enters the model projection",async()=>{assert.deepEqual(await make().run({},context),{total:2});});
 test("v2 rejects invalid inputs and oversized output",async()=>{await assert.rejects(make().run({unexpected:true},context));await assert.rejects(make(2).run({},context),/AI_OUTPUT_BYTE_LIMIT/);});
 test("duplicate tool names are rejected across modules",()=>{assert.throws(()=>assertUniqueToolNames([{name:"same"},{name:"same"}]),/AI_DUPLICATE/);});
@@ -14,4 +14,8 @@ test("unsupported model input transforms fail at definition time",()=>{
 
 test("v2 rejects protected sources even when the proposed output is a numeric count",()=>{
  assert.throws(()=>aiToolV2({name:"count_notes",description:"Count",operation:"read",allowed:()=>true,input:z.object({}),result:z.number(),modelOutput:z.number(),policy:{purpose:"count",serverReads:["ProgressNote"],modelFields:[],processing:"local_only"},run:async()=>1,projectForModel:r=>r}),/AI_SOURCE_DENIED/);
+});
+
+test("v2: buluta açılabilen araç veri sınıfı bildirmek zorunda (§9b)",()=>{
+ assert.throws(()=>aiToolV2({name:"get_x",description:"x",operation:"read",allowed:()=>true,input:z.object({}).strict(),result:z.object({}),modelOutput:z.object({}).strict(),policy:{purpose:"x",serverReads:[],modelFields:[],processing:"approved_provider"},run:async()=>({}),projectForModel:r=>r}),/AI_TOOL_DATA_CLASS_REQUIRED/);
 });

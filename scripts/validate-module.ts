@@ -117,7 +117,7 @@ export function checkModuleAi(moduleDir: string, problems: string[]): string[] {
   const text = fs.readFileSync(aiPath, "utf8");
   const moduleKey = path.basename(moduleDir);
   if (!text.includes('import "server-only"')) problems.push("ai.ts 'server-only' içe aktarmalı.");
-  if (!/export const ai = defineModuleAi(?:V2)?\(/.test(text)) problems.push("ai.ts defineModuleAi veya defineModuleAiV2 ile tanımlanmalı.");
+  if (!/export const ai = defineModuleAiV2\(/.test(text)) problems.push("ai.ts defineModuleAiV2 ile tanımlanmalı (v1 defineModuleAi yasak; MODULE_DEVELOPMENT_GUIDE §9b).");
   if (/defineModuleAiV2\(/.test(text) && /\baiTool\(/.test(text)) problems.push("ai.ts v2 sözleşmesinde legacy aiTool kullanılamaz.");
   const declared = text.match(/\bmodule:\s*["']([\w-]+)["']/)?.[1];
   if (declared !== moduleKey) problems.push(`ai.ts module anahtarı '${declared ?? "?"}' klasör adı '${moduleKey}' ile aynı olmalı.`);
