@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.5.0",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Bulut veri politikası ayarı",
+        "de": "Einstellung Cloud-Datenrichtlinie"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "AI ayarlarına bulut veri politikası eklendi: Kapalı (yalnız yerel model) veya Hazır sorular (varsayılan, mevcut davranış). Denetimli serbest metin ve takma adlı kişi verisi sonraki sürümlerde gelecek.",
+          "de": "Cloud-Datenrichtlinie in den KI-Einstellungen: Aus (nur lokales Modell) oder Vordefinierte Fragen (Standard, bisheriges Verhalten). Geprüfter Freitext und pseudonymisierte Personendaten folgen in späteren Versionen."
+        },
+        {
+          "type": "security",
+          "tr": "Politika değişikliği sağlayıcı politika sürümüne bağlıdır; kullanıcılar bilgilendirmeyi yeniden onaylar.",
+          "de": "Eine Änderung der Richtlinie ändert die Anbieter-Richtlinienversion; Nutzer bestätigen die Information erneut."
+        }
+      ]
+    },
+    {
       "version": "1.4.2",
       "date": "2026-11-15",
       "title": {

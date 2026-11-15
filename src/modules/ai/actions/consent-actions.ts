@@ -12,6 +12,7 @@ import { deleteAllConversations } from "../services/history";
 import { AI_OPERATIONS, sanitizeMatrix, setAiPermissions } from "../services/permissions";
 import { supportedOperations } from "../services/tools";
 import { AI_PROVIDER_IDS, isPrivateEndpoint, isProviderReady, saveProviderCredential } from "../services/providers";
+import { CLOUD_TEXT_MODES, getCloudSettings, setCloudSettings } from "../services/cloud-settings";
 import { AI_CONSENT_VERSION, getActiveProvider, giveAiConsent, revokeAiConsent, setActiveProvider } from "../services/consent";
 
 const empty = z.object({}).optional();
@@ -121,6 +122,27 @@ export async function setAiPermissionsAction(input: unknown): Promise<ActionResu
       const matrix = sanitizeMatrix(input.matrix, supportedOperations());
       await setAiPermissions(matrix);
       await audit({ action: "AI_PERMISSIONS_CHANGED", entity: "AiSettings", entityId: "singleton", after: { matrix } });
+      revalidatePath("/", "layout");
+      return undefined;
+    },
+  });
+  return run(input) as Promise<ActionResult>;
+}
+
+/**
+ * Yönetici bulut veri politikasını seçer (docs/architecture/ai-cloud-pseudonym-relay.md).
+ * Değişiklik sağlayıcı politika sürümünü değiştirir; kullanıcıların rızası yenilenir.
+ * SCREENED ve takma adlı kayıtlar sonraki sürümde etkinleşir; şimdilik yalnız OFF/INTENTS seçilebilir.
+ */
+export async function setAiCloudPolicyAction(input: unknown): Promise<ActionResult> {
+  const run = createAction({
+    permission: { definition: aiPermissions, action: "update" },
+    schema: z.object({ textMode: z.enum(CLOUD_TEXT_MODES), pseudonymousRecords: z.boolean() }),
+    handler: async ({ input, audit }) => {
+      if (input.textMode === "SCREENED" || input.pseudonymousRecords) throw new ActionError("ai.cloudPolicy.errors.notYetAvailable");
+      const before = await getCloudSettings();
+      await setCloudSettings(input);
+      await audit({ action: "AI_CLOUD_POLICY_CHANGED", entity: "AiSettings", entityId: "singleton", before, after: input });
       revalidatePath("/", "layout");
       return undefined;
     },
