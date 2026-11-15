@@ -296,6 +296,7 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
       correlationId: execution.correlationId,
       locale: storedContext.locale === "tr" ? "tr" : "de",
       attempt,
+      leaseToken,
       signal: controller.signal,
     };
 

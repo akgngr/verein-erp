@@ -9,7 +9,7 @@ export async function deleteStoredFile(id:string,ownerId?:string) {
   await getDb().generatedFile.deleteMany({where:{id,ownerId,deletionPending:true}});
 }
 export async function purgeExpiredFiles():Promise<number> {
- const db=getDb(),rows=await db.generatedFile.findMany({where:{OR:[{expiresAt:{lte:new Date()}},{deletionPending:true}]},select:{id:true},take:100});
+ const db=getDb(),rows=await db.generatedFile.findMany({where:{OR:[{expiresAt:{lte:new Date()}},{deletionPending:true},{publicationPending:true,createdAt:{lte:new Date(Date.now()-3600000)}}]},select:{id:true},take:100});
  await db.generatedFile.updateMany({where:{id:{in:rows.map(row=>row.id)}},data:{deletionPending:true}});
  let removed=0;
  for(const row of rows){try{await deleteStoredFile(row.id);removed++;}catch{console.error("[exports] FILE_DELETE_RETRY");}}

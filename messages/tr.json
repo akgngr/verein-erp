@@ -4768,7 +4768,8 @@
     "access": {
       "organization": "PDF dosyalarında dernek antetini (ad, adres, logo) kullanır.",
       "system": "Başka modüllerin dosya formatı eklentilerinin yalnızca modül etkinken kullanılması için modül durumlarını okur.",
-      "members": "Yetkili dosya üretimi ve çalışma anında izin kontrolü."
+      "members": "Yetkili dosya üretimi ve çalışma anında izin kontrolü.",
+      "automation": "Dosya taleplerini mevcut otomasyon kuyruğuna atomik kaydeder; iş durumu ve worker kilidini doğrular."
     },
     "title": "Dosyalarım",
     "description": "Asistanın veya modüllerin sizin için oluşturduğu dosyalar. Yalnızca siz görebilirsiniz; {days} gün sonra otomatik silinir.",

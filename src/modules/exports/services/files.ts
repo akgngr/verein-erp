@@ -1,4 +1,6 @@
 import "server-only";
+import {createHash} from "node:crypto";
+import {getPublishedFileMetadata,listPublishedFileMetadata} from "./file-metadata";
 
 import { readFile } from "node:fs/promises";
 
@@ -64,7 +66,7 @@ export async function createGeneratedFile(args: { ownerId: string; title: string
 
 export async function listGeneratedFiles(ownerId: string): Promise<GeneratedFileItem[]> {
   await purgeExpiredFiles();
-  const rows = await getDb().generatedFile.findMany({ where: { ownerId,deletionPending:false }, orderBy: { createdAt: "desc" }, take: 200 });
+  const rows = await listPublishedFileMetadata(ownerId);
   return rows.map((row) => ({
     id: row.id,
     title: openSecret(PURPOSE, row.titleEnc) ?? "",
@@ -79,13 +81,14 @@ export async function listGeneratedFiles(ownerId: string): Promise<GeneratedFile
 
 /** İndirme: yalnızca sahibi; süresi dolmuşsa null. */
 export async function readGeneratedFile(ownerId: string, id: string): Promise<{ title: string; bytes: Buffer; mimeType: string; extension: string;source:string } | null> {
-  const row = await getDb().generatedFile.findFirst({ where: { id, ownerId, deletionPending:false, expiresAt: { gt: new Date() } } });
+  const row = await getPublishedFileMetadata(ownerId,id);
   if (!row) return null;
   const plugin = findFormat(row.format, await listUsableModuleKeys());
   if (!plugin) return null;
   const encrypted = await readFile(resolveSafePath(storagePath(row.id))).catch(() => null);
   const bytes = encrypted ? openBytes(PURPOSE, encrypted) : null;
   if (!bytes) return null;
+  if(row.sha256&&createHash("sha256").update(bytes).digest("hex")!==row.sha256)throw new Error("FILE_CHECKSUM_FAILED");
   return { title: openSecret(PURPOSE, row.titleEnc) ?? "file", bytes, mimeType: plugin.mimeType, extension: plugin.extension,source:row.source };
 }
 

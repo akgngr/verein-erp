@@ -75,3 +75,9 @@ Yeni ai.export_dataset execution'ları en fazla 3 deneme, 5–30 saniye arası b
 Worker son denemede ölürse otomasyon recovery execution'ı FAILED yapar; dosya durum okuması bunu gözleyip UI'yı terminal duruma geçirir. CANCELLED ve süresi dolmuş işler QUEUED olarak gösterilmez. Kaynak değiştiyse yeni dataset/önizleme/onay gerekir; eski stale işlemi yeniden oynatmak çözüm değildir.
 
 450 testlik izole kabul; gerçek worker, expired lease fixture, bir EISDIR hatasından sonra retry ve SIGTERM ile temiz kapanışı içerir. Bu üretim pilotu veya tüm storage fencing/streaming kabulü değildir.
+
+## FileGeneration publication protokolü
+
+Yeni migration'dan önce AI_PERSONAL_EXPORT_ENABLED=false yap ve eski worker'ları durdur. Migration eski hazır dosyaları korur, yarım dosyaları gizler. Tüm web okuyucuları publicationPending filtresini destekleyen binary'ye güncellenmeden yeni worker/personal export açılmaz. exports modülünün automation read/write erişimi yeni onay gerektirir. Gen1 worker/reader binary'leri ile Gen2 publication protokolünü eşzamanlı kişisel export için kullanma; rollback'te bayrak kapalı ve worker durdurulmuş kalmalıdır.
+
+İlk producer request-generation facade'ına taşındı. Eski AiExportRequest ID ve execution/file bağları korunur; pending dosya girişleri genel dosya listesinde/indirmede yayımlanmaz. Finalization current execution lease'ini transaction'da kilitli doğrular. Her lease ayrı ciphertext nesnesi üretir; eski deneme cleanup'ı yeni dosyayı etkileyemez. Dolu legacy şema backfill'i ve eski/yeni worker fencing yarış fixture'ları izole DB'de doğrulandı. Genel streaming D06'da açıktır.

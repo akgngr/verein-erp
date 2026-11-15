@@ -19,3 +19,5 @@ export { createWorkflow, saveWorkflowDraft, publishWorkflow, startWorkflow, setW
 export { insertTaskExecution } from "./services/execution-store";
 export { getAutomationRuntimeConfig } from "./runtime-config";
 export {getExecutionState} from "./services/execution-control";
+
+export {assertTaskModulesUsable,assertActiveExecutionLease} from "./services/execution-control";

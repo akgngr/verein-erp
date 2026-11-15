@@ -45,3 +45,7 @@ C08 yerel doğrulaması: 449 test geçti; typecheck/lint/module:sync başarılı
 ## Ortak dataset API — D03
 
 Canonical create_dataset/query_dataset/export_dataset, v2 input/output planları ve TR/DE sağlayıcı açıklamaları eklendi. İlk kaynak members.dues'tir; tanımsız kaynak, SQL, kişi arama alanı veya IBAN kolonu kabul edilmez. Export yalnız onay kartı üretir. Eski araç adları v2 uyum alias'ları olarak kalır. 453 test başarılı; yeni commit'in CI kabulü beklenir.
+
+## Merkezi FileGeneration facade — D04
+
+Mevcut exports merkezi metadata/publication sahibidir. AiExportRequest ile aynı transaction'da FileGeneration + mevcut automation/outbox kaydı kurulur. Attempt ID'leri ve kilitli lease finalization eski worker'ın yeni sonucu yayımlamasını/silmesini engeller. Published metadata sorgusu liste/indirme/durum için ortaktır. Dolu eski şema backfill'i ve unpublished byte gizleme dahil 456 test geçti; yeni migration ve reader/worker sıra gereksinimi operations/AI_V2_ROLLOUT.md içindedir. Streaming ve tüm diğer üreticilerin taşınması henüz tamamlanmadı.

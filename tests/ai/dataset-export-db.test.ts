@@ -1,4 +1,6 @@
 import test from "node:test";
+import {executeAutomationTask} from "@/modules/automation/services/task-worker";
+import {generationAttemptFileId,prepareGenerationRequest,requestGeneration,startGeneration,finalizeGeneration,createTabularFile,getPublishedFileMetadata,listPublishedFileMetadata,markGeneratedFileForDeletion,getGenerationState} from "@/modules/exports/automation";
 import {runExportThroughWorker} from "./fixtures/export-worker";
 import {getAiExportStatus} from "@/modules/ai/services/export-status";
 import assert from "node:assert/strict";
@@ -10,6 +12,7 @@ import { accessSignature } from "@/shared/modules/module-access";
 import {resolveLinkedMemberReference} from "@/modules/ai/services/identity-links";
 import { createReferenceScope,saveDataset,createEntityReference,resolveEntityReference } from "@/modules/ai/services/references";
 import { requestDatasetExport,runDatasetExport } from "@/modules/ai/services/dataset-export";
+import {aiDatasetExportTask} from "@/modules/ai/automation";
 import {prepareProposal,claimProposal} from "@/modules/ai/services/proposal-store";
 import { providerRevision } from "@/modules/ai/services/provider-revision";
 import { giveAiConsent } from "@/modules/ai/services/consent";
@@ -75,12 +78,13 @@ test("server export inserts private names only in the file, rejects stale datase
   const recovered=await claimProposal(id,proposalId,revision);assert.equal(recovered.applied,true);assert.equal(recovered.row.executionId,job);
   assert.equal((await claimProposal(id,proposalId,revision)).row.executionId,job);
   await assert.rejects(requestDatasetExport({datasetRef,format:"xlsx",columns:["member.fullName","dues.overdueAmount"]},{userId:id,conversationId:actor.conversationId,proposalId}),/AI_EXPORT_IDEMPOTENCY_CONFLICT/);
+  await executeAutomationTask({executionId:persisted.executionId!,taskKey:"ai.export_dataset",taskVersion:1});
   const status=await runDatasetExport(job,new AbortController().signal);
-  await runDatasetExport(job,new AbortController().signal);
-  assert.equal(await db.generatedFile.count({where:{id:job}}),1);
+  const readyJob=await db.aiExportRequest.findUniqueOrThrow({where:{id:job}});assert.ok(readyJob.fileId);
+  assert.equal(await db.generatedFile.count({where:{generationId:job,publicationPending:false}}),1);
   assert.ok(!JSON.stringify(status).includes("PRIVATE_NAME_SENTINEL"));
   assert.equal(current.rows.length,102);
-  const encrypted=await readFile(resolveSafePath(`generated/${job}.bin`));
+  const encrypted=await readFile(resolveSafePath(`generated/${readyJob.fileId}.bin`));
   assert.ok(openBytes("generated-file",encrypted)?.toString().includes("PRIVATE_NAME_SENTINEL"));
   const cancelled=await requestDatasetExport({datasetRef,format:"csv",columns:["member.fullName"]},{userId:id,conversationId:actor.conversationId,proposalId:randomUUID()});
   await db.aiExportRequest.update({where:{id:cancelled},data:{status:"CANCELLED"}});
@@ -91,9 +95,11 @@ test("server export inserts private names only in the file, rejects stale datase
   await assert.rejects(runDatasetExport(aborted,stopped.signal));assert.equal(await db.generatedFile.count({where:{id:aborted}}),0);
   await db.aiExportRequest.update({where:{id:aborted},data:{status:"CANCELLED"}});
   const xlsx=await requestDatasetExport({datasetRef,format:"xlsx",columns:["member.fullName","dues.overdueAmount"]},{userId:id,conversationId:actor.conversationId,proposalId:randomUUID()});fileIds.push(xlsx);
-  await runDatasetExport(xlsx,new AbortController().signal);
+  const xlsxRequest=await db.aiExportRequest.findUniqueOrThrow({where:{id:xlsx}});assert.ok(xlsxRequest.executionId);
+  await executeAutomationTask({executionId:xlsxRequest.executionId,taskKey:"ai.export_dataset",taskVersion:1});
+  const readyXlsx=await db.aiExportRequest.findUniqueOrThrow({where:{id:xlsx}});assert.ok(readyXlsx.fileId);
   const {default:ExcelJS}=await import("exceljs"),workbook=new ExcelJS.Workbook();
-  const xlsxBytes=openBytes("generated-file",await readFile(resolveSafePath(`generated/${xlsx}.bin`)));assert.ok(xlsxBytes);
+  const xlsxBytes=openBytes("generated-file",await readFile(resolveSafePath(`generated/${readyXlsx.fileId}.bin`)));assert.ok(xlsxBytes);
   await workbook.xlsx.load(xlsxBytes as never);const sheet=workbook.worksheets[0];
   assert.equal(sheet.rowCount,103);assert.equal(sheet.getCell("B2").value,120);assert.equal(typeof sheet.getCell("A2").value,"string");
   const workerJob=await requestDatasetExport({datasetRef,format:"csv",columns:["member.fullName","dues.overdueAmount"]},{userId:id,conversationId:actor.conversationId,proposalId:randomUUID()});fileIds.push(workerJob);
@@ -104,7 +110,7 @@ test("server export inserts private names only in the file, rejects stale datase
   const exhaustedRequest=await db.aiExportRequest.findUniqueOrThrow({where:{id:exhausted}});assert.ok(exhaustedRequest.executionId);
   await db.automationExecution.update({where:{id:exhaustedRequest.executionId},data:{status:"RUNNING",attempt:1,maxAttempts:1,retryPolicy:{maxAttempts:1,initialDelaySeconds:0,maxDelaySeconds:0,backoffMultiplier:1},leaseToken:1,leaseOwner:"exhausted-worker-fixture",startedAt:new Date(0),leaseExpiresAt:new Date(0),steps:{updateMany:{where:{stepKey:"main"},data:{status:"RUNNING",attempt:1}}}}});
   // Force one transient rename failure after recovery, then allow the bounded retry.
-  const marker=resolveSafePath(`generated/${workerJob}.bin`);await mkdir(marker,{recursive:true});let transientRetries=0;
+  const marker=resolveSafePath(`generated/${generationAttemptFileId(workerJob,2)}.bin`);await mkdir(marker,{recursive:true});let transientRetries=0;
   await runExportThroughWorker(workerJob,workerRequest.executionId,{onRetry:async execution=>{
    if(execution.status==="PENDING"&&execution.lastErrorCode==="EISDIR"&&transientRetries===0){
     assert.equal((await db.aiExportRequest.findUniqueOrThrow({where:{id:workerJob}})).status,"QUEUED");
@@ -119,7 +125,37 @@ test("server export inserts private names only in the file, rejects stale datase
   assert.equal((await getAiExportStatus(id,exhausted))?.status,"FAILED");
   assert.equal((await getAiExportStatus(id,cancelled))?.status,"FAILED");
   assert.equal(await db.generatedFile.count({where:{id:exhausted}}),0);
-  assert.ok(openBytes("generated-file",await readFile(resolveSafePath(`generated/${workerJob}.bin`)))?.toString().includes("PRIVATE_NAME_SENTINEL"));
+  const readyWorker=await db.aiExportRequest.findUniqueOrThrow({where:{id:workerJob}});assert.ok(readyWorker.fileId);
+  assert.ok(openBytes("generated-file",await readFile(resolveSafePath(`generated/${readyWorker.fileId}.bin`)))?.toString().includes("PRIVATE_NAME_SENTINEL"));
+  // Both attempts share one generation, but only the current execution lease may publish.
+  const fencedProposal=randomUUID();
+  const fencedJob=await requestDatasetExport({datasetRef,format:"csv",columns:["member.fullName"]},{userId:id,conversationId:actor.conversationId,proposalId:fencedProposal});fileIds.push(fencedJob);
+  const fencedRequest=await db.aiExportRequest.findUniqueOrThrow({where:{id:fencedJob}});assert.ok(fencedRequest.executionId);
+  const organizationId=process.env.AI_DEPLOYMENT_ID??"single-deployment";
+  const prepared=await prepareGenerationRequest({id:randomUUID(),organizationId,ownerId:id,sourceModule:"ai",purpose:"members.dues",format:"csv",idempotencyKey:fencedProposal,deadlineAt:new Date(Date.now()+60000),task:aiDatasetExportTask});
+  assert.deepEqual(await requestGeneration(prepared),{id:fencedJob,executionId:fencedRequest.executionId});
+  const conflicting=await prepareGenerationRequest({...prepared,id:randomUUID(),format:"xlsx"});
+  await assert.rejects(requestGeneration(conflicting),/FILE_GENERATION_IDEMPOTENCY_CONFLICT/);
+  await db.automationExecution.update({where:{id:fencedRequest.executionId},data:{status:"RUNNING",attempt:1,leaseToken:1,leaseOwner:"worker-one",leaseExpiresAt:new Date(Date.now()+60000)}});
+  const leaseOne={id:fencedJob,organizationId,ownerId:id,executionId:fencedRequest.executionId,leaseToken:1};
+  const firstAttempt=await startGeneration(leaseOne);
+  await createTabularFile({id:firstAttempt,generationId:fencedJob,ownerId:id,format:"csv",headers:["name"],rows:[["OLD_UNPUBLISHED_PRIVATE"]],source:"members.dues"});
+  assert.equal(await getPublishedFileMetadata(id,firstAttempt),null);
+  assert.ok(!(await listPublishedFileMetadata(id)).some(row=>row.id===firstAttempt));
+  await db.automationExecution.update({where:{id:fencedRequest.executionId},data:{attempt:2,leaseToken:2,leaseOwner:"worker-two",leaseExpiresAt:new Date(Date.now()+60000)}});
+  const leaseTwo={...leaseOne,leaseToken:2},secondAttempt=await startGeneration(leaseTwo);
+  await createTabularFile({id:secondAttempt,generationId:fencedJob,ownerId:id,format:"csv",headers:["name"],rows:[["NEW_PUBLISHED_PRIVATE"]],source:"members.dues"});
+  await assert.rejects(db.$transaction(tx=>finalizeGeneration(tx,leaseOne,firstAttempt)),/TASK_LEASE_LOST/);
+  await markGeneratedFileForDeletion(firstAttempt,id);
+  assert.equal(await getPublishedFileMetadata(id,secondAttempt),null);
+  await db.$transaction(async tx=>{await finalizeGeneration(tx,leaseTwo,secondAttempt);await tx.aiExportRequest.update({where:{id:fencedJob},data:{status:"READY",fileId:secondAttempt}});});
+  assert.ok(await getPublishedFileMetadata(id,secondAttempt));assert.equal(await getPublishedFileMetadata("other",secondAttempt),null);
+  assert.equal(await getGenerationState(fencedJob,"other",organizationId),null);assert.equal(await getGenerationState(fencedJob,id,"other-deployment"),null);
+  const finalizedGeneration=await getGenerationState(fencedJob,id,organizationId);
+  assert.equal(finalizedGeneration?.fileId,secondAttempt);
+  assert.equal(finalizedGeneration?.expiresAt.toISOString(),(await db.generatedFile.findUniqueOrThrow({where:{id:secondAttempt}})).expiresAt.toISOString());
+  assert.equal(await getPublishedFileMetadata(id,firstAttempt),null);
+  assert.ok(!JSON.stringify(await db.fileGeneration.findUniqueOrThrow({where:{id:fencedJob}})).includes("PRIVATE"));
   const student=await db.student.create({data:{year:2001,sequence:123456789,studentNumber:`student-${id}`,firstName:"PRIVATE_NAME_SENTINEL",lastName:"Only In File",memberId:paid.id,createdById:id,createdByLabel:"Test"}});studentIds.push(student.id);
   const guardian=await db.studentGuardian.create({data:{debtorNumber:50001,firstName:"PRIVATE_NAME_SENTINEL",lastName:"Only In File",memberId:member.id,createdById:id,createdByLabel:"Test"}});guardianIds.push(guardian.id);
   await db.studentGuardianLink.create({data:{studentId:student.id,guardianId:guardian.id,relation:"MOTHER",isPayer:true}});
@@ -142,9 +178,10 @@ test("server export inserts private names only in the file, rejects stale datase
   await db.user.update({where:{id},data:{isActive:false}});
   await assert.rejects(runDatasetExport(stale,new AbortController().signal),/AI_EXPORT_ACCESS_REVOKED/);
  }finally{
-  for(const fileId of fileIds){await rmdir(resolveSafePath(`generated/${fileId}.bin`)).catch(()=>{});await unlink(resolveSafePath(`generated/${fileId}.bin`)).catch(()=>{});await db.generatedFile.deleteMany({where:{id:fileId}});}
+  const stored=await db.generatedFile.findMany({where:{ownerId:id},select:{id:true}});
+  for(const fileId of new Set([...fileIds,...stored.map(row=>row.id)])){await rmdir(resolveSafePath(`generated/${fileId}.bin`)).catch(()=>{});await unlink(resolveSafePath(`generated/${fileId}.bin`)).catch(()=>{});await db.generatedFile.deleteMany({where:{id:fileId}});}
   await db.student.deleteMany({where:{id:{in:studentIds}}});await db.studentGuardian.deleteMany({where:{id:{in:guardianIds}}});
-  await db.aiProposal.deleteMany({where:{userId:id}});await db.aiExportRequest.deleteMany({where:{userId:id}});await db.aiReferenceScope.deleteMany({where:{userId:id}});await db.member.deleteMany({where:{id:{in:memberIds}}});await db.aiUserConsent.deleteMany({where:{userId:id}});await db.user.deleteMany({where:{id}});
+  await db.fileGeneration.deleteMany({where:{ownerId:id}});await db.aiProposal.deleteMany({where:{userId:id}});await db.aiExportRequest.deleteMany({where:{userId:id}});await db.aiReferenceScope.deleteMany({where:{userId:id}});await db.member.deleteMany({where:{id:{in:memberIds}}});await db.aiUserConsent.deleteMany({where:{userId:id}});await db.user.deleteMany({where:{id}});
   if(oldFlag===undefined)delete process.env.AI_PERSONAL_EXPORT_ENABLED;else process.env.AI_PERSONAL_EXPORT_ENABLED=oldFlag;
   if(oldAuto===undefined)delete process.env.AUTOMATION_ENABLED;else process.env.AUTOMATION_ENABLED=oldAuto;
  }

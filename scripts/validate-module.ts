@@ -8,6 +8,11 @@ const MODULES_DIR = path.join(ROOT_DIR, "src", "modules");
 const APP_DIR = path.join(ROOT_DIR, "src", "app", "(dashboard)", "(modules)");
 const MIGRATIONS_DIR = path.join(ROOT_DIR, "prisma", "schema", "migrations");
 
+/** Explicit narrow public entry; private automation services remain forbidden. */
+export function isPublicModuleEntry(targetModule:string,subPath:string):boolean {
+  return !subPath || ["server","ui","edge","page","automation"].includes(subPath) || (targetModule==="automation" && subPath==="public/file-generation");
+}
+
 export interface ModuleValidationResult {
   moduleKey: string;
   valid: boolean;
@@ -596,7 +601,7 @@ export function validateModule(moduleKey: string, customModulesDir?: string): Mo
       if (targetModule === moduleKey) continue;
 
       // Public giriş noktaları serbest
-      if (!subPath || subPath === "server" || subPath === "ui" || subPath === "edge" || subPath === "page" || subPath === "automation") {
+      if (isPublicModuleEntry(targetModule,subPath)) {
         continue;
       }
 
