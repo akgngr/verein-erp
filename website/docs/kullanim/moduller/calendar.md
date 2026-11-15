@@ -1,0 +1,93 @@
+---
+sidebar_position: 31
+title: "Takvim"
+description: "Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve son tarihler tek görünümde."
+slug: /kullanim/moduller/calendar
+---
+
+<!-- Bu sayfa scripts/docs/generate-module-docs.ts ile üretilir; elle düzenlemeyin. -->
+
+Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve son tarihler tek görünümde.
+
+| | |
+|---|---|
+| Anahtar | `calendar` |
+| Tür | Resmî modül |
+| Sürüm | 1.3.4 |
+| Sayfalar | `/calendar`, `/calendar/ayarlar` |
+
+## Diğer modüllere erişim
+
+Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yonetim/modul-yonetimi)).
+
+| Modül | İşlem | Gerekçe |
+|---|---|---|
+| [Etkinlikler](./events) | yazma | Takvim kaydını tek tıkla etkinlik taslağına dönüştürmek için. |
+| [Kullanıcılar](./users) | okuma | Takvim aboneliği ve senkronizasyonda kullanıcının adını ve yetkisini doğrulamak için. |
+| [Modül Yönetimi](./system) | okuma | Takvime kaynak veren modüllerin kurulu ve açık olduğunu denetlemek için. |
+
+## Varsayılan yetkiler
+
+Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
+
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|
+| Takvim | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme, silme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme, oluşturma, düzenleme | görüntüleme |
+
+## Asistan araçları
+
+Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/kullanim/asistan)):
+
+`list_shared_calendar_entries` · `list_shared_calendars` · `propose_calendar_entry`
+
+## Sürüm notları
+
+### 1.3.4 — Asistan araçları yeni veri sözleşmesinde
+
+_2026-11-15_
+
+- **Güvenlik:** Asistan araçları v2 veri sözleşmesine taşındı: modele giden her alan açıkça listelenir ve veri sınıfı bildirilir. Toplam ve kurumsal veriler denetimli bulut modunda da kullanılabilir; serbest kişisel içerik yalnız yerel modelde kalır.
+
+### 1.3.3 — Kullanıcı ve sistem bağı bildirildi
+
+_2026-11-15_
+
+- **Güvenlik:** Takvim senkronizasyonunun kullandığı kullanıcı ve modül durumu bilgileri artık bildirilmiş erişimle okunur. Yönetici erişimi bir kez yeniden onaylar.
+
+### 1.3.2 — Sürümlü AI öneri ve sonuç sınırları
+
+_2026-11-15_
+
+- **Güvenlik:** Öneri araçları katı Zod girdisi ve sabit model sonucu kullanır; salt öneri sorguları gereksiz kişi detaylarını okumaz. Kalan eski okuma araçlarının dönüşümü ayrı sürer.
+
+### 1.3.1 — AI listelerinde eksiksizlik ve sınır kontrolü
+
+_2026-11-15_
+
+- **Düzeltme:** AI listeleri sayfalama ve eksiksizlik bilgisi taşır; aşırı büyük takvim aralıkları kontrollü reddedilir.
+
+### 1.3.0 — Yapay zekâ desteği
+
+_2026-11-07_
+
+- **Yeni:** Asistan ortak takvimleri ve kayıtlarını görebilir, randevu önerebilir (onayınızla eklenir). Kişisel ve dış takvim kayıtları asistana hiç verilmez.
+
+### 1.2.1 — Silinme hakkı
+
+_2026-11-07_
+
+- **Güvenlik:** Kullanıcı silinince silinir: kişisel takvim, ICS aboneliği ve dış takvim bağlantıları.
+
+### 1.2.0 — Takvim ayarları sayfası
+
+_2026-11-07_
+
+- **İyileştirme:** Sağlayıcı uygulama bilgileri (Google/Outlook OAuth) ayrı Takvim → Ayarlar sayfasına taşındı; ayarlanmamışsa bağlantı ekranında yöneticiye "Ayarlara git" düğmesi gösterilir.
+
+### 1.1.1 — Güvenlik düzeltmesi
+
+_2026-11-06_
+
+- **Güvenlik:** Silinen kullanıcının dış takvim bağlantısı ve alınan kayıtları silinir; pasif kullanıcı adına senkron yapılmaz.
+
+Daha eski 3 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/calendar/releases.json)

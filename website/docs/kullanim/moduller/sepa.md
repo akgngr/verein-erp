@@ -1,0 +1,53 @@
+---
+sidebar_position: 29
+title: "SEPA otomatik ödeme"
+description: "Aidat ve kurs ücretleri için SEPA-Lastschrift (pain.008) tahsilatı."
+slug: /kullanim/moduller/sepa
+---
+
+<!-- Bu sayfa scripts/docs/generate-module-docs.ts ile üretilir; elle düzenlemeyin. -->
+
+Aidat ve kurs ücretleri için SEPA-Lastschrift (pain.008) tahsilatı.
+
+| | |
+|---|---|
+| Anahtar | `sepa` |
+| Tür | Resmî modül |
+| Sürüm | 1.0.1 |
+| Gerektirir | [Muhasebe](./accounting) |
+| Önerir | [Üyeler](./members), [Kurslar](./courses) |
+
+## Diğer modüllere erişim
+
+Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yonetim/modul-yonetimi)).
+
+| Modül | İşlem | Gerekçe |
+|---|---|---|
+| [Muhasebe](./accounting) | okuma | Derneğin IBAN'ını ve Gläubiger-ID'yi okur. |
+| [Üyeler](./members) | okuma, yazma | Açık aidatları ve üyelerin SEPA yetkisini okur; tahsil edilen aidatları ödeme olarak kaydeder, geri dönenleri iptal eder. |
+| [Kurslar](./courses) | okuma, yazma | Vadesi gelmiş kurs ücretlerini okur; tahsil edilenleri ödeme olarak kaydeder (muhasebe fişiyle), geri dönenleri ters çevirir. |
+| [Öğrenciler](./students) | okuma | Kurs ücretinin ödeyicisi olan velinin SEPA yetkisini okur. |
+| [Dernek Bilgileri](./organization) | okuma | Dosyada derneğin adını kullanır. |
+| [Modül Yönetimi](./system) | okuma | Kaynak modüllerin açık olup olmadığını kontrol eder. |
+
+## Varsayılan yetkiler
+
+Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
+
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|
+| SEPA otomatik ödeme | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | — | görüntüleme, oluşturma, düzenleme, silme | görüntüleme | — | — |
+
+## Sürüm notları
+
+### 1.0.1 — Muhasebe altına taşındı (/muhasebe/sepa)
+
+_2026-11-07_
+
+- **İyileştirme:** Muhasebe altına taşındı (/muhasebe/sepa)
+
+### 1.0.0 — İlk sürüm
+
+_2026-11-07_
+
+- **Yeni:** SEPA-Lastschrift: açık aidatlar ve kurs ücretleri için önizlemeli tahsilat, pain.008.001.08 dosyası (CORE/RCUR), tahsil edildi kaydı (makbuz/fiş) ve geri dönen ödemeler.
