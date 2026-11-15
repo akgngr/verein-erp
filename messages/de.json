@@ -2066,6 +2066,10 @@
       "errors": {
         "notYetAvailable": "Diese Option wird in einer späteren Version freigeschaltet."
       }
+    },
+    "alias": {
+      "hidden": "(verborgene Person)",
+      "unknown": "(unbekannte Referenz)"
     }
   },
   "audit": {

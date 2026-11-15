@@ -1,6 +1,6 @@
 import "server-only";
 
-import { getLocale } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import { NextResponse } from "next/server";
 import { z } from "zod";
 
@@ -16,6 +16,7 @@ import { recordAiMetric } from "../services/metrics";
 import { reserveAiUsage } from "../services/usage";
 import { claimAiTurn, finishAiTurn, getCachedAiTurn, commitAiTurn } from "../services/turns";
 import { aiPermissions } from "../permissions";
+import { resolveAliasesForDisplay } from "../services/aliases";
 import { runAssistant } from "../services/assistant";
 import { getActiveProvider, hasAiConsent } from "../services/consent";
 import { AI_HISTORY_WINDOW, createConversation, getConversation } from "../services/history";
@@ -77,7 +78,10 @@ export async function aiChatHandler(request: Request): Promise<Response> {
       entityId: null,
       after: { provider, tools: result.toolsUsed, inputTokens: result.usage.inputTokens, outputTokens: result.usage.outputTokens, redactedValues: result.redactions },
     });
-    const response={ok:true,conversationId,reply:result.reply,proposals:result.proposals,files:result.files};
+    // Saklanan yanıt takma adlı kalır (sonraki turda modele bu hâli gider); kullanıcıya canlı yetkiyle çözülmüş hâli döner.
+    const tAlias=await getTranslations("ai.alias");
+    const [displayReply]=await resolveAliasesForDisplay(user,conversationId,[result.reply],{hidden:tAlias("hidden"),unknown:tAlias("unknown")});
+    const response={ok:true,conversationId,reply:displayReply,proposals:result.proposals,files:result.files};
     await commitAiTurn({userId:user.id,conversationId,id:claim.id,message,reply:result.reply,proposals:result.proposals,files:result.files,response});
     return NextResponse.json(response);
     } catch(error) { await finishAiTurn(user.id,conversationId,claim.id,null,false); throw error; }
