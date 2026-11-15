@@ -27,11 +27,11 @@ export const ai = defineModuleAi({
       name: "list_open_tasks",
       operation: "read",
       allowed: (user) => can(user.role, tasksPermissions, "view"),
-      description: "Open and in-progress tasks: id, title, status, priority, due date, overdue flag. No assignee data. Use the id for propose_complete_task / propose_delete_task. mine=true returns only the current user's tasks.", // i18n-ignore (model-facing tool text)
+      description: "Open and in-progress tasks: id, title, status, priority, due date, overdue flag. No assignee data. Use the id for propose_complete_task / propose_delete_task. mine=true returns tasks created by the current user; user/member assignments are not inferred from email or name.", // i18n-ignore (model-facing tool text)
       schema: z.object({ mine: z.boolean(), cursor:aiListCursor, page:z.number().int().min(1).max(1000).optional() }),
       inputSchema: {
         type: "object",
-        properties: { cursor:{type:"string",pattern:"^[1-9]\\d{0,3}$"},page:{type:"integer",minimum:1,maximum:1000}, mine: { type: "boolean", description: "Only tasks assigned to the current user" } }, // i18n-ignore (model-facing tool text)
+        properties: { cursor:{type:"string",pattern:"^[1-9]\\d{0,3}$"},page:{type:"integer",minimum:1,maximum:1000}, mine: { type: "boolean", description: "Only tasks created by the current user" } }, // i18n-ignore (model-facing tool text)
         required: ["mine"],
         additionalProperties: false,
       },
@@ -41,8 +41,8 @@ export const ai = defineModuleAi({
           { pageSize: "50",page:String(page),"filter.status":"__open", ...(mine ? { "filter.mine": "1" } : {}) },
           { sortableFields: TASK_SORTABLE_FIELDS, defaultSort: TASK_DEFAULT_SORT, filterKeys: ["status", "priority", "memberId", "mine", "overdue"] },
         );
-        const result = await listTasks(params, user);
-        return {...aiPageInfo(page,50,result.total),items:result.rows.map((task) => ({ id: task.id, title: task.title, status: task.status, priority: task.priority, dueDate: task.dueDate, overdue: task.isOverdue }))};
+        const result = await listTasks(params, {...user,verifiedMemberIds:[]});
+        return {...aiPageInfo(page,50,result.total),scope:mine?"created_by_actor":"accessible_tasks",assignmentIdentity:"unlinked",items:result.rows.map((task) => ({ id: task.id, title: task.title, status: task.status, priority: task.priority, dueDate: task.dueDate, overdue: task.isOverdue }))};
       },
     }),
     aiTool({

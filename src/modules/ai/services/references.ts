@@ -21,12 +21,15 @@ export async function createEntityReference(actor:ReferenceActor,scopeId:string,
   await getDb().aiEntityReference.create({data:{scopeId,resource,recordId,tokenDigest:tokenDigest(token),expiresAt:scope.expiresAt}});
   return token;
 }
-export async function resolveEntityReference(actor:ReferenceActor,token:string,resource:string) {
+export async function resolveEntityReferenceDetails(actor:ReferenceActor,token:string,resource:string) {
   if(!/^[A-Za-z0-9_-]{43}$/.test(token)) throw new Error("AI_REFERENCE_UNAVAILABLE");
-  const row=await getDb().aiEntityReference.findFirst({where:{tokenDigest:tokenDigest(token),resource,expiresAt:{gt:new Date()},scope:scopeWhere(actor)},select:{recordId:true}});
+  const row=await getDb().aiEntityReference.findFirst({where:{tokenDigest:tokenDigest(token),resource,expiresAt:{gt:new Date()},scope:scopeWhere(actor)},select:{recordId:true,scopeId:true}});
   if(!row) throw new Error("AI_REFERENCE_UNAVAILABLE");
   // Caller must still authorize the live source record. A token is never permission.
-  return row.recordId;
+  return row;
+}
+export async function resolveEntityReference(actor:ReferenceActor,token:string,resource:string) {
+  return (await resolveEntityReferenceDetails(actor,token,resource)).recordId;
 }
 export async function saveDataset(actor:ReferenceActor,args:{scopeId:string;sourceModule:string;definition:unknown;selection:unknown;columns:string[]}) {
   const db=getDb();
