@@ -150,6 +150,10 @@ export function AiChatPanel({
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
   const [accepting, setAccepting] = useState(false);
+  const historyLoading=useRef(false);
+  const historyEpoch=useRef(0);
+  const requestAttempt=useRef<{content:string;conversationId:string|null;key:string}|null>(null);
+  const [historyCursor,setHistoryCursor]=useState<string|null>(null);
   const [exportJobs,setExportJobs]=useState<Record<string,string>>({});
   const [done, setDone] = useState<Set<string>>(new Set());
   const endRef = useRef<HTMLDivElement>(null);
@@ -176,10 +180,13 @@ export function AiChatPanel({
   // Kayıtlı sohbet sayfa açılışında sunucudan (şifresi çözülmüş) yüklenir.
   useEffect(() => {
     if (!consented || !provider || !initialState.conversationId) return;
+    const epoch=++historyEpoch.current;let cancelled=false;
     void getAiConversationAction({ id: initialState.conversationId }).then((result) => {
-      if (result.ok) setTurns(result.data.turns.map((turn) => ({ ...turn, restored: true })));
+      if(cancelled||epoch!==historyEpoch.current)return;
+      if (result.ok) {setTurns(result.data.turns.map((turn) => ({ ...turn, restored: true })));setHistoryCursor(result.data.pageInfo.beforeCursor);}
       else setConversationId(null);
     });
+    return ()=>{cancelled=true;};
   }, [consented, provider, initialState.conversationId]);
 
   const refreshConversations = async () => {
@@ -187,16 +194,33 @@ export function AiChatPanel({
     if (result.ok) setConversations(result.data);
   };
   const openConversation = async (id: string) => {
+    if(busy)return;
+    const epoch=++historyEpoch.current;
     const result = await getAiConversationAction({ id });
+    if(epoch!==historyEpoch.current)return;
     if (!result.ok) return void addToast({ title: result.error, color: "danger" });
+    requestAttempt.current=null;
     setConversationId(id);
+    setHistoryCursor(result.data.pageInfo.beforeCursor);
     setTurns(result.data.turns.map((turn) => ({ ...turn, restored: true })));
     setDone(new Set());
   };
   const newConversation = () => {
+    if(busy)return;
+    historyEpoch.current++;requestAttempt.current=null;
     setConversationId(null);
+    setHistoryCursor(null);
     setTurns([]);
     setDone(new Set());
+  };
+  const loadOlder = async () => {
+    if(!conversationId||!historyCursor||historyLoading.current)return;
+    const epoch=historyEpoch.current;
+    historyLoading.current=true;
+    const result=await getAiConversationAction({id:conversationId,before:historyCursor}).finally(()=>{historyLoading.current=false;});
+    if(!result.ok||epoch!==historyEpoch.current)return;
+    setTurns(current=>[...result.data.turns.map(turn=>({...turn,restored:true})),...current]);
+    setHistoryCursor(result.data.pageInfo.beforeCursor);
   };
   const removeConversation = async () => {
     if (!conversationId) return newConversation();
@@ -227,15 +251,17 @@ export function AiChatPanel({
   const send = async (text?: string) => {
     const content = (text ?? draft).trim();
     if (!content || busy) return;
+    historyEpoch.current++;
     const next = [...turns, { role: "user" as const, content }];
     setTurns(next);
     setDraft("");
     setBusy(true);
+    if(!requestAttempt.current||requestAttempt.current.content!==content||requestAttempt.current.conversationId!==conversationId)requestAttempt.current={content,conversationId,key:crypto.randomUUID()};
     try {
       const response = await fetch("/api/ai/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ requestKey:crypto.randomUUID(), conversationId, message: content }),
+        body: JSON.stringify({ requestKey:requestAttempt.current.key, conversationId, message: content }),
       });
       const data = (await response.json()) as {
         ok: boolean;
@@ -246,6 +272,7 @@ export function AiChatPanel({
         error?: string;
         code?: string;
       };
+      if(data.code!=="turnBusy"&&response.status!==429)requestAttempt.current=null;
       if (!data.ok) {
         addToast({ title: data.error ?? t("error"), color: "danger" });
         if (data.code === "consentRequired") router.refresh();
@@ -279,7 +306,7 @@ export function AiChatPanel({
       return;
     }
     if(result.data.jobId)setExportJobs(previous=>({...previous,[key]:result.data.jobId!}));
-    setDone(new Set(done).add(key));
+    setDone(previous=>new Set(previous).add(key));
     addToast({ title: proposalText(proposal, "done"), color: "success" });
   };
 
@@ -470,6 +497,7 @@ export function AiChatPanel({
                     ))}
                   </div>
                 ) : null}
+                {historyCursor?<Button size="sm" onPress={()=>void loadOlder()}>{t("loadOlder")}</Button>:null}
                 {turns.map((turn, index) => (
                   <div
                     key={index}
@@ -512,7 +540,7 @@ export function AiChatPanel({
                       </div>
                     ) : null}
                     {turn.proposals?.map((proposal, position) => {
-                      const key = `${index}-${position}`;
+                      const key = proposal.proposalId ?? `${index}-${position}`;
                       return (
                         <div
                           key={key}

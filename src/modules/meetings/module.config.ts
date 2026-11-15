@@ -6,7 +6,7 @@ import { meetingsPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "meetings",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.3.1",
+  version: "1.3.2",
   label: "Toplantılar",
   description: "Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar.",
   category: "OFFICIAL",

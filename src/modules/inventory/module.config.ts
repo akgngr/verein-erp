@@ -5,7 +5,7 @@ import { inventoryPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "inventory",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.1.1",
+  version: "1.1.2",
   label: "Envanter ve Demirbaş",
   description: "Dernek demirbaşları, teknik ekipmanlar ve zimmet kayıtlarının takibi.",
   category: "OFFICIAL",

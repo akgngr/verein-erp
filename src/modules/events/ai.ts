@@ -1,6 +1,7 @@
 import "server-only";
 
 import { z } from "zod";
+import {aiListCursor,aiListPage,aiPageInfo} from "@/shared/ai/pagination";
 
 import { PROPOSED, aiAction, aiTool, defineModuleAi } from "@/shared/ai/define";
 import { can } from "@/shared/permissions/define";
@@ -28,16 +29,16 @@ export const ai = defineModuleAi({
       operation: "read",
       allowed: (user) => can(user.role, eventsPermissions, "view"),
       description: "Upcoming events: title, type, status, dates, location, registered count and capacity. No attendee names.", // i18n-ignore (model-facing tool text)
-      schema: z.object({ limit: z.number().int().min(1).max(25) }),
+      schema: z.object({ cursor:aiListCursor,limit: z.number().int().min(1).max(25) }),
       inputSchema: {
         type: "object",
-        properties: { limit: { type: "integer", description: "Maximum number of events (1-25)" } }, // i18n-ignore (model-facing tool text)
+        properties: { cursor:{type:"string",pattern:"^[1-9]\\d{0,3}$"},limit: { type: "integer", description: "Maximum number of events (1-25)" } }, // i18n-ignore (model-facing tool text)
         required: ["limit"],
         additionalProperties: false,
       },
-      run: async ({ limit }) => {
-        const result = await listEvents({ timeFilter: "upcoming", sort: "startDate", dir: "asc", pageSize: limit });
-        return result.items.map((event) => ({
+      run: async ({ cursor,limit }) => {
+        const result = await listEvents({ timeFilter: "upcoming", sort: "startDate", dir: "asc", page:aiListPage(cursor),pageSize: limit });
+        return {...aiPageInfo(result.page,result.pageSize,result.total),items:result.items.map((event) => ({
           title: event.title,
           type: event.type,
           status: event.status,
@@ -46,7 +47,7 @@ export const ai = defineModuleAi({
           location: event.isOnline ? "online" : event.location,
           registered: event.registeredCount,
           capacity: event.capacity,
-        }));
+        }))};
       },
     }),
     aiTool({

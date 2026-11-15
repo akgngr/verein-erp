@@ -27,6 +27,7 @@ export type ModuleAiProposalInput = { action: string; title: string; details?: s
 
 export type ModuleAiContext = {
   user: AiUser;
+  loadDatasetDefinition: (token:string)=>Promise<unknown>;
   createDataset: (args:{definition:unknown;selection:unknown;columns:string[]})=>Promise<string>;
   /** Bir onay kartı önerir; hiçbir veri değişmez. */
   propose: (proposal: ModuleAiProposalInput) => void;

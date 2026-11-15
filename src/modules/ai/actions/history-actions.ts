@@ -23,14 +23,14 @@ export async function listAiConversationsAction(): Promise<ActionResult<{ id: st
   return run({}) as Promise<ActionResult<{ id: string; title: string; updatedAt: string }[]>>;
 }
 
-export async function getAiConversationAction(input: unknown): Promise<ActionResult<{ id: string; turns: { role: "user" | "assistant"; content: string; proposals: AiProposal[]; files: AiFile[] }[] }>> {
+export async function getAiConversationAction(input: unknown): Promise<ActionResult<{ id: string; turns: { role: "user" | "assistant"; content: string; proposals: AiProposal[]; files: AiFile[] }[];pageInfo:{beforeCursor:string|null;hasMore:boolean} }>> {
   const run = createAction({
     permission: { definition: aiPermissions, action: "view" },
-    schema: idSchema,
+    schema: z.object({id:z.string().min(1).max(64),before:z.string().max(128).optional()}).strict(),
     handler: async ({ input, user }) => {
-      const conversation = await getConversation(user.id, input.id);
+      const conversation = await getConversation(user.id,input.id,40,input.before);
       if (!conversation) throw new ActionError("ai.errors.conversationNotFound");
-      return { id: conversation.id, turns: conversation.turns.map(({ role, content, proposals, files }) => ({ role, content, proposals, files })) };
+      return { id: conversation.id,pageInfo:conversation.pageInfo, turns: conversation.turns.map(({ role, content, proposals, files }) => ({ role, content, proposals, files })) };
     },
   });
   return run(input);

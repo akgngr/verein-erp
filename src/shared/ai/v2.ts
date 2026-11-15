@@ -66,7 +66,7 @@ export function aiToolV2<I extends z.ZodType, R extends z.ZodType, M extends z.Z
       });
       try {
         const task = (async () => {
-          const result = definition.result.parse(await definition.run(input, { ...context, signal: controller.signal, propose:proposal=>{controller.signal.throwIfAborted();context.propose(proposal);}, attachFile:file=>{controller.signal.throwIfAborted();context.attachFile(file);} }));
+          const result = definition.result.parse(await definition.run(input, { ...context, signal: controller.signal, createDataset:async args=>{controller.signal.throwIfAborted();const result=await context.createDataset(args);controller.signal.throwIfAborted();return result;},loadDatasetDefinition:async token=>{controller.signal.throwIfAborted();return context.loadDatasetDefinition(token);}, propose:proposal=>{controller.signal.throwIfAborted();context.propose(proposal);}, attachFile:file=>{controller.signal.throwIfAborted();context.attachFile(file);} }));
           controller.signal.throwIfAborted();
           const output = definition.modelOutput.parse(await definition.projectForModel(result, context));
           controller.signal.throwIfAborted();

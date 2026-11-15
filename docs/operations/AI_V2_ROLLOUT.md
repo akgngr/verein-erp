@@ -32,7 +32,9 @@ Bu paket otomatik toplu re-encryption işi başlatmaz. Ciphertext'leri yeniden y
 
 ## Bütçe ve gözlem
 
-AI_DAILY_TOKEN_BUDGET kullanıcı/gün için muhafazakâr byte+çıktı token rezervasyonu sınırıdır; faturalandırılmış token ölçümü veya EUR maliyet garantisi değildir. Günlük EUR bütçesi için gerçek model fiyatı/sağlayıcı hesabı kontrolü hâlâ gereklidir. Model turu 6, toplam araç çağrısı 20, araç model çıktısı 64 KiB, istek deadline 120 saniyedir.
+AI_DAILY_TOKEN_BUDGET kullanıcı/UTC günü için muhafazakâr byte+4096 çıktı token rezervasyonu sınırıdır; faturalandırılmış token ölçümü değildir.
+
+`AI_DAILY_COST_BUDGET_MICRO_EUR` ayarlanırsa tüm deployment için ortak UTC günlük bütçe uygulanır. 1 EUR = 1000000 mikro-EUR. `AI_MODEL_COSTS_JSON` içinde `provider:model` anahtarıyla `inputMicroEurPerMillion` ve `outputMicroEurPerMillion` tamsayı fiyatları zorunludur. Örnek yapısal test fiyatı: `{"test:model":{"inputMicroEurPerMillion":1000000,"outputMicroEurPerMillion":2000000}}`. Bu gerçek sağlayıcı fiyat teklifi değildir. Eksik/bozuk fiyat çağrıyı engeller. Ayar verilmezse para biriminde limit etkin değildir; pilot açmadan önce gerçek model fiyatı ve sağlayıcı hesap limiti doğrulanmalıdır. Rezervasyon her model turundan önce atomik yapılır; başarısız/ambiguous çağrıda iade edilmez. Fatura/vergi/kur ve sağlayıcının token hesaplama ayrıntıları bu iç limite dahil değildir. Model turu 6, toplam araç çağrısı 20, araç model çıktısı 64 KiB, istek deadline 120 saniyedir.
 
 AiUsageBucket içindeki metric:usage_denied, metric:request_denied, metric:request_failed, metric:export_failed saatlik sayaçları içerik taşımaz. AutomationExecution/Log alanları iş gecikmesi, lease ve retry bilgilerini verir. Dış izleme/alert eşikleri operasyon ortamında kurulmalıdır.
 
@@ -46,4 +48,22 @@ AiUsageBucket içindeki metric:usage_denied, metric:request_denied, metric:reque
 
 ## Açık işler
 
-Tüm eski araçların v2 projection şemasına taşınması, cursor ile UI geçmişi, para biriminde bütçe, büyük veri için streaming ve 17 modülün tamamının dönüşümü TODO'da açık tutulur. S1–S6 sekreter ürünleri ayrı kapsamdır; bu belge bunların uygulandığını iddia etmez. Shopify benzeri tema çalışması da bu kabul sürecinden sonra yapılacaktır.
+Tüm eski araçların v2 projection şemasına taşınması, büyük veri için streaming ve kalan legacy modüllerin dönüşümü TODO'da açık tutulur. S1–S6 sekreter ürünleri ayrı kapsamdır; bu belge bunların uygulandığını iddia etmez. Shopify benzeri tema çalışması da bu kabul sürecinden sonra yapılacaktır.
+
+## 15.11.2026 doğrulama güncellemesi
+
+PR #145 ilk runtime commit'inde GitHub Quality gate; migration, schema drift, testler, üretim build ve hydration dahil başarılıdır. Secret scan ve dependency audit de geçti. Sonraki commit'ler için aynı kapılar yeniden geçmelidir. Üretim deploy, gerçek sağlayıcı hesabı doğrulaması ve pilot kabulü yapılmış sayılmaz.
+
+UI geçmişi owner-scoped keyset cursor kullanır. Legacy iş listelerindeki ordinal cursor canlı veridir: eşzamanlı ekleme/silmede snapshot tutarlılığı vaat etmez; `completeness` yalnız ilk sayfaya bütün sonuç sığıyorsa complete olur.
+
+## Runtime sonrası eklemeli migration
+
+`20261115002500_ai_v2_hardening` para birimi rezervasyon alanını ve kullanıcı/requestKey benzersizliğini ekler. Önceki runtime migration dosyası değiştirilmez. Daha önce aynı kullanıcı/requestKey ile birden fazla claim oluşmuşsa migration veri silmeden, kontrollü hata ile durur. Canlı veride bu durum önce operatörce incelenmelidir; öneri/mesaj kayıtları otomatik silinmez veya yeniden adlandırılmaz. Kontrol için içerik döndürmeyen sorgu:
+
+```sql
+SELECT count(*) AS conflicting_request_keys
+FROM (
+  SELECT 1 FROM ai_turn_claims
+  GROUP BY "userId", "requestKey" HAVING count(*) > 1
+) conflicts;
+```
