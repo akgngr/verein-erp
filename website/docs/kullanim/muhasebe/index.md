@@ -7,11 +7,11 @@ sidebar_position: 20
 
 Bu sayfa muhasebe paneli ve ACC-9 kapsamında eklenen kullanıcı rehberlerini tek yerde toplar.
 
-- [Muhasebe genel bakış paneli](./panel)
-- [Ana panel muhasebe kartları](./ana-panel-kartlari)
-- [KPI hesaplama ve mutabakat kuralları](./kpi-hesaplama-kurallari)
-- [Geçmiş/pasif kategorilerin raporlarda görünmesi](./gecmis-kategoriler)
-- [Kasa defteri tarih ve bakiye davranışı](./kasa-defteri-tarih-ve-bakiye)
+- [Muhasebe genel bakış paneli](./panel.md)
+- [Ana panel muhasebe kartları](./ana-panel-kartlari.md)
+- [KPI hesaplama ve mutabakat kuralları](./kpi-hesaplama-kurallari.md)
+- [Geçmiş/pasif kategorilerin raporlarda görünmesi](./gecmis-kategoriler.md)
+- [Kasa defteri tarih ve bakiye davranışı](./kasa-defteri-tarih-ve-bakiye.md)
 
 ## Kontrol yaklaşımı
 
