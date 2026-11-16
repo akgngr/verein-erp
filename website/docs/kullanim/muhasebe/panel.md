@@ -53,3 +53,9 @@ Modül kataloğu `pnpm docs:modules` ile üretilir; `website/docs/kullanim/modul
 ## Büyük fatura listelerinde performans
 
 Vadesi geçmiş fatura önerisi bütün faturaları tek seferde belleğe yüklemez. Sistem uygun faturaları **250 kayıtlık cursor sayfalarında** okur ve her sayfada fatura bazlı açık tutarı hesaplayarak toplamı birleştirir. Böylece kısmi ödeme, Skonto, tam ödeme ve fazla ödeme davranışı korunurken bellek kullanımı veri miktarıyla birlikte sınırsız büyümez.
+
+## Yaklaşan vergi tarihi önerisi
+
+Panel, muhasebe ayarlarındaki KDV dönemi, §19 durumu ve Dauerfristverlängerung seçimini kullanarak mevcut vergi takviminden **önümüzdeki 60 gün içindeki ilk tarihi** gösterebilir. Bu yalnızca kontrol hatırlatıcısıdır; ELSTER gönderimi veya beyanname oluşturma işlemi başlatmaz.
+
+Takvim hesabı hafta sonunu pazartesiye taşır; **resmî tatiller, danışman kaynaklı özel süreler ve olağanüstü yasal uzatmalar otomatik olarak hesaplanmaz**. Son tarih işlemden önce ayrıca doğrulanmalıdır.

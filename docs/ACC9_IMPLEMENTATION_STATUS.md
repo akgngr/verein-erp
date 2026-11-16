@@ -27,7 +27,8 @@
 - [x] **KPI mutabakatı:** Dashboard/getAccountingStats brüt fiş kapsamı ile gelir-gider raporunun brüt genel toplamı eşitlendi; kategorisiz fişler ayrıca mutabakat farkı olarak taşınır. AI özeti brüt toplam ve kategorisiz tutarları açıkça döndürür (PR #189).
 - [ ] **Tarih ve fiş denetimi:** Berlin tarih sınırları, yıl geçişi, reversed/storno, 500+ fatura ve yıllık kapanış için veritabanı fixture'lı entegrasyon testleri.
 - [x] **Banka mutabakatı:** `OPEN` durumundaki banka hareketlerini salt okunur sayıp ilgili ekrana yönlendiren öneri (PR #186).
-- [ ] **Öneri kapsamı devamı:** yaklaşan vergi tarihi, gerektiğinde açık borç/aidat bilgisi; doğrulanmış iş kuralı ve erişim onayı olmadan kart ekleme.
+- [x] **Yaklaşan vergi tarihi:** mevcut ACC-8 vergi takviminden 60 gün içindeki ilk tarih salt okunur öneri olarak gösterilir; resmî tatil/özel uzatma sınırlaması açıkça belirtilir (PR #191).
+- [ ] **Öneri kapsamı devamı:** açık borç zaten vadesi geçmiş fatura uyarısıyla kapsanıyor; aidat için mevcut members kartı ve modüller arası erişim kararı doğrulanmadan muhasebe kartı kopyalanmayacak.
 - [x] **Performans:** vadesi geçmiş faturalar 250 kayıtlık cursor sayfalarında işlenir; fatura başına `openCents` semantiği korunur ve tek seferde tüm satırlar belleğe alınmaz (PR #190).
 - [ ] **UX doğrulaması:** gerçek ekran görüntüleriyle masaüstü/mobil, yükleme/boş/hata/izin durumları; diğer UI agentinin değişiklikleriyle koordinasyon.
 - [ ] **Dokümantasyon:** yeni özelliklerin kullanım örnekleri, görseller, alt sayfalara yönlendirmeler ve CI link testi; mevcut TR website yapısını koru.
