@@ -49,3 +49,7 @@ Modül kataloğu `pnpm docs:modules` ile üretilir; `website/docs/kullanim/modul
 - **KPI kartları:** Gelir, gider ve fark için ikonlu, mobil uyumlu kartlar seçilen ay/çeyrek/yıl dönemini açıkça yazar. Göstermelik ilerleme çubuğu kullanılmaz; rakamlar mevcut muhasebe sorgularından gelir.
 - **Erişilebilirlik:** Gerçek sayısal değerler tabloda yer alır, grafik yalnız görsel destek sağlar.
 
+
+## Büyük fatura listelerinde performans
+
+Vadesi geçmiş fatura önerisi bütün faturaları tek seferde belleğe yüklemez. Sistem uygun faturaları **250 kayıtlık cursor sayfalarında** okur ve her sayfada fatura bazlı açık tutarı hesaplayarak toplamı birleştirir. Böylece kısmi ödeme, Skonto, tam ödeme ve fazla ödeme davranışı korunurken bellek kullanımı veri miktarıyla birlikte sınırsız büyümez.
