@@ -3,7 +3,7 @@ import "server-only";
 import { extractTextFromBytes } from "@/shared/files/extract-text";
 
 import { extractDocumentFields, type DocumentSuggestions } from "./field-extraction";
-import { ocrImage, ocrScannedPdf } from "./ocr";
+import { ocrImage, ocrScannedPdf } from "@/shared/files/ocr";
 
 export type DocumentAnalysis = {
   source: "text" | "ocr" | "none";

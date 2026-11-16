@@ -7,8 +7,7 @@ import {
   buttonVariants,
   Tooltip,
   Dropdown,
-  Label,
-  Description,
+  Header,
 } from "@heroui/react";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -22,6 +21,9 @@ import {
   Lock,
   Maximize2,
   Minimize2,
+  Paperclip,
+  FileText,
+  Loader2,
   Plus,
   ShieldCheck,
   Sparkles,
@@ -43,6 +45,7 @@ import { announceSidePanel } from "@/shared/components/side-panel-events";
 import { cn } from "@/shared/utils";
 
 import { AiExportJob } from "./export-job";
+import { groupConversations, type HistoryGroup } from "../lib/history-groups";
 import { acceptAiConsentAction } from "../actions/consent-actions";
 import { executeAiProposalAction } from "../actions/execute-proposal";
 import {
@@ -62,6 +65,14 @@ import { parseMarkdown } from "@/shared/markdown/parse";
 import type { AiFile, AiProposal } from "../types";
 
 /** Masaüstü yerleşimleri: yan sütun (genişlik sürüklenir) ya da tam ekran. */
+/** Bir mesaja eklenebilecek en çok dosya (sunucu sınırıyla aynı). */
+const ATTACHMENT_LIMIT = 5;
+const ATTACHMENT_ACCEPT = ".pdf,.png,.jpg,.jpeg,.docx,.xlsx,.md,.markdown,.csv,.txt";
+
+/** Mesaj kutusu düğmelerinin konumu: kapalıyken dikey ortada, açıkken alt satırda (geçiş animasyonlu). */
+const BUTTON_TOP_OPEN = "calc(100% - 2.5rem)";
+const BUTTON_TOP_CLOSED = "calc(50% - 1rem)";
+
 const DOCKED_CLASS = "md:sticky md:top-0 md:z-auto md:h-dvh md:w-[var(--ai-panel-width)] md:shrink-0 md:border-l md:border-ink-200";
 const EXPANDED_CLASS = "md:fixed md:inset-0 md:z-50";
 
@@ -242,6 +253,11 @@ export function AiChatPanel({
   const [expanded, setExpanded] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const fileRef = useRef<HTMLInputElement>(null);
+  /** Mesaj kutusu genişletilmiş mi (odak ya da içerik varken dosya düğmesi alt satıra kayar). */
+  const [composerFocused, setComposerFocused] = useState(false);
+  /** Bu mesaja eklenecek dosyalar: sunucunun döndürdüğü şifreli mühür + gösterim bilgisi. */
+  const [attachments, setAttachments] = useState<Array<{ id: string; name: string; token?: string; uploading: boolean }>>([]);
 
   // KARAR: efektler hiçbir değer döndürmez — yeni tarayıcılarda scrollIntoView Promise döndürür
   // ve React yalnızca temizlik fonksiyonu kabul eder.
@@ -357,12 +373,17 @@ export function AiChatPanel({
   };
 
   const send = async (text?: string) => {
-    const content = (text ?? draft).trim();
+    const ready = attachments.filter((item) => item.token);
+    if (attachments.some((item) => item.uploading)) return;
+    const content = (text ?? draft).trim() || (ready.length ? t("attachments.analyzeDefault") : "");
     if (!content || busy) return;
+    const sentAttachments = ready;
     historyEpoch.current++;
-    const next = [...turns, { role: "user" as const, content }];
+    const shown = sentAttachments.length ? `${content}\n\n📎 ${sentAttachments.map((item) => item.name).join(", ")}` : content;
+    const next = [...turns, { role: "user" as const, content: shown }];
     setTurns(next);
     setDraft("");
+    setAttachments([]);
     setBusy(true);
     if (
       !requestAttempt.current ||
@@ -382,6 +403,7 @@ export function AiChatPanel({
           requestKey: requestAttempt.current.key,
           conversationId,
           message: content,
+          attachments: sentAttachments.map((item) => item.token),
         }),
       });
       const data = (await response.json()) as {
@@ -400,6 +422,8 @@ export function AiChatPanel({
         if (data.code === "consentRequired") router.refresh();
         setTurns(turns);
         setDraft(content);
+        setAttachments(sentAttachments);
+        if (data.code === "attachmentExpired") setAttachments([]);
         return;
       }
       if (data.conversationId) setConversationId(data.conversationId);
@@ -416,9 +440,39 @@ export function AiChatPanel({
       toast(t("error"), { variant: "danger" });
       setTurns(turns);
       setDraft(content);
+      setAttachments(sentAttachments);
     } finally {
       setBusy(false);
     }
+  };
+
+  /** Dosya ekle: sunucu metni çıkarır (gerekirse OCR) ve şifreli mühür döner; dosya saklanmaz. */
+  const uploadFiles = async (files: FileList | null) => {
+    const list = Array.from(files ?? []).slice(0, Math.max(0, ATTACHMENT_LIMIT - attachments.length));
+    if (!list.length) {
+      if (files?.length) toast(t("attachments.limit", { count: String(ATTACHMENT_LIMIT) }), { variant: "warning" });
+      return;
+    }
+    const pending = list.map((file) => ({ id: crypto.randomUUID(), name: file.name, uploading: true }));
+    setAttachments((current) => [...current, ...pending]);
+    await Promise.all(
+      list.map(async (file, index) => {
+        const id = pending[index].id;
+        try {
+          const body = new FormData();
+          body.append("file", file);
+          const response = await fetch("/api/ai/attachments", { method: "POST", body });
+          const data = (await response.json().catch(() => null)) as { ok: boolean; error?: string; attachment?: { token: string; name: string } } | null;
+          if (!data?.ok || !data.attachment) throw new Error(data?.error ?? t("attachments.failed"));
+          const token = data.attachment.token;
+          setAttachments((current) => current.map((item) => (item.id === id ? { ...item, token, uploading: false } : item)));
+        } catch (error) {
+          setAttachments((current) => current.filter((item) => item.id !== id));
+          toast(error instanceof Error ? error.message : t("attachments.failed"), { variant: "danger" });
+        }
+      }),
+    );
+    inputRef.current?.focus();
   };
 
   const confirmProposal = async (key: string, proposal: AiProposal) => {
@@ -435,19 +489,27 @@ export function AiChatPanel({
     toast(proposalText(proposal, "done"), { variant: "success" });
   };
 
+  /** Geçmiş: bugün / dün / son 7 gün / bu ay / daha eski; liste zaten yeniden eskiye sıralı gelir. */
+  const historyGroups = groupConversations(conversations);
+  const historyTime = (iso: string, group: HistoryGroup) => {
+    const date = new Date(iso);
+    if (group === "today" || group === "yesterday") return date.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" });
+    return date.toLocaleDateString(undefined, { day: "2-digit", month: "2-digit", ...(group === "older" ? { year: "2-digit" } : {}) });
+  };
   const conversationTitle =
     conversations.find((item) => item.id === conversationId)?.title ??
     (conversationId ? turns.find((turn) => turn.role === "user")?.content : undefined) ??
     t("newConversation");
   const column = expanded ? "mx-auto w-full max-w-3xl" : "w-full";
+  const composerOpen = composerFocused || draft.length > 0 || attachments.length > 0;
 
   /** Yazdıkça büyüyen giriş kutusu (en çok ~8 satır). */
   const autoGrow = (element: HTMLTextAreaElement | null) => {
     if (!element) return;
     element.style.height = "auto";
-    element.style.height = `${Math.min(element.scrollHeight, 200)}px`;
+    element.style.height = `${Math.min(element.scrollHeight, 240)}px`;
   };
-  useEffect(() => autoGrow(inputRef.current), [draft]);
+  useEffect(() => autoGrow(inputRef.current), [draft, composerOpen]);
 
   const iconButton = "rounded-full";
 
@@ -479,7 +541,7 @@ export function AiChatPanel({
               <input
                 aria-label={t("input")}
                 placeholder={t("barPlaceholder")}
-                className="min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-ink-400"
+                className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-ink-400"
                 value={draft}
                 onChange={(event) => setDraft(event.target.value)}
               />
@@ -489,7 +551,7 @@ export function AiChatPanel({
                 aria-label={t("send")}
                 isDisabled={!draft.trim()}
                 variant={actionVariant("primary", "solid")}
-                className="h-10 w-10 min-w-10 rounded-full"
+                className="h-9 w-9 min-w-9 rounded-full"
               >
                 <ArrowUp className="h-5 w-5" aria-hidden />
               </Button>
@@ -519,7 +581,7 @@ export function AiChatPanel({
                 <Button
                   aria-label={t("history")}
                   variant={actionVariant("default", "ghost")}
-                  className="min-w-0 max-w-[60%] justify-start gap-1.5 px-2 text-lg font-medium"
+                  className="min-w-0 max-w-[60%] justify-start gap-1 px-2 text-sm font-semibold"
                 >
                   <span className="truncate">{conversationTitle}</span>
                   <ChevronDown className="h-4 w-4 shrink-0 text-ink-500" aria-hidden />
@@ -533,37 +595,48 @@ export function AiChatPanel({
                       if (key === "__empty") return;
                       void openConversation(String(key));
                     }}
-                    className="max-h-96 w-72 overflow-y-auto"
+                    className="max-h-[28rem] w-80 overflow-y-auto"
                   >
                     {conversations.length ? (
-                      conversations.map((item) => (
-                        <Dropdown.Item key={item.id} id={item.id} textValue={item.title}>
-                          <Label>
-                            <span className="line-clamp-1">{item.title}</span>
-                          </Label>
-                          <Description>{new Date(item.updatedAt).toLocaleString()}</Description>
-                        </Dropdown.Item>
+                      historyGroups.map((group) => (
+                        <Dropdown.Section key={group.key} id={group.key}>
+                          <Header className="px-2 pb-1 pt-2 text-[11px] font-medium uppercase tracking-wide text-ink-400">{t(`historyGroups.${group.key}`)}</Header>
+                          {group.items.map((item) => (
+                            <Dropdown.Item key={item.id} id={item.id} textValue={item.title} className={cn(item.id === conversationId && "bg-ink-100")}>
+                              <span className="flex w-full min-w-0 items-center gap-3 text-sm">
+                                <span className="min-w-0 flex-1 truncate">{item.title}</span>
+                                <span className="shrink-0 text-xs tabular-nums text-ink-400">{historyTime(item.updatedAt, group.key)}</span>
+                              </span>
+                            </Dropdown.Item>
+                          ))}
+                        </Dropdown.Section>
                       ))
                     ) : (
                       <Dropdown.Item id="__empty" textValue={t("historyEmpty")} isDisabled>
-                        <Label className="text-ink-400">{t("historyEmpty")}</Label>
+                        <span className="text-sm text-ink-400">{t("historyEmpty")}</span>
                       </Dropdown.Item>
                     )}
-                    <Dropdown.Item id="__new" textValue={t("newConversation")}>
-                      <Plus className="h-4 w-4" aria-hidden />
-                      <Label>{t("newConversation")}</Label>
-                    </Dropdown.Item>
-                    {conversationId ? (
-                      <Dropdown.Item id="__delete" textValue={t("deleteConversation")} variant="danger">
-                        <Trash2 className="h-4 w-4" aria-hidden />
-                        <Label>{t("deleteConversation")}</Label>
+                    <Dropdown.Section id="__actions" className="mt-1 border-t border-ink-100 pt-1">
+                      <Dropdown.Item id="__new" textValue={t("newConversation")}>
+                        <span className="flex items-center gap-2 text-sm">
+                          <Plus className="h-4 w-4" aria-hidden />
+                          {t("newConversation")}
+                        </span>
                       </Dropdown.Item>
-                    ) : null}
+                      {conversationId ? (
+                        <Dropdown.Item id="__delete" textValue={t("deleteConversation")} variant="danger">
+                          <span className="flex items-center gap-2 text-sm">
+                            <Trash2 className="h-4 w-4" aria-hidden />
+                            {t("deleteConversation")}
+                          </span>
+                        </Dropdown.Item>
+                      ) : null}
+                    </Dropdown.Section>
                   </Dropdown.Menu>
                 </Dropdown.Popover>
               </Dropdown>
             ) : (
-              <span className="px-2 text-lg font-medium">{t("title")}</span>
+              <span className="px-2 text-sm font-semibold">{t("title")}</span>
             )}
             <div className="flex shrink-0 items-center gap-1">
               <span className="mr-1 rounded-full bg-ink-100 px-2.5 py-0.5 text-xs font-medium text-ink-600">{t("beta")}</span>
@@ -656,13 +729,13 @@ export function AiChatPanel({
               <div className="flex flex-1 flex-col overflow-y-auto px-4 text-sm">
                 {turns.length === 0 ? (
                   <div className={cn(column, "mt-auto flex flex-col gap-3 pb-4")}>
-                    <h2 className="text-xl font-semibold text-foreground">{t("emptyTitle")}</h2>
-                    <p className="mb-3 text-base text-ink-500">{t("emptySubtitle")}</p>
+                    <h2 className="text-base font-semibold text-foreground">{t("emptyTitle")}</h2>
+                    <p className="mb-2 text-sm text-ink-500">{t("emptySubtitle")}</p>
                     {(["q1", "q2", "q3", "q4"] as const).map((key) => (
                       <button
                         key={key}
                         type="button"
-                        className="group flex items-center justify-between gap-3 rounded-xl border border-ink-200 px-4 py-3 text-left text-base transition-colors hover:border-ink-300 hover:bg-ink-100"
+                        className="group flex items-center justify-between gap-3 rounded-xl border border-ink-200 px-3.5 py-2.5 text-left text-sm transition-colors hover:border-ink-300 hover:bg-ink-100"
                         onClick={() => {
                           setDraft(t(`examples.${key}`));
                           inputRef.current?.focus();
@@ -694,9 +767,9 @@ export function AiChatPanel({
                     >
                       <div
                         className={cn(
-                          "text-base",
+                          "text-sm leading-6",
                           turn.role === "user"
-                            ? "max-w-[85%] rounded-[1.25rem] bg-ink-100 px-4 py-2.5 text-foreground"
+                            ? "max-w-[85%] rounded-[1.25rem] bg-ink-100 px-3.5 py-2 text-foreground"
                             : "w-full px-1 text-foreground",
                         )}
                       >
@@ -781,7 +854,30 @@ export function AiChatPanel({
                   void send();
                 }}
               >
-                <div className="rounded-[1.75rem] border border-ink-200 bg-background p-2 transition-colors focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/20">
+                <div
+                  className={cn(
+                    "relative rounded-[1.5rem] border bg-background transition-[border-color,box-shadow] duration-200",
+                    composerOpen ? "border-accent ring-2 ring-accent/15" : "border-ink-200",
+                  )}
+                >
+                  {attachments.length ? (
+                    <ul className="flex flex-wrap gap-1.5 px-3 pt-3" aria-label={t("attachments.list")}>
+                      {attachments.map((item) => (
+                        <li key={item.id} className="flex max-w-full items-center gap-1.5 rounded-lg border border-ink-200 bg-ink-50 py-1 pl-2 pr-1 text-xs">
+                          {item.uploading ? <Loader2 className="h-3.5 w-3.5 shrink-0 animate-spin text-ink-400" aria-hidden /> : <FileText className="h-3.5 w-3.5 shrink-0 text-ink-500" aria-hidden />}
+                          <span className="truncate">{item.name}</span>
+                          <button
+                            type="button"
+                            aria-label={t("attachments.remove", { name: item.name })}
+                            onClick={() => setAttachments((current) => current.filter((entry) => entry.id !== item.id))}
+                            className="rounded-full p-0.5 text-ink-400 hover:bg-ink-200 hover:text-foreground"
+                          >
+                            <X className="h-3 w-3" aria-hidden />
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  ) : null}
                   <textarea
                     ref={inputRef}
                     aria-label={t("input")}
@@ -789,25 +885,59 @@ export function AiChatPanel({
                     rows={1}
                     value={draft}
                     onChange={(event) => setDraft(event.target.value)}
+                    onFocus={() => setComposerFocused(true)}
+                    onBlur={() => setComposerFocused(false)}
+                    onTransitionEnd={(event) => autoGrow(event.currentTarget)}
                     onKeyDown={(event) => {
                       if (event.key === "Enter" && !event.shiftKey) {
                         event.preventDefault();
                         void send();
                       }
                     }}
-                    className="block max-h-[200px] w-full resize-none bg-transparent px-3 pb-1 pt-2 text-base outline-none placeholder:text-ink-400"
+                    className={cn(
+                      "block max-h-[240px] w-full resize-none bg-transparent text-sm leading-6 outline-none transition-[padding,min-height] duration-200 ease-out placeholder:text-ink-400",
+                      composerOpen ? "min-h-[5.5rem] px-4 pb-12 pt-3" : "min-h-11 py-2.5 pl-12 pr-14",
+                    )}
                   />
-                  <div className="flex items-center justify-between gap-2">
-                    <Tooltip delay={300}>
-                      <Button isIconOnly aria-label={t("newConversation")} onPress={newConversation} isDisabled={busy || turns.length === 0} variant={actionVariant("default", "ghost")} className={iconButton}>
-                        <Plus className="h-5 w-5" aria-hidden />
-                      </Button>
-                      <Tooltip.Content>{t("newConversation")}</Tooltip.Content>
-                    </Tooltip>
-                    <Button type="submit" isIconOnly aria-label={t("send")} isDisabled={!draft.trim() || busy} variant={actionVariant("primary", "solid")} className="h-10 w-10 min-w-10 rounded-full">
-                      <ArrowUp className="h-5 w-5" aria-hidden />
+                  {/* Dosya düğmesi: kapalıyken solda, giriş kutusuyla aynı satırda; açılınca alt satıra kayar. */}
+                  <input
+                    ref={fileRef}
+                    type="file"
+                    multiple
+                    accept={ATTACHMENT_ACCEPT}
+                    className="hidden"
+                    onChange={(event) => {
+                      void uploadFiles(event.target.files);
+                      event.target.value = "";
+                    }}
+                  />
+                  <Tooltip delay={300}>
+                    <Button
+                      isIconOnly
+                      size="sm"
+                      aria-label={t("attachments.add")}
+                      onPress={() => fileRef.current?.click()}
+                      isDisabled={busy || attachments.length >= ATTACHMENT_LIMIT}
+                      variant={actionVariant("default", "ghost")}
+                      style={{ top: composerOpen ? BUTTON_TOP_OPEN : BUTTON_TOP_CLOSED }}
+                      className="absolute left-2 h-8 w-8 min-w-8 rounded-full transition-[top] duration-200 ease-out"
+                    >
+                      <Paperclip className="h-4 w-4" aria-hidden />
                     </Button>
-                  </div>
+                    <Tooltip.Content>{t("attachments.hint")}</Tooltip.Content>
+                  </Tooltip>
+                  <Button
+                    type="submit"
+                    isIconOnly
+                    size="sm"
+                    aria-label={t("send")}
+                    isDisabled={(!draft.trim() && !attachments.some((item) => item.token)) || busy || attachments.some((item) => item.uploading)}
+                    variant={actionVariant("primary", "solid")}
+                    style={{ top: composerOpen ? BUTTON_TOP_OPEN : BUTTON_TOP_CLOSED }}
+                    className="absolute right-2 h-8 w-8 min-w-8 rounded-full transition-[top] duration-200 ease-out"
+                  >
+                    <ArrowUp className="h-4 w-4" aria-hidden />
+                  </Button>
                 </div>
                 <p className="mt-2 text-center text-xs text-ink-400">{t("disclaimer")}</p>
                 <p className="text-center text-xs text-ink-400">{t("privacyNote")}</p>

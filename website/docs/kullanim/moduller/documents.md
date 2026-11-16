@@ -13,7 +13,7 @@ Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi.
 |---|---|
 | Anahtar | `documents` |
 | Tür | Resmî modül |
-| Sürüm | 1.6.2 |
+| Sürüm | 1.6.3 |
 | Sayfalar | `/evrak`, `/evrak/kategoriler` |
 | Önerir | [Muhasebe](./accounting), [Görevler](./tasks), [Yapay zekâ asistanı](./ai) |
 
@@ -44,6 +44,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_document` · `get_document_statistics` · `list_documents` · `propose_delete_document` · `propose_document` · `propose_document_status` · `read_document_file`
 
 ## Sürüm notları
+
+### 1.6.3 — OCR ortak altyapıya taşındı
+
+_2026-11-16_
+
+- **İyileştirme:** Evrak OCR'ı ortak dosya altyapısına taşındı (asistan ekleri de kullanır); davranış değişmedi.
 
 ### 1.6.2 — HeroUI v3 arayüz geçişi
 
@@ -89,10 +95,4 @@ _2026-11-15_
 - **Yeni:** Yeni evrak formunda seçilen dosya için "Evraktan doldur": metin katmanı veya OCR (taranmış PDF, fotoğraf; Almanca/Türkçe/İngilizce) ile tarih, gönderen, karşı tarafın sayısı, konu, son işlem tarihi ve özet önerilir; seçilen alanlar forma yazılır. Düzenleme formunda da kullanılabilir.
 - **Güvenlik:** Analiz edilen dosya saklanmaz; OCR tamamen sunucuda yerel çalışır, metin dışarı gönderilmez ve loglanmaz.
 
-### 1.2.3 — AI v2 takip paketi
-
-_2026-11-15_
-
-- **İyileştirme:** AI iş akışında sayfalama, sorgu sözleşmesi veya worker iptal kontrolü güçlendirildi.
-
-Daha eski 5 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/documents/releases.json)
+Daha eski 6 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/documents/releases.json)

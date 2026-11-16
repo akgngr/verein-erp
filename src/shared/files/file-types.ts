@@ -46,6 +46,9 @@ export const FILE_TYPE_RULES: FileTypeRule[] = [
     signature: "zip",
   },
   { extensions: ["txt"], mimes: ["text/plain"], signature: "none" },
+  // Markdown ve CSV düz metindir; yalnız açıkça izin veren modüller (ör. asistan ekleri) kabul eder.
+  { extensions: ["md", "markdown"], mimes: ["text/markdown", "text/x-markdown", "text/plain"], signature: "none" },
+  { extensions: ["csv"], mimes: ["text/csv", "application/csv", "text/plain", "application/vnd.ms-excel"], signature: "none" },
   // E-fatura (XRechnung/ZUGFeRD XML). Yalnızca açıkça izin veren modüller kabul eder; hiçbir zaman inline sunulmaz.
   { extensions: ["xml"], mimes: ["application/xml", "text/xml"], signature: "none" },
 ];

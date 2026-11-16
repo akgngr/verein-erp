@@ -100,7 +100,23 @@
     "emptyTitle": "Size nasıl yardımcı olabilirim?",
     "emptySubtitle": "Derneğinizin verileri hakkında soru sorun, rapor ve dosya isteyin ya da iş önerisi alın.",
     "composerPlaceholder": "Bir şey sorun…",
-    "disclaimer": "Asistan hata yapabilir. Sonuçları doğrulayın."
+    "disclaimer": "Asistan hata yapabilir. Sonuçları doğrulayın.",
+    "attachments": {
+      "add": "Dosya ekle",
+      "hint": "Dosya ekle: PDF, resim, Word, Excel, Markdown, CSV",
+      "list": "Ekli dosyalar",
+      "remove": "{name} dosyasını kaldır",
+      "analyzeDefault": "Bu dosyayı analiz et ve özetle.",
+      "failed": "Dosya yüklenemedi.",
+      "limit": "Bir mesaja en çok {count} dosya eklenebilir."
+    },
+    "historyGroups": {
+      "today": "Bugün",
+      "yesterday": "Dün",
+      "week": "Son 7 gün",
+      "month": "Son 30 gün",
+      "older": "Daha eski"
+    }
   },
   "settings": {
     "title": "Yapay zekâ asistanı",
@@ -307,5 +323,13 @@
       "specialCategory": "Evrakta kişiye ait özel nitelikli bilgi (ör. sağlık) var; yalnız yerel modelle işlenebilir.",
       "unreadable": "Asistanın yanıtı okunamadı; lütfen tekrar deneyin."
     }
+  },
+  "attachments": {
+    "unsupported": "Bu dosya türünden metin okunamıyor.",
+    "noText": "Dosyada okunabilir metin bulunamadı.",
+    "failed": "Dosya analiz edilemedi.",
+    "expired": "Ekin süresi doldu; dosyayı yeniden ekleyin.",
+    "needScreened": "Bulut sağlayıcıda dosya eki yalnız \"Denetimli serbest metin\" modunda kullanılabilir (Ayarlar → AI asistanı).",
+    "sensitive": "Dosya kişiyle birlikte özel nitelikli veri (sağlık, din vb.) içeriyor; bulut sağlayıcıya gönderilmedi. Yerel model kullanın."
   }
 }

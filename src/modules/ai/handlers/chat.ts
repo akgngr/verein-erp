@@ -19,6 +19,7 @@ import { aiPermissions } from "../permissions";
 import { resolveAliasesForDisplay } from "../services/aliases";
 import { CloudPreflightError } from "../services/cloud-preflight-error";
 import { runAssistant } from "../services/assistant";
+import { AI_ATTACHMENTS_PER_MESSAGE, openAttachment } from "../services/attachments";
 import { getActiveProvider, hasAiConsent } from "../services/consent";
 import { AI_HISTORY_WINDOW, createConversation, getConversation } from "../services/history";
 import { ProviderError } from "../services/providers";
@@ -28,6 +29,8 @@ const bodySchema = z.object({
   conversationId: z.string().min(1).max(64).nullable(),
   requestKey: z.string().uuid().optional(),
   message: z.string().trim().min(1).max(4000),
+  /** Sohbet ekleri: /api/ai/attachments mühürleri (yalnız bu tur için). */
+  attachments: z.array(z.string().min(1).max(200_000)).max(AI_ATTACHMENTS_PER_MESSAGE).default([]),
 });
 
 const fail = async (key: string, status: number, code?: string) =>
@@ -59,6 +62,8 @@ export async function aiChatHandler(request: Request): Promise<Response> {
 
   try {
     const { message } = parsed.data;
+    const attachments = parsed.data.attachments.map((token) => openAttachment(user.id, token));
+    if (attachments.some((attachment) => !attachment)) return fail("ai.attachments.expired", 400, "attachmentExpired");
     if(parsed.data.requestKey){const cached=await getCachedAiTurn(user.id,parsed.data.requestKey,parsed.data.conversationId);if(cached)return NextResponse.json(cached);}
     let conversationId = parsed.data.conversationId;
     const previous = conversationId ? await getConversation(user.id, conversationId, AI_HISTORY_WINDOW) : null;
@@ -70,20 +75,20 @@ export async function aiChatHandler(request: Request): Promise<Response> {
     const current=await getConversation(user.id,conversationId,AI_HISTORY_WINDOW);
     if(!current)throw new Error("AI_TURN_BUSY");
     const history=current.turns.slice(-(AI_HISTORY_WINDOW-1)).map(({role,content})=>({role,content}));
-    const result = await runAssistant({ conversationId, user, locale: await getLocale(), provider, turns: [...history, { role: "user", content: message }] });
+    const result = await runAssistant({ conversationId, user, locale: await getLocale(), provider, turns: [...history, { role: "user", content: message }], attachments: attachments.filter((attachment) => attachment !== null) });
     await writeAudit({
       userId: user.id,
       userLabel: buildUserLabel(user.name, user.email),
       action: "AI_CHAT",
       entity: "AiAssistant",
       entityId: null,
-      after: { provider, tools: result.toolsUsed, inputTokens: result.usage.inputTokens, outputTokens: result.usage.outputTokens, redactedValues: result.redactions },
+      after: { provider, attachments: attachments.length, tools: result.toolsUsed, inputTokens: result.usage.inputTokens, outputTokens: result.usage.outputTokens, redactedValues: result.redactions },
     });
     // Saklanan yanıt takma adlı kalır (sonraki turda modele bu hâli gider); kullanıcıya canlı yetkiyle çözülmüş hâli döner.
     const tAlias=await getTranslations("ai.alias");
     const [displayReply]=await resolveAliasesForDisplay(user,conversationId,[result.reply],{hidden:tAlias("hidden"),unknown:tAlias("unknown")});
     const response={ok:true,conversationId,reply:displayReply,proposals:result.proposals,files:result.files};
-    await commitAiTurn({userId:user.id,conversationId,id:claim.id,message,reply:result.reply,proposals:result.proposals,files:result.files,response});
+    await commitAiTurn({userId:user.id,conversationId,id:claim.id,message:attachments.length?`${message}\n\n📎 ${attachments.map((attachment)=>attachment!.name).join(", ")}`:message,reply:result.reply,proposals:result.proposals,files:result.files,response});
     return NextResponse.json(response);
     } catch(error) { await finishAiTurn(user.id,conversationId,claim.id,null,false); throw error; }
   } catch (error) {
