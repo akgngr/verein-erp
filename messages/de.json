@@ -657,6 +657,7 @@
       "title": "Kontensalden"
     },
     "menu": {
+      "dashboard": "Übersicht",
       "invoices": "Rechnungen",
       "sync": "Mitgliedsbeiträge übernehmen",
       "reports": "Berichte",
@@ -1818,6 +1819,30 @@
         "description": "Buchungen ohne Datei, ausgenommen Umbuchungen und Quellbuchungen.",
         "period": "{year} · fehlende Belege"
       }
+    },
+    "dashboard": {
+      "title": "Buchhaltungsübersicht",
+      "description": "Buchungen und Prüfhilfen für {year}",
+      "bookings": "Buchungen",
+      "filterLabel": "Buchhaltungszeitraum",
+      "year": "Gesamtes Jahr",
+      "quarter": "Q{n}",
+      "monthLabel": "Monat",
+      "noBookings": "Keine Einnahmen- oder Ausgabenbuchungen im ausgewählten Zeitraum.",
+      "income": "Einnahmenbuchungen",
+      "expense": "Ausgabenbuchungen",
+      "difference": "Einnahmen minus Ausgaben",
+      "quarterlyTitle": "Quartalsübersicht",
+      "quarterlyDescription": "Grün: Einnahmen; Rot: Ausgaben. Die Tabelle zeigt dieselben Werte barrierearm.",
+      "periodColumn": "Zeitraum",
+      "recommendations": "Prüfhinweise",
+      "missingReceipts": "Im Jahr {year} haben {count} Buchungen keinen Dateibeleg.",
+      "inspectBookings": "Buchungen prüfen",
+      "overdue": "Für {count} überfällige Rechnungen sind insgesamt {amount} offen.",
+      "inspectInvoices": "Rechnungen prüfen",
+      "noWarnings": "Keine Auffälligkeiten nach den derzeitigen Prüfregeln.",
+      "basis": "Bruttobuchungswerte in EUR. Kein Bankkontostand oder steuerlicher Gewinn. Die Steuerart ändert die Buchungsdatumsbasis dieses Berichts nicht.",
+      "taxMethod": "Steuereinstellung: {method}."
     }
   },
   "ai": {

@@ -28,7 +28,7 @@ import {
 export const moduleConfig: ModuleConfig = {
   key: "accounting",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.22.4",
+  version: "1.22.5",
   label: "Muhasebe",
   description:
     "Alman dernek mevzuatına uygun çift taraflı defter tutma, fiş ve bütçe yönetimi.",
@@ -54,6 +54,7 @@ export const moduleConfig: ModuleConfig = {
     },
   ],
   menu: [
+    { key: "dashboard", label: "Genel bakış", href: "/muhasebe/panel", icon: BarChart3 },
     {
       key: "invoices",
       label: "Faturalar",

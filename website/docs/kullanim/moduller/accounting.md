@@ -13,8 +13,8 @@ Alman dernek mevzuatına uygun çift taraflı defter tutma, fiş ve bütçe yön
 |---|---|
 | Anahtar | `accounting` |
 | Tür | Resmî modül |
-| Sürüm | 1.22.4 |
-| Sayfalar | `/muhasebe`, `/muhasebe/faturalar`, `/muhasebe/gelen-faturalar`, `/muhasebe/cariler`, `/muhasebe/banka`, `/muhasebe/uyelik-aktarimi`, `/muhasebe/raporlar`, `/muhasebe/vergi`, `/muhasebe/hibeler`, `/muhasebe/sepa`, `/muhasebe/butce`, `/muhasebe/ekler`, `/muhasebe/gobd`, `/muhasebe/yil-kapanisi`, `/muhasebe/ayarlar` |
+| Sürüm | 1.22.5 |
+| Sayfalar | `/muhasebe`, `/muhasebe/panel`, `/muhasebe/faturalar`, `/muhasebe/gelen-faturalar`, `/muhasebe/cariler`, `/muhasebe/banka`, `/muhasebe/uyelik-aktarimi`, `/muhasebe/raporlar`, `/muhasebe/vergi`, `/muhasebe/hibeler`, `/muhasebe/sepa`, `/muhasebe/butce`, `/muhasebe/ekler`, `/muhasebe/gobd`, `/muhasebe/yil-kapanisi`, `/muhasebe/ayarlar` |
 
 ## Diğer modüllere erişim
 
@@ -43,6 +43,13 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_accounting_summary` · `get_bank_inbox_summary` · `get_open_items_summary` · `get_payables_summary` · `get_report_link` · `get_vat_summary`
 
 ## Sürüm notları
+
+### 1.22.5 — Muhasebe genel bakış ekranı
+
+_2026-11-16_
+
+- **Yeni:** Muhasebe modülüne dönem seçimi, çeyreklik SVG/CSS gelir-gider çubukları ve erişilebilir tabloyla salt okunur genel bakış eklendi; gecikmiş faturalar ve belgesiz fişler için kontrol önerileri sunulur.
+- **İyileştirme:** Gelir-gider fiş toplamları mevcut muhasebe listesi ve genel bakış tarafından ortak sorgudan üretilir.
 
 ### 1.22.4 — Ana panel muhasebe kartları
 
@@ -86,10 +93,4 @@ _2026-11-15_
 
 - **Yeni:** Gelen fatura yüklemesi isteğe bağlı ön doldurma alanlarını (tedarikçi, numara, tarihler, IBAN, not) kabul eder; e-fatura verisi her zaman önceliklidir.
 
-### 1.20.1 — E-fatura görünümü düzeltmesi
-
-_2026-11-08_
-
-- **Düzeltme:** Gelen e-fatura görünümünde kaynak satırı çeviri hatası (FORMATTING_ERROR) giderildi.
-
-Daha eski 23 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/accounting/releases.json)
+Daha eski 24 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/accounting/releases.json)

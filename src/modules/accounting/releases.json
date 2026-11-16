@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.22.5",
+      "date": "2026-11-16",
+      "title": {
+        "tr": "Muhasebe genel bakış ekranı",
+        "de": "Buchhaltungsübersicht"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Muhasebe modülüne dönem seçimi, çeyreklik SVG/CSS gelir-gider çubukları ve erişilebilir tabloyla salt okunur genel bakış eklendi; gecikmiş faturalar ve belgesiz fişler için kontrol önerileri sunulur.",
+          "de": "Die Buchhaltung erhält eine schreibgeschützte Übersicht mit Zeitraumauswahl, Quartalsbalken und zugänglicher Tabelle sowie Hinweisen zu überfälligen Rechnungen und Buchungen ohne Belege."
+        },
+        {
+          "type": "improvement",
+          "tr": "Gelir-gider fiş toplamları mevcut muhasebe listesi ve genel bakış tarafından ortak sorgudan üretilir.",
+          "de": "Buchungssummen werden über eine gemeinsame Abfrage von Buchungsliste und Übersicht verwendet."
+        }
+      ]
+    },
+    {
       "version": "1.22.4",
       "date": "2026-11-16",
       "title": {

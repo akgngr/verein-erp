@@ -5,24 +5,13 @@ import { getDb } from "@/shared/db";
 import type { AccountingStats } from "../types";
 import { accountBalanceAt } from "../services/balances";
 import { countMissingReceipts } from "../services/report-builders";
+import { getBookingTotals } from "./get-booking-totals";
 
 /** Panel + liste istatistikleri (§ 14): gelir/gider/fark + eksik belge + bakiyeler. */
 export async function getAccountingStats(year: number): Promise<AccountingStats> {
   const db = getDb();
 
-  const totals = await db.accountingBooking.groupBy({
-    by: ["type"],
-    where: { year, reversedAt: null, type: { not: "TRANSFER" } },
-    _sum: { amount: true },
-  });
-
-  let incomeCents = 0;
-  let expenseCents = 0;
-  for (const total of totals) {
-    const cents = Number(total._sum.amount ? total._sum.amount.mul(100).toFixed(0) : 0);
-    if (total.type === "INCOME") incomeCents += cents;
-    else if (total.type === "EXPENSE") expenseCents += cents;
-  }
+  const { incomeCents, expenseCents, netCents } = await getBookingTotals(year);
 
   const [missingReceiptCount, accounts] = await Promise.all([
     countMissingReceipts(year),
@@ -45,7 +34,7 @@ export async function getAccountingStats(year: number): Promise<AccountingStats>
   return {
     incomeCents,
     expenseCents,
-    netCents: incomeCents - expenseCents,
+    netCents,
     missingReceiptCount,
     accountBalances,
   };
