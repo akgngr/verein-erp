@@ -6,8 +6,6 @@ import {
   Link as ActionLink,
   buttonVariants,
   Tooltip,
-  TextField,
-  TextArea,
   Dropdown,
   Label,
   Description,
@@ -16,17 +14,19 @@ import {
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import {
-  History,
+  ArrowUp,
+  ArrowUpRight,
+  ChevronDown,
+  FileDown,
   ListPlus,
   Lock,
-  MessageSquarePlus,
-  PanelRight,
-  Send,
+  Maximize2,
+  Minimize2,
+  Plus,
   ShieldCheck,
   Sparkles,
   Trash2,
   X,
-  FileDown,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -60,6 +60,10 @@ import {
 import { toInternalMarkdownHref } from "@/shared/markdown/links";
 import { parseMarkdown } from "@/shared/markdown/parse";
 import type { AiFile, AiProposal } from "../types";
+
+/** Masaüstü yerleşimleri: yan sütun (genişlik sürüklenir) ya da tam ekran. */
+const DOCKED_CLASS = "md:sticky md:top-0 md:z-auto md:h-dvh md:w-[var(--ai-panel-width)] md:shrink-0 md:border-l md:border-ink-200";
+const EXPANDED_CLASS = "md:fixed md:inset-0 md:z-50";
 
 type Turn = {
   role: "user" | "assistant";
@@ -234,7 +238,10 @@ export function AiChatPanel({
   const [historyCursor, setHistoryCursor] = useState<string | null>(null);
   const [exportJobs, setExportJobs] = useState<Record<string, string>>({});
   const [done, setDone] = useState<Set<string>>(new Set());
+  /** Genişletilmiş görünüm: masaüstünde sohbet tüm ekranı kaplar, içerik ortada okunur genişlikte. */
+  const [expanded, setExpanded] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   // KARAR: efektler hiçbir değer döndürmez — yeni tarayıcılarda scrollIntoView Promise döndürür
   // ve React yalnızca temizlik fonksiyonu kabul eder.
@@ -428,6 +435,22 @@ export function AiChatPanel({
     toast(proposalText(proposal, "done"), { variant: "success" });
   };
 
+  const conversationTitle =
+    conversations.find((item) => item.id === conversationId)?.title ??
+    (conversationId ? turns.find((turn) => turn.role === "user")?.content : undefined) ??
+    t("newConversation");
+  const column = expanded ? "mx-auto w-full max-w-3xl" : "w-full";
+
+  /** Yazdıkça büyüyen giriş kutusu (en çok ~8 satır). */
+  const autoGrow = (element: HTMLTextAreaElement | null) => {
+    if (!element) return;
+    element.style.height = "auto";
+    element.style.height = `${Math.min(element.scrollHeight, 200)}px`;
+  };
+  useEffect(() => autoGrow(inputRef.current), [draft]);
+
+  const iconButton = "rounded-full";
+
   return (
     <>
       <div className="relative flex min-w-0 flex-1 flex-col">
@@ -436,7 +459,7 @@ export function AiChatPanel({
           // Yüzen giriş çubuğu: içerik alanının altında ortada; gönderince sohbet sütunu açılır.
           <div className="pointer-events-none sticky bottom-4 z-30 flex justify-center px-4">
             <form
-              className="pointer-events-auto flex w-full max-w-xl items-center gap-2 rounded-full border border-ink-200 bg-background/95 py-1.5 pl-2 pr-1.5 shadow-lg backdrop-blur"
+              className="pointer-events-auto flex w-full max-w-xl items-center gap-2 rounded-[1.75rem] border border-ink-200 bg-background/95 p-2 pl-3 shadow-lg backdrop-blur transition-colors focus-within:border-accent"
               onSubmit={(event) => {
                 event.preventDefault();
                 if (!draft.trim()) return setOpen(true);
@@ -444,52 +467,43 @@ export function AiChatPanel({
                 if (consented && provider) void send();
               }}
             >
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-accent text-accent-foreground">
-                <Sparkles className="h-4 w-4" aria-hidden />
-              </span>
+              <button
+                type="button"
+                aria-label={t("open")}
+                title={t("open")}
+                onClick={() => setOpen(true)}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-ink-500 transition-colors hover:bg-ink-100 hover:text-foreground"
+              >
+                <Sparkles className="h-5 w-5" aria-hidden />
+              </button>
               <input
                 aria-label={t("input")}
                 placeholder={t("barPlaceholder")}
-                className="min-w-0 flex-1 bg-transparent text-sm outline-none placeholder:text-ink-400"
+                className="min-w-0 flex-1 bg-transparent text-base outline-none placeholder:text-ink-400"
                 value={draft}
                 onChange={(event) => setDraft(event.target.value)}
               />
               <Button
                 type="submit"
                 isIconOnly
-                size="sm"
                 aria-label={t("send")}
                 isDisabled={!draft.trim()}
-                variant={actionVariant("default", "light")}
-                className={"rounded-full"}
+                variant={actionVariant("primary", "solid")}
+                className="h-10 w-10 min-w-10 rounded-full"
               >
-                <Send className="h-4 w-4" aria-hidden />
+                <ArrowUp className="h-5 w-5" aria-hidden />
               </Button>
-              <span className="h-5 w-px bg-ink-200" aria-hidden />
-              <Tooltip delay={300}>
-                <Button
-                  isIconOnly
-                  size="sm"
-                  aria-label={t("open")}
-                  onPress={() => setOpen(true)}
-                  variant={actionVariant("default", "light")}
-                  className={"rounded-full"}
-                >
-                  <PanelRight className="h-4 w-4" aria-hidden />
-                </Button>
-                <Tooltip.Content>{t("open")}</Tooltip.Content>
-              </Tooltip>
             </form>
           </div>
         ) : null}
       </div>
 
-      {/* Sohbet sütunu: masaüstünde içeriği sola iten sabit genişlikte sütun, mobilde tam ekran. */}
+      {/* Sohbet sütunu: masaüstünde içeriği sola iten sütun ya da tam ekran; mobilde tam ekran. */}
       {open ? (
         <aside
           aria-label={t("title")}
           style={{ "--ai-panel-width": `${width}px` } as CSSProperties}
-          className="fixed inset-0 z-50 flex flex-col bg-background md:sticky md:top-0 md:z-auto md:h-dvh md:w-[var(--ai-panel-width)] md:shrink-0 md:border-l md:border-ink-200"
+          className={cn("fixed inset-0 z-50 flex flex-col bg-background", expanded ? EXPANDED_CLASS : DOCKED_CLASS)}
         >
           <div
             role="separator"
@@ -497,100 +511,98 @@ export function AiChatPanel({
             aria-label={t("resize")}
             title={t("resize")}
             onPointerDown={startResize}
-            className="absolute inset-y-0 left-0 z-10 hidden w-1.5 -translate-x-1/2 cursor-col-resize hover:bg-accent/30 md:block"
+            className={cn("absolute inset-y-0 left-0 z-10 hidden w-1.5 -translate-x-1/2 cursor-col-resize hover:bg-accent/30", !expanded && "md:block")}
           />
-          <header className="flex items-center justify-between gap-2 border-b border-ink-200 px-4 py-3">
-            <div className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-accent" aria-hidden />
-              <span className="text-sm font-semibold">{t("title")}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              {consented && provider ? (
-                <>
-                  <Dropdown
-                    onOpenChange={(isOpen) =>
-                      isOpen && void refreshConversations()
-                    }
+          <header className="flex items-center justify-between gap-2 px-4 pb-2 pt-4">
+            {consented && provider ? (
+              <Dropdown onOpenChange={(isOpen) => isOpen && void refreshConversations()}>
+                <Button
+                  aria-label={t("history")}
+                  variant={actionVariant("default", "ghost")}
+                  className="min-w-0 max-w-[60%] justify-start gap-1.5 px-2 text-lg font-medium"
+                >
+                  <span className="truncate">{conversationTitle}</span>
+                  <ChevronDown className="h-4 w-4 shrink-0 text-ink-500" aria-hidden />
+                </Button>
+                <Dropdown.Popover placement="bottom start">
+                  <Dropdown.Menu
+                    aria-label={t("history")}
+                    onAction={(key) => {
+                      if (key === "__new") return newConversation();
+                      if (key === "__delete") return void removeConversation();
+                      if (key === "__empty") return;
+                      void openConversation(String(key));
+                    }}
+                    className="max-h-96 w-72 overflow-y-auto"
                   >
-                    <Tooltip delay={300}>
-                      <Button
-                        isIconOnly
-                        size="sm"
-                        aria-label={t("history")}
-                        variant={actionVariant("default", "light")}
-                      >
-                        <History className="h-4 w-4" aria-hidden />
-                      </Button>
-                      <Tooltip.Content>{t("history")}</Tooltip.Content>
-                    </Tooltip>
-
-                    <Dropdown.Popover placement="bottom end">
-                      <Dropdown.Menu
-                        aria-label={t("history")}
-                        renderEmptyState={() => t("historyEmpty")}
-                        items={conversations}
-                        onAction={(key) => void openConversation(String(key))}
-                        className="max-h-80 overflow-y-auto"
-                      >
-                        {(item) => (
-                          <Dropdown.Item
-                            key={item.id}
-                            id={item.id}
-                            textValue={item.title}
-                          >
-                            <Label>
-                              <span className="line-clamp-1">{item.title}</span>
-                            </Label>
-                            <Description>
-                              {new Date(item.updatedAt).toLocaleString()}
-                            </Description>
-                          </Dropdown.Item>
-                        )}
-                      </Dropdown.Menu>
-                    </Dropdown.Popover>
-                  </Dropdown>
-                  <Tooltip delay={300}>
-                    <Button
-                      isIconOnly
-                      size="sm"
-                      aria-label={t("newConversation")}
-                      onPress={newConversation}
-                      variant={actionVariant("default", "light")}
-                    >
-                      <MessageSquarePlus className="h-4 w-4" aria-hidden />
-                    </Button>
-                    <Tooltip.Content>{t("newConversation")}</Tooltip.Content>
-                  </Tooltip>
-                  {conversationId ? (
-                    <Tooltip delay={300}>
-                      <Button
-                        isIconOnly
-                        size="sm"
-                        aria-label={t("deleteConversation")}
-                        onPress={() => void removeConversation()}
-                        variant={actionVariant("danger", "light")}
-                      >
+                    {conversations.length ? (
+                      conversations.map((item) => (
+                        <Dropdown.Item key={item.id} id={item.id} textValue={item.title}>
+                          <Label>
+                            <span className="line-clamp-1">{item.title}</span>
+                          </Label>
+                          <Description>{new Date(item.updatedAt).toLocaleString()}</Description>
+                        </Dropdown.Item>
+                      ))
+                    ) : (
+                      <Dropdown.Item id="__empty" textValue={t("historyEmpty")} isDisabled>
+                        <Label className="text-ink-400">{t("historyEmpty")}</Label>
+                      </Dropdown.Item>
+                    )}
+                    <Dropdown.Item id="__new" textValue={t("newConversation")}>
+                      <Plus className="h-4 w-4" aria-hidden />
+                      <Label>{t("newConversation")}</Label>
+                    </Dropdown.Item>
+                    {conversationId ? (
+                      <Dropdown.Item id="__delete" textValue={t("deleteConversation")} variant="danger">
                         <Trash2 className="h-4 w-4" aria-hidden />
-                      </Button>
-                      <Tooltip.Content>
-                        {t("deleteConversation")}
-                      </Tooltip.Content>
-                    </Tooltip>
-                  ) : null}
-                </>
+                        <Label>{t("deleteConversation")}</Label>
+                      </Dropdown.Item>
+                    ) : null}
+                  </Dropdown.Menu>
+                </Dropdown.Popover>
+              </Dropdown>
+            ) : (
+              <span className="px-2 text-lg font-medium">{t("title")}</span>
+            )}
+            <div className="flex shrink-0 items-center gap-1">
+              <span className="mr-1 rounded-full bg-ink-100 px-2.5 py-0.5 text-xs font-medium text-ink-600">{t("beta")}</span>
+              {consented && provider ? (
+                <Tooltip delay={300}>
+                  <Button isIconOnly size="sm" aria-label={t("newConversation")} onPress={newConversation} isDisabled={busy} variant={actionVariant("default", "ghost")} className={iconButton}>
+                    <Plus className="h-5 w-5" aria-hidden />
+                  </Button>
+                  <Tooltip.Content>{t("newConversation")}</Tooltip.Content>
+                </Tooltip>
               ) : null}
+              <Tooltip delay={300}>
+                <Button
+                  isIconOnly
+                  size="sm"
+                  aria-label={expanded ? t("collapse") : t("expand")}
+                  onPress={() => setExpanded((value) => !value)}
+                  variant={actionVariant("default", "ghost")}
+                  className={cn(iconButton, "hidden md:inline-flex")}
+                >
+                  {expanded ? <Minimize2 className="h-4 w-4" aria-hidden /> : <Maximize2 className="h-4 w-4" aria-hidden />}
+                </Button>
+                <Tooltip.Content>{expanded ? t("collapse") : t("expand")}</Tooltip.Content>
+              </Tooltip>
               <Button
                 isIconOnly
                 size="sm"
                 aria-label={t("close")}
-                onPress={() => setOpen(false)}
-                variant={actionVariant("default", "light")}
+                onPress={() => {
+                  setExpanded(false);
+                  setOpen(false);
+                }}
+                variant={actionVariant("default", "ghost")}
+                className={iconButton}
               >
-                <X className="h-4 w-4" aria-hidden />
+                <X className="h-5 w-5" aria-hidden />
               </Button>
             </div>
           </header>
-
           {!provider ? (
             <div className="flex flex-1 flex-col items-center justify-center gap-2 p-6 text-center text-sm text-ink-500">
               <Lock className="h-6 w-6" aria-hidden />
@@ -641,162 +653,164 @@ export function AiChatPanel({
             </div>
           ) : (
             <>
-              <div className="flex flex-1 flex-col gap-3 overflow-y-auto p-4 text-sm">
+              <div className="flex flex-1 flex-col overflow-y-auto px-4 text-sm">
                 {turns.length === 0 ? (
-                  <div className="flex flex-col gap-2 text-ink-500">
-                    <p>{t("welcome")}</p>
+                  <div className={cn(column, "mt-auto flex flex-col gap-3 pb-4")}>
+                    <h2 className="text-xl font-semibold text-foreground">{t("emptyTitle")}</h2>
+                    <p className="mb-3 text-base text-ink-500">{t("emptySubtitle")}</p>
                     {(["q1", "q2", "q3", "q4"] as const).map((key) => (
                       <button
                         key={key}
                         type="button"
-                        className="rounded-lg border border-ink-200 px-3 py-2 text-left hover:bg-ink-100"
-                        onClick={() => setDraft(t(`examples.${key}`))}
+                        className="group flex items-center justify-between gap-3 rounded-xl border border-ink-200 px-4 py-3 text-left text-base transition-colors hover:border-ink-300 hover:bg-ink-100"
+                        onClick={() => {
+                          setDraft(t(`examples.${key}`));
+                          inputRef.current?.focus();
+                        }}
                       >
-                        {t(`examples.${key}`)}
+                        <span>{t(`examples.${key}`)}</span>
+                        <ArrowUpRight className="h-4 w-4 shrink-0 text-ink-400 transition-colors group-hover:text-foreground" aria-hidden />
                       </button>
                     ))}
                   </div>
-                ) : null}
-                {historyCursor ? (
-                  <Button
-                    size="sm"
-                    onPress={() => void loadOlder()}
-                    variant={actionVariant("default", "solid")}
-                  >
-                    {t("loadOlder")}
-                  </Button>
-                ) : null}
-                {turns.map((turn, index) => (
-                  <div
-                    key={index}
-                    className={cn(
-                      "flex flex-col gap-2",
-                      turn.role === "user" ? "items-end" : "items-start",
-                    )}
-                  >
+                ) : (
+                  <div className={cn(column, "flex flex-col gap-4 py-2")}>
+                  {historyCursor ? (
+                    <Button
+                      size="sm"
+                      onPress={() => void loadOlder()}
+                      variant={actionVariant("default", "solid")}
+                    >
+                      {t("loadOlder")}
+                    </Button>
+                  ) : null}
+                  {turns.map((turn, index) => (
                     <div
+                      key={index}
                       className={cn(
-                        "max-w-[90%] rounded-xl px-3 py-2",
-                        turn.role === "user"
-                          ? "bg-accent text-accent-foreground"
-                          : "bg-ink-100 text-foreground",
+                        "flex flex-col gap-2",
+                        turn.role === "user" ? "items-end" : "items-start",
                       )}
                     >
-                      {turn.role === "user" ? (
-                        <p className="whitespace-pre-wrap">{turn.content}</p>
-                      ) : (
-                        <MessageBody text={turn.content} />
-                      )}
-                    </div>
-                    {turn.files?.length ? (
-                      <div className="flex w-[90%] flex-wrap gap-2">
-                        {turn.files.map((file) => (
-                          <ActionLink
-                            key={file.url}
-                            href={file.url}
-                            target="_blank"
-                            rel="noopener"
-                            className={buttonVariants({
-                              variant: actionVariant("primary", "flat"),
-                              size: "sm",
-                            })}
-                          >
-                            {<FileDown className="h-4 w-4" aria-hidden />}
-                            {t("downloadFile", {
-                              title: file.title,
-                              format: file.format.toUpperCase(),
-                            })}
-                          </ActionLink>
-                        ))}
+                      <div
+                        className={cn(
+                          "text-base",
+                          turn.role === "user"
+                            ? "max-w-[85%] rounded-[1.25rem] bg-ink-100 px-4 py-2.5 text-foreground"
+                            : "w-full px-1 text-foreground",
+                        )}
+                      >
+                        {turn.role === "user" ? (
+                          <p className="whitespace-pre-wrap">{turn.content}</p>
+                        ) : (
+                          <MessageBody text={turn.content} />
+                        )}
                       </div>
-                    ) : null}
-                    {turn.proposals?.map((proposal, position) => {
-                      const key = proposal.proposalId ?? `${index}-${position}`;
-                      return (
-                        <div
-                          key={key}
-                          className="w-[90%] rounded-lg border border-brand-200 bg-brand-50/50 p-3 dark:border-brand-500/30 dark:bg-brand-500/10"
-                        >
-                          <p className="text-xs font-semibold uppercase text-accent">
-                            {proposalText(proposal, "kind")}
-                          </p>
-                          <p className="font-medium">{proposal.title}</p>
-                          <p className="text-xs text-ink-500">
-                            {(proposal.details ?? []).join(" · ")}
-                          </p>
-                          <Button
-                            size="sm"
-                            className="mt-2"
-                            isDisabled={done.has(key) || turn.restored}
-                            onPress={() => confirmProposal(key, proposal)}
-                            variant={actionVariant(
-                              "primary",
-                              done.has(key) || turn.restored ? "flat" : "solid",
-                            )}
-                          >
-                            {<ListPlus className="h-4 w-4" aria-hidden />}
-                            {done.has(key)
-                              ? t("proposal.applied")
-                              : turn.restored
-                                ? t("proposal.restored")
-                                : proposalText(proposal, "confirm")}
-                          </Button>
-                          {exportJobs[key] ? (
-                            <AiExportJob id={exportJobs[key]} />
-                          ) : null}
+                      {turn.files?.length ? (
+                        <div className="flex w-[90%] flex-wrap gap-2">
+                          {turn.files.map((file) => (
+                            <ActionLink
+                              key={file.url}
+                              href={file.url}
+                              target="_blank"
+                              rel="noopener"
+                              className={buttonVariants({
+                                variant: actionVariant("primary", "flat"),
+                                size: "sm",
+                              })}
+                            >
+                              {<FileDown className="h-4 w-4" aria-hidden />}
+                              {t("downloadFile", {
+                                title: file.title,
+                                format: file.format.toUpperCase(),
+                              })}
+                            </ActionLink>
+                          ))}
                         </div>
-                      );
-                    })}
+                      ) : null}
+                      {turn.proposals?.map((proposal, position) => {
+                        const key = proposal.proposalId ?? `${index}-${position}`;
+                        return (
+                          <div
+                            key={key}
+                            className="w-[90%] rounded-lg border border-brand-200 bg-brand-50/50 p-3 dark:border-brand-500/30 dark:bg-brand-500/10"
+                          >
+                            <p className="text-xs font-semibold uppercase text-accent">
+                              {proposalText(proposal, "kind")}
+                            </p>
+                            <p className="font-medium">{proposal.title}</p>
+                            <p className="text-xs text-ink-500">
+                              {(proposal.details ?? []).join(" · ")}
+                            </p>
+                            <Button
+                              size="sm"
+                              className="mt-2"
+                              isDisabled={done.has(key) || turn.restored}
+                              onPress={() => confirmProposal(key, proposal)}
+                              variant={actionVariant(
+                                "primary",
+                                done.has(key) || turn.restored ? "flat" : "solid",
+                              )}
+                            >
+                              {<ListPlus className="h-4 w-4" aria-hidden />}
+                              {done.has(key)
+                                ? t("proposal.applied")
+                                : turn.restored
+                                  ? t("proposal.restored")
+                                  : proposalText(proposal, "confirm")}
+                            </Button>
+                            {exportJobs[key] ? (
+                              <AiExportJob id={exportJobs[key]} />
+                            ) : null}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ))}
+                  {busy ? (
+                    <p className="animate-pulse text-ink-400">{t("thinking")}</p>
+                  ) : null}
+                  <div ref={endRef} />
                   </div>
-                ))}
-                {busy ? (
-                  <p className="animate-pulse text-ink-400">{t("thinking")}</p>
-                ) : null}
-                <div ref={endRef} />
+                )}
               </div>
               <form
-                className="flex flex-col gap-2 border-t border-ink-200 p-3"
+                className={cn(column, "px-4 pb-3 pt-2")}
                 onSubmit={(event) => {
                   event.preventDefault();
                   void send();
                 }}
               >
-                <TextField
-                  aria-label={t("input")}
-                  value={draft}
-                  onChange={setDraft}
-                  className={["w-full"].filter(Boolean).join(" ")}
-                >
-                  <TextArea
-                    placeholder={t("input")}
+                <div className="rounded-[1.75rem] border border-ink-200 bg-background p-2 transition-colors focus-within:border-accent focus-within:ring-2 focus-within:ring-accent/20">
+                  <textarea
+                    ref={inputRef}
+                    aria-label={t("input")}
+                    placeholder={t("composerPlaceholder")}
+                    rows={1}
+                    value={draft}
+                    onChange={(event) => setDraft(event.target.value)}
                     onKeyDown={(event) => {
                       if (event.key === "Enter" && !event.shiftKey) {
                         event.preventDefault();
                         void send();
                       }
                     }}
-                    rows={2}
-                    style={{ maxHeight: "calc(6 * 1.5em + 1rem)" }}
-                    className={["[field-sizing:content]"]
-                      .filter(Boolean)
-                      .join(" ")}
+                    className="block max-h-[200px] w-full resize-none bg-transparent px-3 pb-1 pt-2 text-base outline-none placeholder:text-ink-400"
                   />
-                </TextField>
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-xs text-ink-400">
-                    {t("privacyNote")}
-                  </span>
-                  <Button
-                    type="submit"
-                    size="sm"
-                    isIconOnly
-                    aria-label={t("send")}
-                    isDisabled={!draft.trim() || busy}
-                    variant={actionVariant("primary", "solid")}
-                  >
-                    <Send className="h-4 w-4" aria-hidden />
-                  </Button>
+                  <div className="flex items-center justify-between gap-2">
+                    <Tooltip delay={300}>
+                      <Button isIconOnly aria-label={t("newConversation")} onPress={newConversation} isDisabled={busy || turns.length === 0} variant={actionVariant("default", "ghost")} className={iconButton}>
+                        <Plus className="h-5 w-5" aria-hidden />
+                      </Button>
+                      <Tooltip.Content>{t("newConversation")}</Tooltip.Content>
+                    </Tooltip>
+                    <Button type="submit" isIconOnly aria-label={t("send")} isDisabled={!draft.trim() || busy} variant={actionVariant("primary", "solid")} className="h-10 w-10 min-w-10 rounded-full">
+                      <ArrowUp className="h-5 w-5" aria-hidden />
+                    </Button>
+                  </div>
                 </div>
+                <p className="mt-2 text-center text-xs text-ink-400">{t("disclaimer")}</p>
+                <p className="text-center text-xs text-ink-400">{t("privacyNote")}</p>
               </form>
             </>
           )}

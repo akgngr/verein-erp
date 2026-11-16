@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.12.0",
+      "date": "2026-11-16",
+      "title": {
+        "tr": "Yeni sohbet tasarımı",
+        "de": "Neues Chat-Design"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Asistan paneli yenilendi: başlıkta sohbet adı ve geçmiş menüsü, yeni sohbet, tam ekran ve kapat düğmeleri; boş sohbette karşılama ve öneri kartları; yuvarlak, yazdıkça büyüyen mesaj kutusu.",
+          "de": "Assistentenpanel überarbeitet: Chattitel mit Verlaufsmenü, neuer Chat, Vollbild und Schließen in der Kopfzeile; Begrüßung und Vorschlagskarten im leeren Chat; abgerundetes, mitwachsendes Eingabefeld."
+        }
+      ]
+    },
+    {
       "version": "1.11.2",
       "date": "2026-11-16",
       "appVersion": "0.41.0",

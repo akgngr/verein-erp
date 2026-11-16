@@ -35,3 +35,10 @@ describe("Sohbet markdown çözümleyici", () => {
     assert.deepEqual(parseMarkdown("| sadece | satır |"), [{ type: "paragraph", text: "| sadece | satır |" }]);
   });
 });
+
+test("iç bağlantı: HTML meta karakterleri kodlanır, dış adrese kaçılamaz", () => {
+  assert.equal(toInternalMarkdownHref('/uyeler/"><img src=x>'), "/uyeler/%22%3E%3Cimg%20src=x%3E");
+  assert.equal(toInternalMarkdownHref("/uyeler/ab%20c?yil=2026#x"), "/uyeler/ab%20c?yil=2026#x");
+  assert.equal(toInternalMarkdownHref("//evil.example/x"), "/evil.example/x");
+  assert.equal(toInternalMarkdownHref("/%E0%A4%A"), "/%E0%A4%A");
+});

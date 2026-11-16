@@ -93,7 +93,14 @@
       "failed": "Datei konnte nicht erstellt werden. Bitte erstellen Sie einen neuen Vorschlag.",
       "queued": "Datei wird erstellt…"
     },
-    "loadOlder": "Ältere Nachrichten laden"
+    "loadOlder": "Ältere Nachrichten laden",
+    "beta": "BETA",
+    "expand": "Vergrößern",
+    "collapse": "Verkleinern",
+    "emptyTitle": "Wie kann ich helfen?",
+    "emptySubtitle": "Fragen Sie zu Ihren Vereinsdaten, fordern Sie Berichte und Dateien an oder lassen Sie sich Aufgaben vorschlagen.",
+    "composerPlaceholder": "Fragen Sie etwas…",
+    "disclaimer": "Der Assistent kann Fehler machen. Prüfen Sie die Ergebnisse."
   },
   "settings": {
     "title": "KI-Assistent",
