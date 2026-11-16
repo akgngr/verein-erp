@@ -368,6 +368,7 @@
     "title": "Hesap bakiyeleri"
   },
   "menu": {
+    "dashboard": "Genel bakış",
     "invoices": "Faturalar",
     "sync": "Üyelik aktarımı",
     "reports": "Raporlar",
