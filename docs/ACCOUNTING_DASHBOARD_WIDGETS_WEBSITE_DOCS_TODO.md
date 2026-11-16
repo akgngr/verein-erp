@@ -1,216 +1,133 @@
-# Accounting Dashboard, Shared Widgets & Website Documentation — Technical Specification and TODO
+# ACC-9 — Muhasebe Dashboard ve Ana Panel Kartları / DOC-1 Website Rehberleri
 
-**Status:** Proposed / not implemented by this document  
-**Scope:** Accounting module, shared dashboard infrastructure, website documentation  
-**Priority:** ACC-8 P1; DOC-1 mandatory cross-cutting acceptance criterion  
-**Date:** 2026-11-16  
-**Target:** Ordvexa / Verein ERP  
-**Related:** `docs/ACCOUNTING_ROADMAP.md`, `docs/AUTOMATION_ENGINE.md`, `website/docs/kullanim/moduller/accounting.md`
+**Durum:** Revize teknik şartname ve uygulanabilir TODO; henüz uygulama değil  
+**Tarih:** 2026-11-16  
+**Kapsam:** Mevcut tek kurumlu Verein ERP muhasebe modülü, ortak dashboard kartları ve Türkçe website rehberleri  
+**İlgili:** `docs/ACCOUNTING_ROADMAP.md`, `docs/AUTOMATION_ENGINE.md`  
+**İş paketleri:** ACC-9 (yeni dashboard), DOC-1 (her PR için dokümantasyon)
 
-## 1. Purpose and constraints
+> Önceki taslakta önerilen `defineModuleWidget` altyapısı, tenant seçici, çoklu para birimi filtresi, kart başına ayar veritabanı ve yeni grafik kütüphanesi **ilk sürüm kapsamından çıkarıldı**. Mevcut kodu yeniden yazmayın.
 
-Provide an accounting overview with KPI cards, trends, alerts and actionable recommendations. Allow users to add permitted accounting widgets to the **main application dashboard**, without coupling the shared dashboard to accounting. Maintain detailed **website/** documentation for every accounting feature change, in addition to engineering docs.
+## 1. Doğrulanmış mevcut altyapı
 
-This is a **proposal and implementation checklist**, not a claim that the features already exist. Audit the repository before choosing paths, dependencies or migrations. Reuse existing dashboard infrastructure, design system, permission model, module registry, accounting services, Files and Automation integrations. Avoid adding packages unless justified by an ADR. Respect the existing accounting roadmap's EÜR/single-entry scope; do not promise full HGB double-entry bookkeeping without verified support. The accounting module's current description and the roadmap disagree and require an explicit decision.
-
-## 2. Functional design — Accounting dashboard
-
-### 2.1 Summary widgets (initial set)
-
-| Stable key (proposal) | Data and calculation | Filters / actions |
+| Konu | Gerçek dosya / sözleşme | Karar |
 | --- | --- | --- |
-| `accounting.revenue` | Posted income for period, comparable previous period and delta | Date range, organization, source transactions |
-| `accounting.expenses` | Posted expenses for period, delta | Date range, categories, transaction drill-down |
-| `accounting.net-result` | Income minus expenses for selected period, explicitly label cash vs accrual basis | Date range, accounting method, report link |
-| `accounting.receivables` | Open receivables, count and aging buckets | Due date, debtor, invoice list |
-| `accounting.payables` | Open supplier payables, count and aging buckets | Due date, supplier, payables list |
-| `accounting.overdue` | Overdue open items and amounts | Aging, reminder workflow, invoices |
-| `accounting.bank-unmatched` | Imported bank transactions without accepted reconciliation | Bank account, reconciliation |
-| `accounting.tax-calendar` | Relevant deadlines and status from configured tax calendar | Period, tax settings, tax screen |
-| `accounting.missing-receipts` | Posted/draft records missing required supporting documents | Status, document inbox |
-| `accounting.income-expense-trend` | Monthly income/expense series, source-based totals | Range, month granularity |
-| `accounting.cash-position` | Known reconciled account balances with explicit as-of timestamp | Account, balance details |
-| `accounting.dues` | Member dues billed/collected/overdue when members integration is enabled | Membership period, dues source |
+| Kart sözleşmesi | `src/shared/types/dashboard.ts`: `defineCards`, `sm/md/lg`, `permission`, `href`, `render` | Aynen kullan |
+| Kart örnekleri | `src/modules/members/cards/index.tsx` ve diğer modül kartları | Muhasebeye `cards/index.tsx` ekle |
+| Kart keşfi | `src/modules/system/queries/dashboard.ts`, üretilen `src/dashboard-cards` | Mevcut kayıt/senkronizasyon mekanizmasını kullan |
+| Kullanıcı düzeni | `src/modules/system/actions/dashboard-layout.ts`: `systemDashboardLayout`, yetki filtresi, reset | Yeni tablo/optimistic concurrency yok |
+| Kart hata izolasyonu | `DashboardCardDefinition.render` sözleşmesi | Koru, hata testlerini ekle |
+| Gelir-gider | `src/modules/accounting/queries/get-income-expense-report.ts`: `getIncomeExpenseReport(year)` | Önce mevcut yıl bazlı servisleri kullan |
+| Açık kalemler | `src/modules/accounting/queries/invoices.ts`: `listInvoices`; AI katmanında `listOpenItems` kullanımını doğrula | Ortak hesaplama semantiğini koru; 500 kayıt limiti nedeniyle listeyi doğrudan toplam kaynağı yapma |
+| Hesap bakiyeleri | `src/modules/accounting/queries/list-accounts.ts`: `listAccountBalances()` | Muhasebe hesap bakiyesi olarak etiketle; banka mutabakat bakiyesi sanma |
+| Vergi ayarları | `src/modules/accounting/queries/get-settings.ts`: `getSettings().tax` | Ist/Soll ve §19 gösteriminde gerçek ayarları kullan |
+| Website katalog testi | `tests/docs/module-docs.test.ts` ve `pnpm docs:modules` | Üretilen `website/docs/kullanim/moduller/accounting.md` dosyasını **elle düzenleme** |
+| Mevcut muhasebe kapsamı | `docs/ACCOUNTING_ROADMAP.md` tek taraflı EÜR; `src/modules/accounting/module.config.ts` açıklaması çift taraflı diyor | PR-A'da gerçek davranışı inceleyip kararı kaydet |
 
-Every KPI must specify **source models, posting/status inclusion, sign convention, currency, VAT treatment, timezone, date field, accounting basis, rounding, refund/storno treatment and data freshness**. Do not silently combine different currencies or imply cash balance equals profit. Compare only equivalent periods. Provide drill-down from totals to authorized source records. If the organization has insufficient data, show an informative empty state, not fabricated zeroes.
+Sistem bugün **tek kurumlu**, **EUR** ve mevcut **3 sütunlu** dashboard grid ile çalışır. Çoklu organizasyon/tenant, farklı para birimi, kullanıcıya özel kart filtreleri, drag/resize iyileştirmeleri ve kalıcı öneri yaşam döngüsü ayrı gelecekteki işlere bırakılır.
 
-### 2.2 Dashboard UX
+## 2. PR-A: Keşif, muhasebe kapsamı ve KPI tanımları (ilk iş)
 
-- Responsive layout: 4-column desktop where feasible, 2-column tablet, 1-column mobile; adapt to actual design system.
-- Cards: label, value, period, delta where meaningful, trend, last updated timestamp, tooltip explaining calculation, drill-down action.
-- Charts: income vs expenses, aging distribution, category breakdown; accessible tabular alternatives and screen-reader labels.
-- Global filters: organization scope (only authorized organizations), fiscal year, date range, currency and accounting basis where applicable.
-- Persistent personal filters only if user explicitly saves them; ensure switching organizations invalidates previous scoped data.
-- Loading skeleton, empty state, permission denied, disabled-module and recoverable error states.
-- No automatic tax filing, invoice issuance, payments or reminders from a suggestion card.
+- [ ] Mevcut muhasebe kayıt modeli, rapor hesaplamaları, taxMethod, fatura durumları ve UI akışını incele.
+- [ ] Tek taraflı EÜR kararı ile modüldeki "çift taraflı" ifadesi arasındaki çelişkiyi ADR'de çöz. Kanıtlanmamış HGB/double-entry desteği vaat etme.
+- [ ] Mevcut `getIncomeExpenseReport`, `listInvoices`/`listOpenItems`, `listAccountBalances`, `getSettings` ve ilgili servislerin gerçek çıktı tiplerini doğrula.
+- [ ] Her KPI için veri kaynağı, statü filtresi, dönem, saat dilimi (Europe/Berlin), işaret, KDV, taxMethod, yuvarlama, storno, iade, boş durum ve veri tazeliğini yaz.
+- [ ] Yıl bazlı rapor API'sinin ay/çeyrek filtrelerini destekleyip desteklemediğini belirle; ayrı hesaplama kopyası oluşturma.
+- [ ] Fatura listesi 500 kayıtla sınırlı: toplamlar için tam/veritabanı aggregate yolunu belirle, eksik veriyle KPI üretme.
+- [ ] İzin modelini ve `accounting` → `members` için `access` + gerekiyorsa `recommends` / yönetici onayını doğrula.
+- [ ] KPI test fixture planı ve açık kararlar listesi oluştur; PR-A davranış değişikliği yapmasın.
 
-### 2.3 Suggestions / alerts
+## 3. ACC-9 Dashboard kartları ve gerçek veri kaynakları
 
-Start with deterministic rule-based recommendations:
-- Overdue invoices -> review reminders.
-- Unreconciled bank transactions -> open reconciliation.
-- Missing receipts -> open document inbox.
-- Upcoming tax deadlines -> view tax calendar; avoid unsupported legal certainty.
-- Suspected duplicate imports -> review candidates.
-- Unusually high expense categories -> inspect underlying transactions, not automatic accusation.
+| Kart | Başlangıç kaynağı | Kritik not |
+| --- | --- | --- |
+| Gelir | `getIncomeExpenseReport(year)` / `buildIncomeExpenseReport` | Raporla birebir mutabakat; dönem kapsamını kontrol et |
+| Gider | Aynı rapor servisi | KDV ve storno semantiği aynı olmalı |
+| Gelir − gider | Aynı rapor servisi | Kâr / nakit / tahakkuk kavramlarını karıştırma |
+| Açık alacak | `listOpenItems` davranışı ve `invoices.ts` ödeme yardımcıları | Liste limitine dayanarak yanlış toplam üretme |
+| Açık borç | Mevcut payable servislerini keşfet | Kaynak doğrulanmadan gösterme |
+| Vadesi geçmiş | `invoices.ts` / aging yardımcıları | Berlin gün sınırı, kısmi ödemeler |
+| Hesap bakiyeleri | `listAccountBalances()` | "Muhasebe hesabı bakiyesi" diye etiketle |
+| Banka eşleşmemiş | Mevcut banka import/matching sorguları (PR-A'da kesinleştir) | Mutabakat durumunu doğrula |
+| Vergi dönemi | `getSettings().tax` + mevcut vergi takvimi | Ist/Soll ayarını açık göster |
+| Aidat | `members/queries/get-dues-stats.ts` veya accounting sync | Yetki + modüller arası erişim onayı; zaten members kartı var, kopyalama ihtiyacını sorgula |
+| Eksik belge | Belge zorunluluğu kuralı henüz doğrulanmadı | Tanım netleşene kadar sonraya bırak |
+| Trend grafiği | Mevcut rapor servisinden dönem serileri | Önce CSS/SVG çubuk + erişilebilir tablo |
 
-Recommendation model: stable ID, owning module, organization scope, rule key/version, severity, explanation, evidence references, suggested safe navigation/action, created/evaluated timestamps, resolved/dismissed/snoozed status and actor. Store minimal personal data; do not include raw customer records in notifications. Explain why the recommendation was generated. Refresh or invalidate on relevant financial events. AI may **explain** deterministic results via the current module AI contract but must not autonomously post accounting entries, issue reminders or transmit financial data externally. Require explicit permission and human confirmation for sensitive actions.
+Tüm kartlarda yetki kontrolü sunucu tarafında kalır. Görüntülenemeyen kartın veri sorgusu çalıştırılmamalı. Yetki geri alındığında kart görünmez ve veri erişimi engellenir. Kart hatası diğer kartları durdurmaz.
 
-## 3. Shared widget architecture
+## 4. ACC-9 uygulama TODO
 
-### 3.1 Module registration contract
+### PR-B — Muhasebe ekranı
+- [ ] Mevcut `/muhasebe` route ve UI'ı incele; mevcut akışı kırmadan dashboard ekle.
+- [ ] Ortak dönem seçimi: bu ay / bu çeyrek / bu yıl; servis desteklemiyorsa önce veri sözleşmesini genişlet.
+- [ ] İlk KPI seti: gelir, gider, açık alacak, vadesi geçmiş, hesap bakiyesi.
+- [ ] EUR gösterimi, kaynağa git bağlantıları, hesaplama açıklaması ve son güncelleme.
+- [ ] Mevcut 3 sütunlu düzen ile uyumlu responsive kartlar.
+- [ ] Grafik için başlangıçta SVG/CSS ve erişilebilir tablo alternatifi; yeni kütüphane yok.
+- [ ] Loading/empty/error ve farklı kullanıcı rolü testleri.
+- [ ] Aynı PR'da Türkçe website kullanım rehberini ekle.
 
-Design a `defineModuleWidget`-style typed registry, but **first inspect existing module registration conventions**. Suggested fields:
+### PR-C — Ana dashboard entegrasyonu
+- [ ] `src/modules/accounting/cards/index.tsx` içinde `defineCards([...])` ile seçilmiş KPI kartlarını kaydet.
+- [ ] `src/dashboard-cards` için mevcut module sync akışını kullan.
+- [ ] Kart başlığı, ikon, `href`, `permission`, `defaultVisible` ve çeviri anahtarlarını tanımla.
+- [ ] Mevcut `systemDashboardLayout` ile kart ekleme/kaldırma/sıralama ve reset davranışını test et.
+- [ ] Muhasebe ekranı ile ana panelde aynı kaynak/aynı dönem için tutar eşitliğini doğrula.
+- [ ] Website'de ana panele kart ekleme ve yetki rehberini yayımla.
 
-```ts
-type ModuleWidgetDefinition = {
-  key: string;                  // globally unique and stable, e.g. accounting.revenue
-  moduleKey: string;
-  titleKey: string;
-  descriptionKey: string;
-  supportedSizes: Array<"sm" | "md" | "lg">;
-  defaultSize: "sm" | "md" | "lg";
-  requiredPermission: string;   // resolve against existing permission API
-  settingsSchema: unknown;      // validated server-side (Zod or existing equivalent)
-  dataVersion: number;
-  // Trusted server-side provider and separate presentational component references;
-  // do not serialize functions or import paths from user input.
-};
-```
+### PR-D — Kural tabanlı öneriler
+- [ ] Vadesi geçmiş faturalar, eşleşmemiş banka işlemleri, yaklaşan vergi tarihleri için salt okunur kurallar.
+- [ ] Her öneride neden, kaynak kayıt, önem derecesi ve güvenli yönlendirme.
+- [ ] İlk sürüm stateless; kalıcı recommendation tablosu, snooze/audit workflow ve AI eylemleri yok.
+- [ ] Kapatma tercihi eklenecekse kural + ilgili durum sürümüyle anahtarla; yeni bir ihlal eski kapatma nedeniyle gizlenmesin.
+- [ ] Öneriler otomatik ödeme, ihtar, fatura, vergi beyanı oluşturamaz.
+- [ ] Yanlış pozitif, eski veri, rol/izin ve boş durum testleri.
+- [ ] Website'de önerilerin ne anlama geldiğini açıkla.
 
-Implementation guidance:
-- Static/trusted registry, optionally generated via existing module sync; do not dynamically import arbitrary user-provided paths.
-- Shared dashboard owns layout and widget instance persistence; each module owns data aggregation and its presentation.
-- Server verifies session, tenant/organization, module enabled state, cross-module access approvals, permissions, validated settings and bounded query ranges **on every fetch**.
-- Registry validates duplicate keys, unknown modules, invalid sizes/settings and unsupported component/data versions.
-- Widgets are isolated: one failing widget must not crash the entire dashboard.
-- Disable/remove behavior: preserve user layout safely while hiding unavailable widgets; never expose stale private cached data.
-- Per-user layout stored using stable widget IDs, versioned settings and optimistic concurrency; provide sensible defaults and reset.
-- Main dashboard supports catalog search, add/remove, reorder, resize, per-widget settings, and mobile fallback ordering.
-- Do not duplicate the accounting query layer for the main dashboard. Both surfaces call the same authorized provider.
-- Bounded data fetching, query batching, cache keys including tenant/user/permission scope, rate limits and instrumentation; no global cache of private financial results.
+### PR-E — Website dokümantasyon bütünlüğü
+- [ ] Üretilen modül katalog dosyası ile elle yazılan rehberleri açıkça ayır.
+- [ ] `website/docs/kullanim/muhasebe/` önerisini mevcut website router/sidebar ile doğrula.
+- [ ] Muhasebe dashboard, KPI tanımları, filtreler, kartlar, öneriler ve sorun giderme rehberlerini **Türkçe** yaz.
+- [ ] Gerçek uygulama ekranından demo verili, kişisel veri içermeyen görseller ekle.
+- [ ] Üretilen katalog sayfasına bağlantı gerekiyorsa generator kaynak şablonunu düzenle, `pnpm docs:modules` çalıştır.
+- [ ] `tests/docs/module-docs.test.ts`, website build ve link kontrollerini çalıştır.
+- [ ] DE/EN dokümantasyon ayrı i18n ürün kararı verilene kadar kapsam dışı.
 
-### 3.2 Suggested separation (adapt to repository)
+### PR-F — Sertleştirme
+- [ ] KPI toplamları ile muhasebe raporları ve AI asistanı çıktıları için eşitlik testleri.
+- [ ] 500+ fatura, yıl geçişi, saat dilimi, storno, kısmi ödeme, §19 ve Ist/Soll fixture'ları.
+- [ ] Rol bazlı yetki, kart hata izolasyonu, modül devre dışı kalması ve layout kaydı testleri.
+- [ ] Büyük veri performansı ve gereksiz sorgu sayısı ölçümü.
+- [ ] `module.config.ts` ve `releases.json` sürüm eşitliği, `module:sync`, typecheck ve CI.
+- [ ] Website rehberlerinin uygulanmış davranışla eşleştiğini doğrula.
 
-```text
-src/shared/dashboard/                 # shared contracts / registry, if appropriate
-src/modules/dashboard/                # only if existing module ownership supports it
-src/modules/accounting/               # accounting data providers, widgets, recommendations
-website/docs/kullanim/moduller/accounting.md
-website/docs/kullanim/moduller/accounting/  # only if existing website routing supports it
-website/docs/gelistirici/             # adapt to existing documentation conventions
-```
+## 5. DOC-1 — Her muhasebe PR'ı için zorunlu website dokümantasyonu
 
-## 4. Detailed implementation TODO — ACC-8
+- [ ] `docs/` altında teknik kararlar, KPI formülleri ve test kapsamı.
+- [ ] `website/` altında kullanıcıya dönük Türkçe rehber: amaç, gerekli yetki, adım adım kullanım, örnek, sınırlamalar.
+- [ ] Üretilen `website/docs/kullanim/moduller/*.md` dosyalarını **elle düzenleme**; yalnız generator üzerinden güncelle.
+- [ ] Değişen arayüz için gerçek demo ekran görüntüleri; hassas veri kullanma.
+- [ ] Navigasyon, iç bağlantılar, docs generator testi ve website build doğrulaması.
+- [ ] PR açıklamasında dokümantasyon dosyaları ve güncelleme gerekmiyorsa gerekçe.
+- [ ] Modül değiştiyse sürüm artır, `releases.json` eşitle, gerekli CI kontrollerini çalıştır.
 
-### ACC-8.0 Discovery and ADR
-- [ ] Inventory current dashboard routes, registry, widget persistence, permissions and UI components.
-- [ ] Inventory accounting queries and confirm KPI source-of-truth, EÜR vs double-entry semantics and existing tax/calendar integrations.
-- [ ] Write ADR for shared widget ownership, extension contract, settings persistence, cache strategy and failure isolation.
-- [ ] Document dependency on the existing module versioning and releases discipline.
+## 6. Daha sonraki SaaS / ileri özellikler (bu iş kapsamında değil)
 
-### ACC-8.1 Accounting data layer
-- [ ] Implement/reuse tenant-scoped, permission-checked dashboard aggregation services.
-- [ ] Define calculation specifications and unit tests for each KPI.
-- [ ] Handle partial payments, refunds, storno, tax treatment, date boundaries and decimal rounding.
-- [ ] Add filters, drill-down IDs, freshness timestamps and bounded queries.
-- [ ] Add performance measurements and appropriate indexes only after profiling.
-- [ ] Validate cross-widget consistency with source reports and invoice totals.
+- Çoklu tenant/organizasyon seçici ve tenant-scoped cache anahtarları.
+- Çoklu para birimi ve döviz değerleme.
+- Kart başına kalıcı filtre/ayar şeması ve özel widget framework.
+- Gelişmiş interaktif grafik kütüphanesi (kanıtlanmış ihtiyaç halinde ADR).
+- Kalıcı öneri yaşam döngüsü ve AI destekli açıklama (ayrı güvenlik değerlendirmesi).
+- Almanca/İngilizce website dokümantasyonu (i18n altyapısı kararı sonrası).
 
-### ACC-8.2 Accounting dashboard UI
-- [ ] Add accounting dashboard route/section within existing navigation.
-- [ ] Implement summary cards, trend charts, aging, empty/loading/error states and responsive layout.
-- [ ] Implement source links, filter controls, accessible chart alternatives and translated explanations.
-- [ ] Add visual regression and mobile/keyboard/accessibility tests.
+## 7. Kabul kriterleri
 
-### ACC-8.3 Shared widget registry and main dashboard
-- [ ] Define typed registration, validation and stable widget keys.
-- [ ] Add accounting widget registrations without making dashboard depend on accounting.
-- [ ] Implement authorized widget catalog and add/remove/reorder/resize flows.
-- [ ] Persist user layouts, validated widget settings and layout schema version.
-- [ ] Handle disabled modules, permission revocation, stale settings and widget errors.
-- [ ] Add tests for tenant isolation, access revocation, registry collisions and persistence migration.
-
-### ACC-8.4 Recommendations
-- [ ] Define deterministic rule catalog, evidence links and priority/severity.
-- [ ] Implement overdue invoices, unmatched bank entries, missing documents and tax calendar alerts.
-- [ ] Support dismiss/snooze/resolved lifecycle with audit records.
-- [ ] Provide explanation and explicit human approval before any financial side effect.
-- [ ] Optional AI explanation only after privacy/security review and alignment with current AI v2 contract.
-- [ ] Test stale recommendations, false positives, authorization and duplicate event handling.
-
-### ACC-8.5 Operational readiness
-- [ ] Test load with large transaction volumes and many widgets.
-- [ ] Instrument latency, query counts, widget failures and cache invalidation.
-- [ ] Ensure no sensitive data leaks through logs, browser cache or cross-tenant caching.
-- [ ] Run migration, unit, integration, E2E, typecheck, lint and relevant CI gates.
-- [ ] Update accounting module version and `releases.json`; run `module:sync` and `check-module-versions`.
-
-## 5. Website documentation policy — DOC-1
-
-**Mandatory for all accounting changes ACC-0 through ACC-8 and future accounting PRs.** The existing `website/` documentation system is the public/user-facing source; `docs/` remains the engineering/architecture source. Updating one does not replace the other.
-
-### 5.1 Required content per change
-
-| Change | Required website documentation |
-| --- | --- |
-| New feature | Purpose, prerequisites, roles/permissions, step-by-step usage, realistic example, limitations |
-| New/changed settings | Default, meaning, impact, permission, migration implications |
-| Invoice/banking/tax feature | Accounting basis, calculation example, status flow, exceptions and legal caveats |
-| Dashboard widget | Meaning, exact metric definition, filters, data freshness, permission, source drill-down |
-| Recommendations | Trigger, explanation, evidence, safe actions, dismissal and error cases |
-| New export | File format, supported versions, download permissions, validation and example |
-| Breaking UX/API change | Before/after behavior, migration, troubleshooting and release note |
-| Bug fix | Update docs when user-visible behavior changes; otherwise note why no update is needed |
-
-### 5.2 Website TODO
-- [ ] Inspect website documentation framework, current sidebar/routes, localization, frontmatter and build scripts before editing.
-- [ ] Update `website/docs/kullanim/moduller/accounting.md` as canonical entry point.
-- [ ] Add dashboard guide: KPI definitions, filters, drill-downs, recommendations and screenshot(s) from implemented UI.
-- [ ] Add main dashboard widget guide: catalog, add/remove, reorder, resize, permission effects and troubleshooting.
-- [ ] Add invoice, banking, taxes, reports and GoBD subpages **only if justified by existing docs structure**.
-- [ ] Add developer guide for widget registration, data provider contract, authorization, settings and tests.
-- [ ] Maintain Turkish and German docs consistently where supported; add English only when website localization supports it.
-- [ ] Add links from navigation/sidebar and verify no broken internal links.
-- [ ] Explain limitations and avoid asserting GoBD certification or regulatory approval without evidence.
-- [ ] Keep screenshots current; redact personal/financial data and use demo fixtures.
-- [ ] Run website build/link checks and ensure published documentation matches actual implemented behavior.
-
-### 5.3 PR template acceptance criteria
-- [ ] Feature and calculation specification updated in `docs/`.
-- [ ] Corresponding user guide updated in `website/`, or PR explicitly explains why not applicable.
-- [ ] Website pages and navigation links verified; translations updated where supported.
-- [ ] Screenshots/examples match implemented UI, not mockups presented as live.
-- [ ] Tests for business logic, permissions and relevant UI flows pass.
-- [ ] Database migration and backward compatibility verified where applicable.
-- [ ] Module version bumped and `releases.json` synchronized; CI passes.
-- [ ] PR describes risks, test evidence, docs links and deployment/rollback considerations.
-
-## 6. PR breakdown and dependencies
-
-1. **PR A — Discovery/ADR + metric definitions**: no behavioral change. Establish existing infrastructure, accounting basis and security contract.
-2. **PR B — Shared widget contract and layout persistence**: registry, validation, permissions, tests, docs.
-3. **PR C — Accounting aggregations and dashboard UI**: cards, charts, drill-downs, translations, docs.
-4. **PR D — Main dashboard widget catalog**: add/remove/reorder/resize, settings, migrations, docs.
-5. **PR E — Deterministic recommendations**: evidence, safe navigation, lifecycle, audit, docs.
-6. **PR F — Optional AI explanation and performance hardening**: gated by privacy and architecture review.
-
-Each PR must be small, independently reviewable, and update both technical and website documentation for any user-facing change. Do not merge all phases into a single large feature PR. Avoid premature redesign or unrelated HeroUI migration.
-
-## 7. Acceptance / definition of done
-
-- Accounting and main dashboard show identical values for the same widget, tenant, permissions and filter settings.
-- Users cannot access another organization’s accounting data through widget IDs, cached responses, export URLs or altered settings.
-- Revoked permissions and disabled modules immediately block widget data access.
-- KPI values reconcile with authoritative accounting reports for fixture scenarios.
-- A failed widget does not prevent other widgets from rendering.
-- Layouts persist across sessions and remain compatible with widget version upgrades.
-- Recommendations cite underlying authorized records and do not autonomously execute financial actions.
-- User-facing features are fully explained under `website/`; technical contracts are documented under `docs/`.
-- All module version checks, tests, CI and documentation build checks pass before merge.
-
-## 8. Related existing accounting work (do not duplicate)
-
-`docs/ACCOUNTING_ROADMAP.md` already marks ACC-1 through ACC-8 features largely implemented, including DATEV, UStVA, EÜR, CAMT/MT940, XRechnung/ZUGFeRD and GoBD mechanisms. These require verification and hardening, **not blind reimplementation**. Existing known gaps in that roadmap include SEPA direct debit mandates and grants/Verwendungsnachweis; inspect current separate `sepa` and `grants` modules before treating these as still missing.
-
-The earlier conversation used ACC-8 for the dashboard; this document retains that label for the **new dashboard workstream**, while distinguishing it from the *legacy* ACC-8 heading ("Ek özellikler") in the original accounting roadmap. Before implementation, reconcile workstream IDs in the canonical roadmap to avoid collisions.
+1. Yeni widget altyapısı veya gereksiz paket kurulmaz.
+2. Mevcut kart sözleşmesi, kullanıcı düzeni ve kart hata izolasyonu korunur.
+3. Her KPI mevcut muhasebe hesaplama servisleriyle mutabık ve kaynağı açıklanabilirdir.
+4. Yanlış eksik/veri limitli toplam, uydurma sıfır veya yanıltıcı "kâr" etiketi gösterilmez.
+5. Yetkisiz kullanıcı finansal kartı veya verisini göremez; modüller arası erişim kuralları korunur.
+6. Öneriler salt okunurdur, hiçbir finansal yan etki oluşturmaz.
+7. Türkçe website rehberleri gerçek uygulamayı açıklar; otomatik üretilen katalog dosyası elle düzenlenmez.
+8. Her uygulama PR'ında test, dokümantasyon ve modül sürüm kontrolleri tamamlanır.
