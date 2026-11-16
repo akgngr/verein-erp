@@ -28,10 +28,10 @@ import {
 export const moduleConfig: ModuleConfig = {
   key: "accounting",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.22.5",
+  version: "1.22.6",
   label: "Muhasebe",
   description:
-    "Alman dernek mevzuatına uygun çift taraflı defter tutma, fiş ve bütçe yönetimi.",
+    "Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura ve bütçe yönetimi.",
   category: "OFFICIAL",
   hasSchema: true,
   // Başka modüllerden istenen erişim (yönetici onayı gerekir; gerekçe: messages → access.<modül>).
