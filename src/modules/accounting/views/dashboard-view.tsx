@@ -11,7 +11,7 @@ import { accountingPermissions } from "../permissions";
 import { getBookingTotals } from "../queries/get-booking-totals";
 import { getBookingPeriodRange } from "../services/dashboard-period";
 import { getSettings } from "../queries/get-settings";
-import { openCents } from "../services/invoice-payments";
+import { summarizeOverdueInvoices } from "../services/dashboard-overdue";
 import { countMissingReceipts } from "../services/report-builders";
 import { berlinToday } from "../utils";
 
@@ -69,17 +69,7 @@ export async function AccountingDashboardView({ searchParams }: { searchParams: 
     getSettings(),
   ]);
 
-  // Calculate open amounts per invoice (not from sums), so fully paid and
-  // overpaid invoices cannot offset the debt of another invoice.
-  const overdueOpen = overdueInvoices.reduce(
-    (acc, invoice) => {
-      const amount = openCents(invoice);
-      return amount > 0
-        ? { count: acc.count + 1, cents: acc.cents + amount }
-        : acc;
-    },
-    { count: 0, cents: 0 },
-  );
+  const overdueOpen = summarizeOverdueInvoices(overdueInvoices);
   const maxBar = Math.max(1, ...quarters.flatMap((quarter) => [quarter.incomeCents, quarter.expenseCents]));
   const periodLink = (kind: Period, n = 1, y = year) =>
     `/muhasebe/panel?year=${y}&period=${kind}&part=${n}`;
