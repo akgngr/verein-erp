@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.22.3",
+      "date": "2026-11-16",
+      "title": {
+        "tr": "Kasa defteri tarih ve bakiye doğruluğu",
+        "de": "Datumsgrenzen und Salden im Kassenbuch"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Kasa defterinde bitiş gününün tamamı hesaba katılır; iptal satırları sıralandıktan sonra yürüyen bakiyeler yeniden hesaplanır ve yıl sonu bakiye kesimi düzeltilir.",
+          "de": "Das gesamte Enddatum wird im Kassenbuch berücksichtigt; laufende Salden werden nach Einordnung stornierter Zeilen neu berechnet und der Jahresendstichtag korrigiert."
+        }
+      ]
+    },
+    {
       "version": "1.22.2",
       "date": "2026-11-16",
       "title": {
