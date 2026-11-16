@@ -13,7 +13,7 @@ Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve son tarihler tek gö
 |---|---|
 | Anahtar | `calendar` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.6 |
+| Sürüm | 1.3.7 |
 | Sayfalar | `/calendar`, `/calendar/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -41,6 +41,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `list_shared_calendar_entries` · `list_shared_calendars` · `propose_calendar_entry`
 
 ## Sürüm notları
+
+### 1.3.7 — Mobilde alttan açılan çekmece
+
+_2026-11-16_
+
+- **İyileştirme:** Form/ayrıntı çekmecesi mobilde alttan açılır (masaüstünde sağdan).
 
 ### 1.3.6 — Asistan önerileri bulutta
 
@@ -84,10 +90,4 @@ _2026-11-07_
 
 - **Yeni:** Asistan ortak takvimleri ve kayıtlarını görebilir, randevu önerebilir (onayınızla eklenir). Kişisel ve dış takvim kayıtları asistana hiç verilmez.
 
-### 1.2.1 — Silinme hakkı
-
-_2026-11-07_
-
-- **Güvenlik:** Kullanıcı silinince silinir: kişisel takvim, ICS aboneliği ve dış takvim bağlantıları.
-
-Daha eski 5 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/calendar/releases.json)
+Daha eski 6 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/calendar/releases.json)
