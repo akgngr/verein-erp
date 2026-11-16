@@ -1,29 +1,50 @@
 "use client";
+import {
+  toast,
+  Button,
+  Spinner,
+  TextField,
+  Label,
+  Input,
+  Select,
+  ListBox,
+} from "@heroui/react";
 
-import { addToast, Button, Input, SelectItem } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+
 import { Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { ClientSelect } from "@/shared/components/ui/client-select";
 
 import { toCents } from "@/shared/money";
 import type { ActionResult } from "@/shared/types/action";
 
-import { addFlatRateAction, deleteFlatRateAction, disposeAssetAction, linkAssetsToInventoryAction, releaseReserveAction, saveAssetAction, saveReserveAction } from "../actions/extras-actions";
-import { selectionKey } from "./bank-import-card";
+import {
+  addFlatRateAction,
+  deleteFlatRateAction,
+  disposeAssetAction,
+  linkAssetsToInventoryAction,
+  releaseReserveAction,
+  saveAssetAction,
+  saveReserveAction,
+} from "../actions/extras-actions";
 
 const today = () => new Date().toISOString().slice(0, 10);
 
 function useSubmit() {
   const router = useRouter();
   const [busy, setBusy] = useState(false);
-  const submit = async (call: () => Promise<ActionResult>, success: string, reset?: () => void) => {
+  const submit = async (
+    call: () => Promise<ActionResult>,
+    success: string,
+    reset?: () => void,
+  ) => {
     setBusy(true);
     const result = await call();
     setBusy(false);
-    if (!result.ok) return void addToast({ title: result.error, color: "danger" });
-    addToast({ title: success, color: "success" });
+    if (!result.ok) return void toast(result.error, { variant: "danger" });
+    toast(success, { variant: "success" });
     reset?.();
     router.refresh();
   };
@@ -46,16 +67,103 @@ export function AssetForm() {
   }
   return (
     <div className="grid grid-cols-1 items-end gap-3 sm:grid-cols-6">
-      <Input className="sm:col-span-2" size="sm" label={t("name")} labelPlacement="outside" value={name} onValueChange={setName} />
-      <Input size="sm" type="date" label={t("date")} labelPlacement="outside" value={date} onValueChange={setDate} />
-      <Input size="sm" label={t("cost")} labelPlacement="outside" value={cost} onValueChange={setCost} placeholder="0,00" />
-      <ClientSelect size="sm" label={t("method")} labelPlacement="outside" selectedKeys={[method]} onSelectionChange={(keys) => setMethod((selectionKey(keys) || "LINEAR") as typeof method)}>
-        {(["LINEAR", "GWG", "POOL"] as const).map((value) => (
-          <SelectItem key={value}>{t(`methods.${value}`)}</SelectItem>
-        ))}
-      </ClientSelect>
-      <Input size="sm" type="number" label={t("months")} labelPlacement="outside" value={months} onValueChange={setMonths} isDisabled={method !== "LINEAR"} />
-      <Button className="sm:col-span-6 sm:justify-self-start" size="sm" color="primary" startContent={<Plus className="h-4 w-4" aria-hidden />} isLoading={busy} isDisabled={name.trim().length < 2 || !costCents} onPress={() => submit(() => saveAssetAction({ name, acquisitionDate: date, cost, method, usefulLifeMonths: method === "LINEAR" ? months : "1", notes: "" }), t("saved"), () => { setName(""); setCost(""); })}>
+      <TextField
+        value={name}
+        onChange={setName}
+        className={["sm:col-span-2"].filter(Boolean).join(" ")}
+      >
+        <Label>{t("name")}</Label>
+        <Input className={["h-9 text-sm"].filter(Boolean).join(" ")} />
+      </TextField>
+      <TextField
+        value={date}
+        onChange={setDate}
+        className={["w-full"].filter(Boolean).join(" ")}
+      >
+        <Label>{t("date")}</Label>
+        <Input
+          type="date"
+          className={["h-9 text-sm"].filter(Boolean).join(" ")}
+        />
+      </TextField>
+      <TextField
+        value={cost}
+        onChange={setCost}
+        className={["w-full"].filter(Boolean).join(" ")}
+      >
+        <Label>{t("cost")}</Label>
+        <Input
+          placeholder="0,00"
+          className={["h-9 text-sm"].filter(Boolean).join(" ")}
+        />
+      </TextField>
+      <Select
+        value={method}
+        onChange={(selectedValue) => {
+          const keys =
+            selectedValue === null ? undefined : String(selectedValue);
+          return setMethod((String(keys ?? "") || "LINEAR") as typeof method);
+        }}
+      >
+        <Label>{t("method")}</Label>
+        <Select.Trigger className="h-9 text-sm">
+          <Select.Value />
+          <Select.Indicator />
+        </Select.Trigger>
+        <Select.Popover>
+          <ListBox>
+            {(["LINEAR", "GWG", "POOL"] as const).map((value) => (
+              <ListBox.Item
+                key={value}
+                id={value}
+                textValue={String(t(`methods.${value}`))}
+              >
+                <Label>{t(`methods.${value}`)}</Label>
+                <ListBox.ItemIndicator />
+              </ListBox.Item>
+            ))}
+          </ListBox>
+        </Select.Popover>
+      </Select>
+      <TextField
+        value={months}
+        isDisabled={method !== "LINEAR"}
+        onChange={setMonths}
+        className={["w-full"].filter(Boolean).join(" ")}
+      >
+        <Label>{t("months")}</Label>
+        <Input
+          type="number"
+          className={["h-9 text-sm"].filter(Boolean).join(" ")}
+        />
+      </TextField>
+      <Button
+        className="sm:col-span-6 sm:justify-self-start"
+        size="sm"
+        isDisabled={name.trim().length < 2 || !costCents}
+        onPress={() =>
+          submit(
+            () =>
+              saveAssetAction({
+                name,
+                acquisitionDate: date,
+                cost,
+                method,
+                usefulLifeMonths: method === "LINEAR" ? months : "1",
+                notes: "",
+              }),
+            t("saved"),
+            () => {
+              setName("");
+              setCost("");
+            },
+          )
+        }
+        variant={actionVariant("primary", "solid")}
+        isPending={busy}
+      >
+        {busy ? <Spinner size="sm" color="current" /> : null}
+        {<Plus className="h-4 w-4" aria-hidden />}
         {t("add")}
       </Button>
     </div>
@@ -66,7 +174,18 @@ export function DisposeAssetButton({ id }: { id: string }) {
   const t = useTranslations("accounting.extras.assets");
   const { busy, submit } = useSubmit();
   return (
-    <Button size="sm" variant="light" isLoading={busy} onPress={() => submit(() => disposeAssetAction({ id, disposalDate: today(), note: "" }), t("disposed"))}>
+    <Button
+      size="sm"
+      onPress={() =>
+        submit(
+          () => disposeAssetAction({ id, disposalDate: today(), note: "" }),
+          t("disposed"),
+        )
+      }
+      variant={actionVariant("default", "light")}
+      isPending={busy}
+    >
+      {busy ? <Spinner size="sm" color="current" /> : null}
       {t("dispose")}
     </Button>
   );
@@ -77,7 +196,18 @@ export function LinkInventoryButton() {
   const t = useTranslations("accounting.extras.assets");
   const { busy, submit } = useSubmit();
   return (
-    <Button size="sm" variant="flat" isLoading={busy} onPress={() => submit(async () => { const r = await linkAssetsToInventoryAction({}); return r.ok ? { ok: true as const, data: undefined } : r; }, t("inventoryLinked"))}>
+    <Button
+      size="sm"
+      onPress={() =>
+        submit(async () => {
+          const r = await linkAssetsToInventoryAction({});
+          return r.ok ? { ok: true as const, data: undefined } : r;
+        }, t("inventoryLinked"))
+      }
+      variant={actionVariant("default", "flat")}
+      isPending={busy}
+    >
+      {busy ? <Spinner size="sm" color="current" /> : null}
       {t("linkInventory")}
     </Button>
   );
@@ -86,31 +216,113 @@ export function LinkInventoryButton() {
 export function FlatRateForm() {
   const t = useTranslations("accounting.extras.flat");
   const { busy, submit } = useSubmit();
-  const [kind, setKind] = useState<"HOME_OFFICE" | "MILEAGE" | "MEALS_8H" | "MEALS_24H">("HOME_OFFICE");
+  const [kind, setKind] = useState<
+    "HOME_OFFICE" | "MILEAGE" | "MEALS_8H" | "MEALS_24H"
+  >("HOME_OFFICE");
   const [date, setDate] = useState(today());
   const [quantity, setQuantity] = useState("");
   const [note, setNote] = useState("");
   return (
     <div className="grid grid-cols-1 items-end gap-3 sm:grid-cols-5">
-      <ClientSelect size="sm" label={t("kind")} labelPlacement="outside" selectedKeys={[kind]} onSelectionChange={(keys) => setKind((selectionKey(keys) || "HOME_OFFICE") as typeof kind)}>
-        {(["HOME_OFFICE", "MILEAGE", "MEALS_8H", "MEALS_24H"] as const).map((value) => (
-          <SelectItem key={value}>{t(`kinds.${value}`)}</SelectItem>
-        ))}
-      </ClientSelect>
-      <Input size="sm" type="date" label={t("date")} labelPlacement="outside" value={date} onValueChange={setDate} />
-      <Input size="sm" label={t(`unit.${kind}`)} labelPlacement="outside" value={quantity} onValueChange={setQuantity} />
-      <Input size="sm" label={t("note")} labelPlacement="outside" value={note} onValueChange={setNote} />
-      <Button size="sm" color="primary" startContent={<Plus className="h-4 w-4" aria-hidden />} isLoading={busy} isDisabled={!quantity} onPress={() => submit(() => addFlatRateAction({ kind, date, quantity, note }), t("saved"), () => { setQuantity(""); setNote(""); })}>
+      <Select
+        value={kind}
+        onChange={(selectedValue) => {
+          const keys =
+            selectedValue === null ? undefined : String(selectedValue);
+          return setKind((String(keys ?? "") || "HOME_OFFICE") as typeof kind);
+        }}
+      >
+        <Label>{t("kind")}</Label>
+        <Select.Trigger className="h-9 text-sm">
+          <Select.Value />
+          <Select.Indicator />
+        </Select.Trigger>
+        <Select.Popover>
+          <ListBox>
+            {(["HOME_OFFICE", "MILEAGE", "MEALS_8H", "MEALS_24H"] as const).map(
+              (value) => (
+                <ListBox.Item
+                  key={value}
+                  id={value}
+                  textValue={String(t(`kinds.${value}`))}
+                >
+                  <Label>{t(`kinds.${value}`)}</Label>
+                  <ListBox.ItemIndicator />
+                </ListBox.Item>
+              ),
+            )}
+          </ListBox>
+        </Select.Popover>
+      </Select>
+      <TextField
+        value={date}
+        onChange={setDate}
+        className={["w-full"].filter(Boolean).join(" ")}
+      >
+        <Label>{t("date")}</Label>
+        <Input
+          type="date"
+          className={["h-9 text-sm"].filter(Boolean).join(" ")}
+        />
+      </TextField>
+      <TextField
+        value={quantity}
+        onChange={setQuantity}
+        className={["w-full"].filter(Boolean).join(" ")}
+      >
+        <Label>{t(`unit.${kind}`)}</Label>
+        <Input className={["h-9 text-sm"].filter(Boolean).join(" ")} />
+      </TextField>
+      <TextField
+        value={note}
+        onChange={setNote}
+        className={["w-full"].filter(Boolean).join(" ")}
+      >
+        <Label>{t("note")}</Label>
+        <Input className={["h-9 text-sm"].filter(Boolean).join(" ")} />
+      </TextField>
+      <Button
+        size="sm"
+        isDisabled={!quantity}
+        onPress={() =>
+          submit(
+            () => addFlatRateAction({ kind, date, quantity, note }),
+            t("saved"),
+            () => {
+              setQuantity("");
+              setNote("");
+            },
+          )
+        }
+        variant={actionVariant("primary", "solid")}
+        isPending={busy}
+      >
+        {busy ? <Spinner size="sm" color="current" /> : null}
+        {<Plus className="h-4 w-4" aria-hidden />}
         {t("add")}
       </Button>
     </div>
   );
 }
 
-export function DeleteFlatRateButton({ id, label }: { id: string; label: string }) {
+export function DeleteFlatRateButton({
+  id,
+  label,
+}: {
+  id: string;
+  label: string;
+}) {
   const { busy, submit } = useSubmit();
   return (
-    <Button size="sm" variant="light" color="danger" isIconOnly aria-label={label} isLoading={busy} onPress={() => submit(() => deleteFlatRateAction({ id }), label)}>
+    <Button
+      size="sm"
+      isIconOnly
+      aria-label={label}
+      onPress={() => submit(() => deleteFlatRateAction({ id }), label)}
+      variant={actionVariant("danger", "light")}
+      isPending={busy}
+    >
+      {busy ? <Spinner size="sm" color="current" /> : null}
       <Trash2 className="h-4 w-4" aria-hidden />
     </Button>
   );
@@ -119,32 +331,126 @@ export function DeleteFlatRateButton({ id, label }: { id: string; label: string 
 export function ReserveForm({ year }: { year: number }) {
   const t = useTranslations("accounting.extras.reserves");
   const { busy, submit } = useSubmit();
-  const [kind, setKind] = useState<"FREE" | "PURPOSE" | "REPLACEMENT" | "OPERATING">("PURPOSE");
+  const [kind, setKind] = useState<
+    "FREE" | "PURPOSE" | "REPLACEMENT" | "OPERATING"
+  >("PURPOSE");
   const [amount, setAmount] = useState("");
   const [purpose, setPurpose] = useState("");
   const [planned, setPlanned] = useState("");
   return (
     <div className="grid grid-cols-1 items-end gap-3 sm:grid-cols-5">
-      <ClientSelect size="sm" label={t("kind")} labelPlacement="outside" selectedKeys={[kind]} onSelectionChange={(keys) => setKind((selectionKey(keys) || "PURPOSE") as typeof kind)}>
-        {(["PURPOSE", "REPLACEMENT", "OPERATING", "FREE"] as const).map((value) => (
-          <SelectItem key={value}>{t(`kinds.${value}`)}</SelectItem>
-        ))}
-      </ClientSelect>
-      <Input size="sm" label={t("amount")} labelPlacement="outside" value={amount} onValueChange={setAmount} placeholder="0,00" />
-      <Input size="sm" className="sm:col-span-2" label={t("purpose")} labelPlacement="outside" value={purpose} onValueChange={setPurpose} />
-      <Input size="sm" label={t("plannedUse")} labelPlacement="outside" value={planned} onValueChange={setPlanned} placeholder={String(year + 2)} />
-      <Button className="sm:col-span-5 sm:justify-self-start" size="sm" color="primary" startContent={<Plus className="h-4 w-4" aria-hidden />} isLoading={busy} isDisabled={!amount || purpose.trim().length < 3} onPress={() => submit(() => saveReserveAction({ year, kind, amount, purpose, plannedUseYear: planned }), t("saved"), () => { setAmount(""); setPurpose(""); setPlanned(""); })}>
+      <Select
+        value={kind}
+        onChange={(selectedValue) => {
+          const keys =
+            selectedValue === null ? undefined : String(selectedValue);
+          return setKind((String(keys ?? "") || "PURPOSE") as typeof kind);
+        }}
+      >
+        <Label>{t("kind")}</Label>
+        <Select.Trigger className="h-9 text-sm">
+          <Select.Value />
+          <Select.Indicator />
+        </Select.Trigger>
+        <Select.Popover>
+          <ListBox>
+            {(["PURPOSE", "REPLACEMENT", "OPERATING", "FREE"] as const).map(
+              (value) => (
+                <ListBox.Item
+                  key={value}
+                  id={value}
+                  textValue={String(t(`kinds.${value}`))}
+                >
+                  <Label>{t(`kinds.${value}`)}</Label>
+                  <ListBox.ItemIndicator />
+                </ListBox.Item>
+              ),
+            )}
+          </ListBox>
+        </Select.Popover>
+      </Select>
+      <TextField
+        value={amount}
+        onChange={setAmount}
+        className={["w-full"].filter(Boolean).join(" ")}
+      >
+        <Label>{t("amount")}</Label>
+        <Input
+          placeholder="0,00"
+          className={["h-9 text-sm"].filter(Boolean).join(" ")}
+        />
+      </TextField>
+      <TextField
+        value={purpose}
+        onChange={setPurpose}
+        className={["sm:col-span-2"].filter(Boolean).join(" ")}
+      >
+        <Label>{t("purpose")}</Label>
+        <Input className={["h-9 text-sm"].filter(Boolean).join(" ")} />
+      </TextField>
+      <TextField
+        value={planned}
+        onChange={setPlanned}
+        className={["w-full"].filter(Boolean).join(" ")}
+      >
+        <Label>{t("plannedUse")}</Label>
+        <Input
+          placeholder={String(year + 2)}
+          className={["h-9 text-sm"].filter(Boolean).join(" ")}
+        />
+      </TextField>
+      <Button
+        className="sm:col-span-5 sm:justify-self-start"
+        size="sm"
+        isDisabled={!amount || purpose.trim().length < 3}
+        onPress={() =>
+          submit(
+            () =>
+              saveReserveAction({
+                year,
+                kind,
+                amount,
+                purpose,
+                plannedUseYear: planned,
+              }),
+            t("saved"),
+            () => {
+              setAmount("");
+              setPurpose("");
+              setPlanned("");
+            },
+          )
+        }
+        variant={actionVariant("primary", "solid")}
+        isPending={busy}
+      >
+        {busy ? <Spinner size="sm" color="current" /> : null}
+        {<Plus className="h-4 w-4" aria-hidden />}
         {t("add")}
       </Button>
     </div>
   );
 }
 
-export function ReleaseReserveButton({ id, year }: { id: string; year: number }) {
+export function ReleaseReserveButton({
+  id,
+  year,
+}: {
+  id: string;
+  year: number;
+}) {
   const t = useTranslations("accounting.extras.reserves");
   const { busy, submit } = useSubmit();
   return (
-    <Button size="sm" variant="light" isLoading={busy} onPress={() => submit(() => releaseReserveAction({ id, year }), t("released"))}>
+    <Button
+      size="sm"
+      onPress={() =>
+        submit(() => releaseReserveAction({ id, year }), t("released"))
+      }
+      variant={actionVariant("default", "light")}
+      isPending={busy}
+    >
+      {busy ? <Spinner size="sm" color="current" /> : null}
       {t("release")}
     </Button>
   );

@@ -1,6 +1,8 @@
 "use client";
+import { statusStyle } from "@/shared/components/ui/status-appearance";
+import { toast, Chip } from "@heroui/react";
+import { statusTone } from "@/shared/components/ui/status-appearance";
 
-import { addToast, Chip } from "@heroui/react";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -17,7 +19,10 @@ import { deleteCourseAction } from "../actions/course-actions";
 import { COURSE_KIND_VALUES, COURSE_STATUS_VALUES } from "../constants";
 import type { CourseRow, CourseStatus } from "../types";
 
-const STATUS_COLOR: Record<CourseStatus, "default" | "primary" | "success" | "danger"> = {
+const STATUS_COLOR: Record<
+  CourseStatus,
+  "default" | "primary" | "success" | "danger"
+> = {
   PLANNED: "primary",
   ACTIVE: "success",
   COMPLETED: "default",
@@ -60,22 +65,52 @@ export function CourseTable({
       render: (row) => (
         <div className="flex flex-col">
           <span className="font-medium">{row.title}</span>
-          <span className="text-tiny text-default-500">{[tEnum(`kind.${row.kind}`), row.subject, row.teacherNames.join(", ")].filter(Boolean).join(" · ")}</span>
+          <span className="text-xs text-ink-500">
+            {[
+              tEnum(`kind.${row.kind}`),
+              row.subject,
+              row.teacherNames.join(", "),
+            ]
+              .filter(Boolean)
+              .join(" · ")}
+          </span>
         </div>
       ),
     },
-    { key: "startDate", label: t("period"), sortable: true, render: (row) => `${formatDate(row.startDate)}${row.endDate ? ` – ${formatDate(row.endDate)}` : ""}` },
+    {
+      key: "startDate",
+      label: t("period"),
+      sortable: true,
+      render: (row) =>
+        `${formatDate(row.startDate)}${row.endDate ? ` – ${formatDate(row.endDate)}` : ""}`,
+    },
     {
       key: "fee",
       label: t("fee"),
-      render: (row) => (row.feeType === "FREE" ? tEnum("feeType.FREE") : `${formatMoney(row.feeCents)} · ${tEnum(`feeType.${row.feeType}`)}`),
+      render: (row) =>
+        row.feeType === "FREE"
+          ? tEnum("feeType.FREE")
+          : `${formatMoney(row.feeCents)} · ${tEnum(`feeType.${row.feeType}`)}`,
     },
-    { key: "enrolled", label: t("enrolled"), align: "end", render: (row) => (row.capacity ? `${row.enrolledCount} / ${row.capacity}` : row.enrolledCount) },
+    {
+      key: "enrolled",
+      label: t("enrolled"),
+      align: "end",
+      render: (row) =>
+        row.capacity
+          ? `${row.enrolledCount} / ${row.capacity}`
+          : row.enrolledCount,
+    },
     {
       key: "status",
       label: t("status"),
       render: (row) => (
-        <Chip size="sm" variant="flat" color={STATUS_COLOR[row.status]}>
+        <Chip
+          size="sm"
+          color={statusTone(STATUS_COLOR[row.status])}
+          variant={"soft"}
+          style={statusStyle(STATUS_COLOR[row.status])}
+        >
           {tEnum(`status.${row.status}`)}
         </Chip>
       ),
@@ -96,14 +131,46 @@ export function CourseTable({
         q={q}
         searchPlaceholder={t("search")}
         filters={[
-          { key: "status", label: t("status"), options: COURSE_STATUS_VALUES.map((value) => ({ value, label: tEnum(`status.${value}`) })) },
-          { key: "kind", label: t("kind"), options: COURSE_KIND_VALUES.map((value) => ({ value, label: tEnum(`kind.${value}`) })) },
+          {
+            key: "status",
+            label: t("status"),
+            options: COURSE_STATUS_VALUES.map((value) => ({
+              value,
+              label: tEnum(`status.${value}`),
+            })),
+          },
+          {
+            key: "kind",
+            label: t("kind"),
+            options: COURSE_KIND_VALUES.map((value) => ({
+              value,
+              label: tEnum(`kind.${value}`),
+            })),
+          },
         ]}
         emptyMessage={t("empty")}
         rowActions={(row) => [
-          { key: "open", label: t("open"), icon: <Eye className="h-4 w-4" />, href: `/kurslar/${row.id}` },
-          { key: "edit", label: t("edit"), icon: <Pencil className="h-4 w-4" />, href: drawerHref("duzenle", row.id), hidden: !canUpdate },
-          { key: "delete", label: t("delete"), icon: <Trash2 className="h-4 w-4" />, color: "danger", onPress: () => setDeleting(row), hidden: !canDelete },
+          {
+            key: "open",
+            label: t("open"),
+            icon: <Eye className="h-4 w-4" />,
+            href: `/kurslar/${row.id}`,
+          },
+          {
+            key: "edit",
+            label: t("edit"),
+            icon: <Pencil className="h-4 w-4" />,
+            href: drawerHref("duzenle", row.id),
+            hidden: !canUpdate,
+          },
+          {
+            key: "delete",
+            label: t("delete"),
+            icon: <Trash2 className="h-4 w-4" />,
+            color: "danger",
+            onPress: () => setDeleting(row),
+            hidden: !canDelete,
+          },
         ]}
       />
       <ConfirmDialog
@@ -117,10 +184,10 @@ export function CourseTable({
           if (!deleting) return;
           const result = await deleteCourseAction({ id: deleting.id });
           if (!result.ok) {
-            addToast({ title: result.error, color: "danger" });
+            toast(result.error, { variant: "danger" });
             return;
           }
-          addToast({ title: t("deleted"), color: "success" });
+          toast(t("deleted"), { variant: "success" });
           setDeleting(null);
           router.refresh();
         }}

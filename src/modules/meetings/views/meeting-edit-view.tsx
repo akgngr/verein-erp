@@ -17,7 +17,8 @@ export async function MeetingEditView({ id }: { id: string }) {
   try {
     await requirePermission(meetingsPermissions, "update");
   } catch (error) {
-    if (error instanceof ForbiddenError) return <FormDrawer title="">{<AccessDenied />}</FormDrawer>;
+    if (error instanceof ForbiddenError)
+      return <FormDrawer title="">{<AccessDenied />}</FormDrawer>;
     throw error;
   }
 
@@ -29,7 +30,7 @@ export async function MeetingEditView({ id }: { id: string }) {
   if (locked) {
     return (
       <FormDrawer title={t("editTitle")} description={meeting.meetingNumber}>
-        <div className="rounded-medium border border-warning-200 bg-warning-50 px-4 py-3 text-small text-warning-600">
+        <div className="rounded-lg border border-warning-200 bg-warning-50 px-4 py-3 text-sm text-warning-600">
           {meeting.status === "APPROVED"
             ? t("lockedApproved")
             : t("lockedCancelled")}

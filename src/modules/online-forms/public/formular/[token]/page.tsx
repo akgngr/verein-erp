@@ -11,15 +11,21 @@ export async function generateMetadata() {
 }
 
 /** OTURUMSUZ: /formular/<belirteç>. Geçersiz/süresi dolmuş/kullanılmış bağlantıda hiçbir kişi verisi gösterilmez. */
-export default async function OnlineFormPage({ params }: { params: Promise<{ token: string }> }) {
+export default async function OnlineFormPage({
+  params,
+}: {
+  params: Promise<{ token: string }>;
+}) {
   const { token } = await params;
-  const form = /^[A-Za-z0-9_-]{20,100}$/.test(token) ? await loadPublicForm(token) : null;
+  const form = /^[A-Za-z0-9_-]{20,100}$/.test(token)
+    ? await loadPublicForm(token)
+    : null;
   if (!form) {
     const t = await getTranslations("online-forms.public");
     return (
-      <div className="mx-auto max-w-xl rounded-large bg-content1 p-8 text-center shadow-small">
+      <div className="mx-auto max-w-xl rounded-xl bg-surface p-8 text-center shadow-sm">
         <h1 className="text-xl font-semibold">{t("invalidTitle")}</h1>
-        <p className="mt-2 text-default-600">{t("invalidText")}</p>
+        <p className="mt-2 text-ink-600">{t("invalidText")}</p>
       </div>
     );
   }

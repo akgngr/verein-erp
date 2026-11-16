@@ -11,7 +11,11 @@ import { can } from "@/shared/permissions/define";
 
 import { memberPaymentsPermissions } from "../permissions";
 import { MEMBERSHIP_TYPE_VALUES } from "../constants";
-import { DUES_DEFAULT_SORT, DUES_SORTABLE_FIELDS, listDues } from "../queries/list-dues";
+import {
+  DUES_DEFAULT_SORT,
+  DUES_SORTABLE_FIELDS,
+  listDues,
+} from "../queries/list-dues";
 import { getDuesStats } from "../queries/get-dues-stats";
 import { berlinYear } from "../utils";
 import { DuesReportTable } from "../components/dues-report-table";
@@ -20,9 +24,11 @@ import { GenerateDuesModal } from "../components/generate-dues-modal";
 
 function StatCard({ label, value }: { label: string; value: string }) {
   return (
-    <div className="flex flex-col items-start gap-1 rounded-medium border bg-content1 px-4 py-3 shadow-sm">
-      <span className="text-xl font-semibold leading-none text-foreground">{value}</span>
-      <span className="text-tiny text-default-500">{label}</span>
+    <div className="flex flex-col items-start gap-1 rounded-lg border bg-surface px-4 py-3 shadow-sm">
+      <span className="text-xl font-semibold leading-none text-foreground">
+        {value}
+      </span>
+      <span className="text-xs text-ink-500">{label}</span>
     </div>
   );
 }
@@ -58,9 +64,17 @@ export async function DuesReportView({
     Number.isInteger(yearRaw) && yearRaw >= 2000 && yearRaw <= currentYear + 1
       ? yearRaw
       : currentYear;
-  const yearOptions = [currentYear - 2, currentYear - 1, currentYear, currentYear + 1];
+  const yearOptions = [
+    currentYear - 2,
+    currentYear - 1,
+    currentYear,
+    currentYear + 1,
+  ];
 
-  const [list, stats] = await Promise.all([listDues(params, year), getDuesStats(year)]);
+  const [list, stats] = await Promise.all([
+    listDues(params, year),
+    getDuesStats(year),
+  ]);
   const t = await getTranslations("members.dues");
 
   const canCreate = can(user.role, memberPaymentsPermissions, "create");
@@ -76,7 +90,8 @@ export async function DuesReportView({
   // Excel dışa aktarımı raporun aktif yıl/filtrelerini taşır.
   const exportQuery = new URLSearchParams();
   exportQuery.set("filter.year", String(year));
-  if (params.filters.status) exportQuery.set("filter.status", params.filters.status);
+  if (params.filters.status)
+    exportQuery.set("filter.status", params.filters.status);
   if (params.filters.type) exportQuery.set("filter.type", params.filters.type);
 
   return (
@@ -98,19 +113,27 @@ export async function DuesReportView({
       />
 
       <div className="mb-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <StatCard label={t("stats.expected")} value={formatMoney(stats.expectedCents)} />
-        <StatCard label={t("stats.collected")} value={formatMoney(stats.collectedCents)} />
+        <StatCard
+          label={t("stats.expected")}
+          value={formatMoney(stats.expectedCents)}
+        />
+        <StatCard
+          label={t("stats.collected")}
+          value={formatMoney(stats.collectedCents)}
+        />
         <StatCard
           label={t("stats.remaining")}
           value={formatMoney(Math.max(0, stats.remainingCents))}
         />
         <StatCard
           label={t("stats.rate")}
-          value={stats.collectionRate === null ? "—" : `%${stats.collectionRate}`}
+          value={
+            stats.collectionRate === null ? "—" : `%${stats.collectionRate}`
+          }
         />
       </div>
 
-      <div className="mb-4 flex flex-wrap items-center gap-2 text-tiny text-default-500">
+      <div className="mb-4 flex flex-wrap items-center gap-2 text-xs text-ink-500">
         <span className="font-medium">{t("counts.title")}:</span>
         <span>
           {t("status.OPEN")}: {stats.openCount}
@@ -128,7 +151,11 @@ export async function DuesReportView({
           {t("status.WAIVED")}: {stats.waivedCount}
         </span>
         <span>·</span>
-        <span className={stats.overdueCount > 0 ? "font-medium text-danger" : undefined}>
+        <span
+          className={
+            stats.overdueCount > 0 ? "font-medium text-danger" : undefined
+          }
+        >
           {t("filterOverdue")}: {stats.overdueCount}
         </span>
       </div>
@@ -142,7 +169,11 @@ export async function DuesReportView({
         dir={params.dir}
         q={params.q}
         filters={[
-          { key: "status", label: t("colStatus"), options: statusFilterOptions },
+          {
+            key: "status",
+            label: t("colStatus"),
+            options: statusFilterOptions,
+          },
           {
             key: "type",
             label: t("colType"),

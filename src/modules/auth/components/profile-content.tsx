@@ -1,8 +1,7 @@
 "use client";
+import { Card } from "@heroui/react";
 
 import { useTranslations } from "next-intl";
-
-import { Card, CardBody, CardHeader } from "@heroui/react";
 
 import { ChangePasswordForm } from "../components/change-password-form";
 import type { SessionUser } from "../types";
@@ -27,43 +26,51 @@ export function ProfileContent({
   const t = useTranslations("auth.profile");
   return (
     <div className="grid grid-cols-1 gap-6 lg:grid-cols-2">
-      <Card shadow="sm">
-        <CardHeader className="pb-0">
-          <h2 className="text-medium font-medium">{t("accountInfo")}</h2>
-        </CardHeader>
-        <CardBody className="gap-3 text-small">
+      <Card className={"shadow-sm border border-ink-200/80"}>
+        <Card.Header className={["pb-0"].filter(Boolean).join(" ")}>
+          <h2 className="text-base font-medium">{t("accountInfo")}</h2>
+        </Card.Header>
+        <Card.Content className={["gap-3 text-sm"].filter(Boolean).join(" ")}>
           <div className="flex items-center justify-between gap-4">
-            <span className="text-default-500">{t("name")}</span>
+            <span className="text-ink-500">{t("name")}</span>
             <span className="font-medium">{user.name}</span>
           </div>
           <div className="flex items-center justify-between gap-4">
-            <span className="text-default-500">{t("email")}</span>
+            <span className="text-ink-500">{t("email")}</span>
             <span className="font-medium">{user.email}</span>
           </div>
           <div className="flex items-center justify-between gap-4">
-            <span className="text-default-500">{t("role")}</span>
+            <span className="text-ink-500">{t("role")}</span>
             <RoleChip role={user.role} />
           </div>
-        </CardBody>
+        </Card.Content>
       </Card>
 
-      <Card shadow="sm">
-        <CardHeader className="pb-0">
-          <h2 className="text-medium font-medium">{t("changePassword")}</h2>
-        </CardHeader>
-        <CardBody>
+      <Card className={"shadow-sm border border-ink-200/80"}>
+        <Card.Header className={["pb-0"].filter(Boolean).join(" ")}>
+          <h2 className="text-base font-medium">{t("changePassword")}</h2>
+        </Card.Header>
+        <Card.Content>
           <ChangePasswordForm />
-        </CardBody>
+        </Card.Content>
       </Card>
 
-      <Card shadow="sm" className="lg:col-span-2">
-        <CardHeader className="flex-col items-start gap-1 pb-0">
-          <h2 className="text-medium font-medium">{t("details")}</h2>
-          <p className="text-small text-default-500">{t("detailsHint")}</p>
-        </CardHeader>
-        <CardBody>
+      <Card
+        className={["lg:col-span-2", "shadow-sm border border-ink-200/80"]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        <Card.Header
+          className={["flex-col items-start gap-1 pb-0"]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          <h2 className="text-base font-medium">{t("details")}</h2>
+          <p className="text-sm text-ink-500">{t("detailsHint")}</p>
+        </Card.Header>
+        <Card.Content>
           <ProfileForm profile={profile} saveAction={saveProfileAction} />
-        </CardBody>
+        </Card.Content>
       </Card>
     </div>
   );

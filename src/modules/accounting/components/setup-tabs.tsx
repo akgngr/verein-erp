@@ -1,12 +1,21 @@
 "use client";
+import {
+  toast,
+  Button,
+  Card,
+  Spinner,
+  Select,
+  ListBox,
+  Label,
+  Tabs,
+} from "@heroui/react";
 
-import { Button, Card, CardBody, Tab, Tabs, addToast } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+
 import { Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
-
-import { Select, SelectItem } from "@heroui/react";
 
 import { updateAccountAction } from "../actions/account-actions";
 import { updateCategoryAction } from "../actions/category-actions";
@@ -46,7 +55,13 @@ type CategoryRow = {
   defaultTaxRate: number;
   isAsset: boolean;
 };
-type ProjectRow = { id: string; name: string; note: string | null; isActive: boolean; bookingCount: number };
+type ProjectRow = {
+  id: string;
+  name: string;
+  note: string | null;
+  isActive: boolean;
+  bookingCount: number;
+};
 type SettingsData = {
   memberFeeCategoryId: string | null;
   cashAccountId: string | null;
@@ -76,9 +91,18 @@ export function SetupTabs({
 }) {
   const t = useTranslations("accounting.setup");
   const router = useRouter();
-  const [accountModal, setAccountModal] = useState<{ open: boolean; account?: AccountRow }>({ open: false });
-  const [categoryModal, setCategoryModal] = useState<{ open: boolean; category?: CategoryRow }>({ open: false });
-  const [projectModal, setProjectModal] = useState<{ open: boolean; project?: ProjectRow }>({ open: false });
+  const [accountModal, setAccountModal] = useState<{
+    open: boolean;
+    account?: AccountRow;
+  }>({ open: false });
+  const [categoryModal, setCategoryModal] = useState<{
+    open: boolean;
+    category?: CategoryRow;
+  }>({ open: false });
+  const [projectModal, setProjectModal] = useState<{
+    open: boolean;
+    project?: ProjectRow;
+  }>({ open: false });
 
   const toggleActive = async (
     entity: "account" | "category" | "project",
@@ -114,7 +138,7 @@ export function SetupTabs({
       });
     }
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
     router.refresh();
@@ -123,27 +147,46 @@ export function SetupTabs({
   return (
     <div className="flex flex-col gap-4">
       <Tabs
-        aria-label={t("title")}
         selectedKey={tab}
-        onSelectionChange={(key) => router.push(`/muhasebe/ayarlar?sekme=${String(key)}`)}
+        onSelectionChange={(key) =>
+          router.push(`/muhasebe/ayarlar?sekme=${String(key)}`)
+        }
+        variant="secondary"
       >
-        <Tab key="hesaplar" title={t("tabs.accounts")}>
+        <Tabs.ListContainer>
+          <Tabs.List aria-label={t("title")}>
+            <Tabs.Tab id={"hesaplar"} key={"hesaplar"}>
+              {t("tabs.accounts")}
+              <Tabs.Indicator />
+            </Tabs.Tab>
+
+            <Tabs.Tab id={"kategoriler"} key={"kategoriler"}>
+              {t("tabs.categories")}
+              <Tabs.Indicator />
+            </Tabs.Tab>
+
+            <Tabs.Tab id={"projeler"} key={"projeler"}>
+              {t("tabs.projects")}
+              <Tabs.Indicator />
+            </Tabs.Tab>
+          </Tabs.List>
+        </Tabs.ListContainer>
+        <Tabs.Panel id={"hesaplar"} key={"hesaplar"}>
           <div className="pt-3">
             {canUpdate ? (
               <Button
                 size="sm"
-                color="primary"
-                variant="flat"
                 className="mb-3"
-                startContent={<Plus className="h-4 w-4" aria-hidden />}
                 onPress={() => setAccountModal({ open: true })}
+                variant={actionVariant("primary", "flat")}
               >
+                {<Plus className="h-4 w-4" aria-hidden />}
                 {t("accounts.new")}
               </Button>
             ) : null}
-            <table className="w-full text-small" aria-label={t("tabs.accounts")}>
+            <table className="w-full text-sm" aria-label={t("tabs.accounts")}>
               <thead>
-                <tr className="border-b border-default-200 text-left text-tiny uppercase tracking-wide text-default-400">
+                <tr className="border-b border-ink-200 text-left text-xs uppercase tracking-wide text-ink-400">
                   <th className="py-2 pr-3">{t("accounts.name")}</th>
                   <th className="py-2 pr-3">{t("accounts.type")}</th>
                   <th className="py-2 pr-3">{t("accounts.openingBalance")}</th>
@@ -154,33 +197,57 @@ export function SetupTabs({
               </thead>
               <tbody>
                 {accounts.map((account) => (
-                  <tr key={account.id} className={`border-b border-default-100 last:border-none${account.isActive ? "" : " opacity-60"}`}>
+                  <tr
+                    key={account.id}
+                    className={`border-b border-ink-100 last:border-none${account.isActive ? "" : " opacity-60"}`}
+                  >
                     <td className="py-2 pr-3 font-medium">{account.name}</td>
-                    <td className="py-2 pr-3">{t(`accounts.type${account.type}`)}</td>
                     <td className="py-2 pr-3">
-                      {(account.openingBalanceCents / 100).toLocaleString("tr-TR", { style: "currency", currency: "EUR" })}
+                      {t(`accounts.type${account.type}`)}
+                    </td>
+                    <td className="py-2 pr-3">
+                      {(account.openingBalanceCents / 100).toLocaleString(
+                        "tr-TR",
+                        { style: "currency", currency: "EUR" },
+                      )}
                     </td>
                     <td className="py-2 pr-3">{account.bookingCount}</td>
                     <td className="py-2 pr-3">
                       {account.isActive ? (
                         <span className="text-success">✓</span>
                       ) : (
-                        <span className="text-default-400">✗</span>
+                        <span className="text-ink-400">✗</span>
                       )}
                     </td>
                     <td className="py-2">
                       {canUpdate ? (
                         <div className="flex justify-end gap-1">
-                          <Button size="sm" variant="light" onPress={() => setAccountModal({ open: true, account })}>
+                          <Button
+                            size="sm"
+                            onPress={() =>
+                              setAccountModal({ open: true, account })
+                            }
+                            variant={actionVariant("default", "light")}
+                          >
                             {t("accounts.edit")}
                           </Button>
                           <Button
                             size="sm"
-                            variant="light"
-                            color={account.isActive ? "danger" : "success"}
-                            onPress={() => toggleActive("account", account, !account.isActive)}
+                            onPress={() =>
+                              toggleActive(
+                                "account",
+                                account,
+                                !account.isActive,
+                              )
+                            }
+                            variant={actionVariant(
+                              account.isActive ? "danger" : "success",
+                              "light",
+                            )}
                           >
-                            {account.isActive ? t("accounts.deactivate") : t("accounts.activate")}
+                            {account.isActive
+                              ? t("accounts.deactivate")
+                              : t("accounts.activate")}
                           </Button>
                         </div>
                       ) : null}
@@ -190,25 +257,24 @@ export function SetupTabs({
               </tbody>
             </table>
           </div>
-        </Tab>
+        </Tabs.Panel>
 
-        <Tab key="kategoriler" title={t("tabs.categories")}>
+        <Tabs.Panel id={"kategoriler"} key={"kategoriler"}>
           <div className="pt-3">
             {canUpdate ? (
               <Button
                 size="sm"
-                color="primary"
-                variant="flat"
                 className="mb-3"
-                startContent={<Plus className="h-4 w-4" aria-hidden />}
                 onPress={() => setCategoryModal({ open: true })}
+                variant={actionVariant("primary", "flat")}
               >
+                {<Plus className="h-4 w-4" aria-hidden />}
                 {t("categories.new")}
               </Button>
             ) : null}
-            <table className="w-full text-small" aria-label={t("tabs.categories")}>
+            <table className="w-full text-sm" aria-label={t("tabs.categories")}>
               <thead>
-                <tr className="border-b border-default-200 text-left text-tiny uppercase tracking-wide text-default-400">
+                <tr className="border-b border-ink-200 text-left text-xs uppercase tracking-wide text-ink-400">
                   <th className="py-2 pr-3">{t("categories.name")}</th>
                   <th className="py-2 pr-3">{t("categories.direction")}</th>
                   <th className="py-2 pr-3">{t("categories.sphere")}</th>
@@ -219,31 +285,54 @@ export function SetupTabs({
               </thead>
               <tbody>
                 {categories.map((category) => (
-                  <tr key={category.id} className={`border-b border-default-100 last:border-none${category.isActive ? "" : " opacity-60"}`}>
+                  <tr
+                    key={category.id}
+                    className={`border-b border-ink-100 last:border-none${category.isActive ? "" : " opacity-60"}`}
+                  >
                     <td className="py-2 pr-3 font-medium">{category.name}</td>
-                    <td className="py-2 pr-3">{t(`categories.direction${category.direction}`)}</td>
-                    <td className="py-2 pr-3">{t(`categories.sphere${category.sphere}`)}</td>
+                    <td className="py-2 pr-3">
+                      {t(`categories.direction${category.direction}`)}
+                    </td>
+                    <td className="py-2 pr-3">
+                      {t(`categories.sphere${category.sphere}`)}
+                    </td>
                     <td className="py-2 pr-3">{category.bookingCount}</td>
                     <td className="py-2 pr-3">
                       {category.isActive ? (
                         <span className="text-success">✓</span>
                       ) : (
-                        <span className="text-default-400">✗</span>
+                        <span className="text-ink-400">✗</span>
                       )}
                     </td>
                     <td className="py-2">
                       {canUpdate ? (
                         <div className="flex justify-end gap-1">
-                          <Button size="sm" variant="light" onPress={() => setCategoryModal({ open: true, category })}>
+                          <Button
+                            size="sm"
+                            onPress={() =>
+                              setCategoryModal({ open: true, category })
+                            }
+                            variant={actionVariant("default", "light")}
+                          >
                             {t("categories.edit")}
                           </Button>
                           <Button
                             size="sm"
-                            variant="light"
-                            color={category.isActive ? "danger" : "success"}
-                            onPress={() => toggleActive("category", category, !category.isActive)}
+                            onPress={() =>
+                              toggleActive(
+                                "category",
+                                category,
+                                !category.isActive,
+                              )
+                            }
+                            variant={actionVariant(
+                              category.isActive ? "danger" : "success",
+                              "light",
+                            )}
                           >
-                            {category.isActive ? t("categories.deactivate") : t("categories.activate")}
+                            {category.isActive
+                              ? t("categories.deactivate")
+                              : t("categories.activate")}
                           </Button>
                         </div>
                       ) : null}
@@ -253,25 +342,24 @@ export function SetupTabs({
               </tbody>
             </table>
           </div>
-        </Tab>
+        </Tabs.Panel>
 
-        <Tab key="projeler" title={t("tabs.projects")}>
+        <Tabs.Panel id={"projeler"} key={"projeler"}>
           <div className="pt-3">
             {canUpdate ? (
               <Button
                 size="sm"
-                color="primary"
-                variant="flat"
                 className="mb-3"
-                startContent={<Plus className="h-4 w-4" aria-hidden />}
                 onPress={() => setProjectModal({ open: true })}
+                variant={actionVariant("primary", "flat")}
               >
+                {<Plus className="h-4 w-4" aria-hidden />}
                 {t("projects.new")}
               </Button>
             ) : null}
-            <table className="w-full text-small" aria-label={t("tabs.projects")}>
+            <table className="w-full text-sm" aria-label={t("tabs.projects")}>
               <thead>
-                <tr className="border-b border-default-200 text-left text-tiny uppercase tracking-wide text-default-400">
+                <tr className="border-b border-ink-200 text-left text-xs uppercase tracking-wide text-ink-400">
                   <th className="py-2 pr-3">{t("projects.name")}</th>
                   <th className="py-2 pr-3">{t("projects.note")}</th>
                   <th className="py-2 pr-3">{t("projects.bookings")}</th>
@@ -281,7 +369,10 @@ export function SetupTabs({
               </thead>
               <tbody>
                 {projects.map((project) => (
-                  <tr key={project.id} className={`border-b border-default-100 last:border-none${project.isActive ? "" : " opacity-60"}`}>
+                  <tr
+                    key={project.id}
+                    className={`border-b border-ink-100 last:border-none${project.isActive ? "" : " opacity-60"}`}
+                  >
                     <td className="py-2 pr-3 font-medium">{project.name}</td>
                     <td className="py-2 pr-3">{project.note ?? "—"}</td>
                     <td className="py-2 pr-3">{project.bookingCount}</td>
@@ -289,22 +380,38 @@ export function SetupTabs({
                       {project.isActive ? (
                         <span className="text-success">✓</span>
                       ) : (
-                        <span className="text-default-400">✗</span>
+                        <span className="text-ink-400">✗</span>
                       )}
                     </td>
                     <td className="py-2">
                       {canUpdate ? (
                         <div className="flex justify-end gap-1">
-                          <Button size="sm" variant="light" onPress={() => setProjectModal({ open: true, project })}>
+                          <Button
+                            size="sm"
+                            onPress={() =>
+                              setProjectModal({ open: true, project })
+                            }
+                            variant={actionVariant("default", "light")}
+                          >
                             {t("projects.edit")}
                           </Button>
                           <Button
                             size="sm"
-                            variant="light"
-                            color={project.isActive ? "danger" : "success"}
-                            onPress={() => toggleActive("project", project, !project.isActive)}
+                            onPress={() =>
+                              toggleActive(
+                                "project",
+                                project,
+                                !project.isActive,
+                              )
+                            }
+                            variant={actionVariant(
+                              project.isActive ? "danger" : "success",
+                              "light",
+                            )}
                           >
-                            {project.isActive ? t("projects.deactivate") : t("projects.activate")}
+                            {project.isActive
+                              ? t("projects.deactivate")
+                              : t("projects.activate")}
                           </Button>
                         </div>
                       ) : null}
@@ -314,7 +421,7 @@ export function SetupTabs({
               </tbody>
             </table>
           </div>
-        </Tab>
+        </Tabs.Panel>
       </Tabs>
 
       {/* Vergi ayarları (ACC-1) */}
@@ -325,7 +432,9 @@ export function SetupTabs({
         settings={settings}
         canUpdate={canUpdate}
         categoryOptions={categories
-          .filter((category) => category.direction === "INCOME" && category.isActive)
+          .filter(
+            (category) => category.direction === "INCOME" && category.isActive,
+          )
           .map((category) => ({ value: category.id, label: category.name }))}
         accountOptions={accounts
           .filter((account) => account.isActive)
@@ -370,11 +479,19 @@ function SyncSettingsCard({
   const tAccounts = useTranslations("accounting.setup.accounts");
   const tCategories = useTranslations("accounting.setup.categories");
   const router = useRouter();
-  const [memberFeeCategoryId, setMemberFeeCategoryId] = useState(settings.memberFeeCategoryId ?? "");
-  const [cashAccountId, setCashAccountId] = useState(settings.cashAccountId ?? "");
-  const [bankAccountId, setBankAccountId] = useState(settings.bankAccountId ?? "");
+  const [memberFeeCategoryId, setMemberFeeCategoryId] = useState(
+    settings.memberFeeCategoryId ?? "",
+  );
+  const [cashAccountId, setCashAccountId] = useState(
+    settings.cashAccountId ?? "",
+  );
+  const [bankAccountId, setBankAccountId] = useState(
+    settings.bankAccountId ?? "",
+  );
   // Faz 5 (§ 6): bağış kategorisi.
-  const [donationCategoryId, setDonationCategoryId] = useState(settings.donationCategoryId ?? "");
+  const [donationCategoryId, setDonationCategoryId] = useState(
+    settings.donationCategoryId ?? "",
+  );
   const [saving, setSaving] = useState(false);
 
   const save = async () => {
@@ -387,10 +504,10 @@ function SyncSettingsCard({
         donationCategoryId: donationCategoryId || null,
       });
       if (!result.ok) {
-        addToast({ title: result.error, color: "danger" });
+        toast(result.error, { variant: "danger" });
         return;
       }
-      addToast({ title: t("toastSaved"), color: "success" });
+      toast(t("toastSaved"), { variant: "success" });
       router.refresh();
     } finally {
       setSaving(false);
@@ -398,9 +515,9 @@ function SyncSettingsCard({
   };
 
   return (
-    <Card shadow="sm">
-      <CardBody className="gap-4 p-6">
-        <h2 className="text-small font-semibold uppercase tracking-wide text-default-500">
+    <Card className={"shadow-sm border border-ink-200/80"}>
+      <Card.Content className={["gap-4 p-6"].filter(Boolean).join(" ")}>
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-ink-500">
           {t("title")}
         </h2>
         {canUpdate ? (
@@ -408,66 +525,147 @@ function SyncSettingsCard({
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <Select
                 id="accounting-setup-memberFeeCategory"
-                label={t("memberFeeCategory")}
-                labelPlacement="outside"
-                selectedKeys={memberFeeCategoryId ? [memberFeeCategoryId] : []}
-                onSelectionChange={(keys) => setMemberFeeCategoryId(String(Array.from(keys)[0] ?? ""))}
+                value={memberFeeCategoryId ? memberFeeCategoryId : null}
+                onChange={(selectedValue) => {
+                  const keys =
+                    selectedValue === null ? undefined : String(selectedValue);
+                  return setMemberFeeCategoryId(String(keys ?? ""));
+                }}
               >
-                {categoryOptions.map((option) => (
-                  <SelectItem key={option.value}>{option.label}</SelectItem>
-                ))}
+                <Label>{t("memberFeeCategory")}</Label>
+                <Select.Trigger>
+                  <Select.Value />
+                  <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                  <ListBox>
+                    {categoryOptions.map((option) => (
+                      <ListBox.Item
+                        key={option.value}
+                        id={option.value}
+                        textValue={String(option.label)}
+                      >
+                        <Label>{option.label}</Label>
+                        <ListBox.ItemIndicator />
+                      </ListBox.Item>
+                    ))}
+                  </ListBox>
+                </Select.Popover>
               </Select>
               <Select
                 id="accounting-setup-cashAccount"
-                label={t("cashAccount")}
-                labelPlacement="outside"
-                selectedKeys={cashAccountId ? [cashAccountId] : []}
-                onSelectionChange={(keys) => setCashAccountId(String(Array.from(keys)[0] ?? ""))}
+                value={cashAccountId ? cashAccountId : null}
+                onChange={(selectedValue) => {
+                  const keys =
+                    selectedValue === null ? undefined : String(selectedValue);
+                  return setCashAccountId(String(keys ?? ""));
+                }}
               >
-                {accountOptions.map((option) => (
-                  <SelectItem key={option.value}>{option.label}</SelectItem>
-                ))}
+                <Label>{t("cashAccount")}</Label>
+                <Select.Trigger>
+                  <Select.Value />
+                  <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                  <ListBox>
+                    {accountOptions.map((option) => (
+                      <ListBox.Item
+                        key={option.value}
+                        id={option.value}
+                        textValue={String(option.label)}
+                      >
+                        <Label>{option.label}</Label>
+                        <ListBox.ItemIndicator />
+                      </ListBox.Item>
+                    ))}
+                  </ListBox>
+                </Select.Popover>
               </Select>
               <Select
                 id="accounting-setup-bankAccount"
-                label={t("bankAccount")}
-                labelPlacement="outside"
-                selectedKeys={bankAccountId ? [bankAccountId] : []}
-                onSelectionChange={(keys) => setBankAccountId(String(Array.from(keys)[0] ?? ""))}
+                value={bankAccountId ? bankAccountId : null}
+                onChange={(selectedValue) => {
+                  const keys =
+                    selectedValue === null ? undefined : String(selectedValue);
+                  return setBankAccountId(String(keys ?? ""));
+                }}
               >
-                {accountOptions.map((option) => (
-                  <SelectItem key={option.value}>{option.label}</SelectItem>
-                ))}
+                <Label>{t("bankAccount")}</Label>
+                <Select.Trigger>
+                  <Select.Value />
+                  <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                  <ListBox>
+                    {accountOptions.map((option) => (
+                      <ListBox.Item
+                        key={option.value}
+                        id={option.value}
+                        textValue={String(option.label)}
+                      >
+                        <Label>{option.label}</Label>
+                        <ListBox.ItemIndicator />
+                      </ListBox.Item>
+                    ))}
+                  </ListBox>
+                </Select.Popover>
               </Select>
             </div>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
               <Select
                 id="accounting-setup-donationCategory"
-                label={t("donationCategory")}
-                labelPlacement="outside"
-                selectedKeys={donationCategoryId ? [donationCategoryId] : []}
-                onSelectionChange={(keys) => setDonationCategoryId(String(Array.from(keys)[0] ?? ""))}
+                value={donationCategoryId ? donationCategoryId : null}
+                onChange={(selectedValue) => {
+                  const keys =
+                    selectedValue === null ? undefined : String(selectedValue);
+                  return setDonationCategoryId(String(keys ?? ""));
+                }}
               >
-                {categoryOptions.map((option) => (
-                  <SelectItem key={option.value}>{option.label}</SelectItem>
-                ))}
+                <Label>{t("donationCategory")}</Label>
+                <Select.Trigger>
+                  <Select.Value />
+                  <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                  <ListBox>
+                    {categoryOptions.map((option) => (
+                      <ListBox.Item
+                        key={option.value}
+                        id={option.value}
+                        textValue={String(option.label)}
+                      >
+                        <Label>{option.label}</Label>
+                        <ListBox.ItemIndicator />
+                      </ListBox.Item>
+                    ))}
+                  </ListBox>
+                </Select.Popover>
               </Select>
             </div>
             <div>
-              <Button color="primary" onPress={save} isLoading={saving}>
+              <Button
+                onPress={save}
+                variant={actionVariant("primary", "solid")}
+                isPending={saving}
+              >
+                {saving ? <Spinner size="sm" color="current" /> : null}
                 {t("save")}
               </Button>
             </div>
           </>
         ) : (
-          <p className="text-small text-default-500">
-            {tCategories("name")}: <strong>{settings.memberFeeCategoryName ?? "—"}</strong> ·{" "}
-            {tAccounts("typeCASH")}: <strong>{settings.cashAccountName ?? "—"}</strong> ·{" "}
-            {tAccounts("typeBANK")}: <strong>{settings.bankAccountName ?? "—"}</strong> · {tSettingsShort("donationShort")}:{" "}
+          <p className="text-sm text-ink-500">
+            {tCategories("name")}:{" "}
+            <strong>{settings.memberFeeCategoryName ?? "—"}</strong> ·{" "}
+            {tAccounts("typeCASH")}:{" "}
+            <strong>{settings.cashAccountName ?? "—"}</strong> ·{" "}
+            {tAccounts("typeBANK")}:{" "}
+            <strong>{settings.bankAccountName ?? "—"}</strong> ·{" "}
+            {tSettingsShort("donationShort")}:{" "}
             <strong>{settings.donationCategoryName ?? "—"}</strong>
           </p>
         )}
-      </CardBody>
+      </Card.Content>
     </Card>
   );
 }

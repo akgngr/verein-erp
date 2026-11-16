@@ -6,9 +6,10 @@ import { meetingsPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "meetings",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.3.4",
+  version: "1.3.5",
   label: "Toplantılar",
-  description: "Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar.",
+  description:
+    "Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar.",
   category: "OFFICIAL",
   hasSchema: true,
   // Başka modüllerden istenen erişim (yönetici onayı gerekir; gerekçe: messages → access.<modül>).
@@ -29,6 +30,11 @@ export const moduleConfig: ModuleConfig = {
     },
   ],
   menu: [
-    { key: "tasks", label: "Görevler", href: "/toplantilar/gorevler", icon: ListTodo },
+    {
+      key: "tasks",
+      label: "Görevler",
+      href: "/toplantilar/gorevler",
+      icon: ListTodo,
+    },
   ],
 };

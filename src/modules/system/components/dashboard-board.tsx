@@ -1,7 +1,6 @@
 "use client";
+import { Button, Chip, Tooltip, toast } from "@heroui/react";
 
-import { Button, Chip, Tooltip } from "@heroui-v3/react";
-import { addToast } from "@heroui/react";
 import {
   ArrowLeft,
   ArrowRight,
@@ -86,11 +85,7 @@ export function DashboardBoard({
     startTransition(async () => {
       const result = await saveDashboardLayoutAction({ cards: next });
       if (!result.ok) {
-        addToast({
-          title: t("saveError"),
-          description: result.error,
-          color: "danger",
-        });
+        toast(t("saveError"), { description: result.error, variant: "danger" });
         setOrder(placed.map((card) => card.id));
         return;
       }
@@ -137,11 +132,7 @@ export function DashboardBoard({
     startTransition(async () => {
       const result = await resetDashboardLayoutAction();
       if (!result.ok) {
-        addToast({
-          title: t("saveError"),
-          description: result.error,
-          color: "danger",
-        });
+        toast(t("saveError"), { description: result.error, variant: "danger" });
         return;
       }
       router.refresh();
@@ -179,13 +170,13 @@ export function DashboardBoard({
       />
 
       {editing ? (
-        <p className="rounded-xl border border-primary-200 bg-primary-50/60 p-3 text-small text-primary-700 dark:border-primary-500/30 dark:bg-primary-500/10 dark:text-primary-300">
+        <p className="rounded-xl border border-brand-200 bg-brand-50/60 p-3 text-sm text-brand-700 dark:border-brand-500/30 dark:bg-brand-500/10 dark:text-brand-300">
           {t("editHint")}
         </p>
       ) : null}
 
       {visibleCards.length === 0 && !editing ? (
-        <p className="rounded-xl border border-dashed border-default-300 p-8 text-center text-small text-default-500">
+        <p className="rounded-xl border border-dashed border-ink-300 p-8 text-center text-sm text-ink-500">
           {t("empty")}
         </p>
       ) : (
@@ -217,10 +208,10 @@ export function DashboardBoard({
                 onDrop={(event) => event.preventDefault()}
                 onDragEnd={finishDrag}
                 className={cn(
-                  "flex flex-col gap-3 rounded-xl border bg-content1 p-5 shadow-sm transition-[box-shadow,opacity] hover:shadow-md",
+                  "flex flex-col gap-3 rounded-xl border bg-surface p-5 shadow-sm transition-[box-shadow,opacity] hover:shadow-md",
                   editing
-                    ? "cursor-grab border-dashed border-primary-300 active:cursor-grabbing"
-                    : "border-default-200/80",
+                    ? "cursor-grab border-dashed border-brand-300 active:cursor-grabbing"
+                    : "border-ink-200/80",
                   dragId === card.id && "opacity-40",
                   SIZE_CLASS[card.size],
                 )}
@@ -229,17 +220,17 @@ export function DashboardBoard({
                   <div className="flex min-w-0 items-center gap-2.5">
                     {editing ? (
                       <GripVertical
-                        className="h-4 w-4 shrink-0 text-default-400"
+                        className="h-4 w-4 shrink-0 text-ink-400"
                         aria-hidden
                       />
                     ) : null}
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-default-200/70 bg-content2 text-default-600 dark:text-primary">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg border border-ink-200/70 bg-surface-secondary text-ink-600 dark:text-accent">
                       {card.icon}
                     </span>
                     {card.href && !editing ? (
                       <Link
                         href={card.href}
-                        className="truncate text-[13px] font-semibold text-foreground hover:text-primary"
+                        className="truncate text-[13px] font-semibold text-foreground hover:text-accent"
                       >
                         {card.title}
                       </Link>
@@ -299,11 +290,9 @@ export function DashboardBoard({
                   ) : null}
                 </header>
                 {card.failed ? (
-                  <p className="text-small text-danger">{t("cardError")}</p>
+                  <p className="text-sm text-danger">{t("cardError")}</p>
                 ) : card.body === null ? (
-                  <p className="text-small text-default-500">
-                    {t("nothingNow")}
-                  </p>
+                  <p className="text-sm text-ink-500">{t("nothingNow")}</p>
                 ) : (
                   <div className="flex-1">{card.body}</div>
                 )}
@@ -315,27 +304,27 @@ export function DashboardBoard({
 
       {editing ? (
         <section className="flex flex-col gap-3">
-          <h2 className="text-medium font-semibold text-foreground">
+          <h2 className="text-base font-semibold text-foreground">
             {t("available")}
           </h2>
           {available.length === 0 ? (
-            <p className="text-small text-default-500">{t("noneAvailable")}</p>
+            <p className="text-sm text-ink-500">{t("noneAvailable")}</p>
           ) : (
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3">
               {available.map((card) => (
                 <div
                   key={card.id}
-                  className="flex flex-col gap-3 rounded-xl border border-default-200/80 bg-default-50/60 p-4"
+                  className="flex flex-col gap-3 rounded-xl border border-ink-200/80 bg-ink-50/60 p-4"
                 >
                   <div className="flex items-start gap-2.5">
-                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-default-100 text-default-600">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-ink-100 text-ink-600">
                       {card.icon}
                     </span>
                     <div className="flex min-w-0 flex-col">
-                      <span className="text-small font-semibold text-foreground">
+                      <span className="text-sm font-semibold text-foreground">
                         {card.title}
                       </span>
-                      <span className="text-tiny text-default-500">
+                      <span className="text-xs text-ink-500">
                         {card.description}
                       </span>
                     </div>

@@ -1,8 +1,18 @@
 "use client";
+import {
+  toast,
+  Button,
+  Spinner,
+  TextField,
+  Label,
+  TextArea,
+  Description,
+} from "@heroui/react";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
 
-import { Button, Textarea, addToast } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -32,8 +42,8 @@ export function DiscussionEditor({
     if (!initialDiscussion) return null;
     return (
       <div className="mt-2">
-        <p className="text-tiny font-medium text-default-500">{t("label")}</p>
-        <p className="whitespace-pre-wrap text-small">{initialDiscussion}</p>
+        <p className="text-xs font-medium text-ink-500">{t("label")}</p>
+        <p className="whitespace-pre-wrap text-sm">{initialDiscussion}</p>
       </div>
     );
   }
@@ -41,20 +51,20 @@ export function DiscussionEditor({
   if (!editing) {
     return (
       <div className="mt-2">
-        <p className="text-tiny font-medium text-default-500">{t("label")}</p>
+        <p className="text-xs font-medium text-ink-500">{t("label")}</p>
         {initialDiscussion ? (
-          <p className="whitespace-pre-wrap text-small">{initialDiscussion}</p>
+          <p className="whitespace-pre-wrap text-sm">{initialDiscussion}</p>
         ) : (
-          <p className="text-small text-default-400">{t("emptyNote")}</p>
+          <p className="text-sm text-ink-400">{t("emptyNote")}</p>
         )}
         <Button
           size="sm"
-          variant="light"
           className="mt-1"
           onPress={() => {
             setValue(initialDiscussion ?? "");
             setEditing(true);
           }}
+          variant={actionVariant("default", "light")}
         >
           {initialDiscussion ? t("edit") : t("add")}
         </Button>
@@ -70,30 +80,44 @@ export function DiscussionEditor({
     });
     setBusy(false);
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
-    addToast({ title: t("savedToast"), color: "success" });
+    toast(t("savedToast"), { variant: "success" });
     setEditing(false);
     router.refresh();
   };
 
   return (
     <div className="mt-2">
-      <Textarea
-        label={t("fieldLabel")}
-        labelPlacement="outside"
+      <TextField
         value={value}
-        onValueChange={setValue}
-        minRows={4}
-        maxLength={10000}
-        description={t("fieldHelp")}
-      />
+        onChange={setValue}
+        className={["w-full"].filter(Boolean).join(" ")}
+      >
+        <Label>{t("fieldLabel")}</Label>
+        <TextArea
+          maxLength={10000}
+          rows={4}
+          className={["[field-sizing:content]"].filter(Boolean).join(" ")}
+        />
+        <Description>{t("fieldHelp")}</Description>
+      </TextField>
       <div className="mt-2 flex gap-2">
-        <Button size="sm" color="primary" isLoading={busy} onPress={save}>
+        <Button
+          size="sm"
+          onPress={save}
+          variant={actionVariant("primary", "solid")}
+          isPending={busy}
+        >
+          {busy ? <Spinner size="sm" color="current" /> : null}
           {t("save")}
         </Button>
-        <Button size="sm" variant="light" onPress={() => setEditing(false)}>
+        <Button
+          size="sm"
+          onPress={() => setEditing(false)}
+          variant={actionVariant("default", "light")}
+        >
           {t("cancel")}
         </Button>
       </div>

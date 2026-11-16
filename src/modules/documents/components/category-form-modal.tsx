@@ -1,21 +1,28 @@
 "use client";
+import {
+  toast,
+  Button,
+  Spinner,
+  Modal,
+  TextField,
+  Label,
+  Input,
+  FieldError,
+} from "@heroui/react";
+
+import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
 
-import {
-  Button,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  addToast,
-} from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { createCategoryAction, updateCategoryAction } from "../actions/category-actions";
+import {
+  createCategoryAction,
+  updateCategoryAction,
+} from "../actions/category-actions";
 import type { CategoryListItem } from "../types";
 
 /**
@@ -38,24 +45,37 @@ export function CategoryFormModal({
   const t = useTranslations("documents.categories");
   const router = useRouter();
 
-  const submit = async (name: string, onClose: () => void): Promise<string | null> => {
+  const submit = async (
+    name: string,
+    onClose: () => void,
+  ): Promise<string | null> => {
     const result = category
       ? await updateCategoryAction({ id: category.id, name })
       : await createCategoryAction({ name });
     if (!result.ok) return result.error;
-    addToast({ title: category ? t("updatedToast") : t("createdToast"), color: "success" });
+    toast(category ? t("updatedToast") : t("createdToast"), {
+      variant: "success",
+    });
     onClose();
     router.refresh();
     return null;
   };
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="sm" isDismissable>
-      <ModalContent>
-        {(onClose) => (
-          <CategoryFormContent category={category} onClose={onClose} onSubmit={submit} />
-        )}
-      </ModalContent>
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal.Backdrop isDismissable>
+        <Modal.Container size="sm">
+          <Modal.Dialog className={"w-full max-w-sm "}>
+            {({ close: onClose }) => (
+              <CategoryFormContent
+                category={category}
+                onClose={onClose}
+                onSubmit={submit}
+              />
+            )}
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 }
@@ -84,38 +104,49 @@ function CategoryFormContent({
 
   return (
     <>
-      <ModalHeader className="flex flex-col gap-1">
-        {category ? t("edit") : t("new")}
-      </ModalHeader>
-      <ModalBody>
-        <Input
-          label={t("nameLabel")}
-          labelPlacement="outside"
-          placeholder={t("namePlaceholder")}
+      <DialogDismissButton />
+      <Modal.Header className="flex flex-col gap-1">
+        <Modal.Heading className="flex items-center gap-2">
+          {category ? t("edit") : t("new")}
+        </Modal.Heading>
+      </Modal.Header>
+      <Modal.Body>
+        <TextField
           value={name}
-          onValueChange={setName}
           isRequired
-          minLength={2}
-          maxLength={60}
           isInvalid={Boolean(error)}
-          errorMessage={error}
           isDisabled={isSubmitting}
-          autoFocus
-        />
-      </ModalBody>
-      <ModalFooter>
-        <Button variant="light" onPress={onClose} isDisabled={isSubmitting}>
+          onChange={setName}
+          className={["w-full"].filter(Boolean).join(" ")}
+        >
+          <Label>{t("nameLabel")}</Label>
+          <Input
+            placeholder={t("namePlaceholder")}
+            minLength={2}
+            maxLength={60}
+            autoFocus
+          />
+          <FieldError>{error}</FieldError>
+        </TextField>
+      </Modal.Body>
+      <Modal.Footer>
+        <Button
+          onPress={onClose}
+          isDisabled={isSubmitting}
+          variant={actionVariant("default", "light")}
+        >
           {tCommon("cancel")}
         </Button>
         <Button
-          color="primary"
-          isLoading={isSubmitting}
           isDisabled={isSubmitting || name.trim().length < 2}
           onPress={() => void handle()}
+          variant={actionVariant("primary", "solid")}
+          isPending={isSubmitting}
         >
+          {isSubmitting ? <Spinner size="sm" color="current" /> : null}
           {tCommon("save")}
         </Button>
-      </ModalFooter>
+      </Modal.Footer>
     </>
   );
 }

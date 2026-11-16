@@ -13,7 +13,7 @@ Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.
 |---|---|
 | Anahtar | `system` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.11.1 |
+| Sürüm | 1.11.2 |
 | Sayfalar | `/ayarlar`, `/ayarlar/moduller`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/surum-notlari` |
 
 ## Diğer modüllere erişim
@@ -34,6 +34,14 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Modül Yönetimi | görüntüleme, düzenleme, silme | görüntüleme | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.11.2 — HeroUI v3 arayüz geçişi
+
+_2026-11-16_
+
+- **İyileştirme:** Uygulamanın tüm ekranları HeroUI 3.2.7 bileşenlerine geçirildi. Formlar, tarih seçiciler, çoklu seçimler, tablolar, sekmeler, iletişim kutuları ve bildirimler ortak tasarım sistemini kullanır.
+- **İyileştirme:** Çalışma alanı doğal açık yüzeyler, grafit gezinme ve ölçülü yeşil vurgularla yenilendi. Açık/koyu/sistem teması ve mobil gezinme korunur; bileşen renkleri her iki temaya uyarlanır.
+- **İyileştirme:** Eski HeroUI v2 bağımlılıkları, geçici paket adları ve tema eklentisi kaldırıldı. Türkçe/Almanca tarih yerelleştirmesi, klavye gezinmesi, form doğrulama mesajları ve yerelleştirilmiş kopyalama bildirimleri yeni bileşenlerle bütünleştirildi.
 
 ### 1.11.1 — Sade ve profesyonel çalışma alanı
 
@@ -80,11 +88,4 @@ _2026-11-01_
 - **Yeni:** Ayarlar → Modül paketleri: .vmod yükle, doğrulama sonucunu ve kurulum komutunu gör; güvenilen yayıncı listesi. Paket içeriği sunucuda çalıştırılmaz.
 - **Güvenlik:** Güven listesi yalnızca kod incelemesiyle değişir; resmî olmayan yayıncılar yalnızca EXTENSION modül yayımlayabilir; kurcalanmış/güvenilmeyen paketler reddedilir.
 
-### 1.7.0 — Modül sürümleri ve sürüm notları
-
-_2026-11-01_
-
-- **Yeni:** Her modülün kendi sürümü ve sürüm notları (releases.json): Modül Yönetimi'nde sürüme tıklayınca o modülün notları açılır; Ayarlar → Sürüm notları'nda modül seçilebilir.
-- **İyileştirme:** Geliştirme kuralı: değişen her modülün sürümü artırılmalı (module:check ve CI denetler).
-
-Daha eski 8 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/system/releases.json)
+Daha eski 9 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/system/releases.json)

@@ -1,6 +1,7 @@
 "use client";
+import { toast, Card, Button, Spinner } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
-import { Button, Card, CardBody, addToast } from "@heroui/react";
 import { ImageUp, Trash2 } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -32,16 +33,21 @@ export function LogoUploader({
     try {
       const body = new FormData();
       body.append("file", file);
-      const res = await fetch("/api/organization/logo", { method: "POST", body });
-      const json = (await res.json().catch(() => null)) as
-        | { ok: boolean; error?: string; logoVersion?: string }
-        | null;
+      const res = await fetch("/api/organization/logo", {
+        method: "POST",
+        body,
+      });
+      const json = (await res.json().catch(() => null)) as {
+        ok: boolean;
+        error?: string;
+        logoVersion?: string;
+      } | null;
       if (!res.ok || !json?.ok) {
-        addToast({ title: json?.error ?? t("logoError"), color: "danger" });
+        toast(json?.error ?? t("logoError"), { variant: "danger" });
         return;
       }
       setVersion(json.logoVersion ?? null);
-      addToast({ title: t("logoUploadedToast"), color: "success" });
+      toast(t("logoUploadedToast"), { variant: "success" });
       router.refresh();
     } finally {
       setBusy(false);
@@ -53,13 +59,16 @@ export function LogoUploader({
     setBusy(true);
     try {
       const res = await fetch("/api/organization/logo", { method: "DELETE" });
-      const json = (await res.json().catch(() => null)) as { ok: boolean; error?: string } | null;
+      const json = (await res.json().catch(() => null)) as {
+        ok: boolean;
+        error?: string;
+      } | null;
       if (!res.ok || !json?.ok) {
-        addToast({ title: json?.error ?? t("logoError"), color: "danger" });
+        toast(json?.error ?? t("logoError"), { variant: "danger" });
         return;
       }
       setVersion(null);
-      addToast({ title: t("logoRemovedToast"), color: "success" });
+      toast(t("logoRemovedToast"), { variant: "success" });
       router.refresh();
     } finally {
       setBusy(false);
@@ -67,19 +76,29 @@ export function LogoUploader({
   };
 
   return (
-    <Card shadow="sm" className="max-w-3xl">
-      <CardBody className="gap-3 p-6">
+    <Card
+      className={["max-w-3xl", "shadow-sm border border-ink-200/80"]
+        .filter(Boolean)
+        .join(" ")}
+    >
+      <Card.Content className={["gap-3 p-6"].filter(Boolean).join(" ")}>
         <div>
-          <p className="text-small font-semibold">{t("logoTitle")}</p>
-          <p className="text-tiny text-default-400">{t("logoDescription")}</p>
+          <p className="text-sm font-semibold">{t("logoTitle")}</p>
+          <p className="text-xs text-ink-400">{t("logoDescription")}</p>
         </div>
         <div className="flex items-center gap-4">
-          <div className="flex h-24 w-32 shrink-0 items-center justify-center rounded-medium border border-default-200 bg-default-50">
+          <div className="flex h-24 w-32 shrink-0 items-center justify-center rounded-lg border border-ink-200 bg-ink-50">
             {previewSrc ? (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={previewSrc} alt={t("logoTitle")} className="max-h-24 max-w-32 object-contain" />
+              <img
+                src={previewSrc}
+                alt={t("logoTitle")}
+                className="max-h-24 max-w-32 object-contain"
+              />
             ) : (
-              <span className="px-2 text-center text-tiny text-default-400">{t("logoNone")}</span>
+              <span className="px-2 text-center text-xs text-ink-400">
+                {t("logoNone")}
+              </span>
             )}
           </div>
           <div className="flex flex-col items-start gap-2">
@@ -95,32 +114,31 @@ export function LogoUploader({
             />
             <Button
               size="sm"
-              variant="bordered"
-              color="primary"
-              startContent={<ImageUp className="h-4 w-4" aria-hidden />}
-              isLoading={busy}
               onPress={() => inputRef.current?.click()}
+              variant={actionVariant("primary", "bordered")}
+              isPending={busy}
             >
+              {busy ? <Spinner size="sm" color="current" /> : null}
+              {<ImageUp className="h-4 w-4" aria-hidden />}
               {version ? t("logoChange") : t("logoUpload")}
             </Button>
             {version ? (
               <Button
                 size="sm"
-                variant="flat"
-                color="danger"
-                startContent={<Trash2 className="h-4 w-4" aria-hidden />}
                 isDisabled={busy}
                 onPress={() => void remove()}
+                variant={actionVariant("danger", "flat")}
               >
+                {<Trash2 className="h-4 w-4" aria-hidden />}
                 {t("logoRemove")}
               </Button>
             ) : null}
             {logoOriginalName ? (
-              <span className="text-tiny text-default-400">{logoOriginalName}</span>
+              <span className="text-xs text-ink-400">{logoOriginalName}</span>
             ) : null}
           </div>
         </div>
-      </CardBody>
+      </Card.Content>
     </Card>
   );
 }

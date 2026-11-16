@@ -1,14 +1,28 @@
 "use client";
+import {
+  toast,
+  Button,
+  Spinner,
+  Switch,
+  Label,
+  TextField,
+  Input,
+  Select,
+  ListBox,
+} from "@heroui/react";
 
-import { addToast, Button, Input, SelectItem, Switch } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+
 import { Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
-import { ClientSelect } from "@/shared/components/ui/client-select";
 
-
-import { createScheduleAction, deleteScheduleAction, toggleScheduleAction } from "../actions/automation-actions";
+import {
+  createScheduleAction,
+  deleteScheduleAction,
+  toggleScheduleAction,
+} from "../actions/automation-actions";
 
 export type ScheduleRow = {
   id: string;
@@ -33,53 +47,150 @@ export function SchedulesPanel({ schedules, tasks, canManage }: Props) {
   const [taskKey, setTaskKey] = useState(tasks[0]?.key ?? "");
   const [hours, setHours] = useState("24");
 
-  const run = (promise: () => Promise<{ ok: boolean; error?: string }>, success: string) => startTransition(async () => {
-    const response = await promise();
-    if (!response.ok) return void addToast({ title: response.error, color: "danger" });
-    addToast({ title: success, color: "success" });
-    router.refresh();
-  });
+  const run = (
+    promise: () => Promise<{ ok: boolean; error?: string }>,
+    success: string,
+  ) =>
+    startTransition(async () => {
+      const response = await promise();
+      if (!response.ok)
+        return void toast(response.error, { variant: "danger" });
+      toast(success, { variant: "success" });
+      router.refresh();
+    });
 
   return (
     <section className="flex flex-col gap-3">
       <div>
-        <h2 className="text-medium font-semibold">{t("title")}</h2>
-        <p className="text-small text-default-500">{t("description")}</p>
+        <h2 className="text-base font-semibold">{t("title")}</h2>
+        <p className="text-sm text-ink-500">{t("description")}</p>
       </div>
 
       {canManage && tasks.length > 0 ? (
-        <div className="flex flex-wrap items-end gap-2 rounded-large border border-default-200 bg-content1 p-4">
-          <ClientSelect label={t("task")} size="sm" className="max-w-xs" selectedKeys={taskKey ? [taskKey] : []}
-            onSelectionChange={(keys) => setTaskKey(String(Array.from(keys)[0] ?? ""))}>
-            {tasks.map((task) => <SelectItem key={task.key}>{task.key}</SelectItem>)}
-          </ClientSelect>
-          <Input label={t("intervalHours")} size="sm" type="number" min={1} className="max-w-[10rem]" value={hours} onValueChange={setHours} />
-          <Button color="primary" size="md" isLoading={pending} startContent={<Plus className="h-4 w-4" />} isDisabled={!taskKey}
-            onPress={() => run(() => createScheduleAction({ taskKey, intervalMinutes: Math.round(Number(hours) * 60) }), t("created"))}>
+        <div className="flex flex-wrap items-end gap-2 rounded-xl border border-ink-200 bg-surface p-4">
+          <Select
+            className="max-w-xs"
+            value={taskKey ? taskKey : null}
+            onChange={(selectedValue) => {
+              const keys =
+                selectedValue === null ? undefined : String(selectedValue);
+              return setTaskKey(String(keys ?? ""));
+            }}
+          >
+            <Label>{t("task")}</Label>
+            <Select.Trigger className="h-9 text-sm">
+              <Select.Value />
+              <Select.Indicator />
+            </Select.Trigger>
+            <Select.Popover>
+              <ListBox>
+                {tasks.map((task) => (
+                  <ListBox.Item
+                    key={task.key}
+                    id={task.key}
+                    textValue={String(task.key)}
+                  >
+                    <Label>{task.key}</Label>
+                    <ListBox.ItemIndicator />
+                  </ListBox.Item>
+                ))}
+              </ListBox>
+            </Select.Popover>
+          </Select>
+          <TextField
+            value={hours}
+            onChange={setHours}
+            className={["max-w-[10rem]"].filter(Boolean).join(" ")}
+          >
+            <Label>{t("intervalHours")}</Label>
+            <Input
+              type="number"
+              min={1}
+              className={["h-9 text-sm"].filter(Boolean).join(" ")}
+            />
+          </TextField>
+          <Button
+            size="md"
+            isDisabled={!taskKey}
+            onPress={() =>
+              run(
+                () =>
+                  createScheduleAction({
+                    taskKey,
+                    intervalMinutes: Math.round(Number(hours) * 60),
+                  }),
+                t("created"),
+              )
+            }
+            variant={actionVariant("primary", "solid")}
+            isPending={pending}
+          >
+            {pending ? <Spinner size="sm" color="current" /> : null}
+            {<Plus className="h-4 w-4" />}
             {t("add")}
           </Button>
         </div>
       ) : null}
 
       {schedules.length === 0 ? (
-        <p className="rounded-large border border-default-200 p-5 text-small text-default-500">{t("empty")}</p>
+        <p className="rounded-xl border border-ink-200 p-5 text-sm text-ink-500">
+          {t("empty")}
+        </p>
       ) : (
         <ul className="flex flex-col gap-2">
           {schedules.map((schedule) => (
-            <li key={schedule.id} className="flex flex-wrap items-center justify-between gap-3 rounded-large border border-default-200 bg-content1 p-4">
+            <li
+              key={schedule.id}
+              className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-ink-200 bg-surface p-4"
+            >
               <div className="min-w-0">
                 <p className="font-semibold">{schedule.taskKey}</p>
-                <p className="text-small text-default-500">
-                  {t("every", { hours: Math.round((schedule.intervalMinutes / 60) * 10) / 10 })} · {t("next", { date: schedule.nextRun })}
-                  {schedule.lastRun ? ` · ${t("last", { date: schedule.lastRun })}` : ""}
+                <p className="text-sm text-ink-500">
+                  {t("every", {
+                    hours:
+                      Math.round((schedule.intervalMinutes / 60) * 10) / 10,
+                  })}{" "}
+                  · {t("next", { date: schedule.nextRun })}
+                  {schedule.lastRun
+                    ? ` · ${t("last", { date: schedule.lastRun })}`
+                    : ""}
                 </p>
               </div>
               {canManage ? (
                 <div className="flex items-center gap-2">
-                  <Switch size="sm" isSelected={schedule.enabled} isDisabled={pending} aria-label={t("enabled")}
-                    onValueChange={(enabled) => run(() => toggleScheduleAction({ id: schedule.id, enabled }), t("updated"))} />
-                  <Button isIconOnly size="sm" variant="light" color="danger" aria-label={t("delete")} isDisabled={pending}
-                    onPress={() => run(() => deleteScheduleAction({ id: schedule.id }), t("deleted"))}>
+                  <Switch
+                    isSelected={schedule.enabled}
+                    isDisabled={pending}
+                    aria-label={t("enabled")}
+                    onChange={(enabled) =>
+                      run(
+                        () =>
+                          toggleScheduleAction({ id: schedule.id, enabled }),
+                        t("updated"),
+                      )
+                    }
+                    size={"sm"}
+                  >
+                    <Switch.Content>
+                      <Switch.Control>
+                        <Switch.Thumb />
+                      </Switch.Control>
+                      <Label></Label>
+                    </Switch.Content>
+                  </Switch>
+                  <Button
+                    isIconOnly
+                    size="sm"
+                    aria-label={t("delete")}
+                    isDisabled={pending}
+                    onPress={() =>
+                      run(
+                        () => deleteScheduleAction({ id: schedule.id }),
+                        t("deleted"),
+                      )
+                    }
+                    variant={actionVariant("danger", "light")}
+                  >
                     <Trash2 className="h-4 w-4" />
                   </Button>
                 </div>

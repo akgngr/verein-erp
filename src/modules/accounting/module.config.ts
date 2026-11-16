@@ -1,17 +1,37 @@
-import { BarChart3,
-  Banknote, Package, ShieldCheck, Contact, Inbox, Landmark, CalendarCheck, Download, FileText, PieChart, SlidersHorizontal, Users, Wallet, HandCoins, Repeat } from "lucide-react";
+import {
+  BarChart3,
+  Banknote,
+  Package,
+  ShieldCheck,
+  Contact,
+  Inbox,
+  Landmark,
+  CalendarCheck,
+  Download,
+  FileText,
+  PieChart,
+  SlidersHorizontal,
+  Users,
+  Wallet,
+  HandCoins,
+  Repeat,
+} from "lucide-react";
 
 import { grantsPermissions } from "@/modules/grants";
 import { sepaPermissions } from "@/modules/sepa";
 import type { ModuleConfig } from "@/shared/types/module";
-import { accountingPermissions, accountingSetupPermissions } from "./permissions";
+import {
+  accountingPermissions,
+  accountingSetupPermissions,
+} from "./permissions";
 
 export const moduleConfig: ModuleConfig = {
   key: "accounting",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.22.0",
+  version: "1.22.1",
   label: "Muhasebe",
-  description: "Alman dernek mevzuatına uygun çift taraflı defter tutma, fiş ve bütçe yönetimi.",
+  description:
+    "Alman dernek mevzuatına uygun çift taraflı defter tutma, fiş ve bütçe yönetimi.",
   category: "OFFICIAL",
   hasSchema: true,
   // Başka modüllerden istenen erişim (yönetici onayı gerekir; gerekçe: messages → access.<modül>).
@@ -34,20 +54,87 @@ export const moduleConfig: ModuleConfig = {
     },
   ],
   menu: [
-    { key: "invoices", label: "Faturalar", href: "/muhasebe/faturalar", icon: FileText },
-    { key: "payables", label: "Gelen faturalar", href: "/muhasebe/gelen-faturalar", icon: Inbox },
-    { key: "contacts", label: "Cariler", href: "/muhasebe/cariler", icon: Contact },
+    {
+      key: "invoices",
+      label: "Faturalar",
+      href: "/muhasebe/faturalar",
+      icon: FileText,
+    },
+    {
+      key: "payables",
+      label: "Gelen faturalar",
+      href: "/muhasebe/gelen-faturalar",
+      icon: Inbox,
+    },
+    {
+      key: "contacts",
+      label: "Cariler",
+      href: "/muhasebe/cariler",
+      icon: Contact,
+    },
     { key: "bank", label: "Banka", href: "/muhasebe/banka", icon: Banknote },
-    { key: "sync", label: "Üyelik aktarımı", href: "/muhasebe/uyelik-aktarimi", icon: Users },
-    { key: "reports", label: "Raporlar", href: "/muhasebe/raporlar", icon: BarChart3 },
+    {
+      key: "sync",
+      label: "Üyelik aktarımı",
+      href: "/muhasebe/uyelik-aktarimi",
+      icon: Users,
+    },
+    {
+      key: "reports",
+      label: "Raporlar",
+      href: "/muhasebe/raporlar",
+      icon: BarChart3,
+    },
     { key: "tax", label: "Vergi", href: "/muhasebe/vergi", icon: Landmark },
-    { key: "grants", label: "Hibeler", href: "/muhasebe/hibeler", icon: HandCoins, module: "grants", permission: { definition: grantsPermissions, action: "view" } },
-    { key: "sepa", label: "SEPA otomatik ödeme", href: "/muhasebe/sepa", icon: Repeat, module: "sepa", permission: { definition: sepaPermissions, action: "view" } },
-    { key: "budget", label: "Bütçe", href: "/muhasebe/butce", icon: PieChart, permission: { definition: accountingSetupPermissions, action: "view" } },
-    { key: "extras", label: "Demirbaş ve ekler", href: "/muhasebe/ekler", icon: Package },
+    {
+      key: "grants",
+      label: "Hibeler",
+      href: "/muhasebe/hibeler",
+      icon: HandCoins,
+      module: "grants",
+      permission: { definition: grantsPermissions, action: "view" },
+    },
+    {
+      key: "sepa",
+      label: "SEPA otomatik ödeme",
+      href: "/muhasebe/sepa",
+      icon: Repeat,
+      module: "sepa",
+      permission: { definition: sepaPermissions, action: "view" },
+    },
+    {
+      key: "budget",
+      label: "Bütçe",
+      href: "/muhasebe/butce",
+      icon: PieChart,
+      permission: { definition: accountingSetupPermissions, action: "view" },
+    },
+    {
+      key: "extras",
+      label: "Demirbaş ve ekler",
+      href: "/muhasebe/ekler",
+      icon: Package,
+    },
     { key: "gobd", label: "GoBD", href: "/muhasebe/gobd", icon: ShieldCheck },
-    { key: "yearClosing", label: "Yıl kapanışı", href: "/muhasebe/yil-kapanisi", icon: CalendarCheck },
-    { key: "settings", label: "Ayarlar", href: "/muhasebe/ayarlar", icon: SlidersHorizontal, permission: { definition: accountingSetupPermissions, action: "view" } },
-    { key: "export", label: "Excel'e aktar", href: "/api/accounting/export", icon: Download, isDownload: true },
+    {
+      key: "yearClosing",
+      label: "Yıl kapanışı",
+      href: "/muhasebe/yil-kapanisi",
+      icon: CalendarCheck,
+    },
+    {
+      key: "settings",
+      label: "Ayarlar",
+      href: "/muhasebe/ayarlar",
+      icon: SlidersHorizontal,
+      permission: { definition: accountingSetupPermissions, action: "view" },
+    },
+    {
+      key: "export",
+      label: "Excel'e aktar",
+      href: "/api/accounting/export",
+      icon: Download,
+      isDownload: true,
+    },
   ],
 };

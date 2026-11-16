@@ -1,6 +1,8 @@
 "use client";
+import { statusStyle } from "@/shared/components/ui/status-appearance";
+import { toast, Chip } from "@heroui/react";
+import { statusTone } from "@/shared/components/ui/status-appearance";
 
-import { addToast, Chip } from "@heroui/react";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -45,19 +47,43 @@ export function StudentTable({
 
   const columns: DataTableColumn<StudentRow>[] = [
     { key: "studentNumber", label: t("number"), sortable: true, width: 140 },
-    { key: "lastName", label: t("name"), sortable: true, render: (row) => `${row.lastName}, ${row.firstName}` },
-    { key: "birthDate", label: t("birthDate"), render: (row) => (row.birthDate ? formatDate(row.birthDate) : "—") },
-    { key: "school", label: t("school"), render: (row) => [row.school, row.gradeLevel].filter(Boolean).join(" · ") || "—" },
+    {
+      key: "lastName",
+      label: t("name"),
+      sortable: true,
+      render: (row) => `${row.lastName}, ${row.firstName}`,
+    },
+    {
+      key: "birthDate",
+      label: t("birthDate"),
+      render: (row) => (row.birthDate ? formatDate(row.birthDate) : "—"),
+    },
+    {
+      key: "school",
+      label: t("school"),
+      render: (row) =>
+        [row.school, row.gradeLevel].filter(Boolean).join(" · ") || "—",
+    },
     {
       key: "payer",
       label: t("payer"),
-      render: (row) => (row.payerLabel ? `${row.payerLabel} (${row.payerDebtorNumber})` : <span className="text-warning-600">{t("noPayer")}</span>),
+      render: (row) =>
+        row.payerLabel ? (
+          `${row.payerLabel} (${row.payerDebtorNumber})`
+        ) : (
+          <span className="text-warning-600">{t("noPayer")}</span>
+        ),
     },
     {
       key: "status",
       label: t("status"),
       render: (row) => (
-        <Chip size="sm" variant="flat" color={row.status === "ACTIVE" ? "success" : "default"}>
+        <Chip
+          size="sm"
+          color={statusTone(row.status === "ACTIVE" ? "success" : "default")}
+          variant={"soft"}
+          style={statusStyle(row.status === "ACTIVE" ? "success" : "default")}
+        >
           {tStatus(row.status)}
         </Chip>
       ),
@@ -77,29 +103,62 @@ export function StudentTable({
         dir={dir}
         q={q}
         searchPlaceholder={t("search")}
-        filters={[{ key: "status", label: t("status"), options: STUDENT_STATUS_VALUES.map((value) => ({ value, label: tStatus(value) })) }]}
+        filters={[
+          {
+            key: "status",
+            label: t("status"),
+            options: STUDENT_STATUS_VALUES.map((value) => ({
+              value,
+              label: tStatus(value),
+            })),
+          },
+        ]}
         emptyMessage={t("empty")}
         rowActions={(row) => [
-          { key: "open", label: t("open"), icon: <Eye className="h-4 w-4" />, href: `/ogrenciler/${row.id}` },
-          { key: "edit", label: t("edit"), icon: <Pencil className="h-4 w-4" />, href: drawerHref("duzenle", row.id), hidden: !canUpdate },
-          { key: "delete", label: t("delete"), icon: <Trash2 className="h-4 w-4" />, color: "danger", onPress: () => setDeleting(row), hidden: !canDelete },
+          {
+            key: "open",
+            label: t("open"),
+            icon: <Eye className="h-4 w-4" />,
+            href: `/ogrenciler/${row.id}`,
+          },
+          {
+            key: "edit",
+            label: t("edit"),
+            icon: <Pencil className="h-4 w-4" />,
+            href: drawerHref("duzenle", row.id),
+            hidden: !canUpdate,
+          },
+          {
+            key: "delete",
+            label: t("delete"),
+            icon: <Trash2 className="h-4 w-4" />,
+            color: "danger",
+            onPress: () => setDeleting(row),
+            hidden: !canDelete,
+          },
         ]}
       />
       <ConfirmDialog
         isOpen={deleting !== null}
         onOpenChange={(open) => !open && setDeleting(null)}
         title={t("deleteTitle")}
-        message={deleting ? t("deleteMessage", { name: `${deleting.firstName} ${deleting.lastName}` }) : ""}
+        message={
+          deleting
+            ? t("deleteMessage", {
+                name: `${deleting.firstName} ${deleting.lastName}`,
+              })
+            : ""
+        }
         confirmLabel={t("delete")}
         confirmColor="danger"
         onConfirm={async () => {
           if (!deleting) return;
           const result = await deleteStudentAction({ id: deleting.id });
           if (!result.ok) {
-            addToast({ title: result.error, color: "danger" });
+            toast(result.error, { variant: "danger" });
             return;
           }
-          addToast({ title: t("deleted"), color: "success" });
+          toast(t("deleted"), { variant: "success" });
           setDeleting(null);
           router.refresh();
         }}

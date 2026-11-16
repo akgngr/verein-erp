@@ -1,6 +1,7 @@
 "use client";
+import { toast, Button, Spinner } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
-import { addToast, Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -21,28 +22,25 @@ export function ConsentToggle({ consented }: { consented: boolean }) {
       {consented ? (
         <Button
           size="sm"
-          variant="flat"
-          isLoading={busy}
           onPress={async () => {
             setBusy(true);
             const result = await deleteAllAiConversationsAction();
             setBusy(false);
             if (!result.ok)
-              return void addToast({ title: result.error, color: "danger" });
-            addToast({
-              title: t("historyDeleted", { count: result.data.count }),
-              color: "success",
+              return void toast(result.error, { variant: "danger" });
+            toast(t("historyDeleted", { count: result.data.count }), {
+              variant: "success",
             });
           }}
+          variant={actionVariant("default", "flat")}
+          isPending={busy}
         >
+          {busy ? <Spinner size="sm" color="current" /> : null}
           {t("deleteHistory")}
         </Button>
       ) : null}
       <Button
         size="sm"
-        color={consented ? "danger" : "primary"}
-        variant={consented ? "flat" : "solid"}
-        isLoading={busy}
         onPress={async () => {
           setBusy(true);
           const result = consented
@@ -50,14 +48,19 @@ export function ConsentToggle({ consented }: { consented: boolean }) {
             : await acceptAiConsentAction();
           setBusy(false);
           if (!result.ok)
-            return void addToast({ title: result.error, color: "danger" });
-          addToast({
-            title: consented ? t("revoked") : t("accepted"),
-            color: "success",
+            return void toast(result.error, { variant: "danger" });
+          toast(consented ? t("revoked") : t("accepted"), {
+            variant: "success",
           });
           router.refresh();
         }}
+        variant={actionVariant(
+          consented ? "danger" : "primary",
+          consented ? "flat" : "solid",
+        )}
+        isPending={busy}
       >
+        {busy ? <Spinner size="sm" color="current" /> : null}
         {consented ? t("revoke") : t("accept")}
       </Button>
     </div>

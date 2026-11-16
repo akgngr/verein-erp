@@ -1,6 +1,13 @@
 "use client";
+import {
+  toast,
+  Button,
+  Spinner,
+  Link as ActionLink,
+  buttonVariants,
+} from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
-import { Button, addToast } from "@heroui/react";
 import { Download, Paperclip, Trash2, Upload } from "lucide-react";
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
@@ -42,10 +49,10 @@ export function FilesPanel({
       });
       const result = (await response.json()) as { ok: boolean; error?: string };
       if (!result.ok) {
-        addToast({ title: result.error ?? "Yükleme başarısız.", color: "danger" });
+        toast(result.error ?? "Yükleme başarısız.", { variant: "danger" });
         return;
       }
-      addToast({ title: result.ok ? "Belge yüklendi." : "", color: "success" });
+      toast(result.ok ? "Belge yüklendi." : "", { variant: "success" });
     } finally {
       setBusy(false);
     }
@@ -55,20 +62,22 @@ export function FilesPanel({
     if (!deleteTarget) return;
     const result = await deleteBookingFileAction({ fileId: deleteTarget.id });
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
-    addToast({ title: t("delete") + " ✓", color: "success" });
+    toast(t("delete") + " ✓", { variant: "success" });
     setDeleteTarget(null);
   };
 
   const formatSize = (size: number) =>
-    size > 1024 * 1024 ? `${(size / 1024 / 1024).toFixed(1)} MB` : `${Math.ceil(size / 1024)} KB`;
+    size > 1024 * 1024
+      ? `${(size / 1024 / 1024).toFixed(1)} MB`
+      : `${Math.ceil(size / 1024)} KB`;
 
   return (
-    <div className="rounded-medium border border-default-200 bg-content1 p-5 shadow-sm">
+    <div className="rounded-lg border border-ink-200 bg-surface p-5 shadow-sm">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="text-small font-semibold uppercase tracking-wide text-default-500">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-ink-500">
           {t("title")}
         </h2>
         {canUpdate ? (
@@ -86,12 +95,12 @@ export function FilesPanel({
             />
             <Button
               size="sm"
-              color="primary"
-              variant="flat"
-              startContent={<Upload className="h-4 w-4" aria-hidden />}
-              isLoading={busy}
               onPress={() => inputRef.current?.click()}
+              variant={actionVariant("primary", "flat")}
+              isPending={busy}
             >
+              {busy ? <Spinner size="sm" color="current" /> : null}
+              {<Upload className="h-4 w-4" aria-hidden />}
               {t("upload")}
             </Button>
           </>
@@ -99,36 +108,46 @@ export function FilesPanel({
       </div>
 
       {files.length === 0 ? (
-        <p className="text-small text-default-400">{t("empty")}</p>
+        <p className="text-sm text-ink-400">{t("empty")}</p>
       ) : (
         <ul className="flex flex-col gap-1">
           {files.map((file) => (
-            <li key={file.id} className="flex items-center justify-between gap-2 border-b border-default-100 py-1.5 last:border-none">
-              <span className="flex min-w-0 items-center gap-2 text-small">
-                <Paperclip className="h-3.5 w-3.5 shrink-0 text-default-400" aria-hidden />
+            <li
+              key={file.id}
+              className="flex items-center justify-between gap-2 border-b border-ink-100 py-1.5 last:border-none"
+            >
+              <span className="flex min-w-0 items-center gap-2 text-sm">
+                <Paperclip
+                  className="h-3.5 w-3.5 shrink-0 text-ink-400"
+                  aria-hidden
+                />
                 <span className="truncate">{file.originalName}</span>
-                <span className="shrink-0 text-tiny text-default-400">{formatSize(file.size)}</span>
+                <span className="shrink-0 text-xs text-ink-400">
+                  {formatSize(file.size)}
+                </span>
               </span>
               <span className="flex shrink-0 items-center gap-1">
-                <Button
-                  as="a"
+                <ActionLink
                   href={`/api/accounting/files/${file.id}`}
-                  size="sm"
-                  variant="light"
-                  isIconOnly
                   aria-label={t("download")}
-                  startContent={<Download className="h-4 w-4" aria-hidden />}
-                />
+                  className={buttonVariants({
+                    variant: actionVariant("default", "light"),
+                    size: "sm",
+                    isIconOnly: true,
+                  })}
+                >
+                  {<Download className="h-4 w-4" aria-hidden />}
+                </ActionLink>
                 {canDelete ? (
                   <Button
                     size="sm"
-                    variant="light"
-                    color="danger"
                     isIconOnly
                     aria-label={t("delete")}
-                    startContent={<Trash2 className="h-4 w-4" aria-hidden />}
                     onPress={() => setDeleteTarget(file)}
-                  />
+                    variant={actionVariant("danger", "light")}
+                  >
+                    {<Trash2 className="h-4 w-4" aria-hidden />}
+                  </Button>
                 ) : null}
               </span>
             </li>

@@ -1,45 +1,29 @@
 # HeroUI v3 and the workspace theme
 
-Status: **first migration slice; v2 removal is not complete**. Based on main after #166. AI tool contract migration belongs to the other agent and is outside this change.
+Application release: **0.41.0**. HeroUI is pinned to **3.2.7** through the canonical `@heroui/react` and `@heroui/styles` packages. All application controls now use native v3 APIs. The AI tool contract migration belongs to the other agent and is outside this change.
 
-## Direction
+## Scope
 
-A compact administration workspace inspired by commerce back offices: charcoal navigation, warm neutral work surfaces, restrained green actions, thin borders, clear typography, and less decorative shadow. Existing Turkish/German translations, permission-filtered navigation, light/dark/system preferences, sidebar collapse cookie, URL-based filters and form drawers remain the application contracts.
+- Dashboard, navigation, login/public forms and all module-specific interfaces use the same v3 components and application palette.
+- Forms compose TextField/Input, Select/ListBox, ComboBox, DatePicker/Calendar, CheckboxGroup, RadioGroup and Switch. Controlled values, RHF focus refs, validation and existing server actions remain application contracts.
+- Modals/drawers, tables, tabs, menus, tooltips, progress, sliders, badges and global toast notifications use native compounds. Copyable values use a localized application clipboard action.
+- Both multiple-select lists declare multiple selection; date fields preserve date bounds and offer year navigation. The React Aria locale provider follows Turkish/German selection, and its router provider integrates library links with Next.js navigation.
+- V2 dependencies, temporary v3 aliases, HeroUIProvider, ClientSelect and the v2 Tailwind plugin were removed. CSS owns the native v3 variables plus application ink/brand/status palettes. Unused framer-motion and next-themes dependencies were removed. The installation resolves 232 fewer packages than the mixed migration tree.
 
-## Native v3 components in this slice
+## Theme
 
-- Desktop and mobile navigation, account menu and appearance menu.
-- Shared DataTable, sorting indicators, row action menu, search/filter popover, and pagination with first/last destinations.
-- RHF text, textarea, password, select and switch fields; native input/trigger refs for focus; field descriptions and validation errors.
-- Shared URL-driven FormDrawer, form surface, submit action and confirmation dialog.
-- Shared route actions, PDF language menu, dashboard editing actions and chips.
+A compact administration workspace inspired by commerce back offices: graphite navigation, warm neutral work surfaces, restrained green actions, thin borders, clear typography and less decorative shadow. Light/dark/system preferences, sidebar persistence, mobile navigation, permission-filtered routes and URL-driven filters/drawers remain intact.
 
-Dependencies are pinned to HeroUI **3.2.7** under `@heroui-v3/react` and `@heroui-v3/styles`, following the official [incremental migration](https://heroui.com/en/docs/react/migration/incremental-migration). v2's plugin/provider remain while module-specific components still import v2. Temporary costs: both runtimes/styles are bundled; type and CSS conflicts need acceptance checks. This is not a compatibility implementation of v2 controls on top of v3.
+The existing application ThemeProvider owns theme persistence and workflow editor appearance. Native CSS variables control field surfaces, borders, radii and semantic colors. Application action/status helpers express action intent and the additional violet status color; they are not wrappers implementing v2 controls.
 
-Application action helpers keep their existing semantic `color`/`variant` inputs and translate them to v3 button variants centrally. Direct v3 component uses follow the v3 API. The custom application ThemeProvider continues to own the existing `theme` and workflow editor preferences.
+## Release notes
 
-## Remaining migration order
-
-- [ ] Shared date picker and date range filter, including month/year navigation and locale verification.
-- [ ] Existing ClientSelect callers, country/state controls, role chips and global toast API/provider.
-- [ ] Module-specific modals, drawers, selects, checkboxes, tabs, tables and action buttons.
-- [ ] Login/public forms and remaining special controls (autocomplete, progress, snippet replacements).
-- [ ] Remove v2 imports/dependencies/provider/Tailwind plugin; replace alias imports with canonical v3 package names.
-- [ ] Remove v2-specific token/slot overrides after their last consumer moves; measure the production bundle.
-
-Inventory commands (mixed files can import both versions during migration):
-
-```sh
-rg -l 'from "@heroui/react"' src
-rg -l 'from "@heroui-v3/react"' src
-```
+Application release notes are in `src/modules/system/changelog.json` and are visible at `/ayarlar/surum-notlari`. Each of the 30 changed modules also has a version increment and Turkish/German release entry associated with application version 0.41.0. The generated module catalog is synchronized.
 
 ## Acceptance
 
-`HYDRATION_CAPTURE_DIR` enables additional acceptance in the existing production hydration runner. CI opens every static dashboard route, then checks light/dark switching and persistence, sidebar collapse/expand, controlled member form input/select/switch, URL drawer close, mobile overflow, mobile navigation/Escape and mobile appearance switching. It saves screenshots as the five-day `theme-preview` artifact. It never screenshots the credential page and does not submit the sample member.
+The production hydration runner opens every static dashboard route and records hydration/page errors. With `HYDRATION_CAPTURE_DIR`, it also checks light/dark switching and persistence, desktop/mobile navigation, pagination/search/row menus, controlled input/select/switch/checkbox values, year/date selection, tabs and custom ComboBox text. Screenshots cover dashboard and members in both themes, forms, permissions and mobile layouts. Synthetic CI-only members exercise real table data. No form is submitted by these checks.
 
-Typecheck, lint, translation checks, module validation and the DB-backed suite must pass. Actual browser checks and visual inspection must be recorded from CI before declaring this slice accepted. Local Chromium cannot launch in the current restricted environment; no local visual acceptance is claimed.
+Typecheck, lint, translation validation, module validation, release/version checks, database migration/drift tests and the database-backed suite are required. Browser acceptance runs in CI because local Chromium cannot launch in this environment. Final CI results and screenshot review are recorded in the pull request; implementation alone is not browser acceptance.
 
-Local validation on the #166 base: 497 tests across 100 suites passed, none skipped; baseline upgrade and migration drift checks passed. Typecheck, lint, translation and module checks passed. Browser acceptance is pending CI. Existing Tiptap and auth/mail peer warnings are unchanged; no HeroUI peer conflict was reported.
-
-The first CI browser run opened all static routes and captured dashboard/member light/dark screenshots. It caught duplicate interactive tooltip roles; native v3 buttons now act directly as tooltip triggers, while collapsed navigation forwards trigger props to the actual anchor. The follow-up adds twelve synthetic CI-only members to exercise pagination, debounced search and row menus. Fixture seeding refuses any non-CI/non-loopback/non-`verein_ci` database.
+The existing HeroUI client-boundary regression test now distinguishes erased type-only imports from runtime imports. No exemption remains for the deleted v2 Tailwind plugin. Existing unrelated Tiptap/auth peer warnings remain outside this migration.

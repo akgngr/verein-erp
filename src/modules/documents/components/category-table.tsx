@@ -1,14 +1,18 @@
 "use client";
+import { toast, Button } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
 
-import { Button, addToast } from "@heroui/react";
 import { Pencil, Plus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { DataTable } from "@/shared/components/data-table/data-table";
-import type { DataTableColumn, DataTableRowAction } from "@/shared/components/data-table/types";
+import type {
+  DataTableColumn,
+  DataTableRowAction,
+} from "@/shared/components/data-table/types";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { formatDate } from "@/shared/utils";
 
@@ -44,7 +48,9 @@ export function CategoryTable({
   const router = useRouter();
   const [formOpen, setFormOpen] = useState(false);
   const [editing, setEditing] = useState<CategoryListItem | null>(null);
-  const [deactivating, setDeactivating] = useState<CategoryListItem | null>(null);
+  const [deactivating, setDeactivating] = useState<CategoryListItem | null>(
+    null,
+  );
 
   const toggleActive = async (category: CategoryListItem) => {
     const result = await setCategoryActiveAction({
@@ -52,12 +58,11 @@ export function CategoryTable({
       isActive: !category.isActive,
     });
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
-    addToast({
-      title: category.isActive ? t("deactivatedToast") : t("activatedToast"),
-      color: "success",
+    toast(category.isActive ? t("deactivatedToast") : t("activatedToast"), {
+      variant: "success",
     });
     router.refresh();
   };
@@ -71,9 +76,13 @@ export function CategoryTable({
       width: 110,
       render: (row) =>
         row.isActive ? (
-          <span className="text-small font-medium text-success">{t("active")}</span>
+          <span className="text-sm font-medium text-success">
+            {t("active")}
+          </span>
         ) : (
-          <span className="text-small font-medium text-default-400">{t("passive")}</span>
+          <span className="text-sm font-medium text-ink-400">
+            {t("passive")}
+          </span>
         ),
     },
     {
@@ -119,13 +128,13 @@ export function CategoryTable({
         {canUpdate ? (
           <Button
             size="sm"
-            color="primary"
-            startContent={<Plus className="h-4 w-4" aria-hidden />}
             onPress={() => {
               setEditing(null);
               setFormOpen(true);
             }}
+            variant={actionVariant("primary", "solid")}
           >
+            {<Plus className="h-4 w-4" aria-hidden />}
             {t("new")}
           </Button>
         ) : null}
@@ -155,7 +164,9 @@ export function CategoryTable({
       <ConfirmDialog
         isOpen={deactivating !== null}
         onOpenChange={(open) => !open && setDeactivating(null)}
-        title={deactivating?.isActive ? t("deactivateTitle") : t("activateTitle")}
+        title={
+          deactivating?.isActive ? t("deactivateTitle") : t("activateTitle")
+        }
         message={
           deactivating?.isActive
             ? t("deactivateNamedMessage", { name: deactivating?.name ?? "" })
@@ -163,7 +174,9 @@ export function CategoryTable({
         }
         confirmLabel={deactivating?.isActive ? t("deactivate") : t("activate")}
         confirmColor={deactivating?.isActive ? "danger" : "primary"}
-        onConfirm={() => deactivating ? toggleActive(deactivating) : Promise.resolve()}
+        onConfirm={() =>
+          deactivating ? toggleActive(deactivating) : Promise.resolve()
+        }
       />
     </>
   );

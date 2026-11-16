@@ -1,6 +1,7 @@
 "use client";
+import { toast, Button, Spinner } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
-import { addToast, Button } from "@heroui/react";
 import { FileUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -18,14 +19,28 @@ export function PayableUploadButton() {
     try {
       const body = new FormData();
       body.append("file", file);
-      const response = await fetch("/api/accounting/payables", { method: "POST", body });
-      const result = (await response.json()) as { ok: boolean; id?: string; error?: string; source?: string };
+      const response = await fetch("/api/accounting/payables", {
+        method: "POST",
+        body,
+      });
+      const result = (await response.json()) as {
+        ok: boolean;
+        id?: string;
+        error?: string;
+        source?: string;
+      };
       if (!result.ok) {
-        addToast({ title: result.error ?? t("errors.upload"), color: "danger" });
-        if (response.status === 409 && result.id) router.push(`/muhasebe/gelen-faturalar/${result.id}`);
+        toast(result.error ?? t("errors.upload"), { variant: "danger" });
+        if (response.status === 409 && result.id)
+          router.push(`/muhasebe/gelen-faturalar/${result.id}`);
         return;
       }
-      addToast({ title: result.source === "MANUAL" ? t("uploadedManual") : t("uploadedEInvoice", { source: result.source ?? "" }), color: "success" });
+      toast(
+        result.source === "MANUAL"
+          ? t("uploadedManual")
+          : t("uploadedEInvoice", { source: result.source ?? "" }),
+        { variant: "success" },
+      );
       router.push(`/muhasebe/gelen-faturalar/${result.id}`);
     } finally {
       setBusy(false);
@@ -35,8 +50,24 @@ export function PayableUploadButton() {
 
   return (
     <>
-      <input ref={input} id="payable-upload" type="file" accept=".pdf,.xml,.jpg,.jpeg,.png" className="hidden" aria-label={t("upload")} onChange={(event) => event.target.files?.[0] && upload(event.target.files[0])} />
-      <Button color="primary" startContent={<FileUp className="h-4 w-4" aria-hidden />} isLoading={busy} onPress={() => input.current?.click()}>
+      <input
+        ref={input}
+        id="payable-upload"
+        type="file"
+        accept=".pdf,.xml,.jpg,.jpeg,.png"
+        className="hidden"
+        aria-label={t("upload")}
+        onChange={(event) =>
+          event.target.files?.[0] && upload(event.target.files[0])
+        }
+      />
+      <Button
+        onPress={() => input.current?.click()}
+        variant={actionVariant("primary", "solid")}
+        isPending={busy}
+      >
+        {busy ? <Spinner size="sm" color="current" /> : null}
+        {<FileUp className="h-4 w-4" aria-hidden />}
         {t("upload")}
       </Button>
     </>

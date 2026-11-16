@@ -53,8 +53,8 @@ export function ThemeSettingCard() {
             className={cn(
               "flex flex-col justify-between p-4 rounded-xl border text-left transition-all duration-200 cursor-pointer shadow-xs gap-3",
               isSelected
-                ? "border-primary bg-primary-50/50 dark:bg-primary-500/10 shadow-sm ring-1 ring-primary/20"
-                : "border-default-200/80 bg-content1 hover:bg-default-100/60 hover:border-default-300",
+                ? "border-accent bg-brand-50/50 dark:bg-brand-500/10 shadow-sm ring-1 ring-accent/20"
+                : "border-ink-200/80 bg-surface hover:bg-ink-100/60 hover:border-ink-300",
             )}
           >
             <div className="flex items-center justify-between w-full">
@@ -62,16 +62,16 @@ export function ThemeSettingCard() {
                 <Icon className="h-5 w-5" />
               </div>
               {isSelected && (
-                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xs">
+                <span className="flex h-6 w-6 items-center justify-center rounded-full bg-accent text-accent-foreground shadow-xs">
                   <Check className="h-3.5 w-3.5 stroke-[2.5]" />
                 </span>
               )}
             </div>
             <div>
-              <p className="text-small font-semibold text-foreground">
+              <p className="text-sm font-semibold text-foreground">
                 {item.title}
               </p>
-              <p className="text-tiny text-default-400 mt-0.5 leading-snug">
+              <p className="text-xs text-ink-400 mt-0.5 leading-snug">
                 {item.description}
               </p>
             </div>

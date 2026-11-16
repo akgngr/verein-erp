@@ -61,8 +61,8 @@ export async function DonationsSettingsView() {
           warnLabel={t("validityWarn")}
         />
 
-        <section className="flex flex-col gap-3 rounded-medium border border-default-200 bg-content1 p-4 shadow-sm">
-          <h2 className="text-small font-semibold">{t("preview")}</h2>
+        <section className="flex flex-col gap-3 rounded-lg border border-ink-200 bg-surface p-4 shadow-sm">
+          <h2 className="text-sm font-semibold">{t("preview")}</h2>
           <ul className="flex flex-col gap-2">
             {PREVIEWS.map((preview) => (
               <li key={preview.type}>
@@ -70,7 +70,7 @@ export async function DonationsSettingsView() {
                   href={`/api/donations/template-preview/pdf?type=${preview.type}`}
                   target="_blank"
                   rel="noopener"
-                  className="inline-flex items-center gap-2 text-small text-primary underline"
+                  className="inline-flex items-center gap-2 text-sm text-accent underline"
                 >
                   <FileText className="h-4 w-4" aria-hidden />
                   {t(preview.labelKey)}
@@ -82,17 +82,17 @@ export async function DonationsSettingsView() {
             href={t("bmflinkHref")}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-1 text-small text-primary underline"
+            className="inline-flex items-center gap-1 text-sm text-accent underline"
           >
             {t("bmflink")}
             <ExternalLink className="h-3.5 w-3.5" aria-hidden />
           </a>
         </section>
 
-        <section className="flex flex-col gap-3 rounded-medium border border-default-200 bg-content1 p-4 shadow-sm">
-          <h2 className="text-small font-semibold">{t("templateSection")}</h2>
+        <section className="flex flex-col gap-3 rounded-lg border border-ink-200 bg-surface p-4 shadow-sm">
+          <h2 className="text-sm font-semibold">{t("templateSection")}</h2>
           {settings.templateConfirmedAt ? (
-            <p className="text-small text-default-600">
+            <p className="text-sm text-ink-600">
               {t("confirmedInfo", {
                 label: settings.templateConfirmedByLabel ?? "—",
                 date: formatDateTime(settings.templateConfirmedAt),
@@ -101,17 +101,30 @@ export async function DonationsSettingsView() {
             </p>
           ) : null}
           {confirmed ? null : (
-            <p className="text-small text-warning-700">{t("templateNotConfirmed", { version: TEMPLATE_VERSION })}</p>
+            <p className="text-sm text-warning-700">
+              {t("templateNotConfirmed", { version: TEMPLATE_VERSION })}
+            </p>
           )}
-          {canApprove ? <TemplateConfirmForm /> : <p className="text-tiny text-default-500">{t("approveOnly")}</p>}
+          {canApprove ? (
+            <TemplateConfirmForm />
+          ) : (
+            <p className="text-xs text-ink-500">{t("approveOnly")}</p>
+          )}
         </section>
 
-        <section className="flex flex-col gap-2 rounded-medium border border-default-200 bg-content1 p-4 shadow-sm">
-          <h2 className="text-small font-semibold">{t("feeSection")}</h2>
-          <p className="text-small text-default-600">
-            {t("feeDeductibleInfo", { value: profile.membershipFeesDeductible ? tCommon("yes") : tCommon("no") })}
+        <section className="flex flex-col gap-2 rounded-lg border border-ink-200 bg-surface p-4 shadow-sm">
+          <h2 className="text-sm font-semibold">{t("feeSection")}</h2>
+          <p className="text-sm text-ink-600">
+            {t("feeDeductibleInfo", {
+              value: profile.membershipFeesDeductible
+                ? tCommon("yes")
+                : tCommon("no"),
+            })}
           </p>
-          <Link href="/ayarlar/dernek" className="text-small text-primary underline">
+          <Link
+            href="/ayarlar/dernek"
+            className="text-sm text-accent underline"
+          >
             {t("feeDeductibleLink")}
           </Link>
         </section>

@@ -13,11 +13,19 @@ import { ConfirmationActionsBar } from "../components/confirmation-actions-bar";
 import { donationsPermissions } from "../permissions";
 import { getConfirmation } from "../queries/get-confirmation";
 
-function InfoRow({ label, children }: { label: string; children: React.ReactNode }) {
+function InfoRow({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="flex flex-col gap-0.5 border-b border-default-100 py-2 last:border-none">
-      <span className="text-tiny font-medium uppercase tracking-wide text-default-400">{label}</span>
-      <span className="text-small text-foreground">{children}</span>
+    <div className="flex flex-col gap-0.5 border-b border-ink-100 py-2 last:border-none">
+      <span className="text-xs font-medium uppercase tracking-wide text-ink-400">
+        {label}
+      </span>
+      <span className="text-sm text-foreground">{children}</span>
     </div>
   );
 }
@@ -40,8 +48,12 @@ export async function ConfirmationDetailView({ id }: { id: string }) {
 
   const t = await getTranslations("donations.confirmations");
   const isCancelled = confirmation.status === "CANCELLED";
-  const canCancel = !isCancelled && can(user.role, donationsPermissions, "delete");
-  const canReissue = isCancelled && !confirmation.replacedById && can(user.role, donationsPermissions, "approve");
+  const canCancel =
+    !isCancelled && can(user.role, donationsPermissions, "delete");
+  const canReissue =
+    isCancelled &&
+    !confirmation.replacedById &&
+    can(user.role, donationsPermissions, "approve");
   const recipientLink = confirmation.memberId
     ? `/uyeler/${confirmation.memberId}`
     : null;
@@ -66,10 +78,12 @@ export async function ConfirmationDetailView({ id }: { id: string }) {
       />
 
       {isCancelled ? (
-        <div className="rounded-medium bg-danger-50 px-4 py-3 text-small text-danger dark:bg-danger-500/10">
+        <div className="rounded-lg bg-danger-50 px-4 py-3 text-sm text-danger dark:bg-danger-500/10">
           <strong>{t("detail.cancelledBanner")}</strong>{" "}
           {t("detail.cancelledInfo", {
-            date: confirmation.cancelledAt ? formatDate(confirmation.cancelledAt) : "—",
+            date: confirmation.cancelledAt
+              ? formatDate(confirmation.cancelledAt)
+              : "—",
             label: confirmation.cancelledByLabel ?? "—",
             reason: confirmation.cancelReason ?? "—",
           })}
@@ -77,23 +91,32 @@ export async function ConfirmationDetailView({ id }: { id: string }) {
       ) : null}
 
       {confirmation.voidedPaymentWarning ? (
-        <div className="rounded-medium bg-warning-50 px-4 py-3 text-small text-warning-700 dark:bg-warning-500/10">
+        <div className="rounded-lg bg-warning-50 px-4 py-3 text-sm text-warning-700 dark:bg-warning-500/10">
           {t("voidedWarning", {
-            receipt: confirmation.voidedPayments.map((payment) => payment.receiptNumber).join(", "),
+            receipt: confirmation.voidedPayments
+              .map((payment) => payment.receiptNumber)
+              .join(", "),
           })}
         </div>
       ) : null}
 
-      <div className="grid max-w-4xl grid-cols-1 gap-x-6 rounded-medium border border-default-200 bg-content1 p-5 shadow-sm sm:grid-cols-2">
-        <InfoRow label={t("detail.fields.number")}>{confirmation.confirmationNumber}</InfoRow>
-        <InfoRow label={t("detail.fields.issuedAt")}>{formatDate(confirmation.issuedAt)}</InfoRow>
-        <InfoRow label={t("columns.kind")}>
-          {t(`kind.${confirmation.kind}`)} · {t(`content.${confirmation.content}`)}
+      <div className="grid max-w-4xl grid-cols-1 gap-x-6 rounded-lg border border-ink-200 bg-surface p-5 shadow-sm sm:grid-cols-2">
+        <InfoRow label={t("detail.fields.number")}>
+          {confirmation.confirmationNumber}
         </InfoRow>
-        <InfoRow label={t("columns.status")}>{t(`status.${confirmation.status}`)}</InfoRow>
+        <InfoRow label={t("detail.fields.issuedAt")}>
+          {formatDate(confirmation.issuedAt)}
+        </InfoRow>
+        <InfoRow label={t("columns.kind")}>
+          {t(`kind.${confirmation.kind}`)} ·{" "}
+          {t(`content.${confirmation.content}`)}
+        </InfoRow>
+        <InfoRow label={t("columns.status")}>
+          {t(`status.${confirmation.status}`)}
+        </InfoRow>
         <InfoRow label={t("detail.fields.recipient")}>
           {recipientLink ? (
-            <Link href={recipientLink} className="text-primary underline">
+            <Link href={recipientLink} className="text-accent underline">
               {confirmation.recipientName}
             </Link>
           ) : confirmation.donorNumber !== null ? (
@@ -112,10 +135,13 @@ export async function ConfirmationDetailView({ id }: { id: string }) {
             .join(", ")}
         </InfoRow>
         <InfoRow label={t("detail.fields.period")}>
-          {formatDate(confirmation.periodFrom)} – {formatDate(confirmation.periodTo)}
+          {formatDate(confirmation.periodFrom)} –{" "}
+          {formatDate(confirmation.periodTo)}
         </InfoRow>
         <InfoRow label={t("detail.fields.total")}>
-          <span className="font-semibold">{formatMoney(confirmation.totalCents)}</span>
+          <span className="font-semibold">
+            {formatMoney(confirmation.totalCents)}
+          </span>
         </InfoRow>
         <InfoRow label={t("detail.fields.words")}>
           <em>{confirmation.amountInWords}</em>
@@ -127,37 +153,49 @@ export async function ConfirmationDetailView({ id }: { id: string }) {
           {confirmation.issuedByLabel} — {formatDateTime(confirmation.issuedAt)}
         </InfoRow>
         <InfoRow label={t("detail.place")}>{confirmation.issuedPlace}</InfoRow>
-        <InfoRow label={t("detail.fields.templateVersion")}>{confirmation.templateVersion}</InfoRow>
+        <InfoRow label={t("detail.fields.templateVersion")}>
+          {confirmation.templateVersion}
+        </InfoRow>
         <InfoRow label={t("detail.fields.retention")}>
-          {confirmation.retentionEndDate ? formatDate(confirmation.retentionEndDate) : "—"}
+          {confirmation.retentionEndDate
+            ? formatDate(confirmation.retentionEndDate)
+            : "—"}
         </InfoRow>
         {confirmation.replacesId ? (
           <InfoRow label={t("detail.replaces")}>
-            <Link href={`/bagislar/bildirimler/${confirmation.replacesId}`} className="text-primary underline">
+            <Link
+              href={`/bagislar/bildirimler/${confirmation.replacesId}`}
+              className="text-accent underline"
+            >
               {t("actions.view")}
             </Link>
           </InfoRow>
         ) : null}
         {confirmation.replacedById ? (
           <InfoRow label={t("detail.replacedBy")}>
-            <Link href={`/bagislar/bildirimler/${confirmation.replacedById}`} className="text-primary underline">
+            <Link
+              href={`/bagislar/bildirimler/${confirmation.replacedById}`}
+              className="text-accent underline"
+            >
               {t("actions.view")}
             </Link>
           </InfoRow>
         ) : null}
         {confirmation.pdfSha256 ? (
           <InfoRow label={t("detail.pdfHash")}>
-            <code className="break-all text-tiny text-default-500">{confirmation.pdfSha256}</code>
+            <code className="break-all text-xs text-ink-500">
+              {confirmation.pdfSha256}
+            </code>
           </InfoRow>
         ) : null}
       </div>
 
-      <section className="max-w-4xl rounded-medium border border-default-200 bg-content1 shadow-sm">
-        <h2 className="border-b border-default-100 px-5 py-3 text-small font-semibold">
+      <section className="max-w-4xl rounded-lg border border-ink-200 bg-surface shadow-sm">
+        <h2 className="border-b border-ink-100 px-5 py-3 text-sm font-semibold">
           {t("detail.fields.items")}
         </h2>
-        <table className="w-full text-small">
-          <thead className="bg-default-50 text-left text-tiny uppercase tracking-wide text-default-500">
+        <table className="w-full text-sm">
+          <thead className="bg-ink-50 text-left text-xs uppercase tracking-wide text-ink-500">
             <tr>
               <th className="px-5 py-2">#</th>
               <th className="px-5 py-2">{t("detail.itemDate")}</th>
@@ -165,21 +203,26 @@ export async function ConfirmationDetailView({ id }: { id: string }) {
               <th className="px-5 py-2 text-right">{t("detail.itemAmount")}</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-default-100">
+          <tbody className="divide-y divide-ink-100">
             {confirmation.items.map((item) => (
               <tr key={item.id}>
-                <td className="px-5 py-2 text-default-500">{item.position}</td>
+                <td className="px-5 py-2 text-ink-500">{item.position}</td>
                 <td className="px-5 py-2">{formatDate(item.itemDate)}</td>
                 <td className="px-5 py-2">
                   {item.itemType === "DONATION" ? (
-                    <Link href={`/bagislar/${item.sourceId}`} className="text-primary underline">
+                    <Link
+                      href={`/bagislar/${item.sourceId}`}
+                      className="text-accent underline"
+                    >
                       {item.label}
                     </Link>
                   ) : (
                     item.label
                   )}
                 </td>
-                <td className="px-5 py-2 text-right font-medium">{formatMoney(item.amountCents)}</td>
+                <td className="px-5 py-2 text-right font-medium">
+                  {formatMoney(item.amountCents)}
+                </td>
               </tr>
             ))}
           </tbody>

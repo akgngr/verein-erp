@@ -8,7 +8,10 @@ import { moduleHome } from "@/shared/navigation/module-nav";
 import { can } from "@/shared/permissions/define";
 
 import { LanguageSettingCard } from "../components/language-setting-card";
-import { SettingsHub, type SettingsHubSection } from "../components/settings-hub";
+import {
+  SettingsHub,
+  type SettingsHubSection,
+} from "../components/settings-hub";
 import { listUsableModuleKeys } from "../services/module-gate";
 import { ThemeSettingCard } from "../components/theme-setting-card";
 
@@ -27,13 +30,19 @@ export async function SettingsOverviewView() {
 
   const activeKeys = new Set(await listUsableModuleKeys());
   const modules = allModules.filter((mod) => activeKeys.has(mod.key));
-  const text = (key: string, fallback: string) => (tRoot.has(key) ? tRoot(key) : fallback);
+  const text = (key: string, fallback: string) =>
+    tRoot.has(key) ? tRoot(key) : fallback;
 
   const general = modules
     .flatMap((mod) =>
       mod.nav
-        .filter((item) => item.group === "settings" && !item.hidden && item.href !== HUB_HREF)
-        .filter((item) => can(user.role, item.permission.definition, item.permission.action))
+        .filter(
+          (item) =>
+            item.group === "settings" && !item.hidden && item.href !== HUB_HREF,
+        )
+        .filter((item) =>
+          can(user.role, item.permission.definition, item.permission.action),
+        )
         .map((item) => ({ mod, item })),
     )
     .sort((a, b) => a.item.order - b.item.order)
@@ -44,7 +53,10 @@ export async function SettingsOverviewView() {
         href: item.href,
         icon: <Icon className="h-5 w-5" aria-hidden />,
         title: text(`nav.${item.labelKey}`, item.label),
-        description: text(`${mod.key}.module.description`, mod.description ?? ""),
+        description: text(
+          `${mod.key}.module.description`,
+          mod.description ?? "",
+        ),
       };
     });
 
@@ -64,14 +76,27 @@ export async function SettingsOverviewView() {
         href: item.href,
         icon: <Icon className="h-5 w-5" aria-hidden />,
         title: t("moduleSettings", { module: moduleName }),
-        description: text(`${mod.key}.module.description`, mod.description ?? ""),
+        description: text(
+          `${mod.key}.module.description`,
+          mod.description ?? "",
+        ),
       },
     ];
   });
 
   const sections: SettingsHubSection[] = [
-    { key: "general", title: t("sections.general.title"), description: t("sections.general.description"), items: general },
-    { key: "modules", title: t("sections.modules.title"), description: t("sections.modules.description"), items: moduleSettings },
+    {
+      key: "general",
+      title: t("sections.general.title"),
+      description: t("sections.general.description"),
+      items: general,
+    },
+    {
+      key: "modules",
+      title: t("sections.modules.title"),
+      description: t("sections.modules.description"),
+      items: moduleSettings,
+    },
   ];
 
   return (
@@ -82,30 +107,42 @@ export async function SettingsOverviewView() {
 
       <section className="flex flex-col gap-3">
         <div>
-          <h2 className="text-medium font-semibold text-foreground">{t("sections.personal.title")}</h2>
-          <p className="text-small text-default-500">{t("sections.personal.description")}</p>
+          <h2 className="text-base font-semibold text-foreground">
+            {t("sections.personal.title")}
+          </h2>
+          <p className="text-sm text-ink-500">
+            {t("sections.personal.description")}
+          </p>
         </div>
         <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-          <div className="flex flex-col rounded-2xl border border-default-200/80 bg-content1 p-5 shadow-xs">
+          <div className="flex flex-col rounded-2xl border border-ink-200/80 bg-surface p-5 shadow-xs">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-50 text-primary-600 dark:bg-primary-500/15 dark:text-primary-300">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-50 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
                 <Globe2 className="h-4 w-4" aria-hidden />
               </div>
               <div>
-                <h3 className="text-small font-semibold text-foreground">{t("languageSection.title")}</h3>
-                <p className="text-tiny text-default-400">{t("languageSection.description")}</p>
+                <h3 className="text-sm font-semibold text-foreground">
+                  {t("languageSection.title")}
+                </h3>
+                <p className="text-xs text-ink-400">
+                  {t("languageSection.description")}
+                </p>
               </div>
             </div>
             <LanguageSettingCard onSetLocale={setLocaleAction} />
           </div>
-          <div className="flex flex-col rounded-2xl border border-default-200/80 bg-content1 p-5 shadow-xs">
+          <div className="flex flex-col rounded-2xl border border-ink-200/80 bg-surface p-5 shadow-xs">
             <div className="flex items-center gap-2.5">
-              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary-50 text-primary-600 dark:bg-primary-500/15 dark:text-primary-300">
+              <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-brand-50 text-brand-600 dark:bg-brand-500/15 dark:text-brand-300">
                 <Palette className="h-4 w-4" aria-hidden />
               </div>
               <div>
-                <h3 className="text-small font-semibold text-foreground">{t("themeSection.title")}</h3>
-                <p className="text-tiny text-default-400">{t("themeSection.description")}</p>
+                <h3 className="text-sm font-semibold text-foreground">
+                  {t("themeSection.title")}
+                </h3>
+                <p className="text-xs text-ink-400">
+                  {t("themeSection.description")}
+                </p>
               </div>
             </div>
             <ThemeSettingCard />

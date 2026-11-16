@@ -1,6 +1,16 @@
 "use client";
+import {
+  toast,
+  Card,
+  Link as ActionLink,
+  buttonVariants,
+  Button,
+  Spinner,
+  ProgressBar,
+} from "@heroui/react";
 
-import { Button, Card, CardBody, Link, Progress, addToast } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+
 import { Download, FileSpreadsheet } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
@@ -39,24 +49,44 @@ export function ImportWizard() {
     try {
       const formData = new FormData();
       formData.append("file", file);
-      const response = await fetch(`/api/members/import?dryRun=${dryRun ? "1" : "0"}`, {
-        method: "POST",
-        body: formData,
-      });
+      const response = await fetch(
+        `/api/members/import?dryRun=${dryRun ? "1" : "0"}`,
+        {
+          method: "POST",
+          body: formData,
+        },
+      );
       const json = (await response.json()) as
-        | { ok: true; total: number; valid: number; errors: { row: number; messages: string[] }[]; imported?: number }
+        | {
+            ok: true;
+            total: number;
+            valid: number;
+            errors: { row: number; messages: string[] }[];
+            imported?: number;
+          }
         | { ok: false; error: string };
       if (!json.ok) {
         setError(json.error);
         return;
       }
       if (dryRun) {
-        setPreview({ total: json.total, valid: json.valid, errors: json.errors });
+        setPreview({
+          total: json.total,
+          valid: json.valid,
+          errors: json.errors,
+        });
         setCommit(null);
       } else {
-        setCommit({ total: json.total, valid: json.valid, imported: json.imported ?? 0, errors: json.errors });
+        setCommit({
+          total: json.total,
+          valid: json.valid,
+          imported: json.imported ?? 0,
+          errors: json.errors,
+        });
         setPreview(null);
-        addToast({ title: t("toastImported", { count: json.imported ?? 0 }), color: "success" });
+        toast(t("toastImported", { count: json.imported ?? 0 }), {
+          variant: "success",
+        });
         router.refresh();
       }
     } catch {
@@ -68,16 +98,17 @@ export function ImportWizard() {
 
   return (
     <Card>
-      <CardBody className="gap-4 p-5">
+      <Card.Content className={["gap-4 p-5"].filter(Boolean).join(" ")}>
         <div className="flex flex-wrap items-center gap-3">
-          <Button
-            as={Link}
+          <ActionLink
             href="/api/members/import-template"
-            variant="flat"
-            startContent={<Download className="h-4 w-4" aria-hidden />}
+            className={buttonVariants({
+              variant: actionVariant("default", "flat"),
+            })}
           >
+            {<Download className="h-4 w-4" aria-hidden />}
             {t("downloadTemplate")}
-          </Button>
+          </ActionLink>
         </div>
 
         <input
@@ -89,67 +120,84 @@ export function ImportWizard() {
         />
         <div className="flex flex-wrap items-center gap-3">
           <Button
-            variant="flat"
-            startContent={<FileSpreadsheet className="h-4 w-4" aria-hidden />}
             onPress={() => fileInputRef.current?.click()}
+            variant={actionVariant("default", "flat")}
           >
+            {<FileSpreadsheet className="h-4 w-4" aria-hidden />}
             {file ? file.name : t("chooseFile")}
           </Button>
           <Button
-            color="primary"
-            variant="flat"
             isDisabled={!file}
-            isLoading={busy}
             onPress={() => post(true)}
+            variant={actionVariant("primary", "flat")}
+            isPending={busy}
           >
+            {busy ? <Spinner size="sm" color="current" /> : null}
             {t("check")}
           </Button>
         </div>
 
-        {error ? <p className="text-small text-danger">{error}</p> : null}
+        {error ? <p className="text-sm text-danger">{error}</p> : null}
 
         {preview ? (
-          <div className="rounded-medium border border-default-200 p-4">
-            <p className="text-small font-medium">{t("previewTitle")}</p>
-            <div className="mt-2 grid grid-cols-3 gap-3 text-small">
+          <div className="rounded-lg border border-ink-200 p-4">
+            <p className="text-sm font-medium">{t("previewTitle")}</p>
+            <div className="mt-2 grid grid-cols-3 gap-3 text-sm">
               <div>
-                <span className="text-default-400">{t("totalRows")}: </span>
+                <span className="text-ink-400">{t("totalRows")}: </span>
                 {preview.total}
               </div>
               <div>
-                <span className="text-default-400">{t("validRows")}: </span>
-                <span className="font-medium text-success">{preview.valid}</span>
+                <span className="text-ink-400">{t("validRows")}: </span>
+                <span className="font-medium text-success">
+                  {preview.valid}
+                </span>
               </div>
               <div>
-                <span className="text-default-400">{t("errorRows")}: </span>
-                <span className="font-medium text-danger">{preview.errors.length}</span>
+                <span className="text-ink-400">{t("errorRows")}: </span>
+                <span className="font-medium text-danger">
+                  {preview.errors.length}
+                </span>
               </div>
             </div>
 
             {preview.total > 0 ? (
-              <Progress
+              <ProgressBar
                 aria-label={t("previewTitle")}
                 size="sm"
                 className="mt-3"
-                value={preview.total > 0 ? Math.round((preview.valid / preview.total) * 100) : 0}
+                value={
+                  preview.total > 0
+                    ? Math.round((preview.valid / preview.total) * 100)
+                    : 0
+                }
                 color="success"
-              />
+              >
+                <ProgressBar.Track>
+                  <ProgressBar.Fill />
+                </ProgressBar.Track>
+              </ProgressBar>
             ) : null}
 
             {preview.errors.length > 0 ? (
               <div className="mt-3">
-                <p className="text-tiny text-warning-600">{t("skippedWarning")}</p>
-                <div className="mt-2 max-h-64 overflow-auto rounded-small border border-default-200">
-                  <table className="w-full text-tiny" aria-label={t("errorRows")}>
+                <p className="text-xs text-warning-600">
+                  {t("skippedWarning")}
+                </p>
+                <div className="mt-2 max-h-64 overflow-auto rounded-md border border-ink-200">
+                  <table className="w-full text-xs" aria-label={t("errorRows")}>
                     <thead>
-                      <tr className="border-b border-default-200 text-left text-default-400">
+                      <tr className="border-b border-ink-200 text-left text-ink-400">
                         <th className="p-2">{t("colRow")}</th>
                         <th className="p-2">{t("colMessages")}</th>
                       </tr>
                     </thead>
                     <tbody>
                       {preview.errors.slice(0, 200).map((rowError) => (
-                        <tr key={rowError.row} className="border-b border-default-100 last:border-none">
+                        <tr
+                          key={rowError.row}
+                          className="border-b border-ink-100 last:border-none"
+                        >
                           <td className="p-2 font-medium">{rowError.row}</td>
                           <td className="p-2">
                             <ul className="list-inside list-disc">
@@ -163,7 +211,7 @@ export function ImportWizard() {
                     </tbody>
                   </table>
                   {preview.errors.length > 200 ? (
-                    <p className="p-2 text-tiny text-default-400">
+                    <p className="p-2 text-xs text-ink-400">
                       {t("moreErrors", { count: preview.errors.length - 200 })}
                     </p>
                   ) : null}
@@ -173,11 +221,12 @@ export function ImportWizard() {
 
             <div className="mt-4">
               <Button
-                color="primary"
                 isDisabled={preview.valid === 0}
-                isLoading={busy}
                 onPress={() => post(false)}
+                variant={actionVariant("primary", "solid")}
+                isPending={busy}
               >
+                {busy ? <Spinner size="sm" color="current" /> : null}
                 {t("importButton")}
               </Button>
             </div>
@@ -185,10 +234,13 @@ export function ImportWizard() {
         ) : null}
 
         {commit ? (
-          <div className="rounded-medium border border-success-200 bg-success-50 p-4 text-small">
+          <div className="rounded-lg border border-success-200 bg-success-50 p-4 text-sm">
             <p className="font-medium">{t("commitTitle")}</p>
             <p className="mt-1">
-              {t("commitSummary", { imported: commit.imported, total: commit.total })}
+              {t("commitSummary", {
+                imported: commit.imported,
+                total: commit.total,
+              })}
             </p>
             {commit.errors.length > 0 ? (
               <p className="mt-1 text-warning-600">
@@ -196,13 +248,19 @@ export function ImportWizard() {
               </p>
             ) : null}
             <div className="mt-3">
-              <Button as={Link} href="/uyeler" size="sm" variant="flat" color="primary">
+              <ActionLink
+                href="/uyeler"
+                className={buttonVariants({
+                  variant: actionVariant("primary", "flat"),
+                  size: "sm",
+                })}
+              >
                 {t("goToList")}
-              </Button>
+              </ActionLink>
             </div>
           </div>
         ) : null}
-      </CardBody>
+      </Card.Content>
     </Card>
   );
 }

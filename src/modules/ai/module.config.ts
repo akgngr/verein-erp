@@ -14,7 +14,8 @@ export const moduleConfig: ModuleConfig = {
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
   version: "1.12.0",
   label: "Yapay zekâ asistanı",
-  description: "Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuyan asistan.",
+  description:
+    "Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuyan asistan.",
   category: "EXTENSION",
   hasSchema: true,
   // Başka modüllerden istenen erişim (yönetici onayı gerekir; gerekçe: messages → access.<modül>).
@@ -22,7 +23,11 @@ export const moduleConfig: ModuleConfig = {
   // tanımlar (src/ai-registry.ts otomatik üretilir) ve yönetici Ayarlar → Yapay zekâ'daki izin
   // matrisinden açar. Buradaki liste yalnızca asistan altyapısının kendi kullandığı modüllerdir.
   // Yapay zekâ sağlayıcı SDK'ları (`pnpm module:deps` kök package.json'a ekler).
-  dependencies: { "@anthropic-ai/sdk": "^1.3.0", "@mistralai/mistralai": "^3.4.0", openai: "^7.45.1" },
+  dependencies: {
+    "@anthropic-ai/sdk": "^1.3.0",
+    "@mistralai/mistralai": "^3.4.0",
+    openai: "^7.45.1",
+  },
   access: [
     { module: "users", operations: ["read"] },
     { module: "exports", operations: ["read", "write"] },

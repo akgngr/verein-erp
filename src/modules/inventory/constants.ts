@@ -16,20 +16,26 @@ export const INVENTORY_CATEGORIES = [
   "OTHER",
 ] as const;
 
-export const INVENTORY_STATUSES = ["IN_USE", "IDLE", "BROKEN", "SCRAPPED"] as const;
+export const INVENTORY_STATUSES = [
+  "IN_USE",
+  "IDLE",
+  "BROKEN",
+  "SCRAPPED",
+] as const;
 
 export const DEFAULT_INVENTORY_CATEGORY: InventoryCategory = "OTHER";
 export const DEFAULT_INVENTORY_STATUS: InventoryStatus = "IDLE";
 
 /** i18n keys (relative to the `inventory` namespace) for category labels. */
-export const INVENTORY_CATEGORY_LABEL_KEYS: Record<InventoryCategory, string> = {
-  ELECTRONICS: "categories.ELECTRONICS",
-  FURNITURE: "categories.FURNITURE",
-  KITCHEN: "categories.KITCHEN",
-  OFFICE: "categories.OFFICE",
-  SPORTS: "categories.SPORTS",
-  OTHER: "categories.OTHER",
-};
+export const INVENTORY_CATEGORY_LABEL_KEYS: Record<InventoryCategory, string> =
+  {
+    ELECTRONICS: "categories.ELECTRONICS",
+    FURNITURE: "categories.FURNITURE",
+    KITCHEN: "categories.KITCHEN",
+    OFFICE: "categories.OFFICE",
+    SPORTS: "categories.SPORTS",
+    OTHER: "categories.OTHER",
+  };
 
 /** i18n keys (relative to the `inventory` namespace) for status labels. */
 export const INVENTORY_STATUS_LABEL_KEYS: Record<InventoryStatus, string> = {
@@ -42,7 +48,7 @@ export const INVENTORY_STATUS_LABEL_KEYS: Record<InventoryStatus, string> = {
 /** Tailwind classes for status badges (usable in both RSC and client components). */
 export const INVENTORY_STATUS_BADGE_CLASSES: Record<InventoryStatus, string> = {
   IN_USE: "bg-success-100 text-success-700",
-  IDLE: "bg-default-100 text-default-700",
+  IDLE: "bg-ink-100 text-ink-700",
   BROKEN: "bg-danger-100 text-danger-700",
   SCRAPPED: "bg-warning-100 text-warning-700",
 };

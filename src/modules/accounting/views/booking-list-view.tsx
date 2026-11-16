@@ -16,7 +16,10 @@ import {
   listBookings,
 } from "../queries/list-bookings";
 import { getAccountingStats } from "../queries/get-accounting-stats";
-import { listAccountBalances, listAccountOptions } from "../queries/list-accounts";
+import {
+  listAccountBalances,
+  listAccountOptions,
+} from "../queries/list-accounts";
 import { listCategoryOptions } from "../queries/list-categories";
 import { listProjectOptions } from "../queries/list-projects";
 import { listYearsWithBookings } from "../queries/list-years";
@@ -29,7 +32,7 @@ import { AccountingPdfButton } from "../components/pdf-button";
 
 /** Fiş listesi (§ 11.1): yıl + istatistik + bakiye çipleri + tablo. */
 const EXPORT_LINK_CLASS =
-  "inline-flex h-10 items-center gap-1.5 rounded-medium border border-default-200 px-3 text-small font-medium text-foreground hover:bg-default-100";
+  "inline-flex h-10 items-center gap-1.5 rounded-lg border border-ink-200 px-3 text-sm font-medium text-foreground hover:bg-ink-100";
 
 export async function AccountingListView({
   searchParams,
@@ -69,17 +72,21 @@ export async function AccountingListView({
     params.filters.year && /^\d{4}$/.test(params.filters.year)
       ? Number(params.filters.year)
       : currentYear;
-  const effectiveParams = { ...params, filters: { ...params.filters, year: String(yearFilter) } };
+  const effectiveParams = {
+    ...params,
+    filters: { ...params.filters, year: String(yearFilter) },
+  };
 
-  const [list, stats, balances, accounts, categories, projects, years] = await Promise.all([
-    listBookings(effectiveParams),
-    getAccountingStats(yearFilter),
-    listAccountBalances(),
-    listAccountOptions(),
-    listCategoryOptions(),
-    listProjectOptions(),
-    listYearsWithBookings(),
-  ]);
+  const [list, stats, balances, accounts, categories, projects, years] =
+    await Promise.all([
+      listBookings(effectiveParams),
+      getAccountingStats(yearFilter),
+      listAccountBalances(),
+      listAccountOptions(),
+      listCategoryOptions(),
+      listProjectOptions(),
+      listYearsWithBookings(),
+    ]);
   const t = await getTranslations("accounting");
   const tBudget = await getTranslations("accounting.budget");
   const tForm = await getTranslations("accounting.form");
@@ -89,7 +96,11 @@ export async function AccountingListView({
   const canDelete = can(user.role, accountingPermissions, "delete");
 
   const exportQuery = new URLSearchParams(
-    Object.entries({ ...effectiveParams.filters, sort: params.sort, dir: params.dir }).flatMap(([key, value]) =>
+    Object.entries({
+      ...effectiveParams.filters,
+      sort: params.sort,
+      dir: params.dir,
+    }).flatMap(([key, value]) =>
       typeof value === "string" && value ? [[key, value]] : [],
     ),
   ).toString();
@@ -120,30 +131,51 @@ export async function AccountingListView({
         actions={
           <div className="flex flex-wrap items-center gap-2">
             {/* Çıktılar ekrandaki filtrelerle üretilir. */}
-            <AccountingPdfButton href={`/api/accounting/export/pdf?${exportQuery}`} label={t("pdf.list")} />
-            <a href={`/api/accounting/export?${exportQuery}`} className={EXPORT_LINK_CLASS}>
+            <AccountingPdfButton
+              href={`/api/accounting/export/pdf?${exportQuery}`}
+              label={t("pdf.list")}
+            />
+            <a
+              href={`/api/accounting/export?${exportQuery}`}
+              className={EXPORT_LINK_CLASS}
+            >
               <FileSpreadsheet className="h-4 w-4" aria-hidden />
               {t("pdf.excel")}
             </a>
-          {canCreate ? (
-            <div className="flex flex-wrap items-center gap-2">
-              <FormDrawerButton param="yeni" value="gelir" startIcon={<PiggyBank className="h-4 w-4" />}>
-                {t("list.actions.newIncome")}
-              </FormDrawerButton>
-              <FormDrawerButton param="yeni" value="gider" color="secondary" startIcon={<Wallet className="h-4 w-4" />}>
-                {t("list.actions.newExpense")}
-              </FormDrawerButton>
-              <FormDrawerButton param="yeni" value="virman" color="default" variant="bordered" startIcon={<Landmark className="h-4 w-4" />}>
-                {t("list.actions.newTransfer")}
-              </FormDrawerButton>
-            </div>
-          ) : null}
+            {canCreate ? (
+              <div className="flex flex-wrap items-center gap-2">
+                <FormDrawerButton
+                  param="yeni"
+                  value="gelir"
+                  startIcon={<PiggyBank className="h-4 w-4" />}
+                >
+                  {t("list.actions.newIncome")}
+                </FormDrawerButton>
+                <FormDrawerButton
+                  param="yeni"
+                  value="gider"
+                  color="secondary"
+                  startIcon={<Wallet className="h-4 w-4" />}
+                >
+                  {t("list.actions.newExpense")}
+                </FormDrawerButton>
+                <FormDrawerButton
+                  param="yeni"
+                  value="virman"
+                  color="default"
+                  variant="bordered"
+                  startIcon={<Landmark className="h-4 w-4" />}
+                >
+                  {t("list.actions.newTransfer")}
+                </FormDrawerButton>
+              </div>
+            ) : null}
           </div>
         }
       />
 
       {locked ? (
-        <div className="mb-4 rounded-medium border border-warning-300 bg-warning-50 px-4 py-2 text-small text-warning-700">
+        <div className="mb-4 rounded-lg border border-warning-300 bg-warning-50 px-4 py-2 text-sm text-warning-700">
           {t("list.yearLocked", { year: yearFilter })}
         </div>
       ) : null}
@@ -165,7 +197,11 @@ export async function AccountingListView({
         q={params.q}
         searchPlaceholder={t("list.filters.q")}
         filters={[
-          { key: "year", label: t("list.columns.date") + " (yıl)", options: yearOptions },
+          {
+            key: "year",
+            label: t("list.columns.date") + " (yıl)",
+            options: yearOptions,
+          },
           {
             key: "type",
             label: t("list.filters.type"),
@@ -175,20 +211,54 @@ export async function AccountingListView({
               { value: "TRANSFER", label: tForm("typeTransfer") },
             ],
           },
-          { key: "accountId", label: t("list.filters.account"), options: accounts.map((account) => ({ value: account.id, label: account.name })) },
-          { key: "categoryId", label: t("list.filters.category"), options: categories.map((category) => ({ value: category.id, label: category.name })) },
+          {
+            key: "accountId",
+            label: t("list.filters.account"),
+            options: accounts.map((account) => ({
+              value: account.id,
+              label: account.name,
+            })),
+          },
+          {
+            key: "categoryId",
+            label: t("list.filters.category"),
+            options: categories.map((category) => ({
+              value: category.id,
+              label: category.name,
+            })),
+          },
           {
             key: "sphere",
             label: t("list.filters.sphere"),
             options: [
               { value: "IDEELL", label: sphereLabel("IDEELL") },
-              { value: "ASSET_MANAGEMENT", label: sphereLabel("ASSET_MANAGEMENT") },
-              { value: "PURPOSE_OPERATION", label: sphereLabel("PURPOSE_OPERATION") },
-              { value: "ECONOMIC_OPERATION", label: sphereLabel("ECONOMIC_OPERATION") },
+              {
+                value: "ASSET_MANAGEMENT",
+                label: sphereLabel("ASSET_MANAGEMENT"),
+              },
+              {
+                value: "PURPOSE_OPERATION",
+                label: sphereLabel("PURPOSE_OPERATION"),
+              },
+              {
+                value: "ECONOMIC_OPERATION",
+                label: sphereLabel("ECONOMIC_OPERATION"),
+              },
             ],
           },
-          { key: "projectId", label: t("list.filters.project"), options: projects.map((project) => ({ value: project.id, label: project.name })) },
-          { key: "missingReceipt", label: t("list.filters.missingReceipt"), options: [{ value: "1", label: t("list.filters.missingReceipt") }] },
+          {
+            key: "projectId",
+            label: t("list.filters.project"),
+            options: projects.map((project) => ({
+              value: project.id,
+              label: project.name,
+            })),
+          },
+          {
+            key: "missingReceipt",
+            label: t("list.filters.missingReceipt"),
+            options: [{ value: "1", label: t("list.filters.missingReceipt") }],
+          },
           {
             key: "source",
             label: t("list.filters.source"),
@@ -197,15 +267,29 @@ export async function AccountingListView({
               { value: "member", label: t("list.filters.sourceMember") },
             ],
           },
-          { key: "includeReversed", label: t("list.filters.hideReversed"), options: [{ value: "hide", label: t("list.filters.hideReversed") }] },
+          {
+            key: "includeReversed",
+            label: t("list.filters.hideReversed"),
+            options: [{ value: "hide", label: t("list.filters.hideReversed") }],
+          },
         ]}
         canUpdate={canUpdate}
         canDelete={canDelete}
       />
       {canCreate && typeof raw.yeni === "string" ? (
-        <AccountingCreateView type={raw.yeni === "gider" ? "EXPENSE" : raw.yeni === "virman" ? "TRANSFER" : "INCOME"} />
+        <AccountingCreateView
+          type={
+            raw.yeni === "gider"
+              ? "EXPENSE"
+              : raw.yeni === "virman"
+                ? "TRANSFER"
+                : "INCOME"
+          }
+        />
       ) : null}
-      {canUpdate && typeof raw.duzenle === "string" && raw.duzenle ? <AccountingEditView id={raw.duzenle} /> : null}
+      {canUpdate && typeof raw.duzenle === "string" && raw.duzenle ? (
+        <AccountingEditView id={raw.duzenle} />
+      ) : null}
     </div>
   );
 }

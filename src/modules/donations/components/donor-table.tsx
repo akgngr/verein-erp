@@ -1,12 +1,16 @@
 "use client";
+import { Link } from "@heroui/react";
 
 import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
-import { Link } from "@heroui/react";
+
 import { Eye, Pencil } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { DataTable } from "@/shared/components/data-table/data-table";
-import type { DataTableColumn, DataTableRowAction } from "@/shared/components/data-table/types";
+import type {
+  DataTableColumn,
+  DataTableRowAction,
+} from "@/shared/components/data-table/types";
 
 import type { DonorListItem } from "../types";
 
@@ -35,7 +39,10 @@ export function DonorTable({
   const t = useTranslations("donations.donors");
   const drawerHref = useFormDrawerHref();
   const format = (cents: number) =>
-    (cents / 100).toLocaleString("tr-TR", { style: "currency", currency: "EUR" });
+    (cents / 100).toLocaleString("tr-TR", {
+      style: "currency",
+      currency: "EUR",
+    });
 
   const columns: DataTableColumn<DonorListItem>[] = [
     {
@@ -44,7 +51,10 @@ export function DonorTable({
       sortable: true,
       width: 110,
       render: (row) => (
-        <Link href={`/bagislar/bagiscilar/${row.id}`} size="sm" className="font-medium">
+        <Link
+          href={`/bagislar/bagiscilar/${row.id}`}
+          className={["font-medium", "text-sm"].filter(Boolean).join(" ")}
+        >
           SP-{String(row.donorNumber).padStart(4, "0")}
         </Link>
       ),
@@ -55,15 +65,31 @@ export function DonorTable({
       sortable: true,
       width: 240,
       render: (row) => (
-        <span className={row.isAnonymized ? "text-default-400" : ""}>
+        <span className={row.isAnonymized ? "text-ink-400" : ""}>
           {row.displayName}
           {row.isAnonymized ? ` (${t("detail.anonymizedMark")})` : ""}
         </span>
       ),
     },
-    { key: "city", label: t("columns.city"), width: 140, render: (row) => row.city ?? "—" },
-    { key: "donationCount", label: t("columns.count"), width: 110, align: "end" },
-    { key: "totalCents", label: t("columns.total"), width: 130, align: "end", render: (row) => format(row.totalCents) },
+    {
+      key: "city",
+      label: t("columns.city"),
+      width: 140,
+      render: (row) => row.city ?? "—",
+    },
+    {
+      key: "donationCount",
+      label: t("columns.count"),
+      width: 110,
+      align: "end",
+    },
+    {
+      key: "totalCents",
+      label: t("columns.total"),
+      width: 130,
+      align: "end",
+      render: (row) => format(row.totalCents),
+    },
     {
       key: "isActive",
       label: t("columns.status"),
@@ -73,9 +99,21 @@ export function DonorTable({
   ];
 
   const rowActions = (row: DonorListItem): DataTableRowAction[] => [
-    { key: "view", label: t("detail.anonymize"), icon: <Eye className="h-4 w-4" />, href: `/bagislar/bagiscilar/${row.id}` },
+    {
+      key: "view",
+      label: t("detail.anonymize"),
+      icon: <Eye className="h-4 w-4" />,
+      href: `/bagislar/bagiscilar/${row.id}`,
+    },
     ...(canUpdate
-      ? [{ key: "edit", label: t("form.editTitle"), icon: <Pencil className="h-4 w-4" />, href: drawerHref("duzenle", row.id) }]
+      ? [
+          {
+            key: "edit",
+            label: t("form.editTitle"),
+            icon: <Pencil className="h-4 w-4" />,
+            href: drawerHref("duzenle", row.id),
+          },
+        ]
       : []),
   ];
 

@@ -11,9 +11,10 @@ import { mailingsPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "mailings",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "2.4.4",
+  version: "2.4.5",
   label: "Toplu e-posta",
-  description: "Üyelere, velilere ve diğer modüllerin alıcı listelerine kişiye özel toplu e-posta.",
+  description:
+    "Üyelere, velilere ve diğer modüllerin alıcı listelerine kişiye özel toplu e-posta.",
   category: "OFFICIAL",
   hasSchema: true,
   // Zorunlu: gönderim e-posta altyapısıyla yapılır.
@@ -37,6 +38,12 @@ export const moduleConfig: ModuleConfig = {
   ],
   // Kanal eklentilerinin (SMS, Telegram, WhatsApp) sağlayıcı ayarları.
   menu: [
-    { key: "settings", label: "Ayarlar", href: "/toplu-eposta/ayarlar", icon: SlidersHorizontal, permission: { definition: mailingsPermissions, action: "approve" } },
+    {
+      key: "settings",
+      label: "Ayarlar",
+      href: "/toplu-eposta/ayarlar",
+      icon: SlidersHorizontal,
+      permission: { definition: mailingsPermissions, action: "approve" },
+    },
   ],
 };

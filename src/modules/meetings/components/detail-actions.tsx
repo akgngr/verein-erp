@@ -1,8 +1,9 @@
 "use client";
+import { toast, Button, Spinner } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
 
-import { Button, addToast } from "@heroui/react";
 import { Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -33,10 +34,10 @@ export function DeleteMeetingButton({
     const result = await deleteMeetingAction({ id: meetingId });
     setBusy(false);
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
-    addToast({ title: t("deletedToast", { number: meetingNumber }), color: "success" });
+    toast(t("deletedToast", { number: meetingNumber }), { variant: "success" });
     setOpen(false);
     router.push("/toplantilar");
     router.refresh();
@@ -45,12 +46,12 @@ export function DeleteMeetingButton({
   return (
     <>
       <Button
-        color="danger"
-        variant="light"
-        isLoading={busy}
-        startContent={<Trash2 className="h-4 w-4" />}
         onPress={() => setOpen(true)}
+        variant={actionVariant("danger", "light")}
+        isPending={busy}
       >
+        {busy ? <Spinner size="sm" color="current" /> : null}
+        {<Trash2 className="h-4 w-4" />}
         {tCommon("delete")}
       </Button>
       <ConfirmDialog

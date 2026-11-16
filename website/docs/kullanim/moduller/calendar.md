@@ -13,7 +13,7 @@ Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve son tarihler tek gö
 |---|---|
 | Anahtar | `calendar` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.4 |
+| Sürüm | 1.3.5 |
 | Sayfalar | `/calendar`, `/calendar/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -41,6 +41,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `list_shared_calendar_entries` · `list_shared_calendars` · `propose_calendar_entry`
 
 ## Sürüm notları
+
+### 1.3.5 — HeroUI v3 arayüz geçişi
+
+_2026-11-16_
+
+- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
 ### 1.3.4 — Asistan araçları yeni veri sözleşmesinde
 
@@ -84,10 +90,4 @@ _2026-11-07_
 
 - **İyileştirme:** Sağlayıcı uygulama bilgileri (Google/Outlook OAuth) ayrı Takvim → Ayarlar sayfasına taşındı; ayarlanmamışsa bağlantı ekranında yöneticiye "Ayarlara git" düğmesi gösterilir.
 
-### 1.1.1 — Güvenlik düzeltmesi
-
-_2026-11-06_
-
-- **Güvenlik:** Silinen kullanıcının dış takvim bağlantısı ve alınan kayıtları silinir; pasif kullanıcı adına senkron yapılmaz.
-
-Daha eski 3 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/calendar/releases.json)
+Daha eski 4 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/calendar/releases.json)

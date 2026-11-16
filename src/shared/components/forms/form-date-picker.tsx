@@ -1,8 +1,20 @@
 "use client";
+import {
+  DatePicker,
+  DateField,
+  Label,
+  Description,
+  FieldError,
+} from "@heroui/react";
+import { DateCalendar } from "@/shared/components/forms/date-calendar";
 
-import { DatePicker } from "@heroui/react";
 import { parseDate, type DateValue } from "@internationalized/date";
-import { Controller, type Control, type FieldValues, type Path } from "react-hook-form";
+import {
+  Controller,
+  type Control,
+  type FieldValues,
+  type Path,
+} from "react-hook-form";
 import { useTranslateMessage } from "@/shared/i18n/use-translate-message";
 
 export type FormDatePickerProps<T extends FieldValues> = {
@@ -31,7 +43,7 @@ const toDate = (raw: string | null | undefined): DateValue | undefined => {
  * HeroUI DatePicker + react-hook-form Controller sarmalayıcısı (10.4).
  *
  * KARAR: Form değerinin tipi "yyyy-MM-dd" biçimli string'dir; HeroUI'nin
- * CalendarDate değerine çevrilerek kullanılır. Yerelleştirme HeroUIProvider
+ * CalendarDate değerine çevrilerek kullanılır. Yerelleştirme React Aria I18nProvider
  * (arayüz diline göre de-DE / tr-TR) üzerinden sağlanır.
  */
 export function FormDatePicker<T extends FieldValues>({
@@ -62,25 +74,45 @@ export function FormDatePicker<T extends FieldValues>({
         }
         return (
           <DatePicker
+            name={field.name}
+            onBlur={field.onBlur}
+            className={
+              labelPlacement === "outside-left"
+                ? "sm:grid sm:grid-cols-[10rem_1fr] sm:items-start sm:gap-3"
+                : undefined
+            }
             id={`form-date-${String(name)}`}
-            label={label}
-            labelPlacement={labelPlacement}
-            description={description}
             isRequired={isRequired}
             isDisabled={isDisabled}
             value={value}
-            // Doğum tarihi gibi uzak tarihlerde yıl ve ay açılır listeden hızlıca seçilir.
-            showMonthAndYearPickers
             minValue={toDate(minValue)}
             maxValue={toDate(maxValue)}
             onChange={(next) => field.onChange(next ? next.toString() : "")}
             isInvalid={Boolean(fieldState.error)}
-            errorMessage={translateMessage(fieldState.error?.message)}
-            classNames={{
-              label: "text-small font-medium text-foreground pb-1",
-              inputWrapper: "shadow-xs border-default-200 hover:border-default-400 focus-within:!border-primary transition-colors bg-default-50/50 hover:bg-default-100/50 focus-within:!bg-background",
-            }}
-          />
+          >
+            <Label>{label}</Label>
+            <DateField.Group>
+              <DateField.Input>
+                {(segment) => <DateField.Segment segment={segment} />}
+              </DateField.Input>
+              <DateField.Suffix>
+                <DatePicker.Trigger ref={field.ref} aria-label={String(label)}>
+                  <DatePicker.TriggerIndicator />
+                </DatePicker.Trigger>
+              </DateField.Suffix>
+            </DateField.Group>
+            <Description>{description}</Description>
+            <FieldError>
+              {translateMessage(fieldState.error?.message)}
+            </FieldError>
+            <DatePicker.Popover>
+              <DateCalendar
+                label={String(label)}
+                minValue={toDate(minValue)}
+                maxValue={toDate(maxValue)}
+              />
+            </DatePicker.Popover>
+          </DatePicker>
         );
       }}
     />

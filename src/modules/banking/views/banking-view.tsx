@@ -20,21 +20,45 @@ export async function BankingView({ result }: { result?: string | null }) {
   const t = await getTranslations("banking");
   const canManage = can(user.role, bankingPermissions, "approve");
   const canSync = can(user.role, bankingPermissions, "update");
-  const [settings, connections, accounts] = await Promise.all([getBankingSettings(), listConnections(), listAccountOptions()]);
-  const bankAccounts = accounts.filter((row) => row.type === "BANK").map((row) => ({ id: row.id, name: row.name }));
+  const [settings, connections, accounts] = await Promise.all([
+    getBankingSettings(),
+    listConnections(),
+    listAccountOptions(),
+  ]);
+  const bankAccounts = accounts
+    .filter((row) => row.type === "BANK")
+    .map((row) => ({ id: row.id, name: row.name }));
   const configured = settings.provider === "MOCK" || settings.hasCredentials;
   const shownResult = RESULTS.find((value) => value === result);
 
   return (
     <div className="space-y-6">
-      <PageHeader title={t("title")} description={t("description")} actions={canManage ? <ConnectBankButton disabled={!configured} /> : undefined} />
+      <PageHeader
+        title={t("title")}
+        description={t("description")}
+        actions={
+          canManage ? <ConnectBankButton disabled={!configured} /> : undefined
+        }
+      />
       {shownResult ? (
-        <p className={shownResult === "hata" ? "rounded-medium bg-danger-50 p-3 text-small text-danger-700" : "rounded-medium bg-success-50 p-3 text-small text-success-700"}>
+        <p
+          className={
+            shownResult === "hata"
+              ? "rounded-lg bg-danger-50 p-3 text-sm text-danger-700"
+              : "rounded-lg bg-success-50 p-3 text-sm text-success-700"
+          }
+        >
           {t(`result.${shownResult}`)}
         </p>
       ) : null}
-      {!configured ? <p className="rounded-medium bg-warning-50 p-3 text-small text-warning-700">{t("notConfigured")}</p> : null}
-      {!bankAccounts.length ? <p className="text-small text-default-500">{t("noBankAccounts")}</p> : null}
+      {!configured ? (
+        <p className="rounded-lg bg-warning-50 p-3 text-sm text-warning-700">
+          {t("notConfigured")}
+        </p>
+      ) : null}
+      {!bankAccounts.length ? (
+        <p className="text-sm text-ink-500">{t("noBankAccounts")}</p>
+      ) : null}
       {connections.length ? (
         connections.map((connection) => (
           <ConnectionCard
@@ -46,7 +70,8 @@ export async function BankingView({ result }: { result?: string | null }) {
               id: connection.id,
               institutionName: connection.institutionName,
               status: connection.status,
-              consentExpiresAt: connection.consentExpiresAt?.toISOString() ?? null,
+              consentExpiresAt:
+                connection.consentExpiresAt?.toISOString() ?? null,
               lastSyncAt: connection.lastSyncAt?.toISOString() ?? null,
               lastError: connection.lastError,
               accounts: connection.accounts.map((account) => ({
@@ -61,13 +86,17 @@ export async function BankingView({ result }: { result?: string | null }) {
           />
         ))
       ) : (
-        <p className="text-small text-default-500">{t("empty")}</p>
+        <p className="text-sm text-ink-500">{t("empty")}</p>
       )}
-      <p className="text-tiny text-default-500">{t("privacy")}</p>
+      <p className="text-xs text-ink-500">{t("privacy")}</p>
       {canManage ? (
-        <section className="space-y-3 rounded-large border border-default-200 bg-content1 p-4">
-          <h2 className="text-medium font-semibold">{t("settings.title")}</h2>
-          <BankingSettingsForm provider={settings.provider} hasCredentials={settings.hasCredentials} mockAllowed={settings.mockAllowed} />
+        <section className="space-y-3 rounded-xl border border-ink-200 bg-surface p-4">
+          <h2 className="text-base font-semibold">{t("settings.title")}</h2>
+          <BankingSettingsForm
+            provider={settings.provider}
+            hasCredentials={settings.hasCredentials}
+            mockAllowed={settings.mockAllowed}
+          />
         </section>
       ) : null}
     </div>

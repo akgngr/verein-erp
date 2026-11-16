@@ -1,11 +1,14 @@
 "use client";
-
 import { Link } from "@heroui/react";
+
 import { Eye } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { DataTable } from "@/shared/components/data-table/data-table";
-import type { DataTableFilter, DataTableRowAction } from "@/shared/components/data-table/types";
+import type {
+  DataTableFilter,
+  DataTableRowAction,
+} from "@/shared/components/data-table/types";
 import { formatMoney } from "@/shared/money";
 import { formatDate } from "@/shared/utils";
 
@@ -53,7 +56,10 @@ export function DuesReportTable({
       sortable: true,
       width: 140,
       render: (row: DuesReportRow) => (
-        <Link href={`/uyeler/${row.memberId}`} size="sm" className="font-medium">
+        <Link
+          href={`/uyeler/${row.memberId}`}
+          className={["font-medium", "text-sm"].filter(Boolean).join(" ")}
+        >
           {row.membershipNumber}
         </Link>
       ),
@@ -64,7 +70,10 @@ export function DuesReportTable({
       sortable: true,
       width: 200,
       render: (row: DuesReportRow) => (
-        <Link href={`/uyeler/${row.memberId}`} size="sm" className="text-foreground">
+        <Link
+          href={`/uyeler/${row.memberId}`}
+          className={["text-foreground", "text-sm"].filter(Boolean).join(" ")}
+        >
           {row.fullName}
         </Link>
       ),
@@ -94,7 +103,9 @@ export function DuesReportTable({
       width: 130,
       render: (row: DuesReportRow) =>
         row.remainingCents > 0 ? (
-          <span className="font-medium text-warning-600">{formatMoney(row.remainingCents)}</span>
+          <span className="font-medium text-warning-600">
+            {formatMoney(row.remainingCents)}
+          </span>
         ) : (
           formatMoney(0)
         ),
@@ -122,7 +133,8 @@ export function DuesReportTable({
       key: "lastPaymentAt",
       label: t("colLastPayment"),
       width: 130,
-      render: (row: DuesReportRow) => (row.lastPaymentAt ? formatDate(row.lastPaymentAt) : "-"),
+      render: (row: DuesReportRow) =>
+        row.lastPaymentAt ? formatDate(row.lastPaymentAt) : "-",
     },
   ];
 

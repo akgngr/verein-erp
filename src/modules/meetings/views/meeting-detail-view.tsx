@@ -3,7 +3,11 @@ import { MeetingEditView } from "./meeting-edit-view";
 import { FileText, Megaphone, Pencil } from "lucide-react";
 import { notFound } from "next/navigation";
 
-import { ForbiddenError, listActiveUserOptions, requirePermission } from "@/modules/auth/server";
+import {
+  ForbiddenError,
+  listActiveUserOptions,
+  requirePermission,
+} from "@/modules/auth/server";
 import { membersPermissions } from "@/modules/members";
 import { campaignShortcutHref } from "@/modules/mailings/server";
 import { listMemberOptions } from "@/modules/members/server";
@@ -28,11 +32,19 @@ import { ActionItemsTab } from "../components/action-items-tab";
 import { FilesTab } from "../components/files-tab";
 import { DeleteMeetingButton } from "../components/detail-actions";
 
-type TabKey = "genel" | "gundem" | "katilimcilar" | "kararlar" | "gorevler" | "ekler";
+type TabKey =
+  "genel" | "gundem" | "katilimcilar" | "kararlar" | "gorevler" | "ekler";
 
 /** Sekme anahtar doğrulaması; ?sekme= herhangi bir string olabilir. */
 function parseTab(value: string | undefined): TabKey {
-  const valid: TabKey[] = ["genel", "gundem", "katilimcilar", "kararlar", "gorevler", "ekler"];
+  const valid: TabKey[] = [
+    "genel",
+    "gundem",
+    "katilimcilar",
+    "kararlar",
+    "gorevler",
+    "ekler",
+  ];
   return valid.includes(value as TabKey) ? (value as TabKey) : "genel";
 }
 
@@ -74,7 +86,8 @@ export async function MeetingDetailView({
   const canUpdate = can(user.role, meetingsPermissions, "update");
   const canApprove = can(user.role, meetingsPermissions, "approve");
   const canDelete = can(user.role, meetingsPermissions, "delete");
-  const contentEditable = meeting.status === "PLANNED" || meeting.status === "HELD";
+  const contentEditable =
+    meeting.status === "PLANNED" || meeting.status === "HELD";
   const canUpload = canUpdate; // files kapsamı: her durumda update yetkisi yeter
   const canDeleteFiles = meeting.status === "APPROVED" ? canDelete : canUpdate;
 
@@ -82,16 +95,35 @@ export async function MeetingDetailView({
   const [userOptions, memberOptions, maxUploadMb] = await Promise.all([
     listActiveUserOptions(),
     // Üye seçimi yalnızca katılımcı sekmesinde ve üyeleri görebilene yüklenir.
-    tab === "katilimcilar" && canViewMembers && contentEditable && canUpdate ? listMemberOptions() : Promise.resolve([]),
+    tab === "katilimcilar" && canViewMembers && contentEditable && canUpdate
+      ? listMemberOptions()
+      : Promise.resolve([]),
     Promise.resolve(getEnv().MAX_UPLOAD_MB),
   ]);
 
   const tabs: { key: TabKey; label: string; badge?: number }[] = [
     { key: "genel", label: t("tabGeneralShort") },
-    { key: "gundem", label: t("tabAgendaShort"), badge: meeting.agendaItems.length },
-    { key: "katilimcilar", label: t("tabAttendeesShort"), badge: meeting.attendees.length },
-    { key: "kararlar", label: t("tabDecisionsShort"), badge: meeting.decisions.length },
-    { key: "gorevler", label: t("tabTasksShort"), badge: meeting.actionItems.filter((item) => item.status === "OPEN").length },
+    {
+      key: "gundem",
+      label: t("tabAgendaShort"),
+      badge: meeting.agendaItems.length,
+    },
+    {
+      key: "katilimcilar",
+      label: t("tabAttendeesShort"),
+      badge: meeting.attendees.length,
+    },
+    {
+      key: "kararlar",
+      label: t("tabDecisionsShort"),
+      badge: meeting.decisions.length,
+    },
+    {
+      key: "gorevler",
+      label: t("tabTasksShort"),
+      badge: meeting.actionItems.filter((item) => item.status === "OPEN")
+        .length,
+    },
     { key: "ekler", label: t("tabFilesShort"), badge: meeting.files.length },
   ];
 
@@ -101,7 +133,11 @@ export async function MeetingDetailView({
       : (meeting.startTime ?? "-");
 
   // Kampanyalar etkin ve yetki varsa: katılımcılara duyuru sihirbazı bu toplantıyla açılır.
-  const announceHref = await campaignShortcutHref(user.role, "meetings:attendees", { meeting: meetingLabel(meeting) });
+  const announceHref = await campaignShortcutHref(
+    user.role,
+    "meetings:attendees",
+    { meeting: meetingLabel(meeting) },
+  );
 
   return (
     <div>
@@ -121,7 +157,12 @@ export async function MeetingDetailView({
               </LinkButton>
             ) : null}
             {announceHref ? (
-              <LinkButton href={announceHref} color="default" variant="bordered" startIcon={<Megaphone className="h-4 w-4" />}>
+              <LinkButton
+                href={announceHref}
+                color="default"
+                variant="bordered"
+                startIcon={<Megaphone className="h-4 w-4" />}
+              >
                 {tCampaign("announce")}
               </LinkButton>
             ) : null}
@@ -140,13 +181,16 @@ export async function MeetingDetailView({
               href={`/api/meetings/${meeting.id}/minutes-pdf`}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 rounded-small border border-default-300 bg-default-50 px-4 py-1.5 text-small font-medium transition-colors hover:bg-default-100"
+              className="inline-flex items-center gap-2 rounded-md border border-ink-300 bg-ink-50 px-4 py-1.5 text-sm font-medium transition-colors hover:bg-ink-100"
             >
               <FileText className="h-4 w-4" aria-hidden />
               Tutanak (PDF)
             </a>
             {canDelete && meeting.status !== "APPROVED" ? (
-              <DeleteMeetingButton meetingId={meeting.id} meetingNumber={meeting.meetingNumber} />
+              <DeleteMeetingButton
+                meetingId={meeting.id}
+                meetingNumber={meeting.meetingNumber}
+              />
             ) : null}
           </>
         }
@@ -156,30 +200,35 @@ export async function MeetingDetailView({
         <StatusBadge status={meeting.status} />
         <TypeBadge type={meeting.type} />
         {meeting.status !== "APPROVED" ? (
-          <span className="text-tiny text-default-400">{t("draftNote")}</span>
+          <span className="text-xs text-ink-400">{t("draftNote")}</span>
         ) : (
-          <span className="text-tiny text-success-600">
-            {t("approvedOn", { date: formatDate(meeting.approvedAt), by: meeting.approvedByLabel ?? "" })}
+          <span className="text-xs text-success-600">
+            {t("approvedOn", {
+              date: formatDate(meeting.approvedAt),
+              by: meeting.approvedByLabel ?? "",
+            })}
           </span>
         )}
       </div>
 
-      <div className="mb-4 flex flex-wrap gap-1 border-b border-default-200">
+      <div className="mb-4 flex flex-wrap gap-1 border-b border-ink-200">
         {tabs.map((item) => {
           const isActive = item.key === tab;
           return (
             <a
               key={item.key}
               href={`/toplantilar/${meeting.id}?sekme=${item.key}`}
-              className={`-mb-px border-b-2 px-3 py-2 text-small ${
+              className={`-mb-px border-b-2 px-3 py-2 text-sm ${
                 isActive
-                  ? "border-primary font-medium text-primary"
-                  : "border-transparent text-default-500 hover:text-foreground"
+                  ? "border-accent font-medium text-accent"
+                  : "border-transparent text-ink-500 hover:text-foreground"
               }`}
             >
               {item.label}
               {item.badge !== undefined && item.badge > 0 ? (
-                <span className="ml-1 text-tiny text-default-400">({item.badge})</span>
+                <span className="ml-1 text-xs text-ink-400">
+                  ({item.badge})
+                </span>
               ) : null}
             </a>
           );
@@ -192,26 +241,48 @@ export async function MeetingDetailView({
           <dl className="grid grid-cols-1 gap-x-6 gap-y-3 sm:grid-cols-2">
             <InfoItem label={t("fieldNumber")} value={meeting.meetingNumber} />
             <InfoItem label={t("fieldType")} value={tType(meeting.type)} />
-            <InfoItem label={t("fieldStatus")} value={tStatus(meeting.status)} />
-            <InfoItem label={t("fieldDate")} value={formatDate(meeting.meetingDate)} />
+            <InfoItem
+              label={t("fieldStatus")}
+              value={tStatus(meeting.status)}
+            />
+            <InfoItem
+              label={t("fieldDate")}
+              value={formatDate(meeting.meetingDate)}
+            />
             <InfoItem label={t("fieldTime")} value={timeText} />
-            <InfoItem label={t("fieldLocation")} value={meeting.location ?? "-"} />
+            <InfoItem
+              label={t("fieldLocation")}
+              value={meeting.location ?? "-"}
+            />
             <InfoItem
               label={t("fieldQuorum")}
               value={
                 meeting.quorumRequired !== null
-                  ? t("quorumValueShort", { required: meeting.quorumRequired, present: meeting.quorum.presentCount })
+                  ? t("quorumValueShort", {
+                      required: meeting.quorumRequired,
+                      present: meeting.quorum.presentCount,
+                    })
                   : t("notSpecified")
               }
             />
             <InfoItem label={t("recordedBy")} value={meeting.createdByLabel} />
-            <InfoItem label={t("createdAt")} value={formatDateTime(meeting.createdAt)} />
-            <InfoItem label={t("updatedAt")} value={formatDateTime(meeting.updatedAt)} />
+            <InfoItem
+              label={t("createdAt")}
+              value={formatDateTime(meeting.createdAt)}
+            />
+            <InfoItem
+              label={t("updatedAt")}
+              value={formatDateTime(meeting.updatedAt)}
+            />
           </dl>
           {meeting.description ? (
             <div>
-              <p className="text-tiny font-medium text-default-500">{t("fieldDescription")}</p>
-              <p className="whitespace-pre-wrap text-small">{meeting.description}</p>
+              <p className="text-xs font-medium text-ink-500">
+                {t("fieldDescription")}
+              </p>
+              <p className="whitespace-pre-wrap text-sm">
+                {meeting.description}
+              </p>
             </div>
           ) : null}
         </div>
@@ -284,8 +355,8 @@ export async function MeetingDetailView({
 function InfoItem({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <dt className="text-tiny text-default-500">{label}</dt>
-      <dd className="text-small">{value}</dd>
+      <dt className="text-xs text-ink-500">{label}</dt>
+      <dd className="text-sm">{value}</dd>
     </div>
   );
 }

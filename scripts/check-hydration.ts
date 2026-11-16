@@ -170,144 +170,250 @@ async function main() {
   }
   // Optional theme acceptance on the disposable CI database. No login/credential screenshots.
   if (captureDir) {
-    page.setDefaultTimeout(30_000);
-    for (const [route, label] of [
-      ["/", "dashboard"],
-      ["/uyeler", "members"],
-    ]) {
-      await page.goto(`${BASE_URL}${route}`, { waitUntil: "networkidle" });
-      for (const [theme, name] of [
-        ["light", /^(Açık|Hell)$/],
-        ["dark", /^(Koyu|Dunkel)$/],
-      ] as const) {
+    try {
+      page.setDefaultTimeout(30_000);
+      for (const [route, label] of [
+        ["/", "dashboard"],
+        ["/uyeler", "members"],
+      ]) {
+        await page.goto(`${BASE_URL}${route}`, { waitUntil: "networkidle" });
+        for (const [theme, name] of [
+          ["light", /^(Açık|Hell)$/],
+          ["dark", /^(Koyu|Dunkel)$/],
+        ] as const) {
+          await page
+            .getByRole("button", { name: /^(Tema seçimi|Design wählen)$/ })
+            .click();
+          await page.getByRole("menuitemradio", { name }).click();
+          await page.waitForFunction(
+            (value) => document.documentElement.classList.contains(value),
+            theme,
+          );
+          await page.evaluate(() => window.scrollTo(0, 0));
+          await page.screenshot({
+            path: path.join(captureDir, `${label}-${theme}.png`),
+            fullPage: true,
+            animations: "disabled",
+          });
+        }
+      }
+      await page.reload({ waitUntil: "networkidle" });
+      if (!(await page.locator("html.dark").count()))
+        throw new Error("THEME_PERSISTENCE_FAILED");
+      await page
+        .getByRole("button", { name: /^(Menüyü daralt|Menü einklappen)$/ })
+        .click();
+      await page.waitForFunction(() => {
+        const aside = document.querySelector("aside");
+        return aside !== null && aside.getBoundingClientRect().width < 100;
+      });
+      await page
+        .getByRole("button", { name: /^(Menüyü genişlet|Menü ausklappen)$/ })
+        .click();
+      await page.waitForFunction(() => {
+        const aside = document.querySelector("aside");
+        return aside !== null && aside.getBoundingClientRect().width > 200;
+      });
+      // The CI fixture has twelve synthetic members: exercise real table rows and pagination.
+      if (process.env.CI === "true") {
         await page
-          .getByRole("button", { name: /^(Tema seçimi|Design wählen)$/ })
+          .getByRole("button", { name: /^(Sonraki sayfa|Nächste Seite)$/ })
           .click();
-        await page.getByRole("menuitemradio", { name }).click();
-        await page.waitForFunction(
-          (value) => document.documentElement.classList.contains(value),
-          theme,
+        await page.waitForURL((url) => url.searchParams.get("page") === "2");
+        await page.waitForLoadState("networkidle");
+        if ((await page.getByRole("row").count()) !== 3)
+          throw new Error("V3_TABLE_PAGINATION_FAILED");
+        await page
+          .getByRole("button", { name: /^(Önceki sayfa|Vorherige Seite)$/ })
+          .click();
+        await page.waitForURL((url) => !url.searchParams.has("page"));
+        await page.locator("#dt-search-input").fill("Mitglied01");
+        await page.waitForURL(
+          (url) => url.searchParams.get("q") === "Mitglied01",
         );
-        await page.evaluate(() => window.scrollTo(0, 0));
-        await page.screenshot({
-          path: path.join(captureDir, `${label}-${theme}.png`),
+        await page.waitForLoadState("networkidle");
+        if ((await page.getByRole("row").count()) !== 2)
+          throw new Error("V3_TABLE_SEARCH_FAILED");
+        await page
+          .getByRole("button", { name: /^(Satır işlemleri|Zeilenaktionen)$/ })
+          .click();
+        await page.getByRole("menu").waitFor();
+        await page.keyboard.press("Escape");
+        await page.getByRole("menu").waitFor({ state: "hidden" });
+      }
+      current = "/uyeler?yeni";
+      await page.goto(`${BASE_URL}/uyeler?yeni`, { waitUntil: "networkidle" });
+      const memberDialog = page.getByRole("dialog");
+      await memberDialog.waitFor();
+      const firstName = memberDialog.locator('input[name="firstName"]');
+      await firstName.fill("Theme preview");
+      if ((await firstName.inputValue()) !== "Theme preview")
+        throw new Error("V3_TEXT_FIELD_VALUE_FAILED");
+      const selectTrigger = memberDialog
+        .locator('[data-slot="select-trigger"]')
+        .first();
+      await selectTrigger.click();
+      await page.getByRole("listbox").waitFor();
+      await page.keyboard.press("End");
+      await page.keyboard.press("Enter");
+      await page.getByRole("listbox").waitFor({ state: "hidden" });
+      const consent = memberDialog.getByRole("switch");
+      await memberDialog.locator('[data-slot="switch-content"]').click();
+      if (!(await consent.isChecked()))
+        throw new Error("V3_SWITCH_POINTER_FAILED");
+      await consent.focus();
+      await consent.press("Space");
+      if (await consent.isChecked())
+        throw new Error("V3_SWITCH_KEYBOARD_FAILED");
+      await consent.press("Space");
+      if (!(await consent.isChecked()))
+        throw new Error("V3_SWITCH_VALUE_FAILED");
+      const sms = memberDialog.getByRole("checkbox", {
+        name: "SMS",
+        exact: true,
+      });
+      await memberDialog
+        .locator('[data-slot="checkbox-content"]')
+        .filter({ hasText: "SMS" })
+        .click();
+      if (!(await sms.isChecked()))
+        throw new Error("V3_CHECKBOX_POINTER_FAILED");
+      await sms.focus();
+      await sms.press("Space");
+      if (await sms.isChecked()) throw new Error("V3_CHECKBOX_KEYBOARD_FAILED");
+      await memberDialog
+        .getByRole("button", { name: /Doğum tarihi|Geburtsdatum/ })
+        .click();
+      const calendar = page.locator('[data-slot="calendar"]');
+      await calendar.waitFor();
+      await calendar
+        .locator('[data-slot="calendar-year-picker-trigger"]')
+        .click();
+      const years = calendar.getByRole("listbox");
+      await years.waitFor();
+      await years.getByRole("button", { name: "2020", exact: true }).click();
+      const day = calendar
+        .locator(
+          '[data-slot="calendar-cell"][role="button"]:not([aria-disabled="true"])',
+        )
+        .first();
+      await day.click();
+      await calendar.waitFor({ state: "hidden" });
+      const dateValues = await memberDialog
+        .locator('input[name="birthDate"]')
+        .evaluateAll((nodes) =>
+          nodes.map((node) => (node as HTMLInputElement).value),
+        );
+      if (
+        !dateValues.length ||
+        dateValues.some((value) => !value.startsWith("2020-")) ||
+        new Set(dateValues).size !== 1
+      )
+        throw new Error("V3_DATE_FIELD_VALUE_FAILED");
+      await page.evaluate(() => window.scrollTo(0, 0));
+      await page.screenshot({
+        path: path.join(captureDir, "member-form-dark.png"),
+        fullPage: true,
+        animations: "disabled",
+      });
+      await page.keyboard.press("Escape");
+      await memberDialog.waitFor({ state: "hidden" });
+      await page.waitForURL((url) => !url.searchParams.has("yeni"));
+      current = "/ayarlar/kullanicilar";
+      await page.goto(`${BASE_URL}/ayarlar/kullanicilar`, {
+        waitUntil: "networkidle",
+      });
+      const roleTab = page.getByRole("tab", {
+        name: /Roller ve Yetki Matrisi|Rollen und Berechtigungsmatrix/,
+      });
+      await roleTab.click();
+      if ((await roleTab.getAttribute("aria-selected")) !== "true")
+        throw new Error("V3_TABS_FAILED");
+      await page.screenshot({
+        path: path.join(captureDir, "users-permissions-dark.png"),
+        fullPage: true,
+        animations: "disabled",
+      });
+      current = "/evrak?yeni=gelen";
+      await page.goto(`${BASE_URL}/evrak?yeni=gelen`, {
+        waitUntil: "networkidle",
+      });
+      const documentDialog = page.getByRole("dialog");
+      await documentDialog.waitFor();
+      const counterparty = documentDialog.getByRole("combobox", {
+        name: /Gönderen|Absender/,
+      });
+      await counterparty.fill("Synthetic preview organisation");
+      await counterparty.press("Tab");
+      if (
+        (await counterparty.inputValue()) !== "Synthetic preview organisation"
+      )
+        throw new Error("V3_COMBOBOX_CUSTOM_VALUE_FAILED");
+      await page.screenshot({
+        path: path.join(captureDir, "document-form-dark.png"),
+        fullPage: true,
+        animations: "disabled",
+      });
+      await page.keyboard.press("Escape");
+      await documentDialog.waitFor({ state: "hidden" });
+      await page.goto(`${BASE_URL}/uyeler`, { waitUntil: "networkidle" });
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.reload({ waitUntil: "networkidle" });
+      if (
+        await page.evaluate(
+          () => document.documentElement.scrollWidth > innerWidth,
+        )
+      )
+        throw new Error("MOBILE_PAGE_OVERFLOW");
+      await page.screenshot({
+        path: path.join(captureDir, "members-mobile.png"),
+        fullPage: true,
+        animations: "disabled",
+      });
+      await page
+        .getByRole("button", { name: /^(Menüyü aç|Menü öffnen)$/ })
+        .click();
+      await page.getByRole("dialog").waitFor();
+      await page.screenshot({
+        path: path.join(captureDir, "mobile-navigation.png"),
+        fullPage: true,
+        animations: "disabled",
+      });
+      await page.keyboard.press("Escape");
+      if (await page.getByRole("dialog").count())
+        await page.getByRole("dialog").waitFor({ state: "hidden" });
+      await page
+        .getByRole("button", { name: /^(Tema seçimi|Design wählen)$/ })
+        .click();
+      await page.getByRole("menuitemradio", { name: /^(Açık|Hell)$/ }).click();
+      await page.waitForFunction(() =>
+        document.documentElement.classList.contains("light"),
+      );
+      console.info(
+        "[theme] Light/dark, persistence, sidebar, controlled fields, dates, tabs, ComboBox, drawer URL and mobile acceptance passed.",
+      );
+    } catch (error) {
+      await page
+        .screenshot({
+          path: path.join(captureDir, "acceptance-failure.png"),
           fullPage: true,
           animations: "disabled",
-        });
-      }
-    }
-    await page.reload({ waitUntil: "networkidle" });
-    if (!(await page.locator("html.dark").count()))
-      throw new Error("THEME_PERSISTENCE_FAILED");
-    await page
-      .getByRole("button", { name: /^(Menüyü daralt|Menü einklappen)$/ })
-      .click();
-    await page.waitForFunction(() => {
-      const aside = document.querySelector("aside");
-      return aside !== null && aside.getBoundingClientRect().width < 100;
-    });
-    await page
-      .getByRole("button", { name: /^(Menüyü genişlet|Menü ausklappen)$/ })
-      .click();
-    await page.waitForFunction(() => {
-      const aside = document.querySelector("aside");
-      return aside !== null && aside.getBoundingClientRect().width > 200;
-    });
-    // The CI fixture has twelve synthetic members: exercise real table rows and pagination.
-    if (process.env.CI === "true") {
-      await page
-        .getByRole("button", { name: /^(Sonraki sayfa|Nächste Seite)$/ })
-        .click();
-      await page.waitForURL((url) => url.searchParams.get("page") === "2");
-      await page.waitForLoadState("networkidle");
-      if ((await page.getByRole("row").count()) !== 3)
-        throw new Error("V3_TABLE_PAGINATION_FAILED");
-      await page
-        .getByRole("button", { name: /^(Önceki sayfa|Vorherige Seite)$/ })
-        .click();
-      await page.waitForURL((url) => !url.searchParams.has("page"));
-      await page.locator("#dt-search-input").fill("Mitglied01");
-      await page.waitForURL(
-        (url) => url.searchParams.get("q") === "Mitglied01",
+        })
+        .catch(() => undefined);
+      // Labels only: no input values or credentials in failure diagnostics.
+      console.error(
+        "[theme] Visible button labels:",
+        await page.getByRole("button").evaluateAll((nodes) =>
+          nodes.map((node) => ({
+            text: node.textContent?.trim(),
+            label: node.getAttribute("aria-label"),
+            labelledBy: node.getAttribute("aria-labelledby"),
+            slot: node.getAttribute("data-slot"),
+          })),
+        ),
       );
-      await page.waitForLoadState("networkidle");
-      if ((await page.getByRole("row").count()) !== 2)
-        throw new Error("V3_TABLE_SEARCH_FAILED");
-      await page
-        .getByRole("button", { name: /^(Satır işlemleri|Zeilenaktionen)$/ })
-        .click();
-      await page.getByRole("menu").waitFor();
-      await page.keyboard.press("Escape");
-      await page.getByRole("menu").waitFor({ state: "hidden" });
+      throw error;
     }
-    current = "/uyeler?yeni";
-    await page.goto(`${BASE_URL}/uyeler?yeni`, { waitUntil: "networkidle" });
-    const memberDialog = page.getByRole("dialog");
-    await memberDialog.waitFor();
-    const firstName = memberDialog.locator('input[name="firstName"]');
-    await firstName.fill("Theme preview");
-    if ((await firstName.inputValue()) !== "Theme preview")
-      throw new Error("V3_TEXT_FIELD_VALUE_FAILED");
-    const selectTrigger = memberDialog
-      .locator('[data-slot="select-trigger"]')
-      .first();
-    await selectTrigger.click();
-    await page.getByRole("listbox").waitFor();
-    await page.keyboard.press("End");
-    await page.keyboard.press("Enter");
-    await page.getByRole("listbox").waitFor({ state: "hidden" });
-    const consent = memberDialog.getByRole("switch");
-    await memberDialog.locator('[data-slot="switch-content"]').click();
-    if (!(await consent.isChecked()))
-      throw new Error("V3_SWITCH_POINTER_FAILED");
-    await consent.focus();
-    await consent.press("Space");
-    if (await consent.isChecked()) throw new Error("V3_SWITCH_KEYBOARD_FAILED");
-    await consent.press("Space");
-    if (!(await consent.isChecked())) throw new Error("V3_SWITCH_VALUE_FAILED");
-    await page.screenshot({
-      path: path.join(captureDir, "member-form-dark.png"),
-      fullPage: true,
-      animations: "disabled",
-    });
-    await page.keyboard.press("Escape");
-    await memberDialog.waitFor({ state: "hidden" });
-    await page.waitForURL((url) => !url.searchParams.has("yeni"));
-    await page.setViewportSize({ width: 390, height: 844 });
-    await page.reload({ waitUntil: "networkidle" });
-    if (
-      await page.evaluate(
-        () => document.documentElement.scrollWidth > innerWidth,
-      )
-    )
-      throw new Error("MOBILE_PAGE_OVERFLOW");
-    await page.screenshot({
-      path: path.join(captureDir, "members-mobile.png"),
-      fullPage: true,
-      animations: "disabled",
-    });
-    await page
-      .getByRole("button", { name: /^(Menüyü aç|Menü öffnen)$/ })
-      .click();
-    await page.getByRole("dialog").waitFor();
-    await page.screenshot({
-      path: path.join(captureDir, "mobile-navigation.png"),
-      fullPage: true,
-      animations: "disabled",
-    });
-    await page.keyboard.press("Escape");
-    if (await page.getByRole("dialog").count())
-      await page.getByRole("dialog").waitFor({ state: "hidden" });
-    await page
-      .getByRole("button", { name: /^(Tema seçimi|Design wählen)$/ })
-      .click();
-    await page.getByRole("menuitemradio", { name: /^(Açık|Hell)$/ }).click();
-    await page.waitForFunction(() =>
-      document.documentElement.classList.contains("light"),
-    );
-    console.info(
-      "[theme] Light/dark, persistence, sidebar, controlled fields, drawer URL and mobile acceptance passed.",
-    );
   }
   await browser.close();
 

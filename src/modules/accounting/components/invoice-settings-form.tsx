@@ -1,14 +1,19 @@
 "use client";
+import { toast, Button } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addToast, Button } from "@heroui/react";
+
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { applyActionResult } from "@/shared/components/forms/action-result";
-import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
+import {
+  FormSurface,
+  useFormDrawerClose,
+} from "@/shared/components/forms/form-drawer";
 import { FormErrorSummary } from "@/shared/components/forms/form-error-summary";
 import { FormInput } from "@/shared/components/forms/form-input";
 import { FormSwitch } from "@/shared/components/forms/form-switch";
@@ -19,12 +24,22 @@ import { SubmitButton } from "@/shared/components/forms/submit-button";
 import { saveInvoiceSettingsAction } from "../actions/invoice-actions";
 import { INVOICE_TAX_RATES } from "../constants";
 import type { InvoiceSettingsData } from "../queries/invoices";
-import { invoiceSettingsSchema, type InvoiceSettingsInput } from "../schemas/invoice";
+import {
+  invoiceSettingsSchema,
+  type InvoiceSettingsInput,
+} from "../schemas/invoice";
 
 /** Fatura varsayılanları: KDV oranı, muafiyet notu, ödeme süresi, banka bilgisi, alt metin, gelir kategorisi. */
-const money = (cents: number) => (cents ? (cents / 100).toFixed(2).replace(".", ",") : "");
+const money = (cents: number) =>
+  cents ? (cents / 100).toFixed(2).replace(".", ",") : "";
 
-export function InvoiceSettingsForm({ settings, categoryOptions }: { settings: InvoiceSettingsData; categoryOptions: { value: string; label: string }[] }) {
+export function InvoiceSettingsForm({
+  settings,
+  categoryOptions,
+}: {
+  settings: InvoiceSettingsData;
+  categoryOptions: { value: string; label: string }[];
+}) {
   const t = useTranslations("accounting.invoices.settings");
   const tCommon = useTranslations("common");
   const router = useRouter();
@@ -52,13 +67,15 @@ export function InvoiceSettingsForm({ settings, categoryOptions }: { settings: I
       dunningFlatFeeB2B: settings.dunningFlatFeeB2B,
     },
   });
-  const close = () => (closeDrawer ? closeDrawer() : router.push("/muhasebe/faturalar"));
+  const close = () =>
+    closeDrawer ? closeDrawer() : router.push("/muhasebe/faturalar");
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(null);
     const result = await saveInvoiceSettingsAction(values);
-    if (!result.ok) return setFormError(applyActionResult(result, form.setError));
-    addToast({ title: t("saved"), color: "success" });
+    if (!result.ok)
+      return setFormError(applyActionResult(result, form.setError));
+    toast(t("saved"), { variant: "success" });
     close();
   });
 
@@ -66,35 +83,115 @@ export function InvoiceSettingsForm({ settings, categoryOptions }: { settings: I
     <FormSurface className="max-w-2xl">
       <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <FormSelect name="defaultTaxRate" label={t("defaultTaxRate")} control={form.control} options={INVOICE_TAX_RATES.map((rate) => ({ value: String(rate), label: `${rate} %` }))} />
-          <FormInput name="paymentDays" label={t("paymentDays")} control={form.control} type="number" />
+          <FormSelect
+            name="defaultTaxRate"
+            label={t("defaultTaxRate")}
+            control={form.control}
+            options={INVOICE_TAX_RATES.map((rate) => ({
+              value: String(rate),
+              label: `${rate} %`,
+            }))}
+          />
+          <FormInput
+            name="paymentDays"
+            label={t("paymentDays")}
+            control={form.control}
+            type="number"
+          />
         </div>
-        <FormInput name="taxNote" label={t("taxNote")} control={form.control} description={t("taxNoteHelp")} />
-        <FormSelect name="incomeCategoryId" label={t("incomeCategory")} control={form.control} options={categoryOptions} />
-        <FormTextarea name="bankDetails" label={t("bankDetails")} control={form.control} placeholder={t("bankDetailsPlaceholder")} />
+        <FormInput
+          name="taxNote"
+          label={t("taxNote")}
+          control={form.control}
+          description={t("taxNoteHelp")}
+        />
+        <FormSelect
+          name="incomeCategoryId"
+          label={t("incomeCategory")}
+          control={form.control}
+          options={categoryOptions}
+        />
+        <FormTextarea
+          name="bankDetails"
+          label={t("bankDetails")}
+          control={form.control}
+          placeholder={t("bankDetailsPlaceholder")}
+        />
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <FormInput name="sellerVatId" label={t("sellerVatId")} control={form.control} placeholder="DE123456789" />
+          <FormInput
+            name="sellerVatId"
+            label={t("sellerVatId")}
+            control={form.control}
+            placeholder="DE123456789"
+          />
           <FormInput name="iban" label={t("iban")} control={form.control} />
           <FormInput name="bic" label={t("bic")} control={form.control} />
-          <FormInput name="sepaCreditorId" label={t("sepaCreditorId")} description={t("sepaCreditorIdHelp")} control={form.control} />
+          <FormInput
+            name="sepaCreditorId"
+            label={t("sepaCreditorId")}
+            description={t("sepaCreditorIdHelp")}
+            control={form.control}
+          />
         </div>
-        <p className="text-tiny text-default-500">{t("xrechnungHint")}</p>
-        <FormInput name="kositValidatorUrl" label={t("kositValidatorUrl")} description={t("kositValidatorUrlHelp")} control={form.control} placeholder="http://kosit:8081/" />
-        <h3 className="pt-2 text-small font-semibold">{t("dunningTitle")}</h3>
+        <p className="text-xs text-ink-500">{t("xrechnungHint")}</p>
+        <FormInput
+          name="kositValidatorUrl"
+          label={t("kositValidatorUrl")}
+          description={t("kositValidatorUrlHelp")}
+          control={form.control}
+          placeholder="http://kosit:8081/"
+        />
+        <h3 className="pt-2 text-sm font-semibold">{t("dunningTitle")}</h3>
         <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-          <FormInput name="dunningIntervalDays" label={t("dunningIntervalDays")} control={form.control} type="number" />
-          <FormInput name="dunningFeeReminder" label={t("dunningFeeReminder")} control={form.control} placeholder="0,00" />
-          <FormInput name="dunningFeeFirst" label={t("dunningFeeFirst")} control={form.control} placeholder="0,00" />
-          <FormInput name="dunningFeeSecond" label={t("dunningFeeSecond")} control={form.control} placeholder="0,00" />
-          <FormInput name="baseInterestRate" label={t("baseInterestRate")} control={form.control} placeholder="0,00" />
+          <FormInput
+            name="dunningIntervalDays"
+            label={t("dunningIntervalDays")}
+            control={form.control}
+            type="number"
+          />
+          <FormInput
+            name="dunningFeeReminder"
+            label={t("dunningFeeReminder")}
+            control={form.control}
+            placeholder="0,00"
+          />
+          <FormInput
+            name="dunningFeeFirst"
+            label={t("dunningFeeFirst")}
+            control={form.control}
+            placeholder="0,00"
+          />
+          <FormInput
+            name="dunningFeeSecond"
+            label={t("dunningFeeSecond")}
+            control={form.control}
+            placeholder="0,00"
+          />
+          <FormInput
+            name="baseInterestRate"
+            label={t("baseInterestRate")}
+            control={form.control}
+            placeholder="0,00"
+          />
         </div>
-        <FormSwitch name="dunningFlatFeeB2B" label={t("dunningFlatFeeB2B")} control={form.control} description={t("dunningFlatFeeB2BHint")} />
-        <p className="text-tiny text-default-500">{t("dunningHint")}</p>
-        <FormTextarea name="footerText" label={t("footerText")} control={form.control} />
+        <FormSwitch
+          name="dunningFlatFeeB2B"
+          label={t("dunningFlatFeeB2B")}
+          control={form.control}
+          description={t("dunningFlatFeeB2BHint")}
+        />
+        <p className="text-xs text-ink-500">{t("dunningHint")}</p>
+        <FormTextarea
+          name="footerText"
+          label={t("footerText")}
+          control={form.control}
+        />
         <FormErrorSummary message={formError} />
         <div className="flex items-center gap-2">
-          <SubmitButton isSubmitting={form.formState.isSubmitting}>{tCommon("save")}</SubmitButton>
-          <Button variant="light" onPress={close}>
+          <SubmitButton isSubmitting={form.formState.isSubmitting}>
+            {tCommon("save")}
+          </SubmitButton>
+          <Button onPress={close} variant={actionVariant("default", "light")}>
             {tCommon("cancel")}
           </Button>
         </div>

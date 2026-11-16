@@ -66,7 +66,11 @@ function toRows(candidates: ConfirmationCandidate[]): IssueCandidateRow[] {
  * 3) toplam/yazıyla önizleme + hazır olma kontrolü → "Oluştur". Adım durumu URL'de
  * (`?tur=&yil=&bagisci=&uye=&icerik=`); adaylar sunucuda yüklenir.
  */
-export async function ConfirmationIssueView({ searchParams }: { searchParams: Promise<RawParams> }) {
+export async function ConfirmationIssueView({
+  searchParams,
+}: {
+  searchParams: Promise<RawParams>;
+}) {
   try {
     await requirePermission(donationsPermissions, "approve");
   } catch (error) {
@@ -80,19 +84,32 @@ export async function ConfirmationIssueView({ searchParams }: { searchParams: Pr
   const mode = resolveMode(params);
   const currentYear = berlinTodayStart().getUTCFullYear();
   const yearParam = Number(single(params, "yil"));
-  const year = Number.isInteger(yearParam) && yearParam >= 2000 && yearParam <= currentYear ? yearParam : currentYear;
-  const years = Array.from({ length: YEAR_OPTIONS }, (_, index) => currentYear - index);
+  const year =
+    Number.isInteger(yearParam) && yearParam >= 2000 && yearParam <= currentYear
+      ? yearParam
+      : currentYear;
+  const years = Array.from(
+    { length: YEAR_OPTIONS },
+    (_, index) => currentYear - index,
+  );
   const batchContent = single(params, "icerik") === "aidat" ? "aidat" : "bagis";
   const donorId = single(params, "bagisci");
   const memberId = single(params, "uye");
 
   const readiness = await getReadiness(new Date());
-  const isFee = mode === "aidat" || (mode === "yillik" && batchContent === "aidat");
-  const canIssue = isFee ? readiness.canIssueMembershipFee : readiness.canIssueDonation;
+  const isFee =
+    mode === "aidat" || (mode === "yillik" && batchContent === "aidat");
+  const canIssue = isFee
+    ? readiness.canIssueMembershipFee
+    : readiness.canIssueDonation;
 
   const typeCards: Array<{ mode: IssueMode; title: string; hint: string }> = [
     { mode: "tek", title: t("typeSingle"), hint: t("typeSingleHint") },
-    { mode: "toplu", title: t("typeCollective"), hint: t("typeCollectiveHint") },
+    {
+      mode: "toplu",
+      title: t("typeCollective"),
+      hint: t("typeCollectiveHint"),
+    },
     { mode: "aidat", title: t("typeFee"), hint: t("typeFeeHint") },
     { mode: "yillik", title: t("typeBatch"), hint: t("typeBatchHint") },
   ];
@@ -100,7 +117,10 @@ export async function ConfirmationIssueView({ searchParams }: { searchParams: Pr
   let step2: ReactNode = null;
   if (mode === "tek" || mode === "toplu") {
     const recipients = await findBatchRecipients("DONATION", year);
-    const selected = donorId && recipients.some((recipient) => recipient.id === donorId) ? donorId : null;
+    const selected =
+      donorId && recipients.some((recipient) => recipient.id === donorId)
+        ? donorId
+        : null;
     step2 = (
       <>
         <IssueFilters
@@ -113,7 +133,7 @@ export async function ConfirmationIssueView({ searchParams }: { searchParams: Pr
           batchContent={batchContent}
         />
         {recipients.length === 0 ? (
-          <p className="text-small text-default-500">{t("noRecipients")}</p>
+          <p className="text-sm text-ink-500">{t("noRecipients")}</p>
         ) : selected ? (
           <DonationCandidatePicker
             key={`${mode}-${selected}-${year}`}
@@ -128,7 +148,10 @@ export async function ConfirmationIssueView({ searchParams }: { searchParams: Pr
     );
   } else if (mode === "aidat") {
     const recipients = await findBatchRecipients("MEMBERSHIP_FEE", year);
-    const selected = memberId && recipients.some((recipient) => recipient.id === memberId) ? memberId : null;
+    const selected =
+      memberId && recipients.some((recipient) => recipient.id === memberId)
+        ? memberId
+        : null;
     step2 = (
       <>
         <IssueFilters
@@ -141,7 +164,7 @@ export async function ConfirmationIssueView({ searchParams }: { searchParams: Pr
           batchContent={batchContent}
         />
         {recipients.length === 0 ? (
-          <p className="text-small text-default-500">{t("noRecipients")}</p>
+          <p className="text-sm text-ink-500">{t("noRecipients")}</p>
         ) : selected ? (
           <FeeCandidateList
             key={`${selected}-${year}`}
@@ -183,7 +206,7 @@ export async function ConfirmationIssueView({ searchParams }: { searchParams: Pr
       <PageHeader title={t("title")} description={t("subtitle")} />
 
       <section className="flex flex-col gap-3">
-        <h2 className="text-small font-semibold text-default-600">{t("step1")}</h2>
+        <h2 className="text-sm font-semibold text-ink-600">{t("step1")}</h2>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {typeCards.map((card) => (
             <Link
@@ -191,14 +214,16 @@ export async function ConfirmationIssueView({ searchParams }: { searchParams: Pr
               href={`/bagislar/bildirimler/olustur?tur=${card.mode}&yil=${year}`}
               aria-current={mode === card.mode ? "page" : undefined}
               className={cn(
-                "flex flex-col gap-1 rounded-medium border p-4 transition-colors",
+                "flex flex-col gap-1 rounded-lg border p-4 transition-colors",
                 mode === card.mode
-                  ? "border-primary bg-primary-50/60 dark:bg-primary-500/10"
-                  : "border-default-200 bg-content1 hover:border-default-300 hover:bg-default-50",
+                  ? "border-accent bg-brand-50/60 dark:bg-brand-500/10"
+                  : "border-ink-200 bg-surface hover:border-ink-300 hover:bg-ink-50",
               )}
             >
-              <span className="text-small font-semibold text-foreground">{card.title}</span>
-              <span className="text-tiny text-default-500">{card.hint}</span>
+              <span className="text-sm font-semibold text-foreground">
+                {card.title}
+              </span>
+              <span className="text-xs text-ink-500">{card.hint}</span>
             </Link>
           ))}
         </div>
@@ -206,18 +231,22 @@ export async function ConfirmationIssueView({ searchParams }: { searchParams: Pr
 
       {mode ? (
         <div className="grid grid-cols-1 gap-5 lg:grid-cols-[minmax(0,1fr)_320px]">
-          <section className="flex flex-col gap-4 rounded-medium border border-default-200 bg-content1 p-4 shadow-sm">
-            <h2 className="text-small font-semibold text-default-600">{t("step2")}</h2>
+          <section className="flex flex-col gap-4 rounded-lg border border-ink-200 bg-surface p-4 shadow-sm">
+            <h2 className="text-sm font-semibold text-ink-600">{t("step2")}</h2>
             {step2}
           </section>
           <div className="flex flex-col gap-3">
             <ReadinessChecklist
-              items={readiness.items.filter((item) => isFee || item.key !== "membershipFees")}
+              items={readiness.items.filter(
+                (item) => isFee || item.key !== "membershipFees",
+              )}
               title={t("readiness")}
               fixLabel={t("fix")}
               warnLabel={tSettings("validityWarn")}
             />
-            {!canIssue ? <p className="text-tiny text-danger">{t("blocked")}</p> : null}
+            {!canIssue ? (
+              <p className="text-xs text-danger">{t("blocked")}</p>
+            ) : null}
           </div>
         </div>
       ) : null}

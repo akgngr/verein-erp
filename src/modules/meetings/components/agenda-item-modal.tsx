@@ -1,22 +1,29 @@
 "use client";
+import {
+  toast,
+  Button,
+  Spinner,
+  Modal,
+  TextField,
+  Label,
+  Input,
+  TextArea,
+  Description,
+} from "@heroui/react";
+
+import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
 
-import {
-  Button,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  Textarea,
-  addToast,
-} from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { addAgendaItemAction, updateAgendaItemAction } from "../actions/agenda-actions";
+import {
+  addAgendaItemAction,
+  updateAgendaItemAction,
+} from "../actions/agenda-actions";
 
 /**
  * Gündem maddesi ekleme/düzenleme penceresi (7.3): başlık + planlanan içerik.
@@ -55,45 +62,70 @@ export function AgendaItemModal({
       setError(result.error);
       return;
     }
-    addToast({ title: item ? t("updatedToast") : t("addedToast"), color: "success" });
+    toast(item ? t("updatedToast") : t("addedToast"), { variant: "success" });
     onOpenChange(false);
     router.refresh();
   };
 
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange} key={key}>
-      <ModalContent>
-        <ModalHeader>{item ? t("modalEditTitle") : t("modalAddTitle")}</ModalHeader>
-        <ModalBody>
-          <Input
-            label={t("itemTitle")}
-            labelPlacement="outside"
-            value={title}
-            onValueChange={setTitle}
-            isRequired
-            minLength={2}
-            maxLength={200}
-          />
-          <Textarea
-            label={t("plannedContent")}
-            labelPlacement="outside"
-            value={description}
-            onValueChange={setDescription}
-            minRows={3}
-            maxLength={2000}
-            description={t("contentHelp")}
-          />
-          {error ? <p className="text-small text-danger">{error}</p> : null}
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="light" onPress={() => onOpenChange(false)}>
-            {tCommon("cancel")}
-          </Button>
-          <Button color="primary" isLoading={busy} onPress={submit} isDisabled={title.trim().length < 2}>
-            {tCommon("save")}
-          </Button>
-        </ModalFooter>
-      </ModalContent>
+      <Modal.Backdrop>
+        <Modal.Container size="md">
+          <Modal.Dialog className={"w-full max-w-md "}>
+            <DialogDismissButton />
+
+            <Modal.Header>
+              <Modal.Heading className="flex items-center gap-2">
+                {item ? t("modalEditTitle") : t("modalAddTitle")}
+              </Modal.Heading>
+            </Modal.Header>
+            <Modal.Body>
+              <TextField
+                value={title}
+                isRequired
+                onChange={setTitle}
+                className={["w-full"].filter(Boolean).join(" ")}
+              >
+                <Label>{t("itemTitle")}</Label>
+                <Input minLength={2} maxLength={200} />
+              </TextField>
+              <TextField
+                value={description}
+                onChange={setDescription}
+                className={["w-full"].filter(Boolean).join(" ")}
+              >
+                <Label>{t("plannedContent")}</Label>
+                <TextArea
+                  maxLength={2000}
+                  rows={3}
+                  className={["[field-sizing:content]"]
+                    .filter(Boolean)
+                    .join(" ")}
+                />
+                <Description>{t("contentHelp")}</Description>
+              </TextField>
+              {error ? <p className="text-sm text-danger">{error}</p> : null}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                onPress={() => onOpenChange(false)}
+                variant={actionVariant("default", "light")}
+              >
+                {tCommon("cancel")}
+              </Button>
+              <Button
+                onPress={submit}
+                isDisabled={title.trim().length < 2}
+                variant={actionVariant("primary", "solid")}
+                isPending={busy}
+              >
+                {busy ? <Spinner size="sm" color="current" /> : null}
+                {tCommon("save")}
+              </Button>
+            </Modal.Footer>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 }

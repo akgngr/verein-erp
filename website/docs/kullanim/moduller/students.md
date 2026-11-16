@@ -13,7 +13,7 @@ Kurs ve Nachhilfe öğrencileri, veliler ve DATEV uyumlu borçlu (Debitor) kayı
 |---|---|
 | Anahtar | `students` |
 | Tür | Resmî modül |
-| Sürüm | 1.4.6 |
+| Sürüm | 1.4.7 |
 | Sayfalar | `/ogrenciler`, `/ogrenciler/veliler`, `/ogrenciler/ayarlar` |
 | Önerir | [e-Sign](./online-forms) |
 
@@ -41,6 +41,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_student_statistics`
 
 ## Sürüm notları
+
+### 1.4.7 — HeroUI v3 arayüz geçişi
+
+_2026-11-16_
+
+- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
 ### 1.4.6 — Uzaktan form bağı bildirildi
 
@@ -84,10 +90,4 @@ _2026-11-07_
 
 - **Yeni:** Online form: öğrenci/veli bilgilerini tamamlama ve imza; reşit olmayan öğrencide veli onayı
 
-### 1.3.0 — Veli adresi: Bundesland seçimi ve ülke listesi
-
-_2026-11-07_
-
-- **İyileştirme:** Veli adresi: Bundesland seçimi ve ülke listesi
-
-Daha eski 4 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/students/releases.json)
+Daha eski 5 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/students/releases.json)

@@ -1,6 +1,20 @@
 "use client";
+import {
+  toast,
+  Card,
+  Button,
+  Spinner,
+  Switch,
+  Label,
+  Separator,
+  TextField,
+  Input,
+  Select,
+  ListBox,
+} from "@heroui/react";
 
-import { Button, Card, CardBody, Divider, Input, Select, SelectItem, Switch, addToast } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -16,7 +30,13 @@ const PERIODS = ["MONTH", "QUARTER", "YEAR"] as const;
  * Vergi ayarları (ACC-1): hesap planı (SKR03/04), Kleinunternehmer (§ 19 UStG),
  * Ist/Soll-Versteuerung ve UStVA dönemi. § 19 açıkken tüm yeni fişler %0 KDV ile yazılır.
  */
-export function TaxSettingsCard({ settings, canUpdate }: { settings: TaxSettings; canUpdate: boolean }) {
+export function TaxSettingsCard({
+  settings,
+  canUpdate,
+}: {
+  settings: TaxSettings;
+  canUpdate: boolean;
+}) {
   const t = useTranslations("accounting.setup.tax");
   const router = useRouter();
   const [value, setValue] = useState<TaxSettings>(settings);
@@ -27,84 +47,229 @@ export function TaxSettingsCard({ settings, canUpdate }: { settings: TaxSettings
     try {
       const result = await saveTaxSettingsAction(value);
       if (!result.ok) {
-        addToast({ title: result.error, color: "danger" });
+        toast(result.error, { variant: "danger" });
         return;
       }
-      addToast({ title: t("saved"), color: "success" });
+      toast(t("saved"), { variant: "success" });
       router.refresh();
     } finally {
       setSaving(false);
     }
   };
 
-  const pick = <K extends keyof TaxSettings>(key: K) => (keys: "all" | Set<React.Key>) => {
-    const next = keys === "all" ? undefined : Array.from(keys)[0];
-    if (next) setValue((current) => ({ ...current, [key]: String(next) as TaxSettings[K] }));
-  };
+  const pick =
+    <K extends keyof TaxSettings>(key: K) =>
+    (next: string | number | null) => {
+      if (next)
+        setValue((current) => ({
+          ...current,
+          [key]: String(next) as TaxSettings[K],
+        }));
+    };
 
   return (
-    <Card shadow="sm">
-      <CardBody className="gap-4 p-6">
+    <Card className={"shadow-sm border border-ink-200/80"}>
+      <Card.Content className={["gap-4 p-6"].filter(Boolean).join(" ")}>
         <div className="flex flex-col gap-1">
-          <h2 className="text-small font-semibold uppercase tracking-wide text-default-500">{t("title")}</h2>
-          <p className="text-tiny text-default-500">{t("hint")}</p>
+          <h2 className="text-sm font-semibold uppercase tracking-wide text-ink-500">
+            {t("title")}
+          </h2>
+          <p className="text-xs text-ink-500">{t("hint")}</p>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <Select id="accounting-tax-chart" label={t("chart")} labelPlacement="outside" isDisabled={!canUpdate} selectedKeys={[value.chartOfAccounts]} onSelectionChange={pick("chartOfAccounts")}>
-            {CHARTS.map((chart) => (
-              <SelectItem key={chart}>{chart}</SelectItem>
-            ))}
+          <Select
+            id="accounting-tax-chart"
+            isDisabled={!canUpdate}
+            value={value.chartOfAccounts}
+            onChange={(selectedValue) => pick("chartOfAccounts")(selectedValue)}
+          >
+            <Label>{t("chart")}</Label>
+            <Select.Trigger>
+              <Select.Value />
+              <Select.Indicator />
+            </Select.Trigger>
+            <Select.Popover>
+              <ListBox>
+                {CHARTS.map((chart) => (
+                  <ListBox.Item
+                    key={chart}
+                    id={chart}
+                    textValue={String(chart)}
+                  >
+                    <Label>{chart}</Label>
+                    <ListBox.ItemIndicator />
+                  </ListBox.Item>
+                ))}
+              </ListBox>
+            </Select.Popover>
           </Select>
-          <Select id="accounting-tax-method" label={t("method")} labelPlacement="outside" isDisabled={!canUpdate} selectedKeys={[value.taxMethod]} onSelectionChange={pick("taxMethod")}>
-            {METHODS.map((method) => (
-              <SelectItem key={method}>{t(`method${method}`)}</SelectItem>
-            ))}
+          <Select
+            id="accounting-tax-method"
+            isDisabled={!canUpdate}
+            value={value.taxMethod}
+            onChange={(selectedValue) => pick("taxMethod")(selectedValue)}
+          >
+            <Label>{t("method")}</Label>
+            <Select.Trigger>
+              <Select.Value />
+              <Select.Indicator />
+            </Select.Trigger>
+            <Select.Popover>
+              <ListBox>
+                {METHODS.map((method) => (
+                  <ListBox.Item
+                    key={method}
+                    id={method}
+                    textValue={String(t(`method${method}`))}
+                  >
+                    <Label>{t(`method${method}`)}</Label>
+                    <ListBox.ItemIndicator />
+                  </ListBox.Item>
+                ))}
+              </ListBox>
+            </Select.Popover>
           </Select>
-          <Select id="accounting-tax-period" label={t("period")} labelPlacement="outside" isDisabled={!canUpdate} selectedKeys={[value.vatPeriod]} onSelectionChange={pick("vatPeriod")}>
-            {PERIODS.map((period) => (
-              <SelectItem key={period}>{t(`period${period}`)}</SelectItem>
-            ))}
+          <Select
+            id="accounting-tax-period"
+            isDisabled={!canUpdate}
+            value={value.vatPeriod}
+            onChange={(selectedValue) => pick("vatPeriod")(selectedValue)}
+          >
+            <Label>{t("period")}</Label>
+            <Select.Trigger>
+              <Select.Value />
+              <Select.Indicator />
+            </Select.Trigger>
+            <Select.Popover>
+              <ListBox>
+                {PERIODS.map((period) => (
+                  <ListBox.Item
+                    key={period}
+                    id={period}
+                    textValue={String(t(`period${period}`))}
+                  >
+                    <Label>{t(`period${period}`)}</Label>
+                    <ListBox.ItemIndicator />
+                  </ListBox.Item>
+                ))}
+              </ListBox>
+            </Select.Popover>
           </Select>
         </div>
-        <ul className="flex list-disc flex-col gap-0.5 pl-5 text-tiny text-default-500">
+        <ul className="flex list-disc flex-col gap-0.5 pl-5 text-xs text-ink-500">
           <li>{t("chartHint")}</li>
           <li>{t("methodHint")}</li>
         </ul>
-        <Switch id="accounting-tax-smallBusiness" isDisabled={!canUpdate} isSelected={value.smallBusiness} onValueChange={(smallBusiness) => setValue((current) => ({ ...current, smallBusiness }))}>
-          <div className="flex flex-col">
-            <span className="text-small">{t("smallBusiness")}</span>
-            <span className="text-tiny text-default-500">{t("smallBusinessHint")}</span>
-          </div>
+        <Switch
+          id="accounting-tax-smallBusiness"
+          isDisabled={!canUpdate}
+          isSelected={value.smallBusiness}
+          onChange={(smallBusiness) =>
+            setValue((current) => ({ ...current, smallBusiness }))
+          }
+        >
+          <Switch.Content>
+            <Switch.Control>
+              <Switch.Thumb />
+            </Switch.Control>
+            <Label>
+              <div className="flex flex-col">
+                <span className="text-sm">{t("smallBusiness")}</span>
+                <span className="text-xs text-ink-500">
+                  {t("smallBusinessHint")}
+                </span>
+              </div>
+            </Label>
+          </Switch.Content>
         </Switch>
-        <Switch id="accounting-tax-extension" isDisabled={!canUpdate} isSelected={value.vatExtension} onValueChange={(vatExtension) => setValue((current) => ({ ...current, vatExtension }))}>
-          <div className="flex flex-col">
-            <span className="text-small">{t("vatExtension")}</span>
-            <span className="text-tiny text-default-500">{t("vatExtensionHint")}</span>
-          </div>
+        <Switch
+          id="accounting-tax-extension"
+          isDisabled={!canUpdate}
+          isSelected={value.vatExtension}
+          onChange={(vatExtension) =>
+            setValue((current) => ({ ...current, vatExtension }))
+          }
+        >
+          <Switch.Content>
+            <Switch.Control>
+              <Switch.Thumb />
+            </Switch.Control>
+            <Label>
+              <div className="flex flex-col">
+                <span className="text-sm">{t("vatExtension")}</span>
+                <span className="text-xs text-ink-500">
+                  {t("vatExtensionHint")}
+                </span>
+              </div>
+            </Label>
+          </Switch.Content>
         </Switch>
-        <Divider />
+        <Separator></Separator>
         <div className="flex flex-col gap-1">
-          <h3 className="text-small font-semibold">{t("datevTitle")}</h3>
-          <p className="text-tiny text-default-500">{t("datevHint")}</p>
+          <h3 className="text-sm font-semibold">{t("datevTitle")}</h3>
+          <p className="text-xs text-ink-500">{t("datevHint")}</p>
         </div>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
-          <Input id="accounting-tax-consultant" label={t("consultantNo")} labelPlacement="outside" inputMode="numeric" maxLength={7} isDisabled={!canUpdate} value={value.datevConsultantNo} onValueChange={(datevConsultantNo) => setValue((current) => ({ ...current, datevConsultantNo }))} />
-          <Input id="accounting-tax-client" label={t("clientNo")} labelPlacement="outside" inputMode="numeric" maxLength={5} isDisabled={!canUpdate} value={value.datevClientNo} onValueChange={(datevClientNo) => setValue((current) => ({ ...current, datevClientNo }))} />
+          <TextField
+            id="accounting-tax-consultant"
+            isDisabled={!canUpdate}
+            value={value.datevConsultantNo}
+            onChange={(datevConsultantNo) =>
+              setValue((current) => ({ ...current, datevConsultantNo }))
+            }
+            className={["w-full"].filter(Boolean).join(" ")}
+          >
+            <Label>{t("consultantNo")}</Label>
+            <Input inputMode="numeric" maxLength={7} />
+          </TextField>
+          <TextField
+            id="accounting-tax-client"
+            isDisabled={!canUpdate}
+            value={value.datevClientNo}
+            onChange={(datevClientNo) =>
+              setValue((current) => ({ ...current, datevClientNo }))
+            }
+            className={["w-full"].filter(Boolean).join(" ")}
+          >
+            <Label>{t("clientNo")}</Label>
+            <Input inputMode="numeric" maxLength={5} />
+          </TextField>
         </div>
-        <Switch id="accounting-tax-datevKeys" isDisabled={!canUpdate} isSelected={value.datevTaxKeys} onValueChange={(datevTaxKeys) => setValue((current) => ({ ...current, datevTaxKeys }))}>
-          <div className="flex flex-col">
-            <span className="text-small">{t("datevTaxKeys")}</span>
-            <span className="text-tiny text-default-500">{t("datevTaxKeysHint")}</span>
-          </div>
+        <Switch
+          id="accounting-tax-datevKeys"
+          isDisabled={!canUpdate}
+          isSelected={value.datevTaxKeys}
+          onChange={(datevTaxKeys) =>
+            setValue((current) => ({ ...current, datevTaxKeys }))
+          }
+        >
+          <Switch.Content>
+            <Switch.Control>
+              <Switch.Thumb />
+            </Switch.Control>
+            <Label>
+              <div className="flex flex-col">
+                <span className="text-sm">{t("datevTaxKeys")}</span>
+                <span className="text-xs text-ink-500">
+                  {t("datevTaxKeysHint")}
+                </span>
+              </div>
+            </Label>
+          </Switch.Content>
         </Switch>
         {canUpdate ? (
           <div>
-            <Button color="primary" onPress={save} isLoading={saving}>
+            <Button
+              onPress={save}
+              variant={actionVariant("primary", "solid")}
+              isPending={saving}
+            >
+              {saving ? <Spinner size="sm" color="current" /> : null}
               {t("save")}
             </Button>
           </div>
         ) : null}
-      </CardBody>
+      </Card.Content>
     </Card>
   );
 }

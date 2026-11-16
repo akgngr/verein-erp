@@ -13,15 +13,21 @@ export function QuorumBanner({ quorum }: { quorum: QuorumInfo }) {
   return (
     <div
       role="status"
-      className={`rounded-medium px-4 py-2 text-small font-medium ${
+      className={`rounded-lg px-4 py-2 text-sm font-medium ${
         reached
           ? "bg-success-50 text-success-700"
           : "bg-warning-50 text-warning-600"
       }`}
     >
       {reached
-        ? t("reached", { present: quorum.presentCount, required: quorum.required })
-        : t("notReached", { present: quorum.presentCount, required: quorum.required })}
+        ? t("reached", {
+            present: quorum.presentCount,
+            required: quorum.required,
+          })
+        : t("notReached", {
+            present: quorum.presentCount,
+            required: quorum.required,
+          })}
     </div>
   );
 }

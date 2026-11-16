@@ -21,8 +21,11 @@ export async function StudentsSettingsView() {
   return (
     <div className="flex flex-col gap-6">
       <PageHeader title={t("title")} description={t("description")} />
-      <StudentsSettingsForm initial={await getStudentsSettings()} canUpdate={can(user.role, studentsDatevPermissions, "update")} />
-      <p className="max-w-2xl text-small text-default-500">{t("datevNote")}</p>
+      <StudentsSettingsForm
+        initial={await getStudentsSettings()}
+        canUpdate={can(user.role, studentsDatevPermissions, "update")}
+      />
+      <p className="max-w-2xl text-sm text-ink-500">{t("datevNote")}</p>
     </div>
   );
 }

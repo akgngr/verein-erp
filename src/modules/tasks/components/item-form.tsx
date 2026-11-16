@@ -1,6 +1,7 @@
 "use client";
+import { toast, Button } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
-import { addToast, Button } from "@heroui/react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -9,7 +10,10 @@ import { useForm, type Resolver } from "react-hook-form";
 
 import { applyActionResult } from "@/shared/components/forms/action-result";
 import { FormDatePicker } from "@/shared/components/forms/form-date-picker";
-import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
+import {
+  FormSurface,
+  useFormDrawerClose,
+} from "@/shared/components/forms/form-drawer";
 import { FormErrorSummary } from "@/shared/components/forms/form-error-summary";
 import { FormInput } from "@/shared/components/forms/form-input";
 import { FormSelect } from "@/shared/components/forms/form-select";
@@ -18,7 +22,13 @@ import { SubmitButton } from "@/shared/components/forms/submit-button";
 
 import { createTaskAction, updateTaskAction } from "../actions/item-actions";
 import { taskSchema } from "../schemas/item-schema";
-import type { MeetingOption, MemberOption, TaskPriority, TasksRow, TaskStatus } from "../types";
+import type {
+  MeetingOption,
+  MemberOption,
+  TaskPriority,
+  TasksRow,
+  TaskStatus,
+} from "../types";
 
 export type TaskFormValues = {
   title: string;
@@ -72,15 +82,24 @@ export function TasksItemForm({
       setFormError(applyActionResult(result, form.setError));
       return;
     }
-    addToast({ title: item ? t("updated") : t("created"), color: "success" });
+    toast(item ? t("updated") : t("created"), { variant: "success" });
     close();
   });
 
   return (
     <FormSurface className="max-w-2xl">
       <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
-        <FormInput name="title" label={t("title")} control={form.control} isRequired />
-        <FormTextarea name="description" label={t("description")} control={form.control} />
+        <FormInput
+          name="title"
+          label={t("title")}
+          control={form.control}
+          isRequired
+        />
+        <FormTextarea
+          name="description"
+          label={t("description")}
+          control={form.control}
+        />
 
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormSelect
@@ -108,7 +127,11 @@ export function TasksItemForm({
           />
         </div>
 
-        <FormDatePicker name="dueDate" label={t("dueDate")} control={form.control} />
+        <FormDatePicker
+          name="dueDate"
+          label={t("dueDate")}
+          control={form.control}
+        />
 
         <FormSelect
           name="memberId"
@@ -128,8 +151,10 @@ export function TasksItemForm({
 
         <FormErrorSummary message={formError} />
         <div className="flex items-center gap-2 pt-2">
-          <SubmitButton isSubmitting={form.formState.isSubmitting}>{t("save")}</SubmitButton>
-          <Button variant="light" onPress={close}>
+          <SubmitButton isSubmitting={form.formState.isSubmitting}>
+            {t("save")}
+          </SubmitButton>
+          <Button onPress={close} variant={actionVariant("default", "light")}>
             {t("cancel")}
           </Button>
         </div>

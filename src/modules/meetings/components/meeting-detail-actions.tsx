@@ -1,6 +1,12 @@
 "use client";
+import {
+  toast,
+  Link as ActionLink,
+  buttonVariants,
+  Button,
+} from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
-import { Button, addToast } from "@heroui/react";
 import { Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -44,17 +50,20 @@ export function MeetingDetailActions({
   const t = useTranslations("meetings");
   const [deleteOpen, setDeleteOpen] = useState(false);
 
-  const editAvailable = canUpdate && (status === "PLANNED" || status === "HELD");
+  const editAvailable =
+    canUpdate && (status === "PLANNED" || status === "HELD");
   const deleteAvailable = canDelete && status !== "APPROVED";
 
   const remove = async () => {
     const result = await deleteMeetingAction({ id: meetingId });
     setDeleteOpen(false);
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
-    addToast({ title: t("list.deletedToast", { number: meetingNumber }), color: "success" });
+    toast(t("list.deletedToast", { number: meetingNumber }), {
+      variant: "success",
+    });
     router.push("/toplantilar");
     router.refresh();
   };
@@ -63,21 +72,24 @@ export function MeetingDetailActions({
     <>
       {/* Faz 4 (4.3): PDF dil seçimi — ana tıklama varsayılan dil, açılır menü de/tr. */}
       <PdfSplitButton
-        buildHref={(lang) => `/api/meetings/${meetingId}/minutes-pdf?lang=${lang}`}
+        buildHref={(lang) =>
+          `/api/meetings/${meetingId}/minutes-pdf?lang=${lang}`
+        }
         label={t("actions.minutesPdf")}
         aria={t("actions.minutesPdfAria")}
       />
 
       {editAvailable ? (
-        <Button
-          as="a"
-          size="sm"
-          variant="bordered"
-          startContent={<Pencil className="h-4 w-4" aria-hidden />}
+        <ActionLink
           href={`/toplantilar/${meetingId}?duzenle`}
+          className={buttonVariants({
+            variant: actionVariant("default", "bordered"),
+            size: "sm",
+          })}
         >
+          {<Pencil className="h-4 w-4" aria-hidden />}
           {t("common.edit")}
-        </Button>
+        </ActionLink>
       ) : null}
 
       <StatusMenu
@@ -93,11 +105,10 @@ export function MeetingDetailActions({
       {deleteAvailable ? (
         <Button
           size="sm"
-          variant="flat"
-          color="danger"
-          startContent={<Trash2 className="h-4 w-4" aria-hidden />}
           onPress={() => setDeleteOpen(true)}
+          variant={actionVariant("danger", "flat")}
         >
+          {<Trash2 className="h-4 w-4" aria-hidden />}
           {t("common.delete")}
         </Button>
       ) : null}

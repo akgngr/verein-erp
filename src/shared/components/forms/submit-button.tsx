@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Spinner } from "@heroui-v3/react";
+import { Button, Spinner } from "@heroui/react";
 import { actionVariant } from "../ui/action-appearance";
 import type { ReactNode } from "react";
 
@@ -16,21 +16,10 @@ export function SubmitButton({
   children: ReactNode;
   isSubmitting: boolean;
   color?:
-    | "default"
-    | "primary"
-    | "secondary"
-    | "success"
-    | "warning"
-    | "danger";
+    "default" | "primary" | "secondary" | "success" | "warning" | "danger";
   fullWidth?: boolean;
   variant?:
-    | "solid"
-    | "bordered"
-    | "light"
-    | "flat"
-    | "faded"
-    | "ghost"
-    | "shadow";
+    "solid" | "bordered" | "light" | "flat" | "faded" | "ghost" | "shadow";
   className?: string;
 }) {
   return (

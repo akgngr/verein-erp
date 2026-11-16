@@ -4,7 +4,10 @@ import { useMemo } from "react";
 import { useTranslations } from "next-intl";
 import { DataTable, type DataTableProps } from "@/shared/components/data-table";
 import { MAIL_LOG_STATUS_LABEL_KEYS, MAIL_LOG_STATUSES } from "../constants";
-import { formatDateTime, getLogStatusBadgeClass } from "../helpers/mail-helpers";
+import {
+  formatDateTime,
+  getLogStatusBadgeClass,
+} from "../helpers/mail-helpers";
 import type { MailLogFilters, MailLogListResult, MailLogRow } from "../types";
 
 type MailLogTableProps = DataTableProps<MailLogRow>;
@@ -16,7 +19,12 @@ interface MailLogTableComponentProps {
   locale: string;
 }
 
-export function MailLogTable({ result, filters, modules, locale }: MailLogTableComponentProps) {
+export function MailLogTable({
+  result,
+  filters,
+  modules,
+  locale,
+}: MailLogTableComponentProps) {
   const t = useTranslations("mail");
 
   const columns = useMemo<MailLogTableProps["columns"]>(
@@ -37,8 +45,14 @@ export function MailLogTable({ result, filters, modules, locale }: MailLogTableC
         sortable: true,
         render: (row) => (
           <div className="flex flex-col">
-            {row.toName ? <span className="font-medium text-foreground">{row.toName}</span> : null}
-            <span className={row.toName ? "text-tiny text-default-500" : "text-foreground"}>
+            {row.toName ? (
+              <span className="font-medium text-foreground">{row.toName}</span>
+            ) : null}
+            <span
+              className={
+                row.toName ? "text-xs text-ink-500" : "text-foreground"
+              }
+            >
               {row.toAddress}
             </span>
           </div>
@@ -54,7 +68,9 @@ export function MailLogTable({ result, filters, modules, locale }: MailLogTableC
         key: "module",
         label: t("logs.columns.module"),
         sortable: true,
-        render: (row) => <code className="text-tiny text-default-600">{row.module}</code>,
+        render: (row) => (
+          <code className="text-xs text-ink-600">{row.module}</code>
+        ),
       },
       {
         key: "status",
@@ -73,7 +89,10 @@ export function MailLogTable({ result, filters, modules, locale }: MailLogTableC
         label: t("logs.columns.error"),
         render: (row) =>
           row.error ? (
-            <span className="line-clamp-2 break-all text-tiny text-danger" title={row.error}>
+            <span
+              className="line-clamp-2 break-all text-xs text-danger"
+              title={row.error}
+            >
               {row.error}
             </span>
           ) : (
@@ -97,7 +116,10 @@ export function MailLogTable({ result, filters, modules, locale }: MailLogTableC
       {
         key: "module",
         label: t("logs.columns.module"),
-        options: modules.map((moduleName) => ({ value: moduleName, label: moduleName })),
+        options: modules.map((moduleName) => ({
+          value: moduleName,
+          label: moduleName,
+        })),
       },
     ],
     [modules, t],

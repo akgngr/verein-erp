@@ -1,15 +1,31 @@
 "use client";
-
+import { statusStyle } from "@/shared/components/ui/status-appearance";
 import { Chip } from "@heroui/react";
+import {
+  statusTone,
+  badgeVariant,
+} from "@/shared/components/ui/status-appearance";
+
 import { useTranslations } from "next-intl";
 import { createContext, useContext, type ReactNode } from "react";
 
-import { setActivePermissionPolicy, type PermissionDefinition, type PermissionPolicy } from "@/shared/permissions/define";
+import {
+  setActivePermissionPolicy,
+  type PermissionDefinition,
+  type PermissionPolicy,
+} from "@/shared/permissions/define";
 import { roleLabelKey, type ChipColor, type RoleInfo } from "@/shared/roles";
 
-export type PermissionResourceRef = { moduleKey: string; definition: PermissionDefinition };
+export type PermissionResourceRef = {
+  moduleKey: string;
+  definition: PermissionDefinition;
+};
 
-const RolesContext = createContext<{ roles: RoleInfo[]; resources: PermissionResourceRef[]; policy: PermissionPolicy }>({
+const RolesContext = createContext<{
+  roles: RoleInfo[];
+  resources: PermissionResourceRef[];
+  policy: PermissionPolicy;
+}>({
   roles: [],
   resources: [],
   policy: { overrides: {}, unavailableRoles: [] },
@@ -31,7 +47,11 @@ export function RolesProvider({
   children: ReactNode;
 }) {
   setActivePermissionPolicy(policy);
-  return <RolesContext.Provider value={{ roles, resources, policy }}>{children}</RolesContext.Provider>;
+  return (
+    <RolesContext.Provider value={{ roles, resources, policy }}>
+      {children}
+    </RolesContext.Provider>
+  );
 }
 
 /** Kullanılabilir modüllerin izin kaynakları ve etkin politika (rol özeti, düzenleyici). */
@@ -56,11 +76,31 @@ export function useRoles() {
   return { roles, find, label, color };
 }
 
-export function RoleChip({ role, size = "sm", variant = "flat", className }: { role: string; size?: "sm" | "md"; variant?: "flat" | "dot" | "bordered"; className?: string }) {
+export function RoleChip({
+  role,
+  size = "sm",
+  variant = "flat",
+  className,
+}: {
+  role: string;
+  size?: "sm" | "md";
+  variant?: "flat" | "dot" | "bordered";
+  className?: string;
+}) {
   const { label, color, find } = useRoles();
   const unavailable = find(role)?.available === false;
   return (
-    <Chip color={color(role)} size={size} variant={variant} className={`${unavailable ? "opacity-60 line-through" : ""} ${className ?? ""}`}>
+    <Chip
+      size={size}
+      color={statusTone(color(role))}
+      variant={badgeVariant(variant)}
+      className={[
+        `${unavailable ? "opacity-60 line-through" : ""} ${className ?? ""}`,
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      style={statusStyle(color(role))}
+    >
       {label(role)}
     </Chip>
   );

@@ -13,7 +13,7 @@ slug: /kullanim/moduller/mailings
 |---|---|
 | Anahtar | `mailings` |
 | Tür | Resmî modül |
-| Sürüm | 2.4.4 |
+| Sürüm | 2.4.5 |
 | Sayfalar | `/toplu-eposta`, `/toplu-eposta/ayarlar` |
 | Gerektirir | [E-posta Altyapısı](./mail), [Otomasyon](./automation) |
 
@@ -43,6 +43,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_campaign_statistics` · `list_campaign_audiences` · `list_campaigns` · `propose_campaign_draft`
 
 ## Sürüm notları
+
+### 2.4.5 — HeroUI v3 arayüz geçişi
+
+_2026-11-16_
+
+- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
 ### 2.4.4 — Asistan araçları yeni veri sözleşmesinde
 
@@ -89,11 +95,4 @@ _2026-11-07_
 - **Yeni:** Etkinlik ve toplantı katılımcıları hedef kitle olarak; diğer modüllerden sihirbaz ön seçimle açılabilir.
 - **Düzeltme:** Kampanya kartlarında iç içe düğme (hydration) hatası giderildi; taslaklar "Düzenle" ile açılır.
 
-### 2.1.0 — Kanal eklentileri
-
-_2026-11-07_
-
-- **Yeni:** SMS, Telegram ve WhatsApp eklentileri kampanyalara otomatik eklenir; Kampanyalar → Ayarlar'da sağlayıcı bilgileri (şifreli).
-- **Yeni:** E-posta dışı kanallarda gönderim kaydı ile yeniden denemede çift gönderim önlenir; {telegramLink} yer tutucusuyla e-postadan Telegram'a davet.
-
-Daha eski 11 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/mailings/releases.json)
+Daha eski 12 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/mailings/releases.json)

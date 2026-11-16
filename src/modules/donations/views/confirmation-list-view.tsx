@@ -42,7 +42,10 @@ export async function ConfirmationListView({
     params.filters.year && /^\d{4}$/.test(params.filters.year)
       ? Number(params.filters.year)
       : berlinTodayStart().getUTCFullYear();
-  const list = await listConfirmations({ ...params, filters: { ...params.filters, year: String(year) } });
+  const list = await listConfirmations({
+    ...params,
+    filters: { ...params.filters, year: String(year) },
+  });
   const t = await getTranslations("donations.confirmations");
 
   return (
@@ -55,7 +58,11 @@ export async function ConfirmationListView({
             <LinkButton href="/bagislar/bildirimler/olustur" variant="flat">
               {t("create")}
             </LinkButton>
-            <LinkButton href="/api/donations/confirmations/export" variant="bordered" startIcon={<Download className="h-4 w-4" />}>
+            <LinkButton
+              href="/api/donations/confirmations/export"
+              variant="bordered"
+              startIcon={<Download className="h-4 w-4" />}
+            >
               {t("actions.export")}
             </LinkButton>
           </div>
@@ -72,7 +79,7 @@ export async function ConfirmationListView({
         year={year}
         canDelete={can(user.role, donationsPermissions, "delete")}
       />
-      <div className="mt-3 text-tiny text-default-400">
+      <div className="mt-3 text-xs text-ink-400">
         <FileDown className="mr-1 inline h-3.5 w-3.5" aria-hidden />
         {t("batchHint")}
       </div>

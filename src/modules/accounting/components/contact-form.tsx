@@ -1,26 +1,39 @@
 "use client";
+import { toast, Switch, Label } from "@heroui/react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addToast, Switch } from "@heroui/react";
+
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { applyActionResult } from "@/shared/components/forms/action-result";
-import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
+import {
+  FormSurface,
+  useFormDrawerClose,
+} from "@/shared/components/forms/form-drawer";
 import { FormErrorSummary } from "@/shared/components/forms/form-error-summary";
 import { FormInput } from "@/shared/components/forms/form-input";
 import { FormSelect } from "@/shared/components/forms/form-select";
 import { FormTextarea } from "@/shared/components/forms/form-textarea";
 import { SubmitButton } from "@/shared/components/forms/submit-button";
 
-import { createContactAction, updateContactAction } from "../actions/contact-actions";
+import {
+  createContactAction,
+  updateContactAction,
+} from "../actions/contact-actions";
 import type { ContactRow } from "../queries/contacts";
 import { contactCreateSchema, type ContactInput } from "../schemas/contact";
 
 /** ACC-3 cari kart formu. Numara kaydedilince DATEV aralığından otomatik verilir. */
-export function ContactForm({ contact, defaultType = "CUSTOMER" }: { contact?: ContactRow; defaultType?: "CUSTOMER" | "SUPPLIER" }) {
+export function ContactForm({
+  contact,
+  defaultType = "CUSTOMER",
+}: {
+  contact?: ContactRow;
+  defaultType?: "CUSTOMER" | "SUPPLIER";
+}) {
   const t = useTranslations("accounting.contacts");
   const router = useRouter();
   const closeDrawer = useFormDrawerClose();
@@ -36,7 +49,8 @@ export function ContactForm({ contact, defaultType = "CUSTOMER" }: { contact?: C
       email: contact?.email ?? "",
       phone: contact?.phone ?? "",
       vatId: contact?.vatId ?? "",
-      paymentTermDays: contact?.paymentTermDays != null ? String(contact.paymentTermDays) : "",
+      paymentTermDays:
+        contact?.paymentTermDays != null ? String(contact.paymentTermDays) : "",
       notes: contact?.notes ?? "",
       einvoiceType: contact?.einvoiceType ?? "B2B",
       leitwegId: contact?.leitwegId ?? "",
@@ -45,9 +59,12 @@ export function ContactForm({ contact, defaultType = "CUSTOMER" }: { contact?: C
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(null);
-    const result = contact ? await updateContactAction({ ...values, id: contact.id, isActive }) : await createContactAction(values);
-    if (!result.ok) return setFormError(applyActionResult(result, form.setError));
-    addToast({ title: t("saved"), color: "success" });
+    const result = contact
+      ? await updateContactAction({ ...values, id: contact.id, isActive })
+      : await createContactAction(values);
+    if (!result.ok)
+      return setFormError(applyActionResult(result, form.setError));
+    toast(t("saved"), { variant: "success" });
     if (closeDrawer) closeDrawer();
     else router.push("/muhasebe/cariler");
     router.refresh();
@@ -62,38 +79,101 @@ export function ContactForm({ contact, defaultType = "CUSTOMER" }: { contact?: C
             label={t("fields.type")}
             control={form.control}
             isDisabled={Boolean(contact)}
-            options={(["CUSTOMER", "SUPPLIER"] as const).map((value) => ({ value, label: t(`type.${value}`) }))}
-            description={contact ? t("fields.numberFixed", { number: contact.number }) : t("fields.numberAuto")}
+            options={(["CUSTOMER", "SUPPLIER"] as const).map((value) => ({
+              value,
+              label: t(`type.${value}`),
+            }))}
+            description={
+              contact
+                ? t("fields.numberFixed", { number: contact.number })
+                : t("fields.numberAuto")
+            }
           />
-          <FormInput name="name" label={t("fields.name")} control={form.control} isRequired />
-          <FormInput name="contactPerson" label={t("fields.contactPerson")} control={form.control} />
-          <FormInput name="email" label={t("fields.email")} control={form.control} type="email" />
-          <FormInput name="phone" label={t("fields.phone")} control={form.control} type="tel" />
-          <FormInput name="vatId" label={t("fields.vatId")} control={form.control} placeholder="DE123456789" />
+          <FormInput
+            name="name"
+            label={t("fields.name")}
+            control={form.control}
+            isRequired
+          />
+          <FormInput
+            name="contactPerson"
+            label={t("fields.contactPerson")}
+            control={form.control}
+          />
+          <FormInput
+            name="email"
+            label={t("fields.email")}
+            control={form.control}
+            type="email"
+          />
+          <FormInput
+            name="phone"
+            label={t("fields.phone")}
+            control={form.control}
+            type="tel"
+          />
+          <FormInput
+            name="vatId"
+            label={t("fields.vatId")}
+            control={form.control}
+            placeholder="DE123456789"
+          />
           {form.watch("type") === "CUSTOMER" ? (
             <>
               <FormSelect
                 name="einvoiceType"
                 label={t("fields.einvoiceType")}
                 control={form.control}
-                options={(["B2B", "B2C", "PUBLIC"] as const).map((value) => ({ value, label: t(`einvoiceType.${value}`) }))}
+                options={(["B2B", "B2C", "PUBLIC"] as const).map((value) => ({
+                  value,
+                  label: t(`einvoiceType.${value}`),
+                }))}
                 description={t("fields.einvoiceTypeHint")}
               />
-              <FormInput name="leitwegId" label={t("fields.leitwegId")} control={form.control} placeholder="04011000-1234512345-06" isRequired={form.watch("einvoiceType") === "PUBLIC"} description={t("fields.leitwegHint")} />
+              <FormInput
+                name="leitwegId"
+                label={t("fields.leitwegId")}
+                control={form.control}
+                placeholder="04011000-1234512345-06"
+                isRequired={form.watch("einvoiceType") === "PUBLIC"}
+                description={t("fields.leitwegHint")}
+              />
             </>
           ) : null}
-          <FormInput name="paymentTermDays" label={t("fields.paymentTermDays")} control={form.control} description={t("fields.paymentTermHint")} />
+          <FormInput
+            name="paymentTermDays"
+            label={t("fields.paymentTermDays")}
+            control={form.control}
+            description={t("fields.paymentTermHint")}
+          />
         </div>
-        <FormTextarea name="address" label={t("fields.address")} control={form.control} />
-        <FormTextarea name="notes" label={t("fields.notes")} control={form.control} />
+        <FormTextarea
+          name="address"
+          label={t("fields.address")}
+          control={form.control}
+        />
+        <FormTextarea
+          name="notes"
+          label={t("fields.notes")}
+          control={form.control}
+        />
         {contact ? (
-          <Switch isSelected={isActive} onValueChange={setIsActive}>
-            <span className="text-small">{t("fields.isActive")}</span>
+          <Switch isSelected={isActive} onChange={setIsActive}>
+            <Switch.Content>
+              <Switch.Control>
+                <Switch.Thumb />
+              </Switch.Control>
+              <Label>
+                <span className="text-sm">{t("fields.isActive")}</span>
+              </Label>
+            </Switch.Content>
           </Switch>
         ) : null}
-        <p className="text-tiny text-default-500">{t("privacy")}</p>
+        <p className="text-xs text-ink-500">{t("privacy")}</p>
         <FormErrorSummary message={formError} />
-        <SubmitButton isSubmitting={form.formState.isSubmitting}>{t("save")}</SubmitButton>
+        <SubmitButton isSubmitting={form.formState.isSubmitting}>
+          {t("save")}
+        </SubmitButton>
       </form>
     </FormSurface>
   );

@@ -1,6 +1,15 @@
 "use client";
+import {
+  toast,
+  Chip,
+  Link as ActionLink,
+  buttonVariants,
+  Button,
+  Table,
+} from "@heroui/react";
 
-import { addToast, Button, Chip, Table, TableBody, TableCell, TableColumn, TableHeader, TableRow } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+
 import { Download, FolderDown, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useFormatter, useTranslations } from "next-intl";
@@ -10,71 +19,137 @@ import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import type { ActionResult } from "@/shared/types/action";
 
-type FileRow = { id: string; title: string; format: string; sizeBytes: number; source: string; createdAt: string; expiresAt: string; url: string };
+type FileRow = {
+  id: string;
+  title: string;
+  format: string;
+  sizeBytes: number;
+  source: string;
+  createdAt: string;
+  expiresAt: string;
+  url: string;
+};
 
-const size = (bytes: number) => (bytes < 1024 ? `${bytes} B` : bytes < 1024 * 1024 ? `${(bytes / 1024).toFixed(1)} KB` : `${(bytes / 1024 / 1024).toFixed(1)} MB`);
+const size = (bytes: number) =>
+  bytes < 1024
+    ? `${bytes} B`
+    : bytes < 1024 * 1024
+      ? `${(bytes / 1024).toFixed(1)} KB`
+      : `${(bytes / 1024 / 1024).toFixed(1)} MB`;
 
-export function FilesTable({ files, deleteAction }: { files: FileRow[]; deleteAction: (input: unknown) => Promise<ActionResult> }) {
+export function FilesTable({
+  files,
+  deleteAction,
+}: {
+  files: FileRow[];
+  deleteAction: (input: unknown) => Promise<ActionResult>;
+}) {
   const t = useTranslations("exports");
   const tRoot = useTranslations();
   const format = useFormatter();
   const router = useRouter();
   const [pending, setPending] = useState<FileRow | null>(null);
 
-  if (!files.length) return <EmptyState icon={FolderDown} title={t("empty")} description={t("emptyHint")} />;
+  if (!files.length)
+    return (
+      <EmptyState
+        icon={FolderDown}
+        title={t("empty")}
+        description={t("emptyHint")}
+      />
+    );
 
-  const sourceLabel = (source: string) => (source === "ai" ? t("sources.ai") : tRoot.has(`${source}.module.label`) ? tRoot(`${source}.module.label`) : source);
+  const sourceLabel = (source: string) =>
+    source === "ai"
+      ? t("sources.ai")
+      : tRoot.has(`${source}.module.label`)
+        ? tRoot(`${source}.module.label`)
+        : source;
 
   const remove = async () => {
     if (!pending) return;
     const result = await deleteAction({ id: pending.id });
     setPending(null);
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
-    addToast({ title: t("deleted"), color: "success" });
+    toast(t("deleted"), { variant: "success" });
     router.refresh();
   };
 
   return (
     <>
-      <Table aria-label={t("title")} removeWrapper>
-        <TableHeader>
-          <TableColumn>{t("columns.title")}</TableColumn>
-          <TableColumn>{t("columns.format")}</TableColumn>
-          <TableColumn>{t("columns.source")}</TableColumn>
-          <TableColumn>{t("columns.size")}</TableColumn>
-          <TableColumn>{t("columns.created")}</TableColumn>
-          <TableColumn>{t("columns.expires")}</TableColumn>
-          <TableColumn align="end">{t("columns.actions")}</TableColumn>
-        </TableHeader>
-        <TableBody>
-          {files.map((file) => (
-            <TableRow key={file.id}>
-              <TableCell className="font-medium">{file.title}</TableCell>
-              <TableCell>
-                <Chip size="sm" variant="flat" color="primary">
-                  {file.format.toUpperCase()}
-                </Chip>
-              </TableCell>
-              <TableCell>{sourceLabel(file.source)}</TableCell>
-              <TableCell>{size(file.sizeBytes)}</TableCell>
-              <TableCell>{format.dateTime(new Date(file.createdAt), { dateStyle: "short", timeStyle: "short" })}</TableCell>
-              <TableCell>{format.dateTime(new Date(file.expiresAt), { dateStyle: "short" })}</TableCell>
-              <TableCell>
-                <div className="flex justify-end gap-1">
-                  <Button as="a" href={file.url} size="sm" variant="flat" color="primary" startContent={<Download className="h-4 w-4" aria-hidden />}>
-                    {t("download")}
-                  </Button>
-                  <Button isIconOnly size="sm" variant="light" color="danger" aria-label={t("delete")} onPress={() => setPending(file)}>
-                    <Trash2 className="h-4 w-4" aria-hidden />
-                  </Button>
-                </div>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
+      <Table>
+        <Table.ScrollContainer>
+          <Table.Content aria-label={t("title")}>
+            <Table.Header>
+              <Table.Column isRowHeader id={"column-0"}>
+                {t("columns.title")}
+              </Table.Column>
+              <Table.Column id={"column-1"}>{t("columns.format")}</Table.Column>
+              <Table.Column id={"column-2"}>{t("columns.source")}</Table.Column>
+              <Table.Column id={"column-3"}>{t("columns.size")}</Table.Column>
+              <Table.Column id={"column-4"}>
+                {t("columns.created")}
+              </Table.Column>
+              <Table.Column id={"column-5"}>
+                {t("columns.expires")}
+              </Table.Column>
+              <Table.Column id={"column-6"} className="text-right">
+                {t("columns.actions")}
+              </Table.Column>
+            </Table.Header>
+            <Table.Body>
+              {files.map((file) => (
+                <Table.Row key={file.id} id={file.id}>
+                  <Table.Cell className="font-medium">{file.title}</Table.Cell>
+                  <Table.Cell>
+                    <Chip size="sm" color={"accent"} variant={"soft"}>
+                      {file.format.toUpperCase()}
+                    </Chip>
+                  </Table.Cell>
+                  <Table.Cell>{sourceLabel(file.source)}</Table.Cell>
+                  <Table.Cell>{size(file.sizeBytes)}</Table.Cell>
+                  <Table.Cell>
+                    {format.dateTime(new Date(file.createdAt), {
+                      dateStyle: "short",
+                      timeStyle: "short",
+                    })}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {format.dateTime(new Date(file.expiresAt), {
+                      dateStyle: "short",
+                    })}
+                  </Table.Cell>
+                  <Table.Cell>
+                    <div className="flex justify-end gap-1">
+                      <ActionLink
+                        href={file.url}
+                        className={buttonVariants({
+                          variant: actionVariant("primary", "flat"),
+                          size: "sm",
+                        })}
+                      >
+                        {<Download className="h-4 w-4" aria-hidden />}
+                        {t("download")}
+                      </ActionLink>
+                      <Button
+                        isIconOnly
+                        size="sm"
+                        aria-label={t("delete")}
+                        onPress={() => setPending(file)}
+                        variant={actionVariant("danger", "light")}
+                      >
+                        <Trash2 className="h-4 w-4" aria-hidden />
+                      </Button>
+                    </div>
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table.Content>
+        </Table.ScrollContainer>
       </Table>
       <ConfirmDialog
         isOpen={pending !== null}

@@ -1,5 +1,10 @@
 import { useTranslations } from "next-intl";
-import { CalendarClock, ClipboardCheck, ListTodo, AlarmClock } from "lucide-react";
+import {
+  CalendarClock,
+  ClipboardCheck,
+  ListTodo,
+  AlarmClock,
+} from "lucide-react";
 import Link from "next/link";
 
 import type { MeetingStats } from "../types";
@@ -14,14 +19,16 @@ export function StatsCards({ stats }: { stats: MeetingStats }) {
     {
       label: t("planned"),
       value: stats.plannedCount,
-      href: stats.plannedCount > 0 ? "/toplantilar?filter.status=PLANNED" : null,
+      href:
+        stats.plannedCount > 0 ? "/toplantilar?filter.status=PLANNED" : null,
       icon: CalendarClock,
-      tone: "text-primary",
+      tone: "text-accent",
     },
     {
       label: t("draftMinutes"),
       value: stats.draftMinutesCount,
-      href: stats.draftMinutesCount > 0 ? "/toplantilar?filter.status=HELD" : null,
+      href:
+        stats.draftMinutesCount > 0 ? "/toplantilar?filter.status=HELD" : null,
       icon: ClipboardCheck,
       tone: "text-secondary",
     },
@@ -49,11 +56,13 @@ export function StatsCards({ stats }: { stats: MeetingStats }) {
       {cards.map((card) => {
         const Icon = card.icon;
         const content = (
-          <div className="flex items-center gap-3 rounded-medium border border-default-200 bg-content1 px-4 py-3 shadow-sm transition-transform hover:-translate-y-0.5">
+          <div className="flex items-center gap-3 rounded-lg border border-ink-200 bg-surface px-4 py-3 shadow-sm transition-transform hover:-translate-y-0.5">
             <Icon className={`h-6 w-6 ${card.tone}`} aria-hidden />
             <div>
-              <p className="text-2xl font-semibold leading-none">{card.value}</p>
-              <p className="text-tiny text-default-500">{card.label}</p>
+              <p className="text-2xl font-semibold leading-none">
+                {card.value}
+              </p>
+              <p className="text-xs text-ink-500">{card.label}</p>
             </div>
           </div>
         );

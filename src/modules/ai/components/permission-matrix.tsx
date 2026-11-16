@@ -1,6 +1,22 @@
 "use client";
+import { statusStyle } from "@/shared/components/ui/status-appearance";
+import {
+  toast,
+  Button,
+  Chip,
+  Spinner,
+  Modal,
+  Checkbox,
+  Label,
+} from "@heroui/react";
+import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
-import { addToast, Button, Checkbox, Chip, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+import {
+  statusTone,
+  badgeVariant,
+} from "@/shared/components/ui/status-appearance";
+
 import { AlertTriangle, CheckCheck, Info, XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -11,19 +27,51 @@ import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { setAiPermissionsAction } from "../actions/consent-actions";
 
 type Operation = "read" | "create" | "update" | "delete" | "read_content";
-const OPERATIONS: Operation[] = ["read", "create", "update", "delete", "read_content"];
+const OPERATIONS: Operation[] = [
+  "read",
+  "create",
+  "update",
+  "delete",
+  "read_content",
+];
 
 /**
  * Kişisel veriye yakın modüller: bu modüllerde HER izin ve diğer modüllerde güncelleme/silme
  * işaretlenirken onay istenir. Okuma izni verilse bile araçlar kişisel veri döndürmez.
  */
-const SENSITIVE_MODULES = new Set(["members", "students", "progress", "accounting", "donations", "courses"]);
-const isRisky = (module: string, operation: Operation) => operation === "read_content" || operation === "update" || operation === "delete" || SENSITIVE_MODULES.has(module);
+const SENSITIVE_MODULES = new Set([
+  "members",
+  "students",
+  "progress",
+  "accounting",
+  "donations",
+  "courses",
+]);
+const isRisky = (module: string, operation: Operation) =>
+  operation === "read_content" ||
+  operation === "update" ||
+  operation === "delete" ||
+  SENSITIVE_MODULES.has(module);
 
 /** İzin çipinin rengi: açık izinler işlem türüne göre renkli, kapalılar gri. */
-const CHIP_COLOR: Record<Operation, "primary" | "success" | "warning" | "danger"> = { read_content:"danger", read: "primary", create: "success", update: "warning", delete: "danger" };
+const CHIP_COLOR: Record<
+  Operation,
+  "primary" | "success" | "warning" | "danger"
+> = {
+  read_content: "danger",
+  read: "primary",
+  create: "success",
+  update: "warning",
+  delete: "danger",
+};
 
-export type PermissionModule = { key: string; label: string; description: string; icon: ReactNode; availability: "available" | "inactive" | "needsApproval" };
+export type PermissionModule = {
+  key: string;
+  label: string;
+  description: string;
+  icon: ReactNode;
+  availability: "available" | "inactive" | "needsApproval";
+};
 
 type Matrix = Record<string, Operation[]>;
 
@@ -48,12 +96,19 @@ export function PermissionMatrix({
   const [saved, setSaved] = useState<Matrix>(matrix);
   const [openKey, setOpenKey] = useState<string | null>(null);
   const [draft, setDraft] = useState<Operation[]>([]);
-  const [pendingRisk, setPendingRisk] = useState<{ ops: Operation[]; message: string } | null>(null);
+  const [pendingRisk, setPendingRisk] = useState<{
+    ops: Operation[];
+    message: string;
+  } | null>(null);
   const [confirmAll, setConfirmAll] = useState(false);
   const [busy, setBusy] = useState(false);
 
-  const withTools = modules.filter((module) => (supported[module.key] ?? []).length > 0);
-  const withoutTools = modules.filter((module) => !(supported[module.key] ?? []).length);
+  const withTools = modules.filter(
+    (module) => (supported[module.key] ?? []).length > 0,
+  );
+  const withoutTools = modules.filter(
+    (module) => !(supported[module.key] ?? []).length,
+  );
   const open = modules.find((module) => module.key === openKey) ?? null;
   const openSupported = open ? (supported[open.key] ?? []) : [];
 
@@ -62,11 +117,11 @@ export function PermissionMatrix({
     const result = await setAiPermissionsAction({ matrix: next });
     setBusy(false);
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return false;
     }
     setSaved(next);
-    addToast({ title: t("saved"), color: "success" });
+    toast(t("saved"), { variant: "success" });
     router.refresh();
     return true;
   };
@@ -80,7 +135,10 @@ export function PermissionMatrix({
   const toggle = (operation: Operation, checked: boolean) => {
     if (!open) return;
     if (checked && isRisky(open.key, operation)) {
-      setPendingRisk({ ops: [operation], message: riskMessage(open, [operation]) });
+      setPendingRisk({
+        ops: [operation],
+        message: riskMessage(open, [operation]),
+      });
       return;
     }
     setDraft(apply(draft, [operation], checked));
@@ -90,26 +148,44 @@ export function PermissionMatrix({
     if (!open) return;
     const missing = openSupported.filter((op) => !draft.includes(op));
     const risky = missing.filter((op) => isRisky(open.key, op));
-    if (risky.length) setPendingRisk({ ops: missing, message: riskMessage(open, risky) });
+    if (risky.length)
+      setPendingRisk({ ops: missing, message: riskMessage(open, risky) });
     else setDraft(apply(draft, missing, true));
   };
 
   const riskMessage = (module: PermissionModule, ops: Operation[]) => {
     const names = ops.map((op) => t(`operations.${op}`)).join(", ");
-    if(ops.includes("read_content"))return t("risk.content",{module:module.label,operations:names});
-    return SENSITIVE_MODULES.has(module.key) ? t("risk.sensitive", { module: module.label, operations: names }) : t("risk.write", { module: module.label, operations: names });
+    if (ops.includes("read_content"))
+      return t("risk.content", { module: module.label, operations: names });
+    return SENSITIVE_MODULES.has(module.key)
+      ? t("risk.sensitive", { module: module.label, operations: names })
+      : t("risk.write", { module: module.label, operations: names });
   };
 
-  const allSupported: Matrix = Object.fromEntries(withTools.map((module) => [module.key, [...(supported[module.key] ?? [])]]));
+  const allSupported: Matrix = Object.fromEntries(
+    withTools.map((module) => [module.key, [...(supported[module.key] ?? [])]]),
+  );
 
   return (
     <div className="flex flex-col gap-3">
       {canChange ? (
         <div className="flex flex-wrap gap-2">
-          <Button size="sm" variant="flat" color="primary" startContent={<CheckCheck className="h-4 w-4" aria-hidden />} isDisabled={busy} onPress={() => setConfirmAll(true)}>
+          <Button
+            size="sm"
+            isDisabled={busy}
+            onPress={() => setConfirmAll(true)}
+            variant={actionVariant("primary", "flat")}
+          >
+            {<CheckCheck className="h-4 w-4" aria-hidden />}
             {t("allowAll")}
           </Button>
-          <Button size="sm" variant="flat" startContent={<XCircle className="h-4 w-4" aria-hidden />} isDisabled={busy} onPress={() => void save({})}>
+          <Button
+            size="sm"
+            isDisabled={busy}
+            onPress={() => void save({})}
+            variant={actionVariant("default", "flat")}
+          >
+            {<XCircle className="h-4 w-4" aria-hidden />}
             {t("denyAll")}
           </Button>
         </div>
@@ -124,17 +200,36 @@ export function PermissionMatrix({
               key={module.key}
               type="button"
               onClick={() => openModule(module.key)}
-              className="flex flex-col gap-3 rounded-large border border-default-200 bg-content1 p-4 text-left transition hover:border-primary hover:shadow-medium focus-visible:outline-2 focus-visible:outline-primary"
+              className="flex flex-col gap-3 rounded-xl border border-ink-200 bg-surface p-4 text-left transition hover:border-accent hover:shadow-md focus-visible:outline-2 focus-visible:outline-accent"
             >
               <ModuleHead module={module} />
-              {module.availability !== "available" ? <ModuleStatus availability={module.availability} /> : null}
+              {module.availability !== "available" ? (
+                <ModuleStatus availability={module.availability} />
+              ) : null}
               <div className="flex flex-wrap gap-1.5">
                 {OPERATIONS.filter((op) => available.includes(op)).map((op) => {
                   // Modül kullanılamıyorsa izin açık olsa da etkin değildir: gri ve üstü çizili.
-                  const on = allowed.includes(op) && module.availability === "available";
-                  const pausedOn = allowed.includes(op) && module.availability !== "available";
+                  const on =
+                    allowed.includes(op) && module.availability === "available";
+                  const pausedOn =
+                    allowed.includes(op) && module.availability !== "available";
                   return (
-                    <Chip key={op} size="sm" variant={on ? "flat" : "bordered"} color={on ? CHIP_COLOR[op] : "default"} className={on ? "" : pausedOn ? "text-default-400 line-through" : "text-default-400"}>
+                    <Chip
+                      key={op}
+                      size="sm"
+                      color={statusTone(on ? CHIP_COLOR[op] : "default")}
+                      variant={badgeVariant(on ? "flat" : "bordered")}
+                      className={[
+                        on
+                          ? ""
+                          : pausedOn
+                            ? "text-ink-400 line-through"
+                            : "text-ink-400",
+                      ]
+                        .filter(Boolean)
+                        .join(" ")}
+                      style={statusStyle(on ? CHIP_COLOR[op] : "default")}
+                    >
                       {t(`short.${op}`)}
                     </Chip>
                   );
@@ -146,72 +241,134 @@ export function PermissionMatrix({
       </div>
 
       {withoutTools.length ? (
-        <p className="text-tiny text-default-400">{t("noToolsList", { modules: withoutTools.map((module) => module.label).join(", ") })}</p>
+        <p className="text-xs text-ink-400">
+          {t("noToolsList", {
+            modules: withoutTools.map((module) => module.label).join(", "),
+          })}
+        </p>
       ) : null}
 
-      <Modal isOpen={open !== null} onOpenChange={(isOpen) => !isOpen && setOpenKey(null)} size="lg" scrollBehavior="inside">
-        <ModalContent>
-          {(close) =>
-            open ? (
-              <>
-                <ModalHeader className="pb-2">
-                  <ModuleHead module={open} />
-                </ModalHeader>
-                <ModalBody className="gap-4">
-                  {open.availability !== "available" ? <ModuleStatus availability={open.availability} detailed /> : null}
-                  <div className="flex gap-2 rounded-medium bg-default-100 p-3 text-small text-default-600">
-                    <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
-                    <div className="flex flex-col gap-1">
-                      <span>{t("notes.noPersonal")}</span>
-                      <span>{t("notes.confirmCard")}</span>
-                      {SENSITIVE_MODULES.has(open.key) ? <span className="font-medium text-warning-600">{t("notes.sensitive")}</span> : null}
-                    </div>
-                  </div>
-                  <div className="flex flex-col divide-y divide-default-100">
-                    {openSupported.map((op) => (
-                      <Checkbox key={op} isSelected={draft.includes(op)} isDisabled={!canChange} onValueChange={(checked) => toggle(op, checked)} color={CHIP_COLOR[op]} className="max-w-none py-2.5" classNames={{ label: "w-full" }}>
-                        <div className="flex flex-col">
-                          <span className="flex items-center gap-1.5 text-small font-medium">
-                            {t(`operations.${op}`)}
-                            {isRisky(open.key, op) ? <AlertTriangle className="h-3.5 w-3.5 text-warning" aria-label={t("riskBadge")} /> : null}
-                          </span>
-                          <span className="text-tiny text-default-500">{t(`explain.${op}`)}</span>
+      <Modal
+        isOpen={open !== null}
+        onOpenChange={(isOpen) => !isOpen && setOpenKey(null)}
+      >
+        <Modal.Backdrop>
+          <Modal.Container size="lg" scroll={"inside"}>
+            <Modal.Dialog className={"w-full max-w-lg "}>
+              {({ close: close }) =>
+                open ? (
+                  <>
+                    <DialogDismissButton />
+                    <Modal.Header className="pb-2">
+                      <Modal.Heading className="flex items-center gap-2">
+                        <ModuleHead module={open} />
+                      </Modal.Heading>
+                    </Modal.Header>
+                    <Modal.Body className="gap-4">
+                      {open.availability !== "available" ? (
+                        <ModuleStatus
+                          availability={open.availability}
+                          detailed
+                        />
+                      ) : null}
+                      <div className="flex gap-2 rounded-lg bg-ink-100 p-3 text-sm text-ink-600">
+                        <Info className="mt-0.5 h-4 w-4 shrink-0" aria-hidden />
+                        <div className="flex flex-col gap-1">
+                          <span>{t("notes.noPersonal")}</span>
+                          <span>{t("notes.confirmCard")}</span>
+                          {SENSITIVE_MODULES.has(open.key) ? (
+                            <span className="font-medium text-warning-600">
+                              {t("notes.sensitive")}
+                            </span>
+                          ) : null}
                         </div>
-                      </Checkbox>
-                    ))}
-                  </div>
-                </ModalBody>
-                <ModalFooter className="justify-between">
-                  {canChange ? (
-                    <Button size="sm" variant="light" onPress={selectAll}>
-                      {t("selectAll")}
-                    </Button>
-                  ) : (
-                    <span />
-                  )}
-                  <div className="flex gap-2">
-                    <Button size="sm" variant="flat" onPress={close}>
-                      {t("cancel")}
-                    </Button>
-                    {canChange ? (
-                      <Button
-                        size="sm"
-                        color="primary"
-                        isLoading={busy}
-                        isDisabled={sameOps(draft, saved[open.key] ?? [])}
-                        onPress={async () => {
-                          if (await save({ ...saved, [open.key]: OPERATIONS.filter((op) => draft.includes(op)) })) close();
-                        }}
-                      >
-                        {t("save")}
-                      </Button>
-                    ) : null}
-                  </div>
-                </ModalFooter>
-              </>
-            ) : null
-          }
-        </ModalContent>
+                      </div>
+                      <div className="flex flex-col divide-y divide-ink-100">
+                        {openSupported.map((op) => (
+                          <Checkbox
+                            key={op}
+                            isSelected={draft.includes(op)}
+                            isDisabled={!canChange}
+                            onChange={(checked) => toggle(op, checked)}
+                            className={"max-w-none py-2.5"}
+                          >
+                            <Checkbox.Content>
+                              <Checkbox.Control>
+                                <Checkbox.Indicator />
+                              </Checkbox.Control>
+                              <Label className={"w-full"}>
+                                <div className="flex flex-col">
+                                  <span className="flex items-center gap-1.5 text-sm font-medium">
+                                    {t(`operations.${op}`)}
+                                    {isRisky(open.key, op) ? (
+                                      <AlertTriangle
+                                        className="h-3.5 w-3.5 text-warning"
+                                        aria-label={t("riskBadge")}
+                                      />
+                                    ) : null}
+                                  </span>
+                                  <span className="text-xs text-ink-500">
+                                    {t(`explain.${op}`)}
+                                  </span>
+                                </div>
+                              </Label>
+                            </Checkbox.Content>
+                          </Checkbox>
+                        ))}
+                      </div>
+                    </Modal.Body>
+                    <Modal.Footer className="justify-between">
+                      {canChange ? (
+                        <Button
+                          size="sm"
+                          onPress={selectAll}
+                          variant={actionVariant("default", "light")}
+                        >
+                          {t("selectAll")}
+                        </Button>
+                      ) : (
+                        <span />
+                      )}
+                      <div className="flex gap-2">
+                        <Button
+                          size="sm"
+                          onPress={close}
+                          variant={actionVariant("default", "flat")}
+                        >
+                          {t("cancel")}
+                        </Button>
+                        {canChange ? (
+                          <Button
+                            size="sm"
+                            isDisabled={sameOps(draft, saved[open.key] ?? [])}
+                            onPress={async () => {
+                              if (
+                                await save({
+                                  ...saved,
+                                  [open.key]: OPERATIONS.filter((op) =>
+                                    draft.includes(op),
+                                  ),
+                                })
+                              )
+                                close();
+                            }}
+                            variant={actionVariant("primary", "solid")}
+                            isPending={busy}
+                          >
+                            {busy ? (
+                              <Spinner size="sm" color="current" />
+                            ) : null}
+                            {t("save")}
+                          </Button>
+                        ) : null}
+                      </div>
+                    </Modal.Footer>
+                  </>
+                ) : null
+              }
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal.Backdrop>
       </Modal>
 
       <ConfirmDialog
@@ -241,10 +398,16 @@ export function PermissionMatrix({
 }
 
 /** Modül kullanılamıyorsa: neden ve nereden açılacağı (Modül Yönetimi). */
-function ModuleStatus({ availability, detailed = false }: { availability: "inactive" | "needsApproval"; detailed?: boolean }) {
+function ModuleStatus({
+  availability,
+  detailed = false,
+}: {
+  availability: "inactive" | "needsApproval";
+  detailed?: boolean;
+}) {
   const t = useTranslations("ai.settings.matrix.status");
   return (
-    <div className="flex items-start gap-2 rounded-medium bg-warning-50 p-2 text-tiny text-warning-700 dark:bg-warning-500/10 dark:text-warning-400">
+    <div className="flex items-start gap-2 rounded-lg bg-warning-50 p-2 text-xs text-warning-700 dark:bg-warning-500/10 dark:text-warning-400">
       <AlertTriangle className="mt-0.5 h-3.5 w-3.5 shrink-0" aria-hidden />
       <span>
         {t(availability)}
@@ -264,14 +427,20 @@ function ModuleStatus({ availability, detailed = false }: { availability: "inact
 function ModuleHead({ module }: { module: PermissionModule }) {
   return (
     <div className="flex items-start gap-3">
-      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-medium bg-primary-50 text-primary dark:bg-primary-500/15 [&_svg]:h-5 [&_svg]:w-5">{module.icon}</span>
+      <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-brand-50 text-accent dark:bg-brand-500/15 [&_svg]:h-5 [&_svg]:w-5">
+        {module.icon}
+      </span>
       <div className="flex min-w-0 flex-col">
-        <span className="truncate text-small font-semibold">{module.label}</span>
-        <span className="line-clamp-1 text-tiny font-normal text-default-500">{module.description}</span>
+        <span className="truncate text-sm font-semibold">{module.label}</span>
+        <span className="line-clamp-1 text-xs font-normal text-ink-500">
+          {module.description}
+        </span>
       </div>
     </div>
   );
 }
 
-const apply = (current: Operation[], ops: Operation[], on: boolean) => OPERATIONS.filter((op) => (ops.includes(op) ? on : current.includes(op)));
-const sameOps = (a: Operation[], b: Operation[]) => OPERATIONS.every((op) => a.includes(op) === b.includes(op));
+const apply = (current: Operation[], ops: Operation[], on: boolean) =>
+  OPERATIONS.filter((op) => (ops.includes(op) ? on : current.includes(op)));
+const sameOps = (a: Operation[], b: Operation[]) =>
+  OPERATIONS.every((op) => a.includes(op) === b.includes(op));
