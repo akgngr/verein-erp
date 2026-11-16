@@ -161,14 +161,15 @@ function EntryDetail({
   return (
     <>
       <Drawer.Header className="flex items-start gap-3">
-        <Drawer.Heading className="flex items-center gap-2">
-          <span
-            className="mt-1.5 h-3 w-3 shrink-0 rounded-full"
-            style={{ backgroundColor: item.color }}
-          />
-        </Drawer.Heading>
+        <span
+          className="mt-1.5 h-3 w-3 shrink-0 rounded-full"
+          style={{ backgroundColor: item.color }}
+          aria-hidden
+        />
         <div className="min-w-0">
-          <p className="text-lg font-semibold">{item.title}</p>
+          <Drawer.Heading className="text-lg font-semibold">
+            {item.title}
+          </Drawer.Heading>
           <p className="text-sm font-normal text-ink-500">{source?.label}</p>
         </div>
       </Drawer.Header>

@@ -199,8 +199,8 @@ export function DocumentToolbar({
       placeholder={label}
       value={value ? value : FILTER_ALL}
       onChange={(selectedValue) => {
-        const keys = selectedValue === null ? undefined : String(selectedValue);
-        const selected = false ? undefined : keys;
+        const selected =
+          selectedValue === null ? undefined : String(selectedValue);
         const next =
           selected === undefined || selected === FILTER_ALL
             ? ""

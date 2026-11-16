@@ -238,7 +238,10 @@ export function WorkflowHeaderActions(props: Props) {
       <Modal isOpen={editorOpen} onOpenChange={setEditorOpen}>
         <Modal.Backdrop isDismissable={false}>
           <Modal.Container size="full" scroll={"inside"}>
-            <Modal.Dialog className={"w-full h-dvh max-w-full "}>
+            <Modal.Dialog
+              aria-label={props.name}
+              className={"w-full h-dvh max-w-full "}
+            >
               <div className="flex h-dvh flex-col">
                 <WorkflowEditor
                   name={props.name}

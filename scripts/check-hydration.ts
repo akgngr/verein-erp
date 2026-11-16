@@ -277,8 +277,9 @@ async function main() {
     await sms.focus();
     await sms.press("Space");
     if (await sms.isChecked()) throw new Error("V3_CHECKBOX_KEYBOARD_FAILED");
-    const birthDate = memberDialog.locator("#form-date-birthDate");
-    await birthDate.getByRole("button").click();
+    await memberDialog
+      .getByRole("button", { name: /^(Doğum tarihi|Geburtsdatum)$/ })
+      .click();
     const calendar = page.locator('[data-slot="calendar"]');
     await calendar.waitFor();
     await calendar
@@ -286,7 +287,7 @@ async function main() {
       .click();
     const years = calendar.getByRole("listbox");
     await years.waitFor();
-    await years.getByRole("option").filter({ hasText: "2020" }).click();
+    await years.getByRole("button", { name: "2020", exact: true }).click();
     const day = calendar
       .locator(
         '[data-slot="calendar-cell"][role="button"]:not([aria-disabled="true"])',
@@ -296,7 +297,7 @@ async function main() {
     await calendar.waitFor({ state: "hidden" });
     if (
       !(
-        await birthDate.locator('input[name="birthDate"]').inputValue()
+        await memberDialog.locator('input[name="birthDate"]').inputValue()
       ).startsWith("2020-")
     )
       throw new Error("V3_DATE_FIELD_VALUE_FAILED");
@@ -327,9 +328,9 @@ async function main() {
     });
     const documentDialog = page.getByRole("dialog");
     await documentDialog.waitFor();
-    const counterparty = documentDialog
-      .locator("#form-autocomplete-counterparty")
-      .getByRole("combobox");
+    const counterparty = documentDialog.getByRole("combobox", {
+      name: /^(Gönderen|Absender)$/,
+    });
     await counterparty.fill("Synthetic preview organisation");
     await counterparty.press("Tab");
     if ((await counterparty.inputValue()) !== "Synthetic preview organisation")
