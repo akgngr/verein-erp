@@ -10,8 +10,8 @@ test("ACC-9 month range is inclusive of day one and excludes next month day one"
     from: new Date("2026-02-01T00:00:00.000Z"),
     until: new Date("2026-03-01T00:00:00.000Z"),
   });
-  assert.ok(new Date("2026-02-28T00:00:00.000Z") < range!.until);
-  assert.ok(new Date("2026-03-01T00:00:00.000Z") >= range!.until);
+  assert.ok(new Date("2026-02-28T00:00:00.000Z").getTime() < range!.until.getTime());
+  assert.ok(new Date("2026-03-01T00:00:00.000Z").getTime() >= range!.until.getTime());
 });
 
 test("ACC-9 fourth quarter spans Oct 1 through Dec 31 only", () => {
