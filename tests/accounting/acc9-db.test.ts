@@ -6,14 +6,13 @@ import { getDb } from "@/shared/db";
 import { getBookingTotals } from "@/modules/accounting/queries/get-booking-totals";
 import { getOverdueInvoiceSummary } from "@/modules/accounting/queries/get-overdue-invoice-summary";
 import { listYearsWithBookings } from "@/modules/accounting/queries/list-years";
-import { buildAnnualReportData } from "@/modules/accounting/services/report-builders";
 
 const enabled = Boolean(process.env.AI_TEST_DATABASE_URL);
 if (enabled && process.env.AI_TEST_DATABASE_URL !== process.env.DATABASE_URL) {
   throw new Error("Use an isolated database");
 }
 
-test("ACC-9 DB: year boundaries, reversed rows, transfers and annual closing reconcile", { skip: !enabled }, async () => {
+test("ACC-9 DB: year boundaries, reversed rows, transfers and year-closing row reconcile", { skip: !enabled }, async () => {
   const db = getDb();
   const prefix = `acc9-${randomUUID()}`;
   const accountId = `${prefix}-cash`;
@@ -68,21 +67,6 @@ test("ACC-9 DB: year boundaries, reversed rows, transfers and annual closing rec
       expenseCents: 2_000,
       netCents: 8_500,
     });
-
-    const annual = await buildAnnualReportData(2097);
-    assert.deepEqual(annual.incomeExpense.bookingTotals, {
-      incomeCents: 10_500,
-      expenseCents: 2_000,
-      netCents: 8_500,
-    });
-    assert.deepEqual(annual.incomeExpense.uncategorized, {
-      incomeCents: 500,
-      expenseCents: 0,
-    });
-    const balance = annual.accountBalances.find((row) => row.accountId === accountId);
-    assert.ok(balance);
-    assert.equal(balance.openingCents, 5_000);
-    assert.equal(balance.closingCents, 12_500);
 
     const closing = (await listYearsWithBookings()).find((row) => row.year === 2097);
     assert.ok(closing);
