@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.22.10",
+      "date": "2026-11-16",
+      "title": {
+        "tr": "Vadesi geçmiş fatura özeti performansı",
+        "de": "Performance der Überfälligkeitsübersicht"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Muhasebe paneli vadesi geçmiş faturaların tamamını tek seferde belleğe almak yerine 250 kayıtlık sayfalarda işler; fatura başına açık tutar ve Skonto semantiği korunur.",
+          "de": "Die Übersicht verarbeitet überfällige Rechnungen seitenweise mit 250 Datensätzen statt alle Datensätze gleichzeitig zu laden; offene Beträge und Skonto-Semantik bleiben erhalten."
+        }
+      ]
+    },
+    {
       "version": "1.22.9",
       "date": "2026-11-16",
       "title": {
