@@ -39,3 +39,13 @@ Muhasebeyi görüntüleme izni olmayan kullanıcılar genel bakış ekranını a
 - `src/modules/accounting/services/report-builders.ts`
 
 Modül kataloğu `pnpm docs:modules` ile üretilir; `website/docs/kullanim/moduller/accounting.md` elle düzenlenmez.
+
+## Grafik tasarımı ve performans
+
+Çeyreklik gelir-gider grafiği artık modern, yuvarlatılmış iki renkli dikey sütunlar, yardımcı ızgara çizgileri ve doğrudan sütun üzerindeki tutar etiketleriyle gösterilir. Sütunların üzerine gelindiğinde dönem ve EUR tutarı hakkında ayrıntı görülebilir. Grafik altındaki gerçek veri tablosu korunur.
+
+- **Hafif çalışma:** SVG doğrudan sunucuda üretilir. Yeni grafik kütüphanesi, istemci tarafı grafik işleyicisi veya ağır animasyon bulunmaz.
+- **Açık/koyu tema:** Mevcut uygulama teması ve vurgu renkleri kullanılır; ayrıca bir renk paleti dayatılmaz.
+- **KPI kartları:** Gelir, gider ve fark için ikonlu, mobil uyumlu kartlar seçilen ay/çeyrek/yıl dönemini açıkça yazar. Göstermelik ilerleme çubuğu kullanılmaz; rakamlar mevcut muhasebe sorgularından gelir.
+- **Erişilebilirlik:** Gerçek sayısal değerler tabloda yer alır, grafik yalnız görsel destek sağlar.
+
