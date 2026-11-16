@@ -1,0 +1,91 @@
+---
+sidebar_position: 33
+title: "Toplantılar"
+description: "Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar."
+slug: /kullanim/moduller/meetings
+---
+
+<!-- Bu sayfa scripts/docs/generate-module-docs.ts ile üretilir; elle düzenlemeyin. -->
+
+Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar.
+
+| | |
+|---|---|
+| Anahtar | `meetings` |
+| Tür | Resmî modül |
+| Sürüm | 1.3.4 |
+| Sayfalar | `/toplantilar`, `/toplantilar/gorevler` |
+
+## Diğer modüllere erişim
+
+Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yonetim/modul-yonetimi)).
+
+| Modül | İşlem | Gerekçe |
+|---|---|---|
+| [Üyeler](./members) | okuma | Toplantıya katılımcı eklemek için üye listesini okur. Duyuru kampanyalarında üye katılımcıların iletişim bilgilerini ve izinlerini okur. |
+| [Dernek Bilgileri](./organization) | okuma | Tutanak PDF'inde dernek antetini kullanır. |
+| [Toplu e-posta](./mailings) | okuma | Katılımcılara duyuru için Kampanyalar sihirbazını hazır kaynakla açar. |
+
+## Varsayılan yetkiler
+
+Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
+
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Salt okunur | Sayman | Denetçi | Öğretmen |
+|---|---|---|---|---|---|---|---|
+| Toplantı ve Kararlar | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme, onay | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | görüntüleme | — |
+
+## Asistan araçları
+
+Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/kullanim/asistan)):
+
+`get_meeting` · `get_meeting_statistics` · `list_meetings` · `propose_delete_meeting` · `propose_meeting` · `propose_meeting_status`
+
+## Sürüm notları
+
+### 1.3.4 — Asistan araçları yeni veri sözleşmesinde
+
+_2026-11-15_
+
+- **Güvenlik:** Asistan araçları v2 veri sözleşmesine taşındı: modele giden her alan açıkça listelenir ve veri sınıfı bildirilir. Toplam ve kurumsal veriler denetimli bulut modunda da kullanılabilir; serbest kişisel içerik yalnız yerel modelde kalır.
+
+### 1.3.3 — Sürümlü AI öneri ve sonuç sınırları
+
+_2026-11-15_
+
+- **Güvenlik:** Öneri araçları katı Zod girdisi ve sabit model sonucu kullanır; salt öneri sorguları gereksiz kişi detaylarını okumaz. Kalan eski okuma araçlarının dönüşümü ayrı sürer.
+
+### 1.3.2 — AI v2 takip paketi
+
+_2026-11-15_
+
+- **İyileştirme:** AI iş akışında sayfalama, sorgu sözleşmesi veya worker iptal kontrolü güçlendirildi.
+
+### 1.3.1 — AI v2 güvenilirlik ve veri koruma
+
+_2026-11-14_
+
+- **Güvenlik:** Sunucu tarafından doğrulanan AI işlemleri, kapsamlı veri erişimi ve güvenilir yaşam döngüsü kontrolleri güncellendi.
+
+### 1.3.0 — Katılımcılara duyuru
+
+_2026-11-07_
+
+- **Yeni:** Toplantı sayfasında "Katılımcılara duyur": üye katılımcılara kampanya (izinlere uyarak).
+
+### 1.2.0 — Takvim entegrasyonu
+
+_2026-11-06_
+
+- **Yeni:** Kayıtlar Takvim modülünde salt okunur kaynak olarak görünür.
+
+### 1.1.0 — İş akışı tetikleyicileri
+
+_2026-11-06_
+
+- **Yeni:** İş akışı tetikleyicisi: "Toplantı planlandığında" (tür; {{meeting.title}} vb.).
+
+### 1.0.0 — İlk sürüm
+
+_2026-10-29_
+
+- **Yeni:** İlk sürüm.

@@ -12,7 +12,7 @@ import { aiPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "ai",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.11.0",
+  version: "1.11.1",
   label: "Yapay zekâ asistanı",
   description: "Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuyan asistan.",
   category: "EXTENSION",

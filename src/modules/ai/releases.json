@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.11.1",
+      "date": "2026-11-15",
+      "title": {
+        "tr": "Dosyalarda gerçek adlar",
+        "de": "Echte Namen in Dateien"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Asistanın oluşturduğu dosyalarda takma adlı kişiler ([[K3]]) artık gerçek adla yazılır (yetkiniz varsa); buluta yine ad gitmez.",
+          "de": "In vom Assistenten erstellten Dateien erscheinen pseudonyme Personen ([[K3]]) jetzt mit echtem Namen (sofern berechtigt); in die Cloud gehen weiterhin keine Namen."
+        }
+      ]
+    },
+    {
       "version": "1.11.0",
       "date": "2026-11-15",
       "title": {
