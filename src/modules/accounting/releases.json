@@ -11,8 +11,8 @@
       "changes": [
         {
           "type": "feature",
-          "tr": "Muhasebe paneli mevcut vergi ayarlarından 45 gün içindeki yaklaşan UStVA/yıllık beyan tarihini salt okunur öneri olarak gösterir; otomatik beyan veya işlem başlatılmaz.",
-          "de": "Die Buchhaltungsübersicht zeigt aus den bestehenden Steuereinstellungen die nächste Frist innerhalb von 45 Tagen als schreibgeschützten Hinweis; keine automatische Meldung wird ausgelöst."
+          "tr": "Muhasebe paneli mevcut vergi ayarlarından 60 gün içindeki yaklaşan UStVA/yıllık beyan tarihini salt okunur öneri olarak gösterir; otomatik beyan veya işlem başlatılmaz.",
+          "de": "Die Buchhaltungsübersicht zeigt aus den bestehenden Steuereinstellungen die nächste Frist innerhalb von 60 Tagen als schreibgeschützten Hinweis; keine automatische Meldung wird ausgelöst."
         },
         {
           "type": "improvement",
