@@ -1437,11 +1437,11 @@
         "source": "Kaynak: saklanan orijinal XML ({syntax}) · SHA-256 {hash}…"
       },
       "types": {
+        "326": "Kısmi fatura",
         "380": "Fatura",
         "381": "Alacak dekontu (Gutschrift)",
         "384": "Düzeltme faturası",
         "389": "Kendi kendine fatura (Gutschriftverfahren)",
-        "326": "Kısmi fatura",
         "875": "Kısmi inşaat faturası",
         "876": "Kısmi nihai inşaat faturası",
         "877": "Nihai inşaat faturası",
@@ -1509,6 +1509,28 @@
           "b2bVoluntary": "İşletmeye (B2B) fatura: geçiş döneminde PDF mümkün, ancak XRechnung/ZUGFeRD önerilir."
         }
       }
+    }
+  },
+  "cards": {
+    "income": {
+      "title": "Muhasebe gelirleri",
+      "description": "Bu yıl iptal edilmemiş gelir fişlerinin brüt toplamı (virmanlar hariç).",
+      "period": "{year} yılı · gelir fişleri"
+    },
+    "expense": {
+      "title": "Muhasebe giderleri",
+      "description": "Bu yıl iptal edilmemiş gider fişlerinin brüt toplamı (virmanlar hariç).",
+      "period": "{year} yılı · gider fişleri"
+    },
+    "balance": {
+      "title": "Gelir − gider farkı",
+      "description": "Bu yılın fiş bazlı gelir ve gider farkı; banka bakiyesi veya bilanço kârı değildir.",
+      "period": "{year} yılı · fiş farkı"
+    },
+    "missingReceipts": {
+      "title": "Belgesi eksik fişler",
+      "description": "Bu yıldaki kaynak fişi veya virman olmayan, dosyası bulunmayan fişler.",
+      "period": "{year} yılı · eksik belge"
     }
   }
 }
