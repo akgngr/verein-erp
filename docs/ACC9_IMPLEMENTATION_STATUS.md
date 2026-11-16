@@ -28,7 +28,7 @@
 - [ ] **Tarih ve fiş denetimi:** Berlin tarih sınırları, yıl geçişi, reversed/storno, 500+ fatura ve yıllık kapanış için veritabanı fixture'lı entegrasyon testleri.
 - [x] **Banka mutabakatı:** `OPEN` durumundaki banka hareketlerini salt okunur sayıp ilgili ekrana yönlendiren öneri (PR #186).
 - [ ] **Öneri kapsamı devamı:** yaklaşan vergi tarihi, gerektiğinde açık borç/aidat bilgisi; doğrulanmış iş kuralı ve erişim onayı olmadan kart ekleme.
-- [ ] **Performans:** tüm gecikmiş faturaların belleğe çekilmesi yerine, fatura başına açık tutarı koruyan ölçeklenebilir toplama sorgusunu tasarla ve ölç.
+- [x] **Performans:** vadesi geçmiş faturalar 250 kayıtlık cursor sayfalarında işlenir; fatura başına `openCents` semantiği korunur ve tek seferde tüm satırlar belleğe alınmaz (PR #190).
 - [ ] **UX doğrulaması:** gerçek ekran görüntüleriyle masaüstü/mobil, yükleme/boş/hata/izin durumları; diğer UI agentinin değişiklikleriyle koordinasyon.
 - [ ] **Dokümantasyon:** yeni özelliklerin kullanım örnekleri, görseller, alt sayfalara yönlendirmeler ve CI link testi; mevcut TR website yapısını koru.
 - [ ] **İleriki SaaS:** tenant izolasyonu, çoklu para birimi ve çok dilli website ayrı ürün kararıdır; bugünkü işin engeli değildir.
