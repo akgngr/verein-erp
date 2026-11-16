@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.22.8",
+      "date": "2026-11-16",
+      "title": {
+        "tr": "Premium muhasebe kartları ve hafif grafik",
+        "de": "Premium-Buchhaltungskarten und leichtes Diagramm"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Muhasebe panelindeki özet kartlar daha şık ve duyarlı bir tasarıma geçirildi. Çeyreklik gelir-gider grafiği hafif, sunucuda çizilen SVG sütunlarla yenilendi; erişilebilir veri tablosu korundu.",
+          "de": "Kennzahlenkarten werden im responsiven Design dargestellt. Das Quartalsdiagramm verwendet leichtes serverseitiges SVG, die barrierearme Datentabelle bleibt erhalten."
+        },
+        {
+          "type": "improvement",
+          "tr": "Yeni grafik kütüphanesi veya istemci JavaScript yükü eklenmedi; mevcut tema değişkenleri ve muhasebe hesaplamaları kullanılmaya devam eder.",
+          "de": "Keine neue Diagrammbibliothek oder zusätzliche Client-JavaScript-Abhängigkeit; bestehende Theme-Variablen und Finanzberechnungen werden weiterverwendet."
+        }
+      ]
+    },
+    {
       "version": "1.22.7",
       "date": "2026-11-16",
       "title": {
