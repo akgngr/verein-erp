@@ -1,4 +1,7 @@
 "use client";
+
+import { useDrawerPlacement } from "@/shared/hooks/use-media-query";
+import { drawerDialogClass, SheetHandle } from "@/shared/components/forms/form-drawer";
 import {
   toast,
   Link as ActionLink,
@@ -77,6 +80,7 @@ export function EntryDrawer({
   onEdit,
   onSaved,
 }: Props) {
+  const drawerPlacement = useDrawerPlacement();
   const t = useTranslations("calendar");
   return (
     <Drawer
@@ -86,12 +90,9 @@ export function EntryDrawer({
       }}
     >
       <Drawer.Backdrop>
-        <Drawer.Content placement="right">
-          <Drawer.Dialog
-            className={
-              "h-full max-h-dvh w-screen max-w-full rounded-none sm:rounded-l-xl sm:max-w-md"
-            }
-          >
+        <Drawer.Content placement={drawerPlacement}>
+          <Drawer.Dialog className={drawerDialogClass(drawerPlacement, "sm:max-w-md")}>
+          {drawerPlacement === "bottom" ? <SheetHandle /> : null}
             <DialogDismissButton drawer />
 
             {state?.mode === "view" ? (

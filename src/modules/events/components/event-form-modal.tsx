@@ -1,4 +1,7 @@
 "use client";
+
+import { useDrawerPlacement } from "@/shared/hooks/use-media-query";
+import { drawerDialogClass } from "@/shared/components/forms/form-drawer";
 import {
   toast,
   Button,
@@ -36,6 +39,7 @@ export function EventFormModal({
   onClose,
   eventToEdit,
 }: EventFormModalProps) {
+  const drawerPlacement = useDrawerPlacement();
   const tCommon = useTranslations("common");
   const tStatus = useTranslations("events.status");
   const tTypes = useTranslations("events.types");
@@ -139,12 +143,8 @@ export function EventFormModal({
   return (
     <Drawer isOpen={isOpen} onOpenChange={onClose}>
       <Drawer.Backdrop>
-        <Drawer.Content placement="right">
-          <Drawer.Dialog
-            className={
-              "h-full max-h-dvh w-screen max-w-full rounded-none sm:rounded-l-xl sm:max-w-2xl"
-            }
-          >
+        <Drawer.Content placement={drawerPlacement}>
+          <Drawer.Dialog className={drawerDialogClass(drawerPlacement, "sm:max-w-2xl")}>
             {() => (
               <form
                 onSubmit={handleSubmit}

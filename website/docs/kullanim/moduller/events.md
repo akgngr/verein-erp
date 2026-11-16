@@ -13,7 +13,7 @@ Dernek etkinlikleri, seminerler, atölyeler ve katılımcı yönetimi.
 |---|---|
 | Anahtar | `events` |
 | Tür | Resmî modül |
-| Sürüm | 1.2.5 |
+| Sürüm | 1.2.6 |
 | Sayfalar | `/events`, `/events?filter.timeFilter=upcoming`, `/events?filter.timeFilter=past` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `list_upcoming_events` · `propose_event`
 
 ## Sürüm notları
+
+### 1.2.6 — Mobilde alttan açılan çekmece
+
+_2026-11-16_
+
+- **İyileştirme:** Form/ayrıntı çekmecesi mobilde alttan açılır (masaüstünde sağdan).
 
 ### 1.2.5 — Asistan önerileri bulutta
 
@@ -83,8 +89,4 @@ _2026-11-06_
 
 - **Yeni:** Kayıtlar Takvim modülünde salt okunur kaynak olarak görünür.
 
-### 1.0.0 — İlk sürüm
-
-_2026-10-29_
-
-- **Yeni:** İlk sürüm.
+Daha eski 1 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/events/releases.json)

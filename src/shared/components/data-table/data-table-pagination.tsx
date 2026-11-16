@@ -34,7 +34,7 @@ export function DataTablePagination({
       <p className="text-sm text-ink-500">
         {t("totalRecords", { count: total })}
       </p>
-      <div className="flex flex-wrap items-center justify-center gap-3">
+      <div className="flex flex-wrap items-center justify-center gap-3 sm:flex-nowrap">
         <div className="relative inline-flex items-center">
           <select
             className="h-8 w-[125px] appearance-none rounded-lg border border-ink-200/80 bg-ink-100/70 px-3 pr-8 text-xs font-medium text-ink-700 outline-none hover:bg-ink-200/60 focus:border-accent focus:ring-1 focus:ring-accent transition-colors cursor-pointer select-none"
@@ -53,7 +53,7 @@ export function DataTablePagination({
             aria-hidden="true"
           />
         </div>
-        <Pagination size="sm" aria-label={t("table.label")}>
+        <Pagination size="sm" aria-label={t("table.label")} className="w-auto">
           <Pagination.Content>
             <Pagination.Item>
               <Pagination.Previous

@@ -1,4 +1,7 @@
 "use client";
+
+import { useDrawerPlacement } from "@/shared/hooks/use-media-query";
+import { drawerDialogClass, SheetHandle } from "@/shared/components/forms/form-drawer";
 import {
   Button,
   Spinner,
@@ -55,6 +58,7 @@ export function InventoryFormModal({
   onClose,
   item = null,
 }: InventoryFormModalProps) {
+  const drawerPlacement = useDrawerPlacement();
   const t = useTranslations("inventory");
   const [isPending, startTransition] = useTransition();
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -111,12 +115,9 @@ export function InventoryFormModal({
       }}
     >
       <Drawer.Backdrop isDismissable={!isPending}>
-        <Drawer.Content placement="right">
-          <Drawer.Dialog
-            className={
-              "h-full max-h-dvh w-screen max-w-full rounded-none sm:rounded-l-xl sm:max-w-2xl"
-            }
-          >
+        <Drawer.Content placement={drawerPlacement}>
+          <Drawer.Dialog className={drawerDialogClass(drawerPlacement, "sm:max-w-2xl")}>
+          {drawerPlacement === "bottom" ? <SheetHandle /> : null}
             <DialogDismissButton drawer />
 
             <form

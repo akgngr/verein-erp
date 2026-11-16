@@ -10,7 +10,7 @@ import { calendarPermissions } from "./permissions";
  */
 export const moduleConfig: ModuleConfig = {
   key: "calendar",
-  version: "1.3.6",
+  version: "1.3.7",
   label: "Takvim",
   description:
     "Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve son tarihler tek görünümde.",

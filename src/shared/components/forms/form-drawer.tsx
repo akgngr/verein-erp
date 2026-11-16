@@ -3,21 +3,35 @@
 import { Card, Drawer, Description, buttonVariants } from "@heroui/react";
 import { DialogDismissButton } from "../ui/dialog-dismiss-button";
 import { actionVariant } from "../ui/action-appearance";
+import { useDrawerPlacement } from "@/shared/hooks/use-media-query";
 import { cn } from "@/shared/utils";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createContext, useContext, useState, type ReactNode } from "react";
 
 /**
- * Form standardı: oluşturma/düzenleme formları sağdan açılan çekmecede gösterilir.
+ * Form standardı: oluşturma/düzenleme formları çekmecede gösterilir (masaüstü sağ, mobil alt).
  *
  * KARAR: Çekmecenin açık olması URL'de tutulur — liste sayfasında `?yeni` veya
  * `?duzenle=<id>`, detay sayfasında `?duzenle`. Böylece bağlantı paylaşılabilir,
  * geri tuşu çekmeceyi kapatır ve sunucu bileşeni formun verisini kendisi yükler.
  * Kapatınca yalnızca bu parametreler silinir; liste filtreleri korunur.
- * Mobilde çekmece tam ekran açılır.
+ * Masaüstünde sağdan, mobilde alttan (bottom sheet, en çok ekranın %92'si) açılır.
  */
 export const FORM_DRAWER_PARAMS = ["yeni", "duzenle"] as const;
+
+/** Mobil alt panel: tam genişlik, üst köşeler yuvarlak, içerik kadar uzar (en çok %92 ekran). */
+export const BOTTOM_SHEET_CLASS = "flex max-h-[92dvh] w-screen max-w-full flex-col rounded-t-2xl rounded-b-none pb-[env(safe-area-inset-bottom)]";
+
+/** Çekmece kabının sınıfı: masaüstünde sağ panel (verilen azami genişlikle), mobilde alt panel. */
+export function drawerDialogClass(placement: "right" | "bottom", desktopWidth: string): string {
+  return placement === "bottom" ? BOTTOM_SHEET_CLASS : cn("h-full max-h-dvh w-screen max-w-full rounded-none sm:rounded-l-xl", desktopWidth);
+}
+
+/** Alt panelin üstündeki tutamak çizgisi (görsel ipucu; kapatma için dış alana dokunma ya da × kullanılır). */
+export function SheetHandle() {
+  return <div aria-hidden className="mx-auto mt-2 h-1.5 w-10 shrink-0 rounded-full bg-ink-300/80" />;
+}
 
 const FormDrawerContext = createContext<(() => void) | null>(null);
 
@@ -42,6 +56,7 @@ export function FormDrawer({
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const [open, setOpen] = useState(true);
+  const placement = useDrawerPlacement();
 
   const close = () => {
     setOpen(false);
@@ -62,11 +77,13 @@ export function FormDrawer({
             if (!isOpen) close();
           }}
         >
-          <Drawer.Content placement="right">
+          <Drawer.Content placement={placement}>
             <Drawer.Dialog
               className={cn(
-                "h-full max-h-dvh w-screen max-w-full rounded-none sm:rounded-l-xl",
-                {
+                placement === "bottom"
+                  ? BOTTOM_SHEET_CLASS
+                  : "h-full max-h-dvh w-screen max-w-full rounded-none sm:rounded-l-xl",
+                placement === "right" && {
                   md: "sm:max-w-md",
                   lg: "sm:max-w-lg",
                   xl: "sm:max-w-xl",
@@ -77,6 +94,7 @@ export function FormDrawer({
                 }[size],
               )}
             >
+              {placement === "bottom" ? <SheetHandle /> : null}
               <DialogDismissButton drawer />
               <Drawer.Header className="border-b border-ink-200/80 pb-5">
                 <Drawer.Heading>{title}</Drawer.Heading>

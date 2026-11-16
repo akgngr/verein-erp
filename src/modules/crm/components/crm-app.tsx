@@ -1,4 +1,7 @@
 "use client";
+
+import { useDrawerPlacement } from "@/shared/hooks/use-media-query";
+import { drawerDialogClass, SheetHandle } from "@/shared/components/forms/form-drawer";
 import { statusStyle } from "@/shared/components/ui/status-appearance";
 import {
   toast,
@@ -650,6 +653,7 @@ function PartyDrawer({
   can: { update: boolean; delete: boolean };
   onChanged: () => void;
 }) {
+  const drawerPlacement = useDrawerPlacement();
   const t = useTranslations("crm");
   const format = useFormatter();
   const [loaded, setDetail] = useState<Detail | null>(null);
@@ -698,12 +702,9 @@ function PartyDrawer({
   return (
     <Drawer isOpen={Boolean(id)} onOpenChange={(open) => !open && onClose()}>
       <Drawer.Backdrop>
-        <Drawer.Content placement="right">
-          <Drawer.Dialog
-            className={
-              "h-full max-h-dvh w-screen max-w-full rounded-none sm:rounded-l-xl sm:max-w-xl"
-            }
-          >
+        <Drawer.Content placement={drawerPlacement}>
+          <Drawer.Dialog className={drawerDialogClass(drawerPlacement, "sm:max-w-xl")}>
+          {drawerPlacement === "bottom" ? <SheetHandle /> : null}
             <DialogDismissButton drawer />
 
             <Drawer.Header className="flex flex-col gap-1">
