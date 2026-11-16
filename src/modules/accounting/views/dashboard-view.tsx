@@ -74,6 +74,9 @@ export async function AccountingDashboardView({ searchParams }: { searchParams: 
   ]);
 
   const overdueOpen = summarizeOverdueInvoices(overdueInvoices);
+  const periodLabel = period === "year" ? String(year)
+    : period === "quarter" ? t("quarter", { n: validPart })
+    : `${t("monthLabel")} ${validPart}`;
   const periodLink = (kind: Period, n = 1, y = year) =>
     `/muhasebe/panel?year=${y}&period=${kind}&part=${n}`;
 
@@ -150,8 +153,9 @@ export async function AccountingDashboardView({ searchParams }: { searchParams: 
                 <p className={`relative mt-5 break-words text-[clamp(1.35rem,2.5vw,2rem)] font-semibold tracking-tight tabular-nums ${item.valueStyle}`}>
                   {formatMoney(item.value)}
                 </p>
-                <div className="mt-5 h-1 w-full overflow-hidden rounded-full bg-ink-100" aria-hidden="true">
-                  <div className={`h-full w-1/3 rounded-full ${item.key === "income" ? "bg-success-500" : item.key === "expense" ? "bg-accent" : "bg-ink-400"}`} />
+                <div className="relative mt-5 flex items-center justify-between gap-2 border-t border-ink-100 pt-3 text-xs font-medium text-ink-500">
+                  <span>{periodLabel}</span>
+                  <span>EUR</span>
                 </div>
               </article>
             );
