@@ -32,7 +32,12 @@ export function StatsCards({ stats, monthFrom, monthTo }: StatsCardsProps) {
   const { setParams, isPending } = useListQueryState();
 
   const cards: CardDefinition[] = [
-    { key: "open", label: t("open"), value: stats.open, filter: { "filter.status": "OPEN" } },
+    {
+      key: "open",
+      label: t("open"),
+      value: stats.open,
+      filter: { "filter.status": "OPEN" },
+    },
     {
       key: "inProgress",
       label: t("inProgress"),
@@ -50,13 +55,21 @@ export function StatsCards({ stats, monthFrom, monthTo }: StatsCardsProps) {
       key: "incomingThisMonth",
       label: t("incomingThisMonth"),
       value: stats.incomingThisMonth,
-      filter: { "filter.direction": "INCOMING", "filter.from": monthFrom, "filter.to": monthTo },
+      filter: {
+        "filter.direction": "INCOMING",
+        "filter.from": monthFrom,
+        "filter.to": monthTo,
+      },
     },
     {
       key: "outgoingThisMonth",
       label: t("outgoingThisMonth"),
       value: stats.outgoingThisMonth,
-      filter: { "filter.direction": "OUTGOING", "filter.from": monthFrom, "filter.to": monthTo },
+      filter: {
+        "filter.direction": "OUTGOING",
+        "filter.from": monthFrom,
+        "filter.to": monthTo,
+      },
     },
   ];
 
@@ -69,8 +82,10 @@ export function StatsCards({ stats, monthFrom, monthTo }: StatsCardsProps) {
           disabled={isPending}
           onClick={() => setParams(card.filter, { resetPage: true })}
           className={cn(
-            "flex flex-col items-start gap-1 rounded-medium border bg-content1 px-4 py-3 text-left shadow-sm transition-colors",
-            card.filter ? "hover:border-primary-300 hover:bg-primary-50/40" : "cursor-default",
+            "flex flex-col items-start gap-1 rounded-lg border bg-surface px-4 py-3 text-left shadow-sm transition-colors",
+            card.filter
+              ? "hover:border-brand-300 hover:bg-brand-50/40"
+              : "cursor-default",
           )}
           aria-label={t("filterAria", { label: card.label, value: card.value })}
         >
@@ -82,7 +97,7 @@ export function StatsCards({ stats, monthFrom, monthTo }: StatsCardsProps) {
           >
             {card.value}
           </span>
-          <span className="text-tiny text-default-500">{card.label}</span>
+          <span className="text-xs text-ink-500">{card.label}</span>
         </button>
       ))}
     </div>

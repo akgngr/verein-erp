@@ -1,12 +1,6 @@
 "use client";
 
-import {
-  Description,
-  FieldError,
-  Label,
-  ListBox,
-  Select,
-} from "@heroui-v3/react";
+import { Description, FieldError, Label, ListBox, Select } from "@heroui/react";
 import {
   Controller,
   type Control,

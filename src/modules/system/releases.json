@@ -2,6 +2,32 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.11.2",
+      "date": "2026-11-16",
+      "appVersion": "0.41.0",
+      "title": {
+        "tr": "HeroUI v3 arayüz geçişi",
+        "de": "Oberfläche auf HeroUI v3 umgestellt"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Uygulamanın tüm ekranları HeroUI 3.2.7 bileşenlerine geçirildi. Formlar, tarih seçiciler, çoklu seçimler, tablolar, sekmeler, iletişim kutuları ve bildirimler ortak tasarım sistemini kullanır.",
+          "de": "Alle Anwendungsansichten auf HeroUI 3.2.7 umgestellt. Formulare, Datumsauswahl, Mehrfachauswahl, Tabellen, Tabs, Dialoge und Benachrichtigungen verwenden das gemeinsame Designsystem."
+        },
+        {
+          "type": "improvement",
+          "tr": "Çalışma alanı doğal açık yüzeyler, grafit gezinme ve ölçülü yeşil vurgularla yenilendi. Açık/koyu/sistem teması ve mobil gezinme korunur; bileşen renkleri her iki temaya uyarlanır.",
+          "de": "Der Arbeitsbereich erhält natürliche helle Oberflächen, eine graphitfarbene Navigation und dezente grüne Akzente. Hell-, Dunkel- und Systemdesign sowie mobile Navigation bleiben erhalten; Komponentenfarben passen sich beiden Designs an."
+        },
+        {
+          "type": "improvement",
+          "tr": "Eski HeroUI v2 bağımlılıkları, geçici paket adları ve tema eklentisi kaldırıldı. Türkçe/Almanca tarih yerelleştirmesi, klavye gezinmesi, form doğrulama mesajları ve yerelleştirilmiş kopyalama bildirimleri yeni bileşenlerle bütünleştirildi.",
+          "de": "Alte HeroUI-v2-Abhängigkeiten, temporäre Paketnamen und das Theme-Plugin entfernt. Türkische/deutsche Datumsdarstellung, Tastaturnavigation, Formularvalidierung und lokalisierte Kopiermeldungen sind mit den neuen Komponenten integriert."
+        }
+      ]
+    },
+    {
       "version": "1.11.1",
       "date": "2026-11-15",
       "title": {

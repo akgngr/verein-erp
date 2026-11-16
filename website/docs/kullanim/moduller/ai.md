@@ -13,7 +13,7 @@ Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuy
 |---|---|
 | Anahtar | `ai` |
 | Tür | Eklenti |
-| Sürüm | 1.11.1 |
+| Sürüm | 1.11.2 |
 | Sayfalar | `/ayarlar/yapay-zeka` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Yapay zekâ asistanı | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.11.2 — HeroUI v3 arayüz geçişi
+
+_2026-11-16_
+
+- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
 ### 1.11.1 — Dosyalarda gerçek adlar
 
@@ -86,10 +92,4 @@ _2026-11-15_
 
 - **Yeni:** Bulut veri politikasında "Denetimli serbest metin" seçilebilir: her mesaj buluta gitmeden sunucuda taranır, kayıtlı kişiler konuşmanın takma adına ([[K7]]) çevrilir, kişisel veri içeren mesaj gönderilmez ve sebebi gösterilir. Önceki riskli mesajlar bağlama alınmaz. Buluttaki araçlar artık sabit liste yerine v2 veri sınıfına göre açılır.
 
-### 1.6.0 — Konuşma kapsamlı takma ad katmanı
-
-_2026-11-15_
-
-- **Yeni:** Kişi kayıtları konuşmaya özel kısa takma adlarla ([[K7]]) eşlenebilir. Sohbet geçmişi takma adlı saklanır; kullanıcıya gösterilirken ad, izleyicinin o anki yetkisiyle sunucuda çözülür (yetki yoksa "gizli kişi"). Henüz bulut sohbetine bağlı değildir.
-
-Daha eski 15 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/ai/releases.json)
+Daha eski 16 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/ai/releases.json)

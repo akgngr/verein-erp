@@ -8,9 +8,10 @@ import { studentsDatevPermissions, studentsPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "students",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.4.6",
+  version: "1.4.7",
   label: "Öğrenciler",
-  description: "Kurs ve Nachhilfe öğrencileri, veliler ve DATEV uyumlu borçlu (Debitor) kayıtları.",
+  description:
+    "Kurs ve Nachhilfe öğrencileri, veliler ve DATEV uyumlu borçlu (Debitor) kayıtları.",
   category: "OFFICIAL",
   hasSchema: true,
   // Başka modüllerden istenen erişim (yönetici onayı gerekir; gerekçe: messages → access.<modül>).
@@ -31,7 +32,12 @@ export const moduleConfig: ModuleConfig = {
     },
   ],
   menu: [
-    { key: "guardians", label: "Veliler", href: "/ogrenciler/veliler", icon: UsersRound },
+    {
+      key: "guardians",
+      label: "Veliler",
+      href: "/ogrenciler/veliler",
+      icon: UsersRound,
+    },
     {
       key: "datevExport",
       label: "DATEV Debitoren",

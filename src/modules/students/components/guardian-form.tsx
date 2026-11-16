@@ -1,24 +1,43 @@
 "use client";
+import {
+  toast,
+  Button,
+  CheckboxGroup,
+  Label,
+  Description,
+  Checkbox,
+} from "@heroui/react";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addToast, Button, Checkbox, CheckboxGroup } from "@heroui/react";
+
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
 import { applyActionResult } from "@/shared/components/forms/action-result";
-import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
+import {
+  FormSurface,
+  useFormDrawerClose,
+} from "@/shared/components/forms/form-drawer";
 import { FormDatePicker } from "@/shared/components/forms/form-date-picker";
 import { FormSwitch } from "@/shared/components/forms/form-switch";
 import { FormErrorSummary } from "@/shared/components/forms/form-error-summary";
-import { FormCountrySelect, FormStateSelect } from "@/shared/components/forms/form-address-selects";
+import {
+  FormCountrySelect,
+  FormStateSelect,
+} from "@/shared/components/forms/form-address-selects";
 import { FormInput } from "@/shared/components/forms/form-input";
 import { FormSelect } from "@/shared/components/forms/form-select";
 import { FormTextarea } from "@/shared/components/forms/form-textarea";
 import { SubmitButton } from "@/shared/components/forms/submit-button";
 
-import { createGuardianAction, updateGuardianAction } from "../actions/guardian-actions";
+import {
+  createGuardianAction,
+  updateGuardianAction,
+} from "../actions/guardian-actions";
 import { GUARDIAN_SALUTATION_VALUES } from "../constants";
 import { guardianSchema, type GuardianInput } from "../schemas/guardian";
 import type { GuardianRow } from "../types";
@@ -29,10 +48,21 @@ export function GuardianForm({ guardian }: { guardian?: GuardianRow }) {
   const t = useTranslations("students.guardianForm");
   const tCommon = useTranslations("common");
   // Eski serbest metin kayıtları (ör. "Divers") seçenek olarak korunur.
-  const legacySalutation = guardian?.salutation && !(GUARDIAN_SALUTATION_VALUES as readonly string[]).includes(guardian.salutation) ? guardian.salutation : null;
+  const legacySalutation =
+    guardian?.salutation &&
+    !(GUARDIAN_SALUTATION_VALUES as readonly string[]).includes(
+      guardian.salutation,
+    )
+      ? guardian.salutation
+      : null;
   const salutationOptions = [
-    ...GUARDIAN_SALUTATION_VALUES.map((value) => ({ value, label: t(`salutationOptions.${value}`) })),
-    ...(legacySalutation ? [{ value: legacySalutation, label: legacySalutation }] : []),
+    ...GUARDIAN_SALUTATION_VALUES.map((value) => ({
+      value,
+      label: t(`salutationOptions.${value}`),
+    })),
+    ...(legacySalutation
+      ? [{ value: legacySalutation, label: legacySalutation }]
+      : []),
   ];
   const router = useRouter();
   const closeDrawer = useFormDrawerClose();
@@ -58,11 +88,14 @@ export function GuardianForm({ guardian }: { guardian?: GuardianRow }) {
       sepaMandateDate: formatDateOnly(guardian?.sepaMandateDate),
       note: guardian?.note ?? "",
       bulkMailOptOut: guardian?.bulkMailOptOut ?? false,
-      messagingConsents: (guardian?.messagingConsents ?? []) as ("sms" | "whatsapp" | "telegram")[],
+      messagingConsents: (guardian?.messagingConsents ?? []) as (
+        "sms" | "whatsapp" | "telegram"
+      )[],
     },
   });
 
-  const close = () => (closeDrawer ? closeDrawer() : router.push("/ogrenciler/veliler"));
+  const close = () =>
+    closeDrawer ? closeDrawer() : router.push("/ogrenciler/veliler");
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(null);
@@ -72,14 +105,16 @@ export function GuardianForm({ guardian }: { guardian?: GuardianRow }) {
         setFormError(applyActionResult(result, form.setError));
         return;
       }
-      addToast({ title: t("updated"), color: "success" });
+      toast(t("updated"), { variant: "success" });
     } else {
       const result = await createGuardianAction(values);
       if (!result.ok) {
         setFormError(applyActionResult(result, form.setError));
         return;
       }
-      addToast({ title: t("created", { number: result.data.debtorNumber }), color: "success" });
+      toast(t("created", { number: result.data.debtorNumber }), {
+        variant: "success",
+      });
     }
     close();
   });
@@ -89,72 +124,151 @@ export function GuardianForm({ guardian }: { guardian?: GuardianRow }) {
       <form className="flex flex-col gap-5" onSubmit={onSubmit} noValidate>
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-6">
           <div className="sm:col-span-2">
-            <FormSelect name="salutation" label={t("salutation")} control={form.control} options={salutationOptions} />
+            <FormSelect
+              name="salutation"
+              label={t("salutation")}
+              control={form.control}
+              options={salutationOptions}
+            />
           </div>
           <div className="sm:col-span-2">
-            <FormInput name="firstName" label={t("firstName")} control={form.control} isRequired />
+            <FormInput
+              name="firstName"
+              label={t("firstName")}
+              control={form.control}
+              isRequired
+            />
           </div>
           <div className="sm:col-span-2">
-            <FormInput name="lastName" label={t("lastName")} control={form.control} isRequired />
+            <FormInput
+              name="lastName"
+              label={t("lastName")}
+              control={form.control}
+              isRequired
+            />
           </div>
         </section>
         <section className="flex flex-col gap-3">
-          <p className="text-small font-medium">{t("addressTitle")}</p>
+          <p className="text-sm font-medium">{t("addressTitle")}</p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-6">
             <div className="sm:col-span-4">
-              <FormInput name="street" label={t("street")} control={form.control} />
+              <FormInput
+                name="street"
+                label={t("street")}
+                control={form.control}
+              />
             </div>
             <div className="sm:col-span-2">
-              <FormInput name="houseNumber" label={t("houseNumber")} control={form.control} />
+              <FormInput
+                name="houseNumber"
+                label={t("houseNumber")}
+                control={form.control}
+              />
             </div>
             <div className="sm:col-span-2">
-              <FormInput name="postalCode" label={t("postalCode")} control={form.control} />
+              <FormInput
+                name="postalCode"
+                label={t("postalCode")}
+                control={form.control}
+              />
             </div>
             <div className="sm:col-span-4">
               <FormInput name="city" label={t("city")} control={form.control} />
             </div>
             <div className="sm:col-span-3">
-              <FormStateSelect name="state" label={t("state")} control={form.control} />
+              <FormStateSelect
+                name="state"
+                label={t("state")}
+                control={form.control}
+              />
             </div>
             <div className="sm:col-span-3">
-              <FormCountrySelect name="country" store="code" label={t("country")} control={form.control} />
+              <FormCountrySelect
+                name="country"
+                store="code"
+                label={t("country")}
+                control={form.control}
+              />
             </div>
           </div>
         </section>
         <section className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <FormInput name="email" label={t("email")} control={form.control} type="email" />
-          <FormInput name="phone" label={t("phone")} control={form.control} type="tel" />
+          <FormInput
+            name="email"
+            label={t("email")}
+            control={form.control}
+            type="email"
+          />
+          <FormInput
+            name="phone"
+            label={t("phone")}
+            control={form.control}
+            type="tel"
+          />
         </section>
-        <section className="flex flex-col gap-3 rounded-medium border border-default-200 p-3">
-          <p className="text-small font-medium">{t("bankTitle")}</p>
+        <section className="flex flex-col gap-3 rounded-lg border border-ink-200 p-3">
+          <p className="text-sm font-medium">{t("bankTitle")}</p>
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
             <FormInput name="iban" label={t("iban")} control={form.control} />
             <FormInput name="bic" label={t("bic")} control={form.control} />
-            <FormInput name="accountHolder" label={t("accountHolder")} control={form.control} />
-            <FormInput name="sepaMandateReference" label={t("sepaMandateReference")} control={form.control} />
-            <FormDatePicker name="sepaMandateDate" label={t("sepaMandateDate")} control={form.control} />
+            <FormInput
+              name="accountHolder"
+              label={t("accountHolder")}
+              control={form.control}
+            />
+            <FormInput
+              name="sepaMandateReference"
+              label={t("sepaMandateReference")}
+              control={form.control}
+            />
+            <FormDatePicker
+              name="sepaMandateDate"
+              label={t("sepaMandateDate")}
+              control={form.control}
+            />
           </div>
         </section>
         <FormTextarea name="note" label={t("note")} control={form.control} />
-        <section className="flex flex-col gap-3 rounded-medium border border-default-200 p-3">
-          <p className="text-small font-medium">{t("communicationTitle")}</p>
-          <FormSwitch name="bulkMailOptOut" label={t("bulkMailOptOut")} description={t("bulkMailOptOutDescription")} control={form.control} />
+        <section className="flex flex-col gap-3 rounded-lg border border-ink-200 p-3">
+          <p className="text-sm font-medium">{t("communicationTitle")}</p>
+          <FormSwitch
+            name="bulkMailOptOut"
+            label={t("bulkMailOptOut")}
+            description={t("bulkMailOptOutDescription")}
+            control={form.control}
+          />
           <Controller
             name="messagingConsents"
             control={form.control}
             render={({ field }) => (
-              <CheckboxGroup label={t("messagingConsents")} description={t("messagingConsentsDescription")} orientation="horizontal" value={field.value ?? []} onValueChange={field.onChange}>
-                {(["sms", "whatsapp", "telegram"] as const).map((channel) => (
-                  <Checkbox key={channel} value={channel}>{t(`messagingChannels.${channel}`)}</Checkbox>
-                ))}
+              <CheckboxGroup
+                value={field.value ?? []}
+                onChange={field.onChange}
+              >
+                <Label>{t("messagingConsents")}</Label>
+                <div className="flex flex-wrap gap-x-4 gap-y-2">
+                  {(["sms", "whatsapp", "telegram"] as const).map((channel) => (
+                    <Checkbox key={channel} value={channel}>
+                      <Checkbox.Content>
+                        <Checkbox.Control>
+                          <Checkbox.Indicator />
+                        </Checkbox.Control>
+                        <Label>{t(`messagingChannels.${channel}`)}</Label>
+                      </Checkbox.Content>
+                    </Checkbox>
+                  ))}
+                </div>
+                <Description>{t("messagingConsentsDescription")}</Description>
               </CheckboxGroup>
             )}
           />
         </section>
         <FormErrorSummary message={formError} />
         <div className="flex items-center gap-2">
-          <SubmitButton isSubmitting={form.formState.isSubmitting}>{tCommon("save")}</SubmitButton>
-          <Button variant="light" onPress={close}>
+          <SubmitButton isSubmitting={form.formState.isSubmitting}>
+            {tCommon("save")}
+          </SubmitButton>
+          <Button onPress={close} variant={actionVariant("default", "light")}>
             {tCommon("cancel")}
           </Button>
         </div>

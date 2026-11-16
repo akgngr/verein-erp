@@ -1,6 +1,6 @@
 "use client";
 
-import { buttonVariants } from "@heroui-v3/react";
+import { buttonVariants } from "@heroui/react";
 import Link from "next/link";
 import { actionVariant } from "./action-appearance";
 import type { ReactNode } from "react";
@@ -18,21 +18,10 @@ export function LinkButton({
   children: ReactNode;
   startIcon?: ReactNode;
   color?:
-    | "default"
-    | "primary"
-    | "secondary"
-    | "success"
-    | "warning"
-    | "danger";
+    "default" | "primary" | "secondary" | "success" | "warning" | "danger";
   size?: "sm" | "md" | "lg";
   variant?:
-    | "solid"
-    | "bordered"
-    | "light"
-    | "flat"
-    | "faded"
-    | "ghost"
-    | "shadow";
+    "solid" | "bordered" | "light" | "flat" | "faded" | "ghost" | "shadow";
 }) {
   return (
     <Link

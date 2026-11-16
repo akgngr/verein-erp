@@ -1,11 +1,30 @@
 "use client";
+import {
+  Spinner,
+  Card,
+  Button,
+  CheckboxGroup,
+  Label,
+  Checkbox,
+  TextField,
+  Input,
+  FieldError,
+  Select,
+  ListBox,
+} from "@heroui/react";
 
-import { Button, Card, CardBody, Checkbox, CheckboxGroup, Input, Select, SelectItem, Spinner } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+
 import { CheckCircle2 } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useMemo, useState, useTransition } from "react";
 
-import { BUNDESLAENDER, COUNTRY_CODES, countryNameDe, normalizeCountryName } from "@/shared/geo/germany";
+import {
+  BUNDESLAENDER,
+  COUNTRY_CODES,
+  countryNameDe,
+  normalizeCountryName,
+} from "@/shared/geo/germany";
 import { useHydrated } from "@/shared/hooks/use-hydrated";
 import { useTranslateMessage } from "@/shared/i18n/use-translate-message";
 
@@ -18,7 +37,13 @@ type Values = Record<string, string | boolean | string[]>;
 const str = (value: string | null | undefined) => value ?? "";
 
 /** Oturumsuz form: ön doldurulmuş alanlar, Datenschutz onayları ve imza. */
-export function PublicOnlineForm({ token, form }: { token: string; form: Form }) {
+export function PublicOnlineForm({
+  token,
+  form,
+}: {
+  token: string;
+  form: Form;
+}) {
   const t = useTranslations("online-forms.public");
   const translate = useTranslateMessage();
   const locale = useLocale();
@@ -27,63 +52,138 @@ export function PublicOnlineForm({ token, form }: { token: string; form: Form })
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [formError, setFormError] = useState<string | null>(null);
   const [signature, setSignature] = useState<string | null>(null);
-  const [signerName, setSignerName] = useState(form.signerRole === "guardian" && form.guardian ? `${form.guardian.firstName} ${form.guardian.lastName}` : form.subjectName);
+  const [signerName, setSignerName] = useState(
+    form.signerRole === "guardian" && form.guardian
+      ? `${form.guardian.firstName} ${form.guardian.lastName}`
+      : form.subjectName,
+  );
   const [privacyBuiltIn, setPrivacyBuiltIn] = useState(false);
   const [acceptedDocs, setAcceptedDocs] = useState<string[]>([]);
-  const privacyDoc = form.documents.find((doc) => doc.purpose === "PRIVACY" && doc.requiresConsent);
-  const photoDoc = form.documents.find((doc) => doc.purpose === "PHOTO" && doc.requiresConsent);
-  const privacy = privacyDoc ? acceptedDocs.includes(privacyDoc.id) : privacyBuiltIn;
-  const missingRequired = form.documents.some((doc) => doc.requiresConsent && doc.required && !acceptedDocs.includes(doc.id));
-  const toggleDoc = (id: string, value: boolean) => setAcceptedDocs((current) => (value ? [...current.filter((item) => item !== id), id] : current.filter((item) => item !== id)));
+  const privacyDoc = form.documents.find(
+    (doc) => doc.purpose === "PRIVACY" && doc.requiresConsent,
+  );
+  const photoDoc = form.documents.find(
+    (doc) => doc.purpose === "PHOTO" && doc.requiresConsent,
+  );
+  const privacy = privacyDoc
+    ? acceptedDocs.includes(privacyDoc.id)
+    : privacyBuiltIn;
+  const missingRequired = form.documents.some(
+    (doc) =>
+      doc.requiresConsent && doc.required && !acceptedDocs.includes(doc.id),
+  );
+  const toggleDoc = (id: string, value: boolean) =>
+    setAcceptedDocs((current) =>
+      value
+        ? [...current.filter((item) => item !== id), id]
+        : current.filter((item) => item !== id),
+    );
 
-  const [member, setMember] = useState<Values | null>(form.member && {
-    email: str(form.member.email), phone: str(form.member.phone), street: str(form.member.street), houseNumber: str(form.member.houseNumber), postalCode: str(form.member.postalCode),
-    city: str(form.member.city), state: str(form.member.state), country: normalizeCountryName(form.member.country) || "Deutschland", birthDate: str(form.member.birthDate),
-    profession: str(form.member.profession), messagingConsents: form.member.messagingConsents, bulkMailOptOut: form.member.bulkMailOptOut, photoConsent: form.member.photoConsent,
-  });
-  const [student, setStudent] = useState<Values | null>(form.student && {
-    birthDate: str(form.student.birthDate), school: str(form.student.school), gradeLevel: str(form.student.gradeLevel), email: str(form.student.email), phone: str(form.student.phone), photoConsent: form.student.photoConsent,
-  });
-  const [guardian, setGuardian] = useState<Values | null>(form.guardian && {
-    email: str(form.guardian.email), phone: str(form.guardian.phone), street: str(form.guardian.street), houseNumber: str(form.guardian.houseNumber), postalCode: str(form.guardian.postalCode),
-    city: str(form.guardian.city), state: str(form.guardian.state), country: form.guardian.country || "DE", iban: "", bic: "", accountHolder: str(form.guardian.accountHolder),
-    messagingConsents: form.guardian.messagingConsents, bulkMailOptOut: form.guardian.bulkMailOptOut, sepaMandate: false,
-  });
+  const [member, setMember] = useState<Values | null>(
+    form.member && {
+      email: str(form.member.email),
+      phone: str(form.member.phone),
+      street: str(form.member.street),
+      houseNumber: str(form.member.houseNumber),
+      postalCode: str(form.member.postalCode),
+      city: str(form.member.city),
+      state: str(form.member.state),
+      country: normalizeCountryName(form.member.country) || "Deutschland",
+      birthDate: str(form.member.birthDate),
+      profession: str(form.member.profession),
+      messagingConsents: form.member.messagingConsents,
+      bulkMailOptOut: form.member.bulkMailOptOut,
+      photoConsent: form.member.photoConsent,
+    },
+  );
+  const [student, setStudent] = useState<Values | null>(
+    form.student && {
+      birthDate: str(form.student.birthDate),
+      school: str(form.student.school),
+      gradeLevel: str(form.student.gradeLevel),
+      email: str(form.student.email),
+      phone: str(form.student.phone),
+      photoConsent: form.student.photoConsent,
+    },
+  );
+  const [guardian, setGuardian] = useState<Values | null>(
+    form.guardian && {
+      email: str(form.guardian.email),
+      phone: str(form.guardian.phone),
+      street: str(form.guardian.street),
+      houseNumber: str(form.guardian.houseNumber),
+      postalCode: str(form.guardian.postalCode),
+      city: str(form.guardian.city),
+      state: str(form.guardian.state),
+      country: form.guardian.country || "DE",
+      iban: "",
+      bic: "",
+      accountHolder: str(form.guardian.accountHolder),
+      messagingConsents: form.guardian.messagingConsents,
+      bulkMailOptOut: form.guardian.bulkMailOptOut,
+      sepaMandate: false,
+    },
+  );
 
   const countries = useMemo(() => {
     const display = new Intl.DisplayNames([locale], { type: "region" });
-    return COUNTRY_CODES.map((code) => ({ code, name: countryNameDe(code), label: display.of(code) ?? code }));
+    return COUNTRY_CODES.map((code) => ({
+      code,
+      name: countryNameDe(code),
+      label: display.of(code) ?? code,
+    }));
   }, [locale]);
 
   // KARAR: react-aria seçim kutularının otomatik kimlikleri sunucu/istemci arasında kayıyor (hydration
   // uyarısı); form yalnız istemcide çizilir. Sayfa arama motoruna açık değildir, SSR kazancı yok.
   const hydrated = useHydrated();
-  if (!hydrated) return <div className="flex justify-center p-10"><Spinner /></div>;
+  if (!hydrated)
+    return (
+      <div className="flex justify-center p-10">
+        <Spinner></Spinner>
+      </div>
+    );
 
   if (done) {
     return (
-      <Card className="mx-auto max-w-xl"><CardBody className="flex flex-col items-center gap-3 p-8 text-center">
-        <CheckCircle2 className="size-12 text-success" />
-        <h1 className="text-xl font-semibold">{t("doneTitle")}</h1>
-        <p className="text-default-600">{t("doneText", { org: form.orgName })}</p>
-      </CardBody></Card>
+      <Card className={["mx-auto max-w-xl"].filter(Boolean).join(" ")}>
+        <Card.Content
+          className={["flex flex-col items-center gap-3 p-8 text-center"]
+            .filter(Boolean)
+            .join(" ")}
+        >
+          <CheckCircle2 className="size-12 text-success" />
+          <h1 className="text-xl font-semibold">{t("doneTitle")}</h1>
+          <p className="text-ink-600">{t("doneText", { org: form.orgName })}</p>
+        </Card.Content>
+      </Card>
     );
   }
 
-  const field = (scope: string, values: Values, set: (next: Values) => void, name: string, props: { type?: string; label?: string } = {}) => (
-    <Input
+  const field = (
+    scope: string,
+    values: Values,
+    set: (next: Values) => void,
+    name: string,
+    props: { type?: string; label?: string } = {},
+  ) => (
+    <TextField
       key={`${scope}.${name}`}
-      label={props.label ?? t(`fields.${name}` as never)}
-      labelPlacement="outside"
-      placeholder=" "
-      type={props.type ?? "text"}
       value={String(values[name] ?? "")}
-      onValueChange={(value) => set({ ...values, [name]: value })}
       isInvalid={Boolean(errors[`${scope}.${name}`])}
-      errorMessage={translate(errors[`${scope}.${name}`])}
-    />
+      onChange={(value) => set({ ...values, [name]: value })}
+      className={["w-full"].filter(Boolean).join(" ")}
+    >
+      <Label>{props.label ?? t(`fields.${name}` as never)}</Label>
+      <Input placeholder=" " type={props.type ?? "text"} />
+      <FieldError>{translate(errors[`${scope}.${name}`])}</FieldError>
+    </TextField>
   );
-  const birthDate = (scope: string, values: Values, set: (next: Values) => void) => (
+  const birthDate = (
+    scope: string,
+    values: Values,
+    set: (next: Values) => void,
+  ) => (
     <BirthDateSelect
       key={`${scope}.birthDate`}
       id={`${scope}-birthDate`}
@@ -92,45 +192,147 @@ export function PublicOnlineForm({ token, form }: { token: string; form: Form })
       onChange={(value) => set({ ...values, birthDate: value })}
       isInvalid={Boolean(errors[`${scope}.birthDate`])}
       errorMessage={translate(errors[`${scope}.birthDate`])}
-      labels={{ day: t("date.day"), month: t("date.month"), year: t("date.year") }}
+      labels={{
+        day: t("date.day"),
+        month: t("date.month"),
+        year: t("date.year"),
+      }}
     />
   );
-  const address = (scope: string, values: Values, set: (next: Values) => void, countryMode: "code" | "name") => (
+  const address = (
+    scope: string,
+    values: Values,
+    set: (next: Values) => void,
+    countryMode: "code" | "name",
+  ) => (
     <div className="grid grid-cols-1 gap-4 sm:grid-cols-6">
       <div className="sm:col-span-4">{field(scope, values, set, "street")}</div>
-      <div className="sm:col-span-2">{field(scope, values, set, "houseNumber")}</div>
-      <div className="sm:col-span-2">{field(scope, values, set, "postalCode")}</div>
+      <div className="sm:col-span-2">
+        {field(scope, values, set, "houseNumber")}
+      </div>
+      <div className="sm:col-span-2">
+        {field(scope, values, set, "postalCode")}
+      </div>
       <div className="sm:col-span-4">{field(scope, values, set, "city")}</div>
       <div className="sm:col-span-3">
-        <Select id={`${scope}-state`} label={t("fields.state")} labelPlacement="outside" placeholder={t("select")} selectedKeys={values.state ? [String(values.state)] : []} onSelectionChange={(keys) => set({ ...values, state: String(Array.from(keys)[0] ?? "") })} isInvalid={Boolean(errors[`${scope}.state`])} errorMessage={translate(errors[`${scope}.state`])}>
-          {BUNDESLAENDER.map((item) => <SelectItem key={item}>{item}</SelectItem>)}
+        <Select
+          id={`${scope}-state`}
+          placeholder={t("select")}
+          isInvalid={Boolean(errors[`${scope}.state`])}
+          value={values.state ? String(values.state) : null}
+          onChange={(selectedValue) => {
+            const keys =
+              selectedValue === null ? undefined : String(selectedValue);
+            return set({ ...values, state: String(keys ?? "") });
+          }}
+        >
+          <Label>{t("fields.state")}</Label>
+          <Select.Trigger>
+            <Select.Value />
+            <Select.Indicator />
+          </Select.Trigger>
+          <Select.Popover>
+            <ListBox>
+              {BUNDESLAENDER.map((item) => (
+                <ListBox.Item key={item} id={item} textValue={String(item)}>
+                  <Label>{item}</Label>
+                  <ListBox.ItemIndicator />
+                </ListBox.Item>
+              ))}
+            </ListBox>
+          </Select.Popover>
+          <FieldError>{translate(errors[`${scope}.state`])}</FieldError>
         </Select>
       </div>
       <div className="sm:col-span-3">
-        <Select id={`${scope}-country`} label={t("fields.country")} labelPlacement="outside" selectedKeys={values.country ? [String(values.country)] : []} onSelectionChange={(keys) => set({ ...values, country: String(Array.from(keys)[0] ?? "") })}>
-          {countries.map((item) => <SelectItem key={countryMode === "code" ? item.code : item.name}>{item.label}</SelectItem>)}
+        <Select
+          id={`${scope}-country`}
+          value={values.country ? String(values.country) : null}
+          onChange={(selectedValue) => {
+            const keys =
+              selectedValue === null ? undefined : String(selectedValue);
+            return set({ ...values, country: String(keys ?? "") });
+          }}
+        >
+          <Label>{t("fields.country")}</Label>
+          <Select.Trigger>
+            <Select.Value />
+            <Select.Indicator />
+          </Select.Trigger>
+          <Select.Popover>
+            <ListBox>
+              {countries.map((item) => (
+                <ListBox.Item
+                  key={countryMode === "code" ? item.code : item.name}
+                  id={countryMode === "code" ? item.code : item.name}
+                  textValue={String(item.label)}
+                >
+                  <Label>{item.label}</Label>
+                  <ListBox.ItemIndicator />
+                </ListBox.Item>
+              ))}
+            </ListBox>
+          </Select.Popover>
         </Select>
       </div>
     </div>
   );
   const messaging = (values: Values, set: (next: Values) => void) => (
     <div className="flex flex-col gap-2">
-      <CheckboxGroup label={t("messagingLabel")} orientation="horizontal" value={values.messagingConsents as string[]} onValueChange={(value) => set({ ...values, messagingConsents: value })}>
-        {(["sms", "whatsapp", "telegram"] as const).map((key) => <Checkbox key={key} value={key}>{t(`channels.${key}`)}</Checkbox>)}
+      <CheckboxGroup
+        value={values.messagingConsents as string[]}
+        onChange={(value) => set({ ...values, messagingConsents: value })}
+      >
+        <Label>{t("messagingLabel")}</Label>
+        <div className="flex flex-wrap gap-x-4 gap-y-2">
+          {(["sms", "whatsapp", "telegram"] as const).map((key) => (
+            <Checkbox key={key} value={key}>
+              <Checkbox.Content>
+                <Checkbox.Control>
+                  <Checkbox.Indicator />
+                </Checkbox.Control>
+                <Label>{t(`channels.${key}`)}</Label>
+              </Checkbox.Content>
+            </Checkbox>
+          ))}
+        </div>
       </CheckboxGroup>
-      <Checkbox isSelected={Boolean(values.bulkMailOptOut)} onValueChange={(value) => set({ ...values, bulkMailOptOut: value })}>{t("bulkMailOptOut")}</Checkbox>
+      <Checkbox
+        isSelected={Boolean(values.bulkMailOptOut)}
+        onChange={(value) => set({ ...values, bulkMailOptOut: value })}
+      >
+        <Checkbox.Content>
+          <Checkbox.Control>
+            <Checkbox.Indicator />
+          </Checkbox.Control>
+          <Label>{t("bulkMailOptOut")}</Label>
+        </Checkbox.Content>
+      </Checkbox>
     </div>
   );
 
   const consentLabel = (doc: Form["documents"][number]) => {
     if (doc.purpose === "PRIVACY") return t("privacy", { org: form.orgName });
-    if (doc.purpose === "PHOTO") return form.signerRole === "guardian" && student ? t("photoChild") : t("photo");
+    if (doc.purpose === "PHOTO")
+      return form.signerRole === "guardian" && student
+        ? t("photoChild")
+        : t("photo");
     return t("acceptDocument", { title: doc.title });
   };
   const submit = () => {
     setFormError(null);
     start(async () => {
-      const response = await submitOnlineFormAction({ token, textVersion: form.textVersion, signerName, signature: signature ?? "", privacy, documents: acceptedDocs, ...(member ? { member } : {}), ...(student ? { student } : {}), ...(guardian ? { guardian } : {}) });
+      const response = await submitOnlineFormAction({
+        token,
+        textVersion: form.textVersion,
+        signerName,
+        signature: signature ?? "",
+        privacy,
+        documents: acceptedDocs,
+        ...(member ? { member } : {}),
+        ...(student ? { student } : {}),
+        ...(guardian ? { guardian } : {}),
+      });
       if (response.ok) return setDone(true);
       setErrors(response.fields ?? {});
       setFormError(response.error);
@@ -139,96 +341,250 @@ export function PublicOnlineForm({ token, form }: { token: string; form: Form })
   };
 
   const section = (title: string, children: React.ReactNode) => (
-    <Card shadow="sm"><CardBody className="flex flex-col gap-4 p-5"><h2 className="text-medium font-semibold">{title}</h2>{children}</CardBody></Card>
+    <Card className={"shadow-sm border border-ink-200/80"}>
+      <Card.Content
+        className={["flex flex-col gap-4 p-5"].filter(Boolean).join(" ")}
+      >
+        <h2 className="text-base font-semibold">{title}</h2>
+        {children}
+      </Card.Content>
+    </Card>
   );
 
   return (
     <div className="mx-auto flex max-w-2xl flex-col gap-4">
       <header className="flex flex-col gap-1">
-        <p className="text-small text-default-500">{form.orgName}</p>
+        <p className="text-sm text-ink-500">{form.orgName}</p>
         <h1 className="text-2xl font-semibold">{t("title")}</h1>
-        <p className="text-default-600">{form.signerRole === "guardian" ? t("introGuardian", { name: form.subjectName }) : t("intro", { name: form.subjectName })}</p>
-        <p className="text-tiny text-default-400">{t("validUntil", { date: new Date(form.expiresAt).toLocaleDateString(locale) })}</p>
+        <p className="text-ink-600">
+          {form.signerRole === "guardian"
+            ? t("introGuardian", { name: form.subjectName })
+            : t("intro", { name: form.subjectName })}
+        </p>
+        <p className="text-xs text-ink-400">
+          {t("validUntil", {
+            date: new Date(form.expiresAt).toLocaleDateString(locale),
+          })}
+        </p>
       </header>
-      {formError ? <div role="alert" className="rounded-medium bg-danger-50 p-3 text-small text-danger">{translate(formError)}</div> : null}
-
-      {member && section(t("sections.person"), (
-        <>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {field("member", member, setMember, "email", { type: "email" })}
-            {field("member", member, setMember, "phone", { type: "tel" })}
-            {birthDate("member", member, setMember)}
-            {field("member", member, setMember, "profession")}
-          </div>
-          {address("member", member, setMember, "name")}
-        </>
-      ))}
-      {student && section(form.signerRole === "guardian" ? t("sections.child") : t("sections.person"), (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          {birthDate("student", student, setStudent)}
-          {field("student", student, setStudent, "school")}
-          {field("student", student, setStudent, "gradeLevel")}
-          {field("student", student, setStudent, "email", { type: "email" })}
-          {field("student", student, setStudent, "phone", { type: "tel" })}
+      {formError ? (
+        <div
+          role="alert"
+          className="rounded-lg bg-danger-50 p-3 text-sm text-danger"
+        >
+          {translate(formError)}
         </div>
-      ))}
-      {guardian && section(form.kind === "GUARDIAN" ? t("sections.person") : t("sections.guardian"), (
-        <>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {field("guardian", guardian, setGuardian, "email", { type: "email" })}
-            {field("guardian", guardian, setGuardian, "phone", { type: "tel" })}
-          </div>
-          {address("guardian", guardian, setGuardian, "code")}
-          <h3 className="pt-2 text-small font-semibold">{t("sections.bank")}</h3>
-          {form.guardian?.ibanMasked ? <p className="text-tiny text-default-500">{t("ibanKnown", { iban: form.guardian.ibanMasked })}</p> : null}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {field("guardian", guardian, setGuardian, "iban")}
-            {field("guardian", guardian, setGuardian, "bic")}
-            {field("guardian", guardian, setGuardian, "accountHolder")}
-          </div>
-          <Checkbox isSelected={Boolean(guardian.sepaMandate)} onValueChange={(value) => setGuardian({ ...guardian, sepaMandate: value })}>
-            <span className="text-small">{t("sepaMandate", { org: form.orgName })}</span>
-          </Checkbox>
-        </>
-      ))}
+      ) : null}
 
-      {section(t("sections.consents"), (
+      {member &&
+        section(
+          t("sections.person"),
+          <>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {field("member", member, setMember, "email", { type: "email" })}
+              {field("member", member, setMember, "phone", { type: "tel" })}
+              {birthDate("member", member, setMember)}
+              {field("member", member, setMember, "profession")}
+            </div>
+            {address("member", member, setMember, "name")}
+          </>,
+        )}
+      {student &&
+        section(
+          form.signerRole === "guardian"
+            ? t("sections.child")
+            : t("sections.person"),
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+            {birthDate("student", student, setStudent)}
+            {field("student", student, setStudent, "school")}
+            {field("student", student, setStudent, "gradeLevel")}
+            {field("student", student, setStudent, "email", { type: "email" })}
+            {field("student", student, setStudent, "phone", { type: "tel" })}
+          </div>,
+        )}
+      {guardian &&
+        section(
+          form.kind === "GUARDIAN"
+            ? t("sections.person")
+            : t("sections.guardian"),
+          <>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {field("guardian", guardian, setGuardian, "email", {
+                type: "email",
+              })}
+              {field("guardian", guardian, setGuardian, "phone", {
+                type: "tel",
+              })}
+            </div>
+            {address("guardian", guardian, setGuardian, "code")}
+            <h3 className="pt-2 text-sm font-semibold">{t("sections.bank")}</h3>
+            {form.guardian?.ibanMasked ? (
+              <p className="text-xs text-ink-500">
+                {t("ibanKnown", { iban: form.guardian.ibanMasked })}
+              </p>
+            ) : null}
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              {field("guardian", guardian, setGuardian, "iban")}
+              {field("guardian", guardian, setGuardian, "bic")}
+              {field("guardian", guardian, setGuardian, "accountHolder")}
+            </div>
+            <Checkbox
+              isSelected={Boolean(guardian.sepaMandate)}
+              onChange={(value) =>
+                setGuardian({ ...guardian, sepaMandate: value })
+              }
+            >
+              <Checkbox.Content>
+                <Checkbox.Control>
+                  <Checkbox.Indicator />
+                </Checkbox.Control>
+                <Label>
+                  <span className="text-sm">
+                    {t("sepaMandate", { org: form.orgName })}
+                  </span>
+                </Label>
+              </Checkbox.Content>
+            </Checkbox>
+          </>,
+        )}
+
+      {section(
+        t("sections.consents"),
         <>
           {form.documents.map((doc) => (
             <div key={doc.id} className="flex flex-col gap-2">
-              <h3 className="text-small font-semibold">{doc.title}</h3>
+              <h3 className="text-sm font-semibold">{doc.title}</h3>
               {/* contentHtml sunucuda sanitize-html ile izin listesine göre temizlenmiştir. */}
-              <div className="doc-content max-h-64 overflow-y-auto rounded-medium border border-default-200 bg-default-50 p-3 text-small text-default-700" dangerouslySetInnerHTML={{ __html: doc.contentHtml }} />
+              <div
+                className="doc-content max-h-64 overflow-y-auto rounded-lg border border-ink-200 bg-ink-50 p-3 text-sm text-ink-700"
+                dangerouslySetInnerHTML={{ __html: doc.contentHtml }}
+              />
               {doc.requiresConsent ? (
-                <Checkbox isSelected={acceptedDocs.includes(doc.id)} onValueChange={(value) => toggleDoc(doc.id, value)} isInvalid={doc.purpose === "PRIVACY" && Boolean(errors.privacy)}>
-                  <span className="text-small">{consentLabel(doc)}{doc.required ? " *" : ""}</span>
+                <Checkbox
+                  isSelected={acceptedDocs.includes(doc.id)}
+                  isInvalid={
+                    doc.purpose === "PRIVACY" && Boolean(errors.privacy)
+                  }
+                  onChange={(value) => toggleDoc(doc.id, value)}
+                >
+                  <Checkbox.Content>
+                    <Checkbox.Control>
+                      <Checkbox.Indicator />
+                    </Checkbox.Control>
+                    <Label>
+                      <span className="text-sm">
+                        {consentLabel(doc)}
+                        {doc.required ? " *" : ""}
+                      </span>
+                    </Label>
+                  </Checkbox.Content>
                 </Checkbox>
               ) : null}
             </div>
           ))}
           {!privacyDoc ? (
-            <Checkbox isSelected={privacyBuiltIn} onValueChange={setPrivacyBuiltIn} isInvalid={Boolean(errors.privacy)}>
-              <span className="text-small">{t("privacy", { org: form.orgName })}</span>
+            <Checkbox
+              isSelected={privacyBuiltIn}
+              isInvalid={Boolean(errors.privacy)}
+              onChange={setPrivacyBuiltIn}
+            >
+              <Checkbox.Content>
+                <Checkbox.Control>
+                  <Checkbox.Indicator />
+                </Checkbox.Control>
+                <Label>
+                  <span className="text-sm">
+                    {t("privacy", { org: form.orgName })}
+                  </span>
+                </Label>
+              </Checkbox.Content>
             </Checkbox>
           ) : null}
-          {errors.privacy ? <p className="text-tiny text-danger">{translate(errors.privacy)}</p> : null}
-          {!photoDoc && member ? <Checkbox isSelected={Boolean(member.photoConsent)} onValueChange={(value) => setMember({ ...member, photoConsent: value })}><span className="text-small">{t("photo")}</span></Checkbox> : null}
-          {!photoDoc && student ? <Checkbox isSelected={Boolean(student.photoConsent)} onValueChange={(value) => setStudent({ ...student, photoConsent: value })}><span className="text-small">{form.signerRole === "guardian" ? t("photoChild") : t("photo")}</span></Checkbox> : null}
-          {member ? messaging(member, setMember) : guardian ? messaging(guardian, setGuardian) : null}
-          <p className="text-tiny text-default-500">{t("withdraw")}</p>
-        </>
-      ))}
+          {errors.privacy ? (
+            <p className="text-xs text-danger">{translate(errors.privacy)}</p>
+          ) : null}
+          {!photoDoc && member ? (
+            <Checkbox
+              isSelected={Boolean(member.photoConsent)}
+              onChange={(value) =>
+                setMember({ ...member, photoConsent: value })
+              }
+            >
+              <Checkbox.Content>
+                <Checkbox.Control>
+                  <Checkbox.Indicator />
+                </Checkbox.Control>
+                <Label>
+                  <span className="text-sm">{t("photo")}</span>
+                </Label>
+              </Checkbox.Content>
+            </Checkbox>
+          ) : null}
+          {!photoDoc && student ? (
+            <Checkbox
+              isSelected={Boolean(student.photoConsent)}
+              onChange={(value) =>
+                setStudent({ ...student, photoConsent: value })
+              }
+            >
+              <Checkbox.Content>
+                <Checkbox.Control>
+                  <Checkbox.Indicator />
+                </Checkbox.Control>
+                <Label>
+                  <span className="text-sm">
+                    {form.signerRole === "guardian"
+                      ? t("photoChild")
+                      : t("photo")}
+                  </span>
+                </Label>
+              </Checkbox.Content>
+            </Checkbox>
+          ) : null}
+          {member
+            ? messaging(member, setMember)
+            : guardian
+              ? messaging(guardian, setGuardian)
+              : null}
+          <p className="text-xs text-ink-500">{t("withdraw")}</p>
+        </>,
+      )}
 
-      {section(t("sections.signature"), (
+      {section(
+        t("sections.signature"),
         <>
-          <Input label={t("signerName")} labelPlacement="outside" placeholder=" " value={signerName} onValueChange={setSignerName} isInvalid={Boolean(errors.signerName)} errorMessage={translate(errors.signerName)} />
-          <SignaturePad onChange={setSignature} clearLabel={t("clearSignature")} ariaLabel={t("signatureArea")} />
-          {errors.signature ? <p className="text-tiny text-danger">{translate(errors.signature)}</p> : null}
-          <p className="text-tiny text-default-500">{t("signatureHint")}</p>
-        </>
-      ))}
+          <TextField
+            value={signerName}
+            isInvalid={Boolean(errors.signerName)}
+            onChange={setSignerName}
+            className={["w-full"].filter(Boolean).join(" ")}
+          >
+            <Label>{t("signerName")}</Label>
+            <Input placeholder=" " />
+            <FieldError>{translate(errors.signerName)}</FieldError>
+          </TextField>
+          <SignaturePad
+            onChange={setSignature}
+            clearLabel={t("clearSignature")}
+            ariaLabel={t("signatureArea")}
+          />
+          {errors.signature ? (
+            <p className="text-xs text-danger">{translate(errors.signature)}</p>
+          ) : null}
+          <p className="text-xs text-ink-500">{t("signatureHint")}</p>
+        </>,
+      )}
 
-      <Button color="primary" size="lg" isLoading={pending} isDisabled={!privacy || missingRequired || !signature} onPress={submit}>{t("submit")}</Button>
+      <Button
+        size="lg"
+        isDisabled={!privacy || missingRequired || !signature}
+        onPress={submit}
+        variant={actionVariant("primary", "solid")}
+        isPending={pending}
+      >
+        {pending ? <Spinner size="sm" color="current" /> : null}
+        {t("submit")}
+      </Button>
     </div>
   );
 }

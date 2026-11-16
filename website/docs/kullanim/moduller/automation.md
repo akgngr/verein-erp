@@ -13,7 +13,7 @@ Kalıcı arka plan görevleri ve iş akışları.
 |---|---|
 | Anahtar | `automation` |
 | Tür | Eklenti |
-| Sürüm | 0.10.5 |
+| Sürüm | 0.10.6 |
 | Sayfalar | `/automation`, `/automation/workflows` |
 
 ## Diğer modüllere erişim
@@ -35,6 +35,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Otomasyon | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | — | görüntüleme |
 
 ## Sürüm notları
+
+### 0.10.6 — HeroUI v3 arayüz geçişi
+
+_2026-11-16_
+
+- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
 ### 0.10.5 — Sistem bağı bildirildi
 
@@ -79,10 +85,4 @@ _2026-11-06_
 
 - **Düzeltme:** İş akışı editörü kapandıktan sonra sayfanın kaydırılamaması giderildi.
 
-### 0.9.0 — İş akışı tetikleyicileri
-
-_2026-11-06_
-
-- **Yeni:** Koşul adımı tetikleyiciye göre yalnızca o olayın alanlarını listeler; değer listeden seçilir veya "Diğer (elle yaz)" ile girilir. Yardım metinleri alanın altında gösterilir. Modül olayları için standart ve test eklendi.
-
-Daha eski 20 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/automation/releases.json)
+Daha eski 21 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/automation/releases.json)

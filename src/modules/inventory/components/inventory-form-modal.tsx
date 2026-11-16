@@ -1,23 +1,32 @@
 "use client";
+import {
+  Button,
+  Spinner,
+  Drawer,
+  Switch,
+  Label,
+  TextField,
+  Input,
+  FieldError,
+  InputGroup,
+  Description,
+  TextArea,
+} from "@heroui/react";
+
+import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useEffect, useState, useTransition } from "react";
-import { FORM_DRAWER_PROPS } from "@/shared/components/forms/form-drawer";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
-import {
-  Button,
-  Input,
-  Drawer,
-  DrawerBody,
-  DrawerContent,
-  DrawerFooter,
-  DrawerHeader,
-  Switch,
-  Textarea,
-} from "@heroui/react";
+
 import { ChevronDown } from "lucide-react";
-import { createInventoryAction, updateInventoryAction } from "../actions/inventory-actions";
+import {
+  createInventoryAction,
+  updateInventoryAction,
+} from "../actions/inventory-actions";
 import {
   INVENTORY_CATEGORIES,
   INVENTORY_CATEGORY_LABEL_KEYS,
@@ -25,7 +34,10 @@ import {
   INVENTORY_STATUSES,
 } from "../constants";
 import { toInventoryFormValues } from "../helpers/inventory-helpers";
-import { inventoryCreateSchema, type InventoryFormValues } from "../schemas/inventory-schema";
+import {
+  inventoryCreateSchema,
+  type InventoryFormValues,
+} from "../schemas/inventory-schema";
 import type { InventoryItemRow } from "../types";
 
 interface InventoryFormModalProps {
@@ -36,9 +48,13 @@ interface InventoryFormModalProps {
 }
 
 const nativeSelectClassName =
-  "h-10 w-full appearance-none rounded-medium bg-default-100 px-3 pr-9 text-sm text-foreground transition-colors hover:bg-default-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer border border-transparent focus:border-primary/50";
+  "h-10 w-full appearance-none rounded-lg bg-ink-100 px-3 pr-9 text-sm text-foreground transition-colors hover:bg-ink-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-accent/40 cursor-pointer border border-transparent focus:border-accent/50";
 
-export function InventoryFormModal({ isOpen, onClose, item = null }: InventoryFormModalProps) {
+export function InventoryFormModal({
+  isOpen,
+  onClose,
+  item = null,
+}: InventoryFormModalProps) {
   const t = useTranslations("inventory");
   const [isPending, startTransition] = useTransition();
   const [submitError, setSubmitError] = useState<string | null>(null);
@@ -67,7 +83,9 @@ export function InventoryFormModal({ isOpen, onClose, item = null }: InventoryFo
 
   const errorText = (message: string | undefined): string | undefined => {
     if (!message) return undefined;
-    return message.startsWith("validation.") ? t(message) : t("validation.invalid");
+    return message.startsWith("validation.")
+      ? t(message)
+      : t("validation.invalid");
   };
 
   const onSubmit = handleSubmit((values) => {
@@ -91,169 +109,266 @@ export function InventoryFormModal({ isOpen, onClose, item = null }: InventoryFo
       onOpenChange={(open) => {
         if (!open) handleClose();
       }}
-      {...FORM_DRAWER_PROPS}
-      size="2xl"
-      isDismissable={!isPending}
     >
-      <DrawerContent>
-        <form onSubmit={onSubmit} noValidate className="flex h-full min-h-0 flex-col">
-          <DrawerHeader>{isEdit ? t("modal.editTitle") : t("modal.createTitle")}</DrawerHeader>
+      <Drawer.Backdrop isDismissable={!isPending}>
+        <Drawer.Content placement="right">
+          <Drawer.Dialog
+            className={
+              "h-full max-h-dvh w-screen max-w-full rounded-none sm:rounded-l-xl sm:max-w-2xl"
+            }
+          >
+            <DialogDismissButton drawer />
 
-          <DrawerBody>
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <Input
-                {...register("name")}
-                label={t("fields.name")}
-                placeholder={t("placeholders.name")}
-                isRequired
-                isInvalid={Boolean(errors.name)}
-                errorMessage={errorText(errors.name?.message)}
-                className="sm:col-span-2"
-              />
+            <form
+              onSubmit={onSubmit}
+              noValidate
+              className="flex h-full min-h-0 flex-col"
+            >
+              <Drawer.Header>
+                <Drawer.Heading className="flex items-center gap-2">
+                  {isEdit ? t("modal.editTitle") : t("modal.createTitle")}
+                </Drawer.Heading>
+              </Drawer.Header>
 
-              <div className="flex flex-col gap-1.5">
-                <label htmlFor="inventory-category" className="text-small text-foreground">
-                  {t("fields.category")}
-                </label>
-                <div className="relative">
-                  <select
-                    id="inventory-category"
-                    {...register("category")}
-                    className={nativeSelectClassName}
+              <Drawer.Body>
+                <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+                  <TextField
+                    isRequired
+                    isInvalid={Boolean(errors.name)}
+                    className={["sm:col-span-2"].filter(Boolean).join(" ")}
                   >
-                    {INVENTORY_CATEGORIES.map((category) => (
-                      <option key={category} value={category}>
-                        {t(INVENTORY_CATEGORY_LABEL_KEYS[category])}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown
-                    className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-default-400"
-                    aria-hidden="true"
-                  />
-                </div>
-              </div>
+                    <Label>{t("fields.name")}</Label>
+                    <Input
+                      {...register("name")}
+                      placeholder={t("placeholders.name")}
+                    />
+                    <FieldError>{errorText(errors.name?.message)}</FieldError>
+                  </TextField>
 
-              <div className="flex flex-col gap-1.5">
-                <label htmlFor="inventory-status" className="text-small text-foreground">
-                  {t("fields.status")}
-                </label>
-                <div className="relative">
-                  <select
-                    id="inventory-status"
-                    {...register("status")}
-                    className={nativeSelectClassName}
+                  <div className="flex flex-col gap-1.5">
+                    <label
+                      htmlFor="inventory-category"
+                      className="text-sm text-foreground"
+                    >
+                      {t("fields.category")}
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="inventory-category"
+                        {...register("category")}
+                        className={nativeSelectClassName}
+                      >
+                        {INVENTORY_CATEGORIES.map((category) => (
+                          <option key={category} value={category}>
+                            {t(INVENTORY_CATEGORY_LABEL_KEYS[category])}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown
+                        className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-400"
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col gap-1.5">
+                    <label
+                      htmlFor="inventory-status"
+                      className="text-sm text-foreground"
+                    >
+                      {t("fields.status")}
+                    </label>
+                    <div className="relative">
+                      <select
+                        id="inventory-status"
+                        {...register("status")}
+                        className={nativeSelectClassName}
+                      >
+                        {INVENTORY_STATUSES.map((status) => (
+                          <option key={status} value={status}>
+                            {t(INVENTORY_STATUS_LABEL_KEYS[status])}
+                          </option>
+                        ))}
+                      </select>
+                      <ChevronDown
+                        className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-400"
+                        aria-hidden="true"
+                      />
+                    </div>
+                  </div>
+
+                  <TextField
+                    isInvalid={Boolean(errors.serialNumber)}
+                    className={["w-full"].filter(Boolean).join(" ")}
                   >
-                    {INVENTORY_STATUSES.map((status) => (
-                      <option key={status} value={status}>
-                        {t(INVENTORY_STATUS_LABEL_KEYS[status])}
-                      </option>
-                    ))}
-                  </select>
-                  <ChevronDown
-                    className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-default-400"
-                    aria-hidden="true"
-                  />
+                    <Label>{t("fields.serialNumber")}</Label>
+                    <Input
+                      {...register("serialNumber")}
+                      placeholder={t("placeholders.serialNumber")}
+                    />
+                    <FieldError>
+                      {errorText(errors.serialNumber?.message)}
+                    </FieldError>
+                  </TextField>
+
+                  <TextField
+                    isInvalid={Boolean(errors.location)}
+                    className={["w-full"].filter(Boolean).join(" ")}
+                  >
+                    <Label>{t("fields.location")}</Label>
+                    <Input
+                      {...register("location")}
+                      placeholder={t("placeholders.location")}
+                    />
+                    <FieldError>
+                      {errorText(errors.location?.message)}
+                    </FieldError>
+                  </TextField>
+
+                  <TextField
+                    isRequired
+                    isInvalid={Boolean(errors.quantity)}
+                    className={["w-full"].filter(Boolean).join(" ")}
+                  >
+                    <Label>{t("fields.quantity")}</Label>
+                    <Input
+                      {...register("quantity", { valueAsNumber: true })}
+                      type="number"
+                      min={1}
+                      step={1}
+                    />
+                    <FieldError>
+                      {errorText(errors.quantity?.message)}
+                    </FieldError>
+                  </TextField>
+
+                  <TextField
+                    isInvalid={Boolean(errors.purchasePrice)}
+                    className={["w-full"].filter(Boolean).join(" ")}
+                  >
+                    <Label>{t("fields.purchasePrice")}</Label>
+                    <InputGroup>
+                      <InputGroup.Input
+                        {...register("purchasePrice", {
+                          setValueAs: (value: unknown) =>
+                            value === "" ||
+                            value === null ||
+                            value === undefined
+                              ? null
+                              : Number(value),
+                        })}
+                        type="number"
+                        min={0}
+                        step="0.01"
+                      />
+                      <InputGroup.Suffix>
+                        {<span className="text-sm text-ink-400">€</span>}
+                      </InputGroup.Suffix>
+                    </InputGroup>
+                    <FieldError>
+                      {errorText(errors.purchasePrice?.message)}
+                    </FieldError>
+                  </TextField>
+
+                  <TextField
+                    isInvalid={Boolean(errors.purchaseDate)}
+                    className={["w-full"].filter(Boolean).join(" ")}
+                  >
+                    <Label>{t("fields.purchaseDate")}</Label>
+                    <Input
+                      {...register("purchaseDate")}
+                      type="date"
+                      placeholder=" "
+                    />
+                    <FieldError>
+                      {errorText(errors.purchaseDate?.message)}
+                    </FieldError>
+                  </TextField>
+
+                  <TextField
+                    isInvalid={Boolean(errors.assignedMemberId)}
+                    className={["w-full"].filter(Boolean).join(" ")}
+                  >
+                    <Label>{t("fields.assignedMemberId")}</Label>
+                    <Input
+                      {...register("assignedMemberId")}
+                      placeholder={t("placeholders.assignedMemberId")}
+                    />
+                    <Description>{t("hints.assignedMemberId")}</Description>
+                    <FieldError>
+                      {errorText(errors.assignedMemberId?.message)}
+                    </FieldError>
+                  </TextField>
+
+                  <TextField
+                    isInvalid={Boolean(errors.description)}
+                    className={["sm:col-span-2"].filter(Boolean).join(" ")}
+                  >
+                    <Label>{t("fields.description")}</Label>
+                    <TextArea
+                      {...register("description")}
+                      placeholder={t("placeholders.description")}
+                      rows={3}
+                      className={["[field-sizing:content]"]
+                        .filter(Boolean)
+                        .join(" ")}
+                    />
+                    <FieldError>
+                      {errorText(errors.description?.message)}
+                    </FieldError>
+                  </TextField>
+
+                  <div className="flex flex-col gap-1 sm:col-span-2">
+                    <Switch
+                      isSelected={watch("trackAsAsset")}
+                      onChange={(value) =>
+                        setValue("trackAsAsset", value, { shouldDirty: true })
+                      }
+                    >
+                      <Switch.Content>
+                        <Switch.Control>
+                          <Switch.Thumb />
+                        </Switch.Control>
+                        <Label>{t("fields.trackAsAsset")}</Label>
+                      </Switch.Content>
+                    </Switch>
+                    <p className="text-xs text-ink-500">
+                      {t("hints.trackAsAsset")}
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-              <Input
-                {...register("serialNumber")}
-                label={t("fields.serialNumber")}
-                placeholder={t("placeholders.serialNumber")}
-                isInvalid={Boolean(errors.serialNumber)}
-                errorMessage={errorText(errors.serialNumber?.message)}
-              />
+                {submitError ? (
+                  <p
+                    role="alert"
+                    className="rounded-lg bg-danger-50 px-3 py-2 text-sm text-danger"
+                  >
+                    {submitError}
+                  </p>
+                ) : null}
+              </Drawer.Body>
 
-              <Input
-                {...register("location")}
-                label={t("fields.location")}
-                placeholder={t("placeholders.location")}
-                isInvalid={Boolean(errors.location)}
-                errorMessage={errorText(errors.location?.message)}
-              />
-
-              <Input
-                {...register("quantity", { valueAsNumber: true })}
-                type="number"
-                min={1}
-                step={1}
-                label={t("fields.quantity")}
-                isRequired
-                isInvalid={Boolean(errors.quantity)}
-                errorMessage={errorText(errors.quantity?.message)}
-              />
-
-              <Input
-                {...register("purchasePrice", {
-                  setValueAs: (value: unknown) =>
-                    value === "" || value === null || value === undefined ? null : Number(value),
-                })}
-                type="number"
-                min={0}
-                step="0.01"
-                label={t("fields.purchasePrice")}
-                endContent={<span className="text-small text-default-400">€</span>}
-                isInvalid={Boolean(errors.purchasePrice)}
-                errorMessage={errorText(errors.purchasePrice?.message)}
-              />
-
-              <Input
-                {...register("purchaseDate")}
-                type="date"
-                label={t("fields.purchaseDate")}
-                placeholder=" "
-                isInvalid={Boolean(errors.purchaseDate)}
-                errorMessage={errorText(errors.purchaseDate?.message)}
-              />
-
-              <Input
-                {...register("assignedMemberId")}
-                label={t("fields.assignedMemberId")}
-                placeholder={t("placeholders.assignedMemberId")}
-                description={t("hints.assignedMemberId")}
-                isInvalid={Boolean(errors.assignedMemberId)}
-                errorMessage={errorText(errors.assignedMemberId?.message)}
-              />
-
-              <Textarea
-                {...register("description")}
-                label={t("fields.description")}
-                placeholder={t("placeholders.description")}
-                minRows={3}
-                isInvalid={Boolean(errors.description)}
-                errorMessage={errorText(errors.description?.message)}
-                className="sm:col-span-2"
-              />
-
-              <div className="flex flex-col gap-1 sm:col-span-2">
-                <Switch isSelected={watch("trackAsAsset")} onValueChange={(value) => setValue("trackAsAsset", value, { shouldDirty: true })}>
-                  {t("fields.trackAsAsset")}
-                </Switch>
-                <p className="text-tiny text-default-500">{t("hints.trackAsAsset")}</p>
-              </div>
-            </div>
-
-            {submitError ? (
-              <p
-                role="alert"
-                className="rounded-medium bg-danger-50 px-3 py-2 text-small text-danger"
-              >
-                {submitError}
-              </p>
-            ) : null}
-          </DrawerBody>
-
-          <DrawerFooter>
-            <Button variant="light" onPress={handleClose} isDisabled={isPending}>
-              {t("actions.cancel")}
-            </Button>
-            <Button color="primary" type="submit" isLoading={isPending}>
-              {isEdit ? t("actions.save") : t("actions.create")}
-            </Button>
-          </DrawerFooter>
-        </form>
-      </DrawerContent>
+              <Drawer.Footer>
+                <Button
+                  onPress={handleClose}
+                  isDisabled={isPending}
+                  variant={actionVariant("default", "light")}
+                >
+                  {t("actions.cancel")}
+                </Button>
+                <Button
+                  type="submit"
+                  variant={actionVariant("primary", "solid")}
+                  isPending={isPending}
+                >
+                  {isPending ? <Spinner size="sm" color="current" /> : null}
+                  {isEdit ? t("actions.save") : t("actions.create")}
+                </Button>
+              </Drawer.Footer>
+            </form>
+          </Drawer.Dialog>
+        </Drawer.Content>
+      </Drawer.Backdrop>
     </Drawer>
   );
 }

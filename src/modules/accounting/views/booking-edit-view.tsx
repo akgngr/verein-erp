@@ -19,31 +19,32 @@ export async function AccountingEditView({ id }: { id: string }) {
   try {
     await requirePermission(accountingPermissions, "update");
   } catch (error) {
-    if (error instanceof ForbiddenError) return <FormDrawer title="">{<AccessDenied />}</FormDrawer>;
+    if (error instanceof ForbiddenError)
+      return <FormDrawer title="">{<AccessDenied />}</FormDrawer>;
     throw error;
   }
 
-  const [booking, accounts, categories, projects, taxSettings] = await Promise.all([
-    getBooking(id),
-    listAccountOptions(),
-    listCategoryOptions(),
-    listProjectOptions(),
-    getTaxSettings(getDb()),
-  ]);
+  const [booking, accounts, categories, projects, taxSettings] =
+    await Promise.all([
+      getBooking(id),
+      listAccountOptions(),
+      listCategoryOptions(),
+      listProjectOptions(),
+      getTaxSettings(getDb()),
+    ]);
   if (!booking) notFound();
   const t = await getTranslations("accounting.form");
 
-  const blocked =
-    booking.reversedAt
-      ? t("editBlockedReversed")
-      : booking.sourceType
-        ? t("editBlockedSource")
-        : null;
+  const blocked = booking.reversedAt
+    ? t("editBlockedReversed")
+    : booking.sourceType
+      ? t("editBlockedSource")
+      : null;
 
   if (blocked) {
     return (
       <FormDrawer title={t("editTitle")} description={booking.bookingNumber}>
-        <div className="rounded-medium border border-warning-300 bg-warning-50 px-4 py-3 text-small text-warning-700">
+        <div className="rounded-lg border border-warning-300 bg-warning-50 px-4 py-3 text-sm text-warning-700">
           {blocked}
         </div>
       </FormDrawer>

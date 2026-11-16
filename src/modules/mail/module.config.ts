@@ -5,7 +5,7 @@ import { mailInboxPermissions, mailPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "mail",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.4.0",
+  version: "1.4.1",
   label: "E-posta Altyapısı",
   description:
     "Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gönderim kayıtları.",
@@ -18,7 +18,11 @@ export const moduleConfig: ModuleConfig = {
     { module: "accounting", operations: ["write"] },
     { module: "system", operations: ["read"] },
   ],
-  dependencies: { nodemailer: "^10.2.1", imapflow: "^2.10.0", mailparser: "^3.14.1" },
+  dependencies: {
+    nodemailer: "^10.2.1",
+    imapflow: "^2.10.0",
+    mailparser: "^3.14.1",
+  },
   nav: [
     {
       href: "/mail",
@@ -42,7 +46,18 @@ export const moduleConfig: ModuleConfig = {
   ],
   menu: [
     { key: "settings", label: "Ayarlar", href: "/mail", icon: Settings },
-    { key: "logs", label: "Gönderim kayıtları", href: "/mail/kayitlar", icon: ScrollText },
-    { key: "inbox", label: "Gelen kutusu", href: "/mail/gelen-kutusu", icon: Inbox, permission: { definition: mailInboxPermissions, action: "view" } },
+    {
+      key: "logs",
+      label: "Gönderim kayıtları",
+      href: "/mail/kayitlar",
+      icon: ScrollText,
+    },
+    {
+      key: "inbox",
+      label: "Gelen kutusu",
+      href: "/mail/gelen-kutusu",
+      icon: Inbox,
+      permission: { definition: mailInboxPermissions, action: "view" },
+    },
   ],
 };

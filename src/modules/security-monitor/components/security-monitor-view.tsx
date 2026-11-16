@@ -1,6 +1,10 @@
 "use client";
+import { statusStyle } from "@/shared/components/ui/status-appearance";
+import { Button, Spinner, Card, Chip } from "@heroui/react";
+import { statusTone } from "@/shared/components/ui/status-appearance";
 
-import { Badge, Button, Card, CardBody } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+
 import { Clock, PlayCircle, ShieldCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useState } from "react";
@@ -142,17 +146,21 @@ export function SecurityMonitorView() {
 
   const getSeverityColor = (severity: string) => {
     switch (severity) {
-      case "critical": return "bg-danger";
-      case "high": return "bg-warning";
-      case "medium": return "bg-secondary";
-      default: return "bg-primary";
+      case "critical":
+        return "bg-danger";
+      case "high":
+        return "bg-warning";
+      case "medium":
+        return "bg-secondary";
+      default:
+        return "bg-accent";
     }
   };
 
   if (loading) {
     return (
       <div className="p-6">
-        <p className="text-default-500">{t("loading")}</p>
+        <p className="text-ink-500">{t("loading")}</p>
       </div>
     );
   }
@@ -161,112 +169,170 @@ export function SecurityMonitorView() {
     <div className="p-6 space-y-6">
       <div className="flex justify-between items-center">
         <div className="flex items-center gap-2">
-          <ShieldCheck className="h-6 w-6 text-primary" />
+          <ShieldCheck className="h-6 w-6 text-accent" />
           <h1 className="text-xl font-bold">{t("title")}</h1>
         </div>
         <Button
-          color="primary"
           onClick={runTests}
-          isLoading={running}
-          startContent={<PlayCircle className="h-4 w-4" />}
+          variant={actionVariant("primary", "solid")}
+          isPending={running}
         >
+          {running ? <Spinner size="sm" color="current" /> : null}
+          {<PlayCircle className="h-4 w-4" />}
           {t("runTests")}
         </Button>
       </div>
 
-      {queueMessage ? <p className="text-small text-success">{queueMessage}</p> : null}
+      {queueMessage ? (
+        <p className="text-sm text-success">{queueMessage}</p>
+      ) : null}
 
       <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        <Card shadow="sm">
-          <CardBody className="px-4 py-3">
-            <p className="text-tiny uppercase tracking-wide text-default-400">{t("totalRuns")}</p>
-            <p className="text-lg font-semibold">{statistics?.totalRuns || 0}</p>
-          </CardBody>
+        <Card className={"shadow-sm border border-ink-200/80"}>
+          <Card.Content className={["px-4 py-3"].filter(Boolean).join(" ")}>
+            <p className="text-xs uppercase tracking-wide text-ink-400">
+              {t("totalRuns")}
+            </p>
+            <p className="text-lg font-semibold">
+              {statistics?.totalRuns || 0}
+            </p>
+          </Card.Content>
         </Card>
-        <Card shadow="sm">
-          <CardBody className="px-4 py-3">
-            <p className="text-tiny uppercase tracking-wide text-default-400">{t("passRate")}</p>
-            <p className="text-lg font-semibold text-success">{statistics?.passRate || 0}%</p>
-          </CardBody>
+        <Card className={"shadow-sm border border-ink-200/80"}>
+          <Card.Content className={["px-4 py-3"].filter(Boolean).join(" ")}>
+            <p className="text-xs uppercase tracking-wide text-ink-400">
+              {t("passRate")}
+            </p>
+            <p className="text-lg font-semibold text-success">
+              {statistics?.passRate || 0}%
+            </p>
+          </Card.Content>
         </Card>
-        <Card shadow="sm">
-          <CardBody className="px-4 py-3">
-            <p className="text-tiny uppercase tracking-wide text-default-400">{t("passed")}</p>
-            <p className="text-lg font-semibold text-success">{statistics?.passedRuns || 0}</p>
-          </CardBody>
+        <Card className={"shadow-sm border border-ink-200/80"}>
+          <Card.Content className={["px-4 py-3"].filter(Boolean).join(" ")}>
+            <p className="text-xs uppercase tracking-wide text-ink-400">
+              {t("passed")}
+            </p>
+            <p className="text-lg font-semibold text-success">
+              {statistics?.passedRuns || 0}
+            </p>
+          </Card.Content>
         </Card>
-        <Card shadow="sm">
-          <CardBody className="px-4 py-3">
-            <p className="text-tiny uppercase tracking-wide text-default-400">{t("failed")}</p>
-            <p className="text-lg font-semibold text-danger">{statistics?.failedRuns || 0}</p>
-          </CardBody>
+        <Card className={"shadow-sm border border-ink-200/80"}>
+          <Card.Content className={["px-4 py-3"].filter(Boolean).join(" ")}>
+            <p className="text-xs uppercase tracking-wide text-ink-400">
+              {t("failed")}
+            </p>
+            <p className="text-lg font-semibold text-danger">
+              {statistics?.failedRuns || 0}
+            </p>
+          </Card.Content>
         </Card>
-        <Card shadow="sm">
-          <CardBody className="px-4 py-3">
-            <p className="text-tiny uppercase tracking-wide text-default-400">{t("openAlerts")}</p>
-            <p className="text-lg font-semibold text-warning">{statistics?.openAlerts || 0}</p>
-          </CardBody>
+        <Card className={"shadow-sm border border-ink-200/80"}>
+          <Card.Content className={["px-4 py-3"].filter(Boolean).join(" ")}>
+            <p className="text-xs uppercase tracking-wide text-ink-400">
+              {t("openAlerts")}
+            </p>
+            <p className="text-lg font-semibold text-warning">
+              {statistics?.openAlerts || 0}
+            </p>
+          </Card.Content>
         </Card>
       </div>
 
-      <Card shadow="sm">
-        <CardBody className="gap-4 p-6">
+      <Card className={"shadow-sm border border-ink-200/80"}>
+        <Card.Content className={["gap-4 p-6"].filter(Boolean).join(" ")}>
           <div className="flex items-center justify-between">
-            <h2 className="text-medium font-semibold">{t("recentRuns")}</h2>
+            <h2 className="text-base font-semibold">{t("recentRuns")}</h2>
           </div>
           {recentRuns.length === 0 ? (
-            <p className="text-default-400">{t("noRuns")}</p>
+            <p className="text-ink-400">{t("noRuns")}</p>
           ) : (
-            <div className="divide-y divide-default-200">
+            <div className="divide-y divide-ink-200">
               {recentRuns.map((run) => (
-                <div key={run.id} className="flex items-center justify-between py-3">
+                <div
+                  key={run.id}
+                  className="flex items-center justify-between py-3"
+                >
                   <div className="flex items-center gap-3">
-                    <Clock className="h-4 w-4 text-default-400" />
+                    <Clock className="h-4 w-4 text-ink-400" />
                     <div>
                       <p className="font-medium">{run.testSuite}</p>
-                      <p className="text-tiny text-default-400">{new Date(run.createdAt).toLocaleString()}</p>
+                      <p className="text-xs text-ink-400">
+                        {new Date(run.createdAt).toLocaleString()}
+                      </p>
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Badge color={run.status === "passed" ? "success" : run.status === "failed" ? "danger" : "warning"}>
+                    <Chip
+                      variant="soft"
+                      color={statusTone(
+                        run.status === "passed"
+                          ? "success"
+                          : run.status === "failed"
+                            ? "danger"
+                            : "warning",
+                      )}
+                      style={statusStyle(
+                        run.status === "passed"
+                          ? "success"
+                          : run.status === "failed"
+                            ? "danger"
+                            : "warning",
+                      )}
+                    >
                       {run.status}
-                    </Badge>
-                    <span className="text-tiny text-default-400">{run.passed}/{run.totalTests}</span>
+                    </Chip>
+                    <span className="text-xs text-ink-400">
+                      {run.passed}/{run.totalTests}
+                    </span>
                   </div>
                 </div>
               ))}
             </div>
           )}
-        </CardBody>
+        </Card.Content>
       </Card>
 
-      <Card shadow="sm">
-        <CardBody className="gap-4 p-6">
+      <Card className={"shadow-sm border border-ink-200/80"}>
+        <Card.Content className={["gap-4 p-6"].filter(Boolean).join(" ")}>
           <div className="flex items-center justify-between">
-            <h2 className="text-medium font-semibold">{t("openAlerts")}</h2>
+            <h2 className="text-base font-semibold">{t("openAlerts")}</h2>
           </div>
           {alerts.length === 0 ? (
-            <p className="text-default-400">{t("noAlerts")}</p>
+            <p className="text-ink-400">{t("noAlerts")}</p>
           ) : (
-            <div className="divide-y divide-default-200">
+            <div className="divide-y divide-ink-200">
               {alerts.map((alert) => (
                 <div key={alert.id} className="flex items-start gap-3 py-3">
-                  <div className={`w-2 h-2 rounded-full ${getSeverityColor(alert.severity)} mt-1.5`} />
+                  <div
+                    className={`w-2 h-2 rounded-full ${getSeverityColor(alert.severity)} mt-1.5`}
+                  />
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
                       <p className="font-medium">{alert.message}</p>
-                      <Badge color={alert.severity === "critical" ? "danger" : "default"}>
+                      <Chip
+                        variant="soft"
+                        color={statusTone(
+                          alert.severity === "critical" ? "danger" : "default",
+                        )}
+                        style={statusStyle(
+                          alert.severity === "critical" ? "danger" : "default",
+                        )}
+                      >
                         {alert.severity}
-                      </Badge>
+                      </Chip>
                     </div>
-                    <p className="text-tiny text-default-400">{alert.type}</p>
-                    <p className="text-tiny text-default-400">{new Date(alert.createdAt).toLocaleString()}</p>
+                    <p className="text-xs text-ink-400">{alert.type}</p>
+                    <p className="text-xs text-ink-400">
+                      {new Date(alert.createdAt).toLocaleString()}
+                    </p>
                   </div>
                 </div>
               ))}
             </div>
           )}
-        </CardBody>
+        </Card.Content>
       </Card>
     </div>
   );

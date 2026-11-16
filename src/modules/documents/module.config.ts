@@ -1,15 +1,24 @@
 import { Download, FileText, FolderTree } from "lucide-react";
 
 import type { ModuleConfig } from "@/shared/types/module";
-import { documentCategoriesPermissions, documentsPermissions } from "./permissions";
+import {
+  documentCategoriesPermissions,
+  documentsPermissions,
+} from "./permissions";
 
 export const moduleConfig: ModuleConfig = {
   key: "documents",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.6.1",
-  dependencies: { "tesseract.js": "7.0.0", "@tesseract.js-data/deu": "1.0.0", "@tesseract.js-data/tur": "1.0.0", "@tesseract.js-data/eng": "1.0.0" },
+  version: "1.6.2",
+  dependencies: {
+    "tesseract.js": "7.0.0",
+    "@tesseract.js-data/deu": "1.0.0",
+    "@tesseract.js-data/tur": "1.0.0",
+    "@tesseract.js-data/eng": "1.0.0",
+  },
   label: "Evrak Kayıt",
-  description: "Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi.",
+  description:
+    "Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi.",
   category: "OFFICIAL",
   // Bildirilmiş entegrasyonlar (docs/MODULE_DEVELOPMENT_GUIDE.md §8, §8e): "Muhasebeye aktar" muhasebenin sunucu
   // API'sini kullanır; görev ve AI düğmeleri yalnız o modüller kullanılabilirse gösterilir.
@@ -33,7 +42,19 @@ export const moduleConfig: ModuleConfig = {
     },
   ],
   menu: [
-    { key: "categories", label: "Kategoriler", href: "/evrak/kategoriler", icon: FolderTree, permission: { definition: documentCategoriesPermissions, action: "view" } },
-    { key: "export", label: "Excel'e aktar", href: "/api/documents/export", icon: Download, isDownload: true },
+    {
+      key: "categories",
+      label: "Kategoriler",
+      href: "/evrak/kategoriler",
+      icon: FolderTree,
+      permission: { definition: documentCategoriesPermissions, action: "view" },
+    },
+    {
+      key: "export",
+      label: "Excel'e aktar",
+      href: "/api/documents/export",
+      icon: Download,
+      isDownload: true,
+    },
   ],
 };

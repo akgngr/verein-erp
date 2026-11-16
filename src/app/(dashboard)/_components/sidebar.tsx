@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Drawer, Dropdown, Label, Tooltip } from "@heroui-v3/react";
+import { Button, Drawer, Dropdown, Label, Tooltip } from "@heroui/react";
 import {
   Building2,
   ChevronLeft,
@@ -338,9 +338,7 @@ function SidebarContent({
         <Icon
           className={cn(
             "h-[18px] w-[18px] shrink-0 transition-colors",
-            active
-              ? "text-primary-700"
-              : "text-white/65 group-hover:text-white",
+            active ? "text-brand-700" : "text-white/65 group-hover:text-white",
           )}
           aria-hidden
         />
@@ -419,7 +417,7 @@ function SidebarContent({
   };
 
   const switchButtonClass = cn(
-    "flex w-full items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] py-2 text-small font-medium text-white/90 transition-colors hover:bg-white/[0.08] hover:text-white",
+    "flex w-full items-center gap-2 rounded-xl border border-white/10 bg-white/[0.04] py-2 text-sm font-medium text-white/90 transition-colors hover:bg-white/[0.08] hover:text-white",
     collapsed ? "justify-center px-0" : "px-3",
   );
 
@@ -617,16 +615,16 @@ function SidebarUserFooter({
             tSidebar.has("userMenu") ? tSidebar("userMenu") : "Kullanıcı menüsü"
           }
         >
-          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 text-white ring-1 ring-white/15 font-semibold text-small transition-colors">
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-white/10 text-white ring-1 ring-white/15 font-semibold text-sm transition-colors">
             {initials || "?"}
           </div>
           {collapsed ? null : (
             <>
               <div className="flex min-w-0 flex-1 flex-col">
-                <span className="truncate text-small font-semibold text-white leading-tight">
+                <span className="truncate text-sm font-semibold text-white leading-tight">
                   {name}
                 </span>
-                <span className="truncate text-tiny text-[#a9bcae] leading-tight">
+                <span className="truncate text-xs text-[#a9bcae] leading-tight">
                   {email}
                 </span>
               </div>
@@ -657,7 +655,7 @@ function SidebarUserFooter({
               href="/profil"
               onAction={onNavigate}
             >
-              <UserRound className="h-4 w-4 text-default-500" aria-hidden />
+              <UserRound className="h-4 w-4 text-ink-500" aria-hidden />
               <Label>{tNav.has("profil") ? tNav("profil") : "Profil"}</Label>
             </Dropdown.Item>
             <Dropdown.Item
@@ -666,7 +664,7 @@ function SidebarUserFooter({
               href="/ayarlar"
               onAction={onNavigate}
             >
-              <Settings className="h-4 w-4 text-default-500" aria-hidden />
+              <Settings className="h-4 w-4 text-ink-500" aria-hidden />
               <Label>{tNav.has("ayarlar") ? tNav("ayarlar") : "Ayarlar"}</Label>
             </Dropdown.Item>
             <Dropdown.Item
@@ -811,10 +809,10 @@ function MobileSidebar({
 function MobileHeader() {
   const tSidebar = useTranslations("sidebar");
   return (
-    <header className="sticky top-0 z-20 flex h-14 items-center gap-2 border-b border-default-200/80 bg-content1/95 px-3 backdrop-blur-md lg:hidden">
+    <header className="sticky top-0 z-20 flex h-14 items-center gap-2 border-b border-ink-200/80 bg-surface/95 px-3 backdrop-blur-md lg:hidden">
       <SidebarTrigger />
-      <Building2 className="h-4 w-4 text-primary" aria-hidden />
-      <span className="truncate text-small font-semibold text-foreground">
+      <Building2 className="h-4 w-4 text-accent" aria-hidden />
+      <span className="truncate text-sm font-semibold text-foreground">
         {BRAND}
         {tSidebar.has("brand") ? ` · ${tSidebar("brand")}` : ""}
       </span>

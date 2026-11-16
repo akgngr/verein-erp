@@ -7,7 +7,7 @@ import {
   Popover,
   SearchField,
   Select,
-} from "@heroui-v3/react";
+} from "@heroui/react";
 import { ChevronDown, SlidersHorizontal, X } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -137,7 +137,7 @@ export function DataTableToolbar({
             id="dt-clear-all"
             size="sm"
             variant="danger-soft"
-            className="h-9 px-2.5 text-small font-medium text-default-500 hover:text-danger hover:bg-danger-50/60 rounded-xl transition-colors"
+            className="h-9 px-2.5 text-sm font-medium text-ink-500 hover:text-danger hover:bg-danger-50/60 rounded-xl transition-colors"
             onPress={handleResetAll}
           >
             <X className="h-3.5 w-3.5" aria-hidden />
@@ -157,25 +157,25 @@ export function DataTableToolbar({
               size="sm"
               variant={activeFilterCount > 0 ? "secondary" : "outline"}
               className={cn(
-                "h-9 px-3 text-small font-medium transition-all shadow-xs border rounded-xl",
+                "h-9 px-3 text-sm font-medium transition-all shadow-xs border rounded-xl",
                 activeFilterCount > 0
-                  ? "bg-primary-50 text-primary-700 border-primary-300 dark:bg-primary-500/20 dark:text-primary-300 dark:border-primary-500/40 font-semibold"
-                  : "border-default-200/80 bg-default-100/60 hover:bg-default-100 text-default-700",
+                  ? "bg-brand-50 text-brand-700 border-brand-300 dark:bg-brand-500/20 dark:text-brand-300 dark:border-brand-500/40 font-semibold"
+                  : "border-ink-200/80 bg-ink-100/60 hover:bg-ink-100 text-ink-700",
               )}
             >
               <SlidersHorizontal
-                className="h-4 w-4 shrink-0 text-default-500"
+                className="h-4 w-4 shrink-0 text-ink-500"
                 aria-hidden
               />
               <span>{tTable("filters")}</span>
               {activeFilterCount > 0 ? (
-                <span className="rounded-md bg-primary px-1.5 text-[11px] text-primary-foreground">
+                <span className="rounded-md bg-accent px-1.5 text-[11px] text-accent-foreground">
                   {activeFilterCount}
                 </span>
               ) : (
                 <ChevronDown
                   className={cn(
-                    "h-3.5 w-3.5 text-default-400 transition-transform",
+                    "h-3.5 w-3.5 text-ink-400 transition-transform",
                     isFilterOpen && "rotate-180",
                   )}
                   aria-hidden
@@ -186,23 +186,23 @@ export function DataTableToolbar({
             <Popover.Content
               placement="bottom end"
               offset={8}
-              className="p-0 border border-default-200/80 shadow-2xl rounded-2xl bg-content1 overflow-hidden w-[340px] sm:w-[380px] max-w-[calc(100vw-2rem)]"
+              className="p-0 border border-ink-200/80 shadow-2xl rounded-2xl bg-surface overflow-hidden w-[340px] sm:w-[380px] max-w-[calc(100vw-2rem)]"
             >
               <Popover.Dialog
                 aria-label={tTable("filters")}
                 className="flex flex-col p-0"
               >
                 {/* Popover Header */}
-                <div className="flex items-center justify-between px-4 py-3 border-b border-default-200/80 bg-default-50/50">
+                <div className="flex items-center justify-between px-4 py-3 border-b border-ink-200/80 bg-ink-50/50">
                   <div className="flex items-center gap-2.5">
-                    <div className="h-7 w-7 rounded-lg bg-default-200/70 text-foreground flex items-center justify-center">
+                    <div className="h-7 w-7 rounded-lg bg-ink-200/70 text-foreground flex items-center justify-center">
                       <SlidersHorizontal className="h-3.5 w-3.5" />
                     </div>
                     <div className="flex flex-col">
-                      <h4 className="text-small font-semibold text-foreground">
+                      <h4 className="text-sm font-semibold text-foreground">
                         {tTable("filters")}
                       </h4>
-                      <p className="text-[11px] text-default-400">
+                      <p className="text-[11px] text-ink-400">
                         {tTable("filtersHint")}
                       </p>
                     </div>
@@ -225,7 +225,7 @@ export function DataTableToolbar({
                     const currentValue = activeFilters[filter.key] ?? "";
                     return (
                       <div key={filter.key} className="flex flex-col gap-1.5">
-                        <span className="text-[11px] font-semibold text-default-500 uppercase tracking-wider">
+                        <span className="text-[11px] font-semibold text-ink-500 uppercase tracking-wider">
                           {filter.label}
                         </span>
                         <Select
@@ -270,15 +270,15 @@ export function DataTableToolbar({
                   })}
 
                   {filterExtra ? (
-                    <div className="pt-2 border-t border-default-200/60 flex flex-col gap-2">
+                    <div className="pt-2 border-t border-ink-200/60 flex flex-col gap-2">
                       {filterExtra}
                     </div>
                   ) : null}
                 </div>
 
                 {/* Popover Footer */}
-                <div className="px-4 py-2.5 bg-default-50/50 border-t border-default-200/80 flex items-center justify-between">
-                  <span className="text-xs text-default-400 font-medium">
+                <div className="px-4 py-2.5 bg-ink-50/50 border-t border-ink-200/80 flex items-center justify-between">
+                  <span className="text-xs text-ink-400 font-medium">
                     {activeFilterCount > 0
                       ? tTable("activeFilters", { count: activeFilterCount })
                       : tCommon("noFilter")}

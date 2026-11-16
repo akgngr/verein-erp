@@ -1,7 +1,8 @@
 "use client";
+import { toast, Link } from "@heroui/react";
 
 import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
-import { Link, addToast } from "@heroui/react";
+
 import { Eye, Paperclip, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -66,12 +67,11 @@ export function DocumentTable({
     if (!deleting) return;
     const result = await deleteDocumentAction({ id: deleting.id });
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
-    addToast({
-      title: t("list.deletedToast", { registryNumber: deleting.registryNumber }),
-      color: "success",
+    toast(t("list.deletedToast", { registryNumber: deleting.registryNumber }), {
+      variant: "success",
     });
     setDeleting(null);
     router.refresh();
@@ -84,7 +84,10 @@ export function DocumentTable({
       sortable: true,
       width: 150,
       render: (row) => (
-        <Link href={`/evrak/${row.id}`} size="sm" className="font-medium">
+        <Link
+          href={`/evrak/${row.id}`}
+          className={["font-medium", "text-sm"].filter(Boolean).join(" ")}
+        >
           {row.registryNumber}
         </Link>
       ),
@@ -147,7 +150,11 @@ export function DocumentTable({
       width: 150,
       render: (row) =>
         row.dueDate ? (
-          <span className={row.isOverdue ? "font-medium text-danger-600" : undefined}>
+          <span
+            className={
+              row.isOverdue ? "font-medium text-danger-600" : undefined
+            }
+          >
             {formatDate(row.dueDate)}
           </span>
         ) : (
@@ -160,7 +167,7 @@ export function DocumentTable({
       align: "center",
       width: 80,
       render: (row) => (
-        <span className="inline-flex items-center gap-1 text-small text-default-600">
+        <span className="inline-flex items-center gap-1 text-sm text-ink-600">
           <Paperclip className="h-3.5 w-3.5" aria-hidden />
           {row.fileCount}
         </span>
@@ -169,7 +176,12 @@ export function DocumentTable({
   ];
 
   const rowActions = (row: DocumentRow): DataTableRowAction[] => [
-    { key: "view", label: t("list.view"), icon: <Eye className="h-4 w-4" />, href: `/evrak/${row.id}` },
+    {
+      key: "view",
+      label: t("list.view"),
+      icon: <Eye className="h-4 w-4" />,
+      href: `/evrak/${row.id}`,
+    },
     ...(canUpdate
       ? [
           {
@@ -219,7 +231,9 @@ export function DocumentTable({
         isOpen={deleting !== null}
         onOpenChange={(open) => !open && setDeleting(null)}
         title={t("list.deleteTitle")}
-        message={t("list.deleteMessage", { registryNumber: deleting?.registryNumber ?? "" })}
+        message={t("list.deleteMessage", {
+          registryNumber: deleting?.registryNumber ?? "",
+        })}
         confirmLabel={t("list.delete")}
         confirmColor="danger"
         onConfirm={confirmDelete}

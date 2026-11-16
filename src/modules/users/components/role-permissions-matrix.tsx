@@ -1,34 +1,72 @@
 "use client";
-
+import { statusStyle } from "@/shared/components/ui/status-appearance";
 import {
-  addToast,
+  toast,
   Button,
-  Checkbox,
   Chip,
-  Input,
+  Spinner,
+  Checkbox,
+  Label,
   Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
+  TextField,
+  InputGroup,
+  Input,
+  FieldError,
+  TextArea,
   Select,
-  SelectItem,
-  Textarea,
+  ListBox,
+  Description,
 } from "@heroui/react";
+
+import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
+
+import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+import { statusTone } from "@/shared/components/ui/status-appearance";
+
 import { Lock, Pencil, Plus, RotateCcw, Search, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useMemo, useState } from "react";
 
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
-import { RoleChip, usePermissionResources, useRoles, type PermissionResourceRef } from "@/shared/components/roles/roles-provider";
-import { effectiveActions, PERMISSION_ACTIONS, type PermissionAction, type PermissionPolicy } from "@/shared/permissions/define";
-import { CHIP_COLORS, LOCKED_ROLE, type ChipColor, type RoleInfo } from "@/shared/roles";
+import {
+  RoleChip,
+  usePermissionResources,
+  useRoles,
+  type PermissionResourceRef,
+} from "@/shared/components/roles/roles-provider";
+import {
+  effectiveActions,
+  PERMISSION_ACTIONS,
+  type PermissionAction,
+  type PermissionPolicy,
+} from "@/shared/permissions/define";
+import {
+  CHIP_COLORS,
+  LOCKED_ROLE,
+  type ChipColor,
+  type RoleInfo,
+} from "@/shared/roles";
 
-import { createRoleAction, deleteRoleAction, resetRoleGrantsAction, setRoleGrantAction, updateRoleAction } from "../actions/roles";
+import {
+  createRoleAction,
+  deleteRoleAction,
+  resetRoleGrantsAction,
+  setRoleGrantAction,
+  updateRoleAction,
+} from "../actions/roles";
 
 const KIND_ORDER: RoleInfo["kind"][] = ["system", "module", "custom"];
-const DOT: Record<ChipColor, string> = { default: "bg-default-400", primary: "bg-primary", secondary: "bg-secondary", success: "bg-success", warning: "bg-warning", danger: "bg-danger" };
+const DOT: Record<ChipColor, string> = {
+  default: "bg-ink-400",
+  primary: "bg-accent",
+  secondary: "bg-secondary",
+  success: "bg-success",
+  warning: "bg-warning",
+  danger: "bg-danger",
+};
 
 /** Kaynak etiketi: modülün kendi mesajları → permissions.<kaynak>.label/description. */
 function useResourceText() {
@@ -42,7 +80,10 @@ function useResourceText() {
       const key = `${ref.moduleKey}.permissions.${ref.definition.resource}.description`;
       return t.has(key) ? t(key) : "";
     },
-    module: (moduleKey: string) => (t.has(`${moduleKey}.module.label`) ? t(`${moduleKey}.module.label`) : moduleKey),
+    module: (moduleKey: string) =>
+      t.has(`${moduleKey}.module.label`)
+        ? t(`${moduleKey}.module.label`)
+        : moduleKey,
   };
 }
 
@@ -52,7 +93,10 @@ function useRoleDescription() {
   return (role: RoleInfo | undefined) => {
     if (!role) return "";
     if (role.kind === "custom") return role.description ?? "";
-    const key = role.kind === "system" ? `users.matrix.roles.${role.key}.shortDesc` : `${role.moduleKey}.roles.${role.key}.shortDesc`;
+    const key =
+      role.kind === "system"
+        ? `users.matrix.roles.${role.key}.shortDesc`
+        : `${role.moduleKey}.roles.${role.key}.shortDesc`;
     return t.has(key) ? t(key) : "";
   };
 }
@@ -62,7 +106,13 @@ function useRoleDescription() {
  * izinleri. Kaynaklar kurulu ve kullanılabilir tüm modüllerden otomatik gelir. Değişiklik anında
  * kaydedilir; koddaki varsayılandan farklı olanlar işaretlenir. Yönetici rolü kilitlidir.
  */
-export function RolePermissionsMatrix({ userCounts, canManage }: { userCounts: Record<string, number>; canManage: boolean }) {
+export function RolePermissionsMatrix({
+  userCounts,
+  canManage,
+}: {
+  userCounts: Record<string, number>;
+  canManage: boolean;
+}) {
   const t = useTranslations("users.roles");
   const tActions = useTranslations("users.matrix.actions");
   const router = useRouter();
@@ -71,8 +121,12 @@ export function RolePermissionsMatrix({ userCounts, canManage }: { userCounts: R
   const text = useResourceText();
   const describe = useRoleDescription();
 
-  const [selected, setSelected] = useState<string>(roles.find((role) => role.key !== LOCKED_ROLE)?.key ?? LOCKED_ROLE);
-  const [overrides, setOverrides] = useState<PermissionPolicy["overrides"]>(policy.overrides);
+  const [selected, setSelected] = useState<string>(
+    roles.find((role) => role.key !== LOCKED_ROLE)?.key ?? LOCKED_ROLE,
+  );
+  const [overrides, setOverrides] = useState<PermissionPolicy["overrides"]>(
+    policy.overrides,
+  );
   // Sunucudan yeni politika gelince (kaydet → yenile) yerel kopya eşitlenir (render sırasında ayarlama).
   const [syncedFrom, setSyncedFrom] = useState(policy.overrides);
   if (syncedFrom !== policy.overrides) {
@@ -81,7 +135,10 @@ export function RolePermissionsMatrix({ userCounts, canManage }: { userCounts: R
   }
   const [query, setQuery] = useState("");
   const [busyKey, setBusyKey] = useState<string | null>(null);
-  const [editor, setEditor] = useState<{ mode: "create" | "edit"; role?: RoleInfo } | null>(null);
+  const [editor, setEditor] = useState<{
+    mode: "create" | "edit";
+    role?: RoleInfo;
+  } | null>(null);
   const [confirm, setConfirm] = useState<"delete" | "reset" | null>(null);
 
   const role = find(selected);
@@ -92,33 +149,53 @@ export function RolePermissionsMatrix({ userCounts, canManage }: { userCounts: R
     const needle = query.trim().toLocaleLowerCase();
     const map = new Map<string, PermissionResourceRef[]>();
     for (const ref of resources) {
-      const haystack = `${text.module(ref.moduleKey)} ${text.label(ref)} ${text.description(ref)}`.toLocaleLowerCase();
+      const haystack =
+        `${text.module(ref.moduleKey)} ${text.label(ref)} ${text.description(ref)}`.toLocaleLowerCase();
       if (needle && !haystack.includes(needle)) continue;
       map.set(ref.moduleKey, [...(map.get(ref.moduleKey) ?? []), ref]);
     }
-    return [...map.entries()].sort((a, b) => text.module(a[0]).localeCompare(text.module(b[0])));
+    return [...map.entries()].sort((a, b) =>
+      text.module(a[0]).localeCompare(text.module(b[0])),
+    );
   }, [resources, query, text]);
 
-  const isCustomized = (ref: PermissionResourceRef) => Boolean(overrides[selected]?.[ref.definition.resource]);
+  const isCustomized = (ref: PermissionResourceRef) =>
+    Boolean(overrides[selected]?.[ref.definition.resource]);
   const anyCustomized = Object.keys(overrides[selected] ?? {}).length > 0;
-  const totalAllowed = resources.reduce((sum, ref) => sum + effectiveActions(selected, ref.definition, localPolicy).length, 0);
+  const totalAllowed = resources.reduce(
+    (sum, ref) =>
+      sum + effectiveActions(selected, ref.definition, localPolicy).length,
+    0,
+  );
 
-  const toggle = async (ref: PermissionResourceRef, action: PermissionAction, checked: boolean) => {
+  const toggle = async (
+    ref: PermissionResourceRef,
+    action: PermissionAction,
+    checked: boolean,
+  ) => {
     const current = effectiveActions(selected, ref.definition, localPolicy);
-    const next = PERMISSION_ACTIONS.filter((item) => (item === action ? checked : current.includes(item)));
+    const next = PERMISSION_ACTIONS.filter((item) =>
+      item === action ? checked : current.includes(item),
+    );
     const previous = overrides;
     const defaults = ref.definition.grants[selected] ?? [];
-    const isDefault = next.length === defaults.length && next.every((item) => defaults.includes(item));
+    const isDefault =
+      next.length === defaults.length &&
+      next.every((item) => defaults.includes(item));
     const roleOverrides = { ...(overrides[selected] ?? {}) };
     if (isDefault) delete roleOverrides[ref.definition.resource];
     else roleOverrides[ref.definition.resource] = next;
     setOverrides({ ...overrides, [selected]: roleOverrides });
     setBusyKey(`${ref.definition.resource}:${action}`);
-    const result = await setRoleGrantAction({ role: selected, resource: ref.definition.resource, actions: next });
+    const result = await setRoleGrantAction({
+      role: selected,
+      resource: ref.definition.resource,
+      actions: next,
+    });
     setBusyKey(null);
     if (!result.ok) {
       setOverrides(previous);
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
     router.refresh();
@@ -129,7 +206,11 @@ export function RolePermissionsMatrix({ userCounts, canManage }: { userCounts: R
       {/* Roller */}
       <aside className="flex flex-col gap-3">
         {canManage ? (
-          <Button color="primary" variant="flat" startContent={<Plus className="h-4 w-4" aria-hidden />} onPress={() => setEditor({ mode: "create" })}>
+          <Button
+            onPress={() => setEditor({ mode: "create" })}
+            variant={actionVariant("primary", "flat")}
+          >
+            {<Plus className="h-4 w-4" aria-hidden />}
             {t("newRole")}
           </Button>
         ) : null}
@@ -138,22 +219,40 @@ export function RolePermissionsMatrix({ userCounts, canManage }: { userCounts: R
           if (!list.length) return null;
           return (
             <div key={kind} className="flex flex-col gap-1">
-              <span className="px-1 text-tiny font-semibold uppercase text-default-400">{t(`kinds.${kind}`)}</span>
+              <span className="px-1 text-xs font-semibold uppercase text-ink-400">
+                {t(`kinds.${kind}`)}
+              </span>
               {list.map((item) => (
                 <button
                   key={item.key}
                   type="button"
                   onClick={() => setSelected(item.key)}
-                  className={`flex items-center justify-between gap-2 rounded-medium px-3 py-2 text-left text-small transition ${
-                    item.key === selected ? "bg-primary-50 font-semibold text-primary dark:bg-primary-500/15" : "hover:bg-default-100"
+                  className={`flex items-center justify-between gap-2 rounded-lg px-3 py-2 text-left text-sm transition ${
+                    item.key === selected
+                      ? "bg-brand-50 font-semibold text-accent dark:bg-brand-500/15"
+                      : "hover:bg-ink-100"
                   }`}
                 >
                   <span className="flex min-w-0 items-center gap-2">
-                    <span className={`h-2 w-2 shrink-0 rounded-full ${DOT[item.color]}`} aria-hidden />
-                    <span className={`truncate ${item.available ? "" : "text-default-400 line-through"}`}>{label(item.key)}</span>
-                    {item.key === LOCKED_ROLE ? <Lock className="h-3 w-3 shrink-0 text-default-400" aria-label={t("locked")} /> : null}
+                    <span
+                      className={`h-2 w-2 shrink-0 rounded-full ${DOT[item.color]}`}
+                      aria-hidden
+                    />
+                    <span
+                      className={`truncate ${item.available ? "" : "text-ink-400 line-through"}`}
+                    >
+                      {label(item.key)}
+                    </span>
+                    {item.key === LOCKED_ROLE ? (
+                      <Lock
+                        className="h-3 w-3 shrink-0 text-ink-400"
+                        aria-label={t("locked")}
+                      />
+                    ) : null}
                   </span>
-                  <span className="shrink-0 text-tiny text-default-400">{userCounts[item.key] ?? 0}</span>
+                  <span className="shrink-0 text-xs text-ink-400">
+                    {userCounts[item.key] ?? 0}
+                  </span>
                 </button>
               ))}
             </div>
@@ -163,33 +262,68 @@ export function RolePermissionsMatrix({ userCounts, canManage }: { userCounts: R
 
       {/* Seçili rolün izinleri */}
       <section className="flex min-w-0 flex-col gap-4">
-        <div className="flex flex-wrap items-start justify-between gap-3 rounded-large border border-default-200 bg-content1 p-4">
+        <div className="flex flex-wrap items-start justify-between gap-3 rounded-xl border border-ink-200 bg-surface p-4">
           <div className="flex min-w-0 flex-col gap-1">
             <div className="flex flex-wrap items-center gap-2">
               <RoleChip role={selected} size="md" />
-              <Chip size="sm" variant="bordered">
-                {role?.kind === "module" ? t("kindModule", { module: text.module(role.moduleKey ?? "") }) : t(`kind.${role?.kind ?? "system"}`)}
+              <Chip
+                size="sm"
+                variant={"soft"}
+                className={"border border-current"}
+              >
+                {role?.kind === "module"
+                  ? t("kindModule", {
+                      module: text.module(role.moduleKey ?? ""),
+                    })
+                  : t(`kind.${role?.kind ?? "system"}`)}
               </Chip>
-              <span className="text-tiny text-default-500">{t("summary", { users: userCounts[selected] ?? 0, permissions: totalAllowed })}</span>
+              <span className="text-xs text-ink-500">
+                {t("summary", {
+                  users: userCounts[selected] ?? 0,
+                  permissions: totalAllowed,
+                })}
+              </span>
             </div>
-            <p className="text-small text-default-500">{describe(role)}</p>
-            {role && !role.available ? <p className="text-small text-warning-600">{t("unavailable")}</p> : null}
-            {locked ? <p className="flex items-center gap-1 text-small text-default-500"><Lock className="h-3.5 w-3.5" aria-hidden />{t("lockedHint")}</p> : null}
+            <p className="text-sm text-ink-500">{describe(role)}</p>
+            {role && !role.available ? (
+              <p className="text-sm text-warning-600">{t("unavailable")}</p>
+            ) : null}
+            {locked ? (
+              <p className="flex items-center gap-1 text-sm text-ink-500">
+                <Lock className="h-3.5 w-3.5" aria-hidden />
+                {t("lockedHint")}
+              </p>
+            ) : null}
           </div>
           {canManage && !locked ? (
             <div className="flex flex-wrap gap-2">
               {role?.kind === "custom" ? (
                 <>
-                  <Button size="sm" variant="flat" startContent={<Pencil className="h-4 w-4" aria-hidden />} onPress={() => setEditor({ mode: "edit", role })}>
+                  <Button
+                    size="sm"
+                    onPress={() => setEditor({ mode: "edit", role })}
+                    variant={actionVariant("default", "flat")}
+                  >
+                    {<Pencil className="h-4 w-4" aria-hidden />}
                     {t("edit")}
                   </Button>
-                  <Button size="sm" variant="flat" color="danger" startContent={<Trash2 className="h-4 w-4" aria-hidden />} onPress={() => setConfirm("delete")}>
+                  <Button
+                    size="sm"
+                    onPress={() => setConfirm("delete")}
+                    variant={actionVariant("danger", "flat")}
+                  >
+                    {<Trash2 className="h-4 w-4" aria-hidden />}
                     {t("delete")}
                   </Button>
                 </>
               ) : null}
               {anyCustomized && role?.kind !== "custom" ? (
-                <Button size="sm" variant="flat" startContent={<RotateCcw className="h-4 w-4" aria-hidden />} onPress={() => setConfirm("reset")}>
+                <Button
+                  size="sm"
+                  onPress={() => setConfirm("reset")}
+                  variant={actionVariant("default", "flat")}
+                >
+                  {<RotateCcw className="h-4 w-4" aria-hidden />}
                   {t("reset")}
                 </Button>
               ) : null}
@@ -197,48 +331,89 @@ export function RolePermissionsMatrix({ userCounts, canManage }: { userCounts: R
           ) : null}
         </div>
 
-        <Input
-          size="sm"
+        <TextField
           value={query}
-          onValueChange={setQuery}
-          placeholder={t("search")}
           aria-label={t("search")}
-          startContent={<Search className="h-4 w-4 text-default-400" aria-hidden />}
-          isClearable
-          onClear={() => setQuery("")}
-        />
+          onChange={setQuery}
+          className={["w-full"].filter(Boolean).join(" ")}
+        >
+          <InputGroup>
+            <InputGroup.Prefix>
+              {<Search className="h-4 w-4 text-ink-400" aria-hidden />}
+            </InputGroup.Prefix>
+            <InputGroup.Input
+              placeholder={t("search")}
+              className={["h-9 text-sm"].filter(Boolean).join(" ")}
+            />
+            <InputGroup.Suffix>
+              {query ? <FieldClearButton onPress={() => setQuery("")} /> : null}
+            </InputGroup.Suffix>
+          </InputGroup>
+        </TextField>
 
         {groups.map(([moduleKey, refs]) => (
-          <div key={moduleKey} className="overflow-hidden rounded-large border border-default-200 bg-content1">
-            <div className="border-b border-default-100 bg-default-50 px-4 py-2 text-small font-semibold dark:bg-default-100/40">{text.module(moduleKey)}</div>
-            <div className="divide-y divide-default-100">
+          <div
+            key={moduleKey}
+            className="overflow-hidden rounded-xl border border-ink-200 bg-surface"
+          >
+            <div className="border-b border-ink-100 bg-ink-50 px-4 py-2 text-sm font-semibold dark:bg-ink-100/40">
+              {text.module(moduleKey)}
+            </div>
+            <div className="divide-y divide-ink-100">
               {refs.map((ref) => {
                 const supported = ref.definition.grants[LOCKED_ROLE] ?? [];
-                const allowed = effectiveActions(selected, ref.definition, localPolicy);
+                const allowed = effectiveActions(
+                  selected,
+                  ref.definition,
+                  localPolicy,
+                );
                 return (
-                  <div key={ref.definition.resource} className="flex flex-col gap-2 px-4 py-3 md:flex-row md:items-center md:justify-between">
+                  <div
+                    key={ref.definition.resource}
+                    className="flex flex-col gap-2 px-4 py-3 md:flex-row md:items-center md:justify-between"
+                  >
                     <div className="flex min-w-0 flex-col">
-                      <span className="flex items-center gap-2 text-small font-medium">
+                      <span className="flex items-center gap-2 text-sm font-medium">
                         {text.label(ref)}
                         {isCustomized(ref) ? (
-                          <Chip size="sm" variant="flat" color="warning" className="h-5 text-[10px]">
+                          <Chip
+                            size="sm"
+                            color={"warning"}
+                            variant={"soft"}
+                            className={["h-5 text-[10px]"]
+                              .filter(Boolean)
+                              .join(" ")}
+                          >
                             {t("customized")}
                           </Chip>
                         ) : null}
                       </span>
-                      <span className="text-tiny text-default-500">{text.description(ref)}</span>
+                      <span className="text-xs text-ink-500">
+                        {text.description(ref)}
+                      </span>
                     </div>
                     <div className="flex flex-wrap gap-x-4 gap-y-1">
-                      {PERMISSION_ACTIONS.filter((action) => supported.includes(action)).map((action) => (
+                      {PERMISSION_ACTIONS.filter((action) =>
+                        supported.includes(action),
+                      ).map((action) => (
                         <Checkbox
                           key={action}
-                          size="sm"
                           isSelected={allowed.includes(action)}
                           isDisabled={!canManage || locked || busyKey !== null}
-                          onValueChange={(checked) => void toggle(ref, action, checked)}
-                          color={action === "delete" ? "danger" : action === "approve" ? "warning" : "primary"}
+                          onChange={(checked) =>
+                            void toggle(ref, action, checked)
+                          }
                         >
-                          <span className="text-small">{tActions(action)}</span>
+                          <Checkbox.Content>
+                            <Checkbox.Control className="size-4">
+                              <Checkbox.Indicator />
+                            </Checkbox.Control>
+                            <Label>
+                              <span className="text-sm">
+                                {tActions(action)}
+                              </span>
+                            </Label>
+                          </Checkbox.Content>
                         </Checkbox>
                       ))}
                     </div>
@@ -269,16 +444,25 @@ export function RolePermissionsMatrix({ userCounts, canManage }: { userCounts: R
         isOpen={confirm !== null}
         onOpenChange={(open) => !open && setConfirm(null)}
         title={confirm === "delete" ? t("deleteTitle") : t("resetTitle")}
-        message={confirm === "delete" ? t("deleteMessage", { role: label(selected) }) : t("resetMessage", { role: label(selected) })}
+        message={
+          confirm === "delete"
+            ? t("deleteMessage", { role: label(selected) })
+            : t("resetMessage", { role: label(selected) })
+        }
         confirmLabel={confirm === "delete" ? t("delete") : t("reset")}
         confirmColor={confirm === "delete" ? "danger" : "warning"}
         onConfirm={async () => {
-          const result = confirm === "delete" ? await deleteRoleAction({ key: selected }) : await resetRoleGrantsAction({ role: selected });
+          const result =
+            confirm === "delete"
+              ? await deleteRoleAction({ key: selected })
+              : await resetRoleGrantsAction({ role: selected });
           if (!result.ok) {
-            addToast({ title: result.error, color: "danger" });
+            toast(result.error, { variant: "danger" });
             return;
           }
-          addToast({ title: confirm === "delete" ? t("deleted") : t("resetDone"), color: "success" });
+          toast(confirm === "delete" ? t("deleted") : t("resetDone"), {
+            variant: "success",
+          });
           if (confirm === "delete") setSelected(LOCKED_ROLE);
           else setOverrides({ ...overrides, [selected]: {} });
           setConfirm(null);
@@ -315,60 +499,149 @@ function RoleEditor({
   const submit = async () => {
     setBusy(true);
     setError(null);
-    const payload = { label: labelValue, description: description || null, color };
-    const result = mode === "create" ? await createRoleAction({ ...payload, copyFrom: copyFrom || null }) : await updateRoleAction({ ...payload, key: role?.key });
+    const payload = {
+      label: labelValue,
+      description: description || null,
+      color,
+    };
+    const result =
+      mode === "create"
+        ? await createRoleAction({ ...payload, copyFrom: copyFrom || null })
+        : await updateRoleAction({ ...payload, key: role?.key });
     setBusy(false);
     if (!result.ok) {
       setError(result.fieldErrors?.label?.[0] ?? result.error);
       return;
     }
-    addToast({ title: mode === "create" ? t("created") : t("updated"), color: "success" });
-    onSaved(mode === "create" && result.data && typeof result.data === "object" && "key" in result.data ? String(result.data.key) : null);
+    toast(mode === "create" ? t("created") : t("updated"), {
+      variant: "success",
+    });
+    onSaved(
+      mode === "create" &&
+        result.data &&
+        typeof result.data === "object" &&
+        "key" in result.data
+        ? String(result.data.key)
+        : null,
+    );
   };
 
   return (
-    <Modal isOpen onOpenChange={(open) => !open && onClose()} size="md">
-      <ModalContent>
-        <ModalHeader>{mode === "create" ? t("newRole") : t("editTitle")}</ModalHeader>
-        <ModalBody className="gap-4">
-          <Input label={t("fields.label")} labelPlacement="outside" placeholder={t("fields.labelPlaceholder")} value={labelValue} onValueChange={setLabelValue} isRequired errorMessage={error ?? undefined} isInvalid={Boolean(error)} />
-          <Textarea label={t("fields.description")} labelPlacement="outside" placeholder={t("fields.descriptionPlaceholder")} value={description} onValueChange={setDescription} minRows={2} />
-          <div className="flex flex-col gap-2">
-            <span className="text-small">{t("fields.color")}</span>
-            <div className="flex flex-wrap gap-2">
-              {CHIP_COLORS.map((option) => (
-                <button key={option} type="button" onClick={() => setColor(option)} aria-pressed={color === option} className={`rounded-full p-0.5 ${color === option ? "ring-2 ring-primary" : ""}`}>
-                  <Chip size="sm" variant="flat" color={option}>
-                    {labelValue || t("fields.sample")}
-                  </Chip>
-                </button>
-              ))}
-            </div>
-          </div>
-          {mode === "create" ? (
-            <Select
-              label={t("fields.copyFrom")}
-              labelPlacement="outside"
-              placeholder={t("fields.copyFromNone")}
-              description={t("fields.copyFromHint")}
-              selectedKeys={copyFrom ? [copyFrom] : []}
-              onSelectionChange={(keys) => setCopyFrom(String([...keys][0] ?? ""))}
-            >
-              {roles.map((item) => (
-                <SelectItem key={item.key}>{roleLabel(item.key)}</SelectItem>
-              ))}
-            </Select>
-          ) : null}
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="flat" onPress={onClose}>
-            {t("cancel")}
-          </Button>
-          <Button color="primary" isLoading={busy} isDisabled={labelValue.trim().length < 2} onPress={() => void submit()}>
-            {t("save")}
-          </Button>
-        </ModalFooter>
-      </ModalContent>
+    <Modal isOpen onOpenChange={(open) => !open && onClose()}>
+      <Modal.Backdrop>
+        <Modal.Container size="md">
+          <Modal.Dialog className={"w-full max-w-md "}>
+            <DialogDismissButton />
+
+            <Modal.Header>
+              <Modal.Heading className="flex items-center gap-2">
+                {mode === "create" ? t("newRole") : t("editTitle")}
+              </Modal.Heading>
+            </Modal.Header>
+            <Modal.Body className="gap-4">
+              <TextField
+                value={labelValue}
+                isRequired
+                isInvalid={Boolean(error)}
+                onChange={setLabelValue}
+                className={["w-full"].filter(Boolean).join(" ")}
+              >
+                <Label>{t("fields.label")}</Label>
+                <Input placeholder={t("fields.labelPlaceholder")} />
+                <FieldError>{error ?? undefined}</FieldError>
+              </TextField>
+              <TextField
+                value={description}
+                onChange={setDescription}
+                className={["w-full"].filter(Boolean).join(" ")}
+              >
+                <Label>{t("fields.description")}</Label>
+                <TextArea
+                  placeholder={t("fields.descriptionPlaceholder")}
+                  rows={2}
+                  className={["[field-sizing:content]"]
+                    .filter(Boolean)
+                    .join(" ")}
+                />
+              </TextField>
+              <div className="flex flex-col gap-2">
+                <span className="text-sm">{t("fields.color")}</span>
+                <div className="flex flex-wrap gap-2">
+                  {CHIP_COLORS.map((option) => (
+                    <button
+                      key={option}
+                      type="button"
+                      onClick={() => setColor(option)}
+                      aria-pressed={color === option}
+                      className={`rounded-full p-0.5 ${color === option ? "ring-2 ring-accent" : ""}`}
+                    >
+                      <Chip
+                        size="sm"
+                        color={statusTone(option)}
+                        variant={"soft"}
+                        style={statusStyle(option)}
+                      >
+                        {labelValue || t("fields.sample")}
+                      </Chip>
+                    </button>
+                  ))}
+                </div>
+              </div>
+              {mode === "create" ? (
+                <Select
+                  placeholder={t("fields.copyFromNone")}
+                  value={copyFrom ? copyFrom : null}
+                  onChange={(selectedValue) => {
+                    const keys =
+                      selectedValue === null
+                        ? undefined
+                        : String(selectedValue);
+                    return setCopyFrom(String(keys ?? ""));
+                  }}
+                >
+                  <Label>{t("fields.copyFrom")}</Label>
+                  <Select.Trigger>
+                    <Select.Value />
+                    <Select.Indicator />
+                  </Select.Trigger>
+                  <Select.Popover>
+                    <ListBox>
+                      {roles.map((item) => (
+                        <ListBox.Item
+                          key={item.key}
+                          id={item.key}
+                          textValue={String(roleLabel(item.key))}
+                        >
+                          <Label>{roleLabel(item.key)}</Label>
+                          <ListBox.ItemIndicator />
+                        </ListBox.Item>
+                      ))}
+                    </ListBox>
+                  </Select.Popover>
+                  <Description>{t("fields.copyFromHint")}</Description>
+                </Select>
+              ) : null}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                onPress={onClose}
+                variant={actionVariant("default", "flat")}
+              >
+                {t("cancel")}
+              </Button>
+              <Button
+                isDisabled={labelValue.trim().length < 2}
+                onPress={() => void submit()}
+                variant={actionVariant("primary", "solid")}
+                isPending={busy}
+              >
+                {busy ? <Spinner size="sm" color="current" /> : null}
+                {t("save")}
+              </Button>
+            </Modal.Footer>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 }
@@ -379,8 +652,14 @@ export function RolePermissionsPreview({ role }: { role: string }) {
   const { resources, policy } = usePermissionResources();
   const text = useResourceText();
   const byModule = new Map<string, PermissionAction[]>();
-  for (const ref of resources) byModule.set(ref.moduleKey, [...(byModule.get(ref.moduleKey) ?? []), ...effectiveActions(role, ref.definition, policy)]);
-  const entries = [...byModule.entries()].sort((a, b) => text.module(a[0]).localeCompare(text.module(b[0])));
+  for (const ref of resources)
+    byModule.set(ref.moduleKey, [
+      ...(byModule.get(ref.moduleKey) ?? []),
+      ...effectiveActions(role, ref.definition, policy),
+    ]);
+  const entries = [...byModule.entries()].sort((a, b) =>
+    text.module(a[0]).localeCompare(text.module(b[0])),
+  );
   if (!role) return null;
   return (
     <div className="flex flex-wrap gap-1.5">
@@ -388,8 +667,20 @@ export function RolePermissionsPreview({ role }: { role: string }) {
         const write = actions.some((action) => action !== "view");
         const view = actions.includes("view");
         return (
-          <Chip key={moduleKey} size="sm" variant="flat" color={write ? "success" : view ? "primary" : "default"} className={write || view ? "" : "text-default-400"}>
-            {text.module(moduleKey)}: {t(write ? "accessFull" : view ? "accessRead" : "accessNone")}
+          <Chip
+            key={moduleKey}
+            size="sm"
+            color={statusTone(write ? "success" : view ? "primary" : "default")}
+            variant={"soft"}
+            className={[write || view ? "" : "text-ink-400"]
+              .filter(Boolean)
+              .join(" ")}
+            style={statusStyle(
+              write ? "success" : view ? "primary" : "default",
+            )}
+          >
+            {text.module(moduleKey)}:{" "}
+            {t(write ? "accessFull" : view ? "accessRead" : "accessNone")}
           </Chip>
         );
       })}

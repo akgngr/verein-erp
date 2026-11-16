@@ -3,7 +3,10 @@ import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
-import { FormDrawer, FormDrawerButton } from "@/shared/components/forms/form-drawer";
+import {
+  FormDrawer,
+  FormDrawerButton,
+} from "@/shared/components/forms/form-drawer";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { onlineFormsPermissions } from "@/modules/online-forms";
@@ -17,7 +20,13 @@ import { studentsPermissions } from "../permissions";
 import { listGuardianOptions } from "../queries/guardians";
 import { getStudent } from "../queries/students";
 
-export async function StudentDetailView({ id, editOpen }: { id: string; editOpen: boolean }) {
+export async function StudentDetailView({
+  id,
+  editOpen,
+}: {
+  id: string;
+  editOpen: boolean;
+}) {
   let user;
   try {
     user = await requirePermission(studentsPermissions, "view");
@@ -30,17 +39,35 @@ export async function StudentDetailView({ id, editOpen }: { id: string; editOpen
   if (!student) notFound();
   const canUpdate = can(user.role, studentsPermissions, "update");
   const signView = can(user.role, onlineFormsPermissions, "view");
-  const formHref = canUpdate ? (can(user.role, onlineFormsPermissions, "create") ? `/online-formlar?gonder=STUDENT:${student.id}` : null) : null;
+  const formHref = canUpdate
+    ? can(user.role, onlineFormsPermissions, "create")
+      ? `/online-formlar?gonder=STUDENT:${student.id}`
+      : null
+    : null;
   const guardianOptions = canUpdate ? await listGuardianOptions() : [];
 
   const facts: [string, string][] = [
-    [t("form.birthDate"), student.birthDate ? formatDate(student.birthDate) : "—"],
-    [t("form.school"), [student.school, student.gradeLevel].filter(Boolean).join(" · ") || "—"],
+    [
+      t("form.birthDate"),
+      student.birthDate ? formatDate(student.birthDate) : "—",
+    ],
+    [
+      t("form.school"),
+      [student.school, student.gradeLevel].filter(Boolean).join(" · ") || "—",
+    ],
     [t("form.email"), student.email ?? "—"],
     [t("form.phone"), student.phone ?? "—"],
     [t("form.status"), t(`status.${student.status}`)],
-    [t("form.dataConsentAt"), student.dataConsentAt ? formatDate(student.dataConsentAt) : t("detail.noConsent")],
-    [t("form.photoConsent"), student.photoConsent ? t("detail.yes") : t("detail.no")],
+    [
+      t("form.dataConsentAt"),
+      student.dataConsentAt
+        ? formatDate(student.dataConsentAt)
+        : t("detail.noConsent"),
+    ],
+    [
+      t("form.photoConsent"),
+      student.photoConsent ? t("detail.yes") : t("detail.no"),
+    ],
   ];
 
   return (
@@ -50,33 +77,54 @@ export async function StudentDetailView({ id, editOpen }: { id: string; editOpen
         description={`${student.studentNumber} · ${t("detail.createdBy", { label: student.createdByLabel })}`}
         actions={
           <div className="flex flex-wrap items-center gap-2">
-            {signView ? <LinkButton href={`/online-formlar?kisi=STUDENT:${student.id}`} variant="light">{t("onlineForm.documents")}</LinkButton> : null}
-            {formHref ? <LinkButton href={formHref} variant="bordered">{t("onlineForm.send")}</LinkButton> : null}
+            {signView ? (
+              <LinkButton
+                href={`/online-formlar?kisi=STUDENT:${student.id}`}
+                variant="light"
+              >
+                {t("onlineForm.documents")}
+              </LinkButton>
+            ) : null}
+            {formHref ? (
+              <LinkButton href={formHref} variant="bordered">
+                {t("onlineForm.send")}
+              </LinkButton>
+            ) : null}
             {canUpdate ? (
-              <FormDrawerButton param="duzenle" startIcon={<Pencil className="h-4 w-4" />}>
+              <FormDrawerButton
+                param="duzenle"
+                startIcon={<Pencil className="h-4 w-4" />}
+              >
                 {t("detail.edit")}
               </FormDrawerButton>
             ) : null}
           </div>
         }
       />
-      <section className="grid grid-cols-1 gap-3 rounded-xl border border-default-200 bg-content1 p-5 sm:grid-cols-2 lg:grid-cols-3">
+      <section className="grid grid-cols-1 gap-3 rounded-xl border border-ink-200 bg-surface p-5 sm:grid-cols-2 lg:grid-cols-3">
         {facts.map(([label, value]) => (
           <div key={label} className="flex flex-col">
-            <span className="text-tiny text-default-500">{label}</span>
-            <span className="text-small font-medium">{value}</span>
+            <span className="text-xs text-ink-500">{label}</span>
+            <span className="text-sm font-medium">{value}</span>
           </div>
         ))}
         {student.note ? (
           <div className="flex flex-col sm:col-span-2 lg:col-span-3">
-            <span className="text-tiny text-default-500">{t("form.note")}</span>
-            <span className="whitespace-pre-line text-small">{student.note}</span>
+            <span className="text-xs text-ink-500">{t("form.note")}</span>
+            <span className="whitespace-pre-line text-sm">{student.note}</span>
           </div>
         ) : null}
       </section>
-      <GuardianLinksPanel student={student} guardianOptions={guardianOptions} canUpdate={canUpdate} />
+      <GuardianLinksPanel
+        student={student}
+        guardianOptions={guardianOptions}
+        canUpdate={canUpdate}
+      />
       {canUpdate && editOpen ? (
-        <FormDrawer title={t("form.editTitle")} description={student.studentNumber}>
+        <FormDrawer
+          title={t("form.editTitle")}
+          description={student.studentNumber}
+        >
           <StudentForm student={student} />
         </FormDrawer>
       ) : null}

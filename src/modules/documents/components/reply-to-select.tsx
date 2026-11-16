@@ -2,9 +2,23 @@
 
 import { useTranslations } from "next-intl";
 
-import { Autocomplete, AutocompleteItem } from "@heroui/react";
-import { useState } from "react";
-import { Controller, type Control, type FieldValues, type Path } from "react-hook-form";
+import {
+  ComboBox,
+  Description,
+  FieldError,
+  Input,
+  Label,
+  ListBox,
+} from "@heroui/react";
+import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
+import { useTranslateMessage } from "@/shared/i18n/use-translate-message";
+import { useState, type Ref } from "react";
+import {
+  Controller,
+  type Control,
+  type FieldValues,
+  type Path,
+} from "react-hook-form";
 
 import type { ReplyTargetOption } from "../types";
 
@@ -40,6 +54,8 @@ export function ReplyToSelect<T extends FieldValues>({
         <ReplyToSelectInner
           value={typeof field.value === "string" ? field.value : ""}
           onChange={field.onChange}
+          inputRef={field.ref}
+          onBlur={field.onBlur}
           options={options}
           isDisabled={isDisabled}
           isInvalid={Boolean(fieldState.error)}
@@ -57,6 +73,8 @@ function ReplyToSelectInner({
   isDisabled,
   isInvalid,
   errorMessage,
+  inputRef,
+  onBlur,
 }: {
   value: string;
   onChange: (value: string) => void;
@@ -64,8 +82,11 @@ function ReplyToSelectInner({
   isDisabled?: boolean;
   isInvalid?: boolean;
   errorMessage?: string;
+  inputRef?: Ref<HTMLInputElement>;
+  onBlur?: () => void;
 }) {
   const t = useTranslations("documents.form");
+  const translateMessage = useTranslateMessage();
   // KARAR: Arama metni ayrı state'te tutulur; görünen metin türetilir —
   // seçim varsa etiket, yoksa yazılan arama metni (effect gerekmez).
   const [searchText, setSearchText] = useState("");
@@ -73,32 +94,47 @@ function ReplyToSelectInner({
   const displayed = selected ? replyTargetLabel(selected) : searchText;
 
   return (
-    <Autocomplete
+    <ComboBox
       id="documents-reply-to"
-      label={t("replyTo")}
-      labelPlacement="outside"
-      description={t("replyToDescription")}
       isDisabled={isDisabled}
       allowsCustomValue={false}
-      items={options}
-      selectedKey={selected ? selected.id : null}
+      defaultItems={options}
+      value={selected?.id ?? null}
       inputValue={displayed}
       onInputChange={(next) => {
         setSearchText(next);
-        // Yazmaya başlayınca mevcut seçim temizlenir (arama moduna geçilir).
         if (selected && next !== replyTargetLabel(selected)) onChange("");
       }}
-      onSelectionChange={(key) => {
-        onChange(key === null ? "" : String(key));
-      }}
+      onChange={(key) => onChange(key === null ? "" : String(key))}
       isInvalid={isInvalid}
-      errorMessage={errorMessage}
+      className="w-full"
     >
-      {(option) => (
-        <AutocompleteItem key={option.id} textValue={replyTargetLabel(option)}>
-          {replyTargetLabel(option)}
-        </AutocompleteItem>
-      )}
-    </Autocomplete>
+      <Label>{t("replyTo")}</Label>
+      <ComboBox.InputGroup>
+        <Input ref={inputRef} onBlur={onBlur} />
+        {displayed ? (
+          <FieldClearButton
+            onPress={() => {
+              setSearchText("");
+              onChange("");
+            }}
+            isDisabled={isDisabled}
+          />
+        ) : null}
+        <ComboBox.Trigger />
+      </ComboBox.InputGroup>
+      <Description>{t("replyToDescription")}</Description>
+      <ComboBox.Popover>
+        <ListBox<ReplyTargetOption>>
+          {(option) => (
+            <ListBox.Item id={option.id} textValue={replyTargetLabel(option)}>
+              <Label>{replyTargetLabel(option)}</Label>
+              <ListBox.ItemIndicator />
+            </ListBox.Item>
+          )}
+        </ListBox>
+      </ComboBox.Popover>
+      <FieldError>{translateMessage(errorMessage)}</FieldError>
+    </ComboBox>
   );
 }

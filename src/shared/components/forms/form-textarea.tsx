@@ -6,7 +6,7 @@ import {
   Label,
   Description,
   FieldError,
-} from "@heroui-v3/react";
+} from "@heroui/react";
 import {
   Controller,
   type Control,

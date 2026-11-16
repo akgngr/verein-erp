@@ -13,7 +13,7 @@ Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı 
 |---|---|
 | Anahtar | `donations` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.2 |
+| Sürüm | 1.1.3 |
 | Sayfalar | `/bagislar`, `/bagislar/bagiscilar`, `/bagislar/bildirimler`, `/bagislar/bildirimler/olustur`, `/bagislar/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -41,6 +41,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_donation_statistics`
 
 ## Sürüm notları
+
+### 1.1.3 — HeroUI v3 arayüz geçişi
+
+_2026-11-16_
+
+- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
 ### 1.1.2 — AI veri sınıfı
 

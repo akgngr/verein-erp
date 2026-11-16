@@ -1,5 +1,4 @@
 "use client";
-
 import {
   Button,
   Description,
@@ -8,8 +7,9 @@ import {
   Label,
   TextField,
   Tooltip,
-} from "@heroui-v3/react";
-import { addToast } from "@heroui/react";
+  toast,
+} from "@heroui/react";
+
 import { Copy, Eye, EyeOff, WandSparkles } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -54,7 +54,7 @@ export function FormPasswordInput<T extends FieldValues>({
         const copy = async () => {
           try {
             await navigator.clipboard.writeText(value);
-            addToast({ title: t("copied"), color: "success" });
+            toast(t("copied"), { variant: "success" });
           } catch (error) {
             console.error(error instanceof Error ? error.message : error);
           }

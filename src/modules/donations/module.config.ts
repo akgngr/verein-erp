@@ -1,4 +1,11 @@
-import { Download, FilePlus2, HandHeart, Receipt, Settings2, Users } from "lucide-react";
+import {
+  Download,
+  FilePlus2,
+  HandHeart,
+  Receipt,
+  Settings2,
+  Users,
+} from "lucide-react";
 
 import type { ModuleConfig } from "@/shared/types/module";
 import { donationsPermissions } from "./permissions";
@@ -6,9 +13,10 @@ import { donationsPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "donations",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.1.2",
+  version: "1.1.3",
   label: "Bağışlar",
-  description: "Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı takibi.",
+  description:
+    "Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı takibi.",
   category: "OFFICIAL",
   hasSchema: true,
   // Başka modüllerden istenen erişim (yönetici onayı gerekir; gerekçe: messages → access.<modül>).
@@ -29,8 +37,18 @@ export const moduleConfig: ModuleConfig = {
     },
   ],
   menu: [
-    { key: "donors", label: "Bağışçılar", href: "/bagislar/bagiscilar", icon: Users },
-    { key: "confirmations", label: "Bildirimler", href: "/bagislar/bildirimler", icon: Receipt },
+    {
+      key: "donors",
+      label: "Bağışçılar",
+      href: "/bagislar/bagiscilar",
+      icon: Users,
+    },
+    {
+      key: "confirmations",
+      label: "Bildirimler",
+      href: "/bagislar/bildirimler",
+      icon: Receipt,
+    },
     {
       key: "issue",
       label: "Bildirim oluştur",
@@ -38,7 +56,18 @@ export const moduleConfig: ModuleConfig = {
       icon: FilePlus2,
       permission: { definition: donationsPermissions, action: "approve" },
     },
-    { key: "settings", label: "Ayarlar", href: "/bagislar/ayarlar", icon: Settings2 },
-    { key: "export", label: "Excel'e aktar", href: "/api/donations/export", icon: Download, isDownload: true },
+    {
+      key: "settings",
+      label: "Ayarlar",
+      href: "/bagislar/ayarlar",
+      icon: Settings2,
+    },
+    {
+      key: "export",
+      label: "Excel'e aktar",
+      href: "/api/donations/export",
+      icon: Download,
+      isDownload: true,
+    },
   ],
 };

@@ -265,6 +265,41 @@ async function main() {
     if (await consent.isChecked()) throw new Error("V3_SWITCH_KEYBOARD_FAILED");
     await consent.press("Space");
     if (!(await consent.isChecked())) throw new Error("V3_SWITCH_VALUE_FAILED");
+    const sms = memberDialog.getByRole("checkbox", {
+      name: "SMS",
+      exact: true,
+    });
+    await memberDialog
+      .locator('[data-slot="checkbox-content"]')
+      .filter({ hasText: "SMS" })
+      .click();
+    if (!(await sms.isChecked())) throw new Error("V3_CHECKBOX_POINTER_FAILED");
+    await sms.focus();
+    await sms.press("Space");
+    if (await sms.isChecked()) throw new Error("V3_CHECKBOX_KEYBOARD_FAILED");
+    const birthDate = memberDialog.locator("#form-date-birthDate");
+    await birthDate.getByRole("button").click();
+    const calendar = page.locator('[data-slot="calendar"]');
+    await calendar.waitFor();
+    await calendar
+      .locator('[data-slot="calendar-year-picker-trigger"]')
+      .click();
+    const years = calendar.getByRole("listbox");
+    await years.waitFor();
+    await years.getByRole("option").filter({ hasText: "2020" }).click();
+    const day = calendar
+      .locator(
+        '[data-slot="calendar-cell"][role="button"]:not([aria-disabled="true"])',
+      )
+      .first();
+    await day.click();
+    await calendar.waitFor({ state: "hidden" });
+    if (
+      !(
+        await birthDate.locator('input[name="birthDate"]').inputValue()
+      ).startsWith("2020-")
+    )
+      throw new Error("V3_DATE_FIELD_VALUE_FAILED");
     await page.screenshot({
       path: path.join(captureDir, "member-form-dark.png"),
       fullPage: true,
@@ -273,6 +308,40 @@ async function main() {
     await page.keyboard.press("Escape");
     await memberDialog.waitFor({ state: "hidden" });
     await page.waitForURL((url) => !url.searchParams.has("yeni"));
+    current = "/kullanicilar";
+    await page.goto(`${BASE_URL}/kullanicilar`, { waitUntil: "networkidle" });
+    const roleTab = page.getByRole("tab", {
+      name: /Roller ve Yetki Matrisi|Rollen und Berechtigungsmatrix/,
+    });
+    await roleTab.click();
+    if ((await roleTab.getAttribute("aria-selected")) !== "true")
+      throw new Error("V3_TABS_FAILED");
+    await page.screenshot({
+      path: path.join(captureDir, "users-permissions-dark.png"),
+      fullPage: true,
+      animations: "disabled",
+    });
+    current = "/evrak?yeni=gelen";
+    await page.goto(`${BASE_URL}/evrak?yeni=gelen`, {
+      waitUntil: "networkidle",
+    });
+    const documentDialog = page.getByRole("dialog");
+    await documentDialog.waitFor();
+    const counterparty = documentDialog
+      .locator("#form-autocomplete-counterparty")
+      .getByRole("combobox");
+    await counterparty.fill("Synthetic preview organisation");
+    await counterparty.press("Tab");
+    if ((await counterparty.inputValue()) !== "Synthetic preview organisation")
+      throw new Error("V3_COMBOBOX_CUSTOM_VALUE_FAILED");
+    await page.screenshot({
+      path: path.join(captureDir, "document-form-dark.png"),
+      fullPage: true,
+      animations: "disabled",
+    });
+    await page.keyboard.press("Escape");
+    await documentDialog.waitFor({ state: "hidden" });
+    await page.goto(`${BASE_URL}/uyeler`, { waitUntil: "networkidle" });
     await page.setViewportSize({ width: 390, height: 844 });
     await page.reload({ waitUntil: "networkidle" });
     if (

@@ -1,14 +1,29 @@
 "use client";
+import { statusStyle } from "@/shared/components/ui/status-appearance";
+import { toast, Button, Spinner, Chip } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+import { statusTone } from "@/shared/components/ui/status-appearance";
 
-import { addToast, Button, Chip } from "@heroui/react";
-import { CheckCircle2, Download, FileUp, Inbox, RotateCcw, Trash2 } from "lucide-react";
+import {
+  CheckCircle2,
+  Download,
+  FileUp,
+  Inbox,
+  RotateCcw,
+  Trash2,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useFormatter, useTranslations } from "next-intl";
 import { useRef, useState } from "react";
 
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 
-import { deleteInboxMessageAction, fetchInboxAction, importAttachmentAction, setInboxStatusAction } from "../actions/inbox-actions";
+import {
+  deleteInboxMessageAction,
+  fetchInboxAction,
+  importAttachmentAction,
+  setInboxStatusAction,
+} from "../actions/inbox-actions";
 
 export type InboxRow = {
   id: string;
@@ -19,11 +34,23 @@ export type InboxRow = {
   receivedAt: string;
   snippet: string | null;
   status: "NEW" | "DONE";
-  attachments: { id: string; fileName: string; size: number; importedTo: string | null }[];
+  attachments: {
+    id: string;
+    fileName: string;
+    size: number;
+    importedTo: string | null;
+  }[];
 };
 
 /** Gelen kutusu: IMAP'ten al, .eml yükle, ekleri muhasebeye aktar. */
-export function InboxPanel({ rows, imapConfigured, accountingUsable, canManage, canDelete, filter }: {
+export function InboxPanel({
+  rows,
+  imapConfigured,
+  accountingUsable,
+  canManage,
+  canDelete,
+  filter,
+}: {
   rows: InboxRow[];
   imapConfigured: boolean;
   accountingUsable: boolean;
@@ -42,8 +69,8 @@ export function InboxPanel({ rows, imapConfigured, accountingUsable, canManage, 
     setBusy("fetch");
     const response = await fetchInboxAction({});
     setBusy(null);
-    if (!response.ok) return void addToast({ title: response.error, color: "danger" });
-    addToast({ title: t("fetched", response.data), color: "success" });
+    if (!response.ok) return void toast(response.error, { variant: "danger" });
+    toast(t("fetched", response.data), { variant: "success" });
     router.refresh();
   };
 
@@ -51,11 +78,27 @@ export function InboxPanel({ rows, imapConfigured, accountingUsable, canManage, 
     setBusy("eml");
     const body = new FormData();
     body.append("file", file);
-    const response = await fetch("/api/mail/inbox/eml", { method: "POST", body });
-    const json = (await response.json()) as { ok: boolean; error?: string; created?: boolean; attachments?: number };
+    const response = await fetch("/api/mail/inbox/eml", {
+      method: "POST",
+      body,
+    });
+    const json = (await response.json()) as {
+      ok: boolean;
+      error?: string;
+      created?: boolean;
+      attachments?: number;
+    };
     setBusy(null);
-    if (!json.ok) return void addToast({ title: json.error ?? t("errors.emlInvalid"), color: "danger" });
-    addToast({ title: json.created ? t("emlImported", { attachments: json.attachments ?? 0 }) : t("emlDuplicate"), color: json.created ? "success" : "warning" });
+    if (!json.ok)
+      return void toast(json.error ?? t("errors.emlInvalid"), {
+        variant: "danger",
+      });
+    toast(
+      json.created
+        ? t("emlImported", { attachments: json.attachments ?? 0 })
+        : t("emlDuplicate"),
+      { variant: statusTone(json.created ? "success" : "warning") },
+    );
     router.refresh();
   };
 
@@ -63,8 +106,10 @@ export function InboxPanel({ rows, imapConfigured, accountingUsable, canManage, 
     setBusy(id);
     const response = await importAttachmentAction({ id });
     setBusy(null);
-    if (!response.ok) return void addToast({ title: response.error, color: "danger" });
-    addToast({ title: response.data.duplicate ? t("importDuplicate") : t("imported"), color: response.data.duplicate ? "warning" : "success" });
+    if (!response.ok) return void toast(response.error, { variant: "danger" });
+    toast(response.data.duplicate ? t("importDuplicate") : t("imported"), {
+      variant: statusTone(response.data.duplicate ? "warning" : "success"),
+    });
     router.refresh();
   };
 
@@ -79,10 +124,23 @@ export function InboxPanel({ rows, imapConfigured, accountingUsable, canManage, 
       <div className="flex flex-wrap items-center gap-2">
         {canManage ? (
           <>
-            <Button color="primary" startContent={<Inbox size={16} />} isDisabled={!imapConfigured} isLoading={busy === "fetch"} onPress={fetchNow}>
+            <Button
+              isDisabled={!imapConfigured}
+              onPress={fetchNow}
+              variant={actionVariant("primary", "solid")}
+              isPending={busy === "fetch"}
+            >
+              {busy === "fetch" ? <Spinner size="sm" color="current" /> : null}
+              {<Inbox size={16} />}
               {t("fetch")}
             </Button>
-            <Button variant="flat" startContent={<FileUp size={16} />} isLoading={busy === "eml"} onPress={() => fileInput.current?.click()}>
+            <Button
+              onPress={() => fileInput.current?.click()}
+              variant={actionVariant("default", "flat")}
+              isPending={busy === "eml"}
+            >
+              {busy === "eml" ? <Spinner size="sm" color="current" /> : null}
+              {<FileUp size={16} />}
               {t("uploadEml")}
             </Button>
             <input
@@ -100,58 +158,136 @@ export function InboxPanel({ rows, imapConfigured, accountingUsable, canManage, 
         ) : null}
         <div className="ml-auto flex gap-1">
           {filters.map(([key, label]) => (
-            <Button key={key} size="sm" variant={filter === key ? "solid" : "light"} color={filter === key ? "primary" : "default"} onPress={() => router.push(`/mail/gelen-kutusu?durum=${key}`)}>
+            <Button
+              key={key}
+              size="sm"
+              onPress={() => router.push(`/mail/gelen-kutusu?durum=${key}`)}
+              variant={actionVariant(
+                filter === key ? "primary" : "default",
+                filter === key ? "solid" : "light",
+              )}
+            >
               {label}
             </Button>
           ))}
         </div>
       </div>
-      {!accountingUsable ? <p className="text-small text-warning-600">{t("accountingOff")}</p> : null}
+      {!accountingUsable ? (
+        <p className="text-sm text-warning-600">{t("accountingOff")}</p>
+      ) : null}
       {rows.length === 0 ? (
-        <p className="text-small text-default-500">{t("empty")}</p>
+        <p className="text-sm text-ink-500">{t("empty")}</p>
       ) : (
         <ul className="flex flex-col gap-3">
           {rows.map((row) => (
-            <li key={row.id} className="rounded-large border border-default-200 bg-content1 p-4">
+            <li
+              key={row.id}
+              className="rounded-xl border border-ink-200 bg-surface p-4"
+            >
               <div className="flex flex-wrap items-start gap-2">
                 <div className="min-w-0 flex-1">
-                  <div className="font-medium">{row.subject || t("noSubject")}</div>
-                  <div className="text-tiny text-default-500">
-                    {[row.fromName, row.fromAddress].filter(Boolean).join(" · ")} · {format.dateTime(new Date(row.receivedAt), { dateStyle: "medium", timeStyle: "short" })} · {row.source}
+                  <div className="font-medium">
+                    {row.subject || t("noSubject")}
                   </div>
-                  {row.snippet ? <p className="mt-1 line-clamp-2 text-small text-default-600">{row.snippet}</p> : null}
+                  <div className="text-xs text-ink-500">
+                    {[row.fromName, row.fromAddress]
+                      .filter(Boolean)
+                      .join(" · ")}{" "}
+                    ·{" "}
+                    {format.dateTime(new Date(row.receivedAt), {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    })}{" "}
+                    · {row.source}
+                  </div>
+                  {row.snippet ? (
+                    <p className="mt-1 line-clamp-2 text-sm text-ink-600">
+                      {row.snippet}
+                    </p>
+                  ) : null}
                 </div>
-                <Chip size="sm" variant="flat" color={row.status === "NEW" ? "warning" : "success"}>
+                <Chip
+                  size="sm"
+                  color={statusTone(
+                    row.status === "NEW" ? "warning" : "success",
+                  )}
+                  variant={"soft"}
+                  style={statusStyle(
+                    row.status === "NEW" ? "warning" : "success",
+                  )}
+                >
                   {t(`status.${row.status}`)}
                 </Chip>
                 {canManage ? (
-                  <Button size="sm" variant="light" isIconOnly aria-label={row.status === "NEW" ? t("markDone") : t("markNew")} onPress={async () => {
-                    const response = await setInboxStatusAction({ id: row.id, status: row.status === "NEW" ? "DONE" : "NEW" });
-                    if (response.ok) router.refresh();
-                  }}>
-                    {row.status === "NEW" ? <CheckCircle2 size={16} /> : <RotateCcw size={16} />}
+                  <Button
+                    size="sm"
+                    isIconOnly
+                    aria-label={
+                      row.status === "NEW" ? t("markDone") : t("markNew")
+                    }
+                    onPress={async () => {
+                      const response = await setInboxStatusAction({
+                        id: row.id,
+                        status: row.status === "NEW" ? "DONE" : "NEW",
+                      });
+                      if (response.ok) router.refresh();
+                    }}
+                    variant={actionVariant("default", "light")}
+                  >
+                    {row.status === "NEW" ? (
+                      <CheckCircle2 size={16} />
+                    ) : (
+                      <RotateCcw size={16} />
+                    )}
                   </Button>
                 ) : null}
                 {canDelete ? (
-                  <Button size="sm" variant="light" color="danger" isIconOnly aria-label={t("delete")} onPress={() => setDeleting(row.id)}>
+                  <Button
+                    size="sm"
+                    isIconOnly
+                    aria-label={t("delete")}
+                    onPress={() => setDeleting(row.id)}
+                    variant={actionVariant("danger", "light")}
+                  >
                     <Trash2 size={16} />
                   </Button>
                 ) : null}
               </div>
               {row.attachments.length ? (
-                <ul className="mt-3 flex flex-col gap-1 border-t border-default-100 pt-2">
+                <ul className="mt-3 flex flex-col gap-1 border-t border-ink-100 pt-2">
                   {row.attachments.map((attachment) => (
-                    <li key={attachment.id} className="flex flex-wrap items-center gap-2 text-small">
-                      <a href={`/api/mail/inbox/attachment?id=${attachment.id}`} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1 text-primary hover:underline">
+                    <li
+                      key={attachment.id}
+                      className="flex flex-wrap items-center gap-2 text-sm"
+                    >
+                      <a
+                        href={`/api/mail/inbox/attachment?id=${attachment.id}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-1 text-accent hover:underline"
+                      >
                         <Download size={14} /> {attachment.fileName}
                       </a>
-                      <span className="text-tiny text-default-400">{format.number(attachment.size / 1024, { maximumFractionDigits: 0 })} KB</span>
+                      <span className="text-xs text-ink-400">
+                        {format.number(attachment.size / 1024, {
+                          maximumFractionDigits: 0,
+                        })}{" "}
+                        KB
+                      </span>
                       {attachment.importedTo ? (
-                        <Chip size="sm" variant="flat" color="success">
+                        <Chip size="sm" color={"success"} variant={"soft"}>
                           {t("importedChip")}
                         </Chip>
                       ) : canManage && accountingUsable ? (
-                        <Button size="sm" variant="flat" color="primary" isLoading={busy === attachment.id} onPress={() => importAttachment(attachment.id)}>
+                        <Button
+                          size="sm"
+                          onPress={() => importAttachment(attachment.id)}
+                          variant={actionVariant("primary", "flat")}
+                          isPending={busy === attachment.id}
+                        >
+                          {busy === attachment.id ? (
+                            <Spinner size="sm" color="current" />
+                          ) : null}
                           {t("importToAccounting")}
                         </Button>
                       ) : null}
@@ -172,7 +308,8 @@ export function InboxPanel({ rows, imapConfigured, accountingUsable, canManage, 
         onConfirm={async () => {
           if (!deleting) return;
           const response = await deleteInboxMessageAction({ id: deleting });
-          if (!response.ok) return void addToast({ title: response.error, color: "danger" });
+          if (!response.ok)
+            return void toast(response.error, { variant: "danger" });
           router.refresh();
         }}
       />

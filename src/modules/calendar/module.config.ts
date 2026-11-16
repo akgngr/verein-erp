@@ -10,9 +10,10 @@ import { calendarPermissions } from "./permissions";
  */
 export const moduleConfig: ModuleConfig = {
   key: "calendar",
-  version: "1.3.4",
+  version: "1.3.5",
   label: "Takvim",
-  description: "Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve son tarihler tek görünümde.",
+  description:
+    "Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve son tarihler tek görünümde.",
   category: "OFFICIAL",
   hasSchema: true,
   // Randevu → etkinlik dönüşümü events modülünün yetkili action'ı üzerinden yapılır.
@@ -34,7 +35,13 @@ export const moduleConfig: ModuleConfig = {
   ],
   // Senkron eklentilerinin OAuth uygulamaları; ayar merkezinde "Modül ayarları" altında listelenir.
   menu: [
-    { key: "settings", label: "Ayarlar", href: "/calendar/ayarlar", icon: SlidersHorizontal, permission: { definition: calendarPermissions, action: "approve" } },
+    {
+      key: "settings",
+      label: "Ayarlar",
+      href: "/calendar/ayarlar",
+      icon: SlidersHorizontal,
+      permission: { definition: calendarPermissions, action: "approve" },
+    },
   ],
 };
 

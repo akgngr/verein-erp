@@ -15,11 +15,19 @@ import { donationsPermissions } from "../permissions";
 
 import { DonationCancelButton } from "../components/donation-cancel-button";
 
-function InfoRow({ label, children }: { label: string; children: React.ReactNode }) {
+function InfoRow({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="flex flex-col gap-0.5 border-b border-default-100 py-2 last:border-none">
-      <span className="text-tiny font-medium uppercase tracking-wide text-default-400">{label}</span>
-      <span className="text-small text-foreground">{children}</span>
+    <div className="flex flex-col gap-0.5 border-b border-ink-100 py-2 last:border-none">
+      <span className="text-xs font-medium uppercase tracking-wide text-ink-400">
+        {label}
+      </span>
+      <span className="text-sm text-foreground">{children}</span>
     </div>
   );
 }
@@ -48,12 +56,24 @@ export async function DonationDetailView({
   const t = await getTranslations("donations.detail");
   const tForm = await getTranslations("donations.form");
 
-  const canUpdate = can(user.role, donationsPermissions, "update") && !donation.reversedAt && !donation.hasActiveConfirmationItem;
-  const canDelete = can(user.role, donationsPermissions, "delete") && !donation.reversedAt && !donation.hasActiveConfirmationItem;
-  const canIssue = can(user.role, donationsPermissions, "approve") && !donation.reversedAt && !donation.hasActiveConfirmationItem;
+  const canUpdate =
+    can(user.role, donationsPermissions, "update") &&
+    !donation.reversedAt &&
+    !donation.hasActiveConfirmationItem;
+  const canDelete =
+    can(user.role, donationsPermissions, "delete") &&
+    !donation.reversedAt &&
+    !donation.hasActiveConfirmationItem;
+  const canIssue =
+    can(user.role, donationsPermissions, "approve") &&
+    !donation.reversedAt &&
+    !donation.hasActiveConfirmationItem;
 
   const format = (cents: number) =>
-    (cents / 100).toLocaleString("tr-TR", { style: "currency", currency: "EUR" });
+    (cents / 100).toLocaleString("tr-TR", {
+      style: "currency",
+      currency: "EUR",
+    });
 
   return (
     <div>
@@ -63,10 +83,16 @@ export async function DonationDetailView({
         actions={
           <div className="flex flex-wrap gap-2">
             {canUpdate ? (
-              <LinkButtonEdit href={`/bagislar/${donation.id}?duzenle`} label={tForm("editTitle")} />
+              <LinkButtonEdit
+                href={`/bagislar/${donation.id}?duzenle`}
+                label={tForm("editTitle")}
+              />
             ) : null}
             {canIssue ? (
-              <LinkButtonIssue href={`/bagislar/bildirimler/olustur?kaynak=bagis&bagisci=${donation.donorId}`} label={t("issue")} />
+              <LinkButtonIssue
+                href={`/bagislar/bildirimler/olustur?kaynak=bagis&bagisci=${donation.donorId}`}
+                label={t("issue")}
+              />
             ) : null}
             {canDelete ? (
               <DonationCancelButton
@@ -83,9 +109,9 @@ export async function DonationDetailView({
         }
       />
 
-      <div className="max-w-3xl rounded-medium border border-default-200 bg-content1 p-5 shadow-sm">
+      <div className="max-w-3xl rounded-lg border border-ink-200 bg-surface p-5 shadow-sm">
         {donation.reversedAt ? (
-          <div className="mb-3 rounded-medium bg-danger-50 px-3 py-2 text-small font-semibold text-danger">
+          <div className="mb-3 rounded-lg bg-danger-50 px-3 py-2 text-sm font-semibold text-danger">
             {t("reverseInfo", {
               date: formatDate(new Date(donation.reversedAt)),
               reason: donation.reverseReason ?? "",
@@ -93,38 +119,65 @@ export async function DonationDetailView({
           </div>
         ) : null}
         <div className="grid grid-cols-1 gap-x-6 sm:grid-cols-2">
-          <InfoRow label={t("fields.number")}>{donation.donationNumber}</InfoRow>
-          <InfoRow label={t("fields.date")}>{formatDate(donation.receivedAt)}</InfoRow>
+          <InfoRow label={t("fields.number")}>
+            {donation.donationNumber}
+          </InfoRow>
+          <InfoRow label={t("fields.date")}>
+            {formatDate(donation.receivedAt)}
+          </InfoRow>
           <InfoRow label={t("fields.donor")}>
-            <Link href={`/bagislar/bagiscilar/${donation.donorId}`} className="text-primary underline">
-              {donation.donorName} (SP-{String(donation.donorNumber).padStart(4, "0")})
+            <Link
+              href={`/bagislar/bagiscilar/${donation.donorId}`}
+              className="text-accent underline"
+            >
+              {donation.donorName} (SP-
+              {String(donation.donorNumber).padStart(4, "0")})
             </Link>
           </InfoRow>
           <InfoRow label={t("fields.amount")}>
-            <span className="font-semibold">{format(donation.amountCents)}</span>
+            <span className="font-semibold">
+              {format(donation.amountCents)}
+            </span>
           </InfoRow>
-          <InfoRow label={t("fields.method")}>{tMethod(donation.method)}</InfoRow>
+          <InfoRow label={t("fields.method")}>
+            {tMethod(donation.method)}
+          </InfoRow>
           <InfoRow label={t("fields.status")}>
             {donation.reversedAt ? t("reversed") : t("active")}
           </InfoRow>
-          <InfoRow label={t("fields.reference")}>{donation.reference ?? "—"}</InfoRow>
-          <InfoRow label={t("fields.purposeNote")}>{donation.purposeNote ?? "—"}</InfoRow>
+          <InfoRow label={t("fields.reference")}>
+            {donation.reference ?? "—"}
+          </InfoRow>
+          <InfoRow label={t("fields.purposeNote")}>
+            {donation.purposeNote ?? "—"}
+          </InfoRow>
           {donation.waivedReimbursement ? (
             <>
               <InfoRow label={t("fields.waived")}>✓</InfoRow>
-              <InfoRow label={t("fields.claimBasis")}>{donation.claimBasis ?? "—"}</InfoRow>
+              <InfoRow label={t("fields.claimBasis")}>
+                {donation.claimBasis ?? "—"}
+              </InfoRow>
               <InfoRow label={t("fields.waiverDeclaredAt")}>
-                {donation.waiverDeclaredAt ? formatDate(donation.waiverDeclaredAt) : "—"}
+                {donation.waiverDeclaredAt
+                  ? formatDate(donation.waiverDeclaredAt)
+                  : "—"}
               </InfoRow>
             </>
           ) : null}
-          <InfoRow label={t("fields.booking")}>{donation.bookingNumber ?? "—"}</InfoRow>
+          <InfoRow label={t("fields.booking")}>
+            {donation.bookingNumber ?? "—"}
+          </InfoRow>
           {donation.waiverBookingNumber ? (
-            <InfoRow label={t("fields.waiverBooking")}>{donation.waiverBookingNumber}</InfoRow>
+            <InfoRow label={t("fields.waiverBooking")}>
+              {donation.waiverBookingNumber}
+            </InfoRow>
           ) : null}
           <InfoRow label={t("fields.confirmation")}>
             {donation.confirmationNumber ? (
-              <Link href="/bagislar/bildirimler" className="text-primary underline">
+              <Link
+                href="/bagislar/bildirimler"
+                className="text-accent underline"
+              >
                 {donation.confirmationNumber}
                 {donation.confirmationCancelled ? ` (${t("reversed")})` : ""}
               </Link>
@@ -138,12 +191,14 @@ export async function DonationDetailView({
         </div>
       </div>
       <div className="mt-4">
-        <Link href="/bagislar" className="text-small text-primary underline">
+        <Link href="/bagislar" className="text-sm text-accent underline">
           {tD("backToList")}
         </Link>
       </div>
       <span className="hidden">{Pencil.name}</span>
-      {canUpdate && (await searchParams)?.duzenle !== undefined ? <DonationEditView id={donation.id} /> : null}
+      {canUpdate && (await searchParams)?.duzenle !== undefined ? (
+        <DonationEditView id={donation.id} />
+      ) : null}
     </div>
   );
 }
@@ -152,7 +207,7 @@ function LinkButtonEdit({ href, label }: { href: string; label: string }) {
   return (
     <a
       href={href}
-      className="inline-flex items-center gap-2 rounded-medium bg-primary px-3 py-1.5 text-small font-medium text-white"
+      className="inline-flex items-center gap-2 rounded-lg bg-accent px-3 py-1.5 text-sm font-medium text-white"
     >
       <Pencil className="h-4 w-4" aria-hidden />
       {label}
@@ -164,7 +219,7 @@ function LinkButtonIssue({ href, label }: { href: string; label: string }) {
   return (
     <a
       href={href}
-      className="inline-flex items-center gap-2 rounded-medium border border-primary px-3 py-1.5 text-small font-medium text-primary"
+      className="inline-flex items-center gap-2 rounded-lg border border-accent px-3 py-1.5 text-sm font-medium text-accent"
     >
       {label}
     </a>

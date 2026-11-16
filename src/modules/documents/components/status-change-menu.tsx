@@ -1,8 +1,10 @@
 "use client";
+import { toast, Button, Dropdown, Label, Description } from "@heroui/react";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
 
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, addToast } from "@heroui/react";
 import { ChevronDown, RefreshCw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -33,37 +35,44 @@ export function StatusChangeMenu({
     const result = await changeStatusAction({ id: documentId, status });
     setBusy(false);
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
-    addToast({ title: t("updatedToast", { status: tStatus(status) }), color: "success" });
+    toast(t("updatedToast", { status: tStatus(status) }), {
+      variant: "success",
+    });
     router.refresh();
   };
 
   return (
     <Dropdown>
-      <DropdownTrigger>
-        <Button
-          size="sm"
-          variant="bordered"
-          isDisabled={busy}
-          startContent={<RefreshCw className="h-4 w-4" aria-hidden />}
-          endContent={<ChevronDown className="h-4 w-4" aria-hidden />}
-        >
-          {t("button")}
-        </Button>
-      </DropdownTrigger>
-      <DropdownMenu aria-label={t("button")} disabledKeys={[current]}>
-        {STATUS_VALUES.map((status) => (
-          <DropdownItem
-            key={status}
-            description={status === current ? t("current") : undefined}
-            onPress={() => void change(status)}
-          >
-            {tStatus(status)}
-          </DropdownItem>
-        ))}
-      </DropdownMenu>
+      <Button
+        size="sm"
+        isDisabled={busy}
+        variant={actionVariant("default", "bordered")}
+      >
+        {<RefreshCw className="h-4 w-4" aria-hidden />}
+        {t("button")}
+        {<ChevronDown className="h-4 w-4" aria-hidden />}
+      </Button>
+
+      <Dropdown.Popover placement="bottom end">
+        <Dropdown.Menu aria-label={t("button")} disabledKeys={[current]}>
+          {STATUS_VALUES.map((status) => (
+            <Dropdown.Item
+              key={status}
+              id={status}
+              textValue={String(tStatus(status))}
+              onAction={() => void change(status)}
+            >
+              <Label>{tStatus(status)}</Label>
+              <Description>
+                {status === current ? t("current") : undefined}
+              </Description>
+            </Dropdown.Item>
+          ))}
+        </Dropdown.Menu>
+      </Dropdown.Popover>
     </Dropdown>
   );
 }

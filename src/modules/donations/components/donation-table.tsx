@@ -1,13 +1,17 @@
 "use client";
+import { Link } from "@heroui/react";
 
 import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
-import { Link } from "@heroui/react";
+
 import { Ban, Eye, Pencil } from "lucide-react";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
 import { DataTable } from "@/shared/components/data-table/data-table";
-import type { DataTableColumn, DataTableRowAction } from "@/shared/components/data-table/types";
+import type {
+  DataTableColumn,
+  DataTableRowAction,
+} from "@/shared/components/data-table/types";
 
 import type { DonationListItem } from "../types";
 import { CancelDonationModal } from "./cancel-donation-modal";
@@ -44,7 +48,10 @@ export function DonationTable({
   const [cancelling, setCancelling] = useState<DonationListItem | null>(null);
 
   const format = (cents: number) =>
-    (cents / 100).toLocaleString("tr-TR", { style: "currency", currency: "EUR" });
+    (cents / 100).toLocaleString("tr-TR", {
+      style: "currency",
+      currency: "EUR",
+    });
 
   const columns: DataTableColumn<DonationListItem>[] = [
     {
@@ -53,7 +60,15 @@ export function DonationTable({
       sortable: true,
       width: 130,
       render: (row) => (
-        <Link href={`/bagislar/${row.id}`} size="sm" className={`font-medium${row.reversedAt ? " line-through decoration-danger-400" : ""}`}>
+        <Link
+          href={`/bagislar/${row.id}`}
+          className={[
+            `font-medium${row.reversedAt ? " line-through decoration-danger-400" : ""}`,
+            "text-sm",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
           {row.donationNumber}
         </Link>
       ),
@@ -63,15 +78,21 @@ export function DonationTable({
       label: t("columns.date"),
       sortable: true,
       width: 110,
-      render: (row) => (row.receivedAt instanceof Date ? row.receivedAt.toISOString().slice(0, 10) : String(row.receivedAt)),
+      render: (row) =>
+        row.receivedAt instanceof Date
+          ? row.receivedAt.toISOString().slice(0, 10)
+          : String(row.receivedAt),
     },
     {
       key: "donorName",
       label: t("columns.donor"),
       width: 200,
       render: (row) => (
-        <span className="text-small">
-          {row.donorName} <span className="text-tiny text-default-400">SP-{String(row.donorNumber).padStart(4, "0")}</span>
+        <span className="text-sm">
+          {row.donorName}{" "}
+          <span className="text-xs text-ink-400">
+            SP-{String(row.donorNumber).padStart(4, "0")}
+          </span>
         </span>
       ),
     },
@@ -82,12 +103,19 @@ export function DonationTable({
       align: "end",
       width: 120,
       render: (row) => (
-        <span className={`font-medium${row.reversedAt ? " text-default-400 line-through decoration-danger-400" : ""}`}>
+        <span
+          className={`font-medium${row.reversedAt ? " text-ink-400 line-through decoration-danger-400" : ""}`}
+        >
           {format(row.amountCents)}
         </span>
       ),
     },
-    { key: "method", label: t("columns.method"), width: 170, render: (row) => tForm(`method.${row.method}`) },
+    {
+      key: "method",
+      label: t("columns.method"),
+      width: 170,
+      render: (row) => tForm(`method.${row.method}`),
+    },
     {
       key: "waivedReimbursement",
       label: t("columns.waived"),
@@ -100,25 +128,48 @@ export function DonationTable({
       width: 130,
       render: (row) =>
         row.confirmationNumber ? (
-          <span className={row.confirmationCancelled ? "text-default-400 line-through decoration-danger-400" : "text-primary"}>
+          <span
+            className={
+              row.confirmationCancelled
+                ? "text-ink-400 line-through decoration-danger-400"
+                : "text-accent"
+            }
+          >
             {row.confirmationNumber}
           </span>
         ) : (
-          <span className="text-tiny text-default-400">{t("columns.none")}</span>
+          <span className="text-xs text-ink-400">{t("columns.none")}</span>
         ),
     },
     {
       key: "bookingNumber",
       label: t("columns.booking"),
       width: 120,
-      render: (row) => (row.bookingNumber ? <span className="text-tiny">{row.bookingNumber}</span> : "—"),
+      render: (row) =>
+        row.bookingNumber ? (
+          <span className="text-xs">{row.bookingNumber}</span>
+        ) : (
+          "—"
+        ),
     },
   ];
 
   const rowActions = (row: DonationListItem): DataTableRowAction[] => [
-    { key: "view", label: t("actions.view"), icon: <Eye className="h-4 w-4" />, href: `/bagislar/${row.id}` },
+    {
+      key: "view",
+      label: t("actions.view"),
+      icon: <Eye className="h-4 w-4" />,
+      href: `/bagislar/${row.id}`,
+    },
     ...(canUpdate && !row.reversedAt
-      ? [{ key: "edit", label: t("actions.edit"), icon: <Pencil className="h-4 w-4" />, href: drawerHref("duzenle", row.id) }]
+      ? [
+          {
+            key: "edit",
+            label: t("actions.edit"),
+            icon: <Pencil className="h-4 w-4" />,
+            href: drawerHref("duzenle", row.id),
+          },
+        ]
       : []),
     ...(canDelete && !row.reversedAt
       ? [
@@ -133,7 +184,14 @@ export function DonationTable({
       : []),
   ];
 
-  const METHODS = ["CASH", "BANK_TRANSFER", "CARD", "PAYPAL", "REIMBURSEMENT_WAIVER", "OTHER"] as const;
+  const METHODS = [
+    "CASH",
+    "BANK_TRANSFER",
+    "CARD",
+    "PAYPAL",
+    "REIMBURSEMENT_WAIVER",
+    "OTHER",
+  ] as const;
 
   return (
     <>
@@ -149,8 +207,19 @@ export function DonationTable({
         q={q}
         searchPlaceholder={t("filters.q")}
         filters={[
-          { key: "year", label: t("year"), options: [{ value: String(year), label: String(year) }] },
-          { key: "method", label: t("filters.method"), options: METHODS.map((method) => ({ value: method, label: tForm(`method.${method}`) })) },
+          {
+            key: "year",
+            label: t("year"),
+            options: [{ value: String(year), label: String(year) }],
+          },
+          {
+            key: "method",
+            label: t("filters.method"),
+            options: METHODS.map((method) => ({
+              value: method,
+              label: tForm(`method.${method}`),
+            })),
+          },
           {
             key: "waived",
             label: t("filters.waived"),
@@ -168,7 +237,11 @@ export function DonationTable({
               { value: "cancelled", label: t("filters.confirmationCancelled") },
             ],
           },
-          { key: "over300", label: t("filters.over300"), options: [{ value: "1", label: t("filters.over300") }] },
+          {
+            key: "over300",
+            label: t("filters.over300"),
+            options: [{ value: "1", label: t("filters.over300") }],
+          },
         ]}
         rowActions={rowActions}
         emptyMessage={t("empty")}

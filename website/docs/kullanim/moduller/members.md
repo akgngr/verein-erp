@@ -13,7 +13,7 @@ slug: /kullanim/moduller/members
 |---|---|
 | Anahtar | `members` |
 | Tür | Resmî modül |
-| Sürüm | 1.13.1 |
+| Sürüm | 1.13.2 |
 | Sayfalar | `/uyeler`, `/uyeler/aidat`, `/uyeler/turler`, `/toplu-eposta?kaynak=members:members`, `/uyeler/ice-aktar` |
 | Önerir | [e-Sign](./online-forms) |
 
@@ -44,6 +44,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `create_dataset` · `create_dues_dataset` · `get_member_profile` · `get_member_statistics` · `list_dues_by_person` · `query_dataset`
 
 ## Sürüm notları
+
+### 1.13.2 — HeroUI v3 arayüz geçişi
+
+_2026-11-16_
+
+- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
 ### 1.13.1 — Asistan araçları yeni veri sözleşmesinde
 
@@ -89,10 +95,4 @@ _2026-11-15_
 
 - **İyileştirme:** AI asistanı için canlı üye adı sorgusu eklendi (yalnız AI modülünün sunucu tarafı kullanır).
 
-### 1.10.2 — Açık kimlik bağlantıları
-
-_2026-11-15_
-
-- **Güvenlik:** AI kişi eşleştirmesi yalnız mevcut açık kayıt bağlantılarını kullanır; ad/e-posta tahmini ve veli-çocuk kimlik birleştirmesi reddedilir.
-
-Daha eski 18 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/members/releases.json)
+Daha eski 19 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/members/releases.json)

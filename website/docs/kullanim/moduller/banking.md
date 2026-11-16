@@ -13,7 +13,7 @@ Banka hesaplarını lisanslı PSD2 sağlayıcısı üzerinden bağlar, hareketle
 |---|---|
 | Anahtar | `banking` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.1 |
+| Sürüm | 1.1.2 |
 | Sayfalar | `/ayarlar/banka-baglantisi` |
 | Gerektirir | [Muhasebe](./accounting) |
 
@@ -34,6 +34,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Banka bağlantısı | görüntüleme, düzenleme, onay | görüntüleme | — | görüntüleme, düzenleme, onay | görüntüleme | — | — |
 
 ## Sürüm notları
+
+### 1.1.2 — HeroUI v3 arayüz geçişi
+
+_2026-11-16_
+
+- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
 ### 1.1.1 — Hydration düzeltmesi
 

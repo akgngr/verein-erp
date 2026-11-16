@@ -14,7 +14,7 @@ export function PageHeader({
           {title}
         </h1>
         {description ? (
-          <p className="workspace-page-description mt-2 text-[13px] leading-relaxed text-default-500">
+          <p className="workspace-page-description mt-2 text-[13px] leading-relaxed text-ink-500">
             {description}
           </p>
         ) : null}

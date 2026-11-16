@@ -1,23 +1,22 @@
 "use client";
-
 import {
-  Button,
+  toast,
   Chip,
-  Input,
+  Button,
+  Spinner,
   Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
   Switch,
+  Label,
+  TextField,
+  Input,
+  Description,
   Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
-  addToast,
 } from "@heroui/react";
+
+import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+
 import { Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -44,7 +43,9 @@ export function MemberTypesTable({
   const t = useTranslations("members.types");
   const router = useRouter();
 
-  const [editTarget, setEditTarget] = useState<MemberTypeConfigRow | null>(null);
+  const [editTarget, setEditTarget] = useState<MemberTypeConfigRow | null>(
+    null,
+  );
   const [annualDue, setAnnualDue] = useState("");
   const [isActive, setIsActive] = useState(true);
   const [formError, setFormError] = useState<string | null>(null);
@@ -53,7 +54,9 @@ export function MemberTypesTable({
   const openEdit = (row: MemberTypeConfigRow) => {
     setEditTarget(row);
     setAnnualDue(
-      row.annualDueCents === null ? "" : (row.annualDueCents / 100).toFixed(2).replace(".", ","),
+      row.annualDueCents === null
+        ? ""
+        : (row.annualDueCents / 100).toFixed(2).replace(".", ","),
     );
     setIsActive(row.isActive);
     setFormError(null);
@@ -73,7 +76,7 @@ export function MemberTypesTable({
         setFormError(result.error);
         return;
       }
-      addToast({ title: t("toastSaved"), color: "success" });
+      toast(t("toastSaved"), { variant: "success" });
       setEditTarget(null);
       router.refresh();
     } finally {
@@ -82,94 +85,134 @@ export function MemberTypesTable({
   };
 
   return (
-    <div className="rounded-medium border border-default-200 bg-content1 p-5 shadow-sm">
-      <Table aria-label={t("title")} removeWrapper>
-        <TableHeader>
-          <TableColumn>{t("colType")}</TableColumn>
-          <TableColumn>{t("colAnnualDue")}</TableColumn>
-          <TableColumn>{t("colMemberCount")}</TableColumn>
-          <TableColumn>{t("colStatus")}</TableColumn>
-          <TableColumn aria-label=" ">{" "}</TableColumn>
-        </TableHeader>
-        <TableBody emptyContent={t("empty")}>
-          {rows.map((row) => (
-            <TableRow key={row.type}>
-              <TableCell>
-                <div className="flex items-center gap-2">
-                  <TypeBadge type={row.type} />
-                </div>
-              </TableCell>
-              <TableCell>
-                {row.annualDueCents === null ? (
-                  <span className="text-default-400">{t("notSet")}</span>
-                ) : row.annualDueCents === 0 ? (
-                  <span className="text-default-500">{t("noDue")}</span>
-                ) : (
-                  formatMoney(row.annualDueCents)
-                )}
-              </TableCell>
-              <TableCell>{row.memberCount}</TableCell>
-              <TableCell>
-                {row.isActive ? (
-                  <Chip color="success" size="sm" variant="flat">
-                    {t("active")}
-                  </Chip>
-                ) : (
-                  <Chip color="default" size="sm" variant="flat">
-                    {t("passive")}
-                  </Chip>
-                )}
-              </TableCell>
-              <TableCell>
-                {canUpdate ? (
-                  <div className="flex justify-end">
-                    <Button
-                      isIconOnly
-                      size="sm"
-                      variant="light"
-                      aria-label={t("edit")}
-                      onPress={() => openEdit(row)}
-                    >
-                      <Pencil className="h-4 w-4" aria-hidden />
-                    </Button>
-                  </div>
-                ) : null}
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
+    <div className="rounded-lg border border-ink-200 bg-surface p-5 shadow-sm">
+      <Table>
+        <Table.ScrollContainer>
+          <Table.Content aria-label={t("title")}>
+            <Table.Header>
+              <Table.Column isRowHeader id={"column-0"}>
+                {t("colType")}
+              </Table.Column>
+              <Table.Column id={"column-1"}>{t("colAnnualDue")}</Table.Column>
+              <Table.Column id={"column-2"}>{t("colMemberCount")}</Table.Column>
+              <Table.Column id={"column-3"}>{t("colStatus")}</Table.Column>
+              <Table.Column aria-label=" " id={"column-4"}>
+                {" "}
+              </Table.Column>
+            </Table.Header>
+            <Table.Body renderEmptyState={() => t("empty")}>
+              {rows.map((row) => (
+                <Table.Row key={row.type} id={row.type}>
+                  <Table.Cell>
+                    <div className="flex items-center gap-2">
+                      <TypeBadge type={row.type} />
+                    </div>
+                  </Table.Cell>
+                  <Table.Cell>
+                    {row.annualDueCents === null ? (
+                      <span className="text-ink-400">{t("notSet")}</span>
+                    ) : row.annualDueCents === 0 ? (
+                      <span className="text-ink-500">{t("noDue")}</span>
+                    ) : (
+                      formatMoney(row.annualDueCents)
+                    )}
+                  </Table.Cell>
+                  <Table.Cell>{row.memberCount}</Table.Cell>
+                  <Table.Cell>
+                    {row.isActive ? (
+                      <Chip size="sm" color={"success"} variant={"soft"}>
+                        {t("active")}
+                      </Chip>
+                    ) : (
+                      <Chip size="sm" color={"default"} variant={"soft"}>
+                        {t("passive")}
+                      </Chip>
+                    )}
+                  </Table.Cell>
+                  <Table.Cell>
+                    {canUpdate ? (
+                      <div className="flex justify-end">
+                        <Button
+                          isIconOnly
+                          size="sm"
+                          aria-label={t("edit")}
+                          onPress={() => openEdit(row)}
+                          variant={actionVariant("default", "light")}
+                        >
+                          <Pencil className="h-4 w-4" aria-hidden />
+                        </Button>
+                      </div>
+                    ) : null}
+                  </Table.Cell>
+                </Table.Row>
+              ))}
+            </Table.Body>
+          </Table.Content>
+        </Table.ScrollContainer>
       </Table>
 
-      <Modal isOpen={editTarget !== null} onOpenChange={(next) => !next && setEditTarget(null)} size="md">
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader>{t("editTitle")}</ModalHeader>
-              <ModalBody>
-                <Input
-                  label={t("colAnnualDue")}
-                  labelPlacement="outside"
-                  placeholder="0,00"
-                  value={annualDue}
-                  onValueChange={setAnnualDue}
-                  description={t("annualDueHint")}
-                />
-                <Switch isSelected={isActive} onValueChange={setIsActive} size="sm">
-                  {t("isActive")}
-                </Switch>
-                {formError ? <p className="text-small text-danger">{formError}</p> : null}
-              </ModalBody>
-              <ModalFooter>
-                <Button variant="light" onPress={onClose}>
-                  {t("cancel")}
-                </Button>
-                <Button color="primary" isLoading={saving} onPress={submitEdit}>
-                  {t("save")}
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
+      <Modal
+        isOpen={editTarget !== null}
+        onOpenChange={(next) => !next && setEditTarget(null)}
+      >
+        <Modal.Backdrop>
+          <Modal.Container size="md">
+            <Modal.Dialog className={"w-full max-w-md "}>
+              {({ close: onClose }) => (
+                <>
+                  <DialogDismissButton />
+                  <Modal.Header>
+                    <Modal.Heading className="flex items-center gap-2">
+                      {t("editTitle")}
+                    </Modal.Heading>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <TextField
+                      value={annualDue}
+                      onChange={setAnnualDue}
+                      className={["w-full"].filter(Boolean).join(" ")}
+                    >
+                      <Label>{t("colAnnualDue")}</Label>
+                      <Input placeholder="0,00" />
+                      <Description>{t("annualDueHint")}</Description>
+                    </TextField>
+                    <Switch
+                      isSelected={isActive}
+                      onChange={setIsActive}
+                      size={"sm"}
+                    >
+                      <Switch.Content>
+                        <Switch.Control>
+                          <Switch.Thumb />
+                        </Switch.Control>
+                        <Label>{t("isActive")}</Label>
+                      </Switch.Content>
+                    </Switch>
+                    {formError ? (
+                      <p className="text-sm text-danger">{formError}</p>
+                    ) : null}
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button
+                      onPress={onClose}
+                      variant={actionVariant("default", "light")}
+                    >
+                      {t("cancel")}
+                    </Button>
+                    <Button
+                      onPress={submitEdit}
+                      variant={actionVariant("primary", "solid")}
+                      isPending={saving}
+                    >
+                      {saving ? <Spinner size="sm" color="current" /> : null}
+                      {t("save")}
+                    </Button>
+                  </Modal.Footer>
+                </>
+              )}
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal.Backdrop>
       </Modal>
     </div>
   );

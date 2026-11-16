@@ -1,8 +1,9 @@
 "use client";
+import { toast, Button } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
 
-import { Button, addToast } from "@heroui/react";
 import { CheckCircle2, Circle, Pencil, Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -10,7 +11,10 @@ import { useState } from "react";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { formatDate } from "@/shared/utils";
 
-import { deleteActionItemAction, setActionItemStatusAction } from "../actions/action-item-actions";
+import {
+  deleteActionItemAction,
+  setActionItemStatusAction,
+} from "../actions/action-item-actions";
 import { isActionItemOverdue } from "../utils";
 import type { ActionItemRow } from "../types";
 
@@ -43,14 +47,16 @@ export function ActionItemsTab({
 
   const toggleStatus = async (item: ActionItemRow) => {
     const target = item.status === "DONE" ? "OPEN" : "DONE";
-    const result = await setActionItemStatusAction({ id: item.id, status: target });
+    const result = await setActionItemStatusAction({
+      id: item.id,
+      status: target,
+    });
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
-    addToast({
-      title: target === "DONE" ? t("doneToast") : t("reopenedToast"),
-      color: "success",
+    toast(target === "DONE" ? t("doneToast") : t("reopenedToast"), {
+      variant: "success",
     });
     router.refresh();
   };
@@ -59,10 +65,10 @@ export function ActionItemsTab({
     if (!deleting) return;
     const result = await deleteActionItemAction({ id: deleting.id });
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
-    addToast({ title: t("deletedToast"), color: "success" });
+    toast(t("deletedToast"), { variant: "success" });
     setDeleting(null);
     router.refresh();
   };
@@ -73,67 +79,91 @@ export function ActionItemsTab({
         <div>
           <Button
             size="sm"
-            color="primary"
-            startContent={<Plus className="h-4 w-4" />}
             onPress={() => {
               setEditing(null);
               setModalOpen(true);
             }}
+            variant={actionVariant("primary", "solid")}
           >
+            {<Plus className="h-4 w-4" />}
             {t("add")}
           </Button>
         </div>
       ) : null}
 
       {actionItems.length === 0 ? (
-        <p className="text-small text-default-500">{t("empty")}</p>
+        <p className="text-sm text-ink-500">{t("empty")}</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {actionItems.map((actionItem) => {
-            const overdue = isActionItemOverdue(actionItem.status, actionItem.dueDate);
+            const overdue = isActionItemOverdue(
+              actionItem.status,
+              actionItem.dueDate,
+            );
             const done = actionItem.status === "DONE";
             return (
               <li
                 key={actionItem.id}
-                className="flex flex-wrap items-center justify-between gap-2 rounded-medium border border-default-200 bg-content1 p-3"
+                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-ink-200 bg-surface p-3"
               >
                 <div className="min-w-0 flex-1">
-                  <p className={`text-small ${done ? "text-default-400 line-through" : ""}`}>
+                  <p
+                    className={`text-sm ${done ? "text-ink-400 line-through" : ""}`}
+                  >
                     {actionItem.description}
                   </p>
-                  <p className="mt-0.5 flex flex-wrap gap-x-3 text-tiny text-default-500">
+                  <p className="mt-0.5 flex flex-wrap gap-x-3 text-xs text-ink-500">
                     <span>
                       {actionItem.assigneeLabel ?? t("unassigned")}
-                      {actionItem.assigneeLabel && !actionItem.assigneeAttendeeId && !actionItem.assigneeId ? (
-                        <span className="text-default-400">
+                      {actionItem.assigneeLabel &&
+                      !actionItem.assigneeAttendeeId &&
+                      !actionItem.assigneeId ? (
+                        <span className="text-ink-400">
                           {" "}
-                          ({[t("externalBadge"), actionItem.assigneeEmail, actionItem.assigneePhone].filter(Boolean).join(" · ")})
+                          (
+                          {[
+                            t("externalBadge"),
+                            actionItem.assigneeEmail,
+                            actionItem.assigneePhone,
+                          ]
+                            .filter(Boolean)
+                            .join(" · ")}
+                          )
                         </span>
                       ) : null}
                     </span>
-                    <span className={overdue ? "font-medium text-danger-600" : ""}>
-                      {t("dueDateLabel")}: {actionItem.dueDate ? formatDate(actionItem.dueDate) : "-"}
+                    <span
+                      className={overdue ? "font-medium text-danger-600" : ""}
+                    >
+                      {t("dueDateLabel")}:{" "}
+                      {actionItem.dueDate
+                        ? formatDate(actionItem.dueDate)
+                        : "-"}
                       {overdue ? t("overdueShort") : ""}
                     </span>
                     {actionItem.decisionNumber ? (
-                      <span>{t("decisionLine", { number: actionItem.decisionNumber })}</span>
+                      <span>
+                        {t("decisionLine", {
+                          number: actionItem.decisionNumber,
+                        })}
+                      </span>
                     ) : null}
                   </p>
                 </div>
                 <div className="flex shrink-0 items-center gap-1">
                   <Button
                     size="sm"
-                    variant="light"
-                    color={done ? "warning" : "success"}
-                    startContent={
-                      done ? (
-                        <Circle className="h-4 w-4" />
-                      ) : (
-                        <CheckCircle2 className="h-4 w-4" />
-                      )
-                    }
                     onPress={() => toggleStatus(actionItem)}
+                    variant={actionVariant(
+                      done ? "warning" : "success",
+                      "light",
+                    )}
                   >
+                    {done ? (
+                      <Circle className="h-4 w-4" />
+                    ) : (
+                      <CheckCircle2 className="h-4 w-4" />
+                    )}
                     {done ? t("reopen") : t("markDone")}
                   </Button>
                   {contentEditable ? (
@@ -141,22 +171,21 @@ export function ActionItemsTab({
                       <Button
                         isIconOnly
                         size="sm"
-                        variant="light"
                         aria-label={tCommon("edit")}
                         onPress={() => {
                           setEditing(actionItem);
                           setModalOpen(true);
                         }}
+                        variant={actionVariant("default", "light")}
                       >
                         <Pencil className="h-4 w-4" />
                       </Button>
                       <Button
                         isIconOnly
                         size="sm"
-                        variant="light"
-                        color="danger"
                         aria-label={tCommon("delete")}
                         onPress={() => setDeleting(actionItem)}
+                        variant={actionVariant("danger", "light")}
                       >
                         <Trash2 className="h-4 w-4" />
                       </Button>
@@ -185,7 +214,9 @@ export function ActionItemsTab({
         isOpen={deleting !== null}
         onOpenChange={(open) => !open && setDeleting(null)}
         title={t("deleteAria")}
-        message={t("deleteNamedMessage", { description: deleting?.description ?? "" })}
+        message={t("deleteNamedMessage", {
+          description: deleting?.description ?? "",
+        })}
         confirmLabel={tCommon("delete")}
         confirmColor="danger"
         onConfirm={confirmDelete}

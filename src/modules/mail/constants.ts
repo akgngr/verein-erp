@@ -1,4 +1,9 @@
-import type { MailLogStatus, MailSecurity, MailSortField, MailTransport } from "./types";
+import type {
+  MailLogStatus,
+  MailSecurity,
+  MailSortField,
+  MailTransport,
+} from "./types";
 
 export const MAIL_BASE_PATH = "/mail";
 export const MAIL_LOGS_PATH = "/mail/kayitlar";
@@ -40,10 +45,16 @@ export const MAIL_LOG_STATUS_LABEL_KEYS: Record<MailLogStatus, string> = {
 export const MAIL_LOG_STATUS_BADGE_CLASSES: Record<MailLogStatus, string> = {
   SENT: "bg-success-100 text-success-700",
   FAILED: "bg-danger-100 text-danger-700",
-  LOGGED: "bg-default-100 text-default-700",
+  LOGGED: "bg-ink-100 text-ink-700",
 };
 
-export const MAIL_SORT_FIELDS = ["createdAt", "toAddress", "subject", "status", "module"] as const;
+export const MAIL_SORT_FIELDS = [
+  "createdAt",
+  "toAddress",
+  "subject",
+  "status",
+  "module",
+] as const;
 export const DEFAULT_MAIL_SORT: MailSortField = "createdAt";
 
 export const DEFAULT_MAIL_PAGE_SIZE = 10;

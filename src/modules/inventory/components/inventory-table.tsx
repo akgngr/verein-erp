@@ -1,11 +1,18 @@
 "use client";
+import { Button, Spinner, Modal } from "@heroui/react";
+import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useMemo, useState, useTransition } from "react";
 import { useTranslations } from "next-intl";
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
+
 import { ChevronDown, Pencil, Trash2 } from "lucide-react";
 import { DataTable, type DataTableProps } from "@/shared/components/data-table";
-import { deleteInventoryAction, updateInventoryStatusAction } from "../actions/inventory-actions";
+import {
+  deleteInventoryAction,
+  updateInventoryStatusAction,
+} from "../actions/inventory-actions";
 import {
   INVENTORY_CATEGORIES,
   INVENTORY_CATEGORY_LABEL_KEYS,
@@ -43,7 +50,9 @@ export function InventoryTable({
 }: InventoryTableComponentProps) {
   const t = useTranslations("inventory");
   const [editingItem, setEditingItem] = useState<InventoryItemRow | null>(null);
-  const [deletingItem, setDeletingItem] = useState<InventoryItemRow | null>(null);
+  const [deletingItem, setDeletingItem] = useState<InventoryItemRow | null>(
+    null,
+  );
   const [actionError, setActionError] = useState<string | null>(null);
   const [isStatusPending, startStatusTransition] = useTransition();
   const [isDeletePending, startDeleteTransition] = useTransition();
@@ -53,7 +62,10 @@ export function InventoryTable({
       if (!isInventoryStatus(value)) return;
       setActionError(null);
       startStatusTransition(async () => {
-        const response = await updateInventoryStatusAction({ id, status: value });
+        const response = await updateInventoryStatusAction({
+          id,
+          status: value,
+        });
         if (!response.ok) setActionError(t(`errors.${response.error}`));
       });
     };
@@ -67,7 +79,7 @@ export function InventoryTable({
           <div className="flex flex-col">
             <span className="font-medium text-foreground">{row.name}</span>
             {row.serialNumber ? (
-              <span className="text-tiny text-default-500">
+              <span className="text-xs text-ink-500">
                 {t("table.serialPrefix")} {row.serialNumber}
               </span>
             ) : null}
@@ -103,8 +115,10 @@ export function InventoryTable({
                 aria-label={t("fields.status")}
                 value={row.status}
                 disabled={isStatusPending}
-                onChange={(event) => handleStatusChange(row.id, event.target.value)}
-                className="h-8 w-full appearance-none rounded-medium bg-default-100 px-2.5 pr-8 text-xs font-medium text-foreground transition-colors hover:bg-default-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-primary/40 cursor-pointer border border-transparent focus:border-primary/50 disabled:cursor-wait disabled:opacity-60"
+                onChange={(event) =>
+                  handleStatusChange(row.id, event.target.value)
+                }
+                className="h-8 w-full appearance-none rounded-lg bg-ink-100 px-2.5 pr-8 text-xs font-medium text-foreground transition-colors hover:bg-ink-200 focus:bg-background focus:outline-none focus:ring-2 focus:ring-accent/40 cursor-pointer border border-transparent focus:border-accent/50 disabled:cursor-wait disabled:opacity-60"
               >
                 {INVENTORY_STATUSES.map((status) => (
                   <option key={status} value={status}>
@@ -113,7 +127,7 @@ export function InventoryTable({
                 ))}
               </select>
               <ChevronDown
-                className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-default-400"
+                className="pointer-events-none absolute right-2.5 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-ink-400"
                 aria-hidden="true"
               />
             </div>
@@ -137,14 +151,18 @@ export function InventoryTable({
         sortable: true,
         align: "end",
         render: (row) => (
-          <span className="tabular-nums">{formatCurrency(row.purchasePrice, locale)}</span>
+          <span className="tabular-nums">
+            {formatCurrency(row.purchasePrice, locale)}
+          </span>
         ),
       },
       {
         key: "assignedMemberId",
         label: t("fields.assignedMemberId"),
         render: (row) =>
-          row.assignedMemberId ?? <span className="text-default-400">{t("table.unassigned")}</span>,
+          row.assignedMemberId ?? (
+            <span className="text-ink-400">{t("table.unassigned")}</span>
+          ),
       },
     ];
   }, [abilities.canUpdate, isStatusPending, locale, t]);
@@ -208,7 +226,10 @@ export function InventoryTable({
   return (
     <div className="flex flex-col gap-4">
       {actionError ? (
-        <p role="alert" className="rounded-medium bg-danger-50 px-3 py-2 text-small text-danger">
+        <p
+          role="alert"
+          className="rounded-lg bg-danger-50 px-3 py-2 text-sm text-danger"
+        >
           {actionError}
         </p>
       ) : null}
@@ -243,28 +264,46 @@ export function InventoryTable({
           onOpenChange={(open) => {
             if (!open && !isDeletePending) setDeletingItem(null);
           }}
-          size="md"
         >
-          <ModalContent>
-            <ModalHeader>{t("modal.deleteTitle")}</ModalHeader>
-            <ModalBody>
-              <p className="text-small text-default-600">
-                {t("modal.deleteDescription", { name: deletingItem?.name ?? "" })}
-              </p>
-            </ModalBody>
-            <ModalFooter>
-              <Button
-                variant="light"
-                onPress={() => setDeletingItem(null)}
-                isDisabled={isDeletePending}
-              >
-                {t("actions.cancel")}
-              </Button>
-              <Button color="danger" onPress={handleConfirmDelete} isLoading={isDeletePending}>
-                {t("actions.confirmDelete")}
-              </Button>
-            </ModalFooter>
-          </ModalContent>
+          <Modal.Backdrop>
+            <Modal.Container size="md">
+              <Modal.Dialog className={"w-full max-w-md "}>
+                <DialogDismissButton />
+
+                <Modal.Header>
+                  <Modal.Heading className="flex items-center gap-2">
+                    {t("modal.deleteTitle")}
+                  </Modal.Heading>
+                </Modal.Header>
+                <Modal.Body>
+                  <p className="text-sm text-ink-600">
+                    {t("modal.deleteDescription", {
+                      name: deletingItem?.name ?? "",
+                    })}
+                  </p>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button
+                    onPress={() => setDeletingItem(null)}
+                    isDisabled={isDeletePending}
+                    variant={actionVariant("default", "light")}
+                  >
+                    {t("actions.cancel")}
+                  </Button>
+                  <Button
+                    onPress={handleConfirmDelete}
+                    variant={actionVariant("danger", "solid")}
+                    isPending={isDeletePending}
+                  >
+                    {isDeletePending ? (
+                      <Spinner size="sm" color="current" />
+                    ) : null}
+                    {t("actions.confirmDelete")}
+                  </Button>
+                </Modal.Footer>
+              </Modal.Dialog>
+            </Modal.Container>
+          </Modal.Backdrop>
         </Modal>
       ) : null}
     </div>

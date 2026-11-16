@@ -1,6 +1,8 @@
 "use client";
+import { toast, Button, Spinner, Checkbox, Label } from "@heroui/react";
 
-import { Button, Checkbox, addToast } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -19,10 +21,10 @@ export function TemplateConfirmForm() {
     try {
       const result = await confirmTemplateAction();
       if (!result.ok) {
-        addToast({ title: result.error, color: "danger" });
+        toast(result.error, { variant: "danger" });
         return;
       }
-      addToast({ title: t("toastConfirmed"), color: "success" });
+      toast(t("toastConfirmed"), { variant: "success" });
       setChecked(false);
       router.refresh();
     } finally {
@@ -32,11 +34,25 @@ export function TemplateConfirmForm() {
 
   return (
     <div className="flex flex-col gap-3">
-      <Checkbox isSelected={checked} onValueChange={setChecked} size="sm">
-        <span className="text-small">{t("confirmLabel")}</span>
+      <Checkbox isSelected={checked} onChange={setChecked}>
+        <Checkbox.Content>
+          <Checkbox.Control className="size-4">
+            <Checkbox.Indicator />
+          </Checkbox.Control>
+          <Label>
+            <span className="text-sm">{t("confirmLabel")}</span>
+          </Label>
+        </Checkbox.Content>
       </Checkbox>
       <div>
-        <Button color="primary" size="sm" isDisabled={!checked} isLoading={busy} onPress={confirm}>
+        <Button
+          size="sm"
+          isDisabled={!checked}
+          onPress={confirm}
+          variant={actionVariant("primary", "solid")}
+          isPending={busy}
+        >
+          {busy ? <Spinner size="sm" color="current" /> : null}
           {t("confirmButton")}
         </Button>
       </div>

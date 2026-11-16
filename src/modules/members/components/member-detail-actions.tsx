@@ -1,6 +1,12 @@
 "use client";
+import {
+  toast,
+  Link as ActionLink,
+  buttonVariants,
+  Button,
+} from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
-import { Button, addToast } from "@heroui/react";
 import { Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -40,10 +46,12 @@ export function MemberDetailActions({
   const confirmDelete = async () => {
     const result = await deleteMemberAction({ id: memberId });
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
-    addToast({ title: t("deleteConfirm.successToast", { membershipNumber }), color: "success" });
+    toast(t("deleteConfirm.successToast", { membershipNumber }), {
+      variant: "success",
+    });
     router.push("/uyeler");
     router.refresh();
   };
@@ -54,28 +62,31 @@ export function MemberDetailActions({
     <>
       <div className="flex flex-wrap items-center gap-2">
         {canUpdate ? (
-          <Button
-            as="a"
+          <ActionLink
             href={`/uyeler/${memberId}?duzenle`}
-            size="sm"
-            color="primary"
-            variant="solid"
-            startContent={<Pencil className="h-4 w-4" aria-hidden />}
+            className={buttonVariants({
+              variant: actionVariant("primary", "solid"),
+              size: "sm",
+            })}
           >
+            {<Pencil className="h-4 w-4" aria-hidden />}
             {t("actions.edit")}
-          </Button>
+          </ActionLink>
         ) : null}
         {canUpdate ? (
-          <StatusChangeMenu memberId={memberId} current={status} joinDate={joinDate} />
+          <StatusChangeMenu
+            memberId={memberId}
+            current={status}
+            joinDate={joinDate}
+          />
         ) : null}
         {canDelete ? (
           <Button
             size="sm"
-            variant="flat"
-            color="danger"
-            startContent={<Trash2 className="h-4 w-4" aria-hidden />}
             onPress={() => setConfirmOpen(true)}
+            variant={actionVariant("danger", "flat")}
           >
+            {<Trash2 className="h-4 w-4" aria-hidden />}
             {t("actions.delete")}
           </Button>
         ) : null}

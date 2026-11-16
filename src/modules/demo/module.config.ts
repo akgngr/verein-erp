@@ -12,9 +12,10 @@ import { demoPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "demo",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.0.0",
+  version: "1.0.1",
   label: "Demo veri",
-  description: "Test için kurgusal örnek veri yükler; modül kapatılınca hepsini siler.",
+  description:
+    "Test için kurgusal örnek veri yükler; modül kapatılınca hepsini siler.",
   category: "OFFICIAL",
   hasSchema: true,
   access: [{ module: "system", operations: ["read"] }],

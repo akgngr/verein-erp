@@ -1,19 +1,33 @@
-import { BookOpen, ClipboardCheck, Coins, GraduationCap, HandCoins, Presentation, Settings2 } from "lucide-react";
+import {
+  BookOpen,
+  ClipboardCheck,
+  Coins,
+  GraduationCap,
+  HandCoins,
+  Presentation,
+  Settings2,
+} from "lucide-react";
 
 import { progressPermissions } from "@/modules/progress";
 import { studentsPermissions } from "@/modules/students";
 
 import type { ModuleConfig } from "@/shared/types/module";
 
-import { courseFeesPermissions, coursePayoutsPermissions, coursesPermissions, courseTeachersPermissions } from "./permissions";
+import {
+  courseFeesPermissions,
+  coursePayoutsPermissions,
+  coursesPermissions,
+  courseTeachersPermissions,
+} from "./permissions";
 
 /** label/description yalnızca yedektir; görünen adlar messages/<dil>.json'dan gelir. */
 export const moduleConfig: ModuleConfig = {
   key: "courses",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.4.5",
+  version: "1.4.6",
   label: "Kurslar",
-  description: "Gönüllü kurslar ve Nachhilfe: öğretmenler, dersler, kayıtlar, ücretler ve muhasebe aktarımı.",
+  description:
+    "Gönüllü kurslar ve Nachhilfe: öğretmenler, dersler, kayıtlar, ücretler ve muhasebe aktarımı.",
   category: "OFFICIAL",
   hasSchema: true,
   // Başka modüllerden istenen erişim (yönetici onayı gerekir; gerekçe: messages → access.<modül>).

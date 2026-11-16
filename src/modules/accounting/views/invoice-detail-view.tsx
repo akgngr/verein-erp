@@ -23,19 +23,36 @@ import { listAccountOptions } from "../queries/list-accounts";
 import { listCategoryOptions } from "../queries/list-categories";
 import { listCustomerOptions } from "../queries/contacts";
 
-const euro = (cents: number) => (cents / 100).toLocaleString("de-DE", { style: "currency", currency: "EUR" });
+const euro = (cents: number) =>
+  (cents / 100).toLocaleString("de-DE", { style: "currency", currency: "EUR" });
 
-function Info({ label, children }: { label: string; children: React.ReactNode }) {
+function Info({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="flex flex-col gap-0.5 border-b border-default-100 py-2 last:border-none">
-      <span className="text-tiny font-medium uppercase tracking-wide text-default-400">{label}</span>
-      <span className="whitespace-pre-line text-small text-foreground">{children}</span>
+    <div className="flex flex-col gap-0.5 border-b border-ink-100 py-2 last:border-none">
+      <span className="text-xs font-medium uppercase tracking-wide text-ink-400">
+        {label}
+      </span>
+      <span className="whitespace-pre-line text-sm text-foreground">
+        {children}
+      </span>
     </div>
   );
 }
 
 /** Fatura / proforma detayı: kalemler, toplamlar, durum geçmişi ve aksiyonlar. */
-export async function InvoiceDetailView({ id, searchParams }: { id: string; searchParams: Promise<RawSearchParams> }) {
+export async function InvoiceDetailView({
+  id,
+  searchParams,
+}: {
+  id: string;
+  searchParams: Promise<RawSearchParams>;
+}) {
   let user;
   try {
     user = await requirePermission(accountingPermissions, "view");
@@ -52,10 +69,22 @@ export async function InvoiceDetailView({ id, searchParams }: { id: string; sear
     update: can(user.role, accountingPermissions, "update"),
     delete: can(user.role, accountingPermissions, "delete"),
   };
-  const editing = Boolean(raw.duzenle) && invoice.status === "DRAFT" && permissions.update;
-  const [accounts, categories, settings, contacts, einvoice, requirement] = await Promise.all([listAccountOptions(), listCategoryOptions("INCOME"), getInvoiceSettings(), listCustomerOptions(), checkEInvoice(invoice.id), getInvoiceRequirement(invoice.id)]);
+  const editing =
+    Boolean(raw.duzenle) && invoice.status === "DRAFT" && permissions.update;
+  const [accounts, categories, settings, contacts, einvoice, requirement] =
+    await Promise.all([
+      listAccountOptions(),
+      listCategoryOptions("INCOME"),
+      getInvoiceSettings(),
+      listCustomerOptions(),
+      checkEInvoice(invoice.id),
+      getInvoiceRequirement(invoice.id),
+    ]);
   const tObligation = await getTranslations("accounting.einvoice.obligation");
-  const categoryOptions = categories.map((category) => ({ value: category.id, label: category.name }));
+  const categoryOptions = categories.map((category) => ({
+    value: category.id,
+    label: category.name,
+  }));
 
   return (
     <div>
@@ -64,47 +93,85 @@ export async function InvoiceDetailView({ id, searchParams }: { id: string; sear
         description={invoice.recipientName}
         actions={
           <div className="flex flex-wrap items-center gap-2">
-          {(invoice.kind === "INVOICE" || invoice.kind === "CREDIT_NOTE") && invoice.number && invoice.status !== "DRAFT" ? (
-            <>
-              <XRechnungButton invoiceId={invoice.id} number={invoice.number} format="zugferd" />
-              <XRechnungButton invoiceId={invoice.id} number={invoice.number} />
-            </>
-          ) : null}
-          <InvoiceActions
-            invoice={{ ...invoice, categoryId: invoice.categoryId ?? settings.incomeCategoryId }}
-            can={permissions}
-            accountOptions={accounts.map((account) => ({ value: account.id, label: account.name }))}
-            categoryOptions={categoryOptions}
-          />
+            {(invoice.kind === "INVOICE" || invoice.kind === "CREDIT_NOTE") &&
+            invoice.number &&
+            invoice.status !== "DRAFT" ? (
+              <>
+                <XRechnungButton
+                  invoiceId={invoice.id}
+                  number={invoice.number}
+                  format="zugferd"
+                />
+                <XRechnungButton
+                  invoiceId={invoice.id}
+                  number={invoice.number}
+                />
+              </>
+            ) : null}
+            <InvoiceActions
+              invoice={{
+                ...invoice,
+                categoryId: invoice.categoryId ?? settings.incomeCategoryId,
+              }}
+              can={permissions}
+              accountOptions={accounts.map((account) => ({
+                value: account.id,
+                label: account.name,
+              }))}
+              categoryOptions={categoryOptions}
+            />
           </div>
         }
       />
       {invoice.creditNote || invoice.correctsInvoice ? (
-        <p className="mb-4 rounded-medium bg-warning-50 p-3 text-small text-warning-700">
+        <p className="mb-4 rounded-lg bg-warning-50 p-3 text-sm text-warning-700">
           {invoice.creditNote
-            ? t("creditNoteCreated", { number: invoice.creditNote.number ?? "" })
-            : t("creditNoteFor", { number: invoice.correctsInvoice?.number ?? "" })}{" "}
-          <a className="font-medium underline" href={`/muhasebe/faturalar/${invoice.creditNote?.id ?? invoice.correctsInvoice?.id}`}>{t("open")}</a>
+            ? t("creditNoteCreated", {
+                number: invoice.creditNote.number ?? "",
+              })
+            : t("creditNoteFor", {
+                number: invoice.correctsInvoice?.number ?? "",
+              })}{" "}
+          <a
+            className="font-medium underline"
+            href={`/muhasebe/faturalar/${invoice.creditNote?.id ?? invoice.correctsInvoice?.id}`}
+          >
+            {t("open")}
+          </a>
         </p>
       ) : null}
       {requirement ? (
         <div
           role="note"
-          className={`mb-4 rounded-medium p-3 text-small ${requirement.missingLeitweg ? "bg-danger-50 text-danger-700" : requirement.level === "required" ? "bg-warning-50 text-warning-800" : requirement.level === "recommended" ? "bg-primary-50 text-primary-700" : "bg-default-100 text-default-600"}`}
+          className={`mb-4 rounded-lg p-3 text-sm ${requirement.missingLeitweg ? "bg-danger-50 text-danger-700" : requirement.level === "required" ? "bg-warning-50 text-warning-800" : requirement.level === "recommended" ? "bg-brand-50 text-brand-700" : "bg-ink-100 text-ink-600"}`}
         >
-          <p className="font-medium">{tObligation(`invoice.${requirement.level}`)}</p>
+          <p className="font-medium">
+            {tObligation(`invoice.${requirement.level}`)}
+          </p>
           <p>{tObligation(`invoice.reasons.${requirement.reason}`)}</p>
-          {requirement.missingLeitweg ? <p className="mt-1 font-medium">{tObligation("errors.leitwegMissing")}</p> : null}
+          {requirement.missingLeitweg ? (
+            <p className="mt-1 font-medium">
+              {tObligation("errors.leitwegMissing")}
+            </p>
+          ) : null}
         </div>
       ) : null}
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
         <div className="flex flex-col gap-4 lg:col-span-2">
-          {einvoice.applicable ? <EInvoiceCheckPanel invoiceId={invoice.id} issues={einvoice.issues} kositEnabled={Boolean(settings.kositValidatorUrl)} /> : null}
-          <div className="overflow-x-auto rounded-medium border border-default-200 bg-content1 p-5 shadow-sm">
-            <table className="w-full text-small">
-              <thead className="text-tiny uppercase text-default-400">
+          {einvoice.applicable ? (
+            <EInvoiceCheckPanel
+              invoiceId={invoice.id}
+              issues={einvoice.issues}
+              kositEnabled={Boolean(settings.kositValidatorUrl)}
+            />
+          ) : null}
+          <div className="overflow-x-auto rounded-lg border border-ink-200 bg-surface p-5 shadow-sm">
+            <table className="w-full text-sm">
+              <thead className="text-xs uppercase text-ink-400">
                 <tr>
-                  <th className="pb-2 text-left">{t("form.lineDescription")}</th>
+                  <th className="pb-2 text-left">
+                    {t("form.lineDescription")}
+                  </th>
                   <th className="pb-2 text-right">{t("form.quantity")}</th>
                   <th className="pb-2 text-right">{t("form.unitPrice")}</th>
                   <th className="pb-2 text-right">{t("form.taxRate")}</th>
@@ -113,45 +180,81 @@ export async function InvoiceDetailView({ id, searchParams }: { id: string; sear
               </thead>
               <tbody>
                 {invoice.lines.map((line) => (
-                  <tr key={line.id} className="border-t border-default-100">
+                  <tr key={line.id} className="border-t border-ink-100">
                     <td className="py-2">{line.description}</td>
                     <td className="py-2 text-right">
                       {line.quantity.toLocaleString("de-DE")} {line.unit ?? ""}
                     </td>
-                    <td className="py-2 text-right">{euro(line.unitPriceCents)}</td>
+                    <td className="py-2 text-right">
+                      {euro(line.unitPriceCents)}
+                    </td>
                     <td className="py-2 text-right">{line.taxRate} %</td>
                     <td className="py-2 text-right">{euro(line.totalCents)}</td>
                   </tr>
                 ))}
               </tbody>
             </table>
-            <div className="ml-auto mt-3 flex max-w-xs flex-col gap-1 text-small">
-              <div className="flex justify-between"><span>{t("form.net")}</span><span>{euro(invoice.netCents)}</span></div>
+            <div className="ml-auto mt-3 flex max-w-xs flex-col gap-1 text-sm">
+              <div className="flex justify-between">
+                <span>{t("form.net")}</span>
+                <span>{euro(invoice.netCents)}</span>
+              </div>
               {invoice.taxCents > 0 ? (
-                <div className="flex justify-between"><span>{t("taxTotal")}</span><span>{euro(invoice.taxCents)}</span></div>
+                <div className="flex justify-between">
+                  <span>{t("taxTotal")}</span>
+                  <span>{euro(invoice.taxCents)}</span>
+                </div>
               ) : null}
-              <div className="flex justify-between border-t border-default-200 pt-1 font-semibold"><span>{t("form.gross")}</span><span>{euro(invoice.grossCents)}</span></div>
+              <div className="flex justify-between border-t border-ink-200 pt-1 font-semibold">
+                <span>{t("form.gross")}</span>
+                <span>{euro(invoice.grossCents)}</span>
+              </div>
               {invoice.paidCents > 0 ? (
-                <div className="flex justify-between text-success"><span>{t("paidTotal")}</span><span>− {euro(invoice.paidCents)}</span></div>
+                <div className="flex justify-between text-success">
+                  <span>{t("paidTotal")}</span>
+                  <span>− {euro(invoice.paidCents)}</span>
+                </div>
               ) : null}
               {invoice.skontoCents > 0 ? (
-                <div className="flex justify-between text-default-500"><span>{t("skontoTotal")}</span><span>− {euro(invoice.skontoCents)}</span></div>
+                <div className="flex justify-between text-ink-500">
+                  <span>{t("skontoTotal")}</span>
+                  <span>− {euro(invoice.skontoCents)}</span>
+                </div>
               ) : null}
               {invoice.openCents > 0 && invoice.paidCents > 0 ? (
-                <div className="flex justify-between font-semibold text-warning-600"><span>{t("openTotal")}</span><span>{euro(invoice.openCents)}</span></div>
+                <div className="flex justify-between font-semibold text-warning-600">
+                  <span>{t("openTotal")}</span>
+                  <span>{euro(invoice.openCents)}</span>
+                </div>
               ) : null}
             </div>
           </div>
           {invoice.dunnings.length ? (
-            <div className="rounded-medium border border-default-200 bg-content1 p-5 shadow-sm">
-              <h3 className="mb-2 text-small font-semibold">{t("dunningsTitle")}</h3>
-              <ul className="flex flex-col gap-1 text-small">
+            <div className="rounded-lg border border-ink-200 bg-surface p-5 shadow-sm">
+              <h3 className="mb-2 text-sm font-semibold">
+                {t("dunningsTitle")}
+              </h3>
+              <ul className="flex flex-col gap-1 text-sm">
                 {invoice.dunnings.map((dunning) => (
-                  <li key={dunning.id} className="flex flex-wrap items-center justify-between gap-2 border-t border-default-100 py-1.5">
+                  <li
+                    key={dunning.id}
+                    className="flex flex-wrap items-center justify-between gap-2 border-t border-ink-100 py-1.5"
+                  >
                     <span>{formatDate(dunning.dunningDate)}</span>
                     <span>{t(`dunningLevel.${dunning.level}`)}</span>
-                    <span className="text-default-500">{euro(dunning.feeCents + dunning.interestCents + dunning.flatFeeCents)}</span>
-                    <a className="text-primary hover:underline" href={`/api/accounting/dunnings/${dunning.id}/pdf`} target="_blank" rel="noopener noreferrer">
+                    <span className="text-ink-500">
+                      {euro(
+                        dunning.feeCents +
+                          dunning.interestCents +
+                          dunning.flatFeeCents,
+                      )}
+                    </span>
+                    <a
+                      className="text-accent hover:underline"
+                      href={`/api/accounting/dunnings/${dunning.id}/pdf`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
                       PDF
                     </a>
                   </li>
@@ -160,16 +263,26 @@ export async function InvoiceDetailView({ id, searchParams }: { id: string; sear
             </div>
           ) : null}
           {invoice.payments.length ? (
-            <div className="rounded-medium border border-default-200 bg-content1 p-5 shadow-sm">
-              <h3 className="mb-2 text-small font-semibold">{t("paymentsTitle")}</h3>
-              <table className="w-full text-small">
+            <div className="rounded-lg border border-ink-200 bg-surface p-5 shadow-sm">
+              <h3 className="mb-2 text-sm font-semibold">
+                {t("paymentsTitle")}
+              </h3>
+              <table className="w-full text-sm">
                 <tbody>
                   {invoice.payments.map((payment) => (
-                    <tr key={payment.id} className="border-t border-default-100">
+                    <tr key={payment.id} className="border-t border-ink-100">
                       <td className="py-1.5">{formatDate(payment.paidDate)}</td>
-                      <td className="py-1.5 text-default-500">{payment.bookingNumbers}</td>
-                      <td className="py-1.5 text-right">{euro(payment.amountCents)}</td>
-                      <td className="py-1.5 text-right text-default-500">{payment.skontoCents ? `${t("skontoShort")} ${euro(payment.skontoCents)}` : ""}</td>
+                      <td className="py-1.5 text-ink-500">
+                        {payment.bookingNumbers}
+                      </td>
+                      <td className="py-1.5 text-right">
+                        {euro(payment.amountCents)}
+                      </td>
+                      <td className="py-1.5 text-right text-ink-500">
+                        {payment.skontoCents
+                          ? `${t("skontoShort")} ${euro(payment.skontoCents)}`
+                          : ""}
+                      </td>
                     </tr>
                   ))}
                 </tbody>
@@ -177,43 +290,81 @@ export async function InvoiceDetailView({ id, searchParams }: { id: string; sear
             </div>
           ) : null}
         </div>
-        <div className="rounded-medium border border-default-200 bg-content1 p-5 shadow-sm">
+        <div className="rounded-lg border border-ink-200 bg-surface p-5 shadow-sm">
           <div className="mb-2">
-            <InvoiceStatusChip status={invoice.status} overdue={invoice.overdue} />
+            <InvoiceStatusChip
+              status={invoice.status}
+              overdue={invoice.overdue}
+            />
           </div>
-          <Info label={t("form.issueDate")}>{formatDate(invoice.issueDate)}</Info>
-          {invoice.dueDate ? <Info label={t("form.dueDate")}>{formatDate(invoice.dueDate)}</Info> : null}
-          {invoice.serviceDate ? <Info label={t("form.serviceDate")}>{invoice.serviceDate}</Info> : null}
-          {invoice.contactNumber ? <Info label={t("form.contact")}>{String(invoice.contactNumber)}</Info> : null}
-          <Info label={t("form.recipientTitle")}>
-            {[invoice.recipientName, invoice.recipientAddress, invoice.recipientEmail].filter(Boolean).join("\n")}
+          <Info label={t("form.issueDate")}>
+            {formatDate(invoice.issueDate)}
           </Info>
-          {invoice.subject ? <Info label={t("form.subject")}>{invoice.subject}</Info> : null}
-          {invoice.taxNote ? <Info label={t("form.taxNote")}>{invoice.taxNote}</Info> : null}
+          {invoice.dueDate ? (
+            <Info label={t("form.dueDate")}>{formatDate(invoice.dueDate)}</Info>
+          ) : null}
+          {invoice.serviceDate ? (
+            <Info label={t("form.serviceDate")}>{invoice.serviceDate}</Info>
+          ) : null}
+          {invoice.contactNumber ? (
+            <Info label={t("form.contact")}>
+              {String(invoice.contactNumber)}
+            </Info>
+          ) : null}
+          <Info label={t("form.recipientTitle")}>
+            {[
+              invoice.recipientName,
+              invoice.recipientAddress,
+              invoice.recipientEmail,
+            ]
+              .filter(Boolean)
+              .join("\n")}
+          </Info>
+          {invoice.subject ? (
+            <Info label={t("form.subject")}>{invoice.subject}</Info>
+          ) : null}
+          {invoice.taxNote ? (
+            <Info label={t("form.taxNote")}>{invoice.taxNote}</Info>
+          ) : null}
           {invoice.sourceProformaId ? (
             <Info label={t("fromProforma")}>
-              <Link className="text-primary hover:underline" href={`/muhasebe/faturalar/${invoice.sourceProformaId}`}>
+              <Link
+                className="text-accent hover:underline"
+                href={`/muhasebe/faturalar/${invoice.sourceProformaId}`}
+              >
                 {invoice.sourceProformaNumber}
               </Link>
             </Info>
           ) : null}
           {invoice.bookingId ? (
             <Info label={t("paymentBooking")}>
-              <Link className="text-primary hover:underline" href={`/muhasebe/${invoice.bookingId}`}>
+              <Link
+                className="text-accent hover:underline"
+                href={`/muhasebe/${invoice.bookingId}`}
+              >
                 {invoice.bookingNumber}
               </Link>
               {invoice.paidAt ? ` — ${formatDate(invoice.paidAt)}` : ""}
             </Info>
           ) : null}
           {invoice.cancelledAt ? (
-            <Info label={t("cancelled")}>{`${formatDateTime(invoice.cancelledAt)} — ${invoice.cancelReason ?? ""}`}</Info>
+            <Info
+              label={t("cancelled")}
+            >{`${formatDateTime(invoice.cancelledAt)} — ${invoice.cancelReason ?? ""}`}</Info>
           ) : null}
-          <Info label={t("createdBy")}>{`${invoice.createdByLabel} — ${formatDateTime(invoice.createdAt)}`}</Info>
+          <Info
+            label={t("createdBy")}
+          >{`${invoice.createdByLabel} — ${formatDateTime(invoice.createdAt)}`}</Info>
         </div>
       </div>
       {editing ? (
         <FormDrawer size="4xl" title={t("form.editTitle")}>
-          <InvoiceForm invoice={invoice} settings={settings} categoryOptions={categoryOptions} contacts={contacts} />
+          <InvoiceForm
+            invoice={invoice}
+            settings={settings}
+            categoryOptions={categoryOptions}
+            contacts={contacts}
+          />
         </FormDrawer>
       ) : null}
     </div>

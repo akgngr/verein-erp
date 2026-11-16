@@ -1,17 +1,27 @@
 "use client";
+import {
+  Button,
+  Tooltip,
+  TextField,
+  InputGroup,
+  Select,
+  ListBox,
+  Label,
+  Dropdown,
+  Badge,
+} from "@heroui/react";
+
+import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import {
-  Badge,
-  Button,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-  Input,
-  Select,
-  SelectItem,
-} from "@heroui/react";
-import { CalendarDays, ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
+  CalendarDays,
+  ChevronDown,
+  Search,
+  SlidersHorizontal,
+  X,
+} from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
@@ -114,7 +124,11 @@ export function DocumentToolbar({
 
   const hasDateFilter = Boolean(from || to);
   const activeFilterCount =
-    (status ? 1 : 0) + (categoryId ? 1 : 0) + (assigneeId ? 1 : 0) + (mine ? 1 : 0) + (overdue ? 1 : 0);
+    (status ? 1 : 0) +
+    (categoryId ? 1 : 0) +
+    (assigneeId ? 1 : 0) +
+    (mine ? 1 : 0) +
+    (overdue ? 1 : 0);
   const hasFilters = hasDateFilter || activeFilterCount > 0 || direction !== "";
 
   // KARAR: açılır filtre paneli custom div — react-aria overlay'leri iç içe
@@ -126,7 +140,10 @@ export function DocumentToolbar({
   useEffect(() => {
     if (!panelOpen) return;
     const onPointerDown = (event: PointerEvent) => {
-      if (panelRef.current && !panelRef.current.contains(event.target as Node)) {
+      if (
+        panelRef.current &&
+        !panelRef.current.contains(event.target as Node)
+      ) {
         setPanelOpen(false);
       }
     };
@@ -178,98 +195,140 @@ export function DocumentToolbar({
     <Select
       id={`documents-filter-${key}`}
       className="w-full"
-      size="sm"
       aria-label={label}
       placeholder={label}
-      selectedKeys={value ? [value] : [FILTER_ALL]}
-      onSelectionChange={(keys) => {
-        const selected = keys === "all" ? undefined : Array.from(keys)[0];
-        const next = selected === undefined || selected === FILTER_ALL ? "" : String(selected);
+      value={value ? value : FILTER_ALL}
+      onChange={(selectedValue) => {
+        const keys = selectedValue === null ? undefined : String(selectedValue);
+        const selected = false ? undefined : keys;
+        const next =
+          selected === undefined || selected === FILTER_ALL
+            ? ""
+            : String(selected);
         setParams({ [`filter.${key}`]: next }, { resetPage: true });
       }}
     >
-      {[{ value: FILTER_ALL, label: t("filter.all") }, ...options].map((option) => (
-        <SelectItem key={option.value} textValue={option.label}>
-          {option.label}
-        </SelectItem>
-      ))}
+      <Select.Trigger className="h-9 text-sm">
+        <Select.Value />
+        <Select.Indicator />
+      </Select.Trigger>
+      <Select.Popover>
+        <ListBox>
+          {[{ value: FILTER_ALL, label: t("filter.all") }, ...options].map(
+            (option) => (
+              <ListBox.Item
+                key={option.value}
+                id={option.value}
+                textValue={option.label}
+              >
+                <Label>{option.label}</Label>
+                <ListBox.ItemIndicator />
+              </ListBox.Item>
+            ),
+          )}
+        </ListBox>
+      </Select.Popover>
     </Select>
   );
 
   const dateMenu = (
-    <Dropdown placement="bottom-start">
-      <DropdownTrigger>
-        <Button
-          id={`${ctx.idPrefix}-date-range`}
-          size="sm"
-          variant={hasDateFilter ? "flat" : "bordered"}
-          color={hasDateFilter ? "primary" : "default"}
-          startContent={<CalendarDays className="h-4 w-4" aria-hidden />}
-          endContent={<ChevronDown className="h-3.5 w-3.5" aria-hidden />}
-          className="max-w-[240px]"
-        >
-          <span className="truncate">{dateLabel}</span>
-        </Button>
-      </DropdownTrigger>
+    <Dropdown>
+      <Button
+        id={`${ctx.idPrefix}-date-range`}
+        size="sm"
+        className="max-w-[240px]"
+        variant={actionVariant(
+          hasDateFilter ? "primary" : "default",
+          hasDateFilter ? "flat" : "bordered",
+        )}
+      >
+        {<CalendarDays className="h-4 w-4" aria-hidden />}
+        <span className="truncate">{dateLabel}</span>
+        {<ChevronDown className="h-3.5 w-3.5" aria-hidden />}
+      </Button>
+
       {/* KARAR: react-aria koleksiyon tipleri tek dizi çocuğu beklediği için
           hazır seçenekler + temizle tek dizide verilir (DataTable actions kalıbı). */}
-      <DropdownMenu
-        aria-label={t("filter.dateAria")}
-        onAction={(key) => {
-          if (key === CLEAR_KEY) applyDateRange(null);
-          else applyDateRange(presetRange(String(key)));
-        }}
-      >
-        {[
-          ...DATE_PRESETS.map((preset) => (
-            <DropdownItem key={preset.key}>{t(`filter.${preset.labelKey}`)}</DropdownItem>
-          )),
-          <DropdownItem
-            key={CLEAR_KEY}
-            showDivider
-            color="danger"
-            isDisabled={!hasDateFilter}
-          >
-            {t("filter.dateClear")}
-          </DropdownItem>,
-        ]}
-      </DropdownMenu>
+      <Dropdown.Popover placement="bottom start">
+        <Dropdown.Menu
+          aria-label={t("filter.dateAria")}
+          onAction={(key) => {
+            if (key === CLEAR_KEY) applyDateRange(null);
+            else applyDateRange(presetRange(String(key)));
+          }}
+        >
+          {[
+            ...DATE_PRESETS.map((preset) => (
+              <Dropdown.Item
+                key={preset.key}
+                id={preset.key}
+                textValue={String(t(`filter.${preset.labelKey}`))}
+              >
+                <Label>{t(`filter.${preset.labelKey}`)}</Label>
+              </Dropdown.Item>
+            )),
+            <Dropdown.Item
+              key={CLEAR_KEY}
+              isDisabled={!hasDateFilter}
+              id={CLEAR_KEY}
+              textValue={String(t("filter.dateClear"))}
+              variant={"danger" === "danger" ? "danger" : undefined}
+              className={["", "mt-1 border-t border-border pt-2"]
+                .filter(Boolean)
+                .join(" ")}
+            >
+              <Label>{t("filter.dateClear")}</Label>
+            </Dropdown.Item>,
+          ]}
+        </Dropdown.Menu>
+      </Dropdown.Popover>
     </Dropdown>
   );
 
   const filterPanelButton = (
     <div ref={panelRef} className="relative">
-      <Badge
-        content={String(activeFilterCount)}
-        color="primary"
-        size="sm"
-        shape="circle"
-        isInvisible={activeFilterCount === 0}
-      >
+      <Badge.Anchor>
         <Button
           id={`${ctx.idPrefix}-filters`}
           size="sm"
-          variant={activeFilterCount > 0 ? "flat" : "bordered"}
-          color={activeFilterCount > 0 ? "primary" : "default"}
-          startContent={<SlidersHorizontal className="h-4 w-4" aria-hidden />}
-          endContent={<ChevronDown className="h-3.5 w-3.5" aria-hidden />}
           aria-expanded={panelOpen}
           aria-haspopup="dialog"
           onPress={() => setPanelOpen((open) => !open)}
+          variant={actionVariant(
+            activeFilterCount > 0 ? "primary" : "default",
+            activeFilterCount > 0 ? "flat" : "bordered",
+          )}
         >
+          {<SlidersHorizontal className="h-4 w-4" aria-hidden />}
           {t("filter.filters")}
+          {<ChevronDown className="h-3.5 w-3.5" aria-hidden />}
         </Button>
-      </Badge>
+        {!(activeFilterCount === 0) ? (
+          <Badge color="accent" size="sm">
+            <Badge.Label>{String(activeFilterCount)}</Badge.Label>
+          </Badge>
+        ) : null}
+      </Badge.Anchor>
       {panelOpen ? (
         <div
           role="dialog"
           aria-label={t("filter.filtersAria")}
-          className="absolute right-0 top-full z-30 mt-2 flex w-72 flex-col gap-3 rounded-medium border border-default-200 bg-content1 p-3 shadow-medium"
+          className="absolute right-0 top-full z-30 mt-2 flex w-72 flex-col gap-3 rounded-lg border border-ink-200 bg-surface p-3 shadow-md"
         >
           {renderSelect("status", t("filter.status"), status, statusOptions)}
-          {renderSelect("categoryId", t("filter.category"), categoryId, categoryOptions)}
-          {renderSelect("assigneeId", t("filter.assignee"), assigneeId, assigneeOptions)}
-          <label className="flex cursor-pointer select-none items-center gap-2 text-small">
+          {renderSelect(
+            "categoryId",
+            t("filter.category"),
+            categoryId,
+            categoryOptions,
+          )}
+          {renderSelect(
+            "assigneeId",
+            t("filter.assignee"),
+            assigneeId,
+            assigneeOptions,
+          )}
+          <label className="flex cursor-pointer select-none items-center gap-2 text-sm">
             <input
               type="checkbox"
               checked={mine}
@@ -279,11 +338,11 @@ export function DocumentToolbar({
                   { resetPage: true },
                 )
               }
-              className="h-4 w-4 accent-[hsl(var(--heroui-primary))]"
+              className="h-4 w-4 accent-[var(--accent)]"
             />
             {t("filter.mine")}
           </label>
-          <label className="flex cursor-pointer select-none items-center gap-2 text-small">
+          <label className="flex cursor-pointer select-none items-center gap-2 text-sm">
             <input
               type="checkbox"
               checked={overdue}
@@ -293,9 +352,11 @@ export function DocumentToolbar({
                   { resetPage: true },
                 )
               }
-              className="h-4 w-4 accent-[hsl(var(--heroui-danger))]"
+              className="h-4 w-4 accent-[var(--danger)]"
             />
-            <span className={overdue ? "font-medium text-danger-600" : undefined}>
+            <span
+              className={overdue ? "font-medium text-danger-600" : undefined}
+            >
               {t("filter.overdue")}
             </span>
           </label>
@@ -306,18 +367,30 @@ export function DocumentToolbar({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
-      <Input
+      <TextField
         id={`${ctx.idPrefix}-search`}
-        className="w-full min-w-[200px] flex-1 sm:max-w-sm"
-        size="sm"
         value={ctx.searchDraft}
-        onValueChange={ctx.onSearchDraftChange}
-        onClear={() => ctx.onSearchDraftChange("")}
-        isClearable
-        placeholder={t("filter.search")}
-        startContent={<Search className="h-4 w-4 text-default-400" aria-hidden />}
         aria-label={t("filter.searchAria")}
-      />
+        onChange={ctx.onSearchDraftChange}
+        className={["w-full min-w-[200px] flex-1 sm:max-w-sm"]
+          .filter(Boolean)
+          .join(" ")}
+      >
+        <InputGroup>
+          <InputGroup.Prefix>
+            {<Search className="h-4 w-4 text-ink-400" aria-hidden />}
+          </InputGroup.Prefix>
+          <InputGroup.Input
+            placeholder={t("filter.search")}
+            className={["h-9 text-sm"].filter(Boolean).join(" ")}
+          />
+          <InputGroup.Suffix>
+            {ctx.searchDraft ? (
+              <FieldClearButton onPress={() => ctx.onSearchDraftChange("")} />
+            ) : null}
+          </InputGroup.Suffix>
+        </InputGroup>
+      </TextField>
 
       <DirectionTabs />
 
@@ -325,15 +398,18 @@ export function DocumentToolbar({
       {filterPanelButton}
 
       {hasFilters ? (
-        <Button
-          size="sm"
-          variant="light"
-          isIconOnly
-          aria-label={t("filter.clear")}
-          title={t("filter.clear")}
-          startContent={<X className="h-4 w-4" aria-hidden />}
-          onPress={clearFilters}
-        />
+        <Tooltip delay={300}>
+          <Button
+            size="sm"
+            isIconOnly
+            aria-label={t("filter.clear")}
+            onPress={clearFilters}
+            variant={actionVariant("default", "light")}
+          >
+            {<X className="h-4 w-4" aria-hidden />}
+          </Button>
+          <Tooltip.Content>{t("filter.clear")}</Tooltip.Content>
+        </Tooltip>
       ) : null}
     </div>
   );

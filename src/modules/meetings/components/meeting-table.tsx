@@ -1,7 +1,8 @@
 "use client";
+import { toast, Link } from "@heroui/react";
 
 import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
-import { Link, addToast } from "@heroui/react";
+
 import { Eye, ListTodo, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -66,12 +67,11 @@ export function MeetingTable({
     if (!deleting) return;
     const result = await deleteMeetingAction({ id: deleting.id });
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
-    addToast({
-      title: t("list.deletedToast", { number: deleting.meetingNumber }),
-      color: "success",
+    toast(t("list.deletedToast", { number: deleting.meetingNumber }), {
+      variant: "success",
     });
     setDeleting(null);
     router.refresh();
@@ -84,7 +84,10 @@ export function MeetingTable({
       sortable: true,
       width: 140,
       render: (row) => (
-        <Link href={`/toplantilar/${row.id}`} size="sm" className="font-medium">
+        <Link
+          href={`/toplantilar/${row.id}`}
+          className={["font-medium", "text-sm"].filter(Boolean).join(" ")}
+        >
           {row.meetingNumber}
         </Link>
       ),
@@ -146,7 +149,10 @@ export function MeetingTable({
       width: 100,
       render: (row) =>
         row.openActionItemCount > 0 ? (
-          <Link href={`/toplantilar/${row.id}?sekme=gorevler`} size="sm" className="text-warning">
+          <Link
+            href={`/toplantilar/${row.id}?sekme=gorevler`}
+            className={["text-warning", "text-sm"].filter(Boolean).join(" ")}
+          >
             {row.openActionItemCount}
           </Link>
         ) : (
@@ -156,7 +162,12 @@ export function MeetingTable({
   ];
 
   const rowActions = (row: MeetingRow): DataTableRowAction[] => [
-    { key: "view", label: t("common.view"), icon: <Eye className="h-4 w-4" />, href: `/toplantilar/${row.id}` },
+    {
+      key: "view",
+      label: t("common.view"),
+      icon: <Eye className="h-4 w-4" />,
+      href: `/toplantilar/${row.id}`,
+    },
     ...(canUpdate && (row.status === "PLANNED" || row.status === "HELD")
       ? [
           {

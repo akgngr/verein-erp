@@ -1,13 +1,10 @@
 "use client";
+import { Button, Tooltip } from "@heroui/react";
 
-import {
-  Button,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-  RangeCalendar,
-  type RangeValue,
-} from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+
+import { Popover, RangeCalendar } from "@heroui/react";
+type RangeValue<T> = { start: T; end: T };
 import { parseDate, type DateValue } from "@internationalized/date";
 import { CalendarDays, ChevronDown, Globe, X } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -18,14 +15,7 @@ import { cn } from "@/shared/utils";
 import { useListQueryState } from "./use-list-query-state";
 
 type PresetKey =
-  | "custom"
-  | "today"
-  | "yesterday"
-  | "7d"
-  | "14d"
-  | "30d"
-  | "90d"
-  | "365d";
+  "custom" | "today" | "yesterday" | "7d" | "14d" | "30d" | "90d" | "365d";
 
 interface PresetItem {
   key: PresetKey;
@@ -117,7 +107,11 @@ const PRESETS_GROUP_2: PresetItem[] = [
 
 const ALL_PRESETS = [...PRESETS_GROUP_1, ...PRESETS_GROUP_2];
 
-function formatDisplayDate(dateStr: string, format: "short" | "full" = "short", locale = "tr"): string {
+function formatDisplayDate(
+  dateStr: string,
+  format: "short" | "full" = "short",
+  locale = "tr",
+): string {
   if (!dateStr) return "";
   try {
     const parts = dateStr.split("-").map(Number);
@@ -142,7 +136,10 @@ function parseSafeDate(dateStr: string): DateValue | null {
   }
 }
 
-function getInitialRange(activeFrom: string, activeTo: string): RangeValue<DateValue> | null {
+function getInitialRange(
+  activeFrom: string,
+  activeTo: string,
+): RangeValue<DateValue> | null {
   const start = parseSafeDate(activeFrom);
   const end = parseSafeDate(activeTo);
   if (start && end) {
@@ -176,13 +173,15 @@ export function DateRangeFilter({
   const t = useTranslations("common.dateRange");
   const tCommon = useTranslations("common");
   const locale = useLocale();
-  const fmt = (dateStr: string, format: "short" | "full" = "short") => formatDisplayDate(dateStr, format, locale);
+  const fmt = (dateStr: string, format: "short" | "full" = "short") =>
+    formatDisplayDate(dateStr, format, locale);
 
   const activeFrom = searchParams.get(fromParam) ?? "";
   const activeTo = searchParams.get(toParam) ?? "";
   const hasActiveRange = Boolean(activeFrom || activeTo);
 
   const [isOpen, setIsOpen] = useState(false);
+  const [yearPickerOpen, setYearPickerOpen] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState<PresetKey>(() =>
     getInitialPreset(activeFrom, activeTo),
   );
@@ -299,10 +298,10 @@ export function DateRangeFilter({
         type="button"
         onClick={() => handleSelectPreset(preset)}
         className={cn(
-          "w-full text-left px-3 py-1.5 rounded-lg text-small transition-colors",
+          "w-full text-left px-3 py-1.5 rounded-lg text-sm transition-colors",
           isSelected
-            ? "bg-default-200/80 font-medium text-foreground shadow-xs"
-            : "text-default-700 hover:bg-default-100/80 hover:text-foreground",
+            ? "bg-ink-200/80 font-medium text-foreground shadow-xs"
+            : "text-ink-700 hover:bg-ink-100/80 hover:text-foreground",
         )}
       >
         {t(preset.labelKey)}
@@ -312,140 +311,176 @@ export function DateRangeFilter({
 
   return (
     <div className="inline-flex items-center">
-      <Popover
-        isOpen={isOpen}
-        onOpenChange={handleOpenChange}
-        placement="bottom-start"
-        offset={6}
-      >
-        <PopoverTrigger>
-          <Button
-            id={`${idPrefix}-trigger`}
-            size="sm"
-            variant={hasActiveRange ? "flat" : "bordered"}
-            color={hasActiveRange ? "primary" : "default"}
-            className={cn(
-              "h-9 px-3 text-small font-medium transition-all shadow-xs border",
-              hasActiveRange
-                ? "bg-primary-50 text-primary-700 border-primary-300 dark:bg-primary-500/20 dark:text-primary-300 dark:border-primary-500/40 font-semibold"
-                : "border-default-200/80 bg-default-100/60 hover:bg-default-100 text-default-600",
-            )}
-            startContent={<CalendarDays className="h-4 w-4 shrink-0 text-default-500" aria-hidden />}
-            endContent={
-              <ChevronDown
-                className={cn(
-                  "h-3.5 w-3.5 shrink-0 text-default-400 transition-transform duration-200",
-                  isOpen && "rotate-180",
-                )}
-                aria-hidden
-              />
-            }
-          >
-            <span className="truncate max-w-[280px]">{triggerText}</span>
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="p-0 border border-default-200/80 shadow-2xl rounded-2xl bg-content1 overflow-hidden">
-          <div className="flex flex-col">
-            {/* Üst gövde: Sol tarafta şablonlar, dikey çizgi, sağ tarafta takvim */}
-            <div className="flex flex-col sm:flex-row">
-              {/* Sol: Hazır Şablonlar */}
-              <div className="w-full sm:w-36 shrink-0 p-3 flex flex-col gap-0.5 border-b sm:border-b-0 sm:border-r border-default-200/80 bg-default-50/40">
-                <button
-                  type="button"
-                  onClick={() => setSelectedPreset("custom")}
-                  className={cn(
-                    "w-full text-left px-3 py-1.5 rounded-lg text-small transition-colors",
-                    selectedPreset === "custom"
-                      ? "bg-default-200/80 font-medium text-foreground shadow-xs"
-                      : "text-default-700 hover:bg-default-100/80 hover:text-foreground",
-                  )}
-                >
-                  {t("custom")}
-                </button>
+      <Popover isOpen={isOpen} onOpenChange={handleOpenChange}>
+        <Button
+          id={`${idPrefix}-trigger`}
+          size="sm"
+          className={cn(
+            "h-9 px-3 text-sm font-medium transition-all shadow-xs border",
+            hasActiveRange
+              ? "bg-brand-50 text-brand-700 border-brand-300 dark:bg-brand-500/20 dark:text-brand-300 dark:border-brand-500/40 font-semibold"
+              : "border-ink-200/80 bg-ink-100/60 hover:bg-ink-100 text-ink-600",
+          )}
+          variant={actionVariant(
+            hasActiveRange ? "primary" : "default",
+            hasActiveRange ? "flat" : "bordered",
+          )}
+        >
+          {
+            <CalendarDays
+              className="h-4 w-4 shrink-0 text-ink-500"
+              aria-hidden
+            />
+          }
+          <span className="truncate max-w-[280px]">{triggerText}</span>
+          {
+            <ChevronDown
+              className={cn(
+                "h-3.5 w-3.5 shrink-0 text-ink-400 transition-transform duration-200",
+                isOpen && "rotate-180",
+              )}
+              aria-hidden
+            />
+          }
+        </Button>
 
-                <div className="my-1 border-t border-default-200/60" />
+        <Popover.Content
+          placement="bottom start"
+          offset={8}
+          className="p-0 border border-ink-200/80 shadow-2xl rounded-2xl bg-surface overflow-hidden"
+        >
+          <Popover.Dialog aria-label={t("picker")} className="p-0">
+            <div className="flex flex-col">
+              {/* Üst gövde: Sol tarafta şablonlar, dikey çizgi, sağ tarafta takvim */}
+              <div className="flex flex-col sm:flex-row">
+                {/* Sol: Hazır Şablonlar */}
+                <div className="w-full sm:w-36 shrink-0 p-3 flex flex-col gap-0.5 border-b sm:border-b-0 sm:border-r border-ink-200/80 bg-ink-50/40">
+                  <button
+                    type="button"
+                    onClick={() => setSelectedPreset("custom")}
+                    className={cn(
+                      "w-full text-left px-3 py-1.5 rounded-lg text-sm transition-colors",
+                      selectedPreset === "custom"
+                        ? "bg-ink-200/80 font-medium text-foreground shadow-xs"
+                        : "text-ink-700 hover:bg-ink-100/80 hover:text-foreground",
+                    )}
+                  >
+                    {t("custom")}
+                  </button>
 
-                {PRESETS_GROUP_1.map(renderPresetButton)}
+                  <div className="my-1 border-t border-ink-200/60" />
 
-                <div className="my-1 border-t border-default-200/60" />
+                  {PRESETS_GROUP_1.map(renderPresetButton)}
 
-                {PRESETS_GROUP_2.map(renderPresetButton)}
+                  <div className="my-1 border-t border-ink-200/60" />
+
+                  {PRESETS_GROUP_2.map(renderPresetButton)}
+                </div>
+
+                {/* Sağ: HeroUI RangeCalendar */}
+                <div className="p-3 bg-surface">
+                  <RangeCalendar
+                    aria-label={t("picker")}
+                    value={tempRange}
+                    onChange={handleCalendarChange}
+                    isYearPickerOpen={yearPickerOpen}
+                    onYearPickerOpenChange={setYearPickerOpen}
+                    className="border-none bg-transparent shadow-none"
+                  >
+                    <RangeCalendar.Header>
+                      <RangeCalendar.YearPickerTrigger>
+                        <RangeCalendar.YearPickerTriggerHeading />
+                        <RangeCalendar.YearPickerTriggerIndicator />
+                      </RangeCalendar.YearPickerTrigger>
+                      <RangeCalendar.NavButton slot="previous" />
+                      <RangeCalendar.NavButton slot="next" />
+                    </RangeCalendar.Header>
+                    <RangeCalendar.Grid
+                      className={yearPickerOpen ? "hidden" : undefined}
+                    >
+                      <RangeCalendar.GridHeader>
+                        {(day) => (
+                          <RangeCalendar.HeaderCell>
+                            {day}
+                          </RangeCalendar.HeaderCell>
+                        )}
+                      </RangeCalendar.GridHeader>
+                      <RangeCalendar.GridBody>
+                        {(date) => <RangeCalendar.Cell date={date} />}
+                      </RangeCalendar.GridBody>
+                    </RangeCalendar.Grid>
+                    <RangeCalendar.YearPickerGrid>
+                      <RangeCalendar.YearPickerGridBody>
+                        {({ year }) => (
+                          <RangeCalendar.YearPickerCell year={year} />
+                        )}
+                      </RangeCalendar.YearPickerGridBody>
+                    </RangeCalendar.YearPickerGrid>
+                  </RangeCalendar>
+                </div>
               </div>
 
-              {/* Sağ: HeroUI RangeCalendar */}
-              <div className="p-3 bg-content1">
-                <RangeCalendar
-                  aria-label={t("picker")}
-                  value={tempRange}
-                  onChange={handleCalendarChange}
-                  showMonthAndYearPickers
-                  classNames={{
-                    base: "shadow-none border-none bg-transparent",
-                    headerWrapper: "px-1 pt-1",
-                    gridHeader: "text-default-400 font-medium text-tiny",
-                  }}
-                />
-              </div>
-            </div>
+              {/* Alt Bilgi & İşlem Butonları */}
+              <div className="border-t border-ink-200/80 px-4 py-3 bg-ink-50/50 flex flex-col sm:flex-row items-center justify-between gap-3">
+                <div className="flex flex-col">
+                  <span className="text-sm font-medium text-foreground tracking-tight">
+                    {footerDateText}
+                  </span>
+                  <span className="flex items-center gap-1.5 text-xs text-ink-400 font-normal">
+                    <Globe className="h-3.5 w-3.5" />
+                    GMT +01:00
+                  </span>
+                </div>
 
-            {/* Alt Bilgi & İşlem Butonları */}
-            <div className="border-t border-default-200/80 px-4 py-3 bg-default-50/50 flex flex-col sm:flex-row items-center justify-between gap-3">
-              <div className="flex flex-col">
-                <span className="text-small font-medium text-foreground tracking-tight">
-                  {footerDateText}
-                </span>
-                <span className="flex items-center gap-1.5 text-xs text-default-400 font-normal">
-                  <Globe className="h-3.5 w-3.5" />
-                  GMT +01:00
-                </span>
-              </div>
-
-              <div className="flex items-center gap-2">
-                {hasActiveRange || tempRange ? (
+                <div className="flex items-center gap-2">
+                  {hasActiveRange || tempRange ? (
+                    <Button
+                      size="sm"
+                      onPress={handleClear}
+                      className="text-xs font-medium h-8 px-2.5"
+                      variant={actionVariant("danger", "light")}
+                    >
+                      {tCommon("clear")}
+                    </Button>
+                  ) : null}
                   <Button
                     size="sm"
-                    variant="light"
-                    color="danger"
-                    onPress={handleClear}
-                    className="text-xs font-medium h-8 px-2.5"
+                    onPress={() => setIsOpen(false)}
+                    className="h-8 px-4 text-xs font-medium border border-ink-300 rounded-lg hover:bg-ink-100 text-foreground"
+                    variant={actionVariant("default", "bordered")}
                   >
-                    {tCommon("clear")}
+                    {tCommon("cancel")}
                   </Button>
-                ) : null}
-                <Button
-                  size="sm"
-                  variant="bordered"
-                  onPress={() => setIsOpen(false)}
-                  className="h-8 px-4 text-xs font-medium border border-default-300 rounded-lg hover:bg-default-100 text-foreground"
-                >
-                  {tCommon("cancel")}
-                </Button>
-                <Button
-                  size="sm"
-                  onPress={handleApply}
-                  isDisabled={!tempRange}
-                  className="h-8 px-4 text-xs font-medium bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 rounded-lg shadow-xs transition-colors"
-                >
-                  {t("apply")}
-                </Button>
+                  <Button
+                    size="sm"
+                    onPress={handleApply}
+                    isDisabled={!tempRange}
+                    className="h-8 px-4 text-xs font-medium bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200 rounded-lg shadow-xs transition-colors"
+                    variant={actionVariant("default", "solid")}
+                  >
+                    {t("apply")}
+                  </Button>
+                </div>
               </div>
             </div>
-          </div>
-        </PopoverContent>
+          </Popover.Dialog>
+        </Popover.Content>
       </Popover>
 
       {hasActiveRange ? (
-        <Button
-          isIconOnly
-          size="sm"
-          variant="light"
-          aria-label={t("clear")}
-          title={t("clear")}
-          className="h-9 w-7 min-w-7 ml-1 text-default-400 hover:text-danger hover:bg-danger-50/50 rounded-lg transition-colors"
-          onPress={handleClear}
-        >
-          <X className="h-4 w-4" />
-        </Button>
+        <Tooltip delay={300}>
+          <Button
+            isIconOnly
+            size="sm"
+            aria-label={t("clear")}
+            className="h-9 w-7 min-w-7 ml-1 text-ink-400 hover:text-danger hover:bg-danger-50/50 rounded-lg transition-colors"
+            onPress={handleClear}
+            variant={actionVariant("default", "light")}
+          >
+            <X className="h-4 w-4" />
+          </Button>
+          <Tooltip.Content>{t("clear")}</Tooltip.Content>
+        </Tooltip>
       ) : null}
     </div>
   );

@@ -1,11 +1,27 @@
 "use client";
+import {
+  toast,
+  Button,
+  Spinner,
+  Modal,
+  TextField,
+  Label,
+  Input,
+  TextArea,
+} from "@heroui/react";
 
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea, addToast } from "@heroui/react";
+import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
-import { createProjectAction, updateProjectAction } from "../actions/project-actions";
+import {
+  createProjectAction,
+  updateProjectAction,
+} from "../actions/project-actions";
 
 type ProjectRow = {
   id: string;
@@ -43,10 +59,10 @@ export function ProjectFormModal({
           })
         : await createProjectAction({ name, note: note || undefined });
       if (!result.ok) {
-        addToast({ title: result.error, color: "danger" });
+        toast(result.error, { variant: "danger" });
         return;
       }
-      addToast({ title: t("saved"), color: "success" });
+      toast(t("saved"), { variant: "success" });
       onOpenChange(false);
       router.refresh();
     } finally {
@@ -55,35 +71,62 @@ export function ProjectFormModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="md">
-      <ModalContent>
-        <ModalHeader>{project ? t("edit") : t("new")}</ModalHeader>
-        <ModalBody className="gap-4">
-          <Input
-            label={t("name")}
-            labelPlacement="outside"
-            value={name}
-            onValueChange={setName}
-            isRequired
-            maxLength={150}
-          />
-          <Textarea
-            label={t("note")}
-            labelPlacement="outside"
-            value={note}
-            onValueChange={setNote}
-            maxLength={500}
-          />
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="flat" onPress={() => onOpenChange(false)}>
-            {tCommon("cancel")}
-          </Button>
-          <Button color="primary" onPress={submit} isLoading={busy} isDisabled={name.trim().length < 2}>
-            {project ? t("edit") : t("new")}
-          </Button>
-        </ModalFooter>
-      </ModalContent>
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal.Backdrop>
+        <Modal.Container size="md">
+          <Modal.Dialog className={"w-full max-w-md "}>
+            <DialogDismissButton />
+
+            <Modal.Header>
+              <Modal.Heading className="flex items-center gap-2">
+                {project ? t("edit") : t("new")}
+              </Modal.Heading>
+            </Modal.Header>
+            <Modal.Body className="gap-4">
+              <TextField
+                value={name}
+                isRequired
+                onChange={setName}
+                className={["w-full"].filter(Boolean).join(" ")}
+              >
+                <Label>{t("name")}</Label>
+                <Input maxLength={150} />
+              </TextField>
+              <TextField
+                value={note}
+                onChange={setNote}
+                className={["w-full"].filter(Boolean).join(" ")}
+              >
+                <Label>{t("note")}</Label>
+                <TextArea
+                  maxLength={500}
+                  rows={3}
+                  className={["[field-sizing:content]"]
+                    .filter(Boolean)
+                    .join(" ")}
+                />
+              </TextField>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                onPress={() => onOpenChange(false)}
+                variant={actionVariant("default", "flat")}
+              >
+                {tCommon("cancel")}
+              </Button>
+              <Button
+                onPress={submit}
+                isDisabled={name.trim().length < 2}
+                variant={actionVariant("primary", "solid")}
+                isPending={busy}
+              >
+                {busy ? <Spinner size="sm" color="current" /> : null}
+                {project ? t("edit") : t("new")}
+              </Button>
+            </Modal.Footer>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 }

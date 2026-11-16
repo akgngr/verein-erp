@@ -1,20 +1,27 @@
 "use client";
+import {
+  toast,
+  Button,
+  Spinner,
+  Modal,
+  Checkbox,
+  Label,
+  TextField,
+  InputGroup,
+  Description,
+  Input,
+  Select,
+  ListBox,
+} from "@heroui/react";
+
+import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
+
+import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
 
-import {
-  Button,
-  Checkbox,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  Select,
-  SelectItem,
-  addToast,
-} from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -26,7 +33,11 @@ import {
   addAttendeeUsersAction,
 } from "../actions/attendee-actions";
 
-export type AttendeeMemberOption = { id: string; label: string; membershipNumber: string };
+export type AttendeeMemberOption = {
+  id: string;
+  label: string;
+  membershipNumber: string;
+};
 
 /**
  * Katılımcı ekleme penceresi (7.3): kayıtlı kullanıcı (çoklu seçim), dernek üyesi
@@ -55,7 +66,9 @@ export function AttendeeAddModal({
   const router = useRouter();
   const [tab, setTab] = useState<"user" | "member" | "guest">("user");
   const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
-  const [selectedMembers, setSelectedMembers] = useState<Set<string>>(new Set());
+  const [selectedMembers, setSelectedMembers] = useState<Set<string>>(
+    new Set(),
+  );
   const [memberQuery, setMemberQuery] = useState("");
   const [role, setRole] = useState<Set<string>>(new Set(["MEMBER"]));
   const [guestName, setGuestName] = useState("");
@@ -76,7 +89,9 @@ export function AttendeeAddModal({
   const needle = memberQuery.trim().toLocaleLowerCase();
   const filteredMembers = needle
     ? memberOptions.filter((member) =>
-        `${member.label} ${member.membershipNumber}`.toLocaleLowerCase().includes(needle),
+        `${member.label} ${member.membershipNumber}`
+          .toLocaleLowerCase()
+          .includes(needle),
       )
     : memberOptions;
 
@@ -102,7 +117,9 @@ export function AttendeeAddModal({
       setError(result.error);
       return;
     }
-    addToast({ title: t("addedCountToast", { count: result.data.added }), color: "success" });
+    toast(t("addedCountToast", { count: result.data.added }), {
+      variant: "success",
+    });
     close();
     router.refresh();
   };
@@ -120,7 +137,9 @@ export function AttendeeAddModal({
       setError(result.error);
       return;
     }
-    addToast({ title: t("addedCountToast", { count: result.data.added }), color: "success" });
+    toast(t("addedCountToast", { count: result.data.added }), {
+      variant: "success",
+    });
     close();
     router.refresh();
   };
@@ -138,199 +157,332 @@ export function AttendeeAddModal({
       setError(result.error);
       return;
     }
-    addToast({ title: t("addedGuestToast"), color: "success" });
+    toast(t("addedGuestToast"), { variant: "success" });
     close();
     router.refresh();
   };
 
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-      <ModalContent>
-        <ModalHeader>{t("title")}</ModalHeader>
-        <ModalBody>
-          <div className="flex gap-2">
-            <Button
-              size="sm"
-              variant={tab === "user" ? "flat" : "light"}
-              color={tab === "user" ? "primary" : "default"}
-              onPress={() => setTab("user")}
-            >
-              {t("tabUsers")}
-            </Button>
-            {memberOptions.length > 0 ? (
-              <Button
-                size="sm"
-                variant={tab === "member" ? "flat" : "light"}
-                color={tab === "member" ? "primary" : "default"}
-                onPress={() => setTab("member")}
-              >
-                {t("tabMembers")}
-              </Button>
-            ) : null}
-            <Button
-              size="sm"
-              variant={tab === "guest" ? "flat" : "light"}
-              color={tab === "guest" ? "primary" : "default"}
-              onPress={() => setTab("guest")}
-            >
-              {t("tabGuest")}
-            </Button>
-          </div>
+      <Modal.Backdrop>
+        <Modal.Container size="md">
+          <Modal.Dialog className={"w-full max-w-md "}>
+            <DialogDismissButton />
 
-          {tab === "member" ? (
-            <>
-              <div className="flex flex-col gap-2">
-                <Input
-                  label={t("members")}
-                  labelPlacement="outside"
-                  placeholder={t("membersSearch")}
-                  value={memberQuery}
-                  onValueChange={setMemberQuery}
-                  isClearable
-                  onClear={() => setMemberQuery("")}
-                  startContent={<Search className="h-4 w-4 text-default-400" aria-hidden />}
-                  description={t("membersDescription")}
-                />
-                <div
-                  role="group"
-                  aria-label={t("members")}
-                  className="max-h-64 overflow-y-auto rounded-lg border border-default-200 p-1"
-                >
-                  {filteredMembers.length === 0 ? (
-                    <p className="p-3 text-small text-default-500">{t("noMembers")}</p>
-                  ) : (
-                    filteredMembers.map((member) => {
-                      const isAdded = added.has(member.id);
-                      return (
-                        <div key={member.id} className="rounded-md px-2 py-1.5 hover:bg-default-100">
-                          <Checkbox
-                            size="sm"
-                            isDisabled={isAdded}
-                            isSelected={isAdded || selectedMembers.has(member.id)}
-                            onValueChange={(checked) => toggleMember(member.id, checked)}
-                          >
-                            <span className="text-small">{member.label}</span>
-                            <span className="ml-2 font-mono text-tiny text-default-400">
-                              {member.membershipNumber}
-                            </span>
-                            {isAdded ? (
-                              <span className="ml-2 text-tiny text-default-400">{t("alreadyAdded")}</span>
-                            ) : null}
-                          </Checkbox>
-                        </div>
-                      );
-                    })
+            <Modal.Header>
+              <Modal.Heading className="flex items-center gap-2">
+                {t("title")}
+              </Modal.Heading>
+            </Modal.Header>
+            <Modal.Body>
+              <div className="flex gap-2">
+                <Button
+                  size="sm"
+                  onPress={() => setTab("user")}
+                  variant={actionVariant(
+                    tab === "user" ? "primary" : "default",
+                    tab === "user" ? "flat" : "light",
                   )}
-                </div>
-                {selectedMembers.size > 0 ? (
-                  <p className="text-tiny text-default-500">{t("selectedCount", { count: selectedMembers.size })}</p>
+                >
+                  {t("tabUsers")}
+                </Button>
+                {memberOptions.length > 0 ? (
+                  <Button
+                    size="sm"
+                    onPress={() => setTab("member")}
+                    variant={actionVariant(
+                      tab === "member" ? "primary" : "default",
+                      tab === "member" ? "flat" : "light",
+                    )}
+                  >
+                    {t("tabMembers")}
+                  </Button>
                 ) : null}
+                <Button
+                  size="sm"
+                  onPress={() => setTab("guest")}
+                  variant={actionVariant(
+                    tab === "guest" ? "primary" : "default",
+                    tab === "guest" ? "flat" : "light",
+                  )}
+                >
+                  {t("tabGuest")}
+                </Button>
               </div>
-              <Select
-                label={t("role")}
-                labelPlacement="outside"
-                selectedKeys={role}
-                onSelectionChange={(keys) => setRole(new Set(keys as Set<string>))}
-              >
-                {(["MEMBER", "CHAIRPERSON", "SECRETARY"] as const).map((roleKey) => (
-                  <SelectItem key={roleKey} textValue={tRole(roleKey)}>
-                    {tRole(roleKey)}
-                  </SelectItem>
-                ))}
-              </Select>
-            </>
-          ) : tab === "user" ? (
-            <>
-              <Select
-                label={t("users")}
-                labelPlacement="outside"
-                selectionMode="multiple"
-                selectedKeys={selectedUsers}
-                onSelectionChange={(keys) => setSelectedUsers(new Set(keys as Set<string>))}
-                isRequired
-                description={t("usersDescription")}
-              >
-                {userOptions.map((option) => (
-                  <SelectItem key={option.id} textValue={option.label}>
-                    {option.label}
-                  </SelectItem>
-                ))}
-              </Select>
-              <Select
-                label={t("role")}
-                labelPlacement="outside"
-                selectedKeys={role}
-                onSelectionChange={(keys) => setRole(new Set(keys as Set<string>))}
-              >
-                {(["MEMBER", "CHAIRPERSON", "SECRETARY"] as const).map((roleKey) => (
-                  <SelectItem key={roleKey} textValue={tRole(roleKey)}>
-                    {tRole(roleKey)}
-                  </SelectItem>
-                ))}
-              </Select>
-            </>
-          ) : (
-            <>
-              <Input
-                label={t("name")}
-                labelPlacement="outside"
-                value={guestName}
-                onValueChange={setGuestName}
-                isRequired
-                minLength={2}
-                maxLength={120}
-              />
-              <Select
-                label={t("role")}
-                labelPlacement="outside"
-                selectedKeys={guestRole}
-                onSelectionChange={(keys) => setGuestRole(new Set(keys as Set<string>))}
-              >
-                {(["GUEST", "MEMBER"] as const).map((roleKey) => (
-                  <SelectItem key={roleKey} textValue={tRole(roleKey)}>
-                    {tRole(roleKey)}
-                  </SelectItem>
-                ))}
-              </Select>
-            </>
-          )}
 
-          {error ? <p className="text-small text-danger">{error}</p> : null}
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="light" onPress={close}>
-            {tCommon("cancel")}
-          </Button>
-          {tab === "member" ? (
-            <Button
-              color="primary"
-              isLoading={busy}
-              onPress={submitMembers}
-              isDisabled={selectedMembers.size === 0}
-            >
-              {t("add")}
-            </Button>
-          ) : tab === "user" ? (
-            <Button
-              color="primary"
-              isLoading={busy}
-              onPress={submitUsers}
-              isDisabled={selectedUsers.size === 0}
-            >
-              {t("add")}
-            </Button>
-          ) : (
-            <Button
-              color="primary"
-              isLoading={busy}
-              onPress={submitGuest}
-              isDisabled={guestName.trim().length < 2}
-            >
-              {t("add")}
-            </Button>
-          )}
-        </ModalFooter>
-      </ModalContent>
+              {tab === "member" ? (
+                <>
+                  <div className="flex flex-col gap-2">
+                    <TextField
+                      value={memberQuery}
+                      onChange={setMemberQuery}
+                      className={["w-full"].filter(Boolean).join(" ")}
+                    >
+                      <Label>{t("members")}</Label>
+                      <InputGroup>
+                        <InputGroup.Prefix>
+                          {
+                            <Search
+                              className="h-4 w-4 text-ink-400"
+                              aria-hidden
+                            />
+                          }
+                        </InputGroup.Prefix>
+                        <InputGroup.Input placeholder={t("membersSearch")} />
+                        <InputGroup.Suffix>
+                          {memberQuery ? (
+                            <FieldClearButton
+                              onPress={() => setMemberQuery("")}
+                            />
+                          ) : null}
+                        </InputGroup.Suffix>
+                      </InputGroup>
+                      <Description>{t("membersDescription")}</Description>
+                    </TextField>
+                    <div
+                      role="group"
+                      aria-label={t("members")}
+                      className="max-h-64 overflow-y-auto rounded-lg border border-ink-200 p-1"
+                    >
+                      {filteredMembers.length === 0 ? (
+                        <p className="p-3 text-sm text-ink-500">
+                          {t("noMembers")}
+                        </p>
+                      ) : (
+                        filteredMembers.map((member) => {
+                          const isAdded = added.has(member.id);
+                          return (
+                            <div
+                              key={member.id}
+                              className="rounded-md px-2 py-1.5 hover:bg-ink-100"
+                            >
+                              <Checkbox
+                                isDisabled={isAdded}
+                                isSelected={
+                                  isAdded || selectedMembers.has(member.id)
+                                }
+                                onChange={(checked) =>
+                                  toggleMember(member.id, checked)
+                                }
+                              >
+                                <Checkbox.Content>
+                                  <Checkbox.Control className="size-4">
+                                    <Checkbox.Indicator />
+                                  </Checkbox.Control>
+                                  <Label>
+                                    <span className="text-sm">
+                                      {member.label}
+                                    </span>
+                                    <span className="ml-2 font-mono text-xs text-ink-400">
+                                      {member.membershipNumber}
+                                    </span>
+                                    {isAdded ? (
+                                      <span className="ml-2 text-xs text-ink-400">
+                                        {t("alreadyAdded")}
+                                      </span>
+                                    ) : null}
+                                  </Label>
+                                </Checkbox.Content>
+                              </Checkbox>
+                            </div>
+                          );
+                        })
+                      )}
+                    </div>
+                    {selectedMembers.size > 0 ? (
+                      <p className="text-xs text-ink-500">
+                        {t("selectedCount", { count: selectedMembers.size })}
+                      </p>
+                    ) : null}
+                  </div>
+                  <Select
+                    value={Array.from(role)[0] ?? null}
+                    onChange={(selectedValue) => {
+                      const keys =
+                        selectedValue === null
+                          ? undefined
+                          : String(selectedValue);
+                      return setRole(new Set(keys === undefined ? [] : [keys]));
+                    }}
+                  >
+                    <Label>{t("role")}</Label>
+                    <Select.Trigger>
+                      <Select.Value />
+                      <Select.Indicator />
+                    </Select.Trigger>
+                    <Select.Popover>
+                      <ListBox>
+                        {(["MEMBER", "CHAIRPERSON", "SECRETARY"] as const).map(
+                          (roleKey) => (
+                            <ListBox.Item
+                              key={roleKey}
+                              id={roleKey}
+                              textValue={tRole(roleKey)}
+                            >
+                              <Label>{tRole(roleKey)}</Label>
+                              <ListBox.ItemIndicator />
+                            </ListBox.Item>
+                          ),
+                        )}
+                      </ListBox>
+                    </Select.Popover>
+                  </Select>
+                </>
+              ) : tab === "user" ? (
+                <>
+                  <Select
+                    selectionMode="multiple"
+                    isRequired
+                    value={Array.from(selectedUsers)}
+                    onChange={(selectedValue) => {
+                      const keys = selectedValue.map(String);
+                      return setSelectedUsers(new Set(keys));
+                    }}
+                  >
+                    <Label>{t("users")}</Label>
+                    <Select.Trigger>
+                      <Select.Value />
+                      <Select.Indicator />
+                    </Select.Trigger>
+                    <Select.Popover>
+                      <ListBox selectionMode="multiple">
+                        {userOptions.map((option) => (
+                          <ListBox.Item
+                            key={option.id}
+                            id={option.id}
+                            textValue={option.label}
+                          >
+                            <Label>{option.label}</Label>
+                            <ListBox.ItemIndicator />
+                          </ListBox.Item>
+                        ))}
+                      </ListBox>
+                    </Select.Popover>
+                    <Description>{t("usersDescription")}</Description>
+                  </Select>
+                  <Select
+                    value={Array.from(role)[0] ?? null}
+                    onChange={(selectedValue) => {
+                      const keys =
+                        selectedValue === null
+                          ? undefined
+                          : String(selectedValue);
+                      return setRole(new Set(keys === undefined ? [] : [keys]));
+                    }}
+                  >
+                    <Label>{t("role")}</Label>
+                    <Select.Trigger>
+                      <Select.Value />
+                      <Select.Indicator />
+                    </Select.Trigger>
+                    <Select.Popover>
+                      <ListBox>
+                        {(["MEMBER", "CHAIRPERSON", "SECRETARY"] as const).map(
+                          (roleKey) => (
+                            <ListBox.Item
+                              key={roleKey}
+                              id={roleKey}
+                              textValue={tRole(roleKey)}
+                            >
+                              <Label>{tRole(roleKey)}</Label>
+                              <ListBox.ItemIndicator />
+                            </ListBox.Item>
+                          ),
+                        )}
+                      </ListBox>
+                    </Select.Popover>
+                  </Select>
+                </>
+              ) : (
+                <>
+                  <TextField
+                    value={guestName}
+                    isRequired
+                    onChange={setGuestName}
+                    className={["w-full"].filter(Boolean).join(" ")}
+                  >
+                    <Label>{t("name")}</Label>
+                    <Input minLength={2} maxLength={120} />
+                  </TextField>
+                  <Select
+                    value={Array.from(guestRole)[0] ?? null}
+                    onChange={(selectedValue) => {
+                      const keys =
+                        selectedValue === null
+                          ? undefined
+                          : String(selectedValue);
+                      return setGuestRole(
+                        new Set(keys === undefined ? [] : [keys]),
+                      );
+                    }}
+                  >
+                    <Label>{t("role")}</Label>
+                    <Select.Trigger>
+                      <Select.Value />
+                      <Select.Indicator />
+                    </Select.Trigger>
+                    <Select.Popover>
+                      <ListBox>
+                        {(["GUEST", "MEMBER"] as const).map((roleKey) => (
+                          <ListBox.Item
+                            key={roleKey}
+                            id={roleKey}
+                            textValue={tRole(roleKey)}
+                          >
+                            <Label>{tRole(roleKey)}</Label>
+                            <ListBox.ItemIndicator />
+                          </ListBox.Item>
+                        ))}
+                      </ListBox>
+                    </Select.Popover>
+                  </Select>
+                </>
+              )}
+
+              {error ? <p className="text-sm text-danger">{error}</p> : null}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                onPress={close}
+                variant={actionVariant("default", "light")}
+              >
+                {tCommon("cancel")}
+              </Button>
+              {tab === "member" ? (
+                <Button
+                  onPress={submitMembers}
+                  isDisabled={selectedMembers.size === 0}
+                  variant={actionVariant("primary", "solid")}
+                  isPending={busy}
+                >
+                  {busy ? <Spinner size="sm" color="current" /> : null}
+                  {t("add")}
+                </Button>
+              ) : tab === "user" ? (
+                <Button
+                  onPress={submitUsers}
+                  isDisabled={selectedUsers.size === 0}
+                  variant={actionVariant("primary", "solid")}
+                  isPending={busy}
+                >
+                  {busy ? <Spinner size="sm" color="current" /> : null}
+                  {t("add")}
+                </Button>
+              ) : (
+                <Button
+                  onPress={submitGuest}
+                  isDisabled={guestName.trim().length < 2}
+                  variant={actionVariant("primary", "solid")}
+                  isPending={busy}
+                >
+                  {busy ? <Spinner size="sm" color="current" /> : null}
+                  {t("add")}
+                </Button>
+              )}
+            </Modal.Footer>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 }

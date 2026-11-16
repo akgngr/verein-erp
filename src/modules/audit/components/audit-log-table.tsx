@@ -1,6 +1,8 @@
 "use client";
-
+import { statusStyle } from "@/shared/components/ui/status-appearance";
 import { Chip } from "@heroui/react";
+import { statusTone } from "@/shared/components/ui/status-appearance";
+
 import { useTranslations } from "next-intl";
 
 import { DataTable } from "@/shared/components/data-table/data-table";
@@ -48,12 +50,21 @@ export function AuditLogTable({
       key: "action",
       label: t("table.action"),
       render: (row) => (
-        <Chip size="sm" variant="flat" color={actionColor(row.action)}>
+        <Chip
+          size="sm"
+          color={statusTone(actionColor(row.action))}
+          variant={"soft"}
+          style={statusStyle(actionColor(row.action))}
+        >
           {actionLabel(row.action)}
         </Chip>
       ),
     },
-    { key: "entity", label: t("table.entity"), render: (row) => entityLabel(row.entity) },
+    {
+      key: "entity",
+      label: t("table.entity"),
+      render: (row) => entityLabel(row.entity),
+    },
     { key: "entityId", label: t("table.entityId") },
     { key: "ip", label: t("table.ip") },
   ];
@@ -74,12 +85,18 @@ export function AuditLogTable({
         {
           key: "action",
           label: t("table.action"),
-          options: AUDIT_ACTIONS.map((value) => ({ value, label: actionLabel(value) })),
+          options: AUDIT_ACTIONS.map((value) => ({
+            value,
+            label: actionLabel(value),
+          })),
         },
         {
           key: "entity",
           label: t("table.entity"),
-          options: AUDIT_ENTITIES.map((value) => ({ value, label: entityLabel(value) })),
+          options: AUDIT_ENTITIES.map((value) => ({
+            value,
+            label: entityLabel(value),
+          })),
         },
       ]}
       emptyMessage={t("table.empty")}
@@ -87,10 +104,17 @@ export function AuditLogTable({
   );
 }
 
-function actionColor(action: string): "success" | "danger" | "warning" | "primary" | "default" {
+function actionColor(
+  action: string,
+): "success" | "danger" | "warning" | "primary" | "default" {
   if (action === "LOGIN_SUCCESS" || action === "ACTIVATE") return "success";
   if (action === "LOGIN_FAILED") return "danger";
   if (action === "DEACTIVATE" || action === "PASSWORD_RESET") return "warning";
-  if (action === "CREATE" || action === "UPDATE" || action === "PASSWORD_CHANGE") return "primary";
+  if (
+    action === "CREATE" ||
+    action === "UPDATE" ||
+    action === "PASSWORD_CHANGE"
+  )
+    return "primary";
   return "default";
 }

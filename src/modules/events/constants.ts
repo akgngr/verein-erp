@@ -1,11 +1,11 @@
-import type { EventType, EventStatus, AttendeeStatus } from "./types"
+import type { EventType, EventStatus, AttendeeStatus } from "./types";
 
-export const DEFAULT_PAGE_SIZE = 10
+export const DEFAULT_PAGE_SIZE = 10;
 
 export const EVENT_TYPES: {
-  value: EventType
-  labelTr: string
-  labelDe: string
+  value: EventType;
+  labelTr: string;
+  labelDe: string;
 }[] = [
   { value: "WORKSHOP", labelTr: "Atölye", labelDe: "Workshop" },
   { value: "SEMINAR", labelTr: "Seminer", labelDe: "Seminar" },
@@ -25,19 +25,19 @@ export const EVENT_TYPES: {
     labelDe: "Sportliche Aktivität",
   },
   { value: "OTHER", labelTr: "Diğer", labelDe: "Sonstiges" },
-]
+];
 
 export const EVENT_STATUSES: {
-  value: EventStatus
-  labelTr: string
-  labelDe: string
-  tailwindClass: string
+  value: EventStatus;
+  labelTr: string;
+  labelDe: string;
+  tailwindClass: string;
 }[] = [
   {
     value: "DRAFT",
     labelTr: "Taslak",
     labelDe: "Entwurf",
-    tailwindClass: "bg-default-100 text-default-700 border-default-200",
+    tailwindClass: "bg-ink-100 text-ink-700 border-ink-200",
   },
   {
     value: "PUBLISHED",
@@ -60,14 +60,14 @@ export const EVENT_STATUSES: {
     tailwindClass:
       "bg-rose-50 text-rose-700 border-rose-200 dark:bg-rose-950/40 dark:text-rose-400 dark:border-rose-800",
   },
-]
+];
 
 export const ATTENDEE_STATUSES: {
-  value: AttendeeStatus
-  labelTr: string
-  labelDe: string
+  value: AttendeeStatus;
+  labelTr: string;
+  labelDe: string;
 }[] = [
   { value: "REGISTERED", labelTr: "Kayıtlı", labelDe: "Angemeldet" },
   { value: "ATTENDED", labelTr: "Katıldı", labelDe: "Teilgenommen" },
   { value: "CANCELLED", labelTr: "İptal", labelDe: "Abgemeldet" },
-]
+];

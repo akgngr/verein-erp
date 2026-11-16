@@ -13,7 +13,7 @@ Görev ve iş takibi yönetimi.
 |---|---|
 | Anahtar | `tasks` |
 | Tür | Eklenti |
-| Sürüm | 1.3.2 |
+| Sürüm | 1.3.3 |
 | Sayfalar | `/tasks`, `/tasks/bana-atananlar` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `list_open_tasks` · `propose_complete_task` · `propose_delete_task` · `propose_task`
 
 ## Sürüm notları
+
+### 1.3.3 — HeroUI v3 arayüz geçişi
+
+_2026-11-16_
+
+- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
 ### 1.3.2 — Asistan araçları yeni veri sözleşmesinde
 
@@ -83,10 +89,4 @@ _2026-11-06_
 
 - **Yeni:** Kayıtlar Takvim modülünde salt okunur kaynak olarak görünür.
 
-### 1.1.0 — İş akışı tetikleyicileri
-
-_2026-11-06_
-
-- **Yeni:** İş akışı tetikleyicisi: "Görev oluşturulduğunda" (öncelik, son tarih; {{task.title}} vb.).
-
-Daha eski 1 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/tasks/releases.json)
+Daha eski 2 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/tasks/releases.json)

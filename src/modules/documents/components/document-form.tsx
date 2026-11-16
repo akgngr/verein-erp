@@ -1,10 +1,15 @@
 "use client";
+import { toast, Button, Spinner } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
-import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
+import {
+  FormSurface,
+  useFormDrawerClose,
+} from "@/shared/components/forms/form-drawer";
 import { useTranslations } from "next-intl";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, addToast } from "@heroui/react";
+
 import { Sparkles } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
@@ -22,13 +27,28 @@ import type { DocumentDirection } from "@prisma/client";
 
 import { createDocumentAction } from "../actions/create-document";
 import { updateDocumentAction } from "../actions/update-document";
-import { DEFAULT_STATUS_BY_DIRECTION, DELIVERY_METHOD_VALUES, STATUS_VALUES } from "../constants";
-import { documentCreateSchema, documentUpdateSchema } from "../schemas/document";
-import type { AssigneeOption, CategoryOption, ReplyTargetOption } from "../types";
+import {
+  DEFAULT_STATUS_BY_DIRECTION,
+  DELIVERY_METHOD_VALUES,
+  STATUS_VALUES,
+} from "../constants";
+import {
+  documentCreateSchema,
+  documentUpdateSchema,
+} from "../schemas/document";
+import type {
+  AssigneeOption,
+  CategoryOption,
+  ReplyTargetOption,
+} from "../types";
 import { berlinToday } from "../utils";
 import { CounterpartyAutocomplete } from "./counterparty-autocomplete";
 import { DirectionBadge } from "./direction-badge";
-import { AnalysisDialog, APPLICABLE_FIELDS, type ApplicableField } from "./analysis-dialog";
+import {
+  AnalysisDialog,
+  APPLICABLE_FIELDS,
+  type ApplicableField,
+} from "./analysis-dialog";
 import { FileUploader, type UploadCommand } from "./file-uploader";
 import type { DocumentAnalysis } from "../services/document-analysis";
 import { ReplyToSelect } from "./reply-to-select";
@@ -106,7 +126,9 @@ export function DocumentForm(props: DocumentFormProps) {
   const closeDrawer = useFormDrawerClose();
   const [formError, setFormError] = useState<string | null>(null);
   const [pendingFileCount, setPendingFileCount] = useState(0);
-  const [uploadCommand, setUploadCommand] = useState<UploadCommand | null>(null);
+  const [uploadCommand, setUploadCommand] = useState<UploadCommand | null>(
+    null,
+  );
   const tAnalyze = useTranslations("documents.analyze");
   const [analyzingId, setAnalyzingId] = useState<string | null>(null);
   const [analysis, setAnalysis] = useState<DocumentAnalysis | null>(null);
@@ -118,12 +140,22 @@ export function DocumentForm(props: DocumentFormProps) {
     try {
       const body = new FormData();
       body.append("file", file);
-      const response = await fetch("/api/documents/analyze", { method: "POST", body });
-      const result = (await response.json().catch(() => null)) as { ok: boolean; analysis?: DocumentAnalysis; error?: string } | null;
-      if (!result?.ok || !result.analysis) return void addToast({ title: result?.error ?? tAnalyze("failed"), color: "danger" });
+      const response = await fetch("/api/documents/analyze", {
+        method: "POST",
+        body,
+      });
+      const result = (await response.json().catch(() => null)) as {
+        ok: boolean;
+        analysis?: DocumentAnalysis;
+        error?: string;
+      } | null;
+      if (!result?.ok || !result.analysis)
+        return void toast(result?.error ?? tAnalyze("failed"), {
+          variant: "danger",
+        });
       setAnalysis(result.analysis);
     } catch {
-      addToast({ title: tAnalyze("failed"), color: "danger" });
+      toast(tAnalyze("failed"), { variant: "danger" });
     } finally {
       setAnalyzingId(null);
     }
@@ -136,14 +168,21 @@ export function DocumentForm(props: DocumentFormProps) {
   const defaultValues: DocumentFormValues = doc
     ? {
         updatedAt: new Date(doc.updatedAt).toISOString(),
-        documentDate: doc.documentDate instanceof Date ? doc.documentDate.toISOString().slice(0, 10) : String(doc.documentDate),
+        documentDate:
+          doc.documentDate instanceof Date
+            ? doc.documentDate.toISOString().slice(0, 10)
+            : String(doc.documentDate),
         counterparty: doc.counterparty,
         referenceNumber: doc.referenceNumber ?? "",
         subject: doc.subject,
         summary: doc.summary ?? "",
         deliveryMethod: doc.deliveryMethod ?? "",
         status: doc.status,
-        dueDate: doc.dueDate ? (doc.dueDate instanceof Date ? doc.dueDate.toISOString().slice(0, 10) : String(doc.dueDate)) : "",
+        dueDate: doc.dueDate
+          ? doc.dueDate instanceof Date
+            ? doc.dueDate.toISOString().slice(0, 10)
+            : String(doc.dueDate)
+          : "",
         categoryId: doc.categoryId ?? "",
         assigneeId: doc.assigneeId ?? "",
         replyToId: doc.replyToId ?? "",
@@ -168,8 +207,12 @@ export function DocumentForm(props: DocumentFormProps) {
   // FormValues'e uyarlanır. Doğrulama yine zod ile (istemci + sunucu) yapılır.
   const form = useForm<DocumentFormValues>({
     resolver: isEdit
-      ? (zodResolver(documentUpdateSchema) as unknown as Resolver<DocumentFormValues>)
-      : (zodResolver(documentCreateSchema) as unknown as Resolver<DocumentFormValues>),
+      ? (zodResolver(
+          documentUpdateSchema,
+        ) as unknown as Resolver<DocumentFormValues>)
+      : (zodResolver(
+          documentCreateSchema,
+        ) as unknown as Resolver<DocumentFormValues>),
     defaultValues,
   });
 
@@ -185,7 +228,9 @@ export function DocumentForm(props: DocumentFormProps) {
         setFormError(applyActionResult(result, form.setError));
         return;
       }
-      addToast({ title: t("updatedToast", { registryNumber: result.data.registryNumber }), color: "success" });
+      toast(t("updatedToast", { registryNumber: result.data.registryNumber }), {
+        variant: "success",
+      });
       // Çekmecede: kapat (adres değişince sunucu verisi tazelenir); sayfada: detaya dön.
       if (closeDrawer) {
         closeDrawer();
@@ -210,16 +255,19 @@ export function DocumentForm(props: DocumentFormProps) {
     let failed = 0;
     if (pendingFileCount > 0) {
       failed = await new Promise<number>((resolve) => {
-        setUploadCommand({ documentId: id, nonce: Date.now(), onDone: resolve });
+        setUploadCommand({
+          documentId: id,
+          nonce: Date.now(),
+          onDone: resolve,
+        });
       });
     }
 
     if (failed === 0) {
-      addToast({ title: t("savedToast", { registryNumber }), color: "success" });
+      toast(t("savedToast", { registryNumber }), { variant: "success" });
     } else {
-      addToast({
-        title: t("savedWithUploadErrorToast", { count: failed }),
-        color: "warning",
+      toast(t("savedWithUploadErrorToast", { count: failed }), {
+        variant: "warning",
       });
     }
 
@@ -228,7 +276,8 @@ export function DocumentForm(props: DocumentFormProps) {
     router.refresh();
   });
 
-  const counterpartyLabel = direction === "INCOMING" ? t("sender") : t("receiver");
+  const counterpartyLabel =
+    direction === "INCOMING" ? t("sender") : t("receiver");
   const analysisLabels: Record<ApplicableField, string> = {
     counterparty: counterpartyLabel,
     documentDate: t("documentDate"),
@@ -241,167 +290,205 @@ export function DocumentForm(props: DocumentFormProps) {
 
   return (
     <FormSurface className="max-w-3xl">
-        {doc ? (
-          <div className="flex items-center gap-3 rounded-medium border border-default-200 bg-default-50 px-4 py-3">
-            <span className="text-small font-semibold">{doc.registryNumber}</span>
-            <DirectionBadge direction={doc.direction} />
-            <span className="text-tiny text-default-500">
-              {t("readOnlyNote")}
-            </span>
-          </div>
-        ) : null}
+      {doc ? (
+        <div className="flex items-center gap-3 rounded-lg border border-ink-200 bg-ink-50 px-4 py-3">
+          <span className="text-sm font-semibold">{doc.registryNumber}</span>
+          <DirectionBadge direction={doc.direction} />
+          <span className="text-xs text-ink-500">{t("readOnlyNote")}</span>
+        </div>
+      ) : null}
 
-        <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
-          {/* Dosyalar üstte: seçilen evraktan form doldurulabilir (docs/specs/DOCUMENTS_AI.md). */}
-          {!isEdit ? (
-            <div className="flex flex-col gap-2">
-              <p className="text-small font-medium text-foreground">{t("filesSection")}</p>
-              <p className="text-tiny text-default-500">{tAnalyze("createHint")}</p>
-              <FileUploader
-                mode="create"
-                maxMb={props.maxMb}
-                onPendingCountChange={setPendingFileCount}
-                uploadCommand={uploadCommand}
-                onAnalyze={analyzeFile}
-                analyzingId={analyzingId}
-              />
-            </div>
-          ) : (
-            <div className="flex flex-wrap items-center gap-2">
-              <input
-                ref={analyzeInput}
-                type="file"
-                className="hidden"
-                accept=".pdf,.jpg,.jpeg,.png,.webp,.tif,.tiff,.docx,.xlsx,.txt"
-                onChange={(event) => {
-                  const file = event.target.files?.[0];
-                  event.target.value = "";
-                  if (file) void analyzeFile(file, "edit");
-                }}
-              />
-              <Button size="sm" variant="flat" color="primary" startContent={analyzingId ? null : <Sparkles className="h-4 w-4" aria-hidden />} isLoading={Boolean(analyzingId)} onPress={() => analyzeInput.current?.click()}>
-                {tAnalyze("button")}
-              </Button>
-              <span className="text-tiny text-default-500">{tAnalyze("editHint")}</span>
-            </div>
-          )}
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FormDatePicker
-              name="documentDate"
-              label={t("documentDate")}
-              control={form.control}
-              isRequired
-            />
-            <FormDatePicker
-              name="dueDate"
-              label={t("dueDate")}
-              control={form.control}
-              description={t("dueDateDescription")}
+      <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
+        {/* Dosyalar üstte: seçilen evraktan form doldurulabilir (docs/specs/DOCUMENTS_AI.md). */}
+        {!isEdit ? (
+          <div className="flex flex-col gap-2">
+            <p className="text-sm font-medium text-foreground">
+              {t("filesSection")}
+            </p>
+            <p className="text-xs text-ink-500">{tAnalyze("createHint")}</p>
+            <FileUploader
+              mode="create"
+              maxMb={props.maxMb}
+              onPendingCountChange={setPendingFileCount}
+              uploadCommand={uploadCommand}
+              onAnalyze={analyzeFile}
+              analyzingId={analyzingId}
             />
           </div>
+        ) : (
+          <div className="flex flex-wrap items-center gap-2">
+            <input
+              ref={analyzeInput}
+              type="file"
+              className="hidden"
+              accept=".pdf,.jpg,.jpeg,.png,.webp,.tif,.tiff,.docx,.xlsx,.txt"
+              onChange={(event) => {
+                const file = event.target.files?.[0];
+                event.target.value = "";
+                if (file) void analyzeFile(file, "edit");
+              }}
+            />
+            <Button
+              size="sm"
+              onPress={() => analyzeInput.current?.click()}
+              variant={actionVariant("primary", "flat")}
+              isPending={Boolean(analyzingId)}
+            >
+              {Boolean(analyzingId) ? (
+                <Spinner size="sm" color="current" />
+              ) : null}
+              {analyzingId ? null : (
+                <Sparkles className="h-4 w-4" aria-hidden />
+              )}
+              {tAnalyze("button")}
+            </Button>
+            <span className="text-xs text-ink-500">{tAnalyze("editHint")}</span>
+          </div>
+        )}
 
-          <CounterpartyAutocomplete
-            name="counterparty"
-            label={counterpartyLabel}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <FormDatePicker
+            name="documentDate"
+            label={t("documentDate")}
             control={form.control}
-            suggestions={props.counterparties}
             isRequired
           />
-
-          <FormInput
-            name="referenceNumber"
-            label={t("referenceNumber")}
+          <FormDatePicker
+            name="dueDate"
+            label={t("dueDate")}
             control={form.control}
-            placeholder={t("referenceNumberPlaceholder")}
+            description={t("dueDateDescription")}
           />
+        </div>
 
-          <FormInput name="subject" label={t("subject")} control={form.control} isRequired />
+        <CounterpartyAutocomplete
+          name="counterparty"
+          label={counterpartyLabel}
+          control={form.control}
+          suggestions={props.counterparties}
+          isRequired
+        />
 
-          <FormTextarea
-            name="summary"
-            label={t("summary")}
+        <FormInput
+          name="referenceNumber"
+          label={t("referenceNumber")}
+          control={form.control}
+          placeholder={t("referenceNumberPlaceholder")}
+        />
+
+        <FormInput
+          name="subject"
+          label={t("subject")}
+          control={form.control}
+          isRequired
+        />
+
+        <FormTextarea
+          name="summary"
+          label={t("summary")}
+          control={form.control}
+          rows={3}
+          description={t("summaryDescription")}
+        />
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <FormSelect
+            name="categoryId"
+            label={t("category")}
             control={form.control}
-            rows={3}
-            description={t("summaryDescription")}
+            options={[
+              { value: "", label: t("noCategory") },
+              ...props.categories.map((c) => ({ value: c.id, label: c.label })),
+            ]}
           />
+          <FormSelect
+            name="deliveryMethod"
+            label={t("deliveryMethod")}
+            control={form.control}
+            options={[
+              { value: "", label: t("notSpecified") },
+              ...DELIVERY_METHOD_VALUES.map((value) => ({
+                value,
+                label: tDelivery(value),
+              })),
+            ]}
+          />
+        </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FormSelect
-              name="categoryId"
-              label={t("category")}
-              control={form.control}
-              options={[{ value: "", label: t("noCategory") }, ...props.categories.map((c) => ({ value: c.id, label: c.label }))]}
-            />
-            <FormSelect
-              name="deliveryMethod"
-              label={t("deliveryMethod")}
-              control={form.control}
-              options={[
-                { value: "", label: t("notSpecified") },
-                ...DELIVERY_METHOD_VALUES.map((value) => ({ value, label: tDelivery(value) })),
-              ]}
-            />
-          </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <FormSelect
+            name="status"
+            label={t("status")}
+            control={form.control}
+            options={STATUS_VALUES.map((status) => ({
+              value: status,
+              label: tStatus(status),
+            }))}
+          />
+          <FormSelect
+            name="assigneeId"
+            label={t("assignee")}
+            control={form.control}
+            options={[
+              { value: "", label: t("unassigned") },
+              ...props.assignees.map((a) => ({ value: a.id, label: a.label })),
+            ]}
+          />
+        </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FormSelect
-              name="status"
-              label={t("status")}
-              control={form.control}
-              options={STATUS_VALUES.map(
-                (status) => ({ value: status, label: tStatus(status) }),
-              )}
-            />
-            <FormSelect
-              name="assigneeId"
-              label={t("assignee")}
-              control={form.control}
-              options={[
-                { value: "", label: t("unassigned") },
-                ...props.assignees.map((a) => ({ value: a.id, label: a.label })),
-              ]}
-            />
-          </div>
-
-          {direction === "OUTGOING" ? (
-            <ReplyToSelect
-              name="replyToId"
-              control={form.control}
-              options={props.replyTargets}
-            />
-          ) : null}
-
-          <FormErrorSummary message={formError} />
-
-          <div className="flex items-center gap-2">
-            <SubmitButton isSubmitting={form.formState.isSubmitting}>
-              {isEdit ? t("save") : t("saveNew")}
-            </SubmitButton>
-            <Button
-              variant="light"
-              onPress={() => (closeDrawer ? closeDrawer() : router.push(doc ? `/evrak/${doc.id}` : "/evrak"))}
-            >
-              {t("cancel")}
-            </Button>
-          </div>
-        </form>
-        {analysis ? (
-          <AnalysisDialog
-            analysis={analysis}
-            labels={analysisLabels}
-            categories={props.categories}
-            aiAvailable={Boolean(props.aiAvailable)}
-            current={Object.fromEntries(APPLICABLE_FIELDS.map((field) => [field, String(form.getValues(field) ?? "")])) as Record<ApplicableField, string>}
-            onApply={(values) => {
-              for (const [field, value] of Object.entries(values)) {
-                if (value) form.setValue(field as ApplicableField, value, { shouldDirty: true, shouldValidate: true });
-              }
-              addToast({ title: tAnalyze("applied"), color: "success" });
-            }}
-            onClose={() => setAnalysis(null)}
+        {direction === "OUTGOING" ? (
+          <ReplyToSelect
+            name="replyToId"
+            control={form.control}
+            options={props.replyTargets}
           />
         ) : null}
+
+        <FormErrorSummary message={formError} />
+
+        <div className="flex items-center gap-2">
+          <SubmitButton isSubmitting={form.formState.isSubmitting}>
+            {isEdit ? t("save") : t("saveNew")}
+          </SubmitButton>
+          <Button
+            onPress={() =>
+              closeDrawer
+                ? closeDrawer()
+                : router.push(doc ? `/evrak/${doc.id}` : "/evrak")
+            }
+            variant={actionVariant("default", "light")}
+          >
+            {t("cancel")}
+          </Button>
+        </div>
+      </form>
+      {analysis ? (
+        <AnalysisDialog
+          analysis={analysis}
+          labels={analysisLabels}
+          categories={props.categories}
+          aiAvailable={Boolean(props.aiAvailable)}
+          current={
+            Object.fromEntries(
+              APPLICABLE_FIELDS.map((field) => [
+                field,
+                String(form.getValues(field) ?? ""),
+              ]),
+            ) as Record<ApplicableField, string>
+          }
+          onApply={(values) => {
+            for (const [field, value] of Object.entries(values)) {
+              if (value)
+                form.setValue(field as ApplicableField, value, {
+                  shouldDirty: true,
+                  shouldValidate: true,
+                });
+            }
+            toast(tAnalyze("applied"), { variant: "success" });
+          }}
+          onClose={() => setAnalysis(null)}
+        />
+      ) : null}
     </FormSurface>
   );
 }

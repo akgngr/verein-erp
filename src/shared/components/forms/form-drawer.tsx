@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, Drawer, Description, buttonVariants } from "@heroui-v3/react";
+import { Card, Drawer, Description, buttonVariants } from "@heroui/react";
 import { actionVariant } from "../ui/action-appearance";
 import { cn } from "@/shared/utils";
 import Link from "next/link";
@@ -17,16 +17,6 @@ import { createContext, useContext, useState, type ReactNode } from "react";
  * Mobilde çekmece tam ekran açılır.
  */
 export const FORM_DRAWER_PARAMS = ["yeni", "duzenle"] as const;
-
-/**
- * Çekmece görünümü (tek kaynak): kendi açık/kapalı durumunu yöneten formlar
- * (ör. isOpen/onClose alan bileşenler) da aynı yerleşimi kullanır.
- */
-export const FORM_DRAWER_PROPS = {
-  placement: "right",
-  scrollBehavior: "inside",
-  classNames: { base: "max-sm:!max-w-full max-sm:!w-full" },
-} as const;
 
 const FormDrawerContext = createContext<(() => void) | null>(null);
 
@@ -87,7 +77,7 @@ export function FormDrawer({
               )}
             >
               <Drawer.CloseTrigger />
-              <Drawer.Header className="border-b border-default-200/80 pb-5">
+              <Drawer.Header className="border-b border-ink-200/80 pb-5">
                 <Drawer.Heading>{title}</Drawer.Heading>
                 {description ? <Description>{description}</Description> : null}
               </Drawer.Header>
@@ -119,20 +109,9 @@ export function FormDrawerButton({
   children: ReactNode;
   startIcon?: ReactNode;
   color?:
-    | "default"
-    | "primary"
-    | "secondary"
-    | "success"
-    | "warning"
-    | "danger";
+    "default" | "primary" | "secondary" | "success" | "warning" | "danger";
   variant?:
-    | "solid"
-    | "bordered"
-    | "light"
-    | "flat"
-    | "faded"
-    | "ghost"
-    | "shadow";
+    "solid" | "bordered" | "light" | "flat" | "faded" | "ghost" | "shadow";
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -164,7 +143,7 @@ export function FormSurface({
   const inDrawer = useContext(FormDrawerContext) !== null;
   if (inDrawer) return <div className="flex flex-col gap-4">{children}</div>;
   return (
-    <Card className={cn("border border-default-200/80 shadow-sm", className)}>
+    <Card className={cn("border border-ink-200/80 shadow-sm", className)}>
       <Card.Content className="gap-4 p-6">{children}</Card.Content>
     </Card>
   );
