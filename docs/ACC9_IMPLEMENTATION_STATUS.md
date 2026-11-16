@@ -19,12 +19,12 @@
 - [x] Fatura başına ödenen/Skonto/açık tutar toplamlarının testleri eklendi.
 - [x] Muhasebe modülü tanımında tam HGB çift taraflı muhasebe iddiası kaldırıldı; EÜR odaklı gerçek kapsam belirtildi.
 - [x] Module v1.22.6, `releases.json`, generated docs ve Türkçe website hesaplama rehberi güncellendi.
-- [ ] Bu PR'ın CI, Docs, Security ve Vercel sonuçları başarıyla tamamlanmalı.
-- [ ] Bağımsız inceleme ve onaydan sonra merge yapılmalı.
+- [x] PR #185 doğruluk testleri ve EÜR kapsam düzeltmesi CI/Docs/Security/Vercel başarılı şekilde main'e alındı.
+- [x] PR #186 banka mutabakatı önerisi ve PR #188 premium hafif grafik tasarımı main'e alındı.
 
 ## Kalan yüksek öncelikli işler
 
-- [ ] **KPI mutabakatı:** `getAccountingStats`, fiş raporu, `buildIncomeExpenseReport` ve AI özetinin karşılaştırılması; kategori ve KDV farkları varsa hesaplama esasını açıkça ayır.
+- [x] **KPI mutabakatı:** Dashboard/getAccountingStats brüt fiş kapsamı ile gelir-gider raporunun brüt genel toplamı eşitlendi; kategorisiz fişler ayrıca mutabakat farkı olarak taşınır. AI özeti brüt toplam ve kategorisiz tutarları açıkça döndürür (PR #189).
 - [ ] **Tarih ve fiş denetimi:** Berlin tarih sınırları, yıl geçişi, reversed/storno, 500+ fatura ve yıllık kapanış için veritabanı fixture'lı entegrasyon testleri.
 - [x] **Banka mutabakatı:** `OPEN` durumundaki banka hareketlerini salt okunur sayıp ilgili ekrana yönlendiren öneri (PR #186).
 - [ ] **Öneri kapsamı devamı:** yaklaşan vergi tarihi, gerektiğinde açık borç/aidat bilgisi; doğrulanmış iş kuralı ve erişim onayı olmadan kart ekleme.
