@@ -76,10 +76,10 @@ export function QuarterlyFinanceChart({
         </div>
       </div>
 
-      <div className="px-3 pb-3 pt-4 sm:px-6 sm:pt-6">
+      <div className="overflow-x-auto px-3 pb-3 pt-4 sm:px-6 sm:pt-6">
         <svg
           viewBox={`0 0 ${chartWidth} 290`}
-          className="h-auto w-full"
+          className="h-auto w-full min-w-[640px]"
           role="img"
           aria-label={labels.description}
           preserveAspectRatio="xMidYMid meet"
