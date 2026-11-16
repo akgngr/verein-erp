@@ -14,8 +14,9 @@ import { accountingPermissions } from "../permissions";
 import { getBookingTotals } from "../queries/get-booking-totals";
 import { getBookingPeriodRange } from "../services/dashboard-period";
 import { getSettings } from "../queries/get-settings";
-import { summarizeOverdueInvoices } from "../services/dashboard-overdue";
+import { getOverdueInvoiceSummary } from "../queries/get-overdue-invoice-summary";
 import { countMissingReceipts } from "../services/report-builders";
+import { findUpcomingTaxDeadline, taxDeadlines } from "../services/tax-calendar";
 import { berlinToday } from "../utils";
 
 type RawParams = Record<string, string | string[] | undefined>;
@@ -50,15 +51,12 @@ export async function AccountingDashboardView({ searchParams }: { searchParams: 
     : period === "month" ? (part >= 1 && part <= 12 ? part : 1) : 1;
 
   const db = getDb();
-  const [totals, quarters, missingReceiptCount, overdueInvoices, bookingCount, settings, unmatchedBankCount] = await Promise.all([
+  const [totals, quarters, missingReceiptCount, overdueOpen, bookingCount, settings, unmatchedBankCount] = await Promise.all([
     getBookingTotals(year, getBookingPeriodRange(year, period, validPart)),
     Promise.all([1, 2, 3, 4].map((quarter) =>
       getBookingTotals(year, getBookingPeriodRange(year, "quarter", quarter)))),
     countMissingReceipts(year),
-    db.accountingInvoice.findMany({
-      where: { kind: "INVOICE", status: "ISSUED", dueDate: { lt: now } },
-      select: { grossCents: true, paidCents: true, skontoCents: true },
-    }),
+    getOverdueInvoiceSummary(now),
     db.accountingBooking.count({
       where: {
         year, reversedAt: null, type: { not: "TRANSFER" },
@@ -73,7 +71,21 @@ export async function AccountingDashboardView({ searchParams }: { searchParams: 
     db.accountingBankTransaction.count({ where: { status: "OPEN" } }),
   ]);
 
-  const overdueOpen = summarizeOverdueInvoices(overdueInvoices);
+  const upcomingTaxDeadline = findUpcomingTaxDeadline(
+    now,
+    [
+      ...taxDeadlines(currentYear, {
+        vatPeriod: settings.tax.vatPeriod,
+        extension: settings.tax.vatExtension,
+        smallBusiness: settings.tax.smallBusiness,
+      }),
+      ...taxDeadlines(currentYear + 1, {
+        vatPeriod: settings.tax.vatPeriod,
+        extension: settings.tax.vatExtension,
+        smallBusiness: settings.tax.smallBusiness,
+      }),
+    ],
+  );
   const periodLabel = period === "year" ? String(year)
     : period === "quarter" ? t("quarter", { n: validPart })
     : `${t("monthLabel")} ${validPart}`;
@@ -195,7 +207,17 @@ export async function AccountingDashboardView({ searchParams }: { searchParams: 
             <Link href="/muhasebe/banka?durum=open" className="font-medium underline">{t("inspectBank")}</Link>
           </p>
         ) : null}
-        {missingReceiptCount === 0 && overdueOpen.count === 0 && unmatchedBankCount === 0 ? (
+        {upcomingTaxDeadline ? (
+          <p className="rounded-lg border border-warning-300 p-4 text-sm">
+            {t("taxDeadline", {
+              kind: t(`taxDeadlineKey.${upcomingTaxDeadline.key}`),
+              period: upcomingTaxDeadline.period,
+              date: upcomingTaxDeadline.due.toISOString().slice(0, 10),
+            })}{" "}
+            <Link href="/muhasebe/vergi" className="font-medium underline">{t("inspectTax")}</Link>
+          </p>
+        ) : null}
+        {missingReceiptCount === 0 && overdueOpen.count === 0 && unmatchedBankCount === 0 && !upcomingTaxDeadline ? (
           <p className="text-sm text-ink-500">{t("noWarnings")}</p>
         ) : null}
       </section>
