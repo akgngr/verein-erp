@@ -1818,6 +1818,30 @@
         "description": "Bu yıldaki kaynak fişi veya virman olmayan, dosyası bulunmayan fişler.",
         "period": "{year} yılı · eksik belge"
       }
+    },
+    "dashboard": {
+      "title": "Muhasebe genel bakış",
+      "description": "{year} yılı fiş hareketleri ve kontrol önerileri",
+      "bookings": "Fiş kayıtları",
+      "filterLabel": "Muhasebe dönemi seçimi",
+      "year": "Tüm yıl",
+      "quarter": "{n}. çeyrek",
+      "monthLabel": "Ay",
+      "noBookings": "Seçilen dönemde gelir veya gider fişi bulunmuyor.",
+      "income": "Gelir fişleri",
+      "expense": "Gider fişleri",
+      "difference": "Gelir − gider farkı",
+      "quarterlyTitle": "Çeyreklik gelir ve giderler",
+      "quarterlyDescription": "Yeşil: gelir; kırmızı: gider. Aşağıdaki tablo aynı değerleri erişilebilir biçimde gösterir.",
+      "periodColumn": "Dönem",
+      "recommendations": "Kontrol önerileri",
+      "missingReceipts": "{year} yılında {count} fişin dosya eki bulunmuyor.",
+      "inspectBookings": "Fişleri incele",
+      "overdue": "Vadesi geçmiş {count} faturada toplam {amount} açık tutar bulunuyor.",
+      "inspectInvoices": "Faturaları incele",
+      "noWarnings": "Bu kurallara göre kontrol gerektiren kayıt görünmüyor.",
+      "basis": "Tutarlar brüt fiş tutarlarıdır (EUR). Banka bakiyesi veya vergiye esas kâr değildir. Vergi yöntemi raporun tarih esasını değiştirmez.",
+      "taxMethod": "Vergi ayarı: {method}."
     }
   },
   "ai": {
