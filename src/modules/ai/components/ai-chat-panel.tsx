@@ -1,7 +1,7 @@
 "use client";
 
-import { addToast, Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger, Textarea } from "@heroui/react";
-import { History, ListPlus, Lock, MessageSquarePlus, PanelRight, Send, ShieldCheck, Sparkles, Trash2, X, FileDown } from "lucide-react";
+import { addToast, Button, Dropdown, DropdownItem, DropdownMenu, DropdownSection, DropdownTrigger } from "@heroui/react";
+import { ArrowUp, ArrowUpRight, ChevronDown, FileDown, ListPlus, Lock, Maximize2, Minimize2, Plus, ShieldCheck, Sparkles, Trash2, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useEffect, useRef, useState, type CSSProperties, type PointerEvent as ReactPointerEvent, type ReactNode } from "react";
@@ -17,6 +17,10 @@ import { AI_PANEL_COOKIE, AI_PANEL_MAX_WIDTH, AI_PANEL_MIN_WIDTH, encodePanelSta
 import { toInternalMarkdownHref } from "@/shared/markdown/links";
 import { parseMarkdown } from "@/shared/markdown/parse";
 import type { AiFile, AiProposal } from "../types";
+
+/** Masaüstü yerleşimleri: yan sütun (genişlik sürüklenir) ya da tam ekran. */
+const DOCKED_CLASS = "md:sticky md:top-0 md:z-auto md:h-dvh md:w-[var(--ai-panel-width)] md:shrink-0 md:border-l md:border-default-200";
+const EXPANDED_CLASS = "md:fixed md:inset-0 md:z-50";
 
 type Turn = {
   role: "user" | "assistant";
@@ -156,7 +160,10 @@ export function AiChatPanel({
   const [historyCursor,setHistoryCursor]=useState<string|null>(null);
   const [exportJobs,setExportJobs]=useState<Record<string,string>>({});
   const [done, setDone] = useState<Set<string>>(new Set());
+  /** Genişletilmiş görünüm: masaüstünde sohbet tüm ekranı kaplar, içerik ortada okunur genişlikte. */
+  const [expanded, setExpanded] = useState(false);
   const endRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   // KARAR: efektler hiçbir değer döndürmez — yeni tarayıcılarda scrollIntoView Promise döndürür
   // ve React yalnızca temizlik fonksiyonu kabul eder.
@@ -310,6 +317,20 @@ export function AiChatPanel({
     addToast({ title: proposalText(proposal, "done"), color: "success" });
   };
 
+  const conversationTitle =
+    conversations.find((item) => item.id === conversationId)?.title ??
+    (conversationId ? turns.find((turn) => turn.role === "user")?.content : undefined) ??
+    t("newConversation");
+  const column = expanded ? "mx-auto w-full max-w-3xl" : "w-full";
+
+  /** Yazdıkça büyüyen giriş kutusu (en çok ~8 satır). */
+  const autoGrow = (element: HTMLTextAreaElement | null) => {
+    if (!element) return;
+    element.style.height = "auto";
+    element.style.height = `${Math.min(element.scrollHeight, 200)}px`;
+  };
+  useEffect(() => autoGrow(inputRef.current), [draft]);
+
   return (
     <>
       <div className="relative flex min-w-0 flex-1 flex-col">
@@ -318,7 +339,7 @@ export function AiChatPanel({
           // Yüzen giriş çubuğu: içerik alanının altında ortada; gönderince sohbet sütunu açılır.
           <div className="pointer-events-none sticky bottom-4 z-30 flex justify-center px-4">
             <form
-              className="pointer-events-auto flex w-full max-w-xl items-center gap-2 rounded-full border border-default-200 bg-background/95 py-1.5 pl-2 pr-1.5 shadow-lg backdrop-blur"
+              className="pointer-events-auto flex w-full max-w-xl items-center gap-2 rounded-[1.75rem] border border-default-200 bg-content1/95 p-2 pl-3 shadow-large backdrop-blur transition-colors focus-within:border-primary"
               onSubmit={(event) => {
                 event.preventDefault();
                 if (!draft.trim()) return setOpen(true);
@@ -326,38 +347,24 @@ export function AiChatPanel({
                 if (consented && provider) void send();
               }}
             >
-              <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-primary text-primary-foreground">
-                <Sparkles className="h-4 w-4" aria-hidden />
-              </span>
+              <button
+                type="button"
+                aria-label={t("open")}
+                title={t("open")}
+                onClick={() => setOpen(true)}
+                className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-default-500 transition-colors hover:bg-default-100 hover:text-foreground"
+              >
+                <Sparkles className="h-5 w-5" aria-hidden />
+              </button>
               <input
                 aria-label={t("input")}
                 placeholder={t("barPlaceholder")}
-                className="min-w-0 flex-1 bg-transparent text-small outline-none placeholder:text-default-400"
+                className="min-w-0 flex-1 bg-transparent text-medium outline-none placeholder:text-default-400"
                 value={draft}
                 onChange={(event) => setDraft(event.target.value)}
               />
-              <Button
-                type="submit"
-                isIconOnly
-                size="sm"
-                variant="light"
-                radius="full"
-                aria-label={t("send")}
-                isDisabled={!draft.trim()}
-              >
-                <Send className="h-4 w-4" aria-hidden />
-              </Button>
-              <span className="h-5 w-px bg-default-200" aria-hidden />
-              <Button
-                isIconOnly
-                size="sm"
-                variant="light"
-                radius="full"
-                aria-label={t("open")}
-                title={t("open")}
-                onPress={() => setOpen(true)}
-              >
-                <PanelRight className="h-4 w-4" aria-hidden />
+              <Button type="submit" isIconOnly radius="full" color="primary" aria-label={t("send")} isDisabled={!draft.trim()} className="h-10 w-10 min-w-10">
+                <ArrowUp className="h-5 w-5" aria-hidden />
               </Button>
             </form>
           </div>
@@ -369,7 +376,10 @@ export function AiChatPanel({
         <aside
           aria-label={t("title")}
           style={{ "--ai-panel-width": `${width}px` } as CSSProperties}
-          className="fixed inset-0 z-50 flex flex-col bg-background md:sticky md:top-0 md:z-auto md:h-dvh md:w-[var(--ai-panel-width)] md:shrink-0 md:border-l md:border-default-200"
+          className={cn(
+            "fixed inset-0 z-50 flex flex-col bg-background",
+            expanded ? EXPANDED_CLASS : DOCKED_CLASS,
+          )}
         >
           <div
             role="separator"
@@ -377,54 +387,79 @@ export function AiChatPanel({
             aria-label={t("resize")}
             title={t("resize")}
             onPointerDown={startResize}
-            className="absolute inset-y-0 left-0 z-10 hidden w-1.5 -translate-x-1/2 cursor-col-resize hover:bg-primary/30 md:block"
+            className={cn("absolute inset-y-0 left-0 z-10 hidden w-1.5 -translate-x-1/2 cursor-col-resize hover:bg-primary/30", !expanded && "md:block")}
           />
-          <header className="flex items-center justify-between gap-2 border-b border-default-200 px-4 py-3">
-            <div className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-primary" aria-hidden />
-              <span className="text-small font-semibold">{t("title")}</span>
-            </div>
-            <div className="flex items-center gap-1">
-              {consented && provider ? (
-                <>
-                  <Dropdown onOpenChange={(isOpen) => isOpen && void refreshConversations()}>
-                    <DropdownTrigger>
-                      <Button isIconOnly size="sm" variant="light" aria-label={t("history")} title={t("history")}>
-                        <History className="h-4 w-4" aria-hidden />
-                      </Button>
-                    </DropdownTrigger>
-                    <DropdownMenu
-                      aria-label={t("history")}
-                      emptyContent={t("historyEmpty")}
-                      items={conversations}
-                      onAction={(key) => void openConversation(String(key))}
-                      className="max-h-80 overflow-y-auto"
-                    >
-                      {(item) => (
+          <header className="flex items-center justify-between gap-2 px-4 pb-2 pt-4">
+            {consented && provider ? (
+              <Dropdown onOpenChange={(isOpen) => isOpen && void refreshConversations()}>
+                <DropdownTrigger>
+                  <button
+                    type="button"
+                    aria-label={t("history")}
+                    className="flex min-w-0 items-center gap-1.5 rounded-medium px-2 py-1 text-large font-medium transition-colors hover:bg-default-100"
+                  >
+                    <span className="truncate">{conversationTitle}</span>
+                    <ChevronDown className="h-4 w-4 shrink-0 text-default-500" aria-hidden />
+                  </button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  aria-label={t("history")}
+                  onAction={(key) => {
+                    if (key === "__new") return newConversation();
+                    if (key === "__delete") return void removeConversation();
+                    void openConversation(String(key));
+                  }}
+                  className="max-h-96 w-72 overflow-y-auto"
+                >
+                  <DropdownSection showDivider title={t("history")}>
+                    {conversations.length ? (
+                      conversations.map((item) => (
                         <DropdownItem key={item.id} description={new Date(item.updatedAt).toLocaleString()} textValue={item.title}>
                           <span className="line-clamp-1">{item.title}</span>
                         </DropdownItem>
-                      )}
-                    </DropdownMenu>
-                  </Dropdown>
-                  <Button isIconOnly size="sm" variant="light" aria-label={t("newConversation")} title={t("newConversation")} onPress={newConversation}>
-                    <MessageSquarePlus className="h-4 w-4" aria-hidden />
-                  </Button>
-                  {conversationId ? (
-                    <Button isIconOnly size="sm" variant="light" color="danger" aria-label={t("deleteConversation")} title={t("deleteConversation")} onPress={() => void removeConversation()}>
-                      <Trash2 className="h-4 w-4" aria-hidden />
-                    </Button>
-                  ) : null}
-                </>
+                      ))
+                    ) : (
+                      <DropdownItem key="__empty" isReadOnly textValue={t("historyEmpty")} className="text-default-400">
+                        {t("historyEmpty")}
+                      </DropdownItem>
+                    )}
+                  </DropdownSection>
+                  <DropdownSection>
+                    <DropdownItem key="__new" startContent={<Plus className="h-4 w-4" aria-hidden />} textValue={t("newConversation")}>
+                      {t("newConversation")}
+                    </DropdownItem>
+                    {conversationId ? (
+                      <DropdownItem key="__delete" color="danger" className="text-danger" startContent={<Trash2 className="h-4 w-4" aria-hidden />} textValue={t("deleteConversation")}>
+                        {t("deleteConversation")}
+                      </DropdownItem>
+                    ) : null}
+                  </DropdownSection>
+                </DropdownMenu>
+              </Dropdown>
+            ) : (
+              <span className="px-2 text-large font-medium">{t("title")}</span>
+            )}
+            <div className="flex shrink-0 items-center gap-1">
+              <span className="mr-1 rounded-full bg-default-100 px-2.5 py-0.5 text-tiny font-medium text-default-600">{t("beta")}</span>
+              {consented && provider ? (
+                <Button isIconOnly size="sm" variant="light" radius="full" aria-label={t("newConversation")} title={t("newConversation")} onPress={newConversation} isDisabled={busy}>
+                  <Plus className="h-5 w-5" aria-hidden />
+                </Button>
               ) : null}
               <Button
                 isIconOnly
                 size="sm"
                 variant="light"
-                aria-label={t("close")}
-                onPress={() => setOpen(false)}
+                radius="full"
+                className="hidden md:inline-flex"
+                aria-label={expanded ? t("collapse") : t("expand")}
+                title={expanded ? t("collapse") : t("expand")}
+                onPress={() => setExpanded((value) => !value)}
               >
-                <X className="h-4 w-4" aria-hidden />
+                {expanded ? <Minimize2 className="h-4 w-4" aria-hidden /> : <Maximize2 className="h-4 w-4" aria-hidden />}
+              </Button>
+              <Button isIconOnly size="sm" variant="light" radius="full" aria-label={t("close")} title={t("close")} onPress={() => { setExpanded(false); setOpen(false); }}>
+                <X className="h-5 w-5" aria-hidden />
               </Button>
             </div>
           </header>
@@ -481,138 +516,144 @@ export function AiChatPanel({
             </div>
           ) : (
             <>
-              <div className="flex flex-1 flex-col gap-3 overflow-y-auto p-4 text-small">
+              <div className="flex flex-1 flex-col overflow-y-auto px-4 text-small">
                 {turns.length === 0 ? (
-                  <div className="flex flex-col gap-2 text-default-500">
-                    <p>{t("welcome")}</p>
+                  <div className={cn(column, "mt-auto flex flex-col gap-3 pb-4")}>
+                    <h2 className="text-xl font-semibold text-foreground">{t("emptyTitle")}</h2>
+                    <p className="mb-3 text-medium text-default-500">{t("emptySubtitle")}</p>
                     {(["q1", "q2", "q3", "q4"] as const).map((key) => (
                       <button
                         key={key}
                         type="button"
-                        className="rounded-medium border border-default-200 px-3 py-2 text-left hover:bg-default-100"
-                        onClick={() => setDraft(t(`examples.${key}`))}
+                        className="group flex items-center justify-between gap-3 rounded-large border border-default-200 px-4 py-3 text-left text-medium transition-colors hover:border-default-300 hover:bg-default-100"
+                        onClick={() => {
+                          setDraft(t(`examples.${key}`));
+                          inputRef.current?.focus();
+                        }}
                       >
-                        {t(`examples.${key}`)}
+                        <span>{t(`examples.${key}`)}</span>
+                        <ArrowUpRight className="h-4 w-4 shrink-0 text-default-400 transition-colors group-hover:text-foreground" aria-hidden />
                       </button>
                     ))}
                   </div>
-                ) : null}
-                {historyCursor?<Button size="sm" onPress={()=>void loadOlder()}>{t("loadOlder")}</Button>:null}
-                {turns.map((turn, index) => (
-                  <div
-                    key={index}
-                    className={cn(
-                      "flex flex-col gap-2",
-                      turn.role === "user" ? "items-end" : "items-start",
-                    )}
-                  >
+                ) : (
+                  <div className={cn(column, "flex flex-col gap-4 py-2")}>
+                  {historyCursor?<Button size="sm" onPress={()=>void loadOlder()}>{t("loadOlder")}</Button>:null}
+                  {turns.map((turn, index) => (
                     <div
+                      key={index}
                       className={cn(
-                        "max-w-[90%] rounded-large px-3 py-2",
-                        turn.role === "user"
-                          ? "bg-primary text-primary-foreground"
-                          : "bg-default-100 text-foreground",
+                        "flex flex-col gap-2",
+                        turn.role === "user" ? "items-end" : "items-start",
                       )}
                     >
-                      {turn.role === "user" ? (
-                        <p className="whitespace-pre-wrap">{turn.content}</p>
-                      ) : (
-                        <MessageBody text={turn.content} />
-                      )}
-                    </div>
-                    {turn.files?.length ? (
-                      <div className="flex w-[90%] flex-wrap gap-2">
-                        {turn.files.map((file) => (
-                          <Button
-                            key={file.url}
-                            as="a"
-                            href={file.url}
-                            target="_blank"
-                            rel="noopener"
-                            size="sm"
-                            color="primary"
-                            variant="flat"
-                            startContent={<FileDown className="h-4 w-4" aria-hidden />}
-                          >
-                            {t("downloadFile", { title: file.title, format: file.format.toUpperCase() })}
-                          </Button>
-                        ))}
+                      <div
+                        className={cn(
+                          "max-w-[90%] rounded-large px-3 py-2",
+                          turn.role === "user"
+                            ? "bg-primary text-primary-foreground"
+                            : "bg-default-100 text-foreground",
+                        )}
+                      >
+                        {turn.role === "user" ? (
+                          <p className="whitespace-pre-wrap">{turn.content}</p>
+                        ) : (
+                          <MessageBody text={turn.content} />
+                        )}
                       </div>
-                    ) : null}
-                    {turn.proposals?.map((proposal, position) => {
-                      const key = proposal.proposalId ?? `${index}-${position}`;
-                      return (
-                        <div
-                          key={key}
-                          className="w-[90%] rounded-medium border border-primary-200 bg-primary-50/50 p-3 dark:border-primary-500/30 dark:bg-primary-500/10"
-                        >
-                          <p className="text-tiny font-semibold uppercase text-primary">
-                            {proposalText(proposal, "kind")}
-                          </p>
-                          <p className="font-medium">{proposal.title}</p>
-                          <p className="text-tiny text-default-500">{(proposal.details ?? []).join(" · ")}</p>
-                          <Button
-                            size="sm"
-                            color="primary"
-                            variant={done.has(key) || turn.restored ? "flat" : "solid"}
-                            className="mt-2"
-                            isDisabled={done.has(key) || turn.restored}
-                            startContent={
-                              <ListPlus className="h-4 w-4" aria-hidden />
-                            }
-                            onPress={() => confirmProposal(key, proposal)}
-                          >
-                            {done.has(key) ? t("proposal.applied") : turn.restored ? t("proposal.restored") : proposalText(proposal, "confirm")}
-                          </Button>
-                          {exportJobs[key]?<AiExportJob id={exportJobs[key]}/>:null}
+                      {turn.files?.length ? (
+                        <div className="flex w-[90%] flex-wrap gap-2">
+                          {turn.files.map((file) => (
+                            <Button
+                              key={file.url}
+                              as="a"
+                              href={file.url}
+                              target="_blank"
+                              rel="noopener"
+                              size="sm"
+                              color="primary"
+                              variant="flat"
+                              startContent={<FileDown className="h-4 w-4" aria-hidden />}
+                            >
+                              {t("downloadFile", { title: file.title, format: file.format.toUpperCase() })}
+                            </Button>
+                          ))}
                         </div>
-                      );
-                    })}
+                      ) : null}
+                      {turn.proposals?.map((proposal, position) => {
+                        const key = proposal.proposalId ?? `${index}-${position}`;
+                        return (
+                          <div
+                            key={key}
+                            className="w-[90%] rounded-medium border border-primary-200 bg-primary-50/50 p-3 dark:border-primary-500/30 dark:bg-primary-500/10"
+                          >
+                            <p className="text-tiny font-semibold uppercase text-primary">
+                              {proposalText(proposal, "kind")}
+                            </p>
+                            <p className="font-medium">{proposal.title}</p>
+                            <p className="text-tiny text-default-500">{(proposal.details ?? []).join(" · ")}</p>
+                            <Button
+                              size="sm"
+                              color="primary"
+                              variant={done.has(key) || turn.restored ? "flat" : "solid"}
+                              className="mt-2"
+                              isDisabled={done.has(key) || turn.restored}
+                              startContent={
+                                <ListPlus className="h-4 w-4" aria-hidden />
+                              }
+                              onPress={() => confirmProposal(key, proposal)}
+                            >
+                              {done.has(key) ? t("proposal.applied") : turn.restored ? t("proposal.restored") : proposalText(proposal, "confirm")}
+                            </Button>
+                            {exportJobs[key]?<AiExportJob id={exportJobs[key]}/>:null}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ))}
+                  {busy ? (
+                    <p className="animate-pulse text-default-400">
+                      {t("thinking")}
+                    </p>
+                  ) : null}
+                  <div ref={endRef} />
                   </div>
-                ))}
-                {busy ? (
-                  <p className="animate-pulse text-default-400">
-                    {t("thinking")}
-                  </p>
-                ) : null}
-                <div ref={endRef} />
+                )}
               </div>
               <form
-                className="flex flex-col gap-2 border-t border-default-200 p-3"
+                className={cn(column, "px-4 pb-3 pt-2")}
                 onSubmit={(event) => {
                   event.preventDefault();
                   void send();
                 }}
               >
-                <Textarea
-                  aria-label={t("input")}
-                  placeholder={t("input")}
-                  minRows={2}
-                  maxRows={6}
-                  value={draft}
-                  onValueChange={setDraft}
-                  onKeyDown={(event) => {
-                    if (event.key === "Enter" && !event.shiftKey) {
-                      event.preventDefault();
-                      void send();
-                    }
-                  }}
-                />
-                <div className="flex items-center justify-between gap-2">
-                  <span className="text-tiny text-default-400">
-                    {t("privacyNote")}
-                  </span>
-                  <Button
-                    type="submit"
-                    size="sm"
-                    color="primary"
-                    isIconOnly
-                    aria-label={t("send")}
-                    isDisabled={!draft.trim() || busy}
-                  >
-                    <Send className="h-4 w-4" aria-hidden />
-                  </Button>
+                <div className="rounded-[1.75rem] border border-default-200 bg-content1 p-2 transition-colors focus-within:border-primary focus-within:ring-2 focus-within:ring-primary/20">
+                  <textarea
+                    ref={inputRef}
+                    aria-label={t("input")}
+                    placeholder={t("composerPlaceholder")}
+                    rows={1}
+                    value={draft}
+                    onChange={(event) => setDraft(event.target.value)}
+                    onKeyDown={(event) => {
+                      if (event.key === "Enter" && !event.shiftKey) {
+                        event.preventDefault();
+                        void send();
+                      }
+                    }}
+                    className="block max-h-[200px] w-full resize-none bg-transparent px-3 pb-1 pt-2 text-medium outline-none placeholder:text-default-400"
+                  />
+                  <div className="flex items-center justify-between gap-2">
+                    <Button isIconOnly variant="light" radius="full" aria-label={t("newConversation")} title={t("newConversation")} onPress={newConversation} isDisabled={busy || turns.length === 0}>
+                      <Plus className="h-5 w-5" aria-hidden />
+                    </Button>
+                    <Button type="submit" isIconOnly radius="full" color="primary" aria-label={t("send")} isDisabled={!draft.trim() || busy} className="h-10 w-10 min-w-10">
+                      <ArrowUp className="h-5 w-5" aria-hidden />
+                    </Button>
+                  </div>
                 </div>
+                <p className="mt-2 text-center text-tiny text-default-400">{t("disclaimer")}</p>
+                <p className="text-center text-tiny text-default-400">{t("privacyNote")}</p>
               </form>
             </>
           )}

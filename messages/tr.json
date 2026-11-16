@@ -1887,7 +1887,14 @@
         "failed": "Dosya üretilemedi. Lütfen yeni bir öneri oluşturun.",
         "queued": "Dosya hazırlanıyor…"
       },
-      "loadOlder": "Daha eski mesajları yükle"
+      "loadOlder": "Daha eski mesajları yükle",
+      "beta": "BETA",
+      "expand": "Genişlet",
+      "collapse": "Küçült",
+      "emptyTitle": "Size nasıl yardımcı olabilirim?",
+      "emptySubtitle": "Derneğinizin verileri hakkında soru sorun, rapor ve dosya isteyin ya da iş önerisi alın.",
+      "composerPlaceholder": "Bir şey sorun…",
+      "disclaimer": "Asistan hata yapabilir. Sonuçları doğrulayın."
     },
     "settings": {
       "title": "Yapay zekâ asistanı",
