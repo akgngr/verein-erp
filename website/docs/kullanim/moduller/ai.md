@@ -13,7 +13,7 @@ Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuy
 |---|---|
 | Anahtar | `ai` |
 | Tür | Eklenti |
-| Sürüm | 1.13.1 |
+| Sürüm | 1.14.0 |
 | Sayfalar | `/ayarlar/yapay-zeka` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Yapay zekâ asistanı | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.14.0 — Ekli dosya evrak kaydına eklenir; daha güçlü OCR
+
+_2026-11-16_
+
+- **Yeni:** Sohbete eklenen dosya kısa süre şifreli tutulur; asistanın önerdiği evrak kaydını onaylayınca dosya kayda otomatik eklenir. PDF'de gömülü resim okunamazsa sayfa görüntüye çevrilip OCR ile okunur.
 
 ### 1.13.1 — Asistan önerileri bulutta
 
@@ -86,10 +92,4 @@ _2026-11-15_
 - **Yeni:** create_dataset/query_dataset/export_dataset araçları açık şema, TR/DE açıklamalar ve onay zorunluluğuyla sunulur; eski adlar uyum için korunur.
 - **Düzeltme:** Geçici export hataları sınırlı yeniden denenir; terminal/iptal durumları kuyrukta görünmez, başarısız geçici dosyalar temizlenir.
 
-### 1.9.1 — Test yalıtımı
-
-_2026-11-16_
-
-- **Düzeltme:** Evrak özeti testi ortak AI ayarlarını değiştirmiyor; paralel çalışan dışa aktarma testinin rastgele "erişim kaldırıldı" hatası giderildi.
-
-Daha eski 19 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/ai/releases.json)
+Daha eski 20 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/ai/releases.json)

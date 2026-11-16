@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.7.0",
+      "date": "2026-11-16",
+      "title": {
+        "tr": "Asistandan kayıtta dosya eki; daha güçlü OCR",
+        "de": "Dateianhang bei Erfassung über den Assistenten; stärkere OCR"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Asistanın önerdiği evrak kaydı onaylanınca sohbete eklenen dosya kayda eklenir (normal yükleme kurallarıyla doğrulanır). Taranmış PDF'lerde sayfa görüntüsü de OCR ile okunur.",
+          "de": "Beim Bestätigen eines vom Assistenten vorgeschlagenen Dokuments wird die im Chat angehängte Datei beigefügt (normale Upload-Prüfung). Bei gescannten PDFs wird auch das Seitenbild per OCR gelesen."
+        }
+      ]
+    },
+    {
       "version": "1.6.4",
       "date": "2026-11-16",
       "title": {

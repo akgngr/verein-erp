@@ -6,6 +6,7 @@ import { writeAudit } from "@/shared/audit/write-audit";
 import { getEnv } from "@/shared/env";
 import { parseSingleFileUpload, uploadErrorMessage, validateUpload } from "@/shared/files";
 import { extractAttachmentText } from "@/shared/files/attachment-text";
+import { saveTempUpload } from "@/shared/files/temp-uploads";
 import { translateMessage } from "@/shared/i18n/translate-message";
 import { can } from "@/shared/permissions/define";
 import { buildUserLabel } from "@/shared/utils";
@@ -46,7 +47,9 @@ export async function aiAttachmentHandler(request: Request): Promise<Response> {
     const extracted = await extractAttachmentText(parsed.file.buffer, validation.file.mimeType, validation.file.extension);
     if (extracted.text === null) return fail(extracted.reason === "unsupported" ? "ai.attachments.unsupported" : "ai.attachments.noText", 422);
     const name = validation.file.originalName;
-    const token = sealAttachment(user.id, { name, source: extracted.source, truncated: extracted.truncated, text: extracted.text });
+    // Dosyanın kendisi de kısa süre şifreli tutulur: kullanıcı onaylarsa evrak kaydına vb. eklenir.
+    const ref = await saveTempUpload(user.id, parsed.file.buffer, { originalName: name, mimeType: validation.file.mimeType, extension: validation.file.extension, size: validation.file.size });
+    const token = sealAttachment(user.id, { name, source: extracted.source, truncated: extracted.truncated, text: extracted.text, ref });
     await writeAudit({ userId: user.id, userLabel: buildUserLabel(user.name, user.email), action: "AI_ATTACHMENT", entity: "AiAssistant", entityId: null, after: { size: validation.file.size, extension: validation.file.extension, source: extracted.source, chars: extracted.text.length } });
     return NextResponse.json({ ok: true, attachment: { token, name, size: validation.file.size, source: extracted.source, truncated: extracted.truncated } });
   } catch (error) {

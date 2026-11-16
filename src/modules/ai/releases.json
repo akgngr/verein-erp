@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.14.0",
+      "date": "2026-11-16",
+      "title": {
+        "tr": "Ekli dosya evrak kaydına eklenir; daha güçlü OCR",
+        "de": "Anhang wird dem Dokument beigefügt; stärkere OCR"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Sohbete eklenen dosya kısa süre şifreli tutulur; asistanın önerdiği evrak kaydını onaylayınca dosya kayda otomatik eklenir. PDF'de gömülü resim okunamazsa sayfa görüntüye çevrilip OCR ile okunur.",
+          "de": "Angehängte Dateien werden kurz verschlüsselt aufbewahrt und beim Bestätigen des vorgeschlagenen Dokuments automatisch angehängt. Ist ein eingebettetes Bild nicht lesbar, wird die PDF-Seite gerendert und per OCR gelesen."
+        }
+      ]
+    },
+    {
       "version": "1.13.1",
       "date": "2026-11-16",
       "title": {

@@ -42,3 +42,32 @@ test("ek metni: Markdown ve CSV düz metin olarak okunur; desteklenmeyen tür re
   const bin = await extractAttachmentText(new Uint8Array([0, 1, 2]), "application/octet-stream", "bin");
   assert.equal(bin.text, null);
 });
+
+test("geçici yükleme: şifreli saklanır, yalnız sahibi ve süresi içinde açılır, silinebilir", async () => {
+  const os = await import("node:os");
+  const fs = await import("node:fs/promises");
+  const pathModule = await import("node:path");
+  const dir = await fs.mkdtemp(pathModule.join(os.tmpdir(), "temp-upload-"));
+  process.env.UPLOAD_DIR = dir;
+  process.env.DATABASE_URL ??= "postgresql://test:test@localhost:5432/test";
+  const { saveTempUpload, readTempUpload, deleteTempUpload, TEMP_UPLOAD_TTL_MS } = await import("@/shared/files/temp-uploads");
+  try {
+    const now = Date.now();
+    const bytes = new TextEncoder().encode("%PDF-1.4 Zyxwsentinel");
+    const ref = await saveTempUpload("user-1", bytes, { originalName: "Ahmet Yılmaz fatura.pdf", mimeType: "application/pdf", extension: "pdf", size: bytes.length }, now);
+    const { getUploadRoot } = await import("@/shared/files/storage");
+    const stored = await fs.readFile(pathModule.join(getUploadRoot(), ".tmp", "uploads", `${ref}.bin`));
+    assert.equal(stored.includes(Buffer.from("Zyxwsentinel")), false);
+    assert.equal(stored.includes(Buffer.from("Ahmet")), false);
+    const opened = await readTempUpload("user-1", ref, now);
+    assert.equal(opened?.data.toString(), "%PDF-1.4 Zyxwsentinel");
+    assert.equal(opened?.meta.originalName, "Ahmet Yılmaz fatura.pdf");
+    assert.equal(await readTempUpload("user-2", ref, now), null);
+    assert.equal(await readTempUpload("user-1", ref, now + TEMP_UPLOAD_TTL_MS + 1), null);
+    assert.equal(await readTempUpload("user-1", "../../etc/passwd", now), null);
+    await deleteTempUpload(ref);
+    assert.equal(await readTempUpload("user-1", ref, now), null);
+  } finally {
+    await fs.rm(dir, { recursive: true, force: true });
+  }
+});

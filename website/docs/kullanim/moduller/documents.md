@@ -13,7 +13,7 @@ Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi.
 |---|---|
 | Anahtar | `documents` |
 | Tür | Resmî modül |
-| Sürüm | 1.6.4 |
+| Sürüm | 1.7.0 |
 | Sayfalar | `/evrak`, `/evrak/kategoriler` |
 | Önerir | [Muhasebe](./accounting), [Görevler](./tasks), [Yapay zekâ asistanı](./ai) |
 
@@ -44,6 +44,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_document` · `get_document_statistics` · `list_documents` · `propose_delete_document` · `propose_document` · `propose_document_status` · `read_document_file`
 
 ## Sürüm notları
+
+### 1.7.0 — Asistandan kayıtta dosya eki; daha güçlü OCR
+
+_2026-11-16_
+
+- **Yeni:** Asistanın önerdiği evrak kaydı onaylanınca sohbete eklenen dosya kayda eklenir (normal yükleme kurallarıyla doğrulanır). Taranmış PDF'lerde sayfa görüntüsü de OCR ile okunur.
 
 ### 1.6.4 — Asistan önerileri bulutta
 
@@ -87,11 +93,4 @@ _2026-11-15_
 
 - **Yeni:** Gelen evrak dosyalarında "Muhasebeye aktar": dosya analiz edilip muhasebede tedarikçi, numara, tarih, vade ve IBAN'ı dolu gelen fatura taslağı olarak açılır. Son işlem tarihi olan evrakta "Termin için görev oluştur".
 
-### 1.4.0 — Evraktan doldur: AI özeti
-
-_2026-11-15_
-
-- **Yeni:** "Evraktan doldur" penceresinde "AI ile özetle": kısa özet, evrak türü, işlem gerekip gerekmediği ve kategori önerisi; seçilen alanlar forma yazılır.
-- **Düzeltme:** OCR hata kaydı teşhis bilgisi (hata türü/kodu, evrak metni olmadan) içeriyor; dil dosyaları için ek arama yolu ve OCR_LANG_DIR; üretim paketine OCR worker bağımlılıkları eklendi.
-
-Daha eski 7 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/documents/releases.json)
+Daha eski 8 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/documents/releases.json)

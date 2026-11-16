@@ -13,7 +13,7 @@ aiToolV2({
       name: "propose_document",
       operation: "create",
       allowed: (user) => can(user.role, documentsPermissions, "create"),
-      description: "PROPOSES registering a new incoming or outgoing document. Dates YYYY-MM-DD. Nothing is created until the user confirms.", // i18n-ignore (model-facing tool text)
+      description: "PROPOSES registering a new incoming or outgoing document. Dates YYYY-MM-DD. Files the user attached to this message are attached to the new record automatically (set attachFiles=false to skip). Nothing is created until the user confirms.", // i18n-ignore (model-facing tool text)
       input:(z.object({
         direction: z.enum(["INCOMING", "OUTGOING"]),
         documentDate: z.string().regex(DATE_RE),
@@ -21,11 +21,14 @@ aiToolV2({
         subject: z.string().min(3).max(300),
         summary: z.string().max(2000).nullable(),
         dueDate: z.string().regex(DATE_RE).nullable(),
+        attachFiles: z.boolean().optional().describe("Attach the files from this message (default true)"),
       })).strict(),
       result:proposalAcknowledgementSchema,modelOutput:proposalAcknowledgementSchema,
       policy:{"purpose":"documents-proposal","serverReads":[],"modelFields":["status","note"],"processing":"approved_provider","modelDataClass":"internal"},projectForModel:result=>result,
-      run: async ({ subject, ...rest }, { propose }) => {
-        propose({ action: "create", title: subject, details: [rest.direction, rest.documentDate, rest.counterparty], payload: { subject, ...rest } });
+      run: async ({ subject, attachFiles, ...rest }, { propose, attachments }) => {
+        // Ek dosyalar yalnız sunucuda bilinir (model başvuruyu görmez); onayda kayda eklenir.
+        const files = attachFiles === false ? [] : (attachments ?? []);
+        propose({ action: "create", title: subject, details: [rest.direction, rest.documentDate, rest.counterparty, ...(files.length ? [`📎 ${files.map((file) => file.name).join(", ")}`] : [])], payload: { subject, ...rest, fileRefs: files.map((file) => file.ref) } });
         return PROPOSED;
       },
     }),

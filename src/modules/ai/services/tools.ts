@@ -44,9 +44,10 @@ const MODULE_TOOLS = moduleAiRegistry.flatMap((entry) =>
       descriptionKey:tool.descriptionKey,
       schema: tool.schema,
       inputSchema: tool.inputSchema,
-      run: (input, { user, proposals, files, restore,conversationId,policyRevision }) =>
+      run: (input, { user, proposals, files, restore,conversationId,policyRevision,attachments }) =>
         tool.run(input, {
           user,
+          attachments,
           loadDatasetDefinition:async token=>{
             const data=await loadDataset({userId:user.id,conversationId,policyRevision},token);
             if(data.sourceModule!==entry.module)throw new Error("AI_DATASET_SOURCE_DENIED");

@@ -25,6 +25,9 @@ const isProduction = process.env.NODE_ENV === "production";
 /** Evrak OCR (docs/specs/DOCUMENTS_AI.md): tesseract.js çalışanı, WASM çekirdeği ve dil paketleri çalışma anında
  * dosya sisteminden yüklenir; standalone çıktıya açıkça dahil edilir. */
 const OCR_RUNTIME_FILES = [
+  // PDF sayfasını görüntüye çevirme (taranmış/vektör sayfalar): yerel ikili dosyalar.
+  "./node_modules/@napi-rs/**",
+  "./node_modules/.pnpm/@napi-rs+canvas*/**",
       "./node_modules/tesseract.js/**",
       "./node_modules/tesseract.js-core/**",
       "./node_modules/@tesseract.js-data/**",
@@ -82,7 +85,7 @@ const nextConfig: NextConfig = {
   },
   // KARAR (Faz 2, 9. bölüm): @react-pdf/renderer Next bundler'ıyla sorun
   // çıkarabildiği için sunucu paketinin dışında tutulur (serverExternalPackages).
-  serverExternalPackages: ["@react-pdf/renderer", "tesseract.js"],
+  serverExternalPackages: ["@react-pdf/renderer", "tesseract.js", "@napi-rs/canvas"],
   async headers() {
     return [
       {

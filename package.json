@@ -59,6 +59,7 @@
     "@hookform/resolvers": "^5.1.1",
     "@internationalized/date": "3.12.4",
     "@mistralai/mistralai": "^3.4.0",
+    "@napi-rs/canvas": "1.1.1",
     "@prisma/adapter-pg": "7.10.1",
     "@prisma/client": "^7.10.1",
     "@react-pdf/renderer": "^4.9.0",

@@ -17,6 +17,8 @@ export type ToolContext = {
   files: AiFile[];
   /** Model girdisindeki yer tutucuları ([PERSON_1] …) gerçek değerlere çevirir (yalnızca sunucuda). */
   restore: (text: string) => string;
+  /** Bu mesaja eklenen dosyalar (yalnız sunucuda; ad gerçek, başvuru geçici şifreli depoya). */
+  attachments?: Array<{ ref: string; name: string }>;
 };
 
 export type ToolDefinition<S extends z.ZodType> = {
