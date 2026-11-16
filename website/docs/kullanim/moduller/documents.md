@@ -13,7 +13,7 @@ Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi.
 |---|---|
 | Anahtar | `documents` |
 | Tür | Resmî modül |
-| Sürüm | 1.6.3 |
+| Sürüm | 1.6.4 |
 | Sayfalar | `/evrak`, `/evrak/kategoriler` |
 | Önerir | [Muhasebe](./accounting), [Görevler](./tasks), [Yapay zekâ asistanı](./ai) |
 
@@ -44,6 +44,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_document` · `get_document_statistics` · `list_documents` · `propose_delete_document` · `propose_document` · `propose_document_status` · `read_document_file`
 
 ## Sürüm notları
+
+### 1.6.4 — Asistan önerileri bulutta
+
+_2026-11-16_
+
+- **İyileştirme:** Asistanın öneri araçları (onay kartlı) bulut sağlayıcıda denetimli modda da kullanılabilir.
 
 ### 1.6.3 — OCR ortak altyapıya taşındı
 
@@ -88,11 +94,4 @@ _2026-11-15_
 - **Yeni:** "Evraktan doldur" penceresinde "AI ile özetle": kısa özet, evrak türü, işlem gerekip gerekmediği ve kategori önerisi; seçilen alanlar forma yazılır.
 - **Düzeltme:** OCR hata kaydı teşhis bilgisi (hata türü/kodu, evrak metni olmadan) içeriyor; dil dosyaları için ek arama yolu ve OCR_LANG_DIR; üretim paketine OCR worker bağımlılıkları eklendi.
 
-### 1.3.0 — Evraktan doldur (OCR)
-
-_2026-11-15_
-
-- **Yeni:** Yeni evrak formunda seçilen dosya için "Evraktan doldur": metin katmanı veya OCR (taranmış PDF, fotoğraf; Almanca/Türkçe/İngilizce) ile tarih, gönderen, karşı tarafın sayısı, konu, son işlem tarihi ve özet önerilir; seçilen alanlar forma yazılır. Düzenleme formunda da kullanılabilir.
-- **Güvenlik:** Analiz edilen dosya saklanmaz; OCR tamamen sunucuda yerel çalışır, metin dışarı gönderilmez ve loglanmaz.
-
-Daha eski 6 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/documents/releases.json)
+Daha eski 7 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/documents/releases.json)

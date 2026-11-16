@@ -23,7 +23,7 @@ aiToolV2({
         dueDate: z.string().regex(DATE_RE).nullable(),
       })).strict(),
       result:proposalAcknowledgementSchema,modelOutput:proposalAcknowledgementSchema,
-      policy:{"purpose":"documents-proposal","serverReads":[],"modelFields":["status","note"],"processing":"local_only"},projectForModel:result=>result,
+      policy:{"purpose":"documents-proposal","serverReads":[],"modelFields":["status","note"],"processing":"approved_provider","modelDataClass":"internal"},projectForModel:result=>result,
       run: async ({ subject, ...rest }, { propose }) => {
         propose({ action: "create", title: subject, details: [rest.direction, rest.documentDate, rest.counterparty], payload: { subject, ...rest } });
         return PROPOSED;
@@ -36,7 +36,7 @@ aiToolV2({
       description: "PROPOSES changing a document's status (id from list_documents).", // i18n-ignore (model-facing tool text)
       input:(z.object({ documentId: z.string().min(1).max(100), status: z.enum(["OPEN", "IN_PROGRESS", "COMPLETED", "ARCHIVED"]) })).strict(),
       result:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["not_found"])}).strict()]),modelOutput:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["not_found"])}).strict()]),
-      policy:{"purpose":"documents-proposal","serverReads":["Document"],"modelFields":["status","note"],"processing":"local_only"},projectForModel:result=>result,
+      policy:{"purpose":"documents-proposal","serverReads":["Document"],"modelFields":["status","note"],"processing":"approved_provider","modelDataClass":"internal"},projectForModel:result=>result,
       run: async ({ documentId, status }, { propose }) => {
         const doc = await getAiDocumentTarget(documentId);
         if (!doc) return { status: "not_found" } as const;
@@ -51,7 +51,7 @@ aiToolV2({
       description: "PROPOSES deleting a document (id from list_documents).", // i18n-ignore (model-facing tool text)
       input:(z.object({ documentId: z.string().min(1).max(100) })).strict(),
       result:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["not_found"])}).strict()]),modelOutput:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["not_found"])}).strict()]),
-      policy:{"purpose":"documents-proposal","serverReads":["Document"],"modelFields":["status","note"],"processing":"local_only"},projectForModel:result=>result,
+      policy:{"purpose":"documents-proposal","serverReads":["Document"],"modelFields":["status","note"],"processing":"approved_provider","modelDataClass":"internal"},projectForModel:result=>result,
       run: async ({ documentId }, { propose }) => {
         const doc = await getAiDocumentTarget(documentId);
         if (!doc) return { status: "not_found" } as const;

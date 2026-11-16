@@ -23,7 +23,7 @@ aiToolV2({
         description: z.string().max(2000).nullable(),
       })).strict(),
       result:proposalAcknowledgementSchema,modelOutput:proposalAcknowledgementSchema,
-      policy:{"purpose":"meetings-proposal","serverReads":[],"modelFields":["status","note"],"processing":"local_only"},projectForModel:result=>result,
+      policy:{"purpose":"meetings-proposal","serverReads":[],"modelFields":["status","note"],"processing":"approved_provider","modelDataClass":"internal"},projectForModel:result=>result,
       run: async (input, { propose }) => {
         propose({ action: "create", title: input.title, details: [input.type, [input.meetingDate, input.startTime].filter(Boolean).join(" "), input.location ?? ""].filter(Boolean), payload: input });
         return PROPOSED;
@@ -36,7 +36,7 @@ aiToolV2({
       description: "PROPOSES changing a meeting's status (PLANNED, HELD, APPROVED, CANCELLED). A reason (min. 5 chars) is required for cancelling.", // i18n-ignore (model-facing tool text)
       input:(z.object({ meetingId: z.string().min(1).max(100), status: z.enum(["PLANNED", "HELD", "APPROVED", "CANCELLED"]), reason: z.string().max(500).nullable() })).strict(),
       result:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["not_found"])}).strict()]),modelOutput:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["not_found"])}).strict()]),
-      policy:{"purpose":"meetings-proposal","serverReads":["Meeting"],"modelFields":["status","note"],"processing":"local_only"},projectForModel:result=>result,
+      policy:{"purpose":"meetings-proposal","serverReads":["Meeting"],"modelFields":["status","note"],"processing":"approved_provider","modelDataClass":"internal"},projectForModel:result=>result,
       run: async ({ meetingId, status, reason }, { propose }) => {
         const meeting = await getAiMeetingTarget(meetingId);
         if (!meeting) return { status: "not_found" } as const;
@@ -51,7 +51,7 @@ aiToolV2({
       description: "PROPOSES deleting a meeting (id from list_meetings).", // i18n-ignore (model-facing tool text)
       input:(z.object({ meetingId: z.string().min(1).max(100) })).strict(),
       result:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["not_found"])}).strict()]),modelOutput:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["not_found"])}).strict()]),
-      policy:{"purpose":"meetings-proposal","serverReads":["Meeting"],"modelFields":["status","note"],"processing":"local_only"},projectForModel:result=>result,
+      policy:{"purpose":"meetings-proposal","serverReads":["Meeting"],"modelFields":["status","note"],"processing":"approved_provider","modelDataClass":"internal"},projectForModel:result=>result,
       run: async ({ meetingId }, { propose }) => {
         const meeting = await getAiMeetingTarget(meetingId);
         if (!meeting) return { status: "not_found" } as const;

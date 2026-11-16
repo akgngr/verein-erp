@@ -13,7 +13,7 @@ Dernek demirbaşları, teknik ekipmanlar ve zimmet kayıtlarının takibi.
 |---|---|
 | Anahtar | `inventory` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.5 |
+| Sürüm | 1.1.6 |
 | Sayfalar | `/inventory`, `/inventory/kategoriler` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_inventory_overview` · `list_inventory_items` · `propose_delete_inventory_item` · `propose_inventory_item` · `propose_inventory_status`
 
 ## Sürüm notları
+
+### 1.1.6 — Asistan önerileri bulutta
+
+_2026-11-16_
+
+- **İyileştirme:** Asistanın öneri araçları (onay kartlı) bulut sağlayıcıda denetimli modda da kullanılabilir.
 
 ### 1.1.5 — HeroUI v3 arayüz geçişi
 

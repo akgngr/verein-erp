@@ -23,7 +23,7 @@ aiToolV2({
         isOnline: z.boolean(),
       })).strict(),
       result:proposalAcknowledgementSchema,modelOutput:proposalAcknowledgementSchema,
-      policy:{"purpose":"events-proposal","serverReads":[],"modelFields":["status","note"],"processing":"local_only"},projectForModel:result=>result,
+      policy:{"purpose":"events-proposal","serverReads":[],"modelFields":["status","note"],"processing":"approved_provider","modelDataClass":"internal"},projectForModel:result=>result,
       run: async (input, { propose }) => {
         propose({ action: "create", title: input.title, details: [input.type, input.startDate.replace("T", " "), input.isOnline ? "online" : (input.location ?? "")].filter(Boolean), payload: input });
         return PROPOSED;

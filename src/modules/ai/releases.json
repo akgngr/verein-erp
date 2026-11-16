@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.13.1",
+      "date": "2026-11-16",
+      "title": {
+        "tr": "Asistan önerileri bulutta",
+        "de": "Assistent-Vorschläge in der Cloud"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Bulut sağlayıcıda öneri araçları (evrak kaydı, görev, etkinlik vb. onay kartları) artık denetimli modda kullanılabilir; ekteki maskeli değerler öneride gerçek değere çevrilir. Az metinli PDF eklerinde gömülü resimler de OCR ile okunur.",
+          "de": "Vorschlagswerkzeuge (Dokument, Aufgabe, Veranstaltung usw. mit Bestätigungskarte) sind jetzt auch beim Cloud-Anbieter im geprüften Modus verfügbar; maskierte Werte aus Anhängen werden im Vorschlag aufgelöst. Bei PDF-Anhängen mit wenig Text werden eingebettete Bilder per OCR gelesen."
+        }
+      ]
+    },
+    {
       "version": "1.13.0",
       "date": "2026-11-16",
       "title": {

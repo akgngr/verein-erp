@@ -92,7 +92,7 @@ export const ai = defineModuleAiV2({
       description: "PROPOSES a campaign DRAFT (audience id and channel from list_campaign_audiences). The body may use the audience placeholders like {firstName}. Nothing is sent: the user reviews and starts it in the campaign wizard.", // i18n-ignore (model-facing tool text)
       input:(draftSchema).strict(),
       result:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["audience_not_allowed","channel_not_available"])}).strict()]),modelOutput:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["audience_not_allowed","channel_not_available"])}).strict()]),
-      policy:{"purpose":"mailings-proposal","serverReads":[],"modelFields":["status","note"],"processing":"local_only"},projectForModel:result=>result,
+      policy:{"purpose":"mailings-proposal","serverReads":[],"modelFields":["status","note"],"processing":"approved_provider","modelDataClass":"internal"},projectForModel:result=>result,
       run: async (input, { user, propose }) => {
         if (!(await listSources(user.role)).some((source) => source.id === input.sourceId)) return { status: "audience_not_allowed" } as const;
         if (!(await availableChannels()).some((channel) => channel.key === input.channel)) return { status: "channel_not_available" } as const;

@@ -100,7 +100,7 @@ export async function runAssistant(args: { user: SessionUser; locale: string; pr
     module: "module inactive or access not approved → Settings → Modules", // i18n-ignore (model-facing prompt)
     matrix: "assistant permission off → Settings → AI assistant → module card", // i18n-ignore (model-facing prompt)
     feature:"personal export feature flag off → deployment configuration AI_PERSONAL_EXPORT_ENABLED", // i18n-ignore (model-facing)
-    privacy: "cloud processing is limited to approved numeric summaries → Settings → AI assistant → provider", // i18n-ignore (model-facing prompt)
+    privacy: "not available with the cloud provider under the current cloud data policy (content-reading tools run only on a local model; person-level tools need \"pseudonymous person data\") → Settings → AI assistant → cloud data policy", // i18n-ignore (model-facing prompt)
     role: "the user's role lacks this permission → Users → Roles & permissions", // i18n-ignore (model-facing prompt)
   };
   const blocked = (await unavailableTools(args.user, args.provider))
@@ -125,7 +125,7 @@ export async function runAssistant(args: { user: SessionUser; locale: string; pr
       toolsUsed.push(name);
       const tool = byName.get(name);
       if (!tool) return { content: "TOOL_NOT_AVAILABLE", isError: true };
-      const outcome = await runTool(tool, input, { user: args.user,conversationId:args.conversationId,policyRevision:revision, proposals, files, restore: (text) => vault.restore(text) }, args.provider);
+      const outcome = await runTool(tool, input, { user: args.user,conversationId:args.conversationId,policyRevision:revision, proposals, files, restore: (text) => attachmentRestore(vault.restore(text)) }, args.provider);
       if(outcome.ok && Buffer.byteLength(JSON.stringify(outcome.value) ?? "")>65_536) return {content:"AI_OUTPUT_BYTE_LIMIT",isError:true};
       return outcome.ok ? { content: JSON.stringify(vault.redactValue(outcome.value)), isError: false } : { content: outcome.error, isError: true };
     },
@@ -137,14 +137,14 @@ export async function runAssistant(args: { user: SessionUser; locale: string; pr
     // Önerilerdeki metinler kullanıcıya dönerken yer tutuculardan çözülür.
     // payload iç içe olabilir: tüm metin alanları derinlemesine çözülür.
     proposals: await Promise.all(proposals.map(async proposal => {
-      const draft = restoreDeep(proposal, value => vault.restore(value));
+      const draft = restoreDeep(proposal, value => attachmentRestore(vault.restore(value)));
       const action = moduleAiRegistry.find(entry => entry.module === draft.module)?.actions[draft.action];
       const parsed = action?.schema.safeParse(draft.payload);
       if (!action || !parsed?.success) throw new Error("AI_PROPOSAL_INVALID");
       const state = action.snapshot ? await action.snapshot(parsed.data) : undefined;
       return prepareProposal({userId:args.user.id,conversationId:args.conversationId,revision:await providerRevision(args.provider),draft:{...draft,payload:parsed.data},preconditions:state});
     })),
-    files: files.map((file) => ({ ...file, title: vault.restore(file.title) })),
+    files: files.map((file) => ({ ...file, title: attachmentRestore(vault.restore(file.title)) })),
     toolsUsed,
     usage: { inputTokens: result.inputTokens, outputTokens: result.outputTokens },
     redactions: vault.size,

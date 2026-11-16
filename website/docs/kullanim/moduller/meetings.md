@@ -13,7 +13,7 @@ Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar.
 |---|---|
 | Anahtar | `meetings` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.5 |
+| Sürüm | 1.3.6 |
 | Sayfalar | `/toplantilar`, `/toplantilar/gorevler` |
 
 ## Diğer modüllere erişim
@@ -41,6 +41,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_meeting` · `get_meeting_statistics` · `list_meetings` · `propose_delete_meeting` · `propose_meeting` · `propose_meeting_status`
 
 ## Sürüm notları
+
+### 1.3.6 — Asistan önerileri bulutta
+
+_2026-11-16_
+
+- **İyileştirme:** Asistanın öneri araçları (onay kartlı) bulut sağlayıcıda denetimli modda da kullanılabilir.
 
 ### 1.3.5 — HeroUI v3 arayüz geçişi
 
@@ -84,10 +90,4 @@ _2026-11-06_
 
 - **Yeni:** Kayıtlar Takvim modülünde salt okunur kaynak olarak görünür.
 
-### 1.1.0 — İş akışı tetikleyicileri
-
-_2026-11-06_
-
-- **Yeni:** İş akışı tetikleyicisi: "Toplantı planlandığında" (tür; {{meeting.title}} vb.).
-
-Daha eski 1 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/meetings/releases.json)
+Daha eski 2 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/meetings/releases.json)

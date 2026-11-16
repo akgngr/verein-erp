@@ -5,6 +5,8 @@ import { ocrImage, ocrScannedPdf } from "./ocr";
 
 export type AttachmentText = { text: string; source: "text" | "ocr"; truncated: boolean } | { text: null; reason: "unsupported" | "empty" | "failed" };
 
+/** Bu sayının altında metin katmanı olan PDF "seyrek" sayılır ve görüntüleri de okunur. */
+const SPARSE_PDF_TEXT_CHARS = 1500;
 const IMAGE_TYPES = new Set(["image/jpeg", "image/png"]);
 const TEXT_TYPES: Record<string, string> = { md: "text/markdown", markdown: "text/markdown", csv: "text/csv", txt: "text/plain" };
 
@@ -20,11 +22,13 @@ export async function extractAttachmentText(bytes: Uint8Array, mimeType: string,
       return clip(ocr.text, "ocr");
     }
     const extracted = await extractTextFromBytes(bytes, mime);
-    if (extracted.text && extracted.text.replace(/\s/g, "").length >= 20) return { text: extracted.text, source: "text", truncated: extracted.truncated };
-    if (mime === "application/pdf") {
+    const textChars = extracted.text?.replace(/\s/g, "").length ?? 0;
+    // PDF'de metin katmanı azsa (el ilanı, taranmış sayfa üstünde başlık vb.) gömülü görüntüler de OCR'lanır ve birleştirilir.
+    if (mime === "application/pdf" && textChars < SPARSE_PDF_TEXT_CHARS) {
       const ocr = await ocrScannedPdf(bytes);
-      if (ocr.pages) return clip(ocr.text, "ocr");
+      if (ocr.pages && ocr.text.trim()) return clip([extracted.text ?? "", ocr.text].filter(Boolean).join("\n\n"), "ocr");
     }
+    if (extracted.text && textChars >= 20) return { text: extracted.text, source: "text", truncated: extracted.truncated };
     if (extracted.text) return { text: extracted.text, source: "text", truncated: extracted.truncated };
     return { text: null, reason: extracted.reason === "unsupported" ? "unsupported" : extracted.reason === "failed" ? "failed" : "empty" };
   } catch {
