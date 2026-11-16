@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.22.4",
+      "date": "2026-11-16",
+      "title": {
+        "tr": "Ana panel muhasebe kartları",
+        "de": "Buchhaltungskarten auf dem Dashboard"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Mevcut fiş istatistiklerini kullanan gelir, gider, fiş farkı ve eksik belge kartları ana panelde seçilebilir. Kartlar kullanıcı rolüne göre filtrelenir; yeni grafik paketi eklenmedi.",
+          "de": "Einnahmen-, Ausgaben-, Buchungsdifferenz- und Belegwarnkarten sind im Hauptdashboard auswählbar. Die Karten verwenden bestehende Buchungsstatistiken und beachten Benutzerberechtigungen."
+        }
+      ]
+    },
+    {
       "version": "1.22.3",
       "date": "2026-11-16",
       "title": {
