@@ -23,6 +23,7 @@ Grafiğin altında aynı rakamları gösteren erişilebilir tablo bulunur; grafi
 
 - **Belgesi olmayan fişler:** Seçili yılın aktarımdan gelmeyen, virman olmayan ve aktif ek dosyası bulunmayan fişleri gösterir. İlgili fişleri inceleyebilirsiniz.
 - **Vadesi geçmiş faturalar:** Durumu `ISSUED` olan, vadesi bugünden önce kalan faturaların açık brüt tutarlarını bildirir. Yönetici faturaları gözden geçirir.
+- **Eşleştirilmemiş banka hareketleri:** Banka içe aktarımında `OPEN` durumunda bekleyen hareketlerin sayısını bildirir. Banka modülündeki açık hareketler sekmesine yönlendirir; eşleştirme veya fiş oluşturma işlemi başlatmaz. Bu sayı tüm hesapları kapsar ve seçilen ay/çeyrek filtresine göre daralmaz.
 
 Bu öneriler bilgi amaçlıdır. Tutarlar ve kayıtlar incelenmeden muhasebe işlemi, ihtar veya ödeme yapılmaz. Uyarılar sabit bir tabloya kaydedilmez; sayfa açıldığında mevcut kayıtlardan hesaplanır.
 
