@@ -37,6 +37,91 @@ async function main() {
         update: data,
       });
     }
+    await db.systemModuleState.upsert({
+      where: { moduleKey: "accounting" },
+      create: { moduleKey: "accounting", isEnabled: true },
+      update: { isEnabled: true },
+    });
+    await db.accountingSettings.upsert({
+      where: { id: "singleton" },
+      create: { id: "singleton", vatPeriod: "MONTH", taxMethod: "IST", smallBusiness: false },
+      update: { vatPeriod: "MONTH", taxMethod: "IST", smallBusiness: false },
+    });
+    await db.accountingAccount.upsert({
+      where: { id: "theme-preview-account" },
+      create: {
+        id: "theme-preview-account",
+        name: "Theme Preview Bank",
+        type: "BANK",
+        openingBalance: "2500.00",
+        openingDate: new Date("2026-01-01T00:00:00Z"),
+      },
+      update: { isActive: true },
+    });
+    for (const [id, name, direction] of [
+      ["theme-preview-income", "Theme Preview Einnahmen", "INCOME"],
+      ["theme-preview-expense", "Theme Preview Ausgaben", "EXPENSE"],
+    ] as const) {
+      await db.accountingCategory.upsert({
+        where: { id },
+        create: { id, name, direction, sphere: "IDEELL", isActive: true },
+        update: { name, direction, sphere: "IDEELL", isActive: true },
+      });
+    }
+    const previewBookings = [
+      ["01", "INCOME", "2026-02-12", "theme-preview-income", "4500.00"],
+      ["02", "EXPENSE", "2026-03-08", "theme-preview-expense", "1850.00"],
+      ["03", "INCOME", "2026-05-17", "theme-preview-income", "6200.00"],
+      ["04", "EXPENSE", "2026-06-22", "theme-preview-expense", "2700.00"],
+      ["05", "INCOME", "2026-08-11", "theme-preview-income", "5100.00"],
+      ["06", "EXPENSE", "2026-09-04", "theme-preview-expense", "2150.00"],
+      ["07", "INCOME", "2026-10-19", "theme-preview-income", "7300.00"],
+      ["08", "EXPENSE", "2026-11-02", "theme-preview-expense", "3400.00"],
+    ] as const;
+    for (const [suffix, type, date, categoryId, amount] of previewBookings) {
+      const sequence = 990000 + Number(suffix);
+      await db.accountingBooking.upsert({
+        where: { bookingNumber: `PREVIEW-2026-${suffix}` },
+        create: {
+          year: 2026,
+          sequence,
+          bookingNumber: `PREVIEW-2026-${suffix}`,
+          type,
+          bookingDate: new Date(`${date}T00:00:00Z`),
+          accountId: "theme-preview-account",
+          categoryId,
+          amount,
+          netAmount: amount,
+          taxAmount: "0.00",
+          taxRate: 0,
+          description: "Theme preview",
+          createdById: user.id,
+          createdByLabel: "CI preview",
+        },
+        update: { amount, netAmount: amount, bookingDate: new Date(`${date}T00:00:00Z`), reversedAt: null },
+      });
+    }
+    await db.accountingInvoice.upsert({
+      where: { number: "PREVIEW-R-2026-0001" },
+      create: {
+        kind: "INVOICE",
+        status: "ISSUED",
+        number: "PREVIEW-R-2026-0001",
+        year: 2026,
+        sequence: 990001,
+        issueDate: new Date("2026-09-01T00:00:00Z"),
+        dueDate: new Date("2026-10-01T00:00:00Z"),
+        recipientName: "Theme Preview Kunde",
+        netCents: 120000,
+        taxCents: 0,
+        grossCents: 120000,
+        paidCents: 20000,
+        createdById: user.id,
+        createdByLabel: "CI preview",
+      },
+      update: { status: "ISSUED", dueDate: new Date("2026-10-01T00:00:00Z"), grossCents: 120000, paidCents: 20000 },
+    });
+    console.info("[theme] Accounting dashboard fixtures prepared.");
     console.info("[theme] 12 synthetic member fixtures prepared.");
   } finally {
     await db.$disconnect();

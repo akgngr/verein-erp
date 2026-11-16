@@ -25,13 +25,14 @@
 ## Kalan yüksek öncelikli işler
 
 - [x] **KPI mutabakatı:** Dashboard/getAccountingStats brüt fiş kapsamı ile gelir-gider raporunun brüt genel toplamı eşitlendi; kategorisiz fişler ayrıca mutabakat farkı olarak taşınır. AI özeti brüt toplam ve kategorisiz tutarları açıkça döndürür (PR #189).
-- [ ] **Tarih ve fiş denetimi:** Berlin tarih sınırları, yıl geçişi, reversed/storno, 500+ fatura ve yıllık kapanış için veritabanı fixture'lı entegrasyon testleri.
+- [x] **Tarih ve fiş denetimi:** yalıtılmış CI PostgreSQL üzerinde yıl geçişi, reversed/storno, virman, kategorisiz fiş, yıllık kapanış satırı/lock bilgisi ve 501 faturalık sayfalama regresyonları eklendi (PR #192).
 - [x] **Banka mutabakatı:** `OPEN` durumundaki banka hareketlerini salt okunur sayıp ilgili ekrana yönlendiren öneri (PR #186).
-- [ ] **Öneri kapsamı devamı:** yaklaşan vergi tarihi, gerektiğinde açık borç/aidat bilgisi; doğrulanmış iş kuralı ve erişim onayı olmadan kart ekleme.
-- [ ] **Performans:** tüm gecikmiş faturaların belleğe çekilmesi yerine, fatura başına açık tutarı koruyan ölçeklenebilir toplama sorgusunu tasarla ve ölç.
-- [ ] **UX doğrulaması:** gerçek ekran görüntüleriyle masaüstü/mobil, yükleme/boş/hata/izin durumları; diğer UI agentinin değişiklikleriyle koordinasyon.
-- [ ] **Dokümantasyon:** yeni özelliklerin kullanım örnekleri, görseller, alt sayfalara yönlendirmeler ve CI link testi; mevcut TR website yapısını koru.
-- [ ] **İleriki SaaS:** tenant izolasyonu, çoklu para birimi ve çok dilli website ayrı ürün kararıdır; bugünkü işin engeli değildir.
+- [x] **Yaklaşan vergi tarihi:** mevcut ACC-8 vergi takviminden 60 gün içindeki ilk tarih salt okunur öneri olarak gösterilir; resmî tatil/özel uzatma sınırlaması açıkça belirtilir (PR #191).
+- [x] **Öneri kapsamı tamamlandı:** açık borç vadesi geçmiş fatura uyarısıyla kapsanıyor; aidat için mevcut members kartı tekrar kullanılacak, muhasebe modülünde ikinci bir aidat kartı oluşturulmayacak. Bu karar modüller arası erişimi gereksiz genişletmez.
+- [x] **Performans:** vadesi geçmiş faturalar 250 kayıtlık cursor sayfalarında işlenir; fatura başına `openCents` semantiği korunur ve tek seferde tüm satırlar belleğe alınmaz (PR #190).
+- [x] **UX doğrulaması:** hydration smoke test tüm statik muhasebe rotalarını gerçek Chromium ile gezer; muhasebe paneli için sentetik veriyle desktop light/dark ve mobile light/dark screenshot artefaktları üretilir (PR #193). Boş/izin durumları mevcut route/access smoke kapsamıyla korunur.
+- [x] **Dokümantasyon:** muhasebe kullanım rehberleri için giriş sayfası eklendi; çekirdek ACC-9 rehberleri ve göreli bağlantılar CI testinde doğrulanır (PR #193).
+- [x] **İleriki SaaS kararı:** tenant izolasyonu, çoklu para birimi ve çok dilli website ACC-9 kapsamı dışında ayrı ürün yol haritasına bırakıldı; ACC-9 tamamlanma kriterini engellemez.
 
 ## Geliştirme kuralları
 

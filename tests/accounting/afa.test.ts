@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { test } from "node:test";
 
 import { depreciationForYear, depreciationSchedule, flatRateAmountCents, flatRateYearTotals, suggestMethod } from "@/modules/accounting/services/afa";
-import { freeReserveLimitCents, nextBusinessDay, taxDeadlines } from "@/modules/accounting/services/tax-calendar";
+import { findUpcomingTaxDeadline, freeReserveLimitCents, nextBusinessDay, taxDeadlines } from "@/modules/accounting/services/tax-calendar";
 
 const d = (iso: string) => new Date(`${iso}T00:00:00Z`);
 
@@ -43,4 +43,8 @@ test("vergi takvimi", () => {
   assert.equal(extended[0].due.toISOString().slice(0, 10), "2026-03-10");
   assert.equal(taxDeadlines(2026, { vatPeriod: "QUARTER", extension: false, smallBusiness: true }).some((item) => item.key === "ustva"), false);
   assert.equal(freeReserveLimitCents({ assetManagementSurplusCents: 300_000, otherFundsCents: 1_000_000 }), 200_000);
+  const next = findUpcomingTaxDeadline(d("2026-11-16"), taxDeadlines(2026, { vatPeriod: "QUARTER", extension: false, smallBusiness: false }));
+  assert.equal(next?.period, "2026-Q4");
+  assert.equal(next?.due.toISOString().slice(0, 10), "2027-01-11");
+  assert.equal(findUpcomingTaxDeadline(d("2026-11-16"), taxDeadlines(2026, { vatPeriod: "QUARTER", extension: false, smallBusiness: false }), 30), null);
 });

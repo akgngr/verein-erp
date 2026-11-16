@@ -1559,6 +1559,13 @@
     "taxMethod": "Vergi ayarı: {method}.",
     "unmatchedBank": "Eşleştirilmemiş {count} banka hareketi kontrol bekliyor.",
     "inspectBank": "Banka hareketlerini incele",
-    "currency": "EUR"
+    "currency": "EUR",
+    "taxDeadline": "Yaklaşan {kind} son tarihi: {period} için {date}. Resmî tatiller ve özel süre uzatmaları ayrıca doğrulanmalıdır.",
+    "inspectTax": "Vergi takvimini incele",
+    "taxDeadlineKey": {
+      "ustva": "UStVA",
+      "annualVat": "yıllık KDV beyannamesi",
+      "incomeTax": "gelir vergisi beyannamesi"
+    }
   }
 }

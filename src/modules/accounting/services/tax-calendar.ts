@@ -36,3 +36,21 @@ export function taxDeadlines(year: number, options: { vatPeriod: "MONTH" | "QUAR
 export function freeReserveLimitCents(input: { assetManagementSurplusCents: number; otherFundsCents: number }): number {
   return Math.max(0, Math.floor(input.assetManagementSurplusCents / 3)) + Math.max(0, Math.floor(input.otherFundsCents / 10));
 }
+
+
+export function findUpcomingTaxDeadline(
+  now: Date,
+  deadlines: readonly Deadline[],
+  withinDays = 60,
+): Deadline | null {
+  const start = now.getTime();
+  const end = start + withinDays * 86_400_000;
+  return (
+    deadlines
+      .filter((deadline) => {
+        const due = deadline.due.getTime();
+        return due >= start && due <= end;
+      })
+      .sort((a, b) => a.due.getTime() - b.due.getTime())[0] ?? null
+  );
+}
