@@ -45,7 +45,7 @@ export async function buildIncomeExpenseReport(year: number): Promise<IncomeExpe
       },
     }),
     db.accountingBudgetLine.findMany({ where: { year } }),
-    db.accountingCategory.findMany({ where: { isActive: true } }),
+    db.accountingCategory.findMany(),
   ]);
 
   // Gerçekleşen: kategori + yön bazında toplam.
@@ -79,8 +79,8 @@ export async function buildIncomeExpenseReport(year: number): Promise<IncomeExpe
 
   for (const sphere of SPHERE_ORDER) {
     for (const direction of ["INCOME", "EXPENSE"] as CategoryDirection[]) {
-      // Alanın o yöndeki kategorileri (aktif + fişi olanlar; KARAR: fişsiz kategori
-      // raporda boş satır üretmesin — temiz rapor).
+      // Tarihsel raporlar pasifleştirilen kategorileri de içermeli.
+      // Yalnızca bu yıl fişi bulunan kategoriler satır üretir.
       const usedCategoryIds = new Set(
         categories
           .filter((category) => category.sphere === sphere && category.direction === direction)
