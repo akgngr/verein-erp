@@ -48,7 +48,7 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 
 _2026-11-16_
 
-- **Yeni:** Muhasebe paneli mevcut vergi ayarlarından 45 gün içindeki yaklaşan UStVA/yıllık beyan tarihini salt okunur öneri olarak gösterir; otomatik beyan veya işlem başlatılmaz.
+- **Yeni:** Muhasebe paneli mevcut vergi ayarlarından 60 gün içindeki yaklaşan UStVA/yıllık beyan tarihini salt okunur öneri olarak gösterir; otomatik beyan veya işlem başlatılmaz.
 - **İyileştirme:** Uyarı resmi tatiller ve özel süre uzatmalarının mevcut takvim hesabında yer almadığını açıkça belirtir.
 
 ### 1.22.10 — Vadesi geçmiş fatura özeti performansı
