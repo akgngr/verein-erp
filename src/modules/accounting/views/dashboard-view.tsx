@@ -155,7 +155,7 @@ export async function AccountingDashboardView({ searchParams }: { searchParams: 
                 </p>
                 <div className="relative mt-5 flex items-center justify-between gap-2 border-t border-ink-100 pt-3 text-xs font-medium text-ink-500">
                   <span>{periodLabel}</span>
-                  <span>EUR</span>
+                  <span>{t("currency")}</span>
                 </div>
               </article>
             );
