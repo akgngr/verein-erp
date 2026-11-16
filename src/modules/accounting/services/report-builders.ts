@@ -16,6 +16,7 @@ import type {
   ProjectReportRow,
 } from "../types";
 import { accountBalanceAt } from "./balances";
+import { summarizeGrossBookings } from "./booking-summary";
 
 /**
  * Rapor hesaplayıcıları (§ 11.8): ekran, Excel ve PDF TEK bu servisten beslenir
@@ -74,6 +75,14 @@ export async function buildIncomeExpenseReport(year: number): Promise<IncomeExpe
     previous.set(key, (previous.get(key) ?? 0) + cents);
   }
 
+  const { bookingTotals, uncategorized } = summarizeGrossBookings(
+    bookings.map((booking) => ({
+      type: booking.type,
+      categoryId: booking.categoryId,
+      amountCents: Number(booking.amount.mul(100).toFixed(0)),
+    })),
+  );
+
   const rows: IncomeExpenseRow[] = [];
   let economicIncome = 0;
 
@@ -124,6 +133,8 @@ export async function buildIncomeExpenseReport(year: number): Promise<IncomeExpe
   return {
     year,
     rows,
+    bookingTotals,
+    uncategorized,
     economicOperationIncomeCents: economicIncome,
     economicOperationNotice: economicNotice(economicIncome),
   };

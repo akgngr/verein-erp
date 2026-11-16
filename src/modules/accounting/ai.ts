@@ -31,6 +31,8 @@ const summaryOutput = z.object({
   year: z.number().int(),
   categories: z.array(z.object({ category: z.string(), sphere: z.string().nullable(), direction: z.string(), actualEur: z.number(), planEur: z.number(), previousYearEur: z.number() }).strict()),
   economicOperationNotice: z.string(),
+  grossTotals: z.object({ incomeEur: z.number(), expenseEur: z.number(), netEur: z.number() }).strict(),
+  uncategorized: z.object({ incomeEur: z.number(), expenseEur: z.number() }).strict(),
   accounts: z.array(z.object({ account: z.string(), type: z.string(), balanceEur: z.number() }).strict()),
 }).strict();
 const vatOutput = z.object({
@@ -50,7 +52,7 @@ const reportOutput = z.object({ url: z.string(), note: z.string() }).strict();
 
 /** Model-görünür alanlar; src/shared/data-policy.ts AI_TOOL_POLICY ile aynı olmalı. */
 export const ACCOUNTING_AI_FIELDS = {
-  get_accounting_summary: ["year", "categories", "categories.category", "categories.sphere", "categories.direction", "categories.actualEur", "categories.planEur", "categories.previousYearEur", "economicOperationNotice", "accounts", "accounts.account", "accounts.type", "accounts.balanceEur"],
+  get_accounting_summary: ["year", "categories", "categories.category", "categories.sphere", "categories.direction", "categories.actualEur", "categories.planEur", "categories.previousYearEur", "economicOperationNotice", "grossTotals", "grossTotals.incomeEur", "grossTotals.expenseEur", "grossTotals.netEur", "uncategorized", "uncategorized.incomeEur", "uncategorized.expenseEur", "accounts", "accounts.account", "accounts.type", "accounts.balanceEur"],
   get_vat_summary: ["year", "chartOfAccounts", "smallBusiness", "taxMethod", "periods", "periods.period", "periods.kz81BaseEur", "periods.kz86BaseEur", "periods.kz66Eur", "periods.kz83Eur", "euer", "euer.incomeNetEur", "euer.outputTaxEur", "euer.expenseNetEur", "euer.inputTaxEur", "euer.resultEur", "page"],
   get_open_items_summary: ["buckets", "buckets.bucket", "buckets.count", "buckets.openEur", "totalOpenEur", "page"],
   get_bank_inbox_summary: ["statuses", "statuses.status", "statuses.count", "statuses.sumEur", "page"],
@@ -87,6 +89,15 @@ export const ai = defineModuleAiV2({
               previousYearEur: euros(row.previousYearCents),
             })),
           economicOperationNotice: report.economicOperationNotice,
+          grossTotals: {
+            incomeEur: euros(report.bookingTotals.incomeCents),
+            expenseEur: euros(report.bookingTotals.expenseCents),
+            netEur: euros(report.bookingTotals.netCents),
+          },
+          uncategorized: {
+            incomeEur: euros(report.uncategorized.incomeCents),
+            expenseEur: euros(report.uncategorized.expenseCents),
+          },
           accounts: balances.filter((account) => account.isActive).map((account) => ({ account: account.name, type: account.type, balanceEur: euros(account.balanceCents) })),
         };
       },

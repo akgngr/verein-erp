@@ -3,6 +3,7 @@ import { test } from "node:test";
 
 import { getBookingPeriodRange } from "@/modules/accounting/services/dashboard-period";
 import { summarizeOverdueInvoices } from "@/modules/accounting/services/dashboard-overdue";
+import { summarizeGrossBookings } from "@/modules/accounting/services/booking-summary";
 
 test("ACC-9 month range is inclusive of day one and excludes next month day one", () => {
   const range = getBookingPeriodRange(2026, "month", 2);
@@ -46,4 +47,21 @@ test("ACC-9 overdue totals use each invoice open amount, ignoring fully paid and
     { count: 2, cents: 10000 },
   );
   assert.deepEqual(summarizeOverdueInvoices([]), { count: 0, cents: 0 });
+});
+
+
+test("ACC-9 gross KPI reconciliation keeps uncategorized bookings visible without inventing a sphere", () => {
+  assert.deepEqual(
+    summarizeGrossBookings([
+      { type: "INCOME", amountCents: 12000, categoryId: "cat-income" },
+      { type: "INCOME", amountCents: 3000, categoryId: null },
+      { type: "EXPENSE", amountCents: 2500, categoryId: "cat-expense" },
+      { type: "EXPENSE", amountCents: 500, categoryId: null },
+      { type: "TRANSFER", amountCents: 999999, categoryId: null },
+    ]),
+    {
+      bookingTotals: { incomeCents: 15000, expenseCents: 3000, netCents: 12000 },
+      uncategorized: { incomeCents: 3000, expenseCents: 500 },
+    },
+  );
 });

@@ -36,3 +36,14 @@ Grafiğin yanında aynı verileri içeren bir tablo bulunur. Muhasebe kartların
 - `tests/accounting/dashboard-kpi.test.ts`: ay/çeyrek sınırları, yanlış dönem, kısmi ödeme/fazla ödeme regresyon testleri
 
 Tek kurumlu EUR uygulamasında farklı organizasyon veya para birimi seçimi bulunmaz. 
+
+## Dashboard, rapor ve AI toplamlarının mutabakatı
+
+Dashboard gelir/gider kartları ve `getAccountingStats` tüm iptal edilmemiş, virman olmayan fişlerin **brüt** toplamını gösterir. Gelir-gider raporundaki kategori satırları ise yalnız kategori atanmış fişleri dağıtabilir. Kategorisi olmayan bir fişin küresi uydurulmaz.
+
+Bu nedenle rapor nesnesi artık iki ek mutabakat alanı taşır:
+
+- `bookingTotals`: dashboard ile aynı brüt gelir, gider ve fark toplamı.
+- `uncategorized`: kategori atanmadığı için kategori satırlarına dağıtılamayan gelir/gider tutarı.
+
+AI muhasebe özeti de aynı brüt toplamları ve kategorisiz tutarı açıkça döndürür. Böylece kategori satırlarının toplamı genel toplamdan farklıysa bunun nedeni gizlenmez. KDV/EÜR ekranındaki net/vergi hesapları ayrı bir vergi raporu tanımıdır ve brüt dashboard rakamlarıyla doğrudan eşit olmak zorunda değildir.

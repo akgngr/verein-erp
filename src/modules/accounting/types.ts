@@ -141,6 +141,10 @@ export type IncomeExpenseRow = {
 export type IncomeExpenseReport = {
   year: number;
   rows: IncomeExpenseRow[];
+  /** Brüt fiş toplamları; dashboard/getAccountingStats ile aynı kapsam. */
+  bookingTotals: { incomeCents: number; expenseCents: number; netCents: number };
+  /** Kategorisi olmayan fişler rapor satırlarına dağıtılamaz; mutabakat için ayrıca gösterilir. */
+  uncategorized: { incomeCents: number; expenseCents: number };
   /** Ekonomik işletme uyarısı (§ 8 md. 17). */
   economicOperationIncomeCents: number;
   economicOperationNotice: "none" | "warning" | "exceeded";
