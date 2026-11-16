@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.22.2",
+      "date": "2026-11-16",
+      "title": {
+        "tr": "Geçmiş gelir-gider raporlarında pasif kategoriler",
+        "de": "Inaktive Kategorien in historischen Einnahmen-Ausgaben-Berichten"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Pasifleştirilmiş kategorilerde geçmiş fişler varsa gelir-gider raporundan kaybolmaları önlendi. Boş kategoriler yine listelenmez.",
+          "de": "Historische Buchungen in deaktivierten Kategorien bleiben im Einnahmen-Ausgaben-Bericht sichtbar. Kategorien ohne Buchungen werden weiterhin ausgeblendet."
+        }
+      ]
+    },
+    {
       "version": "1.22.1",
       "date": "2026-11-16",
       "appVersion": "0.41.0",
