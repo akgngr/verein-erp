@@ -148,17 +148,28 @@ export function QuarterlyFinanceChart({
                   const top = y(entry.amount);
                   const height = Math.max(0, plotBottom - top);
                   return (
-                    <rect
-                      key={entry.key}
-                      x={entry.x}
-                      y={top}
-                      width={barWidth}
-                      height={height}
-                      rx={Math.min(9, height / 2)}
-                      fill={entry.fill}
-                    >
-                      <title>{`${labels.quarter(index + 1)} · ${entry.label}: ${formatMoney(entry.amount)}`}</title>
-                    </rect>
+                    <g key={entry.key}>
+                      <rect
+                        x={entry.x}
+                        y={top}
+                        width={barWidth}
+                        height={height}
+                        rx={Math.min(9, height / 2)}
+                        fill={entry.fill}
+                      >
+                        <title>{`${labels.quarter(index + 1)} · ${entry.label}: ${formatMoney(entry.amount)}`}</title>
+                      </rect>
+                      {entry.amount > 0 ? (
+                        <text
+                          x={entry.x + barWidth / 2}
+                          y={Math.max(19, top - 10)}
+                          textAnchor="middle"
+                          className="fill-ink-600 text-[11px] font-semibold tabular-nums"
+                        >
+                          {compact.format(entry.amount / 100)}
+                        </text>
+                      ) : null}
+                    </g>
                   );
                 })}
                 <text
