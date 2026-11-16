@@ -14,7 +14,8 @@ export function getBookingPeriodRange(
     throw new RangeError("ACCOUNTING_INVALID_YEAR");
   }
   if (period === "year") return undefined;
-  if (!Number.isInteger(part) || (period === "quarter" ? part < 1 || part > 4 : part < 1 || part > 12)) {
+  const maximumPart = period === "quarter" ? 4 : 12;
+  if (!Number.isInteger(part) || part < 1 || part > maximumPart) {
     throw new RangeError("ACCOUNTING_INVALID_PERIOD");
   }
   const month = period === "quarter" ? (part - 1) * 3 : part - 1;
