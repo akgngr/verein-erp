@@ -302,3 +302,9 @@ body {
     border-radius: var(--radius);
   }
 }
+
+/* Temporary v2 flat-chip styling: its foreground uses the light palette's
+   primary-600 even in dark mode. Keep the forest badge readable until v3 migration. */
+.dark [class~="bg-primary/20"][class~="text-primary-600"] {
+  color: hsl(var(--heroui-primary));
+}
