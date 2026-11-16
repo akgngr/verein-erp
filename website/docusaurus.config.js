@@ -1,13 +1,13 @@
 // @ts-check
 import { themes as prismThemes } from "prism-react-renderer";
 
-/** Verein ERP dokümantasyonu. Yayın: GitHub Pages (.github/workflows/docs.yml). */
+/** Verein ERP dokümantasyonu. Yayın: GitHub Pages (.github/workflows/docs.yml), özel alan adı akgngr.com. */
 /** @type {import('@docusaurus/types').Config} */
 const config = {
   title: "Verein ERP",
   tagline: "Dernekler ve küçük işletmeler için modüler yönetim sistemi",
   favicon: "img/favicon.svg",
-  url: "https://akgngr.github.io",
+  url: "https://akgngr.com",
   baseUrl: "/verein-erp/",
   organizationName: "akgngr",
   projectName: "verein-erp",
