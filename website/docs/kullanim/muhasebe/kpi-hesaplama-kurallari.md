@@ -17,7 +17,7 @@ Muhasebe ekranı seçilen takvim yılındaki gelir ve gider fişlerini, varsa ay
 Yalnızca `INVOICE` türündeki, `ISSUED` durumunda olan ve vadesi geçmiş faturalar incelenir. Her fatura için açık tutar ayrı hesaplanır:
 
 ```text
-açık tutar = en fazla 0'a kadar indirgenmiş (brüt tutar - ödenen - Skonto)
+açık tutar = max(0, brüt tutar - ödenen - Skonto)
 ```
 
 Bir faturanın fazla ödenmiş olması başka bir faturanın açık borcunu azaltmaz. Tam ödenmiş faturalar uyarı sayısına dahil edilmez. Bu bir **kontrol önerisidir**; ödeme veya otomatik ihtar başlatılmaz.
