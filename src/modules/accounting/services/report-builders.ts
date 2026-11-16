@@ -142,14 +142,16 @@ export async function buildLedgerReport(
   });
 
   const fromDate = new Date(`${from}T00:00:00.000Z`);
-  const toDate = new Date(`${to}T00:00:00.000Z`);
+  const toExclusive = new Date(`${to}T00:00:00.000Z`);
+  toExclusive.setUTCDate(toExclusive.getUTCDate() + 1);
+  const throughDate = new Date(toExclusive.getTime() - 1);
 
   // Dönem başı bakiyesi: açılıştan from-1 güne kadar (§ 11.8 md. 2).
   const beforeFrom = new Date(fromDate.getTime() - 1);
   const openingBalanceCents =
     account.openingDate.getTime() <= beforeFrom.getTime()
       ? await accountBalanceAt(accountId, beforeFrom)
-      : account.openingDate.getTime() <= toDate.getTime()
+      : account.openingDate.getTime() <= throughDate.getTime()
         ? Number(account.openingBalance.mul(100).toFixed(0))
         : 0;
 
@@ -157,7 +159,7 @@ export async function buildLedgerReport(
     where: {
       reversedAt: null,
       OR: [{ accountId }, { counterAccountId: accountId }],
-      bookingDate: { gte: fromDate, lte: toDate },
+      bookingDate: { gte: fromDate, lt: toExclusive },
     },
     select: {
       id: true,
@@ -181,7 +183,7 @@ export async function buildLedgerReport(
     where: {
       reversedAt: { not: null },
       OR: [{ accountId }, { counterAccountId: accountId }],
-      bookingDate: { gte: fromDate, lte: toDate },
+      bookingDate: { gte: fromDate, lt: toExclusive },
     },
     select: {
       id: true,
@@ -231,7 +233,7 @@ export async function buildLedgerReport(
       receiptReference: booking.receiptReference,
       type: booking.type,
       amountCents: 0,
-      runningBalanceCents: running,
+      runningBalanceCents: 0,
       reversedAt: booking.reversedAt ? booking.reversedAt.toISOString() : null,
     });
   }
@@ -240,6 +242,14 @@ export async function buildLedgerReport(
     if (dateDiff !== 0) return dateDiff;
     return a.bookingNumber.localeCompare(b.bookingNumber, "de");
   });
+
+  // İptal satırları kronolojik sıraya girdikten sonra bakiyeyi tekrar hesapla.
+  // İptal satırının amountCents değeri 0 olduğundan bakiye değişmez.
+  let chronologicalBalance = openingBalanceCents;
+  for (const row of rows) {
+    chronologicalBalance += row.amountCents;
+    row.runningBalanceCents = chronologicalBalance;
+  }
 
   return {
     accountId: account.id,
@@ -331,7 +341,7 @@ export async function buildAnnualReportData(year: number): Promise<{
 
   const yearStart = new Date(Date.UTC(year, 0, 1));
   const beforeYear = new Date(yearStart.getTime() - 1);
-  const yearEnd = new Date(Date.UTC(year, 11, 31));
+  const yearEnd = new Date(Date.UTC(year + 1, 0, 1) - 1);
 
   const accountBalances: Array<{
     accountId: string;
