@@ -125,7 +125,7 @@ export async function runAssistant(args: { user: SessionUser; locale: string; pr
       toolsUsed.push(name);
       const tool = byName.get(name);
       if (!tool) return { content: "TOOL_NOT_AVAILABLE", isError: true };
-      const outcome = await runTool(tool, input, { user: args.user,conversationId:args.conversationId,policyRevision:revision, proposals, files, restore: (text) => attachmentRestore(vault.restore(text)) }, args.provider);
+      const outcome = await runTool(tool, input, { user: args.user,conversationId:args.conversationId,policyRevision:revision, proposals, files, restore: (text) => attachmentRestore(vault.restore(text)), attachments: attachments.flatMap((attachment) => (attachment.ref ? [{ ref: attachment.ref, name: attachment.name }] : [])) }, args.provider);
       if(outcome.ok && Buffer.byteLength(JSON.stringify(outcome.value) ?? "")>65_536) return {content:"AI_OUTPUT_BYTE_LIMIT",isError:true};
       return outcome.ok ? { content: JSON.stringify(vault.redactValue(outcome.value)), isError: false } : { content: outcome.error, isError: true };
     },

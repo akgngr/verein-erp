@@ -9,7 +9,10 @@ import {DATE_RE, aiAction, isoDay} from "@/shared/ai/define";
 import { parseListParams } from "@/shared/list-params";
 import { can } from "@/shared/permissions/define";
 
+import { getEnv } from "@/shared/env";
+
 import { documentsPermissions } from "./permissions";
+import { attachTempFilesToDocument } from "./services/attach-temp-files";
 import { changeStatusAction, createDocumentAction, deleteDocumentAction, DOCUMENT_DEFAULT_SORT, DOCUMENT_SORTABLE_FIELDS, getDocumentDetail, getDocumentFileText, getDocumentStats, listDocuments } from "./server";
 
 /** Evrak: sorumlu kişi dönmez; karşı taraf ve ek içerikleri maskeleme katmanından geçer. Sözleşme: src/shared/ai/define.ts. */
@@ -117,7 +120,16 @@ export const ai = defineModuleAiV2({
 
   ],
   actions: {
-    create: aiAction({ operation: "create", schema: createSchema, execute: (input) => createDocumentAction(input) }),
+    create: aiAction({
+      operation: "create",
+      schema: createSchema.extend({ fileRefs: z.array(z.string().uuid()).max(5).optional() }),
+      execute: async ({ fileRefs, ...input }, context) => {
+        const created = await createDocumentAction(input);
+        // Sohbette eklenen dosyalar onaylanan kayda eklenir (kullanıcıya ait, süresi dolmamış, izinli tür).
+        if (created.ok && fileRefs?.length && context) await attachTempFilesToDocument(created.data.id, fileRefs, context.user, getEnv().MAX_UPLOAD_MB * 1024 * 1024);
+        return created;
+      },
+    }),
     changeStatus: aiAction({
       operation: "update",
       snapshot: (input)=>getDocumentDetail(input.documentId),

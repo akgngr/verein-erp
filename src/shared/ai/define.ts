@@ -47,6 +47,11 @@ export type ModuleAiContext = {
    * Yalnız kullanıcıya ait çıktılarda (ör. üretilen dosya) kullanın; sonucu modele geri vermeyin.
    */
   revealAliases?: (text: string) => Promise<string>;
+  /**
+   * Kullanıcının bu mesaja eklediği dosyalar (yalnız sunucuda; modele verilmez). `ref`, kullanıcının onaylı
+   * eyleminde dosyayı kalıcı kayda eklemek için `@/shared/files/temp-uploads` ile açılır.
+   */
+  attachments?: Array<{ ref: string; name: string }>;
 };
 
 export type ModuleAiTool<S extends z.ZodType = z.ZodType> = {

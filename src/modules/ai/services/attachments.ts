@@ -14,7 +14,7 @@ export const AI_ATTACHMENTS_PER_MESSAGE = 5;
 /** Bir turda modele giden ek metninin toplam üst sınırı (karakter). */
 export const AI_ATTACHMENT_TOTAL_CHARS = 40_000;
 
-export type AiAttachment = { name: string; source: "text" | "ocr"; truncated: boolean; text: string };
+export type AiAttachment = { name: string; source: "text" | "ocr"; truncated: boolean; text: string; /** Geçici şifreli depodaki dosya (onaylı kayda eklemek için). */ ref?: string };
 type Sealed = AiAttachment & { u: string; exp: number };
 
 export function sealAttachment(userId: string, attachment: AiAttachment, now = Date.now()): string {
@@ -29,7 +29,7 @@ export function openAttachment(userId: string, token: string, now = Date.now()):
   try {
     const sealed = JSON.parse(raw) as Sealed;
     if (sealed.u !== userId || typeof sealed.exp !== "number" || sealed.exp < now || typeof sealed.text !== "string") return null;
-    return { name: sealed.name, source: sealed.source, truncated: sealed.truncated, text: sealed.text };
+    return { name: sealed.name, source: sealed.source, truncated: sealed.truncated, text: sealed.text, ref: typeof sealed.ref === "string" ? sealed.ref : undefined };
   } catch {
     return null;
   }

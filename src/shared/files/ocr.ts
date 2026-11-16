@@ -104,15 +104,41 @@ export async function ocrImage(bytes: Uint8Array): Promise<OcrResult> {
   return recognizeImages([Buffer.from(bytes)]);
 }
 
-/** Metin katmanı olmayan PDF: her sayfanın en büyük görüntüsü OCR'a verilir (en çok OCR_MAX_PAGES). */
+/** Sayfa başına bundan az karakter okunursa sonuç zayıf sayılır ve sayfa görüntüye çevrilerek yeniden okunur. */
+const WEAK_TEXT_PER_PAGE = 40;
+/** Sayfa görüntüsü çözünürlüğü (PDF birimi başına piksel): ~144 dpi, OCR için yeterli ve bellek dostu. */
+const RENDER_SCALE = 2;
+
+/**
+ * Metin katmanı olmayan/az olan PDF: önce her sayfanın en büyük gömülü görüntüsü okunur; sonuç zayıfsa
+ * (görüntü çözülemedi, içerik vektör ya da parçalı) sayfanın kendisi görüntüye çevrilip okunur (en çok OCR_MAX_PAGES).
+ */
 export async function ocrScannedPdf(bytes: Uint8Array): Promise<OcrResult> {
   const { getDocumentProxy, extractImages } = await import("unpdf");
   const pdf = await getDocumentProxy(new Uint8Array(bytes));
+  const pages = Math.min(pdf.numPages, OCR_MAX_PAGES);
   const images: Buffer[] = [];
-  for (let page = 1; page <= Math.min(pdf.numPages, OCR_MAX_PAGES); page++) {
-    const found = await extractImages(pdf, page);
+  for (let page = 1; page <= pages; page++) {
+    const found = await extractImages(pdf, page).catch(() => []);
     const largest = found.sort((a, b) => b.width * b.height - a.width * a.height)[0];
     if (largest && largest.width >= 200 && largest.height >= 200) images.push(rawImageToBmp(largest));
   }
-  return images.length ? recognizeImages(images) : { text: "", confidence: 0, pages: 0 };
+  const embedded = images.length ? await recognizeImages(images) : { text: "", confidence: 0, pages: 0 };
+  if (embedded.text.replace(/\s/g, "").length >= WEAK_TEXT_PER_PAGE * pages) return embedded;
+  const rendered = await ocrRenderedPages(bytes, pages).catch((error: unknown) => {
+    console.error("[shared/files] OCR_RENDER_FAILED", error instanceof Error ? error.message.split("\n")[0].slice(0, 200) : typeof error);
+    return null;
+  });
+  return rendered && rendered.text.replace(/\s/g, "").length > embedded.text.replace(/\s/g, "").length ? rendered : embedded;
+}
+
+/** PDF sayfalarını görüntüye çevirip OCR'lar (@napi-rs/canvas ile; tarayıcı/sistem bağımlılığı yok). */
+async function ocrRenderedPages(bytes: Uint8Array, pages: number): Promise<OcrResult> {
+  const { renderPageAsImage } = await import("unpdf");
+  const images: Buffer[] = [];
+  for (let page = 1; page <= pages; page++) {
+    const png = await renderPageAsImage(new Uint8Array(bytes), page, { canvasImport: () => import("@napi-rs/canvas"), scale: RENDER_SCALE });
+    images.push(Buffer.from(png));
+  }
+  return recognizeImages(images);
 }
