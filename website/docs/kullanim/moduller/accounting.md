@@ -13,7 +13,7 @@ Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura v
 |---|---|
 | Anahtar | `accounting` |
 | Tür | Resmî modül |
-| Sürüm | 1.22.8 |
+| Sürüm | 1.22.9 |
 | Sayfalar | `/muhasebe`, `/muhasebe/panel`, `/muhasebe/faturalar`, `/muhasebe/gelen-faturalar`, `/muhasebe/cariler`, `/muhasebe/banka`, `/muhasebe/uyelik-aktarimi`, `/muhasebe/raporlar`, `/muhasebe/vergi`, `/muhasebe/hibeler`, `/muhasebe/sepa`, `/muhasebe/butce`, `/muhasebe/ekler`, `/muhasebe/gobd`, `/muhasebe/yil-kapanisi`, `/muhasebe/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -43,6 +43,13 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_accounting_summary` · `get_bank_inbox_summary` · `get_open_items_summary` · `get_payables_summary` · `get_report_link` · `get_vat_summary`
 
 ## Sürüm notları
+
+### 1.22.9 — ACC-9 KPI mutabakatı
+
+_2026-11-16_
+
+- **Düzeltme:** Gelir-gider raporu tüm iptal edilmemiş ve virman olmayan fişlerin brüt toplamını ayrıca taşır; kategorisiz fişler mutabakat farkı olarak görünür ve dashboard ile rapor toplamları aynı kapsamda açıklanabilir.
+- **İyileştirme:** Muhasebe AI özeti brüt gelir, gider, fark ve kategorisiz tutarları açıkça döndürür; kategori satırlarıyla genel toplam arasındaki fark saklanmaz.
 
 ### 1.22.8 — Premium muhasebe kartları ve hafif grafik
 
@@ -89,10 +96,4 @@ _2026-11-16_
 
 - **Düzeltme:** Pasifleştirilmiş kategorilerde geçmiş fişler varsa gelir-gider raporundan kaybolmaları önlendi. Boş kategoriler yine listelenmez.
 
-### 1.22.1 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-Daha eski 27 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/accounting/releases.json)
+Daha eski 28 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/accounting/releases.json)
