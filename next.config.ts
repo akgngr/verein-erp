@@ -22,6 +22,24 @@ function envList(name: string): string[] {
 
 const isProduction = process.env.NODE_ENV === "production";
 
+/** Evrak OCR (docs/specs/DOCUMENTS_AI.md): tesseract.js çalışanı, WASM çekirdeği ve dil paketleri çalışma anında
+ * dosya sisteminden yüklenir; standalone çıktıya açıkça dahil edilir. */
+const OCR_RUNTIME_FILES = [
+      "./node_modules/tesseract.js/**",
+      "./node_modules/tesseract.js-core/**",
+      "./node_modules/@tesseract.js-data/**",
+      "./node_modules/.pnpm/tesseract.js*/**",
+      "./node_modules/.pnpm/@tesseract.js-data*/**",
+      // Worker betiği (worker_threads) çalışma anında yüklenir; bağımlılıkları tracing'e açıkça eklenir.
+      "./node_modules/.pnpm/wasm-feature-detect*/**",
+      "./node_modules/.pnpm/regenerator-runtime*/**",
+      "./node_modules/.pnpm/is-url*/**",
+      "./node_modules/.pnpm/bmp-js*/**",
+      "./node_modules/.pnpm/zlibjs*/**",
+      "./node_modules/.pnpm/idb-keyval*/**",
+      "./node_modules/.pnpm/node-fetch@2*/**",
+    ];
+
 const nextConfig: NextConfig = {
   output: "standalone",
   // KARAR (A-2): Next.js 16 dev kaynaklarına (/_next/hmr vb.) yalnızca izinli
@@ -58,21 +76,9 @@ const nextConfig: NextConfig = {
     "/api/progress/report": ["./src/shared/pdf/fonts/**"],
     // Evrak OCR (docs/specs/DOCUMENTS_AI.md): tesseract.js çalışanı, WASM çekirdeği ve dil paketleri
     // çalışma anında dosya sisteminden yüklenir; standalone çıktıya açıkça dahil edilir.
-    "/api/documents/analyze": [
-      "./node_modules/tesseract.js/**",
-      "./node_modules/tesseract.js-core/**",
-      "./node_modules/@tesseract.js-data/**",
-      "./node_modules/.pnpm/tesseract.js*/**",
-      "./node_modules/.pnpm/@tesseract.js-data*/**",
-      // Worker betiği (worker_threads) çalışma anında yüklenir; bağımlılıkları tracing'e açıkça eklenir.
-      "./node_modules/.pnpm/wasm-feature-detect*/**",
-      "./node_modules/.pnpm/regenerator-runtime*/**",
-      "./node_modules/.pnpm/is-url*/**",
-      "./node_modules/.pnpm/bmp-js*/**",
-      "./node_modules/.pnpm/zlibjs*/**",
-      "./node_modules/.pnpm/idb-keyval*/**",
-      "./node_modules/.pnpm/node-fetch@2*/**",
-    ],
+    "/api/documents/analyze": OCR_RUNTIME_FILES,
+    // Asistan sohbet ekleri (resim/taranmış PDF için aynı OCR çalışma zamanı).
+    "/api/ai/attachments": OCR_RUNTIME_FILES,
   },
   // KARAR (Faz 2, 9. bölüm): @react-pdf/renderer Next bundler'ıyla sorun
   // çıkarabildiği için sunucu paketinin dışında tutulur (serverExternalPackages).

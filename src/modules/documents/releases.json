@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.6.3",
+      "date": "2026-11-16",
+      "title": {
+        "tr": "OCR ortak altyapıya taşındı",
+        "de": "OCR in gemeinsame Infrastruktur verschoben"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Evrak OCR'ı ortak dosya altyapısına taşındı (asistan ekleri de kullanır); davranış değişmedi.",
+          "de": "Die Dokument-OCR wurde in die gemeinsame Dateiinfrastruktur verschoben (auch für Assistentenanhänge); Verhalten unverändert."
+        }
+      ]
+    },
+    {
       "version": "1.6.2",
       "date": "2026-11-16",
       "appVersion": "0.41.0",

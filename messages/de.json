@@ -1897,7 +1897,23 @@
       "emptyTitle": "Wie kann ich helfen?",
       "emptySubtitle": "Fragen Sie zu Ihren Vereinsdaten, fordern Sie Berichte und Dateien an oder lassen Sie sich Aufgaben vorschlagen.",
       "composerPlaceholder": "Fragen Sie etwas…",
-      "disclaimer": "Der Assistent kann Fehler machen. Prüfen Sie die Ergebnisse."
+      "disclaimer": "Der Assistent kann Fehler machen. Prüfen Sie die Ergebnisse.",
+      "attachments": {
+        "add": "Datei anhängen",
+        "hint": "Datei anhängen: PDF, Bild, Word, Excel, Markdown, CSV",
+        "list": "Angehängte Dateien",
+        "remove": "{name} entfernen",
+        "analyzeDefault": "Analysiere und fasse diese Datei zusammen.",
+        "failed": "Datei konnte nicht hochgeladen werden.",
+        "limit": "Pro Nachricht sind höchstens {count} Dateien möglich."
+      },
+      "historyGroups": {
+        "today": "Heute",
+        "yesterday": "Gestern",
+        "week": "Letzte 7 Tage",
+        "month": "Letzte 30 Tage",
+        "older": "Älter"
+      }
     },
     "settings": {
       "title": "KI-Assistent",
@@ -2104,6 +2120,14 @@
         "specialCategory": "Das Dokument enthält besondere Daten zu einer Person (z. B. Gesundheit); es kann nur mit einem lokalen Modell verarbeitet werden.",
         "unreadable": "Die Antwort des Assistenten war nicht lesbar; bitte erneut versuchen."
       }
+    },
+    "attachments": {
+      "unsupported": "Aus diesem Dateityp kann kein Text gelesen werden.",
+      "noText": "In der Datei wurde kein lesbarer Text gefunden.",
+      "failed": "Die Datei konnte nicht analysiert werden.",
+      "expired": "Der Anhang ist abgelaufen; bitte erneut anhängen.",
+      "needScreened": "Beim Cloud-Anbieter sind Dateianhänge nur im Modus „Geprüfter Freitext“ möglich (Einstellungen → KI-Assistent).",
+      "sensitive": "Die Datei enthält besondere Kategorien personenbezogener Daten (Gesundheit, Religion …) zusammen mit einer Person; sie wurde nicht an die Cloud gesendet. Verwenden Sie ein lokales Modell."
     }
   },
   "audit": {

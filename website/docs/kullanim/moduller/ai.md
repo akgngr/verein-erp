@@ -13,7 +13,7 @@ Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuy
 |---|---|
 | Anahtar | `ai` |
 | Tür | Eklenti |
-| Sürüm | 1.12.0 |
+| Sürüm | 1.13.0 |
 | Sayfalar | `/ayarlar/yapay-zeka` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Yapay zekâ asistanı | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.13.0 — Asistan: dosya ekleme, yeni geçmiş, hareketli mesaj kutusu
+
+_2026-11-16_
+
+- **Yeni:** Sohbete dosya eklenebilir (PDF, resim, Word, Excel, Markdown, CSV): metin sunucuda çıkarılır (resim ve taranmış belgede OCR), dosya saklanmaz. Bulutta yalnız denetimli modda ve kişisel parçalar maskelenerek gönderilir. Sohbet geçmişi tarihe göre gruplandı; panel yazıları küçültüldü; mesaj kutusuna tıklayınca dosya düğmesi alt satıra kayar.
 
 ### 1.12.0 — Yeni sohbet tasarımı
 
@@ -86,10 +92,4 @@ _2026-11-15_
 
 - **Yeni:** Evrak metni için AI özeti, tür ve kategori önerisi (POST /api/ai/document-summary). Yerel modelde doğrudan; bulutta yalnız "Denetimli serbest metin" modunda, adlar/adres/IBAN/e-posta maskelenerek. Kişiyle birlikte özel nitelikli veri varsa yalnız yerel model. AI matrisinde Evrak Kayıt → içerik okuma gerekir.
 
-### 1.8.0 — Takma adlı kişi verisi (bulut)
-
-_2026-11-15_
-
-- **Yeni:** Denetimli modda "Takma adlı kişi verisi" açılabilir: kişi düzeyindeki araç sonuçları buluta yalnız [[K7]] gibi takma adlarla ve kabalaştırılmış alanlarla gider; model bunlarla rapor üretir, sonuç kullanıcıya gerçek adlarla (canlı yetkiyle) gösterilir.
-
-Daha eski 17 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/ai/releases.json)
+Daha eski 18 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/ai/releases.json)

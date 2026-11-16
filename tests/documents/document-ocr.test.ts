@@ -5,7 +5,7 @@ import { test } from "node:test";
 import { PDFDocument } from "pdf-lib";
 
 import { analyzeDocumentBytes } from "@/modules/documents/services/document-analysis";
-import { rawImageToBmp } from "@/modules/documents/services/ocr";
+import { rawImageToBmp } from "@/shared/files/ocr";
 
 const png = readFileSync("tests/fixtures/documents/invoice-scan.png");
 

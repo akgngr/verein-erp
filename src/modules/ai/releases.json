@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.13.0",
+      "date": "2026-11-16",
+      "title": {
+        "tr": "Asistan: dosya ekleme, yeni geçmiş, hareketli mesaj kutusu",
+        "de": "Assistent: Dateianhänge, neuer Verlauf, animiertes Eingabefeld"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Sohbete dosya eklenebilir (PDF, resim, Word, Excel, Markdown, CSV): metin sunucuda çıkarılır (resim ve taranmış belgede OCR), dosya saklanmaz. Bulutta yalnız denetimli modda ve kişisel parçalar maskelenerek gönderilir. Sohbet geçmişi tarihe göre gruplandı; panel yazıları küçültüldü; mesaj kutusuna tıklayınca dosya düğmesi alt satıra kayar.",
+          "de": "Dateien können an den Chat angehängt werden (PDF, Bild, Word, Excel, Markdown, CSV): Der Text wird serverseitig extrahiert (OCR bei Bildern und Scans), die Datei wird nicht gespeichert. In die Cloud nur im geprüften Modus und mit maskierten Personendaten. Chatverlauf nach Datum gruppiert; kleinere Schrift im Panel; beim Klick ins Eingabefeld rutscht die Anhang-Schaltfläche in die untere Zeile."
+        }
+      ]
+    },
+    {
       "version": "1.12.0",
       "date": "2026-11-16",
       "title": {
