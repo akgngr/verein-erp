@@ -170,6 +170,7 @@ async function main() {
   }
   // Optional theme acceptance on the disposable CI database. No login/credential screenshots.
   if (captureDir) {
+    page.setDefaultTimeout(30_000);
     for (const [route, label] of [
       ["/", "dashboard"],
       ["/uyeler", "members"],
@@ -256,9 +257,14 @@ async function main() {
     await page.keyboard.press("Enter");
     await page.getByRole("listbox").waitFor({ state: "hidden" });
     const consent = memberDialog.getByRole("switch");
-    await consent.click();
-    if ((await consent.getAttribute("aria-checked")) !== "true")
-      throw new Error("V3_SWITCH_VALUE_FAILED");
+    await memberDialog.locator('[data-slot="switch-content"]').click();
+    if (!(await consent.isChecked()))
+      throw new Error("V3_SWITCH_POINTER_FAILED");
+    await consent.focus();
+    await consent.press("Space");
+    if (await consent.isChecked()) throw new Error("V3_SWITCH_KEYBOARD_FAILED");
+    await consent.press("Space");
+    if (!(await consent.isChecked())) throw new Error("V3_SWITCH_VALUE_FAILED");
     await page.screenshot({
       path: path.join(captureDir, "member-form-dark.png"),
       fullPage: true,
