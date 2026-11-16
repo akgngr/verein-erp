@@ -12,7 +12,7 @@ gerektirmez.
 
 ---
 
-> 📚 **Dokümantasyon sitesi:** https://akgngr.github.io/verein-erp/ (kaynak: `website/`, modül kataloğu `pnpm docs:modules` ile üretilir)
+> 📚 **Dokümantasyon sitesi:** https://akgngr.com/verein-erp/ (kaynak: `website/`, modül kataloğu `pnpm docs:modules` ile üretilir)
 
 ## İçindekiler
 
