@@ -13,7 +13,7 @@ Alman dernek mevzuatına uygun çift taraflı defter tutma, fiş ve bütçe yön
 |---|---|
 | Anahtar | `accounting` |
 | Tür | Resmî modül |
-| Sürüm | 1.22.1 |
+| Sürüm | 1.22.2 |
 | Sayfalar | `/muhasebe`, `/muhasebe/faturalar`, `/muhasebe/gelen-faturalar`, `/muhasebe/cariler`, `/muhasebe/banka`, `/muhasebe/uyelik-aktarimi`, `/muhasebe/raporlar`, `/muhasebe/vergi`, `/muhasebe/hibeler`, `/muhasebe/sepa`, `/muhasebe/butce`, `/muhasebe/ekler`, `/muhasebe/gobd`, `/muhasebe/yil-kapanisi`, `/muhasebe/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -43,6 +43,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_accounting_summary` · `get_bank_inbox_summary` · `get_open_items_summary` · `get_payables_summary` · `get_report_link` · `get_vat_summary`
 
 ## Sürüm notları
+
+### 1.22.2 — Geçmiş gelir-gider raporlarında pasif kategoriler
+
+_2026-11-16_
+
+- **Düzeltme:** Pasifleştirilmiş kategorilerde geçmiş fişler varsa gelir-gider raporundan kaybolmaları önlendi. Boş kategoriler yine listelenmez.
 
 ### 1.22.1 — HeroUI v3 arayüz geçişi
 
@@ -89,10 +95,4 @@ _2026-11-07_
 - **Yeni:** Gelen XRechnung/ZUGFeRD faturalarının detayında satıcı, alıcı, kalemler, KDV dökümü, ödeme bilgileri ve notlarla okunabilir görünüm. Görünüm her zaman saklanan orijinal XML'den üretilir.
 - **Yeni:** Aynı içerikten saklama ve denetim için PDF indirilebilir.
 
-### 1.18.0 — E-fatura doğrulama
-
-_2026-11-07_
-
-- **Yeni:** E-fatura doğrulama: EN 16931 ve XRechnung (BR-DE) kuralları; hatalı faturada XRechnung/ZUGFeRD üretilmez, fatura ekranında kontrol paneli, gelen e-faturada içe alırken kontrol, isteğe bağlı KoSIT doğrulayıcısı.
-
-Daha eski 20 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/accounting/releases.json)
+Daha eski 21 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/accounting/releases.json)
