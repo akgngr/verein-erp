@@ -41,7 +41,7 @@ export function freeReserveLimitCents(input: { assetManagementSurplusCents: numb
 export function findUpcomingTaxDeadline(
   now: Date,
   deadlines: readonly Deadline[],
-  withinDays = 45,
+  withinDays = 60,
 ): Deadline | null {
   const start = now.getTime();
   const end = start + withinDays * 86_400_000;
