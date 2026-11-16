@@ -1559,6 +1559,13 @@
     "taxMethod": "Steuereinstellung: {method}.",
     "unmatchedBank": "{count} nicht zugeordnete Bankumsätze müssen geprüft werden.",
     "inspectBank": "Bankumsätze prüfen",
-    "currency": "EUR"
+    "currency": "EUR",
+    "taxDeadline": "Nächster {kind}-Termin: {date} für {period}. Feiertage und Sonderfristverlängerungen müssen separat geprüft werden.",
+    "inspectTax": "Steuerkalender prüfen",
+    "taxDeadlineKey": {
+      "ustva": "UStVA",
+      "annualVat": "Umsatzsteuer-Jahreserklärung",
+      "incomeTax": "Einkommensteuererklärung"
+    }
   }
 }
