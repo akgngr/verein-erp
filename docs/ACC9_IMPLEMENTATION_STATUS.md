@@ -26,7 +26,8 @@
 
 - [ ] **KPI mutabakatı:** `getAccountingStats`, fiş raporu, `buildIncomeExpenseReport` ve AI özetinin karşılaştırılması; kategori ve KDV farkları varsa hesaplama esasını açıkça ayır.
 - [ ] **Tarih ve fiş denetimi:** Berlin tarih sınırları, yıl geçişi, reversed/storno, 500+ fatura ve yıllık kapanış için veritabanı fixture'lı entegrasyon testleri.
-- [ ] **Öneri kapsamı:** banka mutabakatı, yaklaşan vergi tarihi, gerektiğinde açık borç/aidat bilgisi; veriyi ve erişim onayını doğrulamadan kart ekleme.
+- [x] **Banka mutabakatı:** `OPEN` durumundaki banka hareketlerini salt okunur sayıp ilgili ekrana yönlendiren öneri (PR #186).
+- [ ] **Öneri kapsamı devamı:** yaklaşan vergi tarihi, gerektiğinde açık borç/aidat bilgisi; doğrulanmış iş kuralı ve erişim onayı olmadan kart ekleme.
 - [ ] **Performans:** tüm gecikmiş faturaların belleğe çekilmesi yerine, fatura başına açık tutarı koruyan ölçeklenebilir toplama sorgusunu tasarla ve ölç.
 - [ ] **UX doğrulaması:** gerçek ekran görüntüleriyle masaüstü/mobil, yükleme/boş/hata/izin durumları; diğer UI agentinin değişiklikleriyle koordinasyon.
 - [ ] **Dokümantasyon:** yeni özelliklerin kullanım örnekleri, görseller, alt sayfalara yönlendirmeler ve CI link testi; mevcut TR website yapısını koru.

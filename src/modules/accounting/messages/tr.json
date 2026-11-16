@@ -1556,6 +1556,8 @@
     "inspectInvoices": "Faturaları incele",
     "noWarnings": "Bu kurallara göre kontrol gerektiren kayıt görünmüyor.",
     "basis": "Tutarlar brüt fiş tutarlarıdır (EUR). Banka bakiyesi veya vergiye esas kâr değildir. Vergi yöntemi raporun tarih esasını değiştirmez.",
-    "taxMethod": "Vergi ayarı: {method}."
+    "taxMethod": "Vergi ayarı: {method}.",
+    "unmatchedBank": "Eşleştirilmemiş {count} banka hareketi kontrol bekliyor.",
+    "inspectBank": "Banka hareketlerini incele"
   }
 }

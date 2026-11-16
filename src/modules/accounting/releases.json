@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.22.7",
+      "date": "2026-11-16",
+      "title": {
+        "tr": "Banka mutabakatı kontrol önerisi",
+        "de": "Hinweis auf offene Bankabstimmungen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Muhasebe genel bakış ekranında açık durumdaki eşleştirilmemiş banka hareketleri sayılır; banka ekranına güvenli yönlendirme yapılır ve otomatik işlem başlatılmaz.",
+          "de": "Die Buchhaltungsübersicht zeigt die Anzahl offener, nicht abgeglichener Bankumsätze und verlinkt zur Prüfung ohne automatische Buchung."
+        }
+      ]
+    },
+    {
       "version": "1.22.6",
       "date": "2026-11-16",
       "title": {

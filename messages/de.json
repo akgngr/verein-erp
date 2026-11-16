@@ -1842,7 +1842,9 @@
       "inspectInvoices": "Rechnungen prüfen",
       "noWarnings": "Keine Auffälligkeiten nach den derzeitigen Prüfregeln.",
       "basis": "Bruttobuchungswerte in EUR. Kein Bankkontostand oder steuerlicher Gewinn. Die Steuerart ändert die Buchungsdatumsbasis dieses Berichts nicht.",
-      "taxMethod": "Steuereinstellung: {method}."
+      "taxMethod": "Steuereinstellung: {method}.",
+      "unmatchedBank": "{count} nicht zugeordnete Bankumsätze müssen geprüft werden.",
+      "inspectBank": "Bankumsätze prüfen"
     }
   },
   "ai": {
