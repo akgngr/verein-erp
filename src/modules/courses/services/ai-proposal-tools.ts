@@ -23,7 +23,7 @@ aiToolV2({
         description: z.string().max(2000).nullable(),
       })).strict(),
       result:proposalAcknowledgementSchema,modelOutput:proposalAcknowledgementSchema,
-      policy:{"purpose":"courses-proposal","serverReads":[],"modelFields":["status","note"],"processing":"local_only"},projectForModel:result=>result,
+      policy:{"purpose":"courses-proposal","serverReads":[],"modelFields":["status","note"],"processing":"approved_provider","modelDataClass":"internal"},projectForModel:result=>result,
       run: async ({ kind, ...rest }, { propose }) => {
         propose({ action: "create", title: rest.title, details: [kind, [rest.startDate, rest.endDate].filter(Boolean).join(" – ")].filter(Boolean), payload: { kind, ...rest } });
         return PROPOSED;
@@ -36,7 +36,7 @@ aiToolV2({
       description: "PROPOSES changing a course's status (id from get_course_statistics).", // i18n-ignore (model-facing tool text)
       input:(z.object({ courseId: z.string().min(1).max(100), status: z.enum(["PLANNED", "ACTIVE", "COMPLETED", "CANCELLED"]) })).strict(),
       result:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["not_found"])}).strict()]),modelOutput:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["not_found"])}).strict()]),
-      policy:{"purpose":"courses-proposal","serverReads":["Course"],"modelFields":["status","note"],"processing":"local_only"},projectForModel:result=>result,
+      policy:{"purpose":"courses-proposal","serverReads":["Course"],"modelFields":["status","note"],"processing":"approved_provider","modelDataClass":"internal"},projectForModel:result=>result,
       run: async ({ courseId, status }, { propose }) => {
         const course = await getAiCourseTarget(courseId);
         if (!course) return { status: "not_found" } as const;
@@ -51,7 +51,7 @@ aiToolV2({
       description: "PROPOSES deleting a course (id from get_course_statistics).", // i18n-ignore (model-facing tool text)
       input:(z.object({ courseId: z.string().min(1).max(100) })).strict(),
       result:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["not_found"])}).strict()]),modelOutput:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["not_found"])}).strict()]),
-      policy:{"purpose":"courses-proposal","serverReads":["Course"],"modelFields":["status","note"],"processing":"local_only"},projectForModel:result=>result,
+      policy:{"purpose":"courses-proposal","serverReads":["Course"],"modelFields":["status","note"],"processing":"approved_provider","modelDataClass":"internal"},projectForModel:result=>result,
       run: async ({ courseId }, { propose }) => {
         const course = await getAiCourseTarget(courseId);
         if (!course) return { status: "not_found" } as const;

@@ -23,7 +23,7 @@ aiToolV2({
       description: "PROPOSES a new task to the user. Nothing is created: the user confirms it from a card in the panel, with their own permissions. Do not put personal names or contact details in it.", // i18n-ignore (model-facing tool text)
       input:(createSchema).strict(),
       result:proposalAcknowledgementSchema,modelOutput:proposalAcknowledgementSchema,
-      policy:{"purpose":"tasks-proposal","serverReads":[],"modelFields":["status","note"],"processing":"local_only"},projectForModel:result=>result,
+      policy:{"purpose":"tasks-proposal","serverReads":[],"modelFields":["status","note"],"processing":"approved_provider","modelDataClass":"internal"},projectForModel:result=>result,
       run: async (input, { propose }) => {
         propose({ action: "create", title: input.title, details: [input.priority, input.dueDate ?? "", input.description ?? ""].filter(Boolean), payload: input });
         return PROPOSED;
@@ -36,7 +36,7 @@ aiToolV2({
       description: "PROPOSES marking a task as done (id from list_open_tasks). Nothing changes until the user confirms.", // i18n-ignore (model-facing tool text)
       input:(taskId).strict(),
       result:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["not_found"])}).strict()]),modelOutput:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["not_found"])}).strict()]),
-      policy:{"purpose":"tasks-proposal","serverReads":["Task"],"modelFields":["status","note"],"processing":"local_only"},projectForModel:result=>result,
+      policy:{"purpose":"tasks-proposal","serverReads":["Task"],"modelFields":["status","note"],"processing":"approved_provider","modelDataClass":"internal"},projectForModel:result=>result,
       run: async ({ taskId }, { propose }) => {
         const task = await getAiTaskTarget(taskId);
         if (!task) return { status: "not_found" } as const;
@@ -51,7 +51,7 @@ aiToolV2({
       description: "PROPOSES deleting a task (id from list_open_tasks). Nothing is deleted until the user confirms.", // i18n-ignore (model-facing tool text)
       input:(taskId).strict(),
       result:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["not_found"])}).strict()]),modelOutput:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["not_found"])}).strict()]),
-      policy:{"purpose":"tasks-proposal","serverReads":["Task"],"modelFields":["status","note"],"processing":"local_only"},projectForModel:result=>result,
+      policy:{"purpose":"tasks-proposal","serverReads":["Task"],"modelFields":["status","note"],"processing":"approved_provider","modelDataClass":"internal"},projectForModel:result=>result,
       run: async ({ taskId }, { propose }) => {
         const task = await getAiTaskTarget(taskId);
         if (!task) return { status: "not_found" } as const;

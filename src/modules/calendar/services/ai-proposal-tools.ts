@@ -31,7 +31,7 @@ aiToolV2({
         description: z.string().max(2000).nullable(),
       })).strict(),
       result:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["calendar_not_found","open_calendar_once_first","end_before_start"])}).strict()]),modelOutput:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["calendar_not_found","open_calendar_once_first","end_before_start"])}).strict()]),
-      policy:{"purpose":"calendar-proposal","serverReads":["Calendar"],"modelFields":["status","note"],"processing":"local_only"},projectForModel:result=>result,
+      policy:{"purpose":"calendar-proposal","serverReads":["Calendar"],"modelFields":["status","note"],"processing":"approved_provider","modelDataClass":"internal"},projectForModel:result=>result,
       run: async ({ location, description, title, ...input }, { user, propose }) => {
         const db = getDb();
         const calendar = input.calendarId

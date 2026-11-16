@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.3.4",
+      "date": "2026-11-16",
+      "title": {
+        "tr": "Asistan önerileri bulutta",
+        "de": "Assistent-Vorschläge in der Cloud"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Asistanın öneri araçları (onay kartlı) bulut sağlayıcıda denetimli modda da kullanılabilir.",
+          "de": "Die Vorschlagswerkzeuge des Assistenten (mit Bestätigungskarte) sind auch beim Cloud-Anbieter im geprüften Modus verfügbar."
+        }
+      ]
+    },
+    {
       "version": "1.3.3",
       "date": "2026-11-16",
       "appVersion": "0.41.0",

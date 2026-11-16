@@ -22,7 +22,7 @@ aiToolV2({
         description: z.string().max(2000).nullable(),
       })).strict(),
       result:proposalAcknowledgementSchema,modelOutput:proposalAcknowledgementSchema,
-      policy:{"purpose":"inventory-proposal","serverReads":[],"modelFields":["status","note"],"processing":"local_only"},projectForModel:result=>result,
+      policy:{"purpose":"inventory-proposal","serverReads":[],"modelFields":["status","note"],"processing":"approved_provider","modelDataClass":"internal"},projectForModel:result=>result,
       run: async ({ name, ...rest }, { propose }) => {
         propose({ action: "create", title: name, details: [rest.category, `× ${rest.quantity}`, rest.location ?? ""].filter(Boolean), payload: { name, ...rest } });
         return PROPOSED;
@@ -35,7 +35,7 @@ aiToolV2({
       description: "PROPOSES changing an inventory item's status (id from list_inventory_items).", // i18n-ignore (model-facing tool text)
       input:(z.object({ itemId: z.string().min(1).max(100), name: z.string().max(200), status: z.enum(["IN_USE", "IDLE", "BROKEN", "SCRAPPED"]) })).strict(),
       result:proposalAcknowledgementSchema,modelOutput:proposalAcknowledgementSchema,
-      policy:{"purpose":"inventory-proposal","serverReads":[],"modelFields":["status","note"],"processing":"local_only"},projectForModel:result=>result,
+      policy:{"purpose":"inventory-proposal","serverReads":[],"modelFields":["status","note"],"processing":"approved_provider","modelDataClass":"internal"},projectForModel:result=>result,
       run: async ({ itemId, name, status }, { propose }) => {
         propose({ action: "changeStatus", title: name, details: [`→ ${status}`], payload: { itemId, status } });
         return PROPOSED;
@@ -48,7 +48,7 @@ aiToolV2({
       description: "PROPOSES deleting an inventory item (id from list_inventory_items).", // i18n-ignore (model-facing tool text)
       input:(z.object({ itemId: z.string().min(1).max(100), name: z.string().max(200) })).strict(),
       result:proposalAcknowledgementSchema,modelOutput:proposalAcknowledgementSchema,
-      policy:{"purpose":"inventory-proposal","serverReads":[],"modelFields":["status","note"],"processing":"local_only"},projectForModel:result=>result,
+      policy:{"purpose":"inventory-proposal","serverReads":[],"modelFields":["status","note"],"processing":"approved_provider","modelDataClass":"internal"},projectForModel:result=>result,
       run: async ({ itemId, name }, { propose }) => {
         propose({ action: "delete", title: name, payload: { itemId } });
         return PROPOSED;

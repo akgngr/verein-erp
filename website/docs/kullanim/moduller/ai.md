@@ -13,7 +13,7 @@ Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuy
 |---|---|
 | Anahtar | `ai` |
 | Tür | Eklenti |
-| Sürüm | 1.13.0 |
+| Sürüm | 1.13.1 |
 | Sayfalar | `/ayarlar/yapay-zeka` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Yapay zekâ asistanı | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.13.1 — Asistan önerileri bulutta
+
+_2026-11-16_
+
+- **İyileştirme:** Bulut sağlayıcıda öneri araçları (evrak kaydı, görev, etkinlik vb. onay kartları) artık denetimli modda kullanılabilir; ekteki maskeli değerler öneride gerçek değere çevrilir. Az metinli PDF eklerinde gömülü resimler de OCR ile okunur.
 
 ### 1.13.0 — Asistan: dosya ekleme, yeni geçmiş, hareketli mesaj kutusu
 
@@ -86,10 +92,4 @@ _2026-11-16_
 
 - **Düzeltme:** Evrak özeti testi ortak AI ayarlarını değiştirmiyor; paralel çalışan dışa aktarma testinin rastgele "erişim kaldırıldı" hatası giderildi.
 
-### 1.9.0 — Evrak özeti (AI)
-
-_2026-11-15_
-
-- **Yeni:** Evrak metni için AI özeti, tür ve kategori önerisi (POST /api/ai/document-summary). Yerel modelde doğrudan; bulutta yalnız "Denetimli serbest metin" modunda, adlar/adres/IBAN/e-posta maskelenerek. Kişiyle birlikte özel nitelikli veri varsa yalnız yerel model. AI matrisinde Evrak Kayıt → içerik okuma gerekir.
-
-Daha eski 18 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/ai/releases.json)
+Daha eski 19 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/ai/releases.json)

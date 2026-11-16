@@ -40,7 +40,7 @@ test("migrated proposal tools expose strict schemas, fixed acknowledgements and 
   for(const [name,input]of Object.entries(fixtures)){
    const tool=tools.find(t=>t.name===name)!;assert.ok(tool,name);
    assert.equal((tool as unknown as {contractVersion:number}).contractVersion,2);
-   assert.equal(tool.processing,"local_only");assert.equal(tool.inputSchema.additionalProperties,false);
+   assert.equal(tool.processing,undefined);assert.equal((tool as {policy?:{modelDataClass?:string}}).policy?.modelDataClass,"internal");assert.equal(tool.inputSchema.additionalProperties,false);
    assert.equal(tool.schema.safeParse({...input,sql:"select secrets"}).success,false);
    const cards:unknown[]=[];
    const context:ModuleAiContext={user:{id:"actor",name:"Actor",email:"actor@example.test",role:"ADMIN"},propose:card=>{cards.push(card);},restore:v=>v,createDataset:async()=>{throw new Error("No dataset here");},loadDatasetDefinition:async()=>{throw new Error("No dataset here");},attachFile:()=>{throw new Error("No file here");}};

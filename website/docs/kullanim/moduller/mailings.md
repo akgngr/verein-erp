@@ -13,7 +13,7 @@ slug: /kullanim/moduller/mailings
 |---|---|
 | Anahtar | `mailings` |
 | Tür | Resmî modül |
-| Sürüm | 2.4.5 |
+| Sürüm | 2.4.6 |
 | Sayfalar | `/toplu-eposta`, `/toplu-eposta/ayarlar` |
 | Gerektirir | [E-posta Altyapısı](./mail), [Otomasyon](./automation) |
 
@@ -43,6 +43,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_campaign_statistics` · `list_campaign_audiences` · `list_campaigns` · `propose_campaign_draft`
 
 ## Sürüm notları
+
+### 2.4.6 — Asistan önerileri bulutta
+
+_2026-11-16_
+
+- **İyileştirme:** Asistanın öneri araçları (onay kartlı) bulut sağlayıcıda denetimli modda da kullanılabilir.
 
 ### 2.4.5 — HeroUI v3 arayüz geçişi
 
@@ -87,12 +93,4 @@ _2026-11-07_
 - **Yeni:** Alıcı başına gönderim kaydı: gönderildi, teslim edildi, açıldı/okundu, tıkladı; panoda kampanya hunisi.
 - **Yeni:** E-postada açılma pikseli ve imzalı tıklama bağlantıları (kampanya başına açılıp kapatılabilir); SMS/WhatsApp sağlayıcı bildirimleri işlenir.
 
-### 2.2.0 — E-posta şablon editörü, yeni hedef kitleler
-
-_2026-11-07_
-
-- **Yeni:** Yeni blok tabanlı e-posta editörü: solda bileşenler (başlık, metin, buton, görsel, ayırıcı, boşluk, 2/3 sütun, alt bilgi), ortada tuval, sağda seçili bloğun ayarları ve modülün yer tutucuları; masaüstü/mobil önizleme. Çıktı e-posta istemcileriyle uyumlu tablo düzenli HTML.
-- **Yeni:** Etkinlik ve toplantı katılımcıları hedef kitle olarak; diğer modüllerden sihirbaz ön seçimle açılabilir.
-- **Düzeltme:** Kampanya kartlarında iç içe düğme (hydration) hatası giderildi; taslaklar "Düzenle" ile açılır.
-
-Daha eski 12 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/mailings/releases.json)
+Daha eski 13 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/mailings/releases.json)
