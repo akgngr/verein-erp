@@ -1,6 +1,7 @@
 "use client";
 
 import { Card, Drawer, Description, buttonVariants } from "@heroui/react";
+import { DialogDismissButton } from "../ui/dialog-dismiss-button";
 import { actionVariant } from "../ui/action-appearance";
 import { cn } from "@/shared/utils";
 import Link from "next/link";
@@ -76,7 +77,7 @@ export function FormDrawer({
                 }[size],
               )}
             >
-              <Drawer.CloseTrigger />
+              <DialogDismissButton drawer />
               <Drawer.Header className="border-b border-ink-200/80 pb-5">
                 <Drawer.Heading>{title}</Drawer.Heading>
                 {description ? <Description>{description}</Description> : null}

@@ -299,12 +299,18 @@ async function main() {
         .first();
       await day.click();
       await calendar.waitFor({ state: "hidden" });
+      const dateValues = await memberDialog
+        .locator('input[name="birthDate"]')
+        .evaluateAll((nodes) =>
+          nodes.map((node) => (node as HTMLInputElement).value),
+        );
       if (
-        !(
-          await memberDialog.locator('input[name="birthDate"]').inputValue()
-        ).startsWith("2020-")
+        !dateValues.length ||
+        dateValues.some((value) => !value.startsWith("2020-")) ||
+        new Set(dateValues).size !== 1
       )
         throw new Error("V3_DATE_FIELD_VALUE_FAILED");
+      await page.evaluate(() => window.scrollTo(0, 0));
       await page.screenshot({
         path: path.join(captureDir, "member-form-dark.png"),
         fullPage: true,
@@ -335,7 +341,7 @@ async function main() {
       const documentDialog = page.getByRole("dialog");
       await documentDialog.waitFor();
       const counterparty = documentDialog.getByRole("combobox", {
-        name: /^(Gönderen|Absender)$/,
+        name: /Gönderen|Absender/,
       });
       await counterparty.fill("Synthetic preview organisation");
       await counterparty.press("Tab");
@@ -397,16 +403,14 @@ async function main() {
       // Labels only: no input values or credentials in failure diagnostics.
       console.error(
         "[theme] Visible button labels:",
-        await page
-          .getByRole("button")
-          .evaluateAll((nodes) =>
-            nodes.map((node) => ({
-              text: node.textContent?.trim(),
-              label: node.getAttribute("aria-label"),
-              labelledBy: node.getAttribute("aria-labelledby"),
-              slot: node.getAttribute("data-slot"),
-            })),
-          ),
+        await page.getByRole("button").evaluateAll((nodes) =>
+          nodes.map((node) => ({
+            text: node.textContent?.trim(),
+            label: node.getAttribute("aria-label"),
+            labelledBy: node.getAttribute("aria-labelledby"),
+            slot: node.getAttribute("data-slot"),
+          })),
+        ),
       );
       throw error;
     }
