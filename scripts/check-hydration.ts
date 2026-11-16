@@ -218,7 +218,7 @@ async function main() {
         });
       }
       await page.setViewportSize({ width: 1440, height: 900 });
-      await page.reload({ waitUntil: "networkidle" });
+      await page.goto(`${BASE_URL}/uyeler`, { waitUntil: "networkidle" });
       if (!(await page.locator("html.dark").count()))
         throw new Error("THEME_PERSISTENCE_FAILED");
       await page
