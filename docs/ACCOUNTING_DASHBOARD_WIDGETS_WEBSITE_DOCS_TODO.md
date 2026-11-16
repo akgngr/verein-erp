@@ -7,7 +7,7 @@
 **Target:** Ordvexa / Verein ERP  
 **Related:** `docs/ACCOUNTING_ROADMAP.md`, `docs/AUTOMATION_ENGINE.md`, `website/docs/kullanim/moduller/accounting.md`
 
-## 1. Purpose and constraints
+> **2026-11-16 güncellemesi:** Bu belge ilk taslaktır. Mevcut proje altyapısı `defineCards` ve tek kurumlu EUR modelini kullanır. `defineModuleWidget`, multi-tenant, dört sütunlu grid, kart başına kalıcı ayarlar ve DE website sayfaları mevcut ACC-9 kapsamında değildir. Uygulama durumu ve geçerli kararlar için [ACC-9 uygulama durumuna](./ACC9_IMPLEMENTATION_STATUS.md) bakınız. Dashboard kartları PR #183, özet ekran/önerilerin ilk sürümü PR #184 ile ana dala alınmıştır.\n\n## 1. Purpose and constraints
 
 Provide an accounting overview with KPI cards, trends, alerts and actionable recommendations. Allow users to add permitted accounting widgets to the **main application dashboard**, without coupling the shared dashboard to accounting. Maintain detailed **website/** documentation for every accounting feature change, in addition to engineering docs.
 

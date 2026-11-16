@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.22.6",
+      "date": "2026-11-16",
+      "title": {
+        "tr": "ACC-9 hesaplama doğruluğu ve muhasebe kapsamı",
+        "de": "ACC-9 Berechnungstests und Buchhaltungsumfang"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Dashboard için ay/çeyrek dönemleri ve fatura bazında açık borç toplamları regresyon testleriyle güvenceye alındı.",
+          "de": "Monats- und Quartalszeiträume sowie offene Rechnungsbeträge werden durch Regressionstests abgesichert."
+        },
+        {
+          "type": "improvement",
+          "tr": "Modül tanımı mevcut EÜR odaklı muhasebe kapsamına uygun hale getirildi; tam HGB çift taraflı bilanço desteği iddia edilmez.",
+          "de": "Modulbeschreibung beschreibt den EÜR-orientierten Umfang statt einer nicht nachgewiesenen vollständigen HGB-Doppelbuchführung."
+        }
+      ]
+    },
+    {
       "version": "1.22.5",
       "date": "2026-11-16",
       "title": {
