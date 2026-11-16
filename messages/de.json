@@ -1796,6 +1796,28 @@
           }
         }
       }
+    },
+    "cards": {
+      "income": {
+        "title": "Buchungseinnahmen",
+        "description": "Bruttosumme der nicht stornierten Einnahmenbuchungen des Jahres ohne Umbuchungen.",
+        "period": "{year} · Einnahmenbuchungen"
+      },
+      "expense": {
+        "title": "Buchungsausgaben",
+        "description": "Bruttosumme der nicht stornierten Ausgabenbuchungen des Jahres ohne Umbuchungen.",
+        "period": "{year} · Ausgabenbuchungen"
+      },
+      "balance": {
+        "title": "Einnahmen minus Ausgaben",
+        "description": "Differenz aus Jahresbuchungen, kein Bankkontostand oder bilanzieller Gewinn.",
+        "period": "{year} · Buchungsdifferenz"
+      },
+      "missingReceipts": {
+        "title": "Buchungen ohne Beleg",
+        "description": "Buchungen ohne Datei, ausgenommen Umbuchungen und Quellbuchungen.",
+        "period": "{year} · fehlende Belege"
+      }
     }
   },
   "ai": {

@@ -1437,11 +1437,11 @@
         "source": "Quelle: gespeichertes Original-XML ({syntax}) · SHA-256 {hash}…"
       },
       "types": {
+        "326": "Teilrechnung",
         "380": "Rechnung",
         "381": "Gutschrift",
         "384": "Rechnungskorrektur",
         "389": "Selbst ausgestellte Rechnung (Gutschriftverfahren)",
-        "326": "Teilrechnung",
         "875": "Abschlagsrechnung (Bau)",
         "876": "Teilschlussrechnung (Bau)",
         "877": "Schlussrechnung (Bau)",
@@ -1509,6 +1509,28 @@
           "b2bVoluntary": "Rechnung an ein Unternehmen (B2B): in der Übergangszeit ist PDF möglich, XRechnung/ZUGFeRD wird empfohlen."
         }
       }
+    }
+  },
+  "cards": {
+    "income": {
+      "title": "Buchungseinnahmen",
+      "description": "Bruttosumme der nicht stornierten Einnahmenbuchungen des Jahres ohne Umbuchungen.",
+      "period": "{year} · Einnahmenbuchungen"
+    },
+    "expense": {
+      "title": "Buchungsausgaben",
+      "description": "Bruttosumme der nicht stornierten Ausgabenbuchungen des Jahres ohne Umbuchungen.",
+      "period": "{year} · Ausgabenbuchungen"
+    },
+    "balance": {
+      "title": "Einnahmen minus Ausgaben",
+      "description": "Differenz aus Jahresbuchungen, kein Bankkontostand oder bilanzieller Gewinn.",
+      "period": "{year} · Buchungsdifferenz"
+    },
+    "missingReceipts": {
+      "title": "Buchungen ohne Beleg",
+      "description": "Buchungen ohne Datei, ausgenommen Umbuchungen und Quellbuchungen.",
+      "period": "{year} · fehlende Belege"
     }
   }
 }

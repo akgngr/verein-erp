@@ -13,7 +13,7 @@ Alman dernek mevzuatına uygun çift taraflı defter tutma, fiş ve bütçe yön
 |---|---|
 | Anahtar | `accounting` |
 | Tür | Resmî modül |
-| Sürüm | 1.22.3 |
+| Sürüm | 1.22.4 |
 | Sayfalar | `/muhasebe`, `/muhasebe/faturalar`, `/muhasebe/gelen-faturalar`, `/muhasebe/cariler`, `/muhasebe/banka`, `/muhasebe/uyelik-aktarimi`, `/muhasebe/raporlar`, `/muhasebe/vergi`, `/muhasebe/hibeler`, `/muhasebe/sepa`, `/muhasebe/butce`, `/muhasebe/ekler`, `/muhasebe/gobd`, `/muhasebe/yil-kapanisi`, `/muhasebe/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -43,6 +43,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_accounting_summary` · `get_bank_inbox_summary` · `get_open_items_summary` · `get_payables_summary` · `get_report_link` · `get_vat_summary`
 
 ## Sürüm notları
+
+### 1.22.4 — Ana panel muhasebe kartları
+
+_2026-11-16_
+
+- **Yeni:** Mevcut fiş istatistiklerini kullanan gelir, gider, fiş farkı ve eksik belge kartları ana panelde seçilebilir. Kartlar kullanıcı rolüne göre filtrelenir; yeni grafik paketi eklenmedi.
 
 ### 1.22.3 — Kasa defteri tarih ve bakiye doğruluğu
 
@@ -86,12 +92,4 @@ _2026-11-08_
 
 - **Düzeltme:** Gelen e-fatura görünümünde kaynak satırı çeviri hatası (FORMATTING_ERROR) giderildi.
 
-### 1.20.0 — E-fatura zorunluluğu ve alıcı türü
-
-_2026-11-08_
-
-- **Yeni:** Cari kartında e-fatura alıcı türü (işletme, özel kişi, kamu) ve kamu için Leitweg-ID.
-- **Yeni:** Muhasebe ayarlarında e-fatura zorunluluğu (2027/2028 kuralı, önceki yıl cirosu) ve satıcı bilgileri hazırlık listesi.
-- **Yeni:** Fatura ekranında e-fatura gerekliliği uyarısı; B2C ve ≤ 250 € faturalar uyarı üretmez. Kamu alıcısına Leitweg-ID olmadan fatura kesilemez.
-
-Daha eski 22 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/accounting/releases.json)
+Daha eski 23 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/accounting/releases.json)
