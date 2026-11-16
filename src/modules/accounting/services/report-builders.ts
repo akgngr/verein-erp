@@ -16,6 +16,7 @@ import type {
   ProjectReportRow,
 } from "../types";
 import { accountBalanceAt } from "./balances";
+import { summarizeGrossBookings } from "./booking-summary";
 
 /**
  * Rapor hesaplayıcıları (§ 11.8): ekran, Excel ve PDF TEK bu servisten beslenir
@@ -74,19 +75,13 @@ export async function buildIncomeExpenseReport(year: number): Promise<IncomeExpe
     previous.set(key, (previous.get(key) ?? 0) + cents);
   }
 
-  const bookingTotals = { incomeCents: 0, expenseCents: 0, netCents: 0 };
-  const uncategorized = { incomeCents: 0, expenseCents: 0 };
-  for (const booking of bookings) {
-    const cents = Number(booking.amount.mul(100).toFixed(0));
-    if (booking.type === "INCOME") {
-      bookingTotals.incomeCents += cents;
-      if (!booking.categoryId) uncategorized.incomeCents += cents;
-    } else if (booking.type === "EXPENSE") {
-      bookingTotals.expenseCents += cents;
-      if (!booking.categoryId) uncategorized.expenseCents += cents;
-    }
-  }
-  bookingTotals.netCents = bookingTotals.incomeCents - bookingTotals.expenseCents;
+  const { bookingTotals, uncategorized } = summarizeGrossBookings(
+    bookings.map((booking) => ({
+      type: booking.type,
+      categoryId: booking.categoryId,
+      amountCents: Number(booking.amount.mul(100).toFixed(0)),
+    })),
+  );
 
   const rows: IncomeExpenseRow[] = [];
   let economicIncome = 0;
