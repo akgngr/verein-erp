@@ -64,3 +64,29 @@
 ## 6. Bu PR'ın sınırı
 
 Yalnızca keşif/ADR taslağıdır; kod, migration, modül sürümü veya website sayfası değiştirmez. Hiçbir testin çalıştırıldığı iddia edilmez. PR #177'deki planla birlikte gözden geçirilmelidir.
+
+## 7. Ek derin inceleme bulguları (2026-11-16)
+
+- `src/modules/accounting/services/report-builders.ts`: `buildIncomeExpenseReport(year)` `accountingBooking` kayıtlarını `year`, `reversedAt: null`, `type != TRANSFER` koşullarıyla okuyor. `categoryId` olmayan fişleri toplama katmıyor. Tutarlar Decimal -> integer cent çevriliyor; önceki yıl aynı modelle hesaplanıyor. Bu **fiş/kategori bazlı yıllık EÜR benzeri rapor**, tam HGB çift taraflı bilanço değildir.
+- Aynı dosyada `buildLedgerReport` hem `accountId` hem `counterAccountId` üzerinden hareketleri işliyor. Karşı hesap alanı bulunması, tek başına tam çift taraflı muhasebe ve bilanço uygunluğunu kanıtlamaz. ADR kararı: **ürün kapsamı mevcut doğrulanmış EÜR/fiş ve hesap hareketleriyle sınırlandırılmalı; modül açıklamasındaki çift taraflı iddia kaldırılmalı** (kod/versiyon güncellemesi ayrı PR).
+- `src/modules/accounting/services/tax.ts`: `taxMethod: IST | SOLL` vergi ayarı; `smallBusiness` için efektif KDV oranı 0; brütten net/vergi cent düzeyinde ayrılıyor. **Bu ayar raporun otomatik olarak ödeme/tahakkuk esasına göre hesaplandığını kanıtlamaz**; `buildIncomeExpenseReport` doğrudan booking yılını kullanıyor. Dashboard'da `taxMethod` etiketi vergi ayarı olarak gösterilmeli; rapor semantiği ayrı doğrulanmalı.
+- `src/modules/accounting/services/report-builders.ts` içinde `countMissingReceipts(year)` zaten var: transfer olmayan, `sourceType` olmayan ve silinmemiş dosya sayısı sıfır olan fişler. Dolayısıyla **eksik belge kartı için başlangıç kaynağı var**; bunun hukuken zorunlu belge sayısı değil, mevcut iş kuralına göre eksik dosya sayısı olduğu belirtilmeli.
+- `src/modules/accounting/module.config.ts` içindeki `access` dizisi `members: read` içeriyor. Aidat kartı için mevcut onay ve `recommends` gereksinimini çalışma anında doğrula; erişim tamamen yok varsayımı yanlış.
+- `src/modules/members/cards/index.tsx` zaten aidat tahsilat kartı içeriyor; muhasebe paneline aynı kartı yeniden kopyalamak yerine var olan kartı ana panelde kullanmak öncelikli seçenek.
+- `src/modules/accounting/permissions.ts`: `accounting.view` ADMIN, BOARD, TREASURER, AUDITOR için tanımlı; SECRETARY, TEACHER, VIEWER için değil. Kart yetkisi `accountingPermissions.view` ile eşlenmeli.
+- `src/modules/accounting/queries/invoices.ts`: `isOverdue` kontrolü `Date.now() - 24h` kullanıyor; gün başlangıcı temelli doğru vade hesabı olup olmadığı test edilmeli. `listInvoices` `take: 500` içeriyor; toplam için kullanılamaz.
+- `buildLedgerReport` tarih aralığında `toDate` UTC gece yarısına kadar `lte` kullanıyor; bitiş gününün kalan saatleri dışarıda kalabilir. Ayrıca ters kayıtlar ana liste sonrası eklenip sıralanırken `runningBalanceCents` yeniden hesaplanmıyor; bu ayrı doğruluk testi ve hata düzeltme konusu.
+- `buildAnnualReportData` yıl sonu `Date.UTC(year,11,31)` ile hesap bakiyesi alıyor; 31 Aralık gününün tamamını kapsayıp kapsamadığı test edilmeli. Bu, dashboard kartlarına mevcut kodu körlemesine kopyalamamak için kritik.
+- `buildIncomeExpenseReport` aktif kategoriler listesinden kategori ID'lerini üretip kullanılan kategoriyle kesiştiriyor. **Pasifleştirilmiş ama geçmiş fişi olan kategorilerin raporda kaybolması** riski var; fixture ile doğrula.
+
+### Güncellenmiş ADR sonucu
+
+**Karar (dokümantasyon/ürün kapsamı):** Mevcut raporlama EÜR/gelir-gider esaslı olarak sunulacak; HGB uyumlu tam çift taraflı muhasebe iddiası şimdilik kullanılmayacak. Teknik olarak çift hesap referanslarının bulunması bu sonucu değiştirmez. Vergi için IST/SOLL seçimi ayrı bir konudur. Bu ADR'nin uygulamaya geçirilmesi modül açıklaması, sürüm, releases ve website rehberinin birlikte güncellendiği ayrı PR'da yapılmalıdır.
+
+### Yeni öncelikli doğruluk TODO
+- [ ] Pasif kategoriye ait geçmiş fişlerin rapordan düşmediğini fixture ile doğrula/düzelt.
+- [ ] Kassenbuch `toDate` bitiş günü sınırı ve Europe/Berlin semantiğini test et.
+- [ ] Yıl sonu `accountBalanceAt` kesim tarihinin 31 Aralık gününün tamamını kapsadığını test et.
+- [ ] Ters kayıt satırlarının sıralanması sonrası yürüyen bakiye gösterimini test et.
+- [ ] `taxMethod` ile EÜR raporunun fiili kayıt/tarih semantiği ayrımını belge ve test et.
+- [ ] Eksik belge kartı için `countMissingReceipts` iş kuralını kullanıcıya açıklayarak yeniden kullan.
