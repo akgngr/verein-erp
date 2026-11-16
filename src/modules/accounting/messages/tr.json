@@ -1558,6 +1558,7 @@
     "basis": "Tutarlar brüt fiş tutarlarıdır (EUR). Banka bakiyesi veya vergiye esas kâr değildir. Vergi yöntemi raporun tarih esasını değiştirmez.",
     "taxMethod": "Vergi ayarı: {method}.",
     "unmatchedBank": "Eşleştirilmemiş {count} banka hareketi kontrol bekliyor.",
-    "inspectBank": "Banka hareketlerini incele"
+    "inspectBank": "Banka hareketlerini incele",
+    "currency": "EUR"
   }
 }
