@@ -99,9 +99,37 @@ async function recognizeImages(images: Buffer[]): Promise<OcrResult> {
   }
 }
 
-/** Fotoğraf/tarama (JPEG, PNG, …) OCR. */
+/** OCR'ın iyi okuduğu en kısa kenar (piksel); küçük ekran görüntüleri bu boyuta büyütülür. */
+const OCR_TARGET_MIN_EDGE = 1600;
+const OCR_MAX_UPSCALE = 3;
+
+/**
+ * Görüntüyü OCR için hazırlar: PNG'ye çevirir (WebP/GIF dahil) ve küçükse büyütür. Küçük ekran görüntülerinde
+ * (ör. 500 px genişlik) Tesseract harfleri ayıramaz; büyütme okumayı belirgin iyileştirir. Hata olursa ham bayt döner.
+ */
+export async function prepareImageForOcr(bytes: Uint8Array): Promise<Buffer> {
+  try {
+    const { createCanvas, loadImage } = await import("@napi-rs/canvas");
+    const image = await loadImage(Buffer.from(bytes));
+    const scale = Math.min(OCR_MAX_UPSCALE, Math.max(1, OCR_TARGET_MIN_EDGE / Math.min(image.width, image.height)));
+    const width = Math.round(image.width * scale);
+    const height = Math.round(image.height * scale);
+    const canvas = createCanvas(width, height);
+    const context = canvas.getContext("2d");
+    context.fillStyle = "#ffffff";
+    context.fillRect(0, 0, width, height);
+    context.imageSmoothingQuality = "high";
+    context.drawImage(image, 0, 0, width, height);
+    return canvas.toBuffer("image/png");
+  } catch (error) {
+    console.error("[shared/files] OCR_IMAGE_PREPARE_FAILED", error instanceof Error ? error.message.split("\n")[0].slice(0, 200) : typeof error);
+    return Buffer.from(bytes);
+  }
+}
+
+/** Fotoğraf/tarama (JPEG, PNG, WebP …) OCR. */
 export async function ocrImage(bytes: Uint8Array): Promise<OcrResult> {
-  return recognizeImages([Buffer.from(bytes)]);
+  return recognizeImages([await prepareImageForOcr(bytes)]);
 }
 
 /** Sayfa başına bundan az karakter okunursa sonuç zayıf sayılır ve sayfa görüntüye çevrilerek yeniden okunur. */

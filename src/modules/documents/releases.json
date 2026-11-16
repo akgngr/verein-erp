@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.7.1",
+      "date": "2026-11-16",
+      "title": {
+        "tr": "Daha iyi OCR: küçük resimler ve WebP",
+        "de": "Bessere OCR: kleine Bilder und WebP"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Resimler OCR'dan önce büyütülüp PNG'ye çevrilir: küçük ekran görüntüleri ve WebP dosyaları artık okunur.",
+          "de": "Bilder werden vor der OCR vergrößert und in PNG umgewandelt: kleine Screenshots und WebP-Dateien werden jetzt gelesen."
+        }
+      ]
+    },
+    {
       "version": "1.7.0",
       "date": "2026-11-16",
       "title": {

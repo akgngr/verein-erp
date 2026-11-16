@@ -9,7 +9,7 @@ import { openSecret, sealSecret } from "@/shared/security/secret-box";
  */
 export const AI_ATTACHMENT_PURPOSE = "ai-chat-attachment";
 export const AI_ATTACHMENT_TTL_MS = 60 * 60 * 1000;
-export const AI_ATTACHMENT_EXTENSIONS = ["pdf", "png", "jpg", "jpeg", "docx", "xlsx", "md", "markdown", "csv", "txt"] as const;
+export const AI_ATTACHMENT_EXTENSIONS = ["pdf", "png", "jpg", "jpeg", "webp", "docx", "xlsx", "md", "markdown", "csv", "txt"] as const;
 export const AI_ATTACHMENTS_PER_MESSAGE = 5;
 /** Bir turda modele giden ek metninin toplam üst sınırı (karakter). */
 export const AI_ATTACHMENT_TOTAL_CHARS = 40_000;

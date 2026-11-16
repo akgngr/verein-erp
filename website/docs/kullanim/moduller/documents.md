@@ -13,7 +13,7 @@ Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi.
 |---|---|
 | Anahtar | `documents` |
 | Tür | Resmî modül |
-| Sürüm | 1.7.0 |
+| Sürüm | 1.7.1 |
 | Sayfalar | `/evrak`, `/evrak/kategoriler` |
 | Önerir | [Muhasebe](./accounting), [Görevler](./tasks), [Yapay zekâ asistanı](./ai) |
 
@@ -44,6 +44,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_document` · `get_document_statistics` · `list_documents` · `propose_delete_document` · `propose_document` · `propose_document_status` · `read_document_file`
 
 ## Sürüm notları
+
+### 1.7.1 — Daha iyi OCR: küçük resimler ve WebP
+
+_2026-11-16_
+
+- **İyileştirme:** Resimler OCR'dan önce büyütülüp PNG'ye çevrilir: küçük ekran görüntüleri ve WebP dosyaları artık okunur.
 
 ### 1.7.0 — Asistandan kayıtta dosya eki; daha güçlü OCR
 
@@ -87,10 +93,4 @@ _2026-11-15_
 
 - **Güvenlik:** Öneri araçları katı Zod girdisi ve sabit model sonucu kullanır; salt öneri sorguları gereksiz kişi detaylarını okumaz. Kalan eski okuma araçlarının dönüşümü ayrı sürer.
 
-### 1.5.0 — Evraktan iş oluşturma
-
-_2026-11-15_
-
-- **Yeni:** Gelen evrak dosyalarında "Muhasebeye aktar": dosya analiz edilip muhasebede tedarikçi, numara, tarih, vade ve IBAN'ı dolu gelen fatura taslağı olarak açılır. Son işlem tarihi olan evrakta "Termin için görev oluştur".
-
-Daha eski 8 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/documents/releases.json)
+Daha eski 9 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/documents/releases.json)
