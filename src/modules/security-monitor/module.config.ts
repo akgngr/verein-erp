@@ -6,7 +6,7 @@ import { securityMonitorPermissions } from "./permissions";
 
 export const moduleConfig: ModuleConfig = {
   key: "security-monitor",
-  version: "1.3.2",
+  version: "1.3.3",
   label: "Security Monitor",
   description: "Regularly runs system security tests and monitors results",
   category: "OFFICIAL",

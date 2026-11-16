@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. En üst sürüm module.config.ts ile aynı olmalı.",
   "releases": [
     {
+      "version": "1.3.3",
+      "date": "2026-11-16",
+      "title": {
+        "tr": "Uyarı onaylama ucu düzeltildi",
+        "de": "Endpunkt zum Bestätigen von Warnungen korrigiert"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Uyarı onaylama, kimliği olmayan liste ucundan uyarının kendi ucuna taşındı (action: acknowledge | resolve). Üretim derlemesini durduran tip hatası giderildi.",
+          "de": "Das Bestätigen von Warnungen wurde vom Listen-Endpunkt ohne ID auf den Endpunkt der Warnung verschoben (action: acknowledge | resolve). Behebt einen Typfehler, der den Produktions-Build stoppte."
+        }
+      ]
+    },
+    {
       "version": "1.3.2",
       "date": "2026-11-16",
       "appVersion": "0.41.0",
