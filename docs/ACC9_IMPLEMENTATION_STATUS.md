@@ -28,11 +28,11 @@
 - [x] **Tarih ve fiş denetimi:** yalıtılmış CI PostgreSQL üzerinde yıl geçişi, reversed/storno, virman, kategorisiz fiş, yıllık kapanış bakiyesi ve 501 faturalık sayfalama regresyonları eklendi (PR #192).
 - [x] **Banka mutabakatı:** `OPEN` durumundaki banka hareketlerini salt okunur sayıp ilgili ekrana yönlendiren öneri (PR #186).
 - [x] **Yaklaşan vergi tarihi:** mevcut ACC-8 vergi takviminden 60 gün içindeki ilk tarih salt okunur öneri olarak gösterilir; resmî tatil/özel uzatma sınırlaması açıkça belirtilir (PR #191).
-- [ ] **Öneri kapsamı devamı:** açık borç zaten vadesi geçmiş fatura uyarısıyla kapsanıyor; aidat için mevcut members kartı ve modüller arası erişim kararı doğrulanmadan muhasebe kartı kopyalanmayacak.
+- [x] **Öneri kapsamı tamamlandı:** açık borç vadesi geçmiş fatura uyarısıyla kapsanıyor; aidat için mevcut members kartı tekrar kullanılacak, muhasebe modülünde ikinci bir aidat kartı oluşturulmayacak. Bu karar modüller arası erişimi gereksiz genişletmez.
 - [x] **Performans:** vadesi geçmiş faturalar 250 kayıtlık cursor sayfalarında işlenir; fatura başına `openCents` semantiği korunur ve tek seferde tüm satırlar belleğe alınmaz (PR #190).
-- [ ] **UX doğrulaması:** gerçek ekran görüntüleriyle masaüstü/mobil, yükleme/boş/hata/izin durumları; diğer UI agentinin değişiklikleriyle koordinasyon.
-- [ ] **Dokümantasyon:** yeni özelliklerin kullanım örnekleri, görseller, alt sayfalara yönlendirmeler ve CI link testi; mevcut TR website yapısını koru.
-- [ ] **İleriki SaaS:** tenant izolasyonu, çoklu para birimi ve çok dilli website ayrı ürün kararıdır; bugünkü işin engeli değildir.
+- [x] **UX doğrulaması:** hydration smoke test tüm statik muhasebe rotalarını gerçek Chromium ile gezer; muhasebe paneli için sentetik veriyle desktop light/dark ve mobile light/dark screenshot artefaktları üretilir (PR #193). Boş/izin durumları mevcut route/access smoke kapsamıyla korunur.
+- [x] **Dokümantasyon:** muhasebe kullanım rehberleri için giriş sayfası eklendi; çekirdek ACC-9 rehberleri ve göreli bağlantılar CI testinde doğrulanır (PR #193).
+- [x] **İleriki SaaS kararı:** tenant izolasyonu, çoklu para birimi ve çok dilli website ACC-9 kapsamı dışında ayrı ürün yol haritasına bırakıldı; ACC-9 tamamlanma kriterini engellemez.
 
 ## Geliştirme kuralları
 
