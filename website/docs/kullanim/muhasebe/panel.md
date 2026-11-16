@@ -56,6 +56,6 @@ Vadesi geçmiş fatura önerisi bütün faturaları tek seferde belleğe yüklem
 
 ## Yaklaşan vergi tarihi önerisi
 
-Panel, muhasebe ayarlarındaki KDV dönemi, §19 durumu ve Dauerfristverlängerung seçimini kullanarak mevcut vergi takviminden **önümüzdeki 45 gün içindeki ilk tarihi** gösterebilir. Bu yalnızca kontrol hatırlatıcısıdır; ELSTER gönderimi veya beyanname oluşturma işlemi başlatmaz.
+Panel, muhasebe ayarlarındaki KDV dönemi, §19 durumu ve Dauerfristverlängerung seçimini kullanarak mevcut vergi takviminden **önümüzdeki 60 gün içindeki ilk tarihi** gösterebilir. Bu yalnızca kontrol hatırlatıcısıdır; ELSTER gönderimi veya beyanname oluşturma işlemi başlatmaz.
 
 Takvim hesabı hafta sonunu pazartesiye taşır; **resmî tatiller, danışman kaynaklı özel süreler ve olağanüstü yasal uzatmalar otomatik olarak hesaplanmaz**. Son tarih işlemden önce ayrıca doğrulanmalıdır.
