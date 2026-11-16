@@ -76,10 +76,15 @@ test("ACC-9 DB: year boundaries, reversed rows, transfers and year-closing row r
     assert.equal(closing.missingReceiptCount, 3);
     assert.equal(closing.lockedByLabel, prefix);
   } finally {
-    await db.accountingBooking.deleteMany({ where: { createdById: prefix } });
-    await db.accountingYear.deleteMany({ where: { year: 2097, lockedById: prefix } });
-    await db.accountingCategory.deleteMany({ where: { id: { in: [incomeCategoryId, expenseCategoryId] } } });
-    await db.accountingAccount.deleteMany({ where: { id: { in: [accountId, counterAccountId] } } });
+    // Production bookings are append-only by trigger. This test runs only against the
+    // isolated CI database; disable user triggers locally in one cleanup transaction.
+    await db.$transaction(async (tx) => {
+      await tx.$executeRawUnsafe("SET LOCAL session_replication_role = replica");
+      await tx.accountingBooking.deleteMany({ where: { createdById: prefix } });
+      await tx.accountingYear.deleteMany({ where: { year: 2097, lockedById: prefix } });
+      await tx.accountingCategory.deleteMany({ where: { id: { in: [incomeCategoryId, expenseCategoryId] } } });
+      await tx.accountingAccount.deleteMany({ where: { id: { in: [accountId, counterAccountId] } } });
+    });
   }
 });
 
