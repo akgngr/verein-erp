@@ -175,6 +175,7 @@ async function main() {
       for (const [route, label] of [
         ["/", "dashboard"],
         ["/uyeler", "members"],
+        ["/muhasebe/panel", "accounting"],
       ]) {
         await page.goto(`${BASE_URL}${route}`, { waitUntil: "networkidle" });
         for (const [theme, name] of [
@@ -197,7 +198,27 @@ async function main() {
           });
         }
       }
-      await page.reload({ waitUntil: "networkidle" });
+      await page.setViewportSize({ width: 390, height: 844 });
+      await page.goto(`${BASE_URL}/muhasebe/panel`, { waitUntil: "networkidle" });
+      for (const [theme, name] of [
+        ["light", /^(Açık|Hell)$/],
+        ["dark", /^(Koyu|Dunkel)$/],
+      ] as const) {
+        await page.getByRole("button", { name: /^(Tema seçimi|Design wählen)$/ }).click();
+        await page.getByRole("menuitemradio", { name }).click();
+        await page.waitForFunction(
+          (value) => document.documentElement.classList.contains(value),
+          theme,
+        );
+        await page.evaluate(() => window.scrollTo(0, 0));
+        await page.screenshot({
+          path: path.join(captureDir, `accounting-mobile-${theme}.png`),
+          fullPage: true,
+          animations: "disabled",
+        });
+      }
+      await page.setViewportSize({ width: 1440, height: 900 });
+      await page.goto(`${BASE_URL}/uyeler`, { waitUntil: "networkidle" });
       if (!(await page.locator("html.dark").count()))
         throw new Error("THEME_PERSISTENCE_FAILED");
       await page
