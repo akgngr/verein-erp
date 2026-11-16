@@ -1547,7 +1547,7 @@
     "expense": "Gider fişleri",
     "difference": "Gelir − gider farkı",
     "quarterlyTitle": "Çeyreklik gelir ve giderler",
-    "quarterlyDescription": "Yeşil: gelir; kırmızı: gider. Aşağıdaki tablo aynı değerleri erişilebilir biçimde gösterir.",
+    "quarterlyDescription": "Çeyrek bazında brüt fiş hareketleri. Yeşil gelirleri, vurgu rengi giderleri gösterir; ayrıntılı rakamlar aşağıdaki tabloda.",
     "periodColumn": "Dönem",
     "recommendations": "Kontrol önerileri",
     "missingReceipts": "{year} yılında {count} fişin dosya eki bulunmuyor.",
