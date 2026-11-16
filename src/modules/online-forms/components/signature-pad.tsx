@@ -1,11 +1,20 @@
 "use client";
-
 import { Button } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+
 import { Eraser } from "lucide-react";
 import { useEffect, useRef } from "react";
 
 /** Parmak/fare ile imza; değişince PNG data URL (boşsa null) bildirir. */
-export function SignaturePad({ onChange, clearLabel, ariaLabel }: { onChange: (value: string | null) => void; clearLabel: string; ariaLabel: string }) {
+export function SignaturePad({
+  onChange,
+  clearLabel,
+  ariaLabel,
+}: {
+  onChange: (value: string | null) => void;
+  clearLabel: string;
+  ariaLabel: string;
+}) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawing = useRef(false);
   const dirty = useRef(false);
@@ -40,7 +49,7 @@ export function SignaturePad({ onChange, clearLabel, ariaLabel }: { onChange: (v
       <canvas
         ref={canvasRef}
         aria-label={ariaLabel}
-        className="h-40 w-full touch-none rounded-medium border-2 border-dashed border-default-300 bg-white"
+        className="h-40 w-full touch-none rounded-lg border-2 border-dashed border-ink-300 bg-white"
         onPointerDown={(event) => {
           drawing.current = true;
           event.currentTarget.setPointerCapture(event.pointerId);
@@ -59,10 +68,19 @@ export function SignaturePad({ onChange, clearLabel, ariaLabel }: { onChange: (v
         }}
         onPointerUp={(event) => {
           drawing.current = false;
-          if (dirty.current) onChange(event.currentTarget.toDataURL("image/png"));
+          if (dirty.current)
+            onChange(event.currentTarget.toDataURL("image/png"));
         }}
       />
-      <Button size="sm" variant="light" className="self-end" startContent={<Eraser className="size-4" />} onPress={clear}>{clearLabel}</Button>
+      <Button
+        size="sm"
+        className="self-end"
+        onPress={clear}
+        variant={actionVariant("default", "light")}
+      >
+        {<Eraser className="size-4" />}
+        {clearLabel}
+      </Button>
     </div>
   );
 }

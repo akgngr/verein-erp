@@ -13,7 +13,7 @@ Gönüllü kurslar ve Nachhilfe: öğretmenler, dersler, kayıtlar, ücretler ve
 |---|---|
 | Anahtar | `courses` |
 | Tür | Resmî modül |
-| Sürüm | 1.4.5 |
+| Sürüm | 1.4.6 |
 | Sayfalar | `/kurslar`, `/ogrenciler`, `/ogrenci-takibi`, `/kurslar/ogretmenler`, `/kurslar/odemeler`, `/kurslar/hakedisler`, `/kurslar/ayarlar` |
 | Gerektirir | [Öğrenciler](./students) |
 | Önerir | [Öğrenci takibi](./progress) |
@@ -51,6 +51,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_course_statistics` · `list_courses` · `propose_course` · `propose_course_status` · `propose_delete_course`
 
 ## Sürüm notları
+
+### 1.4.6 — HeroUI v3 arayüz geçişi
+
+_2026-11-16_
+
+- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
 ### 1.4.5 — Asistan araçları yeni veri sözleşmesinde
 
@@ -94,10 +100,4 @@ _2026-11-01_
 
 - **İyileştirme:** Zorunlu: Öğrenciler. Önerilen: Öğrenci takibi.
 
-### 1.2.0 — Öğrenciler ve öğrenci takibi Kurslar menüsünde
-
-_2026-11-01_
-
-- **İyileştirme:** Kurslar menüsüne Öğrenciler ve Öğrenci takibi bağlantıları eklendi (modül kapalıysa gizlenir).
-
-Daha eski 2 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/courses/releases.json)
+Daha eski 3 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/courses/releases.json)

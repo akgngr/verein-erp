@@ -1,7 +1,14 @@
 "use client";
 
-import { Autocomplete, AutocompleteItem } from "@heroui/react";
-import { Controller, type Control, type FieldValues, type Path } from "react-hook-form";
+import { ComboBox, FieldError, Input, Label, ListBox } from "@heroui/react";
+import {
+  Controller,
+  type Control,
+  type FieldValues,
+  type Path,
+} from "react-hook-form";
+import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
+import { useTranslateMessage } from "@/shared/i18n/use-translate-message";
 
 /**
  * Gönderen/Alıcı otomatik tamamlama (8.2): önceki kurum/kişilerden öneri sunar,
@@ -23,36 +30,55 @@ export function CounterpartyAutocomplete<T extends FieldValues>({
   isRequired?: boolean;
   isDisabled?: boolean;
 }) {
+  const translateMessage = useTranslateMessage();
   return (
     <Controller
       name={name}
       control={control}
       render={({ field, fieldState }) => (
-        <Autocomplete
+        <ComboBox
           id={`form-autocomplete-${String(name)}`}
-          label={label}
-          labelPlacement="outside"
+          name={field.name}
           isRequired={isRequired}
           isDisabled={isDisabled}
           allowsCustomValue
+          value={
+            typeof field.value === "string" && suggestions.includes(field.value)
+              ? field.value
+              : null
+          }
           inputValue={typeof field.value === "string" ? field.value : ""}
-          onInputChange={(value) => field.onChange(value)}
-          onSelectionChange={(key) => {
+          onInputChange={field.onChange}
+          onChange={(key) => {
             if (key !== null) field.onChange(String(key));
           }}
           defaultItems={suggestions.map((value) => ({ value }))}
           isInvalid={Boolean(fieldState.error)}
-          errorMessage={fieldState.error?.message}
-          classNames={{
-            base: "w-full",
-          }}
+          className="w-full"
         >
-          {(item) => (
-            <AutocompleteItem key={item.value} textValue={item.value}>
-              {item.value}
-            </AutocompleteItem>
-          )}
-        </Autocomplete>
+          <Label>{label}</Label>
+          <ComboBox.InputGroup>
+            <Input ref={field.ref} onBlur={field.onBlur} />
+            {field.value ? (
+              <FieldClearButton
+                onPress={() => field.onChange("")}
+                isDisabled={isDisabled}
+              />
+            ) : null}
+            <ComboBox.Trigger />
+          </ComboBox.InputGroup>
+          <ComboBox.Popover>
+            <ListBox<{ value: string }>>
+              {(item) => (
+                <ListBox.Item id={item.value} textValue={item.value}>
+                  <Label>{item.value}</Label>
+                  <ListBox.ItemIndicator />
+                </ListBox.Item>
+              )}
+            </ListBox>
+          </ComboBox.Popover>
+          <FieldError>{translateMessage(fieldState.error?.message)}</FieldError>
+        </ComboBox>
       )}
     />
   );

@@ -1,15 +1,37 @@
 "use client";
+import {
+  toast,
+  Button,
+  Spinner,
+  TextField,
+  Label,
+  Input,
+  Description,
+  Select,
+  ListBox,
+} from "@heroui/react";
 
-import { addToast, Button, Input, SelectItem } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { ClientSelect } from "@/shared/components/ui/client-select";
 
 import { saveInboxSettingsAction } from "../actions/inbox-actions";
 
 /** IMAP ayarları. Kayıtlı şifre geri gösterilmez; boş bırakılırsa değişmez. */
-export function InboxSettingsForm({ initial }: { initial: { host: string | null; port: number; security: string; username: string | null; hasPassword: boolean; mailbox: string } }) {
+export function InboxSettingsForm({
+  initial,
+}: {
+  initial: {
+    host: string | null;
+    port: number;
+    security: string;
+    username: string | null;
+    hasPassword: boolean;
+    mailbox: string;
+  };
+}) {
   const t = useTranslations("mail.inbox.settings");
   const router = useRouter();
   const [host, setHost] = useState(initial.host ?? "");
@@ -22,47 +44,112 @@ export function InboxSettingsForm({ initial }: { initial: { host: string | null;
 
   return (
     <div className="grid gap-3 md:grid-cols-2">
-      <Input label={t("host")} labelPlacement="outside" placeholder="imap.example.com" value={host} onValueChange={setHost} />
+      <TextField
+        value={host}
+        onChange={setHost}
+        className={["w-full"].filter(Boolean).join(" ")}
+      >
+        <Label>{t("host")}</Label>
+        <Input placeholder="imap.example.com" />
+      </TextField>
       <div className="grid grid-cols-2 gap-3">
-        <Input type="number" label={t("port")} labelPlacement="outside" value={port} onValueChange={setPort} />
-        <ClientSelect
-          label={t("security")}
-          labelPlacement="outside"
-          selectedKeys={[security]}
-          onSelectionChange={(keys) => {
-            const key = Array.from(keys)[0];
+        <TextField
+          value={port}
+          onChange={setPort}
+          className={["w-full"].filter(Boolean).join(" ")}
+        >
+          <Label>{t("port")}</Label>
+          <Input type="number" />
+        </TextField>
+        <Select
+          value={security}
+          onChange={(selectedValue) => {
+            const keys =
+              selectedValue === null ? undefined : String(selectedValue);
+            const key = keys;
             if (typeof key === "string") {
               setSecurity(key);
               setPort(key === "SSL" ? "993" : "143");
             }
           }}
         >
-          {["SSL", "STARTTLS", "NONE"].map((value) => (
-            <SelectItem key={value}>{t(`securities.${value}`)}</SelectItem>
-          ))}
-        </ClientSelect>
+          <Label>{t("security")}</Label>
+          <Select.Trigger>
+            <Select.Value />
+            <Select.Indicator />
+          </Select.Trigger>
+          <Select.Popover>
+            <ListBox>
+              {["SSL", "STARTTLS", "NONE"].map((value) => (
+                <ListBox.Item
+                  key={value}
+                  id={value}
+                  textValue={String(t(`securities.${value}`))}
+                >
+                  <Label>{t(`securities.${value}`)}</Label>
+                  <ListBox.ItemIndicator />
+                </ListBox.Item>
+              ))}
+            </ListBox>
+          </Select.Popover>
+        </Select>
       </div>
-      <Input label={t("username")} labelPlacement="outside" autoComplete="off" value={username} onValueChange={setUsername} />
-      <Input type="password" label={t("password")} labelPlacement="outside" autoComplete="new-password" placeholder={initial.hasPassword ? t("passwordStored") : ""} value={password} onValueChange={setPassword} />
-      <Input label={t("mailbox")} labelPlacement="outside" value={mailbox} onValueChange={setMailbox} description={t("mailboxHelp")} />
+      <TextField
+        value={username}
+        onChange={setUsername}
+        className={["w-full"].filter(Boolean).join(" ")}
+      >
+        <Label>{t("username")}</Label>
+        <Input autoComplete="off" />
+      </TextField>
+      <TextField
+        value={password}
+        onChange={setPassword}
+        className={["w-full"].filter(Boolean).join(" ")}
+      >
+        <Label>{t("password")}</Label>
+        <Input
+          type="password"
+          autoComplete="new-password"
+          placeholder={initial.hasPassword ? t("passwordStored") : ""}
+        />
+      </TextField>
+      <TextField
+        value={mailbox}
+        onChange={setMailbox}
+        className={["w-full"].filter(Boolean).join(" ")}
+      >
+        <Label>{t("mailbox")}</Label>
+        <Input />
+        <Description>{t("mailboxHelp")}</Description>
+      </TextField>
       <div className="flex items-end">
         <Button
-          color="primary"
-          isLoading={busy}
           onPress={async () => {
             setBusy(true);
-            const response = await saveInboxSettingsAction({ host, port: Number(port), security, username, password, mailbox });
+            const response = await saveInboxSettingsAction({
+              host,
+              port: Number(port),
+              security,
+              username,
+              password,
+              mailbox,
+            });
             setBusy(false);
-            if (!response.ok) return void addToast({ title: response.error, color: "danger" });
+            if (!response.ok)
+              return void toast(response.error, { variant: "danger" });
             setPassword("");
-            addToast({ title: t("saved"), color: "success" });
+            toast(t("saved"), { variant: "success" });
             router.refresh();
           }}
+          variant={actionVariant("primary", "solid")}
+          isPending={busy}
         >
+          {busy ? <Spinner size="sm" color="current" /> : null}
           {t("save")}
         </Button>
       </div>
-      <p className="text-tiny text-default-500 md:col-span-2">{t("help")}</p>
+      <p className="text-xs text-ink-500 md:col-span-2">{t("help")}</p>
     </div>
   );
 }

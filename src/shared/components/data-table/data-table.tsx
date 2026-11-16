@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Dropdown, Label, Table } from "@heroui-v3/react";
+import { Button, Dropdown, Label, Table } from "@heroui/react";
 import { MoreHorizontal } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -107,7 +107,7 @@ export function DataTable<T extends { id: string }>({
         isRowHeader={index === 0}
         allowsSorting={Boolean(column.sortable)}
         className={cn(
-          "py-3.5 text-[12px] font-medium text-default-600",
+          "py-3.5 text-[12px] font-medium text-ink-600",
           column.align === "end"
             ? "text-right"
             : column.align === "center"
@@ -129,7 +129,7 @@ export function DataTable<T extends { id: string }>({
             key={ACTIONS_COLUMN_KEY}
             id={ACTIONS_COLUMN_KEY}
             width={64}
-            className={`${ACTIONS_STICKY_CLASS} bg-content2 text-right`}
+            className={`${ACTIONS_STICKY_CLASS} bg-surface-secondary text-right`}
           >
             <span className="sr-only">{tCommon("actions")}</span>
           </Table.Column>,
@@ -167,7 +167,7 @@ export function DataTable<T extends { id: string }>({
           isPending && "pointer-events-none opacity-60",
         )}
       >
-        <Table className="overflow-hidden rounded-xl border border-default-200/80 bg-content1 shadow-sm">
+        <Table className="overflow-hidden rounded-xl border border-ink-200/80 bg-surface shadow-sm">
           <Table.ScrollContainer>
             <Table.Content
               aria-label={ariaLabel ?? tCommon("table.label")}
@@ -210,7 +210,7 @@ export function DataTable<T extends { id: string }>({
                       ? [
                           <Table.Cell
                             key={ACTIONS_COLUMN_KEY}
-                            className={`${ACTIONS_STICKY_CLASS} bg-content1`}
+                            className={`${ACTIONS_STICKY_CLASS} bg-surface`}
                           >
                             {actions.length > 0 ? (
                               <Dropdown>
@@ -261,7 +261,7 @@ export function DataTable<T extends { id: string }>({
                     <Table.Row
                       key={row.id}
                       id={row.id}
-                      className="border-b border-default-100 transition-colors last:border-b-0 hover:bg-default-50"
+                      className="border-b border-ink-100 transition-colors last:border-b-0 hover:bg-ink-50"
                     >
                       {cells}
                     </Table.Row>

@@ -1,8 +1,20 @@
 "use client";
+import {
+  toast,
+  Button,
+  Spinner,
+  Modal,
+  TextField,
+  Label,
+  Input,
+} from "@heroui/react";
+
+import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
 
-import { Button, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, addToast } from "@heroui/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -18,7 +30,13 @@ export function AnonymizeDonorDialog({
   donorId: string;
   donorNumber: string;
   retentionBlocked: boolean;
-  labels: { button: string; title: string; hint: string; confirmLabel: string; toast: string };
+  labels: {
+    button: string;
+    title: string;
+    hint: string;
+    confirmLabel: string;
+    toast: string;
+  };
 }) {
   const tCommon = useTranslations("common");
   const router = useRouter();
@@ -29,12 +47,15 @@ export function AnonymizeDonorDialog({
   const confirm = async () => {
     setBusy(true);
     try {
-      const result = await anonymizeDonorAction({ id: donorId, confirmDonorNumber: confirmText });
+      const result = await anonymizeDonorAction({
+        id: donorId,
+        confirmDonorNumber: confirmText,
+      });
       if (!result.ok) {
-        addToast({ title: result.error, color: "danger" });
+        toast(result.error, { variant: "danger" });
         return;
       }
-      addToast({ title: labels.toast, color: "success" });
+      toast(labels.toast, { variant: "success" });
       setOpen(false);
       router.refresh();
     } finally {
@@ -44,36 +65,60 @@ export function AnonymizeDonorDialog({
 
   return (
     <>
-      <Button size="sm" variant="flat" color="danger" onPress={() => setOpen(true)} isDisabled={retentionBlocked}>
+      <Button
+        size="sm"
+        onPress={() => setOpen(true)}
+        isDisabled={retentionBlocked}
+        variant={actionVariant("danger", "flat")}
+      >
         {labels.button}
       </Button>
-      <Modal isOpen={open} onOpenChange={setOpen} size="md">
-        <ModalContent>
-          <ModalHeader>{labels.title} — {donorNumber}</ModalHeader>
-          <ModalBody>
-            <p className="text-small text-default-500">{labels.hint}</p>
-            <Input
-              label={labels.confirmLabel}
-              labelPlacement="outside"
-              value={confirmText}
-              onValueChange={setConfirmText}
-              isDisabled={retentionBlocked}
-            />
-          </ModalBody>
-          <ModalFooter>
-            <Button variant="flat" onPress={() => setOpen(false)}>
-              {tCommon("cancel")}
-            </Button>
-            <Button
-              color="danger"
-              onPress={confirm}
-              isLoading={busy}
-              isDisabled={retentionBlocked || confirmText.trim().toUpperCase() !== donorNumber}
-            >
-              {labels.button}
-            </Button>
-          </ModalFooter>
-        </ModalContent>
+      <Modal isOpen={open} onOpenChange={setOpen}>
+        <Modal.Backdrop>
+          <Modal.Container size="md">
+            <Modal.Dialog className={"w-full max-w-md "}>
+              <DialogDismissButton />
+
+              <Modal.Header>
+                <Modal.Heading className="flex items-center gap-2">
+                  {labels.title} — {donorNumber}
+                </Modal.Heading>
+              </Modal.Header>
+              <Modal.Body>
+                <p className="text-sm text-ink-500">{labels.hint}</p>
+                <TextField
+                  value={confirmText}
+                  isDisabled={retentionBlocked}
+                  onChange={setConfirmText}
+                  className={["w-full"].filter(Boolean).join(" ")}
+                >
+                  <Label>{labels.confirmLabel}</Label>
+                  <Input />
+                </TextField>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button
+                  onPress={() => setOpen(false)}
+                  variant={actionVariant("default", "flat")}
+                >
+                  {tCommon("cancel")}
+                </Button>
+                <Button
+                  onPress={confirm}
+                  isDisabled={
+                    retentionBlocked ||
+                    confirmText.trim().toUpperCase() !== donorNumber
+                  }
+                  variant={actionVariant("danger", "solid")}
+                  isPending={busy}
+                >
+                  {busy ? <Spinner size="sm" color="current" /> : null}
+                  {labels.button}
+                </Button>
+              </Modal.Footer>
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal.Backdrop>
       </Modal>
     </>
   );

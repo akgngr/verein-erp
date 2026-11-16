@@ -1,6 +1,9 @@
 "use client";
 
-import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
+import {
+  FormSurface,
+  useFormDrawerClose,
+} from "@/shared/components/forms/form-drawer";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -98,52 +101,80 @@ export function DonorForm({
 
   return (
     <FormSurface className="max-w-3xl">
-        <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
-          <FormSelect
-            name="type"
-            label={t("type")}
+      <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
+        <FormSelect
+          name="type"
+          label={t("type")}
+          control={form.control}
+          isRequired
+          options={[
+            { value: "PERSON", label: t("typePERSON") },
+            { value: "ORGANIZATION", label: t("typeORGANIZATION") },
+          ]}
+        />
+        {donorType === "ORGANIZATION" ? (
+          <FormInput
+            name="organizationName"
+            label={t("organizationName")}
             control={form.control}
             isRequired
-            options={[
-              { value: "PERSON", label: t("typePERSON") },
-              { value: "ORGANIZATION", label: t("typeORGANIZATION") },
-            ]}
           />
-          {donorType === "ORGANIZATION" ? (
-            <FormInput name="organizationName" label={t("organizationName")} control={form.control} isRequired />
-          ) : (
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <FormInput name="firstName" label={t("firstName")} control={form.control} />
-              <FormInput name="lastName" label={t("lastName")} control={form.control} />
-            </div>
-          )}
+        ) : (
           <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FormInput name="street" label={t("street")} control={form.control} />
-            <FormInput name="postalCode" label={t("postalCode")} control={form.control} />
-            <FormInput name="city" label={t("city")} control={form.control} />
-            <FormInput name="country" label={t("country")} control={form.control} />
-          </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FormInput name="email" label={t("email")} control={form.control} type="email" />
-            <FormInput name="phone" label={t("phone")} control={form.control} />
-          </div>
-          <FormTextarea name="note" label={t("note")} control={form.control} />
-          {mode === "create" ? (
             <FormInput
-              name="copyFromMemberId"
-              label={t("fromMember")}
+              name="firstName"
+              label={t("firstName")}
               control={form.control}
-              description={t("fromMemberHint")}
-              placeholder={tDonors("memberNumberPlaceholder")}
             />
-          ) : null}
-          {formError ? (
-            <p className="text-small text-danger" role="alert">
-              {formError}
-            </p>
-          ) : null}
-          <SubmitButton isSubmitting={form.formState.isSubmitting}>{t("save")}</SubmitButton>
-        </form>
+            <FormInput
+              name="lastName"
+              label={t("lastName")}
+              control={form.control}
+            />
+          </div>
+        )}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <FormInput name="street" label={t("street")} control={form.control} />
+          <FormInput
+            name="postalCode"
+            label={t("postalCode")}
+            control={form.control}
+          />
+          <FormInput name="city" label={t("city")} control={form.control} />
+          <FormInput
+            name="country"
+            label={t("country")}
+            control={form.control}
+          />
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <FormInput
+            name="email"
+            label={t("email")}
+            control={form.control}
+            type="email"
+          />
+          <FormInput name="phone" label={t("phone")} control={form.control} />
+        </div>
+        <FormTextarea name="note" label={t("note")} control={form.control} />
+        {mode === "create" ? (
+          <FormInput
+            name="copyFromMemberId"
+            label={t("fromMember")}
+            control={form.control}
+            description={t("fromMemberHint")}
+            placeholder={tDonors("memberNumberPlaceholder")}
+          />
+        ) : null}
+        {formError ? (
+          <p className="text-sm text-danger" role="alert">
+            {formError}
+          </p>
+        ) : null}
+        <SubmitButton isSubmitting={form.formState.isSubmitting}>
+          {t("save")}
+        </SubmitButton>
+      </form>
     </FormSurface>
   );
 }

@@ -1,7 +1,8 @@
 "use client";
+import { toast } from "@heroui/react";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addToast } from "@heroui/react";
+
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -14,15 +15,26 @@ import { FormInput } from "@/shared/components/forms/form-input";
 import { SubmitButton } from "@/shared/components/forms/submit-button";
 
 import { saveStudentsSettingsAction } from "../actions/settings-actions";
-import { studentsSettingsSchema, type StudentsSettingsInput } from "../schemas/settings";
+import {
+  studentsSettingsSchema,
+  type StudentsSettingsInput,
+} from "../schemas/settings";
 
-export function StudentsSettingsForm({ initial, canUpdate }: { initial: StudentsSettingsInput; canUpdate: boolean }) {
+export function StudentsSettingsForm({
+  initial,
+  canUpdate,
+}: {
+  initial: StudentsSettingsInput;
+  canUpdate: boolean;
+}) {
   const t = useTranslations("students.settings");
   const tCommon = useTranslations("common");
   const router = useRouter();
   const [formError, setFormError] = useState<string | null>(null);
   const form = useForm<StudentsSettingsInput>({
-    resolver: zodResolver(studentsSettingsSchema) as unknown as Resolver<StudentsSettingsInput>,
+    resolver: zodResolver(
+      studentsSettingsSchema,
+    ) as unknown as Resolver<StudentsSettingsInput>,
     defaultValues: initial,
   });
 
@@ -33,7 +45,7 @@ export function StudentsSettingsForm({ initial, canUpdate }: { initial: Students
       setFormError(applyActionResult(result, form.setError));
       return;
     }
-    addToast({ title: t("saved"), color: "success" });
+    toast(t("saved"), { variant: "success" });
     router.refresh();
   });
 
@@ -41,8 +53,18 @@ export function StudentsSettingsForm({ initial, canUpdate }: { initial: Students
     <FormSurface className="max-w-2xl">
       <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <FormInput name="datevConsultantNo" label={t("consultantNo")} control={form.control} isDisabled={!canUpdate} />
-          <FormInput name="datevClientNo" label={t("clientNo")} control={form.control} isDisabled={!canUpdate} />
+          <FormInput
+            name="datevConsultantNo"
+            label={t("consultantNo")}
+            control={form.control}
+            isDisabled={!canUpdate}
+          />
+          <FormInput
+            name="datevClientNo"
+            label={t("clientNo")}
+            control={form.control}
+            isDisabled={!canUpdate}
+          />
         </div>
         <FormInput
           name="debtorRangeStart"
@@ -53,7 +75,11 @@ export function StudentsSettingsForm({ initial, canUpdate }: { initial: Students
           isDisabled={!canUpdate}
         />
         <FormErrorSummary message={formError} />
-        {canUpdate ? <SubmitButton isSubmitting={form.formState.isSubmitting}>{tCommon("save")}</SubmitButton> : null}
+        {canUpdate ? (
+          <SubmitButton isSubmitting={form.formState.isSubmitting}>
+            {tCommon("save")}
+          </SubmitButton>
+        ) : null}
       </form>
     </FormSurface>
   );

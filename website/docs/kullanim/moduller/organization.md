@@ -13,7 +13,7 @@ Dernek ana verileri, resmi iletişim ve antet logosu.
 |---|---|
 | Anahtar | `organization` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.0.2 |
+| Sürüm | 1.0.3 |
 | Sayfalar | `/ayarlar/dernek` |
 
 ## Varsayılan yetkiler
@@ -31,6 +31,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_organization_info`
 
 ## Sürüm notları
+
+### 1.0.3 — HeroUI v3 arayüz geçişi
+
+_2026-11-16_
+
+- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
 ### 1.0.2 — Asistan araçları yeni veri sözleşmesinde
 

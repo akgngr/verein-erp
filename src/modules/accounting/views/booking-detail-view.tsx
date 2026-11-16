@@ -16,11 +16,19 @@ import { BookingDetailActions } from "../components/booking-detail-actions";
 import { FilesPanel } from "../components/files-panel";
 import { AccountingPdfButton } from "../components/pdf-button";
 
-function InfoRow({ label, children }: { label: string; children: React.ReactNode }) {
+function InfoRow({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="flex flex-col gap-0.5 border-b border-default-100 py-2 last:border-none">
-      <span className="text-tiny font-medium uppercase tracking-wide text-default-400">{label}</span>
-      <span className="text-small text-foreground">{children}</span>
+    <div className="flex flex-col gap-0.5 border-b border-ink-100 py-2 last:border-none">
+      <span className="text-xs font-medium uppercase tracking-wide text-ink-400">
+        {label}
+      </span>
+      <span className="text-sm text-foreground">{children}</span>
     </div>
   );
 }
@@ -46,15 +54,25 @@ export async function AccountingDetailView({
   if (!booking) notFound();
   const t = await getTranslations("accounting");
 
-  const canUpdate = can(user.role, accountingPermissions, "update") && !booking.reversedAt && !booking.sourceType;
-  const canDelete = can(user.role, accountingPermissions, "delete") && !booking.reversedAt && !booking.sourceType;
+  const canUpdate =
+    can(user.role, accountingPermissions, "update") &&
+    !booking.reversedAt &&
+    !booking.sourceType;
+  const canDelete =
+    can(user.role, accountingPermissions, "delete") &&
+    !booking.reversedAt &&
+    !booking.sourceType;
   const canUpload =
-    (can(user.role, accountingPermissions, "update") || can(user.role, accountingPermissions, "create")) &&
+    (can(user.role, accountingPermissions, "update") ||
+      can(user.role, accountingPermissions, "create")) &&
     !booking.reversedAt;
   const canDeleteFile = can(user.role, accountingPermissions, "delete");
 
   const formatAmount = (cents: number) =>
-    (cents / 100).toLocaleString("tr-TR", { style: "currency", currency: "EUR" });
+    (cents / 100).toLocaleString("tr-TR", {
+      style: "currency",
+      currency: "EUR",
+    });
 
   return (
     <div>
@@ -63,7 +81,10 @@ export async function AccountingDetailView({
         description={booking.description}
         actions={
           <div className="flex flex-wrap items-center gap-2">
-            <AccountingPdfButton href={`/api/accounting/${booking.id}/pdf`} label={t(`pdf.voucher.${booking.type}`)} />
+            <AccountingPdfButton
+              href={`/api/accounting/${booking.id}/pdf`}
+              label={t(`pdf.voucher.${booking.type}`)}
+            />
             <BookingDetailActions
               bookingId={booking.id}
               bookingNumber={booking.bookingNumber}
@@ -75,54 +96,81 @@ export async function AccountingDetailView({
       />
 
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-        <div className="rounded-medium border border-default-200 bg-content1 p-5 shadow-sm lg:col-span-2">
+        <div className="rounded-lg border border-ink-200 bg-surface p-5 shadow-sm lg:col-span-2">
           <div className="mb-3 flex flex-wrap items-center gap-2">
             <BookingTypeBadge type={booking.type} />
             {booking.reversedAt ? (
-              <span className="rounded-small bg-danger-50 px-2 py-0.5 text-tiny font-semibold text-danger">
+              <span className="rounded-md bg-danger-50 px-2 py-0.5 text-xs font-semibold text-danger">
                 {t("list.columns.reversed")}
               </span>
             ) : null}
-            <span className="text-tiny text-default-400">{booking.bookingNumber}</span>
+            <span className="text-xs text-ink-400">
+              {booking.bookingNumber}
+            </span>
           </div>
           <div className="grid grid-cols-1 gap-x-6 sm:grid-cols-2">
-            <InfoRow label={t("detail.fields.date")}>{formatDate(booking.bookingDate)}</InfoRow>
+            <InfoRow label={t("detail.fields.date")}>
+              {formatDate(booking.bookingDate)}
+            </InfoRow>
             <InfoRow label={t("detail.fields.amount")}>
-              <span className={booking.type === "EXPENSE" ? "font-semibold text-danger" : booking.type === "INCOME" ? "font-semibold text-success" : "font-semibold"}>
+              <span
+                className={
+                  booking.type === "EXPENSE"
+                    ? "font-semibold text-danger"
+                    : booking.type === "INCOME"
+                      ? "font-semibold text-success"
+                      : "font-semibold"
+                }
+              >
                 {formatAmount(booking.amountCents)}
               </span>
             </InfoRow>
             {booking.taxRate > 0 ? (
               <InfoRow label={t("detail.fields.tax")}>
-                {t("detail.taxLine", { net: formatAmount(booking.netCents), tax: formatAmount(booking.taxCents), rate: booking.taxRate })}
+                {t("detail.taxLine", {
+                  net: formatAmount(booking.netCents),
+                  tax: formatAmount(booking.taxCents),
+                  rate: booking.taxRate,
+                })}
               </InfoRow>
             ) : null}
             <InfoRow label={t("detail.fields.account")}>
               {booking.transferLine ?? booking.accountName}
             </InfoRow>
-            <InfoRow label={t("detail.fields.category")}>{booking.categoryName ?? "—"}</InfoRow>
-            <InfoRow label={t("detail.fields.project")}>{booking.project ?? "—"}</InfoRow>
-            <InfoRow label={t("detail.fields.counterparty")}>{booking.counterparty ?? "—"}</InfoRow>
-            <InfoRow label={t("detail.fields.receiptReference")}>{booking.receiptReference ?? "—"}</InfoRow>
+            <InfoRow label={t("detail.fields.category")}>
+              {booking.categoryName ?? "—"}
+            </InfoRow>
+            <InfoRow label={t("detail.fields.project")}>
+              {booking.project ?? "—"}
+            </InfoRow>
+            <InfoRow label={t("detail.fields.counterparty")}>
+              {booking.counterparty ?? "—"}
+            </InfoRow>
+            <InfoRow label={t("detail.fields.receiptReference")}>
+              {booking.receiptReference ?? "—"}
+            </InfoRow>
             <InfoRow label={t("detail.fields.source")}>
               {booking.sourceType
-                ? (t.has(`enums.sourceType.${booking.sourceType}`)
-                    ? t(`enums.sourceType.${booking.sourceType}`)
-                    : booking.sourceType)
+                ? t.has(`enums.sourceType.${booking.sourceType}`)
+                  ? t(`enums.sourceType.${booking.sourceType}`)
+                  : booking.sourceType
                 : t("detail.sourceManual")}
             </InfoRow>
             <InfoRow label={t("detail.fields.createdBy")}>
               {`${booking.createdByLabel} — ${formatDateTime(booking.createdAt)}`}
             </InfoRow>
             <InfoRow label={t("detail.fields.updatedBy")}>
-              {booking.updatedByLabel ? `${booking.updatedByLabel} — ${formatDateTime(booking.updatedAt)}` : "-"}
+              {booking.updatedByLabel
+                ? `${booking.updatedByLabel} — ${formatDateTime(booking.updatedAt)}`
+                : "-"}
             </InfoRow>
           </div>
 
           {booking.reversedAt ? (
-            <div className="mt-4 rounded-medium border border-danger-200 bg-danger-50 px-4 py-3">
-              <p className="text-small font-semibold text-danger">
-                {t("detail.fields.reverseInfo")} — {t("detail.reversedBy", {
+            <div className="mt-4 rounded-lg border border-danger-200 bg-danger-50 px-4 py-3">
+              <p className="text-sm font-semibold text-danger">
+                {t("detail.fields.reverseInfo")} —{" "}
+                {t("detail.reversedBy", {
                   label: booking.reverseReason ?? "",
                   date: formatDate(new Date(booking.reversedAt)),
                 })}
@@ -139,12 +187,14 @@ export async function AccountingDetailView({
         />
 
         <div className="lg:col-span-3">
-          <Link href="/muhasebe" className="text-small text-primary underline">
+          <Link href="/muhasebe" className="text-sm text-accent underline">
             ← {t("list.title")}
           </Link>
         </div>
       </div>
-      {canUpdate && (await searchParams)?.duzenle !== undefined ? <AccountingEditView id={booking.id} /> : null}
+      {canUpdate && (await searchParams)?.duzenle !== undefined ? (
+        <AccountingEditView id={booking.id} />
+      ) : null}
     </div>
   );
 }

@@ -1,6 +1,24 @@
 "use client";
+import { statusStyle } from "@/shared/components/ui/status-appearance";
+import {
+  toast,
+  Button,
+  Chip,
+  Spinner,
+  Modal,
+  Checkbox,
+  Label,
+  TextField,
+  InputGroup,
+  Input,
+} from "@heroui/react";
+import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
 
-import { addToast, Button, Checkbox, Chip, Input, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
+import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+import { statusTone } from "@/shared/components/ui/status-appearance";
+
 import { Search, UserPlus } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -10,10 +28,16 @@ import { useState } from "react";
 import { formatMoney } from "@/shared/money";
 import { formatDate } from "@/shared/utils";
 
-import { enrollStudentsAction, setEnrollmentStatusAction } from "../actions/enrollment-actions";
+import {
+  enrollStudentsAction,
+  setEnrollmentStatusAction,
+} from "../actions/enrollment-actions";
 import type { CourseEnrollmentStatus, EnrollmentRow } from "../types";
 
-const STATUS_COLOR: Record<CourseEnrollmentStatus, "success" | "default" | "warning"> = { ACTIVE: "success", COMPLETED: "default", WITHDRAWN: "warning" };
+const STATUS_COLOR: Record<
+  CourseEnrollmentStatus,
+  "success" | "default" | "warning"
+> = { ACTIVE: "success", COMPLETED: "default", WITHDRAWN: "warning" };
 
 /** Kurstaki öğrenciler: kayıt (aranabilir çoklu seçim, indirim), durum değişikliği. */
 export function EnrollmentsPanel({
@@ -45,22 +69,36 @@ export function EnrollmentsPanel({
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
 
-  const enrolledIds = new Set(enrollments.map((enrollment) => enrollment.studentId));
+  const enrolledIds = new Set(
+    enrollments.map((enrollment) => enrollment.studentId),
+  );
   const needle = query.trim().toLocaleLowerCase();
   const filtered = studentOptions.filter(
-    (student) => !enrolledIds.has(student.id) && (!needle || `${student.label} ${student.studentNumber}`.toLocaleLowerCase().includes(needle)),
+    (student) =>
+      !enrolledIds.has(student.id) &&
+      (!needle ||
+        `${student.label} ${student.studentNumber}`
+          .toLocaleLowerCase()
+          .includes(needle)),
   );
 
   const enroll = async () => {
     setBusy(true);
     setError(null);
-    const result = await enrollStudentsAction({ courseId, studentIds: [...selected], enrolledAt, discountPercent: discount || "0" });
+    const result = await enrollStudentsAction({
+      courseId,
+      studentIds: [...selected],
+      enrolledAt,
+      discountPercent: discount || "0",
+    });
     setBusy(false);
     if (!result.ok) {
       setError(result.error);
       return;
     }
-    addToast({ title: t("enrolledToast", { count: result.data.enrolled }), color: "success" });
+    toast(t("enrolledToast", { count: result.data.enrolled }), {
+      variant: "success",
+    });
     setOpen(false);
     setSelected(new Set());
     router.refresh();
@@ -69,67 +107,112 @@ export function EnrollmentsPanel({
   const changeStatus = async (id: string, status: CourseEnrollmentStatus) => {
     const result = await setEnrollmentStatusAction({ id, status });
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
-    addToast({ title: result.data.cancelledCharges > 0 ? t("withdrawnToast", { count: result.data.cancelledCharges }) : t("statusToast"), color: "success" });
+    toast(
+      result.data.cancelledCharges > 0
+        ? t("withdrawnToast", { count: result.data.cancelledCharges })
+        : t("statusToast"),
+      { variant: "success" },
+    );
     router.refresh();
   };
 
   return (
     <section className="flex flex-col gap-4">
       {canEdit ? (
-        <Button color="primary" className="self-start" startContent={<UserPlus className="h-4 w-4" aria-hidden />} onPress={() => setOpen(true)}>
+        <Button
+          className="self-start"
+          onPress={() => setOpen(true)}
+          variant={actionVariant("primary", "solid")}
+        >
+          {<UserPlus className="h-4 w-4" aria-hidden />}
           {t("add")}
         </Button>
       ) : null}
       {enrollments.length === 0 ? (
-        <p className="text-small text-default-500">{t("empty")}</p>
+        <p className="text-sm text-ink-500">{t("empty")}</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full text-small">
+          <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-default-200 text-left text-default-500">
+              <tr className="border-b border-ink-200 text-left text-ink-500">
                 <th className="p-2">{t("student")}</th>
                 <th className="p-2">{t("payer")}</th>
                 <th className="p-2">{t("enrolledAt")}</th>
-                {canSeeFees ? <th className="p-2 text-right">{t("open")}</th> : null}
+                {canSeeFees ? (
+                  <th className="p-2 text-right">{t("open")}</th>
+                ) : null}
                 <th className="p-2">{t("status")}</th>
               </tr>
             </thead>
             <tbody>
               {enrollments.map((enrollment) => (
-                <tr key={enrollment.id} className="border-b border-default-100">
+                <tr key={enrollment.id} className="border-b border-ink-100">
                   <td className="p-2">
                     {canOpenStudents ? (
-                      <Link href={`/ogrenciler/${enrollment.studentId}`} className="font-medium text-primary hover:underline">
+                      <Link
+                        href={`/ogrenciler/${enrollment.studentId}`}
+                        className="font-medium text-accent hover:underline"
+                      >
                         {enrollment.studentLabel}
                       </Link>
                     ) : (
-                      <span className="font-medium">{enrollment.studentLabel}</span>
+                      <span className="font-medium">
+                        {enrollment.studentLabel}
+                      </span>
                     )}
-                    <span className="ml-2 font-mono text-tiny text-default-400">{enrollment.studentNumber}</span>
-                    {enrollment.discountPercent > 0 ? <span className="ml-2 text-tiny text-default-500">−{enrollment.discountPercent}%</span> : null}
+                    <span className="ml-2 font-mono text-xs text-ink-400">
+                      {enrollment.studentNumber}
+                    </span>
+                    {enrollment.discountPercent > 0 ? (
+                      <span className="ml-2 text-xs text-ink-500">
+                        −{enrollment.discountPercent}%
+                      </span>
+                    ) : null}
                   </td>
-                  <td className="p-2 text-default-600">{enrollment.payerLabel ? `${enrollment.payerLabel} (${enrollment.payerDebtorNumber})` : "—"}</td>
+                  <td className="p-2 text-ink-600">
+                    {enrollment.payerLabel
+                      ? `${enrollment.payerLabel} (${enrollment.payerDebtorNumber})`
+                      : "—"}
+                  </td>
                   <td className="p-2">{formatDate(enrollment.enrolledAt)}</td>
-                  {canSeeFees ? <td className="p-2 text-right">{enrollment.openCents > 0 ? formatMoney(enrollment.openCents) : "—"}</td> : null}
+                  {canSeeFees ? (
+                    <td className="p-2 text-right">
+                      {enrollment.openCents > 0
+                        ? formatMoney(enrollment.openCents)
+                        : "—"}
+                    </td>
+                  ) : null}
                   <td className="p-2">
                     {canEdit ? (
                       <select
                         aria-label={t("status")}
-                        className="h-8 rounded-medium border border-default-200 bg-default-50/50 px-2 text-small"
+                        className="h-8 rounded-lg border border-ink-200 bg-ink-50/50 px-2 text-sm"
                         value={enrollment.status}
-                        onChange={(event) => changeStatus(enrollment.id, event.target.value as CourseEnrollmentStatus)}
+                        onChange={(event) =>
+                          changeStatus(
+                            enrollment.id,
+                            event.target.value as CourseEnrollmentStatus,
+                          )
+                        }
                       >
-                        {(["ACTIVE", "COMPLETED", "WITHDRAWN"] as const).map((status) => (
-                          <option key={status} value={status}>
-                            {tEnum(`enrollmentStatus.${status}`)}
-                          </option>
-                        ))}
+                        {(["ACTIVE", "COMPLETED", "WITHDRAWN"] as const).map(
+                          (status) => (
+                            <option key={status} value={status}>
+                              {tEnum(`enrollmentStatus.${status}`)}
+                            </option>
+                          ),
+                        )}
                       </select>
                     ) : (
-                      <Chip size="sm" variant="flat" color={STATUS_COLOR[enrollment.status]}>
+                      <Chip
+                        size="sm"
+                        color={statusTone(STATUS_COLOR[enrollment.status])}
+                        variant={"soft"}
+                        style={statusStyle(STATUS_COLOR[enrollment.status])}
+                      >
                         {tEnum(`enrollmentStatus.${enrollment.status}`)}
                       </Chip>
                     )}
@@ -141,60 +224,129 @@ export function EnrollmentsPanel({
         </div>
       )}
 
-      <Modal isOpen={open} onOpenChange={setOpen} size="lg">
-        <ModalContent>
-          <ModalHeader>{t("addTitle")}</ModalHeader>
-          <ModalBody>
-            <Input
-              placeholder={t("search")}
-              aria-label={t("search")}
-              value={query}
-              onValueChange={setQuery}
-              isClearable
-              onClear={() => setQuery("")}
-              startContent={<Search className="h-4 w-4 text-default-400" aria-hidden />}
-            />
-            <div role="group" aria-label={t("student")} className="max-h-64 overflow-y-auto rounded-lg border border-default-200 p-1">
-              {filtered.length === 0 ? (
-                <p className="p-3 text-small text-default-500">{t("noStudents")}</p>
-              ) : (
-                filtered.map((student) => (
-                  <div key={student.id} className="rounded-md px-2 py-1.5 hover:bg-default-100">
-                    <Checkbox
-                      size="sm"
-                      isSelected={selected.has(student.id)}
-                      onValueChange={(checked) =>
-                        setSelected((current) => {
-                          const next = new Set(current);
-                          if (checked) next.add(student.id);
-                          else next.delete(student.id);
-                          return next;
-                        })
-                      }
-                    >
-                      <span className="text-small">{student.label}</span>
-                      <span className="ml-2 font-mono text-tiny text-default-400">{student.studentNumber}</span>
-                    </Checkbox>
-                  </div>
-                ))
-              )}
-            </div>
-            <div className="grid grid-cols-2 gap-3">
-              <Input type="date" label={t("enrolledAt")} labelPlacement="outside" placeholder=" " value={enrolledAt} onValueChange={setEnrolledAt} />
-              <Input type="number" min={0} max={100} label={t("discount")} labelPlacement="outside" placeholder=" " value={discount} onValueChange={setDiscount} endContent={<span className="text-small text-default-400">%</span>} />
-            </div>
-            <p className="text-tiny text-default-500">{t("planHelp")}</p>
-            {error ? <p className="text-small text-danger">{error}</p> : null}
-          </ModalBody>
-          <ModalFooter>
-            <Button variant="light" onPress={() => setOpen(false)}>
-              {tCommon("cancel")}
-            </Button>
-            <Button color="primary" isLoading={busy} isDisabled={selected.size === 0} onPress={enroll}>
-              {t("enroll", { count: selected.size })}
-            </Button>
-          </ModalFooter>
-        </ModalContent>
+      <Modal isOpen={open} onOpenChange={setOpen}>
+        <Modal.Backdrop>
+          <Modal.Container size="lg">
+            <Modal.Dialog className={"w-full max-w-lg "}>
+              <DialogDismissButton />
+
+              <Modal.Header>
+                <Modal.Heading className="flex items-center gap-2">
+                  {t("addTitle")}
+                </Modal.Heading>
+              </Modal.Header>
+              <Modal.Body>
+                <TextField
+                  aria-label={t("search")}
+                  value={query}
+                  onChange={setQuery}
+                  className={["w-full"].filter(Boolean).join(" ")}
+                >
+                  <InputGroup>
+                    <InputGroup.Prefix>
+                      {<Search className="h-4 w-4 text-ink-400" aria-hidden />}
+                    </InputGroup.Prefix>
+                    <InputGroup.Input placeholder={t("search")} />
+                    <InputGroup.Suffix>
+                      {query ? (
+                        <FieldClearButton onPress={() => setQuery("")} />
+                      ) : null}
+                    </InputGroup.Suffix>
+                  </InputGroup>
+                </TextField>
+                <div
+                  role="group"
+                  aria-label={t("student")}
+                  className="max-h-64 overflow-y-auto rounded-lg border border-ink-200 p-1"
+                >
+                  {filtered.length === 0 ? (
+                    <p className="p-3 text-sm text-ink-500">
+                      {t("noStudents")}
+                    </p>
+                  ) : (
+                    filtered.map((student) => (
+                      <div
+                        key={student.id}
+                        className="rounded-md px-2 py-1.5 hover:bg-ink-100"
+                      >
+                        <Checkbox
+                          isSelected={selected.has(student.id)}
+                          onChange={(checked) =>
+                            setSelected((current) => {
+                              const next = new Set(current);
+                              if (checked) next.add(student.id);
+                              else next.delete(student.id);
+                              return next;
+                            })
+                          }
+                        >
+                          <Checkbox.Content>
+                            <Checkbox.Control className="size-4">
+                              <Checkbox.Indicator />
+                            </Checkbox.Control>
+                            <Label>
+                              <span className="text-sm">{student.label}</span>
+                              <span className="ml-2 font-mono text-xs text-ink-400">
+                                {student.studentNumber}
+                              </span>
+                            </Label>
+                          </Checkbox.Content>
+                        </Checkbox>
+                      </div>
+                    ))
+                  )}
+                </div>
+                <div className="grid grid-cols-2 gap-3">
+                  <TextField
+                    value={enrolledAt}
+                    onChange={setEnrolledAt}
+                    className={["w-full"].filter(Boolean).join(" ")}
+                  >
+                    <Label>{t("enrolledAt")}</Label>
+                    <Input type="date" placeholder=" " />
+                  </TextField>
+                  <TextField
+                    value={discount}
+                    onChange={setDiscount}
+                    className={["w-full"].filter(Boolean).join(" ")}
+                  >
+                    <Label>{t("discount")}</Label>
+                    <InputGroup>
+                      <InputGroup.Input
+                        type="number"
+                        min={0}
+                        max={100}
+                        placeholder=" "
+                      />
+                      <InputGroup.Suffix>
+                        {<span className="text-sm text-ink-400">%</span>}
+                      </InputGroup.Suffix>
+                    </InputGroup>
+                  </TextField>
+                </div>
+                <p className="text-xs text-ink-500">{t("planHelp")}</p>
+                {error ? <p className="text-sm text-danger">{error}</p> : null}
+              </Modal.Body>
+              <Modal.Footer>
+                <Button
+                  onPress={() => setOpen(false)}
+                  variant={actionVariant("default", "light")}
+                >
+                  {tCommon("cancel")}
+                </Button>
+                <Button
+                  isDisabled={selected.size === 0}
+                  onPress={enroll}
+                  variant={actionVariant("primary", "solid")}
+                  isPending={busy}
+                >
+                  {busy ? <Spinner size="sm" color="current" /> : null}
+                  {t("enroll", { count: selected.size })}
+                </Button>
+              </Modal.Footer>
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal.Backdrop>
       </Modal>
     </section>
   );

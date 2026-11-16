@@ -1,6 +1,6 @@
 "use client";
 
-import { Description, Label, Switch } from "@heroui-v3/react";
+import { Description, Label, Switch } from "@heroui/react";
 import {
   Controller,
   type Control,

@@ -1,7 +1,8 @@
 "use client";
+import { Link } from "@heroui/react";
 
 import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
-import { Link } from "@heroui/react";
+
 import { Ban, Eye, Pencil } from "lucide-react";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
@@ -51,7 +52,10 @@ export function BookingTable({
   const [reversing, setReversing] = useState<BookingListItem | null>(null);
 
   const formatAmount = (cents: number) =>
-    (cents / 100).toLocaleString("tr-TR", { style: "currency", currency: "EUR" });
+    (cents / 100).toLocaleString("tr-TR", {
+      style: "currency",
+      currency: "EUR",
+    });
 
   const columns: DataTableColumn<BookingListItem>[] = [
     {
@@ -60,7 +64,15 @@ export function BookingTable({
       sortable: true,
       width: 130,
       render: (row) => (
-        <Link href={`/muhasebe/${row.id}`} size="sm" className={`font-medium${row.reversedAt ? " line-through decoration-danger-400" : ""}`}>
+        <Link
+          href={`/muhasebe/${row.id}`}
+          className={[
+            `font-medium${row.reversedAt ? " line-through decoration-danger-400" : ""}`,
+            "text-sm",
+          ]
+            .filter(Boolean)
+            .join(" ")}
+        >
           {row.bookingNumber}
         </Link>
       ),
@@ -71,28 +83,56 @@ export function BookingTable({
       sortable: true,
       width: 110,
       render: (row) =>
-        row.bookingDate instanceof Date ? row.bookingDate.toISOString().slice(0, 10) : String(row.bookingDate),
+        row.bookingDate instanceof Date
+          ? row.bookingDate.toISOString().slice(0, 10)
+          : String(row.bookingDate),
     },
-    { key: "type", label: t("columns.type"), width: 110, render: (row) => <BookingTypeBadge type={row.type} /> },
+    {
+      key: "type",
+      label: t("columns.type"),
+      width: 110,
+      render: (row) => <BookingTypeBadge type={row.type} />,
+    },
     {
       key: "account",
       label: t("columns.account"),
       width: 170,
       render: (row) => row.transferLine ?? row.accountName,
     },
-    { key: "category", label: t("columns.category"), width: 170, render: (row) => row.categoryName ?? "—" },
+    {
+      key: "category",
+      label: t("columns.category"),
+      width: 170,
+      render: (row) => row.categoryName ?? "—",
+    },
     {
       key: "description",
       label: t("columns.description"),
       width: 240,
       render: (row) => (
-        <span className={row.reversedAt ? "text-default-400 line-through decoration-danger-400" : ""}>
+        <span
+          className={
+            row.reversedAt
+              ? "text-ink-400 line-through decoration-danger-400"
+              : ""
+          }
+        >
           {row.description}
         </span>
       ),
     },
-    { key: "counterparty", label: t("columns.counterparty"), width: 140, render: (row) => row.counterparty ?? "—" },
-    { key: "project", label: t("columns.project"), width: 110, render: (row) => row.project ?? "—" },
+    {
+      key: "counterparty",
+      label: t("columns.counterparty"),
+      width: 140,
+      render: (row) => row.counterparty ?? "—",
+    },
+    {
+      key: "project",
+      label: t("columns.project"),
+      width: 110,
+      render: (row) => row.project ?? "—",
+    },
     {
       key: "amount",
       label: t("columns.amount"),
@@ -103,7 +143,7 @@ export function BookingTable({
         <span
           className={
             row.reversedAt
-              ? "text-default-400 line-through decoration-danger-400"
+              ? "text-ink-400 line-through decoration-danger-400"
               : row.type === "INCOME"
                 ? "font-medium text-success"
                 : row.type === "EXPENSE"
@@ -121,9 +161,11 @@ export function BookingTable({
       width: 90,
       render: (row) =>
         row.hasReceipt ? (
-          <span className="text-tiny text-default-500">📎 {row.fileCount}</span>
+          <span className="text-xs text-ink-500">📎 {row.fileCount}</span>
         ) : (
-          <span className="text-tiny font-medium text-warning">{t("columns.missing")}</span>
+          <span className="text-xs font-medium text-warning">
+            {t("columns.missing")}
+          </span>
         ),
     },
     {
@@ -132,9 +174,9 @@ export function BookingTable({
       width: 100,
       render: (row) =>
         row.reversedAt ? (
-          <span className="text-small text-danger">{t("columns.reversed")}</span>
+          <span className="text-sm text-danger">{t("columns.reversed")}</span>
         ) : (
-          <span className="text-small">{t("columns.active")}</span>
+          <span className="text-sm">{t("columns.active")}</span>
         ),
     },
     {
@@ -143,13 +185,18 @@ export function BookingTable({
       width: 110,
       render: (row) =>
         row.sourceType ? (
-          <span className="text-tiny text-primary">{t("sourceLabel")}</span>
+          <span className="text-xs text-accent">{t("sourceLabel")}</span>
         ) : null,
     },
   ];
 
   const rowActions = (row: BookingListItem): DataTableRowAction[] => [
-    { key: "view", label: t("actions.view"), icon: <Eye className="h-4 w-4" />, href: `/muhasebe/${row.id}` },
+    {
+      key: "view",
+      label: t("actions.view"),
+      icon: <Eye className="h-4 w-4" />,
+      href: `/muhasebe/${row.id}`,
+    },
     ...(canUpdate && !row.reversedAt && !row.sourceType
       ? [
           {

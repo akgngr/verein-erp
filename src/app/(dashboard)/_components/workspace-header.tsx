@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Dropdown, Label } from "@heroui-v3/react";
+import { Button, Dropdown, Label } from "@heroui/react";
 import { ChevronRight, LayoutDashboard, Laptop, Moon, Sun } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
@@ -23,10 +23,10 @@ export function WorkspaceHeader({ dateLabel }: { dateLabel: string }) {
       : home.label
     : null;
   return (
-    <header className="workspace-header hidden h-16 shrink-0 items-center justify-between gap-4 border-b border-default-200/70 px-7 backdrop-blur-md lg:flex">
+    <header className="workspace-header hidden h-16 shrink-0 items-center justify-between gap-4 border-b border-ink-200/70 px-7 backdrop-blur-md lg:flex">
       <nav
         aria-label={sidebar("mainMenu")}
-        className="flex min-w-0 items-center gap-2.5 text-[12px] text-default-500"
+        className="flex min-w-0 items-center gap-2.5 text-[12px] text-ink-500"
       >
         <Link
           href="/"
@@ -39,7 +39,7 @@ export function WorkspaceHeader({ dateLabel }: { dateLabel: string }) {
         {moduleLabel && pathname !== "/" ? (
           <>
             <ChevronRight
-              className="h-3 w-3 shrink-0 text-default-300"
+              className="h-3 w-3 shrink-0 text-ink-300"
               aria-hidden
             />
             <span className="truncate font-medium text-foreground">
@@ -49,8 +49,8 @@ export function WorkspaceHeader({ dateLabel }: { dateLabel: string }) {
         ) : null}
       </nav>
       <div className="flex shrink-0 items-center gap-4">
-        <span className="text-[12px] text-default-500">{dateLabel}</span>
-        <span className="h-4 w-px bg-default-200" aria-hidden />
+        <span className="text-[12px] text-ink-500">{dateLabel}</span>
+        <span className="h-4 w-px bg-ink-200" aria-hidden />
         <ThemeMenu />
       </div>
     </header>
@@ -72,7 +72,7 @@ export function ThemeMenu() {
         size="sm"
         variant="tertiary"
         aria-label={sidebar("theme")}
-        className="text-default-500"
+        className="text-ink-500"
       >
         {resolvedTheme === "dark" ? (
           <Moon className="h-4 w-4" aria-hidden />

@@ -1,24 +1,23 @@
 "use client";
+import {
+  toast,
+  Button,
+  Spinner,
+  Modal,
+  TextField,
+  Label,
+  TextArea,
+  Dropdown,
+} from "@heroui/react";
+
+import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
 
-import { addToast } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-
-import {
-  Button,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  Textarea,
-} from "@heroui/react";
 
 import { changeMeetingStatusAction } from "../actions/change-status";
 import { MEETING_STATUS_TRANSITIONS } from "../constants";
@@ -58,10 +57,12 @@ export function StatusMenu({
 
   // KARAR: menü yalnızca izne ve geçiş haritasına düşen hedefleri listeler;
   // sunucu yine de her geçişi yeniden denetler (5. bölüm md. 3).
-  const transitions = (Object.entries(MEETING_STATUS_TRANSITIONS[status] ?? {}) as [
-    MeetingStatus,
-    "update" | "approve",
-  ][]).filter(([, required]) => (required === "approve" ? canApprove : canUpdate));
+  const transitions = (
+    Object.entries(MEETING_STATUS_TRANSITIONS[status] ?? {}) as [
+      MeetingStatus,
+      "update" | "approve",
+    ][]
+  ).filter(([, required]) => (required === "approve" ? canApprove : canUpdate));
 
   if (transitions.length === 0) return null;
 
@@ -99,9 +100,8 @@ export function StatusMenu({
       setError(result.error);
       return;
     }
-    addToast({
-      title: t("updatedToast", { label: tStatus(target) }),
-      color: "success",
+    toast(t("updatedToast", { label: tStatus(target) }), {
+      variant: "success",
     });
     setPending(null);
     setReopenOpen(false);
@@ -120,16 +120,26 @@ export function StatusMenu({
   return (
     <>
       <Dropdown>
-        <DropdownTrigger>
-          <Button variant="flat" color="default">
-            {t("button")}
-          </Button>
-        </DropdownTrigger>
-        <DropdownMenu aria-label={t("changeTitle")} onAction={(key) => onTransitionClick(key as MeetingStatus)}>
-          {transitions.map(([target]) => (
-            <DropdownItem key={target}>{tStatus(target)}</DropdownItem>
-          ))}
-        </DropdownMenu>
+        <Button variant={actionVariant("default", "flat")}>
+          {t("button")}
+        </Button>
+
+        <Dropdown.Popover placement="bottom end">
+          <Dropdown.Menu
+            aria-label={t("changeTitle")}
+            onAction={(key) => onTransitionClick(key as MeetingStatus)}
+          >
+            {transitions.map(([target]) => (
+              <Dropdown.Item
+                key={target}
+                id={target}
+                textValue={String(tStatus(target))}
+              >
+                <Label>{tStatus(target)}</Label>
+              </Dropdown.Item>
+            ))}
+          </Dropdown.Menu>
+        </Dropdown.Popover>
       </Dropdown>
 
       <ConfirmStatusDialog
@@ -147,41 +157,61 @@ export function StatusMenu({
       />
 
       {/* Yeniden açma: gerekçe zorunlu (5-500 karakter) (5. bölüm md. 3). */}
-      <Modal isOpen={reopenOpen} onOpenChange={(open) => !open && setReopenOpen(false)}>
-        <ModalContent>
-          <ModalHeader>{t("reopenModalTitle")}</ModalHeader>
-          <ModalBody>
-            <p className="text-small text-default-600">{t("reopenModalInfo")}</p>
-            <Textarea
-              label={t("reasonShort")}
-              labelPlacement="outside"
-              value={reason}
-              onValueChange={setReason}
-              minRows={3}
-              isRequired
-            />
-            {error ? <p className="text-small text-danger">{error}</p> : null}
-          </ModalBody>
-          <ModalFooter>
-            <Button
-              variant="light"
-              onPress={() => {
-                setReopenOpen(false);
-                setError(null);
-              }}
-            >
-              {tCommon("cancel")}
-            </Button>
-            <Button
-              color="primary"
-              isLoading={busy}
-              onPress={() => submit("HELD", reason)}
-              isDisabled={reason.trim().length < 5}
-            >
-              {t("reopenConfirm")}
-            </Button>
-          </ModalFooter>
-        </ModalContent>
+      <Modal
+        isOpen={reopenOpen}
+        onOpenChange={(open) => !open && setReopenOpen(false)}
+      >
+        <Modal.Backdrop>
+          <Modal.Container size="md">
+            <Modal.Dialog className={"w-full max-w-md "}>
+              <DialogDismissButton />
+
+              <Modal.Header>
+                <Modal.Heading className="flex items-center gap-2">
+                  {t("reopenModalTitle")}
+                </Modal.Heading>
+              </Modal.Header>
+              <Modal.Body>
+                <p className="text-sm text-ink-600">{t("reopenModalInfo")}</p>
+                <TextField
+                  value={reason}
+                  isRequired
+                  onChange={setReason}
+                  className={["w-full"].filter(Boolean).join(" ")}
+                >
+                  <Label>{t("reasonShort")}</Label>
+                  <TextArea
+                    rows={3}
+                    className={["[field-sizing:content]"]
+                      .filter(Boolean)
+                      .join(" ")}
+                  />
+                </TextField>
+                {error ? <p className="text-sm text-danger">{error}</p> : null}
+              </Modal.Body>
+              <Modal.Footer>
+                <Button
+                  onPress={() => {
+                    setReopenOpen(false);
+                    setError(null);
+                  }}
+                  variant={actionVariant("default", "light")}
+                >
+                  {tCommon("cancel")}
+                </Button>
+                <Button
+                  onPress={() => submit("HELD", reason)}
+                  isDisabled={reason.trim().length < 5}
+                  variant={actionVariant("primary", "solid")}
+                  isPending={busy}
+                >
+                  {busy ? <Spinner size="sm" color="current" /> : null}
+                  {t("reopenConfirm")}
+                </Button>
+              </Modal.Footer>
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal.Backdrop>
       </Modal>
     </>
   );
@@ -209,21 +239,39 @@ function ConfirmStatusDialog({
   const tCommon = useTranslations("common");
   return (
     <Modal isOpen={isOpen} onOpenChange={(open) => !open && onCancel()}>
-      <ModalContent>
-        <ModalHeader>{title}</ModalHeader>
-        <ModalBody>
-          <p className="text-small">{message}</p>
-          {error ? <p className="text-small text-danger">{error}</p> : null}
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="light" onPress={onCancel}>
-            {tCommon("cancel")}
-          </Button>
-          <Button color="primary" isLoading={busy} onPress={onConfirm}>
-            {confirmLabel}
-          </Button>
-        </ModalFooter>
-      </ModalContent>
+      <Modal.Backdrop>
+        <Modal.Container size="md">
+          <Modal.Dialog className={"w-full max-w-md "}>
+            <DialogDismissButton />
+
+            <Modal.Header>
+              <Modal.Heading className="flex items-center gap-2">
+                {title}
+              </Modal.Heading>
+            </Modal.Header>
+            <Modal.Body>
+              <p className="text-sm">{message}</p>
+              {error ? <p className="text-sm text-danger">{error}</p> : null}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                onPress={onCancel}
+                variant={actionVariant("default", "light")}
+              >
+                {tCommon("cancel")}
+              </Button>
+              <Button
+                onPress={onConfirm}
+                variant={actionVariant("primary", "solid")}
+                isPending={busy}
+              >
+                {busy ? <Spinner size="sm" color="current" /> : null}
+                {confirmLabel}
+              </Button>
+            </Modal.Footer>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 }

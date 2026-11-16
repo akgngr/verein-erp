@@ -1,8 +1,12 @@
 "use client";
+import { toast } from "@heroui/react";
 
-import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
+import {
+  FormSurface,
+  useFormDrawerClose,
+} from "@/shared/components/forms/form-drawer";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addToast } from "@heroui/react";
+
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm, type Resolver } from "react-hook-form";
@@ -16,11 +20,11 @@ import { FormTextarea } from "@/shared/components/forms/form-textarea";
 import { SubmitButton } from "@/shared/components/forms/submit-button";
 
 import type { AccountOption, CategoryOption, ProjectOption } from "../types";
+import { bookingCreateSchema, bookingUpdateSchema } from "../schemas/booking";
 import {
-  bookingCreateSchema,
-  bookingUpdateSchema,
-} from "../schemas/booking";
-import { createBookingAction, updateBookingAction } from "../actions/booking-actions";
+  createBookingAction,
+  updateBookingAction,
+} from "../actions/booking-actions";
 import { splitGross, TAX_RATES } from "../services/tax";
 import { formatMoney, toCents } from "@/shared/money";
 
@@ -60,7 +64,14 @@ type Props = {
  * virmanda kaynak/hedef hesap + kategori/proje yok; gelir/giderde kategori
  * yöne göre filtrelenir, seçenek etiketi alanı (sphere) gösterir.
  */
-export function BookingForm({ mode, accounts, categories, projects, initial, smallBusiness = false }: Props) {
+export function BookingForm({
+  mode,
+  accounts,
+  categories,
+  projects,
+  initial,
+  smallBusiness = false,
+}: Props) {
   const router = useRouter();
   const closeDrawer = useFormDrawerClose();
   const t = useTranslations("accounting.form");
@@ -95,25 +106,40 @@ export function BookingForm({ mode, accounts, categories, projects, initial, sma
     // KARAR: create şeması discriminated union; resolver tipi uyarlanır (document-form kalıbı).
     resolver: (mode === "edit"
       ? zodResolver(bookingUpdateSchema)
-      : zodResolver(bookingCreateSchema)) as unknown as Resolver<BookingFormValues>,
+      : zodResolver(
+          bookingCreateSchema,
+        )) as unknown as Resolver<BookingFormValues>,
     defaultValues,
   });
 
   const showTax = !isTransfer && !smallBusiness;
-  const [amountValue, taxRateValue, categoryIdValue] = form.watch(["amount", "taxRate", "categoryId"]);
+  const [amountValue, taxRateValue, categoryIdValue] = form.watch([
+    "amount",
+    "taxRate",
+    "categoryId",
+  ]);
   // Kategori DEĞİŞİNCE varsayılan KDV oranı önerilir (kullanıcı değiştirebilir; ilk yüklemede dokunulmaz).
-  const [lastCategoryId, setLastCategoryId] = useState(defaultValues.categoryId);
+  const [lastCategoryId, setLastCategoryId] = useState(
+    defaultValues.categoryId,
+  );
   if (categoryIdValue !== lastCategoryId) {
     setLastCategoryId(categoryIdValue);
-    const category = categoryOptions.find((item) => item.id === categoryIdValue);
-    if (category && showTax) form.setValue("taxRate", String(category.defaultTaxRate));
+    const category = categoryOptions.find(
+      (item) => item.id === categoryIdValue,
+    );
+    if (category && showTax)
+      form.setValue("taxRate", String(category.defaultTaxRate));
   }
   const preview = (() => {
     const cents = toCents(amountValue ?? "");
     const rate = Number(taxRateValue);
     if (!showTax || cents === null || !rate) return null;
     const { netCents, taxCents } = splitGross(cents, rate);
-    return t("taxPreview", { net: formatMoney(netCents), tax: formatMoney(taxCents), rate });
+    return t("taxPreview", {
+      net: formatMoney(netCents),
+      tax: formatMoney(taxCents),
+      rate,
+    });
   })();
 
   const onSubmit = form.handleSubmit(async (values) => {
@@ -137,7 +163,7 @@ export function BookingForm({ mode, accounts, categories, projects, initial, sma
         setFormError(applyActionResult(result, form.setError));
         return;
       }
-      addToast({ title: t("toastUpdated"), color: "success" });
+      toast(t("toastUpdated"), { variant: "success" });
       // Çekmecede: kapat (adres değişince sunucu verisi tazelenir); sayfada: detaya dön.
       if (closeDrawer) {
         closeDrawer();
@@ -165,95 +191,115 @@ export function BookingForm({ mode, accounts, categories, projects, initial, sma
       setFormError(applyActionResult(result, form.setError));
       return;
     }
-    addToast({ title: t("toastSaved", { number: result.data.bookingNumber }), color: "success" });
+    toast(t("toastSaved", { number: result.data.bookingNumber }), {
+      variant: "success",
+    });
     router.push(`/muhasebe/${result.data.id}`);
     router.refresh();
   });
 
   return (
     <FormSurface className="max-w-3xl">
-        <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
-          <FormDatePicker
-            name="bookingDate"
-            label={t("date")}
-            control={form.control}
-            isRequired
-          />
-          <FormInput
-            name="amount"
-            label={showTax ? t("amountGross") : t("amount")}
-            control={form.control}
-            isRequired
-            placeholder="120,00"
-            description={preview ?? undefined}
-          />
-          {showTax ? (
-            <FormSelect
-              name="taxRate"
-              label={t("taxRate")}
-              control={form.control}
-              options={TAX_RATES.map((rate) => ({ value: String(rate), label: `${rate} %` }))}
-            />
-          ) : !isTransfer ? (
-            <p className="text-tiny text-default-500">{t("smallBusinessNote")}</p>
-          ) : null}
+      <form onSubmit={onSubmit} noValidate className="flex flex-col gap-4">
+        <FormDatePicker
+          name="bookingDate"
+          label={t("date")}
+          control={form.control}
+          isRequired
+        />
+        <FormInput
+          name="amount"
+          label={showTax ? t("amountGross") : t("amount")}
+          control={form.control}
+          isRequired
+          placeholder="120,00"
+          description={preview ?? undefined}
+        />
+        {showTax ? (
           <FormSelect
-            name="accountId"
-            label={isTransfer ? t("sourceAccount") : t("account")}
+            name="taxRate"
+            label={t("taxRate")}
             control={form.control}
-            isRequired
-            options={accounts.map((account) => ({ value: account.id, label: account.name }))}
+            options={TAX_RATES.map((rate) => ({
+              value: String(rate),
+              label: `${rate} %`,
+            }))}
           />
-          {isTransfer ? (
-            <FormSelect
-              name="counterAccountId"
-              label={t("targetAccount")}
-              control={form.control}
-              isRequired
-              options={accounts.map((account) => ({ value: account.id, label: account.name }))}
-            />
-          ) : (
-            <FormSelect
-              name="categoryId"
-              label={t("category")}
-              control={form.control}
-              isRequired
-              options={categoryOptions.map((category) => ({
-                value: category.id,
-                label: `${category.name} — ${tSpheres(`sphere${category.sphere.charAt(0)}${category.sphere.slice(1).toLowerCase()}`)}`,
-              }))}
-            />
-          )}
+        ) : !isTransfer ? (
+          <p className="text-xs text-ink-500">{t("smallBusinessNote")}</p>
+        ) : null}
+        <FormSelect
+          name="accountId"
+          label={isTransfer ? t("sourceAccount") : t("account")}
+          control={form.control}
+          isRequired
+          options={accounts.map((account) => ({
+            value: account.id,
+            label: account.name,
+          }))}
+        />
+        {isTransfer ? (
           <FormSelect
-            name="projectId"
-            label={t("project")}
-            control={form.control}
-            options={[
-              { value: "", label: "—" },
-              ...projects.map((project) => ({ value: project.id, label: project.name })),
-            ]}
-          />
-          <FormTextarea
-            name="description"
-            label={t("description")}
+            name="counterAccountId"
+            label={t("targetAccount")}
             control={form.control}
             isRequired
+            options={accounts.map((account) => ({
+              value: account.id,
+              label: account.name,
+            }))}
           />
-          <FormInput name="counterparty" label={t("counterparty")} control={form.control} />
-          <FormInput
-            name="receiptReference"
-            label={t("receiptReference")}
+        ) : (
+          <FormSelect
+            name="categoryId"
+            label={t("category")}
             control={form.control}
+            isRequired
+            options={categoryOptions.map((category) => ({
+              value: category.id,
+              label: `${category.name} — ${tSpheres(`sphere${category.sphere.charAt(0)}${category.sphere.slice(1).toLowerCase()}`)}`,
+            }))}
           />
+        )}
+        <FormSelect
+          name="projectId"
+          label={t("project")}
+          control={form.control}
+          options={[
+            { value: "", label: "—" },
+            ...projects.map((project) => ({
+              value: project.id,
+              label: project.name,
+            })),
+          ]}
+        />
+        <FormTextarea
+          name="description"
+          label={t("description")}
+          control={form.control}
+          isRequired
+        />
+        <FormInput
+          name="counterparty"
+          label={t("counterparty")}
+          control={form.control}
+        />
+        <FormInput
+          name="receiptReference"
+          label={t("receiptReference")}
+          control={form.control}
+        />
 
-          {formError ? (
-            <p className="text-small text-danger" role="alert">
-              {formError}
-            </p>
-          ) : null}
+        {formError ? (
+          <p className="text-sm text-danger" role="alert">
+            {formError}
+          </p>
+        ) : null}
 
-          <SubmitButton isSubmitting={form.formState.isSubmitting}>{t("save")}</SubmitButton>
-        </form>
+        <SubmitButton isSubmitting={form.formState.isSubmitting}>
+          {t("save")}
+        </SubmitButton>
+      </form>
     </FormSurface>
   );
 }

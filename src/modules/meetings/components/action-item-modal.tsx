@@ -1,24 +1,31 @@
 "use client";
+import {
+  toast,
+  Button,
+  Spinner,
+  Modal,
+  TextField,
+  Label,
+  TextArea,
+  Description,
+  Input,
+  Select,
+  ListBox,
+} from "@heroui/react";
+
+import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
 
-import {
-  Button,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  Select,
-  SelectItem,
-  Textarea,
-  addToast,
-} from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { addActionItemAction, updateActionItemAction } from "../actions/action-item-actions";
+import {
+  addActionItemAction,
+  updateActionItemAction,
+} from "../actions/action-item-actions";
 import type { DecisionItem } from "../types";
 
 /**
@@ -61,15 +68,21 @@ export function ActionItemModal({
   // kayıttaki ad "dışarıdan sorumlu" olarak gelir.
   const initialAttendee =
     item?.assigneeAttendeeId ??
-    (item?.assigneeId ? attendeeOptions.find((option) => option.userId === item.assigneeId)?.id : undefined);
+    (item?.assigneeId
+      ? attendeeOptions.find((option) => option.userId === item.assigneeId)?.id
+      : undefined);
   const [assignee, setAssignee] = useState<string>(
     initialAttendee ?? (item?.assigneeLabel ? EXTERNAL : ""),
   );
-  const [assigneeName, setAssigneeName] = useState(!initialAttendee ? (item?.assigneeLabel ?? "") : "");
+  const [assigneeName, setAssigneeName] = useState(
+    !initialAttendee ? (item?.assigneeLabel ?? "") : "",
+  );
   const [assigneeEmail, setAssigneeEmail] = useState(item?.assigneeEmail ?? "");
   const [assigneePhone, setAssigneePhone] = useState(item?.assigneePhone ?? "");
   const isExternal = assignee === EXTERNAL;
-  const [dueDate, setDueDate] = useState(item?.dueDate ? item.dueDate.toISOString().slice(0, 10) : "");
+  const [dueDate, setDueDate] = useState(
+    item?.dueDate ? item.dueDate.toISOString().slice(0, 10) : "",
+  );
   const [decisionId, setDecisionId] = useState<Set<string>>(
     new Set(item?.decisionId ? [item.decisionId] : []),
   );
@@ -98,118 +111,187 @@ export function ActionItemModal({
       setError(result.error);
       return;
     }
-    addToast({ title: item ? t("updatedToast") : t("addedToast"), color: "success" });
+    toast(item ? t("updatedToast") : t("addedToast"), { variant: "success" });
     onOpenChange(false);
     router.refresh();
   };
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} key={key} size="lg">
-      <ModalContent>
-        <ModalHeader>{item ? t("modalEditTitle") : t("modalAddTitle")}</ModalHeader>
-        <ModalBody>
-          <Textarea
-            label={t("descriptionLabel")}
-            labelPlacement="outside"
-            value={description}
-            onValueChange={setDescription}
-            minRows={2}
-            isRequired
-            maxLength={1000}
-            description={t("descriptionHelp")}
-          />
-          <Select
-            label={t("assigneeLabel")}
-            labelPlacement="outside"
-            placeholder={t("noAssigneeOption")}
-            selectedKeys={assignee ? new Set([assignee]) : new Set<string>()}
-            onSelectionChange={(keys) => setAssignee(Array.from(keys as Set<string>)[0] ?? "")}
-            description={attendeeOptions.length === 0 ? t("assigneeNoAttendees") : t("assigneeHelp")}
-          >
-            {[
-              { value: "", label: t("noAssigneeOption") },
-              ...attendeeOptions.map((option) => ({ value: option.id, label: option.label })),
-              { value: EXTERNAL, label: t("assigneeExternalOption") },
-            ].map((option) => (
-              <SelectItem key={option.value} textValue={option.label}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </Select>
-          {isExternal ? (
-            <div className="grid grid-cols-1 gap-3 rounded-medium border border-default-200 p-3 sm:grid-cols-3">
-              <Input
-                label={t("externalName")}
-                labelPlacement="outside"
-                placeholder=" "
-                value={assigneeName}
-                onValueChange={setAssigneeName}
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange} key={key}>
+      <Modal.Backdrop>
+        <Modal.Container size="lg">
+          <Modal.Dialog className={"w-full max-w-lg "}>
+            <DialogDismissButton />
+
+            <Modal.Header>
+              <Modal.Heading className="flex items-center gap-2">
+                {item ? t("modalEditTitle") : t("modalAddTitle")}
+              </Modal.Heading>
+            </Modal.Header>
+            <Modal.Body>
+              <TextField
+                value={description}
                 isRequired
-                maxLength={120}
-              />
-              <Input
-                type="email"
-                label={t("externalEmail")}
-                labelPlacement="outside"
-                placeholder=" "
-                value={assigneeEmail}
-                onValueChange={setAssigneeEmail}
-                maxLength={200}
-              />
-              <Input
-                type="tel"
-                label={t("externalPhone")}
-                labelPlacement="outside"
-                placeholder=" "
-                value={assigneePhone}
-                onValueChange={setAssigneePhone}
-                maxLength={40}
-              />
-            </div>
-          ) : null}
-          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-            <Input
-              type="date"
-              label={t("dueDateLabel")}
-              labelPlacement="outside"
-              value={dueDate}
-              onValueChange={setDueDate}
-            />
-            <Select
-              label={t("decisionLabel")}
-              labelPlacement="outside"
-              selectedKeys={decisionId}
-              onSelectionChange={(keys) => setDecisionId(new Set(keys as Set<string>))}
-            >
-              {[
-                { value: "", label: t("noDecision") },
-                ...decisions.map((decision) => ({
-                  value: decision.id,
-                  label: decision.decisionNumber,
-                })),
-              ].map((option) => (
-                <SelectItem key={option.value} textValue={option.label}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </Select>
-          </div>
-          {error ? <p className="text-small text-danger">{error}</p> : null}
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="light" onPress={() => onOpenChange(false)}>
-            {tCommon("cancel")}
-          </Button>
-          <Button
-            color="primary"
-            isLoading={busy}
-            onPress={submit}
-            isDisabled={description.trim().length < 3 || (isExternal && assigneeName.trim().length < 2)}
-          >
-            {tCommon("save")}
-          </Button>
-        </ModalFooter>
-      </ModalContent>
+                onChange={setDescription}
+                className={["w-full"].filter(Boolean).join(" ")}
+              >
+                <Label>{t("descriptionLabel")}</Label>
+                <TextArea
+                  maxLength={1000}
+                  rows={2}
+                  className={["[field-sizing:content]"]
+                    .filter(Boolean)
+                    .join(" ")}
+                />
+                <Description>{t("descriptionHelp")}</Description>
+              </TextField>
+              <Select
+                placeholder={t("noAssigneeOption")}
+                value={
+                  assignee
+                    ? (Array.from(new Set([assignee]))[0] ?? null)
+                    : (Array.from(new Set<string>())[0] ?? null)
+                }
+                onChange={(selectedValue) => {
+                  const keys =
+                    selectedValue === null ? undefined : String(selectedValue);
+                  return setAssignee(keys ?? "");
+                }}
+              >
+                <Label>{t("assigneeLabel")}</Label>
+                <Select.Trigger>
+                  <Select.Value />
+                  <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                  <ListBox>
+                    {[
+                      { value: "", label: t("noAssigneeOption") },
+                      ...attendeeOptions.map((option) => ({
+                        value: option.id,
+                        label: option.label,
+                      })),
+                      { value: EXTERNAL, label: t("assigneeExternalOption") },
+                    ].map((option) => (
+                      <ListBox.Item
+                        key={option.value}
+                        id={option.value}
+                        textValue={option.label}
+                      >
+                        <Label>{option.label}</Label>
+                        <ListBox.ItemIndicator />
+                      </ListBox.Item>
+                    ))}
+                  </ListBox>
+                </Select.Popover>
+                <Description>
+                  {attendeeOptions.length === 0
+                    ? t("assigneeNoAttendees")
+                    : t("assigneeHelp")}
+                </Description>
+              </Select>
+              {isExternal ? (
+                <div className="grid grid-cols-1 gap-3 rounded-lg border border-ink-200 p-3 sm:grid-cols-3">
+                  <TextField
+                    value={assigneeName}
+                    isRequired
+                    onChange={setAssigneeName}
+                    className={["w-full"].filter(Boolean).join(" ")}
+                  >
+                    <Label>{t("externalName")}</Label>
+                    <Input placeholder=" " maxLength={120} />
+                  </TextField>
+                  <TextField
+                    value={assigneeEmail}
+                    onChange={setAssigneeEmail}
+                    className={["w-full"].filter(Boolean).join(" ")}
+                  >
+                    <Label>{t("externalEmail")}</Label>
+                    <Input type="email" placeholder=" " maxLength={200} />
+                  </TextField>
+                  <TextField
+                    value={assigneePhone}
+                    onChange={setAssigneePhone}
+                    className={["w-full"].filter(Boolean).join(" ")}
+                  >
+                    <Label>{t("externalPhone")}</Label>
+                    <Input type="tel" placeholder=" " maxLength={40} />
+                  </TextField>
+                </div>
+              ) : null}
+              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                <TextField
+                  value={dueDate}
+                  onChange={setDueDate}
+                  className={["w-full"].filter(Boolean).join(" ")}
+                >
+                  <Label>{t("dueDateLabel")}</Label>
+                  <Input type="date" />
+                </TextField>
+                <Select
+                  value={Array.from(decisionId)[0] ?? null}
+                  onChange={(selectedValue) => {
+                    const keys =
+                      selectedValue === null
+                        ? undefined
+                        : String(selectedValue);
+                    return setDecisionId(
+                      new Set(keys === undefined ? [] : [keys]),
+                    );
+                  }}
+                >
+                  <Label>{t("decisionLabel")}</Label>
+                  <Select.Trigger>
+                    <Select.Value />
+                    <Select.Indicator />
+                  </Select.Trigger>
+                  <Select.Popover>
+                    <ListBox>
+                      {[
+                        { value: "", label: t("noDecision") },
+                        ...decisions.map((decision) => ({
+                          value: decision.id,
+                          label: decision.decisionNumber,
+                        })),
+                      ].map((option) => (
+                        <ListBox.Item
+                          key={option.value}
+                          id={option.value}
+                          textValue={option.label}
+                        >
+                          <Label>{option.label}</Label>
+                          <ListBox.ItemIndicator />
+                        </ListBox.Item>
+                      ))}
+                    </ListBox>
+                  </Select.Popover>
+                </Select>
+              </div>
+              {error ? <p className="text-sm text-danger">{error}</p> : null}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                onPress={() => onOpenChange(false)}
+                variant={actionVariant("default", "light")}
+              >
+                {tCommon("cancel")}
+              </Button>
+              <Button
+                onPress={submit}
+                isDisabled={
+                  description.trim().length < 3 ||
+                  (isExternal && assigneeName.trim().length < 2)
+                }
+                variant={actionVariant("primary", "solid")}
+                isPending={busy}
+              >
+                {busy ? <Spinner size="sm" color="current" /> : null}
+                {tCommon("save")}
+              </Button>
+            </Modal.Footer>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 }

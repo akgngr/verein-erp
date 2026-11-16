@@ -1,7 +1,17 @@
 "use client";
+import {
+  toast,
+  Button,
+  CheckboxGroup,
+  Label,
+  Description,
+  Checkbox,
+} from "@heroui/react";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Button, Checkbox, CheckboxGroup, addToast } from "@heroui/react";
+
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Controller, useForm, type Resolver, useWatch } from "react-hook-form";
@@ -9,13 +19,22 @@ import { useTranslations } from "next-intl";
 
 import type { MembershipType } from "@prisma/client";
 
-import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
+import {
+  FormSurface,
+  useFormDrawerClose,
+} from "@/shared/components/forms/form-drawer";
 import { applyActionResult } from "@/shared/components/forms/action-result";
 import { FormDatePicker } from "@/shared/components/forms/form-date-picker";
 import { FormErrorSummary } from "@/shared/components/forms/form-error-summary";
-import { FormCountrySelect, FormStateSelect } from "@/shared/components/forms/form-address-selects";
+import {
+  FormCountrySelect,
+  FormStateSelect,
+} from "@/shared/components/forms/form-address-selects";
 import { FormInput } from "@/shared/components/forms/form-input";
-import { DEFAULT_COUNTRY_NAME, normalizeCountryName } from "@/shared/geo/germany";
+import {
+  DEFAULT_COUNTRY_NAME,
+  normalizeCountryName,
+} from "@/shared/geo/germany";
 import { FormSelect } from "@/shared/components/forms/form-select";
 import { FormTextarea } from "@/shared/components/forms/form-textarea";
 import { FormSwitch } from "@/shared/components/forms/form-switch";
@@ -23,10 +42,7 @@ import { SubmitButton } from "@/shared/components/forms/submit-button";
 
 import { createMemberAction } from "../actions/create-member";
 import { updateMemberAction } from "../actions/update-member";
-import {
-  MEMBERSHIP_TYPE_VALUES,
-  MEMBER_STATUS_VALUES,
-} from "../constants";
+import { MEMBERSHIP_TYPE_VALUES, MEMBER_STATUS_VALUES } from "../constants";
 import { memberCreateSchema, memberUpdateSchema } from "../schemas/member";
 
 const MESSAGING_CHANNELS = ["sms", "whatsapp", "telegram"] as const;
@@ -87,10 +103,16 @@ export type MemberEditFormData = {
 };
 
 type MemberFormProps =
-  | { mode: "create"; /** Faz 3 eklemeleri: pasif türler yeni kayıtta gizlenir. */ availableTypes?: MembershipType[] }
+  | {
+      mode: "create";
+      /** Faz 3 eklemeleri: pasif türler yeni kayıtta gizlenir. */ availableTypes?: MembershipType[];
+    }
   | { mode: "edit"; member: MemberEditFormData };
 
-const STATUS_SELECT_OPTIONS = MEMBER_STATUS_VALUES.map((status) => ({ value: status, label: status }));
+const STATUS_SELECT_OPTIONS = MEMBER_STATUS_VALUES.map((status) => ({
+  value: status,
+  label: status,
+}));
 
 /** Yeni/düzenleme üye formu. Üyelik numarası salt okunurdur; şemada yer almaz. */
 export function MemberForm(props: MemberFormProps) {
@@ -134,7 +156,10 @@ export function MemberForm(props: MemberFormProps) {
               ? String(member.birthDate)
               : "",
         profession: member.profession ?? "",
-        joinDate: member.joinDate instanceof Date ? member.joinDate.toISOString().slice(0, 10) : String(member.joinDate),
+        joinDate:
+          member.joinDate instanceof Date
+            ? member.joinDate.toISOString().slice(0, 10)
+            : String(member.joinDate),
         exitDate:
           member.exitDate instanceof Date
             ? member.exitDate.toISOString().slice(0, 10)
@@ -173,13 +198,23 @@ export function MemberForm(props: MemberFormProps) {
   // KARAR: documents kalıbıyla aynı — z.preprocess'li şemayı resolver'a uyarla.
   const form = useForm<MemberFormValues>({
     resolver: isEdit
-      ? (zodResolver(memberUpdateSchema) as unknown as Resolver<MemberFormValues>)
-      : (zodResolver(memberCreateSchema) as unknown as Resolver<MemberFormValues>),
+      ? (zodResolver(
+          memberUpdateSchema,
+        ) as unknown as Resolver<MemberFormValues>)
+      : (zodResolver(
+          memberCreateSchema,
+        ) as unknown as Resolver<MemberFormValues>),
     defaultValues,
   });
   // Tarih seçicilerin sınırları (sunucu aynı kuralları ayrıca denetler; bkz. services/date-rules.ts).
-  const watchedBirthDate = useWatch({ control: form.control, name: "birthDate" }) as string | null | undefined;
-  const watchedJoinDate = useWatch({ control: form.control, name: "joinDate" }) as string | null | undefined;
+  const watchedBirthDate = useWatch({
+    control: form.control,
+    name: "birthDate",
+  }) as string | null | undefined;
+  const watchedJoinDate = useWatch({
+    control: form.control,
+    name: "joinDate",
+  }) as string | null | undefined;
   const todayIso = new Date().toISOString().slice(0, 10);
 
   const onSubmit = form.handleSubmit(async (values) => {
@@ -191,7 +226,12 @@ export function MemberForm(props: MemberFormProps) {
         setFormError(applyActionResult(result, form.setError));
         return;
       }
-      addToast({ title: t("created.toastUpdated", { membershipNumber: result.data.membershipNumber }), color: "success" });
+      toast(
+        t("created.toastUpdated", {
+          membershipNumber: result.data.membershipNumber,
+        }),
+        { variant: "success" },
+      );
       // Çekmecede: kapat (adres değişince sunucu verisi tazelenir); sayfada: detaya dön.
       if (closeDrawer) {
         closeDrawer();
@@ -207,217 +247,243 @@ export function MemberForm(props: MemberFormProps) {
       setFormError(applyActionResult(result, form.setError));
       return;
     }
-    addToast({ title: t("created.toast", { membershipNumber: result.data.membershipNumber }), color: "success" });
+    toast(
+      t("created.toast", { membershipNumber: result.data.membershipNumber }),
+      { variant: "success" },
+    );
     router.push(`/uyeler/${result.data.id}`);
     router.refresh();
   });
 
   return (
     <FormSurface className="max-w-3xl">
-        {isEdit && member ? (
-          <div className="flex items-center gap-3 rounded-medium border border-default-200 bg-default-50 px-4 py-3">
-            <span className="text-small font-semibold">{member.membershipNumber}</span>
-            <span className="text-tiny text-default-500">
-              {t("form.membershipReadOnly")}
-            </span>
-          </div>
-        ) : null}
+      {isEdit && member ? (
+        <div className="flex items-center gap-3 rounded-lg border border-ink-200 bg-ink-50 px-4 py-3">
+          <span className="text-sm font-semibold">
+            {member.membershipNumber}
+          </span>
+          <span className="text-xs text-ink-500">
+            {t("form.membershipReadOnly")}
+          </span>
+        </div>
+      ) : null}
 
-        <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FormSelect
-              name="type"
-              label={t("form.type")}
-              control={form.control}
-              options={typeOptions.map((value) => ({
-                value,
-                label: t(`type.${value}`),
-              }))}
-              isRequired
-            />
-            <FormSelect
-              name="status"
-              label={t("form.status")}
-              control={form.control}
-              options={STATUS_SELECT_OPTIONS.map((option) => ({
-                value: option.value,
-                label: t(`status.${option.value}`),
-              }))}
-              isRequired
-            />
-          </div>
+      <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <FormSelect
+            name="type"
+            label={t("form.type")}
+            control={form.control}
+            options={typeOptions.map((value) => ({
+              value,
+              label: t(`type.${value}`),
+            }))}
+            isRequired
+          />
+          <FormSelect
+            name="status"
+            label={t("form.status")}
+            control={form.control}
+            options={STATUS_SELECT_OPTIONS.map((option) => ({
+              value: option.value,
+              label: t(`status.${option.value}`),
+            }))}
+            isRequired
+          />
+        </div>
 
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FormInput
-              name="firstName"
-              label={t("form.firstName")}
-              control={form.control}
-              isRequired
-              autoComplete="given-name"
-            />
-            <FormInput
-              name="lastName"
-              label={t("form.lastName")}
-              control={form.control}
-              isRequired
-              autoComplete="family-name"
-            />
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FormInput
-              name="kimlikNo"
-              label={t("form.kimlikNo")}
-              control={form.control}
-              description={t("form.kimlikNoDescription")}
-              placeholder={t("form.kimlikNoPlaceholder")}
-            />
-            <FormDatePicker
-              name="birthDate"
-              label={t("form.birthDate")}
-              control={form.control}
-              description={t("form.birthDateDescription")}
-              minValue="1900-01-01"
-              maxValue={todayIso}
-            />
-          </div>
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FormInput
-              name="email"
-              label={t("form.email")}
-              control={form.control}
-              type="email"
-              autoComplete="email"
-              placeholder={t("form.emailPlaceholder")}
-            />
-            <FormInput
-              name="phone"
-              label={t("form.phone")}
-              control={form.control}
-              type="tel"
-              autoComplete="tel"
-              placeholder={t("form.phonePlaceholder")}
-            />
-          </div>
-
-          {/* KARAR (Verein pivotu): adres Alman adres yapısına göre yapılandırıldı. */}
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
-            <FormInput
-              name="street"
-              label={t("form.street")}
-              control={form.control}
-              placeholder={t("form.streetPlaceholder")}
-              autoComplete="address-line1"
-            />
-            <FormInput
-              name="houseNumber"
-              label={t("form.houseNumber")}
-              control={form.control}
-              placeholder={t("form.houseNumberPlaceholder")}
-              autoComplete="address-line2"
-            />
-            <FormInput
-              name="postalCode"
-              label={t("form.postalCode")}
-              control={form.control}
-              placeholder={t("form.postalCodePlaceholder")}
-              autoComplete="postal-code"
-            />
-          </div>
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FormInput
-              name="city"
-              label={t("form.city")}
-              control={form.control}
-              placeholder={t("form.cityPlaceholder")}
-              autoComplete="address-level2"
-            />
-            <FormStateSelect name="state" label={t("form.state")} control={form.control} />
-          </div>
-          <FormCountrySelect name="country" store="name" label={t("form.country")} control={form.control} description={t("form.countryDescription")} />
-
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
           <FormInput
-            name="profession"
-            label={t("form.profession")}
+            name="firstName"
+            label={t("form.firstName")}
             control={form.control}
-            placeholder={t("form.professionPlaceholder")}
+            isRequired
+            autoComplete="given-name"
           />
-
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-            <FormDatePicker
-              name="joinDate"
-              label={t("form.joinDate")}
-              control={form.control}
-              isRequired
-              minValue={watchedBirthDate || "1900-01-01"}
-            />
-            <FormDatePicker
-              name="exitDate"
-              label={t("form.exitDate")}
-              control={form.control}
-              description={t("form.exitDateDescription")}
-              minValue={watchedJoinDate || undefined}
-            />
-          </div>
-
-          <FormTextarea
-            name="exitReason"
-            label={t("form.exitReason")}
+          <FormInput
+            name="lastName"
+            label={t("form.lastName")}
             control={form.control}
-            rows={2}
-            description={t("form.exitReasonDescription")}
+            isRequired
+            autoComplete="family-name"
           />
+        </div>
 
-          <FormTextarea
-            name="notes"
-            label={t("form.notes")}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <FormInput
+            name="kimlikNo"
+            label={t("form.kimlikNo")}
             control={form.control}
-            rows={3}
-            description={t("form.notesDescription")}
+            description={t("form.kimlikNoDescription")}
+            placeholder={t("form.kimlikNoPlaceholder")}
           />
-
-          <FormSwitch
-            name="bulkMailOptOut"
-            label={t("form.bulkMailOptOut")}
+          <FormDatePicker
+            name="birthDate"
+            label={t("form.birthDate")}
             control={form.control}
-            description={t("form.bulkMailOptOutDescription")}
+            description={t("form.birthDateDescription")}
+            minValue="1900-01-01"
+            maxValue={todayIso}
           />
+        </div>
 
-          <Controller
-            name="messagingConsents"
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <FormInput
+            name="email"
+            label={t("form.email")}
             control={form.control}
-            render={({ field }) => (
-              <CheckboxGroup
-                label={t("form.messagingConsents")}
-                description={t("form.messagingConsentsDescription")}
-                orientation="horizontal"
-                value={field.value ?? []}
-                onValueChange={field.onChange}
-              >
+            type="email"
+            autoComplete="email"
+            placeholder={t("form.emailPlaceholder")}
+          />
+          <FormInput
+            name="phone"
+            label={t("form.phone")}
+            control={form.control}
+            type="tel"
+            autoComplete="tel"
+            placeholder={t("form.phonePlaceholder")}
+          />
+        </div>
+
+        {/* KARAR (Verein pivotu): adres Alman adres yapısına göre yapılandırıldı. */}
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
+          <FormInput
+            name="street"
+            label={t("form.street")}
+            control={form.control}
+            placeholder={t("form.streetPlaceholder")}
+            autoComplete="address-line1"
+          />
+          <FormInput
+            name="houseNumber"
+            label={t("form.houseNumber")}
+            control={form.control}
+            placeholder={t("form.houseNumberPlaceholder")}
+            autoComplete="address-line2"
+          />
+          <FormInput
+            name="postalCode"
+            label={t("form.postalCode")}
+            control={form.control}
+            placeholder={t("form.postalCodePlaceholder")}
+            autoComplete="postal-code"
+          />
+        </div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <FormInput
+            name="city"
+            label={t("form.city")}
+            control={form.control}
+            placeholder={t("form.cityPlaceholder")}
+            autoComplete="address-level2"
+          />
+          <FormStateSelect
+            name="state"
+            label={t("form.state")}
+            control={form.control}
+          />
+        </div>
+        <FormCountrySelect
+          name="country"
+          store="name"
+          label={t("form.country")}
+          control={form.control}
+          description={t("form.countryDescription")}
+        />
+
+        <FormInput
+          name="profession"
+          label={t("form.profession")}
+          control={form.control}
+          placeholder={t("form.professionPlaceholder")}
+        />
+
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+          <FormDatePicker
+            name="joinDate"
+            label={t("form.joinDate")}
+            control={form.control}
+            isRequired
+            minValue={watchedBirthDate || "1900-01-01"}
+          />
+          <FormDatePicker
+            name="exitDate"
+            label={t("form.exitDate")}
+            control={form.control}
+            description={t("form.exitDateDescription")}
+            minValue={watchedJoinDate || undefined}
+          />
+        </div>
+
+        <FormTextarea
+          name="exitReason"
+          label={t("form.exitReason")}
+          control={form.control}
+          rows={2}
+          description={t("form.exitReasonDescription")}
+        />
+
+        <FormTextarea
+          name="notes"
+          label={t("form.notes")}
+          control={form.control}
+          rows={3}
+          description={t("form.notesDescription")}
+        />
+
+        <FormSwitch
+          name="bulkMailOptOut"
+          label={t("form.bulkMailOptOut")}
+          control={form.control}
+          description={t("form.bulkMailOptOutDescription")}
+        />
+
+        <Controller
+          name="messagingConsents"
+          control={form.control}
+          render={({ field }) => (
+            <CheckboxGroup value={field.value ?? []} onChange={field.onChange}>
+              <Label>{t("form.messagingConsents")}</Label>
+              <div className="flex flex-wrap gap-x-4 gap-y-2">
                 {MESSAGING_CHANNELS.map((channel) => (
-                  <Checkbox key={channel} value={channel}>{t(`form.messagingChannels.${channel}`)}</Checkbox>
+                  <Checkbox key={channel} value={channel}>
+                    <Checkbox.Content>
+                      <Checkbox.Control>
+                        <Checkbox.Indicator />
+                      </Checkbox.Control>
+                      <Label>{t(`form.messagingChannels.${channel}`)}</Label>
+                    </Checkbox.Content>
+                  </Checkbox>
                 ))}
-              </CheckboxGroup>
-            )}
-          />
+              </div>
+              <Description>
+                {t("form.messagingConsentsDescription")}
+              </Description>
+            </CheckboxGroup>
+          )}
+        />
 
-          <FormErrorSummary message={formError} />
+        <FormErrorSummary message={formError} />
 
-          <div className="flex items-center gap-2">
-            <SubmitButton isSubmitting={form.formState.isSubmitting}>
-              {isEdit ? t("form.save") : t("form.submit")}
-            </SubmitButton>
-            <Button
-              variant="light"
-              onPress={() =>
-                closeDrawer ? closeDrawer() : router.push(isEdit && member ? `/uyeler/${member.id}` : "/uyeler")
-              }
-            >
-              {t("form.cancel")}
-            </Button>
-          </div>
-        </form>
+        <div className="flex items-center gap-2">
+          <SubmitButton isSubmitting={form.formState.isSubmitting}>
+            {isEdit ? t("form.save") : t("form.submit")}
+          </SubmitButton>
+          <Button
+            onPress={() =>
+              closeDrawer
+                ? closeDrawer()
+                : router.push(
+                    isEdit && member ? `/uyeler/${member.id}` : "/uyeler",
+                  )
+            }
+            variant={actionVariant("default", "light")}
+          >
+            {t("form.cancel")}
+          </Button>
+        </div>
+      </form>
     </FormSurface>
   );
 }

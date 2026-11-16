@@ -1,15 +1,5 @@
 @import "tailwindcss";
-@import "@heroui-v3/styles";
-
-/* HeroUI (v2) eklentisi — Tailwind CSS v4 kurulumu (resmi doküman adımları) */
-@plugin "../heroui.ts";
-/* KARAR: @heroui/theme package.json'da DOĞRUDAN bağımlılıktır (sürümü @heroui/react'in
-   kullandığıyla aynı tutulur). pnpm dolaylı bağımlılığı node_modules/@heroui/theme'a koymaz;
-   bu yol olmadan HeroUI durum sınıfları (label animasyonu, hover, focus, selected) hiç
-   üretilmez. Doğrudan bağımlılık pnpm sürümünden/hoist ayarından bağımsız çalışır. */
-@source "../../node_modules/@heroui/theme/dist/**/*.{js,ts,jsx,tsx,mjs}";
-
-/* Koyu tema: next-themes "class" stratejisi */
+@import "@heroui/styles";
 @custom-variant dark (&:is(.dark *));
 
 html,
@@ -17,76 +7,342 @@ body {
   height: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
 }
-
-/*
- * İş akışı editörünün (@workflowbuilder/sdk) global CSS'i `body{overflow:hidden}` içerir; CSS bir kez
- * yüklenince editör kapansa da kalır ve sayfa kaydırılamaz. Daha özgül seçiciyle varsayılanı koru.
- * Modal açıkken kaydırma kilidini HeroUI kendi satır içi stiliyle ayrıca yönetir.
- */
+/* The workflow editor stylesheet sets body overflow:hidden. Preserve document scrolling. */
 html body {
   overflow: visible;
 }
-
-/* Özel ince ve estetik kaydırma çubuğu */
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
 }
-
 ::-webkit-scrollbar-track {
   background: transparent;
 }
-
 ::-webkit-scrollbar-thumb {
   background: rgba(156, 163, 175, 0.4);
   border-radius: 9999px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(156, 163, 175, 0.7);
 }
-
 .dark ::-webkit-scrollbar-thumb {
   background: rgba(156, 163, 175, 0.25);
 }
-
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: rgba(156, 163, 175, 0.5);
+:focus-visible {
+  outline-color: var(--focus);
+  outline-offset: 3px;
+}
+::selection {
+  background: color-mix(in srgb, var(--accent) 17%, transparent);
+}
+@layer base {
+  *,
+  ::before,
+  ::after {
+    border-color: var(--border);
+  }
+}
+@layer components {
+  .table__content {
+    font-family: inherit;
+  }
+  .button {
+    border-radius: var(--radius);
+  }
+}
+.sidebar-surface {
+  color: #e3ebe5;
+  background: #1c2822;
+  border-right: 1px solid #25382c;
+}
+.dark .sidebar-surface {
+  background: #141d18;
+  border-right-color: #2c3a30;
+}
+.workspace-shell {
+  background: var(--background);
+}
+.workspace-header {
+  background: color-mix(in srgb, var(--background) 94%, transparent);
+}
+.workspace-main {
+  width: 100%;
+  max-width: 1720px;
+  margin-inline: auto;
+}
+.workspace-page-heading {
+  text-wrap: balance;
+}
+.workspace-page-description {
+  max-width: 70ch;
+  text-wrap: pretty;
+}
+@media (prefers-reduced-motion: reduce) {
+  .workspace-shell *,
+  .workspace-shell *::before,
+  .workspace-shell *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
-/* ── Form alanı kenarlıkları ────────────────────────────────────────────────
-   KARAR: HeroUI "flat" alanlar odaklanmadan zemin rengiyle neredeyse aynı görünüyordu. Tüm
-   input/textarea/tarih/select alanlarına ince bir kenarlık verilir — açık temada orta gri,
-   koyu temada yumuşak gri-yeşil. Odakta birincil renk, hatada kırmızı. Global olduğu için
-   modüllerdeki doğrudan <Input>/<Select> kullanımları da aynı görünümü alır. */
-:root {
-  --field-border: #c4c4cc;
-  --field-border-hover: #a7b1a3;
+:root,
+.light,
+[data-theme="light"] {
+  --background: #f4f5f2;
+  --foreground: #242b26;
+  --surface: #ffffff;
+  --surface-foreground: #242b26;
+  --surface-secondary: #f7f8f5;
+  --surface-secondary-foreground: #242b26;
+  --surface-tertiary: #edf0ea;
+  --surface-tertiary-foreground: #242b26;
+  --overlay: #ffffff;
+  --overlay-foreground: #242b26;
+  --accent: #206541;
+  --accent-foreground: #ffffff;
+  --muted: #697367;
+  --border: #dfe3dc;
+  --field: #ffffff;
+  --field-foreground: #242b26;
+  --field-border: #d5dbd2;
+  --border-width-field: 1px;
+  --radius-field: 0.5rem;
+  --radius: 0.5rem;
+  --focus: #337b58;
 }
-.dark {
-  --field-border: rgba(180, 201, 185, 0.25);
-  --field-border-hover: rgba(180, 201, 185, 0.5);
+.dark,
+[data-theme="dark"] {
+  --background: #111714;
+  --foreground: #e9eee9;
+  --surface: #1a221d;
+  --surface-foreground: #e9eee9;
+  --surface-secondary: #212b24;
+  --surface-secondary-foreground: #e9eee9;
+  --surface-tertiary: #2b352d;
+  --surface-tertiary-foreground: #e9eee9;
+  --overlay: #212b24;
+  --overlay-foreground: #e9eee9;
+  --accent: #91c5a3;
+  --accent-foreground: #102719;
+  --muted: #a8b6aa;
+  --border: #334137;
+  --field: #1a221d;
+  --field-foreground: #e9eee9;
+  --field-border: #435447;
+  --focus: #91c5a3;
 }
-[data-slot="input-wrapper"],
-button[data-slot="trigger"][aria-haspopup="listbox"] {
-  border-width: 1px;
-  border-style: solid;
-  border-color: var(--field-border);
+
+@theme inline {
+  --color-ink: var(--ink-200);
+  --color-ink-foreground: var(--foreground);
+  --color-secondary: var(--secondary);
+  --color-divider: var(--border);
+  --color-brand-50: #edf5f0;
+  --color-brand-100: #d9eade;
+  --color-brand-200: #b6d4c0;
+  --color-brand-300: #87b69a;
+  --color-brand-400: #579575;
+  --color-brand-500: #337b58;
+  --color-brand-600: #206541;
+  --color-brand-700: #1d5036;
+  --color-brand-800: #1c402d;
+  --color-brand-900: #173526;
+  --color-ink-50: var(--ink-50);
+  --color-ink-100: var(--ink-100);
+  --color-ink-200: var(--ink-200);
+  --color-ink-300: var(--ink-300);
+  --color-ink-400: var(--ink-400);
+  --color-ink-500: var(--ink-500);
+  --color-ink-600: var(--ink-600);
+  --color-ink-700: var(--ink-700);
+  --color-ink-800: var(--ink-800);
+  --color-ink-900: var(--ink-900);
+  --color-success-50: color-mix(in srgb, var(--success) 6%, var(--background));
+  --color-success-100: color-mix(
+    in srgb,
+    var(--success) 12%,
+    var(--background)
+  );
+  --color-success-200: color-mix(
+    in srgb,
+    var(--success) 25%,
+    var(--background)
+  );
+  --color-success-300: color-mix(
+    in srgb,
+    var(--success) 40%,
+    var(--background)
+  );
+  --color-success-400: color-mix(
+    in srgb,
+    var(--success) 65%,
+    var(--background)
+  );
+  --color-success-500: color-mix(
+    in srgb,
+    var(--success) 100%,
+    var(--foreground)
+  );
+  --color-success-600: color-mix(
+    in srgb,
+    var(--success) 85%,
+    var(--foreground)
+  );
+  --color-success-700: color-mix(
+    in srgb,
+    var(--success) 70%,
+    var(--foreground)
+  );
+  --color-success-800: color-mix(
+    in srgb,
+    var(--success) 55%,
+    var(--foreground)
+  );
+  --color-success-900: color-mix(
+    in srgb,
+    var(--success) 40%,
+    var(--foreground)
+  );
+  --color-warning-50: color-mix(in srgb, var(--warning) 6%, var(--background));
+  --color-warning-100: color-mix(
+    in srgb,
+    var(--warning) 12%,
+    var(--background)
+  );
+  --color-warning-200: color-mix(
+    in srgb,
+    var(--warning) 25%,
+    var(--background)
+  );
+  --color-warning-300: color-mix(
+    in srgb,
+    var(--warning) 40%,
+    var(--background)
+  );
+  --color-warning-400: color-mix(
+    in srgb,
+    var(--warning) 65%,
+    var(--background)
+  );
+  --color-warning-500: color-mix(
+    in srgb,
+    var(--warning) 100%,
+    var(--foreground)
+  );
+  --color-warning-600: color-mix(
+    in srgb,
+    var(--warning) 85%,
+    var(--foreground)
+  );
+  --color-warning-700: color-mix(
+    in srgb,
+    var(--warning) 70%,
+    var(--foreground)
+  );
+  --color-warning-800: color-mix(
+    in srgb,
+    var(--warning) 55%,
+    var(--foreground)
+  );
+  --color-warning-900: color-mix(
+    in srgb,
+    var(--warning) 40%,
+    var(--foreground)
+  );
+  --color-danger-50: color-mix(in srgb, var(--danger) 6%, var(--background));
+  --color-danger-100: color-mix(in srgb, var(--danger) 12%, var(--background));
+  --color-danger-200: color-mix(in srgb, var(--danger) 25%, var(--background));
+  --color-danger-300: color-mix(in srgb, var(--danger) 40%, var(--background));
+  --color-danger-400: color-mix(in srgb, var(--danger) 65%, var(--background));
+  --color-danger-500: color-mix(in srgb, var(--danger) 100%, var(--foreground));
+  --color-danger-600: color-mix(in srgb, var(--danger) 85%, var(--foreground));
+  --color-danger-700: color-mix(in srgb, var(--danger) 70%, var(--foreground));
+  --color-danger-800: color-mix(in srgb, var(--danger) 55%, var(--foreground));
+  --color-danger-900: color-mix(in srgb, var(--danger) 40%, var(--foreground));
+  --color-secondary-50: color-mix(
+    in srgb,
+    var(--secondary) 6%,
+    var(--background)
+  );
+  --color-secondary-100: color-mix(
+    in srgb,
+    var(--secondary) 12%,
+    var(--background)
+  );
+  --color-secondary-200: color-mix(
+    in srgb,
+    var(--secondary) 25%,
+    var(--background)
+  );
+  --color-secondary-300: color-mix(
+    in srgb,
+    var(--secondary) 40%,
+    var(--background)
+  );
+  --color-secondary-400: color-mix(
+    in srgb,
+    var(--secondary) 65%,
+    var(--background)
+  );
+  --color-secondary-500: color-mix(
+    in srgb,
+    var(--secondary) 100%,
+    var(--foreground)
+  );
+  --color-secondary-600: color-mix(
+    in srgb,
+    var(--secondary) 85%,
+    var(--foreground)
+  );
+  --color-secondary-700: color-mix(
+    in srgb,
+    var(--secondary) 70%,
+    var(--foreground)
+  );
+  --color-secondary-800: color-mix(
+    in srgb,
+    var(--secondary) 55%,
+    var(--foreground)
+  );
+  --color-secondary-900: color-mix(
+    in srgb,
+    var(--secondary) 40%,
+    var(--foreground)
+  );
 }
-[data-slot="input-wrapper"]:hover,
-button[data-slot="trigger"][aria-haspopup="listbox"]:hover {
-  border-color: var(--field-border-hover);
+
+:root,
+.light,
+[data-theme="light"] {
+  --secondary: #7c3aed;
+  --ink-50: #f7f8f6;
+  --ink-100: #eef0ec;
+  --ink-200: #dfe3dc;
+  --ink-300: #c4cbc1;
+  --ink-400: #929b90;
+  --ink-500: #697367;
+  --ink-600: #505b4f;
+  --ink-700: #3b453b;
+  --ink-800: #29322a;
+  --ink-900: #1c241e;
 }
-[data-slot="input-wrapper"]:focus-within,
-[data-slot="input-wrapper"][data-focus="true"],
-button[data-slot="trigger"][aria-haspopup="listbox"][data-focus="true"],
-button[data-slot="trigger"][aria-haspopup="listbox"][aria-expanded="true"] {
-  border-color: hsl(var(--heroui-primary));
-}
-[data-invalid="true"] [data-slot="input-wrapper"],
-[data-invalid="true"] button[data-slot="trigger"][aria-haspopup="listbox"] {
-  border-color: hsl(var(--heroui-danger));
+.dark,
+[data-theme="dark"] {
+  --secondary: #c4b5fd;
+  --ink-50: #1a221d;
+  --ink-100: #212b24;
+  --ink-200: #334137;
+  --ink-300: #435447;
+  --ink-400: #859589;
+  --ink-500: #a8b6aa;
+  --ink-600: #becac0;
+  --ink-700: #d4ddd5;
+  --ink-800: #e2e9e3;
+  --ink-900: #f0f4ef;
 }
 
 /* Zengin metin belgeleri (Tiptap editörü .word-page ve gösterim .doc-content): Tailwind preflight sıfırlamasına karşı
@@ -181,130 +437,4 @@ button[data-slot="trigger"][aria-haspopup="listbox"][aria-expanded="true"] {
   float: left;
   height: 0;
   pointer-events: none;
-}
-
-/* Calm navigation shell; the active destination is the strongest visual signal. */
-.sidebar-surface {
-  color: #e3ebe5;
-  background: #1c2822;
-  border-right: 1px solid #25382c;
-}
-.dark .sidebar-surface {
-  background: #141d18;
-  border-right-color: #2c3a30;
-}
-
-.workspace-shell {
-  background: hsl(var(--heroui-background));
-}
-.workspace-header {
-  background: hsl(var(--heroui-background) / 0.94);
-}
-.workspace-main {
-  width: 100%;
-  max-width: 1720px;
-  margin-inline: auto;
-}
-.workspace-page-heading {
-  text-wrap: balance;
-}
-.workspace-page-description {
-  max-width: 70ch;
-  text-wrap: pretty;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .workspace-shell *,
-  .workspace-shell *::before,
-  .workspace-shell *::after {
-    scroll-behavior: auto !important;
-    animation-duration: 0.01ms !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* Renk verilmemiş kenarlıklar (Tailwind v4 varsayılanı currentColor) yumuşak griye çekilir. */
-@layer base {
-  *,
-  ::before,
-  ::after {
-    border-color: hsl(var(--heroui-default-200));
-  }
-}
-
-/* Native controls and typography stay legible across dense management screens. */
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-}
-:focus-visible {
-  outline-color: hsl(var(--heroui-focus));
-  outline-offset: 3px;
-}
-::selection {
-  background: hsl(var(--heroui-primary) / 0.17);
-}
-/* Hand-written primary actions use the same accessible foreground as HeroUI controls. */
-.dark .bg-primary {
-  color: hsl(var(--heroui-primary-foreground));
-}
-
-/* HeroUI v3 CSS-first theme. v2's plugin remains only during the component migration. */
-:root,
-.light,
-[data-theme="light"] {
-  --background: #f4f5f2;
-  --foreground: #242b26;
-  --surface: #ffffff;
-  --surface-foreground: #242b26;
-  --surface-secondary: #f7f8f5;
-  --surface-secondary-foreground: #242b26;
-  --surface-tertiary: #edf0ea;
-  --surface-tertiary-foreground: #242b26;
-  --overlay: #ffffff;
-  --overlay-foreground: #242b26;
-  --accent: #206541;
-  --accent-foreground: #ffffff;
-  --muted: #697367;
-  --border: #dfe3dc;
-  --field-background: #ffffff;
-  --field-foreground: #242b26;
-  --field-border: #d5dbd2;
-  --field-border-width: 1px;
-  --field-radius: 0.5rem;
-  --radius: 0.5rem;
-  --focus: #337b58;
-}
-.dark,
-[data-theme="dark"] {
-  --background: #111714;
-  --foreground: #e9eee9;
-  --surface: #1a221d;
-  --surface-foreground: #e9eee9;
-  --surface-secondary: #212b24;
-  --surface-secondary-foreground: #e9eee9;
-  --surface-tertiary: #2b352d;
-  --surface-tertiary-foreground: #e9eee9;
-  --overlay: #212b24;
-  --overlay-foreground: #e9eee9;
-  --accent: #91c5a3;
-  --accent-foreground: #102719;
-  --muted: #a8b6aa;
-  --border: #334137;
-  --field-background: #1a221d;
-  --field-foreground: #e9eee9;
-  --field-border: #435447;
-  --focus: #91c5a3;
-}
-
-@layer components {
-  /* Workspace actions use the same restrained corner radius as fields. */
-  .button {
-    border-radius: var(--radius);
-  }
-}
-
-/* Temporary v2 flat-chip styling: its foreground uses the light palette's
-   primary-600 even in dark mode. Keep the forest badge readable until v3 migration. */
-.dark [class~="bg-primary/20"][class~="text-primary-600"] {
-  color: hsl(var(--heroui-primary));
 }

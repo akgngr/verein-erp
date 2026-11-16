@@ -13,7 +13,7 @@ Alman dernek mevzuatına uygun çift taraflı defter tutma, fiş ve bütçe yön
 |---|---|
 | Anahtar | `accounting` |
 | Tür | Resmî modül |
-| Sürüm | 1.22.0 |
+| Sürüm | 1.22.1 |
 | Sayfalar | `/muhasebe`, `/muhasebe/faturalar`, `/muhasebe/gelen-faturalar`, `/muhasebe/cariler`, `/muhasebe/banka`, `/muhasebe/uyelik-aktarimi`, `/muhasebe/raporlar`, `/muhasebe/vergi`, `/muhasebe/hibeler`, `/muhasebe/sepa`, `/muhasebe/butce`, `/muhasebe/ekler`, `/muhasebe/gobd`, `/muhasebe/yil-kapanisi`, `/muhasebe/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -43,6 +43,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_accounting_summary` · `get_bank_inbox_summary` · `get_open_items_summary` · `get_payables_summary` · `get_report_link` · `get_vat_summary`
 
 ## Sürüm notları
+
+### 1.22.1 — HeroUI v3 arayüz geçişi
+
+_2026-11-16_
+
+- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
 ### 1.22.0 — Asistan: gelir-gider özetleri bulutta da
 
@@ -89,10 +95,4 @@ _2026-11-07_
 
 - **Yeni:** E-fatura doğrulama: EN 16931 ve XRechnung (BR-DE) kuralları; hatalı faturada XRechnung/ZUGFeRD üretilmez, fatura ekranında kontrol paneli, gelen e-faturada içe alırken kontrol, isteğe bağlı KoSIT doğrulayıcısı.
 
-### 1.17.0 — İptal faturası (e-fatura)
-
-_2026-11-07_
-
-- **Yeni:** Kesilmiş fatura iptal edildiğinde otomatik iptal faturası (Stornorechnung, ST-…): PDF, XRechnung (UBL CreditNote 381) ve ZUGFeRD (381) çıktıları orijinal faturaya referansla.
-
-Daha eski 19 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/accounting/releases.json)
+Daha eski 20 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/accounting/releases.json)

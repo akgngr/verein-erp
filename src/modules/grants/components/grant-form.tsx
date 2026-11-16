@@ -1,6 +1,20 @@
 "use client";
+import {
+  toast,
+  Button,
+  Spinner,
+  Checkbox,
+  Label,
+  TextField,
+  Input,
+  InputGroup,
+  TextArea,
+  Select,
+  ListBox,
+} from "@heroui/react";
 
-import { addToast, Button, Checkbox, Input, Select, SelectItem, Textarea } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
@@ -9,31 +23,100 @@ import { useTranslateMessage } from "@/shared/i18n/use-translate-message";
 
 import { saveGrantAction } from "../actions/grant-actions";
 
-export const GRANT_STATUSES = ["PLANNED", "APPLIED", "APPROVED", "ACTIVE", "REPORTED", "CLOSED", "REJECTED"] as const;
+export const GRANT_STATUSES = [
+  "PLANNED",
+  "APPLIED",
+  "APPROVED",
+  "ACTIVE",
+  "REPORTED",
+  "CLOSED",
+  "REJECTED",
+] as const;
 export type GrantFormValue = {
-  id: string | null; name: string; funder: string; fileNumber: string | null; purpose: string | null; status: (typeof GRANT_STATUSES)[number];
-  approvedCents: number | null; ownShareCents: number; thirdPartyCents: number; periodStart: string; periodEnd: string; reportDueAt: string | null; projectId: string | null; useNetAmounts: boolean;
+  id: string | null;
+  name: string;
+  funder: string;
+  fileNumber: string | null;
+  purpose: string | null;
+  status: (typeof GRANT_STATUSES)[number];
+  approvedCents: number | null;
+  ownShareCents: number;
+  thirdPartyCents: number;
+  periodStart: string;
+  periodEnd: string;
+  reportDueAt: string | null;
+  projectId: string | null;
+  useNetAmounts: boolean;
 };
 
-const euros = (cents: number | null) => (cents === null ? "" : String(cents / 100));
-const toCents = (value: string) => (value.trim() === "" ? null : Math.round(Number(value.replace(",", ".")) * 100));
+const euros = (cents: number | null) =>
+  cents === null ? "" : String(cents / 100);
+const toCents = (value: string) =>
+  value.trim() === ""
+    ? null
+    : Math.round(Number(value.replace(",", ".")) * 100);
 
 /** Hibe temel bilgileri (yeni ve düzenleme). */
-export function GrantForm({ initial, projects, openAfterSave = false, canEdit }: { initial: GrantFormValue; projects: { id: string; name: string }[]; openAfterSave?: boolean; canEdit: boolean }) {
+export function GrantForm({
+  initial,
+  projects,
+  openAfterSave = false,
+  canEdit,
+}: {
+  initial: GrantFormValue;
+  projects: { id: string; name: string }[];
+  openAfterSave?: boolean;
+  canEdit: boolean;
+}) {
   const t = useTranslations("grants");
   const translate = useTranslateMessage();
   const router = useRouter();
-  const [value, setValue] = useState({ ...initial, approved: euros(initial.approvedCents), own: euros(initial.ownShareCents), third: euros(initial.thirdPartyCents) });
+  const [value, setValue] = useState({
+    ...initial,
+    approved: euros(initial.approvedCents),
+    own: euros(initial.ownShareCents),
+    third: euros(initial.thirdPartyCents),
+  });
   const [pending, start] = useTransition();
-  const set = (patch: Partial<typeof value>) => setValue((current) => ({ ...current, ...patch }));
+  const set = (patch: Partial<typeof value>) =>
+    setValue((current) => ({ ...current, ...patch }));
   const field = (key: "name" | "funder" | "fileNumber", type = "text") => (
-    <Input label={t(`fields.${key}`)} labelPlacement="outside" placeholder=" " type={type} value={value[key] ?? ""} isDisabled={!canEdit} onValueChange={(next) => set({ [key]: next })} />
+    <TextField
+      value={value[key] ?? ""}
+      isDisabled={!canEdit}
+      onChange={(next) => set({ [key]: next })}
+      className={["w-full"].filter(Boolean).join(" ")}
+    >
+      <Label>{t(`fields.${key}`)}</Label>
+      <Input placeholder=" " type={type} />
+    </TextField>
   );
   const money = (key: "approved" | "own" | "third", label: string) => (
-    <Input label={label} labelPlacement="outside" placeholder="0,00" inputMode="decimal" endContent={<span className="text-small text-default-400">€</span>} value={value[key]} isDisabled={!canEdit} onValueChange={(next) => set({ [key]: next })} />
+    <TextField
+      value={value[key]}
+      isDisabled={!canEdit}
+      onChange={(next) => set({ [key]: next })}
+      className={["w-full"].filter(Boolean).join(" ")}
+    >
+      <Label>{label}</Label>
+      <InputGroup>
+        <InputGroup.Input placeholder="0,00" inputMode="decimal" />
+        <InputGroup.Suffix>
+          {<span className="text-sm text-ink-400">€</span>}
+        </InputGroup.Suffix>
+      </InputGroup>
+    </TextField>
   );
   const dateField = (key: "periodStart" | "periodEnd" | "reportDueAt") => (
-    <Input label={t(`fields.${key}`)} labelPlacement="outside" placeholder=" " type="date" value={value[key] ?? ""} isDisabled={!canEdit} onValueChange={(next) => set({ [key]: next })} />
+    <TextField
+      value={value[key] ?? ""}
+      isDisabled={!canEdit}
+      onChange={(next) => set({ [key]: next })}
+      className={["w-full"].filter(Boolean).join(" ")}
+    >
+      <Label>{t(`fields.${key}`)}</Label>
+      <Input placeholder=" " type="date" />
+    </TextField>
   );
 
   return (
@@ -42,37 +125,144 @@ export function GrantForm({ initial, projects, openAfterSave = false, canEdit }:
         {field("name")}
         {field("funder")}
         {field("fileNumber")}
-        <Select id="grant-status" label={t("fields.status")} labelPlacement="outside" selectedKeys={[value.status]} isDisabled={!canEdit} onSelectionChange={(keys) => set({ status: String(Array.from(keys)[0] ?? value.status) as GrantFormValue["status"] })}>
-          {GRANT_STATUSES.map((status) => <SelectItem key={status}>{t(`status.${status}`)}</SelectItem>)}
+        <Select
+          id="grant-status"
+          isDisabled={!canEdit}
+          value={value.status}
+          onChange={(selectedValue) => {
+            const keys =
+              selectedValue === null ? undefined : String(selectedValue);
+            return set({
+              status: String(keys ?? value.status) as GrantFormValue["status"],
+            });
+          }}
+        >
+          <Label>{t("fields.status")}</Label>
+          <Select.Trigger>
+            <Select.Value />
+            <Select.Indicator />
+          </Select.Trigger>
+          <Select.Popover>
+            <ListBox>
+              {GRANT_STATUSES.map((status) => (
+                <ListBox.Item
+                  key={status}
+                  id={status}
+                  textValue={String(t(`status.${status}`))}
+                >
+                  <Label>{t(`status.${status}`)}</Label>
+                  <ListBox.ItemIndicator />
+                </ListBox.Item>
+              ))}
+            </ListBox>
+          </Select.Popover>
         </Select>
         {dateField("periodStart")}
         {dateField("periodEnd")}
         {dateField("reportDueAt")}
         <div className="flex flex-col gap-1">
-        <Select id="grant-project" label={t("fields.project")} labelPlacement="outside" placeholder={t("noProject")} selectedKeys={value.projectId ? [value.projectId] : []} isDisabled={!canEdit} onSelectionChange={(keys) => set({ projectId: String(Array.from(keys)[0] ?? "") || null })}>
-          {projects.map((project) => <SelectItem key={project.id}>{project.name}</SelectItem>)}
-        </Select>
-        {/* HeroUI: outside etiket + description birlikte etiketi kaydırıyor; açıklama dışarıda. */}
-        <p className="px-1 text-tiny text-default-500">{t("projectHelp")}</p>
+          <Select
+            id="grant-project"
+            placeholder={t("noProject")}
+            isDisabled={!canEdit}
+            value={value.projectId ? value.projectId : null}
+            onChange={(selectedValue) => {
+              const keys =
+                selectedValue === null ? undefined : String(selectedValue);
+              return set({ projectId: String(keys ?? "") || null });
+            }}
+          >
+            <Label>{t("fields.project")}</Label>
+            <Select.Trigger>
+              <Select.Value />
+              <Select.Indicator />
+            </Select.Trigger>
+            <Select.Popover>
+              <ListBox>
+                {projects.map((project) => (
+                  <ListBox.Item
+                    key={project.id}
+                    id={project.id}
+                    textValue={String(project.name)}
+                  >
+                    <Label>{project.name}</Label>
+                    <ListBox.ItemIndicator />
+                  </ListBox.Item>
+                ))}
+              </ListBox>
+            </Select.Popover>
+          </Select>
+          {/* HeroUI: outside etiket + description birlikte etiketi kaydırıyor; açıklama dışarıda. */}
+          <p className="px-1 text-xs text-ink-500">{t("projectHelp")}</p>
         </div>
         {money("approved", t("fields.approved"))}
         {money("own", t("fields.ownShare"))}
         {money("third", t("fields.thirdParty"))}
       </div>
-      <Checkbox isSelected={value.useNetAmounts} isDisabled={!canEdit} onValueChange={(next) => set({ useNetAmounts: next })}><span className="text-small">{t("fields.useNetAmounts")}</span></Checkbox>
-      <Textarea label={t("fields.purpose")} labelPlacement="outside" placeholder=" " minRows={3} value={value.purpose ?? ""} isDisabled={!canEdit} onValueChange={(next) => set({ purpose: next })} />
+      <Checkbox
+        isSelected={value.useNetAmounts}
+        isDisabled={!canEdit}
+        onChange={(next) => set({ useNetAmounts: next })}
+      >
+        <Checkbox.Content>
+          <Checkbox.Control>
+            <Checkbox.Indicator />
+          </Checkbox.Control>
+          <Label>
+            <span className="text-sm">{t("fields.useNetAmounts")}</span>
+          </Label>
+        </Checkbox.Content>
+      </Checkbox>
+      <TextField
+        value={value.purpose ?? ""}
+        isDisabled={!canEdit}
+        onChange={(next) => set({ purpose: next })}
+        className={["w-full"].filter(Boolean).join(" ")}
+      >
+        <Label>{t("fields.purpose")}</Label>
+        <TextArea
+          placeholder=" "
+          rows={3}
+          className={["[field-sizing:content]"].filter(Boolean).join(" ")}
+        />
+      </TextField>
       {canEdit ? (
-        <Button color="primary" className="self-start" isLoading={pending} onPress={() => start(async () => {
-          const response = await saveGrantAction({
-            id: value.id, name: value.name, funder: value.funder, fileNumber: value.fileNumber ?? "", purpose: value.purpose ?? "", status: value.status,
-            approvedCents: toCents(value.approved), ownShareCents: toCents(value.own) ?? 0, thirdPartyCents: toCents(value.third) ?? 0,
-            periodStart: value.periodStart, periodEnd: value.periodEnd, reportDueAt: value.reportDueAt || null, projectId: value.projectId, useNetAmounts: value.useNetAmounts,
-          });
-          if (!response.ok) return void addToast({ title: translate(response.error), color: "danger" });
-          addToast({ title: t("saved"), color: "success" });
-          if (openAfterSave) router.push(`/muhasebe/hibeler/${response.data.id}`);
-          else router.refresh();
-        })}>{t("save")}</Button>
+        <Button
+          className="self-start"
+          onPress={() =>
+            start(async () => {
+              const response = await saveGrantAction({
+                id: value.id,
+                name: value.name,
+                funder: value.funder,
+                fileNumber: value.fileNumber ?? "",
+                purpose: value.purpose ?? "",
+                status: value.status,
+                approvedCents: toCents(value.approved),
+                ownShareCents: toCents(value.own) ?? 0,
+                thirdPartyCents: toCents(value.third) ?? 0,
+                periodStart: value.periodStart,
+                periodEnd: value.periodEnd,
+                reportDueAt: value.reportDueAt || null,
+                projectId: value.projectId,
+                useNetAmounts: value.useNetAmounts,
+              });
+              if (!response.ok)
+                return void toast(translate(response.error), {
+                  variant: "danger",
+                });
+              toast(t("saved"), { variant: "success" });
+              if (openAfterSave)
+                router.push(`/muhasebe/hibeler/${response.data.id}`);
+              else router.refresh();
+            })
+          }
+          variant={actionVariant("primary", "solid")}
+          isPending={pending}
+        >
+          {pending ? <Spinner size="sm" color="current" /> : null}
+          {t("save")}
+        </Button>
       ) : null}
     </div>
   );

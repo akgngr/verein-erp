@@ -90,7 +90,10 @@
       "generate": "Parola üret",
       "copy": "Kopyala",
       "copied": "Parola panoya kopyalandı."
-    }
+    },
+    "copy": "Kopyala",
+    "copied": "Kopyalandı",
+    "copyFailed": "Kopyalanamadı"
   },
   "nav": {
     "panel": "Panel",

@@ -1,6 +1,18 @@
 "use client";
+import {
+  toast,
+  Button,
+  Spinner,
+  RadioGroup,
+  Radio,
+  Label,
+  Checkbox,
+} from "@heroui/react";
 
-import { Button, Checkbox, Radio, RadioGroup, addToast } from "@heroui/react";
+import { statusTone } from "@/shared/components/ui/status-appearance";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+
 import { CheckCircle2, ChevronDown, FileDown, XCircle } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
@@ -11,7 +23,10 @@ import { amountToGermanWords } from "@/shared/german-number-words";
 import { formatMoney } from "@/shared/money";
 import { cn, formatDate } from "@/shared/utils";
 
-import { issueBatchAction, issueConfirmationAction } from "../actions/confirmation-actions";
+import {
+  issueBatchAction,
+  issueConfirmationAction,
+} from "../actions/confirmation-actions";
 
 export type IssueMode = "tek" | "toplu" | "aidat" | "yillik";
 
@@ -25,7 +40,12 @@ export type IssueCandidateRow = {
 };
 
 type Recipient = { id: string; label: string };
-type BatchResult = { recipientId: string; ok: boolean; confirmationNumber?: string; error?: string };
+type BatchResult = {
+  recipientId: string;
+  ok: boolean;
+  confirmationNumber?: string;
+  error?: string;
+};
 
 /** URL parametresini değiştirir; adım durumu adreste tutulur (geri tuşu ve paylaşım çalışır). */
 function useParamSetter() {
@@ -61,7 +81,10 @@ function NativeSelect({
   disabled?: boolean;
 }) {
   return (
-    <label htmlFor={id} className={cn("flex flex-col gap-1.5 text-small", className)}>
+    <label
+      htmlFor={id}
+      className={cn("flex flex-col gap-1.5 text-sm", className)}
+    >
       <span className="font-medium text-foreground">{label}</span>
       <span className="relative">
         <select
@@ -69,11 +92,14 @@ function NativeSelect({
           value={value}
           disabled={disabled}
           onChange={(event) => onChange(event.target.value)}
-          className="h-9 w-full appearance-none rounded-medium border border-default-200 bg-default-100 pl-3 pr-9 text-small text-foreground outline-none transition-colors hover:bg-default-200 focus-visible:ring-2 focus-visible:ring-primary disabled:opacity-50"
+          className="h-9 w-full appearance-none rounded-lg border border-ink-200 bg-ink-100 pl-3 pr-9 text-sm text-foreground outline-none transition-colors hover:bg-ink-200 focus-visible:ring-2 focus-visible:ring-accent disabled:opacity-50"
         >
           {children}
         </select>
-        <ChevronDown className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-default-500" aria-hidden />
+        <ChevronDown
+          className="pointer-events-none absolute right-2.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-500"
+          aria-hidden
+        />
       </span>
     </label>
   );
@@ -107,7 +133,9 @@ export function IssueFilters({
         label={t("year")}
         className="w-32"
         value={String(year)}
-        onChange={(value) => setParams({ yil: value, bagisci: null, uye: null })}
+        onChange={(value) =>
+          setParams({ yil: value, bagisci: null, uye: null })
+        }
       >
         {years.map((value) => (
           <option key={value} value={String(value)}>
@@ -138,7 +166,11 @@ export function IssueFilters({
           value={selectedRecipientId ?? ""}
           onChange={(value) => setParams({ [recipientParam]: value || null })}
         >
-          <option value="">{recipientParam === "bagisci" ? t("selectDonor") : t("selectMember")}</option>
+          <option value="">
+            {recipientParam === "bagisci"
+              ? t("selectDonor")
+              : t("selectMember")}
+          </option>
           {recipients.map((recipient) => (
             <option key={recipient.id} value={recipient.id}>
               {recipient.label}
@@ -154,19 +186,22 @@ export function IssueFilters({
 function IssuedPanel({ id, number }: { id: string; number: string }) {
   const t = useTranslations("donations.confirmations.issue");
   return (
-    <div className="flex flex-wrap items-center gap-3 rounded-medium border border-success-200 bg-success-50 p-4 text-small dark:bg-success-500/10">
+    <div className="flex flex-wrap items-center gap-3 rounded-lg border border-success-200 bg-success-50 p-4 text-sm dark:bg-success-500/10">
       <CheckCircle2 className="h-5 w-5 text-success" aria-hidden />
       <span className="font-semibold text-success-700">
         {t("issuedTitle")}: {number}
       </span>
-      <Link href={`/bagislar/bildirimler/${id}`} className="text-primary underline">
+      <Link
+        href={`/bagislar/bildirimler/${id}`}
+        className="text-accent underline"
+      >
         {t("openConfirmation")}
       </Link>
       <a
         href={`/api/donations/confirmations/${id}/pdf`}
         target="_blank"
         rel="noopener"
-        className="inline-flex items-center gap-1 text-primary underline"
+        className="inline-flex items-center gap-1 text-accent underline"
       >
         <FileDown className="h-4 w-4" aria-hidden />
         {t("downloadPdf")}
@@ -179,12 +214,12 @@ function IssuedPanel({ id, number }: { id: string; number: string }) {
 function TotalLine({ cents }: { cents: number }) {
   const t = useTranslations("donations.confirmations.issue");
   return (
-    <div className="flex flex-col gap-0.5 rounded-medium bg-default-50 px-3 py-2 text-small">
+    <div className="flex flex-col gap-0.5 rounded-lg bg-ink-50 px-3 py-2 text-sm">
       <span>
         {t("selectedTotal")}: <strong>{formatMoney(cents)}</strong>
       </span>
       {cents > 0 ? (
-        <span className="text-default-500">
+        <span className="text-ink-500">
           {t("words")}: <em>{amountToGermanWords(cents)}</em>
         </span>
       ) : null}
@@ -213,16 +248,23 @@ export function DonationCandidatePicker({
   const t = useTranslations("donations.confirmations.issue");
   const [selected, setSelected] = useState<string[]>([]);
   const [busy, setBusy] = useState(false);
-  const [issued, setIssued] = useState<{ id: string; number: string } | null>(null);
+  const [issued, setIssued] = useState<{ id: string; number: string } | null>(
+    null,
+  );
   const router = useRouter();
 
   if (issued) return <IssuedPanel id={issued.id} number={issued.number} />;
   if (candidates.length === 0) {
-    return <p className="text-small text-default-500">{t("candidatesEmpty")}</p>;
+    return <p className="text-sm text-ink-500">{t("candidatesEmpty")}</p>;
   }
 
-  const byId = new Map(candidates.map((candidate) => [candidate.sourceId, candidate]));
-  const total = selected.reduce((sum, id) => sum + (byId.get(id)?.amountCents ?? 0), 0);
+  const byId = new Map(
+    candidates.map((candidate) => [candidate.sourceId, candidate]),
+  );
+  const total = selected.reduce(
+    (sum, id) => sum + (byId.get(id)?.amountCents ?? 0),
+    0,
+  );
 
   const toggle = (id: string, on: boolean) => {
     const group = byId.get(id)?.waived;
@@ -238,7 +280,11 @@ export function DonationCandidatePicker({
     try {
       const result =
         mode === "tek"
-          ? await issueConfirmationAction({ kind: "SINGLE", content: "DONATION", donationId: selected[0] })
+          ? await issueConfirmationAction({
+              kind: "SINGLE",
+              content: "DONATION",
+              donationId: selected[0],
+            })
           : await issueConfirmationAction({
               kind: "COLLECTIVE",
               content: "DONATION",
@@ -248,10 +294,12 @@ export function DonationCandidatePicker({
               donationIds: selected,
             });
       if (!result.ok) {
-        addToast({ title: result.error, color: "danger" });
+        toast(result.error, { variant: "danger" });
         return;
       }
-      addToast({ title: t("toastIssued", { number: result.data.confirmationNumber }), color: "success" });
+      toast(t("toastIssued", { number: result.data.confirmationNumber }), {
+        variant: "success",
+      });
       setIssued({ id: result.data.id, number: result.data.confirmationNumber });
       router.refresh();
     } finally {
@@ -262,13 +310,19 @@ export function DonationCandidatePicker({
   const groups = [
     { waived: false, title: t("groupNotWaived") },
     { waived: true, title: t("groupWaived") },
-  ].filter((group) => candidates.some((candidate) => candidate.waived === group.waived));
+  ].filter((group) =>
+    candidates.some((candidate) => candidate.waived === group.waived),
+  );
 
   const row = (candidate: IssueCandidateRow) => (
-    <span className="flex flex-1 flex-wrap items-center justify-between gap-x-4 text-small">
+    <span className="flex flex-1 flex-wrap items-center justify-between gap-x-4 text-sm">
       <span className="font-medium">{candidate.sourceNumber}</span>
-      <span className="text-default-500">{formatDate(new Date(candidate.itemDate))}</span>
-      <span className="font-semibold">{formatMoney(candidate.amountCents)}</span>
+      <span className="text-ink-500">
+        {formatDate(new Date(candidate.itemDate))}
+      </span>
+      <span className="font-semibold">
+        {formatMoney(candidate.amountCents)}
+      </span>
     </span>
   );
 
@@ -278,31 +332,55 @@ export function DonationCandidatePicker({
         <RadioGroup
           aria-label={t("step2")}
           value={selected[0] ?? ""}
-          onValueChange={(value) => setSelected(value ? [value] : [])}
+          onChange={(value) => setSelected(value ? [value] : [])}
         >
-          {candidates.map((candidate) => (
-            <Radio key={candidate.sourceId} value={candidate.sourceId} classNames={{ base: "max-w-none", labelWrapper: "flex-1" }}>
-              {row(candidate)}
-            </Radio>
-          ))}
+          <div className="flex flex-col gap-2">
+            {candidates.map((candidate) => (
+              <Radio key={candidate.sourceId} value={candidate.sourceId}>
+                <Radio.Content className={"max-w-none"}>
+                  <Radio.Control>
+                    <Radio.Indicator />
+                  </Radio.Control>
+                  <Label>{row(candidate)}</Label>
+                </Radio.Content>
+              </Radio>
+            ))}
+          </div>
         </RadioGroup>
       ) : (
         <>
-          {groups.length > 1 ? <p className="text-tiny text-default-500">{t("groupRule")}</p> : null}
+          {groups.length > 1 ? (
+            <p className="text-xs text-ink-500">{t("groupRule")}</p>
+          ) : null}
           {groups.map((group) => {
-            const members = candidates.filter((candidate) => candidate.waived === group.waived);
+            const members = candidates.filter(
+              (candidate) => candidate.waived === group.waived,
+            );
             return (
-              <fieldset key={String(group.waived)} className="flex flex-col gap-2 rounded-medium border border-default-200 p-3">
-                <legend className="px-1 text-small font-semibold">{group.title}</legend>
+              <fieldset
+                key={String(group.waived)}
+                className="flex flex-col gap-2 rounded-lg border border-ink-200 p-3"
+              >
+                <legend className="px-1 text-sm font-semibold">
+                  {group.title}
+                </legend>
                 <div className="flex gap-2">
                   <Button
                     size="sm"
-                    variant="light"
-                    onPress={() => setSelected(members.map((candidate) => candidate.sourceId))}
+                    onPress={() =>
+                      setSelected(
+                        members.map((candidate) => candidate.sourceId),
+                      )
+                    }
+                    variant={actionVariant("default", "light")}
                   >
                     {t("selectAll")}
                   </Button>
-                  <Button size="sm" variant="light" onPress={() => setSelected([])}>
+                  <Button
+                    size="sm"
+                    onPress={() => setSelected([])}
+                    variant={actionVariant("default", "light")}
+                  >
                     {t("clearAll")}
                   </Button>
                 </div>
@@ -310,10 +388,14 @@ export function DonationCandidatePicker({
                   <Checkbox
                     key={candidate.sourceId}
                     isSelected={selected.includes(candidate.sourceId)}
-                    onValueChange={(on) => toggle(candidate.sourceId, on)}
-                    classNames={{ base: "max-w-none", label: "flex-1" }}
+                    onChange={(on) => toggle(candidate.sourceId, on)}
                   >
-                    {row(candidate)}
+                    <Checkbox.Content className={"max-w-none"}>
+                      <Checkbox.Control>
+                        <Checkbox.Indicator />
+                      </Checkbox.Control>
+                      <Label className={"flex-1"}>{row(candidate)}</Label>
+                    </Checkbox.Content>
                   </Checkbox>
                 ))}
               </fieldset>
@@ -324,7 +406,13 @@ export function DonationCandidatePicker({
 
       <TotalLine cents={total} />
       <div>
-        <Button color="primary" isDisabled={!canIssue || selected.length === 0} isLoading={busy} onPress={submit}>
+        <Button
+          isDisabled={!canIssue || selected.length === 0}
+          onPress={submit}
+          variant={actionVariant("primary", "solid")}
+          isPending={busy}
+        >
+          {busy ? <Spinner size="sm" color="current" /> : null}
           {t("issue")}
         </Button>
       </div>
@@ -346,24 +434,36 @@ export function FeeCandidateList({
 }) {
   const t = useTranslations("donations.confirmations.issue");
   const [busy, setBusy] = useState(false);
-  const [issued, setIssued] = useState<{ id: string; number: string } | null>(null);
+  const [issued, setIssued] = useState<{ id: string; number: string } | null>(
+    null,
+  );
   const router = useRouter();
 
   if (issued) return <IssuedPanel id={issued.id} number={issued.number} />;
   if (candidates.length === 0) {
-    return <p className="text-small text-default-500">{t("candidatesEmpty")}</p>;
+    return <p className="text-sm text-ink-500">{t("candidatesEmpty")}</p>;
   }
-  const total = candidates.reduce((sum, candidate) => sum + candidate.amountCents, 0);
+  const total = candidates.reduce(
+    (sum, candidate) => sum + candidate.amountCents,
+    0,
+  );
 
   const submit = async () => {
     setBusy(true);
     try {
-      const result = await issueConfirmationAction({ kind: "SINGLE", content: "MEMBERSHIP_FEE", memberId, year });
+      const result = await issueConfirmationAction({
+        kind: "SINGLE",
+        content: "MEMBERSHIP_FEE",
+        memberId,
+        year,
+      });
       if (!result.ok) {
-        addToast({ title: result.error, color: "danger" });
+        toast(result.error, { variant: "danger" });
         return;
       }
-      addToast({ title: t("toastIssued", { number: result.data.confirmationNumber }), color: "success" });
+      toast(t("toastIssued", { number: result.data.confirmationNumber }), {
+        variant: "success",
+      });
       setIssued({ id: result.data.id, number: result.data.confirmationNumber });
       router.refresh();
     } finally {
@@ -373,19 +473,32 @@ export function FeeCandidateList({
 
   return (
     <div className="flex flex-col gap-4">
-      <p className="text-tiny text-default-500">{t("feeAllIncluded")}</p>
-      <ul className="flex flex-col divide-y divide-default-100 rounded-medium border border-default-200">
+      <p className="text-xs text-ink-500">{t("feeAllIncluded")}</p>
+      <ul className="flex flex-col divide-y divide-ink-100 rounded-lg border border-ink-200">
         {candidates.map((candidate) => (
-          <li key={candidate.sourceId} className="flex items-center justify-between gap-4 px-3 py-2 text-small">
+          <li
+            key={candidate.sourceId}
+            className="flex items-center justify-between gap-4 px-3 py-2 text-sm"
+          >
             <span className="font-medium">{candidate.sourceNumber}</span>
-            <span className="text-default-500">{formatDate(new Date(candidate.itemDate))}</span>
-            <span className="font-semibold">{formatMoney(candidate.amountCents)}</span>
+            <span className="text-ink-500">
+              {formatDate(new Date(candidate.itemDate))}
+            </span>
+            <span className="font-semibold">
+              {formatMoney(candidate.amountCents)}
+            </span>
           </li>
         ))}
       </ul>
       <TotalLine cents={total} />
       <div>
-        <Button color="primary" isDisabled={!canIssue} isLoading={busy} onPress={submit}>
+        <Button
+          isDisabled={!canIssue}
+          onPress={submit}
+          variant={actionVariant("primary", "solid")}
+          isPending={busy}
+        >
+          {busy ? <Spinner size="sm" color="current" /> : null}
           {t("issue")}
         </Button>
       </div>
@@ -407,27 +520,34 @@ export function BatchIssuePanel({
 }) {
   const t = useTranslations("donations.confirmations.issue");
   const router = useRouter();
-  const [selected, setSelected] = useState<string[]>(recipients.map((recipient) => recipient.id));
+  const [selected, setSelected] = useState<string[]>(
+    recipients.map((recipient) => recipient.id),
+  );
   const [busy, setBusy] = useState(false);
   const [results, setResults] = useState<BatchResult[] | null>(null);
 
   if (recipients.length === 0) {
-    return <p className="text-small text-default-500">{t("noRecipients")}</p>;
+    return <p className="text-sm text-ink-500">{t("noRecipients")}</p>;
   }
-  const labelOf = new Map(recipients.map((recipient) => [recipient.id, recipient.label]));
+  const labelOf = new Map(
+    recipients.map((recipient) => [recipient.id, recipient.label]),
+  );
 
   const run = async () => {
     setBusy(true);
     try {
-      const result = await issueBatchAction({ year, content, recipientIds: selected });
+      const result = await issueBatchAction({
+        year,
+        content,
+        recipientIds: selected,
+      });
       if (!result.ok) {
-        addToast({ title: result.error, color: "danger" });
+        toast(result.error, { variant: "danger" });
         return;
       }
       const ok = result.data.filter((row) => row.ok).length;
-      addToast({
-        title: t("batchResult", { ok, failed: result.data.length - ok }),
-        color: ok === result.data.length ? "success" : "warning",
+      toast(t("batchResult", { ok, failed: result.data.length - ok }), {
+        variant: statusTone(ok === result.data.length ? "success" : "warning"),
       });
       setResults(result.data);
       router.refresh();
@@ -438,15 +558,26 @@ export function BatchIssuePanel({
 
   if (results) {
     return (
-      <ul className="flex flex-col divide-y divide-default-100 rounded-medium border border-default-200">
+      <ul className="flex flex-col divide-y divide-ink-100 rounded-lg border border-ink-200">
         {results.map((row) => (
-          <li key={row.recipientId} className="flex items-start gap-2 px-3 py-2 text-small">
+          <li
+            key={row.recipientId}
+            className="flex items-start gap-2 px-3 py-2 text-sm"
+          >
             {row.ok ? (
-              <CheckCircle2 className="mt-0.5 h-4 w-4 shrink-0 text-success" aria-hidden />
+              <CheckCircle2
+                className="mt-0.5 h-4 w-4 shrink-0 text-success"
+                aria-hidden
+              />
             ) : (
-              <XCircle className="mt-0.5 h-4 w-4 shrink-0 text-danger" aria-hidden />
+              <XCircle
+                className="mt-0.5 h-4 w-4 shrink-0 text-danger"
+                aria-hidden
+              />
             )}
-            <span className="flex-1 font-medium">{labelOf.get(row.recipientId) ?? row.recipientId}</span>
+            <span className="flex-1 font-medium">
+              {labelOf.get(row.recipientId) ?? row.recipientId}
+            </span>
             <span className={row.ok ? "text-success-700" : "text-danger"}>
               {row.ok
                 ? t("resultOk", { number: row.confirmationNumber ?? "" })
@@ -461,31 +592,58 @@ export function BatchIssuePanel({
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center gap-2">
-        <Button size="sm" variant="light" onPress={() => setSelected(recipients.map((recipient) => recipient.id))}>
+        <Button
+          size="sm"
+          onPress={() =>
+            setSelected(recipients.map((recipient) => recipient.id))
+          }
+          variant={actionVariant("default", "light")}
+        >
           {t("selectAll")}
         </Button>
-        <Button size="sm" variant="light" onPress={() => setSelected([])}>
+        <Button
+          size="sm"
+          onPress={() => setSelected([])}
+          variant={actionVariant("default", "light")}
+        >
           {t("clearAll")}
         </Button>
-        <span className="text-tiny text-default-500">{t("batchSelected", { count: selected.length })}</span>
+        <span className="text-xs text-ink-500">
+          {t("batchSelected", { count: selected.length })}
+        </span>
       </div>
-      <div className="flex max-h-96 flex-col gap-1 overflow-y-auto rounded-medium border border-default-200 p-3">
+      <div className="flex max-h-96 flex-col gap-1 overflow-y-auto rounded-lg border border-ink-200 p-3">
         {recipients.map((recipient) => (
           <Checkbox
             key={recipient.id}
             isSelected={selected.includes(recipient.id)}
-            onValueChange={(on) =>
+            onChange={(on) =>
               setSelected((current) =>
-                on ? [...current, recipient.id] : current.filter((id) => id !== recipient.id),
+                on
+                  ? [...current, recipient.id]
+                  : current.filter((id) => id !== recipient.id),
               )
             }
           >
-            <span className="text-small">{recipient.label}</span>
+            <Checkbox.Content>
+              <Checkbox.Control>
+                <Checkbox.Indicator />
+              </Checkbox.Control>
+              <Label>
+                <span className="text-sm">{recipient.label}</span>
+              </Label>
+            </Checkbox.Content>
           </Checkbox>
         ))}
       </div>
       <div>
-        <Button color="primary" isDisabled={!canIssue || selected.length === 0} isLoading={busy} onPress={run}>
+        <Button
+          isDisabled={!canIssue || selected.length === 0}
+          onPress={run}
+          variant={actionVariant("primary", "solid")}
+          isPending={busy}
+        >
+          {busy ? <Spinner size="sm" color="current" /> : null}
           {t("batchRun")}
         </Button>
       </div>

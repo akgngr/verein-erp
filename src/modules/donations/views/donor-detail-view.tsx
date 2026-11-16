@@ -17,11 +17,19 @@ import { donationsPermissions } from "../permissions";
 
 import { AnonymizeDonorDialog } from "../components/anonymize-donor-dialog";
 
-function InfoRow({ label, children }: { label: string; children: React.ReactNode }) {
+function InfoRow({
+  label,
+  children,
+}: {
+  label: string;
+  children: React.ReactNode;
+}) {
   return (
-    <div className="flex flex-col gap-0.5 border-b border-default-100 py-2 last:border-none">
-      <span className="text-tiny font-medium uppercase tracking-wide text-default-400">{label}</span>
-      <span className="text-small text-foreground">{children}</span>
+    <div className="flex flex-col gap-0.5 border-b border-ink-100 py-2 last:border-none">
+      <span className="text-xs font-medium uppercase tracking-wide text-ink-400">
+        {label}
+      </span>
+      <span className="text-sm text-foreground">{children}</span>
     </div>
   );
 }
@@ -62,10 +70,15 @@ export async function DonorDetailView({
   const t = await getTranslations("donations.donors");
   const tList = await getTranslations("donations.list");
   const format = (cents: number) =>
-    (cents / 100).toLocaleString("tr-TR", { style: "currency", currency: "EUR" });
+    (cents / 100).toLocaleString("tr-TR", {
+      style: "currency",
+      currency: "EUR",
+    });
   const canDelete = can(user.role, donationsPermissions, "delete");
-  const canUpdate = can(user.role, donationsPermissions, "update") && !donor.isAnonymized;
-  const canIssue = can(user.role, donationsPermissions, "approve") && !donor.isAnonymized;
+  const canUpdate =
+    can(user.role, donationsPermissions, "update") && !donor.isAnonymized;
+  const canIssue =
+    can(user.role, donationsPermissions, "approve") && !donor.isAnonymized;
   const tConfirmations = await getTranslations("donations.confirmations");
 
   return (
@@ -98,24 +111,29 @@ export async function DonorDetailView({
         }
       />
       <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <div className="rounded-medium border border-default-200 bg-content1 p-5 shadow-sm">
+        <div className="rounded-lg border border-ink-200 bg-surface p-5 shadow-sm">
           <div className="mb-3 flex flex-wrap items-center gap-2">
             {donor.isAnonymized ? (
-              <span className="rounded-small bg-default-100 px-2 py-0.5 text-tiny font-semibold text-default-500">
+              <span className="rounded-md bg-ink-100 px-2 py-0.5 text-xs font-semibold text-ink-500">
                 {t("detail.anonymizedMark")}
               </span>
             ) : null}
-            <span className="text-tiny text-default-400">
-              {donor.isActive ? tD("active") : tD("passive")} · {formatDate(donor.createdAt)}
+            <span className="text-xs text-ink-400">
+              {donor.isActive ? tD("active") : tD("passive")} ·{" "}
+              {formatDate(donor.createdAt)}
             </span>
           </div>
           <div className="grid grid-cols-1 gap-x-6 sm:grid-cols-2">
             <InfoRow label={t("form.type")}>
-              {donor.type === "ORGANIZATION" ? t("form.typeORGANIZATION") : t("form.typePERSON")}
+              {donor.type === "ORGANIZATION"
+                ? t("form.typeORGANIZATION")
+                : t("form.typePERSON")}
             </InfoRow>
             <InfoRow label={t("columns.name")}>{donor.displayName}</InfoRow>
             <InfoRow label={t("form.street")}>{donor.street ?? "—"}</InfoRow>
-            <InfoRow label={t("form.postalCode")}>{donor.postalCode ?? "—"}</InfoRow>
+            <InfoRow label={t("form.postalCode")}>
+              {donor.postalCode ?? "—"}
+            </InfoRow>
             <InfoRow label={t("form.city")}>{donor.city ?? "—"}</InfoRow>
             <InfoRow label={t("form.country")}>{donor.country ?? "—"}</InfoRow>
             <InfoRow label={t("form.email")}>{donor.email ?? "—"}</InfoRow>
@@ -125,23 +143,38 @@ export async function DonorDetailView({
         </div>
 
         <div className="flex flex-col gap-4">
-          <div className="rounded-medium border border-default-200 bg-content1 p-5 shadow-sm">
-            <h2 className="mb-3 text-small font-semibold uppercase tracking-wide text-default-500">
+          <div className="rounded-lg border border-ink-200 bg-surface p-5 shadow-sm">
+            <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-ink-500">
               {tList("title")}
             </h2>
             {donationList.rows.length === 0 ? (
-              <p className="text-small text-default-400">{tList("empty")}</p>
+              <p className="text-sm text-ink-400">{tList("empty")}</p>
             ) : (
-              <ul className="flex flex-col gap-1 text-small">
+              <ul className="flex flex-col gap-1 text-sm">
                 {donationList.rows.map((row) => (
-                  <li key={row.id} className="flex items-center justify-between border-b border-default-100 py-1.5 last:border-none">
-                    <Link href={`/bagislar/${row.id}`} className="font-medium text-primary underline">
+                  <li
+                    key={row.id}
+                    className="flex items-center justify-between border-b border-ink-100 py-1.5 last:border-none"
+                  >
+                    <Link
+                      href={`/bagislar/${row.id}`}
+                      className="font-medium text-accent underline"
+                    >
                       {row.donationNumber}
                     </Link>
-                    <span className="text-default-500">
-                      {row.receivedAt instanceof Date ? row.receivedAt.toISOString().slice(0, 10) : ""} · {tMethod(row.method)}
+                    <span className="text-ink-500">
+                      {row.receivedAt instanceof Date
+                        ? row.receivedAt.toISOString().slice(0, 10)
+                        : ""}{" "}
+                      · {tMethod(row.method)}
                     </span>
-                    <span className={row.reversedAt ? "text-default-400 line-through" : "font-medium"}>
+                    <span
+                      className={
+                        row.reversedAt
+                          ? "text-ink-400 line-through"
+                          : "font-medium"
+                      }
+                    >
                       {format(row.amountCents)}
                     </span>
                   </li>
@@ -167,11 +200,16 @@ export async function DonorDetailView({
         </div>
       </div>
       <div className="mt-4">
-        <Link href="/bagislar/bagiscilar" className="text-small text-primary underline">
+        <Link
+          href="/bagislar/bagiscilar"
+          className="text-sm text-accent underline"
+        >
           ← {t("title")}
         </Link>
       </div>
-      {canUpdate && (await searchParams)?.duzenle !== undefined ? <DonorEditView id={donor.id} /> : null}
+      {canUpdate && (await searchParams)?.duzenle !== undefined ? (
+        <DonorEditView id={donor.id} />
+      ) : null}
     </div>
   );
 }

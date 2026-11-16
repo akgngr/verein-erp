@@ -13,7 +13,7 @@ Hibe ve proje fonları: finansman planı, ödemeler ve Verwendungsnachweis (kull
 |---|---|
 | Anahtar | `grants` |
 | Tür | Resmî modül |
-| Sürüm | 1.0.4 |
+| Sürüm | 1.0.5 |
 | Gerektirir | [Muhasebe](./accounting) |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_grant_overview`
 
 ## Sürüm notları
+
+### 1.0.5 — HeroUI v3 arayüz geçişi
+
+_2026-11-16_
+
+- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
 ### 1.0.4 — Asistan araçları yeni veri sözleşmesinde
 

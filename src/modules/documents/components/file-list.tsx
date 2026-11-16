@@ -1,8 +1,14 @@
 "use client";
+import {
+  toast,
+  Link as ActionLink,
+  buttonVariants,
+  Button,
+} from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
 
-import { Button, addToast } from "@heroui/react";
 import { Download, Eye, Paperclip, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -47,69 +53,80 @@ export function FileList({
     if (!deleting) return;
     const result = await deleteFileAction({ fileId: deleting.id });
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
-    addToast({ title: t("deletedToast"), color: "success" });
+    toast(t("deletedToast"), { variant: "success" });
     setDeleting(null);
     router.refresh();
   };
 
   if (files.length === 0) {
-    return <p className="text-small text-default-500">{t("empty")}</p>;
+    return <p className="text-sm text-ink-500">{t("empty")}</p>;
   }
 
   return (
     <>
       <ul className="flex flex-col gap-2">
         {files.map((file) => {
-          const previewable = INLINE_PREVIEW_EXTENSIONS.includes(getExtension(file.originalName));
+          const previewable = INLINE_PREVIEW_EXTENSIONS.includes(
+            getExtension(file.originalName),
+          );
           return (
             <li
               key={file.id}
-              className="flex flex-wrap items-center justify-between gap-2 rounded-medium border border-default-200 bg-content1 px-3 py-2"
+              className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-ink-200 bg-surface px-3 py-2"
             >
               <span className="flex min-w-0 items-center gap-2">
-                <Paperclip className="h-4 w-4 shrink-0 text-default-400" aria-hidden />
+                <Paperclip
+                  className="h-4 w-4 shrink-0 text-ink-400"
+                  aria-hidden
+                />
                 <span className="min-w-0">
-                  <span className="block truncate text-small font-medium">{file.originalName}</span>
-                  <span className="text-tiny text-default-400">
-                    {formatSize(file.size)} — {file.uploadedByLabel} — {formatDateTime(file.createdAt)}
+                  <span className="block truncate text-sm font-medium">
+                    {file.originalName}
+                  </span>
+                  <span className="text-xs text-ink-400">
+                    {formatSize(file.size)} — {file.uploadedByLabel} —{" "}
+                    {formatDateTime(file.createdAt)}
                   </span>
                 </span>
               </span>
               <span className="flex shrink-0 items-center gap-1">
-                <Button
-                  as="a"
+                <ActionLink
                   href={`/api/documents/files/${file.id}`}
-                  size="sm"
-                  variant="flat"
-                  startContent={<Download className="h-4 w-4" aria-hidden />}
+                  className={buttonVariants({
+                    variant: actionVariant("default", "flat"),
+                    size: "sm",
+                  })}
                 >
+                  {<Download className="h-4 w-4" aria-hidden />}
                   {t("download")}
-                </Button>
+                </ActionLink>
                 {previewable ? (
-                  <Button
-                    as="a"
+                  <ActionLink
                     href={`/api/documents/files/${file.id}?inline=1`}
                     target="_blank"
                     rel="noopener noreferrer"
-                    size="sm"
-                    variant="light"
-                    startContent={<Eye className="h-4 w-4" aria-hidden />}
+                    className={buttonVariants({
+                      variant: actionVariant("default", "light"),
+                      size: "sm",
+                    })}
                   >
+                    {<Eye className="h-4 w-4" aria-hidden />}
                     {t("preview")}
-                  </Button>
+                  </ActionLink>
                 ) : null}
-                {transfer ? <TransferToAccountingButton fileId={file.id} /> : null}
+                {transfer ? (
+                  <TransferToAccountingButton fileId={file.id} />
+                ) : null}
                 {canUpdate ? (
                   <Button
                     isIconOnly
                     size="sm"
-                    variant="light"
-                    color="danger"
                     aria-label={t("deleteAria", { name: file.originalName })}
                     onPress={() => setDeleting(file)}
+                    variant={actionVariant("danger", "light")}
                   >
                     <Trash2 className="h-4 w-4" aria-hidden />
                   </Button>

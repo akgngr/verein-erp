@@ -8,11 +8,20 @@ import { can } from "@/shared/permissions/define";
 
 import { ChargesTable } from "../components/charges-table";
 import { courseFeesPermissions } from "../permissions";
-import { CHARGE_SORTABLE_FIELDS, getCoursesSettings, listCharges, type ChargeListFilterKeys } from "../queries/course-parts";
+import {
+  CHARGE_SORTABLE_FIELDS,
+  getCoursesSettings,
+  listCharges,
+  type ChargeListFilterKeys,
+} from "../queries/course-parts";
 import { berlinToday, formatDateOnly } from "../utils";
 
 /** Tüm kursların ücret kalemleri (varsayılan: açık olanlar) ve tahsilat. */
-export async function FeesView({ searchParams }: { searchParams: Promise<RawSearchParams> }) {
+export async function FeesView({
+  searchParams,
+}: {
+  searchParams: Promise<RawSearchParams>;
+}) {
   let user;
   try {
     user = await requirePermission(courseFeesPermissions, "view");
@@ -22,12 +31,23 @@ export async function FeesView({ searchParams }: { searchParams: Promise<RawSear
   }
   const t = await getTranslations("courses.fees");
   const raw = await searchParams;
-  const params = parseListParams<ChargeListFilterKeys>(raw, { sortableFields: CHARGE_SORTABLE_FIELDS, defaultSort: "dueDate", filterKeys: ["status", "overdue"] });
-  const [charges, settings] = await Promise.all([listCharges(params), getCoursesSettings()]);
+  const params = parseListParams<ChargeListFilterKeys>(raw, {
+    sortableFields: CHARGE_SORTABLE_FIELDS,
+    defaultSort: "dueDate",
+    filterKeys: ["status", "overdue"],
+  });
+  const [charges, settings] = await Promise.all([
+    listCharges(params),
+    getCoursesSettings(),
+  ]);
   return (
     <div className="flex flex-col gap-6">
       <PageHeader title={t("title")} description={t("description")} />
-      {!settings.incomeCategoryId ? <p className="rounded-medium border border-warning-200 bg-warning-50 p-3 text-small text-warning-700">{t("categoryMissing")}</p> : null}
+      {!settings.incomeCategoryId ? (
+        <p className="rounded-lg border border-warning-200 bg-warning-50 p-3 text-sm text-warning-700">
+          {t("categoryMissing")}
+        </p>
+      ) : null}
       <ChargesTable
         {...charges}
         sort={params.sort}

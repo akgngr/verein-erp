@@ -1,18 +1,23 @@
 "use client";
-
 import {
+  toast,
   Button,
-  DatePicker,
-  Input,
+  Spinner,
   Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
   Switch,
-  Textarea,
-  addToast,
+  Label,
+  TextField,
+  Input,
+  TextArea,
+  DatePicker,
+  DateField,
 } from "@heroui/react";
+import { DateCalendar } from "@/shared/components/forms/date-calendar";
+
+import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+
 import { Pencil, Plus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -23,7 +28,11 @@ import { parseDate, type DateValue } from "@internationalized/date";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { formatMoney } from "@/shared/money";
 
-import { addDueAction, deleteDueAction, updateDueAction } from "../actions/dues-actions";
+import {
+  addDueAction,
+  deleteDueAction,
+  updateDueAction,
+} from "../actions/dues-actions";
 import type { DueRow } from "../types";
 import { DuesStatusBadge } from "./dues-status-badge";
 import { describeActionError } from "@/shared/components/forms/action-result";
@@ -84,12 +93,18 @@ export function DuesPanel({
     setFormError(null);
     setSaving(true);
     try {
-      const result = await addDueAction({ memberId, year, amount, dueDate, note });
+      const result = await addDueAction({
+        memberId,
+        year,
+        amount,
+        dueDate,
+        note,
+      });
       if (!result.ok) {
         setFormError(describeActionError(result));
         return;
       }
-      addToast({ title: t("toastAdded"), color: "success" });
+      toast(t("toastAdded"), { variant: "success" });
       setAddOpen(false);
       router.refresh();
     } finally {
@@ -113,7 +128,7 @@ export function DuesPanel({
         setFormError(describeActionError(result));
         return;
       }
-      addToast({ title: t("toastUpdated"), color: "success" });
+      toast(t("toastUpdated"), { variant: "success" });
       setEditTarget(null);
       router.refresh();
     } finally {
@@ -125,40 +140,39 @@ export function DuesPanel({
     if (!deleteTarget) return;
     const result = await deleteDueAction({ id: deleteTarget.id });
     if (!result.ok) {
-      addToast({ title: describeActionError(result), color: "danger" });
+      toast(describeActionError(result), { variant: "danger" });
       return;
     }
-    addToast({ title: t("toastDeleted"), color: "success" });
+    toast(t("toastDeleted"), { variant: "success" });
     setDeleteTarget(null);
     router.refresh();
   };
 
   return (
-    <div className="rounded-medium border border-default-200 bg-content1 p-5 shadow-sm">
+    <div className="rounded-lg border border-ink-200 bg-surface p-5 shadow-sm">
       <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-        <h2 className="text-small font-semibold uppercase tracking-wide text-default-500">
+        <h2 className="text-sm font-semibold uppercase tracking-wide text-ink-500">
           {t("title")}
         </h2>
         {canCreate ? (
           <Button
             size="sm"
-            color="primary"
-            variant="flat"
-            startContent={<Plus className="h-4 w-4" aria-hidden />}
             onPress={openAdd}
+            variant={actionVariant("primary", "flat")}
           >
+            {<Plus className="h-4 w-4" aria-hidden />}
             {t("add")}
           </Button>
         ) : null}
       </div>
 
       {dues.length === 0 ? (
-        <p className="text-small text-default-400">{t("empty")}</p>
+        <p className="text-sm text-ink-400">{t("empty")}</p>
       ) : (
         <div className="overflow-x-auto">
-          <table className="w-full text-small" aria-label={t("title")}>
+          <table className="w-full text-sm" aria-label={t("title")}>
             <thead>
-              <tr className="border-b border-default-200 text-left text-tiny uppercase tracking-wide text-default-400">
+              <tr className="border-b border-ink-200 text-left text-xs uppercase tracking-wide text-ink-400">
                 <th className="py-2 pr-3">{t("colYear")}</th>
                 <th className="py-2 pr-3">{t("colAmountDue")}</th>
                 <th className="py-2 pr-3">{t("colPaid")}</th>
@@ -171,21 +185,33 @@ export function DuesPanel({
             </thead>
             <tbody>
               {dues.map((row) => (
-                <tr key={row.id} className="border-b border-default-100 last:border-none">
+                <tr
+                  key={row.id}
+                  className="border-b border-ink-100 last:border-none"
+                >
                   <td className="py-2 pr-3 font-medium">{row.year}</td>
-                  <td className="py-2 pr-3">{formatMoney(row.amountDueCents)}</td>
+                  <td className="py-2 pr-3">
+                    {formatMoney(row.amountDueCents)}
+                  </td>
                   <td className="py-2 pr-3">{formatMoney(row.paidCents)}</td>
-                  <td className={`py-2 pr-3${row.remainingCents > 0 ? " font-medium text-warning-600" : ""}`}>
+                  <td
+                    className={`py-2 pr-3${row.remainingCents > 0 ? " font-medium text-warning-600" : ""}`}
+                  >
                     {formatMoney(row.remainingCents)}
                   </td>
                   <td className="py-2 pr-3">
                     <DuesStatusBadge status={row.status} />
                     {row.overdue ? (
-                      <span className="ml-2 text-tiny font-medium text-danger">{t("overdue")}</span>
+                      <span className="ml-2 text-xs font-medium text-danger">
+                        {t("overdue")}
+                      </span>
                     ) : null}
                   </td>
                   <td className="py-2 pr-3">{row.dueDate}</td>
-                  <td className="max-w-48 truncate py-2 pr-3" title={row.note ?? undefined}>
+                  <td
+                    className="max-w-48 truncate py-2 pr-3"
+                    title={row.note ?? undefined}
+                  >
                     {row.note ?? "-"}
                   </td>
                   <td className="py-2">
@@ -194,19 +220,18 @@ export function DuesPanel({
                         <Button
                           isIconOnly
                           size="sm"
-                          variant="light"
                           aria-label={t("edit")}
                           onPress={() => openEdit(row)}
+                          variant={actionVariant("default", "light")}
                         >
                           <Pencil className="h-4 w-4" aria-hidden />
                         </Button>
                         <Button
                           isIconOnly
                           size="sm"
-                          variant="light"
-                          color="danger"
                           aria-label={t("delete")}
                           onPress={() => setDeleteTarget(row)}
+                          variant={actionVariant("danger", "light")}
                         >
                           <Trash2 className="h-4 w-4" aria-hidden />
                         </Button>
@@ -221,112 +246,223 @@ export function DuesPanel({
       )}
 
       {/* Ekleme modalı */}
-      <Modal isOpen={addOpen} onOpenChange={(next) => setAddOpen(next)} size="lg">
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader>{t("addTitle")}</ModalHeader>
-              <ModalBody>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  <Input
-                    label={t("colYear")}
-                    labelPlacement="outside"
-                    type="number"
-                    min={2000}
-                    max={new Date().getFullYear() + 1}
-                    value={year}
-                    onValueChange={setYear}
-                  />
-                  <Input
-                    label={t("colAmountDue")}
-                    labelPlacement="outside"
-                    placeholder="0,00"
-                    value={amount}
-                    onValueChange={setAmount}
-                  />
-                  <DatePicker
-                    showMonthAndYearPickers
-                    label={t("colDueDate")}
-                    labelPlacement="outside"
-                    value={dueDate ? (parseDate(dueDate) as DateValue) : null}
-                    onChange={(next) => setDueDate(next ? next.toString() : "")}
-                  />
-                  <Textarea
-                    label={t("colNote")}
-                    labelPlacement="outside"
-                    maxLength={300}
-                    value={note}
-                    onValueChange={setNote}
-                  />
-                </div>
-                {formError ? <p className="text-small text-danger">{formError}</p> : null}
-              </ModalBody>
-              <ModalFooter>
-                <Button variant="light" onPress={onClose}>
-                  {t("cancel")}
-                </Button>
-                <Button color="primary" isLoading={saving} onPress={submitAdd}>
-                  {t("save")}
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
+      <Modal isOpen={addOpen} onOpenChange={(next) => setAddOpen(next)}>
+        <Modal.Backdrop>
+          <Modal.Container size="lg">
+            <Modal.Dialog className={"w-full max-w-lg "}>
+              {({ close: onClose }) => (
+                <>
+                  <DialogDismissButton />
+                  <Modal.Header>
+                    <Modal.Heading className="flex items-center gap-2">
+                      {t("addTitle")}
+                    </Modal.Heading>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                      <TextField
+                        value={year}
+                        onChange={setYear}
+                        className={["w-full"].filter(Boolean).join(" ")}
+                      >
+                        <Label>{t("colYear")}</Label>
+                        <Input
+                          type="number"
+                          min={2000}
+                          max={new Date().getFullYear() + 1}
+                        />
+                      </TextField>
+                      <TextField
+                        value={amount}
+                        onChange={setAmount}
+                        className={["w-full"].filter(Boolean).join(" ")}
+                      >
+                        <Label>{t("colAmountDue")}</Label>
+                        <Input placeholder="0,00" />
+                      </TextField>
+                      <DatePicker
+                        value={
+                          dueDate ? (parseDate(dueDate) as DateValue) : null
+                        }
+                        onChange={(next) =>
+                          setDueDate(next ? next.toString() : "")
+                        }
+                      >
+                        <Label>{t("colDueDate")}</Label>
+                        <DateField.Group>
+                          <DateField.Input>
+                            {(segment) => (
+                              <DateField.Segment segment={segment} />
+                            )}
+                          </DateField.Input>
+                          <DateField.Suffix>
+                            <DatePicker.Trigger
+                              aria-label={String(t("colDueDate"))}
+                            >
+                              <DatePicker.TriggerIndicator />
+                            </DatePicker.Trigger>
+                          </DateField.Suffix>
+                        </DateField.Group>
+                        <DatePicker.Popover>
+                          <DateCalendar label={String(t("colDueDate"))} />
+                        </DatePicker.Popover>
+                      </DatePicker>
+                      <TextField
+                        value={note}
+                        onChange={setNote}
+                        className={["w-full"].filter(Boolean).join(" ")}
+                      >
+                        <Label>{t("colNote")}</Label>
+                        <TextArea
+                          maxLength={300}
+                          rows={3}
+                          className={["[field-sizing:content]"]
+                            .filter(Boolean)
+                            .join(" ")}
+                        />
+                      </TextField>
+                    </div>
+                    {formError ? (
+                      <p className="text-sm text-danger">{formError}</p>
+                    ) : null}
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button
+                      onPress={onClose}
+                      variant={actionVariant("default", "light")}
+                    >
+                      {t("cancel")}
+                    </Button>
+                    <Button
+                      onPress={submitAdd}
+                      variant={actionVariant("primary", "solid")}
+                      isPending={saving}
+                    >
+                      {saving ? <Spinner size="sm" color="current" /> : null}
+                      {t("save")}
+                    </Button>
+                  </Modal.Footer>
+                </>
+              )}
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal.Backdrop>
       </Modal>
 
       {/* Düzenleme modalı */}
-      <Modal isOpen={editTarget !== null} onOpenChange={(next) => !next && setEditTarget(null)} size="lg">
-        <ModalContent>
-          {(onClose) => (
-            <>
-              <ModalHeader>{t("editTitle", { year: editTarget?.year ?? "" })}</ModalHeader>
-              <ModalBody>
-                <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-                  <Input
-                    label={t("colAmountDue")}
-                    labelPlacement="outside"
-                    placeholder="0,00"
-                    value={amount}
-                    onValueChange={setAmount}
-                  />
-                  <DatePicker
-                    showMonthAndYearPickers
-                    label={t("colDueDate")}
-                    labelPlacement="outside"
-                    value={dueDate ? (parseDate(dueDate) as DateValue) : null}
-                    onChange={(next) => setDueDate(next ? next.toString() : "")}
-                  />
-                  <Textarea
-                    label={t("colNote")}
-                    labelPlacement="outside"
-                    maxLength={300}
-                    value={note}
-                    onValueChange={setNote}
-                  />
-                  <div className="flex items-end pb-2">
-                    <Switch isSelected={waived} onValueChange={setWaived} size="sm">
-                      {t("waived")}
-                    </Switch>
-                  </div>
-                </div>
-                {editTarget ? (
-                  <p className="text-tiny text-default-400">
-                    {t("paidInfo", { paid: formatMoney(editTarget.paidCents) })}
-                  </p>
-                ) : null}
-                {formError ? <p className="text-small text-danger">{formError}</p> : null}
-              </ModalBody>
-              <ModalFooter>
-                <Button variant="light" onPress={onClose}>
-                  {t("cancel")}
-                </Button>
-                <Button color="primary" isLoading={saving} onPress={submitEdit}>
-                  {t("save")}
-                </Button>
-              </ModalFooter>
-            </>
-          )}
-        </ModalContent>
+      <Modal
+        isOpen={editTarget !== null}
+        onOpenChange={(next) => !next && setEditTarget(null)}
+      >
+        <Modal.Backdrop>
+          <Modal.Container size="lg">
+            <Modal.Dialog className={"w-full max-w-lg "}>
+              {({ close: onClose }) => (
+                <>
+                  <DialogDismissButton />
+                  <Modal.Header>
+                    <Modal.Heading className="flex items-center gap-2">
+                      {t("editTitle", { year: editTarget?.year ?? "" })}
+                    </Modal.Heading>
+                  </Modal.Header>
+                  <Modal.Body>
+                    <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+                      <TextField
+                        value={amount}
+                        onChange={setAmount}
+                        className={["w-full"].filter(Boolean).join(" ")}
+                      >
+                        <Label>{t("colAmountDue")}</Label>
+                        <Input placeholder="0,00" />
+                      </TextField>
+                      <DatePicker
+                        value={
+                          dueDate ? (parseDate(dueDate) as DateValue) : null
+                        }
+                        onChange={(next) =>
+                          setDueDate(next ? next.toString() : "")
+                        }
+                      >
+                        <Label>{t("colDueDate")}</Label>
+                        <DateField.Group>
+                          <DateField.Input>
+                            {(segment) => (
+                              <DateField.Segment segment={segment} />
+                            )}
+                          </DateField.Input>
+                          <DateField.Suffix>
+                            <DatePicker.Trigger
+                              aria-label={String(t("colDueDate"))}
+                            >
+                              <DatePicker.TriggerIndicator />
+                            </DatePicker.Trigger>
+                          </DateField.Suffix>
+                        </DateField.Group>
+                        <DatePicker.Popover>
+                          <DateCalendar label={String(t("colDueDate"))} />
+                        </DatePicker.Popover>
+                      </DatePicker>
+                      <TextField
+                        value={note}
+                        onChange={setNote}
+                        className={["w-full"].filter(Boolean).join(" ")}
+                      >
+                        <Label>{t("colNote")}</Label>
+                        <TextArea
+                          maxLength={300}
+                          rows={3}
+                          className={["[field-sizing:content]"]
+                            .filter(Boolean)
+                            .join(" ")}
+                        />
+                      </TextField>
+                      <div className="flex items-end pb-2">
+                        <Switch
+                          isSelected={waived}
+                          onChange={setWaived}
+                          size={"sm"}
+                        >
+                          <Switch.Content>
+                            <Switch.Control>
+                              <Switch.Thumb />
+                            </Switch.Control>
+                            <Label>{t("waived")}</Label>
+                          </Switch.Content>
+                        </Switch>
+                      </div>
+                    </div>
+                    {editTarget ? (
+                      <p className="text-xs text-ink-400">
+                        {t("paidInfo", {
+                          paid: formatMoney(editTarget.paidCents),
+                        })}
+                      </p>
+                    ) : null}
+                    {formError ? (
+                      <p className="text-sm text-danger">{formError}</p>
+                    ) : null}
+                  </Modal.Body>
+                  <Modal.Footer>
+                    <Button
+                      onPress={onClose}
+                      variant={actionVariant("default", "light")}
+                    >
+                      {t("cancel")}
+                    </Button>
+                    <Button
+                      onPress={submitEdit}
+                      variant={actionVariant("primary", "solid")}
+                      isPending={saving}
+                    >
+                      {saving ? <Spinner size="sm" color="current" /> : null}
+                      {t("save")}
+                    </Button>
+                  </Modal.Footer>
+                </>
+              )}
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal.Backdrop>
       </Modal>
 
       <ConfirmDialog

@@ -1,8 +1,14 @@
 "use client";
+import {
+  toast,
+  Link as ActionLink,
+  buttonVariants,
+  Button,
+} from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
 
-import { Button, addToast } from "@heroui/react";
 import { Download, Eye, Paperclip, Trash2, Upload } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
@@ -66,16 +72,18 @@ export function FilesTab({
         const json = (await response.json()) as { ok: boolean; error?: string };
         if (!response.ok || !json.ok) {
           failed += 1;
-          addToast({ title: json.error ?? t("uploadFailed"), color: "danger" });
+          toast(json.error ?? t("uploadFailed"), { variant: "danger" });
         }
       } catch {
         failed += 1;
-        addToast({ title: t("uploadFailed"), color: "danger" });
+        toast(t("uploadFailed"), { variant: "danger" });
       }
     }
     setUploading(false);
     if (failed === 0 && list.length > 0) {
-      addToast({ title: t("uploadedCountToast", { count: list.length }), color: "success" });
+      toast(t("uploadedCountToast", { count: list.length }), {
+        variant: "success",
+      });
     }
     router.refresh();
   };
@@ -84,10 +92,10 @@ export function FilesTab({
     if (!deleting) return;
     const result = await deleteMeetingFileAction({ fileId: deleting.id });
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
-    addToast({ title: t("deletedToast"), color: "success" });
+    toast(t("deletedToast"), { variant: "success" });
     setDeleting(null);
     router.refresh();
   };
@@ -100,9 +108,12 @@ export function FilesTab({
         <div
           role="button"
           tabIndex={0}
-          onClick={() => !limitReached && !uploading && inputRef.current?.click()}
+          onClick={() =>
+            !limitReached && !uploading && inputRef.current?.click()
+          }
           onKeyDown={(event) => {
-            if (event.key === "Enter" && !limitReached && !uploading) inputRef.current?.click();
+            if (event.key === "Enter" && !limitReached && !uploading)
+              inputRef.current?.click();
           }}
           onDragOver={(event) => {
             event.preventDefault();
@@ -112,38 +123,47 @@ export function FilesTab({
           onDrop={(event) => {
             event.preventDefault();
             setDragOver(false);
-            if (!limitReached && !uploading) void uploadFiles(event.dataTransfer.files);
+            if (!limitReached && !uploading)
+              void uploadFiles(event.dataTransfer.files);
           }}
-          className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-medium border-2 border-dashed p-6 text-center transition-colors ${
-            dragOver ? "border-primary bg-primary-50" : "border-default-300 bg-default-50"
+          className={`flex cursor-pointer flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed p-6 text-center transition-colors ${
+            dragOver ? "border-accent bg-brand-50" : "border-ink-300 bg-ink-50"
           } ${limitReached ? "opacity-60" : ""}`}
         >
-          <Upload className="h-6 w-6 text-default-400" aria-hidden />
-          <p className="text-small">
+          <Upload className="h-6 w-6 text-ink-400" aria-hidden />
+          <p className="text-sm">
             {limitReached
               ? t("limitReached", { count: MAX_FILES_PER_MEETING })
               : t("dropOrClick")}
           </p>
-          <p className="text-tiny text-default-400">
-            {t("rulesLine", { types: allowedExtensions.join(", "), maxMb, maxFiles: MAX_FILES_PER_MEETING })}
+          <p className="text-xs text-ink-400">
+            {t("rulesLine", {
+              types: allowedExtensions.join(", "),
+              maxMb,
+              maxFiles: MAX_FILES_PER_MEETING,
+            })}
           </p>
           <input
             ref={inputRef}
             type="file"
             multiple
             hidden
-            accept={allowedExtensions.map((extension) => `.${extension}`).join(",")}
+            accept={allowedExtensions
+              .map((extension) => `.${extension}`)
+              .join(",")}
             onChange={(event) => {
               if (event.target.files) void uploadFiles(event.target.files);
               event.target.value = "";
             }}
           />
-          {uploading ? <p className="text-small text-primary">{t("uploading")}</p> : null}
+          {uploading ? (
+            <p className="text-sm text-accent">{t("uploading")}</p>
+          ) : null}
         </div>
       ) : null}
 
       {files.length === 0 ? (
-        <p className="text-small text-default-500">{t("emptyMeeting")}</p>
+        <p className="text-sm text-ink-500">{t("emptyMeeting")}</p>
       ) : (
         <ul className="flex flex-col gap-2">
           {files.map((file) => {
@@ -153,51 +173,57 @@ export function FilesTab({
             return (
               <li
                 key={file.id}
-                className="flex flex-wrap items-center justify-between gap-2 rounded-medium border border-default-200 bg-content1 px-3 py-2"
+                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-ink-200 bg-surface px-3 py-2"
               >
                 <span className="flex min-w-0 items-center gap-2">
-                  <Paperclip className="h-4 w-4 shrink-0 text-default-400" aria-hidden />
+                  <Paperclip
+                    className="h-4 w-4 shrink-0 text-ink-400"
+                    aria-hidden
+                  />
                   <span className="min-w-0">
-                    <span className="block truncate text-small font-medium">
+                    <span className="block truncate text-sm font-medium">
                       {file.originalName}
                     </span>
-                    <span className="text-tiny text-default-400">
+                    <span className="text-xs text-ink-400">
                       {formatSize(file.size)} — {file.uploadedByLabel} —{" "}
                       {formatDateTime(file.createdAt)}
                     </span>
                   </span>
                 </span>
                 <span className="flex shrink-0 items-center gap-1">
-                  <Button
-                    as="a"
+                  <ActionLink
                     href={`/api/meetings/files/${file.id}`}
-                    size="sm"
-                    variant="flat"
-                    startContent={<Download className="h-4 w-4" aria-hidden />}
+                    className={buttonVariants({
+                      variant: actionVariant("default", "flat"),
+                      size: "sm",
+                    })}
                   >
+                    {<Download className="h-4 w-4" aria-hidden />}
                     {t("download")}
-                  </Button>
+                  </ActionLink>
                   {previewable ? (
-                    <Button
-                      as="a"
+                    <ActionLink
                       href={`/api/meetings/files/${file.id}?inline=1`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      size="sm"
-                      variant="light"
-                      startContent={<Eye className="h-4 w-4" aria-hidden />}
+                      className={buttonVariants({
+                        variant: actionVariant("default", "light"),
+                        size: "sm",
+                      })}
                     >
+                      {<Eye className="h-4 w-4" aria-hidden />}
                       {t("preview")}
-                    </Button>
+                    </ActionLink>
                   ) : null}
                   {canDeleteFiles ? (
                     <Button
                       isIconOnly
                       size="sm"
-                      variant="light"
-                      color="danger"
-                      aria-label={t("deleteNamedAria", { name: file.originalName })}
+                      aria-label={t("deleteNamedAria", {
+                        name: file.originalName,
+                      })}
                       onPress={() => setDeleting(file)}
+                      variant={actionVariant("danger", "light")}
                     >
                       <Trash2 className="h-4 w-4" aria-hidden />
                     </Button>
@@ -213,7 +239,9 @@ export function FilesTab({
         isOpen={deleting !== null}
         onOpenChange={(open) => !open && setDeleting(null)}
         title={t("deleteAction")}
-        message={t("deleteNamedMessage", { name: deleting?.originalName ?? "" })}
+        message={t("deleteNamedMessage", {
+          name: deleting?.originalName ?? "",
+        })}
         confirmLabel={tCommon("delete")}
         confirmColor="danger"
         onConfirm={confirmDelete}

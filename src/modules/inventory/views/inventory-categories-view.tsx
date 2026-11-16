@@ -28,12 +28,15 @@ export async function InventoryCategoriesView() {
 
   return (
     <div className="flex flex-col gap-6">
-      <PageHeader title={t("categoriesPage.title")} description={t("categoriesPage.description")} />
+      <PageHeader
+        title={t("categoriesPage.title")}
+        description={t("categoriesPage.description")}
+      />
 
-      <div className="overflow-x-auto rounded-large border border-default-200/80 bg-content1 shadow-xs">
-        <table className="w-full text-small">
+      <div className="overflow-x-auto rounded-xl border border-ink-200/80 bg-surface shadow-xs">
+        <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-default-200/80 bg-default-100/70 text-left text-tiny font-semibold uppercase tracking-wider text-default-600">
+            <tr className="border-b border-ink-200/80 bg-ink-100/70 text-left text-xs font-semibold uppercase tracking-wider text-ink-600">
               <th scope="col" className="px-4 py-3">
                 {t("categoriesPage.columns.category")}
               </th>
@@ -52,7 +55,7 @@ export async function InventoryCategoriesView() {
             {summary.map((row) => (
               <tr
                 key={row.category}
-                className="border-b border-default-100 transition-colors hover:bg-default-50/70"
+                className="border-b border-ink-100 transition-colors hover:bg-ink-50/70"
               >
                 <td className="px-4 py-3 font-medium text-foreground">
                   {t(INVENTORY_CATEGORY_LABEL_KEYS[row.category])}
@@ -66,7 +69,7 @@ export async function InventoryCategoriesView() {
                 <td className="px-4 py-3 text-right">
                   <Link
                     href={buildCategoryFilterHref(row.category)}
-                    className="text-small font-medium text-primary hover:underline"
+                    className="text-sm font-medium text-accent hover:underline"
                   >
                     {t("categoriesPage.viewItems")}
                   </Link>
@@ -75,7 +78,7 @@ export async function InventoryCategoriesView() {
             ))}
           </tbody>
           <tfoot>
-            <tr className="bg-default-50/50 font-semibold text-foreground">
+            <tr className="bg-ink-50/50 font-semibold text-foreground">
               <td className="px-4 py-3">{t("categoriesPage.total")}</td>
               <td className="px-4 py-3 text-right tabular-nums">
                 {formatNumber(totals.itemCount, locale)}

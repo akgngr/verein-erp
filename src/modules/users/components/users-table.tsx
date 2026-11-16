@@ -1,9 +1,11 @@
 "use client";
+import { statusStyle } from "@/shared/components/ui/status-appearance";
+import { toast, Chip } from "@heroui/react";
+import { statusTone } from "@/shared/components/ui/status-appearance";
 
 import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
 import { useTranslations } from "next-intl";
 
-import { addToast, Chip } from "@heroui/react";
 import { KeyRound, Pencil, Power, RefreshCcw, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -49,9 +51,10 @@ export function UsersTable({
   const tCommon = useTranslations("common");
   const router = useRouter();
   const drawerHref = useFormDrawerHref();
-  const [activeTarget, setActiveTarget] = useState<{ user: UserRow; isActive: boolean } | null>(
-    null,
-  );
+  const [activeTarget, setActiveTarget] = useState<{
+    user: UserRow;
+    isActive: boolean;
+  } | null>(null);
   const [resetTarget, setResetTarget] = useState<UserRow | null>(null);
   const [deleteTarget, setDeleteTarget] = useState<UserRow | null>(null);
 
@@ -62,16 +65,19 @@ export function UsersTable({
       key: "role",
       label: t("role"),
       sortable: true,
-      render: (row) => (
-        <RoleChip role={row.role} />
-      ),
+      render: (row) => <RoleChip role={row.role} />,
     },
     {
       key: "isActive",
       label: t("status"),
       sortable: true,
       render: (row) => (
-        <Chip color={row.isActive ? "success" : "default"} size="sm" variant="flat">
+        <Chip
+          size="sm"
+          color={statusTone(row.isActive ? "success" : "default")}
+          variant={"soft"}
+          style={statusStyle(row.isActive ? "success" : "default")}
+        >
           {row.isActive ? tCommon("active") : tCommon("passive")}
         </Chip>
       ),
@@ -93,23 +99,20 @@ export function UsersTable({
   const handleSetActive = async (user: UserRow, isActive: boolean) => {
     const result = await setUserActiveAction({ id: user.id, isActive });
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
-    addToast({
-      title: isActive ? t("activated") : t("deactivated"),
-      color: "success",
-    });
+    toast(isActive ? t("activated") : t("deactivated"), { variant: "success" });
     router.refresh();
   };
 
   const handleDelete = async (user: UserRow) => {
     const result = await deleteUserAction({ id: user.id });
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
-    addToast({ title: t("deleted"), color: "success" });
+    toast(t("deleted"), { variant: "success" });
     router.refresh();
   };
 
@@ -127,7 +130,14 @@ export function UsersTable({
         q={q}
         searchPlaceholder={t("search")}
         filters={[
-          { key: "role", label: t("role"), options: roleDirectory.roles.map((role) => ({ value: role.key, label: roleDirectory.label(role.key) })) },
+          {
+            key: "role",
+            label: t("role"),
+            options: roleDirectory.roles.map((role) => ({
+              value: role.key,
+              label: roleDirectory.label(role.key),
+            })),
+          },
           {
             key: "status",
             label: t("status"),
@@ -156,9 +166,14 @@ export function UsersTable({
           {
             key: "toggle-active",
             label: row.isActive ? t("deactivate") : t("activate"),
-            icon: row.isActive ? <Power className="h-4 w-4" /> : <RefreshCcw className="h-4 w-4" />,
+            icon: row.isActive ? (
+              <Power className="h-4 w-4" />
+            ) : (
+              <RefreshCcw className="h-4 w-4" />
+            ),
             color: row.isActive ? "danger" : "default",
-            onPress: () => setActiveTarget({ user: row, isActive: !row.isActive }),
+            onPress: () =>
+              setActiveTarget({ user: row, isActive: !row.isActive }),
             hidden: !canUpdate,
           },
           {
@@ -177,18 +192,24 @@ export function UsersTable({
         onOpenChange={(open) => {
           if (!open) setActiveTarget(null);
         }}
-        title={activeTarget?.isActive ? t("activateTitle") : t("deactivateTitle")}
+        title={
+          activeTarget?.isActive ? t("activateTitle") : t("deactivateTitle")
+        }
         message={
           activeTarget
-            ? t(activeTarget.isActive ? "activateConfirm" : "deactivateConfirm", {
-                name: activeTarget.user.name,
-              })
+            ? t(
+                activeTarget.isActive ? "activateConfirm" : "deactivateConfirm",
+                {
+                  name: activeTarget.user.name,
+                },
+              )
             : ""
         }
         confirmLabel={activeTarget?.isActive ? t("activate") : t("deactivate")}
         confirmColor={activeTarget?.isActive ? "primary" : "danger"}
         onConfirm={async () => {
-          if (activeTarget) await handleSetActive(activeTarget.user, activeTarget.isActive);
+          if (activeTarget)
+            await handleSetActive(activeTarget.user, activeTarget.isActive);
         }}
       />
 
@@ -198,7 +219,9 @@ export function UsersTable({
           if (!open) setDeleteTarget(null);
         }}
         title={t("deleteTitle")}
-        message={deleteTarget ? t("deleteConfirm", { name: deleteTarget.name }) : ""}
+        message={
+          deleteTarget ? t("deleteConfirm", { name: deleteTarget.name }) : ""
+        }
         confirmLabel={t("delete")}
         confirmColor="danger"
         onConfirm={async () => {

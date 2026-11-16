@@ -1,20 +1,27 @@
 "use client";
-
+import { statusStyle } from "@/shared/components/ui/status-appearance";
 import {
-  Button,
-  Checkbox,
+  toast,
   Chip,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
+  Button,
+  Spinner,
+  Tooltip,
   Switch,
-  Tab,
+  Label,
+  Modal,
+  Checkbox,
+  TextField,
+  InputGroup,
   Tabs,
-  addToast,
 } from "@heroui/react";
+
+import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
+
+import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+import { statusTone } from "@/shared/components/ui/status-appearance";
+
 import {
   Boxes,
   Lock,
@@ -37,8 +44,15 @@ import { cn } from "@/shared/utils";
 
 import { deleteModuleAction } from "../actions/delete-module";
 import { syncSchemasAction } from "../actions/sync-schemas-action";
-import { approveModuleAccessAction, revokeModuleAccessAction } from "../actions/module-access";
-import { getModuleTogglePlanAction, toggleModuleAction, type ModuleTogglePlan } from "../actions/toggle-module";
+import {
+  approveModuleAccessAction,
+  revokeModuleAccessAction,
+} from "../actions/module-access";
+import {
+  getModuleTogglePlanAction,
+  toggleModuleAction,
+  type ModuleTogglePlan,
+} from "../actions/toggle-module";
 import type { ModuleItem } from "../queries/get-modules";
 
 export function ModuleList({
@@ -67,7 +81,11 @@ export function ModuleList({
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [deletingModule, setDeletingModule] = useState<ModuleItem | null>(null);
   const [consentModule, setConsentModule] = useState<ModuleItem | null>(null);
-  const [dependencyDialog, setDependencyDialog] = useState<{ mod: ModuleItem; isActive: boolean; plan: ModuleTogglePlan } | null>(null);
+  const [dependencyDialog, setDependencyDialog] = useState<{
+    mod: ModuleItem;
+    isActive: boolean;
+    plan: ModuleTogglePlan;
+  } | null>(null);
   const [selectedRecommended, setSelectedRecommended] = useState<string[]>([]);
   const tDeps = useTranslations("system.dependencies");
   const tAccess = useTranslations("system.access");
@@ -78,7 +96,8 @@ export function ModuleList({
         search === "" ||
         mod.label.toLowerCase().includes(search.toLowerCase()) ||
         mod.key.toLowerCase().includes(search.toLowerCase()) ||
-        (mod.description && mod.description.toLowerCase().includes(search.toLowerCase()));
+        (mod.description &&
+          mod.description.toLowerCase().includes(search.toLowerCase()));
 
       const matchCategory =
         selectedCategory === "all" || mod.category === selectedCategory;
@@ -99,13 +118,21 @@ export function ModuleList({
 
   /** Bağımlılık planı: gerekiyorsa pencere açılır, yoksa doğrudan aç/kapat. */
   const planAndToggle = async (mod: ModuleItem, newActive: boolean) => {
-    const plan = await getModuleTogglePlanAction({ key: mod.key, isActive: newActive });
+    const plan = await getModuleTogglePlanAction({
+      key: mod.key,
+      isActive: newActive,
+    });
     if (!plan.ok) {
-      addToast({ title: plan.error, color: "danger" });
+      toast(plan.error, { variant: "danger" });
       return;
     }
     const { enable, missing, recommended, disable } = plan.data;
-    if (enable.length || missing.length || recommended.length || disable.length) {
+    if (
+      enable.length ||
+      missing.length ||
+      recommended.length ||
+      disable.length
+    ) {
       setDependencyDialog({ mod, isActive: newActive, plan: plan.data });
       setSelectedRecommended(recommended.map((item) => item.key));
       return;
@@ -113,16 +140,28 @@ export function ModuleList({
     await runToggle(mod, newActive, false, []);
   };
 
-  const runToggle = async (mod: ModuleItem, newActive: boolean, confirmed: boolean, extras: string[]) => {
-    const result = await toggleModuleAction({ key: mod.key, isActive: newActive, confirmed, recommended: extras });
+  const runToggle = async (
+    mod: ModuleItem,
+    newActive: boolean,
+    confirmed: boolean,
+    extras: string[],
+  ) => {
+    const result = await toggleModuleAction({
+      key: mod.key,
+      isActive: newActive,
+      confirmed,
+      recommended: extras,
+    });
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
-    addToast({
-      title: newActive ? t("status.activatedToast", { label: mod.label }) : t("status.deactivatedToast", { label: mod.label }),
-      color: "success",
-    });
+    toast(
+      newActive
+        ? t("status.activatedToast", { label: mod.label })
+        : t("status.deactivatedToast", { label: mod.label }),
+      { variant: "success" },
+    );
     setDependencyDialog(null);
     router.refresh();
   };
@@ -131,25 +170,38 @@ export function ModuleList({
   const confirmDependencies = async () => {
     if (!dependencyDialog) return;
     const { mod, isActive, plan } = dependencyDialog;
-    const needApproval = [...plan.enable, ...plan.recommended.filter((item) => selectedRecommended.includes(item.key))].filter((item) => item.needsApproval);
+    const needApproval = [
+      ...plan.enable,
+      ...plan.recommended.filter((item) =>
+        selectedRecommended.includes(item.key),
+      ),
+    ].filter((item) => item.needsApproval);
     for (const item of needApproval) {
-      const approved = await approveModuleAccessAction({ key: item.key, activate: false });
+      const approved = await approveModuleAccessAction({
+        key: item.key,
+        activate: false,
+      });
       if (!approved.ok) {
-        addToast({ title: approved.error, color: "danger" });
+        toast(approved.error, { variant: "danger" });
         return;
       }
     }
     await runToggle(mod, isActive, true, selectedRecommended);
   };
 
-  const labelOf = (key: string) => initialModules.find((item) => item.key === key)?.label ?? key;
-  const accessOf = (key: string) => initialModules.find((item) => item.key === key)?.access ?? [];
+  const labelOf = (key: string) =>
+    initialModules.find((item) => item.key === key)?.label ?? key;
+  const accessOf = (key: string) =>
+    initialModules.find((item) => item.key === key)?.access ?? [];
 
   const approveAccess = async (mod: ModuleItem) => {
     // İzin verilir; etkinleştirme bağımlılık planından geçer (zorunlular birlikte açılır).
-    const result = await approveModuleAccessAction({ key: mod.key, activate: false });
+    const result = await approveModuleAccessAction({
+      key: mod.key,
+      activate: false,
+    });
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
     setConsentModule(null);
@@ -160,10 +212,12 @@ export function ModuleList({
     startTransition(async () => {
       const result = await revokeModuleAccessAction({ key: mod.key });
       if (!result.ok) {
-        addToast({ title: result.error, color: "danger" });
+        toast(result.error, { variant: "danger" });
         return;
       }
-      addToast({ title: tAccess("revokedToast", { label: mod.label }), color: "success" });
+      toast(tAccess("revokedToast", { label: mod.label }), {
+        variant: "success",
+      });
       router.refresh();
     });
 
@@ -171,12 +225,11 @@ export function ModuleList({
     if (!deletingModule) return;
     const result = await deleteModuleAction({ key: deletingModule.key });
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
-    addToast({
-      title: t("deleteModal.successToast", { label: deletingModule.label }),
-      color: "success",
+    toast(t("deleteModal.successToast", { label: deletingModule.label }), {
+      variant: "success",
     });
     setDeletingModule(null);
     router.refresh();
@@ -186,13 +239,10 @@ export function ModuleList({
     startTransition(async () => {
       const res = await syncSchemasAction();
       if (!res.ok) {
-        addToast({ title: res.error, color: "danger" });
+        toast(res.error, { variant: "danger" });
         return;
       }
-      addToast({
-        title: t("syncSuccess"),
-        color: "success",
-      });
+      toast(t("syncSuccess"), { variant: "success" });
       router.refresh();
     });
   };
@@ -203,11 +253,14 @@ export function ModuleList({
         return (
           <Chip
             size="sm"
-            variant="flat"
-            color="secondary"
-            className="font-semibold text-tiny tracking-wide"
-            startContent={<Shield className="h-3 w-3 ml-1" />}
+            color={"accent"}
+            variant={"soft"}
+            className={["font-semibold text-xs tracking-wide"]
+              .filter(Boolean)
+              .join(" ")}
+            style={statusStyle("secondary")}
           >
+            {<Shield className="h-3 w-3 ml-1" />}
             {t("badges.core")}
           </Chip>
         );
@@ -215,11 +268,13 @@ export function ModuleList({
         return (
           <Chip
             size="sm"
-            variant="flat"
-            color="primary"
-            className="font-semibold text-tiny tracking-wide"
-            startContent={<Zap className="h-3 w-3 ml-1" />}
+            color={"accent"}
+            variant={"soft"}
+            className={["font-semibold text-xs tracking-wide"]
+              .filter(Boolean)
+              .join(" ")}
           >
+            {<Zap className="h-3 w-3 ml-1" />}
             {t("badges.official")}
           </Chip>
         );
@@ -227,11 +282,13 @@ export function ModuleList({
         return (
           <Chip
             size="sm"
-            variant="flat"
-            color="warning"
-            className="font-semibold text-tiny tracking-wide"
-            startContent={<Boxes className="h-3 w-3 ml-1" />}
+            color={"warning"}
+            variant={"soft"}
+            className={["font-semibold text-xs tracking-wide"]
+              .filter(Boolean)
+              .join(" ")}
           >
+            {<Boxes className="h-3 w-3 ml-1" />}
             {t("badges.extension")}
           </Chip>
         );
@@ -242,46 +299,53 @@ export function ModuleList({
     <div className="flex flex-col gap-6">
       {/* 1. İstatistik Kartları */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-        <div className="p-4 rounded-2xl bg-content1 border border-default-200/80 shadow-xs flex flex-col gap-1">
-          <span className="text-tiny font-semibold text-default-400 uppercase tracking-wider">
+        <div className="p-4 rounded-2xl bg-surface border border-ink-200/80 shadow-xs flex flex-col gap-1">
+          <span className="text-xs font-semibold text-ink-400 uppercase tracking-wider">
             {t("stats.total")}
           </span>
           <span className="text-2xl font-bold text-foreground tracking-tight">
             {stats.total}
           </span>
-          <span className="text-[11px] text-default-400">
-            {stats.active} {t("stats.active")}, {stats.inactive} {t("stats.inactive")}
+          <span className="text-[11px] text-ink-400">
+            {stats.active} {t("stats.active")}, {stats.inactive}{" "}
+            {t("stats.inactive")}
           </span>
         </div>
 
-        <div className="p-4 rounded-2xl bg-content1 border border-default-200/80 shadow-xs flex flex-col gap-1">
-          <span className="text-tiny font-semibold text-secondary-500 uppercase tracking-wider flex items-center gap-1">
+        <div className="p-4 rounded-2xl bg-surface border border-ink-200/80 shadow-xs flex flex-col gap-1">
+          <span className="text-xs font-semibold text-secondary-500 uppercase tracking-wider flex items-center gap-1">
             <Shield className="h-3 w-3" /> {t("stats.core")}
           </span>
           <span className="text-2xl font-bold text-foreground tracking-tight">
             {stats.core}
           </span>
-          <span className="text-[11px] text-default-400">{t("stats.coreDesc")}</span>
+          <span className="text-[11px] text-ink-400">
+            {t("stats.coreDesc")}
+          </span>
         </div>
 
-        <div className="p-4 rounded-2xl bg-content1 border border-default-200/80 shadow-xs flex flex-col gap-1">
-          <span className="text-tiny font-semibold text-primary-500 uppercase tracking-wider flex items-center gap-1">
+        <div className="p-4 rounded-2xl bg-surface border border-ink-200/80 shadow-xs flex flex-col gap-1">
+          <span className="text-xs font-semibold text-brand-500 uppercase tracking-wider flex items-center gap-1">
             <Zap className="h-3 w-3" /> {t("stats.official")}
           </span>
           <span className="text-2xl font-bold text-foreground tracking-tight">
             {stats.official}
           </span>
-          <span className="text-[11px] text-default-400">{t("stats.officialDesc")}</span>
+          <span className="text-[11px] text-ink-400">
+            {t("stats.officialDesc")}
+          </span>
         </div>
 
-        <div className="p-4 rounded-2xl bg-content1 border border-default-200/80 shadow-xs flex flex-col gap-1">
-          <span className="text-tiny font-semibold text-warning-500 uppercase tracking-wider flex items-center gap-1">
+        <div className="p-4 rounded-2xl bg-surface border border-ink-200/80 shadow-xs flex flex-col gap-1">
+          <span className="text-xs font-semibold text-warning-500 uppercase tracking-wider flex items-center gap-1">
             <Boxes className="h-3 w-3" /> {t("stats.extension")}
           </span>
           <span className="text-2xl font-bold text-foreground tracking-tight">
             {stats.extension}
           </span>
-          <span className="text-[11px] text-default-400">{t("stats.extensionDesc")}</span>
+          <span className="text-[11px] text-ink-400">
+            {t("stats.extensionDesc")}
+          </span>
         </div>
       </div>
 
@@ -289,57 +353,108 @@ export function ModuleList({
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex flex-wrap items-center gap-3 flex-1">
           <div className="w-full sm:w-72">
-            <Input
-              size="sm"
-              placeholder={t("searchPlaceholder")}
+            <TextField
               value={search}
-              onValueChange={setSearch}
-              onClear={() => setSearch("")}
-              isClearable
-              startContent={<Search className="h-4 w-4 text-default-400" />}
-              classNames={{
-                inputWrapper:
-                  "h-9 bg-default-100/60 hover:bg-default-100 border border-default-200/80 rounded-xl transition-colors",
-              }}
-            />
+              onChange={setSearch}
+              className={["w-full"].filter(Boolean).join(" ")}
+            >
+              <InputGroup
+                className={
+                  "h-9 bg-ink-100/60 hover:bg-ink-100 border border-ink-200/80 rounded-xl transition-colors"
+                }
+              >
+                <InputGroup.Prefix>
+                  {<Search className="h-4 w-4 text-ink-400" />}
+                </InputGroup.Prefix>
+                <InputGroup.Input
+                  placeholder={t("searchPlaceholder")}
+                  className={["h-9 text-sm"].filter(Boolean).join(" ")}
+                />
+                <InputGroup.Suffix>
+                  {search ? (
+                    <FieldClearButton onPress={() => setSearch("")} />
+                  ) : null}
+                </InputGroup.Suffix>
+              </InputGroup>
+            </TextField>
           </div>
 
           <Tabs
-            size="sm"
             selectedKey={selectedCategory}
             onSelectionChange={(key) => setSelectedCategory(String(key))}
-            classNames={{
-              tabList: "bg-default-100/70 border border-default-200/80 h-9 p-0.5 rounded-xl",
-              cursor: "bg-background shadow-xs rounded-lg",
-              tab: "h-7 text-small font-medium px-3",
-            }}
+            variant="secondary"
           >
-            <Tab key="all" title={t("tabs.all")} />
-            <Tab key="CORE" title={t("tabs.core")} />
-            <Tab key="OFFICIAL" title={t("tabs.official")} />
-            <Tab key="EXTENSION" title={t("tabs.extension")} />
+            <Tabs.ListContainer>
+              <Tabs.List
+                className={
+                  "bg-ink-100/70 border border-ink-200/80 h-9 p-0.5 rounded-xl"
+                }
+              >
+                <Tabs.Tab
+                  id={"all"}
+                  key={"all"}
+                  className={"h-7 text-sm font-medium px-3"}
+                >
+                  {t("tabs.all")}
+                  <Tabs.Indicator
+                    className={"bg-background shadow-xs rounded-lg"}
+                  />
+                </Tabs.Tab>
+                <Tabs.Tab
+                  id={"CORE"}
+                  key={"CORE"}
+                  className={"h-7 text-sm font-medium px-3"}
+                >
+                  {t("tabs.core")}
+                  <Tabs.Indicator
+                    className={"bg-background shadow-xs rounded-lg"}
+                  />
+                </Tabs.Tab>
+                <Tabs.Tab
+                  id={"OFFICIAL"}
+                  key={"OFFICIAL"}
+                  className={"h-7 text-sm font-medium px-3"}
+                >
+                  {t("tabs.official")}
+                  <Tabs.Indicator
+                    className={"bg-background shadow-xs rounded-lg"}
+                  />
+                </Tabs.Tab>
+                <Tabs.Tab
+                  id={"EXTENSION"}
+                  key={"EXTENSION"}
+                  className={"h-7 text-sm font-medium px-3"}
+                >
+                  {t("tabs.extension")}
+                  <Tabs.Indicator
+                    className={"bg-background shadow-xs rounded-lg"}
+                  />
+                </Tabs.Tab>
+              </Tabs.List>
+            </Tabs.ListContainer>
           </Tabs>
         </div>
 
         {canManage && devTools ? (
           <Button
             size="sm"
-            variant="bordered"
             onPress={handleSyncSchemas}
-            isLoading={isPending}
-            startContent={<RefreshCw className="h-3.5 w-3.5" />}
-            className="h-9 px-3 text-small font-medium border-default-200/80 hover:bg-default-100 rounded-xl"
+            className="h-9 px-3 text-sm font-medium border-ink-200/80 hover:bg-ink-100 rounded-xl"
+            variant={actionVariant("default", "bordered")}
+            isPending={isPending}
           >
+            {isPending ? <Spinner size="sm" color="current" /> : null}
+            {<RefreshCw className="h-3.5 w-3.5" />}
             {t("syncSchemas")}
           </Button>
         ) : null}
       </div>
 
       {/* 3. Modüller Tablosu */}
-      <div className="overflow-hidden rounded-2xl border border-default-200/80 bg-content1 shadow-xs">
-        <div className="divide-y divide-default-100">
+      <div className="overflow-hidden rounded-2xl border border-ink-200/80 bg-surface shadow-xs">
+        <div className="divide-y divide-ink-100">
           {filteredModules.length === 0 ? (
-            <div className="p-8 text-center text-default-400 text-small">
+            <div className="p-8 text-center text-ink-400 text-sm">
               {t("noModulesFound")}
             </div>
           ) : (
@@ -348,63 +463,94 @@ export function ModuleList({
                 key={mod.key}
                 className={cn(
                   "p-4.5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors",
-                  !mod.isActive && "bg-default-50/40 opacity-70",
+                  !mod.isActive && "bg-ink-50/40 opacity-70",
                 )}
               >
                 {/* Sol: Modül Bilgileri */}
                 <div className="flex items-start gap-3.5 min-w-0">
-                  <div className="h-10 w-10 rounded-xl bg-default-100 border border-default-200/60 flex items-center justify-center shrink-0 text-foreground shadow-xs">
+                  <div className="h-10 w-10 rounded-xl bg-ink-100 border border-ink-200/60 flex items-center justify-center shrink-0 text-foreground shadow-xs">
                     <Boxes className="h-5 w-5" />
                   </div>
                   <div className="flex flex-col min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
-                      <span className="text-small font-bold text-foreground">
+                      <span className="text-sm font-bold text-foreground">
                         {mod.label}
                       </span>
-                      <span className="text-tiny font-mono text-default-400 px-1.5 py-0.5 rounded-md bg-default-100">
+                      <span className="text-xs font-mono text-ink-400 px-1.5 py-0.5 rounded-md bg-ink-100">
                         {mod.key}
                       </span>
                       {getCategoryBadge(mod.category)}
                       <Link
                         href={`/ayarlar/surum-notlari?modul=${mod.key}`}
-                        className="text-[11px] text-default-400 font-medium underline-offset-2 hover:text-primary hover:underline"
+                        className="text-[11px] text-ink-400 font-medium underline-offset-2 hover:text-accent hover:underline"
                         title={t("releaseNotes")}
                       >
                         v{mod.version}
                       </Link>
                     </div>
-                    <p className="text-tiny text-default-500 mt-0.5 line-clamp-1">
+                    <p className="text-xs text-ink-500 mt-0.5 line-clamp-1">
                       {mod.description ?? t("noDescription")}
                     </p>
-                    <div className="flex items-center gap-3 mt-1.5 text-[11px] text-default-400">
-                      <span>{t("author")}: <span className="font-medium text-default-600">{mod.author}</span></span>
+                    <div className="flex items-center gap-3 mt-1.5 text-[11px] text-ink-400">
+                      <span>
+                        {t("author")}:{" "}
+                        <span className="font-medium text-ink-600">
+                          {mod.author}
+                        </span>
+                      </span>
                       {mod.routes.length > 0 ? (
-                        <span>{t("routes")}: <code className="text-primary-600">{mod.routes.join(", ")}</code></span>
+                        <span>
+                          {t("routes")}:{" "}
+                          <code className="text-brand-600">
+                            {mod.routes.join(", ")}
+                          </code>
+                        </span>
                       ) : null}
                     </div>
                     {mod.access.length > 0 ? (
                       <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                         {mod.accessStatus === "pending" ? (
-                          <Chip size="sm" color="warning" variant="flat" startContent={<ShieldAlert className="h-3 w-3" aria-hidden />}>
+                          <Chip size="sm" color={"warning"} variant={"soft"}>
+                            {<ShieldAlert className="h-3 w-3" aria-hidden />}
                             {tAccess("pending")}
                           </Chip>
                         ) : (
-                          <Chip size="sm" color="success" variant="flat" startContent={<ShieldCheck className="h-3 w-3" aria-hidden />}>
+                          <Chip size="sm" color={"success"} variant={"soft"}>
+                            {<ShieldCheck className="h-3 w-3" aria-hidden />}
                             {tAccess("approved")}
                           </Chip>
                         )}
                         {mod.access.map((request) => (
-                          <span key={request.module} className="rounded-md bg-default-100 px-1.5 py-0.5 text-[11px] text-default-600">
-                            {request.moduleLabel}: {request.operations.map((op) => tAccess(`op.${op}`)).join(", ")}
+                          <span
+                            key={request.module}
+                            className="rounded-md bg-ink-100 px-1.5 py-0.5 text-[11px] text-ink-600"
+                          >
+                            {request.moduleLabel}:{" "}
+                            {request.operations
+                              .map((op) => tAccess(`op.${op}`))
+                              .join(", ")}
                           </span>
                         ))}
                         {canManage && mod.accessStatus === "pending" ? (
-                          <Button size="sm" variant="light" color="warning" className="h-6" onPress={() => setConsentModule(mod)}>
+                          <Button
+                            size="sm"
+                            className="h-6"
+                            onPress={() => setConsentModule(mod)}
+                            variant={actionVariant("warning", "light")}
+                          >
                             {tAccess("review")}
                           </Button>
                         ) : null}
-                        {canManage && mod.accessStatus === "approved" && !mod.isProtected ? (
-                          <Button size="sm" variant="light" className="h-6 text-default-500" isDisabled={isPending} onPress={() => revokeAccess(mod)}>
+                        {canManage &&
+                        mod.accessStatus === "approved" &&
+                        !mod.isProtected ? (
+                          <Button
+                            size="sm"
+                            className="h-6 text-ink-500"
+                            isDisabled={isPending}
+                            onPress={() => revokeAccess(mod)}
+                            variant={actionVariant("default", "light")}
+                          >
                             {tAccess("revoke")}
                           </Button>
                         ) : null}
@@ -417,39 +563,51 @@ export function ModuleList({
                 <div className="flex items-center gap-4 shrink-0 sm:self-center ml-auto sm:ml-0">
                   <div className="flex items-center gap-2">
                     {mod.isProtected ? (
-                      <div className="flex items-center gap-1.5 text-xs text-default-400 font-medium px-2.5 py-1 rounded-lg bg-default-100/70">
+                      <div className="flex items-center gap-1.5 text-xs text-ink-400 font-medium px-2.5 py-1 rounded-lg bg-ink-100/70">
                         <Lock className="h-3 w-3" />
                         <span>{t("status.protected")}</span>
                       </div>
                     ) : (
                       <div className="flex items-center gap-2">
-                        <span className="text-xs font-medium text-default-500">
-                          {mod.isActive ? t("status.active") : t("status.inactive")}
+                        <span className="text-xs font-medium text-ink-500">
+                          {mod.isActive
+                            ? t("status.active")
+                            : t("status.inactive")}
                         </span>
                         <Switch
-                          size="sm"
                           aria-label={t("toggleAria", { label: mod.label })}
                           isSelected={mod.isActive}
                           isDisabled={!canManage || isPending}
-                          onValueChange={(val) => handleToggle(mod, val)}
-                        />
+                          onChange={(val) => handleToggle(mod, val)}
+                          size={"sm"}
+                        >
+                          <Switch.Content>
+                            <Switch.Control>
+                              <Switch.Thumb />
+                            </Switch.Control>
+                            <Label></Label>
+                          </Switch.Content>
+                        </Switch>
                       </div>
                     )}
                   </div>
 
                   {mod.category === "EXTENSION" && canManage && devTools ? (
-                    <Button
-                      isIconOnly
-                      size="sm"
-                      variant="light"
-                      color="danger"
-                      aria-label={t("deleteAria", { label: mod.label })}
-                      title={t("deleteModal.confirm")}
-                      className="rounded-lg"
-                      onPress={() => setDeletingModule(mod)}
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
+                    <Tooltip delay={300}>
+                      <Button
+                        isIconOnly
+                        size="sm"
+                        aria-label={t("deleteAria", { label: mod.label })}
+                        className="rounded-lg"
+                        onPress={() => setDeletingModule(mod)}
+                        variant={actionVariant("danger", "light")}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
+                      <Tooltip.Content>
+                        {t("deleteModal.confirm")}
+                      </Tooltip.Content>
+                    </Tooltip>
                   ) : null}
                 </div>
               </div>
@@ -459,134 +617,269 @@ export function ModuleList({
       </div>
 
       {/* Erişim izni (onay) penceresi */}
-      <Modal isOpen={consentModule !== null} onOpenChange={(open) => !open && setConsentModule(null)} size="lg">
-        <ModalContent>
-          <ModalHeader className="flex items-center gap-2">
-            <ShieldAlert className="h-5 w-5 text-warning-500" aria-hidden />
-            {consentModule ? tAccess("title", { label: consentModule.label }) : null}
-          </ModalHeader>
-          <ModalBody>
-            {consentModule ? (
-              <div className="flex flex-col gap-3">
-                <p className="text-small text-default-600">{tAccess("intro", { label: consentModule.label })}</p>
-                <ul className="flex flex-col gap-2">
-                  {consentModule.access.map((request) => (
-                    <li key={request.module} className="rounded-medium border border-default-200 p-3">
-                      <div className="flex flex-wrap items-center gap-1.5">
-                        <span className="text-small font-semibold">{request.moduleLabel}</span>
-                        {request.operations.map((op) => (
-                          <Chip key={op} size="sm" variant="flat" color={op === "read" ? "default" : op === "write" ? "warning" : "danger"}>
-                            {tAccess(`op.${op}`)}
-                          </Chip>
-                        ))}
-                      </div>
-                      {request.reason ? <p className="mt-1 text-tiny text-default-500">{request.reason}</p> : null}
-                    </li>
-                  ))}
-                </ul>
-                <p className="text-tiny text-default-500">{tAccess("note")}</p>
-              </div>
-            ) : null}
-          </ModalBody>
-          <ModalFooter>
-            <Button variant="light" onPress={() => setConsentModule(null)}>
-              {tAccess("deny")}
-            </Button>
-            <Button color="warning" isLoading={isPending} onPress={() => consentModule && startTransition(() => approveAccess(consentModule))}>
-              {tAccess("allow")}
-            </Button>
-          </ModalFooter>
-        </ModalContent>
+      <Modal
+        isOpen={consentModule !== null}
+        onOpenChange={(open) => !open && setConsentModule(null)}
+      >
+        <Modal.Backdrop>
+          <Modal.Container size="lg">
+            <Modal.Dialog className={"w-full max-w-lg "}>
+              <DialogDismissButton />
+
+              <Modal.Header className="flex items-center gap-2">
+                <Modal.Heading className="flex items-center gap-2">
+                  <ShieldAlert
+                    className="h-5 w-5 text-warning-500"
+                    aria-hidden
+                  />
+                  {consentModule
+                    ? tAccess("title", { label: consentModule.label })
+                    : null}
+                </Modal.Heading>
+              </Modal.Header>
+              <Modal.Body>
+                {consentModule ? (
+                  <div className="flex flex-col gap-3">
+                    <p className="text-sm text-ink-600">
+                      {tAccess("intro", { label: consentModule.label })}
+                    </p>
+                    <ul className="flex flex-col gap-2">
+                      {consentModule.access.map((request) => (
+                        <li
+                          key={request.module}
+                          className="rounded-lg border border-ink-200 p-3"
+                        >
+                          <div className="flex flex-wrap items-center gap-1.5">
+                            <span className="text-sm font-semibold">
+                              {request.moduleLabel}
+                            </span>
+                            {request.operations.map((op) => (
+                              <Chip
+                                key={op}
+                                size="sm"
+                                color={statusTone(
+                                  op === "read"
+                                    ? "default"
+                                    : op === "write"
+                                      ? "warning"
+                                      : "danger",
+                                )}
+                                variant={"soft"}
+                                style={statusStyle(
+                                  op === "read"
+                                    ? "default"
+                                    : op === "write"
+                                      ? "warning"
+                                      : "danger",
+                                )}
+                              >
+                                {tAccess(`op.${op}`)}
+                              </Chip>
+                            ))}
+                          </div>
+                          {request.reason ? (
+                            <p className="mt-1 text-xs text-ink-500">
+                              {request.reason}
+                            </p>
+                          ) : null}
+                        </li>
+                      ))}
+                    </ul>
+                    <p className="text-xs text-ink-500">{tAccess("note")}</p>
+                  </div>
+                ) : null}
+              </Modal.Body>
+              <Modal.Footer>
+                <Button
+                  onPress={() => setConsentModule(null)}
+                  variant={actionVariant("default", "light")}
+                >
+                  {tAccess("deny")}
+                </Button>
+                <Button
+                  onPress={() =>
+                    consentModule &&
+                    startTransition(() => approveAccess(consentModule))
+                  }
+                  variant={actionVariant("warning", "solid")}
+                  isPending={isPending}
+                >
+                  {isPending ? <Spinner size="sm" color="current" /> : null}
+                  {tAccess("allow")}
+                </Button>
+              </Modal.Footer>
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal.Backdrop>
       </Modal>
 
-
       {/* Bağımlılık penceresi */}
-      <Modal isOpen={dependencyDialog !== null} onOpenChange={(open) => !open && setDependencyDialog(null)} size="lg">
-        <ModalContent>
-          <ModalHeader>
-            {dependencyDialog
-              ? dependencyDialog.isActive
-                ? tDeps("enableTitle", { label: dependencyDialog.mod.label })
-                : tDeps("disableTitle", { label: dependencyDialog.mod.label })
-              : null}
-          </ModalHeader>
-          <ModalBody>
-            {dependencyDialog ? (
-              <div className="flex flex-col gap-4 text-small">
-                {dependencyDialog.plan.missing.length ? (
-                  <div className="rounded-medium bg-danger-50 p-3 text-danger-700">
-                    <p className="font-medium">{tDeps("missingTitle")}</p>
-                    <ul className="mt-1 list-disc pl-5">
-                      {dependencyDialog.plan.missing.map((item) => (
-                        <li key={item.module}>
-                          {item.installed
-                            ? tDeps("versionTooLow", { module: labelOf(item.module), installed: item.installed, required: item.version ?? "" })
-                            : tDeps("notInstalled", { module: item.module, required: item.version ?? "" })}
-                        </li>
-                      ))}
-                    </ul>
-                    <Link href="/ayarlar/moduller/paketler" className="mt-2 inline-block underline">
-                      {tDeps("installLink")}
-                    </Link>
-                  </div>
-                ) : null}
-                {dependencyDialog.plan.enable.length ? (
-                  <div>
-                    <p className="font-medium">{tDeps("requiredTitle", { label: dependencyDialog.mod.label })}</p>
-                    <ul className="mt-1 flex flex-col gap-1">
-                      {dependencyDialog.plan.enable.map((item) => (
-                        <li key={item.key} className="flex flex-wrap items-center gap-2">
-                          <Chip size="sm" variant="flat" color="primary">{labelOf(item.key)}</Chip>
-                          {item.needsApproval ? <span className="text-tiny text-warning-600">{tDeps("needsApproval", { modules: accessOf(item.key).map((request) => request.moduleLabel).join(", ") })}</span> : null}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null}
-                {dependencyDialog.plan.recommended.length ? (
-                  <div>
-                    <p className="font-medium">{tDeps("recommendedTitle")}</p>
-                    <div className="mt-1 flex flex-col gap-1">
-                      {dependencyDialog.plan.recommended.map((item) => (
-                        <Checkbox
-                          key={item.key}
-                          isSelected={selectedRecommended.includes(item.key)}
-                          onValueChange={(checked) => setSelectedRecommended((current) => (checked ? [...current, item.key] : current.filter((key) => key !== item.key)))}
+      <Modal
+        isOpen={dependencyDialog !== null}
+        onOpenChange={(open) => !open && setDependencyDialog(null)}
+      >
+        <Modal.Backdrop>
+          <Modal.Container size="lg">
+            <Modal.Dialog className={"w-full max-w-lg "}>
+              <DialogDismissButton />
+
+              <Modal.Header>
+                <Modal.Heading className="flex items-center gap-2">
+                  {dependencyDialog
+                    ? dependencyDialog.isActive
+                      ? tDeps("enableTitle", {
+                          label: dependencyDialog.mod.label,
+                        })
+                      : tDeps("disableTitle", {
+                          label: dependencyDialog.mod.label,
+                        })
+                    : null}
+                </Modal.Heading>
+              </Modal.Header>
+              <Modal.Body>
+                {dependencyDialog ? (
+                  <div className="flex flex-col gap-4 text-sm">
+                    {dependencyDialog.plan.missing.length ? (
+                      <div className="rounded-lg bg-danger-50 p-3 text-danger-700">
+                        <p className="font-medium">{tDeps("missingTitle")}</p>
+                        <ul className="mt-1 list-disc pl-5">
+                          {dependencyDialog.plan.missing.map((item) => (
+                            <li key={item.module}>
+                              {item.installed
+                                ? tDeps("versionTooLow", {
+                                    module: labelOf(item.module),
+                                    installed: item.installed,
+                                    required: item.version ?? "",
+                                  })
+                                : tDeps("notInstalled", {
+                                    module: item.module,
+                                    required: item.version ?? "",
+                                  })}
+                            </li>
+                          ))}
+                        </ul>
+                        <Link
+                          href="/ayarlar/moduller/paketler"
+                          className="mt-2 inline-block underline"
                         >
-                          {labelOf(item.key)}
-                          {item.needsApproval ? <span className="ml-2 text-tiny text-warning-600">{tDeps("needsApproval", { modules: accessOf(item.key).map((request) => request.moduleLabel).join(", ") })}</span> : null}
-                        </Checkbox>
-                      ))}
-                    </div>
+                          {tDeps("installLink")}
+                        </Link>
+                      </div>
+                    ) : null}
+                    {dependencyDialog.plan.enable.length ? (
+                      <div>
+                        <p className="font-medium">
+                          {tDeps("requiredTitle", {
+                            label: dependencyDialog.mod.label,
+                          })}
+                        </p>
+                        <ul className="mt-1 flex flex-col gap-1">
+                          {dependencyDialog.plan.enable.map((item) => (
+                            <li
+                              key={item.key}
+                              className="flex flex-wrap items-center gap-2"
+                            >
+                              <Chip size="sm" color={"accent"} variant={"soft"}>
+                                {labelOf(item.key)}
+                              </Chip>
+                              {item.needsApproval ? (
+                                <span className="text-xs text-warning-600">
+                                  {tDeps("needsApproval", {
+                                    modules: accessOf(item.key)
+                                      .map((request) => request.moduleLabel)
+                                      .join(", "),
+                                  })}
+                                </span>
+                              ) : null}
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : null}
+                    {dependencyDialog.plan.recommended.length ? (
+                      <div>
+                        <p className="font-medium">
+                          {tDeps("recommendedTitle")}
+                        </p>
+                        <div className="mt-1 flex flex-col gap-1">
+                          {dependencyDialog.plan.recommended.map((item) => (
+                            <Checkbox
+                              key={item.key}
+                              isSelected={selectedRecommended.includes(
+                                item.key,
+                              )}
+                              onChange={(checked) =>
+                                setSelectedRecommended((current) =>
+                                  checked
+                                    ? [...current, item.key]
+                                    : current.filter((key) => key !== item.key),
+                                )
+                              }
+                            >
+                              <Checkbox.Content>
+                                <Checkbox.Control>
+                                  <Checkbox.Indicator />
+                                </Checkbox.Control>
+                                <Label>
+                                  {labelOf(item.key)}
+                                  {item.needsApproval ? (
+                                    <span className="ml-2 text-xs text-warning-600">
+                                      {tDeps("needsApproval", {
+                                        modules: accessOf(item.key)
+                                          .map((request) => request.moduleLabel)
+                                          .join(", "),
+                                      })}
+                                    </span>
+                                  ) : null}
+                                </Label>
+                              </Checkbox.Content>
+                            </Checkbox>
+                          ))}
+                        </div>
+                      </div>
+                    ) : null}
+                    {dependencyDialog.plan.disable.length ? (
+                      <div className="rounded-lg bg-warning-50 p-3 text-warning-800">
+                        <p className="font-medium">
+                          {tDeps("dependentsTitle", {
+                            label: dependencyDialog.mod.label,
+                          })}
+                        </p>
+                        <ul className="mt-1 list-disc pl-5">
+                          {dependencyDialog.plan.disable.map((key) => (
+                            <li key={key}>{labelOf(key)}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    ) : null}
                   </div>
                 ) : null}
-                {dependencyDialog.plan.disable.length ? (
-                  <div className="rounded-medium bg-warning-50 p-3 text-warning-800">
-                    <p className="font-medium">{tDeps("dependentsTitle", { label: dependencyDialog.mod.label })}</p>
-                    <ul className="mt-1 list-disc pl-5">
-                      {dependencyDialog.plan.disable.map((key) => (
-                        <li key={key}>{labelOf(key)}</li>
-                      ))}
-                    </ul>
-                  </div>
-                ) : null}
-              </div>
-            ) : null}
-          </ModalBody>
-          <ModalFooter>
-            <Button variant="light" onPress={() => setDependencyDialog(null)}>
-              {tDeps("cancel")}
-            </Button>
-            <Button
-              color={dependencyDialog?.isActive ? "primary" : "warning"}
-              isDisabled={Boolean(dependencyDialog?.plan.missing.length)}
-              isLoading={isPending}
-              onPress={() => startTransition(confirmDependencies)}
-            >
-              {dependencyDialog?.isActive ? tDeps("enableAll") : tDeps("disableAll")}
-            </Button>
-          </ModalFooter>
-        </ModalContent>
+              </Modal.Body>
+              <Modal.Footer>
+                <Button
+                  onPress={() => setDependencyDialog(null)}
+                  variant={actionVariant("default", "light")}
+                >
+                  {tDeps("cancel")}
+                </Button>
+                <Button
+                  isDisabled={Boolean(dependencyDialog?.plan.missing.length)}
+                  onPress={() => startTransition(confirmDependencies)}
+                  variant={actionVariant(
+                    dependencyDialog?.isActive ? "primary" : "warning",
+                    "solid",
+                  )}
+                  isPending={isPending}
+                >
+                  {isPending ? <Spinner size="sm" color="current" /> : null}
+                  {dependencyDialog?.isActive
+                    ? tDeps("enableAll")
+                    : tDeps("disableAll")}
+                </Button>
+              </Modal.Footer>
+            </Modal.Dialog>
+          </Modal.Container>
+        </Modal.Backdrop>
       </Modal>
 
       {/* Silme Onay Modalı */}
@@ -594,7 +887,9 @@ export function ModuleList({
         isOpen={deletingModule !== null}
         onOpenChange={(open) => !open && setDeletingModule(null)}
         title={t("deleteModal.title")}
-        message={t("deleteModal.message", { label: deletingModule?.label ?? "" })}
+        message={t("deleteModal.message", {
+          label: deletingModule?.label ?? "",
+        })}
         confirmLabel={t("deleteModal.confirm")}
         confirmColor="danger"
         onConfirm={handleConfirmDelete}

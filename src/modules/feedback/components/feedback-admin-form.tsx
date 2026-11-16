@@ -1,16 +1,34 @@
 "use client";
+import {
+  toast,
+  Button,
+  Spinner,
+  TextField,
+  Label,
+  TextArea,
+  Select,
+  ListBox,
+} from "@heroui/react";
 
-import { addToast, Button, Select, SelectItem, Textarea } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { updateFeedbackAction } from "../actions/feedback-actions";
 
-const key = (keys: unknown) => (typeof keys === "string" ? keys : String(Array.from(keys as Iterable<unknown>)[0] ?? ""));
-
 /** Yönetici: durum, öncelik ve testçiye cevap. */
-export function FeedbackAdminForm({ item }: { item: { id: string; status: string; priority: string; adminReply: string | null } }) {
+export function FeedbackAdminForm({
+  item,
+}: {
+  item: {
+    id: string;
+    status: string;
+    priority: string;
+    adminReply: string | null;
+  };
+}) {
   const t = useTranslations("feedback");
   const router = useRouter();
   const [status, setStatus] = useState(item.status);
@@ -20,27 +38,94 @@ export function FeedbackAdminForm({ item }: { item: { id: string; status: string
   return (
     <div className="flex flex-col gap-3">
       <div className="grid grid-cols-2 gap-3">
-        <Select label={t("fields.status")} labelPlacement="outside" selectedKeys={[status]} onSelectionChange={(keys) => setStatus(key(keys) || status)}>
-          {["NEW", "IN_PROGRESS", "DONE", "REJECTED"].map((value) => <SelectItem key={value}>{t(`status.${value}`)}</SelectItem>)}
+        <Select
+          value={status}
+          onChange={(selectedValue) => {
+            const keys =
+              selectedValue === null ? undefined : String(selectedValue);
+            return setStatus(String(keys ?? "") || status);
+          }}
+        >
+          <Label>{t("fields.status")}</Label>
+          <Select.Trigger>
+            <Select.Value />
+            <Select.Indicator />
+          </Select.Trigger>
+          <Select.Popover>
+            <ListBox>
+              {["NEW", "IN_PROGRESS", "DONE", "REJECTED"].map((value) => (
+                <ListBox.Item
+                  key={value}
+                  id={value}
+                  textValue={String(t(`status.${value}`))}
+                >
+                  <Label>{t(`status.${value}`)}</Label>
+                  <ListBox.ItemIndicator />
+                </ListBox.Item>
+              ))}
+            </ListBox>
+          </Select.Popover>
         </Select>
-        <Select label={t("fields.priority")} labelPlacement="outside" selectedKeys={[priority]} onSelectionChange={(keys) => setPriority(key(keys) || priority)}>
-          {["LOW", "NORMAL", "HIGH"].map((value) => <SelectItem key={value}>{t(`priority.${value}`)}</SelectItem>)}
+        <Select
+          value={priority}
+          onChange={(selectedValue) => {
+            const keys =
+              selectedValue === null ? undefined : String(selectedValue);
+            return setPriority(String(keys ?? "") || priority);
+          }}
+        >
+          <Label>{t("fields.priority")}</Label>
+          <Select.Trigger>
+            <Select.Value />
+            <Select.Indicator />
+          </Select.Trigger>
+          <Select.Popover>
+            <ListBox>
+              {["LOW", "NORMAL", "HIGH"].map((value) => (
+                <ListBox.Item
+                  key={value}
+                  id={value}
+                  textValue={String(t(`priority.${value}`))}
+                >
+                  <Label>{t(`priority.${value}`)}</Label>
+                  <ListBox.ItemIndicator />
+                </ListBox.Item>
+              ))}
+            </ListBox>
+          </Select.Popover>
         </Select>
       </div>
-      <Textarea label={t("fields.reply")} labelPlacement="outside" value={reply} onValueChange={setReply} minRows={3} />
+      <TextField
+        value={reply}
+        onChange={setReply}
+        className={["w-full"].filter(Boolean).join(" ")}
+      >
+        <Label>{t("fields.reply")}</Label>
+        <TextArea
+          rows={3}
+          className={["[field-sizing:content]"].filter(Boolean).join(" ")}
+        />
+      </TextField>
       <Button
-        color="primary"
         className="self-start"
-        isLoading={busy}
         onPress={async () => {
           setBusy(true);
-          const result = await updateFeedbackAction({ id: item.id, status, priority, reply });
+          const result = await updateFeedbackAction({
+            id: item.id,
+            status,
+            priority,
+            reply,
+          });
           setBusy(false);
-          if (!result.ok) return void addToast({ title: result.error, color: "danger" });
-          addToast({ title: t("saved"), color: "success" });
+          if (!result.ok)
+            return void toast(result.error, { variant: "danger" });
+          toast(t("saved"), { variant: "success" });
           router.refresh();
         }}
+        variant={actionVariant("primary", "solid")}
+        isPending={busy}
       >
+        {busy ? <Spinner size="sm" color="current" /> : null}
         {t("save")}
       </Button>
     </div>

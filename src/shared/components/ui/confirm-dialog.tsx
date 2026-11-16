@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Modal, Spinner } from "@heroui-v3/react";
+import { Button, Modal, Spinner } from "@heroui/react";
 import { actionVariant } from "./action-appearance";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -22,7 +22,7 @@ export function ConfirmDialog({
   confirmLabel?: string;
   cancelLabel?: string;
   confirmColor?: "default" | "primary" | "danger" | "warning";
-  /** Hata yönetimi çağıran taraftadır (örn. addToast ile bildirim). */
+  /** Hata yönetimi çağıran taraftadır (örn. toast ile bildirim). */
   onConfirm: () => Promise<void>;
 }) {
   const [isPending, setIsPending] = useState(false);
@@ -54,7 +54,7 @@ export function ConfirmDialog({
                   <Modal.Heading>{title}</Modal.Heading>
                 </Modal.Header>
                 <Modal.Body>
-                  <p className="text-small text-default-600">{message}</p>
+                  <p className="text-sm text-ink-600">{message}</p>
                 </Modal.Body>
                 <Modal.Footer>
                   <Button

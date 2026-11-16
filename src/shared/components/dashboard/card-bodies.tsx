@@ -42,16 +42,16 @@ export function StatCardBody({
         >
           {value}
         </span>
-        <span className="truncate text-[12px] font-medium text-default-500">
+        <span className="truncate text-[12px] font-medium text-ink-500">
           {label}
         </span>
       </div>
       {details.length > 0 ? (
-        <div className="flex flex-wrap gap-x-4 gap-y-1.5 border-t border-default-100 pt-3.5 text-[11px]">
+        <div className="flex flex-wrap gap-x-4 gap-y-1.5 border-t border-ink-100 pt-3.5 text-[11px]">
           {details.map((detail) => (
             <span
               key={detail.label}
-              className="flex items-center gap-1 text-default-500"
+              className="flex items-center gap-1 text-ink-500"
             >
               <span>{detail.label}:</span>
               <span
@@ -92,12 +92,12 @@ export function TableCardBody({
   emptyText: string;
 }) {
   if (rows.length === 0)
-    return <p className="py-4 text-small text-default-500">{emptyText}</p>;
+    return <p className="py-4 text-sm text-ink-500">{emptyText}</p>;
   return (
     <div className="-mx-1 overflow-x-auto">
-      <table className="w-full text-small">
+      <table className="w-full text-sm">
         <thead>
-          <tr className="border-b border-default-100 text-left text-tiny text-default-500">
+          <tr className="border-b border-ink-100 text-left text-xs text-ink-500">
             {columns.map((column) => (
               <th
                 key={column.key}
@@ -115,7 +115,7 @@ export function TableCardBody({
           {rows.map((row) => (
             <tr
               key={row.id}
-              className="border-b border-default-100 last:border-none"
+              className="border-b border-ink-100 last:border-none"
             >
               {columns.map((column, index) => (
                 <td
@@ -128,7 +128,7 @@ export function TableCardBody({
                   {index === 0 && row.href ? (
                     <Link
                       href={row.href}
-                      className="font-medium text-primary hover:underline"
+                      className="font-medium text-accent hover:underline"
                     >
                       {row.cells[column.key]}
                     </Link>
@@ -170,7 +170,7 @@ export function GaugeCardBody({
           ? "warning"
           : "danger";
   const stroke = {
-    default: "stroke-default-300",
+    default: "stroke-ink-300",
     success: "stroke-success",
     warning: "stroke-warning",
     danger: "stroke-danger",
@@ -187,7 +187,7 @@ export function GaugeCardBody({
           cx="50"
           cy="50"
           r={radius}
-          className="fill-none stroke-default-100"
+          className="fill-none stroke-ink-100"
           strokeWidth="10"
         />
         <circle
@@ -212,14 +212,12 @@ export function GaugeCardBody({
         </text>
       </svg>
       <div className="flex min-w-0 flex-col gap-1">
-        <span className="text-small font-semibold text-foreground">
-          {label}
-        </span>
+        <span className="text-sm font-semibold text-foreground">{label}</span>
         {caption ? (
-          <span className="text-tiny text-default-500">{caption}</span>
+          <span className="text-xs text-ink-500">{caption}</span>
         ) : null}
         {details.map((detail) => (
-          <span key={detail.label} className="text-tiny text-default-500">
+          <span key={detail.label} className="text-xs text-ink-500">
             {detail.label}:{" "}
             <span
               className={cn(
@@ -247,7 +245,7 @@ export function AlertCardBody({
   actionLabel: string;
 }) {
   return (
-    <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-danger-50/70 p-3 text-small text-danger-700 dark:bg-danger-500/10 dark:text-danger-300">
+    <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg bg-danger-50/70 p-3 text-sm text-danger-700 dark:bg-danger-500/10 dark:text-danger-300">
       <span className="font-medium">{message}</span>
       <Link
         href={actionHref}

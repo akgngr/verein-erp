@@ -1,8 +1,20 @@
 "use client";
+import {
+  toast,
+  Button,
+  Spinner,
+  Modal,
+  TextField,
+  Label,
+  TextArea,
+} from "@heroui/react";
+
+import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
 
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader, Textarea, addToast } from "@heroui/react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
@@ -40,10 +52,10 @@ export function CancelDonationModal({
     try {
       const result = await cancelDonationAction({ id: donationId, reason });
       if (!result.ok) {
-        addToast({ title: result.error, color: "danger" });
+        toast(result.error, { variant: "danger" });
         return;
       }
-      addToast({ title: toastTitle, color: "success" });
+      toast(toastTitle, { variant: "success" });
       onOpenChange(false);
       setReason("");
       router.refresh();
@@ -53,32 +65,55 @@ export function CancelDonationModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="md">
-      <ModalContent>
-        <ModalHeader>
-          {title} — {donationNumber}
-        </ModalHeader>
-        <ModalBody>
-          <p className="text-small text-default-500">{hint}</p>
-          <Textarea
-            label={reasonLabel}
-            labelPlacement="outside"
-            value={reason}
-            onValueChange={setReason}
-            maxLength={300}
-            minRows={3}
-            isRequired
-          />
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="flat" onPress={() => onOpenChange(false)}>
-            {tCommon("cancel")}
-          </Button>
-          <Button color="danger" onPress={confirm} isLoading={busy} isDisabled={reason.trim().length < 5}>
-            {confirmLabel}
-          </Button>
-        </ModalFooter>
-      </ModalContent>
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
+      <Modal.Backdrop>
+        <Modal.Container size="md">
+          <Modal.Dialog className={"w-full max-w-md "}>
+            <DialogDismissButton />
+
+            <Modal.Header>
+              <Modal.Heading className="flex items-center gap-2">
+                {title} — {donationNumber}
+              </Modal.Heading>
+            </Modal.Header>
+            <Modal.Body>
+              <p className="text-sm text-ink-500">{hint}</p>
+              <TextField
+                value={reason}
+                isRequired
+                onChange={setReason}
+                className={["w-full"].filter(Boolean).join(" ")}
+              >
+                <Label>{reasonLabel}</Label>
+                <TextArea
+                  maxLength={300}
+                  rows={3}
+                  className={["[field-sizing:content]"]
+                    .filter(Boolean)
+                    .join(" ")}
+                />
+              </TextField>
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                onPress={() => onOpenChange(false)}
+                variant={actionVariant("default", "flat")}
+              >
+                {tCommon("cancel")}
+              </Button>
+              <Button
+                onPress={confirm}
+                isDisabled={reason.trim().length < 5}
+                variant={actionVariant("danger", "solid")}
+                isPending={busy}
+              >
+                {busy ? <Spinner size="sm" color="current" /> : null}
+                {confirmLabel}
+              </Button>
+            </Modal.Footer>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 }

@@ -11,9 +11,10 @@ import { crmPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "crm",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.0.3",
+  version: "1.0.4",
   label: "CRM",
-  description: "Kişiler ve kurumlarla ilişki yönetimi: aşamalar, fırsatlar, zaman akışı ve takipler.",
+  description:
+    "Kişiler ve kurumlarla ilişki yönetimi: aşamalar, fırsatlar, zaman akışı ve takipler.",
   category: "OFFICIAL",
   hasSchema: true,
   recommends: ["members", "accounting"],

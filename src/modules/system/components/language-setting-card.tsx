@@ -1,6 +1,6 @@
 "use client";
+import { toast } from "@heroui/react";
 
-import { addToast } from "@heroui/react";
 import { Check } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
@@ -36,13 +36,11 @@ export function LanguageSettingCard({
     startTransition(async () => {
       const result = await onSetLocale({ locale: nextLocale });
       if (!result.ok) {
-        addToast({ title: tCommon("languageChangeFailed"), color: "danger" });
+        toast(tCommon("languageChangeFailed"), { variant: "danger" });
         return;
       }
-      addToast({
-        // Bildirim yeni dilde gösterilir; mesajlar henüz eski dilde yüklü olduğundan dil adı kullanılır.
-        title: t("switchedTo", { language: LOCALE_LABELS[nextLocale] }),
-        color: "success",
+      toast(t("switchedTo", { language: LOCALE_LABELS[nextLocale] }), {
+        variant: "success",
       });
       router.refresh();
     });
@@ -61,25 +59,25 @@ export function LanguageSettingCard({
             className={cn(
               "flex items-center justify-between p-4 rounded-xl border text-left transition-all duration-200 cursor-pointer shadow-xs",
               isSelected
-                ? "border-primary bg-primary-50/50 dark:bg-primary-500/10 shadow-sm ring-1 ring-primary/20"
-                : "border-default-200/80 bg-content1 hover:bg-default-100/60 hover:border-default-300",
+                ? "border-accent bg-brand-50/50 dark:bg-brand-500/10 shadow-sm ring-1 ring-accent/20"
+                : "border-ink-200/80 bg-surface hover:bg-ink-100/60 hover:border-ink-300",
             )}
           >
             <div className="flex items-center gap-3">
-              <span className="text-2xl p-2 rounded-lg bg-default-100/80 shadow-xs">
+              <span className="text-2xl p-2 rounded-lg bg-ink-100/80 shadow-xs">
                 {LOCALE_FLAGS[loc]}
               </span>
               <div>
-                <p className="text-small font-semibold text-foreground">
+                <p className="text-sm font-semibold text-foreground">
                   {LOCALE_LABELS[loc]}
                 </p>
-                <p className="text-tiny text-default-400">
+                <p className="text-xs text-ink-400">
                   {t(loc === "tr" ? "trHint" : "deHint")}
                 </p>
               </div>
             </div>
             {isSelected ? (
-              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-primary text-primary-foreground shadow-xs">
+              <span className="flex h-6 w-6 items-center justify-center rounded-full bg-accent text-accent-foreground shadow-xs">
                 <Check className="h-3.5 w-3.5 stroke-[2.5]" />
               </span>
             ) : null}

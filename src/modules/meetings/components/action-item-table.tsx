@@ -1,8 +1,8 @@
 "use client";
+import { toast, Link } from "@heroui/react";
 
 import { useTranslations } from "next-intl";
 
-import { Link, addToast } from "@heroui/react";
 import { CheckCircle2, Circle, Eye } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -25,9 +25,11 @@ function StatusBadge({ status }: { status: ActionItemRow["status"] }) {
   const t = useTranslations("meetings.actionStatus");
   const color = ACTION_ITEM_STATUS_COLORS[status];
   const colorClass =
-    color === "success" ? "bg-success-50 text-success-700" : "bg-warning-50 text-warning-600";
+    color === "success"
+      ? "bg-success-50 text-success-700"
+      : "bg-warning-50 text-warning-600";
   return (
-    <span className={`rounded-small px-2 py-0.5 text-tiny ${colorClass}`}>
+    <span className={`rounded-md px-2 py-0.5 text-xs ${colorClass}`}>
       {t(status)}
     </span>
   );
@@ -76,15 +78,17 @@ export function ActionItemTable({
   const toggle = async (row: ActionItemRow) => {
     setBusyId(row.id);
     const target = row.status === "DONE" ? "OPEN" : "DONE";
-    const result = await setActionItemStatusAction({ id: row.id, status: target });
+    const result = await setActionItemStatusAction({
+      id: row.id,
+      status: target,
+    });
     setBusyId(null);
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
-    addToast({
-      title: target === "DONE" ? t("doneToast") : t("reopenedToast"),
-      color: "success",
+    toast(target === "DONE" ? t("doneToast") : t("reopenedToast"), {
+      variant: "success",
     });
     router.refresh();
   };
@@ -100,8 +104,11 @@ export function ActionItemTable({
       label: t("colMeeting"),
       width: 190,
       render: (row) => (
-        <Link href={`/toplantilar/${row.meetingId}`} size="sm">
-          {row.meetingNumber} — {row.meetingTitle.length > 28 ? `${row.meetingTitle.slice(0, 28)}…` : row.meetingTitle}
+        <Link href={`/toplantilar/${row.meetingId}`} className={"text-sm"}>
+          {row.meetingNumber} —{" "}
+          {row.meetingTitle.length > 28
+            ? `${row.meetingTitle.slice(0, 28)}…`
+            : row.meetingTitle}
         </Link>
       ),
     },
@@ -144,12 +151,18 @@ export function ActionItemTable({
   ];
 
   const rowActions = (row: ActionItemRow): DataTableRowAction[] => [
-    { key: "view", label: t("goToMeeting"), icon: <Eye className="h-4 w-4" />, href: `/toplantilar/${row.meetingId}?sekme=gorevler` },
+    {
+      key: "view",
+      label: t("goToMeeting"),
+      icon: <Eye className="h-4 w-4" />,
+      href: `/toplantilar/${row.meetingId}?sekme=gorevler`,
+    },
     ...(canUpdate
       ? [
           {
             key: "toggle",
-            label: row.status === "DONE" ? t("reopenAction") : t("markDoneAction"),
+            label:
+              row.status === "DONE" ? t("reopenAction") : t("markDoneAction"),
             icon:
               row.status === "DONE" ? (
                 <Circle className="h-4 w-4" />

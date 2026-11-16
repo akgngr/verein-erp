@@ -1,24 +1,31 @@
 "use client";
+import {
+  toast,
+  Button,
+  Spinner,
+  Modal,
+  TextField,
+  Label,
+  TextArea,
+  Description,
+  Input,
+  Select,
+  ListBox,
+} from "@heroui/react";
+
+import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
 
-import {
-  Button,
-  Input,
-  Modal,
-  ModalBody,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  Select,
-  SelectItem,
-  Textarea,
-  addToast,
-} from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { addDecisionAction, updateDecisionAction } from "../actions/decision-actions";
+import {
+  addDecisionAction,
+  updateDecisionAction,
+} from "../actions/decision-actions";
 import { DECISION_RESULT_VALUES } from "../constants";
 import type { DecisionItem } from "../types";
 
@@ -46,15 +53,24 @@ export function DecisionModal({
   const tCommon = useTranslations("common");
   const t = useTranslations("meetings.decisions");
   const tResult = useTranslations("meetings.decisionResult");
-  const resultOptions = RESULT_KEYS.map((key) => ({ value: key, label: tResult(key) }));
+  const resultOptions = RESULT_KEYS.map((key) => ({
+    value: key,
+    label: tResult(key),
+  }));
   const router = useRouter();
   const [agendaItemId, setAgendaItemId] = useState<Set<string>>(
-    new Set([decision?.agendaItemId ?? defaultAgendaItemId ?? ""].filter(Boolean)),
+    new Set(
+      [decision?.agendaItemId ?? defaultAgendaItemId ?? ""].filter(Boolean),
+    ),
   );
   const [text, setText] = useState(decision?.text ?? "");
-  const [result, setResult] = useState<Set<string>>(new Set([decision?.result ?? "ACCEPTED"]));
+  const [result, setResult] = useState<Set<string>>(
+    new Set([decision?.result ?? "ACCEPTED"]),
+  );
   const [votesFor, setVotesFor] = useState(
-    decision?.votesFor !== null && decision?.votesFor !== undefined ? String(decision.votesFor) : "",
+    decision?.votesFor !== null && decision?.votesFor !== undefined
+      ? String(decision.votesFor)
+      : "",
   );
   const [votesAgainst, setVotesAgainst] = useState(
     decision?.votesAgainst !== null && decision?.votesAgainst !== undefined
@@ -90,104 +106,167 @@ export function DecisionModal({
       setError(res.error);
       return;
     }
-    addToast({
-      title: decision
+    toast(
+      decision
         ? t("updatedToast")
-        : t("addedToast", { number: (res.data as { decisionNumber?: string }).decisionNumber ?? "" }),
-      color: "success",
-    });
+        : t("addedToast", {
+            number:
+              (res.data as { decisionNumber?: string }).decisionNumber ?? "",
+          }),
+      { variant: "success" },
+    );
     onOpenChange(false);
     router.refresh();
   };
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} key={key} size="lg">
-      <ModalContent>
-        <ModalHeader>{decision ? t("editTitleNumbered", { number: decision.decisionNumber }) : t("modalAddTitle")}</ModalHeader>
-        <ModalBody>
-          <Textarea
-            label={t("text")}
-            labelPlacement="outside"
-            value={text}
-            onValueChange={setText}
-            minRows={3}
-            isRequired
-            maxLength={3000}
-            description={t("textHelp")}
-          />
-          <Select
-            label={t("result")}
-            labelPlacement="outside"
-            selectedKeys={result}
-            onSelectionChange={(keys) => setResult(new Set(keys as Set<string>))}
-          >
-            {resultOptions.map((option) => (
-              <SelectItem key={option.value} textValue={option.label}>
-                {option.label}
-              </SelectItem>
-            ))}
-          </Select>
-          {agendaItems.length > 0 ? (
-            <Select
-              label={t("agendaItem")}
-              labelPlacement="outside"
-              selectedKeys={agendaItemId}
-              onSelectionChange={(keys) => setAgendaItemId(new Set(keys as Set<string>))}
-              description={t("agendaHelp")}
-            >
-              {[
-                { value: "", label: t("noAgenda") },
-                ...agendaItems.map((item) => ({
-                  value: item.id,
-                  label: `${item.position}. ${item.title}`,
-                })),
-              ].map((option) => (
-                <SelectItem key={option.value} textValue={option.label}>
-                  {option.label}
-                </SelectItem>
-              ))}
-            </Select>
-          ) : null}
-          <div className="grid grid-cols-3 gap-3">
-            <Input
-              type="number"
-              label={t("votesForShort")}
-              labelPlacement="outside"
-              value={votesFor}
-              onValueChange={setVotesFor}
-              min={0}
-              max={1000}
-            />
-            <Input
-              type="number"
-              label={t("votesAgainstShort")}
-              labelPlacement="outside"
-              value={votesAgainst}
-              onValueChange={setVotesAgainst}
-              min={0}
-              max={1000}
-            />
-            <Input
-              type="number"
-              label={t("votesAbstainShort")}
-              labelPlacement="outside"
-              value={votesAbstain}
-              onValueChange={setVotesAbstain}
-              min={0}
-              max={1000}
-            />
-          </div>
-          {error ? <p className="text-small text-danger">{error}</p> : null}
-        </ModalBody>
-        <ModalFooter>
-          <Button variant="light" onPress={() => onOpenChange(false)}>
-            {tCommon("cancel")}
-          </Button>
-          <Button color="primary" isLoading={busy} onPress={submit} isDisabled={text.trim().length < 3}>
-            {tCommon("save")}
-          </Button>
-        </ModalFooter>
-      </ModalContent>
+    <Modal isOpen={isOpen} onOpenChange={onOpenChange} key={key}>
+      <Modal.Backdrop>
+        <Modal.Container size="lg">
+          <Modal.Dialog className={"w-full max-w-lg "}>
+            <DialogDismissButton />
+
+            <Modal.Header>
+              <Modal.Heading className="flex items-center gap-2">
+                {decision
+                  ? t("editTitleNumbered", { number: decision.decisionNumber })
+                  : t("modalAddTitle")}
+              </Modal.Heading>
+            </Modal.Header>
+            <Modal.Body>
+              <TextField
+                value={text}
+                isRequired
+                onChange={setText}
+                className={["w-full"].filter(Boolean).join(" ")}
+              >
+                <Label>{t("text")}</Label>
+                <TextArea
+                  maxLength={3000}
+                  rows={3}
+                  className={["[field-sizing:content]"]
+                    .filter(Boolean)
+                    .join(" ")}
+                />
+                <Description>{t("textHelp")}</Description>
+              </TextField>
+              <Select
+                value={Array.from(result)[0] ?? null}
+                onChange={(selectedValue) => {
+                  const keys =
+                    selectedValue === null ? undefined : String(selectedValue);
+                  return setResult(new Set(keys === undefined ? [] : [keys]));
+                }}
+              >
+                <Label>{t("result")}</Label>
+                <Select.Trigger>
+                  <Select.Value />
+                  <Select.Indicator />
+                </Select.Trigger>
+                <Select.Popover>
+                  <ListBox>
+                    {resultOptions.map((option) => (
+                      <ListBox.Item
+                        key={option.value}
+                        id={option.value}
+                        textValue={option.label}
+                      >
+                        <Label>{option.label}</Label>
+                        <ListBox.ItemIndicator />
+                      </ListBox.Item>
+                    ))}
+                  </ListBox>
+                </Select.Popover>
+              </Select>
+              {agendaItems.length > 0 ? (
+                <Select
+                  value={Array.from(agendaItemId)[0] ?? null}
+                  onChange={(selectedValue) => {
+                    const keys =
+                      selectedValue === null
+                        ? undefined
+                        : String(selectedValue);
+                    return setAgendaItemId(
+                      new Set(keys === undefined ? [] : [keys]),
+                    );
+                  }}
+                >
+                  <Label>{t("agendaItem")}</Label>
+                  <Select.Trigger>
+                    <Select.Value />
+                    <Select.Indicator />
+                  </Select.Trigger>
+                  <Select.Popover>
+                    <ListBox>
+                      {[
+                        { value: "", label: t("noAgenda") },
+                        ...agendaItems.map((item) => ({
+                          value: item.id,
+                          label: `${item.position}. ${item.title}`,
+                        })),
+                      ].map((option) => (
+                        <ListBox.Item
+                          key={option.value}
+                          id={option.value}
+                          textValue={option.label}
+                        >
+                          <Label>{option.label}</Label>
+                          <ListBox.ItemIndicator />
+                        </ListBox.Item>
+                      ))}
+                    </ListBox>
+                  </Select.Popover>
+                  <Description>{t("agendaHelp")}</Description>
+                </Select>
+              ) : null}
+              <div className="grid grid-cols-3 gap-3">
+                <TextField
+                  value={votesFor}
+                  onChange={setVotesFor}
+                  className={["w-full"].filter(Boolean).join(" ")}
+                >
+                  <Label>{t("votesForShort")}</Label>
+                  <Input type="number" min={0} max={1000} />
+                </TextField>
+                <TextField
+                  value={votesAgainst}
+                  onChange={setVotesAgainst}
+                  className={["w-full"].filter(Boolean).join(" ")}
+                >
+                  <Label>{t("votesAgainstShort")}</Label>
+                  <Input type="number" min={0} max={1000} />
+                </TextField>
+                <TextField
+                  value={votesAbstain}
+                  onChange={setVotesAbstain}
+                  className={["w-full"].filter(Boolean).join(" ")}
+                >
+                  <Label>{t("votesAbstainShort")}</Label>
+                  <Input type="number" min={0} max={1000} />
+                </TextField>
+              </div>
+              {error ? <p className="text-sm text-danger">{error}</p> : null}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button
+                onPress={() => onOpenChange(false)}
+                variant={actionVariant("default", "light")}
+              >
+                {tCommon("cancel")}
+              </Button>
+              <Button
+                onPress={submit}
+                isDisabled={text.trim().length < 3}
+                variant={actionVariant("primary", "solid")}
+                isPending={busy}
+              >
+                {busy ? <Spinner size="sm" color="current" /> : null}
+                {tCommon("save")}
+              </Button>
+            </Modal.Footer>
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 }

@@ -1,6 +1,9 @@
 "use client";
+import { statusStyle } from "@/shared/components/ui/status-appearance";
+import { toast, Button, Spinner, Chip } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
+import { statusTone } from "@/shared/components/ui/status-appearance";
 
-import { addToast, Button, Chip } from "@heroui/react";
 import { Copy, PackagePlus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useFormatter, useTranslations } from "next-intl";
@@ -23,10 +26,32 @@ export type PackageRow = {
   installCommand: string | null;
 };
 
-const KNOWN_ERRORS = ["format", "manifest", "key", "version", "category", "files", "moduleConfig", "appVersion", "untrusted", "signature", "publisher", "categoryNotAllowed", "unreadable"];
+const KNOWN_ERRORS = [
+  "format",
+  "manifest",
+  "key",
+  "version",
+  "category",
+  "files",
+  "moduleConfig",
+  "appVersion",
+  "untrusted",
+  "signature",
+  "publisher",
+  "categoryNotAllowed",
+  "unreadable",
+];
 
 /** Paket yükleme/doğrulama sonuçları; geçerli paket için kurulum komutu. */
-export function PackagesPanel({ rows, canUpload, canDelete }: { rows: PackageRow[]; canUpload: boolean; canDelete: boolean }) {
+export function PackagesPanel({
+  rows,
+  canUpload,
+  canDelete,
+}: {
+  rows: PackageRow[];
+  canUpload: boolean;
+  canDelete: boolean;
+}) {
   const t = useTranslations("system.packages");
   const format = useFormatter();
   const router = useRouter();
@@ -37,20 +62,32 @@ export function PackagesPanel({ rows, canUpload, canDelete }: { rows: PackageRow
     setBusy(true);
     const body = new FormData();
     body.append("file", file);
-    const response = await fetch("/api/system/packages", { method: "POST", body });
-    const json = (await response.json()) as { ok: boolean; error?: string; verified?: boolean };
+    const response = await fetch("/api/system/packages", {
+      method: "POST",
+      body,
+    });
+    const json = (await response.json()) as {
+      ok: boolean;
+      error?: string;
+      verified?: boolean;
+    };
     setBusy(false);
-    if (!json.ok) return void addToast({ title: json.error ?? t("errors.file"), color: "danger" });
-    addToast({ title: json.verified ? t("verifiedToast") : t("rejectedToast"), color: json.verified ? "success" : "danger" });
+    if (!json.ok)
+      return void toast(json.error ?? t("errors.file"), { variant: "danger" });
+    toast(json.verified ? t("verifiedToast") : t("rejectedToast"), {
+      variant: statusTone(json.verified ? "success" : "danger"),
+    });
     router.refresh();
   };
 
   const errorText = (code: string) => {
     const [kind, detail] = code.split(":");
-    if (KNOWN_ERRORS.includes(kind) && !detail) return t(`errorCodes.${kind}` as never);
+    if (KNOWN_ERRORS.includes(kind) && !detail)
+      return t(`errorCodes.${kind}` as never);
     if (kind === "path") return t("errorCodes.path", { file: detail ?? "" });
     if (kind === "hash") return t("errorCodes.hash", { file: detail ?? "" });
-    if (kind === "mismatch") return t("errorCodes.mismatch", { file: detail ?? "" });
+    if (kind === "mismatch")
+      return t("errorCodes.mismatch", { file: detail ?? "" });
     return code;
   };
 
@@ -58,7 +95,13 @@ export function PackagesPanel({ rows, canUpload, canDelete }: { rows: PackageRow
     <div className="flex flex-col gap-4">
       {canUpload ? (
         <div>
-          <Button color="primary" startContent={<PackagePlus size={16} />} isLoading={busy} onPress={() => input.current?.click()}>
+          <Button
+            onPress={() => input.current?.click()}
+            variant={actionVariant("primary", "solid")}
+            isPending={busy}
+          >
+            {busy ? <Spinner size="sm" color="current" /> : null}
+            {<PackagePlus size={16} />}
             {t("upload")}
           </Button>
           <input
@@ -75,42 +118,71 @@ export function PackagesPanel({ rows, canUpload, canDelete }: { rows: PackageRow
         </div>
       ) : null}
       {rows.length === 0 ? (
-        <p className="text-small text-default-500">{t("empty")}</p>
+        <p className="text-sm text-ink-500">{t("empty")}</p>
       ) : (
         <ul className="flex flex-col gap-3">
           {rows.map((row) => {
-            const installed = row.installedVersion !== null && row.installedVersion === row.version;
+            const installed =
+              row.installedVersion !== null &&
+              row.installedVersion === row.version;
             return (
-              <li key={row.id} className="rounded-large border border-default-200 bg-content1 p-4">
+              <li
+                key={row.id}
+                className="rounded-xl border border-ink-200 bg-surface p-4"
+              >
                 <div className="flex flex-wrap items-center gap-2">
                   <span className="font-medium">{row.name}</span>
-                  <span className="font-mono text-tiny text-default-500">
+                  <span className="font-mono text-xs text-ink-500">
                     {row.moduleKey} v{row.version}
                   </span>
-                  <Chip size="sm" variant="flat" color={row.verified ? "success" : "danger"}>
+                  <Chip
+                    size="sm"
+                    color={statusTone(row.verified ? "success" : "danger")}
+                    variant={"soft"}
+                    style={statusStyle(row.verified ? "success" : "danger")}
+                  >
                     {row.verified ? t("verified") : t("rejected")}
                   </Chip>
                   {installed ? (
-                    <Chip size="sm" variant="flat" color="primary">
+                    <Chip size="sm" color={"accent"} variant={"soft"}>
                       {t("installed")}
                     </Chip>
                   ) : row.installedVersion ? (
-                    <span className="text-tiny text-default-500">{t("installedOther", { version: row.installedVersion })}</span>
+                    <span className="text-xs text-ink-500">
+                      {t("installedOther", { version: row.installedVersion })}
+                    </span>
                   ) : null}
                   {canDelete ? (
-                    <Button size="sm" variant="light" color="danger" isIconOnly className="ml-auto" aria-label={t("delete")} onPress={async () => {
-                      const response = await deleteModulePackageAction({ id: row.id });
-                      if (response.ok) router.refresh();
-                    }}>
+                    <Button
+                      size="sm"
+                      isIconOnly
+                      className="ml-auto"
+                      aria-label={t("delete")}
+                      onPress={async () => {
+                        const response = await deleteModulePackageAction({
+                          id: row.id,
+                        });
+                        if (response.ok) router.refresh();
+                      }}
+                      variant={actionVariant("danger", "light")}
+                    >
                       <Trash2 size={16} />
                     </Button>
                   ) : null}
                 </div>
-                <div className="mt-1 text-tiny text-default-500">
-                  {t("meta", { publisher: row.publisher, category: row.category, date: format.dateTime(new Date(row.createdAt), { dateStyle: "medium", timeStyle: "short" }), by: row.uploadedByLabel })}
+                <div className="mt-1 text-xs text-ink-500">
+                  {t("meta", {
+                    publisher: row.publisher,
+                    category: row.category,
+                    date: format.dateTime(new Date(row.createdAt), {
+                      dateStyle: "medium",
+                      timeStyle: "short",
+                    }),
+                    by: row.uploadedByLabel,
+                  })}
                 </div>
                 {row.errors.length ? (
-                  <ul className="mt-2 list-disc pl-5 text-small text-danger">
+                  <ul className="mt-2 list-disc pl-5 text-sm text-danger">
                     {row.errors.map((code) => (
                       <li key={code}>{errorText(code)}</li>
                     ))}
@@ -118,10 +190,24 @@ export function PackagesPanel({ rows, canUpload, canDelete }: { rows: PackageRow
                 ) : null}
                 {row.verified && row.installCommand && !installed ? (
                   <div className="mt-3 flex flex-col gap-1">
-                    <span className="text-tiny text-default-500">{t("installHelp")}</span>
+                    <span className="text-xs text-ink-500">
+                      {t("installHelp")}
+                    </span>
                     <div className="flex items-center gap-2">
-                      <code className="flex-1 overflow-x-auto rounded-medium bg-default-100 px-2 py-1 text-tiny">{row.installCommand}</code>
-                      <Button size="sm" variant="flat" isIconOnly aria-label={t("copy")} onPress={() => void navigator.clipboard?.writeText(row.installCommand ?? "")}>
+                      <code className="flex-1 overflow-x-auto rounded-lg bg-ink-100 px-2 py-1 text-xs">
+                        {row.installCommand}
+                      </code>
+                      <Button
+                        size="sm"
+                        isIconOnly
+                        aria-label={t("copy")}
+                        onPress={() =>
+                          void navigator.clipboard?.writeText(
+                            row.installCommand ?? "",
+                          )
+                        }
+                        variant={actionVariant("default", "flat")}
+                      >
                         <Copy size={14} />
                       </Button>
                     </div>

@@ -1,21 +1,10 @@
-import type { Button } from "@heroui-v3/react";
+import type { Button } from "@heroui/react";
 
 /** Existing application action intent, independent of the component library's palette API. */
 export type ActionTone =
-  | "default"
-  | "primary"
-  | "secondary"
-  | "success"
-  | "warning"
-  | "danger";
+  "default" | "primary" | "secondary" | "success" | "warning" | "danger";
 export type ActionPresentation =
-  | "solid"
-  | "bordered"
-  | "light"
-  | "flat"
-  | "faded"
-  | "ghost"
-  | "shadow";
+  "solid" | "bordered" | "light" | "flat" | "faded" | "ghost" | "shadow";
 export function actionVariant(
   tone: ActionTone,
   presentation: ActionPresentation,

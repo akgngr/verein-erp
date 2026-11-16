@@ -1,6 +1,6 @@
 "use client";
+import { toast, Link } from "@heroui/react";
 
-import { Link, addToast } from "@heroui/react";
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -73,10 +73,15 @@ export function MemberTable({
     if (!deleting) return;
     const result = await deleteMemberAction({ id: deleting.id });
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
-    addToast({ title: t("deleteConfirm.successToast", { membershipNumber: deleting.membershipNumber }), color: "success" });
+    toast(
+      t("deleteConfirm.successToast", {
+        membershipNumber: deleting.membershipNumber,
+      }),
+      { variant: "success" },
+    );
     setDeleting(null);
     router.refresh();
   };
@@ -88,7 +93,10 @@ export function MemberTable({
       sortable: true,
       width: 140,
       render: (row) => (
-        <Link href={`/uyeler/${row.id}`} size="sm" className="font-medium">
+        <Link
+          href={`/uyeler/${row.id}`}
+          className={["font-medium", "text-sm"].filter(Boolean).join(" ")}
+        >
           {row.membershipNumber}
         </Link>
       ),
@@ -99,7 +107,10 @@ export function MemberTable({
       sortable: true,
       width: 220,
       render: (row) => (
-        <Link href={`/uyeler/${row.id}`} size="sm" className="text-foreground">
+        <Link
+          href={`/uyeler/${row.id}`}
+          className={["text-foreground", "text-sm"].filter(Boolean).join(" ")}
+        >
           {row.lastName}, {row.firstName}
         </Link>
       ),
@@ -140,7 +151,12 @@ export function MemberTable({
   ];
 
   const rowActions = (row: MemberRow): DataTableRowAction[] => [
-    { key: "view", label: t("actions.view"), icon: <Eye className="h-4 w-4" />, href: `/uyeler/${row.id}` },
+    {
+      key: "view",
+      label: t("actions.view"),
+      icon: <Eye className="h-4 w-4" />,
+      href: `/uyeler/${row.id}`,
+    },
     ...(canUpdate
       ? [
           {
@@ -190,7 +206,9 @@ export function MemberTable({
         isOpen={deleting !== null}
         onOpenChange={(open) => !open && setDeleting(null)}
         title={t("deleteConfirm.title")}
-        message={t("deleteConfirm.message", { membershipNumber: deleting?.membershipNumber ?? "" })}
+        message={t("deleteConfirm.message", {
+          membershipNumber: deleting?.membershipNumber ?? "",
+        })}
         confirmLabel={t("deleteConfirm.confirm")}
         confirmColor="danger"
         onConfirm={confirmDelete}

@@ -1,8 +1,9 @@
 "use client";
+import { Link as ActionLink, buttonVariants, Button } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
 
-import { Button } from "@heroui/react";
 import { Ban, Pencil } from "lucide-react";
 import { useState } from "react";
 
@@ -29,25 +30,24 @@ export function BookingDetailActions({
     <>
       <div className="flex flex-wrap items-center gap-2">
         {canUpdate ? (
-          <Button
-            as="a"
+          <ActionLink
             href={`/muhasebe/${bookingId}?duzenle`}
-            size="sm"
-            color="primary"
-            variant="solid"
-            startContent={<Pencil className="h-4 w-4" aria-hidden />}
+            className={buttonVariants({
+              variant: actionVariant("primary", "solid"),
+              size: "sm",
+            })}
           >
+            {<Pencil className="h-4 w-4" aria-hidden />}
             {tCommon("edit")}
-          </Button>
+          </ActionLink>
         ) : null}
         {canDelete ? (
           <Button
             size="sm"
-            variant="flat"
-            color="danger"
-            startContent={<Ban className="h-4 w-4" aria-hidden />}
             onPress={() => setReverseOpen(true)}
+            variant={actionVariant("danger", "flat")}
           >
+            {<Ban className="h-4 w-4" aria-hidden />}
             İptal et (Storno)
           </Button>
         ) : null}

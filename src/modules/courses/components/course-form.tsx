@@ -1,14 +1,20 @@
 "use client";
+import { toast, Button, Checkbox, Label } from "@heroui/react";
+
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addToast, Button, Checkbox } from "@heroui/react";
+
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Controller, useForm, useWatch } from "react-hook-form";
 
 import { applyActionResult } from "@/shared/components/forms/action-result";
-import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
+import {
+  FormSurface,
+  useFormDrawerClose,
+} from "@/shared/components/forms/form-drawer";
 import { FormDatePicker } from "@/shared/components/forms/form-date-picker";
 import { FormErrorSummary } from "@/shared/components/forms/form-error-summary";
 import { FormInput } from "@/shared/components/forms/form-input";
@@ -16,21 +22,42 @@ import { FormSelect } from "@/shared/components/forms/form-select";
 import { FormTextarea } from "@/shared/components/forms/form-textarea";
 import { SubmitButton } from "@/shared/components/forms/submit-button";
 
-import { createCourseAction, updateCourseAction } from "../actions/course-actions";
-import { COURSE_FEE_TYPE_VALUES, COURSE_LEVEL_VALUES, COURSE_KIND_VALUES, COURSE_STATUS_VALUES } from "../constants";
+import {
+  createCourseAction,
+  updateCourseAction,
+} from "../actions/course-actions";
+import {
+  COURSE_FEE_TYPE_VALUES,
+  COURSE_LEVEL_VALUES,
+  COURSE_KIND_VALUES,
+  COURSE_STATUS_VALUES,
+} from "../constants";
 import { courseSchema, type CourseInput } from "../schemas/course";
 import type { CourseDetail } from "../types";
 import { centsToInput, formatDateOnly } from "../utils";
 
 /** Kurs formu (sağ çekmece): genel bilgiler, zaman, ücret modeli ve öğretmenler. */
-export function CourseForm({ course, teacherOptions }: { course?: CourseDetail; teacherOptions: { id: string; label: string }[] }) {
+export function CourseForm({
+  course,
+  teacherOptions,
+}: {
+  course?: CourseDetail;
+  teacherOptions: { id: string; label: string }[];
+}) {
   const t = useTranslations("courses.form");
   const tEnum = useTranslations("courses.enums");
   const tCommon = useTranslations("common");
   // Eski serbest metin seviyeler seçenek olarak korunur.
-  const legacyLevel = course?.level && !(COURSE_LEVEL_VALUES as readonly string[]).includes(course.level) ? course.level : null;
+  const legacyLevel =
+    course?.level &&
+    !(COURSE_LEVEL_VALUES as readonly string[]).includes(course.level)
+      ? course.level
+      : null;
   const levelOptions = [
-    ...COURSE_LEVEL_VALUES.map((value) => ({ value, label: tEnum(`level.${value}`) })),
+    ...COURSE_LEVEL_VALUES.map((value) => ({
+      value,
+      label: tEnum(`level.${value}`),
+    })),
     ...(legacyLevel ? [{ value: legacyLevel, label: legacyLevel }] : []),
   ];
   const router = useRouter();
@@ -51,7 +78,9 @@ export function CourseForm({ course, teacherOptions }: { course?: CourseDetail; 
       capacity: course?.capacity ? String(course.capacity) : "",
       feeType: course?.feeType ?? "FREE",
       fee: course && course.feeCents > 0 ? centsToInput(course.feeCents) : "",
-      installmentCount: course?.installmentCount ? String(course.installmentCount) : "",
+      installmentCount: course?.installmentCount
+        ? String(course.installmentCount)
+        : "",
       status: course?.status ?? "PLANNED",
       teacherIds: course?.teacherIds ?? [],
     },
@@ -64,14 +93,16 @@ export function CourseForm({ course, teacherOptions }: { course?: CourseDetail; 
     setFormError(null);
     if (course) {
       const result = await updateCourseAction({ id: course.id, ...values });
-      if (!result.ok) return setFormError(applyActionResult(result, form.setError));
-      addToast({ title: t("updated"), color: "success" });
+      if (!result.ok)
+        return setFormError(applyActionResult(result, form.setError));
+      toast(t("updated"), { variant: "success" });
       close();
       return;
     }
     const result = await createCourseAction(values);
-    if (!result.ok) return setFormError(applyActionResult(result, form.setError));
-    addToast({ title: t("created"), color: "success" });
+    if (!result.ok)
+      return setFormError(applyActionResult(result, form.setError));
+    toast(t("created"), { variant: "success" });
     router.push(`/kurslar/${result.data.id}`);
   });
 
@@ -79,34 +110,109 @@ export function CourseForm({ course, teacherOptions }: { course?: CourseDetail; 
     <FormSurface className="max-w-2xl">
       <form className="flex flex-col gap-5" onSubmit={onSubmit} noValidate>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <FormSelect name="kind" label={t("kind")} control={form.control} options={COURSE_KIND_VALUES.map((value) => ({ value, label: tEnum(`kind.${value}`) }))} />
-          <FormSelect name="status" label={t("status")} control={form.control} options={COURSE_STATUS_VALUES.map((value) => ({ value, label: tEnum(`status.${value}`) }))} />
+          <FormSelect
+            name="kind"
+            label={t("kind")}
+            control={form.control}
+            options={COURSE_KIND_VALUES.map((value) => ({
+              value,
+              label: tEnum(`kind.${value}`),
+            }))}
+          />
+          <FormSelect
+            name="status"
+            label={t("status")}
+            control={form.control}
+            options={COURSE_STATUS_VALUES.map((value) => ({
+              value,
+              label: tEnum(`status.${value}`),
+            }))}
+          />
         </div>
-        <FormInput name="title" label={t("title")} control={form.control} isRequired />
+        <FormInput
+          name="title"
+          label={t("title")}
+          control={form.control}
+          isRequired
+        />
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-          <FormInput name="subject" label={t("subject")} control={form.control} />
-          <FormSelect name="level" label={t("level")} control={form.control} options={levelOptions} />
-          <FormInput name="location" label={t("location")} control={form.control} />
-          <FormInput name="scheduleNote" label={t("scheduleNote")} control={form.control} placeholder={t("scheduleNotePlaceholder")} />
-          <FormDatePicker name="startDate" label={t("startDate")} control={form.control} isRequired />
-          <FormDatePicker name="endDate" label={t("endDate")} control={form.control} />
-          <FormInput name="capacity" label={t("capacity")} control={form.control} type="number" />
+          <FormInput
+            name="subject"
+            label={t("subject")}
+            control={form.control}
+          />
+          <FormSelect
+            name="level"
+            label={t("level")}
+            control={form.control}
+            options={levelOptions}
+          />
+          <FormInput
+            name="location"
+            label={t("location")}
+            control={form.control}
+          />
+          <FormInput
+            name="scheduleNote"
+            label={t("scheduleNote")}
+            control={form.control}
+            placeholder={t("scheduleNotePlaceholder")}
+          />
+          <FormDatePicker
+            name="startDate"
+            label={t("startDate")}
+            control={form.control}
+            isRequired
+          />
+          <FormDatePicker
+            name="endDate"
+            label={t("endDate")}
+            control={form.control}
+          />
+          <FormInput
+            name="capacity"
+            label={t("capacity")}
+            control={form.control}
+            type="number"
+          />
         </div>
-        <section className="flex flex-col gap-3 rounded-medium border border-default-200 p-3">
-          <p className="text-small font-medium">{t("feeTitle")}</p>
-          <FormSelect name="feeType" label={t("feeType")} control={form.control} options={COURSE_FEE_TYPE_VALUES.map((value) => ({ value, label: tEnum(`feeType.${value}`) }))} />
+        <section className="flex flex-col gap-3 rounded-lg border border-ink-200 p-3">
+          <p className="text-sm font-medium">{t("feeTitle")}</p>
+          <FormSelect
+            name="feeType"
+            label={t("feeType")}
+            control={form.control}
+            options={COURSE_FEE_TYPE_VALUES.map((value) => ({
+              value,
+              label: tEnum(`feeType.${value}`),
+            }))}
+          />
           {feeType !== "FREE" ? (
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
-              <FormInput name="fee" label={feeType === "MONTHLY" ? t("feeMonthly") : t("feeTotal")} control={form.control} isRequired description={t("feeHelp")} />
-              {feeType === "INSTALLMENTS" ? <FormInput name="installmentCount" label={t("installmentCount")} control={form.control} type="number" isRequired /> : null}
+              <FormInput
+                name="fee"
+                label={feeType === "MONTHLY" ? t("feeMonthly") : t("feeTotal")}
+                control={form.control}
+                isRequired
+                description={t("feeHelp")}
+              />
+              {feeType === "INSTALLMENTS" ? (
+                <FormInput
+                  name="installmentCount"
+                  label={t("installmentCount")}
+                  control={form.control}
+                  type="number"
+                  isRequired
+                />
+              ) : null}
             </div>
           ) : null}
-          <p className="text-tiny text-default-500">{t(`feeExplain.${feeType}`)}</p>
+          <p className="text-xs text-ink-500">{t(`feeExplain.${feeType}`)}</p>
         </section>
         <section className="flex flex-col gap-2">
-          <p className="text-small font-medium">{t("teachers")}</p>
+          <p className="text-sm font-medium">{t("teachers")}</p>
           {teacherOptions.length === 0 ? (
-            <p className="text-tiny text-default-500">{t("noTeachers")}</p>
+            <p className="text-xs text-ink-500">{t("noTeachers")}</p>
           ) : (
             <Controller
               control={form.control}
@@ -116,11 +222,21 @@ export function CourseForm({ course, teacherOptions }: { course?: CourseDetail; 
                   {teacherOptions.map((option) => (
                     <Checkbox
                       key={option.id}
-                      size="sm"
                       isSelected={field.value.includes(option.id)}
-                      onValueChange={(checked) => field.onChange(checked ? [...field.value, option.id] : field.value.filter((id) => id !== option.id))}
+                      onChange={(checked) =>
+                        field.onChange(
+                          checked
+                            ? [...field.value, option.id]
+                            : field.value.filter((id) => id !== option.id),
+                        )
+                      }
                     >
-                      {option.label}
+                      <Checkbox.Content>
+                        <Checkbox.Control className="size-4">
+                          <Checkbox.Indicator />
+                        </Checkbox.Control>
+                        <Label>{option.label}</Label>
+                      </Checkbox.Content>
                     </Checkbox>
                   ))}
                 </div>
@@ -128,11 +244,17 @@ export function CourseForm({ course, teacherOptions }: { course?: CourseDetail; 
             />
           )}
         </section>
-        <FormTextarea name="description" label={t("description")} control={form.control} />
+        <FormTextarea
+          name="description"
+          label={t("description")}
+          control={form.control}
+        />
         <FormErrorSummary message={formError} />
         <div className="flex items-center gap-2">
-          <SubmitButton isSubmitting={form.formState.isSubmitting}>{tCommon("save")}</SubmitButton>
-          <Button variant="light" onPress={close}>
+          <SubmitButton isSubmitting={form.formState.isSubmitting}>
+            {tCommon("save")}
+          </SubmitButton>
+          <Button onPress={close} variant={actionVariant("default", "light")}>
             {tCommon("cancel")}
           </Button>
         </div>

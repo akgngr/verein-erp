@@ -1,12 +1,16 @@
 "use client";
+import { toast, Button, Spinner } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
-import { addToast, Button } from "@heroui/react";
 import { RotateCcw, XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useTransition } from "react";
 
-import { cancelExecutionAction, retryExecutionAction } from "../actions/automation-actions";
+import {
+  cancelExecutionAction,
+  retryExecutionAction,
+} from "../actions/automation-actions";
 
 type Props = { id: string; status: string };
 
@@ -19,24 +23,38 @@ export function ExecutionActions({ id, status }: Props) {
   const retryable = status === "FAILED" || status === "CANCELLED";
   if (!cancellable && !retryable) return null;
 
-  const run = (action: typeof cancelExecutionAction, success: string) => startTransition(async () => {
-    const response = await action({ id });
-    if (!response.ok) return void addToast({ title: response.error, color: "danger" });
-    addToast({ title: success, color: "success" });
-    router.refresh();
-  });
+  const run = (action: typeof cancelExecutionAction, success: string) =>
+    startTransition(async () => {
+      const response = await action({ id });
+      if (!response.ok)
+        return void toast(response.error, { variant: "danger" });
+      toast(success, { variant: "success" });
+      router.refresh();
+    });
 
   return (
     <div className="mt-3 flex gap-2">
       {cancellable ? (
-        <Button size="sm" variant="flat" color="danger" isLoading={pending} startContent={<XCircle className="h-4 w-4" />}
-          onPress={() => run(cancelExecutionAction, t("cancelled"))}>
+        <Button
+          size="sm"
+          onPress={() => run(cancelExecutionAction, t("cancelled"))}
+          variant={actionVariant("danger", "flat")}
+          isPending={pending}
+        >
+          {pending ? <Spinner size="sm" color="current" /> : null}
+          {<XCircle className="h-4 w-4" />}
           {t("cancel")}
         </Button>
       ) : null}
       {retryable ? (
-        <Button size="sm" variant="flat" color="primary" isLoading={pending} startContent={<RotateCcw className="h-4 w-4" />}
-          onPress={() => run(retryExecutionAction, t("retried"))}>
+        <Button
+          size="sm"
+          onPress={() => run(retryExecutionAction, t("retried"))}
+          variant={actionVariant("primary", "flat")}
+          isPending={pending}
+        >
+          {pending ? <Spinner size="sm" color="current" /> : null}
+          {<RotateCcw className="h-4 w-4" />}
           {t("retry")}
         </Button>
       ) : null}

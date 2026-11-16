@@ -13,7 +13,7 @@ Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gön
 |---|---|
 | Anahtar | `mail` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.4.0 |
+| Sürüm | 1.4.1 |
 | Sayfalar | `/mail`, `/mail/gelen-kutusu`, `/mail/kayitlar` |
 
 ## Diğer modüllere erişim
@@ -35,6 +35,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | E-posta altyapısı | görüntüleme, oluşturma, düzenleme | — | — | — | görüntüleme | — | — |
 
 ## Sürüm notları
+
+### 1.4.1 — HeroUI v3 arayüz geçişi
+
+_2026-11-16_
+
+- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
 ### 1.4.0 — İş akışı alanları ve değişkenler
 
@@ -78,10 +84,4 @@ _2026-11-03_
 
 - **İyileştirme:** Otomasyon izleme ekranı için kampanyaya bağlı başarısız e-posta kayıtlarını sunucu API'si üzerinden sunar.
 
-### 1.2.1 — Worker için güvenli e-posta API'si
-
-_2026-11-03_
-
-- **Düzeltme:** Arka plan worker'larının Next.js arayüz ve action bağımlılıklarını yüklemeden e-posta gönderebilmesi için dar kapsamlı, server-only automation giriş noktası eklendi.
-
-Daha eski 3 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/mail/releases.json)
+Daha eski 4 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/mail/releases.json)

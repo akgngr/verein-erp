@@ -1,8 +1,13 @@
 "use client";
+import { toast, Button } from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
-import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
+import {
+  FormSurface,
+  useFormDrawerClose,
+} from "@/shared/components/forms/form-drawer";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addToast, Button } from "@heroui/react";
+
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -31,7 +36,9 @@ import {
 /** Yalnızca atanabilir roller (modülü kullanılabilir olanlar); mevcut rol listede değilse eklenir. */
 function useRoleSelectOptions(current?: string) {
   const { roles, label } = useRoles();
-  return roles.filter((role) => role.available || role.key === current).map((role) => ({ value: role.key, label: label(role.key) }));
+  return roles
+    .filter((role) => role.available || role.key === current)
+    .map((role) => ({ value: role.key, label: label(role.key) }));
 }
 
 /** Yeni kullanıcı formu (11.1). */
@@ -56,7 +63,7 @@ export function UserCreateForm() {
       setFormError(applyActionResult(result, form.setError));
       return;
     }
-    addToast({ title: t("created"), color: "success" });
+    toast(t("created"), { variant: "success" });
     if (closeDrawer) {
       closeDrawer();
     } else {
@@ -67,7 +74,12 @@ export function UserCreateForm() {
 
   return (
     <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
-      <FormInput name="name" label={t("name")} control={form.control} isRequired />
+      <FormInput
+        name="name"
+        label={t("name")}
+        control={form.control}
+        isRequired
+      />
       <FormInput
         name="email"
         label={t("email")}
@@ -76,7 +88,13 @@ export function UserCreateForm() {
         isRequired
         placeholder={tCommon("emailPlaceholder")}
       />
-      <FormSelect name="role" label={t("role")} control={form.control} options={roleOptions} isRequired />
+      <FormSelect
+        name="role"
+        label={t("role")}
+        control={form.control}
+        options={roleOptions}
+        isRequired
+      />
       <RolePermissionsPreview role={selectedRole} />
       <FormPasswordInput
         name="password"
@@ -88,8 +106,15 @@ export function UserCreateForm() {
       />
       <FormErrorSummary message={formError} />
       <div className="flex items-center gap-2">
-        <SubmitButton isSubmitting={form.formState.isSubmitting}>{tCommon("create")}</SubmitButton>
-        <Button variant="light" onPress={() => (closeDrawer ? closeDrawer() : router.push("/ayarlar/kullanicilar"))}>
+        <SubmitButton isSubmitting={form.formState.isSubmitting}>
+          {tCommon("create")}
+        </SubmitButton>
+        <Button
+          onPress={() =>
+            closeDrawer ? closeDrawer() : router.push("/ayarlar/kullanicilar")
+          }
+          variant={actionVariant("default", "light")}
+        >
           {tCommon("cancel")}
         </Button>
       </div>
@@ -115,7 +140,12 @@ export function UserEditForm({ user }: { user: UserEditValues }) {
   const [formError, setFormError] = useState<string | null>(null);
   const form = useForm<UserUpdateInput>({
     resolver: zodResolver(userUpdateSchema),
-    defaultValues: { name: user.name, email: user.email, role: user.role, isActive: user.isActive },
+    defaultValues: {
+      name: user.name,
+      email: user.email,
+      role: user.role,
+      isActive: user.isActive,
+    },
   });
 
   const selectedRole = (form.watch("role") as Role) || user.role;
@@ -127,7 +157,7 @@ export function UserEditForm({ user }: { user: UserEditValues }) {
       setFormError(applyActionResult(result, form.setError));
       return;
     }
-    addToast({ title: t("updated"), color: "success" });
+    toast(t("updated"), { variant: "success" });
     if (closeDrawer) {
       closeDrawer();
     } else {
@@ -138,9 +168,26 @@ export function UserEditForm({ user }: { user: UserEditValues }) {
 
   return (
     <form className="flex flex-col gap-4" onSubmit={onSubmit} noValidate>
-      <FormInput name="name" label={t("name")} control={form.control} isRequired />
-      <FormInput name="email" label={t("email")} control={form.control} type="email" isRequired />
-      <FormSelect name="role" label={t("role")} control={form.control} options={roleOptions} isRequired />
+      <FormInput
+        name="name"
+        label={t("name")}
+        control={form.control}
+        isRequired
+      />
+      <FormInput
+        name="email"
+        label={t("email")}
+        control={form.control}
+        type="email"
+        isRequired
+      />
+      <FormSelect
+        name="role"
+        label={t("role")}
+        control={form.control}
+        options={roleOptions}
+        isRequired
+      />
       <RolePermissionsPreview role={selectedRole} />
       <FormSwitch
         name="isActive"
@@ -150,8 +197,15 @@ export function UserEditForm({ user }: { user: UserEditValues }) {
       />
       <FormErrorSummary message={formError} />
       <div className="flex items-center gap-2">
-        <SubmitButton isSubmitting={form.formState.isSubmitting}>{tCommon("save")}</SubmitButton>
-        <Button variant="light" onPress={() => (closeDrawer ? closeDrawer() : router.push("/ayarlar/kullanicilar"))}>
+        <SubmitButton isSubmitting={form.formState.isSubmitting}>
+          {tCommon("save")}
+        </SubmitButton>
+        <Button
+          onPress={() =>
+            closeDrawer ? closeDrawer() : router.push("/ayarlar/kullanicilar")
+          }
+          variant={actionVariant("default", "light")}
+        >
           {tCommon("cancel")}
         </Button>
       </div>

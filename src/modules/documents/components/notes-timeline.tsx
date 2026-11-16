@@ -1,8 +1,8 @@
 "use client";
+import { toast, TextField, Label, TextArea, Description } from "@heroui/react";
 
 import { useTranslations } from "next-intl";
 
-import { Textarea, addToast } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -31,19 +31,23 @@ export function NotesTimeline({
     <div className="flex flex-col gap-4">
       {canUpdate ? <NoteForm documentId={documentId} /> : null}
       {notes.length === 0 ? (
-        <p className="text-small text-default-500">{t("empty")}</p>
+        <p className="text-sm text-ink-500">{t("empty")}</p>
       ) : (
         <ol className="flex flex-col gap-3">
           {notes.map((note) => (
             <li
               key={note.id}
-              className="rounded-medium border border-default-200 bg-content1 px-4 py-3"
+              className="rounded-lg border border-ink-200 bg-surface px-4 py-3"
             >
-              <p className="text-tiny text-default-500">
-                <span className="font-medium text-default-700">{note.authorLabel}</span> —{" "}
-                {formatDateTime(note.createdAt)}
+              <p className="text-xs text-ink-500">
+                <span className="font-medium text-ink-700">
+                  {note.authorLabel}
+                </span>{" "}
+                — {formatDateTime(note.createdAt)}
               </p>
-              <p className="mt-1 whitespace-pre-wrap text-small text-foreground">{note.body}</p>
+              <p className="mt-1 whitespace-pre-wrap text-sm text-foreground">
+                {note.body}
+              </p>
             </li>
           ))}
         </ol>
@@ -70,22 +74,26 @@ function NoteForm({ documentId }: { documentId: string }) {
       return;
     }
     setBody("");
-    addToast({ title: t("addedToast"), color: "success" });
+    toast(t("addedToast"), { variant: "success" });
     router.refresh();
   };
 
   return (
     <form className="flex flex-col gap-2" onSubmit={handleSubmit} noValidate>
-      <Textarea
-        label={t("newNote")}
-        labelPlacement="outside"
-        placeholder={t("notePlaceholder")}
+      <TextField
         value={body}
-        onValueChange={setBody}
-        minRows={3}
-        maxLength={2000}
-        description={`${body.length}/2000`}
-      />
+        onChange={setBody}
+        className={["w-full"].filter(Boolean).join(" ")}
+      >
+        <Label>{t("newNote")}</Label>
+        <TextArea
+          placeholder={t("notePlaceholder")}
+          maxLength={2000}
+          rows={3}
+          className={["[field-sizing:content]"].filter(Boolean).join(" ")}
+        />
+        <Description>{`${body.length}/2000`}</Description>
+      </TextField>
       <FormErrorSummary message={error} />
       <div>
         <SubmitButton isSubmitting={isSubmitting}>{t("add")}</SubmitButton>

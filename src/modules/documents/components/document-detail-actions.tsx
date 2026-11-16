@@ -1,8 +1,14 @@
 "use client";
+import {
+  toast,
+  Link as ActionLink,
+  buttonVariants,
+  Button,
+} from "@heroui/react";
+import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
 
-import { Button, addToast } from "@heroui/react";
 import { Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -36,10 +42,10 @@ export function DocumentDetailActions({
   const confirmDelete = async () => {
     const result = await deleteDocumentAction({ id: documentId });
     if (!result.ok) {
-      addToast({ title: result.error, color: "danger" });
+      toast(result.error, { variant: "danger" });
       return;
     }
-    addToast({ title: t("deletedToast", { registryNumber }), color: "success" });
+    toast(t("deletedToast", { registryNumber }), { variant: "success" });
     router.push("/evrak");
     router.refresh();
   };
@@ -50,16 +56,16 @@ export function DocumentDetailActions({
     <>
       <div className="flex flex-wrap items-center gap-2">
         {canUpdate ? (
-          <Button
-            as="a"
+          <ActionLink
             href={`/evrak/${documentId}?duzenle`}
-            size="sm"
-            color="primary"
-            variant="solid"
-            startContent={<Pencil className="h-4 w-4" aria-hidden />}
+            className={buttonVariants({
+              variant: actionVariant("primary", "solid"),
+              size: "sm",
+            })}
           >
+            {<Pencil className="h-4 w-4" aria-hidden />}
             {t("edit")}
-          </Button>
+          </ActionLink>
         ) : null}
         {canUpdate ? (
           <StatusChangeMenu documentId={documentId} current={status as never} />
@@ -67,11 +73,10 @@ export function DocumentDetailActions({
         {canDelete ? (
           <Button
             size="sm"
-            variant="flat"
-            color="danger"
-            startContent={<Trash2 className="h-4 w-4" aria-hidden />}
             onPress={() => setConfirmOpen(true)}
+            variant={actionVariant("danger", "flat")}
           >
+            {<Trash2 className="h-4 w-4" aria-hidden />}
             {t("delete")}
           </Button>
         ) : null}

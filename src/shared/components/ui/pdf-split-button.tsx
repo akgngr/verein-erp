@@ -1,6 +1,6 @@
 "use client";
 
-import { Button, Dropdown, Label, buttonVariants } from "@heroui-v3/react";
+import { Button, Dropdown, Label, buttonVariants } from "@heroui/react";
 import { cn } from "@/shared/utils";
 import { ChevronDown, FileText } from "lucide-react";
 import { useTranslations } from "next-intl";
