@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.22.11",
+      "date": "2026-11-16",
+      "title": {
+        "tr": "Yaklaşan vergi tarihi kontrol önerisi",
+        "de": "Hinweis auf anstehende Steuerfristen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Muhasebe paneli mevcut vergi ayarlarından 45 gün içindeki yaklaşan UStVA/yıllık beyan tarihini salt okunur öneri olarak gösterir; otomatik beyan veya işlem başlatılmaz.",
+          "de": "Die Buchhaltungsübersicht zeigt aus den bestehenden Steuereinstellungen die nächste Frist innerhalb von 45 Tagen als schreibgeschützten Hinweis; keine automatische Meldung wird ausgelöst."
+        },
+        {
+          "type": "improvement",
+          "tr": "Uyarı resmi tatiller ve özel süre uzatmalarının mevcut takvim hesabında yer almadığını açıkça belirtir.",
+          "de": "Der Hinweis macht transparent, dass Feiertage und besondere Fristverlängerungen im bestehenden Kalender nicht berücksichtigt werden."
+        }
+      ]
+    },
+    {
       "version": "1.22.10",
       "date": "2026-11-16",
       "title": {
