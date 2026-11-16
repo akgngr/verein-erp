@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "@heroui-v3/styles";
 
 /* HeroUI (v2) eklentisi — Tailwind CSS v4 kurulumu (resmi doküman adımları) */
 @plugin "../heroui.ts";
@@ -57,15 +58,15 @@ html body {
 /* ── Form alanı kenarlıkları ────────────────────────────────────────────────
    KARAR: HeroUI "flat" alanlar odaklanmadan zemin rengiyle neredeyse aynı görünüyordu. Tüm
    input/textarea/tarih/select alanlarına ince bir kenarlık verilir — açık temada orta gri,
-   koyu temada hafif neon cyan. Odakta birincil renk, hatada kırmızı. Global olduğu için
+   koyu temada yumuşak gri-yeşil. Odakta birincil renk, hatada kırmızı. Global olduğu için
    modüllerdeki doğrudan <Input>/<Select> kullanımları da aynı görünümü alır. */
 :root {
   --field-border: #c4c4cc;
-  --field-border-hover: #9f9fa9;
+  --field-border-hover: #a7b1a3;
 }
 .dark {
-  --field-border: rgba(34, 211, 238, 0.42);
-  --field-border-hover: rgba(34, 211, 238, 0.7);
+  --field-border: rgba(180, 201, 185, 0.25);
+  --field-border-hover: rgba(180, 201, 185, 0.5);
 }
 [data-slot="input-wrapper"],
 button[data-slot="trigger"][aria-haspopup="listbox"] {
@@ -90,42 +91,220 @@ button[data-slot="trigger"][aria-haspopup="listbox"][aria-expanded="true"] {
 
 /* Zengin metin belgeleri (Tiptap editörü .word-page ve gösterim .doc-content): Tailwind preflight sıfırlamasına karşı
    Word benzeri temel biçimler. */
-.word-page, .doc-content { overflow-wrap: anywhere; }
-.word-page { min-height: 860px; }
-:is(.word-page, .doc-content) > * + * { margin-top: 0.6em; }
-:is(.word-page, .doc-content) h1 { font-size: 1.6em; font-weight: 700; line-height: 1.25; }
-:is(.word-page, .doc-content) h2 { font-size: 1.3em; font-weight: 700; line-height: 1.3; }
-:is(.word-page, .doc-content) h3 { font-size: 1.1em; font-weight: 600; }
-:is(.word-page, .doc-content) ul { list-style: disc; padding-inline-start: 1.5em; }
-:is(.word-page, .doc-content) ol { list-style: decimal; padding-inline-start: 1.5em; }
-:is(.word-page, .doc-content) blockquote { border-inline-start: 3px solid #d4d4d8; padding-inline-start: 0.9em; color: #52525b; }
-:is(.word-page, .doc-content) hr { border: 0; border-top: 1px solid #d4d4d8; margin: 1em 0; }
-:is(.word-page, .doc-content) a { color: #2563eb; text-decoration: underline; }
-:is(.word-page, .doc-content) mark { background: #fef08a; padding: 0 0.1em; }
-:is(.word-page, .doc-content) table { border-collapse: collapse; width: 100%; table-layout: fixed; }
-:is(.word-page, .doc-content) th, :is(.word-page, .doc-content) td { border: 1px solid #a1a1aa; padding: 0.35em 0.5em; vertical-align: top; }
-:is(.word-page, .doc-content) th { background: #f4f4f5; font-weight: 600; }
-.word-page .selectedCell { background: #dbeafe; }
-.word-page .column-resize-handle { position: absolute; right: -2px; top: 0; bottom: 0; width: 4px; background: #60a5fa; pointer-events: none; }
-.word-page .tableWrapper { overflow-x: auto; }
-.word-page td, .word-page th { position: relative; }
-.word-page p.is-editor-empty:first-child::before { content: attr(data-placeholder); color: #a1a1aa; float: left; height: 0; pointer-events: none; }
+.word-page,
+.doc-content {
+  overflow-wrap: anywhere;
+}
+.word-page {
+  min-height: 860px;
+}
+:is(.word-page, .doc-content) > * + * {
+  margin-top: 0.6em;
+}
+:is(.word-page, .doc-content) h1 {
+  font-size: 1.6em;
+  font-weight: 700;
+  line-height: 1.25;
+}
+:is(.word-page, .doc-content) h2 {
+  font-size: 1.3em;
+  font-weight: 700;
+  line-height: 1.3;
+}
+:is(.word-page, .doc-content) h3 {
+  font-size: 1.1em;
+  font-weight: 600;
+}
+:is(.word-page, .doc-content) ul {
+  list-style: disc;
+  padding-inline-start: 1.5em;
+}
+:is(.word-page, .doc-content) ol {
+  list-style: decimal;
+  padding-inline-start: 1.5em;
+}
+:is(.word-page, .doc-content) blockquote {
+  border-inline-start: 3px solid #d4d4d8;
+  padding-inline-start: 0.9em;
+  color: #52525b;
+}
+:is(.word-page, .doc-content) hr {
+  border: 0;
+  border-top: 1px solid #d4d4d8;
+  margin: 1em 0;
+}
+:is(.word-page, .doc-content) a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+:is(.word-page, .doc-content) mark {
+  background: #fef08a;
+  padding: 0 0.1em;
+}
+:is(.word-page, .doc-content) table {
+  border-collapse: collapse;
+  width: 100%;
+  table-layout: fixed;
+}
+:is(.word-page, .doc-content) th,
+:is(.word-page, .doc-content) td {
+  border: 1px solid #a1a1aa;
+  padding: 0.35em 0.5em;
+  vertical-align: top;
+}
+:is(.word-page, .doc-content) th {
+  background: #f4f4f5;
+  font-weight: 600;
+}
+.word-page .selectedCell {
+  background: #dbeafe;
+}
+.word-page .column-resize-handle {
+  position: absolute;
+  right: -2px;
+  top: 0;
+  bottom: 0;
+  width: 4px;
+  background: #60a5fa;
+  pointer-events: none;
+}
+.word-page .tableWrapper {
+  overflow-x: auto;
+}
+.word-page td,
+.word-page th {
+  position: relative;
+}
+.word-page p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: #a1a1aa;
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
 
-/* Sidebar: marka renginde koyu zemin, hafif ışık geçişi. */
+/* Calm navigation shell; the active destination is the strongest visual signal. */
 .sidebar-surface {
-  color: #fff;
-  background:
-    radial-gradient(120% 60% at 0% 0%, rgba(255, 255, 255, 0.12), transparent 60%),
-    linear-gradient(180deg, #2f54d6 0%, #2843b8 55%, #233587 100%);
+  color: #e3ebe5;
+  background: #1c2822;
+  border-right: 1px solid #25382c;
 }
 .dark .sidebar-surface {
-  background:
-    radial-gradient(120% 60% at 0% 0%, rgba(95, 132, 242, 0.18), transparent 60%),
-    linear-gradient(180deg, #172452 0%, #111a3d 100%);
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  background: #141d18;
+  border-right-color: #2c3a30;
+}
+
+.workspace-shell {
+  background: hsl(var(--heroui-background));
+}
+.workspace-header {
+  background: hsl(var(--heroui-background) / 0.94);
+}
+.workspace-main {
+  width: 100%;
+  max-width: 1720px;
+  margin-inline: auto;
+}
+.workspace-page-heading {
+  text-wrap: balance;
+}
+.workspace-page-description {
+  max-width: 70ch;
+  text-wrap: pretty;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .workspace-shell *,
+  .workspace-shell *::before,
+  .workspace-shell *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 /* Renk verilmemiş kenarlıklar (Tailwind v4 varsayılanı currentColor) yumuşak griye çekilir. */
 @layer base {
-  *, ::before, ::after { border-color: hsl(var(--heroui-default-200)); }
+  *,
+  ::before,
+  ::after {
+    border-color: hsl(var(--heroui-default-200));
+  }
+}
+
+/* Native controls and typography stay legible across dense management screens. */
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+:focus-visible {
+  outline-color: hsl(var(--heroui-focus));
+  outline-offset: 3px;
+}
+::selection {
+  background: hsl(var(--heroui-primary) / 0.17);
+}
+/* Hand-written primary actions use the same accessible foreground as HeroUI controls. */
+.dark .bg-primary {
+  color: hsl(var(--heroui-primary-foreground));
+}
+
+/* HeroUI v3 CSS-first theme. v2's plugin remains only during the component migration. */
+:root,
+.light,
+[data-theme="light"] {
+  --background: #f4f5f2;
+  --foreground: #242b26;
+  --surface: #ffffff;
+  --surface-foreground: #242b26;
+  --surface-secondary: #f7f8f5;
+  --surface-secondary-foreground: #242b26;
+  --surface-tertiary: #edf0ea;
+  --surface-tertiary-foreground: #242b26;
+  --overlay: #ffffff;
+  --overlay-foreground: #242b26;
+  --accent: #206541;
+  --accent-foreground: #ffffff;
+  --muted: #697367;
+  --border: #dfe3dc;
+  --field-background: #ffffff;
+  --field-foreground: #242b26;
+  --field-border: #d5dbd2;
+  --field-border-width: 1px;
+  --field-radius: 0.5rem;
+  --radius: 0.5rem;
+  --focus: #337b58;
+}
+.dark,
+[data-theme="dark"] {
+  --background: #111714;
+  --foreground: #e9eee9;
+  --surface: #1a221d;
+  --surface-foreground: #e9eee9;
+  --surface-secondary: #212b24;
+  --surface-secondary-foreground: #e9eee9;
+  --surface-tertiary: #2b352d;
+  --surface-tertiary-foreground: #e9eee9;
+  --overlay: #212b24;
+  --overlay-foreground: #e9eee9;
+  --accent: #91c5a3;
+  --accent-foreground: #102719;
+  --muted: #a8b6aa;
+  --border: #334137;
+  --field-background: #1a221d;
+  --field-foreground: #e9eee9;
+  --field-border: #435447;
+  --focus: #91c5a3;
+}
+
+@layer components {
+  /* Workspace actions use the same restrained corner radius as fields. */
+  .button {
+    border-radius: var(--radius);
+  }
+}
+
+/* Temporary v2 flat-chip styling: its foreground uses the light palette's
+   primary-600 even in dark mode. Keep the forest badge readable until v3 migration. */
+.dark [class~="bg-primary/20"][class~="text-primary-600"] {
+  color: hsl(var(--heroui-primary));
 }

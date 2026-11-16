@@ -1,6 +1,7 @@
 "use client";
 
-import { Button, Dropdown, DropdownItem, DropdownMenu, DropdownTrigger } from "@heroui/react";
+import { Button, Dropdown, Label, buttonVariants } from "@heroui-v3/react";
+import { cn } from "@/shared/utils";
 import { ChevronDown, FileText } from "lucide-react";
 import { useTranslations } from "next-intl";
 
@@ -27,40 +28,51 @@ export function PdfSplitButton({
   const t = useTranslations("pdfLanguage");
   return (
     <div className="flex items-stretch gap-0">
-      <Button
-        as="a"
-        size={size}
-        variant="bordered"
-        color="primary"
-        startContent={<FileText className="h-4 w-4" aria-hidden />}
+      <a
         href={buildHref("de")}
         target="_blank"
         rel="noopener"
-        className="rounded-r-none border-r-0"
+        className={cn(
+          buttonVariants({ size, variant: "outline" }),
+          "rounded-r-none border-r-0",
+        )}
       >
+        <FileText className="h-4 w-4" aria-hidden />
         {label}
-      </Button>
-      <Dropdown placement="bottom-end">
-        <DropdownTrigger>
-          <Button
-            size={size}
-            variant="bordered"
-            color="primary"
-            isIconOnly
-            aria-label={aria}
-            className="rounded-l-none"
-          >
-            <ChevronDown className="h-4 w-4" aria-hidden />
-          </Button>
-        </DropdownTrigger>
-        <DropdownMenu aria-label={aria}>
-          <DropdownItem key="de" textValue={t("german")}>
-            {t("german")}
-          </DropdownItem>
-          <DropdownItem key="tr" textValue={t("turkish")}>
-            {t("turkish")}
-          </DropdownItem>
-        </DropdownMenu>
+      </a>
+      <Dropdown>
+        <Button
+          size={size}
+          variant="outline"
+          isIconOnly
+          aria-label={aria}
+          className="rounded-l-none"
+        >
+          <ChevronDown className="h-4 w-4" aria-hidden />
+        </Button>
+
+        <Dropdown.Popover placement="bottom end">
+          <Dropdown.Menu aria-label={aria}>
+            <Dropdown.Item
+              id="de"
+              textValue={t("german")}
+              href={buildHref("de")}
+              target="_blank"
+              rel="noopener"
+            >
+              <Label>{t("german")}</Label>
+            </Dropdown.Item>
+            <Dropdown.Item
+              id="tr"
+              textValue={t("turkish")}
+              href={buildHref("tr")}
+              target="_blank"
+              rel="noopener"
+            >
+              <Label>{t("turkish")}</Label>
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown.Popover>
       </Dropdown>
     </div>
   );

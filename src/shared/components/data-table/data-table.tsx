@@ -1,18 +1,6 @@
 "use client";
 
-import {
-  Button,
-  Dropdown,
-  DropdownItem,
-  DropdownMenu,
-  DropdownTrigger,
-  Table,
-  TableBody,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  TableRow,
-} from "@heroui/react";
+import { Button, Dropdown, Label, Table } from "@heroui-v3/react";
 import { MoreHorizontal } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -95,37 +83,56 @@ export function DataTable<T extends { id: string }>({
   };
 
   const handlePageSizeChange = (nextSize: number) => {
-    setParams({ pageSize: nextSize !== 10 ? String(nextSize) : null }, { resetPage: true });
+    setParams(
+      { pageSize: nextSize !== 10 ? String(nextSize) : null },
+      { resetPage: true },
+    );
   };
 
   const hasRowActions = typeof rowActions === "function";
   const activeFilters = Object.fromEntries(
-    (filters ?? []).map((filter) => [filter.key, searchParams.get(`filter.${filter.key}`) ?? ""]),
+    (filters ?? []).map((filter) => [
+      filter.key,
+      searchParams.get(`filter.${filter.key}`) ?? "",
+    ]),
   );
 
   // Not: @react-types/table kolon dizisinde null'a izin vermez; koşullu kolon
   // dizi yayma (spread) ile eklenir.
   const headerColumns = [
-    ...columns.map((column) => (
-      <TableColumn
+    ...columns.map((column, index) => (
+      <Table.Column
         key={column.key}
+        id={column.key}
+        isRowHeader={index === 0}
         allowsSorting={Boolean(column.sortable)}
-        align={column.align}
+        className={cn(
+          "py-3.5 text-[12px] font-medium text-default-600",
+          column.align === "end"
+            ? "text-right"
+            : column.align === "center"
+              ? "text-center"
+              : "text-left",
+        )}
         width={column.width}
       >
-        {column.label}
-      </TableColumn>
+        {({ sortDirection }) => (
+          <Table.SortableColumnHeader sortDirection={sortDirection}>
+            {column.label}
+          </Table.SortableColumnHeader>
+        )}
+      </Table.Column>
     )),
     ...(hasRowActions
       ? [
-          <TableColumn
+          <Table.Column
             key={ACTIONS_COLUMN_KEY}
-            align="end"
+            id={ACTIONS_COLUMN_KEY}
             width={64}
-            className={`${ACTIONS_STICKY_CLASS} bg-default-100`}
+            className={`${ACTIONS_STICKY_CLASS} bg-content2 text-right`}
           >
             <span className="sr-only">{tCommon("actions")}</span>
-          </TableColumn>,
+          </Table.Column>,
         ]
       : []),
   ];
@@ -133,7 +140,8 @@ export function DataTable<T extends { id: string }>({
   const defaultCell = (row: T, key: string) => {
     const value = (row as Record<string, unknown>)[key];
     if (value === null || value === undefined || value === "") return "-";
-    if (typeof value === "boolean") return value ? tCommon("yes") : tCommon("no");
+    if (typeof value === "boolean")
+      return value ? tCommon("yes") : tCommon("no");
     if (value instanceof Date) return value.toLocaleString("tr-TR");
     return String(value);
   };
@@ -159,79 +167,109 @@ export function DataTable<T extends { id: string }>({
           isPending && "pointer-events-none opacity-60",
         )}
       >
-        <Table
-          aria-label={ariaLabel ?? tCommon("table.label")}
-          selectionMode="none"
-          sortDescriptor={
-            sort && dir
-              ? { column: sort, direction: dir === "asc" ? "ascending" : "descending" }
-              : undefined
-          }
-          onSortChange={(descriptor) => handleSort(descriptor.column)}
-          classNames={{
-            // KARAR: overflow-x-auto — sütunlar sığmadığında satır işlemleri ("…") sütunu
-            // kırpılmasın; dar ekranlarda tablo yatay kaydırılır (overflow-hidden onu gizliyordu).
-            wrapper: "shadow-xs border border-default-200/80 rounded-large p-0 overflow-x-auto bg-content1",
-            th: "bg-default-100/70 text-default-600 font-semibold text-tiny tracking-wider uppercase py-3 border-b border-default-200/80",
-            td: "py-3 text-small border-b border-default-100 last:border-b-0",
-            tr: "hover:bg-default-50/70 transition-colors",
-          }}
-        >
-          <TableHeader>{headerColumns}</TableHeader>
-          <TableBody
-            emptyContent={<EmptyState title={emptyMessage ?? tCommon("noRecords")} className="border-none bg-transparent" />}
-            isLoading={isPending}
-          >
-            {rows.map((row) => {
-              const actions = rowActions?.(row).filter((action) => !action.hidden) ?? [];
-              const cells = [
-                ...columns.map((column) => (
-                  <TableCell key={column.key}>
-                    {column.render ? column.render(row) : defaultCell(row, column.key)}
-                  </TableCell>
-                )),
-                ...(hasRowActions
-                  ? [
-                      <TableCell key={ACTIONS_COLUMN_KEY} className={`${ACTIONS_STICKY_CLASS} bg-content1`}>
-                        {actions.length > 0 ? (
-                          <Dropdown placement="bottom-end">
-                            <DropdownTrigger>
-                              <Button
-                                isIconOnly
-                                size="sm"
-                                variant="light"
-                                aria-label={tCommon("rowActions")}
-                              >
-                                <MoreHorizontal className="h-4 w-4" />
-                              </Button>
-                            </DropdownTrigger>
-                            <DropdownMenu aria-label={tCommon("rowActions")}>
-                              {actions.map((action) => (
-                                <DropdownItem
-                                  key={action.key}
-                                  color={action.color === "danger" ? "danger" : "default"}
-                                  startContent={action.icon}
-                                  onPress={() => {
-                                    if (action.href) {
-                                      router.push(action.href);
-                                      return;
-                                    }
-                                    action.onPress?.();
-                                  }}
+        <Table className="overflow-hidden rounded-xl border border-default-200/80 bg-content1 shadow-sm">
+          <Table.ScrollContainer>
+            <Table.Content
+              aria-label={ariaLabel ?? tCommon("table.label")}
+              aria-busy={isPending}
+              selectionMode="none"
+              sortDescriptor={
+                sort && dir
+                  ? {
+                      column: sort,
+                      direction: dir === "asc" ? "ascending" : "descending",
+                    }
+                  : undefined
+              }
+              onSortChange={(descriptor) => handleSort(descriptor.column)}
+            >
+              <Table.Header>{headerColumns}</Table.Header>
+              <Table.Body
+                renderEmptyState={() => (
+                  <EmptyState
+                    title={emptyMessage ?? tCommon("noRecords")}
+                    className="border-none bg-transparent"
+                  />
+                )}
+              >
+                {rows.map((row) => {
+                  const actions =
+                    rowActions?.(row).filter((action) => !action.hidden) ?? [];
+                  const cells = [
+                    ...columns.map((column) => (
+                      <Table.Cell
+                        key={column.key}
+                        className="py-3.5 text-[13px]"
+                      >
+                        {column.render
+                          ? column.render(row)
+                          : defaultCell(row, column.key)}
+                      </Table.Cell>
+                    )),
+                    ...(hasRowActions
+                      ? [
+                          <Table.Cell
+                            key={ACTIONS_COLUMN_KEY}
+                            className={`${ACTIONS_STICKY_CLASS} bg-content1`}
+                          >
+                            {actions.length > 0 ? (
+                              <Dropdown>
+                                <Button
+                                  isIconOnly
+                                  size="sm"
+                                  variant="tertiary"
+                                  aria-label={tCommon("rowActions")}
                                 >
-                                  {action.label}
-                                </DropdownItem>
-                              ))}
-                            </DropdownMenu>
-                          </Dropdown>
-                        ) : null}
-                      </TableCell>,
-                    ]
-                  : []),
-              ];
-              return <TableRow key={row.id}>{cells}</TableRow>;
-            })}
-          </TableBody>
+                                  <MoreHorizontal className="h-4 w-4" />
+                                </Button>
+
+                                <Dropdown.Popover placement="bottom end">
+                                  <Dropdown.Menu
+                                    aria-label={tCommon("rowActions")}
+                                  >
+                                    {actions.map((action) => (
+                                      <Dropdown.Item
+                                        key={action.key}
+                                        id={action.key}
+                                        textValue={action.label}
+                                        variant={
+                                          action.color === "danger"
+                                            ? "danger"
+                                            : undefined
+                                        }
+                                        onAction={() => {
+                                          if (action.href) {
+                                            router.push(action.href);
+                                            return;
+                                          }
+                                          action.onPress?.();
+                                        }}
+                                      >
+                                        {action.icon}
+                                        <Label>{action.label}</Label>
+                                      </Dropdown.Item>
+                                    ))}
+                                  </Dropdown.Menu>
+                                </Dropdown.Popover>
+                              </Dropdown>
+                            ) : null}
+                          </Table.Cell>,
+                        ]
+                      : []),
+                  ];
+                  return (
+                    <Table.Row
+                      key={row.id}
+                      id={row.id}
+                      className="border-b border-default-100 transition-colors last:border-b-0 hover:bg-default-50"
+                    >
+                      {cells}
+                    </Table.Row>
+                  );
+                })}
+              </Table.Body>
+            </Table.Content>
+          </Table.ScrollContainer>
         </Table>
       </div>
 

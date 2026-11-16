@@ -1,12 +1,11 @@
 "use client";
 
-import { Button, Link } from "@heroui/react";
+import { buttonVariants } from "@heroui-v3/react";
+import Link from "next/link";
+import { actionVariant } from "./action-appearance";
 import type { ReactNode } from "react";
 
-/**
- * KARAR: HeroUI v2 client bileşen gerektirdiğinden sunucu view'ları HeroUI Button'ı
- * doğrudan kullanamaz; PageHeader aksiyonları için bu sarmalayıcı kullanılır.
- */
+/** Shared route action with native Next.js navigation and HeroUI v3 appearance. */
 export function LinkButton({
   href,
   children,
@@ -18,13 +17,33 @@ export function LinkButton({
   href: string;
   children: ReactNode;
   startIcon?: ReactNode;
-  color?: "default" | "primary" | "secondary" | "success" | "warning" | "danger";
+  color?:
+    | "default"
+    | "primary"
+    | "secondary"
+    | "success"
+    | "warning"
+    | "danger";
   size?: "sm" | "md" | "lg";
-  variant?: "solid" | "bordered" | "light" | "flat" | "faded" | "ghost" | "shadow";
+  variant?:
+    | "solid"
+    | "bordered"
+    | "light"
+    | "flat"
+    | "faded"
+    | "ghost"
+    | "shadow";
 }) {
   return (
-    <Button as={Link} href={href} color={color} size={size} variant={variant} startContent={startIcon}>
+    <Link
+      href={href}
+      className={buttonVariants({
+        size,
+        variant: actionVariant(color, variant),
+      })}
+    >
+      {startIcon}
       {children}
-    </Button>
+    </Link>
   );
 }

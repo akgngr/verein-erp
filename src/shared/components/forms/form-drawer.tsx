@@ -1,6 +1,8 @@
 "use client";
 
-import { Button, Card, CardBody, Drawer, DrawerBody, DrawerContent, DrawerHeader } from "@heroui/react";
+import { Card, Drawer, Description, buttonVariants } from "@heroui-v3/react";
+import { actionVariant } from "../ui/action-appearance";
+import { cn } from "@/shared/utils";
 import Link from "next/link";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { createContext, useContext, useState, type ReactNode } from "react";
@@ -55,26 +57,46 @@ export function FormDrawer({
     const next = new URLSearchParams(searchParams.toString());
     for (const key of FORM_DRAWER_PARAMS) next.delete(key);
     const query = next.toString();
-    router.replace(query ? `${pathname}?${query}` : pathname, { scroll: false });
+    router.replace(query ? `${pathname}?${query}` : pathname, {
+      scroll: false,
+    });
   };
 
   return (
     <FormDrawerContext.Provider value={close}>
-      <Drawer
-        isOpen={open}
-        onOpenChange={(isOpen) => {
-          if (!isOpen) close();
-        }}
-        {...FORM_DRAWER_PROPS}
-        size={size}
-      >
-        <DrawerContent>
-          <DrawerHeader className="flex flex-col gap-1 border-b border-default-200/80">
-            <span className="text-large font-semibold">{title}</span>
-            {description ? <span className="text-small font-normal text-default-500">{description}</span> : null}
-          </DrawerHeader>
-          <DrawerBody className="py-5">{children}</DrawerBody>
-        </DrawerContent>
+      <Drawer>
+        <Drawer.Backdrop
+          isOpen={open}
+          onOpenChange={(isOpen) => {
+            if (!isOpen) close();
+          }}
+        >
+          <Drawer.Content placement="right">
+            <Drawer.Dialog
+              className={cn(
+                "h-full max-h-dvh w-screen max-w-full rounded-none sm:rounded-l-xl",
+                {
+                  md: "sm:max-w-md",
+                  lg: "sm:max-w-lg",
+                  xl: "sm:max-w-xl",
+                  "2xl": "sm:max-w-2xl",
+                  "3xl": "sm:max-w-3xl",
+                  "4xl": "sm:max-w-4xl",
+                  "5xl": "sm:max-w-5xl",
+                }[size],
+              )}
+            >
+              <Drawer.CloseTrigger />
+              <Drawer.Header className="border-b border-default-200/80 pb-5">
+                <Drawer.Heading>{title}</Drawer.Heading>
+                {description ? <Description>{description}</Description> : null}
+              </Drawer.Header>
+              <Drawer.Body className="min-h-0 flex-1 overflow-y-auto py-6">
+                {children}
+              </Drawer.Body>
+            </Drawer.Dialog>
+          </Drawer.Content>
+        </Drawer.Backdrop>
       </Drawer>
     </FormDrawerContext.Provider>
   );
@@ -96,41 +118,63 @@ export function FormDrawerButton({
   value?: string;
   children: ReactNode;
   startIcon?: ReactNode;
-  color?: "default" | "primary" | "secondary" | "success" | "warning" | "danger";
-  variant?: "solid" | "bordered" | "light" | "flat" | "faded" | "ghost" | "shadow";
+  color?:
+    | "default"
+    | "primary"
+    | "secondary"
+    | "success"
+    | "warning"
+    | "danger";
+  variant?:
+    | "solid"
+    | "bordered"
+    | "light"
+    | "flat"
+    | "faded"
+    | "ghost"
+    | "shadow";
 }) {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   const next = new URLSearchParams(searchParams.toString());
   next.set(param, value);
   return (
-    <Button
-      as={Link}
+    <Link
       href={`${pathname}?${next.toString()}`}
       scroll={false}
-      color={color}
-      size="sm"
-      variant={variant}
-      startContent={startIcon}
+      className={buttonVariants({
+        size: "sm",
+        variant: actionVariant(color, variant),
+      })}
     >
+      {startIcon}
       {children}
-    </Button>
+    </Link>
   );
 }
 
 /** Form kabı: sayfada kart, çekmece içinde çerçevesiz (çekmece zaten bir yüzeydir). */
-export function FormSurface({ children, className }: { children: ReactNode; className?: string }) {
+export function FormSurface({
+  children,
+  className,
+}: {
+  children: ReactNode;
+  className?: string;
+}) {
   const inDrawer = useContext(FormDrawerContext) !== null;
   if (inDrawer) return <div className="flex flex-col gap-4">{children}</div>;
   return (
-    <Card shadow="sm" className={className}>
-      <CardBody className="gap-4 p-6">{children}</CardBody>
+    <Card className={cn("border border-default-200/80 shadow-sm", className)}>
+      <Card.Content className="gap-4 p-6">{children}</Card.Content>
     </Card>
   );
 }
 
 /** İstemci tablolarının satır eylemleri için: mevcut sorguyu koruyan çekmece bağlantısı. */
-export function useFormDrawerHref(): (param: (typeof FORM_DRAWER_PARAMS)[number], value?: string) => string {
+export function useFormDrawerHref(): (
+  param: (typeof FORM_DRAWER_PARAMS)[number],
+  value?: string,
+) => string {
   const pathname = usePathname();
   const searchParams = useSearchParams();
   return (param, value = "") => {

@@ -73,7 +73,10 @@
       "reset": "Sıfırla",
       "activeFilters": "{count} filtre aktif",
       "done": "Tamam",
-      "label": "Tablo"
+      "label": "Tablo",
+      "previousPage": "Önceki sayfa",
+      "nextPage": "Sonraki sayfa",
+      "pageNumber": "Sayfa {page}"
     },
     "active": "Aktif",
     "passive": "Pasif",

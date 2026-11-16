@@ -73,7 +73,10 @@
       "reset": "Zurücksetzen",
       "activeFilters": "{count} Filter aktiv",
       "done": "Fertig",
-      "label": "Tabelle"
+      "label": "Tabelle",
+      "previousPage": "Vorherige Seite",
+      "nextPage": "Nächste Seite",
+      "pageNumber": "Seite {page}"
     },
     "active": "Aktiv",
     "passive": "Inaktiv",

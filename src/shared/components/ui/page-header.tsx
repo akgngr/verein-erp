@@ -8,12 +8,20 @@ export function PageHeader({
   actions?: React.ReactNode;
 }) {
   return (
-    <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+    <div className="mb-7 flex flex-col gap-4 sm:flex-row sm:items-start sm:justify-between">
       <div>
-        <h1 className="text-2xl font-bold tracking-tight text-foreground">{title}</h1>
-        {description ? <p className="mt-1 text-small text-default-500">{description}</p> : null}
+        <h1 className="workspace-page-heading text-[26px] font-semibold leading-tight tracking-[-0.035em] text-foreground">
+          {title}
+        </h1>
+        {description ? (
+          <p className="workspace-page-description mt-2 text-[13px] leading-relaxed text-default-500">
+            {description}
+          </p>
+        ) : null}
       </div>
-      {actions ? <div className="flex flex-wrap items-center gap-2.5">{actions}</div> : null}
+      {actions ? (
+        <div className="flex flex-wrap items-center gap-2.5">{actions}</div>
+      ) : null}
     </div>
   );
 }

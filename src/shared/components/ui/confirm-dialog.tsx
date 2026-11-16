@@ -1,6 +1,7 @@
 "use client";
 
-import { Button, Modal, ModalBody, ModalContent, ModalFooter, ModalHeader } from "@heroui/react";
+import { Button, Modal, Spinner } from "@heroui-v3/react";
+import { actionVariant } from "./action-appearance";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
@@ -38,30 +39,46 @@ export function ConfirmDialog({
   };
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} size="sm" isDismissable={!isPending}>
-      <ModalContent>
-        {(onClose) => (
-          <>
-            <ModalHeader className="flex flex-col gap-1">{title}</ModalHeader>
-            <ModalBody>
-              <p className="text-small text-default-600">{message}</p>
-            </ModalBody>
-            <ModalFooter>
-              <Button variant="light" onPress={onClose} isDisabled={isPending}>
-                {cancelLabel ?? tCommon("cancel")}
-              </Button>
-              <Button
-                color={confirmColor}
-                isLoading={isPending}
-                isDisabled={isPending}
-                onPress={() => void handleConfirm(onClose)}
-              >
-                {confirmLabel ?? tCommon("confirm")}
-              </Button>
-            </ModalFooter>
-          </>
-        )}
-      </ModalContent>
+    <Modal>
+      <Modal.Backdrop
+        isOpen={isOpen}
+        onOpenChange={onOpenChange}
+        isDismissable={!isPending}
+        isKeyboardDismissDisabled={isPending}
+      >
+        <Modal.Container size="sm">
+          <Modal.Dialog>
+            {({ close: onClose }) => (
+              <>
+                <Modal.Header>
+                  <Modal.Heading>{title}</Modal.Heading>
+                </Modal.Header>
+                <Modal.Body>
+                  <p className="text-small text-default-600">{message}</p>
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button
+                    variant="tertiary"
+                    onPress={onClose}
+                    isDisabled={isPending}
+                  >
+                    {cancelLabel ?? tCommon("cancel")}
+                  </Button>
+                  <Button
+                    variant={actionVariant(confirmColor, "solid")}
+                    isPending={isPending}
+                    isDisabled={isPending}
+                    onPress={() => void handleConfirm(onClose)}
+                  >
+                    {isPending ? <Spinner size="sm" color="current" /> : null}
+                    {confirmLabel ?? tCommon("confirm")}
+                  </Button>
+                </Modal.Footer>
+              </>
+            )}
+          </Modal.Dialog>
+        </Modal.Container>
+      </Modal.Backdrop>
     </Modal>
   );
 }

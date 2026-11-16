@@ -2,14 +2,13 @@
 
 import {
   Button,
-  Input,
+  Label,
+  ListBox,
   Popover,
-  PopoverContent,
-  PopoverTrigger,
+  SearchField,
   Select,
-  SelectItem,
-} from "@heroui/react";
-import { ChevronDown, Search, SlidersHorizontal, X } from "lucide-react";
+} from "@heroui-v3/react";
+import { ChevronDown, SlidersHorizontal, X } from "lucide-react";
 import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -64,7 +63,8 @@ export function DataTableToolbar({
 
   // Herhangi bir filtre veya arama var mı?
   const hasActiveDate =
-    Boolean(searchParams.get("filter.from")) || Boolean(searchParams.get("filter.to"));
+    Boolean(searchParams.get("filter.from")) ||
+    Boolean(searchParams.get("filter.to"));
   const hasAnyActive =
     Boolean(searchDraft) || activeFilterCount > 0 || hasActiveDate;
 
@@ -104,29 +104,30 @@ export function DataTableToolbar({
     setParams(resetKeys, { resetPage: true });
   };
 
-  const hasFilterOptions = Boolean(filters && filters.length > 0) || Boolean(filterExtra);
+  const hasFilterOptions =
+    Boolean(filters && filters.length > 0) || Boolean(filterExtra);
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-3">
       {/* Sol Küme: Arama Inputu + Tarih Filtresi + Sağına Temizle Butonu */}
       <div className="flex flex-wrap items-center gap-2.5 flex-1 min-w-0">
         <div className="w-full sm:w-64 md:w-72">
-          <Input
-            id="dt-search-input"
-            className="w-full"
-            size="sm"
+          <SearchField
             value={searchDraft}
-            onValueChange={onSearchDraftChange}
-            onClear={() => onSearchDraftChange("")}
-            isClearable
-            placeholder={searchPlaceholder ?? tTable("searchPlaceholder")}
-            startContent={<Search className="h-4 w-4 text-default-400 shrink-0" />}
+            onChange={onSearchDraftChange}
             aria-label={tTable("searchLabel")}
-            classNames={{
-              inputWrapper:
-                "h-9 shadow-xs bg-default-100/60 hover:bg-default-100 border border-default-200/80 transition-colors rounded-xl",
-            }}
-          />
+            className="w-full"
+          >
+            <SearchField.Group className="h-9">
+              <SearchField.SearchIcon />
+              <SearchField.Input
+                id="dt-search-input"
+                placeholder={searchPlaceholder ?? tTable("searchPlaceholder")}
+              />
+
+              <SearchField.ClearButton aria-label={tCommon("clear")} />
+            </SearchField.Group>
+          </SearchField>
         </div>
 
         {dateFilter}
@@ -135,12 +136,11 @@ export function DataTableToolbar({
           <Button
             id="dt-clear-all"
             size="sm"
-            variant="light"
-            color="danger"
+            variant="danger-soft"
             className="h-9 px-2.5 text-small font-medium text-default-500 hover:text-danger hover:bg-danger-50/60 rounded-xl transition-colors"
             onPress={handleResetAll}
-            startContent={<X className="h-3.5 w-3.5" />}
           >
+            <X className="h-3.5 w-3.5" aria-hidden />
             {tCommon("clear")}
           </Button>
         ) : null}
@@ -151,47 +151,47 @@ export function DataTableToolbar({
         {topRightExtra}
 
         {hasFilterOptions ? (
-          <Popover
-            isOpen={isFilterOpen}
-            onOpenChange={setIsFilterOpen}
-            placement="bottom-end"
-            offset={8}
-          >
-            <PopoverTrigger>
-              <Button
-                id="dt-filters-trigger"
-                size="sm"
-                variant={activeFilterCount > 0 ? "flat" : "bordered"}
-                color={activeFilterCount > 0 ? "primary" : "default"}
-                className={cn(
-                  "h-9 px-3 text-small font-medium transition-all shadow-xs border rounded-xl",
-                  activeFilterCount > 0
-                    ? "bg-primary-50 text-primary-700 border-primary-300 dark:bg-primary-500/20 dark:text-primary-300 dark:border-primary-500/40 font-semibold"
-                    : "border-default-200/80 bg-default-100/60 hover:bg-default-100 text-default-700",
-                )}
-                startContent={
-                  <SlidersHorizontal className="h-4 w-4 shrink-0 text-default-500" />
-                }
-                endContent={
-                  activeFilterCount > 0 ? (
-                    <span className="flex h-5 min-w-5 items-center justify-center rounded-full bg-primary text-primary-foreground text-[11px] font-bold px-1.5 shadow-xs">
-                      {activeFilterCount}
-                    </span>
-                  ) : (
-                    <ChevronDown
-                      className={cn(
-                        "h-3.5 w-3.5 text-default-400 transition-transform duration-200",
-                        isFilterOpen && "rotate-180",
-                      )}
-                    />
-                  )
-                }
+          <Popover isOpen={isFilterOpen} onOpenChange={setIsFilterOpen}>
+            <Button
+              id="dt-filters-trigger"
+              size="sm"
+              variant={activeFilterCount > 0 ? "secondary" : "outline"}
+              className={cn(
+                "h-9 px-3 text-small font-medium transition-all shadow-xs border rounded-xl",
+                activeFilterCount > 0
+                  ? "bg-primary-50 text-primary-700 border-primary-300 dark:bg-primary-500/20 dark:text-primary-300 dark:border-primary-500/40 font-semibold"
+                  : "border-default-200/80 bg-default-100/60 hover:bg-default-100 text-default-700",
+              )}
+            >
+              <SlidersHorizontal
+                className="h-4 w-4 shrink-0 text-default-500"
+                aria-hidden
+              />
+              <span>{tTable("filters")}</span>
+              {activeFilterCount > 0 ? (
+                <span className="rounded-md bg-primary px-1.5 text-[11px] text-primary-foreground">
+                  {activeFilterCount}
+                </span>
+              ) : (
+                <ChevronDown
+                  className={cn(
+                    "h-3.5 w-3.5 text-default-400 transition-transform",
+                    isFilterOpen && "rotate-180",
+                  )}
+                  aria-hidden
+                />
+              )}
+            </Button>
+
+            <Popover.Content
+              placement="bottom end"
+              offset={8}
+              className="p-0 border border-default-200/80 shadow-2xl rounded-2xl bg-content1 overflow-hidden w-[340px] sm:w-[380px] max-w-[calc(100vw-2rem)]"
+            >
+              <Popover.Dialog
+                aria-label={tTable("filters")}
+                className="flex flex-col p-0"
               >
-                <span>{tTable("filters")}</span>
-              </Button>
-            </PopoverTrigger>
-            <PopoverContent className="p-0 border border-default-200/80 shadow-2xl rounded-2xl bg-content1 overflow-hidden w-[340px] sm:w-[380px] max-w-[calc(100vw-2rem)]">
-              <div className="flex flex-col">
                 {/* Popover Header */}
                 <div className="flex items-center justify-between px-4 py-3 border-b border-default-200/80 bg-default-50/50">
                   <div className="flex items-center gap-2.5">
@@ -210,8 +210,7 @@ export function DataTableToolbar({
                   {activeFilterCount > 0 ? (
                     <Button
                       size="sm"
-                      variant="light"
-                      color="danger"
+                      variant="danger-soft"
                       className="text-xs h-7 px-2 font-medium"
                       onPress={handleResetFiltersOnly}
                     >
@@ -230,35 +229,41 @@ export function DataTableToolbar({
                           {filter.label}
                         </span>
                         <Select
-                          size="sm"
                           aria-label={filter.label}
-                          placeholder={tCommon("filterSelect", { label: filter.label })}
-                          selectedKeys={currentValue ? [currentValue] : [FILTER_ALL]}
-                          onSelectionChange={(keys) => {
-                            const key =
-                              keys === "all" ? undefined : Array.from(keys)[0];
-                            const value = key === undefined ? "" : String(key);
+                          placeholder={tCommon("filterSelect", {
+                            label: filter.label,
+                          })}
+                          value={currentValue || FILTER_ALL}
+                          onChange={(key) =>
                             onFilterChange(
                               filter.key,
-                              value === FILTER_ALL ? "" : value,
-                            );
-                          }}
-                          classNames={{
-                            trigger:
-                              "h-9 bg-default-100/60 hover:bg-default-100 border border-default-200/80 shadow-xs rounded-xl transition-colors",
-                          }}
+                              key === null || key === FILTER_ALL
+                                ? ""
+                                : String(key),
+                            )
+                          }
                         >
-                          {[
-                            { value: FILTER_ALL, label: tCommon("all") },
-                            ...filter.options,
-                          ].map((option) => (
-                            <SelectItem
-                              key={option.value}
-                              textValue={option.label}
-                            >
-                              {option.label}
-                            </SelectItem>
-                          ))}
+                          <Select.Trigger className="h-9">
+                            <Select.Value />
+                            <Select.Indicator />
+                          </Select.Trigger>
+                          <Select.Popover>
+                            <ListBox>
+                              {[
+                                { value: FILTER_ALL, label: tCommon("all") },
+                                ...filter.options,
+                              ].map((option) => (
+                                <ListBox.Item
+                                  key={option.value}
+                                  id={option.value}
+                                  textValue={option.label}
+                                >
+                                  <Label>{option.label}</Label>
+                                  <ListBox.ItemIndicator />
+                                </ListBox.Item>
+                              ))}
+                            </ListBox>
+                          </Select.Popover>
                         </Select>
                       </div>
                     );
@@ -286,8 +291,8 @@ export function DataTableToolbar({
                     {tTable("done")}
                   </Button>
                 </div>
-              </div>
-            </PopoverContent>
+              </Popover.Dialog>
+            </Popover.Content>
           </Popover>
         ) : null}
 

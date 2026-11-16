@@ -13,7 +13,7 @@ Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.
 |---|---|
 | Anahtar | `system` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.11.0 |
+| Sürüm | 1.11.1 |
 | Sayfalar | `/ayarlar`, `/ayarlar/moduller`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/surum-notlari` |
 
 ## Diğer modüllere erişim
@@ -34,6 +34,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Modül Yönetimi | görüntüleme, düzenleme, silme | görüntüleme | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.11.1 — Sade ve profesyonel çalışma alanı
+
+_2026-11-15_
+
+- **İyileştirme:** Panel kartları ve gezinme kabuğu grafit/yeşil tonlarla yenilendi; ortak tablo, form ve menülerde HeroUI v3 geçişi başladı. Masaüstü/mobil tema seçimi mevcut tercihleri korur.
 
 ### 1.11.0 — Silinme hakkı
 
@@ -81,11 +87,4 @@ _2026-11-01_
 - **Yeni:** Her modülün kendi sürümü ve sürüm notları (releases.json): Modül Yönetimi'nde sürüme tıklayınca o modülün notları açılır; Ayarlar → Sürüm notları'nda modül seçilebilir.
 - **İyileştirme:** Geliştirme kuralı: değişen her modülün sürümü artırılmalı (module:check ve CI denetler).
 
-### 1.6.0 — Kurulum sihirbazı
-
-_2026-11-01_
-
-- **Yeni:** Kurulum sihirbazı: Dernek, Küçük işletme, Orta ölçekli işletme, Freelancer veya Etüt/Nachhilfe seçin; uygun modüller açılır, muhasebe için hesap planı, § 19 ayarı, SKR numaralı kategoriler ve Kasse/Bank hesapları hazırlanır. Mevcut kayıtlar korunur; sihirbaz tekrar çalıştırılabilir.
-- **İyileştirme:** Kurulum tamamlanmadıysa panelde yöneticiye bilgi bandı; Ayarlar merkezinde "Kurulum sihirbazı" bağlantısı.
-
-Daha eski 7 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/system/releases.json)
+Daha eski 8 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/system/releases.json)

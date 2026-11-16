@@ -1,9 +1,21 @@
 "use client";
 
-import { Select, SelectItem } from "@heroui/react";
-import { Controller, type Control, type FieldValues, type Path } from "react-hook-form";
+import {
+  Description,
+  FieldError,
+  Label,
+  ListBox,
+  Select,
+} from "@heroui-v3/react";
+import {
+  Controller,
+  type Control,
+  type FieldValues,
+  type Path,
+} from "react-hook-form";
 import { useTranslations } from "next-intl";
 
+import { cn } from "@/shared/utils";
 import { useTranslateMessage } from "@/shared/i18n/use-translate-message";
 
 export type FormSelectOption = { value: string; label: string };
@@ -41,42 +53,45 @@ export function FormSelect<T extends FieldValues>({
       render={({ field, fieldState }) => {
         const value = field.value ? String(field.value) : "";
         const error = translateMessage(fieldState.error?.message);
-        // KARAR: HeroUI Select'te labelPlacement="outside" + description/errorMessage birlikte
-        // verilince etiket alanın içine kayıyor (yükseklik hesabı hatası). Yardım ve hata metni
-        // bu yüzden Select'in DIŞINDA, aynı görünümle çizilir.
         return (
-          <div className="flex flex-col gap-1">
           <Select
             id={`form-select-${String(name)}`}
-            label={label}
-            labelPlacement={labelPlacement}
+            name={field.name}
+            value={value || null}
+            onChange={(key) => field.onChange(key === null ? "" : String(key))}
+            onBlur={field.onBlur}
             isRequired={isRequired}
-            placeholder={placeholder ?? tCommon("selectPlaceholder")}
             isDisabled={isDisabled}
-            selectedKeys={value ? [value] : []}
-            onSelectionChange={(keys) => {
-              const key = keys === "all" ? undefined : Array.from(keys)[0];
-              field.onChange(key !== undefined ? String(key) : "");
-            }}
             isInvalid={Boolean(fieldState.error)}
-            aria-describedby={error || description ? `form-select-${String(name)}-help` : undefined}
-            classNames={{
-              label: "text-small font-medium text-foreground pb-1",
-              trigger: "shadow-xs border-default-200 hover:border-default-400 focus-within:!border-primary transition-colors bg-default-50/50 hover:bg-default-100/50 focus-within:!bg-background",
-            }}
+            placeholder={placeholder ?? tCommon("selectPlaceholder")}
+            className={cn(
+              "w-full",
+              labelPlacement === "outside-left" &&
+                "grid grid-cols-[minmax(7rem,1fr)_2fr] items-start gap-x-4",
+            )}
           >
-            {options.map((option) => (
-              <SelectItem key={option.value} textValue={option.label}>
-                {option.label}
-              </SelectItem>
-            ))}
+            <Label className="text-[13px] font-medium">{label}</Label>
+            <Select.Trigger ref={field.ref}>
+              <Select.Value />
+              <Select.Indicator />
+            </Select.Trigger>
+            <Select.Popover>
+              <ListBox>
+                {options.map((option) => (
+                  <ListBox.Item
+                    key={option.value}
+                    id={option.value}
+                    textValue={option.label}
+                  >
+                    <Label>{option.label}</Label>
+                    <ListBox.ItemIndicator />
+                  </ListBox.Item>
+                ))}
+              </ListBox>
+            </Select.Popover>
+            {description ? <Description>{description}</Description> : null}
+            <FieldError>{error}</FieldError>
           </Select>
-          {error || description ? (
-            <p id={`form-select-${String(name)}-help`} className={`px-1 text-tiny ${error ? "text-danger" : "text-default-500"}`}>
-              {error || description}
-            </p>
-          ) : null}
-          </div>
         );
       }}
     />
