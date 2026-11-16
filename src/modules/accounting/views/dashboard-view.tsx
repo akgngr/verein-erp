@@ -1,4 +1,7 @@
 import Link from "next/link";
+import { ArrowDownRight, ArrowUpRight, Scale } from "lucide-react";
+
+import { QuarterlyFinanceChart } from "../components/quarterly-finance-chart";
 import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
@@ -71,7 +74,6 @@ export async function AccountingDashboardView({ searchParams }: { searchParams: 
   ]);
 
   const overdueOpen = summarizeOverdueInvoices(overdueInvoices);
-  const maxBar = Math.max(1, ...quarters.flatMap((quarter) => [quarter.incomeCents, quarter.expenseCents]));
   const periodLink = (kind: Period, n = 1, y = year) =>
     `/muhasebe/panel?year=${y}&period=${kind}&part=${n}`;
 
@@ -107,48 +109,67 @@ export async function AccountingDashboardView({ searchParams }: { searchParams: 
       </nav>
 
       {bookingCount === 0 ? (
-        <p className="rounded-lg border border-ink-200 p-4 text-sm text-ink-500">{t("noBookings")}</p>
+        <p className="rounded-2xl border border-ink-200 bg-surface px-6 py-9 text-center text-sm text-ink-500">
+          {t("noBookings")}
+        </p>
       ) : (
-        <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {[
-            { key: "income", value: totals.incomeCents },
-            { key: "expense", value: totals.expenseCents },
-            { key: "difference", value: totals.netCents },
-          ].map((item) => (
-            <article key={item.key} className="rounded-xl border border-ink-200 p-4">
-              <h2 className="text-sm font-medium text-ink-500">{t(item.key)}</h2>
-              <p className="mt-2 text-2xl font-semibold tabular-nums">{formatMoney(item.value)}</p>
-            </article>
-          ))}
+            {
+              key: "income",
+              value: totals.incomeCents,
+              icon: ArrowUpRight,
+              iconStyle: "bg-success-50 text-success-600 dark:bg-success-950/35",
+              valueStyle: "text-success-600",
+            },
+            {
+              key: "expense",
+              value: totals.expenseCents,
+              icon: ArrowDownRight,
+              iconStyle: "bg-accent/10 text-accent",
+              valueStyle: "text-foreground",
+            },
+            {
+              key: "difference",
+              value: totals.netCents,
+              icon: Scale,
+              iconStyle: "bg-ink-100 text-ink-700",
+              valueStyle: totals.netCents < 0 ? "text-danger-600" : "text-foreground",
+            },
+          ].map((item) => {
+            const Icon = item.icon;
+            return (
+              <article key={item.key} className="group relative min-w-0 overflow-hidden rounded-2xl border border-ink-200 bg-surface p-5 shadow-sm transition-shadow hover:shadow-md sm:p-6">
+                <div className="pointer-events-none absolute -right-12 -top-12 size-32 rounded-full bg-ink-100/50 blur-2xl" aria-hidden="true" />
+                <div className="relative flex items-center justify-between gap-3">
+                  <h2 className="text-sm font-medium text-ink-500">{t(item.key)}</h2>
+                  <span className={`inline-flex size-10 items-center justify-center rounded-xl ${item.iconStyle}`}>
+                    <Icon size={19} strokeWidth={1.8} aria-hidden="true" />
+                  </span>
+                </div>
+                <p className={`relative mt-5 break-words text-[clamp(1.35rem,2.5vw,2rem)] font-semibold tracking-tight tabular-nums ${item.valueStyle}`}>
+                  {formatMoney(item.value)}
+                </p>
+                <div className="mt-5 h-1 w-full overflow-hidden rounded-full bg-ink-100" aria-hidden="true">
+                  <div className={`h-full w-1/3 rounded-full ${item.key === "income" ? "bg-success-500" : item.key === "expense" ? "bg-accent" : "bg-ink-400"}`} />
+                </div>
+              </article>
+            );
+          })}
         </div>
       )}
 
-      <section className="rounded-xl border border-ink-200 p-4" aria-labelledby="accounting-quarters-title">
-        <h2 id="accounting-quarters-title" className="mb-1 text-lg font-semibold">{t("quarterlyTitle")}</h2>
-        <p className="mb-4 text-xs text-ink-500">{t("quarterlyDescription")}</p>
-        <div className="space-y-3" aria-hidden="true">
-          {quarters.map((q, i) => (
-            <div key={i} className="grid grid-cols-[55px_minmax(0,1fr)] items-center gap-3">
-              <span className="text-xs">{t("quarter", { n: i + 1 })}</span>
-              <div className="space-y-1">
-                <div className="h-2 rounded bg-ink-100"><div className="h-2 rounded bg-success-500" style={{ width: `${100 * q.incomeCents / maxBar}%` }} /></div>
-                <div className="h-2 rounded bg-ink-100"><div className="h-2 rounded bg-danger-500" style={{ width: `${100 * q.expenseCents / maxBar}%` }} /></div>
-              </div>
-            </div>
-          ))}
-        </div>
-        <table className="mt-4 w-full text-sm">
-          <caption className="sr-only">{t("quarterlyTitle")}</caption>
-          <thead><tr><th scope="col" className="text-left">{t("periodColumn")}</th><th scope="col" className="text-right">{t("income")}</th><th scope="col" className="text-right">{t("expense")}</th></tr></thead>
-          <tbody>{quarters.map((q, i) => (
-            <tr key={i} className="border-t border-ink-100">
-              <th scope="row" className="py-2 text-left font-normal">{t("quarter", { n: i + 1 })}</th>
-              <td className="text-right tabular-nums">{formatMoney(q.incomeCents)}</td>
-              <td className="text-right tabular-nums">{formatMoney(q.expenseCents)}</td>
-            </tr>
-          ))}</tbody>
-        </table>
-      </section>
+      <QuarterlyFinanceChart
+        quarters={quarters}
+        labels={{
+          title: t("quarterlyTitle"),
+          description: t("quarterlyDescription"),
+          income: t("income"),
+          expense: t("expense"),
+          period: t("periodColumn"),
+          quarter: (n) => t("quarter", { n }),
+        }}
+      />
 
       <section aria-labelledby="accounting-recommendations" className="space-y-3">
         <h2 id="accounting-recommendations" className="text-lg font-semibold">{t("recommendations")}</h2>
