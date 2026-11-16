@@ -8,7 +8,8 @@ import { getDb } from "@/shared/db";
 import { formatMoney } from "@/shared/money";
 
 import { accountingPermissions } from "../permissions";
-import { getBookingPeriodRange, getBookingTotals } from "../queries/get-booking-totals";
+import { getBookingTotals } from "../queries/get-booking-totals";
+import { getBookingPeriodRange } from "../services/dashboard-period";
 import { getSettings } from "../queries/get-settings";
 import { openCents } from "../services/invoice-payments";
 import { countMissingReceipts } from "../services/report-builders";
