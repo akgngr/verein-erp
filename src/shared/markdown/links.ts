@@ -9,5 +9,12 @@ export function toInternalMarkdownHref(href: string): string {
     return "/";
   }
 
-  return url.pathname + url.search + url.hash;
+  // Çıktı yeniden kodlanır (ör. tırnak, <, > → %22, %3C, %3E): href'e yalnız güvenli URL karakterleri girer.
+  const normalized = url.pathname + url.search + url.hash;
+  try {
+    return encodeURI(decodeURI(normalized));
+  } catch {
+    // Bozuk yüzde kodlaması: yalnız URL'de güvenli karakterler bırakılır, gerisi kodlanır.
+    return normalized.replace(/[^\w\-./~%?#=&:@!$'()*+,;]/g, (char) => encodeURIComponent(char));
+  }
 }
