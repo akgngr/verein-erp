@@ -395,9 +395,7 @@ export function DateRangeFilter({
                       <RangeCalendar.NavButton slot="previous" />
                       <RangeCalendar.NavButton slot="next" />
                     </RangeCalendar.Header>
-                    <RangeCalendar.Grid
-                      className={yearPickerOpen ? "hidden" : undefined}
-                    >
+                    <RangeCalendar.Grid>
                       <RangeCalendar.GridHeader>
                         {(day) => (
                           <RangeCalendar.HeaderCell>

@@ -30,7 +30,7 @@ export function DateCalendar({
         <Calendar.NavButton slot="previous" />
         <Calendar.NavButton slot="next" />
       </Calendar.Header>
-      <Calendar.Grid className={years ? "hidden" : undefined}>
+      <Calendar.Grid>
         <Calendar.GridHeader>
           {(day) => <Calendar.HeaderCell>{day}</Calendar.HeaderCell>}
         </Calendar.GridHeader>
