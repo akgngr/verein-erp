@@ -1547,7 +1547,7 @@
     "expense": "Ausgabenbuchungen",
     "difference": "Einnahmen minus Ausgaben",
     "quarterlyTitle": "Quartalsübersicht",
-    "quarterlyDescription": "Grün: Einnahmen; Rot: Ausgaben. Die Tabelle zeigt dieselben Werte barrierearm.",
+    "quarterlyDescription": "Bruttobuchungen nach Quartal. Grün steht für Einnahmen, die Akzentfarbe für Ausgaben; genaue Werte stehen in der Tabelle.",
     "periodColumn": "Zeitraum",
     "recommendations": "Prüfhinweise",
     "missingReceipts": "Im Jahr {year} haben {count} Buchungen keinen Dateibeleg.",
