@@ -44,7 +44,7 @@ export async function aiAttachmentHandler(request: Request): Promise<Response> {
 
   try {
     const extracted = await extractAttachmentText(parsed.file.buffer, validation.file.mimeType, validation.file.extension);
-    if (!extracted.text) return fail(extracted.reason === "unsupported" ? "ai.attachments.unsupported" : "ai.attachments.noText", 422);
+    if (extracted.text === null) return fail(extracted.reason === "unsupported" ? "ai.attachments.unsupported" : "ai.attachments.noText", 422);
     const name = validation.file.originalName;
     const token = sealAttachment(user.id, { name, source: extracted.source, truncated: extracted.truncated, text: extracted.text });
     await writeAudit({ userId: user.id, userLabel: buildUserLabel(user.name, user.email), action: "AI_ATTACHMENT", entity: "AiAssistant", entityId: null, after: { size: validation.file.size, extension: validation.file.extension, source: extracted.source, chars: extracted.text.length } });
