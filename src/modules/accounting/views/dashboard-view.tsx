@@ -47,7 +47,7 @@ export async function AccountingDashboardView({ searchParams }: { searchParams: 
     : period === "month" ? (part >= 1 && part <= 12 ? part : 1) : 1;
 
   const db = getDb();
-  const [totals, quarters, missingReceiptCount, overdueInvoices, bookingCount, settings] = await Promise.all([
+  const [totals, quarters, missingReceiptCount, overdueInvoices, bookingCount, settings, unmatchedBankCount] = await Promise.all([
     getBookingTotals(year, getBookingPeriodRange(year, period, validPart)),
     Promise.all([1, 2, 3, 4].map((quarter) =>
       getBookingTotals(year, getBookingPeriodRange(year, "quarter", quarter)))),
@@ -67,6 +67,7 @@ export async function AccountingDashboardView({ searchParams }: { searchParams: 
       },
     }),
     getSettings(),
+    db.accountingBankTransaction.count({ where: { status: "OPEN" } }),
   ]);
 
   const overdueOpen = summarizeOverdueInvoices(overdueInvoices);
@@ -163,7 +164,13 @@ export async function AccountingDashboardView({ searchParams }: { searchParams: 
             <Link href="/muhasebe/faturalar" className="font-medium underline">{t("inspectInvoices")}</Link>
           </p>
         ) : null}
-        {missingReceiptCount === 0 && overdueOpen.count === 0 ? (
+        {unmatchedBankCount > 0 ? (
+          <p className="rounded-lg border border-warning-300 p-4 text-sm">
+            {t("unmatchedBank", { count: unmatchedBankCount })}{" "}
+            <Link href="/muhasebe/banka?durum=open" className="font-medium underline">{t("inspectBank")}</Link>
+          </p>
+        ) : null}
+        {missingReceiptCount === 0 && overdueOpen.count === 0 && unmatchedBankCount === 0 ? (
           <p className="text-sm text-ink-500">{t("noWarnings")}</p>
         ) : null}
       </section>
