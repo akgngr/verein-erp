@@ -1796,6 +1796,28 @@
           }
         }
       }
+    },
+    "cards": {
+      "income": {
+        "title": "Muhasebe gelirleri",
+        "description": "Bu yıl iptal edilmemiş gelir fişlerinin brüt toplamı (virmanlar hariç).",
+        "period": "{year} yılı · gelir fişleri"
+      },
+      "expense": {
+        "title": "Muhasebe giderleri",
+        "description": "Bu yıl iptal edilmemiş gider fişlerinin brüt toplamı (virmanlar hariç).",
+        "period": "{year} yılı · gider fişleri"
+      },
+      "balance": {
+        "title": "Gelir − gider farkı",
+        "description": "Bu yılın fiş bazlı gelir ve gider farkı; banka bakiyesi veya bilanço kârı değildir.",
+        "period": "{year} yılı · fiş farkı"
+      },
+      "missingReceipts": {
+        "title": "Belgesi eksik fişler",
+        "description": "Bu yıldaki kaynak fişi veya virman olmayan, dosyası bulunmayan fişler.",
+        "period": "{year} yılı · eksik belge"
+      }
     }
   },
   "ai": {
