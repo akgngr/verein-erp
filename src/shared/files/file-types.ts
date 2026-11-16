@@ -7,7 +7,7 @@
  * çalıştırılabilir türler YASAKTIR (kayıtta bilinçli olarak yer almazlar).
  */
 
-export type FileSignatureKind = "pdf" | "png" | "jpeg" | "zip" | "ole" | "none";
+export type FileSignatureKind = "pdf" | "png" | "jpeg" | "webp" | "zip" | "ole" | "none";
 
 export type FileTypeRule = {
   extensions: string[];
@@ -21,6 +21,7 @@ export const FILE_TYPE_RULES: FileTypeRule[] = [
   { extensions: ["pdf"], mimes: ["application/pdf"], signature: "pdf" },
   { extensions: ["jpg", "jpeg"], mimes: ["image/jpeg", "application/jpeg"], signature: "jpeg" },
   { extensions: ["png"], mimes: ["image/png", "application/png"], signature: "png" },
+  { extensions: ["webp"], mimes: ["image/webp"], signature: "webp" },
   { extensions: ["doc"], mimes: ["application/msword"], signature: "ole" },
   {
     extensions: ["docx"],
@@ -58,6 +59,7 @@ export const MAGIC_SIGNATURE_BYTES: Record<Exclude<FileSignatureKind, "none">, r
   pdf: [0x25, 0x50, 0x44, 0x46], // %PDF-
   png: [0x89, 0x50, 0x4e, 0x47],
   jpeg: [0xff, 0xd8, 0xff],
+  webp: [0x52, 0x49, 0x46, 0x46], // RIFF (WebP kapsayıcısı)
   zip: [0x50, 0x4b], // PK (docx/xlsx/odt/ods/pptx)
   ole: [0xd0, 0xcf, 0x11, 0xe0], // doc/xls
 };

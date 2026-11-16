@@ -67,7 +67,7 @@ import type { AiFile, AiProposal } from "../types";
 /** Masaüstü yerleşimleri: yan sütun (genişlik sürüklenir) ya da tam ekran. */
 /** Bir mesaja eklenebilecek en çok dosya (sunucu sınırıyla aynı). */
 const ATTACHMENT_LIMIT = 5;
-const ATTACHMENT_ACCEPT = ".pdf,.png,.jpg,.jpeg,.docx,.xlsx,.md,.markdown,.csv,.txt";
+const ATTACHMENT_ACCEPT = ".pdf,.png,.jpg,.jpeg,.webp,.docx,.xlsx,.md,.markdown,.csv,.txt";
 
 /** Mesaj kutusu düğmelerinin konumu: kapalıyken dikey ortada, açıkken alt satırda (geçiş animasyonlu). */
 const BUTTON_TOP_OPEN = "calc(100% - 2.5rem)";

@@ -7,8 +7,8 @@ export type AttachmentText = { text: string; source: "text" | "ocr"; truncated: 
 
 /** Bu sayının altında metin katmanı olan PDF "seyrek" sayılır ve görüntüleri de okunur. */
 const SPARSE_PDF_TEXT_CHARS = 1500;
-const IMAGE_TYPES = new Set(["image/jpeg", "image/png"]);
-const TEXT_TYPES: Record<string, string> = { md: "text/markdown", markdown: "text/markdown", csv: "text/csv", txt: "text/plain" };
+const IMAGE_TYPES = new Set(["image/jpeg", "image/png", "image/webp"]);
+const TEXT_TYPES: Record<string, string> = { webp: "image/webp", md: "text/markdown", markdown: "text/markdown", csv: "text/csv", txt: "text/plain" };
 
 /**
  * Sohbet eki için düz metin: metin katmanı (PDF, Word, Excel, Markdown, CSV, TXT); yoksa OCR (resim, taranmış PDF).
@@ -31,8 +31,9 @@ export async function extractAttachmentText(bytes: Uint8Array, mimeType: string,
     if (extracted.text && textChars >= 20) return { text: extracted.text, source: "text", truncated: extracted.truncated };
     if (extracted.text) return { text: extracted.text, source: "text", truncated: extracted.truncated };
     return { text: null, reason: extracted.reason === "unsupported" ? "unsupported" : extracted.reason === "failed" ? "failed" : "empty" };
-  } catch {
-    console.error("[shared/files] ATTACHMENT_TEXT_FAILED");
+  } catch (error) {
+    // Teşhis: yalnız hata türü/kodu ve ilk satır (dosya içeriği loglanmaz).
+    console.error("[shared/files] ATTACHMENT_TEXT_FAILED", error instanceof Error ? { name: error.name, code: (error as { code?: string }).code, message: error.message.split("\n")[0].slice(0, 200) } : { name: typeof error });
     return { text: null, reason: "failed" };
   }
 }
