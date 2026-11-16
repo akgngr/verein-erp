@@ -368,6 +368,7 @@
     "title": "Kontensalden"
   },
   "menu": {
+    "dashboard": "Übersicht",
     "invoices": "Rechnungen",
     "sync": "Mitgliedsbeiträge übernehmen",
     "reports": "Berichte",
