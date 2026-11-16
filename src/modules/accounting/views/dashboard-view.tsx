@@ -14,7 +14,7 @@ import { accountingPermissions } from "../permissions";
 import { getBookingTotals } from "../queries/get-booking-totals";
 import { getBookingPeriodRange } from "../services/dashboard-period";
 import { getSettings } from "../queries/get-settings";
-import { summarizeOverdueInvoices } from "../services/dashboard-overdue";
+import { getOverdueInvoiceSummary } from "../queries/get-overdue-invoice-summary";
 import { countMissingReceipts } from "../services/report-builders";
 import { berlinToday } from "../utils";
 
@@ -50,15 +50,12 @@ export async function AccountingDashboardView({ searchParams }: { searchParams: 
     : period === "month" ? (part >= 1 && part <= 12 ? part : 1) : 1;
 
   const db = getDb();
-  const [totals, quarters, missingReceiptCount, overdueInvoices, bookingCount, settings, unmatchedBankCount] = await Promise.all([
+  const [totals, quarters, missingReceiptCount, overdueOpen, bookingCount, settings, unmatchedBankCount] = await Promise.all([
     getBookingTotals(year, getBookingPeriodRange(year, period, validPart)),
     Promise.all([1, 2, 3, 4].map((quarter) =>
       getBookingTotals(year, getBookingPeriodRange(year, "quarter", quarter)))),
     countMissingReceipts(year),
-    db.accountingInvoice.findMany({
-      where: { kind: "INVOICE", status: "ISSUED", dueDate: { lt: now } },
-      select: { grossCents: true, paidCents: true, skontoCents: true },
-    }),
+    getOverdueInvoiceSummary(now),
     db.accountingBooking.count({
       where: {
         year, reversedAt: null, type: { not: "TRANSFER" },
@@ -73,7 +70,6 @@ export async function AccountingDashboardView({ searchParams }: { searchParams: 
     db.accountingBankTransaction.count({ where: { status: "OPEN" } }),
   ]);
 
-  const overdueOpen = summarizeOverdueInvoices(overdueInvoices);
   const periodLabel = period === "year" ? String(year)
     : period === "quarter" ? t("quarter", { n: validPart })
     : `${t("monthLabel")} ${validPart}`;
