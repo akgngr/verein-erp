@@ -39,7 +39,7 @@ Verein ERP 36 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekra
 | [Muhasebe](./moduller/accounting) | Alman dernek mevzuatına uygun çift taraflı defter tutma, fiş ve bütçe yönetimi. | 1.22.1 |
 | [Öğrenci takibi](./moduller/progress) | Kurs öğrencilerinin yoklaması, sınav ve notları, gelişim notları ve veli raporu. | 1.1.2 |
 | [Öğrenciler](./moduller/students) | Kurs ve Nachhilfe öğrencileri, veliler ve DATEV uyumlu borçlu (Debitor) kayıtları. | 1.4.7 |
-| [Security Monitor](./moduller/security-monitor) | Regularly runs system security tests and monitors results | 1.3.2 |
+| [Security Monitor](./moduller/security-monitor) | Regularly runs system security tests and monitors results | 1.3.3 |
 | [SEPA otomatik ödeme](./moduller/sepa) | Aidat ve kurs ücretleri için SEPA-Lastschrift (pain.008) tahsilatı. | 1.0.2 |
 | [Takvim](./moduller/calendar) | Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve son tarihler tek görünümde. | 1.3.6 |
 | [Toplantılar](./moduller/meetings) | Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar. | 1.3.6 |
