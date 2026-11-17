@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.3.9",
+      "date": "2026-11-17",
+      "appVersion": "0.41.0",
+      "title": {
+        "tr": "Katılımcı kontrolleri ortak UI katmanında",
+        "de": "Teilnehmer-Steuerung in gemeinsamer UI-Schicht"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Katılımcı ekleme, toplu işaretleme, hızlı konuk girişi, silme ve bildirim akışları FormTextField, ActionButton ve notify adapter katmanına taşındı.",
+          "de": "Teilnehmer hinzufügen, Sammelmarkierung, schnelle Gast-Eingabe, Entfernen und Benachrichtigungen verwenden nun FormTextField-, ActionButton- und Notify-Adapter."
+        }
+      ]
+    },
+    {
       "version": "1.3.8",
       "date": "2026-11-17",
       "appVersion": "0.41.0",
