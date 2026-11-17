@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.10.9",
+      "date": "2026-11-17",
+      "appVersion": "0.41.0",
+      "title": {
+        "tr": "Onay eylemleri ortak UI katmanında",
+        "de": "Freigabeaktionen in gemeinsamer UI-Schicht"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Workflow onay/red eylemleri ortak ActionButton/notify pattern'lerine taşındı; approvals panel artık HeroUI Button/Toast bileşenlerini doğrudan içe aktarmıyor.",
+          "de": "Workflow-Freigabe/Ablehnung verwendet gemeinsame ActionButton-/Notify-Patterns; das Approvals-Panel importiert HeroUI Button/Toast nicht mehr direkt."
+        }
+      ]
+    },
+    {
       "version": "0.10.8",
       "date": "2026-11-17",
       "appVersion": "0.41.0",
