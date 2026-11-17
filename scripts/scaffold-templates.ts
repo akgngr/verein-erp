@@ -78,6 +78,11 @@ function messages(n: ScaffoldNames, locale: "tr" | "de") {
       deleteTitle: tr ? "Kaydı sil" : "Eintrag löschen",
       deleteMessage: tr ? "\"{title}\" kalıcı olarak silinecek. Onaylıyor musunuz?" : "„{title}“ wird dauerhaft gelöscht. Fortfahren?",
       deleted: tr ? "Kayıt silindi." : "Eintrag gelöscht.",
+      bulkActivate: tr ? "Aktif yap" : "Aktiv setzen",
+      bulkPassivate: tr ? "Pasif yap" : "Passiv setzen",
+      bulkSuccess: tr
+        ? "{updated} kayıt güncellendi, {skipped} kayıt zaten hedef durumdaydı."
+        : "{updated} Einträge aktualisiert, {skipped} Einträge waren bereits im Zielstatus.",
     },
     form: {
       createTitle: tr ? "Yeni kayıt" : "Neuer Eintrag",
@@ -223,9 +228,12 @@ import type { ${pascal}Row } from "../types";
 export const ITEM_SORTABLE_FIELDS = ["title", "updatedAt", "createdAt"] as const;
 export const ITEM_DEFAULT_SORT = "updatedAt";
 
-/** Liste sorgusu: arama (başlık/açıklama), durum filtresi, sıralama ve sayfalama. */
-export async function list${pascal}Items(params: ListParams<"status">): Promise<ListResult<${pascal}Row>> {
-  const where: Prisma.${pascal}ItemWhereInput = {
+export type ${pascal}ItemFilterKeys = "status";
+
+export function build${pascal}ItemWhere(
+  params: ListParams<${pascal}ItemFilterKeys>,
+): Prisma.${pascal}ItemWhereInput {
+  return {
     ...(params.q
       ? {
           OR: [
@@ -236,6 +244,11 @@ export async function list${pascal}Items(params: ListParams<"status">): Promise<
       : {}),
     ...(params.filters.status ? { isActive: params.filters.status === "active" } : {}),
   };
+}
+
+/** Liste sorgusu: arama (başlık/açıklama), durum filtresi, sıralama ve sayfalama. */
+export async function list${pascal}Items(params: ListParams<${pascal}ItemFilterKeys>): Promise<ListResult<${pascal}Row>> {
+  const where = build${pascal}ItemWhere(params);
   const db = getDb();
   const [rows, total] = await Promise.all([
     db.${model}.findMany({
