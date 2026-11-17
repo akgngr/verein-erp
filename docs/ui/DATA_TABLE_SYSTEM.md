@@ -53,3 +53,34 @@ Query seçiminde kullanıcıya önce sayfa kapsamı, ardından tüm filtre sonuc
 ## Performans
 
 Binlerce ID browser'a taşınmaz. Pagination değişiminde selection davranışı açık ve testlidir.
+
+## Server-side bulk action sözleşmesi
+
+Bulk action bir UI callback'i değildir; gerçek yetki ve kapsam server action içinde yeniden doğrulanır.
+
+1. Action `createAction({ permission, schema, handler })` kullanır.
+2. `selection`, `dataTableSelectionSchema` ile doğrulanır ve `parseBulkSelection(..., { allowedFilterKeys })` üzerinden geçer.
+3. Query selection için istemciden gelen her filtre anahtarı whitelist içinde olmalıdır.
+4. Modül tenant/organization kapsamı taşıyorsa scope istemciden güvenilir kabul edilmez; session/actor bağlamından server tarafında eklenir.
+5. `mine` gibi kullanıcıya bağlı filtreler session kullanıcısı ile yeniden çözülür.
+6. Soft-delete/retention/business-state koşulları modülün kendi query builder'ında korunur.
+7. İşlem `audit` kaydı bırakır. En az `selectionType`, seçilen/güncellenen/atlanan adet ve hedef state/action kaydedilir; PII listesi audit metadata'ya kopyalanmaz.
+
+Members ve Documents modülleri referans implementasyonlardır.
+
+## Destructive işlemler
+
+Silme, iptal, geri alınamaz arşivleme veya finansal etkili bulk action doğrudan çalışmaz. UI önce ortak `ConfirmDialog` ile kapsamı ve sonucu açıklar. Server action confirmation bilgisini bir güvenlik sınırı kabul etmez; permission ve business rule kontrollerini yine yapar.
+
+## Request mi Automation mı?
+
+Varsayılan karar:
+- küçük, tek veritabanı içi ve birkaç saniye içinde tamamlanan toplu güncellemeler request içinde kalabilir;
+- **500+ kayıt**, dosya üretimi, e-posta/dış API, ağır hesaplama veya yaklaşık **5 saniyeyi aşabilecek** işler Automation/Export pipeline'a taşınır;
+- modül daha düşük eşik seçebilir; daha yüksek eşik için ölçüm ve gerekçe gerekir;
+- worker girdisine tüm satırlar veya PII listesi değil, query/ID kapsamı ve gerekli metadata taşınır;
+- worker çalışırken permission, tenant scope ve kaynak kayıt geçerliliği tekrar doğrulanır.
+
+## Pilot kabulü
+
+Members ve Documents listeleri aynı selection/bulk sözleşmesini kullanır. Quality Gate içindeki typecheck, lint, tests, build, hydration smoke ve theme acceptance bu iki pilotun regresyon kapısıdır.
