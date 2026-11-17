@@ -1,13 +1,15 @@
 # Accounting Dashboard, Shared Widgets & Website Documentation — Technical Specification and TODO
 
-**Status:** Proposed / not implemented by this document  
+**Status:** Implemented as ACC-9 (single organization, EUR, `defineCards`) — see [ACC9_IMPLEMENTATION_STATUS.md](./ACC9_IMPLEMENTATION_STATUS.md); unchecked items are out of scope or deferred  
 **Scope:** Accounting module, shared dashboard infrastructure, website documentation  
 **Priority:** ACC-8 P1; DOC-1 mandatory cross-cutting acceptance criterion  
 **Date:** 2026-11-16  
 **Target:** Ordvexa / Verein ERP  
 **Related:** `docs/ACCOUNTING_ROADMAP.md`, `docs/AUTOMATION_ENGINE.md`, `website/docs/kullanim/moduller/accounting.md`
 
-> **2026-11-16 güncellemesi:** Bu belge ilk taslaktır. Mevcut proje altyapısı `defineCards` ve tek kurumlu EUR modelini kullanır. `defineModuleWidget`, multi-tenant, dört sütunlu grid, kart başına kalıcı ayarlar ve DE website sayfaları mevcut ACC-9 kapsamında değildir. Uygulama durumu ve geçerli kararlar için [ACC-9 uygulama durumuna](./ACC9_IMPLEMENTATION_STATUS.md) bakınız. Dashboard kartları PR #183, özet ekran/önerilerin ilk sürümü PR #184 ile ana dala alınmıştır.\n\n## 1. Purpose and constraints
+> **2026-11-16 güncellemesi:** Bu belge ilk taslaktır. Mevcut proje altyapısı `defineCards` ve tek kurumlu EUR modelini kullanır. `defineModuleWidget`, multi-tenant, dört sütunlu grid, kart başına kalıcı ayarlar ve DE website sayfaları mevcut ACC-9 kapsamında değildir. Uygulama durumu ve geçerli kararlar için [ACC-9 uygulama durumuna](./ACC9_IMPLEMENTATION_STATUS.md) bakınız. Dashboard kartları PR #183, özet ekran/önerilerin ilk sürümü PR #184 ile ana dala alınmıştır.
+
+## 1. Purpose and constraints
 
 Provide an accounting overview with KPI cards, trends, alerts and actionable recommendations. Allow users to add permitted accounting widgets to the **main application dashboard**, without coupling the shared dashboard to accounting. Maintain detailed **website/** documentation for every accounting feature change, in addition to engineering docs.
 
@@ -103,39 +105,41 @@ website/docs/gelistirici/             # adapt to existing documentation conventi
 
 ## 4. Detailed implementation TODO — ACC-8
 
+> Durum (2026-11-17): `[x]` = main'de (PR #179–#193). `[ ]` = ACC-9 kapsamı dışında bırakıldı (multi-tenant, widget boyutlandırma/sürükleme, dismiss/snooze yaşam döngüsü, AI açıklaması, yük testi, DE website) veya ayrı yol haritasında.
+
 ### ACC-8.0 Discovery and ADR
-- [ ] Inventory current dashboard routes, registry, widget persistence, permissions and UI components.
-- [ ] Inventory accounting queries and confirm KPI source-of-truth, EÜR vs double-entry semantics and existing tax/calendar integrations.
-- [ ] Write ADR for shared widget ownership, extension contract, settings persistence, cache strategy and failure isolation.
-- [ ] Document dependency on the existing module versioning and releases discipline.
+- [x] Inventory current dashboard routes, registry, widget persistence, permissions and UI components.
+- [x] Inventory accounting queries and confirm KPI source-of-truth, EÜR vs double-entry semantics and existing tax/calendar integrations.
+- [x] Write ADR for shared widget ownership, extension contract, settings persistence, cache strategy and failure isolation.
+- [x] Document dependency on the existing module versioning and releases discipline.
 
 ### ACC-8.1 Accounting data layer
-- [ ] Implement/reuse tenant-scoped, permission-checked dashboard aggregation services.
-- [ ] Define calculation specifications and unit tests for each KPI.
-- [ ] Handle partial payments, refunds, storno, tax treatment, date boundaries and decimal rounding.
+- [x] Implement/reuse tenant-scoped, permission-checked dashboard aggregation services.
+- [x] Define calculation specifications and unit tests for each KPI.
+- [x] Handle partial payments, refunds, storno, tax treatment, date boundaries and decimal rounding.
 - [ ] Add filters, drill-down IDs, freshness timestamps and bounded queries.
 - [ ] Add performance measurements and appropriate indexes only after profiling.
-- [ ] Validate cross-widget consistency with source reports and invoice totals.
+- [x] Validate cross-widget consistency with source reports and invoice totals.
 
 ### ACC-8.2 Accounting dashboard UI
-- [ ] Add accounting dashboard route/section within existing navigation.
-- [ ] Implement summary cards, trend charts, aging, empty/loading/error states and responsive layout.
-- [ ] Implement source links, filter controls, accessible chart alternatives and translated explanations.
-- [ ] Add visual regression and mobile/keyboard/accessibility tests.
+- [x] Add accounting dashboard route/section within existing navigation.
+- [x] Implement summary cards, trend charts, aging, empty/loading/error states and responsive layout.
+- [x] Implement source links, filter controls, accessible chart alternatives and translated explanations.
+- [x] Add visual regression and mobile/keyboard/accessibility tests.
 
 ### ACC-8.3 Shared widget registry and main dashboard
 - [ ] Define typed registration, validation and stable widget keys.
-- [ ] Add accounting widget registrations without making dashboard depend on accounting.
+- [x] Add accounting widget registrations without making dashboard depend on accounting.
 - [ ] Implement authorized widget catalog and add/remove/reorder/resize flows.
 - [ ] Persist user layouts, validated widget settings and layout schema version.
 - [ ] Handle disabled modules, permission revocation, stale settings and widget errors.
 - [ ] Add tests for tenant isolation, access revocation, registry collisions and persistence migration.
 
 ### ACC-8.4 Recommendations
-- [ ] Define deterministic rule catalog, evidence links and priority/severity.
-- [ ] Implement overdue invoices, unmatched bank entries, missing documents and tax calendar alerts.
+- [x] Define deterministic rule catalog, evidence links and priority/severity.
+- [x] Implement overdue invoices, unmatched bank entries, missing documents and tax calendar alerts.
 - [ ] Support dismiss/snooze/resolved lifecycle with audit records.
-- [ ] Provide explanation and explicit human approval before any financial side effect.
+- [x] Provide explanation and explicit human approval before any financial side effect.
 - [ ] Optional AI explanation only after privacy/security review and alignment with current AI v2 contract.
 - [ ] Test stale recommendations, false positives, authorization and duplicate event handling.
 
@@ -143,8 +147,8 @@ website/docs/gelistirici/             # adapt to existing documentation conventi
 - [ ] Test load with large transaction volumes and many widgets.
 - [ ] Instrument latency, query counts, widget failures and cache invalidation.
 - [ ] Ensure no sensitive data leaks through logs, browser cache or cross-tenant caching.
-- [ ] Run migration, unit, integration, E2E, typecheck, lint and relevant CI gates.
-- [ ] Update accounting module version and `releases.json`; run `module:sync` and `check-module-versions`.
+- [x] Run migration, unit, integration, E2E, typecheck, lint and relevant CI gates.
+- [x] Update accounting module version and `releases.json`; run `module:sync` and `check-module-versions`.
 
 ## 5. Website documentation policy — DOC-1
 
@@ -164,26 +168,26 @@ website/docs/gelistirici/             # adapt to existing documentation conventi
 | Bug fix | Update docs when user-visible behavior changes; otherwise note why no update is needed |
 
 ### 5.2 Website TODO
-- [ ] Inspect website documentation framework, current sidebar/routes, localization, frontmatter and build scripts before editing.
+- [x] Inspect website documentation framework, current sidebar/routes, localization, frontmatter and build scripts before editing.
 - [ ] Update `website/docs/kullanim/moduller/accounting.md` as canonical entry point.
-- [ ] Add dashboard guide: KPI definitions, filters, drill-downs, recommendations and screenshot(s) from implemented UI.
+- [x] Add dashboard guide: KPI definitions, filters, drill-downs, recommendations and screenshot(s) from implemented UI.
 - [ ] Add main dashboard widget guide: catalog, add/remove, reorder, resize, permission effects and troubleshooting.
 - [ ] Add invoice, banking, taxes, reports and GoBD subpages **only if justified by existing docs structure**.
 - [ ] Add developer guide for widget registration, data provider contract, authorization, settings and tests.
 - [ ] Maintain Turkish and German docs consistently where supported; add English only when website localization supports it.
-- [ ] Add links from navigation/sidebar and verify no broken internal links.
-- [ ] Explain limitations and avoid asserting GoBD certification or regulatory approval without evidence.
+- [x] Add links from navigation/sidebar and verify no broken internal links.
+- [x] Explain limitations and avoid asserting GoBD certification or regulatory approval without evidence.
 - [ ] Keep screenshots current; redact personal/financial data and use demo fixtures.
-- [ ] Run website build/link checks and ensure published documentation matches actual implemented behavior.
+- [x] Run website build/link checks and ensure published documentation matches actual implemented behavior.
 
 ### 5.3 PR template acceptance criteria
-- [ ] Feature and calculation specification updated in `docs/`.
-- [ ] Corresponding user guide updated in `website/`, or PR explicitly explains why not applicable.
+- [x] Feature and calculation specification updated in `docs/`.
+- [x] Corresponding user guide updated in `website/`, or PR explicitly explains why not applicable.
 - [ ] Website pages and navigation links verified; translations updated where supported.
 - [ ] Screenshots/examples match implemented UI, not mockups presented as live.
-- [ ] Tests for business logic, permissions and relevant UI flows pass.
+- [x] Tests for business logic, permissions and relevant UI flows pass.
 - [ ] Database migration and backward compatibility verified where applicable.
-- [ ] Module version bumped and `releases.json` synchronized; CI passes.
+- [x] Module version bumped and `releases.json` synchronized; CI passes.
 - [ ] PR describes risks, test evidence, docs links and deployment/rollback considerations.
 
 ## 6. PR breakdown and dependencies
