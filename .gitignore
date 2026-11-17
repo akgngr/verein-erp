@@ -77,3 +77,9 @@ download/*.zip
 /.env
 .module-backups/
 *.private.pem
+
+# e-invoice conformance corpus / downloaded validators (CI)
+/einvoice-out/
+/tools/mustang.jar
+/tools/kosit/
+/tools/xr/

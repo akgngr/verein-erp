@@ -13,7 +13,7 @@ Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura v
 |---|---|
 | Anahtar | `accounting` |
 | Tür | Resmî modül |
-| Sürüm | 1.23.1 |
+| Sürüm | 1.23.2 |
 | Sayfalar | `/muhasebe`, `/muhasebe/panel`, `/muhasebe/faturalar`, `/muhasebe/gelen-faturalar`, `/muhasebe/cariler`, `/muhasebe/banka`, `/muhasebe/uyelik-aktarimi`, `/muhasebe/raporlar`, `/muhasebe/vergi`, `/muhasebe/hibeler`, `/muhasebe/sepa`, `/muhasebe/butce`, `/muhasebe/ekler`, `/muhasebe/gobd`, `/muhasebe/yil-kapanisi`, `/muhasebe/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -43,6 +43,13 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_accounting_summary` · `get_bank_inbox_summary` · `get_open_items_summary` · `get_payables_summary` · `get_report_link` · `get_vat_summary`
 
 ## Sürüm notları
+
+### 1.23.2 — E-fatura uygunluk düzeltmesi (BR-CO-26)
+
+_2026-11-17_
+
+- **Düzeltme:** USt-IdNr. olmayan satıcılarda (ör. §19 kapsamındaki dernekler) XRechnung/ZUGFeRD çıktısı EN 16931 BR-CO-26 kuralına göre geçersizdi. Kurum profilindeki sicil numarası artık satıcının yasal kayıt numarası (BT-30) olarak eklenir; ikisi de yoksa dışa aktarma öncesi açık bir hata gösterilir.
+- **İyileştirme:** Giden e-faturalar CI'da Mustang (EN 16931, XRechnung, Factur-X, veraPDF PDF/A-3) ve resmî KoSIT doğrulayıcısı ile sentetik örneklerle düzenli olarak doğrulanır.
 
 ### 1.23.1 — Muhasebe istatistik kartları ortak UI katmanında
 
@@ -89,11 +96,4 @@ _2026-11-16_
 
 - **İyileştirme:** Muhasebe paneli vadesi geçmiş faturaların tamamını tek seferde belleğe almak yerine 250 kayıtlık sayfalarda işler; fatura başına açık tutar ve Skonto semantiği korunur.
 
-### 1.22.9 — ACC-9 KPI mutabakatı
-
-_2026-11-16_
-
-- **Düzeltme:** Gelir-gider raporu tüm iptal edilmemiş ve virman olmayan fişlerin brüt toplamını ayrıca taşır; kategorisiz fişler mutabakat farkı olarak görünür ve dashboard ile rapor toplamları aynı kapsamda açıklanabilir.
-- **İyileştirme:** Muhasebe AI özeti brüt gelir, gider, fark ve kategorisiz tutarları açıkça döndürür; kategori satırlarıyla genel toplam arasındaki fark saklanmaz.
-
-Daha eski 35 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/accounting/releases.json)
+Daha eski 36 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/accounting/releases.json)

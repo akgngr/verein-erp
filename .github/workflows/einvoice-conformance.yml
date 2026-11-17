@@ -1,0 +1,109 @@
+name: E-invoice conformance
+
+# Generates XRechnung (UBL), EN 16931 CII and ZUGFeRD PDF/A-3 samples with the real accounting
+# builders and validates them with external reference tools:
+#   - Mustang CLI (EN 16931 / XRechnung / Factur-X schematron + veraPDF PDF/A-3 check), pinned + sha256
+#   - KoSIT validator with the official XRechnung configuration
+# Synthetic fixtures only (tests/fixtures/einvoice-conformance.ts); no personal data.
+
+on:
+  pull_request:
+    paths:
+      - "src/modules/accounting/services/einvoice-*.ts"
+      - "src/modules/accounting/services/zugferd-pdf.ts"
+      - "src/modules/accounting/pdf/**"
+      - "scripts/einvoice-conformance/**"
+      - "tests/fixtures/einvoice-conformance.ts"
+      - ".github/workflows/einvoice-conformance.yml"
+  push:
+    branches: [main]
+    paths:
+      - "src/modules/accounting/services/einvoice-*.ts"
+      - "src/modules/accounting/services/zugferd-pdf.ts"
+      - "scripts/einvoice-conformance/**"
+      - "tests/fixtures/einvoice-conformance.ts"
+  schedule:
+    - cron: "17 4 * * 1" # weekly: catches new rule-set releases
+  workflow_dispatch:
+
+concurrency:
+  group: einvoice-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  MUSTANG_VERSION: "2.26.0"
+  MUSTANG_SHA256: "42d7868cb68264874a7b8cab4c3587b03b23ccc7cd72373da917f66758bb9736"
+
+jobs:
+  conformance:
+    name: E-invoice conformance (Mustang + KoSIT)
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Generate corpus
+        run: pnpm einvoice:corpus einvoice-out
+
+      - name: Download Mustang CLI (pinned, checksum verified)
+        run: |
+          mkdir -p tools
+          curl -sSfL -o tools/mustang.jar "https://repo1.maven.org/maven2/org/mustangproject/Mustang-CLI/${MUSTANG_VERSION}/Mustang-CLI-${MUSTANG_VERSION}.jar"
+          echo "${MUSTANG_SHA256}  tools/mustang.jar" | sha256sum -c -
+
+      - name: Download KoSIT validator + XRechnung configuration
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          mkdir -p tools/kosit tools/xr
+          validator_tag=$(gh release view --repo itplr-kosit/validator --json tagName -q .tagName)
+          config_tag=$(gh release view --repo itplr-kosit/validator-configuration-xrechnung --json tagName -q .tagName)
+          echo "KoSIT validator: $validator_tag · XRechnung configuration: $config_tag" | tee -a "$GITHUB_STEP_SUMMARY"
+          gh release download "$validator_tag" --repo itplr-kosit/validator --pattern "*.zip" --dir tools/kosit
+          gh release download "$config_tag" --repo itplr-kosit/validator-configuration-xrechnung --pattern "*.zip" --dir tools/xr
+          (cd tools/kosit && unzip -q -o ./*.zip)
+          (cd tools/xr && unzip -q -o ./*.zip)
+          echo "KoSIT archive contents:"; find tools/kosit -name '*.jar' -printf '  %p %s\n'
+          # Distribution layout (1.6.x): validator-<version>.jar with its dependencies in libs/ (manifest
+          # Class-Path). Older releases ship a single *standalone*.jar. Never pick a library from libs/.
+          jar=$(find tools/kosit -name 'validat*.jar' -not -path '*/libs/*' | sort | head -1)
+          scenarios=$(find tools/xr -name scenarios.xml | head -1)
+          if [ -z "$jar" ] || [ -z "$scenarios" ]; then echo "::error::KoSIT validator jar or scenarios.xml not found"; exit 1; fi
+          conf=$(dirname "$scenarios")
+          echo "Using $jar with $conf" | tee -a "$GITHUB_STEP_SUMMARY"
+          echo "KOSIT_JAR=$jar" >> "$GITHUB_ENV"
+          echo "KOSIT_CONF=$conf" >> "$GITHUB_ENV"
+
+      - name: Validate
+        run: |
+          set -o pipefail
+          test -n "$KOSIT_JAR" || { echo "::error::KOSIT_JAR is empty"; exit 1; }
+          scripts/einvoice-conformance/validate.sh einvoice-out tools/mustang.jar "$KOSIT_JAR" "$KOSIT_CONF" | tee einvoice-out/summary.txt
+          { echo '```'; cat einvoice-out/summary.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: einvoice-conformance
+          path: einvoice-out
+          retention-days: 14

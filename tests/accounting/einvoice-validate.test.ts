@@ -21,9 +21,15 @@ test("geçerli fatura hata vermez", () => {
 
 test("BR-DE satıcı ve ödeme kuralları", () => {
   const found = rules({ ...good, iban: null, seller: { ...party, phone: null, email: null, city: null, postalCode: null, vatId: null, taxNumber: null } });
-  for (const rule of ["BR-DE-1", "BR-DE-3", "BR-DE-4", "BR-DE-6", "BR-DE-7", "BR-DE-16", "BR-S-02"]) assert.ok(found.includes(rule), rule);
+  for (const rule of ["BR-DE-1", "BR-DE-3", "BR-DE-4", "BR-DE-6", "BR-DE-7", "BR-DE-16", "BR-S-02", "BR-CO-26"]) assert.ok(found.includes(rule), rule);
   assert.ok(rules({ ...good, buyerReference: null }).includes("BR-DE-15"));
   assert.equal(validateOutgoing({ ...good, buyerReference: null }).find((issue) => issue.rule === "BR-DE-15")?.severity, "warning");
+});
+
+test("BR-CO-26: USt-IdNr. yoksa sicil numarası gerekir; vergi numarası tek başına yetmez", () => {
+  const noVat = { ...good, seller: { ...party, vatId: null, taxNumber: "27/123/45678" } };
+  assert.ok(rules(noVat).includes("BR-CO-26"));
+  assert.ok(!rules({ ...good, seller: { ...noVat.seller, legalRegistration: "VR 12345 B" } }).includes("BR-CO-26"));
 });
 
 test("toplam ve KDV tutarlılığı", () => {

@@ -14,6 +14,8 @@ export type XInvoiceParty = {
   email: string | null;
   phone: string | null;
   contactName: string | null;
+  /** BT-30 seller legal registration identifier (e.g. Vereinsregister "VR 12345"). Required by BR-CO-26 when no VAT ID. */
+  legalRegistration?: string | null;
 };
 
 export type XInvoiceData = {
@@ -78,7 +80,7 @@ function party(p: XInvoiceParty, role: "seller" | "buyer"): string {
     p.email ? `<cbc:EndpointID schemeID="EM">${esc(p.email)}</cbc:EndpointID>` : "",
     `<cac:PostalAddress>${tag("cbc:StreetName", p.street)}${tag("cbc:CityName", p.city)}${tag("cbc:PostalZone", p.postalCode)}<cac:Country><cbc:IdentificationCode>${esc(p.countryCode)}</cbc:IdentificationCode></cac:Country></cac:PostalAddress>`,
     taxScheme,
-    `<cac:PartyLegalEntity>${tag("cbc:RegistrationName", p.name)}</cac:PartyLegalEntity>`,
+    `<cac:PartyLegalEntity>${tag("cbc:RegistrationName", p.name)}${tag("cbc:CompanyID", p.legalRegistration)}</cac:PartyLegalEntity>`,
     contact,
     "</cac:Party>",
   ].join("");
