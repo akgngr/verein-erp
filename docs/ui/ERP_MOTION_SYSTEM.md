@@ -35,3 +35,17 @@ Motion, dekoratif hareket değil; kullanıcının state değişimini anlamasına
 - selection/state feedback: normal
 - drawer/popover/surface enter: normal veya slow
 - success feedback: normal
+
+## Pattern standardı
+
+- **Page/Surface/Card enter:** yalnız ilk görünümde `.erp-motion-enter`; tekrar render'da sürekli oynatılmaz.
+- **Hover/focus:** `.erp-motion-interactive`; renk, border, shadow ve küçük transform ile sınırlıdır.
+- **Selection:** tablo satırı ve toplu işlem yüzeyi `.erp-motion-selection` kullanır.
+- **Drawer/Popover:** HeroUI/React Aria'nın erişilebilir state yönetimi korunur; özel geçiş eklenirse aynı motion tokenları kullanılır.
+- **Success/error:** kullanıcı işlemin sonucunu toast/status ile görür; motion tek başına anlam taşımaz.
+
+## Erişilebilirlik ve performans
+
+`prefers-reduced-motion: reduce` altında süre tokenları 0.01ms'e iner. Focus sırası, klavye davranışı ve ekran okuyucu metni animasyondan bağımsızdır. Yeni animation runtime paketi varsayılan değildir; CSS veya Web Animations API yeterliyse ek bağımlılık kurulmaz.
+
+CI'daki `tests/shared/ui-platform-contract.test.ts` semantic/motion tokenlarını ve reduced-motion temelini korur.
