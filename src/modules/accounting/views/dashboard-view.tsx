@@ -175,11 +175,11 @@ export async function AccountingDashboardView({ searchParams }: { searchParams: 
           />
 
           <div className="grid gap-4 sm:grid-cols-3">
-            <KpiTile index={0} label={t("income")} cents={overview.current.incomeCents} change={percentChange(overview.current.incomeCents, overview.previous.incomeCents)}
+            <KpiTile label={t("income")} cents={overview.current.incomeCents} change={percentChange(overview.current.incomeCents, overview.previous.incomeCents)}
               changeLabel={changeLabel} noChange={t("noComparison")} upIsGood icon={ArrowUpRight} tone="success" trend={trendIncome} />
-            <KpiTile index={1} label={t("expense")} cents={overview.current.expenseCents} change={percentChange(overview.current.expenseCents, overview.previous.expenseCents)}
+            <KpiTile label={t("expense")} cents={overview.current.expenseCents} change={percentChange(overview.current.expenseCents, overview.previous.expenseCents)}
               changeLabel={changeLabel} noChange={t("noComparison")} upIsGood={false} icon={ArrowDownRight} tone="accent" trend={trendExpense} />
-            <KpiTile index={2} label={t("difference")} cents={overview.current.netCents} change={percentChange(overview.current.netCents, overview.previous.netCents)}
+            <KpiTile label={t("difference")} cents={overview.current.netCents} change={percentChange(overview.current.netCents, overview.previous.netCents)}
               changeLabel={changeLabel} noChange={t("noComparison")} upIsGood icon={Scale} tone="neutral" trend={trendNet} />
           </div>
 

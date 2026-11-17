@@ -1,3 +1,4 @@
+import { SurfaceCard } from "@/shared/components/ui/surface-card";
 import { formatMoney } from "@/shared/money";
 
 const SLICE_CLASSES = ["stroke-accent", "stroke-success-500", "stroke-warning-500", "stroke-danger-500", "stroke-ink-500", "stroke-ink-300"];
@@ -19,7 +20,8 @@ export function ExpenseDonut({ slices, otherCents, labels }: {
   const offsets = rows.reduce<number[]>((acc, row) => [...acc, (acc.at(-1) ?? 0) + (row.cents / Math.max(1, total)) * circumference], [0]);
 
   return (
-    <section className="erp-motion-enter rounded-2xl border border-[var(--ui-border-default)] bg-[var(--ui-surface-card)] p-5 shadow-[var(--ui-shadow-card)] sm:p-6">
+    <section aria-label={labels.title}>
+    <SurfaceCard className="p-0" contentClassName="p-5 sm:p-6">
       <h2 className="text-base font-semibold tracking-tight text-foreground">{labels.title}</h2>
       <p className="text-xs text-ink-500 sm:text-sm">{labels.description}</p>
       {total === 0 ? (
@@ -58,6 +60,7 @@ export function ExpenseDonut({ slices, otherCents, labels }: {
           </ul>
         </div>
       )}
+    </SurfaceCard>
     </section>
   );
 }
