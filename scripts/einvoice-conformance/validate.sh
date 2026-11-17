@@ -21,7 +21,13 @@ if [ -n "$KOSIT_JAR" ]; then
   # Official KoSIT validator with the XRechnung configuration (UBL corpus). One report per file;
   # a report containing <rep:reject> means "not acceptable".
   KOSIT_OUT="$REPORTS/kosit"; mkdir -p "$KOSIT_OUT"
-  java -jar "$KOSIT_JAR" -s "$KOSIT_CONF/scenarios.xml" -r "$KOSIT_CONF" -o "$KOSIT_OUT" "$CORPUS"/xrechnung-ubl/*.xml | tee "$REPORTS/kosit.log" || true
+  # 1.6.x ships validator-<v>.jar without Main-Class plus libs/; older releases have a runnable standalone jar.
+  if unzip -p "$KOSIT_JAR" META-INF/MANIFEST.MF 2>/dev/null | grep -q '^Main-Class:'; then
+    KOSIT_CMD=(java -jar "$KOSIT_JAR")
+  else
+    KOSIT_CMD=(java -cp "$KOSIT_JAR:$(dirname "$KOSIT_JAR")/libs/*" de.kosit.validationtool.cmd.CommandLineApplication)
+  fi
+  "${KOSIT_CMD[@]}" -s "$KOSIT_CONF/scenarios.xml" -r "$KOSIT_CONF" -o "$KOSIT_OUT" "$CORPUS"/xrechnung-ubl/*.xml | tee "$REPORTS/kosit.log" || true
   reports=$(find "$KOSIT_OUT" -name '*.xml' | wc -l)
   rejected=$(grep -l '<rep:reject' "$KOSIT_OUT"/*.xml 2>/dev/null | wc -l)
   echo "kosit: reports=$reports rejected=$rejected"
