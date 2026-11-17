@@ -76,8 +76,8 @@
 
 ## Faz 7 — Pilot modüller
 
-- [ ] Members listesinde çoklu seçim uygula.
-- [ ] Members için güvenli bir bulk action pilotu ekle.
+- [x] Members listesinde çoklu seçim uygula.
+- [x] Members için güvenli bir bulk action pilotu ekle.
 - [ ] İkinci bir modülde (documents/users uygunluk durumuna göre) selection + bulk action uygula.
 - [ ] iki pilot modülde keyboard/mobile/hydration testlerini çalıştır.
 

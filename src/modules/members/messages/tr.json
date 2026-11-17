@@ -647,5 +647,10 @@
         "description": "Mevcut aidat datasetRef seçimini izinli durum ve kalan tutar filtreleriyle daraltıp yeni süreli referans üretir. Kimlik seçicisi veya SQL kabul etmez; yalnız referans ve kayıt sayısı döner."
       }
     }
+  },
+  "bulk": {
+    "activate": "Aktif yap",
+    "passivate": "Pasif yap",
+    "success": "{updated} üye güncellendi, {skipped} kayıt atlandı."
   }
 }

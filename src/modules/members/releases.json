@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.14.0",
+      "date": "2026-11-17",
+      "appVersion": "0.41.0",
+      "title": {
+        "tr": "Üye listesinde toplu seçim ve durum işlemleri",
+        "de": "Mehrfachauswahl und Status-Sammelaktionen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Üye listesinde çoklu seçim, filtre sonucunun tamamını seçme ve güvenli toplu Aktif/Pasif durum işlemleri eklendi. Ayrılmış veya vefat etmiş üyeler toplu durum işleminde değiştirilmez.",
+          "de": "Die Mitgliederliste unterstützt Mehrfachauswahl, Auswahl aller gefilterten Ergebnisse sowie sichere Sammelaktionen für Aktiv/Passiv. Ausgetretene oder verstorbene Mitglieder werden dabei nicht geändert."
+        }
+      ]
+    },
+    {
       "version": "1.13.2",
       "date": "2026-11-16",
       "appVersion": "0.41.0",

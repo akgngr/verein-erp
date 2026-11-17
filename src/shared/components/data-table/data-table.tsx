@@ -4,7 +4,7 @@ import { Button, Dropdown, Label, Table } from "@heroui/react";
 import { MoreHorizontal } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Key } from "react";
 
 import {
@@ -81,6 +81,12 @@ export function DataTable<T extends { id: string }>({
       total > visibleIds.length,
   );
 
+  const clearExplicitSelection = useCallback(() => {
+    if (selection?.value.type === "explicit" && selection.value.ids.length > 0) {
+      selection.onChange({ type: "explicit", ids: [] });
+    }
+  }, [selection]);
+
   useEffect(() => {
     if (
       selection?.value.type === "query" &&
@@ -94,14 +100,16 @@ export function DataTable<T extends { id: string }>({
   useEffect(() => {
     if (searchDraft === q) return;
     const timer = setTimeout(() => {
+      clearExplicitSelection();
       setParams({ q: searchDraft }, { resetPage: true });
     }, 300);
     return () => clearTimeout(timer);
-  }, [searchDraft, q, setParams]);
+  }, [clearExplicitSelection, searchDraft, q, setParams]);
 
   const handleSort = (columnKey: Key) => {
     const column = columns.find((item) => item.key === String(columnKey));
     if (!column?.sortable) return;
+    clearExplicitSelection();
     if (sort !== String(columnKey) || !dir) {
       setParams({ sort: String(columnKey), dir: "asc" }, { resetPage: true });
     } else if (dir === "asc") {
@@ -112,14 +120,17 @@ export function DataTable<T extends { id: string }>({
   };
 
   const handleFilterChange = (key: string, value: string) => {
+    clearExplicitSelection();
     setParams({ [`filter.${key}`]: value }, { resetPage: true });
   };
 
   const handlePageChange = (nextPage: number) => {
+    clearExplicitSelection();
     setParams({ page: nextPage > 1 ? String(nextPage) : null });
   };
 
   const handlePageSizeChange = (nextSize: number) => {
+    clearExplicitSelection();
     setParams(
       { pageSize: nextSize !== 10 ? String(nextSize) : null },
       { resetPage: true },
