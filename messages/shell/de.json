@@ -76,7 +76,10 @@
       "label": "Tabelle",
       "previousPage": "Vorherige Seite",
       "nextPage": "Nächste Seite",
-      "pageNumber": "Seite {page}"
+      "pageNumber": "Seite {page}",
+      "selectedCount": "{count} Einträge ausgewählt",
+      "bulkActions": "Sammelaktionen",
+      "clearSelection": "Auswahl aufheben"
     },
     "active": "Aktiv",
     "passive": "Inaktiv",
