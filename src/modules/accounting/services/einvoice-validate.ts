@@ -38,6 +38,8 @@ export function validateOutgoing(data: XInvoiceData): EInvoiceIssue[] {
   add(!data.buyer.city, err("BR-DE-8"));
   add(!data.buyer.postalCode, err("BR-DE-9"));
   add(!data.seller.vatId && !data.seller.taxNumber, err("BR-DE-16"));
+  // BR-CO-26: seller must be identifiable by VAT ID (BT-31) or legal registration (BT-30); a tax number alone is not enough.
+  add(!data.seller.vatId && !data.seller.legalRegistration, err("BR-CO-26"));
   add(!data.seller.street, warn("BR-08"));
   add(!data.buyer.street, warn("BR-10"));
   add(!data.buyerReference, warn("BR-DE-15"));
@@ -109,7 +111,7 @@ function dedupe(issues: EInvoiceIssue[]): EInvoiceIssue[] {
 /** Arayüzde kullanılan tüm kural kodları (çeviri anahtarlarıyla birebir; test bunu denetler). */
 export const EINVOICE_RULES = [
   "BR-02", "BR-03", "BR-05", "BR-06", "BR-07", "BR-08", "BR-09", "BR-10", "BR-11", "BR-16", "BR-22", "BR-25", "BR-27", "BR-55",
-  "BR-CO-09", "BR-CO-10", "BR-CO-13", "BR-CO-14", "BR-CO-15", "BR-CO-16", "BR-CO-25",
+  "BR-CO-09", "BR-CO-10", "BR-CO-13", "BR-CO-14", "BR-CO-15", "BR-CO-16", "BR-CO-25", "BR-CO-26",
   "BR-S-02", "BR-S-08", "BR-S-09", "BR-Z-08", "BR-Z-09", "BR-E-08", "BR-E-09",
   "BR-DE-1", "BR-DE-3", "BR-DE-4", "BR-DE-6", "BR-DE-7", "BR-DE-8", "BR-DE-9", "BR-DE-15", "BR-DE-16", "BR-DE-19",
   "BR-LINE-NET",

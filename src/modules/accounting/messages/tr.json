@@ -1374,7 +1374,8 @@
       "BR-DE-15": "Alıcı referansı (Leitweg-ID) yok; fatura numarası kullanılacak. Kamu kurumlarına faturada Leitweg-ID zorunludur.",
       "BR-DE-16": "Satıcının USt-IdNr. veya vergi numarası eksik.",
       "BR-DE-19": "Derneğin IBAN'ı geçersiz.",
-      "BR-LINE-NET": "Bir kalemde miktar × fiyat net tutarla uyuşmuyor."
+      "BR-LINE-NET": "Bir kalemde miktar × fiyat net tutarla uyuşmuyor.",
+      "BR-CO-26": "Satıcı tanımlanamıyor: USt-IdNr. yoksa dernek/şirket sicil numarası gerekir (Kurum profili → sicil numarası). Vergi numarası tek başına yeterli değildir."
     },
     "check": {
       "title": "E-fatura kontrolü",

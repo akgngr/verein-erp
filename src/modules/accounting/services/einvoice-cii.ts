@@ -16,6 +16,7 @@ function party(name: "SellerTradeParty" | "BuyerTradeParty", p: XInvoiceParty, s
   return [
     `<ram:${name}>`,
     tag("ram:Name", p.name),
+    p.legalRegistration ? `<ram:SpecifiedLegalOrganization>${tag("ram:ID", p.legalRegistration)}</ram:SpecifiedLegalOrganization>` : "",
     seller && (p.phone || p.email) ? `<ram:DefinedTradeContact>${tag("ram:PersonName", p.contactName ?? p.name)}${p.phone ? `<ram:TelephoneUniversalCommunication>${tag("ram:CompleteNumber", p.phone)}</ram:TelephoneUniversalCommunication>` : ""}${p.email ? `<ram:EmailURIUniversalCommunication>${tag("ram:URIID", p.email)}</ram:EmailURIUniversalCommunication>` : ""}</ram:DefinedTradeContact>` : "",
     `<ram:PostalTradeAddress>${tag("ram:PostcodeCode", p.postalCode)}${tag("ram:LineOne", p.street)}${tag("ram:CityName", p.city)}<ram:CountryID>${esc(p.countryCode)}</ram:CountryID></ram:PostalTradeAddress>`,
     p.email ? `<ram:URIUniversalCommunication><ram:URIID schemeID="EM">${esc(p.email)}</ram:URIID></ram:URIUniversalCommunication>` : "",

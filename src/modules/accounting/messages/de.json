@@ -1374,7 +1374,8 @@
       "BR-DE-15": "Käuferreferenz (Leitweg-ID) fehlt; die Rechnungsnummer wird verwendet. Für öffentliche Auftraggeber ist die Leitweg-ID Pflicht.",
       "BR-DE-16": "USt-IdNr. oder Steuernummer des Verkäufers fehlt.",
       "BR-DE-19": "IBAN des Vereins ist ungültig.",
-      "BR-LINE-NET": "Bei einer Position stimmt Menge × Preis nicht mit dem Nettobetrag überein."
+      "BR-LINE-NET": "Bei einer Position stimmt Menge × Preis nicht mit dem Nettobetrag überein.",
+      "BR-CO-26": "Verkäufer nicht identifizierbar: ohne USt-IdNr. ist die Registernummer (Vereins-/Handelsregister) erforderlich (Organisationsprofil → Registernummer). Die Steuernummer allein genügt nicht."
     },
     "check": {
       "title": "E-Rechnungsprüfung",

@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.23.1",
+      "date": "2026-11-17",
+      "title": {
+        "tr": "E-fatura uygunluk düzeltmesi (BR-CO-26)",
+        "de": "E-Rechnung: Konformität BR-CO-26"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "USt-IdNr. olmayan satıcılarda (ör. §19 kapsamındaki dernekler) XRechnung/ZUGFeRD çıktısı EN 16931 BR-CO-26 kuralına göre geçersizdi. Kurum profilindeki sicil numarası artık satıcının yasal kayıt numarası (BT-30) olarak eklenir; ikisi de yoksa dışa aktarma öncesi açık bir hata gösterilir.",
+          "de": "Bei Verkäufern ohne USt-IdNr. (z. B. Kleinunternehmer-Vereine) war die XRechnung/ZUGFeRD-Ausgabe nach EN 16931 BR-CO-26 ungültig. Die Registernummer aus dem Organisationsprofil wird jetzt als rechtliche Registrierungskennung (BT-30) ausgegeben; fehlt beides, erscheint vor dem Export ein klarer Fehler."
+        },
+        {
+          "type": "improvement",
+          "tr": "Giden e-faturalar CI'da Mustang (EN 16931, XRechnung, Factur-X, veraPDF PDF/A-3) ve resmî KoSIT doğrulayıcısı ile sentetik örneklerle düzenli olarak doğrulanır.",
+          "de": "Ausgehende E-Rechnungen werden in der CI regelmäßig mit synthetischen Beispielen gegen Mustang (EN 16931, XRechnung, Factur-X, veraPDF PDF/A-3) und den offiziellen KoSIT-Validator geprüft."
+        }
+      ]
+    },
+    {
       "version": "1.23.0",
       "date": "2026-11-17",
       "appVersion": "0.41.0",

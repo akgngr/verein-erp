@@ -63,6 +63,7 @@ async function buildEInvoiceData(id: string): Promise<{ ok: true; data: XInvoice
       email: profile.email,
       phone: profile.phone,
       contactName: null,
+      legalRegistration: profile.registerNumber?.trim() || null,
     },
     buyer: { name: invoice.recipientName, ...buyerAddress, vatId: invoice.contact?.vatId ?? null, taxNumber: null, email: invoice.recipientEmail ?? invoice.contact?.email ?? null, phone: null, contactName: invoice.contact?.contactPerson ?? null },
     iban: settings?.iban ?? null,
