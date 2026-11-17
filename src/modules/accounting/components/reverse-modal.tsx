@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Dialog, Label, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -35,10 +36,10 @@ export function ReverseModal({
     try {
       const result = await reverseBookingAction({ id: bookingId, reason });
       if (!result.ok) {
-        toast(result.error, { variant: "danger" });
+        notify.error(result.error);
         return;
       }
-      toast(tForm("toastReversed"), { variant: "success" });
+      notify.success(tForm("toastReversed"));
       onOpenChange(false);
       setReason("");
       router.refresh();

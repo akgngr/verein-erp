@@ -1,5 +1,6 @@
 "use client";
-import { toast, Button } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -75,7 +76,7 @@ export function InvoiceSettingsForm({
     const result = await saveInvoiceSettingsAction(values);
     if (!result.ok)
       return setFormError(applyActionResult(result, form.setError));
-    toast(t("saved"), { variant: "success" });
+    notify.success(t("saved"));
     close();
   });
 

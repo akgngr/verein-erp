@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Card, Input, Label, Select, Separator, Spinner, Switch, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -36,10 +37,10 @@ export function TaxSettingsCard({
     try {
       const result = await saveTaxSettingsAction(value);
       if (!result.ok) {
-        toast(result.error, { variant: "danger" });
+        notify.error(result.error);
         return;
       }
-      toast(t("saved"), { variant: "success" });
+      notify.success(t("saved"));
       router.refresh();
     } finally {
       setSaving(false);
