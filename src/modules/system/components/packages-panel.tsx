@@ -1,8 +1,7 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import { toast, Button, Spinner, Chip } from "@heroui/react";
-import { actionVariant } from "@/shared/components/ui/action-appearance";
-import { statusTone } from "@/shared/components/ui/status-appearance";
+import { ActionButton } from "@/shared/components/ui/action-button";
+import { notify } from "@/shared/components/ui/notify";
+import { StatusChip } from "@/shared/components/ui/status-chip";
 
 import { Copy, PackagePlus, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -73,10 +72,11 @@ export function PackagesPanel({
     };
     setBusy(false);
     if (!json.ok)
-      return void toast(json.error ?? t("errors.file"), { variant: "danger" });
-    toast(json.verified ? t("verifiedToast") : t("rejectedToast"), {
-      variant: statusTone(json.verified ? "success" : "danger"),
-    });
+      return void notify(json.error ?? t("errors.file"), "danger");
+    notify(
+      json.verified ? t("verifiedToast") : t("rejectedToast"),
+      json.verified ? "success" : "danger",
+    );
     router.refresh();
   };
 
@@ -95,15 +95,13 @@ export function PackagesPanel({
     <div className="flex flex-col gap-4">
       {canUpload ? (
         <div>
-          <Button
-            onPress={() => input.current?.click()}
-            variant={actionVariant("primary", "solid")}
+          <ActionButton
             isPending={busy}
+            startIcon={<PackagePlus size={16} />}
+            onPress={() => input.current?.click()}
           >
-            {busy ? <Spinner size="sm" color="current" /> : null}
-            {<PackagePlus size={16} />}
             {t("upload")}
-          </Button>
+          </ActionButton>
           <input
             ref={input}
             type="file"
@@ -135,39 +133,33 @@ export function PackagesPanel({
                   <span className="font-mono text-xs text-ink-500">
                     {row.moduleKey} v{row.version}
                   </span>
-                  <Chip
-                    size="sm"
-                    color={statusTone(row.verified ? "success" : "danger")}
-                    variant={"soft"}
-                    style={statusStyle(row.verified ? "success" : "danger")}
-                  >
+                  <StatusChip tone={row.verified ? "success" : "danger"}>
                     {row.verified ? t("verified") : t("rejected")}
-                  </Chip>
+                  </StatusChip>
                   {installed ? (
-                    <Chip size="sm" color={"accent"} variant={"soft"}>
-                      {t("installed")}
-                    </Chip>
+                    <StatusChip tone="primary">{t("installed")}</StatusChip>
                   ) : row.installedVersion ? (
                     <span className="text-xs text-ink-500">
                       {t("installedOther", { version: row.installedVersion })}
                     </span>
                   ) : null}
                   {canDelete ? (
-                    <Button
-                      size="sm"
+                    <ActionButton
+                      color="danger"
+                      variant="light"
                       isIconOnly
                       className="ml-auto"
-                      aria-label={t("delete")}
-                      onPress={async () => {
-                        const response = await deleteModulePackageAction({
-                          id: row.id,
-                        });
-                        if (response.ok) router.refresh();
+                      ariaLabel={t("delete")}
+                      onPress={() => {
+                        void deleteModulePackageAction({ id: row.id }).then(
+                          (response) => {
+                            if (response.ok) router.refresh();
+                          },
+                        );
                       }}
-                      variant={actionVariant("danger", "light")}
                     >
                       <Trash2 size={16} />
-                    </Button>
+                    </ActionButton>
                   ) : null}
                 </div>
                 <div className="mt-1 text-xs text-ink-500">
@@ -197,19 +189,19 @@ export function PackagesPanel({
                       <code className="flex-1 overflow-x-auto rounded-lg bg-ink-100 px-2 py-1 text-xs">
                         {row.installCommand}
                       </code>
-                      <Button
-                        size="sm"
+                      <ActionButton
+                        color="default"
+                        variant="flat"
                         isIconOnly
-                        aria-label={t("copy")}
+                        ariaLabel={t("copy")}
                         onPress={() =>
                           void navigator.clipboard?.writeText(
                             row.installCommand ?? "",
                           )
                         }
-                        variant={actionVariant("default", "flat")}
                       >
                         <Copy size={14} />
-                      </Button>
+                      </ActionButton>
                     </div>
                   </div>
                 ) : null}
