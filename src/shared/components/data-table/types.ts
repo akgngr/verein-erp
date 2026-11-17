@@ -26,6 +26,11 @@ export type DataTableBulkAction = {
   variant?: "default" | "danger";
   hidden?: boolean;
   disabled?: boolean;
+  confirmation?: {
+    title: string;
+    message: string;
+    confirmLabel?: string;
+  };
   onPress: (selection: DataTableSelection) => void | Promise<void>;
 };
 
