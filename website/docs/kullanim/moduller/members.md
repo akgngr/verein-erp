@@ -13,7 +13,7 @@ slug: /kullanim/moduller/members
 |---|---|
 | Anahtar | `members` |
 | Tür | Resmî modül |
-| Sürüm | 1.14.0 |
+| Sürüm | 1.14.1 |
 | Sayfalar | `/uyeler`, `/uyeler/aidat`, `/uyeler/turler`, `/toplu-eposta?kaynak=members:members`, `/uyeler/ice-aktar` |
 | Önerir | [e-Sign](./online-forms) |
 
@@ -44,6 +44,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `create_dataset` · `create_dues_dataset` · `get_member_profile` · `get_member_statistics` · `list_dues_by_person` · `query_dataset`
 
 ## Sürüm notları
+
+### 1.14.1 — Durum rozetleri ortak UI katmanında
+
+_2026-11-17_
+
+- **İyileştirme:** Tekrarlanan HeroUI durum/tür rozetleri ortak StatusChip pattern'ine taşındı; modül görsel sözleşmesi framework implementasyonundan ayrıştırıldı.
 
 ### 1.14.0 — Üye listesinde toplu seçim ve durum işlemleri
 
@@ -89,10 +95,4 @@ _2026-11-15_
 
 - **Yeni:** AI aracı list_dues_by_person: kişi başına aidat durumu (takma ad, tam avro, vade ayı, üyelik türü, durum); ad ve üye numarası modele gitmez.
 
-### 1.10.4 — AI veri sınıfı
-
-_2026-11-15_
-
-- **İyileştirme:** Aidat veri kümesi araçları AI veri sınıfı "internal" olarak işaretlendi.
-
-Daha eski 20 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/members/releases.json)
+Daha eski 21 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/members/releases.json)
