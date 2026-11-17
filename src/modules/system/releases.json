@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.12.2",
+      "date": "2026-11-17",
+      "title": {
+        "tr": "Ortak UI kartları",
+        "de": "Gemeinsame UI-Karten"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Yüzey kartları ortak SurfaceCard bileşenini kullanıyor.",
+          "de": "Flächenkarten nutzen die gemeinsame SurfaceCard-Komponente."
+        }
+      ]
+    },
+    {
       "version": "1.12.1",
       "date": "2026-11-17",
       "appVersion": "0.41.0",

@@ -2,6 +2,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
 import { requireUser } from "@/modules/auth/server";
+import { SurfaceCard } from "@/shared/components/ui/surface-card";
 
 import { listSurfaceCards } from "../queries/dashboard";
 
@@ -36,8 +37,8 @@ export async function SurfaceCards({ surface, placement }: { surface: string; pl
         const Icon = entry.card.icon;
         const title = text(`${entry.moduleKey}.${entry.card.titleKey}`);
         return (
-          <section key={entry.id} aria-label={title}
-            className="erp-motion-enter relative overflow-hidden rounded-2xl border border-[var(--ui-border-default)] bg-[var(--ui-surface-card)] p-5 shadow-[var(--ui-shadow-card)]">
+          <section key={entry.id} aria-label={title}>
+          <SurfaceCard className="relative overflow-hidden p-0" contentClassName="p-5">
             <div className="pointer-events-none absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-accent via-success-500 to-accent/40" aria-hidden="true" />
             <header className="mb-4 flex items-start gap-3">
               <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-xl bg-accent/10 text-accent">
@@ -51,6 +52,7 @@ export async function SurfaceCards({ surface, placement }: { surface: string; pl
               </div>
             </header>
             {body}
+          </SurfaceCard>
           </section>
         );
       })}

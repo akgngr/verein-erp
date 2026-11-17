@@ -1,3 +1,4 @@
+import { SurfaceCard } from "@/shared/components/ui/surface-card";
 import { formatMoney } from "@/shared/money";
 
 type Month = { incomeCents: number; expenseCents: number };
@@ -40,7 +41,8 @@ export function CashflowChart({ months, labels, highlight }: { months: readonly 
   const line = `M${points.join(" L")}`;
 
   return (
-    <section className="erp-motion-enter overflow-hidden rounded-2xl border border-[var(--ui-border-default)] bg-[var(--ui-surface-card)] shadow-[var(--ui-shadow-card)]">
+    <section aria-label={labels.title}>
+    <SurfaceCard className="overflow-hidden p-0" contentClassName="p-0">
       <header className="flex flex-wrap items-start justify-between gap-3 px-5 pt-5 sm:px-6">
         <div>
           <h2 className="text-base font-semibold tracking-tight text-foreground">{labels.title}</h2>
@@ -115,6 +117,7 @@ export function CashflowChart({ months, labels, highlight }: { months: readonly 
           </table>
         </div>
       </details>
+    </SurfaceCard>
     </section>
   );
 }

@@ -2,9 +2,9 @@ import Link from "next/link";
 import type { LucideIcon } from "lucide-react";
 import { ArrowDownRight, ArrowRight, ArrowUpRight, CalendarClock, Minus } from "lucide-react";
 
+import { SurfaceCard } from "@/shared/components/ui/surface-card";
 import { formatMoney } from "@/shared/money";
 
-const SURFACE = "rounded-2xl border border-[var(--ui-border-default)] bg-[var(--ui-surface-card)] shadow-[var(--ui-shadow-card)]";
 
 /** Mini trend line (12 points). Decorative; the value is always given as text next to it. */
 function Sparkline({ values, className }: { values: readonly number[]; className: string }) {
@@ -23,7 +23,7 @@ function Sparkline({ values, className }: { values: readonly number[]; className
 export function KpiTile(props: {
   label: string; cents: number; change: number | null; changeLabel: string; noChange: string;
   /** true when an increase is good (income, result), false when it is bad (expense). */
-  upIsGood: boolean; icon: LucideIcon; tone: "success" | "accent" | "neutral"; trend: readonly number[]; index: number;
+  upIsGood: boolean; icon: LucideIcon; tone: "success" | "accent" | "neutral"; trend: readonly number[];
 }) {
   const Icon = props.icon;
   const iconTone = props.tone === "success" ? "bg-success-50 text-success-600 dark:bg-success-950/35"
@@ -32,7 +32,7 @@ export function KpiTile(props: {
   const good = props.change === null || props.change === 0 ? null : (props.change > 0) === props.upIsGood;
   const ChangeIcon = props.change === null || props.change === 0 ? Minus : props.change > 0 ? ArrowUpRight : ArrowDownRight;
   return (
-    <article className={`${SURFACE} erp-motion-enter erp-motion-interactive min-w-0 p-5 hover:shadow-[var(--ui-shadow-floating)]`} style={{ animationDelay: `${props.index * 40}ms` }}>
+    <SurfaceCard interactive className="min-w-0 p-0" contentClassName="p-5">
       <div className="flex items-center justify-between gap-3">
         <h2 className="text-sm font-medium text-ink-500">{props.label}</h2>
         <span className={`inline-flex size-9 items-center justify-center rounded-xl ${iconTone}`}><Icon size={18} aria-hidden="true" /></span>
@@ -48,7 +48,7 @@ export function KpiTile(props: {
         <span className="whitespace-nowrap text-ink-500">{props.changeLabel}</span>
       </div>
       <div className="mt-3"><Sparkline values={props.trend} className={lineTone} /></div>
-    </article>
+    </SurfaceCard>
   );
 }
 
@@ -61,7 +61,7 @@ export function LiquidityHero(props: {
   const max = Math.max(1, ...props.accounts.map((account) => Math.abs(account.balanceCents)));
   const delta = props.forecastCents - props.liquidityCents;
   return (
-    <section className={`${SURFACE} erp-motion-enter relative overflow-hidden p-5 sm:p-6`}>
+    <SurfaceCard className="relative overflow-hidden p-0" contentClassName="p-5 sm:p-6">
       <div className="pointer-events-none absolute -right-16 -top-20 size-56 rounded-full bg-accent/10 blur-3xl" aria-hidden="true" />
       <div className="relative grid gap-6 md:grid-cols-[1.2fr_1fr]">
         <div>
@@ -99,7 +99,7 @@ export function LiquidityHero(props: {
           ))}
         </ul>
       </div>
-    </section>
+    </SurfaceCard>
   );
 }
 
@@ -113,10 +113,11 @@ export function UpcomingTimeline({ items, labels, locale }: {
 }) {
   const tone = { receivable: "bg-success-500", payable: "bg-danger-500", tax: "bg-warning-500" } as const;
   return (
-    <section className={`${SURFACE} erp-motion-enter p-5 sm:p-6`}>
+    <section aria-labelledby="accounting-upcoming">
+    <SurfaceCard className="p-0" contentClassName="p-5 sm:p-6">
       <div className="flex items-center gap-2">
         <CalendarClock size={18} className="text-ink-500" aria-hidden="true" />
-        <h2 className="text-base font-semibold tracking-tight">{labels.title}</h2>
+        <h2 id="accounting-upcoming" className="text-base font-semibold tracking-tight">{labels.title}</h2>
       </div>
       <p className="text-xs text-ink-500 sm:text-sm">{labels.description}</p>
       {items.length === 0 ? <p className="mt-5 text-sm text-ink-500">{labels.empty}</p> : (
@@ -142,6 +143,7 @@ export function UpcomingTimeline({ items, labels, locale }: {
           ))}
         </ol>
       )}
+    </SurfaceCard>
     </section>
   );
 }
@@ -152,7 +154,8 @@ export type AttentionItem = { key: string; severity: "warning" | "danger" | "inf
 export function AttentionList({ items, labels }: { items: readonly AttentionItem[]; labels: { title: string; empty: string } }) {
   const tone = { danger: "border-l-danger-500", warning: "border-l-warning-500", info: "border-l-accent" } as const;
   return (
-    <section className={`${SURFACE} erp-motion-enter p-5 sm:p-6`} aria-labelledby="accounting-attention">
+    <section aria-labelledby="accounting-attention">
+    <SurfaceCard className="p-0" contentClassName="p-5 sm:p-6">
       <h2 id="accounting-attention" className="text-base font-semibold tracking-tight">{labels.title}</h2>
       {items.length === 0 ? <p className="mt-3 text-sm text-ink-500">{labels.empty}</p> : (
         <ul className="mt-4 space-y-2">
@@ -168,6 +171,7 @@ export function AttentionList({ items, labels }: { items: readonly AttentionItem
           ))}
         </ul>
       )}
+    </SurfaceCard>
     </section>
   );
 }

@@ -13,7 +13,7 @@ Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.
 |---|---|
 | Anahtar | `system` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.12.1 |
+| Sürüm | 1.12.2 |
 | Sayfalar | `/ayarlar`, `/ayarlar/moduller`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/surum-notlari` |
 
 ## Diğer modüllere erişim
@@ -34,6 +34,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Modül Yönetimi | görüntüleme, düzenleme, silme | görüntüleme | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.12.2 — Ortak UI kartları
+
+_2026-11-17_
+
+- **İyileştirme:** Yüzey kartları ortak SurfaceCard bileşenini kullanıyor.
 
 ### 1.12.1 — Modül paketleri ortak UI katmanında
 
@@ -79,10 +85,4 @@ _2026-11-03_
 
 - **Düzeltme:** Modül kullanılabilirliği sorgularının Next.js cache ve lifecycle bağımlılıklarını worker import zincirine taşıması önlendi. Salt okunur modül durumu erişimi, Next.js revalidasyon ve lifecycle işlemlerinden ayrıldı.
 
-### 1.10.1 — Worker uyumlu modül kullanılabilirliği API'si
-
-_2026-11-03_
-
-- **Düzeltme:** Arka plan worker'larının Next.js bağımlılığı içeren geniş server barrel'larını yüklemeden modül kullanılabilirliğini sorgulaması için automation giriş noktası eklendi.
-
-Daha eski 12 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/system/releases.json)
+Daha eski 13 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/system/releases.json)
