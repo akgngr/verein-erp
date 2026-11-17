@@ -53,4 +53,4 @@ Java 17 veya üzeri gerekir.
 
 - ZUGFeRD PDF'inin tabanı, betik ortamında uygulamanın fatura bileşeni yüklenemediği için sadeleştirilmiş bir yerleşimle üretilir. PDF motoru, fontlar, PDF/A-3 dönüşümü ve gömülü XML ise uygulamadakiyle aynıdır.
 - KoSIT sürümü, iş akışı her çalıştığında en son yayından alınır ve özete yazılır. Haftalık çalışma, yeni kural setlerini erkenden yakalamak içindir.
-- UStVA ve Anlage EÜR doğrulaması (ELSTER ERiC test modu) 2. aşamadır. ELSTER geliştirici kaydı gerektirir.
+- UStVA ve Anlage EÜR doğrulaması (ELSTER ERiC) 2. aşamadır: [ELSTER_ERIC.md](./ELSTER_ERIC.md).

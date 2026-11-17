@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.23.3",
+      "date": "2026-11-17",
+      "title": {
+        "tr": "ELSTER hazırlığı (UStVA, doğrulama)",
+        "de": "ELSTER-Vorbereitung (UStVA, Validierung)"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "UStVA verisini ELSTER XML'ine çeviren ve vergi numarasını 13 haneli ELSTER formatına dönüştüren servisler eklendi; ERiC ile yalnız doğrulama yapan CI işi hazır. Uygulamada henüz gönderim veya indirme yoktur.",
+          "de": "Dienste für UStVA-ELSTER-XML und die Umrechnung der Steuernummer ins 13-stellige ELSTER-Format; CI-Job zur reinen ERiC-Validierung. In der App gibt es noch keine Übermittlung oder Download."
+        }
+      ]
+    },
+    {
       "version": "1.23.2",
       "date": "2026-11-17",
       "title": {

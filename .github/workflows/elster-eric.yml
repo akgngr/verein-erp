@@ -1,0 +1,96 @@
+name: ELSTER ERiC validation
+
+# ELSTER-2: validates generated UStVA payloads with ERiC in **validate-only** mode (no transmission,
+# Testmerker 700000004, test tax office 9198). ERiC may not be redistributed, so the Linux package is
+# fetched from a private location configured as repository secrets:
+#   ERIC_ARCHIVE_URL    https URL of the ERiC Linux-x86_64 zip/jar from the ELSTER developer area
+#   ERIC_ARCHIVE_TOKEN  optional bearer token for that URL
+#   ELSTER_PRODUCER_ID  optional HerstellerID (defaults to the public test ID 74931)
+# Without the secret the job is skipped with a notice.
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "41 4 * * 1"
+  pull_request:
+    paths:
+      - "src/modules/accounting/services/elster-*.ts"
+      - "scripts/elster/**"
+      - ".github/workflows/elster-eric.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  eric:
+    name: ELSTER ERiC (validate only)
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      ERIC_ARCHIVE_URL: ${{ secrets.ERIC_ARCHIVE_URL }}
+      ERIC_ARCHIVE_TOKEN: ${{ secrets.ERIC_ARCHIVE_TOKEN }}
+      ELSTER_PRODUCER_ID: ${{ secrets.ELSTER_PRODUCER_ID }}
+    steps:
+      - name: Check configuration
+        id: config
+        run: |
+          if [ -z "$ERIC_ARCHIVE_URL" ]; then
+            echo "::notice::ERIC_ARCHIVE_URL secret is not set; ERiC validation skipped (see docs/ELSTER_ERIC.md)."
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - uses: actions/checkout@v4
+        if: steps.config.outputs.enabled == 'true'
+
+      - uses: pnpm/action-setup@v4
+        if: steps.config.outputs.enabled == 'true'
+
+      - uses: actions/setup-node@v4
+        if: steps.config.outputs.enabled == 'true'
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - name: Install dependencies
+        if: steps.config.outputs.enabled == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Fetch and unpack ERiC
+        if: steps.config.outputs.enabled == 'true'
+        run: |
+          set -euo pipefail
+          mkdir -p eric
+          auth=()
+          if [ -n "${ERIC_ARCHIVE_TOKEN:-}" ]; then auth=(-H "Authorization: Bearer $ERIC_ARCHIVE_TOKEN"); fi
+          curl -sSfL "${auth[@]}" -o eric/eric.zip "$ERIC_ARCHIVE_URL"
+          (cd eric && unzip -q eric.zip)
+          header=$(find eric -name ericapi.h | head -1)
+          library=$(find eric -name libericapi.so | head -1)
+          if [ -z "$header" ] || [ -z "$library" ]; then echo "::error::ericapi.h or libericapi.so not found in the archive"; exit 1; fi
+          echo "ERIC_INCLUDE=$(dirname "$header")" >> "$GITHUB_ENV"
+          echo "ERIC_LIB=$(dirname "$library")" >> "$GITHUB_ENV"
+          echo "ERiC: $(basename "$(dirname "$(dirname "$library")")")" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Build validator
+        if: steps.config.outputs.enabled == 'true'
+        run: gcc scripts/elster/eric-validate.c -I"$ERIC_INCLUDE" -L"$ERIC_LIB" -lericapi -Wl,-rpath,"$ERIC_LIB" -o eric/eric-validate
+
+      - name: Generate and validate UStVA
+        if: steps.config.outputs.enabled == 'true'
+        run: |
+          set -o pipefail
+          year=$(date -u +%Y)
+          ELSTER_YEAR=$year pnpm -s elster:corpus elster-out
+          mkdir -p elster-out/log
+          eric/eric-validate "UStVA_${year}" elster-out/log elster-out/*.xml | tee elster-out/summary.txt
+          { echo '```'; cat elster-out/summary.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Upload results
+        if: always() && steps.config.outputs.enabled == 'true'
+        uses: actions/upload-artifact@v4
+        with:
+          name: elster-eric
+          path: elster-out
+          retention-days: 14
