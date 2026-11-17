@@ -79,6 +79,58 @@ html body {
   max-width: 70ch;
   text-wrap: pretty;
 }
+:root {
+  --ui-surface-page: var(--background);
+  --ui-surface-card: var(--surface);
+  --ui-surface-muted: var(--surface-secondary);
+  --ui-surface-selected: color-mix(in srgb, var(--accent) 9%, var(--surface));
+  --ui-text-primary: var(--foreground);
+  --ui-text-secondary: var(--muted);
+  --ui-border-default: var(--border);
+  --ui-border-strong: var(--field-border);
+  --ui-action-primary: var(--accent);
+  --ui-action-primary-foreground: var(--accent-foreground);
+  --ui-radius-control: var(--radius-field);
+  --ui-radius-card: 0.75rem;
+  --ui-shadow-card: 0 1px 2px rgb(15 23 42 / 0.05);
+  --ui-shadow-floating: 0 12px 32px rgb(15 23 42 / 0.12);
+
+  --motion-fast: 120ms;
+  --motion-normal: 180ms;
+  --motion-slow: 240ms;
+  --motion-ease-standard: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --motion-ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+  --motion-ease-exit: cubic-bezier(0.4, 0, 1, 1);
+}
+
+.erp-motion-interactive {
+  transition-property: color, background-color, border-color, box-shadow, opacity, transform;
+  transition-duration: var(--motion-fast);
+  transition-timing-function: var(--motion-ease-standard);
+}
+
+.erp-motion-selection {
+  transition-property: color, background-color, border-color, box-shadow;
+  transition-duration: var(--motion-normal);
+  transition-timing-function: var(--motion-ease-standard);
+}
+
+@keyframes erp-ui-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.erp-motion-enter {
+  animation: erp-ui-enter var(--motion-normal) var(--motion-ease-enter) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   :root {
     --motion-fast: 0.01ms;
