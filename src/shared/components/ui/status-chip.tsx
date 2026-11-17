@@ -9,9 +9,11 @@ import { statusStyle, statusTone } from "./status-appearance";
 export function StatusChip({
   tone = "default",
   children,
+  className,
 }: {
   tone?: ActionTone;
   children: ReactNode;
+  className?: string;
 }) {
   return (
     <Chip
@@ -19,6 +21,7 @@ export function StatusChip({
       color={statusTone(tone)}
       variant="soft"
       style={statusStyle(tone)}
+      className={className}
     >
       {children}
     </Chip>

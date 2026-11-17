@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.22.13",
+      "date": "2026-11-17",
+      "appVersion": "0.41.0",
+      "title": {
+        "tr": "Muhasebe rozetleri ortak UI katmanında",
+        "de": "Buchhaltungs-Badges in gemeinsamer UI-Schicht"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Rozet/çip görünümleri ortak StatusChip pattern'ine taşındı; modül düzeyindeki doğrudan HeroUI Chip bağımlılığı azaltıldı.",
+          "de": "Badge-/Chip-Darstellungen verwenden das gemeinsame StatusChip-Pattern; direkte HeroUI-Chip-Abhängigkeiten auf Modulebene wurden reduziert."
+        }
+      ]
+    },
+    {
       "version": "1.22.12",
       "date": "2026-11-17",
       "appVersion": "0.41.0",

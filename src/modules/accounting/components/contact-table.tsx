@@ -1,13 +1,10 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import { Chip } from "@heroui/react";
-import { statusTone } from "@/shared/components/ui/status-appearance";
-
 import { Pencil } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { DataTable } from "@/shared/components/data-table/data-table";
 import type { DataTableColumn } from "@/shared/components/data-table/types";
+import { StatusChip } from "@/shared/components/ui/status-chip";
 
 import type { ContactRow } from "../queries/contacts";
 
@@ -34,14 +31,9 @@ export function ContactTable({
       key: "type",
       label: t("fields.type"),
       render: (row) => (
-        <Chip
-          size="sm"
-          color={statusTone(row.type === "CUSTOMER" ? "primary" : "secondary")}
-          variant={"soft"}
-          style={statusStyle(row.type === "CUSTOMER" ? "primary" : "secondary")}
-        >
+        <StatusChip tone={row.type === "CUSTOMER" ? "primary" : "secondary"}>
           {t(`type.${row.type}`)}
-        </Chip>
+        </StatusChip>
       ),
     },
     {

@@ -13,7 +13,7 @@ Sistem işlemlerinin değiştirilemez güvenlik ve denetim logları.
 |---|---|
 | Anahtar | `audit` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.0.1 |
+| Sürüm | 1.0.2 |
 | Sayfalar | `/ayarlar/denetim-kaydi` |
 
 ## Varsayılan yetkiler
@@ -25,6 +25,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Güvenlik & Değişiklik Günlüğü | görüntüleme | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.0.2 — Denetim eylem rozeti ortak UI katmanında
+
+_2026-11-17_
+
+- **İyileştirme:** Rozet/çip görünümleri ortak StatusChip pattern'ine taşındı; modül düzeyindeki doğrudan HeroUI Chip bağımlılığı azaltıldı.
 
 ### 1.0.1 — HeroUI v3 arayüz geçişi
 
