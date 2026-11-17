@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. En üst sürüm module.config.ts ile aynı olmalı.",
   "releases": [
     {
+      "version": "1.3.4",
+      "date": "2026-11-17",
+      "appVersion": "0.41.0",
+      "title": {
+        "tr": "Güvenlik paneli ortak UI katmanında",
+        "de": "Sicherheitsübersicht in gemeinsamer UI-Schicht"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Güvenlik panelindeki kart, istatistik, durum rozeti ve eylem butonları SurfaceCard, StatCard, StatusChip ve ActionButton ortak pattern'lerine taşındı; ekran artık HeroUI bileşenlerini doğrudan içe aktarmıyor.",
+          "de": "Karten, Kennzahlen, Status-Badges und Aktionsbutton der Sicherheitsübersicht verwenden die gemeinsamen Patterns SurfaceCard, StatCard, StatusChip und ActionButton; die Ansicht importiert HeroUI-Komponenten nicht mehr direkt."
+        }
+      ]
+    },
+    {
       "version": "1.3.3",
       "date": "2026-11-16",
       "title": {
