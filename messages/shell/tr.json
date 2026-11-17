@@ -79,7 +79,9 @@
       "pageNumber": "Sayfa {page}",
       "selectedCount": "{count} kayıt seçildi",
       "bulkActions": "Toplu işlemler",
-      "clearSelection": "Seçimi temizle"
+      "clearSelection": "Seçimi temizle",
+      "querySelectedCount": "{count} filtrelenmiş kayıt seçildi",
+      "selectAllMatching": "Filtreye uyan {count} kaydın tümünü seç"
     },
     "active": "Aktif",
     "passive": "Pasif",

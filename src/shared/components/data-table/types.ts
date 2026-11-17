@@ -1,5 +1,7 @@
 import type { ReactNode } from "react";
 
+import type { DataTableSelection } from "@/shared/data-table/selection-contract";
+
 export type DataTableColumn<T> = {
   /** Sıralama alanıyla aynı ada sahip olmalıdır (9.2). */
   key: string;
@@ -24,14 +26,16 @@ export type DataTableBulkAction = {
   variant?: "default" | "danger";
   hidden?: boolean;
   disabled?: boolean;
-  onPress: () => void;
+  onPress: (selection: DataTableSelection) => void | Promise<void>;
 };
 
 export type DataTableSelectionConfig = {
   mode: "multiple";
-  selectedIds: string[];
-  onSelectionChange: (ids: string[]) => void;
+  value: DataTableSelection;
+  onChange: (selection: DataTableSelection) => void;
   bulkActions?: DataTableBulkAction[];
+  /** Kullanıcı mevcut filtre sonucunun tamamını query-selection olarak seçebilir. */
+  allowQuerySelection?: boolean;
 };
 
 export type DataTableRowAction = {
