@@ -1,6 +1,6 @@
 "use client";
-import { toast, Button } from "@heroui/react";
-import { actionVariant } from "@/shared/components/ui/action-appearance";
+import { ActionButton } from "@/shared/components/ui/action-button";
+import { notify } from "@/shared/components/ui/notify";
 
 import { useRouter } from "next/navigation";
 import type { ReactNode } from "react";
@@ -18,18 +18,18 @@ export function BankRuleDeleteButton({
 }) {
   const router = useRouter();
   return (
-    <Button
-      size="sm"
+    <ActionButton
       isIconOnly
-      aria-label={label}
+      ariaLabel={label}
+      color="danger"
+      variant="light"
       onPress={async () => {
         const result = await deleteBankRuleAction({ id });
-        if (!result.ok) return toast(result.error, { variant: "danger" });
+        if (!result.ok) return void notify(result.error, "danger");
         router.refresh();
       }}
-      variant={actionVariant("danger", "light")}
     >
       {icon}
-    </Button>
+    </ActionButton>
   );
 }
