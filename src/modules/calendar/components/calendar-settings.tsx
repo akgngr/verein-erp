@@ -1,13 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Modal,
-  TextField,
-  Label,
-  Input,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Dialog, Input, Label, Spinner, TextField } from "@/shared/components/kit";
 import { CopyValue } from "@/shared/components/ui/copy-value";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -68,18 +61,15 @@ export function CalendarSettings({
   ) : null;
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-      <Modal.Backdrop>
-        <Modal.Container size="lg" scroll={"inside"}>
-          <Modal.Dialog className={"w-full max-w-2xl "}>
+    <Dialog isOpen={isOpen} onOpenChange={onOpenChange} size="lg" scroll={"inside"} className={"w-full max-w-2xl "}>
             <DialogDismissButton />
 
-            <Modal.Header>
-              <Modal.Heading className="flex items-center gap-2">
+            <Dialog.Header>
+              <Dialog.Heading className="flex items-center gap-2">
                 {t("title")}
-              </Modal.Heading>
-            </Modal.Header>
-            <Modal.Body className="gap-6 pb-6">
+              </Dialog.Heading>
+            </Dialog.Header>
+            <Dialog.Body className="gap-6 pb-6">
               <section className="flex flex-col gap-2">
                 <h3 className="font-semibold">{t("feedTitle")}</h3>
                 <p className="text-sm text-ink-600">{t("feedDescription")}</p>
@@ -110,7 +100,7 @@ export function CalendarSettings({
                     variant={actionVariant("primary", "flat")}
                     isPending={pending}
                   >
-                    {pending ? <Spinner size="sm" color="current" /> : null}
+                    {pending ? <Spinner size="sm" tone="current" /> : null}
                     {feedActive ? (
                       <RefreshCw className="h-4 w-4" />
                     ) : (
@@ -135,7 +125,7 @@ export function CalendarSettings({
                       variant={actionVariant("danger", "light")}
                       isPending={pending}
                     >
-                      {pending ? <Spinner size="sm" color="current" /> : null}
+                      {pending ? <Spinner size="sm" tone="current" /> : null}
                       {<Unlink className="h-4 w-4" />}
                       {t("feedRevoke")}
                     </Button>
@@ -222,17 +212,14 @@ export function CalendarSettings({
                       variant={actionVariant("primary", "solid")}
                       isPending={pending}
                     >
-                      {pending ? <Spinner size="sm" color="current" /> : null}
+                      {pending ? <Spinner size="sm" tone="current" /> : null}
                       {<Plus className="h-4 w-4" />}
                       {t("sharedAdd")}
                     </Button>
                   </div>
                 ) : null}
               </section>
-            </Modal.Body>
-          </Modal.Dialog>
-        </Modal.Container>
-      </Modal.Backdrop>
-    </Modal>
+            </Dialog.Body>
+    </Dialog>
   );
 }

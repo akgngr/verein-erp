@@ -1,13 +1,6 @@
 "use client";
-import {
-  toast,
-  Card,
-  Button,
-  Spinner,
-  Select,
-  ListBox,
-  Label,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Card, Label, Select, Spinner } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -101,24 +94,15 @@ export function BankImportCard({
             }}
           >
             <Label>{t("account")}</Label>
-            <Select.Trigger>
-              <Select.Value />
-              <Select.Indicator />
-            </Select.Trigger>
-            <Select.Popover>
-              <ListBox>
                 {accounts.map((account) => (
-                  <ListBox.Item
+                  <Select.Item
                     key={account.value}
                     id={account.value}
                     textValue={String(account.label)}
                   >
                     <Label>{account.label}</Label>
-                    <ListBox.ItemIndicator />
-                  </ListBox.Item>
+                  </Select.Item>
                 ))}
-              </ListBox>
-            </Select.Popover>
           </Select>
           <Select
             id="bank-import-format"
@@ -132,24 +116,15 @@ export function BankImportCard({
             }}
           >
             <Label>{t("format")}</Label>
-            <Select.Trigger>
-              <Select.Value />
-              <Select.Indicator />
-            </Select.Trigger>
-            <Select.Popover>
-              <ListBox>
                 {FORMATS.map((value) => (
-                  <ListBox.Item
+                  <Select.Item
                     key={value}
                     id={value}
                     textValue={String(t(`formats.${value}`))}
                   >
                     <Label>{t(`formats.${value}`)}</Label>
-                    <ListBox.ItemIndicator />
-                  </ListBox.Item>
+                  </Select.Item>
                 ))}
-              </ListBox>
-            </Select.Popover>
           </Select>
           <input
             ref={input}
@@ -166,7 +141,7 @@ export function BankImportCard({
             variant={actionVariant("primary", "solid")}
             isPending={busy}
           >
-            {busy ? <Spinner size="sm" color="current" /> : null}
+            {busy ? <Spinner size="sm" tone="current" /> : null}
             {<Upload className="h-4 w-4" aria-hidden />}
             {t("submit")}
           </Button>

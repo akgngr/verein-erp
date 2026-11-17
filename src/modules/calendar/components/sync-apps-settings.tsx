@@ -1,19 +1,9 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import {
-  toast,
-  Card,
-  Chip,
-  Button,
-  Spinner,
-  TextField,
-  Label,
-  Input,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Card, Input, Label, Spinner, StatusChip, TextField } from "@/shared/components/kit";
 import { CopyValue } from "@/shared/components/ui/copy-value";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
-import { statusTone } from "@/shared/components/ui/status-appearance";
 
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -53,14 +43,10 @@ function AppForm({ app }: { app: SyncAppView }) {
         <span className="font-semibold">
           {t(`providers.${app.provider}` as never)}
         </span>
-        <Chip
-          size="sm"
-          color={statusTone(app.configured ? "success" : "warning")}
-          variant={"soft"}
-          style={statusStyle(app.configured ? "success" : "warning")}
+        <StatusChip tone={app.configured ? "success" : "warning"}
         >
           {t(app.configured ? "appConfigured" : "appNotConfigured")}
-        </Chip>
+        </StatusChip>
       </Card.Header>
       <Card.Content
         className={["flex flex-col gap-3 pt-0"].filter(Boolean).join(" ")}
@@ -134,7 +120,7 @@ function AppForm({ app }: { app: SyncAppView }) {
             variant={actionVariant("primary", "flat")}
             isPending={pending}
           >
-            {pending ? <Spinner size="sm" color="current" /> : null}
+            {pending ? <Spinner size="sm" tone="current" /> : null}
             {t("save")}
           </Button>
         </div>

@@ -1,26 +1,12 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import {
-  toast,
-  Chip,
-  Button,
-  Spinner,
-  Tooltip,
-  Switch,
-  Label,
-  Modal,
-  Checkbox,
-  TextField,
-  InputGroup,
-  Tabs,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Checkbox, Dialog, InputGroup, Label, Spinner, StatusChip, Switch, Tabs, TextField, Tooltip } from "@/shared/components/kit";
 
 import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
-import { statusTone } from "@/shared/components/ui/status-appearance";
 
 import {
   Boxes,
@@ -251,46 +237,36 @@ export function ModuleList({
     switch (category) {
       case "CORE":
         return (
-          <Chip
-            size="sm"
-            color={"accent"}
-            variant={"soft"}
+          <StatusChip tone="primary"
             className={["font-semibold text-xs tracking-wide"]
               .filter(Boolean)
               .join(" ")}
-            style={statusStyle("secondary")}
           >
             {<Shield className="h-3 w-3 ml-1" />}
             {t("badges.core")}
-          </Chip>
+          </StatusChip>
         );
       case "OFFICIAL":
         return (
-          <Chip
-            size="sm"
-            color={"accent"}
-            variant={"soft"}
+          <StatusChip tone="primary"
             className={["font-semibold text-xs tracking-wide"]
               .filter(Boolean)
               .join(" ")}
           >
             {<Zap className="h-3 w-3 ml-1" />}
             {t("badges.official")}
-          </Chip>
+          </StatusChip>
         );
       case "EXTENSION":
         return (
-          <Chip
-            size="sm"
-            color={"warning"}
-            variant={"soft"}
+          <StatusChip tone="warning"
             className={["font-semibold text-xs tracking-wide"]
               .filter(Boolean)
               .join(" ")}
           >
             {<Boxes className="h-3 w-3 ml-1" />}
             {t("badges.extension")}
-          </Chip>
+          </StatusChip>
         );
     }
   };
@@ -382,9 +358,8 @@ export function ModuleList({
           <Tabs
             selectedKey={selectedCategory}
             onSelectionChange={(key) => setSelectedCategory(String(key))}
-            variant="secondary"
+            emphasis="secondary"
           >
-            <Tabs.ListContainer>
               <Tabs.List
                 className={
                   "bg-ink-100/70 border border-ink-200/80 h-9 p-0.5 rounded-xl"
@@ -396,9 +371,6 @@ export function ModuleList({
                   className={"h-7 text-sm font-medium px-3"}
                 >
                   {t("tabs.all")}
-                  <Tabs.Indicator
-                    className={"bg-background shadow-xs rounded-lg"}
-                  />
                 </Tabs.Tab>
                 <Tabs.Tab
                   id={"CORE"}
@@ -406,9 +378,6 @@ export function ModuleList({
                   className={"h-7 text-sm font-medium px-3"}
                 >
                   {t("tabs.core")}
-                  <Tabs.Indicator
-                    className={"bg-background shadow-xs rounded-lg"}
-                  />
                 </Tabs.Tab>
                 <Tabs.Tab
                   id={"OFFICIAL"}
@@ -416,9 +385,6 @@ export function ModuleList({
                   className={"h-7 text-sm font-medium px-3"}
                 >
                   {t("tabs.official")}
-                  <Tabs.Indicator
-                    className={"bg-background shadow-xs rounded-lg"}
-                  />
                 </Tabs.Tab>
                 <Tabs.Tab
                   id={"EXTENSION"}
@@ -426,12 +392,8 @@ export function ModuleList({
                   className={"h-7 text-sm font-medium px-3"}
                 >
                   {t("tabs.extension")}
-                  <Tabs.Indicator
-                    className={"bg-background shadow-xs rounded-lg"}
-                  />
                 </Tabs.Tab>
               </Tabs.List>
-            </Tabs.ListContainer>
           </Tabs>
         </div>
 
@@ -443,7 +405,7 @@ export function ModuleList({
             variant={actionVariant("default", "bordered")}
             isPending={isPending}
           >
-            {isPending ? <Spinner size="sm" color="current" /> : null}
+            {isPending ? <Spinner size="sm" tone="current" /> : null}
             {<RefreshCw className="h-3.5 w-3.5" />}
             {t("syncSchemas")}
           </Button>
@@ -510,15 +472,15 @@ export function ModuleList({
                     {mod.access.length > 0 ? (
                       <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
                         {mod.accessStatus === "pending" ? (
-                          <Chip size="sm" color={"warning"} variant={"soft"}>
+                          <StatusChip tone="warning">
                             {<ShieldAlert className="h-3 w-3" aria-hidden />}
                             {tAccess("pending")}
-                          </Chip>
+                          </StatusChip>
                         ) : (
-                          <Chip size="sm" color={"success"} variant={"soft"}>
+                          <StatusChip tone="success">
                             {<ShieldCheck className="h-3 w-3" aria-hidden />}
                             {tAccess("approved")}
-                          </Chip>
+                          </StatusChip>
                         )}
                         {mod.access.map((request) => (
                           <span
@@ -581,12 +543,7 @@ export function ModuleList({
                           onChange={(val) => handleToggle(mod, val)}
                           size={"sm"}
                         >
-                          <Switch.Content>
-                            <Switch.Control>
-                              <Switch.Thumb />
-                            </Switch.Control>
                             <Label></Label>
-                          </Switch.Content>
                         </Switch>
                       </div>
                     )}
@@ -617,17 +574,13 @@ export function ModuleList({
       </div>
 
       {/* Erişim izni (onay) penceresi */}
-      <Modal
+      <Dialog
         isOpen={consentModule !== null}
-        onOpenChange={(open) => !open && setConsentModule(null)}
-      >
-        <Modal.Backdrop>
-          <Modal.Container size="lg">
-            <Modal.Dialog className={"w-full max-w-lg "}>
+        onOpenChange={(open) => !open && setConsentModule(null)} size="lg" className={"w-full max-w-lg "}>
               <DialogDismissButton />
 
-              <Modal.Header className="flex items-center gap-2">
-                <Modal.Heading className="flex items-center gap-2">
+              <Dialog.Header className="flex items-center gap-2">
+                <Dialog.Heading className="flex items-center gap-2">
                   <ShieldAlert
                     className="h-5 w-5 text-warning-500"
                     aria-hidden
@@ -635,9 +588,9 @@ export function ModuleList({
                   {consentModule
                     ? tAccess("title", { label: consentModule.label })
                     : null}
-                </Modal.Heading>
-              </Modal.Header>
-              <Modal.Body>
+                </Dialog.Heading>
+              </Dialog.Header>
+              <Dialog.Body>
                 {consentModule ? (
                   <div className="flex flex-col gap-3">
                     <p className="text-sm text-ink-600">
@@ -654,27 +607,15 @@ export function ModuleList({
                               {request.moduleLabel}
                             </span>
                             {request.operations.map((op) => (
-                              <Chip
+                              <StatusChip tone={op === "read"
+                                    ? "default"
+                                    : op === "write"
+                                      ? "warning"
+                                      : "danger"}
                                 key={op}
-                                size="sm"
-                                color={statusTone(
-                                  op === "read"
-                                    ? "default"
-                                    : op === "write"
-                                      ? "warning"
-                                      : "danger",
-                                )}
-                                variant={"soft"}
-                                style={statusStyle(
-                                  op === "read"
-                                    ? "default"
-                                    : op === "write"
-                                      ? "warning"
-                                      : "danger",
-                                )}
                               >
                                 {tAccess(`op.${op}`)}
-                              </Chip>
+                              </StatusChip>
                             ))}
                           </div>
                           {request.reason ? (
@@ -688,8 +629,8 @@ export function ModuleList({
                     <p className="text-xs text-ink-500">{tAccess("note")}</p>
                   </div>
                 ) : null}
-              </Modal.Body>
-              <Modal.Footer>
+              </Dialog.Body>
+              <Dialog.Footer>
                 <Button
                   onPress={() => setConsentModule(null)}
                   variant={actionVariant("default", "light")}
@@ -704,27 +645,20 @@ export function ModuleList({
                   variant={actionVariant("warning", "solid")}
                   isPending={isPending}
                 >
-                  {isPending ? <Spinner size="sm" color="current" /> : null}
+                  {isPending ? <Spinner size="sm" tone="current" /> : null}
                   {tAccess("allow")}
                 </Button>
-              </Modal.Footer>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+              </Dialog.Footer>
+      </Dialog>
 
       {/* Bağımlılık penceresi */}
-      <Modal
+      <Dialog
         isOpen={dependencyDialog !== null}
-        onOpenChange={(open) => !open && setDependencyDialog(null)}
-      >
-        <Modal.Backdrop>
-          <Modal.Container size="lg">
-            <Modal.Dialog className={"w-full max-w-lg "}>
+        onOpenChange={(open) => !open && setDependencyDialog(null)} size="lg" className={"w-full max-w-lg "}>
               <DialogDismissButton />
 
-              <Modal.Header>
-                <Modal.Heading className="flex items-center gap-2">
+              <Dialog.Header>
+                <Dialog.Heading className="flex items-center gap-2">
                   {dependencyDialog
                     ? dependencyDialog.isActive
                       ? tDeps("enableTitle", {
@@ -734,9 +668,9 @@ export function ModuleList({
                           label: dependencyDialog.mod.label,
                         })
                     : null}
-                </Modal.Heading>
-              </Modal.Header>
-              <Modal.Body>
+                </Dialog.Heading>
+              </Dialog.Header>
+              <Dialog.Body>
                 {dependencyDialog ? (
                   <div className="flex flex-col gap-4 text-sm">
                     {dependencyDialog.plan.missing.length ? (
@@ -779,9 +713,9 @@ export function ModuleList({
                               key={item.key}
                               className="flex flex-wrap items-center gap-2"
                             >
-                              <Chip size="sm" color={"accent"} variant={"soft"}>
+                              <StatusChip tone="primary">
                                 {labelOf(item.key)}
-                              </Chip>
+                              </StatusChip>
                               {item.needsApproval ? (
                                 <span className="text-xs text-warning-600">
                                   {tDeps("needsApproval", {
@@ -816,10 +750,6 @@ export function ModuleList({
                                 )
                               }
                             >
-                              <Checkbox.Content>
-                                <Checkbox.Control>
-                                  <Checkbox.Indicator />
-                                </Checkbox.Control>
                                 <Label>
                                   {labelOf(item.key)}
                                   {item.needsApproval ? (
@@ -832,7 +762,6 @@ export function ModuleList({
                                     </span>
                                   ) : null}
                                 </Label>
-                              </Checkbox.Content>
                             </Checkbox>
                           ))}
                         </div>
@@ -854,8 +783,8 @@ export function ModuleList({
                     ) : null}
                   </div>
                 ) : null}
-              </Modal.Body>
-              <Modal.Footer>
+              </Dialog.Body>
+              <Dialog.Footer>
                 <Button
                   onPress={() => setDependencyDialog(null)}
                   variant={actionVariant("default", "light")}
@@ -871,16 +800,13 @@ export function ModuleList({
                   )}
                   isPending={isPending}
                 >
-                  {isPending ? <Spinner size="sm" color="current" /> : null}
+                  {isPending ? <Spinner size="sm" tone="current" /> : null}
                   {dependencyDialog?.isActive
                     ? tDeps("enableAll")
                     : tDeps("disableAll")}
                 </Button>
-              </Modal.Footer>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+              </Dialog.Footer>
+      </Dialog>
 
       {/* Silme Onay Modalı */}
       <ConfirmDialog

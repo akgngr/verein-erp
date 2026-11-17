@@ -1,14 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Modal,
-  TextField,
-  Label,
-  Input,
-  FieldError,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Dialog, FieldError, Input, Label, Spinner, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -139,18 +131,15 @@ export function MandateCard({
       ) : (
         <p className="text-sm text-ink-500">{t("none")}</p>
       )}
-      <Modal isOpen={open} onOpenChange={setOpen}>
-        <Modal.Backdrop>
-          <Modal.Container size="lg">
-            <Modal.Dialog className={"w-full max-w-lg "}>
+      <Dialog isOpen={open} onOpenChange={setOpen} size="lg" className={"w-full max-w-lg "}>
               <DialogDismissButton />
 
-              <Modal.Header>
-                <Modal.Heading className="flex items-center gap-2">
+              <Dialog.Header>
+                <Dialog.Heading className="flex items-center gap-2">
                   {t("title")}
-                </Modal.Heading>
-              </Modal.Header>
-              <Modal.Body>
+                </Dialog.Heading>
+              </Dialog.Header>
+              <Dialog.Body>
                 <p className="text-xs text-ink-500">{t("help")}</p>
                 {field("iban")}
                 {mandate.ibanMasked ? (
@@ -160,8 +149,8 @@ export function MandateCard({
                 {field("accountHolder")}
                 {field("reference")}
                 {field("date", "date")}
-              </Modal.Body>
-              <Modal.Footer>
+              </Dialog.Body>
+              <Dialog.Footer>
                 {mandate.ibanMasked ? (
                   <Button
                     className="me-auto"
@@ -183,14 +172,11 @@ export function MandateCard({
                   variant={actionVariant("primary", "solid")}
                   isPending={pending}
                 >
-                  {pending ? <Spinner size="sm" color="current" /> : null}
+                  {pending ? <Spinner size="sm" tone="current" /> : null}
                   {t("save")}
                 </Button>
-              </Modal.Footer>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+              </Dialog.Footer>
+      </Dialog>
     </div>
   );
 }

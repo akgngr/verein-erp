@@ -1,5 +1,6 @@
 "use client";
-import { toast, Card, Button, Spinner } from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Card, Spinner } from "@/shared/components/kit";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useState } from "react";
@@ -130,7 +131,7 @@ export function SyncPanel({
                 variant={actionVariant("primary", "solid")}
                 isPending={busy}
               >
-                {busy ? <Spinner size="sm" color="current" /> : null}
+                {busy ? <Spinner size="sm" tone="current" /> : null}
                 {t("run")}
               </Button>
             ) : null}

@@ -1,17 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Modal,
-  TextField,
-  Label,
-  TextArea,
-  Description,
-  Input,
-  Select,
-  ListBox,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Description, Dialog, Input, Label, Select, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -117,18 +106,15 @@ export function ActionItemModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} key={key}>
-      <Modal.Backdrop>
-        <Modal.Container size="lg">
-          <Modal.Dialog className={"w-full max-w-lg "}>
+    <Dialog isOpen={isOpen} onOpenChange={onOpenChange} key={key} size="lg" className={"w-full max-w-lg "}>
             <DialogDismissButton />
 
-            <Modal.Header>
-              <Modal.Heading className="flex items-center gap-2">
+            <Dialog.Header>
+              <Dialog.Heading className="flex items-center gap-2">
                 {item ? t("modalEditTitle") : t("modalAddTitle")}
-              </Modal.Heading>
-            </Modal.Header>
-            <Modal.Body>
+              </Dialog.Heading>
+            </Dialog.Header>
+            <Dialog.Body>
               <TextField
                 value={description}
                 isRequired
@@ -159,12 +145,6 @@ export function ActionItemModal({
                 }}
               >
                 <Label>{t("assigneeLabel")}</Label>
-                <Select.Trigger>
-                  <Select.Value />
-                  <Select.Indicator />
-                </Select.Trigger>
-                <Select.Popover>
-                  <ListBox>
                     {[
                       { value: "", label: t("noAssigneeOption") },
                       ...attendeeOptions.map((option) => ({
@@ -173,17 +153,14 @@ export function ActionItemModal({
                       })),
                       { value: EXTERNAL, label: t("assigneeExternalOption") },
                     ].map((option) => (
-                      <ListBox.Item
+                      <Select.Item
                         key={option.value}
                         id={option.value}
                         textValue={option.label}
                       >
                         <Label>{option.label}</Label>
-                        <ListBox.ItemIndicator />
-                      </ListBox.Item>
+                      </Select.Item>
                     ))}
-                  </ListBox>
-                </Select.Popover>
                 <Description>
                   {attendeeOptions.length === 0
                     ? t("assigneeNoAttendees")
@@ -241,12 +218,6 @@ export function ActionItemModal({
                   }}
                 >
                   <Label>{t("decisionLabel")}</Label>
-                  <Select.Trigger>
-                    <Select.Value />
-                    <Select.Indicator />
-                  </Select.Trigger>
-                  <Select.Popover>
-                    <ListBox>
                       {[
                         { value: "", label: t("noDecision") },
                         ...decisions.map((decision) => ({
@@ -254,22 +225,19 @@ export function ActionItemModal({
                           label: decision.decisionNumber,
                         })),
                       ].map((option) => (
-                        <ListBox.Item
+                        <Select.Item
                           key={option.value}
                           id={option.value}
                           textValue={option.label}
                         >
                           <Label>{option.label}</Label>
-                          <ListBox.ItemIndicator />
-                        </ListBox.Item>
+                        </Select.Item>
                       ))}
-                    </ListBox>
-                  </Select.Popover>
                 </Select>
               </div>
               {error ? <p className="text-sm text-danger">{error}</p> : null}
-            </Modal.Body>
-            <Modal.Footer>
+            </Dialog.Body>
+            <Dialog.Footer>
               <Button
                 onPress={() => onOpenChange(false)}
                 variant={actionVariant("default", "light")}
@@ -285,13 +253,10 @@ export function ActionItemModal({
                 variant={actionVariant("primary", "solid")}
                 isPending={busy}
               >
-                {busy ? <Spinner size="sm" color="current" /> : null}
+                {busy ? <Spinner size="sm" tone="current" /> : null}
                 {tCommon("save")}
               </Button>
-            </Modal.Footer>
-          </Modal.Dialog>
-        </Modal.Container>
-      </Modal.Backdrop>
-    </Modal>
+            </Dialog.Footer>
+    </Dialog>
   );
 }

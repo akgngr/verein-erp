@@ -2,17 +2,8 @@
 
 import { useDrawerPlacement } from "@/shared/hooks/use-media-query";
 import { drawerDialogClass } from "@/shared/components/forms/form-drawer";
-import {
-  toast,
-  Button,
-  Spinner,
-  Drawer,
-  Checkbox,
-  Label,
-  TextField,
-  Input,
-  TextArea,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Checkbox, Input, Label, Sheet, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -141,28 +132,25 @@ export function EventFormModal({
   };
 
   return (
-    <Drawer isOpen={isOpen} onOpenChange={onClose}>
-      <Drawer.Backdrop>
-        <Drawer.Content placement={drawerPlacement}>
-          <Drawer.Dialog className={drawerDialogClass(drawerPlacement, "sm:max-w-2xl")}>
+    <Sheet isOpen={isOpen} onOpenChange={onClose} placement={drawerPlacement} className={drawerDialogClass(drawerPlacement, "sm:max-w-2xl")}>
             {() => (
               <form
                 onSubmit={handleSubmit}
                 className="flex h-full min-h-0 flex-col"
               >
                 <DialogDismissButton drawer />
-                <Drawer.Header className="flex flex-col gap-1">
-                  <Drawer.Heading className="flex items-center gap-2">
+                <Sheet.Header className="flex flex-col gap-1">
+                  <Sheet.Heading className="flex items-center gap-2">
                     <span className="text-lg font-semibold text-foreground">
                       {isEditing ? tForm("editTitle") : tForm("createTitle")}
                     </span>
-                  </Drawer.Heading>
+                  </Sheet.Heading>
                   <span className="text-xs text-ink-500 font-normal">
                     {tForm("subtitle")}
                   </span>
-                </Drawer.Header>
+                </Sheet.Header>
 
-                <Drawer.Body className="gap-4">
+                <Sheet.Body className="gap-4">
                   {errorMessage && (
                     <div className="p-3 text-xs rounded-lg bg-danger-50 text-danger-600 border border-danger-200">
                       {errorMessage}
@@ -252,12 +240,7 @@ export function EventFormModal({
 
                   <div className="flex flex-col gap-2">
                     <Checkbox isSelected={isOnline} onChange={setIsOnline}>
-                      <Checkbox.Content>
-                        <Checkbox.Control className="size-4">
-                          <Checkbox.Indicator />
-                        </Checkbox.Control>
                         <Label>{tForm("isOnlineLabel")}</Label>
-                      </Checkbox.Content>
                     </Checkbox>
 
                     {isOnline ? (
@@ -312,9 +295,9 @@ export function EventFormModal({
                         .join(" ")}
                     />
                   </TextField>
-                </Drawer.Body>
+                </Sheet.Body>
 
-                <Drawer.Footer>
+                <Sheet.Footer>
                   <Button
                     onPress={onClose}
                     isDisabled={loading}
@@ -327,15 +310,12 @@ export function EventFormModal({
                     variant={actionVariant("primary", "solid")}
                     isPending={loading}
                   >
-                    {loading ? <Spinner size="sm" color="current" /> : null}
+                    {loading ? <Spinner size="sm" tone="current" /> : null}
                     {isEditing ? tForm("saveChanges") : tForm("create")}
                   </Button>
-                </Drawer.Footer>
+                </Sheet.Footer>
               </form>
             )}
-          </Drawer.Dialog>
-        </Drawer.Content>
-      </Drawer.Backdrop>
-    </Drawer>
+    </Sheet>
   );
 }

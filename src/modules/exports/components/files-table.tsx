@@ -1,12 +1,6 @@
 "use client";
-import {
-  toast,
-  Chip,
-  Link as ActionLink,
-  buttonVariants,
-  Button,
-  Table,
-} from "@heroui/react";
+import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+import { StatusChip, Table } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -105,9 +99,9 @@ export function FilesTable({
                 <Table.Row key={file.id} id={file.id}>
                   <Table.Cell className="font-medium">{file.title}</Table.Cell>
                   <Table.Cell>
-                    <Chip size="sm" color={"accent"} variant={"soft"}>
+                    <StatusChip tone="primary">
                       {file.format.toUpperCase()}
-                    </Chip>
+                    </StatusChip>
                   </Table.Cell>
                   <Table.Cell>{sourceLabel(file.source)}</Table.Cell>
                   <Table.Cell>{size(file.sizeBytes)}</Table.Cell>

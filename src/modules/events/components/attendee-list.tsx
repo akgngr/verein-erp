@@ -1,17 +1,8 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import {
-  toast,
-  Button,
-  Spinner,
-  Chip,
-  TextField,
-  Label,
-  Input,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Input, Label, Spinner, StatusChip, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
-import { statusTone } from "@/shared/components/ui/status-appearance";
 
 import { useTranslations, useLocale } from "next-intl";
 
@@ -254,7 +245,7 @@ export function AttendeeList({
               variant={actionVariant("primary", "solid")}
               isPending={loading}
             >
-              {loading ? <Spinner size="sm" color="current" /> : null}
+              {loading ? <Spinner size="sm" tone="current" /> : null}
               {tA("complete")}
             </Button>
           </div>
@@ -300,14 +291,10 @@ export function AttendeeList({
                     </td>
 
                     <td className="py-3 px-4">
-                      <Chip
-                        size="sm"
-                        color={statusTone(isMember ? "primary" : "default")}
-                        variant={"soft"}
-                        style={statusStyle(isMember ? "primary" : "default")}
+                      <StatusChip tone={isMember ? "primary" : "default"}
                       >
                         {isMember ? tA("member") : tA("guest")}
-                      </Chip>
+                      </StatusChip>
                     </td>
 
                     <td className="py-3 px-4">

@@ -1,15 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Checkbox,
-  Label,
-  TextField,
-  Input,
-  Description,
-  InputGroup,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Checkbox, Description, Input, InputGroup, Label, Spinner, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -149,12 +140,7 @@ function ProviderCard({
           </TextField>
           {provider.hasKey ? (
             <Checkbox isSelected={clearKey} onChange={setClearKey}>
-              <Checkbox.Content>
-                <Checkbox.Control className="size-4">
-                  <Checkbox.Indicator />
-                </Checkbox.Control>
                 <Label>{t("fields.clearKey")}</Label>
-              </Checkbox.Content>
             </Checkbox>
           ) : null}
           <TextField
@@ -175,7 +161,7 @@ function ProviderCard({
               variant={actionVariant("primary", "flat")}
               isPending={busy === "save"}
             >
-              {busy === "save" ? <Spinner size="sm" color="current" /> : null}
+              {busy === "save" ? <Spinner size="sm" tone="current" /> : null}
               {t("credentialSave")}
             </Button>
             {!active ? (
@@ -196,7 +182,7 @@ function ProviderCard({
                 variant={actionVariant("primary", "solid")}
                 isPending={busy === "use"}
               >
-                {busy === "use" ? <Spinner size="sm" color="current" /> : null}
+                {busy === "use" ? <Spinner size="sm" tone="current" /> : null}
                 {t("providerUse")}
               </Button>
             ) : null}

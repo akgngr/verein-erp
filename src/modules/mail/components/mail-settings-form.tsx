@@ -1,13 +1,6 @@
 "use client";
-import {
-  Button,
-  Spinner,
-  TextField,
-  Label,
-  Input,
-  FieldError,
-  Description,
-} from "@heroui/react";
+import { Button } from "@heroui/react";
+import { Description, FieldError, Input, Label, Spinner, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -360,7 +353,7 @@ export function MailSettingsForm({
             variant={actionVariant("default", "bordered")}
             isPending={isVerifying}
           >
-            {isVerifying ? <Spinner size="sm" color="current" /> : null}
+            {isVerifying ? <Spinner size="sm" tone="current" /> : null}
             {isVerifying ? null : <PlugZap className="h-4 w-4" />}
             {t("actions.verify")}
           </Button>
@@ -370,7 +363,7 @@ export function MailSettingsForm({
             variant={actionVariant("primary", "solid")}
             isPending={isSaving}
           >
-            {isSaving ? <Spinner size="sm" color="current" /> : null}
+            {isSaving ? <Spinner size="sm" tone="current" /> : null}
             {isSaving ? null : <Save className="h-4 w-4" />}
             {t("actions.save")}
           </Button>

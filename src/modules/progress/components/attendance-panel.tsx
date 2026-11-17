@@ -1,5 +1,6 @@
 "use client";
-import { toast, Button, Spinner, TextField, Input } from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Input, Spinner, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -247,7 +248,7 @@ export function AttendancePanel({
           variant={actionVariant("primary", "solid")}
           isPending={busy}
         >
-          {busy ? <Spinner size="sm" color="current" /> : null}
+          {busy ? <Spinner size="sm" tone="current" /> : null}
           {t("save")}
         </Button>
       ) : null}

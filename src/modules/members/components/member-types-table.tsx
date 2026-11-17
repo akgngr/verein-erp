@@ -1,17 +1,6 @@
 "use client";
-import {
-  toast,
-  Chip,
-  Button,
-  Spinner,
-  Modal,
-  Switch,
-  Label,
-  TextField,
-  Input,
-  Description,
-  Table,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Description, Dialog, Input, Label, Spinner, StatusChip, Switch, Table, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -120,13 +109,13 @@ export function MemberTypesTable({
                   <Table.Cell>{row.memberCount}</Table.Cell>
                   <Table.Cell>
                     {row.isActive ? (
-                      <Chip size="sm" color={"success"} variant={"soft"}>
+                      <StatusChip tone="success">
                         {t("active")}
-                      </Chip>
+                      </StatusChip>
                     ) : (
-                      <Chip size="sm" color={"default"} variant={"soft"}>
+                      <StatusChip tone="default">
                         {t("passive")}
-                      </Chip>
+                      </StatusChip>
                     )}
                   </Table.Cell>
                   <Table.Cell>
@@ -151,22 +140,18 @@ export function MemberTypesTable({
         </Table.ScrollContainer>
       </Table>
 
-      <Modal
+      <Dialog
         isOpen={editTarget !== null}
-        onOpenChange={(next) => !next && setEditTarget(null)}
-      >
-        <Modal.Backdrop>
-          <Modal.Container size="md">
-            <Modal.Dialog className={"w-full max-w-md "}>
+        onOpenChange={(next) => !next && setEditTarget(null)} size="md" className={"w-full max-w-md "}>
               {({ close: onClose }) => (
                 <>
                   <DialogDismissButton />
-                  <Modal.Header>
-                    <Modal.Heading className="flex items-center gap-2">
+                  <Dialog.Header>
+                    <Dialog.Heading className="flex items-center gap-2">
                       {t("editTitle")}
-                    </Modal.Heading>
-                  </Modal.Header>
-                  <Modal.Body>
+                    </Dialog.Heading>
+                  </Dialog.Header>
+                  <Dialog.Body>
                     <TextField
                       value={annualDue}
                       onChange={setAnnualDue}
@@ -181,18 +166,13 @@ export function MemberTypesTable({
                       onChange={setIsActive}
                       size={"sm"}
                     >
-                      <Switch.Content>
-                        <Switch.Control>
-                          <Switch.Thumb />
-                        </Switch.Control>
                         <Label>{t("isActive")}</Label>
-                      </Switch.Content>
                     </Switch>
                     {formError ? (
                       <p className="text-sm text-danger">{formError}</p>
                     ) : null}
-                  </Modal.Body>
-                  <Modal.Footer>
+                  </Dialog.Body>
+                  <Dialog.Footer>
                     <Button
                       onPress={onClose}
                       variant={actionVariant("default", "light")}
@@ -204,16 +184,13 @@ export function MemberTypesTable({
                       variant={actionVariant("primary", "solid")}
                       isPending={saving}
                     >
-                      {saving ? <Spinner size="sm" color="current" /> : null}
+                      {saving ? <Spinner size="sm" tone="current" /> : null}
                       {t("save")}
                     </Button>
-                  </Modal.Footer>
+                  </Dialog.Footer>
                 </>
               )}
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+      </Dialog>
     </div>
   );
 }

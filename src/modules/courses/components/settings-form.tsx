@@ -1,5 +1,6 @@
 "use client";
-import { toast, Button, Spinner } from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Spinner } from "@/shared/components/kit";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useRouter } from "next/navigation";
@@ -135,7 +136,7 @@ export function CoursesSettingsForm({
         variant={actionVariant("primary", "solid")}
         isPending={busy}
       >
-        {busy ? <Spinner size="sm" color="current" /> : null}
+        {busy ? <Spinner size="sm" tone="current" /> : null}
         {tCommon("save")}
       </Button>
     </div>

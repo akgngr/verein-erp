@@ -1,5 +1,6 @@
 "use client";
-import { toast, TextField, Label, TextArea, Description } from "@heroui/react";
+import { toast } from "@heroui/react";
+import { Description, Label, TextArea, TextField } from "@/shared/components/kit";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";

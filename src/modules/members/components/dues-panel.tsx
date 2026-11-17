@@ -1,18 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Modal,
-  Switch,
-  Label,
-  TextField,
-  Input,
-  TextArea,
-  DatePicker,
-  DateField,
-} from "@heroui/react";
-import { DateCalendar } from "@/shared/components/forms/date-calendar";
+import { Button, toast } from "@heroui/react";
+import { DateInput, Dialog, Input, Label, Spinner, Switch, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -23,7 +11,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
-import { parseDate, type DateValue } from "@internationalized/date";
 
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { formatMoney } from "@/shared/money";
@@ -246,19 +233,16 @@ export function DuesPanel({
       )}
 
       {/* Ekleme modalı */}
-      <Modal isOpen={addOpen} onOpenChange={(next) => setAddOpen(next)}>
-        <Modal.Backdrop>
-          <Modal.Container size="lg">
-            <Modal.Dialog className={"w-full max-w-lg "}>
+      <Dialog isOpen={addOpen} onOpenChange={(next) => setAddOpen(next)} size="lg" className={"w-full max-w-lg "}>
               {({ close: onClose }) => (
                 <>
                   <DialogDismissButton />
-                  <Modal.Header>
-                    <Modal.Heading className="flex items-center gap-2">
+                  <Dialog.Header>
+                    <Dialog.Heading className="flex items-center gap-2">
                       {t("addTitle")}
-                    </Modal.Heading>
-                  </Modal.Header>
-                  <Modal.Body>
+                    </Dialog.Heading>
+                  </Dialog.Header>
+                  <Dialog.Body>
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       <TextField
                         value={year}
@@ -280,33 +264,7 @@ export function DuesPanel({
                         <Label>{t("colAmountDue")}</Label>
                         <Input placeholder="0,00" />
                       </TextField>
-                      <DatePicker
-                        value={
-                          dueDate ? (parseDate(dueDate) as DateValue) : null
-                        }
-                        onChange={(next) =>
-                          setDueDate(next ? next.toString() : "")
-                        }
-                      >
-                        <Label>{t("colDueDate")}</Label>
-                        <DateField.Group>
-                          <DateField.Input>
-                            {(segment) => (
-                              <DateField.Segment segment={segment} />
-                            )}
-                          </DateField.Input>
-                          <DateField.Suffix>
-                            <DatePicker.Trigger
-                              aria-label={String(t("colDueDate"))}
-                            >
-                              <DatePicker.TriggerIndicator />
-                            </DatePicker.Trigger>
-                          </DateField.Suffix>
-                        </DateField.Group>
-                        <DatePicker.Popover>
-                          <DateCalendar label={String(t("colDueDate"))} />
-                        </DatePicker.Popover>
-                      </DatePicker>
+                      <DateInput label={t("colDueDate")} ariaLabel={String(t("colDueDate"))} value={dueDate} onChange={setDueDate} />
                       <TextField
                         value={note}
                         onChange={setNote}
@@ -325,8 +283,8 @@ export function DuesPanel({
                     {formError ? (
                       <p className="text-sm text-danger">{formError}</p>
                     ) : null}
-                  </Modal.Body>
-                  <Modal.Footer>
+                  </Dialog.Body>
+                  <Dialog.Footer>
                     <Button
                       onPress={onClose}
                       variant={actionVariant("default", "light")}
@@ -338,34 +296,27 @@ export function DuesPanel({
                       variant={actionVariant("primary", "solid")}
                       isPending={saving}
                     >
-                      {saving ? <Spinner size="sm" color="current" /> : null}
+                      {saving ? <Spinner size="sm" tone="current" /> : null}
                       {t("save")}
                     </Button>
-                  </Modal.Footer>
+                  </Dialog.Footer>
                 </>
               )}
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+      </Dialog>
 
       {/* Düzenleme modalı */}
-      <Modal
+      <Dialog
         isOpen={editTarget !== null}
-        onOpenChange={(next) => !next && setEditTarget(null)}
-      >
-        <Modal.Backdrop>
-          <Modal.Container size="lg">
-            <Modal.Dialog className={"w-full max-w-lg "}>
+        onOpenChange={(next) => !next && setEditTarget(null)} size="lg" className={"w-full max-w-lg "}>
               {({ close: onClose }) => (
                 <>
                   <DialogDismissButton />
-                  <Modal.Header>
-                    <Modal.Heading className="flex items-center gap-2">
+                  <Dialog.Header>
+                    <Dialog.Heading className="flex items-center gap-2">
                       {t("editTitle", { year: editTarget?.year ?? "" })}
-                    </Modal.Heading>
-                  </Modal.Header>
-                  <Modal.Body>
+                    </Dialog.Heading>
+                  </Dialog.Header>
+                  <Dialog.Body>
                     <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                       <TextField
                         value={amount}
@@ -375,33 +326,7 @@ export function DuesPanel({
                         <Label>{t("colAmountDue")}</Label>
                         <Input placeholder="0,00" />
                       </TextField>
-                      <DatePicker
-                        value={
-                          dueDate ? (parseDate(dueDate) as DateValue) : null
-                        }
-                        onChange={(next) =>
-                          setDueDate(next ? next.toString() : "")
-                        }
-                      >
-                        <Label>{t("colDueDate")}</Label>
-                        <DateField.Group>
-                          <DateField.Input>
-                            {(segment) => (
-                              <DateField.Segment segment={segment} />
-                            )}
-                          </DateField.Input>
-                          <DateField.Suffix>
-                            <DatePicker.Trigger
-                              aria-label={String(t("colDueDate"))}
-                            >
-                              <DatePicker.TriggerIndicator />
-                            </DatePicker.Trigger>
-                          </DateField.Suffix>
-                        </DateField.Group>
-                        <DatePicker.Popover>
-                          <DateCalendar label={String(t("colDueDate"))} />
-                        </DatePicker.Popover>
-                      </DatePicker>
+                      <DateInput label={t("colDueDate")} ariaLabel={String(t("colDueDate"))} value={dueDate} onChange={setDueDate} />
                       <TextField
                         value={note}
                         onChange={setNote}
@@ -422,12 +347,7 @@ export function DuesPanel({
                           onChange={setWaived}
                           size={"sm"}
                         >
-                          <Switch.Content>
-                            <Switch.Control>
-                              <Switch.Thumb />
-                            </Switch.Control>
                             <Label>{t("waived")}</Label>
-                          </Switch.Content>
                         </Switch>
                       </div>
                     </div>
@@ -441,8 +361,8 @@ export function DuesPanel({
                     {formError ? (
                       <p className="text-sm text-danger">{formError}</p>
                     ) : null}
-                  </Modal.Body>
-                  <Modal.Footer>
+                  </Dialog.Body>
+                  <Dialog.Footer>
                     <Button
                       onPress={onClose}
                       variant={actionVariant("default", "light")}
@@ -454,16 +374,13 @@ export function DuesPanel({
                       variant={actionVariant("primary", "solid")}
                       isPending={saving}
                     >
-                      {saving ? <Spinner size="sm" color="current" /> : null}
+                      {saving ? <Spinner size="sm" tone="current" /> : null}
                       {t("save")}
                     </Button>
-                  </Modal.Footer>
+                  </Dialog.Footer>
                 </>
               )}
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+      </Dialog>
 
       <ConfirmDialog
         isOpen={deleteTarget !== null}

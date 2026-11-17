@@ -1,20 +1,8 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import {
-  toast,
-  Chip,
-  Button,
-  Spinner,
-  Link as ActionLink,
-  buttonVariants,
-  Switch,
-  Label,
-  TextField,
-  Input,
-} from "@heroui/react";
+import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+import { Input, Label, Spinner, StatusChip, Switch, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
-import { statusTone } from "@/shared/components/ui/status-appearance";
 
 import { KeyRound, Link2, RefreshCw, Settings2, Unlink } from "lucide-react";
 
@@ -116,14 +104,10 @@ function ProviderRow({
       <div className="flex flex-wrap items-center gap-2">
         <span className="font-medium">{name}</span>
         {account ? (
-          <Chip
-            size="sm"
-            color={statusTone(STATUS_COLOR[account.status])}
-            variant={"soft"}
-            style={statusStyle(STATUS_COLOR[account.status])}
+          <StatusChip tone={STATUS_COLOR[account.status]}
           >
             {t(`status.${account.status}`)}
-          </Chip>
+          </StatusChip>
         ) : null}
         {account?.accountLabel ? (
           <span className="text-sm text-ink-500">{account.accountLabel}</span>
@@ -147,7 +131,7 @@ function ProviderRow({
               variant={actionVariant("default", "flat")}
               isPending={pending}
             >
-              {pending ? <Spinner size="sm" color="current" /> : null}
+              {pending ? <Spinner size="sm" tone="current" /> : null}
               {<RefreshCw className="h-4 w-4" />}
               {t("syncNow")}
             </Button>
@@ -160,7 +144,7 @@ function ProviderRow({
               variant={actionVariant("primary", "flat")}
               isPending={pending}
             >
-              {pending ? <Spinner size="sm" color="current" /> : null}
+              {pending ? <Spinner size="sm" tone="current" /> : null}
               {<Link2 className="h-4 w-4" />}
               {account ? t("reconnect") : t("connect")}
             </Button>
@@ -174,7 +158,7 @@ function ProviderRow({
               variant={actionVariant("danger", "light")}
               isPending={pending}
             >
-              {pending ? <Spinner size="sm" color="current" /> : null}
+              {pending ? <Spinner size="sm" tone="current" /> : null}
               {<Unlink className="h-4 w-4" />}
               {t("disconnect")}
             </Button>
@@ -265,7 +249,7 @@ function ProviderRow({
               variant={actionVariant("primary", "solid")}
               isPending={pending}
             >
-              {pending ? <Spinner size="sm" color="current" /> : null}
+              {pending ? <Spinner size="sm" tone="current" /> : null}
               {<KeyRound className="h-4 w-4" />}
               {t("connect")}
             </Button>
@@ -291,12 +275,7 @@ function ProviderRow({
                 }
                 size={"sm"}
               >
-                <Switch.Content>
-                  <Switch.Control>
-                    <Switch.Thumb />
-                  </Switch.Control>
                   <Label></Label>
-                </Switch.Content>
               </Switch>
               <span
                 className="h-3 w-3 rounded-full"

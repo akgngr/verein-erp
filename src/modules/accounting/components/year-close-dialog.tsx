@@ -1,5 +1,6 @@
 "use client";
-import { toast, Button, Spinner, Modal } from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Dialog, Spinner } from "@/shared/components/kit";
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -53,18 +54,15 @@ export function YearCloseDialog({
   };
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-      <Modal.Backdrop>
-        <Modal.Container size="md">
-          <Modal.Dialog className={"w-full max-w-md "}>
+    <Dialog isOpen={isOpen} onOpenChange={onOpenChange} size="md" className={"w-full max-w-md "}>
             <DialogDismissButton />
 
-            <Modal.Header>
-              <Modal.Heading className="flex items-center gap-2">
+            <Dialog.Header>
+              <Dialog.Heading className="flex items-center gap-2">
                 {t("closeTitle", { year })}
-              </Modal.Heading>
-            </Modal.Header>
-            <Modal.Body>
+              </Dialog.Heading>
+            </Dialog.Header>
+            <Dialog.Body>
               <p className="text-sm font-semibold">{t("closePreview")}</p>
               <ul className="text-sm text-ink-500">
                 <li>
@@ -81,8 +79,8 @@ export function YearCloseDialog({
                 </li>
               </ul>
               <p className="text-sm text-ink-500">{t("closeHint")}</p>
-            </Modal.Body>
-            <Modal.Footer>
+            </Dialog.Body>
+            <Dialog.Footer>
               <Button
                 onPress={() => onOpenChange(false)}
                 variant={actionVariant("default", "flat")}
@@ -94,13 +92,10 @@ export function YearCloseDialog({
                 variant={actionVariant("primary", "solid")}
                 isPending={busy}
               >
-                {busy ? <Spinner size="sm" color="current" /> : null}
+                {busy ? <Spinner size="sm" tone="current" /> : null}
                 {t("closeConfirm")}
               </Button>
-            </Modal.Footer>
-          </Modal.Dialog>
-        </Modal.Container>
-      </Modal.Backdrop>
-    </Modal>
+            </Dialog.Footer>
+    </Dialog>
   );
 }

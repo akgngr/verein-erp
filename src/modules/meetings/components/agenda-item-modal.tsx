@@ -1,15 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Modal,
-  TextField,
-  Label,
-  Input,
-  TextArea,
-  Description,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Description, Dialog, Input, Label, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -68,18 +59,15 @@ export function AgendaItemModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} key={key}>
-      <Modal.Backdrop>
-        <Modal.Container size="md">
-          <Modal.Dialog className={"w-full max-w-md "}>
+    <Dialog isOpen={isOpen} onOpenChange={onOpenChange} key={key} size="md" className={"w-full max-w-md "}>
             <DialogDismissButton />
 
-            <Modal.Header>
-              <Modal.Heading className="flex items-center gap-2">
+            <Dialog.Header>
+              <Dialog.Heading className="flex items-center gap-2">
                 {item ? t("modalEditTitle") : t("modalAddTitle")}
-              </Modal.Heading>
-            </Modal.Header>
-            <Modal.Body>
+              </Dialog.Heading>
+            </Dialog.Header>
+            <Dialog.Body>
               <TextField
                 value={title}
                 isRequired
@@ -105,8 +93,8 @@ export function AgendaItemModal({
                 <Description>{t("contentHelp")}</Description>
               </TextField>
               {error ? <p className="text-sm text-danger">{error}</p> : null}
-            </Modal.Body>
-            <Modal.Footer>
+            </Dialog.Body>
+            <Dialog.Footer>
               <Button
                 onPress={() => onOpenChange(false)}
                 variant={actionVariant("default", "light")}
@@ -119,13 +107,10 @@ export function AgendaItemModal({
                 variant={actionVariant("primary", "solid")}
                 isPending={busy}
               >
-                {busy ? <Spinner size="sm" color="current" /> : null}
+                {busy ? <Spinner size="sm" tone="current" /> : null}
                 {tCommon("save")}
               </Button>
-            </Modal.Footer>
-          </Modal.Dialog>
-        </Modal.Container>
-      </Modal.Backdrop>
-    </Modal>
+            </Dialog.Footer>
+    </Dialog>
   );
 }

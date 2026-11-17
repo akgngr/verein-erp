@@ -1,11 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Link as ActionLink,
-  buttonVariants,
-} from "@heroui/react";
+import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+import { Spinner } from "@/shared/components/kit";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { Download, Paperclip, Trash2, Upload } from "lucide-react";
@@ -99,7 +94,7 @@ export function FilesPanel({
               variant={actionVariant("primary", "flat")}
               isPending={busy}
             >
-              {busy ? <Spinner size="sm" color="current" /> : null}
+              {busy ? <Spinner size="sm" tone="current" /> : null}
               {<Upload className="h-4 w-4" aria-hidden />}
               {t("upload")}
             </Button>

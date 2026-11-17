@@ -2,33 +2,12 @@
 
 import { useDrawerPlacement } from "@/shared/hooks/use-media-query";
 import { drawerDialogClass, SheetHandle } from "@/shared/components/forms/form-drawer";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import {
-  toast,
-  Button,
-  Chip,
-  Card,
-  Spinner,
-  Checkbox,
-  Label,
-  Modal,
-  Drawer,
-  TextField,
-  InputGroup,
-  Input,
-  TextArea,
-  Select,
-  ListBox,
-  Tabs,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Card, Checkbox, Dialog, Input, InputGroup, Label, Select, Sheet, Spinner, StatusChip, Tabs, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
-import {
-  statusTone,
-  badgeVariant,
-} from "@/shared/components/ui/status-appearance";
 
 import {
   ArrowRight,
@@ -182,24 +161,19 @@ export function CrmApp({
         <Tabs
           selectedKey={tab}
           onSelectionChange={(key) => setTab(String(key))}
-          variant="secondary"
+          emphasis="secondary"
         >
-          <Tabs.ListContainer>
             <Tabs.List aria-label={t("title")}>
               <Tabs.Tab id={"parties"} key={"parties"}>
                 {t("tabs.parties")}
-                <Tabs.Indicator />
               </Tabs.Tab>
               <Tabs.Tab id={"deals"} key={"deals"}>
                 {t("tabs.deals")}
-                <Tabs.Indicator />
               </Tabs.Tab>
               <Tabs.Tab id={"followUps"} key={"followUps"}>
                 {t("tabs.followUps", { count: followUps.length })}
-                <Tabs.Indicator />
               </Tabs.Tab>
             </Tabs.List>
-          </Tabs.ListContainer>
         </Tabs>
         {can.create ? (
           <Button
@@ -242,26 +216,16 @@ export function CrmApp({
                   const keys =
                     selectedValue === null ? undefined : String(selectedValue);
                   return setStage(String(keys ?? ""));
-                }}
-              >
-                <Select.Trigger className="h-9 text-sm">
-                  <Select.Value />
-                  <Select.Indicator />
-                </Select.Trigger>
-                <Select.Popover>
-                  <ListBox>
+                }} size="sm">
                     {STAGES.map((item) => (
-                      <ListBox.Item
+                      <Select.Item
                         key={item}
                         id={item}
                         textValue={String(t(`stages.${item}`))}
                       >
                         <Label>{t(`stages.${item}`)}</Label>
-                        <ListBox.ItemIndicator />
-                      </ListBox.Item>
+                      </Select.Item>
                     ))}
-                  </ListBox>
-                </Select.Popover>
               </Select>
             ) : null}
           </div>
@@ -301,14 +265,10 @@ export function CrmApp({
                         {t(`sources.${row.source}` as never)}
                       </td>
                       <td className="px-3 py-2">
-                        <Chip
-                          size="sm"
-                          color={statusTone(STAGE_COLOR[row.stage])}
-                          variant={"soft"}
-                          style={statusStyle(STAGE_COLOR[row.stage])}
+                        <StatusChip tone={STAGE_COLOR[row.stage]}
                         >
                           {t(`stages.${row.stage}`)}
-                        </Chip>
+                        </StatusChip>
                       </td>
                       <td className="px-3 py-2 tabular-nums">
                         {row.openDeals}
@@ -319,14 +279,12 @@ export function CrmApp({
                       <td className="px-3 py-2">
                         <div className="flex flex-wrap gap-1">
                           {row.tags.map((tag) => (
-                            <Chip
+                            <StatusChip
                               key={tag}
-                              size="sm"
-                              variant={"soft"}
                               className={"border border-current"}
                             >
                               {tag}
-                            </Chip>
+                            </StatusChip>
                           ))}
                         </div>
                       </td>
@@ -449,12 +407,7 @@ export function CrmApp({
                         router.refresh();
                       }}
                     >
-                      <Checkbox.Content>
-                        <Checkbox.Control>
-                          <Checkbox.Indicator />
-                        </Checkbox.Control>
                         <Label></Label>
-                      </Checkbox.Content>
                     </Checkbox>
                   ) : null}
                   <CalendarClock
@@ -554,18 +507,15 @@ function AddPartyModal({
     return () => clearTimeout(timer);
   }, [query]);
   return (
-    <Modal isOpen onOpenChange={(open) => !open && onClose()}>
-      <Modal.Backdrop>
-        <Modal.Container size="lg" scroll={"inside"}>
-          <Modal.Dialog className={"w-full max-w-lg "}>
+    <Dialog isOpen onOpenChange={(open) => !open && onClose()} size="lg" scroll={"inside"} className={"w-full max-w-lg "}>
             <DialogDismissButton />
 
-            <Modal.Header>
-              <Modal.Heading className="flex items-center gap-2">
+            <Dialog.Header>
+              <Dialog.Heading className="flex items-center gap-2">
                 {t("addParty")}
-              </Modal.Heading>
-            </Modal.Header>
-            <Modal.Body className="pb-6">
+              </Dialog.Heading>
+            </Dialog.Header>
+            <Dialog.Body className="pb-6">
               <TextField
                 value={query}
                 onChange={setQuery}
@@ -634,11 +584,8 @@ function AddPartyModal({
                   </li>
                 ))}
               </ul>
-            </Modal.Body>
-          </Modal.Dialog>
-        </Modal.Container>
-      </Modal.Backdrop>
-    </Modal>
+            </Dialog.Body>
+    </Dialog>
   );
 }
 
@@ -700,15 +647,12 @@ function PartyDrawer({
       : format.number(cents / 100, { style: "currency", currency: "EUR" });
 
   return (
-    <Drawer isOpen={Boolean(id)} onOpenChange={(open) => !open && onClose()}>
-      <Drawer.Backdrop>
-        <Drawer.Content placement={drawerPlacement}>
-          <Drawer.Dialog className={drawerDialogClass(drawerPlacement, "sm:max-w-xl")}>
+    <Sheet isOpen={Boolean(id)} onOpenChange={(open) => !open && onClose()} placement={drawerPlacement} className={drawerDialogClass(drawerPlacement, "sm:max-w-xl")}>
           {drawerPlacement === "bottom" ? <SheetHandle /> : null}
             <DialogDismissButton drawer />
 
-            <Drawer.Header className="flex flex-col gap-1">
-              <Drawer.Heading className="flex items-center gap-2">
+            <Sheet.Header className="flex flex-col gap-1">
+              <Sheet.Heading className="flex items-center gap-2">
                 {detail ? (
                   <>
                     <span>{detail.name}</span>
@@ -740,9 +684,9 @@ function PartyDrawer({
                 ) : (
                   <Spinner size="sm"></Spinner>
                 )}
-              </Drawer.Heading>
-            </Drawer.Header>
-            <Drawer.Body className="flex flex-col gap-6 pb-8">
+              </Sheet.Heading>
+            </Sheet.Header>
+            <Sheet.Body className="flex flex-col gap-6 pb-8">
               {detail ? (
                 <>
                   <div className="flex flex-wrap items-end gap-2">
@@ -761,27 +705,17 @@ function PartyDrawer({
                           void run(() =>
                             updatePartyAction({ id: detail.id, stage: value }),
                           );
-                      }}
-                    >
+                      }} size="sm">
                       <Label>{t("stage")}</Label>
-                      <Select.Trigger className="h-9 text-sm">
-                        <Select.Value />
-                        <Select.Indicator />
-                      </Select.Trigger>
-                      <Select.Popover>
-                        <ListBox>
                           {STAGES.map((item) => (
-                            <ListBox.Item
+                            <Select.Item
                               key={item}
                               id={item}
                               textValue={String(t(`stages.${item}`))}
                             >
                               <Label>{t(`stages.${item}`)}</Label>
-                              <ListBox.ItemIndicator />
-                            </ListBox.Item>
+                            </Select.Item>
                           ))}
-                        </ListBox>
-                      </Select.Popover>
                     </Select>
                     <TextField
                       value={tags}
@@ -837,9 +771,9 @@ function PartyDrawer({
                         <span className="tabular-nums">
                           {money(item.amountCents)}
                         </span>
-                        <Chip size="sm" variant={"soft"}>
+                        <StatusChip>
                           {t(`dealStages.${item.stage}`)}
-                        </Chip>
+                        </StatusChip>
                         {can.delete ? (
                           <Button
                             isIconOnly
@@ -954,10 +888,6 @@ function PartyDrawer({
                           )
                         }
                       >
-                        <Checkbox.Content>
-                          <Checkbox.Control>
-                            <Checkbox.Indicator />
-                          </Checkbox.Control>
                           <Label>
                             <span className="text-sm">
                               {format.dateTime(new Date(item.dueAt), {
@@ -967,7 +897,6 @@ function PartyDrawer({
                               · {item.note}
                             </span>
                           </Label>
-                        </Checkbox.Content>
                       </Checkbox>
                     ))}
                     {can.update ? (
@@ -1035,24 +964,15 @@ function PartyDrawer({
                       <div className="flex flex-col gap-2">
                         <div className="flex flex-wrap gap-1">
                           {KINDS.map((item) => (
-                            <Chip
+                            <StatusChip tone={kind === item ? "primary" : "default"}
                               key={item}
                               onClick={() => setKind(item)}
-                              color={statusTone(
-                                kind === item ? "primary" : "default",
-                              )}
-                              variant={badgeVariant(
-                                kind === item ? "solid" : "flat",
-                              )}
                               className={["cursor-pointer"]
                                 .filter(Boolean)
                                 .join(" ")}
-                              style={statusStyle(
-                                kind === item ? "primary" : "default",
-                              )}
                             >
                               {t(`kinds.${item}`)}
-                            </Chip>
+                            </StatusChip>
                           ))}
                         </div>
                         <TextField
@@ -1113,10 +1033,7 @@ function PartyDrawer({
                   </section>
                 </>
               ) : null}
-            </Drawer.Body>
-          </Drawer.Dialog>
-        </Drawer.Content>
-      </Drawer.Backdrop>
-    </Drawer>
+            </Sheet.Body>
+    </Sheet>
   );
 }

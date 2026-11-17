@@ -1,8 +1,7 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
 
-import { toast, Chip } from "@heroui/react";
-import { statusTone } from "@/shared/components/ui/status-appearance";
+import { toast } from "@heroui/react";
+import { StatusChip } from "@/shared/components/kit";
 
 import { useTranslations, useLocale } from "next-intl";
 
@@ -104,9 +103,9 @@ export function EventTable({
       render: (row) => {
         const typeMeta = EVENT_TYPES.find((t) => t.value === row.type);
         return (
-          <Chip size="sm" color={"default"} variant={"soft"}>
+          <StatusChip tone="default">
             {typeMeta ? tTypes(typeMeta.value) : row.type}
-          </Chip>
+          </StatusChip>
         );
       },
     },
@@ -127,18 +126,14 @@ export function EventTable({
         };
         const statusMeta = EVENT_STATUSES.find((s) => s.value === row.status);
         return (
-          <Chip
-            size="sm"
-            color={statusTone(statusColorMap[row.status] ?? "default")}
-            variant={"soft"}
-            style={statusStyle(statusColorMap[row.status] ?? "default")}
+          <StatusChip tone={statusColorMap[row.status] ?? "default"}
           >
             <span
               aria-hidden
               className="mr-1.5 size-1.5 rounded-full bg-current"
             />
             {statusMeta ? tStatus(statusMeta.value) : row.status}
-          </Chip>
+          </StatusChip>
         );
       },
     },

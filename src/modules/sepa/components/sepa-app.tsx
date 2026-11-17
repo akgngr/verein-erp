@@ -1,22 +1,8 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import {
-  toast,
-  Button,
-  Spinner,
-  Chip,
-  Link as ActionLink,
-  buttonVariants,
-  TextField,
-  Label,
-  Input,
-  Description,
-  Select,
-  ListBox,
-} from "@heroui/react";
+import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+import { Description, Input, Label, Select, Spinner, StatusChip, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
-import { statusTone } from "@/shared/components/ui/status-appearance";
 
 import { Download, Search } from "lucide-react";
 import Link from "next/link";
@@ -124,24 +110,15 @@ export function SepaApp({
               }}
             >
               <Label>{t("source")}</Label>
-              <Select.Trigger>
-                <Select.Value />
-                <Select.Indicator />
-              </Select.Trigger>
-              <Select.Popover>
-                <ListBox>
                   {sources.map((key) => (
-                    <ListBox.Item
+                    <Select.Item
                       key={key}
                       id={key}
                       textValue={String(t(`sources.${key}`))}
                     >
                       <Label>{t(`sources.${key}`)}</Label>
-                      <ListBox.ItemIndicator />
-                    </ListBox.Item>
+                    </Select.Item>
                   ))}
-                </ListBox>
-              </Select.Popover>
             </Select>
             {source === "MEMBER_DUES" ? (
               <TextField
@@ -194,7 +171,7 @@ export function SepaApp({
               variant={actionVariant("default", "solid")}
               isPending={pending}
             >
-              {pending ? <Spinner size="sm" color="current" /> : null}
+              {pending ? <Spinner size="sm" tone="current" /> : null}
               {<Search className="size-4" />}
               {t("preview")}
             </Button>
@@ -284,7 +261,7 @@ export function SepaApp({
                 variant={actionVariant("primary", "solid")}
                 isPending={pending}
               >
-                {pending ? <Spinner size="sm" color="current" /> : null}
+                {pending ? <Spinner size="sm" tone="current" /> : null}
                 {t("createRun")}
               </Button>
             </div>
@@ -342,14 +319,10 @@ export function SepaApp({
                   </td>
                   <td className="px-2 py-1">{money(run.totalCents)}</td>
                   <td className="px-2 py-1">
-                    <Chip
-                      size="sm"
-                      color={statusTone(STATUS_COLOR[run.status])}
-                      variant={"soft"}
-                      style={statusStyle(STATUS_COLOR[run.status])}
+                    <StatusChip tone={STATUS_COLOR[run.status]}
                     >
                       {t(`status.${run.status}`)}
-                    </Chip>
+                    </StatusChip>
                   </td>
                 </tr>
               ))}
@@ -409,13 +382,10 @@ export function SepaRunDetail({
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-end gap-3">
-        <Chip
-          color={statusTone(STATUS_COLOR[run.status])}
-          variant={"soft"}
-          style={statusStyle(STATUS_COLOR[run.status])}
+        <StatusChip tone={STATUS_COLOR[run.status]}
         >
           {t(`status.${run.status}`)}
-        </Chip>
+        </StatusChip>
         <span className="text-sm text-ink-600">
           {t("collectionDate")}: {date(run.collectionDate)} ·{" "}
           {money(run.totalCents)}
@@ -458,7 +428,7 @@ export function SepaRunDetail({
             variant={actionVariant("success", "solid")}
             isPending={pending}
           >
-            {pending ? <Spinner size="sm" color="current" /> : null}
+            {pending ? <Spinner size="sm" tone="current" /> : null}
             {t("markCollected")}
           </Button>
           {can.cancel ? (
@@ -510,14 +480,10 @@ export function SepaRunDetail({
               </td>
               <td className="px-2 py-1">{money(item.amountCents)}</td>
               <td className="px-2 py-1">
-                <Chip
-                  size="sm"
-                  color={statusTone(STATUS_COLOR[item.status])}
-                  variant={"soft"}
-                  style={statusStyle(STATUS_COLOR[item.status])}
+                <StatusChip tone={STATUS_COLOR[item.status]}
                 >
                   {t(`itemStatus.${item.status}`)}
-                </Chip>
+                </StatusChip>
                 {item.returnReason ? (
                   <span className="block text-xs text-danger">
                     {item.returnReason}

@@ -1,14 +1,6 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import {
-  toast,
-  Chip,
-  Button,
-  Spinner,
-  Select,
-  ListBox,
-  Label,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Label, Select, Spinner, StatusChip } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 import { statusTone } from "@/shared/components/ui/status-appearance";
@@ -116,14 +108,10 @@ export function ConnectionCard({
         <h2 className="text-base font-semibold">
           {connection.institutionName}
         </h2>
-        <Chip
-          size="sm"
-          color={statusTone(STATUS_COLOR[connection.status])}
-          variant={"soft"}
-          style={statusStyle(STATUS_COLOR[connection.status])}
+        <StatusChip tone={STATUS_COLOR[connection.status]}
         >
           {t(`status.${connection.status}`)}
-        </Chip>
+        </StatusChip>
         <div className="ml-auto flex flex-wrap gap-2">
           {canSync ? (
             <Button
@@ -137,7 +125,7 @@ export function ConnectionCard({
               isPending={busy === "refresh"}
             >
               {busy === "refresh" ? (
-                <Spinner size="sm" color="current" />
+                <Spinner size="sm" tone="current" />
               ) : null}
               {<RefreshCw size={14} />}
               {t("refresh")}
@@ -150,7 +138,7 @@ export function ConnectionCard({
               variant={actionVariant("primary", "solid")}
               isPending={busy === "sync"}
             >
-              {busy === "sync" ? <Spinner size="sm" color="current" /> : null}
+              {busy === "sync" ? <Spinner size="sm" tone="current" /> : null}
               {<Download size={14} />}
               {t("sync")}
             </Button>
@@ -239,26 +227,16 @@ export function ConnectionCard({
                           }),
                         t("mapped"),
                       );
-                    }}
-                  >
-                    <Select.Trigger className="h-9 text-sm">
-                      <Select.Value />
-                      <Select.Indicator />
-                    </Select.Trigger>
-                    <Select.Popover>
-                      <ListBox>
+                    }} size="sm">
                         {bankAccounts.map((option) => (
-                          <ListBox.Item
+                          <Select.Item
                             key={option.id}
                             id={option.id}
                             textValue={String(option.name)}
                           >
                             <Label>{option.name}</Label>
-                            <ListBox.ItemIndicator />
-                          </ListBox.Item>
+                          </Select.Item>
                         ))}
-                      </ListBox>
-                    </Select.Popover>
                   </Select>
                 </td>
                 <td className="py-2 text-right text-xs text-ink-500">

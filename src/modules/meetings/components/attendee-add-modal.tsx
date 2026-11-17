@@ -1,18 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Modal,
-  Checkbox,
-  Label,
-  TextField,
-  InputGroup,
-  Description,
-  Input,
-  Select,
-  ListBox,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Checkbox, Description, Dialog, Input, InputGroup, Label, Select, Spinner, TextField } from "@/shared/components/kit";
 
 import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
 
@@ -163,18 +151,15 @@ export function AttendeeAddModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-      <Modal.Backdrop>
-        <Modal.Container size="md">
-          <Modal.Dialog className={"w-full max-w-md "}>
+    <Dialog isOpen={isOpen} onOpenChange={onOpenChange} size="md" className={"w-full max-w-md "}>
             <DialogDismissButton />
 
-            <Modal.Header>
-              <Modal.Heading className="flex items-center gap-2">
+            <Dialog.Header>
+              <Dialog.Heading className="flex items-center gap-2">
                 {t("title")}
-              </Modal.Heading>
-            </Modal.Header>
-            <Modal.Body>
+              </Dialog.Heading>
+            </Dialog.Header>
+            <Dialog.Body>
               <div className="flex gap-2">
                 <Button
                   size="sm"
@@ -265,10 +250,6 @@ export function AttendeeAddModal({
                                   toggleMember(member.id, checked)
                                 }
                               >
-                                <Checkbox.Content>
-                                  <Checkbox.Control className="size-4">
-                                    <Checkbox.Indicator />
-                                  </Checkbox.Control>
                                   <Label>
                                     <span className="text-sm">
                                       {member.label}
@@ -282,7 +263,6 @@ export function AttendeeAddModal({
                                       </span>
                                     ) : null}
                                   </Label>
-                                </Checkbox.Content>
                               </Checkbox>
                             </div>
                           );
@@ -306,26 +286,17 @@ export function AttendeeAddModal({
                     }}
                   >
                     <Label>{t("role")}</Label>
-                    <Select.Trigger>
-                      <Select.Value />
-                      <Select.Indicator />
-                    </Select.Trigger>
-                    <Select.Popover>
-                      <ListBox>
                         {(["MEMBER", "CHAIRPERSON", "SECRETARY"] as const).map(
                           (roleKey) => (
-                            <ListBox.Item
+                            <Select.Item
                               key={roleKey}
                               id={roleKey}
                               textValue={tRole(roleKey)}
                             >
                               <Label>{tRole(roleKey)}</Label>
-                              <ListBox.ItemIndicator />
-                            </ListBox.Item>
+                            </Select.Item>
                           ),
                         )}
-                      </ListBox>
-                    </Select.Popover>
                   </Select>
                 </>
               ) : tab === "user" ? (
@@ -337,27 +308,17 @@ export function AttendeeAddModal({
                     onChange={(selectedValue) => {
                       const keys = selectedValue.map(String);
                       return setSelectedUsers(new Set(keys));
-                    }}
-                  >
+                    }} >
                     <Label>{t("users")}</Label>
-                    <Select.Trigger>
-                      <Select.Value />
-                      <Select.Indicator />
-                    </Select.Trigger>
-                    <Select.Popover>
-                      <ListBox selectionMode="multiple">
                         {userOptions.map((option) => (
-                          <ListBox.Item
+                          <Select.Item
                             key={option.id}
                             id={option.id}
                             textValue={option.label}
                           >
                             <Label>{option.label}</Label>
-                            <ListBox.ItemIndicator />
-                          </ListBox.Item>
+                          </Select.Item>
                         ))}
-                      </ListBox>
-                    </Select.Popover>
                     <Description>{t("usersDescription")}</Description>
                   </Select>
                   <Select
@@ -371,26 +332,17 @@ export function AttendeeAddModal({
                     }}
                   >
                     <Label>{t("role")}</Label>
-                    <Select.Trigger>
-                      <Select.Value />
-                      <Select.Indicator />
-                    </Select.Trigger>
-                    <Select.Popover>
-                      <ListBox>
                         {(["MEMBER", "CHAIRPERSON", "SECRETARY"] as const).map(
                           (roleKey) => (
-                            <ListBox.Item
+                            <Select.Item
                               key={roleKey}
                               id={roleKey}
                               textValue={tRole(roleKey)}
                             >
                               <Label>{tRole(roleKey)}</Label>
-                              <ListBox.ItemIndicator />
-                            </ListBox.Item>
+                            </Select.Item>
                           ),
                         )}
-                      </ListBox>
-                    </Select.Popover>
                   </Select>
                 </>
               ) : (
@@ -417,31 +369,22 @@ export function AttendeeAddModal({
                     }}
                   >
                     <Label>{t("role")}</Label>
-                    <Select.Trigger>
-                      <Select.Value />
-                      <Select.Indicator />
-                    </Select.Trigger>
-                    <Select.Popover>
-                      <ListBox>
                         {(["GUEST", "MEMBER"] as const).map((roleKey) => (
-                          <ListBox.Item
+                          <Select.Item
                             key={roleKey}
                             id={roleKey}
                             textValue={tRole(roleKey)}
                           >
                             <Label>{tRole(roleKey)}</Label>
-                            <ListBox.ItemIndicator />
-                          </ListBox.Item>
+                          </Select.Item>
                         ))}
-                      </ListBox>
-                    </Select.Popover>
                   </Select>
                 </>
               )}
 
               {error ? <p className="text-sm text-danger">{error}</p> : null}
-            </Modal.Body>
-            <Modal.Footer>
+            </Dialog.Body>
+            <Dialog.Footer>
               <Button
                 onPress={close}
                 variant={actionVariant("default", "light")}
@@ -455,7 +398,7 @@ export function AttendeeAddModal({
                   variant={actionVariant("primary", "solid")}
                   isPending={busy}
                 >
-                  {busy ? <Spinner size="sm" color="current" /> : null}
+                  {busy ? <Spinner size="sm" tone="current" /> : null}
                   {t("add")}
                 </Button>
               ) : tab === "user" ? (
@@ -465,7 +408,7 @@ export function AttendeeAddModal({
                   variant={actionVariant("primary", "solid")}
                   isPending={busy}
                 >
-                  {busy ? <Spinner size="sm" color="current" /> : null}
+                  {busy ? <Spinner size="sm" tone="current" /> : null}
                   {t("add")}
                 </Button>
               ) : (
@@ -475,14 +418,11 @@ export function AttendeeAddModal({
                   variant={actionVariant("primary", "solid")}
                   isPending={busy}
                 >
-                  {busy ? <Spinner size="sm" color="current" /> : null}
+                  {busy ? <Spinner size="sm" tone="current" /> : null}
                   {t("add")}
                 </Button>
               )}
-            </Modal.Footer>
-          </Modal.Dialog>
-        </Modal.Container>
-      </Modal.Backdrop>
-    </Modal>
+            </Dialog.Footer>
+    </Dialog>
   );
 }

@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "2.4.7",
+      "date": "2026-11-17",
+      "title": {
+        "tr": "Ortak UI bileşenleri (iç değişiklik)",
+        "de": "Gemeinsame UI-Komponenten (intern)"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.",
+          "de": "Formularfelder, Dialoge, Tabs, Badges und Ladeanzeigen nutzen das gemeinsame UI-Kit; Darstellung und Verhalten bleiben gleich."
+        }
+      ]
+    },
+    {
       "version": "2.4.6",
       "date": "2026-11-16",
       "title": {

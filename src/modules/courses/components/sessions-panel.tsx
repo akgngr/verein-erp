@@ -1,16 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Chip,
-  Spinner,
-  Modal,
-  Checkbox,
-  Label,
-  TextField,
-  Input,
-  TextArea,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Checkbox, Dialog, Input, Label, Spinner, StatusChip, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -175,9 +165,9 @@ export function SessionsPanel({
               </div>
               <div className="flex items-center gap-1">
                 {session.isCancelled ? (
-                  <Chip size="sm" color={"danger"} variant={"soft"}>
+                  <StatusChip tone="danger">
                     {t("cancelled")}
-                  </Chip>
+                  </StatusChip>
                 ) : null}
                 {canEdit ? (
                   <>
@@ -218,21 +208,17 @@ export function SessionsPanel({
         </ul>
       )}
 
-      <Modal
+      <Dialog
         isOpen={draft !== null}
-        onOpenChange={(open) => !open && setDraft(null)}
-      >
-        <Modal.Backdrop>
-          <Modal.Container size="md">
-            <Modal.Dialog className={"w-full max-w-md "}>
+        onOpenChange={(open) => !open && setDraft(null)} size="md" className={"w-full max-w-md "}>
               <DialogDismissButton />
 
-              <Modal.Header>
-                <Modal.Heading className="flex items-center gap-2">
+              <Dialog.Header>
+                <Dialog.Heading className="flex items-center gap-2">
                   {draft?.id ? t("editTitle") : t("addTitle")}
-                </Modal.Heading>
-              </Modal.Header>
-              <Modal.Body>
+                </Dialog.Heading>
+              </Dialog.Header>
+              <Dialog.Body>
                 {draft ? (
                   <div className="flex flex-col gap-3">
                     <div className="grid grid-cols-3 gap-3">
@@ -309,20 +295,15 @@ export function SessionsPanel({
                         setDraft({ ...draft, isCancelled })
                       }
                     >
-                      <Checkbox.Content>
-                        <Checkbox.Control>
-                          <Checkbox.Indicator />
-                        </Checkbox.Control>
                         <Label>{t("markCancelled")}</Label>
-                      </Checkbox.Content>
                     </Checkbox>
                     {error ? (
                       <p className="text-sm text-danger">{error}</p>
                     ) : null}
                   </div>
                 ) : null}
-              </Modal.Body>
-              <Modal.Footer>
+              </Dialog.Body>
+              <Dialog.Footer>
                 <Button
                   onPress={() => setDraft(null)}
                   variant={actionVariant("default", "light")}
@@ -335,30 +316,23 @@ export function SessionsPanel({
                   variant={actionVariant("primary", "solid")}
                   isPending={busy}
                 >
-                  {busy ? <Spinner size="sm" color="current" /> : null}
+                  {busy ? <Spinner size="sm" tone="current" /> : null}
                   {tCommon("save")}
                 </Button>
-              </Modal.Footer>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+              </Dialog.Footer>
+      </Dialog>
 
-      <Modal
+      <Dialog
         isOpen={series !== null}
-        onOpenChange={(open) => !open && setSeries(null)}
-      >
-        <Modal.Backdrop>
-          <Modal.Container size="md">
-            <Modal.Dialog className={"w-full max-w-md "}>
+        onOpenChange={(open) => !open && setSeries(null)} size="md" className={"w-full max-w-md "}>
               <DialogDismissButton />
 
-              <Modal.Header>
-                <Modal.Heading className="flex items-center gap-2">
+              <Dialog.Header>
+                <Dialog.Heading className="flex items-center gap-2">
                   {t("seriesTitle")}
-                </Modal.Heading>
-              </Modal.Header>
-              <Modal.Body>
+                </Dialog.Heading>
+              </Dialog.Header>
+              <Dialog.Body>
                 {series ? (
                   <div className="flex flex-col gap-3">
                     <p className="text-sm text-ink-500">{t("seriesHelp")}</p>
@@ -405,8 +379,8 @@ export function SessionsPanel({
                     ) : null}
                   </div>
                 ) : null}
-              </Modal.Body>
-              <Modal.Footer>
+              </Dialog.Body>
+              <Dialog.Footer>
                 <Button
                   onPress={() => setSeries(null)}
                   variant={actionVariant("default", "light")}
@@ -418,14 +392,11 @@ export function SessionsPanel({
                   variant={actionVariant("primary", "solid")}
                   isPending={busy}
                 >
-                  {busy ? <Spinner size="sm" color="current" /> : null}
+                  {busy ? <Spinner size="sm" tone="current" /> : null}
                   {t("seriesCreate")}
                 </Button>
-              </Modal.Footer>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+              </Dialog.Footer>
+      </Dialog>
 
       <ConfirmDialog
         isOpen={deleting !== null}

@@ -1,6 +1,6 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import { toast, Button, Spinner, Chip } from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Spinner, StatusChip } from "@/shared/components/kit";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 import { statusTone } from "@/shared/components/ui/status-appearance";
 
@@ -130,7 +130,7 @@ export function InboxPanel({
               variant={actionVariant("primary", "solid")}
               isPending={busy === "fetch"}
             >
-              {busy === "fetch" ? <Spinner size="sm" color="current" /> : null}
+              {busy === "fetch" ? <Spinner size="sm" tone="current" /> : null}
               {<Inbox size={16} />}
               {t("fetch")}
             </Button>
@@ -139,7 +139,7 @@ export function InboxPanel({
               variant={actionVariant("default", "flat")}
               isPending={busy === "eml"}
             >
-              {busy === "eml" ? <Spinner size="sm" color="current" /> : null}
+              {busy === "eml" ? <Spinner size="sm" tone="current" /> : null}
               {<FileUp size={16} />}
               {t("uploadEml")}
             </Button>
@@ -206,18 +206,10 @@ export function InboxPanel({
                     </p>
                   ) : null}
                 </div>
-                <Chip
-                  size="sm"
-                  color={statusTone(
-                    row.status === "NEW" ? "warning" : "success",
-                  )}
-                  variant={"soft"}
-                  style={statusStyle(
-                    row.status === "NEW" ? "warning" : "success",
-                  )}
+                <StatusChip tone={row.status === "NEW" ? "warning" : "success"}
                 >
                   {t(`status.${row.status}`)}
-                </Chip>
+                </StatusChip>
                 {canManage ? (
                   <Button
                     size="sm"
@@ -275,9 +267,9 @@ export function InboxPanel({
                         KB
                       </span>
                       {attachment.importedTo ? (
-                        <Chip size="sm" color={"success"} variant={"soft"}>
+                        <StatusChip tone="success">
                           {t("importedChip")}
-                        </Chip>
+                        </StatusChip>
                       ) : canManage && accountingUsable ? (
                         <Button
                           size="sm"
@@ -286,7 +278,7 @@ export function InboxPanel({
                           isPending={busy === attachment.id}
                         >
                           {busy === attachment.id ? (
-                            <Spinner size="sm" color="current" />
+                            <Spinner size="sm" tone="current" />
                           ) : null}
                           {t("importToAccounting")}
                         </Button>

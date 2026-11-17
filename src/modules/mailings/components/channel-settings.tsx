@@ -1,21 +1,9 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import {
-  toast,
-  Card,
-  Chip,
-  Button,
-  Spinner,
-  TextField,
-  Label,
-  Input,
-  Select,
-  ListBox,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Card, Input, Label, Select, Spinner, StatusChip, TextField } from "@/shared/components/kit";
 import { CopyValue } from "@/shared/components/ui/copy-value";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
-import { statusTone } from "@/shared/components/ui/status-appearance";
 
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
@@ -77,18 +65,14 @@ function ChannelCard({ channel }: { channel: ChannelSettingsView }) {
         <span className="font-semibold">
           {t(`channels.${channel.key}.label` as never)}
         </span>
-        <Chip
-          size="sm"
-          color={statusTone(channel.configured ? "success" : "warning")}
-          variant={"soft"}
-          style={statusStyle(channel.configured ? "success" : "warning")}
+        <StatusChip tone={channel.configured ? "success" : "warning"}
         >
           {t(
             channel.configured
               ? "settings.configured"
               : "settings.notConfigured",
           )}
-        </Chip>
+        </StatusChip>
       </Card.Header>
       <Card.Content
         className={["flex flex-col gap-3 pt-0"].filter(Boolean).join(" ")}
@@ -109,17 +93,10 @@ function ChannelCard({ channel }: { channel: ChannelSettingsView }) {
                   const keys =
                     selectedValue === null ? undefined : String(selectedValue);
                   return set(setting.key, String(keys ?? ""));
-                }}
-              >
+                }} size="sm">
                 <Label>{label}</Label>
-                <Select.Trigger className="h-9 text-sm">
-                  <Select.Value />
-                  <Select.Indicator />
-                </Select.Trigger>
-                <Select.Popover>
-                  <ListBox>
                     {setting.options.map((option) => (
-                      <ListBox.Item
+                      <Select.Item
                         key={option}
                         id={option}
                         textValue={String(
@@ -133,11 +110,8 @@ function ChannelCard({ channel }: { channel: ChannelSettingsView }) {
                             `channelOptions.${channel.key}.${setting.key}.${option}` as never,
                           )}
                         </Label>
-                        <ListBox.ItemIndicator />
-                      </ListBox.Item>
+                      </Select.Item>
                     ))}
-                  </ListBox>
-                </Select.Popover>
               </Select>
             );
           }
@@ -188,7 +162,7 @@ function ChannelCard({ channel }: { channel: ChannelSettingsView }) {
           variant={actionVariant("primary", "solid")}
           isPending={pending}
         >
-          {pending ? <Spinner size="sm" color="current" /> : null}
+          {pending ? <Spinner size="sm" tone="current" /> : null}
           {t("settings.save")}
         </Button>
       </Card.Content>

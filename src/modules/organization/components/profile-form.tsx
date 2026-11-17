@@ -1,5 +1,6 @@
 "use client";
-import { toast, Card, Switch, Label } from "@heroui/react";
+import { toast } from "@heroui/react";
+import { Card, Label, Switch } from "@/shared/components/kit";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -237,10 +238,6 @@ export function ProfileForm({ profile }: { profile: OrganizationProfileData }) {
                       onChange={field.onChange}
                       size={"sm"}
                     >
-                      <Switch.Content>
-                        <Switch.Control>
-                          <Switch.Thumb />
-                        </Switch.Control>
                         <Label>
                           <span className="text-sm">
                             {t("membershipFeesDeductible")}
@@ -249,7 +246,6 @@ export function ProfileForm({ profile }: { profile: OrganizationProfileData }) {
                             {t("membershipFeesDeductibleDescription")}
                           </span>
                         </Label>
-                      </Switch.Content>
                     </Switch>
                   )}
                 />

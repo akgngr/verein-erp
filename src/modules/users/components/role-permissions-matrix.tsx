@@ -1,29 +1,12 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import {
-  toast,
-  Button,
-  Chip,
-  Spinner,
-  Checkbox,
-  Label,
-  Modal,
-  TextField,
-  InputGroup,
-  Input,
-  FieldError,
-  TextArea,
-  Select,
-  ListBox,
-  Description,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Checkbox, Description, Dialog, FieldError, Input, InputGroup, Label, Select, Spinner, StatusChip, TextArea, TextField } from "@/shared/components/kit";
 
 import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
-import { statusTone } from "@/shared/components/ui/status-appearance";
 
 import { Lock, Pencil, Plus, RotateCcw, Search, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -266,9 +249,7 @@ export function RolePermissionsMatrix({
           <div className="flex min-w-0 flex-col gap-1">
             <div className="flex flex-wrap items-center gap-2">
               <RoleChip role={selected} size="md" />
-              <Chip
-                size="sm"
-                variant={"soft"}
+              <StatusChip
                 className={"border border-current"}
               >
                 {role?.kind === "module"
@@ -276,7 +257,7 @@ export function RolePermissionsMatrix({
                       module: text.module(role.moduleKey ?? ""),
                     })
                   : t(`kind.${role?.kind ?? "system"}`)}
-              </Chip>
+              </StatusChip>
               <span className="text-xs text-ink-500">
                 {t("summary", {
                   users: userCounts[selected] ?? 0,
@@ -376,16 +357,13 @@ export function RolePermissionsMatrix({
                       <span className="flex items-center gap-2 text-sm font-medium">
                         {text.label(ref)}
                         {isCustomized(ref) ? (
-                          <Chip
-                            size="sm"
-                            color={"warning"}
-                            variant={"soft"}
+                          <StatusChip tone="warning"
                             className={["h-5 text-[10px]"]
                               .filter(Boolean)
                               .join(" ")}
                           >
                             {t("customized")}
-                          </Chip>
+                          </StatusChip>
                         ) : null}
                       </span>
                       <span className="text-xs text-ink-500">
@@ -404,16 +382,11 @@ export function RolePermissionsMatrix({
                             void toggle(ref, action, checked)
                           }
                         >
-                          <Checkbox.Content>
-                            <Checkbox.Control className="size-4">
-                              <Checkbox.Indicator />
-                            </Checkbox.Control>
                             <Label>
                               <span className="text-sm">
                                 {tActions(action)}
                               </span>
                             </Label>
-                          </Checkbox.Content>
                         </Checkbox>
                       ))}
                     </div>
@@ -527,18 +500,15 @@ function RoleEditor({
   };
 
   return (
-    <Modal isOpen onOpenChange={(open) => !open && onClose()}>
-      <Modal.Backdrop>
-        <Modal.Container size="md">
-          <Modal.Dialog className={"w-full max-w-md "}>
+    <Dialog isOpen onOpenChange={(open) => !open && onClose()} size="md" className={"w-full max-w-md "}>
             <DialogDismissButton />
 
-            <Modal.Header>
-              <Modal.Heading className="flex items-center gap-2">
+            <Dialog.Header>
+              <Dialog.Heading className="flex items-center gap-2">
                 {mode === "create" ? t("newRole") : t("editTitle")}
-              </Modal.Heading>
-            </Modal.Header>
-            <Modal.Body className="gap-4">
+              </Dialog.Heading>
+            </Dialog.Header>
+            <Dialog.Body className="gap-4">
               <TextField
                 value={labelValue}
                 isRequired
@@ -575,14 +545,10 @@ function RoleEditor({
                       aria-pressed={color === option}
                       className={`rounded-full p-0.5 ${color === option ? "ring-2 ring-accent" : ""}`}
                     >
-                      <Chip
-                        size="sm"
-                        color={statusTone(option)}
-                        variant={"soft"}
-                        style={statusStyle(option)}
+                      <StatusChip tone={option}
                       >
                         {labelValue || t("fields.sample")}
-                      </Chip>
+                      </StatusChip>
                     </button>
                   ))}
                 </div>
@@ -600,29 +566,20 @@ function RoleEditor({
                   }}
                 >
                   <Label>{t("fields.copyFrom")}</Label>
-                  <Select.Trigger>
-                    <Select.Value />
-                    <Select.Indicator />
-                  </Select.Trigger>
-                  <Select.Popover>
-                    <ListBox>
                       {roles.map((item) => (
-                        <ListBox.Item
+                        <Select.Item
                           key={item.key}
                           id={item.key}
                           textValue={String(roleLabel(item.key))}
                         >
                           <Label>{roleLabel(item.key)}</Label>
-                          <ListBox.ItemIndicator />
-                        </ListBox.Item>
+                        </Select.Item>
                       ))}
-                    </ListBox>
-                  </Select.Popover>
                   <Description>{t("fields.copyFromHint")}</Description>
                 </Select>
               ) : null}
-            </Modal.Body>
-            <Modal.Footer>
+            </Dialog.Body>
+            <Dialog.Footer>
               <Button
                 onPress={onClose}
                 variant={actionVariant("default", "flat")}
@@ -635,14 +592,11 @@ function RoleEditor({
                 variant={actionVariant("primary", "solid")}
                 isPending={busy}
               >
-                {busy ? <Spinner size="sm" color="current" /> : null}
+                {busy ? <Spinner size="sm" tone="current" /> : null}
                 {t("save")}
               </Button>
-            </Modal.Footer>
-          </Modal.Dialog>
-        </Modal.Container>
-      </Modal.Backdrop>
-    </Modal>
+            </Dialog.Footer>
+    </Dialog>
   );
 }
 
@@ -667,21 +621,15 @@ export function RolePermissionsPreview({ role }: { role: string }) {
         const write = actions.some((action) => action !== "view");
         const view = actions.includes("view");
         return (
-          <Chip
+          <StatusChip tone={write ? "success" : view ? "primary" : "default"}
             key={moduleKey}
-            size="sm"
-            color={statusTone(write ? "success" : view ? "primary" : "default")}
-            variant={"soft"}
             className={[write || view ? "" : "text-ink-400"]
               .filter(Boolean)
               .join(" ")}
-            style={statusStyle(
-              write ? "success" : view ? "primary" : "default",
-            )}
           >
             {text.module(moduleKey)}:{" "}
             {t(write ? "accessFull" : view ? "accessRead" : "accessNone")}
-          </Chip>
+          </StatusChip>
         );
       })}
     </div>

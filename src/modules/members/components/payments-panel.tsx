@@ -1,20 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Modal,
-  TextField,
-  Label,
-  Input,
-  TextArea,
-  Description,
-  Select,
-  ListBox,
-  DatePicker,
-  DateField,
-} from "@heroui/react";
-import { DateCalendar } from "@/shared/components/forms/date-calendar";
+import { Button, toast } from "@heroui/react";
+import { DateInput, Description, Dialog, Input, Label, Select, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -24,12 +10,7 @@ import { Ban, Plus } from "lucide-react";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
-import {
-  type DateValue,
-  getLocalTimeZone,
-  parseDate,
-  today,
-} from "@internationalized/date";
+import { getLocalTimeZone, today } from "@internationalized/date";
 
 import { PdfSplitButton } from "@/shared/components/ui/pdf-split-button";
 
@@ -238,18 +219,15 @@ export function PaymentsPanel({
       )}
 
       {/* Yeni ödeme diyaloğu */}
-      <Modal isOpen={addOpen} onOpenChange={setAddOpen}>
-        <Modal.Backdrop>
-          <Modal.Container size="lg">
-            <Modal.Dialog className={"w-full max-w-lg "}>
+      <Dialog isOpen={addOpen} onOpenChange={setAddOpen} size="lg" className={"w-full max-w-lg "}>
               <DialogDismissButton />
 
-              <Modal.Header>
-                <Modal.Heading className="flex items-center gap-2">
+              <Dialog.Header>
+                <Dialog.Heading className="flex items-center gap-2">
                   {t("form.title")}
-                </Modal.Heading>
-              </Modal.Header>
-              <Modal.Body>
+                </Dialog.Heading>
+              </Dialog.Header>
+              <Dialog.Body>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <TextField
                     value={dueYear}
@@ -283,60 +261,18 @@ export function PaymentsPanel({
                     }}
                   >
                     <Label>{t("form.method")}</Label>
-                    <Select.Trigger>
-                      <Select.Value />
-                      <Select.Indicator />
-                    </Select.Trigger>
-                    <Select.Popover>
-                      <ListBox>
                         {PAYMENT_METHODS.map((value) => (
-                          <ListBox.Item
+                          <Select.Item
                             key={value}
                             id={value}
                             textValue={String(t(`method.${value}`))}
                           >
                             <Label>{t(`method.${value}`)}</Label>
-                            <ListBox.ItemIndicator />
-                          </ListBox.Item>
+                          </Select.Item>
                         ))}
-                      </ListBox>
-                    </Select.Popover>
                   </Select>
                   {/* KARAR: FormDatePicker kalıbı — değer "yyyy-MM-dd" string; CalendarDate'e çevrilir. */}
-                  <DatePicker
-                    value={(() => {
-                      if (!paidAt) return null;
-                      try {
-                        return parseDate(paidAt) as DateValue;
-                      } catch {
-                        return null;
-                      }
-                    })()}
-                    onChange={(next) => setPaidAt(next ? next.toString() : "")}
-                    minValue={parseDate(joinDate) as DateValue}
-                    maxValue={today(getLocalTimeZone()) as DateValue}
-                  >
-                    <Label>{t("form.paidAt")}</Label>
-                    <DateField.Group>
-                      <DateField.Input>
-                        {(segment) => <DateField.Segment segment={segment} />}
-                      </DateField.Input>
-                      <DateField.Suffix>
-                        <DatePicker.Trigger
-                          aria-label={String(t("form.paidAt"))}
-                        >
-                          <DatePicker.TriggerIndicator />
-                        </DatePicker.Trigger>
-                      </DateField.Suffix>
-                    </DateField.Group>
-                    <DatePicker.Popover>
-                      <DateCalendar
-                        label={String(t("form.paidAt"))}
-                        minValue={parseDate(joinDate) as DateValue}
-                        maxValue={today(getLocalTimeZone()) as DateValue}
-                      />
-                    </DatePicker.Popover>
-                  </DatePicker>
+                  <DateInput label={t("form.paidAt")} ariaLabel={String(t("form.paidAt"))} value={paidAt} onChange={setPaidAt} minValue={joinDate} maxValue={today(getLocalTimeZone()).toString()} />
                   <TextField
                     value={reference}
                     onChange={setReference}
@@ -358,8 +294,8 @@ export function PaymentsPanel({
                     {formError}
                   </p>
                 ) : null}
-              </Modal.Body>
-              <Modal.Footer>
+              </Dialog.Body>
+              <Dialog.Footer>
                 <Button
                   onPress={() => setAddOpen(false)}
                   variant={actionVariant("default", "flat")}
@@ -371,31 +307,24 @@ export function PaymentsPanel({
                   variant={actionVariant("primary", "solid")}
                   isPending={saving}
                 >
-                  {saving ? <Spinner size="sm" color="current" /> : null}
+                  {saving ? <Spinner size="sm" tone="current" /> : null}
                   {t("form.save")}
                 </Button>
-              </Modal.Footer>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+              </Dialog.Footer>
+      </Dialog>
 
       {/* İptal (void) diyaloğu */}
-      <Modal
+      <Dialog
         isOpen={voidTarget !== null}
-        onOpenChange={(open) => !open && setVoidTarget(null)}
-      >
-        <Modal.Backdrop>
-          <Modal.Container size="md">
-            <Modal.Dialog className={"w-full max-w-md "}>
+        onOpenChange={(open) => !open && setVoidTarget(null)} size="md" className={"w-full max-w-md "}>
               <DialogDismissButton />
 
-              <Modal.Header>
-                <Modal.Heading className="flex items-center gap-2">
+              <Dialog.Header>
+                <Dialog.Heading className="flex items-center gap-2">
                   {t("voidTitle")}
-                </Modal.Heading>
-              </Modal.Header>
-              <Modal.Body>
+                </Dialog.Heading>
+              </Dialog.Header>
+              <Dialog.Body>
                 <p className="text-sm text-ink-500">{t("voidConfirm")}</p>
                 <TextField
                   value={voidReason}
@@ -412,8 +341,8 @@ export function PaymentsPanel({
                       .join(" ")}
                   />
                 </TextField>
-              </Modal.Body>
-              <Modal.Footer>
+              </Dialog.Body>
+              <Dialog.Footer>
                 <Button
                   onPress={() => setVoidTarget(null)}
                   variant={actionVariant("default", "flat")}
@@ -427,11 +356,8 @@ export function PaymentsPanel({
                 >
                   {t("void")}
                 </Button>
-              </Modal.Footer>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+              </Dialog.Footer>
+      </Dialog>
     </div>
   );
 }

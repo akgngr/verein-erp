@@ -10,10 +10,13 @@ export function StatusChip({
   tone = "default",
   children,
   className,
+  onClick,
 }: {
   tone?: ActionTone;
   children: ReactNode;
   className?: string;
+  /** Optional click handler for chips used as filters/toggles. */
+  onClick?: () => void;
 }) {
   return (
     <Chip
@@ -22,6 +25,7 @@ export function StatusChip({
       variant="soft"
       style={statusStyle(tone)}
       className={className}
+      onClick={onClick}
     >
       {children}
     </Chip>

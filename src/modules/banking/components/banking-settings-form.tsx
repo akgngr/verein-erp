@@ -1,14 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  TextField,
-  Label,
-  Input,
-  Select,
-  ListBox,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Input, Label, Select, Spinner, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -63,36 +55,26 @@ export function BankingSettingsForm({
         }}
       >
         <Label>{t("provider")}</Label>
-        <Select.Trigger>
-          <Select.Value />
-          <Select.Indicator />
-        </Select.Trigger>
-        <Select.Popover>
-          <ListBox>
             {[
-              <ListBox.Item
+              <Select.Item
                 key="GOCARDLESS"
                 id={"GOCARDLESS"}
                 textValue={String(t("providers.GOCARDLESS"))}
               >
                 <Label>{t("providers.GOCARDLESS")}</Label>
-                <ListBox.ItemIndicator />
-              </ListBox.Item>,
+              </Select.Item>,
               ...(mockAllowed
                 ? [
-                    <ListBox.Item
+                    <Select.Item
                       key="MOCK"
                       id={"MOCK"}
                       textValue={String(t("providers.MOCK"))}
                     >
                       <Label>{t("providers.MOCK")}</Label>
-                      <ListBox.ItemIndicator />
-                    </ListBox.Item>,
+                    </Select.Item>,
                   ]
                 : []),
             ]}
-          </ListBox>
-        </Select.Popover>
       </Select>
       {value === "GOCARDLESS" ? (
         <>
@@ -133,7 +115,7 @@ export function BankingSettingsForm({
           variant={actionVariant("primary", "solid")}
           isPending={pending}
         >
-          {pending ? <Spinner size="sm" color="current" /> : null}
+          {pending ? <Spinner size="sm" tone="current" /> : null}
           {t("save")}
         </Button>
       </div>

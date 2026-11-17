@@ -1,5 +1,6 @@
 "use client";
-import { toast, Button, Checkbox, Label } from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Checkbox, Label } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -231,12 +232,7 @@ export function CourseForm({
                         )
                       }
                     >
-                      <Checkbox.Content>
-                        <Checkbox.Control className="size-4">
-                          <Checkbox.Indicator />
-                        </Checkbox.Control>
                         <Label>{option.label}</Label>
-                      </Checkbox.Content>
                     </Checkbox>
                   ))}
                 </div>

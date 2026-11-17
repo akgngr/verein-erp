@@ -1,17 +1,6 @@
 "use client";
-import {
-  Spinner,
-  Card,
-  Button,
-  CheckboxGroup,
-  Label,
-  Checkbox,
-  TextField,
-  Input,
-  FieldError,
-  Select,
-  ListBox,
-} from "@heroui/react";
+import { Button } from "@heroui/react";
+import { Card, Checkbox, CheckboxGroup, FieldError, Input, Label, Select, Spinner, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -227,20 +216,11 @@ export function PublicOnlineForm({
           }}
         >
           <Label>{t("fields.state")}</Label>
-          <Select.Trigger>
-            <Select.Value />
-            <Select.Indicator />
-          </Select.Trigger>
-          <Select.Popover>
-            <ListBox>
               {BUNDESLAENDER.map((item) => (
-                <ListBox.Item key={item} id={item} textValue={String(item)}>
+                <Select.Item key={item} id={item} textValue={String(item)}>
                   <Label>{item}</Label>
-                  <ListBox.ItemIndicator />
-                </ListBox.Item>
+                </Select.Item>
               ))}
-            </ListBox>
-          </Select.Popover>
           <FieldError>{translate(errors[`${scope}.state`])}</FieldError>
         </Select>
       </div>
@@ -255,24 +235,15 @@ export function PublicOnlineForm({
           }}
         >
           <Label>{t("fields.country")}</Label>
-          <Select.Trigger>
-            <Select.Value />
-            <Select.Indicator />
-          </Select.Trigger>
-          <Select.Popover>
-            <ListBox>
               {countries.map((item) => (
-                <ListBox.Item
+                <Select.Item
                   key={countryMode === "code" ? item.code : item.name}
                   id={countryMode === "code" ? item.code : item.name}
                   textValue={String(item.label)}
                 >
                   <Label>{item.label}</Label>
-                  <ListBox.ItemIndicator />
-                </ListBox.Item>
+                </Select.Item>
               ))}
-            </ListBox>
-          </Select.Popover>
         </Select>
       </div>
     </div>
@@ -287,12 +258,7 @@ export function PublicOnlineForm({
         <div className="flex flex-wrap gap-x-4 gap-y-2">
           {(["sms", "whatsapp", "telegram"] as const).map((key) => (
             <Checkbox key={key} value={key}>
-              <Checkbox.Content>
-                <Checkbox.Control>
-                  <Checkbox.Indicator />
-                </Checkbox.Control>
                 <Label>{t(`channels.${key}`)}</Label>
-              </Checkbox.Content>
             </Checkbox>
           ))}
         </div>
@@ -301,12 +267,7 @@ export function PublicOnlineForm({
         isSelected={Boolean(values.bulkMailOptOut)}
         onChange={(value) => set({ ...values, bulkMailOptOut: value })}
       >
-        <Checkbox.Content>
-          <Checkbox.Control>
-            <Checkbox.Indicator />
-          </Checkbox.Control>
           <Label>{t("bulkMailOptOut")}</Label>
-        </Checkbox.Content>
       </Checkbox>
     </div>
   );
@@ -434,16 +395,11 @@ export function PublicOnlineForm({
                 setGuardian({ ...guardian, sepaMandate: value })
               }
             >
-              <Checkbox.Content>
-                <Checkbox.Control>
-                  <Checkbox.Indicator />
-                </Checkbox.Control>
                 <Label>
                   <span className="text-sm">
                     {t("sepaMandate", { org: form.orgName })}
                   </span>
                 </Label>
-              </Checkbox.Content>
             </Checkbox>
           </>,
         )}
@@ -467,17 +423,12 @@ export function PublicOnlineForm({
                   }
                   onChange={(value) => toggleDoc(doc.id, value)}
                 >
-                  <Checkbox.Content>
-                    <Checkbox.Control>
-                      <Checkbox.Indicator />
-                    </Checkbox.Control>
                     <Label>
                       <span className="text-sm">
                         {consentLabel(doc)}
                         {doc.required ? " *" : ""}
                       </span>
                     </Label>
-                  </Checkbox.Content>
                 </Checkbox>
               ) : null}
             </div>
@@ -488,16 +439,11 @@ export function PublicOnlineForm({
               isInvalid={Boolean(errors.privacy)}
               onChange={setPrivacyBuiltIn}
             >
-              <Checkbox.Content>
-                <Checkbox.Control>
-                  <Checkbox.Indicator />
-                </Checkbox.Control>
                 <Label>
                   <span className="text-sm">
                     {t("privacy", { org: form.orgName })}
                   </span>
                 </Label>
-              </Checkbox.Content>
             </Checkbox>
           ) : null}
           {errors.privacy ? (
@@ -510,14 +456,9 @@ export function PublicOnlineForm({
                 setMember({ ...member, photoConsent: value })
               }
             >
-              <Checkbox.Content>
-                <Checkbox.Control>
-                  <Checkbox.Indicator />
-                </Checkbox.Control>
                 <Label>
                   <span className="text-sm">{t("photo")}</span>
                 </Label>
-              </Checkbox.Content>
             </Checkbox>
           ) : null}
           {!photoDoc && student ? (
@@ -527,10 +468,6 @@ export function PublicOnlineForm({
                 setStudent({ ...student, photoConsent: value })
               }
             >
-              <Checkbox.Content>
-                <Checkbox.Control>
-                  <Checkbox.Indicator />
-                </Checkbox.Control>
                 <Label>
                   <span className="text-sm">
                     {form.signerRole === "guardian"
@@ -538,7 +475,6 @@ export function PublicOnlineForm({
                       : t("photo")}
                   </span>
                 </Label>
-              </Checkbox.Content>
             </Checkbox>
           ) : null}
           {member
@@ -582,7 +518,7 @@ export function PublicOnlineForm({
         variant={actionVariant("primary", "solid")}
         isPending={pending}
       >
-        {pending ? <Spinner size="sm" color="current" /> : null}
+        {pending ? <Spinner size="sm" tone="current" /> : null}
         {t("submit")}
       </Button>
     </div>

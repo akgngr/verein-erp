@@ -1,14 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Modal,
-  TextField,
-  Label,
-  Input,
-  FieldError,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Dialog, FieldError, Input, Label, Spinner, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -62,10 +54,7 @@ export function CategoryFormModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-      <Modal.Backdrop isDismissable>
-        <Modal.Container size="sm">
-          <Modal.Dialog className={"w-full max-w-sm "}>
+    <Dialog isOpen={isOpen} onOpenChange={onOpenChange} isDismissable size="sm" className={"w-full max-w-sm "}>
             {({ close: onClose }) => (
               <CategoryFormContent
                 category={category}
@@ -73,10 +62,7 @@ export function CategoryFormModal({
                 onSubmit={submit}
               />
             )}
-          </Modal.Dialog>
-        </Modal.Container>
-      </Modal.Backdrop>
-    </Modal>
+    </Dialog>
   );
 }
 
@@ -105,12 +91,12 @@ function CategoryFormContent({
   return (
     <>
       <DialogDismissButton />
-      <Modal.Header className="flex flex-col gap-1">
-        <Modal.Heading className="flex items-center gap-2">
+      <Dialog.Header className="flex flex-col gap-1">
+        <Dialog.Heading className="flex items-center gap-2">
           {category ? t("edit") : t("new")}
-        </Modal.Heading>
-      </Modal.Header>
-      <Modal.Body>
+        </Dialog.Heading>
+      </Dialog.Header>
+      <Dialog.Body>
         <TextField
           value={name}
           isRequired
@@ -128,8 +114,8 @@ function CategoryFormContent({
           />
           <FieldError>{error}</FieldError>
         </TextField>
-      </Modal.Body>
-      <Modal.Footer>
+      </Dialog.Body>
+      <Dialog.Footer>
         <Button
           onPress={onClose}
           isDisabled={isSubmitting}
@@ -143,10 +129,10 @@ function CategoryFormContent({
           variant={actionVariant("primary", "solid")}
           isPending={isSubmitting}
         >
-          {isSubmitting ? <Spinner size="sm" color="current" /> : null}
+          {isSubmitting ? <Spinner size="sm" tone="current" /> : null}
           {tCommon("save")}
         </Button>
-      </Modal.Footer>
+      </Dialog.Footer>
     </>
   );
 }

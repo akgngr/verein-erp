@@ -1,13 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  TextField,
-  Label,
-  Input,
-  TextArea,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Input, Label, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -161,7 +154,7 @@ export function NotesPanel({
               variant={actionVariant("primary", "solid")}
               isPending={busy}
             >
-              {busy ? <Spinner size="sm" color="current" /> : null}
+              {busy ? <Spinner size="sm" tone="current" /> : null}
               {t("add")}
             </Button>
           </div>

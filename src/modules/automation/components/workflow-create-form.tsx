@@ -1,14 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Modal,
-  TextField,
-  Label,
-  Input,
-  TextArea,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Dialog, Input, Label, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -46,18 +38,15 @@ export function WorkflowCreateForm() {
         {<Plus className="h-4 w-4" />}
         {t("create")}
       </Button>
-      <Modal isOpen={open} onOpenChange={setOpen}>
-        <Modal.Backdrop>
-          <Modal.Container size="md">
-            <Modal.Dialog className={"w-full max-w-md "}>
+      <Dialog isOpen={open} onOpenChange={setOpen} size="md" className={"w-full max-w-md "}>
               <DialogDismissButton />
 
-              <Modal.Header>
-                <Modal.Heading className="flex items-center gap-2">
+              <Dialog.Header>
+                <Dialog.Heading className="flex items-center gap-2">
                   {t("create")}
-                </Modal.Heading>
-              </Modal.Header>
-              <Modal.Body>
+                </Dialog.Heading>
+              </Dialog.Header>
+              <Dialog.Body>
                 <TextField
                   value={name}
                   onChange={setName}
@@ -79,8 +68,8 @@ export function WorkflowCreateForm() {
                       .join(" ")}
                   />
                 </TextField>
-              </Modal.Body>
-              <Modal.Footer>
+              </Dialog.Body>
+              <Dialog.Footer>
                 <Button
                   onPress={() => setOpen(false)}
                   variant={actionVariant("default", "light")}
@@ -93,14 +82,11 @@ export function WorkflowCreateForm() {
                   variant={actionVariant("primary", "solid")}
                   isPending={pending}
                 >
-                  {pending ? <Spinner size="sm" color="current" /> : null}
+                  {pending ? <Spinner size="sm" tone="current" /> : null}
                   {t("createAndEdit")}
                 </Button>
-              </Modal.Footer>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+              </Dialog.Footer>
+      </Dialog>
     </>
   );
 }

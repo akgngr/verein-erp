@@ -1,5 +1,6 @@
 "use client";
-import { toast, Card, Button, Spinner, TextField, Input } from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Card, Input, Spinner, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -186,7 +187,7 @@ export function BudgetEditor({
             variant={actionVariant("primary", "solid")}
             isPending={busy}
           >
-            {busy ? <Spinner size="sm" color="current" /> : null}
+            {busy ? <Spinner size="sm" tone="current" /> : null}
             {t("save")}
           </Button>
         ) : null}

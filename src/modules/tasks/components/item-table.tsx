@@ -1,9 +1,8 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import { toast, Chip, Button, Tooltip } from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { StatusChip, Tooltip } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
-import { statusTone } from "@/shared/components/ui/status-appearance";
 
 import {
   AlertCircle,
@@ -88,14 +87,10 @@ export function TasksItemTable({
 
         return (
           <div className="flex items-center gap-1.5">
-            <Chip
-              size="sm"
-              color={statusTone(colorMap[row.status])}
-              variant={"soft"}
-              style={statusStyle(colorMap[row.status])}
+            <StatusChip tone={colorMap[row.status]}
             >
               {t(`statuses.${row.status}`)}
-            </Chip>
+            </StatusChip>
             {canUpdate && row.status !== "DONE" ? (
               <Tooltip delay={300}>
                 <Button
@@ -135,18 +130,14 @@ export function TasksItemTable({
         } as const;
 
         return (
-          <Chip
-            size="sm"
-            color={statusTone(colorMap[row.priority])}
-            variant={"soft"}
-            style={statusStyle(colorMap[row.priority])}
+          <StatusChip tone={colorMap[row.priority]}
           >
             <span
               aria-hidden
               className="mr-1.5 size-1.5 rounded-full bg-current"
             />
             {t(`priorities.${row.priority}`)}
-          </Chip>
+          </StatusChip>
         );
       },
     },
@@ -158,10 +149,10 @@ export function TasksItemTable({
         if (!row.dueDate) return <span className="text-ink-400">-</span>;
         if (row.isOverdue) {
           return (
-            <Chip size="sm" color={"danger"} variant={"soft"}>
+            <StatusChip tone="danger">
               {<AlertCircle className="h-3 w-3 ml-1" />}
               {row.dueDate}
-            </Chip>
+            </StatusChip>
           );
         }
         return <span className="text-sm">{row.dueDate}</span>;

@@ -1,5 +1,5 @@
 "use client";
-import { Switch, Label } from "@heroui/react";
+import { Label, Switch } from "@/shared/components/kit";
 
 import { useTranslations } from "next-intl";
 
@@ -97,12 +97,7 @@ export function ActionItemQuickFilters() {
           }
           size={"sm"}
         >
-          <Switch.Content>
-            <Switch.Control>
-              <Switch.Thumb />
-            </Switch.Control>
             <Label></Label>
-          </Switch.Content>
         </Switch>
       </div>
 
@@ -161,12 +156,7 @@ export function ActionItemQuickFilters() {
           }
           size={"sm"}
         >
-          <Switch.Content>
-            <Switch.Control>
-              <Switch.Thumb />
-            </Switch.Control>
             <Label></Label>
-          </Switch.Content>
         </Switch>
       </div>
     </div>

@@ -1,18 +1,9 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import {
-  toast,
-  Chip,
-  Button,
-  Spinner,
-  Modal,
-  Checkbox,
-  Label,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Checkbox, Dialog, Label, Spinner, StatusChip } from "@/shared/components/kit";
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
-import { statusTone } from "@/shared/components/ui/status-appearance";
 
 import { Sparkles } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
@@ -158,35 +149,24 @@ export function AnalysisDialog({
   };
 
   return (
-    <Modal isOpen onOpenChange={(open) => !open && onClose()}>
-      <Modal.Backdrop>
-        <Modal.Container size="lg" scroll={"inside"}>
-          <Modal.Dialog className={"w-full max-w-2xl "}>
+    <Dialog isOpen onOpenChange={(open) => !open && onClose()} size="lg" scroll={"inside"} className={"w-full max-w-2xl "}>
             <DialogDismissButton />
 
-            <Modal.Header className="flex flex-col gap-1">
-              <Modal.Heading className="flex items-center gap-2">
+            <Dialog.Header className="flex flex-col gap-1">
+              <Dialog.Heading className="flex items-center gap-2">
                 {t("title")}
-              </Modal.Heading>
+              </Dialog.Heading>
               <span className="flex flex-wrap items-center gap-2 text-xs font-normal text-ink-500">
-                <Chip
-                  size="sm"
-                  color={statusTone(
-                    analysis.source === "ocr" ? "warning" : "success",
-                  )}
-                  variant={"soft"}
-                  style={statusStyle(
-                    analysis.source === "ocr" ? "warning" : "success",
-                  )}
+                <StatusChip tone={analysis.source === "ocr" ? "warning" : "success"}
                 >
                   {t(`source.${analysis.source}`)}
-                </Chip>
+                </StatusChip>
                 {analysis.confidence !== null
                   ? t("confidence", { value: String(analysis.confidence) })
                   : null}
               </span>
-            </Modal.Header>
-            <Modal.Body>
+            </Dialog.Header>
+            <Dialog.Body>
               {found.length === 0 ? (
                 <p className="text-sm text-ink-500">
                   {analysis.source === "none" ? t("noText") : t("nothingFound")}
@@ -210,16 +190,11 @@ export function AnalysisDialog({
                             )
                           }
                         >
-                          <Checkbox.Content>
-                            <Checkbox.Control>
-                              <Checkbox.Indicator />
-                            </Checkbox.Control>
                             <Label>
                               <span className="text-sm font-medium">
                                 {labels[field]}
                               </span>
                             </Label>
-                          </Checkbox.Content>
                         </Checkbox>
                         <div className="mt-1 grid grid-cols-1 gap-1 pl-7 text-sm sm:grid-cols-2">
                           <span className="text-ink-400 line-through decoration-ink-300">
@@ -244,18 +219,14 @@ export function AnalysisDialog({
                 <div className="flex flex-wrap items-center gap-2 rounded-lg border border-ink-200 p-3">
                   {ai ? (
                     <>
-                      <Chip
-                        size="sm"
-                        color={"accent"}
-                        variant={"soft"}
-                        style={statusStyle("secondary")}
+                      <StatusChip tone="primary"
                       >
                         {t(`aiKinds.${ai.kind}`)}
-                      </Chip>
+                      </StatusChip>
                       {ai.actionRequired ? (
-                        <Chip size="sm" color={"warning"} variant={"soft"}>
+                        <StatusChip tone="warning">
                           {t("aiActionRequired")}
-                        </Chip>
+                        </StatusChip>
                       ) : null}
                       <span className="text-xs text-ink-500">
                         {t(`aiProcessing.${ai.processing}`)}
@@ -269,7 +240,7 @@ export function AnalysisDialog({
                         variant={actionVariant("secondary", "flat")}
                         isPending={aiBusy}
                       >
-                        {aiBusy ? <Spinner size="sm" color="current" /> : null}
+                        {aiBusy ? <Spinner size="sm" tone="current" /> : null}
                         {aiBusy ? null : (
                           <Sparkles className="h-4 w-4" aria-hidden />
                         )}
@@ -290,8 +261,8 @@ export function AnalysisDialog({
                   </pre>
                 </details>
               ) : null}
-            </Modal.Body>
-            <Modal.Footer>
+            </Dialog.Body>
+            <Dialog.Footer>
               <Button
                 onPress={onClose}
                 variant={actionVariant("default", "light")}
@@ -315,10 +286,7 @@ export function AnalysisDialog({
               >
                 {t("apply", { count: String(selected.length) })}
               </Button>
-            </Modal.Footer>
-          </Modal.Dialog>
-        </Modal.Container>
-      </Modal.Backdrop>
-    </Modal>
+            </Dialog.Footer>
+    </Dialog>
   );
 }

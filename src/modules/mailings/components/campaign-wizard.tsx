@@ -1,24 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Chip,
-  Modal,
-  CheckboxGroup,
-  Label,
-  Description,
-  Checkbox,
-  RadioGroup,
-  Radio,
-  Switch,
-  TextField,
-  Input,
-  TextArea,
-  FieldError,
-  Select,
-  ListBox,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Checkbox, CheckboxGroup, Description, Dialog, FieldError, Input, Label, Radio, RadioGroup, Select, Spinner, StatusChip, Switch, TextArea, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -262,15 +244,11 @@ export function CampaignWizard({
   };
 
   return (
-    <Modal
+    <Dialog
       isOpen={isOpen}
-      onOpenChange={(open) => (open ? undefined : close())}
-    >
-      <Modal.Backdrop isDismissable={false}>
-        <Modal.Container size="full" scroll={"inside"}>
-          <Modal.Dialog className={"w-full h-dvh max-w-full "}>
-            <Modal.Header className="flex items-center gap-3 border-b border-ink-200">
-              <Modal.Heading className="flex items-center gap-2">
+      onOpenChange={(open) => (open ? undefined : close())} isDismissable={false} size="full" scroll={"inside"} className={"w-full h-dvh max-w-full "}>
+            <Dialog.Header className="flex items-center gap-3 border-b border-ink-200">
+              <Dialog.Heading className="flex items-center gap-2">
                 <div className="flex flex-col">
                   <span>
                     {draft ? t("wizard.editTitle") : t("wizard.title")}
@@ -279,7 +257,7 @@ export function CampaignWizard({
                     {t("wizard.subtitle")}
                   </span>
                 </div>
-              </Modal.Heading>
+              </Dialog.Heading>
               <div className="ms-auto flex items-center gap-2">
                 <Button
                   isDisabled={name.trim().length < 2 || !sourceId}
@@ -299,7 +277,7 @@ export function CampaignWizard({
                   isPending={busy === "draft"}
                 >
                   {busy === "draft" ? (
-                    <Spinner size="sm" color="current" />
+                    <Spinner size="sm" tone="current" />
                   ) : null}
                   {<Save className="h-4 w-4" />}
                   {t("wizard.saveDraft")}
@@ -313,8 +291,8 @@ export function CampaignWizard({
                   <X className="h-5 w-5" />
                 </Button>
               </div>
-            </Modal.Header>
-            <Modal.Body className="p-0">
+            </Dialog.Header>
+            <Dialog.Body className="p-0">
               <div className="flex min-h-full flex-col md:flex-row">
                 <nav
                   className="flex shrink-0 gap-1 overflow-x-auto border-b border-ink-200 p-3 md:w-64 md:flex-col md:border-b-0 md:border-e"
@@ -389,24 +367,15 @@ export function CampaignWizard({
                             }}
                           >
                             <Label>{t("source")}</Label>
-                            <Select.Trigger>
-                              <Select.Value />
-                              <Select.Indicator />
-                            </Select.Trigger>
-                            <Select.Popover>
-                              <ListBox>
                                 {sources.map((item) => (
-                                  <ListBox.Item
+                                  <Select.Item
                                     key={item.id}
                                     id={item.id}
                                     textValue={String(item.label)}
                                   >
                                     <Label>{item.label}</Label>
-                                    <ListBox.ItemIndicator />
-                                  </ListBox.Item>
+                                  </Select.Item>
                                 ))}
-                              </ListBox>
-                            </Select.Popover>
                           </Select>
                           <Select
                             placeholder={t("segmentNone")}
@@ -424,24 +393,15 @@ export function CampaignWizard({
                             }}
                           >
                             <Label>{t("segment")}</Label>
-                            <Select.Trigger>
-                              <Select.Value />
-                              <Select.Indicator />
-                            </Select.Trigger>
-                            <Select.Popover>
-                              <ListBox>
                                 {sourceSegments.map((item) => (
-                                  <ListBox.Item
+                                  <Select.Item
                                     key={item.id}
                                     id={item.id}
                                     textValue={String(item.name)}
                                   >
                                     <Label>{item.name}</Label>
-                                    <ListBox.ItemIndicator />
-                                  </ListBox.Item>
+                                  </Select.Item>
                                 ))}
-                              </ListBox>
-                            </Select.Popover>
                           </Select>
                         </div>
                       )}
@@ -465,12 +425,7 @@ export function CampaignWizard({
                                     key={option.value}
                                     value={option.value}
                                   >
-                                    <Checkbox.Content>
-                                      <Checkbox.Control>
-                                        <Checkbox.Indicator />
-                                      </Checkbox.Control>
                                       <Label>{option.label}</Label>
-                                    </Checkbox.Content>
                                   </Checkbox>
                                 ))}
                               </div>
@@ -518,7 +473,7 @@ export function CampaignWizard({
                           isPending={busy === "segment"}
                         >
                           {busy === "segment" ? (
-                            <Spinner size="sm" color="current" />
+                            <Spinner size="sm" tone="current" />
                           ) : null}
                           {<Save size={14} />}
                           {t("segmentSave")}
@@ -549,13 +504,10 @@ export function CampaignWizard({
                                 {t(`channels.${item.key}.description` as never)}
                               </span>
                               {!item.configured ? (
-                                <Chip
-                                  size="sm"
-                                  color={"warning"}
-                                  variant={"soft"}
+                                <StatusChip tone="warning"
                                 >
                                   {t("wizard.channelNotConfigured")}
-                                </Chip>
+                                </StatusChip>
                               ) : null}
                             </span>
                           </button>
@@ -715,20 +667,10 @@ export function CampaignWizard({
                         <Label>{t("wizard.when")}</Label>
                         <div className="flex flex-wrap gap-x-4 gap-y-2">
                           <Radio value="now">
-                            <Radio.Content>
-                              <Radio.Control>
-                                <Radio.Indicator />
-                              </Radio.Control>
                               <Label>{t("wizard.now")}</Label>
-                            </Radio.Content>
                           </Radio>
                           <Radio value="later">
-                            <Radio.Content>
-                              <Radio.Control>
-                                <Radio.Indicator />
-                              </Radio.Control>
                               <Label>{t("wizard.later")}</Label>
-                            </Radio.Content>
                           </Radio>
                         </div>
                       </RadioGroup>
@@ -750,10 +692,6 @@ export function CampaignWizard({
                           onChange={setTracking}
                           size={"sm"}
                         >
-                          <Switch.Content>
-                            <Switch.Control>
-                              <Switch.Thumb />
-                            </Switch.Control>
                             <Label>
                               <span className="flex flex-col">
                                 <span className="text-sm">
@@ -764,7 +702,6 @@ export function CampaignWizard({
                                 </span>
                               </span>
                             </Label>
-                          </Switch.Content>
                         </Switch>
                       ) : null}
                       <p className="rounded-lg bg-ink-100 p-3 text-sm text-ink-600">
@@ -789,7 +726,7 @@ export function CampaignWizard({
                           isPending={busy === "test"}
                         >
                           {busy === "test" ? (
-                            <Spinner size="sm" color="current" />
+                            <Spinner size="sm" tone="current" />
                           ) : null}
                           {<TestTube2 className="h-4 w-4" />}
                           {t("test")}
@@ -799,8 +736,8 @@ export function CampaignWizard({
                   ) : null}
                 </div>
               </div>
-            </Modal.Body>
-            <Modal.Footer className="border-t border-ink-200">
+            </Dialog.Body>
+            <Dialog.Footer className="border-t border-ink-200">
               <Button
                 isDisabled={index === 0}
                 onPress={() => setStep(STEPS[index - 1])}
@@ -845,7 +782,7 @@ export function CampaignWizard({
                   isPending={busy === "launch"}
                 >
                   {busy === "launch" ? (
-                    <Spinner size="sm" color="current" />
+                    <Spinner size="sm" tone="current" />
                   ) : null}
                   {<Send className="h-4 w-4" />}
                   {when === "later"
@@ -853,10 +790,7 @@ export function CampaignWizard({
                     : t("send", { count: preview?.eligible ?? 0 })}
                 </Button>
               )}
-            </Modal.Footer>
-          </Modal.Dialog>
-        </Modal.Container>
-      </Modal.Backdrop>
-    </Modal>
+            </Dialog.Footer>
+    </Dialog>
   );
 }

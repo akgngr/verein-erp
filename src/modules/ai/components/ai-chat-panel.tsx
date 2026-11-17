@@ -1,14 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Link as ActionLink,
-  buttonVariants,
-  Tooltip,
-  Dropdown,
-  Header,
-} from "@heroui/react";
+import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+import { Dropdown, Spinner, Tooltip } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -600,7 +592,7 @@ export function AiChatPanel({
                     {conversations.length ? (
                       historyGroups.map((group) => (
                         <Dropdown.Section key={group.key} id={group.key}>
-                          <Header className="px-2 pb-1 pt-2 text-[11px] font-medium uppercase tracking-wide text-ink-400">{t(`historyGroups.${group.key}`)}</Header>
+                          <Dropdown.SectionHeader className="px-2 pb-1 pt-2 text-[11px] font-medium uppercase tracking-wide text-ink-400">{t(`historyGroups.${group.key}`)}</Dropdown.SectionHeader>
                           {group.items.map((item) => (
                             <Dropdown.Item key={item.id} id={item.id} textValue={item.title} className={cn(item.id === conversationId && "bg-ink-100")}>
                               <span className="flex w-full min-w-0 items-center gap-3 text-sm">
@@ -624,7 +616,7 @@ export function AiChatPanel({
                         </span>
                       </Dropdown.Item>
                       {conversationId ? (
-                        <Dropdown.Item id="__delete" textValue={t("deleteConversation")} variant="danger">
+                        <Dropdown.Item id="__delete" textValue={t("deleteConversation")} tone="danger">
                           <span className="flex items-center gap-2 text-sm">
                             <Trash2 className="h-4 w-4" aria-hidden />
                             {t("deleteConversation")}
@@ -720,7 +712,7 @@ export function AiChatPanel({
                 variant={actionVariant("primary", "solid")}
                 isPending={accepting}
               >
-                {accepting ? <Spinner size="sm" color="current" /> : null}
+                {accepting ? <Spinner size="sm" tone="current" /> : null}
                 {t("consent.accept")}
               </Button>
             </div>

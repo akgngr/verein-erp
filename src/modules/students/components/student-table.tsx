@@ -1,7 +1,6 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import { toast, Chip } from "@heroui/react";
-import { statusTone } from "@/shared/components/ui/status-appearance";
+import { toast } from "@heroui/react";
+import { StatusChip } from "@/shared/components/kit";
 
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -78,14 +77,10 @@ export function StudentTable({
       key: "status",
       label: t("status"),
       render: (row) => (
-        <Chip
-          size="sm"
-          color={statusTone(row.status === "ACTIVE" ? "success" : "default")}
-          variant={"soft"}
-          style={statusStyle(row.status === "ACTIVE" ? "success" : "default")}
+        <StatusChip tone={row.status === "ACTIVE" ? "success" : "default"}
         >
           {tStatus(row.status)}
-        </Chip>
+        </StatusChip>
       ),
     },
   ];

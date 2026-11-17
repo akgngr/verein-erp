@@ -1,17 +1,6 @@
 "use client";
-import {
-  toast,
-  Card,
-  Button,
-  Spinner,
-  TextField,
-  Label,
-  InputGroup,
-  Description,
-  FieldError,
-  Select,
-  ListBox,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Card, Description, FieldError, InputGroup, Label, Select, Spinner, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -124,24 +113,15 @@ export function EInvoiceObligationCard({
             }}
           >
             <Label>{t("mode")}</Label>
-            <Select.Trigger>
-              <Select.Value />
-              <Select.Indicator />
-            </Select.Trigger>
-            <Select.Popover>
-              <ListBox>
                 {MODES.map((value) => (
-                  <ListBox.Item
+                  <Select.Item
                     key={value}
                     id={value}
                     textValue={String(t(`modes.${value}`))}
                   >
                     <Label>{t(`modes.${value}`)}</Label>
-                    <ListBox.ItemIndicator />
-                  </ListBox.Item>
+                  </Select.Item>
                 ))}
-              </ListBox>
-            </Select.Popover>
           </Select>
           <TextField
             isDisabled={!canUpdate}
@@ -187,7 +167,7 @@ export function EInvoiceObligationCard({
               variant={actionVariant("primary", "solid")}
               isPending={saving}
             >
-              {saving ? <Spinner size="sm" color="current" /> : null}
+              {saving ? <Spinner size="sm" tone="current" /> : null}
               {t("save")}
             </Button>
           </div>

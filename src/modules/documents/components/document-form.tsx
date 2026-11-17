@@ -1,5 +1,6 @@
 "use client";
-import { toast, Button, Spinner } from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Spinner } from "@/shared/components/kit";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import {
@@ -335,7 +336,7 @@ export function DocumentForm(props: DocumentFormProps) {
               isPending={Boolean(analyzingId)}
             >
               {Boolean(analyzingId) ? (
-                <Spinner size="sm" color="current" />
+                <Spinner size="sm" tone="current" />
               ) : null}
               {analyzingId ? null : (
                 <Sparkles className="h-4 w-4" aria-hidden />

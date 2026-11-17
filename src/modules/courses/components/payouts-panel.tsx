@@ -1,22 +1,10 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import {
-  toast,
-  Button,
-  Spinner,
-  Chip,
-  Link as ActionLink,
-  buttonVariants,
-  Modal,
-  TextField,
-  Label,
-  Input,
-} from "@heroui/react";
+import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+import { Dialog, Input, Label, Spinner, StatusChip, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
-import { statusTone } from "@/shared/components/ui/status-appearance";
 
 import { AlertTriangle, Calculator, FileText } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -120,7 +108,7 @@ export function PayoutsPanel({
             variant={actionVariant("primary", "solid")}
             isPending={busy === "generate"}
           >
-            {busy === "generate" ? <Spinner size="sm" color="current" /> : null}
+            {busy === "generate" ? <Spinner size="sm" tone="current" /> : null}
             {<Calculator size={16} />}
             {t("generate")}
           </Button>
@@ -182,14 +170,10 @@ export function PayoutsPanel({
                     {money(row.amountCents)}
                   </td>
                   <td className="px-3 py-2">
-                    <Chip
-                      size="sm"
-                      color={statusTone(STATUS_COLOR[row.status])}
-                      variant={"soft"}
-                      style={statusStyle(STATUS_COLOR[row.status])}
+                    <StatusChip tone={STATUS_COLOR[row.status]}
                     >
                       {t(`status.${row.status}`)}
-                    </Chip>
+                    </StatusChip>
                     {row.bookingNumber ? (
                       <div className="text-xs text-ink-500">
                         {row.bookingNumber}
@@ -225,7 +209,7 @@ export function PayoutsPanel({
                           isPending={busy === `a${row.id}`}
                         >
                           {busy === `a${row.id}` ? (
-                            <Spinner size="sm" color="current" />
+                            <Spinner size="sm" tone="current" />
                           ) : null}
                           {t("approve")}
                         </Button>
@@ -259,21 +243,17 @@ export function PayoutsPanel({
           </table>
         </div>
       )}
-      <Modal
+      <Dialog
         isOpen={payFor !== null}
-        onOpenChange={(open) => !open && setPayFor(null)}
-      >
-        <Modal.Backdrop>
-          <Modal.Container size="md">
-            <Modal.Dialog className={"w-full max-w-md "}>
+        onOpenChange={(open) => !open && setPayFor(null)} size="md" className={"w-full max-w-md "}>
               <DialogDismissButton />
 
-              <Modal.Header>
-                <Modal.Heading className="flex items-center gap-2">
+              <Dialog.Header>
+                <Dialog.Heading className="flex items-center gap-2">
                   {t("markPaidTitle")}
-                </Modal.Heading>
-              </Modal.Header>
-              <Modal.Body>
+                </Dialog.Heading>
+              </Dialog.Header>
+              <Dialog.Body>
                 <p className="text-sm text-ink-600">
                   {payFor
                     ? t("markPaidText", {
@@ -290,8 +270,8 @@ export function PayoutsPanel({
                   <Label>{t("paidAt")}</Label>
                   <Input type="date" />
                 </TextField>
-              </Modal.Body>
-              <Modal.Footer>
+              </Dialog.Body>
+              <Dialog.Footer>
                 <Button
                   onPress={() => setPayFor(null)}
                   variant={actionVariant("default", "light")}
@@ -314,32 +294,25 @@ export function PayoutsPanel({
                   isPending={busy === "pay"}
                 >
                   {busy === "pay" ? (
-                    <Spinner size="sm" color="current" />
+                    <Spinner size="sm" tone="current" />
                   ) : null}
                   {t("markPaid")}
                 </Button>
-              </Modal.Footer>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
-      <Modal
+              </Dialog.Footer>
+      </Dialog>
+      <Dialog
         isOpen={cancelFor !== null}
-        onOpenChange={(open) => !open && setCancelFor(null)}
-      >
-        <Modal.Backdrop>
-          <Modal.Container size="md">
-            <Modal.Dialog className={"w-full max-w-md "}>
+        onOpenChange={(open) => !open && setCancelFor(null)} size="md" className={"w-full max-w-md "}>
               <DialogDismissButton />
 
-              <Modal.Header>
-                <Modal.Heading className="flex items-center gap-2">
+              <Dialog.Header>
+                <Dialog.Heading className="flex items-center gap-2">
                   {cancelFor?.status === "DRAFT"
                     ? t("deleteTitle")
                     : t("cancelTitle")}
-                </Modal.Heading>
-              </Modal.Header>
-              <Modal.Body>
+                </Dialog.Heading>
+              </Dialog.Header>
+              <Dialog.Body>
                 <p className="text-sm text-ink-600">
                   {cancelFor?.status === "PAID"
                     ? t("cancelPaidText")
@@ -353,8 +326,8 @@ export function PayoutsPanel({
                   <Label>{t("reason")}</Label>
                   <Input />
                 </TextField>
-              </Modal.Body>
-              <Modal.Footer>
+              </Dialog.Body>
+              <Dialog.Footer>
                 <Button
                   onPress={() => setCancelFor(null)}
                   variant={actionVariant("default", "light")}
@@ -377,15 +350,12 @@ export function PayoutsPanel({
                   isPending={busy === "cancel"}
                 >
                   {busy === "cancel" ? (
-                    <Spinner size="sm" color="current" />
+                    <Spinner size="sm" tone="current" />
                   ) : null}
                   {cancelFor?.status === "DRAFT" ? t("delete") : t("cancel")}
                 </Button>
-              </Modal.Footer>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+              </Dialog.Footer>
+      </Dialog>
     </div>
   );
 }

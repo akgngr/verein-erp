@@ -1,5 +1,6 @@
 "use client";
-import { toast, Button, Spinner, Checkbox, Label } from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Checkbox, Label, Spinner } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -35,14 +36,9 @@ export function TemplateConfirmForm() {
   return (
     <div className="flex flex-col gap-3">
       <Checkbox isSelected={checked} onChange={setChecked}>
-        <Checkbox.Content>
-          <Checkbox.Control className="size-4">
-            <Checkbox.Indicator />
-          </Checkbox.Control>
           <Label>
             <span className="text-sm">{t("confirmLabel")}</span>
           </Label>
-        </Checkbox.Content>
       </Checkbox>
       <div>
         <Button
@@ -52,7 +48,7 @@ export function TemplateConfirmForm() {
           variant={actionVariant("primary", "solid")}
           isPending={busy}
         >
-          {busy ? <Spinner size="sm" color="current" /> : null}
+          {busy ? <Spinner size="sm" tone="current" /> : null}
           {t("confirmButton")}
         </Button>
       </div>

@@ -1,5 +1,5 @@
 "use client";
-import { TextField, InputGroup, Tabs } from "@heroui/react";
+import { InputGroup, Tabs, TextField } from "@/shared/components/kit";
 
 import { Search } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -51,24 +51,19 @@ export function WorkflowsTable({ rows }: { rows: WorkflowRow[] }) {
         <Tabs
           selectedKey={tab}
           onSelectionChange={(key) => setTab(String(key))}
-          variant="secondary"
+          emphasis="secondary"
         >
-          <Tabs.ListContainer>
             <Tabs.List aria-label={t("title")}>
               <Tabs.Tab id={"all"} key={"all"}>
                 {t("filter.all")}
-                <Tabs.Indicator />
               </Tabs.Tab>
               <Tabs.Tab id={"active"} key={"active"}>
                 {t("filter.active")}
-                <Tabs.Indicator />
               </Tabs.Tab>
               <Tabs.Tab id={"inactive"} key={"inactive"}>
                 {t("filter.inactive")}
-                <Tabs.Indicator />
               </Tabs.Tab>
             </Tabs.List>
-          </Tabs.ListContainer>
         </Tabs>
         <TextField
           value={query}

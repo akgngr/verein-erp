@@ -1,5 +1,5 @@
 "use client";
-import { Switch, Label, Tabs } from "@heroui/react";
+import { Label, Switch, Tabs } from "@/shared/components/kit";
 
 import { AlertCircle, UserCheck } from "lucide-react";
 import { useSearchParams } from "next/navigation";
@@ -28,9 +28,8 @@ export function DirectionTabs() {
           { resetPage: true },
         )
       }
-      variant="secondary"
+      emphasis="secondary"
     >
-      <Tabs.ListContainer>
         <Tabs.List
           aria-label={t("directionAria")}
           className={
@@ -43,7 +42,6 @@ export function DirectionTabs() {
             className={"h-7 text-sm font-medium px-3"}
           >
             {t("all")}
-            <Tabs.Indicator className={"bg-background shadow-xs rounded-lg"} />
           </Tabs.Tab>
           <Tabs.Tab
             id={"INCOMING"}
@@ -51,7 +49,6 @@ export function DirectionTabs() {
             className={"h-7 text-sm font-medium px-3"}
           >
             {t("incoming")}
-            <Tabs.Indicator className={"bg-background shadow-xs rounded-lg"} />
           </Tabs.Tab>
           <Tabs.Tab
             id={"OUTGOING"}
@@ -59,10 +56,8 @@ export function DirectionTabs() {
             className={"h-7 text-sm font-medium px-3"}
           >
             {t("outgoing")}
-            <Tabs.Indicator className={"bg-background shadow-xs rounded-lg"} />
           </Tabs.Tab>
         </Tabs.List>
-      </Tabs.ListContainer>
     </Tabs>
   );
 }
@@ -141,12 +136,7 @@ export function DocumentQuickFilters() {
           }
           size={"sm"}
         >
-          <Switch.Content>
-            <Switch.Control>
-              <Switch.Thumb />
-            </Switch.Control>
             <Label></Label>
-          </Switch.Content>
         </Switch>
       </div>
 
@@ -204,12 +194,7 @@ export function DocumentQuickFilters() {
           }
           size={"sm"}
         >
-          <Switch.Content>
-            <Switch.Control>
-              <Switch.Thumb />
-            </Switch.Control>
             <Label></Label>
-          </Switch.Content>
         </Switch>
       </div>
     </div>

@@ -1,19 +1,6 @@
 "use client";
-import {
-  toast,
-  Link as ActionLink,
-  buttonVariants,
-  Button,
-  Spinner,
-  Modal,
-  TextField,
-  Label,
-  Input,
-  Description,
-  TextArea,
-  Select,
-  ListBox,
-} from "@heroui/react";
+import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+import { Description, Dialog, Input, Label, Select, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -104,19 +91,16 @@ export function PayableActions({
         </Button>
       ) : null}
 
-      <Modal isOpen={payOpen} onOpenChange={setPayOpen}>
-        <Modal.Backdrop>
-          <Modal.Container size="md">
-            <Modal.Dialog className={"w-full max-w-md "}>
+      <Dialog isOpen={payOpen} onOpenChange={setPayOpen} size="md" className={"w-full max-w-md "}>
               {({ close: close }) => (
                 <>
                   <DialogDismissButton />
-                  <Modal.Header>
-                    <Modal.Heading className="flex items-center gap-2">
+                  <Dialog.Header>
+                    <Dialog.Heading className="flex items-center gap-2">
                       {t("payTitle")}
-                    </Modal.Heading>
-                  </Modal.Header>
-                  <Modal.Body>
+                    </Dialog.Heading>
+                  </Dialog.Header>
+                  <Dialog.Body>
                     <TextField
                       value={amount}
                       isRequired
@@ -150,27 +134,18 @@ export function PayableActions({
                       }}
                     >
                       <Label>{t("account")}</Label>
-                      <Select.Trigger>
-                        <Select.Value />
-                        <Select.Indicator />
-                      </Select.Trigger>
-                      <Select.Popover>
-                        <ListBox>
                           {accounts.map((account) => (
-                            <ListBox.Item
+                            <Select.Item
                               key={account.value}
                               id={account.value}
                               textValue={String(account.label)}
                             >
                               <Label>{account.label}</Label>
-                              <ListBox.ItemIndicator />
-                            </ListBox.Item>
+                            </Select.Item>
                           ))}
-                        </ListBox>
-                      </Select.Popover>
                     </Select>
-                  </Modal.Body>
-                  <Modal.Footer>
+                  </Dialog.Body>
+                  <Dialog.Footer>
                     <Button
                       onPress={close}
                       variant={actionVariant("default", "light")}
@@ -205,29 +180,23 @@ export function PayableActions({
                       variant={actionVariant("success", "solid")}
                       isPending={busy}
                     >
-                      {busy ? <Spinner size="sm" color="current" /> : null}
+                      {busy ? <Spinner size="sm" tone="current" /> : null}
                       {t("pay")}
                     </Button>
-                  </Modal.Footer>
+                  </Dialog.Footer>
                 </>
               )}
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
-      <Modal isOpen={cancelOpen} onOpenChange={setCancelOpen}>
-        <Modal.Backdrop>
-          <Modal.Container size="md">
-            <Modal.Dialog className={"w-full max-w-md "}>
+      </Dialog>
+      <Dialog isOpen={cancelOpen} onOpenChange={setCancelOpen} size="md" className={"w-full max-w-md "}>
               {({ close: close }) => (
                 <>
                   <DialogDismissButton />
-                  <Modal.Header>
-                    <Modal.Heading className="flex items-center gap-2">
+                  <Dialog.Header>
+                    <Dialog.Heading className="flex items-center gap-2">
                       {t("cancelTitle")}
-                    </Modal.Heading>
-                  </Modal.Header>
-                  <Modal.Body>
+                    </Dialog.Heading>
+                  </Dialog.Header>
+                  <Dialog.Body>
                     <p className="text-sm text-ink-500">{t("cancelHelp")}</p>
                     <TextField
                       value={reason}
@@ -243,8 +212,8 @@ export function PayableActions({
                           .join(" ")}
                       />
                     </TextField>
-                  </Modal.Body>
-                  <Modal.Footer>
+                  </Dialog.Body>
+                  <Dialog.Footer>
                     <Button
                       onPress={close}
                       variant={actionVariant("default", "light")}
@@ -267,16 +236,13 @@ export function PayableActions({
                       variant={actionVariant("danger", "solid")}
                       isPending={busy}
                     >
-                      {busy ? <Spinner size="sm" color="current" /> : null}
+                      {busy ? <Spinner size="sm" tone="current" /> : null}
                       {t("cancel")}
                     </Button>
-                  </Modal.Footer>
+                  </Dialog.Footer>
                 </>
               )}
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+      </Dialog>
       <ConfirmDialog
         isOpen={deleteOpen}
         onOpenChange={setDeleteOpen}

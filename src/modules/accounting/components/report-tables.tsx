@@ -1,5 +1,5 @@
 "use client";
-import { Table } from "@heroui/react";
+import { Table } from "@/shared/components/kit";
 
 import { useTranslations } from "next-intl";
 

@@ -8,7 +8,7 @@ import { progressPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "progress",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.1.2",
+  version: "1.1.3",
   label: "Öğrenci takibi",
   description:
     "Kurs öğrencilerinin yoklaması, sınav ve notları, gelişim notları ve veli raporu.",
