@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Input, Label, Spinner, StatusChip, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -72,9 +73,7 @@ export function AttendeeList({
         return;
       }
 
-      toast(tA("addedToast", { name: `${firstName} ${lastName}` }), {
-        variant: "success",
-      });
+      notify.success(tA("addedToast", { name: `${firstName} ${lastName}` }));
 
       setFirstName("");
       setLastName("");
@@ -99,10 +98,10 @@ export function AttendeeList({
         status: newStatus,
       });
       if (res.success) {
-        toast(tA("statusUpdatedToast"), { variant: "success" });
+        notify.success(tA("statusUpdatedToast"));
         router.refresh();
       } else {
-        toast(res.error ?? tA("statusFailed"), { variant: "danger" });
+        notify.error(res.error ?? tA("statusFailed"));
       }
     } finally {
       setStatusLoadingId(null);
@@ -113,16 +112,14 @@ export function AttendeeList({
     if (!deletingAttendee) return;
     const res = await deleteAttendeeAction(deletingAttendee.id);
     if (res.success) {
-      toast(
+      notify.success(
         tA("removedToast", {
           name: `${deletingAttendee.firstName} ${deletingAttendee.lastName}`,
-        }),
-        { variant: "success" },
-      );
+        }));
       setDeletingAttendee(null);
       router.refresh();
     } else {
-      toast(res.error ?? tA("removeFailed"), { variant: "danger" });
+      notify.error(res.error ?? tA("removeFailed"));
     }
   };
 

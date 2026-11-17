@@ -8,7 +8,7 @@ import { exportsPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "exports",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "2.1.9",
+  version: "2.1.10",
   label: "Dosyalarım",
   description:
     "Oluşturulan PDF, Excel, Word, Markdown ve CSV dosyaları; şifreli saklanır.",
