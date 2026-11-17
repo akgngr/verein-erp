@@ -1,13 +1,10 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import { Chip } from "@heroui/react";
-import { statusTone } from "@/shared/components/ui/status-appearance";
-
 import { HandCoins, Plus } from "lucide-react";
 import Link from "next/link";
 import { useFormatter, useTranslations } from "next-intl";
 
 import { FormDrawerButton } from "@/shared/components/forms/form-drawer";
+import { StatusChip } from "@/shared/components/ui/status-chip";
 
 import type { GRANT_STATUSES } from "./grant-form";
 
@@ -127,14 +124,9 @@ export function GrantsList({
                         : date(row.reportDueAt)}
                     </td>
                     <td className="px-3 py-2">
-                      <Chip
-                        size="sm"
-                        color={statusTone(COLOR[row.status])}
-                        variant={"soft"}
-                        style={statusStyle(COLOR[row.status])}
-                      >
+                      <StatusChip tone={COLOR[row.status]}>
                         {t(`status.${row.status}`)}
-                      </Chip>
+                      </StatusChip>
                     </td>
                   </tr>
                 );
