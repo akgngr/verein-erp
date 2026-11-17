@@ -1,8 +1,8 @@
 "use client";
-import { Select, ListBox, Label } from "@heroui/react";
-
 import { useLocale } from "next-intl";
 import { useMemo } from "react";
+
+import { SelectField } from "@/shared/components/ui/select-field";
 
 /**
  * Doğum tarihi: gün / ay / yıl seçimi (takvimde yıllarca geri gitmek gerekmez). Değer "YYYY-MM-DD" ya da "".
@@ -66,95 +66,39 @@ export function BirthDateSelect({
     <div className="flex flex-col gap-1">
       <span className="text-sm text-foreground">{label}</span>
       <div className="grid grid-cols-[1fr_2fr_1.4fr] gap-2">
-        <Select
+        <SelectField
           id={`${id}-day`}
-          aria-label={`${label} – ${labels.day}`}
+          ariaLabel={`${label} – ${labels.day}`}
           placeholder={labels.day}
           isInvalid={isInvalid}
-          value={d ? d : null}
-          onChange={(selectedValue) => {
-            const keys =
-              selectedValue === null ? undefined : String(selectedValue);
-            return update({ d: String(keys ?? "") });
-          }}
-        >
-          <Select.Trigger>
-            <Select.Value />
-            <Select.Indicator />
-          </Select.Trigger>
-          <Select.Popover>
-            <ListBox>
-              {days.map((item) => (
-                <ListBox.Item
-                  key={item}
-                  id={item}
-                  textValue={String(String(Number(item)))}
-                >
-                  <Label>{String(Number(item))}</Label>
-                  <ListBox.ItemIndicator />
-                </ListBox.Item>
-              ))}
-            </ListBox>
-          </Select.Popover>
-        </Select>
-        <Select
+          value={d || null}
+          options={days.map((item) => ({
+            value: item,
+            label: String(Number(item)),
+          }))}
+          onChange={(next) => update({ d: next ?? "" })}
+        />
+        <SelectField
           id={`${id}-month`}
-          aria-label={`${label} – ${labels.month}`}
+          ariaLabel={`${label} – ${labels.month}`}
           placeholder={labels.month}
           isInvalid={isInvalid}
-          value={m ? m : null}
-          onChange={(selectedValue) => {
-            const keys =
-              selectedValue === null ? undefined : String(selectedValue);
-            return update({ m: String(keys ?? "") });
-          }}
-        >
-          <Select.Trigger>
-            <Select.Value />
-            <Select.Indicator />
-          </Select.Trigger>
-          <Select.Popover>
-            <ListBox>
-              {months.map((item) => (
-                <ListBox.Item
-                  key={item.key}
-                  id={item.key}
-                  textValue={String(item.label)}
-                >
-                  <Label>{item.label}</Label>
-                  <ListBox.ItemIndicator />
-                </ListBox.Item>
-              ))}
-            </ListBox>
-          </Select.Popover>
-        </Select>
-        <Select
+          value={m || null}
+          options={months.map((item) => ({
+            value: item.key,
+            label: item.label,
+          }))}
+          onChange={(next) => update({ m: next ?? "" })}
+        />
+        <SelectField
           id={`${id}-year`}
-          aria-label={`${label} – ${labels.year}`}
+          ariaLabel={`${label} – ${labels.year}`}
           placeholder={labels.year}
           isInvalid={isInvalid}
-          value={y ? y : null}
-          onChange={(selectedValue) => {
-            const keys =
-              selectedValue === null ? undefined : String(selectedValue);
-            return update({ y: String(keys ?? "") });
-          }}
-        >
-          <Select.Trigger>
-            <Select.Value />
-            <Select.Indicator />
-          </Select.Trigger>
-          <Select.Popover>
-            <ListBox>
-              {years.map((item) => (
-                <ListBox.Item key={item} id={item} textValue={String(item)}>
-                  <Label>{item}</Label>
-                  <ListBox.ItemIndicator />
-                </ListBox.Item>
-              ))}
-            </ListBox>
-          </Select.Popover>
-        </Select>
+          value={y || null}
+          options={years.map((item) => ({ value: item, label: item }))}
+          onChange={(next) => update({ y: next ?? "" })}
+        />
       </div>
       {isInvalid && errorMessage ? (
         <p className="text-xs text-danger">{errorMessage}</p>

@@ -13,7 +13,7 @@ slug: /kullanim/moduller/members
 |---|---|
 | Anahtar | `members` |
 | Tür | Resmî modül |
-| Sürüm | 1.14.2 |
+| Sürüm | 1.14.3 |
 | Sayfalar | `/uyeler`, `/uyeler/aidat`, `/uyeler/turler`, `/toplu-eposta?kaynak=members:members`, `/uyeler/ice-aktar` |
 | Önerir | [e-Sign](./online-forms) |
 
@@ -44,6 +44,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `create_dataset` · `create_dues_dataset` · `get_member_profile` · `get_member_statistics` · `list_dues_by_person` · `query_dataset`
 
 ## Sürüm notları
+
+### 1.14.3 — Aidat yıl seçimi ortak SelectField katmanında
+
+_2026-11-17_
+
+- **İyileştirme:** Aidat raporundaki yıl seçimi ortak SelectField adapterına taşındı; doğrudan HeroUI Select/ListBox/Label bağımlılığı kaldırıldı.
 
 ### 1.14.2 — Aidat rozetleri ortak UI katmanında
 
@@ -87,12 +93,4 @@ _2026-11-15_
 
 - **Güvenlik:** Üye sayfasındaki e-imza bağlantıları artık bildirilmiş erişimle çalışır. Yönetici erişimi bir kez yeniden onaylar.
 
-### 1.12.0 — AI v2 araç geçişi
-
-_2026-11-15_
-
-- **Güvenlik:** Toplu istatistik araçları katı girdi, sunucu sonucu ve modele çıkacak alanların açık şemalarıyla v2 sözleşmesine taşındı; kişisel satırlar modele döndürülmez.
-- **İyileştirme:** Aidat veri kümesi 500 kayıtlık keyset sayfaları ve ödeme toplamlarıyla okunur; CSV/XLSX doğrudan şifreli akışa yazılır. İptal, süre ve boyut sınırları yayından önce doğrulanır.
-- **Yeni:** create_dataset/query_dataset/export_dataset araçları açık şema, TR/DE açıklamalar ve onay zorunluluğuyla sunulur; eski adlar uyum için korunur.
-
-Daha eski 22 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/members/releases.json)
+Daha eski 23 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/members/releases.json)

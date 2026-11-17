@@ -13,7 +13,7 @@ e-Sign: kişiye süreli bağlantı, form tamamlama, Datenschutz onayı, imza ve 
 |---|---|
 | Anahtar | `online-forms` |
 | Tür | Resmî modül |
-| Sürüm | 1.2.2 |
+| Sürüm | 1.2.3 |
 | Sayfalar | `/online-formlar` |
 | Gerektirir | [Toplu e-posta](./mailings) |
 | Önerir | [Üyeler](./members), [Öğrenciler](./students) |
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | e-Sign | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | — | görüntüleme | — | — |
 
 ## Sürüm notları
+
+### 1.2.3 — Doğum tarihi seçimi ortak SelectField katmanında
+
+_2026-11-17_
+
+- **İyileştirme:** Gün/ay/yıl doğum tarihi seçimleri ortak SelectField adapterına taşındı; doğrudan HeroUI Select/ListBox/Label bağımlılığı kaldırıldı.
 
 ### 1.2.2 — İmza temizleme eylemi ortak buton katmanında
 
