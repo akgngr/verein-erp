@@ -1,9 +1,9 @@
 "use client";
-import { Select, ListBox, Label } from "@heroui/react";
 
 import { useTranslations } from "next-intl";
 
 import { useListQueryState } from "@/shared/components/data-table/use-list-query-state";
+import { SelectField } from "@/shared/components/ui/select-field";
 
 /**
  * Aidat raporu yıl seçici — filter.year URL parametresini günceller
@@ -21,38 +21,22 @@ export function DuesYearSelect({
   const t = useTranslations("members.dues");
 
   return (
-    <Select
+    <SelectField
       id="members-dues-year"
-      aria-label={t("year")}
+      ariaLabel={t("year")}
+      label={t("year")}
       isRequired
       className="w-44"
+      triggerClassName="h-9 text-sm"
       isDisabled={isPending}
       value={String(current)}
-      onChange={(selectedValue) => {
-        const keys = selectedValue === null ? undefined : String(selectedValue);
-        const key = keys;
-        if (key) setParams({ "filter.year": String(key) }, { resetPage: true });
+      options={years.map((year) => ({
+        value: String(year),
+        label: String(year),
+      }))}
+      onChange={(value) => {
+        if (value) setParams({ "filter.year": value }, { resetPage: true });
       }}
-    >
-      <Label>{t("year")}</Label>
-      <Select.Trigger className="h-9 text-sm">
-        <Select.Value />
-        <Select.Indicator />
-      </Select.Trigger>
-      <Select.Popover>
-        <ListBox>
-          {years.map((year) => (
-            <ListBox.Item
-              key={String(year)}
-              id={String(year)}
-              textValue={String(year)}
-            >
-              <Label>{year}</Label>
-              <ListBox.ItemIndicator />
-            </ListBox.Item>
-          ))}
-        </ListBox>
-      </Select.Popover>
-    </Select>
+    />
   );
 }
