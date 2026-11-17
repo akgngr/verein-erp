@@ -39,7 +39,7 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 
 _2026-11-17_
 
-- **İyileştirme:** Güvenlik panelindeki kart, istatistik, durum rozeti ve eylem butonları ortak UI pattern'lerine taşındı; ekran artık HeroUI bileşenlerini doğrudan içe aktarmıyor.
+- **İyileştirme:** Güvenlik panelindeki kart, istatistik, durum rozeti ve eylem butonları SurfaceCard, StatCard, StatusChip ve ActionButton ortak pattern'lerine taşındı; ekran artık HeroUI bileşenlerini doğrudan içe aktarmıyor.
 
 ### 1.3.3 — Uyarı onaylama ucu düzeltildi
 
