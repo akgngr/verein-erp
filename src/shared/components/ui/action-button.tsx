@@ -15,6 +15,8 @@ export function ActionButton({
   className,
   isDisabled,
   isPending,
+  isIconOnly = false,
+  ariaLabel,
   onPress,
 }: {
   children: ReactNode;
@@ -25,6 +27,8 @@ export function ActionButton({
   className?: string;
   isDisabled?: boolean;
   isPending?: boolean;
+  isIconOnly?: boolean;
+  ariaLabel?: string;
   onPress?: () => void;
 }) {
   return (
@@ -34,6 +38,8 @@ export function ActionButton({
       className={cn("erp-motion-interactive", className)}
       isDisabled={isDisabled}
       isPending={isPending}
+      isIconOnly={isIconOnly}
+      aria-label={ariaLabel}
       onPress={onPress}
     >
       {startIcon}

@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.0.4",
+      "date": "2026-11-17",
+      "appVersion": "0.41.0",
+      "title": {
+        "tr": "Logo yüzeyi ortak UI katmanında",
+        "de": "Logo-Oberfläche in gemeinsamer UI-Schicht"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Logo yükleme kartı, eylem butonları ve bildirimleri ortak SurfaceCard, ActionButton ve notify adapter katmanına taşındı.",
+          "de": "Logo-Upload-Karte, Aktionsbuttons und Benachrichtigungen verwenden nun die gemeinsamen SurfaceCard-, ActionButton- und Notify-Adapter."
+        }
+      ]
+    },
+    {
       "version": "1.0.3",
       "date": "2026-11-16",
       "appVersion": "0.41.0",

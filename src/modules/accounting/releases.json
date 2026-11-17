@@ -2,7 +2,7 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
-      "version": "1.23.1",
+      "version": "1.23.2",
       "date": "2026-11-17",
       "title": {
         "tr": "E-fatura uygunluk düzeltmesi (BR-CO-26)",
@@ -18,6 +18,22 @@
           "type": "improvement",
           "tr": "Giden e-faturalar CI'da Mustang (EN 16931, XRechnung, Factur-X, veraPDF PDF/A-3) ve resmî KoSIT doğrulayıcısı ile sentetik örneklerle düzenli olarak doğrulanır.",
           "de": "Ausgehende E-Rechnungen werden in der CI regelmäßig mit synthetischen Beispielen gegen Mustang (EN 16931, XRechnung, Factur-X, veraPDF PDF/A-3) und den offiziellen KoSIT-Validator geprüft."
+        }
+      ]
+    },
+    {
+      "version": "1.23.1",
+      "date": "2026-11-17",
+      "appVersion": "0.41.0",
+      "title": {
+        "tr": "Muhasebe istatistik kartları ortak UI katmanında",
+        "de": "Buchhaltungs-Statistikkarten in gemeinsamer UI-Schicht"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Kart ve yüzey görünümleri ortak SurfaceCard/StatCard pattern'ine taşındı; modül bu kullanımda HeroUI Card implementasyonuna doğrudan bağlı değil.",
+          "de": "Karten- und Oberflächendarstellungen verwenden gemeinsame SurfaceCard/StatCard-Patterns; das Modul ist für diesen Anwendungsfall nicht mehr direkt an HeroUI Card gebunden."
         }
       ]
     },
