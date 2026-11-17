@@ -1,10 +1,6 @@
 "use client";
-import {
-  toast,
-  Link as ActionLink,
-  buttonVariants,
-  Button,
-} from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Link as ActionLink, buttonVariants, Button } from "@heroui/react";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
@@ -72,18 +68,16 @@ export function FilesTab({
         const json = (await response.json()) as { ok: boolean; error?: string };
         if (!response.ok || !json.ok) {
           failed += 1;
-          toast(json.error ?? t("uploadFailed"), { variant: "danger" });
+          notify.error(json.error ?? t("uploadFailed"));
         }
       } catch {
         failed += 1;
-        toast(t("uploadFailed"), { variant: "danger" });
+        notify.error(t("uploadFailed"));
       }
     }
     setUploading(false);
     if (failed === 0 && list.length > 0) {
-      toast(t("uploadedCountToast", { count: list.length }), {
-        variant: "success",
-      });
+      notify.success(t("uploadedCountToast", { count: list.length }));
     }
     router.refresh();
   };
@@ -92,10 +86,10 @@ export function FilesTab({
     if (!deleting) return;
     const result = await deleteMeetingFileAction({ fileId: deleting.id });
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
-    toast(t("deletedToast"), { variant: "success" });
+    notify.success(t("deletedToast"));
     setDeleting(null);
     router.refresh();
   };

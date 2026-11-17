@@ -1,5 +1,6 @@
 "use client";
-import { toast, Button } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
@@ -61,12 +62,10 @@ export function DecisionsTab({
     if (!deleting) return;
     const result = await deleteDecisionAction({ id: deleting.id });
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
-    toast(t("deletedNumberedToast", { number: deleting.decisionNumber }), {
-      variant: "success",
-    });
+    notify.success(t("deletedNumberedToast", { number: deleting.decisionNumber }));
     setDeleting(null);
     router.refresh();
   };

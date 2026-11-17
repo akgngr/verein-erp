@@ -1,5 +1,6 @@
 "use client";
-import { toast, Button, Link } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button, Link } from "@heroui/react";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
@@ -59,7 +60,7 @@ export function AgendaTab({
     const result = await moveAgendaItemAction({ id, direction });
     setBusy(false);
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
     router.refresh();
@@ -69,10 +70,10 @@ export function AgendaTab({
     if (!deleting) return;
     const result = await deleteAgendaItemAction({ id: deleting.id });
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
-    toast(t("deletedToast"), { variant: "success" });
+    notify.success(t("deletedToast"));
     setDeleting(null);
     router.refresh();
   };
