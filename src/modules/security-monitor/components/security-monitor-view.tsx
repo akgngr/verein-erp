@@ -165,8 +165,8 @@ export function SecurityMonitorView() {
   }
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex justify-between items-center">
+    <div className="space-y-6 p-6">
+      <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
           <ShieldCheck className="h-6 w-6 text-accent" />
           <h1 className="text-xl font-bold">{t("title")}</h1>
@@ -210,10 +210,10 @@ export function SecurityMonitorView() {
       </div>
 
       <SurfaceCard contentClassName="gap-4 p-6">
-          <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between">
             <h2 className="text-base font-semibold">{t("recentRuns")}</h2>
           </div>
-          {recentRuns.length === 0 ? (
+        {recentRuns.length === 0 ? (
             <p className="text-ink-400">{t("noRuns")}</p>
           ) : (
             <div className="divide-y divide-ink-200">
@@ -254,17 +254,17 @@ export function SecurityMonitorView() {
       </SurfaceCard>
 
       <SurfaceCard contentClassName="gap-4 p-6">
-          <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between">
             <h2 className="text-base font-semibold">{t("openAlerts")}</h2>
           </div>
-          {alerts.length === 0 ? (
+        {alerts.length === 0 ? (
             <p className="text-ink-400">{t("noAlerts")}</p>
           ) : (
             <div className="divide-y divide-ink-200">
               {alerts.map((alert) => (
                 <div key={alert.id} className="flex items-start gap-3 py-3">
                   <div
-                    className={`w-2 h-2 rounded-full ${getSeverityColor(alert.severity)} mt-1.5`}
+                    className={`mt-1.5 h-2 w-2 rounded-full ${getSeverityColor(alert.severity)}`}
                   />
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
