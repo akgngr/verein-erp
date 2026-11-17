@@ -1,6 +1,6 @@
 "use client";
-import { toast, Button, Spinner } from "@heroui/react";
-import { actionVariant } from "@/shared/components/ui/action-appearance";
+import { ActionButton } from "@/shared/components/ui/action-button";
+import { notify } from "@/shared/components/ui/notify";
 
 import { MailWarning } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -21,19 +21,20 @@ export function DunningButton({
   const router = useRouter();
   const [busy, setBusy] = useState(false);
   return (
-    <Button
-      size="sm"
+    <ActionButton
+      color={level >= 2 ? "danger" : "warning"}
+      variant="flat"
+      isPending={busy}
+      startIcon={<MailWarning className="h-4 w-4" aria-hidden />}
       onPress={async () => {
         setBusy(true);
         const result = await createDunningAction({ id: invoiceId });
         setBusy(false);
         if (!result.ok) {
-          toast(result.error, { variant: "danger" });
+          notify(result.error, "danger");
           return;
         }
-        toast(t("created", { level: t(`levels.${result.data.level}`) }), {
-          variant: "success",
-        });
+        notify(t("created", { level: t(`levels.${result.data.level}`) }), "success");
         window.open(
           `/api/accounting/dunnings/${result.data.id}/pdf`,
           "_blank",
@@ -41,12 +42,8 @@ export function DunningButton({
         );
         router.refresh();
       }}
-      variant={actionVariant(level >= 2 ? "danger" : "warning", "flat")}
-      isPending={busy}
     >
-      {busy ? <Spinner size="sm" color="current" /> : null}
-      {<MailWarning className="h-4 w-4" aria-hidden />}
       {t(`create.${level}`)}
-    </Button>
+    </ActionButton>
   );
 }
