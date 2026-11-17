@@ -1,12 +1,9 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import { Chip } from "@heroui/react";
-import { statusTone } from "@/shared/components/ui/status-appearance";
-
 import { useTranslations } from "next-intl";
 
 import { DataTable } from "@/shared/components/data-table/data-table";
 import type { DataTableColumn } from "@/shared/components/data-table/types";
+import { StatusChip } from "@/shared/components/ui/status-chip";
 import { formatDateTime } from "@/shared/utils";
 
 import { AUDIT_ACTIONS, AUDIT_ENTITIES } from "../constants";
@@ -50,14 +47,9 @@ export function AuditLogTable({
       key: "action",
       label: t("table.action"),
       render: (row) => (
-        <Chip
-          size="sm"
-          color={statusTone(actionColor(row.action))}
-          variant={"soft"}
-          style={statusStyle(actionColor(row.action))}
-        >
+        <StatusChip tone={actionColor(row.action)}>
           {actionLabel(row.action)}
-        </Chip>
+        </StatusChip>
       ),
     },
     {
