@@ -13,7 +13,7 @@ Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi.
 |---|---|
 | Anahtar | `documents` |
 | Tür | Resmî modül |
-| Sürüm | 1.8.0 |
+| Sürüm | 1.8.1 |
 | Sayfalar | `/evrak`, `/evrak/kategoriler` |
 | Önerir | [Muhasebe](./accounting), [Görevler](./tasks), [Yapay zekâ asistanı](./ai) |
 
@@ -44,6 +44,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_document` · `get_document_statistics` · `list_documents` · `propose_delete_document` · `propose_document` · `propose_document_status` · `read_document_file`
 
 ## Sürüm notları
+
+### 1.8.1 — Evrak rozetleri ortak UI katmanında
+
+_2026-11-17_
+
+- **İyileştirme:** Tekrarlanan HeroUI durum/tür rozetleri ortak StatusChip pattern'ine taşındı; modül görsel sözleşmesi framework implementasyonundan ayrıştırıldı.
 
 ### 1.8.0 — Evrak listesinde toplu seçim ve durum işlemleri
 
@@ -87,10 +93,4 @@ _2026-11-15_
 
 - **Güvenlik:** Asistan araçları v2 veri sözleşmesine taşındı: modele giden her alan açıkça listelenir ve veri sınıfı bildirilir. Toplam ve kurumsal veriler denetimli bulut modunda da kullanılabilir; serbest kişisel içerik yalnız yerel modelde kalır.
 
-### 1.6.0 — Modüller arası bağ bildirildi
-
-_2026-11-15_
-
-- **Güvenlik:** Muhasebe, görevler ve asistan bağlantıları artık bildirilmiş erişimle çalışır: "Muhasebeye aktar" sunucuda, muhasebe yetkiniz denetlenerek yapılır; düğmeler yalnız ilgili modül açık ve yetkiniz varsa görünür. Yönetici erişimleri bir kez yeniden onaylar.
-
-Daha eski 10 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/documents/releases.json)
+Daha eski 11 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/documents/releases.json)
