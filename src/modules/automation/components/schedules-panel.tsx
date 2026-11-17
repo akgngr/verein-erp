@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Input, Label, Select, Spinner, Switch, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -45,8 +46,8 @@ export function SchedulesPanel({ schedules, tasks, canManage }: Props) {
     startTransition(async () => {
       const response = await promise();
       if (!response.ok)
-        return void toast(response.error, { variant: "danger" });
-      toast(success, { variant: "success" });
+        return void notify.error(response.error);
+      notify.success(success);
       router.refresh();
     });
 

@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Dialog, InputGroup, Spinner, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -33,7 +34,7 @@ export function ConnectBankButton({ disabled }: { disabled: boolean }) {
     setLoading(false);
     if (!response.ok) {
       setOpen(false);
-      return void toast(response.error, { variant: "danger" });
+      return void notify.error(response.error);
     }
     setInstitutions(response.data);
   };
@@ -59,7 +60,7 @@ export function ConnectBankButton({ disabled }: { disabled: boolean }) {
     });
     if (!response.ok) {
       setStarting(null);
-      return void toast(response.error, { variant: "danger" });
+      return void notify.error(response.error);
     }
     window.location.assign(response.data.link);
   };

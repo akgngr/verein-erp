@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Description, Dialog, Dropdown, Label, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -73,7 +74,7 @@ export function WorkflowHeaderActions(props: Props) {
     async (draft: unknown) => {
       const response = await saveWorkflowDraftAction({ id: props.id, draft });
       if (!response.ok) {
-        toast(response.error, { variant: "danger" });
+        notify.error(response.error);
         return false;
       }
       setIssues(response.data.issues);
@@ -87,17 +88,15 @@ export function WorkflowHeaderActions(props: Props) {
       if (afterSave) await afterSave();
       const response = await publishWorkflowAction({ id: props.id });
       if (!response.ok)
-        return void toast(response.error, { variant: "danger" });
+        return void notify.error(response.error);
       if (response.data.issues.length > 0) {
         setIssues(response.data.issues);
         setEditorOpen(true);
-        return void toast(t("publishBlocked"), { variant: "warning" });
+        return void notify.warning(t("publishBlocked"));
       }
       setIssues([]);
       setEditorOpen(false);
-      toast(t("published", { version: response.data.version }), {
-        variant: "success",
-      });
+      notify.success(t("published", { version: response.data.version }));
       router.refresh();
     });
 
@@ -108,10 +107,8 @@ export function WorkflowHeaderActions(props: Props) {
         enabled: !props.enabled,
       });
       if (!response.ok)
-        return void toast(response.error, { variant: "danger" });
-      toast(props.enabled ? t("turnedOff") : t("turnedOn"), {
-        variant: "success",
-      });
+        return void notify.error(response.error);
+      notify.success(props.enabled ? t("turnedOff") : t("turnedOn"));
       router.refresh();
     });
 
@@ -122,15 +119,15 @@ export function WorkflowHeaderActions(props: Props) {
         input: runInput,
       });
       if (!response.ok)
-        return void toast(response.error, { variant: "danger" });
+        return void notify.error(response.error);
       setRunOpen(false);
-      toast(t("started"), { variant: "success" });
+      notify.success(t("started"));
       router.refresh();
     });
 
   const remove = async () => {
     const response = await deleteWorkflowAction({ id: props.id });
-    if (!response.ok) return void toast(response.error, { variant: "danger" });
+    if (!response.ok) return void notify.error(response.error);
     router.push("/automation/workflows");
   };
 

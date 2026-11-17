@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Input, Label, Select, Spinner, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -35,10 +36,10 @@ export function BankingSettingsForm({
       secretKey,
     });
     setPending(false);
-    if (!response.ok) return void toast(response.error, { variant: "danger" });
+    if (!response.ok) return void notify.error(response.error);
     setSecretId("");
     setSecretKey("");
-    toast(t("saved"), { variant: "success" });
+    notify.success(t("saved"));
     router.refresh();
   };
 
