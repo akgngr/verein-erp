@@ -21,4 +21,6 @@ export const ERP_MOTION_CLASSES = {
   interactive: "erp-motion-interactive",
   enter: "erp-motion-enter",
   selection: "erp-motion-selection",
+  growY: "erp-motion-grow-y",
+  draw: "erp-motion-draw",
 } as const;

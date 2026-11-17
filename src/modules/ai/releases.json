@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.15.0",
+      "date": "2026-11-17",
+      "title": {
+        "tr": "AI durum analizi kartı",
+        "de": "KI-Lageanalyse-Karte"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Muhasebe genel bakışının sağ üst köşesinde AI durum analizi: yalnız izinli toplam muhasebe araçlarıyla son durumu, riskleri ve önerilen adımları özetler. Sonuç oturum boyunca saklanır, \"Yenile\" ile yeniden üretilir; hiçbir işlem yapmaz.",
+          "de": "KI-Lageanalyse oben rechts in der Finanzübersicht: fasst mit freigegebenen, aggregierten Buchhaltungswerkzeugen Lage, Risiken und nächste Schritte zusammen. Ergebnis bleibt für die Sitzung erhalten, „Aktualisieren“ erzeugt es neu; es werden keine Aktionen ausgeführt."
+        }
+      ]
+    },
+    {
       "version": "1.14.1",
       "date": "2026-11-16",
       "title": {

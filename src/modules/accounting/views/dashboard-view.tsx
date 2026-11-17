@@ -1,23 +1,29 @@
 import Link from "next/link";
 import { ArrowDownRight, ArrowUpRight, Scale } from "lucide-react";
-
-import { QuarterlyFinanceChart } from "../components/quarterly-finance-chart";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
+import { SurfaceCards } from "@/modules/system/ui";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { getDb } from "@/shared/db";
 import { formatMoney } from "@/shared/money";
 
+import { CashflowChart } from "../components/dashboard/cashflow-chart";
+import { ExpenseDonut } from "../components/dashboard/expense-donut";
+import { AttentionList, KpiTile, LiquidityHero, UpcomingTimeline, type AttentionItem, type TimelineItem } from "../components/dashboard/widgets";
 import { accountingPermissions } from "../permissions";
-import { getBookingTotals } from "../queries/get-booking-totals";
-import { getBookingPeriodRange } from "../services/dashboard-period";
-import { getSettings } from "../queries/get-settings";
+import { getDashboardOverview, OUTLOOK_DAYS } from "../queries/get-dashboard-overview";
 import { getOverdueInvoiceSummary } from "../queries/get-overdue-invoice-summary";
+import { getSettings } from "../queries/get-settings";
+import { forecastLiquidity, percentChange } from "../services/dashboard-outlook";
 import { countMissingReceipts } from "../services/report-builders";
-import { findUpcomingTaxDeadline, taxDeadlines } from "../services/tax-calendar";
+import { taxDeadlines } from "../services/tax-calendar";
 import { berlinToday } from "../utils";
+
+const CHIP_BASE = "erp-motion-interactive rounded-lg px-3 py-1.5 text-sm font-medium";
+const CHIP_ACTIVE = `${CHIP_BASE} bg-[var(--ui-surface-card)] text-foreground shadow-[var(--ui-shadow-card)]`;
+const CHIP_IDLE = `${CHIP_BASE} text-ink-500 hover:text-foreground`;
 
 type RawParams = Record<string, string | string[] | undefined>;
 type Period = "year" | "quarter" | "month";
@@ -26,7 +32,11 @@ function parameter(value: string | string[] | undefined): string | undefined {
   return typeof value === "string" ? value : undefined;
 }
 
-/** Read-only finance dashboard. Does not perform payments, reminder issuance or filing. */
+/**
+ * ACC-10 live accounting dashboard. Read-only: shows the current position (liquidity, period KPIs),
+ * what is coming (receivables, payables, tax deadlines) and what needs attention. No payments, reminders or filings.
+ * The AI status card is contributed by the AI module through the "accounting.overview" surface (system module).
+ */
 export async function AccountingDashboardView({ searchParams }: { searchParams: Promise<RawParams> }) {
   try {
     await requirePermission(accountingPermissions, "view");
@@ -36,8 +46,9 @@ export async function AccountingDashboardView({ searchParams }: { searchParams: 
   }
 
   const t = await getTranslations("accounting.dashboard");
-  const now = berlinToday();
-  const currentYear = now.getUTCFullYear();
+  const locale = await getLocale();
+  const today = berlinToday();
+  const currentYear = today.getUTCFullYear();
   const raw = await searchParams;
   const requestedYear = parameter(raw.year);
   const year = requestedYear && /^\d{4}$/.test(requestedYear) && Number(requestedYear) >= 2000 && Number(requestedYear) <= currentYear
@@ -51,176 +62,176 @@ export async function AccountingDashboardView({ searchParams }: { searchParams: 
     : period === "month" ? (part >= 1 && part <= 12 ? part : 1) : 1;
 
   const db = getDb();
-  const [totals, quarters, missingReceiptCount, overdueOpen, bookingCount, settings, unmatchedBankCount] = await Promise.all([
-    getBookingTotals(year, getBookingPeriodRange(year, period, validPart)),
-    Promise.all([1, 2, 3, 4].map((quarter) =>
-      getBookingTotals(year, getBookingPeriodRange(year, "quarter", quarter)))),
+  const [overview, missingReceiptCount, overdueOpen, settings, unmatchedBankCount, draftPayableCount] = await Promise.all([
+    getDashboardOverview({ year, period, part: validPart, today }),
     countMissingReceipts(year),
-    getOverdueInvoiceSummary(now),
-    db.accountingBooking.count({
-      where: {
-        year, reversedAt: null, type: { not: "TRANSFER" },
-        ...(getBookingPeriodRange(year, period, validPart)
-          ? { bookingDate: {
-            gte: getBookingPeriodRange(year, period, validPart)!.from,
-            lt: getBookingPeriodRange(year, period, validPart)!.until,
-          } } : {}),
-      },
-    }),
+    getOverdueInvoiceSummary(today),
     getSettings(),
     db.accountingBankTransaction.count({ where: { status: "OPEN" } }),
+    db.accountingPayable.count({ where: { status: "DRAFT" } }),
   ]);
 
-  const upcomingTaxDeadline = findUpcomingTaxDeadline(
-    now,
-    [
-      ...taxDeadlines(currentYear, {
-        vatPeriod: settings.tax.vatPeriod,
-        extension: settings.tax.vatExtension,
-        smallBusiness: settings.tax.smallBusiness,
-      }),
-      ...taxDeadlines(currentYear + 1, {
-        vatPeriod: settings.tax.vatPeriod,
-        extension: settings.tax.vatExtension,
-        smallBusiness: settings.tax.smallBusiness,
-      }),
-    ],
-  );
+  const deadlineOptions = { vatPeriod: settings.tax.vatPeriod, extension: settings.tax.vatExtension, smallBusiness: settings.tax.smallBusiness };
+  const horizon = new Date(today.getTime() + 60 * 86_400_000);
+  const deadlines = [...taxDeadlines(currentYear, deadlineOptions), ...taxDeadlines(currentYear + 1, deadlineOptions)]
+    .filter((deadline) => deadline.due >= today && deadline.due <= horizon)
+    .sort((a, b) => a.due.getTime() - b.due.getTime())
+    .slice(0, 3);
+
+  const monthNames = Array.from({ length: 12 }, (_, index) =>
+    new Date(Date.UTC(2000, index, 1)).toLocaleDateString(locale, { month: "short", timeZone: "UTC" }));
   const periodLabel = period === "year" ? String(year)
-    : period === "quarter" ? t("quarter", { n: validPart })
-    : `${t("monthLabel")} ${validPart}`;
-  const periodLink = (kind: Period, n = 1, y = year) =>
-    `/muhasebe/panel?year=${y}&period=${kind}&part=${n}`;
+    : period === "quarter" ? `${t("quarter", { n: validPart })} ${year}`
+    : `${monthNames[validPart - 1]} ${year}`;
+  const periodLink = (kind: Period, n = 1, y = year) => `/muhasebe/panel?year=${y}&period=${kind}&part=${n}`;
+
+  const incomingCents = overview.receivables.overdue.cents + overview.receivables.upcoming.cents;
+  const outgoingCents = overview.payables.overdue.cents + overview.payables.upcoming.cents;
+  const forecastCents = forecastLiquidity({ balanceCents: overview.liquidityCents, receivablesCents: incomingCents, payablesCents: outgoingCents });
+
+  const timeline: TimelineItem[] = [
+    ...overview.timeline.map((item) => ({
+      kind: item.kind,
+      key: `${item.kind}-${item.id}`,
+      title: item.party || item.label,
+      subtitle: item.label,
+      date: item.dueDate,
+      cents: item.cents,
+      href: item.kind === "receivable" ? `/muhasebe/faturalar/${item.id}` : `/muhasebe/gelen-faturalar/${item.id}`,
+    })),
+    ...deadlines.map((deadline) => ({
+      kind: "tax" as const,
+      key: `tax-${deadline.key}-${deadline.period}`,
+      title: t(`taxDeadlineKey.${deadline.key}`),
+      subtitle: deadline.period,
+      date: deadline.due,
+      cents: null,
+      href: "/muhasebe/vergi",
+    })),
+  ].sort((a, b) => a.date.getTime() - b.date.getTime()).slice(0, 8);
+
+  const attention: AttentionItem[] = [
+    ...(overdueOpen.count > 0 ? [{ key: "overdue", severity: "danger" as const, text: t("overdue", { count: overdueOpen.count, amount: formatMoney(overdueOpen.cents) }), action: t("inspectInvoices"), href: "/muhasebe/faturalar" }] : []),
+    ...(overview.payables.overdue.count > 0 ? [{ key: "payablesOverdue", severity: "danger" as const, text: t("payablesOverdue", { count: overview.payables.overdue.count, amount: formatMoney(overview.payables.overdue.cents) }), action: t("inspectPayables"), href: "/muhasebe/gelen-faturalar" }] : []),
+    ...(unmatchedBankCount > 0 ? [{ key: "bank", severity: "warning" as const, text: t("unmatchedBank", { count: unmatchedBankCount }), action: t("inspectBank"), href: "/muhasebe/banka?durum=open" }] : []),
+    ...(draftPayableCount > 0 ? [{ key: "draftPayables", severity: "warning" as const, text: t("draftPayables", { count: draftPayableCount }), action: t("inspectPayables"), href: "/muhasebe/gelen-faturalar" }] : []),
+    ...(missingReceiptCount > 0 ? [{ key: "receipts", severity: "warning" as const, text: t("missingReceipts", { count: missingReceiptCount, year }), action: t("inspectBookings"), href: `/muhasebe?filter.year=${year}&filter.missingReceipt=1` }] : []),
+    ...(deadlines[0] ? [{ key: "tax", severity: "info" as const, text: t("taxDeadline", { kind: t(`taxDeadlineKey.${deadlines[0].key}`), period: deadlines[0].period, date: deadlines[0].due.toLocaleDateString(locale, { timeZone: "UTC" }) }), action: t("inspectTax"), href: "/muhasebe/vergi" }] : []),
+  ];
+
+  const changeLabel = t("vsLastYear", { year: year - 1 });
+  const trendIncome = overview.months.map((month) => month.incomeCents);
+  const trendExpense = overview.months.map((month) => month.expenseCents);
+  const trendNet = overview.months.reduce<number[]>((acc, month) => [...acc, (acc.at(-1) ?? 0) + month.netCents], []);
+  const chip = (active: boolean) => (active ? CHIP_ACTIVE : CHIP_IDLE);
 
   return (
     <section className="space-y-6">
       <PageHeader
         title={t("title")}
-        description={t("description", { year })}
+        description={t("liveDescription", { period: periodLabel })}
         actions={<Link href="/muhasebe" className="text-sm font-medium text-accent hover:underline">{t("bookings")}</Link>}
       />
 
       <nav aria-label={t("filterLabel")} className="flex flex-wrap items-center gap-2">
-        {[year - 1, year].filter((y) => y >= 2000).map((y) => (
-          <Link key={y} href={periodLink(period, validPart, y)}
-            className={`rounded-lg border px-3 py-2 text-sm ${y === year ? "border-accent text-accent" : "border-ink-200"}`}>
-            {y}
-          </Link>
-        ))}
-        <Link href={periodLink("year")} className="rounded-lg border border-ink-200 px-3 py-2 text-sm">{t("year")}</Link>
-        {[1, 2, 3, 4].map((q) => (
-          <Link key={q} href={periodLink("quarter", q)} className="rounded-lg border border-ink-200 px-3 py-2 text-sm">
-            {t("quarter", { n: q })}
-          </Link>
-        ))}
-        <span className="text-sm text-ink-500">{t("monthLabel")}</span>
-        <div role="group" aria-label={t("monthLabel")} className="flex flex-wrap gap-1">
-          {Array.from({ length: 12 }, (_, i) => i + 1).map((month) => (
-            <Link key={month} href={periodLink("month", month)}
-              aria-current={period === "month" && validPart === month ? "page" : undefined}
-              className="rounded border border-ink-200 px-2 py-1 text-xs">{month}</Link>
+        <div className="inline-flex flex-wrap gap-1 rounded-xl bg-[var(--ui-surface-muted)] p-1">
+          {[year - 1, year].filter((y) => y >= 2000).map((y) => (
+            <Link key={y} href={periodLink(period, validPart, y)} aria-current={y === year ? "true" : undefined} className={chip(y === year)}>{y}</Link>
+          ))}
+        </div>
+        <div className="inline-flex flex-wrap gap-1 rounded-xl bg-[var(--ui-surface-muted)] p-1">
+          <Link href={periodLink("year")} aria-current={period === "year" ? "page" : undefined} className={chip(period === "year")}>{t("year")}</Link>
+          {[1, 2, 3, 4].map((q) => (
+            <Link key={q} href={periodLink("quarter", q)} aria-current={period === "quarter" && validPart === q ? "page" : undefined}
+              className={chip(period === "quarter" && validPart === q)}>{t("quarterShort", { n: q })}</Link>
+          ))}
+        </div>
+        <div role="group" aria-label={t("monthLabel")} className="inline-flex max-w-full gap-1 overflow-x-auto rounded-xl bg-[var(--ui-surface-muted)] p-1">
+          {monthNames.map((name, index) => (
+            <Link key={name} href={periodLink("month", index + 1)}
+              aria-current={period === "month" && validPart === index + 1 ? "page" : undefined}
+              className={chip(period === "month" && validPart === index + 1)}>{name}</Link>
           ))}
         </div>
       </nav>
 
-      {bookingCount === 0 ? (
-        <p className="rounded-2xl border border-ink-200 bg-surface px-6 py-9 text-center text-sm text-ink-500">
-          {t("noBookings")}
-        </p>
-      ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {[
-            {
-              key: "income",
-              value: totals.incomeCents,
-              icon: ArrowUpRight,
-              iconStyle: "bg-success-50 text-success-600 dark:bg-success-950/35",
-              valueStyle: "text-success-600",
-            },
-            {
-              key: "expense",
-              value: totals.expenseCents,
-              icon: ArrowDownRight,
-              iconStyle: "bg-accent/10 text-accent",
-              valueStyle: "text-foreground",
-            },
-            {
-              key: "difference",
-              value: totals.netCents,
-              icon: Scale,
-              iconStyle: "bg-ink-100 text-ink-700",
-              valueStyle: totals.netCents < 0 ? "text-danger-600" : "text-foreground",
-            },
-          ].map((item) => {
-            const Icon = item.icon;
-            return (
-              <article key={item.key} className="group relative min-w-0 overflow-hidden rounded-2xl border border-ink-200 bg-surface p-5 shadow-sm transition-shadow hover:shadow-md sm:p-6">
-                <div className="pointer-events-none absolute -right-12 -top-12 size-32 rounded-full bg-ink-100/50 blur-2xl" aria-hidden="true" />
-                <div className="relative flex items-center justify-between gap-3">
-                  <h2 className="text-sm font-medium text-ink-500">{t(item.key)}</h2>
-                  <span className={`inline-flex size-10 items-center justify-center rounded-xl ${item.iconStyle}`}>
-                    <Icon size={19} strokeWidth={1.8} aria-hidden="true" />
-                  </span>
-                </div>
-                <p className={`relative mt-5 break-words text-[clamp(1.35rem,2.5vw,2rem)] font-semibold tracking-tight tabular-nums ${item.valueStyle}`}>
-                  {formatMoney(item.value)}
-                </p>
-                <div className="relative mt-5 flex items-center justify-between gap-2 border-t border-ink-100 pt-3 text-xs font-medium text-ink-500">
-                  <span>{periodLabel}</span>
-                  <span>{t("currency")}</span>
-                </div>
-              </article>
-            );
-          })}
+      <div className="grid items-start gap-6 xl:grid-cols-[minmax(0,1fr)_360px]">
+        <div className="min-w-0 space-y-6">
+          <LiquidityHero
+            labels={{
+              title: t("liquidity"),
+              asOf: t("asOf", { date: today.toLocaleDateString(locale, { timeZone: "UTC" }) }),
+              forecast: t("forecast", { days: OUTLOOK_DAYS }),
+              forecastHint: t("forecastHint"),
+              incoming: t("incoming"),
+              outgoing: t("outgoing"),
+              noAccounts: t("noAccounts"),
+            }}
+            liquidityCents={overview.liquidityCents}
+            forecastCents={forecastCents}
+            incomingCents={incomingCents}
+            outgoingCents={outgoingCents}
+            accounts={overview.balances}
+          />
+
+          <div className="grid gap-4 sm:grid-cols-3">
+            <KpiTile index={0} label={t("income")} cents={overview.current.incomeCents} change={percentChange(overview.current.incomeCents, overview.previous.incomeCents)}
+              changeLabel={changeLabel} noChange={t("noComparison")} upIsGood icon={ArrowUpRight} tone="success" trend={trendIncome} />
+            <KpiTile index={1} label={t("expense")} cents={overview.current.expenseCents} change={percentChange(overview.current.expenseCents, overview.previous.expenseCents)}
+              changeLabel={changeLabel} noChange={t("noComparison")} upIsGood={false} icon={ArrowDownRight} tone="accent" trend={trendExpense} />
+            <KpiTile index={2} label={t("difference")} cents={overview.current.netCents} change={percentChange(overview.current.netCents, overview.previous.netCents)}
+              changeLabel={changeLabel} noChange={t("noComparison")} upIsGood icon={Scale} tone="neutral" trend={trendNet} />
+          </div>
+
+          <CashflowChart
+            months={overview.months}
+            highlight={year === currentYear ? today.getUTCMonth() : undefined}
+            labels={{
+              title: t("cashflowTitle", { year }),
+              description: t("cashflowDescription"),
+              income: t("income"),
+              expense: t("expense"),
+              net: t("cumulativeNet"),
+              tableToggle: t("showTable"),
+              monthColumn: t("monthLabel"),
+              months: monthNames,
+            }}
+          />
+
+          <div className="grid gap-6 lg:grid-cols-2">
+            <UpcomingTimeline
+              items={timeline}
+              locale={locale}
+              labels={{
+                title: t("upcomingTitle"),
+                description: t("upcomingDescription", { days: OUTLOOK_DAYS }),
+                empty: t("upcomingEmpty"),
+                receivable: t("receivable"),
+                payable: t("payable"),
+                tax: t("taxItem"),
+              }}
+            />
+            <ExpenseDonut
+              slices={overview.expenses.top}
+              otherCents={overview.expenses.otherCents}
+              labels={{
+                title: t("expenseMixTitle"),
+                description: t("expenseMixDescription", { period: periodLabel }),
+                other: t("other"),
+                uncategorized: t("uncategorized"),
+                empty: t("expenseMixEmpty"),
+                total: t("total"),
+              }}
+            />
+          </div>
         </div>
-      )}
 
-      <QuarterlyFinanceChart
-        quarters={quarters}
-        labels={{
-          title: t("quarterlyTitle"),
-          description: t("quarterlyDescription"),
-          income: t("income"),
-          expense: t("expense"),
-          period: t("periodColumn"),
-          quarter: (n) => t("quarter", { n }),
-        }}
-      />
+        <aside className="min-w-0 space-y-6 xl:sticky xl:top-20" aria-label={t("asideLabel")}>
+          <SurfaceCards surface="accounting.overview" placement="aside" />
+          <AttentionList items={attention} labels={{ title: t("recommendations"), empty: t("noWarnings") }} />
+        </aside>
+      </div>
 
-      <section aria-labelledby="accounting-recommendations" className="space-y-3">
-        <h2 id="accounting-recommendations" className="text-lg font-semibold">{t("recommendations")}</h2>
-        {missingReceiptCount > 0 ? (
-          <p className="rounded-lg border border-warning-300 p-4 text-sm">
-            {t("missingReceipts", { count: missingReceiptCount, year })}{" "}
-            <Link href={`/muhasebe?filter.year=${year}&filter.missingReceipt=1`} className="font-medium underline">{t("inspectBookings")}</Link>
-          </p>
-        ) : null}
-        {overdueOpen.count > 0 ? (
-          <p className="rounded-lg border border-warning-300 p-4 text-sm">
-            {t("overdue", { count: overdueOpen.count, amount: formatMoney(overdueOpen.cents) })}{" "}
-            <Link href="/muhasebe/faturalar" className="font-medium underline">{t("inspectInvoices")}</Link>
-          </p>
-        ) : null}
-        {unmatchedBankCount > 0 ? (
-          <p className="rounded-lg border border-warning-300 p-4 text-sm">
-            {t("unmatchedBank", { count: unmatchedBankCount })}{" "}
-            <Link href="/muhasebe/banka?durum=open" className="font-medium underline">{t("inspectBank")}</Link>
-          </p>
-        ) : null}
-        {upcomingTaxDeadline ? (
-          <p className="rounded-lg border border-warning-300 p-4 text-sm">
-            {t("taxDeadline", {
-              kind: t(`taxDeadlineKey.${upcomingTaxDeadline.key}`),
-              period: upcomingTaxDeadline.period,
-              date: upcomingTaxDeadline.due.toISOString().slice(0, 10),
-            })}{" "}
-            <Link href="/muhasebe/vergi" className="font-medium underline">{t("inspectTax")}</Link>
-          </p>
-        ) : null}
-        {missingReceiptCount === 0 && overdueOpen.count === 0 && unmatchedBankCount === 0 && !upcomingTaxDeadline ? (
-          <p className="text-sm text-ink-500">{t("noWarnings")}</p>
-        ) : null}
-      </section>
       <p className="text-xs text-ink-500">
         {t("basis")} {t("taxMethod", { method: settings.tax.taxMethod })}
       </p>

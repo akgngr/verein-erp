@@ -2,6 +2,32 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.23.0",
+      "date": "2026-11-17",
+      "appVersion": "0.41.0",
+      "title": {
+        "tr": "Canlı finansal genel bakış",
+        "de": "Lebendige Finanzübersicht"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Genel bakış yeniden tasarlandı: toplam likidite ve 30 günlük bakiye tahmini, önceki yıla göre değişimli KPI kartları, aylık nakit akışı grafiği, gider dağılımı ve yaklaşan tahsilat/ödeme/vergi zaman çizelgesi.",
+          "de": "Übersicht neu gestaltet: Gesamtliquidität mit 30-Tage-Prognose, KPI-Karten mit Vorjahresvergleich, monatlicher Cashflow, Ausgabenverteilung und Zeitleiste anstehender Eingänge, Zahlungen und Steuertermine."
+        },
+        {
+          "type": "feature",
+          "tr": "Sağ sütunda AI durum analizi kartı (yapay zekâ modülü etkinse) ve dikkat gerektiren işler listesi; vadesi geçmiş ve onay bekleyen gelen faturalar eklendi.",
+          "de": "Rechte Spalte mit KI-Lageanalyse (bei aktivem KI-Modul) und Handlungsbedarf, inkl. überfälliger und freizugebender Eingangsrechnungen."
+        },
+        {
+          "type": "fix",
+          "tr": "Menüde iki \"Genel bakış\" görünmesi düzeltildi; fiş listesi artık \"Fişler\" adıyla ayrı.",
+          "de": "Doppelter Menüeintrag „Übersicht“ behoben; die Buchungsliste heißt jetzt „Buchungen“."
+        }
+      ]
+    },
+    {
       "version": "1.22.14",
       "date": "2026-11-17",
       "appVersion": "0.41.0",

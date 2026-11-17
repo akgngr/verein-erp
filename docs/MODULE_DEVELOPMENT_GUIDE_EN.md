@@ -304,6 +304,7 @@ export const cards = defineCards([
 - Card title/description texts live in `messages/tr.json` and `de.json` under `cards.<key>.*`.
 - `pnpm module:sync` collects the `cards/index.tsx` files into the generated `src/dashboard-cards.ts`;
   do not edit that file. Examples: the `cards/` folders of `members`, `meetings`, `documents`.
+- **Surface cards (`surfaces`):** a card can also appear on another module's screen, e.g. `surfaces: [{ key: "accounting.overview", placement: "aside" }]`. The host screen does not import the card's module or call its API. It only places `<SurfaceCards surface="..." placement="aside" />` (`@/modules/system/ui`). The system module checks module approval and card permission. No new `access` declaration is needed between the two modules, so existing approvals stay valid. Example: `ai/cards` → accounting overview.
 
 ---
 
