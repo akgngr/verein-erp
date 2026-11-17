@@ -416,5 +416,12 @@
     "tasks": "Liest nur, ob der Nutzer Aufgaben anlegen darf, um „Aufgabe für die Frist anlegen“ anzuzeigen.",
     "system": "Liest, ob Buchhaltung, Aufgaben und Assistent aktiv sind (Schaltflächen nur dann sichtbar).",
     "ai": "„Mit KI zusammenfassen“: sendet den Dokumenttext an den Zusammenfassungsdienst des Assistenten; dessen Datenrichtlinie (lokales Modell oder maskierte Cloud) und die Assistentenberechtigung des Benutzers werden serverseitig angewendet."
+  },
+  "bulk": {
+    "open": "Auf Offen setzen",
+    "inProgress": "In Bearbeitung setzen",
+    "completed": "Als erledigt markieren",
+    "archived": "Archivieren",
+    "success": "{updated} Dokumente aktualisiert, {skipped} Einträge waren bereits im Zielstatus."
   }
 }
