@@ -76,7 +76,10 @@
       "label": "Tablo",
       "previousPage": "Önceki sayfa",
       "nextPage": "Sonraki sayfa",
-      "pageNumber": "Sayfa {page}"
+      "pageNumber": "Sayfa {page}",
+      "selectedCount": "{count} kayıt seçildi",
+      "bulkActions": "Toplu işlemler",
+      "clearSelection": "Seçimi temizle"
     },
     "active": "Aktif",
     "passive": "Pasif",
