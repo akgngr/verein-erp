@@ -26,8 +26,8 @@
 - [x] motion duration/easing tokenlarını ekle.
 - [x] reduced-motion fallback'ını merkezileştir.
 - [x] reusable motion utility/pattern sınıfları ekle.
-- [ ] Page/Surface/Card enter motion standardını uygula.
-- [ ] hover/focus motion standardını uygula.
+- [x] Page/Surface/Card enter motion standardını uygula.
+- [x] hover/focus motion standardını uygula.
 - [x] Drawer/Popover geçişlerinin tokenlarla uyumunu doğrula.
 - [x] sürekli/dekoratif animation kullanımını engelleyen dokümantasyon kuralı ekle.
 - [x] motion regression/smoke testi ekle.

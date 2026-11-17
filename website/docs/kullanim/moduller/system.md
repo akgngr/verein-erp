@@ -13,7 +13,7 @@ Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.
 |---|---|
 | Anahtar | `system` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.11.2 |
+| Sürüm | 1.11.3 |
 | Sayfalar | `/ayarlar`, `/ayarlar/moduller`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/surum-notlari` |
 
 ## Diğer modüllere erişim
@@ -34,6 +34,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Modül Yönetimi | görüntüleme, düzenleme, silme | görüntüleme | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.11.3 — Hafif hareket ve yüzey etkileşimleri
+
+_2026-11-17_
+
+- **İyileştirme:** Sayfa başlıkları, form yüzeyleri ve panel kartları ortak motion tokenlarıyla hafif giriş, hover ve focus geçişleri kullanır. Reduced-motion tercihi korunur.
 
 ### 1.11.2 — HeroUI v3 arayüz geçişi
 
@@ -80,12 +86,4 @@ _2026-11-01_
 
 - **İyileştirme:** Modül paketleri ayrı menüde değil; Modül Yönetimi'ndeki "Yeni modül kur" butonundan açılır. Menü öğeleri gizlenebilir (hidden) ve başka modülün sayfasına bağlanabilir (module).
 
-### 1.8.0 — Modül paketleri
-
-_2026-11-01_
-
-- **Yeni:** İmzalı modül paketleri (.vmod, Ed25519): pnpm module:keygen / module:pack / module:install. Kurulum imzayı, güvenilen yayıncıyı (src/config/trusted-publishers.json), dosya yollarını/hash'leri, kategoriyi ve sürümü doğrular; hata olursa geri alır.
-- **Yeni:** Ayarlar → Modül paketleri: .vmod yükle, doğrulama sonucunu ve kurulum komutunu gör; güvenilen yayıncı listesi. Paket içeriği sunucuda çalıştırılmaz.
-- **Güvenlik:** Güven listesi yalnızca kod incelemesiyle değişir; resmî olmayan yayıncılar yalnızca EXTENSION modül yayımlayabilir; kurcalanmış/güvenilmeyen paketler reddedilir.
-
-Daha eski 9 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/system/releases.json)
+Daha eski 10 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/system/releases.json)

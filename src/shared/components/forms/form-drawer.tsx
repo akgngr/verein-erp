@@ -140,10 +140,10 @@ export function FormDrawerButton({
     <Link
       href={`${pathname}?${next.toString()}`}
       scroll={false}
-      className={buttonVariants({
+      className={cn("erp-motion-interactive", buttonVariants({
         size: "sm",
         variant: actionVariant(color, variant),
-      })}
+      }))}
     >
       {startIcon}
       {children}
@@ -162,7 +162,7 @@ export function FormSurface({
   const inDrawer = useContext(FormDrawerContext) !== null;
   if (inDrawer) return <div className="flex flex-col gap-4">{children}</div>;
   return (
-    <Card className={cn("border border-ink-200/80 shadow-sm", className)}>
+    <Card className={cn("erp-motion-enter erp-motion-interactive border border-ink-200/80 shadow-sm hover:shadow-md", className)}>
       <Card.Content className="gap-4 p-6">{children}</Card.Content>
     </Card>
   );
