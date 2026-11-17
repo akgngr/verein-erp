@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.1.4",
+      "date": "2026-11-17",
+      "appVersion": "0.41.0",
+      "title": {
+        "tr": "İptal eylemi ortak buton katmanında",
+        "de": "Abbruchaktion in gemeinsamer Button-Schicht"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Buton görünümü ve etkileşim semantiği ortak ActionButton pattern'ine taşındı; modül bu kullanımda HeroUI Button implementasyonuna doğrudan bağlı değil.",
+          "de": "Darstellung und Interaktionssemantik des Buttons verwenden das gemeinsame ActionButton-Pattern; das Modul ist für diesen Anwendungsfall nicht mehr direkt an HeroUI Button gebunden."
+        }
+      ]
+    },
+    {
       "version": "1.1.3",
       "date": "2026-11-16",
       "appVersion": "0.41.0",

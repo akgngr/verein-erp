@@ -1,6 +1,5 @@
 "use client";
-import { Button } from "@heroui/react";
-import { actionVariant } from "@/shared/components/ui/action-appearance";
+import { ActionButton } from "@/shared/components/ui/action-button";
 
 import type { ReactNode } from "react";
 import { useState } from "react";
@@ -20,14 +19,14 @@ export function DonationCancelButton(props: {
   const [open, setOpen] = useState(false);
   return (
     <>
-      <Button
-        size="sm"
+      <ActionButton
+        color="danger"
+        variant="flat"
+        startIcon={props.icon}
         onPress={() => setOpen(true)}
-        variant={actionVariant("danger", "flat")}
       >
-        {props.icon}
         {props.label}
-      </Button>
+      </ActionButton>
       <CancelDonationModal
         isOpen={open}
         onOpenChange={setOpen}

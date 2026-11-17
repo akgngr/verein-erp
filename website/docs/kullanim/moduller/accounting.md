@@ -52,6 +52,12 @@ _2026-11-17_
 - **Yeni:** Sağ sütunda AI durum analizi kartı (yapay zekâ modülü etkinse) ve dikkat gerektiren işler listesi; vadesi geçmiş ve onay bekleyen gelen faturalar eklendi.
 - **Düzeltme:** Menüde iki "Genel bakış" görünmesi düzeltildi; fiş listesi artık "Fişler" adıyla ayrı.
 
+### 1.22.14 — Yıl kapanışı eylemleri ortak buton katmanında
+
+_2026-11-17_
+
+- **İyileştirme:** Buton görünümü ve etkileşim semantiği ortak ActionButton pattern'ine taşındı; modül bu kullanımda HeroUI Button implementasyonuna doğrudan bağlı değil.
+
 ### 1.22.13 — Muhasebe rozetleri ortak UI katmanında
 
 _2026-11-17_
@@ -91,10 +97,4 @@ _2026-11-16_
 - **İyileştirme:** Muhasebe panelindeki özet kartlar daha şık ve duyarlı bir tasarıma geçirildi. Çeyreklik gelir-gider grafiği hafif, sunucuda çizilen SVG sütunlarla yenilendi; erişilebilir veri tablosu korundu.
 - **İyileştirme:** Yeni grafik kütüphanesi veya istemci JavaScript yükü eklenmedi; mevcut tema değişkenleri ve muhasebe hesaplamaları kullanılmaya devam eder.
 
-### 1.22.7 — Banka mutabakatı kontrol önerisi
-
-_2026-11-16_
-
-- **Yeni:** Muhasebe genel bakış ekranında açık durumdaki eşleştirilmemiş banka hareketleri sayılır; banka ekranına güvenli yönlendirme yapılır ve otomatik işlem başlatılmaz.
-
-Daha eski 33 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/accounting/releases.json)
+Daha eski 34 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/accounting/releases.json)

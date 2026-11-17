@@ -25,11 +25,11 @@ Verein ERP 36 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekra
 
 | Modül | Açıklama | Sürüm |
 |---|---|---|
-| [Bağışlar](./moduller/donations) | Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı takibi. | 1.1.3 |
+| [Bağışlar](./moduller/donations) | Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı takibi. | 1.1.4 |
 | [Banka bağlantısı](./moduller/banking) | Banka hesaplarını lisanslı PSD2 sağlayıcısı üzerinden bağlar, hareketleri muhasebeye aktarır. | 1.1.2 |
 | [CRM](./moduller/crm) | Kişiler ve kurumlarla ilişki yönetimi: aşamalar, fırsatlar, zaman akışı ve takipler. | 1.0.5 |
 | [Demo veri](./moduller/demo) | Test için kurgusal örnek veri yükler; modül kapatılınca hepsini siler. | 1.0.1 |
-| [e-Sign](./moduller/online-forms) | e-Sign: kişiye süreli bağlantı, form tamamlama, Datenschutz onayı, imza ve imzalı PDF belgeleri. | 1.2.1 |
+| [e-Sign](./moduller/online-forms) | e-Sign: kişiye süreli bağlantı, form tamamlama, Datenschutz onayı, imza ve imzalı PDF belgeleri. | 1.2.2 |
 | [Envanter ve Demirbaş](./moduller/inventory) | Dernek demirbaşları, teknik ekipmanlar ve zimmet kayıtlarının takibi. | 1.1.7 |
 | [Etkinlikler](./moduller/events) | Dernek etkinlikleri, seminerler, atölyeler ve katılımcı yönetimi. | 1.2.6 |
 | [Evrak Kayıt](./moduller/documents) | Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi. | 1.8.1 |

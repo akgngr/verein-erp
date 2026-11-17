@@ -32,7 +32,7 @@
 - [x] **Performans:** vadesi geçmiş faturalar 250 kayıtlık cursor sayfalarında işlenir; fatura başına `openCents` semantiği korunur ve tek seferde tüm satırlar belleğe alınmaz (PR #190).
 - [x] **UX doğrulaması:** hydration smoke test tüm statik muhasebe rotalarını gerçek Chromium ile gezer; muhasebe paneli için sentetik veriyle desktop light/dark ve mobile light/dark screenshot artefaktları üretilir (PR #193). Boş/izin durumları mevcut route/access smoke kapsamıyla korunur.
 - [x] **Dokümantasyon:** muhasebe kullanım rehberleri için giriş sayfası eklendi; çekirdek ACC-9 rehberleri ve göreli bağlantılar CI testinde doğrulanır (PR #193).
-- [x] **İleriki SaaS kararı:** tenant izolasyonu, çoklu para birimi ve çok dilli website ACC-9 kapsamı dışında ayrı ürün yol haritasına bırakıldı; ACC-9 tamamlanma kriterini engellemez.
+- [x] **İleriki SaaS kararı:** tenant izolasyonu, çoklu para birimi ve çok dilli website ACC-9 kapsamı dışında ayrı ürün yol haritasına bırakıldı; ACC-9 tamamlanma kriterini engellemez. Plan: [ertelenen işler yol haritası](./ACCOUNTING_DEFERRED_ROADMAP.md).
 
 ## Geliştirme kuralları
 
