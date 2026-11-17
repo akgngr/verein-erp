@@ -315,3 +315,45 @@ Platform tamamlandı sayılır, eğer:
 - modül geliştirme rehberi güncelse
 - framework bağımlılık sınırı testle korunuyorsa
 - typecheck/lint/test/hydration yeşilse
+
+## 13. Component API — ERP semantik sözleşmesi (W0)
+
+> Bu bölüm, W1–W6 sıfır doğrudan framework importu geçişinin hedef public API'sini tanımlar. W0'da tüm componentlerin mevcut olduğunu iddia etmez; her dalga uyarlamayı ve geriye dönük davranış testlerini tamamlar.
+
+### 13.1 Adlandırma ve durum
+
+| ERP prop/kavramı | Değerler | Anlam | Not |
+| --- | --- | --- | --- |
+| `tone` | `primary \| neutral \| danger \| success \| warning` | Semantik eylem veya durum | Framework'ün `color` API'sini dışarıya taşıma |
+| `emphasis` | `high \| medium \| low` | Eylemin görsel ağırlığı | `solid/flat/faded/bordered/shadow` değerlerini dışarıya taşıma |
+| `size` | `sm \| md \| lg` | Tutarlı boyut skalası | Adapter içindeki gerçek boyut farklı olabilir |
+| `disabled` | `boolean` | Etkileşimi kapat | HTML/ARIA ile tutarlı |
+| `pending` | `boolean` | Bekleyen async eylem | Görsel durum + çift gönderim koruması |
+| `icon` | `ReactNode` | Eylem simgesi | Dekoratif simgeler erişilebilirlikte sessiz |
+| `label` | `string` | Görünen veya erişilebilir açıklama | Icon-only butonlarda zorunlu |
+
+Örnek hedef çağrı: `<ActionButton tone="danger" emphasis="low" pending={saving}>Sil</ActionButton>`. Geçiş sırasında mevcut `color`, `variant`, `isPending`, `isDisabled`, `onPress` gibi alias'lar kısa süre korunabilir; her alias için kaldırılacağı dalga ve uygun geliştirici uyarısı belgelendirilir. İki prop birden verilirse semantik prop önceliklidir. Nihai public API framework terminolojisi içermez.
+
+### 13.2 ERP bileşen aileleri
+
+- **Eylem:** `ActionButton`, `LinkButton`, `TextLink`, `ButtonGroup`, `actionClassName`.
+- **Geri bildirim:** `notify.success/error/info/warning(message, { timeout, action? })`, `Spinner`, `LoadingState`.
+- **Form:** `Field`, `TextInput`, `SelectInput`, `ComboField`, `CheckboxField`, `SwitchField`, `RadioField`, `RangeField`, `DateField` ve React Hook Form adaptörleri.
+- **Katman:** `Dialog`, `Sheet`, `Hint`, `MenuButton`.
+- **Görselleştirme:** `Badge`, `StatusChip`, `SurfaceCard`, `Tabs`, `Separator`, `ProgressBar`, `SimpleTable` ve mevcut sunucu destekli `DataTable`.
+
+### 13.3 API sızıntısına karşı sınırlar
+
+1. `src/modules/**` içinde **0** doğrudan `@heroui/react` importu: istisna yok (W6'da ESLint error + test bütçesi 0).
+2. Ortak API'ler `@heroui/react`'ten tip **re-export etmez**; framework'e ait slot/variant/data-attribute terimlerini public yüzeyde kullanmaz.
+3. Modüllerin `className` kullanımı layout/spacing içindir; `classNames` slot prop'ları ve `[data-slot=...]` üzerinden iç DOM hedeflemek yasaktır.
+4. Erişilebilir Tab/Space/Enter, focus ring, ARIA ve pending smoke testleri her göç dalgası için kabul kriteridir. Light/dark/mobil ve reduced-motion korunur.
+5. Statik Badge/SurfaceCard gibi kalıplar mümkün olduğunca Server Component kalır; `"use client"` yalnız etkileşim gerekiyorsa kullanılır.
+6. Geçiş döneminde yeni ortak API doğrudan kullanılır; legacy alias'lar yalnız mevcut çağrıları korumak içindir. Alias'ların kaldırılması W6 onayıyla yapılır.
+7. Her dalga tüm modüllerde kendi bileşen ailesinin kullanımını temizler, etkilenen modül sürümleri ve internal release notları aynı PR sahipliği altında güncellenir.
+
+### 13.4 Envanter ve kalite kapısı
+
+Kanonik sayaç: `pnpm exec tsx scripts/ui/heroui-inventory.ts --format json` (W0 envanter PR'ı merge edildikten sonra). Markdown raporu için `--format markdown` kullanılır. Sayım `directImportFiles`, `directImportDeclarations`, `directImportingModules`, `componentUses` ve dosyaları kapsar. TypeScript AST kullanımı yorumlar ve alias'lar nedeniyle yanlış sayımı önler. W0'da ESLint sadece yeni/doğrudan HeroUI importları için **uyarı** verir; mevcut modül sınırı ihlalleri **hata** olarak kalır. W6'da aynı kural error ve bütçe 0 olur.
+
+Operasyonel iş bölümü: [WORK_SPLIT.md](./WORK_SPLIT.md).
