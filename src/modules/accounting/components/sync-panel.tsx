@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Card, Spinner } from "@/shared/components/kit";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -35,17 +36,15 @@ export function SyncPanel({
     try {
       const result = await runMemberSyncAction();
       if (!result.ok) {
-        toast(result.error, { variant: "danger" });
+        notify.error(result.error);
         return;
       }
       const data = result.data;
-      toast(
+      notify.success(
         t("toastRun", {
           created: data.createdCount,
           reversed: data.reversedCount,
-        }),
-        { variant: "success" },
-      );
+        }));
       router.refresh();
     } finally {
       setBusy(false);

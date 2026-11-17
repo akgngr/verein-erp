@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Dialog, Spinner } from "@/shared/components/kit";
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -42,10 +43,10 @@ export function YearCloseDialog({
     try {
       const result = await closeYearAction({ year });
       if (!result.ok) {
-        toast(result.error, { variant: "danger" });
+        notify.error(result.error);
         return;
       }
-      toast(t("toastClosed", { year }), { variant: "success" });
+      notify.success(t("toastClosed", { year }));
       onOpenChange(false);
       router.refresh();
     } finally {

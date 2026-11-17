@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Input, Label, Spinner, TextField } from "@/shared/components/kit";
 
 import { statusTone } from "@/shared/components/ui/status-appearance";
@@ -30,10 +31,8 @@ export function SealJournalButton() {
         setBusy(true);
         const result = await sealJournalAction({});
         setBusy(false);
-        if (!result.ok) return void toast(result.error, { variant: "danger" });
-        toast(t("sealed", { count: result.data.sealed }), {
-          variant: "success",
-        });
+        if (!result.ok) return void notify.error(result.error);
+        notify.success(t("sealed", { count: result.data.sealed }));
         router.refresh();
       }}
       variant={actionVariant("primary", "flat")}
@@ -106,19 +105,12 @@ export function CashClosingForm({
           });
           setBusy(false);
           if (!result.ok)
-            return void toast(result.error, { variant: "danger" });
-          toast(
-            result.data.differenceCents
+            return void notify.error(result.error);
+          (result.data.differenceCents ? notify.warning : notify.success)(result.data.differenceCents
               ? t("closedDifference", {
                   amount: euro(result.data.differenceCents),
                 })
-              : t("closed"),
-            {
-              variant: statusTone(
-                result.data.differenceCents ? "warning" : "success",
-              ),
-            },
-          );
+              : t("closed"));
           setCounted("");
           setNote("");
           router.refresh();
