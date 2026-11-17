@@ -260,38 +260,33 @@ export function AttendeesTab({
                   </td>
                   <td className="p-2">
                     {editable ? (
-                      <TextField
+                      <input
                         id={`attendee-note-${attendee.id}`}
                         aria-label={t("note")}
                         defaultValue={attendee.note ?? ""}
-                        className={["w-full"].filter(Boolean).join(" ")}
-                      >
-                        <Input
-                          onBlur={(event) => {
-                            const note = event.target.value;
-                            if (note !== (attendee.note ?? ""))
-                              void update(attendee.id, { note });
-                          }}
-                          className={["text-sm", "h-9 text-sm"]
-                            .filter(Boolean)
-                            .join(" ")}
-                        />
-                      </TextField>
+                        onBlur={(event) => {
+                          const note = event.target.value;
+                          if (note !== (attendee.note ?? ""))
+                            void update(attendee.id, { note });
+                        }}
+                        className="h-9 w-full rounded-lg border border-ink-200 bg-background px-3 text-sm text-foreground outline-none transition-colors focus:border-accent focus:ring-2 focus:ring-accent/20"
+                      />
                     ) : (
                       (attendee.note ?? "-")
                     )}
                   </td>
                   <td className="p-2">
                     {editable ? (
-                      <Button
+                      <ActionButton
+                        color="danger"
+                        variant="light"
                         isIconOnly
-                        size="sm"
-                        aria-label={t("removeConfirm")}
-                        onPress={() => remove(attendee.id, attendee.name)}
-                        variant={actionVariant("danger", "light")}
+                        ariaLabel={t("removeConfirm")}
+                        startIcon={<Trash2 className="h-4 w-4" />}
+                        onPress={() => void remove(attendee.id, attendee.name)}
                       >
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                        <span className="sr-only">{t("removeConfirm")}</span>
+                      </ActionButton>
                     ) : null}
                   </td>
                 </tr>
