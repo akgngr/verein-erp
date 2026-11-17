@@ -79,7 +79,9 @@
       "pageNumber": "Seite {page}",
       "selectedCount": "{count} Einträge ausgewählt",
       "bulkActions": "Sammelaktionen",
-      "clearSelection": "Auswahl aufheben"
+      "clearSelection": "Auswahl aufheben",
+      "querySelectedCount": "{count} gefilterte Einträge ausgewählt",
+      "selectAllMatching": "Alle {count} passenden Einträge auswählen"
     },
     "active": "Aktiv",
     "passive": "Inaktiv",
