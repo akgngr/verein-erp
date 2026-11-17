@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Spinner, StatusChip } from "@/shared/components/kit";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 import { statusTone } from "@/shared/components/ui/status-appearance";
@@ -69,8 +70,8 @@ export function InboxPanel({
     setBusy("fetch");
     const response = await fetchInboxAction({});
     setBusy(null);
-    if (!response.ok) return void toast(response.error, { variant: "danger" });
-    toast(t("fetched", response.data), { variant: "success" });
+    if (!response.ok) return void notify.error(response.error);
+    notify.success(t("fetched", response.data));
     router.refresh();
   };
 
@@ -90,15 +91,10 @@ export function InboxPanel({
     };
     setBusy(null);
     if (!json.ok)
-      return void toast(json.error ?? t("errors.emlInvalid"), {
-        variant: "danger",
-      });
-    toast(
-      json.created
+      return void notify.error(json.error ?? t("errors.emlInvalid"));
+    (json.created ? notify.success : notify.warning)(json.created
         ? t("emlImported", { attachments: json.attachments ?? 0 })
-        : t("emlDuplicate"),
-      { variant: statusTone(json.created ? "success" : "warning") },
-    );
+        : t("emlDuplicate"));
     router.refresh();
   };
 
@@ -106,10 +102,8 @@ export function InboxPanel({
     setBusy(id);
     const response = await importAttachmentAction({ id });
     setBusy(null);
-    if (!response.ok) return void toast(response.error, { variant: "danger" });
-    toast(response.data.duplicate ? t("importDuplicate") : t("imported"), {
-      variant: statusTone(response.data.duplicate ? "warning" : "success"),
-    });
+    if (!response.ok) return void notify.error(response.error);
+    (response.data.duplicate ? notify.warning : notify.success)(response.data.duplicate ? t("importDuplicate") : t("imported"));
     router.refresh();
   };
 
@@ -301,7 +295,7 @@ export function InboxPanel({
           if (!deleting) return;
           const response = await deleteInboxMessageAction({ id: deleting });
           if (!response.ok)
-            return void toast(response.error, { variant: "danger" });
+            return void notify.error(response.error);
           router.refresh();
         }}
       />
