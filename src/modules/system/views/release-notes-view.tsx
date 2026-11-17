@@ -9,8 +9,9 @@ import changelog from "../changelog.json";
 
 import type {
   ModuleRelease as Release,
-  ReleaseChange as Change,
+  PublicReleaseChange as Change,
 } from "@/shared/modules/releases";
+import { publicReleaseNotes } from "@/shared/modules/releases";
 
 const TYPE_STYLE: Record<Change["type"], string> = {
   feature:
@@ -40,6 +41,7 @@ export async function ReleaseNotesView({
   const releases: Release[] = selected
     ? selected.releases
     : (changelog as { releases: Release[] }).releases;
+  const publicReleases = publicReleaseNotes(releases);
   const moduleLabel = (key: string) => tRoot(`${key}.module.label` as never);
   const modules = [...moduleReleases].sort((a, b) =>
     moduleLabel(a.moduleKey).localeCompare(moduleLabel(b.moduleKey), lang),
@@ -86,7 +88,7 @@ export async function ReleaseNotesView({
         ))}
       </nav>
       <ol className="relative flex flex-col gap-6 border-l border-ink-200 pl-6">
-        {releases.map((release, index) => (
+        {publicReleases.map((release, index) => (
           <li key={release.version} className="relative">
             <span
               className={cn(

@@ -567,3 +567,5 @@ Before a user is deleted, the system calls every module's `onUserDeleted(userId)
   `createdById` is a soft reference and `…ByLabel` keeps the name.
 - A table with `userId`/`ownerId` that is kept goes into `USER_LINK_RETAINED` with a reason.
 - `tests/shared/user-deletion.test.ts` enforces this decision and the hook for every such table.
+
+**Internal refactor notes:** `type: internal` remains in the release chain but is hidden from user-facing app and website notes. Module version increments are still required.
