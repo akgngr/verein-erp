@@ -80,9 +80,18 @@ html body {
   text-wrap: pretty;
 }
 @media (prefers-reduced-motion: reduce) {
+  :root {
+    --motion-fast: 0.01ms;
+    --motion-normal: 0.01ms;
+    --motion-slow: 0.01ms;
+  }
+
   .workspace-shell *,
   .workspace-shell *::before,
-  .workspace-shell *::after {
+  .workspace-shell *::after,
+  .erp-motion-interactive,
+  .erp-motion-selection,
+  .erp-motion-enter {
     scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;

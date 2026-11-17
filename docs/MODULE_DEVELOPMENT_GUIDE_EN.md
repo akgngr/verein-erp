@@ -502,6 +502,27 @@ cross-module calls.
 - [ ] Bump `module.config.ts` and add a TR/DE entry at the top of `releases.json`.
 - [ ] Run module sync/validation, i18n and hard-coded-text checks, typecheck, lint and tests.
 
+
+## 7b. ERP UI Platform, motion and table standard
+
+New module interfaces use the shared ERP UI platform. The goal is to keep business modules independent from HeroUI or any future CSS/component framework.
+
+- Prefer existing shared patterns first: `PageHeader`, form drawers, `DataTable`, shared empty/status components.
+- Prefer semantic UI tokens for surface, text, border, radius and elevation decisions; do not create a parallel module-level design system or global theme.
+- HeroUI v3 is the current implementation layer. When a shared ERP pattern exists, modules must not build an alternative wrapper for the same job.
+- Motion is functional feedback only. Use the shared `--motion-*` tokens and `erp-motion-*` patterns; avoid continuous decorative animation, large bounce/scale effects and uncontrolled `transition: all`.
+- Preserve `prefers-reduced-motion`; no critical workflow may depend on animation.
+- List screens use the shared `DataTable`. Do not create parallel table/search/filter/pagination infrastructure in a module.
+- When multiple selection or bulk actions are needed, use the shared DataTable selection/bulk contract. Permission and scope are always revalidated on the server.
+- Large bulk work (large exports, mail batches or long operations) must move to the Automation/Export pipeline instead of blocking the request.
+- Destructive bulk operations require confirmation and an audit trail.
+
+Technical references:
+- `docs/ui/ERP_UI_PLATFORM.md`
+- `docs/ui/ERP_MOTION_SYSTEM.md`
+- `docs/ui/DATA_TABLE_SYSTEM.md`
+
+
 ## 10. Verification (CI runs the same steps)
 
 ```bash

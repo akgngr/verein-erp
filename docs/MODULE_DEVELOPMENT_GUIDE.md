@@ -742,6 +742,27 @@ Yeni modülde arka plan görevi gerekiyorsa:
 - [ ] `pnpm module:sync`, `pnpm module:validate`, i18n/hardcoded-text kontrolleri, typecheck,
       lint ve testleri çalıştır.
 
+
+## 7b. ERP UI Platform, motion ve tablo standardı
+
+Yeni modül arayüzleri uygulamanın ortak UI platformunu kullanır. Amaç, business modüllerini HeroUI veya başka bir CSS/component framework'e doğrudan kilitlememektir.
+
+- Önce mevcut ortak patternleri kullan: `PageHeader`, form drawer yapıları, `DataTable`, ortak empty/status bileşenleri.
+- Renk/yüzey/border/radius/elevation kararlarında semantic UI tokenlarını tercih et; modül içinde yeni global tema veya paralel design system kurma.
+- HeroUI v3 bugün implementasyon katmanıdır. Ortak pattern varsa modül kendi alternatif wrapper/bileşenini üretmemelidir.
+- Motion yalnızca geri bildirim içindir. Ortak `--motion-*` tokenları ve `erp-motion-*` patternleri kullanılır; sürekli dekoratif animasyon, büyük bounce/scale ve kontrolsüz `transition: all` kullanılmaz.
+- `prefers-reduced-motion` davranışı korunur; kritik iş akışı animasyona bağımlı olamaz.
+- Liste ekranlarında ortak `DataTable` kullanılır. Yeni modül kendi paralel table/search/filter/pagination altyapısını kurmaz.
+- Çoklu seçim ve bulk action gerekiyorsa ortak DataTable selection/bulk sözleşmesi kullanılır. Yetki ve scope her zaman server tarafında tekrar doğrulanır.
+- Büyük bulk işler (yüksek adet export/mail/uzun işlem) request içinde tutulmaz; Automation/Export pipeline'a yönlendirilir.
+- Destructive bulk işlemler confirmation ister ve audit izi bırakır.
+
+Teknik kaynaklar:
+- `docs/ui/ERP_UI_PLATFORM.md`
+- `docs/ui/ERP_MOTION_SYSTEM.md`
+- `docs/ui/DATA_TABLE_SYSTEM.md`
+
+
 ## 10. Doğrulama (CI aynı adımları çalıştırır)
 
 ```bash
