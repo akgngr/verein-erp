@@ -83,8 +83,9 @@ jobs:
           (cd tools/kosit && unzip -q -o ./*.zip)
           (cd tools/xr && unzip -q -o ./*.zip)
           echo "KoSIT archive contents:"; find tools/kosit -name '*.jar' -printf '  %p %s\n'
-          # The runnable validator is the largest jar in the distribution (standalone/fat jar).
-          jar=$(find tools/kosit -name '*.jar' -printf '%s %p\n' | sort -nr | head -1 | cut -d' ' -f2-)
+          # Distribution layout (1.6.x): validator-<version>.jar with its dependencies in libs/ (manifest
+          # Class-Path). Older releases ship a single *standalone*.jar. Never pick a library from libs/.
+          jar=$(find tools/kosit -name 'validat*.jar' -not -path '*/libs/*' | sort | head -1)
           scenarios=$(find tools/xr -name scenarios.xml | head -1)
           if [ -z "$jar" ] || [ -z "$scenarios" ]; then echo "::error::KoSIT validator jar or scenarios.xml not found"; exit 1; fi
           conf=$(dirname "$scenarios")
