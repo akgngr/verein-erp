@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Checkbox, Description, Dialog, Input, InputGroup, Label, Select, Spinner, TextField } from "@/shared/components/kit";
 
 import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
@@ -105,9 +106,7 @@ export function AttendeeAddModal({
       setError(result.error);
       return;
     }
-    toast(t("addedCountToast", { count: result.data.added }), {
-      variant: "success",
-    });
+    notify.success(t("addedCountToast", { count: result.data.added }));
     close();
     router.refresh();
   };
@@ -125,9 +124,7 @@ export function AttendeeAddModal({
       setError(result.error);
       return;
     }
-    toast(t("addedCountToast", { count: result.data.added }), {
-      variant: "success",
-    });
+    notify.success(t("addedCountToast", { count: result.data.added }));
     close();
     router.refresh();
   };
@@ -145,7 +142,7 @@ export function AttendeeAddModal({
       setError(result.error);
       return;
     }
-    toast(t("addedGuestToast"), { variant: "success" });
+    notify.success(t("addedGuestToast"));
     close();
     router.refresh();
   };

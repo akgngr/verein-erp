@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Dialog, Dropdown, Label, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -92,9 +93,7 @@ export function StatusMenu({
       setError(result.error);
       return;
     }
-    toast(t("updatedToast", { label: tStatus(target) }), {
-      variant: "success",
-    });
+    notify.success(t("updatedToast", { label: tStatus(target) }));
     setPending(null);
     setReopenOpen(false);
     setReason("");
