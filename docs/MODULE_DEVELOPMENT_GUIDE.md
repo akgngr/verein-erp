@@ -369,6 +369,7 @@ export const cards = defineCards([
 - Kart başlık/açıklama metinleri `messages/tr.json` ve `de.json` içinde `cards.<key>.*` altındadır.
 - `pnpm module:sync`, `cards/index.tsx` dosyalarını üretilen `src/dashboard-cards.ts` içinde toplar;
   bu dosyayı elle düzenleme. Örnekler: `members`, `meetings`, `documents` modüllerinin `cards/` klasörü.
+- **Yüzey kartları (`surfaces`):** Bir kart başka bir modülün ekranında da gösterilebilir, ör. `surfaces: [{ key: "accounting.overview", placement: "aside" }]`. Yüzey sahibi ekran, kartın modülünü import etmez ve onun API'sini çağırmaz. Yalnızca `<SurfaceCards surface="..." placement="aside" />` yerleştirir (`@/modules/system/ui`). Modül onayı ve kart yetkisini system modülü denetler. Böylece iki modül arasında yeni bir `access` bildirimi gerekmez ve mevcut onay düşmez. Örnek: `ai/cards` → muhasebe genel bakış.
 
 ---
 

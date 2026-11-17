@@ -4,6 +4,7 @@ import "server-only";
 export { aiPermissions } from "./permissions";
 export { aiChatHandler } from "./handlers/chat";
 export { documentSummaryHandler } from "./handlers/document-summary";
+export { financeInsightHandler } from "./handlers/finance-insight";
 export { aiAttachmentHandler } from "./handlers/attachments";
 export { aiReportPdfHandler } from "./handlers/report-pdf";
 export { acceptAiConsentAction, revokeAiConsentAction, setAiProviderAction } from "./actions/consent-actions";

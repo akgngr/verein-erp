@@ -32,6 +32,12 @@ export type DashboardCardDefinition = {
   /** Kartı görmek için gereken yetki (verinin geldiği sayfanınki). */
   permission: PermissionRequirement;
   /**
+   * Kartın başka ekranlarda da gösterileceği yüzeyler (örn. muhasebe panosu "accounting.overview").
+   * Yüzey sahibi modül kartın modülünü import etmez: kartları system modülü yetki ve modül onayıyla çizer.
+   * placement "aside": yüzeyin sağ sütununda, üstte sabit.
+   */
+  surfaces?: { key: string; placement: "aside" | "main" }[];
+  /**
    * Gövdeyi üretir (sunucuda; sorgu + `@/shared/components/dashboard/card-bodies` bileşenleri).
    * null dönerse kart o an gösterilecek bir şey olmadığı için gizlenir (örn. gecikme uyarısı).
    * Hata fırlatırsa yalnızca bu kart hata mesajı gösterir; panel çalışmaya devam eder.

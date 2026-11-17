@@ -331,5 +331,37 @@
     "expired": "Ekin süresi doldu; dosyayı yeniden ekleyin.",
     "needScreened": "Bulut sağlayıcıda dosya eki yalnız \"Denetimli serbest metin\" modunda kullanılabilir (Ayarlar → AI asistanı).",
     "sensitive": "Dosya kişiyle birlikte özel nitelikli veri (sağlık, din vb.) içeriyor; bulut sağlayıcıya gönderilmedi. Yerel model kullanın."
+  },
+  "insight": {
+    "loading": "Durum analiz ediliyor…",
+    "failed": "Analiz şu an oluşturulamadı.",
+    "refresh": "Yenile",
+    "actions": "Önerilen adımlar",
+    "disclaimer": "Yalnız toplam muhasebe verileriyle; bilgi amaçlıdır.",
+    "generated": "{time} · {where}",
+    "processing": {
+      "local": "yerel model",
+      "cloud": "bulut sağlayıcı"
+    },
+    "status": {
+      "good": "İyi durumda",
+      "watch": "Dikkat",
+      "risk": "Risk"
+    },
+    "errors": {
+      "moduleOff": "Muhasebe modülü etkin değil ya da asistanın erişimi onaylanmamış.",
+      "notAllowed": "Asistanın muhasebe toplamlarını okuma izni kapalı (Ayarlar → Yapay zekâ → Muhasebe → okuma).",
+      "cloudNotAllowed": "Bulut sağlayıcıyla muhasebe toplamları yalnız \"Denetimli serbest metin\" modunda kullanılabilir. Yönetici AI ayarlarından açabilir veya yerel model seçebilir.",
+      "noData": "Analiz için okunabilir muhasebe verisi bulunamadı.",
+      "unreadable": "Asistanın yanıtı okunamadı; lütfen tekrar deneyin."
+    }
+  },
+  "cards": {
+    "financeInsight": {
+      "title": "AI durum analizi",
+      "description": "Muhasebe toplamlarından son durum ve önerilen adımlar.",
+      "setup": "Durum analizi için yapay zekâ asistanının etkinleştirilmesi ve onayınız gerekir.",
+      "setupLink": "Yapay zekâ ayarları"
+    }
   }
 }

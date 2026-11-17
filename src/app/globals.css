@@ -131,6 +131,38 @@ html body {
   animation: erp-ui-enter var(--motion-normal) var(--motion-ease-enter) both;
 }
 
+/* Data visualisation: one-shot entry only (bars grow, lines/rings draw). No loops. */
+@keyframes erp-ui-grow-y {
+  from {
+    transform: scaleY(0);
+  }
+
+  to {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes erp-ui-draw {
+  from {
+    stroke-dashoffset: var(--erp-draw-length, 1000);
+  }
+
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.erp-motion-grow-y {
+  transform-box: fill-box;
+  transform-origin: bottom;
+  animation: erp-ui-grow-y var(--motion-slow) var(--motion-ease-enter) both;
+}
+
+.erp-motion-draw {
+  stroke-dasharray: var(--erp-draw-length, 1000);
+  animation: erp-ui-draw var(--motion-slow) var(--motion-ease-enter) both;
+}
+
 @media (prefers-reduced-motion: reduce) {
   :root {
     --motion-fast: 0.01ms;
@@ -143,7 +175,9 @@ html body {
   .workspace-shell *::after,
   .erp-motion-interactive,
   .erp-motion-selection,
-  .erp-motion-enter {
+  .erp-motion-enter,
+  .erp-motion-grow-y,
+  .erp-motion-draw {
     scroll-behavior: auto !important;
     animation-duration: 0.01ms !important;
     transition-duration: 0.01ms !important;

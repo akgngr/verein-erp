@@ -677,7 +677,8 @@
       "gobd": "GoBD",
       "extras": "Anlagen & Extras",
       "grants": "Fördermittel",
-      "sepa": "SEPA-Lastschrift"
+      "sepa": "SEPA-Lastschrift",
+      "bookings": "Buchungen"
     },
     "meta": {
       "list": "Buchhaltung",
@@ -1826,21 +1827,16 @@
       }
     },
     "dashboard": {
-      "title": "Buchhaltungsübersicht",
-      "description": "Buchungen und Prüfhilfen für {year}",
+      "title": "Finanzübersicht",
       "bookings": "Buchungen",
       "filterLabel": "Buchhaltungszeitraum",
       "year": "Gesamtes Jahr",
       "quarter": "Q{n}",
       "monthLabel": "Monat",
-      "noBookings": "Keine Einnahmen- oder Ausgabenbuchungen im ausgewählten Zeitraum.",
       "income": "Einnahmenbuchungen",
       "expense": "Ausgabenbuchungen",
       "difference": "Einnahmen minus Ausgaben",
-      "quarterlyTitle": "Quartalsübersicht",
-      "quarterlyDescription": "Bruttobuchungen nach Quartal. Grün steht für Einnahmen, die Akzentfarbe für Ausgaben; genaue Werte stehen in der Tabelle.",
-      "periodColumn": "Zeitraum",
-      "recommendations": "Prüfhinweise",
+      "recommendations": "Handlungsbedarf",
       "missingReceipts": "Im Jahr {year} haben {count} Buchungen keinen Dateibeleg.",
       "inspectBookings": "Buchungen prüfen",
       "overdue": "Für {count} überfällige Rechnungen sind insgesamt {amount} offen.",
@@ -1850,14 +1846,44 @@
       "taxMethod": "Steuereinstellung: {method}.",
       "unmatchedBank": "{count} nicht zugeordnete Bankumsätze müssen geprüft werden.",
       "inspectBank": "Bankumsätze prüfen",
-      "currency": "EUR",
       "taxDeadline": "Nächster {kind}-Termin: {date} für {period}. Feiertage und Sonderfristverlängerungen müssen separat geprüft werden.",
       "inspectTax": "Steuerkalender prüfen",
       "taxDeadlineKey": {
         "ustva": "UStVA",
         "annualVat": "Umsatzsteuer-Jahreserklärung",
         "incomeTax": "Einkommensteuererklärung"
-      }
+      },
+      "liveDescription": "Aktuelle Lage, anstehende Zahlungen und offene Punkte · {period}",
+      "quarterShort": "Q{n}",
+      "liquidity": "Gesamtliquidität",
+      "asOf": "Alle aktiven Konten, Stand {date}",
+      "forecast": "Erwarteter Stand in {days} Tagen",
+      "forecastHint": "Prognose aus fälligen offenen Ausgangs- und Eingangsrechnungen; keine Garantie.",
+      "incoming": "Erwartete Eingänge",
+      "outgoing": "Erwartete Zahlungen",
+      "noAccounts": "Keine aktiven Konten.",
+      "vsLastYear": "ggü. {year}",
+      "noComparison": "—",
+      "cashflowTitle": "Monatlicher Cashflow {year}",
+      "cashflowDescription": "Monatliche Bruttoeinnahmen und -ausgaben; die Linie zeigt das kumulierte Ergebnis seit Jahresbeginn.",
+      "cumulativeNet": "Kumuliertes Ergebnis",
+      "showTable": "Zahlen als Tabelle anzeigen",
+      "upcomingTitle": "Demnächst",
+      "upcomingDescription": "In den nächsten {days} Tagen fällige Eingänge und Zahlungen sowie Steuertermine innerhalb von 60 Tagen.",
+      "upcomingEmpty": "Keine bald fälligen Posten.",
+      "receivable": "Eingang",
+      "payable": "Zahlung",
+      "taxItem": "Steuer",
+      "expenseMixTitle": "Ausgabenverteilung",
+      "expenseMixDescription": "Größte Ausgabenkategorien im Zeitraum {period}.",
+      "other": "Sonstige",
+      "uncategorized": "Ohne Kategorie",
+      "expenseMixEmpty": "Keine Ausgaben in diesem Zeitraum.",
+      "total": "Gesamt",
+      "asideLabel": "Lageanalyse und Hinweise",
+      "payablesOverdue": "{count} überfällige Eingangsrechnungen mit {amount} offen.",
+      "inspectPayables": "Zu den Eingangsrechnungen",
+      "draftPayables": "{count} Eingangsrechnungen warten auf Prüfung und Freigabe."
     }
   },
   "ai": {
@@ -2190,6 +2216,38 @@
       "expired": "Der Anhang ist abgelaufen; bitte erneut anhängen.",
       "needScreened": "Beim Cloud-Anbieter sind Dateianhänge nur im Modus „Geprüfter Freitext“ möglich (Einstellungen → KI-Assistent).",
       "sensitive": "Die Datei enthält besondere Kategorien personenbezogener Daten (Gesundheit, Religion …) zusammen mit einer Person; sie wurde nicht an die Cloud gesendet. Verwenden Sie ein lokales Modell."
+    },
+    "insight": {
+      "loading": "Lage wird analysiert…",
+      "failed": "Die Analyse konnte gerade nicht erstellt werden.",
+      "refresh": "Aktualisieren",
+      "actions": "Empfohlene Schritte",
+      "disclaimer": "Nur mit aggregierten Buchhaltungsdaten; zur Information.",
+      "generated": "{time} · {where}",
+      "processing": {
+        "local": "lokales Modell",
+        "cloud": "Cloud-Anbieter"
+      },
+      "status": {
+        "good": "Gute Lage",
+        "watch": "Beobachten",
+        "risk": "Risiko"
+      },
+      "errors": {
+        "moduleOff": "Das Buchhaltungsmodul ist nicht aktiv oder der Zugriff des Assistenten ist nicht freigegeben.",
+        "notAllowed": "Der Assistent darf keine Buchhaltungssummen lesen (Einstellungen → KI → Buchhaltung → Lesen).",
+        "cloudNotAllowed": "Mit einem Cloud-Anbieter sind Buchhaltungssummen nur im Modus „Geprüfter Freitext“ nutzbar. Die Verwaltung kann dies in den KI-Einstellungen aktivieren oder ein lokales Modell wählen.",
+        "noData": "Keine lesbaren Buchhaltungsdaten für die Analyse gefunden.",
+        "unreadable": "Die Antwort des Assistenten war nicht lesbar; bitte erneut versuchen."
+      }
+    },
+    "cards": {
+      "financeInsight": {
+        "title": "KI-Lageanalyse",
+        "description": "Aktuelle Finanzlage und empfohlene Schritte aus den Buchhaltungssummen.",
+        "setup": "Für die Lageanalyse müssen der KI-Assistent aktiviert und Ihre Einwilligung erteilt sein.",
+        "setupLink": "KI-Einstellungen"
+      }
     }
   },
   "audit": {

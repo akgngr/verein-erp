@@ -331,5 +331,37 @@
     "expired": "Der Anhang ist abgelaufen; bitte erneut anhängen.",
     "needScreened": "Beim Cloud-Anbieter sind Dateianhänge nur im Modus „Geprüfter Freitext“ möglich (Einstellungen → KI-Assistent).",
     "sensitive": "Die Datei enthält besondere Kategorien personenbezogener Daten (Gesundheit, Religion …) zusammen mit einer Person; sie wurde nicht an die Cloud gesendet. Verwenden Sie ein lokales Modell."
+  },
+  "insight": {
+    "loading": "Lage wird analysiert…",
+    "failed": "Die Analyse konnte gerade nicht erstellt werden.",
+    "refresh": "Aktualisieren",
+    "actions": "Empfohlene Schritte",
+    "disclaimer": "Nur mit aggregierten Buchhaltungsdaten; zur Information.",
+    "generated": "{time} · {where}",
+    "processing": {
+      "local": "lokales Modell",
+      "cloud": "Cloud-Anbieter"
+    },
+    "status": {
+      "good": "Gute Lage",
+      "watch": "Beobachten",
+      "risk": "Risiko"
+    },
+    "errors": {
+      "moduleOff": "Das Buchhaltungsmodul ist nicht aktiv oder der Zugriff des Assistenten ist nicht freigegeben.",
+      "notAllowed": "Der Assistent darf keine Buchhaltungssummen lesen (Einstellungen → KI → Buchhaltung → Lesen).",
+      "cloudNotAllowed": "Mit einem Cloud-Anbieter sind Buchhaltungssummen nur im Modus „Geprüfter Freitext“ nutzbar. Die Verwaltung kann dies in den KI-Einstellungen aktivieren oder ein lokales Modell wählen.",
+      "noData": "Keine lesbaren Buchhaltungsdaten für die Analyse gefunden.",
+      "unreadable": "Die Antwort des Assistenten war nicht lesbar; bitte erneut versuchen."
+    }
+  },
+  "cards": {
+    "financeInsight": {
+      "title": "KI-Lageanalyse",
+      "description": "Aktuelle Finanzlage und empfohlene Schritte aus den Buchhaltungssummen.",
+      "setup": "Für die Lageanalyse müssen der KI-Assistent aktiviert und Ihre Einwilligung erteilt sein.",
+      "setupLink": "KI-Einstellungen"
+    }
   }
 }

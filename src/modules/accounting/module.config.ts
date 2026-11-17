@@ -14,8 +14,7 @@ import {
   Users,
   Wallet,
   HandCoins,
-  Repeat,
-} from "lucide-react";
+  Repeat, LayoutDashboard, ReceiptText } from "lucide-react";
 
 import { grantsPermissions } from "@/modules/grants";
 import { sepaPermissions } from "@/modules/sepa";
@@ -28,7 +27,7 @@ import {
 export const moduleConfig: ModuleConfig = {
   key: "accounting",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.22.13",
+  version: "1.23.0",
   label: "Muhasebe",
   description:
     "Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura ve bütçe yönetimi.",
@@ -54,7 +53,8 @@ export const moduleConfig: ModuleConfig = {
     },
   ],
   menu: [
-    { key: "dashboard", label: "Genel bakış", href: "/muhasebe/panel", icon: BarChart3 },
+    { key: "dashboard", label: "Genel bakış", href: "/muhasebe/panel", icon: LayoutDashboard },
+    { key: "bookings", label: "Fişler", href: "/muhasebe", icon: ReceiptText },
     {
       key: "invoices",
       label: "Faturalar",

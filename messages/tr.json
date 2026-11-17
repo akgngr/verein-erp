@@ -677,7 +677,8 @@
       "gobd": "GoBD",
       "extras": "Demirbaş ve ekler",
       "grants": "Hibeler",
-      "sepa": "SEPA otomatik ödeme"
+      "sepa": "SEPA otomatik ödeme",
+      "bookings": "Fişler"
     },
     "meta": {
       "list": "Muhasebe",
@@ -1826,21 +1827,16 @@
       }
     },
     "dashboard": {
-      "title": "Muhasebe genel bakış",
-      "description": "{year} yılı fiş hareketleri ve kontrol önerileri",
+      "title": "Finansal genel bakış",
       "bookings": "Fiş kayıtları",
       "filterLabel": "Muhasebe dönemi seçimi",
       "year": "Tüm yıl",
       "quarter": "{n}. çeyrek",
       "monthLabel": "Ay",
-      "noBookings": "Seçilen dönemde gelir veya gider fişi bulunmuyor.",
       "income": "Gelir fişleri",
       "expense": "Gider fişleri",
       "difference": "Gelir − gider farkı",
-      "quarterlyTitle": "Çeyreklik gelir ve giderler",
-      "quarterlyDescription": "Çeyrek bazında brüt fiş hareketleri. Yeşil gelirleri, vurgu rengi giderleri gösterir; ayrıntılı rakamlar aşağıdaki tabloda.",
-      "periodColumn": "Dönem",
-      "recommendations": "Kontrol önerileri",
+      "recommendations": "Dikkat gerektirenler",
       "missingReceipts": "{year} yılında {count} fişin dosya eki bulunmuyor.",
       "inspectBookings": "Fişleri incele",
       "overdue": "Vadesi geçmiş {count} faturada toplam {amount} açık tutar bulunuyor.",
@@ -1850,14 +1846,44 @@
       "taxMethod": "Vergi ayarı: {method}.",
       "unmatchedBank": "Eşleştirilmemiş {count} banka hareketi kontrol bekliyor.",
       "inspectBank": "Banka hareketlerini incele",
-      "currency": "EUR",
       "taxDeadline": "Yaklaşan {kind} son tarihi: {period} için {date}. Resmî tatiller ve özel süre uzatmaları ayrıca doğrulanmalıdır.",
       "inspectTax": "Vergi takvimini incele",
       "taxDeadlineKey": {
         "ustva": "UStVA",
         "annualVat": "yıllık KDV beyannamesi",
         "incomeTax": "gelir vergisi beyannamesi"
-      }
+      },
+      "liveDescription": "Son durum, yaklaşan ödemeler ve dikkat gerektirenler · {period}",
+      "quarterShort": "Ç{n}",
+      "liquidity": "Toplam likidite",
+      "asOf": "{date} itibarıyla tüm aktif hesaplar",
+      "forecast": "{days} gün sonra beklenen bakiye",
+      "forecastHint": "Vadesi gelen açık faturalar ve gelen faturalardan hesaplanan tahmin; garanti değildir.",
+      "incoming": "Beklenen tahsilat",
+      "outgoing": "Beklenen ödeme",
+      "noAccounts": "Aktif hesap yok.",
+      "vsLastYear": "{year} ile kıyas",
+      "noComparison": "—",
+      "cashflowTitle": "{year} aylık nakit akışı",
+      "cashflowDescription": "Aylık brüt gelir ve giderler; çizgi yıl başından birikimli farkı gösterir.",
+      "cumulativeNet": "Birikimli fark",
+      "showTable": "Rakamları tablo olarak göster",
+      "upcomingTitle": "Yaklaşanlar",
+      "upcomingDescription": "Önümüzdeki {days} günde vadesi gelen tahsilat ve ödemeler, 60 gün içindeki vergi tarihleri.",
+      "upcomingEmpty": "Yakın zamanda vadesi gelen kayıt yok.",
+      "receivable": "Tahsilat",
+      "payable": "Ödeme",
+      "taxItem": "Vergi",
+      "expenseMixTitle": "Gider dağılımı",
+      "expenseMixDescription": "{period} döneminde en büyük gider kategorileri.",
+      "other": "Diğer",
+      "uncategorized": "Kategorisiz",
+      "expenseMixEmpty": "Bu dönemde gider fişi yok.",
+      "total": "Toplam",
+      "asideLabel": "Durum analizi ve öneriler",
+      "payablesOverdue": "Vadesi geçmiş {count} gelen faturada {amount} ödenmemiş tutar var.",
+      "inspectPayables": "Gelen faturalara git",
+      "draftPayables": "{count} gelen fatura kontrol ve onay bekliyor."
     }
   },
   "ai": {
@@ -2190,6 +2216,38 @@
       "expired": "Ekin süresi doldu; dosyayı yeniden ekleyin.",
       "needScreened": "Bulut sağlayıcıda dosya eki yalnız \"Denetimli serbest metin\" modunda kullanılabilir (Ayarlar → AI asistanı).",
       "sensitive": "Dosya kişiyle birlikte özel nitelikli veri (sağlık, din vb.) içeriyor; bulut sağlayıcıya gönderilmedi. Yerel model kullanın."
+    },
+    "insight": {
+      "loading": "Durum analiz ediliyor…",
+      "failed": "Analiz şu an oluşturulamadı.",
+      "refresh": "Yenile",
+      "actions": "Önerilen adımlar",
+      "disclaimer": "Yalnız toplam muhasebe verileriyle; bilgi amaçlıdır.",
+      "generated": "{time} · {where}",
+      "processing": {
+        "local": "yerel model",
+        "cloud": "bulut sağlayıcı"
+      },
+      "status": {
+        "good": "İyi durumda",
+        "watch": "Dikkat",
+        "risk": "Risk"
+      },
+      "errors": {
+        "moduleOff": "Muhasebe modülü etkin değil ya da asistanın erişimi onaylanmamış.",
+        "notAllowed": "Asistanın muhasebe toplamlarını okuma izni kapalı (Ayarlar → Yapay zekâ → Muhasebe → okuma).",
+        "cloudNotAllowed": "Bulut sağlayıcıyla muhasebe toplamları yalnız \"Denetimli serbest metin\" modunda kullanılabilir. Yönetici AI ayarlarından açabilir veya yerel model seçebilir.",
+        "noData": "Analiz için okunabilir muhasebe verisi bulunamadı.",
+        "unreadable": "Asistanın yanıtı okunamadı; lütfen tekrar deneyin."
+      }
+    },
+    "cards": {
+      "financeInsight": {
+        "title": "AI durum analizi",
+        "description": "Muhasebe toplamlarından son durum ve önerilen adımlar.",
+        "setup": "Durum analizi için yapay zekâ asistanının etkinleştirilmesi ve onayınız gerekir.",
+        "setupLink": "Yapay zekâ ayarları"
+      }
     }
   },
   "audit": {

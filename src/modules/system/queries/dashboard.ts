@@ -32,3 +32,14 @@ export async function getDashboardLayout(userId: string, available: AvailableDas
   if (!saved) return available.filter((entry) => entry.card.defaultVisible).map((entry) => entry.id);
   return saved.cards.filter((id) => ids.has(id));
 }
+
+/** Bir yüzeye (örn. "accounting.overview") bağlanan ve kullanıcının görebileceği kartlar. */
+export async function listSurfaceCards(
+  surface: string,
+  placement: "aside" | "main",
+  role: Role,
+): Promise<AvailableDashboardCard[]> {
+  return (await listAvailableDashboardCards(role)).filter((entry) =>
+    entry.card.surfaces?.some((target) => target.key === surface && target.placement === placement),
+  );
+}

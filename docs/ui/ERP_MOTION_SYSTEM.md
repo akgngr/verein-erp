@@ -18,6 +18,8 @@ Motion, dekoratif hareket değil; kullanıcının state değişimini anlamasına
 - `.erp-motion-interactive`: hover/focus gibi küçük state değişimleri
 - `.erp-motion-enter`: surface/bulk bar gibi kısa giriş animasyonu
 - `.erp-motion-selection`: selected row/surface feedback
+- `.erp-motion-grow-y`: grafik çubuklarının ilk görünümde alttan büyümesi (slow, tek sefer)
+- `.erp-motion-draw`: çizgi/halka grafiklerin ilk görünümde çizilmesi (`--erp-draw-length` ile; slow, tek sefer)
 
 ## Kurallar
 
@@ -43,6 +45,10 @@ Motion, dekoratif hareket değil; kullanıcının state değişimini anlamasına
 - **Selection:** tablo satırı ve toplu işlem yüzeyi `.erp-motion-selection` kullanır.
 - **Drawer/Popover:** HeroUI/React Aria'nın erişilebilir state yönetimi korunur; özel geçiş eklenirse aynı motion tokenları kullanılır.
 - **Success/error:** kullanıcı işlemin sonucunu toast/status ile görür; motion tek başına anlam taşımaz.
+
+## Veri görselleştirme
+
+Grafik girişleri yalnız ilk görünümde, `--motion-slow` süresiyle ve elemanlar arası en fazla ~25ms gecikmeyle oynar; döngüsel animasyon yoktur. Grafikler sunucuda SVG olarak çizilir, her grafiğin yanında aynı verinin erişilebilir tablosu bulunur ve değer renk dışında metinle de verilir.
 
 ## Erişilebilirlik ve performans
 
