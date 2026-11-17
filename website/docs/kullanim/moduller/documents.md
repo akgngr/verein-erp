@@ -13,7 +13,7 @@ Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi.
 |---|---|
 | Anahtar | `documents` |
 | Tür | Resmî modül |
-| Sürüm | 1.8.1 |
+| Sürüm | 1.8.2 |
 | Sayfalar | `/evrak`, `/evrak/kategoriler` |
 | Önerir | [Muhasebe](./accounting), [Görevler](./tasks), [Yapay zekâ asistanı](./ai) |
 
@@ -44,6 +44,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_document` · `get_document_statistics` · `list_documents` · `propose_delete_document` · `propose_document` · `propose_document_status` · `read_document_file`
 
 ## Sürüm notları
+
+### 1.8.2 — Muhasebeye aktar eylemi ortak UI katmanında
+
+_2026-11-17_
+
+- **İyileştirme:** Eylem butonları ve bildirimler ortak ActionButton/notify adapter katmanına taşındı; ilgili ekran artık bu kullanımda HeroUI Button/Toast implementasyonuna doğrudan bağlı değil.
 
 ### 1.8.1 — Evrak rozetleri ortak UI katmanında
 
@@ -87,10 +93,4 @@ _2026-11-16_
 
 - **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
-### 1.6.1 — Asistan araçları yeni veri sözleşmesinde
-
-_2026-11-15_
-
-- **Güvenlik:** Asistan araçları v2 veri sözleşmesine taşındı: modele giden her alan açıkça listelenir ve veri sınıfı bildirilir. Toplam ve kurumsal veriler denetimli bulut modunda da kullanılabilir; serbest kişisel içerik yalnız yerel modelde kalır.
-
-Daha eski 11 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/documents/releases.json)
+Daha eski 12 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/documents/releases.json)
