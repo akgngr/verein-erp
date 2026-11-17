@@ -4,9 +4,16 @@ import { Button, Dropdown, Label, Table } from "@heroui/react";
 import { MoreHorizontal } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Key } from "react";
 
+import {
+  applyPageSelection,
+  buildQuerySnapshot,
+  sameQuerySnapshot,
+  selectedCount,
+  selectedIdsForPage,
+} from "@/shared/data-table/selection-contract";
 import { cn } from "@/shared/utils";
 
 import { DataTablePagination } from "./data-table-pagination";
@@ -55,6 +62,33 @@ export function DataTable<T extends { id: string }>({
   const [searchDraft, setSearchDraft] = useState(q);
 
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const visibleIds = useMemo(() => rows.map((row) => row.id), [rows]);
+  const querySnapshot = useMemo(
+    () => buildQuerySnapshot(new URLSearchParams(searchParams.toString()), { q, sort, dir }),
+    [dir, q, searchParams, sort],
+  );
+  const selectedPageIds = selection
+    ? selectedIdsForPage(selection.value, visibleIds)
+    : [];
+  const currentSelectedCount = selection
+    ? selectedCount(selection.value, total)
+    : 0;
+  const canSelectAllQuery = Boolean(
+    selection?.allowQuerySelection &&
+      selection.value.type === "explicit" &&
+      visibleIds.length > 0 &&
+      selectedPageIds.length === visibleIds.length &&
+      total > visibleIds.length,
+  );
+
+  useEffect(() => {
+    if (
+      selection?.value.type === "query" &&
+      !sameQuerySnapshot(selection.value.query, querySnapshot)
+    ) {
+      selection.onChange({ type: "explicit", ids: [] });
+    }
+  }, [querySnapshot, selection]);
 
   // Arama kutusu 300 ms debounce ile q'yü günceller; arama değişince sayfa 1'e döner.
   useEffect(() => {
@@ -166,9 +200,19 @@ export function DataTable<T extends { id: string }>({
 
       {selection?.bulkActions ? (
         <DataTableBulkActionBar
-          selectedCount={selection.selectedIds.length}
+          selection={selection.value}
+          selectedCount={currentSelectedCount}
           actions={selection.bulkActions}
-          onClear={() => selection.onSelectionChange([])}
+          total={total}
+          canSelectAllQuery={canSelectAllQuery}
+          onSelectAllQuery={() =>
+            selection.onChange({
+              type: "query",
+              query: querySnapshot,
+              excludedIds: [],
+            })
+          }
+          onClear={() => selection.onChange({ type: "explicit", ids: [] })}
         />
       ) : null}
 
@@ -184,14 +228,15 @@ export function DataTable<T extends { id: string }>({
               aria-label={ariaLabel ?? tCommon("table.label")}
               aria-busy={isPending}
               selectionMode={selection ? "multiple" : "none"}
-              selectedKeys={selection ? new Set(selection.selectedIds) : undefined}
+              selectedKeys={selection ? new Set(selectedPageIds) : undefined}
               onSelectionChange={
                 selection
                   ? (keys) =>
-                      selection.onSelectionChange(
-                        normalizeSelectedKeys(
-                          keys,
-                          rows.map((row) => row.id),
+                      selection.onChange(
+                        applyPageSelection(
+                          selection.value,
+                          normalizeSelectedKeys(keys, visibleIds),
+                          visibleIds,
                         ),
                       )
                   : undefined
