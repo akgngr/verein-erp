@@ -1,9 +1,8 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import { Button, Spinner, Card, Chip } from "@heroui/react";
-import { statusTone } from "@/shared/components/ui/status-appearance";
-
-import { actionVariant } from "@/shared/components/ui/action-appearance";
+import { ActionButton } from "@/shared/components/ui/action-button";
+import { StatCard } from "@/shared/components/ui/stat-card";
+import { StatusChip } from "@/shared/components/ui/status-chip";
+import { SurfaceCard } from "@/shared/components/ui/surface-card";
 
 import { Clock, PlayCircle, ShieldCheck } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -172,76 +171,45 @@ export function SecurityMonitorView() {
           <ShieldCheck className="h-6 w-6 text-accent" />
           <h1 className="text-xl font-bold">{t("title")}</h1>
         </div>
-        <Button
-          onClick={runTests}
-          variant={actionVariant("primary", "solid")}
+        <ActionButton
+          size="md"
           isPending={running}
+          startIcon={<PlayCircle className="h-4 w-4" />}
+          onPress={() => void runTests()}
         >
-          {running ? <Spinner size="sm" color="current" /> : null}
-          {<PlayCircle className="h-4 w-4" />}
           {t("runTests")}
-        </Button>
+        </ActionButton>
       </div>
 
       {queueMessage ? (
         <p className="text-sm text-success">{queueMessage}</p>
       ) : null}
 
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-        <Card className={"shadow-sm border border-ink-200/80"}>
-          <Card.Content className={["px-4 py-3"].filter(Boolean).join(" ")}>
-            <p className="text-xs uppercase tracking-wide text-ink-400">
-              {t("totalRuns")}
-            </p>
-            <p className="text-lg font-semibold">
-              {statistics?.totalRuns || 0}
-            </p>
-          </Card.Content>
-        </Card>
-        <Card className={"shadow-sm border border-ink-200/80"}>
-          <Card.Content className={["px-4 py-3"].filter(Boolean).join(" ")}>
-            <p className="text-xs uppercase tracking-wide text-ink-400">
-              {t("passRate")}
-            </p>
-            <p className="text-lg font-semibold text-success">
-              {statistics?.passRate || 0}%
-            </p>
-          </Card.Content>
-        </Card>
-        <Card className={"shadow-sm border border-ink-200/80"}>
-          <Card.Content className={["px-4 py-3"].filter(Boolean).join(" ")}>
-            <p className="text-xs uppercase tracking-wide text-ink-400">
-              {t("passed")}
-            </p>
-            <p className="text-lg font-semibold text-success">
-              {statistics?.passedRuns || 0}
-            </p>
-          </Card.Content>
-        </Card>
-        <Card className={"shadow-sm border border-ink-200/80"}>
-          <Card.Content className={["px-4 py-3"].filter(Boolean).join(" ")}>
-            <p className="text-xs uppercase tracking-wide text-ink-400">
-              {t("failed")}
-            </p>
-            <p className="text-lg font-semibold text-danger">
-              {statistics?.failedRuns || 0}
-            </p>
-          </Card.Content>
-        </Card>
-        <Card className={"shadow-sm border border-ink-200/80"}>
-          <Card.Content className={["px-4 py-3"].filter(Boolean).join(" ")}>
-            <p className="text-xs uppercase tracking-wide text-ink-400">
-              {t("openAlerts")}
-            </p>
-            <p className="text-lg font-semibold text-warning">
-              {statistics?.openAlerts || 0}
-            </p>
-          </Card.Content>
-        </Card>
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-5">
+        <StatCard label={t("totalRuns")} value={statistics?.totalRuns || 0} />
+        <StatCard
+          label={t("passRate")}
+          value={`${statistics?.passRate || 0}%`}
+          valueClassName="text-success"
+        />
+        <StatCard
+          label={t("passed")}
+          value={statistics?.passedRuns || 0}
+          valueClassName="text-success"
+        />
+        <StatCard
+          label={t("failed")}
+          value={statistics?.failedRuns || 0}
+          valueClassName="text-danger"
+        />
+        <StatCard
+          label={t("openAlerts")}
+          value={statistics?.openAlerts || 0}
+          valueClassName="text-warning"
+        />
       </div>
 
-      <Card className={"shadow-sm border border-ink-200/80"}>
-        <Card.Content className={["gap-4 p-6"].filter(Boolean).join(" ")}>
+      <SurfaceCard contentClassName="gap-4 p-6">
           <div className="flex items-center justify-between">
             <h2 className="text-base font-semibold">{t("recentRuns")}</h2>
           </div>
@@ -264,25 +232,17 @@ export function SecurityMonitorView() {
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
-                    <Chip
-                      variant="soft"
-                      color={statusTone(
+                    <StatusChip
+                      tone={
                         run.status === "passed"
                           ? "success"
                           : run.status === "failed"
                             ? "danger"
-                            : "warning",
-                      )}
-                      style={statusStyle(
-                        run.status === "passed"
-                          ? "success"
-                          : run.status === "failed"
-                            ? "danger"
-                            : "warning",
-                      )}
+                            : "warning"
+                      }
                     >
                       {run.status}
-                    </Chip>
+                    </StatusChip>
                     <span className="text-xs text-ink-400">
                       {run.passed}/{run.totalTests}
                     </span>
@@ -291,11 +251,9 @@ export function SecurityMonitorView() {
               ))}
             </div>
           )}
-        </Card.Content>
-      </Card>
+      </SurfaceCard>
 
-      <Card className={"shadow-sm border border-ink-200/80"}>
-        <Card.Content className={["gap-4 p-6"].filter(Boolean).join(" ")}>
+      <SurfaceCard contentClassName="gap-4 p-6">
           <div className="flex items-center justify-between">
             <h2 className="text-base font-semibold">{t("openAlerts")}</h2>
           </div>
@@ -311,17 +269,11 @@ export function SecurityMonitorView() {
                   <div className="flex-1">
                     <div className="flex items-center justify-between">
                       <p className="font-medium">{alert.message}</p>
-                      <Chip
-                        variant="soft"
-                        color={statusTone(
-                          alert.severity === "critical" ? "danger" : "default",
-                        )}
-                        style={statusStyle(
-                          alert.severity === "critical" ? "danger" : "default",
-                        )}
+                      <StatusChip
+                        tone={alert.severity === "critical" ? "danger" : "default"}
                       >
                         {alert.severity}
-                      </Chip>
+                      </StatusChip>
                     </div>
                     <p className="text-xs text-ink-400">{alert.type}</p>
                     <p className="text-xs text-ink-400">
@@ -332,8 +284,7 @@ export function SecurityMonitorView() {
               ))}
             </div>
           )}
-        </Card.Content>
-      </Card>
+      </SurfaceCard>
     </div>
   );
 }
