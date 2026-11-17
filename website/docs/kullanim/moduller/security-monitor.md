@@ -13,7 +13,7 @@ Regularly runs system security tests and monitors results
 |---|---|
 | Anahtar | `security-monitor` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.3 |
+| Sürüm | 1.3.4 |
 | Sayfalar | `/guvenlik-izleme` |
 | Gerektirir | [Otomasyon](./automation) |
 
@@ -34,6 +34,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Güvenlik İzleme | görüntüleme, oluşturma, düzenleme, silme | — | — | — | görüntüleme | — |
 
 ## Sürüm notları
+
+### 1.3.4 — Güvenlik paneli ortak UI katmanında
+
+_2026-11-17_
+
+- **İyileştirme:** Güvenlik panelindeki kart, istatistik, durum rozeti ve eylem butonları ortak UI pattern'lerine taşındı; ekran artık HeroUI bileşenlerini doğrudan içe aktarmıyor.
 
 ### 1.3.3 — Uyarı onaylama ucu düzeltildi
 
