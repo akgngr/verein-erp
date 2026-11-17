@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Dialog, Input, Label, Spinner, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -107,10 +108,10 @@ export function GradesPanel({
       const fieldError = result.fieldErrors
         ? Object.values(result.fieldErrors)[0]?.[0]
         : undefined;
-      toast(fieldError ?? result.error, { variant: "danger" });
+      notify.error(fieldError ?? result.error);
       return;
     }
-    toast(t("saved"), { variant: "success" });
+    notify.success(t("saved"));
     router.refresh();
   };
 
@@ -357,7 +358,7 @@ export function GradesPanel({
           if (!selected) return;
           const result = await deleteAssessmentAction({ id: selected.id });
           if (!result.ok) {
-            toast(result.error, { variant: "danger" });
+            notify.error(result.error);
             return;
           }
           setDeleting(false);

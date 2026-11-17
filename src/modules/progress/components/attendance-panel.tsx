@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Input, Spinner, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -106,10 +107,10 @@ export function AttendancePanel({
     const result = await saveAttendanceAction({ courseId, sessionId, entries });
     setBusy(false);
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
-    toast(t("saved", { count: result.data.saved }), { variant: "success" });
+    notify.success(t("saved", { count: result.data.saved }));
     router.refresh();
   };
 

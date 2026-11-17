@@ -1,5 +1,6 @@
 "use client";
-import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
 import { Description, Input, Label, Select, Spinner, StatusChip, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -162,9 +163,7 @@ export function SepaApp({
                     param: param[source],
                   });
                   if (!response.ok)
-                    return void toast(translate(response.error), {
-                      variant: "danger",
-                    });
+                    return void notify.error(translate(response.error));
                   setPreview(response.data);
                 })
               }
@@ -249,12 +248,8 @@ export function SepaApp({
                       sourceKeys: null,
                     });
                     if (!response.ok)
-                      return void toast(translate(response.error), {
-                        variant: "danger",
-                      });
-                    toast(t("created", { number: response.data.number }), {
-                      variant: "success",
-                    });
+                      return void notify.error(translate(response.error));
+                    notify.success(t("created", { number: response.data.number }));
                     router.push(`/muhasebe/sepa/${response.data.id}`);
                   })
                 }
@@ -375,8 +370,8 @@ export function SepaRunDetail({
     start(async () => {
       const response = await fn();
       if (!response.ok)
-        return void toast(translate(response.error), { variant: "danger" });
-      if (done) toast(done, { variant: "success" });
+        return void notify.error(translate(response.error));
+      if (done) notify.success(done);
       router.refresh();
     });
   return (
