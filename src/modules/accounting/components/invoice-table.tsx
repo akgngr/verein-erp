@@ -1,13 +1,10 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import { Chip } from "@heroui/react";
-import { statusTone } from "@/shared/components/ui/status-appearance";
-
 import { Eye } from "lucide-react";
 import { useTranslations } from "next-intl";
 
 import { DataTable } from "@/shared/components/data-table/data-table";
 import type { DataTableColumn } from "@/shared/components/data-table/types";
+import { StatusChip } from "@/shared/components/ui/status-chip";
 import { formatDate } from "@/shared/utils";
 
 import { INVOICE_KIND_VALUES, INVOICE_STATUS_VALUES } from "../constants";
@@ -33,14 +30,9 @@ export function InvoiceStatusChip({
 }) {
   const t = useTranslations("accounting.invoices");
   return (
-    <Chip
-      size="sm"
-      color={statusTone(overdue ? "warning" : INVOICE_STATUS_COLOR[status])}
-      variant={"soft"}
-      style={statusStyle(overdue ? "warning" : INVOICE_STATUS_COLOR[status])}
-    >
+    <StatusChip tone={overdue ? "warning" : INVOICE_STATUS_COLOR[status]}>
       {overdue ? t("overdue") : t(`status.${status}`)}
-    </Chip>
+    </StatusChip>
   );
 }
 
