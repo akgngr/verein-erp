@@ -55,19 +55,19 @@
 
 ## Faz 5 — Query selection
 
-- [ ] explicit/query selection union tipini ekle.
-- [ ] "bu sayfadaki N kayıt seçildi" akışını ekle.
-- [ ] "filtreye uyan tüm X kayıt" seçim akışını ekle.
-- [ ] query selection için client'a tüm ID'leri taşımama kuralını uygula.
-- [ ] excludedIds desteğini ekle.
-- [ ] server-side selection resolver/helper oluştur.
-- [ ] query/filter snapshot doğrulaması ekle.
-- [ ] pagination değişiminde selection semantiğini test et.
+- [x] explicit/query selection union tipini ekle.
+- [x] "bu sayfadaki N kayıt seçildi" akışını ekle.
+- [x] "filtreye uyan tüm X kayıt" seçim akışını ekle.
+- [x] query selection için client'a tüm ID'leri taşımama kuralını uygula.
+- [x] excludedIds desteğini ekle.
+- [x] server-side selection resolver/helper oluştur.
+- [x] query/filter snapshot doğrulaması ekle.
+- [x] pagination değişiminde selection semantiğini test et.
 
 ## Faz 6 — Bulk action server contract
 
-- [ ] ortak bulk action input şemasını tanımla.
-- [ ] explicit/query selection server validation helper ekle.
+- [x] ortak bulk action input şemasını tanımla.
+- [x] explicit/query selection server validation helper ekle.
 - [ ] permission doğrulama örneği ekle.
 - [ ] tenant/organization scope doğrulaması ekle.
 - [ ] audit metadata standardını belirle.
