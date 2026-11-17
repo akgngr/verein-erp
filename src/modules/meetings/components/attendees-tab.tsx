@@ -1,7 +1,7 @@
 "use client";
-import { toast, Button, Spinner, TextField, Label, Input } from "@heroui/react";
-
-import { actionVariant } from "@/shared/components/ui/action-appearance";
+import { FormTextField } from "@/shared/components/forms/form-text-field";
+import { ActionButton } from "@/shared/components/ui/action-button";
+import { notify } from "@/shared/components/ui/notify";
 
 import { useTranslations } from "next-intl";
 
@@ -70,7 +70,7 @@ export function AttendeesTab({
       note: data.note ?? current.note ?? "",
     });
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify(result.error, "danger");
       return;
     }
     router.refresh();
@@ -79,10 +79,10 @@ export function AttendeesTab({
   const remove = async (id: string, name: string) => {
     const result = await removeAttendeeAction({ id });
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify(result.error, "danger");
       return;
     }
-    toast(t("removedNamedToast", { name }), { variant: "success" });
+    notify(t("removedNamedToast", { name }), "success");
     router.refresh();
   };
 
@@ -91,12 +91,10 @@ export function AttendeesTab({
     const result = await markAllAttendeesPresentAction({ meetingId });
     setBusy(false);
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify(result.error, "danger");
       return;
     }
-    toast(t("markedToast", { count: result.data.updated }), {
-      variant: "success",
-    });
+    notify(t("markedToast", { count: result.data.updated }), "success");
     router.refresh();
   };
 
@@ -107,7 +105,7 @@ export function AttendeesTab({
       role: "GUEST",
     });
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify(result.error, "danger");
       return;
     }
     setGuestName("");
@@ -120,44 +118,39 @@ export function AttendeesTab({
 
       {editable ? (
         <div className="flex flex-wrap items-end gap-2">
-          <Button
-            size="sm"
+          <ActionButton
+            color="primary"
+            variant="solid"
+            startIcon={<UserPlus className="h-4 w-4" />}
             onPress={() => setModalOpen(true)}
-            variant={actionVariant("primary", "solid")}
           >
-            {<UserPlus className="h-4 w-4" />}
             {t("addUser")}
-          </Button>
-          <Button
-            size="sm"
-            onPress={markAll}
-            variant={actionVariant("default", "flat")}
+          </ActionButton>
+          <ActionButton
+            color="default"
+            variant="flat"
+            startIcon={<UserCheck className="h-4 w-4" />}
             isPending={busy}
+            onPress={markAll}
           >
-            {busy ? <Spinner size="sm" color="current" /> : null}
-            {<UserCheck className="h-4 w-4" />}
             {t("markAll")}
-          </Button>
+          </ActionButton>
           <div className="flex items-end gap-1">
-            <TextField
+            <FormTextField
+              label={t("guestName")}
               value={guestName}
               onChange={setGuestName}
-              className={["w-full", "w-56"].filter(Boolean).join(" ")}
-            >
-              <Label>{t("guestName")}</Label>
-              <Input
-                placeholder={t("name")}
-                className={["h-9 text-sm"].filter(Boolean).join(" ")}
-              />
-            </TextField>
-            <Button
-              size="sm"
+              placeholder={t("name")}
+              className="w-56"
+            />
+            <ActionButton
+              color="default"
+              variant="flat"
               isDisabled={guestName.trim().length < 2}
               onPress={quickAddGuest}
-              variant={actionVariant("default", "flat")}
             >
               {t("addGuest")}
-            </Button>
+            </ActionButton>
           </div>
         </div>
       ) : null}
