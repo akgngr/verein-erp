@@ -498,17 +498,19 @@ export function ${pascal}ItemForm({ item }: { item?: ${pascal}Row }) {
   files["components/item-table.tsx"] = `"use client";
 
 import { addToast, Chip } from "@heroui/react";
-import { Pencil, Trash2 } from "lucide-react";
+import { CircleCheck, CircleOff, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { DataTable } from "@/shared/components/data-table/data-table";
 import type { DataTableColumn } from "@/shared/components/data-table/types";
+import type { DataTableSelection } from "@/shared/data-table/selection-contract";
 import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { formatDateTime } from "@/shared/utils";
 
+import { bulkSet${pascal}ItemStatusAction } from "../actions/bulk-item-actions";
 import { delete${pascal}ItemAction } from "../actions/item-actions";
 import type { ${pascal}Row } from "../types";
 
@@ -537,6 +539,27 @@ export function ${pascal}ItemTable({
   const router = useRouter();
   const drawerHref = useFormDrawerHref();
   const [deleting, setDeleting] = useState<${pascal}Row | null>(null);
+  const [selection, setSelection] = useState<DataTableSelection>({ type: "explicit", ids: [] });
+  const [bulkPending, setBulkPending] = useState(false);
+
+  const runBulkStatus = async (currentSelection: DataTableSelection, isActive: boolean) => {
+    setBulkPending(true);
+    try {
+      const result = await bulkSet${pascal}ItemStatusAction({ selection: currentSelection, isActive });
+      if (!result.ok) {
+        addToast({ title: result.error, color: "danger" });
+        return;
+      }
+      addToast({
+        title: t("bulkSuccess", { updated: result.data.updated, skipped: result.data.skipped }),
+        color: "success",
+      });
+      setSelection({ type: "explicit", ids: [] });
+      router.refresh();
+    } finally {
+      setBulkPending(false);
+    }
+  };
 
   const columns: DataTableColumn<${pascal}Row>[] = [
     { key: "title", label: t("title"), sortable: true },
@@ -575,6 +598,32 @@ export function ${pascal}ItemTable({
             ],
           },
         ]}
+        selection={
+          canUpdate
+            ? {
+                mode: "multiple",
+                value: selection,
+                onChange: setSelection,
+                allowQuerySelection: true,
+                bulkActions: [
+                  {
+                    key: "activate",
+                    label: t("bulkActivate"),
+                    icon: <CircleCheck className="h-4 w-4" />,
+                    disabled: bulkPending,
+                    onPress: (currentSelection) => runBulkStatus(currentSelection, true),
+                  },
+                  {
+                    key: "passivate",
+                    label: t("bulkPassivate"),
+                    icon: <CircleOff className="h-4 w-4" />,
+                    disabled: bulkPending,
+                    onPress: (currentSelection) => runBulkStatus(currentSelection, false),
+                  },
+                ],
+              }
+            : undefined
+        }
         emptyMessage={t("empty")}
         rowActions={(row) => [
           {
