@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.23.4",
+      "date": "2026-11-17",
+      "appVersion": "0.41.0",
+      "title": {
+        "tr": "Muhasebe eylemleri ortak UI katmanında",
+        "de": "Buchhaltungsaktionen in gemeinsamer UI-Schicht"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "İhtar oluşturma, XRechnung/ZUGFeRD indirme ve banka kuralı silme eylemleri ortak ActionButton/notify adapter katmanına taşındı; ilgili dosyalardaki doğrudan HeroUI bağımlılığı kaldırıldı.",
+          "de": "Mahnlauf-Erstellung, XRechnung/ZUGFeRD-Download und das Löschen von Bankregeln verwenden nun die gemeinsamen ActionButton-/Notify-Adapter; die direkten HeroUI-Abhängigkeiten in diesen Dateien wurden entfernt."
+        }
+      ]
+    },
+    {
       "version": "1.23.3",
       "date": "2026-11-17",
       "title": {
