@@ -72,3 +72,22 @@ test("module bulk actions enforce permission, selection validation and audit", (
     assert.match(source, /audit\s*\(/, path.relative(ROOT, file));
   }
 });
+
+test("shared DataTable keeps accessible controlled selection wiring", () => {
+  const table = fs.readFileSync(
+    path.join(ROOT, "src/shared/components/data-table/data-table.tsx"),
+    "utf8",
+  );
+  const bulkBar = fs.readFileSync(
+    path.join(ROOT, "src/shared/components/data-table/data-table-bulk-action-bar.tsx"),
+    "utf8",
+  );
+
+  assert.match(table, /selectionMode=\{selection \? "multiple" : "none"\}/);
+  assert.match(table, /selectedKeys=/);
+  assert.match(table, /onSelectionChange=/);
+  assert.match(table, /aria-label=/);
+  assert.match(bulkBar, /role="region"/);
+  assert.match(bulkBar, /aria-label=\{tTable\("bulkActions"\)\}/);
+  assert.match(bulkBar, /aria-busy=/);
+});
