@@ -4,7 +4,7 @@ import { Button, Dropdown, Label, Table } from "@heroui/react";
 import { MoreHorizontal } from "lucide-react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import type { Key } from "react";
 
 import {
@@ -81,11 +81,11 @@ export function DataTable<T extends { id: string }>({
       total > visibleIds.length,
   );
 
-  const clearExplicitSelection = () => {
+  const clearExplicitSelection = useCallback(() => {
     if (selection?.value.type === "explicit" && selection.value.ids.length > 0) {
       selection.onChange({ type: "explicit", ids: [] });
     }
-  };
+  }, [selection]);
 
   useEffect(() => {
     if (
@@ -104,7 +104,7 @@ export function DataTable<T extends { id: string }>({
       setParams({ q: searchDraft }, { resetPage: true });
     }, 300);
     return () => clearTimeout(timer);
-  }, [searchDraft, q, setParams]);
+  }, [clearExplicitSelection, searchDraft, q, setParams]);
 
   const handleSort = (columnKey: Key) => {
     const column = columns.find((item) => item.key === String(columnKey));
