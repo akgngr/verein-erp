@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Checkbox, Label, Spinner } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -22,10 +23,10 @@ export function TemplateConfirmForm() {
     try {
       const result = await confirmTemplateAction();
       if (!result.ok) {
-        toast(result.error, { variant: "danger" });
+        notify.error(result.error);
         return;
       }
-      toast(t("toastConfirmed"), { variant: "success" });
+      notify.success(t("toastConfirmed"));
       setChecked(false);
       router.refresh();
     } finally {
