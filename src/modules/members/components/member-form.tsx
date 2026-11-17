@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Checkbox, CheckboxGroup, Description, Label } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -220,12 +221,10 @@ export function MemberForm(props: MemberFormProps) {
         setFormError(applyActionResult(result, form.setError));
         return;
       }
-      toast(
+      notify.success(
         t("created.toastUpdated", {
           membershipNumber: result.data.membershipNumber,
-        }),
-        { variant: "success" },
-      );
+        }));
       // Çekmecede: kapat (adres değişince sunucu verisi tazelenir); sayfada: detaya dön.
       if (closeDrawer) {
         closeDrawer();
@@ -241,10 +240,8 @@ export function MemberForm(props: MemberFormProps) {
       setFormError(applyActionResult(result, form.setError));
       return;
     }
-    toast(
-      t("created.toast", { membershipNumber: result.data.membershipNumber }),
-      { variant: "success" },
-    );
+    notify.success(
+      t("created.toast", { membershipNumber: result.data.membershipNumber }));
     router.push(`/uyeler/${result.data.id}`);
     router.refresh();
   });
