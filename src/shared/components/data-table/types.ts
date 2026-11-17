@@ -17,6 +17,23 @@ export type DataTableFilter = {
   options: { value: string; label: string }[];
 };
 
+export type DataTableBulkAction = {
+  key: string;
+  label: string;
+  icon?: ReactNode;
+  variant?: "default" | "danger";
+  hidden?: boolean;
+  disabled?: boolean;
+  onPress: () => void;
+};
+
+export type DataTableSelectionConfig = {
+  mode: "multiple";
+  selectedIds: string[];
+  onSelectionChange: (ids: string[]) => void;
+  bulkActions?: DataTableBulkAction[];
+};
+
 export type DataTableRowAction = {
   key: string;
   label: string;
@@ -40,6 +57,8 @@ export type DataTableProps<T extends { id: string }> = {
   searchPlaceholder?: string;
   filters?: DataTableFilter[];
   rowActions?: (row: T) => DataTableRowAction[];
+  /** Opt-in multiple selection and shared bulk actions. */
+  selection?: DataTableSelectionConfig;
   /** Üst satır sağ taraf (ör. Gelen/Giden sekmesi). */
   topRightExtra?: ReactNode;
   /** Alt satır sol taraf (ör. DateRangeFilter). */
