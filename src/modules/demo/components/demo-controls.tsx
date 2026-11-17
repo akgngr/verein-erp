@@ -28,7 +28,7 @@ export function DemoControls({ hasData }: { hasData: boolean }) {
   };
   const clear = async () => {
     const response = await clearDemoDataAction({});
-    if (!response.ok) return void toast(response.error, { variant: "danger" });
+    if (!response.ok) return void notify(response.error, "danger");
     notify(
       response.data.remaining > 0
         ? t("clearedPartial", {
