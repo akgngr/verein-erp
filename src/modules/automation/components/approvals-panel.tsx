@@ -1,11 +1,12 @@
 "use client";
-import { toast, Button, Spinner } from "@heroui/react";
-import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { Check, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useTransition } from "react";
+
+import { ActionButton } from "@/shared/components/ui/action-button";
+import { notify } from "@/shared/components/ui/notify";
 
 import { decideApprovalAction } from "../actions/workflow-actions";
 
@@ -32,9 +33,11 @@ export function ApprovalsPanel({
   const decide = (stepId: string, approved: boolean) =>
     startTransition(async () => {
       const response = await decideApprovalAction({ stepId, approved });
-      if (!response.ok)
-        return void toast(response.error, { variant: "danger" });
-      toast(approved ? t("approved") : t("rejected"), { variant: "success" });
+      if (!response.ok) {
+        notify(response.error, "danger");
+        return;
+      }
+      notify(approved ? t("approved") : t("rejected"), "success");
       router.refresh();
     });
 
@@ -45,7 +48,7 @@ export function ApprovalsPanel({
         {approvals.map((approval) => (
           <li
             key={approval.stepId}
-            className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-warning-200 bg-warning-50 p-4"
+            className="erp-motion-interactive flex flex-wrap items-center justify-between gap-3 rounded-xl border border-warning-200 bg-warning-50 p-4"
           >
             <div className="min-w-0">
               <p className="font-semibold">
@@ -58,26 +61,23 @@ export function ApprovalsPanel({
             </div>
             {canDecide ? (
               <div className="flex gap-2">
-                <Button
-                  size="sm"
+                <ActionButton
+                  color="success"
+                  isPending={pending}
+                  startIcon={<Check className="h-4 w-4" />}
                   onPress={() => decide(approval.stepId, true)}
-                  variant={actionVariant("success", "solid")}
-                  isPending={pending}
                 >
-                  {pending ? <Spinner size="sm" color="current" /> : null}
-                  {<Check className="h-4 w-4" />}
                   {t("approve")}
-                </Button>
-                <Button
-                  size="sm"
-                  onPress={() => decide(approval.stepId, false)}
-                  variant={actionVariant("danger", "flat")}
+                </ActionButton>
+                <ActionButton
+                  color="danger"
+                  variant="flat"
                   isPending={pending}
+                  startIcon={<X className="h-4 w-4" />}
+                  onPress={() => decide(approval.stepId, false)}
                 >
-                  {pending ? <Spinner size="sm" color="current" /> : null}
-                  {<X className="h-4 w-4" />}
                   {t("reject")}
-                </Button>
+                </ActionButton>
               </div>
             ) : null}
           </li>
