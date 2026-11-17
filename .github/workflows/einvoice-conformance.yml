@@ -82,15 +82,20 @@ jobs:
           gh release download "$config_tag" --repo itplr-kosit/validator-configuration-xrechnung --pattern "*.zip" --dir tools/xr
           (cd tools/kosit && unzip -q -o ./*.zip)
           (cd tools/xr && unzip -q -o ./*.zip)
-          jar=$(find tools/kosit -name '*standalone*.jar' | head -1)
-          conf=$(dirname "$(find tools/xr -name scenarios.xml | head -1)")
-          test -n "$jar" && test -n "$conf"
+          echo "KoSIT archive contents:"; find tools/kosit -name '*.jar' -printf '  %p %s\n'
+          # The runnable validator is the largest jar in the distribution (standalone/fat jar).
+          jar=$(find tools/kosit -name '*.jar' -printf '%s %p\n' | sort -nr | head -1 | cut -d' ' -f2-)
+          scenarios=$(find tools/xr -name scenarios.xml | head -1)
+          if [ -z "$jar" ] || [ -z "$scenarios" ]; then echo "::error::KoSIT validator jar or scenarios.xml not found"; exit 1; fi
+          conf=$(dirname "$scenarios")
+          echo "Using $jar with $conf" | tee -a "$GITHUB_STEP_SUMMARY"
           echo "KOSIT_JAR=$jar" >> "$GITHUB_ENV"
           echo "KOSIT_CONF=$conf" >> "$GITHUB_ENV"
 
       - name: Validate
         run: |
           set -o pipefail
+          test -n "$KOSIT_JAR" || { echo "::error::KOSIT_JAR is empty"; exit 1; }
           scripts/einvoice-conformance/validate.sh einvoice-out tools/mustang.jar "$KOSIT_JAR" "$KOSIT_CONF" | tee einvoice-out/summary.txt
           { echo '```'; cat einvoice-out/summary.txt; echo '```'; } >> "$GITHUB_STEP_SUMMARY"
 
