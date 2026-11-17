@@ -1,8 +1,9 @@
 "use client";
 
+import { notify } from "@/shared/components/ui/notify";
 import { useDrawerPlacement } from "@/shared/hooks/use-media-query";
 import { drawerDialogClass, SheetHandle } from "@/shared/components/forms/form-drawer";
-import { Button, toast } from "@heroui/react";
+import { Button } from "@heroui/react";
 import { Card, Checkbox, Dialog, Input, InputGroup, Label, Select, Sheet, Spinner, StatusChip, Tabs, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -359,9 +360,7 @@ export function CrmApp({
                                     stage: next,
                                   });
                                   if (!response.ok)
-                                    return void toast(response.error, {
-                                      variant: "danger",
-                                    });
+                                    return void notify.error(response.error);
                                   router.refresh();
                                 }}
                                 variant={actionVariant("default", "light")}
@@ -570,9 +569,7 @@ function AddPartyModal({
                             sourceId: row.id,
                           });
                           if (!response.ok)
-                            return void toast(response.error, {
-                              variant: "danger",
-                            });
+                            return void notify.error(response.error);
                           onAdded(response.data.id);
                         }}
                         variant={actionVariant("primary", "flat")}
@@ -615,7 +612,7 @@ function PartyDrawer({
     if (!id) return Promise.resolve();
     return getPartyAction({ id }).then((response) => {
       if (!response.ok)
-        return void toast(response.error, { variant: "danger" });
+        return void notify.error(response.error);
       setDetail(response.data);
       setTags(response.data.tags.join(", "));
     });
@@ -626,7 +623,7 @@ function PartyDrawer({
     void getPartyAction({ id }).then((response) => {
       if (cancelled) return;
       if (!response.ok)
-        return void toast(response.error, { variant: "danger" });
+        return void notify.error(response.error);
       setDetail(response.data);
       setTags(response.data.tags.join(", "));
     });
@@ -637,7 +634,7 @@ function PartyDrawer({
 
   const run = async (call: () => Promise<{ ok: boolean; error?: string }>) => {
     const response = await call();
-    if (!response.ok) return void toast(response.error, { variant: "danger" });
+    if (!response.ok) return void notify.error(response.error);
     await load();
     onChanged();
   };

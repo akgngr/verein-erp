@@ -1,5 +1,6 @@
 "use client";
-import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
 import { Input, Label, Spinner, StatusChip, Switch, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -85,7 +86,7 @@ function ProviderRow({
     startTransition(async () => {
       const response = await action();
       if (response && !response.ok)
-        toast(response.error, { variant: "danger" });
+        notify.error(response.error);
       router.refresh();
     });
 
@@ -94,7 +95,7 @@ function ProviderRow({
     startTransition(async () => {
       const response = await startOAuthAction({ provider: provider.key });
       if (!response.ok)
-        return void toast(response.error, { variant: "danger" });
+        return void notify.error(response.error);
       window.location.assign(response.data.url);
     });
   };
@@ -122,9 +123,7 @@ function ProviderRow({
                     accountId: account.id,
                   });
                   if (response.ok)
-                    toast(t("synced", { count: response.data.events }), {
-                      variant: "success",
-                    });
+                    notify.success(t("synced", { count: response.data.events }));
                   return response;
                 })
               }
@@ -241,7 +240,7 @@ function ProviderRow({
                   if (response.ok) {
                     setPassword("");
                     setShowForm(false);
-                    toast(t("connected"), { variant: "success" });
+                    notify.success(t("connected"));
                   }
                   return response;
                 })

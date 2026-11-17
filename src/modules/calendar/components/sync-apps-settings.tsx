@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Card, Input, Label, Spinner, StatusChip, TextField } from "@/shared/components/kit";
 import { CopyValue } from "@/shared/components/ui/copy-value";
 
@@ -111,9 +112,9 @@ function AppForm({ app }: { app: SyncAppView }) {
                   tenant,
                 });
                 if (!response.ok)
-                  return void toast(response.error, { variant: "danger" });
+                  return void notify.error(response.error);
                 setClientSecret("");
-                toast(t("appSaved"), { variant: "success" });
+                notify.success(t("appSaved"));
                 router.refresh();
               })
             }
