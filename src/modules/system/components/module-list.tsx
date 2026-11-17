@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Checkbox, Dialog, InputGroup, Label, Spinner, StatusChip, Switch, Tabs, TextField, Tooltip } from "@/shared/components/kit";
 
 import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
@@ -109,7 +110,7 @@ export function ModuleList({
       isActive: newActive,
     });
     if (!plan.ok) {
-      toast(plan.error, { variant: "danger" });
+      notify.error(plan.error);
       return;
     }
     const { enable, missing, recommended, disable } = plan.data;
@@ -139,15 +140,13 @@ export function ModuleList({
       recommended: extras,
     });
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
-    toast(
+    notify.success(
       newActive
         ? t("status.activatedToast", { label: mod.label })
-        : t("status.deactivatedToast", { label: mod.label }),
-      { variant: "success" },
-    );
+        : t("status.deactivatedToast", { label: mod.label }));
     setDependencyDialog(null);
     router.refresh();
   };
@@ -168,7 +167,7 @@ export function ModuleList({
         activate: false,
       });
       if (!approved.ok) {
-        toast(approved.error, { variant: "danger" });
+        notify.error(approved.error);
         return;
       }
     }
@@ -187,7 +186,7 @@ export function ModuleList({
       activate: false,
     });
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
     setConsentModule(null);
@@ -198,12 +197,10 @@ export function ModuleList({
     startTransition(async () => {
       const result = await revokeModuleAccessAction({ key: mod.key });
       if (!result.ok) {
-        toast(result.error, { variant: "danger" });
+        notify.error(result.error);
         return;
       }
-      toast(tAccess("revokedToast", { label: mod.label }), {
-        variant: "success",
-      });
+      notify.success(tAccess("revokedToast", { label: mod.label }));
       router.refresh();
     });
 
@@ -211,12 +208,10 @@ export function ModuleList({
     if (!deletingModule) return;
     const result = await deleteModuleAction({ key: deletingModule.key });
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
-    toast(t("deleteModal.successToast", { label: deletingModule.label }), {
-      variant: "success",
-    });
+    notify.success(t("deleteModal.successToast", { label: deletingModule.label }));
     setDeletingModule(null);
     router.refresh();
   };
@@ -225,10 +220,10 @@ export function ModuleList({
     startTransition(async () => {
       const res = await syncSchemasAction();
       if (!res.ok) {
-        toast(res.error, { variant: "danger" });
+        notify.error(res.error);
         return;
       }
-      toast(t("syncSuccess"), { variant: "success" });
+      notify.success(t("syncSuccess"));
       router.refresh();
     });
   };

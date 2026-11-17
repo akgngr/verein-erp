@@ -4,7 +4,7 @@ import { toast } from "@heroui/react";
 
 /** ERP-owned toast API. Framework variant names never leave this adapter. */
 export type NotifyKind = "success" | "error" | "info" | "warning";
-export type NotifyOptions = { timeout?: number };
+export type NotifyOptions = { timeout?: number; description?: string };
 
 /** @deprecated Temporary compatibility for already migrated modules. */
 export type NotifyVariant = "success" | "danger" | "warning" | "default";
@@ -17,7 +17,7 @@ const appearance: Record<NotifyKind, NotifyVariant> = {
 };
 
 function show(message: string, kind: NotifyKind, options?: NotifyOptions) {
-  toast(message, { variant: appearance[kind], timeout: options?.timeout });
+  toast(message, { variant: appearance[kind], timeout: options?.timeout, description: options?.description });
 }
 
 /**

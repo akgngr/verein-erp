@@ -1,5 +1,6 @@
 "use client";
-import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
 import { Card, Checkbox, Label, Select, Spinner, StatusChip, Switch } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -97,7 +98,7 @@ export function SetupWizard({
       accountingPreset: accountingPreset && selected.has("accounting"),
     });
     setBusy(false);
-    if (!response.ok) return void toast(response.error, { variant: "danger" });
+    if (!response.ok) return void notify.error(response.error);
     setResult(response.data);
     setStep(4);
   };
