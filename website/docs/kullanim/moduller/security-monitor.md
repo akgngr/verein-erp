@@ -86,11 +86,4 @@ _2026-11-05_
 - **İyileştirme:** Güvenlik testleri HTTP isteği içinde çalıştırılmak yerine Automation worker kuyruğuna alındı.
 - **Düzeltme:** Automation modül bağımlılığı ve yönetici erişim onayı tanımlandı.
 
-### 1.0.0 — Güvenlik İzleme Modülü
-
-_2026-11-05_
-
-- **Yeni:** Güvenlik testleri çalıştırma ve sonuçları saklama
-- **Yeni:** Uyarı sistemi ile kritik hataların bildirimi
-- **Yeni:** Test geçmişi ve istatistikler
-- **Yeni:** Zamanlanmış test çalıştırmaları
+Daha eski 1 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/security-monitor/releases.json)
