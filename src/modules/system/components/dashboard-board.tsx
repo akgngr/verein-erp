@@ -208,7 +208,7 @@ export function DashboardBoard({
                 onDrop={(event) => event.preventDefault()}
                 onDragEnd={finishDrag}
                 className={cn(
-                  "flex flex-col gap-3 rounded-xl border bg-surface p-5 shadow-sm transition-[box-shadow,opacity] hover:shadow-md",
+                  "erp-motion-enter erp-motion-interactive flex flex-col gap-3 rounded-xl border bg-surface p-5 shadow-sm hover:-translate-y-0.5 hover:shadow-md",
                   editing
                     ? "cursor-grab border-dashed border-brand-300 active:cursor-grabbing"
                     : "border-ink-200/80",
@@ -314,7 +314,7 @@ export function DashboardBoard({
               {available.map((card) => (
                 <div
                   key={card.id}
-                  className="flex flex-col gap-3 rounded-xl border border-ink-200/80 bg-ink-50/60 p-4"
+                  className="erp-motion-enter erp-motion-interactive flex flex-col gap-3 rounded-xl border border-ink-200/80 bg-ink-50/60 p-4 hover:border-ink-300 hover:bg-surface"
                 >
                   <div className="flex items-start gap-2.5">
                     <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-ink-100 text-ink-600">
