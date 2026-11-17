@@ -28,14 +28,17 @@ if [ -n "$KOSIT_JAR" ]; then
     KOSIT_CMD=(java -cp "$KOSIT_JAR:$(dirname "$KOSIT_JAR")/libs/*" de.kosit.validationtool.cmd.CommandLineApplication)
   fi
   "${KOSIT_CMD[@]}" -s "$KOSIT_CONF/scenarios.xml" -r "$KOSIT_CONF" -o "$KOSIT_OUT" "$CORPUS"/xrechnung-ubl/*.xml | tee "$REPORTS/kosit.log" || true
-  reports=$(find "$KOSIT_OUT" -name '*.xml' | wc -l)
-  rejected=$(grep -l '<rep:reject' "$KOSIT_OUT"/*.xml 2>/dev/null | wc -l)
-  echo "kosit: reports=$reports rejected=$rejected"
-  for report in $(grep -l '<rep:reject' "$KOSIT_OUT"/*.xml 2>/dev/null); do
+  # KoSIT prints "Acceptable: N  Rejected: M"; reports with <rep:reject> are listed for diagnosis.
+  summary=$(grep -oE 'Acceptable:[[:space:]]*[0-9]+[[:space:]]+Rejected:[[:space:]]*[0-9]+' "$REPORTS/kosit.log" | tail -1 || true)
+  acceptable=$(echo "$summary" | sed -nE 's/.*Acceptable:[[:space:]]*([0-9]+).*/\1/p')
+  rejected=$(echo "$summary" | sed -nE 's/.*Rejected:[[:space:]]*([0-9]+).*/\1/p')
+  expected=$(find "$CORPUS"/xrechnung-ubl -name '*.xml' | wc -l)
+  echo "kosit: acceptable=${acceptable:-?} rejected=${rejected:-?} expected=$expected"
+  for report in $(grep -l '<rep:reject' "$KOSIT_OUT"/*.xml 2>/dev/null || true); do
     echo "  rejected: $(basename "$report")"
-    grep -oE 'code="[^"]+"' "$report" | sort -u | sed 's/^/    /'
+    { grep -oE 'code="[^"]+"' "$report" || true; } | sort -u | sed 's/^/    /'
   done
-  if [ "$reports" -eq 0 ] || [ "$rejected" -gt 0 ]; then failed=1; fi
+  if [ "${acceptable:-0}" != "$expected" ] || [ "${rejected:-1}" != "0" ]; then failed=1; fi
 fi
 
 exit $failed
