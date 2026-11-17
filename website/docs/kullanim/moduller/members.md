@@ -95,10 +95,4 @@ _2026-11-15_
 
 - **İyileştirme:** Aidat veri kümesi araçları AI veri sınıfı "internal" olarak işaretlendi.
 
-### 1.10.3 — AI takma ad çözümlemesi
-
-_2026-11-15_
-
-- **İyileştirme:** AI asistanı için canlı üye adı sorgusu eklendi (yalnız AI modülünün sunucu tarafı kullanır).
-
 Daha eski 20 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/members/releases.json)
