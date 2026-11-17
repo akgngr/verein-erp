@@ -13,7 +13,7 @@ Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.
 |---|---|
 | Anahtar | `system` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.12.0 |
+| Sürüm | 1.12.1 |
 | Sayfalar | `/ayarlar`, `/ayarlar/moduller`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/surum-notlari` |
 
 ## Diğer modüllere erişim
@@ -34,6 +34,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Modül Yönetimi | görüntüleme, düzenleme, silme | görüntüleme | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.12.1 — Modül paketleri ortak UI katmanında
+
+_2026-11-17_
+
+- **İyileştirme:** Modül paketleri ekranındaki yükleme, silme, kopyalama, durum rozetleri ve bildirimler ActionButton, StatusChip ve notify adapter katmanına taşındı; ekran artık HeroUI bileşenlerini doğrudan içe aktarmıyor.
 
 ### 1.12.0 — Yüzey kartları
 
@@ -79,11 +85,4 @@ _2026-11-03_
 
 - **Düzeltme:** Arka plan worker'larının Next.js bağımlılığı içeren geniş server barrel'larını yüklemeden modül kullanılabilirliğini sorgulaması için automation giriş noktası eklendi.
 
-### 1.10.0 — Modül bağımlılıkları
-
-_2026-11-01_
-
-- **Yeni:** Modül bağımlılıkları: zorunlu (requires) ve önerilen (recommends). Etkinleştirirken eksik zorunlu modüller birlikte açılır (gerekirse erişim izni aynı pencerede), önerilenler işaretli seçenek olarak sunulur; kurulu değilse "Yeni modül kur"a yönlendirilir. Kapatırken bağlı modüller onayla birlikte kapanır.
-- **İyileştirme:** Kurulum sihirbazı zorunlu bağımlılıkları otomatik ekler; module:check bilinmeyen/döngüsel bağımlılığı, module:install eksik veya eski bağımlılığı reddeder.
-
-Daha eski 11 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/system/releases.json)
+Daha eski 12 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/system/releases.json)
