@@ -34,9 +34,24 @@ describe("module scaffold templates", () => {
       "views/item-list-view.tsx",
       "components/item-form.tsx",
       "actions/item-actions.ts",
+      "actions/bulk-item-actions.ts",
     ]) {
       assert.ok(files[required], `missing ${required}`);
     }
+  });
+
+  test("generates the shared DataTable selection and bulk-action pattern", () => {
+    const table = files["components/item-table.tsx"];
+    const bulk = files["actions/bulk-item-actions.ts"];
+
+    assert.match(table, /DataTableSelection/);
+    assert.match(table, /allowQuerySelection:\s*true/);
+    assert.match(table, /bulkActions/);
+    assert.match(bulk, /dataTableSelectionSchema/);
+    assert.match(bulk, /parseBulkSelection/);
+    assert.match(bulk, /allowedFilterKeys/);
+    assert.match(bulk, /permission:/);
+    assert.match(bulk, /audit\s*\(/);
   });
 
   test("server files never import HeroUI; client files start with the directive", () => {

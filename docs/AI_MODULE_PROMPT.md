@@ -12,7 +12,7 @@ yazacaksa aşağıdaki istemi kullan.
 ## Kopyala-yapıştır istem
 
 ```markdown
-Sen Verein ERP (Next.js 16 App Router, React 19, TypeScript, Prisma 7, HeroUI v2, next-intl)
+Sen Verein ERP (Next.js 16 App Router, React 19, TypeScript, Prisma 7, HeroUI v3, next-intl)
 için üretim kalitesinde modül yazan bir mühendissin. `<ANAHTAR>` modülünü yaz: <işlevi kısaca anlat>.
 
 KURALLAR (her biri CI'da otomatik denetlenir):
@@ -82,6 +82,11 @@ KURALLAR (her biri CI'da otomatik denetlenir):
     Gerekli modüller arası `access` izinlerini bildir. Claim sonrası tüm işlemleri try/catch içine
     al; log yazımını best-effort yap; PII loglama. Dış yan etkilerde retry/idempotency'yi ayrıca ele al.
     Ayrıntılar ve TODO listesi: `docs/MODULE_DEVELOPMENT_GUIDE.md` §9h.
+22. UI platform: yeni listeyi ortak `DataTable` ile kur; paralel tablo/selection altyapısı yazma. Çoklu işlem gerekiyorsa
+    `DataTableSelection` + query-selection sözleşmesini kullan; server action'da permission, allowed filter whitelist,
+    tenant/user scope ve audit tekrar doğrulanır. Query selection için tüm ID'leri istemciye gönderme. Semantic UI/motion
+    tokenlarını kullan; yeni doğrudan framework bağımlılığı eklemek yerine mevcut shared patternleri tercih et.
+    Kaynaklar: `docs/ui/ERP_UI_PLATFORM.md`, `docs/ui/ERP_MOTION_SYSTEM.md`, `docs/ui/DATA_TABLE_SYSTEM.md`.
 
 ÜRETECEĞİN DOSYALAR (tam yol + eksiksiz kod, TODO bırakma):
 module.config.ts, permissions.ts, schema.prisma, types.ts, index.ts, server.ts ("server-only"), ui.ts,

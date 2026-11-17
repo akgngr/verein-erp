@@ -23,6 +23,11 @@ export const ERP_UI_TOKENS = {
     primary: "--ui-action-primary",
     primaryForeground: "--ui-action-primary-foreground",
   },
+  status: {
+    success: "--success",
+    warning: "--warning",
+    danger: "--danger",
+  },
   radius: {
     control: "--ui-radius-control",
     card: "--ui-radius-card",

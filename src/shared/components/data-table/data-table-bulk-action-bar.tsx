@@ -3,8 +3,10 @@
 import { Button } from "@heroui/react";
 import { X } from "lucide-react";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 
 import type { DataTableSelection } from "@/shared/data-table/selection-contract";
+import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { cn } from "@/shared/utils";
 import type { DataTableBulkAction } from "./types";
 
@@ -28,62 +30,105 @@ export function DataTableBulkActionBar({
   className?: string;
 }) {
   const tTable = useTranslations("common.table");
+  const [pendingKey, setPendingKey] = useState<string | null>(null);
+  const [confirmingAction, setConfirmingAction] =
+    useState<DataTableBulkAction | null>(null);
   const visibleActions = actions.filter((action) => !action.hidden);
 
   if (selectedCount < 1 || visibleActions.length < 1) return null;
 
+  const executeAction = async (action: DataTableBulkAction) => {
+    setPendingKey(action.key);
+    try {
+      await action.onPress(selection);
+    } finally {
+      setPendingKey(null);
+    }
+  };
+
+  const handleAction = (action: DataTableBulkAction) => {
+    if (action.confirmation) {
+      setConfirmingAction(action);
+      return;
+    }
+    void executeAction(action);
+  };
+
   return (
-    <div
-      className={cn(
-        "erp-motion-enter flex flex-wrap items-center gap-2 rounded-xl border border-brand-200/80 bg-brand-50/80 px-3 py-2 shadow-sm dark:border-brand-500/30 dark:bg-brand-500/10",
-        className,
-      )}
-      role="region"
-      aria-label={tTable("bulkActions")}
-    >
-      <div className="mr-1 flex min-w-0 flex-col">
-        <span className="text-sm font-semibold text-foreground">
-          {selection.type === "query"
-            ? tTable("querySelectedCount", { count: selectedCount })
-            : tTable("selectedCount", { count: selectedCount })}
-        </span>
-        {canSelectAllQuery && onSelectAllQuery ? (
-          <Button
-            size="sm"
-            variant="tertiary"
-            className="h-auto justify-start p-0 text-xs font-medium text-brand-700 dark:text-brand-300"
-            onPress={onSelectAllQuery}
-          >
-            {tTable("selectAllMatching", { count: total })}
-          </Button>
-        ) : null}
-      </div>
-
-      <div className="flex flex-wrap items-center gap-2">
-        {visibleActions.map((action) => (
-          <Button
-            key={action.key}
-            size="sm"
-            variant={action.variant === "danger" ? "danger-soft" : "secondary"}
-            isDisabled={action.disabled}
-            onPress={() => void action.onPress(selection)}
-          >
-            {action.icon}
-            {action.label}
-          </Button>
-        ))}
-      </div>
-
-      <Button
-        isIconOnly
-        size="sm"
-        variant="tertiary"
-        className="ml-auto"
-        aria-label={tTable("clearSelection")}
-        onPress={onClear}
+    <>
+      <div
+        className={cn(
+          "erp-motion-enter flex flex-wrap items-center gap-2 rounded-xl border border-brand-200/80 bg-brand-50/80 px-3 py-2 shadow-sm dark:border-brand-500/30 dark:bg-brand-500/10",
+          className,
+        )}
+        role="region"
+        aria-label={tTable("bulkActions")}
+        aria-busy={pendingKey !== null}
       >
-        <X className="h-4 w-4" aria-hidden />
-      </Button>
-    </div>
+        <div className="mr-1 flex min-w-0 flex-col">
+          <span className="text-sm font-semibold text-foreground">
+            {selection.type === "query"
+              ? tTable("querySelectedCount", { count: selectedCount })
+              : tTable("selectedCount", { count: selectedCount })}
+          </span>
+          {canSelectAllQuery && onSelectAllQuery ? (
+            <Button
+              size="sm"
+              variant="tertiary"
+              className="h-auto justify-start p-0 text-xs font-medium text-brand-700 dark:text-brand-300"
+              isDisabled={pendingKey !== null}
+              onPress={onSelectAllQuery}
+            >
+              {tTable("selectAllMatching", { count: total })}
+            </Button>
+          ) : null}
+        </div>
+
+        <div className="flex flex-wrap items-center gap-2">
+          {visibleActions.map((action) => (
+            <Button
+              key={action.key}
+              size="sm"
+              variant={action.variant === "danger" ? "danger-soft" : "secondary"}
+              isPending={pendingKey === action.key}
+              isDisabled={action.disabled || pendingKey !== null}
+              onPress={() => handleAction(action)}
+            >
+              {action.icon}
+              {action.label}
+            </Button>
+          ))}
+        </div>
+
+        <Button
+          isIconOnly
+          size="sm"
+          variant="tertiary"
+          className="ml-auto"
+          aria-label={tTable("clearSelection")}
+          isDisabled={pendingKey !== null}
+          onPress={onClear}
+        >
+          <X className="h-4 w-4" aria-hidden />
+        </Button>
+      </div>
+
+      <ConfirmDialog
+        isOpen={confirmingAction !== null}
+        onOpenChange={(open) => {
+          if (!open) setConfirmingAction(null);
+        }}
+        title={confirmingAction?.confirmation?.title ?? ""}
+        message={confirmingAction?.confirmation?.message ?? ""}
+        confirmLabel={confirmingAction?.confirmation?.confirmLabel}
+        confirmColor={confirmingAction?.variant === "danger" ? "danger" : "primary"}
+        onConfirm={async () => {
+          if (!confirmingAction) return;
+          const action = confirmingAction;
+          await executeAction(action);
+          setConfirmingAction(null);
+        }}
+      />
+    </>
   );
 }

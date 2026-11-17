@@ -174,6 +174,21 @@ The root `messages/<locale>.json` is **generated** from `messages/shell/<locale>
 
 ---
 
+
+### Multiple selection / bulk action checklist
+
+When a list supports bulk operations:
+
+- Use `DataTableSelection` and the shared `DataTable` selection contract; do not build a parallel checkbox/selection stack.
+- Validate the action input with `dataTableSelectionSchema`; on the server use `parseBulkSelection` with an explicit `allowedFilterKeys` whitelist.
+- Recheck permission through `createAction`. Never trust tenant/organization/user scope supplied by the client.
+- Query selection must not ship all IDs to the browser; resolve the same query builder on the server.
+- Preserve business-state, soft-delete and retention constraints in the selection query.
+- Audit bounded metadata such as selection type, counts and target operation; never copy a PII list into audit metadata.
+- Destructive bulk operations require the shared `ConfirmDialog`.
+- Move 500+ rows, external API/email/file generation, or work likely to exceed about 5 seconds to Automation/Export.
+- References: `members/actions/bulk-change-status.ts`, `documents/actions/bulk-change-status.ts`, `docs/ui/DATA_TABLE_SYSTEM.md`.
+
 ## 8. Cross-module access (admin approval)
 
 A module uses another module's data only through that module's `@/modules/<m>/server` API and

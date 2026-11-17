@@ -78,6 +78,11 @@ function messages(n: ScaffoldNames, locale: "tr" | "de") {
       deleteTitle: tr ? "Kaydı sil" : "Eintrag löschen",
       deleteMessage: tr ? "\"{title}\" kalıcı olarak silinecek. Onaylıyor musunuz?" : "„{title}“ wird dauerhaft gelöscht. Fortfahren?",
       deleted: tr ? "Kayıt silindi." : "Eintrag gelöscht.",
+      bulkActivate: tr ? "Aktif yap" : "Aktiv setzen",
+      bulkPassivate: tr ? "Pasif yap" : "Passiv setzen",
+      bulkSuccess: tr
+        ? "{updated} kayıt güncellendi, {skipped} kayıt zaten hedef durumdaydı."
+        : "{updated} Einträge aktualisiert, {skipped} Einträge waren bereits im Zielstatus.",
     },
     form: {
       createTitle: tr ? "Yeni kayıt" : "Neuer Eintrag",
@@ -223,9 +228,12 @@ import type { ${pascal}Row } from "../types";
 export const ITEM_SORTABLE_FIELDS = ["title", "updatedAt", "createdAt"] as const;
 export const ITEM_DEFAULT_SORT = "updatedAt";
 
-/** Liste sorgusu: arama (başlık/açıklama), durum filtresi, sıralama ve sayfalama. */
-export async function list${pascal}Items(params: ListParams<"status">): Promise<ListResult<${pascal}Row>> {
-  const where: Prisma.${pascal}ItemWhereInput = {
+export type ${pascal}ItemFilterKeys = "status";
+
+export function build${pascal}ItemWhere(
+  params: ListParams<${pascal}ItemFilterKeys>,
+): Prisma.${pascal}ItemWhereInput {
+  return {
     ...(params.q
       ? {
           OR: [
@@ -236,6 +244,11 @@ export async function list${pascal}Items(params: ListParams<"status">): Promise<
       : {}),
     ...(params.filters.status ? { isActive: params.filters.status === "active" } : {}),
   };
+}
+
+/** Liste sorgusu: arama (başlık/açıklama), durum filtresi, sıralama ve sayfalama. */
+export async function list${pascal}Items(params: ListParams<${pascal}ItemFilterKeys>): Promise<ListResult<${pascal}Row>> {
+  const where = build${pascal}ItemWhere(params);
   const db = getDb();
   const [rows, total] = await Promise.all([
     db.${model}.findMany({
@@ -322,6 +335,96 @@ export async function delete${pascal}ItemAction(input: unknown): Promise<ActionR
 }
 `;
 
+  files["actions/bulk-item-actions.ts"] = `"use server";
+
+import { revalidatePath } from "next/cache";
+import type { Prisma } from "@prisma/client";
+import { z } from "zod";
+
+import { createAction } from "@/modules/auth/server";
+import { parseBulkSelection } from "@/shared/data-table/server-selection";
+import { dataTableSelectionSchema, type DataTableSelection } from "@/shared/data-table/selection-contract";
+import { getDb } from "@/shared/db";
+import type { ListParams } from "@/shared/list-params";
+import type { ActionResult } from "@/shared/types/action";
+
+import { ${perm} } from "../permissions";
+import {
+  build${pascal}ItemWhere,
+  ITEM_DEFAULT_SORT,
+  ITEM_SORTABLE_FIELDS,
+  type ${pascal}ItemFilterKeys,
+} from "../queries/list-items";
+
+const BULK_FILTER_KEYS = ["status"] as const;
+
+const bulkStatusSchema = z.object({
+  selection: dataTableSelectionSchema,
+  isActive: z.boolean(),
+}).strict();
+
+function queryToListParams(
+  query: Extract<DataTableSelection, { type: "query" }>["query"],
+): ListParams<${pascal}ItemFilterKeys> {
+  const filters: Partial<Record<${pascal}ItemFilterKeys, string>> = {};
+  if (query.filters.status) filters.status = query.filters.status;
+  const sort =
+    query.sort &&
+    ITEM_SORTABLE_FIELDS.includes(query.sort as (typeof ITEM_SORTABLE_FIELDS)[number])
+      ? query.sort
+      : ITEM_DEFAULT_SORT;
+  return {
+    page: 1,
+    pageSize: 10,
+    q: query.q ?? "",
+    sort,
+    dir: query.dir ?? "desc",
+    filters,
+    skip: 0,
+    take: 10,
+  };
+}
+
+function selectionWhere(selection: DataTableSelection): Prisma.${pascal}ItemWhereInput {
+  if (selection.type === "explicit") return { id: { in: selection.ids } };
+  const base = build${pascal}ItemWhere(queryToListParams(selection.query));
+  if (selection.excludedIds.length === 0) return base;
+  return { AND: [base, { id: { notIn: selection.excludedIds } }] };
+}
+
+export async function bulkSet${pascal}ItemStatusAction(
+  input: unknown,
+): Promise<ActionResult<{ updated: number; skipped: number }>> {
+  return createAction({
+    permission: { definition: ${perm}, action: "update" },
+    schema: bulkStatusSchema,
+    handler: async ({ input, audit }) => {
+      const selection = parseBulkSelection(input.selection, {
+        allowedFilterKeys: BULK_FILTER_KEYS,
+      });
+      const where = selectionWhere(selection);
+      const db = getDb();
+      const selectedTotal = await db.${model}.count({ where });
+      if (selectedTotal === 0) return { updated: 0, skipped: 0 };
+      const result = await db.${model}.updateMany({
+        where: { AND: [where, { isActive: { not: input.isActive } }] },
+        data: { isActive: input.isActive },
+      });
+      const skipped = Math.max(0, selectedTotal - result.count);
+      await audit({
+        action: "UPDATE",
+        entity: "${pascal}ItemBulk",
+        entityId: "bulk-status",
+        before: { selectionType: selection.type, selectedCount: selectedTotal },
+        after: { isActive: input.isActive, updatedCount: result.count, skippedCount: skipped },
+      });
+      revalidatePath("/${key}");
+      return { updated: result.count, skipped };
+    },
+  })(input);
+}
+`;
+
   files["components/item-form.tsx"] = `"use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -395,17 +498,19 @@ export function ${pascal}ItemForm({ item }: { item?: ${pascal}Row }) {
   files["components/item-table.tsx"] = `"use client";
 
 import { addToast, Chip } from "@heroui/react";
-import { Pencil, Trash2 } from "lucide-react";
+import { CircleCheck, CircleOff, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { DataTable } from "@/shared/components/data-table/data-table";
 import type { DataTableColumn } from "@/shared/components/data-table/types";
+import type { DataTableSelection } from "@/shared/data-table/selection-contract";
 import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { formatDateTime } from "@/shared/utils";
 
+import { bulkSet${pascal}ItemStatusAction } from "../actions/bulk-item-actions";
 import { delete${pascal}ItemAction } from "../actions/item-actions";
 import type { ${pascal}Row } from "../types";
 
@@ -434,6 +539,27 @@ export function ${pascal}ItemTable({
   const router = useRouter();
   const drawerHref = useFormDrawerHref();
   const [deleting, setDeleting] = useState<${pascal}Row | null>(null);
+  const [selection, setSelection] = useState<DataTableSelection>({ type: "explicit", ids: [] });
+  const [bulkPending, setBulkPending] = useState(false);
+
+  const runBulkStatus = async (currentSelection: DataTableSelection, isActive: boolean) => {
+    setBulkPending(true);
+    try {
+      const result = await bulkSet${pascal}ItemStatusAction({ selection: currentSelection, isActive });
+      if (!result.ok) {
+        addToast({ title: result.error, color: "danger" });
+        return;
+      }
+      addToast({
+        title: t("bulkSuccess", { updated: result.data.updated, skipped: result.data.skipped }),
+        color: "success",
+      });
+      setSelection({ type: "explicit", ids: [] });
+      router.refresh();
+    } finally {
+      setBulkPending(false);
+    }
+  };
 
   const columns: DataTableColumn<${pascal}Row>[] = [
     { key: "title", label: t("title"), sortable: true },
@@ -472,6 +598,32 @@ export function ${pascal}ItemTable({
             ],
           },
         ]}
+        selection={
+          canUpdate
+            ? {
+                mode: "multiple",
+                value: selection,
+                onChange: setSelection,
+                allowQuerySelection: true,
+                bulkActions: [
+                  {
+                    key: "activate",
+                    label: t("bulkActivate"),
+                    icon: <CircleCheck className="h-4 w-4" />,
+                    disabled: bulkPending,
+                    onPress: (currentSelection) => runBulkStatus(currentSelection, true),
+                  },
+                  {
+                    key: "passivate",
+                    label: t("bulkPassivate"),
+                    icon: <CircleOff className="h-4 w-4" />,
+                    disabled: bulkPending,
+                    onPress: (currentSelection) => runBulkStatus(currentSelection, false),
+                  },
+                ],
+              }
+            : undefined
+        }
         emptyMessage={t("empty")}
         rowActions={(row) => [
           {
