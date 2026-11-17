@@ -13,7 +13,7 @@ Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura v
 |---|---|
 | Anahtar | `accounting` |
 | Tür | Resmî modül |
-| Sürüm | 1.22.11 |
+| Sürüm | 1.22.12 |
 | Sayfalar | `/muhasebe`, `/muhasebe/panel`, `/muhasebe/faturalar`, `/muhasebe/gelen-faturalar`, `/muhasebe/cariler`, `/muhasebe/banka`, `/muhasebe/uyelik-aktarimi`, `/muhasebe/raporlar`, `/muhasebe/vergi`, `/muhasebe/hibeler`, `/muhasebe/sepa`, `/muhasebe/butce`, `/muhasebe/ekler`, `/muhasebe/gobd`, `/muhasebe/yil-kapanisi`, `/muhasebe/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -43,6 +43,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_accounting_summary` · `get_bank_inbox_summary` · `get_open_items_summary` · `get_payables_summary` · `get_report_link` · `get_vat_summary`
 
 ## Sürüm notları
+
+### 1.22.12 — Fiş türü rozeti ortak UI katmanında
+
+_2026-11-17_
+
+- **İyileştirme:** Rozet görünümü ortak StatusChip pattern'ine taşındı; modül artık bu kullanımda HeroUI Chip implementasyonuna doğrudan bağlı değil.
 
 ### 1.22.11 — Yaklaşan vergi tarihi kontrol önerisi
 
@@ -91,10 +97,4 @@ _2026-11-16_
 - **Yeni:** Muhasebe modülüne dönem seçimi, çeyreklik SVG/CSS gelir-gider çubukları ve erişilebilir tabloyla salt okunur genel bakış eklendi; gecikmiş faturalar ve belgesiz fişler için kontrol önerileri sunulur.
 - **İyileştirme:** Gelir-gider fiş toplamları mevcut muhasebe listesi ve genel bakış tarafından ortak sorgudan üretilir.
 
-### 1.22.4 — Ana panel muhasebe kartları
-
-_2026-11-16_
-
-- **Yeni:** Mevcut fiş istatistiklerini kullanan gelir, gider, fiş farkı ve eksik belge kartları ana panelde seçilebilir. Kartlar kullanıcı rolüne göre filtrelenir; yeni grafik paketi eklenmedi.
-
-Daha eski 30 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/accounting/releases.json)
+Daha eski 31 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/accounting/releases.json)

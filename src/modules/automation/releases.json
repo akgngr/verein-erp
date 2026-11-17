@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.10.7",
+      "date": "2026-11-17",
+      "appVersion": "0.41.0",
+      "title": {
+        "tr": "Çalışma durumu rozeti ortak UI katmanında",
+        "de": "Ausführungsstatus in gemeinsamer UI-Schicht"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Rozet görünümü ortak StatusChip pattern'ine taşındı; modül artık bu kullanımda HeroUI Chip implementasyonuna doğrudan bağlı değil.",
+          "de": "Die Badge-Darstellung nutzt das gemeinsame StatusChip-Pattern; das Modul ist für diesen Anwendungsfall nicht mehr direkt an die HeroUI-Chip-Implementierung gebunden."
+        }
+      ]
+    },
+    {
       "version": "0.10.6",
       "date": "2026-11-16",
       "appVersion": "0.41.0",

@@ -18,7 +18,7 @@ import {
 export const moduleConfig: ModuleConfig = {
   key: "members",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.14.1",
+  version: "1.14.2",
   label: "Üyeler",
   description: "Üye kayıtları, üyelik tipleri, aidat tahakkuk ve ödeme takibi.",
   category: "OFFICIAL",

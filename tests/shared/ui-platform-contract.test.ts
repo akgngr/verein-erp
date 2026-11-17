@@ -54,7 +54,7 @@ test("direct HeroUI dependency in modules may only shrink during adapter migrati
   // Baseline at ERP UI Platform hardening (2026-11-17). Reductions are welcome;
   // new direct framework imports must use shared UI patterns instead.
   assert.ok(
-    directImports.length <= 184,
+    directImports.length <= 181,
     "Direct @heroui/react imports increased to " + directImports.length +
       "; use shared UI patterns/adapters instead.",
   );

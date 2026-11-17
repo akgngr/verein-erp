@@ -1,7 +1,6 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import { Chip } from "@heroui/react";
-import { statusTone } from "@/shared/components/ui/status-appearance";
+
+import { StatusChip } from "@/shared/components/ui/status-chip";
 
 interface ExecutionStatusChipProps {
   status: string;
@@ -12,7 +11,7 @@ export function ExecutionStatusChip({
   status,
   label,
 }: ExecutionStatusChipProps) {
-  const color =
+  const tone =
     status === "SUCCEEDED"
       ? "success"
       : status === "FAILED"
@@ -21,14 +20,5 @@ export function ExecutionStatusChip({
           ? "warning"
           : "default";
 
-  return (
-    <Chip
-      size="sm"
-      color={statusTone(color)}
-      variant={"soft"}
-      style={statusStyle(color)}
-    >
-      {label}
-    </Chip>
-  );
+  return <StatusChip tone={tone}>{label}</StatusChip>;
 }
