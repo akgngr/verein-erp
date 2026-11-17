@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Checkbox, Label } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -96,14 +97,14 @@ export function CourseForm({
       const result = await updateCourseAction({ id: course.id, ...values });
       if (!result.ok)
         return setFormError(applyActionResult(result, form.setError));
-      toast(t("updated"), { variant: "success" });
+      notify.success(t("updated"));
       close();
       return;
     }
     const result = await createCourseAction(values);
     if (!result.ok)
       return setFormError(applyActionResult(result, form.setError));
-    toast(t("created"), { variant: "success" });
+    notify.success(t("created"));
     router.push(`/kurslar/${result.data.id}`);
   });
 

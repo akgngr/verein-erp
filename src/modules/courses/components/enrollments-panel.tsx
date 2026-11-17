@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Checkbox, Dialog, Input, InputGroup, Label, Spinner, StatusChip, TextField } from "@/shared/components/kit";
 import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
 
@@ -84,9 +85,7 @@ export function EnrollmentsPanel({
       setError(result.error);
       return;
     }
-    toast(t("enrolledToast", { count: result.data.enrolled }), {
-      variant: "success",
-    });
+    notify.success(t("enrolledToast", { count: result.data.enrolled }));
     setOpen(false);
     setSelected(new Set());
     router.refresh();
@@ -95,15 +94,13 @@ export function EnrollmentsPanel({
   const changeStatus = async (id: string, status: CourseEnrollmentStatus) => {
     const result = await setEnrollmentStatusAction({ id, status });
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
-    toast(
+    notify.success(
       result.data.cancelledCharges > 0
         ? t("withdrawnToast", { count: result.data.cancelledCharges })
-        : t("statusToast"),
-      { variant: "success" },
-    );
+        : t("statusToast"));
     router.refresh();
   };
 

@@ -1,5 +1,6 @@
 "use client";
-import { toast, Button } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -72,14 +73,14 @@ export function TeacherForm({ teacher }: { teacher?: TeacherRow }) {
       const result = await updateTeacherAction({ id: teacher.id, ...values });
       if (!result.ok)
         return setFormError(applyActionResult(result, form.setError));
-      toast(t("updated"), { variant: "success" });
+      notify.success(t("updated"));
       close();
       return;
     }
     const result = await createTeacherAction(values);
     if (!result.ok)
       return setFormError(applyActionResult(result, form.setError));
-    toast(t("created"), { variant: "success" });
+    notify.success(t("created"));
     if (result.data.invite) {
       setInvite({ ...result.data.invite, email: values.email });
       router.refresh();
