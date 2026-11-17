@@ -1,6 +1,6 @@
 "use client";
-import { toast, Button, Spinner } from "@heroui/react";
-import { actionVariant } from "@/shared/components/ui/action-appearance";
+import { ActionButton } from "@/shared/components/ui/action-button";
+import { notify } from "@/shared/components/ui/notify";
 
 import { FileBadge, FileCode2 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -19,8 +19,17 @@ export function XRechnungButton({
   const t = useTranslations("accounting.invoices.xrechnung");
   const [busy, setBusy] = useState(false);
   return (
-    <Button
-      size="sm"
+    <ActionButton
+      color="default"
+      variant="bordered"
+      isPending={busy}
+      startIcon={
+        format === "zugferd" ? (
+          <FileBadge className="h-4 w-4" aria-hidden />
+        ) : (
+          <FileCode2 className="h-4 w-4" aria-hidden />
+        )
+      }
       onPress={async () => {
         setBusy(true);
         try {
@@ -31,10 +40,7 @@ export function XRechnungButton({
             const result = (await response.json().catch(() => ({}))) as {
               error?: string;
             };
-            toast(result.error ?? t("failed"), {
-              variant: "danger",
-              timeout: 9000,
-            });
+            notify(result.error ?? t("failed"), "danger", { timeout: 9000 });
             return;
           }
           const url = URL.createObjectURL(await response.blob());
@@ -50,16 +56,8 @@ export function XRechnungButton({
           setBusy(false);
         }
       }}
-      variant={actionVariant("default", "bordered")}
-      isPending={busy}
     >
-      {busy ? <Spinner size="sm" color="current" /> : null}
-      {format === "zugferd" ? (
-        <FileBadge className="h-4 w-4" aria-hidden />
-      ) : (
-        <FileCode2 className="h-4 w-4" aria-hidden />
-      )}
       {format === "zugferd" ? t("zugferd") : t("download")}
-    </Button>
+    </ActionButton>
   );
 }
