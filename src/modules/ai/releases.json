@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.15.1",
+      "date": "2026-11-17",
+      "appVersion": "0.41.0",
+      "title": {
+        "tr": "Rıza eylemleri ortak UI katmanında",
+        "de": "Einwilligungsaktionen in gemeinsamer UI-Schicht"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Eylem butonları ve kullanıcı bildirimleri ortak ActionButton/notify adapter katmanına taşındı; bu kullanımda doğrudan HeroUI bağımlılığı kaldırıldı.",
+          "de": "Aktionsbuttons und Benutzerbenachrichtigungen verwenden nun die gemeinsamen ActionButton-/Notify-Adapter; die direkte HeroUI-Abhängigkeit wurde für diesen Anwendungsfall entfernt."
+        }
+      ]
+    },
+    {
       "version": "1.15.0",
       "date": "2026-11-17",
       "title": {
