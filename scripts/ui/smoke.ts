@@ -27,6 +27,8 @@ function assert(ok: boolean, message: string): asserts ok {
 
 async function login(page: Page) {
   await page.goto(base + "/giris", { waitUntil: "load" });
+  // The second viewport shares an authenticated browser context.
+  if (new URL(page.url()).pathname !== "/giris") return;
   const email = process.env.E2E_EMAIL;
   const password = process.env.E2E_PASSWORD;
   assert(Boolean(email && password), "E2E_EMAIL and E2E_PASSWORD required");
