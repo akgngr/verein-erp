@@ -141,7 +141,7 @@ function main() {
   let output: string | undefined;
   for (let i = 0; i < args.length; i++) {
     if (args[i] === "--format" && (args[i + 1] === "json" || args[i + 1] === "markdown")) {
-      format = args[++i] as typeof format;
+      format = args[++i] as "json" | "markdown";
     } else if (args[i] === "--output" && args[i + 1]) {
       output = args[++i];
     } else {
