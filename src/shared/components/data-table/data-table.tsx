@@ -12,6 +12,8 @@ import { cn } from "@/shared/utils";
 import { DataTablePagination } from "./data-table-pagination";
 import { useListQueryState } from "./use-list-query-state";
 import { DataTableToolbar } from "./data-table-toolbar";
+import { DataTableBulkActionBar } from "./data-table-bulk-action-bar";
+import { normalizeSelectedKeys } from "./selection";
 import type { DataTableProps } from "./types";
 import { EmptyState } from "../ui/empty-state";
 
@@ -38,6 +40,7 @@ export function DataTable<T extends { id: string }>({
   searchPlaceholder,
   filters,
   rowActions,
+  selection,
   topRightExtra,
   dateFilter,
   filterExtra,
@@ -161,6 +164,14 @@ export function DataTable<T extends { id: string }>({
         toolbarExtra={toolbarExtra}
       />
 
+      {selection?.bulkActions ? (
+        <DataTableBulkActionBar
+          selectedCount={selection.selectedIds.length}
+          actions={selection.bulkActions}
+          onClear={() => selection.onSelectionChange([])}
+        />
+      ) : null}
+
       <div
         className={cn(
           "overflow-x-auto transition-opacity",
@@ -172,7 +183,19 @@ export function DataTable<T extends { id: string }>({
             <Table.Content
               aria-label={ariaLabel ?? tCommon("table.label")}
               aria-busy={isPending}
-              selectionMode="none"
+              selectionMode={selection ? "multiple" : "none"}
+              selectedKeys={selection ? new Set(selection.selectedIds) : undefined}
+              onSelectionChange={
+                selection
+                  ? (keys) =>
+                      selection.onSelectionChange(
+                        normalizeSelectedKeys(
+                          keys,
+                          rows.map((row) => row.id),
+                        ),
+                      )
+                  : undefined
+              }
               sortDescriptor={
                 sort && dir
                   ? {
@@ -261,7 +284,7 @@ export function DataTable<T extends { id: string }>({
                     <Table.Row
                       key={row.id}
                       id={row.id}
-                      className="border-b border-ink-100 transition-colors last:border-b-0 hover:bg-ink-50"
+                      className="erp-motion-selection border-b border-ink-100 last:border-b-0 hover:bg-ink-50 data-[selected=true]:bg-brand-50/80 dark:data-[selected=true]:bg-brand-500/10"
                     >
                       {cells}
                     </Table.Row>
