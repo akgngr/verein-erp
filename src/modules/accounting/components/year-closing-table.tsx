@@ -1,6 +1,5 @@
 "use client";
-import { Button } from "@heroui/react";
-import { actionVariant } from "@/shared/components/ui/action-appearance";
+import { ActionButton } from "@/shared/components/ui/action-button";
 
 import { Lock, LockOpen } from "lucide-react";
 import { useState } from "react";
@@ -76,25 +75,25 @@ export function YearClosingTable({
                 {canApprove ? (
                   <div className="flex justify-end gap-1">
                     {row.lockedAt ? (
-                      <Button
-                        size="sm"
+                      <ActionButton
+                        color="danger"
+                        variant="light"
+                        startIcon={<LockOpen className="h-4 w-4" aria-hidden />}
                         onPress={() => setUnlockTarget(row)}
-                        variant={actionVariant("danger", "light")}
                       >
-                        {<LockOpen className="h-4 w-4" aria-hidden />}
                         {t("unlock")}
-                      </Button>
+                      </ActionButton>
                     ) : (
-                      <Button
-                        size="sm"
+                      <ActionButton
+                        color="primary"
+                        variant="flat"
+                        startIcon={<Lock className="h-4 w-4" aria-hidden />}
                         onPress={() => {
                           setCloseTarget(row);
                         }}
-                        variant={actionVariant("primary", "flat")}
                       >
-                        {<Lock className="h-4 w-4" aria-hidden />}
                         {t("close")}
-                      </Button>
+                      </ActionButton>
                     )}
                   </div>
                 ) : null}

@@ -1,6 +1,5 @@
 "use client";
-import { Button } from "@heroui/react";
-import { actionVariant } from "@/shared/components/ui/action-appearance";
+import { ActionButton } from "@/shared/components/ui/action-button";
 
 import { Eraser } from "lucide-react";
 import { useEffect, useRef } from "react";
@@ -72,15 +71,15 @@ export function SignaturePad({
             onChange(event.currentTarget.toDataURL("image/png"));
         }}
       />
-      <Button
-        size="sm"
+      <ActionButton
+        color="default"
+        variant="light"
         className="self-end"
+        startIcon={<Eraser className="size-4" />}
         onPress={clear}
-        variant={actionVariant("default", "light")}
       >
-        {<Eraser className="size-4" />}
         {clearLabel}
-      </Button>
+      </ActionButton>
     </div>
   );
 }
