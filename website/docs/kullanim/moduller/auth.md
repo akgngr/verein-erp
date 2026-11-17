@@ -13,9 +13,15 @@ Kullanıcı girişi, oturum yönetimi ve parola güvenliği.
 |---|---|
 | Anahtar | `auth` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.0.4 |
+| Sürüm | 1.0.5 |
 
 ## Sürüm notları
+
+### 1.0.5 — Giriş ve profil yüzeyleri ortak kart katmanında
+
+_2026-11-17_
+
+- **İyileştirme:** Kart ve yüzey görünümleri ortak SurfaceCard/StatCard pattern'ine taşındı; modül bu kullanımda HeroUI Card implementasyonuna doğrudan bağlı değil.
 
 ### 1.0.4 — HeroUI v3 arayüz geçişi
 
