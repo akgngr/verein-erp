@@ -105,3 +105,21 @@ export function validateQuerySelectionFilters(
   }
   return parsed;
 }
+
+export function sameQuerySnapshot(
+  left: DataTableQuerySnapshot,
+  right: DataTableQuerySnapshot,
+): boolean {
+  if ((left.q ?? "") !== (right.q ?? "")) return false;
+  if ((left.sort ?? "") !== (right.sort ?? "")) return false;
+  if ((left.dir ?? "") !== (right.dir ?? "")) return false;
+
+  const leftKeys = Object.keys(left.filters).sort();
+  const rightKeys = Object.keys(right.filters).sort();
+  if (leftKeys.length !== rightKeys.length) return false;
+
+  return leftKeys.every(
+    (key, index) =>
+      key === rightKeys[index] && left.filters[key] === right.filters[key],
+  );
+}
