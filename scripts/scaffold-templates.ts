@@ -335,6 +335,96 @@ export async function delete${pascal}ItemAction(input: unknown): Promise<ActionR
 }
 `;
 
+  files["actions/bulk-item-actions.ts"] = `"use server";
+
+import { revalidatePath } from "next/cache";
+import type { Prisma } from "@prisma/client";
+import { z } from "zod";
+
+import { createAction } from "@/modules/auth/server";
+import { parseBulkSelection } from "@/shared/data-table/server-selection";
+import { dataTableSelectionSchema, type DataTableSelection } from "@/shared/data-table/selection-contract";
+import { getDb } from "@/shared/db";
+import type { ListParams } from "@/shared/list-params";
+import type { ActionResult } from "@/shared/types/action";
+
+import { ${perm} } from "../permissions";
+import {
+  build${pascal}ItemWhere,
+  ITEM_DEFAULT_SORT,
+  ITEM_SORTABLE_FIELDS,
+  type ${pascal}ItemFilterKeys,
+} from "../queries/list-items";
+
+const BULK_FILTER_KEYS = ["status"] as const;
+
+const bulkStatusSchema = z.object({
+  selection: dataTableSelectionSchema,
+  isActive: z.boolean(),
+}).strict();
+
+function queryToListParams(
+  query: Extract<DataTableSelection, { type: "query" }>["query"],
+): ListParams<${pascal}ItemFilterKeys> {
+  const filters: Partial<Record<${pascal}ItemFilterKeys, string>> = {};
+  if (query.filters.status) filters.status = query.filters.status;
+  const sort =
+    query.sort &&
+    ITEM_SORTABLE_FIELDS.includes(query.sort as (typeof ITEM_SORTABLE_FIELDS)[number])
+      ? query.sort
+      : ITEM_DEFAULT_SORT;
+  return {
+    page: 1,
+    pageSize: 10,
+    q: query.q ?? "",
+    sort,
+    dir: query.dir ?? "desc",
+    filters,
+    skip: 0,
+    take: 10,
+  };
+}
+
+function selectionWhere(selection: DataTableSelection): Prisma.${pascal}ItemWhereInput {
+  if (selection.type === "explicit") return { id: { in: selection.ids } };
+  const base = build${pascal}ItemWhere(queryToListParams(selection.query));
+  if (selection.excludedIds.length === 0) return base;
+  return { AND: [base, { id: { notIn: selection.excludedIds } }] };
+}
+
+export async function bulkSet${pascal}ItemStatusAction(
+  input: unknown,
+): Promise<ActionResult<{ updated: number; skipped: number }>> {
+  return createAction({
+    permission: { definition: ${perm}, action: "update" },
+    schema: bulkStatusSchema,
+    handler: async ({ input, audit }) => {
+      const selection = parseBulkSelection(input.selection, {
+        allowedFilterKeys: BULK_FILTER_KEYS,
+      });
+      const where = selectionWhere(selection);
+      const db = getDb();
+      const selectedTotal = await db.${model}.count({ where });
+      if (selectedTotal === 0) return { updated: 0, skipped: 0 };
+      const result = await db.${model}.updateMany({
+        where: { AND: [where, { isActive: { not: input.isActive } }] },
+        data: { isActive: input.isActive },
+      });
+      const skipped = Math.max(0, selectedTotal - result.count);
+      await audit({
+        action: "UPDATE",
+        entity: "${pascal}ItemBulk",
+        entityId: "bulk-status",
+        before: { selectionType: selection.type, selectedCount: selectedTotal },
+        after: { isActive: input.isActive, updatedCount: result.count, skippedCount: skipped },
+      });
+      revalidatePath("/${key}");
+      return { updated: result.count, skipped };
+    },
+  })(input);
+}
+`;
+
   files["components/item-form.tsx"] = `"use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
