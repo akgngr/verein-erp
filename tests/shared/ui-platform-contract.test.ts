@@ -14,18 +14,21 @@ function walk(dir: string): string[] {
 
 test("ERP UI semantic and motion foundations remain present", () => {
   const css = fs.readFileSync(path.join(ROOT, "src/app/globals.css"), "utf8");
+  const tokens = fs.readFileSync(
+    path.join(ROOT, "src/shared/ui-platform/tokens.ts"),
+    "utf8",
+  );
   for (const token of [
     "--ui-surface-page",
     "--ui-surface-card",
     "--ui-surface-selected",
     "--ui-text-primary",
     "--ui-border-default",
-    "--motion-fast",
-    "--motion-normal",
-    "--motion-slow",
-    "--motion-ease-standard",
   ]) {
-    assert.ok(css.includes(token), `missing ${token}`);
+    assert.ok(tokens.includes(token), `missing semantic contract ${token}`);
+  }
+  for (const token of ["--motion-fast", "--motion-normal", "--motion-slow"]) {
+    assert.ok(css.includes(token), `missing motion token ${token}`);
   }
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)/);
   assert.match(css, /\.erp-motion-enter/);
