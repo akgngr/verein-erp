@@ -1,21 +1,10 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import {
-  toast,
-  Chip,
-  Button,
-  Spinner,
-  Modal,
-  TextField,
-  Label,
-  Input,
-  TextArea,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Dialog, Input, Label, Spinner, StatusChip, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
-import { statusTone } from "@/shared/components/ui/status-appearance";
 
 import { Ban, Coins, Undo2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -152,18 +141,10 @@ export function ChargesTable({
       label: t("status"),
       render: (row) => (
         <div className="flex flex-col gap-0.5">
-          <Chip
-            size="sm"
-            color={statusTone(
-              row.isOverdue ? "danger" : STATUS_COLOR[row.status],
-            )}
-            variant={"soft"}
-            style={statusStyle(
-              row.isOverdue ? "danger" : STATUS_COLOR[row.status],
-            )}
+          <StatusChip tone={row.isOverdue ? "danger" : STATUS_COLOR[row.status]}
           >
             {row.isOverdue ? t("overdue") : tEnum(`chargeStatus.${row.status}`)}
-          </Chip>
+          </StatusChip>
           {row.payment ? (
             <span className="text-xs text-ink-500">
               {formatDate(row.payment.paidAt)} ·{" "}
@@ -290,21 +271,17 @@ export function ChargesTable({
           },
         ]}
       />
-      <Modal
+      <Dialog
         isOpen={dialog !== null}
-        onOpenChange={(open) => !open && setDialog(null)}
-      >
-        <Modal.Backdrop>
-          <Modal.Container size="md">
-            <Modal.Dialog className={"w-full max-w-md "}>
+        onOpenChange={(open) => !open && setDialog(null)} size="md" className={"w-full max-w-md "}>
               <DialogDismissButton />
 
-              <Modal.Header>
-                <Modal.Heading className="flex items-center gap-2">
+              <Dialog.Header>
+                <Dialog.Heading className="flex items-center gap-2">
                   {dialog ? t(`${dialog.type}Title`) : null}
-                </Modal.Heading>
-              </Modal.Header>
-              <Modal.Body>
+                </Dialog.Heading>
+              </Dialog.Header>
+              <Dialog.Body>
                 {dialog ? (
                   <div className="flex flex-col gap-3">
                     <p className="text-sm">
@@ -382,8 +359,8 @@ export function ChargesTable({
                     ) : null}
                   </div>
                 ) : null}
-              </Modal.Body>
-              <Modal.Footer>
+              </Dialog.Body>
+              <Dialog.Footer>
                 <Button
                   onPress={() => setDialog(null)}
                   variant={actionVariant("default", "light")}
@@ -398,14 +375,11 @@ export function ChargesTable({
                   )}
                   isPending={busy}
                 >
-                  {busy ? <Spinner size="sm" color="current" /> : null}
+                  {busy ? <Spinner size="sm" tone="current" /> : null}
                   {dialog ? t(`${dialog.type}Confirm`) : null}
                 </Button>
-              </Modal.Footer>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+              </Dialog.Footer>
+      </Dialog>
     </>
   );
 }

@@ -1,15 +1,6 @@
 "use client";
-import {
-  toast,
-  Chip,
-  Button,
-  Spinner,
-  RadioGroup,
-  Radio,
-  Label,
-  Description,
-  Switch,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Description, Label, Radio, RadioGroup, Spinner, StatusChip, Switch } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -64,21 +55,16 @@ export function CloudPolicyCard({
         <div className="flex flex-col gap-2">
           {(["OFF", "INTENTS", "SCREENED"] as const).map((value) => (
             <Radio key={value} value={value}>
-              <Radio.Content>
-                <Radio.Control>
-                  <Radio.Indicator />
-                </Radio.Control>
                 <Label>
                   <span className="flex items-center gap-2">
                     {t(`modes.${value}.label`)}
                     {value === "INTENTS" ? (
-                      <Chip size="sm" variant={"soft"}>
+                      <StatusChip>
                         {t("default")}
-                      </Chip>
+                      </StatusChip>
                     ) : null}
                   </span>
                 </Label>
-              </Radio.Content>
               <Description>{t(`modes.${value}.help`)}</Description>
             </Radio>
           ))}
@@ -91,16 +77,11 @@ export function CloudPolicyCard({
           onChange={setRecords}
           size={"sm"}
         >
-          <Switch.Content>
-            <Switch.Control>
-              <Switch.Thumb />
-            </Switch.Control>
             <Label>
               <span className="flex items-center gap-2 text-sm">
                 {t("records.label")}
               </span>
             </Label>
-          </Switch.Content>
         </Switch>
         <p className="text-xs text-ink-500">{t("records.help")}</p>
       </div>
@@ -116,7 +97,7 @@ export function CloudPolicyCard({
             variant={actionVariant("primary", "solid")}
             isPending={busy}
           >
-            {busy ? <Spinner size="sm" color="current" /> : null}
+            {busy ? <Spinner size="sm" tone="current" /> : null}
             {t("save")}
           </Button>
         </div>

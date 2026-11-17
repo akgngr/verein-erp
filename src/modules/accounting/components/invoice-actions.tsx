@@ -1,20 +1,6 @@
 "use client";
-import {
-  toast,
-  Link as ActionLink,
-  buttonVariants,
-  Button,
-  Spinner,
-  Modal,
-  Checkbox,
-  Label,
-  TextField,
-  Input,
-  Description,
-  TextArea,
-  Select,
-  ListBox,
-} from "@heroui/react";
+import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+import { Checkbox, Description, Dialog, Input, Label, Select, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -174,7 +160,7 @@ export function InvoiceActions({
             variant={actionVariant("primary", "flat")}
             isPending={busy}
           >
-            {busy ? <Spinner size="sm" color="current" /> : null}
+            {busy ? <Spinner size="sm" tone="current" /> : null}
             {<FileOutput className="h-4 w-4" aria-hidden />}
             {t("convert")}
           </Button>
@@ -214,19 +200,16 @@ export function InvoiceActions({
         }}
       />
 
-      <Modal isOpen={paymentOpen} onOpenChange={setPaymentOpen}>
-        <Modal.Backdrop>
-          <Modal.Container size="md">
-            <Modal.Dialog className={"w-full max-w-md "}>
+      <Dialog isOpen={paymentOpen} onOpenChange={setPaymentOpen} size="md" className={"w-full max-w-md "}>
               {({ close: onClose }) => (
                 <>
                   <DialogDismissButton />
-                  <Modal.Header>
-                    <Modal.Heading className="flex items-center gap-2">
+                  <Dialog.Header>
+                    <Dialog.Heading className="flex items-center gap-2">
                       {t("paymentTitle", { number: invoice.number ?? "" })}
-                    </Modal.Heading>
-                  </Modal.Header>
-                  <Modal.Body>
+                    </Dialog.Heading>
+                  </Dialog.Header>
+                  <Dialog.Body>
                     <p className="text-sm text-ink-500">{t("paymentHelp")}</p>
                     <TextField
                       value={amount}
@@ -245,10 +228,6 @@ export function InvoiceActions({
                         isSelected={closeRemainder}
                         onChange={setCloseRemainder}
                       >
-                        <Checkbox.Content>
-                          <Checkbox.Control className="size-4">
-                            <Checkbox.Indicator />
-                          </Checkbox.Control>
                           <Label>
                             <span className="text-sm">
                               {t("closeRemainder", {
@@ -261,7 +240,6 @@ export function InvoiceActions({
                               })}
                             </span>
                           </Label>
-                        </Checkbox.Content>
                       </Checkbox>
                     ) : null}
                     <TextField
@@ -285,24 +263,15 @@ export function InvoiceActions({
                       }}
                     >
                       <Label>{t("account")}</Label>
-                      <Select.Trigger>
-                        <Select.Value />
-                        <Select.Indicator />
-                      </Select.Trigger>
-                      <Select.Popover>
-                        <ListBox>
                           {accountOptions.map((option) => (
-                            <ListBox.Item
+                            <Select.Item
                               key={option.value}
                               id={option.value}
                               textValue={String(option.label)}
                             >
                               <Label>{option.label}</Label>
-                              <ListBox.ItemIndicator />
-                            </ListBox.Item>
+                            </Select.Item>
                           ))}
-                        </ListBox>
-                      </Select.Popover>
                     </Select>
                     <Select
                       isRequired
@@ -316,27 +285,18 @@ export function InvoiceActions({
                       }}
                     >
                       <Label>{t("category")}</Label>
-                      <Select.Trigger>
-                        <Select.Value />
-                        <Select.Indicator />
-                      </Select.Trigger>
-                      <Select.Popover>
-                        <ListBox>
                           {categoryOptions.map((option) => (
-                            <ListBox.Item
+                            <Select.Item
                               key={option.value}
                               id={option.value}
                               textValue={String(option.label)}
                             >
                               <Label>{option.label}</Label>
-                              <ListBox.ItemIndicator />
-                            </ListBox.Item>
+                            </Select.Item>
                           ))}
-                        </ListBox>
-                      </Select.Popover>
                     </Select>
-                  </Modal.Body>
-                  <Modal.Footer>
+                  </Dialog.Body>
+                  <Dialog.Footer>
                     <Button
                       onPress={onClose}
                       variant={actionVariant("default", "light")}
@@ -374,30 +334,24 @@ export function InvoiceActions({
                       variant={actionVariant("success", "solid")}
                       isPending={busy}
                     >
-                      {busy ? <Spinner size="sm" color="current" /> : null}
+                      {busy ? <Spinner size="sm" tone="current" /> : null}
                       {t("recordPayment")}
                     </Button>
-                  </Modal.Footer>
+                  </Dialog.Footer>
                 </>
               )}
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+      </Dialog>
 
-      <Modal isOpen={cancelOpen} onOpenChange={setCancelOpen}>
-        <Modal.Backdrop>
-          <Modal.Container size="md">
-            <Modal.Dialog className={"w-full max-w-md "}>
+      <Dialog isOpen={cancelOpen} onOpenChange={setCancelOpen} size="md" className={"w-full max-w-md "}>
               {({ close: onClose }) => (
                 <>
                   <DialogDismissButton />
-                  <Modal.Header>
-                    <Modal.Heading className="flex items-center gap-2">
+                  <Dialog.Header>
+                    <Dialog.Heading className="flex items-center gap-2">
                       {t("cancelTitle", { number: invoice.number ?? "" })}
-                    </Modal.Heading>
-                  </Modal.Header>
-                  <Modal.Body>
+                    </Dialog.Heading>
+                  </Dialog.Header>
+                  <Dialog.Body>
                     <p className="text-sm text-ink-500">
                       {invoice.status === "PAID"
                         ? t("cancelPaidHelp")
@@ -422,8 +376,8 @@ export function InvoiceActions({
                           .join(" ")}
                       />
                     </TextField>
-                  </Modal.Body>
-                  <Modal.Footer>
+                  </Dialog.Body>
+                  <Dialog.Footer>
                     <Button
                       onPress={onClose}
                       variant={actionVariant("default", "light")}
@@ -446,16 +400,13 @@ export function InvoiceActions({
                       variant={actionVariant("danger", "solid")}
                       isPending={busy}
                     >
-                      {busy ? <Spinner size="sm" color="current" /> : null}
+                      {busy ? <Spinner size="sm" tone="current" /> : null}
                       {t("cancel")}
                     </Button>
-                  </Modal.Footer>
+                  </Dialog.Footer>
                 </>
               )}
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+      </Dialog>
     </div>
   );
 }

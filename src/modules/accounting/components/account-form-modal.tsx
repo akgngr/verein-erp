@@ -1,19 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Modal,
-  TextField,
-  Label,
-  Input,
-  Description,
-  Select,
-  ListBox,
-  DatePicker,
-  DateField,
-} from "@heroui/react";
-import { DateCalendar } from "@/shared/components/forms/date-calendar";
+import { Button, toast } from "@heroui/react";
+import { DateInput, Description, Dialog, Input, Label, Select, Spinner, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -23,7 +10,6 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 
-import { parseDate } from "@internationalized/date";
 
 import type { AccountType } from "@prisma/client";
 
@@ -119,18 +105,15 @@ export function AccountFormModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-      <Modal.Backdrop>
-        <Modal.Container size="md">
-          <Modal.Dialog className={"w-full max-w-md "}>
+    <Dialog isOpen={isOpen} onOpenChange={onOpenChange} size="md" className={"w-full max-w-md "}>
             <DialogDismissButton />
 
-            <Modal.Header>
-              <Modal.Heading className="flex items-center gap-2">
+            <Dialog.Header>
+              <Dialog.Heading className="flex items-center gap-2">
                 {account ? t("edit") : t("new")}
-              </Modal.Heading>
-            </Modal.Header>
-            <Modal.Body className="gap-4">
+              </Dialog.Heading>
+            </Dialog.Header>
+            <Dialog.Body className="gap-4">
               <TextField
                 value={name}
                 isRequired
@@ -150,24 +133,15 @@ export function AccountFormModal({
                 }}
               >
                 <Label>{t("type")}</Label>
-                <Select.Trigger>
-                  <Select.Value />
-                  <Select.Indicator />
-                </Select.Trigger>
-                <Select.Popover>
-                  <ListBox>
                     {TYPES.map((value) => (
-                      <ListBox.Item
+                      <Select.Item
                         key={value}
                         id={value}
                         textValue={String(t(`type${value}`))}
                       >
                         <Label>{t(`type${value}`)}</Label>
-                        <ListBox.ItemIndicator />
-                      </ListBox.Item>
+                      </Select.Item>
                     ))}
-                  </ListBox>
-                </Select.Popover>
               </Select>
               <TextField
                 value={accountNumber}
@@ -197,37 +171,9 @@ export function AccountFormModal({
                 <Label>{t("openingBalance")}</Label>
                 <Input inputMode="decimal" />
               </TextField>
-              <DatePicker
-                granularity="day"
-                value={(() => {
-                  try {
-                    return parseDate(openingDate);
-                  } catch {
-                    return null;
-                  }
-                })()}
-                onChange={(value) =>
-                  setOpeningDate(value ? value.toString() : "")
-                }
-                hideTimeZone
-              >
-                <Label>{t("openingDate")}</Label>
-                <DateField.Group>
-                  <DateField.Input>
-                    {(segment) => <DateField.Segment segment={segment} />}
-                  </DateField.Input>
-                  <DateField.Suffix>
-                    <DatePicker.Trigger aria-label={String(t("openingDate"))}>
-                      <DatePicker.TriggerIndicator />
-                    </DatePicker.Trigger>
-                  </DateField.Suffix>
-                </DateField.Group>
-                <DatePicker.Popover>
-                  <DateCalendar label={String(t("openingDate"))} />
-                </DatePicker.Popover>
-              </DatePicker>
-            </Modal.Body>
-            <Modal.Footer>
+              <DateInput label={t("openingDate")} ariaLabel={String(t("openingDate"))} value={openingDate} onChange={setOpeningDate} />
+            </Dialog.Body>
+            <Dialog.Footer>
               <Button
                 onPress={() => onOpenChange(false)}
                 variant={actionVariant("default", "flat")}
@@ -240,13 +186,10 @@ export function AccountFormModal({
                 variant={actionVariant("primary", "solid")}
                 isPending={busy}
               >
-                {busy ? <Spinner size="sm" color="current" /> : null}
+                {busy ? <Spinner size="sm" tone="current" /> : null}
                 {account ? t("edit") : t("new")}
               </Button>
-            </Modal.Footer>
-          </Modal.Dialog>
-        </Modal.Container>
-      </Modal.Backdrop>
-    </Modal>
+            </Dialog.Footer>
+    </Dialog>
   );
 }

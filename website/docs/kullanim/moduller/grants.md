@@ -13,7 +13,7 @@ Hibe ve proje fonları: finansman planı, ödemeler ve Verwendungsnachweis (kull
 |---|---|
 | Anahtar | `grants` |
 | Tür | Resmî modül |
-| Sürüm | 1.0.6 |
+| Sürüm | 1.0.7 |
 | Gerektirir | [Muhasebe](./accounting) |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_grant_overview`
 
 ## Sürüm notları
+
+### 1.0.7 — Ortak UI bileşenleri (iç değişiklik)
+
+_2026-11-17_
+
+- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
 ### 1.0.6 — Hibe durum rozeti ortak UI katmanında
 

@@ -1,17 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Modal,
-  TextField,
-  Label,
-  TextArea,
-  Description,
-  Input,
-  Select,
-  ListBox,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Description, Dialog, Input, Label, Select, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -120,20 +109,17 @@ export function DecisionModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange} key={key}>
-      <Modal.Backdrop>
-        <Modal.Container size="lg">
-          <Modal.Dialog className={"w-full max-w-lg "}>
+    <Dialog isOpen={isOpen} onOpenChange={onOpenChange} key={key} size="lg" className={"w-full max-w-lg "}>
             <DialogDismissButton />
 
-            <Modal.Header>
-              <Modal.Heading className="flex items-center gap-2">
+            <Dialog.Header>
+              <Dialog.Heading className="flex items-center gap-2">
                 {decision
                   ? t("editTitleNumbered", { number: decision.decisionNumber })
                   : t("modalAddTitle")}
-              </Modal.Heading>
-            </Modal.Header>
-            <Modal.Body>
+              </Dialog.Heading>
+            </Dialog.Header>
+            <Dialog.Body>
               <TextField
                 value={text}
                 isRequired
@@ -159,24 +145,15 @@ export function DecisionModal({
                 }}
               >
                 <Label>{t("result")}</Label>
-                <Select.Trigger>
-                  <Select.Value />
-                  <Select.Indicator />
-                </Select.Trigger>
-                <Select.Popover>
-                  <ListBox>
                     {resultOptions.map((option) => (
-                      <ListBox.Item
+                      <Select.Item
                         key={option.value}
                         id={option.value}
                         textValue={option.label}
                       >
                         <Label>{option.label}</Label>
-                        <ListBox.ItemIndicator />
-                      </ListBox.Item>
+                      </Select.Item>
                     ))}
-                  </ListBox>
-                </Select.Popover>
               </Select>
               {agendaItems.length > 0 ? (
                 <Select
@@ -192,12 +169,6 @@ export function DecisionModal({
                   }}
                 >
                   <Label>{t("agendaItem")}</Label>
-                  <Select.Trigger>
-                    <Select.Value />
-                    <Select.Indicator />
-                  </Select.Trigger>
-                  <Select.Popover>
-                    <ListBox>
                       {[
                         { value: "", label: t("noAgenda") },
                         ...agendaItems.map((item) => ({
@@ -205,17 +176,14 @@ export function DecisionModal({
                           label: `${item.position}. ${item.title}`,
                         })),
                       ].map((option) => (
-                        <ListBox.Item
+                        <Select.Item
                           key={option.value}
                           id={option.value}
                           textValue={option.label}
                         >
                           <Label>{option.label}</Label>
-                          <ListBox.ItemIndicator />
-                        </ListBox.Item>
+                        </Select.Item>
                       ))}
-                    </ListBox>
-                  </Select.Popover>
                   <Description>{t("agendaHelp")}</Description>
                 </Select>
               ) : null}
@@ -246,8 +214,8 @@ export function DecisionModal({
                 </TextField>
               </div>
               {error ? <p className="text-sm text-danger">{error}</p> : null}
-            </Modal.Body>
-            <Modal.Footer>
+            </Dialog.Body>
+            <Dialog.Footer>
               <Button
                 onPress={() => onOpenChange(false)}
                 variant={actionVariant("default", "light")}
@@ -260,13 +228,10 @@ export function DecisionModal({
                 variant={actionVariant("primary", "solid")}
                 isPending={busy}
               >
-                {busy ? <Spinner size="sm" color="current" /> : null}
+                {busy ? <Spinner size="sm" tone="current" /> : null}
                 {tCommon("save")}
               </Button>
-            </Modal.Footer>
-          </Modal.Dialog>
-        </Modal.Container>
-      </Modal.Backdrop>
-    </Modal>
+            </Dialog.Footer>
+    </Dialog>
   );
 }

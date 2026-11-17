@@ -1,15 +1,7 @@
 "use client";
-import {
-  Button,
-  Tooltip,
-  TextField,
-  InputGroup,
-  Select,
-  ListBox,
-  Label,
-  Dropdown,
-  Badge,
-} from "@heroui/react";
+import { Button } from "@heroui/react";
+import { Badge } from "@/shared/components/kit";
+import { Dropdown, InputGroup, Label, Select, TextField, Tooltip } from "@/shared/components/kit";
 
 import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
 
@@ -206,28 +198,18 @@ export function DocumentToolbar({
             ? ""
             : String(selected);
         setParams({ [`filter.${key}`]: next }, { resetPage: true });
-      }}
-    >
-      <Select.Trigger className="h-9 text-sm">
-        <Select.Value />
-        <Select.Indicator />
-      </Select.Trigger>
-      <Select.Popover>
-        <ListBox>
+      }} size="sm">
           {[{ value: FILTER_ALL, label: t("filter.all") }, ...options].map(
             (option) => (
-              <ListBox.Item
+              <Select.Item
                 key={option.value}
                 id={option.value}
                 textValue={option.label}
               >
                 <Label>{option.label}</Label>
-                <ListBox.ItemIndicator />
-              </ListBox.Item>
+              </Select.Item>
             ),
           )}
-        </ListBox>
-      </Select.Popover>
     </Select>
   );
 
@@ -272,7 +254,7 @@ export function DocumentToolbar({
               isDisabled={!hasDateFilter}
               id={CLEAR_KEY}
               textValue={String(t("filter.dateClear"))}
-              variant={"danger" === "danger" ? "danger" : undefined}
+              tone={"danger" === "danger" ? "danger" : undefined}
               className={["", "mt-1 border-t border-border pt-2"]
                 .filter(Boolean)
                 .join(" ")}
@@ -287,7 +269,7 @@ export function DocumentToolbar({
 
   const filterPanelButton = (
     <div ref={panelRef} className="relative">
-      <Badge.Anchor>
+      <Badge tone="accent" content={activeFilterCount > 0 ? String(activeFilterCount) : null}>
         <Button
           id={`${ctx.idPrefix}-filters`}
           size="sm"
@@ -303,12 +285,7 @@ export function DocumentToolbar({
           {t("filter.filters")}
           {<ChevronDown className="h-3.5 w-3.5" aria-hidden />}
         </Button>
-        {!(activeFilterCount === 0) ? (
-          <Badge color="accent" size="sm">
-            <Badge.Label>{String(activeFilterCount)}</Badge.Label>
-          </Badge>
-        ) : null}
-      </Badge.Anchor>
+      </Badge>
       {panelOpen ? (
         <div
           role="dialog"

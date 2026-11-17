@@ -1,13 +1,6 @@
 "use client";
-import {
-  toast,
-  Card,
-  Link as ActionLink,
-  buttonVariants,
-  Button,
-  Spinner,
-  ProgressBar,
-} from "@heroui/react";
+import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+import { Card, ProgressBar, Spinner } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -132,7 +125,7 @@ export function ImportWizard() {
             variant={actionVariant("primary", "flat")}
             isPending={busy}
           >
-            {busy ? <Spinner size="sm" color="current" /> : null}
+            {busy ? <Spinner size="sm" tone="current" /> : null}
             {t("check")}
           </Button>
         </div>
@@ -171,11 +164,8 @@ export function ImportWizard() {
                     ? Math.round((preview.valid / preview.total) * 100)
                     : 0
                 }
-                color="success"
+                tone="success"
               >
-                <ProgressBar.Track>
-                  <ProgressBar.Fill />
-                </ProgressBar.Track>
               </ProgressBar>
             ) : null}
 
@@ -226,7 +216,7 @@ export function ImportWizard() {
                 variant={actionVariant("primary", "solid")}
                 isPending={busy}
               >
-                {busy ? <Spinner size="sm" color="current" /> : null}
+                {busy ? <Spinner size="sm" tone="current" /> : null}
                 {t("importButton")}
               </Button>
             </div>

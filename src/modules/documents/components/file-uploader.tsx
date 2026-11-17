@@ -1,5 +1,6 @@
 "use client";
-import { toast, Button, Spinner } from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Spinner } from "@/shared/components/kit";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
@@ -345,7 +346,7 @@ export function FileUploader({
                     isPending={analyzingId === item.id}
                   >
                     {analyzingId === item.id ? (
-                      <Spinner size="sm" color="current" />
+                      <Spinner size="sm" tone="current" />
                     ) : null}
                     {analyzingId === item.id ? null : (
                       <Sparkles className="h-4 w-4" aria-hidden />

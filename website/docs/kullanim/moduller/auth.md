@@ -13,9 +13,15 @@ Kullanıcı girişi, oturum yönetimi ve parola güvenliği.
 |---|---|
 | Anahtar | `auth` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.0.5 |
+| Sürüm | 1.0.6 |
 
 ## Sürüm notları
+
+### 1.0.6 — Ortak UI bileşenleri (iç değişiklik)
+
+_2026-11-17_
+
+- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
 ### 1.0.5 — Giriş ve profil yüzeyleri ortak kart katmanında
 

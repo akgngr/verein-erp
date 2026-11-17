@@ -1,14 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Card,
-  Spinner,
-  Select,
-  ListBox,
-  Label,
-  Tabs,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Card, Label, Select, Spinner, Tabs } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -151,26 +143,21 @@ export function SetupTabs({
         onSelectionChange={(key) =>
           router.push(`/muhasebe/ayarlar?sekme=${String(key)}`)
         }
-        variant="secondary"
+        emphasis="secondary"
       >
-        <Tabs.ListContainer>
           <Tabs.List aria-label={t("title")}>
             <Tabs.Tab id={"hesaplar"} key={"hesaplar"}>
               {t("tabs.accounts")}
-              <Tabs.Indicator />
             </Tabs.Tab>
 
             <Tabs.Tab id={"kategoriler"} key={"kategoriler"}>
               {t("tabs.categories")}
-              <Tabs.Indicator />
             </Tabs.Tab>
 
             <Tabs.Tab id={"projeler"} key={"projeler"}>
               {t("tabs.projects")}
-              <Tabs.Indicator />
             </Tabs.Tab>
           </Tabs.List>
-        </Tabs.ListContainer>
         <Tabs.Panel id={"hesaplar"} key={"hesaplar"}>
           <div className="pt-3">
             {canUpdate ? (
@@ -533,24 +520,15 @@ function SyncSettingsCard({
                 }}
               >
                 <Label>{t("memberFeeCategory")}</Label>
-                <Select.Trigger>
-                  <Select.Value />
-                  <Select.Indicator />
-                </Select.Trigger>
-                <Select.Popover>
-                  <ListBox>
                     {categoryOptions.map((option) => (
-                      <ListBox.Item
+                      <Select.Item
                         key={option.value}
                         id={option.value}
                         textValue={String(option.label)}
                       >
                         <Label>{option.label}</Label>
-                        <ListBox.ItemIndicator />
-                      </ListBox.Item>
+                      </Select.Item>
                     ))}
-                  </ListBox>
-                </Select.Popover>
               </Select>
               <Select
                 id="accounting-setup-cashAccount"
@@ -562,24 +540,15 @@ function SyncSettingsCard({
                 }}
               >
                 <Label>{t("cashAccount")}</Label>
-                <Select.Trigger>
-                  <Select.Value />
-                  <Select.Indicator />
-                </Select.Trigger>
-                <Select.Popover>
-                  <ListBox>
                     {accountOptions.map((option) => (
-                      <ListBox.Item
+                      <Select.Item
                         key={option.value}
                         id={option.value}
                         textValue={String(option.label)}
                       >
                         <Label>{option.label}</Label>
-                        <ListBox.ItemIndicator />
-                      </ListBox.Item>
+                      </Select.Item>
                     ))}
-                  </ListBox>
-                </Select.Popover>
               </Select>
               <Select
                 id="accounting-setup-bankAccount"
@@ -591,24 +560,15 @@ function SyncSettingsCard({
                 }}
               >
                 <Label>{t("bankAccount")}</Label>
-                <Select.Trigger>
-                  <Select.Value />
-                  <Select.Indicator />
-                </Select.Trigger>
-                <Select.Popover>
-                  <ListBox>
                     {accountOptions.map((option) => (
-                      <ListBox.Item
+                      <Select.Item
                         key={option.value}
                         id={option.value}
                         textValue={String(option.label)}
                       >
                         <Label>{option.label}</Label>
-                        <ListBox.ItemIndicator />
-                      </ListBox.Item>
+                      </Select.Item>
                     ))}
-                  </ListBox>
-                </Select.Popover>
               </Select>
             </div>
             <div className="grid grid-cols-1 gap-3 sm:grid-cols-3">
@@ -622,24 +582,15 @@ function SyncSettingsCard({
                 }}
               >
                 <Label>{t("donationCategory")}</Label>
-                <Select.Trigger>
-                  <Select.Value />
-                  <Select.Indicator />
-                </Select.Trigger>
-                <Select.Popover>
-                  <ListBox>
                     {categoryOptions.map((option) => (
-                      <ListBox.Item
+                      <Select.Item
                         key={option.value}
                         id={option.value}
                         textValue={String(option.label)}
                       >
                         <Label>{option.label}</Label>
-                        <ListBox.ItemIndicator />
-                      </ListBox.Item>
+                      </Select.Item>
                     ))}
-                  </ListBox>
-                </Select.Popover>
               </Select>
             </div>
             <div>
@@ -648,7 +599,7 @@ function SyncSettingsCard({
                 variant={actionVariant("primary", "solid")}
                 isPending={saving}
               >
-                {saving ? <Spinner size="sm" color="current" /> : null}
+                {saving ? <Spinner size="sm" tone="current" /> : null}
                 {t("save")}
               </Button>
             </div>

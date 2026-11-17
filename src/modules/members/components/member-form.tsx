@@ -1,12 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  CheckboxGroup,
-  Label,
-  Description,
-  Checkbox,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Checkbox, CheckboxGroup, Description, Label } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -448,12 +442,7 @@ export function MemberForm(props: MemberFormProps) {
               <div className="flex flex-wrap gap-x-4 gap-y-2">
                 {MESSAGING_CHANNELS.map((channel) => (
                   <Checkbox key={channel} value={channel}>
-                    <Checkbox.Content>
-                      <Checkbox.Control>
-                        <Checkbox.Indicator />
-                      </Checkbox.Control>
                       <Label>{t(`form.messagingChannels.${channel}`)}</Label>
-                    </Checkbox.Content>
                   </Checkbox>
                 ))}
               </div>

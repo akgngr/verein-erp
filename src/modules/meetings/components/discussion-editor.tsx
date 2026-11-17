@@ -1,13 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  TextField,
-  Label,
-  TextArea,
-  Description,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Description, Label, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -110,7 +103,7 @@ export function DiscussionEditor({
           variant={actionVariant("primary", "solid")}
           isPending={busy}
         >
-          {busy ? <Spinner size="sm" color="current" /> : null}
+          {busy ? <Spinner size="sm" tone="current" /> : null}
           {t("save")}
         </Button>
         <Button

@@ -1,5 +1,6 @@
 "use client";
-import { toast, Button, Dropdown, Label, Description } from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Description, Dropdown, Label } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 

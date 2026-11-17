@@ -13,7 +13,7 @@ Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.
 |---|---|
 | Anahtar | `system` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.12.2 |
+| Sürüm | 1.12.3 |
 | Sayfalar | `/ayarlar`, `/ayarlar/moduller`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/surum-notlari` |
 
 ## Diğer modüllere erişim
@@ -34,6 +34,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Modül Yönetimi | görüntüleme, düzenleme, silme | görüntüleme | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.12.3 — Ortak UI bileşenleri (iç değişiklik)
+
+_2026-11-17_
+
+- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
 ### 1.12.2 — Ortak UI kartları
 
@@ -79,10 +85,4 @@ _2026-11-07_
 
 - **Yeni:** Modül yaşam döngüsüne onUserDeleted kancası eklendi; kişisel panel düzeni kullanıcıyla birlikte silinir.
 
-### 1.10.2 — Worker için Next.js bağımsız modül durumu
-
-_2026-11-03_
-
-- **Düzeltme:** Modül kullanılabilirliği sorgularının Next.js cache ve lifecycle bağımlılıklarını worker import zincirine taşıması önlendi. Salt okunur modül durumu erişimi, Next.js revalidasyon ve lifecycle işlemlerinden ayrıldı.
-
-Daha eski 13 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/system/releases.json)
+Daha eski 14 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/system/releases.json)

@@ -1,13 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Modal,
-  TextField,
-  Input,
-  Label,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Dialog, Input, Label, Spinner, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -260,7 +253,7 @@ export function GradesPanel({
               variant={actionVariant("primary", "solid")}
               isPending={busy}
             >
-              {busy ? <Spinner size="sm" color="current" /> : null}
+              {busy ? <Spinner size="sm" tone="current" /> : null}
               {t("save")}
             </Button>
           ) : null}
@@ -268,21 +261,17 @@ export function GradesPanel({
         </>
       )}
 
-      <Modal
+      <Dialog
         isOpen={creating !== null}
-        onOpenChange={(open) => !open && setCreating(null)}
-      >
-        <Modal.Backdrop>
-          <Modal.Container size="md">
-            <Modal.Dialog className={"w-full max-w-md "}>
+        onOpenChange={(open) => !open && setCreating(null)} size="md" className={"w-full max-w-md "}>
               <DialogDismissButton />
 
-              <Modal.Header>
-                <Modal.Heading className="flex items-center gap-2">
+              <Dialog.Header>
+                <Dialog.Heading className="flex items-center gap-2">
                   {t("addTitle")}
-                </Modal.Heading>
-              </Modal.Header>
-              <Modal.Body>
+                </Dialog.Heading>
+              </Dialog.Header>
+              <Dialog.Body>
                 {creating ? (
                   <div className="flex flex-col gap-3">
                     <TextField
@@ -339,8 +328,8 @@ export function GradesPanel({
                     ) : null}
                   </div>
                 ) : null}
-              </Modal.Body>
-              <Modal.Footer>
+              </Dialog.Body>
+              <Dialog.Footer>
                 <Button
                   onPress={() => setCreating(null)}
                   variant={actionVariant("default", "light")}
@@ -352,14 +341,11 @@ export function GradesPanel({
                   variant={actionVariant("primary", "solid")}
                   isPending={busy}
                 >
-                  {busy ? <Spinner size="sm" color="current" /> : null}
+                  {busy ? <Spinner size="sm" tone="current" /> : null}
                   {tCommon("save")}
                 </Button>
-              </Modal.Footer>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+              </Dialog.Footer>
+      </Dialog>
       <ConfirmDialog
         isOpen={deleting}
         onOpenChange={setDeleting}

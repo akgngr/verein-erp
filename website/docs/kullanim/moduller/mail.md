@@ -13,7 +13,7 @@ Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gön
 |---|---|
 | Anahtar | `mail` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.4.1 |
+| Sürüm | 1.4.2 |
 | Sayfalar | `/mail`, `/mail/gelen-kutusu`, `/mail/kayitlar` |
 
 ## Diğer modüllere erişim
@@ -35,6 +35,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | E-posta altyapısı | görüntüleme, oluşturma, düzenleme | — | — | — | görüntüleme | — | — |
 
 ## Sürüm notları
+
+### 1.4.2 — Ortak UI bileşenleri (iç değişiklik)
+
+_2026-11-17_
+
+- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
 ### 1.4.1 — HeroUI v3 arayüz geçişi
 
@@ -78,10 +84,4 @@ _2026-11-06_
 
 - **Yeni:** İş akışlarında sabit bir adrese tek bildirim e-postası gönderen mail.send_notification görevi eklendi.
 
-### 1.2.2 — Otomasyon izleme API'si
-
-_2026-11-03_
-
-- **İyileştirme:** Otomasyon izleme ekranı için kampanyaya bağlı başarısız e-posta kayıtlarını sunucu API'si üzerinden sunar.
-
-Daha eski 4 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/mail/releases.json)
+Daha eski 5 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/mail/releases.json)

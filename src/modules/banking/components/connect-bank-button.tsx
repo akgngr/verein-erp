@@ -1,12 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Modal,
-  TextField,
-  InputGroup,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Dialog, InputGroup, Spinner, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -80,18 +74,15 @@ export function ConnectBankButton({ disabled }: { disabled: boolean }) {
         {<Plus size={16} />}
         {t("button")}
       </Button>
-      <Modal isOpen={open} onOpenChange={setOpen}>
-        <Modal.Backdrop>
-          <Modal.Container size="lg" scroll={"inside"}>
-            <Modal.Dialog className={"w-full max-w-lg "}>
+      <Dialog isOpen={open} onOpenChange={setOpen} size="lg" scroll={"inside"} className={"w-full max-w-lg "}>
               <DialogDismissButton />
 
-              <Modal.Header>
-                <Modal.Heading className="flex items-center gap-2">
+              <Dialog.Header>
+                <Dialog.Heading className="flex items-center gap-2">
                   {t("title")}
-                </Modal.Heading>
-              </Modal.Header>
-              <Modal.Body className="pb-6">
+                </Dialog.Heading>
+              </Dialog.Header>
+              <Dialog.Body className="pb-6">
                 <p className="text-sm text-ink-500">{t("help")}</p>
                 <TextField
                   aria-label={t("search")}
@@ -148,11 +139,8 @@ export function ConnectBankButton({ disabled }: { disabled: boolean }) {
                     ) : null}
                   </ul>
                 )}
-              </Modal.Body>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+              </Dialog.Body>
+      </Dialog>
     </>
   );
 }

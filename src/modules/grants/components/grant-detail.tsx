@@ -1,20 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Link as ActionLink,
-  buttonVariants,
-  Chip,
-  TextField,
-  Label,
-  Input,
-  InputGroup,
-  TextArea,
-  Select,
-  ListBox,
-  Tabs,
-} from "@heroui/react";
+import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+import { Input, InputGroup, Label, Select, Spinner, StatusChip, Tabs, TextArea, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -96,30 +82,24 @@ export function GrantDetailApp({
 
   if (!hydrated) return null;
   return (
-    <Tabs variant="primary">
-      <Tabs.ListContainer>
+    <Tabs emphasis="primary">
         <Tabs.List aria-label={grant.name}>
           <Tabs.Tab id={"general"} key={"general"}>
             {t("tabs.general")}
-            <Tabs.Indicator />
           </Tabs.Tab>
 
           <Tabs.Tab id={"plan"} key={"plan"}>
             {t("tabs.plan")}
-            <Tabs.Indicator />
           </Tabs.Tab>
 
           <Tabs.Tab id={"payouts"} key={"payouts"}>
             {t("tabs.payouts")}
-            <Tabs.Indicator />
           </Tabs.Tab>
 
           <Tabs.Tab id={"report"} key={"report"}>
             {t("tabs.report")}
-            <Tabs.Indicator />
           </Tabs.Tab>
         </Tabs.List>
-      </Tabs.ListContainer>
       <Tabs.Panel id={"general"} key={"general"}>
         <GrantForm canEdit={can.update} projects={projects} initial={grant} />
         {can.delete ? (
@@ -200,27 +180,17 @@ export function GrantDetailApp({
                       i === index ? { ...item, categoryIds: keys } : item,
                     ),
                   );
-                }}
-              >
+                }} size="sm">
                 <Label>{t("fields.categories")}</Label>
-                <Select.Trigger className="h-9 text-sm">
-                  <Select.Value />
-                  <Select.Indicator />
-                </Select.Trigger>
-                <Select.Popover>
-                  <ListBox selectionMode="multiple">
                     {categories.map((category) => (
-                      <ListBox.Item
+                      <Select.Item
                         key={category.id}
                         id={category.id}
                         textValue={String(category.name)}
                       >
                         <Label>{category.name}</Label>
-                        <ListBox.ItemIndicator />
-                      </ListBox.Item>
+                      </Select.Item>
                     ))}
-                  </ListBox>
-                </Select.Popover>
               </Select>
               {can.update ? (
                 <Button
@@ -269,7 +239,7 @@ export function GrantDetailApp({
                 variant={actionVariant("primary", "solid")}
                 isPending={pending}
               >
-                {pending ? <Spinner size="sm" color="current" /> : null}
+                {pending ? <Spinner size="sm" tone="current" /> : null}
                 {t("save")}
               </Button>
             </div>
@@ -412,7 +382,7 @@ export function GrantDetailApp({
                 variant={actionVariant("primary", "solid")}
                 isPending={pending}
               >
-                {pending ? <Spinner size="sm" color="current" /> : null}
+                {pending ? <Spinner size="sm" tone="current" /> : null}
                 {t("add")}
               </Button>
             </div>
@@ -440,19 +410,19 @@ export function GrantDetailApp({
               {t("reportPdf")}
             </ActionLink>
             {grant.reportSubmittedAt ? (
-              <Chip color={"success"} variant={"soft"}>
+              <StatusChip tone="success">
                 {t("submittedAt", {
                   date: format.dateTime(new Date(grant.reportSubmittedAt), {
                     dateStyle: "medium",
                   }),
                 })}
-              </Chip>
+              </StatusChip>
             ) : null}
             {report.missingReceipts ? (
-              <Chip color={"warning"} variant={"soft"}>
+              <StatusChip tone="warning">
                 {<AlertTriangle className="size-3.5" />}
                 {t("missingReceipts", { count: report.missingReceipts })}
-              </Chip>
+              </StatusChip>
             ) : null}
           </div>
           <section>
@@ -619,7 +589,7 @@ export function GrantDetailApp({
                   variant={actionVariant("default", "solid")}
                   isPending={pending}
                 >
-                  {pending ? <Spinner size="sm" color="current" /> : null}
+                  {pending ? <Spinner size="sm" tone="current" /> : null}
                   {t("save")}
                 </Button>
                 {grant.reportSubmittedAt ? (

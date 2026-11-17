@@ -1,5 +1,6 @@
 "use client";
-import { toast, Switch, Label } from "@heroui/react";
+import { toast } from "@heroui/react";
+import { Label, Switch } from "@/shared/components/kit";
 
 import {
   FormSurface,
@@ -195,14 +196,9 @@ export function DonationForm({
               onChange={field.onChange}
               size={"sm"}
             >
-              <Switch.Content>
-                <Switch.Control>
-                  <Switch.Thumb />
-                </Switch.Control>
                 <Label>
                   <span className="text-sm">{t("waived")}</span>
                 </Label>
-              </Switch.Content>
             </Switch>
           )}
         />

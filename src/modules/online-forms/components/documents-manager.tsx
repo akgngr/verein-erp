@@ -1,25 +1,10 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import {
-  toast,
-  Button,
-  Chip,
-  Spinner,
-  Modal,
-  Switch,
-  Label,
-  CheckboxGroup,
-  Checkbox,
-  TextField,
-  Input,
-  Select,
-  ListBox,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Checkbox, CheckboxGroup, Dialog, Input, Label, Select, Spinner, StatusChip, Switch, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
-import { statusTone } from "@/shared/components/ui/status-appearance";
 
 import {
   ArrowDown,
@@ -148,64 +133,40 @@ export function DocumentsManager({ documents }: { documents: DocumentRow[] }) {
               <div className="flex min-w-0 flex-1 flex-col gap-1">
                 <span className="font-medium">{doc.title}</span>
                 <div className="flex flex-wrap gap-1">
-                  <Chip
-                    size="sm"
-                    color={statusTone(
-                      doc.purpose === "PRIVACY"
+                  <StatusChip tone={doc.purpose === "PRIVACY"
                         ? "primary"
                         : doc.purpose === "PHOTO"
                           ? "secondary"
-                          : "default",
-                    )}
-                    variant={"soft"}
-                    style={statusStyle(
-                      doc.purpose === "PRIVACY"
-                        ? "primary"
-                        : doc.purpose === "PHOTO"
-                          ? "secondary"
-                          : "default",
-                    )}
+                          : "default"}
                   >
                     {t(`purposes.${doc.purpose}`)}
-                  </Chip>
+                  </StatusChip>
                   {doc.requiresConsent ? (
-                    <Chip
-                      size="sm"
-                      color={statusTone(
-                        doc.required || doc.purpose === "PRIVACY"
+                    <StatusChip tone={doc.required || doc.purpose === "PRIVACY"
                           ? "danger"
-                          : "default",
-                      )}
-                      variant={"soft"}
-                      style={statusStyle(
-                        doc.required || doc.purpose === "PRIVACY"
-                          ? "danger"
-                          : "default",
-                      )}
+                          : "default"}
                     >
                       {doc.required || doc.purpose === "PRIVACY"
                         ? t("requiredChip")
                         : t("optionalChip")}
-                    </Chip>
+                    </StatusChip>
                   ) : (
-                    <Chip size="sm" variant={"soft"}>
+                    <StatusChip>
                       {t("infoOnlyChip")}
-                    </Chip>
+                    </StatusChip>
                   )}
                   {doc.appliesTo.map((kind) => (
-                    <Chip
+                    <StatusChip
                       key={kind}
-                      size="sm"
-                      variant={"soft"}
                       className={"border border-current"}
                     >
                       {tKinds(kind)}
-                    </Chip>
+                    </StatusChip>
                   ))}
                   {doc.active ? null : (
-                    <Chip size="sm" color={"warning"} variant={"soft"}>
+                    <StatusChip tone="warning">
                       {t("inactive")}
-                    </Chip>
+                    </StatusChip>
                   )}
                 </div>
               </div>
@@ -238,21 +199,17 @@ export function DocumentsManager({ documents }: { documents: DocumentRow[] }) {
         </ul>
       )}
 
-      <Modal
+      <Dialog
         isOpen={Boolean(editing)}
-        onOpenChange={(open) => !open && setEditing(null)}
-      >
-        <Modal.Backdrop isDismissable={false}>
-          <Modal.Container size="full" scroll={"inside"}>
-            <Modal.Dialog className={"w-full h-dvh max-w-full "}>
+        onOpenChange={(open) => !open && setEditing(null)} isDismissable={false} size="full" scroll={"inside"} className={"w-full h-dvh max-w-full "}>
               <DialogDismissButton />
 
               {editing ? (
                 <>
-                  <Modal.Header className="flex flex-col gap-3 border-b border-ink-200">
-                    <Modal.Heading className="flex items-center gap-2">
+                  <Dialog.Header className="flex flex-col gap-3 border-b border-ink-200">
+                    <Dialog.Heading className="flex items-center gap-2">
                       <span>{editing.id ? t("editTitle") : t("addTitle")}</span>
-                    </Modal.Heading>
+                    </Dialog.Heading>
                     <div className="grid grid-cols-1 gap-3 text-sm font-normal lg:grid-cols-[2fr_1fr_auto]">
                       <TextField
                         value={editing.title}
@@ -283,24 +240,15 @@ export function DocumentsManager({ documents }: { documents: DocumentRow[] }) {
                         }}
                       >
                         <Label>{t("fields.purpose")}</Label>
-                        <Select.Trigger>
-                          <Select.Value />
-                          <Select.Indicator />
-                        </Select.Trigger>
-                        <Select.Popover>
-                          <ListBox>
                             {PURPOSES.map((purpose) => (
-                              <ListBox.Item
+                              <Select.Item
                                 key={purpose}
                                 id={purpose}
                                 textValue={String(t(`purposes.${purpose}`))}
                               >
                                 <Label>{t(`purposes.${purpose}`)}</Label>
-                                <ListBox.ItemIndicator />
-                              </ListBox.Item>
+                              </Select.Item>
                             ))}
-                          </ListBox>
-                        </Select.Popover>
                       </Select>
                       <Switch
                         isSelected={editing.active}
@@ -309,12 +257,7 @@ export function DocumentsManager({ documents }: { documents: DocumentRow[] }) {
                         }
                         className={"self-end"}
                       >
-                        <Switch.Content>
-                          <Switch.Control>
-                            <Switch.Thumb />
-                          </Switch.Control>
                           <Label>{t("fields.active")}</Label>
-                        </Switch.Content>
                       </Switch>
                     </div>
                     <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-sm font-normal">
@@ -328,12 +271,7 @@ export function DocumentsManager({ documents }: { documents: DocumentRow[] }) {
                         <div className="flex flex-wrap gap-x-4 gap-y-2">
                           {KINDS.map((kind) => (
                             <Checkbox key={kind} value={kind}>
-                              <Checkbox.Content>
-                                <Checkbox.Control>
-                                  <Checkbox.Indicator />
-                                </Checkbox.Control>
                                 <Label>{tKinds(kind)}</Label>
-                              </Checkbox.Content>
                             </Checkbox>
                           ))}
                         </div>
@@ -345,12 +283,7 @@ export function DocumentsManager({ documents }: { documents: DocumentRow[] }) {
                           setEditing({ ...editing, requiresConsent })
                         }
                       >
-                        <Checkbox.Content>
-                          <Checkbox.Control>
-                            <Checkbox.Indicator />
-                          </Checkbox.Control>
                           <Label>{t("fields.requiresConsent")}</Label>
-                        </Checkbox.Content>
                       </Checkbox>
                       <Checkbox
                         isSelected={
@@ -364,19 +297,14 @@ export function DocumentsManager({ documents }: { documents: DocumentRow[] }) {
                           setEditing({ ...editing, required })
                         }
                       >
-                        <Checkbox.Content>
-                          <Checkbox.Control>
-                            <Checkbox.Indicator />
-                          </Checkbox.Control>
                           <Label>{t("fields.required")}</Label>
-                        </Checkbox.Content>
                       </Checkbox>
                     </div>
                     <p className="text-xs font-normal text-ink-500">
                       {t(`purposeHelp.${editing.purpose}`)}
                     </p>
-                  </Modal.Header>
-                  <Modal.Body className="min-h-0 p-3">
+                  </Dialog.Header>
+                  <Dialog.Body className="min-h-0 p-3">
                     <RichTextEditor
                       key={editing.id ?? "new"}
                       value={editing.contentHtml}
@@ -387,8 +315,8 @@ export function DocumentsManager({ documents }: { documents: DocumentRow[] }) {
                         )
                       }
                     />
-                  </Modal.Body>
-                  <Modal.Footer className="border-t border-ink-200">
+                  </Dialog.Body>
+                  <Dialog.Footer className="border-t border-ink-200">
                     <Button
                       onPress={() => setEditing(null)}
                       variant={actionVariant("default", "light")}
@@ -406,16 +334,13 @@ export function DocumentsManager({ documents }: { documents: DocumentRow[] }) {
                       variant={actionVariant("primary", "solid")}
                       isPending={pending}
                     >
-                      {pending ? <Spinner size="sm" color="current" /> : null}
+                      {pending ? <Spinner size="sm" tone="current" /> : null}
                       {t("save")}
                     </Button>
-                  </Modal.Footer>
+                  </Dialog.Footer>
                 </>
               ) : null}
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+      </Dialog>
     </div>
   );
 }

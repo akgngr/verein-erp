@@ -1,15 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Switch,
-  Label,
-  TextField,
-  Input,
-  Select,
-  ListBox,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Input, Label, Select, Spinner, Switch, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -75,27 +66,17 @@ export function SchedulesPanel({ schedules, tasks, canManage }: Props) {
               const keys =
                 selectedValue === null ? undefined : String(selectedValue);
               return setTaskKey(String(keys ?? ""));
-            }}
-          >
+            }} size="sm">
             <Label>{t("task")}</Label>
-            <Select.Trigger className="h-9 text-sm">
-              <Select.Value />
-              <Select.Indicator />
-            </Select.Trigger>
-            <Select.Popover>
-              <ListBox>
                 {tasks.map((task) => (
-                  <ListBox.Item
+                  <Select.Item
                     key={task.key}
                     id={task.key}
                     textValue={String(task.key)}
                   >
                     <Label>{task.key}</Label>
-                    <ListBox.ItemIndicator />
-                  </ListBox.Item>
+                  </Select.Item>
                 ))}
-              </ListBox>
-            </Select.Popover>
           </Select>
           <TextField
             value={hours}
@@ -125,7 +106,7 @@ export function SchedulesPanel({ schedules, tasks, canManage }: Props) {
             variant={actionVariant("primary", "solid")}
             isPending={pending}
           >
-            {pending ? <Spinner size="sm" color="current" /> : null}
+            {pending ? <Spinner size="sm" tone="current" /> : null}
             {<Plus className="h-4 w-4" />}
             {t("add")}
           </Button>
@@ -171,12 +152,7 @@ export function SchedulesPanel({ schedules, tasks, canManage }: Props) {
                     }
                     size={"sm"}
                   >
-                    <Switch.Content>
-                      <Switch.Control>
-                        <Switch.Thumb />
-                      </Switch.Control>
                       <Label></Label>
-                    </Switch.Content>
                   </Switch>
                   <Button
                     isIconOnly

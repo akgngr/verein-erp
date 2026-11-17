@@ -1,15 +1,6 @@
 "use client";
-import {
-  toast,
-  Link as ActionLink,
-  buttonVariants,
-  Button,
-  Spinner,
-  Modal,
-  TextField,
-  Label,
-  TextArea,
-} from "@heroui/react";
+import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+import { Dialog, Label, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -102,7 +93,7 @@ export function ConfirmationActionsBar({
           variant={actionVariant("primary", "solid")}
           isPending={busy}
         >
-          {busy ? <Spinner size="sm" color="current" /> : null}
+          {busy ? <Spinner size="sm" tone="current" /> : null}
           {busy ? null : <RefreshCcw className="h-4 w-4" aria-hidden />}
           {t("actions.replace")}
         </Button>
@@ -118,18 +109,15 @@ export function ConfirmationActionsBar({
         </Button>
       ) : null}
 
-      <Modal isOpen={cancelOpen} onOpenChange={setCancelOpen}>
-        <Modal.Backdrop>
-          <Modal.Container size="md">
-            <Modal.Dialog className={"w-full max-w-md "}>
+      <Dialog isOpen={cancelOpen} onOpenChange={setCancelOpen} size="md" className={"w-full max-w-md "}>
               <DialogDismissButton />
 
-              <Modal.Header>
-                <Modal.Heading className="flex items-center gap-2">
+              <Dialog.Header>
+                <Dialog.Heading className="flex items-center gap-2">
                   {t("cancelTitle")} — {confirmationNumber}
-                </Modal.Heading>
-              </Modal.Header>
-              <Modal.Body>
+                </Dialog.Heading>
+              </Dialog.Header>
+              <Dialog.Body>
                 <p className="text-sm text-ink-500">{t("cancelHint")}</p>
                 <TextField
                   value={reason}
@@ -146,8 +134,8 @@ export function ConfirmationActionsBar({
                       .join(" ")}
                   />
                 </TextField>
-              </Modal.Body>
-              <Modal.Footer>
+              </Dialog.Body>
+              <Dialog.Footer>
                 <Button
                   onPress={() => setCancelOpen(false)}
                   variant={actionVariant("default", "flat")}
@@ -160,14 +148,11 @@ export function ConfirmationActionsBar({
                   variant={actionVariant("danger", "solid")}
                   isPending={busy}
                 >
-                  {busy ? <Spinner size="sm" color="current" /> : null}
+                  {busy ? <Spinner size="sm" tone="current" /> : null}
                   {t("actions.cancel")}
                 </Button>
-              </Modal.Footer>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+              </Dialog.Footer>
+      </Dialog>
     </div>
   );
 }

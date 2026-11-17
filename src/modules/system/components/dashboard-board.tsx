@@ -1,5 +1,6 @@
 "use client";
-import { Button, Chip, Tooltip, toast } from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { StatusChip, Tooltip } from "@/shared/components/kit";
 
 import {
   ArrowLeft,
@@ -331,12 +332,12 @@ export function DashboardBoard({
                   </div>
                   <div className="flex items-center justify-between gap-2">
                     <div className="flex gap-1">
-                      <Chip size="sm" variant="soft">
+                      <StatusChip>
                         {card.moduleLabel}
-                      </Chip>
-                      <Chip size="sm" variant="soft">
+                      </StatusChip>
+                      <StatusChip>
                         {t(`sizes.${card.size}`)}
-                      </Chip>
+                      </StatusChip>
                     </div>
                     <Button
                       size="sm"

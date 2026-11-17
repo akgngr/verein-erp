@@ -13,7 +13,7 @@ Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuy
 |---|---|
 | Anahtar | `ai` |
 | Tür | Eklenti |
-| Sürüm | 1.15.1 |
+| Sürüm | 1.15.2 |
 | Sayfalar | `/ayarlar/yapay-zeka` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Yapay zekâ asistanı | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.15.2 — Ortak UI bileşenleri (iç değişiklik)
+
+_2026-11-17_
+
+- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
 ### 1.15.1 — Rıza eylemleri ortak UI katmanında
 
@@ -83,10 +89,4 @@ _2026-11-16_
 
 - **İyileştirme:** Asistan paneli yenilendi: başlıkta sohbet adı ve geçmiş menüsü, yeni sohbet, tam ekran ve kapat düğmeleri; boş sohbette karşılama ve öneri kartları; yuvarlak, yazdıkça büyüyen mesaj kutusu.
 
-### 1.11.2 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-Daha eski 23 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/ai/releases.json)
+Daha eski 24 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/ai/releases.json)

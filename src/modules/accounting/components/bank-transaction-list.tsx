@@ -1,24 +1,10 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import {
-  toast,
-  Chip,
-  Button,
-  Link as ActionLink,
-  buttonVariants,
-  Spinner,
-  Modal,
-  Checkbox,
-  Label,
-  Select,
-  ListBox,
-  Tabs,
-} from "@heroui/react";
+import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+import { Checkbox, Dialog, Label, Select, Spinner, StatusChip, Tabs } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
-import { statusTone } from "@/shared/components/ui/status-appearance";
 
 import { EyeOff, Link2, Undo2, UserRound } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -188,7 +174,7 @@ export function BankTransactionList({
               {row.suggestions.length ? (
                 <div className="flex flex-wrap gap-1.5">
                   {row.suggestions.map((suggestion) => (
-                    <Chip
+                    <StatusChip tone={suggestion.score >= 60 ? "success" : "primary"}
                       key={
                         suggestion.kind === "invoice"
                           ? suggestion.invoiceId
@@ -196,7 +182,6 @@ export function BankTransactionList({
                             ? suggestion.payableId
                             : suggestion.ruleId
                       }
-                      size="sm"
                       onClick={
                         canEdit
                           ? () =>
@@ -212,22 +197,15 @@ export function BankTransactionList({
                                   : open(row, undefined, suggestion)
                           : undefined
                       }
-                      color={statusTone(
-                        suggestion.score >= 60 ? "success" : "primary",
-                      )}
-                      variant={"soft"}
                       className={[canEdit ? "cursor-pointer" : ""]
                         .filter(Boolean)
                         .join(" ")}
-                      style={statusStyle(
-                        suggestion.score >= 60 ? "success" : "primary",
-                      )}
                     >
                       {suggestion.label} ·{" "}
                       {suggestion.reasons
                         .map((reason) => t(`reasons.${reason}`))
                         .join(", ")}
-                    </Chip>
+                    </StatusChip>
                   ))}
                 </div>
               ) : null}
@@ -294,48 +272,40 @@ export function BankTransactionList({
         ))}
       </ul>
 
-      <Modal
+      <Dialog
         isOpen={active !== null}
-        onOpenChange={(isOpen) => !isOpen && setActive(null)}
-      >
-        <Modal.Backdrop>
-          <Modal.Container size="lg">
-            <Modal.Dialog className={"w-full max-w-lg "}>
+        onOpenChange={(isOpen) => !isOpen && setActive(null)} size="lg" className={"w-full max-w-lg "}>
               {({ close: close }) =>
                 active ? (
                   <>
                     <DialogDismissButton />
-                    <Modal.Header className="flex flex-col gap-1">
-                      <Modal.Heading className="flex items-center gap-2">
+                    <Dialog.Header className="flex flex-col gap-1">
+                      <Dialog.Heading className="flex items-center gap-2">
                         <span>{t("modal.title")}</span>
-                      </Modal.Heading>
+                      </Dialog.Heading>
                       <span className="text-sm font-normal text-ink-500">
                         {day(active.bookingDate)} ·{" "}
                         {active.counterpartyName ?? t("unknownParty")} ·{" "}
                         {euro(active.amountCents)}
                       </span>
-                    </Modal.Header>
-                    <Modal.Body className="gap-4">
+                    </Dialog.Header>
+                    <Dialog.Body className="gap-4">
                       {active.amountCents > 0 ? (
                         <Tabs
                           selectedKey={mode}
                           onSelectionChange={(key) =>
                             setMode(key as "invoice" | "category")
                           }
-                          variant="secondary"
+                          emphasis="secondary"
                         >
-                          <Tabs.ListContainer>
                             <Tabs.List aria-label={t("modal.title")}>
                               <Tabs.Tab id={"invoice"} key={"invoice"}>
                                 {t("modal.invoice")}
-                                <Tabs.Indicator />
                               </Tabs.Tab>
                               <Tabs.Tab id={"category"} key={"category"}>
                                 {t("modal.category")}
-                                <Tabs.Indicator />
                               </Tabs.Tab>
                             </Tabs.List>
-                          </Tabs.ListContainer>
                         </Tabs>
                       ) : payables.length ? (
                         <Tabs
@@ -343,20 +313,16 @@ export function BankTransactionList({
                           onSelectionChange={(key) =>
                             setMode(key as "payable" | "category")
                           }
-                          variant="secondary"
+                          emphasis="secondary"
                         >
-                          <Tabs.ListContainer>
                             <Tabs.List aria-label={t("modal.title")}>
                               <Tabs.Tab id={"payable"} key={"payable"}>
                                 {t("modal.payable")}
-                                <Tabs.Indicator />
                               </Tabs.Tab>
                               <Tabs.Tab id={"category"} key={"category"}>
                                 {t("modal.category")}
-                                <Tabs.Indicator />
                               </Tabs.Tab>
                             </Tabs.List>
-                          </Tabs.ListContainer>
                         </Tabs>
                       ) : null}
                       {mode === "payable" ? (
@@ -372,14 +338,8 @@ export function BankTransactionList({
                           }}
                         >
                           <Label>{t("modal.payableSelect")}</Label>
-                          <Select.Trigger>
-                            <Select.Value />
-                            <Select.Indicator />
-                          </Select.Trigger>
-                          <Select.Popover>
-                            <ListBox>
                               {payables.map((payable) => (
-                                <ListBox.Item
+                                <Select.Item
                                   key={payable.value}
                                   id={payable.value}
                                   textValue={String(
@@ -387,11 +347,8 @@ export function BankTransactionList({
                                   )}
                                 >
                                   <Label>{`${payable.label} — ${euro(payable.openCents)}`}</Label>
-                                  <ListBox.ItemIndicator />
-                                </ListBox.Item>
+                                </Select.Item>
                               ))}
-                            </ListBox>
-                          </Select.Popover>
                         </Select>
                       ) : null}
                       {mode === "invoice" ? (
@@ -407,14 +364,8 @@ export function BankTransactionList({
                           }}
                         >
                           <Label>{t("modal.invoiceSelect")}</Label>
-                          <Select.Trigger>
-                            <Select.Value />
-                            <Select.Indicator />
-                          </Select.Trigger>
-                          <Select.Popover>
-                            <ListBox>
                               {invoices.map((invoice) => (
-                                <ListBox.Item
+                                <Select.Item
                                   key={invoice.value}
                                   id={invoice.value}
                                   textValue={String(
@@ -422,11 +373,8 @@ export function BankTransactionList({
                                   )}
                                 >
                                   <Label>{`${invoice.label} — ${euro(invoice.openCents)}`}</Label>
-                                  <ListBox.ItemIndicator />
-                                </ListBox.Item>
+                                </Select.Item>
                               ))}
-                            </ListBox>
-                          </Select.Popover>
                         </Select>
                       ) : null}
                       {mode !== "payable" ? (
@@ -442,24 +390,15 @@ export function BankTransactionList({
                           }}
                         >
                           <Label>{t("modal.categorySelect")}</Label>
-                          <Select.Trigger>
-                            <Select.Value />
-                            <Select.Indicator />
-                          </Select.Trigger>
-                          <Select.Popover>
-                            <ListBox>
                               {categories.map((category) => (
-                                <ListBox.Item
+                                <Select.Item
                                   key={category.value}
                                   id={category.value}
                                   textValue={String(category.label)}
                                 >
                                   <Label>{category.label}</Label>
-                                  <ListBox.ItemIndicator />
-                                </ListBox.Item>
+                                </Select.Item>
                               ))}
-                            </ListBox>
-                          </Select.Popover>
                         </Select>
                       ) : null}
                       {mode === "category" ? (
@@ -476,24 +415,15 @@ export function BankTransactionList({
                             }}
                           >
                             <Label>{t("modal.taxRate")}</Label>
-                            <Select.Trigger>
-                              <Select.Value />
-                              <Select.Indicator />
-                            </Select.Trigger>
-                            <Select.Popover>
-                              <ListBox>
                                 {["0", "7", "19"].map((rate) => (
-                                  <ListBox.Item
+                                  <Select.Item
                                     key={rate}
                                     id={rate}
                                     textValue={String(`${rate} %`)}
                                   >
                                     <Label>{`${rate} %`}</Label>
-                                    <ListBox.ItemIndicator />
-                                  </ListBox.Item>
+                                  </Select.Item>
                                 ))}
-                              </ListBox>
-                            </Select.Popover>
                           </Select>
                           <Select
                             id="bank-book-rule"
@@ -510,21 +440,14 @@ export function BankTransactionList({
                             }}
                           >
                             <Label>{t("modal.learn")}</Label>
-                            <Select.Trigger>
-                              <Select.Value />
-                              <Select.Indicator />
-                            </Select.Trigger>
-                            <Select.Popover>
-                              <ListBox>
-                                <ListBox.Item
+                                <Select.Item
                                   key="NONE"
                                   id={"NONE"}
                                   textValue={String(t("modal.learnNone"))}
                                 >
                                   <Label>{t("modal.learnNone")}</Label>
-                                  <ListBox.ItemIndicator />
-                                </ListBox.Item>
-                                <ListBox.Item
+                                </Select.Item>
+                                <Select.Item
                                   key="COUNTERPARTY"
                                   id={"COUNTERPARTY"}
                                   textValue={String(
@@ -532,18 +455,14 @@ export function BankTransactionList({
                                   )}
                                 >
                                   <Label>{t("modal.learnCounterparty")}</Label>
-                                  <ListBox.ItemIndicator />
-                                </ListBox.Item>
-                                <ListBox.Item
+                                </Select.Item>
+                                <Select.Item
                                   key="PURPOSE"
                                   id={"PURPOSE"}
                                   textValue={String(t("modal.learnPurpose"))}
                                 >
                                   <Label>{t("modal.learnPurpose")}</Label>
-                                  <ListBox.ItemIndicator />
-                                </ListBox.Item>
-                              </ListBox>
-                            </Select.Popover>
+                                </Select.Item>
                           </Select>
                           <p className="-mt-2 px-1 text-xs text-ink-500">
                             {t("modal.learnHint")}
@@ -554,10 +473,6 @@ export function BankTransactionList({
                           isSelected={closeRemainder}
                           onChange={setCloseRemainder}
                         >
-                          <Checkbox.Content>
-                            <Checkbox.Control className="size-4">
-                              <Checkbox.Indicator />
-                            </Checkbox.Control>
                             <Label>
                               <span className="text-sm">
                                 {t("modal.closeRemainder", {
@@ -565,11 +480,10 @@ export function BankTransactionList({
                                 })}
                               </span>
                             </Label>
-                          </Checkbox.Content>
                         </Checkbox>
                       ) : null}
-                    </Modal.Body>
-                    <Modal.Footer>
+                    </Dialog.Body>
+                    <Dialog.Footer>
                       <Button
                         onPress={close}
                         variant={actionVariant("default", "light")}
@@ -592,17 +506,14 @@ export function BankTransactionList({
                         variant={actionVariant("primary", "solid")}
                         isPending={busy}
                       >
-                        {busy ? <Spinner size="sm" color="current" /> : null}
+                        {busy ? <Spinner size="sm" tone="current" /> : null}
                         {t("modal.submit")}
                       </Button>
-                    </Modal.Footer>
+                    </Dialog.Footer>
                   </>
                 ) : null
               }
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+      </Dialog>
     </>
   );
 }

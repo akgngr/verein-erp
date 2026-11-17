@@ -13,7 +13,7 @@ Oluşturulan PDF, Excel, Word, Markdown ve CSV dosyaları; şifreli saklanır.
 |---|---|
 | Anahtar | `exports` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 2.1.8 |
+| Sürüm | 2.1.9 |
 | Sayfalar | `/dosyalar` |
 
 ## Diğer modüllere erişim
@@ -42,6 +42,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `create_file` · `export_dataset` · `propose_dataset_export`
 
 ## Sürüm notları
+
+### 2.1.9 — Ortak UI bileşenleri (iç değişiklik)
+
+_2026-11-17_
+
+- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
 ### 2.1.8 — HeroUI v3 arayüz geçişi
 
@@ -85,10 +91,4 @@ _2026-11-15_
 
 - **Düzeltme:** Geçici export hataları sınırlı yeniden denenir; terminal/iptal durumları kuyrukta görünmez, başarısız geçici dosyalar temizlenir.
 
-### 2.1.1 — AI v2 takip paketi
-
-_2026-11-15_
-
-- **İyileştirme:** AI iş akışında sayfalama, sorgu sözleşmesi veya worker iptal kontrolü güçlendirildi.
-
-Daha eski 6 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/exports/releases.json)
+Daha eski 7 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/exports/releases.json)

@@ -1,14 +1,6 @@
 "use client";
-import {
-  toast,
-  Card,
-  Button,
-  Spinner,
-  Checkbox,
-  Label,
-  TextField,
-  Input,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Card, Checkbox, Input, Label, Spinner, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -111,10 +103,6 @@ export function PaymentRunCard({
                 isDisabled={!row.ibanOk}
                 onChange={(on) => toggle(row.id, on)}
               >
-                <Checkbox.Content>
-                  <Checkbox.Control className="size-4">
-                    <Checkbox.Indicator />
-                  </Checkbox.Control>
                   <Label>
                     <span className="text-sm">
                       {row.supplierName} {row.number ? `· ${row.number}` : ""}{" "}
@@ -128,7 +116,6 @@ export function PaymentRunCard({
                       ) : null}
                     </span>
                   </Label>
-                </Checkbox.Content>
               </Checkbox>
               <span className="tabular-nums">{euro(row.openCents)}</span>
             </li>
@@ -153,7 +140,7 @@ export function PaymentRunCard({
             variant={actionVariant("primary", "solid")}
             isPending={busy}
           >
-            {busy ? <Spinner size="sm" color="current" /> : null}
+            {busy ? <Spinner size="sm" tone="current" /> : null}
             {<Download className="h-4 w-4" aria-hidden />}
             {t("download", { count: selected.size, total: euro(total) })}
           </Button>

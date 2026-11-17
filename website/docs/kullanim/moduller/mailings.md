@@ -13,7 +13,7 @@ slug: /kullanim/moduller/mailings
 |---|---|
 | Anahtar | `mailings` |
 | Tür | Resmî modül |
-| Sürüm | 2.4.6 |
+| Sürüm | 2.4.7 |
 | Sayfalar | `/toplu-eposta`, `/toplu-eposta/ayarlar` |
 | Gerektirir | [E-posta Altyapısı](./mail), [Otomasyon](./automation) |
 
@@ -43,6 +43,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_campaign_statistics` · `list_campaign_audiences` · `list_campaigns` · `propose_campaign_draft`
 
 ## Sürüm notları
+
+### 2.4.7 — Ortak UI bileşenleri (iç değişiklik)
+
+_2026-11-17_
+
+- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
 ### 2.4.6 — Asistan önerileri bulutta
 
@@ -86,11 +92,4 @@ _2026-11-07_
 
 - **Yeni:** Tek kişiye işlem mesajı gönderimi (ör. form bağlantısı)
 
-### 2.3.0 — Teslim, açılma ve tıklama izleme
-
-_2026-11-07_
-
-- **Yeni:** Alıcı başına gönderim kaydı: gönderildi, teslim edildi, açıldı/okundu, tıkladı; panoda kampanya hunisi.
-- **Yeni:** E-postada açılma pikseli ve imzalı tıklama bağlantıları (kampanya başına açılıp kapatılabilir); SMS/WhatsApp sağlayıcı bildirimleri işlenir.
-
-Daha eski 13 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/mailings/releases.json)
+Daha eski 14 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/mailings/releases.json)

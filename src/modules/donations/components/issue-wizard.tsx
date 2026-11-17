@@ -1,13 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  RadioGroup,
-  Radio,
-  Label,
-  Checkbox,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Checkbox, Label, Radio, RadioGroup, Spinner } from "@/shared/components/kit";
 
 import { statusTone } from "@/shared/components/ui/status-appearance";
 
@@ -337,12 +330,7 @@ export function DonationCandidatePicker({
           <div className="flex flex-col gap-2">
             {candidates.map((candidate) => (
               <Radio key={candidate.sourceId} value={candidate.sourceId}>
-                <Radio.Content className={"max-w-none"}>
-                  <Radio.Control>
-                    <Radio.Indicator />
-                  </Radio.Control>
                   <Label>{row(candidate)}</Label>
-                </Radio.Content>
               </Radio>
             ))}
           </div>
@@ -390,12 +378,7 @@ export function DonationCandidatePicker({
                     isSelected={selected.includes(candidate.sourceId)}
                     onChange={(on) => toggle(candidate.sourceId, on)}
                   >
-                    <Checkbox.Content className={"max-w-none"}>
-                      <Checkbox.Control>
-                        <Checkbox.Indicator />
-                      </Checkbox.Control>
                       <Label className={"flex-1"}>{row(candidate)}</Label>
-                    </Checkbox.Content>
                   </Checkbox>
                 ))}
               </fieldset>
@@ -412,7 +395,7 @@ export function DonationCandidatePicker({
           variant={actionVariant("primary", "solid")}
           isPending={busy}
         >
-          {busy ? <Spinner size="sm" color="current" /> : null}
+          {busy ? <Spinner size="sm" tone="current" /> : null}
           {t("issue")}
         </Button>
       </div>
@@ -498,7 +481,7 @@ export function FeeCandidateList({
           variant={actionVariant("primary", "solid")}
           isPending={busy}
         >
-          {busy ? <Spinner size="sm" color="current" /> : null}
+          {busy ? <Spinner size="sm" tone="current" /> : null}
           {t("issue")}
         </Button>
       </div>
@@ -625,14 +608,9 @@ export function BatchIssuePanel({
               )
             }
           >
-            <Checkbox.Content>
-              <Checkbox.Control>
-                <Checkbox.Indicator />
-              </Checkbox.Control>
               <Label>
                 <span className="text-sm">{recipient.label}</span>
               </Label>
-            </Checkbox.Content>
           </Checkbox>
         ))}
       </div>
@@ -643,7 +621,7 @@ export function BatchIssuePanel({
           variant={actionVariant("primary", "solid")}
           isPending={busy}
         >
-          {busy ? <Spinner size="sm" color="current" /> : null}
+          {busy ? <Spinner size="sm" tone="current" /> : null}
           {t("batchRun")}
         </Button>
       </div>

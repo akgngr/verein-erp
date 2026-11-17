@@ -1,17 +1,8 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import {
-  toast,
-  Chip,
-  Button,
-  Card,
-  Link as ActionLink,
-  buttonVariants,
-  ProgressBar,
-} from "@heroui/react";
+import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+import { Card, ProgressBar, StatusChip } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
-import { statusTone } from "@/shared/components/ui/status-appearance";
 
 import {
   CalendarClock,
@@ -147,20 +138,17 @@ export function CampaignBoard(props: {
   return (
     <div className="flex flex-col gap-5">
       <div className="flex flex-wrap items-center gap-3">
-        <Chip variant={"soft"}>
+        <StatusChip>
           {<Send className="ms-1 h-3.5 w-3.5" />}
           {t("board.totalCampaigns", { count: totals.campaigns })}
-        </Chip>
-        <Chip color={"success"} variant={"soft"}>
+        </StatusChip>
+        <StatusChip tone="success">
           {t("board.totalSent", { count: totals.sent })}
-        </Chip>
-        <Chip
-          color={"accent"}
-          variant={"soft"}
-          style={statusStyle("secondary")}
+        </StatusChip>
+        <StatusChip tone="primary"
         >
           {t("board.totalScheduled", { count: totals.scheduled })}
-        </Chip>
+        </StatusChip>
         {props.canCreate ? (
           <Button
             className="ms-auto"
@@ -227,17 +215,13 @@ export function CampaignBoard(props: {
                         <span className="line-clamp-2 font-medium">
                           {item.name || item.subject}
                         </span>
-                        <Chip
-                          size="sm"
-                          color={statusTone(STATUS_COLOR[item.status])}
-                          variant={"soft"}
+                        <StatusChip tone={STATUS_COLOR[item.status]}
                           className={["ms-auto shrink-0"]
                             .filter(Boolean)
                             .join(" ")}
-                          style={statusStyle(STATUS_COLOR[item.status])}
                         >
                           {t(`statusLabels.${item.status}`)}
-                        </Chip>
+                        </StatusChip>
                       </div>
                       <p className="truncate text-xs text-ink-500">
                         {item.sourceLabel}
@@ -250,11 +234,8 @@ export function CampaignBoard(props: {
                             size="sm"
                             aria-label={t("board.progress")}
                             value={progress}
-                            color={item.failedCount ? "warning" : "success"}
+                            tone={item.failedCount ? "warning" : "success"}
                           >
-                            <ProgressBar.Track>
-                              <ProgressBar.Fill />
-                            </ProgressBar.Track>
                           </ProgressBar>
                           <p className="text-xs text-ink-600">
                             {t("result", {
@@ -412,27 +393,15 @@ function Funnel({ item }: { item: BoardCampaign }) {
   return (
     <div className="flex flex-wrap gap-1">
       {steps.map((step) => (
-        <Chip
+        <StatusChip tone={step.key === "clicked"
+              ? "secondary"
+              : step.key === "delivered"
+                ? "success"
+                : "primary"}
           key={step.key}
-          size="sm"
-          color={statusTone(
-            step.key === "clicked"
-              ? "secondary"
-              : step.key === "delivered"
-                ? "success"
-                : "primary",
-          )}
-          variant={"soft"}
-          style={statusStyle(
-            step.key === "clicked"
-              ? "secondary"
-              : step.key === "delivered"
-                ? "success"
-                : "primary",
-          )}
         >
           {t(step.key, { count: step.value, percent: percent(step.value) })}
-        </Chip>
+        </StatusChip>
       ))}
     </div>
   );

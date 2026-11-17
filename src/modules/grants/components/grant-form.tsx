@@ -1,17 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Checkbox,
-  Label,
-  TextField,
-  Input,
-  InputGroup,
-  TextArea,
-  Select,
-  ListBox,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Checkbox, Input, InputGroup, Label, Select, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -138,24 +127,15 @@ export function GrantForm({
           }}
         >
           <Label>{t("fields.status")}</Label>
-          <Select.Trigger>
-            <Select.Value />
-            <Select.Indicator />
-          </Select.Trigger>
-          <Select.Popover>
-            <ListBox>
               {GRANT_STATUSES.map((status) => (
-                <ListBox.Item
+                <Select.Item
                   key={status}
                   id={status}
                   textValue={String(t(`status.${status}`))}
                 >
                   <Label>{t(`status.${status}`)}</Label>
-                  <ListBox.ItemIndicator />
-                </ListBox.Item>
+                </Select.Item>
               ))}
-            </ListBox>
-          </Select.Popover>
         </Select>
         {dateField("periodStart")}
         {dateField("periodEnd")}
@@ -173,24 +153,15 @@ export function GrantForm({
             }}
           >
             <Label>{t("fields.project")}</Label>
-            <Select.Trigger>
-              <Select.Value />
-              <Select.Indicator />
-            </Select.Trigger>
-            <Select.Popover>
-              <ListBox>
                 {projects.map((project) => (
-                  <ListBox.Item
+                  <Select.Item
                     key={project.id}
                     id={project.id}
                     textValue={String(project.name)}
                   >
                     <Label>{project.name}</Label>
-                    <ListBox.ItemIndicator />
-                  </ListBox.Item>
+                  </Select.Item>
                 ))}
-              </ListBox>
-            </Select.Popover>
           </Select>
           {/* HeroUI: outside etiket + description birlikte etiketi kaydırıyor; açıklama dışarıda. */}
           <p className="px-1 text-xs text-ink-500">{t("projectHelp")}</p>
@@ -204,14 +175,9 @@ export function GrantForm({
         isDisabled={!canEdit}
         onChange={(next) => set({ useNetAmounts: next })}
       >
-        <Checkbox.Content>
-          <Checkbox.Control>
-            <Checkbox.Indicator />
-          </Checkbox.Control>
           <Label>
             <span className="text-sm">{t("fields.useNetAmounts")}</span>
           </Label>
-        </Checkbox.Content>
       </Checkbox>
       <TextField
         value={value.purpose ?? ""}
@@ -260,7 +226,7 @@ export function GrantForm({
           variant={actionVariant("primary", "solid")}
           isPending={pending}
         >
-          {pending ? <Spinner size="sm" color="current" /> : null}
+          {pending ? <Spinner size="sm" tone="current" /> : null}
           {t("save")}
         </Button>
       ) : null}

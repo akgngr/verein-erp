@@ -1,5 +1,6 @@
 "use client";
-import { toast, Switch, Label } from "@heroui/react";
+import { toast } from "@heroui/react";
+import { Label, Switch } from "@/shared/components/kit";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -159,14 +160,9 @@ export function ContactForm({
         />
         {contact ? (
           <Switch isSelected={isActive} onChange={setIsActive}>
-            <Switch.Content>
-              <Switch.Control>
-                <Switch.Thumb />
-              </Switch.Control>
               <Label>
                 <span className="text-sm">{t("fields.isActive")}</span>
               </Label>
-            </Switch.Content>
           </Switch>
         ) : null}
         <p className="text-xs text-ink-500">{t("privacy")}</p>

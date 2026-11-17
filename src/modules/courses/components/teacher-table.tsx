@@ -1,18 +1,9 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import {
-  toast,
-  Chip,
-  Button,
-  Spinner,
-  Link as ActionLink,
-  buttonVariants,
-  Modal,
-} from "@heroui/react";
+import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+import { Dialog, Spinner, StatusChip } from "@/shared/components/kit";
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
-import { statusTone } from "@/shared/components/ui/status-appearance";
 
 import { MailPlus, Pencil } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -78,14 +69,10 @@ export function TeacherTable({
                 </td>
                 <td className="p-3 text-right">{row.courseCount}</td>
                 <td className="p-3">
-                  <Chip
-                    size="sm"
-                    color={statusTone(row.userId ? "success" : "default")}
-                    variant={"soft"}
-                    style={statusStyle(row.userId ? "success" : "default")}
+                  <StatusChip tone={row.userId ? "success" : "default"}
                   >
                     {row.userId ? t("hasAccount") : t("noAccount")}
-                  </Chip>
+                  </StatusChip>
                 </td>
                 <td className="p-3">
                   <div className="flex justify-end gap-1">
@@ -113,7 +100,7 @@ export function TeacherTable({
                         isPending={busyId === row.id}
                       >
                         {busyId === row.id ? (
-                          <Spinner size="sm" color="current" />
+                          <Spinner size="sm" tone="current" />
                         ) : null}
                         {<MailPlus className="h-4 w-4" aria-hidden />}
                         {t("invite")}
@@ -139,35 +126,28 @@ export function TeacherTable({
           </tbody>
         </table>
       </div>
-      <Modal
+      <Dialog
         isOpen={invite !== null}
-        onOpenChange={(open) => !open && setInvite(null)}
-      >
-        <Modal.Backdrop>
-          <Modal.Container size="md">
-            <Modal.Dialog className={"w-full max-w-md "}>
+        onOpenChange={(open) => !open && setInvite(null)} size="md" className={"w-full max-w-md "}>
               <DialogDismissButton />
 
-              <Modal.Header>
-                <Modal.Heading className="flex items-center gap-2">
+              <Dialog.Header>
+                <Dialog.Heading className="flex items-center gap-2">
                   {t("inviteTitle")}
-                </Modal.Heading>
-              </Modal.Header>
-              <Modal.Body>
+                </Dialog.Heading>
+              </Dialog.Header>
+              <Dialog.Body>
                 {invite ? <InviteResultNotice result={invite} /> : null}
-              </Modal.Body>
-              <Modal.Footer>
+              </Dialog.Body>
+              <Dialog.Footer>
                 <Button
                   onPress={() => setInvite(null)}
                   variant={actionVariant("primary", "solid")}
                 >
                   {t("inviteDone")}
                 </Button>
-              </Modal.Footer>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+              </Dialog.Footer>
+      </Dialog>
     </>
   );
 }

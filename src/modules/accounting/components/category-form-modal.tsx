@@ -1,18 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Modal,
-  Switch,
-  Label,
-  TextField,
-  Input,
-  Description,
-  TextArea,
-  Select,
-  ListBox,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Description, Dialog, Input, Label, Select, Spinner, Switch, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -132,18 +120,15 @@ export function CategoryFormModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onOpenChange={onOpenChange}>
-      <Modal.Backdrop>
-        <Modal.Container size="md">
-          <Modal.Dialog className={"w-full max-w-md "}>
+    <Dialog isOpen={isOpen} onOpenChange={onOpenChange} size="md" className={"w-full max-w-md "}>
             <DialogDismissButton />
 
-            <Modal.Header>
-              <Modal.Heading className="flex items-center gap-2">
+            <Dialog.Header>
+              <Dialog.Heading className="flex items-center gap-2">
                 {category ? t("edit") : t("new")}
-              </Modal.Heading>
-            </Modal.Header>
-            <Modal.Body className="gap-4">
+              </Dialog.Heading>
+            </Dialog.Header>
+            <Dialog.Body className="gap-4">
               <TextField
                 value={name}
                 isRequired
@@ -163,24 +148,15 @@ export function CategoryFormModal({
                 }}
               >
                 <Label>{t("direction")}</Label>
-                <Select.Trigger>
-                  <Select.Value />
-                  <Select.Indicator />
-                </Select.Trigger>
-                <Select.Popover>
-                  <ListBox>
                     {DIRECTIONS.map((value) => (
-                      <ListBox.Item
+                      <Select.Item
                         key={value}
                         id={value}
                         textValue={String(t(`direction${value}`))}
                       >
                         <Label>{t(`direction${value}`)}</Label>
-                        <ListBox.ItemIndicator />
-                      </ListBox.Item>
+                      </Select.Item>
                     ))}
-                  </ListBox>
-                </Select.Popover>
               </Select>
               <Select
                 value={sphere}
@@ -192,24 +168,15 @@ export function CategoryFormModal({
                 }}
               >
                 <Label>{t("sphere")}</Label>
-                <Select.Trigger>
-                  <Select.Value />
-                  <Select.Indicator />
-                </Select.Trigger>
-                <Select.Popover>
-                  <ListBox>
                     {SPHERES.map((value) => (
-                      <ListBox.Item
+                      <Select.Item
                         key={value}
                         id={value}
                         textValue={String(sphereLabel(value))}
                       >
                         <Label>{sphereLabel(value)}</Label>
-                        <ListBox.ItemIndicator />
-                      </ListBox.Item>
+                      </Select.Item>
                     ))}
-                  </ListBox>
-                </Select.Popover>
               </Select>
               <div className="grid grid-cols-2 gap-3">
                 <TextField
@@ -237,32 +204,19 @@ export function CategoryFormModal({
                   }}
                 >
                   <Label>{t("defaultTaxRate")}</Label>
-                  <Select.Trigger>
-                    <Select.Value />
-                    <Select.Indicator />
-                  </Select.Trigger>
-                  <Select.Popover>
-                    <ListBox>
                       {TAX_RATES.map((rate) => (
-                        <ListBox.Item
+                        <Select.Item
                           key={String(rate)}
                           id={String(rate)}
                           textValue={String(`${rate} %`)}
                         >
                           <Label>{`${rate} %`}</Label>
-                          <ListBox.ItemIndicator />
-                        </ListBox.Item>
+                        </Select.Item>
                       ))}
-                    </ListBox>
-                  </Select.Popover>
                 </Select>
               </div>
               {direction === "EXPENSE" ? (
                 <Switch isSelected={isAsset} onChange={setIsAsset} size={"sm"}>
-                  <Switch.Content>
-                    <Switch.Control>
-                      <Switch.Thumb />
-                    </Switch.Control>
                     <Label>
                       <span className="flex flex-col">
                         <span className="text-sm">{t("isAsset")}</span>
@@ -271,7 +225,6 @@ export function CategoryFormModal({
                         </span>
                       </span>
                     </Label>
-                  </Switch.Content>
                 </Switch>
               ) : null}
               <div className="flex flex-wrap gap-1.5">
@@ -309,8 +262,8 @@ export function CategoryFormModal({
                     .join(" ")}
                 />
               </TextField>
-            </Modal.Body>
-            <Modal.Footer>
+            </Dialog.Body>
+            <Dialog.Footer>
               <Button
                 onPress={() => onOpenChange(false)}
                 variant={actionVariant("default", "flat")}
@@ -323,13 +276,10 @@ export function CategoryFormModal({
                 variant={actionVariant("primary", "solid")}
                 isPending={busy}
               >
-                {busy ? <Spinner size="sm" color="current" /> : null}
+                {busy ? <Spinner size="sm" tone="current" /> : null}
                 {category ? t("edit") : t("new")}
               </Button>
-            </Modal.Footer>
-          </Modal.Dialog>
-        </Modal.Container>
-      </Modal.Backdrop>
-    </Modal>
+            </Dialog.Footer>
+    </Dialog>
   );
 }

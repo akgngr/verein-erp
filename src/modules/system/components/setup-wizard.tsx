@@ -1,25 +1,8 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import {
-  toast,
-  Chip,
-  Card,
-  Link as ActionLink,
-  buttonVariants,
-  Button,
-  Spinner,
-  Switch,
-  Label,
-  Checkbox,
-  Select,
-  ListBox,
-} from "@heroui/react";
+import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+import { Card, Checkbox, Label, Select, Spinner, StatusChip, Switch } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
-import {
-  statusTone,
-  badgeVariant,
-} from "@/shared/components/ui/status-appearance";
 
 import {
   Briefcase,
@@ -132,24 +115,12 @@ export function SetupWizard({
         <ol className="flex flex-wrap gap-2 text-sm">
           {steps.map((name, index) => (
             <li key={name}>
-              <Chip
-                size="sm"
-                color={statusTone(
-                  index < step
+              <StatusChip tone={index < step
                     ? "success"
                     : index === step
                       ? "primary"
-                      : "default",
-                )}
-                variant={badgeVariant(index === step ? "solid" : "flat")}
-                style={statusStyle(
-                  index < step
-                    ? "success"
-                    : index === step
-                      ? "primary"
-                      : "default",
-                )}
-              >{`${index + 1}. ${name}`}</Chip>
+                      : "default"}
+              >{`${index + 1}. ${name}`}</StatusChip>
             </li>
           ))}
         </ol>
@@ -181,10 +152,6 @@ export function SetupWizard({
           <Card.Content className={["gap-4 p-5"].filter(Boolean).join(" ")}>
             <p className="text-sm text-ink-600">{t(`types.${type}.taxHint`)}</p>
             <Switch isSelected={smallBusiness} onChange={setSmallBusiness}>
-              <Switch.Content>
-                <Switch.Control>
-                  <Switch.Thumb />
-                </Switch.Control>
                 <Label>
                   <span className="flex flex-col">
                     <span className="text-sm">{t("smallBusiness")}</span>
@@ -193,7 +160,6 @@ export function SetupWizard({
                     </span>
                   </span>
                 </Label>
-              </Switch.Content>
             </Switch>
             <Select
               className="max-w-xs"
@@ -209,36 +175,21 @@ export function SetupWizard({
               }}
             >
               <Label>{t("chart")}</Label>
-              <Select.Trigger>
-                <Select.Value />
-                <Select.Indicator />
-              </Select.Trigger>
-              <Select.Popover>
-                <ListBox>
-                  <ListBox.Item key="SKR03" id={"SKR03"} textValue={"SKR03"}>
+                  <Select.Item key="SKR03" id={"SKR03"} textValue={"SKR03"}>
                     <Label>SKR03</Label>
-                    <ListBox.ItemIndicator />
-                  </ListBox.Item>
-                  <ListBox.Item key="SKR04" id={"SKR04"} textValue={"SKR04"}>
+                  </Select.Item>
+                  <Select.Item key="SKR04" id={"SKR04"} textValue={"SKR04"}>
                     <Label>SKR04</Label>
-                    <ListBox.ItemIndicator />
-                  </ListBox.Item>
-                </ListBox>
-              </Select.Popover>
+                  </Select.Item>
             </Select>
             <p className="-mt-2 text-xs text-ink-500">{t("chartHint")}</p>
             <Checkbox
               isSelected={accountingPreset}
               onChange={setAccountingPreset}
             >
-              <Checkbox.Content>
-                <Checkbox.Control>
-                  <Checkbox.Indicator />
-                </Checkbox.Control>
                 <Label>
                   <span className="text-sm">{t("accountingPreset")}</span>
                 </Label>
-              </Checkbox.Content>
             </Checkbox>
             <p className="-mt-2 text-xs text-ink-500">
               {t("accountingPresetHint")}
@@ -265,10 +216,6 @@ export function SetupWizard({
                     })
                   }
                 >
-                  <Checkbox.Content>
-                    <Checkbox.Control>
-                      <Checkbox.Indicator />
-                    </Checkbox.Control>
                     <Label>
                       <span className="text-sm">
                         {module.label}
@@ -279,7 +226,6 @@ export function SetupWizard({
                         ) : null}
                       </span>
                     </Label>
-                  </Checkbox.Content>
                 </Checkbox>
               ))}
             </div>
@@ -413,7 +359,7 @@ export function SetupWizard({
               variant={actionVariant("primary", "solid")}
               isPending={busy}
             >
-              {busy ? <Spinner size="sm" color="current" /> : null}
+              {busy ? <Spinner size="sm" tone="current" /> : null}
               {t("apply")}
             </Button>
           )}

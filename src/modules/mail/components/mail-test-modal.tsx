@@ -1,13 +1,6 @@
 "use client";
-import {
-  Button,
-  Spinner,
-  Modal,
-  TextField,
-  Label,
-  Input,
-  FieldError,
-} from "@heroui/react";
+import { Button } from "@heroui/react";
+import { Dialog, FieldError, Input, Label, Spinner, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -92,24 +85,20 @@ export function MailTestModal({ isOpen }: MailTestModalProps) {
   });
 
   return (
-    <Modal
+    <Dialog
       isOpen={isOpen}
       onOpenChange={(open) => {
         if (!open) handleClose();
-      }}
-    >
-      <Modal.Backdrop isDismissable={!isPending}>
-        <Modal.Container size="md">
-          <Modal.Dialog className={"w-full max-w-md "}>
+      }} isDismissable={!isPending} size="md" className={"w-full max-w-md "}>
             <DialogDismissButton />
 
             <form onSubmit={onSubmit} noValidate>
-              <Modal.Header>
-                <Modal.Heading className="flex items-center gap-2">
+              <Dialog.Header>
+                <Dialog.Heading className="flex items-center gap-2">
                   {t("testMail.title")}
-                </Modal.Heading>
-              </Modal.Header>
-              <Modal.Body>
+                </Dialog.Heading>
+              </Dialog.Header>
+              <Dialog.Body>
                 <p className="text-sm text-ink-500">
                   {t("testMail.description")}
                 </p>
@@ -157,8 +146,8 @@ export function MailTestModal({ isOpen }: MailTestModalProps) {
                     </div>
                   </div>
                 ) : null}
-              </Modal.Body>
-              <Modal.Footer>
+              </Dialog.Body>
+              <Dialog.Footer>
                 <Button
                   onPress={handleClose}
                   isDisabled={isPending}
@@ -171,14 +160,11 @@ export function MailTestModal({ isOpen }: MailTestModalProps) {
                   variant={actionVariant("primary", "solid")}
                   isPending={isPending}
                 >
-                  {isPending ? <Spinner size="sm" color="current" /> : null}
+                  {isPending ? <Spinner size="sm" tone="current" /> : null}
                   {t("actions.sendTest")}
                 </Button>
-              </Modal.Footer>
+              </Dialog.Footer>
             </form>
-          </Modal.Dialog>
-        </Modal.Container>
-      </Modal.Backdrop>
-    </Modal>
+    </Dialog>
   );
 }

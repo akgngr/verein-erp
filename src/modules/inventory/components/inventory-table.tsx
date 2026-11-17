@@ -1,5 +1,6 @@
 "use client";
-import { Button, Spinner, Modal } from "@heroui/react";
+import { Button } from "@heroui/react";
+import { Dialog, Spinner } from "@/shared/components/kit";
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -259,30 +260,26 @@ export function InventoryTable({
       ) : null}
 
       {abilities.canDelete ? (
-        <Modal
+        <Dialog
           isOpen={deletingItem !== null}
           onOpenChange={(open) => {
             if (!open && !isDeletePending) setDeletingItem(null);
-          }}
-        >
-          <Modal.Backdrop>
-            <Modal.Container size="md">
-              <Modal.Dialog className={"w-full max-w-md "}>
+          }} size="md" className={"w-full max-w-md "}>
                 <DialogDismissButton />
 
-                <Modal.Header>
-                  <Modal.Heading className="flex items-center gap-2">
+                <Dialog.Header>
+                  <Dialog.Heading className="flex items-center gap-2">
                     {t("modal.deleteTitle")}
-                  </Modal.Heading>
-                </Modal.Header>
-                <Modal.Body>
+                  </Dialog.Heading>
+                </Dialog.Header>
+                <Dialog.Body>
                   <p className="text-sm text-ink-600">
                     {t("modal.deleteDescription", {
                       name: deletingItem?.name ?? "",
                     })}
                   </p>
-                </Modal.Body>
-                <Modal.Footer>
+                </Dialog.Body>
+                <Dialog.Footer>
                   <Button
                     onPress={() => setDeletingItem(null)}
                     isDisabled={isDeletePending}
@@ -296,15 +293,12 @@ export function InventoryTable({
                     isPending={isDeletePending}
                   >
                     {isDeletePending ? (
-                      <Spinner size="sm" color="current" />
+                      <Spinner size="sm" tone="current" />
                     ) : null}
                     {t("actions.confirmDelete")}
                   </Button>
-                </Modal.Footer>
-              </Modal.Dialog>
-            </Modal.Container>
-          </Modal.Backdrop>
-        </Modal>
+                </Dialog.Footer>
+        </Dialog>
       ) : null}
     </div>
   );

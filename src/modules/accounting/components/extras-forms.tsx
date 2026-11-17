@@ -1,14 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  TextField,
-  Label,
-  Input,
-  Select,
-  ListBox,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Input, Label, Select, Spinner, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -103,27 +95,17 @@ export function AssetForm() {
           const keys =
             selectedValue === null ? undefined : String(selectedValue);
           return setMethod((String(keys ?? "") || "LINEAR") as typeof method);
-        }}
-      >
+        }} size="sm">
         <Label>{t("method")}</Label>
-        <Select.Trigger className="h-9 text-sm">
-          <Select.Value />
-          <Select.Indicator />
-        </Select.Trigger>
-        <Select.Popover>
-          <ListBox>
             {(["LINEAR", "GWG", "POOL"] as const).map((value) => (
-              <ListBox.Item
+              <Select.Item
                 key={value}
                 id={value}
                 textValue={String(t(`methods.${value}`))}
               >
                 <Label>{t(`methods.${value}`)}</Label>
-                <ListBox.ItemIndicator />
-              </ListBox.Item>
+              </Select.Item>
             ))}
-          </ListBox>
-        </Select.Popover>
       </Select>
       <TextField
         value={months}
@@ -162,7 +144,7 @@ export function AssetForm() {
         variant={actionVariant("primary", "solid")}
         isPending={busy}
       >
-        {busy ? <Spinner size="sm" color="current" /> : null}
+        {busy ? <Spinner size="sm" tone="current" /> : null}
         {<Plus className="h-4 w-4" aria-hidden />}
         {t("add")}
       </Button>
@@ -185,7 +167,7 @@ export function DisposeAssetButton({ id }: { id: string }) {
       variant={actionVariant("default", "light")}
       isPending={busy}
     >
-      {busy ? <Spinner size="sm" color="current" /> : null}
+      {busy ? <Spinner size="sm" tone="current" /> : null}
       {t("dispose")}
     </Button>
   );
@@ -207,7 +189,7 @@ export function LinkInventoryButton() {
       variant={actionVariant("default", "flat")}
       isPending={busy}
     >
-      {busy ? <Spinner size="sm" color="current" /> : null}
+      {busy ? <Spinner size="sm" tone="current" /> : null}
       {t("linkInventory")}
     </Button>
   );
@@ -230,29 +212,19 @@ export function FlatRateForm() {
           const keys =
             selectedValue === null ? undefined : String(selectedValue);
           return setKind((String(keys ?? "") || "HOME_OFFICE") as typeof kind);
-        }}
-      >
+        }} size="sm">
         <Label>{t("kind")}</Label>
-        <Select.Trigger className="h-9 text-sm">
-          <Select.Value />
-          <Select.Indicator />
-        </Select.Trigger>
-        <Select.Popover>
-          <ListBox>
             {(["HOME_OFFICE", "MILEAGE", "MEALS_8H", "MEALS_24H"] as const).map(
               (value) => (
-                <ListBox.Item
+                <Select.Item
                   key={value}
                   id={value}
                   textValue={String(t(`kinds.${value}`))}
                 >
                   <Label>{t(`kinds.${value}`)}</Label>
-                  <ListBox.ItemIndicator />
-                </ListBox.Item>
+                </Select.Item>
               ),
             )}
-          </ListBox>
-        </Select.Popover>
       </Select>
       <TextField
         value={date}
@@ -297,7 +269,7 @@ export function FlatRateForm() {
         variant={actionVariant("primary", "solid")}
         isPending={busy}
       >
-        {busy ? <Spinner size="sm" color="current" /> : null}
+        {busy ? <Spinner size="sm" tone="current" /> : null}
         {<Plus className="h-4 w-4" aria-hidden />}
         {t("add")}
       </Button>
@@ -322,7 +294,7 @@ export function DeleteFlatRateButton({
       variant={actionVariant("danger", "light")}
       isPending={busy}
     >
-      {busy ? <Spinner size="sm" color="current" /> : null}
+      {busy ? <Spinner size="sm" tone="current" /> : null}
       <Trash2 className="h-4 w-4" aria-hidden />
     </Button>
   );
@@ -345,29 +317,19 @@ export function ReserveForm({ year }: { year: number }) {
           const keys =
             selectedValue === null ? undefined : String(selectedValue);
           return setKind((String(keys ?? "") || "PURPOSE") as typeof kind);
-        }}
-      >
+        }} size="sm">
         <Label>{t("kind")}</Label>
-        <Select.Trigger className="h-9 text-sm">
-          <Select.Value />
-          <Select.Indicator />
-        </Select.Trigger>
-        <Select.Popover>
-          <ListBox>
             {(["PURPOSE", "REPLACEMENT", "OPERATING", "FREE"] as const).map(
               (value) => (
-                <ListBox.Item
+                <Select.Item
                   key={value}
                   id={value}
                   textValue={String(t(`kinds.${value}`))}
                 >
                   <Label>{t(`kinds.${value}`)}</Label>
-                  <ListBox.ItemIndicator />
-                </ListBox.Item>
+                </Select.Item>
               ),
             )}
-          </ListBox>
-        </Select.Popover>
       </Select>
       <TextField
         value={amount}
@@ -424,7 +386,7 @@ export function ReserveForm({ year }: { year: number }) {
         variant={actionVariant("primary", "solid")}
         isPending={busy}
       >
-        {busy ? <Spinner size="sm" color="current" /> : null}
+        {busy ? <Spinner size="sm" tone="current" /> : null}
         {<Plus className="h-4 w-4" aria-hidden />}
         {t("add")}
       </Button>
@@ -450,7 +412,7 @@ export function ReleaseReserveButton({
       variant={actionVariant("default", "light")}
       isPending={busy}
     >
-      {busy ? <Spinner size="sm" color="current" /> : null}
+      {busy ? <Spinner size="sm" tone="current" /> : null}
       {t("release")}
     </Button>
   );

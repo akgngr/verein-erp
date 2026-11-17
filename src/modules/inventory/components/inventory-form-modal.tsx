@@ -2,19 +2,8 @@
 
 import { useDrawerPlacement } from "@/shared/hooks/use-media-query";
 import { drawerDialogClass, SheetHandle } from "@/shared/components/forms/form-drawer";
-import {
-  Button,
-  Spinner,
-  Drawer,
-  Switch,
-  Label,
-  TextField,
-  Input,
-  FieldError,
-  InputGroup,
-  Description,
-  TextArea,
-} from "@heroui/react";
+import { Button } from "@heroui/react";
+import { Description, FieldError, Input, InputGroup, Label, Sheet, Spinner, Switch, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -108,15 +97,11 @@ export function InventoryFormModal({
   });
 
   return (
-    <Drawer
+    <Sheet
       isOpen={isOpen}
       onOpenChange={(open) => {
         if (!open) handleClose();
-      }}
-    >
-      <Drawer.Backdrop isDismissable={!isPending}>
-        <Drawer.Content placement={drawerPlacement}>
-          <Drawer.Dialog className={drawerDialogClass(drawerPlacement, "sm:max-w-2xl")}>
+      }} isDismissable={!isPending} placement={drawerPlacement} className={drawerDialogClass(drawerPlacement, "sm:max-w-2xl")}>
           {drawerPlacement === "bottom" ? <SheetHandle /> : null}
             <DialogDismissButton drawer />
 
@@ -125,13 +110,13 @@ export function InventoryFormModal({
               noValidate
               className="flex h-full min-h-0 flex-col"
             >
-              <Drawer.Header>
-                <Drawer.Heading className="flex items-center gap-2">
+              <Sheet.Header>
+                <Sheet.Heading className="flex items-center gap-2">
                   {isEdit ? t("modal.editTitle") : t("modal.createTitle")}
-                </Drawer.Heading>
-              </Drawer.Header>
+                </Sheet.Heading>
+              </Sheet.Header>
 
-              <Drawer.Body>
+              <Sheet.Body>
                 <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                   <TextField
                     isRequired
@@ -326,12 +311,7 @@ export function InventoryFormModal({
                         setValue("trackAsAsset", value, { shouldDirty: true })
                       }
                     >
-                      <Switch.Content>
-                        <Switch.Control>
-                          <Switch.Thumb />
-                        </Switch.Control>
                         <Label>{t("fields.trackAsAsset")}</Label>
-                      </Switch.Content>
                     </Switch>
                     <p className="text-xs text-ink-500">
                       {t("hints.trackAsAsset")}
@@ -347,9 +327,9 @@ export function InventoryFormModal({
                     {submitError}
                   </p>
                 ) : null}
-              </Drawer.Body>
+              </Sheet.Body>
 
-              <Drawer.Footer>
+              <Sheet.Footer>
                 <Button
                   onPress={handleClose}
                   isDisabled={isPending}
@@ -362,14 +342,11 @@ export function InventoryFormModal({
                   variant={actionVariant("primary", "solid")}
                   isPending={isPending}
                 >
-                  {isPending ? <Spinner size="sm" color="current" /> : null}
+                  {isPending ? <Spinner size="sm" tone="current" /> : null}
                   {isEdit ? t("actions.save") : t("actions.create")}
                 </Button>
-              </Drawer.Footer>
+              </Sheet.Footer>
             </form>
-          </Drawer.Dialog>
-        </Drawer.Content>
-      </Drawer.Backdrop>
-    </Drawer>
+    </Sheet>
   );
 }

@@ -13,7 +13,7 @@ Dernek demirbaşları, teknik ekipmanlar ve zimmet kayıtlarının takibi.
 |---|---|
 | Anahtar | `inventory` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.7 |
+| Sürüm | 1.1.8 |
 | Sayfalar | `/inventory`, `/inventory/kategoriler` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_inventory_overview` · `list_inventory_items` · `propose_delete_inventory_item` · `propose_inventory_item` · `propose_inventory_status`
 
 ## Sürüm notları
+
+### 1.1.8 — Ortak UI bileşenleri (iç değişiklik)
+
+_2026-11-17_
+
+- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
 ### 1.1.7 — Mobilde alttan açılan çekmece
 
@@ -83,10 +89,4 @@ _2026-11-14_
 
 - **Güvenlik:** Sunucu tarafından doğrulanan AI işlemleri, kapsamlı veri erişimi ve güvenilir yaşam döngüsü kontrolleri güncellendi.
 
-### 1.1.0 — Muhasebe demirbaş senkronu
-
-_2026-11-01_
-
-- **Yeni:** "Muhasebede demirbaş (AfA) olarak izle": muhasebe modülü etkinse eşya demirbaş olarak açılır; ad, alım tarihi, bedel ve hurdaya çıkarma senkron.
-
-Daha eski 1 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/inventory/releases.json)
+Daha eski 2 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/inventory/releases.json)

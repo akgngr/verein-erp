@@ -1,8 +1,7 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import { toast, Chip, Button, Spinner } from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Spinner, StatusChip } from "@/shared/components/kit";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
-import { statusTone } from "@/shared/components/ui/status-appearance";
 
 import { CheckCircle2, ShieldCheck, TriangleAlert } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -62,19 +61,11 @@ export function EInvoiceCheckPanel({
           <ul className="flex flex-col gap-1 text-sm">
             {issues.map((issue) => (
               <li key={issue.rule} className="flex items-start gap-2">
-                <Chip
-                  size="sm"
-                  color={statusTone(
-                    issue.severity === "error" ? "danger" : "warning",
-                  )}
-                  variant={"soft"}
-                  style={statusStyle(
-                    issue.severity === "error" ? "danger" : "warning",
-                  )}
+                <StatusChip tone={issue.severity === "error" ? "danger" : "warning"}
                 >
                   {<TriangleAlert className="size-3" />}
                   {issue.rule}
-                </Chip>
+                </StatusChip>
                 <span className="text-ink-700">
                   {t(`rules.${issue.rule}` as never)}
                 </span>
@@ -103,7 +94,7 @@ export function EInvoiceCheckPanel({
             variant={actionVariant("default", "flat")}
             isPending={pending}
           >
-            {pending ? <Spinner size="sm" color="current" /> : null}
+            {pending ? <Spinner size="sm" tone="current" /> : null}
             {t("check.kositRun")}
           </Button>
         ) : (
@@ -111,14 +102,10 @@ export function EInvoiceCheckPanel({
         )}
         {kosit ? (
           <div className="flex flex-col gap-1">
-            <Chip
-              size="sm"
-              color={statusTone(kosit.valid ? "success" : "danger")}
-              variant={"soft"}
-              style={statusStyle(kosit.valid ? "success" : "danger")}
+            <StatusChip tone={kosit.valid ? "success" : "danger"}
             >
               {kosit.valid ? t("check.kositValid") : t("check.kositInvalid")}
-            </Chip>
+            </StatusChip>
             {kosit.messages.length ? (
               <details className="text-xs">
                 <summary className="cursor-pointer">

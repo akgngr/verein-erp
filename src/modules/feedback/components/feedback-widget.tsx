@@ -1,14 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Modal,
-  TextField,
-  Label,
-  Input,
-  TextArea,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Dialog, Input, Label, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -244,19 +236,16 @@ export function FeedbackWidget() {
         </div>
       </div>
 
-      <Modal isOpen={open} onOpenChange={setOpen}>
-        <Modal.Backdrop>
-          <Modal.Container size="lg">
-            <Modal.Dialog className={"w-full max-w-lg "}>
+      <Dialog isOpen={open} onOpenChange={setOpen} size="lg" className={"w-full max-w-lg "}>
               {({ close: close }) => (
                 <>
                   <DialogDismissButton />
-                  <Modal.Header>
-                    <Modal.Heading className="flex items-center gap-2">
+                  <Dialog.Header>
+                    <Dialog.Heading className="flex items-center gap-2">
                       {t("title")}
-                    </Modal.Heading>
-                  </Modal.Header>
-                  <Modal.Body className="gap-3">
+                    </Dialog.Heading>
+                  </Dialog.Header>
+                  <Dialog.Body className="gap-3">
                     <div className="grid grid-cols-2 gap-2">
                       {(["BUG", "SUGGESTION"] as const).map((kind) => (
                         <button
@@ -339,8 +328,8 @@ export function FeedbackWidget() {
                     <p className="rounded-lg bg-ink-100 p-2 text-xs text-ink-600">
                       {t("context", { page: pathname })}
                     </p>
-                  </Modal.Body>
-                  <Modal.Footer>
+                  </Dialog.Body>
+                  <Dialog.Footer>
                     <Button
                       onPress={close}
                       variant={actionVariant("default", "light")}
@@ -358,16 +347,13 @@ export function FeedbackWidget() {
                       )}
                       isPending={busy}
                     >
-                      {busy ? <Spinner size="sm" color="current" /> : null}
+                      {busy ? <Spinner size="sm" tone="current" /> : null}
                       {t("send")}
                     </Button>
-                  </Modal.Footer>
+                  </Dialog.Footer>
                 </>
               )}
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+      </Dialog>
     </>
   );
 }

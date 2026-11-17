@@ -1,6 +1,6 @@
 "use client";
 
-import { ComboBox, FieldError, Input, Label, ListBox } from "@heroui/react";
+import { ComboBox, FieldError, Input, Label } from "@/shared/components/kit";
 import {
   Controller,
   type Control,
@@ -68,14 +68,13 @@ export function CounterpartyAutocomplete<T extends FieldValues>({
             <ComboBox.Trigger />
           </ComboBox.InputGroup>
           <ComboBox.Popover>
-            <ListBox<{ value: string }>>
+            <ComboBox.List<{ value: string }>>
               {(item) => (
-                <ListBox.Item id={item.value} textValue={item.value}>
+                <ComboBox.Item id={item.value} textValue={item.value}>
                   <Label>{item.value}</Label>
-                  <ListBox.ItemIndicator />
-                </ListBox.Item>
+                </ComboBox.Item>
               )}
-            </ListBox>
+            </ComboBox.List>
           </ComboBox.Popover>
           <FieldError>{translateMessage(fieldState.error?.message)}</FieldError>
         </ComboBox>

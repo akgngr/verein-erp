@@ -1,22 +1,9 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import {
-  toast,
-  Button,
-  Chip,
-  Link as ActionLink,
-  buttonVariants,
-  Spinner,
-  Modal,
-  RadioGroup,
-  Label,
-  Radio,
-  Description,
-} from "@heroui/react";
+import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+import { Description, Dialog, Label, Radio, RadioGroup, Spinner, StatusChip } from "@/shared/components/kit";
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
-import { statusTone } from "@/shared/components/ui/status-appearance";
 
 import { FileDown, FileSignature, PenLine, X } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -170,14 +157,10 @@ export function OnlineFormsApp({
                     </span>
                   </td>
                   <td className="px-3 py-2">
-                    <Chip
-                      size="sm"
-                      color={statusTone(STATUS_COLOR[row.status])}
-                      variant={"soft"}
-                      style={statusStyle(STATUS_COLOR[row.status])}
+                    <StatusChip tone={STATUS_COLOR[row.status]}
                     >
                       {t(`status.${row.status}`)}
-                    </Chip>
+                    </StatusChip>
                     {row.status === "PENDING" && row.openedAt ? (
                       <span className="block text-xs text-ink-500">
                         {t("opened")}
@@ -259,22 +242,18 @@ export function OnlineFormsApp({
           </table>
         </div>
       )}
-      <Modal
+      <Dialog
         isOpen={Boolean(signature)}
-        onOpenChange={(open) => !open && setSignature(null)}
-      >
-        <Modal.Backdrop>
-          <Modal.Container size="md">
-            <Modal.Dialog className={"w-full max-w-md "}>
+        onOpenChange={(open) => !open && setSignature(null)} size="md" className={"w-full max-w-md "}>
               <DialogDismissButton />
 
-              <Modal.Header>
-                <Modal.Heading className="flex items-center gap-2">
+              <Dialog.Header>
+                <Dialog.Heading className="flex items-center gap-2">
                   {t("signature")}
-                </Modal.Heading>
-              </Modal.Header>
+                </Dialog.Heading>
+              </Dialog.Header>
               {/* eslint-disable-next-line @next/next/no-img-element -- şifresi çözülmüş data URL */}
-              <Modal.Body>
+              <Dialog.Body>
                 {signature ? (
                   <img
                     src={signature}
@@ -282,11 +261,8 @@ export function OnlineFormsApp({
                     className="w-full rounded-lg border border-ink-200 bg-white"
                   />
                 ) : null}
-              </Modal.Body>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+              </Dialog.Body>
+      </Dialog>
     </div>
   );
 }
@@ -324,18 +300,15 @@ function SendDialog({
   }, [target, channels]);
 
   return (
-    <Modal isOpen onOpenChange={(open) => !open && onClose()}>
-      <Modal.Backdrop>
-        <Modal.Container size="lg">
-          <Modal.Dialog className={"w-full max-w-lg "}>
+    <Dialog isOpen onOpenChange={(open) => !open && onClose()} size="lg" className={"w-full max-w-lg "}>
             <DialogDismissButton />
 
-            <Modal.Header>
-              <Modal.Heading className="flex items-center gap-2">
+            <Dialog.Header>
+              <Dialog.Heading className="flex items-center gap-2">
                 {t("sendTitle")}
-              </Modal.Heading>
-            </Modal.Header>
-            <Modal.Body>
+              </Dialog.Heading>
+            </Dialog.Header>
+            <Dialog.Body>
               {error ? <p className="text-danger">{translate(error)}</p> : null}
               {!error && !preview ? <Spinner></Spinner> : null}
               {!error && preview ? (
@@ -354,12 +327,7 @@ function SendDialog({
                       <div className="flex flex-col gap-2">
                         {preview.guardians.map((item) => (
                           <Radio key={item.id} value={item.id}>
-                            <Radio.Content>
-                              <Radio.Control>
-                                <Radio.Indicator />
-                              </Radio.Control>
                               <Label>{item.name}</Label>
-                            </Radio.Content>
                           </Radio>
                         ))}
                       </div>
@@ -374,12 +342,7 @@ function SendDialog({
                           value={key}
                           isDisabled={!preview.addresses[key]}
                         >
-                          <Radio.Content>
-                            <Radio.Control>
-                              <Radio.Indicator />
-                            </Radio.Control>
                             <Label>{t(`channels.${key}` as never)}</Label>
-                          </Radio.Content>
                           <Description>
                             {preview.addresses[key] ?? t("noAddress")}
                           </Description>
@@ -393,8 +356,8 @@ function SendDialog({
                   <p className="text-xs text-ink-500">{t("sendHint")}</p>
                 </div>
               ) : null}
-            </Modal.Body>
-            <Modal.Footer>
+            </Dialog.Body>
+            <Dialog.Footer>
               <Button
                 onPress={onClose}
                 variant={actionVariant("default", "light")}
@@ -422,13 +385,10 @@ function SendDialog({
                 variant={actionVariant("primary", "solid")}
                 isPending={pending}
               >
-                {pending ? <Spinner size="sm" color="current" /> : null}
+                {pending ? <Spinner size="sm" tone="current" /> : null}
                 {t("send")}
               </Button>
-            </Modal.Footer>
-          </Modal.Dialog>
-        </Modal.Container>
-      </Modal.Backdrop>
-    </Modal>
+            </Dialog.Footer>
+    </Dialog>
   );
 }

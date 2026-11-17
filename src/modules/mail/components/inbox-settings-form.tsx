@@ -1,15 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  TextField,
-  Label,
-  Input,
-  Description,
-  Select,
-  ListBox,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Description, Input, Label, Select, Spinner, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -74,24 +65,15 @@ export function InboxSettingsForm({
           }}
         >
           <Label>{t("security")}</Label>
-          <Select.Trigger>
-            <Select.Value />
-            <Select.Indicator />
-          </Select.Trigger>
-          <Select.Popover>
-            <ListBox>
               {["SSL", "STARTTLS", "NONE"].map((value) => (
-                <ListBox.Item
+                <Select.Item
                   key={value}
                   id={value}
                   textValue={String(t(`securities.${value}`))}
                 >
                   <Label>{t(`securities.${value}`)}</Label>
-                  <ListBox.ItemIndicator />
-                </ListBox.Item>
+                </Select.Item>
               ))}
-            </ListBox>
-          </Select.Popover>
         </Select>
       </div>
       <TextField
@@ -145,7 +127,7 @@ export function InboxSettingsForm({
           variant={actionVariant("primary", "solid")}
           isPending={busy}
         >
-          {busy ? <Spinner size="sm" color="current" /> : null}
+          {busy ? <Spinner size="sm" tone="current" /> : null}
           {t("save")}
         </Button>
       </div>

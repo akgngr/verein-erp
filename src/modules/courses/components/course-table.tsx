@@ -1,7 +1,6 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import { toast, Chip } from "@heroui/react";
-import { statusTone } from "@/shared/components/ui/status-appearance";
+import { toast } from "@heroui/react";
+import { StatusChip } from "@/shared/components/kit";
 
 import { Eye, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -105,14 +104,10 @@ export function CourseTable({
       key: "status",
       label: t("status"),
       render: (row) => (
-        <Chip
-          size="sm"
-          color={statusTone(STATUS_COLOR[row.status])}
-          variant={"soft"}
-          style={statusStyle(STATUS_COLOR[row.status])}
+        <StatusChip tone={STATUS_COLOR[row.status]}
         >
           {tEnum(`status.${row.status}`)}
-        </Chip>
+        </StatusChip>
       ),
     },
   ];

@@ -1,15 +1,6 @@
 "use client";
-import {
-  toast,
-  Spinner,
-  Button,
-  ButtonGroup,
-  Checkbox,
-  Label,
-  TextField,
-  InputGroup,
-  Tooltip,
-} from "@heroui/react";
+import { Button, ButtonGroup, toast } from "@heroui/react";
+import { Checkbox, InputGroup, Label, Spinner, TextField, Tooltip } from "@/shared/components/kit";
 
 import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
 
@@ -334,18 +325,9 @@ function CalendarAppInner({ sources, canManageShared, hasFeed, sync }: Props) {
                 style={{ ["--source-color" as string]: source.color }}
                 onChange={() => toggleSource(source.id)}
               >
-                <Checkbox.Content>
-                  <Checkbox.Control
-                    className={
-                      "after:bg-[var(--source-color)] before:border-[var(--source-color)]"
-                    }
-                  >
-                    <Checkbox.Indicator />
-                  </Checkbox.Control>
                   <Label>
                     <span className="text-sm">{source.label}</span>
                   </Label>
-                </Checkbox.Content>
               </Checkbox>
             ))}
           </div>

@@ -1,14 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  TextField,
-  Label,
-  TextArea,
-  Select,
-  ListBox,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Label, Select, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -47,24 +39,15 @@ export function FeedbackAdminForm({
           }}
         >
           <Label>{t("fields.status")}</Label>
-          <Select.Trigger>
-            <Select.Value />
-            <Select.Indicator />
-          </Select.Trigger>
-          <Select.Popover>
-            <ListBox>
               {["NEW", "IN_PROGRESS", "DONE", "REJECTED"].map((value) => (
-                <ListBox.Item
+                <Select.Item
                   key={value}
                   id={value}
                   textValue={String(t(`status.${value}`))}
                 >
                   <Label>{t(`status.${value}`)}</Label>
-                  <ListBox.ItemIndicator />
-                </ListBox.Item>
+                </Select.Item>
               ))}
-            </ListBox>
-          </Select.Popover>
         </Select>
         <Select
           value={priority}
@@ -75,24 +58,15 @@ export function FeedbackAdminForm({
           }}
         >
           <Label>{t("fields.priority")}</Label>
-          <Select.Trigger>
-            <Select.Value />
-            <Select.Indicator />
-          </Select.Trigger>
-          <Select.Popover>
-            <ListBox>
               {["LOW", "NORMAL", "HIGH"].map((value) => (
-                <ListBox.Item
+                <Select.Item
                   key={value}
                   id={value}
                   textValue={String(t(`priority.${value}`))}
                 >
                   <Label>{t(`priority.${value}`)}</Label>
-                  <ListBox.ItemIndicator />
-                </ListBox.Item>
+                </Select.Item>
               ))}
-            </ListBox>
-          </Select.Popover>
         </Select>
       </div>
       <TextField
@@ -125,7 +99,7 @@ export function FeedbackAdminForm({
         variant={actionVariant("primary", "solid")}
         isPending={busy}
       >
-        {busy ? <Spinner size="sm" color="current" /> : null}
+        {busy ? <Spinner size="sm" tone="current" /> : null}
         {t("save")}
       </Button>
     </div>

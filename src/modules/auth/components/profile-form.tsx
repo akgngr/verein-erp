@@ -1,5 +1,6 @@
 "use client";
-import { toast, Separator, Checkbox, Label } from "@heroui/react";
+import { toast } from "@heroui/react";
+import { Checkbox, Label, Separator } from "@/shared/components/kit";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -158,12 +159,7 @@ export function ProfileForm({
               onChange={field.onChange}
               className={"col-span-full"}
             >
-              <Checkbox.Content>
-                <Checkbox.Control className="size-4">
-                  <Checkbox.Indicator />
-                </Checkbox.Control>
                 <Label>{t("clearIban")}</Label>
-              </Checkbox.Content>
             </Checkbox>
           )}
         />
@@ -203,12 +199,7 @@ export function ProfileForm({
               onChange={field.onChange}
               className={"col-span-full"}
             >
-              <Checkbox.Content>
-                <Checkbox.Control className="size-4">
-                  <Checkbox.Indicator />
-                </Checkbox.Control>
                 <Label>{t("clearTaxNumber")}</Label>
-              </Checkbox.Content>
             </Checkbox>
           )}
         />

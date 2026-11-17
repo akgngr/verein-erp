@@ -1,5 +1,5 @@
 "use client";
-import { Tabs } from "@heroui/react";
+import { Tabs } from "@/shared/components/kit";
 
 import { useTranslations } from "next-intl";
 
@@ -29,25 +29,20 @@ export function WorkflowTabs({
   const t = useTranslations("automation.workflows");
   return (
     <section className="rounded-xl border border-ink-200 bg-surface p-3">
-      <Tabs variant="secondary">
-        <Tabs.ListContainer>
+      <Tabs emphasis="secondary">
           <Tabs.List aria-label={t("title")}>
             <Tabs.Tab id={"active"} key={"active"}>
               {active ? t("activeWorkflow") : t("draftWorkflow")}
-              <Tabs.Indicator />
             </Tabs.Tab>
             {draftDiffers && draft ? (
               <Tabs.Tab id={"draft"} key={"draft"}>
                 {t("unpublishedDraft")}
-                <Tabs.Indicator />
               </Tabs.Tab>
             ) : null}
             <Tabs.Tab id={"versions"} key={"versions"}>
               {t("versionHistory")}
-              <Tabs.Indicator />
             </Tabs.Tab>
           </Tabs.List>
-        </Tabs.ListContainer>
         <Tabs.Panel id={"active"} key={"active"}>
           {(active ?? draft) ? (
             <WorkflowFlowPreview {...(active ?? draft)!} />

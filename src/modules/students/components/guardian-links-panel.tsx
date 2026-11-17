@@ -1,13 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Chip,
-  Link as ActionLink,
-  buttonVariants,
-  Checkbox,
-  Label,
-} from "@heroui/react";
+import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+import { Checkbox, Label, StatusChip } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -128,9 +121,9 @@ export function GuardianLinksPanel({
               </div>
               <div className="flex items-center gap-1">
                 {guardian.isPayer ? (
-                  <Chip size="sm" color={"accent"} variant={"soft"}>
+                  <StatusChip tone="primary">
                     {t("payer")}
-                  </Chip>
+                  </StatusChip>
                 ) : canUpdate ? (
                   <Button
                     size="sm"
@@ -230,12 +223,7 @@ export function GuardianLinksPanel({
               onChange={setIsPayer}
               className={"pb-2"}
             >
-              <Checkbox.Content>
-                <Checkbox.Control>
-                  <Checkbox.Indicator />
-                </Checkbox.Control>
                 <Label>{t("payer")}</Label>
-              </Checkbox.Content>
             </Checkbox>
             <Button
               isDisabled={!guardianId || busy}

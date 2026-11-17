@@ -1,5 +1,6 @@
 "use client";
-import { toast, Button, Spinner, TextField, Label, Input } from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Input, Label, Spinner, TextField } from "@/shared/components/kit";
 
 import { statusTone } from "@/shared/components/ui/status-appearance";
 
@@ -38,7 +39,7 @@ export function SealJournalButton() {
       variant={actionVariant("primary", "flat")}
       isPending={busy}
     >
-      {busy ? <Spinner size="sm" color="current" /> : null}
+      {busy ? <Spinner size="sm" tone="current" /> : null}
       {<ShieldCheck className="h-4 w-4" aria-hidden />}
       {t("seal")}
     </Button>
@@ -125,7 +126,7 @@ export function CashClosingForm({
         variant={actionVariant("warning", "solid")}
         isPending={busy}
       >
-        {busy ? <Spinner size="sm" color="current" /> : null}
+        {busy ? <Spinner size="sm" tone="current" /> : null}
         {<Lock className="h-4 w-4" aria-hidden />}
         {t("close")}
       </Button>

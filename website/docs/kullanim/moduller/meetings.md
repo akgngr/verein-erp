@@ -13,7 +13,7 @@ Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar.
 |---|---|
 | Anahtar | `meetings` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.10 |
+| Sürüm | 1.3.11 |
 | Sayfalar | `/toplantilar`, `/toplantilar/gorevler` |
 
 ## Diğer modüllere erişim
@@ -41,6 +41,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_meeting` · `get_meeting_statistics` · `list_meetings` · `propose_delete_meeting` · `propose_meeting` · `propose_meeting_status`
 
 ## Sürüm notları
+
+### 1.3.11 — Ortak UI bileşenleri (iç değişiklik)
+
+_2026-11-17_
+
+- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
 ### 1.3.10 — Toplantı silme eylemi ortak UI katmanında
 
@@ -84,10 +90,4 @@ _2026-11-15_
 
 - **Güvenlik:** Asistan araçları v2 veri sözleşmesine taşındı: modele giden her alan açıkça listelenir ve veri sınıfı bildirilir. Toplam ve kurumsal veriler denetimli bulut modunda da kullanılabilir; serbest kişisel içerik yalnız yerel modelde kalır.
 
-### 1.3.3 — Sürümlü AI öneri ve sonuç sınırları
-
-_2026-11-15_
-
-- **Güvenlik:** Öneri araçları katı Zod girdisi ve sabit model sonucu kullanır; salt öneri sorguları gereksiz kişi detaylarını okumaz. Kalan eski okuma araçlarının dönüşümü ayrı sürer.
-
-Daha eski 6 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/meetings/releases.json)
+Daha eski 7 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/meetings/releases.json)

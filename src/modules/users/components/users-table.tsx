@@ -1,7 +1,6 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import { toast, Chip } from "@heroui/react";
-import { statusTone } from "@/shared/components/ui/status-appearance";
+import { toast } from "@heroui/react";
+import { StatusChip } from "@/shared/components/kit";
 
 import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
 import { useTranslations } from "next-intl";
@@ -72,14 +71,10 @@ export function UsersTable({
       label: t("status"),
       sortable: true,
       render: (row) => (
-        <Chip
-          size="sm"
-          color={statusTone(row.isActive ? "success" : "default")}
-          variant={"soft"}
-          style={statusStyle(row.isActive ? "success" : "default")}
+        <StatusChip tone={row.isActive ? "success" : "default"}
         >
           {row.isActive ? tCommon("active") : tCommon("passive")}
-        </Chip>
+        </StatusChip>
       ),
     },
     {

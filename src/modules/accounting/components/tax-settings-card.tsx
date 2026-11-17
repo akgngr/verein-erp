@@ -1,17 +1,6 @@
 "use client";
-import {
-  toast,
-  Card,
-  Button,
-  Spinner,
-  Switch,
-  Label,
-  Separator,
-  TextField,
-  Input,
-  Select,
-  ListBox,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Card, Input, Label, Select, Separator, Spinner, Switch, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -84,24 +73,15 @@ export function TaxSettingsCard({
             onChange={(selectedValue) => pick("chartOfAccounts")(selectedValue)}
           >
             <Label>{t("chart")}</Label>
-            <Select.Trigger>
-              <Select.Value />
-              <Select.Indicator />
-            </Select.Trigger>
-            <Select.Popover>
-              <ListBox>
                 {CHARTS.map((chart) => (
-                  <ListBox.Item
+                  <Select.Item
                     key={chart}
                     id={chart}
                     textValue={String(chart)}
                   >
                     <Label>{chart}</Label>
-                    <ListBox.ItemIndicator />
-                  </ListBox.Item>
+                  </Select.Item>
                 ))}
-              </ListBox>
-            </Select.Popover>
           </Select>
           <Select
             id="accounting-tax-method"
@@ -110,24 +90,15 @@ export function TaxSettingsCard({
             onChange={(selectedValue) => pick("taxMethod")(selectedValue)}
           >
             <Label>{t("method")}</Label>
-            <Select.Trigger>
-              <Select.Value />
-              <Select.Indicator />
-            </Select.Trigger>
-            <Select.Popover>
-              <ListBox>
                 {METHODS.map((method) => (
-                  <ListBox.Item
+                  <Select.Item
                     key={method}
                     id={method}
                     textValue={String(t(`method${method}`))}
                   >
                     <Label>{t(`method${method}`)}</Label>
-                    <ListBox.ItemIndicator />
-                  </ListBox.Item>
+                  </Select.Item>
                 ))}
-              </ListBox>
-            </Select.Popover>
           </Select>
           <Select
             id="accounting-tax-period"
@@ -136,24 +107,15 @@ export function TaxSettingsCard({
             onChange={(selectedValue) => pick("vatPeriod")(selectedValue)}
           >
             <Label>{t("period")}</Label>
-            <Select.Trigger>
-              <Select.Value />
-              <Select.Indicator />
-            </Select.Trigger>
-            <Select.Popover>
-              <ListBox>
                 {PERIODS.map((period) => (
-                  <ListBox.Item
+                  <Select.Item
                     key={period}
                     id={period}
                     textValue={String(t(`period${period}`))}
                   >
                     <Label>{t(`period${period}`)}</Label>
-                    <ListBox.ItemIndicator />
-                  </ListBox.Item>
+                  </Select.Item>
                 ))}
-              </ListBox>
-            </Select.Popover>
           </Select>
         </div>
         <ul className="flex list-disc flex-col gap-0.5 pl-5 text-xs text-ink-500">
@@ -168,10 +130,6 @@ export function TaxSettingsCard({
             setValue((current) => ({ ...current, smallBusiness }))
           }
         >
-          <Switch.Content>
-            <Switch.Control>
-              <Switch.Thumb />
-            </Switch.Control>
             <Label>
               <div className="flex flex-col">
                 <span className="text-sm">{t("smallBusiness")}</span>
@@ -180,7 +138,6 @@ export function TaxSettingsCard({
                 </span>
               </div>
             </Label>
-          </Switch.Content>
         </Switch>
         <Switch
           id="accounting-tax-extension"
@@ -190,10 +147,6 @@ export function TaxSettingsCard({
             setValue((current) => ({ ...current, vatExtension }))
           }
         >
-          <Switch.Content>
-            <Switch.Control>
-              <Switch.Thumb />
-            </Switch.Control>
             <Label>
               <div className="flex flex-col">
                 <span className="text-sm">{t("vatExtension")}</span>
@@ -202,7 +155,6 @@ export function TaxSettingsCard({
                 </span>
               </div>
             </Label>
-          </Switch.Content>
         </Switch>
         <Separator></Separator>
         <div className="flex flex-col gap-1">
@@ -243,10 +195,6 @@ export function TaxSettingsCard({
             setValue((current) => ({ ...current, datevTaxKeys }))
           }
         >
-          <Switch.Content>
-            <Switch.Control>
-              <Switch.Thumb />
-            </Switch.Control>
             <Label>
               <div className="flex flex-col">
                 <span className="text-sm">{t("datevTaxKeys")}</span>
@@ -255,7 +203,6 @@ export function TaxSettingsCard({
                 </span>
               </div>
             </Label>
-          </Switch.Content>
         </Switch>
         {canUpdate ? (
           <div>
@@ -264,7 +211,7 @@ export function TaxSettingsCard({
               variant={actionVariant("primary", "solid")}
               isPending={saving}
             >
-              {saving ? <Spinner size="sm" color="current" /> : null}
+              {saving ? <Spinner size="sm" tone="current" /> : null}
               {t("save")}
             </Button>
           </div>

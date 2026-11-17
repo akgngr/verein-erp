@@ -8,7 +8,7 @@ import { studentsDatevPermissions, studentsPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "students",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.4.7",
+  version: "1.4.8",
   label: "Öğrenciler",
   description:
     "Kurs ve Nachhilfe öğrencileri, veliler ve DATEV uyumlu borçlu (Debitor) kayıtları.",

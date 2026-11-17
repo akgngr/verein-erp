@@ -2,22 +2,8 @@
 
 import { useDrawerPlacement } from "@/shared/hooks/use-media-query";
 import { drawerDialogClass, SheetHandle } from "@/shared/components/forms/form-drawer";
-import {
-  toast,
-  Link as ActionLink,
-  buttonVariants,
-  Button,
-  Spinner,
-  Drawer,
-  Checkbox,
-  Label,
-  TextField,
-  Input,
-  Description,
-  TextArea,
-  Select,
-  ListBox,
-} from "@heroui/react";
+import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+import { Checkbox, Description, Input, Label, Select, Sheet, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -83,15 +69,11 @@ export function EntryDrawer({
   const drawerPlacement = useDrawerPlacement();
   const t = useTranslations("calendar");
   return (
-    <Drawer
+    <Sheet
       isOpen={state !== null}
       onOpenChange={(open) => {
         if (!open) onClose();
-      }}
-    >
-      <Drawer.Backdrop>
-        <Drawer.Content placement={drawerPlacement}>
-          <Drawer.Dialog className={drawerDialogClass(drawerPlacement, "sm:max-w-md")}>
+      }} placement={drawerPlacement} className={drawerDialogClass(drawerPlacement, "sm:max-w-md")}>
           {drawerPlacement === "bottom" ? <SheetHandle /> : null}
             <DialogDismissButton drawer />
 
@@ -111,16 +93,13 @@ export function EntryDrawer({
                 onCancel={onClose}
               />
             ) : (
-              <Drawer.Header>
-                <Drawer.Heading className="flex items-center gap-2">
+              <Sheet.Header>
+                <Sheet.Heading className="flex items-center gap-2">
                   {t("newEntry")}
-                </Drawer.Heading>
-              </Drawer.Header>
+                </Sheet.Heading>
+              </Sheet.Header>
             )}
-          </Drawer.Dialog>
-        </Drawer.Content>
-      </Drawer.Backdrop>
-    </Drawer>
+    </Sheet>
   );
 }
 
@@ -161,20 +140,20 @@ function EntryDetail({
 
   return (
     <>
-      <Drawer.Header className="flex items-start gap-3">
+      <Sheet.Header className="flex items-start gap-3">
         <span
           className="mt-1.5 h-3 w-3 shrink-0 rounded-full"
           style={{ backgroundColor: item.color }}
           aria-hidden
         />
         <div className="min-w-0">
-          <Drawer.Heading className="text-lg font-semibold">
+          <Sheet.Heading className="text-lg font-semibold">
             {item.title}
-          </Drawer.Heading>
+          </Sheet.Heading>
           <p className="text-sm font-normal text-ink-500">{source?.label}</p>
         </div>
-      </Drawer.Header>
-      <Drawer.Body className="gap-3 text-sm">
+      </Sheet.Header>
+      <Sheet.Body className="gap-3 text-sm">
         <p>
           {format(item.start)}
           {sameDayEnd ? "" : ` – ${format(item.end)}`}
@@ -197,8 +176,8 @@ function EntryDetail({
         {!item.entryId ? (
           <p className="text-xs text-ink-500">{t("readOnlySource")}</p>
         ) : null}
-      </Drawer.Body>
-      <Drawer.Footer className="flex-wrap justify-start">
+      </Sheet.Body>
+      <Sheet.Footer className="flex-wrap justify-start">
         {item.href ? (
           <ActionLink
             href={item.href}
@@ -225,7 +204,7 @@ function EntryDetail({
                 variant={actionVariant("secondary", "flat")}
                 isPending={pending}
               >
-                {pending ? <Spinner size="sm" color="current" /> : null}
+                {pending ? <Spinner size="sm" tone="current" /> : null}
                 {<CalendarPlus className="h-4 w-4" />}
                 {t("convertToEvent")}
               </Button>
@@ -239,7 +218,7 @@ function EntryDetail({
             </Button>
           </>
         ) : null}
-      </Drawer.Footer>
+      </Sheet.Footer>
       <ConfirmDialog
         isOpen={confirm}
         onOpenChange={setConfirm}
@@ -351,12 +330,12 @@ function EntryForm({
 
   return (
     <>
-      <Drawer.Header>
-        <Drawer.Heading className="flex items-center gap-2">
+      <Sheet.Header>
+        <Sheet.Heading className="flex items-center gap-2">
           {item ? t("editEntry") : t("newEntry")}
-        </Drawer.Heading>
-      </Drawer.Header>
-      <Drawer.Body className="gap-4">
+        </Sheet.Heading>
+      </Sheet.Header>
+      <Sheet.Body className="gap-4">
         <TextField
           isRequired
           value={title}
@@ -375,32 +354,18 @@ function EntryForm({
           }}
         >
           <Label>{t("fields.calendar")}</Label>
-          <Select.Trigger>
-            <Select.Value />
-            <Select.Indicator />
-          </Select.Trigger>
-          <Select.Popover>
-            <ListBox>
               {sources.map((source) => (
-                <ListBox.Item
+                <Select.Item
                   key={source.id.slice("calendar:".length)}
                   id={source.id.slice("calendar:".length)}
                   textValue={String(source.label)}
                 >
                   <Label>{source.label}</Label>
-                  <ListBox.ItemIndicator />
-                </ListBox.Item>
+                </Select.Item>
               ))}
-            </ListBox>
-          </Select.Popover>
         </Select>
         <Checkbox isSelected={allDay} onChange={toggleAllDay}>
-          <Checkbox.Content>
-            <Checkbox.Control>
-              <Checkbox.Indicator />
-            </Checkbox.Control>
             <Label>{t("allDay")}</Label>
-          </Checkbox.Content>
         </Checkbox>
         <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
           <TextField
@@ -430,24 +395,15 @@ function EntryForm({
             }}
           >
             <Label>{t("fields.recurrence")}</Label>
-            <Select.Trigger>
-              <Select.Value />
-              <Select.Indicator />
-            </Select.Trigger>
-            <Select.Popover>
-              <ListBox>
                 {RECURRENCES.map((value) => (
-                  <ListBox.Item
+                  <Select.Item
                     key={value}
                     id={value}
                     textValue={String(t(`recurrence.${value}`))}
                   >
                     <Label>{t(`recurrence.${value}`)}</Label>
-                    <ListBox.ItemIndicator />
-                  </ListBox.Item>
+                  </Select.Item>
                 ))}
-              </ListBox>
-            </Select.Popover>
           </Select>
           {recurrence !== "NONE" ? (
             <>
@@ -491,8 +447,8 @@ function EntryForm({
             className={["[field-sizing:content]"].filter(Boolean).join(" ")}
           />
         </TextField>
-      </Drawer.Body>
-      <Drawer.Footer>
+      </Sheet.Body>
+      <Sheet.Footer>
         <Button onPress={onCancel} variant={actionVariant("default", "light")}>
           {t("cancel")}
         </Button>
@@ -502,10 +458,10 @@ function EntryForm({
           variant={actionVariant("primary", "solid")}
           isPending={pending}
         >
-          {pending ? <Spinner size="sm" color="current" /> : null}
+          {pending ? <Spinner size="sm" tone="current" /> : null}
           {t("save")}
         </Button>
-      </Drawer.Footer>
+      </Sheet.Footer>
     </>
   );
 }

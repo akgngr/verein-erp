@@ -1,23 +1,11 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import {
-  toast,
-  Button,
-  Chip,
-  Spinner,
-  Modal,
-  Checkbox,
-  Label,
-  TextField,
-  InputGroup,
-  Input,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Checkbox, Dialog, Input, InputGroup, Label, Spinner, StatusChip, TextField } from "@/shared/components/kit";
 import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
-import { statusTone } from "@/shared/components/ui/status-appearance";
 
 import { Search, UserPlus } from "lucide-react";
 import Link from "next/link";
@@ -207,14 +195,10 @@ export function EnrollmentsPanel({
                         )}
                       </select>
                     ) : (
-                      <Chip
-                        size="sm"
-                        color={statusTone(STATUS_COLOR[enrollment.status])}
-                        variant={"soft"}
-                        style={statusStyle(STATUS_COLOR[enrollment.status])}
+                      <StatusChip tone={STATUS_COLOR[enrollment.status]}
                       >
                         {tEnum(`enrollmentStatus.${enrollment.status}`)}
-                      </Chip>
+                      </StatusChip>
                     )}
                   </td>
                 </tr>
@@ -224,18 +208,15 @@ export function EnrollmentsPanel({
         </div>
       )}
 
-      <Modal isOpen={open} onOpenChange={setOpen}>
-        <Modal.Backdrop>
-          <Modal.Container size="lg">
-            <Modal.Dialog className={"w-full max-w-lg "}>
+      <Dialog isOpen={open} onOpenChange={setOpen} size="lg" className={"w-full max-w-lg "}>
               <DialogDismissButton />
 
-              <Modal.Header>
-                <Modal.Heading className="flex items-center gap-2">
+              <Dialog.Header>
+                <Dialog.Heading className="flex items-center gap-2">
                   {t("addTitle")}
-                </Modal.Heading>
-              </Modal.Header>
-              <Modal.Body>
+                </Dialog.Heading>
+              </Dialog.Header>
+              <Dialog.Body>
                 <TextField
                   aria-label={t("search")}
                   value={query}
@@ -280,17 +261,12 @@ export function EnrollmentsPanel({
                             })
                           }
                         >
-                          <Checkbox.Content>
-                            <Checkbox.Control className="size-4">
-                              <Checkbox.Indicator />
-                            </Checkbox.Control>
                             <Label>
                               <span className="text-sm">{student.label}</span>
                               <span className="ml-2 font-mono text-xs text-ink-400">
                                 {student.studentNumber}
                               </span>
                             </Label>
-                          </Checkbox.Content>
                         </Checkbox>
                       </div>
                     ))
@@ -326,8 +302,8 @@ export function EnrollmentsPanel({
                 </div>
                 <p className="text-xs text-ink-500">{t("planHelp")}</p>
                 {error ? <p className="text-sm text-danger">{error}</p> : null}
-              </Modal.Body>
-              <Modal.Footer>
+              </Dialog.Body>
+              <Dialog.Footer>
                 <Button
                   onPress={() => setOpen(false)}
                   variant={actionVariant("default", "light")}
@@ -340,14 +316,11 @@ export function EnrollmentsPanel({
                   variant={actionVariant("primary", "solid")}
                   isPending={busy}
                 >
-                  {busy ? <Spinner size="sm" color="current" /> : null}
+                  {busy ? <Spinner size="sm" tone="current" /> : null}
                   {t("enroll", { count: selected.size })}
                 </Button>
-              </Modal.Footer>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+              </Dialog.Footer>
+      </Dialog>
     </section>
   );
 }

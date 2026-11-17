@@ -1,14 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Modal,
-  TextField,
-  Label,
-  TextArea,
-  Dropdown,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Dialog, Dropdown, Label, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -157,21 +149,17 @@ export function StatusMenu({
       />
 
       {/* Yeniden açma: gerekçe zorunlu (5-500 karakter) (5. bölüm md. 3). */}
-      <Modal
+      <Dialog
         isOpen={reopenOpen}
-        onOpenChange={(open) => !open && setReopenOpen(false)}
-      >
-        <Modal.Backdrop>
-          <Modal.Container size="md">
-            <Modal.Dialog className={"w-full max-w-md "}>
+        onOpenChange={(open) => !open && setReopenOpen(false)} size="md" className={"w-full max-w-md "}>
               <DialogDismissButton />
 
-              <Modal.Header>
-                <Modal.Heading className="flex items-center gap-2">
+              <Dialog.Header>
+                <Dialog.Heading className="flex items-center gap-2">
                   {t("reopenModalTitle")}
-                </Modal.Heading>
-              </Modal.Header>
-              <Modal.Body>
+                </Dialog.Heading>
+              </Dialog.Header>
+              <Dialog.Body>
                 <p className="text-sm text-ink-600">{t("reopenModalInfo")}</p>
                 <TextField
                   value={reason}
@@ -188,8 +176,8 @@ export function StatusMenu({
                   />
                 </TextField>
                 {error ? <p className="text-sm text-danger">{error}</p> : null}
-              </Modal.Body>
-              <Modal.Footer>
+              </Dialog.Body>
+              <Dialog.Footer>
                 <Button
                   onPress={() => {
                     setReopenOpen(false);
@@ -205,14 +193,11 @@ export function StatusMenu({
                   variant={actionVariant("primary", "solid")}
                   isPending={busy}
                 >
-                  {busy ? <Spinner size="sm" color="current" /> : null}
+                  {busy ? <Spinner size="sm" tone="current" /> : null}
                   {t("reopenConfirm")}
                 </Button>
-              </Modal.Footer>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+              </Dialog.Footer>
+      </Dialog>
     </>
   );
 }
@@ -238,22 +223,19 @@ function ConfirmStatusDialog({
 }) {
   const tCommon = useTranslations("common");
   return (
-    <Modal isOpen={isOpen} onOpenChange={(open) => !open && onCancel()}>
-      <Modal.Backdrop>
-        <Modal.Container size="md">
-          <Modal.Dialog className={"w-full max-w-md "}>
+    <Dialog isOpen={isOpen} onOpenChange={(open) => !open && onCancel()} size="md" className={"w-full max-w-md "}>
             <DialogDismissButton />
 
-            <Modal.Header>
-              <Modal.Heading className="flex items-center gap-2">
+            <Dialog.Header>
+              <Dialog.Heading className="flex items-center gap-2">
                 {title}
-              </Modal.Heading>
-            </Modal.Header>
-            <Modal.Body>
+              </Dialog.Heading>
+            </Dialog.Header>
+            <Dialog.Body>
               <p className="text-sm">{message}</p>
               {error ? <p className="text-sm text-danger">{error}</p> : null}
-            </Modal.Body>
-            <Modal.Footer>
+            </Dialog.Body>
+            <Dialog.Footer>
               <Button
                 onPress={onCancel}
                 variant={actionVariant("default", "light")}
@@ -265,13 +247,10 @@ function ConfirmStatusDialog({
                 variant={actionVariant("primary", "solid")}
                 isPending={busy}
               >
-                {busy ? <Spinner size="sm" color="current" /> : null}
+                {busy ? <Spinner size="sm" tone="current" /> : null}
                 {confirmLabel}
               </Button>
-            </Modal.Footer>
-          </Modal.Dialog>
-        </Modal.Container>
-      </Modal.Backdrop>
-    </Modal>
+            </Dialog.Footer>
+    </Dialog>
   );
 }

@@ -1,18 +1,6 @@
 "use client";
-import {
-  Button,
-  ButtonGroup,
-  TextField,
-  Label,
-  TextArea,
-  Description,
-  Input,
-  Select,
-  ListBox,
-  Tabs,
-  Tooltip,
-  Slider,
-} from "@heroui/react";
+import { Button, ButtonGroup } from "@heroui/react";
+import { Description, Input, Label, Select, Slider, Tabs, TextArea, TextField, Tooltip } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -266,13 +254,11 @@ export function EmailBuilder({
         <Tabs
           selectedKey={mode}
           onSelectionChange={(key) => setMode(key as typeof mode)}
-          variant="secondary"
+          emphasis="secondary"
         >
-          <Tabs.ListContainer>
             <Tabs.List aria-label={t("mode")}>
               <Tabs.Tab id={"edit"} key={"edit"}>
                 {t("edit")}
-                <Tabs.Indicator />
               </Tabs.Tab>
               <Tabs.Tab id={"desktop"} key={"desktop"}>
                 {
@@ -281,7 +267,6 @@ export function EmailBuilder({
                     {t("desktop")}
                   </span>
                 }
-                <Tabs.Indicator />
               </Tabs.Tab>
               <Tabs.Tab id={"mobile"} key={"mobile"}>
                 {
@@ -290,10 +275,8 @@ export function EmailBuilder({
                     {t("mobile")}
                   </span>
                 }
-                <Tabs.Indicator />
               </Tabs.Tab>
             </Tabs.List>
-          </Tabs.ListContainer>
         </Tabs>
         {mode === "edit" ? (
           <div
@@ -778,27 +761,17 @@ function Inspector({
               const keys =
                 selectedValue === null ? undefined : String(selectedValue);
               return set({ level: Number(keys ?? 1) });
-            }}
-          >
+            }} size="sm">
             <Label>{t("fields.level")}</Label>
-            <Select.Trigger className="h-9 text-sm">
-              <Select.Value />
-              <Select.Indicator />
-            </Select.Trigger>
-            <Select.Popover>
-              <ListBox>
                 {["1", "2", "3"].map((level) => (
-                  <ListBox.Item
+                  <Select.Item
                     key={level}
                     id={level}
                     textValue={String(`H${level}`)}
                   >
                     <Label>{`H${level}`}</Label>
-                    <ListBox.ItemIndicator />
-                  </ListBox.Item>
+                  </Select.Item>
                 ))}
-              </ListBox>
-            </Select.Popover>
           </Select>
           <AlignField
             value={block.align}
@@ -834,11 +807,6 @@ function Inspector({
             onChange={(value) => set({ fontSize: Number(value) })}
           >
             <Label>{t("fields.fontSize")}</Label>
-            <Slider.Output />
-            <Slider.Track>
-              <Slider.Fill />
-              <Slider.Thumb />
-            </Slider.Track>
           </Slider>
           <ColorField
             label={t("fields.color")}
@@ -886,11 +854,6 @@ function Inspector({
             onChange={(value) => set({ radius: Number(value) })}
           >
             <Label>{t("fields.radius")}</Label>
-            <Slider.Output />
-            <Slider.Track>
-              <Slider.Fill />
-              <Slider.Thumb />
-            </Slider.Track>
           </Slider>
         </>
       ) : null}
@@ -929,11 +892,6 @@ function Inspector({
             onChange={(value) => set({ width: Number(value) })}
           >
             <Label>{t("fields.width")}</Label>
-            <Slider.Output />
-            <Slider.Track>
-              <Slider.Fill />
-              <Slider.Thumb />
-            </Slider.Track>
           </Slider>
           <AlignField
             value={block.align}
@@ -956,11 +914,6 @@ function Inspector({
             onChange={(value) => set({ thickness: Number(value) })}
           >
             <Label>{t("fields.thickness")}</Label>
-            <Slider.Output />
-            <Slider.Track>
-              <Slider.Fill />
-              <Slider.Thumb />
-            </Slider.Track>
           </Slider>
         </>
       ) : null}
@@ -973,11 +926,6 @@ function Inspector({
           onChange={(value) => set({ height: Number(value) })}
         >
           <Label>{t("fields.height")}</Label>
-          <Slider.Output />
-          <Slider.Track>
-            <Slider.Fill />
-            <Slider.Thumb />
-          </Slider.Track>
         </Slider>
       ) : null}
       {block.type === "footer" ? (
@@ -1043,11 +991,6 @@ function Inspector({
             onChange={(value) => set({ gap: Number(value) })}
           >
             <Label>{t("fields.gap")}</Label>
-            <Slider.Output />
-            <Slider.Track>
-              <Slider.Fill />
-              <Slider.Thumb />
-            </Slider.Track>
           </Slider>
           <p className="text-xs text-ink-500">{t("columnsHelp")}</p>
         </>
@@ -1100,27 +1043,17 @@ function DesignSettings({
             fontFamily: (keys ??
               "sans") as EmailDesign["settings"]["fontFamily"],
           });
-        }}
-      >
+        }} size="sm">
         <Label>{t("fields.font")}</Label>
-        <Select.Trigger className="h-9 text-sm">
-          <Select.Value />
-          <Select.Indicator />
-        </Select.Trigger>
-        <Select.Popover>
-          <ListBox>
             {(["sans", "serif", "mono"] as const).map((font) => (
-              <ListBox.Item
+              <Select.Item
                 key={font}
                 id={font}
                 textValue={String(t(`fonts.${font}`))}
               >
                 <Label>{t(`fonts.${font}`)}</Label>
-                <ListBox.ItemIndicator />
-              </ListBox.Item>
+              </Select.Item>
             ))}
-          </ListBox>
-        </Select.Popover>
       </Select>
       <Slider
         minValue={480}
@@ -1130,11 +1063,6 @@ function DesignSettings({
         onChange={(value) => set({ width: Number(value) })}
       >
         <Label>{t("fields.contentWidth")}</Label>
-        <Slider.Output />
-        <Slider.Track>
-          <Slider.Fill />
-          <Slider.Thumb />
-        </Slider.Track>
       </Slider>
     </div>
   );

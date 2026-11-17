@@ -13,7 +13,7 @@ Dernek ana verileri, resmi iletişim ve antet logosu.
 |---|---|
 | Anahtar | `organization` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.0.4 |
+| Sürüm | 1.0.5 |
 | Sayfalar | `/ayarlar/dernek` |
 
 ## Varsayılan yetkiler
@@ -31,6 +31,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_organization_info`
 
 ## Sürüm notları
+
+### 1.0.5 — Ortak UI bileşenleri (iç değişiklik)
+
+_2026-11-17_
+
+- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
 ### 1.0.4 — Logo yüzeyi ortak UI katmanında
 

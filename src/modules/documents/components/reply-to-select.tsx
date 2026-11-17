@@ -2,14 +2,7 @@
 
 import { useTranslations } from "next-intl";
 
-import {
-  ComboBox,
-  Description,
-  FieldError,
-  Input,
-  Label,
-  ListBox,
-} from "@heroui/react";
+import { ComboBox, Description, FieldError, Input, Label } from "@/shared/components/kit";
 import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
 import { useTranslateMessage } from "@/shared/i18n/use-translate-message";
 import { useState, type Ref } from "react";
@@ -125,14 +118,13 @@ function ReplyToSelectInner({
       </ComboBox.InputGroup>
       <Description>{t("replyToDescription")}</Description>
       <ComboBox.Popover>
-        <ListBox<ReplyTargetOption>>
+        <ComboBox.List<ReplyTargetOption>>
           {(option) => (
-            <ListBox.Item id={option.id} textValue={replyTargetLabel(option)}>
+            <ComboBox.Item id={option.id} textValue={replyTargetLabel(option)}>
               <Label>{replyTargetLabel(option)}</Label>
-              <ListBox.ItemIndicator />
-            </ListBox.Item>
+            </ComboBox.Item>
           )}
-        </ListBox>
+        </ComboBox.List>
       </ComboBox.Popover>
       <FieldError>{translateMessage(errorMessage)}</FieldError>
     </ComboBox>

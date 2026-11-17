@@ -1,5 +1,5 @@
 "use client";
-import { Tabs } from "@heroui/react";
+import { Tabs } from "@/shared/components/kit";
 
 import { ShieldCheck, Users } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -20,9 +20,8 @@ export function UsersTabsContainer({
       <Tabs
         selectedKey={selectedTab}
         onSelectionChange={(k) => setSelectedTab(k as string)}
-        variant="primary"
+        emphasis="primary"
       >
-        <Tabs.ListContainer>
           <Tabs.List
             aria-label={t("pageTitle")}
             className={"gap-6 border-b border-ink-200/80 p-0"}
@@ -38,7 +37,6 @@ export function UsersTabsContainer({
                   <span>{t("tabUsers")}</span>
                 </div>
               }
-              <Tabs.Indicator className={"w-full bg-accent"} />
             </Tabs.Tab>
             <Tabs.Tab
               id={"permissions"}
@@ -51,10 +49,8 @@ export function UsersTabsContainer({
                   <span>{t("tabRoles")}</span>
                 </div>
               }
-              <Tabs.Indicator className={"w-full bg-accent"} />
             </Tabs.Tab>
           </Tabs.List>
-        </Tabs.ListContainer>
       </Tabs>
 
       <div className="pt-1">

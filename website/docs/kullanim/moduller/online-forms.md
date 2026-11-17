@@ -13,7 +13,7 @@ e-Sign: kişiye süreli bağlantı, form tamamlama, Datenschutz onayı, imza ve 
 |---|---|
 | Anahtar | `online-forms` |
 | Tür | Resmî modül |
-| Sürüm | 1.2.3 |
+| Sürüm | 1.2.4 |
 | Sayfalar | `/online-formlar` |
 | Gerektirir | [Toplu e-posta](./mailings) |
 | Önerir | [Üyeler](./members), [Öğrenciler](./students) |
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | e-Sign | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | — | görüntüleme | — | — |
 
 ## Sürüm notları
+
+### 1.2.4 — Ortak UI bileşenleri (iç değişiklik)
+
+_2026-11-17_
+
+- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
 ### 1.2.3 — Doğum tarihi seçimi ortak SelectField katmanında
 

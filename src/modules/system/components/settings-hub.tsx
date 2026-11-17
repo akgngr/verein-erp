@@ -1,5 +1,5 @@
 "use client";
-import { TextField, InputGroup } from "@heroui/react";
+import { InputGroup, TextField } from "@/shared/components/kit";
 import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
 
 import { ChevronRight, Search } from "lucide-react";

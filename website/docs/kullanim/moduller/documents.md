@@ -13,7 +13,7 @@ Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi.
 |---|---|
 | Anahtar | `documents` |
 | Tür | Resmî modül |
-| Sürüm | 1.8.2 |
+| Sürüm | 1.8.3 |
 | Sayfalar | `/evrak`, `/evrak/kategoriler` |
 | Önerir | [Muhasebe](./accounting), [Görevler](./tasks), [Yapay zekâ asistanı](./ai) |
 
@@ -44,6 +44,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_document` · `get_document_statistics` · `list_documents` · `propose_delete_document` · `propose_document` · `propose_document_status` · `read_document_file`
 
 ## Sürüm notları
+
+### 1.8.3 — Ortak UI bileşenleri (iç değişiklik)
+
+_2026-11-17_
+
+- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
 ### 1.8.2 — Muhasebeye aktar eylemi ortak UI katmanında
 
@@ -87,10 +93,4 @@ _2026-11-16_
 
 - **İyileştirme:** Evrak OCR'ı ortak dosya altyapısına taşındı (asistan ekleri de kullanır); davranış değişmedi.
 
-### 1.6.2 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-Daha eski 12 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/documents/releases.json)
+Daha eski 13 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/documents/releases.json)

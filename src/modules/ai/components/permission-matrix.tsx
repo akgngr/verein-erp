@@ -1,21 +1,9 @@
 "use client";
-import { statusStyle } from "@/shared/components/ui/status-appearance";
-import {
-  toast,
-  Button,
-  Chip,
-  Spinner,
-  Modal,
-  Checkbox,
-  Label,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Checkbox, Dialog, Label, Spinner, StatusChip } from "@/shared/components/kit";
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
-import {
-  statusTone,
-  badgeVariant,
-} from "@/shared/components/ui/status-appearance";
 
 import { AlertTriangle, CheckCheck, Info, XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -214,11 +202,8 @@ export function PermissionMatrix({
                   const pausedOn =
                     allowed.includes(op) && module.availability !== "available";
                   return (
-                    <Chip
+                    <StatusChip tone={on ? CHIP_COLOR[op] : "default"}
                       key={op}
-                      size="sm"
-                      color={statusTone(on ? CHIP_COLOR[op] : "default")}
-                      variant={badgeVariant(on ? "flat" : "bordered")}
                       className={[
                         on
                           ? ""
@@ -228,10 +213,9 @@ export function PermissionMatrix({
                       ]
                         .filter(Boolean)
                         .join(" ")}
-                      style={statusStyle(on ? CHIP_COLOR[op] : "default")}
                     >
                       {t(`short.${op}`)}
-                    </Chip>
+                    </StatusChip>
                   );
                 })}
               </div>
@@ -248,23 +232,19 @@ export function PermissionMatrix({
         </p>
       ) : null}
 
-      <Modal
+      <Dialog
         isOpen={open !== null}
-        onOpenChange={(isOpen) => !isOpen && setOpenKey(null)}
-      >
-        <Modal.Backdrop>
-          <Modal.Container size="lg" scroll={"inside"}>
-            <Modal.Dialog className={"w-full max-w-lg "}>
+        onOpenChange={(isOpen) => !isOpen && setOpenKey(null)} size="lg" scroll={"inside"} className={"w-full max-w-lg "}>
               {({ close: close }) =>
                 open ? (
                   <>
                     <DialogDismissButton />
-                    <Modal.Header className="pb-2">
-                      <Modal.Heading className="flex items-center gap-2">
+                    <Dialog.Header className="pb-2">
+                      <Dialog.Heading className="flex items-center gap-2">
                         <ModuleHead module={open} />
-                      </Modal.Heading>
-                    </Modal.Header>
-                    <Modal.Body className="gap-4">
+                      </Dialog.Heading>
+                    </Dialog.Header>
+                    <Dialog.Body className="gap-4">
                       {open.availability !== "available" ? (
                         <ModuleStatus
                           availability={open.availability}
@@ -292,10 +272,6 @@ export function PermissionMatrix({
                             onChange={(checked) => toggle(op, checked)}
                             className={"max-w-none py-2.5"}
                           >
-                            <Checkbox.Content>
-                              <Checkbox.Control>
-                                <Checkbox.Indicator />
-                              </Checkbox.Control>
                               <Label className={"w-full"}>
                                 <div className="flex flex-col">
                                   <span className="flex items-center gap-1.5 text-sm font-medium">
@@ -312,12 +288,11 @@ export function PermissionMatrix({
                                   </span>
                                 </div>
                               </Label>
-                            </Checkbox.Content>
                           </Checkbox>
                         ))}
                       </div>
-                    </Modal.Body>
-                    <Modal.Footer className="justify-between">
+                    </Dialog.Body>
+                    <Dialog.Footer className="justify-between">
                       {canChange ? (
                         <Button
                           size="sm"
@@ -356,20 +331,17 @@ export function PermissionMatrix({
                             isPending={busy}
                           >
                             {busy ? (
-                              <Spinner size="sm" color="current" />
+                              <Spinner size="sm" tone="current" />
                             ) : null}
                             {t("save")}
                           </Button>
                         ) : null}
                       </div>
-                    </Modal.Footer>
+                    </Dialog.Footer>
                   </>
                 ) : null
               }
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+      </Dialog>
 
       <ConfirmDialog
         isOpen={pendingRisk !== null}

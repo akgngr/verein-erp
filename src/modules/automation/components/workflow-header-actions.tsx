@@ -1,15 +1,6 @@
 "use client";
-import {
-  toast,
-  Button,
-  Spinner,
-  Modal,
-  TextField,
-  Label,
-  TextArea,
-  Description,
-  Dropdown,
-} from "@heroui/react";
+import { Button, toast } from "@heroui/react";
+import { Description, Dialog, Dropdown, Label, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -199,7 +190,7 @@ export function WorkflowHeaderActions(props: Props) {
               key="delete"
               id={"delete"}
               textValue={String(t("delete"))}
-              variant={"danger" === "danger" ? "danger" : undefined}
+              tone={"danger" === "danger" ? "danger" : undefined}
               className={["text-danger"].filter(Boolean).join(" ")}
             >
               <Label>{t("delete")}</Label>
@@ -218,7 +209,7 @@ export function WorkflowHeaderActions(props: Props) {
             )}
             isPending={pending}
           >
-            {pending ? <Spinner size="sm" color="current" /> : null}
+            {pending ? <Spinner size="sm" tone="current" /> : null}
             {<Power className="h-4 w-4" />}
             {props.enabled ? t("turnOff") : t("turnOn")}
           </Button>
@@ -228,20 +219,15 @@ export function WorkflowHeaderActions(props: Props) {
             variant={actionVariant("primary", "solid")}
             isPending={pending}
           >
-            {pending ? <Spinner size="sm" color="current" /> : null}
+            {pending ? <Spinner size="sm" tone="current" /> : null}
             {<Rocket className="h-4 w-4" />}
             {t("publishAndTurnOn")}
           </Button>
         )
       ) : null}
 
-      <Modal isOpen={editorOpen} onOpenChange={setEditorOpen}>
-        <Modal.Backdrop isDismissable={false}>
-          <Modal.Container size="full" scroll={"inside"}>
-            <Modal.Dialog
-              aria-label={props.name}
-              className={"w-full h-dvh max-w-full "}
-            >
+      <Dialog isOpen={editorOpen} onOpenChange={setEditorOpen} isDismissable={false} size="full" scroll={"inside"} aria-label={props.name}
+              className={"w-full h-dvh max-w-full "}>
               <div className="flex h-dvh flex-col">
                 <WorkflowEditor
                   name={props.name}
@@ -271,7 +257,7 @@ export function WorkflowHeaderActions(props: Props) {
                             isPending={saving}
                           >
                             {saving ? (
-                              <Spinner size="sm" color="current" />
+                              <Spinner size="sm" tone="current" />
                             ) : null}
                             {<Save className="h-4 w-4" />}
                             {t("saveDraft")}
@@ -283,7 +269,7 @@ export function WorkflowHeaderActions(props: Props) {
                               isPending={pending}
                             >
                               {pending ? (
-                                <Spinner size="sm" color="current" />
+                                <Spinner size="sm" tone="current" />
                               ) : null}
                               {<Rocket className="h-4 w-4" />}
                               {t("saveAndPublish")}
@@ -319,23 +305,17 @@ export function WorkflowHeaderActions(props: Props) {
                   )}
                 />
               </div>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+      </Dialog>
 
-      <Modal isOpen={runOpen} onOpenChange={setRunOpen}>
-        <Modal.Backdrop>
-          <Modal.Container size="md">
-            <Modal.Dialog className={"w-full max-w-md "}>
+      <Dialog isOpen={runOpen} onOpenChange={setRunOpen} size="md" className={"w-full max-w-md "}>
               <DialogDismissButton />
 
-              <Modal.Header>
-                <Modal.Heading className="flex items-center gap-2">
+              <Dialog.Header>
+                <Dialog.Heading className="flex items-center gap-2">
                   {t("run")}
-                </Modal.Heading>
-              </Modal.Header>
-              <Modal.Body>
+                </Dialog.Heading>
+              </Dialog.Header>
+              <Dialog.Body>
                 <TextField
                   value={runInput}
                   onChange={setRunInput}
@@ -350,8 +330,8 @@ export function WorkflowHeaderActions(props: Props) {
                   />
                   <Description>{t("runInputHint")}</Description>
                 </TextField>
-              </Modal.Body>
-              <Modal.Footer>
+              </Dialog.Body>
+              <Dialog.Footer>
                 <Button
                   onPress={() => setRunOpen(false)}
                   variant={actionVariant("default", "light")}
@@ -363,15 +343,12 @@ export function WorkflowHeaderActions(props: Props) {
                   variant={actionVariant("primary", "solid")}
                   isPending={pending}
                 >
-                  {pending ? <Spinner size="sm" color="current" /> : null}
+                  {pending ? <Spinner size="sm" tone="current" /> : null}
                   {<Play className="h-4 w-4" />}
                   {t("run")}
                 </Button>
-              </Modal.Footer>
-            </Modal.Dialog>
-          </Modal.Container>
-        </Modal.Backdrop>
-      </Modal>
+              </Dialog.Footer>
+      </Dialog>
 
       <ConfirmDialog
         isOpen={confirmDelete}
