@@ -6,6 +6,7 @@ import {
   buildQuerySnapshot,
   selectedCount,
   selectedIdsForPage,
+  sameQuerySnapshot,
   validateQuerySelectionFilters,
 } from "../../src/shared/data-table/selection-contract";
 
@@ -74,5 +75,25 @@ test("server validation rejects undeclared filter keys", () => {
         ["status"],
       ),
     /DATA_TABLE_FILTER_NOT_ALLOWED:secret/,
+  );
+});
+
+test("query snapshot comparison ignores filter key order", () => {
+  assert.equal(
+    sameQuerySnapshot(
+      { q: "x", filters: { a: "1", b: "2" }, sort: "name", dir: "asc" },
+      { q: "x", filters: { b: "2", a: "1" }, sort: "name", dir: "asc" },
+    ),
+    true,
+  );
+});
+
+test("query snapshot comparison detects filter changes", () => {
+  assert.equal(
+    sameQuerySnapshot(
+      { filters: { status: "ACTIVE" } },
+      { filters: { status: "INACTIVE" } },
+    ),
+    false,
   );
 });
