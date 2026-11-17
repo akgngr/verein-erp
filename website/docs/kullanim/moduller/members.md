@@ -101,4 +101,4 @@ _2026-11-15_
 
 - **İyileştirme:** AI asistanı için canlı üye adı sorgusu eklendi (yalnız AI modülünün sunucu tarafı kullanır).
 
-Daha eski 19 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/members/releases.json)
+Daha eski 20 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/members/releases.json)
