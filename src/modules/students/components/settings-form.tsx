@@ -1,5 +1,6 @@
 "use client";
-import { toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -45,7 +46,7 @@ export function StudentsSettingsForm({
       setFormError(applyActionResult(result, form.setError));
       return;
     }
-    toast(t("saved"), { variant: "success" });
+    notify.success(t("saved"));
     router.refresh();
   });
 

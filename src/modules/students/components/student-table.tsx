@@ -1,5 +1,6 @@
 "use client";
-import { toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";
 import { StatusChip } from "@/shared/components/kit";
 
 import { Eye, Pencil, Trash2 } from "lucide-react";
@@ -150,10 +151,10 @@ export function StudentTable({
           if (!deleting) return;
           const result = await deleteStudentAction({ id: deleting.id });
           if (!result.ok) {
-            toast(result.error, { variant: "danger" });
+            notify.error(result.error);
             return;
           }
-          toast(t("deleted"), { variant: "success" });
+          notify.success(t("deleted"));
           setDeleting(null);
           router.refresh();
         }}
