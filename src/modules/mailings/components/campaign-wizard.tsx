@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Checkbox, CheckboxGroup, Description, Dialog, FieldError, Input, Label, Radio, RadioGroup, Select, Spinner, StatusChip, Switch, TextArea, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -268,9 +269,9 @@ export function CampaignWizard({
                     );
                     setBusy(null);
                     if (!response.ok)
-                      return void toast(response.error, { variant: "danger" });
+                      return void notify.error(response.error);
                     setDraftId(response.data.id);
-                    toast(t("wizard.draftSaved"), { variant: "success" });
+                    notify.success(t("wizard.draftSaved"));
                     router.refresh();
                   }}
                   variant={actionVariant("default", "flat")}
@@ -463,10 +464,8 @@ export function CampaignWizard({
                             });
                             setBusy(null);
                             if (!response.ok)
-                              return void toast(response.error, {
-                                variant: "danger",
-                              });
-                            toast(t("segmentSaved"), { variant: "success" });
+                              return void notify.error(response.error);
+                            notify.success(t("segmentSaved"));
                             router.refresh();
                           }}
                           variant={actionVariant("default", "flat")}
@@ -717,10 +716,8 @@ export function CampaignWizard({
                             );
                             setBusy(null);
                             if (response.ok)
-                              toast(t("testSent", { to: response.data.to }), {
-                                variant: "success",
-                              });
-                            else toast(response.error, { variant: "danger" });
+                              notify.success(t("testSent", { to: response.data.to }));
+                            else notify.error(response.error);
                           }}
                           variant={actionVariant("default", "flat")}
                           isPending={busy === "test"}
@@ -766,15 +763,13 @@ export function CampaignWizard({
                     );
                     setBusy(null);
                     if (!response.ok)
-                      return void toast(response.error, { variant: "danger" });
-                    toast(
+                      return void notify.error(response.error);
+                    notify.success(
                       response.data.scheduled
                         ? t("wizard.scheduled", {
                             count: response.data.recipients,
                           })
-                        : t("started", { count: response.data.recipients }),
-                      { variant: "success" },
-                    );
+                        : t("started", { count: response.data.recipients }));
                     close();
                     router.refresh();
                   }}

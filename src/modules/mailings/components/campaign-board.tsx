@@ -1,5 +1,6 @@
 "use client";
-import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
 import { Card, ProgressBar, StatusChip } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -359,7 +360,7 @@ export function CampaignBoard(props: {
               ? await deleteCampaignAction({ id: confirm.id })
               : await cancelCampaignAction({ id: confirm.id });
           if (!response.ok)
-            return void toast(response.error, { variant: "danger" });
+            return void notify.error(response.error);
           setConfirm(null);
           router.refresh();
         }}
