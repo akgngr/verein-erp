@@ -1,5 +1,6 @@
 "use client";
-import { toast, Button } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import {
@@ -63,7 +64,7 @@ export function UserCreateForm() {
       setFormError(applyActionResult(result, form.setError));
       return;
     }
-    toast(t("created"), { variant: "success" });
+    notify.success(t("created"));
     if (closeDrawer) {
       closeDrawer();
     } else {
@@ -157,7 +158,7 @@ export function UserEditForm({ user }: { user: UserEditValues }) {
       setFormError(applyActionResult(result, form.setError));
       return;
     }
-    toast(t("updated"), { variant: "success" });
+    notify.success(t("updated"));
     if (closeDrawer) {
       closeDrawer();
     } else {

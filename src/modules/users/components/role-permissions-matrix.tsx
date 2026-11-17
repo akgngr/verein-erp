@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Checkbox, Description, Dialog, FieldError, Input, InputGroup, Label, Select, Spinner, StatusChip, TextArea, TextField } from "@/shared/components/kit";
 
 import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
@@ -178,7 +179,7 @@ export function RolePermissionsMatrix({
     setBusyKey(null);
     if (!result.ok) {
       setOverrides(previous);
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
     router.refresh();
@@ -430,12 +431,10 @@ export function RolePermissionsMatrix({
               ? await deleteRoleAction({ key: selected })
               : await resetRoleGrantsAction({ role: selected });
           if (!result.ok) {
-            toast(result.error, { variant: "danger" });
+            notify.error(result.error);
             return;
           }
-          toast(confirm === "delete" ? t("deleted") : t("resetDone"), {
-            variant: "success",
-          });
+          notify.success(confirm === "delete" ? t("deleted") : t("resetDone"));
           if (confirm === "delete") setSelected(LOCKED_ROLE);
           else setOverrides({ ...overrides, [selected]: {} });
           setConfirm(null);
@@ -486,9 +485,7 @@ function RoleEditor({
       setError(result.fieldErrors?.label?.[0] ?? result.error);
       return;
     }
-    toast(mode === "create" ? t("created") : t("updated"), {
-      variant: "success",
-    });
+    notify.success(mode === "create" ? t("created") : t("updated"));
     onSaved(
       mode === "create" &&
         result.data &&
