@@ -1,11 +1,12 @@
 "use client";
-import { toast, Button, Spinner } from "@heroui/react";
-import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { FileUp } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useRef, useState } from "react";
+
+import { ActionButton } from "@/shared/components/ui/action-button";
+import { notify } from "@/shared/components/ui/notify";
 
 /** Gelen fatura yükle: PDF / XRechnung XML / foto. E-fatura ise alanlar önceden doldurulur. */
 export function PayableUploadButton() {
@@ -30,16 +31,17 @@ export function PayableUploadButton() {
         source?: string;
       };
       if (!result.ok) {
-        toast(result.error ?? t("errors.upload"), { variant: "danger" });
-        if (response.status === 409 && result.id)
+        notify(result.error ?? t("errors.upload"), "danger");
+        if (response.status === 409 && result.id) {
           router.push(`/muhasebe/gelen-faturalar/${result.id}`);
+        }
         return;
       }
-      toast(
+      notify(
         result.source === "MANUAL"
           ? t("uploadedManual")
           : t("uploadedEInvoice", { source: result.source ?? "" }),
-        { variant: "success" },
+        "success",
       );
       router.push(`/muhasebe/gelen-faturalar/${result.id}`);
     } finally {
@@ -57,19 +59,19 @@ export function PayableUploadButton() {
         accept=".pdf,.xml,.jpg,.jpeg,.png"
         className="hidden"
         aria-label={t("upload")}
-        onChange={(event) =>
-          event.target.files?.[0] && upload(event.target.files[0])
-        }
+        onChange={(event) => {
+          const file = event.target.files?.[0];
+          if (file) void upload(file);
+        }}
       />
-      <Button
-        onPress={() => input.current?.click()}
-        variant={actionVariant("primary", "solid")}
+      <ActionButton
+        size="md"
         isPending={busy}
+        startIcon={<FileUp className="h-4 w-4" aria-hidden />}
+        onPress={() => input.current?.click()}
       >
-        {busy ? <Spinner size="sm" color="current" /> : null}
-        {<FileUp className="h-4 w-4" aria-hidden />}
         {t("upload")}
-      </Button>
+      </ActionButton>
     </>
   );
 }

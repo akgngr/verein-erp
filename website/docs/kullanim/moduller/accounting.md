@@ -13,7 +13,7 @@ Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura v
 |---|---|
 | Anahtar | `accounting` |
 | Tür | Resmî modül |
-| Sürüm | 1.23.4 |
+| Sürüm | 1.23.5 |
 | Sayfalar | `/muhasebe`, `/muhasebe/panel`, `/muhasebe/faturalar`, `/muhasebe/gelen-faturalar`, `/muhasebe/cariler`, `/muhasebe/banka`, `/muhasebe/uyelik-aktarimi`, `/muhasebe/raporlar`, `/muhasebe/vergi`, `/muhasebe/hibeler`, `/muhasebe/sepa`, `/muhasebe/butce`, `/muhasebe/ekler`, `/muhasebe/gobd`, `/muhasebe/yil-kapanisi`, `/muhasebe/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -43,6 +43,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_accounting_summary` · `get_bank_inbox_summary` · `get_open_items_summary` · `get_payables_summary` · `get_report_link` · `get_vat_summary`
 
 ## Sürüm notları
+
+### 1.23.5 — Gelen fatura ve fiş detay eylemleri ortak UI katmanında
+
+_2026-11-17_
+
+- **İyileştirme:** Gelen fatura yükleme ile fiş detay düzenle/storno eylemleri ortak ActionButton/LinkButton/notify pattern'lerine taşındı; bu dosyalardaki doğrudan HeroUI bağımlılığı kaldırıldı.
 
 ### 1.23.4 — Muhasebe eylemleri ortak UI adapterında
 
@@ -89,10 +95,4 @@ _2026-11-17_
 
 - **İyileştirme:** Rozet/çip görünümleri ortak StatusChip pattern'ine taşındı; modül düzeyindeki doğrudan HeroUI Chip bağımlılığı azaltıldı.
 
-### 1.22.12 — Fiş türü rozeti ortak UI katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Rozet görünümü ortak StatusChip pattern'ine taşındı; modül artık bu kullanımda HeroUI Chip implementasyonuna doğrudan bağlı değil.
-
-Daha eski 38 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/accounting/releases.json)
+Daha eski 39 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/accounting/releases.json)

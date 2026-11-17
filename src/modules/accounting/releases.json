@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.23.5",
+      "date": "2026-11-17",
+      "appVersion": "0.41.0",
+      "title": {
+        "tr": "Gelen fatura ve fiş detay eylemleri ortak UI katmanında",
+        "de": "Eingangsrechnung und Buchungsdetails in gemeinsamer UI-Schicht"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Gelen fatura yükleme ile fiş detay düzenle/storno eylemleri ortak ActionButton/LinkButton/notify pattern'lerine taşındı; bu dosyalardaki doğrudan HeroUI bağımlılığı kaldırıldı.",
+          "de": "Upload von Eingangsrechnungen sowie Bearbeiten/Storno in Buchungsdetails verwenden gemeinsame ActionButton-/LinkButton-/Notify-Patterns; direkte HeroUI-Abhängigkeiten wurden entfernt."
+        }
+      ]
+    },
+    {
       "version": "1.23.4",
       "date": "2026-11-17",
       "appVersion": "0.41.0",
