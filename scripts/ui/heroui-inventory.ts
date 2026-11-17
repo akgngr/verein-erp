@@ -129,7 +129,7 @@ export function toMarkdown(inventory: Inventory): string {
     "",
     "| Path | Imported symbols |",
     "| --- | --- |",
-    ...inventory.files.map((file) => `| \`${file.path}\` | ${file.imports.map((i) => \`${i}\`).join(", ")} |`),
+    ...inventory.files.map((file) => `| \`${file.path}\` | ${file.imports.map((i) => "`" + i + "`").join(", ")} |`),
     "",
   ];
   return lines.join("\n");
