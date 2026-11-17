@@ -13,7 +13,7 @@ Dernek ana verileri, resmi iletişim ve antet logosu.
 |---|---|
 | Anahtar | `organization` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.0.3 |
+| Sürüm | 1.0.4 |
 | Sayfalar | `/ayarlar/dernek` |
 
 ## Varsayılan yetkiler
@@ -31,6 +31,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_organization_info`
 
 ## Sürüm notları
+
+### 1.0.4 — Logo yüzeyi ortak UI katmanında
+
+_2026-11-17_
+
+- **İyileştirme:** Logo yükleme kartı, eylem butonları ve bildirimleri ortak SurfaceCard, ActionButton ve notify adapter katmanına taşındı.
 
 ### 1.0.3 — HeroUI v3 arayüz geçişi
 
