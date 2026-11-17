@@ -13,7 +13,7 @@ Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura v
 |---|---|
 | Anahtar | `accounting` |
 | Tür | Resmî modül |
-| Sürüm | 1.23.0 |
+| Sürüm | 1.23.1 |
 | Sayfalar | `/muhasebe`, `/muhasebe/panel`, `/muhasebe/faturalar`, `/muhasebe/gelen-faturalar`, `/muhasebe/cariler`, `/muhasebe/banka`, `/muhasebe/uyelik-aktarimi`, `/muhasebe/raporlar`, `/muhasebe/vergi`, `/muhasebe/hibeler`, `/muhasebe/sepa`, `/muhasebe/butce`, `/muhasebe/ekler`, `/muhasebe/gobd`, `/muhasebe/yil-kapanisi`, `/muhasebe/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -43,6 +43,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_accounting_summary` · `get_bank_inbox_summary` · `get_open_items_summary` · `get_payables_summary` · `get_report_link` · `get_vat_summary`
 
 ## Sürüm notları
+
+### 1.23.1 — Muhasebe istatistik kartları ortak UI katmanında
+
+_2026-11-17_
+
+- **İyileştirme:** Kart ve yüzey görünümleri ortak SurfaceCard/StatCard pattern'ine taşındı; modül bu kullanımda HeroUI Card implementasyonuna doğrudan bağlı değil.
 
 ### 1.23.0 — Canlı finansal genel bakış
 
@@ -90,11 +96,4 @@ _2026-11-16_
 - **Düzeltme:** Gelir-gider raporu tüm iptal edilmemiş ve virman olmayan fişlerin brüt toplamını ayrıca taşır; kategorisiz fişler mutabakat farkı olarak görünür ve dashboard ile rapor toplamları aynı kapsamda açıklanabilir.
 - **İyileştirme:** Muhasebe AI özeti brüt gelir, gider, fark ve kategorisiz tutarları açıkça döndürür; kategori satırlarıyla genel toplam arasındaki fark saklanmaz.
 
-### 1.22.8 — Premium muhasebe kartları ve hafif grafik
-
-_2026-11-16_
-
-- **İyileştirme:** Muhasebe panelindeki özet kartlar daha şık ve duyarlı bir tasarıma geçirildi. Çeyreklik gelir-gider grafiği hafif, sunucuda çizilen SVG sütunlarla yenilendi; erişilebilir veri tablosu korundu.
-- **İyileştirme:** Yeni grafik kütüphanesi veya istemci JavaScript yükü eklenmedi; mevcut tema değişkenleri ve muhasebe hesaplamaları kullanılmaya devam eder.
-
-Daha eski 34 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/accounting/releases.json)
+Daha eski 35 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/accounting/releases.json)

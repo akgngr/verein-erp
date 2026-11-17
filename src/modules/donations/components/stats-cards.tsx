@@ -1,8 +1,8 @@
 "use client";
-import { Card } from "@heroui/react";
 
 import { useTranslations } from "next-intl";
 
+import { StatCard } from "@/shared/components/ui/stat-card";
 import type { DonationStats } from "../types";
 
 /** Bağış istatistik kartları (§ 17). */
@@ -15,11 +15,7 @@ export function DonationStatsCards({ stats }: { stats: DonationStats }) {
     });
 
   const cards = [
-    {
-      label: t("total"),
-      value: format(stats.totalCents),
-      tone: "text-foreground",
-    },
+    { label: t("total"), value: format(stats.totalCents), tone: "text-foreground" },
     { label: t("count"), value: String(stats.count), tone: "text-foreground" },
     {
       label: t("unconfirmed"),
@@ -36,16 +32,12 @@ export function DonationStatsCards({ stats }: { stats: DonationStats }) {
   return (
     <div className="mb-4 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
       {cards.map((card) => (
-        <Card key={card.label} className={"shadow-sm border border-ink-200/80"}>
-          <Card.Content className={["px-4 py-3"].filter(Boolean).join(" ")}>
-            <p className="text-xs uppercase tracking-wide text-ink-400">
-              {card.label}
-            </p>
-            <p className={`text-base font-semibold ${card.tone}`}>
-              {card.value}
-            </p>
-          </Card.Content>
-        </Card>
+        <StatCard
+          key={card.label}
+          label={card.label}
+          value={card.value}
+          valueClassName={card.tone}
+        />
       ))}
     </div>
   );
