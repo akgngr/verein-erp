@@ -21,6 +21,10 @@ import { countMissingReceipts } from "../services/report-builders";
 import { taxDeadlines } from "../services/tax-calendar";
 import { berlinToday } from "../utils";
 
+const CHIP_BASE = "erp-motion-interactive rounded-lg px-3 py-1.5 text-sm font-medium";
+const CHIP_ACTIVE = `${CHIP_BASE} bg-[var(--ui-surface-card)] text-foreground shadow-[var(--ui-shadow-card)]`;
+const CHIP_IDLE = `${CHIP_BASE} text-ink-500 hover:text-foreground`;
+
 type RawParams = Record<string, string | string[] | undefined>;
 type Period = "year" | "quarter" | "month";
 
@@ -119,8 +123,7 @@ export async function AccountingDashboardView({ searchParams }: { searchParams: 
   const trendIncome = overview.months.map((month) => month.incomeCents);
   const trendExpense = overview.months.map((month) => month.expenseCents);
   const trendNet = overview.months.reduce<number[]>((acc, month) => [...acc, (acc.at(-1) ?? 0) + month.netCents], []);
-  const chip = (active: boolean) =>
-    `erp-motion-interactive rounded-lg px-3 py-1.5 text-sm font-medium ${active ? "bg-[var(--ui-surface-card)] text-foreground shadow-[var(--ui-shadow-card)]" : "text-ink-500 hover:text-foreground"}`;
+  const chip = (active: boolean) => (active ? CHIP_ACTIVE : CHIP_IDLE);
 
   return (
     <section className="space-y-6">
