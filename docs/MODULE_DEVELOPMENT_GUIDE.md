@@ -175,6 +175,21 @@ Kök `messages/<dil>.json` **üretilen** dosyadır; `messages/shell/<dil>.json` 
 
 ---
 
+
+### Toplu seçim / bulk action kontrol listesi
+
+Bir liste toplu işlem destekliyorsa:
+
+- `DataTableSelection` ve ortak `DataTable` selection sözleşmesini kullan; kendi checkbox/selection altyapını kurma.
+- Action girdisinde `dataTableSelectionSchema`; server'da `parseBulkSelection` + açık `allowedFilterKeys` kullan.
+- Permission'ı `createAction` içinde yeniden doğrula. Tenant/organization/user scope'u istemciden güvenilir kabul etme.
+- Query-selection'da tüm ID'leri browser'a taşıma; aynı query builder ile server'da çöz.
+- Business-state, soft-delete ve retention filtrelerini seçim sorgusunda da uygula.
+- Audit'e kişi listesi/PII değil; selection türü, adetler ve hedef işlem gibi sınırlı metadata yaz.
+- Destructive bulk işlem ortak `ConfirmDialog` ister.
+- 500+ kayıt, dış API/e-posta/dosya üretimi veya yaklaşık 5 saniyeyi aşabilecek işler Automation/Export pipeline'a taşınır.
+- Referanslar: `members/actions/bulk-change-status.ts`, `documents/actions/bulk-change-status.ts`, `docs/ui/DATA_TABLE_SYSTEM.md`.
+
 ## 8. Modüller arası erişim (yönetici onayı)
 
 Bir modül başka bir modülün verisini yalnızca o modülün `@/modules/<m>/server` API'si üzerinden
