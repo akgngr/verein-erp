@@ -52,7 +52,7 @@ export function collectInventory(root: string): Inventory {
 
   for (const file of listFiles(modulesDir)) {
     const relativePath = path.relative(root, file).split(path.sep).join("/");
-    const module = relativePath.split("/")[2];
+    const moduleKey = relativePath.split("/")[2];
     const text = fs.readFileSync(file, "utf8");
     const source = ts.createSourceFile(file, text, ts.ScriptTarget.Latest, true, file.endsWith("tsx") ? ts.ScriptKind.TSX : ts.ScriptKind.TS);
     let declarations = 0;
@@ -77,15 +77,15 @@ export function collectInventory(root: string): Inventory {
     if (!declarations) continue;
     inventory.directImportFiles += 1;
     inventory.directImportDeclarations += declarations;
-    const stats = inventory.modules[module] ?? { files: 0, declarations: 0, componentUses: {} };
+    const stats = inventory.modules[moduleKey] ?? { files: 0, declarations: 0, componentUses: {} };
     stats.files++;
     stats.declarations += declarations;
-    inventory.modules[module] = stats;
+    inventory.modules[moduleKey] = stats;
     for (const name of names) {
       inventory.componentUses[name] = (inventory.componentUses[name] ?? 0) + 1;
       stats.componentUses[name] = (stats.componentUses[name] ?? 0) + 1;
     }
-    inventory.files.push({ path: relativePath, module, declarations, imports: names.sort() });
+    inventory.files.push({ path: relativePath, module: moduleKey, declarations, imports: names.sort() });
   }
   inventory.directImportingModules = Object.keys(inventory.modules).length;
   inventory.componentUses = sortCountMap(inventory.componentUses);
