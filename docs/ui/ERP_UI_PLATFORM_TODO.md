@@ -40,7 +40,7 @@
 - [x] select-all current page davranışını ekle.
 - [x] selected row görsel state'ini semantic tokenlarla tasarla.
 - [x] selection değişimini dışarı bildiren typed callback ekle.
-- [ ] keyboard/ARIA selection davranışını test et.
+- [x] keyboard/ARIA selection davranışını test et.
 
 ## Faz 4 — BulkActionBar
 
