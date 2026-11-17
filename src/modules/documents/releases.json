@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.8.0",
+      "date": "2026-11-17",
+      "appVersion": "0.41.0",
+      "title": {
+        "tr": "Evrak listesinde toplu seçim ve durum işlemleri",
+        "de": "Mehrfachauswahl und Status-Sammelaktionen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Evrak listesinde çoklu seçim, filtre sonucunun tamamını seçme ve Açık/İşlemde/Tamamlandı/Arşivlendi durumlarına toplu geçiş eklendi.",
+          "de": "Die Dokumentliste unterstützt Mehrfachauswahl, Auswahl aller gefilterten Ergebnisse und Sammelwechsel zu Offen/In Bearbeitung/Erledigt/Archiviert."
+        }
+      ]
+    },
+    {
       "version": "1.7.1",
       "date": "2026-11-16",
       "title": {

@@ -3,7 +3,7 @@ import { toast, Link } from "@heroui/react";
 
 import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
 
-import { Eye, Paperclip, Pencil, Trash2 } from "lucide-react";
+import { Archive, CheckCircle2, Circle, Eye, LoaderCircle, Paperclip, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
@@ -14,11 +14,13 @@ import type {
   DataTableFilter,
   DataTableRowAction,
 } from "@/shared/components/data-table/types";
+import type { DataTableSelection } from "@/shared/data-table/selection-contract";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { formatDate } from "@/shared/utils";
 
 import type { DocumentDirection, DocumentStatus } from "@prisma/client";
 
+import { bulkChangeDocumentStatusAction } from "../actions/bulk-change-status";
 import { deleteDocumentAction } from "../actions/delete-document";
 import { SUBJECT_TRUNCATE_LENGTH } from "../constants";
 import { DirectionBadge } from "./direction-badge";
@@ -62,6 +64,11 @@ export function DocumentTable({
   const drawerHref = useFormDrawerHref();
   const t = useTranslations("documents");
   const [deleting, setDeleting] = useState<DocumentRow | null>(null);
+  const [selection, setSelection] = useState<DataTableSelection>({
+    type: "explicit",
+    ids: [],
+  });
+  const [bulkPending, setBulkPending] = useState(false);
 
   const confirmDelete = async () => {
     if (!deleting) return;
@@ -75,6 +82,35 @@ export function DocumentTable({
     });
     setDeleting(null);
     router.refresh();
+  };
+
+  const runBulkStatus = async (
+    currentSelection: DataTableSelection,
+    status: DocumentStatus,
+  ) => {
+    setBulkPending(true);
+    try {
+      const result = await bulkChangeDocumentStatusAction({
+        selection: currentSelection,
+        status,
+      });
+      if (!result.ok) {
+        toast(result.error, { variant: "danger" });
+        return;
+      }
+
+      toast(
+        t("bulk.success", {
+          updated: result.data.updated,
+          skipped: result.data.skipped,
+        }),
+        { variant: "success" },
+      );
+      setSelection({ type: "explicit", ids: [] });
+      router.refresh();
+    } finally {
+      setBulkPending(false);
+    }
   };
 
   const columns: DataTableColumn<DocumentRow>[] = [
@@ -224,6 +260,50 @@ export function DocumentTable({
         toolbarExtra={toolbarExtra}
         searchPlaceholder={t("filter.search")}
         rowActions={rowActions}
+        selection={
+          canUpdate
+            ? {
+                mode: "multiple",
+                value: selection,
+                onChange: setSelection,
+                allowQuerySelection: true,
+                bulkActions: [
+                  {
+                    key: "open",
+                    label: t("bulk.open"),
+                    icon: <Circle className="h-4 w-4" />,
+                    disabled: bulkPending,
+                    onPress: (currentSelection) =>
+                      runBulkStatus(currentSelection, "OPEN"),
+                  },
+                  {
+                    key: "in-progress",
+                    label: t("bulk.inProgress"),
+                    icon: <LoaderCircle className="h-4 w-4" />,
+                    disabled: bulkPending,
+                    onPress: (currentSelection) =>
+                      runBulkStatus(currentSelection, "IN_PROGRESS"),
+                  },
+                  {
+                    key: "completed",
+                    label: t("bulk.completed"),
+                    icon: <CheckCircle2 className="h-4 w-4" />,
+                    disabled: bulkPending,
+                    onPress: (currentSelection) =>
+                      runBulkStatus(currentSelection, "COMPLETED"),
+                  },
+                  {
+                    key: "archived",
+                    label: t("bulk.archived"),
+                    icon: <Archive className="h-4 w-4" />,
+                    disabled: bulkPending,
+                    onPress: (currentSelection) =>
+                      runBulkStatus(currentSelection, "ARCHIVED"),
+                  },
+                ],
+              }
+            : undefined
+        }
         emptyMessage={t("list.empty")}
       />
 

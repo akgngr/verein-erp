@@ -13,7 +13,7 @@ Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi.
 |---|---|
 | Anahtar | `documents` |
 | Tür | Resmî modül |
-| Sürüm | 1.7.1 |
+| Sürüm | 1.8.0 |
 | Sayfalar | `/evrak`, `/evrak/kategoriler` |
 | Önerir | [Muhasebe](./accounting), [Görevler](./tasks), [Yapay zekâ asistanı](./ai) |
 
@@ -44,6 +44,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_document` · `get_document_statistics` · `list_documents` · `propose_delete_document` · `propose_document` · `propose_document_status` · `read_document_file`
 
 ## Sürüm notları
+
+### 1.8.0 — Evrak listesinde toplu seçim ve durum işlemleri
+
+_2026-11-17_
+
+- **Yeni:** Evrak listesinde çoklu seçim, filtre sonucunun tamamını seçme ve Açık/İşlemde/Tamamlandı/Arşivlendi durumlarına toplu geçiş eklendi.
 
 ### 1.7.1 — Daha iyi OCR: küçük resimler ve WebP
 
@@ -87,10 +93,4 @@ _2026-11-15_
 
 - **Güvenlik:** Muhasebe, görevler ve asistan bağlantıları artık bildirilmiş erişimle çalışır: "Muhasebeye aktar" sunucuda, muhasebe yetkiniz denetlenerek yapılır; düğmeler yalnız ilgili modül açık ve yetkiniz varsa görünür. Yönetici erişimleri bir kez yeniden onaylar.
 
-### 1.5.1 — Sürümlü AI öneri ve sonuç sınırları
-
-_2026-11-15_
-
-- **Güvenlik:** Öneri araçları katı Zod girdisi ve sabit model sonucu kullanır; salt öneri sorguları gereksiz kişi detaylarını okumaz. Kalan eski okuma araçlarının dönüşümü ayrı sürer.
-
-Daha eski 9 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/documents/releases.json)
+Daha eski 10 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/documents/releases.json)

@@ -78,7 +78,7 @@
 
 - [x] Members listesinde çoklu seçim uygula.
 - [x] Members için güvenli bir bulk action pilotu ekle.
-- [ ] İkinci bir modülde (documents/users uygunluk durumuna göre) selection + bulk action uygula.
+- [x] İkinci bir modülde (documents/users uygunluk durumuna göre) selection + bulk action uygula.
 - [ ] iki pilot modülde keyboard/mobile/hydration testlerini çalıştır.
 
 ## Faz 8 — Dokümantasyon ve geliştirici sözleşmesi
