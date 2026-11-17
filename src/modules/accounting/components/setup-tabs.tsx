@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Card, Label, Select, Spinner, Tabs } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -130,7 +131,7 @@ export function SetupTabs({
       });
     }
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
     router.refresh();
@@ -491,10 +492,10 @@ function SyncSettingsCard({
         donationCategoryId: donationCategoryId || null,
       });
       if (!result.ok) {
-        toast(result.error, { variant: "danger" });
+        notify.error(result.error);
         return;
       }
-      toast(t("toastSaved"), { variant: "success" });
+      notify.success(t("toastSaved"));
       router.refresh();
     } finally {
       setSaving(false);

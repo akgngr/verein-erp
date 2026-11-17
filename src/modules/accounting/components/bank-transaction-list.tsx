@@ -1,5 +1,6 @@
 "use client";
-import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
 import { Checkbox, Dialog, Label, Select, Spinner, StatusChip, Tabs } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -98,7 +99,7 @@ export function BankTransactionList({
     status: "OPEN" | "PRIVATE" | "IGNORED",
   ) => {
     const result = await setBankTransactionStatusAction({ id: row.id, status });
-    if (!result.ok) return toast(result.error, { variant: "danger" });
+    if (!result.ok) return notify.error(result.error);
     router.refresh();
   };
 
@@ -124,10 +125,8 @@ export function BankTransactionList({
               learnRule,
             });
     setBusy(false);
-    if (!result.ok) return toast(result.error, { variant: "danger" });
-    toast(t("booked", { number: result.data.bookingNumber }), {
-      variant: "success",
-    });
+    if (!result.ok) return notify.error(result.error);
+    notify.success(t("booked", { number: result.data.bookingNumber }));
     setActive(null);
     router.refresh();
   };

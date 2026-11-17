@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Input, Label, Select, Spinner, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -35,8 +36,8 @@ function useSubmit() {
     setBusy(true);
     const result = await call();
     setBusy(false);
-    if (!result.ok) return void toast(result.error, { variant: "danger" });
-    toast(success, { variant: "success" });
+    if (!result.ok) return void notify.error(result.error);
+    notify.success(success);
     reset?.();
     router.refresh();
   };

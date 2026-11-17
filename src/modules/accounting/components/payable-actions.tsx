@@ -1,5 +1,6 @@
 "use client";
-import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
 import { Description, Dialog, Input, Label, Select, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -43,7 +44,7 @@ export function PayableActions({
   const [reason, setReason] = useState("");
   const [busy, setBusy] = useState(false);
   const amountCents = toCents(amount);
-  const fail = (error: string) => toast(error, { variant: "danger" });
+  const fail = (error: string) => notify.error(error);
 
   return (
     <div className="flex flex-wrap gap-2">
@@ -170,10 +171,8 @@ export function PayableActions({
                         });
                         setBusy(false);
                         if (!result.ok) return fail(result.error);
-                        toast(
-                          t("paid", { number: result.data.bookingNumber }),
-                          { variant: "success" },
-                        );
+                        notify.success(
+                          t("paid", { number: result.data.bookingNumber }));
                         close();
                         router.refresh();
                       }}
