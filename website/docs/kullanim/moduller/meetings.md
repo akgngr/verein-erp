@@ -13,7 +13,7 @@ Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar.
 |---|---|
 | Anahtar | `meetings` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.8 |
+| Sürüm | 1.3.9 |
 | Sayfalar | `/toplantilar`, `/toplantilar/gorevler` |
 
 ## Diğer modüllere erişim
@@ -41,6 +41,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_meeting` · `get_meeting_statistics` · `list_meetings` · `propose_delete_meeting` · `propose_meeting` · `propose_meeting_status`
 
 ## Sürüm notları
+
+### 1.3.9 — Katılımcı kontrolleri ortak UI katmanında
+
+_2026-11-17_
+
+- **İyileştirme:** Katılımcı ekleme, toplu işaretleme, hızlı konuk girişi, silme ve bildirim akışları FormTextField, ActionButton ve notify adapter katmanına taşındı.
 
 ### 1.3.8 — Kalan toplantı rozetleri ortak UI katmanında
 
@@ -84,10 +90,4 @@ _2026-11-15_
 
 - **İyileştirme:** AI iş akışında sayfalama, sorgu sözleşmesi veya worker iptal kontrolü güçlendirildi.
 
-### 1.3.1 — AI v2 güvenilirlik ve veri koruma
-
-_2026-11-14_
-
-- **Güvenlik:** Sunucu tarafından doğrulanan AI işlemleri, kapsamlı veri erişimi ve güvenilir yaşam döngüsü kontrolleri güncellendi.
-
-Daha eski 4 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/meetings/releases.json)
+Daha eski 5 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/meetings/releases.json)
