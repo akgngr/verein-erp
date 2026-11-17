@@ -83,3 +83,5 @@ download/*.zip
 /tools/mustang.jar
 /tools/kosit/
 /tools/xr/
+/elster-out/
+/eric/
