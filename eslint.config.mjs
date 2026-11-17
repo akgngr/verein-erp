@@ -83,6 +83,24 @@ const eslintConfig = [
     // modüller: src/app'i import edemez (3.1)
     files: ["src/modules/**/*.{ts,tsx}"],
     rules: {
+      // W0: uyarı olarak başlat; mevcut modül/app import sınırlarını error bırak.
+      // W6: bu kural error olacak. no-restricted-imports yerine ayrı kural
+      // kullanılması boundary güvenliğini yanlışlıkla warn düzeyine düşürmez.
+      "no-restricted-syntax": [
+        "warn",
+        {
+          selector: "ImportDeclaration[source.value=\'@heroui/react\']",
+          message: "ERP UI platform: modules must import shared UI patterns instead of @heroui/react (W6: error).",
+        },
+        {
+          selector: "ExportNamedDeclaration[source.value=\'@heroui/react\']",
+          message: "ERP UI platform: do not re-export @heroui/react from modules (W6: error).",
+        },
+        {
+          selector: "ExportAllDeclaration[source.value=\'@heroui/react\']",
+          message: "ERP UI platform: do not re-export @heroui/react from modules (W6: error).",
+        },
+      ],
       "no-restricted-imports": [
         "error",
         {
