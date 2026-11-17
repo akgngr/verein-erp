@@ -30,11 +30,11 @@ Her PR açıklamasında önce/sonra metrikleri bulunur: `directImportFiles`, `di
 | **W1 — Bildirimler** | **UI Platform ajanı** | **1–2** | W0 metrik/CI iskeleti; `toast` → `notify.success/error/info/warning`; timeout/action ve erişilebilir durumlar; tüm modüller | **2** — W0 merge + smoke |
 | **W2 — Düğmeler ve bağlantılar** | **UI Platform ajanı** | **2–4** | W1, `ActionButton` semantik API; `Button`, `buttonVariants`, `ButtonGroup`, `Link` → ortak patternler; `actionClassName` | **3** — W1 merge + smoke |
 | **W3 — Form alanları** | **Claude** | **4–7** | W2 API stabil; Label/Description/FieldError/TextField/Input/TextArea/InputGroup, Select/ListBox/ComboBox, seçim alanları ve tarih alanları; kontrollü ve kontrolsüz kalıplar | **4** — W2 merge; muhasebe/e-fatura işleriyle çakışma denetimi |
-| **W4 — Katmanlar** | **W3 bitince yeniden dağıtılır; varsayılan UI Platform ajanı** | **2–4** | W3 form primitive'leri; Modal/Dialog, Drawer/Sheet, Tooltip/Hint, Dropdown/MenuButton; mobil sheet ve keyboard | **5** — W3 merge; sahip yeniden teyit edilir |
-| **W5 — Görüntüleme** | **W3 bitince yeniden dağıtılır; varsayılan UI Platform ajanı** | **2–4** | W4; Spinner/LoadingState, Chip/Badge, Card/SurfaceCard, Tabs/Separator/ProgressBar/Table/Header; SimpleTable ve SSR | **6** — W4 merge; sahip yeniden teyit edilir |
+| **W4 — Katmanlar** | **Claude** | **2–4** | W3 form primitive'leri; Modal/Dialog, Drawer/Sheet, Tooltip/Hint, Dropdown/MenuButton; mobil sheet ve keyboard | **5** — W3 merge; sahip yeniden teyit edilir |
+| **W5 — Görüntüleme** | **Claude** | **2–4** | W4; Spinner/LoadingState, Chip/Badge, Card/SurfaceCard, Tabs/Separator/ProgressBar/Table/Header; SimpleTable ve SSR | **6** — W4 merge; sahip yeniden teyit edilir |
 | **W6 — Kilit / prova** | **UI Platform ajanı** | **1–2** | W1–W5 temiz; bütçe 0, ESLint error, scaffold/AI prompt, belge/TODO güncellemesi, Badge framework değişim provası (modül diff'i 0) | **7** — bütün dalgalar merge + CI yeşil |
 
-**Toplam tahmin:** **14–26 PR**; kesin sayı değildir. W4/W5'teki atama W3 bitince iki ajan arasında `WORK_SPLIT.md` güncellenerek netleştirilir. Tahminleri haftalık raporda yeniden değerlendir.
+**Toplam tahmin:** **14–26 PR**; kesin sayı değildir. W4/W5 için Claude'un 2026-11-17 tarihinde ürün sahibince onaylanan sahipliği esas alınır; sonraki değişiklikler iki ajan arasında `WORK_SPLIT.md` güncellenerek netleştirilir. Tahminleri haftalık raporda yeniden değerlendir.
 
 **Dalga tamamlanma kapısı:** Typecheck, lint, ilgili unit ve hydration testleri, Playwright UI smoke (etkileşim, toast, Tab; light/dark, mobil), module validation, module-version/release check yeşil; sayımda ölçülebilir düşüş; etkilenen tüm modüllerin release artışları ve `type: "internal"` notları tek dalga sahipliğinde. W6 için son değer tam **0** ve sınırı 0 olan otomatik test zorunludur.
 
@@ -49,8 +49,8 @@ Her PR açıklamasında önce/sonra metrikleri bulunur: `directImportFiles`, `di
 | **W1** | UI Platform ajanı — `toast` göçü yapılan tüm modüller | Claude aktif modüllerde UI göçü veya sürüm artışını aynı anda yapmaz; ayrı iş gerekirse W1 merge sonrasına bırakır |
 | **W2** | UI Platform ajanı — düğme/link göçü yapılan tüm modüller | Claude muhasebe/e-fatura/ELSTER kodunu ayrı dalda tutar; sürüm/release çakışması çözülmeden merge yok |
 | **W3** | **Claude** — form alanları göçü yapılan tüm modüller | UI Platform ajanı aynı modüllerin sürümünü/release dosyasını değiştirmez; bağımsız ortak adapter/test araştırması yapabilir |
-| **W4** | W3 sonrası atanacak tek sahip (**varsayılan UI Platform ajanı**) — layer göçü yapılan tüm modüller | Claude acil düzeltmeler dışında aynı modüllere/sürümlere girmez |
-| **W5** | W3 sonrası atanacak tek sahip (**varsayılan UI Platform ajanı**) — display göçü yapılan tüm modüller | Claude accounting dashboard ve system surface-card sahipliğiyle çakışan işleri önceden teslim/koordine eder |
+| **W4** | **Claude** — layer göçü yapılan tüm modüller | Claude acil düzeltmeler dışında aynı modüllere/sürümlere girmez |
+| **W5** | **Claude** — display göçü yapılan tüm modüller | Claude accounting dashboard ve system surface-card sahipliğiyle çakışan işleri önceden teslim/koordine eder |
 | **W6** | UI Platform ajanı — son kalan modüller (varsa) | Claude UI göçüne dair sürüm/release yazımını W6 kapanana kadar durdurur |
 
 **Bütün 36 modülün kapsamı:** `accounting, ai, audit, auth, automation, banking, calendar-apple, calendar-google, calendar-outlook, calendar, campaign-sms, campaign-telegram, campaign-whatsapp, courses, crm, demo, documents, donations, events, exports, feedback, grants, inventory, mail, mailings, meetings, members, online-forms, organization, progress, security-monitor, sepa, students, system, tasks, users`. Her dalga, kendi bileşen ailesini bu modüllerin **tamamında** tarar; import yoksa sürüm artışı da yapılmaz.
@@ -90,7 +90,7 @@ Diğer ajanın işini etkileyen her karar, sahiplik devri, API değişimi veya d
 
 1. **UI dondurma süresi:** W1–W5 boyunca kesintisiz mi, yoksa dalga bazında kısa (önerilen) pencereler mi? Acil bug/security istisna onayı kimin?
 2. **Internal release görünürlüğü:** `type: "internal"` notları release ekranında tamamen gizlensin mi, yönetici için katlanabilir mi? Website katalog çıktısı bunları kesinlikle dışlamalı mı?
-3. **W4/W5 sahipliği:** W3 sonunda Claude'un muhasebe/ELSTER iş yüküne ve geriye kalan import dağılımına göre kim devralacak?
+3. **W4/W5 sahipliği:** Ürün sahibi 2026-11-17 tarihinde **Claude** olarak atadı. Gerekirse yalnız ürün sahibi yeni devir kararı verebilir.
 4. **Her dalganın ürün sahibi onayı:** tüm W0–W6 için ayrı merge onayı mı, yoksa önceden belirlenmiş CI + review kapısı sonrası yetki devri mi?
 5. **Dondurma sırasında muhasebe/e-fatura/ELSTER UI değişiklikleri:** mevcut çalışmalar için yalnız servis/CI yürüsün mü, yoksa kritik uyumluluk ekranları yazılı istisna alabilir mi?
 6. **Depoda eksik devir belgesi:** `docs/ui/HANDOFF_UI_ZERO_IMPORT.md` içeriğini W0 ilk PR'ına ürün sahibinin paylaştığı metinle birebir ekleme kararı teyit edilsin.
@@ -99,4 +99,5 @@ Diğer ajanın işini etkileyen her karar, sahiplik devri, API değişimi veya d
 
 | Tarih | Sahip | Değişiklik / etkisi | Diğer ajan için not |
 | --- | --- | --- | --- |
-| 2026-11-17 | UI Platform ajanı | W0–W6 koordinasyon taslağı oluşturuldu; **yalnız plan dosyası** | Devir belgesi `main` dalında yok; W0'da eklenmeli. Bu PR henüz uygulama veya merge izni değildir. |
+| 2026-11-17 | UI Platform ajanı | W0–W6 koordinasyon taslağı oluşturuldu; **yalnız plan dosyası** | Devir belgesi ilk plan PR tarihinde `main` dalında yoktu; daha sonra Claude #227 ile ekledi. |
+| 2026-11-17 | Ürün sahibi | W4 (katmanlar) ve W5 (görüntüleme) sahipliği **Claude** olarak kesinleşti; W0/W1/W2/W6 UI Platform ajanında | Dalgaların merge işlemlerini Claude yapar; UI Platform ajanı merge yapmaz. |
