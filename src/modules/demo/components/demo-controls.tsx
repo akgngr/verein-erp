@@ -1,7 +1,6 @@
 "use client";
-import { statusTone } from "@/shared/components/ui/status-appearance";
-import { toast, Button } from "@heroui/react";
-import { actionVariant } from "@/shared/components/ui/action-appearance";
+import { ActionButton } from "@/shared/components/ui/action-button";
+import { notify } from "@/shared/components/ui/notify";
 
 import { Database, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -23,47 +22,43 @@ export function DemoControls({ hasData }: { hasData: boolean }) {
 
   const seed = async () => {
     const response = await seedDemoDataAction({});
-    if (!response.ok) return void toast(response.error, { variant: "danger" });
-    toast(t("seeded", { count: response.data.total }), { variant: "success" });
+    if (!response.ok) return void notify(response.error, "danger");
+    notify(t("seeded", { count: response.data.total }), "success");
     router.refresh();
   };
   const clear = async () => {
     const response = await clearDemoDataAction({});
     if (!response.ok) return void toast(response.error, { variant: "danger" });
-    toast(
+    notify(
       response.data.remaining > 0
         ? t("clearedPartial", {
             removed: response.data.removed,
             remaining: response.data.remaining,
           })
         : t("cleared", { count: response.data.removed }),
-      {
-        variant: statusTone(
-          response.data.remaining > 0 ? "warning" : "success",
-        ),
-      },
+      response.data.remaining > 0 ? "warning" : "success",
     );
     router.refresh();
   };
 
   return (
     <div className="flex flex-wrap gap-2">
-      <Button
+      <ActionButton
         isDisabled={hasData}
+        startIcon={<Database size={16} />}
         onPress={() => setConfirm("seed")}
-        variant={actionVariant("primary", "solid")}
       >
-        {<Database size={16} />}
         {t("seed")}
-      </Button>
-      <Button
+      </ActionButton>
+      <ActionButton
+        color="danger"
+        variant="flat"
         isDisabled={!hasData}
+        startIcon={<Trash2 size={16} />}
         onPress={() => setConfirm("clear")}
-        variant={actionVariant("danger", "flat")}
       >
-        {<Trash2 size={16} />}
         {t("clear")}
-      </Button>
+      </ActionButton>
       <ConfirmDialog
         isOpen={confirm !== null}
         onOpenChange={(open) => !open && setConfirm(null)}
