@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Description, Dropdown, Label } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -36,12 +37,10 @@ export function StatusChangeMenu({
     const result = await changeStatusAction({ id: documentId, status });
     setBusy(false);
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
-    toast(t("updatedToast", { status: tStatus(status) }), {
-      variant: "success",
-    });
+    notify.success(t("updatedToast", { status: tStatus(status) }));
     router.refresh();
   };
 

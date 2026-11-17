@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Checkbox, Dialog, Label, Spinner, StatusChip } from "@/shared/components/kit";
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -130,9 +131,7 @@ export function AnalysisDialog({
         error?: string;
       } | null;
       if (!result?.ok || !result.summary)
-        return void toast(result?.error ?? t("aiFailed"), {
-          variant: "danger",
-        });
+        return void notify.error(result?.error ?? t("aiFailed"));
       setAi(result.summary);
       setSelected((list) => [
         ...new Set([
@@ -142,7 +141,7 @@ export function AnalysisDialog({
         ]),
       ]);
     } catch {
-      toast(t("aiFailed"), { variant: "danger" });
+      notify.error(t("aiFailed"));
     } finally {
       setAiBusy(false);
     }

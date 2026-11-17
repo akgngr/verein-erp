@@ -1,5 +1,6 @@
 "use client";
-import { toast, Button } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
@@ -58,12 +59,10 @@ export function CategoryTable({
       isActive: !category.isActive,
     });
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
-    toast(category.isActive ? t("deactivatedToast") : t("activatedToast"), {
-      variant: "success",
-    });
+    notify.success(category.isActive ? t("deactivatedToast") : t("activatedToast"));
     router.refresh();
   };
 
