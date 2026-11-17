@@ -13,7 +13,7 @@ Test için kurgusal örnek veri yükler; modül kapatılınca hepsini siler.
 |---|---|
 | Anahtar | `demo` |
 | Tür | Resmî modül |
-| Sürüm | 1.0.1 |
+| Sürüm | 1.0.2 |
 | Sayfalar | `/ayarlar/demo-veri` |
 
 ## Diğer modüllere erişim
@@ -33,6 +33,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Demo veri | görüntüleme, oluşturma, silme | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.0.2 — Demo eylemleri ortak UI katmanında
+
+_2026-11-17_
+
+- **İyileştirme:** Eylem butonları ve bildirimler ortak ActionButton/notify adapter katmanına taşındı; ilgili ekran artık bu kullanımda HeroUI Button/Toast implementasyonuna doğrudan bağlı değil.
 
 ### 1.0.1 — HeroUI v3 arayüz geçişi
 

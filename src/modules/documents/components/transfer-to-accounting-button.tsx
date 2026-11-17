@@ -1,7 +1,6 @@
 "use client";
-import { statusTone } from "@/shared/components/ui/status-appearance";
-import { toast, Button, Spinner } from "@heroui/react";
-import { actionVariant } from "@/shared/components/ui/action-appearance";
+import { ActionButton } from "@/shared/components/ui/action-button";
+import { notify } from "@/shared/components/ui/notify";
 
 import { Landmark } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -23,10 +22,11 @@ export function TransferToAccountingButton({ fileId }: { fileId: string }) {
     setBusy(true);
     try {
       const result = await transferToAccountingAction({ fileId });
-      if (!result.ok) return void toast(result.error, { variant: "danger" });
-      toast(result.data.duplicate ? t("transferDuplicate") : t("transferred"), {
-        variant: statusTone(result.data.duplicate ? "warning" : "success"),
-      });
+      if (!result.ok) return void notify(result.error, "danger");
+      notify(
+        result.data.duplicate ? t("transferDuplicate") : t("transferred"),
+        result.data.duplicate ? "warning" : "success",
+      );
       router.push(`/muhasebe/gelen-faturalar/${result.data.payableId}`);
     } finally {
       setBusy(false);
@@ -34,15 +34,14 @@ export function TransferToAccountingButton({ fileId }: { fileId: string }) {
   };
 
   return (
-    <Button
-      size="sm"
-      onPress={transfer}
-      variant={actionVariant("primary", "flat")}
+    <ActionButton
+      color="primary"
+      variant="flat"
       isPending={busy}
+      startIcon={busy ? undefined : <Landmark className="h-4 w-4" aria-hidden />}
+      onPress={() => void transfer()}
     >
-      {busy ? <Spinner size="sm" color="current" /> : null}
-      {busy ? null : <Landmark className="h-4 w-4" aria-hidden />}
       {t("transfer")}
-    </Button>
+    </ActionButton>
   );
 }
