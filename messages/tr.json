@@ -4216,6 +4216,13 @@
       "tasks": "Yalnız kullanıcının görev oluşturma yetkisini okur; \"Termin için görev oluştur\" düğmesini göstermek için.",
       "system": "Muhasebe, görevler ve asistan modüllerinin etkin olup olmadığını okur (düğmeler yalnız etkinse gösterilir).",
       "ai": "\"AI ile özetle\": evrak metnini asistanın özet servisine gönderir; asistan veri politikası (yerel model ya da maskelenmiş bulut) ve kullanıcının asistan yetkisi sunucuda uygulanır."
+    },
+    "bulk": {
+      "open": "Açık yap",
+      "inProgress": "İşlemde yap",
+      "completed": "Tamamlandı yap",
+      "archived": "Arşivle",
+      "success": "{updated} evrak güncellendi, {skipped} kayıt zaten hedef durumdaydı."
     }
   },
   "donations": {
