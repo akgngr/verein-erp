@@ -1,6 +1,6 @@
 "use client";
-import { toast, Button, Spinner } from "@heroui/react";
-import { actionVariant } from "@/shared/components/ui/action-appearance";
+import { ActionButton } from "@/shared/components/ui/action-button";
+import { notify } from "@/shared/components/ui/notify";
 
 import { RotateCcw, XCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -27,36 +27,34 @@ export function ExecutionActions({ id, status }: Props) {
     startTransition(async () => {
       const response = await action({ id });
       if (!response.ok)
-        return void toast(response.error, { variant: "danger" });
-      toast(success, { variant: "success" });
+        return void notify(response.error, "danger");
+      notify(success, "success");
       router.refresh();
     });
 
   return (
     <div className="mt-3 flex gap-2">
       {cancellable ? (
-        <Button
-          size="sm"
-          onPress={() => run(cancelExecutionAction, t("cancelled"))}
-          variant={actionVariant("danger", "flat")}
+        <ActionButton
+          color="danger"
+          variant="flat"
           isPending={pending}
+          startIcon={<XCircle className="h-4 w-4" />}
+          onPress={() => run(cancelExecutionAction, t("cancelled"))}
         >
-          {pending ? <Spinner size="sm" color="current" /> : null}
-          {<XCircle className="h-4 w-4" />}
           {t("cancel")}
-        </Button>
+        </ActionButton>
       ) : null}
       {retryable ? (
-        <Button
-          size="sm"
-          onPress={() => run(retryExecutionAction, t("retried"))}
-          variant={actionVariant("primary", "flat")}
+        <ActionButton
+          color="primary"
+          variant="flat"
           isPending={pending}
+          startIcon={<RotateCcw className="h-4 w-4" />}
+          onPress={() => run(retryExecutionAction, t("retried"))}
         >
-          {pending ? <Spinner size="sm" color="current" /> : null}
-          {<RotateCcw className="h-4 w-4" />}
           {t("retry")}
-        </Button>
+        </ActionButton>
       ) : null}
     </div>
   );
