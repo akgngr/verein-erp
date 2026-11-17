@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Checkbox, Dialog, Label, Spinner, StatusChip } from "@/shared/components/kit";
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -105,11 +106,11 @@ export function PermissionMatrix({
     const result = await setAiPermissionsAction({ matrix: next });
     setBusy(false);
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return false;
     }
     setSaved(next);
-    toast(t("saved"), { variant: "success" });
+    notify.success(t("saved"));
     router.refresh();
     return true;
   };

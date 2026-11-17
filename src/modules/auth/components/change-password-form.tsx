@@ -1,5 +1,6 @@
 "use client";
-import { toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -37,7 +38,7 @@ export function ChangePasswordForm() {
       return;
     }
     form.reset();
-    toast(t("updated"), { variant: "success" });
+    notify.success(t("updated"));
     router.push("/");
     router.refresh();
   });

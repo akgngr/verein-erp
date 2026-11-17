@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Checkbox, Description, Input, InputGroup, Label, Spinner, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -56,10 +57,10 @@ function ProviderCard({
       baseUrl,
     });
     setBusy(null);
-    if (!result.ok) return void toast(result.error, { variant: "danger" });
+    if (!result.ok) return void notify.error(result.error);
     setApiKey("");
     setClearKey(false);
-    toast(t("credentialSaved"), { variant: "success" });
+    notify.success(t("credentialSaved"));
     router.refresh();
   };
 
@@ -175,8 +176,8 @@ function ProviderCard({
                   });
                   setBusy(null);
                   if (!result.ok)
-                    return void toast(result.error, { variant: "danger" });
-                  toast(t("providerChanged"), { variant: "success" });
+                    return void notify.error(result.error);
+                  notify.success(t("providerChanged"));
                   router.refresh();
                 }}
                 variant={actionVariant("primary", "solid")}
