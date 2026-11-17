@@ -13,7 +13,7 @@ Kalıcı arka plan görevleri ve iş akışları.
 |---|---|
 | Anahtar | `automation` |
 | Tür | Eklenti |
-| Sürüm | 0.10.8 |
+| Sürüm | 0.10.9 |
 | Sayfalar | `/automation`, `/automation/workflows` |
 
 ## Diğer modüllere erişim
@@ -35,6 +35,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Otomasyon | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | — | görüntüleme |
 
 ## Sürüm notları
+
+### 0.10.9 — Onay eylemleri ortak UI katmanında
+
+_2026-11-17_
+
+- **İyileştirme:** Workflow onay/red eylemleri ortak ActionButton/notify pattern'lerine taşındı; approvals panel artık HeroUI Button/Toast bileşenlerini doğrudan içe aktarmıyor.
 
 ### 0.10.8 — Çalışma eylemleri ortak UI katmanında
 
@@ -78,11 +84,4 @@ _2026-11-14_
 
 - **Güvenlik:** Sunucu tarafından doğrulanan AI işlemleri, kapsamlı veri erişimi ve güvenilir yaşam döngüsü kontrolleri güncellendi.
 
-### 0.10.1 — Koşul değerleri düzeltmesi
-
-_2026-11-07_
-
-- **Düzeltme:** Evet/hayır alanları (ör. "Tüm gün") koşulda artık Evet/Hayır listesiyle seçiliyor; elle true/false yazmak gerekmiyor.
-- **Düzeltme:** Değeri seçilmemiş koşul yayımlanırken adım adıyla uyarı verir (sessizce boş değerle karşılaştırılmaz); boş liste "Bir değer seçin" gösterir.
-
-Daha eski 23 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/automation/releases.json)
+Daha eski 24 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/automation/releases.json)
