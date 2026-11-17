@@ -647,5 +647,10 @@
         "description": "Verfeinert eine bestehende Beitrags-datasetRef mit erlaubten Status- und Restbetragsfiltern und erzeugt eine neue befristete Referenz. Keine Identitätsselektoren oder SQL; nur Referenz und Anzahl."
       }
     }
+  },
+  "bulk": {
+    "activate": "Aktiv setzen",
+    "passivate": "Passiv setzen",
+    "success": "{updated} Mitglieder aktualisiert, {skipped} Einträge übersprungen."
   }
 }
