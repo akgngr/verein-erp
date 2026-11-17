@@ -1,7 +1,7 @@
 "use client";
 import { toast, Link } from "@heroui/react";
 
-import { Eye, Pencil, Trash2 } from "lucide-react";
+import { Eye, Pencil, Trash2, UserCheck, UserMinus } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useTranslations } from "next-intl";
@@ -13,12 +13,14 @@ import type {
   DataTableFilter,
   DataTableRowAction,
 } from "@/shared/components/data-table/types";
+import type { DataTableSelection } from "@/shared/data-table/selection-contract";
 import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 import { formatDate } from "@/shared/utils";
 
 import type { MemberStatus, MembershipType } from "@prisma/client";
 
 import { deleteMemberAction } from "../actions/delete-member";
+import { bulkChangeMemberStatusAction } from "../actions/bulk-change-status";
 import { StatusBadge } from "./status-badge";
 import { TypeBadge } from "./type-badge";
 
@@ -68,6 +70,11 @@ export function MemberTable({
   const drawerHref = useFormDrawerHref();
   const t = useTranslations("members");
   const [deleting, setDeleting] = useState<MemberRow | null>(null);
+  const [selection, setSelection] = useState<DataTableSelection>({
+    type: "explicit",
+    ids: [],
+  });
+  const [bulkPending, setBulkPending] = useState(false);
 
   const confirmDelete = async () => {
     if (!deleting) return;
@@ -84,6 +91,35 @@ export function MemberTable({
     );
     setDeleting(null);
     router.refresh();
+  };
+
+  const runBulkStatus = async (
+    currentSelection: DataTableSelection,
+    status: "ACTIVE" | "PASSIVE",
+  ) => {
+    setBulkPending(true);
+    try {
+      const result = await bulkChangeMemberStatusAction({
+        selection: currentSelection,
+        status,
+      });
+      if (!result.ok) {
+        toast(result.error, { variant: "danger" });
+        return;
+      }
+
+      toast(
+        t("bulk.success", {
+          updated: result.data.updated,
+          skipped: result.data.skipped,
+        }),
+        { variant: "success" },
+      );
+      setSelection({ type: "explicit", ids: [] });
+      router.refresh();
+    } finally {
+      setBulkPending(false);
+    }
   };
 
   const columns: DataTableColumn<MemberRow>[] = [
@@ -199,6 +235,34 @@ export function MemberTable({
         toolbarExtra={toolbarExtra}
         searchPlaceholder={searchPlaceholder ?? t("list.searchPlaceholder")}
         rowActions={rowActions}
+        selection={
+          canUpdate
+            ? {
+                mode: "multiple",
+                value: selection,
+                onChange: setSelection,
+                allowQuerySelection: true,
+                bulkActions: [
+                  {
+                    key: "activate",
+                    label: t("bulk.activate"),
+                    icon: <UserCheck className="h-4 w-4" />,
+                    disabled: bulkPending,
+                    onPress: (currentSelection) =>
+                      runBulkStatus(currentSelection, "ACTIVE"),
+                  },
+                  {
+                    key: "passivate",
+                    label: t("bulk.passivate"),
+                    icon: <UserMinus className="h-4 w-4" />,
+                    disabled: bulkPending,
+                    onPress: (currentSelection) =>
+                      runBulkStatus(currentSelection, "PASSIVE"),
+                  },
+                ],
+              }
+            : undefined
+        }
         emptyMessage={emptyMessage ?? t("list.empty")}
       />
 
