@@ -24,3 +24,20 @@ export function parseBulkSelection(
 
   return validateQuerySelectionFilters(selection, options.allowedFilterKeys);
 }
+
+export async function resolveBulkSelection<T>(
+  input: unknown,
+  options: ResolveBulkSelectionOptions & {
+    resolveExplicit: (ids: string[]) => Promise<T>;
+    resolveQuery: (
+      query: Extract<DataTableSelection, { type: "query" }>["query"],
+      excludedIds: string[],
+    ) => Promise<T>;
+  },
+): Promise<T> {
+  const selection = parseBulkSelection(input, options);
+  if (selection.type === "explicit") {
+    return options.resolveExplicit(selection.ids);
+  }
+  return options.resolveQuery(selection.query, selection.excludedIds);
+}
