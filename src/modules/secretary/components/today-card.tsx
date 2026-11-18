@@ -43,7 +43,7 @@ export function SecretaryTodayCard({
         {items.length === 0 ? (
           <p className="py-4 text-sm text-ink-500">{labels.empty}</p>
         ) : (
-          <ul className="divide-y divide-ink-200/70">
+          <ul aria-label={labels.title} className="divide-y divide-ink-200/70">
             {items.map((item) => <TodayItem key={item.id} item={item} open={labels.open} />)}
           </ul>
         )}
