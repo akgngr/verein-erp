@@ -1,6 +1,6 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
+import { notify } from "@/shared/components/ui/notify";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
@@ -20,6 +20,7 @@ import { isActionItemOverdue } from "../utils";
 import type { ActionItemRow } from "../types";
 
 import { ActionItemModal } from "./action-item-modal";
+import { Button } from "@/shared/components/kit";
 
 /**
  * Toplantı görevleri sekmesi (7.3): açıklama, sorumlu, son tarih (gecikmiş

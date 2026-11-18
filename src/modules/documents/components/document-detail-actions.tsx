@@ -1,6 +1,6 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Link as ActionLink, buttonVariants, Button } from "@heroui/react";
+import { notify } from "@/shared/components/ui/notify";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
@@ -13,6 +13,7 @@ import { ConfirmDialog } from "@/shared/components/ui/confirm-dialog";
 
 import { deleteDocumentAction } from "../actions/delete-document";
 import { StatusChangeMenu } from "./status-change-menu";
+import { TextLink as ActionLink, buttonClassName, Button } from "@/shared/components/kit";
 
 /**
  * Detay sayfası aksiyon kümesi (8.3): Düzenle / Durum değiştir / Sil.
@@ -54,7 +55,7 @@ export function DocumentDetailActions({
         {canUpdate ? (
           <ActionLink
             href={`/evrak/${documentId}?duzenle`}
-            className={buttonVariants({
+            className={buttonClassName({
               variant: actionVariant("primary", "solid"),
               size: "sm",
             })}

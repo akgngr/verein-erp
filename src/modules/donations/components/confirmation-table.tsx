@@ -1,5 +1,4 @@
 "use client";
-import { Link } from "@heroui/react";
 
 import { AlertTriangle, Eye } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -11,6 +10,7 @@ import type {
 } from "@/shared/components/data-table/types";
 
 import type { ConfirmationListItem } from "../types";
+import { TextLink } from "@/shared/components/kit";
 
 /** Bildirim tablosu (§ 15 md. 5) + void uyarısı (§ 11 md. 11). */
 export function ConfirmationTable({
@@ -48,7 +48,7 @@ export function ConfirmationTable({
       sortable: true,
       width: 140,
       render: (row) => (
-        <Link
+        <TextLink
           href={`/bagislar/bildirimler/${row.id}`}
           className={[
             `font-medium${row.status === "CANCELLED" ? " text-ink-400 line-through decoration-danger-400" : ""}`,
@@ -58,7 +58,7 @@ export function ConfirmationTable({
             .join(" ")}
         >
           {row.confirmationNumber}
-        </Link>
+        </TextLink>
       ),
     },
     {

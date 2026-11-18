@@ -1,6 +1,6 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Link as ActionLink, buttonVariants, Button } from "@heroui/react";
+import { notify } from "@/shared/components/ui/notify";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { Pencil, Trash2 } from "lucide-react";
@@ -14,6 +14,7 @@ import type { MemberStatus } from "@prisma/client";
 
 import { deleteMemberAction } from "../actions/delete-member";
 import { StatusChangeMenu } from "./status-change-menu";
+import { TextLink as ActionLink, buttonClassName, Button } from "@/shared/components/kit";
 
 /**
  * Detay sayfası aksiyon kümesi: Düzenle / Durum değiştir / Sil.
@@ -58,7 +59,7 @@ export function MemberDetailActions({
         {canUpdate ? (
           <ActionLink
             href={`/uyeler/${memberId}?duzenle`}
-            className={buttonVariants({
+            className={buttonClassName({
               variant: actionVariant("primary", "solid"),
               size: "sm",
             })}
