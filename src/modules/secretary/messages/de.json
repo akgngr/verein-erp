@@ -1,0 +1,24 @@
+{
+  "nav": {
+    "secretary": "Sekretariat"
+  },
+  "module": {
+    "label": "Sekretariat",
+    "description": "Persönliches Sekretariat: Morgenübersicht und freizugebende Vorschläge."
+  },
+  "permissions": {
+    "secretary": {
+      "label": "Sekretariat",
+      "description": "Eigene Morgenübersicht und Vorschläge sehen; Einstellungen verwalten."
+    }
+  },
+  "meta": {
+    "home": "Sekretariat"
+  },
+  "title": "Sekretariat",
+  "description": "Was heute Ihre Aufmerksamkeit braucht und welche Vorschläge auf Ihre Freigabe warten.",
+  "empty": {
+    "title": "Sekretariat wird vorbereitet",
+    "description": "Morgenübersicht und Vorschläge erscheinen bald hier."
+  }
+}

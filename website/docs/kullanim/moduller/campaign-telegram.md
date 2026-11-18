@@ -1,5 +1,5 @@
 ---
-sidebar_position: 32
+sidebar_position: 33
 title: "Telegram"
 description: "Kampanyalar için Telegram kanalı (Bot API). Kişi davet bağlantısıyla abone olur; /stop ile ayrılır."
 slug: /kullanim/moduller/campaign-telegram

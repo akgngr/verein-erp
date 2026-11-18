@@ -1,5 +1,5 @@
 ---
-sidebar_position: 33
+sidebar_position: 34
 title: "Toplantılar"
 description: "Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar."
 slug: /kullanim/moduller/meetings

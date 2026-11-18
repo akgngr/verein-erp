@@ -1,0 +1,24 @@
+{
+  "nav": {
+    "secretary": "Sekreter"
+  },
+  "module": {
+    "label": "Sekreter",
+    "description": "Kişisel sekreter: sabah özeti ve onaylı öneriler."
+  },
+  "permissions": {
+    "secretary": {
+      "label": "Sekreter",
+      "description": "Kendi sabah özetini ve önerileri görme; ayarları yönetme."
+    }
+  },
+  "meta": {
+    "home": "Sekreter"
+  },
+  "title": "Sekreter",
+  "description": "Bugün neye bakmanız gerektiği ve onayınızı bekleyen öneriler.",
+  "empty": {
+    "title": "Sekreter hazırlanıyor",
+    "description": "Sabah özeti ve öneriler yakında burada görünecek."
+  }
+}

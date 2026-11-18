@@ -127,6 +127,7 @@
     "online-forms": "e-Sign",
     "organization": "Vereinsdaten",
     "progress": "Lernfortschritt",
+    "secretary": "Sekretariat",
     "securityMonitor": "Sicherheitsüberwachung",
     "students": "Schüler",
     "ayarlar": "Einstellungen",
@@ -7798,6 +7799,27 @@
         "label": "Alle Entwicklungsnotizen",
         "description": "Notizen anderer löschen; ohne Berechtigung nur eigene Notizen."
       }
+    }
+  },
+  "secretary": {
+    "module": {
+      "label": "Sekretariat",
+      "description": "Persönliches Sekretariat: Morgenübersicht und freizugebende Vorschläge."
+    },
+    "permissions": {
+      "secretary": {
+        "label": "Sekretariat",
+        "description": "Eigene Morgenübersicht und Vorschläge sehen; Einstellungen verwalten."
+      }
+    },
+    "meta": {
+      "home": "Sekretariat"
+    },
+    "title": "Sekretariat",
+    "description": "Was heute Ihre Aufmerksamkeit braucht und welche Vorschläge auf Ihre Freigabe warten.",
+    "empty": {
+      "title": "Sekretariat wird vorbereitet",
+      "description": "Morgenübersicht und Vorschläge erscheinen bald hier."
     }
   },
   "security-monitor": {

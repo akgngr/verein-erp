@@ -1,0 +1,20 @@
+{
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
+  "releases": [
+    {
+      "version": "0.1.0",
+      "date": "2026-11-18",
+      "title": {
+        "tr": "Sekreter modülü iskeleti",
+        "de": "Grundgerüst des Sekretariat-Moduls"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Kişisel sekreter modülü eklendi (varsayılan kapalı). Sabah özeti ve öneriler sonraki sürümlerde gelecek.",
+          "de": "Modul „Sekretariat“ hinzugefügt (standardmäßig deaktiviert). Morgenübersicht und Vorschläge folgen in späteren Versionen."
+        }
+      ]
+    }
+  ]
+}
