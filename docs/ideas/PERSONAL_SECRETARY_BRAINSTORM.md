@@ -13,7 +13,7 @@
 - **Nereye:** İsteğe bağlı `secretary` modülü. Mevcut AI v2, otomasyon motoru, UI kiti ve yüzey kartları yeniden kullanılır.
 - **İlk sürüm (MVP):** P1 kural tabanlı sabah özeti + P2 onay kutusu. E-posta taslakları (P3) sonra; ses, OCR ve çok kanallı bildirim (P4) en son.
 - **Önce yazılacak kararlar:** `AiProposal`'ın kural kaynaklı önerilere genelleştirilmesi (ADR), sekreterin kendi küçük tablosu, gelen posta olayı ve uygulama içi bildirim altyapısı (bkz. §4.1).
-- **Kurum sınırı:** Her müşteri ayrı kurulumda çalışır ([ADR 0001](../adr/0001-isolated-deployment-per-customer.md)); kurumlar arası izolasyon kurulum düzeyinde sağlanır. Sekreter için kabul kriteri **kullanıcı izolasyonu**dur.
+- **Kurum sınırı:** Her müşterinin kendi veritabanı ve anahtarları vardır ([ADR 0001](../adr/0001-isolated-deployment-per-customer.md), hibrit). Sekreter tablolarında müşteri alanı gerekmez; ortak çalışma zamanında (ADR 0001 Aşama 3) sekreterin işleri müşteriyi yalnız imzalı iş zarfından alır. Sekreter için kabul kriteri **kullanıcı izolasyonu**dur.
 
 ## 1. Ürün tezi
 
@@ -58,7 +58,7 @@ Brifing **AI olmadan da** kural tabanlı veriyle üretilebilmeli. Model yalnız 
 | PS-02 | Onay kutusu / öneri merkezî akışı | **Evet** | Kontrol tek noktada | AiProposal, TTL, atomic claim, audit |
 | PS-03 | Takvim ve görev çakışması | **Evet** | Zaman kaybını azaltma | Calendar permissions, timezone Europe/Berlin |
 | PS-04 | Gelen e-postadan görev/yanıt taslağı | **MVP sonrası** | Gelen kutusu iş yükü | IMAP kapsamı, ayrı içerik rızası, gönderim onayı |
-| PS-05 | Son tarih / gecikmiş cevap takibi | **MVP sonrası** | Kaybolan işleri yakalama | Automation outbox; kurum sınırı kurulum düzeyinde (ADR 0001) |
+| PS-05 | Son tarih / gecikmiş cevap takibi | **MVP sonrası** | Kaybolan işleri yakalama | Automation outbox; kurum sınırı müşteri veritabanında (ADR 0001) |
 | PS-06 | Fatura ve tahsilat uyarıları | **Evet (salt okuma)** | Nakit akışını görünür kılma | Accounting OPOS permission, finans işlemi otomatik yok |
 | PS-07 | Evrak OCR alan önerisi | **MVP sonrası** | Veri girişini hızlandırma | Local OCR, sensitive content fail-closed |
 | PS-08 | Toplantı hazırlık özeti | **MVP sonrası** | Gündem ve açık kararlar | Meetings/task public adapter, kaynak bağlantısı |
@@ -96,7 +96,7 @@ Calendar / Tasks / Mail / Documents / Accounting / Members
                  |
        Automation outbox + pg-boss worker
                  |
-   Audit / Notification Policies  (kurum sınırı: kurulum, ADR 0001)
+   Audit / Notification Policies  (kurum sınırı: müşteri veritabanı + platform bağlamı, ADR 0001)
 ```
 
 **Teknik karar önerisi:** Kişisel sekreter, AI sohbet paneline gömülü monolit yerine modül yaşam döngüsüyle açılıp kapanabilen **`secretary`** isimli isteğe bağlı ürün modülü olsun. İlk etapta modül oluşturmadan önce servis sözleşmesini ve UI prototipini doğrula. Core altyapı yalnız reusable shared primitive sağlar. Modül `public`, `server`, `ui`, `ai`, `automation` girişleri üzerinden bağımlı modüllerle etkileşir; hiçbir modülün private Prisma tablosunu doğrudan sorgulamaz.

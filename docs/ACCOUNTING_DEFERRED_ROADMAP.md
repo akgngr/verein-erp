@@ -8,30 +8,41 @@ Panel düzeni (R3) ve Almanca website (R4) bağımsızdır ve paralel yürüyebi
 
 | # | İş | Bağımlılık | Tahmini boyut | Risk |
 |---|----|-----------|---------------|------|
-| R1 | Barındırılan çoklu müşteri: izole kurulum + yönetim katmanı (ADR 0001) | — | Büyük (6–8 PR, çoğu altyapı) | Orta: operasyon; veri sızıntısı riski yapısal olarak düşük |
+| R1 | Hibrit çoklu müşteri: yönetim katmanı + müşteri başına veritabanı + izole kurulum, 4 aşama (ADR 0001) | — | Çok büyük (Aşama 1: 6–8 PR; Aşama 2–3 platform işi) | Aşama 1 düşük; Aşama 2–3 orta-yüksek (sızıntı riski CI kapısıyla) |
 | R2 | Çoklu para birimi | — | Büyük (4 PR) | Orta: GoBD/DATEV uyumu |
 | R3 | Panel kartlarını sürükle/boyutlandır | — | Orta (2–3 PR) | Düşük |
 | R4 | Almanca website dokümantasyonu | — | Orta (2 PR + sürekli) | Düşük |
 
 ---
 
-## R1 — Barındırılan çoklu müşteri (izole kurulum + yönetim katmanı)
+## R1 — Hibrit çoklu müşteri (yönetim katmanı + müşteri başına veritabanı + izole kurulum)
 
-Karar: [ADR 0001](./adr/0001-isolated-deployment-per-customer.md). Her müşteri **ayrı uygulama + ayrı veritabanı + ayrı anahtarlar** ile çalışır. Ortak veritabanlı çok kiracılık (`organizationId` + RLS) ana ürüne **eklenmez**. Modül kodu tek kurumlu kalır.
+Karar: [ADR 0001](./adr/0001-isolated-deployment-per-customer.md) (hibrit, aşamalı). Tek kod tabanı; SaaS ve self-host eşit önemde. Paketler: Community, Business, Enterprise (+ self-host). Ortak veritabanlı çok kiracılık (`organizationId` + RLS) ana ürüne **eklenmez**.
 
-- **R1.0 Karar:** ADR 0001 onayı (ürün sahibi).
-- **R1.1 Müşteri açma:** Tek komutla Postgres veritabanı ve kullanıcı, secret'lar (`AUTH_SECRET`, `DATA_ENCRYPTION_*`, `MAIL_ENCRYPTION_KEY`), dosya deposu, alan adı ve TLS, web + worker konteyneri, migrator çalıştırma, ilk yönetici daveti.
-- **R1.2 Aşamalı yayın:** Sürüm kanalları (test grubu → genel); müşteri başına sürüm sabitleme; geriye uyumlu migration kuralı (genişlet → taşı → daralt); otomatik geri alma.
-- **R1.3 Yedek ve geri yükleme:** Müşteri anahtarıyla şifreli günlük yedek (bekleyen "şifreli yedek" işiyle birleşir); geri yükleme provası; müşteri isteğiyle tam dışa aktarma ve silme.
-- **R1.4 İzleme:** Sağlık uçları, worker kuyruğu, disk ve migration durumu. Kişisel veri içermeyen merkezi log/metrik.
-- **R1.5 Maliyet:** Uyuyan konteyner (scale-to-zero), küçük kaynak profilleri, ortak Postgres kümesinde veritabanı başına kotalar.
-- **R1.6 Faturalama ve plan:** Plan → modül seti/limitler. Yönetim katmanı yalnız işletme verisi tutar, müşteri verisine erişmez.
-- **R1.7 Self-host paketi:** Aynı imajlarla `docker compose` kurulumu, güncelleme rehberi.
-- **R1.8 Testler (kapı):** İki müşteri kurulumunun ağ, veritabanı, dosya ve anahtar düzeyinde birbirine erişemediğinin otomatik doğrulaması; yedekten geri yükleme testi; aşamalı yayın + geri alma provası.
+**Aşama 1 — Yönetim katmanı + izole kurulum (modül kodu değişmez)**
+- **R1.1 Müşteri açma:** Tek komutla Postgres veritabanı ve kullanıcı, müşteri başına secret'lar (`AUTH_SECRET`, `DATA_ENCRYPTION_*`, `MAIL_ENCRYPTION_KEY`), dosya deposu, alan adı ve TLS, web + worker konteyneri, migrator, ilk yönetici daveti. Hedef ortam: Coolify veya eşdeğeri.
+- **R1.2 Aşamalı yayın:** Sürüm kanalları (test grubu → genel), müşteri başına sürüm sabitleme, geriye uyumlu migration kuralı, otomatik geri alma.
+- **R1.3 Yedek ve geri yükleme:** Müşteri anahtarıyla şifreli günlük yedek (bekleyen "şifreli yedek" işiyle birleşir), geri yükleme provası, istekle dışa aktarma ve silme.
+- **R1.4 İzleme ve maliyet:** Sağlık uçları, kuyruk, disk ve migration durumu; kişisel veri içermeyen merkezi log/metrik; uyuyan konteyner ve kaynak profilleri.
+- **R1.5 Plan ve fatura:** Paket → modül seti ve limitler. Yönetim katmanı yalnız işletme verisi tutar. AVV/DPA ve alt işleyen listesi.
+- **R1.6 Self-host paketi:** Aynı imajlarla `docker compose`, güncelleme rehberi.
+- **R1.7 Kapı:** İki kurulumun ağ, veritabanı, dosya ve anahtar düzeyinde birbirine erişemediğinin otomatik testi; geri yükleme ve geri alma provası.
 
-Kabul: Yeni müşteri tek komutla açılır, güncellenir, yedeklenir ve silinir. Hiçbir müşteri kurulumu başka müşterinin verisine, dosyasına veya anahtarına erişemez. Modül kodunda kurum filtresine gerek yoktur.
+**Aşama 2 — Müşteri bağlamı sözleşmesi**
+- **R1.8 Envanter (ADR 0003):** Süreç düzeyinde tek olan her şey: veritabanı istemcisi, anahtarlar, pg-boss, dosya kökü, mail ayarları, AI bütçe/takma ad, önbellekler, zamanlayıcılar.
+- **R1.9 Sözleşme:** Doğrulanmış bağlamdan müşteri çözümü; imzalı iş zarfı; modüller yalnız platform sözleşmesinden erişir (lint/test ile zorunlu).
+- **R1.10 Kapı:** Tek süreçte iki test müşterisiyle tüm test paketi ve çapraz erişim testleri CI'da.
 
-**Sonra (opsiyonel):** Çok küçük müşteriler için ortak veritabanlı "Lite" ürün yalnız ayrı bir ADR ile, sınırlı modül setiyle ve üçüncü taraf modülsüz düşünülür.
+**Aşama 3 — Ortak çalışma zamanı + müşteri başına veritabanı**
+- **R1.11** Community ve küçük Business müşterileri ortak runtime'a; yalnız onaylı modüller (üçüncü taraf modüller ayrılmış kurulumda).
+- **R1.12** Sınırlı istemci önbelleği, bağlantı havuzu, müşteri bazında migration takibi ve kota (ADR 0004).
+- **R1.13** Maliyet ölçümü; Community ekonomisi tutmuyorsa ayrı ADR.
+
+**Aşama 4 — Merkezi kimlik ve paket geçişleri**
+- **R1.14** Yönetim katmanında SSO; bir kullanıcı birden fazla kurumda (yetkiler kurumda kalır).
+- **R1.15** Community → Business → Enterprise geçişinde veri taşıma; kod değişmez.
+
+Kabul (genel): Yeni müşteri tek komutla açılır, güncellenir, yedeklenir ve silinir. Hiçbir müşteri başka müşterinin verisine, dosyasına veya anahtarına erişemez. Yeni modüller müşteri mantığı yazmaz.
 
 ## R2 — Çoklu para birimi
 
