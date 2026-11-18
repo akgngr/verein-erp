@@ -849,3 +849,13 @@ Bir modül kendi olaylarını yayımlayabilir; bu olaylar İş akışları düze
 **Düzenleyicide:** Koşul adımı tetikleyicinin olayına göre yalnızca o olayın alanlarını listeler; enum alanlarda değer seçenekli gelir, "Diğer (elle yaz)" ile manuel girilebilir (ipucu `help.<alan>` veya alan türünden gelir).
 
 **Dahili refaktör notları:** `type: internal` sürüm zincirinde kalır; kullanıcı ekranında ve web kataloğunda gösterilmez. Modül sürüm artışı yine zorunludur.
+
+## 9h. Kişisel sekreter katkısı (`secretary.ts`)
+
+Modül, kullanıcının sabah özetine katkı vermek için `src/modules/<modül>/secretary.ts` dosyasında `export const secretary = defineModuleSecretary({ module: "<modül>", providers: [...] })` tanımlar (`@/shared/secretary/define`). `pnpm module:sync` bu dosyaları `src/secretary-registry.ts` içinde toplar; sekreter modülü başka modülü import etmez.
+
+- Her sağlayıcı: `key`, `permission` (modülün görüntüleme yetkisi; yoksa çağrılmaz), `collect(context) → BriefingItem[]`.
+- Öğe kimliği `"<modül>:<tür>[:<kaynakId>]"`; `href` yalnız kendi modülünün sayfası; başlık modülün çevirisinden (`context.t`).
+- En fazla 20 öğe, 3 sn içinde; yalnız kendi verisi, kullanıcının zaten görebildiği ölçüde.
+- `validateModuleSecretary` / `validateBriefingItem` ile test edin. Ayrıntı: `docs/specs/PERSONAL_SECRETARY.md` §3.1.
+
