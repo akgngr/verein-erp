@@ -1,7 +1,6 @@
 import "server-only";
 
 import { getDb } from "@/shared/db";
-import { getUserProfiles } from "@/modules/auth/server";
 import { defineModuleSecretary, type BriefingItem, type SecretaryContext } from "@/shared/secretary/define";
 import { findMemberIdsByEmail } from "@/modules/members/server";
 import { resolveTaskAssigneeIds } from "./queries/assignee-identity";
@@ -39,6 +38,7 @@ export function buildTaskBriefing(counts: { overdue: number; today: number }, co
 
 /** Mirrors the existing Tasks "mine" identity policy, not a name-only match. */
 async function countMine(context: SecretaryContext): Promise<{ overdue: number; today: number }> {
+  const { getUserProfiles } = await import("@/modules/auth/server");
   const [user] = await getUserProfiles([context.user.id]);
   if (!user?.isActive) return { overdue: 0, today: 0 };
   const memberIds = await resolveTaskAssigneeIds({ id: context.user.id, email: user.email }, findMemberIdsByEmail);
