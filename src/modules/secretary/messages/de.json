@@ -59,6 +59,12 @@
     "openSource": "Zur Quelle",
     "count": "{count} Einträge",
     "unavailable": "Übersicht momentan nicht verfügbar",
-    "tryAgain": "Bitte versuchen Sie es später erneut."
+    "tryAgain": "Bitte versuchen Sie es später erneut.",
+    "dismiss": "Ausblenden",
+    "tomorrow": "Auf morgen verschieben",
+    "nextWeek": "Eine Woche zurückstellen",
+    "undo": "Rückgängig",
+    "actionDone": "Sichtbarkeit aktualisiert.",
+    "actionError": "Aktion konnte nicht abgeschlossen werden."
   }
 }
