@@ -203,5 +203,10 @@
       "confirm": "Kaydı ekle",
       "done": "Takvim kaydı eklendi."
     }
+  },
+  "secretary": {
+    "today": "Bugün {count} takvim kaydı",
+    "tomorrow": "Yarın {count} takvim kaydı",
+    "collisions": "Çakışan {count} takvim aralığı"
   }
 }
