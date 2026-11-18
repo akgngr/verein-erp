@@ -13,7 +13,7 @@
 - **Nereye:** İsteğe bağlı `secretary` modülü. Mevcut AI v2, otomasyon motoru, UI kiti ve yüzey kartları yeniden kullanılır.
 - **İlk sürüm (MVP):** P1 kural tabanlı sabah özeti + P2 onay kutusu. E-posta taslakları (P3) sonra; ses, OCR ve çok kanallı bildirim (P4) en son.
 - **Önce yazılacak kararlar:** `AiProposal`'ın kural kaynaklı önerilere genelleştirilmesi (ADR), sekreterin kendi küçük tablosu, gelen posta olayı ve uygulama içi bildirim altyapısı (bkz. §4.1).
-- **Bilinçli sınır:** Sistem bugün tek kurumlu. Kurum izolasyonu kuralları çoklu kurum (R1) geldiğinde zorunlu olur; o zamana kadar kabul kriteri **kullanıcı izolasyonu**dur.
+- **Kurum sınırı:** Her müşteri ayrı kurulumda çalışır ([ADR 0001](../adr/0001-isolated-deployment-per-customer.md)); kurumlar arası izolasyon kurulum düzeyinde sağlanır. Sekreter için kabul kriteri **kullanıcı izolasyonu**dur.
 
 ## 1. Ürün tezi
 
@@ -58,7 +58,7 @@ Brifing **AI olmadan da** kural tabanlı veriyle üretilebilmeli. Model yalnız 
 | PS-02 | Onay kutusu / öneri merkezî akışı | **Evet** | Kontrol tek noktada | AiProposal, TTL, atomic claim, audit |
 | PS-03 | Takvim ve görev çakışması | **Evet** | Zaman kaybını azaltma | Calendar permissions, timezone Europe/Berlin |
 | PS-04 | Gelen e-postadan görev/yanıt taslağı | **MVP sonrası** | Gelen kutusu iş yükü | IMAP kapsamı, ayrı içerik rızası, gönderim onayı |
-| PS-05 | Son tarih / gecikmiş cevap takibi | **MVP sonrası** | Kaybolan işleri yakalama | Automation outbox; kurum sınırı R1 ile |
+| PS-05 | Son tarih / gecikmiş cevap takibi | **MVP sonrası** | Kaybolan işleri yakalama | Automation outbox; kurum sınırı kurulum düzeyinde (ADR 0001) |
 | PS-06 | Fatura ve tahsilat uyarıları | **Evet (salt okuma)** | Nakit akışını görünür kılma | Accounting OPOS permission, finans işlemi otomatik yok |
 | PS-07 | Evrak OCR alan önerisi | **MVP sonrası** | Veri girişini hızlandırma | Local OCR, sensitive content fail-closed |
 | PS-08 | Toplantı hazırlık özeti | **MVP sonrası** | Gündem ve açık kararlar | Meetings/task public adapter, kaynak bağlantısı |
@@ -96,7 +96,7 @@ Calendar / Tasks / Mail / Documents / Accounting / Members
                  |
        Automation outbox + pg-boss worker
                  |
-   Audit / (R1: Organization Scope) / Notification Policies
+   Audit / Notification Policies  (kurum sınırı: kurulum, ADR 0001)
 ```
 
 **Teknik karar önerisi:** Kişisel sekreter, AI sohbet paneline gömülü monolit yerine modül yaşam döngüsüyle açılıp kapanabilen **`secretary`** isimli isteğe bağlı ürün modülü olsun. İlk etapta modül oluşturmadan önce servis sözleşmesini ve UI prototipini doğrula. Core altyapı yalnız reusable shared primitive sağlar. Modül `public`, `server`, `ui`, `ai`, `automation` girişleri üzerinden bağımlı modüllerle etkileşir; hiçbir modülün private Prisma tablosunu doğrudan sorgulamaz.
@@ -120,14 +120,14 @@ Calendar / Tasks / Mail / Documents / Accounting / Members
 | Uygulama içi bildirim merkezi | **Yok**; yalnız anlık `notify` (toast) var | Kalıcı bildirim listesi ayrı küçük bir altyapı işi; P1 için gerekmez (özet kartı yeterli). |
 | "Bugün" kartının yeri | **Var:** yüzey kartları (`DashboardCardDefinition.surfaces` + `SurfaceCards`) | Sekreter kartı ana Panel'e ve modül ekranlarına yeni altyapı olmadan yerleşir. |
 | Muhasebe uyarı kaynağı | **Var:** muhasebe panosunun "dikkat gerektirenler" mantığı (vadesi geçmiş fatura/gelen fatura, onay bekleyen, eşleşmemiş banka, belgesiz fiş, vergi tarihi) | P1 için doğrudan kaynak; modülün `ai.ts`/public sorgusu üzerinden. |
-| Çoklu kurum | **Yok** (tek kurum); plan: `docs/ACCOUNTING_DEFERRED_ROADMAP.md` R1 | Kurum alanları ve testleri R1 ile zorunlu. |
+| Çoklu müşteri | Kod tek kurumlu; barındırılan sürümde her müşteri ayrı kurulum ([ADR 0001](../adr/0001-isolated-deployment-per-customer.md), yol haritası R1) | Sekreterde kurum alanı gerekmez. |
 
 **Önemli ayrım:** “Bana gösterme” ≠ “Görevi tamamla”. Sekreterin kendi görünümü ile kaynak modüldeki işin gerçek durumu ayrıdır.
 
 ### Olay akışı (örnek)
 
 1. Mevcut modülün güvenilir olayı oluşur (ör. `documents.registered`; gelen posta için **yeni** olay gerekir, bkz. §4.1).
-2. Tek worker task, actor + izin + feature flag (R1 sonrası ayrıca kurum) kontrolleriyle işlenir.
+2. Tek worker task, actor + izin + feature flag kontrolleriyle işlenir.
 3. Kural tabanlı ayrıştırma karar verebiliyorsa model çağrılmaz.
 4. Model gerekiyorsa güvenli projection + rıza + sağlayıcı/bütçe politikası uygulanır. Serbest metin/PII için kapı açılamazsa **yerel-only veya manuel** fallback.
 5. `AiProposal` kullanıcıya taslak olarak sunulur; son tarih ve kaynak revizyonu saklanır.
@@ -139,13 +139,13 @@ Calendar / Tasks / Mail / Documents / Accounting / Members
 
 - **GDPR/DSGVO:** Veri minimizasyonu, amaç sınırlaması, saklama süresi, silme ve veri erişim kapsamı ürün tasarımında varsayılan. Hukuki uyum yalnız teknik dokümanla garanti edilemez; DPO/hukuk değerlendirmesi gerekir.
 - **Sıfır güven model kanalı:** AI v2 dataset/ref/token + `DATA_POLICY` + `AI_TOOL_POLICY` sözleşmesi kullanılmalı. `K0/K1` ve öğrenci/veli gibi hassas bilgiler model çıktısına açılmamalı; salt maskeleme yeterli kabul edilmemeli.
-- **Çok katmanlı izin:** actor, (R1 sonrası) kurum, module enabled, module AI matrix, tool policy, consent, scope, row-level permission her okuma/confirm/worker aşamasında güncel denetlenir.
+- **Çok katmanlı izin:** actor, module enabled, module AI matrix, tool policy, consent, scope, row-level permission her okuma/confirm/worker aşamasında güncel denetlenir.
 - **Risk seviyeleri:** L0 bilgi ve brifing; L1 taslak; L2 kayıt güncelleme için açık onay; L3 dış dünyaya gönderim/finans/vergisel işlem için ayrı güçlü onay ve mümkünse iki aşamalı yetki. Bazı L3 türleri hiçbir AI-driven otomatik yol üzerinden yapılmaz.
-- **Spam/tekrar önleme:** idempotency key, unique event key, cooldown, max daily notification, quiet hours, user opt-out, kurum düzeyi kota (R1 sonrası).
+- **Spam/tekrar önleme:** idempotency key, unique event key, cooldown, max daily notification, quiet hours, user opt-out, kurulum düzeyi kota.
 - **Gizli kaynaklar:** Öğrenci, veli, sağlık, özel not ve finans detayları varsayılan kapalı; yalnız güvenli aggregate ya da ilgili modülde doğrudan kullanıcı erişimi.
 - **Saklama:** Briefing cache kısa TTL; proposal TTL, purge worker, silme/consent revoke zinciri; geçmişi kullanıcı kontrol edebilmeli.
 - **Bildirim metni:** Push/e-posta konu satırında hassas isim/tutar/sağlık/vergi ayrıntısı bulunmaz; güvenli UI deep link tercih edilir.
-- **Denetlenebilirlik:** Her önerinin `sourceRef`, `policyRevision`, `actorId`, (R1 sonrası) `organizationId`, `proposedAt`, `expiresAt`, `sourceRevision`, `executionId`, `resultCode`; asla ham hassas metin logları değil.
+- **Denetlenebilirlik:** Her önerinin `sourceRef`, `policyRevision`, `actorId`, `proposedAt`, `expiresAt`, `sourceRevision`, `executionId`, `resultCode`; asla ham hassas metin logları değil.
 
 ## 6. Ürün akışları — düşük maliyetle yüksek değer
 
@@ -189,7 +189,7 @@ Calendar / Tasks / Mail / Documents / Accounting / Members
 | Faz | Çıktı | Bloklayan ön koşul | Kabul testi |
 | --- | --- | --- | --- |
 | P0 | UX akışları, kullanıcı görüşmeleri, veri/izin matrisi, risk modeli, `AiProposal` ADR | UI kiti (W3–W5, mevcut) | Gösterilebilir statik prototip + DPO ön değerlendirmesi |
-| P1 | Rule-only sabah brifingi, salt-okuma | Tasks/Calendar/Accounting adapters, UI W6 kilidi, sekreter tercih tablosu | Kullanıcı izolasyonu (kurum izolasyonu R1 ile), no-model tests, mobil/a11y |
+| P1 | Rule-only sabah brifingi, salt-okuma | Tasks/Calendar/Accounting adapters, UI W6 kilidi, sekreter tercih tablosu | Kullanıcı izolasyonu, no-model tests, mobil/a11y |
 | P2 | Proposal Inbox + confirm/dismiss | AiProposal v2 ve idempotency | Double confirm, stale source, revoked permission, audit |
 | P3 | Mail taslakları + hatırlatma kuralları + devir (PS-15) | Mail/Automation, per-mailbox consent, gelen posta olayı | Gönderim her zaman onaylı, sessiz saatler, tekrar yok |
 | P4 | OCR, ses, akıllı doğal dil, çok kanallı | Privacy gates, provider region/retention, budget | Local-only fallback, false-positive evaluation, data leakage tests |
@@ -198,7 +198,7 @@ MVP önceliği: **P1 + P2**, ardından **P3**. P4’ü erken eklemek maliyet, ve
 
 ## 9. Kalite ve test matrisi
 
-- RBAC ve kullanıcı sınırı: kullanıcı A'nın hiçbir brifing/önerisi kullanıcı B'ye görünmez. Kurum sınırı testleri R1 ile eklenir.
+- RBAC ve kullanıcı sınırı: kullanıcı A'nın hiçbir brifing/önerisi kullanıcı B'ye görünmez. Kurum sınırı kurulum düzeyindedir (ADR 0001).
 - Disabled module, revoked consent, disabled provider, policy revision, expired reference/proposal, stale source.
 - Worker double delivery, retry, race, idempotency, timeout, outbox crash/recovery.
 - TypeScript/ESLint/module:sync/module-version checks, hydration, i18n TR/DE (sonra EN), light/dark/mobile/reduced-motion.
