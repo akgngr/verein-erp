@@ -1,7 +1,7 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
-import { Description, Label, Spinner, TextArea, TextField } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { Description, Label, Spinner, TextArea, TextField, Button } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 

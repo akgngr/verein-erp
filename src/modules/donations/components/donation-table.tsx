@@ -1,5 +1,4 @@
 "use client";
-import { Link } from "@heroui/react";
 
 import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
 
@@ -15,6 +14,7 @@ import type {
 
 import type { DonationListItem } from "../types";
 import { CancelDonationModal } from "./cancel-donation-modal";
+import { TextLink } from "@/shared/components/kit";
 
 /** Bağış tablosu (§ 15 md. 1). */
 export function DonationTable({
@@ -60,7 +60,7 @@ export function DonationTable({
       sortable: true,
       width: 130,
       render: (row) => (
-        <Link
+        <TextLink
           href={`/bagislar/${row.id}`}
           className={[
             `font-medium${row.reversedAt ? " line-through decoration-danger-400" : ""}`,
@@ -70,7 +70,7 @@ export function DonationTable({
             .join(" ")}
         >
           {row.donationNumber}
-        </Link>
+        </TextLink>
       ),
     },
     {

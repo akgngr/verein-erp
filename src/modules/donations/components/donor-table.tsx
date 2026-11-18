@@ -1,5 +1,4 @@
 "use client";
-import { Link } from "@heroui/react";
 
 import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
 
@@ -13,6 +12,7 @@ import type {
 } from "@/shared/components/data-table/types";
 
 import type { DonorListItem } from "../types";
+import { TextLink } from "@/shared/components/kit";
 
 /** Bağışçı tablosu (§ 15 md. 4). */
 export function DonorTable({
@@ -51,12 +51,12 @@ export function DonorTable({
       sortable: true,
       width: 110,
       render: (row) => (
-        <Link
+        <TextLink
           href={`/bagislar/bagiscilar/${row.id}`}
           className={["font-medium", "text-sm"].filter(Boolean).join(" ")}
         >
           SP-{String(row.donorNumber).padStart(4, "0")}
-        </Link>
+        </TextLink>
       ),
     },
     {

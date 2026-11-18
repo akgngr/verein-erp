@@ -1,6 +1,6 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Link } from "@heroui/react";
+import { notify } from "@/shared/components/ui/notify";
 
 import { useTranslations } from "next-intl";
 
@@ -20,6 +20,7 @@ import { setActionItemStatusAction } from "../actions/action-item-actions";
 import { ACTION_ITEM_STATUS_COLORS } from "../constants";
 import { isActionItemOverdue } from "../utils";
 import type { ActionItemRow } from "../types";
+import { TextLink } from "@/shared/components/kit";
 
 /** Durum rozeti (7.4). */
 function StatusBadge({ status }: { status: ActionItemRow["status"] }) {
@@ -103,12 +104,12 @@ export function ActionItemTable({
       label: t("colMeeting"),
       width: 190,
       render: (row) => (
-        <Link href={`/toplantilar/${row.meetingId}`} className={"text-sm"}>
+        <TextLink href={`/toplantilar/${row.meetingId}`} className={"text-sm"}>
           {row.meetingNumber} —{" "}
           {row.meetingTitle.length > 28
             ? `${row.meetingTitle.slice(0, 28)}…`
             : row.meetingTitle}
-        </Link>
+        </TextLink>
       ),
     },
     {

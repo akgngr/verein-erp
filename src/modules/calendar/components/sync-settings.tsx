@@ -1,7 +1,7 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
-import { Input, Label, Spinner, StatusChip, Switch, TextField } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { Input, Label, Spinner, StatusChip, Switch, TextField, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -172,7 +172,7 @@ function ProviderRow({
           {canManage ? (
             <ActionLink
               href="/calendar/ayarlar"
-              className={buttonVariants({
+              className={buttonClassName({
                 variant: actionVariant("warning", "flat"),
                 size: "sm",
               })}

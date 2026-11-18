@@ -1,6 +1,5 @@
 "use client";
-import { Button, ButtonGroup } from "@heroui/react";
-import { Description, Input, Label, Select, Slider, Tabs, TextArea, TextField, Tooltip } from "@/shared/components/kit";
+import { Description, Input, Label, Select, Slider, Tabs, TextArea, TextField, Tooltip, Button, ButtonGroup } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 

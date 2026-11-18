@@ -1,6 +1,6 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Link } from "@heroui/react";
+import { notify } from "@/shared/components/ui/notify";
 
 import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
 
@@ -26,6 +26,7 @@ import { deleteDocumentAction } from "../actions/delete-document";
 import { SUBJECT_TRUNCATE_LENGTH } from "../constants";
 import { DirectionBadge } from "./direction-badge";
 import { StatusBadge } from "./status-badge";
+import { TextLink } from "@/shared/components/kit";
 
 /**
  * Evrak listesi tablosu (8.1).
@@ -117,12 +118,12 @@ export function DocumentTable({
       sortable: true,
       width: 150,
       render: (row) => (
-        <Link
+        <TextLink
           href={`/evrak/${row.id}`}
           className={["font-medium", "text-sm"].filter(Boolean).join(" ")}
         >
           {row.registryNumber}
-        </Link>
+        </TextLink>
       ),
     },
     {

@@ -1,6 +1,6 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Link } from "@heroui/react";
+import { notify } from "@/shared/components/ui/notify";
 
 import { Eye, Pencil, Trash2, UserCheck, UserMinus } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -24,6 +24,7 @@ import { deleteMemberAction } from "../actions/delete-member";
 import { bulkChangeMemberStatusAction } from "../actions/bulk-change-status";
 import { StatusBadge } from "./status-badge";
 import { TypeBadge } from "./type-badge";
+import { TextLink } from "@/shared/components/kit";
 
 /**
  * Üye listesi tablosu. DataTable paylaşılan client bileşeni olduğundan satır
@@ -126,12 +127,12 @@ export function MemberTable({
       sortable: true,
       width: 140,
       render: (row) => (
-        <Link
+        <TextLink
           href={`/uyeler/${row.id}`}
           className={["font-medium", "text-sm"].filter(Boolean).join(" ")}
         >
           {row.membershipNumber}
-        </Link>
+        </TextLink>
       ),
     },
     {
@@ -140,12 +141,12 @@ export function MemberTable({
       sortable: true,
       width: 220,
       render: (row) => (
-        <Link
+        <TextLink
           href={`/uyeler/${row.id}`}
           className={["text-foreground", "text-sm"].filter(Boolean).join(" ")}
         >
           {row.lastName}, {row.firstName}
-        </Link>
+        </TextLink>
       ),
     },
     {

@@ -1,7 +1,7 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
-import { Description, Dialog, Input, Label, Select, Spinner, TextArea, TextField } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { Description, Dialog, Input, Label, Select, Spinner, TextArea, TextField, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -52,7 +52,7 @@ export function PayableActions({
         <>
           <ActionLink
             href={`/muhasebe/gelen-faturalar/${payable.id}?duzenle=1`}
-            className={buttonVariants({
+            className={buttonClassName({
               variant: actionVariant("default", "flat"),
               size: "sm",
             })}

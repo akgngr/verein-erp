@@ -1,7 +1,7 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
-import { Card, Description, FieldError, InputGroup, Label, Select, Spinner, TextField } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { Card, Description, FieldError, InputGroup, Label, Select, Spinner, TextField, Button } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 

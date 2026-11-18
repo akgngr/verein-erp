@@ -1,7 +1,7 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
-import { Dialog, Input, Label, Spinner, TextField } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { Dialog, Input, Label, Spinner, TextField, Button } from "@/shared/components/kit";
 import { CopyValue } from "@/shared/components/ui/copy-value";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";

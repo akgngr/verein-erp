@@ -3,6 +3,8 @@ import fs from "node:fs";
 import path from "node:path";
 import test from "node:test";
 
+import { collectInventory, toMarkdown } from "../../scripts/ui/heroui-inventory";
+
 const ROOT = process.cwd();
 
 function walk(dir: string): string[] {
@@ -43,21 +45,30 @@ test("business modules do not create a parallel shared DataTable implementation"
   assert.deepEqual(forbidden, []);
 });
 
-test("direct HeroUI dependency in modules may only shrink during adapter migration", () => {
-  const moduleFiles = walk(path.join(ROOT, "src/modules")).filter((file) =>
-    /\.(?:ts|tsx)$/.test(file),
-  );
-  const directImports = moduleFiles.filter((file) =>
-    fs.readFileSync(file, "utf8").includes('from "@heroui/react"'),
-  );
+/**
+ * W6 ratchet: the number of module files that import @heroui/react directly may only go down.
+ * Lower W6_CEILING in the same PR that migrates files, and regenerate the tracked inventory
+ * (`pnpm ui:inventory` → docs/ui/HEROUI_INVENTORY.md). Target: 0, then the ESLint rule becomes an error.
+ */
+const W6_CEILING = 30;
 
-  // Baseline at ERP UI Platform hardening (2026-11-17). Reductions are welcome;
-  // new direct framework imports must use shared UI patterns instead.
+test("direct HeroUI dependency in modules may only shrink during adapter migration", () => {
+  const inventory = collectInventory(ROOT);
   assert.ok(
-    directImports.length <= 152,
-    "Direct @heroui/react imports increased to " + directImports.length +
-      "; use shared UI patterns/adapters instead.",
+    inventory.directImportFiles <= W6_CEILING,
+    "Direct @heroui/react imports increased to " + inventory.directImportFiles +
+      " (ceiling " + W6_CEILING + "); import from @/shared/components/kit instead.",
   );
+  assert.equal(
+    inventory.directImportFiles,
+    W6_CEILING,
+    "Migration progress detected: lower W6_CEILING to " + inventory.directImportFiles + " and run `pnpm ui:inventory`.",
+  );
+});
+
+test("tracked HeroUI inventory (docs/ui/HEROUI_INVENTORY.md) is up to date", () => {
+  const tracked = fs.readFileSync(path.join(ROOT, "docs/ui/HEROUI_INVENTORY.md"), "utf8");
+  assert.equal(tracked, toMarkdown(collectInventory(ROOT)), "Run `pnpm ui:inventory` and commit docs/ui/HEROUI_INVENTORY.md.");
 });
 
 test("module bulk actions enforce permission, selection validation and audit", () => {

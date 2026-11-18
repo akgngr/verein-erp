@@ -1,6 +1,5 @@
 "use client";
-import { Button } from "@heroui/react";
-import { Card, Checkbox, CheckboxGroup, FieldError, Input, Label, Select, Spinner, TextField } from "@/shared/components/kit";
+import { Card, Checkbox, CheckboxGroup, FieldError, Input, Label, Select, Spinner, TextField, Button } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 

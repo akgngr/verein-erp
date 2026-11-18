@@ -1,7 +1,7 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
-import { Card, ProgressBar, Spinner } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { Card, ProgressBar, Spinner, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -94,7 +94,7 @@ export function ImportWizard() {
         <div className="flex flex-wrap items-center gap-3">
           <ActionLink
             href="/api/members/import-template"
-            className={buttonVariants({
+            className={buttonClassName({
               variant: actionVariant("default", "flat"),
             })}
           >
@@ -239,7 +239,7 @@ export function ImportWizard() {
             <div className="mt-3">
               <ActionLink
                 href="/uyeler"
-                className={buttonVariants({
+                className={buttonClassName({
                   variant: actionVariant("primary", "flat"),
                   size: "sm",
                 })}

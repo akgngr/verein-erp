@@ -1,6 +1,5 @@
 "use client";
-import { Button } from "@heroui/react";
-import { Dialog, FieldError, Input, Label, Spinner, TextField } from "@/shared/components/kit";
+import { Dialog, FieldError, Input, Label, Spinner, TextField, Button } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
