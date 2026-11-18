@@ -7870,6 +7870,15 @@
         "stale": "Kaynak kayıt değişti; öneri geçersiz. Lütfen kaynağı kontrol edin.",
         "failed": "Eylem tamamlanamadı. Tekrar denenmez; lütfen kaynak kaydı kontrol edin."
       }
+    },
+    "ui": {
+      "today": "Bugün",
+      "noItems": "Şimdilik takip edilecek öğe yok.",
+      "partialFailure": "Bazı kaynaklar şu anda yüklenemedi. Diğer sonuçlar gösteriliyor.",
+      "openSource": "Kaynağa git",
+      "count": "{count} öğe",
+      "unavailable": "Özet şu anda kullanılamıyor",
+      "tryAgain": "Lütfen daha sonra yeniden deneyin."
     }
   },
   "security-monitor": {
