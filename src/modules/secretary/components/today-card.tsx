@@ -3,6 +3,7 @@ import { ArrowUpRight, CalendarCheck2, CircleAlert } from "lucide-react";
 
 import { Card } from "@/shared/components/kit";
 import type { Briefing, BriefingItem } from "@/shared/secretary/define";
+import { SecretaryItemActions, type ItemActionLabels } from "./item-actions";
 
 export type TodayCardLabels = {
   title: string;
@@ -10,6 +11,7 @@ export type TodayCardLabels = {
   failures: string;
   open: string;
   count: (value: number) => string;
+  actions: ItemActionLabels;
 };
 
 /** Presentational, permission-filtered briefing only; safe for server-rendered surfaces. */
@@ -44,7 +46,7 @@ export function SecretaryTodayCard({
           <p className="py-4 text-sm text-ink-500">{labels.empty}</p>
         ) : (
           <ul aria-label={labels.title} className="divide-y divide-ink-200/70">
-            {items.map((item) => <TodayItem key={item.id} item={item} open={labels.open} />)}
+            {items.map((item) => <TodayItem key={item.id} item={item} open={labels.open} actions={labels.actions} />)}
           </ul>
         )}
       </Card.Content>
@@ -52,11 +54,13 @@ export function SecretaryTodayCard({
   );
 }
 
-function TodayItem({ item, open }: { item: BriefingItem; open: string }) {
+function TodayItem({ item, open, actions }: { item: BriefingItem; open: string; actions: ItemActionLabels }) {
   const severity = item.severity === "danger" ? "bg-danger" :
     item.severity === "warning" ? "bg-warning" : "bg-ink-400";
   return (
-    <li className="flex items-start gap-3 py-3 first:pt-0 last:pb-0">
+    <li className="py-3 first:pt-0 last:pb-0">
+      <SecretaryItemActions itemId={item.id} labels={actions}>
+      <div className="flex items-start gap-3">
       <span className={`mt-1.5 size-2 shrink-0 rounded-full ${severity}`} aria-hidden="true" />
       <div className="min-w-0 flex-1">
         <p className="break-words text-sm font-medium">{item.title}</p>
@@ -66,6 +70,8 @@ function TodayItem({ item, open }: { item: BriefingItem; open: string }) {
       <Link href={item.href} aria-label={`${open}: ${item.title}`} className="inline-flex shrink-0 items-center gap-1 rounded-md px-2 py-1 text-sm text-accent outline-offset-2 hover:underline focus-visible:outline focus-visible:outline-2">
         {open} <ArrowUpRight className="size-3.5" aria-hidden="true" />
       </Link>
+      </div>
+      </SecretaryItemActions>
     </li>
   );
 }
