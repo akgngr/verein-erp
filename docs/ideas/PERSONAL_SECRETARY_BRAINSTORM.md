@@ -3,7 +3,7 @@
 **Tarih:** 2026-11-17  
 **Durum:** Ürün önerileri / karar bekleyen fikirler; uygulama şartnamesi veya geliştirme başlangıcı değildir.  
 **Başlama koşulu:** P0 (prototip, ADR, izin matrisi) hemen başlayabilir; ihtiyaç duyulan UI kiti (W3–W5) main'de. Uygulama (P1+) için AI v2 güvenlik kabul kapıları ve W6 kilidi beklenir.  
-**Kanonik belge:** Kişisel sekreterle ilgili tüm fikir ve kararlar bu dosyada toplanır. uygulama planı ve iş bölümü `docs/specs/PERSONAL_SECRETARY.md` dosyasında; önceki `docs/PERSONAL_SECRETARY_BRAINSTORM.md` buraya birleştirildi.  
+**Kanonik belge:** Kişisel sekreterle ilgili tüm fikir ve kararlar bu dosyada toplanır. Uygulama planı ve iş bölümü `docs/specs/PERSONAL_SECRETARY.md` dosyasında; önceki `docs/PERSONAL_SECRETARY_BRAINSTORM.md` buraya birleştirildi.  
 **İlişkili belgeler:** `docs/specs/PERSONAL_SECRETARY.md`, `docs/TODO_AI_ASSISTANT_V2.md`, `docs/specs/AI_ASSISTANT_V2_IMPLEMENTATION_SPEC.md`, `docs/AUTOMATION_ENGINE.md`, `docs/ui/ERP_UI_PLATFORM.md`, `docs/ui/WORK_SPLIT.md`, `docs/reviews/AI_ASSISTANT_ARCHITECTURE_AUDIT.md`.
 
 ## 0. Yönetici özeti (1 sayfa)
