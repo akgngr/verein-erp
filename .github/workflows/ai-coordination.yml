@@ -1,0 +1,80 @@
+name: AI agent coordination
+
+# Asenkron Claude ↔ ChatGPT/Codex koordinasyonu (docs/ai-coordination/README.md).
+# Birincil tetikleyici GitHub olaylarıdır; 15 dakikalık zamanlama yalnızca yedektir (gecikebilir).
+# Yaptığı iş: (1) bağımlılıkları kapanan görevleri status:blocked → status:ready yapar ve sahibine yorum bırakır,
+# (2) açık görev/PR özetini iş akışı özetine yazar. Kod veya PR üzerinde yazma yetkisi yoktur.
+
+on:
+  issues:
+    types: [opened, closed, reopened, edited, labeled]
+  pull_request:
+    types: [opened, closed, reopened, ready_for_review]
+  schedule:
+    - cron: "*/15 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+  pull-requests: read
+
+concurrency:
+  group: ai-coordination
+  cancel-in-progress: false
+
+jobs:
+  coordinate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Resolve dependencies and summarize tasks
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const { owner, repo } = context.repo;
+            const issues = await github.paginate(github.rest.issues.listForRepo, { owner, repo, state: "all", labels: "module:secretary", per_page: 100 });
+            const tasks = issues.filter((i) => !i.pull_request);
+            const byNumber = new Map(tasks.map((i) => [i.number, i]));
+            const labelsOf = (i) => i.labels.map((l) => (typeof l === "string" ? l : l.name));
+            const depsOf = (i) => {
+              const body = i.body || "";
+              const start = body.indexOf("### Bağımlılıklar");
+              if (start === -1) return [];
+              const rest = body.slice(start + 17);
+              const end = rest.indexOf("###");
+              return [...(end === -1 ? rest : rest.slice(0, end)).matchAll(/#(\d+)/g)].map((m) => Number(m[1]));
+            };
+            const isClosed = async (n) => {
+              const known = byNumber.get(n);
+              if (known) return known.state === "closed";
+              const { data } = await github.rest.issues.get({ owner, repo, issue_number: n });
+              return data.state === "closed";
+            };
+
+            // 1) blocked → ready
+            for (const task of tasks.filter((t) => t.state === "open" && labelsOf(t).includes("status:blocked"))) {
+              const deps = depsOf(task);
+              if (!deps.length) continue;
+              const states = await Promise.all(deps.map(isClosed));
+              if (!states.every(Boolean)) continue;
+              await github.rest.issues.removeLabel({ owner, repo, issue_number: task.number, name: "status:blocked" }).catch(() => {});
+              await github.rest.issues.addLabels({ owner, repo, issue_number: task.number, labels: ["status:ready"] });
+              const agent = labelsOf(task).find((l) => l.startsWith("agent:"))?.slice(6) ?? "agent";
+              await github.rest.issues.createComment({ owner, repo, issue_number: task.number,
+                body: `Bağımlılıklar tamamlandı (${deps.map((d) => "#" + d).join(", ")}). **${agent}** bu göreve başlayabilir. Branch adı ve dosya sahipliği issue gövdesinde.` });
+              core.info(`#${task.number} → status:ready`);
+            }
+
+            // 2) özet
+            const prs = await github.paginate(github.rest.pulls.list, { owner, repo, state: "open", per_page: 100 });
+            const prFor = (n) => prs.filter((p) => new RegExp(`(close[sd]?|fix(e[sd])?|resolve[sd]?)\\s+#${n}\\b`, "i").test(p.body || "")).map((p) => `#${p.number}`).join(", ");
+            const fresh = await github.paginate(github.rest.issues.listForRepo, { owner, repo, state: "open", labels: "module:secretary", per_page: 100 });
+            const rows = fresh.filter((i) => !i.pull_request).sort((a, b) => a.number - b.number).map((i) => {
+              const l = labelsOf(i);
+              return `| #${i.number} | ${l.find((x) => x.startsWith("agent:")) ?? "—"} | ${l.find((x) => x.startsWith("status:")) ?? "—"} | ${i.title.replace(/\|/g, "/")} | ${prFor(i.number) || "—"} |`;
+            });
+            await core.summary
+              .addHeading("Secretary — açık görevler")
+              .addRaw("| Issue | Sahip | Durum | Başlık | PR |\n|---|---|---|---|---|\n" + rows.join("\n") + "\n")
+              .write();
