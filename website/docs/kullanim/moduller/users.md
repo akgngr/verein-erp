@@ -13,7 +13,7 @@ Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri.
 |---|---|
 | Anahtar | `users` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.1.5 |
+| Sürüm | 1.1.6 |
 | Sayfalar | `/ayarlar/kullanicilar` |
 
 ## Diğer modüllere erişim
@@ -33,6 +33,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Kullanıcı Hesapları | görüntüleme, oluşturma, düzenleme, silme | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.1.6 — Arayüz altyapısı
+
+_2026-11-18_
+
+- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
 ### 1.1.4 — Ortak UI bileşenleri (iç değişiklik)
 
@@ -76,8 +82,4 @@ _2026-11-03_
 
 - **Düzeltme:** Rol servisinin modül kullanılabilirliği sorgusu, Next.js bağımlılıklarını worker import zincirinden uzak tutan system automation API'sine yönlendirildi.
 
-### 1.0.0 — İlk sürüm
-
-_2026-10-29_
-
-- **Yeni:** İlk sürüm.
+Daha eski 1 herkese açık sürüm notu.

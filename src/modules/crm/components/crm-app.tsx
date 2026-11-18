@@ -3,8 +3,7 @@
 import { notify } from "@/shared/components/ui/notify";
 import { useDrawerPlacement } from "@/shared/hooks/use-media-query";
 import { drawerDialogClass, SheetHandle } from "@/shared/components/forms/form-drawer";
-import { Button } from "@heroui/react";
-import { Card, Checkbox, Dialog, Input, InputGroup, Label, Select, Sheet, Spinner, StatusChip, Tabs, TextArea, TextField } from "@/shared/components/kit";
+import { Card, Checkbox, Dialog, Input, InputGroup, Label, Select, Sheet, Spinner, StatusChip, Tabs, TextArea, TextField, Button } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 

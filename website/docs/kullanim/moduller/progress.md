@@ -13,7 +13,7 @@ Kurs öğrencilerinin yoklaması, sınav ve notları, gelişim notları ve veli 
 |---|---|
 | Anahtar | `progress` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.4 |
+| Sürüm | 1.1.5 |
 | Sayfalar | `/ogrenci-takibi` |
 | Gerektirir | [Kurslar](./courses) |
 
@@ -42,6 +42,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_progress_statistics`
 
 ## Sürüm notları
+
+### 1.1.5 — Arayüz altyapısı
+
+_2026-11-18_
+
+- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
 ### 1.1.3 — Ortak UI bileşenleri (iç değişiklik)
 
