@@ -20,6 +20,7 @@ export const moduleConfig: ModuleConfig = {
   access: [
     { module: "members", operations: ["read"] },
     { module: "meetings", operations: ["read"] },
+    { module: "users", operations: ["read"] },
   ],
   nav: [
     {
