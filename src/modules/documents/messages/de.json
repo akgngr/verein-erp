@@ -423,5 +423,9 @@
     "completed": "Als erledigt markieren",
     "archived": "Archivieren",
     "success": "{updated} Dokumente aktualisiert, {skipped} Einträge waren bereits im Zielstatus."
+  },
+  "secretary": {
+    "overdue": "{count, plural, one {# Vorgang überfällig} other {# Vorgänge überfällig}}",
+    "dueSoon": "{count, plural, one {# Vorgang fällig in {days} Tagen} other {# Vorgänge fällig in {days} Tagen}}"
   }
 }

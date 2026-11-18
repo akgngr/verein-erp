@@ -1886,6 +1886,18 @@
       "payablesOverdue": "{count} überfällige Eingangsrechnungen mit {amount} offen.",
       "inspectPayables": "Zu den Eingangsrechnungen",
       "draftPayables": "{count} Eingangsrechnungen warten auf Prüfung und Freigabe."
+    },
+    "secretary": {
+      "overdueInvoices": "{count, plural, one {# überfällige Rechnung} other {# überfällige Rechnungen}}",
+      "overduePayables": "{count, plural, one {# überfällige Eingangsrechnung} other {# überfällige Eingangsrechnungen}}",
+      "draftPayables": "{count, plural, one {# Eingangsrechnung wartet auf Prüfung} other {# Eingangsrechnungen warten auf Prüfung}}",
+      "openBankTransactions": "{count, plural, one {# Bankumsatz wartet auf Zuordnung} other {# Bankumsätze warten auf Zuordnung}}",
+      "taxDeadline": "{tax} ({period}): {days, plural, =0 {heute fällig} one {noch # Tag} other {noch # Tage}}",
+      "taxKinds": {
+        "ustva": "Umsatzsteuer-Voranmeldung",
+        "annualVat": "Umsatzsteuer-Jahreserklärung",
+        "incomeTax": "Ertragsteuererklärung"
+      }
     }
   },
   "ai": {
@@ -4283,6 +4295,10 @@
       "completed": "Als erledigt markieren",
       "archived": "Archivieren",
       "success": "{updated} Dokumente aktualisiert, {skipped} Einträge waren bereits im Zielstatus."
+    },
+    "secretary": {
+      "overdue": "{count, plural, one {# Vorgang überfällig} other {# Vorgänge überfällig}}",
+      "dueSoon": "{count, plural, one {# Vorgang fällig in {days} Tagen} other {# Vorgänge fällig in {days} Tagen}}"
     }
   },
   "donations": {
@@ -7310,6 +7326,9 @@
       "activate": "Aktiv setzen",
       "passivate": "Passiv setzen",
       "success": "{updated} Mitglieder aktualisiert, {skipped} Einträge übersprungen."
+    },
+    "secretary": {
+      "overdueDues": "{count, plural, one {# überfälliger Mitgliedsbeitrag} other {# überfällige Mitgliedsbeiträge}}"
     }
   },
   "online-forms": {
