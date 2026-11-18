@@ -127,6 +127,7 @@
     "online-forms": "e-Sign",
     "organization": "Dernek Bilgileri",
     "progress": "Öğrenci takibi",
+    "secretary": "Sekreter",
     "securityMonitor": "Güvenlik İzleme",
     "students": "Öğrenciler",
     "ayarlar": "Ayarlar",
@@ -7798,6 +7799,27 @@
         "label": "Tüm gelişim notları",
         "description": "Başkalarının yazdığı gelişim notlarını silme; kapalıysa yalnızca kendi notları."
       }
+    }
+  },
+  "secretary": {
+    "module": {
+      "label": "Sekreter",
+      "description": "Kişisel sekreter: sabah özeti ve onaylı öneriler."
+    },
+    "permissions": {
+      "secretary": {
+        "label": "Sekreter",
+        "description": "Kendi sabah özetini ve önerileri görme; ayarları yönetme."
+      }
+    },
+    "meta": {
+      "home": "Sekreter"
+    },
+    "title": "Sekreter",
+    "description": "Bugün neye bakmanız gerektiği ve onayınızı bekleyen öneriler.",
+    "empty": {
+      "title": "Sekreter hazırlanıyor",
+      "description": "Sabah özeti ve öneriler yakında burada görünecek."
     }
   },
   "security-monitor": {

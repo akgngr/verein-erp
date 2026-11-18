@@ -1,5 +1,5 @@
 ---
-sidebar_position: 37
+sidebar_position: 38
 title: "Yapay zekâ asistanı"
 description: "Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuyan asistan."
 slug: /kullanim/moduller/ai
