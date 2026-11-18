@@ -1,5 +1,4 @@
 "use client";
-import { Link } from "@heroui/react";
 
 import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
 
@@ -17,6 +16,7 @@ import type {
 import type { BookingListItem } from "../types";
 import { BookingTypeBadge } from "./booking-type-badge";
 import { ReverseModal } from "./reverse-modal";
+import { TextLink } from "@/shared/components/kit";
 
 /**
  * Fiş listesi tablosu (§ 11.1): üye tablosu kalıbı. İptal edilenler üstü
@@ -64,7 +64,7 @@ export function BookingTable({
       sortable: true,
       width: 130,
       render: (row) => (
-        <Link
+        <TextLink
           href={`/muhasebe/${row.id}`}
           className={[
             `font-medium${row.reversedAt ? " line-through decoration-danger-400" : ""}`,
@@ -74,7 +74,7 @@ export function BookingTable({
             .join(" ")}
         >
           {row.bookingNumber}
-        </Link>
+        </TextLink>
       ),
     },
     {

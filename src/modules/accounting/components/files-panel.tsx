@@ -1,7 +1,7 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
-import { Spinner } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { Spinner, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { Download, Paperclip, Trash2, Upload } from "lucide-react";
@@ -126,7 +126,7 @@ export function FilesPanel({
                 <ActionLink
                   href={`/api/accounting/files/${file.id}`}
                   aria-label={t("download")}
-                  className={buttonVariants({
+                  className={buttonClassName({
                     variant: actionVariant("default", "light"),
                     size: "sm",
                     isIconOnly: true,
