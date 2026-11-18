@@ -23,6 +23,7 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 | Modül | İşlem | Gerekçe |
 |---|---|---|
 | [Modül Yönetimi](./system) | okuma | Hangi modüllerin açık ve onaylı olduğunu okur; özet yalnız bunların katkılarını gösterir. |
+| [Kullanıcılar](./users) | okuma | Günlük özeti yalnız etkin ve sekreter yetkisi olan kullanıcılar için hazırlamak üzere kullanıcının durumunu ve rolünü okur. |
 
 ## Varsayılan yetkiler
 
@@ -39,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 _2026-11-18_
 
 - **Yeni:** Modüller sabah özeti öğelerine öneri ekleyebilir (ör. vadesi geçmiş faturaya hatırlatma taslağı). Öneri şifreli saklanır; onaylanınca ilgili modülün kendi eylemi çalışır. Onay anında yetki, modül durumu ve kaynak kaydın değişip değişmediği yeniden denetlenir; çift onay, süresi dolmuş veya bayat öneri çalışmaz. E-posta, ödeme gibi dışa etkili eylemler ayrıca onay ister.
+
+### 0.5.0 — Günlük özet zamanlaması
+
+_2026-11-18_
+
+- **Yeni:** Sabah özeti her gün kullanıcının seçtiği saatte (Europe/Berlin) bir kez hazırlanır. Sessiz saatlere uyulur, aynı gün tekrarlanmaz; yaz/kış saati geçişleri desteklenir. Hesap pasifse veya yetki kaldırıldıysa özet hazırlanmaz.
 
 ### 0.4.0 — Özet öğelerini kapatma ve erteleme
 

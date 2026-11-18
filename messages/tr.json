@@ -7849,7 +7849,16 @@
       "snoozeTooLong": "En fazla 90 gün ertelenebilir."
     },
     "access": {
-      "system": "Hangi modüllerin açık ve onaylı olduğunu okur; özet yalnız bunların katkılarını gösterir."
+      "system": "Hangi modüllerin açık ve onaylı olduğunu okur; özet yalnız bunların katkılarını gösterir.",
+      "users": "Günlük özeti yalnız etkin ve sekreter yetkisi olan kullanıcılar için hazırlamak üzere kullanıcının durumunu ve rolünü okur."
+    },
+    "automation": {
+      "tasks": {
+        "daily_briefing": {
+          "label": "Günlük sabah özeti",
+          "description": "Zamanı gelen kullanıcılar için sabah özetini günde bir kez hazırlar (Europe/Berlin saati, sessiz saatlere uyar)."
+        }
+      }
     },
     "proposals": {
       "errors": {

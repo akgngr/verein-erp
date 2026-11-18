@@ -19,6 +19,7 @@ export const moduleConfig: ModuleConfig = {
   hasSchema: true,
   access: [
     { module: "system", operations: ["read"] }, // kullanılabilir modüller (özet süzmesi)
+    { module: "users", operations: ["read"] }, // günlük özet: kullanıcı etkin mi, rolü ne
   ],
   nav: [
     {

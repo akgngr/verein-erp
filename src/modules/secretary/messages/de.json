@@ -30,7 +30,16 @@
     "snoozeTooLong": "Höchstens 90 Tage zurückstellbar."
   },
   "access": {
-    "system": "Liest, welche Module aktiv und freigegeben sind; die Übersicht zeigt nur deren Beiträge."
+    "system": "Liest, welche Module aktiv und freigegeben sind; die Übersicht zeigt nur deren Beiträge.",
+    "users": "Liest Status und Rolle des Benutzers, damit die tägliche Übersicht nur für aktive Benutzer mit Sekretariatsberechtigung erstellt wird."
+  },
+  "automation": {
+    "tasks": {
+      "daily_briefing": {
+        "label": "Tägliche Morgenübersicht",
+        "description": "Erstellt die Morgenübersicht einmal täglich zur gewählten Uhrzeit (Europe/Berlin, Ruhezeiten werden beachtet)."
+      }
+    }
   },
   "proposals": {
     "errors": {
