@@ -13,7 +13,7 @@ Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura v
 |---|---|
 | Anahtar | `accounting` |
 | Tür | Resmî modül |
-| Sürüm | 1.24.0 |
+| Sürüm | 1.24.1 |
 | Sayfalar | `/muhasebe`, `/muhasebe/panel`, `/muhasebe/faturalar`, `/muhasebe/gelen-faturalar`, `/muhasebe/cariler`, `/muhasebe/banka`, `/muhasebe/uyelik-aktarimi`, `/muhasebe/raporlar`, `/muhasebe/vergi`, `/muhasebe/hibeler`, `/muhasebe/sepa`, `/muhasebe/butce`, `/muhasebe/ekler`, `/muhasebe/gobd`, `/muhasebe/yil-kapanisi`, `/muhasebe/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -43,6 +43,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_accounting_summary` · `get_bank_inbox_summary` · `get_open_items_summary` · `get_payables_summary` · `get_report_link` · `get_vat_summary`
 
 ## Sürüm notları
+
+### 1.24.1 — Arayüz altyapısı
+
+_2026-11-18_
+
+- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
 ### 1.24.0 — Sekreter özetine katkı
 
@@ -87,10 +93,4 @@ _2026-11-17_
 - **Düzeltme:** USt-IdNr. olmayan satıcılarda (ör. §19 kapsamındaki dernekler) XRechnung/ZUGFeRD çıktısı EN 16931 BR-CO-26 kuralına göre geçersizdi. Kurum profilindeki sicil numarası artık satıcının yasal kayıt numarası (BT-30) olarak eklenir; ikisi de yoksa dışa aktarma öncesi açık bir hata gösterilir.
 - **İyileştirme:** Giden e-faturalar CI'da Mustang (EN 16931, XRechnung, Factur-X, veraPDF PDF/A-3) ve resmî KoSIT doğrulayıcısı ile sentetik örneklerle düzenli olarak doğrulanır.
 
-### 1.23.1 — Muhasebe istatistik kartları ortak UI katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Kart ve yüzey görünümleri ortak SurfaceCard/StatCard pattern'ine taşındı; modül bu kullanımda HeroUI Card implementasyonuna doğrudan bağlı değil.
-
-Daha eski 42 herkese açık sürüm notu.
+Daha eski 43 herkese açık sürüm notu.
