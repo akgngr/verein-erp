@@ -90,7 +90,8 @@
   },
   "access": {
     "members": "Liest die Mitgliederliste, um Verantwortliche auszuwählen.",
-    "meetings": "Liest die Sitzungsliste, um Aufgaben einer Sitzung zuzuordnen."
+    "meetings": "Liest die Sitzungsliste, um Aufgaben einer Sitzung zuzuordnen.",
+    "users": "Liest die Kontoe-Mail-Adresse des aktiven Benutzers für die Zuordnung eigener Aufgaben in der Sekretariatsübersicht."
   },
   "ai": {
     "create": {
