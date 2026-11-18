@@ -16,7 +16,9 @@ const appearance: Record<NotifyKind, NotifyVariant> = {
   warning: "warning",
 };
 
-function show(message: string, kind: NotifyKind, options?: NotifyOptions) {
+function show(message: string | null | undefined, kind: NotifyKind, options?: NotifyOptions) {
+  // Missing optional upstream error messages must not become blank toasts.
+  if (typeof message !== "string" || !message.trim()) return;
   toast(message, { variant: appearance[kind], timeout: options?.timeout, description: options?.description });
 }
 
@@ -29,7 +31,7 @@ function show(message: string, kind: NotifyKind, options?: NotifyOptions) {
  * complete. Do not add new callers of the deprecated callable API.
  */
 function legacyNotify(
-  message: string,
+  message: string | null | undefined,
   variant: NotifyVariant = "default",
   options?: NotifyOptions,
 ) {
@@ -38,8 +40,8 @@ function legacyNotify(
 }
 
 export const notify = Object.assign(legacyNotify, {
-  success: (message: string, options?: NotifyOptions) => show(message, "success", options),
-  error: (message: string, options?: NotifyOptions) => show(message, "error", options),
-  info: (message: string, options?: NotifyOptions) => show(message, "info", options),
-  warning: (message: string, options?: NotifyOptions) => show(message, "warning", options),
+  success: (message: string | null | undefined, options?: NotifyOptions) => show(message, "success", options),
+  error: (message: string | null | undefined, options?: NotifyOptions) => show(message, "error", options),
+  info: (message: string | null | undefined, options?: NotifyOptions) => show(message, "info", options),
+  warning: (message: string | null | undefined, options?: NotifyOptions) => show(message, "warning", options),
 });
