@@ -1,6 +1,5 @@
 "use client";
-import { Button } from "@heroui/react";
-import { Description, FieldError, Input, Label, Spinner, TextField } from "@/shared/components/kit";
+import { Description, FieldError, Input, Label, Spinner, TextField, Button } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 

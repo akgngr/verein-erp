@@ -13,7 +13,7 @@ e-Sign: kişiye süreli bağlantı, form tamamlama, Datenschutz onayı, imza ve 
 |---|---|
 | Anahtar | `online-forms` |
 | Tür | Resmî modül |
-| Sürüm | 1.2.5 |
+| Sürüm | 1.2.6 |
 | Sayfalar | `/online-formlar` |
 | Gerektirir | [Toplu e-posta](./mailings) |
 | Önerir | [Üyeler](./members), [Öğrenciler](./students) |
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | e-Sign | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | — | görüntüleme | — | — |
 
 ## Sürüm notları
+
+### 1.2.6 — Arayüz altyapısı
+
+_2026-11-18_
+
+- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
 ### 1.2.4 — Ortak UI bileşenleri (iç değişiklik)
 
@@ -86,8 +92,4 @@ _2026-11-07_
 - **Yeni:** e-Sign adı; Datenschutz ve fotoğraf izni metinleri ayarlanabilir ve formda gösterilir; doğum tarihi gün/ay/yıl seçimi; imzalı PDF (gömülü imza, onaylar, metinler) imza anında üretilip şifreli saklanır; benzersiz belge anahtarı; kişi sayfalarından belgelere bağlantı; veli listesinden gönderim.
 - **İyileştirme:** İmzalı PDF arka planda (worker) üretilir; imzalayan beklemez. Otomasyon kapalıysa doğrudan üretilir.
 
-### 1.0.0 — İlk sürüm
-
-_2026-11-07_
-
-- **Yeni:** Üye, öğrenci ve veliye e-posta/SMS/WhatsApp ile süreli form bağlantısı; kişi eksik bilgileri, Datenschutz ve isteğe bağlı onayları doldurup imzalar, kayıt güncellenir. Reşit olmayan öğrencide veli onaylar.
+Daha eski 1 herkese açık sürüm notu.

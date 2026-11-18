@@ -1,7 +1,7 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
-import { Dialog, Spinner, StatusChip } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { Dialog, Spinner, StatusChip, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -111,7 +111,7 @@ export function TeacherTable({
                       <ActionLink
                         href={drawerHref("duzenle", row.id)}
                         aria-label={tCommon("edit")}
-                        className={buttonVariants({
+                        className={buttonClassName({
                           variant: actionVariant("default", "light"),
                           size: "sm",
                           isIconOnly: true,

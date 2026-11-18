@@ -1,7 +1,7 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
-import { Dropdown, Spinner, Tooltip } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { Dropdown, Spinner, Tooltip, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -780,7 +780,7 @@ export function AiChatPanel({
                               href={file.url}
                               target="_blank"
                               rel="noopener"
-                              className={buttonVariants({
+                              className={buttonClassName({
                                 variant: actionVariant("primary", "flat"),
                                 size: "sm",
                               })}

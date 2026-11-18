@@ -1,6 +1,5 @@
 "use client";
-import { Button } from "@heroui/react";
-import { Separator, Tooltip } from "@/shared/components/kit";
+import { Separator, Tooltip, Button } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
