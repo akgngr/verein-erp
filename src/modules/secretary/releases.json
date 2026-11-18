@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.6.1",
+      "date": "2026-11-18",
+      "title": {
+        "tr": "Bugün ekranı ve sabah özeti kartı",
+        "de": "Heute-Seite und Morgenübersicht"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Sekreter ekranı yetkiye göre süzülen gerçek sabah özetini, hata ve boş durumlarını ve kaynak modül bağlantılarını gösterir.",
+          "de": "Die Sekretariatsseite zeigt die berechtigungsgefilterte Morgenübersicht mit Fehler- und Leerzustand sowie Links zum Quellmodul."
+        }
+      ]
+    },
+    {
       "version": "0.6.0",
       "date": "2026-11-18",
       "title": {
