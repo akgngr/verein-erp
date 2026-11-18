@@ -3,32 +3,35 @@
 **Durum:** Plan (uygulanmadı) · **Tarih:** 2026-11-17
 **Kaynak:** [ACC-9 uygulama durumu](./ACC9_IMPLEMENTATION_STATUS.md) içinde "kapsam dışı" bırakılan dört başlık.
 
-Sıralama bağımlılığa göredir: çoklu kurum (R1), çoklu para biriminden (R2) önce gelir, çünkü para birimi ayarı kuruma bağlıdır.
+Sıralama: R1 ve R2 artık bağımsızdır (izole kurulumda para birimi ayarı zaten kurulum başınadır); R2 kendi önceliğiyle yürür.
 Panel düzeni (R3) ve Almanca website (R4) bağımsızdır ve paralel yürüyebilir.
 
 | # | İş | Bağımlılık | Tahmini boyut | Risk |
 |---|----|-----------|---------------|------|
-| R1 | Çoklu kurum (multi-tenant) | — | Çok büyük (6+ PR) | Yüksek: veri sızıntısı |
-| R2 | Çoklu para birimi | R1 (kurum para birimi) | Büyük (4 PR) | Orta: GoBD/DATEV uyumu |
+| R1 | Barındırılan çoklu müşteri: izole kurulum + yönetim katmanı (ADR 0001) | — | Büyük (6–8 PR, çoğu altyapı) | Orta: operasyon; veri sızıntısı riski yapısal olarak düşük |
+| R2 | Çoklu para birimi | — | Büyük (4 PR) | Orta: GoBD/DATEV uyumu |
 | R3 | Panel kartlarını sürükle/boyutlandır | — | Orta (2–3 PR) | Düşük |
 | R4 | Almanca website dokümantasyonu | — | Orta (2 PR + sürekli) | Düşük |
 
 ---
 
-## R1 — Çoklu kurum (SaaS multi-tenancy)
+## R1 — Barındırılan çoklu müşteri (izole kurulum + yönetim katmanı)
 
-Hedef: tek kurulumda birden çok derneğin/işletmenin verisi, birbirinden kesin yalıtılmış olarak çalışsın.
+Karar: [ADR 0001](./adr/0001-isolated-deployment-per-customer.md). Her müşteri **ayrı uygulama + ayrı veritabanı + ayrı anahtarlar** ile çalışır. Ortak veritabanlı çok kiracılık (`organizationId` + RLS) ana ürüne **eklenmez**. Modül kodu tek kurumlu kalır.
 
-- **R1.0 Karar (ADR):** satır düzeyi `organizationId` + PostgreSQL RLS ile şema-başına-kurum karşılaştırması.
-  Öneri: `organizationId` + RLS (tek migration hattı, pg-boss ile uyumlu).
-- **R1.1 Veri modeli:** tüm modül tablolarına `organizationId` (NOT NULL, indeksli); mevcut veri tek kuruma taşınır; geri dönüş betiği.
-- **R1.2 İstek bağlamı:** oturumdan kurum çözümü, `getDb()` her sorguda kurum filtresi (Prisma extension) ve RLS `SET app.org_id`.
-- **R1.3 Arka plan işleri:** pg-boss işlerine `organizationId` zorunlu; GoBD hash zinciri ve numara serileri kurum başına.
-- **R1.4 Dosyalar ve önbellek:** dosya depolama yolu, geçici yüklemeler, AI takma ad ve önbellek anahtarları kurum önekli.
-- **R1.5 Yönetim:** kurum oluşturma/davet, kullanıcı birden çok kuruma üye, kurum değiştirici.
-- **R1.6 Testler (zorunlu kapı):** çapraz kurum erişim testi (her API rotası, kart, dışa aktarma, AI aracı), RLS kapalıyken bile filtre testi.
+- **R1.0 Karar:** ADR 0001 onayı (ürün sahibi).
+- **R1.1 Müşteri açma:** Tek komutla Postgres veritabanı ve kullanıcı, secret'lar (`AUTH_SECRET`, `DATA_ENCRYPTION_*`, `MAIL_ENCRYPTION_KEY`), dosya deposu, alan adı ve TLS, web + worker konteyneri, migrator çalıştırma, ilk yönetici daveti.
+- **R1.2 Aşamalı yayın:** Sürüm kanalları (test grubu → genel); müşteri başına sürüm sabitleme; geriye uyumlu migration kuralı (genişlet → taşı → daralt); otomatik geri alma.
+- **R1.3 Yedek ve geri yükleme:** Müşteri anahtarıyla şifreli günlük yedek (bekleyen "şifreli yedek" işiyle birleşir); geri yükleme provası; müşteri isteğiyle tam dışa aktarma ve silme.
+- **R1.4 İzleme:** Sağlık uçları, worker kuyruğu, disk ve migration durumu. Kişisel veri içermeyen merkezi log/metrik.
+- **R1.5 Maliyet:** Uyuyan konteyner (scale-to-zero), küçük kaynak profilleri, ortak Postgres kümesinde veritabanı başına kotalar.
+- **R1.6 Faturalama ve plan:** Plan → modül seti/limitler. Yönetim katmanı yalnız işletme verisi tutar, müşteri verisine erişmez.
+- **R1.7 Self-host paketi:** Aynı imajlarla `docker compose` kurulumu, güncelleme rehberi.
+- **R1.8 Testler (kapı):** İki müşteri kurulumunun ağ, veritabanı, dosya ve anahtar düzeyinde birbirine erişemediğinin otomatik doğrulaması; yedekten geri yükleme testi; aşamalı yayın + geri alma provası.
 
-Kabul: başka kurumun kimliğiyle yapılan hiçbir istek veri döndürmez; tüm modüller kurum filtresini otomatik alır (modül yazarı unutamaz).
+Kabul: Yeni müşteri tek komutla açılır, güncellenir, yedeklenir ve silinir. Hiçbir müşteri kurulumu başka müşterinin verisine, dosyasına veya anahtarına erişemez. Modül kodunda kurum filtresine gerek yoktur.
+
+**Sonra (opsiyonel):** Çok küçük müşteriler için ortak veritabanlı "Lite" ürün yalnız ayrı bir ADR ile, sınırlı modül setiyle ve üçüncü taraf modülsüz düşünülür.
 
 ## R2 — Çoklu para birimi
 
