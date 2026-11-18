@@ -8635,7 +8635,8 @@
     },
     "access": {
       "members": "Görev sorumlusu seçmek için üye listesini okur.",
-      "meetings": "Görevi bir toplantıya bağlamak için toplantı listesini okur."
+      "meetings": "Görevi bir toplantıya bağlamak için toplantı listesini okur.",
+      "users": "Sekreter özeti için etkin kullanıcının görev eşleştirmesinde kullanılacak hesap e-posta adresini okur."
     },
     "ai": {
       "create": {
