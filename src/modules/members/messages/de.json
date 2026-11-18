@@ -652,5 +652,8 @@
     "activate": "Aktiv setzen",
     "passivate": "Passiv setzen",
     "success": "{updated} Mitglieder aktualisiert, {skipped} Einträge übersprungen."
+  },
+  "secretary": {
+    "overdueDues": "{count, plural, one {# überfälliger Mitgliedsbeitrag} other {# überfällige Mitgliedsbeiträge}}"
   }
 }

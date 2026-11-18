@@ -13,7 +13,7 @@ Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura v
 |---|---|
 | Anahtar | `accounting` |
 | Tür | Resmî modül |
-| Sürüm | 1.23.8 |
+| Sürüm | 1.24.0 |
 | Sayfalar | `/muhasebe`, `/muhasebe/panel`, `/muhasebe/faturalar`, `/muhasebe/gelen-faturalar`, `/muhasebe/cariler`, `/muhasebe/banka`, `/muhasebe/uyelik-aktarimi`, `/muhasebe/raporlar`, `/muhasebe/vergi`, `/muhasebe/hibeler`, `/muhasebe/sepa`, `/muhasebe/butce`, `/muhasebe/ekler`, `/muhasebe/gobd`, `/muhasebe/yil-kapanisi`, `/muhasebe/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -43,6 +43,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_accounting_summary` · `get_bank_inbox_summary` · `get_open_items_summary` · `get_payables_summary` · `get_report_link` · `get_vat_summary`
 
 ## Sürüm notları
+
+### 1.24.0 — Sekreter özetine katkı
+
+_2026-11-18_
+
+- **Yeni:** Kişisel sekreterin sabah özetinde vadesi geçmiş faturalar, kontrol bekleyen gelen faturalar, eşleşmemiş banka hareketleri ve yaklaşan vergi tarihi görünür (yalnız sayı ve toplam, cari adı yok).
 
 ### 1.23.7 — Ortak UI bileşenleri (iç değişiklik)
 
@@ -87,12 +93,4 @@ _2026-11-17_
 
 - **İyileştirme:** Kart ve yüzey görünümleri ortak SurfaceCard/StatCard pattern'ine taşındı; modül bu kullanımda HeroUI Card implementasyonuna doğrudan bağlı değil.
 
-### 1.23.0 — Canlı finansal genel bakış
-
-_2026-11-17_
-
-- **Yeni:** Genel bakış yeniden tasarlandı: toplam likidite ve 30 günlük bakiye tahmini, önceki yıla göre değişimli KPI kartları, aylık nakit akışı grafiği, gider dağılımı ve yaklaşan tahsilat/ödeme/vergi zaman çizelgesi.
-- **Yeni:** Sağ sütunda AI durum analizi kartı (yapay zekâ modülü etkinse) ve dikkat gerektiren işler listesi; vadesi geçmiş ve onay bekleyen gelen faturalar eklendi.
-- **Düzeltme:** Menüde iki "Genel bakış" görünmesi düzeltildi; fiş listesi artık "Fişler" adıyla ayrı.
-
-Daha eski 41 herkese açık sürüm notu.
+Daha eski 42 herkese açık sürüm notu.

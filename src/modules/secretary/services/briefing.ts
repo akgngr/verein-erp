@@ -19,8 +19,15 @@ export type BriefingDeps = {
   usableModules?: () => Promise<string[]>;
   translator?: (moduleKey: string) => Promise<SecretaryContext["t"]>;
   itemStates?: (userId: string) => Promise<ItemState[]>;
+  /**
+   * Öğedeki `suggestion`ı kalıcı öneriye çevirir ve kimliğini döner (T2.1). Varsayılan: şifreli
+   * `SecretaryProposal` deposu. `false`: öneri üretme (ör. günlük özet işi).
+   */
+  proposals?: ProposalHook | false;
   timeoutMs?: number;
 };
+
+export type ProposalHook = (input: { moduleKey: string; item: BriefingItem; suggestion: NonNullable<BriefingItem["suggestion"]>; context: SecretaryContext }) => Promise<string | undefined>;
 
 const SEVERITY_ORDER: Record<BriefingItem["severity"], number> = { danger: 0, warning: 1, info: 2 };
 
@@ -68,6 +75,7 @@ export async function getBriefing(user: { id: string; role: Role }, now = new Da
   ]);
   const translator = deps.translator ?? defaultTranslator;
   const timeoutMs = deps.timeoutMs ?? SECRETARY_LIMITS.providerTimeoutMs;
+  const proposals = deps.proposals === false ? null : deps.proposals ?? defaultProposalHook(user, now, registry);
   const failures: string[] = [];
 
   const jobs = registry
@@ -81,7 +89,8 @@ export async function getBriefing(user: { id: string; role: Role }, now = new Da
           const items = await withTimeout(provider.collect({ user, now, t }), timeoutMs);
           const valid = items.filter((item) => validateBriefingItem(entry.module, item).length === 0);
           if (valid.length !== items.length) failures.push(id);
-          return { module: entry.module, items: valid.slice(0, SECRETARY_LIMITS.maxItemsPerProvider) };
+          const limited = valid.slice(0, SECRETARY_LIMITS.maxItemsPerProvider);
+          return { module: entry.module, items: await attachProposals(entry.module, limited, { user, now, t }, proposals) };
         } catch {
           failures.push(id);
           console.error("[secretary] PROVIDER_FAILED", { provider: id });
@@ -101,6 +110,39 @@ export async function getBriefing(user: { id: string; role: Role }, now = new Da
     .sort((a, b) => SEVERITY_ORDER[a.items[0].severity] - SEVERITY_ORDER[b.items[0].severity] || a.module.localeCompare(b.module));
 
   return { generatedAt: now.toISOString(), sections, failures: [...new Set(failures)].sort() };
+}
+
+/**
+ * Önerileri bağlar ve sunucuya özel `suggestion` alanını her durumda siler: payload istemciye ulaşmaz.
+ * Öneri üretilemezse öğe önerisiz gösterilir (özet bozulmaz).
+ */
+async function attachProposals(moduleKey: string, items: BriefingItem[], context: SecretaryContext, hook: ProposalHook | null): Promise<BriefingItem[]> {
+  return Promise.all(items.map(async ({ suggestion, ...item }) => {
+    if (!suggestion || !hook) return item;
+    try {
+      const proposalId = await hook({ moduleKey, item, suggestion, context });
+      return proposalId ? { ...item, proposalId } : item;
+    } catch {
+      console.error("[secretary] PROPOSAL_FAILED", { module: moduleKey });
+      return item;
+    }
+  }));
+}
+
+/** Varsayılan öneri bağlayıcısı; depo yalnız ilk öneride yüklenir. */
+function defaultProposalHook(user: { id: string; role: Role }, now: Date, registry: readonly ModuleSecretary[]): ProposalHook {
+  return async ({ moduleKey, item, suggestion, context }) => {
+    const [{ ensureRuleProposal }, { prismaProposalStore, proposalCrypto }] = await Promise.all([
+      import("./proposals"),
+      import("./proposal-store"),
+    ]);
+    return ensureRuleProposal(
+      user,
+      { moduleKey, itemId: item.id, action: suggestion.action, payload: suggestion.payload, context },
+      { store: prismaProposalStore(), crypto: proposalCrypto, registry },
+      now,
+    );
+  };
 }
 
 // Varsayılan bağımlılıklar gerektiğinde yüklenir (birim testleri Next/DB zincirini yüklemez).
