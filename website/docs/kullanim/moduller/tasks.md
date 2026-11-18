@@ -13,7 +13,7 @@ Görev ve iş takibi yönetimi.
 |---|---|
 | Anahtar | `tasks` |
 | Tür | Eklenti |
-| Sürüm | 1.3.7 |
+| Sürüm | 1.3.8 |
 | Sayfalar | `/tasks`, `/tasks/bana-atananlar` |
 
 ## Diğer modüllere erişim
@@ -24,6 +24,7 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 |---|---|---|
 | [Üyeler](./members) | okuma | Görev sorumlusu seçmek için üye listesini okur. |
 | [Toplantılar](./meetings) | okuma | Görevi bir toplantıya bağlamak için toplantı listesini okur. |
+| [Kullanıcılar](./users) | okuma | Sekreter özeti için etkin kullanıcının görev eşleştirmesinde kullanılacak hesap e-posta adresini okur. |
 
 ## Varsayılan yetkiler
 
@@ -40,6 +41,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `list_open_tasks` · `propose_complete_task` · `propose_delete_task` · `propose_task`
 
 ## Sürüm notları
+
+### 1.3.8 — Görevler sekreter özeti
+
+_2026-11-18_
+
+- **Yeni:** Bana atanan veya oluşturduğum, bugün vadesi dolan ve geciken açık görev sayıları sekreterde gösterilir.
 
 ### 1.3.7 — Arayüz altyapısı
 
@@ -83,10 +90,4 @@ _2026-11-15_
 
 - **İyileştirme:** Yeni görev formu adres parametreleriyle (baslik, aciklama, bitis) önceden doldurulabilir; ör. evraktaki termin.
 
-### 1.2.3 — Açık kimlik bağlantıları
-
-_2026-11-15_
-
-- **Güvenlik:** AI kişi eşleştirmesi yalnız mevcut açık kayıt bağlantılarını kullanır; ad/e-posta tahmini ve veli-çocuk kimlik birleştirmesi reddedilir.
-
-Daha eski 5 herkese açık sürüm notu.
+Daha eski 6 herkese açık sürüm notu.
