@@ -92,4 +92,4 @@ _2026-11-07_
 
 - **Yeni:** Tek kişiye işlem mesajı gönderimi (ör. form bağlantısı)
 
-Daha eski 14 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/mailings/releases.json)
+Daha eski 14 herkese açık sürüm notu.

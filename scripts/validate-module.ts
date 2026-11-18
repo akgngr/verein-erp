@@ -196,7 +196,7 @@ export function checkModuleRequires(moduleDir: string, moduleKey: string): strin
   walk(moduleKey, [moduleKey]);
   return [...new Set(problems)];
 }
-const RELEASE_TYPES = new Set(["feature", "improvement", "fix", "security"]);
+const RELEASE_TYPES = new Set(["feature", "improvement", "fix", "security", "internal"]);
 
 /** "1.2.3" karşılaştırması: a > b ise pozitif. */
 export function compareSemver(a: string, b: string): number {
@@ -225,7 +225,7 @@ export function checkModuleReleases(moduleDir: string): string[] {
     if (!release.title?.tr || !release.title?.de) problems.push(`releases.json ${label}: title.tr ve title.de zorunlu.`);
     if (!release.changes?.length) problems.push(`releases.json ${label}: en az bir değişiklik olmalı.`);
     for (const change of release.changes ?? []) {
-      if (!change.type || !RELEASE_TYPES.has(change.type) || !change.tr || !change.de) problems.push(`releases.json ${label}: her değişiklikte type (feature|improvement|fix|security), tr ve de olmalı.`);
+      if (!change.type || !RELEASE_TYPES.has(change.type) || !change.tr || !change.de) problems.push(`releases.json ${label}: her değişiklikte type (feature|improvement|fix|security|internal), tr ve de olmalı.`);
     }
     const next = releases[index + 1];
     if (next?.version && release.version && SEMVER.test(release.version) && SEMVER.test(next.version) && compareSemver(release.version, next.version) <= 0) {

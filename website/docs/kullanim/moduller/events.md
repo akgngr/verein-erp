@@ -89,4 +89,4 @@ _2026-11-07_
 
 - **Yeni:** Etkinlik sayfasında "Katılımcılara duyur": Kampanyalar sihirbazı bu etkinliğin katılımcılarıyla açılır.
 
-Daha eski 2 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/events/releases.json)
+Daha eski 2 herkese açık sürüm notu.

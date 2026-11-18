@@ -114,7 +114,7 @@ export function moduleFiles(n: ScaffoldNames): Record<string, string> {
 
   files["releases.json"] = `${JSON.stringify(
     {
-      _comment: "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
+      _comment: "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal.",
       releases: [
         {
           version: "1.0.0",
