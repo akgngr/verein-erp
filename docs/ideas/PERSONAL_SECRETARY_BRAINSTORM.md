@@ -2,8 +2,18 @@
 
 **Tarih:** 2026-11-17  
 **Durum:** Ürün önerileri / karar bekleyen fikirler; uygulama şartnamesi veya geliştirme başlangıcı değildir.  
-**Başlama koşulu:** Merkezi UI Platform W0–W6 geçişi ve AI v2 güvenlik kabul kapıları tamamlandıktan sonra planlanmalı.  
+**Başlama koşulu:** P0 (prototip, ADR, izin matrisi) hemen başlayabilir; ihtiyaç duyulan UI kiti (W3–W5) main'de. Uygulama (P1+) için AI v2 güvenlik kabul kapıları ve W6 kilidi beklenir.  
+**Kanonik belge:** Kişisel sekreterle ilgili tüm fikir ve kararlar bu dosyada toplanır. `docs/specs/PERSONAL_SECRETARY.md` P0 kararlarından sonra bu belgeden yeniden yazılacak; önceki `docs/PERSONAL_SECRETARY_BRAINSTORM.md` buraya birleştirildi.  
 **İlişkili belgeler:** `docs/specs/PERSONAL_SECRETARY.md`, `docs/TODO_AI_ASSISTANT_V2.md`, `docs/specs/AI_ASSISTANT_V2_IMPLEMENTATION_SPEC.md`, `docs/AUTOMATION_ENGINE.md`, `docs/ui/ERP_UI_PLATFORM.md`, `docs/ui/WORK_SPLIT.md`, `docs/reviews/AI_ASSISTANT_ARCHITECTURE_AUDIT.md`.
+
+## 0. Yönetici özeti (1 sayfa)
+
+- **Ne:** Her kullanıcı için sabah "bugün neye bakmalıyım" listesi ve onaya sunulan hazır taslaklar. Asistan kendi başına hiçbir dış işlem (e-posta, ödeme, beyan, silme) yapmaz.
+- **Nasıl:** Önce kurallarla (vade, süre, eşik), AI'sız çalışır. AI yalnız sınıflama, özet ve taslak metin için ve izin verildiyse devreye girer.
+- **Nereye:** İsteğe bağlı `secretary` modülü. Mevcut AI v2, otomasyon motoru, UI kiti ve yüzey kartları yeniden kullanılır.
+- **İlk sürüm (MVP):** P1 kural tabanlı sabah özeti + P2 onay kutusu. E-posta taslakları (P3) sonra; ses, OCR ve çok kanallı bildirim (P4) en son.
+- **Önce yazılacak kararlar:** `AiProposal`'ın kural kaynaklı önerilere genelleştirilmesi (ADR), sekreterin kendi küçük tablosu, gelen posta olayı ve uygulama içi bildirim altyapısı (bkz. §4.1).
+- **Kurum sınırı:** Her müşteri ayrı kurulumda çalışır ([ADR 0001](../adr/0001-isolated-deployment-per-customer.md)); kurumlar arası izolasyon kurulum düzeyinde sağlanır. Sekreter için kabul kriteri **kullanıcı izolasyonu**dur.
 
 ## 1. Ürün tezi
 
@@ -48,7 +58,7 @@ Brifing **AI olmadan da** kural tabanlı veriyle üretilebilmeli. Model yalnız 
 | PS-02 | Onay kutusu / öneri merkezî akışı | **Evet** | Kontrol tek noktada | AiProposal, TTL, atomic claim, audit |
 | PS-03 | Takvim ve görev çakışması | **Evet** | Zaman kaybını azaltma | Calendar permissions, timezone Europe/Berlin |
 | PS-04 | Gelen e-postadan görev/yanıt taslağı | **MVP sonrası** | Gelen kutusu iş yükü | IMAP kapsamı, ayrı içerik rızası, gönderim onayı |
-| PS-05 | Son tarih / gecikmiş cevap takibi | **MVP sonrası** | Kaybolan işleri yakalama | Automation outbox, tenant sınırı |
+| PS-05 | Son tarih / gecikmiş cevap takibi | **MVP sonrası** | Kaybolan işleri yakalama | Automation outbox; kurum sınırı kurulum düzeyinde (ADR 0001) |
 | PS-06 | Fatura ve tahsilat uyarıları | **Evet (salt okuma)** | Nakit akışını görünür kılma | Accounting OPOS permission, finans işlemi otomatik yok |
 | PS-07 | Evrak OCR alan önerisi | **MVP sonrası** | Veri girişini hızlandırma | Local OCR, sensitive content fail-closed |
 | PS-08 | Toplantı hazırlık özeti | **MVP sonrası** | Gündem ve açık kararlar | Meetings/task public adapter, kaynak bağlantısı |
@@ -58,6 +68,9 @@ Brifing **AI olmadan da** kural tabanlı veriyle üretilebilmeli. Model yalnız 
 | PS-12 | Tekrarlayan rutinlerden öneri | **İleri aşama** | Proaktif asistan | Kullanıcı opt-in; öngörü kaydı ve kapatma kontrolü |
 | PS-13 | Takım/vekil modu | **İleri aşama** | Kurumsal operasyon | Rol devri; kullanıcı adına otomatik onay yasak |
 | PS-14 | WhatsApp/SMS/Telegram bildirim | **İleri aşama** | Kanal erişimi | Kanal modülü, açık opt-in, rate limit, ayrı onay |
+| PS-15 | "Benim yerime takip et" devri | **MVP sonrası** | "Belediyeden 1 hafta cevap gelmezse hatırlat" gibi devredilen takipler | Automation zamanlaması; sonuç yalnız hatırlatma + taslak |
+| PS-16 | Haftalık kurul / yönetim raporu | **MVP sonrası** | Nakit, yeni üyeler, açık işler, riskler tek sayfa PDF | Yalnız toplam veri; `exports` ile şifreli dosya |
+| PS-17 | Üye hizmetleri taslakları | **İleri aşama** | Aidat hatırlatma, adres değişikliği talebi → kayıt önerisi, tebrik taslakları | Kanal izni (opt-in), gönderim onayı, özel nitelikli veri yok |
 
 ### Bilinçli olarak kapsam dışı bırakılanlar
 
@@ -83,7 +96,7 @@ Calendar / Tasks / Mail / Documents / Accounting / Members
                  |
        Automation outbox + pg-boss worker
                  |
-   Audit / Tenant Scope / Notification Policies
+   Audit / Notification Policies  (kurum sınırı: kurulum, ADR 0001)
 ```
 
 **Teknik karar önerisi:** Kişisel sekreter, AI sohbet paneline gömülü monolit yerine modül yaşam döngüsüyle açılıp kapanabilen **`secretary`** isimli isteğe bağlı ürün modülü olsun. İlk etapta modül oluşturmadan önce servis sözleşmesini ve UI prototipini doğrula. Core altyapı yalnız reusable shared primitive sağlar. Modül `public`, `server`, `ui`, `ai`, `automation` girişleri üzerinden bağımlı modüllerle etkileşir; hiçbir modülün private Prisma tablosunu doğrudan sorgulamaz.
@@ -97,12 +110,24 @@ Calendar / Tasks / Mail / Documents / Accounting / Members
 - `scheduleBriefing(actor, preferences)`: tek Automation worker ile idempotent günlük zamanlama, kapatma kontrolü.
 - `dismissItem(actor, itemId)`: sessize alma sadece kullanıcıya özgü tercih; kaynak iş verisini silmez.
 
+### 4.1 Altyapı gerçekliği (2026-11-18 itibarıyla kodda olan / olmayan)
+
+| Konu | Durum | Gereken |
+|---|---|---|
+| `AiProposal` tablosu | **Var**, ama sohbet önerileri için: `providerRevision` zorunlu, `conversationId`, şifreli içerik, `moduleKey/actionKey` = modülün `ai.ts` eylemi | **ADR:** `source: "model" \| "rule"` alanıyla genelleştir (`providerRevision` kural kaynaklıda boş), ya da ayrı tablo. Onay yolu aynı kalmalı. |
+| Sekreterin kendi verisi | **Yok** | Küçük tablo(lar): kullanıcı tercihleri (saat, sessiz saatler, kanallar), öğe görünürlüğü (`dismiss`/`snooze`, kaynak kaydı değiştirmez), devredilen takipler (PS-15). |
+| Gelen posta olayı | **Yok.** Otomasyonda `mail.message_received` diye bir olay tanımlı değil; mevcut olaylar `documents.registered`, `tasks.created`, `meetings.created`, `calendar.entry_created` … | `mail` modülüne IMAP içe alma sonrası olay ekle (yalnız kimlik/meta, içerik değil). |
+| Uygulama içi bildirim merkezi | **Yok**; yalnız anlık `notify` (toast) var | Kalıcı bildirim listesi ayrı küçük bir altyapı işi; P1 için gerekmez (özet kartı yeterli). |
+| "Bugün" kartının yeri | **Var:** yüzey kartları (`DashboardCardDefinition.surfaces` + `SurfaceCards`) | Sekreter kartı ana Panel'e ve modül ekranlarına yeni altyapı olmadan yerleşir. |
+| Muhasebe uyarı kaynağı | **Var:** muhasebe panosunun "dikkat gerektirenler" mantığı (vadesi geçmiş fatura/gelen fatura, onay bekleyen, eşleşmemiş banka, belgesiz fiş, vergi tarihi) | P1 için doğrudan kaynak; modülün `ai.ts`/public sorgusu üzerinden. |
+| Çoklu müşteri | Kod tek kurumlu; barındırılan sürümde her müşteri ayrı kurulum ([ADR 0001](../adr/0001-isolated-deployment-per-customer.md), yol haritası R1) | Sekreterde kurum alanı gerekmez. |
+
 **Önemli ayrım:** “Bana gösterme” ≠ “Görevi tamamla”. Sekreterin kendi görünümü ile kaynak modüldeki işin gerçek durumu ayrıdır.
 
 ### Olay akışı (örnek)
 
-1. `mail.message_received` veya mevcut modülün güvenilir olayı oluşur.
-2. Tek worker task, tenant+actor+izin+feature flag kontrolleriyle işlenir.
+1. Mevcut modülün güvenilir olayı oluşur (ör. `documents.registered`; gelen posta için **yeni** olay gerekir, bkz. §4.1).
+2. Tek worker task, actor + izin + feature flag kontrolleriyle işlenir.
 3. Kural tabanlı ayrıştırma karar verebiliyorsa model çağrılmaz.
 4. Model gerekiyorsa güvenli projection + rıza + sağlayıcı/bütçe politikası uygulanır. Serbest metin/PII için kapı açılamazsa **yerel-only veya manuel** fallback.
 5. `AiProposal` kullanıcıya taslak olarak sunulur; son tarih ve kaynak revizyonu saklanır.
@@ -114,13 +139,13 @@ Calendar / Tasks / Mail / Documents / Accounting / Members
 
 - **GDPR/DSGVO:** Veri minimizasyonu, amaç sınırlaması, saklama süresi, silme ve veri erişim kapsamı ürün tasarımında varsayılan. Hukuki uyum yalnız teknik dokümanla garanti edilemez; DPO/hukuk değerlendirmesi gerekir.
 - **Sıfır güven model kanalı:** AI v2 dataset/ref/token + `DATA_POLICY` + `AI_TOOL_POLICY` sözleşmesi kullanılmalı. `K0/K1` ve öğrenci/veli gibi hassas bilgiler model çıktısına açılmamalı; salt maskeleme yeterli kabul edilmemeli.
-- **Çok katmanlı izin:** actor, tenant, module enabled, module AI matrix, tool policy, consent, scope, row-level permission her okuma/confirm/worker aşamasında güncel denetlenir.
+- **Çok katmanlı izin:** actor, module enabled, module AI matrix, tool policy, consent, scope, row-level permission her okuma/confirm/worker aşamasında güncel denetlenir.
 - **Risk seviyeleri:** L0 bilgi ve brifing; L1 taslak; L2 kayıt güncelleme için açık onay; L3 dış dünyaya gönderim/finans/vergisel işlem için ayrı güçlü onay ve mümkünse iki aşamalı yetki. Bazı L3 türleri hiçbir AI-driven otomatik yol üzerinden yapılmaz.
-- **Spam/tekrar önleme:** idempotency key, unique event key, cooldown, max daily notification, quiet hours, user opt-out, tenant-level quota.
+- **Spam/tekrar önleme:** idempotency key, unique event key, cooldown, max daily notification, quiet hours, user opt-out, kurulum düzeyi kota.
 - **Gizli kaynaklar:** Öğrenci, veli, sağlık, özel not ve finans detayları varsayılan kapalı; yalnız güvenli aggregate ya da ilgili modülde doğrudan kullanıcı erişimi.
 - **Saklama:** Briefing cache kısa TTL; proposal TTL, purge worker, silme/consent revoke zinciri; geçmişi kullanıcı kontrol edebilmeli.
 - **Bildirim metni:** Push/e-posta konu satırında hassas isim/tutar/sağlık/vergi ayrıntısı bulunmaz; güvenli UI deep link tercih edilir.
-- **Denetlenebilirlik:** Her önerinin `sourceRef`, `policyRevision`, `actorId`, `tenantId`, `proposedAt`, `expiresAt`, `sourceRevision`, `executionId`, `resultCode`; asla ham hassas metin logları değil.
+- **Denetlenebilirlik:** Her önerinin `sourceRef`, `policyRevision`, `actorId`, `proposedAt`, `expiresAt`, `sourceRevision`, `executionId`, `resultCode`; asla ham hassas metin logları değil.
 
 ## 6. Ürün akışları — düşük maliyetle yüksek değer
 
@@ -163,17 +188,17 @@ Calendar / Tasks / Mail / Documents / Accounting / Members
 
 | Faz | Çıktı | Bloklayan ön koşul | Kabul testi |
 | --- | --- | --- | --- |
-| P0 | UX akışları, kullanıcı görüşmeleri, veri/izin matrisi, risk modeli | UI Platform W0–W6, AI v2 pilot feature flag | Gösterilebilir statik prototip + DPO ön değerlendirmesi |
-| P1 | Rule-only sabah brifingi, salt-okuma | Tasks/Calendar/Accounting adapters | Kullanıcı+tenant izolasyonu, no-model tests, mobil/a11y |
+| P0 | UX akışları, kullanıcı görüşmeleri, veri/izin matrisi, risk modeli, `AiProposal` ADR | UI kiti (W3–W5, mevcut) | Gösterilebilir statik prototip + DPO ön değerlendirmesi |
+| P1 | Rule-only sabah brifingi, salt-okuma | Tasks/Calendar/Accounting adapters, UI W6 kilidi, sekreter tercih tablosu | Kullanıcı izolasyonu, no-model tests, mobil/a11y |
 | P2 | Proposal Inbox + confirm/dismiss | AiProposal v2 ve idempotency | Double confirm, stale source, revoked permission, audit |
-| P3 | Mail taslakları + hatırlatma kuralları | Mail/Automation, per-mailbox consent | Gönderim her zaman onaylı, sessiz saatler, tekrar yok |
+| P3 | Mail taslakları + hatırlatma kuralları + devir (PS-15) | Mail/Automation, per-mailbox consent, gelen posta olayı | Gönderim her zaman onaylı, sessiz saatler, tekrar yok |
 | P4 | OCR, ses, akıllı doğal dil, çok kanallı | Privacy gates, provider region/retention, budget | Local-only fallback, false-positive evaluation, data leakage tests |
 
 MVP önceliği: **P1 + P2**, ardından **P3**. P4’ü erken eklemek maliyet, veri koruma ve bakım yükünü gereksiz yükseltir.
 
 ## 9. Kalite ve test matrisi
 
-- RBAC + tenant ve organization boundary; kullanıcı A'nın hiçbir brifing/önerisi kullanıcı B'ye görünmez.
+- RBAC ve kullanıcı sınırı: kullanıcı A'nın hiçbir brifing/önerisi kullanıcı B'ye görünmez. Kurum sınırı kurulum düzeyindedir (ADR 0001).
 - Disabled module, revoked consent, disabled provider, policy revision, expired reference/proposal, stale source.
 - Worker double delivery, retry, race, idempotency, timeout, outbox crash/recovery.
 - TypeScript/ESLint/module:sync/module-version checks, hydration, i18n TR/DE (sonra EN), light/dark/mobile/reduced-motion.
@@ -192,7 +217,7 @@ MVP önceliği: **P1 + P2**, ardından **P3**. P4’ü erken eklemek maliyet, ve
 | Proaktif aksiyon? | **Taslak öner + onay al** | Otomatik gönderim (önerilmez) |
 | İlk hedef? | **Freelancer + dernek sekreteri** | Tüm sektörlere aynı anda açılma |
 | Mobil kanal? | **ERP içi bildirim** | Push/WhatsApp (sonraya bırak) |
-| Veri modeli? | **Mevcut AiProposal / AI v2 projection** | İkinci proposal/LLM datastore (önerilmez) |
+| Veri modeli? | **`AiProposal`'ı ADR ile kural kaynaklı önerilere genelleştir + sekreterin küçük tercih/görünürlük tablosu** | İkinci, paralel bir öneri deposu (önerilmez) |
 | MVP kapsamı? | **P1–P2** | Ses + OCR + mail + otomasyon hepsi birden |
 
 ## 11. Açık sorular ve prototipte ölçülecek metrikler
@@ -210,7 +235,11 @@ MVP önceliği: **P1 + P2**, ardından **P3**. P4’ü erken eklemek maliyet, ve
 - [ ] P0 onayı: arketip, brifing taslağı, menü konumu, risk seviyesi politikası.
 - [ ] Kaynak modüller için read-only capabilities sözleşmesi / yetki matrisi.
 - [ ] Sekreter için `defineModuleAi`/Automation contract uyum analizi.
-- [ ] `AiProposal` kullanımını doğrula; yeni tablo gereksinimi için migration öncesi ADR yaz.
+- [ ] ADR: `AiProposal`'ı `source: model|rule` ile genelleştirme veya ayrı tablo; onay yolu ve şifreleme aynı kalır.
+- [ ] Sekreter tabloları: tercihler, öğe görünürlüğü (dismiss/snooze), devredilen takipler; migration + saklama süresi.
+- [ ] `mail`: IMAP içe alma sonrası meta-only olay (`mail.message_received` gibi), içerik loglanmadan.
+- [ ] "Bugün" kartını yüzey kartı (`surfaces`) olarak Panel'e ve ilgili modül ekranlarına bağla.
+- [ ] Kalıcı uygulama içi bildirim listesi: ihtiyaç P3'te yeniden değerlendirilir.
 - [ ] Deterministik briefing aggregator + server-only UI.
 - [ ] Approval Inbox + aç/kapat + provenance/TTL görünürlüğü.
 - [ ] Worker event idempotency/quiet hours ve feature flags.
@@ -220,4 +249,4 @@ MVP önceliği: **P1 + P2**, ardından **P3**. P4’ü erken eklemek maliyet, ve
 
 ---
 
-**Sonuç:** En yüksek değerli başlangıç ürününün “sabah öncelikleri + onaylı öneriler” olduğunu düşünüyorum. Mevcut AI v2, Automation, DataTable ve modüler izin sistemi tekrar kullanılmalı; yeni bir otonom agent framework'ü veya ağır motion paketi eklenmemeli. UI Platform tamamlanmadan sekreter için yeni ekran geliştirmeye başlanmamalı.
+**Sonuç:** En yüksek değerli başlangıç ürününün “sabah öncelikleri + onaylı öneriler” olduğunu düşünüyorum. Mevcut AI v2, Automation, DataTable ve modüler izin sistemi tekrar kullanılmalı; yeni bir otonom agent framework'ü veya ağır motion paketi eklenmemeli. P0 (prototip + ADR) hemen başlayabilir; ürün ekranları W6 kilidi ve AI v2 kabul kapılarından sonra geliştirilir.
