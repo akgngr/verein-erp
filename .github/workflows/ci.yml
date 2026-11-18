@@ -5,8 +5,9 @@ name: CI
 
 on:
   push:
-    branches: [main]
+    branches: [alpha, beta, main]
   pull_request:
+    branches: [alpha, beta, main]
   workflow_dispatch: # GitHub Actions sekmesinden elle çalıştırma
 
 concurrency:
@@ -17,6 +18,14 @@ permissions:
   contents: read
 
 jobs:
+  branch-flow:
+    name: Branch promotion policy
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify source and target branches
+        run: node scripts/check-branch-flow.mjs
+
   quality:
     name: Quality gate
     runs-on: ubuntu-latest
