@@ -15,7 +15,7 @@ Durum, GitHub Issue etiketlerinden (`status:*`) gelir; bu tablo her merge sonras
 | S1 | T1.2 | #253 | Claude | Sağlayıcılar: accounting, documents, members | #250 | ready | |
 | S1 | T1.3 | #258 | ChatGPT | Sağlayıcılar: tasks, calendar, meetings | #250 | ready | |
 | S1 | T1.4 | #259 | ChatGPT | "Bugün" kartı + sekreter sayfası | #249, #250 | ready | |
-| S1 | T1.5 | #254 | Claude | Kapat/ertele eylemleri | #251 | ready | |
+| S1 | T1.5 | #254 | Claude | Kapat/ertele eylemleri | #251 | in review | |
 | S1 | T1.6 | #260 | ChatGPT | Kapat/ertele UI + smoke | #254, #259 | blocked | |
 | S2 | T2.1 | #255 | Claude | Kural kaynaklı öneriler + onay yolu | #248, #252 | blocked | |
 | S2 | T2.2 | #261 | ChatGPT | Onay kutusu UI | #255 | blocked | |
