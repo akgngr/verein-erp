@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.3.0",
+      "date": "2026-11-18",
+      "title": {
+        "tr": "Sabah özeti toplayıcısı",
+        "de": "Sammeldienst für die Morgenübersicht"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Modüllerin sekretere verdiği katkılar tek bir özette toplanır. Yalnız yetkili olunan ve açık modüller görünür; hata veren veya yavaş bir modül özeti durdurmaz. Kapatılan ve ertelenen öğeler gizlenir.",
+          "de": "Beiträge der Module werden in einer Übersicht zusammengeführt. Nur freigeschaltete Module mit Berechtigung erscheinen; ein fehlerhaftes oder langsames Modul blockiert die Übersicht nicht. Ausgeblendete und zurückgestellte Einträge werden nicht angezeigt."
+        }
+      ]
+    },
+    {
       "version": "0.2.0",
       "date": "2026-11-18",
       "title": {
