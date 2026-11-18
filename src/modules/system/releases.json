@@ -1,6 +1,22 @@
 {
-  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
+    {
+      "version": "1.12.4",
+      "date": "2026-11-17",
+      "appVersion": "0.41.0",
+      "title": {
+        "tr": "Dahili sürüm notu politikası",
+        "de": "Richtlinie für interne Versionshinweise"
+      },
+      "changes": [
+        {
+          "type": "internal",
+          "tr": "Dahili sürüm kayıtları kullanıcıya açık sürüm ekranı ve web kataloğundan ayrıldı.",
+          "de": "Interne Release-Einträge wurden aus öffentlichen Versionshinweisen und dem Webkatalog ausgeblendet."
+        }
+      ]
+    },
     {
       "version": "1.12.3",
       "date": "2026-11-17",

@@ -84,4 +84,4 @@ _2026-11-15_
 
 - **Düzeltme:** Geçici export hataları sınırlı yeniden denenir; terminal/iptal durumları kuyrukta görünmez, başarısız geçici dosyalar temizlenir.
 
-Daha eski 25 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/automation/releases.json)
+Daha eski 25 herkese açık sürüm notu.

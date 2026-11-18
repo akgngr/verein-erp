@@ -79,14 +79,15 @@ async function modulePage(mod: (typeof allModules)[number], labels: Map<string, 
   const tools = Object.entries(AI_TOOL_POLICY).filter(([, entry]) => entry.module === mod.key).map(([tool]) => tool).sort();
   if (tools.length) out.push("", "## Asistan araçları", "", "Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/kullanim/asistan)):", "", tools.map((tool) => `\`${tool}\``).join(" · "));
 
-  if (releases.length) {
+  const publicReleases = releases.map((release) => ({ ...release, changes: (release.changes ?? []).filter((change) => change.type !== "internal") })).filter((release) => release.changes.length > 0);
+  if (publicReleases.length) {
     out.push("", "## Sürüm notları", "");
-    for (const release of releases.slice(0, RELEASE_LIMIT)) {
+    for (const release of publicReleases.slice(0, RELEASE_LIMIT)) {
       out.push(`### ${release.version}${release.title?.tr ? ` — ${release.title.tr}` : ""}`, "", release.date ? `_${release.date}_` : "", "");
       for (const change of release.changes ?? []) out.push(`- **${TYPE[change.type] ?? change.type}:** ${change.tr.replace(/\r?\n/g, " ").replace(/</g, "&lt;")}`);
       out.push("");
     }
-    if (releases.length > RELEASE_LIMIT) out.push(`Daha eski ${releases.length - RELEASE_LIMIT} sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/${mod.key}/releases.json)`, "");
+    if (publicReleases.length > RELEASE_LIMIT) out.push(`Daha eski ${publicReleases.length - RELEASE_LIMIT} herkese açık sürüm notu.`, "");
   }
   return out.join("\n").replace(/\n{3,}/g, "\n\n").trimEnd() + "\n";
 }

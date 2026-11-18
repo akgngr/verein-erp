@@ -553,7 +553,7 @@ const file = await createGeneratedFile({ ownerId: user.id, title, format: "xlsx"
 Modüldeki her değişiklik bir **modül sürümüdür**:
 
 1. `src/modules/<modül>/releases.json` dosyasının EN ÜSTÜNE yeni sürüm ekleyin (`version`, `date`, `title.tr/de`,
-   `changes[]` → `type`: feature | improvement | fix | security, `tr`, `de`; isteğe bağlı `appVersion`).
+   `changes[]` → `type`: feature | improvement | fix | security | internal, `tr`, `de`; isteğe bağlı `appVersion`).
 2. `module.config.ts` içindeki `version` aynı sürüm olmalı (`pnpm module:check` denetler).
 3. Sürümleme: yeni özellik → minor (1.2.0 → 1.3.0), düzeltme → patch (1.3.0 → 1.3.1), uyumsuz değişiklik → major.
 4. CI (`scripts/check-module-versions.ts`): ana dala göre dosyası değişen her modülün sürümü artmış olmalı.
@@ -847,3 +847,5 @@ Bir modül kendi olaylarını yayımlayabilir; bu olaylar İş akışları düze
 - Olay modülün kodunda `emitAutomationEvent(<olay>, …)` ile gerçekten yayımlanır.
 
 **Düzenleyicide:** Koşul adımı tetikleyicinin olayına göre yalnızca o olayın alanlarını listeler; enum alanlarda değer seçenekli gelir, "Diğer (elle yaz)" ile manuel girilebilir (ipucu `help.<alan>` veya alan türünden gelir).
+
+**Dahili refaktör notları:** `type: internal` sürüm zincirinde kalır; kullanıcı ekranında ve web kataloğunda gösterilmez. Modül sürüm artışı yine zorunludur.

@@ -100,4 +100,4 @@ _2026-11-07_
 
 - **İyileştirme:** SEPA tahsilatlarını kaydetme ve geri dönenleri ters çevirme (SEPA modülü için)
 
-Daha eski 5 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/courses/releases.json)
+Daha eski 5 herkese açık sürüm notu.
