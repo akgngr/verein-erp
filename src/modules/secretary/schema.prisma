@@ -1,0 +1,72 @@
+/// Kullanıcının sekreter tercihleri (T0.4). Kullanıcı başına tek satır.
+model SecretaryPreference {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  /// Günlük özet saati, Europe/Berlin "HH:mm".
+  briefingTime   String   @default("07:30")
+  briefingEnabled Boolean @default(true)
+  /// Sessiz saatler "HH:mm"; ikisi de boşsa sessiz saat yok.
+  quietFrom      String?
+  quietTo        String?
+  /// Bildirim kanalları: "in_app" | "email" (Pro: diğer kanallar).
+  channels       String[] @default(["in_app"])
+  updatedAt      DateTime @updatedAt
+  createdAt      DateTime @default(now())
+
+  @@map("secretary_preferences")
+}
+
+enum SecretaryItemStateKind {
+  DISMISSED
+  SNOOZED
+}
+
+/// Özet öğesinin kullanıcıya özel görünürlüğü. Kaynak kaydı değiştirmez ("gösterme" ≠ "tamamla").
+model SecretaryItemState {
+  id        String                 @id @default(cuid())
+  userId    String
+  /// BriefingItem.id ("<modül>:<tür>[:<kaynakId>]").
+  itemId    String
+  state     SecretaryItemStateKind
+  /// SNOOZED için bitiş; DISMISSED için null.
+  until     DateTime?
+  createdAt DateTime               @default(now())
+  updatedAt DateTime               @updatedAt
+
+  @@unique([userId, itemId])
+  @@index([userId, until])
+  @@map("secretary_item_states")
+}
+
+enum SecretaryProposalStatus {
+  PENDING
+  EXECUTING
+  APPLIED
+  FAILED
+  DISMISSED
+  EXPIRED
+}
+
+/// Sekreter önerisi (ADR 0005). İçerik şifreli; onay atomik claim ile; belirsiz yazma tekrarlanmaz.
+model SecretaryProposal {
+  id               String                  @id @default(cuid())
+  userId           String
+  /// "rule" | "model"
+  source           String                  @default("rule")
+  itemId           String?
+  moduleKey        String
+  actionKey        String
+  payloadEnc       String
+  previewEnc       String
+  payloadHash      String
+  preconditionsEnc String?
+  status           SecretaryProposalStatus @default(PENDING)
+  idempotencyKey   String                  @unique
+  expiresAt        DateTime
+  confirmedAt      DateTime?
+  completedAt      DateTime?
+  createdAt        DateTime                @default(now())
+
+  @@index([userId, status, expiresAt])
+  @@map("secretary_proposals")
+}

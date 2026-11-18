@@ -10,6 +10,7 @@ import { lifecycle as calendarLifecycle } from "@/modules/calendar/lifecycle";
 import { lifecycle as crmLifecycle } from "@/modules/crm/lifecycle";
 import { lifecycle as demoLifecycle } from "@/modules/demo/lifecycle";
 import { lifecycle as exportsLifecycle } from "@/modules/exports/lifecycle";
+import { lifecycle as secretaryLifecycle } from "@/modules/secretary/lifecycle";
 
 /** Modül yaşam döngüsü kancaları (src/modules/<modül>/lifecycle.ts), ör. kapatılırken temizlik. */
 export const moduleLifecycleRegistry: ModuleLifecycle[] = [
@@ -20,4 +21,5 @@ export const moduleLifecycleRegistry: ModuleLifecycle[] = [
   crmLifecycle,
   demoLifecycle,
   exportsLifecycle,
+  secretaryLifecycle,
 ];
