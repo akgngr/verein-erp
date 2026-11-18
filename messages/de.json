@@ -1886,6 +1886,18 @@
       "payablesOverdue": "{count} überfällige Eingangsrechnungen mit {amount} offen.",
       "inspectPayables": "Zu den Eingangsrechnungen",
       "draftPayables": "{count} Eingangsrechnungen warten auf Prüfung und Freigabe."
+    },
+    "secretary": {
+      "overdueInvoices": "{count, plural, one {# überfällige Rechnung} other {# überfällige Rechnungen}}",
+      "overduePayables": "{count, plural, one {# überfällige Eingangsrechnung} other {# überfällige Eingangsrechnungen}}",
+      "draftPayables": "{count, plural, one {# Eingangsrechnung wartet auf Prüfung} other {# Eingangsrechnungen warten auf Prüfung}}",
+      "openBankTransactions": "{count, plural, one {# Bankumsatz wartet auf Zuordnung} other {# Bankumsätze warten auf Zuordnung}}",
+      "taxDeadline": "{tax} ({period}): {days, plural, =0 {heute fällig} one {noch # Tag} other {noch # Tage}}",
+      "taxKinds": {
+        "ustva": "Umsatzsteuer-Voranmeldung",
+        "annualVat": "Umsatzsteuer-Jahreserklärung",
+        "incomeTax": "Ertragsteuererklärung"
+      }
     }
   },
   "ai": {
@@ -4283,6 +4295,10 @@
       "completed": "Als erledigt markieren",
       "archived": "Archivieren",
       "success": "{updated} Dokumente aktualisiert, {skipped} Einträge waren bereits im Zielstatus."
+    },
+    "secretary": {
+      "overdue": "{count, plural, one {# Vorgang überfällig} other {# Vorgänge überfällig}}",
+      "dueSoon": "{count, plural, one {# Vorgang fällig in {days} Tagen} other {# Vorgänge fällig in {days} Tagen}}"
     }
   },
   "donations": {
@@ -7310,6 +7326,9 @@
       "activate": "Aktiv setzen",
       "passivate": "Passiv setzen",
       "success": "{updated} Mitglieder aktualisiert, {skipped} Einträge übersprungen."
+    },
+    "secretary": {
+      "overdueDues": "{count, plural, one {# überfälliger Mitgliedsbeitrag} other {# überfällige Mitgliedsbeiträge}}"
     }
   },
   "online-forms": {
@@ -7830,7 +7849,27 @@
       "snoozeTooLong": "Höchstens 90 Tage zurückstellbar."
     },
     "access": {
-      "system": "Liest, welche Module aktiv und freigegeben sind; die Übersicht zeigt nur deren Beiträge."
+      "system": "Liest, welche Module aktiv und freigegeben sind; die Übersicht zeigt nur deren Beiträge.",
+      "users": "Liest Status und Rolle des Benutzers, damit die tägliche Übersicht nur für aktive Benutzer mit Sekretariatsberechtigung erstellt wird."
+    },
+    "automation": {
+      "tasks": {
+        "daily_briefing": {
+          "label": "Tägliche Morgenübersicht",
+          "description": "Erstellt die Morgenübersicht einmal täglich zur gewählten Uhrzeit (Europe/Berlin, Ruhezeiten werden beachtet)."
+        }
+      }
+    },
+    "proposals": {
+      "errors": {
+        "unavailable": "Der Vorschlag ist nicht mehr verfügbar (bereits bearbeitet oder nicht Ihrer).",
+        "expired": "Der Vorschlag ist abgelaufen.",
+        "forbidden": "Keine Berechtigung für diesen Vorschlag oder das Modul ist deaktiviert.",
+        "externalConfirmRequired": "Diese Aktion wirkt nach außen (z. B. E-Mail, Zahlung) und muss zusätzlich bestätigt werden.",
+        "unreadable": "Der Vorschlag konnte nicht geprüft werden und wurde verworfen.",
+        "stale": "Der Ursprungsdatensatz hat sich geändert; der Vorschlag ist ungültig. Bitte prüfen Sie den Datensatz.",
+        "failed": "Die Aktion konnte nicht abgeschlossen werden. Sie wird nicht wiederholt; bitte prüfen Sie den Datensatz."
+      }
     }
   },
   "security-monitor": {

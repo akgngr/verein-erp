@@ -1,0 +1,120 @@
+name: Agent discussion bridge
+
+# Ajanların GitHub Discussions'a yazması için köprü (docs/ai-coordination/DISCUSSIONS_PROTOCOL.md).
+# Neden: bazı ajan oturumları Discussions'ı REST ile okuyabilir ama yazamaz (yazma yalnız GraphQL).
+# Bu iş akışı, depoya yazma yetkisi olan bir kişi/ajan tarafından elle (workflow_dispatch) tetiklenir ve
+# GITHUB_TOKEN ile tek bir discussion açar veya yorum/yanıt yazar. Kod, issue veya PR üzerinde yetkisi yoktur.
+# Girdiler komut olarak değil, yalnız veri olarak kullanılır (script içine metin olarak yerleştirilmez).
+
+on:
+  workflow_dispatch:
+    inputs:
+      agent:
+        description: "Yazan ajan (ör. claude, chatgpt, codex)"
+        required: true
+        type: string
+      mode:
+        description: "create = yeni discussion, comment = yorum/yanıt"
+        required: true
+        type: choice
+        options: [create, comment]
+      category:
+        description: "create için kategori adı (ör. Architecture & RFC)"
+        required: false
+        type: string
+      title:
+        description: "create için başlık"
+        required: false
+        type: string
+      discussion:
+        description: "comment için discussion numarası"
+        required: false
+        type: string
+      reply_to:
+        description: "İsteğe bağlı: yanıtlanacak yorumun node id'si (DC_...)"
+        required: false
+        type: string
+      body:
+        description: "Markdown metin (kişisel/dernek verisi ve sır YASAK)"
+        required: true
+        type: string
+
+permissions:
+  contents: read
+  discussions: write
+
+concurrency:
+  group: discussion-bridge
+  cancel-in-progress: false
+
+jobs:
+  post:
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - uses: actions/github-script@v7
+        with:
+          script: |
+            const input = context.payload.inputs ?? {};
+            const agent = String(input.agent ?? "").trim().toLowerCase();
+            const mode = String(input.mode ?? "");
+            const body = String(input.body ?? "").trim();
+
+            if (!/^[a-z][a-z0-9-]{1,23}$/.test(agent)) core.setFailed("agent: 2-24 küçük harf/rakam/tire");
+            if (!body || body.length > 20000) core.setFailed("body: boş olamaz, en fazla 20000 karakter");
+            // Kaba sır/kişisel veri koruması; asıl kural protokoldedir.
+            const forbidden = [
+              /-----BEGIN [A-Z ]*PRIVATE KEY-----/,
+              /\bgh[pousr]_[A-Za-z0-9]{20,}\b/,
+              /\bsk-[A-Za-z0-9_-]{20,}\b/,
+              /\b[A-Z]{2}\d{2}(?:\s?[A-Z0-9]{4}){3,7}\b/, // IBAN benzeri
+            ];
+            if (forbidden.some((pattern) => pattern.test(body))) core.setFailed("body: sır veya IBAN benzeri içerik reddedildi");
+            if (process.exitCode) return;
+
+            const signed = `**[agent:${agent}]** · via discussion bridge (run ${context.runId}, by @${context.actor})\n\n${body}`;
+            const { owner, repo } = context.repo;
+
+            if (mode === "create") {
+              const categoryName = String(input.category ?? "").trim().toLowerCase();
+              const title = String(input.title ?? "").trim();
+              if (!title || title.length > 200) return core.setFailed("title: 1-200 karakter");
+              const data = await github.graphql(
+                `query($owner:String!,$repo:String!){repository(owner:$owner,name:$repo){id discussionCategories(first:50){nodes{id name slug}}}}`,
+                { owner, repo },
+              );
+              const categories = data.repository.discussionCategories.nodes;
+              const category = categories.find((c) => c.name.toLowerCase() === categoryName || c.slug === categoryName);
+              if (!category) return core.setFailed(`category bulunamadı. Mevcut: ${categories.map((c) => c.name).join(", ")}`);
+              const created = await github.graphql(
+                `mutation($repo:ID!,$cat:ID!,$title:String!,$body:String!){createDiscussion(input:{repositoryId:$repo,categoryId:$cat,title:$title,body:$body}){discussion{number url}}}`,
+                { repo: data.repository.id, cat: category.id, title: `[${agent}] ${title}`, body: signed },
+              );
+              const discussion = created.createDiscussion.discussion;
+              core.summary.addRaw(`Discussion #${discussion.number}: ${discussion.url}`).write();
+              core.setOutput("url", discussion.url);
+              return;
+            }
+
+            if (mode === "comment") {
+              const number = Number(input.discussion);
+              if (!Number.isInteger(number) || number < 1) return core.setFailed("discussion: geçerli numara gerekli");
+              const replyTo = String(input.reply_to ?? "").trim();
+              if (replyTo && !/^DC_[A-Za-z0-9_-]{4,64}$/.test(replyTo)) return core.setFailed("reply_to: DC_ ile başlayan node id");
+              const data = await github.graphql(
+                `query($owner:String!,$repo:String!,$n:Int!){repository(owner:$owner,name:$repo){discussion(number:$n){id locked}}}`,
+                { owner, repo, n: number },
+              );
+              const discussion = data.repository.discussion;
+              if (!discussion) return core.setFailed("discussion bulunamadı");
+              if (discussion.locked) return core.setFailed("discussion kilitli");
+              const result = await github.graphql(
+                `mutation($id:ID!,$body:String!,$reply:ID){addDiscussionComment(input:{discussionId:$id,body:$body,replyToId:$reply}){comment{url}}}`,
+                { id: discussion.id, body: signed, reply: replyTo || null },
+              );
+              core.summary.addRaw(`Comment: ${result.addDiscussionComment.comment.url}`).write();
+              core.setOutput("url", result.addDiscussionComment.comment.url);
+              return;
+            }
+
+            core.setFailed("mode: create | comment");

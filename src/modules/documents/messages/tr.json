@@ -423,5 +423,9 @@
     "completed": "Tamamlandı yap",
     "archived": "Arşivle",
     "success": "{updated} evrak güncellendi, {skipped} kayıt zaten hedef durumdaydı."
+  },
+  "secretary": {
+    "overdue": "{count} evrakın süresi geçti",
+    "dueSoon": "{count} evrakın süresi {days} gün içinde doluyor"
   }
 }

@@ -30,6 +30,26 @@
     "snoozeTooLong": "Höchstens 90 Tage zurückstellbar."
   },
   "access": {
-    "system": "Liest, welche Module aktiv und freigegeben sind; die Übersicht zeigt nur deren Beiträge."
+    "system": "Liest, welche Module aktiv und freigegeben sind; die Übersicht zeigt nur deren Beiträge.",
+    "users": "Liest Status und Rolle des Benutzers, damit die tägliche Übersicht nur für aktive Benutzer mit Sekretariatsberechtigung erstellt wird."
+  },
+  "automation": {
+    "tasks": {
+      "daily_briefing": {
+        "label": "Tägliche Morgenübersicht",
+        "description": "Erstellt die Morgenübersicht einmal täglich zur gewählten Uhrzeit (Europe/Berlin, Ruhezeiten werden beachtet)."
+      }
+    }
+  },
+  "proposals": {
+    "errors": {
+      "unavailable": "Der Vorschlag ist nicht mehr verfügbar (bereits bearbeitet oder nicht Ihrer).",
+      "expired": "Der Vorschlag ist abgelaufen.",
+      "forbidden": "Keine Berechtigung für diesen Vorschlag oder das Modul ist deaktiviert.",
+      "externalConfirmRequired": "Diese Aktion wirkt nach außen (z. B. E-Mail, Zahlung) und muss zusätzlich bestätigt werden.",
+      "unreadable": "Der Vorschlag konnte nicht geprüft werden und wurde verworfen.",
+      "stale": "Der Ursprungsdatensatz hat sich geändert; der Vorschlag ist ungültig. Bitte prüfen Sie den Datensatz.",
+      "failed": "Die Aktion konnte nicht abgeschlossen werden. Sie wird nicht wiederholt; bitte prüfen Sie den Datensatz."
+    }
   }
 }

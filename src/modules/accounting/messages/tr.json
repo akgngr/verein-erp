@@ -1594,5 +1594,17 @@
     "payablesOverdue": "Vadesi geçmiş {count} gelen faturada {amount} ödenmemiş tutar var.",
     "inspectPayables": "Gelen faturalara git",
     "draftPayables": "{count} gelen fatura kontrol ve onay bekliyor."
+  },
+  "secretary": {
+    "overdueInvoices": "{count} vadesi geçmiş fatura",
+    "overduePayables": "{count} vadesi geçmiş gelen fatura",
+    "draftPayables": "{count} gelen fatura kontrol bekliyor",
+    "openBankTransactions": "{count} banka hareketi eşleşme bekliyor",
+    "taxDeadline": "{tax} ({period}): {days, plural, =0 {bugün son gün} one {# gün kaldı} other {# gün kaldı}}",
+    "taxKinds": {
+      "ustva": "KDV ön beyanı",
+      "annualVat": "Yıllık KDV beyanı",
+      "incomeTax": "Gelir/kurumlar vergisi beyanı"
+    }
   }
 }
