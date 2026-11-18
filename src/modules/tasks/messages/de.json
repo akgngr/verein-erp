@@ -144,5 +144,9 @@
   },
   "calendar": {
     "due": "Aufgaben-Fälligkeiten"
+  },
+  "secretary": {
+    "overdue": "{count} überfällige Aufgaben",
+    "dueToday": "{count} heute fällige Aufgaben"
   }
 }
