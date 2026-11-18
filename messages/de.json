@@ -7821,6 +7821,14 @@
       "title": "Sekretariat wird vorbereitet",
       "description": "Morgenübersicht und Vorschläge erscheinen bald hier."
     },
+    "validation": {
+      "itemId": "Ungültige Eintrags-ID.",
+      "until": "Ungültiger Zeitpunkt."
+    },
+    "errors": {
+      "snoozeInPast": "Der Zeitpunkt muss in der Zukunft liegen.",
+      "snoozeTooLong": "Höchstens 90 Tage zurückstellbar."
+    },
     "access": {
       "system": "Liest, welche Module aktiv und freigegeben sind; die Übersicht zeigt nur deren Beiträge."
     }

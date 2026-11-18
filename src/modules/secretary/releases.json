@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.4.0",
+      "date": "2026-11-18",
+      "title": {
+        "tr": "Özet öğelerini kapatma ve erteleme",
+        "de": "Übersichtseinträge ausblenden und zurückstellen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Sabah özetindeki bir öğe kapatılabilir, en fazla 90 gün ertelenebilir veya yeniden gösterilebilir. Bu yalnız sizin görünümünüzü değiştirir; kaynak kayıt değişmez.",
+          "de": "Einträge der Morgenübersicht können ausgeblendet, bis zu 90 Tage zurückgestellt oder wieder angezeigt werden. Das ändert nur Ihre Ansicht, nicht den Ursprungsdatensatz."
+        }
+      ]
+    },
+    {
       "version": "0.3.0",
       "date": "2026-11-18",
       "title": {
