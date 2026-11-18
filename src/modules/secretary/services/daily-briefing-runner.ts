@@ -26,7 +26,7 @@ export async function runScheduledBriefings(now: Date): Promise<DailyBriefingRes
       return user ? { id: user.id, role: user.role, isActive: user.isActive } : null;
     },
     // Özet sayıları için başlık gerekmez; worker'da istek bağlamı olmadığından çeviri anahtarı yeterli.
-    buildBriefing: (user, at) => getBriefing(user, at, { translator: async () => (key) => key }),
+    buildBriefing: (user, at) => getBriefing(user, at, { translator: async () => (key) => key, proposals: false }),
     // Dış kanal teslimi (özet e-postası) T3.2 şablonuyla eklenir; o zamana kadar yalnız uygulama içi.
   });
 }

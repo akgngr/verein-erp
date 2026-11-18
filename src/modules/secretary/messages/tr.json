@@ -40,5 +40,16 @@
         "description": "Zamanı gelen kullanıcılar için sabah özetini günde bir kez hazırlar (Europe/Berlin saati, sessiz saatlere uyar)."
       }
     }
+  },
+  "proposals": {
+    "errors": {
+      "unavailable": "Öneri artık kullanılamıyor (zaten işlenmiş veya size ait değil).",
+      "expired": "Önerinin süresi doldu.",
+      "forbidden": "Bu öneriyi uygulama yetkiniz yok veya ilgili modül kapalı.",
+      "externalConfirmRequired": "Bu eylem dışarıya etki eder (ör. e-posta, ödeme); ayrıca onaylamanız gerekir.",
+      "unreadable": "Öneri doğrulanamadı ve iptal edildi.",
+      "stale": "Kaynak kayıt değişti; öneri geçersiz. Lütfen kaynağı kontrol edin.",
+      "failed": "Eylem tamamlanamadı. Tekrar denenmez; lütfen kaynak kaydı kontrol edin."
+    }
   }
 }

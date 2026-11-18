@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.6.0",
+      "date": "2026-11-18",
+      "title": {
+        "tr": "Kural kaynaklı öneriler ve onay yolu",
+        "de": "Regelbasierte Vorschläge und Freigabe"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Modüller sabah özeti öğelerine öneri ekleyebilir (ör. vadesi geçmiş faturaya hatırlatma taslağı). Öneri şifreli saklanır; onaylanınca ilgili modülün kendi eylemi çalışır. Onay anında yetki, modül durumu ve kaynak kaydın değişip değişmediği yeniden denetlenir; çift onay, süresi dolmuş veya bayat öneri çalışmaz. E-posta, ödeme gibi dışa etkili eylemler ayrıca onay ister.",
+          "de": "Module können Einträgen der Morgenübersicht Vorschläge hinzufügen (z. B. Mahnentwurf für eine überfällige Rechnung). Vorschläge werden verschlüsselt gespeichert; nach Freigabe führt das jeweilige Modul seine eigene Aktion aus. Bei der Freigabe werden Berechtigung, Modulstatus und Änderungen am Ursprungsdatensatz erneut geprüft; doppelte, abgelaufene oder veraltete Vorschläge werden nicht ausgeführt. Nach außen wirkende Aktionen wie E-Mail oder Zahlung erfordern eine zusätzliche Bestätigung."
+        }
+      ]
+    },
+    {
       "version": "0.5.0",
       "date": "2026-11-18",
       "title": {
