@@ -144,5 +144,9 @@
   },
   "calendar": {
     "due": "Görev bitiş tarihleri"
+  },
+  "secretary": {
+    "overdue": "{count} gecikmiş görev",
+    "dueToday": "Bugün tamamlanması gereken {count} görev"
   }
 }
