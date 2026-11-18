@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 
 import { Button } from "@/shared/components/kit";
 import { notify } from "@/shared/components/ui/notify";
@@ -20,7 +20,7 @@ export type ItemActionLabels = {
 
 type Operation = "dismiss" | "tomorrow" | "nextWeek" | "undo";
 
-export function SecretaryItemActions({ itemId, labels }: { itemId: string; labels: ItemActionLabels }) {
+export function SecretaryItemActions({ itemId, labels, children }: { itemId: string; labels: ItemActionLabels; children: ReactNode }) {
   const router = useRouter();
   const [pending, setPending] = useState<Operation | null>(null);
   const [hidden, setHidden] = useState(false);
@@ -51,14 +51,20 @@ export function SecretaryItemActions({ itemId, labels }: { itemId: string; label
   }
 
   return (
-    <div className="flex flex-wrap items-center gap-1.5" aria-busy={pending !== null}>
+    <div className="min-w-0 w-full space-y-2" aria-busy={pending !== null}>
       {hidden ? (
-        <Button size="sm" variant="secondary" isDisabled={pending !== null} onPress={() => void perform("undo")}>{labels.undo}</Button>
+        <div className="flex flex-wrap items-center gap-2" role="status">
+          <span className="text-sm text-ink-500">{labels.done}</span>
+          <Button size="sm" variant="secondary" isDisabled={pending !== null} onPress={() => void perform("undo")}>{labels.undo}</Button>
+        </div>
       ) : (
         <>
-          <Button size="sm" variant="ghost" isDisabled={pending !== null} onPress={() => void perform("dismiss")}>{labels.dismiss}</Button>
-          <Button size="sm" variant="ghost" isDisabled={pending !== null} onPress={() => void perform("tomorrow")}>{labels.tomorrow}</Button>
-          <Button size="sm" variant="ghost" isDisabled={pending !== null} onPress={() => void perform("nextWeek")}>{labels.nextWeek}</Button>
+          {children}
+          <div className="flex flex-wrap items-center gap-1.5">
+            <Button size="sm" variant="ghost" isDisabled={pending !== null} onPress={() => void perform("dismiss")}>{labels.dismiss}</Button>
+            <Button size="sm" variant="ghost" isDisabled={pending !== null} onPress={() => void perform("tomorrow")}>{labels.tomorrow}</Button>
+            <Button size="sm" variant="ghost" isDisabled={pending !== null} onPress={() => void perform("nextWeek")}>{labels.nextWeek}</Button>
+          </div>
         </>
       )}
     </div>
