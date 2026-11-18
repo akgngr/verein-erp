@@ -1,7 +1,7 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
-import { Dialog, Label, Spinner, TextArea, TextField } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { Dialog, Label, Spinner, TextArea, TextField, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -77,7 +77,7 @@ export function ConfirmationActionsBar({
         href={`/api/donations/confirmations/${id}/pdf`}
         target="_blank"
         rel="noopener"
-        className={buttonVariants({
+        className={buttonClassName({
           variant: actionVariant("primary", "bordered"),
           size: "sm",
         })}

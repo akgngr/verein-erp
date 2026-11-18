@@ -1,6 +1,6 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button, Link } from "@heroui/react";
+import { notify } from "@/shared/components/ui/notify";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
@@ -26,6 +26,7 @@ import type { AgendaItemDetail, DecisionItem } from "../types";
 
 import { AgendaItemModal } from "./agenda-item-modal";
 import { DiscussionEditor } from "./discussion-editor";
+import { Button, TextLink } from "@/shared/components/kit";
 
 /**
  * Gündem sekmesi (7.3): sıralı liste; madde numarası, başlık, planlanan içerik,
@@ -187,7 +188,7 @@ export function AgendaTab({
 
                 {canDecide && editable ? (
                   <div className="mt-3">
-                    <Link
+                    <TextLink
                       href={`/toplantilar/${meetingId}?sekme=kararlar&gundem=${item.id}`}
                       className={[
                         "inline-flex items-center gap-1 text-accent",
@@ -198,7 +199,7 @@ export function AgendaTab({
                     >
                       <MessageSquarePlus className="h-4 w-4" aria-hidden />
                       {t("addDecision")}
-                    </Link>
+                    </TextLink>
                   </div>
                 ) : null}
               </li>

@@ -1,5 +1,4 @@
 "use client";
-import { Link } from "@heroui/react";
 
 import { Eye } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -15,6 +14,7 @@ import { formatDate } from "@/shared/utils";
 import type { DuesReportRow } from "../types";
 import { DuesStatusBadge } from "./dues-status-badge";
 import { TypeBadge } from "./type-badge";
+import { TextLink } from "@/shared/components/kit";
 
 /**
  * Aidat raporu tablosu. KARAR: "Ödenen" sıralanabilir değildir — ödenen tutar
@@ -56,12 +56,12 @@ export function DuesReportTable({
       sortable: true,
       width: 140,
       render: (row: DuesReportRow) => (
-        <Link
+        <TextLink
           href={`/uyeler/${row.memberId}`}
           className={["font-medium", "text-sm"].filter(Boolean).join(" ")}
         >
           {row.membershipNumber}
-        </Link>
+        </TextLink>
       ),
     },
     {
@@ -70,12 +70,12 @@ export function DuesReportTable({
       sortable: true,
       width: 200,
       render: (row: DuesReportRow) => (
-        <Link
+        <TextLink
           href={`/uyeler/${row.memberId}`}
           className={["text-foreground", "text-sm"].filter(Boolean).join(" ")}
         >
           {row.fullName}
-        </Link>
+        </TextLink>
       ),
     },
     {
