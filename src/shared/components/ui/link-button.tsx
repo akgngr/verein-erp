@@ -2,36 +2,54 @@
 
 import { buttonVariants } from "@heroui/react";
 import Link from "next/link";
-import { actionVariant } from "./action-appearance";
 import type { ReactNode } from "react";
 
-/** Shared route action with native Next.js navigation and HeroUI v3 appearance. */
+import { actionVariant, type ActionPresentation, type ActionTone } from "./action-appearance";
+import { cn } from "@/shared/utils";
+
+/** ERP-owned semantics; legacy color/variant remain only for transition. */
+export type LinkButtonTone = "primary" | "neutral" | "danger" | "success" | "warning";
+export type LinkButtonEmphasis = "high" | "medium" | "low";
+
 export function LinkButton({
   href,
   children,
-  startIcon,
-  color = "primary",
+  icon,
+  tone,
+  emphasis,
+  className,
   size = "sm",
-  variant = "solid",
+  startIcon,
+  color,
+  variant,
 }: {
   href: string;
   children: ReactNode;
-  startIcon?: ReactNode;
-  color?:
-    "default" | "primary" | "secondary" | "success" | "warning" | "danger";
+  icon?: ReactNode;
+  tone?: LinkButtonTone;
+  emphasis?: LinkButtonEmphasis;
   size?: "sm" | "md" | "lg";
-  variant?:
-    "solid" | "bordered" | "light" | "flat" | "faded" | "ghost" | "shadow";
+  className?: string;
+  /** @deprecated Use icon. */
+  startIcon?: ReactNode;
+  /** @deprecated Use tone. */
+  color?: ActionTone;
+  /** @deprecated Use emphasis. */
+  variant?: ActionPresentation;
 }) {
+  const resolvedTone: ActionTone = tone === "neutral" ? "default" : (tone ?? color ?? "primary");
+  const resolvedStyle: ActionPresentation = emphasis
+    ? ({ high: "solid", medium: "bordered", low: "light" } as const)[emphasis]
+    : variant ?? "solid";
   return (
     <Link
       href={href}
-      className={buttonVariants({
+      className={cn(buttonVariants({
         size,
-        variant: actionVariant(color, variant),
-      })}
+        variant: actionVariant(resolvedTone, resolvedStyle),
+      }), "erp-motion-interactive", className)}
     >
-      {startIcon}
+      {icon ?? startIcon}
       {children}
     </Link>
   );
