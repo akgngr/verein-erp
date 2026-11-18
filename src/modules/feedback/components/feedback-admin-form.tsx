@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Label, Select, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -92,8 +93,8 @@ export function FeedbackAdminForm({
           });
           setBusy(false);
           if (!result.ok)
-            return void toast(result.error, { variant: "danger" });
-          toast(t("saved"), { variant: "success" });
+            return void notify.error(result.error);
+          notify.success(t("saved"));
           router.refresh();
         }}
         variant={actionVariant("primary", "solid")}

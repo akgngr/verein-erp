@@ -1,5 +1,6 @@
 "use client";
-import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
 import { Description, Dialog, Label, Radio, RadioGroup, Spinner, StatusChip } from "@/shared/components/kit";
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -374,10 +375,8 @@ function SendDialog({
                       guardianId,
                     });
                     if (!response.ok)
-                      return void toast(translate(response.error), {
-                        variant: "danger",
-                      });
-                    toast(t("sent"), { variant: "success" });
+                      return void notify.error(translate(response.error));
+                    notify.success(t("sent"));
                     onClose();
                     router.refresh();
                   })

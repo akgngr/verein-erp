@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Description, Label, Radio, RadioGroup, Spinner, StatusChip, Switch } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -39,8 +40,8 @@ export function CloudPolicyCard({
     });
     setBusy(false);
     if (!result.ok)
-      return void toast(translate(result.error), { variant: "danger" });
-    toast(t("saved"), { variant: "success" });
+      return void notify.error(translate(result.error));
+    notify.success(t("saved"));
     router.refresh();
   };
 

@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { DateInput, Description, Dialog, Input, Label, Select, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -73,9 +74,7 @@ export function PaymentsPanel({
         setFormError(describeActionError(result));
         return;
       }
-      toast(t("toastSaved", { receipt: result.data.receiptNumber }), {
-        variant: "success",
-      });
+      notify.success(t("toastSaved", { receipt: result.data.receiptNumber }));
       setAddOpen(false);
       setAmount("");
       setReference("");
@@ -92,10 +91,10 @@ export function PaymentsPanel({
       reason: voidReason,
     });
     if (!result.ok) {
-      toast(describeActionError(result), { variant: "danger" });
+      notify.error(describeActionError(result));
       return;
     }
-    toast(t("toastVoided"), { variant: "success" });
+    notify.success(t("toastVoided"));
     setVoidTarget(null);
     setVoidReason("");
   };

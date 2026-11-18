@@ -1,5 +1,6 @@
 "use client";
-import { Button, ButtonGroup, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button, ButtonGroup } from "@heroui/react";
 import { Checkbox, InputGroup, Label, Spinner, TextField, Tooltip } from "@/shared/components/kit";
 
 import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
@@ -96,12 +97,7 @@ function CalendarAppInner({ sources, canManageShared, hasFeed, sync }: Props) {
   const [settingsOpen, setSettingsOpen] = useState(Boolean(syncResult));
   useEffect(() => {
     if (!syncResult) return;
-    toast(
-      t(syncResult === "connected" ? "sync.connected" : "sync.errors.failed"),
-      {
-        variant: statusTone(syncResult === "connected" ? "success" : "danger"),
-      },
-    );
+    (syncResult === "connected" ? notify.success : notify.error)(t(syncResult === "connected" ? "sync.connected" : "sync.errors.failed"));
     const url = new URL(window.location.href);
     url.searchParams.delete("sync");
     window.history.replaceState(null, "", url);
@@ -117,7 +113,7 @@ function CalendarAppInner({ sources, canManageShared, hasFeed, sync }: Props) {
           to: range.to.toISOString(),
         });
         if (!response.ok)
-          return void toast(response.error, { variant: "danger" });
+          return void notify.error(response.error);
         setItems(response.data);
       }),
     [range],

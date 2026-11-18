@@ -1,5 +1,6 @@
 "use client";
-import { toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";
 import { Label, Switch } from "@/shared/components/kit";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -65,7 +66,7 @@ export function ContactForm({
       : await createContactAction(values);
     if (!result.ok)
       return setFormError(applyActionResult(result, form.setError));
-    toast(t("saved"), { variant: "success" });
+    notify.success(t("saved"));
     if (closeDrawer) closeDrawer();
     else router.push("/muhasebe/cariler");
     router.refresh();

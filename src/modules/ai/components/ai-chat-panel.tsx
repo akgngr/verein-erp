@@ -1,5 +1,6 @@
 "use client";
-import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
 import { Dropdown, Spinner, Tooltip } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -300,7 +301,7 @@ export function AiChatPanel({
     const epoch = ++historyEpoch.current;
     const result = await getAiConversationAction({ id });
     if (epoch !== historyEpoch.current) return;
-    if (!result.ok) return void toast(result.error, { variant: "danger" });
+    if (!result.ok) return void notify.error(result.error);
     requestAttempt.current = null;
     setConversationId(id);
     setHistoryCursor(result.data.pageInfo.beforeCursor);
@@ -336,8 +337,8 @@ export function AiChatPanel({
   const removeConversation = async () => {
     if (!conversationId) return newConversation();
     const result = await deleteAiConversationAction({ id: conversationId });
-    if (!result.ok) return void toast(result.error, { variant: "danger" });
-    toast(t("conversationDeleted"), { variant: "success" });
+    if (!result.ok) return void notify.error(result.error);
+    notify.success(t("conversationDeleted"));
     newConversation();
   };
 
@@ -410,7 +411,7 @@ export function AiChatPanel({
       if (data.code !== "turnBusy" && response.status !== 429)
         requestAttempt.current = null;
       if (!data.ok) {
-        toast(data.error ?? t("error"), { variant: "danger" });
+        notify.error(data.error ?? t("error"));
         if (data.code === "consentRequired") router.refresh();
         setTurns(turns);
         setDraft(content);
@@ -429,7 +430,7 @@ export function AiChatPanel({
         },
       ]);
     } catch {
-      toast(t("error"), { variant: "danger" });
+      notify.error(t("error"));
       setTurns(turns);
       setDraft(content);
       setAttachments(sentAttachments);
@@ -442,7 +443,7 @@ export function AiChatPanel({
   const uploadFiles = async (files: FileList | null) => {
     const list = Array.from(files ?? []).slice(0, Math.max(0, ATTACHMENT_LIMIT - attachments.length));
     if (!list.length) {
-      if (files?.length) toast(t("attachments.limit", { count: String(ATTACHMENT_LIMIT) }), { variant: "warning" });
+      if (files?.length) notify.warning(t("attachments.limit", { count: String(ATTACHMENT_LIMIT) }));
       return;
     }
     const pending = list.map((file) => ({ id: crypto.randomUUID(), name: file.name, uploading: true }));
@@ -460,7 +461,7 @@ export function AiChatPanel({
           setAttachments((current) => current.map((item) => (item.id === id ? { ...item, token, uploading: false } : item)));
         } catch (error) {
           setAttachments((current) => current.filter((item) => item.id !== id));
-          toast(error instanceof Error ? error.message : t("attachments.failed"), { variant: "danger" });
+          notify.error(error instanceof Error ? error.message : t("attachments.failed"));
         }
       }),
     );
@@ -472,13 +473,13 @@ export function AiChatPanel({
       proposalId: proposal.proposalId,
     });
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
     if (result.data.jobId)
       setExportJobs((previous) => ({ ...previous, [key]: result.data.jobId! }));
     setDone((previous) => new Set(previous).add(key));
-    toast(proposalText(proposal, "done"), { variant: "success" });
+    notify.success(proposalText(proposal, "done"));
   };
 
   /** Geçmiş: bugün / dün / son 7 gün / bu ay / daha eski; liste zaten yeniden eskiye sıralı gelir. */
@@ -706,7 +707,7 @@ export function AiChatPanel({
                   const result = await acceptAiConsentAction();
                   setAccepting(false);
                   if (!result.ok)
-                    return void toast(result.error, { variant: "danger" });
+                    return void notify.error(result.error);
                   router.refresh();
                 }}
                 variant={actionVariant("primary", "solid")}

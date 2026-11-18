@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Dialog, Input, Label, Spinner, StatusChip, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -188,14 +189,12 @@ export function ChargesTable({
       setError(fieldError ?? result.error);
       return;
     }
-    toast(
+    notify.success(
       "bookingNumber" in result.data
         ? t("paidToast", { booking: String(result.data.bookingNumber) })
         : dialog.type === "reverse"
           ? t("reversedToast")
-          : t("waivedToast"),
-      { variant: "success" },
-    );
+          : t("waivedToast"));
     setDialog(null);
     router.refresh();
   };

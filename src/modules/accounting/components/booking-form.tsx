@@ -1,5 +1,6 @@
 "use client";
-import { toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";
 
 import {
   FormSurface,
@@ -163,7 +164,7 @@ export function BookingForm({
         setFormError(applyActionResult(result, form.setError));
         return;
       }
-      toast(t("toastUpdated"), { variant: "success" });
+      notify.success(t("toastUpdated"));
       // Çekmecede: kapat (adres değişince sunucu verisi tazelenir); sayfada: detaya dön.
       if (closeDrawer) {
         closeDrawer();
@@ -191,9 +192,7 @@ export function BookingForm({
       setFormError(applyActionResult(result, form.setError));
       return;
     }
-    toast(t("toastSaved", { number: result.data.bookingNumber }), {
-      variant: "success",
-    });
+    notify.success(t("toastSaved", { number: result.data.bookingNumber }));
     router.push(`/muhasebe/${result.data.id}`);
     router.refresh();
   });

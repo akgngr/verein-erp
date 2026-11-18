@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Description, Dialog, Input, Label, Spinner, StatusChip, Switch, Table, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -65,7 +66,7 @@ export function MemberTypesTable({
         setFormError(result.error);
         return;
       }
-      toast(t("toastSaved"), { variant: "success" });
+      notify.success(t("toastSaved"));
       setEditTarget(null);
       router.refresh();
     } finally {

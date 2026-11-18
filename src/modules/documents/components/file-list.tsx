@@ -1,10 +1,6 @@
 "use client";
-import {
-  toast,
-  Link as ActionLink,
-  buttonVariants,
-  Button,
-} from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Link as ActionLink, buttonVariants, Button } from "@heroui/react";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
@@ -53,10 +49,10 @@ export function FileList({
     if (!deleting) return;
     const result = await deleteFileAction({ fileId: deleting.id });
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
-    toast(t("deletedToast"), { variant: "success" });
+    notify.success(t("deletedToast"));
     setDeleting(null);
     router.refresh();
   };

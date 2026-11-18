@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Spinner } from "@/shared/components/kit";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -98,21 +99,15 @@ export function FileUploader({
         next.length + pending.length >=
         MAX_FILES_PER_DOCUMENT - existingCount
       ) {
-        toast(t("maxFilesToast", { count: MAX_FILES_PER_DOCUMENT }), {
-          variant: "warning",
-        });
+        notify.warning(t("maxFilesToast", { count: MAX_FILES_PER_DOCUMENT }));
         break;
       }
       if (!ALLOWED_EXTENSIONS.includes(getExtension(file.name))) {
-        toast(t("typeNotAccepted", { name: file.name }), {
-          variant: "warning",
-        });
+        notify.warning(t("typeNotAccepted", { name: file.name }));
         continue;
       }
       if (file.size > maxMb * 1024 * 1024) {
-        toast(t("tooLarge", { name: file.name, maxMb }), {
-          variant: "warning",
-        });
+        notify.warning(t("tooLarge", { name: file.name, maxMb }));
         continue;
       }
       next.push({
@@ -216,14 +211,12 @@ export function FileUploader({
         await uploadOne(documentId, item);
         ok += 1;
       } catch (error) {
-        toast(error instanceof Error ? error.message : t("uploadFailed"), {
-          variant: "danger",
-        });
+        notify.error(error instanceof Error ? error.message : t("uploadFailed"));
       }
     }
     setBusy(false);
     if (ok > 0) {
-      toast(t("uploadedToast"), { variant: "success" });
+      notify.success(t("uploadedToast"));
       onUploaded?.();
       router.refresh();
     }

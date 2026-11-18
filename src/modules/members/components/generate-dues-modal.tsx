@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { DateInput, Dialog, Label, Select, Spinner } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -53,9 +54,7 @@ export function GenerateDuesModal({ currentYear }: { currentYear: number }) {
       if (dryRun) {
         setPreview(result.data);
       } else {
-        toast(t("toastCreated", { count: result.data.created ?? 0 }), {
-          variant: "success",
-        });
+        notify.success(t("toastCreated", { count: result.data.created ?? 0 }));
         setOpen(false);
         setPreview(null);
         router.refresh();

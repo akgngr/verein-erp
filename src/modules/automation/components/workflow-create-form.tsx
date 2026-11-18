@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Dialog, Input, Label, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -25,7 +26,7 @@ export function WorkflowCreateForm() {
     startTransition(async () => {
       const response = await createWorkflowAction({ name, description });
       if (!response.ok)
-        return void toast(response.error, { variant: "danger" });
+        return void notify.error(response.error);
       router.push(`/automation/workflows/${response.data.id}?edit=1`);
     });
 

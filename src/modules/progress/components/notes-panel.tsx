@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Input, Label, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -60,10 +61,10 @@ export function NotesPanel({
       const fieldError = result.fieldErrors
         ? Object.values(result.fieldErrors)[0]?.[0]
         : undefined;
-      toast(fieldError ?? result.error, { variant: "danger" });
+      notify.error(fieldError ?? result.error);
       return;
     }
-    toast(t("saved"), { variant: "success" });
+    notify.success(t("saved"));
     setDraft({ date: today, rating: "", text: "", goals: "" });
     router.refresh();
   };
@@ -199,7 +200,7 @@ export function NotesPanel({
                             id: note.id,
                           });
                           if (!result.ok) {
-                            toast(result.error, { variant: "danger" });
+                            notify.error(result.error);
                             return;
                           }
                           router.refresh();

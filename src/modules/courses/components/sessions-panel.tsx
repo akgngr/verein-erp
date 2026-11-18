@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Checkbox, Dialog, Input, Label, Spinner, StatusChip, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -92,7 +93,7 @@ export function SessionsPanel({
       setError(translateMessage(fieldError) ?? result.error);
       return;
     }
-    toast(t("saved"), { variant: "success" });
+    notify.success(t("saved"));
     setDraft(null);
     router.refresh();
   };
@@ -112,9 +113,7 @@ export function SessionsPanel({
       setError(result.error);
       return;
     }
-    toast(t("seriesCreated", { count: result.data.created }), {
-      variant: "success",
-    });
+    notify.success(t("seriesCreated", { count: result.data.created }));
     setSeries(null);
     router.refresh();
   };
@@ -413,7 +412,7 @@ export function SessionsPanel({
           if (!deleting) return;
           const result = await deleteSessionAction({ id: deleting.id });
           if (!result.ok) {
-            toast(result.error, { variant: "danger" });
+            notify.error(result.error);
             return;
           }
           setDeleting(null);

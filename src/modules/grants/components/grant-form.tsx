@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Checkbox, Input, InputGroup, Label, Select, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -214,10 +215,8 @@ export function GrantForm({
                 useNetAmounts: value.useNetAmounts,
               });
               if (!response.ok)
-                return void toast(translate(response.error), {
-                  variant: "danger",
-                });
-              toast(t("saved"), { variant: "success" });
+                return void notify.error(translate(response.error));
+              notify.success(t("saved"));
               if (openAfterSave)
                 router.push(`/muhasebe/hibeler/${response.data.id}`);
               else router.refresh();

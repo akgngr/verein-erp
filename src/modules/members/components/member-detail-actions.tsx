@@ -1,10 +1,6 @@
 "use client";
-import {
-  toast,
-  Link as ActionLink,
-  buttonVariants,
-  Button,
-} from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Link as ActionLink, buttonVariants, Button } from "@heroui/react";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { Pencil, Trash2 } from "lucide-react";
@@ -46,12 +42,10 @@ export function MemberDetailActions({
   const confirmDelete = async () => {
     const result = await deleteMemberAction({ id: memberId });
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
-    toast(t("deleteConfirm.successToast", { membershipNumber }), {
-      variant: "success",
-    });
+    notify.success(t("deleteConfirm.successToast", { membershipNumber }));
     router.push("/uyeler");
     router.refresh();
   };

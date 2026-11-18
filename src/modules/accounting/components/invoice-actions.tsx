@@ -1,5 +1,6 @@
 "use client";
-import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
 import { Checkbox, Description, Dialog, Input, Label, Select, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -72,11 +73,11 @@ export function InvoiceActions({
     amountCents !== null && amountCents > 0 && amountCents < invoice.openCents;
 
   const done = (message: string) => {
-    toast(message, { variant: "success" });
+    notify.success(message);
     router.refresh();
   };
   const fail = (error: string): void => {
-    toast(error, { variant: "danger" });
+    notify.error(error);
   };
   const draft = invoice.status === "DRAFT";
 
@@ -194,7 +195,7 @@ export function InvoiceActions({
           } else {
             const result = await deleteInvoiceDraftAction({ id: invoice.id });
             if (!result.ok) return fail(result.error);
-            toast(t("deleted"), { variant: "success" });
+            notify.success(t("deleted"));
             router.push("/muhasebe/faturalar");
           }
         }}

@@ -1,10 +1,6 @@
 "use client";
-import {
-  toast,
-  Link as ActionLink,
-  buttonVariants,
-  Button,
-} from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Link as ActionLink, buttonVariants, Button } from "@heroui/react";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
@@ -42,10 +38,10 @@ export function DocumentDetailActions({
   const confirmDelete = async () => {
     const result = await deleteDocumentAction({ id: documentId });
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
-    toast(t("deletedToast", { registryNumber }), { variant: "success" });
+    notify.success(t("deletedToast", { registryNumber }));
     router.push("/evrak");
     router.refresh();
   };

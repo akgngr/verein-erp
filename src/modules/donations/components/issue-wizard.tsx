@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Checkbox, Label, Radio, RadioGroup, Spinner } from "@/shared/components/kit";
 
 import { statusTone } from "@/shared/components/ui/status-appearance";
@@ -287,12 +288,10 @@ export function DonationCandidatePicker({
               donationIds: selected,
             });
       if (!result.ok) {
-        toast(result.error, { variant: "danger" });
+        notify.error(result.error);
         return;
       }
-      toast(t("toastIssued", { number: result.data.confirmationNumber }), {
-        variant: "success",
-      });
+      notify.success(t("toastIssued", { number: result.data.confirmationNumber }));
       setIssued({ id: result.data.id, number: result.data.confirmationNumber });
       router.refresh();
     } finally {
@@ -441,12 +440,10 @@ export function FeeCandidateList({
         year,
       });
       if (!result.ok) {
-        toast(result.error, { variant: "danger" });
+        notify.error(result.error);
         return;
       }
-      toast(t("toastIssued", { number: result.data.confirmationNumber }), {
-        variant: "success",
-      });
+      notify.success(t("toastIssued", { number: result.data.confirmationNumber }));
       setIssued({ id: result.data.id, number: result.data.confirmationNumber });
       router.refresh();
     } finally {
@@ -525,13 +522,11 @@ export function BatchIssuePanel({
         recipientIds: selected,
       });
       if (!result.ok) {
-        toast(result.error, { variant: "danger" });
+        notify.error(result.error);
         return;
       }
       const ok = result.data.filter((row) => row.ok).length;
-      toast(t("batchResult", { ok, failed: result.data.length - ok }), {
-        variant: statusTone(ok === result.data.length ? "success" : "warning"),
-      });
+      (ok === result.data.length ? notify.success : notify.warning)(t("batchResult", { ok, failed: result.data.length - ok }));
       setResults(result.data);
       router.refresh();
     } finally {

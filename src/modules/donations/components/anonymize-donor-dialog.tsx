@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Dialog, Input, Label, Spinner, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -45,10 +46,10 @@ export function AnonymizeDonorDialog({
         confirmDonorNumber: confirmText,
       });
       if (!result.ok) {
-        toast(result.error, { variant: "danger" });
+        notify.error(result.error);
         return;
       }
-      toast(labels.toast, { variant: "success" });
+      notify.success(labels.toast);
       setOpen(false);
       router.refresh();
     } finally {

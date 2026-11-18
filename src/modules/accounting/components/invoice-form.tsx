@@ -1,5 +1,6 @@
 "use client";
-import { toast, Button } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -167,7 +168,7 @@ export function InvoiceForm({
       : await createInvoiceAction(values);
     if (!result.ok)
       return setFormError(applyActionResult(result, form.setError));
-    toast(invoice ? t("updated") : t("created"), { variant: "success" });
+    notify.success(invoice ? t("updated") : t("created"));
     if (invoice) return close();
     router.push(`/muhasebe/faturalar/${result.data.id}`);
   });

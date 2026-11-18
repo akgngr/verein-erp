@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Card, Checkbox, Input, Label, Spinner, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -63,7 +64,7 @@ export function PaymentRunCard({
         const result = (await response.json().catch(() => ({}))) as {
           error?: string;
         };
-        toast(result.error ?? t("failed"), { variant: "danger" });
+        notify.error(result.error ?? t("failed"));
         return;
       }
       const name =
@@ -76,7 +77,7 @@ export function PaymentRunCard({
       link.download = name;
       link.click();
       URL.revokeObjectURL(url);
-      toast(t("done", { count: selected.size }), { variant: "success" });
+      notify.success(t("done", { count: selected.size }));
     } finally {
       setBusy(false);
     }

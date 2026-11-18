@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Card, Label, Select, Spinner } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -45,7 +46,7 @@ export function BankImportCard({
     try {
       const content = await readStatement(file);
       if (content.length > BANK_MAX_CHARS) {
-        toast(t("tooLarge"), { variant: "danger" });
+        notify.error(t("tooLarge"));
         return;
       }
       const result = await importBankStatementAction({
@@ -55,17 +56,15 @@ export function BankImportCard({
         content,
       });
       if (!result.ok) {
-        toast(result.error, { variant: "danger" });
+        notify.error(result.error);
         return;
       }
-      toast(
+      notify.success(
         t("done", {
           total: result.data.total,
           created: result.data.created,
           format: result.data.format,
-        }),
-        { variant: "success" },
-      );
+        }));
       setFile(null);
       if (input.current) input.current.value = "";
       router.refresh();

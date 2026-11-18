@@ -1,5 +1,6 @@
 "use client";
-import { toast, Link } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Link } from "@heroui/react";
 
 import { useTranslations } from "next-intl";
 
@@ -84,12 +85,10 @@ export function ActionItemTable({
     });
     setBusyId(null);
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
-    toast(target === "DONE" ? t("doneToast") : t("reopenedToast"), {
-      variant: "success",
-    });
+    notify.success(target === "DONE" ? t("doneToast") : t("reopenedToast"));
     router.refresh();
   };
 

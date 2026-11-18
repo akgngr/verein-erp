@@ -1,5 +1,6 @@
 "use client";
-import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
 import { Spinner } from "@/shared/components/kit";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -44,10 +45,10 @@ export function FilesPanel({
       });
       const result = (await response.json()) as { ok: boolean; error?: string };
       if (!result.ok) {
-        toast(result.error ?? "Yükleme başarısız.", { variant: "danger" });
+        notify.error(result.error ?? "Yükleme başarısız.");
         return;
       }
-      toast(result.ok ? "Belge yüklendi." : "", { variant: "success" });
+      notify.success(result.ok ? "Belge yüklendi." : "");
     } finally {
       setBusy(false);
     }
@@ -57,10 +58,10 @@ export function FilesPanel({
     if (!deleteTarget) return;
     const result = await deleteBookingFileAction({ fileId: deleteTarget.id });
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
-    toast(t("delete") + " ✓", { variant: "success" });
+    notify.success(t("delete") + " ✓");
     setDeleteTarget(null);
   };
 

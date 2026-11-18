@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Description, Dialog, Input, Label, Select, Spinner, Switch, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -108,10 +109,10 @@ export function CategoryFormModal({
             isAsset: direction === "EXPENSE" && isAsset,
           });
       if (!result.ok) {
-        toast(result.error, { variant: "danger" });
+        notify.error(result.error);
         return;
       }
-      toast(t("saved"), { variant: "success" });
+      notify.success(t("saved"));
       onOpenChange(false);
       router.refresh();
     } finally {

@@ -1,5 +1,6 @@
 "use client";
-import { toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";
 
 import { Check } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
@@ -36,12 +37,10 @@ export function LanguageSettingCard({
     startTransition(async () => {
       const result = await onSetLocale({ locale: nextLocale });
       if (!result.ok) {
-        toast(tCommon("languageChangeFailed"), { variant: "danger" });
+        notify.error(tCommon("languageChangeFailed"));
         return;
       }
-      toast(t("switchedTo", { language: LOCALE_LABELS[nextLocale] }), {
-        variant: "success",
-      });
+      notify.success(t("switchedTo", { language: LOCALE_LABELS[nextLocale] }));
       router.refresh();
     });
   };

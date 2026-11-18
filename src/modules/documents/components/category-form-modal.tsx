@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Dialog, FieldError, Input, Label, Spinner, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -45,9 +46,7 @@ export function CategoryFormModal({
       ? await updateCategoryAction({ id: category.id, name })
       : await createCategoryAction({ name });
     if (!result.ok) return result.error;
-    toast(category ? t("updatedToast") : t("createdToast"), {
-      variant: "success",
-    });
+    notify.success(category ? t("updatedToast") : t("createdToast"));
     onClose();
     router.refresh();
     return null;

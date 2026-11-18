@@ -1,5 +1,6 @@
 "use client";
-import { toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";
 import { StatusChip } from "@/shared/components/kit";
 
 import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
@@ -94,20 +95,20 @@ export function UsersTable({
   const handleSetActive = async (user: UserRow, isActive: boolean) => {
     const result = await setUserActiveAction({ id: user.id, isActive });
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
-    toast(isActive ? t("activated") : t("deactivated"), { variant: "success" });
+    notify.success(isActive ? t("activated") : t("deactivated"));
     router.refresh();
   };
 
   const handleDelete = async (user: UserRow) => {
     const result = await deleteUserAction({ id: user.id });
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
-    toast(t("deleted"), { variant: "success" });
+    notify.success(t("deleted"));
     router.refresh();
   };
 

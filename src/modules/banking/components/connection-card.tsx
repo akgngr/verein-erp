@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Label, Select, Spinner, StatusChip } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -80,8 +81,8 @@ export function ConnectionCard({
     setBusy(key);
     const response = await fn();
     setBusy(null);
-    if (!response.ok) return void toast(response.error, { variant: "danger" });
-    if (success) toast(success, { variant: "success" });
+    if (!response.ok) return void notify.error(response.error);
+    if (success) notify.success(success);
     router.refresh();
   };
 
@@ -89,16 +90,15 @@ export function ConnectionCard({
     setBusy("sync");
     const response = await syncBankConnectionAction({ id: connection.id });
     setBusy(null);
-    if (!response.ok) return void toast(response.error, { variant: "danger" });
-    toast(
+    if (!response.ok) return void notify.error(response.error);
+    (response.data.accounts ? notify.success : notify.warning)(
       response.data.accounts
         ? t("synced", {
             created: response.data.created,
             total: response.data.total,
           })
-        : t("syncNoAccounts"),
-      { variant: statusTone(response.data.accounts ? "success" : "warning") },
-    );
+        : t("syncNoAccounts")
+    )
     router.refresh();
   };
 
@@ -261,7 +261,7 @@ export function ConnectionCard({
             id: connection.id,
           });
           if (!response.ok)
-            return void toast(response.error, { variant: "danger" });
+            return void notify.error(response.error);
           router.refresh();
         }}
       />

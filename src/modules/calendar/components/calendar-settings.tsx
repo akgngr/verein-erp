@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Dialog, Input, Label, Spinner, TextField } from "@/shared/components/kit";
 import { CopyValue } from "@/shared/components/ui/copy-value";
 
@@ -88,9 +89,7 @@ export function CalendarSettings({
                       run(async () => {
                         const response = await rotateFeedAction({});
                         if (!response.ok)
-                          return void toast(response.error, {
-                            variant: "danger",
-                          });
+                          return void notify.error(response.error);
                         setFeedUrl(
                           `${window.location.origin}/api/calendar/feed/${response.data.token}.ics`,
                         );
@@ -115,9 +114,7 @@ export function CalendarSettings({
                         run(async () => {
                           const response = await revokeFeedAction({});
                           if (!response.ok)
-                            return void toast(response.error, {
-                              variant: "danger",
-                            });
+                            return void notify.error(response.error);
                           setFeedUrl(null);
                           setFeedActive(false);
                         })
@@ -202,11 +199,9 @@ export function CalendarSettings({
                             color,
                           });
                           if (!response.ok)
-                            return void toast(response.error, {
-                              variant: "danger",
-                            });
+                            return void notify.error(response.error);
                           setName("");
-                          toast(t("sharedCreated"), { variant: "success" });
+                          notify.success(t("sharedCreated"));
                         })
                       }
                       variant={actionVariant("primary", "solid")}

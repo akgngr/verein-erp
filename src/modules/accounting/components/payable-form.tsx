@@ -1,5 +1,6 @@
 "use client";
-import { toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";
 
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -107,7 +108,7 @@ export function PayableForm({
     const result = await savePayableAction(input);
     if (!result.ok)
       return setFormError(applyActionResult(result, form.setError));
-    toast(t("saved"), { variant: "success" });
+    notify.success(t("saved"));
     router.replace(`/muhasebe/gelen-faturalar/${payable.id}`);
     router.refresh();
   });

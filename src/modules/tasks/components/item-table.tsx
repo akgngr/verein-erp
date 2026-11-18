@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { StatusChip, Tooltip } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -101,10 +102,10 @@ export function TasksItemTable({
                   onPress={async () => {
                     const res = await completeTaskAction({ id: row.id });
                     if (!res.ok) {
-                      toast(res.error, { variant: "danger" });
+                      notify.error(res.error);
                       return;
                     }
-                    toast(t("markedDone"), { variant: "success" });
+                    notify.success(t("markedDone"));
                     router.refresh();
                   }}
                   variant={actionVariant("success", "light")}
@@ -232,12 +233,10 @@ export function TasksItemTable({
             onPress: async () => {
               const res = await completeTaskAction({ id: row.id });
               if (!res.ok) {
-                toast(res.error, { variant: "danger" });
+                notify.error(res.error);
                 return;
               }
-              toast(row.status === "DONE" ? t("reopened") : t("markedDone"), {
-                variant: "success",
-              });
+              notify.success(row.status === "DONE" ? t("reopened") : t("markedDone"));
               router.refresh();
             },
             hidden: !canUpdate,
@@ -272,10 +271,10 @@ export function TasksItemTable({
           if (!deleting) return;
           const result = await deleteTaskAction({ id: deleting.id });
           if (!result.ok) {
-            toast(result.error, { variant: "danger" });
+            notify.error(result.error);
             return;
           }
-          toast(t("deleted"), { variant: "success" });
+          notify.success(t("deleted"));
           setDeleting(null);
           router.refresh();
         }}

@@ -1,5 +1,6 @@
 "use client";
-import { toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";
 import { Description, Label, TextArea, TextField } from "@/shared/components/kit";
 
 import { useTranslations } from "next-intl";
@@ -75,7 +76,7 @@ function NoteForm({ documentId }: { documentId: string }) {
       return;
     }
     setBody("");
-    toast(t("addedToast"), { variant: "success" });
+    notify.success(t("addedToast"));
     router.refresh();
   };
 

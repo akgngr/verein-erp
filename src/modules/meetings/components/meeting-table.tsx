@@ -1,5 +1,6 @@
 "use client";
-import { toast, Link } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Link } from "@heroui/react";
 
 import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
 
@@ -67,12 +68,10 @@ export function MeetingTable({
     if (!deleting) return;
     const result = await deleteMeetingAction({ id: deleting.id });
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
-    toast(t("list.deletedToast", { number: deleting.meetingNumber }), {
-      variant: "success",
-    });
+    notify.success(t("list.deletedToast", { number: deleting.meetingNumber }));
     setDeleting(null);
     router.refresh();
   };

@@ -1,5 +1,6 @@
 "use client";
-import { toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";
 import { Checkbox, Label, Separator } from "@/shared/components/kit";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -67,7 +68,7 @@ export function ProfileForm({
       clearIban: false,
       clearTaxNumber: false,
     });
-    toast(t("saved"), { variant: "success" });
+    notify.success(t("saved"));
     router.refresh();
   });
 

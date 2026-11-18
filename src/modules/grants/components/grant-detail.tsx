@@ -1,5 +1,6 @@
 "use client";
-import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
 import { Input, InputGroup, Label, Select, Spinner, StatusChip, Tabs, TextArea, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -60,8 +61,8 @@ export function GrantDetailApp({
     start(async () => {
       const response = await call();
       if (!response.ok)
-        return void toast(translate(response.error), { variant: "danger" });
-      if (success) toast(success, { variant: "success" });
+        return void notify.error(translate(response.error));
+      if (success) notify.success(success);
       router.refresh();
     });
 

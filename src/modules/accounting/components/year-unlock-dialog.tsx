@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Dialog, Label, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -32,10 +33,10 @@ export function YearUnlockDialog({
     try {
       const result = await unlockYearAction({ year, reason });
       if (!result.ok) {
-        toast(result.error, { variant: "danger" });
+        notify.error(result.error);
         return;
       }
-      toast(t("toastUnlocked", { year }), { variant: "success" });
+      notify.success(t("toastUnlocked", { year }));
       onOpenChange(false);
       setReason("");
       router.refresh();

@@ -1,5 +1,6 @@
 "use client";
-import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
 import { Card, ProgressBar, Spinner } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -77,9 +78,7 @@ export function ImportWizard() {
           errors: json.errors,
         });
         setPreview(null);
-        toast(t("toastImported", { count: json.imported ?? 0 }), {
-          variant: "success",
-        });
+        notify.success(t("toastImported", { count: json.imported ?? 0 }));
         router.refresh();
       }
     } catch {

@@ -1,5 +1,6 @@
 "use client";
-import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
 import { Checkbox, Label, StatusChip } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -50,10 +51,10 @@ export function GuardianLinksPanel({
   const done = (result: { ok: boolean; error?: string }, success: string) => {
     setBusy(false);
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return false;
     }
-    toast(success, { variant: "success" });
+    notify.success(success);
     router.refresh();
     return true;
   };

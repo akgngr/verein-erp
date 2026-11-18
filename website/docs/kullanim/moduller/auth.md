@@ -13,7 +13,7 @@ Kullanıcı girişi, oturum yönetimi ve parola güvenliği.
 |---|---|
 | Anahtar | `auth` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.0.6 |
+| Sürüm | 1.0.7 |
 
 ## Sürüm notları
 

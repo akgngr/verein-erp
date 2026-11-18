@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { StatusChip, Tooltip } from "@/shared/components/kit";
 
 import {
@@ -86,7 +87,7 @@ export function DashboardBoard({
     startTransition(async () => {
       const result = await saveDashboardLayoutAction({ cards: next });
       if (!result.ok) {
-        toast(t("saveError"), { description: result.error, variant: "danger" });
+        notify.error(t("saveError"), { description: result.error });
         setOrder(placed.map((card) => card.id));
         return;
       }
@@ -133,7 +134,7 @@ export function DashboardBoard({
     startTransition(async () => {
       const result = await resetDashboardLayoutAction();
       if (!result.ok) {
-        toast(t("saveError"), { description: result.error, variant: "danger" });
+        notify.error(t("saveError"), { description: result.error });
         return;
       }
       router.refresh();

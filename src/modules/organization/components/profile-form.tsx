@@ -1,5 +1,6 @@
 "use client";
-import { toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";
 import { Card, Label, Switch } from "@/shared/components/kit";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -93,7 +94,7 @@ export function ProfileForm({ profile }: { profile: OrganizationProfileData }) {
       setFormError(applyActionResult(result, form.setError));
       return;
     }
-    toast(t("savedToast"), { variant: "success" });
+    notify.success(t("savedToast"));
     router.refresh();
   });
 

@@ -13,7 +13,7 @@ Oluşturulan PDF, Excel, Word, Markdown ve CSV dosyaları; şifreli saklanır.
 |---|---|
 | Anahtar | `exports` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 2.1.9 |
+| Sürüm | 2.1.10 |
 | Sayfalar | `/dosyalar` |
 
 ## Diğer modüllere erişim

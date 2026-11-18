@@ -1,5 +1,6 @@
 "use client";
-import { toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";
 import { Label, Switch } from "@/shared/components/kit";
 
 import {
@@ -104,7 +105,7 @@ export function DonationForm({
         setFormError(applyActionResult(result, form.setError));
         return;
       }
-      toast(t("toastSaved", { number: "" }), { variant: "success" });
+      notify.success(t("toastSaved", { number: "" }));
       // Çekmecede: kapat (adres değişince sunucu verisi tazelenir); sayfada: detaya dön.
       if (closeDrawer) {
         closeDrawer();
@@ -119,9 +120,7 @@ export function DonationForm({
       setFormError(applyActionResult(result, form.setError));
       return;
     }
-    toast(t("toastSaved", { number: result.data.donationNumber }), {
-      variant: "success",
-    });
+    notify.success(t("toastSaved", { number: result.data.donationNumber }));
     router.push(`/bagislar/${result.data.id}`);
     router.refresh();
   });

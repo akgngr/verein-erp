@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { DateInput, Dialog, Input, Label, Spinner, Switch, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -91,7 +92,7 @@ export function DuesPanel({
         setFormError(describeActionError(result));
         return;
       }
-      toast(t("toastAdded"), { variant: "success" });
+      notify.success(t("toastAdded"));
       setAddOpen(false);
       router.refresh();
     } finally {
@@ -115,7 +116,7 @@ export function DuesPanel({
         setFormError(describeActionError(result));
         return;
       }
-      toast(t("toastUpdated"), { variant: "success" });
+      notify.success(t("toastUpdated"));
       setEditTarget(null);
       router.refresh();
     } finally {
@@ -127,10 +128,10 @@ export function DuesPanel({
     if (!deleteTarget) return;
     const result = await deleteDueAction({ id: deleteTarget.id });
     if (!result.ok) {
-      toast(describeActionError(result), { variant: "danger" });
+      notify.error(describeActionError(result));
       return;
     }
-    toast(t("toastDeleted"), { variant: "success" });
+    notify.success(t("toastDeleted"));
     setDeleteTarget(null);
     router.refresh();
   };

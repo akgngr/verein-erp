@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Card, Input, Label, Select, Spinner, StatusChip, TextField } from "@/shared/components/kit";
 import { CopyValue } from "@/shared/components/ui/copy-value";
 
@@ -154,8 +155,8 @@ function ChannelCard({ channel }: { channel: ChannelSettingsView }) {
                 values,
               });
               if (!response.ok)
-                return void toast(response.error, { variant: "danger" });
-              toast(t("settings.saved"), { variant: "success" });
+                return void notify.error(response.error);
+              notify.success(t("settings.saved"));
               router.refresh();
             })
           }

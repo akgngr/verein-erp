@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { DateInput, Description, Dialog, Dropdown, Input, Label, Spinner, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -73,12 +74,10 @@ export function StatusChangeMenu({
     });
     setBusy(false);
     if (!result.ok) {
-      toast(describeActionError(result), { variant: "danger" });
+      notify.error(describeActionError(result));
       return;
     }
-    toast(t("statusChange.updatedToast", { status: t(`status.${status}`) }), {
-      variant: "success",
-    });
+    notify.success(t("statusChange.updatedToast", { status: t(`status.${status}`) }));
     router.refresh();
   };
 

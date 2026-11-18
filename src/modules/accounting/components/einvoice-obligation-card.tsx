@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Card, Description, FieldError, InputGroup, Label, Select, Spinner, TextField } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -64,7 +65,7 @@ export function EInvoiceObligationCard({
         return setError(
           result.fieldErrors?.previousYearRevenue?.[0] ?? result.error,
         );
-      toast(t("saved"), { variant: "success" });
+      notify.success(t("saved"));
       router.refresh();
     } finally {
       setSaving(false);

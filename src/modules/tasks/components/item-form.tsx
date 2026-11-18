@@ -1,5 +1,6 @@
 "use client";
-import { toast, Button } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -82,7 +83,7 @@ export function TasksItemForm({
       setFormError(applyActionResult(result, form.setError));
       return;
     }
-    toast(item ? t("updated") : t("created"), { variant: "success" });
+    notify.success(item ? t("updated") : t("created"));
     close();
   });
 

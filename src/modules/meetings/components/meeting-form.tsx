@@ -1,5 +1,6 @@
 "use client";
-import { toast, Button } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import {
@@ -142,7 +143,7 @@ export function MeetingForm(props: MeetingFormProps) {
         setFormError(applyActionResult(result, form.setError));
         return;
       }
-      toast(t("updatedToast"), { variant: "success" });
+      notify.success(t("updatedToast"));
       // Çekmecede: kapat (adres değişince sunucu verisi tazelenir); sayfada: detaya dön.
       if (closeDrawer) {
         closeDrawer();
@@ -158,9 +159,7 @@ export function MeetingForm(props: MeetingFormProps) {
       setFormError(applyActionResult(result, form.setError));
       return;
     }
-    toast(t("createdToast", { number: result.data.meetingNumber }), {
-      variant: "success",
-    });
+    notify.success(t("createdToast", { number: result.data.meetingNumber }));
     router.push(`/toplantilar/${result.data.id}?sekme=gundem`);
     router.refresh();
   });

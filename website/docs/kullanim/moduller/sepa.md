@@ -13,7 +13,7 @@ Aidat ve kurs ücretleri için SEPA-Lastschrift (pain.008) tahsilatı.
 |---|---|
 | Anahtar | `sepa` |
 | Tür | Resmî modül |
-| Sürüm | 1.0.3 |
+| Sürüm | 1.0.4 |
 | Gerektirir | [Muhasebe](./accounting) |
 | Önerir | [Üyeler](./members), [Kurslar](./courses) |
 

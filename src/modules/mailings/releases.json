@@ -2,6 +2,22 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "2.4.8",
+      "date": "2026-11-17",
+      "appVersion": "0.41.0",
+      "title": {
+        "tr": "Merkezi bildirimler",
+        "de": "Zentrale Benachrichtigungen"
+      },
+      "changes": [
+        {
+          "type": "internal",
+          "tr": "Bildirimler ortak notify API'sine geçirildi.",
+          "de": "Benachrichtigungen nutzen die gemeinsame notify-API."
+        }
+      ]
+    },
+    {
       "version": "2.4.7",
       "date": "2026-11-17",
       "title": {

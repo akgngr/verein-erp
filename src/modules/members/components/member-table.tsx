@@ -1,5 +1,6 @@
 "use client";
-import { toast, Link } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Link } from "@heroui/react";
 
 import { Eye, Pencil, Trash2, UserCheck, UserMinus } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -80,15 +81,13 @@ export function MemberTable({
     if (!deleting) return;
     const result = await deleteMemberAction({ id: deleting.id });
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
-    toast(
+    notify.success(
       t("deleteConfirm.successToast", {
         membershipNumber: deleting.membershipNumber,
-      }),
-      { variant: "success" },
-    );
+      }));
     setDeleting(null);
     router.refresh();
   };
@@ -104,17 +103,15 @@ export function MemberTable({
         status,
       });
       if (!result.ok) {
-        toast(result.error, { variant: "danger" });
+        notify.error(result.error);
         return;
       }
 
-      toast(
+      notify.success(
         t("bulk.success", {
           updated: result.data.updated,
           skipped: result.data.skipped,
-        }),
-        { variant: "success" },
-      );
+        }));
       setSelection({ type: "explicit", ids: [] });
       router.refresh();
     } finally {

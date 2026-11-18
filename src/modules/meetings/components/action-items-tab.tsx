@@ -1,5 +1,6 @@
 "use client";
-import { toast, Button } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
@@ -52,12 +53,10 @@ export function ActionItemsTab({
       status: target,
     });
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
-    toast(target === "DONE" ? t("doneToast") : t("reopenedToast"), {
-      variant: "success",
-    });
+    notify.success(target === "DONE" ? t("doneToast") : t("reopenedToast"));
     router.refresh();
   };
 
@@ -65,10 +64,10 @@ export function ActionItemsTab({
     if (!deleting) return;
     const result = await deleteActionItemAction({ id: deleting.id });
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
-    toast(t("deletedToast"), { variant: "success" });
+    notify.success(t("deletedToast"));
     setDeleting(null);
     router.refresh();
   };

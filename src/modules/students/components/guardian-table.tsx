@@ -1,5 +1,6 @@
 "use client";
-import { toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";
 
 import { FileSignature, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
@@ -144,10 +145,10 @@ export function GuardianTable({
           if (!deleting) return;
           const result = await deleteGuardianAction({ id: deleting.id });
           if (!result.ok) {
-            toast(result.error, { variant: "danger" });
+            notify.error(result.error);
             return;
           }
-          toast(t("deleted"), { variant: "success" });
+          notify.success(t("deleted"));
           setDeleting(null);
           router.refresh();
         }}

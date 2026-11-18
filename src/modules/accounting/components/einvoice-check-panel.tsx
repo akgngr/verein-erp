@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Spinner, StatusChip } from "@/shared/components/kit";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -85,9 +86,7 @@ export function EInvoiceCheckPanel({
                   id: invoiceId,
                 });
                 if (!response.ok)
-                  return void toast(translate(response.error), {
-                    variant: "danger",
-                  });
+                  return void notify.error(translate(response.error));
                 setKosit(response.data);
               })
             }

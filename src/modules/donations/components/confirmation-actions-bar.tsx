@@ -1,5 +1,6 @@
 "use client";
-import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
 import { Dialog, Label, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -43,10 +44,10 @@ export function ConfirmationActionsBar({
     try {
       const result = await cancelConfirmationAction({ id, reason });
       if (!result.ok) {
-        toast(result.error, { variant: "danger" });
+        notify.error(result.error);
         return;
       }
-      toast(t("detail.cancelled"), { variant: "success" });
+      notify.success(t("detail.cancelled"));
       setCancelOpen(false);
       setReason("");
       router.refresh();
@@ -60,12 +61,10 @@ export function ConfirmationActionsBar({
     try {
       const result = await reissueConfirmationAction({ id });
       if (!result.ok) {
-        toast(result.error, { variant: "danger" });
+        notify.error(result.error);
         return;
       }
-      toast(t("detail.reissued", { number: result.data.confirmationNumber }), {
-        variant: "success",
-      });
+      notify.success(t("detail.reissued", { number: result.data.confirmationNumber }));
       router.push(`/bagislar/bildirimler/${result.data.id}`);
     } finally {
       setBusy(false);

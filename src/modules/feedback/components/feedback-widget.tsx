@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Dialog, Input, Label, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -153,10 +154,10 @@ export function FeedbackWidget() {
         error?: string;
       };
       if (!result.ok) {
-        toast(result.error ?? t("failed"), { variant: "danger" });
+        notify.error(result.error ?? t("failed"));
         return;
       }
-      toast(t("sent", { number: result.number ?? 0 }), { variant: "success" });
+      notify.success(t("sent", { number: result.number ?? 0 }));
       if (!muted) beep();
       setOpen(false);
       setTitle("");

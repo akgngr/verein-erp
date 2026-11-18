@@ -1,5 +1,6 @@
 "use client";
-import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
 import { StatusChip, Table } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -65,10 +66,10 @@ export function FilesTable({
     const result = await deleteAction({ id: pending.id });
     setPending(null);
     if (!result.ok) {
-      toast(result.error, { variant: "danger" });
+      notify.error(result.error);
       return;
     }
-    toast(t("deleted"), { variant: "success" });
+    notify.success(t("deleted"));
     router.refresh();
   };
 

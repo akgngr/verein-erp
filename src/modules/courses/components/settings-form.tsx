@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Spinner } from "@/shared/components/kit";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -127,10 +128,10 @@ export function CoursesSettingsForm({
           });
           setBusy(false);
           if (!result.ok) {
-            toast(result.error, { variant: "danger" });
+            notify.error(result.error);
             return;
           }
-          toast(t("saved"), { variant: "success" });
+          notify.success(t("saved"));
           router.refresh();
         }}
         variant={actionVariant("primary", "solid")}

@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Dialog, Label, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -45,10 +46,10 @@ export function CancelDonationModal({
     try {
       const result = await cancelDonationAction({ id: donationId, reason });
       if (!result.ok) {
-        toast(result.error, { variant: "danger" });
+        notify.error(result.error);
         return;
       }
-      toast(toastTitle, { variant: "success" });
+      notify.success(toastTitle);
       onOpenChange(false);
       setReason("");
       router.refresh();

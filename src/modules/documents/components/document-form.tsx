@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Spinner } from "@/shared/components/kit";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -151,12 +152,10 @@ export function DocumentForm(props: DocumentFormProps) {
         error?: string;
       } | null;
       if (!result?.ok || !result.analysis)
-        return void toast(result?.error ?? tAnalyze("failed"), {
-          variant: "danger",
-        });
+        return void notify.error(result?.error ?? tAnalyze("failed"));
       setAnalysis(result.analysis);
     } catch {
-      toast(tAnalyze("failed"), { variant: "danger" });
+      notify.error(tAnalyze("failed"));
     } finally {
       setAnalyzingId(null);
     }
@@ -229,9 +228,7 @@ export function DocumentForm(props: DocumentFormProps) {
         setFormError(applyActionResult(result, form.setError));
         return;
       }
-      toast(t("updatedToast", { registryNumber: result.data.registryNumber }), {
-        variant: "success",
-      });
+      notify.success(t("updatedToast", { registryNumber: result.data.registryNumber }));
       // Çekmecede: kapat (adres değişince sunucu verisi tazelenir); sayfada: detaya dön.
       if (closeDrawer) {
         closeDrawer();
@@ -265,11 +262,9 @@ export function DocumentForm(props: DocumentFormProps) {
     }
 
     if (failed === 0) {
-      toast(t("savedToast", { registryNumber }), { variant: "success" });
+      notify.success(t("savedToast", { registryNumber }));
     } else {
-      toast(t("savedWithUploadErrorToast", { count: failed }), {
-        variant: "warning",
-      });
+      notify.warning(t("savedWithUploadErrorToast", { count: failed }));
     }
 
     // (3) Başarılıysa detay sayfasına yönlendir.
@@ -485,7 +480,7 @@ export function DocumentForm(props: DocumentFormProps) {
                   shouldValidate: true,
                 });
             }
-            toast(tAnalyze("applied"), { variant: "success" });
+            notify.success(tAnalyze("applied"));
           }}
           onClose={() => setAnalysis(null)}
         />

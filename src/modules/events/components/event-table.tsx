@@ -1,6 +1,7 @@
 "use client";
 
-import { toast } from "@heroui/react";
+import { notify } from "@/shared/components/ui/notify";
+
 import { StatusChip } from "@/shared/components/kit";
 
 import { useTranslations, useLocale } from "next-intl";
@@ -64,13 +65,11 @@ export function EventTable({
     if (!deletingEvent) return;
     const res = await deleteEventAction(deletingEvent.id);
     if (res.success) {
-      toast(tTable("deletedToast", { title: deletingEvent.title }), {
-        variant: "success",
-      });
+      notify.success(tTable("deletedToast", { title: deletingEvent.title }));
       setDeletingEvent(null);
       router.refresh();
     } else {
-      toast(res.error ?? tTable("deleteFailed"), { variant: "danger" });
+      notify.error(res.error ?? tTable("deleteFailed"));
     }
   };
 

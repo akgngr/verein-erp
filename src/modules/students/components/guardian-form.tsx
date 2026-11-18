@@ -1,5 +1,6 @@
 "use client";
-import { Button, toast } from "@heroui/react";
+
+import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
 import { Checkbox, CheckboxGroup, Description, Label } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -99,16 +100,14 @@ export function GuardianForm({ guardian }: { guardian?: GuardianRow }) {
         setFormError(applyActionResult(result, form.setError));
         return;
       }
-      toast(t("updated"), { variant: "success" });
+      notify.success(t("updated"));
     } else {
       const result = await createGuardianAction(values);
       if (!result.ok) {
         setFormError(applyActionResult(result, form.setError));
         return;
       }
-      toast(t("created", { number: result.data.debtorNumber }), {
-        variant: "success",
-      });
+      notify.success(t("created", { number: result.data.debtorNumber }));
     }
     close();
   });

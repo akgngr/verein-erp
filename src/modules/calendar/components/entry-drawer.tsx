@@ -1,8 +1,9 @@
 "use client";
 
+import { notify } from "@/shared/components/ui/notify";
 import { useDrawerPlacement } from "@/shared/hooks/use-media-query";
 import { drawerDialogClass, SheetHandle } from "@/shared/components/forms/form-drawer";
-import { Button, buttonVariants, Link as ActionLink, toast } from "@heroui/react";
+import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
 import { Checkbox, Description, Input, Label, Select, Sheet, Spinner, TextArea, TextField } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
@@ -133,8 +134,8 @@ function EntryDetail({
     startTransition(async () => {
       const response = await convertToEventAction({ id: item.entryId });
       if (!response.ok)
-        return void toast(response.error, { variant: "danger" });
-      toast(t("converted"), { variant: "success" });
+        return void notify.error(response.error);
+      notify.success(t("converted"));
       onChanged();
     });
 
@@ -233,7 +234,7 @@ function EntryDetail({
         onConfirm={async () => {
           const response = await deleteEntryAction({ id: item.entryId });
           if (!response.ok)
-            return void toast(response.error, { variant: "danger" });
+            return void notify.error(response.error);
           onChanged();
         }}
       />
@@ -323,8 +324,8 @@ function EntryForm({
             : null,
       });
       if (!response.ok)
-        return void toast(response.error, { variant: "danger" });
-      toast(t("saved"), { variant: "success" });
+        return void notify.error(response.error);
+      notify.success(t("saved"));
       onSaved();
     });
 
