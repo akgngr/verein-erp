@@ -569,3 +569,13 @@ Before a user is deleted, the system calls every module's `onUserDeleted(userId)
 - `tests/shared/user-deletion.test.ts` enforces this decision and the hook for every such table.
 
 **Internal refactor notes:** `type: internal` remains in the release chain but is hidden from user-facing app and website notes. Module version increments are still required.
+
+## Personal secretary contribution (`secretary.ts`)
+
+A module contributes to the user's morning briefing with `export const secretary = defineModuleSecretary({ module: "<module>", providers: [...] })` in `src/modules/<module>/secretary.ts` (`@/shared/secretary/define`). `pnpm module:sync` collects these into `src/secretary-registry.ts`; the secretary module never imports other modules.
+
+- Each provider: `key`, `permission` (the module's view permission; not called without it), `collect(context) → BriefingItem[]`.
+- Item id `"<module>:<kind>[:<sourceId>]"`; `href` only to the module's own pages; title translated via `context.t`.
+- At most 20 items within 3 s; only the module's own data, within what the user can already see.
+- Test with `validateModuleSecretary` / `validateBriefingItem`. Details: `docs/specs/PERSONAL_SECRETARY.md` §3.1.
+
