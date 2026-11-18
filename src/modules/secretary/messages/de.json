@@ -20,5 +20,8 @@
   "empty": {
     "title": "Sekretariat wird vorbereitet",
     "description": "Morgenübersicht und Vorschläge erscheinen bald hier."
+  },
+  "access": {
+    "system": "Liest, welche Module aktiv und freigegeben sind; die Übersicht zeigt nur deren Beiträge."
   }
 }

@@ -13,8 +13,16 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 |---|---|
 | Anahtar | `secretary` |
 | Tür | Eklenti |
-| Sürüm | 0.2.0 |
+| Sürüm | 0.3.0 |
 | Sayfalar | `/sekreter` |
+
+## Diğer modüllere erişim
+
+Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yonetim/modul-yonetimi)).
+
+| Modül | İşlem | Gerekçe |
+|---|---|---|
+| [Modül Yönetimi](./system) | okuma | Hangi modüllerin açık ve onaylı olduğunu okur; özet yalnız bunların katkılarını gösterir. |
 
 ## Varsayılan yetkiler
 
@@ -25,6 +33,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Sekreter | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — |
 
 ## Sürüm notları
+
+### 0.3.0 — Sabah özeti toplayıcısı
+
+_2026-11-18_
+
+- **Yeni:** Modüllerin sekretere verdiği katkılar tek bir özette toplanır. Yalnız yetkili olunan ve açık modüller görünür; hata veren veya yavaş bir modül özeti durdurmaz. Kapatılan ve ertelenen öğeler gizlenir.
 
 ### 0.2.0 — Sekreter veri modeli
 

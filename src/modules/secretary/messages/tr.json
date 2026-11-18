@@ -20,5 +20,8 @@
   "empty": {
     "title": "Sekreter hazırlanıyor",
     "description": "Sabah özeti ve öneriler yakında burada görünecek."
+  },
+  "access": {
+    "system": "Hangi modüllerin açık ve onaylı olduğunu okur; özet yalnız bunların katkılarını gösterir."
   }
 }
