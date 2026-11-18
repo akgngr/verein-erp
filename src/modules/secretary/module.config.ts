@@ -17,6 +17,9 @@ export const moduleConfig: ModuleConfig = {
   description: "Kişisel sekreter: sabah özeti ve onaylı öneriler.",
   category: "EXTENSION",
   hasSchema: true,
+  access: [
+    { module: "system", operations: ["read"] }, // kullanılabilir modüller (özet süzmesi)
+  ],
   nav: [
     {
       href: "/sekreter",
