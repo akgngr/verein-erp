@@ -16,6 +16,14 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 | Sürüm | 0.3.0 |
 | Sayfalar | `/sekreter` |
 
+## Diğer modüllere erişim
+
+Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yonetim/modul-yonetimi)).
+
+| Modül | İşlem | Gerekçe |
+|---|---|---|
+| [Modül Yönetimi](./system) | okuma | Hangi modüllerin açık ve onaylı olduğunu okur; özet yalnız bunların katkılarını gösterir. |
+
 ## Varsayılan yetkiler
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
