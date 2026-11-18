@@ -13,7 +13,7 @@ Aidat ve kurs ücretleri için SEPA-Lastschrift (pain.008) tahsilatı.
 |---|---|
 | Anahtar | `sepa` |
 | Tür | Resmî modül |
-| Sürüm | 1.0.4 |
+| Sürüm | 1.0.5 |
 | Gerektirir | [Muhasebe](./accounting) |
 | Önerir | [Üyeler](./members), [Kurslar](./courses) |
 
@@ -39,6 +39,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | SEPA otomatik ödeme | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | — | görüntüleme, oluşturma, düzenleme, silme | görüntüleme | — | — |
 
 ## Sürüm notları
+
+### 1.0.5 — Arayüz altyapısı
+
+_2026-11-18_
+
+- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
 ### 1.0.3 — Ortak UI bileşenleri (iç değişiklik)
 

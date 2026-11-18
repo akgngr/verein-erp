@@ -13,7 +13,7 @@ Test kullanıcılarının hata ve önerilerini toplar.
 |---|---|
 | Anahtar | `feedback` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.3 |
+| Sürüm | 1.1.4 |
 | Sayfalar | `/geri-bildirim` |
 
 ## Diğer modüllere erişim
@@ -33,6 +33,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Geri bildirim | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma | görüntüleme, oluşturma | görüntüleme, oluşturma | görüntüleme, oluşturma | görüntüleme, oluşturma | görüntüleme, oluşturma |
 
 ## Sürüm notları
+
+### 1.1.4 — Arayüz altyapısı
+
+_2026-11-18_
+
+- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
 ### 1.1.2 — Ortak UI bileşenleri (iç değişiklik)
 

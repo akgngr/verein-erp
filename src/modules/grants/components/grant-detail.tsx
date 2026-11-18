@@ -1,7 +1,7 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
-import { Input, InputGroup, Label, Select, Spinner, StatusChip, Tabs, TextArea, TextField } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { Input, InputGroup, Label, Select, Spinner, StatusChip, Tabs, TextArea, TextField, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -403,7 +403,7 @@ export function GrantDetailApp({
               href={`/api/grants/${grant.id}/report-pdf`}
               target="_blank"
               rel="noopener"
-              className={buttonVariants({
+              className={buttonClassName({
                 variant: actionVariant("primary", "flat"),
               })}
             >

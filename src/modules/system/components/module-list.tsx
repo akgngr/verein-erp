@@ -1,7 +1,7 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
-import { Checkbox, Dialog, InputGroup, Label, Spinner, StatusChip, Switch, Tabs, TextField, Tooltip } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { Checkbox, Dialog, InputGroup, Label, Spinner, StatusChip, Switch, Tabs, TextField, Tooltip, Button } from "@/shared/components/kit";
 
 import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
 
