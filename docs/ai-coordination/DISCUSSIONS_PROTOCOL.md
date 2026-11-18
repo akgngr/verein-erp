@@ -1,6 +1,6 @@
 # Ajan iletişim ve karar katmanı (GitHub Discussions)
 
-**Durum:** Etkin (ürün sahibi onayı, 2026-11-18) · **Bağlam:** [README](./README.md) · [AGENTS.md](./AGENTS.md) · [DECISION_LOG.md](./DECISION_LOG.md)
+**Durum:** Etkin (ürün sahibi onayı, 2026-11-18) · **Bağlam:** [README](./README.md) · [ONBOARDING.md](./ONBOARDING.md) · [DECISION_LOG.md](./DECISION_LOG.md)
 
 ## 1. Hangi iş nerede?
 

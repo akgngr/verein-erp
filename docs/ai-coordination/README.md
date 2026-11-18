@@ -1,6 +1,6 @@
 # AI koordinasyon protokolü (çok ajanlı)
 
-> Yeni ajan mısın? Önce [AGENTS.md](./AGENTS.md). Tartışma ve kararlar: [DISCUSSIONS_PROTOCOL.md](./DISCUSSIONS_PROTOCOL.md) · [DECISION_LOG.md](./DECISION_LOG.md).
+> Yeni ajan mısın? Önce [ONBOARDING.md](./ONBOARDING.md). Tartışma ve kararlar: [DISCUSSIONS_PROTOCOL.md](./DISCUSSIONS_PROTOCOL.md) · [DECISION_LOG.md](./DECISION_LOG.md).
 
 **Amaç:** İki AI ajanının aynı depoda, birbirinin işini bozmadan, yalnızca GitHub üzerinden asenkron çalışması. ChatGPT'nin webhook ucu yoktur; her şey **Issue, PR ve bu klasördeki Markdown** üzerinden yürür.
 
