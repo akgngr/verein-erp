@@ -2,6 +2,8 @@
 
 Durum: taslak · Hedef: KOBİ ve serbest çalışanlar için önerici asistan
 
+> **Not (2026-11-18):** Güncel fikir, gerekçe ve kararlar `docs/ideas/PERSONAL_SECRETARY_BRAINSTORM.md` dosyasında toplandı. Bu şartname P0 kararlarından (özellikle `AiProposal` ADR'si) sonra o belgeden yeniden yazılacaktır. Aşağıdaki `AiProposal` alan listesi mevcut tabloyla birebir değildir; bkz. ideas belgesi §4.1.
+
 ## 1. Temel ilkeler
 1. **Öneri, onay, kayıt.** AI hiçbir kaydı kendiliğinden oluşturmaz; her öneri kullanıcı onayıyla yazılır.
 2. **Veri politikası:** K0/K1 modele gitmez; yalnız `AI_TOOL_POLICY`'de beyanlı K2/K3 araçlar + takma adlandırma.
