@@ -36,11 +36,61 @@ Lisans modeli kesinleşene kadar kod, ayrılabilecek şekilde yazılır:
 
 MVP: **S0–S2**. Ardından S3. S4 ve S5 lisans kararından sonra `secretary-pro` olarak.
 
-## 4. İş bölümü (Claude ↔ UI Platform ajanı)
+## 3.1 Ortak sözleşme (T0.3'te koda dökülür; ChatGPT bu tiplere göre çalışır)
+
+```ts
+// src/shared/secretary/define.ts
+export type BriefingSeverity = "info" | "warning" | "danger";
+
+export type BriefingItem = {
+  /** Stabil kimlik: "<modül>:<tür>[:<kaynakId>]" — kapat/ertele durumu bu kimliğe bağlanır. */
+  id: string;
+  module: string;
+  kind: string;
+  severity: BriefingSeverity;
+  /** Çevrilmiş kısa başlık (sağlayıcı kendi i18n ad alanından üretir). */
+  title: string;
+  detail?: string;
+  /** ISO tarih veya tarih-saat; sıralama ve "bugün/yaklaşan" ayrımı için. */
+  dueAt?: string;
+  count?: number;
+  amountCents?: number;
+  /** Kaynağa giden uygulama içi bağlantı (yalnız bu modülün sayfaları). */
+  href: string;
+};
+
+export type SecretaryContext = {
+  user: { id: string; role: Role };
+  now: Date; // Europe/Berlin "bugün" hesabı için
+  t: (key: string, values?: Record<string, string | number>) => string; // modül ad alanında
+};
+
+export type SecretaryProvider = {
+  key: string;
+  permission: PermissionRequirement; // görüntüleme yetkisi yoksa sağlayıcı çağrılmaz
+  collect: (context: SecretaryContext) => Promise<BriefingItem[]>;
+};
+
+export type ModuleSecretary = { module: string; providers: SecretaryProvider[] };
+export const defineModuleSecretary = (definition: ModuleSecretary): ModuleSecretary => definition;
+
+// Toplayıcı (T1.1) çıktısı
+export type Briefing = {
+  generatedAt: string;
+  sections: { module: string; items: BriefingItem[] }[]; // kapatılmış/ertelenmiş öğeler süzülmüş
+  failures: string[]; // hata veren sağlayıcı anahtarları (içerik yok)
+};
+```
+
+Kurallar: Sağlayıcı yalnız kendi modülünün verisini okur ve sayfalarına bağlantı verir. Kişisel veriyi `title`/`detail` içinde yalnız kullanıcının zaten görebildiği ölçüde kullanır. Sağlayıcı başına 3 sn zaman aşımı; en fazla 20 öğe.
+
+## 4. İş bölümü (Claude ↔ ChatGPT)
+
+Koordinasyon protokolü: [`docs/ai-coordination/README.md`](../ai-coordination/README.md). Her görev bir GitHub Issue'dur (`agent:claude` / `agent:chatgpt`); güncel görev panosu [`docs/ai-coordination/secretary/TASKS.md`](../ai-coordination/secretary/TASKS.md).
 
 **Dosya sahipliği ilkesi:** Aynı dosyayı iki ajan aynı anda değiştirmez.
 - Claude: arka uç, şema, sözleşme, servisler, eylemler, otomasyon, testler.
-- UI Platform ajanı: `components/`, `views/`, kartlar, sayfalar ve UI metinleri.
+- ChatGPT: `components/`, `views/`, kartlar, sayfalar ve UI metinleri.
 - Paylaşılan iki dosya için kural:
   - `messages/tr.json` ve `de.json`: Claude `secretary.*` altında arka uç anahtarlarını, UI ajanı `secretary.ui.*` altında kendi anahtarlarını ekler. Çakışmada sonra merge eden yeniden uyarlar.
   - `module.config.ts` sürümü: sonra merge eden bir sonraki patch sürümüne geçer ve `releases.json`'a not ekler.
@@ -53,19 +103,19 @@ MVP: **S0–S2**. Ardından S3. S4 ve S5 lisans kararından sonra `secretary-pro
 | T0.4 Tablolar: `SecretaryPreference`, `SecretaryItemState` + migration | S0 | **Claude** | T0.2 |
 | T1.1 Toplayıcı servis (`getBriefing`): paralel, zaman aşımı, sağlayıcı hatası izole, yetki süzmesi | S1 | **Claude** | T0.3 |
 | T1.2 Sağlayıcılar: **accounting, documents, members** | S1 | **Claude** | T0.3 |
-| T1.3 Sağlayıcılar: **tasks, calendar, meetings** | S1 | **UI Platform ajanı** | T0.3 |
-| T1.4 "Bugün" yüzey kartı (`surfaces`) + sekreter sayfası (özet listesi, boş durum, kaynağa git) | S1 | **UI Platform ajanı** | T1.1 (API sözleşmesi) |
+| T1.3 Sağlayıcılar: **tasks, calendar, meetings** | S1 | **ChatGPT** | T0.3 |
+| T1.4 "Bugün" yüzey kartı (`surfaces`) + sekreter sayfası (özet listesi, boş durum, kaynağa git) | S1 | **ChatGPT** | T1.1 (API sözleşmesi) |
 | T1.5 Kapat/ertele eylemleri + `SecretaryItemState` | S1 | **Claude** | T0.4 |
-| T1.6 Kapat/ertele UI, mobil/a11y/tema smoke testleri | S1 | **UI Platform ajanı** | T1.5 |
+| T1.6 Kapat/ertele UI, mobil/a11y/tema smoke testleri | S1 | **ChatGPT** | T1.5 |
 | T2.1 Kural kaynaklı öneri üretimi + onay yolu (hedef modül eylemi) + audit | S2 | **Claude** | T0.1 |
-| T2.2 Onay kutusu UI (önizleme, düzenle, onayla/reddet/ertele) | S2 | **UI Platform ajanı** | T2.1 |
+| T2.2 Onay kutusu UI (önizleme, düzenle, onayla/reddet/ertele) | S2 | **ChatGPT** | T2.1 |
 | T3.1 Otomasyon: günlük özet işi, sessiz saatler, yaz/kış saati | S3 | **Claude** | T1.1 |
-| T3.2 Tercih ekranı + özet e-posta şablonu | S3 | **UI Platform ajanı** | T3.1 |
+| T3.2 Tercih ekranı + özet e-posta şablonu | S3 | **ChatGPT** | T3.1 |
 | T4–T5 Pro özellikleri | S4–S5 | Lisans kararından sonra yeniden dağıtılır | Lisans ADR'si |
 
 **Sözleşme önce:** T1.1'in TypeScript tipleri (`BriefingItem`, `BriefingSection`) T0.3 PR'ında yayımlanır. UI ajanı bu tiplere göre çalışabilir, arka ucun bitmesini beklemez.
 
-### UI Platform ajanı için planlama komutu
+### ChatGPT için planlama komutu (Issue C0)
 
 > **GÖREV — Sekreter iş bölümünün onayı ve takvimi:** `docs/specs/PERSONAL_SECRETARY.md` (bu belge) ile `docs/ideas/PERSONAL_SECRETARY_BRAINSTORM.md` dosyasını oku. Sana atanan T1.3, T1.4, T1.6, T2.2 ve T3.2 görevleri için:
 > 1. Sıra, tahmini PR sayısı ve bağımlılık takvimini çıkar.
