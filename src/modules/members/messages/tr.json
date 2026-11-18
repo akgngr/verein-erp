@@ -652,5 +652,8 @@
     "activate": "Aktif yap",
     "passivate": "Pasif yap",
     "success": "{updated} üye güncellendi, {skipped} kayıt atlandı."
+  },
+  "secretary": {
+    "overdueDues": "{count} aidatın vadesi geçti"
   }
 }

@@ -13,7 +13,7 @@ slug: /kullanim/moduller/members
 |---|---|
 | Anahtar | `members` |
 | Tür | Resmî modül |
-| Sürüm | 1.14.5 |
+| Sürüm | 1.15.0 |
 | Sayfalar | `/uyeler`, `/uyeler/aidat`, `/uyeler/turler`, `/toplu-eposta?kaynak=members:members`, `/uyeler/ice-aktar` |
 | Önerir | [e-Sign](./online-forms) |
 
@@ -44,6 +44,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `create_dataset` · `create_dues_dataset` · `get_member_profile` · `get_member_statistics` · `list_dues_by_person` · `query_dataset`
 
 ## Sürüm notları
+
+### 1.15.0 — Sekreter özetine katkı
+
+_2026-11-18_
+
+- **Yeni:** Kişisel sekreterin sabah özetinde vadesi geçmiş aidat sayısı görünür (yalnız aidat yetkisi olanlara, üye adı olmadan).
 
 ### 1.14.4 — Ortak UI bileşenleri (iç değişiklik)
 
@@ -87,10 +93,4 @@ _2026-11-15_
 
 - **Güvenlik:** Asistan araçları v2 veri sözleşmesine taşındı: modele giden her alan açıkça listelenir ve veri sınıfı bildirilir. Toplam ve kurumsal veriler denetimli bulut modunda da kullanılabilir; serbest kişisel içerik yalnız yerel modelde kalır.
 
-### 1.13.0 — Asistan: üye profili (takma adlı)
-
-_2026-11-15_
-
-- **Yeni:** Asistan ad parçasıyla ya da konuşmadaki takma adla üye bulabilir: durum, üyelik türü, giriş/çıkış yılı ve aidatlar. Buluta ad, iletişim, adres, doğum tarihi gitmez; kişi [[K3]] gibi görünür, size gerçek adıyla gösterilir. Bulutta yalnız "takma adlı kişi verisi" açıkken.
-
-Daha eski 24 herkese açık sürüm notu.
+Daha eski 25 herkese açık sürüm notu.
