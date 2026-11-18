@@ -86,4 +86,4 @@ _2026-11-05_
 - **İyileştirme:** Güvenlik testleri HTTP isteği içinde çalıştırılmak yerine Automation worker kuyruğuna alındı.
 - **Düzeltme:** Automation modül bağımlılığı ve yönetici erişim onayı tanımlandı.
 
-Daha eski 1 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/security-monitor/releases.json)
+Daha eski 1 herkese açık sürüm notu.

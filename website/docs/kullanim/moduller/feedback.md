@@ -13,7 +13,7 @@ Test kullanıcılarının hata ve önerilerini toplar.
 |---|---|
 | Anahtar | `feedback` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.2 |
+| Sürüm | 1.1.3 |
 | Sayfalar | `/geri-bildirim` |
 
 ## Diğer modüllere erişim

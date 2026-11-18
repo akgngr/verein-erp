@@ -13,7 +13,7 @@ slug: /kullanim/moduller/members
 |---|---|
 | Anahtar | `members` |
 | Tür | Resmî modül |
-| Sürüm | 1.14.4 |
+| Sürüm | 1.14.5 |
 | Sayfalar | `/uyeler`, `/uyeler/aidat`, `/uyeler/turler`, `/toplu-eposta?kaynak=members:members`, `/uyeler/ice-aktar` |
 | Önerir | [e-Sign](./online-forms) |
 
@@ -93,4 +93,4 @@ _2026-11-15_
 
 - **Yeni:** Asistan ad parçasıyla ya da konuşmadaki takma adla üye bulabilir: durum, üyelik türü, giriş/çıkış yılı ve aidatlar. Buluta ad, iletişim, adres, doğum tarihi gitmez; kişi [[K3]] gibi görünür, size gerçek adıyla gösterilir. Bulutta yalnız "takma adlı kişi verisi" açıkken.
 
-Daha eski 24 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/members/releases.json)
+Daha eski 24 herkese açık sürüm notu.

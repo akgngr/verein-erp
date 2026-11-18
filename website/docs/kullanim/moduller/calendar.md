@@ -13,7 +13,7 @@ Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve son tarihler tek gö
 |---|---|
 | Anahtar | `calendar` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.8 |
+| Sürüm | 1.3.9 |
 | Sayfalar | `/calendar`, `/calendar/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -90,4 +90,4 @@ _2026-11-15_
 
 - **Düzeltme:** AI listeleri sayfalama ve eksiksizlik bilgisi taşır; aşırı büyük takvim aralıkları kontrollü reddedilir.
 
-Daha eski 7 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/calendar/releases.json)
+Daha eski 7 herkese açık sürüm notu.

@@ -13,7 +13,7 @@ slug: /kullanim/moduller/mailings
 |---|---|
 | Anahtar | `mailings` |
 | Tür | Resmî modül |
-| Sürüm | 2.4.7 |
+| Sürüm | 2.4.8 |
 | Sayfalar | `/toplu-eposta`, `/toplu-eposta/ayarlar` |
 | Gerektirir | [E-posta Altyapısı](./mail), [Otomasyon](./automation) |
 
@@ -92,4 +92,4 @@ _2026-11-07_
 
 - **Yeni:** Tek kişiye işlem mesajı gönderimi (ör. form bağlantısı)
 
-Daha eski 14 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/mailings/releases.json)
+Daha eski 14 herkese açık sürüm notu.

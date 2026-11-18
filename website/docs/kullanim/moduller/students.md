@@ -13,7 +13,7 @@ Kurs ve Nachhilfe öğrencileri, veliler ve DATEV uyumlu borçlu (Debitor) kayı
 |---|---|
 | Anahtar | `students` |
 | Tür | Resmî modül |
-| Sürüm | 1.4.8 |
+| Sürüm | 1.4.9 |
 | Sayfalar | `/ogrenciler`, `/ogrenciler/veliler`, `/ogrenciler/ayarlar` |
 | Önerir | [e-Sign](./online-forms) |
 
@@ -90,4 +90,4 @@ _2026-11-07_
 
 - **İyileştirme:** Öğrenci sayfasında e-Sign belgelerine bağlantı; veli listesinden e-Sign formu gönderme
 
-Daha eski 6 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/students/releases.json)
+Daha eski 6 herkese açık sürüm notu.

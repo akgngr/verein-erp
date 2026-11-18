@@ -13,7 +13,7 @@ Hibe ve proje fonları: finansman planı, ödemeler ve Verwendungsnachweis (kull
 |---|---|
 | Anahtar | `grants` |
 | Tür | Resmî modül |
-| Sürüm | 1.0.7 |
+| Sürüm | 1.0.8 |
 | Gerektirir | [Muhasebe](./accounting) |
 
 ## Diğer modüllere erişim

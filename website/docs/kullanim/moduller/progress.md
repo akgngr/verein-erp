@@ -13,7 +13,7 @@ Kurs öğrencilerinin yoklaması, sınav ve notları, gelişim notları ve veli 
 |---|---|
 | Anahtar | `progress` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.3 |
+| Sürüm | 1.1.4 |
 | Sayfalar | `/ogrenci-takibi` |
 | Gerektirir | [Kurslar](./courses) |
 
