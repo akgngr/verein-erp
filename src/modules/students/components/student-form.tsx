@@ -1,6 +1,6 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
+import { notify } from "@/shared/components/ui/notify";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -31,6 +31,7 @@ import { STUDENT_STATUS_VALUES } from "../constants";
 import { studentSchema, type StudentInput } from "../schemas/student";
 import type { StudentDetail } from "../types";
 import { formatDateOnly } from "../utils";
+import { Button } from "@/shared/components/kit";
 
 /** Öğrenci oluşturma/düzenleme formu (sağ çekmece). Veliler detay sayfasında bağlanır. */
 export function StudentForm({ student }: { student?: StudentDetail }) {

@@ -13,7 +13,7 @@ Hibe ve proje fonları: finansman planı, ödemeler ve Verwendungsnachweis (kull
 |---|---|
 | Anahtar | `grants` |
 | Tür | Resmî modül |
-| Sürüm | 1.0.8 |
+| Sürüm | 1.0.9 |
 | Gerektirir | [Muhasebe](./accounting) |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_grant_overview`
 
 ## Sürüm notları
+
+### 1.0.9 — Arayüz altyapısı
+
+_2026-11-18_
+
+- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
 ### 1.0.7 — Ortak UI bileşenleri (iç değişiklik)
 
@@ -83,8 +89,4 @@ _2026-11-07_
 
 - **İyileştirme:** Muhasebe altına taşındı (/muhasebe/hibeler)
 
-### 1.0.0 — İlk sürüm
-
-_2026-11-07_
-
-- **Yeni:** Hibeler: finansman planı (kategori eşlemeli), ödemeler, plan/gerçekleşen ve %20 sapma uyarısı, belge listesi, faaliyet raporu ve Verwendungsnachweis PDF'i; rapor tarihleri takvimde.
+Daha eski 1 herkese açık sürüm notu.

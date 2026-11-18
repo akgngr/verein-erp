@@ -45,24 +45,13 @@ test("business modules do not create a parallel shared DataTable implementation"
   assert.deepEqual(forbidden, []);
 });
 
-/**
- * W6 ratchet: the number of module files that import @heroui/react directly may only go down.
- * Lower W6_CEILING in the same PR that migrates files, and regenerate the tracked inventory
- * (`pnpm ui:inventory` → docs/ui/HEROUI_INVENTORY.md). Target: 0, then the ESLint rule becomes an error.
- */
-const W6_CEILING = 30;
-
-test("direct HeroUI dependency in modules may only shrink during adapter migration", () => {
+/** W6 locked (#281): no module file may import @heroui/react directly; use @/shared/components/kit. */
+test("modules have zero direct HeroUI imports (W6 lock)", () => {
   const inventory = collectInventory(ROOT);
-  assert.ok(
-    inventory.directImportFiles <= W6_CEILING,
-    "Direct @heroui/react imports increased to " + inventory.directImportFiles +
-      " (ceiling " + W6_CEILING + "); import from @/shared/components/kit instead.",
-  );
-  assert.equal(
-    inventory.directImportFiles,
-    W6_CEILING,
-    "Migration progress detected: lower W6_CEILING to " + inventory.directImportFiles + " and run `pnpm ui:inventory`.",
+  assert.deepEqual(
+    inventory.files.map((file) => file.path),
+    [],
+    "Import UI primitives from @/shared/components/kit instead of @heroui/react.",
   );
 });
 

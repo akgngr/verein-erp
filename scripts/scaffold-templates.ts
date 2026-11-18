@@ -428,13 +428,14 @@ export async function bulkSet${pascal}ItemStatusAction(
   files["components/item-form.tsx"] = `"use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { addToast, Button } from "@heroui/react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { applyActionResult } from "@/shared/components/forms/action-result";
+import { Button } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
 import { FormSurface, useFormDrawerClose } from "@/shared/components/forms/form-drawer";
 import { FormErrorSummary } from "@/shared/components/forms/form-error-summary";
 import { FormInput } from "@/shared/components/forms/form-input";
@@ -472,7 +473,7 @@ export function ${pascal}ItemForm({ item }: { item?: ${pascal}Row }) {
       setFormError(applyActionResult(result, form.setError));
       return;
     }
-    addToast({ title: item ? t("updated") : t("created"), color: "success" });
+    notify.success(item ? t("updated") : t("created"));
     close();
   });
 
@@ -485,7 +486,7 @@ export function ${pascal}ItemForm({ item }: { item?: ${pascal}Row }) {
         <FormErrorSummary message={formError} />
         <div className="flex items-center gap-2">
           <SubmitButton isSubmitting={form.formState.isSubmitting}>{t("save")}</SubmitButton>
-          <Button variant="light" onPress={close}>
+          <Button variant="tertiary" onPress={close}>
             {t("cancel")}
           </Button>
         </div>
@@ -497,13 +498,14 @@ export function ${pascal}ItemForm({ item }: { item?: ${pascal}Row }) {
 
   files["components/item-table.tsx"] = `"use client";
 
-import { addToast, Chip } from "@heroui/react";
 import { CircleCheck, CircleOff, Pencil, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 
 import { DataTable } from "@/shared/components/data-table/data-table";
+import { StatusChip } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
 import type { DataTableColumn } from "@/shared/components/data-table/types";
 import type { DataTableSelection } from "@/shared/data-table/selection-contract";
 import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
@@ -547,13 +549,10 @@ export function ${pascal}ItemTable({
     try {
       const result = await bulkSet${pascal}ItemStatusAction({ selection: currentSelection, isActive });
       if (!result.ok) {
-        addToast({ title: result.error, color: "danger" });
+        notify.error(result.error);
         return;
       }
-      addToast({
-        title: t("bulkSuccess", { updated: result.data.updated, skipped: result.data.skipped }),
-        color: "success",
-      });
+      notify.success(t("bulkSuccess", { updated: result.data.updated, skipped: result.data.skipped }));
       setSelection({ type: "explicit", ids: [] });
       router.refresh();
     } finally {
@@ -567,9 +566,9 @@ export function ${pascal}ItemTable({
       key: "isActive",
       label: t("status"),
       render: (row) => (
-        <Chip size="sm" variant="flat" color={row.isActive ? "success" : "default"}>
+        <StatusChip tone={row.isActive ? "success" : "default"}>
           {row.isActive ? t("active") : t("passive")}
-        </Chip>
+        </StatusChip>
       ),
     },
     { key: "updatedAt", label: t("updatedAt"), sortable: true, render: (row) => formatDateTime(row.updatedAt) },
@@ -656,10 +655,10 @@ export function ${pascal}ItemTable({
           if (!deleting) return;
           const result = await delete${pascal}ItemAction({ id: deleting.id });
           if (!result.ok) {
-            addToast({ title: result.error, color: "danger" });
+            notify.error(result.error);
             return;
           }
-          addToast({ title: t("deleted"), color: "success" });
+          notify.success(t("deleted"));
           setDeleting(null);
           router.refresh();
         }}

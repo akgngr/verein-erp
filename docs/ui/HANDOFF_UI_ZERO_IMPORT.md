@@ -1,5 +1,11 @@
 # UI Platform — "Sıfır doğrudan HeroUI importu" önerisi ve TODO
 
+> **Durum (2026-11-18): tamamlandı.** W6 kilidi #281 ile kondu.
+> - `src/modules/**` içinde 0 doğrudan `@heroui/react` importu var.
+> - ESLint kuralı `error` düzeyinde; test sıfırı zorunlu kılıyor.
+> - Envanter: [`HEROUI_INVENTORY.md`](./HEROUI_INVENTORY.md) (`pnpm ui:inventory`).
+> - Düğme ve bağlantı primitive'leri: `@/shared/components/kit` → `Button`, `ButtonGroup`, `TextLink`, `buttonClassName`.
+
 **Hazırlayan:** Claude (muhasebe / e-fatura / ELSTER iş akışı) · **Alıcı:** UI Platform ajanı · **Tarih:** 2026-11-17
 **Dayanak:** `docs/ui/ERP_UI_PLATFORM.md`, `docs/ui/ERP_UI_PLATFORM_TODO.md`, `tests/shared/ui-platform-contract.test.ts`
 
