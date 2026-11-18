@@ -1,7 +1,7 @@
 import "server-only";
 
 import { getDb } from "@/shared/db";
-import { getUserProfiles } from "@/modules/users/server";
+import { getUserProfiles } from "@/modules/auth/server";
 import { defineModuleSecretary, type BriefingItem, type SecretaryContext } from "@/shared/secretary/define";
 import { findMemberIdsByEmail } from "@/modules/members/server";
 import { resolveTaskAssigneeIds } from "./queries/assignee-identity";
