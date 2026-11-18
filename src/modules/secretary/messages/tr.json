@@ -20,5 +20,13 @@
   "empty": {
     "title": "Sekreter hazırlanıyor",
     "description": "Sabah özeti ve öneriler yakında burada görünecek."
+  },
+  "validation": {
+    "itemId": "Geçersiz öğe kimliği.",
+    "until": "Geçersiz erteleme zamanı."
+  },
+  "errors": {
+    "snoozeInPast": "Erteleme zamanı gelecekte olmalı.",
+    "snoozeTooLong": "En fazla 90 gün ertelenebilir."
   }
 }

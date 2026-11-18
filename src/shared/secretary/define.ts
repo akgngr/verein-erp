@@ -58,7 +58,8 @@ export type Briefing = {
 /** Sağlayıcı başına sınırlar (T1.1 toplayıcısı uygular). */
 export const SECRETARY_LIMITS = { providerTimeoutMs: 3000, maxItemsPerProvider: 20 } as const;
 
-const ITEM_ID = /^[a-z][a-z0-9-]*:[a-z][a-z0-9-]*(?::[A-Za-z0-9_-]{1,64})?$/;
+/** BriefingItem.id biçimi: "<modül>:<tür>[:<kaynakId>]". */
+export const BRIEFING_ITEM_ID_PATTERN = /^[a-z][a-z0-9-]*:[a-z][a-z0-9-]*(?::[A-Za-z0-9_-]{1,64})?$/;
 
 /**
  * Sözleşme denetimi (kayıt testinde ve toplayıcıda kullanılır). Hata kodları döner, boş = geçerli.
@@ -80,7 +81,7 @@ export function validateModuleSecretary(moduleKey: string, definition: ModuleSec
 
 export function validateBriefingItem(moduleKey: string, item: BriefingItem): string[] {
   const errors: string[] = [];
-  if (!ITEM_ID.test(item.id) || !item.id.startsWith(`${moduleKey}:`)) errors.push(`item-id:${item.id}`);
+  if (!BRIEFING_ITEM_ID_PATTERN.test(item.id) || !item.id.startsWith(`${moduleKey}:`)) errors.push(`item-id:${item.id}`);
   if (item.module !== moduleKey) errors.push(`item-module:${item.id}`);
   if (!item.href.startsWith("/") || item.href.startsWith("//")) errors.push(`item-href:${item.id}`);
   if (!item.title.trim()) errors.push(`item-title:${item.id}`);
