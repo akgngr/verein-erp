@@ -13,7 +13,7 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 |---|---|
 | Anahtar | `secretary` |
 | Tür | Eklenti |
-| Sürüm | 0.1.0 |
+| Sürüm | 0.2.0 |
 | Sayfalar | `/sekreter` |
 
 ## Varsayılan yetkiler
@@ -25,6 +25,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Sekreter | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — |
 
 ## Sürüm notları
+
+### 0.2.0 — Sekreter veri modeli
+
+_2026-11-18_
+
+- **Yeni:** Sekreter tercihleri, özet öğelerini kapatma/erteleme durumu ve öneriler için tablolar eklendi. Kullanıcı silindiğinde bu kayıtlar da silinir.
 
 ### 0.1.0 — Sekreter modülü iskeleti
 

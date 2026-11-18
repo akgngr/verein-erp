@@ -12,11 +12,11 @@ import { secretaryPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "secretary",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "0.1.0",
+  version: "0.2.0",
   label: "Sekreter",
   description: "Kişisel sekreter: sabah özeti ve onaylı öneriler.",
   category: "EXTENSION",
-  hasSchema: false,
+  hasSchema: true,
   nav: [
     {
       href: "/sekreter",

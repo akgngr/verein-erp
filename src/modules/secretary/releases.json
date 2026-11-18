@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.2.0",
+      "date": "2026-11-18",
+      "title": {
+        "tr": "Sekreter veri modeli",
+        "de": "Datenmodell des Sekretariats"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Sekreter tercihleri, özet öğelerini kapatma/erteleme durumu ve öneriler için tablolar eklendi. Kullanıcı silindiğinde bu kayıtlar da silinir.",
+          "de": "Tabellen für Einstellungen, Ausblenden/Zurückstellen von Übersichtseinträgen und Vorschläge hinzugefügt. Beim Löschen eines Benutzers werden diese Daten ebenfalls gelöscht."
+        }
+      ]
+    },
+    {
       "version": "0.1.0",
       "date": "2026-11-18",
       "title": {
