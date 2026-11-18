@@ -1,7 +1,7 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
-import { Checkbox, Label, Radio, RadioGroup, Spinner } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { Checkbox, Label, Radio, RadioGroup, Spinner, Button } from "@/shared/components/kit";
 
 import { statusTone } from "@/shared/components/ui/status-appearance";
 

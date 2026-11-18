@@ -1,6 +1,6 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Link as ActionLink, buttonVariants, Button } from "@heroui/react";
+import { notify } from "@/shared/components/ui/notify";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
@@ -17,6 +17,7 @@ import { MAX_FILES_PER_MEETING } from "../constants";
 import { getExtension } from "@/shared/files/validation";
 import { INLINE_PREVIEW_EXTENSIONS } from "@/shared/files/file-types";
 import type { MeetingFileItem } from "../types";
+import { TextLink as ActionLink, buttonClassName, Button } from "@/shared/components/kit";
 
 function formatSize(size: number): string {
   if (size >= 1024 * 1024) return `${(size / (1024 * 1024)).toFixed(1)} MB`;
@@ -187,7 +188,7 @@ export function FilesTab({
                 <span className="flex shrink-0 items-center gap-1">
                   <ActionLink
                     href={`/api/meetings/files/${file.id}`}
-                    className={buttonVariants({
+                    className={buttonClassName({
                       variant: actionVariant("default", "flat"),
                       size: "sm",
                     })}
@@ -200,7 +201,7 @@ export function FilesTab({
                       href={`/api/meetings/files/${file.id}?inline=1`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className={buttonVariants({
+                      className={buttonClassName({
                         variant: actionVariant("default", "light"),
                         size: "sm",
                       })}

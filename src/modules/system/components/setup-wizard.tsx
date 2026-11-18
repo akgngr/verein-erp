@@ -1,7 +1,7 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
-import { Card, Checkbox, Label, Select, Spinner, StatusChip, Switch } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { Card, Checkbox, Label, Select, Spinner, StatusChip, Switch, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -295,7 +295,7 @@ export function SetupWizard({
             <div className="flex flex-wrap gap-2 pt-2">
               <ActionLink
                 href="/ayarlar/dernek"
-                className={buttonVariants({
+                className={buttonClassName({
                   variant: actionVariant("primary", "solid"),
                   size: "sm",
                 })}
@@ -306,7 +306,7 @@ export function SetupWizard({
               {selected.has("accounting") ? (
                 <ActionLink
                   href="/muhasebe/ayarlar"
-                  className={buttonVariants({
+                  className={buttonClassName({
                     variant: actionVariant("default", "flat"),
                     size: "sm",
                   })}
@@ -317,7 +317,7 @@ export function SetupWizard({
               {result.needsApproval.length ? (
                 <ActionLink
                   href="/ayarlar/moduller"
-                  className={buttonVariants({
+                  className={buttonClassName({
                     variant: actionVariant("default", "flat"),
                     size: "sm",
                   })}
@@ -327,7 +327,7 @@ export function SetupWizard({
               ) : null}
               <ActionLink
                 href="/"
-                className={buttonVariants({
+                className={buttonClassName({
                   variant: actionVariant("default", "light"),
                   size: "sm",
                 })}

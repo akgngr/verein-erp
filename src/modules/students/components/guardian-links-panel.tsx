@@ -1,7 +1,7 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
-import { Checkbox, Label, StatusChip } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { Checkbox, Label, StatusChip, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -148,7 +148,7 @@ export function GuardianLinksPanel({
                 ) : null}
                 <ActionLink
                   href={`/ogrenciler/veliler?duzenle=${guardian.guardianId}`}
-                  className={buttonVariants({
+                  className={buttonClassName({
                     variant: actionVariant("default", "light"),
                     size: "sm",
                   })}
@@ -237,7 +237,7 @@ export function GuardianLinksPanel({
           </div>
           <ActionLink
             href="/ogrenciler/veliler?yeni"
-            className={buttonVariants({
+            className={buttonClassName({
               variant: actionVariant("default", "light"),
               size: "sm",
               className: "self-start",

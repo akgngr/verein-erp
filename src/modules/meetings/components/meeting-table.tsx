@@ -1,6 +1,6 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Link } from "@heroui/react";
+import { notify } from "@/shared/components/ui/notify";
 
 import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
 
@@ -24,6 +24,7 @@ import { deleteMeetingAction } from "../actions/meeting-actions";
 import { TITLE_TRUNCATE_LENGTH } from "../constants";
 import { StatusBadge } from "./status-badge";
 import { TypeBadge } from "./type-badge";
+import { TextLink } from "@/shared/components/kit";
 
 /**
  * Toplantı listesi tablosu (7.1).
@@ -83,12 +84,12 @@ export function MeetingTable({
       sortable: true,
       width: 140,
       render: (row) => (
-        <Link
+        <TextLink
           href={`/toplantilar/${row.id}`}
           className={["font-medium", "text-sm"].filter(Boolean).join(" ")}
         >
           {row.meetingNumber}
-        </Link>
+        </TextLink>
       ),
     },
     {
@@ -148,12 +149,12 @@ export function MeetingTable({
       width: 100,
       render: (row) =>
         row.openActionItemCount > 0 ? (
-          <Link
+          <TextLink
             href={`/toplantilar/${row.id}?sekme=gorevler`}
             className={["text-warning", "text-sm"].filter(Boolean).join(" ")}
           >
             {row.openActionItemCount}
-          </Link>
+          </TextLink>
         ) : (
           0
         ),

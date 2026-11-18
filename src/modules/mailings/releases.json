@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "2.4.9",
+      "date": "2026-11-18",
+      "title": {
+        "tr": "Arayüz altyapısı",
+        "de": "UI-Infrastruktur"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.",
+          "de": "Schaltflächen und Links nutzen jetzt das gemeinsame UI-Kit. Aussehen und Verhalten bleiben unverändert."
+        }
+      ]
+    },
+    {
       "version": "2.4.8",
       "date": "2026-11-17",
       "appVersion": "0.41.0",

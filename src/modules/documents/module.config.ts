@@ -9,7 +9,7 @@ import {
 export const moduleConfig: ModuleConfig = {
   key: "documents",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.9.0",
+  version: "1.9.1",
   dependencies: {
     "tesseract.js": "7.0.0",
     "@tesseract.js-data/deu": "1.0.0",

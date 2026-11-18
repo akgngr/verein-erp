@@ -1,7 +1,7 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
-import { Checkbox, Dialog, Label, Spinner, StatusChip } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { Checkbox, Dialog, Label, Spinner, StatusChip, Button } from "@/shared/components/kit";
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";

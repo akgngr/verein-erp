@@ -13,7 +13,7 @@ Banka hesaplarını lisanslı PSD2 sağlayıcısı üzerinden bağlar, hareketle
 |---|---|
 | Anahtar | `banking` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.4 |
+| Sürüm | 1.1.5 |
 | Sayfalar | `/ayarlar/banka-baglantisi` |
 | Gerektirir | [Muhasebe](./accounting) |
 
@@ -34,6 +34,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Banka bağlantısı | görüntüleme, düzenleme, onay | görüntüleme | — | görüntüleme, düzenleme, onay | görüntüleme | — | — |
 
 ## Sürüm notları
+
+### 1.1.5 — Arayüz altyapısı
+
+_2026-11-18_
+
+- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
 ### 1.1.3 — Ortak UI bileşenleri (iç değişiklik)
 

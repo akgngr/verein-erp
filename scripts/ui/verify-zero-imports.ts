@@ -1,6 +1,5 @@
 /**
- * Final W6 acceptance command; safe to add before the migration is complete.
- * Do not wire into CI until W3/W4/W5 waves have merged.
+ * W6 acceptance command (locked in #281; also enforced by tests/shared/ui-platform-contract.test.ts and ESLint).
  *
  *   pnpm exec tsx scripts/ui/verify-zero-imports.ts
  */

@@ -13,7 +13,7 @@ Görev ve iş takibi yönetimi.
 |---|---|
 | Anahtar | `tasks` |
 | Tür | Eklenti |
-| Sürüm | 1.3.6 |
+| Sürüm | 1.3.7 |
 | Sayfalar | `/tasks`, `/tasks/bana-atananlar` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `list_open_tasks` · `propose_complete_task` · `propose_delete_task` · `propose_task`
 
 ## Sürüm notları
+
+### 1.3.7 — Arayüz altyapısı
+
+_2026-11-18_
+
+- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
 ### 1.3.5 — Ortak UI bileşenleri (iç değişiklik)
 
@@ -83,10 +89,4 @@ _2026-11-15_
 
 - **Güvenlik:** AI kişi eşleştirmesi yalnız mevcut açık kayıt bağlantılarını kullanır; ad/e-posta tahmini ve veli-çocuk kimlik birleştirmesi reddedilir.
 
-### 1.2.2 — AI v2 takip paketi
-
-_2026-11-15_
-
-- **İyileştirme:** AI iş akışında sayfalama, sorgu sözleşmesi veya worker iptal kontrolü güçlendirildi.
-
-Daha eski 4 herkese açık sürüm notu.
+Daha eski 5 herkese açık sürüm notu.

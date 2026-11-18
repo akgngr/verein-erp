@@ -1,7 +1,7 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
-import { Description, Input, Label, Select, Spinner, StatusChip, TextField } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { Description, Input, Label, Select, Spinner, StatusChip, TextField, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -388,7 +388,7 @@ export function SepaRunDetail({
         {can.download && run.status !== "CANCELLED" ? (
           <ActionLink
             href={`/api/sepa/${run.id}/xml`}
-            className={buttonVariants({
+            className={buttonClassName({
               variant: actionVariant("primary", "flat"),
             })}
           >

@@ -1,6 +1,6 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
+import { notify } from "@/shared/components/ui/notify";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import {
@@ -35,6 +35,7 @@ import { MEETING_TYPE_VALUES } from "../constants";
 import { meetingCreateSchema, meetingUpdateSchema } from "../schemas/meeting";
 import type { CopySourceOption } from "../types";
 import { berlinToday } from "../utils";
+import { Button } from "@/shared/components/kit";
 
 type MeetingTypeKey = "BOARD" | "GENERAL_ASSEMBLY" | "COMMITTEE" | "OTHER";
 
