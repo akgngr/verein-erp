@@ -604,5 +604,9 @@
   },
   "campaign": {
     "announce": "Katılımcılara duyur"
+  },
+  "secretary": {
+    "upcoming": "Önümüzdeki 3 günde {count} toplantı",
+    "missingAgenda": "Gündemi eksik {count} toplantı"
   }
 }
