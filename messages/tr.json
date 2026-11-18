@@ -3133,6 +3133,11 @@
         "confirm": "Kaydı ekle",
         "done": "Takvim kaydı eklendi."
       }
+    },
+    "secretary": {
+      "today": "Bugün {count} takvim kaydı",
+      "tomorrow": "Yarın {count} takvim kaydı",
+      "collisions": "Çakışan {count} takvim aralığı"
     }
   },
   "calendar-apple": {
@@ -6673,6 +6678,10 @@
     },
     "campaign": {
       "announce": "Katılımcılara duyur"
+    },
+    "secretary": {
+      "upcoming": "Önümüzdeki 3 günde {count} toplantı",
+      "missingAgenda": "Gündemi eksik {count} toplantı"
     }
   },
   "members": {
@@ -8626,7 +8635,8 @@
     },
     "access": {
       "members": "Görev sorumlusu seçmek için üye listesini okur.",
-      "meetings": "Görevi bir toplantıya bağlamak için toplantı listesini okur."
+      "meetings": "Görevi bir toplantıya bağlamak için toplantı listesini okur.",
+      "users": "Sekreter özeti için etkin kullanıcının görev eşleştirmesinde kullanılacak hesap e-posta adresini okur."
     },
     "ai": {
       "create": {
@@ -8680,6 +8690,10 @@
     },
     "calendar": {
       "due": "Görev bitiş tarihleri"
+    },
+    "secretary": {
+      "overdue": "{count} gecikmiş görev",
+      "dueToday": "Bugün tamamlanması gereken {count} görev"
     }
   },
   "users": {

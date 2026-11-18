@@ -203,5 +203,10 @@
       "confirm": "Eintrag anlegen",
       "done": "Kalendereintrag angelegt."
     }
+  },
+  "secretary": {
+    "today": "Heute {count} Kalendereinträge",
+    "tomorrow": "Morgen {count} Kalendereinträge",
+    "collisions": "{count} Zeitüberschneidungen im Kalender"
   }
 }
