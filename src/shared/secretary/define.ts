@@ -1,3 +1,5 @@
+import type { z } from "zod";
+
 import type { Role } from "../roles";
 import type { PermissionRequirement } from "../types/module";
 
@@ -24,6 +26,13 @@ export type BriefingItem = {
   amountCents?: number;
   /** Kaynağa giden uygulama içi bağlantı (yalnız sağlayıcının kendi modülünün sayfaları). */
   href: string;
+  /**
+   * Yalnız sunucu: kural kaynaklı öneri (ADR 0005). Toplayıcı bunu şifreli bir `SecretaryProposal`a
+   * çevirir ve istemciye yalnız `proposalId` gider; payload tarayıcıya ulaşmaz.
+   */
+  suggestion?: { action: string; payload: unknown };
+  /** Bu öğe için bekleyen öneri (onay kutusu). */
+  proposalId?: string;
 };
 
 export type SecretaryContext = {
@@ -42,9 +51,35 @@ export type SecretaryProvider = {
   collect: (context: SecretaryContext) => Promise<BriefingItem[]>;
 };
 
-export type ModuleSecretary = { module: string; providers: SecretaryProvider[] };
+/** "external": e-posta, ödeme, beyan gibi dışa etkili eylem — UI ek onay ister, sunucu da zorunlu kılar. */
+export type SecretaryActionRisk = "internal" | "external";
+
+export type SecretaryActionContext = { user: { id: string; role: Role }; now: Date };
+
+/**
+ * Onaylanan önerinin çalıştırdığı hedef modül eylemi (ADR 0005). Modülün mevcut servis veya
+ * eylemini kullanır; yetki çalışma anında yeniden denetlenir. Hiçbir eylem otomatik onaylanmaz.
+ */
+export type SecretaryAction<P = unknown> = {
+  /** Modül içinde benzersiz anahtar. */
+  key: string;
+  permission: PermissionRequirement;
+  risk: SecretaryActionRisk;
+  schema: z.ZodType<P>;
+  /** Önizleme: kullanıcının zaten görebildiği kısa metin (modül ad alanında çevrilmiş). */
+  preview: (payload: P, context: SecretaryContext) => Promise<{ title: string; detail?: string }>;
+  /** Kaynağın şimdiki durumu; öneri sonrası değiştiyse öneri bayattır. null: kaynak artık yok. */
+  snapshot?: (payload: P) => Promise<unknown>;
+  execute: (payload: P, context: SecretaryActionContext) => Promise<{ href?: string }>;
+};
+
+export type ModuleSecretary = { module: string; providers: SecretaryProvider[]; actions?: SecretaryAction[] };
 
 export const defineModuleSecretary = (definition: ModuleSecretary): ModuleSecretary => definition;
+
+/** Tip güvenli eylem tanımı (payload tipi şemadan). */
+export const defineSecretaryAction = <P>(action: SecretaryAction<P>): SecretaryAction =>
+  action as unknown as SecretaryAction;
 
 /** Toplayıcı (T1.1) çıktısı. */
 export type Briefing = {
@@ -76,6 +111,13 @@ export function validateModuleSecretary(moduleKey: string, definition: ModuleSec
     if (keys.has(provider.key)) errors.push(`provider-duplicate:${provider.key}`);
     keys.add(provider.key);
   }
+  const actions = new Set<string>();
+  for (const action of definition.actions ?? []) {
+    if (!/^[a-z][a-zA-Z0-9-]*$/.test(action.key)) errors.push(`action-key:${action.key}`);
+    if (actions.has(action.key)) errors.push(`action-duplicate:${action.key}`);
+    if (action.risk !== "internal" && action.risk !== "external") errors.push(`action-risk:${action.key}`);
+    actions.add(action.key);
+  }
   return errors;
 }
 
@@ -86,5 +128,6 @@ export function validateBriefingItem(moduleKey: string, item: BriefingItem): str
   if (!item.href.startsWith("/") || item.href.startsWith("//")) errors.push(`item-href:${item.id}`);
   if (!item.title.trim()) errors.push(`item-title:${item.id}`);
   if (item.dueAt !== undefined && Number.isNaN(Date.parse(item.dueAt))) errors.push(`item-due:${item.id}`);
+  if (item.proposalId !== undefined) errors.push(`item-proposal:${item.id}`); // yalnız toplayıcı atar
   return errors;
 }
