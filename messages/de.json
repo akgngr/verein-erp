@@ -3133,6 +3133,11 @@
         "confirm": "Eintrag anlegen",
         "done": "Kalendereintrag angelegt."
       }
+    },
+    "secretary": {
+      "today": "Heute {count} Kalendereinträge",
+      "tomorrow": "Morgen {count} Kalendereinträge",
+      "collisions": "{count} Zeitüberschneidungen im Kalender"
     }
   },
   "calendar-apple": {
@@ -6673,6 +6678,10 @@
     },
     "campaign": {
       "announce": "Teilnehmende benachrichtigen"
+    },
+    "secretary": {
+      "upcoming": "{count} Sitzungen in den nächsten 3 Tagen",
+      "missingAgenda": "{count} Sitzungen ohne Tagesordnung"
     }
   },
   "members": {
@@ -8635,7 +8644,8 @@
     },
     "access": {
       "members": "Liest die Mitgliederliste, um Verantwortliche auszuwählen.",
-      "meetings": "Liest die Sitzungsliste, um Aufgaben einer Sitzung zuzuordnen."
+      "meetings": "Liest die Sitzungsliste, um Aufgaben einer Sitzung zuzuordnen.",
+      "users": "Liest die Kontoe-Mail-Adresse des aktiven Benutzers für die Zuordnung eigener Aufgaben in der Sekretariatsübersicht."
     },
     "ai": {
       "create": {
@@ -8689,6 +8699,10 @@
     },
     "calendar": {
       "due": "Aufgaben-Fälligkeiten"
+    },
+    "secretary": {
+      "overdue": "{count} überfällige Aufgaben",
+      "dueToday": "{count} heute fällige Aufgaben"
     }
   },
   "users": {
