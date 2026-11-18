@@ -90,4 +90,4 @@ _2026-11-15_
 
 - **Düzeltme:** AI listeleri sayfalama ve eksiksizlik bilgisi taşır; aşırı büyük takvim aralıkları kontrollü reddedilir.
 
-Daha eski 7 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/calendar/releases.json)
+Daha eski 7 herkese açık sürüm notu.

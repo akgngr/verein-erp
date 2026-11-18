@@ -93,4 +93,4 @@ _2026-11-15_
 
 - **Yeni:** Asistan ad parçasıyla ya da konuşmadaki takma adla üye bulabilir: durum, üyelik türü, giriş/çıkış yılı ve aidatlar. Buluta ad, iletişim, adres, doğum tarihi gitmez; kişi [[K3]] gibi görünür, size gerçek adıyla gösterilir. Bulutta yalnız "takma adlı kişi verisi" açıkken.
 
-Daha eski 24 sürüm: [releases.json](https://github.com/akgngr/verein-erp/blob/main/src/modules/members/releases.json)
+Daha eski 24 herkese açık sürüm notu.
