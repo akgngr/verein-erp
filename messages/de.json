@@ -7870,6 +7870,15 @@
         "stale": "Der Ursprungsdatensatz hat sich geändert; der Vorschlag ist ungültig. Bitte prüfen Sie den Datensatz.",
         "failed": "Die Aktion konnte nicht abgeschlossen werden. Sie wird nicht wiederholt; bitte prüfen Sie den Datensatz."
       }
+    },
+    "ui": {
+      "today": "Heute",
+      "noItems": "Zurzeit gibt es keine offenen Einträge.",
+      "partialFailure": "Einige Quellen konnten nicht geladen werden. Die übrigen Ergebnisse werden angezeigt.",
+      "openSource": "Zur Quelle",
+      "count": "{count} Einträge",
+      "unavailable": "Übersicht momentan nicht verfügbar",
+      "tryAgain": "Bitte versuchen Sie es später erneut."
     }
   },
   "security-monitor": {
