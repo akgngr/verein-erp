@@ -37,6 +37,14 @@ export async function SecretaryHomeView() {
           failures: t("ui.partialFailure"),
           open: t("ui.openSource"),
           count: (count) => t("ui.count", { count }),
+          actions: {
+            dismiss: t("ui.dismiss"),
+            tomorrow: t("ui.tomorrow"),
+            nextWeek: t("ui.nextWeek"),
+            undo: t("ui.undo"),
+            done: t("ui.actionDone"),
+            error: t("ui.actionError"),
+          },
         }} />
       ) : (
         <EmptyState icon={NotebookPen} title={t("ui.unavailable")} description={t("ui.tryAgain")} />
