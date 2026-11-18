@@ -50,7 +50,7 @@ test("business modules do not create a parallel shared DataTable implementation"
  * Lower W6_CEILING in the same PR that migrates files, and regenerate the tracked inventory
  * (`pnpm ui:inventory` → docs/ui/HEROUI_INVENTORY.md). Target: 0, then the ESLint rule becomes an error.
  */
-const W6_CEILING = 59;
+const W6_CEILING = 30;
 
 test("direct HeroUI dependency in modules may only shrink during adapter migration", () => {
   const inventory = collectInventory(ROOT);

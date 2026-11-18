@@ -13,7 +13,7 @@ Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve son tarihler tek gö
 |---|---|
 | Anahtar | `calendar` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.9 |
+| Sürüm | 1.3.10 |
 | Sayfalar | `/calendar`, `/calendar/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -41,6 +41,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `list_shared_calendar_entries` · `list_shared_calendars` · `propose_calendar_entry`
 
 ## Sürüm notları
+
+### 1.3.10 — Arayüz altyapısı
+
+_2026-11-18_
+
+- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
 ### 1.3.8 — Ortak UI bileşenleri (iç değişiklik)
 
@@ -84,10 +90,4 @@ _2026-11-15_
 
 - **Güvenlik:** Öneri araçları katı Zod girdisi ve sabit model sonucu kullanır; salt öneri sorguları gereksiz kişi detaylarını okumaz. Kalan eski okuma araçlarının dönüşümü ayrı sürer.
 
-### 1.3.1 — AI listelerinde eksiksizlik ve sınır kontrolü
-
-_2026-11-15_
-
-- **Düzeltme:** AI listeleri sayfalama ve eksiksizlik bilgisi taşır; aşırı büyük takvim aralıkları kontrollü reddedilir.
-
-Daha eski 7 herkese açık sürüm notu.
+Daha eski 8 herkese açık sürüm notu.

@@ -13,7 +13,7 @@ Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuy
 |---|---|
 | Anahtar | `ai` |
 | Tür | Eklenti |
-| Sürüm | 1.15.3 |
+| Sürüm | 1.15.4 |
 | Sayfalar | `/ayarlar/yapay-zeka` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Yapay zekâ asistanı | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.15.4 — Arayüz altyapısı
+
+_2026-11-18_
+
+- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
 ### 1.15.2 — Ortak UI bileşenleri (iç değişiklik)
 
@@ -83,10 +89,4 @@ _2026-11-16_
 
 - **Yeni:** Sohbete dosya eklenebilir (PDF, resim, Word, Excel, Markdown, CSV): metin sunucuda çıkarılır (resim ve taranmış belgede OCR), dosya saklanmaz. Bulutta yalnız denetimli modda ve kişisel parçalar maskelenerek gönderilir. Sohbet geçmişi tarihe göre gruplandı; panel yazıları küçültüldü; mesaj kutusuna tıklayınca dosya düğmesi alt satıra kayar.
 
-### 1.12.0 — Yeni sohbet tasarımı
-
-_2026-11-16_
-
-- **İyileştirme:** Asistan paneli yenilendi: başlıkta sohbet adı ve geçmiş menüsü, yeni sohbet, tam ekran ve kapat düğmeleri; boş sohbette karşılama ve öneri kartları; yuvarlak, yazdıkça büyüyen mesaj kutusu.
-
-Daha eski 24 herkese açık sürüm notu.
+Daha eski 25 herkese açık sürüm notu.

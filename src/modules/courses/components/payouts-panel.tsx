@@ -1,7 +1,7 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
-import { Dialog, Input, Label, Spinner, StatusChip, TextField } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { Dialog, Input, Label, Spinner, StatusChip, TextField, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
@@ -187,7 +187,7 @@ export function PayoutsPanel({
                         <ActionLink
                           href={`/api/courses/payouts/pdf?id=${row.id}`}
                           target="_blank"
-                          className={buttonVariants({
+                          className={buttonClassName({
                             variant: actionVariant("default", "flat"),
                             size: "sm",
                           })}
