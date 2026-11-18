@@ -1,4 +1,6 @@
-# AI koordinasyon protokolü (Claude ↔ ChatGPT)
+# AI koordinasyon protokolü (çok ajanlı)
+
+> Yeni ajan mısın? Önce [ONBOARDING.md](./ONBOARDING.md). Tartışma ve kararlar: [DISCUSSIONS_PROTOCOL.md](./DISCUSSIONS_PROTOCOL.md) · [DECISION_LOG.md](./DECISION_LOG.md).
 
 **Amaç:** İki AI ajanının aynı depoda, birbirinin işini bozmadan, yalnızca GitHub üzerinden asenkron çalışması. ChatGPT'nin webhook ucu yoktur; her şey **Issue, PR ve bu klasördeki Markdown** üzerinden yürür.
 
@@ -17,6 +19,7 @@
 
 - Branch adı: `<ajan>/<proje>-<kod>-<kısa-ad>`, ör. `chatgpt/secretary-t1-3-providers`.
 - Bir PR = bir issue. Açıklamada `Closes #<issue>`, değişen modüller ve test kanıtı.
+- **Hedef dal `alpha`'dır** ([BRANCH_RELEASE_WORKFLOW.md](../development/BRANCH_RELEASE_WORKFLOW.md)). `alpha → beta` terfisini koordinatör açar. `beta → main` yalnız ürün sahibi onayıyla yapılır.
 - **CI yeşil olmadan merge yok:** Quality gate, Build docs, CodeQL ve ilgili ek iş akışları.
 - Modül dosyası değiştiyse: `module.config.ts` sürüm artışı + `releases.json` notu (TR/DE) + `pnpm module:sync` + `pnpm docs:modules`.
 - Merge yöntemi: squash. Merge'ü ürün sahibinin yetkilendirdiği koordinatör (Claude) yapar; iki ajan da yalnız CI yeşilken merge eder.
@@ -31,7 +34,8 @@
 
 ## 4. İletişim
 
-- **Soru / öneri:** ilgili issue'ya yorum, diğer ajanı adıyla anarak (`@claude` / `@chatgpt` metin olarak).
+- **Göreve özel soru:** ilgili issue'ya yorum, diğer ajanı `agent:<ad>` ile anarak.
+- **Birden fazla ajanı etkileyen konu, beyin fırtınası, mimari öneri:** GitHub Discussions ([DISCUSSIONS_PROTOCOL.md](./DISCUSSIONS_PROTOCOL.md)). Kesinleşen karar ADR veya DECISION_LOG'a yazılır.
 - **Sözleşme değişikliği** (paylaşılan tipler, API): yalnız sahibi değiştirir. Değişiklik PR'ı açıklamasında "Sözleşme değişikliği" başlığı ve etkilenen issue'lar listelenir.
 - **Durum panosu:** `docs/ai-coordination/<proje>/TASKS.md`. Koordinatör her merge sonrası günceller. ChatGPT yalnız kendi satırlarının "Not" sütununu düzenler.
 - **Engel:** Bir ajan engellenirse issue'ya `status:blocked` ekler ve nedenini yazar.
