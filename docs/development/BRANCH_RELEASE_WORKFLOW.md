@@ -61,6 +61,8 @@ feature/<topic> ---- PR + CI ----> alpha
 A critical production fix starts from the current `main` commit. Apply via a narrowly scoped fix PR into `alpha`, promote to `beta`, validate, then promote to `main`. If release-train changes in `alpha` must not ship, coordinate an explicit exceptional emergency process with a human administrator and documented audit rather than silently bypassing branch rules. Use Vercel/Coolify rollback mechanisms for urgent recovery; data migrations require a separate rollback/forward-fix plan.
 
 ## GitHub repository settings (administrator action)
+The exact rulesets live in `.github/rulesets/{alpha,beta,main}.json`. Apply them in **Settings → Rules → Rulesets → New ruleset → Import a ruleset** (replace the old "Development Branch Protection" and update "Production Branch Protection"). After that, delete the temporary `branch-flow` ("Branch promotion policy") job from `ci.yml`.
+
 Protect `alpha`, `beta`, and `main` with rulesets or branch protection:
 - Require pull requests and passing checks for all three branches; block force-push and deletion.
 - Require `Promotion policy (<branch>)` and `Quality gate` checks on PRs, plus other existing security/docs checks where applicable.
