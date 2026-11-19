@@ -7,7 +7,9 @@ test("daily email includes counts/link but never user-supplied details", () => {
   const digest = { date: "2026-11-19", total: 3, danger: 1, warning: 2 };
   for (const locale of ["tr", "de"] as const) {
     const email = renderSecretaryDailySummary(digest, locale, "https://erp.example.org");
-    assert.ok(email.text.includes("https://erp.example.org/sekreter"));
+    // Bağlantı satırını tam URL olarak ayrıştır (alt dize kontrolü CodeQL "incomplete URL substring" uyarısı verir).
+    const links = email.text.split(/\s+/).filter((token) => token.startsWith("https://")).map((token) => new URL(token));
+    assert.deepEqual(links.map((link) => [link.origin, link.pathname]), [["https://erp.example.org", "/sekreter"]]);
     assert.ok(email.text.includes("3"));
     assert.ok(!email.text.includes("amount"));
     assert.ok(!email.text.includes("name"));
