@@ -108,3 +108,43 @@ model SecretaryFollowUp {
   @@index([userId, status])
   @@map("secretary_follow_ups")
 }
+
+/// S5.2 (#316): kullanıcının dış kanal rızası. Adres şifreli; doğrulama kodu yalnız hash. Geri alınınca adres silinir.
+model SecretaryChannelConsent {
+  id               String    @id @default(cuid())
+  userId           String
+  /// "telegram" | "whatsapp" | "sms"
+  channel          String
+  addressEnc       String?
+  codeHash         String?
+  codeExpiresAt    DateTime?
+  codeAttempts     Int       @default(0)
+  verifiedAt       DateTime?
+  revokedAt        DateTime?
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
+
+  @@unique([userId, channel])
+  @@map("secretary_channel_consents")
+}
+
+/// S5.2 (#316): dış kanal teslim kaydı (içerik yok). Kullanıcı+kanal+gün+tür benzersiz: çift gönderim yok.
+model SecretaryChannelDelivery {
+  id         String   @id @default(cuid())
+  userId     String
+  channel    String
+  /// Europe/Berlin günü "YYYY-MM-DD".
+  day        String
+  /// "daily-digest" | "verification"
+  kind       String
+  status     String   @default("PENDING") // PENDING | SENT | FAILED
+  attempts   Int      @default(0)
+  providerId String?
+  errorCode  String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId, channel, day, kind])
+  @@index([userId, channel, day])
+  @@map("secretary_channel_deliveries")
+}

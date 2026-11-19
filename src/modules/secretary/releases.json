@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.9.0",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Dış bildirim kanalları (rızalı)",
+        "de": "Externe Benachrichtigungskanäle (mit Einwilligung)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Günlük özet, rıza verip adresini doğrulayan kullanıcıya Telegram, WhatsApp veya SMS ile de gönderilebilir. Mesaj yalnız sayıları içerir; ad, başlık veya tutar gitmez.",
+          "de": "Die Tagesübersicht kann Nutzern mit Einwilligung und bestätigter Adresse auch per Telegram, WhatsApp oder SMS zugestellt werden. Die Nachricht enthält nur Zahlen; keine Namen, Titel oder Beträge."
+        },
+        {
+          "type": "security",
+          "tr": "Sağlayıcı yapılandırılmadıkça kanallar kapalıdır ve hiçbir şey gönderilmez. Rıza geri alınınca adres silinir ve gönderim hemen durur; kanal başına günde tek özet, sınırlı yeniden deneme, sessiz saatlere uyulur.",
+          "de": "Ohne eingerichteten Anbieter sind die Kanäle deaktiviert und es wird nichts gesendet. Beim Widerruf wird die Adresse gelöscht und der Versand sofort beendet; pro Kanal eine Übersicht täglich, begrenzte Wiederholungen, Ruhezeiten werden beachtet."
+        }
+      ]
+    },
+    {
       "version": "0.7.0",
       "date": "2026-11-19",
       "title": {

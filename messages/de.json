@@ -8029,6 +8029,18 @@
         "invalidTransition": "Diese Aktion ist für diese Nachverfolgung nicht möglich.",
         "forbidden": "Für diese Aktion fehlt die Berechtigung."
       }
+    },
+    "channels": {
+      "errors": {
+        "forbidden": "Für diese Aktion fehlt die Berechtigung.",
+        "addressInvalid": "Adresse ungültig (Telefon im Format +49…, für Telegram die Chat-ID).",
+        "unavailable": "Dieser Kanal ist derzeit nicht verfügbar (Anbieter nicht eingerichtet).",
+        "rateLimited": "Tageslimit für Bestätigungen erreicht.",
+        "sendFailed": "Bestätigungscode konnte nicht gesendet werden.",
+        "notPending": "Keine ausstehende Bestätigung.",
+        "codeExpired": "Code abgelaufen oder Versuche aufgebraucht; bitte neu anfordern.",
+        "codeInvalid": "Code falsch."
+      }
     }
   },
   "security-monitor": {

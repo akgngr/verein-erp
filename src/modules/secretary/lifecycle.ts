@@ -16,6 +16,8 @@ export const lifecycle = defineLifecycle({
       db.secretaryItemState.deleteMany({ where: { userId } }),
       db.secretaryProposal.deleteMany({ where: { userId } }),
       db.secretaryFollowUp.deleteMany({ where: { userId } }),
+      db.secretaryChannelConsent.deleteMany({ where: { userId } }),
+      db.secretaryChannelDelivery.deleteMany({ where: { userId } }),
     ]);
   },
 });
