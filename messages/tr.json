@@ -193,7 +193,8 @@
       "sm": "Küçük",
       "md": "Orta",
       "lg": "Geniş"
-    }
+    },
+    "asideLabel": "Bugün ve hatırlatmalar"
   },
   "meta": {
     "panel": "Panel",
@@ -1897,7 +1898,9 @@
         "ustva": "KDV ön beyanı",
         "annualVat": "Yıllık KDV beyanı",
         "incomeTax": "Gelir/kurumlar vergisi beyanı"
-      }
+      },
+      "dunningProposal": "{count} vadesi geçmiş fatura için ihtar kaydı oluştur",
+      "dunningProposalDetail": "Her faturaya sıradaki ihtar kademesi (ücret ve faiz ayarlara göre) kaydedilir. E-posta veya PDF gönderilmez; ihtarları faturalar ekranından gözden geçirip gönderirsiniz."
     }
   },
   "ai": {
@@ -7851,7 +7854,11 @@
     },
     "validation": {
       "itemId": "Geçersiz öğe kimliği.",
-      "until": "Geçersiz erteleme zamanı."
+      "until": "Geçersiz erteleme zamanı.",
+      "clock": "Saat SS:dd biçiminde olmalı.",
+      "channels": "En az bir kanal seçin.",
+      "quietPair": "Sessiz saatlerin başlangıcı ve bitişi birlikte girilmeli.",
+      "quietSame": "Sessiz saat başlangıcı ve bitişi aynı olamaz."
     },
     "errors": {
       "snoozeInPast": "Erteleme zamanı gelecekte olmalı.",
@@ -7859,7 +7866,8 @@
     },
     "access": {
       "system": "Hangi modüllerin açık ve onaylı olduğunu okur; özet yalnız bunların katkılarını gösterir.",
-      "users": "Günlük özeti yalnız etkin ve sekreter yetkisi olan kullanıcılar için hazırlamak üzere kullanıcının durumunu ve rolünü okur."
+      "users": "Günlük özeti yalnız etkin ve sekreter yetkisi olan kullanıcılar için hazırlamak üzere kullanıcının durumunu ve rolünü okur.",
+      "mail": "Günlük özet e-postasını göndermek için mevcut e-posta altyapısını kullanır (yalnız tercihinde e-posta seçen kullanıcıya, yalnız toplam sayılar)."
     },
     "automation": {
       "tasks": {
@@ -7877,7 +7885,10 @@
         "externalConfirmRequired": "Bu eylem dışarıya etki eder (ör. e-posta, ödeme); ayrıca onaylamanız gerekir.",
         "unreadable": "Öneri doğrulanamadı ve iptal edildi.",
         "stale": "Kaynak kayıt değişti; öneri geçersiz. Lütfen kaynağı kontrol edin.",
-        "failed": "Eylem tamamlanamadı. Tekrar denenmez; lütfen kaynak kaydı kontrol edin."
+        "failed": "Eylem tamamlanamadı. Tekrar denenmez; lütfen kaynak kaydı kontrol edin.",
+        "snoozeInPast": "Erteleme zamanı gelecekte olmalı.",
+        "snoozeTooLong": "Öneri en fazla 90 gün ertelenebilir.",
+        "snoozeBeyondExpiry": "Öneri, geçerlilik süresinin sonrasına ertelenemez."
       }
     },
     "ui": {
@@ -7887,7 +7898,30 @@
       "openSource": "Kaynağa git",
       "count": "{count} öğe",
       "unavailable": "Özet şu anda kullanılamıyor",
-      "tryAgain": "Lütfen daha sonra yeniden deneyin."
+      "tryAgain": "Lütfen daha sonra yeniden deneyin.",
+      "dismiss": "Kapat",
+      "tomorrow": "Yarına ertele",
+      "nextWeek": "1 hafta ertele",
+      "undo": "Geri al",
+      "actionDone": "Görünürlük güncellendi.",
+      "actionError": "İşlem tamamlanamadı."
+    },
+    "digest": {
+      "subject": "Sabah özetiniz: {total} konu",
+      "intro": "Günaydın. Bugünkü sabah özetinizde {total} konu var.",
+      "urgent": "Bunlardan {danger} tanesi acil.",
+      "link": "Özeti açmak için: {url}",
+      "footer": "Bu e-postayı sekreter tercihlerinizden kapatabilirsiniz. Ayrıntılar yalnız uygulamada, oturum açtıktan sonra görünür."
+    },
+    "cards": {
+      "today": {
+        "title": "Bugün",
+        "description": "Sekreterin sabah özeti",
+        "empty": "Bugün dikkat gerektiren bir konu yok.",
+        "listLabel": "Bugünkü konular",
+        "partial": "Bazı modüller şu an yanıt vermedi; liste eksik olabilir.",
+        "more": "Tümünü gör ({count})"
+      }
     }
   },
   "security-monitor": {

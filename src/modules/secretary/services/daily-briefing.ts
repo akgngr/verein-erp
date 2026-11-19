@@ -6,7 +6,8 @@ import { secretaryPermissions } from "../permissions";
 import { type BriefingPreference, dueBriefingDate } from "./schedule";
 
 export type ScheduledPreference = BriefingPreference & { userId: string; channels: string[] };
-export type BriefingRecipient = { id: string; role: Role; isActive: boolean };
+/** E-posta yalnız sunucuda teslim için kullanılır; özet içeriğine, log'a veya audit'e girmez. */
+export type BriefingRecipient = { id: string; role: Role; isActive: boolean; email?: string };
 /** Teslime giden özet: yalnız sayılar (kişisel veri yok). */
 export type BriefingDigest = { date: string; total: number; danger: number; warning: number };
 
@@ -59,6 +60,8 @@ export async function runDailyBriefings(now: Date, deps: DailyBriefingDeps): Pro
         continue;
       }
       const digest = digestOf(await deps.buildBriefing({ id: user.id, role: user.role }, now), date);
+      // Boş özet için dış kanala bildirim gönderilmez (gürültü yok); gün yine de işaretli kalır.
+      if (digest.total === 0) continue;
       for (const channel of channels) await deps.deliver(user, channel, digest);
       result.produced += 1;
     } catch {

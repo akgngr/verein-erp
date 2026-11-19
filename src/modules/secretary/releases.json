@@ -2,6 +2,91 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.6.6",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Panelde \"Bugün\" kartı",
+        "de": "Karte „Heute“ im Dashboard"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Sabah özeti, Panel'in sağ üst köşesinde \"Bugün\" kartı olarak görünür (yalnız sekreter yetkisi olanlara ve modül açıkken). Karttan ilgili sayfaya gidilir.",
+          "de": "Die Morgenübersicht erscheint oben rechts im Dashboard als Karte „Heute“ (nur mit Sekretariatsberechtigung und aktivem Modul). Die Einträge verlinken auf die jeweilige Seite."
+        },
+        {
+          "type": "fix",
+          "tr": "Sekreter sayfası, modül açıkken \"Bugün\" kartını gösterirken çöküyordu; düzeltildi.",
+          "de": "Die Sekretariatsseite stürzte bei aktivem Modul beim Anzeigen der Karte „Heute“ ab; behoben."
+        }
+      ]
+    },
+    {
+      "version": "0.6.5",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Önerileri ertele ve düzenle",
+        "de": "Vorschläge zurückstellen und bearbeiten"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Bir öneri en fazla 90 gün ve geçerlilik süresi içinde ertelenebilir; ertelenen öneri onay kutusunda gizlenir. Modül izin veriyorsa öneri, kaynağın kendi düzenleme sayfasına güvenli bağlantı sunar. Onay kutusu öneri durumunu içerik göstermeden bildirir.",
+          "de": "Ein Vorschlag kann bis zu 90 Tage und innerhalb seiner Gültigkeit zurückgestellt werden; zurückgestellte Vorschläge sind im Posteingang ausgeblendet. Sofern das Modul es unterstützt, verlinkt der Vorschlag sicher auf die eigene Bearbeitungsseite des Datensatzes. Der Posteingang zeigt den Status ohne Inhalte an."
+        }
+      ]
+    },
+    {
+      "version": "0.6.4",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Kişisel tercihler ve günlük özet e-postası",
+        "de": "Persönliche Einstellungen und tägliche Übersicht per E-Mail"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Her kullanıcı kendi özet saatini, sessiz saatlerini ve kanallarını (uygulama içi, e-posta) kaydedebilir; başkasının tercihleri değiştirilemez.",
+          "de": "Jeder Benutzer kann eigene Uhrzeit, Ruhezeiten und Kanäle (in der Anwendung, E-Mail) speichern; fremde Einstellungen sind nicht änderbar."
+        },
+        {
+          "type": "feature",
+          "tr": "E-posta kanalını seçenlere günlük özet e-postası gönderilir: yalnız toplam sayılar ve uygulamaya bağlantı, kişisel veri yok. Uygulama adresi (APP_URL) ve e-posta ayarı gerekir; sessiz saatlerde ve boş özette gönderilmez.",
+          "de": "Wer den E-Mail-Kanal wählt, erhält die tägliche Übersicht per E-Mail: nur Gesamtzahlen und ein Link zur Anwendung, keine personenbezogenen Daten. Erfordert die Anwendungsadresse (APP_URL) und E-Mail-Einstellungen; kein Versand während Ruhezeiten oder bei leerer Übersicht."
+        }
+      ]
+    },
+    {
+      "version": "0.6.3",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Günlük özet arka planda güvenilir",
+        "de": "Tägliche Übersicht im Hintergrund zuverlässig"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Günlük özet işi arka plan sürecinde (worker) hata vermeden çalışır; tüm modül katkıları orada da hesaplanır.",
+          "de": "Der Job für die tägliche Übersicht läuft im Hintergrundprozess (Worker) fehlerfrei; alle Modulbeiträge werden dort ebenfalls berechnet."
+        }
+      ]
+    },
+    {
+      "version": "0.6.2",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Özet öğelerinde kapat/ertele/geri al",
+        "de": "Einträge ausblenden, zurückstellen und wiederherstellen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Özet kartlarında kapat, yarına veya bir haftaya ertele ve geri al arayüzü eklendi. Kaynak kayıtlar değiştirilmez.",
+          "de": "Übersichtseinträge lassen sich ausblenden, auf morgen oder eine Woche verschieben und wiederherstellen. Quelldaten bleiben unverändert."
+        }
+      ]
+    },
+    {
       "version": "0.6.1",
       "date": "2026-11-18",
       "title": {

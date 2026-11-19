@@ -55,6 +55,11 @@ const eslintConfig = [
     // Her yerde: modül iç dosyalarına erişim yasağı (3.4)
     rules: {
       "no-restricted-imports": ["error", { patterns: [MODULE_INTERNAL_IMPORTS] }],
+      // Bilinçli olarak kullanılmayan değerler "_" ile başlar (ör. `const { secret: _secret, ...rest } = row`).
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_", ignoreRestSiblings: true },
+      ],
     },
   },
   {

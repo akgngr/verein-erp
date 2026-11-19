@@ -33,9 +33,11 @@ export type ProposalRow = {
   status: ProposalStatus;
   idempotencyKey: string;
   expiresAt: Date;
+  /** Kullanıcı ertelemesi (#296); süre sonu (expiresAt) bundan etkilenmez. */
+  snoozedUntil?: Date | null;
 };
 
-export type ProposalCreate = Omit<ProposalRow, "id" | "status">;
+export type ProposalCreate = Omit<ProposalRow, "id" | "status" | "snoozedUntil">;
 
 export type ProposalStore = {
   findByKey: (idempotencyKey: string) => Promise<ProposalRow | null>;
@@ -44,7 +46,12 @@ export type ProposalStore = {
   /** Koşullu geçiş: yalnız sahibinin, `from` durumundaki satırı. true: tam bir satır değişti. */
   transition: (id: string, userId: string, from: ProposalStatus, to: ProposalStatus, at: Date) => Promise<boolean>;
   listPending: (userId: string, now: Date) => Promise<ProposalRow[]>;
+  /** Koşullu erteleme: yalnız sahibinin PENDING satırı. true: tam bir satır değişti. */
+  snooze: (id: string, userId: string, until: Date) => Promise<boolean>;
 };
+
+/** Erteleme üst sınırı (öğe ertelemesiyle aynı). */
+export const PROPOSAL_MAX_SNOOZE_DAYS = 90;
 
 export type ProposalCrypto = { seal: (plain: string) => string; open: (sealed: string) => string | null };
 
@@ -106,7 +113,31 @@ export async function ensureRuleProposal(
   return created.id;
 }
 
-export type ProposalView = { id: string; moduleKey: string; actionKey: string; risk: "internal" | "external"; title: string; detail?: string; expiresAt: string };
+export type ProposalView = {
+  id: string;
+  moduleKey: string;
+  actionKey: string;
+  risk: "internal" | "external";
+  title: string;
+  detail?: string;
+  expiresAt: string;
+  /** Kaynağın kendi düzenleme sayfası (sunucuda doğrulanmış göreli yol); payload içermez. */
+  editHref?: string;
+};
+
+/** Uygulama içi göreli yol mu? (dış bağlantı, protokol-göreli `//` ve şema yok) */
+export function isSafeInternalHref(href: unknown): href is string {
+  return typeof href === "string" && href.length <= 512 && href.startsWith("/") && !href.startsWith("//") && !href.includes("\\") && !/[\s<>"']/.test(href);
+}
+
+/** Payload'ı sunucuda çözer ve doğrular; kurcalanmışsa null. */
+function openPayload(row: ProposalRow, action: SecretaryAction, crypto: ProposalCrypto): unknown | null {
+  const plain = crypto.open(row.payloadEnc);
+  if (plain === null) return null;
+  const raw: unknown = JSON.parse(plain);
+  const parsed = action.schema.safeParse(raw);
+  return hashOf(raw) === row.payloadHash && parsed.success ? parsed.data : null;
+}
 
 /** Onay kutusu listesi: yalnız kullanıcının, süresi dolmamış, eylemi hâlâ izinli bekleyen önerileri. */
 export async function listPendingProposals(user: { id: string; role: Role }, deps: ProposalDeps, now: Date): Promise<ProposalView[]> {
@@ -117,9 +148,59 @@ export async function listPendingProposals(user: { id: string; role: Role }, dep
     if (!action || !usable.has(row.moduleKey) || !allowed(user.role, action)) return [];
     const plain = deps.crypto.open(row.previewEnc);
     if (!plain) return [];
+    if (row.snoozedUntil && row.snoozedUntil.getTime() > now.getTime()) return [];
     const preview = JSON.parse(plain) as { title: string; detail?: string };
-    return [{ id: row.id, moduleKey: row.moduleKey, actionKey: row.actionKey, risk: action.risk, title: preview.title, detail: preview.detail, expiresAt: row.expiresAt.toISOString() }];
+    let editHref: string | undefined;
+    if (action.editHref) {
+      const payload = openPayload(row, action, deps.crypto);
+      const href = payload === null ? null : action.editHref(payload);
+      if (isSafeInternalHref(href)) editHref = href;
+    }
+    return [{ id: row.id, moduleKey: row.moduleKey, actionKey: row.actionKey, risk: action.risk, title: preview.title, detail: preview.detail, expiresAt: row.expiresAt.toISOString(), ...(editHref ? { editHref } : {}) }];
   });
+}
+
+/**
+ * Öneriyi erteler (#296): yalnız sahibi, yalnız PENDING, gelecekte, en fazla 90 gün ve süre sonundan önce.
+ * Eylem yetkisi ve modül durumu yeniden denetlenir. Süre sonu uzamaz (erteleme öneriyi canlı tutmaz).
+ */
+export async function snoozeProposal(
+  user: { id: string; role: Role },
+  input: { id: string; until: Date },
+  deps: ProposalDeps,
+  now: Date,
+): Promise<{ snoozedUntil: string }> {
+  const row = await deps.store.findOwn(input.id, user.id);
+  if (!row || row.status !== "PENDING") throw new ProposalError("secretary.proposals.errors.unavailable");
+  if (row.expiresAt.getTime() <= now.getTime()) {
+    await deps.store.transition(row.id, user.id, "PENDING", "EXPIRED", now);
+    throw new ProposalError("secretary.proposals.errors.expired");
+  }
+  const action = findAction(deps.registry, row.moduleKey, row.actionKey);
+  const usable = new Set(await deps.usableModules());
+  if (!action || !usable.has(row.moduleKey) || !allowed(user.role, action)) throw new ProposalError("secretary.proposals.errors.forbidden");
+  const until = input.until.getTime();
+  if (!Number.isFinite(until) || until <= now.getTime()) throw new ProposalError("secretary.proposals.errors.snoozeInPast");
+  if (until - now.getTime() > PROPOSAL_MAX_SNOOZE_DAYS * 86_400_000) throw new ProposalError("secretary.proposals.errors.snoozeTooLong");
+  if (until >= row.expiresAt.getTime()) throw new ProposalError("secretary.proposals.errors.snoozeBeyondExpiry");
+  if (!(await deps.store.snooze(row.id, user.id, input.until))) throw new ProposalError("secretary.proposals.errors.unavailable");
+  return { snoozedUntil: input.until.toISOString() };
+}
+
+export type ProposalState = "pending" | "snoozed" | "executing" | "applied" | "failed" | "dismissed" | "expired" | "unavailable";
+
+/**
+ * Kullanıcıya güvenli durum (#296): yalnız sahibine gerçek durum, başkasına/olmayana "unavailable".
+ * İçerik, payload veya kaynak ayrıntısı döndürmez. Süresi geçmiş PENDING "expired" görünür.
+ */
+export async function getProposalState(user: { id: string }, id: string, deps: Pick<ProposalDeps, "store">, now: Date): Promise<ProposalState> {
+  const row = await deps.store.findOwn(id, user.id);
+  if (!row) return "unavailable";
+  if (row.status === "PENDING") {
+    if (row.expiresAt.getTime() <= now.getTime()) return "expired";
+    return row.snoozedUntil && row.snoozedUntil.getTime() > now.getTime() ? "snoozed" : "pending";
+  }
+  return row.status.toLowerCase() as ProposalState;
 }
 
 /** Öneriyi onaylar ve hedef modül eylemini çalıştırır. Hata kodları çeviri anahtarıdır. */

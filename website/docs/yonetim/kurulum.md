@@ -37,6 +37,7 @@ pnpm automation:worker
 | `DATABASE_URL` | PostgreSQL bağlantısı. Havuzlu sunucuda ayrıca `DIRECT_URL` (migration için). |
 | `AUTH_SECRET` | `openssl rand -base64 32`. Veritabanındaki sırlar bundan türetilen anahtarla şifrelenir; **değişirse bu kayıtlar çözülemez**. |
 | `AUTH_TRUST_HOST` | Sunucu dağıtımında `true`. |
+| `APP_URL` | İsteğe bağlı. Uygulamanın herkese açık adresi (ör. `https://erp.ornek.de`). E-postalardaki bağlantılar için gerekir; tanımlı değilse sekreterin günlük özet e-postası gönderilmez. |
 | `AUTOMATION_ENABLED`, `AUTOMATION_WORKER_ENABLED` | Otomasyon ve worker. |
 | `UPLOAD_DIR`, `MAX_UPLOAD_MB` | Yüklenen dosyalar (üretimde kalıcı volume) ve dosya başına sınır. |
 | `ORGANIZATION_NAME` | Dernek bilgileri girilene kadar kullanılan ad. |

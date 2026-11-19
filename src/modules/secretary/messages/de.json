@@ -23,7 +23,11 @@
   },
   "validation": {
     "itemId": "Ungültige Eintrags-ID.",
-    "until": "Ungültiger Zeitpunkt."
+    "until": "Ungültiger Zeitpunkt.",
+    "clock": "Die Uhrzeit muss im Format HH:mm sein.",
+    "channels": "Wählen Sie mindestens einen Kanal.",
+    "quietPair": "Beginn und Ende der Ruhezeit müssen zusammen angegeben werden.",
+    "quietSame": "Beginn und Ende der Ruhezeit dürfen nicht gleich sein."
   },
   "errors": {
     "snoozeInPast": "Der Zeitpunkt muss in der Zukunft liegen.",
@@ -31,7 +35,8 @@
   },
   "access": {
     "system": "Liest, welche Module aktiv und freigegeben sind; die Übersicht zeigt nur deren Beiträge.",
-    "users": "Liest Status und Rolle des Benutzers, damit die tägliche Übersicht nur für aktive Benutzer mit Sekretariatsberechtigung erstellt wird."
+    "users": "Liest Status und Rolle des Benutzers, damit die tägliche Übersicht nur für aktive Benutzer mit Sekretariatsberechtigung erstellt wird.",
+    "mail": "Nutzt den vorhandenen E-Mail-Versand für die tägliche Übersicht (nur an Benutzer mit E-Mail-Kanal, nur Gesamtzahlen)."
   },
   "automation": {
     "tasks": {
@@ -49,7 +54,10 @@
       "externalConfirmRequired": "Diese Aktion wirkt nach außen (z. B. E-Mail, Zahlung) und muss zusätzlich bestätigt werden.",
       "unreadable": "Der Vorschlag konnte nicht geprüft werden und wurde verworfen.",
       "stale": "Der Ursprungsdatensatz hat sich geändert; der Vorschlag ist ungültig. Bitte prüfen Sie den Datensatz.",
-      "failed": "Die Aktion konnte nicht abgeschlossen werden. Sie wird nicht wiederholt; bitte prüfen Sie den Datensatz."
+      "failed": "Die Aktion konnte nicht abgeschlossen werden. Sie wird nicht wiederholt; bitte prüfen Sie den Datensatz.",
+      "snoozeInPast": "Der Zeitpunkt muss in der Zukunft liegen.",
+      "snoozeTooLong": "Ein Vorschlag kann höchstens 90 Tage zurückgestellt werden.",
+      "snoozeBeyondExpiry": "Ein Vorschlag kann nicht über sein Ablaufdatum hinaus zurückgestellt werden."
     }
   },
   "ui": {
@@ -59,6 +67,29 @@
     "openSource": "Zur Quelle",
     "count": "{count} Einträge",
     "unavailable": "Übersicht momentan nicht verfügbar",
-    "tryAgain": "Bitte versuchen Sie es später erneut."
+    "tryAgain": "Bitte versuchen Sie es später erneut.",
+    "dismiss": "Ausblenden",
+    "tomorrow": "Auf morgen verschieben",
+    "nextWeek": "Eine Woche zurückstellen",
+    "undo": "Rückgängig",
+    "actionDone": "Sichtbarkeit aktualisiert.",
+    "actionError": "Aktion konnte nicht abgeschlossen werden."
+  },
+  "digest": {
+    "subject": "Ihre Morgenübersicht: {total} Themen",
+    "intro": "Guten Morgen. Ihre heutige Morgenübersicht enthält {total} Themen.",
+    "urgent": "Davon sind {danger} dringend.",
+    "link": "Zur Übersicht: {url}",
+    "footer": "Sie können diese E-Mail in Ihren Sekretariatseinstellungen abbestellen. Details sehen Sie nur nach der Anmeldung in der Anwendung."
+  },
+  "cards": {
+    "today": {
+      "title": "Heute",
+      "description": "Morgenübersicht des Sekretariats",
+      "empty": "Heute gibt es nichts, das Ihre Aufmerksamkeit erfordert.",
+      "listLabel": "Heutige Themen",
+      "partial": "Einige Module haben gerade nicht geantwortet; die Liste kann unvollständig sein.",
+      "more": "Alle anzeigen ({count})"
+    }
   }
 }

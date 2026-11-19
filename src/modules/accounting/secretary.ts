@@ -1,11 +1,15 @@
 import "server-only";
 
+import { z } from "zod";
+
+import { writeAudit } from "@/shared/audit/write-audit";
 import { getDb } from "@/shared/db";
-import { defineModuleSecretary, type BriefingItem, type SecretaryContext } from "@/shared/secretary/define";
+import { defineModuleSecretary, defineSecretaryAction, type BriefingItem, type SecretaryContext } from "@/shared/secretary/define";
 
 import { accountingPermissions } from "./permissions";
 import { getOverdueInvoiceSummary } from "./queries/get-overdue-invoice-summary";
 import { openCentsOf } from "./services/dashboard-outlook";
+import { createDunningForInvoice, DunningError, listDunnableInvoices } from "./services/dunning-create";
 import { getTaxSettings } from "./services/tax";
 import { type Deadline, taxDeadlines } from "./services/tax-calendar";
 import { berlinToday } from "./utils";
@@ -21,7 +25,12 @@ export type AccountingSnapshot = {
   draftPayables: number;
   openBankTransactions: number;
   nextTaxDeadline: Deadline | null;
+  /** İhtar kesilebilecek faturalar (sekreter önerisi için; kimlikler yalnız sunucuda kalır). */
+  dunnable?: { id: string; level: number }[];
 };
+
+/** Bir öneride en çok kaç faturaya ihtar kaydı oluşturulur. */
+export const DUNNING_PROPOSAL_LIMIT = 20;
 
 /** Sabah özeti öğeleri. Yalnız sayı ve toplam tutar; kişi/cari adı yok. */
 export function buildAccountingItems(snapshot: AccountingSnapshot, context: Pick<SecretaryContext, "t">, today: Date): BriefingItem[] {
@@ -38,6 +47,10 @@ export function buildAccountingItems(snapshot: AccountingSnapshot, context: Pick
       title: t("secretary.overdueInvoices", { count: snapshot.overdueInvoices.count }),
       count: snapshot.overdueInvoices.count,
       amountCents: snapshot.overdueInvoices.cents,
+      // Kural kaynaklı öneri: toplayıcı bunu şifreli öneriye çevirir; istemciye yalnız proposalId gider.
+      ...(snapshot.dunnable?.length
+        ? { suggestion: { action: "dunning", payload: { invoiceIds: snapshot.dunnable.map((invoice) => invoice.id) } } }
+        : {}),
       dueAt: isoDay,
       href: "/muhasebe/faturalar",
     });
@@ -104,7 +117,7 @@ export function pickTaxDeadline(deadlines: readonly Deadline[], today: Date, hor
 
 async function loadSnapshot(today: Date): Promise<AccountingSnapshot> {
   const db = getDb();
-  const [overdueInvoices, overduePayableRows, draftPayables, openBankTransactions, tax] = await Promise.all([
+  const [overdueInvoices, overduePayableRows, draftPayables, openBankTransactions, tax, dunnable] = await Promise.all([
     getOverdueInvoiceSummary(today),
     db.accountingPayable.findMany({
       where: { status: "OPEN", dueDate: { lt: today } },
@@ -114,18 +127,64 @@ async function loadSnapshot(today: Date): Promise<AccountingSnapshot> {
     db.accountingPayable.count({ where: { status: "DRAFT" } }),
     db.accountingBankTransaction.count({ where: { status: "OPEN" } }),
     getTaxSettings(db),
+    listDunnableInvoices(today, DUNNING_PROPOSAL_LIMIT, db),
   ]);
   const payableCents = overduePayableRows.map(openCentsOf).filter((cents) => cents > 0);
   const options = { vatPeriod: tax.vatPeriod, extension: tax.vatExtension, smallBusiness: tax.smallBusiness };
   const year = today.getUTCFullYear();
   return {
     overdueInvoices,
+    dunnable,
     overduePayables: { count: payableCents.length, cents: payableCents.reduce((sum, cents) => sum + cents, 0) },
     draftPayables,
     openBankTransactions,
     nextTaxDeadline: pickTaxDeadline([...taxDeadlines(year, options), ...taxDeadlines(year + 1, options)], today),
   };
 }
+
+const dunningPayload = z.object({ invoiceIds: z.array(z.string().min(1).max(64)).min(1).max(DUNNING_PROPOSAL_LIMIT) }).strict();
+
+/**
+ * Öneri eylemi: vadesi geçmiş faturalar için sıradaki ihtar kademesini kaydeder (ACC-6 ile aynı çekirdek).
+ * Yalnız `AccountingDunning` kaydı yazılır; e-posta veya PDF gönderilmez (risk: internal). Onay anında
+ * kaynak durumu (hangi faturalar hâlâ ihtar kesilebilir) değiştiyse öneri bayat sayılır ve çalışmaz.
+ */
+export const dunningAction = defineSecretaryAction({
+  key: "dunning",
+  permission: { definition: accountingPermissions, action: "update" },
+  risk: "internal",
+  schema: dunningPayload,
+  preview: async (payload, context) => ({
+    title: context.t("secretary.dunningProposal", { count: payload.invoiceIds.length }),
+    detail: context.t("secretary.dunningProposalDetail"),
+  }),
+  snapshot: async (payload) => {
+    const wanted = new Set(payload.invoiceIds);
+    const current = (await listDunnableInvoices(berlinToday(), 200)).filter((invoice) => wanted.has(invoice.id));
+    return current.length ? current.sort((a, b) => a.id.localeCompare(b.id)) : null;
+  },
+  editHref: () => "/muhasebe/faturalar",
+  execute: async (payload, context) => {
+    const today = berlinToday(context.now);
+    for (const invoiceId of payload.invoiceIds) {
+      try {
+        // Kayıttaki "oluşturan" etiketi (createdById gerçek kullanıcıdır); arayüz metni değil.
+        const created = await createDunningForInvoice(invoiceId, { id: context.user.id, label: "Sekreter önerisi" }, today); // i18n-ignore
+        await writeAudit({
+          userId: context.user.id,
+          action: "CREATE",
+          entity: "AccountingDunning",
+          entityId: created.id,
+          after: { invoice: created.invoiceNumber, level: created.level, source: "secretary" },
+        });
+      } catch (error) {
+        // Bu arada ödenen/ihtar kesilen fatura atlanır; diğerleri etkilenmez.
+        if (!(error instanceof DunningError)) throw error;
+      }
+    }
+    return { href: "/muhasebe/faturalar" };
+  },
+});
 
 export const secretary = defineModuleSecretary({
   module: "accounting",
@@ -137,4 +196,5 @@ export const secretary = defineModuleSecretary({
       return buildAccountingItems(await loadSnapshot(today), context, today);
     },
   }],
+  actions: [dunningAction],
 });
