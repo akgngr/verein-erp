@@ -22,7 +22,7 @@ Durum, GitHub Issue etiketlerinden (`status:*`) gelir; bu tablo her merge sonras
 | S3 | T3.1 | #256 | Claude | Günlük özet işi, sessiz saatler | #252, #251 | blocked | |
 | S3 | T3.2 | #262 | ChatGPT | Tercih ekranı + özet e-postası | #256 | ready | 1 PR, mail altyapısı üzerinden insan onaylı gönderim |
 
-Pro aşamaları (S4–S5): #263, lisans kararından sonra.
+S4–S5 geliştirmesi lisans kararını **beklemez**. Epic #263 ve aşağıdaki alt görevler açıldı. Lisans/fiyatlandırma ayrı ADR konusudur.
 
 ## Uygulama sırası
 
@@ -50,3 +50,15 @@ Pro aşamaları (S4–S5): #263, lisans kararından sonra.
 | #262 | 1 | T3.1 zamanlayıcı hazır | TR/DE, kişisel veri içermeyen yalnız sayı ve bağlantı |
 
 Çakışma kararı: Merkezi UI W1/W2/W6 değişikliklerine doğrudan müdahale etmiyoruz; her yeni sekreter bileşeni `@/shared/components/kit` üzerinden yazılacak. Panel yüzeyi #291 ve güvenlik regression #292 Claude'un ayrı dosya sahipliği altında; ChatGPT yalnız kendi komponent/view/API tüketen dosyalarını değiştirir. Her PR'ın hedefi `alpha`, modül sürüm notu ve üretilmiş dosyalar CI ile doğrulanır. Ortak mesaj ve `module.config.ts` sürümleri merge sırasına göre yeniden senkronlanır.
+
+## S4–S5 uygulama panosu — ürün sahibi onayı 2026-11-19
+
+| Aşama | Issue | Sahip | Kapsam | Durum | Kabul / bağımlılık |
+|---|---|---|---|---|---|
+| S4 | #313 | Claude | Posta meta olayları, yerel-öncelikli sınıflama, cevap/görev taslakları | ready | Mail izin/consent, dış gönderim onayı; S3 |
+| S4 | #314 | Claude | Takip kaydı, scheduler ve geri alma | ready | Tek pg-boss worker, yetki/audit/idempotency |
+| S5 | #315 | Claude | Kurul raporu + OCR öneri servisi | ready | Files otomasyon kuyruğu ve veri minimizasyonu |
+| S5 | #316 | Claude | Kanal adapterleri ve vekil/ekip sözleşmesi | ready | Explicit opt-in, scope, expiry, revoke, rate limit |
+| S4–S5 | #317 | ChatGPT | Posta/takip/rapor/kanal/vekil UI | ready | Backend public sözleşmeleri #313–#316, TR/DE, a11y |
+
+Dosya sahipliği: Claude servis/şema/worker/adapter; ChatGPT yalnız UI ve UI çevirileri. Çakışan `module.config.ts`, `releases.json`, üretilmiş mesaj ve katalog dosyaları merge sırasına göre güncellenir. Özellikler ücretli hale getirilmez. Epic #263 ancak tüm alt görevler ve uçtan uca testler kabul edilince kapanır.
