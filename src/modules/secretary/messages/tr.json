@@ -163,6 +163,17 @@
       "forbidden": "Bu işlem için yetkiniz yok."
     }
   },
+  "delegation": {
+    "errors": {
+      "forbidden": "Bu işlem için yetkiniz yok.",
+      "self": "Kendinize vekâlet veremezsiniz.",
+      "expiry": "Süre sonu gelecekte ve en fazla 90 gün sonra olmalı.",
+      "delegateInvalid": "Seçilen kullanıcı etkin değil veya sekreteri kullanamıyor.",
+      "duplicate": "Bu kişiye zaten etkin bir vekâlet verdiniz.",
+      "limit": "En fazla 5 etkin vekâlet verebilirsiniz.",
+      "notFound": "Vekâlet bulunamadı veya artık geçerli değil."
+    }
+  },
   "channels": {
     "errors": {
       "forbidden": "Bu işlem için yetkiniz yok.",

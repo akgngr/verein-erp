@@ -2,7 +2,7 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
-      "version": "0.9.0",
+      "version": "0.11.0",
       "date": "2026-11-19",
       "title": {
         "tr": "Dış bildirim kanalları (rızalı)",
@@ -18,6 +18,26 @@
           "type": "security",
           "tr": "Sağlayıcı yapılandırılmadıkça kanallar kapalıdır ve hiçbir şey gönderilmez. Rıza geri alınınca adres silinir ve gönderim hemen durur; kanal başına günde tek özet, sınırlı yeniden deneme, sessiz saatlere uyulur.",
           "de": "Ohne eingerichteten Anbieter sind die Kanäle deaktiviert und es wird nichts gesendet. Beim Widerruf wird die Adresse gelöscht und der Versand sofort beendet; pro Kanal eine Übersicht täglich, begrenzte Wiederholungen, Ruhezeiten werden beachtet."
+        }
+      ]
+    },
+    {
+      "version": "0.10.0",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Vekil / ekip modu",
+        "de": "Vertretung / Teammodus"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Sekreter özetinizi süreli bir vekâletle bir ekip arkadaşınıza salt okunur gösterebilirsiniz (en fazla 90 gün, en fazla 5 kişi). Siz veya vekil vekâleti her an geri alabilir.",
+          "de": "Sie können Ihre Sekretär-Übersicht per befristeter Vertretung einer Teamkollegin oder einem Teamkollegen schreibgeschützt freigeben (höchstens 90 Tage, höchstens 5 Personen). Sie oder die Vertretung können jederzeit widerrufen."
+        },
+        {
+          "type": "security",
+          "tr": "Vekil yalnız kendi yetkisinin izin verdiğini görür; hiçbir öneriyi sizin yerinize onaylayamaz. Her görüntüleme denetim kaydına yazılır.",
+          "de": "Die Vertretung sieht nur, was ihre eigene Berechtigung erlaubt, und kann keine Vorschläge in Ihrem Namen bestätigen. Jede Ansicht wird im Prüfprotokoll erfasst."
         }
       ]
     },
