@@ -198,7 +198,35 @@ async function main() {
           });
         }
       }
+      // #291: Sekreter "Bugün" kartı Panel'in sağ sütununda; klavye ile ulaşılır, azaltılmış harekette çalışır.
+      await page.goto(`${BASE_URL}/`, { waitUntil: "networkidle" });
+      const panelAside = page.getByRole("complementary", { name: /^(Bugün ve hatırlatmalar|Heute und Hinweise)$/ });
+      await panelAside.waitFor({ timeout: 30_000 });
+      const todayCard = panelAside.getByRole("region", { name: /^(Bugün|Heute)$/ });
+      if (!(await todayCard.count())) throw new Error("SECRETARY_PANEL_CARD_MISSING");
+      const todayLink = todayCard.getByRole("link").first();
+      await todayLink.focus();
+      if (!(await todayLink.evaluate((el) => el === document.activeElement))) throw new Error("SECRETARY_PANEL_CARD_NOT_FOCUSABLE");
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await page.reload({ waitUntil: "networkidle" });
+      await panelAside.waitFor({ timeout: 30_000 });
+      await page.emulateMedia({ reducedMotion: "no-preference" });
+
       await page.setViewportSize({ width: 390, height: 844 });
+      await page.goto(`${BASE_URL}/`, { waitUntil: "networkidle" });
+      const asideBox = await panelAside.boundingBox();
+      const boardHeading = await page.getByRole("heading").first().boundingBox();
+      if (!asideBox || !boardHeading) throw new Error("SECRETARY_PANEL_MOBILE_LAYOUT");
+      for (const [theme, name] of [
+        ["light", /^(Açık|Hell)$/],
+        ["dark", /^(Koyu|Dunkel)$/],
+      ] as const) {
+        await page.getByRole("button", { name: /^(Tema seçimi|Design wählen)$/ }).click();
+        await page.getByRole("menuitemradio", { name }).click();
+        await page.waitForFunction((value) => document.documentElement.classList.contains(value), theme);
+        await page.evaluate(() => window.scrollTo(0, 0));
+        await page.screenshot({ path: path.join(captureDir, `dashboard-mobile-${theme}.png`), fullPage: true, animations: "disabled" });
+      }
       await page.goto(`${BASE_URL}/muhasebe/panel`, { waitUntil: "networkidle" });
       for (const [theme, name] of [
         ["light", /^(Açık|Hell)$/],
