@@ -2,13 +2,13 @@
 
 > Yeni ajan mısın? Önce [ONBOARDING.md](./ONBOARDING.md). Tartışma ve kararlar: [DISCUSSIONS_PROTOCOL.md](./DISCUSSIONS_PROTOCOL.md) · [DECISION_LOG.md](./DECISION_LOG.md).
 
-**Amaç:** İki AI ajanının aynı depoda, birbirinin işini bozmadan, yalnızca GitHub üzerinden asenkron çalışması. ChatGPT'nin webhook ucu yoktur; her şey **Issue, PR ve bu klasördeki Markdown** üzerinden yürür.
+**Amaç:** Birden fazla AI ajanının aynı depoda, birbirinin işini bozmadan, yalnızca GitHub üzerinden asenkron çalışması. ChatGPT'nin webhook ucu yoktur; her şey **Issue, PR ve bu klasördeki Markdown** üzerinden yürür.
 
 ## 1. Görev = GitHub Issue
 
 - Her görev bir issue'dur. Başlık biçimi: `[<Proje> <Kod>] <Başlık>`, ör. `[Secretary T1.3] …`.
 - **Etiketler**
-  - Sahip: `agent:claude` veya `agent:chatgpt`
+  - Sahip: `agent:claude`, `agent:chatgpt` veya (kayıt tamamlandıktan sonra) `agent:gemini`
   - Proje: `module:<ad>`
   - Aşama: `stage:S0`…`stage:S3`
   - Durum: `status:ready` (başlanabilir) veya `status:blocked` (bağımlılık bekliyor)
@@ -30,7 +30,7 @@
 - **Paylaşılan dosyalar için kurallar**
   - `messages/tr.json` ve `de.json`: Claude `<modül>.*` arka uç anahtarlarını, ChatGPT `<modül>.ui.*` anahtarlarını ekler.
   - Üretilen dosyalar (`src/*-registry.ts`, `src/app/**` köprüleri, `website/docs/kullanim/moduller/*`): yalnız `pnpm module:sync` ve `pnpm docs:modules` ile üretilir, elle düzenlenmez.
-  - Sürüm çakışması: sonra merge eden `origin/main`'i alır ve mevcut en yüksek sürümün bir üstüne çıkar. `releases.json`'da önceki notları korur.
+  - Sürüm çakışması: sonra merge eden hedef dal olan `origin/alpha`'nın en güncel halini alır ve mevcut en yüksek sürümün bir üstüne çıkar. `releases.json`'da önceki notları korur.
 
 ## 4. İletişim
 
@@ -51,9 +51,17 @@
   - Claude: koordinatör, arka uç görevleri, PR incelemesi ve merge.
   - Codex: `agent:chatgpt` geliştirme görevlerini uygular ve PR açar.
   - ChatGPT: mimari değerlendirme ve koordinasyon raporlarını takip eder.
+  - Gemini: Modern Web, a11y/IME, browser uyumluluğu ve TypeScript/runtime iyileştirmeleri. İlk onboarding #326, sonraki görevler #327–#330; dosya sahipliği ve koordinatör onayı olmadan uygulama yok.
 
 ## 6. Kalite kapıları (her PR)
 
 - `tsc` 0 hata, `pnpm test`, `pnpm lint` (0 hata), `pnpm module:validate`, `scripts/check-i18n-keys.ts`, `scripts/check-hardcoded-text.ts`.
 - UI içeren PR'da: `@/shared/components/kit` kullanımı (doğrudan `@heroui/react` yok), mobil, klavye, açık/koyu tema ve reduced-motion kontrolü.
 - Kişisel veri log'lanmaz; testlerde yalnız sentetik veri.
+
+## 7. Gemini görev sınırı
+
+- Gemini onboarding ve iş takibi [`gemini/TASKS.md`](./gemini/TASKS.md) ile yapılır; koordinatör Claude tarafından onaylanmadan `status:ready` kabul edilmez.
+- UI Platform, AI sohbeti ve automation paylaşılan dosyalarında mevcut dosya sahibiyle önceden Issue üzerinden mutabakat zorunludur.
+- İlk teknik görev #327; #328–#330 bağımsız, dar kapsamlı PR'lardır. Prisma JSON normalizasyonu önce analiz/testtir; otomasyonun saklama semantiği doğrudan değiştirilmez.
+- GitHub PR attribution formatı için [`AI_CONTRIBUTORS.md`](./AI_CONTRIBUTORS.md) esastır.
