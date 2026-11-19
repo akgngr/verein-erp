@@ -18,13 +18,22 @@ permissions:
   contents: read
 
 jobs:
-  branch-flow:
-    name: Branch promotion policy
+  promotion:
+    # Hedefe özel ad: alpha->beta için yeşil sonuç aynı commit'te alpha->main'i açamaz (zorunlu kontrol commit SHA'sına bağlıdır).
+    name: Promotion policy (${{ github.base_ref }})
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
-      - name: Verify source and target branches
-        run: node scripts/check-branch-flow.mjs
+        with:
+          fetch-depth: 0
+      - name: Verify source, target and content drift
+        env:
+          BASE_REF: ${{ github.base_ref }}
+          HEAD_REF: ${{ github.head_ref }}
+          HEAD_REPO: ${{ github.event.pull_request.head.repo.full_name }}
+          BASE_REPO: ${{ github.repository }}
+        run: node scripts/check-promotion.mjs
 
   quality:
     name: Quality gate

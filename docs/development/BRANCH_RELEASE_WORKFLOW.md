@@ -32,8 +32,22 @@ feature/<topic> ---- PR + CI ----> alpha
 - Require human approval before `beta -> main`; AI agents must not auto-merge production changes.
 - PRs should target `alpha` unless they are branch promotion PRs.
 - All PRs still run GitHub CI (Prisma migrations, generated files, i18n, typecheck, lint, tests, Next build and hydration checks). Vercel is not a required PR check.
-- The `Branch promotion policy` CI job enforces allowed PR source/target combinations. GitHub rulesets must require that check; a workflow alone does not protect against direct pushes.
+- The `Promotion policy (<base>)` CI job (`scripts/check-promotion.mjs`) enforces the strict rules below. Each target branch requires its **own** check name, because GitHub matches required checks per commit SHA: with one shared name, a green `alpha -> beta` run let `alpha -> main` (#309) merge on the same commit.
 - `main` updates retain the existing GHCR Docker build/publish and Coolify deployment pathway.
+
+## Strict rules (enforced)
+
+| Target | Allowed head | Merge method | Required checks | Extra |
+| --- | --- | --- | --- | --- |
+| `alpha` | `claude/ chatgpt/ codex/ agent/ feature/ fix/ hotfix/ docs/ chore/ ci/ test/ refactor/ deps/ dependabot/ sync/` | squash only | `Quality gate`, `Promotion policy (alpha)` | branch must be up to date with `alpha` |
+| `beta` | `alpha` only | merge commit only | `Quality gate`, `Promotion policy (beta)` | `beta` must not contain content missing from `alpha` |
+| `main` | `beta` only | merge commit only | `Quality gate`, `Promotion policy (main)`, `Secret scan (gitleaks)`, `Dependency audit` | `main` must not contain content missing from `beta`; explicit product-owner approval |
+
+- Fork PRs are rejected for all three branches.
+- `main`, `beta` and `alpha` can never be the head of a PR into `alpha` (no back-merges; drift is caught by the content check instead).
+- Direct pushes, force pushes and deletion are blocked by rulesets for everyone (no bypass actors).
+- Merge methods are fixed per branch: squash keeps `alpha` history one commit per task; merge commits keep `beta`/`main` traceable to the promoted `alpha`/`beta` commit.
+- A required approval is not configured because the single maintainer account authors the PRs (GitHub forbids self-approval); the `beta -> main` human approval is recorded in the promotion PR conversation instead.
 
 ## Release train
 1. Merge small task PRs into `alpha` once the quality gate passes.
@@ -49,7 +63,7 @@ A critical production fix starts from the current `main` commit. Apply via a nar
 ## GitHub repository settings (administrator action)
 Protect `alpha`, `beta`, and `main` with rulesets or branch protection:
 - Require pull requests and passing checks for all three branches; block force-push and deletion.
-- Require `Branch promotion policy` and `Quality gate` checks on PRs, plus other existing security/docs checks where applicable.
+- Require `Promotion policy (<branch>)` and `Quality gate` checks on PRs, plus other existing security/docs checks where applicable.
 - Require at least one human approval and disable bypass/auto-merge for `main`. Consider a CODEOWNERS rule for release ownership.
 - Remove Vercel Preview/Deployment checks from **required checks**; GitHub CI must remain required.
 - Set Vercel Production Branch to `main` under Project Settings → Git.
@@ -66,6 +80,6 @@ Do not retarget existing PRs blindly; inspect their base, merge conflicts, relea
 - [ ] `alpha` and `beta` exist from current `main`
 - [ ] Vercel Git deployment disabled for all branches except `main`
 - [ ] Branch CI runs for PRs and pushes to `alpha`, `beta`, `main`
-- [ ] Promotion guard rejects feature -> beta/main and alpha -> main
+- [x] Promotion guard rejects feature -> beta/main and alpha -> main (per-target check names)
 - [ ] GitHub rulesets protect all three branches and no Vercel status is required
 - [ ] First release promotion tested end-to-end
