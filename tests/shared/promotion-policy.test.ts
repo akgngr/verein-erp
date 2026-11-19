@@ -13,6 +13,7 @@ const bad = (input: { base: string; head: string; headRepo?: string; extraOnBase
 test("promotion: only feature → alpha → beta → main", () => {
   ok({ base: "alpha", head: "claude/secretary-x" });
   ok({ base: "alpha", head: "chatgpt/ui-y" });
+  ok({ base: "alpha", head: "gemini/onboarding" });
   ok({ base: "beta", head: "alpha" });
   ok({ base: "main", head: "beta" });
   bad({ base: "main", head: "alpha" }, /only beta -> main/);

@@ -39,7 +39,7 @@ feature/<topic> ---- PR + CI ----> alpha
 
 | Target | Allowed head | Merge method | Required checks | Extra |
 | --- | --- | --- | --- | --- |
-| `alpha` | `claude/ chatgpt/ codex/ agent/ feature/ fix/ hotfix/ docs/ chore/ ci/ test/ refactor/ deps/ dependabot/ sync/` | squash only | `Quality gate`, `Promotion policy (alpha)` | branch must be up to date with `alpha` |
+| `alpha` | `claude/ chatgpt/ codex/ gemini/ agent/ feature/ fix/ hotfix/ docs/ chore/ ci/ test/ refactor/ deps/ dependabot/ sync/` | squash only | `Quality gate`, `Promotion policy (alpha)` | branch must be up to date with `alpha` |
 | `beta` | `alpha` only | merge commit only | `Quality gate`, `Promotion policy (beta)` | `beta` must not contain content missing from `alpha` |
 | `main` | `beta` only | merge commit only | `Quality gate`, `Promotion policy (main)`, `Secret scan (gitleaks)`, `Dependency audit` | `main` must not contain content missing from `beta`; explicit product-owner approval |
 

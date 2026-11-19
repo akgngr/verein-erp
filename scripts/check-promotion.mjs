@@ -5,7 +5,7 @@ import { execFileSync } from "node:child_process";
 import { pathToFileURL } from "node:url";
 
 /** Allowed feature branch prefixes for PRs into alpha. */
-export const FEATURE_PREFIXES = ["claude/", "chatgpt/", "codex/", "agent/", "feature/", "fix/", "hotfix/", "docs/", "chore/", "ci/", "test/", "refactor/", "deps/", "dependabot/", "sync/"];
+export const FEATURE_PREFIXES = ["claude/", "chatgpt/", "codex/", "gemini/", "agent/", "feature/", "fix/", "hotfix/", "docs/", "chore/", "ci/", "test/", "refactor/", "deps/", "dependabot/", "sync/"];
 
 /**
  * Pure decision; `extraOnBase` = files changed on the base since the merge base (content the source lacks).
