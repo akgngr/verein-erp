@@ -1,6 +1,5 @@
 import { getTranslations } from "next-intl/server";
 
-import { Card } from "@/shared/components/kit";
 import type { Role } from "@/shared/roles";
 import { SecretaryProposalActions } from "../components/proposal-actions";
 import { getPendingProposals } from "../services/pending-proposals";
@@ -33,9 +32,9 @@ export async function SecretaryInboxView({ user }: { user: { id: string; role: R
   };
 
   return (
-    <Card className="border border-ink-200/80 bg-surface shadow-sm">
-      <Card.Header><h2 className="text-base font-semibold">{t("ui.proposalInbox")}</h2></Card.Header>
-      <Card.Content>
+    <section className="rounded-xl border border-ink-200/80 bg-surface p-4 shadow-sm">
+      <h2 className="mb-3 text-base font-semibold">{t("ui.proposalInbox")}</h2>
+      <div>
         {unavailable ? <p role="status" className="text-sm text-ink-500">{t("ui.proposalUnavailable")}</p> :
           proposals.length === 0 ? <p className="text-sm text-ink-500">{t("ui.proposalEmpty")}</p> :
           <ul className="divide-y divide-ink-200/70">
@@ -50,7 +49,7 @@ export async function SecretaryInboxView({ user }: { user: { id: string; role: R
               </li>
             ))}
           </ul>}
-      </Card.Content>
-    </Card>
+      </div>
+    </section>
   );
 }
