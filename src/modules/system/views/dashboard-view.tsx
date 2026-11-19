@@ -18,8 +18,13 @@ import { getSetupState } from "../services/setup";
 import {
   getDashboardLayout,
   listAvailableDashboardCards,
+  listSurfaceCards,
   type AvailableDashboardCard,
 } from "../queries/dashboard";
+import { SurfaceCards } from "./surface-cards";
+
+/** Panelin sağ sütunu: modüller `surfaces: [{ key: "panel.home", placement: "aside" }]` ile bağlanır. */
+export const PANEL_SURFACE = "panel.home";
 
 /**
  * Panel: modüllerin `cards/` klasöründen sunduğu kartlar, kullanıcının kayıtlı düzenine göre.
@@ -95,6 +100,16 @@ export async function DashboardView() {
     ? await getSetupState()
     : null;
   const tSetup = await getTranslations("system.setup");
+  const hasAside = (await listSurfaceCards(PANEL_SURFACE, "aside", user.role)).length > 0;
+
+  const board = (
+    <DashboardBoard
+      title={t("overviewTitle")}
+      description={t("overviewDescription")}
+      placed={placed}
+      available={addable}
+    />
+  );
 
   return (
     <>
@@ -112,12 +127,17 @@ export async function DashboardView() {
           </Link>
         </div>
       ) : null}
-      <DashboardBoard
-        title={t("overviewTitle")}
-        description={t("overviewDescription")}
-        placed={placed}
-        available={addable}
-      />
+      {hasAside ? (
+        <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_22rem]">
+          {/* Mobilde yan sütun önce (üstte), geniş ekranda sağda ve yapışkan. */}
+          <aside className="order-1 min-w-0 space-y-6 xl:order-2 xl:sticky xl:top-20 xl:self-start" aria-label={t("asideLabel")}>
+            <SurfaceCards surface={PANEL_SURFACE} placement="aside" />
+          </aside>
+          <div className="order-2 min-w-0 xl:order-1">{board}</div>
+        </div>
+      ) : (
+        board
+      )}
     </>
   );
 }
