@@ -7923,6 +7923,10 @@
         "daily_briefing": {
           "label": "Tägliche Morgenübersicht",
           "description": "Erstellt die Morgenübersicht einmal täglich zur gewählten Uhrzeit (Europe/Berlin, Ruhezeiten werden beachtet)."
+        },
+        "follow_up_reminders": {
+          "label": "Nachverfolgungs-Erinnerungen",
+          "description": "Erinnert im Sekretär-Überblick an fällige Nachverfolgungen (höchstens einmal täglich; keine externen Nachrichten)."
         }
       }
     },
@@ -8011,6 +8015,19 @@
         "listLabel": "Heutige Themen",
         "partial": "Einige Module haben gerade nicht geantwortet; die Liste kann unvollständig sein.",
         "more": "Alle anzeigen ({count})"
+      }
+    },
+    "secretary": {
+      "followUpDue": "Nachverfolgung: {title}",
+      "followUpExhausted": "Nachverfolgung (Erinnerungen ausgeschöpft): {title}"
+    },
+    "followUps": {
+      "errors": {
+        "dateInvalid": "Das Datum darf nicht in der Vergangenheit oder mehr als ein Jahr in der Zukunft liegen.",
+        "limit": "Sie können höchstens 100 offene Nachverfolgungen haben.",
+        "notFound": "Nachverfolgung nicht gefunden.",
+        "invalidTransition": "Diese Aktion ist für diese Nachverfolgung nicht möglich.",
+        "forbidden": "Für diese Aktion fehlt die Berechtigung."
       }
     }
   },

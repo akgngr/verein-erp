@@ -2,6 +2,31 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.7.0",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Benim yerime takip et",
+        "de": "Für mich nachverfolgen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Bir kayıt için takip oluşturabilirsiniz: son tarih, en fazla hatırlatma sayısı ve kaynağın sayfası. Süresi gelince sekreter özetinde günde en çok bir kez hatırlatılır.",
+          "de": "Sie können für einen Eintrag eine Nachverfolgung anlegen: Fälligkeitsdatum, maximale Anzahl Erinnerungen und Seite der Quelle. Bei Fälligkeit erinnert der Sekretär-Überblick höchstens einmal täglich."
+        },
+        {
+          "type": "feature",
+          "tr": "Takip duraklatılabilir, devam ettirilebilir, iptal edilebilir veya tamamlandı olarak işaretlenebilir. Kaynak kayıt değiştirilmez, kimseye mesaj gönderilmez.",
+          "de": "Nachverfolgungen lassen sich pausieren, fortsetzen, abbrechen oder abschließen. Die Quelle wird nicht verändert, es werden keine Nachrichten versendet."
+        },
+        {
+          "type": "security",
+          "tr": "Takip başlığı şifreli saklanır ve yalnız sahibine görünür; yetkisi kalkan veya pasif kullanıcının takipleri otomatik duraklatılır.",
+          "de": "Der Titel wird verschlüsselt gespeichert und ist nur für den Eigentümer sichtbar; bei entzogener Berechtigung oder deaktiviertem Konto werden Nachverfolgungen automatisch pausiert."
+        }
+      ]
+    },
+    {
       "version": "0.6.10",
       "date": "2026-11-19",
       "title": {
