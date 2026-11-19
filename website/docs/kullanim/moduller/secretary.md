@@ -13,7 +13,7 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 |---|---|
 | Anahtar | `secretary` |
 | Tür | Eklenti |
-| Sürüm | 0.6.9 |
+| Sürüm | 0.6.10 |
 | Sayfalar | `/sekreter` |
 
 ## Diğer modüllere erişim
@@ -35,6 +35,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Sekreter | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — |
 
 ## Sürüm notları
+
+### 0.6.10 — Gelişmiş Sekreter çalışma masası UI sözleşmesi
+
+_2026-11-19_
+
+- **İyileştirme:** S4–S5 posta, takip, rapor, OCR, kanal izni ve vekil işlemleri için yetki süzülmüş veriyle kullanılacak, güvenli bağlantılı, iki dilli ve salt okunur çalışma masası bileşeni hazırlandı. Gerçek işlem yetenekleri #313–#317 kapsamında bağlanacaktır.
 
 ### 0.6.9 — Günlük özet e-postası yeni şablonla
 
