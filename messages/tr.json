@@ -7904,7 +7904,22 @@
       "nextWeek": "1 hafta ertele",
       "undo": "Geri al",
       "actionDone": "Görünürlük güncellendi.",
-      "actionError": "İşlem tamamlanamadı."
+      "actionError": "İşlem tamamlanamadı.",
+      "proposalApprove": "Onayla",
+      "proposalReject": "Reddet",
+      "proposalExternal": "Dışa etkili eylem onayı",
+      "proposalExternalExplanation": "Bu işlem e-posta, ödeme veya başka bir dış işlem gerçekleştirebilir. Devam etmek istiyor musunuz?",
+      "proposalConfirm": "Evet, işlemi onayla",
+      "proposalCancel": "Vazgeç",
+      "proposalExpires": "Son geçerlilik",
+      "proposalExpired": "Önerinin süresi doldu.",
+      "proposalDone": "Öneri işlendi.",
+      "proposalError": "İşlem tamamlanamadı.",
+      "proposalInbox": "Onayınızı bekleyen öneriler",
+      "proposalUnavailable": "Öneriler şu anda yüklenemiyor.",
+      "proposalEmpty": "Onay bekleyen öneri bulunmuyor.",
+      "proposalSnooze": "1 gün ertele",
+      "proposalEdit": "Kaynakta düzenle"
     },
     "digest": {
       "subject": "Sabah özetiniz: {total} konu",
