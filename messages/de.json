@@ -8042,6 +8042,17 @@
         "invalidTransition": "Diese Aktion ist für diese Nachverfolgung nicht möglich.",
         "forbidden": "Für diese Aktion fehlt die Berechtigung."
       }
+    },
+    "delegation": {
+      "errors": {
+        "forbidden": "Für diese Aktion fehlt die Berechtigung.",
+        "self": "Sie können sich nicht selbst vertreten lassen.",
+        "expiry": "Das Ablaufdatum muss in der Zukunft und höchstens 90 Tage entfernt liegen.",
+        "delegateInvalid": "Die gewählte Person ist nicht aktiv oder kann den Sekretär nicht nutzen.",
+        "duplicate": "Für diese Person besteht bereits eine aktive Vertretung.",
+        "limit": "Sie können höchstens 5 aktive Vertretungen vergeben.",
+        "notFound": "Vertretung nicht gefunden oder nicht mehr gültig."
+      }
     }
   },
   "security-monitor": {

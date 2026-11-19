@@ -108,3 +108,21 @@ model SecretaryFollowUp {
   @@index([userId, status])
   @@map("secretary_follow_ups")
 }
+
+/// S5.2 (#316): vekil/ekip modu. Açık yetki: kapsam, süre sonu, geri alma ve denetim. Vekil hiçbir zaman
+/// sahibinin yerine onay veremez; yalnız kapsamdaki görünümü, KENDİ yetkisiyle süzülmüş olarak görür.
+model SecretaryDelegation {
+  id          String    @id @default(cuid())
+  grantorId   String
+  delegateId  String
+  /// "briefing.view" | "followUps.view"
+  scopes      String[]
+  expiresAt   DateTime
+  revokedAt   DateTime?
+  revokedById String?
+  createdAt   DateTime  @default(now())
+
+  @@index([delegateId, revokedAt, expiresAt])
+  @@index([grantorId, revokedAt])
+  @@map("secretary_delegations")
+}

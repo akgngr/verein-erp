@@ -13,7 +13,7 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 |---|---|
 | Anahtar | `secretary` |
 | Tür | Eklenti |
-| Sürüm | 0.8.0 |
+| Sürüm | 0.10.0 |
 | Sayfalar | `/sekreter` |
 
 ## Diğer modüllere erişim
@@ -37,6 +37,13 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Sekreter | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — |
 
 ## Sürüm notları
+
+### 0.10.0 — Vekil / ekip modu
+
+_2026-11-19_
+
+- **Yeni:** Sekreter özetinizi süreli bir vekâletle bir ekip arkadaşınıza salt okunur gösterebilirsiniz (en fazla 90 gün, en fazla 5 kişi). Siz veya vekil vekâleti her an geri alabilir.
+- **Güvenlik:** Vekil yalnız kendi yetkisinin izin verdiğini görür; hiçbir öneriyi sizin yerinize onaylayamaz. Her görüntüleme denetim kaydına yazılır.
 
 ### 0.8.0 — Haftalık kurul raporu
 
@@ -84,10 +91,4 @@ _2026-11-19_
 - **Yeni:** Sabah özeti, Panel'in sağ üst köşesinde "Bugün" kartı olarak görünür (yalnız sekreter yetkisi olanlara ve modül açıkken). Karttan ilgili sayfaya gidilir.
 - **Düzeltme:** Sekreter sayfası, modül açıkken "Bugün" kartını gösterirken çöküyordu; düzeltildi.
 
-### 0.6.5 — Önerileri ertele ve düzenle
-
-_2026-11-19_
-
-- **Yeni:** Bir öneri en fazla 90 gün ve geçerlilik süresi içinde ertelenebilir; ertelenen öneri onay kutusunda gizlenir. Modül izin veriyorsa öneri, kaynağın kendi düzenleme sayfasına güvenli bağlantı sunar. Onay kutusu öneri durumunu içerik göstermeden bildirir.
-
-Daha eski 10 herkese açık sürüm notu.
+Daha eski 11 herkese açık sürüm notu.
