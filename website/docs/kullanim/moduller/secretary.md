@@ -41,6 +41,7 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 _2026-11-19_
 
 - **Yeni:** Sabah özeti, Panel'in sağ üst köşesinde "Bugün" kartı olarak görünür (yalnız sekreter yetkisi olanlara ve modül açıkken). Karttan ilgili sayfaya gidilir.
+- **Düzeltme:** Sekreter sayfası, modül açıkken "Bugün" kartını gösterirken çöküyordu; düzeltildi.
 
 ### 0.6.5 — Önerileri ertele ve düzenle
 
