@@ -88,7 +88,20 @@
     "proposalUnavailable": "Öneriler şu anda yüklenemiyor.",
     "proposalEmpty": "Onay bekleyen öneri bulunmuyor.",
     "proposalSnooze": "1 gün ertele",
-    "proposalEdit": "Kaynakta düzenle"
+    "proposalEdit": "Kaynakta düzenle",
+    "preferencesTitle": "Günlük özet tercihleri",
+    "preferencesEnabled": "Günlük özet etkin",
+    "preferencesTime": "Özet saati",
+    "preferencesQuietFrom": "Sessiz saat başlangıcı",
+    "preferencesQuietTo": "Sessiz saat bitişi",
+    "preferencesInApp": "Uygulama içi",
+    "preferencesEmail": "E-posta",
+    "preferencesSave": "Kaydet",
+    "preferencesSaved": "Tercihler kaydedildi",
+    "preferencesError": "Tercihler kaydedilemedi",
+    "preferencesInvalid": "Saat ve kanal seçimlerini kontrol edin",
+    "preferencesEmailHint": "E-posta yalnız özet sayıları ve güvenli uygulama bağlantısını içerir.",
+    "preferencesUnavailable": "Tercihler şu anda yüklenemiyor."
   },
   "digest": {
     "subject": "Sabah özetiniz: {total} konu",
