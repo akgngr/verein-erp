@@ -7932,7 +7932,20 @@
       "preferencesError": "Tercihler kaydedilemedi",
       "preferencesInvalid": "Saat ve kanal seçimlerini kontrol edin",
       "preferencesEmailHint": "E-posta yalnız özet sayıları ve güvenli uygulama bağlantısını içerir.",
-      "preferencesUnavailable": "Tercihler şu anda yüklenemiyor."
+      "preferencesUnavailable": "Tercihler şu anda yüklenemiyor.",
+      "advancedTitle": "Sekreter — gelişmiş işler",
+      "advancedEmpty": "Henüz incelenecek gelişmiş işlem yok.",
+      "advancedApprovalRequired": "İşlem uygulanmadan önce açık onayınız gereklidir.",
+      "advancedMail": "Gelen posta",
+      "advancedFollowUp": "Takip",
+      "advancedWeeklyReport": "Haftalık rapor",
+      "advancedOcr": "Evrak alan önerisi",
+      "advancedChannel": "Bildirim izni",
+      "advancedDelegation": "Vekil yetkisi",
+      "advancedDraft": "Taslak",
+      "advancedNeedsReview": "İnceleme bekliyor",
+      "advancedPaused": "Duraklatıldı",
+      "advancedComplete": "Tamamlandı"
     },
     "digest": {
       "subject": "Sabah özetiniz: {total} konu",
