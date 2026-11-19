@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.8.0",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Haftalık kurul raporu",
+        "de": "Wochenbericht für den Vorstand"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Haftalık kurul raporu PDF olarak üretilebilir: yalnız alan bazında toplam, dikkat ve acil sayıları içerir; kişi adı, başlık veya tutar ayrıntısı yoktur. Rapor yalnız sizin görebildiğiniz verilerden oluşur.",
+          "de": "Ein Wochenbericht für den Vorstand kann als PDF erstellt werden: nur Summen je Bereich (gesamt, Achtung, dringend), keine Namen, Titel oder Beträge. Er enthält nur Daten, die Sie sehen dürfen."
+        },
+        {
+          "type": "security",
+          "tr": "PDF, Dosyalarım'ın üretim kuyruğunda oluşturulur, şifreli saklanır ve 30 gün sonra silinir; doğrudan indirme bağlantısı yoktur. Yetki üretim sırasında yeniden denetlenir.",
+          "de": "Das PDF wird in der Erstellungswarteschlange von „Meine Dateien“ erzeugt, verschlüsselt gespeichert und nach 30 Tagen gelöscht; kein direkter Download-Link. Die Berechtigung wird bei der Erstellung erneut geprüft."
+        }
+      ]
+    },
+    {
       "version": "0.6.10",
       "date": "2026-11-19",
       "title": {

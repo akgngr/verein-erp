@@ -36,13 +36,19 @@
   "access": {
     "system": "Hangi modüllerin açık ve onaylı olduğunu okur; özet yalnız bunların katkılarını gösterir.",
     "users": "Günlük özeti yalnız etkin ve sekreter yetkisi olan kullanıcılar için hazırlamak üzere kullanıcının durumunu ve rolünü okur.",
-    "mail": "Günlük özet e-postasını göndermek için mevcut e-posta altyapısını kullanır (yalnız tercihinde e-posta seçen kullanıcıya, yalnız toplam sayılar)."
+    "mail": "Günlük özet e-postasını göndermek için mevcut e-posta altyapısını kullanır (yalnız tercihinde e-posta seçen kullanıcıya, yalnız toplam sayılar).",
+    "exports": "Haftalık kurul raporunu (yalnız sayılar) Dosyalarım üretim hattında PDF olarak oluşturur; doğrudan indirme bağlantısı yoktur.",
+    "organization": "Rapor antedi için dernek adını, adresini ve logosunu okur."
   },
   "automation": {
     "tasks": {
       "daily_briefing": {
         "label": "Günlük sabah özeti",
         "description": "Zamanı gelen kullanıcılar için sabah özetini günde bir kez hazırlar (Europe/Berlin saati, sessiz saatlere uyar)."
+      },
+      "weekly_report": {
+        "label": "Haftalık kurul raporu (PDF)",
+        "description": "Yalnız sayılardan oluşan haftalık raporu Dosyalarım'a PDF olarak üretir."
       }
     }
   },
@@ -131,6 +137,13 @@
       "listLabel": "Bugünkü konular",
       "partial": "Bazı modüller şu an yanıt vermedi; liste eksik olabilir.",
       "more": "Tümünü gör ({count})"
+    }
+  },
+  "weeklyReport": {
+    "errors": {
+      "forbidden": "Bu rapor için yetkiniz yok.",
+      "unavailable": "Dosya üretimi şu an kullanılamıyor (Otomasyon veya Dosyalarım kapalı).",
+      "notFound": "Rapor bulunamadı."
     }
   }
 }

@@ -13,7 +13,7 @@ Oluşturulan PDF, Excel, Word, Markdown ve CSV dosyaları; şifreli saklanır.
 |---|---|
 | Anahtar | `exports` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 2.1.11 |
+| Sürüm | 2.2.0 |
 | Sayfalar | `/dosyalar` |
 
 ## Diğer modüllere erişim
@@ -42,6 +42,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `create_file` · `export_dataset` · `propose_dataset_export`
 
 ## Sürüm notları
+
+### 2.2.0 — Üretim hattında PDF
+
+_2026-11-19_
+
+- **Yeni:** Merkezi dosya üretim hattı artık PDF belgeleri de üretir (çıktı doğrulaması, şifreli saklama, yayından önce yetki denetimi). İlk kullanan: sekreterin haftalık kurul raporu.
 
 ### 2.1.11 — Arayüz altyapısı
 
@@ -85,10 +91,4 @@ _2026-11-15_
 
 - **Güvenlik:** FileGeneration facade mevcut outbox ile atomiktir; yalnız geçerli worker lease dosyayı yayımlar, pending dosyalar liste/indirmeden gizlenir.
 
-### 2.1.3 — Sürümlü veri kümesi araçları
-
-_2026-11-15_
-
-- **Yeni:** create_dataset/query_dataset/export_dataset araçları açık şema, TR/DE açıklamalar ve onay zorunluluğuyla sunulur; eski adlar uyum için korunur.
-
-Daha eski 8 herkese açık sürüm notu.
+Daha eski 9 herkese açık sürüm notu.
