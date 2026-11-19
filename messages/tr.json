@@ -8053,6 +8053,18 @@
         "limit": "En fazla 5 etkin vekâlet verebilirsiniz.",
         "notFound": "Vekâlet bulunamadı veya artık geçerli değil."
       }
+    },
+    "channels": {
+      "errors": {
+        "forbidden": "Bu işlem için yetkiniz yok.",
+        "addressInvalid": "Adres geçersiz (telefon +49… biçiminde, Telegram için sohbet kimliği).",
+        "unavailable": "Bu kanal şu an kullanılamıyor (sağlayıcı yapılandırılmamış).",
+        "rateLimited": "Bugün için doğrulama sınırına ulaşıldı.",
+        "sendFailed": "Doğrulama kodu gönderilemedi.",
+        "notPending": "Bekleyen bir doğrulama yok.",
+        "codeExpired": "Kodun süresi doldu veya deneme hakkı bitti; yeniden isteyin.",
+        "codeInvalid": "Kod hatalı."
+      }
     }
   },
   "security-monitor": {

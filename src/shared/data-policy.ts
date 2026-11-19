@@ -137,6 +137,8 @@ export const DATA_POLICY = {
   SecretaryProposal: { owner: "secretary", category: "K1", reason: "Sekreter önerisi; içerik ve önizleme şifreli", sensitiveFields: ["payloadEnc", "previewEnc", "preconditionsEnc"], personalOwnerField: "userId" },
   SecretaryFollowUp: { owner: "secretary", category: "K1", reason: "Kullanıcının takip kayıtları; başlık şifreli, kaynak yalnız uygulama içi yol", sensitiveFields: ["titleEnc"], personalOwnerField: "userId" },
   SecretaryDelegation: { owner: "secretary", category: "K1", reason: "Vekil yetkisi: sahibi, vekil, kapsam, süre sonu (içerik yok)", sensitiveFields: [], personalOwnerField: "grantorId" },
+  SecretaryChannelConsent: { owner: "secretary", category: "K1", reason: "Kullanıcının dış kanal rızası; adres şifreli, doğrulama kodu yalnız hash", sensitiveFields: ["addressEnc", "codeHash"], personalOwnerField: "userId" },
+  SecretaryChannelDelivery: { owner: "secretary", category: "K1", reason: "Dış kanal teslim kaydı (içerik/adres yok; yalnız gün, durum, sağlayıcı kimliği)", sensitiveFields: [], personalOwnerField: "userId" },
   CalendarFeedToken: { owner: "calendar", category: "K0", reason: "ICS abonelik sırrı (yalnız hash)", sensitiveFields: ["tokenHash"], personalOwnerField: "userId" },
   Meeting: { owner: "meetings", category: "K3", reason: "Toplantılar; kişi adları yok", sensitiveFields: ["createdByLabel", "approvedByLabel"] },
   MeetingDecision: { owner: "meetings", category: "K3", reason: "Kararlar", sensitiveFields: [] },

@@ -13,7 +13,7 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 |---|---|
 | Anahtar | `secretary` |
 | Tür | Eklenti |
-| Sürüm | 0.10.0 |
+| Sürüm | 0.11.0 |
 | Sayfalar | `/sekreter` |
 
 ## Diğer modüllere erişim
@@ -37,6 +37,13 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Sekreter | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — |
 
 ## Sürüm notları
+
+### 0.11.0 — Dış bildirim kanalları (rızalı)
+
+_2026-11-19_
+
+- **Yeni:** Günlük özet, rıza verip adresini doğrulayan kullanıcıya Telegram, WhatsApp veya SMS ile de gönderilebilir. Mesaj yalnız sayıları içerir; ad, başlık veya tutar gitmez.
+- **Güvenlik:** Sağlayıcı yapılandırılmadıkça kanallar kapalıdır ve hiçbir şey gönderilmez. Rıza geri alınınca adres silinir ve gönderim hemen durur; kanal başına günde tek özet, sınırlı yeniden deneme, sessiz saatlere uyulur.
 
 ### 0.10.0 — Vekil / ekip modu
 
@@ -84,11 +91,4 @@ _2026-11-19_
 
 - **Yeni:** Yetkili önerileri listeleyen onay kutusu eklendi: onayla, reddet, ertele ve izinli kaynakta düzenle bağlantısı; dışa etkili eylemlerde ikinci onay zorunludur.
 
-### 0.6.6 — Panelde "Bugün" kartı
-
-_2026-11-19_
-
-- **Yeni:** Sabah özeti, Panel'in sağ üst köşesinde "Bugün" kartı olarak görünür (yalnız sekreter yetkisi olanlara ve modül açıkken). Karttan ilgili sayfaya gidilir.
-- **Düzeltme:** Sekreter sayfası, modül açıkken "Bugün" kartını gösterirken çöküyordu; düzeltildi.
-
-Daha eski 11 herkese açık sürüm notu.
+Daha eski 12 herkese açık sürüm notu.
