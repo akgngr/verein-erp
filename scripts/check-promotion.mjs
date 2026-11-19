@@ -9,10 +9,10 @@ export const FEATURE_PREFIXES = ["claude/", "chatgpt/", "codex/", "gemini/", "ag
 
 /**
  * Pure decision; `extraOnBase` = files changed on the base since the merge base (content the source lacks).
- * @param {{ base?: string, head?: string, headRepo?: string, baseRepo?: string, extraOnBase?: string[] }} input
+ * @param {{ base?: string, head?: string, headRepo?: string, baseRepo?: string, extraOnBase?: string[], otherOpenBases?: string[] }} input
  * @returns {string[]}
  */
-export function evaluatePromotion({ base, head, headRepo, baseRepo, extraOnBase = [] }) {
+export function evaluatePromotion({ base, head, headRepo, baseRepo, extraOnBase = [], otherOpenBases = [] }) {
   /** @type {string[]} */
   const errors = [];
   if (!base || !head) return ["missing base or head ref"];
@@ -26,6 +26,10 @@ export function evaluatePromotion({ base, head, headRepo, baseRepo, extraOnBase 
     if (head !== "alpha") errors.push(`only alpha -> beta is allowed (got ${head} -> beta)`);
   } else if (base === "main") {
     if (head !== "beta") errors.push(`only beta -> main is allowed (got ${head} -> main)`);
+  }
+  // Bir dal = tek açık PR. Aynı başlığın başka hedefe açık PR'ı, aynı commit üzerindeki zorunlu kontrolü gölgeler.
+  if (otherOpenBases.length > 0) {
+    errors.push(`branch "${head}" also has an open PR into ${[...new Set(otherOpenBases)].join(", ")}; one branch may have only one open PR. Close the extra PR.`);
   }
   if ((base === "beta" || base === "main") && extraOnBase.length > 0) {
     errors.push(
@@ -49,7 +53,20 @@ function extraContentOnBase(base, head) {
   return out ? out.split("\n") : [];
 }
 
-function main() {
+/** Aynı başlık dalının başka hedeflere açık PR'ları (GitHub API, salt okunur). Token yoksa denetim atlanır. */
+async function otherOpenBasesFor(head, base) {
+  const token = process.env.GITHUB_TOKEN;
+  const repo = process.env.BASE_REPO;
+  const owner = (process.env.HEAD_REPO ?? "").split("/")[0];
+  if (!token || !repo || !owner) return [];
+  const url = `https://api.github.com/repos/${repo}/pulls?state=open&per_page=100&head=${encodeURIComponent(`${owner}:${head}`)}`;
+  const response = await fetch(url, { headers: { authorization: `Bearer ${token}`, accept: "application/vnd.github+json" } });
+  if (!response.ok) throw new Error(`GitHub API ${response.status}`);
+  const pulls = await response.json();
+  return pulls.map((pull) => pull.base.ref).filter((ref) => ref !== base);
+}
+
+async function main() {
   if (process.env.GITHUB_EVENT_NAME !== "pull_request") {
     console.log("[promotion] Non-PR event; nothing to check.");
     return;
@@ -58,6 +75,7 @@ function main() {
   const head = process.env.HEAD_REF;
   const input = { base, head, headRepo: process.env.HEAD_REPO, baseRepo: process.env.BASE_REPO, extraOnBase: [] };
   if ((base === "beta" && head === "alpha") || (base === "main" && head === "beta")) input.extraOnBase = extraContentOnBase(base, head);
+  input.otherOpenBases = await otherOpenBasesFor(head, base);
   const errors = evaluatePromotion(input);
   if (errors.length) {
     for (const error of errors) console.error(`[promotion] ✖ ${error}`);
@@ -67,4 +85,9 @@ function main() {
   console.log(`[promotion] ✓ ${head} → ${base}`);
 }
 
-if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) main();
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  main().catch((error) => {
+    console.error(`[promotion] ✖ ${error instanceof Error ? error.message : String(error)}`);
+    process.exit(1);
+  });
+}
