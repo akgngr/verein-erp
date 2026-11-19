@@ -5,7 +5,6 @@ import { Checkbox, InputGroup, Label, Spinner, TextField, Tooltip, Button, Butto
 
 import { FieldClearButton } from "@/shared/components/forms/field-clear-button";
 
-import { statusTone } from "@/shared/components/ui/status-appearance";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 

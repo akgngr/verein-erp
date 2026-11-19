@@ -13,7 +13,7 @@ Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve son tarihler tek gö
 |---|---|
 | Anahtar | `calendar` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.11 |
+| Sürüm | 1.3.12 |
 | Sayfalar | `/calendar`, `/calendar/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -41,6 +41,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `list_shared_calendar_entries` · `list_shared_calendars` · `propose_calendar_entry`
 
 ## Sürüm notları
+
+### 1.3.12 — Kod bakımı
+
+_2026-11-19_
+
+- **İyileştirme:** Kullanılmayan kod temizlendi; formlar alan değişikliklerini React Compiler ile uyumlu şekilde izliyor. Görünüm ve davranış değişmedi.
 
 ### 1.3.11 — Takvim sekreter özeti
 
@@ -84,10 +90,4 @@ _2026-11-15_
 
 - **Güvenlik:** Asistan araçları v2 veri sözleşmesine taşındı: modele giden her alan açıkça listelenir ve veri sınıfı bildirilir. Toplam ve kurumsal veriler denetimli bulut modunda da kullanılabilir; serbest kişisel içerik yalnız yerel modelde kalır.
 
-### 1.3.3 — Kullanıcı ve sistem bağı bildirildi
-
-_2026-11-15_
-
-- **Güvenlik:** Takvim senkronizasyonunun kullandığı kullanıcı ve modül durumu bilgileri artık bildirilmiş erişimle okunur. Yönetici erişimi bir kez yeniden onaylar.
-
-Daha eski 9 herkese açık sürüm notu.
+Daha eski 10 herkese açık sürüm notu.
