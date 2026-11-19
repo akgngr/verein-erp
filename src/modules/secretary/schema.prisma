@@ -74,3 +74,37 @@ model SecretaryProposal {
   @@index([userId, status, expiresAt])
   @@map("secretary_proposals")
 }
+
+enum SecretaryFollowUpStatus {
+  ACTIVE
+  PAUSED
+  DONE
+  CANCELLED
+  EXHAUSTED
+}
+
+/// S4.2 (#314): "benim yerime takip et". Kullanıcıya özel; başlık şifreli. Hatırlatma yalnız uygulama içi
+/// (sekreter özeti); kaynak kayıt değiştirilmez, dış mesaj gönderilmez.
+model SecretaryFollowUp {
+  id             String                  @id @default(cuid())
+  userId         String
+  /// Kaynağı sahiplenen modül anahtarı ve onun yetkili sayfası (uygulama içi göreli yol).
+  sourceModule   String
+  sourceHref     String
+  titleEnc       String
+  /// Europe/Berlin takvim günü "YYYY-MM-DD" (yaz/kış saatinden bağımsız).
+  dueOn          String
+  status         SecretaryFollowUpStatus @default(ACTIVE)
+  maxReminders   Int                     @default(3)
+  reminderCount  Int                     @default(0)
+  /// Son hatırlatmanın Berlin günü: aynı gün ikinci hatırlatma yok (yeniden başlatma/çift çalışma güvenli).
+  lastRemindedOn String?
+  /// PAUSED nedeni: "user" | "permission".
+  pausedReason   String?
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+
+  @@index([status, dueOn])
+  @@index([userId, status])
+  @@map("secretary_follow_ups")
+}
