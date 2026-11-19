@@ -7,8 +7,13 @@ import { pathToFileURL } from "node:url";
 /** Allowed feature branch prefixes for PRs into alpha. */
 export const FEATURE_PREFIXES = ["claude/", "chatgpt/", "codex/", "agent/", "feature/", "fix/", "hotfix/", "docs/", "chore/", "ci/", "test/", "refactor/", "deps/", "dependabot/", "sync/"];
 
-/** Pure decision; `extraOnBase` = files changed on the base since the merge base (content the source lacks). */
+/**
+ * Pure decision; `extraOnBase` = files changed on the base since the merge base (content the source lacks).
+ * @param {{ base?: string, head?: string, headRepo?: string, baseRepo?: string, extraOnBase?: string[] }} input
+ * @returns {string[]}
+ */
 export function evaluatePromotion({ base, head, headRepo, baseRepo, extraOnBase = [] }) {
+  /** @type {string[]} */
   const errors = [];
   if (!base || !head) return ["missing base or head ref"];
   if (headRepo && baseRepo && headRepo !== baseRepo) errors.push(`PRs from forks cannot target ${base} (${headRepo})`);

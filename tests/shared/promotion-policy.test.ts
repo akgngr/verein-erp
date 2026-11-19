@@ -1,12 +1,11 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
 
-// @ts-expect-error -- plain ESM script without type declarations
 import { evaluatePromotion } from "../../scripts/check-promotion.mjs";
 
 const repo = "akgngr/verein-erp";
-const ok = (input: Record<string, unknown>) => assert.deepEqual(evaluatePromotion({ headRepo: repo, baseRepo: repo, ...input }), []);
-const bad = (input: Record<string, unknown>, pattern: RegExp) => {
+const ok = (input: { base: string; head: string; headRepo?: string; extraOnBase?: string[] }) => assert.deepEqual(evaluatePromotion({ headRepo: repo, baseRepo: repo, ...input }), []);
+const bad = (input: { base: string; head: string; headRepo?: string; extraOnBase?: string[] }, pattern: RegExp) => {
   const errors: string[] = evaluatePromotion({ headRepo: repo, baseRepo: repo, ...input });
   assert.ok(errors.some((error) => pattern.test(error)), `${JSON.stringify(input)} → ${JSON.stringify(errors)}`);
 };
