@@ -13,7 +13,7 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 |---|---|
 | Anahtar | `secretary` |
 | Tür | Eklenti |
-| Sürüm | 0.6.2 |
+| Sürüm | 0.6.3 |
 | Sayfalar | `/sekreter` |
 
 ## Diğer modüllere erişim
@@ -34,6 +34,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Sekreter | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — |
 
 ## Sürüm notları
+
+### 0.6.3 — Günlük özet arka planda güvenilir
+
+_2026-11-19_
+
+- **Düzeltme:** Günlük özet işi arka plan sürecinde (worker) hata vermeden çalışır; tüm modül katkıları orada da hesaplanır.
 
 ### 0.6.2 — Özet öğelerinde kapat/ertele/geri al
 
@@ -77,8 +83,4 @@ _2026-11-18_
 
 - **Yeni:** Sekreter tercihleri, özet öğelerini kapatma/erteleme durumu ve öneriler için tablolar eklendi. Kullanıcı silindiğinde bu kayıtlar da silinir.
 
-### 0.1.0 — Sekreter modülü iskeleti
-
-_2026-11-18_
-
-- **Yeni:** Kişisel sekreter modülü eklendi (varsayılan kapalı). Sabah özeti ve öneriler sonraki sürümlerde gelecek.
+Daha eski 1 herkese açık sürüm notu.

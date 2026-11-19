@@ -147,7 +147,7 @@ function defaultProposalHook(user: { id: string; role: Role }, now: Date, regist
 
 // Varsayılan bağımlılıklar gerektiğinde yüklenir (birim testleri Next/DB zincirini yüklemez).
 async function defaultUsableModules(): Promise<string[]> {
-  return (await import("@/modules/system/server")).listUsableModuleKeys();
+  return (await import("@/modules/system/automation")).listUsableModuleKeys(); // worker-safe
 }
 
 async function defaultItemStates(userId: string): Promise<ItemState[]> {

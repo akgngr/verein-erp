@@ -272,14 +272,7 @@ export async function listMemberOptions(options: { ids?: string[] } = {}): Promi
 }
 
 /** Bu e-posta adresine sahip (silinmemiş) üyelerin kimlikleri; kullanıcıyı üye kaydıyla eşleştirmek için. */
-export async function findMemberIdsByEmail(email: string): Promise<string[]> {
-  const { getDb } = await import("@/shared/db");
-  const members = await getDb().member.findMany({
-    where: { email: { equals: email, mode: "insensitive" }, deletedAt: null },
-    select: { id: true },
-  });
-  return members.map((member) => member.id);
-}
+export { findMemberIdsByEmail } from "./queries/find-member-ids-by-email";
 export { getMemberSelfService, applyMemberSelfService } from "./services/online-form";
 export type { MemberSelfService, MemberSelfServiceInput } from "./services/online-form";
 export { listDebitableDues, recordSepaDuePayments, voidSepaDuePayment, type DebitableDue } from "./services/sepa-debit";
