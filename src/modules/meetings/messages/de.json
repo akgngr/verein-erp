@@ -604,5 +604,9 @@
   },
   "campaign": {
     "announce": "Teilnehmende benachrichtigen"
+  },
+  "secretary": {
+    "upcoming": "{count} Sitzungen in den nächsten 3 Tagen",
+    "missingAgenda": "{count} Sitzungen ohne Tagesordnung"
   }
 }

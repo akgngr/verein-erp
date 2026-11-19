@@ -71,6 +71,11 @@ export type SecretaryAction<P = unknown> = {
   /** Kaynağın şimdiki durumu; öneri sonrası değiştiyse öneri bayattır. null: kaynak artık yok. */
   snapshot?: (payload: P) => Promise<unknown>;
   execute: (payload: P, context: SecretaryActionContext) => Promise<{ href?: string }>;
+  /**
+   * İsteğe bağlı "düzenle" yolu: kaynağın kendi yetkili düzenleme sayfası (uygulama içi göreli yol).
+   * Sunucu doğrular (`/` ile başlar, `//` veya şema yok); payload istemciye gitmez. #296
+   */
+  editHref?: (payload: P) => string | null;
 };
 
 export type ModuleSecretary = { module: string; providers: SecretaryProvider[]; actions?: SecretaryAction[] };

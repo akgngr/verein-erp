@@ -94,3 +94,21 @@ test("shared DataTable keeps accessible controlled selection wiring", () => {
   assert.match(bulkBar, /aria-label=\{tTable\("bulkActions"\)\}/);
   assert.match(bulkBar, /aria-busy=/);
 });
+
+/**
+ * RSC sınırı: "use client" kit bileşenlerinin statik alt özellikleri (Card.Header, Tabs.Tab …) sunucu
+ * bileşeninde undefined olur ve sayfa "Element type is invalid" ile çöker. Sunucu bileşenleri ayrı
+ * exportları (CardHeader, CardContent …) kullanmalı.
+ */
+test("server components do not use static subcomponents of client kit primitives", () => {
+  const offenders = walk(path.join(ROOT, "src/modules"))
+    .filter((file) => file.endsWith(".tsx"))
+    .filter((file) => {
+      const source = fs.readFileSync(file, "utf8");
+      if (/^\s*["']use client["']/.test(source)) return false;
+      if (!source.includes("@/shared/components/kit")) return false;
+      return /<(Card|Tabs|Table|Dialog|Sheet|Select|ComboBox|Dropdown)\.[A-Z]/.test(source);
+    })
+    .map((file) => path.relative(ROOT, file));
+  assert.deepEqual(offenders, [], "Use CardHeader/CardContent/... in server components");
+});

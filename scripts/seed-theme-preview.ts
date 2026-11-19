@@ -1,5 +1,7 @@
 /** Synthetic browser fixtures for the disposable GitHub Actions database only. */
+import { moduleConfig as secretaryConfig } from "../src/modules/secretary/module.config";
 import { createPrismaClient } from "../src/shared/db-client";
+import { accessSignature } from "../src/shared/modules/module-access";
 
 async function main() {
   const url = new URL(process.env.DATABASE_URL ?? "");
@@ -41,6 +43,19 @@ async function main() {
       where: { moduleKey: "accounting" },
       create: { moduleKey: "accounting", isEnabled: true },
       update: { isEnabled: true },
+    });
+    // Sekreter (EXTENSION): Panel'in sağ sütunundaki "Bugün" kartının tarayıcı smoke'u için açılır ve
+    // erişim talebi onaylanır (#291). Yalnız tek kullanımlık CI veritabanında.
+    await db.systemModuleState.upsert({
+      where: { moduleKey: "secretary" },
+      create: { moduleKey: "secretary", isEnabled: true },
+      update: { isEnabled: true },
+    });
+    const secretaryAccess = JSON.stringify({ signature: accessSignature(secretaryConfig.access), approvedAt: new Date().toISOString(), approvedBy: user.id });
+    await db.systemSetting.upsert({
+      where: { key: "module-access:secretary" },
+      create: { key: "module-access:secretary", value: secretaryAccess, description: "module-access approval" },
+      update: { value: secretaryAccess },
     });
     await db.accountingSettings.upsert({
       where: { id: "singleton" },

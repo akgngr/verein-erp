@@ -2,6 +2,36 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.3.12",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Kod bakımı",
+        "de": "Codepflege"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Kullanılmayan kod temizlendi; formlar alan değişikliklerini React Compiler ile uyumlu şekilde izliyor. Görünüm ve davranış değişmedi.",
+          "de": "Ungenutzter Code entfernt; Formulare beobachten Feldänderungen kompatibel mit dem React Compiler. Aussehen und Verhalten bleiben unverändert."
+        }
+      ]
+    },
+    {
+      "version": "1.3.11",
+      "date": "2026-11-18",
+      "title": {
+        "tr": "Takvim sekreter özeti",
+        "de": "Kalender in der Sekretariatsübersicht"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Kişisel ve ortak takvimlerin bugünkü/yarınki kayıt sayıları ve saat çakışmaları, gizlilik sınırları korunarak özetlenir.",
+          "de": "Eigene und gemeinsame Kalendertermine heute/morgen und Terminüberschneidungen werden unter Beachtung der Zugriffsgrenzen zusammengefasst."
+        }
+      ]
+    },
+    {
       "version": "1.3.10",
       "date": "2026-11-18",
       "title": {

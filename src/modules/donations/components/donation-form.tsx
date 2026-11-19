@@ -11,7 +11,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Controller, useForm, type Resolver } from "react-hook-form";
+import { Controller, useForm, type Resolver, useWatch } from "react-hook-form";
 import { useTranslations } from "next-intl";
 
 import { applyActionResult } from "@/shared/components/forms/action-result";
@@ -86,13 +86,11 @@ export function DonationForm({
     },
   });
 
-  const amount = form.watch("amount");
+  const amount = useWatch({ control: form.control, name: "amount" });
   const cents =
     Number((amount ?? "0").replace(",", ".").replace(/[^\d.]/g, "")) * 100 || 0;
   const showSmallHint = cents > 0 && cents <= SMALL_DONATION_LIMIT_CENTS;
-  const waived = form.watch("waivedReimbursement");
-  const method = form.watch("method");
-  void method;
+  const waived = useWatch({ control: form.control, name: "waivedReimbursement" });
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(null);

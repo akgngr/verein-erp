@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. En üst sürüm module.config.ts ile aynı olmalı.",
   "releases": [
     {
+      "version": "1.3.5",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Kod bakımı",
+        "de": "Codepflege"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Kullanılmayan kod temizlendi; formlar alan değişikliklerini React Compiler ile uyumlu şekilde izliyor. Görünüm ve davranış değişmedi.",
+          "de": "Ungenutzter Code entfernt; Formulare beobachten Feldänderungen kompatibel mit dem React Compiler. Aussehen und Verhalten bleiben unverändert."
+        }
+      ]
+    },
+    {
       "version": "1.3.4",
       "date": "2026-11-17",
       "appVersion": "0.41.0",

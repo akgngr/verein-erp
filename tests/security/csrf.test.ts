@@ -102,7 +102,7 @@ describe("CSRF Koruması", () => {
       // Bu, CSRF korumasının etkili olduğunu doğrulamak içindir
       
       // Simülasyon: CSRF saldırısı
-      const csrfAttack = {
+      const _csrfAttack = {
         method: "POST",
         url: "/api/transfer",
         headers: {

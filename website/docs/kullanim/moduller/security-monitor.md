@@ -13,7 +13,7 @@ Regularly runs system security tests and monitors results
 |---|---|
 | Anahtar | `security-monitor` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.4 |
+| Sürüm | 1.3.5 |
 | Sayfalar | `/guvenlik-izleme` |
 | Gerektirir | [Otomasyon](./automation) |
 
@@ -34,6 +34,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Güvenlik İzleme | görüntüleme, oluşturma, düzenleme, silme | — | — | — | görüntüleme | — |
 
 ## Sürüm notları
+
+### 1.3.5 — Kod bakımı
+
+_2026-11-19_
+
+- **İyileştirme:** Kullanılmayan kod temizlendi; formlar alan değişikliklerini React Compiler ile uyumlu şekilde izliyor. Görünüm ve davranış değişmedi.
 
 ### 1.3.4 — Güvenlik paneli ortak UI katmanında
 
@@ -78,12 +84,4 @@ _2026-11-05_
 
 - **Düzeltme:** İstatistik, test geçmişi ve uyarı API'lerinden gelen hatalarda HTTP durumu ve sunucu hata ayrıntıları artık konsola yansıtılıyor.
 
-### 1.1.0 — Modül standardı ve kalıcı test yürütme
-
-_2026-11-05_
-
-- **İyileştirme:** İstemci, sunucu ve arayüz public API girişleri ayrıştırıldı.
-- **İyileştirme:** Güvenlik testleri HTTP isteği içinde çalıştırılmak yerine Automation worker kuyruğuna alındı.
-- **Düzeltme:** Automation modül bağımlılığı ve yönetici erişim onayı tanımlandı.
-
-Daha eski 1 herkese açık sürüm notu.
+Daha eski 2 herkese açık sürüm notu.

@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.12.7",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Panel sağ sütunu",
+        "de": "Rechte Spalte im Dashboard"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Panel'de modüllerin bağlanabildiği sağ sütun (mobilde üstte) eklendi; sütun yalnız gösterilecek kart varsa görünür.",
+          "de": "Das Dashboard hat eine rechte Spalte (mobil oben), in die Module Karten einbinden können; sie erscheint nur, wenn es Karten gibt."
+        }
+      ]
+    },
+    {
       "version": "1.12.6",
       "date": "2026-11-18",
       "title": {

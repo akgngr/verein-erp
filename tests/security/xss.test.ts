@@ -221,7 +221,7 @@ describe("XSS Koruması", () => {
       // Bu, statik analiz ile yapılmalıdır
       
       // Örnek: dangerouslySetInnerHTML kullanımı
-      const html = "<div dangerouslySetInnerHTML={{ __html: userInput }}>";
+      const _html = "<div dangerouslySetInnerHTML={{ __html: userInput }}>";
       
       // Eğer userInput kontrol edilmeden kullanılırsa, XSS riski vardır
       // Bu test, böyle kullanımların olmadığını doğrulamak içindir

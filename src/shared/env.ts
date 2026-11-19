@@ -27,6 +27,13 @@ const envSchema = z.object({
   ORGANIZATION_NAME: z.string().min(1).default("Dernek"),
   // PDF dili (Faz 4 Adım 5): de = Almanca (varsayılan), tr = Türkçe.
   DOCUMENT_LANGUAGE: z.enum(["de", "tr"]).default("de"),
+  // Uygulamanın herkese açık adresi (e-postalardaki bağlantılar için; ör. https://erp.ornek.de).
+  // Tanımlı değilse uygulama dışı bağlantı gerektiren e-postalar (sekreter günlük özeti) gönderilmez.
+  APP_URL: z
+    .string()
+    .url("APP_URL geçerli bir adres olmalı (ör. https://erp.ornek.de).")
+    .refine((value) => /^https?:\/\//.test(value), "APP_URL http(s) ile başlamalı.")
+    .optional(),
 });
 
 export type Env = z.infer<typeof envSchema>;

@@ -108,3 +108,33 @@ test("secretary providers: sözleşme geçerli ve görüntüleme yetkisine bağl
     }
   }
 });
+
+test("secretary providers: muhasebe ihtar önerisi yalnız sunucuda, güvenli ve yetkiye bağlı", async () => {
+  const { dunningAction, DUNNING_PROPOSAL_LIMIT } = await import("@/modules/accounting/secretary");
+  const { isSafeInternalHref } = await import("@/modules/secretary/services/proposals");
+  const snapshot = {
+    overdueInvoices: { count: 2, cents: 5_000 },
+    overduePayables: { count: 0, cents: 0 },
+    draftPayables: 0,
+    openBankTransactions: 0,
+    nextTaxDeadline: null,
+    dunnable: [{ id: "inv-a", level: 1 }, { id: "inv-b", level: 2 }],
+  };
+  const [overdue] = buildAccountingItems(snapshot, { t: translator(accountingTr) }, today);
+  assert.deepEqual(overdue.suggestion, { action: "dunning", payload: { invoiceIds: ["inv-a", "inv-b"] } });
+  assert.deepEqual(validateBriefingItem("accounting", overdue), []);
+  assert.equal(buildAccountingItems({ ...snapshot, dunnable: [] }, { t: translator(accountingTr) }, today)[0].suggestion, undefined);
+
+  assert.equal(dunningAction.risk, "internal", "yalnız kayıt; e-posta/PDF gönderimi yok");
+  assert.equal(dunningAction.permission.action, "update");
+  assert.equal(can("TREASURER", dunningAction.permission.definition, "update"), true);
+  assert.equal(can("BOARD", dunningAction.permission.definition, "update"), false);
+  assert.ok(dunningAction.schema.safeParse({ invoiceIds: ["a"] }).success);
+  assert.ok(!dunningAction.schema.safeParse({ invoiceIds: [] }).success);
+  assert.ok(!dunningAction.schema.safeParse({ invoiceIds: Array.from({ length: DUNNING_PROPOSAL_LIMIT + 1 }, (_, i) => `i${i}`) }).success);
+  assert.ok(!dunningAction.schema.safeParse({ invoiceIds: ["a"], extra: 1 }).success);
+  assert.ok(isSafeInternalHref(dunningAction.editHref?.({ invoiceIds: ["a"] })));
+  const preview = await dunningAction.preview({ invoiceIds: ["a", "b"] }, { user: { id: "u", role: "ADMIN" }, now: today, t: translator(accountingTr) });
+  assert.ok(preview.title.length > 0 && !preview.title.includes("inv-"));
+  assert.deepEqual(validateModuleSecretary("accounting", accountingSecretary), []);
+});

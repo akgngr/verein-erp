@@ -4,7 +4,7 @@ import { Description, FieldError, Input, Label, Spinner, TextField, Button } fro
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useEffect, useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 
@@ -68,7 +68,7 @@ export function MailSettingsForm({
     register,
     handleSubmit,
     reset,
-    watch,
+    control,
     getValues,
     setValue,
     formState: { errors },
@@ -81,7 +81,7 @@ export function MailSettingsForm({
     reset(toMailSettingsFormValues(settings));
   }, [settings, reset]);
 
-  const transport = watch("transport");
+  const transport = useWatch({ control, name: "transport" });
   const isSmtp = transport === "SMTP";
 
   const errorText = (message: string | undefined): string | undefined => {

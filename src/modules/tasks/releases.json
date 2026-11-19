@@ -2,6 +2,36 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.3.9",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Sekreter katkısı worker uyumlu",
+        "de": "Sekretariatsbeitrag im Worker lauffähig"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Sabah özetindeki görev sayıları artık arka plan işinde (günlük özet) de doğru hesaplanır; kimlik eşleştirmesi değişmedi.",
+          "de": "Die Aufgabenzahlen der Morgenübersicht werden jetzt auch im Hintergrundjob (tägliche Übersicht) korrekt berechnet; die Zuordnung bleibt unverändert."
+        }
+      ]
+    },
+    {
+      "version": "1.3.8",
+      "date": "2026-11-18",
+      "title": {
+        "tr": "Görevler sekreter özeti",
+        "de": "Aufgaben in der Sekretariatsübersicht"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Bana atanan veya oluşturduğum, bugün vadesi dolan ve geciken açık görev sayıları sekreterde gösterilir.",
+          "de": "Heute fällige und überfällige eigene oder zugeordnete offene Aufgaben erscheinen in der Sekretariatsübersicht."
+        }
+      ]
+    },
+    {
       "version": "1.3.7",
       "date": "2026-11-18",
       "title": {
