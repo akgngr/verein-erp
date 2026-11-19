@@ -13,7 +13,7 @@ Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi.
 |---|---|
 | Anahtar | `documents` |
 | Tür | Resmî modül |
-| Sürüm | 1.9.1 |
+| Sürüm | 1.10.0 |
 | Sayfalar | `/evrak`, `/evrak/kategoriler` |
 | Önerir | [Muhasebe](./accounting), [Görevler](./tasks), [Yapay zekâ asistanı](./ai) |
 
@@ -44,6 +44,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_document` · `get_document_statistics` · `list_documents` · `propose_delete_document` · `propose_document` · `propose_document_status` · `read_document_file`
 
 ## Sürüm notları
+
+### 1.10.0 — OCR önerilerinde kaynak ve güven
+
+_2026-11-19_
+
+- **İyileştirme:** Belge analizinde her alan önerisi kaynağını (metin katmanı veya OCR), güven değerini ve bulunduğu satırı taşır; OCR güveni düşükse öneriler ayrıca doğrulanacak şekilde işaretlenir. Öneriler yine yalnız öneridir, otomatik kaydedilmez ve hiçbir veri dışarı gönderilmez.
 
 ### 1.9.1 — Arayüz altyapısı
 
@@ -87,10 +93,4 @@ _2026-11-16_
 
 - **İyileştirme:** Resimler OCR'dan önce büyütülüp PNG'ye çevrilir: küçük ekran görüntüleri ve WebP dosyaları artık okunur.
 
-### 1.7.0 — Asistandan kayıtta dosya eki; daha güçlü OCR
-
-_2026-11-16_
-
-- **Yeni:** Asistanın önerdiği evrak kaydı onaylanınca sohbete eklenen dosya kayda eklenir (normal yükleme kurallarıyla doğrulanır). Taranmış PDF'lerde sayfa görüntüsü de OCR ile okunur.
-
-Daha eski 15 herkese açık sürüm notu.
+Daha eski 16 herkese açık sürüm notu.
