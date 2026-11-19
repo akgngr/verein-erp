@@ -1897,7 +1897,9 @@
         "ustva": "KDV ön beyanı",
         "annualVat": "Yıllık KDV beyanı",
         "incomeTax": "Gelir/kurumlar vergisi beyanı"
-      }
+      },
+      "dunningProposal": "{count} vadesi geçmiş fatura için ihtar kaydı oluştur",
+      "dunningProposalDetail": "Her faturaya sıradaki ihtar kademesi (ücret ve faiz ayarlara göre) kaydedilir. E-posta veya PDF gönderilmez; ihtarları faturalar ekranından gözden geçirip gönderirsiniz."
     }
   },
   "ai": {
