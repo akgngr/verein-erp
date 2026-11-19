@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.6.3",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Günlük özet arka planda güvenilir",
+        "de": "Tägliche Übersicht im Hintergrund zuverlässig"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Günlük özet işi arka plan sürecinde (worker) hata vermeden çalışır; tüm modül katkıları orada da hesaplanır.",
+          "de": "Der Job für die tägliche Übersicht läuft im Hintergrundprozess (Worker) fehlerfrei; alle Modulbeiträge werden dort ebenfalls berechnet."
+        }
+      ]
+    },
+    {
       "version": "0.6.2",
       "date": "2026-11-19",
       "title": {

@@ -13,7 +13,7 @@ Görev ve iş takibi yönetimi.
 |---|---|
 | Anahtar | `tasks` |
 | Tür | Eklenti |
-| Sürüm | 1.3.8 |
+| Sürüm | 1.3.9 |
 | Sayfalar | `/tasks`, `/tasks/bana-atananlar` |
 
 ## Diğer modüllere erişim
@@ -41,6 +41,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `list_open_tasks` · `propose_complete_task` · `propose_delete_task` · `propose_task`
 
 ## Sürüm notları
+
+### 1.3.9 — Sekreter katkısı worker uyumlu
+
+_2026-11-19_
+
+- **Düzeltme:** Sabah özetindeki görev sayıları artık arka plan işinde (günlük özet) de doğru hesaplanır; kimlik eşleştirmesi değişmedi.
 
 ### 1.3.8 — Görevler sekreter özeti
 
@@ -84,10 +90,4 @@ _2026-11-15_
 
 - **Güvenlik:** Öneri araçları katı Zod girdisi ve sabit model sonucu kullanır; salt öneri sorguları gereksiz kişi detaylarını okumaz. Kalan eski okuma araçlarının dönüşümü ayrı sürer.
 
-### 1.3.0 — Görev ön doldurma
-
-_2026-11-15_
-
-- **İyileştirme:** Yeni görev formu adres parametreleriyle (baslik, aciklama, bitis) önceden doldurulabilir; ör. evraktaki termin.
-
-Daha eski 6 herkese açık sürüm notu.
+Daha eski 7 herkese açık sürüm notu.

@@ -1,6 +1,7 @@
 import "server-only";
 
-import { getUserById } from "@/modules/users/server";
+// Worker-safe giriş: users/server next-auth zincirini yükler ve worker'da çalışmaz.
+import { getUserById } from "@/modules/users/automation";
 import { getDb } from "@/shared/db";
 
 import { getBriefing } from "./briefing";

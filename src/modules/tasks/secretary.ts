@@ -37,10 +37,11 @@ export function buildTaskBriefing(counts: { overdue: number; today: number }, co
 
 /** Mirrors the existing Tasks "mine" identity policy, not a name-only match. */
 async function countMine(context: SecretaryContext): Promise<{ overdue: number; today: number }> {
-  const { getUserProfiles } = await import("@/modules/auth/server");
-  const [user] = await getUserProfiles([context.user.id]);
+  // Worker-safe girişler (auth/server ve members/server next-auth'u yükler; worker'da çalışmaz).
+  const { getUserById } = await import("@/modules/users/automation");
+  const user = await getUserById(context.user.id);
   if (!user?.isActive) return { overdue: 0, today: 0 };
-  const { findMemberIdsByEmail } = await import("@/modules/members/server");
+  const { findMemberIdsByEmail } = await import("@/modules/members/automation");
   const memberIds = await resolveTaskAssigneeIds({ id: context.user.id, email: user.email }, findMemberIdsByEmail);
   const day = new Date(`${taskBerlinDay(context.now)}T00:00:00.000Z`);
   const common = {

@@ -46,3 +46,4 @@ export { getMemberContacts, searchMemberContacts, type MemberContact } from "./q
 export { describeDuesDataset, streamDuesDataset, duesSnapshotHasher, loadDuesDataset, duesDatasetQuerySchema, parseDuesDatasetQuery, DUES_DATASET_COLUMNS, memberPaymentsPermissions } from "./services/ai-dataset";
 export {getLiveMemberIdentity,getLiveMemberLabels} from "./services/identity-link";
 export {membersPermissions} from "./permissions";
+export { findMemberIdsByEmail } from "./queries/find-member-ids-by-email";
