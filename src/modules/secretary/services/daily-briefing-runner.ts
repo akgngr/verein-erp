@@ -7,7 +7,12 @@ import { getDb } from "@/shared/db";
 import { getEnv } from "@/shared/env";
 
 import { getBriefing } from "./briefing";
-import { createEmailDelivery } from "./briefing-email";
+import { renderSecretaryDailySummary } from "../emails/daily-summary";
+import { type BriefingEmailRenderer, createEmailDelivery } from "./briefing-email";
+
+/** T3.2 şablonu (#262): yalnız sayılar + güvenilir uygulama adresi; HTML ve düz metin. */
+export const dailySummaryRenderer: BriefingEmailRenderer = (digest, { locale, url }) =>
+  renderSecretaryDailySummary(digest, locale, new URL(url).origin);
 import { type DailyBriefingResult, runDailyBriefings } from "./daily-briefing";
 
 /** Veritabanına bağlı varsayılanlarla günlük özet çalıştırması (worker). */
@@ -38,6 +43,7 @@ export async function runScheduledBriefings(now: Date): Promise<DailyBriefingRes
       locale: env.DOCUMENT_LANGUAGE,
       isMailConfigured,
       send: (message) => sendMail(message),
+      render: dailySummaryRenderer,
     }),
   });
 }

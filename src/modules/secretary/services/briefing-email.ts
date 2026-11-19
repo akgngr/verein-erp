@@ -7,7 +7,7 @@ import type { BriefingDigest, BriefingRecipient } from "./daily-briefing";
  * isim, tutar, başlık veya öğe ayrıntısı gönderilmez. Alıcı adresi yalnız teslimde kullanılır.
  * Görsel/HTML şablon T3.2'de (#262) `renderBriefingEmail` yerine bağlanabilir; sözleşme aynı kalır.
  */
-export type BriefingEmail = { subject: string; text: string };
+export type BriefingEmail = { subject: string; text: string; html?: string };
 export type BriefingEmailRenderer = (digest: BriefingDigest, options: { locale: "tr" | "de"; url: string }) => BriefingEmail;
 
 const MESSAGES = { tr: tr.digest, de: de.digest } as const;
@@ -43,7 +43,7 @@ export type EmailDeliveryDeps = {
   appUrl: string | undefined;
   locale: "tr" | "de";
   isMailConfigured: () => Promise<boolean>;
-  send: (message: { to: string; subject: string; text: string; context: { module: string; reference?: string } }) => Promise<{ ok: boolean }>;
+  send: (message: { to: string; subject: string; text: string; html?: string; context: { module: string; reference?: string } }) => Promise<{ ok: boolean }>;
   render?: BriefingEmailRenderer;
 };
 
@@ -59,7 +59,7 @@ export function createEmailDelivery(deps: EmailDeliveryDeps) {
     const url = secretaryLink(deps.appUrl);
     if (!url || !(await deps.isMailConfigured())) return;
     const email = (deps.render ?? renderBriefingEmail)(digest, { locale: deps.locale, url });
-    const result = await deps.send({ to: user.email, subject: email.subject, text: email.text, context: { module: "secretary", reference: `daily-briefing:${digest.date}` } });
+    const result = await deps.send({ to: user.email, subject: email.subject, text: email.text, ...(email.html ? { html: email.html } : {}), context: { module: "secretary", reference: `daily-briefing:${digest.date}` } });
     if (!result.ok) throw new BriefingEmailError("SECRETARY_BRIEFING_EMAIL_FAILED");
   };
 }
