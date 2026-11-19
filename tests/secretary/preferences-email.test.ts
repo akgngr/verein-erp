@@ -135,7 +135,9 @@ test("email: T3.2 şablonu teslimde kullanılır; HTML kaçışlı, yalnız say�
   await deliver({ id: "u1", role: "ADMIN", isActive: true, email: "owner@example.test" }, "email", digest);
   assert.equal(sent.length, 1);
   assert.match(sent[0].text, /https:\/\/erp\.example\.test\/sekreter/);
-  assert.ok(sent[0].html?.includes('href="https://erp.example.test/sekreter"'));
+  const href = /href="([^"]+)"/.exec(sent[0].html ?? "")?.[1];
+  assert.ok(href);
+  assert.deepEqual([new URL(href).origin, new URL(href).pathname], ["https://erp.example.test", "/sekreter"]);
   assert.ok(!`${sent[0].text}${sent[0].html}`.includes("owner@example.test"), "alıcı adresi gövdede yok");
   // Üretimde http (localhost dışı) reddedilir; teslim hata verir, runner bu kullanıcıyı atlar.
   const insecure = createEmailDelivery({ appUrl: "http://erp.example.test", locale: "de", isMailConfigured: async () => true, send: async () => ({ ok: true }), render: dailySummaryRenderer });
