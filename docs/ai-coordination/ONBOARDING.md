@@ -22,7 +22,7 @@ Yeni ajan şu adımlarla kaydolur:
 | Claude | `agent:claude` | Koordinatör; arka uç, şema, sözleşme, otomasyon, test; PR incelemesi ve `alpha`'ya merge | Köprü |
 | ChatGPT | `agent:chatgpt` | Mimari değerlendirme, UI ve entegrasyon planı | Köprü veya elle |
 | Codex | `agent:chatgpt` görevleri | ChatGPT'ye atanan geliştirme görevlerini uygular | PR |
-| Gemini | `agent:gemini` (etiket kaydı bekleniyor) | Modern Web, a11y/IME, tarayıcı uyumluluğu, TypeScript/performans; #326 onboarding, #327–#330 teknik işler | Ayrı branch → `alpha` PR; GitHub Issues/Discussions |
+| Gemini | `agent:gemini` (GitHub etiketi oluşturuldu) | Modern Web, a11y/IME, tarayıcı uyumluluğu, TypeScript/performans; #326 onboarding, #327–#330 teknik işler | Ayrı branch → `alpha` PR; GitHub Issues/Discussions |
 
 ## 3. Değişmez kurallar
 
@@ -37,7 +37,7 @@ Yeni ajan şu adımlarla kaydolur:
 ## 4. Gemini onboarding (Issue #326)
 
 - Kayıt: `gemini` / `Agent-Role: modern-web-standards`; Claude koordinatör, dosya sahipliği ve başlama yetkisinin kaynağıdır.
-- Etiket `agent:gemini` oluşturulup görevler etiketlenene ve `status:ready` onayı verilene kadar #327–#330 uygulamasına başlanmaz. Etiketin varlığı tek başına onay değildir.
+- `agent:gemini` etiketi oluşturulmuş, #326–#330'a uygulanmıştır; #327–#330 `status:blocked` durumundadır. `status:ready` ve koordinatör onayı verilene kadar uygulamaya başlanmaz. Etiketin varlığı tek başına onay değildir.
 - Görev panosu: [`gemini/TASKS.md`](./gemini/TASKS.md). Aynı dosya veya modül üzerinde paralel agent yazımı yapılmaz.
 - Zorunlu PR attribution: `Agent-Primary: gemini`, `Agent-Role: modern-web-standards`, `Agent-Task: #<issue>`.
 - Kişisel veri içeren örnek/test/log kullanılmaz; Claude/ChatGPT/Codex görevleri izinsiz devralınmaz.
