@@ -26,6 +26,11 @@ const CardHeader = ({ className, children }: Base) => <HCard.Header className={c
 const CardContent = ({ className, children }: Base) => <HCard.Content className={className}>{children}</HCard.Content>;
 const CardFooter = ({ className, children }: Base) => <HCard.Footer className={className}>{children}</HCard.Footer>;
 export const Card = Object.assign(CardRoot, { Header: CardHeader, Content: CardContent, Footer: CardFooter });
+/**
+ * Sunucu bileşenleri için ayrı exportlar: "use client" modülünün statik alt özellikleri (Card.Header)
+ * RSC sınırında taşınmaz ve sunucuda undefined olur. Sunucu bileşenleri CardHeader/CardContent/CardFooter kullanır.
+ */
+export { CardHeader, CardContent, CardFooter };
 
 // ---------------------------------------------------------------- Tabs
 

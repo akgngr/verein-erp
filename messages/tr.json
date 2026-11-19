@@ -193,7 +193,8 @@
       "sm": "Küçük",
       "md": "Orta",
       "lg": "Geniş"
-    }
+    },
+    "asideLabel": "Bugün ve hatırlatmalar"
   },
   "meta": {
     "panel": "Panel",
@@ -7911,6 +7912,16 @@
       "urgent": "Bunlardan {danger} tanesi acil.",
       "link": "Özeti açmak için: {url}",
       "footer": "Bu e-postayı sekreter tercihlerinizden kapatabilirsiniz. Ayrıntılar yalnız uygulamada, oturum açtıktan sonra görünür."
+    },
+    "cards": {
+      "today": {
+        "title": "Bugün",
+        "description": "Sekreterin sabah özeti",
+        "empty": "Bugün dikkat gerektiren bir konu yok.",
+        "listLabel": "Bugünkü konular",
+        "partial": "Bazı modüller şu an yanıt vermedi; liste eksik olabilir.",
+        "more": "Tümünü gör ({count})"
+      }
     }
   },
   "security-monitor": {

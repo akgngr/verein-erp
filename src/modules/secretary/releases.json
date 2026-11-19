@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.6.6",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Panelde \"Bugün\" kartı",
+        "de": "Karte „Heute“ im Dashboard"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Sabah özeti, Panel'in sağ üst köşesinde \"Bugün\" kartı olarak görünür (yalnız sekreter yetkisi olanlara ve modül açıkken). Karttan ilgili sayfaya gidilir.",
+          "de": "Die Morgenübersicht erscheint oben rechts im Dashboard als Karte „Heute“ (nur mit Sekretariatsberechtigung und aktivem Modul). Die Einträge verlinken auf die jeweilige Seite."
+        },
+        {
+          "type": "fix",
+          "tr": "Sekreter sayfası, modül açıkken \"Bugün\" kartını gösterirken çöküyordu; düzeltildi.",
+          "de": "Die Sekretariatsseite stürzte bei aktivem Modul beim Anzeigen der Karte „Heute“ ab; behoben."
+        }
+      ]
+    },
+    {
       "version": "0.6.5",
       "date": "2026-11-19",
       "title": {
