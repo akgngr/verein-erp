@@ -7,7 +7,7 @@ import {
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm, type Resolver } from "react-hook-form";
+import { useForm, type Resolver, useWatch } from "react-hook-form";
 import { useTranslations } from "next-intl";
 
 import { applyActionResult } from "@/shared/components/forms/action-result";
@@ -71,7 +71,7 @@ export function DonorForm({
     },
   });
 
-  const donorType = form.watch("type");
+  const donorType = useWatch({ control: form.control, name: "type" });
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(null);

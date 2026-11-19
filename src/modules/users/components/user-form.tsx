@@ -12,7 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 
 import { applyActionResult } from "@/shared/components/forms/action-result";
 import { FormErrorSummary } from "@/shared/components/forms/form-error-summary";
@@ -56,7 +56,7 @@ export function UserCreateForm() {
     defaultValues: { name: "", email: "", role: "VIEWER", password: "" },
   });
 
-  const selectedRole = (form.watch("role") as Role) || "VIEWER";
+  const selectedRole = (useWatch({ control: form.control, name: "role" }) as Role) || "VIEWER";
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(null);
@@ -150,7 +150,7 @@ export function UserEditForm({ user }: { user: UserEditValues }) {
     },
   });
 
-  const selectedRole = (form.watch("role") as Role) || user.role;
+  const selectedRole = (useWatch({ control: form.control, name: "role" }) as Role) || user.role;
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(null);
