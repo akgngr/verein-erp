@@ -12,7 +12,7 @@ import { secretaryPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "secretary",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "0.6.8",
+  version: "0.6.9",
   label: "Sekreter",
   description: "Kişisel sekreter: sabah özeti ve onaylı öneriler.",
   category: "EXTENSION",

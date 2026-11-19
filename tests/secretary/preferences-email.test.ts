@@ -121,3 +121,23 @@ test("daily briefing: boş özet ve sessiz saatte e-posta yok; aynı gün tekrar
   await runDailyBriefings(morning, deps(2, [pref({ userId: "ok" })]));
   assert.deepEqual(delivered, ["ok"], "aynı gün ikinci kez gönderilmez");
 });
+
+test("email: T3.2 şablonu teslimde kullanılır; HTML kaçışlı, yalnız sayılar ve /sekreter bağlantısı", async () => {
+  const { dailySummaryRenderer } = await import("@/modules/secretary/services/daily-briefing-runner");
+  const sent: { to: string; subject: string; text: string; html?: string }[] = [];
+  const deliver = createEmailDelivery({
+    appUrl: "https://erp.example.test/",
+    locale: "de",
+    isMailConfigured: async () => true,
+    send: async (message) => { sent.push(message); return { ok: true }; },
+    render: dailySummaryRenderer,
+  });
+  await deliver({ id: "u1", role: "ADMIN", isActive: true, email: "owner@example.test" }, "email", digest);
+  assert.equal(sent.length, 1);
+  assert.match(sent[0].text, /https:\/\/erp\.example\.test\/sekreter/);
+  assert.ok(sent[0].html?.includes('href="https://erp.example.test/sekreter"'));
+  assert.ok(!`${sent[0].text}${sent[0].html}`.includes("owner@example.test"), "alıcı adresi gövdede yok");
+  // Üretimde http (localhost dışı) reddedilir; teslim hata verir, runner bu kullanıcıyı atlar.
+  const insecure = createEmailDelivery({ appUrl: "http://erp.example.test", locale: "de", isMailConfigured: async () => true, send: async () => ({ ok: true }), render: dailySummaryRenderer });
+  await assert.rejects(() => insecure({ id: "u1", role: "ADMIN", isActive: true, email: "owner@example.test" }, "email", digest), /SECRETARY_ORIGIN_REQUIRES_HTTPS/);
+});

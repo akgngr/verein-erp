@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.6.9",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Günlük özet e-postası yeni şablonla",
+        "de": "Tägliche Übersicht mit neuer E-Mail-Vorlage"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Günlük özet e-postası artık yeni şablonla (HTML ve düz metin) gönderilir: yalnız toplam sayılar ve uygulamaya güvenli bağlantı, kişisel veri yok.",
+          "de": "Die tägliche Übersicht wird jetzt mit der neuen Vorlage (HTML und Text) versendet: nur Gesamtzahlen und ein sicherer Link zur Anwendung, keine personenbezogenen Daten."
+        }
+      ]
+    },
+    {
       "version": "0.6.8",
       "date": "2026-11-19",
       "title": {
