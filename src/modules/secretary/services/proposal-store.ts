@@ -14,7 +14,7 @@ export const proposalCrypto: ProposalCrypto = {
 
 const SELECT = {
   id: true, userId: true, source: true, itemId: true, moduleKey: true, actionKey: true, payloadEnc: true, previewEnc: true,
-  payloadHash: true, preconditionsEnc: true, status: true, idempotencyKey: true, expiresAt: true,
+  payloadHash: true, preconditionsEnc: true, status: true, idempotencyKey: true, expiresAt: true, snoozedUntil: true,
 } as const;
 
 export function prismaProposalStore(): ProposalStore {
@@ -34,11 +34,13 @@ export function prismaProposalStore(): ProposalStore {
       })).count === 1,
     listPending: (userId, now) =>
       db.secretaryProposal.findMany({
-        where: { userId, status: "PENDING", expiresAt: { gt: now } },
+        where: { userId, status: "PENDING", expiresAt: { gt: now }, OR: [{ snoozedUntil: null }, { snoozedUntil: { lte: now } }] },
         select: SELECT,
         orderBy: { createdAt: "asc" },
         take: 100,
       }) as Promise<ProposalRow[]>,
+    snooze: async (id, userId, until) =>
+      (await db.secretaryProposal.updateMany({ where: { id, userId, status: "PENDING", expiresAt: { gt: until } }, data: { snoozedUntil: until } })).count === 1,
   };
 }
 
