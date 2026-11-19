@@ -13,7 +13,7 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 |---|---|
 | Anahtar | `secretary` |
 | Tür | Eklenti |
-| Sürüm | 0.6.6 |
+| Sürüm | 0.6.9 |
 | Sayfalar | `/sekreter` |
 
 ## Diğer modüllere erişim
@@ -35,6 +35,24 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Sekreter | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — |
 
 ## Sürüm notları
+
+### 0.6.9 — Günlük özet e-postası yeni şablonla
+
+_2026-11-19_
+
+- **İyileştirme:** Günlük özet e-postası artık yeni şablonla (HTML ve düz metin) gönderilir: yalnız toplam sayılar ve uygulamaya güvenli bağlantı, kişisel veri yok.
+
+### 0.6.8 — Sekreter tercih ekranı
+
+_2026-11-19_
+
+- **Yeni:** Kullanıcılar kendi özet saatini, sessiz saatlerini ve aktif kanalları değiştirebilir. TR/DE günlük özet e-posta şablonu eklendi.
+
+### 0.6.7 — Sekreter onay kutusu
+
+_2026-11-19_
+
+- **Yeni:** Yetkili önerileri listeleyen onay kutusu eklendi: onayla, reddet, ertele ve izinli kaynakta düzenle bağlantısı; dışa etkili eylemlerde ikinci onay zorunludur.
 
 ### 0.6.6 — Panelde "Bugün" kartı
 
@@ -68,22 +86,4 @@ _2026-11-19_
 
 - **Yeni:** Özet kartlarında kapat, yarına veya bir haftaya ertele ve geri al arayüzü eklendi. Kaynak kayıtlar değiştirilmez.
 
-### 0.6.1 — Bugün ekranı ve sabah özeti kartı
-
-_2026-11-18_
-
-- **Yeni:** Sekreter ekranı yetkiye göre süzülen gerçek sabah özetini, hata ve boş durumlarını ve kaynak modül bağlantılarını gösterir.
-
-### 0.6.0 — Kural kaynaklı öneriler ve onay yolu
-
-_2026-11-18_
-
-- **Yeni:** Modüller sabah özeti öğelerine öneri ekleyebilir (ör. vadesi geçmiş faturaya hatırlatma taslağı). Öneri şifreli saklanır; onaylanınca ilgili modülün kendi eylemi çalışır. Onay anında yetki, modül durumu ve kaynak kaydın değişip değişmediği yeniden denetlenir; çift onay, süresi dolmuş veya bayat öneri çalışmaz. E-posta, ödeme gibi dışa etkili eylemler ayrıca onay ister.
-
-### 0.5.0 — Günlük özet zamanlaması
-
-_2026-11-18_
-
-- **Yeni:** Sabah özeti her gün kullanıcının seçtiği saatte (Europe/Berlin) bir kez hazırlanır. Sessiz saatlere uyulur, aynı gün tekrarlanmaz; yaz/kış saati geçişleri desteklenir. Hesap pasifse veya yetki kaldırıldıysa özet hazırlanmaz.
-
-Daha eski 4 herkese açık sürüm notu.
+Daha eski 7 herkese açık sürüm notu.
