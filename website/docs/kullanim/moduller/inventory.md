@@ -13,7 +13,7 @@ Dernek demirbaşları, teknik ekipmanlar ve zimmet kayıtlarının takibi.
 |---|---|
 | Anahtar | `inventory` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.9 |
+| Sürüm | 1.1.10 |
 | Sayfalar | `/inventory`, `/inventory/kategoriler` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_inventory_overview` · `list_inventory_items` · `propose_delete_inventory_item` · `propose_inventory_item` · `propose_inventory_status`
 
 ## Sürüm notları
+
+### 1.1.10 — Kod bakımı
+
+_2026-11-19_
+
+- **İyileştirme:** Kullanılmayan kod temizlendi; formlar alan değişikliklerini React Compiler ile uyumlu şekilde izliyor. Görünüm ve davranış değişmedi.
 
 ### 1.1.9 — Arayüz altyapısı
 
@@ -83,10 +89,4 @@ _2026-11-15_
 
 - **Güvenlik:** Öneri araçları katı Zod girdisi ve sabit model sonucu kullanır; salt öneri sorguları gereksiz kişi detaylarını okumaz. Kalan eski okuma araçlarının dönüşümü ayrı sürer.
 
-### 1.1.2 — AI v2 takip paketi
-
-_2026-11-15_
-
-- **İyileştirme:** AI iş akışında sayfalama, sorgu sözleşmesi veya worker iptal kontrolü güçlendirildi.
-
-Daha eski 3 herkese açık sürüm notu.
+Daha eski 4 herkese açık sürüm notu.

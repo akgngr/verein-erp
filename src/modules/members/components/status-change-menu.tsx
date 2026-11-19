@@ -7,7 +7,6 @@ import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-butto
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
-import { parseDate } from "@internationalized/date";
 import { ChevronDown, RefreshCw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -107,14 +106,6 @@ export function StatusChangeMenu({
     setCancellationReceivedAt("");
   };
 
-  const parse = (value: string) => {
-    if (!value) return null;
-    try {
-      return parseDate(value);
-    } catch {
-      return null;
-    }
-  };
 
   return (
     <>

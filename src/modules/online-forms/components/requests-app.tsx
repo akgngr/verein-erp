@@ -253,9 +253,9 @@ export function OnlineFormsApp({
                   {t("signature")}
                 </Dialog.Heading>
               </Dialog.Header>
-              {/* eslint-disable-next-line @next/next/no-img-element -- şifresi çözülmüş data URL */}
               <Dialog.Body>
                 {signature ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- şifresi çözülmüş data URL; next/image uygun değil
                   <img
                     src={signature}
                     alt={t("signature")}

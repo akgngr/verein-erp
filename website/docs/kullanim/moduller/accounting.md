@@ -50,6 +50,12 @@ _2026-11-19_
 
 - **Yeni:** Vadesi geçmiş ve ihtar zamanı gelmiş faturalar için sekreter, onay kutusunda "ihtar kaydı oluştur" önerisi sunar. Onaylanınca her faturaya sıradaki ihtar kademesi kaydedilir; e-posta veya PDF gönderilmez. Yalnız muhasebe düzenleme yetkisi olanlar görür; bu arada ödenen veya ihtarlanan fatura varsa öneri geçersiz olur.
 
+### 1.24.2 — Kod bakımı
+
+_2026-11-19_
+
+- **İyileştirme:** Kullanılmayan kod temizlendi; formlar alan değişikliklerini React Compiler ile uyumlu şekilde izliyor. Görünüm ve davranış değişmedi.
+
 ### 1.24.1 — Arayüz altyapısı
 
 _2026-11-18_
@@ -86,10 +92,4 @@ _2026-11-17_
 
 - **İyileştirme:** İhtar oluşturma, XRechnung/ZUGFeRD indirme ve banka kuralı silme eylemleri ortak ActionButton/notify katmanına taşındı; bu dosyalardaki doğrudan HeroUI bağımlılığı kaldırıldı.
 
-### 1.23.3 — ELSTER hazırlığı (UStVA, doğrulama)
-
-_2026-11-17_
-
-- **İyileştirme:** UStVA verisini ELSTER XML'ine çeviren ve vergi numarasını 13 haneli ELSTER formatına dönüştüren servisler eklendi; ERiC ile yalnız doğrulama yapan CI işi hazır. Uygulamada henüz gönderim veya indirme yoktur.
-
-Daha eski 44 herkese açık sürüm notu.
+Daha eski 45 herkese açık sürüm notu.
