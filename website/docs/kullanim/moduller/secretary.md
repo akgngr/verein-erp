@@ -86,10 +86,4 @@ _2026-11-19_
 
 - **Düzeltme:** Günlük özet işi arka plan sürecinde (worker) hata vermeden çalışır; tüm modül katkıları orada da hesaplanır.
 
-### 0.6.2 — Özet öğelerinde kapat/ertele/geri al
-
-_2026-11-19_
-
-- **Yeni:** Özet kartlarında kapat, yarına veya bir haftaya ertele ve geri al arayüzü eklendi. Kaynak kayıtlar değiştirilmez.
-
-Daha eski 7 herkese açık sürüm notu.
+Daha eski 8 herkese açık sürüm notu.
