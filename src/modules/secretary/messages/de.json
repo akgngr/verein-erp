@@ -101,7 +101,20 @@
     "preferencesError": "Speichern fehlgeschlagen",
     "preferencesInvalid": "Uhrzeiten und Kanäle prüfen",
     "preferencesEmailHint": "Die E-Mail enthält nur Anzahlen und einen sicheren Link zur Anwendung.",
-    "preferencesUnavailable": "Einstellungen sind momentan nicht verfügbar."
+    "preferencesUnavailable": "Einstellungen sind momentan nicht verfügbar.",
+    "advancedTitle": "Sekretariat — erweiterte Aufgaben",
+    "advancedEmpty": "Derzeit liegen keine erweiterten Vorgänge zur Prüfung vor.",
+    "advancedApprovalRequired": "Vor der Ausführung ist Ihre ausdrückliche Zustimmung erforderlich.",
+    "advancedMail": "Posteingang",
+    "advancedFollowUp": "Nachverfolgung",
+    "advancedWeeklyReport": "Wochenbericht",
+    "advancedOcr": "Dokumentenfeld-Vorschlag",
+    "advancedChannel": "Benachrichtigungseinwilligung",
+    "advancedDelegation": "Vertretungsberechtigung",
+    "advancedDraft": "Entwurf",
+    "advancedNeedsReview": "Prüfung erforderlich",
+    "advancedPaused": "Pausiert",
+    "advancedComplete": "Abgeschlossen"
   },
   "digest": {
     "subject": "Ihre Morgenübersicht: {total} Themen",
