@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.6.10",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Gelişmiş Sekreter çalışma masası UI sözleşmesi",
+        "de": "UI-Vertrag für den erweiterten Sekretariatsarbeitsplatz"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "S4–S5 posta, takip, rapor, OCR, kanal izni ve vekil işlemleri için yetki süzülmüş veriyle kullanılacak, güvenli bağlantılı, iki dilli ve salt okunur çalışma masası bileşeni hazırlandı. Gerçek işlem yetenekleri #313–#317 kapsamında bağlanacaktır.",
+          "de": "Eine zweisprachige, schreibgeschützte Arbeitsfläche für S4–S5 mit sicheren internen Links wurde vorbereitet. Die vollständige Anbindung folgt in #313–#317."
+        }
+      ]
+    },
+    {
       "version": "0.6.9",
       "date": "2026-11-19",
       "title": {
