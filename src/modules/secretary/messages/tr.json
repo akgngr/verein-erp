@@ -59,6 +59,12 @@
     "openSource": "Kaynağa git",
     "count": "{count} öğe",
     "unavailable": "Özet şu anda kullanılamıyor",
-    "tryAgain": "Lütfen daha sonra yeniden deneyin."
+    "tryAgain": "Lütfen daha sonra yeniden deneyin.",
+    "dismiss": "Kapat",
+    "tomorrow": "Yarına ertele",
+    "nextWeek": "1 hafta ertele",
+    "undo": "Geri al",
+    "actionDone": "Görünürlük güncellendi.",
+    "actionError": "İşlem tamamlanamadı."
   }
 }
