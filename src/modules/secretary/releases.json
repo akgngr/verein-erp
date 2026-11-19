@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.6.7",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Sekreter onay kutusu",
+        "de": "Freigabepostfach des Sekretariats"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yetkili önerileri listeleyen onay kutusu eklendi: onayla, reddet, ertele ve izinli kaynakta düzenle bağlantısı; dışa etkili eylemlerde ikinci onay zorunludur.",
+          "de": "Freigabepostfach mit Freigeben, Ablehnen, Zurückstellen und sicherer Quellbearbeitung; externe Aktionen erfordern eine zweite Bestätigung."
+        }
+      ]
+    },
+    {
       "version": "0.6.6",
       "date": "2026-11-19",
       "title": {

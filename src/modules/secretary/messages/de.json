@@ -73,7 +73,22 @@
     "nextWeek": "Eine Woche zurückstellen",
     "undo": "Rückgängig",
     "actionDone": "Sichtbarkeit aktualisiert.",
-    "actionError": "Aktion konnte nicht abgeschlossen werden."
+    "actionError": "Aktion konnte nicht abgeschlossen werden.",
+    "proposalApprove": "Freigeben",
+    "proposalReject": "Ablehnen",
+    "proposalExternal": "Externe Aktion bestätigen",
+    "proposalExternalExplanation": "Diese Aktion kann E-Mails versenden, Zahlungen auslösen oder andere externe Folgen haben. Möchten Sie fortfahren?",
+    "proposalConfirm": "Aktion freigeben",
+    "proposalCancel": "Abbrechen",
+    "proposalExpires": "Gültig bis",
+    "proposalExpired": "Der Vorschlag ist abgelaufen.",
+    "proposalDone": "Vorschlag bearbeitet.",
+    "proposalError": "Aktion fehlgeschlagen.",
+    "proposalInbox": "Vorschläge zur Freigabe",
+    "proposalUnavailable": "Vorschläge können gerade nicht geladen werden.",
+    "proposalEmpty": "Keine offenen Vorschläge.",
+    "proposalSnooze": "1 Tag zurückstellen",
+    "proposalEdit": "An der Quelle bearbeiten"
   },
   "digest": {
     "subject": "Ihre Morgenübersicht: {total} Themen",
