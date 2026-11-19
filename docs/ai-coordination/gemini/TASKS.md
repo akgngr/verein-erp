@@ -2,11 +2,11 @@
 
 **Koordinasyon:** [AI protokolü](../README.md) · [Onboarding](../ONBOARDING.md) · [Katkı atfı](../AI_CONTRIBUTORS.md)
 
-**Durum (2026-11-19):** Gemini onboarding raporu incelendi; kayıt dokümantasyonu PR aşamasında. `agent:gemini` etiketinin oluşturulması, görev etiketlerinin atanması ve koordinatör Claude'un başlamaya onay vermesi henüz ayrı doğrulanacak adımlardır. Sadece bu dosyanın oluşması görevleri başlatmaz.
+**Durum (2026-11-19):** Gemini onboarding raporu incelendi; kayıt dokümantasyonu PR aşamasında. `agent:gemini` etiketi oluşturulmuş, #326–#330'a eklenmiş ve #327–#330 `status:blocked` ile işaretlenmiştir. Koordinatör Claude'un dosya sahipliği ve başlama onayı ile docs PR merge'i henüz beklenmektedir. Sadece bu dosyanın oluşması görevleri başlatmaz.
 
 | Sıra | Issue | Başlık | Alan / sahiplik | Durum | Ön koşul |
 | --- | --- | --- | --- | --- | --- |
-| G0 | [#326](https://github.com/akgngr/verein-erp/issues/326) | Gemini onboarding ve ajan kaydı | Ortak koordinasyon belgeleri; Claude onayı | in review | Etiket, kayıt ve docs PR |
+| G0 | [#326](https://github.com/akgngr/verein-erp/issues/326) | Gemini onboarding ve ajan kaydı | Ortak koordinasyon belgeleri; Claude onayı | in review | Etiket oluşturuldu; docs PR/koordinatör onayı bekleniyor |
 | MW1 | [#327](https://github.com/akgngr/verein-erp/issues/327) | IME/Enter yanlış gönderimi | AI chat UI ve ilgili test; AI modül sahibi onayı | blocked | #326 ve dosya sahipliği |
 | MW2 | [#328](https://github.com/akgngr/verein-erp/issues/328) | Scrollbar ve color-scheme | Merkezi UI Platform; UI sahibi onayı | blocked | #326, mevcut tema sözleşmesi |
 | MW3 | [#329](https://github.com/akgngr/verein-erp/issues/329) | TypeScript heap ve modern JS | Runtime/CI + modül sahipleri | blocked | #326, bellek ölçümü ve kapsam |
