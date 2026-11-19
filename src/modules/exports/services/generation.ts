@@ -8,7 +8,7 @@ import {getModuleAvailability} from "@/modules/system/automation";
 import {getPublishedFileMetadata} from "./file-metadata";
 import {FILES_RETENTION_DAYS} from "../constants";
 
-const requestSchema=z.object({id:z.string().regex(/^[A-Za-z0-9_-]{1,128}$/),organizationId:z.string().min(1).max(128),ownerId:z.string().min(1).max(128),sourceModule:z.string().regex(/^[a-z][a-z0-9-]{1,63}$/),purpose:z.string().regex(/^[a-z][a-z0-9_.-]{1,79}$/),format:z.enum(["csv","xlsx"]),idempotencyKey:z.string().min(1).max(200),deadlineAt:z.date()}).strict();
+const requestSchema=z.object({id:z.string().regex(/^[A-Za-z0-9_-]{1,128}$/),organizationId:z.string().min(1).max(128),ownerId:z.string().min(1).max(128),sourceModule:z.string().regex(/^[a-z][a-z0-9-]{1,63}$/),purpose:z.string().regex(/^[a-z][a-z0-9_.-]{1,79}$/),format:z.enum(["csv","xlsx","pdf"]),idempotencyKey:z.string().min(1).max(200),deadlineAt:z.date()}).strict();
 type GenerationRequest=z.infer<typeof requestSchema>&{task:TaskDefinition};
 const preparedBrand=Symbol("prepared-generation-request");
 export type PreparedGenerationRequest=GenerationRequest&{readonly [preparedBrand]:true};
@@ -109,4 +109,8 @@ export async function purgeGenerationHistory(now=new Date()){
  const rows=await getDb().fileGeneration.findMany({where:{expiresAt:{lte:now}},select:{id:true},take:100});
  await getDb().generatedFile.updateMany({where:{generationId:{in:rows.map(row=>row.id)},publicationPending:true},data:{deletionPending:true}});
  return getDb().fileGeneration.deleteMany({where:{id:{in:rows.map(row=>row.id)}}});
+}
+/** Worker: kaynak modülün kendi üretim kaydı (sahip/yürütme eşleşmesi için; içerik yok). */
+export async function getSourceGeneration(id:string,sourceModule:string,purpose:string){
+ return getDb().fileGeneration.findFirst({where:{id,sourceModule,purpose},select:{id:true,ownerId:true,organizationId:true,executionId:true}});
 }
