@@ -36,13 +36,19 @@
   "access": {
     "system": "Liest, welche Module aktiv und freigegeben sind; die Übersicht zeigt nur deren Beiträge.",
     "users": "Liest Status und Rolle des Benutzers, damit die tägliche Übersicht nur für aktive Benutzer mit Sekretariatsberechtigung erstellt wird.",
-    "mail": "Nutzt den vorhandenen E-Mail-Versand für die tägliche Übersicht (nur an Benutzer mit E-Mail-Kanal, nur Gesamtzahlen)."
+    "mail": "Nutzt den vorhandenen E-Mail-Versand für die tägliche Übersicht (nur an Benutzer mit E-Mail-Kanal, nur Gesamtzahlen).",
+    "exports": "Erstellt den Wochenbericht (nur Zahlen) als PDF über die Dateierstellung von „Meine Dateien“; kein direkter Download-Link.",
+    "organization": "Liest Vereinsname, Anschrift und Logo für den Briefkopf des Berichts."
   },
   "automation": {
     "tasks": {
       "daily_briefing": {
         "label": "Tägliche Morgenübersicht",
         "description": "Erstellt die Morgenübersicht einmal täglich zur gewählten Uhrzeit (Europe/Berlin, Ruhezeiten werden beachtet)."
+      },
+      "weekly_report": {
+        "label": "Wochenbericht für den Vorstand (PDF)",
+        "description": "Erstellt den Wochenbericht nur mit Zahlen als PDF unter „Meine Dateien“."
       },
       "follow_up_reminders": {
         "label": "Nachverfolgungs-Erinnerungen",
@@ -135,6 +141,13 @@
       "listLabel": "Heutige Themen",
       "partial": "Einige Module haben gerade nicht geantwortet; die Liste kann unvollständig sein.",
       "more": "Alle anzeigen ({count})"
+    }
+  },
+  "weeklyReport": {
+    "errors": {
+      "forbidden": "Für diesen Bericht fehlt die Berechtigung.",
+      "unavailable": "Die Dateierstellung ist derzeit nicht verfügbar (Automation oder „Meine Dateien“ deaktiviert).",
+      "notFound": "Bericht nicht gefunden."
     }
   },
   "secretary": {

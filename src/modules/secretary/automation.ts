@@ -49,3 +49,27 @@ export const followUpRemindersTask = defineTask({
     });
   },
 });
+
+const WEEKLY_REPORT_RETRY = { maxAttempts: 2, initialDelaySeconds: 30, maxDelaySeconds: 120, backoffMultiplier: 2 } as const;
+
+/**
+ * S5.1 (#315): haftalık kurul raporu PDF'i. Files hattının üretim görevi (yalnız `generationId` girdisi);
+ * kuyruk/retry/lease mevcut Automation altyapısındadır. Rapor yalnız sayılar içerir.
+ */
+export const weeklyReportTask = defineTask({
+  key: "secretary.weekly_report",
+  version: 1,
+  description: "secretary.weekly_report",
+  inputSchema: z.object({ generationId: z.string().min(1).max(128) }).strict(),
+  timeoutSeconds: 120,
+  retry: WEEKLY_REPORT_RETRY,
+  idempotencyKey: (input) => `secretary-weekly-report:${input.generationId}`,
+  handler: async (input, context) => {
+    const runner = await import("./services/weekly-report-runner");
+    try {
+      return await runner.runWeeklyReport(input.generationId, context);
+    } catch (error) {
+      return runner.failWeeklyReportAttempt(input.generationId, context, error, WEEKLY_REPORT_RETRY.maxAttempts);
+    }
+  },
+});
