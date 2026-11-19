@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.6.5",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Önerileri ertele ve düzenle",
+        "de": "Vorschläge zurückstellen und bearbeiten"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Bir öneri en fazla 90 gün ve geçerlilik süresi içinde ertelenebilir; ertelenen öneri onay kutusunda gizlenir. Modül izin veriyorsa öneri, kaynağın kendi düzenleme sayfasına güvenli bağlantı sunar. Onay kutusu öneri durumunu içerik göstermeden bildirir.",
+          "de": "Ein Vorschlag kann bis zu 90 Tage und innerhalb seiner Gültigkeit zurückgestellt werden; zurückgestellte Vorschläge sind im Posteingang ausgeblendet. Sofern das Modul es unterstützt, verlinkt der Vorschlag sicher auf die eigene Bearbeitungsseite des Datensatzes. Der Posteingang zeigt den Status ohne Inhalte an."
+        }
+      ]
+    },
+    {
       "version": "0.6.4",
       "date": "2026-11-19",
       "title": {

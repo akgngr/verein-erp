@@ -6,9 +6,9 @@ import { ActionError, createAction } from "@/modules/auth/server";
 import type { ActionResult } from "@/shared/types/action";
 
 import { secretaryPermissions } from "../permissions";
-import { proposalConfirmSchema, proposalRefSchema } from "../schemas/item-state";
+import { proposalConfirmSchema, proposalRefSchema, proposalSnoozeSchema } from "../schemas/item-state";
 import { defaultProposalDeps } from "../services/proposal-store";
-import { confirmProposal, dismissProposal, ProposalError } from "../services/proposals";
+import { confirmProposal, dismissProposal, ProposalError, snoozeProposal } from "../services/proposals";
 
 /**
  * Öneriyi onaylar: hedef modül eylemi çalışır. Yetki iki kez denetlenir (sekreter görüntüleme +
@@ -45,6 +45,25 @@ export async function dismissProposalAction(input: unknown): Promise<ActionResul
       if (dismissed) await audit({ action: "UPDATE", entity: "SecretaryProposal", entityId: input.id, after: { status: "DISMISSED" } });
       revalidatePath("/sekreter");
       return { dismissed };
+    },
+  })(input);
+}
+
+/** Öneriyi erteler (#296): yalnız sahibi; gelecekte, ≤ 90 gün ve süre sonundan önce. */
+export async function snoozeProposalAction(input: unknown): Promise<ActionResult<{ snoozedUntil: string }>> {
+  return createAction({
+    permission: { definition: secretaryPermissions, action: "view" },
+    schema: proposalSnoozeSchema,
+    handler: async ({ input, user, audit }) => {
+      try {
+        const result = await snoozeProposal({ id: user.id, role: user.role }, { id: input.id, until: new Date(input.until) }, await defaultProposalDeps(), new Date());
+        await audit({ action: "UPDATE", entity: "SecretaryProposal", entityId: input.id, after: { status: "SNOOZED" } });
+        revalidatePath("/sekreter");
+        return result;
+      } catch (error) {
+        if (error instanceof ProposalError) throw new ActionError(error.message);
+        throw error;
+      }
     },
   })(input);
 }

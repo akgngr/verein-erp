@@ -21,3 +21,8 @@ export const proposalConfirmSchema = z.object({
 });
 
 export const proposalRefSchema = z.object({ id: z.string().min(1).max(64) });
+
+export const proposalSnoozeSchema = z.object({
+  id: z.string().min(1).max(64),
+  until: z.iso.datetime({ offset: true, message: "secretary.validation.until" }),
+});
