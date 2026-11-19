@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.6.8",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Sekreter tercih ekranı",
+        "de": "Einstellungen der Sekretariatsübersicht"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Kullanıcılar kendi özet saatini, sessiz saatlerini ve aktif kanalları değiştirebilir. TR/DE günlük özet e-posta şablonu eklendi.",
+          "de": "Benutzer können Uhrzeit, Ruhezeiten und aktive Kanäle ändern. TR/DE-E-Mail-Vorlage für die tägliche Übersicht hinzugefügt."
+        }
+      ]
+    },
+    {
       "version": "0.6.7",
       "date": "2026-11-19",
       "title": {

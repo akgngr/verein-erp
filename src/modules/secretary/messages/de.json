@@ -88,7 +88,20 @@
     "proposalUnavailable": "Vorschläge können gerade nicht geladen werden.",
     "proposalEmpty": "Keine offenen Vorschläge.",
     "proposalSnooze": "1 Tag zurückstellen",
-    "proposalEdit": "An der Quelle bearbeiten"
+    "proposalEdit": "An der Quelle bearbeiten",
+    "preferencesTitle": "Einstellungen der Tagesübersicht",
+    "preferencesEnabled": "Tagesübersicht aktiviert",
+    "preferencesTime": "Uhrzeit",
+    "preferencesQuietFrom": "Ruhezeit ab",
+    "preferencesQuietTo": "Ruhezeit bis",
+    "preferencesInApp": "In der App",
+    "preferencesEmail": "E-Mail",
+    "preferencesSave": "Speichern",
+    "preferencesSaved": "Einstellungen gespeichert",
+    "preferencesError": "Speichern fehlgeschlagen",
+    "preferencesInvalid": "Uhrzeiten und Kanäle prüfen",
+    "preferencesEmailHint": "Die E-Mail enthält nur Anzahlen und einen sicheren Link zur Anwendung.",
+    "preferencesUnavailable": "Einstellungen sind momentan nicht verfügbar."
   },
   "digest": {
     "subject": "Ihre Morgenübersicht: {total} Themen",

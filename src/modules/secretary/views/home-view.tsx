@@ -8,6 +8,7 @@ import { PageHeader } from "@/shared/components/ui/page-header";
 
 import { SecretaryTodayCard } from "../components/today-card";
 import { SecretaryInboxView } from "./inbox-view";
+import { SecretaryPreferencesView } from "./preferences-view";
 import { secretaryPermissions } from "../permissions";
 import { getBriefing } from "../services/briefing";
 
@@ -51,6 +52,7 @@ export async function SecretaryHomeView() {
         <EmptyState icon={NotebookPen} title={t("ui.unavailable")} description={t("ui.tryAgain")} />
       )}
       <SecretaryInboxView user={{ id: user.id, role: user.role }} />
+      <SecretaryPreferencesView user={{ id: user.id }} />
     </section>
   );
 }
