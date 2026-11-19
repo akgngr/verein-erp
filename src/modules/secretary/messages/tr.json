@@ -23,7 +23,11 @@
   },
   "validation": {
     "itemId": "Geçersiz öğe kimliği.",
-    "until": "Geçersiz erteleme zamanı."
+    "until": "Geçersiz erteleme zamanı.",
+    "clock": "Saat SS:dd biçiminde olmalı.",
+    "channels": "En az bir kanal seçin.",
+    "quietPair": "Sessiz saatlerin başlangıcı ve bitişi birlikte girilmeli.",
+    "quietSame": "Sessiz saat başlangıcı ve bitişi aynı olamaz."
   },
   "errors": {
     "snoozeInPast": "Erteleme zamanı gelecekte olmalı.",
@@ -31,7 +35,8 @@
   },
   "access": {
     "system": "Hangi modüllerin açık ve onaylı olduğunu okur; özet yalnız bunların katkılarını gösterir.",
-    "users": "Günlük özeti yalnız etkin ve sekreter yetkisi olan kullanıcılar için hazırlamak üzere kullanıcının durumunu ve rolünü okur."
+    "users": "Günlük özeti yalnız etkin ve sekreter yetkisi olan kullanıcılar için hazırlamak üzere kullanıcının durumunu ve rolünü okur.",
+    "mail": "Günlük özet e-postasını göndermek için mevcut e-posta altyapısını kullanır (yalnız tercihinde e-posta seçen kullanıcıya, yalnız toplam sayılar)."
   },
   "automation": {
     "tasks": {
@@ -66,5 +71,12 @@
     "undo": "Geri al",
     "actionDone": "Görünürlük güncellendi.",
     "actionError": "İşlem tamamlanamadı."
+  },
+  "digest": {
+    "subject": "Sabah özetiniz: {total} konu",
+    "intro": "Günaydın. Bugünkü sabah özetinizde {total} konu var.",
+    "urgent": "Bunlardan {danger} tanesi acil.",
+    "link": "Özeti açmak için: {url}",
+    "footer": "Bu e-postayı sekreter tercihlerinizden kapatabilirsiniz. Ayrıntılar yalnız uygulamada, oturum açtıktan sonra görünür."
   }
 }

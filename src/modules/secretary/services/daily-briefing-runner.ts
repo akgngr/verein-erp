@@ -2,14 +2,18 @@ import "server-only";
 
 // Worker-safe giriş: users/server next-auth zincirini yükler ve worker'da çalışmaz.
 import { getUserById } from "@/modules/users/automation";
+import { isMailConfigured, sendMail } from "@/modules/mail/automation";
 import { getDb } from "@/shared/db";
+import { getEnv } from "@/shared/env";
 
 import { getBriefing } from "./briefing";
+import { createEmailDelivery } from "./briefing-email";
 import { type DailyBriefingResult, runDailyBriefings } from "./daily-briefing";
 
 /** Veritabanına bağlı varsayılanlarla günlük özet çalıştırması (worker). */
 export async function runScheduledBriefings(now: Date): Promise<DailyBriefingResult> {
   const db = getDb();
+  const env = getEnv();
   return runDailyBriefings(now, {
     listPreferences: () =>
       db.secretaryPreference.findMany({
@@ -24,10 +28,16 @@ export async function runScheduledBriefings(now: Date): Promise<DailyBriefingRes
       })).count === 1,
     loadUser: async (userId) => {
       const user = await getUserById(userId);
-      return user ? { id: user.id, role: user.role, isActive: user.isActive } : null;
+      return user ? { id: user.id, role: user.role, isActive: user.isActive, email: user.email } : null;
     },
     // Özet sayıları için başlık gerekmez; worker'da istek bağlamı olmadığından çeviri anahtarı yeterli.
     buildBriefing: (user, at) => getBriefing(user, at, { translator: async () => (key) => key, proposals: false }),
-    // Dış kanal teslimi (özet e-postası) T3.2 şablonuyla eklenir; o zamana kadar yalnız uygulama içi.
+    // E-posta: yalnız kullanıcı "email" kanalını seçtiyse, APP_URL tanımlı ve mail yapılandırılmışsa.
+    deliver: createEmailDelivery({
+      appUrl: env.APP_URL,
+      locale: env.DOCUMENT_LANGUAGE,
+      isMailConfigured,
+      send: (message) => sendMail(message),
+    }),
   });
 }
