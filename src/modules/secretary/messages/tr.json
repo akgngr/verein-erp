@@ -49,6 +49,10 @@
       "weekly_report": {
         "label": "Haftalık kurul raporu (PDF)",
         "description": "Yalnız sayılardan oluşan haftalık raporu Dosyalarım'a PDF olarak üretir."
+      },
+      "follow_up_reminders": {
+        "label": "Takip hatırlatmaları",
+        "description": "Süresi gelen takip kayıtlarını sekreter özetinde hatırlatır (günde en çok bir kez; dış mesaj gönderilmez)."
       }
     }
   },
@@ -144,6 +148,19 @@
       "forbidden": "Bu rapor için yetkiniz yok.",
       "unavailable": "Dosya üretimi şu an kullanılamıyor (Otomasyon veya Dosyalarım kapalı).",
       "notFound": "Rapor bulunamadı."
+    }
+  },
+  "secretary": {
+    "followUpDue": "Takip: {title}",
+    "followUpExhausted": "Takip (hatırlatmalar bitti): {title}"
+  },
+  "followUps": {
+    "errors": {
+      "dateInvalid": "Takip tarihi bugünden önce veya bir yıldan ileri olamaz.",
+      "limit": "En fazla 100 açık takip kaydınız olabilir.",
+      "notFound": "Takip kaydı bulunamadı.",
+      "invalidTransition": "Bu takip kaydı için bu işlem yapılamaz.",
+      "forbidden": "Bu işlem için yetkiniz yok."
     }
   }
 }
