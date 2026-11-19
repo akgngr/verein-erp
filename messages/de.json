@@ -7882,7 +7882,10 @@
         "externalConfirmRequired": "Diese Aktion wirkt nach außen (z. B. E-Mail, Zahlung) und muss zusätzlich bestätigt werden.",
         "unreadable": "Der Vorschlag konnte nicht geprüft werden und wurde verworfen.",
         "stale": "Der Ursprungsdatensatz hat sich geändert; der Vorschlag ist ungültig. Bitte prüfen Sie den Datensatz.",
-        "failed": "Die Aktion konnte nicht abgeschlossen werden. Sie wird nicht wiederholt; bitte prüfen Sie den Datensatz."
+        "failed": "Die Aktion konnte nicht abgeschlossen werden. Sie wird nicht wiederholt; bitte prüfen Sie den Datensatz.",
+        "snoozeInPast": "Der Zeitpunkt muss in der Zukunft liegen.",
+        "snoozeTooLong": "Ein Vorschlag kann höchstens 90 Tage zurückgestellt werden.",
+        "snoozeBeyondExpiry": "Ein Vorschlag kann nicht über sein Ablaufdatum hinaus zurückgestellt werden."
       }
     },
     "ui": {

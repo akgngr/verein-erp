@@ -13,7 +13,7 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 |---|---|
 | Anahtar | `secretary` |
 | Tür | Eklenti |
-| Sürüm | 0.6.4 |
+| Sürüm | 0.6.5 |
 | Sayfalar | `/sekreter` |
 
 ## Diğer modüllere erişim
@@ -35,6 +35,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Sekreter | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — |
 
 ## Sürüm notları
+
+### 0.6.5 — Önerileri ertele ve düzenle
+
+_2026-11-19_
+
+- **Yeni:** Bir öneri en fazla 90 gün ve geçerlilik süresi içinde ertelenebilir; ertelenen öneri onay kutusunda gizlenir. Modül izin veriyorsa öneri, kaynağın kendi düzenleme sayfasına güvenli bağlantı sunar. Onay kutusu öneri durumunu içerik göstermeden bildirir.
 
 ### 0.6.4 — Kişisel tercihler ve günlük özet e-postası
 
@@ -79,10 +85,4 @@ _2026-11-18_
 
 - **Yeni:** Sabah özetindeki bir öğe kapatılabilir, en fazla 90 gün ertelenebilir veya yeniden gösterilebilir. Bu yalnız sizin görünümünüzü değiştirir; kaynak kayıt değişmez.
 
-### 0.3.0 — Sabah özeti toplayıcısı
-
-_2026-11-18_
-
-- **Yeni:** Modüllerin sekretere verdiği katkılar tek bir özette toplanır. Yalnız yetkili olunan ve açık modüller görünür; hata veren veya yavaş bir modül özeti durdurmaz. Kapatılan ve ertelenen öğeler gizlenir.
-
-Daha eski 2 herkese açık sürüm notu.
+Daha eski 3 herkese açık sürüm notu.

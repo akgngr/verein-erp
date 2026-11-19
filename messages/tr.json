@@ -7882,7 +7882,10 @@
         "externalConfirmRequired": "Bu eylem dışarıya etki eder (ör. e-posta, ödeme); ayrıca onaylamanız gerekir.",
         "unreadable": "Öneri doğrulanamadı ve iptal edildi.",
         "stale": "Kaynak kayıt değişti; öneri geçersiz. Lütfen kaynağı kontrol edin.",
-        "failed": "Eylem tamamlanamadı. Tekrar denenmez; lütfen kaynak kaydı kontrol edin."
+        "failed": "Eylem tamamlanamadı. Tekrar denenmez; lütfen kaynak kaydı kontrol edin.",
+        "snoozeInPast": "Erteleme zamanı gelecekte olmalı.",
+        "snoozeTooLong": "Öneri en fazla 90 gün ertelenebilir.",
+        "snoozeBeyondExpiry": "Öneri, geçerlilik süresinin sonrasına ertelenemez."
       }
     },
     "ui": {

@@ -65,6 +65,8 @@ model SecretaryProposal {
   status           SecretaryProposalStatus @default(PENDING)
   idempotencyKey   String                  @unique
   expiresAt        DateTime
+  /// Kullanıcı öneriyi bu zamana kadar erteledi (onay kutusunda gizli; süre sonu değişmez). #296
+  snoozedUntil     DateTime?
   confirmedAt      DateTime?
   completedAt      DateTime?
   createdAt        DateTime                @default(now())
