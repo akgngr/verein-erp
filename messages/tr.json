@@ -7916,13 +7916,19 @@
     "access": {
       "system": "Hangi modüllerin açık ve onaylı olduğunu okur; özet yalnız bunların katkılarını gösterir.",
       "users": "Günlük özeti yalnız etkin ve sekreter yetkisi olan kullanıcılar için hazırlamak üzere kullanıcının durumunu ve rolünü okur.",
-      "mail": "Günlük özet e-postasını göndermek için mevcut e-posta altyapısını kullanır (yalnız tercihinde e-posta seçen kullanıcıya, yalnız toplam sayılar)."
+      "mail": "Günlük özet e-postasını göndermek için mevcut e-posta altyapısını kullanır (yalnız tercihinde e-posta seçen kullanıcıya, yalnız toplam sayılar).",
+      "exports": "Haftalık kurul raporunu (yalnız sayılar) Dosyalarım üretim hattında PDF olarak oluşturur; doğrudan indirme bağlantısı yoktur.",
+      "organization": "Rapor antedi için dernek adını, adresini ve logosunu okur."
     },
     "automation": {
       "tasks": {
         "daily_briefing": {
           "label": "Günlük sabah özeti",
           "description": "Zamanı gelen kullanıcılar için sabah özetini günde bir kez hazırlar (Europe/Berlin saati, sessiz saatlere uyar)."
+        },
+        "weekly_report": {
+          "label": "Haftalık kurul raporu (PDF)",
+          "description": "Yalnız sayılardan oluşan haftalık raporu Dosyalarım'a PDF olarak üretir."
         },
         "follow_up_reminders": {
           "label": "Takip hatırlatmaları",
@@ -8017,6 +8023,13 @@
         "more": "Tümünü gör ({count})"
       }
     },
+    "weeklyReport": {
+      "errors": {
+        "forbidden": "Bu rapor için yetkiniz yok.",
+        "unavailable": "Dosya üretimi şu an kullanılamıyor (Otomasyon veya Dosyalarım kapalı).",
+        "notFound": "Rapor bulunamadı."
+      }
+    },
     "secretary": {
       "followUpDue": "Takip: {title}",
       "followUpExhausted": "Takip (hatırlatmalar bitti): {title}"
@@ -8028,6 +8041,29 @@
         "notFound": "Takip kaydı bulunamadı.",
         "invalidTransition": "Bu takip kaydı için bu işlem yapılamaz.",
         "forbidden": "Bu işlem için yetkiniz yok."
+      }
+    },
+    "delegation": {
+      "errors": {
+        "forbidden": "Bu işlem için yetkiniz yok.",
+        "self": "Kendinize vekâlet veremezsiniz.",
+        "expiry": "Süre sonu gelecekte ve en fazla 90 gün sonra olmalı.",
+        "delegateInvalid": "Seçilen kullanıcı etkin değil veya sekreteri kullanamıyor.",
+        "duplicate": "Bu kişiye zaten etkin bir vekâlet verdiniz.",
+        "limit": "En fazla 5 etkin vekâlet verebilirsiniz.",
+        "notFound": "Vekâlet bulunamadı veya artık geçerli değil."
+      }
+    },
+    "channels": {
+      "errors": {
+        "forbidden": "Bu işlem için yetkiniz yok.",
+        "addressInvalid": "Adres geçersiz (telefon +49… biçiminde, Telegram için sohbet kimliği).",
+        "unavailable": "Bu kanal şu an kullanılamıyor (sağlayıcı yapılandırılmamış).",
+        "rateLimited": "Bugün için doğrulama sınırına ulaşıldı.",
+        "sendFailed": "Doğrulama kodu gönderilemedi.",
+        "notPending": "Bekleyen bir doğrulama yok.",
+        "codeExpired": "Kodun süresi doldu veya deneme hakkı bitti; yeniden isteyin.",
+        "codeInvalid": "Kod hatalı."
       }
     }
   },

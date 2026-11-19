@@ -7916,13 +7916,19 @@
     "access": {
       "system": "Liest, welche Module aktiv und freigegeben sind; die Übersicht zeigt nur deren Beiträge.",
       "users": "Liest Status und Rolle des Benutzers, damit die tägliche Übersicht nur für aktive Benutzer mit Sekretariatsberechtigung erstellt wird.",
-      "mail": "Nutzt den vorhandenen E-Mail-Versand für die tägliche Übersicht (nur an Benutzer mit E-Mail-Kanal, nur Gesamtzahlen)."
+      "mail": "Nutzt den vorhandenen E-Mail-Versand für die tägliche Übersicht (nur an Benutzer mit E-Mail-Kanal, nur Gesamtzahlen).",
+      "exports": "Erstellt den Wochenbericht (nur Zahlen) als PDF über die Dateierstellung von „Meine Dateien“; kein direkter Download-Link.",
+      "organization": "Liest Vereinsname, Anschrift und Logo für den Briefkopf des Berichts."
     },
     "automation": {
       "tasks": {
         "daily_briefing": {
           "label": "Tägliche Morgenübersicht",
           "description": "Erstellt die Morgenübersicht einmal täglich zur gewählten Uhrzeit (Europe/Berlin, Ruhezeiten werden beachtet)."
+        },
+        "weekly_report": {
+          "label": "Wochenbericht für den Vorstand (PDF)",
+          "description": "Erstellt den Wochenbericht nur mit Zahlen als PDF unter „Meine Dateien“."
         },
         "follow_up_reminders": {
           "label": "Nachverfolgungs-Erinnerungen",
@@ -8017,6 +8023,13 @@
         "more": "Alle anzeigen ({count})"
       }
     },
+    "weeklyReport": {
+      "errors": {
+        "forbidden": "Für diesen Bericht fehlt die Berechtigung.",
+        "unavailable": "Die Dateierstellung ist derzeit nicht verfügbar (Automation oder „Meine Dateien“ deaktiviert).",
+        "notFound": "Bericht nicht gefunden."
+      }
+    },
     "secretary": {
       "followUpDue": "Nachverfolgung: {title}",
       "followUpExhausted": "Nachverfolgung (Erinnerungen ausgeschöpft): {title}"
@@ -8028,6 +8041,29 @@
         "notFound": "Nachverfolgung nicht gefunden.",
         "invalidTransition": "Diese Aktion ist für diese Nachverfolgung nicht möglich.",
         "forbidden": "Für diese Aktion fehlt die Berechtigung."
+      }
+    },
+    "delegation": {
+      "errors": {
+        "forbidden": "Für diese Aktion fehlt die Berechtigung.",
+        "self": "Sie können sich nicht selbst vertreten lassen.",
+        "expiry": "Das Ablaufdatum muss in der Zukunft und höchstens 90 Tage entfernt liegen.",
+        "delegateInvalid": "Die gewählte Person ist nicht aktiv oder kann den Sekretär nicht nutzen.",
+        "duplicate": "Für diese Person besteht bereits eine aktive Vertretung.",
+        "limit": "Sie können höchstens 5 aktive Vertretungen vergeben.",
+        "notFound": "Vertretung nicht gefunden oder nicht mehr gültig."
+      }
+    },
+    "channels": {
+      "errors": {
+        "forbidden": "Für diese Aktion fehlt die Berechtigung.",
+        "addressInvalid": "Adresse ungültig (Telefon im Format +49…, für Telegram die Chat-ID).",
+        "unavailable": "Dieser Kanal ist derzeit nicht verfügbar (Anbieter nicht eingerichtet).",
+        "rateLimited": "Tageslimit für Bestätigungen erreicht.",
+        "sendFailed": "Bestätigungscode konnte nicht gesendet werden.",
+        "notPending": "Keine ausstehende Bestätigung.",
+        "codeExpired": "Code abgelaufen oder Versuche aufgebraucht; bitte neu anfordern.",
+        "codeInvalid": "Code falsch."
       }
     }
   },

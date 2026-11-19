@@ -16,6 +16,11 @@ export const lifecycle = defineLifecycle({
       db.secretaryItemState.deleteMany({ where: { userId } }),
       db.secretaryProposal.deleteMany({ where: { userId } }),
       db.secretaryFollowUp.deleteMany({ where: { userId } }),
+      // Vekil yetkileri: kullanıcı sahibi veya vekilse silinir (yetki bir kişiye bağlıdır, devredilemez).
+      db.secretaryDelegation.deleteMany({ where: { grantorId: userId } }),
+      db.secretaryDelegation.deleteMany({ where: { delegateId: userId } }),
+      db.secretaryChannelConsent.deleteMany({ where: { userId } }),
+      db.secretaryChannelDelivery.deleteMany({ where: { userId } }),
     ]);
   },
 });
