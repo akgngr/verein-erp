@@ -1,6 +1,6 @@
 # Kişisel Sekreter — uygulama planı, aşamalar ve iş bölümü
 
-**Durum:** Onaylı yön (ürün sahibi, 2026-11-18). Uygulama başlıyor.
+**Durum:** S0–S3 uygulanmış; S4–S5 lisans kararı beklenmeden uygulamaya açıldı (ürün sahibi, 2026-11-19).
 **Gerekçe ve fikir havuzu:** [`docs/ideas/PERSONAL_SECRETARY_BRAINSTORM.md`](../ideas/PERSONAL_SECRETARY_BRAINSTORM.md)
 **Mimari bağlam:** [ADR 0001](../adr/0001-isolated-deployment-per-customer.md) (hibrit çoklu müşteri)
 
@@ -12,14 +12,14 @@
 4. **Yetki:** Her katkı, kullanıcının o modüldeki görüntüleme yetkisiyle süzülür. Kapalı veya onaysız modülün katkısı görünmez.
 5. **"Gösterme" ≠ "tamamla":** Sekreterde kapatılan veya ertelenen öğe kaynak kaydı değiştirmez.
 
-## 2. Çekirdek / Pro ayrımı (lisans kararına bağlı)
+## 2. Modülerlik ve ilerideki lisans ayrımı (karar ertelenmiştir)
 
-Lisans modeli kesinleşene kadar kod, ayrılabilecek şekilde yazılır:
+**2026-11-19 karar güncellemesi:** S4–S5'i geliştirmek için lisans, ücret veya ayrı Enterprise deposu beklenmeyecektir. Aşağıdaki sınıflandırma yalnız ileride değerlendirilecek paketleme ihtimalidir; erişim kapısı ya da lisans seçimi değildir. Şimdilik özellikler aynı depodaki modüler ve test edilebilir kodla hazırlanır:
 
 | Katman | İçerik | Öneri |
 |---|---|---|
 | **`secretary` (çekirdek)** | Sabah özeti, katkı kaydı, onay kutusu, tercihler, günlük özet e-postası | Açık çekirdek; dernekler ve küçük kullanıcılar için değer üretir |
-| **`secretary-pro` (Enterprise, ayrı modül)** | Posta sınıflama ve cevap taslakları, OCR alan önerileri, haftalık kurul raporu, çok kanallı bildirim, ekip/vekil modu, takip devri | Kapalı kaynak; ayrı depoda, Enterprise imajında |
+| **İleri Sekreter yetenekleri (S4–S5)** | Posta sınıflama ve cevap taslakları, OCR alan önerileri, haftalık kurul raporu, çok kanallı bildirim, ekip/vekil modu, takip devri | **Şimdi geliştirilecek**; olası ayrı modül/lisans/fiyatlandırma kararı gelecekte ayrı ADR ile |
 
 Çekirdek, Pro'nun bağlanabileceği iki uzantı noktası sunar: ek öğe katkı sağlayıcıları ve öneri türleri. Pro, çekirdeği import etmez; katkı kaydı üzerinden bağlanır.
 
@@ -34,7 +34,7 @@ Lisans modeli kesinleşene kadar kod, ayrılabilecek şekilde yazılır:
 | **S4 — Pro: posta ve takip** | `mail` gelen posta olayı (meta), yerel-öncelikli sınıflama, cevap ve görev taslağı, "benim yerime takip et" | Gönderim her zaman onaylı; özel nitelikli veri buluta gitmez |
 | **S5 — Pro: rapor, OCR, kanallar, ekip** | Haftalık kurul raporu (PDF), evrak OCR alan önerileri, Telegram/WhatsApp/SMS bildirim, vekil modu | Kanal izni, oran sınırı, ayrı onay |
 
-MVP: **S0–S2**. Ardından S3. S4 ve S5 lisans kararından sonra `secretary-pro` olarak.
+MVP: **S0–S2**; S3 tamamlandı. **S4 ve S5 lisans kararı beklemeden** geliştirilecektir. Epic #263; alt görevler #313, #314, #315, #316, #317. Ücretlendirme/paywall/kapalı kaynak ayrımı bu görevlerin kapsamında değildir.
 
 ## 3.1 Ortak sözleşme (T0.3'te koda dökülür; ChatGPT bu tiplere göre çalışır)
 
@@ -111,7 +111,7 @@ Koordinasyon protokolü: [`docs/ai-coordination/README.md`](../ai-coordination/R
 | T2.2 Onay kutusu UI (önizleme, düzenle, onayla/reddet/ertele) | S2 | **ChatGPT** | T2.1 |
 | T3.1 Otomasyon: günlük özet işi, sessiz saatler, yaz/kış saati | S3 | **Claude** | T1.1 |
 | T3.2 Tercih ekranı + özet e-posta şablonu | S3 | **ChatGPT** | T3.1 |
-| T4–T5 Pro özellikleri | S4–S5 | Lisans kararından sonra yeniden dağıtılır | Lisans ADR'si |
+| T4–T5 ileri özellikleri | S4–S5 | **Claude backend (#313–#316), ChatGPT UI (#317)** | S0–S3 ve mevcut izin/onay sözleşmeleri |
 
 **Sözleşme önce:** T1.1'in TypeScript tipleri (`BriefingItem`, `BriefingSection`) T0.3 PR'ında yayımlanır. UI ajanı bu tiplere göre çalışabilir, arka ucun bitmesini beklemez.
 
@@ -130,3 +130,15 @@ Koordinasyon protokolü: [`docs/ai-coordination/README.md`](../ai-coordination/R
 |---|---|---|
 | 2026-11-18 | Claude | Plan, aşamalar S0–S5 ve iş bölümü yazıldı. |
 | 2026-11-19 | ChatGPT | Görev bazında PR ve bağımlılık planı kesinleştirildi; Panel/surfaces #291 ve gizlilik regresyonu #292 Claude'a devredildi. |
+| 2026-11-19 | ChatGPT | Ürün sahibi S4–S5'in lisans kararından bağımsız uygulanmasını onayladı; epic #263 açıldı, Claude backend #313–#316 ve ChatGPT UI #317. |
+
+## 6. S4–S5 etkin uygulama kararı (2026-11-19)
+
+- **Uygula, fakat ticari erişim kısıtı getirme.** Mevcut `secretary` modülü ve `secretary.ts` / AI v2 / automation / Files sözleşmelerini kullan. Lisans, paket ve fiyatlama ayrı karardır.
+- **İşlem güvenliği:** Kullanıcıya öneri/taslak göster; e-posta veya dış kanala gönderim ve kaynak modülde yazma yalnız açık onay + çalışma anında tekrar yetki denetimi ile. Tanımsız ve yeterince doğrulanmamış kanallar güvenli kapalı durumda kalır.
+- **Posta:** Meta olaylar, yerel-öncelikli sınıflama, consent, sınırlı veri erişimi, AI sağlayıcıya özel/sensitif içerik iletmeme. Ayrı gönderim onayı. Epic #263 → #313.
+- **Takip:** Kullanıcı tarafından kurulan, durdurulabilir ve geri alınabilir takip işleri; tek pg-boss iş motoru, idempotency, audit. Epic #263 → #314.
+- **Kurul raporu / OCR:** Yalnız izinli ve minimum sayısal verilerle rapor, Files/Automation dosya üretimi; OCR sadece doğrulanabilir alan önerisi ve insan onayı. Epic #263 → #315.
+- **Kanallar / vekil:** Kanal başına opt-in, sessiz saat, rate limit, secret yönetimi, vekil haklarında kapsam/süre/iptal/audit ve hiçbir koşulda başkasının onayını atlama yok. Epic #263 → #316.
+- **UI:** Ortak kit, mobil/klavye/reduced-motion, TR/DE, hata/boş/izin durumları; backend public API tamamlanmadan canlı eylem simülasyonu yok. Epic #263 → #317.
+- **Kabul:** Her alt görev ayrı `alpha` PR, modül sürüm/release kayıtları ve üretilmiş belgeler senkron; CI, Docs, Security ve bağımsız veri izolasyonu testleri yeşil. Ortamda canlı üçüncü taraf credential yoksa gerçek gönderim doğrulanmış sayılmaz.
