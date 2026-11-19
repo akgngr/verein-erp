@@ -13,7 +13,7 @@ Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gön
 |---|---|
 | Anahtar | `mail` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.4.5 |
+| Sürüm | 1.5.0 |
 | Sayfalar | `/mail`, `/mail/gelen-kutusu`, `/mail/kayitlar` |
 
 ## Diğer modüllere erişim
@@ -24,6 +24,8 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 |---|---|---|
 | [Muhasebe](./accounting) | yazma | Gelen e-postalardaki fatura/belge eklerini muhasebe → gelen faturalar kutusuna aktarır. |
 | [Modül Yönetimi](./system) | okuma | Muhasebe modülünün etkin olup olmadığını okur (aktarma düğmesi yalnızca etkinken gösterilir). |
+| [Görevler](./tasks) | yazma | Sekreterin onaylı "görev taslağı" önerisinden görev oluşturur (yalnız kullanıcı onayıyla). |
+| [Kullanıcılar](./users) | okuma | Görevdeki "oluşturan" etiketi için kullanıcının adını okur. |
 
 ## Varsayılan yetkiler
 
@@ -35,6 +37,15 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | E-posta altyapısı | görüntüleme, oluşturma, düzenleme | — | — | — | görüntüleme | — | — |
 
 ## Sürüm notları
+
+### 1.5.0 — Sekreter: gelen posta sınıflaması ve taslaklar
+
+_2026-11-19_
+
+- **Yeni:** Yönetici açarsa gelen e-postalar yalnız konu satırı ve ek türüne göre yerel kurallarla sınıflanır (fatura, toplantı, üyelik, bağış, soru). Gövde okunmaz, harici yapay zekâya veri gitmez.
+- **Yeni:** Rıza veren kullanıcıya sekreter yanıt taslağı veya görev önerir. Taslak boş açılır; e-posta yalnız metni yazıp ayrıca "Gönder" dediğinizde gider.
+- **Yeni:** Otomasyonlar için yeni olay: "Gelen kutusuna e-posta geldiğinde" (yalnız kimlik, kaynak, ek sayısı ve sınıf).
+- **Güvenlik:** Taslak metni şifreli saklanır, gönderimden sonra silinir; rıza geri alınınca açık taslaklar da silinir.
 
 ### 1.4.5 — Kod bakımı
 
@@ -78,10 +89,4 @@ _2026-11-06_
 
 - **İyileştirme:** Bildirim e-postası adımı gönderim sonucunu (maskeli alıcı, SMTP hatası, günlük kimliği) terminale yazar.
 
-### 1.3.2 — İş akışı hata düzeltmeleri
-
-_2026-11-06_
-
-- **Düzeltme:** Bildirim e-postası adımı, e-posta ayarlanmamışsa yeniden denemeden hemen MAIL_NOT_CONFIGURED ile başarısız olur.
-
-Daha eski 7 herkese açık sürüm notu.
+Daha eski 8 herkese açık sürüm notu.
