@@ -168,7 +168,8 @@ export const dunningAction = defineSecretaryAction({
     const today = berlinToday(context.now);
     for (const invoiceId of payload.invoiceIds) {
       try {
-        const created = await createDunningForInvoice(invoiceId, { id: context.user.id, label: "Sekreter önerisi" }, today);
+        // Kayıttaki "oluşturan" etiketi (createdById gerçek kullanıcıdır); arayüz metni değil.
+        const created = await createDunningForInvoice(invoiceId, { id: context.user.id, label: "Sekreter önerisi" }, today); // i18n-ignore
         await writeAudit({
           userId: context.user.id,
           action: "CREATE",
