@@ -1898,7 +1898,9 @@
         "ustva": "Umsatzsteuer-Voranmeldung",
         "annualVat": "Umsatzsteuer-Jahreserklärung",
         "incomeTax": "Ertragsteuererklärung"
-      }
+      },
+      "dunningProposal": "Mahnungen für {count} überfällige Rechnungen anlegen",
+      "dunningProposalDetail": "Für jede Rechnung wird die nächste Mahnstufe (Gebühren und Zinsen gemäß Einstellungen) erfasst. Es wird keine E-Mail oder PDF versendet; Sie prüfen und versenden die Mahnungen über die Rechnungsübersicht."
     }
   },
   "ai": {

@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.25.0",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Sekreterden ihtar önerisi",
+        "de": "Mahnvorschlag vom Sekretariat"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Vadesi geçmiş ve ihtar zamanı gelmiş faturalar için sekreter, onay kutusunda \"ihtar kaydı oluştur\" önerisi sunar. Onaylanınca her faturaya sıradaki ihtar kademesi kaydedilir; e-posta veya PDF gönderilmez. Yalnız muhasebe düzenleme yetkisi olanlar görür; bu arada ödenen veya ihtarlanan fatura varsa öneri geçersiz olur.",
+          "de": "Für überfällige, mahnreife Rechnungen schlägt das Sekretariat im Posteingang „Mahnungen anlegen“ vor. Nach Freigabe wird je Rechnung die nächste Mahnstufe erfasst; es wird keine E-Mail oder PDF versendet. Nur mit Bearbeitungsrecht in der Buchhaltung sichtbar; wurde eine Rechnung inzwischen bezahlt oder gemahnt, verfällt der Vorschlag."
+        }
+      ]
+    },
+    {
       "version": "1.24.2",
       "date": "2026-11-19",
       "title": {
