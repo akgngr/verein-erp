@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.6.4",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Kişisel tercihler ve günlük özet e-postası",
+        "de": "Persönliche Einstellungen und tägliche Übersicht per E-Mail"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Her kullanıcı kendi özet saatini, sessiz saatlerini ve kanallarını (uygulama içi, e-posta) kaydedebilir; başkasının tercihleri değiştirilemez.",
+          "de": "Jeder Benutzer kann eigene Uhrzeit, Ruhezeiten und Kanäle (in der Anwendung, E-Mail) speichern; fremde Einstellungen sind nicht änderbar."
+        },
+        {
+          "type": "feature",
+          "tr": "E-posta kanalını seçenlere günlük özet e-postası gönderilir: yalnız toplam sayılar ve uygulamaya bağlantı, kişisel veri yok. Uygulama adresi (APP_URL) ve e-posta ayarı gerekir; sessiz saatlerde ve boş özette gönderilmez.",
+          "de": "Wer den E-Mail-Kanal wählt, erhält die tägliche Übersicht per E-Mail: nur Gesamtzahlen und ein Link zur Anwendung, keine personenbezogenen Daten. Erfordert die Anwendungsadresse (APP_URL) und E-Mail-Einstellungen; kein Versand während Ruhezeiten oder bei leerer Übersicht."
+        }
+      ]
+    },
+    {
       "version": "0.6.3",
       "date": "2026-11-19",
       "title": {
