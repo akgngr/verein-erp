@@ -1,6 +1,6 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
+import { notify } from "@/shared/components/ui/notify";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
@@ -16,6 +16,7 @@ import { DECISION_RESULT_COLORS } from "../constants";
 import type { AgendaItemDetail, DecisionItem } from "../types";
 
 import { DecisionModal } from "./decision-modal";
+import { Button } from "@/shared/components/kit";
 
 /** Sonuç rozeti (7.3 Kararlar). */
 function ResultBadge({ result }: { result: DecisionItem["result"] }) {

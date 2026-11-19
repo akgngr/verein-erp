@@ -1,7 +1,7 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
-import { Card, ProgressBar, StatusChip } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { Card, ProgressBar, StatusChip, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -278,7 +278,7 @@ export function CampaignBoard(props: {
                         {item.workflowId ? (
                           <ActionLink
                             href={`/automation/workflows/${item.workflowId}`}
-                            className={buttonVariants({
+                            className={buttonClassName({
                               variant: actionVariant("default", "light"),
                               size: "sm",
                             })}

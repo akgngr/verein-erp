@@ -54,7 +54,8 @@ test("secretary module does not import other modules (contributions come only vi
   const walk = (dir: string) => fs.readdirSync(dir, { withFileTypes: true }).forEach((d) => (d.isDirectory() ? walk(path.join(dir, d.name)) : /\.tsx?$/.test(d.name) && files.push(path.join(dir, d.name))));
   walk(root);
   // users: günlük özet işinde kullanıcının etkinliği ve rolü (module.config access ile bildirilmiş).
-  const allowed = new Set(["secretary", "auth", "system", "users"]);
+  // mail: günlük özet e-postası (module.config access ile bildirilmiş, worker-safe mail/automation).
+  const allowed = new Set(["secretary", "auth", "system", "users", "mail"]);
   for (const file of files) {
     for (const match of fs.readFileSync(file, "utf8").matchAll(/from\s+["']@\/modules\/([a-z0-9-]+)/g)) {
       assert.ok(allowed.has(match[1]), `${path.relative(root, file)} imports @/modules/${match[1]}`);

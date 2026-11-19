@@ -1,6 +1,6 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
+import { notify } from "@/shared/components/ui/notify";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useTranslations } from "next-intl";
@@ -20,6 +20,7 @@ import { formatDate } from "@/shared/utils";
 import { setCategoryActiveAction } from "../actions/category-actions";
 import { CategoryFormModal } from "./category-form-modal";
 import type { CategoryListItem } from "../types";
+import { Button } from "@/shared/components/kit";
 
 /**
  * Kategori listesi tablosu (8.5): Ad, Durum, Evrak sayısı + satır aksiyonları

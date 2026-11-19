@@ -1,7 +1,7 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button, buttonVariants, Link as ActionLink } from "@heroui/react";
-import { Description, Dialog, Label, Radio, RadioGroup, Spinner, StatusChip } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { Description, Dialog, Label, Radio, RadioGroup, Spinner, StatusChip, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
@@ -195,7 +195,7 @@ export function OnlineFormsApp({
                         href={`/api/online-forms/${row.id}/pdf`}
                         target="_blank"
                         rel="noopener"
-                        className={buttonVariants({
+                        className={buttonClassName({
                           variant: actionVariant("default", "flat"),
                           size: "sm",
                           className: "me-2",
@@ -253,9 +253,9 @@ export function OnlineFormsApp({
                   {t("signature")}
                 </Dialog.Heading>
               </Dialog.Header>
-              {/* eslint-disable-next-line @next/next/no-img-element -- şifresi çözülmüş data URL */}
               <Dialog.Body>
                 {signature ? (
+                  // eslint-disable-next-line @next/next/no-img-element -- şifresi çözülmüş data URL; next/image uygun değil
                   <img
                     src={signature}
                     alt={t("signature")}

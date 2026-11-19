@@ -13,7 +13,7 @@ Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı 
 |---|---|
 | Anahtar | `donations` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.7 |
+| Sürüm | 1.1.9 |
 | Sayfalar | `/bagislar`, `/bagislar/bagiscilar`, `/bagislar/bildirimler`, `/bagislar/bildirimler/olustur`, `/bagislar/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -41,6 +41,18 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_donation_statistics`
 
 ## Sürüm notları
+
+### 1.1.9 — Kod bakımı
+
+_2026-11-19_
+
+- **İyileştirme:** Kullanılmayan kod temizlendi; formlar alan değişikliklerini React Compiler ile uyumlu şekilde izliyor. Görünüm ve davranış değişmedi.
+
+### 1.1.8 — Arayüz altyapısı
+
+_2026-11-18_
+
+- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
 ### 1.1.6 — Ortak UI bileşenleri (iç değişiklik)
 
@@ -78,14 +90,4 @@ _2026-11-15_
 
 - **İyileştirme:** AI çıktısı açık şema veya sayfalama metadatasıyla sınırlandırılır; kişi alanları eklenmez.
 
-### 1.1.0 — İş akışı tetikleyicileri
-
-_2026-11-06_
-
-- **Yeni:** İş akışı tetikleyicisi: "Bağış kaydedildiğinde" (yöntem, tutar; {{donation.donorName}} vb.).
-
-### 1.0.0 — İlk sürüm
-
-_2026-10-29_
-
-- **Yeni:** İlk sürüm.
+Daha eski 2 herkese açık sürüm notu.

@@ -159,7 +159,8 @@
       "sm": "Klein",
       "md": "Mittel",
       "lg": "Breit"
-    }
+    },
+    "asideLabel": "Heute und Hinweise"
   },
   "meta": {
     "panel": "Dashboard",

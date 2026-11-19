@@ -2,15 +2,14 @@
 
 import { useDrawerPlacement } from "@/shared/hooks/use-media-query";
 import { drawerDialogClass, SheetHandle } from "@/shared/components/forms/form-drawer";
-import { Button } from "@heroui/react";
-import { Description, FieldError, Input, InputGroup, Label, Sheet, Spinner, Switch, TextArea, TextField } from "@/shared/components/kit";
+import { Description, FieldError, Input, InputGroup, Label, Sheet, Spinner, Switch, TextArea, TextField, Button } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useEffect, useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 
@@ -57,13 +56,14 @@ export function InventoryFormModal({
     register,
     handleSubmit,
     reset,
-    watch,
+    control,
     setValue,
     formState: { errors },
   } = useForm<InventoryFormValues>({
     resolver: zodResolver(inventoryCreateSchema),
     defaultValues: toInventoryFormValues(item),
   });
+  const trackAsAsset = useWatch({ control, name: "trackAsAsset" });
 
   useEffect(() => {
     if (isOpen) reset(toInventoryFormValues(item));
@@ -306,7 +306,7 @@ export function InventoryFormModal({
 
                   <div className="flex flex-col gap-1 sm:col-span-2">
                     <Switch
-                      isSelected={watch("trackAsAsset")}
+                      isSelected={trackAsAsset}
                       onChange={(value) =>
                         setValue("trackAsAsset", value, { shouldDirty: true })
                       }

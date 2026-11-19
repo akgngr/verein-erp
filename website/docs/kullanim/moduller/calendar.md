@@ -13,7 +13,7 @@ Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve son tarihler tek gö
 |---|---|
 | Anahtar | `calendar` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.9 |
+| Sürüm | 1.3.12 |
 | Sayfalar | `/calendar`, `/calendar/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -41,6 +41,24 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `list_shared_calendar_entries` · `list_shared_calendars` · `propose_calendar_entry`
 
 ## Sürüm notları
+
+### 1.3.12 — Kod bakımı
+
+_2026-11-19_
+
+- **İyileştirme:** Kullanılmayan kod temizlendi; formlar alan değişikliklerini React Compiler ile uyumlu şekilde izliyor. Görünüm ve davranış değişmedi.
+
+### 1.3.11 — Takvim sekreter özeti
+
+_2026-11-18_
+
+- **Yeni:** Kişisel ve ortak takvimlerin bugünkü/yarınki kayıt sayıları ve saat çakışmaları, gizlilik sınırları korunarak özetlenir.
+
+### 1.3.10 — Arayüz altyapısı
+
+_2026-11-18_
+
+- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
 ### 1.3.8 — Ortak UI bileşenleri (iç değişiklik)
 
@@ -72,22 +90,4 @@ _2026-11-15_
 
 - **Güvenlik:** Asistan araçları v2 veri sözleşmesine taşındı: modele giden her alan açıkça listelenir ve veri sınıfı bildirilir. Toplam ve kurumsal veriler denetimli bulut modunda da kullanılabilir; serbest kişisel içerik yalnız yerel modelde kalır.
 
-### 1.3.3 — Kullanıcı ve sistem bağı bildirildi
-
-_2026-11-15_
-
-- **Güvenlik:** Takvim senkronizasyonunun kullandığı kullanıcı ve modül durumu bilgileri artık bildirilmiş erişimle okunur. Yönetici erişimi bir kez yeniden onaylar.
-
-### 1.3.2 — Sürümlü AI öneri ve sonuç sınırları
-
-_2026-11-15_
-
-- **Güvenlik:** Öneri araçları katı Zod girdisi ve sabit model sonucu kullanır; salt öneri sorguları gereksiz kişi detaylarını okumaz. Kalan eski okuma araçlarının dönüşümü ayrı sürer.
-
-### 1.3.1 — AI listelerinde eksiksizlik ve sınır kontrolü
-
-_2026-11-15_
-
-- **Düzeltme:** AI listeleri sayfalama ve eksiksizlik bilgisi taşır; aşırı büyük takvim aralıkları kontrollü reddedilir.
-
-Daha eski 7 herkese açık sürüm notu.
+Daha eski 10 herkese açık sürüm notu.

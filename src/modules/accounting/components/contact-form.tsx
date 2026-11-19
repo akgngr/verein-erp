@@ -8,7 +8,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 
 import { applyActionResult } from "@/shared/components/forms/action-result";
 import {
@@ -58,6 +58,8 @@ export function ContactForm({
       leitwegId: contact?.leitwegId ?? "",
     },
   });
+  const contactType = useWatch({ control: form.control, name: "type" });
+  const einvoiceType = useWatch({ control: form.control, name: "einvoiceType" });
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(null);
@@ -120,7 +122,7 @@ export function ContactForm({
             control={form.control}
             placeholder="DE123456789"
           />
-          {form.watch("type") === "CUSTOMER" ? (
+          {contactType === "CUSTOMER" ? (
             <>
               <FormSelect
                 name="einvoiceType"
@@ -137,7 +139,7 @@ export function ContactForm({
                 label={t("fields.leitwegId")}
                 control={form.control}
                 placeholder="04011000-1234512345-06"
-                isRequired={form.watch("einvoiceType") === "PUBLIC"}
+                isRequired={einvoiceType === "PUBLIC"}
                 description={t("fields.leitwegHint")}
               />
             </>

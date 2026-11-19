@@ -1,6 +1,6 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
+import { notify } from "@/shared/components/ui/notify";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import {
@@ -12,7 +12,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 
 import { applyActionResult } from "@/shared/components/forms/action-result";
 import { FormErrorSummary } from "@/shared/components/forms/form-error-summary";
@@ -33,6 +33,7 @@ import {
   type UserCreateInput,
   type UserUpdateInput,
 } from "../schemas/user";
+import { Button } from "@/shared/components/kit";
 
 /** Yalnızca atanabilir roller (modülü kullanılabilir olanlar); mevcut rol listede değilse eklenir. */
 function useRoleSelectOptions(current?: string) {
@@ -55,7 +56,7 @@ export function UserCreateForm() {
     defaultValues: { name: "", email: "", role: "VIEWER", password: "" },
   });
 
-  const selectedRole = (form.watch("role") as Role) || "VIEWER";
+  const selectedRole = (useWatch({ control: form.control, name: "role" }) as Role) || "VIEWER";
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(null);
@@ -149,7 +150,7 @@ export function UserEditForm({ user }: { user: UserEditValues }) {
     },
   });
 
-  const selectedRole = (form.watch("role") as Role) || user.role;
+  const selectedRole = (useWatch({ control: form.control, name: "role" }) as Role) || user.role;
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(null);

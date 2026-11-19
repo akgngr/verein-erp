@@ -13,7 +13,7 @@ Dernek etkinlikleri, seminerler, atölyeler ve katılımcı yönetimi.
 |---|---|
 | Anahtar | `events` |
 | Tür | Resmî modül |
-| Sürüm | 1.2.8 |
+| Sürüm | 1.2.9 |
 | Sayfalar | `/events`, `/events?filter.timeFilter=upcoming`, `/events?filter.timeFilter=past` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `list_upcoming_events` · `propose_event`
 
 ## Sürüm notları
+
+### 1.2.9 — Arayüz altyapısı
+
+_2026-11-18_
+
+- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
 ### 1.2.7 — Ortak UI bileşenleri (iç değişiklik)
 
@@ -83,10 +89,4 @@ _2026-11-15_
 
 - **İyileştirme:** AI çıktısı açık şema veya sayfalama metadatasıyla sınırlandırılır; kişi alanları eklenmez.
 
-### 1.2.0 — Katılımcılara duyuru
-
-_2026-11-07_
-
-- **Yeni:** Etkinlik sayfasında "Katılımcılara duyur": Kampanyalar sihirbazı bu etkinliğin katılımcılarıyla açılır.
-
-Daha eski 2 herkese açık sürüm notu.
+Daha eski 3 herkese açık sürüm notu.

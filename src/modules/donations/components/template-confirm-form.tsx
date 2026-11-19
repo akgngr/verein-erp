@@ -1,7 +1,7 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
-import { Checkbox, Label, Spinner } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { Checkbox, Label, Spinner, Button } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 

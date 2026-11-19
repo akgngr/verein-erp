@@ -55,6 +55,11 @@ const eslintConfig = [
     // Her yerde: modül iç dosyalarına erişim yasağı (3.4)
     rules: {
       "no-restricted-imports": ["error", { patterns: [MODULE_INTERNAL_IMPORTS] }],
+      // Bilinçli olarak kullanılmayan değerler "_" ile başlar (ör. `const { secret: _secret, ...rest } = row`).
+      "@typescript-eslint/no-unused-vars": [
+        "warn",
+        { argsIgnorePattern: "^_", varsIgnorePattern: "^_", caughtErrorsIgnorePattern: "^_", ignoreRestSiblings: true },
+      ],
     },
   },
   {
@@ -85,22 +90,21 @@ const eslintConfig = [
     // modüller: src/app'i import edemez (3.1)
     files: ["src/modules/**/*.{ts,tsx}"],
     rules: {
-      // W0: uyarı olarak başlat; mevcut modül/app import sınırlarını error bırak.
-      // W6: bu kural error olacak. no-restricted-imports yerine ayrı kural
-      // kullanılması boundary güvenliğini yanlışlıkla warn düzeyine düşürmez.
+      // W6 kilidi (#281): modüller UI framework'ünü doğrudan import edemez; yalnız @/shared/components/kit.
+      // no-restricted-imports yerine ayrı kural: boundary kuralları bundan bağımsız kalır.
       "no-restricted-syntax": [
-        "warn",
+        "error",
         {
           selector: "ImportDeclaration[source.value=\'@heroui/react\']",
-          message: "ERP UI platform: modules must import shared UI patterns instead of @heroui/react (W6: error).",
+          message: "ERP UI platform: modules must import shared UI patterns instead of @heroui/react (W6).",
         },
         {
           selector: "ExportNamedDeclaration[source.value=\'@heroui/react\']",
-          message: "ERP UI platform: do not re-export @heroui/react from modules (W6: error).",
+          message: "ERP UI platform: do not re-export @heroui/react from modules (W6).",
         },
         {
           selector: "ExportAllDeclaration[source.value=\'@heroui/react\']",
-          message: "ERP UI platform: do not re-export @heroui/react from modules (W6: error).",
+          message: "ERP UI platform: do not re-export @heroui/react from modules (W6).",
         },
       ],
       "no-restricted-imports": [

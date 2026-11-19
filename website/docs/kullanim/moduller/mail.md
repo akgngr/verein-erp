@@ -13,7 +13,7 @@ Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gön
 |---|---|
 | Anahtar | `mail` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.4.3 |
+| Sürüm | 1.4.5 |
 | Sayfalar | `/mail`, `/mail/gelen-kutusu`, `/mail/kayitlar` |
 
 ## Diğer modüllere erişim
@@ -35,6 +35,18 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | E-posta altyapısı | görüntüleme, oluşturma, düzenleme | — | — | — | görüntüleme | — | — |
 
 ## Sürüm notları
+
+### 1.4.5 — Kod bakımı
+
+_2026-11-19_
+
+- **İyileştirme:** Kullanılmayan kod temizlendi; formlar alan değişikliklerini React Compiler ile uyumlu şekilde izliyor. Görünüm ve davranış değişmedi.
+
+### 1.4.4 — Arayüz altyapısı
+
+_2026-11-18_
+
+- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
 ### 1.4.2 — Ortak UI bileşenleri (iç değişiklik)
 
@@ -72,16 +84,4 @@ _2026-11-06_
 
 - **Düzeltme:** Bildirim e-postası adımı, e-posta ayarlanmamışsa yeniden denemeden hemen MAIL_NOT_CONFIGURED ile başarısız olur.
 
-### 1.3.1 — İş akışı etiketleri
-
-_2026-11-06_
-
-- **İyileştirme:** Bildirim e-postası adımı için alan etiketleri ve açıklamalar eklendi.
-
-### 1.3.0 — İş akışı görevi: bildirim e-postası
-
-_2026-11-06_
-
-- **Yeni:** İş akışlarında sabit bir adrese tek bildirim e-postası gönderen mail.send_notification görevi eklendi.
-
-Daha eski 5 herkese açık sürüm notu.
+Daha eski 7 herkese açık sürüm notu.

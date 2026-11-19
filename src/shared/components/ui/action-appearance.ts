@@ -1,4 +1,4 @@
-import type { Button } from "@heroui/react";
+import type { ButtonVariant } from "../kit/action";
 
 /** Existing application action intent, independent of the component library's palette API. */
 export type ActionTone =
@@ -8,7 +8,7 @@ export type ActionPresentation =
 export function actionVariant(
   tone: ActionTone,
   presentation: ActionPresentation,
-): Button["Props"]["variant"] {
+): ButtonVariant {
   if (tone === "danger")
     return presentation === "solid" || presentation === "shadow"
       ? "danger"

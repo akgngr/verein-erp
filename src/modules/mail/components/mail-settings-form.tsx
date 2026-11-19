@@ -1,11 +1,10 @@
 "use client";
-import { Button } from "@heroui/react";
-import { Description, FieldError, Input, Label, Spinner, TextField } from "@/shared/components/kit";
+import { Description, FieldError, Input, Label, Spinner, TextField, Button } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useEffect, useState, useTransition } from "react";
-import { useForm } from "react-hook-form";
+import { useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 
@@ -69,7 +68,7 @@ export function MailSettingsForm({
     register,
     handleSubmit,
     reset,
-    watch,
+    control,
     getValues,
     setValue,
     formState: { errors },
@@ -82,7 +81,7 @@ export function MailSettingsForm({
     reset(toMailSettingsFormValues(settings));
   }, [settings, reset]);
 
-  const transport = watch("transport");
+  const transport = useWatch({ control, name: "transport" });
   const isSmtp = transport === "SMTP";
 
   const errorText = (message: string | undefined): string | undefined => {

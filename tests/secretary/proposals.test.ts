@@ -8,7 +8,10 @@ import {
   confirmProposal,
   dismissProposal,
   ensureRuleProposal,
+  getProposalState,
+  isSafeInternalHref,
   listPendingProposals,
+  snoozeProposal,
   type ProposalDeps,
   ProposalError,
   type ProposalRow,
@@ -39,6 +42,12 @@ function memoryStore() {
       return true;
     },
     listPending: async (userId, now) => rows.filter((row) => row.userId === userId && row.status === "PENDING" && row.expiresAt > now),
+    snooze: async (id, userId, until) => {
+      const row = rows.find((entry) => entry.id === id && entry.userId === userId && entry.status === "PENDING" && entry.expiresAt > until);
+      if (!row) return false;
+      row.snoozedUntil = until;
+      return true;
+    },
   };
   return { rows, store };
 }
@@ -46,7 +55,7 @@ function memoryStore() {
 // Test şifrelemesi: sızıntı denetimi için düz metni gizleyen basit, geri çevrilebilir kodlama.
 const crypto = { seal: (plain: string) => `sealed:${Buffer.from(plain).toString("base64")}`, open: (sealed: string) => sealed.startsWith("sealed:") ? Buffer.from(sealed.slice(7), "base64").toString() : null };
 
-function setup(options: { risk?: "internal" | "external"; executeFails?: boolean } = {}) {
+function setup(options: { risk?: "internal" | "external"; executeFails?: boolean; editHref?: (payload: { invoiceId: string }) => string | null } = {}) {
   const source = { status: "OVERDUE", version: 1 };
   const executed: string[] = [];
   const action = defineSecretaryAction({
@@ -56,6 +65,7 @@ function setup(options: { risk?: "internal" | "external"; executeFails?: boolean
     schema: z.object({ invoiceId: z.string() }),
     preview: async (payload) => ({ title: `Hatırlatma taslağı ${payload.invoiceId}` }),
     snapshot: async () => (source.status === "GONE" ? null : { ...source }),
+    ...(options.editHref ? { editHref: options.editHref } : {}),
     execute: async (payload) => {
       if (options.executeFails) throw new Error("db down");
       executed.push(payload.invoiceId);
@@ -215,4 +225,62 @@ test("briefing: öğe önerisi istemciye yalnız proposalId olarak gider", async
   assert.equal(items[1].proposalId, undefined);
   assert.ok(!JSON.stringify(briefing).includes("suggestion"));
   assert.ok(!JSON.stringify(briefing).includes("invoiceId"));
+});
+
+const day = 86_400_000;
+
+test("proposals #296: erteleme yalnız sahibi, gelecekte, ≤ 90 gün ve süre sonundan önce", async () => {
+  const env = setup();
+  const id = (await propose(env))!;
+  const at = (ms: number) => new Date(now.getTime() + ms);
+  await assert.rejects(() => snoozeProposal({ id: "other", role: "ADMIN" }, { id, until: at(day) }, env.deps, now), /unavailable/);
+  await assert.rejects(() => snoozeProposal(admin, { id, until: now }, env.deps, now), /snoozeInPast/);
+  await assert.rejects(() => snoozeProposal(admin, { id, until: at(91 * day) }, env.deps, now), /snoozeTooLong/);
+  // TTL 7 gün: süre sonuna veya sonrasına ertelenemez (öneriyi canlı tutmaz).
+  await assert.rejects(() => snoozeProposal(admin, { id, until: at(7 * day) }, env.deps, now), /snoozeBeyondExpiry/);
+  await assert.rejects(() => snoozeProposal({ id: "u1", role: "AUDITOR" }, { id, until: at(day) }, env.deps, now), /forbidden/);
+
+  const result = await snoozeProposal(admin, { id, until: at(day) }, env.deps, now);
+  assert.equal(result.snoozedUntil, at(day).toISOString());
+  assert.deepEqual(await listPendingProposals(admin, env.deps, now), [], "ertelenen öneri listede gizli");
+  assert.equal(await getProposalState(admin, id, env.deps, now), "snoozed");
+  assert.equal((await listPendingProposals(admin, env.deps, at(day + 1))).length, 1, "süre geçince yeniden görünür");
+  assert.equal(await getProposalState(admin, id, env.deps, at(day + 1)), "pending");
+  assert.equal(env.rows[0].expiresAt.getTime(), now.getTime() + 7 * day, "süre sonu uzamaz");
+});
+
+test("proposals #296: ertelenmiş öneri hâlâ açık onayla çalışır; çift onay ve yarış korunur", async () => {
+  const env = setup({ risk: "external" });
+  const id = (await propose(env))!;
+  await snoozeProposal(admin, { id, until: new Date(now.getTime() + day) }, env.deps, now);
+  await assert.rejects(() => confirmProposal(admin, { id }, env.deps, now), /externalConfirmRequired/);
+  const outcomes = await Promise.allSettled([
+    confirmProposal(admin, { id, confirmExternal: true }, env.deps, now),
+    confirmProposal(admin, { id, confirmExternal: true }, env.deps, now),
+  ]);
+  assert.equal(outcomes.filter((outcome) => outcome.status === "fulfilled").length, 1);
+  assert.deepEqual(env.executed, ["inv1"]);
+  // Uygulanan öneri ertelenemez.
+  await assert.rejects(() => snoozeProposal(admin, { id, until: new Date(now.getTime() + day) }, env.deps, now), /unavailable/);
+  assert.equal(await getProposalState(admin, id, env.deps, now), "applied");
+});
+
+test("proposals #296: güvenli durum ve düzenleme yolu sızıntısız", async () => {
+  const env = setup({ editHref: (payload) => `/muhasebe/faturalar/${payload.invoiceId}/duzenle` });
+  const id = (await propose(env))!;
+  assert.equal(await getProposalState({ id: "intruder" }, id, env.deps, now), "unavailable");
+  assert.equal(await getProposalState(admin, "missing", env.deps, now), "unavailable");
+  assert.equal(await getProposalState(admin, id, env.deps, new Date(now.getTime() + 8 * day)), "expired");
+
+  const [view] = await listPendingProposals(admin, env.deps, now);
+  assert.equal(view.editHref, "/muhasebe/faturalar/inv1/duzenle");
+  assert.ok(!("payload" in view) && !JSON.stringify(view).includes("payloadEnc"));
+
+  for (const bad of ["https://evil.example/x", "//evil.example", "/a\\b", "javascript:alert(1)", "/a b", 5]) {
+    assert.equal(isSafeInternalHref(bad), false, String(bad));
+  }
+  const unsafe = setup({ editHref: () => "//evil.example/steal" });
+  await propose(unsafe);
+  const [unsafeView] = await listPendingProposals(admin, unsafe.deps, now);
+  assert.equal(unsafeView.editHref, undefined, "güvensiz yol istemciye verilmez");
 });

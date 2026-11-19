@@ -10,7 +10,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { useForm, type Resolver } from "react-hook-form";
+import { useForm, type Resolver, useWatch } from "react-hook-form";
 import { useTranslations } from "next-intl";
 
 import { applyActionResult } from "@/shared/components/forms/action-result";
@@ -114,11 +114,11 @@ export function BookingForm({
   });
 
   const showTax = !isTransfer && !smallBusiness;
-  const [amountValue, taxRateValue, categoryIdValue] = form.watch([
+  const [amountValue, taxRateValue, categoryIdValue] = useWatch({ control: form.control, name: [
     "amount",
     "taxRate",
     "categoryId",
-  ]);
+  ] });
   // Kategori DEĞİŞİNCE varsayılan KDV oranı önerilir (kullanıcı değiştirebilir; ilk yüklemede dokunulmaz).
   const [lastCategoryId, setLastCategoryId] = useState(
     defaultValues.categoryId,

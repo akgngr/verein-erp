@@ -11,7 +11,7 @@ import { bankingPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "banking",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.1.4",
+  version: "1.1.6",
   label: "Banka bağlantısı",
   description:
     "Banka hesaplarını lisanslı PSD2 sağlayıcısı üzerinden bağlar, hareketleri muhasebeye aktarır.",

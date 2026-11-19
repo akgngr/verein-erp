@@ -1,7 +1,7 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
-import { Checkbox, CheckboxGroup, Description, Dialog, FieldError, Input, Label, Radio, RadioGroup, Select, Spinner, StatusChip, Switch, TextArea, TextField } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { Checkbox, CheckboxGroup, Description, Dialog, FieldError, Input, Label, Radio, RadioGroup, Select, Spinner, StatusChip, Switch, TextArea, TextField, Button } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 

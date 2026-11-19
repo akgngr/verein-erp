@@ -1,0 +1,33 @@
+name: AI Contributors Dashboard
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 7 * * 1"
+
+permissions:
+  contents: read
+  issues: read
+  pull-requests: read
+  checks: read
+
+jobs:
+  report:
+    name: Generate AI contributor report
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+      - name: Build read-only dashboard
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPORT_OUTPUT: ai-contributors-report.md
+        run: node scripts/ai-contributors-report.mjs
+      - name: Upload dashboard artifact
+        uses: actions/upload-artifact@v6
+        with:
+          name: ai-contributors-report
+          path: ai-contributors-report.md
+          retention-days: 30

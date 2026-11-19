@@ -3,6 +3,8 @@ import fs from "node:fs";
 import path from "node:path";
 import test from "node:test";
 
+import { collectInventory, toMarkdown } from "../../scripts/ui/heroui-inventory";
+
 const ROOT = process.cwd();
 
 function walk(dir: string): string[] {
@@ -43,21 +45,19 @@ test("business modules do not create a parallel shared DataTable implementation"
   assert.deepEqual(forbidden, []);
 });
 
-test("direct HeroUI dependency in modules may only shrink during adapter migration", () => {
-  const moduleFiles = walk(path.join(ROOT, "src/modules")).filter((file) =>
-    /\.(?:ts|tsx)$/.test(file),
+/** W6 locked (#281): no module file may import @heroui/react directly; use @/shared/components/kit. */
+test("modules have zero direct HeroUI imports (W6 lock)", () => {
+  const inventory = collectInventory(ROOT);
+  assert.deepEqual(
+    inventory.files.map((file) => file.path),
+    [],
+    "Import UI primitives from @/shared/components/kit instead of @heroui/react.",
   );
-  const directImports = moduleFiles.filter((file) =>
-    fs.readFileSync(file, "utf8").includes('from "@heroui/react"'),
-  );
+});
 
-  // Baseline at ERP UI Platform hardening (2026-11-17). Reductions are welcome;
-  // new direct framework imports must use shared UI patterns instead.
-  assert.ok(
-    directImports.length <= 152,
-    "Direct @heroui/react imports increased to " + directImports.length +
-      "; use shared UI patterns/adapters instead.",
-  );
+test("tracked HeroUI inventory (docs/ui/HEROUI_INVENTORY.md) is up to date", () => {
+  const tracked = fs.readFileSync(path.join(ROOT, "docs/ui/HEROUI_INVENTORY.md"), "utf8");
+  assert.equal(tracked, toMarkdown(collectInventory(ROOT)), "Run `pnpm ui:inventory` and commit docs/ui/HEROUI_INVENTORY.md.");
 });
 
 test("module bulk actions enforce permission, selection validation and audit", () => {
@@ -93,4 +93,22 @@ test("shared DataTable keeps accessible controlled selection wiring", () => {
   assert.match(bulkBar, /role="region"/);
   assert.match(bulkBar, /aria-label=\{tTable\("bulkActions"\)\}/);
   assert.match(bulkBar, /aria-busy=/);
+});
+
+/**
+ * RSC sınırı: "use client" kit bileşenlerinin statik alt özellikleri (Card.Header, Tabs.Tab …) sunucu
+ * bileşeninde undefined olur ve sayfa "Element type is invalid" ile çöker. Sunucu bileşenleri ayrı
+ * exportları (CardHeader, CardContent …) kullanmalı.
+ */
+test("server components do not use static subcomponents of client kit primitives", () => {
+  const offenders = walk(path.join(ROOT, "src/modules"))
+    .filter((file) => file.endsWith(".tsx"))
+    .filter((file) => {
+      const source = fs.readFileSync(file, "utf8");
+      if (/^\s*["']use client["']/.test(source)) return false;
+      if (!source.includes("@/shared/components/kit")) return false;
+      return /<(Card|Tabs|Table|Dialog|Sheet|Select|ComboBox|Dropdown)\.[A-Z]/.test(source);
+    })
+    .map((file) => path.relative(ROOT, file));
+  assert.deepEqual(offenders, [], "Use CardHeader/CardContent/... in server components");
 });

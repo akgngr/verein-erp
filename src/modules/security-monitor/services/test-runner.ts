@@ -3,8 +3,7 @@ import { promisify } from "node:util";
 import { getDb } from "@/shared/db";
 
 const execFileAsync = promisify(execFile);
-const SUPPORTED_TEST_SUITES = ["security"] as const;
-type SupportedTestSuite = (typeof SUPPORTED_TEST_SUITES)[number];
+type SupportedTestSuite = "security";
 
 interface TestResult {
   success: boolean;

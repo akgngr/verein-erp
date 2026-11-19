@@ -34,6 +34,7 @@
     "module:validate": "tsx scripts/validate-module.ts",
     "module:deps": "tsx scripts/module-deps.ts",
     "module:check": "tsx scripts/validate-module.ts",
+    "ui:inventory": "tsx scripts/ui/heroui-inventory.ts --format markdown --output docs/ui/HEROUI_INVENTORY.md",
     "predev": "tsx scripts/sync-schemas.ts && prisma generate",
     "prebuild": "tsx scripts/sync-schemas.ts && prisma generate",
     "pretypecheck": "node -e \"for (const d of ['.next/types', '.next/dev/types']) require('fs').rmSync(d, { recursive: true, force: true })\" && tsx scripts/sync-schemas.ts && prisma generate",

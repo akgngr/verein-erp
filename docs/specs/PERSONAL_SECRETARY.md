@@ -129,3 +129,4 @@ Koordinasyon protokolü: [`docs/ai-coordination/README.md`](../ai-coordination/R
 | Tarih | Sahip | Değişiklik |
 |---|---|---|
 | 2026-11-18 | Claude | Plan, aşamalar S0–S5 ve iş bölümü yazıldı. |
+| 2026-11-19 | ChatGPT | Görev bazında PR ve bağımlılık planı kesinleştirildi; Panel/surfaces #291 ve gizlilik regresyonu #292 Claude'a devredildi. |

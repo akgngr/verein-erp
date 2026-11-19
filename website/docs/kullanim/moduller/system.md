@@ -13,7 +13,7 @@ Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.
 |---|---|
 | Anahtar | `system` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.12.5 |
+| Sürüm | 1.12.7 |
 | Sayfalar | `/ayarlar`, `/ayarlar/moduller`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/surum-notlari` |
 
 ## Diğer modüllere erişim
@@ -34,6 +34,18 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Modül Yönetimi | görüntüleme, düzenleme, silme | görüntüleme | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.12.7 — Panel sağ sütunu
+
+_2026-11-19_
+
+- **İyileştirme:** Panel'de modüllerin bağlanabildiği sağ sütun (mobilde üstte) eklendi; sütun yalnız gösterilecek kart varsa görünür.
+
+### 1.12.6 — Arayüz altyapısı
+
+_2026-11-18_
+
+- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
 ### 1.12.3 — Ortak UI bileşenleri (iç değişiklik)
 
@@ -73,16 +85,4 @@ _2026-11-16_
 - **İyileştirme:** Çalışma alanı doğal açık yüzeyler, grafit gezinme ve ölçülü yeşil vurgularla yenilendi. Açık/koyu/sistem teması ve mobil gezinme korunur; bileşen renkleri her iki temaya uyarlanır.
 - **İyileştirme:** Eski HeroUI v2 bağımlılıkları, geçici paket adları ve tema eklentisi kaldırıldı. Türkçe/Almanca tarih yerelleştirmesi, klavye gezinmesi, form doğrulama mesajları ve yerelleştirilmiş kopyalama bildirimleri yeni bileşenlerle bütünleştirildi.
 
-### 1.11.1 — Sade ve profesyonel çalışma alanı
-
-_2026-11-15_
-
-- **İyileştirme:** Panel kartları ve gezinme kabuğu grafit/yeşil tonlarla yenilendi; ortak tablo, form ve menülerde HeroUI v3 geçişi başladı. Masaüstü/mobil tema seçimi mevcut tercihleri korur.
-
-### 1.11.0 — Silinme hakkı
-
-_2026-11-07_
-
-- **Yeni:** Modül yaşam döngüsüne onUserDeleted kancası eklendi; kişisel panel düzeni kullanıcıyla birlikte silinir.
-
-Daha eski 14 herkese açık sürüm notu.
+Daha eski 16 herkese açık sürüm notu.

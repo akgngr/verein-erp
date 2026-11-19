@@ -13,7 +13,7 @@ slug: /kullanim/moduller/mailings
 |---|---|
 | Anahtar | `mailings` |
 | Tür | Resmî modül |
-| Sürüm | 2.4.8 |
+| Sürüm | 2.4.9 |
 | Sayfalar | `/toplu-eposta`, `/toplu-eposta/ayarlar` |
 | Gerektirir | [E-posta Altyapısı](./mail), [Otomasyon](./automation) |
 
@@ -43,6 +43,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_campaign_statistics` · `list_campaign_audiences` · `list_campaigns` · `propose_campaign_draft`
 
 ## Sürüm notları
+
+### 2.4.9 — Arayüz altyapısı
+
+_2026-11-18_
+
+- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
 ### 2.4.7 — Ortak UI bileşenleri (iç değişiklik)
 
@@ -86,10 +92,4 @@ _2026-11-07_
 
 - **Düzeltme:** Telegram kanal açıklamasındaki {telegramLink} yer tutucusu konsol hatası veriyordu; artık düz metin olarak gösteriliyor.
 
-### 2.4.0 — Tek kişiye işlem mesajı gönderimi (ör. form bağlantısı)
-
-_2026-11-07_
-
-- **Yeni:** Tek kişiye işlem mesajı gönderimi (ör. form bağlantısı)
-
-Daha eski 14 herkese açık sürüm notu.
+Daha eski 15 herkese açık sürüm notu.

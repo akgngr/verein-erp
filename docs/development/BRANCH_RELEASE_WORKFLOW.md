@@ -27,6 +27,7 @@ feature/<topic> ---- PR + CI ----> alpha
 | `beta` | `alpha` only | Release candidate and acceptance | disabled |
 | `main` | `beta` only | Production-ready, reviewed releases | enabled |
 
+- Vercel builds only `main`. `vercel.json` disables Git deployments for every branch (`"**": false`; a single `*` does not match branch names with `/` such as `claude/x` or `chatgpt/x`) and an `ignoreCommand` skips any build whose `VERCEL_GIT_COMMIT_REF` is not `main`. Branches created before this change still carry the old file until they merge the current base.
 - Do not directly push to the three protected branches. Use PRs and pass the required CI checks.
 - Require human approval before `beta -> main`; AI agents must not auto-merge production changes.
 - PRs should target `alpha` unless they are branch promotion PRs.

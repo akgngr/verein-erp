@@ -1,13 +1,12 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
-import { DateInput, Description, Dialog, Dropdown, Input, Label, Spinner, TextField } from "@/shared/components/kit";
+import { notify } from "@/shared/components/ui/notify";
+import { DateInput, Description, Dialog, Dropdown, Input, Label, Spinner, TextField, Button } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
-import { parseDate } from "@internationalized/date";
 import { ChevronDown, RefreshCw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -107,14 +106,6 @@ export function StatusChangeMenu({
     setCancellationReceivedAt("");
   };
 
-  const parse = (value: string) => {
-    if (!value) return null;
-    try {
-      return parseDate(value);
-    } catch {
-      return null;
-    }
-  };
 
   return (
     <>

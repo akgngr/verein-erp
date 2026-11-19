@@ -13,7 +13,7 @@ Kurs ve Nachhilfe öğrencileri, veliler ve DATEV uyumlu borçlu (Debitor) kayı
 |---|---|
 | Anahtar | `students` |
 | Tür | Resmî modül |
-| Sürüm | 1.4.9 |
+| Sürüm | 1.4.10 |
 | Sayfalar | `/ogrenciler`, `/ogrenciler/veliler`, `/ogrenciler/ayarlar` |
 | Önerir | [e-Sign](./online-forms) |
 
@@ -41,6 +41,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_student_statistics`
 
 ## Sürüm notları
+
+### 1.4.10 — Arayüz altyapısı
+
+_2026-11-18_
+
+- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
 ### 1.4.8 — Ortak UI bileşenleri (iç değişiklik)
 
@@ -84,10 +90,4 @@ _2026-11-07_
 
 - **İyileştirme:** SEPA modülü için veli yetki bilgisi (yalnız okuma)
 
-### 1.4.1 — Öğrenci sayfasında e-Sign belgelerine bağlantı; veli listesinden e-Sign formu gönderme
-
-_2026-11-07_
-
-- **İyileştirme:** Öğrenci sayfasında e-Sign belgelerine bağlantı; veli listesinden e-Sign formu gönderme
-
-Daha eski 6 herkese açık sürüm notu.
+Daha eski 7 herkese açık sürüm notu.

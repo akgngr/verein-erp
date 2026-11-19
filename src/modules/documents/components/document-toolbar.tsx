@@ -1,6 +1,5 @@
 "use client";
-import { Button } from "@heroui/react";
-import { Badge } from "@/shared/components/kit";
+import { Badge, Button } from "@/shared/components/kit";
 import { Dropdown, InputGroup, Label, Select, TextField, Tooltip } from "@/shared/components/kit";
 
 import { FieldClearButton } from "@/shared/components/forms/field-clear-button";

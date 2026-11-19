@@ -1,6 +1,6 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Button } from "@heroui/react";
+import { notify } from "@/shared/components/ui/notify";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -29,6 +29,7 @@ import {
 import { teacherSchema, type TeacherInput } from "../schemas/teacher";
 import type { TeacherRow } from "../types";
 import { InviteResultNotice, type InviteResult } from "./invite-result";
+import { Button } from "@/shared/components/kit";
 
 /** Öğretmen formu; yeni kayıtta isteğe bağlı olarak TEACHER rolüyle giriş hesabı açılır. */
 export function TeacherForm({ teacher }: { teacher?: TeacherRow }) {

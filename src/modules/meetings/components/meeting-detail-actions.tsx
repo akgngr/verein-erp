@@ -1,6 +1,6 @@
 "use client";
 
-import { notify } from "@/shared/components/ui/notify";import { Link as ActionLink, buttonVariants, Button } from "@heroui/react";
+import { notify } from "@/shared/components/ui/notify";
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { Pencil, Trash2 } from "lucide-react";
@@ -15,6 +15,7 @@ import { PdfSplitButton } from "@/shared/components/ui/pdf-split-button";
 
 import { deleteMeetingAction } from "../actions/meeting-actions";
 import { StatusMenu } from "./status-menu";
+import { TextLink as ActionLink, buttonClassName, Button } from "@/shared/components/kit";
 
 /**
  * Detay başlığı aksiyonları (7.3): Düzenle (durum PLANNED/HELD + update),
@@ -76,7 +77,7 @@ export function MeetingDetailActions({
       {editAvailable ? (
         <ActionLink
           href={`/toplantilar/${meetingId}?duzenle`}
-          className={buttonVariants({
+          className={buttonClassName({
             variant: actionVariant("default", "bordered"),
             size: "sm",
           })}

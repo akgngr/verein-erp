@@ -13,7 +13,7 @@ slug: /kullanim/moduller/members
 |---|---|
 | Anahtar | `members` |
 | Tür | Resmî modül |
-| Sürüm | 1.15.0 |
+| Sürüm | 1.15.3 |
 | Sayfalar | `/uyeler`, `/uyeler/aidat`, `/uyeler/turler`, `/toplu-eposta?kaynak=members:members`, `/uyeler/ice-aktar` |
 | Önerir | [e-Sign](./online-forms) |
 
@@ -45,6 +45,24 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 
 ## Sürüm notları
 
+### 1.15.3 — Kod bakımı
+
+_2026-11-19_
+
+- **İyileştirme:** Kullanılmayan kod temizlendi; formlar alan değişikliklerini React Compiler ile uyumlu şekilde izliyor. Görünüm ve davranış değişmedi.
+
+### 1.15.2 — Arka plan işleri için üye eşleştirme
+
+_2026-11-19_
+
+- **Düzeltme:** E-postaya göre üye eşleştirmesi arka plan işlerinden de güvenle kullanılabilir.
+
+### 1.15.1 — Arayüz altyapısı
+
+_2026-11-18_
+
+- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
+
 ### 1.15.0 — Sekreter özetine katkı
 
 _2026-11-18_
@@ -75,22 +93,4 @@ _2026-11-17_
 
 - **İyileştirme:** Tekrarlanan HeroUI durum/tür rozetleri ortak StatusChip pattern'ine taşındı; modül görsel sözleşmesi framework implementasyonundan ayrıştırıldı.
 
-### 1.14.0 — Üye listesinde toplu seçim ve durum işlemleri
-
-_2026-11-17_
-
-- **Yeni:** Üye listesinde çoklu seçim, filtre sonucunun tamamını seçme ve güvenli toplu Aktif/Pasif durum işlemleri eklendi. Ayrılmış veya vefat etmiş üyeler toplu durum işleminde değiştirilmez.
-
-### 1.13.2 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-### 1.13.1 — Asistan araçları yeni veri sözleşmesinde
-
-_2026-11-15_
-
-- **Güvenlik:** Asistan araçları v2 veri sözleşmesine taşındı: modele giden her alan açıkça listelenir ve veri sınıfı bildirilir. Toplam ve kurumsal veriler denetimli bulut modunda da kullanılabilir; serbest kişisel içerik yalnız yerel modelde kalır.
-
-Daha eski 25 herkese açık sürüm notu.
+Daha eski 28 herkese açık sürüm notu.

@@ -22,7 +22,7 @@ jobs:
     name: Branch promotion policy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Verify source and target branches
         run: node scripts/check-branch-flow.mjs
 
@@ -55,13 +55,13 @@ jobs:
       NEXT_TELEMETRY_DISABLED: "1"
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0 # modül sürüm denetimi ana dalla karşılaştırır
 
-      - uses: pnpm/action-setup@v4 # sürüm package.json "packageManager" alanından okunur
+      - uses: pnpm/action-setup@v5 # sürüm package.json "packageManager" alanından okunur
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 22
           cache: pnpm
@@ -156,7 +156,7 @@ jobs:
 
       - name: Theme acceptance screenshots
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v6
         with:
           name: theme-preview
           path: theme-preview/*.png
@@ -174,7 +174,7 @@ jobs:
       contents: read
       packages: write
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
