@@ -3,7 +3,22 @@ import { automationTrace, maskEmail } from "@/shared/automation/trace";
 
 import { z } from "zod";
 
-import { defineTask, PermanentTaskError } from "@/shared/automation/define";
+import { defineEvent, defineTask, PermanentTaskError } from "@/shared/automation/define";
+
+/**
+ * S4.1 (#313): gelen kutusuna yeni e-posta kaydedildi. Yalnız kimlik ve sayılar; gönderen, konu,
+ * gövde veya ek adı YOK. Sınıf yalnız kurum düzeyinde sınıflama açıksa dolu.
+ */
+export const mailMessageReceivedEvent = defineEvent({
+  key: "mail.message_received",
+  description: "mail.message_received",
+  payloadSchema: z.object({
+    inboxMessageId: z.string().min(1).max(64),
+    source: z.enum(["IMAP", "EML"]),
+    attachmentCount: z.number().int().min(0).max(100),
+    category: z.enum(["invoice", "meeting", "membership", "donation", "question", "other"]).nullable(),
+  }).strict(),
+});
 
 // mail modülü — worker/otomasyonlar için framework bağımsız sunucu API'si.
 // Next.js action, route veya UI modüllerini bu girişe eklemeyin.
