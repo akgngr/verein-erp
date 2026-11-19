@@ -44,6 +44,7 @@ feature/<topic> ---- PR + CI ----> alpha
 | `main` | `beta` only | merge commit only | `Quality gate`, `Promotion policy (main)`, `Secret scan (gitleaks)`, `Dependency audit` | `main` must not contain content missing from `beta`; explicit product-owner approval |
 
 - Fork PRs are rejected for all three branches.
+- **One branch = one open PR.** GitHub matches required checks per commit; a second PR from the same branch (e.g. `feature -> main` next to `feature -> alpha`) shadows the first PR's `Promotion policy` result. The promotion job fails while another open PR from the same head exists.
 - `main`, `beta` and `alpha` can never be the head of a PR into `alpha` (no back-merges; drift is caught by the content check instead).
 - Direct pushes, force pushes and deletion are blocked by rulesets for everyone (no bypass actors).
 - Merge methods are fixed per branch: squash keeps `alpha` history one commit per task; merge commits keep `beta`/`main` traceable to the promoted `alpha`/`beta` commit.

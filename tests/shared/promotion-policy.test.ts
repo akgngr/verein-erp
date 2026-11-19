@@ -4,8 +4,8 @@ import { test } from "node:test";
 import { evaluatePromotion } from "../../scripts/check-promotion.mjs";
 
 const repo = "akgngr/verein-erp";
-const ok = (input: { base: string; head: string; headRepo?: string; extraOnBase?: string[] }) => assert.deepEqual(evaluatePromotion({ headRepo: repo, baseRepo: repo, ...input }), []);
-const bad = (input: { base: string; head: string; headRepo?: string; extraOnBase?: string[] }, pattern: RegExp) => {
+const ok = (input: { base: string; head: string; headRepo?: string; extraOnBase?: string[]; otherOpenBases?: string[] }) => assert.deepEqual(evaluatePromotion({ headRepo: repo, baseRepo: repo, ...input }), []);
+const bad = (input: { base: string; head: string; headRepo?: string; extraOnBase?: string[]; otherOpenBases?: string[] }, pattern: RegExp) => {
   const errors: string[] = evaluatePromotion({ headRepo: repo, baseRepo: repo, ...input });
   assert.ok(errors.some((error) => pattern.test(error)), `${JSON.stringify(input)} → ${JSON.stringify(errors)}`);
 };
@@ -38,4 +38,9 @@ test("promotion: base content missing from source blocks beta/main (no skipped p
 
 test("promotion: stacked PRs into non-protected bases are not restricted", () => {
   ok({ base: "claude/base-branch", head: "claude/child" });
+});
+
+test("promotion: one branch may have only one open PR (otherwise checks on the shared commit shadow each other)", () => {
+  bad({ base: "alpha", head: "claude/x", otherOpenBases: ["main"] }, /one branch may have only one open PR/);
+  ok({ base: "alpha", head: "claude/x", otherOpenBases: [] });
 });
