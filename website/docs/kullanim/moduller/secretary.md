@@ -13,7 +13,7 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 |---|---|
 | Anahtar | `secretary` |
 | Tür | Eklenti |
-| Sürüm | 0.6.10 |
+| Sürüm | 0.7.0 |
 | Sayfalar | `/sekreter` |
 
 ## Diğer modüllere erişim
@@ -35,6 +35,14 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Sekreter | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — |
 
 ## Sürüm notları
+
+### 0.7.0 — Benim yerime takip et
+
+_2026-11-19_
+
+- **Yeni:** Bir kayıt için takip oluşturabilirsiniz: son tarih, en fazla hatırlatma sayısı ve kaynağın sayfası. Süresi gelince sekreter özetinde günde en çok bir kez hatırlatılır.
+- **Yeni:** Takip duraklatılabilir, devam ettirilebilir, iptal edilebilir veya tamamlandı olarak işaretlenebilir. Kaynak kayıt değiştirilmez, kimseye mesaj gönderilmez.
+- **Güvenlik:** Takip başlığı şifreli saklanır ve yalnız sahibine görünür; yetkisi kalkan veya pasif kullanıcının takipleri otomatik duraklatılır.
 
 ### 0.6.10 — Gelişmiş Sekreter çalışma masası UI sözleşmesi
 
@@ -80,10 +88,4 @@ _2026-11-19_
 - **Yeni:** Her kullanıcı kendi özet saatini, sessiz saatlerini ve kanallarını (uygulama içi, e-posta) kaydedebilir; başkasının tercihleri değiştirilemez.
 - **Yeni:** E-posta kanalını seçenlere günlük özet e-postası gönderilir: yalnız toplam sayılar ve uygulamaya bağlantı, kişisel veri yok. Uygulama adresi (APP_URL) ve e-posta ayarı gerekir; sessiz saatlerde ve boş özette gönderilmez.
 
-### 0.6.3 — Günlük özet arka planda güvenilir
-
-_2026-11-19_
-
-- **Düzeltme:** Günlük özet işi arka plan sürecinde (worker) hata vermeden çalışır; tüm modül katkıları orada da hesaplanır.
-
-Daha eski 8 herkese açık sürüm notu.
+Daha eski 9 herkese açık sürüm notu.

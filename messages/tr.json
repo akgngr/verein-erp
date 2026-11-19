@@ -7874,6 +7874,10 @@
         "daily_briefing": {
           "label": "Günlük sabah özeti",
           "description": "Zamanı gelen kullanıcılar için sabah özetini günde bir kez hazırlar (Europe/Berlin saati, sessiz saatlere uyar)."
+        },
+        "follow_up_reminders": {
+          "label": "Takip hatırlatmaları",
+          "description": "Süresi gelen takip kayıtlarını sekreter özetinde hatırlatır (günde en çok bir kez; dış mesaj gönderilmez)."
         }
       }
     },
@@ -7962,6 +7966,19 @@
         "listLabel": "Bugünkü konular",
         "partial": "Bazı modüller şu an yanıt vermedi; liste eksik olabilir.",
         "more": "Tümünü gör ({count})"
+      }
+    },
+    "secretary": {
+      "followUpDue": "Takip: {title}",
+      "followUpExhausted": "Takip (hatırlatmalar bitti): {title}"
+    },
+    "followUps": {
+      "errors": {
+        "dateInvalid": "Takip tarihi bugünden önce veya bir yıldan ileri olamaz.",
+        "limit": "En fazla 100 açık takip kaydınız olabilir.",
+        "notFound": "Takip kaydı bulunamadı.",
+        "invalidTransition": "Bu takip kaydı için bu işlem yapılamaz.",
+        "forbidden": "Bu işlem için yetkiniz yok."
       }
     }
   },
