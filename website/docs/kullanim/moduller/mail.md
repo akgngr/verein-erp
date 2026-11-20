@@ -13,7 +13,7 @@ Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gön
 |---|---|
 | Anahtar | `mail` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.5.0 |
+| Sürüm | 1.5.1 |
 | Sayfalar | `/mail`, `/mail/gelen-kutusu`, `/mail/kayitlar` |
 
 ## Diğer modüllere erişim
@@ -22,6 +22,7 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 | Modül | İşlem | Gerekçe |
 |---|---|---|
+| [Bildirimler](./notifications) | yazma | Sınıflamaya rıza veren kullanıcılara yeni e-posta bildirimi gönderir (gönderen ve konu olmadan). |
 | [Muhasebe](./accounting) | yazma | Gelen e-postalardaki fatura/belge eklerini muhasebe → gelen faturalar kutusuna aktarır. |
 | [Modül Yönetimi](./system) | okuma | Muhasebe modülünün etkin olup olmadığını okur (aktarma düğmesi yalnızca etkinken gösterilir). |
 | [Görevler](./tasks) | yazma | Sekreterin onaylı "görev taslağı" önerisinden görev oluşturur (yalnız kullanıcı onayıyla). |
@@ -37,6 +38,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | E-posta altyapısı | görüntüleme, oluşturma, düzenleme | — | — | — | görüntüleme | — | — |
 
 ## Sürüm notları
+
+### 1.5.1 — Merkezi bildirimler
+
+_2026-11-20_
+
+- **Yeni:** Sınıflamaya rıza veren kullanıcılar, öneri yapılabilecek yeni e-postalar için bildirim alır (gönderen ve konu olmadan).
 
 ### 1.5.0 — Sekreter: gelen posta sınıflaması ve taslaklar
 
@@ -83,10 +90,4 @@ _2026-11-06_
 
 - **Düzeltme:** Gelen kutusu ayarlarındaki güvenlik seçiminde oluşan hydration hatası giderildi.
 
-### 1.3.3 — İzleme logları
-
-_2026-11-06_
-
-- **İyileştirme:** Bildirim e-postası adımı gönderim sonucunu (maskeli alıcı, SMTP hatası, günlük kimliği) terminale yazar.
-
-Daha eski 8 herkese açık sürüm notu.
+Daha eski 9 herkese açık sürüm notu.

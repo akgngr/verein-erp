@@ -529,7 +529,8 @@
   "access": {
     "members": "Toplantıya katılımcı eklemek için üye listesini okur. Duyuru kampanyalarında üye katılımcıların iletişim bilgilerini ve izinlerini okur.",
     "organization": "Tutanak PDF'inde dernek antetini kullanır.",
-    "mailings": "Katılımcılara duyuru için Kampanyalar sihirbazını hazır kaynakla açar."
+    "mailings": "Katılımcılara duyuru için Kampanyalar sihirbazını hazır kaynakla açar.",
+    "notifications": "Toplantıya katılımcı eklendiğinde ilgili kullanıcıya bildirim gönderir."
   },
   "ai": {
     "create": {
@@ -608,5 +609,11 @@
   "secretary": {
     "upcoming": "Önümüzdeki 3 günde {count} toplantı",
     "missingAgenda": "Gündemi eksik {count} toplantı"
+  },
+  "notifications": {
+    "invited": {
+      "title": "Toplantıya eklendiniz: {title}",
+      "body": "Toplantı ayrıntılarını açın."
+    }
   }
 }

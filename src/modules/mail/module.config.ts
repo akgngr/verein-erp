@@ -5,7 +5,7 @@ import { mailInboxPermissions, mailPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "mail",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.5.0",
+  version: "1.5.1",
   label: "E-posta Altyapısı",
   description:
     "Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gönderim kayıtları.",
@@ -15,6 +15,7 @@ export const moduleConfig: ModuleConfig = {
   // SMTP gönderimi; IMAP gelen kutusu okuma ve MIME ayrıştırma (`pnpm module:deps` kök package.json'a ekler).
   // Gelen kutusu: belge eklerini muhasebe gelen faturalarına aktarır; muhasebe etkin mi diye modül durumunu okur.
   access: [
+    { module: "notifications", operations: ["write"] }, // N1c: merkezi bildirim (ADR 0006)
     { module: "accounting", operations: ["write"] },
     { module: "system", operations: ["read"] },
     // S4.1 (#313): onaylı sekreter "görev taslağı" önerisi görev açar; oluşturanın adı okunur.

@@ -91,7 +91,8 @@
   "access": {
     "members": "Görev sorumlusu seçmek için üye listesini okur.",
     "meetings": "Görevi bir toplantıya bağlamak için toplantı listesini okur.",
-    "users": "Sekreter özeti için etkin kullanıcının görev eşleştirmesinde kullanılacak hesap e-posta adresini okur."
+    "users": "Sekreter özeti için etkin kullanıcının görev eşleştirmesinde kullanılacak hesap e-posta adresini okur.",
+    "notifications": "Görev atandığında atanan kişiye bildirim gönderir."
   },
   "ai": {
     "create": {
@@ -149,5 +150,11 @@
   "secretary": {
     "overdue": "{count} gecikmiş görev",
     "dueToday": "Bugün tamamlanması gereken {count} görev"
+  },
+  "notifications": {
+    "assigned": {
+      "title": "Size görev atandı: {title}",
+      "body": "Görevlerim sayfasında açın."
+    }
   }
 }

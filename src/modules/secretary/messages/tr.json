@@ -38,7 +38,8 @@
     "users": "Günlük özeti yalnız etkin ve sekreter yetkisi olan kullanıcılar için hazırlamak üzere kullanıcının durumunu ve rolünü okur.",
     "mail": "Günlük özet e-postasını göndermek için mevcut e-posta altyapısını kullanır (yalnız tercihinde e-posta seçen kullanıcıya, yalnız toplam sayılar).",
     "exports": "Haftalık kurul raporunu (yalnız sayılar) Dosyalarım üretim hattında PDF olarak oluşturur; doğrudan indirme bağlantısı yoktur.",
-    "organization": "Rapor antedi için dernek adını, adresini ve logosunu okur."
+    "organization": "Rapor antedi için dernek adını, adresini ve logosunu okur.",
+    "notifications": "Yeni öneri oluştuğunda kullanıcıya (içeriksiz) bildirim gönderir."
   },
   "automation": {
     "tasks": {
@@ -184,6 +185,12 @@
       "notPending": "Bekleyen bir doğrulama yok.",
       "codeExpired": "Kodun süresi doldu veya deneme hakkı bitti; yeniden isteyin.",
       "codeInvalid": "Kod hatalı."
+    }
+  },
+  "notifications": {
+    "proposal": {
+      "title": "Onayınızı bekleyen yeni bir sekreter önerisi var",
+      "body": "Sekreter sayfasında inceleyin."
     }
   }
 }

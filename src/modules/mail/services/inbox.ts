@@ -12,6 +12,7 @@ import { makeStoredName, readFile, removeFile, saveFile } from "@/shared/files";
 import { decryptSecret, encryptSecret } from "./mail-crypto";
 import { parseInboxMessage, type ParsedInboxMessage } from "./inbox-parse";
 import { triageInboxMessage } from "./inbox-triage";
+import { TRIAGE_SUGGESTION } from "./inbox-triage-rules";
 
 const FIRST_FETCH_DAYS = 30;
 const MAX_PER_FETCH = 100;
@@ -92,6 +93,18 @@ async function afterMessageStored(id: string, source: "IMAP" | "EML", attachment
     category = await triageInboxMessage(id);
   } catch {
     console.error("[mail/inbox] TRIAGE_FAILED");
+  }
+  // N1c (#356): öneri yapılabilecek sınıfta, sınıflamaya rıza veren kullanıcılara bildirim (yetki notify'da denetlenir).
+  if (category && category in TRIAGE_SUGGESTION) {
+    try {
+      const recipients = (await getDb().mailTriageOptIn.findMany({ select: { userId: true }, take: 500 })).map((row) => row.userId);
+      if (recipients.length) {
+        const { notify } = await import("@/modules/notifications/automation");
+        await notify({ type: "mail.triage", recipients, ref: `mail-triage:${id}`, params: { category } });
+      }
+    } catch {
+      console.error("[mail/inbox] NOTIFY_FAILED");
+    }
   }
   try {
     const { emitAutomationEvent } = await import("@/shared/automation/emit");
