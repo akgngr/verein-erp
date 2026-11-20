@@ -28,3 +28,24 @@ test("N1b only renders validated internal source links", () => {
   assert.match(ui, /segment === "\.\."|segment === "\."/);
   assert.match(ui, /count > 99 \? "99\+"/);
 });
+
+const adapter = fs.readFileSync("src/modules/notifications/views/inbox-widget.tsx", "utf8");
+
+test("N1b polls only visible tabs and cleans up timers/listeners on unmount", () => {
+  assert.match(adapter, /document\.visibilityState === "visible"/);
+  assert.match(adapter, /document\.addEventListener\("visibilitychange", poll\)/);
+  assert.match(adapter, /document\.removeEventListener\("visibilitychange", poll\)/);
+  assert.match(adapter, /window\.clearInterval\(interval\)/);
+  assert.match(adapter, /const POLL_MS = 30_000/);
+});
+
+test("N1b uses authenticated actions and fails closed on read or write errors", () => {
+  assert.match(adapter, /listNotificationsAction\(\{ unreadOnly: false, limit: 50 \}\)/);
+  assert.match(adapter, /unreadNotificationCountAction\(\{\}\)/);
+  assert.match(adapter, /if \(!list\.ok \|\| !unread\.ok\) \{ setUnavailable\(true\); return; \}/);
+  assert.match(adapter, /if \(!result\.ok\) \{ setUnavailable\(true\); return; \}/);
+  assert.match(adapter, /onRead=\{\(id\) => act\(\(\) => markNotificationsReadAction/);
+  assert.match(adapter, /onReadAll=\{\(\) => act\(\(\) => markAllNotificationsReadAction/);
+  assert.match(adapter, /onSnooze=\{\(id\) => act\(\(\) => snoozeNotificationAction/);
+  assert.doesNotMatch(adapter, /console\.(?:log|debug|info)|localStorage|sessionStorage/);
+});
