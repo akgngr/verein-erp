@@ -49,7 +49,7 @@ Every work package in this spec follows these rules:
 
 | Gap | Evidence | Issue | Owner |
 |---|---|---|---|
-| CodeQL and Dependabot are claimed in docs but not configured | No `codeql` workflow, no `.github/dependabot.yml` | #408 | claude |
+| Dependabot not configured; CodeQL runs only via GitHub default setup (no versioned config) | No `.github/dependabot.yml`; CodeQL checks appear on PRs | #408 | claude |
 | Authorization matrix + IDOR tests missing | `docs/specs/TODO_SECURITY_TESTING.md` | #409 | chatgpt |
 | AI v2 migration not finished (F01-F03; E08/E12 operator tasks) | `docs/TODO_AI_ASSISTANT_V2.md` | #410 | claude |
 | Central file pipeline: inventory (FILE-0) not started | `docs/TODO_CENTRALIZED_FILE_PIPELINE.md` | #411 | gemini |
@@ -206,7 +206,7 @@ Every work package in this spec follows these rules:
 | Q1 audit room | #405 | claude | — | ready |
 | Q2 SEPA coach | #406 | claude | — | ready |
 | Q3 treasurer report | #407 | chatgpt | — | ready |
-| SEC1 CodeQL + Dependabot | #408 | claude | — | ready |
+| SEC1 Dependabot + CodeQL docs | #408 | claude | — | ready |
 | SEC2 authz matrix + IDOR | #409 | chatgpt | — | ready |
 | AI v2 F01-F03 | #410 | claude | — | ready |
 | FILE-0 inventory | #411 | gemini | — | ready |
@@ -230,5 +230,5 @@ The `ai-coordination` workflow moves blocked issues to ready when their dependen
 1. Meta verification for WhatsApp (#362).
 2. Who reviews tax/legal content for W1, W5, #9 and #12 (tax advisor / lawyer)?
 3. Is the diaspora segment the primary beachhead or one of several (affects ordering in Wave 2)?
-4. Does CodeQL become a required check (#408, ruleset change)?
+4. Does the CodeQL default-setup check become a required check (#408, ruleset change)?
 5. Timing of the ADR 0001 phase ADRs (needed before W2 can ship as a separate public surface).
