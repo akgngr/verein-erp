@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.4.0",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Telegram bildirimleri",
+        "de": "Telegram-Benachrichtigungen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yönetici bir Telegram botu tanımlayabilir; kullanıcılar tek tıkla açılan bağlantıyla hesaplarını bağlar ve bildirimleri Telegram'dan da alır. /stop ile bağ kaldırılır.",
+          "de": "Administratoren können einen Telegram-Bot einrichten; Nutzer verbinden ihr Konto per Einmal-Link und erhalten Benachrichtigungen auch über Telegram. /stop beendet die Verbindung."
+        },
+        {
+          "type": "security",
+          "tr": "Bot token veritabanında şifreli saklanır ve geri gösterilmez; bağlama bağlantısı tek kullanımlık ve 15 dakika geçerlidir; Telegram'a yalnız genel metin ve uygulama bağlantısı gider.",
+          "de": "Der Bot-Token wird verschlüsselt in der Datenbank gespeichert und nicht angezeigt; der Verbindungslink ist einmalig und 15 Minuten gültig; an Telegram gehen nur allgemeiner Text und ein Anwendungslink."
+        }
+      ]
+    },
+    {
       "version": "0.3.0",
       "date": "2026-11-20",
       "title": {

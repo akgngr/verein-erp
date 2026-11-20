@@ -79,3 +79,23 @@ model NotificationDelivery {
   @@index([status, createdAt])
   @@map("notification_deliveries")
 }
+
+/// N4 (#361): kullanıcının dış kanal bağı (ör. Telegram sohbeti). Adres şifreli; arama yalnız hash ile.
+/// Bağlama belirteci tek kullanımlık ve süreli (yalnız hash saklanır). Geri alınınca adres silinir.
+model NotificationChannelLink {
+  id            String    @id @default(cuid())
+  userId        String
+  channel       String
+  addressEnc    String?
+  addressHash   String?
+  linkTokenHash String?   @unique
+  linkExpiresAt DateTime?
+  verifiedAt    DateTime?
+  revokedAt     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([userId, channel])
+  @@index([channel, addressHash])
+  @@map("notification_channel_links")
+}

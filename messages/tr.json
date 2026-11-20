@@ -7441,6 +7441,14 @@
     "validation": {
       "quietPair": "Sessiz saat için başlangıç ve bitişi birlikte girin.",
       "quietSame": "Başlangıç ve bitiş aynı olamaz."
+    },
+    "channels": {
+      "errors": {
+        "telegramToken": "Bot token geçersiz veya Telegram doğrulamadı.",
+        "telegramWebhook": "Telegram webhook kaydedilemedi; uygulama adresinin internetten erişilebilir olduğundan emin olun.",
+        "appUrl": "Uygulama adresi (APP_URL) https ile tanımlı olmalı.",
+        "unavailable": "Bu kanal şu an kullanılamıyor (yönetici yapılandırmadı)."
+      }
     }
   },
   "online-forms": {

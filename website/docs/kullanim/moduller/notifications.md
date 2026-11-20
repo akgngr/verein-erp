@@ -13,7 +13,7 @@ Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.
 |---|---|
 | Anahtar | `notifications` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 0.3.0 |
+| Sürüm | 0.4.0 |
 
 ## Diğer modüllere erişim
 
@@ -34,6 +34,13 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Bildirimler | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme |
 
 ## Sürüm notları
+
+### 0.4.0 — Telegram bildirimleri
+
+_2026-11-20_
+
+- **Yeni:** Yönetici bir Telegram botu tanımlayabilir; kullanıcılar tek tıkla açılan bağlantıyla hesaplarını bağlar ve bildirimleri Telegram'dan da alır. /stop ile bağ kaldırılır.
+- **Güvenlik:** Bot token veritabanında şifreli saklanır ve geri gösterilmez; bağlama bağlantısı tek kullanımlık ve 15 dakika geçerlidir; Telegram'a yalnız genel metin ve uygulama bağlantısı gider.
 
 ### 0.3.0 — Bildirim tercihleri ve e-posta
 

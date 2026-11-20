@@ -42,6 +42,8 @@ export type DispatchDeps = {
   sendMail: (message: MailMessage) => Promise<{ ok: boolean; logId?: string }>;
   appUrl: string | undefined;
   locale: "tr" | "de";
+  /** N4 (#361): Telegram (yapılandırılmamışsa yok sayılır). */
+  telegram?: { isAvailable: () => Promise<boolean>; chatFor: (userId: string) => Promise<string | null>; send: (chatId: string, text: string) => Promise<{ ok: boolean; providerId?: string }> };
 };
 export type DispatchResult = { users: number; sent: number; skipped: number; failed: number; digests: number };
 
@@ -76,12 +78,33 @@ async function claim(userId: string, channel: string, dedupeKey: string): Promis
 }
 
 async function finish(id: string, ok: boolean, providerId?: string) {
-  await getDb().notificationDelivery.update({ where: { id }, data: ok ? { status: "SENT", providerId: providerId?.slice(0, 200) ?? null, errorCode: null } : { status: "FAILED", errorCode: "MAIL_SEND_FAILED" } });
+  await getDb().notificationDelivery.update({ where: { id }, data: ok ? { status: "SENT", providerId: providerId?.slice(0, 200) ?? null, errorCode: null } : { status: "FAILED", errorCode: "CHANNEL_SEND_FAILED" } });
 }
+
+type Sender = (user: DispatchUser, count: number, link: string, reference: string) => Promise<{ ok: boolean; providerId?: string } | null>;
 
 export async function runDispatch(now: Date, deps: DispatchDeps): Promise<DispatchResult> {
   const result: DispatchResult = { users: 0, sent: 0, skipped: 0, failed: 0, digests: 0 };
-  if (!deps.appUrl || !appLink(deps.appUrl, "/") || !(await deps.isMailConfigured())) return result;
+  if (!deps.appUrl || !appLink(deps.appUrl, "/")) return result;
+  // Kullanılabilir dış kanallar ve gönderenler (kanal başına; null = bu kullanıcıya bu kanaldan gönderilemez).
+  const senders = new Map<string, Sender>();
+  if (await deps.isMailConfigured()) {
+    senders.set("email", async (user, count, link, reference) => {
+      if (!user.email) return null;
+      const sent = await deps.sendMail({ to: user.email, ...emailText(deps.locale, count, link), context: { module: "notifications", reference } }).catch(() => ({ ok: false as const }));
+      return { ok: sent.ok, providerId: "logId" in sent ? sent.logId : undefined };
+    });
+  }
+  const telegram = deps.telegram;
+  if (telegram && (await telegram.isAvailable().catch(() => false))) {
+    senders.set("telegram", async (user, count, link) => {
+      const chatId = await telegram.chatFor(user.id);
+      if (!chatId) return null;
+      const message = emailText(deps.locale, count, link);
+      return telegram.send(chatId, `${message.subject}\n${link}`).catch(() => ({ ok: false }));
+    });
+  }
+  if (!senders.size) return result;
   const db = getDb();
   const since = new Date(now.getTime() - DISPATCH_LIMITS.windowHours * 3_600_000);
   const pending = await db.notification.findMany({
@@ -95,47 +118,57 @@ export async function runDispatch(now: Date, deps: DispatchDeps): Promise<Dispat
   const usable = new Set(await deps.usableModules());
   const time = berlinClock(now);
 
+  const deliver = async (user: DispatchUser, channel: string, dedupeKey: string, count: number, link: string): Promise<boolean> => {
+    const send = senders.get(channel);
+    if (!send) return false;
+    const id = await claim(user.id, channel, dedupeKey);
+    if (!id) return false;
+    const sent: { ok: boolean; providerId?: string } | null = await send(user, count, link, dedupeKey).catch(() => ({ ok: false }));
+    if (sent === null) {
+      // Bu kanal bu kullanıcı için bağlı değil: claim geri alınır (sonra bağlanırsa gönderilebilir).
+      await db.notificationDelivery.delete({ where: { id } }).catch(() => undefined);
+      return false;
+    }
+    await finish(id, sent.ok, sent.providerId);
+    if (sent.ok) result.sent += 1; else result.failed += 1;
+    return sent.ok;
+  };
+
   for (const [userId, rows] of [...byUser].slice(0, DISPATCH_LIMITS.usersPerRun)) {
     result.users += 1;
     try {
       const user = await deps.loadUser(userId);
-      if (!user?.isActive || !user.email) { result.skipped += rows.length; continue; }
+      if (!user?.isActive) { result.skipped += rows.length; continue; }
       const [settings, prefs] = await Promise.all([
         db.notificationSettings.findUnique({ where: { userId } }),
         db.notificationPreference.findMany({ where: { userId }, select: { typeKey: true, channel: true, enabled: true } }) as Promise<PreferenceRow[]>,
       ]);
       if (isQuiet(time.minutes, settings?.quietFrom ?? null, settings?.quietTo ?? null)) { result.skipped += rows.length; continue; }
-      // E-posta kanalı açık ve hâlâ yetkili olunan bildirimler.
+      // Kanal açık ve hâlâ yetkili olunan bildirimler.
       const eligible = rows.flatMap((row) => {
         const found = findType(deps.registry, row.typeKey);
         if (!found || !usable.has(found.moduleKey)) return [];
         if (!can(user.role, found.type.permission.definition, found.type.permission.action)) return [];
-        if (!resolveChannels(found.type, row.typeKey, prefs).includes("email")) return [];
+        const channels = resolveChannels(found.type, row.typeKey, prefs).filter((channel) => senders.has(channel));
+        if (!channels.length) return [];
         const plain = row.paramsEnc ? openSecret(PARAMS_PURPOSE, row.paramsEnc) : null;
         const params = found.type.schema.safeParse(plain ? JSON.parse(plain) : null);
-        return params.success ? [{ ...row, href: found.type.href(params.data) }] : [];
+        return params.success ? [{ ...row, channels, href: found.type.href(params.data) }] : [];
       });
       if (!eligible.length) continue;
 
       if ((settings?.digestMode ?? "instant") === "daily") {
         const at = clock(settings?.digestTime ?? "07:30") ?? 450;
         if (time.minutes < at) continue;
-        const id = await claim(userId, "email", `digest:${time.date}`);
-        if (!id) continue;
-        const message = emailText(deps.locale, eligible.length, appLink(deps.appUrl, "/")!);
-        const sent = await deps.sendMail({ to: user.email, ...message, context: { module: "notifications", reference: `digest:${time.date}` } }).catch(() => ({ ok: false as const }));
-        await finish(id, sent.ok, "logId" in sent ? sent.logId : undefined);
-        if (sent.ok) { result.digests += 1; result.sent += 1; } else result.failed += 1;
+        for (const channel of new Set(eligible.flatMap((row) => row.channels))) {
+          const count = eligible.filter((row) => row.channels.includes(channel)).length;
+          if (await deliver(user, channel, `digest:${time.date}`, count, appLink(deps.appUrl, "/")!)) result.digests += 1;
+        }
         continue;
       }
 
       for (const row of eligible.slice(0, DISPATCH_LIMITS.perUserPerRun)) {
-        const id = await claim(userId, "email", row.id);
-        if (!id) continue;
-        const message = emailText(deps.locale, 1, appLink(deps.appUrl, row.href)!);
-        const sent = await deps.sendMail({ to: user.email, ...message, context: { module: "notifications", reference: `notification:${row.id}` } }).catch(() => ({ ok: false as const }));
-        await finish(id, sent.ok, "logId" in sent ? sent.logId : undefined);
-        if (sent.ok) result.sent += 1; else result.failed += 1;
+        for (const channel of row.channels) await deliver(user, channel, row.id, 1, appLink(deps.appUrl, row.href)!);
       }
     } catch {
       // Bir kullanıcının hatası diğerlerini durdurmaz; içerik günlüğe yazılmaz.
@@ -169,5 +202,14 @@ export async function defaultDispatchDeps(): Promise<DispatchDeps> {
     },
     appUrl: env.APP_URL,
     locale: env.DOCUMENT_LANGUAGE,
+    telegram: {
+      isAvailable: async () => {
+        const { getChannelConfig } = await import("./channel-config");
+        const config = await getChannelConfig("telegram");
+        return config.enabled && Boolean(config.secrets.botToken);
+      },
+      chatFor: async (userId) => (await import("./telegram")).telegramChatFor(userId),
+      send: async (chatId, text) => (await import("./telegram")).sendTelegram(chatId, text),
+    },
   };
 }
