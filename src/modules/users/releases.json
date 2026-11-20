@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.1.10",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Kullanıcı dizini",
+        "de": "Nutzerverzeichnis"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Yönetici ekranları için ad/e-posta ile aranabilen, sayfalı kullanıcı dizini (ör. bildirim aboneleri).",
+          "de": "Durchsuchbares, seitenweises Nutzerverzeichnis für Verwaltungsansichten (z. B. Benachrichtigungs-Abonnenten)."
+        }
+      ]
+    },
+    {
       "version": "1.1.9",
       "date": "2026-11-20",
       "title": {
