@@ -2,6 +2,146 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.9.0",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "SMS kanalı ve iş akışında bildirim",
+        "de": "SMS-Kanal und Benachrichtigung im Workflow"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yönetici isterse SMS kanalını (seven.io veya Twilio) açabilir; kullanıcı numarasını kodla doğrular. Varsayılan kapalıdır.",
+          "de": "Die Verwaltung kann optional den SMS-Kanal (seven.io oder Twilio) aktivieren; Nutzer bestätigen ihre Nummer per Code. Standardmäßig aus."
+        },
+        {
+          "type": "feature",
+          "tr": "Otomasyonlarda yeni adım: 'Bildirim gönder' — herkese veya seçilen rollere kurum içi bildirim.",
+          "de": "Neuer Automationsschritt 'Benachrichtigung senden' — interne Benachrichtigung an alle oder ausgewählte Rollen."
+        },
+        {
+          "type": "security",
+          "tr": "SMS anahtarı veritabanında şifreli, numara şifreli; doğrulama kodu yalnız hash, 15 dakika, sınırlı deneme. SMS'e yalnız genel metin ve bağlantı gider.",
+          "de": "SMS-Schlüssel und Nummer verschlüsselt; Bestätigungscode nur als Hash, 15 Minuten, begrenzte Versuche. Per SMS gehen nur allgemeiner Text und ein Link."
+        }
+      ]
+    },
+    {
+      "version": "0.8.0",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Tür özel dış kanal metni",
+        "de": "Typspezifischer Text für externe Kanäle"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Bildirim türü, dış kanallar için yalnız sayı/tarih içeren kısa bir metin verebilir (ör. günlük özet: '12 kayıt, 2 acil'); yoksa genel metin kullanılır. Sekreter tercihlerinin taşınması için içe alma işlevleri eklendi.",
+          "de": "Eine Benachrichtigungsart kann für externe Kanäle einen kurzen Text nur mit Zahlen/Datum liefern (z. B. Tagesübersicht: '12 Einträge, 2 dringend'); sonst wird ein allgemeiner Text verwendet. Importfunktionen für die Übernahme der Sekretär-Einstellungen hinzugefügt."
+        }
+      ]
+    },
+    {
+      "version": "0.7.0",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Abone görünümü (yönetici)",
+        "de": "Abonnentenübersicht (Verwaltung)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yönetici, hangi kullanıcının hangi bildirim kanalını kullandığını görebilir (e-posta tercihi, Telegram bağı, tarayıcı bildirimi cihaz sayısı) ve gerekirse bir kullanıcının Telegram bağını veya tarayıcı aboneliklerini kaldırabilir.",
+          "de": "Die Verwaltung sieht, welche Nutzer welche Benachrichtigungskanäle verwenden (E-Mail-Einstellung, Telegram-Verbindung, Anzahl Browser-Geräte), und kann bei Bedarf die Telegram-Verbindung oder Browser-Abonnements eines Nutzers entfernen."
+        },
+        {
+          "type": "security",
+          "tr": "Görünümde adres, sohbet kimliği veya cihaz adresi yoktur; her görüntüleme ve kaldırma denetim kaydına yazılır.",
+          "de": "Die Übersicht zeigt keine Adressen, Chat-IDs oder Geräteadressen; jede Ansicht und Entfernung wird protokolliert."
+        }
+      ]
+    },
+    {
+      "version": "0.6.0",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Herkese ve role göre bildirim, kurum duyurusu",
+        "de": "Benachrichtigungen an alle oder nach Rolle, Vereinsmitteilung"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Bildirimler ilgili kişiye, herkesi ilgilendiriyorsa herkese gider: modüller 'herkes' veya 'şu roller' diye kitle seçebilir. Yönetici kurum duyurusu yayımlayabilir (herkese veya seçilen rollere).",
+          "de": "Benachrichtigungen gehen an die betroffene Person oder, wenn alle betroffen sind, an alle: Module können als Zielgruppe 'alle' oder bestimmte Rollen wählen. Die Verwaltung kann Vereinsmitteilungen veröffentlichen (an alle oder ausgewählte Rollen)."
+        },
+        {
+          "type": "security",
+          "tr": "Kitle içinde de herkesin yetkisi ayrı ayrı denetlenir; duyuru içeriği şifreli saklanır ve dış kanallara gitmez (yalnız genel metin ve bağlantı).",
+          "de": "Auch innerhalb der Zielgruppe wird die Berechtigung jeder Person einzeln geprüft; der Mitteilungstext wird verschlüsselt gespeichert und nicht an externe Kanäle gesendet (nur allgemeiner Text und Link)."
+        }
+      ]
+    },
+    {
+      "version": "0.5.0",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Tarayıcı bildirimleri (Web Push)",
+        "de": "Browser-Benachrichtigungen (Web Push)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yönetici açtığında kullanıcılar bildirimleri tarayıcı/telefon bildirimi olarak da alabilir. Gerekli anahtarlar ilk açılışta otomatik üretilir.",
+          "de": "Nach Aktivierung durch die Verwaltung erhalten Nutzer Benachrichtigungen auch als Browser-/Telefonbenachrichtigung. Die nötigen Schlüssel werden beim ersten Einschalten automatisch erzeugt."
+        },
+        {
+          "type": "security",
+          "tr": "Anahtarlar ve abonelik bilgileri şifreli saklanır; yalnız bilinen push servislerine gönderilir; bildirimde yalnız genel metin ve bağlantı vardır. Geçersiz abonelikler otomatik silinir.",
+          "de": "Schlüssel und Abonnements werden verschlüsselt gespeichert; gesendet wird nur an bekannte Push-Dienste; die Benachrichtigung enthält nur allgemeinen Text und einen Link. Ungültige Abonnements werden automatisch entfernt."
+        }
+      ]
+    },
+    {
+      "version": "0.4.0",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Telegram bildirimleri",
+        "de": "Telegram-Benachrichtigungen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yönetici bir Telegram botu tanımlayabilir; kullanıcılar tek tıkla açılan bağlantıyla hesaplarını bağlar ve bildirimleri Telegram'dan da alır. /stop ile bağ kaldırılır.",
+          "de": "Administratoren können einen Telegram-Bot einrichten; Nutzer verbinden ihr Konto per Einmal-Link und erhalten Benachrichtigungen auch über Telegram. /stop beendet die Verbindung."
+        },
+        {
+          "type": "security",
+          "tr": "Bot token veritabanında şifreli saklanır ve geri gösterilmez; bağlama bağlantısı tek kullanımlık ve 15 dakika geçerlidir; Telegram'a yalnız genel metin ve uygulama bağlantısı gider.",
+          "de": "Der Bot-Token wird verschlüsselt in der Datenbank gespeichert und nicht angezeigt; der Verbindungslink ist einmalig und 15 Minuten gültig; an Telegram gehen nur allgemeiner Text und ein Anwendungslink."
+        }
+      ]
+    },
+    {
+      "version": "0.3.0",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Bildirim tercihleri ve e-posta",
+        "de": "Benachrichtigungseinstellungen und E-Mail"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Her bildirim türü için hangi kanaldan haber almak istediğinizi seçebilirsiniz; sessiz saat ve 'anında' ya da 'günlük özet' seçeneği eklendi. E-posta kanalı çalışıyor.",
+          "de": "Pro Benachrichtigungsart wählbar, über welchen Kanal Sie informiert werden; Ruhezeiten und die Wahl zwischen sofort und täglicher Zusammenfassung hinzugefügt. Der E-Mail-Kanal ist aktiv."
+        },
+        {
+          "type": "security",
+          "tr": "E-postada yalnız genel metin ve uygulama bağlantısı bulunur; ad, başlık veya tutar gitmez. Aynı bildirim ikinci kez e-postalanmaz; okunan bildirim e-postalanmaz.",
+          "de": "Die E-Mail enthält nur einen allgemeinen Text und einen Anwendungslink; keine Namen, Titel oder Beträge. Dieselbe Benachrichtigung wird nicht zweimal gemailt; gelesene Benachrichtigungen werden nicht gemailt."
+        }
+      ]
+    },
+    {
       "version": "0.2.0",
       "date": "2026-11-20",
       "title": {

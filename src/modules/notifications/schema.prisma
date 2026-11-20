@@ -79,3 +79,39 @@ model NotificationDelivery {
   @@index([status, createdAt])
   @@map("notification_deliveries")
 }
+
+/// N4 (#361): kullanıcının dış kanal bağı (ör. Telegram sohbeti). Adres şifreli; arama yalnız hash ile.
+/// Bağlama belirteci tek kullanımlık ve süreli (yalnız hash saklanır). Geri alınınca adres silinir.
+model NotificationChannelLink {
+  id            String    @id @default(cuid())
+  userId        String
+  channel       String
+  addressEnc    String?
+  addressHash   String?
+  linkTokenHash String?   @unique
+  linkExpiresAt DateTime?
+  verifiedAt    DateTime?
+  revokedAt     DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  @@unique([userId, channel])
+  @@index([channel, addressHash])
+  @@map("notification_channel_links")
+}
+
+/// N3a (#359): tarayıcı push aboneliği. Uç nokta ve anahtarlar şifreli; tekillik uç nokta hash'i ile.
+/// Push servisi 404/410 dönerse abonelik silinir.
+model NotificationPushSubscription {
+  id           String   @id @default(cuid())
+  userId       String
+  endpointHash String   @unique
+  endpointEnc  String
+  keysEnc      String
+  failureCount Int      @default(0)
+  createdAt    DateTime @default(now())
+  lastSeenAt   DateTime @default(now())
+
+  @@index([userId])
+  @@map("notification_push_subscriptions")
+}

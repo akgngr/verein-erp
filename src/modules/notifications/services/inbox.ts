@@ -23,10 +23,15 @@ export type NotifyDeps = {
   registry: readonly ModuleNotifications[];
   usableModules: () => Promise<string[]>;
   loadUser: (userId: string) => Promise<Recipient | null>;
+  /** N1d (#374): kitle çözümü — etkin kullanıcılar (isteğe bağlı rol süzgeci). */
+  listAudience?: (roles?: readonly string[]) => Promise<{ id: string; role: Role }[]>;
 };
 
+/** Kitle: belirli kişiler, türü görmeye yetkili herkes veya belirli roller (yine tür yetkisiyle süzülür). */
+export type Audience = { allWithPermission: true } | { roles: readonly string[] };
+
 async function defaultDeps(): Promise<NotifyDeps> {
-  const [{ moduleNotificationRegistry }, { listUsableModuleKeys }, { getUserById }] = await Promise.all([
+  const [{ moduleNotificationRegistry }, { listUsableModuleKeys }, { getUserById, listActiveUsersForAudience }] = await Promise.all([
     import("@/notification-registry"),
     import("@/modules/system/automation"),
     import("@/modules/users/automation"),
@@ -34,6 +39,7 @@ async function defaultDeps(): Promise<NotifyDeps> {
   return {
     registry: moduleNotificationRegistry,
     usableModules: listUsableModuleKeys,
+    listAudience: (roles) => listActiveUsersForAudience(roles),
     loadUser: async (userId) => {
       const user = await getUserById(userId);
       return user ? { id: user.id, role: user.role, isActive: user.isActive } : null;
@@ -50,7 +56,7 @@ export function findType(registry: readonly ModuleNotifications[], typeKey: stri
 }
 
 /** Bildirim gönder. Dönüş: yeni oluşturulan kayıt sayısı (yetkisiz/pasif alıcılar ve tekrarlar atlanır). */
-export async function notify(input: { type: string; recipients: readonly string[]; ref: string; params: unknown }, deps?: NotifyDeps): Promise<number> {
+export async function notify(input: { type: string; recipients?: readonly string[]; audience?: Audience; ref: string; params: unknown }, deps?: NotifyDeps): Promise<number> {
   const resolved = deps ?? (await defaultDeps());
   const found = findType(resolved.registry, input.type);
   if (!found) throw new NotificationError("NOTIFICATION_TYPE_UNKNOWN");
@@ -58,18 +64,32 @@ export async function notify(input: { type: string; recipients: readonly string[
   const parsed = found.type.schema.safeParse(input.params);
   if (!parsed.success) throw new NotificationError("NOTIFICATION_PARAMS_INVALID");
   if (!(await resolved.usableModules()).includes(found.moduleKey)) return 0;
+  if ((input.recipients ? 1 : 0) + (input.audience ? 1 : 0) !== 1) throw new NotificationError("NOTIFICATION_RECIPIENTS_INVALID");
+  const permitted = (role: string) => can(role, found.type.permission.definition, found.type.permission.action);
   const recipients: string[] = [];
-  for (const userId of new Set(input.recipients)) {
-    const user = await resolved.loadUser(userId);
-    if (user?.isActive && can(user.role, found.type.permission.definition, found.type.permission.action)) recipients.push(user.id);
+  if (input.audience) {
+    if (!resolved.listAudience) throw new NotificationError("NOTIFICATION_AUDIENCE_UNAVAILABLE");
+    const roles = "roles" in input.audience ? input.audience.roles : undefined;
+    if (roles && !roles.length) return 0;
+    for (const user of await resolved.listAudience(roles)) if (permitted(user.role)) recipients.push(user.id);
+  } else {
+    for (const userId of new Set(input.recipients)) {
+      const user = await resolved.loadUser(userId);
+      if (user?.isActive && permitted(user.role)) recipients.push(user.id);
+    }
   }
   if (!recipients.length) return 0;
   const paramsEnc = sealSecret(PURPOSE, JSON.stringify(parsed.data ?? null));
-  const result = await getDb().notification.createMany({
-    data: recipients.map((userId) => ({ userId, typeKey: fullTypeKey(found.moduleKey, found.type.key), moduleKey: found.moduleKey, severity: found.type.severity, paramsEnc, refKey: input.ref })),
+  let created = 0;
+  // Büyük kitlede parça parça yazım (tekrarlar benzersiz anahtarla atlanır).
+  for (let index = 0; index < recipients.length; index += 500) {
+    const result = await getDb().notification.createMany({
+    data: recipients.slice(index, index + 500).map((userId) => ({ userId, typeKey: fullTypeKey(found.moduleKey, found.type.key), moduleKey: found.moduleKey, severity: found.type.severity, paramsEnc, refKey: input.ref })),
     skipDuplicates: true,
-  });
-  return result.count;
+    });
+    created += result.count;
+  }
+  return created;
 }
 
 export type NotificationView = {

@@ -22,3 +22,5 @@ onlyBuiltDependencies:
 # (DatePicker tip uyumu: CalendarDate → DateValue nominal uyuşmazlığını önler).
 overrides:
   "@internationalized/date": 3.12.4
+  # GHSA-7589-6fvf-x4pw (ReDoS, effect <= 3.22.0): @hookform/resolvers ve prisma üzerinden gelir.
+  effect: 3.22.4

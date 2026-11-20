@@ -141,6 +141,8 @@ export const DATA_POLICY = {
   NotificationSettings: { owner: "notifications", category: "K1", reason: "Sessiz saat ve özet modu", sensitiveFields: [], personalOwnerField: "userId" },
   NotificationChannelConfig: { owner: "notifications", category: "K0", reason: "Kanal sağlayıcı sırları (bot token, API anahtarı, VAPID özel anahtarı; şifreli)", sensitiveFields: ["secretsEnc"] },
   NotificationDelivery: { owner: "notifications", category: "K1", reason: "Dış kanal teslim kaydı (içerik/adres yok)", sensitiveFields: [], personalOwnerField: "userId" },
+  NotificationChannelLink: { owner: "notifications", category: "K1", reason: "Kullanıcının dış kanal bağı (ör. Telegram sohbeti); adres şifreli, belirteç yalnız hash", sensitiveFields: ["addressEnc", "addressHash", "linkTokenHash"], personalOwnerField: "userId" },
+  NotificationPushSubscription: { owner: "notifications", category: "K1", reason: "Tarayıcı push aboneliği; uç nokta ve anahtarlar şifreli", sensitiveFields: ["endpointEnc", "keysEnc", "endpointHash"], personalOwnerField: "userId" },
   SecretaryDelegation: { owner: "secretary", category: "K1", reason: "Vekil yetkisi: sahibi, vekil, kapsam, süre sonu (içerik yok)", sensitiveFields: [], personalOwnerField: "grantorId" },
   SecretaryChannelConsent: { owner: "secretary", category: "K1", reason: "Kullanıcının dış kanal rızası; adres şifreli, doğrulama kodu yalnız hash", sensitiveFields: ["addressEnc", "codeHash"], personalOwnerField: "userId" },
   SecretaryChannelDelivery: { owner: "secretary", category: "K1", reason: "Dış kanal teslim kaydı (içerik/adres yok; yalnız gün, durum, sağlayıcı kimliği)", sensitiveFields: [], personalOwnerField: "userId" },

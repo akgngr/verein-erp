@@ -13,6 +13,8 @@ export const lifecycle = defineLifecycle({
       db.notificationPreference.deleteMany({ where: { userId } }),
       db.notificationSettings.deleteMany({ where: { userId } }),
       db.notificationDelivery.deleteMany({ where: { userId } }),
+      db.notificationChannelLink.deleteMany({ where: { userId } }),
+      db.notificationPushSubscription.deleteMany({ where: { userId } }),
     ]);
   },
 });

@@ -7420,18 +7420,61 @@
     },
     "access": {
       "users": "Prüft beim Senden und Lesen, ob der Empfänger aktiv ist und die Rolle die Benachrichtigung sehen darf.",
-      "system": "Liest, ob das auslösende Modul aktiv und freigegeben ist."
+      "system": "Liest, ob das auslösende Modul aktiv und freigegeben ist.",
+      "mail": "Versendet Benachrichtigungs-E-Mails über die vorhandene E-Mail-Infrastruktur (nur allgemeiner Text und Anwendungslink)."
     },
     "errors": {
       "snoozeRange": "Die Verschiebung muss in der Zukunft liegen und darf höchstens 30 Tage betragen.",
-      "notFound": "Benachrichtigung nicht gefunden."
+      "notFound": "Benachrichtigung nicht gefunden.",
+      "announcementFailed": "Die Mitteilung konnte nicht gesendet werden."
     },
     "automation": {
       "tasks": {
         "purge": {
           "label": "Alte Benachrichtigungen bereinigen",
           "description": "Löscht täglich Benachrichtigungen, die älter als 90 Tage sind."
+        },
+        "dispatch": {
+          "label": "Benachrichtigungs-E-Mails",
+          "description": "Leitet ungelesene Benachrichtigungen gemäß den Einstellungen per E-Mail weiter (sofort oder täglich; Ruhezeiten werden beachtet). Die E-Mail enthält nur einen allgemeinen Text und einen Link."
+        },
+        "send": {
+          "label": "Benachrichtigung senden (an Personen)",
+          "description": "Sendet eine interne Benachrichtigung an alle oder ausgewählte Rollen. Sie erscheint in der Glocke; an die gewählten Kanäle (E-Mail, Telegram …) geht nur allgemeiner Text.",
+          "fields": {
+            "title": "Titel",
+            "body": "Text",
+            "roles": "Rollen (leer = alle)"
+          },
+          "help": {
+            "body": "Felder wie '{{member.fullName}}' sind möglich; sie werden erst beim Senden gefüllt.",
+            "roles": "z. B. BOARD, TREASURER. Leer: an alle, die die Benachrichtigung sehen dürfen."
+          }
         }
+      }
+    },
+    "validation": {
+      "quietPair": "Bitte Beginn und Ende der Ruhezeit gemeinsam angeben.",
+      "quietSame": "Beginn und Ende dürfen nicht gleich sein."
+    },
+    "channels": {
+      "errors": {
+        "telegramToken": "Bot-Token ungültig oder von Telegram nicht bestätigt.",
+        "telegramWebhook": "Telegram-Webhook konnte nicht registriert werden; die Anwendungsadresse muss aus dem Internet erreichbar sein.",
+        "appUrl": "Die Anwendungsadresse (APP_URL) muss mit https eingerichtet sein.",
+        "unavailable": "Dieser Kanal ist derzeit nicht verfügbar (nicht eingerichtet).",
+        "smsProvider": "SMS-Anbieter oder Schlüssel fehlt/ungültig (für Twilio ist die Account SID nötig).",
+        "phoneInvalid": "Telefonnummer ungültig.",
+        "rateLimited": "Tageslimit für Bestätigungscodes erreicht.",
+        "sendFailed": "Bestätigungscode konnte nicht gesendet werden.",
+        "codeExpired": "Code abgelaufen oder Versuche aufgebraucht; bitte neu anfordern.",
+        "codeInvalid": "Code falsch."
+      }
+    },
+    "notifications": {
+      "announcement": {
+        "title": "Mitteilung: {title}",
+        "body": "{body}"
       }
     }
   },
@@ -7977,6 +8020,10 @@
         "follow_up_reminders": {
           "label": "Nachverfolgungs-Erinnerungen",
           "description": "Erinnert im Sekretär-Überblick an fällige Nachverfolgungen (höchstens einmal täglich; keine externen Nachrichten)."
+        },
+        "migrate_notifications": {
+          "label": "Sekretär-Einstellungen in Benachrichtigungen übernehmen",
+          "description": "Übernimmt E-Mail-Einstellungen der Tagesübersicht und bestätigte Kanal-Einwilligungen in das zentrale Benachrichtigungssystem (nur fehlende; täglich)."
         }
       }
     },
@@ -8114,6 +8161,10 @@
       "proposal": {
         "title": "Ein neuer Sekretär-Vorschlag wartet auf Ihre Bestätigung",
         "body": "Auf der Sekretär-Seite prüfen."
+      },
+      "dailyDigest": {
+        "title": "Tagesübersicht: {total} Einträge ({danger} dringend, {warning} Achtung)",
+        "body": "Auf der Sekretär-Seite öffnen."
       }
     }
   },
