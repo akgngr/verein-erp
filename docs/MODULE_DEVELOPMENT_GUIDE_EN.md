@@ -572,6 +572,10 @@ Before a user is deleted, the system calls every module's `onUserDeleted(userId)
 
 **Internal refactor notes:** `type: internal` remains in the release chain but is hidden from user-facing app and website notes. Module version increments are still required.
 
+## Top-bar action (`header.tsx`)
+
+A module adds a button next to the theme switch with `export const header = defineModuleHeader({ module: "<module>", actions: [{ key, order, render }] })` in `src/modules/<module>/header.tsx` (`@/shared/header/define`). `pnpm module:sync` collects these into `src/header-registry.ts`. Only **usable** modules render actions: the module must be active, its access approved and, if it declares `license`, licensed. `render` runs on the server, does its own permission check and returns `null` to hide. It must not send personal data to the client. Licensed modules (e.g. `help-center`, RFC-002) add their buttons this way.
+
 ## Personal secretary contribution (`secretary.ts`)
 
 A module contributes to the user's morning briefing with `export const secretary = defineModuleSecretary({ module: "<module>", providers: [...] })` in `src/modules/<module>/secretary.ts` (`@/shared/secretary/define`). `pnpm module:sync` collects these into `src/secretary-registry.ts`; the secretary module never imports other modules.
