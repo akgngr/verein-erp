@@ -5673,7 +5673,8 @@
       "accounting": "Gelen e-postalardaki fatura/belge eklerini muhasebe → gelen faturalar kutusuna aktarır.",
       "system": "Muhasebe modülünün etkin olup olmadığını okur (aktarma düğmesi yalnızca etkinken gösterilir).",
       "tasks": "Sekreterin onaylı \"görev taslağı\" önerisinden görev oluşturur (yalnız kullanıcı onayıyla).",
-      "users": "Görevdeki \"oluşturan\" etiketi için kullanıcının adını okur."
+      "users": "Görevdeki \"oluşturan\" etiketi için kullanıcının adını okur.",
+      "notifications": "Sınıflamaya rıza veren kullanıcılara yeni e-posta bildirimi gönderir (gönderen ve konu olmadan)."
     },
     "inbox": {
       "title": "Gelen kutusu",
@@ -5798,6 +5799,12 @@
       "replyDraftProposalDetail": "Yalnız boş bir taslak açılır. Metni siz yazar, ayrıca \"Gönder\" dediğinizde gönderilir.",
       "taskDraftProposal": "Bu e-posta için görev oluştur",
       "taskDraftProposalDetail": "Konu başlığıyla açık bir görev oluşturulur; atama ve tarih eklenmez, kimseye bildirim gitmez."
+    },
+    "notifications": {
+      "triage": {
+        "title": "Gelen kutusunda işlem önerilebilecek yeni e-posta",
+        "body": "Gelen kutusunu açın."
+      }
     }
   },
   "mailings": {
@@ -6655,7 +6662,8 @@
     "access": {
       "members": "Toplantıya katılımcı eklemek için üye listesini okur. Duyuru kampanyalarında üye katılımcıların iletişim bilgilerini ve izinlerini okur.",
       "organization": "Tutanak PDF'inde dernek antetini kullanır.",
-      "mailings": "Katılımcılara duyuru için Kampanyalar sihirbazını hazır kaynakla açar."
+      "mailings": "Katılımcılara duyuru için Kampanyalar sihirbazını hazır kaynakla açar.",
+      "notifications": "Toplantıya katılımcı eklendiğinde ilgili kullanıcıya bildirim gönderir."
     },
     "ai": {
       "create": {
@@ -6734,6 +6742,12 @@
     "secretary": {
       "upcoming": "Önümüzdeki 3 günde {count} toplantı",
       "missingAgenda": "Gündemi eksik {count} toplantı"
+    },
+    "notifications": {
+      "invited": {
+        "title": "Toplantıya eklendiniz: {title}",
+        "body": "Toplantı ayrıntılarını açın."
+      }
     }
   },
   "members": {
@@ -7946,7 +7960,8 @@
       "users": "Günlük özeti yalnız etkin ve sekreter yetkisi olan kullanıcılar için hazırlamak üzere kullanıcının durumunu ve rolünü okur.",
       "mail": "Günlük özet e-postasını göndermek için mevcut e-posta altyapısını kullanır (yalnız tercihinde e-posta seçen kullanıcıya, yalnız toplam sayılar).",
       "exports": "Haftalık kurul raporunu (yalnız sayılar) Dosyalarım üretim hattında PDF olarak oluşturur; doğrudan indirme bağlantısı yoktur.",
-      "organization": "Rapor antedi için dernek adını, adresini ve logosunu okur."
+      "organization": "Rapor antedi için dernek adını, adresini ve logosunu okur.",
+      "notifications": "Yeni öneri oluştuğunda kullanıcıya (içeriksiz) bildirim gönderir."
     },
     "automation": {
       "tasks": {
@@ -8092,6 +8107,12 @@
         "notPending": "Bekleyen bir doğrulama yok.",
         "codeExpired": "Kodun süresi doldu veya deneme hakkı bitti; yeniden isteyin.",
         "codeInvalid": "Kod hatalı."
+      }
+    },
+    "notifications": {
+      "proposal": {
+        "title": "Onayınızı bekleyen yeni bir sekreter önerisi var",
+        "body": "Sekreter sayfasında inceleyin."
       }
     }
   },
@@ -8850,7 +8871,8 @@
     "access": {
       "members": "Görev sorumlusu seçmek için üye listesini okur.",
       "meetings": "Görevi bir toplantıya bağlamak için toplantı listesini okur.",
-      "users": "Sekreter özeti için etkin kullanıcının görev eşleştirmesinde kullanılacak hesap e-posta adresini okur."
+      "users": "Sekreter özeti için etkin kullanıcının görev eşleştirmesinde kullanılacak hesap e-posta adresini okur.",
+      "notifications": "Görev atandığında atanan kişiye bildirim gönderir."
     },
     "ai": {
       "create": {
@@ -8908,6 +8930,12 @@
     "secretary": {
       "overdue": "{count} gecikmiş görev",
       "dueToday": "Bugün tamamlanması gereken {count} görev"
+    },
+    "notifications": {
+      "assigned": {
+        "title": "Size görev atandı: {title}",
+        "body": "Görevlerim sayfasında açın."
+      }
     }
   },
   "users": {

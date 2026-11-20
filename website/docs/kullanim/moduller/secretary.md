@@ -13,7 +13,7 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 |---|---|
 | Anahtar | `secretary` |
 | Tür | Eklenti |
-| Sürüm | 0.11.2 |
+| Sürüm | 0.11.3 |
 | Sayfalar | `/sekreter` |
 
 ## Diğer modüllere erişim
@@ -22,6 +22,7 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 | Modül | İşlem | Gerekçe |
 |---|---|---|
+| [Bildirimler](./notifications) | yazma | Yeni öneri oluştuğunda kullanıcıya (içeriksiz) bildirim gönderir. |
 | [Modül Yönetimi](./system) | okuma | Hangi modüllerin açık ve onaylı olduğunu okur; özet yalnız bunların katkılarını gösterir. |
 | [Kullanıcılar](./users) | okuma | Günlük özeti yalnız etkin ve sekreter yetkisi olan kullanıcılar için hazırlamak üzere kullanıcının durumunu ve rolünü okur. |
 | [E-posta Altyapısı](./mail) | yazma | Günlük özet e-postasını göndermek için mevcut e-posta altyapısını kullanır (yalnız tercihinde e-posta seçen kullanıcıya, yalnız toplam sayılar). |
@@ -37,6 +38,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Sekreter | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — |
 
 ## Sürüm notları
+
+### 0.11.3 — Merkezi bildirimler
+
+_2026-11-20_
+
+- **Yeni:** Onay bekleyen yeni sekreter önerileri bildirim olarak görünür (içerik yok).
 
 ### 0.11.2 — Çalışma zamanı modernizasyonu
 
@@ -85,10 +92,4 @@ _2026-11-19_
 
 - **İyileştirme:** S4–S5 posta, takip, rapor, OCR, kanal izni ve vekil işlemleri için yetki süzülmüş veriyle kullanılacak, güvenli bağlantılı, iki dilli ve salt okunur çalışma masası bileşeni hazırlandı. Gerçek işlem yetenekleri #313–#317 kapsamında bağlanacaktır.
 
-### 0.6.9 — Günlük özet e-postası yeni şablonla
-
-_2026-11-19_
-
-- **İyileştirme:** Günlük özet e-postası artık yeni şablonla (HTML ve düz metin) gönderilir: yalnız toplam sayılar ve uygulamaya güvenli bağlantı, kişisel veri yok.
-
-Daha eski 14 herkese açık sürüm notu.
+Daha eski 15 herkese açık sürüm notu.

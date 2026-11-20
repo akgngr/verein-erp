@@ -13,7 +13,7 @@ Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar.
 |---|---|
 | Anahtar | `meetings` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.15 |
+| Sürüm | 1.3.16 |
 | Sayfalar | `/toplantilar`, `/toplantilar/gorevler` |
 
 ## Diğer modüllere erişim
@@ -22,6 +22,7 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 | Modül | İşlem | Gerekçe |
 |---|---|---|
+| [Bildirimler](./notifications) | yazma | Toplantıya katılımcı eklendiğinde ilgili kullanıcıya bildirim gönderir. |
 | [Üyeler](./members) | okuma | Toplantıya katılımcı eklemek için üye listesini okur. Duyuru kampanyalarında üye katılımcıların iletişim bilgilerini ve izinlerini okur. |
 | [Dernek Bilgileri](./organization) | okuma | Tutanak PDF'inde dernek antetini kullanır. |
 | [Toplu e-posta](./mailings) | okuma | Katılımcılara duyuru için Kampanyalar sihirbazını hazır kaynakla açar. |
@@ -41,6 +42,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_meeting` · `get_meeting_statistics` · `list_meetings` · `propose_delete_meeting` · `propose_meeting` · `propose_meeting_status`
 
 ## Sürüm notları
+
+### 1.3.16 — Merkezi bildirimler
+
+_2026-11-20_
+
+- **Yeni:** Toplantıya eklenen kullanıcılar bildirim alır.
 
 ### 1.3.15 — Toplantılar sekreter özeti
 
@@ -84,10 +91,4 @@ _2026-11-17_
 
 - **İyileştirme:** Rozet/çip görünümleri ortak StatusChip pattern'ine taşındı; modül düzeyindeki doğrudan HeroUI Chip bağımlılığı azaltıldı.
 
-### 1.3.7 — Toplantı rozetleri ortak UI katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Tekrarlanan HeroUI durum/tür rozetleri ortak StatusChip pattern'ine taşındı; modül görsel sözleşmesi framework implementasyonundan ayrıştırıldı.
-
-Daha eski 10 herkese açık sürüm notu.
+Daha eski 11 herkese açık sürüm notu.

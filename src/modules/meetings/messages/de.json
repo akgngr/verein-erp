@@ -529,7 +529,8 @@
   "access": {
     "members": "Liest die Mitgliederliste, um Teilnehmende hinzuzufügen. Liest für Ankündigungskampagnen Kontaktdaten und Einwilligungen teilnehmender Mitglieder.",
     "organization": "Verwendet den Vereinsbriefkopf im Protokoll-PDF.",
-    "mailings": "Öffnet den Kampagnen-Assistenten mit den Teilnehmenden als Zielgruppe."
+    "mailings": "Öffnet den Kampagnen-Assistenten mit den Teilnehmenden als Zielgruppe.",
+    "notifications": "Benachrichtigt Nutzer, die als Teilnehmende zu einer Sitzung hinzugefügt werden."
   },
   "ai": {
     "create": {
@@ -608,5 +609,11 @@
   "secretary": {
     "upcoming": "{count} Sitzungen in den nächsten 3 Tagen",
     "missingAgenda": "{count} Sitzungen ohne Tagesordnung"
+  },
+  "notifications": {
+    "invited": {
+      "title": "Sie wurden zu einer Sitzung hinzugefügt: {title}",
+      "body": "Sitzungsdetails öffnen."
+    }
   }
 }
