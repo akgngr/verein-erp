@@ -12,7 +12,7 @@ import { secretaryPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "secretary",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "0.11.4",
+  version: "0.11.5",
   label: "Sekreter",
   description: "Kişisel sekreter: sabah özeti ve onaylı öneriler.",
   category: "EXTENSION",
@@ -23,6 +23,7 @@ export const moduleConfig: ModuleConfig = {
     { module: "mail", operations: ["write"] }, // günlük özet e-postası (yalnız tercih eden kullanıcıya)
     { module: "exports", operations: ["write"] }, // S5.1: haftalık kurul raporu PDF (Files üretim hattı)
     { module: "organization", operations: ["read"] }, // S5.1: rapor antedi (dernek adı, adres, logo)
+    { module: "notifications", operations: ["write"] }, // S5: yalnız izinli bildirim eylemleri
   ],
   nav: [
     {
