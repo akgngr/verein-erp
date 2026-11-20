@@ -1,4 +1,6 @@
+import { Bell } from "lucide-react";
 import type { ModuleConfig } from "@/shared/types/module";
+import { notificationsPermissions } from "./permissions";
 
 /**
  * Merkezi bildirim sistemi (ADR 0006). CORE: tüm modüllerin bildirimleri tek kutuda; kanallar uygulama içi,
@@ -8,7 +10,7 @@ import type { ModuleConfig } from "@/shared/types/module";
 export const moduleConfig: ModuleConfig = {
   key: "notifications",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "0.4.0",
+  version: "0.4.1",
   label: "Bildirimler",
   description: "Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.",
   category: "CORE",
@@ -20,7 +22,15 @@ export const moduleConfig: ModuleConfig = {
     { module: "mail", operations: ["write"] }, // N2a: bildirim e-postaları (genel metin + bağlantı)
   ],
   // Görünür giriş noktası sağ üstteki zil (N1b); kenar menüsünde öğe yok.
-  nav: [],
+  nav: [{
+    href: "/ayarlar/bildirimler",
+    label: "Bildirimler",
+    labelKey: "notifications",
+    icon: Bell,
+    group: "settings",
+    order: 11,
+    permission: { definition: notificationsPermissions, action: "view" },
+  }],
 };
 
 export default moduleConfig;

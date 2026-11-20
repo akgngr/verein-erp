@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.4.1",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Bildirim tercihleri ve kanal bağlantıları arayüzü",
+        "de": "Benachrichtigungseinstellungen und Kanalverknüpfung"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Ayarlar > Bildirimler ekranında tür/kanal tercihleri, sessiz saatler, anında/günlük özet ve Telegram hesabı bağlama ile yönetici bot ayarı eklendi.",
+          "de": "Unter Einstellungen > Benachrichtigungen können Typ-/Kanalpräferenzen, Ruhezeiten, sofortige/tägliche Zusammenfassungen, Telegram-Verknüpfungen und die Bot-Konfiguration verwaltet werden."
+        },
+        {
+          "type": "security",
+          "tr": "Tercihler yalnız yetki denetimli sunucu eylemleriyle kaydedilir; bot token gizli tutulur ve geri gösterilmez; uygulama içi kanal daima etkin kalır.",
+          "de": "Änderungen erfolgen nur über berechtigungsgeprüfte Serveraktionen; Bot-Token bleiben verborgen und werden nicht ausgelesen; In-App-Benachrichtigungen bleiben immer aktiv."
+        }
+      ]
+    },
+    {
       "version": "0.4.0",
       "date": "2026-11-20",
       "title": {
