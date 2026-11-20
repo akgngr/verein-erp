@@ -123,7 +123,7 @@ export function NotificationBellDrawer({
               )}
           </div>
         </Sheet.Body>
-        <Sheet.Footer><Link className="text-sm text-accent underline-offset-4 hover:underline focus-visible:underline" href="/settings/notifications">{labels.settings}</Link></Sheet.Footer>
+        <Sheet.Footer><Link className="text-sm text-accent underline-offset-4 hover:underline focus-visible:underline" href="/ayarlar/bildirimler">{labels.settings}</Link></Sheet.Footer>
       </Sheet>
     </>
   );
