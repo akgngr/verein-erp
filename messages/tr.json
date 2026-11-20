@@ -136,7 +136,8 @@
     "kurulum": "Kurulum sihirbazı",
     "modulPaketleri": "Modül paketleri",
     "tasks": "Görevler",
-    "kullanicilar": "Kullanıcılar"
+    "kullanicilar": "Kullanıcılar",
+    "notifications": "Bildirimler"
   },
   "sidebar": {
     "brand": "Dernek Yönetim",
@@ -7448,6 +7449,49 @@
         "telegramWebhook": "Telegram webhook kaydedilemedi; uygulama adresinin internetten erişilebilir olduğundan emin olun.",
         "appUrl": "Uygulama adresi (APP_URL) https ile tanımlı olmalı.",
         "unavailable": "Bu kanal şu an kullanılamıyor (yönetici yapılandırmadı)."
+      }
+    },
+    "ui": {
+      "preferencesTitle": "Bildirim tercihleri",
+      "preferencesTable": "Bildirim türü ve kanal tercihleri",
+      "settingsTitle": "Saatler ve özet",
+      "type": "Bildirim türü",
+      "inApp": "Uygulama içi (her zaman açık)",
+      "loading": "Bildirim tercihleri yükleniyor…",
+      "unavailable": "Bildirim tercihleri şu anda yüklenemiyor.",
+      "preferencesError": "Bildirim tercihleri kaydedilemedi.",
+      "preferencesSaved": "Bildirim tercihleri kaydedildi.",
+      "emptyTypes": "Henüz ayarlanabilecek bir bildirim türü yok.",
+      "quietFrom": "Sessiz saat başlangıcı",
+      "quietTo": "Sessiz saat bitişi",
+      "digestMode": "Bildirim sıklığı",
+      "digest": {
+        "instant": "Anında",
+        "daily": "Günlük özet"
+      },
+      "digestTime": "Günlük özet saati",
+      "save": "Tercihleri kaydet",
+      "channel": {
+        "email": "E-posta",
+        "web_push": "Web Push",
+        "telegram": "Telegram",
+        "whatsapp": "WhatsApp",
+        "sms": "SMS"
+      },
+      "preferencesDescription": "Bildirim kanallarını, sessiz saatleri ve günlük özeti yönetin.",
+      "telegramLinkTitle": "Telegram hesabı bağlama",
+      "telegramUnlink": "Telegram bağlantısını kaldır",
+      "telegramConnect": "Telegram'a bağlan",
+      "telegramOpen": "Telegram bağlantısını aç",
+      "telegramAdmin": "Telegram botu (yönetici)",
+      "telegramEnabled": "Telegram kanalını etkinleştir",
+      "telegramToken": "Bot token (mevcut anahtar gösterilmez)",
+      "telegramTokenSaved": "Kayıtlı bot anahtarı mevcut. Yeni anahtar için yazın; boş bırakırsanız korunur.",
+      "telegramTokenMissing": "Henüz bot anahtarı kaydedilmemiş.",
+      "link": {
+        "linked": "Telegram hesabı bağlı.",
+        "pending": "Bağlantı onayı bekleniyor.",
+        "none": "Telegram hesabı bağlı değil."
       }
     }
   },
