@@ -7436,6 +7436,19 @@
         "dispatch": {
           "label": "Benachrichtigungs-E-Mails",
           "description": "Leitet ungelesene Benachrichtigungen gemäß den Einstellungen per E-Mail weiter (sofort oder täglich; Ruhezeiten werden beachtet). Die E-Mail enthält nur einen allgemeinen Text und einen Link."
+        },
+        "send": {
+          "label": "Benachrichtigung senden (an Personen)",
+          "description": "Sendet eine interne Benachrichtigung an alle oder ausgewählte Rollen. Sie erscheint in der Glocke; an die gewählten Kanäle (E-Mail, Telegram …) geht nur allgemeiner Text.",
+          "fields": {
+            "title": "Titel",
+            "body": "Text",
+            "roles": "Rollen (leer = alle)"
+          },
+          "help": {
+            "body": "Felder wie '{{member.fullName}}' sind möglich; sie werden erst beim Senden gefüllt.",
+            "roles": "z. B. BOARD, TREASURER. Leer: an alle, die die Benachrichtigung sehen dürfen."
+          }
         }
       }
     },
@@ -7448,7 +7461,13 @@
         "telegramToken": "Bot-Token ungültig oder von Telegram nicht bestätigt.",
         "telegramWebhook": "Telegram-Webhook konnte nicht registriert werden; die Anwendungsadresse muss aus dem Internet erreichbar sein.",
         "appUrl": "Die Anwendungsadresse (APP_URL) muss mit https eingerichtet sein.",
-        "unavailable": "Dieser Kanal ist derzeit nicht verfügbar (nicht eingerichtet)."
+        "unavailable": "Dieser Kanal ist derzeit nicht verfügbar (nicht eingerichtet).",
+        "smsProvider": "SMS-Anbieter oder Schlüssel fehlt/ungültig (für Twilio ist die Account SID nötig).",
+        "phoneInvalid": "Telefonnummer ungültig.",
+        "rateLimited": "Tageslimit für Bestätigungscodes erreicht.",
+        "sendFailed": "Bestätigungscode konnte nicht gesendet werden.",
+        "codeExpired": "Code abgelaufen oder Versuche aufgebraucht; bitte neu anfordern.",
+        "codeInvalid": "Code falsch."
       }
     },
     "notifications": {

@@ -2,6 +2,31 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.9.0",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "SMS kanalı ve iş akışında bildirim",
+        "de": "SMS-Kanal und Benachrichtigung im Workflow"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yönetici isterse SMS kanalını (seven.io veya Twilio) açabilir; kullanıcı numarasını kodla doğrular. Varsayılan kapalıdır.",
+          "de": "Die Verwaltung kann optional den SMS-Kanal (seven.io oder Twilio) aktivieren; Nutzer bestätigen ihre Nummer per Code. Standardmäßig aus."
+        },
+        {
+          "type": "feature",
+          "tr": "Otomasyonlarda yeni adım: 'Bildirim gönder' — herkese veya seçilen rollere kurum içi bildirim.",
+          "de": "Neuer Automationsschritt 'Benachrichtigung senden' — interne Benachrichtigung an alle oder ausgewählte Rollen."
+        },
+        {
+          "type": "security",
+          "tr": "SMS anahtarı veritabanında şifreli, numara şifreli; doğrulama kodu yalnız hash, 15 dakika, sınırlı deneme. SMS'e yalnız genel metin ve bağlantı gider.",
+          "de": "SMS-Schlüssel und Nummer verschlüsselt; Bestätigungscode nur als Hash, 15 Minuten, begrenzte Versuche. Per SMS gehen nur allgemeiner Text und ein Link."
+        }
+      ]
+    },
+    {
       "version": "0.8.0",
       "date": "2026-11-20",
       "title": {
