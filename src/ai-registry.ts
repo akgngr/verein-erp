@@ -14,12 +14,14 @@ import { ai as coursesAi } from "@/modules/courses/ai";
 import { ai as crmAi } from "@/modules/crm/ai";
 import { ai as eventsAi } from "@/modules/events/ai";
 import { ai as exportsAi } from "@/modules/exports/ai";
+import { ai as financeAi } from "@/modules/finance/ai";
 import { ai as grantsAi } from "@/modules/grants/ai";
 import { ai as inventoryAi } from "@/modules/inventory/ai";
 import { ai as mailingsAi } from "@/modules/mailings/ai";
 import { ai as progressAi } from "@/modules/progress/ai";
 import { ai as studentsAi } from "@/modules/students/ai";
 import { ai as tasksAi } from "@/modules/tasks/ai";
+import { ai as weatherAi } from "@/modules/weather/ai";
 
 /** Modüllerin asistana sunduğu araçlar ve onay eylemleri (src/modules/<modül>/ai.ts). */
 export const moduleAiRegistry: ModuleAi[] = [
@@ -34,10 +36,12 @@ export const moduleAiRegistry: ModuleAi[] = [
   crmAi,
   eventsAi,
   exportsAi,
+  financeAi,
   grantsAi,
   inventoryAi,
   mailingsAi,
   progressAi,
   studentsAi,
   tasksAi,
+  weatherAi,
 ];
