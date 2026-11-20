@@ -34,7 +34,19 @@ export type NotificationType<P = unknown> = {
   bodyKey?: string;
   /** Uygulama içi göreli bağlantı (kaynağın yetkili sayfası); dış adres veya sorgu parametresi yok. */
   href: (params: P) => string | null;
+  /**
+   * İsteğe bağlı dış kanal metni (e-posta konusu, Telegram, push). YALNIZ sayı/tarih gibi kişisel olmayan değerler;
+   * ad, başlık, tutar, serbest metin yasak. Verilmezse genel metin kullanılır. Tek satır, en çok 160 karakter.
+   */
+  externalText?: (params: P, locale: "tr" | "de") => string;
 };
+
+/** Dış kanal metnini güvenli tek satıra indirger (kontrol karakteri yok, en çok 160). */
+export function safeExternalText(value: unknown): string | null {
+  if (typeof value !== "string") return null;
+  const text = value.replace(/[\u0000-\u001f\u007f]+/g, " ").replace(/\s+/g, " ").trim().slice(0, 160);
+  return text || null;
+}
 
 export type ModuleNotifications = { module: string; types: NotificationType[] };
 

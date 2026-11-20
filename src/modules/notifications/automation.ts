@@ -6,6 +6,9 @@ import { defineTask } from "@/shared/automation/define";
 
 // notifications modülü — worker/otomasyon girişi. Diğer modüller bildirim göndermek için `notify`'ı buradan alır.
 export { notify } from "./services/inbox";
+// N6 (#363): sekreter geçişi (yalnız eksik kayıtları oluşturur).
+export { ensurePreference } from "./services/preferences";
+export { importVerifiedChannelLink } from "./services/telegram";
 
 /** Saklama (ADR 0006): 90 günden eski bildirimler günde bir silinir. */
 export const purgeNotificationsTask = defineTask({
