@@ -13,7 +13,7 @@ Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.
 |---|---|
 | Anahtar | `notifications` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 0.1.0 |
+| Sürüm | 0.2.0 |
 
 ## Diğer modüllere erişim
 
@@ -33,6 +33,13 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Bildirimler | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme |
 
 ## Sürüm notları
+
+### 0.2.0 — Bildirim kutusu servisi
+
+_2026-11-20_
+
+- **Yeni:** Modüller bildirim gönderebilir; her alıcının yetkisi gönderimde ve okumada yeniden denetlenir, aynı olay için ikinci bildirim oluşmaz. Okundu, tümünü okundu, ertele ve kapat işlemleri eklendi.
+- **Güvenlik:** Bildirimler 90 gün sonra otomatik silinir.
 
 ### 0.1.0 — Merkezi bildirim altyapısı
 
