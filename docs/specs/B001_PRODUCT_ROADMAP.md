@@ -31,7 +31,7 @@ Every work package in this spec follows these rules:
 
 | Area | Issue | Owner | State | Note |
 |---|---|---|---|---|
-| Notifications N1b bell + drawer | #355 | chatgpt | draft PR #369 | Blocks N7 #364 and help drawer F1b #415 |
+| Notifications N1b bell + drawer | #355 | chatgpt | draft PR #369 | Blocks N7 #364; its panel pattern is reused by the licensed help drawer (H1) |
 | Notifications N2b preferences UI | #358 | chatgpt | draft PR #378 | |
 | Notifications N8b subscribers screen | #376 | chatgpt | ready (label says blocked; backend #375 is done) | |
 | Notifications N8c announcement screen | #381 | chatgpt | ready | |
@@ -58,7 +58,7 @@ Every work package in this spec follows these rules:
 ### 2.3 Larger open topics without issues (owner decision needed)
 
 - **ADR 0001 hybrid multi-tenant / control plane** is "proposed"; the phase ADRs are not written. This is the prerequisite for hosted SaaS and for the public portal deployment option (RFC-003 #399).
-- **Licensing / packaging** is deliberately deferred (`docs/ideas/PRODUCT_PHILOSOPHY_AND_LICENSING_DECISION.md`). The "AI help = enterprise tier" note in F1/W3 is a packaging *assumption*, not a paywall; nothing is gated in code.
+- **Licensing / packaging** in general is still deferred (`docs/ideas/PRODUCT_PHILOSOPHY_AND_LICENSING_DECISION.md`). **Exception decided on 2026-11-20 (RFC-002, discussion #417):** the help center is an Enterprise/licensed module. Licensing H0 (#419) builds the generic signed-license mechanism in the public repo.
 - **Remaining security backlog** (OSV, Semgrep, Trivy, ZAP, fuzzing, marketplace signature check in CI) stays in `TODO_SECURITY_TESTING.md` until #408/#409 are done.
 - **Deferred accounting roadmap** R2 multi-currency, R3 dashboard drag/resize, R4 German website docs (`docs/ACCOUNTING_DEFERRED_ROADMAP.md`).
 
@@ -68,25 +68,32 @@ Every work package in this spec follows these rules:
 
 | Day | claude | chatgpt (Codex) | gemini |
 |---|---|---|---|
-| Mon | Fix labels #376/#360; open RFC-002 #398 and RFC-005 #401; start SEC1 #408 | Finish #355 (PR #369) | Start #397 / #396 |
+| Mon | Fix labels #376/#360; open RFC-005 #401; start SEC1 #408 | Finish #355 (PR #369) | Start #397 / #396 |
 | Tue | Review/merge notifications PRs; F2a #402 | #358 (PR #378), then #376 | #360 web push client |
-| Wed | RFC decisions (24 h review); start F1a #412 after #398 | #381, #317 (PR #348) | FILE-0 #411; #364 once #355 merged |
+| Wed | RFC-005 decision (24 h review); start licensing H0 #419 | #381, #317 (PR #348) | FILE-0 #411; #364 once #355 merged |
 | Thu | Q2 SEPA coach #406 or W1 #414 (after #401) | F3 readiness #403 | W4 §72a #404 |
-| Fri | Q1 audit room #405; promotion `alpha → beta` with acceptance notes | SEC2 authz matrix #409 | F1b help drawer #415 (after #412 + #355) |
+| Fri | Q1 audit room #405; promotion `alpha → beta` with acceptance notes | SEC2 authz matrix #409 | W4 §72a tracker #404 (continued) |
 
-**Rule:** In-flight work (§2.1) has priority over new B001 work. RFC-003 #399 and RFC-004 #400 start after RFC-002/005 are decided.
+**Rule:** In-flight work (§2.1) has priority over new B001 work. RFC-003 #399 and RFC-004 #400 start after RFC-005 is decided (RFC-002 is already decided in #417).
 
 ---
 
 ## 4. Wave 0: platform foundations
 
-### F1. Contextual help drawer (product-owner request, all tiers)
+### F1. Contextual help center (Enterprise / licensed)
 
-- **What:** A help button in the top bar, next to the notification bell, opens a right-side drawer. It shows help for the current page: purpose, step-by-step tasks, field explanations and legal notes, in the user's language.
-- **Content (single source of truth):** `src/modules/<module>/help/<route>.tr.md` and `.de.md`, collected by `module:sync`. The same files feed the docs site. CI fails when a nav route lacks TR or DE help (allow-list during migration).
-- **Search:** route lookup first, then a static index (BM25/MiniSearch) built at sync time, with TR/DE normalisation (i/İ/ı, umlauts, ß). No external service, no vector DB.
-- **Issues:** RFC-002 #398 → F1a backend #412 (claude) → F1b drawer UI #415 (gemini, after #355).
-- **Done when:** three pilot modules (members, accounting, sepa) have full TR/DE help, the drawer passes keyboard/screen-reader checks and coexists with the notification drawer in one panel pattern.
+**Decided by the product owner on 2026-11-20** (RFC-002, discussion #417, DECISION_LOG). This replaces the brainstorm assumption "drawer for all tiers".
+
+- **What:** A help button in the top bar opens a right-side drawer with help for the current page: purpose, step-by-step tasks, field explanations and legal notes, in TR/DE following the user's language. Below the article, "Ask AI" answers from the help articles and the page **structure**.
+- **Who gets it:** only instances with a valid license that contains the feature `help-center` (hosted Enterprise or licensed self-host). The icon appears only after a valid license is entered; there is no teaser for unlicensed instances.
+- **License:** Ed25519-signed, verified offline, bound to **both** the instance domain and the organisation identity. The proposed grace period is 14 days, pending owner confirmation.
+- **Where the code lives:**
+  - **Public repo, H0 #419 (claude):** license verification, server-side `hasLicensedFeature()`, Settings → License screen, a marketplace activation gate for licensed packages, and a generic top-bar extension slot. No help UI or content.
+  - **Private repo, H1–H3:** the `help-center` EXTENSION module (signed marketplace package). H1 is the drawer and route→article mapping, H2 the first articles (accounting, members, dues/SEPA, donations), H3 AI help with feedback and a missing-article backlog.
+- **Content:** each module's help text lives in the private repo as `content/<module>/<route>.tr.md` and `.de.md`. The agent that builds or changes a screen writes or updates its help article in the same work cycle (linked PRs). Private CI checks TR+DE coverage for every nav route.
+- **AI help:** runs on the **customer's own AI provider** (existing AI module config, quotas, audit, pseudonymisation). There is no vendor-hosted help endpoint. By default the AI gets only the route, articles, page structure (no values) and the user's permissions. Screen values are a per-question opt-in through the K0-K3 gate.
+- **Drawer requirements carried into H1** (from closed #415): one right-side panel pattern with the notification drawer (#355), focus trap and return, Esc, landmarks, reduced motion, mobile full-screen sheet, dark mode.
+- **Superseded issues:** #398 (RFC duplicate), #412 and #415 (moved to the private repo).
 
 ### F2. Privacy presets and data egress report
 
@@ -108,7 +115,7 @@ Every work package in this spec follows these rules:
 |---|---|---|---|---|
 | W1 | Gemeinnützigkeit Compliance Cockpit | M | RFC-005 #401 | #414 (claude), UI issue after backend |
 | W2 | Member privacy cockpit + self-service portal | L | RFC-003 #399, SEC2 #409 | opened after RFC decision |
-| W3 | Bilingual Behörden-Lotse + "Ask AI about this page" | M | RFC-002 #398, F1 | opened after F1a |
+| W3 | Bilingual Behörden-Lotse (+ page AI, delivered as help-center H3) | M | RFC-002 decided (#417); H0 #419 for the page-AI part | Behörden-Lotse issue opened after RFC-005; page AI tracked in the private repo |
 | W4 | §72a SGB VIII youth-protection inspection tracker | S | none | #404 (gemini) |
 | W5 | General assembly end-to-end | L | RFC-004 #400 + legal review | opened after RFC decision |
 
@@ -126,7 +133,7 @@ Every work package in this spec follows these rules:
 
 ### W3. Bilingual Behörden-Lotse + page AI
 
-- **Scope:** an uploaded or forwarded authority letter goes through OCR and pseudonymisation. The output is a side-by-side TR/DE plain-language summary (what they want, deadline, consequence), a German reply draft and a dated task. On every page, the AI layer below the help article answers from the help articles and the page **structure**.
+- **Scope:** an uploaded or forwarded authority letter goes through OCR and pseudonymisation. The output is a side-by-side TR/DE plain-language summary (what they want, deadline, consequence), a German reply draft and a dated task. This letter assistant is built in the public repo (documents, mail, ai, tasks). The page AI below the help article is part of the licensed help center (H3, private repo, see F1); it answers from the help articles and the page **structure**.
 - **Binding conditions:** local model by default; external inference only after explicit per-request approval. Every extracted deadline links to its source passage and needs human confirmation. The page-context payload follows a strict Zod contract (route, field keys/types, button states, error keys) and never includes values. Screen values are a per-question opt-in through pseudonymisation and the K0-K3 gate.
 
 ### W4. §72a SGB VIII inspection tracker
@@ -192,12 +199,13 @@ Every work package in this spec follows these rules:
 
 | Code | Issue | Owner | Depends on | Status at creation |
 |---|---|---|---|---|
-| RFC-002 help content + page context | #398 | claude | — | ready |
-| RFC-003 portal surface + auth | #399 | claude | — | ready (after RFC-002/005) |
+| RFC-002 help center (decided in discussion #417) | #398 | claude | — | closed: superseded |
+| Licensing H0: signed license, feature gate, license screen | #419 | claude | — | ready |
+| RFC-003 portal surface + auth | #399 | claude | — | ready (after RFC-005) |
 | RFC-004 secret ballot | #400 | claude | — | ready (low priority) |
 | RFC-005 compliance rule format | #401 | claude | — | ready |
-| F1a help backend | #412 | claude | #398 | blocked |
-| F1b help drawer UI | #415 | gemini | #412, #355 | blocked |
+| ~~F1a help backend~~ | #412 | — | — | closed: moved to private repo (H1–H3) |
+| ~~F1b help drawer UI~~ | #415 | — | — | closed: moved to private repo (H1) |
 | F2a egress ledger + presets | #402 | claude | — | ready |
 | F2b privacy UI + contract tests | #413 | chatgpt | #402 | blocked |
 | F3 readiness cockpit | #403 | chatgpt | — | ready |
@@ -232,3 +240,4 @@ The `ai-coordination` workflow moves blocked issues to ready when their dependen
 3. Is the diaspora segment the primary beachhead or one of several (affects ordering in Wave 2)?
 4. Does the CodeQL default-setup check become a required check (#408, ruleset change)?
 5. Timing of the ADR 0001 phase ADRs (needed before W2 can ship as a separate public surface).
+6. Confirm the 14-day license grace period and create the private help repository (RFC-002, #417).
