@@ -136,7 +136,8 @@
     "kurulum": "Einrichtungsassistent",
     "modulPaketleri": "Modulpakete",
     "tasks": "Aufgaben",
-    "kullanicilar": "Benutzer"
+    "kullanicilar": "Benutzer",
+    "notifications": "Benachrichtigungen"
   },
   "sidebar": {
     "brand": "Vereinsverwaltung",
@@ -7448,6 +7449,49 @@
         "telegramWebhook": "Telegram-Webhook konnte nicht registriert werden; die Anwendungsadresse muss aus dem Internet erreichbar sein.",
         "appUrl": "Die Anwendungsadresse (APP_URL) muss mit https eingerichtet sein.",
         "unavailable": "Dieser Kanal ist derzeit nicht verfügbar (nicht eingerichtet)."
+      }
+    },
+    "ui": {
+      "preferencesTitle": "Benachrichtigungseinstellungen",
+      "preferencesTable": "Benachrichtigungsarten und Kanäle",
+      "settingsTitle": "Ruhezeiten und Zusammenfassung",
+      "type": "Benachrichtigungsart",
+      "inApp": "In der Anwendung (immer aktiv)",
+      "loading": "Einstellungen werden geladen…",
+      "unavailable": "Benachrichtigungseinstellungen können derzeit nicht geladen werden.",
+      "preferencesError": "Einstellungen konnten nicht gespeichert werden.",
+      "preferencesSaved": "Einstellungen gespeichert.",
+      "emptyTypes": "Derzeit sind keine Benachrichtigungsarten konfigurierbar.",
+      "quietFrom": "Ruhezeit ab",
+      "quietTo": "Ruhezeit bis",
+      "digestMode": "Häufigkeit",
+      "digest": {
+        "instant": "Sofort",
+        "daily": "Täglich zusammengefasst"
+      },
+      "digestTime": "Uhrzeit der Zusammenfassung",
+      "save": "Einstellungen speichern",
+      "channel": {
+        "email": "E-Mail",
+        "web_push": "Web Push",
+        "telegram": "Telegram",
+        "whatsapp": "WhatsApp",
+        "sms": "SMS"
+      },
+      "preferencesDescription": "Verwalten Sie Kanäle, Ruhezeiten und tägliche Zusammenfassungen.",
+      "telegramLinkTitle": "Telegram-Konto verbinden",
+      "telegramUnlink": "Telegram-Verbindung trennen",
+      "telegramConnect": "Mit Telegram verbinden",
+      "telegramOpen": "Telegram-Link öffnen",
+      "telegramAdmin": "Telegram-Bot (Administration)",
+      "telegramEnabled": "Telegram-Kanal aktivieren",
+      "telegramToken": "Bot-Token (vorhandener Schlüssel wird nicht angezeigt)",
+      "telegramTokenSaved": "Ein Bot-Schlüssel ist gespeichert. Einen neuen Schlüssel eingeben oder leer lassen, um ihn zu behalten.",
+      "telegramTokenMissing": "Noch kein Bot-Schlüssel gespeichert.",
+      "link": {
+        "linked": "Telegram-Konto ist verbunden.",
+        "pending": "Verbindung wartet auf Bestätigung.",
+        "none": "Kein Telegram-Konto verbunden."
       }
     }
   },
