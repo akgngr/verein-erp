@@ -7405,7 +7405,8 @@
     },
     "access": {
       "users": "Prüft beim Senden und Lesen, ob der Empfänger aktiv ist und die Rolle die Benachrichtigung sehen darf.",
-      "system": "Liest, ob das auslösende Modul aktiv und freigegeben ist."
+      "system": "Liest, ob das auslösende Modul aktiv und freigegeben ist.",
+      "mail": "Versendet Benachrichtigungs-E-Mails über die vorhandene E-Mail-Infrastruktur (nur allgemeiner Text und Anwendungslink)."
     },
     "errors": {
       "snoozeRange": "Die Verschiebung muss in der Zukunft liegen und darf höchstens 30 Tage betragen.",
@@ -7416,8 +7417,16 @@
         "purge": {
           "label": "Alte Benachrichtigungen bereinigen",
           "description": "Löscht täglich Benachrichtigungen, die älter als 90 Tage sind."
+        },
+        "dispatch": {
+          "label": "Benachrichtigungs-E-Mails",
+          "description": "Leitet ungelesene Benachrichtigungen gemäß den Einstellungen per E-Mail weiter (sofort oder täglich; Ruhezeiten werden beachtet). Die E-Mail enthält nur einen allgemeinen Text und einen Link."
         }
       }
+    },
+    "validation": {
+      "quietPair": "Bitte Beginn und Ende der Ruhezeit gemeinsam angeben.",
+      "quietSame": "Beginn und Ende dürfen nicht gleich sein."
     }
   },
   "online-forms": {

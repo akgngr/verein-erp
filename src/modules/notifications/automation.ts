@@ -22,3 +22,19 @@ export const purgeNotificationsTask = defineTask({
     return { removed: await purgeExpired() };
   },
 });
+
+/** N2a (#357): dış kanal dağıtımı (e-posta; anında veya günlük özet). Mevcut zamanlayıcı, 5 dakikada bir. */
+export const dispatchNotificationsTask = defineTask({
+  key: "notifications.dispatch",
+  version: 1,
+  description: "notifications.dispatch",
+  inputSchema: z.object({}).strict(),
+  timeoutSeconds: 240,
+  retry: { maxAttempts: 1, initialDelaySeconds: 0, maxDelaySeconds: 0, backoffMultiplier: 1 },
+  schedule: { input: () => ({}), minIntervalMinutes: 5, automaticIntervalMinutes: 5 },
+  idempotencyKey: () => `notifications:dispatch:${Math.floor(Date.now() / 300_000)}`,
+  handler: async () => {
+    const { runDispatch, defaultDispatchDeps } = await import("./services/dispatch");
+    return runDispatch(new Date(), await defaultDispatchDeps());
+  },
+});
