@@ -1,5 +1,5 @@
 ---
-sidebar_position: 29
+sidebar_position: 30
 title: "Sekreter"
 description: "Kişisel sekreter: sabah özeti ve onaylı öneriler."
 slug: /kullanim/moduller/secretary

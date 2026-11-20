@@ -1,0 +1,16 @@
+{
+  "module": {
+    "label": "Bildirimler",
+    "description": "Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar."
+  },
+  "permissions": {
+    "notifications": {
+      "label": "Bildirimler",
+      "description": "Kendi bildirimlerini görme ve tercihleri; yönetici kanal ayarları."
+    }
+  },
+  "access": {
+    "users": "Bildirimin alıcısı etkin mi ve rolü bu bildirimi görmeye yetiyor mu, gönderim ve okuma anında denetlenir.",
+    "system": "Bildirimi üreten modülün açık ve onaylı olup olmadığını okur."
+  }
+}

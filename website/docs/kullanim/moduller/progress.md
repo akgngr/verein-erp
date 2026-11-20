@@ -1,5 +1,5 @@
 ---
-sidebar_position: 26
+sidebar_position: 27
 title: "Öğrenci takibi"
 description: "Kurs öğrencilerinin yoklaması, sınav ve notları, gelişim notları ve veli raporu."
 slug: /kullanim/moduller/progress

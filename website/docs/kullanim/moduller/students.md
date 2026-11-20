@@ -1,5 +1,5 @@
 ---
-sidebar_position: 27
+sidebar_position: 28
 title: "Öğrenciler"
 description: "Kurs ve Nachhilfe öğrencileri, veliler ve DATEV uyumlu borçlu (Debitor) kayıtları."
 slug: /kullanim/moduller/students

@@ -1,0 +1,16 @@
+{
+  "module": {
+    "label": "Benachrichtigungen",
+    "description": "Benachrichtigungen aller Module an einem Ort; Kanaleinstellungen und Einwilligungen."
+  },
+  "permissions": {
+    "notifications": {
+      "label": "Benachrichtigungen",
+      "description": "Eigene Benachrichtigungen und Einstellungen; Kanalverwaltung für Administratoren."
+    }
+  },
+  "access": {
+    "users": "Prüft beim Senden und Lesen, ob der Empfänger aktiv ist und die Rolle die Benachrichtigung sehen darf.",
+    "system": "Liest, ob das auslösende Modul aktiv und freigegeben ist."
+  }
+}

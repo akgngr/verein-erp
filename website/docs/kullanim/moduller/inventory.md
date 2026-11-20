@@ -1,5 +1,5 @@
 ---
-sidebar_position: 12
+sidebar_position: 13
 title: "Envanter ve Demirbaş"
 description: "Dernek demirbaşları, teknik ekipmanlar ve zimmet kayıtlarının takibi."
 slug: /kullanim/moduller/inventory

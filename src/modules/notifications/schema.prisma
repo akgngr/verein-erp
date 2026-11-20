@@ -1,0 +1,81 @@
+/// ADR 0006: kullanıcı bildirimi. Parametreler şifreli (kişisel veri içerebilir); metin okunurken çevrilir.
+/// (userId, typeKey, refKey) benzersiz: aynı olay için ikinci bildirim yok. Saklama 90 gün.
+model Notification {
+  id           String    @id @default(cuid())
+  userId       String
+  /// "<modül>.<tür>"
+  typeKey      String
+  moduleKey    String
+  severity     String    @default("info")
+  paramsEnc    String?
+  /// Kaynak olay anahtarı (idempotensi), ör. "task:<id>:assigned".
+  refKey       String
+  readAt       DateTime?
+  snoozedUntil DateTime?
+  dismissedAt  DateTime?
+  createdAt    DateTime  @default(now())
+
+  @@unique([userId, typeKey, refKey])
+  @@index([userId, readAt, createdAt])
+  @@index([createdAt])
+  @@map("notifications")
+}
+
+/// Tür × kanal tercihi. typeKey "*" = tüm türler için varsayılan.
+model NotificationPreference {
+  id        String   @id @default(cuid())
+  userId    String
+  typeKey   String
+  channel   String
+  enabled   Boolean
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, typeKey, channel])
+  @@map("notification_preferences")
+}
+
+/// Kullanıcı düzeyi: sessiz saat ve özet modu.
+model NotificationSettings {
+  userId     String   @id
+  quietFrom  String?
+  quietTo    String?
+  /// "instant" | "daily"
+  digestMode String   @default("instant")
+  /// Günlük özet saati, Europe/Berlin "HH:mm".
+  digestTime String   @default("07:30")
+  updatedAt  DateTime @updatedAt
+
+  @@map("notification_settings")
+}
+
+/// Kurum düzeyi kanal ayarı. Sağlayıcı sırları (bot token, API anahtarı, VAPID özel anahtarı) DB'de şifreli;
+/// ortam değişkeni gerekmez. Sırlar arayüze geri gösterilmez.
+model NotificationChannelConfig {
+  channel     String   @id
+  enabled     Boolean  @default(false)
+  secretsEnc  String?
+  settings    Json?
+  updatedById String?
+  updatedAt   DateTime @updatedAt
+
+  @@map("notification_channel_configs")
+}
+
+/// Dış kanal teslim kaydı (içerik/adres yok). (userId, channel, dedupeKey) benzersiz: çift gönderim yok.
+model NotificationDelivery {
+  id         String   @id @default(cuid())
+  userId     String
+  channel    String
+  /// Bildirim kimliği veya özet anahtarı ("digest:<YYYY-MM-DD>").
+  dedupeKey  String
+  status     String   @default("PENDING") // PENDING | SENT | FAILED
+  attempts   Int      @default(0)
+  providerId String?
+  errorCode  String?
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId, channel, dedupeKey])
+  @@index([status, createdAt])
+  @@map("notification_deliveries")
+}

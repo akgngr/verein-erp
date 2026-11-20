@@ -1,5 +1,5 @@
 ---
-sidebar_position: 22
+sidebar_position: 23
 title: "Modül Yönetimi"
 description: "Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi."
 slug: /kullanim/moduller/system
