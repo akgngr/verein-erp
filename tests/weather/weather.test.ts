@@ -1,12 +1,55 @@
 import assert from "node:assert/strict";
-import { describe, it } from "node:test";
+import { describe, it, beforeEach } from "node:test";
 
 import { getConditionInfo, WMO_CODES } from "@/modules/weather";
-import { getWeatherData } from "@/modules/weather/server";
+import {
+  getWeatherData,
+  getCachedWeatherData,
+  setCachedWeatherData,
+  clearWeatherCache,
+  findCityCoordinates,
+} from "@/modules/weather/server";
 import { aiWeatherTool } from "@/modules/weather/ai";
 import { buildWeatherBriefing } from "@/modules/weather/secretary";
+import {
+  fetchWeatherByCoordsAction,
+  searchCityWeatherAction,
+} from "@/modules/weather/actions/weather-actions";
+import type { WeatherData } from "@/modules/weather";
+
+const mockWeatherData: WeatherData = {
+  city: "Frankfurt am Main",
+  latitude: 50.11,
+  longitude: 8.68,
+  temperature: 20,
+  apparentTemperature: 21,
+  humidity: 50,
+  windSpeed: 12,
+  weatherCode: 0,
+  conditionTextTr: "Açık ve Güneşli",
+  conditionTextDe: "Klar und sonnig",
+  isDay: true,
+  precipitation: 0,
+  daily: {
+    dates: ["2026-11-20"],
+    maxTemps: [22],
+    minTemps: [15],
+    weatherCodes: [0],
+    precipitationSums: [0],
+  },
+  hourly: {
+    times: ["12:00", "15:00"],
+    temps: [20, 22],
+    weatherCodes: [0, 0],
+  },
+  updatedAt: new Date().toISOString(),
+};
 
 describe("Weather module tests", () => {
+  beforeEach(() => {
+    clearWeatherCache();
+  });
+
   it("getConditionInfo correctly resolves clear, rain, and stormy weather", () => {
     const clear = getConditionInfo(0);
     assert.equal(clear.code, 0);
@@ -35,23 +78,43 @@ describe("Weather module tests", () => {
     assert.ok(WMO_CODES[95]);
   });
 
-  it("getWeatherData returns a valid WeatherData structure", async () => {
-    const data = await getWeatherData();
-    assert.ok(data.city);
-    assert.equal(typeof data.temperature, "number");
-    assert.equal(typeof data.apparentTemperature, "number");
-    assert.equal(typeof data.humidity, "number");
-    assert.equal(typeof data.windSpeed, "number");
-    assert.ok(Array.isArray(data.daily.dates));
-    assert.ok(Array.isArray(data.daily.maxTemps));
-    assert.ok(Array.isArray(data.daily.minTemps));
-    assert.ok(Array.isArray(data.hourly.times));
+  it("findCityCoordinates handles exact match, prefix match >= 3 chars, and rejects partial contains", () => {
+    // Exact match
+    const berlin = findCityCoordinates("Berlin");
+    assert.ok(berlin);
+    assert.equal(berlin.name, "Berlin");
+
+    // Prefix match >= 3 chars
+    const bremen = findCityCoordinates("bre");
+    assert.ok(bremen);
+    assert.equal(bremen.name, "Bremen");
+
+    // Reject false contains (e.g. "en" should NOT match Bremen or Dresden)
+    const enMatch = findCityCoordinates("en");
+    assert.equal(enMatch, null);
+
+    // Empty / short / unknown
+    assert.equal(findCityCoordinates(""), null);
+    assert.equal(findCityCoordinates("a"), null);
+    assert.equal(findCityCoordinates("Atlantis"), null);
   });
 
-  it("secretary provider generates valid weather advisory items", async () => {
-    // Önbelleği ısıt (sıcak patika testi için)
-    await getWeatherData();
+  it("getWeatherData returns null on invalid coordinates", async () => {
+    assert.equal(await getWeatherData(999, 0), null);
+    assert.equal(await getWeatherData(0, -200), null);
+    assert.equal(await getWeatherData(NaN, 0), null);
+  });
 
+  it("getCachedWeatherData returns cached data when primed, and null when empty", () => {
+    assert.equal(getCachedWeatherData(50.11, 8.68), null);
+    setCachedWeatherData(mockWeatherData);
+    const cached = getCachedWeatherData(50.11, 8.68);
+    assert.ok(cached);
+    assert.equal(cached.city, "Frankfurt am Main");
+    assert.equal(cached.temperature, 20);
+  });
+
+  it("secretary provider generates valid weather advisory only when cache is primed", async () => {
     const mockContext = {
       user: { id: "test-user-id", role: "ADMIN" as const },
       now: new Date("2026-11-20T10:00:00.000Z"),
@@ -69,18 +132,52 @@ describe("Weather module tests", () => {
       },
     };
 
+    // Önbellek boşken sıcak patikada hiçbir öğe üretilmemeli (dış ağ çağrısı yok)
+    const emptyItems = await buildWeatherBriefing(mockContext);
+    assert.deepEqual(emptyItems, []);
+
+    // Önbellek doluyken öğe üretilmeli
+    setCachedWeatherData(mockWeatherData);
     const items = await buildWeatherBriefing(mockContext);
     assert.ok(Array.isArray(items));
     assert.equal(items.length, 1);
     assert.equal(items[0].id, "weather:today");
     assert.equal(items[0].module, "weather");
     assert.equal(items[0].kind, "advisory");
-    assert.ok(items[0].title.includes("Bugün hava"));
+    assert.ok(items[0].title.includes("Bugün hava 20°"));
   });
 
-  it("aiWeatherTool is properly configured with v2 AI contract", () => {
+  it("aiWeatherTool is properly configured with v2 AI contract and handles unknown city", async () => {
     assert.equal(aiWeatherTool.name, "get_current_weather");
     assert.equal(aiWeatherTool.operation, "read");
     assert.equal(aiWeatherTool.policy.purpose, "weather-forecast");
+
+    const mockAiContext = {
+      user: { id: "test-user-id", name: "Test User", email: "test@example.com", role: "ADMIN" as const },
+    };
+
+    // Bilinmeyen şehir sorgusunda hata fırlatılmalı
+    await assert.rejects(
+      async () => {
+        await aiWeatherTool.run({ city: "NonExistentCityXYZ" }, mockAiContext as never);
+      },
+      /UNKNOWN_CITY/,
+    );
+  });
+
+  it("fetchWeatherByCoordsAction validates coordinates and searchCityWeatherAction validates query", async () => {
+    // Geçersiz koordinatlar reddedilir
+    assert.equal(await fetchWeatherByCoordsAction(NaN, 10), null);
+    assert.equal(await fetchWeatherByCoordsAction(100, 10), null);
+
+    // Kısa veya boş sorgu reddedilir
+    const shortResult = await searchCityWeatherAction("a");
+    assert.equal(shortResult.success, false);
+    assert.equal(shortResult.error, "QUERY_TOO_SHORT");
+
+    // Bilinmeyen şehir CITY_NOT_FOUND döndürür
+    const notFoundResult = await searchCityWeatherAction("BilinmeyenSehir123");
+    assert.equal(notFoundResult.success, false);
+    assert.equal(notFoundResult.error, "CITY_NOT_FOUND");
   });
 });
