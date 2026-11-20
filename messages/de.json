@@ -124,6 +124,7 @@
     "topluEposta": "Kampagnen",
     "toplantilar": "Sitzungen",
     "uyeler": "Mitglieder",
+    "notifications": "Benachrichtigungen",
     "online-forms": "e-Sign",
     "organization": "Vereinsdaten",
     "progress": "Lernfortschritt",
@@ -136,8 +137,7 @@
     "kurulum": "Einrichtungsassistent",
     "modulPaketleri": "Modulpakete",
     "tasks": "Aufgaben",
-    "kullanicilar": "Benutzer",
-    "notifications": "Benachrichtigungen"
+    "kullanicilar": "Benutzer"
   },
   "sidebar": {
     "brand": "Vereinsverwaltung",
