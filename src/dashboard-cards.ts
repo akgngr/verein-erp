@@ -13,6 +13,7 @@ import { cards as financeCards } from "@/modules/finance/cards";
 import { cards as progressCards } from "@/modules/progress/cards";
 import { cards as secretaryCards } from "@/modules/secretary/cards";
 import { cards as studentsCards } from "@/modules/students/cards";
+import { cards as weatherCards } from "@/modules/weather/cards";
 
 /** Modüllerin panele sunduğu kartlar (src/modules/<modül>/cards/index.ts). */
 export const dashboardCards: { moduleKey: string; cards: DashboardCardDefinition[] }[] = [
@@ -26,4 +27,5 @@ export const dashboardCards: { moduleKey: string; cards: DashboardCardDefinition
   { moduleKey: "progress", cards: progressCards },
   { moduleKey: "secretary", cards: secretaryCards },
   { moduleKey: "students", cards: studentsCards },
+  { moduleKey: "weather", cards: weatherCards },
 ];
