@@ -21,6 +21,8 @@ export const SUPPORTED_CURRENCIES: Record<string, CurrencyInfo> = {
   PLN: { code: "PLN", symbol: "zł", nameTr: "Polonya Zlotisi", nameDe: "Polnischer Złoty", flag: "🇵🇱" },
 };
 
+import { channelFetch } from "@/shared/campaigns/channel";
+
 export interface RatesData {
   base: string;
   date: string;
@@ -63,12 +65,11 @@ export async function getExchangeRates(base = DEFAULT_BASE_CURRENCY): Promise<Ra
 
   try {
     const url = `https://open.er-api.com/v6/latest/${normalizedBase}`;
-    const res = await fetch(url, {
+    const res = await channelFetch(["open.er-api.com"], url, {
       headers: { "User-Agent": "Verein-ERP-Finance-Module/1.0" },
-      next: { revalidate: 900 },
     });
 
-    if (!res.ok) throw new Error(`Rates API HTTP ${res.status}`);
+    if (!res.ok) throw new Error("RATES_API_HTTP_ERROR");
 
     const json = (await res.json()) as {
       result?: string;
@@ -78,7 +79,7 @@ export async function getExchangeRates(base = DEFAULT_BASE_CURRENCY): Promise<Ra
     };
 
     if (json.result !== "success" || !json.rates) {
-      throw new Error("Invalid rates response");
+      throw new Error("RATES_API_INVALID_RESPONSE");
     }
 
     const data: RatesData = {
@@ -101,13 +102,15 @@ export async function getExchangeRates(base = DEFAULT_BASE_CURRENCY): Promise<Ra
       rates[curr] = Number((eurRate / baseMult).toFixed(4));
     }
 
-    return {
+    const fallbackData: RatesData = {
       base: normalizedBase,
       date: new Date().toISOString().split("T")[0],
       timeLastUpdateUtc: new Date().toUTCString(),
       rates,
       previousRates: rates,
     };
+    ratesCache.set(normalizedBase, { data: fallbackData, timestamp: now });
+    return fallbackData;
   }
 }
 
