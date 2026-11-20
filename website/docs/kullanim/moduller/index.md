@@ -7,7 +7,7 @@ sidebar_position: 1
 
 <!-- Bu sayfa scripts/docs/generate-module-docs.ts ile üretilir; elle düzenlemeyin. -->
 
-Verein ERP 38 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekranından açılıp kapatılır; çekirdek modüller her zaman açıktır. Her sayfa modülün kendi tanımından otomatik üretilir.
+Verein ERP 39 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekranından açılıp kapatılır; çekirdek modüller her zaman açıktır. Her sayfa modülün kendi tanımından otomatik üretilir.
 
 ## Çekirdek modüller
 
@@ -52,6 +52,7 @@ Verein ERP 38 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekra
 | Modül | Açıklama | Sürüm |
 |---|---|---|
 | [Apple Takvim](./moduller/calendar-apple) | iCloud takvimini CalDAV ile salt okunur bağlar (Apple ID + uygulamaya özel parola). | 1.0.0 |
+| [Finans](./moduller/finance) | Canlı döviz kurları, piyasa göstergeleri, kur çevirici ve finansal AI asistanı. | 0.1.0 |
 | [Google Takvim](./moduller/calendar-google) | Google Takvim hesabını takvime salt okunur bağlar (OAuth; yönetici kendi Google Cloud uygulamasını girer). | 1.0.0 |
 | [Görevler](./moduller/tasks) | Görev ve iş takibi yönetimi. | 1.3.11 |
 | [Otomasyon](./moduller/automation) | Kalıcı arka plan görevleri ve iş akışları. | 0.10.12 |

@@ -29,6 +29,7 @@ import { moduleConfig as demoModule } from "@/modules/demo";
 import { moduleConfig as eventsModule } from "@/modules/events";
 import { moduleConfig as exportsModule } from "@/modules/exports";
 import { moduleConfig as feedbackModule } from "@/modules/feedback";
+import { moduleConfig as financeModule } from "@/modules/finance";
 import { moduleConfig as grantsModule } from "@/modules/grants";
 import { moduleConfig as inventoryModule } from "@/modules/inventory";
 import { moduleConfig as mailModule } from "@/modules/mail";
@@ -72,6 +73,7 @@ export const allModules: ModuleConfig[] = [
   eventsModule,
   exportsModule,
   feedbackModule,
+  financeModule,
   grantsModule,
   inventoryModule,
   mailModule,
