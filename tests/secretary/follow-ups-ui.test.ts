@@ -62,3 +62,12 @@ test("follow-up list failures announce an accessible retry state", () => {
   assert.match(ui, /role="status"/);
   assert.match(ui, /if \(!result\.ok\) \{ notify\.error\(labels\.error\); return; \}/);
 });
+
+
+test("follow-up write failures never display success or mutate the local list", () => {
+  const ui = read("src/modules/secretary/components/follow-ups.tsx");
+  assert.match(ui, /if \(!result\.ok\) \{ notify\.error\(labels\.error\); return; \}/);
+  assert.match(ui, /catch \{\s*notify\.error\(labels\.error\);/);
+  assert.match(ui, /if \(pending \|\| !AVAILABLE\[item\.status\]\.includes\(command\)\) return;/);
+  assert.doesNotMatch(ui, /sendEmail|sendSms|sendTelegram|window\.open|localStorage/);
+});
