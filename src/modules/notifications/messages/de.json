@@ -41,5 +41,33 @@
       "appUrl": "Die Anwendungsadresse (APP_URL) muss mit https eingerichtet sein.",
       "unavailable": "Dieser Kanal ist derzeit nicht verfügbar (nicht eingerichtet)."
     }
+  },
+  "ui": {
+    "preferencesTitle": "Benachrichtigungseinstellungen",
+    "preferencesTable": "Benachrichtigungsarten und Kanäle",
+    "settingsTitle": "Ruhezeiten und Zusammenfassung",
+    "type": "Benachrichtigungsart",
+    "inApp": "In der Anwendung (immer aktiv)",
+    "loading": "Einstellungen werden geladen…",
+    "unavailable": "Benachrichtigungseinstellungen können derzeit nicht geladen werden.",
+    "preferencesError": "Einstellungen konnten nicht gespeichert werden.",
+    "preferencesSaved": "Einstellungen gespeichert.",
+    "emptyTypes": "Derzeit sind keine Benachrichtigungsarten konfigurierbar.",
+    "quietFrom": "Ruhezeit ab",
+    "quietTo": "Ruhezeit bis",
+    "digestMode": "Häufigkeit",
+    "digest": {
+      "instant": "Sofort",
+      "daily": "Täglich zusammengefasst"
+    },
+    "digestTime": "Uhrzeit der Zusammenfassung",
+    "save": "Einstellungen speichern",
+    "channel": {
+      "email": "E-Mail",
+      "web_push": "Web Push",
+      "telegram": "Telegram",
+      "whatsapp": "WhatsApp",
+      "sms": "SMS"
+    }
   }
 }
