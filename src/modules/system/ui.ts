@@ -10,3 +10,4 @@ export { SurfaceCards } from "./views/surface-cards";
 export { ReleaseNotesView } from "./views/release-notes-view";
 export { SetupView } from "./views/setup-view";
 export { PackagesView } from "./views/packages-view";
+export { LicenseView } from "./views/license-view";

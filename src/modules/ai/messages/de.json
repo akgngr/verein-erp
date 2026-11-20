@@ -227,7 +227,8 @@
       "status": {
         "inactive": "Modul ist nicht aktiv: Der Assistent kann es trotz Berechtigung nicht nutzen.",
         "needsApproval": "Die Zugriffsfreigabe des Moduls steht aus: Bis dahin kann der Assistent es nicht nutzen.",
-        "link": "Zur Modulverwaltung"
+        "link": "Zur Modulverwaltung",
+        "unlicensed": "Dieses Modul erfordert eine Lizenz (Einstellungen → Lizenz)."
       }
     },
     "deleteHistory": "Gesamten Chatverlauf löschen",

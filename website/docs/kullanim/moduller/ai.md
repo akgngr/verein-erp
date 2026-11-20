@@ -13,7 +13,7 @@ Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuy
 |---|---|
 | Anahtar | `ai` |
 | Tür | Eklenti |
-| Sürüm | 1.15.5 |
+| Sürüm | 1.15.6 |
 | Sayfalar | `/ayarlar/yapay-zeka` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Yapay zekâ asistanı | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.15.6 — Lisans durumu
+
+_2026-11-20_
+
+- **İyileştirme:** AI yetki matrisi, lisans gerektiren modüller için "lisans gerekli" durumunu gösterir.
 
 ### 1.15.5 — IME ve klavye güvenliği
 
@@ -83,10 +89,4 @@ _2026-11-16_
 
 - **Yeni:** Sohbete eklenen dosya kısa süre şifreli tutulur; asistanın önerdiği evrak kaydını onaylayınca dosya kayda otomatik eklenir. PDF'de gömülü resim okunamazsa sayfa görüntüye çevrilip OCR ile okunur.
 
-### 1.13.1 — Asistan önerileri bulutta
-
-_2026-11-16_
-
-- **İyileştirme:** Bulut sağlayıcıda öneri araçları (evrak kaydı, görev, etkinlik vb. onay kartları) artık denetimli modda kullanılabilir; ekteki maskeli değerler öneride gerçek değere çevrilir. Az metinli PDF eklerinde gömülü resimler de OCR ile okunur.
-
-Daha eski 26 herkese açık sürüm notu.
+Daha eski 27 herkese açık sürüm notu.
