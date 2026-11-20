@@ -19,6 +19,6 @@ export const config = {
   // (api/mailings/t: rastgele belirteç; tıklamada imzalı hedef) ve uzaktan form sayfası
   // (formular/<belirteç>: 32 bayt rastgele, tek kullanımlık, süreli; online-forms modülü).
   matcher: [
-    "/((?!api/health|api/auth|api/documents|api/calendar/feed|api/campaign-telegram/webhook|api/campaign-sms/webhook|api/campaign-whatsapp/webhook|api/mailings/t/|formular/|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt)$).*)",
+    "/((?!api/health|api/auth|api/documents|api/calendar/feed|api/campaign-telegram/webhook|api/notifications/telegram-webhook|api/campaign-sms/webhook|api/campaign-whatsapp/webhook|api/mailings/t/|formular/|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt)$).*)",
   ],
 };
