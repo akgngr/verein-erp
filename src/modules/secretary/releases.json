@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.11.5",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Bildirim modülü erişim sözleşmesi",
+        "de": "Zugriffsvertrag für das Benachrichtigungsmodul"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Sekreterin bildirim modülüne mevcut erişimi modül sözleşmesinde açıkça bildirildi.",
+          "de": "Der bestehende Zugriff des Sekretariats auf das Benachrichtigungsmodul wird im Modulvertrag ausdrücklich deklariert."
+        }
+      ]
+    },
+    {
       "version": "0.11.4",
       "date": "2026-11-20",
       "title": {
