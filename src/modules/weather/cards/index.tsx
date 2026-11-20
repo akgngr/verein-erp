@@ -14,10 +14,10 @@ export const cards = defineCards([
     defaultVisible: true,
     href: "/weather",
     permission: { definition: weatherPermissions, action: "view" },
-    render: async ({ t }) => {
+    render: async () => {
       const weather = await getWeatherData();
       const { WeatherCardBody } = await import("./weather-card-body");
-      return <WeatherCardBody initialWeather={weather} t={t} />;
+      return <WeatherCardBody initialWeather={weather} />;
     },
   },
 ]);

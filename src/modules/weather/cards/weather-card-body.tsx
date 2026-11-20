@@ -14,7 +14,8 @@ import {
   Wind,
 } from "lucide-react";
 
-import type { DashboardCardContext } from "@/shared/types/dashboard";
+import { useTranslations } from "next-intl";
+
 import type { WeatherData } from "../services/weather";
 
 function getWeatherIcon(code: number, isDay: boolean) {
@@ -42,11 +43,10 @@ function getWeatherIcon(code: number, isDay: boolean) {
 
 export function WeatherCardBody({
   initialWeather,
-  t,
 }: {
   initialWeather: WeatherData;
-  t: DashboardCardContext["t"];
 }) {
+  const t = useTranslations("weather");
   const [weather, setWeather] = useState<WeatherData>(initialWeather);
   const [locating, setLocating] = useState(false);
   const [, startTransition] = useTransition();
