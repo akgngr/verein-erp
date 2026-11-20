@@ -9,7 +9,7 @@ import type { FileFormatPlugin } from "@/shared/formats/define";
  */
 export function allFormats(): { moduleKey: string; plugin: FileFormatPlugin }[] {
   const seen = new Set<string>();
-  const ordered = [...moduleFormatRegistry].sort((a, b) => (a.moduleKey === "exports" ? -1 : b.moduleKey === "exports" ? 1 : 0));
+  const ordered = moduleFormatRegistry.toSorted((a, b) => (a.moduleKey === "exports" ? -1 : b.moduleKey === "exports" ? 1 : 0));
   const result: { moduleKey: string; plugin: FileFormatPlugin }[] = [];
   for (const entry of ordered) {
     for (const plugin of entry.formats) {

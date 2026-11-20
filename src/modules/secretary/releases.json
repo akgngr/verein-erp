@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.11.2",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Çalışma zamanı modernizasyonu",
+        "de": "Laufzeitmodernisierung"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Sabah özeti öğelerinin önem ve vade sırasına göre dizilmesinde (sortItems) toSorted metodu uygulandı.",
+          "de": "Bei der Sortierung der Elemente der Morgenübersicht nach Dringlichkeit und Fälligkeit (sortItems) wird nun toSorted verwendet."
+        }
+      ]
+    },
+    {
       "version": "0.11.1",
       "date": "2026-11-20",
       "title": {

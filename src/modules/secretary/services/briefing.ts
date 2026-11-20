@@ -56,7 +56,7 @@ export function isHidden(itemId: string, states: readonly ItemState[], now: Date
 }
 
 export function sortItems(items: BriefingItem[]): BriefingItem[] {
-  return [...items].sort((a, b) =>
+  return items.toSorted((a, b) =>
     SEVERITY_ORDER[a.severity] - SEVERITY_ORDER[b.severity]
     || (a.dueAt ?? "9999").localeCompare(b.dueAt ?? "9999")
     || a.id.localeCompare(b.id));
