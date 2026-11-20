@@ -271,6 +271,8 @@ export const AI_TOOL_POLICY = {
   propose_event: {"module": "events", "reads": [], "serverReads": [], "modelFields": ["status", "note"]},
   // exports
   create_file: { module: "exports", reads: [], serverReads: [], modelFields: ["status", "format", "note"] },
+  // finance
+  get_exchange_rates: { module: "finance", reads: [], serverReads: [], modelFields: ["base", "date", "rates"] },
   // inventory
   get_inventory_overview: { module: "inventory", reads: ["InventoryItem"], serverReads: ["InventoryItem"], modelFields: ["totals", "totals.itemCount", "totals.totalQuantity", "totals.inUseQuantity", "totals.brokenQuantity", "byCategory", "byCategory.category", "byCategory.itemCount", "byCategory.totalQuantity"] },
   list_inventory_items: { module: "inventory", reads: ["InventoryItem"], serverReads: ["InventoryItem"], modelFields: ["page", "pageSize", "total", "hasMore", "nextCursor", "completeness", "items", "items.id", "items.name", "items.category", "items.status", "items.quantity", "items.location", "items.purchaseDate", "items.purchasePriceEur"] },
