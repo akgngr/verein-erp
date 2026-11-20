@@ -1,5 +1,5 @@
 ---
-sidebar_position: 33
+sidebar_position: 35
 title: "Takvim"
 description: "Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve son tarihler tek görünümde."
 slug: /kullanim/moduller/calendar
