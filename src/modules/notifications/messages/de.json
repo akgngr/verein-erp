@@ -16,7 +16,8 @@
   },
   "errors": {
     "snoozeRange": "Die Verschiebung muss in der Zukunft liegen und darf höchstens 30 Tage betragen.",
-    "notFound": "Benachrichtigung nicht gefunden."
+    "notFound": "Benachrichtigung nicht gefunden.",
+    "announcementFailed": "Die Mitteilung konnte nicht gesendet werden."
   },
   "automation": {
     "tasks": {
@@ -40,6 +41,12 @@
       "telegramWebhook": "Telegram-Webhook konnte nicht registriert werden; die Anwendungsadresse muss aus dem Internet erreichbar sein.",
       "appUrl": "Die Anwendungsadresse (APP_URL) muss mit https eingerichtet sein.",
       "unavailable": "Dieser Kanal ist derzeit nicht verfügbar (nicht eingerichtet)."
+    }
+  },
+  "notifications": {
+    "announcement": {
+      "title": "Mitteilung: {title}",
+      "body": "{body}"
     }
   }
 }
