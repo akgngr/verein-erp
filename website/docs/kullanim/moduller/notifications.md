@@ -13,7 +13,7 @@ Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.
 |---|---|
 | Anahtar | `notifications` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 0.4.0 |
+| Sürüm | 0.5.0 |
 
 ## Diğer modüllere erişim
 
@@ -34,6 +34,13 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Bildirimler | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme |
 
 ## Sürüm notları
+
+### 0.5.0 — Tarayıcı bildirimleri (Web Push)
+
+_2026-11-20_
+
+- **Yeni:** Yönetici açtığında kullanıcılar bildirimleri tarayıcı/telefon bildirimi olarak da alabilir. Gerekli anahtarlar ilk açılışta otomatik üretilir.
+- **Güvenlik:** Anahtarlar ve abonelik bilgileri şifreli saklanır; yalnız bilinen push servislerine gönderilir; bildirimde yalnız genel metin ve bağlantı vardır. Geçersiz abonelikler otomatik silinir.
 
 ### 0.4.0 — Telegram bildirimleri
 
