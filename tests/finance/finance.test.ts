@@ -7,6 +7,7 @@ import {
   convertCurrency,
 } from "@/modules/finance";
 import { getExchangeRates } from "@/modules/finance/server";
+import { fetchExchangeRatesAction } from "@/modules/finance/actions/rates-actions";
 import { aiRatesTool } from "@/modules/finance/ai";
 
 describe("Finance module tests", () => {
@@ -48,6 +49,25 @@ describe("Finance module tests", () => {
     assert.equal(typeof data.rates.USD, "number");
     assert.equal(typeof data.rates.TRY, "number");
     assert.ok(data.date);
+  });
+
+  it("getExchangeRates sanitizes invalid or path traversal base to DEFAULT_BASE_CURRENCY", async () => {
+    const dataWithTraversal = await getExchangeRates("../../evil");
+    assert.equal(dataWithTraversal.base, "EUR");
+
+    const dataWithUnknown = await getExchangeRates("UNKNOWN");
+    assert.equal(dataWithUnknown.base, "EUR");
+  });
+
+  it("fetchExchangeRatesAction sanitizes untrusted input safely", async () => {
+    const defaultData = await fetchExchangeRatesAction();
+    assert.equal(defaultData.base, "EUR");
+
+    const maliciousData = await fetchExchangeRatesAction("../malicious/path?attack=1");
+    assert.equal(maliciousData.base, "EUR");
+
+    const validData = await fetchExchangeRatesAction("usd");
+    assert.equal(validData.base, "USD");
   });
 
   it("aiRatesTool is properly configured with v2 AI contract", () => {
