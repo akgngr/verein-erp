@@ -14,10 +14,10 @@ export const cards = defineCards([
     defaultVisible: true,
     href: "/finance",
     permission: { definition: financePermissions, action: "view" },
-    render: async ({ t }) => {
+    render: async () => {
       const data = await getExchangeRates("EUR");
       const { FinanceCardBody } = await import("./finance-card-body");
-      return <FinanceCardBody initialRates={data} t={t} />;
+      return <FinanceCardBody initialRates={data} />;
     },
   },
 ]);

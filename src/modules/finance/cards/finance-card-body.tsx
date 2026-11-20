@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 import { ArrowDownRight, ArrowUpRight, Coins } from "lucide-react";
+import { useTranslations } from "next-intl";
 
-import type { DashboardCardContext } from "@/shared/types/dashboard";
 import {
   SUPPORTED_CURRENCIES,
   type RatesData,
@@ -13,11 +13,10 @@ const DISPLAY_CURRENCIES = ["USD", "TRY", "CHF", "GBP"];
 
 export function FinanceCardBody({
   initialRates,
-  t,
 }: {
   initialRates: RatesData;
-  t: DashboardCardContext["t"];
 }) {
+  const t = useTranslations("finance");
   const [rates] = useState<RatesData>(initialRates);
   const [convertAmount, setConvertAmount] = useState<number>(100);
 
