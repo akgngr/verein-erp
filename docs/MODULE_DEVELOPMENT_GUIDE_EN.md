@@ -206,6 +206,8 @@ access: [
 - `pnpm module:validate` scans the code. An undeclared `server` import or direct access to another
   module's table (`getDb().<model>`) is an error. The operation is derived from the function name:
   `delete…`/`remove…` → delete; `create…`, `update…`, `send…`, `…Action` etc. → write; otherwise read.
+- Dynamic (`await import("@/modules/x/server")`), namespace (`import * as`) and re-export (`export … from`) imports count as access too.
+- **Outbound network:** a bare `fetch(` in module code may only target an app-relative path (`"/api/…"`). Calls to external services happen **server-side only** via `channelFetch([allowed hosts], url)` (https, no redirects, timeout). Direct browser requests to third parties are forbidden (they leak the user's IP). Reviewed exceptions live in `RAW_FETCH_ALLOWLIST`.
 - `auth` (session, `createAction`) is infrastructure and needs no declaration.
 - When activating the module, the admin sees the requested access in an approval dialog and allows it.
   Without approval the module is unusable: hidden from the menu, pages and APIs closed (generated
@@ -569,6 +571,10 @@ Before a user is deleted, the system calls every module's `onUserDeleted(userId)
 - `tests/shared/user-deletion.test.ts` enforces this decision and the hook for every such table.
 
 **Internal refactor notes:** `type: internal` remains in the release chain but is hidden from user-facing app and website notes. Module version increments are still required.
+
+## Top-bar action (`header.tsx`)
+
+A module adds a button next to the theme switch with `export const header = defineModuleHeader({ module: "<module>", actions: [{ key, order, render }] })` in `src/modules/<module>/header.tsx` (`@/shared/header/define`). `pnpm module:sync` collects these into `src/header-registry.ts`. Only **usable** modules render actions: the module must be active, its access approved and, if it declares `license`, licensed. `render` runs on the server, does its own permission check and returns `null` to hide. It must not send personal data to the client. Licensed modules (e.g. `help-center`, RFC-002) add their buttons this way.
 
 ## Personal secretary contribution (`secretary.ts`)
 

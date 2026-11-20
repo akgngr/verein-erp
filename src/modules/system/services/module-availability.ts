@@ -1,12 +1,14 @@
 import "server-only";
 
 import { allModules } from "@/registry";
+import { statusHasFeature } from "@/shared/licensing/license";
 import { isAccessApproved } from "@/shared/modules/module-access";
 
+import { getLicenseStatus } from "./license-store";
 import { getAccessRecords } from "./module-access-store";
 import { listActiveModuleKeys } from "./module-state-reader";
 
-export type ModuleAvailability = "available" | "inactive" | "needsApproval";
+export type ModuleAvailability = "available" | "inactive" | "needsApproval" | "unlicensed";
 
 /**
  * Framework-independent module availability checks shared by server pages and background workers.
@@ -16,15 +18,17 @@ export async function getModuleAvailability(key: string): Promise<ModuleAvailabi
   const mod = allModules.find((candidate) => candidate.key === key);
   if (!mod || mod.category === "CORE") return "available";
   if (!(await listActiveModuleKeys([key])).includes(key)) return "inactive";
+  if (mod.license && !statusHasFeature(await getLicenseStatus(), mod.license.feature)) return "unlicensed";
   if (!mod.access?.length) return "available";
   return isAccessApproved(mod, (await getAccessRecords())[key]) ? "available" : "needsApproval";
 }
 
 /** Menü, panel kartları ve worker kontrolleri için kullanılabilir modüller. */
 export async function listUsableModuleKeys(): Promise<string[]> {
-  const [records, activeKeys] = await Promise.all([getAccessRecords(), listActiveModuleKeys(allModules.map((mod) => mod.key))]);
+  const [records, activeKeys, license] = await Promise.all([getAccessRecords(), listActiveModuleKeys(allModules.map((mod) => mod.key)), getLicenseStatus()]);
   const active = new Set(activeKeys);
+  const licensed = (mod: (typeof allModules)[number]) => !mod.license || statusHasFeature(license, mod.license.feature);
   return allModules
-    .filter((mod) => mod.category === "CORE" || (active.has(mod.key) && isAccessApproved(mod, records[mod.key])))
+    .filter((mod) => mod.category === "CORE" || (active.has(mod.key) && isAccessApproved(mod, records[mod.key]) && licensed(mod)))
     .map((mod) => mod.key);
 }

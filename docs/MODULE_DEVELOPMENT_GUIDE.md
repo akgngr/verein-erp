@@ -317,6 +317,8 @@ Ek zorunluluklar:
   yalnız `boolean` iner.
 - Her `access` girdisinin `messages/tr.json` + `de.json` → `access.<modül>` gerekçesi zorunludur.
 - `access` değişince mevcut kurulumlarda yönetici **yeniden onay** verir (imza değişir). Bu bilinçli bir maliyettir.
+- Dinamik (`await import("@/modules/x/server")`), ad alanı (`import * as`) ve yeniden dışa aktarım (`export … from`) da bağdır; `module:validate` bunları da sayar.
+- **Dış ağ isteği:** modül kodunda çıplak `fetch(` yalnız uygulama içi göreli yola (`"/api/…"`) yapılır. Dış hizmete istek **yalnız sunucuda** `channelFetch([izinli hostlar], url)` ile yapılır (https, yönlendirme yok, zaman aşımı). Tarayıcıdan üçüncü tarafa doğrudan istek yasaktır (kullanıcının IP'si sızar). İstisnalar `RAW_FETCH_ALLOWLIST`'te (incelenmiş, sabit host).
 - `auth` altyapıdır, muaftır. Yolu birden çok modülün paylaştığı alanlar (ör. `/ayarlar`) muaftır.
 
 Denetim: `tests/modules/module-boundaries.test.ts` (CI'da `pnpm test`) her modülün kodunu tarar; bildirilmemiş
@@ -849,6 +851,10 @@ Bir modül kendi olaylarını yayımlayabilir; bu olaylar İş akışları düze
 **Düzenleyicide:** Koşul adımı tetikleyicinin olayına göre yalnızca o olayın alanlarını listeler; enum alanlarda değer seçenekli gelir, "Diğer (elle yaz)" ile manuel girilebilir (ipucu `help.<alan>` veya alan türünden gelir).
 
 **Dahili refaktör notları:** `type: internal` sürüm zincirinde kalır; kullanıcı ekranında ve web kataloğunda gösterilmez. Modül sürüm artışı yine zorunludur.
+
+## 9g2. Üst çubuk eylemi (`header.tsx`)
+
+Modül, tema düğmesinin yanına bir düğme eklemek için `src/modules/<modül>/header.tsx` içinde `export const header = defineModuleHeader({ module: "<modül>", actions: [{ key, order, render }] })` tanımlar (`@/shared/header/define`). `pnpm module:sync` bunları `src/header-registry.ts` içinde toplar. Yalnız **kullanılabilir** modüllerin eylemleri çizilir: modül etkin, erişimi onaylı ve `license` istiyorsa lisansı geçerli olmalı. `render` sunucuda çalışır, kendi yetki denetimini yapar ve gösterilmeyecekse `null` döndürür. İstemciye kişisel veri taşımaz. Lisanslı modüller (ör. `help-center`, RFC-002) düğmelerini bu yolla ekler.
 
 ## 9h. Kişisel sekreter katkısı (`secretary.ts`)
 

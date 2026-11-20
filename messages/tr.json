@@ -136,6 +136,7 @@
     "surumNotlari": "Sürüm notları",
     "kurulum": "Kurulum sihirbazı",
     "modulPaketleri": "Modül paketleri",
+    "lisans": "Lisans",
     "tasks": "Görevler",
     "kullanicilar": "Kullanıcılar",
     "weather": "Hava Durumu"
@@ -2131,7 +2132,8 @@
         "status": {
           "inactive": "Modül etkin değil: izin açık olsa da asistan bu modülü kullanamaz.",
           "needsApproval": "Modülün erişim onayı bekliyor: onaylanana kadar asistan bu modülü kullanamaz.",
-          "link": "Modül Yönetimi'ne git"
+          "link": "Modül Yönetimi'ne git",
+          "unlicensed": "Bu modül lisans gerektiriyor (Ayarlar → Lisans)."
         }
       },
       "deleteHistory": "Tüm sohbet geçmişimi sil",
@@ -8724,7 +8726,8 @@
         "write": "yazma",
         "delete": "silme"
       },
-      "accounting": "Kurulum sihirbazı, seçilen kurum türüne göre muhasebe kategorilerini, hesaplarını ve vergi ayarlarını oluşturur."
+      "accounting": "Kurulum sihirbazı, seçilen kurum türüne göre muhasebe kategorilerini, hesaplarını ve vergi ayarlarını oluşturur.",
+      "organization": "Lisans doğrulaması için kurum adı ve sicil/vergi numarası okunur (lisans bu kuruma bağlıdır)."
     },
     "gate": {
       "manage": "Modül yönetimine git",
@@ -8735,6 +8738,10 @@
       "needsApproval": {
         "title": "Bu modül erişim izni bekliyor",
         "description": "Modül başka modüllerin verilerine erişmek istiyor. Yönetici Modül Yönetimi'nden izin verene kadar kullanılamaz."
+      },
+      "unlicensed": {
+        "title": "Bu modül lisans gerektiriyor",
+        "description": "Bu özellik yalnız geçerli bir Enterprise lisansıyla kullanılabilir. Yönetici Ayarlar → Lisans'tan lisans girebilir."
       }
     },
     "releases": {
@@ -8901,6 +8908,50 @@
         "missing": "Gerekli modüller kurulu değil.",
         "required": "Bu modül başka modüllere ihtiyaç duyuyor; Modül Yönetimi'nden etkinleştirin.",
         "dependentsActive": "Bu modüle bağlı modüller açık; Modül Yönetimi'nden birlikte kapatın."
+      }
+    },
+    "license": {
+      "title": "Lisans",
+      "description": "Enterprise özellikleri (ör. yardım merkezi) geçerli bir lisansla açılır. Lisans hem alan adına hem kuruma bağlıdır.",
+      "statusTitle": "Lisans durumu",
+      "state": {
+        "none": "Lisans yok",
+        "valid": "Geçerli",
+        "grace": "Süresi doldu – ek süre",
+        "expired": "Süresi doldu",
+        "mismatch": "Bu kuruluma ait değil",
+        "invalid": "Geçersiz"
+      },
+      "mismatch": {
+        "domain": "Lisanstaki alan adı bu kurulumun adresiyle (APP_URL) eşleşmiyor.",
+        "organisation": "Lisanstaki kurum adı veya sicil numarası Kurum bilgileriyle eşleşmiyor."
+      },
+      "errors": {
+        "format": "Lisans metni okunamadı.",
+        "signature": "Lisans imzası geçersiz.",
+        "issuer": "Lisans tanınmayan bir yayıncı tarafından imzalanmış."
+      },
+      "graceNotice": "Lisansın süresi doldu. Enterprise özellikleri {date} tarihine kadar açık kalır; lütfen lisansı yenileyin.",
+      "fields": {
+        "licenseId": "Lisans no",
+        "tier": "Paket",
+        "organisation": "Kurum",
+        "domain": "Alan adı",
+        "features": "Özellikler",
+        "expiresAt": "Bitiş"
+      },
+      "instance": "Bu kurulum: {domain} · {organisation}",
+      "enterLabel": "Lisans metni",
+      "replaceLabel": "Yeni lisans metni (mevcut lisansın yerine geçer)",
+      "enterHelp": "Size gönderilen lisans dosyasının içeriğini olduğu gibi yapıştırın. Lisans çevrimdışı doğrulanır; hiçbir veri dışarı gönderilmez.",
+      "save": "Lisansı kaydet",
+      "remove": "Lisansı kaldır",
+      "removed": "Lisans kaldırıldı.",
+      "saved": {
+        "valid": "Lisans etkin.",
+        "grace": "Lisans kaydedildi; süresi dolmuş, ek süre işliyor.",
+        "expired": "Lisans kaydedildi ancak süresi dolmuş.",
+        "mismatch": "Lisans kaydedildi ancak bu kuruluma ait değil."
       }
     }
   },
