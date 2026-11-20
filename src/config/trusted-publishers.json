@@ -1,4 +1,10 @@
 {
   "_comment": "Güvenilen modül yayıncıları (Ed25519 public key, PEM). Ekleme/çıkarma yalnızca kod incelemesiyle yapılır; arayüzden güven eklenemez. keyId = pnpm module:keygen çıktısı. official: true olan yayıncı CORE/OFFICIAL modül yayımlayabilir, diğerleri yalnızca EXTENSION.",
-  "publishers": []
+  "publishers": [
+    {
+      "publisher": "verein-erp",
+      "keyId": "e1e6601508e97f5d",
+      "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAR437bRodAwcLE0B38OM3Td8N+drAwKV523UqTbZg6+U=\n-----END PUBLIC KEY-----\n"
+    }
+  ]
 }

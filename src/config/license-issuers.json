@@ -1,4 +1,10 @@
 {
   "_comment": "Lisans yayıncılarının AÇIK anahtarları (Ed25519, PEM). Yalnız kod incelemesiyle değişir. Özel anahtar ASLA bu depoya girmez. Üretim: pnpm license:keygen (bkz. docs/adr/0007-licensing.md).",
-  "issuers": []
+  "issuers": [
+    {
+      "label": "verein-erp",
+      "keyId": "e1e6601508e97f5d",
+      "publicKey": "-----BEGIN PUBLIC KEY-----\nMCowBQYDK2VwAyEAR437bRodAwcLE0B38OM3Td8N+drAwKV523UqTbZg6+U=\n-----END PUBLIC KEY-----\n"
+    }
+  ]
 }
