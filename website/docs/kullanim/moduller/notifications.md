@@ -13,7 +13,7 @@ Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.
 |---|---|
 | Anahtar | `notifications` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 0.4.0 |
+| Sürüm | 0.4.1 |
 
 ## Diğer modüllere erişim
 
@@ -34,6 +34,13 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Bildirimler | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme |
 
 ## Sürüm notları
+
+### 0.4.1 — Bildirim zili ve canlı çekmece
+
+_2026-11-20_
+
+- **Yeni:** Üst menüde bildirim zili, okunmamış rozeti, modül ve okunmamış filtreleri, güvenli bağlantılar, okundu/ertele işlemleri ve sekme görünürken 30 saniyelik güncelleme eklendi.
+- **Güvenlik:** Kayıtlar yalnız yetki denetimli sunucu işlemlerinden gelir; başka kullanıcının bildirimleri gösterilmez.
 
 ### 0.4.0 — Telegram bildirimleri
 

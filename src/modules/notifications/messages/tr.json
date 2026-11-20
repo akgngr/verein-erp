@@ -41,5 +41,18 @@
       "appUrl": "Uygulama adresi (APP_URL) https ile tanımlı olmalı.",
       "unavailable": "Bu kanal şu an kullanılamıyor (yönetici yapılandırmadı)."
     }
+  },
+  "ui": {
+    "open": "Bildirimleri aç",
+    "heading": "Bildirimler",
+    "all": "Tümü",
+    "unread": "Okunmamış",
+    "empty": "Bildirim bulunmuyor.",
+    "markRead": "Okundu olarak işaretle",
+    "markAllRead": "Tümünü okundu işaretle",
+    "snooze": "Yarına ertele",
+    "settings": "Bildirim ayarları",
+    "unavailable": "Bildirimler şu anda yüklenemiyor.",
+    "module": "Modül"
   }
 }
