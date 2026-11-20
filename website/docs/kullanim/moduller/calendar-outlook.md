@@ -1,5 +1,5 @@
 ---
-sidebar_position: 27
+sidebar_position: 28
 title: "Outlook Takvim"
 description: "Microsoft 365 / Outlook takvimini salt okunur bağlar (OAuth; yönetici kendi Azure uygulamasını girer)."
 slug: /kullanim/moduller/calendar-outlook

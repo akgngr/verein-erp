@@ -21,6 +21,7 @@ import { ai as mailingsAi } from "@/modules/mailings/ai";
 import { ai as progressAi } from "@/modules/progress/ai";
 import { ai as studentsAi } from "@/modules/students/ai";
 import { ai as tasksAi } from "@/modules/tasks/ai";
+import { ai as weatherAi } from "@/modules/weather/ai";
 
 /** Modüllerin asistana sunduğu araçlar ve onay eylemleri (src/modules/<modül>/ai.ts). */
 export const moduleAiRegistry: ModuleAi[] = [
@@ -42,4 +43,5 @@ export const moduleAiRegistry: ModuleAi[] = [
   progressAi,
   studentsAi,
   tasksAi,
+  weatherAi,
 ];

@@ -18,6 +18,7 @@
    - Yazma işlemleri her seferinde kullanıcı onayı ve kullanıcının kendi rol yetkisini gerektirir.
 5. **Otomasyonda kimlik yeterlidir.** Olay yükleri (`defineEvent → payloadSchema`) yalnızca kimlik ve sınıflandırma taşır. Ad, e-posta gibi alanlar `variables.load` ile **yalnızca gönderim anında** okunur; kuyruğa, yürütme kaydına ya da loga yazılmaz (`tests/automation/module-events.test.ts` denetler).
 6. **Sırlar hiçbir yere taşınmaz.** Parola, token ve API anahtarları yalnızca sahibi modülün sunucu kodunda, şifreli olarak bulunur; hiçbir API, log, AI aracı ya da dışa aktarma bunları döndürmez.
+7. **Konum verisi (DSGVO Md. 5/6).** Hava durumu (`weather`) ve benzeri özelliklerde kullanıcı konumu yalnızca kullanıcının açık rızası ve eylemiyle (opt-in) istemcide okunur; veritabanında saklanmaz. Dış API'ye (Open-Meteo) gönderilen koordinatlar yaklaşık 1 km hassasiyete (2 ondalık basamak) yuvarlanır; ham koordinatlar loglanmaz.
 
 ## 2. Kategoriler
 

@@ -1,0 +1,20 @@
+{
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler).",
+  "releases": [
+    {
+      "version": "0.1.0",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Hava Durumu Modülü",
+        "de": "Wetter-Modul"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Konum bazlı anlık hava durumu, saatlik/günlük tahminler, şık dashboard kartı, AI aracı ve sekreter etkinlik önerisi entegrasyonu.",
+          "de": "Standortbezogenes Live-Wetter, stündliche/tägliche Vorhersagen, elegantes Dashboard-Widget, KI-Tool und Sekretär-Event-Empfehlungen."
+        }
+      ]
+    }
+  ]
+}
