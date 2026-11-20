@@ -37,6 +37,36 @@
       ]
     },
     {
+      "version": "0.11.5",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Bildirim modülü erişim sözleşmesi",
+        "de": "Zugriffsvertrag für das Benachrichtigungsmodul"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Sekreterin bildirim modülüne mevcut erişimi modül sözleşmesinde açıkça bildirildi.",
+          "de": "Der bestehende Zugriff des Sekretariats auf das Benachrichtigungsmodul wird im Modulvertrag ausdrücklich deklariert."
+        }
+      ]
+    },
+    {
+      "version": "0.11.4",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Takip listesi yeniden deneme",
+        "de": "Erneutes Laden der Nachverfolgungen"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Takip listesi yüklenemediğinde hata ekranından yeniden deneme olanağı eklendi.",
+          "de": "Bei einem Ladefehler der Nachverfolgungsliste kann der Abruf erneut versucht werden."
+        }
+      ]
+    },
+    {
       "version": "0.11.3",
       "date": "2026-11-20",
       "title": {
@@ -413,36 +443,6 @@
           "type": "feature",
           "tr": "Kişisel sekreter modülü eklendi (varsayılan kapalı). Sabah özeti ve öneriler sonraki sürümlerde gelecek.",
           "de": "Modul „Sekretariat“ hinzugefügt (standardmäßig deaktiviert). Morgenübersicht und Vorschläge folgen in späteren Versionen."
-        }
-      ]
-    },
-    {
-      "version": "0.11.5",
-      "date": "2026-11-20",
-      "title": {
-        "tr": "Bildirim modülü erişim sözleşmesi",
-        "de": "Zugriffsvertrag für das Benachrichtigungsmodul"
-      },
-      "changes": [
-        {
-          "type": "fix",
-          "tr": "Sekreterin bildirim modülüne mevcut erişimi modül sözleşmesinde açıkça bildirildi.",
-          "de": "Der bestehende Zugriff des Sekretariats auf das Benachrichtigungsmodul wird im Modulvertrag ausdrücklich deklariert."
-        }
-      ]
-    },
-    {
-      "version": "0.11.4",
-      "date": "2026-11-20",
-      "title": {
-        "tr": "Takip listesi yeniden deneme",
-        "de": "Erneutes Laden der Nachverfolgungen"
-      },
-      "changes": [
-        {
-          "type": "fix",
-          "tr": "Takip listesi yüklenemediğinde hata ekranından yeniden deneme olanağı eklendi.",
-          "de": "Bei einem Ladefehler der Nachverfolgungsliste kann der Abruf erneut versucht werden."
         }
       ]
     }
