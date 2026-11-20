@@ -136,7 +136,8 @@
     "kurulum": "Einrichtungsassistent",
     "modulPaketleri": "Modulpakete",
     "tasks": "Aufgaben",
-    "kullanicilar": "Benutzer"
+    "kullanicilar": "Benutzer",
+    "weather": "Wetter"
   },
   "sidebar": {
     "brand": "Vereinsverwaltung",
@@ -9210,6 +9211,52 @@
         "notCustom": "Nur eigene Rollen können bearbeitet und gelöscht werden.",
         "inUse": "Dieser Rolle sind Benutzer zugewiesen; weisen Sie ihnen zuerst eine andere Rolle zu."
       }
+    }
+  },
+  "weather": {
+    "module": {
+      "label": "Wetter",
+      "description": "Standortbezogenes Live-Wetter, Vorhersagen, Dashboard-Widget und Sekretär-Event-Empfehlungen."
+    },
+    "permissions": {
+      "weather": {
+        "label": "Wetter",
+        "description": "Berechtigung zur Anzeige von Wetterdaten und Vorhersagen."
+      }
+    },
+    "cards": {
+      "current": {
+        "title": "Wetter",
+        "description": "Aktuelles Wetter und Temperaturübersicht.",
+        "myLocation": "Mein Standort",
+        "detectLocation": "Standort ermitteln",
+        "detectLocationTooltip": "Aktuelles Wetter anhand des Browser-Standorts abrufen",
+        "locating": "Wird ermittelt...",
+        "feelsLike": "Gefühlt {temp}°",
+        "humidity": "Luftfeuchtigkeit",
+        "wind": "Wind"
+      }
+    },
+    "title": "Wetter und Vorhersagen",
+    "description": "Aktuelles Wetter und 7-Tage-Vorhersage für den Vereinsstandort und Ihren aktuellen Aufenthaltsort.",
+    "meta": {
+      "title": "Wetter",
+      "description": "Wettervorhersagen und Empfehlungen für die Veranstaltungsplanung."
+    },
+    "myLocation": "Mein Standort",
+    "detectLocation": "Standort ermitteln",
+    "locating": "Standort wird ermittelt...",
+    "searchCityPlaceholder": "Stadt suchen (z. B. Berlin, Frankfurt)...",
+    "feelsLike": "Gefühlt {temp}°",
+    "todayRange": "Min / Max heute",
+    "humidity": "Luftfeuchtigkeit",
+    "windSpeed": "Windgeschwindigkeit",
+    "precipitation": "Niederschlag",
+    "forecastTitle": "7-Tage-Wettervorhersage",
+    "today": "Heute",
+    "secretary": {
+      "dailyForecast": "Heute {temp}°, {cond}.",
+      "outdoorWarning": "Berücksichtigen Sie die Wetterbedingungen für Aktivitäten im Freien oder Termine."
     }
   }
 }

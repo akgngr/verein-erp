@@ -136,7 +136,8 @@
     "kurulum": "Kurulum sihirbazı",
     "modulPaketleri": "Modül paketleri",
     "tasks": "Görevler",
-    "kullanicilar": "Kullanıcılar"
+    "kullanicilar": "Kullanıcılar",
+    "weather": "Hava Durumu"
   },
   "sidebar": {
     "brand": "Dernek Yönetim",
@@ -9210,6 +9211,52 @@
         "notCustom": "Yalnızca özel roller düzenlenip silinebilir.",
         "inUse": "Bu rolü taşıyan kullanıcılar var; önce kullanıcılara başka rol atayın."
       }
+    }
+  },
+  "weather": {
+    "module": {
+      "label": "Hava Durumu",
+      "description": "Anlık konum bazlı hava durumu, tahminler, panel kartı ve sekreter etkinlik önerileri."
+    },
+    "permissions": {
+      "weather": {
+        "label": "Hava Durumu",
+        "description": "Hava durumu verilerini ve tahminlerini görüntüleme izni."
+      }
+    },
+    "cards": {
+      "current": {
+        "title": "Hava Durumu",
+        "description": "Anlık hava durumu ve sıcaklık özeti.",
+        "myLocation": "Konumum",
+        "detectLocation": "Konumumu Bul",
+        "detectLocationTooltip": "Tarayıcı konumunu kullanarak güncel hava durumunu al",
+        "locating": "Aranıyor...",
+        "feelsLike": "Hissedilen {temp}°",
+        "humidity": "Nem",
+        "wind": "Rüzgar"
+      }
+    },
+    "title": "Hava Durumu ve Tahminler",
+    "description": "Dernek merkezi ve güncel konumunuz için anlık hava durumu ve 7 günlük tahminler.",
+    "meta": {
+      "title": "Hava Durumu",
+      "description": "Hava durumu tahminleri ve etkinlik planlama önerileri."
+    },
+    "myLocation": "Konumum",
+    "detectLocation": "Konumumu Bul",
+    "locating": "Konum alınıyor...",
+    "searchCityPlaceholder": "Şehir ara (örn. Berlin, Ankara)...",
+    "feelsLike": "Hissedilen {temp}°",
+    "todayRange": "Günün En Düşük / En Yüksek",
+    "humidity": "Nem Oranı",
+    "windSpeed": "Rüzgar Hızı",
+    "precipitation": "Yağış Miktarı",
+    "forecastTitle": "7 Günlük Hava Tahmini",
+    "today": "Bugün",
+    "secretary": {
+      "dailyForecast": "Bugün hava {temp}°, {cond}.",
+      "outdoorWarning": "Açık alan etkinlikleri veya randevular için hava koşullarını göz önünde bulundurun."
     }
   }
 }

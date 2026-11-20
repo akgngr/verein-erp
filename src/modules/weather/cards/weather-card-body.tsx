@@ -1,0 +1,158 @@
+"use client";
+
+import { useState, useTransition } from "react";
+import {
+  Cloud,
+  CloudFog,
+  CloudLightning,
+  CloudRain,
+  CloudSun,
+  Droplets,
+  MapPin,
+  Navigation,
+  Sun,
+  Wind,
+} from "lucide-react";
+
+import type { DashboardCardContext } from "@/shared/types/dashboard";
+import type { WeatherData } from "../services/weather";
+
+function getWeatherIcon(code: number, isDay: boolean) {
+  if (code === 0 || code === 1) {
+    return isDay ? (
+      <Sun className="size-8 text-amber-500 animate-spin-slow" aria-hidden="true" />
+    ) : (
+      <CloudSun className="size-8 text-indigo-400" aria-hidden="true" />
+    );
+  }
+  if (code === 2 || code === 3) {
+    return <CloudSun className="size-8 text-sky-500" aria-hidden="true" />;
+  }
+  if (code === 45 || code === 48) {
+    return <CloudFog className="size-8 text-slate-400" aria-hidden="true" />;
+  }
+  if ([51, 53, 55, 61, 63, 65, 80, 81, 82].includes(code)) {
+    return <CloudRain className="size-8 text-blue-500" aria-hidden="true" />;
+  }
+  if ([95, 96, 99].includes(code)) {
+    return <CloudLightning className="size-8 text-purple-500" aria-hidden="true" />;
+  }
+  return <Cloud className="size-8 text-slate-400" aria-hidden="true" />;
+}
+
+export function WeatherCardBody({
+  initialWeather,
+  t,
+}: {
+  initialWeather: WeatherData;
+  t: DashboardCardContext["t"];
+}) {
+  const [weather, setWeather] = useState<WeatherData>(initialWeather);
+  const [locating, setLocating] = useState(false);
+  const [, startTransition] = useTransition();
+
+  const handleDetectLocation = () => {
+    if (!navigator.geolocation) return;
+    setLocating(true);
+
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        const { latitude, longitude } = pos.coords;
+        startTransition(async () => {
+          try {
+            const res = await fetch(
+              `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m&timezone=auto`,
+            );
+            if (res.ok) {
+              const data = await res.json();
+              setWeather((prev) => ({
+                ...prev,
+                city: t("cards.current.myLocation"),
+                latitude,
+                longitude,
+                temperature: Math.round(data.current?.temperature_2m ?? prev.temperature),
+                apparentTemperature: Math.round(data.current?.apparent_temperature ?? prev.apparentTemperature),
+                humidity: data.current?.relative_humidity_2m ?? prev.humidity,
+                windSpeed: Math.round(data.current?.wind_speed_10m ?? prev.windSpeed),
+                weatherCode: data.current?.weather_code ?? prev.weatherCode,
+                isDay: data.current?.is_day === 1,
+              }));
+            }
+          } catch {
+            // Sessizce mevcut veriyi koru
+          } finally {
+            setLocating(false);
+          }
+        });
+      },
+      () => {
+        setLocating(false);
+      },
+      { timeout: 8000 },
+    );
+  };
+
+  const isDaytime = weather.isDay;
+
+  return (
+    <div
+      className={`relative overflow-hidden rounded-xl p-4 transition-all duration-300 ${
+        isDaytime
+          ? "bg-gradient-to-br from-sky-500/10 via-amber-500/5 to-transparent border border-sky-500/20"
+          : "bg-gradient-to-br from-indigo-950/40 via-purple-900/20 to-transparent border border-indigo-500/20"
+      }`}
+    >
+      {/* Header bar: City & Geolocation trigger */}
+      <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center gap-1.5 min-w-0 text-sm font-medium text-ink-700 dark:text-ink-200">
+          <MapPin className="size-4 shrink-0 text-sky-500" aria-hidden="true" />
+          <span className="truncate">{weather.city}</span>
+        </div>
+        <button
+          type="button"
+          onClick={handleDetectLocation}
+          disabled={locating}
+          className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-sky-600 dark:text-sky-400 hover:bg-sky-500/10 transition-colors focus-visible:outline-2 focus-visible:outline-sky-500 disabled:opacity-50"
+          title={t("cards.current.detectLocationTooltip")}
+        >
+          <Navigation className={`size-3 ${locating ? "animate-spin" : ""}`} aria-hidden="true" />
+          <span>{locating ? t("cards.current.locating") : t("cards.current.detectLocation")}</span>
+        </button>
+      </div>
+
+      {/* Main weather stats */}
+      <div className="mt-3 flex items-center justify-between">
+        <div className="flex items-baseline gap-2">
+          <span className="text-4xl font-extrabold tracking-tight text-ink-900 dark:text-white">
+            {weather.temperature}°
+          </span>
+          <span className="text-xs font-medium text-ink-500">
+            {t("cards.current.feelsLike", { temp: weather.apparentTemperature })}
+          </span>
+        </div>
+        <div className="flex items-center gap-2">
+          {getWeatherIcon(weather.weatherCode, weather.isDay)}
+        </div>
+      </div>
+
+      {/* Condition label */}
+      <p className="mt-1 text-sm font-medium text-ink-600 dark:text-ink-300">
+        {weather.conditionTextTr}
+      </p>
+
+      {/* Metrics Row */}
+      <div className="mt-4 grid grid-cols-2 gap-2 pt-3 border-t border-ink-100 dark:border-white/10 text-xs text-ink-600 dark:text-ink-400">
+        <div className="flex items-center gap-1.5">
+          <Droplets className="size-3.5 text-blue-500" aria-hidden="true" />
+          <span>{t("cards.current.humidity")}:</span>
+          <span className="font-semibold text-ink-800 dark:text-ink-100">{weather.humidity}%</span>
+        </div>
+        <div className="flex items-center gap-1.5">
+          <Wind className="size-3.5 text-teal-500" aria-hidden="true" />
+          <span>{t("cards.current.wind")}:</span>
+          <span className="font-semibold text-ink-800 dark:text-ink-100">{weather.windSpeed} km/s</span>
+        </div>
+      </div>
+    </div>
+  );
+}

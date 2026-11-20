@@ -262,6 +262,8 @@ export const AI_TOOL_POLICY = {
   propose_delete_document: {"module": "documents", "reads": [], "serverReads": ["Document"], "modelFields": ["status", "note"]},
   // donations
   get_donation_statistics: {"module": "donations", "reads": [], "serverReads": ["Donation"], "modelFields": ["year", "totalEur", "count", "unconfirmedOver300", "confirmationsIssued", "confirmationWarnings"]},
+  // weather
+  get_current_weather: { module: "weather", reads: [], serverReads: [], modelFields: ["city", "temperature", "apparentTemperature", "humidity", "windSpeed", "conditionText", "isAdverse", "todayMin", "todayMax"] },
   // events
   list_upcoming_events: { module: "events", reads: ["Event"], serverReads: ["Event"], modelFields: ["page", "pageSize", "total", "hasMore", "nextCursor", "completeness", "items", "items.title", "items.type", "items.status", "items.start", "items.end", "items.location", "items.registered", "items.capacity"] },
   propose_event: {"module": "events", "reads": [], "serverReads": [], "modelFields": ["status", "note"]},
