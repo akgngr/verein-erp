@@ -852,6 +852,10 @@ Bir modül kendi olaylarını yayımlayabilir; bu olaylar İş akışları düze
 
 **Dahili refaktör notları:** `type: internal` sürüm zincirinde kalır; kullanıcı ekranında ve web kataloğunda gösterilmez. Modül sürüm artışı yine zorunludur.
 
+## 9g2. Üst çubuk eylemi (`header.tsx`)
+
+Modül, tema düğmesinin yanına bir düğme eklemek için `src/modules/<modül>/header.tsx` içinde `export const header = defineModuleHeader({ module: "<modül>", actions: [{ key, order, render }] })` tanımlar (`@/shared/header/define`). `pnpm module:sync` bunları `src/header-registry.ts` içinde toplar. Yalnız **kullanılabilir** modüllerin eylemleri çizilir: modül etkin, erişimi onaylı ve `license` istiyorsa lisansı geçerli olmalı. `render` sunucuda çalışır, kendi yetki denetimini yapar ve gösterilmeyecekse `null` döndürür. İstemciye kişisel veri taşımaz. Lisanslı modüller (ör. `help-center`, RFC-002) düğmelerini bu yolla ekler.
+
 ## 9h. Kişisel sekreter katkısı (`secretary.ts`)
 
 Modül, kullanıcının sabah özetine katkı vermek için `src/modules/<modül>/secretary.ts` dosyasında `export const secretary = defineModuleSecretary({ module: "<modül>", providers: [...] })` tanımlar (`@/shared/secretary/define`). `pnpm module:sync` bu dosyaları `src/secretary-registry.ts` içinde toplar; sekreter modülü başka modülü import etmez.

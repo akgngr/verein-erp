@@ -14,6 +14,7 @@ const RELEASES_FILE = path.join(ROOT_DIR, "src", "module-releases.ts");
 const CALENDAR_FILE = path.join(ROOT_DIR, "src", "calendar-registry.ts");
 const SECRETARY_FILE = path.join(ROOT_DIR, "src", "secretary-registry.ts");
 const NOTIFICATION_FILE = path.join(ROOT_DIR, "src", "notification-registry.ts");
+const HEADER_FILE = path.join(ROOT_DIR, "src", "header-registry.ts");
 const CALENDAR_SYNC_FILE = path.join(ROOT_DIR, "src", "calendar-sync-registry.ts");
 const CAMPAIGN_CHANNEL_FILE = path.join(ROOT_DIR, "src", "campaign-channel-registry.ts");
 const AUTOMATION_FILE = path.join(ROOT_DIR, "src", "automation-registry.ts");
@@ -112,6 +113,7 @@ export const registry: ModuleConfig[] = allModules;
   syncConventionFile(validModules, "channels.ts", "channels", CAMPAIGN_CHANNEL_FILE, "ModuleCampaignChannels", "@/shared/campaigns/channel", "moduleChannelRegistry", "Kampanya gönderim kanalları (src/modules/<modül>/channels.ts).");
   syncConventionFile(validModules, "secretary.ts", "secretary", SECRETARY_FILE, "ModuleSecretary", "@/shared/secretary/define", "moduleSecretaryRegistry", "Kişisel sekretere sabah özeti katkısı veren modüller (src/modules/<modül>/secretary.ts).");
   syncConventionFile(validModules, "notifications.ts", "notifications", NOTIFICATION_FILE, "ModuleNotifications", "@/shared/notifications/define", "moduleNotificationRegistry", "Merkezi bildirim türleri (src/modules/<modül>/notifications.ts, ADR 0006).");
+  syncConventionFile(validModules, "header.tsx", "header", HEADER_FILE, "ModuleHeader", "@/shared/header/define", "moduleHeaderRegistry", "Üst çubuk eylemleri (src/modules/<modül>/header.tsx, RFC-002).");
   syncAutomationTasks(validModules);
 
   return { registered: validModules };
@@ -180,7 +182,7 @@ function syncConventionFile(
   listName: string,
   doc: string,
 ): void {
-  const base = file.replace(/\.ts$/, "");
+  const base = file.replace(/\.tsx?$/, "");
   const withFile = modules.filter((mod) => fs.existsSync(path.join(MODULES_DIR, mod, file)));
   const suffix = exportName.charAt(0).toUpperCase() + exportName.slice(1);
   const toValidVarName = (mod: string) => mod.replace(/-/g, "");

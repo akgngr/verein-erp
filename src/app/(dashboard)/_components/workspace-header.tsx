@@ -5,12 +5,13 @@ import { ChevronRight, LayoutDashboard, Laptop, Moon, Sun } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import type { ReactNode } from "react";
 import { registry } from "@/registry";
 import { useTheme, type Theme } from "@/shared/components/theme-provider";
 import { findActiveModule, moduleHome } from "@/shared/navigation/module-nav";
 
 /** Context and a working appearance switch; destinations remain the existing module navigation. */
-export function WorkspaceHeader({ dateLabel }: { dateLabel: string }) {
+export function WorkspaceHeader({ dateLabel, actions }: { dateLabel: string; actions?: ReactNode }) {
   const pathname = usePathname(),
     searchParams = useSearchParams(),
     t = useTranslations(),
@@ -51,6 +52,8 @@ export function WorkspaceHeader({ dateLabel }: { dateLabel: string }) {
       <div className="flex shrink-0 items-center gap-4">
         <span className="text-[12px] text-ink-500">{dateLabel}</span>
         <span className="h-4 w-px bg-ink-200" aria-hidden />
+        {/* Modül eylemleri (src/modules/<modül>/header.tsx, RFC-002), ör. lisanslı yardım merkezi. */}
+        {actions}
         <ThemeMenu />
       </div>
     </header>
