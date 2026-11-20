@@ -128,7 +128,8 @@
     "typescript": "^5"
   },
   "overrides": {
-    "@internationalized/date": "3.12.4"
+    "@internationalized/date": "3.12.4",
+    "effect": "3.22.4"
   },
   "moduleDependencies": {
     "pdf-lib": [
