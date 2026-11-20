@@ -251,15 +251,39 @@ export function operationFor(name: string): "read" | "write" | "delete" {
   return "read";
 }
 
+function splitImportNames(list: string): string[] {
+  return list
+    .split(",")
+    .map((part) => part.trim())
+    .filter((part) => part && !part.startsWith("type "))
+    .map((part) => part.split(/\s+as\s+|\s*:\s*/)[0].trim());
+}
+
 /** Kaynak dosyalardaki `@/modules/<m>/server` içe aktarımları: hedef modül → kullanılan adlar. */
 export function findServerImports(moduleDir: string, moduleKey: string): Map<string, Set<string>> {
   const found = new Map<string, Set<string>>();
+  // auth: oturum altyapısı (bkz. ACCESS_EXEMPT_MODULES); izin politikasını users'tan döngüsüz yükler.
+  if (ACCESS_EXEMPT_MODULES.has(moduleKey)) return found;
   const walk = (dir: string) => {
     for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
       const fullPath = path.join(dir, entry.name);
       if (entry.isDirectory()) walk(fullPath);
       else if (/\.(ts|tsx)$/.test(entry.name)) {
         const text = fs.readFileSync(fullPath, "utf8");
+        const add = (target: string, names: Iterable<string>) => {
+          if (target === moduleKey || ACCESS_EXEMPT_MODULES.has(target)) return;
+          if (!found.has(target)) found.set(target, new Set());
+          for (const name of names) found.get(target)!.add(name);
+        };
+        // Dinamik içe aktarım: `const { a, b } = await import("@/modules/x/server")`; ad çıkarılamazsa en az okuma sayılır.
+        for (const match of text.matchAll(/(?:\{([^{}]*)\}\s*=\s*await\s+)?import\(\s*["']@\/modules\/([a-z0-9-]+)\/server["']\s*\)/g)) {
+          add(match[2], match[1] ? splitImportNames(match[1]) : ["<dynamic>"]);
+        }
+        // Ad alanı / yeniden dışa aktarım: `import * as x from` ve `export { a } from` / `export * from`.
+        for (const match of text.matchAll(/import\s+\*\s+as\s+\w+\s+from\s+["']@\/modules\/([a-z0-9-]+)\/server["']/g)) add(match[1], ["<namespace>"]);
+        for (const match of text.matchAll(/export\s+(?:\{([^}]*)\}|\*)\s+from\s+["']@\/modules\/([a-z0-9-]+)\/server["']/g)) {
+          add(match[2], match[1] ? splitImportNames(match[1]) : ["<namespace>"]);
+        }
         for (const match of text.matchAll(/import\s+(?:type\s+)?\{([^}]*)\}\s+from\s+["']@\/modules\/([a-z0-9-]+)\/server["']/g)) {
           const target = match[2];
           if (target === moduleKey || ACCESS_EXEMPT_MODULES.has(target) || /^import\s+type/.test(match[0])) continue;
@@ -323,6 +347,46 @@ function findForeignTableAccess(moduleDir: string, moduleKey: string): string[] 
   };
   walk(moduleDir);
   return [...problems];
+}
+
+/**
+ * Dış ağ isteği kuralı (#60): modül kodunda çıplak `fetch(` yalnız uygulamanın kendi adreslerine ("/api/…")
+ * yapılabilir. Dış hizmete giden istek sunucuda `channelFetch` (https + izinli host listesi, yönlendirme yok,
+ * zaman aşımı) ile yapılır; tarayıcıdan üçüncü tarafa doğrudan istek (kullanıcının IP'si sızar) yasaktır.
+ * Liste: incelenmiş, sabit hostlu eski çağrılar (yeni ekleme yapılmaz).
+ */
+export const RAW_FETCH_ALLOWLIST = new Set([
+  "accounting/services/kosit.ts", // yöneticinin girdiği KoSIT doğrulayıcı adresi (zaman aşımı + redirect: error)
+  "banking/services/providers/gocardless.ts", // sabit GoCardless API hostu
+]);
+
+export function findRawFetchCalls(source: string): string[] {
+  const problems: string[] = [];
+  for (const match of source.matchAll(/(^|[^\w.$])fetch\(\s*([^,)]*)/g)) {
+    const arg = match[2].trim();
+    if (/^["'`]\/(?!\/)/.test(arg)) continue; // uygulama içi göreli yol
+    problems.push(arg.slice(0, 60) || "<boş>");
+  }
+  return problems;
+}
+
+function checkOutboundFetch(moduleDir: string, moduleKey: string): string[] {
+  const problems: string[] = [];
+  const walk = (dir: string) => {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const fullPath = path.join(dir, entry.name);
+      if (entry.isDirectory()) walk(fullPath);
+      else if (/\.(ts|tsx)$/.test(entry.name)) {
+        const relative = `${moduleKey}/${path.relative(moduleDir, fullPath).split(path.sep).join("/")}`;
+        if (RAW_FETCH_ALLOWLIST.has(relative)) continue;
+        for (const arg of findRawFetchCalls(fs.readFileSync(fullPath, "utf8"))) {
+          problems.push(`${relative}: çıplak fetch(${arg}) — dış istekler sunucuda channelFetch(izinli hostlar, url) ile yapılmalı; tarayıcıdan yalnız "/api/…" çağrılır.`);
+        }
+      }
+    }
+  };
+  walk(moduleDir);
+  return problems;
 }
 
 function checkModuleAccess(moduleDir: string, moduleKey: string, configText: string, trJson: unknown, deJson: unknown): string[] {
@@ -511,6 +575,7 @@ export function validateModule(moduleKey: string, customModulesDir?: string): Mo
   }
 
   errors.push(...checkModuleReleases(moduleDir));
+  errors.push(...checkOutboundFetch(moduleDir, moduleKey));
   errors.push(...checkModuleRequires(moduleDir, moduleKey));
 
   const uiPath = path.join(moduleDir, "ui.ts");
