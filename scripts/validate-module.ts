@@ -358,7 +358,6 @@ function findForeignTableAccess(moduleDir: string, moduleKey: string): string[] 
 export const RAW_FETCH_ALLOWLIST = new Set([
   "accounting/services/kosit.ts", // yöneticinin girdiği KoSIT doğrulayıcı adresi (zaman aşımı + redirect: error)
   "banking/services/providers/gocardless.ts", // sabit GoCardless API hostu
-  "finance/components/currency-dashboard.tsx", // GEÇİCİ: tarayıcıdan open.er-api.com; sunucuya taşınması #396
   "weather/cards/weather-card-body.tsx", // GEÇİCİ: tarayıcıdan Open-Meteo; sunucuya taşınması #397
   "weather/components/weather-details.tsx", // GEÇİCİ: tarayıcıdan Open-Meteo; sunucuya taşınması #397
 ]);
