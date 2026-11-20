@@ -13,7 +13,7 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 |---|---|
 | Anahtar | `secretary` |
 | Tür | Eklenti |
-| Sürüm | 0.11.0 |
+| Sürüm | 0.11.1 |
 | Sayfalar | `/sekreter` |
 
 ## Diğer modüllere erişim
@@ -37,6 +37,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Sekreter | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — |
 
 ## Sürüm notları
+
+### 0.11.1 — Sekreter çalışma masasında geçerli kayıt sınırı
+
+_2026-11-20_
+
+- **Düzeltme:** Geçersiz veya yetkisiz gösterim kayıtları ilk 100 öğeyi doldurup sonraki geçerli kayıtları gizleyemez; görünüm en fazla 100 doğrulanmış öğe gösterir.
 
 ### 0.11.0 — Dış bildirim kanalları (rızalı)
 
@@ -85,10 +91,4 @@ _2026-11-19_
 
 - **Yeni:** Kullanıcılar kendi özet saatini, sessiz saatlerini ve aktif kanalları değiştirebilir. TR/DE günlük özet e-posta şablonu eklendi.
 
-### 0.6.7 — Sekreter onay kutusu
-
-_2026-11-19_
-
-- **Yeni:** Yetkili önerileri listeleyen onay kutusu eklendi: onayla, reddet, ertele ve izinli kaynakta düzenle bağlantısı; dışa etkili eylemlerde ikinci onay zorunludur.
-
-Daha eski 12 herkese açık sürüm notu.
+Daha eski 13 herkese açık sürüm notu.
