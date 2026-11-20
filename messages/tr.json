@@ -9254,6 +9254,35 @@
     "precipitation": "Yağış Miktarı",
     "forecastTitle": "7 Günlük Hava Tahmini",
     "today": "Bugün",
+    "access": {
+      "organization": "Dernek merkezi konumuna göre hava durumu tahminlerini almak için dernek adres bilgilerini okur."
+    },
+    "conditions": {
+      "0": "Açık ve Güneşli",
+      "1": "Çoğunlukla Açık",
+      "2": "Parçalı Bulutlu",
+      "3": "Bulutlu",
+      "45": "Sisli",
+      "48": "Kırağılı Sis",
+      "51": "Hafif Çisenti",
+      "53": "Çisenti",
+      "55": "Yoğun Çisenti",
+      "61": "Hafif Yağmurlu",
+      "63": "Yağmurlu",
+      "65": "Kuvvetli Yağmur",
+      "71": "Hafif Kar Yağışlı",
+      "73": "Kar Yağışlı",
+      "75": "Yoğun Kar Yağışlı",
+      "80": "Hafif Sağanak",
+      "81": "Sağanak Yağış",
+      "82": "Şiddetli Sağanak",
+      "85": "Kar Sağanağı",
+      "86": "Yoğun Kar Sağanağı",
+      "95": "Gök Gürültülü Fırtına",
+      "96": "Dolu ile Birlikte Fırtına",
+      "99": "Şiddetli Dolu ve Fırtına",
+      "fallback": "Değişken Hava"
+    },
     "secretary": {
       "dailyForecast": "Bugün hava {temp}°, {cond}.",
       "outdoorWarning": "Açık alan etkinlikleri veya randevular için hava koşullarını göz önünde bulundurun."

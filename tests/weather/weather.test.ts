@@ -49,10 +49,16 @@ describe("Weather module tests", () => {
   });
 
   it("secretary provider generates valid weather advisory items", async () => {
+    // Önbelleği ısıt (sıcak patika testi için)
+    await getWeatherData();
+
     const mockContext = {
       user: { id: "test-user-id", role: "ADMIN" as const },
       now: new Date("2026-11-20T10:00:00.000Z"),
       t: (key: string, values?: Record<string, string | number>) => {
+        if (key.startsWith("conditions.")) {
+          return "Güneşli";
+        }
         if (key === "secretary.dailyForecast") {
           return `Bugün hava ${values?.temp}°, ${values?.cond}.`;
         }

@@ -9,9 +9,10 @@ export const moduleConfig: ModuleConfig = {
   version: "0.1.0",
   label: "Hava Durumu",
   description:
-    "Anlık konum bazlı hava durumu, tahminler, panel kartı ve sekreter etkinlik önerileri.",
+    "Anlık konum bazlı hava durumu, tahminler, panel kartı ve sekreter etkinlik önerileri (Dış API: api.open-meteo.com).",
   category: "EXTENSION",
   hasSchema: false,
+  access: [{ module: "organization", operations: ["read"] }],
   nav: [
     {
       href: "/weather",

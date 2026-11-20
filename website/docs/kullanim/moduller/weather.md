@@ -1,13 +1,13 @@
 ---
 sidebar_position: 19
 title: "Hava Durumu"
-description: "Anlık konum bazlı hava durumu, tahminler, panel kartı ve sekreter etkinlik önerileri."
+description: "Anlık konum bazlı hava durumu, tahminler, panel kartı ve sekreter etkinlik önerileri (Dış API: api.open-meteo.com)."
 slug: /kullanim/moduller/weather
 ---
 
 <!-- Bu sayfa scripts/docs/generate-module-docs.ts ile üretilir; elle düzenlemeyin. -->
 
-Anlık konum bazlı hava durumu, tahminler, panel kartı ve sekreter etkinlik önerileri.
+Anlık konum bazlı hava durumu, tahminler, panel kartı ve sekreter etkinlik önerileri (Dış API: api.open-meteo.com).
 
 | | |
 |---|---|
@@ -16,13 +16,21 @@ Anlık konum bazlı hava durumu, tahminler, panel kartı ve sekreter etkinlik ö
 | Sürüm | 0.1.0 |
 | Sayfalar | `/weather` |
 
+## Diğer modüllere erişim
+
+Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yonetim/modul-yonetimi)).
+
+| Modül | İşlem | Gerekçe |
+|---|---|---|
+| [Dernek Bilgileri](./organization) | okuma | Dernek merkezi konumuna göre hava durumu tahminlerini almak için dernek adres bilgilerini okur. |
+
 ## Varsayılan yetkiler
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
 | İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
 |---|---|---|---|---|---|---|---|
-| Hava Durumu | görüntüleme, manage | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme |
+| Hava Durumu | görüntüleme, onay | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme |
 
 ## Asistan araçları
 

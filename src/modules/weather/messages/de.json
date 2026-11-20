@@ -42,6 +42,35 @@
   "precipitation": "Niederschlag",
   "forecastTitle": "7-Tage-Wettervorhersage",
   "today": "Heute",
+  "access": {
+    "organization": "Liest Vereinsadressdaten, um Wettervorhersagen für den Hauptsitz abzurufen."
+  },
+  "conditions": {
+    "0": "Klar und sonnig",
+    "1": "Überwiegend klar",
+    "2": "Teilweise bewölkt",
+    "3": "Bedeckt",
+    "45": "Nebel",
+    "48": "Raureifnebel",
+    "51": "Leichter Nieselregen",
+    "53": "Mäßiger Nieselregen",
+    "55": "Dichter Nieselregen",
+    "61": "Leichter Regen",
+    "63": "Mäßiger Regen",
+    "65": "Starker Regen",
+    "71": "Leichter Schneefall",
+    "73": "Mäßiger Schneefall",
+    "75": "Starker Schneefall",
+    "80": "Leichter Regenschauer",
+    "81": "Mäßiger Regenschauer",
+    "82": "Heftiger Regenschauer",
+    "85": "Schneeschauer",
+    "86": "Starker Schneeschauer",
+    "95": "Gewitter",
+    "96": "Gewitter mit leichtem Hagel",
+    "99": "Gewitter mit starkem Hagel",
+    "fallback": "Wechselhaft"
+  },
   "secretary": {
     "dailyForecast": "Heute {temp}°, {cond}.",
     "outdoorWarning": "Berücksichtigen Sie die Wetterbedingungen für Aktivitäten im Freien oder Termine."

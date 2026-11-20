@@ -1,3 +1,5 @@
+import { channelFetch } from "@/shared/campaigns/channel";
+
 export interface WeatherData {
   city: string;
   latitude: number;
@@ -80,18 +82,65 @@ interface CacheEntry {
 }
 const weatherCache = new Map<string, CacheEntry>();
 
+export const PRESET_CITIES = [
+  { name: "Frankfurt am Main", lat: 50.11, lon: 8.68 },
+  { name: "Berlin", lat: 52.52, lon: 13.41 },
+  { name: "Köln", lat: 50.94, lon: 6.96 },
+  { name: "München", lat: 48.14, lon: 11.58 },
+  { name: "Hamburg", lat: 53.55, lon: 9.99 },
+  { name: "Stuttgart", lat: 48.78, lon: 9.18 },
+  { name: "Düsseldorf", lat: 51.22, lon: 6.78 },
+  { name: "Dortmund", lat: 51.51, lon: 7.47 },
+  { name: "Essen", lat: 51.46, lon: 7.01 },
+  { name: "Leipzig", lat: 51.34, lon: 12.37 },
+  { name: "Bremen", lat: 53.08, lon: 8.81 },
+  { name: "Dresden", lat: 51.05, lon: 13.74 },
+  { name: "Hannover", lat: 52.37, lon: 9.73 },
+  { name: "Nürnberg", lat: 49.45, lon: 11.08 },
+  { name: "Wien", lat: 48.21, lon: 16.37 },
+  { name: "Zürich", lat: 47.38, lon: 8.54 },
+  { name: "İstanbul", lat: 41.01, lon: 28.98 },
+  { name: "Ankara", lat: 39.93, lon: 32.86 },
+] as const;
+
+export function findCityCoordinates(cityName?: string | null): { name: string; lat: number; lon: number } | null {
+  if (!cityName) return null;
+  const normalized = cityName.trim().toLowerCase();
+  const match = PRESET_CITIES.find(
+    (c) => c.name.toLowerCase() === normalized || c.name.toLowerCase().includes(normalized) || normalized.includes(c.name.toLowerCase())
+  );
+  return match ?? null;
+}
+
 export const DEFAULT_COORDINATES = {
   city: "Frankfurt am Main",
-  latitude: 50.1109,
-  longitude: 8.6821,
+  latitude: 50.11,
+  longitude: 8.68,
 };
+
+export function getCachedWeatherData(
+  latitude = DEFAULT_COORDINATES.latitude,
+  longitude = DEFAULT_COORDINATES.longitude,
+): WeatherData | null {
+  const roundedLat = Number(latitude.toFixed(2));
+  const roundedLon = Number(longitude.toFixed(2));
+  const cacheKey = `${roundedLat},${roundedLon}`;
+  const cached = weatherCache.get(cacheKey);
+  const now = Date.now();
+  if (cached && now - cached.timestamp < CACHE_TTL_MS) {
+    return cached.data;
+  }
+  return null;
+}
 
 export async function getWeatherData(
   latitude = DEFAULT_COORDINATES.latitude,
   longitude = DEFAULT_COORDINATES.longitude,
   city = DEFAULT_COORDINATES.city,
 ): Promise<WeatherData> {
-  const cacheKey = `${latitude.toFixed(2)},${longitude.toFixed(2)}`;
+  const roundedLat = Number(latitude.toFixed(2));
+  const roundedLon = Number(longitude.toFixed(2));
+  const cacheKey = `${roundedLat},${roundedLon}`;
   const cached = weatherCache.get(cacheKey);
   const now = Date.now();
 
@@ -100,14 +149,13 @@ export async function getWeatherData(
   }
 
   try {
-    const url = `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto`;
-    const res = await fetch(url, {
+    const url = `https://api.open-meteo.com/v1/forecast?latitude=${roundedLat}&longitude=${roundedLon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto`;
+    const res = await channelFetch(["api.open-meteo.com"], url, {
       headers: { "User-Agent": "Verein-ERP-Weather-Module/1.0" },
-      next: { revalidate: 900 }, // 15 dakika Next.js cache
     });
 
     if (!res.ok) {
-      throw new Error(`Open-Meteo HTTP ${res.status}`);
+      throw new Error("OPEN_METEO_FETCH_ERROR");
     }
 
     const json = (await res.json()) as {

@@ -4,7 +4,7 @@ import { z } from "zod";
 import { defineModuleAiV2, aiToolV2 } from "@/shared/ai/v2";
 import { can } from "@/shared/permissions/define";
 import { weatherPermissions } from "./permissions";
-import { getWeatherData, getConditionInfo, DEFAULT_COORDINATES } from "./services/weather";
+import { getWeatherData, getConditionInfo, DEFAULT_COORDINATES, findCityCoordinates } from "./services/weather";
 
 const WeatherOutputSchema = z
   .object({
@@ -28,8 +28,6 @@ export const aiWeatherTool = aiToolV2({
     "Get current weather conditions and temperature for event and meeting planning.", // i18n-ignore (model-facing tool text)
   input: z
     .object({
-      latitude: z.number().optional(),
-      longitude: z.number().optional(),
       city: z.string().optional(),
     })
     .strict(),
@@ -54,11 +52,20 @@ export const aiWeatherTool = aiToolV2({
   },
   projectForModel: (result) => result,
   run: async (input) => {
-    const lat = input.latitude ?? DEFAULT_COORDINATES.latitude;
-    const lon = input.longitude ?? DEFAULT_COORDINATES.longitude;
-    const city = input.city ?? DEFAULT_COORDINATES.city;
+    let lat = DEFAULT_COORDINATES.latitude;
+    let lon = DEFAULT_COORDINATES.longitude;
+    let cityName = input.city ?? DEFAULT_COORDINATES.city;
 
-    const data = await getWeatherData(lat, lon, city);
+    if (input.city) {
+      const match = findCityCoordinates(input.city);
+      if (match) {
+        lat = match.lat;
+        lon = match.lon;
+        cityName = match.name;
+      }
+    }
+
+    const data = await getWeatherData(lat, lon, cityName);
     const cond = getConditionInfo(data.weatherCode);
 
     return {
