@@ -16,7 +16,8 @@
   },
   "errors": {
     "snoozeRange": "Erteleme süresi gelecekte ve en fazla 30 gün olmalı.",
-    "notFound": "Bildirim bulunamadı."
+    "notFound": "Bildirim bulunamadı.",
+    "announcementFailed": "Duyuru gönderilemedi."
   },
   "automation": {
     "tasks": {
@@ -40,6 +41,12 @@
       "telegramWebhook": "Telegram webhook kaydedilemedi; uygulama adresinin internetten erişilebilir olduğundan emin olun.",
       "appUrl": "Uygulama adresi (APP_URL) https ile tanımlı olmalı.",
       "unavailable": "Bu kanal şu an kullanılamıyor (yönetici yapılandırmadı)."
+    }
+  },
+  "notifications": {
+    "announcement": {
+      "title": "Duyuru: {title}",
+      "body": "{body}"
     }
   }
 }

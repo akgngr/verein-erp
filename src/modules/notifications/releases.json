@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.6.0",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Herkese ve role göre bildirim, kurum duyurusu",
+        "de": "Benachrichtigungen an alle oder nach Rolle, Vereinsmitteilung"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Bildirimler ilgili kişiye, herkesi ilgilendiriyorsa herkese gider: modüller 'herkes' veya 'şu roller' diye kitle seçebilir. Yönetici kurum duyurusu yayımlayabilir (herkese veya seçilen rollere).",
+          "de": "Benachrichtigungen gehen an die betroffene Person oder, wenn alle betroffen sind, an alle: Module können als Zielgruppe 'alle' oder bestimmte Rollen wählen. Die Verwaltung kann Vereinsmitteilungen veröffentlichen (an alle oder ausgewählte Rollen)."
+        },
+        {
+          "type": "security",
+          "tr": "Kitle içinde de herkesin yetkisi ayrı ayrı denetlenir; duyuru içeriği şifreli saklanır ve dış kanallara gitmez (yalnız genel metin ve bağlantı).",
+          "de": "Auch innerhalb der Zielgruppe wird die Berechtigung jeder Person einzeln geprüft; der Mitteilungstext wird verschlüsselt gespeichert und nicht an externe Kanäle gesendet (nur allgemeiner Text und Link)."
+        }
+      ]
+    },
+    {
       "version": "0.5.0",
       "date": "2026-11-20",
       "title": {
