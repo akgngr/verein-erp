@@ -92,3 +92,11 @@ export async function getSettings(userId: string): Promise<NotificationSettingsI
 export async function saveSettings(userId: string, value: NotificationSettingsInput): Promise<void> {
   await getDb().notificationSettings.upsert({ where: { userId }, create: { userId, ...value }, update: value });
 }
+
+/** N6 (#363) geçişi: kullanıcının bu tür/kanal tercihi yoksa oluşturur (varsa dokunmaz). Dönüş: oluşturuldu mu. */
+export async function ensurePreference(userId: string, typeKey: string, channel: NotificationChannel, enabled: boolean): Promise<boolean> {
+  const db = getDb();
+  if (await db.notificationPreference.findUnique({ where: { userId_typeKey_channel: { userId, typeKey, channel } }, select: { id: true } })) return false;
+  await db.notificationPreference.create({ data: { userId, typeKey, channel, enabled } }).catch(() => undefined);
+  return true;
+}

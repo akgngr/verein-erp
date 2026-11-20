@@ -125,3 +125,14 @@ export async function sendTelegram(chatId: string, text: string, call: TelegramT
     return { ok: false };
   }
 }
+
+/**
+ * N6 (#363) geçişi: başka bir modülde doğrulanmış kanal adresini (ör. sekreter rızası) bağ olarak içe alır.
+ * Kullanıcının o kanalda bağı varsa dokunmaz. Adres şifreli, arama hash ile.
+ */
+export async function importVerifiedChannelLink(userId: string, channel: "telegram" | "whatsapp" | "sms", address: string, verifiedAt: Date): Promise<boolean> {
+  const db = getDb();
+  if (await db.notificationChannelLink.findUnique({ where: { userId_channel: { userId, channel } }, select: { id: true } })) return false;
+  await db.notificationChannelLink.create({ data: { userId, channel, addressEnc: sealSecret(ADDRESS_PURPOSE, address), addressHash: sha(address), verifiedAt } }).catch(() => undefined);
+  return true;
+}

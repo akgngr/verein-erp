@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.8.0",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Tür özel dış kanal metni",
+        "de": "Typspezifischer Text für externe Kanäle"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Bildirim türü, dış kanallar için yalnız sayı/tarih içeren kısa bir metin verebilir (ör. günlük özet: '12 kayıt, 2 acil'); yoksa genel metin kullanılır. Sekreter tercihlerinin taşınması için içe alma işlevleri eklendi.",
+          "de": "Eine Benachrichtigungsart kann für externe Kanäle einen kurzen Text nur mit Zahlen/Datum liefern (z. B. Tagesübersicht: '12 Einträge, 2 dringend'); sonst wird ein allgemeiner Text verwendet. Importfunktionen für die Übernahme der Sekretär-Einstellungen hinzugefügt."
+        }
+      ]
+    },
+    {
       "version": "0.7.0",
       "date": "2026-11-20",
       "title": {

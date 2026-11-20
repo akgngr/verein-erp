@@ -8000,6 +8000,10 @@
         "follow_up_reminders": {
           "label": "Takip hatırlatmaları",
           "description": "Süresi gelen takip kayıtlarını sekreter özetinde hatırlatır (günde en çok bir kez; dış mesaj gönderilmez)."
+        },
+        "migrate_notifications": {
+          "label": "Sekreter tercihlerini bildirimlere taşı",
+          "description": "Günlük özet e-posta tercihlerini ve doğrulanmış kanal rızalarını merkezi bildirim sistemine taşır (yalnız eksikleri; günde bir)."
         }
       }
     },
@@ -8137,6 +8141,10 @@
       "proposal": {
         "title": "Onayınızı bekleyen yeni bir sekreter önerisi var",
         "body": "Sekreter sayfasında inceleyin."
+      },
+      "dailyDigest": {
+        "title": "Günlük özet: {total} kayıt ({danger} acil, {warning} dikkat)",
+        "body": "Sekreter sayfasında açın."
       }
     }
   },
