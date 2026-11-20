@@ -13,7 +13,8 @@ Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.
 |---|---|
 | Anahtar | `notifications` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 0.4.0 |
+| Sürüm | 0.4.1 |
+| Sayfalar | `/ayarlar/bildirimler` |
 
 ## Diğer modüllere erişim
 
@@ -34,6 +35,13 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Bildirimler | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme |
 
 ## Sürüm notları
+
+### 0.4.1 — Bildirim tercihleri ve kanal bağlantıları arayüzü
+
+_2026-11-20_
+
+- **Yeni:** Ayarlar > Bildirimler ekranında tür/kanal tercihleri, sessiz saatler, anında/günlük özet ve Telegram hesabı bağlama ile yönetici bot ayarı eklendi.
+- **Güvenlik:** Tercihler yalnız yetki denetimli sunucu eylemleriyle kaydedilir; bot token gizli tutulur ve geri gösterilmez; uygulama içi kanal daima etkin kalır.
 
 ### 0.4.0 — Telegram bildirimleri
 
