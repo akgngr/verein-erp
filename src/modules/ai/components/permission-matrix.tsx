@@ -59,7 +59,7 @@ export type PermissionModule = {
   label: string;
   description: string;
   icon: ReactNode;
-  availability: "available" | "inactive" | "needsApproval";
+  availability: "available" | "inactive" | "needsApproval" | "unlicensed";
 };
 
 type Matrix = Record<string, Operation[]>;
@@ -375,7 +375,7 @@ function ModuleStatus({
   availability,
   detailed = false,
 }: {
-  availability: "inactive" | "needsApproval";
+  availability: "inactive" | "needsApproval" | "unlicensed";
   detailed?: boolean;
 }) {
   const t = useTranslations("ai.settings.matrix.status");

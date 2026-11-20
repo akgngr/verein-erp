@@ -227,7 +227,8 @@
       "status": {
         "inactive": "Modül etkin değil: izin açık olsa da asistan bu modülü kullanamaz.",
         "needsApproval": "Modülün erişim onayı bekliyor: onaylanana kadar asistan bu modülü kullanamaz.",
-        "link": "Modül Yönetimi'ne git"
+        "link": "Modül Yönetimi'ne git",
+        "unlicensed": "Bu modül lisans gerektiriyor (Ayarlar → Lisans)."
       }
     },
     "deleteHistory": "Tüm sohbet geçmişimi sil",
