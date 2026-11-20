@@ -53,8 +53,11 @@ export function safeAdvancedItem(raw: AdvancedSecretaryItem): AdvancedSecretaryI
 }
 
 export function filterAdvancedItems(items: readonly AdvancedSecretaryItem[]): AdvancedSecretaryItem[] {
-  return items.slice(0, 100).flatMap((item) => {
+  const visible: AdvancedSecretaryItem[] = [];
+  for (const item of items) {
     const safe = safeAdvancedItem(item);
-    return safe ? [safe] : [];
-  });
+    if (safe) visible.push(safe);
+    if (visible.length === 100) break;
+  }
+  return visible;
 }
