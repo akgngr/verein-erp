@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.7.0",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Abone görünümü (yönetici)",
+        "de": "Abonnentenübersicht (Verwaltung)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yönetici, hangi kullanıcının hangi bildirim kanalını kullandığını görebilir (e-posta tercihi, Telegram bağı, tarayıcı bildirimi cihaz sayısı) ve gerekirse bir kullanıcının Telegram bağını veya tarayıcı aboneliklerini kaldırabilir.",
+          "de": "Die Verwaltung sieht, welche Nutzer welche Benachrichtigungskanäle verwenden (E-Mail-Einstellung, Telegram-Verbindung, Anzahl Browser-Geräte), und kann bei Bedarf die Telegram-Verbindung oder Browser-Abonnements eines Nutzers entfernen."
+        },
+        {
+          "type": "security",
+          "tr": "Görünümde adres, sohbet kimliği veya cihaz adresi yoktur; her görüntüleme ve kaldırma denetim kaydına yazılır.",
+          "de": "Die Übersicht zeigt keine Adressen, Chat-IDs oder Geräteadressen; jede Ansicht und Entfernung wird protokolliert."
+        }
+      ]
+    },
+    {
       "version": "0.6.0",
       "date": "2026-11-20",
       "title": {

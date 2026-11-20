@@ -13,7 +13,7 @@ Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri.
 |---|---|
 | Anahtar | `users` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.1.9 |
+| Sürüm | 1.1.10 |
 | Sayfalar | `/ayarlar/kullanicilar` |
 
 ## Diğer modüllere erişim
@@ -33,6 +33,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Kullanıcı Hesapları | görüntüleme, oluşturma, düzenleme, silme | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.1.10 — Kullanıcı dizini
+
+_2026-11-20_
+
+- **İyileştirme:** Yönetici ekranları için ad/e-posta ile aranabilen, sayfalı kullanıcı dizini (ör. bildirim aboneleri).
 
 ### 1.1.9 — Bildirim kitlesi
 
@@ -76,10 +82,4 @@ _2026-11-16_
 
 - **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
-### 1.1.1 — AI v2 güvenilirlik ve veri koruma
-
-_2026-11-14_
-
-- **Güvenlik:** Sunucu tarafından doğrulanan AI işlemleri, kapsamlı veri erişimi ve güvenilir yaşam döngüsü kontrolleri güncellendi.
-
-Daha eski 4 herkese açık sürüm notu.
+Daha eski 5 herkese açık sürüm notu.
