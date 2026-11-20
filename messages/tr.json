@@ -7419,7 +7419,8 @@
     },
     "access": {
       "users": "Bildirimin alıcısı etkin mi ve rolü bu bildirimi görmeye yetiyor mu, gönderim ve okuma anında denetlenir.",
-      "system": "Bildirimi üreten modülün açık ve onaylı olup olmadığını okur."
+      "system": "Bildirimi üreten modülün açık ve onaylı olup olmadığını okur.",
+      "mail": "Bildirim e-postalarını mevcut e-posta altyapısıyla gönderir (yalnız genel metin ve uygulama bağlantısı)."
     },
     "errors": {
       "snoozeRange": "Erteleme süresi gelecekte ve en fazla 30 gün olmalı.",
@@ -7430,8 +7431,16 @@
         "purge": {
           "label": "Eski bildirimleri temizle",
           "description": "90 günden eski bildirimleri günde bir siler."
+        },
+        "dispatch": {
+          "label": "Bildirim e-postaları",
+          "description": "Okunmamış bildirimleri tercihlere göre e-postayla iletir (anında veya günlük özet; sessiz saatlere uyar). E-postada yalnız genel metin ve bağlantı vardır."
         }
       }
+    },
+    "validation": {
+      "quietPair": "Sessiz saat için başlangıç ve bitişi birlikte girin.",
+      "quietSame": "Başlangıç ve bitiş aynı olamaz."
     }
   },
   "online-forms": {

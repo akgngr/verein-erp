@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.3.0",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Bildirim tercihleri ve e-posta",
+        "de": "Benachrichtigungseinstellungen und E-Mail"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Her bildirim türü için hangi kanaldan haber almak istediğinizi seçebilirsiniz; sessiz saat ve 'anında' ya da 'günlük özet' seçeneği eklendi. E-posta kanalı çalışıyor.",
+          "de": "Pro Benachrichtigungsart wählbar, über welchen Kanal Sie informiert werden; Ruhezeiten und die Wahl zwischen sofort und täglicher Zusammenfassung hinzugefügt. Der E-Mail-Kanal ist aktiv."
+        },
+        {
+          "type": "security",
+          "tr": "E-postada yalnız genel metin ve uygulama bağlantısı bulunur; ad, başlık veya tutar gitmez. Aynı bildirim ikinci kez e-postalanmaz; okunan bildirim e-postalanmaz.",
+          "de": "Die E-Mail enthält nur einen allgemeinen Text und einen Anwendungslink; keine Namen, Titel oder Beträge. Dieselbe Benachrichtigung wird nicht zweimal gemailt; gelesene Benachrichtigungen werden nicht gemailt."
+        }
+      ]
+    },
+    {
       "version": "0.2.0",
       "date": "2026-11-20",
       "title": {
