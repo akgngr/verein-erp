@@ -1,5 +1,5 @@
 ---
-sidebar_position: 35
+sidebar_position: 36
 title: "Toplu e-posta"
 description: "Üyelere, velilere ve diğer modüllerin alıcı listelerine kişiye özel toplu e-posta."
 slug: /kullanim/moduller/mailings

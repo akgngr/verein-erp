@@ -1,5 +1,5 @@
 ---
-sidebar_position: 29
+sidebar_position: 30
 title: "Sekreter"
 description: "Kişisel sekreter: sabah özeti ve onaylı öneriler."
 slug: /kullanim/moduller/secretary
@@ -13,7 +13,7 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 |---|---|
 | Anahtar | `secretary` |
 | Tür | Eklenti |
-| Sürüm | 0.11.0 |
+| Sürüm | 0.12.0 |
 | Sayfalar | `/sekreter` |
 
 ## Diğer modüllere erişim
@@ -22,6 +22,7 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 | Modül | İşlem | Gerekçe |
 |---|---|---|
+| [Bildirimler](./notifications) | yazma | Yeni öneri oluştuğunda kullanıcıya (içeriksiz) bildirim gönderir. |
 | [Modül Yönetimi](./system) | okuma | Hangi modüllerin açık ve onaylı olduğunu okur; özet yalnız bunların katkılarını gösterir. |
 | [Kullanıcılar](./users) | okuma | Günlük özeti yalnız etkin ve sekreter yetkisi olan kullanıcılar için hazırlamak üzere kullanıcının durumunu ve rolünü okur. |
 | [E-posta Altyapısı](./mail) | yazma | Günlük özet e-postasını göndermek için mevcut e-posta altyapısını kullanır (yalnız tercihinde e-posta seçen kullanıcıya, yalnız toplam sayılar). |
@@ -37,6 +38,31 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Sekreter | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — |
 
 ## Sürüm notları
+
+### 0.12.0 — Günlük özet bildirim sistemiyle
+
+_2026-11-20_
+
+- **İyileştirme:** Günlük özet artık merkezi bildirim sistemiyle teslim edilir: zildeki kutuda görünür; e-posta, Telegram ve tarayıcı bildirimi seçimi Bildirim tercihlerinden yapılır. Önceki e-posta seçimi ve doğrulanmış kanal rızaları otomatik taşınır.
+- **Güvenlik:** Dış kanallara yalnız sayılar ve tarih gider; kişi adı, başlık veya tutar gitmez.
+
+### 0.11.3 — Merkezi bildirimler
+
+_2026-11-20_
+
+- **Yeni:** Onay bekleyen yeni sekreter önerileri bildirim olarak görünür (içerik yok).
+
+### 0.11.2 — Çalışma zamanı modernizasyonu
+
+_2026-11-20_
+
+- **İyileştirme:** Sabah özeti öğelerinin önem ve vade sırasına göre dizilmesinde (sortItems) toSorted metodu uygulandı.
+
+### 0.11.1 — Sekreter çalışma masasında geçerli kayıt sınırı
+
+_2026-11-20_
+
+- **Düzeltme:** Geçersiz veya yetkisiz gösterim kayıtları ilk 100 öğeyi doldurup sonraki geçerli kayıtları gizleyemez; görünüm en fazla 100 doğrulanmış öğe gösterir.
 
 ### 0.11.0 — Dış bildirim kanalları (rızalı)
 
@@ -67,28 +93,4 @@ _2026-11-19_
 - **Yeni:** Takip duraklatılabilir, devam ettirilebilir, iptal edilebilir veya tamamlandı olarak işaretlenebilir. Kaynak kayıt değiştirilmez, kimseye mesaj gönderilmez.
 - **Güvenlik:** Takip başlığı şifreli saklanır ve yalnız sahibine görünür; yetkisi kalkan veya pasif kullanıcının takipleri otomatik duraklatılır.
 
-### 0.6.10 — Gelişmiş Sekreter çalışma masası UI sözleşmesi
-
-_2026-11-19_
-
-- **İyileştirme:** S4–S5 posta, takip, rapor, OCR, kanal izni ve vekil işlemleri için yetki süzülmüş veriyle kullanılacak, güvenli bağlantılı, iki dilli ve salt okunur çalışma masası bileşeni hazırlandı. Gerçek işlem yetenekleri #313–#317 kapsamında bağlanacaktır.
-
-### 0.6.9 — Günlük özet e-postası yeni şablonla
-
-_2026-11-19_
-
-- **İyileştirme:** Günlük özet e-postası artık yeni şablonla (HTML ve düz metin) gönderilir: yalnız toplam sayılar ve uygulamaya güvenli bağlantı, kişisel veri yok.
-
-### 0.6.8 — Sekreter tercih ekranı
-
-_2026-11-19_
-
-- **Yeni:** Kullanıcılar kendi özet saatini, sessiz saatlerini ve aktif kanalları değiştirebilir. TR/DE günlük özet e-posta şablonu eklendi.
-
-### 0.6.7 — Sekreter onay kutusu
-
-_2026-11-19_
-
-- **Yeni:** Yetkili önerileri listeleyen onay kutusu eklendi: onayla, reddet, ertele ve izinli kaynakta düzenle bağlantısı; dışa etkili eylemlerde ikinci onay zorunludur.
-
-Daha eski 12 herkese açık sürüm notu.
+Daha eski 16 herkese açık sürüm notu.

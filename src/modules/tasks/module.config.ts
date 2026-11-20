@@ -11,13 +11,14 @@ import { tasksPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "tasks",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.3.10",
+  version: "1.3.11",
   label: "Görevler",
   description: "Görev ve iş takibi yönetimi.",
   category: "EXTENSION",
   hasSchema: true,
   // Başka modüllerden istenen erişim (yönetici onayı gerekir; gerekçe: messages → access.<modül>).
   access: [
+    { module: "notifications", operations: ["write"] }, // N1c: merkezi bildirim (ADR 0006)
     { module: "members", operations: ["read"] },
     { module: "meetings", operations: ["read"] },
     { module: "users", operations: ["read"] },

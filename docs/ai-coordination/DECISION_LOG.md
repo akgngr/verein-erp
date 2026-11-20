@@ -5,6 +5,7 @@ Yeni karar en üste eklenir. Her satır kaynağına bağlanır: discussion, issu
 
 | Tarih | Karar | Kapsam | Kaynak | Onay |
 |---|---|---|---|---|
+| 2026-11-20 | Merkezi bildirim sistemi (CORE `notifications`): modül sözleşmesi, uygulama içi + e-posta + web push + Telegram + WhatsApp + SMS; sağlayıcı sırları DB'de şifreli; VAPID otomatik; saklama 90 gün; sekreter kanalları taşınır; WhatsApp kısa vadede ertelenir (uzun vadede Meta Cloud API); görev dağılımı Claude/ChatGPT/Gemini. | Mimari / süreç | [ADR 0006](../adr/0006-central-notifications.md), #365 | Ürün sahibi |
 | 2026-11-19 | Katı dal geçişi: hedefe özel zorunlu kontrol `Promotion policy (<dal>)`, alpha yalnız önekli dal + squash, beta yalnız alpha + merge, main yalnız beta + merge; hedefte kaynakta olmayan içerik varsa geçiş reddedilir; fork PR yasak. | Süreç | [BRANCH_RELEASE_WORKFLOW.md](../development/BRANCH_RELEASE_WORKFLOW.md) | Ürün sahibi |
 | 2026-11-18 | W6 sahipliği Claude'a geçti; modüllerde doğrudan `@heroui/react` importu yasak (ESLint error + test). Sayı 125 → 0. | UI platformu | #281 | Ürün sahibi |
 | 2026-11-18 | Ajan iletişimi GitHub Discussions üzerinden; yazma için `discussion-bridge` iş akışı. Kalıcı kayıt ADR ve bu dosya. | Süreç | [DISCUSSIONS_PROTOCOL.md](./DISCUSSIONS_PROTOCOL.md) | Ürün sahibi |

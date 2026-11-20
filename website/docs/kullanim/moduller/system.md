@@ -1,5 +1,5 @@
 ---
-sidebar_position: 22
+sidebar_position: 23
 title: "Modül Yönetimi"
 description: "Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi."
 slug: /kullanim/moduller/system
@@ -13,7 +13,7 @@ Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.
 |---|---|
 | Anahtar | `system` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.12.7 |
+| Sürüm | 1.12.8 |
 | Sayfalar | `/ayarlar`, `/ayarlar/moduller`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/surum-notlari` |
 
 ## Diğer modüllere erişim
@@ -34,6 +34,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Modül Yönetimi | görüntüleme, düzenleme, silme | görüntüleme | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.12.8 — Çalışma zamanı modernizasyonu
+
+_2026-11-20_
+
+- **İyileştirme:** Modül kapatma eyleminde (toggleModuleAction) basamaklı bağımlı dizilimi toReversed ile yenilendi.
 
 ### 1.12.7 — Panel sağ sütunu
 
@@ -77,12 +83,4 @@ _2026-11-17_
 
 - **İyileştirme:** Sayfa başlıkları, form yüzeyleri ve panel kartları ortak motion tokenlarıyla hafif giriş, hover ve focus geçişleri kullanır. Reduced-motion tercihi korunur.
 
-### 1.11.2 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Uygulamanın tüm ekranları HeroUI 3.2.7 bileşenlerine geçirildi. Formlar, tarih seçiciler, çoklu seçimler, tablolar, sekmeler, iletişim kutuları ve bildirimler ortak tasarım sistemini kullanır.
-- **İyileştirme:** Çalışma alanı doğal açık yüzeyler, grafit gezinme ve ölçülü yeşil vurgularla yenilendi. Açık/koyu/sistem teması ve mobil gezinme korunur; bileşen renkleri her iki temaya uyarlanır.
-- **İyileştirme:** Eski HeroUI v2 bağımlılıkları, geçici paket adları ve tema eklentisi kaldırıldı. Türkçe/Almanca tarih yerelleştirmesi, klavye gezinmesi, form doğrulama mesajları ve yerelleştirilmiş kopyalama bildirimleri yeni bileşenlerle bütünleştirildi.
-
-Daha eski 16 herkese açık sürüm notu.
+Daha eski 17 herkese açık sürüm notu.

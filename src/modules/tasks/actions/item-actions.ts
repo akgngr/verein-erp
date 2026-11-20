@@ -7,6 +7,7 @@ import type { ActionResult } from "@/shared/types/action";
 import { buildUserLabel } from "@/shared/utils";
 import { emitAutomationEvent } from "@/shared/automation/emit";
 import { taskCreatedEvent } from "../automation";
+import { notifyTaskAssignee } from "../services/notify-assignee";
 
 import { tasksPermissions } from "../permissions";
 import {
@@ -53,6 +54,7 @@ export async function createTaskAction(input: unknown): Promise<ActionResult<{ i
         },
       });
       await emitAutomationEvent(taskCreatedEvent, { taskId: created.id, priority: created.priority, hasDueDate: created.dueDate !== null }).catch(() => false);
+      await notifyTaskAssignee(created, user.id);
 
       await audit({
         action: "CREATE",
@@ -127,6 +129,7 @@ export async function updateTaskAction(input: unknown): Promise<ActionResult<{ i
           completedByLabel,
         },
       });
+      if (updated.memberId && updated.memberId !== existing.memberId) await notifyTaskAssignee(updated, user.id);
 
       await audit({
         action: "UPDATE",

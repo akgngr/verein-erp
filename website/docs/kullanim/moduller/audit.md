@@ -1,5 +1,5 @@
 ---
-sidebar_position: 7
+sidebar_position: 8
 title: "Denetim Kayıtları"
 description: "Sistem işlemlerinin değiştirilemez güvenlik ve denetim logları."
 slug: /kullanim/moduller/audit

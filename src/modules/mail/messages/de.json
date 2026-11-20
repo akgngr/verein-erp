@@ -137,7 +137,8 @@
     "accounting": "Übernimmt Rechnungs-/Belegdateien aus eingehenden E-Mails in den Belegeingang der Buchhaltung.",
     "system": "Liest, ob das Buchhaltungsmodul aktiv ist (Übernahme nur dann möglich).",
     "tasks": "Legt aus einem bestätigten Sekretär-Vorschlag „Aufgabenentwurf“ eine Aufgabe an (nur mit Zustimmung des Nutzers).",
-    "users": "Liest den Namen des Nutzers für das Feld „erstellt von“ der Aufgabe."
+    "users": "Liest den Namen des Nutzers für das Feld „erstellt von“ der Aufgabe.",
+    "notifications": "Benachrichtigt Nutzer mit Einwilligung über neue E-Mails (ohne Absender und Betreff)."
   },
   "inbox": {
     "title": "Posteingang",
@@ -262,5 +263,11 @@
     "replyDraftProposalDetail": "Es wird nur ein leerer Entwurf angelegt. Den Text schreiben Sie; gesendet wird erst, wenn Sie zusätzlich „Senden“ wählen.",
     "taskDraftProposal": "Aufgabe zu dieser E-Mail anlegen",
     "taskDraftProposalDetail": "Eine offene Aufgabe mit dem Betreff wird angelegt; ohne Zuweisung und Termin, niemand wird benachrichtigt."
+  },
+  "notifications": {
+    "triage": {
+      "title": "Neue E-Mail im Posteingang mit möglichem Vorschlag",
+      "body": "Posteingang öffnen."
+    }
   }
 }

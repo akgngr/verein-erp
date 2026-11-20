@@ -73,3 +73,16 @@ export const weeklyReportTask = defineTask({
     }
   },
 });
+
+/** N6 (#363): sekreter kanal tercihlerini merkezi bildirim sistemine taşır (idempotent; günde bir). */
+export const migrateNotificationsTask = defineTask({
+  key: "secretary.migrate_notifications",
+  version: 1,
+  description: "secretary.migrate_notifications",
+  inputSchema: z.object({}).strict(),
+  timeoutSeconds: 300,
+  retry: { maxAttempts: 2, initialDelaySeconds: 60, maxDelaySeconds: 300, backoffMultiplier: 2 },
+  schedule: { input: () => ({}), minIntervalMinutes: 60, automaticIntervalMinutes: 24 * 60 },
+  idempotencyKey: () => `secretary:migrate-notifications:${new Date().toISOString().slice(0, 10)}`,
+  handler: async () => (await import("./services/notification-migration")).migrateSecretaryToNotifications(),
+});
