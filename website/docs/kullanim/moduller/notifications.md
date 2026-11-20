@@ -13,7 +13,7 @@ Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.
 |---|---|
 | Anahtar | `notifications` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 0.8.0 |
+| Sürüm | 0.9.0 |
 
 ## Diğer modüllere erişim
 
@@ -34,6 +34,14 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Bildirimler | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme |
 
 ## Sürüm notları
+
+### 0.9.0 — SMS kanalı ve iş akışında bildirim
+
+_2026-11-20_
+
+- **Yeni:** Yönetici isterse SMS kanalını (seven.io veya Twilio) açabilir; kullanıcı numarasını kodla doğrular. Varsayılan kapalıdır.
+- **Yeni:** Otomasyonlarda yeni adım: 'Bildirim gönder' — herkese veya seçilen rollere kurum içi bildirim.
+- **Güvenlik:** SMS anahtarı veritabanında şifreli, numara şifreli; doğrulama kodu yalnız hash, 15 dakika, sınırlı deneme. SMS'e yalnız genel metin ve bağlantı gider.
 
 ### 0.8.0 — Tür özel dış kanal metni
 
@@ -83,9 +91,4 @@ _2026-11-20_
 - **Yeni:** Modüller bildirim gönderebilir; her alıcının yetkisi gönderimde ve okumada yeniden denetlenir, aynı olay için ikinci bildirim oluşmaz. Okundu, tümünü okundu, ertele ve kapat işlemleri eklendi.
 - **Güvenlik:** Bildirimler 90 gün sonra otomatik silinir.
 
-### 0.1.0 — Merkezi bildirim altyapısı
-
-_2026-11-20_
-
-- **Yeni:** Modüllerin bildirim türlerini tanımladığı ortak sözleşme ve bildirim tabloları eklendi. Görünür değişiklik sonraki sürümlerde gelir.
-- **Güvenlik:** Bildirim içerikleri şifreli saklanır; sağlayıcı sırları veritabanında şifreli tutulur ve geri gösterilmez; kullanıcı silinince bildirimleri de silinir.
+Daha eski 1 herkese açık sürüm notu.

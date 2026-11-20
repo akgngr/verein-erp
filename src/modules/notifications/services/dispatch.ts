@@ -44,6 +44,8 @@ export type DispatchDeps = {
   locale: "tr" | "de";
   /** N3a (#359): Web Push (yapılandırılmamışsa yok sayılır). */
   webPush?: { isAvailable: () => Promise<boolean>; send: (userId: string, message: { title: string; body: string; url: string }) => Promise<{ ok: boolean } | null> };
+  /** N6b (#363): SMS (varsayılan kapalı; yapılandırılmamışsa yok sayılır). */
+  sms?: { isAvailable: () => Promise<boolean>; send: (userId: string, text: string) => Promise<{ ok: boolean; providerId?: string } | null> };
   /** N4 (#361): Telegram (yapılandırılmamışsa yok sayılır). */
   telegram?: { isAvailable: () => Promise<boolean>; chatFor: (userId: string) => Promise<string | null>; send: (chatId: string, text: string) => Promise<{ ok: boolean; providerId?: string }> };
 };
@@ -118,6 +120,13 @@ export async function runDispatch(now: Date, deps: DispatchDeps): Promise<Dispat
     senders.set("web_push", async (user, count, link, _reference, text) => {
       const message = messageFor(deps.locale, count, link, text);
       return webPush.send(user.id, { title: message.subject, body: message.subject, url: link }).catch(() => ({ ok: false }));
+    });
+  }
+  const sms = deps.sms;
+  if (sms && (await sms.isAvailable().catch(() => false))) {
+    senders.set("sms", async (user, count, link, _reference, text) => {
+      const message = messageFor(deps.locale, count, link, text);
+      return sms.send(user.id, `${message.subject}\n${link}`).catch(() => ({ ok: false }));
     });
   }
   if (!senders.size) return result;
@@ -221,6 +230,10 @@ export async function defaultDispatchDeps(): Promise<DispatchDeps> {
     },
     appUrl: env.APP_URL,
     locale: env.DOCUMENT_LANGUAGE,
+    sms: {
+      isAvailable: async () => (await import("./sms")).smsAvailable(),
+      send: async (userId, text) => (await import("./sms")).sendSms(userId, text),
+    },
     webPush: {
       isAvailable: async () => Boolean(await (await import("./web-push")).publicKey()),
       send: async (userId, message) => (await import("./web-push")).sendPush(userId, message),

@@ -7436,6 +7436,19 @@
         "dispatch": {
           "label": "Bildirim e-postaları",
           "description": "Okunmamış bildirimleri tercihlere göre e-postayla iletir (anında veya günlük özet; sessiz saatlere uyar). E-postada yalnız genel metin ve bağlantı vardır."
+        },
+        "send": {
+          "label": "Bildirim gönder (kişilere)",
+          "description": "Kurum içi bildirim gönderir: herkese veya seçilen rollere. Bildirim zilde görünür; kişilerin seçtiği kanallara (e-posta, Telegram…) yalnız genel metin gider.",
+          "fields": {
+            "title": "Başlık",
+            "body": "Metin",
+            "roles": "Roller (boş = herkes)"
+          },
+          "help": {
+            "body": "Metne '{{member.fullName}}' gibi alanlar eklenebilir; yalnız gönderim anında doldurulur.",
+            "roles": "Örn. BOARD, TREASURER. Boş bırakılırsa bildirimi görebilen herkese gider."
+          }
         }
       }
     },
@@ -7448,7 +7461,13 @@
         "telegramToken": "Bot token geçersiz veya Telegram doğrulamadı.",
         "telegramWebhook": "Telegram webhook kaydedilemedi; uygulama adresinin internetten erişilebilir olduğundan emin olun.",
         "appUrl": "Uygulama adresi (APP_URL) https ile tanımlı olmalı.",
-        "unavailable": "Bu kanal şu an kullanılamıyor (yönetici yapılandırmadı)."
+        "unavailable": "Bu kanal şu an kullanılamıyor (yönetici yapılandırmadı).",
+        "smsProvider": "SMS sağlayıcısı veya anahtarı eksik/geçersiz (Twilio için Account SID gerekir).",
+        "phoneInvalid": "Telefon numarası geçersiz.",
+        "rateLimited": "Bugün için doğrulama kodu sınırına ulaşıldı.",
+        "sendFailed": "Doğrulama kodu gönderilemedi.",
+        "codeExpired": "Kodun süresi doldu veya deneme hakkı bitti; yeniden isteyin.",
+        "codeInvalid": "Kod hatalı."
       }
     },
     "notifications": {
