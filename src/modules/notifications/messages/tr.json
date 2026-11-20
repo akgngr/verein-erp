@@ -41,5 +41,33 @@
       "appUrl": "Uygulama adresi (APP_URL) https ile tanımlı olmalı.",
       "unavailable": "Bu kanal şu an kullanılamıyor (yönetici yapılandırmadı)."
     }
+  },
+  "ui": {
+    "preferencesTitle": "Bildirim tercihleri",
+    "preferencesTable": "Bildirim türü ve kanal tercihleri",
+    "settingsTitle": "Saatler ve özet",
+    "type": "Bildirim türü",
+    "inApp": "Uygulama içi (her zaman açık)",
+    "loading": "Bildirim tercihleri yükleniyor…",
+    "unavailable": "Bildirim tercihleri şu anda yüklenemiyor.",
+    "preferencesError": "Bildirim tercihleri kaydedilemedi.",
+    "preferencesSaved": "Bildirim tercihleri kaydedildi.",
+    "emptyTypes": "Henüz ayarlanabilecek bir bildirim türü yok.",
+    "quietFrom": "Sessiz saat başlangıcı",
+    "quietTo": "Sessiz saat bitişi",
+    "digestMode": "Bildirim sıklığı",
+    "digest": {
+      "instant": "Anında",
+      "daily": "Günlük özet"
+    },
+    "digestTime": "Günlük özet saati",
+    "save": "Tercihleri kaydet",
+    "channel": {
+      "email": "E-posta",
+      "web_push": "Web Push",
+      "telegram": "Telegram",
+      "whatsapp": "WhatsApp",
+      "sms": "SMS"
+    }
   }
 }
