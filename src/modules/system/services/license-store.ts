@@ -56,7 +56,7 @@ export async function saveLicense(text: string): Promise<LicenseStatus> {
   if (status.state === "invalid" || status.state === "none") return status;
   await getDb().systemSetting.upsert({
     where: { key: KEY },
-    create: { key: KEY, value: text.trim(), description: "license (RFC-002)" },
+    create: { key: KEY, value: text.trim(), description: "license" },
     update: { value: text.trim() },
   });
   clearLicenseCache();
