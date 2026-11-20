@@ -2,6 +2,36 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.5.0",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Sekreter: gelen posta sınıflaması ve taslaklar",
+        "de": "Sekretär: Posteingangs-Einordnung und Entwürfe"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yönetici açarsa gelen e-postalar yalnız konu satırı ve ek türüne göre yerel kurallarla sınıflanır (fatura, toplantı, üyelik, bağış, soru). Gövde okunmaz, harici yapay zekâya veri gitmez.",
+          "de": "Wenn die Verwaltung es aktiviert, werden eingehende E-Mails nur anhand von Betreff und Anhangtyp lokal eingeordnet (Rechnung, Sitzung, Mitgliedschaft, Spende, Frage). Der Inhalt wird nicht gelesen, nichts geht an externe KI."
+        },
+        {
+          "type": "feature",
+          "tr": "Rıza veren kullanıcıya sekreter yanıt taslağı veya görev önerir. Taslak boş açılır; e-posta yalnız metni yazıp ayrıca \"Gönder\" dediğinizde gider.",
+          "de": "Nutzern mit Einwilligung schlägt der Sekretär Antwortentwürfe oder Aufgaben vor. Der Entwurf ist leer; gesendet wird nur, wenn Sie den Text schreiben und zusätzlich „Senden“ wählen."
+        },
+        {
+          "type": "feature",
+          "tr": "Otomasyonlar için yeni olay: \"Gelen kutusuna e-posta geldiğinde\" (yalnız kimlik, kaynak, ek sayısı ve sınıf).",
+          "de": "Neues Automationsereignis „Wenn eine E-Mail im Posteingang eingeht“ (nur ID, Quelle, Anzahl Anhänge und Kategorie)."
+        },
+        {
+          "type": "security",
+          "tr": "Taslak metni şifreli saklanır, gönderimden sonra silinir; rıza geri alınınca açık taslaklar da silinir.",
+          "de": "Entwurfstexte werden verschlüsselt gespeichert und nach dem Senden gelöscht; beim Widerruf der Einwilligung werden offene Entwürfe ebenfalls gelöscht."
+        }
+      ]
+    },
+    {
       "version": "1.4.5",
       "date": "2026-11-19",
       "title": {

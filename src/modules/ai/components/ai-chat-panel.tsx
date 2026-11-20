@@ -39,6 +39,7 @@ import { cn } from "@/shared/utils";
 
 import { AiExportJob } from "./export-job";
 import { groupConversations, type HistoryGroup } from "../lib/history-groups";
+import { shouldSubmitOnEnter } from "../lib/ime";
 import { acceptAiConsentAction } from "../actions/consent-actions";
 import { executeAiProposalAction } from "../actions/execute-proposal";
 import {
@@ -187,6 +188,8 @@ function MessageBody({ text }: { text: string }) {
     </div>
   );
 }
+
+export { isImeCompositionActive, shouldSubmitOnEnter } from "../lib/ime";
 
 /**
  * Sağ panel sohbet alanı: içerikten bağımsız kayan sütun; genişliği sürüklenerek ayarlanır, açık
@@ -882,7 +885,7 @@ export function AiChatPanel({
                     onBlur={() => setComposerFocused(false)}
                     onTransitionEnd={(event) => autoGrow(event.currentTarget)}
                     onKeyDown={(event) => {
-                      if (event.key === "Enter" && !event.shiftKey) {
+                      if (shouldSubmitOnEnter(event)) {
                         event.preventDefault();
                         void send();
                       }

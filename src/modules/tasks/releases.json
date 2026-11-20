@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.3.10",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Sekreter önerisinden görev",
+        "de": "Aufgabe aus Sekretär-Vorschlag"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Başka modüller, kullanıcının onayladığı sekreter önerisinden açık bir görev oluşturabilir (ör. e-postadan görev).",
+          "de": "Andere Module können aus einem vom Nutzer bestätigten Sekretär-Vorschlag eine offene Aufgabe anlegen (z. B. Aufgabe aus E-Mail)."
+        }
+      ]
+    },
+    {
       "version": "1.3.9",
       "date": "2026-11-19",
       "title": {

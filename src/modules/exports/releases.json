@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "2.2.0",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "Üretim hattında PDF",
+        "de": "PDF in der Dateierstellung"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Merkezi dosya üretim hattı artık PDF belgeleri de üretir (çıktı doğrulaması, şifreli saklama, yayından önce yetki denetimi). İlk kullanan: sekreterin haftalık kurul raporu.",
+          "de": "Die zentrale Dateierstellung erzeugt jetzt auch PDF-Dokumente (Ausgabeprüfung, verschlüsselte Ablage, Berechtigungsprüfung vor Veröffentlichung). Erster Nutzer: der Wochenbericht des Sekretärs."
+        }
+      ]
+    },
+    {
       "version": "2.1.11",
       "date": "2026-11-18",
       "title": {

@@ -5,7 +5,7 @@ import { mailInboxPermissions, mailPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "mail",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.4.5",
+  version: "1.5.0",
   label: "E-posta Altyapısı",
   description:
     "Tüm modüller için ortak e-posta gönderim altyapısı, SMTP ayarları ve gönderim kayıtları.",
@@ -17,6 +17,9 @@ export const moduleConfig: ModuleConfig = {
   access: [
     { module: "accounting", operations: ["write"] },
     { module: "system", operations: ["read"] },
+    // S4.1 (#313): onaylı sekreter "görev taslağı" önerisi görev açar; oluşturanın adı okunur.
+    { module: "tasks", operations: ["write"] },
+    { module: "users", operations: ["read"] },
   ],
   dependencies: {
     nodemailer: "^10.2.1",

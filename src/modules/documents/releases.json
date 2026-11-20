@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.10.0",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "OCR önerilerinde kaynak ve güven",
+        "de": "Herkunft und Konfidenz bei OCR-Vorschlägen"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Belge analizinde her alan önerisi kaynağını (metin katmanı veya OCR), güven değerini ve bulunduğu satırı taşır; OCR güveni düşükse öneriler ayrıca doğrulanacak şekilde işaretlenir. Öneriler yine yalnız öneridir, otomatik kaydedilmez ve hiçbir veri dışarı gönderilmez.",
+          "de": "Bei der Dokumentanalyse trägt jeder Feldvorschlag seine Herkunft (Textebene oder OCR), die Konfidenz und die Zeile; bei niedriger OCR-Konfidenz werden die Vorschläge zur gesonderten Prüfung markiert. Vorschläge bleiben Vorschläge, werden nicht automatisch gespeichert und es werden keine Daten nach außen gesendet."
+        }
+      ]
+    },
+    {
       "version": "1.9.1",
       "date": "2026-11-18",
       "title": {

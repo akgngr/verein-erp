@@ -11,6 +11,7 @@ import { makeStoredName, readFile, removeFile, saveFile } from "@/shared/files";
 
 import { decryptSecret, encryptSecret } from "./mail-crypto";
 import { parseInboxMessage, type ParsedInboxMessage } from "./inbox-parse";
+import { triageInboxMessage } from "./inbox-triage";
 
 const FIRST_FETCH_DAYS = 30;
 const MAX_PER_FETCH = 100;
@@ -58,7 +59,7 @@ async function storeMessage(parsed: ParsedInboxMessage, source: "IMAP" | "EML", 
       await saveFile(storagePath, attachment.content);
       stored.push({ fileName: attachment.fileName, mimeType: attachment.mimeType, extension: attachment.extension, size: attachment.content.length, storagePath });
     }
-    await db.mailInboxMessage.create({
+    const created = await db.mailInboxMessage.create({
       data: {
         source,
         externalKey,
@@ -71,11 +72,33 @@ async function storeMessage(parsed: ParsedInboxMessage, source: "IMAP" | "EML", 
         status: stored.length ? "NEW" : "DONE",
         attachments: { create: stored },
       },
+      select: { id: true },
     });
+    await afterMessageStored(created.id, source, stored.length);
     return true;
   } catch (error) {
     for (const file of stored) await removeFile(file.storagePath);
     throw error;
+  }
+}
+
+/**
+ * S4.1 (#313): sınıflama ve `mail.message_received` olayı. Hata izole: içe alma asla bu yüzden başarısız olmaz;
+ * günlükte içerik yok, yalnız kod.
+ */
+async function afterMessageStored(id: string, source: "IMAP" | "EML", attachmentCount: number): Promise<void> {
+  let category: Awaited<ReturnType<typeof triageInboxMessage>> = null;
+  try {
+    category = await triageInboxMessage(id);
+  } catch {
+    console.error("[mail/inbox] TRIAGE_FAILED");
+  }
+  try {
+    const { emitAutomationEvent } = await import("@/shared/automation/emit");
+    const { mailMessageReceivedEvent } = await import("../automation");
+    await emitAutomationEvent(mailMessageReceivedEvent, { inboxMessageId: id, source, attachmentCount: Math.min(attachmentCount, 100), category });
+  } catch {
+    console.error("[mail/inbox] EVENT_FAILED");
   }
 }
 

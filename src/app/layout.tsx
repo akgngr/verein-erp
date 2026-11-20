@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
@@ -6,6 +6,10 @@ import { getLocale, getTranslations } from "next-intl/server";
 import { THEME_INIT_SCRIPT } from "@/shared/components/theme-provider";
 import { Providers } from "./providers";
 import "./globals.css";
+
+export const viewport: Viewport = {
+  colorScheme: "light dark",
+};
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations("common");
