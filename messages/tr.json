@@ -9407,7 +9407,8 @@
         "locating": "Aranıyor...",
         "feelsLike": "Hissedilen {temp}°",
         "humidity": "Nem",
-        "wind": "Rüzgar"
+        "wind": "Rüzgar",
+        "unavailable": "Hava durumu bilgisi şu anda alınamadı."
       }
     },
     "title": "Hava Durumu ve Tahminler",
@@ -9427,6 +9428,9 @@
     "precipitation": "Yağış Miktarı",
     "forecastTitle": "7 Günlük Hava Tahmini",
     "today": "Bugün",
+    "unavailable": "Hava durumu bilgisi şu anda alınamıyor.",
+    "unavailableHelp": "Lütfen yukarıdan bir şehir seçin veya konumunuzu belirleyin.",
+    "cityNotFound": "Belirtilen şehir bulunamadı.",
     "access": {
       "organization": "Dernek merkezi konumuna göre hava durumu tahminlerini almak için dernek adres bilgilerini okur."
     },

@@ -82,6 +82,16 @@ interface CacheEntry {
 }
 const weatherCache = new Map<string, CacheEntry>();
 
+export function setCachedWeatherData(data: WeatherData): void {
+  const roundedLat = Number(data.latitude.toFixed(2));
+  const roundedLon = Number(data.longitude.toFixed(2));
+  weatherCache.set(`${roundedLat},${roundedLon}`, { data, timestamp: Date.now() });
+}
+
+export function clearWeatherCache(): void {
+  weatherCache.clear();
+}
+
 export const PRESET_CITIES = [
   { name: "Frankfurt am Main", lat: 50.11, lon: 8.68 },
   { name: "Berlin", lat: 52.52, lon: 13.41 },
@@ -106,10 +116,56 @@ export const PRESET_CITIES = [
 export function findCityCoordinates(cityName?: string | null): { name: string; lat: number; lon: number } | null {
   if (!cityName) return null;
   const normalized = cityName.trim().toLowerCase();
-  const match = PRESET_CITIES.find(
-    (c) => c.name.toLowerCase() === normalized || c.name.toLowerCase().includes(normalized) || normalized.includes(c.name.toLowerCase())
-  );
-  return match ?? null;
+  if (normalized.length < 2) return null;
+
+  // 1. Tam ad eşleşmesi
+  const exact = PRESET_CITIES.find((c) => c.name.toLowerCase() === normalized);
+  if (exact) return exact;
+
+  // 2. En az 3 karakterli başlangıç (prefix) eşleşmesi (çift yönlü includes yanlış eşleşmeleri önler)
+  if (normalized.length >= 3) {
+    const prefix = PRESET_CITIES.find((c) => c.name.toLowerCase().startsWith(normalized));
+    if (prefix) return prefix;
+  }
+
+  return null;
+}
+
+export async function searchCityCoordinates(
+  cityName?: string | null,
+): Promise<{ name: string; lat: number; lon: number } | null> {
+  if (!cityName) return null;
+  const trimmed = cityName.trim();
+  if (trimmed.length < 2) return null;
+
+  // Önce hazır şehir listesinde ara
+  const preset = findCityCoordinates(trimmed);
+  if (preset) return preset;
+
+  // Hazır listede yoksa Open-Meteo Geocoding API'sini sunucu üzerinden güvenle sorgula
+  try {
+    const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(trimmed)}&count=1&format=json`;
+    const res = await channelFetch(["geocoding-api.open-meteo.com", "open-meteo.com"], url, {
+      headers: { "User-Agent": "Verein-ERP-Weather-Module/1.0" },
+    });
+    if (!res.ok) return null;
+
+    const json = (await res.json()) as {
+      results?: Array<{ name: string; latitude: number; longitude: number }>;
+    };
+    const first = json.results?.[0];
+    if (!first || typeof first.latitude !== "number" || typeof first.longitude !== "number") {
+      return null;
+    }
+
+    return {
+      name: first.name,
+      lat: Number(first.latitude.toFixed(2)),
+      lon: Number(first.longitude.toFixed(2)),
+    };
+  } catch {
+    return null;
+  }
 }
 
 export const DEFAULT_COORDINATES = {
@@ -137,7 +193,14 @@ export async function getWeatherData(
   latitude = DEFAULT_COORDINATES.latitude,
   longitude = DEFAULT_COORDINATES.longitude,
   city = DEFAULT_COORDINATES.city,
-): Promise<WeatherData> {
+): Promise<WeatherData | null> {
+  if (typeof latitude !== "number" || typeof longitude !== "number" || isNaN(latitude) || isNaN(longitude)) {
+    return null;
+  }
+  if (latitude < -90 || latitude > 90 || longitude < -180 || longitude > 180) {
+    return null;
+  }
+
   const roundedLat = Number(latitude.toFixed(2));
   const roundedLon = Number(longitude.toFixed(2));
   const cacheKey = `${roundedLat},${roundedLon}`;
@@ -150,12 +213,12 @@ export async function getWeatherData(
 
   try {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${roundedLat}&longitude=${roundedLon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto`;
-    const res = await channelFetch(["api.open-meteo.com"], url, {
+    const res = await channelFetch(["api.open-meteo.com", "open-meteo.com"], url, {
       headers: { "User-Agent": "Verein-ERP-Weather-Module/1.0" },
     });
 
     if (!res.ok) {
-      throw new Error("OPEN_METEO_FETCH_ERROR");
+      return null;
     }
 
     const json = (await res.json()) as {
@@ -216,36 +279,7 @@ export async function getWeatherData(
     weatherCache.set(cacheKey, { data: result, timestamp: now });
     return result;
   } catch {
-    // Hata veya ağ yokluğunda güvenli yedek veri
-    const fallbackCond = getConditionInfo(0);
-    const fallbackData: WeatherData = {
-      city,
-      latitude: roundedLat,
-      longitude: roundedLon,
-      temperature: 19,
-      apparentTemperature: 19,
-      humidity: 55,
-      windSpeed: 12,
-      weatherCode: 0,
-      conditionTextTr: fallbackCond.tr,
-      conditionTextDe: fallbackCond.de,
-      isDay: true,
-      precipitation: 0,
-      daily: {
-        dates: [new Date().toISOString().split("T")[0]],
-        maxTemps: [21],
-        minTemps: [14],
-        weatherCodes: [0],
-        precipitationSums: [0],
-      },
-      hourly: {
-        times: ["12:00", "15:00", "18:00"],
-        temps: [19, 21, 18],
-        weatherCodes: [0, 0, 0],
-      },
-      updatedAt: new Date().toISOString(),
-    };
-    weatherCache.set(cacheKey, { data: fallbackData, timestamp: now });
-    return fallbackData;
+    // Ağ arızasında veya hatada null dön; sahte veri döndürme ve hatayı önbelleğe alma (#385)
+    return null;
   }
 }
