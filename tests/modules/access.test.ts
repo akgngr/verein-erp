@@ -4,7 +4,11 @@ import assert from "node:assert/strict";
 import { allModules } from "@/registry";
 import { accessSignature, isAccessApproved } from "@/shared/modules/module-access";
 import { exportedMethods } from "@/shared/modules/sync-routes";
-import { declaredAccess, findServerImports, operationFor } from "../../scripts/validate-module";
+import fs from "node:fs";
+import os from "node:os";
+import path from "node:path";
+
+import { declaredAccess, findRawFetchCalls, findServerImports, operationFor } from "../../scripts/validate-module";
 
 describe("Modüller arası erişim izni", () => {
   test("onay kuralları: resmi modül onaylı gelir, eklenti izin bekler, geri alma ve imza değişimi onayı düşürür", () => {
@@ -57,6 +61,41 @@ describe("Modüller arası erişim izni", () => {
         for (const name of names) assert.ok(granted.has(operationFor(name)), `${mod.key} → ${target}.${name} için ${operationFor(name)} izni yok`);
       }
     }
+  });
+
+  test("#60: dinamik, ad alanı ve yeniden dışa aktarım içe aktarımları da erişim sayılır", () => {
+    const dir = fs.mkdtempSync(path.join(os.tmpdir(), "mod-access-"));
+    try {
+      fs.writeFileSync(path.join(dir, "a.ts"), [
+        "async function f() {",
+        "  const { getProfile, createThing } = await import(\"@/modules/organization/server\");",
+        "}",
+        "const lazy = () => import(\"@/modules/members/server\");",
+        "import * as users from \"@/modules/users/server\";",
+        "export { sendMail } from \"@/modules/mail/server\";",
+        "import { x } from \"@/modules/demo/server\";",
+      ].join("\n"));
+      const found = findServerImports(dir, "demo");
+      assert.deepEqual([...found.get("organization")!].sort(), ["createThing", "getProfile"]);
+      assert.deepEqual([...found.get("members")!], ["<dynamic>"]);
+      assert.equal(operationFor("<dynamic>"), "read");
+      assert.deepEqual([...found.get("users")!], ["<namespace>"]);
+      assert.deepEqual([...found.get("mail")!], ["sendMail"]);
+      assert.equal(found.has("demo"), false, "kendi server'ı sayılmaz");
+      assert.equal(findServerImports(dir, "auth").size, 0, "auth altyapısı muaf");
+    } finally {
+      fs.rmSync(dir, { recursive: true, force: true });
+    }
+  });
+
+  test("#60: modülde çıplak fetch yalnız uygulama içi göreli yola", () => {
+    assert.deepEqual(findRawFetchCalls('await fetch("/api/ai/chat", { method: "POST" })'), []);
+    assert.deepEqual(findRawFetchCalls("fetch(`/api/x?limit=${n}`)"), []);
+    assert.deepEqual(findRawFetchCalls('channelFetch(["api.example.com"], url)'), [], "channelFetch serbest");
+    assert.deepEqual(findRawFetchCalls("obj.fetch(url)"), [], "yöntem çağrısı değil");
+    assert.equal(findRawFetchCalls("await fetch(`https://open.er-api.com/v6/latest/${b}`)").length, 1);
+    assert.equal(findRawFetchCalls('fetch("//evil.example/x")').length, 1, "protokolsüz dış adres");
+    assert.equal(findRawFetchCalls("fetch(url)").length, 1, "değişken adres incelenmeli");
   });
 
   test("API köprüsü kaynaktaki HTTP yöntemlerini bulur", () => {
