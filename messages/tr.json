@@ -124,6 +124,7 @@
     "topluEposta": "Kampanyalar",
     "toplantilar": "Toplantılar",
     "uyeler": "Üyeler",
+    "notifications": "Bildirimler",
     "online-forms": "e-Sign",
     "organization": "Dernek Bilgileri",
     "progress": "Öğrenci takibi",
@@ -136,8 +137,7 @@
     "kurulum": "Kurulum sihirbazı",
     "modulPaketleri": "Modül paketleri",
     "tasks": "Görevler",
-    "kullanicilar": "Kullanıcılar",
-    "notifications": "Bildirimler"
+    "kullanicilar": "Kullanıcılar"
   },
   "sidebar": {
     "brand": "Dernek Yönetim",
