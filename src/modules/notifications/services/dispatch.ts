@@ -42,6 +42,8 @@ export type DispatchDeps = {
   sendMail: (message: MailMessage) => Promise<{ ok: boolean; logId?: string }>;
   appUrl: string | undefined;
   locale: "tr" | "de";
+  /** N3a (#359): Web Push (yapılandırılmamışsa yok sayılır). */
+  webPush?: { isAvailable: () => Promise<boolean>; send: (userId: string, message: { title: string; body: string; url: string }) => Promise<{ ok: boolean } | null> };
   /** N4 (#361): Telegram (yapılandırılmamışsa yok sayılır). */
   telegram?: { isAvailable: () => Promise<boolean>; chatFor: (userId: string) => Promise<string | null>; send: (chatId: string, text: string) => Promise<{ ok: boolean; providerId?: string }> };
 };
@@ -102,6 +104,13 @@ export async function runDispatch(now: Date, deps: DispatchDeps): Promise<Dispat
       if (!chatId) return null;
       const message = emailText(deps.locale, count, link);
       return telegram.send(chatId, `${message.subject}\n${link}`).catch(() => ({ ok: false }));
+    });
+  }
+  const webPush = deps.webPush;
+  if (webPush && (await webPush.isAvailable().catch(() => false))) {
+    senders.set("web_push", async (user, count, link) => {
+      const message = emailText(deps.locale, count, link);
+      return webPush.send(user.id, { title: message.subject, body: message.subject, url: link }).catch(() => ({ ok: false }));
     });
   }
   if (!senders.size) return result;
@@ -202,6 +211,10 @@ export async function defaultDispatchDeps(): Promise<DispatchDeps> {
     },
     appUrl: env.APP_URL,
     locale: env.DOCUMENT_LANGUAGE,
+    webPush: {
+      isAvailable: async () => Boolean(await (await import("./web-push")).publicKey()),
+      send: async (userId, message) => (await import("./web-push")).sendPush(userId, message),
+    },
     telegram: {
       isAvailable: async () => {
         const { getChannelConfig } = await import("./channel-config");

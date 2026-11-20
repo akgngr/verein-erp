@@ -7,6 +7,7 @@ import type { ActionResult } from "@/shared/types/action";
 
 import { notificationsPermissions } from "../permissions";
 import { type ChannelConfigView, listChannelConfigs } from "../services/channel-config";
+import { configureWebPush, publicKey, subscribe, subscriptionSchema, unsubscribe, WebPushError } from "../services/web-push";
 import { configureTelegram, requestTelegramLink, revokeTelegramLink, TelegramError, telegramLinkStatus } from "../services/telegram";
 
 const view = { definition: notificationsPermissions, action: "view" as const };
@@ -16,6 +17,7 @@ async function guard<T>(fn: () => Promise<T>): Promise<T> {
   try {
     return await fn();
   } catch (error) {
+    if (error instanceof WebPushError) throw new ActionError(error.message);
     if (error instanceof TelegramError) throw new ActionError(error.message.startsWith("notifications.") ? error.message : "notifications.channels.errors.telegramWebhook");
     throw error;
   }
@@ -67,4 +69,43 @@ export async function revokeTelegramLinkAction(input: unknown): Promise<ActionRe
       return null;
     },
   })(input ?? {});
+}
+
+/** Yönetici: Web Push kanalı (VAPID anahtarı ilk açılışta üretilir, DB'de şifreli). */
+export async function saveWebPushChannelAction(input: unknown): Promise<ActionResult<{ publicKey: string | null }>> {
+  return createAction({
+    permission: admin,
+    schema: z.object({ enabled: z.boolean() }).strict(),
+    handler: async ({ input, user, audit }) => {
+      const { getEnv } = await import("@/shared/env");
+      const result = await guard(() => configureWebPush(input.enabled, getEnv().APP_URL, user.id));
+      await audit({ action: "SETTINGS_UPDATE", entity: "NotificationChannelConfig", entityId: "web_push", after: { enabled: input.enabled } });
+      return result;
+    },
+  })(input);
+}
+
+/** Kullanıcı: tarayıcı aboneliği için genel anahtar (kanal kapalıysa null). */
+export async function getWebPushKeyAction(input: unknown): Promise<ActionResult<{ publicKey: string | null }>> {
+  return createAction({ permission: view, schema: z.object({}).strict(), handler: async () => ({ publicKey: await publicKey() }) })(input ?? {});
+}
+
+export async function subscribeWebPushAction(input: unknown): Promise<ActionResult<null>> {
+  return createAction({
+    permission: view,
+    schema: subscriptionSchema,
+    handler: async ({ input, user, audit }) => {
+      await guard(() => subscribe(user.id, input));
+      await audit({ action: "CREATE", entity: "NotificationPushSubscription", entityId: user.id, after: { host: new URL(input.endpoint).hostname } });
+      return null;
+    },
+  })(input);
+}
+
+/** Abonelikten çıkma her zaman serbest. */
+export async function unsubscribeWebPushAction(input: unknown): Promise<ActionResult<null>> {
+  return createAction({
+    schema: z.object({ endpoint: z.string().max(1000) }).strict(),
+    handler: async ({ input, user }) => { await unsubscribe(user.id, input.endpoint); return null; },
+  })(input);
 }
