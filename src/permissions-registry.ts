@@ -28,6 +28,7 @@ import * as demoPermissionExports from "@/modules/demo/permissions";
 import * as eventsPermissionExports from "@/modules/events/permissions";
 import * as exportsPermissionExports from "@/modules/exports/permissions";
 import * as feedbackPermissionExports from "@/modules/feedback/permissions";
+import * as financePermissionExports from "@/modules/finance/permissions";
 import * as grantsPermissionExports from "@/modules/grants/permissions";
 import * as inventoryPermissionExports from "@/modules/inventory/permissions";
 import * as mailPermissionExports from "@/modules/mail/permissions";
@@ -40,6 +41,7 @@ import * as securitymonitorPermissionExports from "@/modules/security-monitor/pe
 import * as sepaPermissionExports from "@/modules/sepa/permissions";
 import * as studentsPermissionExports from "@/modules/students/permissions";
 import * as tasksPermissionExports from "@/modules/tasks/permissions";
+import * as weatherPermissionExports from "@/modules/weather/permissions";
 
 const isDefinition = (value: unknown): value is PermissionDefinition =>
   typeof value === "object" && value !== null && "resource" in value && "grants" in value;
@@ -73,6 +75,7 @@ export const permissionResources: { moduleKey: string; definitions: PermissionDe
   { moduleKey: "events", definitions: definitionsOf(eventsPermissionExports) },
   { moduleKey: "exports", definitions: definitionsOf(exportsPermissionExports) },
   { moduleKey: "feedback", definitions: definitionsOf(feedbackPermissionExports) },
+  { moduleKey: "finance", definitions: definitionsOf(financePermissionExports) },
   { moduleKey: "grants", definitions: definitionsOf(grantsPermissionExports) },
   { moduleKey: "inventory", definitions: definitionsOf(inventoryPermissionExports) },
   { moduleKey: "mail", definitions: definitionsOf(mailPermissionExports) },
@@ -85,6 +88,7 @@ export const permissionResources: { moduleKey: string; definitions: PermissionDe
   { moduleKey: "sepa", definitions: definitionsOf(sepaPermissionExports) },
   { moduleKey: "students", definitions: definitionsOf(studentsPermissionExports) },
   { moduleKey: "tasks", definitions: definitionsOf(tasksPermissionExports) },
+  { moduleKey: "weather", definitions: definitionsOf(weatherPermissionExports) },
   { moduleKey: "system", definitions: [systemPermissions, settingsPermissions] },
 ].map((entry, index, all) => ({
   // Aynı kaynak birden fazla yerde dışa aktarılmışsa yalnızca ilk görüldüğü modülde listelenir.

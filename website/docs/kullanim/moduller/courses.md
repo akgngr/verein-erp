@@ -1,5 +1,5 @@
 ---
-sidebar_position: 22
+sidebar_position: 24
 title: "Kurslar"
 description: "Gönüllü kurslar ve Nachhilfe: öğretmenler, dersler, kayıtlar, ücretler ve muhasebe aktarımı."
 slug: /kullanim/moduller/courses

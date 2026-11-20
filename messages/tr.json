@@ -118,6 +118,7 @@
     "events": "Etkinlikler",
     "exports": "Dosyalarım",
     "geriBildirim": "Geri bildirim",
+    "finance": "Finans",
     "inventory": "Envanter",
     "mail": "E-posta",
     "gelenKutusu": "Gelen kutusu",
@@ -136,7 +137,8 @@
     "kurulum": "Kurulum sihirbazı",
     "modulPaketleri": "Modül paketleri",
     "tasks": "Görevler",
-    "kullanicilar": "Kullanıcılar"
+    "kullanicilar": "Kullanıcılar",
+    "weather": "Hava Durumu"
   },
   "sidebar": {
     "brand": "Dernek Yönetim",
@@ -5255,6 +5257,54 @@
       }
     }
   },
+  "finance": {
+    "module": {
+      "label": "Finans",
+      "description": "Canlı döviz kurları, piyasa göstergeleri, kur çevirici ve finansal AI asistanı."
+    },
+    "menu": {
+      "settings": "Ayarlar"
+    },
+    "permissions": {
+      "finance": {
+        "label": "Finans",
+        "description": "Döviz kurlarını ve finansal göstergeleri görüntüleme izni."
+      }
+    },
+    "cards": {
+      "rates": {
+        "title": "Döviz Kurları",
+        "description": "Canlı döviz kurları ve değişim göstergeleri.",
+        "baseCurrency": "Baz: 1 {code}"
+      }
+    },
+    "title": "Finans ve Piyasa Kurları",
+    "description": "Canlı döviz kurları, kur çevirici ve finansal planlama göstergeleri.",
+    "meta": {
+      "title": "Finans ve Kurlar",
+      "description": "Canlı piyasa kurları ve finansal araçlar."
+    },
+    "baseCurrency": "Baz Para Birimi",
+    "lastUpdated": "Son Güncelleme: {date}",
+    "refresh": "Kurları yenile",
+    "converterTitle": "Anlık Kur Çevirici",
+    "amount": "Tutar",
+    "from": "Kaynak Birim",
+    "to": "Hedef Birim",
+    "swap": "Birimleri Değiştir",
+    "allRatesTitle": "Tüm Kurlar ({base} Bazlı)",
+    "searchCurrency": "Para birimi ara...",
+    "settings": {
+      "title": "Finans Ayarları",
+      "description": "Varsayılan baz para birimini ve takip edilecek döviz kurlarını yapılandırın.",
+      "baseCurrencyLabel": "Varsayılan Baz Para Birimi",
+      "baseCurrencyDesc": "Tüm kurların ve göstergelerin hesaplanacağı ana para birimi.",
+      "trackedCurrenciesLabel": "Takip Edilen Kurlar",
+      "trackedCurrenciesDesc": "Dashboard kartında ve özet tablolarda gösterilecek öncelikli para birimleri.",
+      "saveButton": "Ayarları Kaydet",
+      "savedSuccess": "Ayarlar başarıyla kaydedildi!"
+    }
+  },
   "grants": {
     "module": {
       "label": "Hibeler",
@@ -9261,6 +9311,81 @@
         "notCustom": "Yalnızca özel roller düzenlenip silinebilir.",
         "inUse": "Bu rolü taşıyan kullanıcılar var; önce kullanıcılara başka rol atayın."
       }
+    }
+  },
+  "weather": {
+    "module": {
+      "label": "Hava Durumu",
+      "description": "Anlık konum bazlı hava durumu, tahminler, panel kartı ve sekreter etkinlik önerileri."
+    },
+    "permissions": {
+      "weather": {
+        "label": "Hava Durumu",
+        "description": "Hava durumu verilerini ve tahminlerini görüntüleme izni."
+      }
+    },
+    "cards": {
+      "current": {
+        "title": "Hava Durumu",
+        "description": "Anlık hava durumu ve sıcaklık özeti.",
+        "myLocation": "Konumum",
+        "detectLocation": "Konumumu Bul",
+        "detectLocationTooltip": "Tarayıcı konumunu kullanarak güncel hava durumunu al",
+        "locating": "Aranıyor...",
+        "feelsLike": "Hissedilen {temp}°",
+        "humidity": "Nem",
+        "wind": "Rüzgar"
+      }
+    },
+    "title": "Hava Durumu ve Tahminler",
+    "description": "Dernek merkezi ve güncel konumunuz için anlık hava durumu ve 7 günlük tahminler.",
+    "meta": {
+      "title": "Hava Durumu",
+      "description": "Hava durumu tahminleri ve etkinlik planlama önerileri."
+    },
+    "myLocation": "Konumum",
+    "detectLocation": "Konumumu Bul",
+    "locating": "Konum alınıyor...",
+    "searchCityPlaceholder": "Şehir ara (örn. Berlin, Ankara)...",
+    "feelsLike": "Hissedilen {temp}°",
+    "todayRange": "Günün En Düşük / En Yüksek",
+    "humidity": "Nem Oranı",
+    "windSpeed": "Rüzgar Hızı",
+    "precipitation": "Yağış Miktarı",
+    "forecastTitle": "7 Günlük Hava Tahmini",
+    "today": "Bugün",
+    "access": {
+      "organization": "Dernek merkezi konumuna göre hava durumu tahminlerini almak için dernek adres bilgilerini okur."
+    },
+    "conditions": {
+      "0": "Açık ve Güneşli",
+      "1": "Çoğunlukla Açık",
+      "2": "Parçalı Bulutlu",
+      "3": "Bulutlu",
+      "45": "Sisli",
+      "48": "Kırağılı Sis",
+      "51": "Hafif Çisenti",
+      "53": "Çisenti",
+      "55": "Yoğun Çisenti",
+      "61": "Hafif Yağmurlu",
+      "63": "Yağmurlu",
+      "65": "Kuvvetli Yağmur",
+      "71": "Hafif Kar Yağışlı",
+      "73": "Kar Yağışlı",
+      "75": "Yoğun Kar Yağışlı",
+      "80": "Hafif Sağanak",
+      "81": "Sağanak Yağış",
+      "82": "Şiddetli Sağanak",
+      "85": "Kar Sağanağı",
+      "86": "Yoğun Kar Sağanağı",
+      "95": "Gök Gürültülü Fırtına",
+      "96": "Dolu ile Birlikte Fırtına",
+      "99": "Şiddetli Dolu ve Fırtına",
+      "fallback": "Değişken Hava"
+    },
+    "secretary": {
+      "dailyForecast": "Bugün hava {temp}°, {cond}.",
+      "outdoorWarning": "Açık alan etkinlikleri veya randevular için hava koşullarını göz önünde bulundurun."
     }
   }
 }

@@ -1,0 +1,51 @@
+{
+  "module": {
+    "label": "Finanzen",
+    "description": "Live-Wechselkurse, Marktindikatoren, Währungsrechner und finanzieller KI-Assistent."
+  },
+  "nav": {
+    "finance": "Finanzen"
+  },
+  "menu": {
+    "settings": "Einstellungen"
+  },
+  "permissions": {
+    "finance": {
+      "label": "Finanzen",
+      "description": "Berechtigung zur Einsicht in Wechselkurse und Finanzindikatoren."
+    }
+  },
+  "cards": {
+    "rates": {
+      "title": "Wechselkurse",
+      "description": "Live-Wechselkurse und Kursveränderungen.",
+      "baseCurrency": "Basis: 1 {code}"
+    }
+  },
+  "title": "Finanzen und Marktkurse",
+  "description": "Live-Wechselkurse, Währungsrechner und Finanzplanungsinstrumente.",
+  "meta": {
+    "title": "Finanzen und Kurse",
+    "description": "Live-Marktkurse und Finanzwerkzeuge."
+  },
+  "baseCurrency": "Basiswährung",
+  "lastUpdated": "Letzte Aktualisierung: {date}",
+  "refresh": "Kurse aktualisieren",
+  "converterTitle": "Währungsrechner",
+  "amount": "Betrag",
+  "from": "Ausgangswährung",
+  "to": "Zielwährung",
+  "swap": "Währungen tauschen",
+  "allRatesTitle": "Alle Kurse (Basis {base})",
+  "searchCurrency": "Währung suchen...",
+  "settings": {
+    "title": "Finanzeinstellungen",
+    "description": "Konfigurieren Sie die Standard-Basiswährung und bevorzugte Wechselkurse.",
+    "baseCurrencyLabel": "Standard-Basiswährung",
+    "baseCurrencyDesc": "Hauptwährung für alle Kursberechnungen und Übersichten.",
+    "trackedCurrenciesLabel": "Beobachtete Währungen",
+    "trackedCurrenciesDesc": "Prioritäre Währungen für das Dashboard-Widget und Kurztabellen.",
+    "saveButton": "Einstellungen speichern",
+    "savedSuccess": "Einstellungen erfolgreich gespeichert!"
+  }
+}

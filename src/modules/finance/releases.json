@@ -1,0 +1,20 @@
+{
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler).",
+  "releases": [
+    {
+      "version": "0.1.0",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Finans ve Döviz Modülü",
+        "de": "Finanz- und Währungsmodul"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Canlı döviz kurları (EUR, USD, TRY, CHF, GBP), kur çevirici, ayarlar, modern panel kartı ve AI aracı.",
+          "de": "Live-Wechselkurse (EUR, USD, TRY, CHF, GBP), Währungsrechner, Einstellungen, modernes Dashboard-Widget und KI-Tool."
+        }
+      ]
+    }
+  ]
+}
