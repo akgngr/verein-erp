@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.12.8",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Çalışma zamanı modernizasyonu",
+        "de": "Laufzeitmodernisierung"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Modül kapatma eyleminde (toggleModuleAction) basamaklı bağımlı dizilimi toReversed ile yenilendi.",
+          "de": "Bei der Modul-Deaktivierungsaktion (toggleModuleAction) wird die kaskadierende Abhängigkeitsreihenfolge nun mit toReversed umgekehrt."
+        }
+      ]
+    },
+    {
       "version": "1.12.7",
       "date": "2026-11-19",
       "title": {

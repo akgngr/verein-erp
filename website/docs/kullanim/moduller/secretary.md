@@ -13,7 +13,7 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 |---|---|
 | Anahtar | `secretary` |
 | Tür | Eklenti |
-| Sürüm | 0.11.1 |
+| Sürüm | 0.11.2 |
 | Sayfalar | `/sekreter` |
 
 ## Diğer modüllere erişim
@@ -37,6 +37,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Sekreter | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — |
 
 ## Sürüm notları
+
+### 0.11.2 — Çalışma zamanı modernizasyonu
+
+_2026-11-20_
+
+- **İyileştirme:** Sabah özeti öğelerinin önem ve vade sırasına göre dizilmesinde (sortItems) toSorted metodu uygulandı.
 
 ### 0.11.1 — Sekreter çalışma masasında geçerli kayıt sınırı
 
@@ -85,10 +91,4 @@ _2026-11-19_
 
 - **İyileştirme:** Günlük özet e-postası artık yeni şablonla (HTML ve düz metin) gönderilir: yalnız toplam sayılar ve uygulamaya güvenli bağlantı, kişisel veri yok.
 
-### 0.6.8 — Sekreter tercih ekranı
-
-_2026-11-19_
-
-- **Yeni:** Kullanıcılar kendi özet saatini, sessiz saatlerini ve aktif kanalları değiştirebilir. TR/DE günlük özet e-posta şablonu eklendi.
-
-Daha eski 13 herkese açık sürüm notu.
+Daha eski 14 herkese açık sürüm notu.

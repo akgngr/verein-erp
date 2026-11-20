@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.4.11",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Çalışma zamanı modernizasyonu",
+        "de": "Laufzeitmodernisierung"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Öğretmen hakedişi hesaplamasında (calculatePayout) oturum sıralaması toSorted ile yenilendi.",
+          "de": "In der Auszahlungsberechnung für Lehrkräfte (calculatePayout) wurde die Sitzungssortierung auf toSorted aktualisiert."
+        }
+      ]
+    },
+    {
       "version": "1.4.10",
       "date": "2026-11-18",
       "title": {

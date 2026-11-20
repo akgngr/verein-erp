@@ -78,7 +78,7 @@ export async function toggleModuleAction(input: unknown): Promise<ActionResult> 
         // Zorunlu bağımlılar: kullanıcı onayıyla birlikte kapanır (önce bağımlılar).
         const dependents = enabledDependents(input.key, allModules, isEnabled);
         if (dependents.length && !input.confirmed) throw new ActionError("system.dependencies.errors.dependentsActive");
-        for (const key of [...dependents].reverse()) await setModuleEnabled(key, false);
+        for (const key of dependents.toReversed()) await setModuleEnabled(key, false);
         await setModuleEnabled(input.key, false);
         await audit({ action: "UPDATE", entity: "SystemModule", entityId: input.key, after: { key: input.key, isActive: false, cascade: dependents } });
         return { key: input.key, isActive: false };
