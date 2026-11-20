@@ -7406,6 +7406,18 @@
     "access": {
       "users": "Bildirimin alıcısı etkin mi ve rolü bu bildirimi görmeye yetiyor mu, gönderim ve okuma anında denetlenir.",
       "system": "Bildirimi üreten modülün açık ve onaylı olup olmadığını okur."
+    },
+    "errors": {
+      "snoozeRange": "Erteleme süresi gelecekte ve en fazla 30 gün olmalı.",
+      "notFound": "Bildirim bulunamadı."
+    },
+    "automation": {
+      "tasks": {
+        "purge": {
+          "label": "Eski bildirimleri temizle",
+          "description": "90 günden eski bildirimleri günde bir siler."
+        }
+      }
     }
   },
   "online-forms": {

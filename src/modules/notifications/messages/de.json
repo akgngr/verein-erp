@@ -12,5 +12,17 @@
   "access": {
     "users": "Prüft beim Senden und Lesen, ob der Empfänger aktiv ist und die Rolle die Benachrichtigung sehen darf.",
     "system": "Liest, ob das auslösende Modul aktiv und freigegeben ist."
+  },
+  "errors": {
+    "snoozeRange": "Die Verschiebung muss in der Zukunft liegen und darf höchstens 30 Tage betragen.",
+    "notFound": "Benachrichtigung nicht gefunden."
+  },
+  "automation": {
+    "tasks": {
+      "purge": {
+        "label": "Alte Benachrichtigungen bereinigen",
+        "description": "Löscht täglich Benachrichtigungen, die älter als 90 Tage sind."
+      }
+    }
   }
 }
