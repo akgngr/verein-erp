@@ -13,8 +13,8 @@ Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.
 |---|---|
 | Anahtar | `system` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.12.8 |
-| Sayfalar | `/ayarlar`, `/ayarlar/moduller`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/surum-notlari` |
+| Sürüm | 1.13.0 |
+| Sayfalar | `/ayarlar`, `/ayarlar/moduller`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/lisans`, `/ayarlar/surum-notlari` |
 
 ## Diğer modüllere erişim
 
@@ -23,6 +23,7 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 | Modül | İşlem | Gerekçe |
 |---|---|---|
 | [Muhasebe](./accounting) | okuma, yazma | Kurulum sihirbazı, seçilen kurum türüne göre muhasebe kategorilerini, hesaplarını ve vergi ayarlarını oluşturur. |
+| [Dernek Bilgileri](./organization) | okuma | Lisans doğrulaması için kurum adı ve sicil/vergi numarası okunur (lisans bu kuruma bağlıdır). |
 
 ## Varsayılan yetkiler
 
@@ -34,6 +35,13 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Modül Yönetimi | görüntüleme, düzenleme, silme | görüntüleme | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.13.0 — Enterprise lisansı
+
+_2026-11-20_
+
+- **Yeni:** Ayarlar → Lisans: imzalı Enterprise lisansı girilir, çevrimdışı doğrulanır; lisans hem alan adına hem kuruma bağlıdır, süre bitince 14 gün ek süre.
+- **Yeni:** Lisanslı modüller yalnız ilgili özelliği içeren geçerli lisansla etkinleşir; lisans yoksa menüde, sayfada, API'de ve arka plan işlerinde kapalı kalır.
 
 ### 1.12.8 — Çalışma zamanı modernizasyonu
 
@@ -77,10 +85,4 @@ _2026-11-17_
 
 - **Yeni:** Modül kartları başka modül ekranlarında da gösterilebilir (surfaces); modül onayı ve yetki sistem tarafından denetlenir, modüller arası yeni erişim gerekmez.
 
-### 1.11.3 — Hafif hareket ve yüzey etkileşimleri
-
-_2026-11-17_
-
-- **İyileştirme:** Sayfa başlıkları, form yüzeyleri ve panel kartları ortak motion tokenlarıyla hafif giriş, hover ve focus geçişleri kullanır. Reduced-motion tercihi korunur.
-
-Daha eski 17 herkese açık sürüm notu.
+Daha eski 18 herkese açık sürüm notu.

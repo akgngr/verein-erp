@@ -87,6 +87,11 @@ export type ModuleConfig = {
    * version: en düşük sürüm (">=1.1.0" veya "1.1.0").
    */
   requires?: { module: string; version?: string }[];
+  /**
+   * Lisanslı modül (RFC-002): yalnız bu özelliği içeren geçerli lisansla kullanılabilir (Ayarlar → Lisans).
+   * Lisans yoksa modül menüde, sayfada, API'de ve worker'da kullanılamaz; etkinleştirilemez.
+   */
+  license?: { feature: string };
   /** ÖNERİLEN modüller: onsuz çalışır ama eksik kalır; etkinleştirirken birlikte açmak önerilir. */
   recommends?: string[];
   /**

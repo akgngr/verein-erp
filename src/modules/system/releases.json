@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.13.0",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Enterprise lisansı",
+        "de": "Enterprise-Lizenz"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Ayarlar → Lisans: imzalı Enterprise lisansı girilir, çevrimdışı doğrulanır; lisans hem alan adına hem kuruma bağlıdır, süre bitince 14 gün ek süre.",
+          "de": "Einstellungen → Lizenz: signierte Enterprise-Lizenz hinterlegen, Offline-Prüfung; die Lizenz ist an Domain und Organisation gebunden, nach Ablauf 14 Tage Kulanzzeit."
+        },
+        {
+          "type": "feature",
+          "tr": "Lisanslı modüller yalnız ilgili özelliği içeren geçerli lisansla etkinleşir; lisans yoksa menüde, sayfada, API'de ve arka plan işlerinde kapalı kalır.",
+          "de": "Lizenzierte Module sind nur mit einer gültigen Lizenz für die jeweilige Funktion nutzbar; ohne Lizenz bleiben Menü, Seiten, APIs und Hintergrundjobs gesperrt."
+        }
+      ]
+    },
+    {
       "version": "1.12.8",
       "date": "2026-11-20",
       "title": {

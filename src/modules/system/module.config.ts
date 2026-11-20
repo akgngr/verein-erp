@@ -1,4 +1,4 @@
-import { Boxes, History, Settings, Wand2, PackageCheck } from "lucide-react";
+import { Boxes, History, KeyRound, Settings, Wand2, PackageCheck } from "lucide-react";
 import type { ModuleConfig } from "@/shared/types/module";
 import {
   settingsPermissions,
@@ -8,14 +8,18 @@ import {
 export const moduleConfig: ModuleConfig = {
   key: "system",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.12.8",
+  version: "1.13.0",
   label: "Modül Yönetimi",
   description: "Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.",
   category: "CORE",
   isProtected: true,
   hasSchema: true,
   // Kurulum sihirbazı muhasebe hazır ayarlarını (kategori/hesap/vergi) yazar.
-  access: [{ module: "accounting", operations: ["read", "write"] }],
+  access: [
+    { module: "accounting", operations: ["read", "write"] },
+    // Lisans (RFC-002): kurum adı ve sicil numarası lisansla eşleştirilir.
+    { module: "organization", operations: ["read"] },
+  ],
   nav: [
     {
       href: "/ayarlar",
@@ -53,6 +57,16 @@ export const moduleConfig: ModuleConfig = {
       icon: Wand2,
       group: "settings",
       order: 1,
+      permission: { definition: systemPermissions, action: "update" },
+    },
+    {
+      // RFC-002: Enterprise lisansı (alan adı + kurum). Yalnız yönetici.
+      href: "/ayarlar/lisans",
+      label: "Lisans",
+      labelKey: "lisans",
+      icon: KeyRound,
+      group: "settings",
+      order: 5,
       permission: { definition: systemPermissions, action: "update" },
     },
     {
