@@ -71,3 +71,9 @@ test("follow-up write failures never display success or mutate the local list", 
   assert.match(ui, /if \(pending \|\| !AVAILABLE\[item\.status\]\.includes\(command\)\) return;/);
   assert.doesNotMatch(ui, /sendEmail|sendSms|sendTelegram|window\.open|localStorage/);
 });
+
+test("secretary declares the notification capability used by its integrated UI", () => {
+  const config = read("src/modules/secretary/module.config.ts");
+  assert.match(config, /\{ module: "notifications", operations: \["write"\] \}/);
+  assert.doesNotMatch(config, /from ["']@\/modules\/notifications\//);
+});
