@@ -5671,7 +5671,9 @@
     },
     "access": {
       "accounting": "Gelen e-postalardaki fatura/belge eklerini muhasebe → gelen faturalar kutusuna aktarır.",
-      "system": "Muhasebe modülünün etkin olup olmadığını okur (aktarma düğmesi yalnızca etkinken gösterilir)."
+      "system": "Muhasebe modülünün etkin olup olmadığını okur (aktarma düğmesi yalnızca etkinken gösterilir).",
+      "tasks": "Sekreterin onaylı \"görev taslağı\" önerisinden görev oluşturur (yalnız kullanıcı onayıyla).",
+      "users": "Görevdeki \"oluşturan\" etiketi için kullanıcının adını okur."
     },
     "inbox": {
       "title": "Gelen kutusu",
@@ -5731,6 +5733,16 @@
         "emlInvalid": "Geçerli bir .eml dosyası değil.",
         "accountingOff": "Muhasebe modülü kapalı.",
         "notFound": "Bulunamadı."
+      },
+      "drafts": {
+        "errors": {
+          "noRecipient": "Bu e-postanın yanıt adresi yok.",
+          "notFound": "Taslak bulunamadı.",
+          "notEditable": "Bu taslak artık düzenlenemez.",
+          "bodyRequired": "Göndermeden önce yanıt metnini yazın.",
+          "mailNotConfigured": "E-posta gönderimi yapılandırılmamış (Ayarlar → E-posta).",
+          "sendFailed": "E-posta gönderilemedi; taslak korunuyor."
+        }
       }
     },
     "automation": {
@@ -5748,7 +5760,44 @@
             "body": "Metne '{{member.fullName}}' gibi alanlar ekleyebilirsiniz; liste aşağıda. Kişisel bilgiler yalnızca gönderim anında okunur, saklanmaz."
           }
         }
+      },
+      "events": {
+        "message_received": {
+          "label": "Gelen kutusuna e-posta geldiğinde",
+          "fields": {
+            "inboxMessageId": "E-posta kimliği",
+            "source": "Kaynak",
+            "attachmentCount": "Ek sayısı",
+            "category": "Sınıf"
+          },
+          "options": {
+            "source": {
+              "IMAP": "IMAP",
+              "EML": ".eml dosyası"
+            },
+            "category": {
+              "invoice": "Fatura",
+              "meeting": "Toplantı",
+              "membership": "Üyelik",
+              "donation": "Bağış",
+              "question": "Soru",
+              "other": "Diğer"
+            }
+          }
+        }
       }
+    },
+    "secretary": {
+      "triage": {
+        "question": "Soru içeren e-posta yanıt bekliyor olabilir",
+        "membership": "Üyelikle ilgili e-posta yanıt bekliyor olabilir",
+        "meeting": "Toplantı/davet e-postası: görev olarak takip edilebilir",
+        "donation": "Bağışla ilgili e-posta: görev olarak takip edilebilir"
+      },
+      "replyDraftProposal": "Yanıt taslağı aç",
+      "replyDraftProposalDetail": "Yalnız boş bir taslak açılır. Metni siz yazar, ayrıca \"Gönder\" dediğinizde gönderilir.",
+      "taskDraftProposal": "Bu e-posta için görev oluştur",
+      "taskDraftProposalDetail": "Konu başlığıyla açık bir görev oluşturulur; atama ve tarih eklenmez, kimseye bildirim gitmez."
     }
   },
   "mailings": {
@@ -7867,13 +7916,23 @@
     "access": {
       "system": "Hangi modüllerin açık ve onaylı olduğunu okur; özet yalnız bunların katkılarını gösterir.",
       "users": "Günlük özeti yalnız etkin ve sekreter yetkisi olan kullanıcılar için hazırlamak üzere kullanıcının durumunu ve rolünü okur.",
-      "mail": "Günlük özet e-postasını göndermek için mevcut e-posta altyapısını kullanır (yalnız tercihinde e-posta seçen kullanıcıya, yalnız toplam sayılar)."
+      "mail": "Günlük özet e-postasını göndermek için mevcut e-posta altyapısını kullanır (yalnız tercihinde e-posta seçen kullanıcıya, yalnız toplam sayılar).",
+      "exports": "Haftalık kurul raporunu (yalnız sayılar) Dosyalarım üretim hattında PDF olarak oluşturur; doğrudan indirme bağlantısı yoktur.",
+      "organization": "Rapor antedi için dernek adını, adresini ve logosunu okur."
     },
     "automation": {
       "tasks": {
         "daily_briefing": {
           "label": "Günlük sabah özeti",
           "description": "Zamanı gelen kullanıcılar için sabah özetini günde bir kez hazırlar (Europe/Berlin saati, sessiz saatlere uyar)."
+        },
+        "weekly_report": {
+          "label": "Haftalık kurul raporu (PDF)",
+          "description": "Yalnız sayılardan oluşan haftalık raporu Dosyalarım'a PDF olarak üretir."
+        },
+        "follow_up_reminders": {
+          "label": "Takip hatırlatmaları",
+          "description": "Süresi gelen takip kayıtlarını sekreter özetinde hatırlatır (günde en çok bir kez; dış mesaj gönderilmez)."
         }
       }
     },
@@ -7932,7 +7991,20 @@
       "preferencesError": "Tercihler kaydedilemedi",
       "preferencesInvalid": "Saat ve kanal seçimlerini kontrol edin",
       "preferencesEmailHint": "E-posta yalnız özet sayıları ve güvenli uygulama bağlantısını içerir.",
-      "preferencesUnavailable": "Tercihler şu anda yüklenemiyor."
+      "preferencesUnavailable": "Tercihler şu anda yüklenemiyor.",
+      "advancedTitle": "Sekreter — gelişmiş işler",
+      "advancedEmpty": "Henüz incelenecek gelişmiş işlem yok.",
+      "advancedApprovalRequired": "İşlem uygulanmadan önce açık onayınız gereklidir.",
+      "advancedMail": "Gelen posta",
+      "advancedFollowUp": "Takip",
+      "advancedWeeklyReport": "Haftalık rapor",
+      "advancedOcr": "Evrak alan önerisi",
+      "advancedChannel": "Bildirim izni",
+      "advancedDelegation": "Vekil yetkisi",
+      "advancedDraft": "Taslak",
+      "advancedNeedsReview": "İnceleme bekliyor",
+      "advancedPaused": "Duraklatıldı",
+      "advancedComplete": "Tamamlandı"
     },
     "digest": {
       "subject": "Sabah özetiniz: {total} konu",
@@ -7949,6 +8021,49 @@
         "listLabel": "Bugünkü konular",
         "partial": "Bazı modüller şu an yanıt vermedi; liste eksik olabilir.",
         "more": "Tümünü gör ({count})"
+      }
+    },
+    "weeklyReport": {
+      "errors": {
+        "forbidden": "Bu rapor için yetkiniz yok.",
+        "unavailable": "Dosya üretimi şu an kullanılamıyor (Otomasyon veya Dosyalarım kapalı).",
+        "notFound": "Rapor bulunamadı."
+      }
+    },
+    "secretary": {
+      "followUpDue": "Takip: {title}",
+      "followUpExhausted": "Takip (hatırlatmalar bitti): {title}"
+    },
+    "followUps": {
+      "errors": {
+        "dateInvalid": "Takip tarihi bugünden önce veya bir yıldan ileri olamaz.",
+        "limit": "En fazla 100 açık takip kaydınız olabilir.",
+        "notFound": "Takip kaydı bulunamadı.",
+        "invalidTransition": "Bu takip kaydı için bu işlem yapılamaz.",
+        "forbidden": "Bu işlem için yetkiniz yok."
+      }
+    },
+    "delegation": {
+      "errors": {
+        "forbidden": "Bu işlem için yetkiniz yok.",
+        "self": "Kendinize vekâlet veremezsiniz.",
+        "expiry": "Süre sonu gelecekte ve en fazla 90 gün sonra olmalı.",
+        "delegateInvalid": "Seçilen kullanıcı etkin değil veya sekreteri kullanamıyor.",
+        "duplicate": "Bu kişiye zaten etkin bir vekâlet verdiniz.",
+        "limit": "En fazla 5 etkin vekâlet verebilirsiniz.",
+        "notFound": "Vekâlet bulunamadı veya artık geçerli değil."
+      }
+    },
+    "channels": {
+      "errors": {
+        "forbidden": "Bu işlem için yetkiniz yok.",
+        "addressInvalid": "Adres geçersiz (telefon +49… biçiminde, Telegram için sohbet kimliği).",
+        "unavailable": "Bu kanal şu an kullanılamıyor (sağlayıcı yapılandırılmamış).",
+        "rateLimited": "Bugün için doğrulama sınırına ulaşıldı.",
+        "sendFailed": "Doğrulama kodu gönderilemedi.",
+        "notPending": "Bekleyen bir doğrulama yok.",
+        "codeExpired": "Kodun süresi doldu veya deneme hakkı bitti; yeniden isteyin.",
+        "codeInvalid": "Kod hatalı."
       }
     }
   },

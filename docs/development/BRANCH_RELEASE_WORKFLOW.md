@@ -39,11 +39,12 @@ feature/<topic> ---- PR + CI ----> alpha
 
 | Target | Allowed head | Merge method | Required checks | Extra |
 | --- | --- | --- | --- | --- |
-| `alpha` | `claude/ chatgpt/ codex/ agent/ feature/ fix/ hotfix/ docs/ chore/ ci/ test/ refactor/ deps/ dependabot/ sync/` | squash only | `Quality gate`, `Promotion policy (alpha)` | branch must be up to date with `alpha` |
+| `alpha` | `claude/ chatgpt/ codex/ gemini/ agent/ feature/ fix/ hotfix/ docs/ chore/ ci/ test/ refactor/ deps/ dependabot/ sync/` | squash only | `Quality gate`, `Promotion policy (alpha)` | branch must be up to date with `alpha` |
 | `beta` | `alpha` only | merge commit only | `Quality gate`, `Promotion policy (beta)` | `beta` must not contain content missing from `alpha` |
 | `main` | `beta` only | merge commit only | `Quality gate`, `Promotion policy (main)`, `Secret scan (gitleaks)`, `Dependency audit` | `main` must not contain content missing from `beta`; explicit product-owner approval |
 
 - Fork PRs are rejected for all three branches.
+- **One branch = one open PR.** GitHub matches required checks per commit; a second PR from the same branch (e.g. `feature -> main` next to `feature -> alpha`) shadows the first PR's `Promotion policy` result. The promotion job fails while another open PR from the same head exists.
 - `main`, `beta` and `alpha` can never be the head of a PR into `alpha` (no back-merges; drift is caught by the content check instead).
 - Direct pushes, force pushes and deletion are blocked by rulesets for everyone (no bypass actors).
 - Merge methods are fixed per branch: squash keeps `alpha` history one commit per task; merge commits keep `beta`/`main` traceable to the promoted `alpha`/`beta` commit.
@@ -61,7 +62,7 @@ feature/<topic> ---- PR + CI ----> alpha
 A critical production fix starts from the current `main` commit. Apply via a narrowly scoped fix PR into `alpha`, promote to `beta`, validate, then promote to `main`. If release-train changes in `alpha` must not ship, coordinate an explicit exceptional emergency process with a human administrator and documented audit rather than silently bypassing branch rules. Use Vercel/Coolify rollback mechanisms for urgent recovery; data migrations require a separate rollback/forward-fix plan.
 
 ## GitHub repository settings (administrator action)
-The exact rulesets live in `.github/rulesets/{alpha,beta,main}.json`. Apply them in **Settings → Rules → Rulesets → New ruleset → Import a ruleset** (replace the old "Development Branch Protection" and update "Production Branch Protection"). After that, delete the temporary `branch-flow` ("Branch promotion policy") job from `ci.yml`.
+The exact rulesets live in `.github/rulesets/{alpha,beta,main}.json`. Apply them in **Settings → Rules → Rulesets → New ruleset → Import a ruleset** — applied on 2026-11-19 (Alpha / Beta / Production Branch Protection); the legacy shared "Branch promotion policy" check was removed.
 
 Protect `alpha`, `beta`, and `main` with rulesets or branch protection:
 - Require pull requests and passing checks for all three branches; block force-push and deletion.

@@ -47,6 +47,8 @@ model MailInboxSettings {
   uidValidity       String?
   lastFetchAt       DateTime?
   lastError         String?
+  /// S4.1 (#313): kurum düzeyinde yerel, meta tabanlı sınıflama (varsayılan kapalı; yönetici açar).
+  triageEnabled     Boolean  @default(false)
   updatedAt         DateTime @updatedAt
 
   @@map("mail_inbox_settings")
@@ -64,9 +66,14 @@ model MailInboxMessage {
   receivedAt  DateTime
   snippet     String?
   status      String              @default("NEW") // NEW | DONE
+  /// S4.1 (#313): yerel kural sınıfı (invoice | meeting | membership | donation | question | other); yalnız triageEnabled iken.
+  category    String?
+  triagedAt   DateTime?
   createdAt   DateTime            @default(now())
 
   attachments MailInboxAttachment[]
+  replyDrafts MailReplyDraft[]
+  triageTasks MailTriageTask[]
 
   @@index([status, receivedAt])
   @@map("mail_inbox_messages")
@@ -87,4 +94,43 @@ model MailInboxAttachment {
 
   @@index([messageId])
   @@map("mail_inbox_attachments")
+}
+
+/// S4.1 (#313): gelen posta sınıflaması için kullanıcı rızası (opt-in). Kayıt yoksa sekreter posta önerisi göstermez.
+model MailTriageOptIn {
+  userId    String   @id
+  createdAt DateTime @default(now())
+
+  @@map("mail_triage_opt_ins")
+}
+
+/// S4.1 (#313): onaylı öneriden doğan yanıt TASLAĞI. Gönderim ayrı, ikinci bir onaydır (gövdeyi kullanıcı yazar).
+/// Gövde AES-GCM ile şifreli; gönderilince silinir. Kullanıcı başına mesaj başına tek taslak.
+model MailReplyDraft {
+  id             String    @id @default(cuid())
+  inboxMessageId String
+  inboxMessage   MailInboxMessage @relation(fields: [inboxMessageId], references: [id], onDelete: Cascade)
+  userId         String
+  status         String    @default("DRAFT") // DRAFT | SENT | DISCARDED
+  bodyEnc        String?
+  sentAt         DateTime?
+  mailLogId      String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+
+  @@unique([inboxMessageId, userId])
+  @@index([userId, status])
+  @@map("mail_reply_drafts")
+}
+
+/// S4.1 (#313): onaylı "görev taslağı" önerisinden oluşan görev bağlantısı (aynı mesaj için ikinci öneri olmaz).
+model MailTriageTask {
+  inboxMessageId String
+  inboxMessage   MailInboxMessage @relation(fields: [inboxMessageId], references: [id], onDelete: Cascade)
+  userId         String
+  taskId         String
+  createdAt      DateTime         @default(now())
+
+  @@id([inboxMessageId, userId])
+  @@map("mail_triage_tasks")
 }

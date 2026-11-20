@@ -4,7 +4,7 @@ import { getDb } from "@/shared/db";
 import { defineLifecycle } from "@/shared/modules/lifecycle";
 
 /**
- * Kullanıcı silinince sekreter tercihleri, öğe görünürlüğü ve önerileri silinir (DSGVO Art. 17).
+ * Kullanıcı silinince sekreter tercihleri, öğe görünürlüğü, önerileri ve takip kayıtları silinir (DSGVO Art. 17).
  * Modül kapatılınca veri korunur (yeniden açıldığında tercihler geri gelir); öneriler süresi dolunca temizlenir.
  */
 export const lifecycle = defineLifecycle({
@@ -15,6 +15,12 @@ export const lifecycle = defineLifecycle({
       db.secretaryPreference.deleteMany({ where: { userId } }),
       db.secretaryItemState.deleteMany({ where: { userId } }),
       db.secretaryProposal.deleteMany({ where: { userId } }),
+      db.secretaryFollowUp.deleteMany({ where: { userId } }),
+      // Vekil yetkileri: kullanıcı sahibi veya vekilse silinir (yetki bir kişiye bağlıdır, devredilemez).
+      db.secretaryDelegation.deleteMany({ where: { grantorId: userId } }),
+      db.secretaryDelegation.deleteMany({ where: { delegateId: userId } }),
+      db.secretaryChannelConsent.deleteMany({ where: { userId } }),
+      db.secretaryChannelDelivery.deleteMany({ where: { userId } }),
     ]);
   },
 });

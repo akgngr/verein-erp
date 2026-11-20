@@ -13,22 +13,49 @@ body {
 html body {
   overflow: visible;
 }
-::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+
+:root {
+  color-scheme: light dark;
+  --scrollbar-thumb: rgba(156, 163, 175, 0.4);
+  --scrollbar-track: transparent;
 }
-::-webkit-scrollbar-track {
-  background: transparent;
+
+.dark {
+  --scrollbar-thumb: rgba(156, 163, 175, 0.25);
 }
-::-webkit-scrollbar-thumb {
-  background: rgba(156, 163, 175, 0.4);
-  border-radius: 9999px;
+
+/* W3C Baseline standart kaydırma çubuğu özellikleri */
+* {
+  scrollbar-color: var(--scrollbar-thumb) var(--scrollbar-track);
+  scrollbar-width: thin;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(156, 163, 175, 0.7);
+
+/* Yüksek karşıtlık / erişilebilirlik modunda sistem kontrollerine uyum */
+@media (forced-colors: active) {
+  * {
+    scrollbar-color: auto;
+  }
 }
-.dark ::-webkit-scrollbar-thumb {
-  background: rgba(156, 163, 175, 0.25);
+
+/* scrollbar-color desteklemeyen eski WebKit tarayıcılar için yedek kural */
+@supports not (scrollbar-color: auto) {
+  * {
+    scrollbar-width: auto;
+  }
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--scrollbar-thumb);
+    border-radius: 9999px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(156, 163, 175, 0.7);
+  }
 }
 :focus-visible {
   outline-color: var(--focus);

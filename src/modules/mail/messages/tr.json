@@ -135,7 +135,9 @@
   },
   "access": {
     "accounting": "Gelen e-postalardaki fatura/belge eklerini muhasebe → gelen faturalar kutusuna aktarır.",
-    "system": "Muhasebe modülünün etkin olup olmadığını okur (aktarma düğmesi yalnızca etkinken gösterilir)."
+    "system": "Muhasebe modülünün etkin olup olmadığını okur (aktarma düğmesi yalnızca etkinken gösterilir).",
+    "tasks": "Sekreterin onaylı \"görev taslağı\" önerisinden görev oluşturur (yalnız kullanıcı onayıyla).",
+    "users": "Görevdeki \"oluşturan\" etiketi için kullanıcının adını okur."
   },
   "inbox": {
     "title": "Gelen kutusu",
@@ -195,6 +197,16 @@
       "emlInvalid": "Geçerli bir .eml dosyası değil.",
       "accountingOff": "Muhasebe modülü kapalı.",
       "notFound": "Bulunamadı."
+    },
+    "drafts": {
+      "errors": {
+        "noRecipient": "Bu e-postanın yanıt adresi yok.",
+        "notFound": "Taslak bulunamadı.",
+        "notEditable": "Bu taslak artık düzenlenemez.",
+        "bodyRequired": "Göndermeden önce yanıt metnini yazın.",
+        "mailNotConfigured": "E-posta gönderimi yapılandırılmamış (Ayarlar → E-posta).",
+        "sendFailed": "E-posta gönderilemedi; taslak korunuyor."
+      }
     }
   },
   "automation": {
@@ -212,6 +224,43 @@
           "body": "Metne '{{member.fullName}}' gibi alanlar ekleyebilirsiniz; liste aşağıda. Kişisel bilgiler yalnızca gönderim anında okunur, saklanmaz."
         }
       }
+    },
+    "events": {
+      "message_received": {
+        "label": "Gelen kutusuna e-posta geldiğinde",
+        "fields": {
+          "inboxMessageId": "E-posta kimliği",
+          "source": "Kaynak",
+          "attachmentCount": "Ek sayısı",
+          "category": "Sınıf"
+        },
+        "options": {
+          "source": {
+            "IMAP": "IMAP",
+            "EML": ".eml dosyası"
+          },
+          "category": {
+            "invoice": "Fatura",
+            "meeting": "Toplantı",
+            "membership": "Üyelik",
+            "donation": "Bağış",
+            "question": "Soru",
+            "other": "Diğer"
+          }
+        }
+      }
     }
+  },
+  "secretary": {
+    "triage": {
+      "question": "Soru içeren e-posta yanıt bekliyor olabilir",
+      "membership": "Üyelikle ilgili e-posta yanıt bekliyor olabilir",
+      "meeting": "Toplantı/davet e-postası: görev olarak takip edilebilir",
+      "donation": "Bağışla ilgili e-posta: görev olarak takip edilebilir"
+    },
+    "replyDraftProposal": "Yanıt taslağı aç",
+    "replyDraftProposalDetail": "Yalnız boş bir taslak açılır. Metni siz yazar, ayrıca \"Gönder\" dediğinizde gönderilir.",
+    "taskDraftProposal": "Bu e-posta için görev oluştur",
+    "taskDraftProposalDetail": "Konu başlığıyla açık bir görev oluşturulur; atama ve tarih eklenmez, kimseye bildirim gitmez."
   }
 }
