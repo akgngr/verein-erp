@@ -187,8 +187,8 @@ export async function getWeatherData(
 
     const result: WeatherData = {
       city,
-      latitude,
-      longitude,
+      latitude: roundedLat,
+      longitude: roundedLon,
       temperature: Math.round(json.current?.temperature_2m ?? 18),
       apparentTemperature: Math.round(json.current?.apparent_temperature ?? 18),
       humidity: json.current?.relative_humidity_2m ?? 50,
@@ -216,12 +216,12 @@ export async function getWeatherData(
     weatherCache.set(cacheKey, { data: result, timestamp: now });
     return result;
   } catch {
-    // Hata durumunda güvenli yedek veri
+    // Hata veya ağ yokluğunda güvenli yedek veri
     const fallbackCond = getConditionInfo(0);
-    return {
+    const fallbackData: WeatherData = {
       city,
-      latitude,
-      longitude,
+      latitude: roundedLat,
+      longitude: roundedLon,
       temperature: 19,
       apparentTemperature: 19,
       humidity: 55,
@@ -245,5 +245,7 @@ export async function getWeatherData(
       },
       updatedAt: new Date().toISOString(),
     };
+    weatherCache.set(cacheKey, { data: fallbackData, timestamp: now });
+    return fallbackData;
   }
 }
