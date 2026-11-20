@@ -1,5 +1,5 @@
 ---
-sidebar_position: 36
+sidebar_position: 37
 title: "Üyeler"
 description: "Üye kayıtları, üyelik tipleri, aidat tahakkuk ve ödeme takibi."
 slug: /kullanim/moduller/members

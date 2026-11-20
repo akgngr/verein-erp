@@ -1,0 +1,14 @@
+{
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
+  "releases": [
+    {
+      "version": "0.1.0",
+      "date": "2026-11-20",
+      "title": { "tr": "Merkezi bildirim altyapısı", "de": "Zentrale Benachrichtigungs-Infrastruktur" },
+      "changes": [
+        { "type": "feature", "tr": "Modüllerin bildirim türlerini tanımladığı ortak sözleşme ve bildirim tabloları eklendi. Görünür değişiklik sonraki sürümlerde gelir.", "de": "Gemeinsamer Vertrag, mit dem Module ihre Benachrichtigungsarten beschreiben, und Benachrichtigungstabellen hinzugefügt. Sichtbare Änderungen folgen in späteren Versionen." },
+        { "type": "security", "tr": "Bildirim içerikleri şifreli saklanır; sağlayıcı sırları veritabanında şifreli tutulur ve geri gösterilmez; kullanıcı silinince bildirimleri de silinir.", "de": "Benachrichtigungsinhalte werden verschlüsselt gespeichert; Anbieter-Geheimnisse liegen verschlüsselt in der Datenbank und werden nicht angezeigt; beim Löschen eines Nutzers werden auch dessen Benachrichtigungen gelöscht." }
+      ]
+    }
+  ]
+}

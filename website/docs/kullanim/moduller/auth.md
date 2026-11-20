@@ -1,5 +1,5 @@
 ---
-sidebar_position: 19
+sidebar_position: 20
 title: "Kimlik Doğrulama"
 description: "Kullanıcı girişi, oturum yönetimi ve parola güvenliği."
 slug: /kullanim/moduller/auth

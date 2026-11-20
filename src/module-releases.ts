@@ -31,6 +31,7 @@ import grantsReleases from "@/modules/grants/releases.json";
 import inventoryReleases from "@/modules/inventory/releases.json";
 import mailReleases from "@/modules/mail/releases.json";
 import mailingsReleases from "@/modules/mailings/releases.json";
+import notificationsReleases from "@/modules/notifications/releases.json";
 import onlineformsReleases from "@/modules/online-forms/releases.json";
 import progressReleases from "@/modules/progress/releases.json";
 import secretaryReleases from "@/modules/secretary/releases.json";
@@ -71,6 +72,7 @@ export const moduleReleases: { moduleKey: string; releases: ModuleRelease[] }[] 
   { moduleKey: "inventory", releases: inventoryReleases.releases as ModuleRelease[] },
   { moduleKey: "mail", releases: mailReleases.releases as ModuleRelease[] },
   { moduleKey: "mailings", releases: mailingsReleases.releases as ModuleRelease[] },
+  { moduleKey: "notifications", releases: notificationsReleases.releases as ModuleRelease[] },
   { moduleKey: "online-forms", releases: onlineformsReleases.releases as ModuleRelease[] },
   { moduleKey: "progress", releases: progressReleases.releases as ModuleRelease[] },
   { moduleKey: "secretary", releases: secretaryReleases.releases as ModuleRelease[] },
