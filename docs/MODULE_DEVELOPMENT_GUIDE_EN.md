@@ -206,6 +206,8 @@ access: [
 - `pnpm module:validate` scans the code. An undeclared `server` import or direct access to another
   module's table (`getDb().<model>`) is an error. The operation is derived from the function name:
   `delete…`/`remove…` → delete; `create…`, `update…`, `send…`, `…Action` etc. → write; otherwise read.
+- Dynamic (`await import("@/modules/x/server")`), namespace (`import * as`) and re-export (`export … from`) imports count as access too.
+- **Outbound network:** a bare `fetch(` in module code may only target an app-relative path (`"/api/…"`). Calls to external services happen **server-side only** via `channelFetch([allowed hosts], url)` (https, no redirects, timeout). Direct browser requests to third parties are forbidden (they leak the user's IP). Reviewed exceptions live in `RAW_FETCH_ALLOWLIST`.
 - `auth` (session, `createAction`) is infrastructure and needs no declaration.
 - When activating the module, the admin sees the requested access in an approval dialog and allows it.
   Without approval the module is unusable: hidden from the menu, pages and APIs closed (generated

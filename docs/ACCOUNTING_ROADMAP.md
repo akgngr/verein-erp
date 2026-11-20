@@ -52,7 +52,7 @@ CAMT.053/MT940, SEPA pain.001/pain.008, GoBD.
 ### ACC-6 — İhtarname ve ödeme
 - [x] İhtar seviyeleri, ücret, gecikme faizi (§288 BGB), PDF/e-posta
 - [x] Ödeme önerisi (Skonto önce), SEPA pain.001
-- [ ] Aidatlar için SEPA Lastschrift pain.008 + mandat yönetimi — **eksik**
+- [x] Aidatlar için SEPA Lastschrift pain.008 + mandat yönetimi — `sepa` modülü
 
 ### ACC-7 — GoBD paketi
 - [x] Zincirleme SHA-256 kayıt (fiş, storno, dışa aktarma) + doğrulama ekranı
@@ -65,7 +65,7 @@ CAMT.053/MT940, SEPA pain.001/pain.008, GoBD.
 - [x] Götürü giderler (ev ofisi, km, harcırah)
 - [x] Vergi takvimi + iCal
 - [x] Dernek: §62 AO rezervler, Kassenprüfer raporu, SKR49
-- [ ] Hibe ve Verwendungsnachweis raporu — **eksik**
+- [x] Hibe ve Verwendungsnachweis raporu — `grants` modülü
 
 ## Her aşamada
 - Veri modeli değişikliği → migration + mevcut veriyle test; değiştirilemez kayıtlar storno ile düzeltilir.
