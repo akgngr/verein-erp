@@ -68,6 +68,24 @@
       "telegram": "Telegram",
       "whatsapp": "WhatsApp",
       "sms": "SMS"
+    },
+    "preferencesDescription": "Bildirim kanallarını, sessiz saatleri ve günlük özeti yönetin.",
+    "telegramLinkTitle": "Telegram hesabı bağlama",
+    "telegramUnlink": "Telegram bağlantısını kaldır",
+    "telegramConnect": "Telegram'a bağlan",
+    "telegramOpen": "Telegram bağlantısını aç",
+    "telegramAdmin": "Telegram botu (yönetici)",
+    "telegramEnabled": "Telegram kanalını etkinleştir",
+    "telegramToken": "Bot token (mevcut anahtar gösterilmez)",
+    "telegramTokenSaved": "Kayıtlı bot anahtarı mevcut. Yeni anahtar için yazın; boş bırakırsanız korunur.",
+    "telegramTokenMissing": "Henüz bot anahtarı kaydedilmemiş.",
+    "link": {
+      "linked": "Telegram hesabı bağlı.",
+      "pending": "Bağlantı onayı bekleniyor.",
+      "none": "Telegram hesabı bağlı değil."
     }
+  },
+  "nav": {
+    "notifications": "Bildirimler"
   }
 }
