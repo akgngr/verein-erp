@@ -91,7 +91,8 @@
   "access": {
     "members": "Liest die Mitgliederliste, um Verantwortliche auszuwählen.",
     "meetings": "Liest die Sitzungsliste, um Aufgaben einer Sitzung zuzuordnen.",
-    "users": "Liest die Kontoe-Mail-Adresse des aktiven Benutzers für die Zuordnung eigener Aufgaben in der Sekretariatsübersicht."
+    "users": "Liest die Kontoe-Mail-Adresse des aktiven Benutzers für die Zuordnung eigener Aufgaben in der Sekretariatsübersicht.",
+    "notifications": "Benachrichtigt die zugewiesene Person, wenn eine Aufgabe zugewiesen wird."
   },
   "ai": {
     "create": {
@@ -149,5 +150,11 @@
   "secretary": {
     "overdue": "{count} überfällige Aufgaben",
     "dueToday": "{count} heute fällige Aufgaben"
+  },
+  "notifications": {
+    "assigned": {
+      "title": "Ihnen wurde eine Aufgabe zugewiesen: {title}",
+      "body": "Unter „Meine Aufgaben“ öffnen."
+    }
   }
 }

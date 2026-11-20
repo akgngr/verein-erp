@@ -13,7 +13,7 @@ Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri.
 |---|---|
 | Anahtar | `users` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.1.7 |
+| Sürüm | 1.1.8 |
 | Sayfalar | `/ayarlar/kullanicilar` |
 
 ## Diğer modüllere erişim
@@ -33,6 +33,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Kullanıcı Hesapları | görüntüleme, oluşturma, düzenleme, silme | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.1.8 — Bildirim alıcısı eşleme
+
+_2026-11-20_
+
+- **İyileştirme:** Diğer modüller, bildirim alıcısını e-posta adresine göre etkin kullanıcılar arasından bulabilir.
 
 ### 1.1.7 — Kod bakımı
 
@@ -76,10 +82,4 @@ _2026-11-07_
 
 - **Güvenlik:** Kullanıcı silinirken tüm modüllerin kişisel verileri de silinir (KVKK md. 7 / DSGVO Art. 17); kurumsal kayıtlar yasal saklama gereği kalır. Temizlenemeyen modüller denetim kaydına yazılır.
 
-### 1.0.2 — Worker için dar public API
-
-_2026-11-03_
-
-- **Düzeltme:** Worker kullanıcı sorgusu ve izin politikası, geniş sunucu barrel'ı yerine framework bağımsız automation giriş noktasından sunuldu.
-
-Daha eski 2 herkese açık sürüm notu.
+Daha eski 3 herkese açık sürüm notu.

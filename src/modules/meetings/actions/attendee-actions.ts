@@ -27,7 +27,7 @@ async function loadMeetingForUpdate(meetingId: string) {
   const db = getDb();
   const meeting = await db.meeting.findFirst({
     where: { id: meetingId, deletedAt: null },
-    select: { id: true, meetingNumber: true, status: true, deletedAt: true },
+    select: { id: true, meetingNumber: true, title: true, status: true, deletedAt: true },
   });
   if (!meeting) throw new ActionError("meetings.errors.meetingNotFound");
   return meeting;
@@ -98,6 +98,15 @@ export async function addAttendeeUsersAction(
         entityId: meeting.id,
         after: { meetingNumber: meeting.meetingNumber, addedUsers: rows.length, role: input.role },
       });
+
+      // N1c (#356): eklenen kullanıcılara bildirim (ekleyen hariç). Hata eklemeyi bozmaz.
+      try {
+        const { notify } = await import("@/modules/notifications/automation");
+        const recipients = rows.map((row) => row.userId).filter((id) => id !== user.id);
+        if (recipients.length) await notify({ type: "meetings.invited", recipients, ref: `meeting:${meeting.id}:invited`, params: { meetingId: meeting.id, title: meeting.title.slice(0, 200) } });
+      } catch {
+        console.error("[meetings] NOTIFY_INVITED_FAILED");
+      }
 
       return { added: rows.length };
     },
