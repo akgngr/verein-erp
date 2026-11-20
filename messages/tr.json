@@ -118,6 +118,7 @@
     "events": "Etkinlikler",
     "exports": "Dosyalarım",
     "geriBildirim": "Geri bildirim",
+    "finance": "Finans",
     "inventory": "Envanter",
     "mail": "E-posta",
     "gelenKutusu": "Gelen kutusu",
@@ -5253,6 +5254,54 @@
           }
         }
       }
+    }
+  },
+  "finance": {
+    "module": {
+      "label": "Finans",
+      "description": "Canlı döviz kurları, piyasa göstergeleri, kur çevirici ve finansal AI asistanı."
+    },
+    "menu": {
+      "settings": "Ayarlar"
+    },
+    "permissions": {
+      "finance": {
+        "label": "Finans",
+        "description": "Döviz kurlarını ve finansal göstergeleri görüntüleme izni."
+      }
+    },
+    "cards": {
+      "rates": {
+        "title": "Döviz Kurları",
+        "description": "Canlı döviz kurları ve değişim göstergeleri.",
+        "baseCurrency": "Baz: 1 {code}"
+      }
+    },
+    "title": "Finans ve Piyasa Kurları",
+    "description": "Canlı döviz kurları, kur çevirici ve finansal planlama göstergeleri.",
+    "meta": {
+      "title": "Finans ve Kurlar",
+      "description": "Canlı piyasa kurları ve finansal araçlar."
+    },
+    "baseCurrency": "Baz Para Birimi",
+    "lastUpdated": "Son Güncelleme: {date}",
+    "refresh": "Kurları yenile",
+    "converterTitle": "Anlık Kur Çevirici",
+    "amount": "Tutar",
+    "from": "Kaynak Birim",
+    "to": "Hedef Birim",
+    "swap": "Birimleri Değiştir",
+    "allRatesTitle": "Tüm Kurlar ({base} Bazlı)",
+    "searchCurrency": "Para birimi ara...",
+    "settings": {
+      "title": "Finans Ayarları",
+      "description": "Varsayılan baz para birimini ve takip edilecek döviz kurlarını yapılandırın.",
+      "baseCurrencyLabel": "Varsayılan Baz Para Birimi",
+      "baseCurrencyDesc": "Tüm kurların ve göstergelerin hesaplanacağı ana para birimi.",
+      "trackedCurrenciesLabel": "Takip Edilen Kurlar",
+      "trackedCurrenciesDesc": "Dashboard kartında ve özet tablolarda gösterilecek öncelikli para birimleri.",
+      "saveButton": "Ayarları Kaydet",
+      "savedSuccess": "Ayarlar başarıyla kaydedildi!"
     }
   },
   "grants": {
