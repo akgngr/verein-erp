@@ -1,5 +1,5 @@
 ---
-sidebar_position: 30
+sidebar_position: 32
 title: "Sekreter"
 description: "Kişisel sekreter: sabah özeti ve onaylı öneriler."
 slug: /kullanim/moduller/secretary
@@ -13,7 +13,7 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 |---|---|
 | Anahtar | `secretary` |
 | Tür | Eklenti |
-| Sürüm | 0.11.3 |
+| Sürüm | 0.12.0 |
 | Sayfalar | `/sekreter` |
 
 ## Diğer modüllere erişim
@@ -39,18 +39,18 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 
 ## Sürüm notları
 
-### 0.11.4 — Takip listesi yeniden deneme
+### 0.12.0 — Günlük özet bildirim sistemiyle
 
 _2026-11-20_
 
-- **Düzeltme:** Takip listesi yüklenemediğinde hata ekranından yeniden deneme olanağı eklendi.
+- **İyileştirme:** Günlük özet artık merkezi bildirim sistemiyle teslim edilir: zildeki kutuda görünür; e-posta, Telegram ve tarayıcı bildirimi seçimi Bildirim tercihlerinden yapılır. Önceki e-posta seçimi ve doğrulanmış kanal rızaları otomatik taşınır.
+- **Güvenlik:** Dış kanallara yalnız sayılar ve tarih gider; kişi adı, başlık veya tutar gitmez.
 
-### 0.11.3 — Takiplerim arayüzü
+### 0.11.3 — Merkezi bildirimler
 
 _2026-11-20_
 
-- **Yeni:** Sekreter sayfasında kullanıcıya ait takipleri görüntüleme, yeni takip oluşturma, duraklatma, devam ettirme, iptal ve tamamlama işlemleri gerçek yetki denetimli sunucu eylemlerine bağlandı.
-- **Güvenlik:** İşlemler yalnız oturum sahibinin kayıtlarını etkiler; dış mesaj gönderilmez ve geçersiz kaynak bağlantıları gösterilmez.
+- **Yeni:** Onay bekleyen yeni sekreter önerileri bildirim olarak görünür (içerik yok).
 
 ### 0.11.2 — Çalışma zamanı modernizasyonu
 

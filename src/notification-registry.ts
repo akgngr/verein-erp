@@ -5,6 +5,7 @@ import type { ModuleNotifications } from "@/shared/notifications/define";
 
 import { notifications as meetingsNotifications } from "@/modules/meetings/notifications";
 import { notifications as mailNotifications } from "@/modules/mail/notifications";
+import { notifications as notificationsNotifications } from "@/modules/notifications/notifications";
 import { notifications as secretaryNotifications } from "@/modules/secretary/notifications";
 import { notifications as tasksNotifications } from "@/modules/tasks/notifications";
 
@@ -12,6 +13,7 @@ import { notifications as tasksNotifications } from "@/modules/tasks/notificatio
 export const moduleNotificationRegistry: ModuleNotifications[] = [
   meetingsNotifications,
   mailNotifications,
+  notificationsNotifications,
   secretaryNotifications,
   tasksNotifications,
 ];

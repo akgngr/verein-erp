@@ -5,3 +5,5 @@ import "server-only";
 export { getUserById, type UserRow } from "./queries/list-users";
 export { loadPermissionPolicy } from "./services/roles";
 export { findActiveUserIdsByEmails } from "./queries/find-users-by-email";
+export { listActiveUsersForAudience } from "./queries/list-audience";
+export { listUserDirectory } from "./queries/user-directory";

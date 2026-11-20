@@ -27,6 +27,7 @@ import demoReleases from "@/modules/demo/releases.json";
 import eventsReleases from "@/modules/events/releases.json";
 import exportsReleases from "@/modules/exports/releases.json";
 import feedbackReleases from "@/modules/feedback/releases.json";
+import financeReleases from "@/modules/finance/releases.json";
 import grantsReleases from "@/modules/grants/releases.json";
 import inventoryReleases from "@/modules/inventory/releases.json";
 import mailReleases from "@/modules/mail/releases.json";
@@ -39,6 +40,7 @@ import securitymonitorReleases from "@/modules/security-monitor/releases.json";
 import sepaReleases from "@/modules/sepa/releases.json";
 import studentsReleases from "@/modules/students/releases.json";
 import tasksReleases from "@/modules/tasks/releases.json";
+import weatherReleases from "@/modules/weather/releases.json";
 
 /** Modüllerin sürüm notları (src/modules/<modül>/releases.json), en yeni sürüm üstte. */
 export const moduleReleases: { moduleKey: string; releases: ModuleRelease[] }[] = [
@@ -68,6 +70,7 @@ export const moduleReleases: { moduleKey: string; releases: ModuleRelease[] }[] 
   { moduleKey: "events", releases: eventsReleases.releases as ModuleRelease[] },
   { moduleKey: "exports", releases: exportsReleases.releases as ModuleRelease[] },
   { moduleKey: "feedback", releases: feedbackReleases.releases as ModuleRelease[] },
+  { moduleKey: "finance", releases: financeReleases.releases as ModuleRelease[] },
   { moduleKey: "grants", releases: grantsReleases.releases as ModuleRelease[] },
   { moduleKey: "inventory", releases: inventoryReleases.releases as ModuleRelease[] },
   { moduleKey: "mail", releases: mailReleases.releases as ModuleRelease[] },
@@ -80,4 +83,5 @@ export const moduleReleases: { moduleKey: string; releases: ModuleRelease[] }[] 
   { moduleKey: "sepa", releases: sepaReleases.releases as ModuleRelease[] },
   { moduleKey: "students", releases: studentsReleases.releases as ModuleRelease[] },
   { moduleKey: "tasks", releases: tasksReleases.releases as ModuleRelease[] },
+  { moduleKey: "weather", releases: weatherReleases.releases as ModuleRelease[] },
 ];

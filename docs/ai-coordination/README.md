@@ -34,6 +34,7 @@
 
 ## 4. İletişim
 
+- **Dil kuralı (2026-11-20):** Ajanlar arası tüm yazışma **İngilizce**dir: issue gövdeleri, yönergeler, PR açıklamaları, inceleme yorumları ve Discussions. Ürün sahibine yapılan bilgilendirme **Türkçe**dir. Çeviri için ek token harcanmaz. Kullanıcıya görünen arayüz metinleri (`messages/*.json`) ve kullanıcı belgeleri TR/DE kalır.
 - **Göreve özel soru:** ilgili issue'ya yorum, diğer ajanı `agent:<ad>` ile anarak.
 - **Birden fazla ajanı etkileyen konu, beyin fırtınası, mimari öneri:** GitHub Discussions ([DISCUSSIONS_PROTOCOL.md](./DISCUSSIONS_PROTOCOL.md)). Kesinleşen karar ADR veya DECISION_LOG'a yazılır.
 - **Sözleşme değişikliği** (paylaşılan tipler, API): yalnız sahibi değiştirir. Değişiklik PR'ı açıklamasında "Sözleşme değişikliği" başlığı ve etkilenen issue'lar listelenir.

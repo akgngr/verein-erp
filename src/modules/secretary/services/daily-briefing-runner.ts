@@ -2,15 +2,11 @@ import "server-only";
 
 // Worker-safe giriş: users/server next-auth zincirini yükler ve worker'da çalışmaz.
 import { getUserById } from "@/modules/users/automation";
-import { isMailConfigured, sendMail } from "@/modules/mail/automation";
 import { getDb } from "@/shared/db";
-import { getEnv } from "@/shared/env";
-import { SECRETARY_EXTERNAL_CHANNELS, type SecretaryExternalChannel } from "@/shared/secretary/channels";
 
 import { getBriefing } from "./briefing";
-import { activeChannels, deliverDigestToChannel } from "./channels";
 import { renderSecretaryDailySummary } from "../emails/daily-summary";
-import { type BriefingEmailRenderer, createEmailDelivery } from "./briefing-email";
+import type { BriefingEmailRenderer } from "./briefing-email";
 
 /** T3.2 şablonu (#262): yalnız sayılar + güvenilir uygulama adresi; HTML ve düz metin. */
 export const dailySummaryRenderer: BriefingEmailRenderer = (digest, { locale, url }) =>
@@ -20,15 +16,6 @@ import { type DailyBriefingResult, runDailyBriefings } from "./daily-briefing";
 /** Veritabanına bağlı varsayılanlarla günlük özet çalıştırması (worker). */
 export async function runScheduledBriefings(now: Date): Promise<DailyBriefingResult> {
   const db = getDb();
-  const env = getEnv();
-  // E-posta: yalnız kullanıcı "email" kanalını seçtiyse, APP_URL tanımlı ve mail yapılandırılmışsa.
-  const email = createEmailDelivery({
-    appUrl: env.APP_URL,
-    locale: env.DOCUMENT_LANGUAGE,
-    isMailConfigured,
-    send: (message) => sendMail(message),
-    render: dailySummaryRenderer,
-  });
   return runDailyBriefings(now, {
     listPreferences: () =>
       db.secretaryPreference.findMany({
@@ -47,11 +34,10 @@ export async function runScheduledBriefings(now: Date): Promise<DailyBriefingRes
     },
     // Özet sayıları için başlık gerekmez; worker'da istek bağlamı olmadığından çeviri anahtarı yeterli.
     buildBriefing: (user, at) => getBriefing(user, at, { translator: async () => (key) => key, proposals: false }),
-    deliver: async (user, channel, digest) => {
-      if (channel === "email") return email(user, channel, digest);
-      if (!(SECRETARY_EXTERNAL_CHANNELS as readonly string[]).includes(channel)) return;
-      await deliverDigestToChannel(user, channel as SecretaryExternalChannel, digest, { locale: env.DOCUMENT_LANGUAGE });
+    // N6 (#363): teslim merkezi bildirim sisteminde; kanal/tercih/sessiz saat/çift gönderim orada yönetilir.
+    publish: async (user, digest) => {
+      const { notify } = await import("@/modules/notifications/automation");
+      await notify({ type: "secretary.daily-digest", recipients: [user.id], ref: `daily-digest:${digest.date}`, params: digest });
     },
-    listConsentedChannels: activeChannels,
   });
 }

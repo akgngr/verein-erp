@@ -142,6 +142,7 @@ export const DATA_POLICY = {
   NotificationChannelConfig: { owner: "notifications", category: "K0", reason: "Kanal sağlayıcı sırları (bot token, API anahtarı, VAPID özel anahtarı; şifreli)", sensitiveFields: ["secretsEnc"] },
   NotificationDelivery: { owner: "notifications", category: "K1", reason: "Dış kanal teslim kaydı (içerik/adres yok)", sensitiveFields: [], personalOwnerField: "userId" },
   NotificationChannelLink: { owner: "notifications", category: "K1", reason: "Kullanıcının dış kanal bağı (ör. Telegram sohbeti); adres şifreli, belirteç yalnız hash", sensitiveFields: ["addressEnc", "addressHash", "linkTokenHash"], personalOwnerField: "userId" },
+  NotificationPushSubscription: { owner: "notifications", category: "K1", reason: "Tarayıcı push aboneliği; uç nokta ve anahtarlar şifreli", sensitiveFields: ["endpointEnc", "keysEnc", "endpointHash"], personalOwnerField: "userId" },
   SecretaryDelegation: { owner: "secretary", category: "K1", reason: "Vekil yetkisi: sahibi, vekil, kapsam, süre sonu (içerik yok)", sensitiveFields: [], personalOwnerField: "grantorId" },
   SecretaryChannelConsent: { owner: "secretary", category: "K1", reason: "Kullanıcının dış kanal rızası; adres şifreli, doğrulama kodu yalnız hash", sensitiveFields: ["addressEnc", "codeHash"], personalOwnerField: "userId" },
   SecretaryChannelDelivery: { owner: "secretary", category: "K1", reason: "Dış kanal teslim kaydı (içerik/adres yok; yalnız gün, durum, sağlayıcı kimliği)", sensitiveFields: [], personalOwnerField: "userId" },
@@ -263,11 +264,15 @@ export const AI_TOOL_POLICY = {
   propose_delete_document: {"module": "documents", "reads": [], "serverReads": ["Document"], "modelFields": ["status", "note"]},
   // donations
   get_donation_statistics: {"module": "donations", "reads": [], "serverReads": ["Donation"], "modelFields": ["year", "totalEur", "count", "unconfirmedOver300", "confirmationsIssued", "confirmationWarnings"]},
+  // weather — DSGVO Md. 5/6: Konum kişisel veridir; koordinatlar yuvarlanır (≈1 km), log'lanmaz, tarayıcı konumu rızasız saklanmaz
+  get_current_weather: { module: "weather", reads: [], serverReads: [], modelFields: ["city", "temperature", "apparentTemperature", "humidity", "windSpeed", "conditionText", "isAdverse", "todayMin", "todayMax"] },
   // events
   list_upcoming_events: { module: "events", reads: ["Event"], serverReads: ["Event"], modelFields: ["page", "pageSize", "total", "hasMore", "nextCursor", "completeness", "items", "items.title", "items.type", "items.status", "items.start", "items.end", "items.location", "items.registered", "items.capacity"] },
   propose_event: {"module": "events", "reads": [], "serverReads": [], "modelFields": ["status", "note"]},
   // exports
   create_file: { module: "exports", reads: [], serverReads: [], modelFields: ["status", "format", "note"] },
+  // finance
+  get_exchange_rates: { module: "finance", reads: [], serverReads: [], modelFields: ["base", "date", "rates"] },
   // inventory
   get_inventory_overview: { module: "inventory", reads: ["InventoryItem"], serverReads: ["InventoryItem"], modelFields: ["totals", "totals.itemCount", "totals.totalQuantity", "totals.inUseQuantity", "totals.brokenQuantity", "byCategory", "byCategory.category", "byCategory.itemCount", "byCategory.totalQuantity"] },
   list_inventory_items: { module: "inventory", reads: ["InventoryItem"], serverReads: ["InventoryItem"], modelFields: ["page", "pageSize", "total", "hasMore", "nextCursor", "completeness", "items", "items.id", "items.name", "items.category", "items.status", "items.quantity", "items.location", "items.purchaseDate", "items.purchasePriceEur"] },

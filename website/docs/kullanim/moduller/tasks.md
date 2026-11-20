@@ -1,5 +1,5 @@
 ---
-sidebar_position: 18
+sidebar_position: 19
 title: "Görevler"
 description: "Görev ve iş takibi yönetimi."
 slug: /kullanim/moduller/tasks

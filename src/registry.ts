@@ -29,6 +29,7 @@ import { moduleConfig as demoModule } from "@/modules/demo";
 import { moduleConfig as eventsModule } from "@/modules/events";
 import { moduleConfig as exportsModule } from "@/modules/exports";
 import { moduleConfig as feedbackModule } from "@/modules/feedback";
+import { moduleConfig as financeModule } from "@/modules/finance";
 import { moduleConfig as grantsModule } from "@/modules/grants";
 import { moduleConfig as inventoryModule } from "@/modules/inventory";
 import { moduleConfig as mailModule } from "@/modules/mail";
@@ -41,6 +42,7 @@ import { moduleConfig as securitymonitorModule } from "@/modules/security-monito
 import { moduleConfig as sepaModule } from "@/modules/sepa";
 import { moduleConfig as studentsModule } from "@/modules/students";
 import { moduleConfig as tasksModule } from "@/modules/tasks";
+import { moduleConfig as weatherModule } from "@/modules/weather";
 
 /**
  * Projedeki TÜM kayıtlı modüllerin dinamik listesi.
@@ -72,6 +74,7 @@ export const allModules: ModuleConfig[] = [
   eventsModule,
   exportsModule,
   feedbackModule,
+  financeModule,
   grantsModule,
   inventoryModule,
   mailModule,
@@ -84,6 +87,7 @@ export const allModules: ModuleConfig[] = [
   sepaModule,
   studentsModule,
   tasksModule,
+  weatherModule,
 ];
 
 /** Geriye dönük uyumluluk için varsayılan registry */

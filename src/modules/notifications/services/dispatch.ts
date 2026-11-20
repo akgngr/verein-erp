@@ -3,7 +3,7 @@ import "server-only";
 import { getDb } from "@/shared/db";
 import { can } from "@/shared/permissions/define";
 import type { Role } from "@/shared/roles";
-import { isSafeNotificationHref, type ModuleNotifications } from "@/shared/notifications/define";
+import { isSafeNotificationHref, type ModuleNotifications, safeExternalText } from "@/shared/notifications/define";
 import { openSecret } from "@/shared/security/secret-box";
 
 import { findType } from "./inbox";
@@ -42,6 +42,10 @@ export type DispatchDeps = {
   sendMail: (message: MailMessage) => Promise<{ ok: boolean; logId?: string }>;
   appUrl: string | undefined;
   locale: "tr" | "de";
+  /** N3a (#359): Web Push (yapılandırılmamışsa yok sayılır). */
+  webPush?: { isAvailable: () => Promise<boolean>; send: (userId: string, message: { title: string; body: string; url: string }) => Promise<{ ok: boolean } | null> };
+  /** N6b (#363): SMS (varsayılan kapalı; yapılandırılmamışsa yok sayılır). */
+  sms?: { isAvailable: () => Promise<boolean>; send: (userId: string, text: string) => Promise<{ ok: boolean; providerId?: string } | null> };
   /** N4 (#361): Telegram (yapılandırılmamışsa yok sayılır). */
   telegram?: { isAvailable: () => Promise<boolean>; chatFor: (userId: string) => Promise<string | null>; send: (chatId: string, text: string) => Promise<{ ok: boolean; providerId?: string }> };
 };
@@ -81,7 +85,14 @@ async function finish(id: string, ok: boolean, providerId?: string) {
   await getDb().notificationDelivery.update({ where: { id }, data: ok ? { status: "SENT", providerId: providerId?.slice(0, 200) ?? null, errorCode: null } : { status: "FAILED", errorCode: "CHANNEL_SEND_FAILED" } });
 }
 
-type Sender = (user: DispatchUser, count: number, link: string, reference: string) => Promise<{ ok: boolean; providerId?: string } | null>;
+type Sender = (user: DispatchUser, count: number, link: string, reference: string, text?: string | null) => Promise<{ ok: boolean; providerId?: string } | null>;
+
+/** Tür özel metin varsa onu (yalnız kişisel olmayan değerler; sözleşme), yoksa genel metni kullanır. */
+function messageFor(locale: "tr" | "de", count: number, link: string, text?: string | null): { subject: string; text: string } {
+  const generic = emailText(locale, count, link);
+  if (!text) return generic;
+  return { subject: `Verein ERP: ${text}`, text: `${text}\n\n${locale === "de" ? "Öffnen" : "Açın"}: ${link}` };
+}
 
 export async function runDispatch(now: Date, deps: DispatchDeps): Promise<DispatchResult> {
   const result: DispatchResult = { users: 0, sent: 0, skipped: 0, failed: 0, digests: 0 };
@@ -89,19 +100,33 @@ export async function runDispatch(now: Date, deps: DispatchDeps): Promise<Dispat
   // Kullanılabilir dış kanallar ve gönderenler (kanal başına; null = bu kullanıcıya bu kanaldan gönderilemez).
   const senders = new Map<string, Sender>();
   if (await deps.isMailConfigured()) {
-    senders.set("email", async (user, count, link, reference) => {
+    senders.set("email", async (user, count, link, reference, text) => {
       if (!user.email) return null;
-      const sent = await deps.sendMail({ to: user.email, ...emailText(deps.locale, count, link), context: { module: "notifications", reference } }).catch(() => ({ ok: false as const }));
+      const sent = await deps.sendMail({ to: user.email, ...messageFor(deps.locale, count, link, text), context: { module: "notifications", reference } }).catch(() => ({ ok: false as const }));
       return { ok: sent.ok, providerId: "logId" in sent ? sent.logId : undefined };
     });
   }
   const telegram = deps.telegram;
   if (telegram && (await telegram.isAvailable().catch(() => false))) {
-    senders.set("telegram", async (user, count, link) => {
+    senders.set("telegram", async (user, count, link, _reference, text) => {
       const chatId = await telegram.chatFor(user.id);
       if (!chatId) return null;
-      const message = emailText(deps.locale, count, link);
+      const message = messageFor(deps.locale, count, link, text);
       return telegram.send(chatId, `${message.subject}\n${link}`).catch(() => ({ ok: false }));
+    });
+  }
+  const webPush = deps.webPush;
+  if (webPush && (await webPush.isAvailable().catch(() => false))) {
+    senders.set("web_push", async (user, count, link, _reference, text) => {
+      const message = messageFor(deps.locale, count, link, text);
+      return webPush.send(user.id, { title: message.subject, body: message.subject, url: link }).catch(() => ({ ok: false }));
+    });
+  }
+  const sms = deps.sms;
+  if (sms && (await sms.isAvailable().catch(() => false))) {
+    senders.set("sms", async (user, count, link, _reference, text) => {
+      const message = messageFor(deps.locale, count, link, text);
+      return sms.send(user.id, `${message.subject}\n${link}`).catch(() => ({ ok: false }));
     });
   }
   if (!senders.size) return result;
@@ -118,12 +143,12 @@ export async function runDispatch(now: Date, deps: DispatchDeps): Promise<Dispat
   const usable = new Set(await deps.usableModules());
   const time = berlinClock(now);
 
-  const deliver = async (user: DispatchUser, channel: string, dedupeKey: string, count: number, link: string): Promise<boolean> => {
+  const deliver = async (user: DispatchUser, channel: string, dedupeKey: string, count: number, link: string, text?: string | null): Promise<boolean> => {
     const send = senders.get(channel);
     if (!send) return false;
     const id = await claim(user.id, channel, dedupeKey);
     if (!id) return false;
-    const sent: { ok: boolean; providerId?: string } | null = await send(user, count, link, dedupeKey).catch(() => ({ ok: false }));
+    const sent: { ok: boolean; providerId?: string } | null = await send(user, count, link, dedupeKey, text).catch(() => ({ ok: false }));
     if (sent === null) {
       // Bu kanal bu kullanıcı için bağlı değil: claim geri alınır (sonra bağlanırsa gönderilebilir).
       await db.notificationDelivery.delete({ where: { id } }).catch(() => undefined);
@@ -153,7 +178,10 @@ export async function runDispatch(now: Date, deps: DispatchDeps): Promise<Dispat
         if (!channels.length) return [];
         const plain = row.paramsEnc ? openSecret(PARAMS_PURPOSE, row.paramsEnc) : null;
         const params = found.type.schema.safeParse(plain ? JSON.parse(plain) : null);
-        return params.success ? [{ ...row, channels, href: found.type.href(params.data) }] : [];
+        if (!params.success) return [];
+        let text: string | null = null;
+        try { text = found.type.externalText ? safeExternalText(found.type.externalText(params.data, deps.locale)) : null; } catch { text = null; }
+        return [{ ...row, channels, href: found.type.href(params.data), text }];
       });
       if (!eligible.length) continue;
 
@@ -168,7 +196,7 @@ export async function runDispatch(now: Date, deps: DispatchDeps): Promise<Dispat
       }
 
       for (const row of eligible.slice(0, DISPATCH_LIMITS.perUserPerRun)) {
-        for (const channel of row.channels) await deliver(user, channel, row.id, 1, appLink(deps.appUrl, row.href)!);
+        for (const channel of row.channels) await deliver(user, channel, row.id, 1, appLink(deps.appUrl, row.href)!, row.text);
       }
     } catch {
       // Bir kullanıcının hatası diğerlerini durdurmaz; içerik günlüğe yazılmaz.
@@ -202,6 +230,14 @@ export async function defaultDispatchDeps(): Promise<DispatchDeps> {
     },
     appUrl: env.APP_URL,
     locale: env.DOCUMENT_LANGUAGE,
+    sms: {
+      isAvailable: async () => (await import("./sms")).smsAvailable(),
+      send: async (userId, text) => (await import("./sms")).sendSms(userId, text),
+    },
+    webPush: {
+      isAvailable: async () => Boolean(await (await import("./web-push")).publicKey()),
+      send: async (userId, message) => (await import("./web-push")).sendPush(userId, message),
+    },
     telegram: {
       isAvailable: async () => {
         const { getChannelConfig } = await import("./channel-config");
