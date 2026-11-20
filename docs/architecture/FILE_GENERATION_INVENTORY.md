@@ -3,7 +3,7 @@
 - **Şartname Referansı:** [CENTRALIZED_FILE_PIPELINE_SPEC.md](../specs/CENTRALIZED_FILE_PIPELINE_SPEC.md)
 - **İlk Üretici / Facade:** [FILE_GENERATION_FACADE.md](./FILE_GENERATION_FACADE.md)
 - **Takip Edilen Görev:** Issue #411 ([Files FILE-0] Inventory of file generation and download points)
-- **Backlog Durumu:** [TODO_CENTRALIZED_FILE_PIPELINE.md](../TODO_CENTRALIZED_FILE_PIPELINE.md) § FILE-0
+- **Backlog Durumu:** `docs/TODO_CENTRALIZED_FILE_PIPELINE.md` § FILE-0
 - **Tarih:** 20.11.2026
 - **Hazırlayan:** agent:gemini
 
