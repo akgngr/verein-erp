@@ -68,6 +68,24 @@
       "telegram": "Telegram",
       "whatsapp": "WhatsApp",
       "sms": "SMS"
+    },
+    "preferencesDescription": "Verwalten Sie Kanäle, Ruhezeiten und tägliche Zusammenfassungen.",
+    "telegramLinkTitle": "Telegram-Konto verbinden",
+    "telegramUnlink": "Telegram-Verbindung trennen",
+    "telegramConnect": "Mit Telegram verbinden",
+    "telegramOpen": "Telegram-Link öffnen",
+    "telegramAdmin": "Telegram-Bot (Administration)",
+    "telegramEnabled": "Telegram-Kanal aktivieren",
+    "telegramToken": "Bot-Token (vorhandener Schlüssel wird nicht angezeigt)",
+    "telegramTokenSaved": "Ein Bot-Schlüssel ist gespeichert. Einen neuen Schlüssel eingeben oder leer lassen, um ihn zu behalten.",
+    "telegramTokenMissing": "Noch kein Bot-Schlüssel gespeichert.",
+    "link": {
+      "linked": "Telegram-Konto ist verbunden.",
+      "pending": "Verbindung wartet auf Bestätigung.",
+      "none": "Kein Telegram-Konto verbunden."
     }
+  },
+  "nav": {
+    "notifications": "Benachrichtigungen"
   }
 }
