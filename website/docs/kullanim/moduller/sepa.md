@@ -1,5 +1,5 @@
 ---
-sidebar_position: 32
+sidebar_position: 33
 title: "SEPA otomatik ödeme"
 description: "Aidat ve kurs ücretleri için SEPA-Lastschrift (pain.008) tahsilatı."
 slug: /kullanim/moduller/sepa

@@ -1,5 +1,5 @@
 ---
-sidebar_position: 26
+sidebar_position: 27
 title: "Otomasyon"
 description: "Kalıcı arka plan görevleri ve iş akışları."
 slug: /kullanim/moduller/automation
