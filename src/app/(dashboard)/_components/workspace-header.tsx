@@ -6,6 +6,7 @@ import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { registry } from "@/registry";
+import { NotificationInboxWidget } from "@/modules/notifications/ui";
 import { useTheme, type Theme } from "@/shared/components/theme-provider";
 import { findActiveModule, moduleHome } from "@/shared/navigation/module-nav";
 
@@ -51,6 +52,7 @@ export function WorkspaceHeader({ dateLabel }: { dateLabel: string }) {
       <div className="flex shrink-0 items-center gap-4">
         <span className="text-[12px] text-ink-500">{dateLabel}</span>
         <span className="h-4 w-px bg-ink-200" aria-hidden />
+        <NotificationInboxWidget />
         <ThemeMenu />
       </div>
     </header>

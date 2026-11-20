@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.4.1",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Bildirim zili ve canlı çekmece",
+        "de": "Benachrichtigungsglocke mit Live-Posteingang"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Üst menüde bildirim zili, okunmamış rozeti, modül ve okunmamış filtreleri, güvenli bağlantılar, okundu/ertele işlemleri ve sekme görünürken 30 saniyelik güncelleme eklendi.",
+          "de": "Benachrichtigungsglocke im Kopfbereich mit Zähler, Modul- und Ungelesenfiltern, sicheren Links, Gelesen-/Zurückstellen-Aktionen und Aktualisierung alle 30 Sekunden bei sichtbarem Tab."
+        },
+        {
+          "type": "security",
+          "tr": "Kayıtlar yalnız yetki denetimli sunucu işlemlerinden gelir; başka kullanıcının bildirimleri gösterilmez.",
+          "de": "Einträge stammen ausschließlich aus berechtigungsgeprüften Serveraktionen; Nachrichten anderer Nutzer werden nicht angezeigt."
+        }
+      ]
+    },
+    {
       "version": "0.4.0",
       "date": "2026-11-20",
       "title": {
