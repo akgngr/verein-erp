@@ -7977,8 +7977,7 @@
       "users": "Liest Status und Rolle des Benutzers, damit die tägliche Übersicht nur für aktive Benutzer mit Sekretariatsberechtigung erstellt wird.",
       "mail": "Nutzt den vorhandenen E-Mail-Versand für die tägliche Übersicht (nur an Benutzer mit E-Mail-Kanal, nur Gesamtzahlen).",
       "exports": "Erstellt den Wochenbericht (nur Zahlen) als PDF über die Dateierstellung von „Meine Dateien“; kein direkter Download-Link.",
-      "organization": "Liest Vereinsname, Anschrift und Logo für den Briefkopf des Berichts.",
-      "notifications": "Benachrichtigt bei neuen Vorschlägen (ohne Inhalt)."
+      "organization": "Liest Vereinsname, Anschrift und Logo für den Briefkopf des Berichts."
     },
     "automation": {
       "tasks": {
@@ -8064,7 +8063,29 @@
       "advancedDraft": "Entwurf",
       "advancedNeedsReview": "Prüfung erforderlich",
       "advancedPaused": "Pausiert",
-      "advancedComplete": "Abgeschlossen"
+      "advancedComplete": "Abgeschlossen",
+      "followUpsTitle": "Meine Nachverfolgungen",
+      "followUpsName": "Bezeichnung",
+      "followUpsDue": "Fälligkeitsdatum",
+      "followUpsCreate": "Nachverfolgung erstellen",
+      "followUpsEmpty": "Noch keine Nachverfolgungen vorhanden.",
+      "followUpsUnavailable": "Nachverfolgungen können derzeit nicht geladen werden.",
+      "followUpsLoading": "Nachverfolgungen werden geladen…",
+      "followUpsSaved": "Nachverfolgung erstellt.",
+      "followUpsChanged": "Nachverfolgung aktualisiert.",
+      "followUpsError": "Die Aktion konnte nicht abgeschlossen werden. Bitte prüfen Sie die Angaben und versuchen Sie es erneut.",
+      "followUpsReminders": "Erinnerung",
+      "followUpsActive": "Aktiv",
+      "followUpsPaused": "Pausiert",
+      "followUpsExhausted": "Erinnerungen ausgeschöpft",
+      "followUpsDone": "Abgeschlossen",
+      "followUpsCancelled": "Abgebrochen",
+      "followUpsPause": "Pausieren",
+      "followUpsResume": "Fortsetzen",
+      "followUpsCancel": "Abbrechen",
+      "followUpsComplete": "Abschließen",
+      "followUpsConfirmCancel": "Zum endgültigen Abbrechen erneut auf „Abbrechen“ klicken.",
+      "followUpsKeep": "Zurück"
     },
     "digest": {
       "subject": "Ihre Morgenübersicht: {total} Themen",
@@ -8124,12 +8145,6 @@
         "notPending": "Keine ausstehende Bestätigung.",
         "codeExpired": "Code abgelaufen oder Versuche aufgebraucht; bitte neu anfordern.",
         "codeInvalid": "Code falsch."
-      }
-    },
-    "notifications": {
-      "proposal": {
-        "title": "Ein neuer Sekretär-Vorschlag wartet auf Ihre Bestätigung",
-        "body": "Auf der Sekretär-Seite prüfen."
       }
     }
   },

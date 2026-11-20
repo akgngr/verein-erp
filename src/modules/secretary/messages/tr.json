@@ -38,8 +38,7 @@
     "users": "Günlük özeti yalnız etkin ve sekreter yetkisi olan kullanıcılar için hazırlamak üzere kullanıcının durumunu ve rolünü okur.",
     "mail": "Günlük özet e-postasını göndermek için mevcut e-posta altyapısını kullanır (yalnız tercihinde e-posta seçen kullanıcıya, yalnız toplam sayılar).",
     "exports": "Haftalık kurul raporunu (yalnız sayılar) Dosyalarım üretim hattında PDF olarak oluşturur; doğrudan indirme bağlantısı yoktur.",
-    "organization": "Rapor antedi için dernek adını, adresini ve logosunu okur.",
-    "notifications": "Yeni öneri oluştuğunda kullanıcıya (içeriksiz) bildirim gönderir."
+    "organization": "Rapor antedi için dernek adını, adresini ve logosunu okur."
   },
   "automation": {
     "tasks": {
@@ -125,7 +124,29 @@
     "advancedDraft": "Taslak",
     "advancedNeedsReview": "İnceleme bekliyor",
     "advancedPaused": "Duraklatıldı",
-    "advancedComplete": "Tamamlandı"
+    "advancedComplete": "Tamamlandı",
+    "followUpsTitle": "Takiplerim",
+    "followUpsName": "Takip başlığı",
+    "followUpsDue": "Son tarih",
+    "followUpsCreate": "Takip oluştur",
+    "followUpsEmpty": "Henüz takip kaydı yok.",
+    "followUpsUnavailable": "Takipler şu anda yüklenemiyor.",
+    "followUpsLoading": "Takipler yükleniyor…",
+    "followUpsSaved": "Takip oluşturuldu.",
+    "followUpsChanged": "Takip güncellendi.",
+    "followUpsError": "Takip işlemi tamamlanamadı. Bilgileri kontrol ederek yeniden deneyin.",
+    "followUpsReminders": "Hatırlatma",
+    "followUpsActive": "Aktif",
+    "followUpsPaused": "Duraklatıldı",
+    "followUpsExhausted": "Hatırlatma hakkı bitti",
+    "followUpsDone": "Tamamlandı",
+    "followUpsCancelled": "İptal edildi",
+    "followUpsPause": "Duraklat",
+    "followUpsResume": "Devam et",
+    "followUpsCancel": "İptal et",
+    "followUpsComplete": "Tamamla",
+    "followUpsConfirmCancel": "Bu takip kaydını kalıcı olarak iptal etmek için İptal et düğmesine yeniden basın.",
+    "followUpsKeep": "Vazgeç"
   },
   "digest": {
     "subject": "Sabah özetiniz: {total} konu",
@@ -185,12 +206,6 @@
       "notPending": "Bekleyen bir doğrulama yok.",
       "codeExpired": "Kodun süresi doldu veya deneme hakkı bitti; yeniden isteyin.",
       "codeInvalid": "Kod hatalı."
-    }
-  },
-  "notifications": {
-    "proposal": {
-      "title": "Onayınızı bekleyen yeni bir sekreter önerisi var",
-      "body": "Sekreter sayfasında inceleyin."
     }
   }
 }

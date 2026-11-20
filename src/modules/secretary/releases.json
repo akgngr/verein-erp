@@ -2,17 +2,37 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.11.4",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Takip listesi yeniden deneme",
+        "de": "Erneutes Laden der Nachverfolgungen"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Takip listesi yüklenemediğinde hata ekranından yeniden deneme olanağı eklendi.",
+          "de": "Bei einem Ladefehler der Nachverfolgungsliste kann der Abruf erneut versucht werden."
+        }
+      ]
+    },
+    {
       "version": "0.11.3",
       "date": "2026-11-20",
       "title": {
-        "tr": "Merkezi bildirimler",
-        "de": "Zentrale Benachrichtigungen"
+        "tr": "Takiplerim arayüzü",
+        "de": "Oberfläche Meine Nachverfolgungen"
       },
       "changes": [
         {
           "type": "feature",
-          "tr": "Onay bekleyen yeni sekreter önerileri bildirim olarak görünür (içerik yok).",
-          "de": "Neue Sekretär-Vorschläge erscheinen als Benachrichtigung (ohne Inhalt)."
+          "tr": "Sekreter sayfasında kullanıcıya ait takipleri görüntüleme, yeni takip oluşturma, duraklatma, devam ettirme, iptal ve tamamlama işlemleri gerçek yetki denetimli sunucu eylemlerine bağlandı.",
+          "de": "Im Sekretariat können eigene Nachverfolgungen angezeigt, erstellt, pausiert, fortgesetzt, abgebrochen oder abgeschlossen werden; alle Vorgänge verwenden echte serverseitig berechtigungsgeprüfte Aktionen."
+        },
+        {
+          "type": "security",
+          "tr": "İşlemler yalnız oturum sahibinin kayıtlarını etkiler; dış mesaj gönderilmez ve geçersiz kaynak bağlantıları gösterilmez.",
+          "de": "Aktionen betreffen nur eigene Einträge; es werden keine externen Nachrichten gesendet und unsichere Quelllinks nicht angezeigt."
         }
       ]
     },
