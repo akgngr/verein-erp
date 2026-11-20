@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.15.5",
+      "date": "2026-11-19",
+      "title": {
+        "tr": "IME ve klavye güvenliği",
+        "de": "IME- und Tastatursicherheit"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "AI sohbet kutusunda Enter tuşuyla gönderim yapılırken IME kompozisyonu (Japonca, Çince, Korece vb.) denetimi eklendi; metin dönüşümü sırasındaki erken gönderimler engellendi.",
+          "de": "IME-Kompositionsprüfung bei Tastatureingaben (Enter) im AI-Chat hinzugefügt; verhindert vorzeitiges Absenden während der Zeichenkonvertierung."
+        }
+      ]
+    },
+    {
       "version": "1.15.4",
       "date": "2026-11-18",
       "title": {

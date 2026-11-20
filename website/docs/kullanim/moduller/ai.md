@@ -13,7 +13,7 @@ Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuy
 |---|---|
 | Anahtar | `ai` |
 | Tür | Eklenti |
-| Sürüm | 1.15.4 |
+| Sürüm | 1.15.5 |
 | Sayfalar | `/ayarlar/yapay-zeka` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Yapay zekâ asistanı | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.15.5 — IME ve klavye güvenliği
+
+_2026-11-19_
+
+- **Düzeltme:** AI sohbet kutusunda Enter tuşuyla gönderim yapılırken IME kompozisyonu (Japonca, Çince, Korece vb.) denetimi eklendi; metin dönüşümü sırasındaki erken gönderimler engellendi.
 
 ### 1.15.4 — Arayüz altyapısı
 
@@ -83,10 +89,4 @@ _2026-11-16_
 
 - **İyileştirme:** Bulut sağlayıcıda öneri araçları (evrak kaydı, görev, etkinlik vb. onay kartları) artık denetimli modda kullanılabilir; ekteki maskeli değerler öneride gerçek değere çevrilir. Az metinli PDF eklerinde gömülü resimler de OCR ile okunur.
 
-### 1.13.0 — Asistan: dosya ekleme, yeni geçmiş, hareketli mesaj kutusu
-
-_2026-11-16_
-
-- **Yeni:** Sohbete dosya eklenebilir (PDF, resim, Word, Excel, Markdown, CSV): metin sunucuda çıkarılır (resim ve taranmış belgede OCR), dosya saklanmaz. Bulutta yalnız denetimli modda ve kişisel parçalar maskelenerek gönderilir. Sohbet geçmişi tarihe göre gruplandı; panel yazıları küçültüldü; mesaj kutusuna tıklayınca dosya düğmesi alt satıra kayar.
-
-Daha eski 25 herkese açık sürüm notu.
+Daha eski 26 herkese açık sürüm notu.
