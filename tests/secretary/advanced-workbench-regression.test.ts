@@ -74,6 +74,15 @@ test("advanced secretary bounds rendered collections and does not mutate caller 
   assert.deepEqual(supplied, before);
 });
 
+test("invalid leading projections cannot hide later authorized items", () => {
+  const invalid = Array.from({ length: 110 }, (_, i) => ({ ...item, id: `invalid:${i}`, status: "invalid" as never }));
+  const valid = Array.from({ length: 105 }, (_, i) => ({ ...item, id: `followup:valid-${i}` }));
+  const result = filterAdvancedItems([...invalid, ...valid]);
+  assert.equal(result.length, 100);
+  assert.equal(result[0].id, "followup:valid-0");
+  assert.equal(result[99].id, "followup:valid-99");
+});
+
 test("read-only workbench keeps an accessible, translated, action-free rendering contract", () => {
   const view = read("src/modules/secretary/views/advanced-workbench-view.tsx");
   const labels = read("src/modules/secretary/views/advanced-workbench-labels.ts");

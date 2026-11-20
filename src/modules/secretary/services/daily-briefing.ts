@@ -19,6 +19,11 @@ export type DailyBriefingDeps = {
   buildBriefing: (user: { id: string; role: Role }, now: Date) => Promise<Briefing>;
   /** Kanal teslimi. "in_app" sayfada canlı hesaplanır; dış kanal yoksa çağrılmaz. */
   deliver?: (user: BriefingRecipient, channel: string, digest: BriefingDigest) => Promise<void>;
+  /**
+   * N6 (#363): özeti merkezi bildirim sistemine yayımlar (kanal, tercih, sessiz saat ve çift gönderim orada).
+   * Verilirse `deliver` yerine kullanılır; kanal listesinden bağımsız, günde bir kez çağrılır.
+   */
+  publish?: (user: BriefingRecipient, digest: BriefingDigest) => Promise<void>;
   /** S5.2 (#316): kullanıcının doğrulanmış dış kanal rızaları (telegram/whatsapp/sms). */
   listConsentedChannels?: (userId: string) => Promise<string[]>;
 };
@@ -56,7 +61,7 @@ export async function runDailyBriefings(now: Date, deps: DailyBriefingDeps): Pro
       }
       const consented = deps.listConsentedChannels ? await deps.listConsentedChannels(preference.userId) : [];
       const channels = [...new Set([...preference.channels.filter((channel) => EXTERNAL_CHANNELS.has(channel)), ...consented])];
-      if (channels.length === 0 || !deps.deliver) continue;
+      if (!deps.publish && (channels.length === 0 || !deps.deliver)) continue;
       const user = await deps.loadUser(preference.userId);
       if (!user || !user.isActive || !can(user.role, secretaryPermissions, "view")) {
         result.skipped += 1;
@@ -65,8 +70,9 @@ export async function runDailyBriefings(now: Date, deps: DailyBriefingDeps): Pro
       const digest = digestOf(await deps.buildBriefing({ id: user.id, role: user.role }, now), date);
       // Boş özet için dış kanala bildirim gönderilmez (gürültü yok); gün yine de işaretli kalır.
       if (digest.total === 0) continue;
+      if (deps.publish) await deps.publish(user, digest);
       // Bir kanalın hatası diğer kanalları durdurmaz.
-      for (const channel of channels) await deps.deliver(user, channel, digest).catch(() => undefined);
+      else for (const channel of channels) await deps.deliver!(user, channel, digest).catch(() => undefined);
       result.produced += 1;
     } catch {
       result.skipped += 1;

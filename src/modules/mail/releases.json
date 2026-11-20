@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.5.1",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Merkezi bildirimler",
+        "de": "Zentrale Benachrichtigungen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Sınıflamaya rıza veren kullanıcılar, öneri yapılabilecek yeni e-postalar için bildirim alır (gönderen ve konu olmadan).",
+          "de": "Nutzer mit Einwilligung werden über neue E-Mails mit möglichem Vorschlag benachrichtigt (ohne Absender und Betreff)."
+        }
+      ]
+    },
+    {
       "version": "1.5.0",
       "date": "2026-11-19",
       "title": {

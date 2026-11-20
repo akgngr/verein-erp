@@ -1,5 +1,5 @@
 ---
-sidebar_position: 20
+sidebar_position: 21
 title: "Kullanıcılar"
 description: "Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri."
 slug: /kullanim/moduller/users
@@ -13,7 +13,7 @@ Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri.
 |---|---|
 | Anahtar | `users` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.1.7 |
+| Sürüm | 1.1.10 |
 | Sayfalar | `/ayarlar/kullanicilar` |
 
 ## Diğer modüllere erişim
@@ -33,6 +33,24 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Kullanıcı Hesapları | görüntüleme, oluşturma, düzenleme, silme | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.1.10 — Kullanıcı dizini
+
+_2026-11-20_
+
+- **İyileştirme:** Yönetici ekranları için ad/e-posta ile aranabilen, sayfalı kullanıcı dizini (ör. bildirim aboneleri).
+
+### 1.1.9 — Bildirim kitlesi
+
+_2026-11-20_
+
+- **İyileştirme:** Bildirim sistemi, duyurular için etkin kullanıcıları (isteğe bağlı role göre) listeleyebilir.
+
+### 1.1.8 — Bildirim alıcısı eşleme
+
+_2026-11-20_
+
+- **İyileştirme:** Diğer modüller, bildirim alıcısını e-posta adresine göre etkin kullanıcılar arasından bulabilir.
 
 ### 1.1.7 — Kod bakımı
 
@@ -64,22 +82,4 @@ _2026-11-16_
 
 - **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
-### 1.1.1 — AI v2 güvenilirlik ve veri koruma
-
-_2026-11-14_
-
-- **Güvenlik:** Sunucu tarafından doğrulanan AI işlemleri, kapsamlı veri erişimi ve güvenilir yaşam döngüsü kontrolleri güncellendi.
-
-### 1.1.0 — Silinme hakkı
-
-_2026-11-07_
-
-- **Güvenlik:** Kullanıcı silinirken tüm modüllerin kişisel verileri de silinir (KVKK md. 7 / DSGVO Art. 17); kurumsal kayıtlar yasal saklama gereği kalır. Temizlenemeyen modüller denetim kaydına yazılır.
-
-### 1.0.2 — Worker için dar public API
-
-_2026-11-03_
-
-- **Düzeltme:** Worker kullanıcı sorgusu ve izin politikası, geniş sunucu barrel'ı yerine framework bağımsız automation giriş noktasından sunuldu.
-
-Daha eski 2 herkese açık sürüm notu.
+Daha eski 5 herkese açık sürüm notu.

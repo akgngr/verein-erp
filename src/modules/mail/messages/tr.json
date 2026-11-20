@@ -137,7 +137,8 @@
     "accounting": "Gelen e-postalardaki fatura/belge eklerini muhasebe → gelen faturalar kutusuna aktarır.",
     "system": "Muhasebe modülünün etkin olup olmadığını okur (aktarma düğmesi yalnızca etkinken gösterilir).",
     "tasks": "Sekreterin onaylı \"görev taslağı\" önerisinden görev oluşturur (yalnız kullanıcı onayıyla).",
-    "users": "Görevdeki \"oluşturan\" etiketi için kullanıcının adını okur."
+    "users": "Görevdeki \"oluşturan\" etiketi için kullanıcının adını okur.",
+    "notifications": "Sınıflamaya rıza veren kullanıcılara yeni e-posta bildirimi gönderir (gönderen ve konu olmadan)."
   },
   "inbox": {
     "title": "Gelen kutusu",
@@ -262,5 +263,11 @@
     "replyDraftProposalDetail": "Yalnız boş bir taslak açılır. Metni siz yazar, ayrıca \"Gönder\" dediğinizde gönderilir.",
     "taskDraftProposal": "Bu e-posta için görev oluştur",
     "taskDraftProposalDetail": "Konu başlığıyla açık bir görev oluşturulur; atama ve tarih eklenmez, kimseye bildirim gitmez."
+  },
+  "notifications": {
+    "triage": {
+      "title": "Gelen kutusunda işlem önerilebilecek yeni e-posta",
+      "body": "Gelen kutusunu açın."
+    }
   }
 }

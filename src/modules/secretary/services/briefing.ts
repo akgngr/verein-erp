@@ -56,7 +56,7 @@ export function isHidden(itemId: string, states: readonly ItemState[], now: Date
 }
 
 export function sortItems(items: BriefingItem[]): BriefingItem[] {
-  return [...items].sort((a, b) =>
+  return items.toSorted((a, b) =>
     SEVERITY_ORDER[a.severity] - SEVERITY_ORDER[b.severity]
     || (a.dueAt ?? "9999").localeCompare(b.dueAt ?? "9999")
     || a.id.localeCompare(b.id));
@@ -129,6 +129,12 @@ async function attachProposals(moduleKey: string, items: BriefingItem[], context
   }));
 }
 
+/** N1c (#356): yeni öneri bildirimi (içerik yok). */
+async function notifyNewProposal(proposalId: string, userId: string): Promise<void> {
+  const { notify } = await import("@/modules/notifications/automation");
+  await notify({ type: "secretary.proposal", recipients: [userId], ref: `proposal:${proposalId}`, params: {} });
+}
+
 /** Varsayılan öneri bağlayıcısı; depo yalnız ilk öneride yüklenir. */
 function defaultProposalHook(user: { id: string; role: Role }, now: Date, registry: readonly ModuleSecretary[]): ProposalHook {
   return async ({ moduleKey, item, suggestion, context }) => {
@@ -139,7 +145,7 @@ function defaultProposalHook(user: { id: string; role: Role }, now: Date, regist
     return ensureRuleProposal(
       user,
       { moduleKey, itemId: item.id, action: suggestion.action, payload: suggestion.payload, context },
-      { store: prismaProposalStore(), crypto: proposalCrypto, registry },
+      { store: prismaProposalStore(), crypto: proposalCrypto, registry, onCreated: notifyNewProposal },
       now,
     );
   };

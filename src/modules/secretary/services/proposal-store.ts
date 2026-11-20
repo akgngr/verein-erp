@@ -50,5 +50,14 @@ export async function defaultProposalDeps(): Promise<ProposalDeps> {
     import("@/secretary-registry"),
     import("@/modules/system/server"),
   ]);
-  return { store: prismaProposalStore(), crypto: proposalCrypto, registry: moduleSecretaryRegistry, usableModules: listUsableModuleKeys };
+  return {
+    store: prismaProposalStore(),
+    crypto: proposalCrypto,
+    registry: moduleSecretaryRegistry,
+    usableModules: listUsableModuleKeys,
+    onCreated: async (proposalId, userId) => {
+      const { notify } = await import("@/modules/notifications/automation");
+      await notify({ type: "secretary.proposal", recipients: [userId], ref: `proposal:${proposalId}`, params: {} });
+    },
+  };
 }

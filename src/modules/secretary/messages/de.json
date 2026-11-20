@@ -38,7 +38,8 @@
     "users": "Liest Status und Rolle des Benutzers, damit die tägliche Übersicht nur für aktive Benutzer mit Sekretariatsberechtigung erstellt wird.",
     "mail": "Nutzt den vorhandenen E-Mail-Versand für die tägliche Übersicht (nur an Benutzer mit E-Mail-Kanal, nur Gesamtzahlen).",
     "exports": "Erstellt den Wochenbericht (nur Zahlen) als PDF über die Dateierstellung von „Meine Dateien“; kein direkter Download-Link.",
-    "organization": "Liest Vereinsname, Anschrift und Logo für den Briefkopf des Berichts."
+    "organization": "Liest Vereinsname, Anschrift und Logo für den Briefkopf des Berichts.",
+    "notifications": "Benachrichtigt bei neuen Vorschlägen (ohne Inhalt)."
   },
   "automation": {
     "tasks": {
@@ -53,6 +54,10 @@
       "follow_up_reminders": {
         "label": "Nachverfolgungs-Erinnerungen",
         "description": "Erinnert im Sekretär-Überblick an fällige Nachverfolgungen (höchstens einmal täglich; keine externen Nachrichten)."
+      },
+      "migrate_notifications": {
+        "label": "Sekretär-Einstellungen in Benachrichtigungen übernehmen",
+        "description": "Übernimmt E-Mail-Einstellungen der Tagesübersicht und bestätigte Kanal-Einwilligungen in das zentrale Benachrichtigungssystem (nur fehlende; täglich)."
       }
     }
   },
@@ -184,6 +189,16 @@
       "notPending": "Keine ausstehende Bestätigung.",
       "codeExpired": "Code abgelaufen oder Versuche aufgebraucht; bitte neu anfordern.",
       "codeInvalid": "Code falsch."
+    }
+  },
+  "notifications": {
+    "proposal": {
+      "title": "Ein neuer Sekretär-Vorschlag wartet auf Ihre Bestätigung",
+      "body": "Auf der Sekretär-Seite prüfen."
+    },
+    "dailyDigest": {
+      "title": "Tagesübersicht: {total} Einträge ({danger} dringend, {warning} Achtung)",
+      "body": "Auf der Sekretär-Seite öffnen."
     }
   }
 }

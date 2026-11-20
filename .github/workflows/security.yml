@@ -41,6 +41,9 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 22
+          # Bu iş paket kurmaz; setup-node v5'in otomatik pnpm önbelleği (packageManager alanı) olmayan
+          # depo yolunu kaydetmeye çalışıp işi kırmızıya çeviriyordu.
+          package-manager-cache: false
       # Yalnız üretim bağımlılıkları; high/critical açık varsa kapı kapanır.
       # Geçici istisna: GHSA-fc5q-39xc-vjpf (picomatch <= 4.0.7).
       # 2026-11-17 itibarıyla npm'de yamalı sürüm yok; upstream fix PR #254 açık.

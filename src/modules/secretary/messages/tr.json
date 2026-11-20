@@ -38,7 +38,8 @@
     "users": "Günlük özeti yalnız etkin ve sekreter yetkisi olan kullanıcılar için hazırlamak üzere kullanıcının durumunu ve rolünü okur.",
     "mail": "Günlük özet e-postasını göndermek için mevcut e-posta altyapısını kullanır (yalnız tercihinde e-posta seçen kullanıcıya, yalnız toplam sayılar).",
     "exports": "Haftalık kurul raporunu (yalnız sayılar) Dosyalarım üretim hattında PDF olarak oluşturur; doğrudan indirme bağlantısı yoktur.",
-    "organization": "Rapor antedi için dernek adını, adresini ve logosunu okur."
+    "organization": "Rapor antedi için dernek adını, adresini ve logosunu okur.",
+    "notifications": "Yeni öneri oluştuğunda kullanıcıya (içeriksiz) bildirim gönderir."
   },
   "automation": {
     "tasks": {
@@ -53,6 +54,10 @@
       "follow_up_reminders": {
         "label": "Takip hatırlatmaları",
         "description": "Süresi gelen takip kayıtlarını sekreter özetinde hatırlatır (günde en çok bir kez; dış mesaj gönderilmez)."
+      },
+      "migrate_notifications": {
+        "label": "Sekreter tercihlerini bildirimlere taşı",
+        "description": "Günlük özet e-posta tercihlerini ve doğrulanmış kanal rızalarını merkezi bildirim sistemine taşır (yalnız eksikleri; günde bir)."
       }
     }
   },
@@ -184,6 +189,16 @@
       "notPending": "Bekleyen bir doğrulama yok.",
       "codeExpired": "Kodun süresi doldu veya deneme hakkı bitti; yeniden isteyin.",
       "codeInvalid": "Kod hatalı."
+    }
+  },
+  "notifications": {
+    "proposal": {
+      "title": "Onayınızı bekleyen yeni bir sekreter önerisi var",
+      "body": "Sekreter sayfasında inceleyin."
+    },
+    "dailyDigest": {
+      "title": "Günlük özet: {total} kayıt ({danger} acil, {warning} dikkat)",
+      "body": "Sekreter sayfasında açın."
     }
   }
 }

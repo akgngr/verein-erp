@@ -60,6 +60,8 @@ export type ProposalDeps = {
   crypto: ProposalCrypto;
   registry: readonly ModuleSecretary[];
   usableModules: () => Promise<string[]>;
+  /** N1c (#356): yeni öneri oluşunca (bildirim). Hata öneriyi bozmaz. */
+  onCreated?: (proposalId: string, userId: string) => Promise<void>;
 };
 
 export class ProposalError extends Error {}
@@ -110,6 +112,7 @@ export async function ensureRuleProposal(
     idempotencyKey,
     expiresAt: new Date(now.getTime() + PROPOSAL_TTL_MS),
   });
+  await deps.onCreated?.(created.id, user.id).catch(() => undefined);
   return created.id;
 }
 

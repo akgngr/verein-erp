@@ -22,8 +22,8 @@ export function calculatePayout(
   rate: { rateCents: number; rateUnit: "HOUR" | "SESSION" },
   defaultMinutes: number,
 ): { lines: PayoutLine[]; minutes: number; amountCents: number } {
-  const lines = [...sessions]
-    .sort((a, b) => a.date.localeCompare(b.date) || (a.startTime ?? "").localeCompare(b.startTime ?? ""))
+  const lines = sessions
+    .toSorted((a, b) => a.date.localeCompare(b.date) || (a.startTime ?? "").localeCompare(b.startTime ?? ""))
     .map((session) => {
       const minutes = sessionMinutes(session, defaultMinutes);
       const amountCents = rate.rateUnit === "SESSION" ? rate.rateCents : Math.round((rate.rateCents * minutes) / 60);

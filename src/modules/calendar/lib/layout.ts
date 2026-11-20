@@ -7,7 +7,7 @@ export type Timed = { id: string; start: Date; end: Date };
 export type Placed = { id: string; column: number; columns: number };
 
 export function layoutDay(items: Timed[]): Map<string, Placed> {
-  const sorted = [...items].sort((a, b) => a.start.getTime() - b.start.getTime() || b.end.getTime() - a.end.getTime());
+  const sorted = items.toSorted((a, b) => a.start.getTime() - b.start.getTime() || b.end.getTime() - a.end.getTime());
   const result = new Map<string, Placed>();
   let cluster: { item: Timed; column: number }[] = [];
   let clusterEnd = -Infinity;
