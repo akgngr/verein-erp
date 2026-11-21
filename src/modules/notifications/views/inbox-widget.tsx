@@ -60,10 +60,13 @@ export function NotificationInboxWidget() {
     setBusy(true);
     try {
       const result = await fn();
-      if (!result.ok) { setUnavailable(true); return; }
+      if (!result.ok) { setItems([]); setCount(0); setUnavailable(true); throw new Error("NOTIFICATION_ACTION_FAILED"); }
       await reload();
     } catch {
+      setItems([]);
+      setCount(0);
       setUnavailable(true);
+      throw new Error("NOTIFICATION_ACTION_FAILED");
     } finally {
       setBusy(false);
     }
