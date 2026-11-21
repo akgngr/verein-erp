@@ -39,6 +39,7 @@ const MODULE_INTERNAL_IMPORTS = {
     "!@/modules/*/secretary",
     "!@/modules/*/notifications",
     "!@/modules/*/header",
+    "!@/modules/*/widget",
     "!@/modules/*/releases.json",
     "!@/modules/*/permissions",
     "!@/modules/*/routes",
