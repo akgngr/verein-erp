@@ -58,9 +58,9 @@ export function NotificationBellDrawer({
   const [moduleFilter, setModuleFilter] = useState("");
   const [pending, setPending] = useState(false);
   const [actionFailed, setActionFailed] = useState(false);
-  const count = Math.max(0, Math.floor(Number.isFinite(unreadCount) ? unreadCount : 0));
-  const filtered = items.filter(item => (!unreadOnly || item.unread) && (!moduleFilter || item.moduleLabel === moduleFilter));
-  const modules = [...new Set(items.map(item => item.moduleLabel))].sort();
+  const count = unavailable ? 0 : Math.max(0, Math.floor(Number.isFinite(unreadCount) ? unreadCount : 0));
+  const filtered = (unavailable ? [] : items).filter(item => (!unreadOnly || item.unread) && (!moduleFilter || item.moduleLabel === moduleFilter));
+  const modules = [...new Set((unavailable ? [] : items).map(item => item.moduleLabel))].sort();
 
   async function act(operation: (() => Promise<void>) | undefined) {
     if (!operation || busy || pending || unavailable) return;
