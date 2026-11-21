@@ -7,6 +7,7 @@ import { EmptyState } from "@/shared/components/ui/empty-state";
 import { PageHeader } from "@/shared/components/ui/page-header";
 
 import { SecretaryTodayCard } from "../components/today-card";
+import { SecretaryFollowUps } from "../components/follow-ups";
 import { SecretaryInboxView } from "./inbox-view";
 import { SecretaryPreferencesView } from "./preferences-view";
 import { secretaryPermissions } from "../permissions";
@@ -51,6 +52,24 @@ export async function SecretaryHomeView() {
       ) : (
         <EmptyState icon={NotebookPen} title={t("ui.unavailable")} description={t("ui.tryAgain")} />
       )}
+      <SecretaryFollowUps labels={{
+        heading: t("ui.followUpsTitle"), title: t("ui.followUpsName"), due: t("ui.followUpsDue"),
+        create: t("ui.followUpsCreate"), empty: t("ui.followUpsEmpty"),
+        unavailable: t("ui.followUpsUnavailable"), loading: t("ui.followUpsLoading"),
+        saved: t("ui.followUpsSaved"), changed: t("ui.followUpsChanged"),
+        error: t("ui.followUpsError"), openSource: t("ui.openSource"), retry: t("ui.tryAgain"),
+        reminders: t("ui.followUpsReminders"),
+        cancelPrompt: t("ui.followUpsConfirmCancel"), keep: t("ui.followUpsKeep"),
+        status: {
+          ACTIVE: t("ui.followUpsActive"), PAUSED: t("ui.followUpsPaused"),
+          EXHAUSTED: t("ui.followUpsExhausted"), DONE: t("ui.followUpsDone"),
+          CANCELLED: t("ui.followUpsCancelled"),
+        },
+        actions: {
+          pause: t("ui.followUpsPause"), resume: t("ui.followUpsResume"),
+          cancel: t("ui.followUpsCancel"), complete: t("ui.followUpsComplete"),
+        },
+      }} />
       <SecretaryInboxView user={{ id: user.id, role: user.role }} />
       <SecretaryPreferencesView user={{ id: user.id }} />
     </section>
