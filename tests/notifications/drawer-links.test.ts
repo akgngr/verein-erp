@@ -88,3 +88,12 @@ test("notification inbox pauses background polling while a write is in flight", 
   assert.match(source, /mutationInFlight\.current = true;/);
   assert.match(source, /finally \{\s*mutationInFlight\.current = false;/);
 });
+
+/** A successful write followed by a failed refresh must surface an error, not silent success. */
+test("notification inbox reports post-mutation refresh failures", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const source = await readFile(new URL("../../src/modules/notifications/views/inbox-widget.tsx", import.meta.url), "utf8");
+  assert.match(source, /if \(!\(await reload\(\)\)\) throw new Error\("NOTIFICATION_REFRESH_FAILED"\)/);
+  assert.match(source, /setUnavailable\(false\);\s*return true;/);
+  assert.match(source, /setUnavailable\(true\);\s*return false;/);
+});
