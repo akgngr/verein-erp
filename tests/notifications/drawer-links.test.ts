@@ -70,3 +70,11 @@ test("notification action failures propagate and clear stale badge state", async
   assert.match(drawer, /catch \{ setActionFailed\(true\); \}/);
   assert.match(drawer, /role="alert"/);
 });
+
+/** An in-flight poll must not restore stale data after a user mutation begins. */
+test("notification mutations invalidate in-flight polls before invoking the server", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const source = await readFile(new URL("../../src/modules/notifications/views/inbox-widget.tsx", import.meta.url), "utf8");
+  assert.match(source, /if \(busy \|\| unavailable\) return;\s*\/\/ A poll started before this mutation must not overwrite its result\.\s*requestId\.current\+\+;\s*setBusy\(true\);/);
+  assert.match(source, /if \(currentRequest !== requestId\.current\) return;/);
+});
