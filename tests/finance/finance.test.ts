@@ -7,7 +7,7 @@ import {
   convertCurrency,
 } from "@/modules/finance";
 import { getExchangeRates } from "@/modules/finance/server";
-import { fetchExchangeRatesAction } from "@/modules/finance/actions/rates-actions";
+import { fetchRatesSchema } from "@/modules/finance/actions/rates-actions";
 import { aiRatesTool } from "@/modules/finance/ai";
 
 describe("Finance module tests", () => {
@@ -59,15 +59,24 @@ describe("Finance module tests", () => {
     assert.equal(dataWithUnknown.base, "EUR");
   });
 
-  it("fetchExchangeRatesAction sanitizes untrusted input safely", async () => {
-    const defaultData = await fetchExchangeRatesAction();
-    assert.equal(defaultData.base, "EUR");
+  it("fetchRatesSchema strictly validates 3-letter currency code and rejects traversal", () => {
+    const valid = fetchRatesSchema.safeParse({ base: "USD" });
+    assert.equal(valid.success, true);
+    if (valid.success) assert.equal(valid.data.base, "USD");
 
-    const maliciousData = await fetchExchangeRatesAction("../malicious/path?attack=1");
-    assert.equal(maliciousData.base, "EUR");
+    const lowercase = fetchRatesSchema.safeParse({ base: "try" });
+    assert.equal(lowercase.success, true);
+    if (lowercase.success) assert.equal(lowercase.data.base, "TRY");
 
-    const validData = await fetchExchangeRatesAction("usd");
-    assert.equal(validData.base, "USD");
+    const defaultVal = fetchRatesSchema.safeParse({});
+    assert.equal(defaultVal.success, true);
+    if (defaultVal.success) assert.equal(defaultVal.data.base, "EUR");
+
+    const traversal = fetchRatesSchema.safeParse({ base: "../evil" });
+    assert.equal(traversal.success, false);
+
+    const tooLong = fetchRatesSchema.safeParse({ base: "USDOLLAR" });
+    assert.equal(tooLong.success, false);
   });
 
   it("aiRatesTool is properly configured with v2 AI contract", () => {

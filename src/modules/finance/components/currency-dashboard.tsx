@@ -35,9 +35,9 @@ export function CurrencyDashboard({ initialRates }: { initialRates: RatesData })
     setBaseCurrency(newBase);
     startTransition(async () => {
       try {
-        const data = await fetchExchangeRatesAction(newBase);
-        if (data?.rates) {
-          setRates(data);
+        const res = await fetchExchangeRatesAction({ base: newBase });
+        if (res.ok && res.data?.rates) {
+          setRates(res.data);
         }
       } catch {
         // Fallback
