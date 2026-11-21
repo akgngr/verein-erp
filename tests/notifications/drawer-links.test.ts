@@ -17,3 +17,21 @@ test("notification drawer only accepts simple internal routes", () => {
     assert.equal(safeNotificationHref(href), false, String(href));
   }
 });
+
+/** Keep the disconnected UI safe until the authenticated inbox adapter is mounted. */
+test("notification drawer keeps mutation and accessibility safeguards", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const source = await readFile(
+    new URL("../../src/modules/notifications/components/notification-bell-drawer.tsx", import.meta.url),
+    "utf8",
+  );
+  assert.match(source, /from ["']@\/shared\/components\/kit["']/);
+  assert.doesNotMatch(source, /from ["']@heroui\/react["']/);
+  assert.match(source, /isDisabled=\{!onReadAll \|\| pending \|\| busy \|\| count === 0\}/);
+  assert.match(source, /isDisabled=\{!onRead \|\| pending \|\| busy\}/);
+  assert.match(source, /isDisabled=\{!onSnooze \|\| pending \|\| busy\}/);
+  assert.match(source, /role="alert"/);
+  assert.match(source, /aria-busy=\{pending \|\| busy\}/);
+  assert.match(source, /safeNotificationHref\(item\.href\)/);
+  assert.doesNotMatch(source, /demoNotifications|mockNotifications|localStorage/);
+});
