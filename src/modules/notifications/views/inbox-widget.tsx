@@ -25,11 +25,13 @@ export function NotificationInboxWidget() {
         listNotificationsAction({ unreadOnly: false, limit: 50 }),
         unreadNotificationCountAction({}),
       ]);
-      if (!list.ok || !unread.ok) { setUnavailable(true); return; }
+      if (!list.ok || !unread.ok) { setItems([]); setCount(0); setUnavailable(true); return; }
       setItems(list.data);
       setCount(unread.data.count);
       setUnavailable(false);
     } catch {
+      setItems([]);
+      setCount(0);
       setUnavailable(true);
     }
   }, []);
