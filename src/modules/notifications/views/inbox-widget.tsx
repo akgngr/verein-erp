@@ -20,6 +20,8 @@ export function NotificationInboxWidget() {
   const [unavailable, setUnavailable] = useState(false);
   // Ignore responses from older polls after a newer reload or an unmount.
   const requestId = useRef(0);
+  // A timer must not start a fresh read while a write is in progress.
+  const mutationInFlight = useRef(false);
 
   const reload = useCallback(async () => {
     const currentRequest = ++requestId.current;
@@ -43,7 +45,7 @@ export function NotificationInboxWidget() {
 
   useEffect(() => {
     let mounted = true;
-    const poll = () => { if (mounted && document.visibilityState === "visible") void reload(); };
+    const poll = () => { if (mounted && !mutationInFlight.current && document.visibilityState === "visible") void reload(); };
     poll();
     const interval = window.setInterval(poll, POLL_MS);
     document.addEventListener("visibilitychange", poll);
@@ -56,7 +58,8 @@ export function NotificationInboxWidget() {
   }, [reload]);
 
   const act = async (fn: () => Promise<{ ok: boolean }>) => {
-    if (busy || unavailable) return;
+    if (mutationInFlight.current || unavailable) return;
+    mutationInFlight.current = true;
     // A poll started before this mutation must not overwrite its result.
     requestId.current++;
     setBusy(true);
@@ -70,6 +73,7 @@ export function NotificationInboxWidget() {
       setUnavailable(true);
       throw new Error("NOTIFICATION_ACTION_FAILED");
     } finally {
+      mutationInFlight.current = false;
       setBusy(false);
     }
   };
