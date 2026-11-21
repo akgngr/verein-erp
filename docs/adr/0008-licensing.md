@@ -1,4 +1,4 @@
-# ADR 0007 — Enterprise licensing (signed, domain + organisation bound)
+# ADR 0008 — Enterprise licensing (signed, domain + organisation bound)
 
 **Status:** accepted (product owner, 2026-11-20) · **Source:** [RFC-002](https://github.com/akgngr/verein-erp/discussions/417), #419
 
