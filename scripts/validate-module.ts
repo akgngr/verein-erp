@@ -392,6 +392,19 @@ function checkOutboundFetch(moduleDir: string, moduleKey: string): string[] {
   return problems;
 }
 
+/** Widget Platform (#435): `widget.ts` istemci-güvenli ve modüle ait olmalı. */
+export function checkWidgetFile(moduleKey: string, text: string | null): string[] {
+  if (text === null) return [];
+  const problems: string[] = [];
+  if (/["']server-only["']/.test(text) || /@\/shared\/db|getDb\(/.test(text)) problems.push("widget.ts istemci-güvenli olmalı: server-only veya veritabanı erişimi içeremez (veri, widget bileşeninin kendi server action'ı ile alınır).");
+  if (!/export\s+const\s+widgets\s*=\s*defineModuleWidgets\(/.test(text)) problems.push("widget.ts `export const widgets = defineModuleWidgets(...)` dışa aktarmalı (@/shared/widgets/registry).");
+  else if (!new RegExp(`defineModuleWidgets\\(\\s*["']${moduleKey}["']`).test(text)) problems.push(`widget.ts yalnız kendi modülü ("${moduleKey}") için widget tanımlayabilir.`);
+  for (const match of text.matchAll(/import\(\s*["']([^"']+)["']\s*\)/g)) {
+    if (!match[1].startsWith("./")) problems.push(`widget.ts yükleyicisi yalnız modülün kendi dosyalarını içe aktarabilir: ${match[1]}`);
+  }
+  return problems;
+}
+
 function checkModuleAccess(moduleDir: string, moduleKey: string, configText: string, trJson: unknown, deJson: unknown): string[] {
   const problems: string[] = findForeignTableAccess(moduleDir, moduleKey);
   const declared = declaredAccess(configText);
@@ -579,6 +592,10 @@ export function validateModule(moduleKey: string, customModulesDir?: string): Mo
 
   errors.push(...checkModuleReleases(moduleDir));
   errors.push(...checkOutboundFetch(moduleDir, moduleKey));
+  {
+    const widgetPath = path.join(moduleDir, "widget.ts");
+    errors.push(...checkWidgetFile(moduleKey, fs.existsSync(widgetPath) ? fs.readFileSync(widgetPath, "utf8") : null));
+  }
   errors.push(...checkModuleRequires(moduleDir, moduleKey));
 
   const uiPath = path.join(moduleDir, "ui.ts");
