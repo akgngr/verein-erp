@@ -65,13 +65,16 @@ export function WeatherDetails({ initialWeather }: { initialWeather: WeatherData
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [, startTransition] = useTransition();
 
-  const fetchWeatherForCoords = (lat: number, lon: number, cityName: string) => {
+  const fetchWeatherForCoords = (lat: number, lon: number, cityName?: string) => {
     setErrorMessage(null);
     startTransition(async () => {
       try {
-        const data = await fetchWeatherByCoordsAction(lat, lon, cityName);
-        if (data) {
-          setWeather(data);
+        const res = await fetchWeatherByCoordsAction({ lat, lon, cityName });
+        if (res.ok && res.data) {
+          setWeather({
+            ...res.data,
+            city: cityName || res.data.city || t("myLocation"),
+          });
         } else {
           setErrorMessage(t("unavailable"));
         }
@@ -107,14 +110,12 @@ export function WeatherDetails({ initialWeather }: { initialWeather: WeatherData
     setErrorMessage(null);
     startTransition(async () => {
       try {
-        const res = await searchCityWeatherAction(query);
-        if (res.success && res.data) {
+        const res = await searchCityWeatherAction({ query });
+        if (res.ok && res.data) {
           setWeather(res.data);
           setSearchQuery("");
-        } else if (res.error === "CITY_NOT_FOUND") {
-          setErrorMessage(t("cityNotFound"));
         } else {
-          setErrorMessage(t("unavailable"));
+          setErrorMessage(t("cityNotFound"));
         }
       } catch {
         setErrorMessage(t("unavailable"));

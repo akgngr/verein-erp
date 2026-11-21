@@ -12,8 +12,8 @@ import {
 import { aiWeatherTool } from "@/modules/weather/ai";
 import { buildWeatherBriefing } from "@/modules/weather/secretary";
 import {
-  fetchWeatherByCoordsAction,
-  searchCityWeatherAction,
+  coordsWeatherSchema,
+  citySearchSchema,
 } from "@/modules/weather/actions/weather-actions";
 import type { WeatherData } from "@/modules/weather";
 
@@ -165,19 +165,22 @@ describe("Weather module tests", () => {
     );
   });
 
-  it("fetchWeatherByCoordsAction validates coordinates and searchCityWeatherAction validates query", async () => {
-    // Geçersiz koordinatlar reddedilir
-    assert.equal(await fetchWeatherByCoordsAction(NaN, 10), null);
-    assert.equal(await fetchWeatherByCoordsAction(100, 10), null);
+  it("coordsWeatherSchema and citySearchSchema strictly validate bounds and length", () => {
+    // Geçerli koordinatlar
+    const validCoords = coordsWeatherSchema.safeParse({ lat: 52.52, lon: 13.41, cityName: "Berlin" });
+    assert.equal(validCoords.success, true);
 
-    // Kısa veya boş sorgu reddedilir
-    const shortResult = await searchCityWeatherAction("a");
-    assert.equal(shortResult.success, false);
-    assert.equal(shortResult.error, "QUERY_TOO_SHORT");
+    // Sınır aşımı koordinatlar reddedilir
+    assert.equal(coordsWeatherSchema.safeParse({ lat: 100, lon: 10 }).success, false);
+    assert.equal(coordsWeatherSchema.safeParse({ lat: -95, lon: 10 }).success, false);
+    assert.equal(coordsWeatherSchema.safeParse({ lat: 50, lon: 200 }).success, false);
+    assert.equal(coordsWeatherSchema.safeParse({ lat: 50, lon: -190 }).success, false);
+    assert.equal(coordsWeatherSchema.safeParse({ lat: 50, lon: 10, cityName: "A".repeat(81) }).success, false);
 
-    // Bilinmeyen şehir CITY_NOT_FOUND döndürür
-    const notFoundResult = await searchCityWeatherAction("BilinmeyenSehir123");
-    assert.equal(notFoundResult.success, false);
-    assert.equal(notFoundResult.error, "CITY_NOT_FOUND");
+    // Şehir arama sorgu sınırları (2–80 karakter)
+    assert.equal(citySearchSchema.safeParse({ query: "Berlin" }).success, true);
+    assert.equal(citySearchSchema.safeParse({ query: "a" }).success, false);
+    assert.equal(citySearchSchema.safeParse({ query: "   " }).success, false);
+    assert.equal(citySearchSchema.safeParse({ query: "B".repeat(81) }).success, false);
   });
 });

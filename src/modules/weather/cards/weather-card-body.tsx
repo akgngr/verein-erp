@@ -62,13 +62,16 @@ export function WeatherCardBody({
         const { latitude, longitude } = pos.coords;
         startTransition(async () => {
           try {
-            const data = await fetchWeatherByCoordsAction(
-              latitude,
-              longitude,
-              t("cards.current.myLocation"),
-            );
-            if (data) {
-              setWeather(data);
+            const res = await fetchWeatherByCoordsAction({
+              lat: latitude,
+              lon: longitude,
+              cityName: t("cards.current.myLocation"),
+            });
+            if (res.ok && res.data) {
+              setWeather({
+                ...res.data,
+                city: t("cards.current.myLocation"),
+              });
             }
           } catch {
             // Sessizce mevcut durumu koru
