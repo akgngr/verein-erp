@@ -398,7 +398,7 @@ export function checkWidgetFile(moduleKey: string, text: string | null): string[
   const problems: string[] = [];
   if (/["']server-only["']/.test(text) || /@\/shared\/db|getDb\(/.test(text)) problems.push("widget.ts istemci-güvenli olmalı: server-only veya veritabanı erişimi içeremez (veri, widget bileşeninin kendi server action'ı ile alınır).");
   if (!/export\s+const\s+widgets\s*=\s*defineModuleWidgets\(/.test(text)) problems.push("widget.ts `export const widgets = defineModuleWidgets(...)` dışa aktarmalı (@/shared/widgets/registry).");
-  else if (!new RegExp(`defineModuleWidgets\\(\\s*["']${moduleKey}["']`).test(text)) problems.push(`widget.ts yalnız kendi modülü ("${moduleKey}") için widget tanımlayabilir.`);
+  else if (/defineModuleWidgets\(\s*["']([^"']*)["']/.exec(text)?.[1] !== moduleKey) problems.push(`widget.ts yalnız kendi modülü ("${moduleKey}") için widget tanımlayabilir.`);
   for (const match of text.matchAll(/import\(\s*["']([^"']+)["']\s*\)/g)) {
     if (!match[1].startsWith("./")) problems.push(`widget.ts yükleyicisi yalnız modülün kendi dosyalarını içe aktarabilir: ${match[1]}`);
   }
