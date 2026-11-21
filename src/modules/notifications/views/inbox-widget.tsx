@@ -56,7 +56,9 @@ export function NotificationInboxWidget() {
   }, [reload]);
 
   const act = async (fn: () => Promise<{ ok: boolean }>) => {
-    if (busy) return;
+    if (busy || unavailable) return;
+    // A poll started before this mutation must not overwrite its result.
+    requestId.current++;
     setBusy(true);
     try {
       const result = await fn();
