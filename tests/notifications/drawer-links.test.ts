@@ -31,6 +31,9 @@ test("notification drawer keeps mutation and accessibility safeguards", async ()
   assert.match(source, /isDisabled=\{!onRead \|\| pending \|\| busy \|\| unavailable\}/);
   assert.match(source, /isDisabled=\{!onSnooze \|\| pending \|\| busy \|\| unavailable\}/);
   assert.match(source, /role="alert"/);
+  assert.match(source, /const count = unavailable \? 0 :/);
+  assert.match(source, /const filtered = \(unavailable \? \[\] : items\)\.filter/);
+  assert.match(source, /const modules = \[\.\.\.new Set\(\(unavailable \? \[\] : items\)\.map/);
   assert.match(source, /if \(!operation \|\| busy \|\| pending \|\| unavailable\) return;/);
   assert.match(source, /aria-busy=\{pending \|\| busy\}/);
   assert.match(source, /safeNotificationHref\(item\.href\)/);
