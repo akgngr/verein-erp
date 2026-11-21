@@ -50,3 +50,12 @@ test("notification inbox clears stale data when refresh fails", async () => {
   assert.match(source, /if \(!list\.ok \|\| !unread\.ok\) \{ setItems\(\[\]\); setCount\(0\); setUnavailable\(true\); return; \}/);
   assert.match(source, /catch \{\s*setItems\(\[\]\);\s*setCount\(0\);\s*setUnavailable\(true\);/);
 });
+
+/** An older poll must not replace a newer response or write after unmount. */
+test("notification inbox invalidates stale async poll responses", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const source = await readFile(new URL("../../src/modules/notifications/views/inbox-widget.tsx", import.meta.url), "utf8");
+  assert.match(source, /const currentRequest = \\+\\+requestId\\.current/);
+  assert.match(source, /if \\(currentRequest !== requestId\\.current\\) return;/);
+  assert.match(source, /requestId\\.current\\+\\+;/);
+});
