@@ -57,6 +57,7 @@ export function NotificationBellDrawer({
   const [unreadOnly, setUnreadOnly] = useState(false);
   const [moduleFilter, setModuleFilter] = useState("");
   const [pending, setPending] = useState(false);
+  const [actionFailed, setActionFailed] = useState(false);
   const count = Math.max(0, Math.floor(Number.isFinite(unreadCount) ? unreadCount : 0));
   const filtered = items.filter(item => (!unreadOnly || item.unread) && (!moduleFilter || item.moduleLabel === moduleFilter));
   const modules = [...new Set(items.map(item => item.moduleLabel))].sort();
@@ -64,7 +65,8 @@ export function NotificationBellDrawer({
   async function act(operation: (() => Promise<void>) | undefined) {
     if (!operation || busy || pending) return;
     setPending(true);
-    try { await operation(); } catch { /* Parent adapter reports failures. */ } finally { setPending(false); }
+    setActionFailed(false);
+    try { await operation(); } catch { setActionFailed(true); } finally { setPending(false); }
   }
 
   return (
@@ -100,6 +102,7 @@ export function NotificationBellDrawer({
                 {modules.map(key => <option key={key} value={key}>{key}</option>)}
               </select>
             </label>
+            {actionFailed && !unavailable ? <p role="alert">{labels.unavailable}</p> : null}
             {unavailable ? <p role="alert">{labels.unavailable}</p>
               : filtered.length === 0 ? <p role="status" className="text-sm text-ink-500">{labels.empty}</p>
               : (
