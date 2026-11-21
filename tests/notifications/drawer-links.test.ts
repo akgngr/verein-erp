@@ -12,7 +12,7 @@ test("notification drawer only accepts simple internal routes", () => {
     null, undefined, "", "/", "//evil.example", "https://evil.example",
     "javascript:alert(1)", "/a?redirect=//evil.example", "/a#fragment",
     "/a%2fb", "/a/../b", "/a/./b", "/a\\b", "/a b",
-    "/a\nnext", "/" + "a".repeat(300),
+    "/a\nnext", "/a\u202Etxt", "/a\u2066b\u2069", "/a\u200Fhidden", "/a\u0085control", "/" + "a".repeat(300),
   ]) {
     assert.equal(safeNotificationHref(href), false, String(href));
   }
