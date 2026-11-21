@@ -63,7 +63,7 @@ export function NotificationBellDrawer({
   const modules = [...new Set(items.map(item => item.moduleLabel))].sort();
 
   async function act(operation: (() => Promise<void>) | undefined) {
-    if (!operation || busy || pending) return;
+    if (!operation || busy || pending || unavailable) return;
     setPending(true);
     setActionFailed(false);
     try { await operation(); } catch { setActionFailed(true); } finally { setPending(false); }
@@ -89,7 +89,7 @@ export function NotificationBellDrawer({
                 aria-pressed={!unreadOnly} onPress={() => setUnreadOnly(false)}>{labels.all}</Button>
               <Button size="sm" variant={unreadOnly ? "primary" : "secondary"}
                 aria-pressed={unreadOnly} onPress={() => setUnreadOnly(true)}>{labels.unread}</Button>
-              <Button size="sm" variant="ghost" isDisabled={!onReadAll || pending || busy || count === 0}
+              <Button size="sm" variant="ghost" isDisabled={!onReadAll || pending || busy || unavailable || count === 0}
                 onPress={() => void act(onReadAll)}>
                 <CheckCheck className="h-4 w-4" aria-hidden />{labels.markAllRead}
               </Button>
@@ -115,9 +115,9 @@ export function NotificationBellDrawer({
                         {safeNotificationHref(item.href) ?
                           <Link href={item.href} className="text-sm text-accent underline-offset-4 hover:underline focus-visible:underline"
                             onClick={() => setOpen(false)}>{labels.open}</Link> : null}
-                        {item.unread ? <Button size="sm" variant="ghost" isDisabled={!onRead || pending || busy}
+                        {item.unread ? <Button size="sm" variant="ghost" isDisabled={!onRead || pending || busy || unavailable}
                           onPress={() => void act(onRead ? () => onRead(item.id) : undefined)}>{labels.markRead}</Button> : null}
-                        <Button size="sm" variant="ghost" isDisabled={!onSnooze || pending || busy}
+                        <Button size="sm" variant="ghost" isDisabled={!onSnooze || pending || busy || unavailable}
                           onPress={() => void act(onSnooze ? () => onSnooze(item.id) : undefined)}>{labels.snooze}</Button>
                       </div>
                     </li>
