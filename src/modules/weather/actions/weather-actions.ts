@@ -1,29 +1,17 @@
 "use server";
 
-import { z } from "zod";
-
 import type { ActionResult } from "@/shared/types/action";
 
 import { weatherPermissions } from "../permissions";
+import {
+  coordsWeatherSchema,
+  citySearchSchema,
+} from "../schemas/weather-schemas";
 import {
   getWeatherData,
   searchCityCoordinates,
   type WeatherData,
 } from "../services/weather";
-
-export const coordsWeatherSchema = z
-  .object({
-    lat: z.number().min(-90).max(90),
-    lon: z.number().min(-180).max(180),
-    cityName: z.string().trim().max(80).optional(),
-  })
-  .strict();
-
-export const citySearchSchema = z
-  .object({
-    query: z.string().trim().min(2).max(80),
-  })
-  .strict();
 
 /**
  * Tarayıcı geolocation koordinatlarıyla veya harici koordinatlarla hava durumu getirir.

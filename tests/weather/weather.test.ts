@@ -14,7 +14,7 @@ import { buildWeatherBriefing } from "@/modules/weather/secretary";
 import {
   coordsWeatherSchema,
   citySearchSchema,
-} from "@/modules/weather/actions/weather-actions";
+} from "@/modules/weather/schemas/weather-schemas";
 import type { WeatherData } from "@/modules/weather";
 
 const mockWeatherData: WeatherData = {
