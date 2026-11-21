@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import {
   listNotificationsAction, markAllNotificationsReadAction, markNotificationsReadAction,
@@ -18,18 +18,23 @@ export function NotificationInboxWidget() {
   const [count, setCount] = useState(0);
   const [busy, setBusy] = useState(false);
   const [unavailable, setUnavailable] = useState(false);
+  // Ignore responses from older polls after a newer reload or an unmount.
+  const requestId = useRef(0);
 
   const reload = useCallback(async () => {
+    const currentRequest = ++requestId.current;
     try {
       const [list, unread] = await Promise.all([
         listNotificationsAction({ unreadOnly: false, limit: 50 }),
         unreadNotificationCountAction({}),
       ]);
+      if (currentRequest !== requestId.current) return;
       if (!list.ok || !unread.ok) { setItems([]); setCount(0); setUnavailable(true); return; }
       setItems(list.data);
       setCount(unread.data.count);
       setUnavailable(false);
     } catch {
+      if (currentRequest !== requestId.current) return;
       setItems([]);
       setCount(0);
       setUnavailable(true);
@@ -44,6 +49,7 @@ export function NotificationInboxWidget() {
     document.addEventListener("visibilitychange", poll);
     return () => {
       mounted = false;
+      requestId.current++;
       window.clearInterval(interval);
       document.removeEventListener("visibilitychange", poll);
     };
