@@ -27,9 +27,9 @@ test("notification drawer keeps mutation and accessibility safeguards", async ()
   );
   assert.match(source, /from ["']@\/shared\/components\/kit["']/);
   assert.doesNotMatch(source, /from ["']@heroui\/react["']/);
-  assert.match(source, /isDisabled=\{!onReadAll \|\| pending \|\| busy \|\| count === 0\}/);
-  assert.match(source, /isDisabled=\{!onRead \|\| pending \|\| busy\}/);
-  assert.match(source, /isDisabled=\{!onSnooze \|\| pending \|\| busy\}/);
+  assert.match(source, /isDisabled=\{!onReadAll \|\| pending \|\| busy \|\| unavailable \|\| count === 0\}/);
+  assert.match(source, /isDisabled=\{!onRead \|\| pending \|\| busy \|\| unavailable\}/);
+  assert.match(source, /isDisabled=\{!onSnooze \|\| pending \|\| busy \|\| unavailable\}/);
   assert.match(source, /role="alert"/);
   assert.match(source, /if \(!operation \|\| busy \|\| pending \|\| unavailable\) return;/);
   assert.match(source, /aria-busy=\{pending \|\| busy\}/);
