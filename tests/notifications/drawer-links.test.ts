@@ -78,3 +78,13 @@ test("notification mutations invalidate in-flight polls before invoking the serv
   assert.match(source, /if \(busy \|\| unavailable\) return;\s*\/\/ A poll started before this mutation must not overwrite its result\.\s*requestId\.current\+\+;\s*setBusy\(true\);/);
   assert.match(source, /if \(currentRequest !== requestId\.current\) return;/);
 });
+
+/** Polling cannot overlap a pending mutation, even before React updates busy state. */
+test("notification inbox pauses background polling while a write is in flight", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const source = await readFile(new URL("../../src/modules/notifications/views/inbox-widget.tsx", import.meta.url), "utf8");
+  assert.match(source, /const mutationInFlight = useRef\(false\)/);
+  assert.match(source, /mounted && !mutationInFlight\.current && document\.visibilityState === "visible"/);
+  assert.match(source, /mutationInFlight\.current = true;/);
+  assert.match(source, /finally \{\s*mutationInFlight\.current = false;/);
+});
