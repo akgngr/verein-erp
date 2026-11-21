@@ -48,7 +48,7 @@ test("notification inbox clears stale data when refresh fails", async () => {
     "utf8",
   );
   assert.match(source, /if \(!list\.ok \|\| !unread\.ok\) \{ setItems\(\[\]\); setCount\(0\); setUnavailable\(true\); return; \}/);
-  assert.match(source, /catch \{\s*setItems\(\[\]\);\s*setCount\(0\);\s*setUnavailable\(true\);/);
+  assert.match(source, /catch \{\s*if \(currentRequest !== requestId\.current\) return;\s*setItems\(\[\]\);\s*setCount\(0\);\s*setUnavailable\(true\);/);
 });
 
 /** An older poll must not replace a newer response or write after unmount. */
