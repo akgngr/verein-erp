@@ -30,16 +30,18 @@ export function NotificationInboxWidget() {
         listNotificationsAction({ unreadOnly: false, limit: 50 }),
         unreadNotificationCountAction({}),
       ]);
-      if (currentRequest !== requestId.current) return;
-      if (!list.ok || !unread.ok) { setItems([]); setCount(0); setUnavailable(true); return; }
+      if (currentRequest !== requestId.current) return false;
+      if (!list.ok || !unread.ok) { setItems([]); setCount(0); setUnavailable(true); return false; }
       setItems(list.data);
       setCount(unread.data.count);
       setUnavailable(false);
+      return true;
     } catch {
-      if (currentRequest !== requestId.current) return;
+      if (currentRequest !== requestId.current) return false;
       setItems([]);
       setCount(0);
       setUnavailable(true);
+      return false;
     }
   }, []);
 
@@ -66,7 +68,7 @@ export function NotificationInboxWidget() {
     try {
       const result = await fn();
       if (!result.ok) { setItems([]); setCount(0); setUnavailable(true); throw new Error("NOTIFICATION_ACTION_FAILED"); }
-      await reload();
+      if (!(await reload())) throw new Error("NOTIFICATION_REFRESH_FAILED");
     } catch {
       setItems([]);
       setCount(0);
