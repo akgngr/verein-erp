@@ -34,7 +34,7 @@ test("notification drawer keeps mutation and accessibility safeguards", async ()
   assert.match(source, /const count = unavailable \? 0 :/);
   assert.match(source, /const filtered = \(unavailable \? \[\] : items\)\.filter/);
   assert.match(source, /const modules = \[\.\.\.new Set\(\(unavailable \? \[\] : items\)\.map/);
-  assert.match(source, /if \(!operation \|\| busy \|\| pending \|\| unavailable\) return;/);
+  assert.match(source, /if \(!operation \|\| busy \|\| pending \|\| unavailable\) return false;/);
   assert.match(source, /aria-busy=\{pending \|\| busy\}/);
   assert.match(source, /safeNotificationHref\(item\.href\)/);
   assert.doesNotMatch(source, /demoNotifications|mockNotifications|localStorage/);
@@ -47,8 +47,8 @@ test("notification inbox clears stale data when refresh fails", async () => {
     new URL("../../src/modules/notifications/views/inbox-widget.tsx", import.meta.url),
     "utf8",
   );
-  assert.match(source, /if \(!list\.ok \|\| !unread\.ok\) \{ setItems\(\[\]\); setCount\(0\); setUnavailable\(true\); return; \}/);
-  assert.match(source, /catch \{\s*if \(currentRequest !== requestId\.current\) return;\s*setItems\(\[\]\);\s*setCount\(0\);\s*setUnavailable\(true\);/);
+  assert.match(source, /if \(!list\.ok \|\| !unread\.ok\) \{ setItems\(\[\]\); setCount\(0\); setUnavailable\(true\); return false; \}/);
+  assert.match(source, /catch \{\s*if \(currentRequest !== requestId\.current\) return false;\s*setItems\(\[\]\);\s*setCount\(0\);\s*setUnavailable\(true\);/);
 });
 
 /** An older poll must not replace a newer response or write after unmount. */
@@ -56,7 +56,7 @@ test("notification inbox invalidates stale async poll responses", async () => {
   const { readFile } = await import("node:fs/promises");
   const source = await readFile(new URL("../../src/modules/notifications/views/inbox-widget.tsx", import.meta.url), "utf8");
   assert.match(source, /const currentRequest = \+\+requestId\.current/);
-  assert.match(source, /if \(currentRequest !== requestId\.current\) return;/);
+  assert.match(source, /if \(currentRequest !== requestId\.current\) return false;/);
   assert.match(source, /requestId\.current\+\+;/);
 });
 
@@ -75,8 +75,8 @@ test("notification action failures propagate and clear stale badge state", async
 test("notification mutations invalidate in-flight polls before invoking the server", async () => {
   const { readFile } = await import("node:fs/promises");
   const source = await readFile(new URL("../../src/modules/notifications/views/inbox-widget.tsx", import.meta.url), "utf8");
-  assert.match(source, /if \(mutationInFlight\.current \|\| unavailable\) return;\s*mutationInFlight\.current = true;\s*\/\/ A poll started before this mutation must not overwrite its result\.\s*requestId\.current\+\+;\s*setBusy\(true\);/);
-  assert.match(source, /if \(currentRequest !== requestId\.current\) return;/);
+  assert.match(source, /if \(mutationInFlight\.current \|\| unavailable\) return false;\s*mutationInFlight\.current = true;\s*\/\/ A poll started before this mutation must not overwrite its result\.\s*requestId\.current\+\+;\s*setBusy\(true\);/);
+  assert.match(source, /if \(currentRequest !== requestId\.current\) return false;/);
 });
 
 /** Polling cannot overlap a pending mutation, even before React updates busy state. */
