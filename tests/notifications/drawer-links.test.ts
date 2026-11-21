@@ -59,3 +59,14 @@ test("notification inbox invalidates stale async poll responses", async () => {
   assert.match(source, /if \(currentRequest !== requestId\.current\) return;/);
   assert.match(source, /requestId\.current\+\+;/);
 });
+
+/** Failed mutations must reject so the drawer announces an accessible error, not silent success. */
+test("notification action failures propagate and clear stale badge state", async () => {
+  const { readFile } = await import("node:fs/promises");
+  const source = await readFile(new URL("../../src/modules/notifications/views/inbox-widget.tsx", import.meta.url), "utf8");
+  assert.match(source, /if \(!result\.ok\) \{ setItems\(\[\]\); setCount\(0\); setUnavailable\(true\); throw new Error\("NOTIFICATION_ACTION_FAILED"\); \}/);
+  assert.match(source, /catch \{\s*setItems\(\[\]\);\s*setCount\(0\);\s*setUnavailable\(true\);\s*throw new Error\("NOTIFICATION_ACTION_FAILED"\);/);
+  const drawer = await readFile(new URL("../../src/modules/notifications/components/notification-bell-drawer.tsx", import.meta.url), "utf8");
+  assert.match(drawer, /catch \{ setActionFailed\(true\); \}/);
+  assert.match(drawer, /role="alert"/);
+});
