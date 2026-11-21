@@ -1,0 +1,105 @@
+{
+  "nav": {
+    "youth-protection": "Jugendschutz"
+  },
+  "module": {
+    "label": "Jugendschutz",
+    "description": "Einsichtnahme in das erweiterte Führungszeugnis (§ 72a SGB VIII) und Gebührenbefreiungsvorlage."
+  },
+  "permissions": {
+    "youth-protection": {
+      "label": "Jugendschutz",
+      "description": "Verwaltung der Einsichtnahmen in das erweiterte Führungszeugnis."
+    }
+  },
+  "meta": {
+    "list": "Jugendschutz-Einsichtnahme"
+  },
+  "title": "Jugendschutz (§ 72a SGB VIII)",
+  "description": "Nachverfolgung der Einsichtnahme in das erweiterte Führungszeugnis für Trainer/Ehrenamtliche und Gebührenbefreiungsantrag.",
+  "newItem": "Neue Einsichtnahme",
+  "table": {
+    "aria": "Jugendschutz – Einsichtnahmeliste",
+    "personName": "Trainer / Ehrenamtliche(r)",
+    "inspectionDate": "Einsichtnahmedatum",
+    "certificateIssueDate": "Ausstellungsdatum",
+    "inspectingOfficer": "Einsicht nehmende Person",
+    "nextDueDate": "Nächste Fälligkeit",
+    "note": "Notiz",
+    "status_overdue": "Überfällig",
+    "status_upcoming": "Fällig in 3 Monaten",
+    "status_valid": "Gültig",
+    "filterStatus": "Statusfilter",
+    "filter_overdue": "Überfällig",
+    "filter_upcoming": "Fällig in 3 Monaten",
+    "filter_valid": "Gültig",
+    "search": "Person oder prüfende Person suchen...",
+    "empty": "Noch keine Einsichtnahme erfasst. Legen Sie mit „Neue Einsichtnahme“ den ersten Eintrag an.",
+    "generateLetter": "Gebührenbefreiungsantrag",
+    "edit": "Bearbeiten",
+    "delete": "Löschen",
+    "deleteTitle": "Eintrag löschen",
+    "deleteMessage": "Der Einsichtnahme-Eintrag für „{name}“ wird dauerhaft gelöscht. Fortfahren?",
+    "deleted": "Eintrag gelöscht."
+  },
+  "form": {
+    "createTitle": "Neue Einsichtnahme erfassen",
+    "editTitle": "Einsichtnahme bearbeiten",
+    "legalNotice": "Gesetzliche Schutzgrenze (§ 72a SGB VIII / DSGVO Art. 10): Führungszeugnisse dürfen NIEMALS hochgeladen oder gespeichert werden (technisch unterbunden). Es wird ausschließlich dokumentiert, dass das Original vorgelegt und geprüft wurde.",
+    "personName": "Name der Person",
+    "personNamePlaceholder": "z. B. Max Mustermann",
+    "inspectionDate": "Datum der Einsichtnahme",
+    "inspectionDateHelp": "Datum, an dem das Originaldokument dem Vorstand vorgelegt wurde",
+    "certificateIssueDate": "Ausstellungsdatum des Zeugnisses",
+    "certificateIssueDateHelp": "Auf dem Führungszeugnis vermerktes Ausstellungsdatum",
+    "inspectingOfficer": "Prüfendes Vorstandsmitglied",
+    "inspectingOfficerPlaceholder": "z. B. Erika Musterfrau (Vorstand)",
+    "nextDueDate": "Nächste Fälligkeit / Wiedervorlage",
+    "nextDueDateHelp": "Regulär nach 5 Jahren gemäß Empfehlung der Jugendämter/Sportbünde",
+    "note": "Optionale Notiz",
+    "noteNotice": "Wichtig: Keinesfalls Verurteilungen oder strafrechtliche Inhalte eintragen. Nur rein administrative Notizen.",
+    "notePlaceholder": "z. B. Original eingesehen, keine Eintragungen nach § 72a Abs. 1 SGB VIII.",
+    "save": "Speichern",
+    "cancel": "Abbrechen",
+    "created": "Eintrag angelegt.",
+    "updated": "Eintrag aktualisiert."
+  },
+  "letter": {
+    "title": "Vorlage für Gebührenbefreiungsantrag",
+    "openButton": "Gebührenbefreiungsantrag",
+    "description": "Antrag auf Gebührenbefreiung zur Vorlage bei der Meldebehörde / dem Bürgeramt gemäß § 12 JVKostG.",
+    "personName": "Name der antragstellenden Person",
+    "namePlaceholder": "Max Mustermann",
+    "role": "Funktion / Tätigkeit im Verein",
+    "rolePlaceholder": "z. B. ehrenamtliche(r) Trainer(in) / Jugendleiter(in)",
+    "birthDate": "Geburtsdatum",
+    "address": "Wohnanschrift",
+    "addressPlaceholder": "Musterstr. 1, 10115 Berlin",
+    "previewTitle": "Amtliche Vorlage (Vorschau)",
+    "previewLabel": "Dokumententext",
+    "copyButton": "Text kopieren",
+    "copiedButton": "Kopiert",
+    "copied": "Dokumententext in die Zwischenablage kopiert.",
+    "copyFailed": "Kopieren fehlgeschlagen.",
+    "printButton": "Drucken",
+    "printPopupBlocked": "Druckfenster wurde blockiert. Bitte Pop-up-Berechtigungen prüfen.",
+    "close": "Schließen"
+  },
+  "secretary": {
+    "dueCount": "{count, plural, one {Bei # Person ist die Einsichtnahme in das Führungszeugnis fällig oder läuft in 3 Monaten ab.} other {Bei # Personen ist die Einsichtnahme in das Führungszeugnis fällig oder läuft in 3 Monaten ab.}}"
+  },
+  "errors": {
+    "notFound": "Eintrag nicht gefunden."
+  },
+  "validation": {
+    "personNameRequired": "Name ist erforderlich.",
+    "personNameMax": "Der Name darf höchstens 120 Zeichen lang sein.",
+    "inspectionDateInvalid": "Gültiges Einsichtnahmedatum auswählen (JJJJ-MM-TT).",
+    "certificateIssueDateInvalid": "Gültiges Ausstellungsdatum auswählen (JJJJ-MM-TT).",
+    "inspectingOfficerRequired": "Prüfende Person ist erforderlich.",
+    "inspectingOfficerMax": "Der Name darf höchstens 120 Zeichen lang sein.",
+    "nextDueDateInvalid": "Gültiges Fälligkeitsdatum auswählen (JJJJ-MM-TT).",
+    "noteMax": "Die Notiz darf höchstens 500 Zeichen lang sein.",
+    "dateInvalid": "Ungültiges Datumsformat."
+  }
+}

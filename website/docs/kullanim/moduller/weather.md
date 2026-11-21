@@ -1,5 +1,5 @@
 ---
-sidebar_position: 20
+sidebar_position: 21
 title: "Hava Durumu"
 description: "Anlık konum bazlı hava durumu, tahminler, panel kartı ve sekreter etkinlik önerileri (Dış API: api.open-meteo.com)."
 slug: /kullanim/moduller/weather
