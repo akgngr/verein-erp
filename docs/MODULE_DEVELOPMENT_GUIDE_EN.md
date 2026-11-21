@@ -572,7 +572,18 @@ Before a user is deleted, the system calls every module's `onUserDeleted(userId)
 
 **Internal refactor notes:** `type: internal` remains in the release chain but is hidden from user-facing app and website notes. Module version increments are still required.
 
-## Top-bar action (`header.tsx`)
+## Widgets (`widget.ts`, Widget Platform)
+
+A module contributes UI to the top bar and other slots **only** through `src/modules/<module>/widget.ts`: `export const widgets = defineModuleWidgets("<module>", [{ id: "<module>.<name>", slot: "header.right", size, titleKey, requiredPermissions: ["<resource>:<action>"], load: () => import("./widgets/<name>") }])` (`@/shared/widgets/registry`, ADR 0007-widget-platform). `pnpm module:sync` collects them at build time into `src/widget-registry.ts`; nothing is scanned at runtime. `module:validate` enforces the rules:
+- `widget.ts` is client-safe (no server-only, no DB).
+- It declares widgets for its own module only.
+- Loaders import only the module's own files (`./…`).
+
+Visibility is computed server-side: the module must be usable (active, approved and licensed) and the user must hold every `requiredPermissions` entry. No `widget.ts` means no widgets; that is not an error.
+
+## Top-bar action (`header.tsx`) — temporary
+
+> `header.tsx` will be removed when the Widget Platform slot (#436) lands; use `widget.ts` for new code.
 
 A module adds a button next to the theme switch with `export const header = defineModuleHeader({ module: "<module>", actions: [{ key, order, render }] })` in `src/modules/<module>/header.tsx` (`@/shared/header/define`). `pnpm module:sync` collects these into `src/header-registry.ts`. Only **usable** modules render actions: the module must be active, its access approved and, if it declares `license`, licensed. `render` runs on the server, does its own permission check and returns `null` to hide. It must not send personal data to the client. Licensed modules (e.g. `help-center`, RFC-002) add their buttons this way.
 

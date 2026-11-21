@@ -1,0 +1,12 @@
+{
+  "module": {
+    "label": "Widget-Plattform",
+    "description": "Sammelt die Bausteine der Module für Kopfzeile und Panels auf sichere Weise."
+  },
+  "permissions": {
+    "widgets": {
+      "label": "Widgets",
+      "description": "Modul-Bausteine in Kopfzeile und Panels sehen; Admin-Richtlinie."
+    }
+  }
+}

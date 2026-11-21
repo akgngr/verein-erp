@@ -9460,5 +9460,17 @@
       "dailyForecast": "Bugün hava {temp}°, {cond}.",
       "outdoorWarning": "Açık alan etkinlikleri veya randevular için hava koşullarını göz önünde bulundurun."
     }
+  },
+  "widgets": {
+    "module": {
+      "label": "Widget Platformu",
+      "description": "Modüllerin üst çubuk ve paneller için bileşenlerini güvenli biçimde toplar."
+    },
+    "permissions": {
+      "widgets": {
+        "label": "Widget'lar",
+        "description": "Üst çubuk ve paneldeki modül bileşenlerini görme; yönetici politikası."
+      }
+    }
   }
 }

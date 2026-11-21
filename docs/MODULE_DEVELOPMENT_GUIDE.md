@@ -852,7 +852,13 @@ Bir modül kendi olaylarını yayımlayabilir; bu olaylar İş akışları düze
 
 **Dahili refaktör notları:** `type: internal` sürüm zincirinde kalır; kullanıcı ekranında ve web kataloğunda gösterilmez. Modül sürüm artışı yine zorunludur.
 
-## 9g2. Üst çubuk eylemi (`header.tsx`)
+## 9g1. Widget (`widget.ts`, Widget Platform)
+
+Modül, üst çubuk ve diğer yuvalara bileşen eklemek için **yalnız** `src/modules/<modül>/widget.ts` içinde `export const widgets = defineModuleWidgets("<modül>", [{ id: "<modül>.<ad>", slot: "header.right", size, titleKey, requiredPermissions: ["<kaynak>:<eylem>"], load: () => import("./widgets/<ad>") }])` tanımlar (`@/shared/widgets/registry`, ADR 0007-widget-platform). `pnpm module:sync` bunları derleme anında `src/widget-registry.ts` içinde toplar; çalışma zamanında dosya taranmaz. Kurallar (`module:validate` denetler): `widget.ts` istemci-güvenlidir (server-only ve veritabanı yok), yalnız kendi modülü için tanım yapar, yükleyiciler yalnız modülün kendi dosyalarını (`./…`) içe aktarır. Görünürlük sunucuda hesaplanır: modül kullanılabilir (etkin + onaylı + lisanslı) ve kullanıcı her `requiredPermissions` iznine sahip olmalı. `widget.ts` yoksa widget yoktur (hata değildir).
+
+## 9g2. Üst çubuk eylemi (`header.tsx`) — geçici
+
+> Widget Platform yuvası (#436) gelince `header.tsx` kaldırılır; yeni kodda `widget.ts` kullanın.
 
 Modül, tema düğmesinin yanına bir düğme eklemek için `src/modules/<modül>/header.tsx` içinde `export const header = defineModuleHeader({ module: "<modül>", actions: [{ key, order, render }] })` tanımlar (`@/shared/header/define`). `pnpm module:sync` bunları `src/header-registry.ts` içinde toplar. Yalnız **kullanılabilir** modüllerin eylemleri çizilir: modül etkin, erişimi onaylı ve `license` istiyorsa lisansı geçerli olmalı. `render` sunucuda çalışır, kendi yetki denetimini yapar ve gösterilmeyecekse `null` döndürür. İstemciye kişisel veri taşımaz. Lisanslı modüller (ör. `help-center`, RFC-002) düğmelerini bu yolla ekler.
 
