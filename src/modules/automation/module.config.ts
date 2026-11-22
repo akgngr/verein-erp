@@ -7,7 +7,7 @@ import { automationPermissions } from "./permissions";
 /** Kalıcı arka plan işleri ve workflow altyapısı. */
 export const moduleConfig: ModuleConfig = {
   key: "automation",
-  version: "0.10.12",
+  version: "0.10.13",
   label: "Otomasyon",
   description: "Kalıcı arka plan görevleri ve iş akışları.",
   category: "EXTENSION",
@@ -18,10 +18,10 @@ export const moduleConfig: ModuleConfig = {
     { module: "system", operations: ["read"] },
   ],
   dependencies: {
-    "pg-boss": "12.38.0",
+    "pg-boss": "12.38.2",
     "@workflowbuilder/sdk": "3.0.0",
     "@xyflow/react": "12.10.2",
-    zustand: "5.0.8",
+    zustand: "5.1.0",
     i18next: "24.2.3",
   },
   basePath: "/automation",
