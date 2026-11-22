@@ -15,6 +15,7 @@ import {
   ShieldCheck,
   CheckCircle2,
 } from "lucide-react";
+import { useTranslations } from "next-intl";
 
 import { ActionButton } from "@/shared/components/ui/action-button";
 import { SurfaceCard } from "@/shared/components/ui/surface-card";
@@ -28,28 +29,14 @@ interface AssemblyReportSlidesProps {
   onClose?: () => void;
 }
 
-const SPHERE_TITLES = {
-  tr: {
-    IDEELL: "1. İdeel Alan (Aidat & Bağışlar)",
-    ASSET_MANAGEMENT: "2. Varlık Yönetimi",
-    PURPOSE_OPERATION: "3. Amaca Bağlı İşletme",
-    ECONOMIC_OPERATION: "4. Ticari İşletme",
-  },
-  de: {
-    IDEELL: "1. Ideeller Bereich (Beiträge & Spenden)",
-    ASSET_MANAGEMENT: "2. Vermögensverwaltung",
-    PURPOSE_OPERATION: "3. Zweckbetrieb",
-    ECONOMIC_OPERATION: "4. Wirtschaftlicher Geschäftsbetrieb",
-  },
-} as const;
-
 export function AssemblyReportSlides({
   report,
   initialLang = "tr",
   onClose,
 }: AssemblyReportSlidesProps) {
+  const t = useTranslations("accounting.reports.treasurer");
   const [slide, setSlide] = useState(0);
-  const [lang, setLang] = useState<"tr" | "de">(initialLang);
+  const [displayLang, setDisplayLang] = useState<"tr" | "de">(initialLang);
   const [isFullscreen, setIsFullscreen] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -101,68 +88,14 @@ export function AssemblyReportSlides({
     };
   }, [nextSlide, prevSlide, onClose]);
 
-  const money = (cents: number) => formatMoney(cents, lang === "tr" ? "tr-TR" : "de-DE");
+  const money = (cents: number) => formatMoney(cents, displayLang === "tr" ? "tr-TR" : "de-DE");
 
-  const t = {
-    tr: {
-      slideLabel: "Slayt",
-      fullscreen: "Tam Ekran",
-      close: "Kapat",
-      prev: "Önceki",
-      next: "Sonraki",
-      fiscalYear: `${report.year} Mali Yılı`,
-      slide1Title: "Kassenbericht: Genel Mali Görünüm ve Yıllık Sonuç",
-      slide1Subtitle: "Genel Kurul için Toplulaştırılmış Finansal Rapor",
-      slide2Title: "4 Faaliyet Alanı ve Yıllık Değişim (§ 5)",
-      slide2Subtitle: "İdeel Alan, Varlık Yönetimi, Zweckbetrieb ve Ticari İşletme",
-      slide3Title: "Proje Bazlı Fonlar ve Bütçe Durumu",
-      slide3Subtitle: "Zweckgebundene Mittel: Amaca Bağlı Proje Bakiyeleri",
-      slide4Title: "Yedek Akçeler ve Fon Rezervleri (§ 62 AO)",
-      slide4Subtitle: "Serbest Rezervler, Amaca Bağlı Fonlar ve Likidite Sağlığı",
-      slide5Title: "Sayman Değerlendirmesi ve İbra Tavsiyesi",
-      slide5Subtitle: "Kasa Hareketi ve Denetim Özeti",
-      income: "Toplam Gelir",
-      expense: "Toplam Gider",
-      netSurplus: "Yıllık Net Bakiye",
-      liquidity: "Kapanış Likiditesi",
-      freeReserves: "Serbest Rezervler",
-      earmarked: "Amaca Bağlı Fonlar",
-      surplusDesc: "Yıllık faaliyet sonucu net fazlalık",
-      deficitDesc: "Yıllık faaliyet sonucu net açık",
-      yoy: "Geçen yıla göre",
-      noProjects: "Bu dönemde bağımsız proje bütçesi kaydı bulunmamaktadır.",
-      recommendationHeader: "Genel Kurul İbra Tavsiyesi (Entlastung)",
-    },
-    de: {
-      slideLabel: "Folie",
-      fullscreen: "Vollbild",
-      close: "Schließen",
-      prev: "Zurück",
-      next: "Weiter",
-      fiscalYear: `Geschäftsjahr ${report.year}`,
-      slide1Title: "Kassenbericht: Gesamtergebnis & Finanzlage",
-      slide1Subtitle: "Aggregierter Finanz- und Tätigkeitsbericht für die Mitgliederversammlung",
-      slide2Title: "Die 4 steuerlichen Sphären (§ 5)",
-      slide2Subtitle: "Ideeller Bereich, Vermögensverwaltung, Zweckbetrieb & Gewerbe",
-      slide3Title: "Projektbezogene Mittelverwendung",
-      slide3Subtitle: "Zweckgebundene Mittel: Verwendung und Endbestände",
-      slide4Title: "Rücklagen und Vermögensstand (§ 62 AO)",
-      slide4Subtitle: "Freie Rücklagen, zweckgebundene Mittel & Liquiditätsbestand",
-      slide5Title: "Fazit des Schatzmeisters & Entlastung",
-      slide5Subtitle: "Kassenprüfung und ordnungsgemäße Geschäftsführung",
-      income: "Gesamteinnahmen",
-      expense: "Gesamtausgaben",
-      netSurplus: "Jahresergebnis",
-      liquidity: "Liquidität zum Stichtag",
-      freeReserves: "Freie Rücklagen",
-      earmarked: "Zweckgebundene Mittel",
-      surplusDesc: "Jahresüberschuss",
-      deficitDesc: "Jahresfehlbetrag",
-      yoy: "Im Vorjahresvergleich",
-      noProjects: "Im Berichtszeitraum wurden keine separaten Projektbuchungen geführt.",
-      recommendationHeader: "Beschlussempfehlung zur Entlastung",
-    },
-  }[lang];
+  const sphereTitles: Record<string, string> = {
+    IDEELL: t("spheres.ideell"),
+    ASSET_MANAGEMENT: t("spheres.assetManagement"),
+    PURPOSE_OPERATION: t("spheres.purposeOperation"),
+    ECONOMIC_OPERATION: t("spheres.economicOperation"),
+  };
 
   return (
     <div
@@ -171,17 +104,17 @@ export function AssemblyReportSlides({
         isFullscreen ? "h-screen w-screen p-8" : "min-h-[580px] p-6 shadow-lg"
       }`}
       role="region"
-      aria-label="General Assembly Presentation Slides"
+      aria-label={t("title", { year: report.year })}
     >
       {/* Üst Çubuk: Başlık, Dil, Tam Ekran & Kapat */}
       <header className="flex items-center justify-between border-b border-ink-200 pb-4">
         <div className="flex items-center gap-3">
           <span className="inline-flex items-center gap-1.5 rounded-md bg-accent/10 px-2.5 py-1 text-xs font-semibold text-accent">
             <FileText className="h-3.5 w-3.5" aria-hidden="true" />
-            {t.fiscalYear}
+            {t("fiscalYear", { year: report.year })}
           </span>
           <span className="text-xs font-medium text-ink-500">
-            {t.slideLabel} {slide + 1} / {totalSlides}
+            {t("slideLabel")} {slide + 1} / {totalSlides}
           </span>
         </div>
 
@@ -190,18 +123,18 @@ export function AssemblyReportSlides({
           <div className="flex rounded-lg border border-ink-200 p-0.5 text-xs">
             <button
               type="button"
-              onClick={() => setLang("tr")}
+              onClick={() => setDisplayLang("tr")}
               className={`rounded px-2 py-1 font-medium transition-colors ${
-                lang === "tr" ? "bg-accent text-white" : "text-ink-600 hover:text-ink-900"
+                displayLang === "tr" ? "bg-accent text-white" : "text-ink-600 hover:text-ink-900"
               }`}
             >
               TR
             </button>
             <button
               type="button"
-              onClick={() => setLang("de")}
+              onClick={() => setDisplayLang("de")}
               className={`rounded px-2 py-1 font-medium transition-colors ${
-                lang === "de" ? "bg-accent text-white" : "text-ink-600 hover:text-ink-900"
+                displayLang === "de" ? "bg-accent text-white" : "text-ink-600 hover:text-ink-900"
               }`}
             >
               DE
@@ -210,28 +143,26 @@ export function AssemblyReportSlides({
 
           <ActionButton
             onClick={toggleFullscreen}
+            variant="ghost"
             size="sm"
-            label={t.fullscreen}
-            icon={
+            aria-label={t("fullscreen")}
+            startIcon={
               isFullscreen ? (
                 <Minimize2 className="h-4 w-4" aria-hidden="true" />
               ) : (
                 <Maximize2 className="h-4 w-4" aria-hidden="true" />
               )
             }
-          >
-            {t.fullscreen}
-          </ActionButton>
+          />
 
           {onClose ? (
             <ActionButton
               onClick={onClose}
+              variant="ghost"
               size="sm"
-              label={t.close}
-              icon={<X className="h-4 w-4" aria-hidden="true" />}
-            >
-              {t.close}
-            </ActionButton>
+              aria-label={t("close")}
+              startIcon={<X className="h-4 w-4" aria-hidden="true" />}
+            />
           ) : null}
         </div>
       </header>
@@ -243,15 +174,15 @@ export function AssemblyReportSlides({
           <div className="space-y-6 animate-in fade-in duration-300">
             <div>
               <h2 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
-                {t.slide1Title}
+                {t("title", { year: report.year })}
               </h2>
-              <p className="mt-1 text-sm text-ink-500">{t.slide1Subtitle}</p>
+              <p className="mt-1 text-sm text-ink-500">{t("slide1Subtitle")}</p>
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-4">
               <SurfaceCard className="p-4 border-l-4 border-l-blue-500">
                 <p className="text-xs font-semibold uppercase tracking-wider text-ink-500">
-                  {t.income}
+                  {t("totalIncome")}
                 </p>
                 <p className="mt-2 text-2xl font-bold text-foreground">
                   {money(report.totals.totalIncomeCents)}
@@ -264,14 +195,14 @@ export function AssemblyReportSlides({
                       <TrendingDown className="h-3 w-3 text-rose-600" aria-hidden="true" />
                     )}
                     {report.totals.incomeChangePercent >= 0 ? "+" : ""}
-                    {report.totals.incomeChangePercent}% {t.yoy}
+                    {report.totals.incomeChangePercent}% {t("yoy")}
                   </p>
                 )}
               </SurfaceCard>
 
               <SurfaceCard className="p-4 border-l-4 border-l-amber-500">
                 <p className="text-xs font-semibold uppercase tracking-wider text-ink-500">
-                  {t.expense}
+                  {t("totalExpense")}
                 </p>
                 <p className="mt-2 text-2xl font-bold text-foreground">
                   {money(report.totals.totalExpenseCents)}
@@ -284,7 +215,7 @@ export function AssemblyReportSlides({
                       <TrendingUp className="h-3 w-3 text-rose-600" aria-hidden="true" />
                     )}
                     {report.totals.expenseChangePercent >= 0 ? "+" : ""}
-                    {report.totals.expenseChangePercent}% {t.yoy}
+                    {report.totals.expenseChangePercent}% {t("yoy")}
                   </p>
                 )}
               </SurfaceCard>
@@ -297,7 +228,7 @@ export function AssemblyReportSlides({
                 }`}
               >
                 <p className="text-xs font-semibold uppercase tracking-wider text-ink-500">
-                  {t.netSurplus}
+                  {t("netSurplus")}
                 </p>
                 <p
                   className={`mt-2 text-2xl font-bold ${
@@ -309,26 +240,26 @@ export function AssemblyReportSlides({
                   {money(report.totals.netAnnualSurplusCents)}
                 </p>
                 <p className="mt-1 text-xs text-ink-600">
-                  {report.totals.netAnnualSurplusCents >= 0 ? t.surplusDesc : t.deficitDesc}
+                  {report.totals.netAnnualSurplusCents >= 0 ? t("surplusDesc") : t("deficitDesc")}
                 </p>
               </SurfaceCard>
 
               <SurfaceCard className="p-4 border-l-4 border-l-purple-500">
                 <p className="text-xs font-semibold uppercase tracking-wider text-ink-500">
-                  {t.liquidity}
+                  {t("closingReserves")}
                 </p>
                 <p className="mt-2 text-2xl font-bold text-foreground">
                   {money(report.reserves.closingReservesCents)}
                 </p>
                 <p className="mt-1 text-xs text-ink-600">
-                  {t.freeReserves}: {money(report.reserves.freeReservesCents)}
+                  {t("freeReserves")}: {money(report.reserves.freeReservesCents)}
                 </p>
               </SurfaceCard>
             </div>
 
             <div className="rounded-lg border border-ink-200 bg-ink-50/50 p-4 dark:bg-ink-900/30">
               <p className="text-sm font-medium leading-relaxed text-ink-800 dark:text-ink-200">
-                • {report.plainSummary[lang][0]}
+                • {report.plainSummary[displayLang][0]}
               </p>
             </div>
           </div>
@@ -339,9 +270,9 @@ export function AssemblyReportSlides({
           <div className="space-y-6 animate-in fade-in duration-300">
             <div>
               <h2 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
-                {t.slide2Title}
+                {t("spheresTitle")}
               </h2>
-              <p className="mt-1 text-sm text-ink-500">{t.slide2Subtitle}</p>
+              <p className="mt-1 text-sm text-ink-500">{t("slide2Subtitle")}</p>
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
@@ -349,7 +280,7 @@ export function AssemblyReportSlides({
                 <SurfaceCard key={s.sphere} className="p-4 space-y-3">
                   <div className="flex items-center justify-between border-b border-ink-100 pb-2">
                     <span className="font-semibold text-sm text-foreground">
-                      {SPHERE_TITLES[lang][s.sphere]}
+                      {sphereTitles[s.sphere] ?? s.sphere}
                     </span>
                     {s.yearOnYearChangePercent !== null && (
                       <span
@@ -366,19 +297,19 @@ export function AssemblyReportSlides({
                   </div>
                   <div className="grid grid-cols-3 gap-2 text-center">
                     <div>
-                      <p className="text-[11px] text-ink-500">{t.income}</p>
+                      <p className="text-[11px] text-ink-500">{t("incomeHeader")}</p>
                       <p className="font-medium text-xs sm:text-sm text-foreground">
                         {money(s.incomeCents)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-[11px] text-ink-500">{t.expense}</p>
+                      <p className="text-[11px] text-ink-500">{t("expenseHeader")}</p>
                       <p className="font-medium text-xs sm:text-sm text-foreground">
                         {money(s.expenseCents)}
                       </p>
                     </div>
                     <div>
-                      <p className="text-[11px] text-ink-500">{t.netSurplus}</p>
+                      <p className="text-[11px] text-ink-500">{t("netHeader")}</p>
                       <p
                         className={`font-semibold text-xs sm:text-sm ${
                           s.netCents >= 0 ? "text-emerald-600" : "text-rose-600"
@@ -393,7 +324,7 @@ export function AssemblyReportSlides({
             </div>
 
             <p className="text-xs text-ink-500">
-              • {report.plainSummary[lang][1]}
+              • {report.plainSummary[displayLang][1]}
             </p>
           </div>
         )}
@@ -403,15 +334,15 @@ export function AssemblyReportSlides({
           <div className="space-y-6 animate-in fade-in duration-300">
             <div>
               <h2 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
-                {t.slide3Title}
+                {t("projectsTitle")}
               </h2>
-              <p className="mt-1 text-sm text-ink-500">{t.slide3Subtitle}</p>
+              <p className="mt-1 text-sm text-ink-500">{t("slide3Subtitle")}</p>
             </div>
 
             {report.projects.length === 0 ? (
               <div className="rounded-lg border border-dashed border-ink-200 p-8 text-center text-ink-500">
                 <Briefcase className="mx-auto mb-2 h-8 w-8 text-ink-400" aria-hidden="true" />
-                <p className="text-sm">{t.noProjects}</p>
+                <p className="text-sm">{t("noProjects")}</p>
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 md:grid-cols-3">
@@ -421,15 +352,15 @@ export function AssemblyReportSlides({
                       {p.projectName}
                     </p>
                     <div className="flex justify-between text-xs text-ink-600">
-                      <span>{t.income}:</span>
+                      <span>{t("incomeHeader")}:</span>
                       <span className="font-medium">{money(p.incomeCents)}</span>
                     </div>
                     <div className="flex justify-between text-xs text-ink-600">
-                      <span>{t.expense}:</span>
+                      <span>{t("expenseHeader")}:</span>
                       <span className="font-medium">{money(p.expenseCents)}</span>
                     </div>
                     <div className="flex justify-between border-t border-ink-100 pt-1 text-xs">
-                      <span className="font-medium">{t.netSurplus}:</span>
+                      <span className="font-medium">{t("netHeader")}:</span>
                       <span
                         className={`font-bold ${
                           p.netCents >= 0 ? "text-emerald-600" : "text-rose-600"
@@ -445,13 +376,13 @@ export function AssemblyReportSlides({
 
             <div className="rounded-lg bg-accent/5 p-4 border border-accent/20">
               <p className="text-sm font-medium text-foreground">
-                {t.earmarked}:{" "}
+                {t("earmarkedFunds")}:{" "}
                 <span className="font-bold text-accent">
                   {money(report.reserves.earmarkedFundsCents)}
                 </span>
               </p>
               <p className="mt-1 text-xs text-ink-500">
-                {report.plainSummary[lang][2]}
+                {report.plainSummary[displayLang][2]}
               </p>
             </div>
           </div>
@@ -462,43 +393,43 @@ export function AssemblyReportSlides({
           <div className="space-y-6 animate-in fade-in duration-300">
             <div>
               <h2 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
-                {t.slide4Title}
+                {t("closingReserves")}
               </h2>
-              <p className="mt-1 text-sm text-ink-500">{t.slide4Subtitle}</p>
+              <p className="mt-1 text-sm text-ink-500">{t("slide4Subtitle")}</p>
             </div>
 
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-3">
               <SurfaceCard className="p-5 text-center">
                 <Layers className="mx-auto mb-2 h-6 w-6 text-purple-600" aria-hidden="true" />
-                <p className="text-xs uppercase tracking-wide text-ink-500">{t.freeReserves}</p>
+                <p className="text-xs uppercase tracking-wide text-ink-500">{t("freeReserves")}</p>
                 <p className="mt-2 text-2xl font-bold text-foreground">
                   {money(report.reserves.freeReservesCents)}
                 </p>
-                <p className="mt-1 text-xs text-ink-400">§ 62 Abs. 1 Nr. 3 AO</p>
+                <p className="mt-1 text-xs text-ink-400">{t("statuteFreeReserves")}</p>
               </SurfaceCard>
 
               <SurfaceCard className="p-5 text-center">
                 <ShieldCheck className="mx-auto mb-2 h-6 w-6 text-indigo-600" aria-hidden="true" />
-                <p className="text-xs uppercase tracking-wide text-ink-500">{t.earmarked}</p>
+                <p className="text-xs uppercase tracking-wide text-ink-500">{t("earmarkedFunds")}</p>
                 <p className="mt-2 text-2xl font-bold text-foreground">
                   {money(report.reserves.earmarkedFundsCents)}
                 </p>
-                <p className="mt-1 text-xs text-ink-400">§ 62 Abs. 1 Nr. 1 AO</p>
+                <p className="mt-1 text-xs text-ink-400">{t("statuteEarmarked")}</p>
               </SurfaceCard>
 
               <SurfaceCard className="p-5 text-center">
                 <CheckCircle2 className="mx-auto mb-2 h-6 w-6 text-emerald-600" aria-hidden="true" />
-                <p className="text-xs uppercase tracking-wide text-ink-500">{t.liquidity}</p>
+                <p className="text-xs uppercase tracking-wide text-ink-500">{t("closingReserves")}</p>
                 <p className="mt-2 text-2xl font-bold text-foreground">
                   {money(report.reserves.closingReservesCents)}
                 </p>
-                <p className="mt-1 text-xs text-ink-400">Bank- und Kassenbestände</p>
+                <p className="mt-1 text-xs text-ink-400">{t("bankAndCash")}</p>
               </SurfaceCard>
             </div>
 
             <div className="rounded-lg border border-ink-200 bg-ink-50/50 p-4 dark:bg-ink-900/30">
               <p className="text-sm font-medium leading-relaxed text-ink-800 dark:text-ink-200">
-                • {report.plainSummary[lang][3]}
+                • {report.plainSummary[displayLang][3]}
               </p>
             </div>
           </div>
@@ -509,13 +440,13 @@ export function AssemblyReportSlides({
           <div className="space-y-6 animate-in fade-in duration-300">
             <div>
               <h2 className="text-2xl font-bold tracking-tight text-foreground md:text-3xl">
-                {t.slide5Title}
+                {t("summaryTitle")}
               </h2>
-              <p className="mt-1 text-sm text-ink-500">{t.slide5Subtitle}</p>
+              <p className="mt-1 text-sm text-ink-500">{t("slide5Subtitle")}</p>
             </div>
 
             <div className="space-y-2 rounded-lg border border-ink-200 bg-surface p-4">
-              {report.plainSummary[lang].map((item, index) => (
+              {report.plainSummary[displayLang].map((item, index) => (
                 <div key={index} className="flex items-start gap-2 text-sm text-ink-700 dark:text-ink-300">
                   <span className="text-accent mt-0.5">•</span>
                   <p className="leading-relaxed">{item}</p>
@@ -529,10 +460,10 @@ export function AssemblyReportSlides({
                 <CheckCircle2 className="h-6 w-6 text-emerald-600 shrink-0" aria-hidden="true" />
                 <div>
                   <h3 className="font-bold text-emerald-900 dark:text-emerald-200">
-                    {t.recommendationHeader}
+                    {t("recommendationHeader")}
                   </h3>
                   <p className="mt-1 text-sm text-emerald-800 dark:text-emerald-300">
-                    {report.plainSummary.recommendation[lang]}
+                    {report.plainSummary.recommendation[displayLang]}
                   </p>
                 </div>
               </div>
@@ -550,7 +481,7 @@ export function AssemblyReportSlides({
           size="sm"
           startIcon={<ChevronLeft className="h-4 w-4" aria-hidden="true" />}
         >
-          {t.prev}
+          {t("prevSlide")}
         </ActionButton>
 
         {/* Slayt Noktaları */}
@@ -563,7 +494,7 @@ export function AssemblyReportSlides({
               className={`h-2 rounded-full transition-all ${
                 idx === slide ? "w-6 bg-accent" : "w-2 bg-ink-300 hover:bg-ink-400"
               }`}
-              aria-label={`${t.slideLabel} ${idx + 1}`}
+              aria-label={`${t("slideLabel")} ${idx + 1}`}
               role="tab"
               aria-selected={idx === slide}
             />
@@ -573,10 +504,11 @@ export function AssemblyReportSlides({
         <ActionButton
           onClick={nextSlide}
           disabled={slide === totalSlides - 1}
+          variant="solid"
           size="sm"
-          icon={<ChevronRight className="h-4 w-4" aria-hidden="true" />}
+          endIcon={<ChevronRight className="h-4 w-4" aria-hidden="true" />}
         >
-          {t.next}
+          {t("nextSlide")}
         </ActionButton>
       </footer>
     </div>

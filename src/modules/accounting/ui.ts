@@ -10,3 +10,4 @@ export { YearClosingView } from "./views/year-closing-view";
 export { MemberSyncView } from "./views/member-sync-view";
 export { ReportsView } from "./views/reports-view";
 export { TreasurerReportSlideView } from "./views/treasurer-report-slide-view";
+export { AssemblyReportSlides } from "./components/assembly-report-slides";
