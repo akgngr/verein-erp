@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.12.0",
+      "date": "2026-11-22",
+      "title": {
+        "tr": "Yönetici duyuru gönderme ekranı",
+        "de": "Verwaltungsansicht zum Senden von Mitteilungen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yöneticiler duyuruyu herkese veya seçilen rollere onay penceresinden gönderebilir ve gerçek alıcı sayısını görebilir.",
+          "de": "Administratoren können Mitteilungen nach Bestätigung an alle oder ausgewählte Rollen senden und die tatsächliche Empfängerzahl sehen."
+        }
+      ]
+    },
+    {
       "version": "0.11.0",
       "date": "2026-11-22",
       "title": {
