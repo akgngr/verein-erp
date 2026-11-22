@@ -1,8 +1,5 @@
 import { getLocale } from "next-intl/server";
 import { WorkspaceHeader } from "./_components/workspace-header";
-import { Fragment } from "react";
-import { moduleHeaderRegistry } from "@/header-registry";
-import { usableHeaderActions } from "@/shared/header/define";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
@@ -59,15 +56,10 @@ export default async function DashboardLayout({
     month: "long",
     timeZone: "Europe/Berlin",
   }).format(new Date());
-  // Üst çubuk eylemleri (RFC-002): yalnız kullanılabilir modüllerin; her eylem kendi yetkisini denetler.
-  const headerActions = await Promise.all(
-    usableHeaderActions(moduleHeaderRegistry, activeModuleKeys).map(async (action) => ({
-      key: `${action.module}:${action.key}`,
-      node: await Promise.resolve(action.render({ user: { id: user.id, role: user.role } })).catch(() => null),
-    })),
-  );
-  // Widget Platform (#436/#437): server-resolved visibility + user preferences; client never grants access.
-  const widgetAccess = await resolveWidgetsForUser({ id: user.id, role: user.role }, activeModuleKeys).catch(() => undefined);
+  // All module, tenant, permission and admin-policy checks stay on the server.
+  // A failed lookup removes widgets; no client-side fallback may grant access.
+  const widgetAccess = await resolveWidgetsForUser(user, activeModuleKeys)
+    .catch(() => ({ allowedIds: [], preferences: [] }));
   const collapsed =
     (await cookies()).get(SIDEBAR_COLLAPSED_COOKIE)?.value === "1";
 
@@ -93,10 +85,9 @@ export default async function DashboardLayout({
             Modül kapalıysa, rol izinli değilse sütun olduğu gibi döner. */}
           <AiAssistantSlot user={user}>
             <div className="flex min-w-0 flex-1 flex-col">
-              <MobileHeader />
+              <MobileHeader widgetAccess={widgetAccess} />
               <WorkspaceHeader
                 dateLabel={dateLabel}
-                actions={headerActions.map(({ key, node }) => <Fragment key={key}>{node}</Fragment>)}
                 widgetAccess={widgetAccess}
               />
               <main className="workspace-main flex-1 px-4 py-6 md:px-7 lg:py-8">

@@ -316,5 +316,10 @@
       "expired": "Lizenz gespeichert, aber abgelaufen.",
       "mismatch": "Lizenz gespeichert, gehört aber nicht zu dieser Installation."
     }
+  },
+  "ui": {
+    "widget": {
+      "settings": "Einstellungen"
+    }
   }
 }

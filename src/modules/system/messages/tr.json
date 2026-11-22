@@ -316,5 +316,10 @@
       "expired": "Lisans kaydedildi ancak süresi dolmuş.",
       "mismatch": "Lisans kaydedildi ancak bu kuruluma ait değil."
     }
+  },
+  "ui": {
+    "widget": {
+      "settings": "Ayarlar"
+    }
   }
 }
