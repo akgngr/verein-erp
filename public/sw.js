@@ -108,6 +108,8 @@ self.addEventListener("notificationclick", (event) => {
 });
 
 self.addEventListener("pushsubscriptionchange", (event) => {
+  // TODO: Currently re-registers renewed subscriptions via open window clients.
+  // When no window client is open, consider direct server fetch to sync renewed subscription.
   event.waitUntil(
     self.registration.pushManager
       .subscribe(event.oldSubscription ? event.oldSubscription.options : { userVisibleOnly: true })

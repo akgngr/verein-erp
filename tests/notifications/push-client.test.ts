@@ -89,20 +89,16 @@ test("service-worker: public/sw.js gerekli olay dinleyicilerini ve güvenlik kur
   assert.ok(!swContent.includes("console.log("), "SW içinde veri sızdıran console.log bulunmamalıdır");
 });
 
-test("manifest: public/manifest.json ve src/app/manifest.ts geçerli PWA standartlarındadır", async () => {
+test("manifest: src/app/manifest.ts geçerli PWA standartlarındadır ve statik json ile çakışmaz", async () => {
   const jsonPath = path.join(ROOT, "public/manifest.json");
-  assert.ok(fs.existsSync(jsonPath), "public/manifest.json mevcut olmalı");
-  const manifestData = JSON.parse(fs.readFileSync(jsonPath, "utf8"));
-
-  assert.equal(manifestData.name, "Verein ERP");
-  assert.equal(manifestData.short_name, "Verein ERP");
-  assert.equal(manifestData.display, "standalone");
-  assert.ok(Array.isArray(manifestData.icons) && manifestData.icons.length > 0);
+  assert.ok(!fs.existsSync(jsonPath), "public/manifest.json drifting önlemek için kaldırılmış olmalı");
 
   const manifestTs = await import("@/app/manifest");
   const generated = manifestTs.default();
   assert.equal(generated.name, "Verein ERP");
+  assert.equal(generated.short_name, "Verein ERP");
   assert.equal(generated.display, "standalone");
+  assert.ok(Array.isArray(generated.icons) && generated.icons.length > 0);
 });
 
 test("i18n: Web Push bildirimleri TR ve DE çeviri anahtarları tam pariteye sahiptir", () => {
