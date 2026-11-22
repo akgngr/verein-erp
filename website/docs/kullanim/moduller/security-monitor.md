@@ -1,5 +1,5 @@
 ---
-sidebar_position: 31
+sidebar_position: 32
 title: "Security Monitor"
 description: "Regularly runs system security tests and monitors results"
 slug: /kullanim/moduller/security-monitor

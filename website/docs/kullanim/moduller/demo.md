@@ -1,5 +1,5 @@
 ---
-sidebar_position: 7
+sidebar_position: 8
 title: "Demo veri"
 description: "Test için kurgusal örnek veri yükler; modül kapatılınca hepsini siler."
 slug: /kullanim/moduller/demo

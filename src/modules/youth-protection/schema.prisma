@@ -1,0 +1,33 @@
+enum YouthProtectionStatus {
+  CLEARED
+  EXCLUDED
+  PENDING
+}
+
+/// § 72a SGB VIII Çocuk ve Genç Koruma — Genişletilmiş Adli Sicil Belgesi (erweitertes Führungszeugnis)
+/// İnceleme / İbraz Takibi.
+/// YASAL VE GİZLİLİK SINIRI: DSGVO Art. 10 gereği ceza mahkûmiyeti / sabıka belgesi ASLA sisteme
+/// yüklenemez ve saklanamaz (dosya yükleme teknik olarak engellenmiştir). Orijinal belge yetkili
+/// tarafından yalnızca fiziksel olarak incelenir ve asla dijitalleştirilmez. Yalnızca inceleme olgusu,
+/// belge tarihi ve kişinin faaliyetten men edilip edilmediği (status) kaydedilir (§ 72a Abs. 5 SGB VIII).
+model YouthProtectionRecord {
+  id                   String                @id @default(cuid())
+  personName           String
+  memberId             String?
+  userId               String?
+  inspectionDate       DateTime
+  certificateIssueDate DateTime
+  inspectingOfficer    String
+  nextDueDate          DateTime
+  status               YouthProtectionStatus @default(CLEARED)
+  activityEndedAt      DateTime?
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+
+  @@index([nextDueDate])
+  @@index([personName])
+  @@index([memberId])
+  @@index([userId])
+  @@index([activityEndedAt])
+  @@map("youth_protection_records")
+}
