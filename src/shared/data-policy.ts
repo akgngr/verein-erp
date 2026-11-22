@@ -64,6 +64,13 @@ export const DATA_POLICY = {
   SystemSetting: { owner: "system", category: "K0", reason: "Yapılandırma ve erişim onayları (sır içerebilir)", sensitiveFields: [] },
   User: { owner: "users", category: "K0", reason: "Kimlik doğrulama sırları (parola hash, kilit)", sensitiveFields: ["passwordHash", "email"], directAccess: ["auth"] },
   UserProfile: { owner: "auth", category: "K0", reason: "Banka ve iletişim verisi", sensitiveFields: ["accountHolder", "bic", "city", "houseNumber", "ibanEnc", "mobile", "phone", "postalCode", "street", "taxNumberEnc"], personalOwnerField: "userId" },
+  YouthProtectionRecord: {
+    owner: "youth-protection",
+    category: "K0",
+    reason: "§ 72a SGB VIII genişletilmiş adli sicil belgesi ibraz takibi (DSGVO Art. 10; yalnızca sahip modül, asla yapay zekâ)",
+    sensitiveFields: ["inspectingOfficer", "certificateIssueDate", "inspectionDate", "nextDueDate", "status", "activityEndedAt"],
+    personalOwnerField: "userId",
+  },
   // ── K1 ──
   AccountingBankImport: { owner: "accounting", category: "K1", reason: "Banka ekstresi dosyaları", sensitiveFields: [] },
   AccountingContact: { owner: "accounting", category: "K1", reason: "Müşteri/tedarikçi kişisel verisi", sensitiveFields: ["address", "contactPerson", "email", "notes", "phone", "vatId"] },

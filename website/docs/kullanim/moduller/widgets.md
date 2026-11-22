@@ -1,5 +1,5 @@
 ---
-sidebar_position: 41
+sidebar_position: 42
 title: "Widget Platformu"
 description: "Modüllerin üst çubuk ve paneller için bileşenlerini güvenli biçimde toplar."
 slug: /kullanim/moduller/widgets

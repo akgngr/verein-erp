@@ -139,7 +139,8 @@
     "lisans": "Lisans",
     "tasks": "Görevler",
     "kullanicilar": "Kullanıcılar",
-    "weather": "Hava Durumu"
+    "weather": "Hava Durumu",
+    "youth-protection": "Çocuk Koruma"
   },
   "sidebar": {
     "brand": "Dernek Yönetim",
@@ -9491,6 +9492,118 @@
         "label": "Widget'lar",
         "description": "Üst çubuk ve paneldeki modül bileşenlerini görme; yönetici politikası."
       }
+    }
+  },
+  "youth-protection": {
+    "module": {
+      "label": "Çocuk Koruma",
+      "description": "Eğitmen ve gönüllülerin genişletilmiş adli sicil belgesi (§ 72a SGB VIII) ibraz takibi ve harç muafiyet yazısı şablonu. Orijinal belge fiziki olarak incelenir, asla sisteme yüklenmez ve dijitalleştirilmez."
+    },
+    "permissions": {
+      "youth-protection": {
+        "label": "Çocuk Koruma",
+        "description": "Genişletilmiş adli sicil belgesi ibraz kayıtlarının yönetimi."
+      }
+    },
+    "meta": {
+      "list": "Çocuk Koruma İbraz Takibi"
+    },
+    "title": "Çocuk Koruma (§ 72a SGB VIII)",
+    "description": "Eğitmen ve gönüllülerin genişletilmiş adli sicil belgesi (erweitertes Führungszeugnis) ibraz kayıtları ve harç muafiyet başvurusu. Orijinal belge yetkili tarafından yalnızca fiziksel olarak incelenir, kesinlikle dijitalleştirilmez veya yüklenmez.",
+    "newItem": "Yeni ibraz kaydı",
+    "table": {
+      "aria": "Çocuk Koruma ibraz listesi",
+      "personName": "Eğitmen / Gönüllü",
+      "inspectionDate": "İbraz tarihi",
+      "certificateIssueDate": "Belge veriliş tarihi",
+      "inspectingOfficer": "İnceleyen yetkili",
+      "nextDueDate": "Gelecek ibraz tarihi",
+      "status": "Yasal Durum",
+      "activityEndedAt": "Faaliyet Bitişi",
+      "recordStatus_CLEARED": "Uygun (Görev Alabilir)",
+      "recordStatus_EXCLUDED": "Hariç Tutuldu (Men Edildi)",
+      "recordStatus_PENDING": "Beklemede",
+      "validity_overdue": "Süresi geçmiş",
+      "validity_upcoming": "3 ay içinde dolacak",
+      "validity_valid": "Geçerli",
+      "validity_ended": "Faaliyet sonlandı",
+      "filterStatus": "Durum filtresi",
+      "filter_overdue": "Süresi geçmiş",
+      "filter_upcoming": "Yaklaşan (3 ay)",
+      "filter_valid": "Geçerli",
+      "filter_ended": "Faaliyet sonlandı",
+      "search": "Kişi adı veya yetkili ara...",
+      "empty": "Henüz ibraz kaydı bulunmuyor. 'Yeni ibraz kaydı' ile ilk kaydı ekleyin.",
+      "generateLetter": "Harç muafiyet yazısı",
+      "edit": "Düzenle",
+      "delete": "Sil",
+      "deleteTitle": "İbraz kaydını sil",
+      "deleteMessage": "\"{name}\" kişisine ait ibraz kaydı kalıcı olarak silinecek. Onaylıyor musunuz?",
+      "deleted": "İbraz kaydı silindi."
+    },
+    "form": {
+      "createTitle": "Yeni İbraz Kaydı",
+      "editTitle": "İbraz Kaydını Düzenle",
+      "legalNotice": "Yasal ve Gizlilik Sınırı (§ 72a SGB VIII / DSGVO Md. 10): Ceza mahkûmiyeti veya adli sicil belgesi ASLA sisteme yüklenemez veya saklanamaz (dosya yükleme teknik olarak engellenmiştir). Orijinal belge yetkili tarafından fiziki olarak incelenir ve asla dijitalleştirilmez. Yalnızca ibraz tarihi ve sabit yasal uygunluk durumu kaydedilir; serbest metin not girilmez.",
+      "personName": "Adı Soyadı",
+      "personNamePlaceholder": "Örn. Ahmet Yılmaz / Max Mustermann",
+      "inspectionDate": "İbraz / İnceleme Tarihi",
+      "inspectionDateHelp": "Orijinal belgenin yetkiliye ibraz edildiği tarih",
+      "certificateIssueDate": "Belgenin Veriliş Tarihi",
+      "certificateIssueDateHelp": "Führungszeugnis üzerinde yazılı olan tanzim tarihi",
+      "inspectingOfficer": "İnceleyen Yönetici / Yetkili",
+      "inspectingOfficerPlaceholder": "Örn. Mehmet Demir (Yönetim Kurulu)",
+      "nextDueDate": "Gelecek İbraz / Yenileme Tarihi",
+      "nextDueDateHelp": "Yasal tavsiye gereği genellikle 5 yıl sonrası",
+      "status": "Yasal İnceleme Durumu",
+      "statusHelp": "DSGVO Md. 10 gereği mahkûmiyet ayrıntısı girilemez; yalnızca görev alabilirlik durumu seçilir.",
+      "status_CLEARED": "Uygun (Görev Alabilir)",
+      "status_EXCLUDED": "Hariç Tutuldu (Men Edildi)",
+      "status_PENDING": "Beklemede",
+      "activityEndedAt": "Faaliyet / Görev Bitiş Tarihi (İsteğe Bağlı)",
+      "activityEndedAtHelp": "§ 72a (5) SGB VIII: Görev bittikten en geç 3 ay sonra kayıt otomatik silinir; görev üstlenilmediyse derhal silinir.",
+      "save": "Kaydet",
+      "cancel": "Vazgeç",
+      "created": "İbraz kaydı oluşturuldu.",
+      "updated": "İbraz kaydı güncellendi."
+    },
+    "letter": {
+      "title": "Harç Muafiyet Belgesi Şablonu",
+      "openButton": "Harç muafiyet yazısı",
+      "description": "Meldebehörde / Bürgeramt makamına sunulmak üzere § 12 JVKostG uyarınca genişletilmiş sabıka kaydı harç muafiyeti talep yazısı.",
+      "personName": "Başvuran Adı Soyadı",
+      "namePlaceholder": "Max Mustermann",
+      "role": "Dernekteki Görevi",
+      "rolePlaceholder": "Örn. Ehrenamtlicher Trainer / Jugendleiter",
+      "birthDate": "Doğum Tarihi",
+      "address": "İkamet Adresi",
+      "addressPlaceholder": "Musterstr. 1, 10115 Berlin",
+      "previewTitle": "Resmi Almanca Belge Önizlemesi",
+      "previewLabel": "Belge metni",
+      "copyButton": "Metni kopyala",
+      "copiedButton": "Kopiyalandı",
+      "copied": "Belge metni panoya kopyalandı.",
+      "copyFailed": "Kopyalama başarısız oldu.",
+      "printButton": "Yazdır",
+      "printPopupBlocked": "Yazdırma penceresi engellendi. Lütfen tarayıcı izinlerini kontrol edin.",
+      "close": "Kapat"
+    },
+    "secretary": {
+      "dueCount": "{count, plural, one {# eğitmen/gönüllünün adli sicil ibraz süresi doldu veya 3 ay içinde dolacak.} other {# eğitmen/gönüllünün adli sicil ibraz süresi doldu veya 3 ay içinde dolacak.}}"
+    },
+    "errors": {
+      "notFound": "İbraz kaydı bulunamadı."
+    },
+    "validation": {
+      "personNameRequired": "Ad soyad alanı zorunludur.",
+      "personNameMax": "Ad soyad en fazla 120 karakter olabilir.",
+      "inspectionDateInvalid": "Geçerli bir ibraz tarihi seçiniz (YYYY-AA-GG).",
+      "certificateIssueDateInvalid": "Geçerli bir belge tarihi seçiniz (YYYY-AA-GG).",
+      "inspectingOfficerRequired": "İnceleyen yetkili adı zorunludur.",
+      "inspectingOfficerMax": "Yetkili adı en fazla 120 karakter olabilir.",
+      "nextDueDateInvalid": "Geçerli bir gelecek ibraz tarihi seçiniz (YYYY-AA-GG).",
+      "activityEndedAtInvalid": "Geçerli bir faaliyet bitiş tarihi seçiniz (YYYY-AA-GG).",
+      "dateInvalid": "Geçersiz tarih formatı."
     }
   }
 }

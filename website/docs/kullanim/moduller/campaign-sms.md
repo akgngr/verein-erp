@@ -1,5 +1,5 @@
 ---
-sidebar_position: 34
+sidebar_position: 35
 title: "SMS"
 description: "Kampanyalar için SMS kanalı (seven.io veya Twilio). Yalnız SMS izni verenlere gider."
 slug: /kullanim/moduller/campaign-sms

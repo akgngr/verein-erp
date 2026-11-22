@@ -1,0 +1,35 @@
+{
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal.",
+  "releases": [
+    {
+      "version": "0.1.0",
+      "date": "2026-11-21",
+      "title": {
+        "tr": "Çocuk Koruma İnceleme Takibi (§ 72a SGB VIII)",
+        "de": "Jugendschutz-Einsichtnahme (§ 72a SGB VIII)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Eğitmen ve gönüllülerin genişletilmiş sabıka kaydı (erweitertes Führungszeugnis) ibraz ve ibraz yenileme takibi (DSGVO Md. 10 uyumlu, dosya yüklemesiz, K0 veri sınıfı).",
+          "de": "Nachverfolgung der Einsichtnahme in das erweiterte Führungszeugnis für Trainer und Ehrenamtliche ohne Dokumentenspeicherung (DSGVO Art. 10, Datenklasse K0)."
+        },
+        {
+          "type": "feature",
+          "tr": "Meldebehörde / Bürgeramt için harç muafiyet yazısı şablonu (§ 12 JVKostG).",
+          "de": "Vorlage für den Antrag auf Gebührenbefreiung bei der Meldebehörde (§ 12 JVKostG)."
+        },
+        {
+          "type": "feature",
+          "tr": "Sekreter sabah özeti entegrasyonu: süresi dolan veya 3 ay içinde dolacak ibrazlar için kişi adı içermeyen sayısal uyarı.",
+          "de": "Sekretär-Morgenbriefing: aggregierte Erinnerung 3 Monate vor Ablauf der Gültigkeit ohne personenbezogene Namen."
+        },
+        {
+          "type": "security",
+          "tr": "Yasal silme ve yaşam döngüsü (§ 72a (5) SGB VIII / DSGVO Md. 17): Serbest metin not kaldırıldı; sabit durum enum'ı eklendi. Görev bittikten 3 ay sonra otomatik hard-delete ve kullanıcı silinince verilerin silinmesi sağlandı.",
+          "de": "Gesetzliche Löschung und Lebenszyklus (§ 72a Abs. 5 SGB VIII / Art. 17 DSGVO): Freitextfeld entfernt, Status-Enum eingeführt. Automatisches Hard-Delete 3 Monate nach Tätigkeitsende und Löschung bei Benutzerlöschung."
+        }
+      ]
+    }
+  ]
+}

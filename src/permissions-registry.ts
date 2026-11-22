@@ -43,6 +43,7 @@ import * as studentsPermissionExports from "@/modules/students/permissions";
 import * as tasksPermissionExports from "@/modules/tasks/permissions";
 import * as weatherPermissionExports from "@/modules/weather/permissions";
 import * as widgetsPermissionExports from "@/modules/widgets/permissions";
+import * as youthprotectionPermissionExports from "@/modules/youth-protection/permissions";
 
 const isDefinition = (value: unknown): value is PermissionDefinition =>
   typeof value === "object" && value !== null && "resource" in value && "grants" in value;
@@ -91,6 +92,7 @@ export const permissionResources: { moduleKey: string; definitions: PermissionDe
   { moduleKey: "tasks", definitions: definitionsOf(tasksPermissionExports) },
   { moduleKey: "weather", definitions: definitionsOf(weatherPermissionExports) },
   { moduleKey: "widgets", definitions: definitionsOf(widgetsPermissionExports) },
+  { moduleKey: "youth-protection", definitions: definitionsOf(youthprotectionPermissionExports) },
   { moduleKey: "system", definitions: [systemPermissions, settingsPermissions] },
 ].map((entry, index, all) => ({
   // Aynı kaynak birden fazla yerde dışa aktarılmışsa yalnızca ilk görüldüğü modülde listelenir.

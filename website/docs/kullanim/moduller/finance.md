@@ -1,5 +1,5 @@
 ---
-sidebar_position: 16
+sidebar_position: 17
 title: "Finans"
 description: "Canlı döviz kurları, piyasa göstergeleri, kur çevirici ve finansal AI asistanı."
 slug: /kullanim/moduller/finance
