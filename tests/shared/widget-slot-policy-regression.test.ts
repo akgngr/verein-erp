@@ -92,3 +92,23 @@ test("WP2: malformed preference flags cannot enable disabled-by-default widgets"
     ["system.required"],
   );
 });
+
+
+test("WP2: null and non-object persisted preferences fail closed without crashing", () => {
+  const preferences = [
+    null,
+    undefined,
+    "system.disabled",
+    42,
+    { id: "system.disabled", enabled: true, order: 0 },
+  ] as unknown as WidgetPreference[];
+  assert.deepEqual(
+    resolveWidgets(widgets, "header.right", preferences, () => true).map((widget) => widget.id),
+    ["system.disabled", "system.optional", "system.required"],
+  );
+  assert.deepEqual(
+    resolveWidgets(widgets, "header.right", preferences, (widget) => widget.id !== "system.disabled")
+      .map((widget) => widget.id),
+    ["system.optional", "system.required"],
+  );
+});
