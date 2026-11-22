@@ -28,6 +28,8 @@ export function WidgetSlot({
 }: WidgetSlotProps) {
   const definitions = resolveWidgets(registry.map((entry) => entry.definition), slot, preferences, canView);
   const byId = new Map(registry.map((entry) => [entry.definition.id, entry]));
+  // Do not mount an empty host: denied/disabled widgets must not reserve header space.
+  if (definitions.length === 0) return null;
   return (
     <div className={className} data-widget-slot={slot}>
       {definitions.map((definition) => {
