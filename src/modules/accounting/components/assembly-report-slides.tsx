@@ -143,26 +143,30 @@ export function AssemblyReportSlides({
 
           <ActionButton
             onClick={toggleFullscreen}
-            variant="ghost"
+            emphasis="low"
             size="sm"
-            aria-label={t("fullscreen")}
-            startIcon={
+            iconOnly
+            icon={
               isFullscreen ? (
                 <Minimize2 className="h-4 w-4" aria-hidden="true" />
               ) : (
                 <Maximize2 className="h-4 w-4" aria-hidden="true" />
               )
             }
-          />
+          >
+            {t("fullscreen")}
+          </ActionButton>
 
           {onClose ? (
             <ActionButton
               onClick={onClose}
-              variant="ghost"
+              emphasis="low"
               size="sm"
-              aria-label={t("close")}
-              startIcon={<X className="h-4 w-4" aria-hidden="true" />}
-            />
+              iconOnly
+              icon={<X className="h-4 w-4" aria-hidden="true" />}
+            >
+              {t("close")}
+            </ActionButton>
           ) : null}
         </div>
       </header>
@@ -477,9 +481,9 @@ export function AssemblyReportSlides({
         <ActionButton
           onClick={prevSlide}
           disabled={slide === 0}
-          variant="bordered"
+          emphasis="medium"
           size="sm"
-          startIcon={<ChevronLeft className="h-4 w-4" aria-hidden="true" />}
+          icon={<ChevronLeft className="h-4 w-4" aria-hidden="true" />}
         >
           {t("prevSlide")}
         </ActionButton>
@@ -504,9 +508,9 @@ export function AssemblyReportSlides({
         <ActionButton
           onClick={nextSlide}
           disabled={slide === totalSlides - 1}
-          variant="solid"
+          emphasis="high"
           size="sm"
-          endIcon={<ChevronRight className="h-4 w-4" aria-hidden="true" />}
+          icon={<ChevronRight className="h-4 w-4" aria-hidden="true" />}
         >
           {t("nextSlide")}
         </ActionButton>
