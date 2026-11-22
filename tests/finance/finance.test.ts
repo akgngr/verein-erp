@@ -7,7 +7,7 @@ import {
   convertCurrency,
 } from "@/modules/finance";
 import { getExchangeRates } from "@/modules/finance/server";
-import { fetchRatesSchema } from "@/modules/finance/actions/rates-actions";
+import { fetchRatesSchema } from "@/modules/finance/schemas/rates-schemas";
 import { aiRatesTool } from "@/modules/finance/ai";
 
 describe("Finance module tests", () => {
