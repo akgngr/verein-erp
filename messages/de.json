@@ -7528,6 +7528,22 @@
         "title": "Mitteilung: {title}",
         "body": "{body}"
       }
+    },
+    "ui": {
+      "push": {
+        "title": "Web-Push-Benachrichtigungen",
+        "description": "Erhalten Sie Push-Benachrichtigungen über Ihren Browser oder Ihr Gerät.",
+        "enable": "Benachrichtigungen aktivieren",
+        "disable": "Benachrichtigungen deaktivieren",
+        "enabled": "Web-Benachrichtigungen aktiv",
+        "disabled": "Web-Benachrichtigungen inaktiv",
+        "unsupported": "Ihr Browser unterstützt keine Web-Push-Benachrichtigungen.",
+        "denied": "Benachrichtigungsberechtigung im Browser blockiert. Bitte in den Browsereinstellungen aktivieren.",
+        "iosHint": "Auf iOS-Geräten muss diese App über das Teilen-Menü in Safari 'Zum Home-Bildschirm' hinzugefügt werden, um Push-Benachrichtigungen zu unterstützen.",
+        "subscribing": "Wird aktiviert...",
+        "unsubscribing": "Wird deaktiviert...",
+        "error": "Fehler beim Aktualisieren des Benachrichtigungsabonnements."
+      }
     }
   },
   "online-forms": {
@@ -9408,7 +9424,8 @@
         "locating": "Wird ermittelt...",
         "feelsLike": "Gefühlt {temp}°",
         "humidity": "Luftfeuchtigkeit",
-        "wind": "Wind"
+        "wind": "Wind",
+        "unavailable": "Wetterdaten konnten derzeit nicht abgerufen werden."
       }
     },
     "title": "Wetter und Vorhersagen",
@@ -9428,6 +9445,9 @@
     "precipitation": "Niederschlag",
     "forecastTitle": "7-Tage-Wettervorhersage",
     "today": "Heute",
+    "unavailable": "Wetterdaten sind derzeit nicht verfügbar.",
+    "unavailableHelp": "Bitte wählen Sie oben eine Stadt oder ermitteln Sie Ihren Standort.",
+    "cityNotFound": "Die angegebene Stadt konnte nicht gefunden werden.",
     "access": {
       "organization": "Liest Vereinsadressdaten, um Wettervorhersagen für den Hauptsitz abzurufen."
     },

@@ -7528,6 +7528,22 @@
         "title": "Duyuru: {title}",
         "body": "{body}"
       }
+    },
+    "ui": {
+      "push": {
+        "title": "Web Push Bildirimleri",
+        "description": "Tarayıcınız veya cihazınız üzerinden anlık bildirimler alın.",
+        "enable": "Bildirimleri Etkinleştir",
+        "disable": "Bildirimleri Kapat",
+        "enabled": "Web bildirimleri etkin",
+        "disabled": "Web bildirimleri kapalı",
+        "unsupported": "Tarayıcınız anlık web bildirimlerini desteklemiyor.",
+        "denied": "Tarayıcı bildirim izni engellenmiş. Bildirimleri almak için tarayıcı ayarlarından izin vermelisiniz.",
+        "iosHint": "iOS cihazlarda web bildirimi alabilmek için bu sayfayı Safari menüsünden 'Ana Ekrana Ekle' yaparak PWA olarak açmalısınız.",
+        "subscribing": "Etkinleştiriliyor...",
+        "unsubscribing": "Kapatılıyor...",
+        "error": "Bildirim aboneliği güncellenirken bir hata oluştu."
+      }
     }
   },
   "online-forms": {
@@ -9408,7 +9424,8 @@
         "locating": "Aranıyor...",
         "feelsLike": "Hissedilen {temp}°",
         "humidity": "Nem",
-        "wind": "Rüzgar"
+        "wind": "Rüzgar",
+        "unavailable": "Hava durumu bilgisi şu anda alınamadı."
       }
     },
     "title": "Hava Durumu ve Tahminler",
@@ -9428,6 +9445,9 @@
     "precipitation": "Yağış Miktarı",
     "forecastTitle": "7 Günlük Hava Tahmini",
     "today": "Bugün",
+    "unavailable": "Hava durumu bilgisi şu anda alınamıyor.",
+    "unavailableHelp": "Lütfen yukarıdan bir şehir seçin veya konumunuzu belirleyin.",
+    "cityNotFound": "Belirtilen şehir bulunamadı.",
     "access": {
       "organization": "Dernek merkezi konumuna göre hava durumu tahminlerini almak için dernek adres bilgilerini okur."
     },

@@ -14,9 +14,10 @@ import {
   Wind,
 } from "lucide-react";
 
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import type { WeatherData } from "../services/weather";
+import { fetchWeatherByCoordsAction } from "../actions/weather-actions";
 
 function getWeatherIcon(code: number, isDay: boolean) {
   if (code === 0 || code === 1) {
@@ -44,10 +45,11 @@ function getWeatherIcon(code: number, isDay: boolean) {
 export function WeatherCardBody({
   initialWeather,
 }: {
-  initialWeather: WeatherData;
+  initialWeather: WeatherData | null;
 }) {
   const t = useTranslations("weather");
-  const [weather, setWeather] = useState<WeatherData>(initialWeather);
+  const locale = useLocale();
+  const [weather, setWeather] = useState<WeatherData | null>(initialWeather);
   const [locating, setLocating] = useState(false);
   const [, startTransition] = useTransition();
 
@@ -60,26 +62,19 @@ export function WeatherCardBody({
         const { latitude, longitude } = pos.coords;
         startTransition(async () => {
           try {
-            const res = await fetch(
-              `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m&timezone=auto`,
-            );
-            if (res.ok) {
-              const data = await res.json();
-              setWeather((prev) => ({
-                ...prev,
+            const res = await fetchWeatherByCoordsAction({
+              lat: latitude,
+              lon: longitude,
+              cityName: t("cards.current.myLocation"),
+            });
+            if (res.ok && res.data) {
+              setWeather({
+                ...res.data,
                 city: t("cards.current.myLocation"),
-                latitude,
-                longitude,
-                temperature: Math.round(data.current?.temperature_2m ?? prev.temperature),
-                apparentTemperature: Math.round(data.current?.apparent_temperature ?? prev.apparentTemperature),
-                humidity: data.current?.relative_humidity_2m ?? prev.humidity,
-                windSpeed: Math.round(data.current?.wind_speed_10m ?? prev.windSpeed),
-                weatherCode: data.current?.weather_code ?? prev.weatherCode,
-                isDay: data.current?.is_day === 1,
-              }));
+              });
             }
           } catch {
-            // Sessizce mevcut veriyi koru
+            // Sessizce mevcut durumu koru
           } finally {
             setLocating(false);
           }
@@ -92,7 +87,37 @@ export function WeatherCardBody({
     );
   };
 
+  if (!weather) {
+    return (
+      <div className="relative overflow-hidden rounded-xl p-4 bg-gradient-to-br from-slate-500/10 via-slate-500/5 to-transparent border border-slate-500/20">
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-1.5 min-w-0 text-sm font-medium text-ink-700 dark:text-ink-200">
+            <Cloud className="size-4 shrink-0 text-slate-400" aria-hidden="true" />
+            <span className="truncate">{t("cards.current.title")}</span>
+          </div>
+          <button
+            type="button"
+            onClick={handleDetectLocation}
+            disabled={locating}
+            className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-xs font-medium text-sky-600 dark:text-sky-400 hover:bg-sky-500/10 transition-colors focus-visible:outline-2 focus-visible:outline-sky-500 disabled:opacity-50"
+            title={t("cards.current.detectLocationTooltip")}
+          >
+            <Navigation className={`size-3 ${locating ? "animate-spin" : ""}`} aria-hidden="true" />
+            <span>{locating ? t("cards.current.locating") : t("cards.current.detectLocation")}</span>
+          </button>
+        </div>
+        <div className="mt-4 flex flex-col items-center justify-center py-4 text-center">
+          <Cloud className="size-8 text-ink-400 dark:text-ink-500 mb-2" aria-hidden="true" />
+          <p className="text-xs text-ink-500 dark:text-ink-400">
+            {t("cards.current.unavailable")}
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   const isDaytime = weather.isDay;
+  const conditionText = locale === "de" ? weather.conditionTextDe : weather.conditionTextTr;
 
   return (
     <div
@@ -137,7 +162,7 @@ export function WeatherCardBody({
 
       {/* Condition label */}
       <p className="mt-1 text-sm font-medium text-ink-600 dark:text-ink-300">
-        {weather.conditionTextTr}
+        {conditionText}
       </p>
 
       {/* Metrics Row */}
@@ -150,7 +175,7 @@ export function WeatherCardBody({
         <div className="flex items-center gap-1.5">
           <Wind className="size-3.5 text-teal-500" aria-hidden="true" />
           <span>{t("cards.current.wind")}:</span>
-          <span className="font-semibold text-ink-800 dark:text-ink-100">{weather.windSpeed} km/s</span>
+          <span className="font-semibold text-ink-800 dark:text-ink-100">{weather.windSpeed} km/h</span>
         </div>
       </div>
     </div>
