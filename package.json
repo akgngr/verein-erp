@@ -113,7 +113,7 @@
   "devDependencies": {
     "@next/env": "16.4.6",
     "@tailwindcss/postcss": "^4",
-    "@types/node": "^24.0.0",
+    "@types/node": "^26.6.6",
     "@types/nodemailer": "^8.0.2",
     "@types/pg": "^8.23.1",
     "@types/react": "^19",
