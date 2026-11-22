@@ -49,6 +49,7 @@
     "surumNotlari": "Sürüm notları",
     "kurulum": "Kurulum sihirbazı",
     "modulPaketleri": "Modül paketleri",
+    "modulSagligi": "Modül Sağlığı",
     "lisans": "Lisans"
   },
   "meta": {
@@ -90,7 +91,8 @@
       "delete": "silme"
     },
     "accounting": "Kurulum sihirbazı, seçilen kurum türüne göre muhasebe kategorilerini, hesaplarını ve vergi ayarlarını oluşturur.",
-    "organization": "Lisans doğrulaması için kurum adı ve sicil/vergi numarası okunur (lisans bu kuruma bağlıdır)."
+    "organization": "Lisans doğrulaması için kurum adı ve sicil/vergi numarası okunur (lisans bu kuruma bağlıdır).",
+    "users": "Modül ve iş akışı sağlığı kokpitinde yönetici kullanıcısının varlığı denetlenir."
   },
   "gate": {
     "manage": "Modül yönetimine git",
@@ -315,6 +317,64 @@
       "grace": "Lisans kaydedildi; süresi dolmuş, ek süre işliyor.",
       "expired": "Lisans kaydedildi ancak süresi dolmuş.",
       "mismatch": "Lisans kaydedildi ancak bu kuruluma ait değil."
+    }
+  },
+  "readiness": {
+    "metaTitle": "Modül ve İş Akışı Sağlığı | Verein ERP",
+    "title": "Modül ve İş Akışı Sağlığı",
+    "subtitle": "Etkin modüllerin yapılandırma bütünlüğü, erişim onayları, worker durumu ve iş kuyruğu sağlığını denetleyin.",
+    "linkTitle": "Sağlık Kokpiti",
+    "refresh": "Yenile",
+    "searchPlaceholder": "Modül adı veya koduyla ara...",
+    "noModulesFound": "Arama kriterlerine uygun modül bulunamadı.",
+    "failedBreakdown": "Hata Dağılımı",
+    "notificationChannels": "Bildirim Kanalları",
+    "noChannelsConfigured": "Yapılandırılmış kanal bulunmuyor",
+    "configureChannels": "Kanalları Yapılandır",
+    "guidanceTitle": "Önerilen Düzeltme Adımı",
+    "fixIssue": "Düzeltme Ekranına Git",
+    "stats": {
+      "activeModules": "Etkin Modüller",
+      "healthyModules": "Tam Hazır (Sağlıklı)",
+      "warnings": "Dikkat Gerektiren",
+      "failedJobs": "Başarısız Görevler"
+    },
+    "tabs": {
+      "all": "Tümü",
+      "issues": "Sorunlu Modüller",
+      "core": "Çekirdek",
+      "official": "Resmi",
+      "extension": "Eklentiler"
+    },
+    "status": {
+      "protected": "Korumalı",
+      "healthy": "Sağlıklı",
+      "warning": "Uyarı",
+      "critical": "Kritik"
+    },
+    "pillars": {
+      "config": "Yapılandırma",
+      "access": "Erişim İzinleri",
+      "heartbeat": "Worker Durumu",
+      "queue": "İş Kuyruğu",
+      "complete": "Tamamlandı",
+      "incomplete": "Eksik",
+      "approved": "Onaylı",
+      "pending": "Onay Bekliyor",
+      "active": "Çalışıyor",
+      "stale": "Cevapsız",
+      "idle": "Boşta",
+      "clean": "Hatasız",
+      "failed": "Hata"
+    },
+    "guidance": {
+      "accountingMissingAccount": "Muhasebe hesap planı veya aktif kasa/banka hesabı tanımlanmamış.",
+      "organizationMissingProfile": "Kurum profil bilgileri (ad, yasal form, vergi no) eksik.",
+      "authNoUsers": "Sistemde tanımlı kullanıcı bulunamadı.",
+      "accessGrantsPending": "Bu modülün talep ettiği erişim izinleri yönetici onayı bekliyor.",
+      "failedJobsDetected": "Arka plan iş kuyruğunda başarısız görevler tespit edildi.",
+      "notificationsNoChannel": "Bildirim modülü için aktif bir dağıtım kanalı (E-posta, Telegram vb.) yapılandırılmamış.",
+      "generalIssue": "Modül yapılandırması veya iş akışında dikkat edilmesi gereken durumlar var."
     }
   }
 }

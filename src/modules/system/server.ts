@@ -10,3 +10,11 @@ export { approveModuleAccessAction, revokeModuleAccessAction } from "./actions/m
 export { uploadPackageHandler } from "./services/package-handlers";
 export { deleteModulePackageAction } from "./actions/package-actions";
 export { runUserDeletionHooks } from "./services/module-state-store";
+export {
+  getModuleReadinessReport,
+  computeModuleReadiness,
+  redactErrorCategory,
+  type ModuleReadinessReport,
+  type ModuleReadinessItem,
+} from "./services/readiness";
+export { getModuleReadinessAction } from "./actions/get-readiness";
