@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler).",
   "releases": [
     {
+      "version": "0.1.1",
+      "date": "2026-11-20",
+      "title": {
+        "tr": "Sunucu Taraflı Open-Meteo İstekleri ve Güvenlik Sıkılaştırma",
+        "de": "Serverseitige Open-Meteo-Abfragen und Sicherheitshärtung"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Hava durumu ve coğrafi arama (geocoding) istekleri tarayıcıdan sunucu eylemlerine (Server Action) taşındı; harici ağ istekleri channelFetch korumasına alındı; başarısız ağ durumlarında sahte veri yerine açık unavailable durumu sağlandı.",
+          "de": "Wetter- und Geocoding-Abfragen vom Browser auf Server-Aktionen umgestellt; externe Netzwerkanfragen über channelFetch abgesichert; bei Netzwerkfehlern wird ein expliziter Nicht-Verfügbar-Status statt statischer Testdaten zurückgegeben."
+        }
+      ]
+    },
+    {
       "version": "0.1.0",
       "date": "2026-11-20",
       "title": {
