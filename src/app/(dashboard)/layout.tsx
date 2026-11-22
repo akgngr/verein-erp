@@ -11,6 +11,7 @@ import { requireUser, signOutAction } from "@/modules/auth/server";
 import { AiAssistantSlot } from "@/modules/ai/ui";
 import { FeedbackSlot } from "@/modules/feedback/ui";
 import { listUsableModuleKeys } from "@/modules/system/server";
+import { resolveWidgetsForUser } from "@/modules/widgets/server";
 import {
   listPermissionResources,
   listRoleDirectory,
@@ -65,6 +66,8 @@ export default async function DashboardLayout({
       node: await Promise.resolve(action.render({ user: { id: user.id, role: user.role } })).catch(() => null),
     })),
   );
+  // Widget Platform (#436/#437): server-resolved visibility + user preferences; client never grants access.
+  const widgetAccess = await resolveWidgetsForUser({ id: user.id, role: user.role }, activeModuleKeys).catch(() => undefined);
   const collapsed =
     (await cookies()).get(SIDEBAR_COLLAPSED_COOKIE)?.value === "1";
 
@@ -94,6 +97,7 @@ export default async function DashboardLayout({
               <WorkspaceHeader
                 dateLabel={dateLabel}
                 actions={headerActions.map(({ key, node }) => <Fragment key={key}>{node}</Fragment>)}
+                widgetAccess={widgetAccess}
               />
               <main className="workspace-main flex-1 px-4 py-6 md:px-7 lg:py-8">
                 {children}

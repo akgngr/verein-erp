@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.11.0",
+      "date": "2026-11-22",
+      "title": {
+        "tr": "Bildirim zili ve tercih ekranı",
+        "de": "Benachrichtigungsglocke und Einstellungen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Sağ üstte bildirim zili ve okunmamış rozeti; sağ çekmecede bildirimler (okundu, tümünü okundu, ertele). Zil Widget Platformu üzerinden eklenir.",
+          "de": "Benachrichtigungsglocke mit Ungelesen-Zähler oben rechts; Benachrichtigungen in der rechten Schublade (gelesen, alle gelesen, später). Die Glocke kommt über die Widget-Plattform."
+        },
+        {
+          "type": "feature",
+          "tr": "Ayarlar → Bildirimler: tür × kanal tercihleri, sessiz saatler, günlük özet, Telegram bağlama ve tarayıcı (push) bildirimleri.",
+          "de": "Einstellungen → Benachrichtigungen: Art × Kanal, Ruhezeiten, Tageszusammenfassung, Telegram-Verknüpfung und Browser-Push."
+        }
+      ]
+    },
+    {
       "version": "0.10.0",
       "date": "2026-11-21",
       "title": {
