@@ -1,5 +1,5 @@
 ---
-sidebar_position: 15
+sidebar_position: 16
 title: "Evrak Kayıt"
 description: "Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi."
 slug: /kullanim/moduller/documents

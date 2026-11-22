@@ -1,5 +1,5 @@
 ---
-sidebar_position: 41
+sidebar_position: 42
 title: "Widget Platformu"
 description: "Modüllerin üst çubuk ve paneller için bileşenlerini güvenli biçimde toplar."
 slug: /kullanim/moduller/widgets
@@ -13,7 +13,7 @@ Modüllerin üst çubuk ve paneller için bileşenlerini güvenli biçimde topla
 |---|---|
 | Anahtar | `widgets` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 0.1.0 |
+| Sürüm | 0.2.0 |
 
 ## Varsayılan yetkiler
 
@@ -24,6 +24,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Widget'lar | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme |
 
 ## Sürüm notları
+
+### 0.2.0 — Widget tercihleri ve yönetici politikası
+
+_2026-11-22_
+
+- **Yeni:** Kullanıcı widget'ları açıp kapatabilir ve sıralayabilir; yönetici isteğe bağlı widget'ları herkes için kapatabilir. Zorunlu widget'lar kapatılamaz; tercihler sunucuda doğrulanır.
 
 ### 0.1.0 — Widget kayıt altyapısı
 

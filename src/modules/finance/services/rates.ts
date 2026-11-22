@@ -54,9 +54,13 @@ const FALLBACK_EUR_RATES: Record<string, number> = {
   PLN: 4.28,
 };
 
-export async function getExchangeRates(base = DEFAULT_BASE_CURRENCY): Promise<RatesData> {
-  const normalizedBase = base.toUpperCase();
-  const cached = ratesCache.get(normalizedBase);
+export async function getExchangeRates(base: string = DEFAULT_BASE_CURRENCY): Promise<RatesData> {
+  const normalized = typeof base === "string" ? base.trim().toUpperCase() : "";
+  const safeBase = Object.prototype.hasOwnProperty.call(SUPPORTED_CURRENCIES, normalized)
+    ? SUPPORTED_CURRENCIES[normalized].code
+    : DEFAULT_BASE_CURRENCY;
+
+  const cached = ratesCache.get(safeBase);
   const now = Date.now();
 
   if (cached && now - cached.timestamp < CACHE_TTL_MS) {
@@ -64,7 +68,7 @@ export async function getExchangeRates(base = DEFAULT_BASE_CURRENCY): Promise<Ra
   }
 
   try {
-    const url = `https://open.er-api.com/v6/latest/${normalizedBase}`;
+    const url = `https://open.er-api.com/v6/latest/${safeBase}`;
     const res = await channelFetch(["open.er-api.com"], url, {
       headers: { "User-Agent": "Verein-ERP-Finance-Module/1.0" },
     });
@@ -83,7 +87,7 @@ export async function getExchangeRates(base = DEFAULT_BASE_CURRENCY): Promise<Ra
     }
 
     const data: RatesData = {
-      base: normalizedBase,
+      base: safeBase,
       date: new Date().toISOString().split("T")[0],
       timeLastUpdateUtc: json.time_last_update_utc ?? new Date().toUTCString(),
       rates: json.rates,
@@ -92,24 +96,24 @@ export async function getExchangeRates(base = DEFAULT_BASE_CURRENCY): Promise<Ra
       ),
     };
 
-    ratesCache.set(normalizedBase, { data, timestamp: now });
+    ratesCache.set(safeBase, { data, timestamp: now });
     return data;
   } catch {
     // Güvenli fallback kurları
-    const baseMult = FALLBACK_EUR_RATES[normalizedBase] ?? 1.0;
+    const baseMult = FALLBACK_EUR_RATES[safeBase] ?? 1.0;
     const rates: Record<string, number> = {};
     for (const [curr, eurRate] of Object.entries(FALLBACK_EUR_RATES)) {
       rates[curr] = Number((eurRate / baseMult).toFixed(4));
     }
 
     const fallbackData: RatesData = {
-      base: normalizedBase,
+      base: safeBase,
       date: new Date().toISOString().split("T")[0],
       timeLastUpdateUtc: new Date().toUTCString(),
       rates,
       previousRates: rates,
     };
-    ratesCache.set(normalizedBase, { data: fallbackData, timestamp: now });
+    ratesCache.set(safeBase, { data: fallbackData, timestamp: now });
     return fallbackData;
   }
 }
