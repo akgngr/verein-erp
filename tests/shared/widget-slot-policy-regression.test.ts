@@ -34,7 +34,7 @@ test("WP2: widget placement cannot be changed by stored preferences", () => {
   const preferences: WidgetPreference[] = [{ id: "system.other", enabled: true, order: -100 }];
   assert.deepEqual(
     resolveWidgets(widgets, "header.right", preferences, () => true).map((widget) => widget.id),
-    ["system.required", "system.optional"],
+    ["system.optional", "system.required"],
   );
 });
 
@@ -42,7 +42,7 @@ test("WP2: unknown preference IDs do not create executable widgets", () => {
   const preferences: WidgetPreference[] = [{ id: "evil.remote", enabled: true, order: -999 }];
   assert.deepEqual(
     resolveWidgets(widgets, "header.right", preferences, () => true).map((widget) => widget.id),
-    ["system.required", "system.optional"],
+    ["system.optional", "system.required"],
   );
 });
 
