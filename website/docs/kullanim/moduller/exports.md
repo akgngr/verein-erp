@@ -1,5 +1,5 @@
 ---
-sidebar_position: 10
+sidebar_position: 11
 title: "Dosyalarım"
 description: "Oluşturulan PDF, Excel, Word, Markdown ve CSV dosyaları; şifreli saklanır."
 slug: /kullanim/moduller/exports

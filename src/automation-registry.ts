@@ -23,6 +23,7 @@ import * as secretaryAutomationExports from "@/modules/secretary/automation";
 import * as securitymonitorAutomationExports from "@/modules/security-monitor/automation";
 import * as studentsAutomationExports from "@/modules/students/automation";
 import * as tasksAutomationExports from "@/modules/tasks/automation";
+import * as youthprotectionAutomationExports from "@/modules/youth-protection/automation";
 
 const tasksOf = (moduleKey: string, exports: Record<string, unknown>): TaskDefinition[] =>
   Object.values(exports).filter(isTaskDefinition).map((task) => {
@@ -58,6 +59,7 @@ export const moduleAutomationTasks: TaskDefinition[] = [
   ...tasksOf("security-monitor", securitymonitorAutomationExports),
   ...tasksOf("students", studentsAutomationExports),
   ...tasksOf("tasks", tasksAutomationExports),
+  ...tasksOf("youth-protection", youthprotectionAutomationExports),
 ];
 
 /** Modüllerin yayımladığı olaylar (iş akışı tetikleyicileri). */
@@ -82,4 +84,5 @@ export const moduleAutomationEvents: EventDefinition[] = [
   ...eventsOf("security-monitor", securitymonitorAutomationExports),
   ...eventsOf("students", studentsAutomationExports),
   ...eventsOf("tasks", tasksAutomationExports),
+  ...eventsOf("youth-protection", youthprotectionAutomationExports),
 ];

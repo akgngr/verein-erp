@@ -12,6 +12,7 @@ import { secretary as mailSecretary } from "@/modules/mail/secretary";
 import { secretary as secretarySecretary } from "@/modules/secretary/secretary";
 import { secretary as tasksSecretary } from "@/modules/tasks/secretary";
 import { secretary as weatherSecretary } from "@/modules/weather/secretary";
+import { secretary as youthprotectionSecretary } from "@/modules/youth-protection/secretary";
 
 /** Kişisel sekretere sabah özeti katkısı veren modüller (src/modules/<modül>/secretary.ts). */
 export const moduleSecretaryRegistry: ModuleSecretary[] = [
@@ -24,4 +25,5 @@ export const moduleSecretaryRegistry: ModuleSecretary[] = [
   secretarySecretary,
   tasksSecretary,
   weatherSecretary,
+  youthprotectionSecretary,
 ];
