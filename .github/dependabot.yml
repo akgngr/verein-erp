@@ -15,6 +15,12 @@ updates:
     labels: [dependencies]
     commit-message:
       prefix: deps
+    # Major sürümler bilinçli, ayrı ve test edilmiş geçişle yapılır (çalışma zamanı/RSC uyumu).
+    ignore:
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"] # çalışma zamanındaki Node LTS ile aynı kalmalı
+      - dependency-name: "lucide-react"
+        update-types: ["version-update:semver-major"] # 1.x react-server içinde kırılıyor (#458)
     groups:
       production:
         dependency-type: production
