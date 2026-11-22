@@ -112,3 +112,17 @@ test("WP2: null and non-object persisted preferences fail closed without crashin
     ["system.optional", "system.required"],
   );
 });
+
+test("WP2: throwing authorization policy fails closed for only the affected widget", () => {
+  const allowed = resolveWidgets(widgets, "header.right", [], (widget) => {
+    if (widget.id === "system.required") throw new Error("authorization unavailable");
+    return widget.id === "system.optional";
+  });
+  assert.deepEqual(allowed.map((widget) => widget.id), ["system.optional"]);
+
+  // Even a mandatory widget cannot bypass a failed server-derived authorization check.
+  const denied = resolveWidgets(widgets, "header.right", [
+    { id: "system.required", enabled: true, order: -100 },
+  ], () => { throw new Error("tenant policy unavailable"); });
+  assert.deepEqual(denied, []);
+});

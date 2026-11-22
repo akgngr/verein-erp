@@ -72,7 +72,14 @@ export function resolveWidgets(
     }
   }
   return definitions.filter((widget) => {
-    if (widget.slot !== slot || !canView(widget)) return false;
+    if (widget.slot !== slot) return false;
+    // A failed authorization resolver must never render a widget by accident.
+    // Keep unrelated widgets available; never log permission or tenant context.
+    try {
+      if (!canView(widget)) return false;
+    } catch {
+      return false;
+    }
     return widget.mandatory || (preferenceMap.get(widget.id)?.enabled ?? widget.defaultEnabled ?? false);
   }).sort((a, b) => {
     const orderA = preferenceMap.get(a.id)?.order ?? a.priority ?? 1000;
