@@ -67,5 +67,21 @@
       "title": "Duyuru: {title}",
       "body": "{body}"
     }
+  },
+  "ui": {
+    "push": {
+      "title": "Web Push Bildirimleri",
+      "description": "Tarayıcınız veya cihazınız üzerinden anlık bildirimler alın.",
+      "enable": "Bildirimleri Etkinleştir",
+      "disable": "Bildirimleri Kapat",
+      "enabled": "Web bildirimleri etkin",
+      "disabled": "Web bildirimleri kapalı",
+      "unsupported": "Tarayıcınız anlık web bildirimlerini desteklemiyor.",
+      "denied": "Tarayıcı bildirim izni engellenmiş. Bildirimleri almak için tarayıcı ayarlarından izin vermelisiniz.",
+      "iosHint": "iOS cihazlarda web bildirimi alabilmek için bu sayfayı Safari menüsünden 'Ana Ekrana Ekle' yaparak PWA olarak açmalısınız.",
+      "subscribing": "Etkinleştiriliyor...",
+      "unsubscribing": "Kapatılıyor...",
+      "error": "Bildirim aboneliği güncellenirken bir hata oluştu."
+    }
   }
 }

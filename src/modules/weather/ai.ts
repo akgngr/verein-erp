@@ -4,7 +4,12 @@ import { z } from "zod";
 import { defineModuleAiV2, aiToolV2 } from "@/shared/ai/v2";
 import { can } from "@/shared/permissions/define";
 import { weatherPermissions } from "./permissions";
-import { getWeatherData, getConditionInfo, DEFAULT_COORDINATES, findCityCoordinates } from "./services/weather";
+import {
+  getWeatherData,
+  getConditionInfo,
+  DEFAULT_COORDINATES,
+  searchCityCoordinates,
+} from "./services/weather";
 
 const WeatherOutputSchema = z
   .object({
@@ -57,15 +62,20 @@ export const aiWeatherTool = aiToolV2({
     let cityName = input.city ?? DEFAULT_COORDINATES.city;
 
     if (input.city) {
-      const match = findCityCoordinates(input.city);
-      if (match) {
-        lat = match.lat;
-        lon = match.lon;
-        cityName = match.name;
+      const match = await searchCityCoordinates(input.city);
+      if (!match) {
+        throw new Error(`UNKNOWN_CITY: ${input.city}`);
       }
+      lat = match.lat;
+      lon = match.lon;
+      cityName = match.name;
     }
 
     const data = await getWeatherData(lat, lon, cityName);
+    if (!data) {
+      throw new Error("WEATHER_UNAVAILABLE");
+    }
+
     const cond = getConditionInfo(data.weatherCode);
 
     return {
@@ -74,7 +84,7 @@ export const aiWeatherTool = aiToolV2({
       apparentTemperature: data.apparentTemperature,
       humidity: data.humidity,
       windSpeed: data.windSpeed,
-      conditionText: cond.tr,
+      conditionText: `${cond.tr} / ${cond.de}`,
       isAdverse: cond.isAdverse,
       todayMin: data.daily.minTemps[0] ?? data.temperature - 4,
       todayMax: data.daily.maxTemps[0] ?? data.temperature + 4,
