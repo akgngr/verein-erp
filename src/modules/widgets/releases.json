@@ -2,9 +2,27 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.2.0",
+      "date": "2026-11-22",
+      "title": {
+        "tr": "Widget tercihleri ve yönetici politikası",
+        "de": "Widget-Einstellungen und Admin-Richtlinie"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Kullanıcı widget'ları açıp kapatabilir ve sıralayabilir; yönetici isteğe bağlı widget'ları herkes için kapatabilir. Zorunlu widget'lar kapatılamaz; tercihler sunucuda doğrulanır.",
+          "de": "Nutzer können Widgets ein-/ausblenden und sortieren; Admins können optionale Widgets für alle deaktivieren. Pflicht-Widgets bleiben sichtbar; Einstellungen werden serverseitig geprüft."
+        }
+      ]
+    },
+    {
       "version": "0.1.0",
       "date": "2026-11-21",
-      "title": { "tr": "Widget kayıt altyapısı", "de": "Widget-Registry-Grundlage" },
+      "title": {
+        "tr": "Widget kayıt altyapısı",
+        "de": "Widget-Registry-Grundlage"
+      },
       "changes": [
         {
           "type": "feature",

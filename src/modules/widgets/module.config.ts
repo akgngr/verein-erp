@@ -9,12 +9,12 @@ import type { ModuleConfig } from "@/shared/types/module";
 export const moduleConfig: ModuleConfig = {
   key: "widgets",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "0.1.0",
+  version: "0.2.0",
   label: "Widget Platformu",
   description: "Modüllerin üst çubuk ve paneller için bileşenlerini güvenli biçimde toplar.",
   category: "CORE",
   isProtected: true,
-  hasSchema: false,
+  hasSchema: true,
   // Görünür giriş noktası yok; widget'lar yuvalarda (ör. header.right) çizilir (WP2 #436).
   nav: [],
 };
