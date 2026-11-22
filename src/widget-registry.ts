@@ -2,9 +2,11 @@
 // Widget Platform (#435): derleme anında güvenilen kayıt. Çalışma zamanında dosya taranmaz, yol çalıştırılmaz.
 import { buildWidgetRegistry, type WidgetRegistration } from "@/shared/widgets/registry";
 
+import { widgets as systemWidgets } from "@/modules/system/widget";
 import { widgets as notificationsWidgets } from "@/modules/notifications/widget";
 
 /** Modüllerin widget'ları (src/modules/<modül>/widget.ts). */
 export const widgetRegistry: readonly WidgetRegistration[] = buildWidgetRegistry([
+  { module: "system", widgets: systemWidgets },
   { module: "notifications", widgets: notificationsWidgets },
 ]);
