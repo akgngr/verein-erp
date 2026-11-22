@@ -7,6 +7,7 @@ import {
   convertCurrency,
 } from "@/modules/finance";
 import { getExchangeRates } from "@/modules/finance/server";
+import { fetchRatesSchema } from "@/modules/finance/schemas/rates-schemas";
 import { aiRatesTool } from "@/modules/finance/ai";
 
 describe("Finance module tests", () => {
@@ -48,6 +49,34 @@ describe("Finance module tests", () => {
     assert.equal(typeof data.rates.USD, "number");
     assert.equal(typeof data.rates.TRY, "number");
     assert.ok(data.date);
+  });
+
+  it("getExchangeRates sanitizes invalid or path traversal base to DEFAULT_BASE_CURRENCY", async () => {
+    const dataWithTraversal = await getExchangeRates("../../evil");
+    assert.equal(dataWithTraversal.base, "EUR");
+
+    const dataWithUnknown = await getExchangeRates("UNKNOWN");
+    assert.equal(dataWithUnknown.base, "EUR");
+  });
+
+  it("fetchRatesSchema strictly validates 3-letter currency code and rejects traversal", () => {
+    const valid = fetchRatesSchema.safeParse({ base: "USD" });
+    assert.equal(valid.success, true);
+    if (valid.success) assert.equal(valid.data.base, "USD");
+
+    const lowercase = fetchRatesSchema.safeParse({ base: "try" });
+    assert.equal(lowercase.success, true);
+    if (lowercase.success) assert.equal(lowercase.data.base, "TRY");
+
+    const defaultVal = fetchRatesSchema.safeParse({});
+    assert.equal(defaultVal.success, true);
+    if (defaultVal.success) assert.equal(defaultVal.data.base, "EUR");
+
+    const traversal = fetchRatesSchema.safeParse({ base: "../evil" });
+    assert.equal(traversal.success, false);
+
+    const tooLong = fetchRatesSchema.safeParse({ base: "USDOLLAR" });
+    assert.equal(tooLong.success, false);
   });
 
   it("aiRatesTool is properly configured with v2 AI contract", () => {

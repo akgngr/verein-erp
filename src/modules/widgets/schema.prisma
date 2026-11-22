@@ -1,0 +1,25 @@
+// Widget Platform WP3 (#437). Tenant scope: every customer runs an isolated instance and database
+// (ADR 0001), so "tenant" = this database; rows never carry another tenant's data.
+
+/// Kullanıcının widget tercihi (görünürlük + sıra). Yalnız kayıtlı widget kimlikleri; içerik yok.
+model WidgetUserPreference {
+  id        String   @id @default(cuid())
+  userId    String
+  widgetId  String
+  enabled   Boolean
+  order     Int
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, widgetId])
+  @@index([userId])
+  @@map("widget_user_preferences")
+}
+
+/// Kurum (yönetici) politikası: isteğe bağlı bir widget'ı herkes için kapatır. Zorunlu widget'lar kapatılamaz.
+model WidgetPolicy {
+  widgetId  String   @id
+  disabled  Boolean
+  updatedAt DateTime @updatedAt
+
+  @@map("widget_policies")
+}

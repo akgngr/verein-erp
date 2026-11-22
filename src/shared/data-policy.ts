@@ -64,6 +64,13 @@ export const DATA_POLICY = {
   SystemSetting: { owner: "system", category: "K0", reason: "Yapılandırma ve erişim onayları (sır içerebilir)", sensitiveFields: [] },
   User: { owner: "users", category: "K0", reason: "Kimlik doğrulama sırları (parola hash, kilit)", sensitiveFields: ["passwordHash", "email"], directAccess: ["auth"] },
   UserProfile: { owner: "auth", category: "K0", reason: "Banka ve iletişim verisi", sensitiveFields: ["accountHolder", "bic", "city", "houseNumber", "ibanEnc", "mobile", "phone", "postalCode", "street", "taxNumberEnc"], personalOwnerField: "userId" },
+  YouthProtectionRecord: {
+    owner: "youth-protection",
+    category: "K0",
+    reason: "§ 72a SGB VIII genişletilmiş adli sicil belgesi ibraz takibi (DSGVO Art. 10; yalnızca sahip modül, asla yapay zekâ)",
+    sensitiveFields: ["inspectingOfficer", "certificateIssueDate", "inspectionDate", "nextDueDate", "status", "activityEndedAt"],
+    personalOwnerField: "userId",
+  },
   // ── K1 ──
   AccountingBankImport: { owner: "accounting", category: "K1", reason: "Banka ekstresi dosyaları", sensitiveFields: [] },
   AccountingContact: { owner: "accounting", category: "K1", reason: "Müşteri/tedarikçi kişisel verisi", sensitiveFields: ["address", "contactPerson", "email", "notes", "phone", "vatId"] },
@@ -137,6 +144,8 @@ export const DATA_POLICY = {
   SecretaryProposal: { owner: "secretary", category: "K1", reason: "Sekreter önerisi; içerik ve önizleme şifreli", sensitiveFields: ["payloadEnc", "previewEnc", "preconditionsEnc"], personalOwnerField: "userId" },
   SecretaryFollowUp: { owner: "secretary", category: "K1", reason: "Kullanıcının takip kayıtları; başlık şifreli, kaynak yalnız uygulama içi yol", sensitiveFields: ["titleEnc"], personalOwnerField: "userId" },
   Notification: { owner: "notifications", category: "K1", reason: "Kullanıcı bildirimi; parametreler şifreli, metin okunurken üretilir; 90 gün saklanır", sensitiveFields: ["paramsEnc"], personalOwnerField: "userId" },
+  WidgetUserPreference: { owner: "widgets", category: "K1", reason: "Kullanıcının widget görünürlük ve sıra tercihi (yalnız widget kimliği)", sensitiveFields: [], personalOwnerField: "userId" },
+  WidgetPolicy: { owner: "widgets", category: "K1", reason: "Kurum düzeyi widget politikası (kişisel veri yok)", sensitiveFields: [] },
   NotificationPreference: { owner: "notifications", category: "K1", reason: "Bildirim türü × kanal tercihi", sensitiveFields: [], personalOwnerField: "userId" },
   NotificationSettings: { owner: "notifications", category: "K1", reason: "Sessiz saat ve özet modu", sensitiveFields: [], personalOwnerField: "userId" },
   NotificationChannelConfig: { owner: "notifications", category: "K0", reason: "Kanal sağlayıcı sırları (bot token, API anahtarı, VAPID özel anahtarı; şifreli)", sensitiveFields: ["secretsEnc"] },

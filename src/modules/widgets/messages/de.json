@@ -8,5 +8,8 @@
       "label": "Widgets",
       "description": "Modul-Bausteine in Kopfzeile und Panels sehen; Admin-Richtlinie."
     }
+  },
+  "errors": {
+    "policyNotAllowed": "Dieses Widget ist verpflichtend oder unbekannt; die Richtlinie kann nicht angewendet werden."
   }
 }
