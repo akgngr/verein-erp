@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.10.13",
+      "date": "2026-11-22",
+      "title": {
+        "tr": "Bağımlılık güncellemesi",
+        "de": "Abhängigkeitsupdate"
+      },
+      "changes": [
+        {
+          "type": "internal",
+          "tr": "pg-boss 12.38.2 ve zustand 5.1.0 sürümleriyle uyumlu hale getirildi.",
+          "de": "Kompatibel mit pg-boss 12.38.2 und zustand 5.1.0."
+        }
+      ]
+    },
+    {
       "version": "0.10.12",
       "date": "2026-11-18",
       "title": {
