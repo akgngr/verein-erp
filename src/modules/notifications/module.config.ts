@@ -1,4 +1,7 @@
+import { Bell } from "lucide-react";
 import type { ModuleConfig } from "@/shared/types/module";
+
+import { notificationsPermissions } from "./permissions";
 
 /**
  * Merkezi bildirim sistemi (ADR 0006). CORE: tüm modüllerin bildirimleri tek kutuda; kanallar uygulama içi,
@@ -8,7 +11,7 @@ import type { ModuleConfig } from "@/shared/types/module";
 export const moduleConfig: ModuleConfig = {
   key: "notifications",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "0.10.0",
+  version: "0.11.0",
   label: "Bildirimler",
   description: "Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.",
   category: "CORE",
@@ -23,8 +26,18 @@ export const moduleConfig: ModuleConfig = {
   dependencies: {
     "web-push": "3.6.7",
   },
-  // Görünür giriş noktası sağ üstteki zil (N1b); kenar menüsünde öğe yok.
-  nav: [],
+  // Görünür giriş noktaları: sağ üstteki zil (widget.ts) ve Ayarlar → Bildirimler (tercihler).
+  nav: [
+    {
+      href: "/ayarlar/bildirimler",
+      label: "Bildirimler",
+      labelKey: "notifications",
+      icon: Bell,
+      group: "settings",
+      order: 11,
+      permission: { definition: notificationsPermissions, action: "view" },
+    },
+  ],
 };
 
 export default moduleConfig;
