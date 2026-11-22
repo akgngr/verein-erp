@@ -61,7 +61,8 @@ export function resolveWidgets(
   const preferenceMap = new Map<string, WidgetPreference>();
   const duplicateIds = new Set<string>();
   for (const item of preferences) {
-    if (typeof item.id !== "string" || typeof item.enabled !== "boolean" ||
+    if (item === null || typeof item !== "object" ||
+      typeof item.id !== "string" || typeof item.enabled !== "boolean" ||
       !Number.isSafeInteger(item.order)) continue;
     if (preferenceMap.has(item.id)) {
       duplicateIds.add(item.id);
