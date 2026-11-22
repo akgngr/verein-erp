@@ -13,8 +13,8 @@ Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.
 |---|---|
 | Anahtar | `notifications` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 0.12.0 |
-| Sayfalar | `/ayarlar/bildirimler`, `/ayarlar/bildirimler/duyurular` |
+| Sürüm | 0.13.0 |
+| Sayfalar | `/ayarlar/bildirimler`, `/ayarlar/bildirimler/duyurular`, `/ayarlar/bildirimler/aboneler` |
 
 ## Diğer modüllere erişim
 
@@ -35,6 +35,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Bildirimler | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme |
 
 ## Sürüm notları
+
+### 0.13.0 — Yönetici abone görünümü
+
+_2026-11-22_
+
+- **Yeni:** Yönetici bildirim kanallarının özetini ve kullanıcı bazında durumunu görebilir; arama ve filtreyle Telegram veya tarayıcı aboneliğini onayla kaldırabilir.
 
 ### 0.12.0 — Yönetici duyuru gönderme ekranı
 
@@ -85,11 +91,4 @@ _2026-11-20_
 - **Yeni:** Bildirimler ilgili kişiye, herkesi ilgilendiriyorsa herkese gider: modüller 'herkes' veya 'şu roller' diye kitle seçebilir. Yönetici kurum duyurusu yayımlayabilir (herkese veya seçilen rollere).
 - **Güvenlik:** Kitle içinde de herkesin yetkisi ayrı ayrı denetlenir; duyuru içeriği şifreli saklanır ve dış kanallara gitmez (yalnız genel metin ve bağlantı).
 
-### 0.5.0 — Tarayıcı bildirimleri (Web Push)
-
-_2026-11-20_
-
-- **Yeni:** Yönetici açtığında kullanıcılar bildirimleri tarayıcı/telefon bildirimi olarak da alabilir. Gerekli anahtarlar ilk açılışta otomatik üretilir.
-- **Güvenlik:** Anahtarlar ve abonelik bilgileri şifreli saklanır; yalnız bilinen push servislerine gönderilir; bildirimde yalnız genel metin ve bağlantı vardır. Geçersiz abonelikler otomatik silinir.
-
-Daha eski 4 herkese açık sürüm notu.
+Daha eski 5 herkese açık sürüm notu.
