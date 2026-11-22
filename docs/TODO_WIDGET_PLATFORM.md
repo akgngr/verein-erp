@@ -32,3 +32,15 @@
 
 ## Coordination
 UI Platform owns the host and registry. Notifications owns bell data and behavior. Coordinate changes to `workspace-header.tsx` and notifications PRs #369/#378 before merging.
+
+
+## Product-owner architecture update — 2026-11-21
+- [ ] Create CORE `src/modules/widgets/` module as registry/configuration owner.
+- [ ] Each module contributes widgets via its own singular `src/modules/<moduleId>/widget.ts`; modules without this file contribute none.
+- [ ] Extend `pnpm module:sync` to discover and validate module-local `widget.ts` files at build time and generate a static trusted registry.
+- [ ] Lazy-load trusted components from generated registry; never scan runtime filesystem or accept executable paths from preferences.
+- [ ] Complete generic registry, header slot, tenant/user preferences and settings UI before integrating the notifications bell.
+- [ ] Use an independent system widget to test the platform first.
+- [ ] Migrate notification bell from #355 / PR #369 via `src/modules/notifications/widget.ts` in #439; never hardcode the bell in Header.
+- [ ] Notification backend/channel work may continue independently.
+- [ ] Follow dependency sequence: #435 -> (#436 and #437) -> #438 -> #439; #440 browser checks and #441 final rollout.
