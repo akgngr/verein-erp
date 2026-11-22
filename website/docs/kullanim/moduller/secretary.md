@@ -1,5 +1,5 @@
 ---
-sidebar_position: 32
+sidebar_position: 33
 title: "Sekreter"
 description: "Kişisel sekreter: sabah özeti ve onaylı öneriler."
 slug: /kullanim/moduller/secretary
@@ -13,7 +13,7 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 |---|---|
 | Anahtar | `secretary` |
 | Tür | Eklenti |
-| Sürüm | 0.12.0 |
+| Sürüm | 0.12.1 |
 | Sayfalar | `/sekreter` |
 
 ## Diğer modüllere erişim
@@ -39,12 +39,30 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 
 ## Sürüm notları
 
+### 0.12.1 — Takip arayüzü
+
+_2026-11-20_
+
+- **Yeni:** Sekreter takipleri için kullanıcı arayüzü eklendi.
+
 ### 0.12.0 — Günlük özet bildirim sistemiyle
 
 _2026-11-20_
 
 - **İyileştirme:** Günlük özet artık merkezi bildirim sistemiyle teslim edilir: zildeki kutuda görünür; e-posta, Telegram ve tarayıcı bildirimi seçimi Bildirim tercihlerinden yapılır. Önceki e-posta seçimi ve doğrulanmış kanal rızaları otomatik taşınır.
 - **Güvenlik:** Dış kanallara yalnız sayılar ve tarih gider; kişi adı, başlık veya tutar gitmez.
+
+### 0.11.5 — Bildirim modülü erişim sözleşmesi
+
+_2026-11-20_
+
+- **Düzeltme:** Sekreterin bildirim modülüne mevcut erişimi modül sözleşmesinde açıkça bildirildi.
+
+### 0.11.4 — Takip listesi yeniden deneme
+
+_2026-11-20_
+
+- **Düzeltme:** Takip listesi yüklenemediğinde hata ekranından yeniden deneme olanağı eklendi.
 
 ### 0.11.3 — Merkezi bildirimler
 
@@ -71,26 +89,4 @@ _2026-11-19_
 - **Yeni:** Günlük özet, rıza verip adresini doğrulayan kullanıcıya Telegram, WhatsApp veya SMS ile de gönderilebilir. Mesaj yalnız sayıları içerir; ad, başlık veya tutar gitmez.
 - **Güvenlik:** Sağlayıcı yapılandırılmadıkça kanallar kapalıdır ve hiçbir şey gönderilmez. Rıza geri alınınca adres silinir ve gönderim hemen durur; kanal başına günde tek özet, sınırlı yeniden deneme, sessiz saatlere uyulur.
 
-### 0.10.0 — Vekil / ekip modu
-
-_2026-11-19_
-
-- **Yeni:** Sekreter özetinizi süreli bir vekâletle bir ekip arkadaşınıza salt okunur gösterebilirsiniz (en fazla 90 gün, en fazla 5 kişi). Siz veya vekil vekâleti her an geri alabilir.
-- **Güvenlik:** Vekil yalnız kendi yetkisinin izin verdiğini görür; hiçbir öneriyi sizin yerinize onaylayamaz. Her görüntüleme denetim kaydına yazılır.
-
-### 0.8.0 — Haftalık kurul raporu
-
-_2026-11-19_
-
-- **Yeni:** Haftalık kurul raporu PDF olarak üretilebilir: yalnız alan bazında toplam, dikkat ve acil sayıları içerir; kişi adı, başlık veya tutar ayrıntısı yoktur. Rapor yalnız sizin görebildiğiniz verilerden oluşur.
-- **Güvenlik:** PDF, Dosyalarım'ın üretim kuyruğunda oluşturulur, şifreli saklanır ve 30 gün sonra silinir; doğrudan indirme bağlantısı yoktur. Yetki üretim sırasında yeniden denetlenir.
-
-### 0.7.0 — Benim yerime takip et
-
-_2026-11-19_
-
-- **Yeni:** Bir kayıt için takip oluşturabilirsiniz: son tarih, en fazla hatırlatma sayısı ve kaynağın sayfası. Süresi gelince sekreter özetinde günde en çok bir kez hatırlatılır.
-- **Yeni:** Takip duraklatılabilir, devam ettirilebilir, iptal edilebilir veya tamamlandı olarak işaretlenebilir. Kaynak kayıt değiştirilmez, kimseye mesaj gönderilmez.
-- **Güvenlik:** Takip başlığı şifreli saklanır ve yalnız sahibine görünür; yetkisi kalkan veya pasif kullanıcının takipleri otomatik duraklatılır.
-
-Daha eski 16 herkese açık sürüm notu.
+Daha eski 19 herkese açık sürüm notu.

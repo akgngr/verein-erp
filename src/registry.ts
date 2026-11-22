@@ -43,6 +43,8 @@ import { moduleConfig as sepaModule } from "@/modules/sepa";
 import { moduleConfig as studentsModule } from "@/modules/students";
 import { moduleConfig as tasksModule } from "@/modules/tasks";
 import { moduleConfig as weatherModule } from "@/modules/weather";
+import { moduleConfig as widgetsModule } from "@/modules/widgets";
+import { moduleConfig as youthprotectionModule } from "@/modules/youth-protection";
 
 /**
  * Projedeki TÜM kayıtlı modüllerin dinamik listesi.
@@ -88,6 +90,8 @@ export const allModules: ModuleConfig[] = [
   studentsModule,
   tasksModule,
   weatherModule,
+  widgetsModule,
+  youthprotectionModule,
 ];
 
 /** Geriye dönük uyumluluk için varsayılan registry */

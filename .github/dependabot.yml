@@ -1,0 +1,62 @@
+# Dependabot: haftalık, gruplu güncellemeler. Hedef dal `alpha` (BRANCH_RELEASE_WORKFLOW.md).
+# `dependabot/` başlı dallar Promotion policy'de izinli (scripts/check-promotion.mjs).
+# Güvenlik güncellemeleri (security updates) bu takvimden bağımsız olarak hemen açılır.
+version: 2
+updates:
+  - package-ecosystem: npm # kök uygulama (pnpm-lock.yaml)
+    directory: /
+    target-branch: alpha
+    schedule:
+      interval: weekly
+      day: monday
+      time: "05:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 5
+    labels: [dependencies]
+    commit-message:
+      prefix: deps
+    # Major sürümler bilinçli, ayrı ve test edilmiş geçişle yapılır (çalışma zamanı/RSC uyumu).
+    ignore:
+      - dependency-name: "@types/node"
+        update-types: ["version-update:semver-major"] # çalışma zamanındaki Node LTS ile aynı kalmalı
+      - dependency-name: "lucide-react"
+        update-types: ["version-update:semver-major"] # 1.x react-server içinde kırılıyor (#458)
+    groups:
+      production:
+        dependency-type: production
+        update-types: [minor, patch]
+      development:
+        dependency-type: development
+        update-types: [minor, patch]
+
+  - package-ecosystem: npm # belge sitesi (website/package-lock.json)
+    directory: /website
+    target-branch: alpha
+    schedule:
+      interval: weekly
+      day: monday
+      time: "05:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 3
+    labels: [dependencies]
+    commit-message:
+      prefix: deps(website)
+    groups:
+      website:
+        update-types: [minor, patch]
+
+  - package-ecosystem: github-actions
+    directory: /
+    target-branch: alpha
+    schedule:
+      interval: weekly
+      day: monday
+      time: "05:00"
+      timezone: Europe/Berlin
+    open-pull-requests-limit: 3
+    labels: [dependencies]
+    commit-message:
+      prefix: ci
+    groups:
+      actions:
+        patterns: ["*"]

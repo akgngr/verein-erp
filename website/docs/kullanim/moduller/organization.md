@@ -1,5 +1,5 @@
 ---
-sidebar_position: 9
+sidebar_position: 10
 title: "Dernek Bilgileri"
 description: "Dernek ana verileri, resmi iletişim ve antet logosu."
 slug: /kullanim/moduller/organization

@@ -5,12 +5,22 @@ import { ChevronRight, LayoutDashboard, Laptop, Moon, Sun } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
+import type { ReactNode } from "react";
+import { widgetRegistry } from "@/widget-registry";
+import { WidgetSlot } from "@/shared/widgets/components/widget-slot";
+import type { WidgetPreference } from "@/shared/widgets/contract";
 import { registry } from "@/registry";
 import { useTheme, type Theme } from "@/shared/components/theme-provider";
 import { findActiveModule, moduleHome } from "@/shared/navigation/module-nav";
 
+/** Server-resolved visibility and preferences. Never derive authorization from client state. */
+export interface HeaderWidgetAccess {
+  allowedIds: readonly string[];
+  preferences: readonly WidgetPreference[];
+}
+
 /** Context and a working appearance switch; destinations remain the existing module navigation. */
-export function WorkspaceHeader({ dateLabel }: { dateLabel: string }) {
+export function WorkspaceHeader({ dateLabel, actions, widgetAccess }: { dateLabel: string; actions?: ReactNode; widgetAccess?: HeaderWidgetAccess }) {
   const pathname = usePathname(),
     searchParams = useSearchParams(),
     t = useTranslations(),
@@ -51,6 +61,18 @@ export function WorkspaceHeader({ dateLabel }: { dateLabel: string }) {
       <div className="flex shrink-0 items-center gap-4">
         <span className="text-[12px] text-ink-500">{dateLabel}</span>
         <span className="h-4 w-px bg-ink-200" aria-hidden />
+        {/* Modül eylemleri (src/modules/<modül>/header.tsx, RFC-002), ör. lisanslı yardım merkezi. */}
+        {actions}
+        {/* No server-derived access means no widgets: never grant access on the client. */}
+        {widgetAccess ? (
+          <WidgetSlot
+            slot="header.right"
+            registry={widgetRegistry}
+            preferences={widgetAccess.preferences}
+            canView={(definition) => widgetAccess.allowedIds.includes(definition.id)}
+            className="flex min-w-0 items-center gap-2"
+          />
+        ) : null}
         <ThemeMenu />
       </div>
     </header>

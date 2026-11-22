@@ -1,5 +1,5 @@
 ---
-sidebar_position: 23
+sidebar_position: 24
 title: "Kullanıcılar"
 description: "Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri."
 slug: /kullanim/moduller/users

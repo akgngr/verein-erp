@@ -41,6 +41,8 @@ import sepaReleases from "@/modules/sepa/releases.json";
 import studentsReleases from "@/modules/students/releases.json";
 import tasksReleases from "@/modules/tasks/releases.json";
 import weatherReleases from "@/modules/weather/releases.json";
+import widgetsReleases from "@/modules/widgets/releases.json";
+import youthprotectionReleases from "@/modules/youth-protection/releases.json";
 
 /** Modüllerin sürüm notları (src/modules/<modül>/releases.json), en yeni sürüm üstte. */
 export const moduleReleases: { moduleKey: string; releases: ModuleRelease[] }[] = [
@@ -84,4 +86,6 @@ export const moduleReleases: { moduleKey: string; releases: ModuleRelease[] }[] 
   { moduleKey: "students", releases: studentsReleases.releases as ModuleRelease[] },
   { moduleKey: "tasks", releases: tasksReleases.releases as ModuleRelease[] },
   { moduleKey: "weather", releases: weatherReleases.releases as ModuleRelease[] },
+  { moduleKey: "widgets", releases: widgetsReleases.releases as ModuleRelease[] },
+  { moduleKey: "youth-protection", releases: youthprotectionReleases.releases as ModuleRelease[] },
 ];

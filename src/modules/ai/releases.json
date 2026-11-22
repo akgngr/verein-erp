@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.15.7",
+      "date": "2026-11-22",
+      "title": {
+        "tr": "Vergi ve hukuk danışmanlığı sınırı",
+        "de": "Grenze zur Steuer- und Rechtsberatung"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Asistan genel kuralları ve rakamları açıklar ama kişiye özel vergi veya hukuk tavsiyesi vermez; bu durumlarda vergi danışmanına ya da avukata yönlendirir ve uyarı notu ekler.",
+          "de": "Der Assistent erklärt allgemeine Regeln und Zahlen, gibt aber keine individuelle Steuer- oder Rechtsberatung; in solchen Fällen verweist er an Steuerberater oder Rechtsanwalt und ergänzt einen Hinweis."
+        }
+      ]
+    },
+    {
       "version": "1.15.6",
       "date": "2026-11-20",
       "title": {
