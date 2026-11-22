@@ -13,7 +13,8 @@ Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.
 |---|---|
 | Anahtar | `notifications` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 0.10.0 |
+| Sürüm | 0.11.0 |
+| Sayfalar | `/ayarlar/bildirimler` |
 
 ## Diğer modüllere erişim
 
@@ -34,6 +35,13 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Bildirimler | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme |
 
 ## Sürüm notları
+
+### 0.11.0 — Bildirim zili ve tercih ekranı
+
+_2026-11-22_
+
+- **Yeni:** Sağ üstte bildirim zili ve okunmamış rozeti; sağ çekmecede bildirimler (okundu, tümünü okundu, ertele). Zil Widget Platformu üzerinden eklenir.
+- **Yeni:** Ayarlar → Bildirimler: tür × kanal tercihleri, sessiz saatler, günlük özet, Telegram bağlama ve tarayıcı (push) bildirimleri.
 
 ### 0.10.0 — Web Push istemci ve PWA manifest
 
@@ -85,11 +93,4 @@ _2026-11-20_
 - **Yeni:** Yönetici bir Telegram botu tanımlayabilir; kullanıcılar tek tıkla açılan bağlantıyla hesaplarını bağlar ve bildirimleri Telegram'dan da alır. /stop ile bağ kaldırılır.
 - **Güvenlik:** Bot token veritabanında şifreli saklanır ve geri gösterilmez; bağlama bağlantısı tek kullanımlık ve 15 dakika geçerlidir; Telegram'a yalnız genel metin ve uygulama bağlantısı gider.
 
-### 0.3.0 — Bildirim tercihleri ve e-posta
-
-_2026-11-20_
-
-- **Yeni:** Her bildirim türü için hangi kanaldan haber almak istediğinizi seçebilirsiniz; sessiz saat ve 'anında' ya da 'günlük özet' seçeneği eklendi. E-posta kanalı çalışıyor.
-- **Güvenlik:** E-postada yalnız genel metin ve uygulama bağlantısı bulunur; ad, başlık veya tutar gitmez. Aynı bildirim ikinci kez e-postalanmaz; okunan bildirim e-postalanmaz.
-
-Daha eski 2 herkese açık sürüm notu.
+Daha eski 3 herkese açık sürüm notu.
