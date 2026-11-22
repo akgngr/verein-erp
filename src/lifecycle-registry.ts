@@ -13,6 +13,7 @@ import { lifecycle as exportsLifecycle } from "@/modules/exports/lifecycle";
 import { lifecycle as mailLifecycle } from "@/modules/mail/lifecycle";
 import { lifecycle as notificationsLifecycle } from "@/modules/notifications/lifecycle";
 import { lifecycle as secretaryLifecycle } from "@/modules/secretary/lifecycle";
+import { lifecycle as widgetsLifecycle } from "@/modules/widgets/lifecycle";
 import { lifecycle as youthprotectionLifecycle } from "@/modules/youth-protection/lifecycle";
 
 /** Modül yaşam döngüsü kancaları (src/modules/<modül>/lifecycle.ts), ör. kapatılırken temizlik. */
@@ -27,5 +28,6 @@ export const moduleLifecycleRegistry: ModuleLifecycle[] = [
   mailLifecycle,
   notificationsLifecycle,
   secretaryLifecycle,
+  widgetsLifecycle,
   youthprotectionLifecycle,
 ];

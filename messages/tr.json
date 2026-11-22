@@ -9492,6 +9492,9 @@
         "label": "Widget'lar",
         "description": "Üst çubuk ve paneldeki modül bileşenlerini görme; yönetici politikası."
       }
+    },
+    "errors": {
+      "policyNotAllowed": "Bu widget zorunludur veya tanınmıyor; politika uygulanamaz."
     }
   },
   "youth-protection": {
