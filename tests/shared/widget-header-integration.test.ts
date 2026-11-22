@@ -17,3 +17,10 @@ test("WP2 header fails closed without server-derived widget authorization", () =
   assert.match(header, /preferences=\{widgetAccess\.preferences\}/);
   assert.doesNotMatch(header, /canView=\{\(\) => true\}/);
 });
+
+
+test("WP2 denied or disabled widget collections do not mount an empty header host", () => {
+  const slot = readFileSync(join(process.cwd(), "src/shared/widgets/components/widget-slot.tsx"), "utf8");
+  assert.match(slot, /if \(definitions\.length === 0\) return null;/);
+  assert.ok(slot.indexOf("if (definitions.length === 0) return null;") < slot.indexOf("return ("));
+});
