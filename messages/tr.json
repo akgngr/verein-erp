@@ -125,6 +125,7 @@
     "topluEposta": "Kampanyalar",
     "toplantilar": "Toplantılar",
     "uyeler": "Üyeler",
+    "notifications": "Bildirimler",
     "online-forms": "e-Sign",
     "organization": "Dernek Bilgileri",
     "progress": "Öğrenci takibi",
@@ -7544,7 +7545,61 @@
         "subscribing": "Etkinleştiriliyor...",
         "unsubscribing": "Kapatılıyor...",
         "error": "Bildirim aboneliği güncellenirken bir hata oluştu."
+      },
+      "open": "Bildirimleri aç",
+      "heading": "Bildirimler",
+      "all": "Tümü",
+      "unread": "Okunmamış",
+      "empty": "Bildirim bulunmuyor.",
+      "markRead": "Okundu olarak işaretle",
+      "markAllRead": "Tümünü okundu işaretle",
+      "snooze": "Yarına ertele",
+      "settings": "Bildirim ayarları",
+      "unavailable": "Bildirimler şu anda yüklenemiyor.",
+      "module": "Modül",
+      "preferencesTitle": "Bildirim tercihleri",
+      "preferencesTable": "Bildirim türü ve kanal tercihleri",
+      "settingsTitle": "Saatler ve özet",
+      "type": "Bildirim türü",
+      "inApp": "Uygulama içi (her zaman açık)",
+      "loading": "Bildirim tercihleri yükleniyor…",
+      "preferencesError": "Bildirim tercihleri kaydedilemedi.",
+      "preferencesSaved": "Bildirim tercihleri kaydedildi.",
+      "emptyTypes": "Henüz ayarlanabilecek bir bildirim türü yok.",
+      "quietFrom": "Sessiz saat başlangıcı",
+      "quietTo": "Sessiz saat bitişi",
+      "digestMode": "Bildirim sıklığı",
+      "digest": {
+        "instant": "Anında",
+        "daily": "Günlük özet"
+      },
+      "digestTime": "Günlük özet saati",
+      "save": "Tercihleri kaydet",
+      "channel": {
+        "email": "E-posta",
+        "web_push": "Web Push",
+        "telegram": "Telegram",
+        "whatsapp": "WhatsApp",
+        "sms": "SMS"
+      },
+      "preferencesDescription": "Bildirim kanallarını, sessiz saatleri ve günlük özeti yönetin.",
+      "telegramLinkTitle": "Telegram hesabı bağlama",
+      "telegramUnlink": "Telegram bağlantısını kaldır",
+      "telegramConnect": "Telegram'a bağlan",
+      "telegramOpen": "Telegram bağlantısını aç",
+      "telegramAdmin": "Telegram botu (yönetici)",
+      "telegramEnabled": "Telegram kanalını etkinleştir",
+      "telegramToken": "Bot token (mevcut anahtar gösterilmez)",
+      "telegramTokenSaved": "Kayıtlı bot anahtarı mevcut. Yeni anahtar için yazın; boş bırakırsanız korunur.",
+      "telegramTokenMissing": "Henüz bot anahtarı kaydedilmemiş.",
+      "link": {
+        "linked": "Telegram hesabı bağlı.",
+        "pending": "Bağlantı onayı bekleniyor.",
+        "none": "Telegram hesabı bağlı değil."
       }
+    },
+    "widget": {
+      "bell": "Bildirimler"
     }
   },
   "online-forms": {
