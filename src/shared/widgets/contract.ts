@@ -56,7 +56,20 @@ export function resolveWidgets(
   preferences: readonly WidgetPreference[],
   canView: (widget: WidgetDefinition) => boolean,
 ): WidgetDefinition[] {
-  const preferenceMap = new Map(preferences.map((item) => [item.id, item]));
+  // Treat persisted preferences as untrusted: reject duplicate IDs and invalid sort values.
+  // The server-derived canView policy remains authoritative regardless of preferences.
+  const preferenceMap = new Map<string, WidgetPreference>();
+  const duplicateIds = new Set<string>();
+  for (const item of preferences) {
+    if (typeof item.id !== "string" || typeof item.enabled !== "boolean" ||
+      !Number.isSafeInteger(item.order)) continue;
+    if (preferenceMap.has(item.id)) {
+      duplicateIds.add(item.id);
+      preferenceMap.delete(item.id);
+    } else if (!duplicateIds.has(item.id)) {
+      preferenceMap.set(item.id, item);
+    }
+  }
   return definitions.filter((widget) => {
     if (widget.slot !== slot || !canView(widget)) return false;
     return widget.mandatory || (preferenceMap.get(widget.id)?.enabled ?? widget.defaultEnabled ?? false);
