@@ -1,5 +1,6 @@
-import { Boxes, History, KeyRound, Settings, Wand2, PackageCheck } from "lucide-react";
+import { Boxes, History, KeyRound, Settings, Wand2, PackageCheck, PanelsTopLeft } from "lucide-react";
 import type { ModuleConfig } from "@/shared/types/module";
+import { widgetsPermissions } from "@/modules/widgets";
 import {
   settingsPermissions,
   systemPermissions,
@@ -8,7 +9,7 @@ import {
 export const moduleConfig: ModuleConfig = {
   key: "system",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.14.0",
+  version: "1.15.0",
   label: "Modül Yönetimi",
   description: "Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.",
   category: "CORE",
@@ -16,6 +17,7 @@ export const moduleConfig: ModuleConfig = {
   hasSchema: true,
   // Kurulum sihirbazı muhasebe hazır ayarlarını (kategori/hesap/vergi) yazar.
   access: [
+    { module: "widgets", operations: ["read", "write"] },
     { module: "accounting", operations: ["read", "write"] },
     // Lisans (RFC-002): kurum adı ve sicil numarası lisansla eşleştirilir.
     { module: "organization", operations: ["read"] },
@@ -38,6 +40,15 @@ export const moduleConfig: ModuleConfig = {
       group: "settings",
       order: 3,
       permission: { definition: systemPermissions, action: "view" },
+    },
+    {
+      href: "/ayarlar/widgetlar",
+      label: "Widget düzeni",
+      labelKey: "widgetlar",
+      icon: PanelsTopLeft,
+      group: "settings",
+      order: 2,
+      permission: { definition: widgetsPermissions, action: "view" },
     },
     {
       href: "/ayarlar/moduller/paketler",

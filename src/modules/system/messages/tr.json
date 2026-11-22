@@ -49,7 +49,8 @@
     "surumNotlari": "Sürüm notları",
     "kurulum": "Kurulum sihirbazı",
     "modulPaketleri": "Modül paketleri",
-    "lisans": "Lisans"
+    "lisans": "Lisans",
+    "widgetlar": "Widget düzeni"
   },
   "meta": {
     "settings": "Ayarlar",
@@ -90,7 +91,8 @@
       "delete": "silme"
     },
     "accounting": "Kurulum sihirbazı, seçilen kurum türüne göre muhasebe kategorilerini, hesaplarını ve vergi ayarlarını oluşturur.",
-    "organization": "Lisans doğrulaması için kurum adı ve sicil/vergi numarası okunur (lisans bu kuruma bağlıdır)."
+    "organization": "Lisans doğrulaması için kurum adı ve sicil/vergi numarası okunur (lisans bu kuruma bağlıdır).",
+    "widgets": "Kullanıcının izinli widget düzenini görüntüler, sıralamasını ve görünürlük tercihlerini kaydeder."
   },
   "gate": {
     "manage": "Modül yönetimine git",
@@ -320,6 +322,24 @@
   "ui": {
     "widget": {
       "settings": "Ayarlar"
+    },
+    "widgets": {
+      "title": "Widget düzeni",
+      "description": "Üst çubuktaki bileşenleri düzenleyin. Görünürlük ve yetkiler sunucuda denetlenir.",
+      "empty": "Kullanılabilir widget yok.",
+      "mandatory": "Zorunlu widget",
+      "optional": "İsteğe bağlı widget",
+      "adminDisabled": "Yönetici tarafından kapatıldı",
+      "enable": "Göster",
+      "disable": "Gizle",
+      "up": "Yukarı taşı",
+      "down": "Aşağı taşı",
+      "reset": "Varsayılana dön",
+      "changed": "Düzen kaydedildi.",
+      "error": "Düzen kaydedilemedi. Önceki durum geri yüklendi.",
+      "desktop": "Masaüstü önizlemesi",
+      "mobile": "Mobil önizleme",
+      "preview": "Widget önizlemeleri"
     }
   }
 }

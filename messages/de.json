@@ -138,6 +138,7 @@
     "kurulum": "Einrichtungsassistent",
     "modulPaketleri": "Modulpakete",
     "lisans": "Lizenz",
+    "widgetlar": "Widget-Anordnung",
     "tasks": "Aufgaben",
     "kullanicilar": "Benutzer",
     "weather": "Wetter",
@@ -8799,7 +8800,8 @@
         "delete": "löschen"
       },
       "accounting": "Der Einrichtungsassistent legt je nach Organisationsform Buchhaltungskategorien, Konten und Steuereinstellungen an.",
-      "organization": "Für die Lizenzprüfung werden Name und Register-/Steuernummer der Organisation gelesen (die Lizenz ist an diese Organisation gebunden)."
+      "organization": "Für die Lizenzprüfung werden Name und Register-/Steuernummer der Organisation gelesen (die Lizenz ist an diese Organisation gebunden).",
+      "widgets": "Zeigt berechtigte Widgets an und speichert die Reihenfolge und Sichtbarkeitseinstellungen des Nutzers."
     },
     "gate": {
       "manage": "Zur Modulverwaltung",
@@ -9029,6 +9031,24 @@
     "ui": {
       "widget": {
         "settings": "Einstellungen"
+      },
+      "widgets": {
+        "title": "Widget-Anordnung",
+        "description": "Ordnen Sie die Elemente in der Kopfzeile. Sichtbarkeit und Berechtigungen prüft der Server.",
+        "empty": "Keine Widgets verfügbar.",
+        "mandatory": "Pflicht-Widget",
+        "optional": "Optionales Widget",
+        "adminDisabled": "Von der Administration deaktiviert",
+        "enable": "Einblenden",
+        "disable": "Ausblenden",
+        "up": "Nach oben",
+        "down": "Nach unten",
+        "reset": "Standardeinstellungen",
+        "changed": "Anordnung gespeichert.",
+        "error": "Anordnung konnte nicht gespeichert werden. Der vorherige Zustand wurde wiederhergestellt.",
+        "desktop": "Desktop-Vorschau",
+        "mobile": "Mobile Vorschau",
+        "preview": "Widget-Vorschauen"
       }
     }
   },

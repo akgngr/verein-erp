@@ -2,6 +2,14 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.2.1",
+      "date": "2026-11-22",
+      "title": { "tr": "Ayar ekranı eylem girişi", "de": "Aktionszugang für die Einstellungen" },
+      "changes": [
+        { "type": "improvement", "tr": "Mevcut yetkili widget tercih eylemleri arayüze güvenli bir modül girişinden sunulur.", "de": "Die bestehenden berechtigungsgeschützten Widget-Aktionen sind über einen öffentlichen UI-Einstieg verfügbar." }
+      ]
+    },
+    {
       "version": "0.2.0",
       "date": "2026-11-22",
       "title": {

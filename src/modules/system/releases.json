@@ -2,6 +2,14 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.15.0",
+      "date": "2026-11-22",
+      "title": { "tr": "Widget düzeni", "de": "Widget-Anordnung" },
+      "changes": [
+        { "type": "feature", "tr": "Kullanıcılar izinli widget'ları açıp kapatabilir, sıralayabilir, varsayılan düzene dönebilir ve masaüstü/mobil önizlemesini görebilir.", "de": "Nutzer können berechtigte Widgets ein- und ausblenden, sortieren, zurücksetzen und eine Desktop- und Mobilvorschau sehen." }
+      ]
+    },
+    {
       "version": "1.14.0",
       "date": "2026-11-22",
       "title": {

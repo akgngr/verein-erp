@@ -13,8 +13,8 @@ Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.
 |---|---|
 | Anahtar | `system` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.14.0 |
-| Sayfalar | `/ayarlar`, `/ayarlar/moduller`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/lisans`, `/ayarlar/surum-notlari` |
+| Sürüm | 1.15.0 |
+| Sayfalar | `/ayarlar`, `/ayarlar/moduller`, `/ayarlar/widgetlar`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/lisans`, `/ayarlar/surum-notlari` |
 
 ## Diğer modüllere erişim
 
@@ -22,6 +22,7 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 | Modül | İşlem | Gerekçe |
 |---|---|---|
+| [Widget Platformu](./widgets) | okuma, yazma | Kullanıcının izinli widget düzenini görüntüler, sıralamasını ve görünürlük tercihlerini kaydeder. |
 | [Muhasebe](./accounting) | okuma, yazma | Kurulum sihirbazı, seçilen kurum türüne göre muhasebe kategorilerini, hesaplarını ve vergi ayarlarını oluşturur. |
 | [Dernek Bilgileri](./organization) | okuma | Lisans doğrulaması için kurum adı ve sicil/vergi numarası okunur (lisans bu kuruma bağlıdır). |
 
@@ -35,6 +36,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Modül Yönetimi | görüntüleme, düzenleme, silme | görüntüleme | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.15.0 — Widget düzeni
+
+_2026-11-22_
+
+- **Yeni:** Kullanıcılar izinli widget'ları açıp kapatabilir, sıralayabilir, varsayılan düzene dönebilir ve masaüstü/mobil önizlemesini görebilir.
 
 ### 1.14.0 — Üst çubuk widget altyapısı
 
@@ -79,10 +86,4 @@ _2026-11-17_
 
 - **İyileştirme:** Yüzey kartları ortak SurfaceCard bileşenini kullanıyor.
 
-### 1.12.1 — Modül paketleri ortak UI katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Modül paketleri ekranındaki yükleme, silme, kopyalama, durum rozetleri ve bildirimler ActionButton, StatusChip ve notify adapter katmanına taşındı; ekran artık HeroUI bileşenlerini doğrudan içe aktarmıyor.
-
-Daha eski 19 herkese açık sürüm notu.
+Daha eski 20 herkese açık sürüm notu.
