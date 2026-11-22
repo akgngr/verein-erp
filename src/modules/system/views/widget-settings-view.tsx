@@ -1,15 +1,22 @@
 import { getTranslations } from "next-intl/server";
 
-import { requirePermission } from "@/modules/auth/server";
+import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { listUsableModuleKeys } from "@/modules/system/server";
 import { getWidgetSettings } from "@/modules/widgets/server";
 import { widgetsPermissions } from "@/modules/widgets";
 import { PageHeader } from "@/shared/components/ui/page-header";
+import { AccessDenied } from "@/shared/components/ui/access-denied";
 
 import { WidgetSettingsForm } from "../components/widget-settings-form";
 
 export async function WidgetSettingsView() {
-  const user = await requirePermission(widgetsPermissions, "view");
+  let user: Awaited<ReturnType<typeof requirePermission>>;
+  try {
+    user = await requirePermission(widgetsPermissions, "view");
+  } catch (error) {
+    if (error instanceof ForbiddenError) return <AccessDenied />;
+    throw error;
+  }
   const [rows, t, root] = await Promise.all([
     listUsableModuleKeys().then((keys) => getWidgetSettings(user, keys)),
     getTranslations("system.ui.widgets"),
