@@ -660,6 +660,34 @@
         "description": "Jahres-Kassenbericht für die Mitgliederversammlung: Kontensalden, EÜR, Projekte, Unterschriftsfelder.",
         "pdf": "Kassenbericht PDF"
       },
+      "treasurer": {
+        "title": "Kassenbericht für die Mitgliederversammlung ({year})",
+        "subtitle": "Aggregierter Bericht über steuerliche Sphären, Projekte und Rücklagenbestände.",
+        "enterSlideMode": "Präsentationsmodus",
+        "exitSlideMode": "Präsentation beenden",
+        "downloadPdf": "Kassenbericht PDF herunterladen",
+        "totalIncome": "Gesamteinnahmen",
+        "totalExpense": "Gesamtausgaben",
+        "netSurplus": "Jahresergebnis",
+        "closingReserves": "Liquider Endbestand",
+        "freeReserves": "Freie Rücklagen",
+        "previousYear": "Vorjahr",
+        "yoyDelta": "Veränderung z. Vorjahr",
+        "spheresTitle": "Steuerliche Sphären (§ 5)",
+        "sphereHeader": "Bereich",
+        "incomeHeader": "Einnahmen",
+        "expenseHeader": "Ausgaben",
+        "netHeader": "Netto",
+        "changeHeader": "Veränderung",
+        "projectsTitle": "Projektbezogene Mittelverwendung",
+        "summaryTitle": "Bericht und Erläuterungen des Schatzmeisters",
+        "spheres": {
+          "ideell": "Ideeller Bereich",
+          "assetManagement": "Vermögensverwaltung",
+          "purposeOperation": "Zweckbetrieb",
+          "economicOperation": "Wirtschaftlicher Geschäftsbetrieb"
+        }
+      },
       "economic80": "Die Einnahmen des wirtschaftlichen Geschäftsbetriebs erreichen 80 % der Grenze von 50.000 € (§ 64 Abs. 3 AO).",
       "economicExceeded": "Die Einnahmen des wirtschaftlichen Geschäftsbetriebs haben die Grenze von 50.000 € überschritten (§ 64 Abs. 3 AO). Bitte Steuerberatung hinzuziehen.",
       "reversedSuffix": "{description} (STORNIERT)"

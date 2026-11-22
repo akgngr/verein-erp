@@ -1,24 +1,26 @@
 import { Download } from "lucide-react";
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
 import Link from "next/link";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
-import { PageHeader } from "@/shared/components/ui/page-header";
 import { LinkButton } from "@/shared/components/ui/link-button";
+import { PageHeader } from "@/shared/components/ui/page-header";
 
-import { listAccountOptions } from "../queries/list-accounts";
-import { getIncomeExpenseReport } from "../queries/get-income-expense-report";
-import { getLedgerReport } from "../queries/get-ledger";
-import { getProjectReport } from "../queries/get-project-report";
-import { accountingPermissions } from "../permissions";
+import { AnnualPdfButton } from "../components/annual-pdf-button";
+import { ReportLedgerSelector } from "../components/report-ledger-selector";
 import {
   IncomeExpenseTable,
   LedgerTable,
   ProjectReportTable,
 } from "../components/report-tables";
-import { ReportLedgerSelector } from "../components/report-ledger-selector";
-import { AnnualPdfButton } from "../components/annual-pdf-button";
+import { accountingPermissions } from "../permissions";
+import { getIncomeExpenseReport } from "../queries/get-income-expense-report";
+import { getLedgerReport } from "../queries/get-ledger";
+import { getProjectReport } from "../queries/get-project-report";
+import { listAccountOptions } from "../queries/list-accounts";
+import { getTreasurerReportData } from "../queries/treasurer-report";
+import { TreasurerReportSlideView } from "./treasurer-report-slide-view";
 
 /**
  * Raporlar (§ 11.8): ?sekme=e|k|p|y + filter.year + account/from/to.
@@ -44,19 +46,25 @@ export async function ReportsView({
     throw error;
   }
 
-  const t = await getTranslations("accounting.reports");
+  const [t, rawLocale] = await Promise.all([
+    getTranslations("accounting.reports"),
+    getLocale(),
+  ]);
+  const locale = (rawLocale === "de" ? "de" : "tr") as "tr" | "de";
+
   const accounts = await listAccountOptions();
 
   const effectiveAccountId = accountId ?? accounts[0]?.id ?? "";
   const effectiveFrom = from ?? `${year}-01-01`;
   const effectiveTo = to ?? `${year}-12-31`;
 
-  const [incomeExpense, ledger, projects] = await Promise.all([
+  const [incomeExpense, ledger, projects, treasurerReport] = await Promise.all([
     tab === "e" ? getIncomeExpenseReport(year) : null,
     tab === "k" && effectiveAccountId
       ? getLedgerReport(effectiveAccountId, effectiveFrom, effectiveTo)
       : null,
     tab === "p" ? getProjectReport(year) : null,
+    tab === "y" ? getTreasurerReportData(year) : null,
   ]);
 
   return (
@@ -159,8 +167,8 @@ export async function ReportsView({
           <ProjectReportTable rows={projects} />
         ) : null}
 
-        {tab === "y" ? (
-          <p className="text-sm text-ink-500">{t("annual.description")}</p>
+        {tab === "y" && treasurerReport ? (
+          <TreasurerReportSlideView report={treasurerReport} lang={locale} />
         ) : null}
       </div>
     </div>

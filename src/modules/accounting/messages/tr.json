@@ -360,6 +360,34 @@
       "description": "Genel Kurul için yıllık kasa raporu (Kassenbericht): hesap bakiyeleri, EÜR, projeler, imza blokları.",
       "pdf": "Kassenbericht PDF"
     },
+    "treasurer": {
+      "title": "Genel Kurul Kassenbericht ({year})",
+      "subtitle": "Faaliyet alanları, projeler ve fon rezervlerini içeren toplulaştırılmış sayman raporu.",
+      "enterSlideMode": "Sunum Modu",
+      "exitSlideMode": "Sunumdan Çık",
+      "downloadPdf": "Kassenbericht PDF İndir",
+      "totalIncome": "Toplam Gelir",
+      "totalExpense": "Toplam Gider",
+      "netSurplus": "Yıllık Net Fazlalık",
+      "closingReserves": "Dönem Sonu Toplam Rezerv",
+      "freeReserves": "Serbest Rezerv",
+      "previousYear": "Önceki Yıl",
+      "yoyDelta": "Yıllık Değişim",
+      "spheresTitle": "Faaliyet Alanları Dağılımı (§ 5)",
+      "sphereHeader": "Alan",
+      "incomeHeader": "Gelir",
+      "expenseHeader": "Gider",
+      "netHeader": "Net",
+      "changeHeader": "Değişim",
+      "projectsTitle": "Proje Bazlı Fon ve Bütçe Durumu",
+      "summaryTitle": "Sayman Değerlendirmesi ve Özet",
+      "spheres": {
+        "ideell": "İdeel Alan (Aidat & Bağış)",
+        "assetManagement": "Varlık Yönetimi (Faiz/Kira)",
+        "purposeOperation": "Amaca Bağlı İşletme (Zweckbetrieb)",
+        "economicOperation": "Ticari İşletme (Wirtschaftlich)"
+      }
+    },
     "economic80": "Ticari işletme gelirleri 50.000 € sınırının %80'ine ulaştı (§ 64 Abs. 3 AO).",
     "economicExceeded": "Ticari işletme gelirleri 50.000 € sınırını aştı (§ 64 Abs. 3 AO). Vergi danışmanına başvurun.",
     "reversedSuffix": "{description} (İPTAL)"
