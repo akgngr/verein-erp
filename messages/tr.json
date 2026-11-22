@@ -8240,7 +8240,16 @@
       "followUpsCancel": "İptal et",
       "followUpsComplete": "Tamamla",
       "followUpsConfirmCancel": "Bu takip kaydını kalıcı olarak iptal etmek için İptal et düğmesine yeniden basın.",
-      "followUpsKeep": "Vazgeç"
+      "followUpsKeep": "Vazgeç",
+      "weeklyReportTitle": "Haftalık kurul raporu",
+      "weeklyReportDescription": "Yalnız toplu sayılardan oluşan PDF hazırlanır. Hazır olduğunda Dosyalarım bölümünde görünür.",
+      "weeklyReportRequest": "Rapor hazırla",
+      "weeklyReportCheck": "Durumu kontrol et",
+      "weeklyReportFiles": "Dosyalarım'a git",
+      "weeklyReportPending": "Rapor hazırlanıyor. Biraz sonra durumu kontrol edin.",
+      "weeklyReportReady": "Rapor hazır.",
+      "weeklyReportFailed": "Rapor hazırlanamadı veya artık kullanılamıyor.",
+      "weeklyReportError": "Rapor işlemi tamamlanamadı. Yeniden deneyin."
     },
     "digest": {
       "subject": "Sabah özetiniz: {total} konu",

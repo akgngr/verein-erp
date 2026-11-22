@@ -13,7 +13,7 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 |---|---|
 | Anahtar | `secretary` |
 | Tür | Eklenti |
-| Sürüm | 0.12.1 |
+| Sürüm | 0.12.2 |
 | Sayfalar | `/sekreter` |
 
 ## Diğer modüllere erişim
@@ -38,6 +38,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Sekreter | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — |
 
 ## Sürüm notları
+
+### 0.12.2 — Haftalık rapor arayüzü
+
+_2026-11-22_
+
+- **Yeni:** Sekreter sayfasından haftalık kurul raporu talep etme, üretim durumunu kontrol etme ve hazır raporu Dosyalarım'da açma eklendi.
 
 ### 0.12.1 — Takip arayüzü
 
@@ -82,11 +88,4 @@ _2026-11-20_
 
 - **Düzeltme:** Geçersiz veya yetkisiz gösterim kayıtları ilk 100 öğeyi doldurup sonraki geçerli kayıtları gizleyemez; görünüm en fazla 100 doğrulanmış öğe gösterir.
 
-### 0.11.0 — Dış bildirim kanalları (rızalı)
-
-_2026-11-19_
-
-- **Yeni:** Günlük özet, rıza verip adresini doğrulayan kullanıcıya Telegram, WhatsApp veya SMS ile de gönderilebilir. Mesaj yalnız sayıları içerir; ad, başlık veya tutar gitmez.
-- **Güvenlik:** Sağlayıcı yapılandırılmadıkça kanallar kapalıdır ve hiçbir şey gönderilmez. Rıza geri alınınca adres silinir ve gönderim hemen durur; kanal başına günde tek özet, sınırlı yeniden deneme, sessiz saatlere uyulur.
-
-Daha eski 19 herkese açık sürüm notu.
+Daha eski 20 herkese açık sürüm notu.
