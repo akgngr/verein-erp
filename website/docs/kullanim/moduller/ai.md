@@ -1,5 +1,5 @@
 ---
-sidebar_position: 42
+sidebar_position: 43
 title: "Yapay zekâ asistanı"
 description: "Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuyan asistan."
 slug: /kullanim/moduller/ai
@@ -13,7 +13,7 @@ Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuy
 |---|---|
 | Anahtar | `ai` |
 | Tür | Eklenti |
-| Sürüm | 1.15.6 |
+| Sürüm | 1.15.7 |
 | Sayfalar | `/ayarlar/yapay-zeka` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Yapay zekâ asistanı | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.15.7 — Vergi ve hukuk danışmanlığı sınırı
+
+_2026-11-22_
+
+- **İyileştirme:** Asistan genel kuralları ve rakamları açıklar ama kişiye özel vergi veya hukuk tavsiyesi vermez; bu durumlarda vergi danışmanına ya da avukata yönlendirir ve uyarı notu ekler.
 
 ### 1.15.6 — Lisans durumu
 
@@ -83,10 +89,4 @@ _2026-11-16_
 
 - **İyileştirme:** Resimler OCR'dan önce büyütülüp PNG'ye çevrilir: küçük ekran görüntüleri ve WebP dosyaları artık okunur.
 
-### 1.14.0 — Ekli dosya evrak kaydına eklenir; daha güçlü OCR
-
-_2026-11-16_
-
-- **Yeni:** Sohbete eklenen dosya kısa süre şifreli tutulur; asistanın önerdiği evrak kaydını onaylayınca dosya kayda otomatik eklenir. PDF'de gömülü resim okunamazsa sayfa görüntüye çevrilip OCR ile okunur.
-
-Daha eski 27 herkese açık sürüm notu.
+Daha eski 28 herkese açık sürüm notu.

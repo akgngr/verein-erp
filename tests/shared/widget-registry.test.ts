@@ -3,7 +3,7 @@ import assert from "node:assert/strict";
 import fs from "node:fs";
 import test, { describe } from "node:test";
 
-import { visibleWidgetIds } from "@/modules/widgets/server";
+import { visibleWidgetIds } from "@/modules/widgets/services/visibility";
 import { definePermissions } from "@/shared/permissions/define";
 import { buildWidgetRegistry, defineModuleWidgets, validateWidgetRegistry } from "@/shared/widgets/registry";
 import { checkWidgetFile } from "../../scripts/validate-module";

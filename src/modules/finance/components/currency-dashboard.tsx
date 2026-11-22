@@ -17,6 +17,7 @@ import {
   convertCurrency,
   type RatesData,
 } from "../services/rates";
+import { fetchExchangeRatesAction } from "../actions/rates-actions";
 
 export function CurrencyDashboard({ initialRates }: { initialRates: RatesData }) {
   const t = useTranslations("finance");
@@ -34,16 +35,9 @@ export function CurrencyDashboard({ initialRates }: { initialRates: RatesData })
     setBaseCurrency(newBase);
     startTransition(async () => {
       try {
-        const res = await fetch(`https://open.er-api.com/v6/latest/${newBase}`);
-        if (!res.ok) return;
-        const json = await res.json();
-        if (json.rates) {
-          setRates((prev) => ({
-            ...prev,
-            base: newBase,
-            rates: json.rates,
-            previousRates: json.rates,
-          }));
+        const res = await fetchExchangeRatesAction({ base: newBase });
+        if (res.ok && res.data?.rates) {
+          setRates(res.data);
         }
       } catch {
         // Fallback
