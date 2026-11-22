@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, type ComponentType, type ReactNode } from "react";
+import { createElement, lazy, Suspense, type ComponentType, type ReactNode } from "react";
 import { WidgetErrorBoundary } from "./widget-error-boundary";
 import type { WidgetDefinition, WidgetPreference, WidgetSlot as SlotName } from "../contract";
 import { resolveWidgets } from "../contract";
@@ -41,11 +41,10 @@ export function WidgetSlot({
 
 function WidgetMount({ entry, fallback }: { entry: WidgetRegistration; fallback: ReactNode }) {
   // React.lazy is memoized per loader function to avoid re-importing on re-render.
-  const LazyWidget = getLazyWidget(entry.load);
   return (
     <WidgetErrorBoundary fallback={fallback}>
       <Suspense fallback={fallback}>
-        <LazyWidget />
+        {createElement(getLazyWidget(entry.load))}
       </Suspense>
     </WidgetErrorBoundary>
   );
@@ -66,4 +65,3 @@ function requireLazy(load: WidgetComponentLoader): ComponentType {
   return lazy(load);
 }
 
-import { lazy } from "react";
