@@ -1,5 +1,5 @@
 ---
-sidebar_position: 14
+sidebar_position: 15
 title: "Etkinlikler"
 description: "Dernek etkinlikleri, seminerler, atölyeler ve katılımcı yönetimi."
 slug: /kullanim/moduller/events

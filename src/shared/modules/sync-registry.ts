@@ -14,6 +14,8 @@ const RELEASES_FILE = path.join(ROOT_DIR, "src", "module-releases.ts");
 const CALENDAR_FILE = path.join(ROOT_DIR, "src", "calendar-registry.ts");
 const SECRETARY_FILE = path.join(ROOT_DIR, "src", "secretary-registry.ts");
 const NOTIFICATION_FILE = path.join(ROOT_DIR, "src", "notification-registry.ts");
+const HEADER_FILE = path.join(ROOT_DIR, "src", "header-registry.ts");
+const WIDGET_FILE = path.join(ROOT_DIR, "src", "widget-registry.ts");
 const CALENDAR_SYNC_FILE = path.join(ROOT_DIR, "src", "calendar-sync-registry.ts");
 const CAMPAIGN_CHANNEL_FILE = path.join(ROOT_DIR, "src", "campaign-channel-registry.ts");
 const AUTOMATION_FILE = path.join(ROOT_DIR, "src", "automation-registry.ts");
@@ -112,9 +114,35 @@ export const registry: ModuleConfig[] = allModules;
   syncConventionFile(validModules, "channels.ts", "channels", CAMPAIGN_CHANNEL_FILE, "ModuleCampaignChannels", "@/shared/campaigns/channel", "moduleChannelRegistry", "Kampanya gönderim kanalları (src/modules/<modül>/channels.ts).");
   syncConventionFile(validModules, "secretary.ts", "secretary", SECRETARY_FILE, "ModuleSecretary", "@/shared/secretary/define", "moduleSecretaryRegistry", "Kişisel sekretere sabah özeti katkısı veren modüller (src/modules/<modül>/secretary.ts).");
   syncConventionFile(validModules, "notifications.ts", "notifications", NOTIFICATION_FILE, "ModuleNotifications", "@/shared/notifications/define", "moduleNotificationRegistry", "Merkezi bildirim türleri (src/modules/<modül>/notifications.ts, ADR 0006).");
+  syncConventionFile(validModules, "header.tsx", "header", HEADER_FILE, "ModuleHeader", "@/shared/header/define", "moduleHeaderRegistry", "Üst çubuk eylemleri (src/modules/<modül>/header.tsx, RFC-002).");
+  syncWidgetRegistry(validModules);
   syncAutomationTasks(validModules);
 
   return { registered: validModules };
+}
+
+/**
+ * Widget Platform WP1 (#435): `widget.ts` dosyası olan modüllerin `widgets` dizisini src/widget-registry.ts içinde
+ * toplar. İstemci-güvenlidir (server-only yok): yalnız tembel (lazy) yükleyiciler ve tanımlar içerir.
+ */
+function syncWidgetRegistry(modules: string[]): void {
+  const withFile = modules.filter((mod) => fs.existsSync(path.join(MODULES_DIR, mod, "widget.ts")));
+  const varName = (mod: string) => `${mod.replace(/-/g, "")}Widgets`;
+  const imports = withFile.map((mod) => `import { widgets as ${varName(mod)} } from "@/modules/${mod}/widget";`).join("\n");
+  const items = withFile.map((mod) => `  { module: "${mod}", widgets: ${varName(mod)} },`).join("\n");
+  const content = `// Bu dosya syncModuleRegistry tarafından otomatik üretilir (pnpm module:sync); elle düzenlemeyin.
+// Widget Platform (#435): derleme anında güvenilen kayıt. Çalışma zamanında dosya taranmaz, yol çalıştırılmaz.
+import { buildWidgetRegistry, type WidgetRegistration } from "@/shared/widgets/registry";
+${imports ? `\n${imports}\n` : ""}
+/** Modüllerin widget'ları (src/modules/<modül>/widget.ts). */
+export const widgetRegistry: readonly WidgetRegistration[] = buildWidgetRegistry(${items ? `[\n${items}\n]` : "[]"});
+`;
+  try {
+    const current = fs.existsSync(WIDGET_FILE) ? fs.readFileSync(WIDGET_FILE, "utf8") : "";
+    if (current !== content) fs.writeFileSync(WIDGET_FILE, content, "utf8");
+  } catch (err) {
+    console.error(`[sync-registry] Failed to write ${path.relative(ROOT_DIR, WIDGET_FILE)}:`, err);
+  }
 }
 
 /**
@@ -180,7 +208,7 @@ function syncConventionFile(
   listName: string,
   doc: string,
 ): void {
-  const base = file.replace(/\.ts$/, "");
+  const base = file.replace(/\.tsx?$/, "");
   const withFile = modules.filter((mod) => fs.existsSync(path.join(MODULES_DIR, mod, file)));
   const suffix = exportName.charAt(0).toUpperCase() + exportName.slice(1);
   const toValidVarName = (mod: string) => mod.replace(/-/g, "");

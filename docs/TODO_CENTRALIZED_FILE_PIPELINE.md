@@ -9,16 +9,18 @@
 
 ## FILE-0 — Mevcut sistem envanteri ve tasarım doğrulaması
 
-- [ ] Tüm modüllerde dosya üretim noktalarını tespit et.
-- [ ] Doğrudan `Content-Disposition: attachment` veya download response oluşturan handler'ları listele.
-- [ ] Client-side Blob/object URL ile indirme yapan noktaları tespit et.
-- [ ] Mevcut upload, preview, storage ve download akışlarını haritala.
-- [ ] Prisma file modellerini ve modül ilişkilerini envanterle.
-- [ ] Format/kütüphane bağımlılıklarını ve lisanslarını belirle.
-- [ ] Permission, tenant izolasyonu ve audit davranışlarını karşılaştır.
-- [ ] Deployment, UPLOAD_DIR, volume ve backup beklentilerini doğrula.
-- [ ] Mevcut schema symlink ve migration kurallarını not et.
-- [ ] İlk pilot modülü ve geçiş sırasını seç.
+> **Tamamlandı:** Ayrıntılı envanter ve analiz raporu için bkz. [FILE_GENERATION_INVENTORY.md](./architecture/FILE_GENERATION_INVENTORY.md) (Refs #411).
+
+- [x] Tüm modüllerde dosya üretim noktalarını tespit et.
+- [x] Doğrudan `Content-Disposition: attachment` veya download response oluşturan handler'ları listele.
+- [x] Client-side Blob/object URL ile indirme yapan noktaları tespit et.
+- [x] Mevcut upload, preview, storage ve download akışlarını haritala.
+- [x] Prisma file modellerini ve modül ilişkilerini envanterle.
+- [x] Format/kütüphane bağımlılıklarını ve lisanslarını belirle.
+- [x] Permission, tenant izolasyonu ve audit davranışlarını karşılaştır.
+- [x] Deployment, UPLOAD_DIR, volume ve backup beklentilerini doğrula.
+- [x] Mevcut schema symlink ve migration kurallarını not et.
+- [x] İlk pilot modülü ve geçiş sırasını seç.
 
 ## FILE-1 — Merkezi Files altyapısı
 

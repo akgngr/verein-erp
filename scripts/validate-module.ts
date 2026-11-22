@@ -358,9 +358,6 @@ function findForeignTableAccess(moduleDir: string, moduleKey: string): string[] 
 export const RAW_FETCH_ALLOWLIST = new Set([
   "accounting/services/kosit.ts", // yöneticinin girdiği KoSIT doğrulayıcı adresi (zaman aşımı + redirect: error)
   "banking/services/providers/gocardless.ts", // sabit GoCardless API hostu
-  "finance/components/currency-dashboard.tsx", // GEÇİCİ: tarayıcıdan open.er-api.com; sunucuya taşınması #396
-  "weather/cards/weather-card-body.tsx", // GEÇİCİ: tarayıcıdan Open-Meteo; sunucuya taşınması #397
-  "weather/components/weather-details.tsx", // GEÇİCİ: tarayıcıdan Open-Meteo; sunucuya taşınması #397
 ]);
 
 export function findRawFetchCalls(source: string): string[] {
@@ -389,6 +386,19 @@ function checkOutboundFetch(moduleDir: string, moduleKey: string): string[] {
     }
   };
   walk(moduleDir);
+  return problems;
+}
+
+/** Widget Platform (#435): `widget.ts` istemci-güvenli ve modüle ait olmalı. */
+export function checkWidgetFile(moduleKey: string, text: string | null): string[] {
+  if (text === null) return [];
+  const problems: string[] = [];
+  if (/["']server-only["']/.test(text) || /@\/shared\/db|getDb\(/.test(text)) problems.push("widget.ts istemci-güvenli olmalı: server-only veya veritabanı erişimi içeremez (veri, widget bileşeninin kendi server action'ı ile alınır).");
+  if (!/export\s+const\s+widgets\s*=\s*defineModuleWidgets\(/.test(text)) problems.push("widget.ts `export const widgets = defineModuleWidgets(...)` dışa aktarmalı (@/shared/widgets/registry).");
+  else if (/defineModuleWidgets\(\s*["']([^"']*)["']/.exec(text)?.[1] !== moduleKey) problems.push(`widget.ts yalnız kendi modülü ("${moduleKey}") için widget tanımlayabilir.`);
+  for (const match of text.matchAll(/import\(\s*["']([^"']+)["']\s*\)/g)) {
+    if (!match[1].startsWith("./")) problems.push(`widget.ts yükleyicisi yalnız modülün kendi dosyalarını içe aktarabilir: ${match[1]}`);
+  }
   return problems;
 }
 
@@ -579,6 +589,10 @@ export function validateModule(moduleKey: string, customModulesDir?: string): Mo
 
   errors.push(...checkModuleReleases(moduleDir));
   errors.push(...checkOutboundFetch(moduleDir, moduleKey));
+  {
+    const widgetPath = path.join(moduleDir, "widget.ts");
+    errors.push(...checkWidgetFile(moduleKey, fs.existsSync(widgetPath) ? fs.readFileSync(widgetPath, "utf8") : null));
+  }
   errors.push(...checkModuleRequires(moduleDir, moduleKey));
 
   const uiPath = path.join(moduleDir, "ui.ts");

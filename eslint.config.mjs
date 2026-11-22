@@ -14,6 +14,7 @@ import nextTypescript from "eslint-config-next/typescript";
 //   @/modules/<modül>/channels → kampanya kanalları (yalnızca üretilen src/campaign-channel-registry.ts)
 //   @/modules/<modül>/secretary → sabah özeti katkıları (yalnızca üretilen src/secretary-registry.ts)
 //   @/modules/<modül>/notifications → bildirim türleri (yalnızca üretilen src/notification-registry.ts, ADR 0006)
+//   @/modules/<modül>/header → üst çubuk eylemleri (yalnızca üretilen src/header-registry.ts, RFC-002)
 //   @/modules/<modül>/demo, /lifecycle → yalnızca üretilen src/demo-registry.ts, src/lifecycle-registry.ts
 // KARAR: Desen; "@ /modules/x/queries/y" gibi derin içe aktarmaları da kapsasın diye
 // "@ /modules/*/**" ile genişletildi. İstisnalar yalnızca tam public giriş yollarıdır.
@@ -37,6 +38,8 @@ const MODULE_INTERNAL_IMPORTS = {
     "!@/modules/*/channels",
     "!@/modules/*/secretary",
     "!@/modules/*/notifications",
+    "!@/modules/*/header",
+    "!@/modules/*/widget",
     "!@/modules/*/releases.json",
     "!@/modules/*/permissions",
     "!@/modules/*/routes",

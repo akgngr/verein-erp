@@ -1,5 +1,5 @@
 ---
-sidebar_position: 20
+sidebar_position: 21
 title: "Hava Durumu"
 description: "Anlık konum bazlı hava durumu, tahminler, panel kartı ve sekreter etkinlik önerileri (Dış API: api.open-meteo.com)."
 slug: /kullanim/moduller/weather
@@ -13,7 +13,7 @@ Anlık konum bazlı hava durumu, tahminler, panel kartı ve sekreter etkinlik ö
 |---|---|
 | Anahtar | `weather` |
 | Tür | Eklenti |
-| Sürüm | 0.1.0 |
+| Sürüm | 0.1.1 |
 | Sayfalar | `/weather` |
 
 ## Diğer modüllere erişim
@@ -39,6 +39,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_current_weather`
 
 ## Sürüm notları
+
+### 0.1.1 — Sunucu Taraflı Open-Meteo İstekleri ve Güvenlik Sıkılaştırma
+
+_2026-11-20_
+
+- **Düzeltme:** Hava durumu ve coğrafi arama (geocoding) istekleri tarayıcıdan sunucu eylemlerine (Server Action) taşındı; harici ağ istekleri channelFetch korumasına alındı; başarısız ağ durumlarında sahte veri yerine açık unavailable durumu sağlandı.
 
 ### 0.1.0 — Hava Durumu Modülü
 

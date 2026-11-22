@@ -1,0 +1,15 @@
+{
+  "module": {
+    "label": "Widget Platformu",
+    "description": "Modüllerin üst çubuk ve paneller için bileşenlerini güvenli biçimde toplar."
+  },
+  "permissions": {
+    "widgets": {
+      "label": "Widget'lar",
+      "description": "Üst çubuk ve paneldeki modül bileşenlerini görme; yönetici politikası."
+    }
+  },
+  "errors": {
+    "policyNotAllowed": "Bu widget zorunludur veya tanınmıyor; politika uygulanamaz."
+  }
+}

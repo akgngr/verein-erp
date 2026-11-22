@@ -1,5 +1,5 @@
 ---
-sidebar_position: 16
+sidebar_position: 17
 title: "Finans"
 description: "Canlı döviz kurları, piyasa göstergeleri, kur çevirici ve finansal AI asistanı."
 slug: /kullanim/moduller/finance
@@ -13,7 +13,7 @@ Canlı döviz kurları, piyasa göstergeleri, kur çevirici ve finansal AI asist
 |---|---|
 | Anahtar | `finance` |
 | Tür | Eklenti |
-| Sürüm | 0.1.0 |
+| Sürüm | 0.1.1 |
 | Sayfalar | `/finance`, `/finance/ayarlar` |
 
 ## Varsayılan yetkiler
@@ -31,6 +31,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_exchange_rates`
 
 ## Sürüm notları
+
+### 0.1.1 — Sunucu Taraflı Kur Getirme ve Güvenlik Sıkılaştırma
+
+_2026-11-20_
+
+- **Düzeltme:** Döviz kuru istekleri tarayıcıdan sunucu eylemine (Server Action) taşındı; harici ağ istekleri channelFetch korumasına alındı.
 
 ### 0.1.0 — Finans ve Döviz Modülü
 
