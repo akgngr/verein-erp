@@ -161,6 +161,11 @@ değişkeni değil, uygulama içindeki ayar ekranlarından girilir ve şifreli s
 - Denetim kaydı kişi adı yerine numara kullanır; PDF/XML indirmeleri kaydedilir.
 - CI: tip ve lint kontrolleri, testler, CodeQL, gitleaks (yanlış alarmlar `.gitleaksignore`'da
   gerekçeyle), bağımlılık denetimi.
+- CodeQL, GitHub'ın depo düzeyindeki **varsayılan kurulumu** (default setup; Settings → Code security)
+  ile çalışır. Bu yüzden `.github/workflows` altında CodeQL iş akışı dosyası yoktur. Bu bir eksik
+  değildir; PR'larda `CodeQL` ve `Analyze (…)` kontrolleri görünür.
+- Dependabot (`.github/dependabot.yml`): kök npm/pnpm, `website/` ve GitHub Actions için haftalık,
+  gruplu güncellemeler `alpha` dalına açılır.
 
 ## 7. Dağıtım ve yedekleme
 

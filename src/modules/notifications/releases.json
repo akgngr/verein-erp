@@ -2,6 +2,31 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.10.0",
+      "date": "2026-11-21",
+      "title": {
+        "tr": "Web Push istemci ve PWA manifest",
+        "de": "Web-Push-Client und PWA-Manifest"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Web Push istemci bileşenleri (PushToggle, PushCard), tarayıcı izin akışı ve PWA manifest desteği eklendi.",
+          "de": "Web-Push-Clientkomponenten (PushToggle, PushCard), Browser-Berechtigungsablauf und PWA-Manifest hinzugefügt."
+        },
+        {
+          "type": "feature",
+          "tr": "public/sw.js ile anlık bildirim gösterimi, güvenli aynı kökenli bağlantı yönlendirmesi ve pushsubscriptionchange desteği sağlandı.",
+          "de": "Push-Benachrichtigungsanzeige über public/sw.js, sichere Ursprungsweiterleitung bei Klick und pushsubscriptionchange-Unterstützung implementiert."
+        },
+        {
+          "type": "improvement",
+          "tr": "iOS cihazlarda PWA ana ekrana ekleme rehberi ve desteklenmeyen tarayıcılarda zarif geri çekilme sağlandı.",
+          "de": "PWA-Installationshinweis für iOS-Geräte und elegante Fallbacks für nicht unterstützte Browser hinzugefügt."
+        }
+      ]
+    },
+    {
       "version": "0.9.0",
       "date": "2026-11-20",
       "title": {

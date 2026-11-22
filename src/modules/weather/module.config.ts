@@ -6,7 +6,7 @@ import { weatherPermissions } from "./permissions";
 
 export const moduleConfig: ModuleConfig = {
   key: "weather",
-  version: "0.1.0",
+  version: "0.1.1",
   label: "Hava Durumu",
   description:
     "Anlık konum bazlı hava durumu, tahminler, panel kartı ve sekreter etkinlik önerileri (Dış API: api.open-meteo.com).",
