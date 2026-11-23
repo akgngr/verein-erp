@@ -31,7 +31,7 @@ export type PushTransport = WebPushLib["sendNotification"];
 async function lib(): Promise<WebPushLib> {
   const mod = (await import("web-push")) as unknown as Partial<WebPushLib> & { default?: WebPushLib };
   const resolved = mod.default ?? mod;
-  if (typeof resolved.sendNotification !== "function" || typeof resolved.generateVAPIDKeys !== "function") throw new WebPushError("web-push kitaplığı yüklenemedi");
+  if (typeof resolved.sendNotification !== "function" || typeof resolved.generateVAPIDKeys !== "function") throw new WebPushError("notifications.channels.errors.unavailable");
   return resolved as WebPushLib;
 }
 
