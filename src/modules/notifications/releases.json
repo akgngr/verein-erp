@@ -2,7 +2,7 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
-      "version": "0.13.1",
+      "version": "0.14.1",
       "date": "2026-11-23",
       "title": {
         "tr": "Veri çıkışı defteri bağlantısı",
@@ -13,6 +13,21 @@
           "type": "internal",
           "tr": "SMS, Telegram ve Web Push bildirim bağdaştırıcıları her dış gönderimde içerik veya kişisel veri saklamadan veri çıkışı defterine (SystemEgressLedger) meta veri kaydı yazar.",
           "de": "Die SMS-, Telegram- und Web-Push-Adapter protokollieren bei jedem externen Versand Metadaten ohne Nutzlast oder personenbezogene Daten im Datenausgangs-Ledger (SystemEgressLedger)."
+        }
+      ]
+    },
+    {
+      "version": "0.14.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Yönetici abone görünümü ekranı",
+        "de": "Verwaltungsansicht für Abonnenten"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Ayarlar → Bildirimler → Aboneler ekranı eklendi: kanal başına özet kartları, kullanıcı tablosu (e-posta/Telegram/Web Push durum rozetleri), arama, kanal filtresi ve onaylı bağlantı kaldırma.",
+          "de": "Ansicht Einstellungen → Benachrichtigungen → Abonnenten hinzugefügt: Übersichtskarten pro Kanal, Nutzertabelle (E-Mail-/Telegram-/Web-Push-Status), Suche, Kanalfilter und bestätigtes Trennen von Verbindungen."
         }
       ]
     },
