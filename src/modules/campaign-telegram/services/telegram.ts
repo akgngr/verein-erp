@@ -13,11 +13,17 @@ export function webhookSecret(botToken: string): string {
 }
 
 export async function telegramCall<T>(botToken: string, method: string, body: unknown): Promise<T> {
-  const response = await channelFetch(["api.telegram.org"], `${API}/bot${botToken}/${method}`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(body),
-  });
+  const payload = JSON.stringify(body);
+  const response = await channelFetch(
+    ["api.telegram.org"],
+    `${API}/bot${botToken}/${method}`,
+    {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: payload,
+    },
+    { moduleKey: "campaign-telegram", category: "CAMPAIGN", provider: "telegram", volume: Buffer.byteLength(payload), count: 1, unit: "bytes", legalBasis: "CONSENT" },
+  );
   const json = (await response.json().catch(() => ({}))) as { ok?: boolean; result?: T; error_code?: number };
   if (!response.ok || !json.ok) throw new Error(`TELEGRAM_${json.error_code ?? response.status}`);
   return json.result as T;

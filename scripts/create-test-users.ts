@@ -13,6 +13,7 @@ try {
 
 import bcrypt from "bcryptjs";
 import { createPrismaClient } from "../src/shared/db-client";
+import { maskEmail } from "../src/shared/automation/trace";
 
 const prisma = createPrismaClient();
 
@@ -30,7 +31,7 @@ async function main() {
       update: { role: user.role, isActive: true, passwordHash, mustChangePassword: false },
       create: { ...user, passwordHash, mustChangePassword: false },
     });
-    console.log(`hazır: ${user.email} / Test@12345 (${user.role})`);
+    console.log(`hazır: ${maskEmail(user.email)} (${user.role}); parola bu betikteki sabit test parolasıdır`);
   }
 }
 

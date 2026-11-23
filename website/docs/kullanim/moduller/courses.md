@@ -13,7 +13,7 @@ Gönüllü kurslar ve Nachhilfe: öğretmenler, dersler, kayıtlar, ücretler ve
 |---|---|
 | Anahtar | `courses` |
 | Tür | Resmî modül |
-| Sürüm | 1.4.11 |
+| Sürüm | 1.4.12 |
 | Sayfalar | `/kurslar`, `/ogrenciler`, `/ogrenci-takibi`, `/kurslar/ogretmenler`, `/kurslar/odemeler`, `/kurslar/hakedisler`, `/kurslar/ayarlar` |
 | Gerektirir | [Öğrenciler](./students) |
 | Önerir | [Öğrenci takibi](./progress) |
@@ -51,6 +51,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_course_statistics` · `list_courses` · `propose_course` · `propose_course_status` · `propose_delete_course`
 
 ## Sürüm notları
+
+### 1.4.12 — GoBD silme koruması
+
+_2026-11-23_
+
+- **Güvenlik:** Kurs kayıt, ücret ve ödeme ilişkileri onDelete: Restrict olarak güncellendi.
 
 ### 1.4.11 — Çalışma zamanı modernizasyonu
 
@@ -94,10 +100,4 @@ _2026-11-15_
 
 - **Güvenlik:** Öneri araçları katı Zod girdisi ve sabit model sonucu kullanır; salt öneri sorguları gereksiz kişi detaylarını okumaz. Kalan eski okuma araçlarının dönüşümü ayrı sürer.
 
-### 1.4.3 — AI listelerinde eksiksizlik ve sınır kontrolü
-
-_2026-11-15_
-
-- **Düzeltme:** AI listeleri sayfalama ve eksiksizlik bilgisi taşır; aşırı büyük takvim aralıkları kontrollü reddedilir.
-
-Daha eski 7 herkese açık sürüm notu.
+Daha eski 8 herkese açık sürüm notu.

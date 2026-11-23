@@ -13,7 +13,7 @@ Hibe ve proje fonları: finansman planı, ödemeler ve Verwendungsnachweis (kull
 |---|---|
 | Anahtar | `grants` |
 | Tür | Resmî modül |
-| Sürüm | 1.0.9 |
+| Sürüm | 1.0.10 |
 | Gerektirir | [Muhasebe](./accounting) |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_grant_overview`
 
 ## Sürüm notları
+
+### 1.0.10 — GoBD silme koruması ve şema tutarlılığı
+
+_2026-11-23_
+
+- **Güvenlik:** Yalnızca planlanan (PLANNED) ve tahsil edilmiş ödemesi olmayan hibeler silinebilir; tahsil edilmiş ödeme kayıtlarının silinmesi engellendi ve finansal ilişkiler onDelete: Restrict olarak güncellendi.
 
 ### 1.0.9 — Arayüz altyapısı
 
@@ -83,10 +89,4 @@ _2026-11-07_
 
 - **İyileştirme:** Yeni hibe formu diğer formlar gibi sağdan açılan çekmecede.
 
-### 1.0.1 — Muhasebe altına taşındı (/muhasebe/hibeler)
-
-_2026-11-07_
-
-- **İyileştirme:** Muhasebe altına taşındı (/muhasebe/hibeler)
-
-Daha eski 1 herkese açık sürüm notu.
+Daha eski 2 herkese açık sürüm notu.

@@ -2,6 +2,36 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.26.1",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "GoBD silme koruması",
+        "de": "GoBD-Löschschutz"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Banka ekstresi hareketleri ilişkisi (AccountingBankTransaction.import) onDelete: Restrict olarak güncellendi.",
+          "de": "Die Relation AccountingBankTransaction.import wurde auf onDelete: Restrict umgestellt."
+        }
+      ]
+    },
+    {
+      "version": "1.26.0",
+      "date": "2026-11-22",
+      "title": {
+        "tr": "Genel Kurul Kassenbericht ve sunum görünümü",
+        "de": "Kassenbericht und Präsentationsansicht für die Mitgliederversammlung"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Genel Kurul için tek tıkla faaliyet alanları (§ 5), projeler, rezervler ve önceki yıl karşılaştırmalı Kassenbericht PDF raporu ve slayt görünümü eklendi (Q3, Refs #407).",
+          "de": "Aggregierter Kassenbericht und Präsentationsansicht für die Mitgliederversammlung mit Sphären (§ 5), Projekten, Rücklagen und Vorjahresvergleich hinzugefügt (Q3, Refs #407)."
+        }
+      ]
+    },
+    {
       "version": "1.25.0",
       "date": "2026-11-19",
       "title": {

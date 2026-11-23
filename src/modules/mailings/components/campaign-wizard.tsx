@@ -172,7 +172,7 @@ export function CampaignWizard({
     toLocalInput(draft?.scheduledAt ?? null),
   );
   const [preview, setPreview] = useState<Preview | null>(null);
-  const [tracking, setTracking] = useState(true);
+  const [tracking, setTracking] = useState(false);
   const [busy, setBusy] = useState<string | null>(null);
   const [openedAt] = useState(() => Date.now());
   const sourceSegments = segments.filter(

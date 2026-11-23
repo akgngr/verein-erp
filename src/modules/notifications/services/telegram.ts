@@ -4,6 +4,7 @@ import { createHash, randomBytes } from "node:crypto";
 
 import { channelFetch } from "@/shared/campaigns/channel";
 import { getDb } from "@/shared/db";
+import { recordEgress } from "@/shared/egress/record-egress";
 import { openSecret, sealSecret } from "@/shared/security/secret-box";
 
 import { getChannelConfig, saveChannelConfig } from "./channel-config";
@@ -27,7 +28,13 @@ export const webhookSecret = (botToken: string) => createHash("sha256").update(`
 export type TelegramTransport = <T>(botToken: string, method: string, body: unknown) => Promise<T>;
 
 export const telegramCall: TelegramTransport = async <T>(botToken: string, method: string, body: unknown): Promise<T> => {
-  const response = await channelFetch(["api.telegram.org"], `${API}/bot${botToken}/${method}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(body) });
+  const payload = JSON.stringify(body);
+  const response = await channelFetch(
+    ["api.telegram.org"],
+    `${API}/bot${botToken}/${method}`,
+    { method: "POST", headers: { "Content-Type": "application/json" }, body: payload },
+    { moduleKey: "notifications", category: "NOTIFICATION", provider: "telegram", volume: Buffer.byteLength(payload), count: 1, unit: "bytes", legalBasis: "CONSENT" },
+  );
   const json = (await response.json().catch(() => ({}))) as { ok?: boolean; result?: T; error_code?: number };
   if (!response.ok || !json.ok) throw new TelegramError(`TELEGRAM_${json.error_code ?? response.status}`);
   return json.result as T;
@@ -123,6 +130,18 @@ export async function sendTelegram(chatId: string, text: string, call: TelegramT
     return { ok: true, providerId: result.message_id !== undefined ? String(result.message_id) : undefined };
   } catch {
     return { ok: false };
+  } finally {
+    if (call !== telegramCall) {
+      await recordEgress({
+        moduleKey: "notifications",
+        category: "NOTIFICATION",
+        provider: "telegram",
+        volume: Buffer.byteLength(text),
+        count: 1,
+        unit: "bytes",
+        legalBasis: "CONSENT",
+      });
+    }
   }
 }
 

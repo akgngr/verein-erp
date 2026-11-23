@@ -186,7 +186,7 @@ test("server export inserts private names only in the file, rejects stale datase
   const stored=await db.generatedFile.findMany({where:{ownerId:id},select:{id:true}});
   for(const fileId of new Set([...fileIds,...stored.map(row=>row.id)])){await rmdir(resolveSafePath(`generated/${fileId}.bin`)).catch(()=>{});await unlink(resolveSafePath(`generated/${fileId}.bin`)).catch(()=>{});await db.generatedFile.deleteMany({where:{id:fileId}});}
   await db.student.deleteMany({where:{id:{in:studentIds}}});await db.studentGuardian.deleteMany({where:{id:{in:guardianIds}}});
-  await db.fileGeneration.deleteMany({where:{ownerId:id}});await db.aiProposal.deleteMany({where:{userId:id}});await db.aiExportRequest.deleteMany({where:{userId:id}});await db.aiReferenceScope.deleteMany({where:{userId:id}});await db.member.deleteMany({where:{id:{in:memberIds}}});await db.aiUserConsent.deleteMany({where:{userId:id}});await db.user.deleteMany({where:{id}});
+  await db.fileGeneration.deleteMany({where:{ownerId:id}});await db.aiProposal.deleteMany({where:{userId:id}});await db.aiExportRequest.deleteMany({where:{userId:id}});await db.aiReferenceScope.deleteMany({where:{userId:id}});await db.memberDue.deleteMany({where:{memberId:{in:memberIds}}});await db.member.deleteMany({where:{id:{in:memberIds}}});await db.aiUserConsent.deleteMany({where:{userId:id}});await db.user.deleteMany({where:{id}});
   if(oldFlag===undefined)delete process.env.AI_PERSONAL_EXPORT_ENABLED;else process.env.AI_PERSONAL_EXPORT_ENABLED=oldFlag;
   if(oldAuto===undefined)delete process.env.AUTOMATION_ENABLED;else process.env.AUTOMATION_ENABLED=oldAuto;
  }

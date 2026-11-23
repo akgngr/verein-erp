@@ -2,6 +2,111 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.14.1",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Veri çıkışı defteri bağlantısı",
+        "de": "Anbindung an das Datenausgangs-Ledger"
+      },
+      "changes": [
+        {
+          "type": "internal",
+          "tr": "SMS, Telegram ve Web Push bildirim bağdaştırıcıları her dış gönderimde içerik veya kişisel veri saklamadan veri çıkışı defterine (SystemEgressLedger) meta veri kaydı yazar.",
+          "de": "Die SMS-, Telegram- und Web-Push-Adapter protokollieren bei jedem externen Versand Metadaten ohne Nutzlast oder personenbezogene Daten im Datenausgangs-Ledger (SystemEgressLedger)."
+        }
+      ]
+    },
+    {
+      "version": "0.14.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Yönetici abone görünümü ekranı",
+        "de": "Verwaltungsansicht für Abonnenten"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Ayarlar → Bildirimler → Aboneler ekranı eklendi: kanal başına özet kartları, kullanıcı tablosu (e-posta/Telegram/Web Push durum rozetleri), arama, kanal filtresi ve onaylı bağlantı kaldırma.",
+          "de": "Ansicht Einstellungen → Benachrichtigungen → Abonnenten hinzugefügt: Übersichtskarten pro Kanal, Nutzertabelle (E-Mail-/Telegram-/Web-Push-Status), Suche, Kanalfilter und bestätigtes Trennen von Verbindungen."
+        }
+      ]
+    },
+    {
+      "version": "0.13.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Anlık bildirim akışı (SSE) ve erişilebilirlik",
+        "de": "Echtzeit-Benachrichtigungs-Stream (SSE) und Barrierefreiheit"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yoklama yerine Server-Sent Events (SSE) ile anlık okunmamış sayısı ve güncelleme akışı (/api/notifications/stream); bağlantı koptuğunda zarif biçimde yoklamaya geri düşme ve sekme gizliyken duraklatma.",
+          "de": "Echtzeit-Stream für Ungelesen-Zähler und Aktualisierungen über Server-Sent Events (SSE) statt reinem Polling (/api/notifications/stream); eleganter Fallback auf Polling bei Verbindungsunterbrechung und Pausieren bei inaktivem Tab."
+        },
+        {
+          "type": "improvement",
+          "tr": "Bildirim çekmecesi için aria-live, aria-haspopup, genişletilmiş durum yönetimi ve ekran okuyuculara yönelik bağlamsal buton etiketleri ile tam erişilebilirlik sağlandı.",
+          "de": "Vollständige Barrierefreiheit für die Benachrichtigungsschublade durch aria-live, aria-haspopup, erweiterte Zustandsverwaltung und kontextuelle Schaltflächenbeschriftungen für Screenreader."
+        },
+        {
+          "type": "security",
+          "tr": "SSE akışı kullanıcı bazında katı şekilde yalıtılmıştır; akış üzerinden kişisel veri (PII) iletilmez, yalnızca hafif sinyal ve sayılar taşınır.",
+          "de": "Der SSE-Stream ist strikt pro Benutzer isoliert; es werden keine personenbezogenen Daten (PII) übertragen, sondern lediglich Signale und Zählerstände."
+        }
+      ]
+    },
+    {
+      "version": "0.12.1",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Web push kitaplığı güncellendi",
+        "de": "Web-Push-Bibliothek aktualisiert"
+      },
+      "changes": [
+        {
+          "type": "internal",
+          "tr": "Tarayıcı bildirimleri için web-push kitaplığı 4.0.0 sürümüne yükseltildi; davranış değişmedi.",
+          "de": "Die Web-Push-Bibliothek für Browser-Benachrichtigungen wurde auf Version 4.0.0 aktualisiert; das Verhalten bleibt unverändert."
+        }
+      ]
+    },
+    {
+      "version": "0.12.0",
+      "date": "2026-11-22",
+      "title": {
+        "tr": "Yönetici duyuru gönderme ekranı",
+        "de": "Verwaltungsansicht zum Senden von Mitteilungen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yöneticiler duyuruyu herkese veya seçilen rollere onay penceresinden gönderebilir ve gerçek alıcı sayısını görebilir.",
+          "de": "Administratoren können Mitteilungen nach Bestätigung an alle oder ausgewählte Rollen senden und die tatsächliche Empfängerzahl sehen."
+        }
+      ]
+    },
+    {
+      "version": "0.11.0",
+      "date": "2026-11-22",
+      "title": {
+        "tr": "Bildirim zili ve tercih ekranı",
+        "de": "Benachrichtigungsglocke und Einstellungen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Sağ üstte bildirim zili ve okunmamış rozeti; sağ çekmecede bildirimler (okundu, tümünü okundu, ertele). Zil Widget Platformu üzerinden eklenir.",
+          "de": "Benachrichtigungsglocke mit Ungelesen-Zähler oben rechts; Benachrichtigungen in der rechten Schublade (gelesen, alle gelesen, später). Die Glocke kommt über die Widget-Plattform."
+        },
+        {
+          "type": "feature",
+          "tr": "Ayarlar → Bildirimler: tür × kanal tercihleri, sessiz saatler, günlük özet, Telegram bağlama ve tarayıcı (push) bildirimleri.",
+          "de": "Einstellungen → Benachrichtigungen: Art × Kanal, Ruhezeiten, Tageszusammenfassung, Telegram-Verknüpfung und Browser-Push."
+        }
+      ]
+    },
+    {
       "version": "0.10.0",
       "date": "2026-11-21",
       "title": {

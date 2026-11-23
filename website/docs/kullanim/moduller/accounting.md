@@ -13,7 +13,7 @@ Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura v
 |---|---|
 | Anahtar | `accounting` |
 | Tür | Resmî modül |
-| Sürüm | 1.25.0 |
+| Sürüm | 1.26.1 |
 | Sayfalar | `/muhasebe`, `/muhasebe/panel`, `/muhasebe/faturalar`, `/muhasebe/gelen-faturalar`, `/muhasebe/cariler`, `/muhasebe/banka`, `/muhasebe/uyelik-aktarimi`, `/muhasebe/raporlar`, `/muhasebe/vergi`, `/muhasebe/hibeler`, `/muhasebe/sepa`, `/muhasebe/butce`, `/muhasebe/ekler`, `/muhasebe/gobd`, `/muhasebe/yil-kapanisi`, `/muhasebe/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -43,6 +43,18 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_accounting_summary` · `get_bank_inbox_summary` · `get_open_items_summary` · `get_payables_summary` · `get_report_link` · `get_vat_summary`
 
 ## Sürüm notları
+
+### 1.26.1 — GoBD silme koruması
+
+_2026-11-23_
+
+- **Güvenlik:** Banka ekstresi hareketleri ilişkisi (AccountingBankTransaction.import) onDelete: Restrict olarak güncellendi.
+
+### 1.26.0 — Genel Kurul Kassenbericht ve sunum görünümü
+
+_2026-11-22_
+
+- **Yeni:** Genel Kurul için tek tıkla faaliyet alanları (§ 5), projeler, rezervler ve önceki yıl karşılaştırmalı Kassenbericht PDF raporu ve slayt görünümü eklendi (Q3, Refs #407).
 
 ### 1.25.0 — Sekreterden ihtar önerisi
 
@@ -80,16 +92,4 @@ _2026-11-17_
 
 - **İyileştirme:** Genel bakış paneli ortak SurfaceCard bileşenini kullanıyor (görünüm aynı).
 
-### 1.23.5 — Gelen fatura ve fiş detay eylemleri ortak UI katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Gelen fatura yükleme ile fiş detay düzenle/storno eylemleri ortak ActionButton/LinkButton/notify pattern'lerine taşındı; bu dosyalardaki doğrudan HeroUI bağımlılığı kaldırıldı.
-
-### 1.23.4 — Muhasebe eylemleri ortak UI adapterında
-
-_2026-11-17_
-
-- **İyileştirme:** İhtar oluşturma, XRechnung/ZUGFeRD indirme ve banka kuralı silme eylemleri ortak ActionButton/notify katmanına taşındı; bu dosyalardaki doğrudan HeroUI bağımlılığı kaldırıldı.
-
-Daha eski 45 herkese açık sürüm notu.
+Daha eski 47 herkese açık sürüm notu.

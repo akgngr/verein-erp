@@ -2,6 +2,81 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.17.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Veri çıkışı defteri ve gizlilik ön ayarları (F2a)",
+        "de": "Datenausgangs-Ledger und Datenschutz-Voreinstellungen (F2a)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Tüm dış ağ bağdaştırıcıları (yapay zekâ sağlayıcıları, bildirimler, kampanya kanalları, bankacılık, takvim senkronizasyonu, e-posta, hava durumu ve döviz kuru) içerik veya kişisel veri saklamadan kategori, sağlayıcı, hacim/adet ve hukuki dayanak meta verilerini veri çıkışı defterine (SystemEgressLedger) yazar.",
+          "de": "Alle ausgehenden Adapter (KI-Anbieter, Benachrichtigungen, Kampagnenkanäle, Banking, Kalendersynchronisierung, E-Mail, Wetter und Wechselkurse) protokollieren Kategorie, Anbieter, Volumen/Anzahl und Rechtsgrundlage ohne Nutzlast oder personenbezogene Daten im Datenausgangs-Ledger (SystemEgressLedger)."
+        },
+        {
+          "type": "feature",
+          "tr": "Aylık veri çıkışı raporlayıcısı yapılandırma, gerçekleşen aktarımlar ve sağlayıcı tarafı saklama sürelerini birbirinden ayırır; akış kapatılsa bile geçmiş aktarım kayıtları değiştirilmez.",
+          "de": "Der monatliche Datenausgangsbericht trennt Konfiguration, tatsächliche Übermittlungen und anbieterseitige Aufbewahrungsfristen; das Deaktivieren eines Flusses macht frühere Übermittlungen nicht rückgängig."
+        },
+        {
+          "type": "feature",
+          "tr": "Strict / Standard / Connected gizlilik ön ayarları veri olarak tanımlandı; önizleme farkı üretir, yönetici onayı ile uygulanır ve Strict profilinde kendi sunucunuzda barındırılan model ucu önerilir.",
+          "de": "Die Datenschutz-Voreinstellungen Strict / Standard / Connected sind datengetrieben definiert, erzeugen eine Änderungs-Vorschau, erfordern eine Administrator-Freigabe und empfehlen im Strict-Profil einen selbst gehosteten Modell-Endpunkt."
+        }
+      ]
+    },
+    {
+      "version": "1.16.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Kişisel widget ayarları",
+        "de": "Persönliche Widget-Einstellungen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Widget görünürlük ve sıralama ayarları, sıfırlama ve masaüstü/mobil önizleme kullanıcı hesabına bağlandı.",
+          "de": "Sichtbarkeit, Reihenfolge, Zurücksetzen und Desktop-/Mobilvorschau der Widgets sind an das Nutzerkonto gebunden."
+        }
+      ]
+    },
+    {
+      "version": "1.15.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Modül ve iş akışı sağlığı kokpiti (F3)",
+        "de": "Modul- und Workflow-Gesundheitscockpit (F3)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Ayarlar → Modül Yönetimi → Modül ve İş Akışı Sağlığı: etkin modüllerin yapılandırma bütünlüğü, erişim onayları, worker kalp atışı ve kuyruk hata durumları tek ekranda özetlenir.",
+          "de": "Einstellungen → Modulverwaltung → Modul- und Workflow-Gesundheit: Vollständigkeit der Modulkonfiguration, Zugriffsberechtigungen, Worker-Heartbeats und Warteschlangenfehler werden auf einer Übersicht angezeigt."
+        },
+        {
+          "type": "feature",
+          "tr": "Hata kodları kişisel veri sızdırmadan güvenli kategorilere (TIMEOUT, NETWORK, DATABASE, AUTH) indirgenir; sorunlu alanlar için doğrudan ilgili ayar ekranına yönlendirme kılavuzu sunulur.",
+          "de": "Fehlercodes werden ohne personenbezogene Daten in sichere Kategorien (TIMEOUT, NETWORK, DATABASE, AUTH) aggregiert; bei Problemen wird direkt auf die entsprechende Konfigurationsseite verwiesen."
+        }
+      ]
+    },
+    {
+      "version": "1.14.0",
+      "date": "2026-11-22",
+      "title": {
+        "tr": "Üst çubuk widget altyapısı",
+        "de": "Widget-Integration in der Kopfzeile"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Üst çubukta yetki ve kullanıcı tercihlerine göre görünen Ayarlar kısayolu widget’ı eklendi; masaüstü ve mobilde tek bileşen yüklenir.",
+          "de": "Ein Einstellungs-Widget in der Kopfzeile folgt Berechtigungen und Nutzereinstellungen; es wird jeweils nur auf dem sichtbaren Bildschirm geladen."
+        }
+      ]
+    },
+    {
       "version": "1.13.0",
       "date": "2026-11-20",
       "title": {

@@ -10,3 +10,41 @@ export { approveModuleAccessAction, revokeModuleAccessAction } from "./actions/m
 export { uploadPackageHandler } from "./services/package-handlers";
 export { deleteModulePackageAction } from "./actions/package-actions";
 export { runUserDeletionHooks } from "./services/module-state-store";
+export {
+  getModuleReadinessReport,
+  computeModuleReadiness,
+  redactErrorCategory,
+  type ModuleReadinessReport,
+  type ModuleReadinessItem,
+} from "./services/readiness";
+export { getModuleReadinessAction } from "./actions/get-readiness";
+export {
+  getMonthlyEgressReportAction,
+  previewPrivacyPresetAction,
+  applyPrivacyPresetAction,
+} from "./actions/egress-actions";
+export {
+  getMonthlyEgressReport,
+  buildMonthlyEgressReport,
+  resolveMonthWindow,
+  PROVIDER_RETENTION_POLICIES,
+  type MonthlyEgressReport,
+  type EgressTransferSummaryRow,
+  type EgressModuleConfigItem,
+  type EgressRetentionReportItem,
+  type ProviderRetentionPolicy,
+} from "./services/egress-report";
+export {
+  PRIVACY_PRESETS,
+  PRIVACY_PRESET_IDS,
+  PRIVACY_PRESET_SETTING_KEY,
+  PRIVACY_AI_ALLOWED_SETTING_KEY,
+  computePrivacyPresetDiff,
+  getActivePrivacyPreset,
+  previewPrivacyPreset,
+  applyPrivacyPreset,
+  type PrivacyPresetId,
+  type PrivacyPresetDefinition,
+  type PrivacyPresetPreview,
+  type ApplyPrivacyPresetResult,
+} from "./services/privacy-presets";

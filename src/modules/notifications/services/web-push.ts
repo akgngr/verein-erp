@@ -5,6 +5,7 @@ import { createHash } from "node:crypto";
 import { z } from "zod";
 
 import { getDb } from "@/shared/db";
+import { recordEgress } from "@/shared/egress/record-egress";
 import { openSecret, sealSecret } from "@/shared/security/secret-box";
 
 import { getChannelConfig, saveChannelConfig } from "./channel-config";
@@ -27,8 +28,12 @@ type WebPushLib = {
 };
 export type PushTransport = WebPushLib["sendNotification"];
 
+/** web-push 4.x saf ESM'dir ve default export içermez; 3.x CJS default'unu da destekler. */
 async function lib(): Promise<WebPushLib> {
-  return ((await import("web-push")) as unknown as { default: WebPushLib }).default;
+  const mod = (await import("web-push")) as unknown as Partial<WebPushLib> & { default?: WebPushLib };
+  const resolved = mod.default ?? mod;
+  if (typeof resolved.sendNotification !== "function" || typeof resolved.generateVAPIDKeys !== "function") throw new WebPushError("notifications.channels.errors.unavailable");
+  return resolved as WebPushLib;
 }
 
 const sha = (value: string) => createHash("sha256").update(value).digest("hex");
@@ -117,6 +122,16 @@ export async function sendPush(userId: string, message: { title: string; body: s
       const status = (error as { statusCode?: number }).statusCode;
       if (status === 404 || status === 410 || sub.failureCount + 1 >= MAX_FAILURES) await db.notificationPushSubscription.delete({ where: { id: sub.id } }).catch(() => undefined);
       else await db.notificationPushSubscription.update({ where: { id: sub.id }, data: { failureCount: { increment: 1 } } });
+    } finally {
+      await recordEgress({
+        moduleKey: "notifications",
+        category: "NOTIFICATION",
+        provider: "web_push",
+        volume: Buffer.byteLength(payload),
+        count: 1,
+        unit: "bytes",
+        legalBasis: "CONSENT",
+      });
     }
   }
   return { ok: any };
