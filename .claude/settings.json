@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh api -X PUT repos/akgngr/verein-erp/pulls/*/merge *)",
+      "Bash(gh api -X PUT repos/akgngr/verein-erp/pulls/*/update-branch*)"
+    ]
+  },
+  "autoMode": {
+    "allow": [
+      "$defaults",
+      "Squash-merging a pull request into the `alpha` branch of akgngr/verein-erp via `gh api -X PUT repos/akgngr/verein-erp/pulls/<n>/merge -f merge_method=squash -f sha=<head>` is pre-authorized by the repository owner when the PR targets `alpha`, is not a draft and its required checks (`Quality gate`, `Promotion policy (alpha)`) are green on the head SHA. Merging into `beta` or `main` is NOT authorized.",
+      "Updating a PR branch with `gh api -X PUT repos/akgngr/verein-erp/pulls/<n>/update-branch` is pre-authorized by the repository owner."
+    ]
+  }
+}

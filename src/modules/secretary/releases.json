@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.12.2",
+      "date": "2026-11-22",
+      "title": {
+        "tr": "Haftalık rapor arayüzü",
+        "de": "Oberfläche für Wochenberichte"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Sekreter sayfasından haftalık kurul raporu talep etme, üretim durumunu kontrol etme ve hazır raporu Dosyalarım'da açma eklendi.",
+          "de": "Der Sekretär kann wöchentliche Vorstandsberichte anfordern, ihren Status prüfen und fertige Berichte unter Meine Dateien öffnen."
+        }
+      ]
+    },
+    {
       "version": "0.12.1",
       "date": "2026-11-20",
       "title": {

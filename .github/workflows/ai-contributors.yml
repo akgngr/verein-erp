@@ -16,8 +16,8 @@ jobs:
     name: Generate AI contributor report
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v5
-      - uses: actions/setup-node@v5
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
         with:
           node-version: 22
       - name: Build read-only dashboard
@@ -26,7 +26,7 @@ jobs:
           REPORT_OUTPUT: ai-contributors-report.md
         run: node scripts/ai-contributors-report.mjs
       - name: Upload dashboard artifact
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@v7
         with:
           name: ai-contributors-report
           path: ai-contributors-report.md
