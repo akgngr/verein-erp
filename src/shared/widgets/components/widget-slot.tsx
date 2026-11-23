@@ -27,6 +27,7 @@ export function WidgetSlot({
   slot, registry, preferences = [], canView, fallback = null, className,
 }: WidgetSlotProps) {
   const definitions = resolveWidgets(registry.map((entry) => entry.definition), slot, preferences, canView);
+  if (!definitions.length) return null;
   const byId = new Map(registry.map((entry) => [entry.definition.id, entry]));
   return (
     <div className={className} data-widget-slot={slot}>

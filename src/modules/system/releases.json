@@ -2,8 +2,8 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
-      "version": "1.14.0",
-      "date": "2026-11-22",
+      "version": "1.15.0",
+      "date": "2026-11-23",
       "title": {
         "tr": "Modül ve iş akışı sağlığı kokpiti (F3)",
         "de": "Modul- und Workflow-Gesundheitscockpit (F3)"
@@ -18,6 +18,21 @@
           "type": "feature",
           "tr": "Hata kodları kişisel veri sızdırmadan güvenli kategorilere (TIMEOUT, NETWORK, DATABASE, AUTH) indirgenir; sorunlu alanlar için doğrudan ilgili ayar ekranına yönlendirme kılavuzu sunulur.",
           "de": "Fehlercodes werden ohne personenbezogene Daten in sichere Kategorien (TIMEOUT, NETWORK, DATABASE, AUTH) aggregiert; bei Problemen wird direkt auf die entsprechende Konfigurationsseite verwiesen."
+        }
+      ]
+    },
+    {
+      "version": "1.14.0",
+      "date": "2026-11-22",
+      "title": {
+        "tr": "Üst çubuk widget altyapısı",
+        "de": "Widget-Integration in der Kopfzeile"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Üst çubukta yetki ve kullanıcı tercihlerine göre görünen Ayarlar kısayolu widget’ı eklendi; masaüstü ve mobilde tek bileşen yüklenir.",
+          "de": "Ein Einstellungs-Widget in der Kopfzeile folgt Berechtigungen und Nutzereinstellungen; es wird jeweils nur auf dem sichtbaren Bildschirm geladen."
         }
       ]
     },

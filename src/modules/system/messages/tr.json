@@ -49,8 +49,8 @@
     "surumNotlari": "Sürüm notları",
     "kurulum": "Kurulum sihirbazı",
     "modulPaketleri": "Modül paketleri",
-    "modulSagligi": "Modül Sağlığı",
-    "lisans": "Lisans"
+    "lisans": "Lisans",
+    "modulSagligi": "Modül Sağlığı"
   },
   "meta": {
     "settings": "Ayarlar",
@@ -91,8 +91,7 @@
       "delete": "silme"
     },
     "accounting": "Kurulum sihirbazı, seçilen kurum türüne göre muhasebe kategorilerini, hesaplarını ve vergi ayarlarını oluşturur.",
-    "organization": "Lisans doğrulaması için kurum adı ve sicil/vergi numarası okunur (lisans bu kuruma bağlıdır).",
-    "users": "Modül ve iş akışı sağlığı kokpitinde yönetici kullanıcısının varlığı denetlenir."
+    "organization": "Lisans doğrulaması için kurum adı ve sicil/vergi numarası okunur (lisans bu kuruma bağlıdır)."
   },
   "gate": {
     "manage": "Modül yönetimine git",
@@ -317,6 +316,11 @@
       "grace": "Lisans kaydedildi; süresi dolmuş, ek süre işliyor.",
       "expired": "Lisans kaydedildi ancak süresi dolmuş.",
       "mismatch": "Lisans kaydedildi ancak bu kuruluma ait değil."
+    }
+  },
+  "ui": {
+    "widget": {
+      "settings": "Ayarlar"
     }
   },
   "readiness": {
