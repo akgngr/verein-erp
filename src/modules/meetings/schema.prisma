@@ -89,6 +89,7 @@ model Meeting {
   decisions   MeetingDecision[]
   actionItems ActionItem[]
   files       MeetingFile[]
+  votes       MeetingVote[]
 
   @@unique([year, sequence])
   @@index([type])
@@ -195,4 +196,84 @@ model MeetingFile {
   deletedAt       DateTime?
 
   @@index([meetingId])
+}
+
+// ── Gizli oylama (RFC-004 aşama 3, yüz yüze; #522) ─────────────────────────────────────────────
+// Üç ayrı depo, ortak birleştirme anahtarı YOK: kim oy pusulası aldı (uygunluk) / tek kullanımlık
+// kimlik (üye yok, zaman yok; kapanışta silinir) / oy sandığı (üye, zaman, sıra yok → anonim veri).
+
+enum MeetingVoteStatus {
+  OPEN
+  CLOSED
+}
+
+/// Bir gizli oylama (bir gündem maddesi / karar).
+model MeetingVote {
+  id               String            @id @default(cuid())
+  meetingId        String
+  meeting          Meeting           @relation(fields: [meetingId], references: [id], onDelete: Cascade)
+  agendaItemId     String?
+  question         String
+  options          String[]
+  /// Küçük sayı koruması: bu sayının altında sonuç yayımlanmaz (varsayılan 5, en az 3).
+  minBallots       Int               @default(5)
+  /// minBallots 5'in altına indirildiyse gerekçe (tutanağa yazılır).
+  minBallotsReason String?
+  status           MeetingVoteStatus @default(OPEN)
+  /// Kapanışta: { seçenek: ağırlıklı toplam }; minBallots altında null.
+  totals           Json?
+  ballotCount      Int               @default(0)
+  /// Kapanışta sıralı oy listesinin (choice,weight,nonce) SHA-256 özeti; tutanakta yer alır.
+  ballotHash       String?
+  /// Kapanışta yayımlanan makbuz kodları (seçimsiz, rastgele sıralı).
+  receipts         String[]          @default([])
+  /// Bu tarihten sonra uygunluk kaydı ve oylar silinir (tutanak onayı veya en fazla 12 ay).
+  retainUntil      DateTime?
+  closedAt         DateTime?
+  createdById      String
+  createdByLabel   String
+  createdAt        DateTime          @default(now())
+
+  eligibility MeetingVoteEligibility[]
+  credentials MeetingVoteCredential[]
+  ballots     MeetingVoteBallot[]
+
+  @@index([meetingId])
+  @@index([status, retainUntil])
+}
+
+/// E: kim oy pusulası aldı (yoklama listesi gibi). Ne oy verdiği burada YOK.
+model MeetingVoteEligibility {
+  voteId   String
+  vote     MeetingVote @relation(fields: [voteId], references: [id], onDelete: Cascade)
+  memberId String // yumuşak referans (members)
+  weight   Int         @default(1)
+  /// Dakika hassasiyetinde; kapanışta null yapılır.
+  usedAt   DateTime?
+
+  @@id([voteId, memberId])
+}
+
+/// Tek kullanımlık oy kimliği (yalnız özeti). Üye kimliği ve zaman YOK; kapanışta silinir.
+model MeetingVoteCredential {
+  credentialHash String      @id
+  voteId         String
+  vote           MeetingVote @relation(fields: [voteId], references: [id], onDelete: Cascade)
+  weight         Int         @default(1)
+  spent          Boolean     @default(false)
+
+  @@index([voteId])
+}
+
+/// B: oy sandığı. Üye, zaman, sıra, oturum veya IP YOK (anonim veri). Kimlik rastgele 128 bit.
+model MeetingVoteBallot {
+  id          String      @id
+  voteId      String
+  vote        MeetingVote @relation(fields: [voteId], references: [id], onDelete: Cascade)
+  choice      String
+  weight      Int         @default(1)
+  batch       Int         @default(1)
+  ballotNonce String      @unique
+
+  @@index([voteId])
 }

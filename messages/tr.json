@@ -6451,7 +6451,8 @@
       "createdAt": "Oluşturma",
       "updatedAt": "Son güncelleme",
       "notSpecified": "Belirtilmedi",
-      "quorumValueShort": "{required} katılımcı ({present} katıldı)"
+      "quorumValueShort": "{required} katılımcı ({present} katıldı)",
+      "tabVotesShort": "Gizli oylama"
     },
     "quorum": {
       "reached": "Toplantı yeter sayısı sağlandı ({present}/{required})",
@@ -6904,6 +6905,12 @@
             "location": "Yer"
           }
         }
+      },
+      "tasks": {
+        "vote_purge": {
+          "label": "Gizli oylama saklama süresi",
+          "description": "Saklama süresi dolan gizli oylamaların uygunluk kaydını ve oylarını günde bir siler; toplamlar ve özet kalır."
+        }
       }
     },
     "calendar": {
@@ -6939,6 +6946,85 @@
       "invited": {
         "title": "Toplantıya eklendiniz: {title}",
         "body": "Toplantı ayrıntılarını açın."
+      }
+    },
+    "vote": {
+      "intro": "Gizli oylama (yüz yüze): giriş masasında, yoklamada \"katıldı\" olarak işaretli her üyeye tek kullanımlık bir oy kodu verilir. Üye kodu oy kabininde (/oy) kullanır. Kim kod aldığı görülür; kimin ne oy verdiği hiçbir yerde saklanmaz.",
+      "options": {
+        "yes": "Evet",
+        "no": "Hayır",
+        "abstain": "Çekimser",
+        "list": "Seçenekler: {options}"
+      },
+      "status": {
+        "OPEN": "Açık",
+        "CLOSED": "Kapandı"
+      },
+      "issuedCount": "{count} kod verildi",
+      "minBallotsInfo": "en az {count} oy",
+      "issued": "Kod verildi",
+      "issue": "Kod ver",
+      "codeFor": "Oy kodu: {name}",
+      "codeHint": "Kodu yalnız üyeye verin. Kod bir kez kullanılır ve tekrar gösterilemez.",
+      "print": "Yazdır",
+      "hideCode": "Kodu gizle",
+      "noPresent": "Yoklamada \"katıldı\" olarak işaretli üye yok. Önce Katılımcılar sekmesinde yoklamayı alın.",
+      "boothHint": "Oy kabini: bu sitenin /oy adresi (kabindeki cihazda oturum açmayın).",
+      "close": "Oylamayı kapat",
+      "closeConfirm": "Oylama kapatılsın mı? Kullanılmayan kodlar geçersiz olur, sonuç hesaplanır.",
+      "closed": "Oylama kapandı, sonuç kaydedildi.",
+      "closedWithheld": "Oylama kapandı. {count} oy en az oy sayısının altında: sonuç gizli tutuldu; açık oylama yapın veya erteleyin.",
+      "withheld": "{count} oy, en az {min} oy sınırının altında: sonuç yayımlanmadı (gizlilik koruması). Açık oylama yapın veya erteleyin.",
+      "ballotCount": "Kullanılan oy: {count}",
+      "hash": "Oy listesi özeti (SHA-256)",
+      "receipts": "Makbuz kodları ({count}, seçimsiz)",
+      "cannotCheck": "Bu sistemle doğrulanamayanlar: sunucunun oy verme sırasında gizlice eşleştirme yapmadığı (güvenilir sunucu tasarımı) ve tek bir oyun içeriğinin seçmen tarafından kanıtlanması (bilinçli olarak yok; baskıyı önler).",
+      "retention": "Uygunluk kaydı ve oylar {date} tarihinde silinir; toplamlar, makbuz listesi ve özet kalır.",
+      "new": "Yeni gizli oylama",
+      "question": "Soru veya seçim",
+      "kind": "Tür",
+      "kinds": {
+        "yesNoAbstain": "Evet / Hayır / Çekimser",
+        "candidates": "Aday listesi"
+      },
+      "agendaItem": "Gündem maddesi",
+      "noAgendaItem": "Gündem maddesi yok",
+      "minBallots": "En az oy sayısı",
+      "candidates": "Adaylar (her satıra bir aday)",
+      "minBallotsReason": "5'in altına indirme gerekçesi (en az {min}; tutanağa yazılır)",
+      "open": "Oylamayı aç",
+      "opened": "Gizli oylama açıldı.",
+      "errors": {
+        "question": "Soru en az 3 karakter olmalı.",
+        "options": "En az iki seçenek gerekli.",
+        "tooLow": "En az oy sayısı 3'ten küçük olamaz.",
+        "reasonRequired": "5'in altına indirmek için gerekçe yazın.",
+        "meetingNotFound": "Toplantı bulunamadı.",
+        "voteNotOpen": "Oylama açık değil.",
+        "notPresent": "Bu üye yoklamada \"katıldı\" olarak işaretli değil.",
+        "alreadyIssued": "Bu üyeye bu oylama için zaten kod verildi.",
+        "invalidCode": "Kod geçersiz veya kullanılmış.",
+        "invalidChoice": "Geçersiz seçim."
+      },
+      "booth": {
+        "title": "Gizli oy kabini",
+        "intro": "Giriş masasında aldığınız oy kodunu girin.",
+        "codeLabel": "Oy kodu",
+        "open": "Oy pusulasını aç",
+        "cast": "Oyumu ver",
+        "cancel": "Vazgeç",
+        "secretNote": "Oyunuz adınızla bağlantısız saklanır. Gönderince değiştirilemez.",
+        "thanks": "Oyunuz alındı.",
+        "receiptText": "Makbuz kodunuz:",
+        "receiptLabel": "Makbuz kodu",
+        "receiptHint": "Oylama kapanınca yayımlanan makbuz listesinde bu kodu görürseniz oyunuz sayılmıştır. Kod oyunuzun içeriğini göstermez.",
+        "next": "Sonraki seçmen",
+        "howTitle": "Gizlilik nasıl sağlanıyor?",
+        "howText": "Kod verilirken yalnız \"kod aldı\" bilgisi tutulur. Oy kodla, adınız olmadan atılır; oy kaydında ad, zaman, sıra veya cihaz bilgisi yoktur. Kapanışta kodlar silinir ve oy listesi karıştırılır.",
+        "errors": {
+          "invalidCode": "Kod geçersiz veya zaten kullanılmış.",
+          "invalidChoice": "Lütfen bir seçenek seçin."
+        }
       }
     }
   },

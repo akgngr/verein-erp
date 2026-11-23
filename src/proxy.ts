@@ -18,7 +18,8 @@ export const config = {
   // Telegram/SMS/WhatsApp webhook'ları (imza veya gizli yol) ve e-posta izleme
   // (api/mailings/t: rastgele belirteç; tıklamada imzalı hedef) ve uzaktan form sayfası
   // (formular/<belirteç>: 32 bayt rastgele, tek kullanımlık, süreli; online-forms modülü).
+  // Gizli oylama kabini (oy: oturum OKUNMAZ; tek girdi tek kullanımlık 130 bit oy kodu; meetings, RFC-004).
   matcher: [
-    "/((?!api/health|api/auth|api/documents|api/calendar/feed|api/campaign-telegram/webhook|api/notifications/telegram-webhook|api/campaign-sms/webhook|api/campaign-whatsapp/webhook|api/mailings/t/|formular/|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt)$).*)",
+    "/((?!api/health|api/auth|api/documents|api/calendar/feed|api/campaign-telegram/webhook|api/notifications/telegram-webhook|api/campaign-sms/webhook|api/campaign-whatsapp/webhook|api/mailings/t/|formular/|oy$|oy/|_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp|ico|txt)$).*)",
   ],
 };

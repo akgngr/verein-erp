@@ -18,6 +18,8 @@ import { can } from "@/shared/permissions/define";
 import { formatDate, formatDateTime } from "@/shared/utils";
 
 import { getMeeting } from "../queries/get-meeting";
+import { listVotes } from "../services/secret-ballot";
+import { VotesTab } from "../components/votes-tab";
 import { meetingLabel } from "../recipients";
 import { meetingsPermissions } from "../permissions";
 import { MEETING_ALLOWED_EXTENSIONS } from "../constants";
@@ -33,7 +35,7 @@ import { FilesTab } from "../components/files-tab";
 import { DeleteMeetingButton } from "../components/detail-actions";
 
 type TabKey =
-  "genel" | "gundem" | "katilimcilar" | "kararlar" | "gorevler" | "ekler";
+  "genel" | "gundem" | "katilimcilar" | "kararlar" | "oylama" | "gorevler" | "ekler";
 
 /** Sekme anahtar doğrulaması; ?sekme= herhangi bir string olabilir. */
 function parseTab(value: string | undefined): TabKey {
@@ -42,6 +44,7 @@ function parseTab(value: string | undefined): TabKey {
     "gundem",
     "katilimcilar",
     "kararlar",
+    "oylama",
     "gorevler",
     "ekler",
   ];
@@ -101,6 +104,9 @@ export async function MeetingDetailView({
     Promise.resolve(getEnv().MAX_UPLOAD_MB),
   ]);
 
+  // Gizli oylama (RFC-004): yalnız meetings.update yetkisi olan görür; oylar ve kimlikler hiç dönmez.
+  const votes = canUpdate ? await listVotes(meeting.id) : [];
+
   const tabs: { key: TabKey; label: string; badge?: number }[] = [
     { key: "genel", label: t("tabGeneralShort") },
     {
@@ -118,6 +124,7 @@ export async function MeetingDetailView({
       label: t("tabDecisionsShort"),
       badge: meeting.decisions.length,
     },
+    { key: "oylama", label: t("tabVotesShort"), badge: votes.filter((vote) => vote.status === "OPEN").length },
     {
       key: "gorevler",
       label: t("tabTasksShort"),
@@ -317,6 +324,18 @@ export async function MeetingDetailView({
           agendaItems={meeting.agendaItems}
           editable={contentEditable && canUpdate}
           presetAgendaItemId={agendaPreset ?? null}
+        />
+      ) : null}
+
+      {tab === "oylama" && canUpdate ? (
+        <VotesTab
+          meetingId={meeting.id}
+          votes={votes}
+          present={meeting.attendees
+            .filter((attendee) => attendee.memberId && attendee.attendance === "PRESENT")
+            .map((attendee) => ({ memberId: attendee.memberId as string, name: attendee.name }))}
+          agendaItems={meeting.agendaItems.map((item) => ({ id: item.id, position: item.position, title: item.title }))}
+          editable={contentEditable}
         />
       ) : null}
 
