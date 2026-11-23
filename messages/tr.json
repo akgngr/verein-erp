@@ -9142,7 +9142,9 @@
         "mobile": "Mobil",
         "noHeaderWidgets": "Görünür widget yok",
         "slots": {
-          "header.right": "Üst çubuk · sağ"
+          "header": {
+            "right": "Üst çubuk · sağ"
+          }
         },
         "resetSuccess": "Varsayılan ayarlar geri yüklendi."
       }

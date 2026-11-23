@@ -345,7 +345,9 @@
       "mobile": "Mobil",
       "noHeaderWidgets": "Keine sichtbaren Widgets",
       "slots": {
-        "header.right": "Kopfzeile · rechts"
+        "header": {
+          "right": "Kopfzeile · rechts"
+        }
       },
       "resetSuccess": "Standardeinstellungen wiederhergestellt."
     }
