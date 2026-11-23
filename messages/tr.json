@@ -6122,6 +6122,11 @@
         "kind": "Kampanya taslağı",
         "confirm": "Taslağı oluştur",
         "done": "Kampanya taslağı oluşturuldu; Kampanyalar'da açıp gönderebilirsiniz."
+      },
+      "dues_reminder_draft": {
+        "kind": "Aidat hatırlatma taslağı",
+        "confirm": "Taslağı oluştur",
+        "done": "Aidat hatırlatma taslağı oluşturuldu; Kampanyalar'da gözden geçirip ayrıca gönderin."
       }
     },
     "calendar": {
