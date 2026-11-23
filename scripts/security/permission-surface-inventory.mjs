@@ -31,11 +31,14 @@ async function visit(directory) {
     if (!entry.isFile() || !/\.[cm]?[jt]sx?$/.test(entry.name)) continue;
     const isEntry = /(^|\/)(page|route|layout|actions?)\.[cm]?[jt]sx?$/.test(path);
     const isPermission = /(^|\/)permissions?\.[cm]?[jt]sx?$/.test(path);
-    if (!isEntry && !isPermission) continue;
     const source = await readFile(join(root, path), "utf8");
+    // Server actions may live in arbitrarily named module files, not only actions.ts.
+    const isServerAction = /(?:^|\n)\s*["\x27]use server["\x27]\s*;?\s*(?:\r?\n|$)/m.test(source);
+    if (!isEntry && !isPermission && !isServerAction) continue;
     const markers = [];
     if (isEntry) markers.push("entry-point");
     if (isPermission) markers.push("permission-file");
+    if (isServerAction) markers.push("server-action-candidate");
     if (/\b(?:definePermissions|PermissionDefinition)\b/.test(source)) markers.push("permission-definition");
     if (/\b(?:requireUser|requirePermission|canAccess|assertPermission)\b/.test(source)) markers.push("guard-reference");
     results.push({ path: path.split(sep).join("/"), markers });
