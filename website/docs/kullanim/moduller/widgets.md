@@ -31,12 +31,6 @@ _2026-11-23_
 
 - **Yeni:** Widget görünürlük ve sıralama ayarları, sıfırlama ve masaüstü/mobil önizleme kullanıcı hesabına bağlandı.
 
-### 0.3.0 — Widget ayar ekranı sözleşmesi
-
-_2026-11-23_
-
-- **Yeni:** Widget görünürlük ve sıralama ayarları, sıfırlama ve masaüstü/mobil önizleme kullanıcı hesabına bağlandı.
-
 ### 0.2.0 — Widget tercihleri ve yönetici politikası
 
 _2026-11-22_

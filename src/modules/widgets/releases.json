@@ -17,21 +17,6 @@
       ]
     },
     {
-      "version": "0.3.0",
-      "date": "2026-11-23",
-      "title": {
-        "tr": "Widget ayar ekranı sözleşmesi",
-        "de": "Vertrag für Widget-Einstellungen"
-      },
-      "changes": [
-        {
-          "type": "feature",
-          "tr": "Widget görünürlük ve sıralama ayarları, sıfırlama ve masaüstü/mobil önizleme kullanıcı hesabına bağlandı.",
-          "de": "Sichtbarkeit, Reihenfolge, Zurücksetzen und Desktop-/Mobilvorschau der Widgets sind an das Nutzerkonto gebunden."
-        }
-      ]
-    },
-    {
       "version": "0.2.0",
       "date": "2026-11-22",
       "title": {

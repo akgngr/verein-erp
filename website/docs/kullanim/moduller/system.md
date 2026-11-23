@@ -14,7 +14,7 @@ Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.
 | Anahtar | `system` |
 | Tür | Çekirdek (her zaman açık) |
 | Sürüm | 1.16.0 |
-| Sayfalar | `/ayarlar/widgetlar`, `/ayarlar`, `/ayarlar/moduller`, `/ayarlar/moduller/saglik`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/lisans`, `/ayarlar/surum-notlari` |
+| Sayfalar | `/ayarlar`, `/ayarlar/widgetlar`, `/ayarlar/moduller`, `/ayarlar/moduller/saglik`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/lisans`, `/ayarlar/surum-notlari` |
 
 ## Diğer modüllere erişim
 
@@ -37,12 +37,6 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Modül Yönetimi | görüntüleme, düzenleme, silme | görüntüleme | — | — | — | — | — |
 
 ## Sürüm notları
-
-### 1.16.0 — Kişisel widget ayarları
-
-_2026-11-23_
-
-- **Yeni:** Widget görünürlük ve sıralama ayarları, sıfırlama ve masaüstü/mobil önizleme kullanıcı hesabına bağlandı.
 
 ### 1.16.0 — Kişisel widget ayarları
 
@@ -88,4 +82,10 @@ _2026-11-18_
 
 - **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
-Daha eski 22 herkese açık sürüm notu.
+### 1.12.3 — Ortak UI bileşenleri (iç değişiklik)
+
+_2026-11-17_
+
+- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
+
+Daha eski 21 herkese açık sürüm notu.
