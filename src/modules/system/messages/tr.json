@@ -51,7 +51,9 @@
     "modulPaketleri": "Modül paketleri",
     "lisans": "Lisans",
     "modulSagligi": "Modül Sağlığı",
-    "widgetlar": "Widget ayarları"
+    "widgetlar": "Widget ayarları",
+    "privacyPresets": "Gizlilik ön ayarları",
+    "egressReport": "Veri çıkışı raporu"
   },
   "meta": {
     "settings": "Ayarlar",
@@ -410,5 +412,86 @@
       "notificationsNoChannel": "Bildirim modülü için aktif bir dağıtım kanalı (E-posta, Telegram vb.) yapılandırılmamış.",
       "generalIssue": "Modül yapılandırması veya iş akışında dikkat edilmesi gereken durumlar var."
     }
+  },
+  "privacyUi": {
+    "title": "Gizlilik ön ayarları",
+    "subtitle": "Dış hizmetlere izin verilen veri akışlarını inceleyin ve değişiklikleri açıkça onaylayın.",
+    "choose": "Gizlilik profili",
+    "presets": {
+      "Strict": {
+        "label": "Sıkı (Strict)",
+        "description": "Dış bağlantıları sınırlar; yerel yapay zekâ önerilir."
+      },
+      "Standard": {
+        "label": "Standart (Standard)",
+        "description": "Seçilmiş hizmetlere kontrollü erişim sağlar."
+      },
+      "Connected": {
+        "label": "Bağlı (Connected)",
+        "description": "Daha fazla harici bağlantıya izin verir; veri çıkışını gözden geçirin."
+      }
+    },
+    "loading": "Önizleme yükleniyor…",
+    "error": "Gizlilik ayarları alınamadı veya değişiklik kaydedilemedi.",
+    "saved": "Gizlilik ön ayarı uygulandı.",
+    "diffTitle": "Uygulamadan önce değişiklikler",
+    "current": "Geçerli",
+    "target": "Hedef",
+    "none": "Yok",
+    "changeCount": "Değişecek modül: {count}",
+    "module": "Modül",
+    "before": "Önce",
+    "after": "Sonra",
+    "enabled": "Açık",
+    "disabled": "Kapalı",
+    "aiTitle": "Yapay zekâ sağlayıcı politikası",
+    "recommended": "Önerilen sağlayıcı",
+    "allowed": "İzin verilenler",
+    "disallowed": "Bu profilin izin vermediği mevcut sağlayıcılar",
+    "selfHostedWarning": "Yerel yapay zekâ sağlayıcısı henüz yapılandırılmamış. Bu profil yerel sağlayıcı önerir.",
+    "approval": "Önizlemedeki modül ve sağlayıcı değişikliklerini okudum; uygulanmasını onaylıyorum.",
+    "apply": "Onayla ve uygula",
+    "applying": "Uygulanıyor…",
+    "noChanges": "Bu profil zaten geçerli; değişiklik yok.",
+    "readOnly": "Bu ayarları değiştirmek için sistem yöneticisi izni gerekir."
+  },
+  "egressUi": {
+    "title": "Aylık veri çıkışı raporu",
+    "subtitle": "Yapılandırılmış bağlantıları, gerçekleşmiş veri aktarımlarını ve sağlayıcı saklama politikalarını ayrı inceleyin.",
+    "month": "Ay",
+    "year": "Yıl",
+    "refresh": "Raporu getir",
+    "loading": "Rapor yükleniyor…",
+    "error": "Rapor yüklenemedi; erişiminizi ve bağlantıyı kontrol edin.",
+    "configuration": "Yapılandırma (Configuration)",
+    "configurationNote": "Bu bölümün durumu rapor anındaki yapılandırmadır; geçmiş aktarımları göstermez.",
+    "activePreset": "Etkin gizlilik profili",
+    "aiProviders": "Yapılandırılmış yapay zekâ sağlayıcıları",
+    "module": "Modül",
+    "state": "Durum",
+    "providers": "Sağlayıcılar",
+    "enabled": "Açık",
+    "disabled": "Kapalı",
+    "none": "Yok",
+    "actualTransfers": "Gerçekleşen aktarımlar (Actual Transfers)",
+    "period": "Rapor dönemi (UTC)",
+    "totalCalls": "Toplam çağrı",
+    "totalVolume": "Toplam hacim",
+    "immutableNotice": "Bir hizmetin kapatılması geçmişte gerçekleşmiş aktarımları geri almaz veya kayıtlardan silmez.",
+    "noTransfers": "Bu dönem için kaydedilmiş veri çıkışı bulunmuyor. Bu, hiç aktarım olmadığına dair mutlak garanti değildir.",
+    "provider": "Sağlayıcı",
+    "category": "Kategori",
+    "calls": "Çağrı",
+    "volume": "Hacim",
+    "legalBasis": "Hukuki dayanak",
+    "providerRetention": "Sağlayıcı tarafı saklama (Provider-side Retention)",
+    "retentionNotice": "Saklama bilgileri sağlayıcı politikası meta verileridir; gerçek silinme/elde tutma durumu veya sözleşme garantisi olarak yorumlanmamalıdır.",
+    "jurisdiction": "Bölge",
+    "policy": "Politika",
+    "days": "Gün",
+    "occurred": "Bu ay kayıt var mı?",
+    "yes": "Evet",
+    "no": "Hayır",
+    "unknown": "Belirtilmemiş"
   }
 }

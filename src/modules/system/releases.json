@@ -2,6 +2,31 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.18.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Gizlilik profilleri ve aylık veri çıkışı raporu (F2b)",
+        "de": "Datenschutzprofile und monatlicher Datenausgangsbericht (F2b)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Strict / Standard / Connected gizlilik profilleri için modül ve yapay zekâ sağlayıcısı değişikliklerini önce gösteren, açık yönetici onayı gerektiren arayüz eklendi.",
+          "de": "Oberfläche zur Vorschau von Modul- und KI-Anbieteränderungen für Strict / Standard / Connected mit ausdrücklicher Administratorfreigabe."
+        },
+        {
+          "type": "feature",
+          "tr": "Aylık veri çıkışı ekranı mevcut yapılandırma, gerçekleşen aktarımlar ve sağlayıcı tarafı saklama politikalarını ayrı bölümlerde gösterir.",
+          "de": "Monatlicher Datenausgangsbericht mit klar getrennten Bereichen für Konfiguration, tatsächliche Übermittlungen und anbieterseitige Speicherung."
+        },
+        {
+          "type": "improvement",
+          "tr": "İki dilli ekranlar, yetki denetimi, önizleme onayı ve egress sözleşme testleri eklendi.",
+          "de": "Zweisprachige Ansichten, Berechtigungsprüfung, Vorschaufreigabe und Datenausgangs-Vertragstests ergänzt."
+        }
+      ]
+    },
+    {
       "version": "1.17.0",
       "date": "2026-11-23",
       "title": {
