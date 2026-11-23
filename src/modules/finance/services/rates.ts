@@ -69,9 +69,12 @@ export async function getExchangeRates(base: string = DEFAULT_BASE_CURRENCY): Pr
 
   try {
     const url = `https://open.er-api.com/v6/latest/${safeBase}`;
-    const res = await channelFetch(["open.er-api.com"], url, {
-      headers: { "User-Agent": "Verein-ERP-Finance-Module/1.0" },
-    });
+    const res = await channelFetch(
+      ["open.er-api.com"],
+      url,
+      { headers: { "User-Agent": "Verein-ERP-Finance-Module/1.0" } },
+      { moduleKey: "finance", category: "EXTERNAL_API", provider: "open_er_api", count: 1, unit: "requests", legalBasis: "LEGITIMATE_INTEREST" },
+    );
 
     if (!res.ok) throw new Error("RATES_API_HTTP_ERROR");
 

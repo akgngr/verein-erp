@@ -35,20 +35,26 @@ export const channels = defineChannels("campaign-whatsapp", [
       const results: ChannelSendResult[] = [];
       for (const message of messages) {
         try {
-          const response = await channelFetch(["graph.facebook.com"], `${GRAPH}/${config.phoneNumberId}/messages`, {
-            method: "POST",
-            headers: { Authorization: `Bearer ${config.accessToken}`, "Content-Type": "application/json" },
-            body: JSON.stringify({
-              messaging_product: "whatsapp",
-              to: message.to.replace(/^\+/, ""),
-              type: "template",
-              template: {
-                name: config.templateName,
-                language: { code: config.templateLanguage || "de" },
-                components: [{ type: "body", parameters: [{ type: "text", text: message.text.replace(/\s*\n\s*/g, " ").slice(0, MAX_LENGTH) }] }],
-              },
-            }),
+          const payload = JSON.stringify({
+            messaging_product: "whatsapp",
+            to: message.to.replace(/^\+/, ""),
+            type: "template",
+            template: {
+              name: config.templateName,
+              language: { code: config.templateLanguage || "de" },
+              components: [{ type: "body", parameters: [{ type: "text", text: message.text.replace(/\s*\n\s*/g, " ").slice(0, MAX_LENGTH) }] }],
+            },
           });
+          const response = await channelFetch(
+            ["graph.facebook.com"],
+            `${GRAPH}/${config.phoneNumberId}/messages`,
+            {
+              method: "POST",
+              headers: { Authorization: `Bearer ${config.accessToken}`, "Content-Type": "application/json" },
+              body: payload,
+            },
+            { moduleKey: "campaign-whatsapp", category: "CAMPAIGN", provider: "whatsapp_meta", volume: Buffer.byteLength(payload), count: 1, unit: "bytes", legalBasis: "CONSENT" },
+          );
           if (!response.ok) {
             results.push({ ok: false, error: `WHATSAPP_HTTP_${response.status}` });
             continue;

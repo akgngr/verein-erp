@@ -13,7 +13,7 @@ Kampanyalar için WhatsApp kanalı (Meta Cloud API, onaylı şablonla). Yalnız 
 |---|---|
 | Anahtar | `campaign-whatsapp` |
 | Tür | Eklenti |
-| Sürüm | 1.1.0 |
+| Sürüm | 1.1.1 |
 | Gerektirir | [Toplu e-posta](./mailings) |
 
 ## Diğer modüllere erişim
