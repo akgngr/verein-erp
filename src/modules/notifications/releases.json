@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.13.0",
+      "date": "2026-11-22",
+      "title": {
+        "tr": "Yönetici abone görünümü",
+        "de": "Verwaltungsansicht für Abonnenten"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yönetici bildirim kanallarının özetini ve kullanıcı bazında durumunu görebilir; arama ve filtreyle Telegram veya tarayıcı aboneliğini onayla kaldırabilir.",
+          "de": "Administratoren sehen Kanalübersicht und Nutzerstatus und können nach Suche und Filter Telegram- oder Browser-Abonnements nach Bestätigung entfernen."
+        }
+      ]
+    },
+    {
       "version": "0.12.0",
       "date": "2026-11-22",
       "title": {
