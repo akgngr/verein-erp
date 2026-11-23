@@ -38,7 +38,7 @@ Verein ERP 42 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekra
 | [Geri bildirim](./moduller/feedback) | Test kullanıcılarının hata ve önerilerini toplar. | 1.1.4 |
 | [Hibeler](./moduller/grants) | Hibe ve proje fonları: finansman planı, ödemeler ve Verwendungsnachweis (kullanım raporu). | 1.0.9 |
 | [Kurslar](./moduller/courses) | Gönüllü kurslar ve Nachhilfe: öğretmenler, dersler, kayıtlar, ücretler ve muhasebe aktarımı. | 1.4.11 |
-| [Muhasebe](./moduller/accounting) | Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura ve bütçe yönetimi. | 1.25.0 |
+| [Muhasebe](./moduller/accounting) | Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura ve bütçe yönetimi. | 1.26.0 |
 | [Öğrenci takibi](./moduller/progress) | Kurs öğrencilerinin yoklaması, sınav ve notları, gelişim notları ve veli raporu. | 1.1.5 |
 | [Öğrenciler](./moduller/students) | Kurs ve Nachhilfe öğrencileri, veliler ve DATEV uyumlu borçlu (Debitor) kayıtları. | 1.4.10 |
 | [Security Monitor](./moduller/security-monitor) | Regularly runs system security tests and monitors results | 1.3.5 |
@@ -60,7 +60,7 @@ Verein ERP 42 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekra
 | [Hava Durumu](./moduller/weather) | Anlık konum bazlı hava durumu, tahminler, panel kartı ve sekreter etkinlik önerileri (Dış API: api.open-meteo.com). | 0.1.1 |
 | [Otomasyon](./moduller/automation) | Kalıcı arka plan görevleri ve iş akışları. | 0.10.14 |
 | [Outlook Takvim](./moduller/calendar-outlook) | Microsoft 365 / Outlook takvimini salt okunur bağlar (OAuth; yönetici kendi Azure uygulamasını girer). | 1.0.0 |
-| [Sekreter](./moduller/secretary) | Kişisel sekreter: sabah özeti ve onaylı öneriler. | 0.12.1 |
+| [Sekreter](./moduller/secretary) | Kişisel sekreter: sabah özeti ve onaylı öneriler. | 0.12.2 |
 | [SMS](./moduller/campaign-sms) | Kampanyalar için SMS kanalı (seven.io veya Twilio). Yalnız SMS izni verenlere gider. | 1.1.0 |
 | [Telegram](./moduller/campaign-telegram) | Kampanyalar için Telegram kanalı (Bot API). Kişi davet bağlantısıyla abone olur; /stop ile ayrılır. | 1.0.0 |
 | [WhatsApp](./moduller/campaign-whatsapp) | Kampanyalar için WhatsApp kanalı (Meta Cloud API, onaylı şablonla). Yalnız WhatsApp izni verenlere gider. | 1.1.0 |
