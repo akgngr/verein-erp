@@ -1,7 +1,7 @@
 # RFC-003 — Public member portal: surface and authentication
 
 **Issue:** #399 · **Gates:** W2 member privacy cockpit + self-service portal (`docs/specs/B001_PRODUCT_ROADMAP.md` §5 W2), SEC2 #409
-**Status:** Proposed. The owner must approve before any implementation issue is opened (security-relevant).
+**Status:** **Accepted** by the owner on 2026-11-23 (§10, ADR 0010).
 **Author:** agent:claude · **Date:** 2026-11-23 · **Related:** ADR 0001 (hybrid multi-tenant), RFC-002 #417, DECISION_LOG
 
 > The portal is the first **internet-facing surface for members**. Today every authenticated route is for the board and staff (Auth.js Credentials, roles). This RFC defines a separate, data-minimal surface with its own threat model, authentication and routing. It does not change the admin surface.
@@ -147,3 +147,19 @@ The feature flag `PORTAL_ENABLED=false` is the default. Each phase passes the ne
 3. Approve the data scope table (§6), in particular "no member directory in v1" and "corrections go through an approval queue".
 4. Is SMS an allowed magic-link channel in v1 (cost, SIM-swap risk), or email only?
 5. Is the portal Community-tier, or a Business+ feature (licensing, RFC-002 model)?
+
+## 10. Owner decisions (2026-11-23)
+1. **Possession-based login with passkey step-up and no member passwords:** approved.
+2. **Deployment:** option **(a) only**, the same runtime with path isolation (separate route group and proxy branch). The separate `PORTAL_ONLY` container (b) is **not** built now. It stays a later option if hosted plans need it, and needs a new decision.
+3. **Data scope (§6):** approved. No member directory in v1; corrections go through the board's approval queue.
+4. **Magic-link channel:** **email only** in v1. SMS may come later as an opt-in per association.
+5. **Tier:** the **core portal is Community**, because these are rights under the GDPR:
+   - own data and correction proposals;
+   - consents and channels;
+   - receipts;
+   - Art. 15 request;
+   - processing log.
+
+   Event registration and document signing in the portal are **Business+** features (licensing model of RFC-002 / ADR 0008).
+
+Implementation follows ADR 0010 in three phases (§8); the issues are opened with this decision.
