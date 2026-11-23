@@ -20,6 +20,8 @@ test("SEC2 inventory is deterministic, read-only, and does not mistake markers f
     fixture("src/modules/demo/actions.ts", "export async function save() {}");
     fixture("src/modules/demo/actions/follow-ups.ts", '"use server"; export async function followUpAction() {}');
     fixture("src/modules/demo/actions/helpers.ts", "export function helper() {}");
+    fixture("src/modules/demo/actions/protected.ts", '"use server"; export const save = createAction({ permission: "demo.write" });');
+    fixture("src/modules/demo/actions/configured.ts", '"use server"; export const save = { permission: "demo.write" };');
     fixture("src/shared/permissions/permissions.ts", "const definition = definePermissions;");
     fixture("src/modules/demo/generated/page.tsx", "requirePermission");
     fixture("src/modules/demo/other.ts", "requirePermission");
@@ -41,14 +43,18 @@ test("SEC2 inventory is deterministic, read-only, and does not mistake markers f
       "src/app/(dashboard)/page.tsx",
       "src/app/api/demo/route.ts",
       "src/modules/demo/actions.ts",
+      "src/modules/demo/actions/configured.ts",
       "src/modules/demo/actions/follow-ups.ts",
+      "src/modules/demo/actions/protected.ts",
       "src/shared/permissions/permissions.ts",
     ]);
     assert.deepEqual(report.candidates[0]?.markers, ["entry-point"]);
     assert.deepEqual(report.candidates[1]?.markers, ["entry-point", "guard-reference"]);
     assert.deepEqual(report.candidates[2]?.markers, ["entry-point"]);
-    assert.deepEqual(report.candidates[3]?.markers, ["server-action"]);
-    assert.deepEqual(report.candidates[4]?.markers, ["permission-file", "permission-definition"]);
+    assert.deepEqual(report.candidates[3]?.markers, ["server-action", "guard-reference"]);
+    assert.deepEqual(report.candidates[4]?.markers, ["server-action"]);
+    assert.deepEqual(report.candidates[5]?.markers, ["server-action", "guard-reference"]);
+    assert.deepEqual(report.candidates[6]?.markers, ["permission-file", "permission-definition"]);
     assert.equal(report.candidates.some(({ path }) => path.endsWith("helpers.ts")), false);
     assert.equal(report.candidates.some(({ path }) => path.includes("generated")), false);
   } finally {

@@ -123,7 +123,8 @@
     "createdAt": "Erstellt",
     "updatedAt": "Zuletzt geändert",
     "notSpecified": "Nicht angegeben",
-    "quorumValueShort": "{required} Teilnehmer ({present} anwesend)"
+    "quorumValueShort": "{required} Teilnehmer ({present} anwesend)",
+    "tabVotesShort": "Geheime Abstimmung"
   },
   "quorum": {
     "reached": "Die Beschlussfähigkeit wurde festgestellt ({present}/{required})",
@@ -579,6 +580,12 @@
           "location": "Ort"
         }
       }
+    },
+    "tasks": {
+      "vote_purge": {
+        "label": "Aufbewahrung geheimer Abstimmungen",
+        "description": "Löscht täglich Berechtigungslisten und Stimmen abgelaufener geheimer Abstimmungen; Summen und Prüfsumme bleiben."
+      }
     }
   },
   "calendar": {
@@ -614,6 +621,85 @@
     "invited": {
       "title": "Sie wurden zu einer Sitzung hinzugefügt: {title}",
       "body": "Sitzungsdetails öffnen."
+    }
+  },
+  "vote": {
+    "intro": "Geheime Abstimmung (Präsenz): Am Check-in erhält jedes in der Anwesenheit als \"anwesend\" markierte Mitglied einen Einmal-Stimmcode. Das Mitglied nutzt den Code in der Wahlkabine (/oy). Sichtbar ist, wer einen Code erhalten hat; wer wie abgestimmt hat, wird nirgends gespeichert.",
+    "options": {
+      "yes": "Ja",
+      "no": "Nein",
+      "abstain": "Enthaltung",
+      "list": "Optionen: {options}"
+    },
+    "status": {
+      "OPEN": "Offen",
+      "CLOSED": "Geschlossen"
+    },
+    "issuedCount": "{count} Codes ausgegeben",
+    "minBallotsInfo": "mindestens {count} Stimmen",
+    "issued": "Code ausgegeben",
+    "issue": "Code ausgeben",
+    "codeFor": "Stimmcode: {name}",
+    "codeHint": "Code nur dem Mitglied geben. Er gilt einmal und kann nicht erneut angezeigt werden.",
+    "print": "Drucken",
+    "hideCode": "Code ausblenden",
+    "noPresent": "Kein Mitglied ist als \"anwesend\" markiert. Bitte zuerst im Reiter Teilnehmende die Anwesenheit erfassen.",
+    "boothHint": "Wahlkabine: Adresse /oy dieser Seite (auf dem Kabinengerät nicht anmelden).",
+    "close": "Abstimmung schließen",
+    "closeConfirm": "Abstimmung schließen? Nicht genutzte Codes werden ungültig, das Ergebnis wird berechnet.",
+    "closed": "Abstimmung geschlossen, Ergebnis gespeichert.",
+    "closedWithheld": "Abstimmung geschlossen. {count} Stimmen liegen unter der Mindestzahl: Ergebnis zurückgehalten; offen abstimmen oder vertagen.",
+    "withheld": "{count} Stimmen unter der Mindestzahl {min}: Ergebnis nicht veröffentlicht (Schutz des Wahlgeheimnisses). Offen abstimmen oder vertagen.",
+    "ballotCount": "Abgegebene Stimmen: {count}",
+    "hash": "Prüfsumme der Stimmliste (SHA-256)",
+    "receipts": "Quittungscodes ({count}, ohne Wahl)",
+    "cannotCheck": "Nicht überprüfbar: dass der Server während der Stimmabgabe nicht heimlich verknüpft (vertrauenswürdiger Server) und dass eine einzelne Stimme vom Wählenden belegt werden kann (bewusst nicht; verhindert Druck).",
+    "retention": "Berechtigungsliste und Stimmen werden am {date} gelöscht; Summen, Quittungsliste und Prüfsumme bleiben.",
+    "new": "Neue geheime Abstimmung",
+    "question": "Frage oder Wahl",
+    "kind": "Art",
+    "kinds": {
+      "yesNoAbstain": "Ja / Nein / Enthaltung",
+      "candidates": "Kandidatenliste"
+    },
+    "agendaItem": "Tagesordnungspunkt",
+    "noAgendaItem": "Kein Tagesordnungspunkt",
+    "minBallots": "Mindestzahl Stimmen",
+    "candidates": "Kandidierende (eine Person pro Zeile)",
+    "minBallotsReason": "Begründung für weniger als 5 (mindestens {min}; wird protokolliert)",
+    "open": "Abstimmung öffnen",
+    "opened": "Geheime Abstimmung geöffnet.",
+    "errors": {
+      "question": "Die Frage braucht mindestens 3 Zeichen.",
+      "options": "Mindestens zwei Optionen nötig.",
+      "tooLow": "Die Mindestzahl darf nicht unter 3 liegen.",
+      "reasonRequired": "Bitte eine Begründung für weniger als 5 angeben.",
+      "meetingNotFound": "Sitzung nicht gefunden.",
+      "voteNotOpen": "Die Abstimmung ist nicht offen.",
+      "notPresent": "Dieses Mitglied ist nicht als \"anwesend\" markiert.",
+      "alreadyIssued": "Für diese Abstimmung hat das Mitglied bereits einen Code.",
+      "invalidCode": "Code ungültig oder bereits genutzt.",
+      "invalidChoice": "Ungültige Auswahl."
+    },
+    "booth": {
+      "title": "Geheime Wahlkabine",
+      "intro": "Geben Sie den Stimmcode vom Check-in ein.",
+      "codeLabel": "Stimmcode",
+      "open": "Stimmzettel öffnen",
+      "cast": "Stimme abgeben",
+      "cancel": "Abbrechen",
+      "secretNote": "Ihre Stimme wird ohne Bezug zu Ihrem Namen gespeichert. Nach dem Absenden ist keine Änderung möglich.",
+      "thanks": "Ihre Stimme wurde gezählt.",
+      "receiptText": "Ihr Quittungscode:",
+      "receiptLabel": "Quittungscode",
+      "receiptHint": "Steht dieser Code nach Schluss in der veröffentlichten Quittungsliste, wurde Ihre Stimme gezählt. Der Code verrät nicht, wie Sie abgestimmt haben.",
+      "next": "Nächste Person",
+      "howTitle": "Wie wird das Wahlgeheimnis gewahrt?",
+      "howText": "Bei der Ausgabe wird nur \"hat einen Code erhalten\" gespeichert. Die Stimme wird mit dem Code, ohne Namen abgegeben; der Stimmeintrag enthält keinen Namen, keine Zeit, keine Reihenfolge und kein Gerät. Beim Schließen werden Codes gelöscht und die Stimmliste gemischt.",
+      "errors": {
+        "invalidCode": "Code ungültig oder bereits genutzt.",
+        "invalidChoice": "Bitte eine Option wählen."
+      }
     }
   }
 }
