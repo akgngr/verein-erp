@@ -12,11 +12,12 @@ import { secretaryPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "secretary",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "0.13.0",
+  version: "0.13.1",
   label: "Sekreter",
   description: "Kişisel sekreter: sabah özeti ve onaylı öneriler.",
   category: "EXTENSION",
   hasSchema: true,
+  recommends: ["documents"], // S5: OCR review continues in the Documents module's guarded form.
   access: [
     { module: "notifications", operations: ["write"] }, // N1c: merkezi bildirim (ADR 0006)
     { module: "system", operations: ["read"] }, // kullanılabilir modüller (özet süzmesi)

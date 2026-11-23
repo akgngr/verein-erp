@@ -3,6 +3,7 @@ import { getTranslations } from "next-intl/server";
 import type { Role } from "@/shared/roles";
 import { SecretaryProposalActions } from "../components/proposal-actions";
 import { getPendingProposals } from "../services/pending-proposals";
+import { groupSecretaryProposals } from "./inbox-groups";
 
 /** Only sanitized previews from server service are ever sent to the client. */
 export async function SecretaryInboxView({ user }: { user: { id: string; role: Role } }) {
@@ -30,6 +31,24 @@ export async function SecretaryInboxView({ user }: { user: { id: string; role: R
     snooze: t("ui.proposalSnooze"),
     edit: t("ui.proposalEdit"),
   };
+  const { mailDrafts, other } = groupSecretaryProposals(proposals);
+
+  const renderProposals = (items: typeof proposals) => (
+    <ul className="divide-y divide-ink-200/70">
+      {items.map((proposal) => (
+        <li key={proposal.id} className="space-y-2 py-3 first:pt-0 last:pb-0">
+          <p className="break-words text-sm font-semibold">{proposal.title}</p>
+          {proposal.detail ? <p className="break-words text-sm text-ink-500">{proposal.detail}</p> : null}
+          <p className="text-xs text-ink-500">
+            {proposal.moduleKey === "mail" && proposal.actionKey === "replyDraft" ? t("ui.mailReplyDraft") :
+              proposal.moduleKey === "mail" && proposal.actionKey === "taskDraft" ? t("ui.mailTaskDraft") : proposal.moduleKey}
+            {" · "}{labels.expires}: <time dateTime={proposal.expiresAt}>{proposal.expiresAt.slice(0, 10)}</time>
+          </p>
+          <SecretaryProposalActions proposal={proposal} labels={labels} />
+        </li>
+      ))}
+    </ul>
+  );
 
   return (
     <section className="rounded-xl border border-ink-200/80 bg-surface p-4 shadow-sm">
@@ -37,18 +56,17 @@ export async function SecretaryInboxView({ user }: { user: { id: string; role: R
       <div>
         {unavailable ? <p role="status" className="text-sm text-ink-500">{t("ui.proposalUnavailable")}</p> :
           proposals.length === 0 ? <p className="text-sm text-ink-500">{t("ui.proposalEmpty")}</p> :
-          <ul className="divide-y divide-ink-200/70">
-            {proposals.map((proposal) => (
-              <li key={proposal.id} className="space-y-2 py-3 first:pt-0 last:pb-0">
-                <p className="text-sm font-semibold break-words">{proposal.title}</p>
-                {proposal.detail ? <p className="text-sm break-words text-ink-500">{proposal.detail}</p> : null}
-                <p className="text-xs text-ink-500">
-                  {proposal.moduleKey} · {proposal.actionKey} · {labels.expires}: <time dateTime={proposal.expiresAt}>{proposal.expiresAt.slice(0, 10)}</time>
-                </p>
-                <SecretaryProposalActions proposal={proposal} labels={labels} />
-              </li>
-            ))}
-          </ul>}
+          <div className="space-y-5">
+            {mailDrafts.length ? <section aria-label={t("ui.mailTriageTitle")}>
+              <h3 className="text-sm font-semibold">{t("ui.mailTriageTitle")}</h3>
+              <p className="mt-1 text-xs text-ink-500">{t("ui.mailTriageHelp")}</p>
+              {renderProposals(mailDrafts)}
+            </section> : null}
+            {other.length ? <section aria-label={t("ui.otherProposalsTitle")}>
+              <h3 className="text-sm font-semibold">{t("ui.otherProposalsTitle")}</h3>
+              {renderProposals(other)}
+            </section> : null}
+          </div>}
       </div>
     </section>
   );
