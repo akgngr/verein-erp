@@ -8800,7 +8800,8 @@
         "delete": "silme"
       },
       "accounting": "Kurulum sihirbazı, seçilen kurum türüne göre muhasebe kategorilerini, hesaplarını ve vergi ayarlarını oluşturur.",
-      "organization": "Lisans doğrulaması için kurum adı ve sicil/vergi numarası okunur (lisans bu kuruma bağlıdır)."
+      "organization": "Lisans doğrulaması için kurum adı ve sicil/vergi numarası okunur (lisans bu kuruma bağlıdır).",
+      "users": "Modül ve iş akışı sağlığı kokpitinde yönetici kullanıcısının varlığı denetlenir."
     },
     "gate": {
       "manage": "Modül yönetimine git",
