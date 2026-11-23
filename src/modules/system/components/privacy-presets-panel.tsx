@@ -22,12 +22,7 @@ export function PrivacyPresetsPanel({ idPrefix = "system-privacy-presets", canMa
   useEffect(() => {
     const seq = ++requestId.current;
     let mounted = true;
-    // Never carry confirmation across a new diff or a failed preview.
-    setApproved(false);
-    setPreview(null);
-    setError(false);
-    setSaved(false);
-    setLoading(true);
+    // Load the server preview; selection changes reset state in their event handler.
     void previewPrivacyPresetAction({ presetId: selected })
       .then((result) => {
         if (!mounted || requestId.current !== seq) return;
@@ -74,7 +69,14 @@ export function PrivacyPresetsPanel({ idPrefix = "system-privacy-presets", canMa
         <select
           id={`${idPrefix}-preset`}
           value={selected}
-          onChange={(event) => setSelected(event.target.value as PrivacyPresetId)}
+          onChange={(event) => {
+            setApproved(false);
+            setPreview(null);
+            setError(false);
+            setSaved(false);
+            setLoading(true);
+            setSelected(event.target.value as PrivacyPresetId);
+          }}
           disabled={saving}
           className="w-full rounded-lg border border-border bg-surface px-3 py-2 text-foreground sm:max-w-sm"
         >
