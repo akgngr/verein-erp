@@ -45,3 +45,28 @@ test("WP4: malformed preferences and failed policy checks never grant access", (
   assert.ok(!ids(result).includes("system.second"));
   assert.equal(result.find((item) => item.id === "system.first")?.enabled, true);
 });
+
+test("WP4: reset restores trusted registry order after a user reorders widgets", () => {
+  const defaults = editWidgetPreferences(definitions, [], all, { type: "reset" });
+  const customized = editWidgetPreferences(definitions, defaults, all, {
+    type: "move", id: "system.second", direction: -1,
+  });
+  assert.notDeepEqual(ids(customized), ids(defaults));
+  const restored = editWidgetPreferences(definitions, customized, all, { type: "reset" });
+  assert.deepEqual(restored, defaults);
+});
+
+test("WP4: reset uses trusted priority and ignores manipulated stored order", () => {
+  const priorityDefinitions: WidgetDefinition[] = [
+    { id: "system.later", moduleId: "system", slot: "header.right", size: "compact", titleKey: "later", priority: 20 },
+    { id: "system.earlier", moduleId: "system", slot: "header.right", size: "compact", titleKey: "earlier", priority: 5, defaultEnabled: true },
+  ];
+  const stored: WidgetPreference[] = [
+    { id: "system.later", enabled: true, order: -100 },
+    { id: "system.earlier", enabled: false, order: 100 },
+  ];
+  const restored = editWidgetPreferences(priorityDefinitions, stored, all, { type: "reset" });
+  assert.deepEqual(ids(restored), ["system.earlier", "system.later"]);
+  assert.deepEqual(restored.map((item) => item.enabled), [true, false]);
+  assert.deepEqual(restored.map((item) => item.order), [0, 1]);
+});
