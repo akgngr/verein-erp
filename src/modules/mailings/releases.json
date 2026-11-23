@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "2.5.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Gizlilik dostu e-posta izleme",
+        "de": "Datenschutzfreundliches E-Mail-Tracking"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Yeni kampanyalarda açılma/tıklama izleme artık varsayılan olarak kapalı; gerekirse kampanya sihirbazında açılabilir. Mevcut kampanyalar değişmedi.",
+          "de": "Öffnungs- und Klick-Tracking ist bei neuen Kampagnen jetzt standardmäßig aus und kann im Kampagnen-Assistenten eingeschaltet werden. Bestehende Kampagnen bleiben unverändert."
+        },
+        {
+          "type": "security",
+          "tr": "Tarayıcısı Global Privacy Control (Sec-GPC) gönderen alıcıların açılma ve tıklamaları kaydedilmez; bağlantılar yine çalışır.",
+          "de": "Bei Empfängern, deren Client Global Privacy Control (Sec-GPC) sendet, werden Öffnungen und Klicks nicht erfasst; Links funktionieren weiterhin."
+        }
+      ]
+    },
+    {
       "version": "2.4.9",
       "date": "2026-11-18",
       "title": {
