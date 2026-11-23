@@ -13,8 +13,9 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 |---|---|
 | Anahtar | `secretary` |
 | Tür | Eklenti |
-| Sürüm | 0.13.1 |
+| Sürüm | 0.13.2 |
 | Sayfalar | `/sekreter` |
+| Önerir | [Evrak Kayıt](./documents) |
 
 ## Diğer modüllere erişim
 
@@ -39,11 +40,17 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 
 ## Sürüm notları
 
-### 0.13.1 — TAX_ADVISOR rolü izin tanımı
+### 0.13.2 — TAX_ADVISOR rolü izin tanımı
 
 _2026-11-23_
 
 - **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
+
+### 0.13.1 — Posta taslakları ve evrak incelemesine geçiş
+
+_2026-11-23_
+
+- **İyileştirme:** Posta kaynaklı onaylar ayrı ve taslak olarak gösterilir; evrak OCR incelemesi evrak modülünün kendi yetki ve etkinlik kapılı formuna yönlendirir. Takip, rapor, kanal izni ve vekâlet ekranları korunur.
 
 ### 0.13.0 — Vekâlet ve kanal izinleri ekranları
 
@@ -82,10 +89,4 @@ _2026-11-20_
 
 - **Düzeltme:** Takip listesi yüklenemediğinde hata ekranından yeniden deneme olanağı eklendi.
 
-### 0.11.3 — Merkezi bildirimler
-
-_2026-11-20_
-
-- **Yeni:** Onay bekleyen yeni sekreter önerileri bildirim olarak görünür (içerik yok).
-
-Daha eski 22 herkese açık sürüm notu.
+Daha eski 23 herkese açık sürüm notu.
