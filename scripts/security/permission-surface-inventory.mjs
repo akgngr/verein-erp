@@ -43,7 +43,7 @@ async function visit(directory) {
     if (isPermission) markers.push("permission-file");
     if (isServerAction) markers.push("server-action");
     if (/\b(?:definePermissions|PermissionDefinition)\b/.test(source)) markers.push("permission-definition");
-    if (/\b(?:requireUser|requirePermission|canAccess|assertPermission)\b/.test(source)) markers.push("guard-reference");
+    if (/\b(?:requireUser|requirePermission|canAccess|assertPermission|createAction)\b|\bpermission\s*:/.test(source)) markers.push("guard-reference");
     results.push({ path: path.split(sep).join("/"), markers });
   }
 }
