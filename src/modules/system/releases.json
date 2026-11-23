@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.16.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Kişisel widget ayarları",
+        "de": "Persönliche Widget-Einstellungen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Widget görünürlük ve sıralama ayarları, sıfırlama ve masaüstü/mobil önizleme kullanıcı hesabına bağlandı.",
+          "de": "Sichtbarkeit, Reihenfolge, Zurücksetzen und Desktop-/Mobilvorschau der Widgets sind an das Nutzerkonto gebunden."
+        }
+      ]
+    },
+    {
       "version": "1.15.0",
       "date": "2026-11-23",
       "title": {

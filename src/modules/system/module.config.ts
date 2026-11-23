@@ -1,4 +1,4 @@
-import { Activity, Boxes, History, KeyRound, Settings, Wand2, PackageCheck } from "lucide-react";
+import { Activity, Boxes, History, KeyRound, Settings, Wand2, PackageCheck, PanelsTopLeft } from "lucide-react";
 import type { ModuleConfig } from "@/shared/types/module";
 import {
   settingsPermissions,
@@ -8,7 +8,7 @@ import {
 export const moduleConfig: ModuleConfig = {
   key: "system",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.15.0",
+  version: "1.16.0",
   label: "Modül Yönetimi",
   description: "Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.",
   category: "CORE",
@@ -21,6 +21,7 @@ export const moduleConfig: ModuleConfig = {
     { module: "organization", operations: ["read"] },
     // Sağlık kokpiti (F3): admin kullanıcısı varlığı denetlenir.
     { module: "users", operations: ["read"] },
+    { module: "widgets", operations: ["read", "write"] },
   ],
   nav: [
     {
@@ -30,6 +31,15 @@ export const moduleConfig: ModuleConfig = {
       icon: Settings,
       group: "settings",
       order: 0,
+      permission: { definition: settingsPermissions, action: "view" },
+    },
+    {
+      href: "/ayarlar/widgetlar",
+      label: "Widget ayarları",
+      labelKey: "widgetlar",
+      icon: PanelsTopLeft,
+      group: "settings",
+      order: 2,
       permission: { definition: settingsPermissions, action: "view" },
     },
     {
