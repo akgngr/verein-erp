@@ -70,3 +70,15 @@ test("WP4: reset uses trusted priority and ignores manipulated stored order", ()
   assert.deepEqual(restored.map((item) => item.enabled), [true, false]);
   assert.deepEqual(restored.map((item) => item.order), [0, 1]);
 });
+
+test("WP4: duplicate stored IDs cannot override trusted visibility or order", () => {
+  const duplicate: WidgetPreference[] = [
+    { id: "system.second", enabled: true, order: -999 },
+    { id: "system.second", enabled: false, order: 999 },
+  ];
+  const result = editWidgetPreferences(definitions, duplicate, all, {
+    type: "move", id: "system.footer", direction: -1,
+  });
+  assert.equal(result.find((item) => item.id === "system.second")?.enabled, false);
+  assert.deepEqual(ids(result), ids(editWidgetPreferences(definitions, [], all, { type: "reset" })));
+});
