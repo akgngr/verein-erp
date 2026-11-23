@@ -6,7 +6,7 @@
  * No files are modified and no application code is executed.
  */
 import { readdir, readFile } from "node:fs/promises";
-import { join, relative, sep } from "node:path";
+import { join, sep } from "node:path";
 
 const root = process.cwd();
 const targets = ["src/app", "src/modules", "src/shared/permissions"];
