@@ -2,7 +2,7 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
-      "version": "1.3.17",
+      "version": "1.4.1",
       "date": "2026-11-23",
       "title": {
         "tr": "TAX_ADVISOR rolü izin tanımı",
@@ -13,6 +13,26 @@
           "type": "security",
           "tr": "TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.",
           "de": "Standardmäßig geschlossener Berechtigungseintrag für die Systemrolle TAX_ADVISOR ergänzt."
+        }
+      ]
+    },
+    {
+      "version": "1.4.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Yüz yüze gizli oylama",
+        "de": "Geheime Abstimmung in Präsenz"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Toplantıda gizli oylama: giriş masasında katılan üyelere tek kullanımlık oy kodu verilir, oy /oy kabininde adsız atılır. Evet/Hayır/Çekimser veya aday listesi; evet/hayır oylamasında karar otomatik kaydedilir.",
+          "de": "Geheime Abstimmung in der Sitzung: Am Check-in erhalten anwesende Mitglieder einen Einmal-Stimmcode, abgestimmt wird anonym in der Wahlkabine /oy. Ja/Nein/Enthaltung oder Kandidatenliste; bei Ja/Nein wird der Beschluss automatisch erfasst."
+        },
+        {
+          "type": "security",
+          "tr": "Oy kaydında ad, zaman, sıra veya cihaz bilgisi yok; kapanışta kodlar silinir ve oy listesi karıştırılır. Seçimi göstermeyen makbuz kodu, oy listesi özeti ve en az oy sayısı koruması (varsayılan 5). Uygunluk kaydı ve oylar en geç 12 ay sonra silinir.",
+          "de": "Der Stimmeintrag enthält keinen Namen, keine Zeit, keine Reihenfolge und kein Gerät; beim Schließen werden Codes gelöscht und die Stimmliste gemischt. Quittungscode ohne Wahlinhalt, Prüfsumme der Stimmliste und Mindeststimmenschutz (Standard 5). Berechtigungsliste und Stimmen werden spätestens nach 12 Monaten gelöscht."
         }
       ]
     },

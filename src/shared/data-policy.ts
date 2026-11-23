@@ -45,6 +45,8 @@ export const GLOBAL_SENSITIVE_FIELD = /ByLabel$/;
 export const DATA_POLICY = {
   // ── K0 ──
   AccountingBookingFile: { owner: "accounting", category: "K0", reason: "Fiş/makbuz görüntüleri", sensitiveFields: [] },
+  MeetingVoteCredential: { owner: "meetings", category: "K0", reason: "Gizli oylama: tek kullanımlık oy kimliği özeti (kapanışta silinir)", sensitiveFields: ["credentialHash"] },
+  MeetingVoteBallot: { owner: "meetings", category: "K0", reason: "Gizli oylama: oy sandığı (anonim; hiçbir araç/dışa aktarım okuyamaz)", sensitiveFields: ["choice", "ballotNonce"] },
   AiConversation: { owner: "ai", category: "K0", reason: "Kullanıcı sohbetleri", sensitiveFields: [], personalOwnerField: "userId" },
   AiMessage: { owner: "ai", category: "K0", reason: "Kullanıcı sohbetleri", sensitiveFields: [] },
   AiProviderCredential: { owner: "ai", category: "K0", reason: "API anahtarı (şifreli)", sensitiveFields: [] },
@@ -106,6 +108,7 @@ export const DATA_POLICY = {
   SepaDebitRun: { owner: "sepa", category: "K1", reason: "Tahsilat dosyası (IBAN içeren XML şifreli)", sensitiveFields: ["xmlEnc", "createdByLabel"] },
   SepaDebitItem: { owner: "sepa", category: "K1", reason: "Kişi bazlı tahsilat kalemi (ad, maskeli IBAN, yetki ref.)", sensitiveFields: ["debtorName", "ibanMasked", "mandateReference", "remittance", "sourceKey", "returnReason"] },
   MeetingAttendee: { owner: "meetings", category: "K1", reason: "Katılımcı adları", sensitiveFields: [ "note"] },
+  MeetingVoteEligibility: { owner: "meetings", category: "K1", reason: "Gizli oylama: kim oy pusulası aldı (yoklama gibi; oy içeriği yok)", sensitiveFields: ["memberId"] },
   MemberDue: { owner: "members", category: "K1", reason: "Kişi bazlı aidatlar", sensitiveFields: [] },
   MemberPayment: { owner: "members", category: "K1", reason: "Kişi bazlı ödemeler", sensitiveFields: [] },
   ProgressAssessment: { owner: "progress", category: "K1", reason: "Öğrenci bazlı değerlendirmeler", sensitiveFields: [] },
@@ -158,6 +161,7 @@ export const DATA_POLICY = {
   CalendarFeedToken: { owner: "calendar", category: "K0", reason: "ICS abonelik sırrı (yalnız hash)", sensitiveFields: ["tokenHash"], personalOwnerField: "userId" },
   Meeting: { owner: "meetings", category: "K3", reason: "Toplantılar; kişi adları yok", sensitiveFields: ["createdByLabel", "approvedByLabel"] },
   MeetingDecision: { owner: "meetings", category: "K3", reason: "Kararlar", sensitiveFields: [] },
+  MeetingVote: { owner: "meetings", category: "K3", reason: "Gizli oylama: soru, seçenekler, toplamlar ve özet (kişi verisi yok)", sensitiveFields: ["createdByLabel"] },
   Member: { owner: "members", category: "K3", reason: "Üye kişisel verisi; yapay zekâya yalnız sayım/dağılım", sensitiveFields: ["firstName", "lastName", "email", "phone", "street", "houseNumber", "postalCode", "city", "birthDate", "kimlikNo", "notes", "sepaIban", "sepaBic", "sepaAccountHolder", "sepaMandateReference"] },
   ProgressAttendance: { owner: "progress", category: "K3", reason: "Öğrenci bazlı yoklama; yapay zekâya yalnız oranlar", sensitiveFields: [] },
   ProgressGrade: { owner: "progress", category: "K3", reason: "Öğrenci notları; yapay zekâya yalnız ortalama", sensitiveFields: [] },

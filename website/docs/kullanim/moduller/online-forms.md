@@ -13,7 +13,7 @@ e-Sign: kişiye süreli bağlantı, form tamamlama, Datenschutz onayı, imza ve 
 |---|---|
 | Anahtar | `online-forms` |
 | Tür | Resmî modül |
-| Sürüm | 1.2.8 |
+| Sürüm | 1.3.1 |
 | Sayfalar | `/online-formlar` |
 | Gerektirir | [Toplu e-posta](./mailings) |
 | Önerir | [Üyeler](./members), [Öğrenciler](./students) |
@@ -41,7 +41,7 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 
 ## Sürüm notları
 
-### 1.2.8 — TAX_ADVISOR rolü izin tanımı
+### 1.3.1 — TAX_ADVISOR rolü izin tanımı
 
 _2026-11-23_
 

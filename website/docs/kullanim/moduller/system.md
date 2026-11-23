@@ -13,8 +13,8 @@ Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.
 |---|---|
 | Anahtar | `system` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.17.1 |
-| Sayfalar | `/ayarlar`, `/ayarlar/widgetlar`, `/ayarlar/moduller`, `/ayarlar/moduller/saglik`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/lisans`, `/ayarlar/surum-notlari` |
+| Sürüm | 1.18.1 |
+| Sayfalar | `/ayarlar`, `/ayarlar/widgetlar`, `/ayarlar/moduller`, `/ayarlar/moduller/saglik`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/lisans`, `/ayarlar/gizlilik`, `/ayarlar/veri-cikisi`, `/ayarlar/surum-notlari` |
 
 ## Diğer modüllere erişim
 
@@ -39,11 +39,19 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 
 ## Sürüm notları
 
-### 1.17.1 — TAX_ADVISOR rolü izin tanımı
+### 1.18.1 — TAX_ADVISOR rolü izin tanımı
 
 _2026-11-23_
 
 - **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
+
+### 1.18.0 — Gizlilik profilleri ve aylık veri çıkışı raporu (F2b)
+
+_2026-11-23_
+
+- **Yeni:** Strict / Standard / Connected gizlilik profilleri için modül ve yapay zekâ sağlayıcısı değişikliklerini önce gösteren, açık yönetici onayı gerektiren arayüz eklendi.
+- **Yeni:** Aylık veri çıkışı ekranı mevcut yapılandırma, gerçekleşen aktarımlar ve sağlayıcı tarafı saklama politikalarını ayrı bölümlerde gösterir.
+- **İyileştirme:** İki dilli ekranlar, yetki denetimi, önizleme onayı ve egress sözleşme testleri eklendi.
 
 ### 1.17.0 — Veri çıkışı defteri ve gizlilik ön ayarları (F2a)
 
@@ -85,10 +93,4 @@ _2026-11-20_
 
 - **İyileştirme:** Modül kapatma eyleminde (toggleModuleAction) basamaklı bağımlı dizilimi toReversed ile yenilendi.
 
-### 1.12.7 — Panel sağ sütunu
-
-_2026-11-19_
-
-- **İyileştirme:** Panel'de modüllerin bağlanabildiği sağ sütun (mobilde üstte) eklendi; sütun yalnız gösterilecek kart varsa görünür.
-
-Daha eski 23 herkese açık sürüm notu.
+Daha eski 24 herkese açık sürüm notu.

@@ -142,6 +142,8 @@
     "lisans": "Lizenz",
     "modulSagligi": "Modul-Gesundheit",
     "widgetlar": "Widget-Einstellungen",
+    "privacyPresets": "Datenschutzprofile",
+    "egressReport": "Datenausgangsbericht",
     "tasks": "Aufgaben",
     "kullanicilar": "Benutzer",
     "weather": "Wetter",
@@ -6450,7 +6452,8 @@
       "createdAt": "Erstellt",
       "updatedAt": "Zuletzt geändert",
       "notSpecified": "Nicht angegeben",
-      "quorumValueShort": "{required} Teilnehmer ({present} anwesend)"
+      "quorumValueShort": "{required} Teilnehmer ({present} anwesend)",
+      "tabVotesShort": "Geheime Abstimmung"
     },
     "quorum": {
       "reached": "Die Beschlussfähigkeit wurde festgestellt ({present}/{required})",
@@ -6903,6 +6906,12 @@
             "location": "Ort"
           }
         }
+      },
+      "tasks": {
+        "vote_purge": {
+          "label": "Aufbewahrung geheimer Abstimmungen",
+          "description": "Löscht täglich Berechtigungslisten und Stimmen abgelaufener geheimer Abstimmungen; Summen und Prüfsumme bleiben."
+        }
       }
     },
     "calendar": {
@@ -6938,6 +6947,85 @@
       "invited": {
         "title": "Sie wurden zu einer Sitzung hinzugefügt: {title}",
         "body": "Sitzungsdetails öffnen."
+      }
+    },
+    "vote": {
+      "intro": "Geheime Abstimmung (Präsenz): Am Check-in erhält jedes in der Anwesenheit als \"anwesend\" markierte Mitglied einen Einmal-Stimmcode. Das Mitglied nutzt den Code in der Wahlkabine (/oy). Sichtbar ist, wer einen Code erhalten hat; wer wie abgestimmt hat, wird nirgends gespeichert.",
+      "options": {
+        "yes": "Ja",
+        "no": "Nein",
+        "abstain": "Enthaltung",
+        "list": "Optionen: {options}"
+      },
+      "status": {
+        "OPEN": "Offen",
+        "CLOSED": "Geschlossen"
+      },
+      "issuedCount": "{count} Codes ausgegeben",
+      "minBallotsInfo": "mindestens {count} Stimmen",
+      "issued": "Code ausgegeben",
+      "issue": "Code ausgeben",
+      "codeFor": "Stimmcode: {name}",
+      "codeHint": "Code nur dem Mitglied geben. Er gilt einmal und kann nicht erneut angezeigt werden.",
+      "print": "Drucken",
+      "hideCode": "Code ausblenden",
+      "noPresent": "Kein Mitglied ist als \"anwesend\" markiert. Bitte zuerst im Reiter Teilnehmende die Anwesenheit erfassen.",
+      "boothHint": "Wahlkabine: Adresse /oy dieser Seite (auf dem Kabinengerät nicht anmelden).",
+      "close": "Abstimmung schließen",
+      "closeConfirm": "Abstimmung schließen? Nicht genutzte Codes werden ungültig, das Ergebnis wird berechnet.",
+      "closed": "Abstimmung geschlossen, Ergebnis gespeichert.",
+      "closedWithheld": "Abstimmung geschlossen. {count} Stimmen liegen unter der Mindestzahl: Ergebnis zurückgehalten; offen abstimmen oder vertagen.",
+      "withheld": "{count} Stimmen unter der Mindestzahl {min}: Ergebnis nicht veröffentlicht (Schutz des Wahlgeheimnisses). Offen abstimmen oder vertagen.",
+      "ballotCount": "Abgegebene Stimmen: {count}",
+      "hash": "Prüfsumme der Stimmliste (SHA-256)",
+      "receipts": "Quittungscodes ({count}, ohne Wahl)",
+      "cannotCheck": "Nicht überprüfbar: dass der Server während der Stimmabgabe nicht heimlich verknüpft (vertrauenswürdiger Server) und dass eine einzelne Stimme vom Wählenden belegt werden kann (bewusst nicht; verhindert Druck).",
+      "retention": "Berechtigungsliste und Stimmen werden am {date} gelöscht; Summen, Quittungsliste und Prüfsumme bleiben.",
+      "new": "Neue geheime Abstimmung",
+      "question": "Frage oder Wahl",
+      "kind": "Art",
+      "kinds": {
+        "yesNoAbstain": "Ja / Nein / Enthaltung",
+        "candidates": "Kandidatenliste"
+      },
+      "agendaItem": "Tagesordnungspunkt",
+      "noAgendaItem": "Kein Tagesordnungspunkt",
+      "minBallots": "Mindestzahl Stimmen",
+      "candidates": "Kandidierende (eine Person pro Zeile)",
+      "minBallotsReason": "Begründung für weniger als 5 (mindestens {min}; wird protokolliert)",
+      "open": "Abstimmung öffnen",
+      "opened": "Geheime Abstimmung geöffnet.",
+      "errors": {
+        "question": "Die Frage braucht mindestens 3 Zeichen.",
+        "options": "Mindestens zwei Optionen nötig.",
+        "tooLow": "Die Mindestzahl darf nicht unter 3 liegen.",
+        "reasonRequired": "Bitte eine Begründung für weniger als 5 angeben.",
+        "meetingNotFound": "Sitzung nicht gefunden.",
+        "voteNotOpen": "Die Abstimmung ist nicht offen.",
+        "notPresent": "Dieses Mitglied ist nicht als \"anwesend\" markiert.",
+        "alreadyIssued": "Für diese Abstimmung hat das Mitglied bereits einen Code.",
+        "invalidCode": "Code ungültig oder bereits genutzt.",
+        "invalidChoice": "Ungültige Auswahl."
+      },
+      "booth": {
+        "title": "Geheime Wahlkabine",
+        "intro": "Geben Sie den Stimmcode vom Check-in ein.",
+        "codeLabel": "Stimmcode",
+        "open": "Stimmzettel öffnen",
+        "cast": "Stimme abgeben",
+        "cancel": "Abbrechen",
+        "secretNote": "Ihre Stimme wird ohne Bezug zu Ihrem Namen gespeichert. Nach dem Absenden ist keine Änderung möglich.",
+        "thanks": "Ihre Stimme wurde gezählt.",
+        "receiptText": "Ihr Quittungscode:",
+        "receiptLabel": "Quittungscode",
+        "receiptHint": "Steht dieser Code nach Schluss in der veröffentlichten Quittungsliste, wurde Ihre Stimme gezählt. Der Code verrät nicht, wie Sie abgestimmt haben.",
+        "next": "Nächste Person",
+        "howTitle": "Wie wird das Wahlgeheimnis gewahrt?",
+        "howText": "Bei der Ausgabe wird nur \"hat einen Code erhalten\" gespeichert. Die Stimme wird mit dem Code, ohne Namen abgegeben; der Stimmeintrag enthält keinen Namen, keine Zeit, keine Reihenfolge und kein Gerät. Beim Schließen werden Codes gelöscht und die Stimmliste gemischt.",
+        "errors": {
+          "invalidCode": "Code ungültig oder bereits genutzt.",
+          "invalidChoice": "Bitte eine Option wählen."
+        }
       }
     }
   },
@@ -8663,7 +8751,10 @@
     "skip": {
       "noMandate": "Kein SEPA-Mandat",
       "invalidIban": "IBAN ungültig",
-      "alreadyInRun": "Bereits in einem offenen Einzug"
+      "alreadyInRun": "Bereits in einem offenen Einzug",
+      "dormant": "Mandat 36 Monate ungenutzt",
+      "renewAfterReturn": "Nach Rückgabe neues Mandat nötig",
+      "pausedAfterReturns": "Wegen wiederholter Rückgaben pausiert"
     },
     "createRun": "Lastschriftdatei erstellen",
     "created": "{number} erstellt.",
@@ -8702,7 +8793,6 @@
     "cancelRun": "Einzug stornieren",
     "cancelConfirm": "Dieser Einzug wird storniert. Nur fortfahren, wenn die Datei nicht bei der Bank eingereicht wurde.",
     "markReturned": "Rücklastschrift",
-    "returnPrompt": "Rückgabegrund (z. B. AC04 Konto erloschen, MD06 Widerspruch, AM04 keine Deckung):",
     "returnedToast": "Rücklastschrift erfasst; Zahlung storniert, Forderung wieder offen.",
     "collectedOn": "Eingezogen am {date}",
     "remittance": {
@@ -8719,7 +8809,12 @@
       "notOpen": "Der Einzug ist nicht offen.",
       "notCollected": "Der Posten ist nicht eingezogen.",
       "reason": "Bitte Grund angeben.",
-      "notFound": "Einzug nicht gefunden."
+      "notFound": "Einzug nicht gefunden.",
+      "renewalUnavailable": "Das Modul Online-Formulare ist nicht verfügbar.",
+      "renewalTarget": "Für diesen Eintrag wurde keine Person gefunden.",
+      "renewalForbidden": "Sie dürfen dieser Person keinen Formular-Link senden.",
+      "renewalNoAddress": "Für diesen Kanal gibt es keine Adresse.",
+      "renewalFailed": "Der Link konnte nicht gesendet werden."
     },
     "access": {
       "accounting": "Liest Vereins-IBAN und Gläubiger-ID.",
@@ -8727,7 +8822,95 @@
       "courses": "Liest fällige Kursgebühren; bucht eingezogene Gebühren (mit Buchung) und storniert Rücklastschriften.",
       "students": "Liest das SEPA-Mandat der zahlenden Erziehungsberechtigten.",
       "organization": "Verwendet den Vereinsnamen in der Datei.",
-      "system": "Prüft, ob die Quellmodule aktiv sind."
+      "system": "Prüft, ob die Quellmodule aktiv sind.",
+      "online-forms": "Um Zahlungspflichtigen, die ein neues SEPA-Mandat brauchen, einen E-Signatur-Link über das bestehende Online-Formular zu senden und dessen Status anzuzeigen."
+    },
+    "health": {
+      "title": "Mandatsprüfung und Rücklastschrift-Coach",
+      "description": "Prüft Mandate vor dem Einzug: fehlende Referenz oder Unterschriftsdatum, IBAN-Prüfziffer (lokal), 36 Monate ungenutzte Mandate und wiederholte Rücklastschriften. Es wird nichts gespeichert oder versendet.",
+      "threshold": "Pausieren ab (12 Monate)",
+      "thresholdOption": "{count, plural, one {nach # Rückgabe} other {nach # Rückgaben}}",
+      "check": "Prüfen",
+      "summary": "{checked} Zahlungspflichtige geprüft; {issues} mit Hinweisen, {blocked} werden vom Einzug ausgenommen.",
+      "allGood": "Alle Mandate sind einzugsbereit.",
+      "returnsCell": "{count, plural, one {# Rückgabe} other {# Rückgaben}} · {fee} Gebühren",
+      "columns": {
+        "debtor": "Zahlungspflichtiger",
+        "iban": "IBAN",
+        "mandate": "Mandatsref.",
+        "issues": "Hinweise",
+        "returns": "Rückgaben (12 Monate)"
+      },
+      "issues": {
+        "missingIban": "Keine IBAN",
+        "invalidIban": "IBAN ungültig",
+        "missingReference": "Keine Mandatsreferenz",
+        "missingSignatureDate": "Kein Unterschriftsdatum",
+        "futureSignatureDate": "Unterschriftsdatum in der Zukunft",
+        "dormant": "36 Monate ungenutzt (verfallen)",
+        "missingHolder": "Kontoinhaber leer",
+        "renewAfterReturn": "Nach Rückgabe neues Mandat nötig",
+        "pausedAfterReturns": "Wiederholte Rückgaben: pausiert"
+      }
+    },
+    "coach": {
+      "codes": {
+        "AC01": "IBAN fehlerhaft; Konto nicht gefunden.",
+        "AC04": "Konto erloschen.",
+        "AC06": "Konto gesperrt.",
+        "AC13": "Schuldnerkonto ist ein Verbraucherkonto (nur B2B).",
+        "AG01": "Lastschrift auf diesem Konto nicht zulässig.",
+        "AM04": "Deckung unzureichend.",
+        "MD01": "Kein gültiges Mandat.",
+        "MD06": "Erstattung durch den Zahlungspflichtigen (8 Wochen).",
+        "MD07": "Zahlungspflichtiger verstorben.",
+        "MS02": "Widerspruch durch den Zahlungspflichtigen.",
+        "MS03": "Grund von der Bank nicht angegeben.",
+        "RR04": "Regulatorischer Grund.",
+        "SL01": "Bank des Zahlungspflichtigen sperrt diesen Gläubiger."
+      },
+      "unknownCode": "Kein Rückgabegrund erfasst; bitte die Bankmitteilung prüfen.",
+      "actions": {
+        "retry": "Nächster Schritt: Deckungsproblem kann vorübergehend sein; beim nächsten Einzug erneut versuchen.",
+        "renewMandate": "Nächster Schritt: neues SEPA-Mandat (ggf. neue IBAN) anfordern; bis dahin kein Einzug.",
+        "contactDebtor": "Nächster Schritt: freundlich Kontakt aufnehmen, Grund für Widerspruch oder Erstattung erfragen, ggf. Überweisung erbitten.",
+        "manualCheck": "Nächster Schritt: Rückgabemitteilung der Bank prüfen."
+      },
+      "reminderLabel": "Erinnerungsentwurf (kopieren und selbst versenden)",
+      "reminderDraft": "Hallo,\n\ndie SEPA-Lastschrift über {amount} (Mandatsreferenz {reference}) wurde von Ihrer Bank zurückgegeben. Bitte prüfen Sie Ihre Kontodaten und geben Sie uns kurz Bescheid; bei Bedarf können Sie ein neues SEPA-Mandat erteilen oder den Betrag überweisen.\n\nVielen Dank und freundliche Grüße\n\n—\n\nMerhaba,\n\nyetki referansı {reference} ile yaptığımız {amount} tutarındaki SEPA tahsilatı bankanız tarafından iade edildi. Lütfen hesap bilgilerinizi kontrol edip bize kısa bir bilgi verin; gerekirse yeni bir SEPA yetkisi imzalayabilir veya tutarı havale edebilirsiniz.\n\nTeşekkürler, saygılarımızla",
+      "copy": "Entwurf kopieren",
+      "copied": "Entwurf kopiert.",
+      "draftOnly": "Nur Entwurf: hier wird nichts versendet."
+    },
+    "returnForm": {
+      "title": "Rücklastschrift erfassen",
+      "code": "Rückgabegrund",
+      "fee": "Bankgebühr (€, optional)",
+      "note": "Notiz (optional)",
+      "hint": "Die Zahlung wird storniert und die Forderung wieder geöffnet. Der Rückgabegrund fließt in Mandatsprüfung und Pausierung ein.",
+      "cancel": "Abbrechen",
+      "feeInvalid": "Die Gebühr muss ein gültiger Betrag sein."
+    },
+    "renewal": {
+      "request": "Neues Mandat anfordern (E-Signatur)",
+      "unavailable": "E-Signatur-Link nicht verfügbar (Modul, Berechtigung oder Adresse fehlt).",
+      "confirmTitle": "E-Signatur-Link für ein neues SEPA-Mandat senden?",
+      "confirmText": "Die Person erhält den bestehenden Online-Formular-Link; nach der Unterschrift werden neue IBAN und Mandatsdatum gespeichert. Ohne Bestätigung wird nichts gesendet.",
+      "channel": "Kanal und Adresse",
+      "channels": {
+        "email": "E-Mail",
+        "sms": "SMS",
+        "whatsapp": "WhatsApp"
+      },
+      "send": "Link senden",
+      "cancel": "Abbrechen",
+      "sent": "E-Signatur-Link gesendet.",
+      "status": {
+        "PENDING": "Link gesendet ({date}), Unterschrift ausstehend",
+        "COMPLETED": "Unterschrieben ({date})",
+        "CANCELLED": "Link storniert ({date})",
+        "EXPIRED": "Link abgelaufen ({date})"
+      }
     }
   },
   "students": {
@@ -9363,6 +9546,87 @@
         "notificationsNoChannel": "Für das Benachrichtigungsmodul ist kein aktiver Kanal (E-Mail, Telegram etc.) eingerichtet.",
         "generalIssue": "Es liegen Konfigurations- oder Workflow-Hinweise für dieses Modul vor."
       }
+    },
+    "privacyUi": {
+      "title": "Datenschutz-Voreinstellungen",
+      "subtitle": "Datenflüsse zu externen Diensten prüfen und Änderungen ausdrücklich freigeben.",
+      "choose": "Datenschutzprofil",
+      "presets": {
+        "Strict": {
+          "label": "Strikt (Strict)",
+          "description": "Externe Verbindungen werden eingeschränkt; lokale KI wird empfohlen."
+        },
+        "Standard": {
+          "label": "Standard",
+          "description": "Ausgewählte Dienste werden kontrolliert freigegeben."
+        },
+        "Connected": {
+          "label": "Verbunden (Connected)",
+          "description": "Ermöglicht weitere externe Dienste; prüfen Sie den Datenausgang."
+        }
+      },
+      "loading": "Vorschau wird geladen…",
+      "error": "Datenschutzprofil konnte nicht geladen oder gespeichert werden.",
+      "saved": "Datenschutzprofil angewendet.",
+      "diffTitle": "Änderungen vor der Freigabe",
+      "current": "Aktuell",
+      "target": "Ziel",
+      "none": "Keine",
+      "changeCount": "Geänderte Module: {count}",
+      "module": "Modul",
+      "before": "Vorher",
+      "after": "Nachher",
+      "enabled": "Aktiv",
+      "disabled": "Inaktiv",
+      "aiTitle": "KI-Anbieterrichtlinie",
+      "recommended": "Empfohlener Anbieter",
+      "allowed": "Erlaubte Anbieter",
+      "disallowed": "Konfigurierte, aber nicht erlaubte Anbieter",
+      "selfHostedWarning": "Es ist noch kein lokaler KI-Anbieter eingerichtet. Dieses Profil empfiehlt einen lokalen Anbieter.",
+      "approval": "Ich habe die angezeigten Modul- und Anbieteränderungen geprüft und stimme der Anwendung zu.",
+      "apply": "Bestätigen und anwenden",
+      "applying": "Wird angewendet…",
+      "noChanges": "Das Profil ist bereits aktiv; keine Änderungen.",
+      "readOnly": "Zur Änderung sind Systemadministratorrechte erforderlich."
+    },
+    "egressUi": {
+      "title": "Monatlicher Datenausgangsbericht",
+      "subtitle": "Konfiguration, tatsächlich erfasste Übermittlungen und Anbieterspeicherung getrennt auswerten.",
+      "month": "Monat",
+      "year": "Jahr",
+      "refresh": "Bericht laden",
+      "loading": "Bericht wird geladen…",
+      "error": "Bericht konnte nicht geladen werden. Prüfen Sie Berechtigung und Verbindung.",
+      "configuration": "Konfiguration (Configuration)",
+      "configurationNote": "Die Einstellungen zeigen den aktuellen Zustand, nicht die historischen Übermittlungen.",
+      "activePreset": "Aktives Datenschutzprofil",
+      "aiProviders": "Konfigurierte KI-Anbieter",
+      "module": "Modul",
+      "state": "Status",
+      "providers": "Anbieter",
+      "enabled": "Aktiv",
+      "disabled": "Inaktiv",
+      "none": "Keine",
+      "actualTransfers": "Tatsächliche Übermittlungen (Actual Transfers)",
+      "period": "Berichtszeitraum (UTC)",
+      "totalCalls": "Aufrufe gesamt",
+      "totalVolume": "Gesamtvolumen",
+      "immutableNotice": "Das Deaktivieren eines Dienstes macht frühere Übermittlungen nicht rückgängig und löscht die Ledger-Einträge nicht.",
+      "noTransfers": "Für diesen Zeitraum sind keine Übermittlungen protokolliert. Dies ist keine Garantie, dass keine Übermittlungen stattgefunden haben.",
+      "provider": "Anbieter",
+      "category": "Kategorie",
+      "calls": "Aufrufe",
+      "volume": "Volumen",
+      "legalBasis": "Rechtsgrundlage",
+      "providerRetention": "Anbieterseitige Speicherung (Provider-side Retention)",
+      "retentionNotice": "Die Angaben sind Richtlinien-Metadaten, keine Bestätigung der tatsächlichen Löschung, Speicherdauer oder vertraglicher Zusagen.",
+      "jurisdiction": "Region",
+      "policy": "Richtlinie",
+      "days": "Tage",
+      "occurred": "In diesem Monat erfasst?",
+      "yes": "Ja",
+      "no": "Nein",
+      "unknown": "Nicht angegeben"
     }
   },
   "tasks": {

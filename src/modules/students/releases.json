@@ -2,7 +2,7 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
-      "version": "1.4.11",
+      "version": "1.4.12",
       "date": "2026-11-23",
       "title": {
         "tr": "TAX_ADVISOR rolü izin tanımı",
@@ -13,6 +13,21 @@
           "type": "security",
           "tr": "TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.",
           "de": "Standardmäßig geschlossener Berechtigungseintrag für die Systemrolle TAX_ADVISOR ergänzt."
+        }
+      ]
+    },
+    {
+      "version": "1.4.11",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Debitor numarasından veli kimliği",
+        "de": "Eltern-ID aus Debitorennummer"
+      },
+      "changes": [
+        {
+          "type": "internal",
+          "tr": "SEPA yetki yenilemesi için debitor numarasından yalnız veli kimliğini döndüren okuma sözleşmesi eklendi; kişi verisi dönmez.",
+          "de": "Lesevertrag für die SEPA-Mandatserneuerung ergänzt, der aus der Debitorennummer nur die Eltern-ID liefert; keine personenbezogenen Daten."
         }
       ]
     },

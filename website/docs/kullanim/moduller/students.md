@@ -13,7 +13,7 @@ Kurs ve Nachhilfe öğrencileri, veliler ve DATEV uyumlu borçlu (Debitor) kayı
 |---|---|
 | Anahtar | `students` |
 | Tür | Resmî modül |
-| Sürüm | 1.4.11 |
+| Sürüm | 1.4.12 |
 | Sayfalar | `/ogrenciler`, `/ogrenciler/veliler`, `/ogrenciler/ayarlar` |
 | Önerir | [e-Sign](./online-forms) |
 
@@ -42,7 +42,7 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 
 ## Sürüm notları
 
-### 1.4.11 — TAX_ADVISOR rolü izin tanımı
+### 1.4.12 — TAX_ADVISOR rolü izin tanımı
 
 _2026-11-23_
 

@@ -1,4 +1,4 @@
-import { Activity, Boxes, History, KeyRound, Settings, Wand2, PackageCheck, PanelsTopLeft } from "lucide-react";
+import { Activity, Boxes, History, KeyRound, Settings, Wand2, PackageCheck, PanelsTopLeft, ShieldCheck, FileText } from "lucide-react";
 import type { ModuleConfig } from "@/shared/types/module";
 import {
   settingsPermissions,
@@ -8,7 +8,7 @@ import {
 export const moduleConfig: ModuleConfig = {
   key: "system",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.17.1",
+  version: "1.18.1",
   label: "Modül Yönetimi",
   description: "Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.",
   category: "CORE",
@@ -91,6 +91,24 @@ export const moduleConfig: ModuleConfig = {
       group: "settings",
       order: 5,
       permission: { definition: systemPermissions, action: "update" },
+    },
+    {
+      href: "/ayarlar/gizlilik",
+      label: "Gizlilik ön ayarları",
+      labelKey: "privacyPresets",
+      icon: ShieldCheck,
+      group: "settings",
+      order: 6,
+      permission: { definition: systemPermissions, action: "view" },
+    },
+    {
+      href: "/ayarlar/veri-cikisi",
+      label: "Veri çıkışı raporu",
+      labelKey: "egressReport",
+      icon: FileText,
+      group: "settings",
+      order: 7,
+      permission: { definition: systemPermissions, action: "view" },
     },
     {
       href: "/ayarlar/surum-notlari",

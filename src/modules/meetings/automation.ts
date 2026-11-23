@@ -2,7 +2,7 @@ import "server-only";
 
 import { z } from "zod";
 
-import { defineEvent } from "@/shared/automation/define";
+import { defineEvent, defineTask } from "@/shared/automation/define";
 
 /** Yeni toplantı planlandı. */
 export const meetingCreatedEvent = defineEvent({
@@ -30,5 +30,21 @@ export const meetingCreatedEvent = defineEvent({
         location: meeting.location ?? null,
       };
     },
+  },
+});
+
+/** Gizli oylama saklaması (RFC-004 §9.4): süresi dolan oylamaların uygunluk kaydı ve oyları günde bir silinir. */
+export const purgeExpiredVotesTask = defineTask({
+  key: "meetings.vote_purge",
+  version: 1,
+  description: "meetings.vote_purge",
+  inputSchema: z.object({}).strict(),
+  timeoutSeconds: 120,
+  retry: { maxAttempts: 2, initialDelaySeconds: 60, maxDelaySeconds: 300, backoffMultiplier: 2 },
+  schedule: { input: () => ({}), minIntervalMinutes: 60, automaticIntervalMinutes: 24 * 60 },
+  idempotencyKey: () => `meetings:vote-purge:${new Date().toISOString().slice(0, 10)}`,
+  handler: async () => {
+    const { purgeExpiredVotes } = await import("./services/secret-ballot");
+    return { votes: await purgeExpiredVotes() };
   },
 });
