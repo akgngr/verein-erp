@@ -49,7 +49,7 @@ import {
 } from "@/shared/components/side-panel-events";
 import { cn } from "@/shared/utils";
 
-import { ThemeMenu } from "./workspace-header";
+import { HeaderWidgetSlot, ThemeMenu, type HeaderWidgetAccess } from "./workspace-header";
 import { SIDEBAR_COLLAPSED_COOKIE } from "./sidebar-state";
 
 type SidebarContextValue = {
@@ -806,7 +806,7 @@ function MobileSidebar({
 }
 
 /** Mobil (<1024px) üst şerit: yalnızca menü butonu ve marka. Masaüstünde üst bar yoktur. */
-function MobileHeader() {
+function MobileHeader({ widgetAccess }: { widgetAccess?: HeaderWidgetAccess }) {
   const tSidebar = useTranslations("sidebar");
   return (
     <header className="sticky top-0 z-20 flex h-14 items-center gap-2 border-b border-ink-200/80 bg-surface/95 px-3 backdrop-blur-md lg:hidden">
@@ -816,7 +816,8 @@ function MobileHeader() {
         {BRAND}
         {tSidebar.has("brand") ? ` · ${tSidebar("brand")}` : ""}
       </span>
-      <div className="ml-auto">
+      <div className="ml-auto flex min-w-0 shrink-0 items-center gap-2">
+        {widgetAccess ? <HeaderWidgetSlot access={widgetAccess} mobile /> : null}
         <ThemeMenu />
       </div>
     </header>
