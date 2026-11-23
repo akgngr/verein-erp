@@ -212,8 +212,56 @@ async function main() {
       await panelAside.waitFor({ timeout: 30_000 });
       await page.emulateMedia({ reducedMotion: "no-preference" });
 
+      // #440 (WP6): Widget Platform desktop accessibility, focus, and drawer verification.
+      await page.setViewportSize({ width: 1280, height: 800 });
+      await page.goto(`${BASE_URL}/`, { waitUntil: "networkidle" });
+
+      const settingsShortcut = page.locator('header a[href="/ayarlar"]').first();
+      if (await settingsShortcut.count()) {
+        await settingsShortcut.focus();
+        if (!(await settingsShortcut.evaluate((el) => el === document.activeElement))) {
+          throw new Error("WIDGET_SETTINGS_SHORTCUT_NOT_FOCUSABLE");
+        }
+      }
+
+      const bellButton = page.locator('header button[aria-label*="ildirim"], header button[aria-label*="enachrichtig"], header [data-widget-slot="header.right"] button').first();
+      if (await bellButton.count()) {
+        await bellButton.focus();
+        if (!(await bellButton.evaluate((el) => el === document.activeElement))) {
+          throw new Error("WIDGET_BELL_NOT_FOCUSABLE");
+        }
+        await page.keyboard.press("Enter");
+        const drawer = page.getByRole("dialog");
+        await drawer.waitFor({ state: "visible", timeout: 15_000 });
+        await page.keyboard.press("Escape");
+        await drawer.waitFor({ state: "hidden", timeout: 15_000 });
+      }
+
+      await page.emulateMedia({ reducedMotion: "reduce" });
+      await page.reload({ waitUntil: "networkidle" });
+      await page.emulateMedia({ reducedMotion: "no-preference" });
+
       await page.setViewportSize({ width: 390, height: 844 });
       await page.goto(`${BASE_URL}/`, { waitUntil: "networkidle" });
+
+      // #440 (WP6): Widget Platform mobile viewport overflow check and mobile drawer verification.
+      const mobileScrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
+      if (mobileScrollWidth > 390 + 5) {
+        throw new Error(`WIDGET_MOBILE_OVERFLOW: scrollWidth ${mobileScrollWidth} exceeds 390`);
+      }
+      const mobileBellButton = page.locator('header button[aria-label*="ildirim"], header button[aria-label*="enachrichtig"], header [data-widget-slot="header.right"] button').first();
+      if (await mobileBellButton.count()) {
+        await mobileBellButton.focus();
+        if (!(await mobileBellButton.evaluate((el) => el === document.activeElement))) {
+          throw new Error("WIDGET_MOBILE_BELL_NOT_FOCUSABLE");
+        }
+        await page.keyboard.press("Enter");
+        const mobileDrawer = page.getByRole("dialog");
+        await mobileDrawer.waitFor({ state: "visible", timeout: 15_000 });
+        await page.keyboard.press("Escape");
+        await mobileDrawer.waitFor({ state: "hidden", timeout: 15_000 });
+      }
+
       const asideBox = await panelAside.boundingBox();
       const boardHeading = await page.getByRole("heading").first().boundingBox();
       if (!asideBox || !boardHeading) throw new Error("SECRETARY_PANEL_MOBILE_LAYOUT");
