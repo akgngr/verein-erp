@@ -13,7 +13,7 @@ slug: /kullanim/moduller/mailings
 |---|---|
 | Anahtar | `mailings` |
 | Tür | Resmî modül |
-| Sürüm | 2.5.0 |
+| Sürüm | 2.6.0 |
 | Sayfalar | `/toplu-eposta`, `/toplu-eposta/ayarlar` |
 | Gerektirir | [E-posta Altyapısı](./mail), [Otomasyon](./automation) |
 
@@ -40,9 +40,15 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 
 Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/kullanim/asistan)):
 
-`get_campaign_statistics` · `list_campaign_audiences` · `list_campaigns` · `propose_campaign_draft`
+`get_campaign_statistics` · `list_campaign_audiences` · `list_campaigns` · `propose_campaign_draft` · `propose_dues_reminder_draft`
 
 ## Sürüm notları
+
+### 2.6.0 — Asistandan aidat hatırlatma taslağı
+
+_2026-11-23_
+
+- **Yeni:** Asistan, aidatı açık olan aktif üyeler için nazik bir hatırlatma kampanyasını taslak olarak önerebilir. Alıcıları ve tutarları görmez; taslağı siz onaylarsınız, gönderimi ayrıca Kampanyalar'dan başlatırsınız.
 
 ### 2.5.0 — Gizlilik dostu e-posta izleme
 
@@ -87,10 +93,4 @@ _2026-11-15_
 
 - **Güvenlik:** Öneri araçları katı Zod girdisi ve sabit model sonucu kullanır; salt öneri sorguları gereksiz kişi detaylarını okumaz. Kalan eski okuma araçlarının dönüşümü ayrı sürer.
 
-### 2.4.2 — AI listelerinde eksiksizlik ve sınır kontrolü
-
-_2026-11-15_
-
-- **Düzeltme:** AI listeleri sayfalama ve eksiksizlik bilgisi taşır; aşırı büyük takvim aralıkları kontrollü reddedilir.
-
-Daha eski 16 herkese açık sürüm notu.
+Daha eski 17 herkese açık sürüm notu.
