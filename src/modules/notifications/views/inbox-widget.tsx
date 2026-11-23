@@ -10,6 +10,7 @@ import type { NotificationView } from "../services/inbox";
 import { NotificationBellDrawer } from "../components/notification-bell-drawer";
 
 const POLL_MS = 30_000;
+const SSE_SAFETY_POLL_MS = 90_000;
 
 /** Authenticated, server-filtered inbox; no client-side privileged database access. */
 export function NotificationInboxWidget() {
@@ -22,6 +23,7 @@ export function NotificationInboxWidget() {
   const requestId = useRef(0);
   // A timer must not start a fresh read while a write is in progress.
   const mutationInFlight = useRef(false);
+  const lastSseCount = useRef<number | null>(null);
 
   const reload = useCallback(async () => {
     const currentRequest = ++requestId.current;
@@ -34,6 +36,7 @@ export function NotificationInboxWidget() {
       if (!list.ok || !unread.ok) { setItems([]); setCount(0); setUnavailable(true); return false; }
       setItems(list.data);
       setCount(unread.data.count);
+      lastSseCount.current = unread.data.count;
       setUnavailable(false);
       return true;
     } catch {
@@ -56,10 +59,16 @@ export function NotificationInboxWidget() {
       }
     };
 
-    // Polling fallback interval: runs when SSE is unavailable, disconnected, or on error
+    // Polling fallback interval: runs at 30s when SSE is unavailable/disconnected,
+    // plus a slower 90s safety poll while SSE is active so out-of-process worker
+    // notifications never leave the drawer items stale.
     const interval = window.setInterval(() => {
       if (!sseActive) poll();
     }, POLL_MS);
+
+    const safetyInterval = window.setInterval(() => {
+      if (sseActive) poll();
+    }, SSE_SAFETY_POLL_MS);
 
     const connectSSE = () => {
       if (typeof EventSource === "undefined" || document.visibilityState !== "visible") {
@@ -79,8 +88,13 @@ export function NotificationInboxWidget() {
           try {
             const data = JSON.parse(event.data);
             if (typeof data.count === "number") {
+              const prev = lastSseCount.current;
+              lastSseCount.current = data.count;
               setCount(data.count);
               setUnavailable(false);
+              if (prev !== null && prev !== data.count && !mutationInFlight.current) {
+                void reload();
+              }
             }
           } catch {
             void reload();
@@ -114,7 +128,6 @@ export function NotificationInboxWidget() {
 
     const handleVisibility = () => {
       if (document.visibilityState === "visible") {
-        poll();
         if (!sseActive) connectSSE();
       } else {
         disconnectSSE();
@@ -132,6 +145,7 @@ export function NotificationInboxWidget() {
       req.current++;
       disconnectSSE();
       window.clearInterval(interval);
+      window.clearInterval(safetyInterval);
       document.removeEventListener("visibilitychange", poll);
       document.removeEventListener("visibilitychange", handleVisibility);
     };

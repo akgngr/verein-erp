@@ -6,6 +6,7 @@ import {
   emitNotificationUpdate,
   subscribeNotificationUpdates,
 } from "@/modules/notifications/services/stream-bus";
+import { createNotificationEventStream } from "@/modules/notifications/services/stream-sse";
 
 test("stream-bus invokes listener per userId and maintains strict isolation", () => {
   let user1Calls = 0;
@@ -35,6 +36,7 @@ test("stream-bus invokes listener per userId and maintains strict isolation", ()
 
 test("stream route contract: authentication, authorization, event-stream headers, and zero PII", () => {
   const routeSource = fs.readFileSync("src/modules/notifications/api/stream/route.ts", "utf8");
+  const sseSource = fs.readFileSync("src/modules/notifications/services/stream-sse.ts", "utf8");
 
   // Route configuration
   assert.match(routeSource, /export const runtime = "nodejs"/);
@@ -53,19 +55,56 @@ test("stream route contract: authentication, authorization, event-stream headers
   assert.match(routeSource, /"X-Accel-Buffering":\s*"no"/);
 
   // SSE event structure
-  assert.match(routeSource, /send\("count",/);
-  assert.match(routeSource, /send\("update",/);
-  assert.match(routeSource, /sendComment\("keepalive"\)/);
+  assert.match(sseSource, /send\("count",/);
+  assert.match(sseSource, /send\("update",/);
+  assert.match(sseSource, /sendComment\("keepalive"\)/);
 
   // Lifecycle & cleanup
-  assert.match(routeSource, /request\.signal\.addEventListener\("abort"/);
-  assert.match(routeSource, /unsubscribeBus\(\)/);
+  assert.match(sseSource, /signal\.addEventListener\("abort"/);
+  assert.match(sseSource, /unsubscribeBus\(\)/);
 
   // Strict privacy: Zero personal data (PII) transmitted over SSE
   assert.doesNotMatch(routeSource, /user\.email|user\.name|dbUser|password|token|paramsEnc/);
+  assert.doesNotMatch(sseSource, /user\.email|user\.name|dbUser|password|token|paramsEnc/);
 });
 
-test("inbox-widget implements SSE with automatic fallback to polling and visibility management", () => {
+test("notification created outside the process updates count over SSE without in-process bus emit", async () => {
+  const controller = new AbortController();
+  let dbUnreadCount = 0;
+
+  const stream = createNotificationEventStream({
+    userId: "worker-target-user",
+    signal: controller.signal,
+    getUnreadCount: async () => dbUnreadCount,
+    subscribe: subscribeNotificationUpdates,
+    intervalMs: 25,
+  });
+
+  const reader = stream.getReader();
+  const decoder = new TextDecoder();
+  let collected = "";
+
+  const firstChunk = await reader.read();
+  collected += decoder.decode(firstChunk.value, { stream: true });
+  assert.match(collected, /event: count\ndata: \{"count":0\}/);
+
+  // Simulate another process (e.g. automation worker) inserting notifications into DB
+  // without calling in-process emitNotificationUpdate().
+  dbUnreadCount = 2;
+
+  for (let i = 0; i < 10 && !collected.includes('{"count":2}'); i++) {
+    const nextChunk = await reader.read();
+    if (nextChunk.done) break;
+    collected += decoder.decode(nextChunk.value, { stream: true });
+  }
+
+  controller.abort();
+  await reader.cancel();
+
+  assert.match(collected, /event: count\ndata: \{"count":2\}/);
+});
+
+test("inbox-widget implements SSE with automatic fallback to polling, safety polling, and visibility management", () => {
   const widgetSource = fs.readFileSync("src/modules/notifications/views/inbox-widget.tsx", "utf8");
 
   // SSE initialization
@@ -74,9 +113,11 @@ test("inbox-widget implements SSE with automatic fallback to polling and visibil
   assert.match(widgetSource, /eventSource\.addEventListener\("count"/);
   assert.match(widgetSource, /eventSource\.addEventListener\("update"/);
 
-  // Fallback to polling on error or disconnection
+  // Fallback to polling on error or disconnection + slow safety poll while SSE is active
   assert.match(widgetSource, /eventSource\.onerror = \(\) =>/);
   assert.match(widgetSource, /if \(!sseActive\) poll\(\)/);
+  assert.match(widgetSource, /SSE_SAFETY_POLL_MS/);
+  assert.match(widgetSource, /if \(sseActive\) poll\(\)/);
 
   // Tab visibility: pauses when hidden, reconnects when visible
   assert.match(widgetSource, /const handleVisibility = \(\) =>/);

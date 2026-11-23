@@ -63,7 +63,10 @@ describe("Widget Platform WP6 — Accessibility & Semantic HTML", () => {
     );
 
     // Trigger button accessibility
-    assert.match(drawerSrc, /<Button[\s\S]*?aria-label=\{labels\.open\}[\s\S]*?className="relative">/);
+    assert.match(
+      drawerSrc,
+      /<Button[\s\S]*?aria-label=\{count > 0 \? `\$\{labels\.open\} \(\$\{count > 99 \? "99\+" : count\} \$\{labels\.unread\}\)` : labels\.open\}[\s\S]*?className="relative">/,
+    );
     assert.match(drawerSrc, /<Bell[\s\S]*?aria-hidden/);
 
     // Badge is aria-hidden so screen readers do not stammer disconnected numbers
