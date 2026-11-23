@@ -13,7 +13,7 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 |---|---|
 | Anahtar | `secretary` |
 | Tür | Eklenti |
-| Sürüm | 0.12.2 |
+| Sürüm | 0.13.0 |
 | Sayfalar | `/sekreter` |
 
 ## Diğer modüllere erişim
@@ -38,6 +38,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Sekreter | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — |
 
 ## Sürüm notları
+
+### 0.13.0 — Vekâlet ve kanal izinleri ekranları
+
+_2026-11-23_
+
+- **Yeni:** Vekâlet verme, geri alma ve salt okunur özet; maskelenmiş harici kanal izinleri ve geri alma eklendi. Yapılandırılmamış kanallarda yeni bağlantı sunulmaz.
 
 ### 0.12.2 — Haftalık rapor arayüzü
 
@@ -82,10 +88,4 @@ _2026-11-20_
 
 - **İyileştirme:** Sabah özeti öğelerinin önem ve vade sırasına göre dizilmesinde (sortItems) toSorted metodu uygulandı.
 
-### 0.11.1 — Sekreter çalışma masasında geçerli kayıt sınırı
-
-_2026-11-20_
-
-- **Düzeltme:** Geçersiz veya yetkisiz gösterim kayıtları ilk 100 öğeyi doldurup sonraki geçerli kayıtları gizleyemez; görünüm en fazla 100 doğrulanmış öğe gösterir.
-
-Daha eski 20 herkese açık sürüm notu.
+Daha eski 21 herkese açık sürüm notu.

@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.13.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Vekâlet ve kanal izinleri ekranları",
+        "de": "Vertretungs- und Kanaleinwilligungsansichten"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Vekâlet verme, geri alma ve salt okunur özet; maskelenmiş harici kanal izinleri ve geri alma eklendi. Yapılandırılmamış kanallarda yeni bağlantı sunulmaz.",
+          "de": "Vertretungen erteilen und widerrufen, schreibgeschützte Übersicht sowie maskierte Kanaleinwilligungen mit Widerruf ergänzt. Nicht eingerichtete Kanäle bieten keine neue Verbindung an."
+        }
+      ]
+    },
+    {
       "version": "0.12.2",
       "date": "2026-11-22",
       "title": {
