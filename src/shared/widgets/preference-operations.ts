@@ -38,7 +38,10 @@ export function editWidgetPreferences(
       (byId.get(b.id)?.order ?? b.priority ?? 1000) || a.id.localeCompare(b.id)));
 
   if (change.type === "reset") {
-    return ordered.map((widget, order) => ({
+    // Restore trusted registry order, not the user's previous custom order.
+    const defaults = [...slots.values()].flatMap((group) =>
+      [...group].sort((a, b) => (a.priority ?? 1000) - (b.priority ?? 1000) || a.id.localeCompare(b.id)));
+    return defaults.map((widget, order) => ({
       id: widget.id, enabled: widget.mandatory || widget.defaultEnabled === true, order,
     }));
   }
