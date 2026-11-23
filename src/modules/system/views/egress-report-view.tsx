@@ -1,6 +1,7 @@
 import { requirePermission, ForbiddenError } from "@/modules/auth/server";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
+import { systemPermissions } from "@/shared/permissions/system";
 import { getTranslations } from "next-intl/server";
 
 import { EgressReportPanel } from "../components/egress-report-panel";
