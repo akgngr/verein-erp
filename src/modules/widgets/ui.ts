@@ -1,2 +1,3 @@
-// widgets modülü — UI public girişi (yuva ana bileşeni WP2 #436 ile gelir)
-export {};
+// Client-safe action references; never export server-only queries from here.
+export { saveWidgetPreferencesAction, resetWidgetPreferencesAction } from "./actions/preferences";
+export type { WidgetSettingsRow } from "./services/preferences";

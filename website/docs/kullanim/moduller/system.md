@@ -13,8 +13,8 @@ Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.
 |---|---|
 | Anahtar | `system` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.15.0 |
-| Sayfalar | `/ayarlar`, `/ayarlar/moduller`, `/ayarlar/moduller/saglik`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/lisans`, `/ayarlar/surum-notlari` |
+| Sürüm | 1.16.0 |
+| Sayfalar | `/ayarlar`, `/ayarlar/widgetlar`, `/ayarlar/moduller`, `/ayarlar/moduller/saglik`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/lisans`, `/ayarlar/surum-notlari` |
 
 ## Diğer modüllere erişim
 
@@ -25,6 +25,7 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 | [Muhasebe](./accounting) | okuma, yazma | Kurulum sihirbazı, seçilen kurum türüne göre muhasebe kategorilerini, hesaplarını ve vergi ayarlarını oluşturur. |
 | [Dernek Bilgileri](./organization) | okuma | Lisans doğrulaması için kurum adı ve sicil/vergi numarası okunur (lisans bu kuruma bağlıdır). |
 | [Kullanıcılar](./users) | okuma | Modül ve iş akışı sağlığı kokpitinde yönetici kullanıcısının varlığı denetlenir. |
+| [Widget Platformu](./widgets) | okuma, yazma | Widget tercihlerini gösterir ve kullanıcının değişikliklerini kaydeder. |
 
 ## Varsayılan yetkiler
 
@@ -36,6 +37,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Modül Yönetimi | görüntüleme, düzenleme, silme | görüntüleme | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.16.0 — Kişisel widget ayarları
+
+_2026-11-23_
+
+- **Yeni:** Widget görünürlük ve sıralama ayarları, sıfırlama ve masaüstü/mobil önizleme kullanıcı hesabına bağlandı.
 
 ### 1.15.0 — Modül ve iş akışı sağlığı kokpiti (F3)
 
@@ -81,10 +88,4 @@ _2026-11-17_
 
 - **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
-### 1.12.2 — Ortak UI kartları
-
-_2026-11-17_
-
-- **İyileştirme:** Yüzey kartları ortak SurfaceCard bileşenini kullanıyor.
-
-Daha eski 20 herkese açık sürüm notu.
+Daha eski 21 herkese açık sürüm notu.
