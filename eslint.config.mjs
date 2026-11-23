@@ -40,6 +40,7 @@ const MODULE_INTERNAL_IMPORTS = {
     "!@/modules/*/notifications",
     "!@/modules/*/header",
     "!@/modules/*/widget",
+    "!@/modules/*/compliance",
     "!@/modules/*/releases.json",
     "!@/modules/*/permissions",
     "!@/modules/*/routes",

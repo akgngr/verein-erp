@@ -1,0 +1,18 @@
+{
+  "id": "gem.economic-operation-threshold",
+  "version": 1,
+  "title": { "tr": "Ekonomik işletme gelir sınırı", "de": "Besteuerungsgrenze wirtschaftlicher Geschäftsbetrieb" },
+  "legalSource": [{ "norm": "§ 64 Abs. 3 AO", "url": "https://www.gesetze-im-internet.de/ao_1977/__64.html" }],
+  "jurisdiction": "DE",
+  "effective": { "from": "2026-01-01", "to": null },
+  "metric": "accounting.economicRevenueGross",
+  "params": { "thresholdCents": 5000000 },
+  "condition": { "op": "gt", "value": "thresholdCents" },
+  "severity": "critical",
+  "finding": {
+    "tr": "{year} yılında ekonomik işletme brüt geliri {valueCents}. Genel sınır (§ 64 Abs. 3 AO): {thresholdCents}.",
+    "de": "Einnahmen des wirtschaftlichen Geschäftsbetriebs {year} (brutto): {valueCents}. Allgemeine Grenze (§ 64 Abs. 3 AO): {thresholdCents}."
+  },
+  "suggestedTask": { "title": { "tr": "Ekonomik işletmenin vergi durumunu danışmanla görüş", "de": "Steuerliche Folgen mit Steuerberater klären" }, "dueInDays": 30, "role": "TREASURER" },
+  "review": { "status": "draft", "reviewerRole": "owner" }
+}
