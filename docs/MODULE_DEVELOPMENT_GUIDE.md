@@ -405,33 +405,39 @@ import "server-only";
 
 import { z } from "zod";
 
-import { aiAction, aiTool, defineModuleAi, NO_INPUT, PROPOSED } from "@/shared/ai/define";
+import { aiAction, PROPOSED } from "@/shared/ai/define";
+import { proposalAcknowledgementSchema as proposed } from "@/shared/ai/dataset";
+import { aiToolV2, defineModuleAiV2 } from "@/shared/ai/v2";
 import { can } from "@/shared/permissions/define";
 
 import { examplePermissions } from "./permissions";
-import { createThingAction, listThings } from "./server";
+import { countThings, createThingAction } from "./server";
 
-const createSchema = z.object({ title: z.string().min(1).max(200) });
+const createSchema = z.object({ title: z.string().min(1).max(200) }).strict();
+const stats = z.object({ open: z.number().int(), done: z.number().int() }).strict();
 
-export const ai = defineModuleAi({
+export const ai = defineModuleAiV2({
   module: "example",                         // klasör adıyla AYNI
   tools: [
-    aiTool({
-      name: "list_things",                   // snake_case, tüm modüllerde benzersiz
+    aiToolV2({
+      name: "get_thing_statistics",          // snake_case, tüm modüllerde benzersiz
       operation: "read",
       allowed: (user) => can(user.role, examplePermissions, "view"),
-      description: "Things: id, title, status. No personal data.",   // modele yönelik, İngilizce
-      schema: z.object({}),
-      inputSchema: NO_INPUT,                  // modele gönderilen JSON şeması
-      run: async () => (await listThings()).map(({ id, title, status }) => ({ id, title, status })),
+      description: "Thing statistics: open and done counts. Counts only.", // i18n-ignore (model-facing tool text)
+      input: z.object({}).strict(), result: stats, modelOutput: stats,
+      // Modele giden alanların TAM listesi; aynısı src/shared/data-policy.ts → AI_TOOL_POLICY.get_thing_statistics.
+      policy: { purpose: "example-statistics", serverReads: ["ExampleThing"], modelFields: ["open", "done"], processing: "approved_provider", modelDataClass: "aggregate" },
+      projectForModel: (result) => result,
+      run: async () => countThings(),
     }),
-    aiTool({
+    aiToolV2({
       name: "propose_thing",
       operation: "create",
       allowed: (user) => can(user.role, examplePermissions, "create"),
-      description: "PROPOSES a new thing. Nothing is created until the user confirms.",
-      schema: createSchema,
-      inputSchema: { type: "object", properties: { title: { type: "string" } }, required: ["title"], additionalProperties: false },
+      description: "PROPOSES a new thing. Nothing is created until the user confirms.", // i18n-ignore (model-facing tool text)
+      input: createSchema, result: proposed, modelOutput: proposed,
+      policy: { purpose: "example-proposal", serverReads: [], modelFields: ["status", "note"], processing: "local_only" },
+      projectForModel: (result) => result,
       run: async (input, { propose }) => {
         propose({ action: "create", title: input.title, details: [], payload: input });
         return PROPOSED;
@@ -462,7 +468,7 @@ export const ai = defineModuleAi({
   `ai.<eylem>.confirm` (düğme) ve `ai.<eylem>.done` (bildirim) zorunludur.
 - **Modüller arası erişim:** `ai.ts` yalnızca **kendi** `./server` ve `./permissions` dosyalarını kullanır.
   Başka modülün verisi gerekiyorsa §8'deki `access` onayı ve o modülün `server` girişi kullanılır.
-- **Doğrulayıcı** (`pnpm module:validate`) şunları denetler: `server-only`, `export const ai = defineModuleAi(...)`,
+- **Doğrulayıcı** (`pnpm module:validate`) şunları denetler: `server-only`, `export const ai = defineModuleAiV2(...)`,
   `module` = klasör adı, snake_case araç adları, `propose` edilen her eylemin `actions` içinde tanımlı olması
   ve eylem çevirileri.
 
