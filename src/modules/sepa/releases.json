@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.0.6",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "GoBD silme koruması",
+        "de": "GoBD-Löschschutz"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "SEPA tahsilat kalemi ilişkisi (SepaDebitItem.run) onDelete: Restrict olarak güncellendi.",
+          "de": "Die Relation SepaDebitItem.run wurde auf onDelete: Restrict umgestellt."
+        }
+      ]
+    },
+    {
       "version": "1.0.5",
       "date": "2026-11-18",
       "title": {
