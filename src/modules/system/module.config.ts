@@ -1,4 +1,4 @@
-import { Boxes, History, KeyRound, Settings, Wand2, PackageCheck } from "lucide-react";
+import { Activity, Boxes, History, KeyRound, Settings, Wand2, PackageCheck } from "lucide-react";
 import type { ModuleConfig } from "@/shared/types/module";
 import {
   settingsPermissions,
@@ -8,7 +8,7 @@ import {
 export const moduleConfig: ModuleConfig = {
   key: "system",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.13.0",
+  version: "1.15.0",
   label: "Modül Yönetimi",
   description: "Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.",
   category: "CORE",
@@ -19,6 +19,8 @@ export const moduleConfig: ModuleConfig = {
     { module: "accounting", operations: ["read", "write"] },
     // Lisans (RFC-002): kurum adı ve sicil numarası lisansla eşleştirilir.
     { module: "organization", operations: ["read"] },
+    // Sağlık kokpiti (F3): admin kullanıcısı varlığı denetlenir.
+    { module: "users", operations: ["read"] },
   ],
   nav: [
     {
@@ -40,12 +42,21 @@ export const moduleConfig: ModuleConfig = {
       permission: { definition: systemPermissions, action: "view" },
     },
     {
+      href: "/ayarlar/moduller/saglik",
+      label: "Modül ve İş Akışı Sağlığı",
+      labelKey: "modulSagligi",
+      icon: Activity,
+      group: "settings",
+      order: 4,
+      permission: { definition: systemPermissions, action: "view" },
+    },
+    {
       href: "/ayarlar/moduller/paketler",
       label: "Modül paketleri",
       labelKey: "modulPaketleri",
       icon: PackageCheck,
       group: "settings",
-      order: 4,
+      order: 5,
       permission: { definition: systemPermissions, action: "view" },
       // Ayrı menü yok: Modül Yönetimi ekranındaki "Yeni modül kur" butonundan açılır.
       hidden: true,
