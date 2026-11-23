@@ -66,19 +66,19 @@ Bitiş: AI sadece datasetRef/durum görür; dosyada doğru ad ve tutarlar bulunu
 - [x] E05 (AI-14) keyId/keyring, eski format okuma ve read-old/write-new rotasyon; decrypt hata görünürlüğü.
 - [x] E06 (AI-16) Provider policy revision/model/endpoint/fallback ve yeniden onay kuralları.
 - [x] E07 (AI-16) Rıza iptalinde pending iş/ref/dataset revoke; eski dosya/rapor purpose bazlı yaşam döngüsü.
-- [ ] E08 Sağlayıcı timeout/retry/region/retention/fallback ayarlarını resmî belgeler ve gerçek hesapla doğrula.
+- [ ] E08 Sağlayıcı timeout/retry/region/retention/fallback ayarlarını resmî belgeler ve gerçek hesapla doğrula. **Operatör görevi:** gerçek sağlayıcı hesabı (DPA/bölge) gerektirir; kodla kapanmaz (`operations/AI_V2_ROLLOUT.md`, #410).
 - [x] E09 Metrics/alerts: budget, denial, stale preview, cleanup hatası, orphan ve job gecikmesi.
 - [x] E10 İzole DB entegrasyon ve worker recovery/cancellation testleri; ilgili yer tutucu auth testlerini gerçek davranış testine dönüştür.
 - [x] E11 module:sync, modül sürüm/releases, typecheck, lint, ilgili testler, build ve TR/DE kontrollerini tamamla.
-- [ ] E12 Pilot feature flag, durdurma/rollback ve operatör runbook'u; kişisel export yayını için kabul matrisi.
+- [ ] E12 Pilot feature flag, durdurma/rollback ve operatör runbook'u; kişisel export yayını için kabul matrisi. **Operatör görevi:** üretim pilotu ve kabul matrisi ürün sahibi/operatörle yapılır (#410).
 
 ## F — sonraki ürün kapsamı
 
-- [ ] F01 students/guardian adapter'larını çocuk verisi politikasını koruyarak taşı.
-- [ ] F02 Diğer 17 modülün araçlarını öncelik sırasıyla v2'ye geçir; sonrasında legacy desteği kaldır.
+- [x] F01 students/guardian adapter'larını çocuk verisi politikasını koruyarak taşı. Öğrenci/veli aracı v2, local-only ve yalnız sayı döndürür; kişisel öğrenci/veli dosyası çocuk verisi politikası (K3) gereği AI'a açılmaz. Kanıt: `tests/ai/v2-only-registry.test.ts` (yalnız `count` sorgusu, sayı alanları).
+- [x] F02 Diğer 17 modülün araçlarını öncelik sırasıyla v2'ye geçir; sonrasında legacy desteği kaldır. Tüm modül araçları `aiToolV2`; v1 `aiTool`/`defineModuleAi` kaldırıldı, çalışma zamanı v2 olmayan aracı `AI_V1_TOOL_REJECTED` ile reddeder.
 - [ ] F03 Aidat hatırlatma taslağı → bağımsız gönderim onayı → mevcut mailings otomasyonu.
-- [ ] F04 PERSONAL_SECRETARY S1–S6: günlük brifing, inbox önerisi, OCR, boş zaman ve takip; v2 temeli üstünde ayrı planla (kanonik: `docs/ideas/PERSONAL_SECRETARY_BRAINSTORM.md`).
-- [ ] F05 Gerçek istemci/ilişkili sorgu ihtiyacı oluşursa GraphQL kararını yeniden değerlendir.
+- [ ] F04 (sekreter epiği #263 kapsamında izlenir) PERSONAL_SECRETARY S1–S6: günlük brifing, inbox önerisi, OCR, boş zaman ve takip; v2 temeli üstünde ayrı planla (kanonik: `docs/ideas/PERSONAL_SECRETARY_BRAINSTORM.md`).
+- [ ] F05 Gerçek istemci/ilişkili sorgu ihtiyacı oluşursa GraphQL kararını yeniden değerlendir. (Talep oluşursa yeniden değerlendirilir; şu an iş yok.)
 
 ## Takip kuralı
 
