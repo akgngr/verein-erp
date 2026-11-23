@@ -8,6 +8,10 @@ import {
   type ProjectRowInput,
   type RecordedReserveInput,
 } from "@/modules/accounting/services/treasurer-report";
+import {
+  getTreasurerReportSummary,
+  getTreasurerReportSummaryFromStrings,
+} from "@/modules/accounting/utils/treasurer-report-summary";
 
 test("computeTreasurerReport: faaliyet alanları ve toplam gelir/gider hesaplaması", () => {
   const bookings: BookingRowInput[] = [
@@ -112,9 +116,13 @@ test("computeTreasurerReport: § 62 AO kayıtlı yedekler ve amaca tahsisli fonl
   assert.equal(report.reserves.recordedReserves.length, 2);
   assert.equal(report.reserves.closingReservesCents, 250_000);
 
-  // Düz metinde § 62 AO açıklaması yer almalı
-  const trText = report.plainSummary.tr.join(" ");
-  const deText = report.plainSummary.de.join(" ");
+  // Sunum katmanında (strings.ts ve summary util) § 62 AO açıklaması yer almalı
+  const formatMoneyMock = (cents: number) => `${(cents / 100).toFixed(2)} €`;
+  const summaryTr = getTreasurerReportSummaryFromStrings(report, "tr", formatMoneyMock);
+  const summaryDe = getTreasurerReportSummaryFromStrings(report, "de", formatMoneyMock);
+
+  const trText = summaryTr.lines.join(" ");
+  const deText = summaryDe.lines.join(" ");
   assert.match(trText, /§ 62 AO/);
   assert.match(deText, /§ 62 AO/);
 });
@@ -140,7 +148,7 @@ test("computeTreasurerReport: Önceki yıl bazının 0 olması durumu (sıfıra 
   assert.equal(eco.yearOnYearChangePercent, null);
 });
 
-test("computeTreasurerReport: İbra tavsiyesi (Entlastung) üretimi", () => {
+test("computeTreasurerReport & summary: İbra tavsiyesi (Entlastung) üretimi", () => {
   const report = computeTreasurerReport({
     year: 2026,
     bookings: [],
@@ -149,12 +157,25 @@ test("computeTreasurerReport: İbra tavsiyesi (Entlastung) üretimi", () => {
     projects: [],
   });
 
-  assert.ok(report.plainSummary.recommendation);
-  assert.match(report.plainSummary.recommendation.tr, /Sayman ve Yönetim Kurulu'nun ibrası tavsiye edilir/);
-  assert.match(report.plainSummary.recommendation.de, /Entlastung des Schatzmeisters und des Vorstands empfohlen/);
+  const formatMoneyMock = (cents: number) => `${(cents / 100).toFixed(2)} €`;
+  const summaryTr = getTreasurerReportSummaryFromStrings(report, "tr", formatMoneyMock);
+  const summaryDe = getTreasurerReportSummaryFromStrings(report, "de", formatMoneyMock);
+
+  assert.ok(summaryTr.recommendation);
+  assert.match(summaryTr.recommendation, /Sayman ve Yönetim Kurulu'nun ibrası tavsiye edilir/);
+  assert.ok(summaryDe.recommendation);
+  assert.match(summaryDe.recommendation, /Entlastung des Schatzmeisters und des Vorstands empfohlen/);
+
+  // t() fonksiyonu ile ICU formatlama testi
+  const mockT = (key: string, values?: Record<string, string | number>) => {
+    if (key === "summary.recommendation") return `${values?.year} ibrası tavsiye edilir.`;
+    return key;
+  };
+  const summaryFromT = getTreasurerReportSummary(report, mockT, formatMoneyMock);
+  assert.equal(summaryFromT.recommendation, "2026 ibrası tavsiye edilir.");
 });
 
-test("computeTreasurerReport: Gizlilik doğrulaması (kişisel veya üye verisi içermez)", () => {
+test("computeTreasurerReport: Gizlilik doğrulaması (salt sayısal toplulaştırma, kişisel veya üye verisi içermez)", () => {
   const bookings: BookingRowInput[] = [
     { id: "b1", year: 2026, type: "INCOME", amountCents: 12_000, sphere: "IDEELL", projectId: null },
   ];
@@ -169,14 +190,14 @@ test("computeTreasurerReport: Gizlilik doğrulaması (kişisel veya üye verisi 
 
   const serialized = JSON.stringify(report);
 
-  // Çıktıda kişi adları veya IBAN formatı bulunmamalıdır
+  // Çıktıda kişi adları, IBAN formatı veya gömülü metin bulunmamalıdır
   assert.doesNotMatch(serialized, /DE\d{20}/);
   assert.doesNotMatch(serialized, /Max Mustermann/i);
   assert.doesNotMatch(serialized, /Ahmet Yılmaz/i);
+  assert.doesNotMatch(serialized, /Bilinmeyen Proje/);
+  assert.doesNotMatch(serialized, /faaliyet döneminde/);
 
-  // Düz metin özetleri üretilmiş olmalı
-  assert.ok(report.plainSummary.tr.length > 0);
-  assert.ok(report.plainSummary.de.length > 0);
-  assert.match(report.plainSummary.tr[0], /2026 faaliyet döneminde/);
-  assert.match(report.plainSummary.de[0], /Im Geschäftsjahr 2026/);
+  // Servis çıktısında salt sayısal alanlar yer almalıdır
+  assert.equal(typeof report.totals.totalIncomeCents, "number");
+  assert.equal(typeof report.reserves.closingReservesCents, "number");
 });

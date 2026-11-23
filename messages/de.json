@@ -708,6 +708,17 @@
           "assetManagement": "Vermögensverwaltung",
           "purposeOperation": "Zweckbetrieb",
           "economicOperation": "Wirtschaftlicher Geschäftsbetrieb"
+        },
+        "unknownProject": "Unbekanntes Projekt",
+        "summary": {
+          "incomeSurplus": "Im Geschäftsjahr {year} beliefen sich die Gesamteinnahmen auf {income} und die Gesamtausgaben auf {expense}. Das Geschäftsjahr schließt mit einem Jahresüberschuss von {surplus} ab.",
+          "incomeDeficit": "Im Geschäftsjahr {year} beliefen sich die Gesamteinnahmen auf {income} und die Gesamtausgaben auf {expense}. Das Geschäftsjahr schließt mit einem Jahresfehlbetrag von {deficit} ab.",
+          "ideell": "Im ideellen Bereich (Mitgliedsbeiträge und Spenden) wurde ein Nettoergebnis von {net} erzielt.",
+          "projectsWithCount": "Im Berichtszeitraum wurden {count} Projekte geführt; der zweckgebundene Mittelbestand beträgt {earmarked}.",
+          "projectsNone": "Im Berichtszeitraum wurden keine gesonderten Projektbuchungen erfasst.",
+          "reserves": "Der Gesamtbestand der liquiden Mittel (Kasse und Bankkonten) belief sich zum Stichtag auf {closing} (davon freie Rücklagen: {free}).",
+          "recordedReserves": "Die nach § 62 AO ausgewiesenen Rücklagen belaufen sich auf insgesamt {recorded}.",
+          "recommendation": "Die Kassenprüfung ergab eine ordnungsgemäße Buch- und Belegführung. Der Mitgliederversammlung wird die Entlastung des Schatzmeisters und des Vorstands empfohlen."
         }
       },
       "economic80": "Die Einnahmen des wirtschaftlichen Geschäftsbetriebs erreichen 80 % der Grenze von 50.000 € (§ 64 Abs. 3 AO).",

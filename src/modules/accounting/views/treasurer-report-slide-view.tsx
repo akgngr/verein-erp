@@ -10,6 +10,7 @@ import { formatMoney } from "@/shared/money";
 
 import { AssemblyReportSlides } from "../components/assembly-report-slides";
 import type { TreasurerReportResult } from "../services/treasurer-report";
+import { getTreasurerReportSummary } from "../utils/treasurer-report-summary";
 
 export function TreasurerReportSlideView({
   report,
@@ -29,6 +30,8 @@ export function TreasurerReportSlideView({
   };
 
   const isSurplus = report.totals.netAnnualSurplusCents >= 0;
+
+  const summary = getTreasurerReportSummary(report, t, formatMoney);
 
   if (slideMode) {
     return (
@@ -179,7 +182,7 @@ export function TreasurerReportSlideView({
                   key={p.projectId}
                   className="flex items-center justify-between py-1.5 border-b border-ink-100 text-xs last:border-0"
                 >
-                  <span className="font-medium text-foreground">{p.projectName}</span>
+                  <span className="font-medium text-foreground">{p.projectName || t("unknownProject")}</span>
                   <div className="flex items-center gap-3">
                     <span className="text-ink-500">
                       {formatMoney(p.incomeCents)} / {formatMoney(p.expenseCents)}
@@ -201,18 +204,18 @@ export function TreasurerReportSlideView({
         <SurfaceCard className={`p-5 ${report.projects.length === 0 ? "lg:col-span-2" : ""}`}>
           <h3 className="text-sm font-semibold text-foreground mb-3">{t("summaryTitle")}</h3>
           <ul className="space-y-2 text-xs text-foreground/90">
-            {report.plainSummary[lang].map((point, index) => (
+            {summary.lines.map((point, index) => (
               <li key={index} className="flex items-start gap-2">
                 <span className="h-1.5 w-1.5 rounded-full bg-accent mt-1.5 shrink-0" />
                 <span>{point}</span>
               </li>
             ))}
           </ul>
-          {report.plainSummary.recommendation ? (
+          {summary.recommendation ? (
             <div className="mt-4 flex items-center gap-2 rounded-lg border border-emerald-500/30 bg-emerald-50/50 p-3 text-xs dark:bg-emerald-950/20">
               <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0" aria-hidden="true" />
               <span className="font-medium text-emerald-900 dark:text-emerald-200">
-                {report.plainSummary.recommendation[lang]}
+                {summary.recommendation}
               </span>
             </div>
           ) : null}

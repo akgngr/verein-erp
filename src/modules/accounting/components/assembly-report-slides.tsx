@@ -22,6 +22,7 @@ import { SurfaceCard } from "@/shared/components/ui/surface-card";
 import { formatMoney } from "@/shared/money";
 
 import type { TreasurerReportResult } from "../services/treasurer-report";
+import { getTreasurerReportSummaryFromStrings } from "../utils/treasurer-report-summary";
 
 interface AssemblyReportSlidesProps {
   report: TreasurerReportResult;
@@ -89,6 +90,7 @@ export function AssemblyReportSlides({
   }, [nextSlide, prevSlide, onClose]);
 
   const money = (cents: number) => formatMoney(cents, displayLang === "tr" ? "tr-TR" : "de-DE");
+  const summary = getTreasurerReportSummaryFromStrings(report, displayLang, money);
 
   const sphereTitles: Record<string, string> = {
     IDEELL: t("spheres.ideell"),
@@ -263,7 +265,7 @@ export function AssemblyReportSlides({
 
             <div className="rounded-lg border border-ink-200 bg-ink-50/50 p-4 dark:bg-ink-900/30">
               <p className="text-sm font-medium leading-relaxed text-ink-800 dark:text-ink-200">
-                • {report.plainSummary[displayLang][0]}
+                • {summary.lines[0]}
               </p>
             </div>
           </div>
@@ -328,7 +330,7 @@ export function AssemblyReportSlides({
             </div>
 
             <p className="text-xs text-ink-500">
-              • {report.plainSummary[displayLang][1]}
+              • {summary.lines[1]}
             </p>
           </div>
         )}
@@ -353,7 +355,7 @@ export function AssemblyReportSlides({
                 {report.projects.map((p) => (
                   <SurfaceCard key={p.projectId} className="p-4 space-y-2">
                     <p className="font-semibold text-sm text-foreground truncate">
-                      {p.projectName}
+                      {p.projectName || t("unknownProject")}
                     </p>
                     <div className="flex justify-between text-xs text-ink-600">
                       <span>{t("incomeHeader")}:</span>
@@ -386,7 +388,7 @@ export function AssemblyReportSlides({
                 </span>
               </p>
               <p className="mt-1 text-xs text-ink-500">
-                {report.plainSummary[displayLang][2]}
+                {summary.lines[2]}
               </p>
             </div>
           </div>
@@ -433,7 +435,7 @@ export function AssemblyReportSlides({
 
             <div className="rounded-lg border border-ink-200 bg-ink-50/50 p-4 dark:bg-ink-900/30">
               <p className="text-sm font-medium leading-relaxed text-ink-800 dark:text-ink-200">
-                • {report.plainSummary[displayLang][3]}
+                • {summary.lines[3]}
               </p>
             </div>
           </div>
@@ -450,7 +452,7 @@ export function AssemblyReportSlides({
             </div>
 
             <div className="space-y-2 rounded-lg border border-ink-200 bg-surface p-4">
-              {report.plainSummary[displayLang].map((item, index) => (
+              {summary.lines.map((item, index) => (
                 <div key={index} className="flex items-start gap-2 text-sm text-ink-700 dark:text-ink-300">
                   <span className="text-accent mt-0.5">•</span>
                   <p className="leading-relaxed">{item}</p>
@@ -467,7 +469,7 @@ export function AssemblyReportSlides({
                     {t("recommendationHeader")}
                   </h3>
                   <p className="mt-1 text-sm text-emerald-800 dark:text-emerald-300">
-                    {report.plainSummary.recommendation[displayLang]}
+                    {summary.recommendation}
                   </p>
                 </div>
               </div>

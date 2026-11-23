@@ -44,7 +44,7 @@ export interface SphereAggregate {
 
 export interface ProjectAggregate {
   projectId: string;
-  projectName: string;
+  projectName: string | null;
   incomeCents: number;
   expenseCents: number;
   netCents: number;
@@ -73,14 +73,6 @@ export interface TreasurerReportResult {
     yearOnYearDeltaCents: number;
     incomeChangePercent: number | null;
     expenseChangePercent: number | null;
-  };
-  plainSummary: {
-    tr: string[];
-    de: string[];
-    recommendation: {
-      tr: string;
-      de: string;
-    };
   };
 }
 
@@ -160,7 +152,7 @@ export function computeTreasurerReport(params: {
   });
 
   // 2. Proje bazlı toplamlar
-  const projectMap = new Map<string, { name: string; income: number; expense: number }>();
+  const projectMap = new Map<string, { name: string | null; income: number; expense: number }>();
   for (const p of projects) {
     projectMap.set(p.id, { name: p.name, income: 0, expense: 0 });
   }
@@ -168,7 +160,7 @@ export function computeTreasurerReport(params: {
   for (const b of bookings) {
     if (b.type === "TRANSFER" || !b.projectId) continue;
     const entry = projectMap.get(b.projectId) ?? {
-      name: b.projectName ?? "Bilinmeyen Proje",
+      name: b.projectName ?? null,
       income: 0,
       expense: 0,
     };
@@ -221,51 +213,6 @@ export function computeTreasurerReport(params: {
     totalRecordedReservesCents,
   };
 
-  // 4. İki Dilli Düz Metin Özet (Plain-language Narrative)
-  const formatMoney = (cents: number, lang: "tr" | "de") => {
-    const euros = cents / 100;
-    return new Intl.NumberFormat(lang === "tr" ? "tr-TR" : "de-DE", {
-      style: "currency",
-      currency: "EUR",
-      maximumFractionDigits: 2,
-    }).format(euros);
-  };
-
-  const trSummary: string[] = [
-    `${year} faaliyet döneminde derneğin toplam geliri ${formatMoney(totalIncomeCents, "tr")}, toplam gideri ${formatMoney(totalExpenseCents, "tr")} olarak gerçekleşmiştir. Dönem ${netAnnualSurplusCents >= 0 ? "net " + formatMoney(netAnnualSurplusCents, "tr") + " fazlalıkla" : "net " + formatMoney(Math.abs(netAnnualSurplusCents), "tr") + " açıkla"} tamamlanmıştır.`,
-    `İdeel alandaki (üye aidatları ve bağışlar) net bakiye ${formatMoney(spheres.find((s) => s.sphere === "IDEELL")?.netCents ?? 0, "tr")} seviyesindedir.`,
-    projectAggregates.length > 0
-      ? `Dönem içinde ${projectAggregates.length} aktif projede faaliyet yürütülmüş, amaca bağlı fon bakiyesi ${formatMoney(earmarkedFundsCents, "tr")} olarak kaydedilmiştir.`
-      : "Dönem içinde ayrı bir proje kaydı yürütülmemiştir.",
-    `Kasa ve banka hesaplarındaki toplam likit rezerv yıl sonunda ${formatMoney(closingReservesCents, "tr")} seviyesine ulaşmıştır (serbest rezerv: ${formatMoney(freeReservesCents, "tr")}).`,
-  ];
-
-  if (totalRecordedReservesCents > 0) {
-    trSummary.push(
-      `§ 62 AO kapsamında kayıtlı toplam yedek akçe tutarı ${formatMoney(totalRecordedReservesCents, "tr")} seviyesindedir.`,
-    );
-  }
-
-  const deSummary: string[] = [
-    `Im Geschäftsjahr ${year} beliefen sich die Gesamteinnahmen auf ${formatMoney(totalIncomeCents, "de")} und die Gesamtausgaben auf ${formatMoney(totalExpenseCents, "de")}. Das Geschäftsjahr schließt mit einem ${netAnnualSurplusCents >= 0 ? "Jahresüberschuss von " + formatMoney(netAnnualSurplusCents, "de") : "Jahresfehlbetrag von " + formatMoney(Math.abs(netAnnualSurplusCents), "de")} ab.`,
-    `Im ideellen Bereich (Mitgliedsbeiträge und Spenden) wurde ein Nettoergebnis von ${formatMoney(spheres.find((s) => s.sphere === "IDEELL")?.netCents ?? 0, "de")} erzielt.`,
-    projectAggregates.length > 0
-      ? `Im Berichtszeitraum wurden ${projectAggregates.length} Projekte geführt; der zweckgebundene Mittelbestand beträgt ${formatMoney(earmarkedFundsCents, "de")}.`
-      : "Im Berichtszeitraum wurden keine gesonderten Projektbuchungen erfasst.",
-    `Der Gesamtbestand der liquiden Mittel (Kasse und Bankkonten) belief sich zum Stichtag auf ${formatMoney(closingReservesCents, "de")} (davon freie Rücklagen: ${formatMoney(freeReservesCents, "de")}).`,
-  ];
-
-  if (totalRecordedReservesCents > 0) {
-    deSummary.push(
-      `Die nach § 62 AO ausgewiesenen Rücklagen belaufen sich auf insgesamt ${formatMoney(totalRecordedReservesCents, "de")}.`,
-    );
-  }
-
-  const recommendation = {
-    tr: `${year} yılı defter, belge ve hesap denetimleri sonucunda kasa hareketlerinin nizami olduğu tespit edilmiş olup, Genel Kurul'a Sayman ve Yönetim Kurulu'nun ibrası tavsiye edilir.`,
-    de: `Die Kassenprüfung ergab eine ordnungsgemäße Buch- und Belegführung. Der Mitgliederversammlung wird die Entlastung des Schatzmeisters und des Vorstands empfohlen.`,
-  };
-
   return {
     year,
     spheres,
@@ -279,11 +226,6 @@ export function computeTreasurerReport(params: {
       yearOnYearDeltaCents,
       incomeChangePercent,
       expenseChangePercent,
-    },
-    plainSummary: {
-      tr: trSummary,
-      de: deSummary,
-      recommendation,
     },
   };
 }

@@ -4,6 +4,7 @@ import { formatPdfMoney } from "@/shared/pdf/format";
 import { Letterhead, type LetterheadProfile } from "@/shared/pdf/letterhead";
 
 import type { TreasurerReportResult } from "../services/treasurer-report";
+import { ACCOUNTING_STRINGS } from "./strings";
 
 export interface TreasurerReportPdfData {
   organization: LetterheadProfile;
@@ -89,100 +90,65 @@ const styles = StyleSheet.create({
   },
 });
 
-const SPHERE_LABELS = {
-  tr: {
-    IDEELL: "1. İdeel Alan (Aidat & Bağışlar)",
-    ASSET_MANAGEMENT: "2. Varlık Yönetimi (Faiz / Kira)",
-    PURPOSE_OPERATION: "3. Amaca Bağlı İşletme (Zweckbetrieb)",
-    ECONOMIC_OPERATION: "4. Ticari İşletme (Wirtschaftlich)",
-  },
-  de: {
-    IDEELL: "1. Ideeller Bereich (Beiträge & Spenden)",
-    ASSET_MANAGEMENT: "2. Vermögensverwaltung",
-    PURPOSE_OPERATION: "3. Zweckbetrieb",
-    ECONOMIC_OPERATION: "4. Wirtschaftlicher Geschäftsbetrieb",
-  },
-} as const;
-
 export function TreasurerReportDocument({ data }: { data: TreasurerReportPdfData }) {
   const { organization, lang, report } = data;
   const money = (cents: number) => formatPdfMoney(cents, lang);
+  const t = ACCOUNTING_STRINGS[lang].treasurerReport;
+  const sphereLabels = t.sphereLabelsNumbered;
 
-  const t = {
-    tr: {
-      title: `Kassenbericht (Kasa ve Bütçe Raporu) — ${report.year}`,
-      subtitle: "Genel Kurul Sunumu için Toplulaştırılmış Finansal Rapor (Kişisel veri içermez)",
-      spheres: "Faaliyet Alanlarına Göre Gelir ve Gider Dağılımı (§ 5)",
-      sphere: "Faaliyet Alanı",
-      income: "Gelir",
-      expense: "Gider",
-      net: "Net Sonuç",
-      prevYear: "Önceki Yıl",
-      change: "Yıllık Değişim",
-      projects: "Proje Bazlı Fon ve Bütçe Durumu",
-      project: "Proje Adı",
-      reserves: "Fonlar ve Rezerv Durumu (§ 62 AO)",
-      opening: "Dönem Başı Likit Rezerv:",
-      closing: "Dönem Sonu Toplam Rezerv:",
-      surplus: "Yıllık Net Bakiye:",
-      earmarked: "Amaca Bağlı (Zweckgebunden) Proje Fonları:",
-      free: "Serbest Rezervler (Freie Rücklagen):",
-      summaryTitle: "Dönem Özeti ve Sayman Değerlendirmesi",
-      recommendationTitle: "İbra Tavsiyesi",
-      treasurerSign: "Sayman (Schatzmeister) İmzası",
-      auditorSign: "Kasa Denetçisi (Kassenprüfer) İmzası",
-      placeDate: "Tarih ve Yer:",
-    },
-    de: {
-      title: `Kassenbericht für die Mitgliederversammlung — ${report.year}`,
-      subtitle: "Aggregierter Finanz- und Tätigkeitsbericht (Ohne personenbezogene Daten)",
-      spheres: "Einnahmen und Ausgaben nach steuerlichen Bereichen (§ 5)",
-      sphere: "Tätigkeitsbereich",
-      income: "Einnahmen",
-      expense: "Ausgaben",
-      net: "Netto",
-      prevYear: "Vorjahr",
-      change: "Veränderung",
-      projects: "Projektbezogene Mittelverwendung",
-      project: "Projekt",
-      reserves: "Mittel- und Rücklagenstand (§ 62 AO)",
-      opening: "Liquider Anfangsbestand:",
-      closing: "Liquider Endbestand:",
-      surplus: "Jahresergebnis:",
-      earmarked: "Zweckgebundene Rücklagen:",
-      free: "Freie Rücklagen:",
-      summaryTitle: "Zusammenfassung des Schatzmeisters",
-      recommendationTitle: "Entlastungsempfehlung",
-      treasurerSign: "Unterschrift Schatzmeister / Vorstand",
-      auditorSign: "Unterschrift Kassenprüfer",
-      placeDate: "Ort, Datum:",
-    },
-  }[lang];
+  const isSurplus = report.totals.netAnnualSurplusCents >= 0;
+  const ideellNetCents = report.spheres.find((s) => s.sphere === "IDEELL")?.netCents ?? 0;
 
-  const sphereLabels = SPHERE_LABELS[lang];
+  const summaryLines: string[] = [
+    isSurplus
+      ? t.summaryIncomeSurplus(
+          report.year,
+          money(report.totals.totalIncomeCents),
+          money(report.totals.totalExpenseCents),
+          money(report.totals.netAnnualSurplusCents),
+        )
+      : t.summaryIncomeDeficit(
+          report.year,
+          money(report.totals.totalIncomeCents),
+          money(report.totals.totalExpenseCents),
+          money(Math.abs(report.totals.netAnnualSurplusCents)),
+        ),
+    t.summaryIdeell(money(ideellNetCents)),
+    report.projects.length > 0
+      ? t.summaryProjects(report.projects.length, money(report.reserves.earmarkedFundsCents))
+      : t.summaryNoProjects,
+    t.summaryReserves(money(report.reserves.closingReservesCents), money(report.reserves.freeReservesCents)),
+  ];
+
+  if (report.reserves.totalRecordedReservesCents > 0) {
+    summaryLines.push(t.summaryRecordedReserves(money(report.reserves.totalRecordedReservesCents)));
+  }
+
+  const recommendation = t.recommendation(report.year);
+  const docTitle = t.title(report.year);
 
   return (
-    <Document title={`${t.title}`} author={organization.name} language={lang}>
+    <Document title={docTitle} author={organization.name} language={lang}>
       <Page size="A4" style={styles.page}>
         <Letterhead profile={organization} />
 
         <View style={styles.headerBlock}>
-          <Text style={styles.title}>{t.title}</Text>
+          <Text style={styles.title}>{docTitle}</Text>
           <Text style={styles.subtitle}>{t.subtitle}</Text>
         </View>
 
         {/* KPI Özeti */}
         <View style={styles.kpiContainer}>
           <View style={styles.kpiCard}>
-            <Text style={styles.kpiLabel}>{t.income}</Text>
+            <Text style={styles.kpiLabel}>{t.colIncome}</Text>
             <Text style={styles.kpiValue}>{money(report.totals.totalIncomeCents)}</Text>
           </View>
           <View style={styles.kpiCard}>
-            <Text style={styles.kpiLabel}>{t.expense}</Text>
+            <Text style={styles.kpiLabel}>{t.colExpense}</Text>
             <Text style={styles.kpiValue}>{money(report.totals.totalExpenseCents)}</Text>
           </View>
           <View style={styles.kpiCard}>
-            <Text style={styles.kpiLabel}>{t.surplus}</Text>
+            <Text style={styles.kpiLabel}>{t.netAnnualSurplus}</Text>
             <Text
               style={[
                 styles.kpiValue,
@@ -193,19 +159,19 @@ export function TreasurerReportDocument({ data }: { data: TreasurerReportPdfData
             </Text>
           </View>
           <View style={styles.kpiCard}>
-            <Text style={styles.kpiLabel}>{t.closing}</Text>
+            <Text style={styles.kpiLabel}>{t.closingReserves}</Text>
             <Text style={styles.kpiValue}>{money(report.reserves.closingReservesCents)}</Text>
           </View>
         </View>
 
         {/* Alanlar Tablosu */}
-        <Text style={styles.sectionTitle}>{t.spheres}</Text>
+        <Text style={styles.sectionTitle}>{t.spheresSection}</Text>
         <View style={[styles.row, styles.headRow]}>
-          <Text style={{ width: 175, paddingHorizontal: 2 }}>{t.sphere}</Text>
-          <Text style={{ width: 75, textAlign: "right", paddingHorizontal: 2 }}>{t.income}</Text>
-          <Text style={{ width: 75, textAlign: "right", paddingHorizontal: 2 }}>{t.expense}</Text>
-          <Text style={{ width: 75, textAlign: "right", paddingHorizontal: 2 }}>{t.net}</Text>
-          <Text style={{ width: 55, textAlign: "right", paddingHorizontal: 2 }}>{t.change}</Text>
+          <Text style={{ width: 175, paddingHorizontal: 2 }}>{t.colSphere}</Text>
+          <Text style={{ width: 75, textAlign: "right", paddingHorizontal: 2 }}>{t.colIncome}</Text>
+          <Text style={{ width: 75, textAlign: "right", paddingHorizontal: 2 }}>{t.colExpense}</Text>
+          <Text style={{ width: 75, textAlign: "right", paddingHorizontal: 2 }}>{t.colNet}</Text>
+          <Text style={{ width: 55, textAlign: "right", paddingHorizontal: 2 }}>{t.colChange}</Text>
         </View>
         {report.spheres.map((s) => (
           <View key={s.sphere} style={styles.row}>
@@ -222,22 +188,22 @@ export function TreasurerReportDocument({ data }: { data: TreasurerReportPdfData
         ))}
 
         {/* Rezerv ve Fon Özeti */}
-        <Text style={styles.sectionTitle}>{t.reserves}</Text>
+        <Text style={styles.sectionTitle}>{t.reservesSection}</Text>
         <View style={{ marginTop: 4, marginBottom: 8 }}>
           <View style={styles.row}>
-            <Text style={{ width: 260 }}>{t.opening}</Text>
+            <Text style={{ width: 260 }}>{t.openingReserves}</Text>
             <Text style={{ width: 120, textAlign: "right" }}>{money(report.reserves.openingReservesCents)}</Text>
           </View>
           <View style={styles.row}>
-            <Text style={{ width: 260 }}>{t.earmarked}</Text>
+            <Text style={{ width: 260 }}>{t.earmarkedFunds}</Text>
             <Text style={{ width: 120, textAlign: "right" }}>{money(report.reserves.earmarkedFundsCents)}</Text>
           </View>
           <View style={styles.row}>
-            <Text style={{ width: 260 }}>{t.free}</Text>
+            <Text style={{ width: 260 }}>{t.freeReserves}</Text>
             <Text style={{ width: 120, textAlign: "right" }}>{money(report.reserves.freeReservesCents)}</Text>
           </View>
           <View style={[styles.row, styles.totalRow]}>
-            <Text style={{ width: 260 }}>{t.closing}</Text>
+            <Text style={{ width: 260 }}>{t.closingReserves}</Text>
             <Text style={{ width: 120, textAlign: "right" }}>{money(report.reserves.closingReservesCents)}</Text>
           </View>
         </View>
@@ -245,16 +211,16 @@ export function TreasurerReportDocument({ data }: { data: TreasurerReportPdfData
         {/* Projeler Tablosu (Varsa) */}
         {report.projects.length > 0 && (
           <>
-            <Text style={styles.sectionTitle}>{t.projects}</Text>
+            <Text style={styles.sectionTitle}>{t.projectsSection}</Text>
             <View style={[styles.row, styles.headRow]}>
-              <Text style={{ width: 230, paddingHorizontal: 2 }}>{t.project}</Text>
-              <Text style={{ width: 75, textAlign: "right", paddingHorizontal: 2 }}>{t.income}</Text>
-              <Text style={{ width: 75, textAlign: "right", paddingHorizontal: 2 }}>{t.expense}</Text>
-              <Text style={{ width: 75, textAlign: "right", paddingHorizontal: 2 }}>{t.net}</Text>
+              <Text style={{ width: 230, paddingHorizontal: 2 }}>{t.colProject}</Text>
+              <Text style={{ width: 75, textAlign: "right", paddingHorizontal: 2 }}>{t.colIncome}</Text>
+              <Text style={{ width: 75, textAlign: "right", paddingHorizontal: 2 }}>{t.colExpense}</Text>
+              <Text style={{ width: 75, textAlign: "right", paddingHorizontal: 2 }}>{t.colNet}</Text>
             </View>
             {report.projects.map((p) => (
               <View key={p.projectId} style={styles.row}>
-                <Text style={{ width: 230, paddingHorizontal: 2 }}>{p.projectName}</Text>
+                <Text style={{ width: 230, paddingHorizontal: 2 }}>{p.projectName || t.unknownProject}</Text>
                 <Text style={{ width: 75, textAlign: "right", paddingHorizontal: 2 }}>{money(p.incomeCents)}</Text>
                 <Text style={{ width: 75, textAlign: "right", paddingHorizontal: 2 }}>{money(p.expenseCents)}</Text>
                 <Text style={{ width: 75, textAlign: "right", paddingHorizontal: 2 }}>{money(p.netCents)}</Text>
@@ -266,13 +232,13 @@ export function TreasurerReportDocument({ data }: { data: TreasurerReportPdfData
         {/* Düz Metin Özet */}
         <View style={styles.summaryBox}>
           <Text style={[styles.summaryText, { fontWeight: 700, marginBottom: 5 }]}>{t.summaryTitle}</Text>
-          {report.plainSummary[lang].map((line, i) => (
+          {summaryLines.map((line, i) => (
             <Text key={i} style={styles.summaryText}>• {line}</Text>
           ))}
-          {report.plainSummary.recommendation ? (
+          {recommendation ? (
             <View style={styles.recommendationBox}>
               <Text style={styles.recommendationText}>
-                {report.plainSummary.recommendation[lang]}
+                {recommendation}
               </Text>
             </View>
           ) : null}

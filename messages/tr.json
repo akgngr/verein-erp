@@ -708,6 +708,17 @@
           "assetManagement": "Varlık Yönetimi (Faiz/Kira)",
           "purposeOperation": "Amaca Bağlı İşletme (Zweckbetrieb)",
           "economicOperation": "Ticari İşletme (Wirtschaftlich)"
+        },
+        "unknownProject": "Bilinmeyen Proje",
+        "summary": {
+          "incomeSurplus": "{year} faaliyet döneminde derneğin toplam geliri {income}, toplam gideri {expense} olarak gerçekleşmiştir. Dönem net {surplus} fazlalıkla tamamlanmıştır.",
+          "incomeDeficit": "{year} faaliyet döneminde derneğin toplam geliri {income}, toplam gideri {expense} olarak gerçekleşmiştir. Dönem net {deficit} açıkla tamamlanmıştır.",
+          "ideell": "İdeel alandaki (üye aidatları ve bağışlar) net bakiye {net} seviyesindedir.",
+          "projectsWithCount": "Dönem içinde {count} aktif projede faaliyet yürütülmüş, amaca bağlı fon bakiyesi {earmarked} olarak kaydedilmiştir.",
+          "projectsNone": "Dönem içinde ayrı bir proje kaydı yürütülmemiştir.",
+          "reserves": "Kasa ve banka hesaplarındaki toplam likit rezerv yıl sonunda {closing} seviyesine ulaşmıştır (serbest rezerv: {free}).",
+          "recordedReserves": "§ 62 AO kapsamında kayıtlı toplam yedek akçe tutarı {recorded} seviyesindedir.",
+          "recommendation": "{year} yılı defter, belge ve hesap denetimleri sonucunda kasa hareketlerinin nizami olduğu tespit edilmiş olup, Genel Kurul'a Sayman ve Yönetim Kurulu'nun ibrası tavsiye edilir."
         }
       },
       "economic80": "Ticari işletme gelirleri 50.000 € sınırının %80'ine ulaştı (§ 64 Abs. 3 AO).",
