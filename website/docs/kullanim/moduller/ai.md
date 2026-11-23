@@ -13,7 +13,7 @@ Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuy
 |---|---|
 | Anahtar | `ai` |
 | Tür | Eklenti |
-| Sürüm | 1.15.8 |
+| Sürüm | 1.15.9 |
 | Sayfalar | `/ayarlar/yapay-zeka` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Yapay zekâ asistanı | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.15.8 — Asistan araçları yalnız v2 sözleşmesiyle
+
+_2026-11-23_
+
+- **Güvenlik:** Eski (v1) araç sözleşmesi kaldırıldı; asistan yalnız veri politikası kayıtlı v2 araçlarını yükler. Öğrenci ve veli verisi yapay zekâya yalnız sayı olarak gider.
 
 ### 1.15.7 — Vergi ve hukuk danışmanlığı sınırı
 
@@ -83,10 +89,4 @@ _2026-11-17_
 
 - **Yeni:** Muhasebe genel bakışının sağ üst köşesinde AI durum analizi: yalnız izinli toplam muhasebe araçlarıyla son durumu, riskleri ve önerilen adımları özetler. Sonuç oturum boyunca saklanır, "Yenile" ile yeniden üretilir; hiçbir işlem yapmaz.
 
-### 1.14.1 — Daha iyi OCR: küçük resimler ve WebP
-
-_2026-11-16_
-
-- **İyileştirme:** Resimler OCR'dan önce büyütülüp PNG'ye çevrilir: küçük ekran görüntüleri ve WebP dosyaları artık okunur.
-
-Daha eski 28 herkese açık sürüm notu.
+Daha eski 29 herkese açık sürüm notu.

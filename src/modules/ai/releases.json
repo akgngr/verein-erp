@@ -2,7 +2,7 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
-      "version": "1.15.8",
+      "version": "1.15.9",
       "date": "2026-11-23",
       "title": {
         "tr": "Veri çıkışı defteri bağlantısı",
@@ -13,6 +13,21 @@
           "type": "internal",
           "tr": "Sağlayıcı bağdaştırıcıları (adapterFor) her dış çıkarım isteğinde içerik veya kişisel veri saklamadan veri çıkışı defterine (SystemEgressLedger) meta veri kaydı yazar.",
           "de": "Die Anbieter-Adapter (adapterFor) protokollieren bei jeder externen Inferenzanfrage Metadaten ohne Nutzlast oder personenbezogene Daten im Datenausgangs-Ledger (SystemEgressLedger)."
+        }
+      ]
+    },
+    {
+      "version": "1.15.8",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Asistan araçları yalnız v2 sözleşmesiyle",
+        "de": "Assistenz-Werkzeuge nur noch mit v2-Vertrag"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Eski (v1) araç sözleşmesi kaldırıldı; asistan yalnız veri politikası kayıtlı v2 araçlarını yükler. Öğrenci ve veli verisi yapay zekâya yalnız sayı olarak gider.",
+          "de": "Der alte (v1) Werkzeugvertrag wurde entfernt; der Assistent lädt nur v2-Werkzeuge mit registrierter Datenrichtlinie. Schüler- und Elterndaten gehen nur als Zahlen an die KI."
         }
       ]
     },
