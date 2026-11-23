@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.27.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Kassenprüfer süreli denetim odası (B001 Q1)",
+        "de": "Zeitlich begrenzter Kassenprüfer-Prüfraum (B001 Q1)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Son kullanma tarihli salt-okunur denetçi erişimi (/muhasebe/denetim), tüm görüntülemelerin denetim kaydına yazılması, 5 alanlı rehberli kontrol listesi ve Genel Kurul Denetim Raporu PDF'ine aktarılan bulgu kayıtları eklendi.",
+          "de": "Zeitlich begrenzter Lesezugriff für Kassenprüfer (/muhasebe/denetim), lückenlose Protokollierung aller Zugriffe, 5-teilige geführte Checkliste und Übernahme der Feststellungen in den Kassenprüfungsbericht (PDF) hinzugefügt."
+        }
+      ]
+    },
+    {
       "version": "1.26.1",
       "date": "2026-11-23",
       "title": {

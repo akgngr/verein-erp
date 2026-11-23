@@ -443,7 +443,8 @@
     "extras": "Demirbaş ve ekler",
     "grants": "Hibeler",
     "sepa": "SEPA otomatik ödeme",
-    "bookings": "Fişler"
+    "bookings": "Fişler",
+    "auditRoom": "Denetim odası"
   },
   "nav": {
     "muhasebe": "Muhasebe"
@@ -463,7 +464,71 @@
     "bank": "Banka",
     "payables": "Gelen faturalar",
     "gobd": "GoBD",
-    "extras": "Demirbaş ve ekler"
+    "extras": "Demirbaş ve ekler",
+    "auditRoom": "Kasa Denetim Odası"
+  },
+  "auditRoom": {
+    "title": "Kasa Denetim Odası (Kassenprüfer)",
+    "subtitle": "Süreli salt-okunur denetim erişimi, rehberli kontrol listesi ve genel kurul bulgu raporu.",
+    "defaultTitle": "Yıllık Kasa Denetimi",
+    "expiredTitle": "Denetim erişimi sona erdi veya tanımlı değil",
+    "expiredMessage": "Bu mali yıl için aktif, süresi dolmamış bir kasa denetimi erişiminiz bulunmuyor. Yönetim veya saymandan süreli denetim odası açmasını isteyin.",
+    "statusActive": "Erişim aktif (bitiş: {date})",
+    "statusExpired": "Süresi doldu / iptal edildi",
+    "noRoom": "Henüz denetim odası açılmadı",
+    "pdfButton": "Denetim Raporu PDF",
+    "pdfAria": "Denetim raporu PDF dili seçimi",
+    "manageTitle": "Süreli denetim erişimi yönetimi",
+    "roomTitleLabel": "Oda başlığı",
+    "auditorUserIdLabel": "Denetçi kullanıcı ID (isteğe bağlı)",
+    "auditorUserIdPlaceholder": "Boş bırakılırsa tüm AUDITOR rolleri erişir",
+    "daysValidLabel": "Geçerlilik süresi (gün)",
+    "createRoom": "Denetim odası aç",
+    "revokeRoom": "Erişimi hemen kapat",
+    "checked": "Kontrol edildi",
+    "pending": "Bekliyor",
+    "markChecked": "Kontrol edildi işaretle",
+    "uncheck": "İşareti kaldır",
+    "sampleBookingsTitle": "Fiş örneklemi (son kayıtlar)",
+    "emptySample": "Bu mali yılda fiş bulunamadı.",
+    "filesCount": "{count} belge",
+    "findingsTitle": "Denetim bulguları ve notlar",
+    "sectionLabel": "Kontrol alanı",
+    "severityLabel": "Önem düzeyi",
+    "summaryLabel": "Bulgu özeti",
+    "detailLabel": "Detay (isteğe bağlı)",
+    "addFinding": "Bulgu ekle",
+    "noFindings": "Henüz bulgu eklenmedi.",
+    "resolveFinding": "Çözüldü işaretle",
+    "sections": {
+      "BOOKING_SAMPLE": "Fiş örneklemi",
+      "RECEIPT_COMPLETENESS": "Belge tamlığı",
+      "CASH_COUNTS": "Kasa sayımı / kapanışları",
+      "BANK_RECONCILIATION": "Banka mutabakatı",
+      "OPEN_ITEMS": "Açık kalemler"
+    },
+    "metrics": {
+      "bookingSample": "İncelenen örnek fiş sayısı: {count}",
+      "receiptCompleteness": "Belgesiz fiş: {missing} · Numara boşluğu: {gaps}",
+      "cashCounts": "Kasa hesabı: {accounts} · Kapanmamış gün: {unclosed}",
+      "bankReconciliation": "Açık ekstre satırı: {open} · İşlenmiş: {booked}",
+      "openItems": "Açık fatura: {invoices} · Açık gelen fatura: {payables}"
+    },
+    "severities": {
+      "INFO": "Bilgi",
+      "NOTE": "Not",
+      "ISSUE": "Bulgu"
+    },
+    "statuses": {
+      "OPEN": "Açık",
+      "RESOLVED": "Çözüldü"
+    },
+    "errors": {
+      "generic": "İşlem tamamlanamadı.",
+      "notFound": "Denetim odası veya bulgu bulunamadı.",
+      "invalidWindow": "Bitiş tarihi başlangıçtan sonra olmalıdır.",
+      "expiredOrDenied": "Denetim odası süresi dolmuş veya erişim yetkiniz yok."
+    }
   },
   "errors": {
     "openingDateInvalid": "Açılış tarihi geçersiz.",
