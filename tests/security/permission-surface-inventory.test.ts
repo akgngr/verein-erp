@@ -18,7 +18,7 @@ test("SEC2 inventory is deterministic, read-only, and does not mistake markers f
     fixture("src/app/(dashboard)/page.tsx", "export default function Page() { return null; }");
     fixture("src/app/api/demo/route.ts", "const check = requirePermission;");
     fixture("src/modules/demo/actions.ts", "export async function save() {}");
-    fixture("src/shared/permissions/demo.ts", "const definition = definePermissions;");
+    fixture("src/shared/permissions/permissions.ts", "const definition = definePermissions;");
     fixture("src/modules/demo/generated/page.tsx", "requirePermission");
     fixture("src/modules/demo/other.ts", "requirePermission");
     fixture("src/modules/demo/node_modules/page.ts", "requirePermission");
@@ -39,7 +39,7 @@ test("SEC2 inventory is deterministic, read-only, and does not mistake markers f
       "src/app/(dashboard)/page.tsx",
       "src/app/api/demo/route.ts",
       "src/modules/demo/actions.ts",
-      "src/shared/permissions/demo.ts",
+      "src/shared/permissions/permissions.ts",
     ]);
     assert.deepEqual(report.candidates[0]?.markers, ["entry-point"]);
     assert.deepEqual(report.candidates[1]?.markers, ["entry-point", "guard-reference"]);
