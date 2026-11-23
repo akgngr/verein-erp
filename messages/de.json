@@ -141,6 +141,7 @@
     "modulPaketleri": "Modulpakete",
     "lisans": "Lizenz",
     "modulSagligi": "Modul-Gesundheit",
+    "widgetlar": "Widget-Einstellungen",
     "tasks": "Aufgaben",
     "kullanicilar": "Benutzer",
     "weather": "Wetter",
@@ -8943,7 +8944,8 @@
       "accounting": "Der Einrichtungsassistent legt je nach Organisationsform Buchhaltungskategorien, Konten und Steuereinstellungen an.",
       "organization": "Für die Lizenzprüfung werden Name und Register-/Steuernummer der Organisation gelesen (die Lizenz ist an diese Organisation gebunden).",
       "users": "Prüft das Vorhandensein eines Administratorkontos im Modul- und Workflow-Gesundheitscockpit.",
-      "ai": "Liest den Status konfigurierter KI-Anbieter für Datenschutz-Voreinstellungen und den monatlichen Datenausgangsbericht."
+      "ai": "Liest den Status konfigurierter KI-Anbieter für Datenschutz-Voreinstellungen und den monatlichen Datenausgangsbericht.",
+      "widgets": "Zeigt Widget-Einstellungen an und speichert Änderungen der Nutzer."
     },
     "gate": {
       "manage": "Zur Modulverwaltung",
@@ -9173,6 +9175,32 @@
     "ui": {
       "widget": {
         "settings": "Einstellungen"
+      },
+      "widgetSettings": {
+        "title": "Widget-Einstellungen",
+        "description": "Ordnen Sie die Widgets der Kopfzeile. Sichtbarkeit und Reihenfolge werden nur für Ihr Konto gespeichert.",
+        "hint": "Änderungen werden automatisch gespeichert. Die Pfeiltasten sind auch per Tastatur bedienbar.",
+        "reset": "Standard wiederherstellen",
+        "saved": "Einstellungen gespeichert.",
+        "failed": "Speichern fehlgeschlagen. Die vorherigen Einstellungen wurden wiederhergestellt.",
+        "empty": "Keine verfügbaren Widgets.",
+        "list": "Widget-Einstellungen",
+        "mandatory": "Verpflichtend",
+        "adminDisabled": "Durch Admin deaktiviert",
+        "optional": "Optional",
+        "toggle": "Sichtbarkeit von {title} ändern",
+        "moveUp": "{title} nach oben",
+        "moveDown": "{title} nach unten",
+        "preview": "Vorschau der Kopfzeile",
+        "desktop": "Desktop",
+        "mobile": "Mobil",
+        "noHeaderWidgets": "Keine sichtbaren Widgets",
+        "slots": {
+          "header": {
+            "right": "Kopfzeile · rechts"
+          }
+        },
+        "resetSuccess": "Standardeinstellungen wiederhergestellt."
       }
     },
     "readiness": {

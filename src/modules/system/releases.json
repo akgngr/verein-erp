@@ -2,7 +2,7 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
-      "version": "1.16.0",
+      "version": "1.17.0",
       "date": "2026-11-23",
       "title": {
         "tr": "Veri çıkışı defteri ve gizlilik ön ayarları (F2a)",
@@ -23,6 +23,21 @@
           "type": "feature",
           "tr": "Strict / Standard / Connected gizlilik ön ayarları veri olarak tanımlandı; önizleme farkı üretir, yönetici onayı ile uygulanır ve Strict profilinde kendi sunucunuzda barındırılan model ucu önerilir.",
           "de": "Die Datenschutz-Voreinstellungen Strict / Standard / Connected sind datengetrieben definiert, erzeugen eine Änderungs-Vorschau, erfordern eine Administrator-Freigabe und empfehlen im Strict-Profil einen selbst gehosteten Modell-Endpunkt."
+        }
+      ]
+    },
+    {
+      "version": "1.16.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Kişisel widget ayarları",
+        "de": "Persönliche Widget-Einstellungen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Widget görünürlük ve sıralama ayarları, sıfırlama ve masaüstü/mobil önizleme kullanıcı hesabına bağlandı.",
+          "de": "Sichtbarkeit, Reihenfolge, Zurücksetzen und Desktop-/Mobilvorschau der Widgets sind an das Nutzerkonto gebunden."
         }
       ]
     },

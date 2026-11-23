@@ -141,6 +141,7 @@
     "modulPaketleri": "Modül paketleri",
     "lisans": "Lisans",
     "modulSagligi": "Modül Sağlığı",
+    "widgetlar": "Widget ayarları",
     "tasks": "Görevler",
     "kullanicilar": "Kullanıcılar",
     "weather": "Hava Durumu",
@@ -8943,7 +8944,8 @@
       "accounting": "Kurulum sihirbazı, seçilen kurum türüne göre muhasebe kategorilerini, hesaplarını ve vergi ayarlarını oluşturur.",
       "organization": "Lisans doğrulaması için kurum adı ve sicil/vergi numarası okunur (lisans bu kuruma bağlıdır).",
       "users": "Modül ve iş akışı sağlığı kokpitinde yönetici kullanıcısının varlığı denetlenir.",
-      "ai": "Gizlilik ön ayarları ve aylık veri çıkışı raporu için yapılandırılmış yapay zekâ sağlayıcılarının durumu okunur."
+      "ai": "Gizlilik ön ayarları ve aylık veri çıkışı raporu için yapılandırılmış yapay zekâ sağlayıcılarının durumu okunur.",
+      "widgets": "Widget tercihlerini gösterir ve kullanıcının değişikliklerini kaydeder."
     },
     "gate": {
       "manage": "Modül yönetimine git",
@@ -9173,6 +9175,32 @@
     "ui": {
       "widget": {
         "settings": "Ayarlar"
+      },
+      "widgetSettings": {
+        "title": "Widget ayarları",
+        "description": "Üst çubuktaki widget’ları düzenleyin. Görünürlük ve sıra yalnız hesabınız için kaydedilir.",
+        "hint": "Değişiklikler otomatik kaydedilir. Sıralama düğmeleri klavyeyle de kullanılabilir.",
+        "reset": "Varsayılana dön",
+        "saved": "Tercihler kaydedildi.",
+        "failed": "Kaydedilemedi. Önceki tercihler geri yüklendi.",
+        "empty": "Kullanılabilir widget yok.",
+        "list": "Widget tercihleri",
+        "mandatory": "Zorunlu",
+        "adminDisabled": "Yönetici tarafından kapatıldı",
+        "optional": "İsteğe bağlı",
+        "toggle": "{title} görünürlüğünü değiştir",
+        "moveUp": "{title} yukarı taşı",
+        "moveDown": "{title} aşağı taşı",
+        "preview": "Üst çubuk önizlemesi",
+        "desktop": "Masaüstü",
+        "mobile": "Mobil",
+        "noHeaderWidgets": "Görünür widget yok",
+        "slots": {
+          "header": {
+            "right": "Üst çubuk · sağ"
+          }
+        },
+        "resetSuccess": "Varsayılan ayarlar geri yüklendi."
       }
     },
     "readiness": {
