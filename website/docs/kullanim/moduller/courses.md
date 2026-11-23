@@ -13,7 +13,7 @@ Gönüllü kurslar ve Nachhilfe: öğretmenler, dersler, kayıtlar, ücretler ve
 |---|---|
 | Anahtar | `courses` |
 | Tür | Resmî modül |
-| Sürüm | 1.4.12 |
+| Sürüm | 1.4.13 |
 | Sayfalar | `/kurslar`, `/ogrenciler`, `/ogrenci-takibi`, `/kurslar/ogretmenler`, `/kurslar/odemeler`, `/kurslar/hakedisler`, `/kurslar/ayarlar` |
 | Gerektirir | [Öğrenciler](./students) |
 | Önerir | [Öğrenci takibi](./progress) |
