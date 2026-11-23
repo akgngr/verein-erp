@@ -1,4 +1,4 @@
-import { Bell } from "lucide-react";
+import { Bell, Megaphone } from "lucide-react";
 import type { ModuleConfig } from "@/shared/types/module";
 
 import { notificationsPermissions } from "./permissions";
@@ -11,7 +11,7 @@ import { notificationsPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "notifications",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "0.12.0",
+  version: "0.13.0",
   label: "Bildirimler",
   description: "Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.",
   category: "CORE",
@@ -27,6 +27,7 @@ export const moduleConfig: ModuleConfig = {
     "web-push": "3.6.7",
   },
   // Görünür giriş noktaları: sağ üstteki zil (widget.ts) ve Ayarlar → Bildirimler (tercihler).
+  basePath: "/ayarlar/bildirimler",
   nav: [
     {
       href: "/ayarlar/bildirimler",
@@ -36,6 +37,15 @@ export const moduleConfig: ModuleConfig = {
       group: "settings",
       order: 11,
       permission: { definition: notificationsPermissions, action: "view" },
+    },
+    {
+      href: "/ayarlar/bildirimler/duyurular",
+      label: "Duyurular",
+      labelKey: "duyurular",
+      icon: Megaphone,
+      group: "settings",
+      order: 12,
+      permission: { definition: notificationsPermissions, action: "update" },
     },
   ],
 };

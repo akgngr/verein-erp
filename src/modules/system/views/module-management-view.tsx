@@ -3,7 +3,7 @@ import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { can } from "@/shared/permissions/define";
 import { systemPermissions } from "@/shared/permissions/system";
-import { PackagePlus } from "lucide-react";
+import { Activity, PackagePlus } from "lucide-react";
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
@@ -30,12 +30,20 @@ export async function ModuleManagementView() {
         title={t("title")}
         description={t("subtitle")}
         actions={
-          <Link
-            href="/ayarlar/moduller/paketler"
-            className="inline-flex h-10 items-center gap-2 rounded-lg bg-accent px-4 text-sm font-medium text-accent-foreground hover:opacity-90"
-          >
-            <PackagePlus size={16} aria-hidden /> {t("installModule")}
-          </Link>
+          <div className="flex items-center gap-2">
+            <Link
+              href="/ayarlar/moduller/saglik"
+              className="inline-flex h-10 items-center gap-2 rounded-lg border border-border bg-surface px-4 text-sm font-medium text-foreground hover:bg-surface-elevated"
+            >
+              <Activity size={16} aria-hidden /> {t("readiness.linkTitle")}
+            </Link>
+            <Link
+              href="/ayarlar/moduller/paketler"
+              className="inline-flex h-10 items-center gap-2 rounded-lg bg-accent px-4 text-sm font-medium text-accent-foreground hover:opacity-90"
+            >
+              <PackagePlus size={16} aria-hidden /> {t("installModule")}
+            </Link>
+          </div>
         }
       />
 

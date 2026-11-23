@@ -133,10 +133,30 @@
       "linked": "Telegram hesabı bağlı.",
       "pending": "Bağlantı onayı bekleniyor.",
       "none": "Telegram hesabı bağlı değil."
+    },
+    "announcement": {
+      "title": "Duyuru gönder",
+      "description": "Kurum içi duyuruyu herkese veya seçilen rollere gönderin.",
+      "compose": "Yeni duyuru",
+      "subject": "Başlık",
+      "message": "Metin",
+      "audience": "Hedef kitle",
+      "audienceHint": "Rol seçmezseniz bildirimi görebilen herkese gönderilir.",
+      "review": "Gönderimi gözden geçir",
+      "confirmTitle": "Duyuruyu gönder?",
+      "confirmMessage": "Gönderimden sonra duyuru alıcılara iletilir. Seçilen hedef kitle:",
+      "selectedRoles": "Seçilen roller: {roles}",
+      "everyone": "Herkes (bildirimi görme yetkisi olanlar)",
+      "cancel": "Vazgeç",
+      "send": "Gönder",
+      "sending": "Gönderiliyor…",
+      "sent": "Duyuru {count} alıcıya gönderildi.",
+      "sendError": "Duyuru gönderilemedi. Yetkinizi ve bağlantınızı kontrol edip tekrar deneyin."
     }
   },
   "nav": {
-    "notifications": "Bildirimler"
+    "notifications": "Bildirimler",
+    "duyurular": "Duyurular"
   },
   "widget": {
     "bell": "Bildirimler"
