@@ -45,9 +45,45 @@ export type AccountingStrings = {
   sphereLabels: Record<"IDEELL" | "ASSET_MANAGEMENT" | "PURPOSE_OPERATION" | "ECONOMIC_OPERATION", string>;
   none: string;
   footerPage: (page: number, total: number) => string;
+  /** Genel Kurul Kassenbericht (Q3) */
+  treasurerReport: {
+    title: (year: number) => string;
+    subtitle: string;
+    spheresSection: string;
+    colSphere: string;
+    colIncome: string;
+    colExpense: string;
+    colNet: string;
+    colPrevYear: string;
+    colChange: string;
+    projectsSection: string;
+    colProject: string;
+    reservesSection: string;
+    openingReserves: string;
+    closingReserves: string;
+    netAnnualSurplus: string;
+    earmarkedFunds: string;
+    freeReserves: string;
+    summaryTitle: string;
+    summaryIncomeSurplus: (year: number, income: string, expense: string, surplus: string) => string;
+    summaryIncomeDeficit: (year: number, income: string, expense: string, deficit: string) => string;
+    summaryIdeell: (net: string) => string;
+    summaryProjects: (count: number, earmarked: string) => string;
+    summaryNoProjects: string;
+    summaryReserves: (closing: string, free: string) => string;
+    summaryRecordedReserves: (recorded: string) => string;
+    recommendation: (year: number) => string;
+    unknownProject: string;
+    treasurerSign: string;
+    auditorSign: string;
+    placeDate: string;
+    sphereLabelsNumbered: Record<"IDEELL" | "ASSET_MANAGEMENT" | "PURPOSE_OPERATION" | "ECONOMIC_OPERATION", string>;
+  };
 };
 
-export const ACCOUNTING_STRINGS: { de: AccountingStrings; tr: AccountingStrings } = {
+export type AccountingLanguage = "de" | "tr";
+
+export const ACCOUNTING_STRINGS: Record<AccountingLanguage, AccountingStrings> = {
   de: {
     ledgerTitle: "KASSENBUCH",
     colDate: "Datum",
@@ -94,6 +130,51 @@ export const ACCOUNTING_STRINGS: { de: AccountingStrings; tr: AccountingStrings 
     },
     none: "–",
     footerPage: (page, total) => `Seite ${page} von ${total}`,
+    treasurerReport: {
+      title: (year) => `Kassenbericht für die Mitgliederversammlung — ${year}`,
+      subtitle: "Aggregierter Finanz- und Tätigkeitsbericht (Ohne personenbezogene Daten)",
+      spheresSection: "Einnahmen und Ausgaben nach steuerlichen Bereichen (§ 5)",
+      colSphere: "Tätigkeitsbereich",
+      colIncome: "Einnahmen",
+      colExpense: "Ausgaben",
+      colNet: "Netto",
+      colPrevYear: "Vorjahr",
+      colChange: "Veränderung",
+      projectsSection: "Projektbezogene Mittelverwendung",
+      colProject: "Projekt",
+      reservesSection: "Mittel- und Rücklagenstand (§ 62 AO)",
+      openingReserves: "Liquider Anfangsbestand:",
+      closingReserves: "Liquider Endbestand:",
+      netAnnualSurplus: "Jahresergebnis:",
+      earmarkedFunds: "Zweckgebundene Rücklagen:",
+      freeReserves: "Freie Rücklagen:",
+      summaryTitle: "Zusammenfassung des Schatzmeisters",
+      summaryIncomeSurplus: (year, income, expense, surplus) =>
+        `Im Geschäftsjahr ${year} beliefen sich die Gesamteinnahmen auf ${income} und die Gesamtausgaben auf ${expense}. Das Geschäftsjahr schließt mit einem Jahresüberschuss von ${surplus} ab.`,
+      summaryIncomeDeficit: (year, income, expense, deficit) =>
+        `Im Geschäftsjahr ${year} beliefen sich die Gesamteinnahmen auf ${income} und die Gesamtausgaben auf ${expense}. Das Geschäftsjahr schließt mit einem Jahresfehlbetrag von ${deficit} ab.`,
+      summaryIdeell: (net) =>
+        `Im ideellen Bereich (Mitgliedsbeiträge und Spenden) wurde ein Nettoergebnis von ${net} erzielt.`,
+      summaryProjects: (count, earmarked) =>
+        `Im Berichtszeitraum wurden ${count} Projekte geführt; der zweckgebundene Mittelbestand beträgt ${earmarked}.`,
+      summaryNoProjects: "Im Berichtszeitraum wurden keine gesonderten Projektbuchungen erfasst.",
+      summaryReserves: (closing, free) =>
+        `Der Gesamtbestand der liquiden Mittel (Kasse und Bankkonten) belief sich zum Stichtag auf ${closing} (davon freie Rücklagen: ${free}).`,
+      summaryRecordedReserves: (recorded) =>
+        `Die nach § 62 AO ausgewiesenen Rücklagen belaufen sich auf insgesamt ${recorded}.`,
+      recommendation: () =>
+        "Die Kassenprüfung ergab eine ordnungsgemäße Buch- und Belegführung. Der Mitgliederversammlung wird die Entlastung des Schatzmeisters und des Vorstands empfohlen.",
+      unknownProject: "Unbekanntes Projekt",
+      treasurerSign: "Unterschrift Schatzmeister / Vorstand",
+      auditorSign: "Unterschrift Kassenprüfer",
+      placeDate: "Ort, Datum:",
+      sphereLabelsNumbered: {
+        IDEELL: "1. Ideeller Bereich (Beiträge & Spenden)",
+        ASSET_MANAGEMENT: "2. Vermögensverwaltung",
+        PURPOSE_OPERATION: "3. Zweckbetrieb",
+        ECONOMIC_OPERATION: "4. Wirtschaftlicher Geschäftsbetrieb",
+      },
+    },
   },
   tr: {
     ledgerTitle: "KASA DEFTERİ (KASSENBUCH)",
@@ -141,5 +222,50 @@ export const ACCOUNTING_STRINGS: { de: AccountingStrings; tr: AccountingStrings 
     },
     none: "—",
     footerPage: (page, total) => `Sayfa ${page} / ${total}`,
+    treasurerReport: {
+      title: (year) => `Kassenbericht (Kasa ve Bütçe Raporu) — ${year}`,
+      subtitle: "Genel Kurul Sunumu için Toplulaştırılmış Finansal Rapor (Kişisel veri içermez)",
+      spheresSection: "Faaliyet Alanlarına Göre Gelir ve Gider Dağılımı (§ 5)",
+      colSphere: "Faaliyet Alanı",
+      colIncome: "Gelir",
+      colExpense: "Gider",
+      colNet: "Net Sonuç",
+      colPrevYear: "Önceki Yıl",
+      colChange: "Yıllık Değişim",
+      projectsSection: "Proje Bazlı Fon ve Bütçe Durumu",
+      colProject: "Proje Adı",
+      reservesSection: "Fonlar ve Rezerv Durumu (§ 62 AO)",
+      openingReserves: "Dönem Başı Likit Rezerv:",
+      closingReserves: "Dönem Sonu Toplam Rezerv:",
+      netAnnualSurplus: "Yıllık Net Bakiye:",
+      earmarkedFunds: "Amaca Bağlı (Zweckgebunden) Proje Fonları:",
+      freeReserves: "Serbest Rezervler (Freie Rücklagen):",
+      summaryTitle: "Dönem Özeti ve Sayman Değerlendirmesi",
+      summaryIncomeSurplus: (year, income, expense, surplus) =>
+        `${year} faaliyet döneminde derneğin toplam geliri ${income}, toplam gideri ${expense} olarak gerçekleşmiştir. Dönem net ${surplus} fazlalıkla tamamlanmıştır.`,
+      summaryIncomeDeficit: (year, income, expense, deficit) =>
+        `${year} faaliyet döneminde derneğin toplam geliri ${income}, toplam gideri ${expense} olarak gerçekleşmiştir. Dönem net ${deficit} açıkla tamamlanmıştır.`,
+      summaryIdeell: (net) =>
+        `İdeel alandaki (üye aidatları ve bağışlar) net bakiye ${net} seviyesindedir.`,
+      summaryProjects: (count, earmarked) =>
+        `Dönem içinde ${count} aktif projede faaliyet yürütülmüş, amaca bağlı fon bakiyesi ${earmarked} olarak kaydedilmiştir.`,
+      summaryNoProjects: "Dönem içinde ayrı bir proje kaydı yürütülmemiştir.",
+      summaryReserves: (closing, free) =>
+        `Kasa ve banka hesaplarındaki toplam likit rezerv yıl sonunda ${closing} seviyesine ulaşmıştır (serbest rezerv: ${free}).`,
+      summaryRecordedReserves: (recorded) =>
+        `§ 62 AO kapsamında kayıtlı toplam yedek akçe tutarı ${recorded} seviyesindedir.`,
+      recommendation: (year) =>
+        `${year} yılı defter, belge ve hesap denetimleri sonucunda kasa hareketlerinin nizami olduğu tespit edilmiş olup, Genel Kurul'a Sayman ve Yönetim Kurulu'nun ibrası tavsiye edilir.`,
+      unknownProject: "Bilinmeyen Proje",
+      treasurerSign: "Sayman (Schatzmeister) İmzası",
+      auditorSign: "Kasa Denetçisi (Kassenprüfer) İmzası",
+      placeDate: "Tarih ve Yer:",
+      sphereLabelsNumbered: {
+        IDEELL: "1. İdeel Alan (Aidat & Bağışlar)",
+        ASSET_MANAGEMENT: "2. Varlık Yönetimi (Faiz / Kira)",
+        PURPOSE_OPERATION: "3. Amaca Bağlı İşletme (Zweckbetrieb)",
+        ECONOMIC_OPERATION: "4. Ticari İşletme (Wirtschaftlich)",
+      },
+    },
   },
 };
