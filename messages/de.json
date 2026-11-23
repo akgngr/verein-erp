@@ -127,6 +127,7 @@
     "uyeler": "Mitglieder",
     "notifications": "Benachrichtigungen",
     "duyurular": "Mitteilungen",
+    "aboneler": "Abonnenten",
     "online-forms": "e-Sign",
     "organization": "Vereinsdaten",
     "progress": "Lernfortschritt",
@@ -140,6 +141,7 @@
     "modulPaketleri": "Modulpakete",
     "lisans": "Lizenz",
     "modulSagligi": "Modul-Gesundheit",
+    "widgetlar": "Widget-Einstellungen",
     "tasks": "Aufgaben",
     "kullanicilar": "Benutzer",
     "weather": "Wetter",
@@ -6118,6 +6120,11 @@
         "kind": "Kampagnenentwurf",
         "confirm": "Entwurf anlegen",
         "done": "Kampagnenentwurf angelegt; unter Kampagnen öffnen und senden."
+      },
+      "dues_reminder_draft": {
+        "kind": "Entwurf Beitragserinnerung",
+        "confirm": "Entwurf anlegen",
+        "done": "Entwurf der Beitragserinnerung angelegt; unter Kampagnen prüfen und separat senden."
       }
     },
     "calendar": {
@@ -7675,6 +7682,53 @@
         "sending": "Wird gesendet…",
         "sent": "Mitteilung an {count} Empfänger gesendet.",
         "sendError": "Mitteilung konnte nicht gesendet werden. Prüfen Sie Ihre Berechtigung und Verbindung und versuchen Sie es erneut."
+      },
+      "subscribers": {
+        "title": "Abonnenten",
+        "description": "Sehen Sie den Status der Benachrichtigungskanäle pro Nutzer ein und trennen Sie bei Bedarf externe Kanäle.",
+        "summaryUsers": "Nutzer gesamt",
+        "summaryEmailOff": "E-Mail deaktiviert",
+        "summaryTelegram": "Telegram verbunden",
+        "summaryWebPush": "Web Push",
+        "summaryWebPushDevices": "{users} Nutzer · {devices} Geräte",
+        "searchLabel": "Nutzer suchen",
+        "searchPlaceholder": "Nach Name oder E-Mail suchen…",
+        "filterChannel": "Kanalfilter",
+        "filterAll": "Alle Kanäle",
+        "filterTelegram": "Telegram verbunden",
+        "filterWebPush": "Web Push aktiv",
+        "filterEmailOff": "E-Mail aus",
+        "tableLabel": "Benachrichtigungsabonnenten",
+        "colUser": "Nutzer",
+        "colRole": "Rolle",
+        "colEmail": "E-Mail",
+        "colTelegram": "Telegram",
+        "colPush": "Web Push",
+        "colActions": "Aktionen",
+        "inactive": "Inaktiv",
+        "emailOn": "Aktiv",
+        "emailOff": "Aus",
+        "emailDefault": "Standard",
+        "telegramLinked": "Verbunden",
+        "telegramPending": "Ausstehend",
+        "telegramNone": "Nicht verbunden",
+        "pushDevices": "{count} Geräte",
+        "pushNone": "Inaktiv",
+        "unlinkTelegram": "Telegram trennen",
+        "unlinkWebPush": "Push trennen",
+        "noActions": "—",
+        "loading": "Abonnenten werden geladen…",
+        "empty": "Keine passenden Abonnenten gefunden.",
+        "loadError": "Abonnentenliste konnte nicht geladen werden.",
+        "confirmUnlinkTitle": "Kanalverbindung trennen?",
+        "confirmUnlinkMessage": "Die {channel}-Verbindung von {name} wird getrennt. Der Nutzer kann sie später bei Bedarf erneut herstellen.",
+        "cancel": "Abbrechen",
+        "confirm": "Trennen",
+        "unlinkSuccess": "Kanalverbindung wurde getrennt.",
+        "unlinkError": "Kanalverbindung konnte nicht getrennt werden.",
+        "prevPage": "Zurück",
+        "nextPage": "Weiter",
+        "pageInfo": "Seite {page} / {totalPages} ({total} Einträge)"
       }
     },
     "widget": {
@@ -8889,7 +8943,8 @@
       },
       "accounting": "Der Einrichtungsassistent legt je nach Organisationsform Buchhaltungskategorien, Konten und Steuereinstellungen an.",
       "organization": "Für die Lizenzprüfung werden Name und Register-/Steuernummer der Organisation gelesen (die Lizenz ist an diese Organisation gebunden).",
-      "users": "Prüft das Vorhandensein eines Administratorkontos im Modul- und Workflow-Gesundheitscockpit."
+      "users": "Prüft das Vorhandensein eines Administratorkontos im Modul- und Workflow-Gesundheitscockpit.",
+      "widgets": "Zeigt Widget-Einstellungen an und speichert Änderungen der Nutzer."
     },
     "gate": {
       "manage": "Zur Modulverwaltung",
@@ -9119,6 +9174,32 @@
     "ui": {
       "widget": {
         "settings": "Einstellungen"
+      },
+      "widgetSettings": {
+        "title": "Widget-Einstellungen",
+        "description": "Ordnen Sie die Widgets der Kopfzeile. Sichtbarkeit und Reihenfolge werden nur für Ihr Konto gespeichert.",
+        "hint": "Änderungen werden automatisch gespeichert. Die Pfeiltasten sind auch per Tastatur bedienbar.",
+        "reset": "Standard wiederherstellen",
+        "saved": "Einstellungen gespeichert.",
+        "failed": "Speichern fehlgeschlagen. Die vorherigen Einstellungen wurden wiederhergestellt.",
+        "empty": "Keine verfügbaren Widgets.",
+        "list": "Widget-Einstellungen",
+        "mandatory": "Verpflichtend",
+        "adminDisabled": "Durch Admin deaktiviert",
+        "optional": "Optional",
+        "toggle": "Sichtbarkeit von {title} ändern",
+        "moveUp": "{title} nach oben",
+        "moveDown": "{title} nach unten",
+        "preview": "Vorschau der Kopfzeile",
+        "desktop": "Desktop",
+        "mobile": "Mobil",
+        "noHeaderWidgets": "Keine sichtbaren Widgets",
+        "slots": {
+          "header": {
+            "right": "Kopfzeile · rechts"
+          }
+        },
+        "resetSuccess": "Standardeinstellungen wiederhergestellt."
       }
     },
     "readiness": {

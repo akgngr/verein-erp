@@ -28,6 +28,21 @@ const draftSchema = z.object({
   body: z.string().max(20000),
 });
 
+/**
+ * F03 (#410): aidat hatırlatma TASLAĞI. Kitle sunucuda sabittir (aktif üyeler, açık/kısmi aidat; toplu
+ * e-posta istemeyenler kaynakta zaten atlanır). Model alıcıları, tutarları veya filtreyi görmez/değiştiremez.
+ * Akış: öneri kartı → kullanıcı onayı yalnız TASLAK kaydeder → gönderim ayrıca sihirbazda başlatılır →
+ * kampanya mevcut mailings otomasyonu (iş akışı) ile çalışır.
+ */
+export const DUES_REMINDER_SOURCE = "members:members";
+export const DUES_REMINDER_FILTER = { status: ["ACTIVE"], dues: ["OPEN"] } as const;
+const duesReminderSchema = z.object({
+  name: z.string().min(2).max(120),
+  channel: z.string().min(2).max(30),
+  subject: z.string().max(200),
+  body: z.string().min(1).max(20000),
+}).strict();
+
 export const ai = defineModuleAiV2({
   module: "mailings",
   tools: [
@@ -100,8 +115,29 @@ export const ai = defineModuleAiV2({
         return PROPOSED;
       },
     }),
+    aiToolV2({
+      name: "propose_dues_reminder_draft",
+      operation: "create",
+      allowed: (user) => can(user.role, mailingsPermissions, "create"),
+      description: "PROPOSES a polite membership-dues reminder as a campaign DRAFT. The audience is fixed by the server: active members with open or partly paid dues (members who opted out of bulk mail are skipped). You never see recipients or amounts. Write a neutral, friendly text in the user's language; placeholders {firstName}, {lastName}, {membershipNumber} are allowed; do not threaten consequences or state legal claims. Nothing is sent: the user reviews the draft and starts it separately in the campaign wizard.", // i18n-ignore (model-facing tool text)
+      input: duesReminderSchema,
+      result:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["audience_not_allowed","channel_not_available"])}).strict()]),modelOutput:z.union([proposalAcknowledgementSchema,z.object({status:z.enum(["audience_not_allowed","channel_not_available"])}).strict()]),
+      policy:{"purpose":"mailings-dues-reminder-proposal","serverReads":[],"modelFields":["status","note"],"processing":"approved_provider","modelDataClass":"internal"},projectForModel:result=>result,
+      run: async (input, { user, propose }) => {
+        if (!(await listSources(user.role)).some((source) => source.id === DUES_REMINDER_SOURCE)) return { status: "audience_not_allowed" } as const;
+        if (!(await availableChannels()).some((channel) => channel.key === input.channel)) return { status: "channel_not_available" } as const;
+        propose({ action: "dues_reminder_draft", title: input.name, details: input.subject ? [input.channel, input.subject] : [input.channel], payload: input });
+        return PROPOSED;
+      },
+    }),
   ],
   actions: {
+    // Onay yalnız taslak kaydeder; kitle sunucuda sabittir (payload'dan kaynak/filtre okunmaz).
+    dues_reminder_draft: aiAction({
+      operation: "create",
+      schema: duesReminderSchema,
+      execute: (input) => saveCampaignDraftAction({ ...input, sourceId: DUES_REMINDER_SOURCE, filter: { status: [...DUES_REMINDER_FILTER.status], dues: [...DUES_REMINDER_FILTER.dues] } }),
+    }),
     draft: aiAction({
       operation: "create",
       schema: draftSchema,

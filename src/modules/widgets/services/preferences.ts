@@ -47,6 +47,8 @@ export type WidgetSettingsRow = {
   adminDisabled: boolean;
   enabled: boolean;
   order: number;
+  defaultEnabled: boolean;
+  defaultOrder: number;
 };
 
 export function buildSettingsRows(input: {
@@ -72,6 +74,8 @@ export function buildSettingsRows(input: {
         adminDisabled,
         enabled: !adminDisabled && (definition.mandatory === true || (pref?.enabled ?? definition.defaultEnabled ?? false)),
         order: pref?.order ?? definition.priority ?? 1000,
+        defaultEnabled: definition.mandatory === true || (definition.defaultEnabled ?? false),
+        defaultOrder: definition.priority ?? 1000,
       };
     })
     .sort((a, b) => a.order - b.order || a.id.localeCompare(b.id));

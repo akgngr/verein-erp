@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "2.6.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Asistandan aidat hatırlatma taslağı",
+        "de": "Beitragserinnerung als Entwurf vom Assistenten"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Asistan, aidatı açık olan aktif üyeler için nazik bir hatırlatma kampanyasını taslak olarak önerebilir. Alıcıları ve tutarları görmez; taslağı siz onaylarsınız, gönderimi ayrıca Kampanyalar'dan başlatırsınız.",
+          "de": "Der Assistent kann eine freundliche Erinnerung für aktive Mitglieder mit offenen Beiträgen als Kampagnenentwurf vorschlagen. Empfänger und Beträge sieht er nicht; Sie bestätigen den Entwurf und starten den Versand separat unter Kampagnen."
+        }
+      ]
+    },
+    {
       "version": "2.5.0",
       "date": "2026-11-23",
       "title": {
