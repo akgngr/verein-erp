@@ -17,6 +17,7 @@ export const moduleConfig: ModuleConfig = {
   description: "Kişisel sekreter: sabah özeti ve onaylı öneriler.",
   category: "EXTENSION",
   hasSchema: true,
+  recommends: ["documents"], // S5: OCR review continues in the Documents module's guarded form.
   access: [
     { module: "notifications", operations: ["write"] }, // N1c: merkezi bildirim (ADR 0006)
     { module: "system", operations: ["read"] }, // kullanılabilir modüller (özet süzmesi)

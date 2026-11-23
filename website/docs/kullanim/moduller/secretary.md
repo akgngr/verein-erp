@@ -15,6 +15,7 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 | Tür | Eklenti |
 | Sürüm | 0.13.1 |
 | Sayfalar | `/sekreter` |
+| Önerir | [Evrak Kayıt](./documents) |
 
 ## Diğer modüllere erişim
 
