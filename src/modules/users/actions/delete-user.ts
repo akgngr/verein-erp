@@ -39,7 +39,8 @@ export async function deleteUserAction(input: unknown): Promise<ActionResult> {
         action: "DELETE",
         entity: "User",
         entityId: target.id,
-        before: { name: target.name, email: target.email, role: target.role, isActive: target.isActive },
+        // Silinen kişinin adı/e-postası denetim kaydına yazılmaz (DSGVO Art. 17; README §6): yalnız kimlik ve rol.
+        before: { role: target.role, isActive: target.isActive },
         ...(cleanup.failed.length ? { after: { personalDataCleanupFailed: cleanup.failed } } : {}),
       });
       return undefined;

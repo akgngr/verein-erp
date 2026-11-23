@@ -13,7 +13,7 @@ Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri.
 |---|---|
 | Anahtar | `users` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.1.10 |
+| Sürüm | 1.1.11 |
 | Sayfalar | `/ayarlar/kullanicilar` |
 
 ## Diğer modüllere erişim
@@ -33,6 +33,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Kullanıcı Hesapları | görüntüleme, oluşturma, düzenleme, silme | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.1.11 — Silinen kullanıcı için daha az kişisel veri
+
+_2026-11-23_
+
+- **Güvenlik:** Bir kullanıcı silindiğinde denetim kaydına artık adı ve e-posta adresi yazılmıyor; yalnız kimlik numarası ve rol tutuluyor.
 
 ### 1.1.10 — Kullanıcı dizini
 
@@ -76,10 +82,4 @@ _2026-11-17_
 
 - **İyileştirme:** Şifre sıfırlama penceresi merkezi FormModal, ActionButton ve notify bileşenlerine taşındı; modüldeki doğrudan HeroUI kullanımı azaltıldı.
 
-### 1.1.2 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-Daha eski 5 herkese açık sürüm notu.
+Daha eski 6 herkese açık sürüm notu.
