@@ -21,6 +21,7 @@ import { z } from "zod";
 
 import { hashPassword } from "../src/shared/security/password";
 import { createPrismaClient } from "../src/shared/db-client";
+import { maskEmail } from "../src/shared/automation/trace";
 
 const envSchema = z.object({
   DATABASE_URL: z.string().min(1),
@@ -71,10 +72,10 @@ async function main() {
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
     await prisma.user.update({ where: { email }, data });
-    console.log(`Yönetici sıfırlandı: ${email} (parola = .env ADMIN_PASSWORD, mustChangePassword = true)`);
+    console.log(`Yönetici sıfırlandı: ${maskEmail(email)} (parola = .env ADMIN_PASSWORD, mustChangePassword = true)`);
   } else {
     await prisma.user.create({ data: { ...data, email } });
-    console.log(`Yönetici oluşturuldu: ${email}`);
+    console.log(`Yönetici oluşturuldu: ${maskEmail(email)}`);
   }
 }
 
