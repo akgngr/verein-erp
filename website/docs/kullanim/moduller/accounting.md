@@ -13,8 +13,8 @@ Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura v
 |---|---|
 | Anahtar | `accounting` |
 | Tür | Resmî modül |
-| Sürüm | 1.26.1 |
-| Sayfalar | `/muhasebe`, `/muhasebe/panel`, `/muhasebe/faturalar`, `/muhasebe/gelen-faturalar`, `/muhasebe/cariler`, `/muhasebe/banka`, `/muhasebe/uyelik-aktarimi`, `/muhasebe/raporlar`, `/muhasebe/vergi`, `/muhasebe/hibeler`, `/muhasebe/sepa`, `/muhasebe/butce`, `/muhasebe/ekler`, `/muhasebe/gobd`, `/muhasebe/yil-kapanisi`, `/muhasebe/ayarlar` |
+| Sürüm | 1.27.0 |
+| Sayfalar | `/muhasebe`, `/muhasebe/panel`, `/muhasebe/faturalar`, `/muhasebe/gelen-faturalar`, `/muhasebe/cariler`, `/muhasebe/banka`, `/muhasebe/uyelik-aktarimi`, `/muhasebe/raporlar`, `/muhasebe/vergi`, `/muhasebe/hibeler`, `/muhasebe/sepa`, `/muhasebe/butce`, `/muhasebe/ekler`, `/muhasebe/gobd`, `/muhasebe/denetim`, `/muhasebe/yil-kapanisi`, `/muhasebe/ayarlar` |
 
 ## Diğer modüllere erişim
 
@@ -43,6 +43,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_accounting_summary` · `get_bank_inbox_summary` · `get_open_items_summary` · `get_payables_summary` · `get_report_link` · `get_vat_summary`
 
 ## Sürüm notları
+
+### 1.27.0 — Kassenprüfer süreli denetim odası (B001 Q1)
+
+_2026-11-23_
+
+- **Yeni:** Son kullanma tarihli salt-okunur denetçi erişimi (/muhasebe/denetim), tüm görüntülemelerin denetim kaydına yazılması, 5 alanlı rehberli kontrol listesi ve Genel Kurul Denetim Raporu PDF'ine aktarılan bulgu kayıtları eklendi.
 
 ### 1.26.1 — GoBD silme koruması
 
@@ -86,10 +92,4 @@ _2026-11-17_
 
 - **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
-### 1.23.6 — Ortak UI kartları
-
-_2026-11-17_
-
-- **İyileştirme:** Genel bakış paneli ortak SurfaceCard bileşenini kullanıyor (görünüm aynı).
-
-Daha eski 47 herkese açık sürüm notu.
+Daha eski 48 herkese açık sürüm notu.
