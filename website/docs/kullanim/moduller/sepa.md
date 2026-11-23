@@ -27,7 +27,7 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 | [Üyeler](./members) | okuma, yazma | Açık aidatları ve üyelerin SEPA yetkisini okur; tahsil edilen aidatları ödeme olarak kaydeder, geri dönenleri iptal eder. |
 | [Kurslar](./courses) | okuma, yazma | Vadesi gelmiş kurs ücretlerini okur; tahsil edilenleri ödeme olarak kaydeder (muhasebe fişiyle), geri dönenleri ters çevirir. |
 | [Öğrenciler](./students) | okuma | Kurs ücretinin ödeyicisi olan velinin SEPA yetkisini okur. |
-| [e-Sign](./online-forms) | okuma, yazma | — |
+| [e-Sign](./online-forms) | okuma, yazma | Yeni SEPA yetkisi gereken borçlulara mevcut çevrimiçi form üzerinden e-imza bağlantısı göndermek ve bağlantının durumunu göstermek için. |
 | [Dernek Bilgileri](./organization) | okuma | Dosyada derneğin adını kullanır. |
 | [Modül Yönetimi](./system) | okuma | Kaynak modüllerin açık olup olmadığını kontrol eder. |
 
