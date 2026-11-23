@@ -1,6 +1,7 @@
 import "server-only";
 
 import type { BankTransactionInput } from "@/modules/accounting/server";
+import { recordEgress } from "@/shared/egress/record-egress";
 
 import { BankProviderError, type BankProvider, type ConsentState, type Institution, type ProviderAccount } from "./types";
 
@@ -27,12 +28,26 @@ export class GoCardlessProvider implements BankProvider {
   private async token(): Promise<string> {
     const cached = tokenCache.get(this.secretId);
     if (cached && cached.expiresAt > Date.now() + 60_000) return cached.access;
-    const response = await fetch(`${BASE}/token/new/`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({ secret_id: this.secretId, secret_key: this.secretKey }),
-      signal: AbortSignal.timeout(15_000),
-    });
+    const payload = JSON.stringify({ secret_id: this.secretId, secret_key: this.secretKey });
+    let response: Response;
+    try {
+      response = await fetch(`${BASE}/token/new/`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json", Accept: "application/json" },
+        body: payload,
+        signal: AbortSignal.timeout(15_000),
+      });
+    } finally {
+      await recordEgress({
+        moduleKey: "banking",
+        category: "BANKING",
+        provider: "gocardless",
+        volume: Buffer.byteLength(payload),
+        count: 1,
+        unit: "bytes",
+        legalBasis: "CONTRACT",
+      });
+    }
     if (response.status === 401 || response.status === 403) throw new BankProviderError("token rejected", "credentials"); // i18n-ignore (iç hata, loglanır)
     if (!response.ok) throw new BankProviderError(`token ${response.status}`, "provider");
     const body = (await response.json()) as { access: string; access_expires: number };
@@ -41,12 +56,27 @@ export class GoCardlessProvider implements BankProvider {
   }
 
   private async call<T>(path: string, init: { method?: string; body?: unknown } = {}): Promise<T> {
-    const response = await fetch(`${BASE}${path}`, {
-      method: init.method ?? "GET",
-      headers: { Authorization: `Bearer ${await this.token()}`, "Content-Type": "application/json", Accept: "application/json" },
-      body: init.body === undefined ? undefined : JSON.stringify(init.body),
-      signal: AbortSignal.timeout(30_000),
-    });
+    const payload = init.body === undefined ? undefined : JSON.stringify(init.body);
+    let response: Response;
+    const token = await this.token();
+    try {
+      response = await fetch(`${BASE}${path}`, {
+        method: init.method ?? "GET",
+        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json", Accept: "application/json" },
+        body: payload,
+        signal: AbortSignal.timeout(30_000),
+      });
+    } finally {
+      await recordEgress({
+        moduleKey: "banking",
+        category: "BANKING",
+        provider: "gocardless",
+        volume: payload ? Buffer.byteLength(payload) : 0,
+        count: 1,
+        unit: "bytes",
+        legalBasis: "CONTRACT",
+      });
+    }
     if (!response.ok) throw new BankProviderError(`${init.method ?? "GET"} ${path.split("?")[0]} → ${response.status}`, "provider");
     return (response.status === 204 ? undefined : await response.json()) as T;
   }

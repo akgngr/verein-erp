@@ -145,9 +145,12 @@ export async function searchCityCoordinates(
   // Hazır listede yoksa Open-Meteo Geocoding API'sini sunucu üzerinden güvenle sorgula
   try {
     const url = `https://geocoding-api.open-meteo.com/v1/search?name=${encodeURIComponent(trimmed)}&count=1&format=json`;
-    const res = await channelFetch(["geocoding-api.open-meteo.com", "open-meteo.com"], url, {
-      headers: { "User-Agent": "Verein-ERP-Weather-Module/1.0" },
-    });
+    const res = await channelFetch(
+      ["geocoding-api.open-meteo.com", "open-meteo.com"],
+      url,
+      { headers: { "User-Agent": "Verein-ERP-Weather-Module/1.0" } },
+      { moduleKey: "weather", category: "EXTERNAL_API", provider: "open_meteo", count: 1, unit: "requests", legalBasis: "LEGITIMATE_INTEREST" },
+    );
     if (!res.ok) return null;
 
     const json = (await res.json()) as {
@@ -213,9 +216,12 @@ export async function getWeatherData(
 
   try {
     const url = `https://api.open-meteo.com/v1/forecast?latitude=${roundedLat}&longitude=${roundedLon}&current=temperature_2m,relative_humidity_2m,apparent_temperature,is_day,precipitation,weather_code,wind_speed_10m&hourly=temperature_2m,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum&timezone=auto`;
-    const res = await channelFetch(["api.open-meteo.com", "open-meteo.com"], url, {
-      headers: { "User-Agent": "Verein-ERP-Weather-Module/1.0" },
-    });
+    const res = await channelFetch(
+      ["api.open-meteo.com", "open-meteo.com"],
+      url,
+      { headers: { "User-Agent": "Verein-ERP-Weather-Module/1.0" } },
+      { moduleKey: "weather", category: "EXTERNAL_API", provider: "open_meteo", count: 1, unit: "requests", legalBasis: "LEGITIMATE_INTEREST" },
+    );
 
     if (!res.ok) {
       return null;

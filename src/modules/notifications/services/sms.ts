@@ -4,6 +4,7 @@ import { createHash, randomInt, timingSafeEqual } from "node:crypto";
 
 import { channelFetch, normalizePhone } from "@/shared/campaigns/channel";
 import { getDb } from "@/shared/db";
+import { recordEgress } from "@/shared/egress/record-egress";
 import { openSecret, sealSecret } from "@/shared/security/secret-box";
 
 import { getChannelConfig, saveChannelConfig } from "./channel-config";
@@ -28,11 +29,16 @@ export type SmsTransport = (input: { provider: string; apiKey: string; accountSi
 export const smsTransport: SmsTransport = async ({ provider, apiKey, accountSid, sender, to, text }) => {
   const body = text.slice(0, SMS_LIMITS.maxLength);
   if (provider === "seven") {
-    const response = await channelFetch(["seven.io"], "https://gateway.seven.io/api/sms", {
-      method: "POST",
-      headers: { "X-Api-Key": apiKey, "Content-Type": "application/json", Accept: "application/json" },
-      body: JSON.stringify({ to, text: body, from: sender || undefined }),
-    });
+    const response = await channelFetch(
+      ["seven.io"],
+      "https://gateway.seven.io/api/sms",
+      {
+        method: "POST",
+        headers: { "X-Api-Key": apiKey, "Content-Type": "application/json", Accept: "application/json" },
+        body: JSON.stringify({ to, text: body, from: sender || undefined }),
+      },
+      { moduleKey: "notifications", category: "NOTIFICATION", provider: "seven", volume: Buffer.byteLength(body), count: 1, unit: "bytes", legalBasis: "CONSENT" },
+    );
     if (!response.ok) return { ok: false };
     const json = (await response.json().catch(() => ({}))) as { success?: string; messages?: { id?: string; success?: boolean }[] };
     const first = json.messages?.[0];
@@ -40,11 +46,16 @@ export const smsTransport: SmsTransport = async ({ provider, apiKey, accountSid,
   }
   if (provider === "twilio") {
     if (!accountSid || !/^AC[0-9a-f]{32}$/i.test(accountSid)) return { ok: false };
-    const response = await channelFetch(["api.twilio.com"], `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`, {
-      method: "POST",
-      headers: { Authorization: `Basic ${Buffer.from(`${accountSid}:${apiKey}`).toString("base64")}`, "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ To: to, From: sender ?? "", Body: body }),
-    });
+    const response = await channelFetch(
+      ["api.twilio.com"],
+      `https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`,
+      {
+        method: "POST",
+        headers: { Authorization: `Basic ${Buffer.from(`${accountSid}:${apiKey}`).toString("base64")}`, "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({ To: to, From: sender ?? "", Body: body }),
+      },
+      { moduleKey: "notifications", category: "NOTIFICATION", provider: "twilio", volume: Buffer.byteLength(body), count: 1, unit: "bytes", legalBasis: "CONSENT" },
+    );
     if (!response.ok) return { ok: false };
     const json = (await response.json().catch(() => ({}))) as { sid?: string };
     return { ok: true, providerId: json.sid };
@@ -73,7 +84,21 @@ export async function configureSms(input: { enabled: boolean; provider?: string;
 async function send(to: string, text: string, transport: SmsTransport): Promise<{ ok: boolean; providerId?: string }> {
   const config = await getChannelConfig("sms");
   if (!config.enabled || !config.secrets.apiKey || !config.settings.provider) return { ok: false };
-  return transport({ provider: config.settings.provider, apiKey: config.secrets.apiKey, accountSid: config.settings.accountSid, sender: config.settings.sender, to, text }).catch(() => ({ ok: false }));
+  try {
+    return await transport({ provider: config.settings.provider, apiKey: config.secrets.apiKey, accountSid: config.settings.accountSid, sender: config.settings.sender, to, text }).catch(() => ({ ok: false }));
+  } finally {
+    if (transport !== smsTransport) {
+      await recordEgress({
+        moduleKey: "notifications",
+        category: "NOTIFICATION",
+        provider: config.settings.provider,
+        volume: Buffer.byteLength(text.slice(0, SMS_LIMITS.maxLength)),
+        count: 1,
+        unit: "bytes",
+        legalBasis: "CONSENT",
+      });
+    }
+  }
 }
 
 /** Kullanıcı: numarayı doğrulamak için kod gönder. Kanal kapalıysa hiçbir şey saklanmaz. */

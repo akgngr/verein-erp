@@ -8944,6 +8944,7 @@
       "accounting": "Kurulum sihirbazı, seçilen kurum türüne göre muhasebe kategorilerini, hesaplarını ve vergi ayarlarını oluşturur.",
       "organization": "Lisans doğrulaması için kurum adı ve sicil/vergi numarası okunur (lisans bu kuruma bağlıdır).",
       "users": "Modül ve iş akışı sağlığı kokpitinde yönetici kullanıcısının varlığı denetlenir.",
+      "ai": "Gizlilik ön ayarları ve aylık veri çıkışı raporu için yapılandırılmış yapay zekâ sağlayıcılarının durumu okunur.",
       "widgets": "Widget tercihlerini gösterir ve kullanıcının değişikliklerini kaydeder."
     },
     "gate": {

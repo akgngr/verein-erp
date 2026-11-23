@@ -9,5 +9,6 @@ export { aiAttachmentHandler } from "./handlers/attachments";
 export { aiReportPdfHandler } from "./handlers/report-pdf";
 export { acceptAiConsentAction, revokeAiConsentAction, setAiProviderAction } from "./actions/consent-actions";
 export { getActiveProvider, hasAiConsent, isAiConfigured } from "./services/consent";
+export { listProviderStatus } from "./services/providers";
 export { AiSettingsView } from "./views/ai-settings-view";
 export { AiAssistantSlot } from "./views/ai-assistant-slot";

@@ -94,6 +94,7 @@
     "accounting": "Der Einrichtungsassistent legt je nach Organisationsform Buchhaltungskategorien, Konten und Steuereinstellungen an.",
     "organization": "Für die Lizenzprüfung werden Name und Register-/Steuernummer der Organisation gelesen (die Lizenz ist an diese Organisation gebunden).",
     "users": "Prüft das Vorhandensein eines Administratorkontos im Modul- und Workflow-Gesundheitscockpit.",
+    "ai": "Liest den Status konfigurierter KI-Anbieter für Datenschutz-Voreinstellungen und den monatlichen Datenausgangsbericht.",
     "widgets": "Zeigt Widget-Einstellungen an und speichert Änderungen der Nutzer."
   },
   "gate": {
