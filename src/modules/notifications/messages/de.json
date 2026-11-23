@@ -59,7 +59,9 @@
       "rateLimited": "Tageslimit für Bestätigungscodes erreicht.",
       "sendFailed": "Bestätigungscode konnte nicht gesendet werden.",
       "codeExpired": "Code abgelaufen oder Versuche aufgebraucht; bitte neu anfordern.",
-      "codeInvalid": "Code falsch."
+      "codeInvalid": "Code falsch.",
+      "whatsappConfig": "WhatsApp-Einstellungen ungültig (Telefonnummern-ID, Vorlagenname oder Sprache).",
+      "whatsappNotReady": "WhatsApp kann nicht aktiviert werden: Zugriffstoken, Telefonnummern-ID, Vorlage und Bestätigung der Meta-Freigabe erforderlich."
     }
   },
   "notifications": {
