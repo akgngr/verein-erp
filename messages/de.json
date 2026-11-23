@@ -8733,7 +8733,8 @@
       "courses": "Liest fällige Kursgebühren; bucht eingezogene Gebühren (mit Buchung) und storniert Rücklastschriften.",
       "students": "Liest das SEPA-Mandat der zahlenden Erziehungsberechtigten.",
       "organization": "Verwendet den Vereinsnamen in der Datei.",
-      "system": "Prüft, ob die Quellmodule aktiv sind."
+      "system": "Prüft, ob die Quellmodule aktiv sind.",
+      "online-forms": "Um Zahlungspflichtigen, die ein neues SEPA-Mandat brauchen, einen E-Signatur-Link über das bestehende Online-Formular zu senden und dessen Status anzuzeigen."
     },
     "health": {
       "title": "Mandatsprüfung und Rücklastschrift-Coach",

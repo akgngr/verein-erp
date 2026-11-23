@@ -8733,7 +8733,8 @@
       "courses": "Vadesi gelmiş kurs ücretlerini okur; tahsil edilenleri ödeme olarak kaydeder (muhasebe fişiyle), geri dönenleri ters çevirir.",
       "students": "Kurs ücretinin ödeyicisi olan velinin SEPA yetkisini okur.",
       "organization": "Dosyada derneğin adını kullanır.",
-      "system": "Kaynak modüllerin açık olup olmadığını kontrol eder."
+      "system": "Kaynak modüllerin açık olup olmadığını kontrol eder.",
+      "online-forms": "Yeni SEPA yetkisi gereken borçlulara mevcut çevrimiçi form üzerinden e-imza bağlantısı göndermek ve bağlantının durumunu göstermek için."
     },
     "health": {
       "title": "Mandat sağlığı ve iade koçu",
