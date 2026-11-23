@@ -2,6 +2,7 @@ import "server-only";
 
 import type { GrantStatus } from "@prisma/client";
 
+import { ActionError } from "@/modules/auth/server";
 import { listProjectBookings, type ProjectBookingRow } from "@/modules/accounting/server";
 import { getDb } from "@/shared/db";
 
@@ -50,7 +51,21 @@ export async function saveGrant(id: string | null, input: GrantInput, actor: Act
 }
 
 export async function deleteGrant(id: string) {
-  await getDb().grant.delete({ where: { id } });
+  const db = getDb();
+  const existing = await db.grant.findUnique({
+    where: { id },
+    select: { id: true, status: true, payouts: { select: { receivedAt: true } } },
+  });
+  if (!existing) throw new ActionError("grants.errors.notFound");
+  if (existing.status !== "PLANNED") throw new ActionError("grants.errors.deleteOnlyPlanned");
+  if (existing.payouts.some((payout) => payout.receivedAt !== null)) {
+    throw new ActionError("grants.errors.hasReceivedPayouts");
+  }
+  await db.$transaction([
+    db.grantBudgetLine.deleteMany({ where: { grantId: id } }),
+    db.grantPayout.deleteMany({ where: { grantId: id } }),
+    db.grant.delete({ where: { id } }),
+  ]);
 }
 
 /** Finansman planı kalemlerini toptan değiştirir. */
@@ -68,8 +83,17 @@ export async function addPayout(grantId: string, input: { requestedAt: string; a
 export async function setPayoutReceived(id: string, receivedAt: string | null) {
   await getDb().grantPayout.update({ where: { id }, data: { receivedAt: receivedAt ? toDate(receivedAt) : null } });
 }
-export async function deletePayout(id: string) {
-  await getDb().grantPayout.delete({ where: { id } });
+export async function deletePayout(id: string, grantId?: string) {
+  const db = getDb();
+  const existing = await db.grantPayout.findUnique({
+    where: { id },
+    select: { id: true, grantId: true, receivedAt: true },
+  });
+  if (!existing || (grantId && existing.grantId !== grantId)) {
+    throw new ActionError("grants.errors.notFound");
+  }
+  if (existing.receivedAt !== null) throw new ActionError("grants.errors.payoutAlreadyReceived");
+  await db.grantPayout.delete({ where: { id } });
 }
 
 export async function saveReportText(id: string, text: string, submitted: boolean | null) {

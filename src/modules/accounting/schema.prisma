@@ -413,7 +413,7 @@ model AccountingBankImport {
 model AccountingBankTransaction {
   id               String                @id @default(cuid())
   importId         String
-  import           AccountingBankImport  @relation(fields: [importId], references: [id], onDelete: Cascade)
+  import           AccountingBankImport  @relation(fields: [importId], references: [id], onDelete: Restrict)
   accountId        String
   hash             String                @unique
   bookingDate      DateTime              @db.Date

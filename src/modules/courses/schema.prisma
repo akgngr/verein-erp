@@ -183,7 +183,7 @@ model CourseEnrollment {
   createdAt         DateTime               @default(now())
   updatedAt         DateTime               @updatedAt
 
-  course  Course         @relation(fields: [courseId], references: [id], onDelete: Cascade)
+  course  Course         @relation(fields: [courseId], references: [id], onDelete: Restrict)
   charges CourseCharge[]
 
   @@unique([courseId, studentId])
@@ -205,7 +205,7 @@ model CourseCharge {
   createdAt    DateTime           @default(now())
   updatedAt    DateTime           @updatedAt
 
-  enrollment CourseEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Cascade)
+  enrollment CourseEnrollment @relation(fields: [enrollmentId], references: [id], onDelete: Restrict)
   payments   CoursePayment[]
 
   @@index([enrollmentId])
@@ -227,7 +227,7 @@ model CoursePayment {
   reversedAt      DateTime?
   reverseReason   String?
 
-  charge CourseCharge @relation(fields: [chargeId], references: [id], onDelete: Cascade)
+  charge CourseCharge @relation(fields: [chargeId], references: [id], onDelete: Restrict)
 
   @@index([chargeId])
   @@map("courses_payments")

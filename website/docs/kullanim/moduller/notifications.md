@@ -13,7 +13,8 @@ Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.
 |---|---|
 | Anahtar | `notifications` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 0.10.0 |
+| Sürüm | 0.14.1 |
+| Sayfalar | `/ayarlar/bildirimler`, `/ayarlar/bildirimler/duyurular`, `/ayarlar/bildirimler/aboneler` |
 
 ## Diğer modüllere erişim
 
@@ -34,6 +35,33 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Bildirimler | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme |
 
 ## Sürüm notları
+
+### 0.14.0 — Yönetici abone görünümü ekranı
+
+_2026-11-23_
+
+- **Yeni:** Ayarlar → Bildirimler → Aboneler ekranı eklendi: kanal başına özet kartları, kullanıcı tablosu (e-posta/Telegram/Web Push durum rozetleri), arama, kanal filtresi ve onaylı bağlantı kaldırma.
+
+### 0.13.0 — Anlık bildirim akışı (SSE) ve erişilebilirlik
+
+_2026-11-23_
+
+- **Yeni:** Yoklama yerine Server-Sent Events (SSE) ile anlık okunmamış sayısı ve güncelleme akışı (/api/notifications/stream); bağlantı koptuğunda zarif biçimde yoklamaya geri düşme ve sekme gizliyken duraklatma.
+- **İyileştirme:** Bildirim çekmecesi için aria-live, aria-haspopup, genişletilmiş durum yönetimi ve ekran okuyuculara yönelik bağlamsal buton etiketleri ile tam erişilebilirlik sağlandı.
+- **Güvenlik:** SSE akışı kullanıcı bazında katı şekilde yalıtılmıştır; akış üzerinden kişisel veri (PII) iletilmez, yalnızca hafif sinyal ve sayılar taşınır.
+
+### 0.12.0 — Yönetici duyuru gönderme ekranı
+
+_2026-11-22_
+
+- **Yeni:** Yöneticiler duyuruyu herkese veya seçilen rollere onay penceresinden gönderebilir ve gerçek alıcı sayısını görebilir.
+
+### 0.11.0 — Bildirim zili ve tercih ekranı
+
+_2026-11-22_
+
+- **Yeni:** Sağ üstte bildirim zili ve okunmamış rozeti; sağ çekmecede bildirimler (okundu, tümünü okundu, ertele). Zil Widget Platformu üzerinden eklenir.
+- **Yeni:** Ayarlar → Bildirimler: tür × kanal tercihleri, sessiz saatler, günlük özet, Telegram bağlama ve tarayıcı (push) bildirimleri.
 
 ### 0.10.0 — Web Push istemci ve PWA manifest
 
@@ -64,32 +92,4 @@ _2026-11-20_
 - **Yeni:** Yönetici, hangi kullanıcının hangi bildirim kanalını kullandığını görebilir (e-posta tercihi, Telegram bağı, tarayıcı bildirimi cihaz sayısı) ve gerekirse bir kullanıcının Telegram bağını veya tarayıcı aboneliklerini kaldırabilir.
 - **Güvenlik:** Görünümde adres, sohbet kimliği veya cihaz adresi yoktur; her görüntüleme ve kaldırma denetim kaydına yazılır.
 
-### 0.6.0 — Herkese ve role göre bildirim, kurum duyurusu
-
-_2026-11-20_
-
-- **Yeni:** Bildirimler ilgili kişiye, herkesi ilgilendiriyorsa herkese gider: modüller 'herkes' veya 'şu roller' diye kitle seçebilir. Yönetici kurum duyurusu yayımlayabilir (herkese veya seçilen rollere).
-- **Güvenlik:** Kitle içinde de herkesin yetkisi ayrı ayrı denetlenir; duyuru içeriği şifreli saklanır ve dış kanallara gitmez (yalnız genel metin ve bağlantı).
-
-### 0.5.0 — Tarayıcı bildirimleri (Web Push)
-
-_2026-11-20_
-
-- **Yeni:** Yönetici açtığında kullanıcılar bildirimleri tarayıcı/telefon bildirimi olarak da alabilir. Gerekli anahtarlar ilk açılışta otomatik üretilir.
-- **Güvenlik:** Anahtarlar ve abonelik bilgileri şifreli saklanır; yalnız bilinen push servislerine gönderilir; bildirimde yalnız genel metin ve bağlantı vardır. Geçersiz abonelikler otomatik silinir.
-
-### 0.4.0 — Telegram bildirimleri
-
-_2026-11-20_
-
-- **Yeni:** Yönetici bir Telegram botu tanımlayabilir; kullanıcılar tek tıkla açılan bağlantıyla hesaplarını bağlar ve bildirimleri Telegram'dan da alır. /stop ile bağ kaldırılır.
-- **Güvenlik:** Bot token veritabanında şifreli saklanır ve geri gösterilmez; bağlama bağlantısı tek kullanımlık ve 15 dakika geçerlidir; Telegram'a yalnız genel metin ve uygulama bağlantısı gider.
-
-### 0.3.0 — Bildirim tercihleri ve e-posta
-
-_2026-11-20_
-
-- **Yeni:** Her bildirim türü için hangi kanaldan haber almak istediğinizi seçebilirsiniz; sessiz saat ve 'anında' ya da 'günlük özet' seçeneği eklendi. E-posta kanalı çalışıyor.
-- **Güvenlik:** E-postada yalnız genel metin ve uygulama bağlantısı bulunur; ad, başlık veya tutar gitmez. Aynı bildirim ikinci kez e-postalanmaz; okunan bildirim e-postalanmaz.
-
-Daha eski 2 herkese açık sürüm notu.
+Daha eski 6 herkese açık sürüm notu.

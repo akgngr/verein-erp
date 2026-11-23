@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler).",
   "releases": [
     {
+      "version": "0.1.2",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Veri çıkışı defteri bağlantısı",
+        "de": "Anbindung an das Datenausgangs-Ledger"
+      },
+      "changes": [
+        {
+          "type": "internal",
+          "tr": "Döviz kuru servisi her dış API isteğinde içerik veya kişisel veri saklamadan veri çıkışı defterine (SystemEgressLedger) meta veri kaydı yazar.",
+          "de": "Der Wechselkursdienst protokolliert bei jeder externen API-Anfrage Metadaten ohne Nutzlast oder personenbezogene Daten im Datenausgangs-Ledger (SystemEgressLedger)."
+        }
+      ]
+    },
+    {
       "version": "0.1.1",
       "date": "2026-11-20",
       "title": {

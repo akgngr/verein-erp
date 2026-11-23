@@ -331,7 +331,7 @@ Rules:
   `payload` are restored automatically.
 - Each action needs `ai.<action>.kind|confirm|done` in `messages/{tr,de}.json`.
 - `ai.ts` only uses its own `./server` and `./permissions`; other modules go through the §8 `access` approval.
-- `pnpm module:validate` checks: `server-only`, `defineModuleAi`, `module` = folder name, snake_case tool
+- `pnpm module:validate` checks: `server-only`, `defineModuleAiV2`, `module` = folder name, snake_case tool
   names, every proposed action defined, action translations.
 
 Checklist: create `ai.ts` → add translations → `pnpm module:sync && pnpm module:validate && pnpm typecheck`

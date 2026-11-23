@@ -18,6 +18,7 @@ import { z } from "zod";
 
 import { hashPassword } from "../src/shared/security/password";
 import { createPrismaClient } from "../src/shared/db-client";
+import { maskEmail } from "../src/shared/automation/trace";
 
 const seedEnvSchema = z.object({
   DATABASE_URL: z.string().min(1, "DATABASE_URL gerekli (.env dosyasını hazırlayın)."),
@@ -61,7 +62,7 @@ async function main() {
 
   const existing = await prisma.user.findUnique({ where: { email } });
   if (existing) {
-    console.log(`Yönetici zaten mevcut (${email}); seed değişiklik yapmadı.`);
+    console.log(`Yönetici zaten mevcut (${maskEmail(email)}); seed değişiklik yapmadı.`);
   } else {
     await prisma.user.create({
       data: {
@@ -73,7 +74,7 @@ async function main() {
       },
     });
 
-    console.log(`İlk yönetici oluşturuldu: ${email}`);
+    console.log(`İlk yönetici oluşturuldu: ${maskEmail(email)}`);
     console.log("İlk girişte parola değişikliği istenecek (mustChangePassword = true).");
   }
 

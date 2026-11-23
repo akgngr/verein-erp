@@ -13,7 +13,7 @@ Kampanyalar için Telegram kanalı (Bot API). Kişi davet bağlantısıyla abone
 |---|---|
 | Anahtar | `campaign-telegram` |
 | Tür | Eklenti |
-| Sürüm | 1.0.0 |
+| Sürüm | 1.0.1 |
 | Gerektirir | [Toplu e-posta](./mailings) |
 
 ## Diğer modüllere erişim

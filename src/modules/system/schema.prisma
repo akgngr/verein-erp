@@ -51,3 +51,22 @@ model SystemModulePackage {
   @@index([moduleKey])
   @@map("system_module_packages")
 }
+
+/// Dış veri çıkışı (egress) defteri (F2a): kategori, sağlayıcı, hacim/adet, hukuki dayanak ve modül.
+/// Yük (payload) ve kişisel veri ASLA saklanmaz.
+model SystemEgressLedger {
+  id         String   @id @default(cuid())
+  moduleKey  String
+  category   String
+  provider   String
+  volume     Int      @default(0)
+  count      Int      @default(1)
+  unit       String   @default("requests")
+  legalBasis String
+  occurredAt DateTime @default(now())
+
+  @@index([occurredAt])
+  @@index([moduleKey, occurredAt])
+  @@index([provider, occurredAt])
+  @@map("system_egress_ledger")
+}

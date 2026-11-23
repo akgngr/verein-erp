@@ -3,7 +3,7 @@ import { z } from "zod";
 
 /**
  * MODÜL AI STANDARDI — her modül, asistanın kendisiyle neler yapabileceğini KENDİ klasöründeki
- * `ai.ts` dosyasında `defineModuleAi` ile bildirir. `pnpm module:sync` bu dosyaları bulup
+ * `ai.ts` dosyasında `defineModuleAiV2` + `aiToolV2` (src/shared/ai/v2.ts) ile bildirir. `pnpm module:sync` bu dosyaları bulup
  * `src/ai-registry.ts`'i üretir; AI modülü araçları ve önerileri yalnızca oradan toplar.
  *
  * Güvenlik kapıları (AI modülü uygular, modül yazarı ayrıca bir şey yapmaz):
@@ -81,18 +81,15 @@ export type ModuleAiAction<S extends z.ZodType = z.ZodType> = {
 };
 
 export type ModuleAi = {
-  contractVersion?: 1 | 2;
+  /** Yalnız v2 sözleşmesi desteklenir (F02: v1 yolu kaldırıldı). */
+  contractVersion?: 2;
   module: string;
   tools: ModuleAiTool[];
   actions: Record<string, ModuleAiAction>;
 };
 
 /** Tip çıkarımı için yardımcılar. */
-/** @deprecated v1 araç sözleşmesi; modüllerde yasak (MODULE_DEVELOPMENT_GUIDE.md §9b). `aiToolV2` kullanın. */
-export const aiTool = <S extends z.ZodType>(tool: ModuleAiTool<S>) => tool as unknown as ModuleAiTool;
 export const aiAction = <S extends z.ZodType>(action: ModuleAiAction<S>) => action as unknown as ModuleAiAction;
-/** @deprecated v1; modüllerde yasak (§9b). `defineModuleAiV2` kullanın. */
-export const defineModuleAi = (definition: ModuleAi): ModuleAi => ({ ...definition, contractVersion: definition.contractVersion ?? 1 });
 
 /** Yaygın not: öneri yapıldıktan sonra modele dönen sonuç. */
 export const PROPOSED = { status: "proposed", note: "A confirmation card was shown to the user; nothing changes until they confirm." } as const; // i18n-ignore (model-facing tool text)

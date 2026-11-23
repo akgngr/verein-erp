@@ -33,7 +33,7 @@ const MODULE_TOOLS = moduleAiRegistry.flatMap((entry) =>
   entry.tools.map((tool) =>
     define({
       name: tool.name,
-      contractVersion:"contractVersion" in tool && tool.contractVersion===2?2:1,
+      contractVersion: 2,
       module: entry.module,
       operation: tool.operation,
       processing: tool.processing,
@@ -80,11 +80,11 @@ const MODULE_TOOLS = moduleAiRegistry.flatMap((entry) =>
 );
 
 for(const entry of moduleAiRegistry)for(const tool of entry.tools){
- if("contractVersion" in tool&&tool.contractVersion===2){
-  const registered=AI_TOOL_POLICY[tool.name as keyof typeof AI_TOOL_POLICY];
-  const policy="policy" in tool?tool.policy as {modelFields:readonly string[];serverReads:readonly string[]}:null;
-  if(!registered||registered.module!==entry.module||!("modelFields" in registered)||!policy||policy.modelFields.some(field=>!registered.modelFields.some(allowed=>allowed===field)))throw new Error("AI_V2_POLICY_MISMATCH");
- }
+ // F02: legacy v1 yolu yok. v2 olmayan ya da politika kaydı tutmayan araç başlangıçta reddedilir (fail closed).
+ if(!("contractVersion" in tool)||tool.contractVersion!==2)throw new Error("AI_V1_TOOL_REJECTED");
+ const registered=AI_TOOL_POLICY[tool.name as keyof typeof AI_TOOL_POLICY];
+ const policy="policy" in tool?tool.policy as {modelFields:readonly string[];serverReads:readonly string[]}:null;
+ if(!registered||registered.module!==entry.module||!("modelFields" in registered)||!policy||policy.modelFields.some(field=>!registered.modelFields.some(allowed=>allowed===field)))throw new Error("AI_V2_POLICY_MISMATCH");
 }
 assertUniqueToolNames(MODULE_TOOLS);
 const TOOLS = MODULE_TOOLS;

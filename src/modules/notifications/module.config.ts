@@ -1,4 +1,7 @@
+import { Bell, Megaphone, Users } from "lucide-react";
 import type { ModuleConfig } from "@/shared/types/module";
+
+import { notificationsPermissions } from "./permissions";
 
 /**
  * Merkezi bildirim sistemi (ADR 0006). CORE: tüm modüllerin bildirimleri tek kutuda; kanallar uygulama içi,
@@ -8,7 +11,7 @@ import type { ModuleConfig } from "@/shared/types/module";
 export const moduleConfig: ModuleConfig = {
   key: "notifications",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "0.10.0",
+  version: "0.14.1",
   label: "Bildirimler",
   description: "Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.",
   category: "CORE",
@@ -21,10 +24,39 @@ export const moduleConfig: ModuleConfig = {
   ],
   // N3a: Web Push (VAPID anahtarları DB'de şifreli, otomatik üretilir).
   dependencies: {
-    "web-push": "3.6.7",
+    "web-push": "4.0.0",
   },
-  // Görünür giriş noktası sağ üstteki zil (N1b); kenar menüsünde öğe yok.
-  nav: [],
+  // Görünür giriş noktaları: sağ üstteki zil (widget.ts) ve Ayarlar → Bildirimler (tercihler).
+  basePath: "/ayarlar/bildirimler",
+  nav: [
+    {
+      href: "/ayarlar/bildirimler",
+      label: "Bildirimler",
+      labelKey: "notifications",
+      icon: Bell,
+      group: "settings",
+      order: 11,
+      permission: { definition: notificationsPermissions, action: "view" },
+    },
+    {
+      href: "/ayarlar/bildirimler/duyurular",
+      label: "Duyurular",
+      labelKey: "duyurular",
+      icon: Megaphone,
+      group: "settings",
+      order: 12,
+      permission: { definition: notificationsPermissions, action: "update" },
+    },
+    {
+      href: "/ayarlar/bildirimler/aboneler",
+      label: "Aboneler",
+      labelKey: "aboneler",
+      icon: Users,
+      group: "settings",
+      order: 13,
+      permission: { definition: notificationsPermissions, action: "update" },
+    },
+  ],
 };
 
 export default moduleConfig;

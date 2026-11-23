@@ -19,8 +19,8 @@ model MailingCampaign {
   workflowId     String?
   /// Planlı gönderim zamanı (iş akışındaki bekleme adımı).
   scheduledAt    DateTime?
-  /// E-posta açılma/tıklama izleme (kampanya başına; varsayılan açık).
-  tracking       Boolean       @default(true)
+  /// E-posta açılma/tıklama izleme (kampanya başına; gizlilik gereği varsayılan kapalı, DSGVO Art. 25).
+  tracking       Boolean       @default(false)
   /// İzleme bağlantılarının kökü (kampanyayı başlatan isteğin genel adresi; worker bunu kullanır).
   trackingBaseUrl String?
   /// "<modül>:<kaynak>" (ör. members:members) veya programatik çağrıda "<modül>:api"

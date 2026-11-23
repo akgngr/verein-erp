@@ -12,6 +12,7 @@ try {
 
 import { hashPassword } from "../src/shared/security/password";
 import { createPrismaClient } from "../src/shared/db-client";
+import { maskEmail } from "../src/shared/automation/trace";
 
 const prisma = createPrismaClient();
 
@@ -33,10 +34,10 @@ async function main() {
     const existing = await prisma.user.findUnique({ where: { email: spec.email } });
     if (existing) {
       await prisma.user.update({ where: { email: spec.email }, data });
-      console.log(`güncellendi: ${spec.email} (${spec.role})`);
+      console.log(`güncellendi: ${maskEmail(spec.email)} (${spec.role})`);
     } else {
       await prisma.user.create({ data: { ...data, email: spec.email } });
-      console.log(`oluşturuldu: ${spec.email} (${spec.role})`);
+      console.log(`oluşturuldu: ${maskEmail(spec.email)} (${spec.role})`);
     }
   }
 }
