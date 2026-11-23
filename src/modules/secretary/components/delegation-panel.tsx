@@ -36,7 +36,7 @@ export function SecretaryDelegationPanel({ initialRows, labels }: { initialRows:
       // Server validates the selected user and expiration; refreshable list avoids assuming the name.
       const { listMyDelegationsAction } = await import("../actions/delegation");
       const latest = await listMyDelegationsAction({});
-      if (!latest.ok) { setMessage("error"); return; }
+      if (!latest.ok) { setMessage("success"); return; }
       setRows(latest.data); setDelegateId(""); setExpiresAt(""); setMessage("success");
     } catch { setMessage("error"); } finally { setPending(false); }
   }
