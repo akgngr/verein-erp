@@ -748,7 +748,8 @@
       "extras": "Anlagen & Extras",
       "grants": "Fördermittel",
       "sepa": "SEPA-Lastschrift",
-      "bookings": "Buchungen"
+      "bookings": "Buchungen",
+      "auditRoom": "Prüfraum"
     },
     "meta": {
       "list": "Buchhaltung",
@@ -765,7 +766,71 @@
       "bank": "Bank",
       "payables": "Eingangsrechnungen",
       "gobd": "GoBD",
-      "extras": "Anlagen & Extras"
+      "extras": "Anlagen & Extras",
+      "auditRoom": "Kassenprüfer-Prüfraum"
+    },
+    "auditRoom": {
+      "title": "Kassenprüfer-Prüfraum",
+      "subtitle": "Zeitlich begrenzter Lesezugriff, geführte Checkliste und Feststellungsbericht für die Mitgliederversammlung.",
+      "defaultTitle": "Kassenprüfung",
+      "expiredTitle": "Prüfzugriff abgelaufen oder nicht vorhanden",
+      "expiredMessage": "Für dieses Geschäftsjahr liegt kein aktiver, unbefristeter Prüfzugriff vor. Bitte wenden Sie sich an Vorstand oder Kassenwart.",
+      "statusActive": "Zugriff aktiv (bis {date})",
+      "statusExpired": "Abgelaufen / widerrufen",
+      "noRoom": "Noch kein Prüfraum angelegt",
+      "pdfButton": "Prüfbericht PDF",
+      "pdfAria": "Sprachauswahl für den Prüfbericht (PDF)",
+      "manageTitle": "Zeitlich begrenzten Prüfzugriff verwalten",
+      "roomTitleLabel": "Titel des Prüfraums",
+      "auditorUserIdLabel": "Prüfer-Benutzer-ID (optional)",
+      "auditorUserIdPlaceholder": "Leer lassen für alle AUDITOR-Rollen",
+      "daysValidLabel": "Gültigkeitsdauer (Tage)",
+      "createRoom": "Prüfraum öffnen",
+      "revokeRoom": "Zugriff sofort beenden",
+      "checked": "Geprüft",
+      "pending": "Offen",
+      "markChecked": "Als geprüft markieren",
+      "uncheck": "Markierung entfernen",
+      "sampleBookingsTitle": "Buchungsstichprobe (letzte Buchungen)",
+      "emptySample": "Keine Buchungen in diesem Geschäftsjahr gefunden.",
+      "filesCount": "{count} Belege",
+      "findingsTitle": "Feststellungen und Hinweise",
+      "sectionLabel": "Prüfbereich",
+      "severityLabel": "Stufe",
+      "summaryLabel": "Kurzbeschreibung",
+      "detailLabel": "Details (optional)",
+      "addFinding": "Feststellung erfassen",
+      "noFindings": "Noch keine Feststellungen erfasst.",
+      "resolveFinding": "Als erledigt markieren",
+      "sections": {
+        "BOOKING_SAMPLE": "Buchungsstichprobe",
+        "RECEIPT_COMPLETENESS": "Belegvollständigkeit",
+        "CASH_COUNTS": "Kassensturz / Kassenabschlüsse",
+        "BANK_RECONCILIATION": "Bankabstimmung",
+        "OPEN_ITEMS": "Offene Posten"
+      },
+      "metrics": {
+        "bookingSample": "Geprüfte Stichprobenbuchungen: {count}",
+        "receiptCompleteness": "Buchungen ohne Beleg: {missing} · Nummern-Lücken: {gaps}",
+        "cashCounts": "Kassenkonten: {accounts} · Offene Tage: {unclosed}",
+        "bankReconciliation": "Offene Auszugszeilen: {open} · Verbucht: {booked}",
+        "openItems": "Offene Ausgangsrechnungen: {invoices} · Offene Eingangsrechnungen: {payables}"
+      },
+      "severities": {
+        "INFO": "Info",
+        "NOTE": "Hinweis",
+        "ISSUE": "Beanstandung"
+      },
+      "statuses": {
+        "OPEN": "Offen",
+        "RESOLVED": "Erledigt"
+      },
+      "errors": {
+        "generic": "Vorgang konnte nicht abgeschlossen werden.",
+        "notFound": "Prüfraum oder Feststellung nicht gefunden.",
+        "invalidWindow": "Das Ablaufdatum muss nach dem Startdatum liegen.",
+        "expiredOrDenied": "Der Prüfzugriff ist abgelaufen oder nicht berechtigt."
+      }
     },
     "errors": {
       "openingDateInvalid": "Das Eröffnungsdatum ist ungültig.",
@@ -8597,7 +8662,10 @@
     "skip": {
       "noMandate": "Kein SEPA-Mandat",
       "invalidIban": "IBAN ungültig",
-      "alreadyInRun": "Bereits in einem offenen Einzug"
+      "alreadyInRun": "Bereits in einem offenen Einzug",
+      "dormant": "Mandat 36 Monate ungenutzt",
+      "renewAfterReturn": "Nach Rückgabe neues Mandat nötig",
+      "pausedAfterReturns": "Wegen wiederholter Rückgaben pausiert"
     },
     "createRun": "Lastschriftdatei erstellen",
     "created": "{number} erstellt.",
@@ -8636,7 +8704,6 @@
     "cancelRun": "Einzug stornieren",
     "cancelConfirm": "Dieser Einzug wird storniert. Nur fortfahren, wenn die Datei nicht bei der Bank eingereicht wurde.",
     "markReturned": "Rücklastschrift",
-    "returnPrompt": "Rückgabegrund (z. B. AC04 Konto erloschen, MD06 Widerspruch, AM04 keine Deckung):",
     "returnedToast": "Rücklastschrift erfasst; Zahlung storniert, Forderung wieder offen.",
     "collectedOn": "Eingezogen am {date}",
     "remittance": {
@@ -8662,6 +8729,72 @@
       "students": "Liest das SEPA-Mandat der zahlenden Erziehungsberechtigten.",
       "organization": "Verwendet den Vereinsnamen in der Datei.",
       "system": "Prüft, ob die Quellmodule aktiv sind."
+    },
+    "health": {
+      "title": "Mandatsprüfung und Rücklastschrift-Coach",
+      "description": "Prüft Mandate vor dem Einzug: fehlende Referenz oder Unterschriftsdatum, IBAN-Prüfziffer (lokal), 36 Monate ungenutzte Mandate und wiederholte Rücklastschriften. Es wird nichts gespeichert oder versendet.",
+      "threshold": "Pausieren ab (12 Monate)",
+      "thresholdOption": "{count, plural, one {nach # Rückgabe} other {nach # Rückgaben}}",
+      "check": "Prüfen",
+      "summary": "{checked} Zahlungspflichtige geprüft; {issues} mit Hinweisen, {blocked} werden vom Einzug ausgenommen.",
+      "allGood": "Alle Mandate sind einzugsbereit.",
+      "returnsCell": "{count, plural, one {# Rückgabe} other {# Rückgaben}} · {fee} Gebühren",
+      "columns": {
+        "debtor": "Zahlungspflichtiger",
+        "iban": "IBAN",
+        "mandate": "Mandatsref.",
+        "issues": "Hinweise",
+        "returns": "Rückgaben (12 Monate)"
+      },
+      "issues": {
+        "missingIban": "Keine IBAN",
+        "invalidIban": "IBAN ungültig",
+        "missingReference": "Keine Mandatsreferenz",
+        "missingSignatureDate": "Kein Unterschriftsdatum",
+        "futureSignatureDate": "Unterschriftsdatum in der Zukunft",
+        "dormant": "36 Monate ungenutzt (verfallen)",
+        "missingHolder": "Kontoinhaber leer",
+        "renewAfterReturn": "Nach Rückgabe neues Mandat nötig",
+        "pausedAfterReturns": "Wiederholte Rückgaben: pausiert"
+      }
+    },
+    "coach": {
+      "codes": {
+        "AC01": "IBAN fehlerhaft; Konto nicht gefunden.",
+        "AC04": "Konto erloschen.",
+        "AC06": "Konto gesperrt.",
+        "AC13": "Schuldnerkonto ist ein Verbraucherkonto (nur B2B).",
+        "AG01": "Lastschrift auf diesem Konto nicht zulässig.",
+        "AM04": "Deckung unzureichend.",
+        "MD01": "Kein gültiges Mandat.",
+        "MD06": "Erstattung durch den Zahlungspflichtigen (8 Wochen).",
+        "MD07": "Zahlungspflichtiger verstorben.",
+        "MS02": "Widerspruch durch den Zahlungspflichtigen.",
+        "MS03": "Grund von der Bank nicht angegeben.",
+        "RR04": "Regulatorischer Grund.",
+        "SL01": "Bank des Zahlungspflichtigen sperrt diesen Gläubiger."
+      },
+      "unknownCode": "Kein Rückgabegrund erfasst; bitte die Bankmitteilung prüfen.",
+      "actions": {
+        "retry": "Nächster Schritt: Deckungsproblem kann vorübergehend sein; beim nächsten Einzug erneut versuchen.",
+        "renewMandate": "Nächster Schritt: neues SEPA-Mandat (ggf. neue IBAN) anfordern; bis dahin kein Einzug.",
+        "contactDebtor": "Nächster Schritt: freundlich Kontakt aufnehmen, Grund für Widerspruch oder Erstattung erfragen, ggf. Überweisung erbitten.",
+        "manualCheck": "Nächster Schritt: Rückgabemitteilung der Bank prüfen."
+      },
+      "reminderLabel": "Erinnerungsentwurf (kopieren und selbst versenden)",
+      "reminderDraft": "Hallo,\n\ndie SEPA-Lastschrift über {amount} (Mandatsreferenz {reference}) wurde von Ihrer Bank zurückgegeben. Bitte prüfen Sie Ihre Kontodaten und geben Sie uns kurz Bescheid; bei Bedarf können Sie ein neues SEPA-Mandat erteilen oder den Betrag überweisen.\n\nVielen Dank und freundliche Grüße\n\n—\n\nMerhaba,\n\nyetki referansı {reference} ile yaptığımız {amount} tutarındaki SEPA tahsilatı bankanız tarafından iade edildi. Lütfen hesap bilgilerinizi kontrol edip bize kısa bir bilgi verin; gerekirse yeni bir SEPA yetkisi imzalayabilir veya tutarı havale edebilirsiniz.\n\nTeşekkürler, saygılarımızla",
+      "copy": "Entwurf kopieren",
+      "copied": "Entwurf kopiert.",
+      "draftOnly": "Nur Entwurf: hier wird nichts versendet."
+    },
+    "returnForm": {
+      "title": "Rücklastschrift erfassen",
+      "code": "Rückgabegrund",
+      "fee": "Bankgebühr (€, optional)",
+      "note": "Notiz (optional)",
+      "hint": "Die Zahlung wird storniert und die Forderung wieder geöffnet. Der Rückgabegrund fließt in Mandatsprüfung und Pausierung ein.",
+      "cancel": "Abbrechen",
+      "feeInvalid": "Die Gebühr muss ein gültiger Betrag sein."
     }
   },
   "students": {
