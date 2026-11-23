@@ -13,9 +13,9 @@ Aidat ve kurs ücretleri için SEPA-Lastschrift (pain.008) tahsilatı.
 |---|---|
 | Anahtar | `sepa` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.0 |
+| Sürüm | 1.2.0 |
 | Gerektirir | [Muhasebe](./accounting) |
-| Önerir | [Üyeler](./members), [Kurslar](./courses) |
+| Önerir | [Üyeler](./members), [Kurslar](./courses), [e-Sign](./online-forms) |
 
 ## Diğer modüllere erişim
 
@@ -27,6 +27,7 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 | [Üyeler](./members) | okuma, yazma | Açık aidatları ve üyelerin SEPA yetkisini okur; tahsil edilen aidatları ödeme olarak kaydeder, geri dönenleri iptal eder. |
 | [Kurslar](./courses) | okuma, yazma | Vadesi gelmiş kurs ücretlerini okur; tahsil edilenleri ödeme olarak kaydeder (muhasebe fişiyle), geri dönenleri ters çevirir. |
 | [Öğrenciler](./students) | okuma | Kurs ücretinin ödeyicisi olan velinin SEPA yetkisini okur. |
+| [e-Sign](./online-forms) | okuma, yazma | — |
 | [Dernek Bilgileri](./organization) | okuma | Dosyada derneğin adını kullanır. |
 | [Modül Yönetimi](./system) | okuma | Kaynak modüllerin açık olup olmadığını kontrol eder. |
 
@@ -39,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | SEPA otomatik ödeme | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | — | görüntüleme, oluşturma, düzenleme, silme | görüntüleme | — | — |
 
 ## Sürüm notları
+
+### 1.2.0 — E-imza ile mandat yenileme
+
+_2026-11-23_
+
+- **Yeni:** Mandat sağlığı ve iade koçunda, yeni yetki gereken borçlulara mevcut çevrimiçi form üzerinden e-imza bağlantısı gönderilebilir. Kanal ve maskeli adres gösterilir, açık onay olmadan gönderilmez; son bağlantının durumu (bekliyor, imzalandı, süresi doldu) görünür.
 
 ### 1.1.0 — Mandat sağlığı ve iade koçu
 

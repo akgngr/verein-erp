@@ -8720,7 +8720,12 @@
       "notOpen": "Der Einzug ist nicht offen.",
       "notCollected": "Der Posten ist nicht eingezogen.",
       "reason": "Bitte Grund angeben.",
-      "notFound": "Einzug nicht gefunden."
+      "notFound": "Einzug nicht gefunden.",
+      "renewalUnavailable": "Das Modul Online-Formulare ist nicht verfügbar.",
+      "renewalTarget": "Für diesen Eintrag wurde keine Person gefunden.",
+      "renewalForbidden": "Sie dürfen dieser Person keinen Formular-Link senden.",
+      "renewalNoAddress": "Für diesen Kanal gibt es keine Adresse.",
+      "renewalFailed": "Der Link konnte nicht gesendet werden."
     },
     "access": {
       "accounting": "Liest Vereins-IBAN und Gläubiger-ID.",
@@ -8795,6 +8800,27 @@
       "hint": "Die Zahlung wird storniert und die Forderung wieder geöffnet. Der Rückgabegrund fließt in Mandatsprüfung und Pausierung ein.",
       "cancel": "Abbrechen",
       "feeInvalid": "Die Gebühr muss ein gültiger Betrag sein."
+    },
+    "renewal": {
+      "request": "Neues Mandat anfordern (E-Signatur)",
+      "unavailable": "E-Signatur-Link nicht verfügbar (Modul, Berechtigung oder Adresse fehlt).",
+      "confirmTitle": "E-Signatur-Link für ein neues SEPA-Mandat senden?",
+      "confirmText": "Die Person erhält den bestehenden Online-Formular-Link; nach der Unterschrift werden neue IBAN und Mandatsdatum gespeichert. Ohne Bestätigung wird nichts gesendet.",
+      "channel": "Kanal und Adresse",
+      "channels": {
+        "email": "E-Mail",
+        "sms": "SMS",
+        "whatsapp": "WhatsApp"
+      },
+      "send": "Link senden",
+      "cancel": "Abbrechen",
+      "sent": "E-Signatur-Link gesendet.",
+      "status": {
+        "PENDING": "Link gesendet ({date}), Unterschrift ausstehend",
+        "COMPLETED": "Unterschrieben ({date})",
+        "CANCELLED": "Link storniert ({date})",
+        "EXPIRED": "Link abgelaufen ({date})"
+      }
     }
   },
   "students": {

@@ -8720,7 +8720,12 @@
       "notOpen": "Tahsilat açık değil.",
       "notCollected": "Kalem tahsil edilmiş değil.",
       "reason": "Nedeni girin.",
-      "notFound": "Tahsilat bulunamadı."
+      "notFound": "Tahsilat bulunamadı.",
+      "renewalUnavailable": "Çevrimiçi formlar modülü kullanılamıyor.",
+      "renewalTarget": "Bu kayıt için kişi bulunamadı.",
+      "renewalForbidden": "Bu kişiye form bağlantısı gönderme yetkiniz yok.",
+      "renewalNoAddress": "Bu kanal için adres yok.",
+      "renewalFailed": "Bağlantı gönderilemedi."
     },
     "access": {
       "accounting": "Derneğin IBAN'ını ve Gläubiger-ID'yi okur.",
@@ -8795,6 +8800,27 @@
       "hint": "Ödeme iptal edilir ve borç yeniden açılır. İade kodu, mandat sağlığı ve duraklatma için kullanılır.",
       "cancel": "Vazgeç",
       "feeInvalid": "Ücret geçerli bir tutar olmalı."
+    },
+    "renewal": {
+      "request": "Yeni mandat iste (e-imza)",
+      "unavailable": "E-imza bağlantısı kullanılamıyor (modül, yetki veya adres yok).",
+      "confirmTitle": "Yeni SEPA yetkisi için e-imza bağlantısı gönderilsin mi?",
+      "confirmText": "Kişiye mevcut çevrimiçi form bağlantısı gönderilir; imzalandığında yeni IBAN ve yetki tarihi kaydedilir. Onaylamadan hiçbir şey gönderilmez.",
+      "channel": "Kanal ve adres",
+      "channels": {
+        "email": "E-posta",
+        "sms": "SMS",
+        "whatsapp": "WhatsApp"
+      },
+      "send": "Bağlantıyı gönder",
+      "cancel": "Vazgeç",
+      "sent": "E-imza bağlantısı gönderildi.",
+      "status": {
+        "PENDING": "Bağlantı gönderildi ({date}), imza bekleniyor",
+        "COMPLETED": "İmzalandı ({date})",
+        "CANCELLED": "Bağlantı iptal edildi ({date})",
+        "EXPIRED": "Bağlantının süresi doldu ({date})"
+      }
     }
   },
   "students": {
