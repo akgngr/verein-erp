@@ -68,7 +68,9 @@ export function NotificationBellDrawer({
 
   return (
     <>
-      <Button variant="tertiary" size="sm" isIconOnly aria-label={labels.open}
+      <Button variant="tertiary" size="sm" isIconOnly
+        aria-label={count > 0 ? `${labels.open} (${count > 99 ? "99+" : count} ${labels.unread})` : labels.open}
+        aria-haspopup="dialog" aria-expanded={open}
         onPress={() => setOpen(true)} className="relative">
         <Bell className="h-4 w-4" aria-hidden />
         {count > 0 ? (
@@ -81,6 +83,9 @@ export function NotificationBellDrawer({
         <Sheet.Header><Sheet.Heading>{labels.heading}</Sheet.Heading></Sheet.Header>
         <Sheet.Body>
           <div className="space-y-4" aria-busy={pending || busy}>
+            <div className="sr-only" role="status" aria-live="polite" aria-atomic="true">
+              {count > 0 ? `${count} ${labels.unread}` : labels.empty}
+            </div>
             <div className="flex flex-wrap gap-2" role="group" aria-label={labels.heading}>
               <Button size="sm" variant={unreadOnly ? "secondary" : "primary"}
                 aria-pressed={!unreadOnly} onPress={() => setUnreadOnly(false)}>{labels.all}</Button>
@@ -103,18 +108,24 @@ export function NotificationBellDrawer({
             {unavailable ? <p role="alert">{labels.unavailable}</p>
               : filtered.length === 0 ? <p role="status" className="text-sm text-ink-500">{labels.empty}</p>
               : (
-                <ul className="space-y-2">
+                <ul className="space-y-2" aria-live="polite">
                   {filtered.map(item => (
                     <li key={item.id} className="rounded-lg border border-ink-200/80 p-3">
-                      <p className="text-xs text-ink-500">{item.moduleLabel} · {item.createdLabel}</p>
-                      <p className="break-words text-sm font-medium">{item.title}</p>
+                      <p className="text-xs text-ink-500">
+                        {item.unread ? <span className="sr-only">[{labels.unread}] </span> : null}
+                        {item.moduleLabel} · {item.createdLabel}
+                      </p>
+                      <p className="break-words text-sm font-medium">
+                        {item.unread ? <span className="sr-only">[{labels.unread}] </span> : null}
+                        {item.title}
+                      </p>
                       <div className="mt-2 flex flex-wrap gap-2">
                         {safeNotificationHref(item.href) ?
-                          <Link href={item.href} className="text-sm text-accent underline-offset-4 hover:underline focus-visible:underline"
+                          <Link href={item.href} aria-label={`${labels.open}: ${item.title}`} className="text-sm text-accent underline-offset-4 hover:underline focus-visible:underline"
                             onClick={() => setOpen(false)}>{labels.open}</Link> : null}
-                        {item.unread ? <Button size="sm" variant="ghost" isDisabled={!onRead || pending || busy || unavailable}
+                        {item.unread ? <Button size="sm" variant="ghost" aria-label={`${labels.markRead}: ${item.title}`} isDisabled={!onRead || pending || busy || unavailable}
                           onPress={() => void act(onRead ? () => onRead(item.id) : undefined)}>{labels.markRead}</Button> : null}
-                        <Button size="sm" variant="ghost" isDisabled={!onSnooze || pending || busy || unavailable}
+                        <Button size="sm" variant="ghost" aria-label={`${labels.snooze}: ${item.title}`} isDisabled={!onSnooze || pending || busy || unavailable}
                           onPress={() => void act(onSnooze ? () => onSnooze(item.id) : undefined)}>{labels.snooze}</Button>
                       </div>
                     </li>

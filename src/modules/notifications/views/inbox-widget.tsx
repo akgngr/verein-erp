@@ -47,15 +47,93 @@ export function NotificationInboxWidget() {
 
   useEffect(() => {
     let mounted = true;
-    const poll = () => { if (mounted && !mutationInFlight.current && document.visibilityState === "visible") void reload(); };
+    let eventSource: EventSource | null = null;
+    let sseActive = false;
+
+    const poll = () => {
+      if (mounted && !mutationInFlight.current && document.visibilityState === "visible") {
+        void reload();
+      }
+    };
+
+    // Polling fallback interval: runs when SSE is unavailable, disconnected, or on error
+    const interval = window.setInterval(() => {
+      if (!sseActive) poll();
+    }, POLL_MS);
+
+    const connectSSE = () => {
+      if (typeof EventSource === "undefined" || document.visibilityState !== "visible") {
+        sseActive = false;
+        return;
+      }
+
+      try {
+        eventSource = new EventSource("/api/notifications/stream");
+
+        eventSource.onopen = () => {
+          sseActive = true;
+        };
+
+        eventSource.addEventListener("count", (event) => {
+          if (!mounted) return;
+          try {
+            const data = JSON.parse(event.data);
+            if (typeof data.count === "number") {
+              setCount(data.count);
+              setUnavailable(false);
+            }
+          } catch {
+            void reload();
+          }
+        });
+
+        eventSource.addEventListener("update", () => {
+          if (!mounted || mutationInFlight.current) return;
+          void reload();
+        });
+
+        eventSource.onerror = () => {
+          if (eventSource) {
+            eventSource.close();
+            eventSource = null;
+          }
+          sseActive = false;
+        };
+      } catch {
+        sseActive = false;
+      }
+    };
+
+    const disconnectSSE = () => {
+      if (eventSource) {
+        eventSource.close();
+        eventSource = null;
+      }
+      sseActive = false;
+    };
+
+    const handleVisibility = () => {
+      if (document.visibilityState === "visible") {
+        poll();
+        if (!sseActive) connectSSE();
+      } else {
+        disconnectSSE();
+      }
+    };
+
     poll();
-    const interval = window.setInterval(poll, POLL_MS);
+    connectSSE();
+
     document.addEventListener("visibilitychange", poll);
+    document.addEventListener("visibilitychange", handleVisibility);
     return () => {
       mounted = false;
-      requestId.current++;
+      const req = requestId;
+      req.current++;
+      disconnectSSE();
       window.clearInterval(interval);
       document.removeEventListener("visibilitychange", poll);
+      document.removeEventListener("visibilitychange", handleVisibility);
     };
   }, [reload]);
 
