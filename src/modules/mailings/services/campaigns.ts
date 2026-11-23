@@ -218,7 +218,7 @@ export async function saveDraft(role: Role, input: CampaignInput, actor: Actor):
     bodyHtml: input.bodyHtml ?? null,
     design: (input.design ?? undefined) as Prisma.InputJsonValue | undefined,
     scheduledAt: input.scheduledAt ?? null,
-    tracking: input.tracking ?? true,
+    tracking: input.tracking ?? false,
   };
   if (input.id) {
     const updated = await db.mailingCampaign.updateMany({ where: { id: input.id, status: "DRAFT" }, data });
@@ -275,7 +275,7 @@ export async function launchCampaign(
     design: (input.design ?? undefined) as Prisma.InputJsonValue | undefined,
     scheduledAt,
     status: (scheduledAt ? "SCHEDULED" : "SENDING") as "SCHEDULED" | "SENDING",
-    tracking: input.tracking ?? true,
+    tracking: input.tracking ?? false,
     trackingBaseUrl: baseUrl ?? null,
     recipientCount: eligible.length,
     skippedNoEmail: noAddress,
