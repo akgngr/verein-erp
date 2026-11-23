@@ -19,13 +19,17 @@ export function editWidgetPreferences(
     }
   }
   const permitted = new Map(allowed.map((widget) => [widget.id, widget]));
-  const seen = new Set<string>();
-  const safeCurrent = current.filter((item) => {
-    if (!item || typeof item.id !== "string" || typeof item.enabled !== "boolean" ||
-        !Number.isSafeInteger(item.order) || seen.has(item.id) || !permitted.has(item.id)) return false;
-    seen.add(item.id);
-    return true;
-  });
+  // Match resolveWidgets: duplicate persisted IDs are ambiguous and must not
+  // let the first attacker-controlled entry decide visibility or ordering.
+  const counts = new Map<string, number>();
+  for (const item of current) {
+    if (item && typeof item.id === "string") {
+      counts.set(item.id, (counts.get(item.id) ?? 0) + 1);
+    }
+  }
+  const safeCurrent = current.filter((item) =>
+    item && typeof item.id === "string" && typeof item.enabled === "boolean" &&
+    Number.isSafeInteger(item.order) && counts.get(item.id) === 1 && permitted.has(item.id));
   const byId = new Map(safeCurrent.map((item) => [item.id, item]));
   const slots = new Map<string, WidgetDefinition[]>();
   for (const widget of allowed) {

@@ -94,7 +94,7 @@
     "next-auth": "5.0.0-beta.32",
     "next-intl": "^4.15.3",
     "nodemailer": "^10.6.0",
-    "openai": "^7.60.0",
+    "openai": "^7.62.0",
     "pdf-lib": "1.17.1",
     "pg": "^8.23.1",
     "pg-boss": "12.38.2",
