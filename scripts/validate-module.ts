@@ -108,7 +108,7 @@ function checkModuleMessages(moduleDir: string, trJson: unknown, deJson: unknown
 }
 
 /**
- * `ai.ts` kuralları: server-only, defineModuleAi, `module` anahtarı klasör adıyla aynı, araç adları
+ * `ai.ts` kuralları: server-only, defineModuleAiV2 (v1 yok), `module` anahtarı klasör adıyla aynı, araç adları
  * snake_case. Dönen değer: eylem başına gereken çeviri anahtarları (<eylem>.kind|confirm|done).
  */
 export function checkModuleAi(moduleDir: string, problems: string[]): string[] {

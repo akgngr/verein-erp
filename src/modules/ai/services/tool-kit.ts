@@ -23,7 +23,7 @@ export type ToolContext = {
 
 export type ToolDefinition<S extends z.ZodType> = {
   name: string;
-  contractVersion?:1|2;
+  contractVersion?:2;
   module: string;
   /** İzin matrisindeki işlem (kapalıysa araç modele hiç sunulmaz). */
   operation: AiOperation;
