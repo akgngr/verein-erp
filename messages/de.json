@@ -8261,7 +8261,16 @@
       "followUpsCancel": "Abbrechen",
       "followUpsComplete": "Abschließen",
       "followUpsConfirmCancel": "Zum endgültigen Abbrechen erneut auf „Abbrechen“ klicken.",
-      "followUpsKeep": "Zurück"
+      "followUpsKeep": "Zurück",
+      "weeklyReportTitle": "Wöchentlicher Vorstandsbericht",
+      "weeklyReportDescription": "Ein PDF mit aggregierten Zahlen wird erstellt. Danach erscheint es unter Meine Dateien.",
+      "weeklyReportRequest": "Bericht erstellen",
+      "weeklyReportCheck": "Status prüfen",
+      "weeklyReportFiles": "Zu Meine Dateien",
+      "weeklyReportPending": "Der Bericht wird erstellt. Prüfen Sie den Status in Kürze erneut.",
+      "weeklyReportReady": "Der Bericht ist fertig.",
+      "weeklyReportFailed": "Der Bericht konnte nicht erstellt werden oder ist nicht mehr verfügbar.",
+      "weeklyReportError": "Der Berichtsvorgang konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut."
     },
     "digest": {
       "subject": "Ihre Morgenübersicht: {total} Themen",
