@@ -1,10 +1,10 @@
 # RFC-004 — Secret ballot architecture for the general assembly
 
 **Issue:** #400 · **Gates:** W5 General assembly end-to-end (`docs/specs/B001_PRODUCT_ROADMAP.md` §5 W5)
-**Status:** Proposed. Requires **owner approval and a legal review** before any implementation issue is opened.
+**Status:** **Accepted in principle** (owner delegated the choice on 2026-11-23: "apply the approach best suited to the euro area", see §9). A **legal review still gates remote/hybrid secret votes** (phase 4).
 **Author:** agent:claude · **Date:** 2026-11-23 · **Depends on:** RFC-003 (portal authentication) for remote voting
 
-> **Not legal advice.** Sections 7 and 8 list legal questions for a lawyer. They are not answers (RDG § 3; DECISION_LOG 2026-11-22, `src/shared/ai/advice-policy.ts`).
+> **Not legal advice.** Section 6 lists legal questions for a lawyer, and §9 records product decisions within that frame. Neither is a legal answer (RDG § 3; DECISION_LOG 2026-11-22, `src/shared/ai/advice-policy.ts`).
 
 ## 1. Problem and scope
 
@@ -15,7 +15,7 @@
   2. **Ballots are unlinkable:** nobody can link a ballot to a member. This includes the board, the operator, a database admin, a log reader and our own code.
   3. **The result is auditable:** the counted totals can be checked against the cast ballots.
 
-**Out of scope (v1):** cryptographic end-to-end verifiability (voter-verifiable receipts, mix-nets, homomorphic tallying). v1 is a **trusted-server design with strict data separation**. §6 states plainly what it can and cannot prove.
+**Out of scope (v1):** full cryptographic end-to-end verifiability (mix-nets, homomorphic tallying). v1 is a **trusted-server design with strict data separation**. It adds a coercion-safe *recorded-as-cast* check (§9.2). §4 states plainly what it can and cannot prove.
 
 ## 2. Design: two stores that share no key
 
@@ -139,6 +139,9 @@ model VoteBallot {             // B: what was voted (no member, no time)
 - **Close:** `vote_credentials` is empty after close; totals match the ballots; the hash is in the minutes; `minBallots` gating works.
 - **Hybrid:** the same member cannot vote both remote and in person.
 - **Data policy:** `VoteBallot`/`VoteCredential` are `K0`, and an AI source scan rejects them.
+- **Receipts (§9.2):** the published receipt list holds no choices; the hash matches the ballot list; a receipt code does not reveal the choice.
+- **Retention (§9.4):** credentials are deleted and `usedAt` is null after close; ballots and eligibility are deleted after the period; totals and hash stay.
+- **Zero egress:** vote routes create no egress-ledger entries and make no outbound requests.
 
 ## 6. Legal notes (questions for legal review, not advice)
 
@@ -157,12 +160,55 @@ The result is marked "not legal advice". The owner requests the legal review bef
 3. Secret votes in person: kiosk and printed codes, no portal dependency.
 4. Remote and hybrid secret votes, after RFC-003 auth (portal, step-up) is live.
 
-## 8. Decisions requested from the owner
+## 8. Decisions (resolved in §9)
 
-1. Approve the trusted-server separation design (E / credential / B, no joinable keys) as v1, with the "cannot check" list shown in the UI and minutes.
-2. Default `minBallots` = 5? Should the chair be able to lower it, with a warning?
-3. Drop `VoteEligibility.usedAt` after the challenge period, or keep it at minute precision?
-4. Order the legal review (BGB § 32, contestation, bylaws mapping) before phase 3.
-5. Confirm that agent:gemini writes the decoupling tests (§5) as a separate issue.
+The five open questions of the first draft are resolved in §9 with a euro-area baseline. That baseline is the EU GDPR, the Council of Europe e-voting standards, the European Accessibility Act and German association law.
 
-**Owner approval must be recorded (DECISION_LOG) before any implementation issue is opened.**
+## 9. Decision: euro-area baseline (adopted 2026-11-23)
+
+### 9.1 Reference frame
+| Source | What it requires | How this design meets it |
+|---|---|---|
+| **GDPR** Art. 5(1)(c)(e), Art. 25, Recital 26 | Data minimisation, storage limitation, privacy by design. **Truly anonymous data is outside the GDPR.** | Ballots carry no member id, time or sequence and cannot be linked (§2.2), so the ballot box is anonymous data. Only the eligibility register is personal data, and it is minimised and deleted (§9.4). This also matters when an association's votes reveal Art. 9 data (political, religious or trade-union associations). |
+| **Council of Europe Recommendation CM/Rec(2017)5** (standards for e-voting; all euro-area states are members) | Universal, equal, free and **secret** suffrage; the voter's identity cannot be linked to the vote; one vote per voter; transparency and observability; information to voters about how the system works | Separation design (§2), single-use credential, auditor tables (§4), and a voter-facing "how secrecy works" page in TR/DE |
+| **BGB § 32 Abs. 2** (virtual or hybrid assemblies, since 2023) | Hybrid participation by board decision unless the bylaws exclude it; purely virtual assemblies need a bylaws basis or a members' resolution | Remote secret voting is **off per vote** until the chair confirms the legal basis (bylaws clause or resolution), which is recorded in the minutes (§9.5) |
+| **European Accessibility Act** (Directive (EU) 2019/882, applicable since 28 Jun 2025) / **EN 301 549** (WCAG 2.1 AA) | Accessible digital services | Ballot UI, kiosk and portal are WCAG 2.1 AA: keyboard, screen reader, contrast, no time pressure on choosing |
+| **EU data residency** (GDPR Chapter V, Schrems II) | No unnecessary third-country transfer | Vote tables live only in the tenant's EU/EEA database (ADR 0001). No external service is in the vote path: no AI, analytics, CDN scripts or third-party captcha. The egress ledger must show **zero** egress for vote routes. |
+
+eIDAS-level identification (eID, qualified signatures) is **not required** for association votes. It would exclude many members. Identity comes from portal step-up with a passkey (RFC-003) or in-person check-in, and eID can be added later as an optional extra.
+
+### 9.2 Verifiability without coercion (recorded-as-cast)
+- After casting, the voter sees a random **ballot receipt code** (`ballotNonce`, 8 words or 16 characters). It does not reveal the choice.
+- At close, the system publishes the **list of receipt codes only**, without choices, in random order, plus the SHA-256 hash of the full ballot list (`choice,weight,ballotNonce`). The hash also goes into the minutes.
+- What the voter can check: their ballot was **recorded and counted in the total**. What they cannot do is prove to a third party *what* they voted. This meets the CM/Rec(2017)5 transparency goal without enabling vote buying or coercion.
+- The full ballot list with choices is visible only to the election committee during the challenge period, for a recount, and is never public.
+
+### 9.3 Small-count protection
+- `minBallots` defaults to **5**. The chair may lower it to **3** at the earliest; the warning and the decision are recorded in the minutes.
+- Below the threshold the vote is held **openly**, or postponed. The bylaws may require secrecy, in which case it is postponed; this is never silent.
+- Weight classes (proxies, corporate members) with fewer than `minBallots` members are shown with a warning before the vote opens.
+
+### 9.4 Retention and deletion (storage limitation)
+| Data | Kept | Deleted |
+|---|---|---|
+| `VoteCredential` | Until close | **At close** (spent and unspent) |
+| `VoteEligibility.usedAt` | Not stored beyond minute precision | **Set to null at close**. The participation fact stays, like a signed attendance list. |
+| `VoteEligibility` (who received a ballot) | Until the challenge period ends | Then deleted. The period is the **approval of the minutes at the next assembly, or at most 12 months**; German association law has no fixed statutory period. |
+| `VoteBallot` (anonymous) | Same period, for a recount | Then deleted. Totals, receipt-code list and hash stay in the minutes (`MeetingDecision`) for the life of the minutes. |
+
+Deletion runs through the existing lifecycle jobs and is logged as "vote X: ballots deleted (n)", without ids.
+
+### 9.5 Remote and hybrid voting rules
+- **Per vote**, the chair chooses `in_person` | `hybrid` | `remote`. `hybrid` and `remote` need a confirmed legal basis (bylaws clause or members' resolution, a text field). That basis is printed in the minutes.
+- Remote voters authenticate through RFC-003 (passkey step-up, ≤ 5 min). In-person voters use the kiosk or a printed code (§2.4). Both feed one eligibility register.
+- A voting window of at least **10 minutes** for remote votes, and the result is not shown before close. This avoids bandwagon effects and timing correlation.
+- **Phase 4 (remote/hybrid) stays blocked until the legal review is recorded.** Phase 3 (in-person secret ballots) may start now.
+
+### 9.6 Answers to the first draft's questions
+1. Trusted-server separation as v1: **yes**, with the §9.2 receipt check and the §4 "cannot check" list shown in the UI and the minutes.
+2. `minBallots`: **5 by default, minimum 3**, and lowering it is recorded.
+3. `usedAt`: **nulled at close**. Eligibility rows are deleted after the challenge period (§9.4).
+4. Legal review: **required before phase 4**. Phase 3 does not depend on it.
+5. Decoupling tests: **agent:gemini**, a separate issue (opened with this decision).
+
+**Next steps:** ADR after the legal review (phase 4); phase 3 implementation issue (meetings, in person); tests issue (agent:gemini).
