@@ -10,6 +10,11 @@ import { getDb } from "@/shared/db";
  * yok). SMS/WhatsApp: sağlayıcı bildirimleri `recordProviderStatus` ile işlenir.
  */
 
+/** Global Privacy Control (`Sec-GPC: 1`): alıcı izlenmemeyi istiyor; açılma/tıklama kaydedilmez. */
+export function isTrackingOptOut(headers: Headers): boolean {
+  return headers.get("sec-gpc")?.trim() === "1";
+}
+
 export const newTrackingToken = () => randomBytes(18).toString("base64url");
 
 function secret(): string {
