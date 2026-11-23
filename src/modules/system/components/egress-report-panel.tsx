@@ -72,7 +72,7 @@ export function EgressReportPanel({
           <input
             id={`${idPrefix}-year`} type="number" min={2020} max={2100} step={1}
             value={year}
-            onChange={(event) => setYear(Number(event.target.value))}
+            onChange={(event) => { setYear(Number(event.target.value)); setReport(null); setError(false); }}
             className="w-28 rounded-lg border border-border bg-surface px-3 py-2 text-foreground"
           />
         </label>
