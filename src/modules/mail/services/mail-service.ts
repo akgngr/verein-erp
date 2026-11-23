@@ -120,6 +120,17 @@ async function deliver(
   } catch (sendError) {
     const error = getErrorMessage(sendError);
     return { ok: false, error, logId: await writeLog(valid, "FAILED", { error }) };
+  } finally {
+    const { recordEgress } = await import("@/shared/egress/record-egress");
+    await recordEgress({
+      moduleKey: valid.context?.module || "mail",
+      category: "EMAIL",
+      provider: "smtp",
+      volume: Buffer.byteLength(valid.text ?? "") + Buffer.byteLength(valid.html ?? ""),
+      count: 1,
+      unit: "bytes",
+      legalBasis: "LEGITIMATE_INTEREST",
+    });
   }
 }
 

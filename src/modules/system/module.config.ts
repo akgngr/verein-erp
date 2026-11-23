@@ -8,7 +8,7 @@ import {
 export const moduleConfig: ModuleConfig = {
   key: "system",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.15.0",
+  version: "1.16.0",
   label: "Modül Yönetimi",
   description: "Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.",
   category: "CORE",
@@ -21,6 +21,8 @@ export const moduleConfig: ModuleConfig = {
     { module: "organization", operations: ["read"] },
     // Sağlık kokpiti (F3): admin kullanıcısı varlığı denetlenir.
     { module: "users", operations: ["read"] },
+    // Gizlilik ön ayarları ve veri çıkışı raporu (F2a): AI sağlayıcı durumu okunur.
+    { module: "ai", operations: ["read"] },
   ],
   nav: [
     {

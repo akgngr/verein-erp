@@ -5,6 +5,7 @@ import { createHash } from "node:crypto";
 import { z } from "zod";
 
 import { getDb } from "@/shared/db";
+import { recordEgress } from "@/shared/egress/record-egress";
 import { openSecret, sealSecret } from "@/shared/security/secret-box";
 
 import { getChannelConfig, saveChannelConfig } from "./channel-config";
@@ -121,6 +122,16 @@ export async function sendPush(userId: string, message: { title: string; body: s
       const status = (error as { statusCode?: number }).statusCode;
       if (status === 404 || status === 410 || sub.failureCount + 1 >= MAX_FAILURES) await db.notificationPushSubscription.delete({ where: { id: sub.id } }).catch(() => undefined);
       else await db.notificationPushSubscription.update({ where: { id: sub.id }, data: { failureCount: { increment: 1 } } });
+    } finally {
+      await recordEgress({
+        moduleKey: "notifications",
+        category: "NOTIFICATION",
+        provider: "web_push",
+        volume: Buffer.byteLength(payload),
+        count: 1,
+        unit: "bytes",
+        legalBasis: "CONSENT",
+      });
     }
   }
   return { ok: any };
