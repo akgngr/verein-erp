@@ -7,6 +7,7 @@ export const campaignWhatsappPermissions = definePermissions("campaign-whatsapp"
   SECRETARY: ["view"],
   TREASURER: [],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: [],
 });

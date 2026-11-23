@@ -13,7 +13,7 @@ Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri.
 |---|---|
 | Anahtar | `users` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.1.11 |
+| Sürüm | 1.2.0 |
 | Sayfalar | `/ayarlar/kullanicilar` |
 
 ## Diğer modüllere erişim
@@ -28,11 +28,17 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Salt okunur | Sayman | Denetçi | Öğretmen |
-|---|---|---|---|---|---|---|---|
-| Kullanıcı Hesapları | görüntüleme, oluşturma, düzenleme, silme | — | — | — | — | — | — |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Salt okunur | Sayman | Denetçi | TAX_ADVISOR | Öğretmen |
+|---|---|---|---|---|---|---|---|---|
+| Kullanıcı Hesapları | görüntüleme, oluşturma, düzenleme, silme | — | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.2.0 — Vergi danışmanı (TAX_ADVISOR) rolü ve zaman sınırlı erişim
+
+_2026-11-23_
+
+- **Yeni:** Muhasebe ve finans raporları için salt okunur TAX_ADVISOR rolü ile varsayılan 14 / en fazla 90 günlük erişim penceresi yönetimi eklendi.
 
 ### 1.1.11 — Silinen kullanıcı için daha az kişisel veri
 
@@ -76,10 +82,4 @@ _2026-11-17_
 
 - **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
-### 1.1.3 — Şifre sıfırlama formu merkezi dialog katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Şifre sıfırlama penceresi merkezi FormModal, ActionButton ve notify bileşenlerine taşındı; modüldeki doğrudan HeroUI kullanımı azaltıldı.
-
-Daha eski 6 herkese açık sürüm notu.
+Daha eski 7 herkese açık sürüm notu.

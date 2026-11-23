@@ -13,7 +13,7 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 |---|---|
 | Anahtar | `secretary` |
 | Tür | Eklenti |
-| Sürüm | 0.13.0 |
+| Sürüm | 0.13.1 |
 | Sayfalar | `/sekreter` |
 
 ## Diğer modüllere erişim
@@ -33,11 +33,17 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| Sekreter | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| Sekreter | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — | görüntüleme | — |
 
 ## Sürüm notları
+
+### 0.13.1 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 0.13.0 — Vekâlet ve kanal izinleri ekranları
 
@@ -82,10 +88,4 @@ _2026-11-20_
 
 - **Yeni:** Onay bekleyen yeni sekreter önerileri bildirim olarak görünür (içerik yok).
 
-### 0.11.2 — Çalışma zamanı modernizasyonu
-
-_2026-11-20_
-
-- **İyileştirme:** Sabah özeti öğelerinin önem ve vade sırasına göre dizilmesinde (sortItems) toSorted metodu uygulandı.
-
-Daha eski 21 herkese açık sürüm notu.
+Daha eski 22 herkese açık sürüm notu.

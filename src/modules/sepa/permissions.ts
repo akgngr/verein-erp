@@ -7,6 +7,7 @@ export const sepaPermissions = definePermissions("sepa", {
   SECRETARY: [],
   TREASURER: ["view", "create", "update", "delete"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: [],
 });

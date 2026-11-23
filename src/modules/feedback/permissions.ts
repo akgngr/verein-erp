@@ -10,6 +10,7 @@ export const feedbackPermissions = definePermissions("feedback", {
   SECRETARY: ["view", "create"],
   TREASURER: ["view", "create"],
   AUDITOR: ["view", "create"],
+  TAX_ADVISOR: [],
   TEACHER: ["view", "create"],
   VIEWER: ["view", "create"],
 });

@@ -10,6 +10,7 @@ export const mailingsPermissions = definePermissions("mailings", {
   SECRETARY: ["view", "create"],
   TREASURER: [],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: [],
 });

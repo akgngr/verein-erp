@@ -7,6 +7,7 @@ export const accountingPermissions = definePermissions("accounting", {
   SECRETARY: [],
   TREASURER: ["view", "create", "update", "delete", "approve"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: ["view"],
   TEACHER: [],
   VIEWER: [],
 });
@@ -18,6 +19,7 @@ export const accountingSetupPermissions = definePermissions("accountingSetup", {
   SECRETARY: [],
   TREASURER: ["view", "create", "update"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: ["view"],
   TEACHER: [],
   VIEWER: [],
 });

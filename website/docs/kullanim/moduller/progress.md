@@ -13,7 +13,7 @@ Kurs öğrencilerinin yoklaması, sınav ve notları, gelişim notları ve veli 
 |---|---|
 | Anahtar | `progress` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.5 |
+| Sürüm | 1.1.6 |
 | Sayfalar | `/ogrenci-takibi` |
 | Gerektirir | [Kurslar](./courses) |
 
@@ -30,10 +30,10 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| Tüm gelişim notları | silme | — | — | — | — | — | — |
-| Öğrenci takibi | görüntüleme, oluşturma, düzenleme, silme | görüntüleme | görüntüleme, oluşturma, düzenleme | — | — | görüntüleme, oluşturma, düzenleme, silme | — |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| Tüm gelişim notları | silme | — | — | — | — | — | — | — |
+| Öğrenci takibi | görüntüleme, oluşturma, düzenleme, silme | görüntüleme | görüntüleme, oluşturma, düzenleme | — | — | — | görüntüleme, oluşturma, düzenleme, silme | — |
 
 ## Asistan araçları
 
@@ -42,6 +42,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_progress_statistics`
 
 ## Sürüm notları
+
+### 1.1.6 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 1.1.5 — Arayüz altyapısı
 

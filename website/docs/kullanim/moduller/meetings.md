@@ -13,7 +13,7 @@ Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar.
 |---|---|
 | Anahtar | `meetings` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.16 |
+| Sürüm | 1.3.17 |
 | Sayfalar | `/toplantilar`, `/toplantilar/gorevler` |
 
 ## Diğer modüllere erişim
@@ -31,9 +31,9 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Salt okunur | Sayman | Denetçi | Öğretmen |
-|---|---|---|---|---|---|---|---|
-| Toplantı ve Kararlar | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme, onay | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | görüntüleme | — |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Salt okunur | Sayman | Denetçi | TAX_ADVISOR | Öğretmen |
+|---|---|---|---|---|---|---|---|---|
+| Toplantı ve Kararlar | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme, onay | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | görüntüleme | — | — |
 
 ## Asistan araçları
 
@@ -42,6 +42,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_meeting` · `get_meeting_statistics` · `list_meetings` · `propose_delete_meeting` · `propose_meeting` · `propose_meeting_status`
 
 ## Sürüm notları
+
+### 1.3.17 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 1.3.16 — Merkezi bildirimler
 
@@ -85,10 +91,4 @@ _2026-11-17_
 
 - **İyileştirme:** Katılımcı ekleme, toplu işaretleme, hızlı konuk girişi, silme ve bildirim akışları FormTextField, ActionButton ve notify adapter katmanına taşındı.
 
-### 1.3.8 — Kalan toplantı rozetleri ortak UI katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Rozet/çip görünümleri ortak StatusChip pattern'ine taşındı; modül düzeyindeki doğrudan HeroUI Chip bağımlılığı azaltıldı.
-
-Daha eski 11 herkese açık sürüm notu.
+Daha eski 12 herkese açık sürüm notu.

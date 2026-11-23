@@ -13,7 +13,7 @@ Kalıcı arka plan görevleri ve iş akışları.
 |---|---|
 | Anahtar | `automation` |
 | Tür | Eklenti |
-| Sürüm | 0.10.14 |
+| Sürüm | 0.10.15 |
 | Sayfalar | `/automation`, `/automation/workflows` |
 
 ## Diğer modüllere erişim
@@ -30,11 +30,17 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| Otomasyon | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | — | görüntüleme |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| Otomasyon | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | — | — | görüntüleme |
 
 ## Sürüm notları
+
+### 0.10.15 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 0.10.12 — Arayüz altyapısı
 
@@ -78,10 +84,4 @@ _2026-11-15_
 
 - **Güvenlik:** Görev çalıştırmadan önceki modül durumu denetimi artık bildirilmiş erişimle yapılır. Yönetici erişimi bir kez yeniden onaylar.
 
-### 0.10.4 — Merkezi dosya talebi ve güvenli publication
-
-_2026-11-15_
-
-- **Güvenlik:** FileGeneration facade mevcut outbox ile atomiktir; yalnız geçerli worker lease dosyayı yayımlar, pending dosyalar liste/indirmeden gizlenir.
-
-Daha eski 26 herkese açık sürüm notu.
+Daha eski 27 herkese açık sürüm notu.

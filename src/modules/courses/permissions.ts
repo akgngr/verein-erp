@@ -7,6 +7,7 @@ export const coursesPermissions = definePermissions("courses", {
   SECRETARY: ["view", "create", "update"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: ["view"],
   VIEWER: [],
 });
@@ -18,6 +19,7 @@ export const courseSessionsPermissions = definePermissions("courseSessions", {
   SECRETARY: ["view", "create", "update", "delete"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: ["view", "create", "update", "delete"],
   VIEWER: [],
 });
@@ -29,6 +31,7 @@ export const courseFeesPermissions = definePermissions("courseFees", {
   SECRETARY: ["view", "create"],
   TREASURER: ["view", "create", "update", "delete"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: [],
 });
@@ -40,6 +43,7 @@ export const courseTeachersPermissions = definePermissions("courseTeachers", {
   SECRETARY: ["view", "create", "update"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: [],
 });
@@ -54,6 +58,7 @@ export const coursesAllPermissions = definePermissions("coursesAll", {
   SECRETARY: ["view"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: ["view"],
 });
@@ -68,6 +73,7 @@ export const coursePayoutsPermissions = definePermissions("coursePayouts", {
   SECRETARY: ["view"],
   TREASURER: ["view", "create", "update", "delete", "approve"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: ["view"],
   VIEWER: [],
 });
@@ -79,6 +85,7 @@ export const coursePayoutsAllPermissions = definePermissions("coursePayoutsAll",
   SECRETARY: ["view"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: [],
 });

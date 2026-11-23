@@ -165,6 +165,7 @@ export const DATA_POLICY = {
   Student: { owner: "students", category: "K3", reason: "Reşit olmayanlar; yapay zekâya yalnız sayım", sensitiveFields: ["firstName", "lastName", "birthDate", "email", "phone"] },
   Task: { owner: "tasks", category: "K3", reason: "Görevler; başlık maskeli, kişi alanları yok", sensitiveFields: ["memberName", "memberId", "createdByLabel", "completedByLabel"] },
   // ── K2 ──
+  ExternalAccessGrant: { owner: "users", category: "K2", reason: "Harici inceleme zaman sınırı kaydı", sensitiveFields: [], directAccess: ["auth"] },
   AccountingAccount: { owner: "accounting", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
   AccountingAsset: { owner: "accounting", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
   AccountingBankRule: { owner: "accounting", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },

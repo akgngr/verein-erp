@@ -15,7 +15,7 @@ import { defineNotificationType, defineNotificationTypes } from "@/shared/notifi
 import { definePermissions } from "@/shared/permissions/define";
 import type { Role } from "@/shared/roles";
 
-const perms = definePermissions("demo", { ADMIN: ["view"], BOARD: ["view"], SECRETARY: [], TREASURER: [], AUDITOR: [], TEACHER: [], VIEWER: [] });
+const perms = definePermissions("demo", { ADMIN: ["view"], BOARD: ["view"], SECRETARY: [], TREASURER: [], AUDITOR: [], TAX_ADVISOR: [], TEACHER: [], VIEWER: [] });
 const withEmail = defineNotificationType({ key: "invited", severity: "info", defaultChannels: ["in_app", "email"], permission: { definition: perms, action: "view" }, schema: z.object({ id: z.string(), title: z.string() }).strict(), titleKey: "notifications.invited.title", href: (p) => `/toplantilar/${p.id}` });
 const inAppOnly = defineNotificationType({ ...withEmail, key: "quiet", defaultChannels: ["in_app"] } as never);
 const registry = [defineNotificationTypes("meetings", [withEmail, inAppOnly])];

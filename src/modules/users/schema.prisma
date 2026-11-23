@@ -37,3 +37,21 @@ model RoleGrant {
   @@id([roleKey, resource])
   @@map("role_grants")
 }
+
+/// Zaman sınırlı harici inceleme erişimi (örn. vergi danışmanı / TAX_ADVISOR).
+model ExternalAccessGrant {
+  id              String    @id @default(cuid())
+  userId          String
+  moduleScope     String?
+  startsAt        DateTime
+  expiresAt       DateTime
+  revokedAt       DateTime?
+  createdByUserId String?
+  note            String?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([userId, expiresAt])
+  @@map("external_access_grants")
+}
+

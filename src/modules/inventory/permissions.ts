@@ -6,6 +6,7 @@ export const inventoryPermissions = definePermissions("inventory", {
   SECRETARY: ["view", "create", "update"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: ["view"],
 });

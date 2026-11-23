@@ -49,7 +49,7 @@ describe("Authentication bypass protection with real Auth.js behavior",()=>{
   assert.equal(tokenToSessionUser({id:"u",role:"VIEWER"})?.mustChangePassword,true);
  });
  test("permission checks enforce role-specific actions",()=>{
-  const permissions=definePermissions("test",{ADMIN:["view","create","update","delete"],BOARD:["view","create"],SECRETARY:["view"],TREASURER:["view"],AUDITOR:["view"],VIEWER:["view"]});
+  const permissions=definePermissions("test",{ADMIN:["view","create","update","delete"],BOARD:["view","create"],SECRETARY:["view"],TREASURER:["view"],AUDITOR:["view"], TAX_ADVISOR: [],VIEWER:["view"]});
   assert.equal(can("ADMIN",permissions,"delete"),true);assert.equal(can("BOARD",permissions,"create"),true);
   assert.equal(can("BOARD",permissions,"delete"),false);assert.equal(can("VIEWER",permissions,"create"),false);
  });

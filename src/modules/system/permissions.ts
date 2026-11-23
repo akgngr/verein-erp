@@ -6,6 +6,7 @@ export const systemPermissions = definePermissions("system", {
   SECRETARY: [],
   TREASURER: [],
   AUDITOR: [],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: [],
 });
@@ -16,6 +17,7 @@ export const settingsPermissions = definePermissions("settings", {
   SECRETARY: ["view"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: ["view"], // yalnızca kişisel tercihler (dil, tema); diğer ayar sayfaları kendi yetkisiyle süzülür
   VIEWER: ["view"],
 });

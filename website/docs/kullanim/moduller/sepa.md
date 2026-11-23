@@ -13,7 +13,7 @@ Aidat ve kurs ücretleri için SEPA-Lastschrift (pain.008) tahsilatı.
 |---|---|
 | Anahtar | `sepa` |
 | Tür | Resmî modül |
-| Sürüm | 1.0.6 |
+| Sürüm | 1.0.7 |
 | Gerektirir | [Muhasebe](./accounting) |
 | Önerir | [Üyeler](./members), [Kurslar](./courses) |
 
@@ -34,11 +34,17 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| SEPA otomatik ödeme | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | — | görüntüleme, oluşturma, düzenleme, silme | görüntüleme | — | — |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| SEPA otomatik ödeme | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | — | görüntüleme, oluşturma, düzenleme, silme | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.0.7 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 1.0.6 — GoBD silme koruması
 

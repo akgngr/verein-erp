@@ -13,7 +13,7 @@ Test için kurgusal örnek veri yükler; modül kapatılınca hepsini siler.
 |---|---|
 | Anahtar | `demo` |
 | Tür | Resmî modül |
-| Sürüm | 1.0.2 |
+| Sürüm | 1.0.3 |
 | Sayfalar | `/ayarlar/demo-veri` |
 
 ## Diğer modüllere erişim
@@ -28,11 +28,17 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| Demo veri | görüntüleme, oluşturma, silme | — | — | — | — | — | — |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| Demo veri | görüntüleme, oluşturma, silme | — | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.0.3 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 1.0.2 — Demo eylemleri ortak UI katmanında
 

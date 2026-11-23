@@ -8,5 +8,6 @@ export const auditPermissions = definePermissions("audit", {
   VIEWER: [],
   TREASURER: [],
   AUDITOR: [],
+  TAX_ADVISOR: [],
   TEACHER: [],
 });

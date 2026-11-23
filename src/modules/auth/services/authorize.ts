@@ -5,6 +5,7 @@ import { CredentialsSignin } from "next-auth";
 import { writeAudit } from "@/shared/audit/write-audit";
 import { getDb } from "@/shared/db";
 import { getEnv } from "@/shared/env";
+import { hasActiveExternalGrant, isTimeBoxedRole } from "@/shared/security/external-grant";
 import { verifyPassword } from "@/shared/security/password";
 import { getLoginAccessStatus, getLoginFailureState } from "@/shared/security/login-lockout";
 import { buildUserLabel } from "@/shared/utils";
@@ -98,6 +99,20 @@ export async function authorize(
     });
 
     throw new InvalidCredentialsError();
+  }
+
+  if (isTimeBoxedRole(user.role)) {
+    const grants = await db.externalAccessGrant.findMany({ where: { userId: user.id } });
+    if (!hasActiveExternalGrant(grants, now)) {
+      await writeAudit({
+        userId: user.id,
+        userLabel,
+        action: "LOGIN_FAILED",
+        entity: "Auth",
+        entityId: user.id,
+      });
+      throw new InvalidCredentialsError();
+    }
   }
 
   await db.user.update({

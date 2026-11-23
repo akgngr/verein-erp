@@ -6,6 +6,7 @@ export const mailPermissions = definePermissions("mail", {
   SECRETARY: [],
   TREASURER: [],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: [],
 });
@@ -20,6 +21,7 @@ export const mailInboxPermissions = definePermissions("mailInbox", {
   SECRETARY: [],
   TREASURER: ["view", "create"],
   AUDITOR: [],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: [],
 });
