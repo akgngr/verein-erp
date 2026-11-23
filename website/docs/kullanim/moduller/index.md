@@ -60,7 +60,7 @@ Verein ERP 42 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekra
 | [Hava Durumu](./moduller/weather) | Anlık konum bazlı hava durumu, tahminler, panel kartı ve sekreter etkinlik önerileri (Dış API: api.open-meteo.com). | 0.1.2 |
 | [Otomasyon](./moduller/automation) | Kalıcı arka plan görevleri ve iş akışları. | 0.10.14 |
 | [Outlook Takvim](./moduller/calendar-outlook) | Microsoft 365 / Outlook takvimini salt okunur bağlar (OAuth; yönetici kendi Azure uygulamasını girer). | 1.0.0 |
-| [Sekreter](./moduller/secretary) | Kişisel sekreter: sabah özeti ve onaylı öneriler. | 0.12.2 |
+| [Sekreter](./moduller/secretary) | Kişisel sekreter: sabah özeti ve onaylı öneriler. | 0.13.0 |
 | [SMS](./moduller/campaign-sms) | Kampanyalar için SMS kanalı (seven.io veya Twilio). Yalnız SMS izni verenlere gider. | 1.1.1 |
 | [Telegram](./moduller/campaign-telegram) | Kampanyalar için Telegram kanalı (Bot API). Kişi davet bağlantısıyla abone olur; /stop ile ayrılır. | 1.0.1 |
 | [WhatsApp](./moduller/campaign-whatsapp) | Kampanyalar için WhatsApp kanalı (Meta Cloud API, onaylı şablonla). Yalnız WhatsApp izni verenlere gider. | 1.1.1 |

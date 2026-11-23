@@ -9,10 +9,14 @@ import { PageHeader } from "@/shared/components/ui/page-header";
 import { SecretaryTodayCard } from "../components/today-card";
 import { SecretaryFollowUps } from "../components/follow-ups";
 import { SecretaryWeeklyReport } from "../components/weekly-report";
+import { SecretaryDelegationPanel } from "../components/delegation-panel";
+import { SecretaryChannelConsentsPanel } from "../components/channel-consents-panel";
 import { SecretaryInboxView } from "./inbox-view";
 import { SecretaryPreferencesView } from "./preferences-view";
 import { secretaryPermissions } from "../permissions";
 import { getBriefing } from "../services/briefing";
+import { listDelegations } from "../services/delegation";
+import { listConsents } from "../services/channels";
 
 /** T1.4: authenticated, permission-filtered, server-rendered morning briefing. */
 export async function SecretaryHomeView() {
@@ -31,6 +35,10 @@ export async function SecretaryHomeView() {
     // Do not expose private provider or database errors in the UI.
     console.error("[secretary] BRIEFING_VIEW_FAILED");
   }
+  const [delegations, consents] = await Promise.all([
+    listDelegations(user.id).catch(() => null),
+    listConsents(user.id).catch(() => null),
+  ]);
   return (
     <section className="space-y-6">
       <PageHeader title={t("title")} description={t("description")} />
@@ -79,6 +87,26 @@ export async function SecretaryHomeView() {
         error: t("ui.weeklyReportError"),
       }} />
       <SecretaryInboxView user={{ id: user.id, role: user.role }} />
+      {delegations === null ? <p role="status">{t("ui.delegationPanel.unavailable")}</p> :
+        <SecretaryDelegationPanel initialRows={delegations} labels={{
+          title: t("ui.delegationPanel.title"), description: t("ui.delegationPanel.description"),
+          userId: t("ui.delegationPanel.userId"), expiry: t("ui.delegationPanel.expiry"),
+          briefing: t("ui.delegationPanel.briefing"), followUps: t("ui.delegationPanel.followUps"),
+          grant: t("ui.delegationPanel.grant"), revoke: t("ui.delegationPanel.revoke"),
+          confirm: t("ui.delegationPanel.confirm"), cancel: t("ui.delegationPanel.cancel"),
+          view: t("ui.delegationPanel.view"), close: t("ui.delegationPanel.close"),
+          given: t("ui.delegationPanel.given"), received: t("ui.delegationPanel.received"),
+          empty: t("ui.delegationPanel.empty"), expired: t("ui.delegationPanel.expired"),
+          success: t("ui.delegationPanel.success"), error: t("ui.delegationPanel.error"),
+        }} />}
+      {consents === null ? <p role="status">{t("ui.consentPanel.error")}</p> :
+        <SecretaryChannelConsentsPanel initialRows={consents} labels={{
+          title: t("ui.consentPanel.title"), unavailable: t("ui.consentPanel.unavailable"),
+          empty: t("ui.consentPanel.empty"), revoke: t("ui.consentPanel.revoke"),
+          confirm: t("ui.consentPanel.confirm"), cancel: t("ui.consentPanel.cancel"),
+          saved: t("ui.consentPanel.saved"), error: t("ui.consentPanel.error"),
+          status: { active: t("ui.consentPanel.active"), pending: t("ui.consentPanel.pending"), revoked: t("ui.consentPanel.revoked") },
+        }} />}
       <SecretaryPreferencesView user={{ id: user.id }} />
     </section>
   );
