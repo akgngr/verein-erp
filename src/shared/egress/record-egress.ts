@@ -1,7 +1,3 @@
-import "server-only";
-
-import { getDb } from "@/shared/db";
-
 export const EGRESS_CATEGORIES = [
   "AI_INFERENCE",
   "NOTIFICATION",
@@ -51,7 +47,17 @@ export type EgressLedgerRecord = {
 
 export type EgressSink = (entry: EgressLedgerRecord) => void | Promise<void>;
 
-const globalForEgress = globalThis as unknown as { __egressSink?: EgressSink | null };
+const globalForEgress = globalThis as unknown as {
+  __egressSink?: EgressSink | null;
+  __defaultEgressSink?: EgressSink | null;
+};
+
+/**
+ * Registers the default server-side persistence sink (called by `@/shared/db`).
+ */
+export function registerDefaultEgressSink(sink: EgressSink): void {
+  globalForEgress.__defaultEgressSink = sink;
+}
 
 /**
  * Registers an in-memory sink for contract tests so outbound adapters can be verified
@@ -110,23 +116,10 @@ export function buildEgressRecord(input: RecordEgressInput): EgressLedgerRecord 
 export async function recordEgress(input: RecordEgressInput): Promise<void> {
   const entry = buildEgressRecord(input);
   try {
-    if (globalForEgress.__egressSink) {
-      await globalForEgress.__egressSink(entry);
-      return;
+    const sink = globalForEgress.__egressSink ?? globalForEgress.__defaultEgressSink;
+    if (sink) {
+      await sink(entry);
     }
-
-    await getDb().systemEgressLedger.create({
-      data: {
-        moduleKey: entry.moduleKey,
-        category: entry.category,
-        provider: entry.provider,
-        volume: entry.volume,
-        count: entry.count,
-        unit: entry.unit,
-        legalBasis: entry.legalBasis,
-        occurredAt: entry.occurredAt,
-      },
-    });
   } catch (error) {
     console.error("[egress] Veri cikis kaydi yazilamadi:", error);
   }
