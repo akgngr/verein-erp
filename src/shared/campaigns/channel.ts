@@ -104,14 +104,19 @@ export type ChannelEgressMeta = {
   legalBasis?: EgressLegalBasis;
 };
 
+function matchesHost(host: string, domain: string): boolean {
+  return host === domain || host.endsWith(`.${domain}`);
+}
+
 function inferProviderFromHost(hostname: string): string {
-  if (hostname.includes("seven.io")) return "seven";
-  if (hostname.includes("twilio.com")) return "twilio";
-  if (hostname.includes("telegram.org")) return "telegram";
-  if (hostname.includes("facebook.com")) return "whatsapp_meta";
-  if (hostname.includes("open-meteo.com")) return "open_meteo";
-  if (hostname.includes("open.er-api.com")) return "open_er_api";
-  return hostname.split(".").slice(-2).join("_") || "external";
+  const host = hostname.toLowerCase();
+  if (matchesHost(host, "seven.io")) return "seven";
+  if (matchesHost(host, "twilio.com")) return "twilio";
+  if (matchesHost(host, "telegram.org")) return "telegram";
+  if (matchesHost(host, "facebook.com")) return "whatsapp_meta";
+  if (matchesHost(host, "open-meteo.com")) return "open_meteo";
+  if (matchesHost(host, "open.er-api.com")) return "open_er_api";
+  return host.split(".").slice(-2).join("_") || "external";
 }
 
 function estimateBodyBytes(body: RequestInit["body"]): number {
