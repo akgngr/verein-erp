@@ -13,7 +13,7 @@ Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar.
 |---|---|
 | Anahtar | `meetings` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.16 |
+| Sürüm | 1.4.0 |
 | Sayfalar | `/toplantilar`, `/toplantilar/gorevler` |
 
 ## Diğer modüllere erişim
@@ -42,6 +42,13 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_meeting` · `get_meeting_statistics` · `list_meetings` · `propose_delete_meeting` · `propose_meeting` · `propose_meeting_status`
 
 ## Sürüm notları
+
+### 1.4.0 — Yüz yüze gizli oylama
+
+_2026-11-23_
+
+- **Yeni:** Toplantıda gizli oylama: giriş masasında katılan üyelere tek kullanımlık oy kodu verilir, oy /oy kabininde adsız atılır. Evet/Hayır/Çekimser veya aday listesi; evet/hayır oylamasında karar otomatik kaydedilir.
+- **Güvenlik:** Oy kaydında ad, zaman, sıra veya cihaz bilgisi yok; kapanışta kodlar silinir ve oy listesi karıştırılır. Seçimi göstermeyen makbuz kodu, oy listesi özeti ve en az oy sayısı koruması (varsayılan 5). Uygunluk kaydı ve oylar en geç 12 ay sonra silinir.
 
 ### 1.3.16 — Merkezi bildirimler
 
@@ -85,10 +92,4 @@ _2026-11-17_
 
 - **İyileştirme:** Katılımcı ekleme, toplu işaretleme, hızlı konuk girişi, silme ve bildirim akışları FormTextField, ActionButton ve notify adapter katmanına taşındı.
 
-### 1.3.8 — Kalan toplantı rozetleri ortak UI katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Rozet/çip görünümleri ortak StatusChip pattern'ine taşındı; modül düzeyindeki doğrudan HeroUI Chip bağımlılığı azaltıldı.
-
-Daha eski 11 herkese açık sürüm notu.
+Daha eski 12 herkese açık sürüm notu.
