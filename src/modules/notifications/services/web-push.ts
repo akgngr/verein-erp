@@ -27,8 +27,12 @@ type WebPushLib = {
 };
 export type PushTransport = WebPushLib["sendNotification"];
 
+/** web-push 4.x saf ESM'dir ve default export içermez; 3.x CJS default'unu da destekler. */
 async function lib(): Promise<WebPushLib> {
-  return ((await import("web-push")) as unknown as { default: WebPushLib }).default;
+  const mod = (await import("web-push")) as unknown as Partial<WebPushLib> & { default?: WebPushLib };
+  const resolved = mod.default ?? mod;
+  if (typeof resolved.sendNotification !== "function" || typeof resolved.generateVAPIDKeys !== "function") throw new WebPushError("notifications.channels.errors.unavailable");
+  return resolved as WebPushLib;
 }
 
 const sha = (value: string) => createHash("sha256").update(value).digest("hex");
