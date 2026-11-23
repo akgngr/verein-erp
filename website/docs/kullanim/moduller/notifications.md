@@ -13,7 +13,7 @@ Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.
 |---|---|
 | Anahtar | `notifications` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 0.12.1 |
+| Sürüm | 0.13.0 |
 | Sayfalar | `/ayarlar/bildirimler`, `/ayarlar/bildirimler/duyurular` |
 
 ## Diğer modüllere erişim
@@ -35,6 +35,14 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Bildirimler | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme |
 
 ## Sürüm notları
+
+### 0.13.0 — Anlık bildirim akışı (SSE) ve erişilebilirlik
+
+_2026-11-23_
+
+- **Yeni:** Yoklama yerine Server-Sent Events (SSE) ile anlık okunmamış sayısı ve güncelleme akışı (/api/notifications/stream); bağlantı koptuğunda zarif biçimde yoklamaya geri düşme ve sekme gizliyken duraklatma.
+- **İyileştirme:** Bildirim çekmecesi için aria-live, aria-haspopup, genişletilmiş durum yönetimi ve ekran okuyuculara yönelik bağlamsal buton etiketleri ile tam erişilebilirlik sağlandı.
+- **Güvenlik:** SSE akışı kullanıcı bazında katı şekilde yalıtılmıştır; akış üzerinden kişisel veri (PII) iletilmez, yalnızca hafif sinyal ve sayılar taşınır.
 
 ### 0.12.0 — Yönetici duyuru gönderme ekranı
 
@@ -85,11 +93,4 @@ _2026-11-20_
 - **Yeni:** Bildirimler ilgili kişiye, herkesi ilgilendiriyorsa herkese gider: modüller 'herkes' veya 'şu roller' diye kitle seçebilir. Yönetici kurum duyurusu yayımlayabilir (herkese veya seçilen rollere).
 - **Güvenlik:** Kitle içinde de herkesin yetkisi ayrı ayrı denetlenir; duyuru içeriği şifreli saklanır ve dış kanallara gitmez (yalnız genel metin ve bağlantı).
 
-### 0.5.0 — Tarayıcı bildirimleri (Web Push)
-
-_2026-11-20_
-
-- **Yeni:** Yönetici açtığında kullanıcılar bildirimleri tarayıcı/telefon bildirimi olarak da alabilir. Gerekli anahtarlar ilk açılışta otomatik üretilir.
-- **Güvenlik:** Anahtarlar ve abonelik bilgileri şifreli saklanır; yalnız bilinen push servislerine gönderilir; bildirimde yalnız genel metin ve bağlantı vardır. Geçersiz abonelikler otomatik silinir.
-
-Daha eski 4 herkese açık sürüm notu.
+Daha eski 5 herkese açık sürüm notu.

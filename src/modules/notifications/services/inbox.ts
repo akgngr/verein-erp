@@ -5,6 +5,7 @@ import { can } from "@/shared/permissions/define";
 import type { Role } from "@/shared/roles";
 import { fullTypeKey, isSafeNotificationHref, type ModuleNotifications, type NotificationType } from "@/shared/notifications/define";
 import { openSecret, sealSecret } from "@/shared/security/secret-box";
+import { emitNotificationUpdate } from "./stream-bus";
 
 /**
  * N1a (#354) — çekirdek servis. Gönderim: tür kayıttan bulunur, parametre şeması strict doğrulanır, kaynak modül
@@ -88,6 +89,9 @@ export async function notify(input: { type: string; recipients?: readonly string
     skipDuplicates: true,
     });
     created += result.count;
+  }
+  if (created > 0) {
+    for (const userId of recipients) emitNotificationUpdate(userId);
   }
   return created;
 }

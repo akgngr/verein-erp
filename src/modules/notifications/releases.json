@@ -2,6 +2,31 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.13.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Anlık bildirim akışı (SSE) ve erişilebilirlik",
+        "de": "Echtzeit-Benachrichtigungs-Stream (SSE) und Barrierefreiheit"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yoklama yerine Server-Sent Events (SSE) ile anlık okunmamış sayısı ve güncelleme akışı (/api/notifications/stream); bağlantı koptuğunda zarif biçimde yoklamaya geri düşme ve sekme gizliyken duraklatma.",
+          "de": "Echtzeit-Stream für Ungelesen-Zähler und Aktualisierungen über Server-Sent Events (SSE) statt reinem Polling (/api/notifications/stream); eleganter Fallback auf Polling bei Verbindungsunterbrechung und Pausieren bei inaktivem Tab."
+        },
+        {
+          "type": "improvement",
+          "tr": "Bildirim çekmecesi için aria-live, aria-haspopup, genişletilmiş durum yönetimi ve ekran okuyuculara yönelik bağlamsal buton etiketleri ile tam erişilebilirlik sağlandı.",
+          "de": "Vollständige Barrierefreiheit für die Benachrichtigungsschublade durch aria-live, aria-haspopup, erweiterte Zustandsverwaltung und kontextuelle Schaltflächenbeschriftungen für Screenreader."
+        },
+        {
+          "type": "security",
+          "tr": "SSE akışı kullanıcı bazında katı şekilde yalıtılmıştır; akış üzerinden kişisel veri (PII) iletilmez, yalnızca hafif sinyal ve sayılar taşınır.",
+          "de": "Der SSE-Stream ist strikt pro Benutzer isoliert; es werden keine personenbezogenen Daten (PII) übertragen, sondern lediglich Signale und Zählerstände."
+        }
+      ]
+    },
+    {
       "version": "0.12.1",
       "date": "2026-11-23",
       "title": {
