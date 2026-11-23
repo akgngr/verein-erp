@@ -4,7 +4,7 @@ import { getSepaCreditorSettings } from "@/modules/accounting/server";
 import { listDebitableCharges, recordSepaChargePayments, voidSepaChargePayment } from "@/modules/courses/server";
 import { listDebitableDues, recordSepaDuePayments, voidSepaDuePayment } from "@/modules/members/server";
 import { getOrganizationProfile } from "@/modules/organization/server";
-import { getGuardianMandates } from "@/modules/students/server";
+import { getGuardianIdsByDebtorNumber, getGuardianMandates } from "@/modules/students/server";
 import { listUsableModuleKeys } from "@/modules/system/automation";
 import { getDb } from "@/shared/db";
 import { openSecret, sealSecret } from "@/shared/security/secret-box";
@@ -19,7 +19,7 @@ export type Source = "MEMBER_DUES" | "COURSE_FEES";
 export type SkipReason = "noMandate" | "invalidIban" | "alreadyInRun" | "dormant" | "renewAfterReturn" | "pausedAfterReturns";
 /** Sağlık sorunlarından tahsilatı durduranlar (önizlemede atlanır). */
 const HEALTH_SKIPS: readonly HealthIssue[] = ["dormant", "renewAfterReturn", "pausedAfterReturns"];
-export type Candidate = { sourceKey: string; debtorName: string; label: string; amountCents: number; iban: string | null; bic: string | null; holder: string | null; mandateReference: string | null; mandateDate: string | null; remittance: string };
+export type Candidate = { subject: { kind: "MEMBER" | "GUARDIAN"; subjectId: string } | null; sourceKey: string; debtorName: string; label: string; amountCents: number; iban: string | null; bic: string | null; holder: string | null; mandateReference: string | null; mandateDate: string | null; remittance: string };
 
 export const mask = (iban: string) => `${iban.slice(0, 4)} •••• ${iban.slice(-4)}`;
 
@@ -38,16 +38,19 @@ export async function candidates(source: Source, param: string, labels: { dues: 
     if (!usable.has("members")) return [];
     const year = Number(param);
     return (await listDebitableDues(year)).map((due) => ({
-      sourceKey: `${due.memberId}:${year}`, debtorName: due.accountHolder ?? due.name, label: `${due.membershipNumber} ${due.name}`, amountCents: due.openCents,
+      subject: { kind: "MEMBER" as const, subjectId: due.memberId }, sourceKey: `${due.memberId}:${year}`, debtorName: due.accountHolder ?? due.name, label: `${due.membershipNumber} ${due.name}`, amountCents: due.openCents,
       iban: due.iban, bic: due.bic, holder: due.accountHolder, mandateReference: due.mandateReference, mandateDate: due.mandateDate, remittance: `${labels.dues(year)} ${due.membershipNumber}`,
     }));
   }
   if (!usable.has("courses") || !usable.has("students")) return [];
   const charges = await listDebitableCharges(new Date(`${param}T23:59:59Z`));
-  const mandates = await getGuardianMandates([...new Set(charges.map((charge) => charge.debtorNumber).filter((value): value is number => value !== null))]);
+  const debtorNumbers = [...new Set(charges.map((charge) => charge.debtorNumber).filter((value): value is number => value !== null))];
+  const [mandates, guardianIds] = await Promise.all([getGuardianMandates(debtorNumbers), getGuardianIdsByDebtorNumber(debtorNumbers)]);
   return charges.map((charge) => {
     const guardian = charge.debtorNumber !== null ? mandates.get(charge.debtorNumber) : undefined;
+    const guardianId = charge.debtorNumber !== null ? guardianIds.get(charge.debtorNumber) : undefined;
     return {
+      subject: guardianId ? { kind: "GUARDIAN" as const, subjectId: guardianId } : null,
       sourceKey: charge.chargeId, debtorName: guardian?.accountHolder ?? "—", label: `${charge.courseCode} · ${charge.label}${guardian ? ` · ${guardian.name}` : ""}`, amountCents: charge.amountCents,
       iban: guardian?.iban ?? null, bic: guardian?.bic ?? null, holder: guardian?.accountHolder ?? null, mandateReference: guardian?.mandateReference ?? null, mandateDate: guardian?.mandateDate ?? null,
       remittance: `${labels.course(charge.courseCode, charge.label)}${charge.debtorNumber ? ` Debitor ${charge.debtorNumber}` : ""}`,
@@ -65,7 +68,7 @@ export async function previewRun(source: Source, param: string, labels: Paramete
     return HEALTH_SKIPS.find((issue) => issues.includes(issue)) as SkipReason | undefined;
   };
   const pending = new Set((await getDb().sepaDebitItem.findMany({ where: { sourceKey: { in: list.map((item) => item.sourceKey) }, status: "PENDING", run: { status: "CREATED" } }, select: { sourceKey: true } })).map((row) => row.sourceKey));
-  const ready: (Omit<Candidate, "iban" | "bic"> & { ibanMasked: string })[] = [];
+  const ready: (Omit<Candidate, "iban" | "bic" | "subject"> & { ibanMasked: string })[] = [];
   const skipped: { label: string; amountCents: number; reason: SkipReason }[] = [];
   for (const item of list) {
     if (pending.has(item.sourceKey)) skipped.push({ label: item.label, amountCents: item.amountCents, reason: "alreadyInRun" });
@@ -73,7 +76,7 @@ export async function previewRun(source: Source, param: string, labels: Paramete
     else if (!isValidIban(item.iban)) skipped.push({ label: item.label, amountCents: item.amountCents, reason: "invalidIban" });
     else if (healthSkip(item)) skipped.push({ label: item.label, amountCents: item.amountCents, reason: healthSkip(item)! });
     else {
-      const { iban, bic: _bic, ...rest } = item;
+      const { iban, bic: _bic, subject: _subject, ...rest } = item;
       ready.push({ ...rest, ibanMasked: mask(iban) });
     }
   }

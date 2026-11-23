@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.2.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "E-imza ile mandat yenileme",
+        "de": "Mandatserneuerung per E-Signatur"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Mandat sağlığı ve iade koçunda, yeni yetki gereken borçlulara mevcut çevrimiçi form üzerinden e-imza bağlantısı gönderilebilir. Kanal ve maskeli adres gösterilir, açık onay olmadan gönderilmez; son bağlantının durumu (bekliyor, imzalandı, süresi doldu) görünür.",
+          "de": "In Mandatsprüfung und Rücklastschrift-Coach kann für Zahlungspflichtige, die ein neues Mandat brauchen, ein E-Signatur-Link über das bestehende Online-Formular gesendet werden. Kanal und maskierte Adresse werden angezeigt, ohne ausdrückliche Bestätigung wird nichts gesendet; der Status des letzten Links (ausstehend, unterschrieben, abgelaufen) ist sichtbar."
+        }
+      ]
+    },
+    {
       "version": "1.1.0",
       "date": "2026-11-23",
       "title": {

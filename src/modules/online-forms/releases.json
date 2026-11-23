@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.3.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "SEPA yetki yenileme sözleşmesi",
+        "de": "Vertrag für SEPA-Mandatserneuerung"
+      },
+      "changes": [
+        {
+          "type": "internal",
+          "tr": "SEPA modülü için dar bir sunucu sözleşmesi: maskeli kanallar, son form bağlantısının durumu ve mevcut imza akışıyla yenileme bağlantısı gönderme. İmza akışı değişmedi.",
+          "de": "Schmaler Server-Vertrag für das SEPA-Modul: maskierte Kanäle, Status des letzten Formular-Links und Versand eines Erneuerungslinks über den bestehenden Signaturablauf. Der Signaturablauf bleibt unverändert."
+        }
+      ]
+    },
+    {
       "version": "1.2.7",
       "date": "2026-11-19",
       "title": {
