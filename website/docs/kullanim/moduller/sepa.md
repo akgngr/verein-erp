@@ -13,7 +13,7 @@ Aidat ve kurs ücretleri için SEPA-Lastschrift (pain.008) tahsilatı.
 |---|---|
 | Anahtar | `sepa` |
 | Tür | Resmî modül |
-| Sürüm | 1.0.6 |
+| Sürüm | 1.1.0 |
 | Gerektirir | [Muhasebe](./accounting) |
 | Önerir | [Üyeler](./members), [Kurslar](./courses) |
 
@@ -39,6 +39,14 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | SEPA otomatik ödeme | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | — | görüntüleme, oluşturma, düzenleme, silme | görüntüleme | — | — |
 
 ## Sürüm notları
+
+### 1.1.0 — Mandat sağlığı ve iade koçu
+
+_2026-11-23_
+
+- **Yeni:** Tahsilattan önce mandat sağlığı denetimi: eksik referans veya imza tarihi, yerel IBAN sağlama toplamı, 36 ay kullanılmayan yetkiler ve tekrarlayan iadeler. IBAN'lar maskeli gösterilir.
+- **Yeni:** İade koçu: iade kodları (AM04, MD06 …) Türkçe/Almanca açıklanır, sonraki adım önerilir ve iki dilli nazik bir hatırlatma taslağı kopyalanabilir; gönderim yapılmaz.
+- **İyileştirme:** İade kaydında iade kodu ve banka ücreti seçilir; 12 ayda belirlenen sayıda iadeden sonra veya 36 ay kullanılmayan yetkilerde tahsilat otomatik duraklatılır.
 
 ### 1.0.6 — GoBD silme koruması
 

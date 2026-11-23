@@ -9,6 +9,8 @@ import type { ActionResult } from "@/shared/types/action";
 import { buildUserLabel } from "@/shared/utils";
 
 import { sepaPermissions } from "../permissions";
+import { DEFAULT_MAX_RETURNS, RETURN_CODE_LIST } from "../lib/mandate-health";
+import { mandateHealth } from "../services/health";
 import { cancelRun, createRun, creditorProblems, markCollected, markReturned, previewRun } from "../services/runs";
 
 const id = z.string().min(1).max(64);
@@ -17,6 +19,8 @@ const source = z.discriminatedUnion("source", [
   z.object({ source: z.literal("MEMBER_DUES"), param: z.string().regex(/^\d{4}$/, "sepa.errors.year") }),
   z.object({ source: z.literal("COURSE_FEES"), param: date }),
 ]);
+/** İade eşiği: kaç iadeden sonra tahsilat duraklatılır (12 ay içinde). */
+const maxReturns = z.number().int().min(1).max(10).default(DEFAULT_MAX_RETURNS);
 const actorOf = (user: { id: string; name: string; email: string }) => ({ id: user.id, label: buildUserLabel(user.name, user.email) });
 async function labels() {
   const t = await getTranslations({ locale: "de", namespace: "sepa.remittance" });
@@ -26,21 +30,21 @@ async function labels() {
 export async function previewRunAction(input: unknown) {
   return createAction({
     permission: { definition: sepaPermissions, action: "create" },
-    schema: source,
-    handler: async ({ input }) => ({ ...(await previewRun(input.source, input.param, await labels())), problems: await creditorProblems() }),
+    schema: z.intersection(source, z.object({ maxReturns })),
+    handler: async ({ input }) => ({ ...(await previewRun(input.source, input.param, await labels(), input.maxReturns)), problems: await creditorProblems() }),
   })(input);
 }
 
 export async function createRunAction(input: unknown): Promise<ActionResult<{ id: string; number: string }>> {
   return createAction({
     permission: { definition: sepaPermissions, action: "create" },
-    schema: z.intersection(source, z.object({ collectionDate: date, sourceKeys: z.array(z.string().max(140)).max(5000).nullable() })),
+    schema: z.intersection(source, z.object({ collectionDate: date, sourceKeys: z.array(z.string().max(140)).max(5000).nullable(), maxReturns })),
     handler: async ({ input, user, audit }) => {
       const problems = await creditorProblems();
       if (problems.includes("ownIban")) throw new ActionError("sepa.errors.ownIban");
       if (problems.includes("creditorId")) throw new ActionError("sepa.errors.creditorId");
       if (input.collectionDate < new Date().toISOString().slice(0, 10)) throw new ActionError("sepa.errors.pastDate");
-      const run = await createRun(input.source, input.param, input.collectionDate, input.sourceKeys, actorOf(user), await labels());
+      const run = await createRun(input.source, input.param, input.collectionDate, input.sourceKeys, actorOf(user), await labels(), input.maxReturns);
       if (!run) throw new ActionError("sepa.errors.nothingToCollect");
       await audit({ action: "CREATE", entity: "SepaDebitRun", entityId: run.id, after: { number: run.number } });
       revalidatePath("/muhasebe/sepa");
@@ -65,10 +69,18 @@ export async function markCollectedAction(input: unknown): Promise<ActionResult<
 export async function markReturnedAction(input: unknown): Promise<ActionResult<null>> {
   return createAction({
     permission: { definition: sepaPermissions, action: "update" },
-    schema: z.object({ runId: id, itemId: id, reason: z.string().trim().min(2, "sepa.errors.reason").max(200) }),
+    schema: z.object({
+      runId: id,
+      itemId: id,
+      code: z.enum(RETURN_CODE_LIST as [string, ...string[]]).nullable().default(null),
+      reason: z.string().trim().max(200).default(""),
+      feeCents: z.number().int().min(0).max(100_000).nullable().default(null),
+    }).refine((value) => value.code !== null || value.reason.length >= 2, { message: "sepa.errors.reason", path: ["reason"] }),
     handler: async ({ input, user, audit }) => {
-      if (!(await markReturned(input.itemId, input.reason, actorOf(user)))) throw new ActionError("sepa.errors.notCollected");
-      await audit({ action: "UPDATE", entity: "SepaDebitItem", entityId: input.itemId, after: { returned: true } });
+      const reason = input.reason || input.code!;
+      if (!(await markReturned(input.itemId, { reason, code: input.code, feeCents: input.feeCents }, actorOf(user)))) throw new ActionError("sepa.errors.notCollected");
+      // Denetim kaydı yalnız kod ve ücret tutar; serbest metin (kişi bilgisi içerebilir) yazılmaz.
+      await audit({ action: "UPDATE", entity: "SepaDebitItem", entityId: input.itemId, after: { returned: true, code: input.code, feeCents: input.feeCents } });
       revalidatePath(`/muhasebe/sepa/${input.runId}`);
       return null;
     },
@@ -85,5 +97,14 @@ export async function cancelRunAction(input: unknown): Promise<ActionResult<null
       revalidatePath("/muhasebe/sepa");
       return null;
     },
+  })(input);
+}
+
+/** Mandat sağlık taraması + iade koçu (salt okuma; hiçbir şey yazılmaz veya gönderilmez). */
+export async function mandateHealthAction(input: unknown) {
+  return createAction({
+    permission: { definition: sepaPermissions, action: "view" },
+    schema: z.intersection(source, z.object({ maxReturns })),
+    handler: async ({ input }) => mandateHealth(input.source, input.param, await labels(), input.maxReturns),
   })(input);
 }

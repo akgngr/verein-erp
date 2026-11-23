@@ -2,6 +2,31 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.1.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Mandat sağlığı ve iade koçu",
+        "de": "Mandatsprüfung und Rücklastschrift-Coach"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Tahsilattan önce mandat sağlığı denetimi: eksik referans veya imza tarihi, yerel IBAN sağlama toplamı, 36 ay kullanılmayan yetkiler ve tekrarlayan iadeler. IBAN'lar maskeli gösterilir.",
+          "de": "Mandatsprüfung vor dem Einzug: fehlende Referenz oder Unterschriftsdatum, lokale IBAN-Prüfziffer, 36 Monate ungenutzte Mandate und wiederholte Rücklastschriften. IBANs werden maskiert angezeigt."
+        },
+        {
+          "type": "feature",
+          "tr": "İade koçu: iade kodları (AM04, MD06 …) Türkçe/Almanca açıklanır, sonraki adım önerilir ve iki dilli nazik bir hatırlatma taslağı kopyalanabilir; gönderim yapılmaz.",
+          "de": "Rücklastschrift-Coach: Rückgabegründe (AM04, MD06 …) werden auf Deutsch/Türkisch erklärt, der nächste Schritt wird vorgeschlagen und ein freundlicher zweisprachiger Erinnerungsentwurf kann kopiert werden; es wird nichts versendet."
+        },
+        {
+          "type": "improvement",
+          "tr": "İade kaydında iade kodu ve banka ücreti seçilir; 12 ayda belirlenen sayıda iadeden sonra veya 36 ay kullanılmayan yetkilerde tahsilat otomatik duraklatılır.",
+          "de": "Bei der Rücklastschrift werden Rückgabegrund und Bankgebühr erfasst; nach einer einstellbaren Zahl von Rückgaben in 12 Monaten oder bei 36 Monate ungenutzten Mandaten wird der Einzug automatisch pausiert."
+        }
+      ]
+    },
+    {
       "version": "1.0.6",
       "date": "2026-11-23",
       "title": {

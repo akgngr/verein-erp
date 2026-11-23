@@ -9,16 +9,21 @@ import { resolvePdfLang } from "@/shared/pdf/i18n";
 import { AuditorReportDocument } from "../pdf/auditor-report-document";
 import { DOCUMENT_STRINGS } from "../pdf/document-strings";
 import { getGobdStatus } from "../queries/gobd";
+import { loadAuditRoomPdfData } from "../services/audit-room";
 import { accountBalanceAt } from "../services/balances";
 import { authorizePdf, loadLetterhead, pdfResponse } from "./pdf-support";
 
-/** GET /api/accounting/extras/auditor-report?year= — Kassenprüfungsbericht (ACC-8). */
+/** GET /api/accounting/extras/auditor-report?year= — Kassenprüfungsbericht (ACC-8 + Q1). */
 export async function auditorReportHandler(request: Request): Promise<Response> {
   const user = await authorizePdf();
   if (user instanceof Response) return user;
   const yearRaw = new URL(request.url).searchParams.get("year") ?? "";
   if (!/^\d{4}$/.test(yearRaw)) return NextResponse.json({ ok: false, error: await translateMessage("accounting.gobd.errors.year") }, { status: 400 });
   const year = Number(yearRaw);
+  const auditRoom = await loadAuditRoomPdfData({ id: user.id, role: user.role }, year);
+  if (!auditRoom.allowed) {
+    return NextResponse.json({ ok: false, error: await translateMessage("accounting.auditRoom.errors.expiredOrDenied") }, { status: 403 });
+  }
   const lang = resolvePdfLang(request);
   const s = DOCUMENT_STRINGS[lang].auditor;
   const db = getDb();
@@ -58,6 +63,8 @@ export async function auditorReportHandler(request: Request): Promise<Response> 
           year,
           accounts: rows,
           checks,
+          checklistSummary: auditRoom.summary?.checklist,
+          findings: auditRoom.summary?.findings,
           strings: { ...s, intro: s.intro(year) },
         }}
       />

@@ -10,7 +10,16 @@ export type AuditorReportData = {
   year: number;
   accounts: Array<{ name: string; openingCents: number; incomeCents: number; expenseCents: number; transferCents: number; closingCents: number }>;
   checks: Array<{ label: string; ok: boolean; detail: string }>;
-  strings: { title: string; intro: string; account: string; opening: string; income: string; expense: string; transfer: string; closing: string; total: string; checks: string; result: string; resultText: string; auditor: string; place: string };
+  checklistSummary?: Array<{ section: "BOOKING_SAMPLE" | "RECEIPT_COMPLETENESS" | "CASH_COUNTS" | "BANK_RECONCILIATION" | "OPEN_ITEMS"; checked: boolean; note: string | null }>;
+  findings?: Array<{ section: "BOOKING_SAMPLE" | "RECEIPT_COMPLETENESS" | "CASH_COUNTS" | "BANK_RECONCILIATION" | "OPEN_ITEMS"; severity: "INFO" | "NOTE" | "ISSUE"; status: "OPEN" | "RESOLVED"; summary: string; detail: string | null }>;
+  strings: {
+    title: string; intro: string; account: string; opening: string; income: string; expense: string; transfer: string; closing: string; total: string; checks: string;
+    checklistHeading?: string; findingsHeading?: string; noFindings?: string;
+    sectionLabels?: Record<"BOOKING_SAMPLE" | "RECEIPT_COMPLETENESS" | "CASH_COUNTS" | "BANK_RECONCILIATION" | "OPEN_ITEMS", string>;
+    severityLabels?: Record<"INFO" | "NOTE" | "ISSUE", string>;
+    statusLabels?: Record<"OPEN" | "RESOLVED", string>;
+    result: string; resultText: string; auditor: string; place: string;
+  };
 };
 
 const styles = StyleSheet.create({
@@ -67,6 +76,38 @@ export function AuditorReportDocument({ data }: { data: AuditorReportData }) {
         {data.checks.map((check) => (
           <Text key={check.label} style={{ color: check.ok ? "#15803d" : "#b91c1c" }}>{`•  ${check.label}: ${check.detail}`}</Text>
         ))}
+        {data.checklistSummary && data.checklistSummary.length > 0 && s.checklistHeading ? (
+          <>
+            <Text style={styles.h2}>{s.checklistHeading}</Text>
+            {data.checklistSummary.map((item) => {
+              const label = s.sectionLabels?.[item.section] ?? item.section;
+              return (
+                <Text key={item.section} style={{ color: item.checked ? "#15803d" : "#444444" }}>
+                  {`${item.checked ? "[x]" : "[ ]"} ${label}${item.note ? ` — ${item.note}` : ""}`}
+                </Text>
+              );
+            })}
+          </>
+        ) : null}
+        {data.findings && s.findingsHeading ? (
+          <>
+            <Text style={styles.h2}>{s.findingsHeading}</Text>
+            {data.findings.length === 0 ? (
+              <Text style={styles.p}>{s.noFindings ?? "—"}</Text>
+            ) : (
+              data.findings.map((finding, index) => {
+                const section = s.sectionLabels?.[finding.section] ?? finding.section;
+                const severity = s.severityLabels?.[finding.severity] ?? finding.severity;
+                const status = s.statusLabels?.[finding.status] ?? finding.status;
+                return (
+                  <Text key={`${finding.section}-${index}`} style={{ color: finding.severity === "ISSUE" && finding.status === "OPEN" ? "#b91c1c" : "#111111" }}>
+                    {`•  [${severity} / ${status}] ${section}: ${finding.summary}${finding.detail ? ` — ${finding.detail}` : ""}`}
+                  </Text>
+                );
+              })
+            )}
+          </>
+        ) : null}
         <Text style={styles.h2}>{s.result}</Text>
         <Text style={styles.p}>{s.resultText}</Text>
         <View style={styles.sign}>

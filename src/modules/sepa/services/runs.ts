@@ -9,15 +9,19 @@ import { listUsableModuleKeys } from "@/modules/system/automation";
 import { getDb } from "@/shared/db";
 import { openSecret, sealSecret } from "@/shared/security/secret-box";
 
+import { checkMandate, DEFAULT_MAX_RETURNS, isReturnCode, type HealthIssue } from "../lib/mandate-health";
 import { buildPain008, isValidCreditorId, isValidIban, type DebitTransaction } from "../lib/pain008";
+import { loadMandateHistory } from "./history";
 
 const XML_PURPOSE = "sepa-debit-xml";
 export type Actor = { id: string; label: string };
 export type Source = "MEMBER_DUES" | "COURSE_FEES";
-export type SkipReason = "noMandate" | "invalidIban" | "alreadyInRun";
-type Candidate = { sourceKey: string; debtorName: string; label: string; amountCents: number; iban: string | null; bic: string | null; holder: string | null; mandateReference: string | null; mandateDate: string | null; remittance: string };
+export type SkipReason = "noMandate" | "invalidIban" | "alreadyInRun" | "dormant" | "renewAfterReturn" | "pausedAfterReturns";
+/** Sağlık sorunlarından tahsilatı durduranlar (önizlemede atlanır). */
+const HEALTH_SKIPS: readonly HealthIssue[] = ["dormant", "renewAfterReturn", "pausedAfterReturns"];
+export type Candidate = { sourceKey: string; debtorName: string; label: string; amountCents: number; iban: string | null; bic: string | null; holder: string | null; mandateReference: string | null; mandateDate: string | null; remittance: string };
 
-const mask = (iban: string) => `${iban.slice(0, 4)} •••• ${iban.slice(-4)}`;
+export const mask = (iban: string) => `${iban.slice(0, 4)} •••• ${iban.slice(-4)}`;
 
 /** Gläubiger bilgileri eksikse hangi ayarın eksik olduğunu döner. */
 export async function creditorProblems(): Promise<string[]> {
@@ -28,7 +32,7 @@ export async function creditorProblems(): Promise<string[]> {
   return problems;
 }
 
-async function candidates(source: Source, param: string, labels: { dues: (year: number) => string; course: (code: string, label: string) => string }): Promise<Candidate[]> {
+export async function candidates(source: Source, param: string, labels: { dues: (year: number) => string; course: (code: string, label: string) => string }): Promise<Candidate[]> {
   const usable = new Set(await listUsableModuleKeys());
   if (source === "MEMBER_DUES") {
     if (!usable.has("members")) return [];
@@ -52,8 +56,14 @@ async function candidates(source: Source, param: string, labels: { dues: (year: 
 }
 
 /** Önizleme: tahsil edilebilir kalemler ve atlananlar (gerekçeli). IBAN maskeli döner. */
-export async function previewRun(source: Source, param: string, labels: Parameters<typeof candidates>[2]) {
+export async function previewRun(source: Source, param: string, labels: Parameters<typeof candidates>[2], maxReturns = DEFAULT_MAX_RETURNS) {
   const list = await candidates(source, param, labels);
+  const history = await loadMandateHistory(source, list);
+  const today = new Date();
+  const healthSkip = (item: Candidate): SkipReason | undefined => {
+    const issues = checkMandate(item, { today, maxReturns, ...history.for(item) });
+    return HEALTH_SKIPS.find((issue) => issues.includes(issue)) as SkipReason | undefined;
+  };
   const pending = new Set((await getDb().sepaDebitItem.findMany({ where: { sourceKey: { in: list.map((item) => item.sourceKey) }, status: "PENDING", run: { status: "CREATED" } }, select: { sourceKey: true } })).map((row) => row.sourceKey));
   const ready: (Omit<Candidate, "iban" | "bic"> & { ibanMasked: string })[] = [];
   const skipped: { label: string; amountCents: number; reason: SkipReason }[] = [];
@@ -61,6 +71,7 @@ export async function previewRun(source: Source, param: string, labels: Paramete
     if (pending.has(item.sourceKey)) skipped.push({ label: item.label, amountCents: item.amountCents, reason: "alreadyInRun" });
     else if (!item.iban || !item.mandateReference || !item.mandateDate) skipped.push({ label: item.label, amountCents: item.amountCents, reason: "noMandate" });
     else if (!isValidIban(item.iban)) skipped.push({ label: item.label, amountCents: item.amountCents, reason: "invalidIban" });
+    else if (healthSkip(item)) skipped.push({ label: item.label, amountCents: item.amountCents, reason: healthSkip(item)! });
     else {
       const { iban, bic: _bic, ...rest } = item;
       ready.push({ ...rest, ibanMasked: mask(iban) });
@@ -70,10 +81,10 @@ export async function previewRun(source: Source, param: string, labels: Paramete
 }
 
 /** Çalıştırma oluşturur: XML üretilip şifreli saklanır. */
-export async function createRun(source: Source, param: string, collectionDate: string, sourceKeys: string[] | null, actor: Actor, labels: Parameters<typeof candidates>[2]) {
+export async function createRun(source: Source, param: string, collectionDate: string, sourceKeys: string[] | null, actor: Actor, labels: Parameters<typeof candidates>[2], maxReturns = DEFAULT_MAX_RETURNS) {
   const settings = await getSepaCreditorSettings();
   const org = await getOrganizationProfile();
-  const preview = await previewRun(source, param, labels);
+  const preview = await previewRun(source, param, labels, maxReturns);
   const wanted = sourceKeys ? new Set(sourceKeys) : null;
   const all = await candidates(source, param, labels);
   const chosen = all.filter((item) => preview.ready.some((ready) => ready.sourceKey === item.sourceKey) && (!wanted || wanted.has(item.sourceKey)));
@@ -120,7 +131,7 @@ export async function getRun(id: string) {
   const { xmlEnc: _xml, items, ...rest } = row;
   return {
     ...rest, collectionDate: row.collectionDate.toISOString().slice(0, 10), collectedAt: row.collectedAt?.toISOString().slice(0, 10) ?? null, createdAt: row.createdAt.toISOString(),
-    items: items.map((item) => ({ id: item.id, debtorName: item.debtorName, ibanMasked: item.ibanMasked, mandateReference: item.mandateReference, amountCents: item.amountCents, endToEndId: item.endToEndId, status: item.status, receipt: item.receipt, returnReason: item.returnReason })),
+    items: items.map((item) => ({ id: item.id, debtorName: item.debtorName, ibanMasked: item.ibanMasked, mandateReference: item.mandateReference, amountCents: item.amountCents, endToEndId: item.endToEndId, status: item.status, receipt: item.receipt, returnReason: item.returnReason, returnCode: item.returnCode, returnFeeCents: item.returnFeeCents })),
   };
 }
 
@@ -140,8 +151,9 @@ export async function markCollected(id: string, collectedAt: string, actor: Acto
   return true;
 }
 
-/** Rücklastschrift: kalemin ödemesi iptal edilir, borç yeniden açılır. */
-export async function markReturned(itemId: string, reason: string, actor: Actor) {
+/** Rücklastschrift: kalemin ödemesi iptal edilir, borç yeniden açılır. İade kodu ve banka ücreti koç için saklanır. */
+export async function markReturned(itemId: string, input: { reason: string; code: string | null; feeCents: number | null }, actor: Actor) {
+  const reason = input.reason;
   const db = getDb();
   const item = await db.sepaDebitItem.findUnique({ where: { id: itemId }, include: { run: { select: { source: true, status: true } } } });
   if (!item || item.status !== "COLLECTED") return false;
@@ -151,7 +163,8 @@ export async function markReturned(itemId: string, reason: string, actor: Actor)
   } else {
     await voidSepaChargePayment(item.sourceKey, item.endToEndId, reason, actor);
   }
-  await db.sepaDebitItem.update({ where: { id: itemId }, data: { status: "RETURNED", returnReason: reason } });
+  const code = input.code && isReturnCode(input.code) ? input.code : null;
+  await db.sepaDebitItem.update({ where: { id: itemId }, data: { status: "RETURNED", returnReason: reason, returnCode: code, returnFeeCents: input.feeCents, returnedAt: new Date() } });
   return true;
 }
 

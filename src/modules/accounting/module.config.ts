@@ -1,6 +1,7 @@
 import {
   BarChart3,
   Banknote,
+  ClipboardCheck,
   Package,
   ShieldCheck,
   Contact,
@@ -27,7 +28,7 @@ import {
 export const moduleConfig: ModuleConfig = {
   key: "accounting",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.26.1",
+  version: "1.27.0",
   label: "Muhasebe",
   description:
     "Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura ve bütçe yönetimi.",
@@ -117,6 +118,7 @@ export const moduleConfig: ModuleConfig = {
       icon: Package,
     },
     { key: "gobd", label: "GoBD", href: "/muhasebe/gobd", icon: ShieldCheck },
+    { key: "auditRoom", label: "Denetim odası", href: "/muhasebe/denetim", icon: ClipboardCheck },
     {
       key: "yearClosing",
       label: "Yıl kapanışı",
