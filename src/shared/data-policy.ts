@@ -209,6 +209,7 @@ export const DATA_POLICY = {
   StudentsCounter: { owner: "students", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
   StudentsSettings: { owner: "students", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
   SystemDashboardLayout: { owner: "system", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [], personalOwnerField: "userId" },
+  SystemEgressLedger: { owner: "system", category: "K2", reason: "Veri çıkışı (egress) meta kayıtları; yük ve kişisel veri içermez", sensitiveFields: [], directAccess: ["shared"] },
   SystemModulePackage: { owner: "system", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
   SystemModuleState: { owner: "system", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
 } as const satisfies Record<string, TablePolicy>;

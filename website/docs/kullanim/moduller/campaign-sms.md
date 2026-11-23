@@ -13,7 +13,7 @@ Kampanyalar için SMS kanalı (seven.io veya Twilio). Yalnız SMS izni verenlere
 |---|---|
 | Anahtar | `campaign-sms` |
 | Tür | Eklenti |
-| Sürüm | 1.1.0 |
+| Sürüm | 1.1.1 |
 | Gerektirir | [Toplu e-posta](./mailings) |
 
 ## Diğer modüllere erişim

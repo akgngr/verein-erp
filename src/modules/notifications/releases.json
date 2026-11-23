@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.14.1",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Veri çıkışı defteri bağlantısı",
+        "de": "Anbindung an das Datenausgangs-Ledger"
+      },
+      "changes": [
+        {
+          "type": "internal",
+          "tr": "SMS, Telegram ve Web Push bildirim bağdaştırıcıları her dış gönderimde içerik veya kişisel veri saklamadan veri çıkışı defterine (SystemEgressLedger) meta veri kaydı yazar.",
+          "de": "Die SMS-, Telegram- und Web-Push-Adapter protokollieren bei jedem externen Versand Metadaten ohne Nutzlast oder personenbezogene Daten im Datenausgangs-Ledger (SystemEgressLedger)."
+        }
+      ]
+    },
+    {
       "version": "0.14.0",
       "date": "2026-11-23",
       "title": {
