@@ -1,17 +1,20 @@
 "use server";
 
+import { headers } from "next/headers";
 import { revalidatePath } from "next/cache";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
 
 import { ActionError, createAction } from "@/modules/auth/server";
+import { canRequestRenewal, requestMandateRenewal } from "@/modules/online-forms/server";
+import { listUsableModuleKeys } from "@/modules/system/automation";
 import type { ActionResult } from "@/shared/types/action";
 import { buildUserLabel } from "@/shared/utils";
 
 import { sepaPermissions } from "../permissions";
 import { DEFAULT_MAX_RETURNS, RETURN_CODE_LIST } from "../lib/mandate-health";
 import { mandateHealth } from "../services/health";
-import { cancelRun, createRun, creditorProblems, markCollected, markReturned, previewRun } from "../services/runs";
+import { cancelRun, candidates, createRun, creditorProblems, markCollected, markReturned, previewRun } from "../services/runs";
 
 const id = z.string().min(1).max(64);
 const date = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, "sepa.errors.date");
@@ -105,6 +108,34 @@ export async function mandateHealthAction(input: unknown) {
   return createAction({
     permission: { definition: sepaPermissions, action: "view" },
     schema: z.intersection(source, z.object({ maxReturns })),
-    handler: async ({ input }) => mandateHealth(input.source, input.param, await labels(), input.maxReturns),
+    handler: async ({ input, user }) => mandateHealth(input.source, input.param, await labels(), input.maxReturns, user.role),
   })(input);
 }
+
+/**
+ * e-imza ile SEPA yetki yenileme bağlantısı (#521). Hedef istemciden alınmaz: kaynak + kaynak anahtarından sunucuda
+ * çözülür (başka kişiye bağlantı gönderilemez). Açık onaydan sonra çağrılır; mevcut online-forms akışını kullanır.
+ */
+export async function requestMandateRenewalAction(input: unknown): Promise<ActionResult<{ id: string }>> {
+  return createAction({
+    permission: { definition: sepaPermissions, action: "update" },
+    schema: z.intersection(source, z.object({ sourceKey: z.string().min(1).max(140), channel: z.enum(["email", "sms", "whatsapp"]) })),
+    handler: async ({ input, user, audit }) => {
+      if (!(await listUsableModuleKeys()).includes("online-forms")) throw new ActionError("sepa.errors.renewalUnavailable");
+      const subject = (await candidates(input.source, input.param, await labels())).find((item) => item.sourceKey === input.sourceKey)?.subject;
+      if (!subject) throw new ActionError("sepa.errors.renewalTarget");
+      if (!canRequestRenewal(user.role, subject.kind)) throw new ActionError("sepa.errors.renewalForbidden");
+      const h = await headers();
+      const host = h.get("x-forwarded-host") ?? h.get("host");
+      if (!host) throw new ActionError("sepa.errors.renewalFailed");
+      const proto = h.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
+      const result = await requestMandateRenewal(subject, input.channel, actorOf(user), `${proto}://${host}`);
+      if (!result.ok) throw new ActionError(result.error === "noAddress" ? "sepa.errors.renewalNoAddress" : "sepa.errors.renewalFailed");
+      // Denetim: yalnız kimlikler ve kanal; adres veya ad yazılmaz.
+      await audit({ action: "CREATE", entity: "OnlineFormRequest", entityId: result.id, after: { purpose: "sepaMandateRenewal", kind: subject.kind, channel: input.channel } });
+      revalidatePath("/muhasebe/sepa");
+      return { id: result.id };
+    },
+  })(input);
+}
+

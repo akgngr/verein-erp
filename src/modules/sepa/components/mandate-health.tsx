@@ -1,6 +1,6 @@
 "use client";
 
-import { ShieldCheck } from "lucide-react";
+import { Send, ShieldCheck } from "lucide-react";
 import { useFormatter, useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 
@@ -9,7 +9,7 @@ import { actionVariant } from "@/shared/components/ui/action-appearance";
 import { notify } from "@/shared/components/ui/notify";
 import { useTranslateMessage } from "@/shared/i18n/use-translate-message";
 
-import { mandateHealthAction } from "../actions/sepa-actions";
+import { mandateHealthAction, requestMandateRenewalAction } from "../actions/sepa-actions";
 import { DEFAULT_MAX_RETURNS } from "../lib/mandate-health";
 
 type Health = Extract<Awaited<ReturnType<typeof mandateHealthAction>>, { ok: true }>["data"];
@@ -29,6 +29,7 @@ export function MandateHealthPanel({ sources, defaults }: { sources: ("MEMBER_DU
   const [param, setParam] = useState({ MEMBER_DUES: defaults.year, COURSE_FEES: defaults.until });
   const [maxReturns, setMaxReturns] = useState<number>(DEFAULT_MAX_RETURNS);
   const [result, setResult] = useState<Health | null>(null);
+  const [scanned, setScanned] = useState<{ source: typeof source; param: string } | null>(null);
   const [open, setOpen] = useState<string | null>(null);
   const [pending, start] = useTransition();
   if (!sources.length) return null;
@@ -38,6 +39,7 @@ export function MandateHealthPanel({ sources, defaults }: { sources: ("MEMBER_DU
       const response = await mandateHealthAction({ source, param: param[source], maxReturns });
       if (!response.ok) return void notify.error(translate(response.error));
       setResult(response.data);
+      setScanned({ source, param: param[source] });
       setOpen(null);
     });
 
@@ -96,7 +98,7 @@ export function MandateHealthPanel({ sources, defaults }: { sources: ("MEMBER_DU
                 </thead>
                 <tbody>
                   {result.rows.map((row) => (
-                    <HealthRowView key={row.sourceKey} row={row} money={money} open={open === row.sourceKey} onToggle={() => setOpen(open === row.sourceKey ? null : row.sourceKey)} />
+                    <HealthRowView key={row.sourceKey} row={row} money={money} scan={scanned} open={open === row.sourceKey} onToggle={() => setOpen(open === row.sourceKey ? null : row.sourceKey)} />
                   ))}
                 </tbody>
               </table>
@@ -110,8 +112,22 @@ export function MandateHealthPanel({ sources, defaults }: { sources: ("MEMBER_DU
   );
 }
 
-function HealthRowView({ row, money, open, onToggle }: { row: Row; money: (cents: number) => string; open: boolean; onToggle: () => void }) {
+function HealthRowView({ row, money, scan, open, onToggle }: { row: Row; money: (cents: number) => string; scan: { source: "MEMBER_DUES" | "COURSE_FEES"; param: string } | null; open: boolean; onToggle: () => void }) {
   const t = useTranslations("sepa");
+  const translate = useTranslateMessage();
+  const channels = Object.entries(row.renewal?.channels ?? {}) as [string, string][];
+  const [renewing, setRenewing] = useState<string | null>(null);
+  const [last, setLast] = useState(row.renewal?.last ?? null);
+  const [sending, startSending] = useTransition();
+  const send = () =>
+    scan && renewing &&
+    startSending(async () => {
+      const response = await requestMandateRenewalAction({ source: scan.source, param: scan.param, sourceKey: row.sourceKey, channel: renewing });
+      if (!response.ok) return void notify.error(translate(response.error));
+      notify.success(t("renewal.sent"));
+      setLast({ status: "PENDING", sentAt: new Date().toISOString().slice(0, 10), completedAt: null });
+      setRenewing(null);
+    });
   const reminder = t("coach.reminderDraft", { reference: row.mandateReference ?? "—", amount: money(row.amountCents) });
   return (
     <>
@@ -129,6 +145,19 @@ function HealthRowView({ row, money, open, onToggle }: { row: Row; money: (cents
           </ul>
         </td>
         <td className="px-2 py-1">
+          {row.renewal ? (
+            <div className="mb-1 flex flex-col items-start gap-1">
+              {last ? <span className="text-xs text-ink-500">{t(`renewal.status.${last.status}`, { date: last.completedAt ?? last.sentAt })}</span> : null}
+              {row.renewal.available && !renewing ? (
+                <Button size="sm" variant={actionVariant("primary", "light")} onPress={() => setRenewing(channels[0]?.[0] ?? null)}>
+                  <Send className="size-3.5" aria-hidden />
+                  {t("renewal.request")}
+                </Button>
+              ) : !row.renewal.available ? (
+                <span className="text-xs text-ink-400">{t("renewal.unavailable")}</span>
+              ) : null}
+            </div>
+          ) : null}
           {row.returns.count ? (
             <Button size="sm" variant={actionVariant("default", "light")} onPress={onToggle} aria-expanded={open}>
               {t("health.returnsCell", { count: row.returns.count, fee: money(row.returns.feeCents) })}
@@ -138,6 +167,28 @@ function HealthRowView({ row, money, open, onToggle }: { row: Row; money: (cents
           )}
         </td>
       </tr>
+      {renewing ? (
+        <tr className="bg-primary-50">
+          <td colSpan={5} className="px-3 py-2">
+            <div className="flex flex-col gap-2 text-sm" role="group" aria-label={t("renewal.confirmTitle")}>
+              <p className="font-medium">{t("renewal.confirmTitle")}</p>
+              <p className="text-ink-600">{t("renewal.confirmText")}</p>
+              <Select id={`sepa-renewal-${row.sourceKey}`} value={renewing} onChange={(value) => setRenewing(String(value ?? renewing))} className="max-w-sm">
+                <Label>{t("renewal.channel")}</Label>
+                {channels.map(([channel, masked]) => (
+                  <Select.Item key={channel} id={channel} textValue={`${t(`renewal.channels.${channel}` as never)} · ${masked}`}>
+                    <Label>{t(`renewal.channels.${channel}` as never)} · {masked}</Label>
+                  </Select.Item>
+                ))}
+              </Select>
+              <div className="flex gap-2">
+                <Button size="sm" variant={actionVariant("primary", "solid")} onPress={send} isPending={sending}>{t("renewal.send")}</Button>
+                <Button size="sm" variant={actionVariant("default", "light")} onPress={() => setRenewing(null)}>{t("renewal.cancel")}</Button>
+              </div>
+            </div>
+          </td>
+        </tr>
+      ) : null}
       {open ? (
         <tr className="bg-ink-50">
           <td colSpan={5} className="px-3 py-2">

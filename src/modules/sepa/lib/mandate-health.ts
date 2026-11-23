@@ -122,3 +122,9 @@ export function coachAdvice(code: string | null): { code: ReturnCode | null; inf
   const info = RETURN_CODES[code];
   return { code, info, action: info.renewMandate ? "renewMandate" : info.retry ? "retry" : "contactDebtor" };
 }
+
+/** Issues that a new signed mandate fixes (#521): offer the e-sign renewal link for these. */
+export const RENEWAL_ISSUES: ReadonlySet<HealthIssue> = new Set(["missingIban", "invalidIban", "missingReference", "missingSignatureDate", "futureSignatureDate", "dormant", "renewAfterReturn"]);
+export function needsRenewal(issues: readonly HealthIssue[], advice: ReturnType<typeof coachAdvice>["action"] | null): boolean {
+  return advice === "renewMandate" || issues.some((issue) => RENEWAL_ISSUES.has(issue));
+}
