@@ -13,8 +13,9 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 |---|---|
 | Anahtar | `secretary` |
 | Tür | Eklenti |
-| Sürüm | 0.13.0 |
+| Sürüm | 0.13.1 |
 | Sayfalar | `/sekreter` |
+| Önerir | [Evrak Kayıt](./documents) |
 
 ## Diğer modüllere erişim
 
@@ -38,6 +39,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Sekreter | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — |
 
 ## Sürüm notları
+
+### 0.13.1 — Posta taslakları ve evrak incelemesine geçiş
+
+_2026-11-23_
+
+- **İyileştirme:** Posta kaynaklı onaylar ayrı ve taslak olarak gösterilir; evrak OCR incelemesi evrak modülünün kendi yetki ve etkinlik kapılı formuna yönlendirir. Takip, rapor, kanal izni ve vekâlet ekranları korunur.
 
 ### 0.13.0 — Vekâlet ve kanal izinleri ekranları
 
@@ -82,10 +89,4 @@ _2026-11-20_
 
 - **Yeni:** Onay bekleyen yeni sekreter önerileri bildirim olarak görünür (içerik yok).
 
-### 0.11.2 — Çalışma zamanı modernizasyonu
-
-_2026-11-20_
-
-- **İyileştirme:** Sabah özeti öğelerinin önem ve vade sırasına göre dizilmesinde (sortItems) toSorted metodu uygulandı.
-
-Daha eski 21 herkese açık sürüm notu.
+Daha eski 22 herkese açık sürüm notu.
