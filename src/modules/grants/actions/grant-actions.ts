@@ -105,7 +105,7 @@ export async function deletePayoutAction(input: unknown): Promise<ActionResult<n
     permission: { definition: grantsPermissions, action: "update" },
     schema: z.object({ grantId: id, id }),
     handler: async ({ input }) => {
-      await deletePayout(input.id);
+      await deletePayout(input.id, input.grantId);
       done(input.grantId);
       return null;
     },

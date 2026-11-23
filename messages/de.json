@@ -5498,7 +5498,10 @@
       "period": "Das Ende darf nicht vor dem Beginn liegen.",
       "lineLabel": "Positionsname darf nicht leer sein.",
       "amount": "Der Betrag muss größer als null sein.",
-      "reportEmpty": "Bitte vor dem Einreichen den Sachbericht schreiben."
+      "reportEmpty": "Bitte vor dem Einreichen den Sachbericht schreiben.",
+      "deleteOnlyPlanned": "Es können nur geplante Zuwendungen (PLANNED) gelöscht werden.",
+      "hasReceivedPayouts": "Eine Zuwendung mit bereits eingegangenen Auszahlungen kann nicht gelöscht werden.",
+      "payoutAlreadyReceived": "Eine bereits eingegangene Auszahlung kann nicht gelöscht werden."
     },
     "calendar": {
       "reports": "Verwendungsnachweise"
