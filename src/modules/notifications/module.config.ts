@@ -11,7 +11,7 @@ import { notificationsPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "notifications",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "0.12.0",
+  version: "0.12.1",
   label: "Bildirimler",
   description: "Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.",
   category: "CORE",
@@ -24,7 +24,7 @@ export const moduleConfig: ModuleConfig = {
   ],
   // N3a: Web Push (VAPID anahtarları DB'de şifreli, otomatik üretilir).
   dependencies: {
-    "web-push": "3.6.7",
+    "web-push": "4.0.0",
   },
   // Görünür giriş noktaları: sağ üstteki zil (widget.ts) ve Ayarlar → Bildirimler (tercihler).
   basePath: "/ayarlar/bildirimler",
