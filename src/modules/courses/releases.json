@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.4.12",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "GoBD silme koruması",
+        "de": "GoBD-Löschschutz"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Kurs kayıt, ücret ve ödeme ilişkileri onDelete: Restrict olarak güncellendi.",
+          "de": "Die Relationen für Kursanmeldungen, Gebühren und Zahlungen wurden auf onDelete: Restrict umgestellt."
+        }
+      ]
+    },
+    {
       "version": "1.4.11",
       "date": "2026-11-20",
       "title": {

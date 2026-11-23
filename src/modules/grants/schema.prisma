@@ -47,7 +47,7 @@ model Grant {
 model GrantBudgetLine {
   id           String   @id @default(cuid())
   grantId      String
-  grant        Grant    @relation(fields: [grantId], references: [id], onDelete: Cascade)
+  grant        Grant    @relation(fields: [grantId], references: [id], onDelete: Restrict)
   label        String
   plannedCents Int
   categoryIds  String[] @default([])
@@ -61,7 +61,7 @@ model GrantBudgetLine {
 model GrantPayout {
   id          String    @id @default(cuid())
   grantId     String
-  grant       Grant     @relation(fields: [grantId], references: [id], onDelete: Cascade)
+  grant       Grant     @relation(fields: [grantId], references: [id], onDelete: Restrict)
   requestedAt DateTime  @db.Date
   amountCents Int
   receivedAt  DateTime? @db.Date
