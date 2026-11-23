@@ -13,7 +13,7 @@ Modüllerin üst çubuk ve paneller için bileşenlerini güvenli biçimde topla
 |---|---|
 | Anahtar | `widgets` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 0.2.0 |
+| Sürüm | 0.3.0 |
 
 ## Varsayılan yetkiler
 
@@ -24,6 +24,18 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Widget'lar | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme |
 
 ## Sürüm notları
+
+### 0.3.0 — Widget ayar ekranı sözleşmesi
+
+_2026-11-23_
+
+- **Yeni:** Widget görünürlük ve sıralama ayarları, sıfırlama ve masaüstü/mobil önizleme kullanıcı hesabına bağlandı.
+
+### 0.3.0 — Widget ayar ekranı sözleşmesi
+
+_2026-11-23_
+
+- **Yeni:** Widget görünürlük ve sıralama ayarları, sıfırlama ve masaüstü/mobil önizleme kullanıcı hesabına bağlandı.
 
 ### 0.2.0 — Widget tercihleri ve yönetici politikası
 
