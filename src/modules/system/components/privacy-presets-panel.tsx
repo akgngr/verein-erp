@@ -41,7 +41,7 @@ export function PrivacyPresetsPanel({ idPrefix = "system-privacy-presets", canMa
         if (mounted && requestId.current === seq) setLoading(false);
       });
     return () => { mounted = false; };
-  }, [selected, saved]);
+  }, [selected]);
 
   async function apply() {
     if (!canManage || !approved || !preview || loading || saving || error) return;
