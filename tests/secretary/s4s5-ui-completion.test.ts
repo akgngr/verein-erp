@@ -25,6 +25,7 @@ test("OCR review delegates authorization to the guarded documents route and neve
   assert.match(home, /<SecretaryDocumentReviewLink/);
   assert.doesNotMatch(home, /@\/modules\/documents|@\/modules\/system\/server/);
   assert.match(link, /href="\/evrak\/yeni"/);
+  assert.match(link, /^"use client";/);
   assert.doesNotMatch(link, /fetch\(|FileReader|FormData|analyzeFileHandler|createDocumentAction/);
 });
 
