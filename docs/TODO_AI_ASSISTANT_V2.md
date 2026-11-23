@@ -76,7 +76,7 @@ Bitiş: AI sadece datasetRef/durum görür; dosyada doğru ad ve tutarlar bulunu
 
 - [x] F01 students/guardian adapter'larını çocuk verisi politikasını koruyarak taşı. Öğrenci/veli aracı v2, local-only ve yalnız sayı döndürür; kişisel öğrenci/veli dosyası çocuk verisi politikası (K3) gereği AI'a açılmaz. Kanıt: `tests/ai/v2-only-registry.test.ts` (yalnız `count` sorgusu, sayı alanları).
 - [x] F02 Diğer 17 modülün araçlarını öncelik sırasıyla v2'ye geçir; sonrasında legacy desteği kaldır. Tüm modül araçları `aiToolV2`; v1 `aiTool`/`defineModuleAi` kaldırıldı, çalışma zamanı v2 olmayan aracı `AI_V1_TOOL_REJECTED` ile reddeder.
-- [ ] F03 Aidat hatırlatma taslağı → bağımsız gönderim onayı → mevcut mailings otomasyonu.
+- [x] F03 Aidat hatırlatma taslağı → bağımsız gönderim onayı → mevcut mailings otomasyonu. `propose_dues_reminder_draft`: kitle sunucuda sabit (aktif + açık/kısmi aidat, toplu e-posta istemeyenler hariç); model yalnız onay bilgisi görür; onay yalnız taslak kaydeder, gönderim sihirbazda ayrıca başlatılır ve mevcut kampanya iş akışıyla çalışır.
 - [ ] F04 (sekreter epiği #263 kapsamında izlenir) PERSONAL_SECRETARY S1–S6: günlük brifing, inbox önerisi, OCR, boş zaman ve takip; v2 temeli üstünde ayrı planla (kanonik: `docs/ideas/PERSONAL_SECRETARY_BRAINSTORM.md`).
 - [ ] F05 Gerçek istemci/ilişkili sorgu ihtiyacı oluşursa GraphQL kararını yeniden değerlendir. (Talep oluşursa yeniden değerlendirilir; şu an iş yok.)
 
