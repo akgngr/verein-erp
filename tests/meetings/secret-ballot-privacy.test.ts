@@ -196,7 +196,7 @@ describe("RFC-004 §5 / §9 secret-ballot privacy", () => {
       if (!close.ok) throw new Error("synthetic vote did not close");
       assert.equal(close.published, true);
       assert.deepEqual([...state.vote.receipts].sort(), [...receipts].sort());
-      assert.ok(state.vote.receipts.every((receipt) => typeof receipt === "string" && !/yes|no|abstain/i.test(receipt)));
+      assert.ok(state.vote.receipts.every((receipt) => typeof receipt === "string" && /^([0-9A-HJKMNP-TV-Z]{4}-){3}[0-9A-HJKMNP-TV-Z]{4}$/.test(receipt)));
       assert.equal(state.vote.ballotHash, ballotListHash(state.ballots));
       assert.notEqual(state.vote.ballotHash, ballotListHash([{ ...state.ballots[0], choice: "abstain" }, ...state.ballots.slice(1)]));
       assert.equal(JSON.stringify(state.vote.receipts).includes("choice"), false);
