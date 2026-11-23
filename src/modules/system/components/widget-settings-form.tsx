@@ -29,7 +29,7 @@ export function WidgetSettingsForm({ initialRows }: { initialRows: Row[] }) {
     try {
       const result = reset
         ? await resetWidgetPreferencesAction({})
-        : await saveWidgetPreferencesAction({ preferences: next.filter((row) => !row.adminDisabled).map(({ id, enabled, order }) => ({ id, enabled, order })) });
+        : await saveWidgetPreferencesAction({ preferences: ordered(next).filter((row) => !row.adminDisabled).map(({ id, enabled }, order) => ({ id, enabled, order })) });
       if (!result.ok) throw new Error();
       setMessage(reset ? "reset" : "saved");
       router.refresh();
