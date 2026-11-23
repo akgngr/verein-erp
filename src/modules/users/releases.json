@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.1.11",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Silinen kullanıcı için daha az kişisel veri",
+        "de": "Weniger personenbezogene Daten bei gelöschten Benutzern"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Bir kullanıcı silindiğinde denetim kaydına artık adı ve e-posta adresi yazılmıyor; yalnız kimlik numarası ve rol tutuluyor.",
+          "de": "Beim Löschen eines Benutzers werden Name und E-Mail-Adresse nicht mehr ins Prüfprotokoll geschrieben; gespeichert werden nur Kennung und Rolle."
+        }
+      ]
+    },
+    {
       "version": "1.1.10",
       "date": "2026-11-20",
       "title": {
