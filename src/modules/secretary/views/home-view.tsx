@@ -8,6 +8,7 @@ import { PageHeader } from "@/shared/components/ui/page-header";
 
 import { SecretaryTodayCard } from "../components/today-card";
 import { SecretaryFollowUps } from "../components/follow-ups";
+import { SecretaryWeeklyReport } from "../components/weekly-report";
 import { SecretaryInboxView } from "./inbox-view";
 import { SecretaryPreferencesView } from "./preferences-view";
 import { secretaryPermissions } from "../permissions";
@@ -69,6 +70,13 @@ export async function SecretaryHomeView() {
           pause: t("ui.followUpsPause"), resume: t("ui.followUpsResume"),
           cancel: t("ui.followUpsCancel"), complete: t("ui.followUpsComplete"),
         },
+      }} />
+      <SecretaryWeeklyReport labels={{
+        title: t("ui.weeklyReportTitle"), description: t("ui.weeklyReportDescription"),
+        request: t("ui.weeklyReportRequest"), check: t("ui.weeklyReportCheck"),
+        files: t("ui.weeklyReportFiles"), pending: t("ui.weeklyReportPending"),
+        ready: t("ui.weeklyReportReady"), failed: t("ui.weeklyReportFailed"),
+        error: t("ui.weeklyReportError"),
       }} />
       <SecretaryInboxView user={{ id: user.id, role: user.role }} />
       <SecretaryPreferencesView user={{ id: user.id }} />

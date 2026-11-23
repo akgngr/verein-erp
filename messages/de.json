@@ -126,6 +126,7 @@
     "toplantilar": "Sitzungen",
     "uyeler": "Mitglieder",
     "notifications": "Benachrichtigungen",
+    "duyurular": "Mitteilungen",
     "online-forms": "e-Sign",
     "organization": "Vereinsdaten",
     "progress": "Lernfortschritt",
@@ -7655,6 +7656,25 @@
         "linked": "Telegram-Konto ist verbunden.",
         "pending": "Verbindung wartet auf Bestätigung.",
         "none": "Kein Telegram-Konto verbunden."
+      },
+      "announcement": {
+        "title": "Mitteilung senden",
+        "description": "Senden Sie eine interne Mitteilung an alle oder an ausgewählte Rollen.",
+        "compose": "Neue Mitteilung",
+        "subject": "Titel",
+        "message": "Text",
+        "audience": "Zielgruppe",
+        "audienceHint": "Ohne Rollenauswahl erhalten alle mit Leseberechtigung die Mitteilung.",
+        "review": "Versand prüfen",
+        "confirmTitle": "Mitteilung senden?",
+        "confirmMessage": "Nach dem Senden wird die Mitteilung an die Zielgruppe zugestellt. Zielgruppe:",
+        "selectedRoles": "Ausgewählte Rollen: {roles}",
+        "everyone": "Alle (mit Berechtigung für Mitteilungen)",
+        "cancel": "Abbrechen",
+        "send": "Senden",
+        "sending": "Wird gesendet…",
+        "sent": "Mitteilung an {count} Empfänger gesendet.",
+        "sendError": "Mitteilung konnte nicht gesendet werden. Prüfen Sie Ihre Berechtigung und Verbindung und versuchen Sie es erneut."
       }
     },
     "widget": {
@@ -8300,7 +8320,16 @@
       "followUpsCancel": "Abbrechen",
       "followUpsComplete": "Abschließen",
       "followUpsConfirmCancel": "Zum endgültigen Abbrechen erneut auf „Abbrechen“ klicken.",
-      "followUpsKeep": "Zurück"
+      "followUpsKeep": "Zurück",
+      "weeklyReportTitle": "Wöchentlicher Vorstandsbericht",
+      "weeklyReportDescription": "Ein PDF mit aggregierten Zahlen wird erstellt. Danach erscheint es unter Meine Dateien.",
+      "weeklyReportRequest": "Bericht erstellen",
+      "weeklyReportCheck": "Status prüfen",
+      "weeklyReportFiles": "Zu Meine Dateien",
+      "weeklyReportPending": "Der Bericht wird erstellt. Prüfen Sie den Status in Kürze erneut.",
+      "weeklyReportReady": "Der Bericht ist fertig.",
+      "weeklyReportFailed": "Der Bericht konnte nicht erstellt werden oder ist nicht mehr verfügbar.",
+      "weeklyReportError": "Der Berichtsvorgang konnte nicht abgeschlossen werden. Bitte versuchen Sie es erneut."
     },
     "digest": {
       "subject": "Ihre Morgenübersicht: {total} Themen",
