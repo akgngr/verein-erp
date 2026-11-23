@@ -13,7 +13,7 @@ slug: /kullanim/moduller/mailings
 |---|---|
 | Anahtar | `mailings` |
 | Tür | Resmî modül |
-| Sürüm | 2.4.9 |
+| Sürüm | 2.5.0 |
 | Sayfalar | `/toplu-eposta`, `/toplu-eposta/ayarlar` |
 | Gerektirir | [E-posta Altyapısı](./mail), [Otomasyon](./automation) |
 
@@ -43,6 +43,13 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_campaign_statistics` · `list_campaign_audiences` · `list_campaigns` · `propose_campaign_draft`
 
 ## Sürüm notları
+
+### 2.5.0 — Gizlilik dostu e-posta izleme
+
+_2026-11-23_
+
+- **Güvenlik:** Yeni kampanyalarda açılma/tıklama izleme artık varsayılan olarak kapalı; gerekirse kampanya sihirbazında açılabilir. Mevcut kampanyalar değişmedi.
+- **Güvenlik:** Tarayıcısı Global Privacy Control (Sec-GPC) gönderen alıcıların açılma ve tıklamaları kaydedilmez; bağlantılar yine çalışır.
 
 ### 2.4.9 — Arayüz altyapısı
 
@@ -86,10 +93,4 @@ _2026-11-15_
 
 - **Düzeltme:** AI listeleri sayfalama ve eksiksizlik bilgisi taşır; aşırı büyük takvim aralıkları kontrollü reddedilir.
 
-### 2.4.1 — Kanal açıklaması düzeltmesi
-
-_2026-11-07_
-
-- **Düzeltme:** Telegram kanal açıklamasındaki {telegramLink} yer tutucusu konsol hatası veriyordu; artık düz metin olarak gösteriliyor.
-
-Daha eski 15 herkese açık sürüm notu.
+Daha eski 16 herkese açık sürüm notu.
