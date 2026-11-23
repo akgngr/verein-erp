@@ -87,11 +87,68 @@ export function normalizePhone(value: string | null | undefined, defaultCountryC
   return /^\+[1-9]\d{7,14}$/.test(digits) ? digits : null;
 }
 
+import {
+  recordEgress,
+  type EgressCategory,
+  type EgressLegalBasis,
+  type EgressUnit,
+} from "@/shared/egress/record-egress";
+
+export type ChannelEgressMeta = {
+  moduleKey: string;
+  category?: EgressCategory;
+  provider?: string;
+  volume?: number;
+  count?: number;
+  unit?: EgressUnit;
+  legalBasis?: EgressLegalBasis;
+};
+
+function matchesHost(host: string, domain: string): boolean {
+  return host === domain || host.endsWith(`.${domain}`);
+}
+
+function inferProviderFromHost(hostname: string): string {
+  const host = hostname.toLowerCase();
+  if (matchesHost(host, "seven.io")) return "seven";
+  if (matchesHost(host, "twilio.com")) return "twilio";
+  if (matchesHost(host, "telegram.org")) return "telegram";
+  if (matchesHost(host, "facebook.com")) return "whatsapp_meta";
+  if (matchesHost(host, "open-meteo.com")) return "open_meteo";
+  if (matchesHost(host, "open.er-api.com")) return "open_er_api";
+  return host.split(".").slice(-2).join("_") || "external";
+}
+
+function estimateBodyBytes(body: RequestInit["body"]): number {
+  if (typeof body === "string") return Buffer.byteLength(body);
+  if (body instanceof URLSearchParams) return Buffer.byteLength(body.toString());
+  if (body instanceof Uint8Array) return body.byteLength;
+  if (body instanceof ArrayBuffer) return body.byteLength;
+  return 0;
+}
+
 /** https + host allowlist + zaman aşımı; sağlayıcı API'lerine yalnız bununla gidilir. */
-export async function channelFetch(allowedHosts: readonly string[], url: string, init: RequestInit = {}): Promise<Response> {
+export async function channelFetch(
+  allowedHosts: readonly string[],
+  url: string,
+  init: RequestInit = {},
+  egress?: ChannelEgressMeta,
+): Promise<Response> {
   const parsed = new URL(url);
   if (parsed.protocol !== "https:" || !allowedHosts.some((host) => parsed.hostname === host || parsed.hostname.endsWith(`.${host}`))) {
     throw new Error("CHANNEL_HOST_NOT_ALLOWED");
   }
-  return fetch(parsed, { ...init, redirect: "error", signal: AbortSignal.timeout(20_000) });
+  try {
+    return await fetch(parsed, { ...init, redirect: "error", signal: AbortSignal.timeout(20_000) });
+  } finally {
+    await recordEgress({
+      moduleKey: egress?.moduleKey ?? "external",
+      category: egress?.category ?? "EXTERNAL_API",
+      provider: egress?.provider ?? inferProviderFromHost(parsed.hostname),
+      volume: egress?.volume ?? estimateBodyBytes(init.body),
+      count: egress?.count ?? 1,
+      unit: egress?.unit ?? "bytes",
+      legalBasis: egress?.legalBasis ?? "LEGITIMATE_INTEREST",
+    });
+  }
 }

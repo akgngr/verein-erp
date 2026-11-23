@@ -73,18 +73,46 @@ export class SyncAuthError extends Error {
 /** Upper bound on events stored per calendar and sync. */
 export const MAX_REMOTE_EVENTS = 2500;
 
+import { recordEgress } from "@/shared/egress/record-egress";
+
 /** fetch with host allowlist, timeout and JSON/text handling. */
-export async function syncFetch(provider: Pick<CalendarSyncProvider, "allowedHosts">, url: string, init: RequestInit = {}): Promise<Response> {
+export async function syncFetch(
+  provider: Pick<CalendarSyncProvider, "allowedHosts"> & { key?: string },
+  url: string,
+  init: RequestInit = {},
+): Promise<Response> {
   const parsed = new URL(url);
   if (parsed.protocol !== "https:" || !provider.allowedHosts.some((host) => parsed.hostname === host || parsed.hostname.endsWith(`.${host}`))) {
     throw new Error("SYNC_HOST_NOT_ALLOWED");
   }
-  const response = await fetch(parsed, { ...init, redirect: "error", signal: AbortSignal.timeout(20_000) });
-  if (response.status === 401 || response.status === 403) throw new SyncAuthError();
-  return response;
+  const bodyBytes = typeof init.body === "string"
+    ? Buffer.byteLength(init.body)
+    : init.body instanceof URLSearchParams
+      ? Buffer.byteLength(init.body.toString())
+      : 0;
+  try {
+    const response = await fetch(parsed, { ...init, redirect: "error", signal: AbortSignal.timeout(20_000) });
+    if (response.status === 401 || response.status === 403) throw new SyncAuthError();
+    return response;
+  } finally {
+    const providerKey = provider.key ?? provider.allowedHosts[0] ?? "calendar";
+    await recordEgress({
+      moduleKey: provider.key ? `calendar-${provider.key}` : "calendar",
+      category: "CALENDAR_SYNC",
+      provider: providerKey,
+      volume: bodyBytes,
+      count: 1,
+      unit: "bytes",
+      legalBasis: "CONSENT",
+    });
+  }
 }
 
-export async function syncJson<T>(provider: Pick<CalendarSyncProvider, "allowedHosts">, url: string, init: RequestInit = {}): Promise<T> {
+export async function syncJson<T>(
+  provider: Pick<CalendarSyncProvider, "allowedHosts"> & { key?: string },
+  url: string,
+  init: RequestInit = {},
+): Promise<T> {
   const response = await syncFetch(provider, url, init);
   if (!response.ok) throw new Error(`SYNC_HTTP_${response.status}`);
   return response.json() as Promise<T>;

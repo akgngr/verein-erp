@@ -13,7 +13,7 @@ Anlık konum bazlı hava durumu, tahminler, panel kartı ve sekreter etkinlik ö
 |---|---|
 | Anahtar | `weather` |
 | Tür | Eklenti |
-| Sürüm | 0.1.1 |
+| Sürüm | 0.1.2 |
 | Sayfalar | `/weather` |
 
 ## Diğer modüllere erişim

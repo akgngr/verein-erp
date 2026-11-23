@@ -12,11 +12,17 @@ export const PROVIDERS = ["seven", "twilio"] as const;
 const MAX_LENGTH = 918; // 6 × 153 (birleşik GSM-7)
 
 async function sendSeven(message: ChannelMessage, config: ChannelConfig): Promise<ChannelSendResult> {
-  const response = await channelFetch(["seven.io"], "https://gateway.seven.io/api/sms", {
-    method: "POST",
-    headers: { "X-Api-Key": config.apiKey ?? "", "Content-Type": "application/json", Accept: "application/json" },
-    body: JSON.stringify({ to: message.to, text: message.text.slice(0, MAX_LENGTH), from: config.sender || undefined }),
-  });
+  const text = message.text.slice(0, MAX_LENGTH);
+  const response = await channelFetch(
+    ["seven.io"],
+    "https://gateway.seven.io/api/sms",
+    {
+      method: "POST",
+      headers: { "X-Api-Key": config.apiKey ?? "", "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ to: message.to, text, from: config.sender || undefined }),
+    },
+    { moduleKey: "campaign-sms", category: "CAMPAIGN", provider: "seven", volume: Buffer.byteLength(text), count: 1, unit: "bytes", legalBasis: "CONSENT" },
+  );
   if (!response.ok) return { ok: false, error: `SMS_HTTP_${response.status}` };
   const body = (await response.json().catch(() => ({}))) as { success?: string; messages?: { id?: string; success?: boolean }[] };
   const first = body.messages?.[0];
@@ -26,17 +32,23 @@ async function sendSeven(message: ChannelMessage, config: ChannelConfig): Promis
 async function sendTwilio(message: ChannelMessage, config: ChannelConfig): Promise<ChannelSendResult> {
   const sid = config.accountSid ?? "";
   if (!/^AC[0-9a-f]{32}$/i.test(sid)) return { ok: false, error: "SMS_CONFIG" };
-  const response = await channelFetch(["api.twilio.com"], `https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`, {
-    method: "POST",
-    headers: { Authorization: `Basic ${Buffer.from(`${sid}:${config.apiKey ?? ""}`).toString("base64")}`, "Content-Type": "application/x-www-form-urlencoded" },
-    body: new URLSearchParams({
-      To: message.to,
-      From: config.sender ?? "",
-      Body: message.text.slice(0, MAX_LENGTH),
-      // Mesaj başına teslim bildirimi (yalnız https genel adreste).
-      ...(message.callbackBaseUrl?.startsWith("https://") ? { StatusCallback: `${message.callbackBaseUrl}/api/campaign-sms/webhook/twilio` } : {}),
-    }),
-  });
+  const text = message.text.slice(0, MAX_LENGTH);
+  const response = await channelFetch(
+    ["api.twilio.com"],
+    `https://api.twilio.com/2010-04-01/Accounts/${sid}/Messages.json`,
+    {
+      method: "POST",
+      headers: { Authorization: `Basic ${Buffer.from(`${sid}:${config.apiKey ?? ""}`).toString("base64")}`, "Content-Type": "application/x-www-form-urlencoded" },
+      body: new URLSearchParams({
+        To: message.to,
+        From: config.sender ?? "",
+        Body: text,
+        // Mesaj başına teslim bildirimi (yalnız https genel adreste).
+        ...(message.callbackBaseUrl?.startsWith("https://") ? { StatusCallback: `${message.callbackBaseUrl}/api/campaign-sms/webhook/twilio` } : {}),
+      }),
+    },
+    { moduleKey: "campaign-sms", category: "CAMPAIGN", provider: "twilio", volume: Buffer.byteLength(text), count: 1, unit: "bytes", legalBasis: "CONSENT" },
+  );
   if (!response.ok) return { ok: false, error: `SMS_HTTP_${response.status}` };
   const body = (await response.json().catch(() => ({}))) as { sid?: string };
   return { ok: true, providerId: body.sid };

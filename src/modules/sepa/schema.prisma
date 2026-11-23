@@ -44,7 +44,7 @@ model SepaDebitRun {
 model SepaDebitItem {
   id               String         @id @default(cuid())
   runId            String
-  run              SepaDebitRun   @relation(fields: [runId], references: [id], onDelete: Cascade)
+  run              SepaDebitRun   @relation(fields: [runId], references: [id], onDelete: Restrict)
   /// "<memberId>:<yıl>" veya "<chargeId>"
   sourceKey        String
   debtorName       String
