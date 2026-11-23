@@ -101,7 +101,13 @@ All widget platform components (`WidgetSlot`, `HeaderWidgetSlot`, `NotificationB
 ## 6. Automated Test Coverage
 
 The following automated test suites enforce and verify these requirements on every CI quality gate:
-- `tests/widgets/a11y-browser-verification.test.ts`: Keyboard & screen reader attributes, mobile overflow constraints, SSR hydration safety, fault isolation, and preference operations.
+- `scripts/check-hydration.ts` (Playwright E2E & Browser Acceptance): Real browser Chromium verification on the live running application:
+  - Desktop 1280px & Mobile 390px viewport layouts.
+  - Tab navigation and visible focus verification for `SettingsShortcut` and `NotificationBellDrawer` trigger.
+  - Enter key to open drawer (`dialog`), Escape key to close and restore focus.
+  - `prefers-reduced-motion` media query emulation.
+  - Mobile horizontal scroll width assertion (`scrollWidth <= 390 + 5px`) ensuring zero viewport blowout.
+- `tests/widgets/a11y-browser-verification.test.ts`: Screen reader semantics, safe notification link sanitization, error boundary fault containment without PII, and preference operations.
 - `tests/shared/widget-header-integration.test.ts`: Header slot mounting, server-derived authorization gating, and system shortcut integration.
 - `tests/shared/widget-slot-contract.test.ts`: Slot policy resolution and error boundary containment.
 - `tests/shared/widget-preference-operations.test.ts`: Pure preference editing, move operations, and default reset semantics.
