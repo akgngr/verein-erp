@@ -6119,6 +6119,11 @@
         "kind": "Kampagnenentwurf",
         "confirm": "Entwurf anlegen",
         "done": "Kampagnenentwurf angelegt; unter Kampagnen öffnen und senden."
+      },
+      "dues_reminder_draft": {
+        "kind": "Entwurf Beitragserinnerung",
+        "confirm": "Entwurf anlegen",
+        "done": "Entwurf der Beitragserinnerung angelegt; unter Kampagnen prüfen und separat senden."
       }
     },
     "calendar": {

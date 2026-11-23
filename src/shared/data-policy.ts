@@ -299,6 +299,7 @@ export const AI_TOOL_POLICY = {
   list_campaigns: { module: "mailings", reads: ["MailingCampaign"], serverReads: ["MailingCampaign"], modelFields: ["page", "pageSize", "total", "hasMore", "nextCursor", "completeness", "items", "items.id", "items.name", "items.subject", "items.channel", "items.status", "items.recipientCount", "items.sentCount", "items.failedCount", "items.createdAt", "items.scheduledAt"] },
   list_campaign_audiences: { module: "mailings", reads: [], serverReads: [], modelFields: ["audiences", "audiences.id", "audiences.placeholders", "channels"] },
   propose_campaign_draft: {"module": "mailings", "reads": [], "serverReads": [], "modelFields": ["status", "note"]},
+  propose_dues_reminder_draft: {"module": "mailings", "reads": [], "serverReads": [], "modelFields": ["status", "note"]},
   get_meeting: { module: "meetings", reads: ["Meeting", "AgendaItem", "MeetingDecision"], serverReads: ["Meeting", "AgendaItem", "MeetingDecision"], modelFields: ["status", "number", "type", "title", "date", "attendeeCount", "agenda", "agenda.position", "agenda.title", "agenda.description", "agenda.discussion", "decisions", "decisions.number", "decisions.text", "decisions.result", "decisions.agendaItem", "decisions.votesFor", "decisions.votesAgainst", "decisions.votesAbstain"] },
   propose_meeting: {"module": "meetings", "reads": [], "serverReads": [], "modelFields": ["status", "note"]},
   propose_meeting_status: {"module": "meetings", "reads": [], "serverReads": ["Meeting"], "modelFields": ["status", "note"]},
