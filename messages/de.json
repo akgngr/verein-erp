@@ -138,6 +138,7 @@
     "kurulum": "Einrichtungsassistent",
     "modulPaketleri": "Modulpakete",
     "lisans": "Lizenz",
+    "modulSagligi": "Modul-Gesundheit",
     "tasks": "Aufgaben",
     "kullanicilar": "Benutzer",
     "weather": "Wetter",
@@ -8799,7 +8800,8 @@
         "delete": "löschen"
       },
       "accounting": "Der Einrichtungsassistent legt je nach Organisationsform Buchhaltungskategorien, Konten und Steuereinstellungen an.",
-      "organization": "Für die Lizenzprüfung werden Name und Register-/Steuernummer der Organisation gelesen (die Lizenz ist an diese Organisation gebunden)."
+      "organization": "Für die Lizenzprüfung werden Name und Register-/Steuernummer der Organisation gelesen (die Lizenz ist an diese Organisation gebunden).",
+      "users": "Prüft das Vorhandensein eines Administratorkontos im Modul- und Workflow-Gesundheitscockpit."
     },
     "gate": {
       "manage": "Zur Modulverwaltung",
@@ -9029,6 +9031,64 @@
     "ui": {
       "widget": {
         "settings": "Einstellungen"
+      }
+    },
+    "readiness": {
+      "metaTitle": "Modul- und Workflow-Gesundheit | Verein ERP",
+      "title": "Modul- und Workflow-Gesundheit",
+      "subtitle": "Überprüfen Sie Konfigurationsvollständigkeit, Zugriffsberechtigungen, Worker-Status und die Warteschlangen-Integrität aktiver Module.",
+      "linkTitle": "Gesundheits-Cockpit",
+      "refresh": "Aktualisieren",
+      "searchPlaceholder": "Nach Modulname oder -schlüssel suchen...",
+      "noModulesFound": "Keine Module gefunden, die den Kriterien entsprechen.",
+      "failedBreakdown": "Fehlerverteilung",
+      "notificationChannels": "Benachrichtigungskanäle",
+      "noChannelsConfigured": "Keine Kanäle konfiguriert",
+      "configureChannels": "Kanäle konfigurieren",
+      "guidanceTitle": "Empfohlener Lösungsschritt",
+      "fixIssue": "Zur Konfigurationsseite",
+      "stats": {
+        "activeModules": "Aktive Module",
+        "healthyModules": "Vollständig bereit (Gesund)",
+        "warnings": "Aufmerksamkeit erforderlich",
+        "failedJobs": "Fehlgeschlagene Aufgaben"
+      },
+      "tabs": {
+        "all": "Alle",
+        "issues": "Auffällige Module",
+        "core": "Kern",
+        "official": "Offiziell",
+        "extension": "Erweiterungen"
+      },
+      "status": {
+        "protected": "Geschützt",
+        "healthy": "Gesund",
+        "warning": "Warnung",
+        "critical": "Kritisch"
+      },
+      "pillars": {
+        "config": "Konfiguration",
+        "access": "Zugriffsrechte",
+        "heartbeat": "Worker-Status",
+        "queue": "Warteschlange",
+        "complete": "Vollständig",
+        "incomplete": "Unvollständig",
+        "approved": "Genehmigt",
+        "pending": "Genehmigung ausstehend",
+        "active": "Aktiv",
+        "stale": "Inaktiv",
+        "idle": "Im Leerlauf",
+        "clean": "Fehlerfrei",
+        "failed": "Fehler"
+      },
+      "guidance": {
+        "accountingMissingAccount": "Kontenplan oder aktives Bank-/Kassenkonto nicht eingerichtet.",
+        "organizationMissingProfile": "Organisationsprofil (Name, Rechtsform, Steuernummer) unvollständig.",
+        "authNoUsers": "Keine Benutzer im System registriert.",
+        "accessGrantsPending": "Die von diesem Modul angeforderten Berechtigungen warten auf Administratorfreigabe.",
+        "failedJobsDetected": "In der Hintergrund-Warteschlange wurden fehlgeschlagene Aufgaben festgestellt.",
+        "notificationsNoChannel": "Für das Benachrichtigungsmodul ist kein aktiver Kanal (E-Mail, Telegram etc.) eingerichtet.",
+        "generalIssue": "Es liegen Konfigurations- oder Workflow-Hinweise für dieses Modul vor."
       }
     }
   },

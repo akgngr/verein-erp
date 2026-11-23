@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.15.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Modül ve iş akışı sağlığı kokpiti (F3)",
+        "de": "Modul- und Workflow-Gesundheitscockpit (F3)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Ayarlar → Modül Yönetimi → Modül ve İş Akışı Sağlığı: etkin modüllerin yapılandırma bütünlüğü, erişim onayları, worker kalp atışı ve kuyruk hata durumları tek ekranda özetlenir.",
+          "de": "Einstellungen → Modulverwaltung → Modul- und Workflow-Gesundheit: Vollständigkeit der Modulkonfiguration, Zugriffsberechtigungen, Worker-Heartbeats und Warteschlangenfehler werden auf einer Übersicht angezeigt."
+        },
+        {
+          "type": "feature",
+          "tr": "Hata kodları kişisel veri sızdırmadan güvenli kategorilere (TIMEOUT, NETWORK, DATABASE, AUTH) indirgenir; sorunlu alanlar için doğrudan ilgili ayar ekranına yönlendirme kılavuzu sunulur.",
+          "de": "Fehlercodes werden ohne personenbezogene Daten in sichere Kategorien (TIMEOUT, NETWORK, DATABASE, AUTH) aggregiert; bei Problemen wird direkt auf die entsprechende Konfigurationsseite verwiesen."
+        }
+      ]
+    },
+    {
       "version": "1.14.0",
       "date": "2026-11-22",
       "title": {
