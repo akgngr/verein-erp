@@ -58,8 +58,14 @@ model SepaDebitItem {
   /// Makbuz veya muhasebe fiş numarası
   receipt          String?
   returnReason     String?
+  /// ISO 20022 iade kodu (AM04, MD06 …); iade koçu bunu açıklar (B001 Q2).
+  returnCode       String?
+  /// Bankanın iade için kestiği ücret (kuruş).
+  returnFeeCents   Int?
+  returnedAt       DateTime?
 
   @@index([runId])
   @@index([sourceKey, status])
+  @@index([mandateReference, status])
   @@map("sepa_debit_items")
 }

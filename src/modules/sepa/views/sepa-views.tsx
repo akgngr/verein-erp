@@ -8,6 +8,7 @@ import { LinkButton } from "@/shared/components/ui/link-button";
 import { PageHeader } from "@/shared/components/ui/page-header";
 import { can } from "@/shared/permissions/define";
 
+import { MandateHealthPanel } from "../components/mandate-health";
 import { SepaApp, SepaRunDetail } from "../components/sepa-app";
 import { earliestCollectionDate } from "../lib/pain008";
 import { sepaPermissions } from "../permissions";
@@ -35,7 +36,10 @@ export async function SepaView() {
   return (
     <div>
       <PageHeader title={t("title")} description={t("description")} />
-      <SepaApp runs={runs} sources={sources} problems={problems} canCreate={can(user.role, sepaPermissions, "create")} defaults={{ year: String(now.getUTCFullYear()), until: monthEnd, collectionDate: earliestCollectionDate(now, 2) }} />
+      <div className="flex flex-col gap-6">
+        <SepaApp runs={runs} sources={sources} problems={problems} canCreate={can(user.role, sepaPermissions, "create")} defaults={{ year: String(now.getUTCFullYear()), until: monthEnd, collectionDate: earliestCollectionDate(now, 2) }} />
+        <MandateHealthPanel sources={sources} defaults={{ year: String(now.getUTCFullYear()), until: monthEnd }} />
+      </div>
     </div>
   );
 }
