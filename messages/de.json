@@ -103,6 +103,7 @@
   "nav": {
     "panel": "Dashboard",
     "profil": "Profil",
+    "menuDuzeni": "Menüanordnung",
     "muhasebe": "Buchhaltung",
     "ai": "KI-Assistent",
     "denetimKaydi": "Prüfprotokoll",
@@ -168,30 +169,25 @@
     "backToMain": "Hauptmenü",
     "backToModule": "Zurück zu {module}",
     "customizeMenu": "Menü anpassen",
-    "categories": {
-      "association": "Verein",
-      "finance": "Finanzen",
-      "education": "Bildung",
-      "communication": "Kommunikation",
-      "operations": "Werkzeuge"
-    },
     "customizer": {
-      "title": "Seitenleiste anpassen",
-      "subtitle": "Erstellen Sie persönliche Kategorien, ordnen Sie Untermodule zu oder blenden Sie Module aus.",
-      "newGroupPlaceholder": "Neuer Kategoriename (z. B. Vereinsarbeit)",
+      "title": "Menüanordnung",
+      "subtitle": "Ordnen Sie Module als Untermenüpunkte einem anderen Modul zu, ändern Sie die Reihenfolge, blenden Sie Module aus oder erstellen Sie optionale Kategorien.",
+      "newGroupPlaceholder": "Neuer Kategoriename (optional)",
       "addGroupButton": "Kategorie hinzufügen",
       "deleteGroupButton": "Gruppe löschen",
       "moduleColumn": "Modul",
       "categoryColumn": "Kategorie",
-      "parentColumn": "Übergeordnet",
-      "noParent": "Eigenständig (Stamm)",
+      "parentColumn": "Übergeordnet (öffnet im Untermenü)",
+      "noParent": "Hauptmenü (eigenständig)",
+      "noCategory": "Ohne Kategorie",
       "visible": "Sichtbar",
       "hidden": "Ausgeblendet",
       "moveUp": "Hoch",
       "moveDown": "Runter",
       "resetButton": "Zurücksetzen",
       "saveButton": "Speichern",
-      "cancelButton": "Abbrechen"
+      "savedMessage": "Menüanordnung gespeichert.",
+      "resetMessage": "Menüanordnung zurückgesetzt."
     }
   },
   "panel": {
