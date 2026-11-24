@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı.",
   "releases": [
     {
+      "version": "0.3.1",
+      "date": "2026-11-24",
+      "title": {
+        "tr": "Portal CSP nonce, SameSite=Strict oturum ve Secure __Host- çerezleri",
+        "de": "Portal-CSP-Nonce, SameSite=Strict-Sitzung und Secure-__Host--Cookies"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "İstek başına CSP nonce + x-nonce başlığı, __Host-portal-session için SameSite=Strict ve tüm __Host- çerezleri için daima Secure=true eklendi.",
+          "de": "Pro-Anfrage-CSP-Nonce + x-nonce-Header, SameSite=Strict für __Host-portal-session und immer Secure=true für alle __Host--Cookies ergänzt."
+        }
+      ]
+    },
+    {
       "version": "0.3.0",
       "date": "2026-11-24",
       "title": {

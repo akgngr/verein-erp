@@ -95,7 +95,8 @@ test("portal isolation, scanner-safe GET, IBAN masking, and PORTAL_ENABLED=false
   assert.equal(maskIban("DE89370400440532013000"), "DE89 •••• •••• 3000");
 
   const proxySrc = fs.readFileSync(path.join(process.cwd(), "src/proxy.ts"), "utf8");
-  assert.match(proxySrc, /default-src 'self'; frame-ancestors 'none'/);
+  assert.match(proxySrc, /buildPortalCsp/);
+  assert.match(proxySrc, /x-nonce/);
   assert.match(proxySrc, /Referrer-Policy/);
   assert.match(proxySrc, /PORTAL_ENABLED/);
 

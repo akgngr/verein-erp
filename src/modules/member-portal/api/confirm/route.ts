@@ -57,8 +57,8 @@ export async function POST(req: NextRequest) {
   res.cookies.delete(PORTAL_NONCE_COOKIE);
   res.cookies.set(PORTAL_SESSION_COOKIE, result.rawSessionToken, {
     httpOnly: true,
-    sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    secure: true,
     path: "/",
     maxAge: Math.floor(PORTAL_SESSION_ABSOLUTE_MS / 1000),
   });
