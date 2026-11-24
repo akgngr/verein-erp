@@ -64,3 +64,19 @@ model UserNavPreference {
   @@map("user_nav_preferences")
 }
 
+
+/// Davet bağlantısı (Kassenprüfer / vergi danışmanı ve diğer kullanıcılar): tek kullanımlık, süreli.
+/// Yalnız belirteç hash'i saklanır; e-postada parola veya mali veri yoktur. Kullanıldığında usedAt dolar.
+model UserInvitation {
+  id          String    @id @default(cuid())
+  userId      String
+  tokenHash   String    @unique
+  expiresAt   DateTime
+  usedAt      DateTime?
+  revokedAt   DateTime?
+  createdById String
+  createdAt   DateTime  @default(now())
+
+  @@index([userId])
+  @@map("user_invitations")
+}

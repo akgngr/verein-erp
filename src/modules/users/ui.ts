@@ -7,3 +7,4 @@ export {
   RolePermissionsMatrix,
   RolePermissionsPreview,
 } from "./components/role-permissions-matrix";
+export { InvitationView } from "./views/invitation-view";

@@ -6,7 +6,7 @@ import { StatusChip } from "@/shared/components/kit";
 import { useFormDrawerHref } from "@/shared/components/forms/form-drawer";
 import { useTranslations } from "next-intl";
 
-import { KeyRound, Pencil, Power, RefreshCcw, Trash2 } from "lucide-react";
+import { KeyRound, MailPlus, Pencil, Power, RefreshCcw, Trash2 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
@@ -19,6 +19,7 @@ import { formatDateTime } from "@/shared/utils";
 import { ResetPasswordDialog } from "./reset-password-dialog";
 import { deleteUserAction } from "../actions/delete-user";
 import { setUserActiveAction } from "../actions/set-active";
+import { inviteUserAction } from "../actions/invitations";
 import type { UserRow } from "../queries/list-users";
 
 /**
@@ -49,6 +50,7 @@ export function UsersTable({
   const roleDirectory = useRoles();
   const t = useTranslations("users.table");
   const tCommon = useTranslations("common");
+  const tInvite = useTranslations("users.invite");
   const router = useRouter();
   const drawerHref = useFormDrawerHref();
   const [activeTarget, setActiveTarget] = useState<{
@@ -100,6 +102,15 @@ export function UsersTable({
     }
     notify.success(isActive ? t("activated") : t("deactivated"));
     router.refresh();
+  };
+
+  const handleInvite = async (user: UserRow) => {
+    const result = await inviteUserAction({ id: user.id });
+    if (!result.ok) {
+      notify.error(result.error);
+      return;
+    }
+    notify.success(tInvite("sent", { email: user.email }));
   };
 
   const handleDelete = async (user: UserRow) => {
@@ -158,6 +169,13 @@ export function UsersTable({
             icon: <KeyRound className="h-4 w-4" />,
             onPress: () => setResetTarget(row),
             hidden: !canUpdate,
+          },
+          {
+            key: "invite",
+            label: tInvite("action"),
+            icon: <MailPlus className="h-4 w-4" />,
+            onPress: () => void handleInvite(row),
+            hidden: !canUpdate || !row.isActive,
           },
           {
             key: "toggle-active",
