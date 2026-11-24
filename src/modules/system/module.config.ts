@@ -1,4 +1,4 @@
-import { Activity, Boxes, History, KeyRound, Settings, Wand2, PackageCheck, PanelsTopLeft, ShieldCheck, FileText } from "lucide-react";
+import { Activity, Boxes, History, KeyRound, Settings, Wand2, PackageCheck, PanelsTopLeft, ShieldCheck, FileText, SlidersHorizontal } from "lucide-react";
 import type { ModuleConfig } from "@/shared/types/module";
 import {
   settingsPermissions,
@@ -8,7 +8,7 @@ import {
 export const moduleConfig: ModuleConfig = {
   key: "system",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.18.2",
+  version: "1.18.3",
   label: "Modül Yönetimi",
   description: "Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.",
   category: "CORE",
@@ -19,8 +19,8 @@ export const moduleConfig: ModuleConfig = {
     { module: "accounting", operations: ["read", "write"] },
     // Lisans (RFC-002): kurum adı ve sicil numarası lisansla eşleştirilir.
     { module: "organization", operations: ["read"] },
-    // Sağlık kokpiti (F3): admin kullanıcısı varlığı denetlenir.
-    { module: "users", operations: ["read"] },
+    // Sağlık kokpiti (F3) ve kullanıcı bazlı menü düzeni (/ayarlar/menu).
+    { module: "users", operations: ["read", "write"] },
     // Gizlilik ön ayarları ve veri çıkışı raporu (F2a): AI sağlayıcı durumu okunur.
     { module: "ai", operations: ["read"] },
     { module: "widgets", operations: ["read", "write"] },
@@ -109,6 +109,15 @@ export const moduleConfig: ModuleConfig = {
       group: "settings",
       order: 7,
       permission: { definition: systemPermissions, action: "view" },
+    },
+    {
+      href: "/ayarlar/menu",
+      label: "Menü düzeni",
+      labelKey: "menuDuzeni",
+      icon: SlidersHorizontal,
+      group: "settings",
+      order: 8,
+      permission: { definition: settingsPermissions, action: "view" },
     },
     {
       href: "/ayarlar/surum-notlari",

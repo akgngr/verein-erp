@@ -13,8 +13,8 @@ Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.
 |---|---|
 | Anahtar | `system` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.18.2 |
-| Sayfalar | `/ayarlar`, `/ayarlar/widgetlar`, `/ayarlar/moduller`, `/ayarlar/moduller/saglik`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/lisans`, `/ayarlar/gizlilik`, `/ayarlar/veri-cikisi`, `/ayarlar/surum-notlari` |
+| Sürüm | 1.18.3 |
+| Sayfalar | `/ayarlar`, `/ayarlar/widgetlar`, `/ayarlar/moduller`, `/ayarlar/moduller/saglik`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/lisans`, `/ayarlar/gizlilik`, `/ayarlar/veri-cikisi`, `/ayarlar/menu`, `/ayarlar/surum-notlari` |
 
 ## Diğer modüllere erişim
 
@@ -24,7 +24,7 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 |---|---|---|
 | [Muhasebe](./accounting) | okuma, yazma | Kurulum sihirbazı, seçilen kurum türüne göre muhasebe kategorilerini, hesaplarını ve vergi ayarlarını oluşturur. |
 | [Dernek Bilgileri](./organization) | okuma | Lisans doğrulaması için kurum adı ve sicil/vergi numarası okunur (lisans bu kuruma bağlıdır). |
-| [Kullanıcılar](./users) | okuma | Modül ve iş akışı sağlığı kokpitinde yönetici kullanıcısının varlığı denetlenir. |
+| [Kullanıcılar](./users) | okuma, yazma | Modül ve iş akışı sağlığı kokpitinde yönetici kullanıcısının varlığı denetlenir. |
 | [Yapay zekâ asistanı](./ai) | okuma | Gizlilik ön ayarları ve aylık veri çıkışı raporu için yapılandırılmış yapay zekâ sağlayıcılarının durumu okunur. |
 | [Widget Platformu](./widgets) | okuma, yazma | Widget tercihlerini gösterir ve kullanıcının değişikliklerini kaydeder. |
 
@@ -38,6 +38,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Modül Yönetimi | görüntüleme, düzenleme, silme | görüntüleme | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.18.3 — Menü düzeni ayar sayfası
+
+_2026-11-24_
+
+- **İyileştirme:** Kullanıcı bazlı menü özelleştirme sayfası Ayarlar menüsüne (/ayarlar/menu) taşındı.
 
 ### 1.18.2 — Lisans özelliği kontrolü dışa aktarımı
 
@@ -86,11 +92,4 @@ _2026-11-22_
 
 - **Yeni:** Üst çubukta yetki ve kullanıcı tercihlerine göre görünen Ayarlar kısayolu widget’ı eklendi; masaüstü ve mobilde tek bileşen yüklenir.
 
-### 1.13.0 — Enterprise lisansı
-
-_2026-11-20_
-
-- **Yeni:** Ayarlar → Lisans: imzalı Enterprise lisansı girilir, çevrimdışı doğrulanır; lisans hem alan adına hem kuruma bağlıdır, süre bitince 14 gün ek süre.
-- **Yeni:** Lisanslı modüller yalnız ilgili özelliği içeren geçerli lisansla etkinleşir; lisans yoksa menüde, sayfada, API'de ve arka plan işlerinde kapalı kalır.
-
-Daha eski 25 herkese açık sürüm notu.
+Daha eski 26 herkese açık sürüm notu.
