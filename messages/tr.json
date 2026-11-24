@@ -103,6 +103,7 @@
   "nav": {
     "panel": "Panel",
     "profil": "Profil",
+    "menuDuzeni": "Menü düzeni",
     "muhasebe": "Muhasebe",
     "ai": "Yapay zekâ asistanı",
     "denetimKaydi": "Denetim Kaydı",
@@ -168,30 +169,25 @@
     "backToMain": "Ana menü",
     "backToModule": "{module} menüsüne dön",
     "customizeMenu": "Menüyü özelleştir",
-    "categories": {
-      "association": "Dernek",
-      "finance": "Finans",
-      "education": "Eğitim",
-      "communication": "İletişim",
-      "operations": "Araçlar"
-    },
     "customizer": {
-      "title": "Sol Menüyü Özelleştir",
-      "subtitle": "Yalnızca kendi hesabınız için menü grupları oluşturun, modülleri alt modül olarak gruplayın veya gizleyin.",
-      "newGroupPlaceholder": "Yeni kategori adı (ör. Dernek İşleri)",
+      "title": "Menü Düzeni",
+      "subtitle": "Yalnızca kendi hesabınız için modülleri başka bir modülün alt menüsüne taşıyın, sıralayın, gizleyin veya isteğe bağlı kategori grupları oluşturun.",
+      "newGroupPlaceholder": "Yeni kategori adı (isteğe bağlı)",
       "addGroupButton": "Kategori ekle",
       "deleteGroupButton": "Grubu sil",
       "moduleColumn": "Modül",
       "categoryColumn": "Kategori",
-      "parentColumn": "Üst Modül",
-      "noParent": "Bağımsız (kök)",
+      "parentColumn": "Üst Modül (alt menüsünde açılır)",
+      "noParent": "Ana menüde (bağımsız)",
+      "noCategory": "Kategorisiz",
       "visible": "Görünür",
       "hidden": "Gizli",
       "moveUp": "Yukarı",
       "moveDown": "Aşağı",
       "resetButton": "Varsayılana sıfırla",
       "saveButton": "Kaydet",
-      "cancelButton": "İptal"
+      "savedMessage": "Menü düzeni kaydedildi.",
+      "resetMessage": "Menü düzeni varsayılana sıfırlandı."
     }
   },
   "panel": {

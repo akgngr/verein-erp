@@ -3,16 +3,15 @@
 import { Button, Drawer, Dropdown, Label, Tooltip } from "@heroui/react";
 import {
   Building2,
-  ChevronDown,
   ChevronLeft,
   ChevronRight,
+  Folder,
   LayoutDashboard,
   LogOut,
   Menu as MenuIcon,
   PanelLeftClose,
   PanelLeftOpen,
   Settings,
-  SlidersHorizontal,
   UserRound,
   type LucideIcon,
 } from "lucide-react";
@@ -33,13 +32,11 @@ import { RoleChip } from "@/shared/components/roles/roles-provider";
 import { MODULE_NAV_DEFAULTS } from "@/shared/navigation/nav-defaults.generated";
 import {
   resolveUserSidebarTree,
-  type ResolvedNavNode,
   type UserNavConfig,
 } from "@/shared/navigation/user-nav";
 import type { Role } from "@/shared/roles";
 import { can } from "@/shared/permissions/define";
 
-import { NavCustomizerModal } from "./nav-customizer-modal";
 import {
   MODULE_HOME_KEY,
   findActiveKey,
@@ -156,6 +153,7 @@ const PANEL_ITEM: NavItem = {
 
 /** Ayar sayfalarını toplayan sanal modülün anahtarı (registry'de yoktur). */
 const SETTINGS_KEY = "_settings";
+const CAT_KEY_PREFIX = "_cat:";
 
 /**
  * "settings" grubundaki nav öğelerinden sanal bir modül kurar: ana sayfası "/ayarlar" (yoksa ilk öğe),
@@ -222,16 +220,6 @@ function SidebarContent({
   const tSidebar = useTranslations("sidebar");
   const tRoot = useTranslations();
 
-  const [navConfig, setNavConfig] = useState<UserNavConfig | null>(initialNavConfig);
-  const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>(() => {
-    const map: Record<string, boolean> = {};
-    for (const id of initialNavConfig?.collapsedGroupIds ?? []) {
-      map[id] = true;
-    }
-    return map;
-  });
-  const [customizerOpen, setCustomizerOpen] = useState(false);
-
   const allowed = (permission: PermissionRequirement) =>
     can(role, permission.definition, permission.action);
 
@@ -253,6 +241,39 @@ function SidebarContent({
     );
   const mainItems = visibleItems.filter((item) => item.group === "main");
 
+  const navTree = resolveUserSidebarTree({
+    items: mainItems,
+    modules: visibleModules,
+    defaults: MODULE_NAV_DEFAULTS,
+    userConfig: initialNavConfig,
+  });
+
+  const moduleHasMenuOrChildren = (mod: ModuleConfig) =>
+    hasModuleMenu(mod) || (navTree.childrenByParent[mod.key]?.length ?? 0) > 0;
+
+  const categoryModules: ModuleConfig[] = navTree.categories.map((cat) => ({
+    key: `${CAT_KEY_PREFIX}${cat.id}`,
+    label: cat.label,
+    category: "CORE",
+    nav: [
+      {
+        href: `#cat-${cat.id}`,
+        label: cat.label,
+        icon: Folder,
+        group: "main",
+        order: cat.order,
+        permission: PANEL_ITEM.permission,
+      },
+    ],
+    menu: cat.nodes.map((node) => ({
+      key: node.item.href,
+      label: node.item.label,
+      href: node.item.href,
+      icon: node.item.icon,
+      permission: node.item.permission,
+    })),
+  }));
+
   // KARAR: "settings" grubundaki tüm sayfalar ana menüde tek "Ayarlar" girişinde toplanır; girişe
   // tıklanınca panel, modül menüsü gibi ayar sayfalarının menüsüne geçer.
   const settings = buildSettingsModule(
@@ -260,9 +281,10 @@ function SidebarContent({
   );
   const modules = [
     ...(settings ? [settings.module] : []),
+    ...categoryModules,
     ...visibleModules.filter(
       (mod) =>
-        mod.nav.some((item) => item.group === "main") || hasModuleMenu(mod),
+        mod.nav.some((item) => item.group === "main") || moduleHasMenuOrChildren(mod),
     ),
   ];
   // Herhangi bir ayar sayfasındayken ana menüdeki "Ayarlar" girişi aktiftir.
@@ -275,9 +297,23 @@ function SidebarContent({
   const activeMainHref =
     activeMainKey === SETTINGS_KEY ? settings?.hub.href : activeMainKey;
 
-  const routeModule = findActiveModule(modules, pathname, searchParams);
-  const routeModuleKey =
-    routeModule && hasModuleMenu(routeModule) ? routeModule.key : null;
+  const routeModule = findActiveModule(
+    modules.filter((m) => !m.key.startsWith(CAT_KEY_PREFIX)),
+    pathname,
+    searchParams,
+  );
+  const routeNodeMeta = routeModule
+    ? navTree.allItems.find((n) => n.moduleKey === routeModule.key)
+    : undefined;
+  const routeParentKey = routeNodeMeta?.parentModule ?? null;
+  const routeCategoryKey = routeNodeMeta?.categoryId
+    ? `${CAT_KEY_PREFIX}${routeNodeMeta.categoryId}`
+    : null;
+  const routeModuleKey = routeModule
+    ? moduleHasMenuOrChildren(routeModule)
+      ? routeModule.key
+      : (routeParentKey ?? routeCategoryKey)
+    : null;
 
   // null: adrese uy; "main": ana menü; diğer: o modülün menüsü (tıklama anında, gezinme bitmeden).
   const [override, setOverride] = useState<string | null>(null);
@@ -297,43 +333,82 @@ function SidebarContent({
     return item.label;
   };
   const moduleLabel = (mod: ModuleConfig): string => {
+    if (mod.key.startsWith(CAT_KEY_PREFIX)) return mod.label;
     const home = moduleHome(mod);
     return home ? navLabel(home) : mod.label;
   };
   const moduleNavKey = new Map(
-    modules.map((mod) => [moduleHome(mod)?.href, mod]),
+    modules
+      .filter((mod) => !mod.key.startsWith(CAT_KEY_PREFIX))
+      .map((mod) => [moduleHome(mod)?.href, mod]),
   );
 
-  const moduleLinks: MenuLink[] = shownModule
-    ? moduleMenuItems(shownModule)
-        .filter((item) =>
-          allowed(item.permission ?? moduleHome(shownModule)!.permission),
+  const shownCategory = shownModule?.key.startsWith(CAT_KEY_PREFIX)
+    ? navTree.categories.find((c) => `${CAT_KEY_PREFIX}${c.id}` === shownModule.key)
+    : undefined;
+
+  const baseModuleLinks: MenuLink[] = shownCategory
+    ? shownCategory.nodes.map((node) => ({
+        key: node.item.href,
+        href: node.item.href,
+        label: navLabel(node.item),
+        icon: node.item.icon,
+      }))
+    : shownModule
+      ? (hasModuleMenu(shownModule)
+          ? moduleMenuItems(shownModule)
+          : moduleHome(shownModule)
+            ? [
+                {
+                  key: MODULE_HOME_KEY,
+                  label: "Genel bakış", // i18n-ignore
+                  href: moduleHome(shownModule)!.href,
+                  icon: moduleHome(shownModule)!.icon,
+                  permission: moduleHome(shownModule)!.permission,
+                },
+              ]
+            : []
         )
-        .filter(
-          (item) =>
-            !item.module ||
-            !activeModuleKeys ||
-            activeModuleKeys.includes(item.module),
-        )
-        .map((item) => {
-          if (
-            shownModule.key === SETTINGS_KEY &&
-            item.key !== MODULE_HOME_KEY
-          ) {
-            return {
-              ...item,
-              label: navLabel(
-                settings!.items.find((nav) => nav.href === item.href)!,
-              ),
-            };
-          }
-          const key =
-            item.key === MODULE_HOME_KEY
-              ? "sidebar.overview"
-              : `${shownModule.key}.menu.${item.key}`;
-          return { ...item, label: tRoot.has(key) ? tRoot(key) : item.label };
-        })
-    : [];
+          .filter((item) =>
+            allowed(item.permission ?? moduleHome(shownModule)!.permission),
+          )
+          .filter(
+            (item) =>
+              !item.module ||
+              !activeModuleKeys ||
+              activeModuleKeys.includes(item.module),
+          )
+          .map((item) => {
+            if (
+              shownModule.key === SETTINGS_KEY &&
+              item.key !== MODULE_HOME_KEY
+            ) {
+              return {
+                ...item,
+                label: navLabel(
+                  settings!.items.find((nav) => nav.href === item.href)!,
+                ),
+              };
+            }
+            const key =
+              item.key === MODULE_HOME_KEY
+                ? "sidebar.overview"
+                : `${shownModule.key}.menu.${item.key}`;
+            return { ...item, label: tRoot.has(key) ? tRoot(key) : item.label };
+          })
+      : [];
+
+  const childModuleLinks: MenuLink[] =
+    shownModule && !shownCategory
+      ? (navTree.childrenByParent[shownModule.key] ?? []).map((child) => ({
+          key: child.item.href,
+          href: child.item.href,
+          label: navLabel(child.item),
+          icon: child.item.icon,
+        }))
+      : [];
+
+  const moduleLinks: MenuLink[] = [...baseModuleLinks, ...childModuleLinks];
   const activeModuleLink = findActiveKey(
     moduleLinks,
     (item) => item.key,
@@ -425,7 +500,7 @@ function SidebarContent({
 
   const renderMainItem = (item: NavItem) => {
     const mod = moduleNavKey.get(item.href);
-    const drillsDown = mod ? hasModuleMenu(mod) : false;
+    const drillsDown = mod ? moduleHasMenuOrChildren(mod) : false;
     return renderLink(
       {
         key: item.href,
@@ -434,7 +509,7 @@ function SidebarContent({
         icon: item.icon,
       },
       item.href === activeMainHref,
-      // Alt menüsü olan modülde panel modül menüsüne geçer (mobil çekmece açık kalır).
+      // Alt menüsü veya alt modülü olan modülde panel modül menüsüne geçer (mobil çekmece açık kalır).
       drillsDown && mod ? () => setOverride(mod.key) : onNavigate,
     );
   };
@@ -491,103 +566,38 @@ function SidebarContent({
               );
             })()
           : null}
-        {(() => {
-          const navTree = resolveUserSidebarTree({
-            items: mainItems,
-            modules: visibleModules,
-            defaults: MODULE_NAV_DEFAULTS,
-            userConfig: navConfig,
-            defaultCategoryLabels: {
-              association: tSidebar("categories.association"),
-              finance: tSidebar("categories.finance"),
-              education: tSidebar("categories.education"),
-              communication: tSidebar("categories.communication"),
-              operations: tSidebar("categories.operations"),
-            },
-          });
-
-          const renderNodeTree = (node: ResolvedNavNode) => (
-            <div key={node.moduleKey} className="flex flex-col gap-0.5">
-              {renderMainItem(node.item)}
-              {!collapsed && node.children.length > 0 ? (
-                <div className="ml-4 flex flex-col gap-0.5 border-l border-white/15 pl-2.5">
-                  {node.children.map((child) => renderNodeTree(child))}
-                </div>
-              ) : null}
-            </div>
-          );
-
-          if (collapsed) {
-            return (
-              <div className="flex flex-col gap-1">
-                {mainItems.map(renderMainItem)}
-              </div>
+        <div className="flex flex-col gap-1">
+          {navTree.pinnedTop.map(renderMainItem)}
+          {navTree.uncategorizedNodes.map((node) => renderMainItem(node.item))}
+          {navTree.categories.map((category) => {
+            const catKey = `${CAT_KEY_PREFIX}${category.id}`;
+            const active =
+              shownModuleKey === catKey ||
+              category.nodes.some((n) => n.item.href === activeMainHref);
+            const buttonEl = (
+              <button
+                key={catKey}
+                type="button"
+                onClick={() => setOverride(catKey)}
+                className={cn(itemClass(active), "w-full cursor-pointer text-left")}
+              >
+                <Folder
+                  className={cn(
+                    "h-[18px] w-[18px] shrink-0 transition-colors",
+                    active ? "text-brand-700" : "text-white/65 group-hover:text-white",
+                  )}
+                  aria-hidden
+                />
+                <span className={collapsed ? "sr-only" : "truncate"}>{category.label}</span>
+              </button>
             );
-          }
-
-          return (
-            <>
-              <div className="flex flex-col gap-1">
-                {navTree.pinnedTop.map(renderMainItem)}
-              </div>
-              <div className="flex flex-col gap-3">
-                {navTree.categories.map((category) => {
-                  const isGroupCollapsed = Boolean(collapsedGroups[category.id]);
-                  return (
-                    <div key={category.id} className="flex flex-col gap-1">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          setCollapsedGroups((prev) => ({
-                            ...prev,
-                            [category.id]: !prev[category.id],
-                          }))
-                        }
-                        aria-expanded={!isGroupCollapsed}
-                        className="flex items-center justify-between px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white/50 hover:text-white/80"
-                      >
-                        <span className="truncate">{category.label}</span>
-                        {isGroupCollapsed ? (
-                          <ChevronRight className="h-3.5 w-3.5 shrink-0" aria-hidden />
-                        ) : (
-                          <ChevronDown className="h-3.5 w-3.5 shrink-0" aria-hidden />
-                        )}
-                      </button>
-                      {!isGroupCollapsed ? (
-                        <div className="flex flex-col gap-0.5">
-                          {category.nodes.map(renderNodeTree)}
-                        </div>
-                      ) : null}
-                    </div>
-                  );
-                })}
-              </div>
-              <NavCustomizerModal
-                open={customizerOpen}
-                onClose={() => setCustomizerOpen(false)}
-                allItems={navTree.allItems}
-                categories={navTree.categories}
-                initialConfig={navConfig}
-                labelForItem={(node) => navLabel(node.item)}
-                onSaved={(next) => setNavConfig(next)}
-              />
-            </>
-          );
-        })()}
+            return withTooltip(catKey, category.label, buttonEl);
+          })}
+        </div>
         {settings ? (
           <div className="flex flex-col gap-1 border-t border-white/15 pt-3">
             {renderMainItem(settings.hub)}
           </div>
-        ) : null}
-        {!collapsed ? (
-          <button
-            type="button"
-            onClick={() => setCustomizerOpen(true)}
-            className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-white/60 hover:bg-white/10 hover:text-white"
-          >
-            <SlidersHorizontal className="h-3.5 w-3.5 shrink-0" aria-hidden />
-            <span className="truncate">{tSidebar("customizeMenu")}</span>
-          </button>
         ) : null}
       </nav>
 
@@ -651,9 +661,15 @@ function SidebarContent({
               </span>
             </div>
             <div className="flex flex-col gap-1">
-              {moduleLinks.map((link) =>
-                renderLink(link, link.key === activeModuleLink, onNavigate),
-              )}
+              {moduleLinks.map((link) => {
+                const targetMod = shownCategory ? moduleNavKey.get(link.href) : undefined;
+                const drillsDown = targetMod ? moduleHasMenuOrChildren(targetMod) : false;
+                return renderLink(
+                  link,
+                  link.key === activeModuleLink,
+                  drillsDown && targetMod ? () => setOverride(targetMod.key) : onNavigate,
+                );
+              })}
             </div>
           </>
         ) : null}
