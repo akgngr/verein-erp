@@ -2,7 +2,7 @@ import NextAuth from "next-auth";
 import { NextResponse, type NextRequest } from "next/server";
 
 import { authConfig } from "@/modules/auth/edge";
-import { buildPortalCsp, generatePortalNonce } from "@/modules/member-portal/services/portal-csp";
+import { buildPortalCsp, generatePortalNonce } from "@/modules/member-portal";
 
 // Next.js 16: middleware dosyasının adı proxy.ts'tir (kurulu sürüme göre belirlendi).
 // Edge-uyumlu Auth.js yapılandırması kullanılır; Prisma import EDİLMEZ.
