@@ -38,7 +38,8 @@ export default function FinanceRatesHeaderWidget() {
 
   useEffect(() => {
     let mounted = true;
-    void refresh(() => mounted);
+    // Defer the first load so no state update runs synchronously inside the effect (react-hooks/set-state-in-effect).
+    void Promise.resolve().then(() => refresh(() => mounted));
     return () => { mounted = false; };
   }, [refresh]);
 
