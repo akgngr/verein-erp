@@ -13,7 +13,7 @@ Oluşturulan PDF, Excel, Word, Markdown ve CSV dosyaları; şifreli saklanır.
 |---|---|
 | Anahtar | `exports` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 2.2.3 |
+| Sürüm | 2.2.4 |
 | Sayfalar | `/dosyalar` |
 
 ## Diğer modüllere erişim
@@ -42,6 +42,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `create_file` · `export_dataset` · `propose_dataset_export`
 
 ## Sürüm notları
+
+### 2.2.4 — nav.json kategori ve alt modül tanımı
+
+_2026-11-24_
+
+- **İyileştirme:** Kullanıcı bazlı sol menü gruplama ve alt modül hiyerarşisi için nav.json eklendi.
 
 ### 2.2.3 — Üye portalı DSGVO Md. 15 şifreli dışa aktarım sözleşmesi
 
@@ -85,10 +91,4 @@ _2026-11-16_
 
 - **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
-### 2.1.7 — Dosyalarda gerçek adlar
-
-_2026-11-15_
-
-- **Düzeltme:** Dosya oluşturma: takma adlar dosyada gerçek ada çevrilir.
-
-Daha eski 12 herkese açık sürüm notu.
+Daha eski 13 herkese açık sürüm notu.

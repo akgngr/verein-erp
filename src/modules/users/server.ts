@@ -12,3 +12,8 @@ export {
   countUsersByRole,
   invalidatePermissionPolicy,
 } from "./services/roles";
+export {
+  getUserNavPreference,
+  saveUserNavPreference,
+  resetUserNavPreference,
+} from "./services/nav-preferences";

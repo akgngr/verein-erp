@@ -10,6 +10,7 @@ import { FeedbackSlot } from "@/modules/feedback/ui";
 import { listUsableModuleKeys } from "@/modules/system/server";
 import { resolveWidgetsForUser } from "@/modules/widgets/server";
 import {
+  getUserNavPreference,
   listPermissionResources,
   listRoleDirectory,
   loadPermissionPolicy,
@@ -43,11 +44,12 @@ export default async function DashboardLayout({
   }
 
   // Menüde yalnızca kullanılabilir modüller: çekirdek + etkin ve erişim izni onaylı olanlar.
-  const [activeModuleKeys, roles, policy, resources] = await Promise.all([
+  const [activeModuleKeys, roles, policy, resources, initialNavConfig] = await Promise.all([
     listUsableModuleKeys(),
     listRoleDirectory(),
     loadPermissionPolicy(),
     listPermissionResources(),
+    getUserNavPreference(user.id).catch(() => null),
   ]);
   const locale = await getLocale();
   const dateLabel = new Intl.DateTimeFormat(locale, {
@@ -77,6 +79,7 @@ export default async function DashboardLayout({
           <DesktopSidebar
             role={user.role}
             activeModuleKeys={activeModuleKeys}
+            initialNavConfig={initialNavConfig}
             userName={user.name}
             userEmail={user.email}
             onSignOut={signOutAction}
@@ -100,6 +103,7 @@ export default async function DashboardLayout({
           <MobileSidebar
             role={user.role}
             activeModuleKeys={activeModuleKeys}
+            initialNavConfig={initialNavConfig}
             userName={user.name}
             userEmail={user.email}
             onSignOut={signOutAction}

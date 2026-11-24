@@ -13,7 +13,7 @@ Kişisel sekreter: sabah özeti ve onaylı öneriler.
 |---|---|
 | Anahtar | `secretary` |
 | Tür | Eklenti |
-| Sürüm | 0.13.2 |
+| Sürüm | 0.13.3 |
 | Sayfalar | `/sekreter` |
 | Önerir | [Evrak Kayıt](./documents) |
 
@@ -39,6 +39,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Sekreter | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — | görüntüleme | — |
 
 ## Sürüm notları
+
+### 0.13.3 — nav.json kategori ve alt modül tanımı
+
+_2026-11-24_
+
+- **İyileştirme:** Kullanıcı bazlı sol menü gruplama ve alt modül hiyerarşisi için nav.json eklendi.
 
 ### 0.13.2 — TAX_ADVISOR rolü izin tanımı
 
@@ -83,10 +89,4 @@ _2026-11-20_
 
 - **Düzeltme:** Sekreterin bildirim modülüne mevcut erişimi modül sözleşmesinde açıkça bildirildi.
 
-### 0.11.4 — Takip listesi yeniden deneme
-
-_2026-11-20_
-
-- **Düzeltme:** Takip listesi yüklenemediğinde hata ekranından yeniden deneme olanağı eklendi.
-
-Daha eski 23 herkese açık sürüm notu.
+Daha eski 24 herkese açık sürüm notu.

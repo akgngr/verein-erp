@@ -179,6 +179,7 @@ export const DATA_POLICY = {
   // ── K2 ──
   SecurityRateLimit: { owner: "member-portal", category: "K2", reason: "Hız sınırı sayacı (yalnızca karma anahtar)", sensitiveFields: [], directAccess: ["shared"] },
   ExternalAccessGrant: { owner: "users", category: "K2", reason: "Harici inceleme zaman sınırı kaydı", sensitiveFields: [], directAccess: ["auth"], personalOwnerField: "userId" },
+  UserNavPreference: { owner: "users", category: "K2", reason: "Kullanıcı bazlı sol menü gruplama ve görünürlük tercihi", sensitiveFields: [], personalOwnerField: "userId" },
   AccountingAccount: { owner: "accounting", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
   AccountingAsset: { owner: "accounting", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
   AccountingBankRule: { owner: "accounting", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },

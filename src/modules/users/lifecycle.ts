@@ -7,6 +7,8 @@ import { getDb } from "@/shared/db";
 export const lifecycle: ModuleLifecycle = {
   moduleKey: "users",
   onUserDeleted: async (userId) => {
-    await getDb().externalAccessGrant.deleteMany({ where: { userId } });
+    const db = getDb();
+    await db.externalAccessGrant.deleteMany({ where: { userId } });
+    await db.userNavPreference.deleteMany({ where: { userId } });
   },
 };

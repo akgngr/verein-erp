@@ -13,7 +13,7 @@ Kişiler ve kurumlarla ilişki yönetimi: aşamalar, fırsatlar, zaman akışı 
 |---|---|
 | Anahtar | `crm` |
 | Tür | Resmî modül |
-| Sürüm | 1.0.9 |
+| Sürüm | 1.0.10 |
 | Sayfalar | `/crm` |
 | Önerir | [Üyeler](./members), [Muhasebe](./accounting) |
 
@@ -42,6 +42,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_crm_pipeline`
 
 ## Sürüm notları
+
+### 1.0.10 — nav.json kategori ve alt modül tanımı
+
+_2026-11-24_
+
+- **İyileştirme:** Kullanıcı bazlı sol menü gruplama ve alt modül hiyerarşisi için nav.json eklendi.
 
 ### 1.0.9 — TAX_ADVISOR rolü izin tanımı
 
@@ -85,10 +91,4 @@ _2026-11-15_
 
 - **Güvenlik:** Toplu istatistik araçları katı girdi, sunucu sonucu ve modele çıkacak alanların açık şemalarıyla v2 sözleşmesine taşındı; kişisel satırlar modele döndürülmez.
 
-### 1.0.1 — Seçim kutularında hydration uyarısı giderildi
-
-_2026-11-07_
-
-- **Düzeltme:** Seçim kutularında hydration uyarısı giderildi
-
-Daha eski 1 herkese açık sürüm notu.
+Daha eski 2 herkese açık sürüm notu.
