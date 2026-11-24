@@ -21,6 +21,7 @@ export const moduleConfig: ModuleConfig = {
     { module: "tasks", operations: ["write"] }, // bulgudan taslak görev (insan onayıyla)
     { module: "exports", operations: ["write"] }, // PDF/CSV dışa aktarım
   ],
+  recommends: ["accounting"],
   nav: [
     {
       href: "/compliance",

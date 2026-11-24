@@ -15,6 +15,7 @@ Kamu yararı (Gemeinnützigkeit) için iç kontrol listesi: süreler ve sınırl
 | Tür | Eklenti |
 | Sürüm | 0.2.0 |
 | Sayfalar | `/compliance` |
+| Önerir | [Muhasebe](./accounting) |
 
 ## Diğer modüllere erişim
 
