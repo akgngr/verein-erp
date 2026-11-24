@@ -8,6 +8,7 @@ export const documentsPermissions = definePermissions("documents", {
   VIEWER: ["view"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
 });
 
@@ -19,5 +20,6 @@ export const documentCategoriesPermissions = definePermissions("documentCategori
   VIEWER: ["view"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
 });

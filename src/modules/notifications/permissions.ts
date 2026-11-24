@@ -10,6 +10,7 @@ export const notificationsPermissions = definePermissions("notifications", {
   SECRETARY: ["view"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: ["view"],
   VIEWER: ["view"],
 });

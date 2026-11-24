@@ -13,7 +13,7 @@ Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı 
 |---|---|
 | Anahtar | `donations` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.10 |
+| Sürüm | 1.1.11 |
 | Sayfalar | `/bagislar`, `/bagislar/bagiscilar`, `/bagislar/bildirimler`, `/bagislar/bildirimler/olustur`, `/bagislar/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -30,9 +30,9 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| Bağış ve Makbuzlar | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme | — | görüntüleme, oluşturma, düzenleme, silme, onay | — | — | — |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| Bağış ve Makbuzlar | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme | — | görüntüleme, oluşturma, düzenleme, silme, onay | — | — | — | — |
 
 ## Asistan araçları
 
@@ -41,6 +41,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_donation_statistics`
 
 ## Sürüm notları
+
+### 1.1.11 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 1.1.9 — Kod bakımı
 
@@ -84,10 +90,4 @@ _2026-11-15_
 
 - **İyileştirme:** Bağış istatistiği aracı AI veri sınıfı "aggregate" olarak işaretlendi.
 
-### 1.1.1 — AI veri sözleşmesi ve liste güvenilirliği
-
-_2026-11-15_
-
-- **İyileştirme:** AI çıktısı açık şema veya sayfalama metadatasıyla sınırlandırılır; kişi alanları eklenmez.
-
-Daha eski 2 herkese açık sürüm notu.
+Daha eski 3 herkese açık sürüm notu.

@@ -6,6 +6,7 @@ export const youthProtectionPermissions = definePermissions("youth-protection", 
   SECRETARY: ["view", "create", "update"],
   TREASURER: [],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: [],
 });

@@ -13,7 +13,7 @@ Kişiler ve kurumlarla ilişki yönetimi: aşamalar, fırsatlar, zaman akışı 
 |---|---|
 | Anahtar | `crm` |
 | Tür | Resmî modül |
-| Sürüm | 1.0.8 |
+| Sürüm | 1.0.9 |
 | Sayfalar | `/crm` |
 | Önerir | [Üyeler](./members), [Muhasebe](./accounting) |
 
@@ -31,9 +31,9 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| CRM | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme, silme | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | — | görüntüleme |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| CRM | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme, silme | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | — | — | görüntüleme |
 
 ## Asistan araçları
 
@@ -42,6 +42,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_crm_pipeline`
 
 ## Sürüm notları
+
+### 1.0.9 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 1.0.8 — Arayüz altyapısı
 
@@ -85,8 +91,4 @@ _2026-11-07_
 
 - **Düzeltme:** Seçim kutularında hydration uyarısı giderildi
 
-### 1.0.0 — İlk sürüm
-
-_2026-11-07_
-
-- **Yeni:** Üyeler ve cari hesaplar üzerinde ilişki yönetimi: aşamalar, etiketler, fırsat panosu, zaman akışı, takipler (takvimde), iş akışı olayı ve AI için toplu fırsat sayıları.
+Daha eski 1 herkese açık sürüm notu.

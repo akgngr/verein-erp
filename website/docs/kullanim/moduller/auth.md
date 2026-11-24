@@ -13,9 +13,15 @@ Kullanıcı girişi, oturum yönetimi ve parola güvenliği.
 |---|---|
 | Anahtar | `auth` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.0.7 |
+| Sürüm | 1.1.0 |
 
 ## Sürüm notları
+
+### 1.1.0 — Zaman sınırlı harici erişim doğrulaması
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR rolü için oturum, modül kapsamı ve süre sonu denetimi sunucu tarafında zorunlu hale getirildi ve her görünüm denetim kaydına yazıldı.
 
 ### 1.0.6 — Ortak UI bileşenleri (iç değişiklik)
 

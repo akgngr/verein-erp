@@ -13,7 +13,7 @@ Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuy
 |---|---|
 | Anahtar | `ai` |
 | Tür | Eklenti |
-| Sürüm | 1.15.9 |
+| Sürüm | 1.15.10 |
 | Sayfalar | `/ayarlar/yapay-zeka` |
 
 ## Diğer modüllere erişim
@@ -35,11 +35,17 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| Yapay zekâ asistanı | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | — | — | — |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| Yapay zekâ asistanı | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.15.10 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 1.15.8 — Asistan araçları yalnız v2 sözleşmesiyle
 
@@ -83,10 +89,4 @@ _2026-11-17_
 
 - **İyileştirme:** Eylem butonları ve kullanıcı bildirimleri ortak ActionButton/notify adapter katmanına taşındı; bu kullanımda doğrudan HeroUI bağımlılığı kaldırıldı.
 
-### 1.15.0 — AI durum analizi kartı
-
-_2026-11-17_
-
-- **Yeni:** Muhasebe genel bakışının sağ üst köşesinde AI durum analizi: yalnız izinli toplam muhasebe araçlarıyla son durumu, riskleri ve önerilen adımları özetler. Sonuç oturum boyunca saklanır, "Yenile" ile yeniden üretilir; hiçbir işlem yapmaz.
-
-Daha eski 29 herkese açık sürüm notu.
+Daha eski 30 herkese açık sürüm notu.

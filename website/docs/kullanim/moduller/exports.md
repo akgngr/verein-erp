@@ -13,7 +13,7 @@ Oluşturulan PDF, Excel, Word, Markdown ve CSV dosyaları; şifreli saklanır.
 |---|---|
 | Anahtar | `exports` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 2.2.1 |
+| Sürüm | 2.2.2 |
 | Sayfalar | `/dosyalar` |
 
 ## Diğer modüllere erişim
@@ -31,9 +31,9 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| Dosyalarım | görüntüleme, oluşturma, silme | görüntüleme, oluşturma, silme | görüntüleme, oluşturma, silme | görüntüleme, oluşturma, silme | görüntüleme, oluşturma, silme | görüntüleme, oluşturma, silme | görüntüleme, oluşturma, silme |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| Dosyalarım | görüntüleme, oluşturma, silme | görüntüleme, oluşturma, silme | görüntüleme, oluşturma, silme | görüntüleme, oluşturma, silme | görüntüleme, oluşturma, silme | — | görüntüleme, oluşturma, silme | görüntüleme, oluşturma, silme |
 
 ## Asistan araçları
 
@@ -42,6 +42,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `create_file` · `export_dataset` · `propose_dataset_export`
 
 ## Sürüm notları
+
+### 2.2.2 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 2.2.1 — Çalışma zamanı modernizasyonu
 
@@ -85,10 +91,4 @@ _2026-11-15_
 
 - **Güvenlik:** Asistan araçları v2 veri sözleşmesine taşındı: modele giden her alan açıkça listelenir ve veri sınıfı bildirilir. Toplam ve kurumsal veriler denetimli bulut modunda da kullanılabilir; serbest kişisel içerik yalnız yerel modelde kalır.
 
-### 2.1.5 — Sınırlı ve şifreli dosya akışı
-
-_2026-11-15_
-
-- **İyileştirme:** Aidat veri kümesi 500 kayıtlık keyset sayfaları ve ödeme toplamlarıyla okunur; CSV/XLSX doğrudan şifreli akışa yazılır. İptal, süre ve boyut sınırları yayından önce doğrulanır.
-
-Daha eski 10 herkese açık sürüm notu.
+Daha eski 11 herkese açık sürüm notu.

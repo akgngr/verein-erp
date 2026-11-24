@@ -7,6 +7,7 @@ export const campaignTelegramPermissions = definePermissions("campaign-telegram"
   SECRETARY: ["view"],
   TREASURER: [],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: [],
 });

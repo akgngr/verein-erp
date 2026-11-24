@@ -13,7 +13,7 @@ Gelen ve giden resmi evrakların numaralandırılması, takibi ve arşivlenmesi.
 |---|---|
 | Anahtar | `documents` |
 | Tür | Resmî modül |
-| Sürüm | 1.10.0 |
+| Sürüm | 1.10.1 |
 | Sayfalar | `/evrak`, `/evrak/kategoriler` |
 | Önerir | [Muhasebe](./accounting), [Görevler](./tasks), [Yapay zekâ asistanı](./ai) |
 
@@ -32,10 +32,10 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Salt okunur | Sayman | Denetçi | Öğretmen |
-|---|---|---|---|---|---|---|---|
-| Evrak Kategorileri | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — |
-| Gelen / Giden Evraklar | görüntüleme, oluşturma, düzenleme, silme | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | görüntüleme | — |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Salt okunur | Sayman | Denetçi | TAX_ADVISOR | Öğretmen |
+|---|---|---|---|---|---|---|---|---|
+| Evrak Kategorileri | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — | — |
+| Gelen / Giden Evraklar | görüntüleme, oluşturma, düzenleme, silme | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | görüntüleme | — | — |
 
 ## Asistan araçları
 
@@ -44,6 +44,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_document` · `get_document_statistics` · `list_documents` · `propose_delete_document` · `propose_document` · `propose_document_status` · `read_document_file`
 
 ## Sürüm notları
+
+### 1.10.1 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 1.10.0 — OCR önerilerinde kaynak ve güven
 
@@ -87,10 +93,4 @@ _2026-11-17_
 
 - **Yeni:** Evrak listesinde çoklu seçim, filtre sonucunun tamamını seçme ve Açık/İşlemde/Tamamlandı/Arşivlendi durumlarına toplu geçiş eklendi.
 
-### 1.7.1 — Daha iyi OCR: küçük resimler ve WebP
-
-_2026-11-16_
-
-- **İyileştirme:** Resimler OCR'dan önce büyütülüp PNG'ye çevrilir: küçük ekran görüntüleri ve WebP dosyaları artık okunur.
-
-Daha eski 16 herkese açık sürüm notu.
+Daha eski 17 herkese açık sürüm notu.

@@ -7,6 +7,7 @@ export const studentsPermissions = definePermissions("students", {
   SECRETARY: ["view", "create", "update"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: [],
 });
@@ -18,6 +19,7 @@ export const studentsDatevPermissions = definePermissions("studentsDatev", {
   SECRETARY: [],
   TREASURER: ["view", "update"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: [],
 });

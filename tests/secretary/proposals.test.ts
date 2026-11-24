@@ -22,7 +22,7 @@ import type { Role } from "@/shared/roles";
 import { defineModuleSecretary, defineSecretaryAction, type ModuleSecretary, validateModuleSecretary } from "@/shared/secretary/define";
 
 const invoicePermissions = definePermissions("invoicesTest", {
-  ADMIN: ["view", "update"], BOARD: ["view"], SECRETARY: [], TREASURER: ["view", "update"], AUDITOR: ["view"], TEACHER: [], VIEWER: [],
+  ADMIN: ["view", "update"], BOARD: ["view"], SECRETARY: [], TREASURER: ["view", "update"], AUDITOR: ["view"], TAX_ADVISOR: [], TEACHER: [], VIEWER: [],
 });
 
 function memoryStore() {

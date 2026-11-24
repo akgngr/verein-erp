@@ -7,7 +7,7 @@ import type { ModuleConfig } from "@/shared/types/module";
 export const moduleConfig: ModuleConfig = {
   key: "sepa",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.2.0",
+  version: "1.2.1",
   label: "SEPA otomatik ödeme",
   description:
     "Aidat ve kurs ücretleri için SEPA-Lastschrift (pain.008) tahsilatı.",

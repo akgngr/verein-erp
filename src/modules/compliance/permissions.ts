@@ -10,6 +10,7 @@ export const compliancePermissions = definePermissions("compliance", {
   SECRETARY: [],
   TREASURER: ["view", "create"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: ["view"],
   TEACHER: [],
   VIEWER: [],
 });

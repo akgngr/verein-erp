@@ -3,6 +3,7 @@ import "server-only";
 
 import type { ModuleLifecycle } from "@/shared/modules/lifecycle";
 
+import { lifecycle as usersLifecycle } from "@/modules/users/lifecycle";
 import { lifecycle as systemLifecycle } from "@/modules/system/lifecycle";
 import { lifecycle as authLifecycle } from "@/modules/auth/lifecycle";
 import { lifecycle as aiLifecycle } from "@/modules/ai/lifecycle";
@@ -18,6 +19,7 @@ import { lifecycle as youthprotectionLifecycle } from "@/modules/youth-protectio
 
 /** Modül yaşam döngüsü kancaları (src/modules/<modül>/lifecycle.ts), ör. kapatılırken temizlik. */
 export const moduleLifecycleRegistry: ModuleLifecycle[] = [
+  usersLifecycle,
   systemLifecycle,
   authLifecycle,
   aiLifecycle,

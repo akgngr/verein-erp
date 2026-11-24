@@ -13,7 +13,7 @@ e-Sign: kişiye süreli bağlantı, form tamamlama, Datenschutz onayı, imza ve 
 |---|---|
 | Anahtar | `online-forms` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.0 |
+| Sürüm | 1.3.1 |
 | Sayfalar | `/online-formlar` |
 | Gerektirir | [Toplu e-posta](./mailings) |
 | Önerir | [Üyeler](./members), [Öğrenciler](./students) |
@@ -35,11 +35,17 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| e-Sign | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | — | görüntüleme | — | — |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| e-Sign | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | — | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.3.1 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 1.2.7 — Kod bakımı
 
@@ -85,10 +91,4 @@ _2026-11-07_
 - **Yeni:** Belgeler tam ekran modalda Tiptap tabanlı Word benzeri editörle düzenlenir (başlıklar, listeler, hizalama, tablo, bağlantı). HTML sunucuda temizlenir.
 - **İyileştirme:** İmzalı PDF ve kanıt kaydı her belgenin metnini ve onay durumunu içerir. Eski metinler belgelere taşındı.
 
-### 1.1.1 — Worker PDF düzeltmesi
-
-_2026-11-07_
-
-- **Düzeltme:** Gemeinnützigkeit tarihi girilmiş kurumlarda imzalı PDF worker'da üretilemiyordu (tarih alanı metin olarak geliyordu). Hata kaydı artık asıl hata mesajını gösteriyor.
-
-Daha eski 2 herkese açık sürüm notu.
+Daha eski 3 herkese açık sürüm notu.

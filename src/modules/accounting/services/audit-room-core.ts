@@ -1,4 +1,5 @@
 import { can } from "@/shared/permissions/define";
+import { isTimeBoxActive } from "@/shared/security/external-grant";
 
 import { accountingPermissions } from "../permissions";
 
@@ -28,9 +29,7 @@ export type AuditActor = {
 
 /** Returns true only while the audit room is neither revoked nor outside [startsAt, expiresAt). */
 export function isAuditRoomActive(room: Pick<AuditRoomWindow, "startsAt" | "expiresAt" | "revokedAt">, now = new Date()): boolean {
-  if (room.revokedAt !== null) return false;
-  const nowMs = now.getTime();
-  return room.startsAt.getTime() <= nowMs && room.expiresAt.getTime() > nowMs;
+  return isTimeBoxActive(room, now);
 }
 
 /** Only roles with accounting:approve (ADMIN / TREASURER) may create or revoke audit rooms. */

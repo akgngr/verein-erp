@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.27.2",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "TAX_ADVISOR rolü izin tanımı",
+        "de": "Berechtigungsdefinition für Rolle TAX_ADVISOR"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "TAX_ADVISOR rolü için salt okunur görüntüleme izni tanımlandı.",
+          "de": "Schreibgeschützte Lese-Berechtigung für die Rolle TAX_ADVISOR ergänzt."
+        }
+      ]
+    },
+    {
       "version": "1.27.1",
       "date": "2026-11-23",
       "title": {

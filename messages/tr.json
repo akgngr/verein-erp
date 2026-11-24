@@ -285,7 +285,8 @@
     "SECRETARY": "Sekreter",
     "VIEWER": "Salt okunur",
     "TREASURER": "Sayman",
-    "AUDITOR": "Denetçi"
+    "AUDITOR": "Denetçi",
+    "TAX_ADVISOR": "Vergi danışmanı"
   },
   "validation": {
     "passwordMin": "Parola en az 10 karakter olmalıdır.",
@@ -9928,7 +9929,9 @@
       "selfDemote": "Kendi rolünüzü düşüremezsiniz.",
       "selfDelete": "Kendinizi silemezsiniz.",
       "roleUnavailable": "Bu rol atanamaz: rol yok ya da modülü etkin değil.",
-      "adminOnly": "Yönetici rolünü yalnızca bir yönetici atayabilir veya değiştirebilir."
+      "adminOnly": "Yönetici rolünü yalnızca bir yönetici atayabilir veya değiştirebilir.",
+      "grantExceedsMaxDuration": "Erişim süresi en fazla 90 gün olabilir.",
+      "grantEndBeforeStart": "Bitiş tarihi başlangıç tarihinden sonra olmalıdır."
     },
     "validation": {
       "nameRequired": "Ad soyad zorunludur.",
@@ -9988,6 +9991,11 @@
           "label": "Denetçi (Kassenprüfer)",
           "shortDesc": "Mali ve idari kayıtlara salt okunur denetim erişimi.",
           "legalContext": "Yıllık mali denetim yapar; bağışçı kişisel verilerine erişemez."
+        },
+        "TAX_ADVISOR": {
+          "label": "Vergi danışmanı (Steuerberater/in)",
+          "shortDesc": "Muhasebe ve finans raporlarına zaman sınırlı, salt okunur erişim.",
+          "legalContext": "Yalnızca yöneticinin belirlediği tarih aralığında mali raporları inceler."
         },
         "VIEWER": {
           "label": "Salt Okunur (Leser)",
@@ -10133,6 +10141,26 @@
         "unknownResource": "İzin kaynağı bulunamadı veya modülü etkin değil.",
         "notCustom": "Yalnızca özel roller düzenlenip silinebilir.",
         "inUse": "Bu rolü taşıyan kullanıcılar var; önce kullanıcılara başka rol atayın."
+      }
+    },
+    "grants": {
+      "title": "Zaman Sınırlı Harici Erişim",
+      "subtitle": "Vergi danışmanı için varsayılan 14 gün, en fazla 90 gün geçerli salt okunur erişim penceresi.",
+      "startsAt": "Başlangıç",
+      "expiresAt": "Bitiş",
+      "moduleScope": "Modül kapsamı",
+      "scopeAll": "İzin verilen tümü (Muhasebe + Finans)",
+      "scopeAccounting": "Yalnızca Muhasebe",
+      "scopeFinance": "Yalnızca Finans",
+      "note": "Not",
+      "notePlaceholder": "Örn. 2026 yıl sonu incelemesi",
+      "createButton": "Erişim penceresi oluştur",
+      "revokeButton": "İptal et",
+      "empty": "Henüz tanımlı erişim penceresi yok.",
+      "statuses": {
+        "active": "Aktif",
+        "expired": "Süresi doldu",
+        "revoked": "İptal edildi"
       }
     }
   },
