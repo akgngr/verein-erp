@@ -5545,7 +5545,12 @@
       "savedSuccess": "Einstellungen erfolgreich gespeichert!"
     },
     "widget": {
-      "rates": "Wechselkurse"
+      "rates": "Wechselkurse",
+      "title": "Wechselkurse",
+      "unavailable": "Kurse nicht verfügbar",
+      "refresh": "Aktualisieren",
+      "more": "Finanzen öffnen",
+      "base": "1 EUR"
     }
   },
   "grants": {
@@ -10429,7 +10434,14 @@
       "outdoorWarning": "Berücksichtigen Sie die Wetterbedingungen für Aktivitäten im Freien oder Termine."
     },
     "widget": {
-      "current": "Wetter"
+      "current": "Wetter",
+      "title": "Wetter",
+      "unavailable": "Wetter nicht verfügbar",
+      "feels": "Gefühlt",
+      "wind": "Wind",
+      "humidity": "Feuchte",
+      "refresh": "Aktualisieren",
+      "more": "Wetter öffnen"
     }
   },
   "widgets": {
