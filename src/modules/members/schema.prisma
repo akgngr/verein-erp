@@ -135,9 +135,10 @@ model Member {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  memberNotes MemberNote[]
-  payments    MemberPayment[]
-  dues        MemberDue[]
+  memberNotes         MemberNote[]
+  payments            MemberPayment[]
+  dues                MemberDue[]
+  correctionProposals MemberCorrectionProposal[]
 
   @@unique([year, sequence])
   @@index([status])
@@ -235,4 +236,25 @@ model MemberNote {
   createdAt   DateTime @default(now())
 
   @@index([memberId, createdAt])
+}
+
+model MemberCorrectionProposal {
+  id              String    @id @default(cuid())
+  memberId        String
+  member          Member    @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  field           String
+  previousValue   String?
+  proposedValue   String
+  status          String    @default("PENDING") // "PENDING" | "APPROVED" | "REJECTED"
+  requestedByRef  String
+  reviewedById    String?
+  reviewedByLabel String?
+  reviewNote      String?
+  reviewedAt      DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  @@index([memberId, status])
+  @@index([status, createdAt])
+  @@map("member_correction_proposals")
 }

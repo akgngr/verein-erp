@@ -13,7 +13,7 @@ Görev ve iş takibi yönetimi.
 |---|---|
 | Anahtar | `tasks` |
 | Tür | Eklenti |
-| Sürüm | 1.3.12 |
+| Sürüm | 1.3.13 |
 | Sayfalar | `/tasks`, `/tasks/bana-atananlar` |
 
 ## Diğer modüllere erişim
@@ -42,6 +42,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `list_open_tasks` · `propose_complete_task` · `propose_delete_task` · `propose_task`
 
 ## Sürüm notları
+
+### 1.3.13 — nav.json kategori ve alt modül tanımı
+
+_2026-11-24_
+
+- **İyileştirme:** Kullanıcı bazlı sol menü gruplama ve alt modül hiyerarşisi için nav.json eklendi.
 
 ### 1.3.12 — TAX_ADVISOR rolü izin tanımı
 
@@ -85,10 +91,4 @@ _2026-11-17_
 
 - **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
 
-### 1.3.4 — Asistan önerileri bulutta
-
-_2026-11-16_
-
-- **İyileştirme:** Asistanın öneri araçları (onay kartlı) bulut sağlayıcıda denetimli modda da kullanılabilir.
-
-Daha eski 10 herkese açık sürüm notu.
+Daha eski 11 herkese açık sürüm notu.

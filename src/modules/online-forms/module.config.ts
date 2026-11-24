@@ -12,7 +12,7 @@ import { onlineFormsPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "online-forms",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.3.1",
+  version: "1.3.3",
   dependencies: {
     "@tiptap/extension-highlight": "^3.33.0",
     "@tiptap/extension-table": "^3.33.0",

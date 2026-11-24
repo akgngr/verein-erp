@@ -1,0 +1,145 @@
+{
+  "module": {
+    "label": "Mitgliederportal",
+    "description": "Self-Service-Portal für Mitglieder mit passwortlosem Magic Link und Passkey."
+  },
+  "permissions": {
+    "member-portal": {
+      "label": "Mitgliederportal-Verwaltung",
+      "description": "Status und Einstellungen des Mitgliederportals einsehen und verwalten."
+    }
+  },
+  "access": {
+    "members": "Wird verwendet, um eigene Stammdaten anzuzeigen, Korrekturvorschläge einzureichen und Einwilligungen zu verwalten.",
+    "students": "Wird verwendet, um verknüpfte Schülerdaten für Erziehungsberechtigte anzuzeigen.",
+    "mail": "Wird verwendet, um einmalige Anmelde- und Double-Opt-In-Links per E-Mail zu senden.",
+    "donations": "Wird verwendet, um eigene Zuwendungsbestätigungen als PDF herunterzuladen.",
+    "exports": "Wird verwendet, um verschlüsselte DSGVO-Art.-15-Exporte zu erstellen und bereitzustellen.",
+    "audit": "Wird verwendet, um das eigene Verarbeitungsprotokoll ohne Personennamen anzuzeigen.",
+    "events": "Wird verwendet, um sich mit Business+-Lizenz für Veranstaltungen anzumelden.",
+    "online-forms": "Wird verwendet, um mit Business+-Lizenz ausstehende Dokumente zu unterzeichnen.",
+    "system": "Wird verwendet, um den Business+-Lizenzstatus zu prüfen."
+  },
+  "login": {
+    "title": "Anmeldung zum Mitgliederportal",
+    "subtitle": "Kein Passwort erforderlich. Wir senden einen einmaligen Anmeldelink an Ihre hinterlegte E-Mail-Adresse.",
+    "emailLabel": "E-Mail-Adresse",
+    "emailPlaceholder": "name@verein.de",
+    "submitButton": "Anmeldelink senden",
+    "sentNotice": "Falls die E-Mail-Adresse bei uns hinterlegt ist, wurde ein Anmeldelink gesendet."
+  },
+  "confirm": {
+    "title": "Anmeldung bestätigen",
+    "subtitle": "Klicken Sie auf die Schaltfläche unten, um Ihre Sitzung zu starten.",
+    "submitButton": "Im Mitgliederportal anmelden",
+    "missingToken": "Ungültiger oder fehlender Anmeldelink."
+  },
+  "shell": {
+    "welcome": "Willkommen, {name}",
+    "memberNumber": "Mitgliedsnummer",
+    "stepUpActive": "Step-up aktiv (5 Min.)",
+    "stepUpRequired": "Für geschützte Aktionen Step-up erforderlich",
+    "signOutEverywhere": "Überall abmelden",
+    "masterDataTitle": "Meine Stammdaten (Nur Lesen)",
+    "masterDataSubtitle": "Ihre Daten sind ausschließlich für Sie sichtbar.",
+    "securityTitle": "Sicherheit und Passkeys",
+    "passkeyCount": "Registrierte Passkeys: {count}",
+    "fields": {
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "address": "Adresse",
+      "iban": "IBAN (Maskiert)",
+      "street": "Straße",
+      "houseNumber": "Hausnummer",
+      "postalCode": "Postleitzahl",
+      "city": "Ort"
+    }
+  },
+  "corrections": {
+    "title": "Korrekturvorschlag",
+    "subtitle": "Vorschläge werden nicht direkt gespeichert, sondern gehen in die Freigabewarteschlange des Vorstands.",
+    "fieldLabel": "Feld",
+    "valueLabel": "Neuer Wert",
+    "submitButton": "Zur Prüfung einreichen",
+    "submittedNotice": "Ihr Korrekturvorschlag wurde an den Vorstand übermittelt.",
+    "errorNotice": "Vorschlag konnte nicht übermittelt werden. Bitte prüfen Sie Ihre Eingabe.",
+    "empty": "Noch keine Korrekturvorschläge.",
+    "statuses": {
+      "PENDING": "Ausstehend",
+      "APPROVED": "Genehmigt",
+      "REJECTED": "Abgelehnt"
+    }
+  },
+  "consents": {
+    "title": "Einwilligungen und Kanäle",
+    "subtitle": "Ein Widerruf wirkt sofort; neue Kanäle erfordern ein Double-Opt-In.",
+    "version": "Textversion: {version}",
+    "active": "Aktiv",
+    "inactive": "Inaktiv",
+    "revokeButton": "Sofort widerrufen",
+    "optInButton": "Per Double-Opt-In aktivieren",
+    "optInSentNotice": "Bestätigungslink wurde an Ihre E-Mail-Adresse gesendet.",
+    "revokedNotice": "Einwilligung wurde sofort widerrufen.",
+    "targets": {
+      "bulkMail": "Rundschreiben per E-Mail",
+      "photo": "Foto- und Videofreigabe",
+      "sms": "SMS-Benachrichtigungen",
+      "whatsapp": "WhatsApp-Benachrichtigungen",
+      "telegram": "Telegram-Benachrichtigungen"
+    }
+  },
+  "receipts": {
+    "title": "Belege und Zuwendungsbestätigungen",
+    "subtitle": "Für den PDF-Download sind Step-up und eine signierte Kurzzeit-Referenz erforderlich.",
+    "stepUpHint": "Bitte führen Sie zuerst ein Step-up mit Ihrem Passkey durch, um Belege herunterzuladen.",
+    "downloadButton": "PDF herunterladen",
+    "empty": "Keine Belege vorhanden.",
+    "kinds": {
+      "dues": "Beitragsquittung",
+      "donation": "Zuwendungsbestätigung"
+    }
+  },
+  "art15": {
+    "title": "DSGVO Art. 15 Datenauskunft",
+    "subtitle": "Fordern Sie eine verschlüsselte Kopie Ihrer Daten an (7 Tage gültig, max. 1 offener Antrag).",
+    "stepUpHint": "Bitte führen Sie zuerst ein Step-up mit Ihrem Passkey durch, um einen Art.-15-Export anzufordern.",
+    "requestButton": "Verschlüsselten Export anfordern",
+    "createdNotice": "Ihr verschlüsselter Art.-15-Export steht bereit (7 Tage gültig).",
+    "errorNotice": "Es liegt bereits ein offener Antrag vor oder ein Step-up ist erforderlich.",
+    "empty": "Noch keine Art.-15-Anfragen.",
+    "bundleTitle": "DSGVO Art. 15 Paket (AES-256-GCM)",
+    "downloadButton": "Verschlüsselte Datei herunterladen"
+  },
+  "processingLog": {
+    "title": "Verarbeitungsprotokoll",
+    "subtitle": "Ausschließlich eigene Einträge; ohne Namen anderer Personen.",
+    "empty": "Noch keine Einträge.",
+    "roles": {
+      "PORTAL": "Mitgliederportal",
+      "BOARD": "Vorstand",
+      "SYSTEM": "System"
+    },
+    "categories": {
+      "masterData": "Stammdaten",
+      "receipts": "Belege",
+      "events": "Veranstaltungen",
+      "signing": "Signatur",
+      "art15": "Art.-15-Export",
+      "portal": "Portal"
+    }
+  },
+  "events": {
+    "title": "Veranstaltungen (Business+)",
+    "subtitle": "Melden Sie sich direkt für veröffentlichte Vereinsveranstaltungen an.",
+    "empty": "Keine bevorstehenden Veranstaltungen.",
+    "registered": "Angemeldet",
+    "registerButton": "Anmelden"
+  },
+  "signing": {
+    "title": "Ausstehende Dokumente (Business+)",
+    "subtitle": "Unterzeichnen Sie offene Online-Formulare direkt im Portal.",
+    "empty": "Keine offenen Dokumente zur Signatur.",
+    "signerNameLabel": "Name des Unterzeichners",
+    "signButton": "Dokument unterzeichnen"
+  }
+}

@@ -48,3 +48,4 @@ export {
   type PrivacyPresetPreview,
   type ApplyPrivacyPresetResult,
 } from "./services/privacy-presets";
+export { hasLicensedFeature } from "./services/license-store";

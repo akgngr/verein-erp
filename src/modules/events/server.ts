@@ -12,3 +12,8 @@ export {
   deleteAttendeeAction,
 } from "./actions/event-actions"
 export { buildEventsWorkbook } from "./services/event-export-service"
+export {
+  listPublishedEventsForPortal,
+  registerMemberForEventForPortal,
+  type PortalEventRow,
+} from "./services/portal-events"

@@ -13,8 +13,9 @@ Kamu yararı (Gemeinnützigkeit) için iç kontrol listesi: süreler ve sınırl
 |---|---|
 | Anahtar | `compliance` |
 | Tür | Eklenti |
-| Sürüm | 0.1.1 |
+| Sürüm | 0.2.1 |
 | Sayfalar | `/compliance` |
+| Önerir | [Muhasebe](./accounting) |
 
 ## Diğer modüllere erişim
 
@@ -24,6 +25,7 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 |---|---|---|
 | [Modül Yönetimi](./system) | okuma | Kural kaynağı olan modül açık mı, kontrol edilir. |
 | [Görevler](./tasks) | yazma | Bir bulgudan, kullanıcı onayıyla görev taslağı oluşturulur. |
+| [Dosyalarım](./exports) | yazma | Uyum raporu PDF/CSV olarak Dosyalarım alanına aktarılır. |
 
 ## Varsayılan yetkiler
 
@@ -34,6 +36,18 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Uyum kontrolü | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma | — | görüntüleme, oluşturma | görüntüleme | görüntüleme | — | — |
 
 ## Sürüm notları
+
+### 0.2.1 — nav.json kategori ve alt modül tanımı
+
+_2026-11-24_
+
+- **İyileştirme:** Kullanıcı bazlı sol menü gruplama ve alt modül hiyerarşisi için nav.json eklendi.
+
+### 0.2.0 — Uyum kokpiti arayüzü ve PDF/CSV dışa aktarım
+
+_2026-11-23_
+
+- **Yeni:** Yıl seçici, klavye erişimli trafik ışığı kartları, yasal kaynak bağlantıları, yönetici önizleme anahtarı (?preview=1) ve Dosyalarım üzerinden PDF/CSV dışa aktarım eklendi.
 
 ### 0.1.1 — TAX_ADVISOR rolü izin tanımı
 

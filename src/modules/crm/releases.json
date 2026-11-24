@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.0.10",
+      "date": "2026-11-24",
+      "title": {
+        "tr": "nav.json kategori ve alt modül tanımı",
+        "de": "nav.json Kategorie- und Untermodul-Definition"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Kullanıcı bazlı sol menü gruplama ve alt modül hiyerarşisi için nav.json eklendi.",
+          "de": "nav.json für benutzerspezifische Seitenleisten-Gruppierung und Untermodul-Hierarchie ergänzt."
+        }
+      ]
+    },
+    {
       "version": "1.0.9",
       "date": "2026-11-23",
       "title": {

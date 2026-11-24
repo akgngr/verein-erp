@@ -8,3 +8,8 @@ export { deleteGeneratedFileAction } from "./actions/files";
 
 // Central async file request API. Source modules authorize their actor before prepare.
 export {prepareGenerationRequest,requestGeneration,getGenerationState} from "./services/generation";
+export {
+  createEncryptedArt15ExportForPortal,
+  readEncryptedArt15ExportForPortal,
+  encryptArt15Payload,
+} from "./services/portal-art15";

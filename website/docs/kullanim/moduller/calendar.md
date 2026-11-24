@@ -13,7 +13,7 @@ Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve son tarihler tek gö
 |---|---|
 | Anahtar | `calendar` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.14 |
+| Sürüm | 1.3.15 |
 | Sayfalar | `/calendar`, `/calendar/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -41,6 +41,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `list_shared_calendar_entries` · `list_shared_calendars` · `propose_calendar_entry`
 
 ## Sürüm notları
+
+### 1.3.15 — nav.json kategori ve alt modül tanımı
+
+_2026-11-24_
+
+- **İyileştirme:** Kullanıcı bazlı sol menü gruplama ve alt modül hiyerarşisi için nav.json eklendi.
 
 ### 1.3.14 — TAX_ADVISOR rolü izin tanımı
 
@@ -84,10 +90,4 @@ _2026-11-16_
 
 - **İyileştirme:** Form/ayrıntı çekmecesi mobilde alttan açılır (masaüstünde sağdan).
 
-### 1.3.6 — Asistan önerileri bulutta
-
-_2026-11-16_
-
-- **İyileştirme:** Asistanın öneri araçları (onay kartlı) bulut sağlayıcıda denetimli modda da kullanılabilir.
-
-Daha eski 12 herkese açık sürüm notu.
+Daha eski 13 herkese açık sürüm notu.

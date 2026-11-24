@@ -55,3 +55,12 @@ model ExternalAccessGrant {
   @@map("external_access_grants")
 }
 
+/// Kullanıcı bazlı sol menü özelleştirmesi (kategori grupları, alt modül eşlemesi, gizleme, sıralama).
+model UserNavPreference {
+  userId    String   @id
+  config    Json
+  updatedAt DateTime @updatedAt
+
+  @@map("user_nav_preferences")
+}
+

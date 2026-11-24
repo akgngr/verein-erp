@@ -4,6 +4,13 @@ import type { PermissionAction, PermissionDefinition } from "../permissions/defi
 
 export type ModuleCategory = "CORE" | "OFFICIAL" | "EXTENSION";
 
+export type NavCategoryId =
+  | "association"
+  | "finance"
+  | "education"
+  | "communication"
+  | "operations";
+
 export type NavItem = {
   href: string;
   label: string;
@@ -13,6 +20,10 @@ export type NavItem = {
   group: "main" | "settings";
   order: number;
   permission: PermissionRequirement;
+  /** Varsayılan kategori grubu (nav.json üzerinden de bildirilebilir). */
+  categoryGroup?: NavCategoryId;
+  /** Başka bir modülün altında alt modül olarak gruplanacaksa üst modül anahtarı. */
+  parentModule?: string;
   /**
    * true: sol panelde (ana menü/Ayarlar) gösterilmez; sayfa ve yetki tanımı geçerli kalır.
    * Başka bir modülün menüsünden bağlanan alt modüller için (örn. Öğrenciler → Kurslar menüsü).

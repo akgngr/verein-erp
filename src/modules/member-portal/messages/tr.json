@@ -1,0 +1,145 @@
+{
+  "module": {
+    "label": "Üye Portalı",
+    "description": "Parolasız sihirli bağlantı ve geçiş anahtarı ile üye self-servis portalı."
+  },
+  "permissions": {
+    "member-portal": {
+      "label": "Üye Portalı Yönetimi",
+      "description": "Üye portalı ayarlarını ve durumunu görüntüleme/yönetme."
+    }
+  },
+  "access": {
+    "members": "Üyenin kendi ana verilerini salt okunur göstermek, düzeltme talebi kuyruğu ve rıza yönetimi için kullanılır.",
+    "students": "Veli bağlantılı öğrenci bilgilerini göstermek için kullanılır.",
+    "mail": "Tek kullanımlık sihirli giriş bağlantısı ve çift onaylı rıza bağlantısı göndermek için kullanılır.",
+    "donations": "Üyenin kendi bağış makbuzlarını (Zuwendungsbestätigung) PDF olarak indirmesi için kullanılır.",
+    "exports": "DSGVO Md. 15 şifreli veri dışa aktarımı oluşturmak ve indirmek için kullanılır.",
+    "audit": "Üyenin kendi verilerine ait işleme günlüğünü kişi adı olmadan göstermek için kullanılır.",
+    "events": "Business+ lisansıyla etkinliklere kayıt olmak için kullanılır.",
+    "online-forms": "Business+ lisansıyla bekleyen belgeleri imzalamak için kullanılır.",
+    "system": "Business+ lisans durumunu doğrulamak için kullanılır."
+  },
+  "login": {
+    "title": "Üye Portalı Girişi",
+    "subtitle": "Parola gerekmez. Kayıtlı e-posta adresinize tek kullanımlık giriş bağlantısı göndeririz.",
+    "emailLabel": "E-posta adresi",
+    "emailPlaceholder": "ornek@dernek.de",
+    "submitButton": "Giriş bağlantısı gönder",
+    "sentNotice": "E-posta adresi kayıtlarımızda varsa giriş bağlantısı gönderildi."
+  },
+  "confirm": {
+    "title": "Girişi Onayla",
+    "subtitle": "Oturumu başlatmak için aşağıdaki düğmeye basın.",
+    "submitButton": "Üye portalına giriş yap",
+    "missingToken": "Geçersiz veya eksik giriş bağlantısı."
+  },
+  "shell": {
+    "welcome": "Hoş geldiniz, {name}",
+    "memberNumber": "Üye numarası",
+    "stepUpActive": "Ek doğrulama aktif (5 dk)",
+    "stepUpRequired": "Hassas işlemler için ek doğrulama gerekir",
+    "signOutEverywhere": "Tüm oturumlardan çık",
+    "masterDataTitle": "Üyelik Bilgilerim (Salt Okunur)",
+    "masterDataSubtitle": "Kişisel verileriniz yalnızca sizin tarafınızdan görüntülenir.",
+    "securityTitle": "Güvenlik ve Geçiş Anahtarları",
+    "passkeyCount": "Kayıtlı geçiş anahtarı (Passkey): {count}",
+    "fields": {
+      "email": "E-posta",
+      "phone": "Telefon",
+      "address": "Adres",
+      "iban": "IBAN (Maskeli)",
+      "street": "Sokak",
+      "houseNumber": "Kapı No",
+      "postalCode": "Posta Kodu",
+      "city": "Şehir"
+    }
+  },
+  "corrections": {
+    "title": "Veri Düzeltme Talebi",
+    "subtitle": "Önerilen değişiklikler doğrudan uygulanmaz; yönetim kurulu onay kuyruğuna alınır.",
+    "fieldLabel": "Alan",
+    "valueLabel": "Yeni değer",
+    "submitButton": "Onay kuyruğuna gönder",
+    "submittedNotice": "Düzeltme talebiniz yönetim kurulu onay kuyruğuna eklendi.",
+    "errorNotice": "Talep gönderilemedi. Lütfen girdiğiniz değeri kontrol edin.",
+    "empty": "Henüz düzeltme talebi yok.",
+    "statuses": {
+      "PENDING": "Beklemede",
+      "APPROVED": "Onaylandı",
+      "REJECTED": "Reddedildi"
+    }
+  },
+  "consents": {
+    "title": "Rızalar ve İletişim Kanalları",
+    "subtitle": "Geri çekme işlemi anında uygulanır; yeni kanal ekleme çift onay (Double Opt-In) gerektirir.",
+    "version": "Metin sürümü: {version}",
+    "active": "Aktif",
+    "inactive": "Pasif",
+    "revokeButton": "Anında geri çek",
+    "optInButton": "Çift onay ile ekle",
+    "optInSentNotice": "Onay bağlantısı e-posta adresinize gönderildi.",
+    "revokedNotice": "Rıza anında geri çekildi.",
+    "targets": {
+      "bulkMail": "Toplu duyuru e-postaları",
+      "photo": "Fotoğraf ve video yayın izni",
+      "sms": "SMS bildirimleri",
+      "whatsapp": "WhatsApp bildirimleri",
+      "telegram": "Telegram bildirimleri"
+    }
+  },
+  "receipts": {
+    "title": "Makbuzlar (Aidat ve Bağış)",
+    "subtitle": "PDF indirme için ek doğrulama (Step-up) ve kısa ömürlü imzalı referans gerekir.",
+    "stepUpHint": "Makbuzları indirmek için önce geçiş anahtarı ile ek doğrulama yapın.",
+    "downloadButton": "PDF İndir",
+    "empty": "Henüz indirilebilir makbuz bulunmuyor.",
+    "kinds": {
+      "dues": "Aidat Makbuzu",
+      "donation": "Bağış Makbuzu"
+    }
+  },
+  "art15": {
+    "title": "DSGVO Md. 15 Veri Dışa Aktarımı",
+    "subtitle": "Kişisel verilerinizin şifreli kopyasını talep edin (7 gün geçerli, aynı anda en fazla 1 açık talep).",
+    "stepUpHint": "Md. 15 dışa aktarımı için önce geçiş anahtarı ile ek doğrulama yapın.",
+    "requestButton": "Şifreli dışa aktarım talep et",
+    "createdNotice": "Şifreli Md. 15 dosyanız hazırlandı (7 gün geçerli).",
+    "errorNotice": "Zaten açık bir Md. 15 talebiniz var veya ek doğrulama gerekiyor.",
+    "empty": "Henüz Md. 15 dışa aktarım talebi yok.",
+    "bundleTitle": "DSGVO Md. 15 Paketi (AES-256-GCM)",
+    "downloadButton": "Şifreli dosyayı indir"
+  },
+  "processingLog": {
+    "title": "Veri İşleme Günlüğü",
+    "subtitle": "Yalnızca size ait işlemler; başka kişilerin adları gösterilmez.",
+    "empty": "Henüz işlem kaydı yok.",
+    "roles": {
+      "PORTAL": "Üye Portalı",
+      "BOARD": "Yönetim Kurulu",
+      "SYSTEM": "Sistem"
+    },
+    "categories": {
+      "masterData": "Ana Veri",
+      "receipts": "Makbuzlar",
+      "events": "Etkinlikler",
+      "signing": "İmzalama",
+      "art15": "Md. 15 Dışa Aktarım",
+      "portal": "Portal"
+    }
+  },
+  "events": {
+    "title": "Etkinlikler (Business+)",
+    "subtitle": "Yayımlanan dernek etkinliklerine doğrudan kayıt olun.",
+    "empty": "Yaklaşan etkinlik bulunmuyor.",
+    "registered": "Kayıtlı",
+    "registerButton": "Kayıt ol"
+  },
+  "signing": {
+    "title": "Bekleyen Belgeler (Business+)",
+    "subtitle": "Bekleyen çevrimiçi formları portal üzerinden imzalayın.",
+    "empty": "İmzalanacak bekleyen belge yok.",
+    "signerNameLabel": "İmzalayan adı soyadı",
+    "signButton": "Belgeyi imzala"
+  }
+}

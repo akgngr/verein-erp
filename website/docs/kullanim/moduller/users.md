@@ -13,7 +13,7 @@ Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri.
 |---|---|
 | Anahtar | `users` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.2.0 |
+| Sürüm | 1.3.0 |
 | Sayfalar | `/ayarlar/kullanicilar` |
 
 ## Diğer modüllere erişim
@@ -33,6 +33,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Kullanıcı Hesapları | görüntüleme, oluşturma, düzenleme, silme | — | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.3.0 — Kullanıcı bazlı sol menü özelleştirme tercihi
+
+_2026-11-24_
+
+- **Yeni:** UserNavPreference modeli, /api/users/nav-preferences uç noktası ve DSGVO silme kancası eklendi.
 
 ### 1.2.0 — Vergi danışmanı (TAX_ADVISOR) rolü ve zaman sınırlı erişim
 
@@ -76,10 +82,4 @@ _2026-11-18_
 
 - **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
-### 1.1.4 — Ortak UI bileşenleri (iç değişiklik)
-
-_2026-11-17_
-
-- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
-
-Daha eski 7 herkese açık sürüm notu.
+Daha eski 8 herkese açık sürüm notu.

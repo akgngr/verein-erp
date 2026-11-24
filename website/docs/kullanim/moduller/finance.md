@@ -13,7 +13,7 @@ Canlı döviz kurları, piyasa göstergeleri, kur çevirici ve finansal AI asist
 |---|---|
 | Anahtar | `finance` |
 | Tür | Eklenti |
-| Sürüm | 0.1.3 |
+| Sürüm | 0.1.4 |
 | Sayfalar | `/finance`, `/finance/ayarlar` |
 
 ## Varsayılan yetkiler
@@ -31,6 +31,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_exchange_rates`
 
 ## Sürüm notları
+
+### 0.1.4 — nav.json kategori ve alt modül tanımı
+
+_2026-11-24_
+
+- **İyileştirme:** Kullanıcı bazlı sol menü gruplama ve alt modül hiyerarşisi için nav.json eklendi.
 
 ### 0.1.3 — TAX_ADVISOR rolü izin tanımı
 

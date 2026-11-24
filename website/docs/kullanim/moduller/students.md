@@ -13,7 +13,7 @@ Kurs ve Nachhilfe öğrencileri, veliler ve DATEV uyumlu borçlu (Debitor) kayı
 |---|---|
 | Anahtar | `students` |
 | Tür | Resmî modül |
-| Sürüm | 1.4.12 |
+| Sürüm | 1.4.13 |
 | Sayfalar | `/ogrenciler`, `/ogrenciler/veliler`, `/ogrenciler/ayarlar` |
 | Önerir | [e-Sign](./online-forms) |
 
@@ -41,6 +41,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_student_statistics`
 
 ## Sürüm notları
+
+### 1.4.13 — nav.json kategori ve alt modül tanımı
+
+_2026-11-24_
+
+- **İyileştirme:** Kullanıcı bazlı sol menü gruplama ve alt modül hiyerarşisi için nav.json eklendi.
 
 ### 1.4.12 — TAX_ADVISOR rolü izin tanımı
 
@@ -84,10 +90,4 @@ _2026-11-15_
 
 - **Güvenlik:** AI kişi eşleştirmesi yalnız mevcut açık kayıt bağlantılarını kullanır; ad/e-posta tahmini ve veli-çocuk kimlik birleştirmesi reddedilir.
 
-### 1.4.3 — AI veri sözleşmesi ve liste güvenilirliği
-
-_2026-11-15_
-
-- **İyileştirme:** AI çıktısı açık şema veya sayfalama metadatasıyla sınırlandırılır; kişi alanları eklenmez.
-
-Daha eski 8 herkese açık sürüm notu.
+Daha eski 9 herkese açık sürüm notu.

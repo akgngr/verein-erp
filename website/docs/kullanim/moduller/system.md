@@ -13,7 +13,7 @@ Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.
 |---|---|
 | Anahtar | `system` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.18.1 |
+| Sürüm | 1.18.2 |
 | Sayfalar | `/ayarlar`, `/ayarlar/widgetlar`, `/ayarlar/moduller`, `/ayarlar/moduller/saglik`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/lisans`, `/ayarlar/gizlilik`, `/ayarlar/veri-cikisi`, `/ayarlar/surum-notlari` |
 
 ## Diğer modüllere erişim
@@ -38,6 +38,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Modül Yönetimi | görüntüleme, düzenleme, silme | görüntüleme | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.18.2 — Lisans özelliği kontrolü dışa aktarımı
+
+_2026-11-24_
+
+- **İyileştirme:** hasLicensedFeature fonksiyonu modül sunucu sözleşmesine eklendi.
 
 ### 1.18.1 — TAX_ADVISOR rolü izin tanımı
 
@@ -87,10 +93,4 @@ _2026-11-20_
 - **Yeni:** Ayarlar → Lisans: imzalı Enterprise lisansı girilir, çevrimdışı doğrulanır; lisans hem alan adına hem kuruma bağlıdır, süre bitince 14 gün ek süre.
 - **Yeni:** Lisanslı modüller yalnız ilgili özelliği içeren geçerli lisansla etkinleşir; lisans yoksa menüde, sayfada, API'de ve arka plan işlerinde kapalı kalır.
 
-### 1.12.8 — Çalışma zamanı modernizasyonu
-
-_2026-11-20_
-
-- **İyileştirme:** Modül kapatma eyleminde (toggleModuleAction) basamaklı bağımlı dizilimi toReversed ile yenilendi.
-
-Daha eski 24 herkese açık sürüm notu.
+Daha eski 25 herkese açık sürüm notu.
