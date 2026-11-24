@@ -49,6 +49,11 @@
     "savedSuccess": "Ayarlar başarıyla kaydedildi!"
   },
   "widget": {
-    "rates": "Döviz kurları"
+    "rates": "Döviz kurları",
+    "title": "Döviz kurları",
+    "unavailable": "Kurlar alınamadı",
+    "refresh": "Yenile",
+    "more": "Finansı aç",
+    "base": "1 EUR"
   }
 }
