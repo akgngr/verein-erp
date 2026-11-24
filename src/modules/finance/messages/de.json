@@ -47,5 +47,8 @@
     "trackedCurrenciesDesc": "Prioritäre Währungen für das Dashboard-Widget und Kurztabellen.",
     "saveButton": "Einstellungen speichern",
     "savedSuccess": "Einstellungen erfolgreich gespeichert!"
+  },
+  "widget": {
+    "rates": "Wechselkurse"
   }
 }
