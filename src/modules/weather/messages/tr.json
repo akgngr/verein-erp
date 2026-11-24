@@ -78,5 +78,15 @@
   "secretary": {
     "dailyForecast": "Bugün hava {temp}°, {cond}.",
     "outdoorWarning": "Açık alan etkinlikleri veya randevular için hava koşullarını göz önünde bulundurun."
+  },
+  "widget": {
+    "current": "Hava durumu",
+    "title": "Hava durumu",
+    "unavailable": "Hava durumu alınamadı",
+    "feels": "Hissedilen",
+    "wind": "Rüzgâr",
+    "humidity": "Nem",
+    "refresh": "Yenile",
+    "more": "Hava durumunu aç"
   }
 }

@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler).",
   "releases": [
     {
+      "version": "0.2.0",
+      "date": "2026-11-24",
+      "title": {
+        "tr": "Hafif döviz header widget'ı",
+        "de": "Leichtes Wechselkurs-Header-Widget"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Kullanıcı tarafından açılabilen, yetki kontrollü ve tembel yüklenen EUR döviz widget'ı; manuel yenileme ve azaltılmış hareket desteği.",
+          "de": "Optionales, berechtigungsgeschütztes und verzögert geladenes EUR-Wechselkurs-Widget; manuelle Aktualisierung und reduzierte Bewegung."
+        }
+      ]
+    },
+    {
       "version": "0.1.4",
       "date": "2026-11-24",
       "title": {

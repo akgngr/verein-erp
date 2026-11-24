@@ -5539,6 +5539,14 @@
       "trackedCurrenciesDesc": "Dashboard kartında ve özet tablolarda gösterilecek öncelikli para birimleri.",
       "saveButton": "Ayarları Kaydet",
       "savedSuccess": "Ayarlar başarıyla kaydedildi!"
+    },
+    "widget": {
+      "rates": "Döviz kurları",
+      "title": "Döviz kurları",
+      "unavailable": "Kurlar alınamadı",
+      "refresh": "Yenile",
+      "more": "Finansı aç",
+      "base": "1 EUR"
     }
   },
   "grants": {
@@ -10447,6 +10455,16 @@
     "secretary": {
       "dailyForecast": "Bugün hava {temp}°, {cond}.",
       "outdoorWarning": "Açık alan etkinlikleri veya randevular için hava koşullarını göz önünde bulundurun."
+    },
+    "widget": {
+      "current": "Hava durumu",
+      "title": "Hava durumu",
+      "unavailable": "Hava durumu alınamadı",
+      "feels": "Hissedilen",
+      "wind": "Rüzgâr",
+      "humidity": "Nem",
+      "refresh": "Yenile",
+      "more": "Hava durumunu aç"
     }
   },
   "widgets": {

@@ -13,7 +13,7 @@ Anlık konum bazlı hava durumu, tahminler, panel kartı ve sekreter etkinlik ö
 |---|---|
 | Anahtar | `weather` |
 | Tür | Eklenti |
-| Sürüm | 0.1.4 |
+| Sürüm | 0.2.0 |
 | Sayfalar | `/weather` |
 
 ## Diğer modüllere erişim
@@ -39,6 +39,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_current_weather`
 
 ## Sürüm notları
+
+### 0.2.0 — Hafif hava durumu header widget'ı
+
+_2026-11-24_
+
+- **Yeni:** Frankfurt olarak açıkça etiketlenen hava durumu widget'ı; yetkili sunucu eylemi, manuel yenileme ve azaltılmış hareket desteği.
 
 ### 0.1.4 — nav.json kategori ve alt modül tanımı
 
