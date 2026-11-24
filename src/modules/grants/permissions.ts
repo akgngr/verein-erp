@@ -7,6 +7,7 @@ export const grantsPermissions = definePermissions("grants", {
   SECRETARY: ["view"],
   TREASURER: ["view", "create", "update", "delete"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: [],
 });

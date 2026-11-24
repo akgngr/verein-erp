@@ -6,6 +6,7 @@ export const weatherPermissions = definePermissions("weather", {
   SECRETARY: ["view"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: ["view"],
   VIEWER: ["view"],
 });

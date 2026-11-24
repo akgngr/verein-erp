@@ -6,5 +6,6 @@ export const securityMonitorPermissions = definePermissions("security-monitor", 
   SECRETARY: [],
   TREASURER: [],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   VIEWER: [],
 });

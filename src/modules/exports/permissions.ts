@@ -7,6 +7,7 @@ export const exportsPermissions = definePermissions("exports", {
   SECRETARY: ["view", "create", "delete"],
   TREASURER: ["view", "create", "delete"],
   AUDITOR: ["view", "create", "delete"],
+  TAX_ADVISOR: [],
   TEACHER: ["view", "create", "delete"],
   VIEWER: ["view", "create", "delete"],
 });

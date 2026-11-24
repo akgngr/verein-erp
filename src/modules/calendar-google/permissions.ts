@@ -10,6 +10,7 @@ export const calendarGooglePermissions = definePermissions("calendar-google", {
   SECRETARY: ["view"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: ["view"],
   VIEWER: ["view"],
 });

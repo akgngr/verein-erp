@@ -10,6 +10,7 @@ export const calendarApplePermissions = definePermissions("calendar-apple", {
   SECRETARY: ["view"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: ["view"],
   VIEWER: ["view"],
 });

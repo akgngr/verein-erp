@@ -285,7 +285,8 @@
     "SECRETARY": "Schriftführung",
     "VIEWER": "Nur Lesen",
     "TREASURER": "Kassenwart",
-    "AUDITOR": "Kassenprüfung"
+    "AUDITOR": "Kassenprüfung",
+    "TAX_ADVISOR": "Steuerberater/in"
   },
   "validation": {
     "passwordMin": "Das Passwort muss mindestens 10 Zeichen lang sein.",
@@ -9928,7 +9929,9 @@
       "selfDemote": "Sie können Ihre eigene Rolle nicht herabstufen.",
       "selfDelete": "Sie können sich nicht selbst löschen.",
       "roleUnavailable": "Diese Rolle kann nicht zugewiesen werden: Sie existiert nicht oder ihr Modul ist nicht aktiv.",
-      "adminOnly": "Nur ein Administrator kann die Administratorrolle vergeben oder ändern."
+      "adminOnly": "Nur ein Administrator kann die Administratorrolle vergeben oder ändern.",
+      "grantExceedsMaxDuration": "Die Zugriffsdauer darf höchstens 90 Tage betragen.",
+      "grantEndBeforeStart": "Das Enddatum muss nach dem Startdatum liegen."
     },
     "validation": {
       "nameRequired": "Name ist erforderlich.",
@@ -9988,6 +9991,11 @@
           "label": "Kassenprüfer",
           "shortDesc": "Lesender Prüfzugriff auf Finanz- und Verwaltungsdaten.",
           "legalContext": "Führt die jährliche Kassenprüfung durch; kein Zugriff auf personenbezogene Spenderdaten."
+        },
+        "TAX_ADVISOR": {
+          "label": "Steuerberater/in",
+          "shortDesc": "Zeitlich begrenzter Lesezugriff auf Buchhaltung und Finanzberichte.",
+          "legalContext": "Prüft Finanzberichte ausschließlich innerhalb des vom Administrator festgelegten Zeitfensters."
         },
         "VIEWER": {
           "label": "Leser",
@@ -10133,6 +10141,26 @@
         "unknownResource": "Berechtigung nicht gefunden oder Modul nicht aktiv.",
         "notCustom": "Nur eigene Rollen können bearbeitet und gelöscht werden.",
         "inUse": "Dieser Rolle sind Benutzer zugewiesen; weisen Sie ihnen zuerst eine andere Rolle zu."
+      }
+    },
+    "grants": {
+      "title": "Zeitlich begrenzter externer Zugriff",
+      "subtitle": "Schreibgeschütztes Zugriffsfenster für Steuerberatung (Standard: 14 Tage, maximal 90 Tage).",
+      "startsAt": "Beginn",
+      "expiresAt": "Ende",
+      "moduleScope": "Modulbereich",
+      "scopeAll": "Alle freigegebenen Module (Buchhaltung + Finanzen)",
+      "scopeAccounting": "Nur Buchhaltung",
+      "scopeFinance": "Nur Finanzen",
+      "note": "Hinweis",
+      "notePlaceholder": "z. B. Jahresabschlussprüfung 2026",
+      "createButton": "Zugriffsfenster anlegen",
+      "revokeButton": "Widerrufen",
+      "empty": "Noch kein Zugriffsfenster hinterlegt.",
+      "statuses": {
+        "active": "Aktiv",
+        "expired": "Abgelaufen",
+        "revoked": "Widerrufen"
       }
     }
   },

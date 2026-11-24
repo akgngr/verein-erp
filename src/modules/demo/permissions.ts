@@ -7,6 +7,7 @@ export const demoPermissions = definePermissions("demo", {
   SECRETARY: [],
   TREASURER: [],
   AUDITOR: [],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: [],
 });

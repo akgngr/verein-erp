@@ -5,9 +5,13 @@ import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { EmptyState } from "@/shared/components/ui/empty-state";
 import { FormDrawer } from "@/shared/components/forms/form-drawer";
 
+import { computeDefaultGrantWindow, isTimeBoxedRole } from "@/shared/security/external-grant";
+
+import { ExternalGrantsPanel } from "../components/external-grants-panel";
 import { UserEditForm, UserFormCard } from "../components/user-form";
 import { getUserById } from "../queries/list-users";
 import { usersPermissions } from "../permissions";
+import { listExternalGrantsForUser } from "../services/external-grants";
 
 export async function UserEditView({ userId }: { userId: string }) {
   try {
@@ -27,6 +31,9 @@ export async function UserEditView({ userId }: { userId: string }) {
     );
   }
 
+  const grants = await listExternalGrantsForUser(user.id);
+  const defaultWindow = computeDefaultGrantWindow();
+
   return (
     <FormDrawer title={t("editTitle")} description={`${user.name} — ${user.email}`}>
       <UserFormCard>
@@ -40,6 +47,21 @@ export async function UserEditView({ userId }: { userId: string }) {
           }}
         />
       </UserFormCard>
+      {isTimeBoxedRole(user.role) || grants.length > 0 ? (
+        <ExternalGrantsPanel
+          userId={user.id}
+          grants={grants.map((g) => ({
+            id: g.id,
+            moduleScope: g.moduleScope,
+            startsAt: g.startsAt.toISOString(),
+            expiresAt: g.expiresAt.toISOString(),
+            revokedAt: g.revokedAt ? g.revokedAt.toISOString() : null,
+            note: g.note,
+          }))}
+          defaultStartsAt={defaultWindow.startsAt.toISOString()}
+          defaultExpiresAt={defaultWindow.expiresAt.toISOString()}
+        />
+      ) : null}
     </FormDrawer>
   );
 }

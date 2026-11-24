@@ -13,7 +13,7 @@ Regularly runs system security tests and monitors results
 |---|---|
 | Anahtar | `security-monitor` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.5 |
+| Sürüm | 1.3.6 |
 | Sayfalar | `/guvenlik-izleme` |
 | Gerektirir | [Otomasyon](./automation) |
 
@@ -29,11 +29,17 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Salt okunur |
-|---|---|---|---|---|---|---|
-| Güvenlik İzleme | görüntüleme, oluşturma, düzenleme, silme | — | — | — | görüntüleme | — |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Salt okunur |
+|---|---|---|---|---|---|---|---|
+| Güvenlik İzleme | görüntüleme, oluşturma, düzenleme, silme | — | — | — | görüntüleme | — | — |
 
 ## Sürüm notları
+
+### 1.3.6 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 1.3.5 — Kod bakımı
 
@@ -78,10 +84,4 @@ _2026-11-05_
 
 - **Yeni:** Güvenlik testleri Otomasyon ekranından düzenli aralıklarla (en az saatlik) çalışacak şekilde zamanlanabilir.
 
-### 1.1.1 — Güvenlik izleme API hata ayıklama iyileştirmesi
-
-_2026-11-05_
-
-- **Düzeltme:** İstatistik, test geçmişi ve uyarı API'lerinden gelen hatalarda HTTP durumu ve sunucu hata ayrıntıları artık konsola yansıtılıyor.
-
-Daha eski 2 herkese açık sürüm notu.
+Daha eski 3 herkese açık sürüm notu.

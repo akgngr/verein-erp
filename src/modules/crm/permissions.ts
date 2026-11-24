@@ -7,6 +7,7 @@ export const crmPermissions = definePermissions("crm", {
   SECRETARY: ["view", "create", "update"],
   TREASURER: ["view", "create", "update"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: ["view"],
 });

@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. En üst sürüm module.config.ts ile aynı olmalı.",
   "releases": [
     {
+      "version": "1.3.6",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "TAX_ADVISOR rolü izin tanımı",
+        "de": "Berechtigungsdefinition für Rolle TAX_ADVISOR"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.",
+          "de": "Standardmäßig geschlossener Berechtigungseintrag für die Systemrolle TAX_ADVISOR ergänzt."
+        }
+      ]
+    },
+    {
       "version": "1.3.5",
       "date": "2026-11-19",
       "title": {

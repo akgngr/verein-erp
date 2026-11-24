@@ -4,11 +4,18 @@ import { getDb } from "@/shared/db";
 import { hashPassword } from "@/shared/security/password";
 import type { ActionResult } from "@/shared/types/action";
 
-import { ActionError } from "@/modules/auth/server";
+import {
+  computeDefaultGrantWindow,
+  isTimeBoxedRole,
+  validateGrantWindow,
+} from "@/shared/security/external-grant";
+import { buildUserLabel } from "@/shared/utils";
+
+import { ActionError, createAction } from "@/modules/auth/server";
 import { usersPermissions } from "../permissions";
 import { userCreateSchema } from "../schemas/user";
+import { createExternalGrant } from "../services/external-grants";
 import { isAssignableRole } from "../services/roles";
-import { createAction } from "@/modules/auth/server";
 
 /** Yeni kullanıcı: ad, e-posta, rol, geçici parola; mustChangePassword = true (11.1). */
 export async function createUserAction(input: unknown): Promise<ActionResult<{ id: string }>> {
@@ -36,6 +43,25 @@ export async function createUserAction(input: unknown): Promise<ActionResult<{ i
         throw new ActionError("users.errors.roleUnavailable", { role: ["users.errors.roleUnavailable"] });
       }
 
+      let grantWindow: { startsAt: Date; expiresAt: Date } | null = null;
+      if (isTimeBoxedRole(input.role)) {
+        if (input.grantStartsAt && input.grantExpiresAt) {
+          const startsAt = new Date(input.grantStartsAt);
+          const expiresAt = new Date(input.grantExpiresAt);
+          const check = validateGrantWindow(startsAt, expiresAt);
+          if (!check.ok) {
+            throw new ActionError(
+              check.reason === "exceedsMaxDuration"
+                ? "users.errors.grantExceedsMaxDuration"
+                : "users.errors.grantEndBeforeStart",
+            );
+          }
+          grantWindow = { startsAt, expiresAt };
+        } else {
+          grantWindow = computeDefaultGrantWindow();
+        }
+      }
+
       const created = await db.user.create({
         data: {
           name: input.name,
@@ -52,6 +78,17 @@ export async function createUserAction(input: unknown): Promise<ActionResult<{ i
         entityId: created.id,
         after: { name: created.name, email: created.email, role: created.role, isActive: created.isActive },
       });
+
+      if (grantWindow) {
+        await createExternalGrant({
+          userId: created.id,
+          moduleScope: input.grantModuleScope ?? null,
+          startsAt: grantWindow.startsAt,
+          expiresAt: grantWindow.expiresAt,
+          actorUserId: user.id,
+          actorUserLabel: buildUserLabel(user.name, user.email),
+        });
+      }
 
       return { id: created.id };
     },

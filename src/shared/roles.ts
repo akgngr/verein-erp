@@ -8,7 +8,7 @@
  */
 export type Role = string;
 
-export const SYSTEM_ROLES = ["ADMIN", "BOARD", "SECRETARY", "TREASURER", "AUDITOR", "VIEWER"] as const;
+export const SYSTEM_ROLES = ["ADMIN", "BOARD", "SECRETARY", "TREASURER", "AUDITOR", "TAX_ADVISOR", "VIEWER"] as const;
 export type SystemRole = (typeof SYSTEM_ROLES)[number];
 
 /** Yönetici rolü: izinleri değiştirilemez, her zaman koddaki tam yetkiyle çalışır. */
@@ -24,6 +24,7 @@ export const SYSTEM_ROLE_COLORS: Record<SystemRole, ChipColor> = {
   SECRETARY: "success",
   TREASURER: "warning",
   AUDITOR: "danger",
+  TAX_ADVISOR: "secondary",
   VIEWER: "default",
 };
 

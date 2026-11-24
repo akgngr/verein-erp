@@ -13,7 +13,7 @@ Aidat ve kurs ücretleri için SEPA-Lastschrift (pain.008) tahsilatı.
 |---|---|
 | Anahtar | `sepa` |
 | Tür | Resmî modül |
-| Sürüm | 1.2.0 |
+| Sürüm | 1.2.1 |
 | Gerektirir | [Muhasebe](./accounting) |
 | Önerir | [Üyeler](./members), [Kurslar](./courses), [e-Sign](./online-forms) |
 
@@ -35,11 +35,17 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| SEPA otomatik ödeme | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | — | görüntüleme, oluşturma, düzenleme, silme | görüntüleme | — | — |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| SEPA otomatik ödeme | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | — | görüntüleme, oluşturma, düzenleme, silme | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.2.1 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 1.2.0 — E-imza ile mandat yenileme
 
@@ -85,8 +91,4 @@ _2026-11-07_
 
 - **İyileştirme:** Muhasebe altına taşındı (/muhasebe/sepa)
 
-### 1.0.0 — İlk sürüm
-
-_2026-11-07_
-
-- **Yeni:** SEPA-Lastschrift: açık aidatlar ve kurs ücretleri için önizlemeli tahsilat, pain.008.001.08 dosyası (CORE/RCUR), tahsil edildi kaydı (makbuz/fiş) ve geri dönen ödemeler.
+Daha eski 1 herkese açık sürüm notu.

@@ -40,7 +40,7 @@ describe("widget registry", () => {
       ...defineModuleWidgets("help-center", [{ id: "help-center.help", slot: "header.right", size: "popover", titleKey: "x", load }]),
       ...defineModuleWidgets("secret", [{ id: "secret.w", slot: "header.right", size: "compact", titleKey: "x", requiredPermissions: ["missing:view"], load }]),
     ];
-    const resources = [{ moduleKey: "notifications", definitions: [definePermissions("notifications", { ADMIN: ["view"], BOARD: [], SECRETARY: [], TREASURER: [], AUDITOR: [], TEACHER: [], VIEWER: [] })] }];
+    const resources = [{ moduleKey: "notifications", definitions: [definePermissions("notifications", { ADMIN: ["view"], BOARD: [], SECRETARY: [], TREASURER: [], AUDITOR: [], TAX_ADVISOR: [], TEACHER: [], VIEWER: [] })] }];
     assert.deepEqual(visibleWidgetIds({ registry, usableModuleKeys: ["notifications", "secret"], role: "ADMIN", resources }), ["notifications.bell"]);
     assert.deepEqual(visibleWidgetIds({ registry, usableModuleKeys: ["notifications", "help-center"], role: "VIEWER", resources }), ["help-center.help"]);
     assert.deepEqual(visibleWidgetIds({ registry, usableModuleKeys: [], role: "ADMIN", resources }), [], "unlicensed/inactive module → no widget");
