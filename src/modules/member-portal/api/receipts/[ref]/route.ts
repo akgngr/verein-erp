@@ -25,10 +25,11 @@ function parseSubjectRef(ref: string): { kind: "member" | "guardian"; id: string
   return { kind, id };
 }
 
-export async function handlePortalReceiptDownloadGet(
+export async function GET(
   request: Request,
-  ctx: { ref: string },
+  context: { params: Promise<{ ref: string }> },
 ): Promise<Response> {
+  const ctx = await context.params;
   if (!isPortalEnabled()) {
     return NextResponse.json({ ok: false, error: "notFound" }, { status: 404 });
   }
