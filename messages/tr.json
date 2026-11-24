@@ -10092,7 +10092,14 @@
       "isActive": "Hesap aktif",
       "isActiveHint": "Pasife alınan kullanıcı oturumu geçerli olsa bile işlem yapamaz.",
       "created": "Kullanıcı oluşturuldu.",
-      "updated": "Kullanıcı güncellendi."
+      "updated": "Kullanıcı güncellendi.",
+      "setupMode": "Hesap kurulumu",
+      "setupInvite": "Davet bağlantısı gönder (kullanıcı şifresini kendisi belirler)",
+      "setupPassword": "Şifreyi ben belirleyip kişiye ileteyim",
+      "setupInviteHint": "Kullanıcının e-posta adresine tek kullanımlık, 72 saat geçerli bir bağlantı gider. E-postada şifre yoktur.",
+      "setupPasswordHint": "Geçici şifreyi kişiye güvenli bir yoldan iletin; ilk girişte değiştirmesi istenir.",
+      "createdInvited": "Kullanıcı oluşturuldu, {email} adresine davet bağlantısı gönderildi.",
+      "createdInviteFailed": "Kullanıcı oluşturuldu ancak davet e-postası gönderilemedi. E-posta ayarlarını kontrol edip listeden \"Davet bağlantısı gönder\" ile yeniden deneyin."
     },
     "resetPassword": {
       "title": "Parolayı Sıfırla",

@@ -10092,7 +10092,14 @@
       "isActive": "Konto aktiv",
       "isActiveHint": "Ein deaktivierter Benutzer kann auch mit gültiger Sitzung nichts ausführen.",
       "created": "Benutzer wurde angelegt.",
-      "updated": "Benutzer wurde aktualisiert."
+      "updated": "Benutzer wurde aktualisiert.",
+      "setupMode": "Kontoeinrichtung",
+      "setupInvite": "Einladungslink senden (Nutzer legt das Passwort selbst fest)",
+      "setupPassword": "Passwort selbst festlegen und weitergeben",
+      "setupInviteHint": "An die E-Mail-Adresse geht ein einmaliger, 72 Stunden gültiger Link. Die E-Mail enthält kein Passwort.",
+      "setupPasswordHint": "Geben Sie das vorläufige Passwort auf sicherem Weg weiter; beim ersten Login muss es geändert werden.",
+      "createdInvited": "Nutzer angelegt, Einladungslink an {email} gesendet.",
+      "createdInviteFailed": "Nutzer angelegt, aber die Einladungs-E-Mail konnte nicht gesendet werden. Prüfen Sie die E-Mail-Einstellungen und versuchen Sie es in der Liste mit „Einladungslink senden“ erneut."
     },
     "resetPassword": {
       "title": "Passwort zurücksetzen",

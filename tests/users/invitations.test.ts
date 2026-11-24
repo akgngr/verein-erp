@@ -17,6 +17,22 @@ describe("invitation (pure)", () => {
     assert.doesNotMatch(mail.text, /passwor[dt]:|€|EUR/i);
   });
 
+  test("create form: invite needs no password, password mode enforces the password policy", async () => {
+    const { userCreateSchema } = await import("@/modules/users/schemas/user");
+    const base = { name: "Pat", email: "pat@example.test", role: "AUDITOR" };
+    assert.equal(userCreateSchema.safeParse({ ...base, setupMode: "invite" }).success, true, "invite needs no password");
+    assert.equal(userCreateSchema.safeParse({ ...base }).success, false, "mode must be chosen explicitly");
+    assert.equal(userCreateSchema.safeParse({ ...base, setupMode: "password" }).success, false);
+    assert.equal(userCreateSchema.safeParse({ ...base, setupMode: "password", password: "short" }).success, false);
+    assert.equal(userCreateSchema.safeParse({ ...base, setupMode: "password", password: "Sehr-sicheres-Passwort-2031!" }).success, true);
+    assert.equal(userCreateSchema.safeParse({ ...base, setupMode: "magic" }).success, false);
+  });
+
+  test("helper that sends mail is not a server action (no client-callable mail sender)", () => {
+    assert.doesNotMatch(fs.readFileSync("src/modules/users/services/invitation-mail.ts", "utf8"), /"use server"/);
+    assert.doesNotMatch(fs.readFileSync("src/modules/users/actions/invitations.ts", "utf8"), /export async function sendInvitationTo/);
+  });
+
   test("auth gate lets /davet/* through without a session", () => {
     assert.match(fs.readFileSync("src/modules/auth/auth.config.ts", "utf8"), /path\.startsWith\("\/davet\/"\)\) return true/);
   });

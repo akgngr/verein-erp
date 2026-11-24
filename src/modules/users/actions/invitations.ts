@@ -5,12 +5,12 @@ import { z } from "zod";
 import { ActionError, createAction } from "@/modules/auth/server";
 import { writeAudit } from "@/shared/audit/write-audit";
 import { getDb } from "@/shared/db";
-import { getEnv } from "@/shared/env";
 import { passwordSchema } from "@/shared/security/password";
 import type { ActionResult } from "@/shared/types/action";
 
 import { usersPermissions } from "../permissions";
-import { acceptInvitation, createInvitation, InvitationError, invitationLink, inviteMail } from "../services/invitations";
+import { acceptInvitation, InvitationError } from "../services/invitations";
+import { sendInvitationTo } from "../services/invitation-mail";
 
 /** Admin: send a one-time invitation link (72 h) to an active user. Audit holds no token. */
 export async function inviteUserAction(input: unknown): Promise<ActionResult<{ expiresAt: string }>> {
@@ -22,15 +22,7 @@ export async function inviteUserAction(input: unknown): Promise<ActionResult<{ e
       if (!target) throw new ActionError("users.errors.notFound");
       if (!target.isActive) throw new ActionError("users.invite.errors.inactive");
       if (target.role === "ADMIN" && user.role !== "ADMIN") throw new ActionError("users.errors.adminOnly");
-      const { isMailConfigured, sendMail } = await import("@/modules/mail/server");
-      if (!(await isMailConfigured())) throw new ActionError("users.invite.errors.mailNotConfigured");
-      const appUrl = getEnv().APP_URL;
-      const { token, expiresAt } = await createInvitation(target.id, user.id);
-      const link = appUrl ? invitationLink(appUrl, token) : null;
-      if (!link) throw new ActionError("users.invite.errors.appUrl");
-      const message = inviteMail(target.locale === "de" ? "de" : "tr", { name: target.name, link, expiresAt });
-      const sent = await sendMail({ to: target.email, ...message, context: { module: "users", reference: `invite:${target.id}` } });
-      if (!sent.ok) throw new ActionError("users.invite.errors.sendFailed");
+      const expiresAt = await sendInvitationTo(target, user.id);
       await audit({ action: "USER_INVITE", entity: "User", entityId: target.id, after: { expiresAt: expiresAt.toISOString() } });
       return { expiresAt: expiresAt.toISOString() };
     },
