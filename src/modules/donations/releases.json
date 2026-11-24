@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.1.12",
+      "date": "2026-11-24",
+      "title": {
+        "tr": "Üye portalı bağış makbuzu PDF sözleşmesi",
+        "de": "Mitgliederportal-Zuwendungsbestätigungs-PDF-Vertrag"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Üyenin kendi bağış bildirimlerini portal üzerinden doğrulayıp PDF olarak indirebilmesi için sunucu sözleşmesi eklendi.",
+          "de": "Server-Vertrag zum Abruf eigener Zuwendungsbestätigungen als PDF über das Mitgliederportal ergänzt."
+        }
+      ]
+    },
+    {
       "version": "1.1.11",
       "date": "2026-11-23",
       "title": {

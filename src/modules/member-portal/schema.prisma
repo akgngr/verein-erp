@@ -47,3 +47,17 @@ model SecurityRateLimit {
 
   @@map("security_rate_limits")
 }
+
+model PortalConsentChallenge {
+  id            String    @id @default(cuid())
+  subjectRef    String
+  channel       String
+  addressMasked String
+  tokenHash     String    @unique
+  expiresAt     DateTime
+  confirmedAt   DateTime?
+  createdAt     DateTime  @default(now())
+
+  @@index([subjectRef, channel])
+  @@map("portal_consent_challenges")
+}

@@ -4,15 +4,22 @@ import { getTranslations } from "next-intl/server";
 
 import { Button, Card, CardContent, CardHeader, StatusChip } from "@/shared/components/kit";
 
+import { PortalSelfServicePanel } from "../components/portal-self-service-panel";
 import { getActivePortalSession } from "../services/auth";
 import { isPortalEnabled, isPortalStepUpActive, PORTAL_SESSION_COOKIE } from "../services/auth-core";
 import { getPortalMasterData } from "../services/master-data";
 import { listPortalPasskeys } from "../services/passkey";
+import {
+  listPortalConsents,
+  listPortalCorrections,
+  listPortalReceipts,
+} from "../services/self-service";
 
 /**
- * Isolated Member Portal shell (ADR 0010 P1):
- * reads ONLY the portal session cookie (never admin session), shows own read-only
- * master data with masked IBAN, passkey status, and sign-out-everywhere button.
+ * Isolated Member Portal shell (ADR 0010 P1/P2):
+ * reads ONLY the portal session cookie (never admin session), shows own
+ * master data with masked IBAN, passkey status, corrections queue, consents,
+ * and step-up gated receipt downloads.
  */
 export async function PortalShellView() {
   if (!isPortalEnabled()) notFound();
@@ -22,10 +29,13 @@ export async function PortalShellView() {
   const session = await getActivePortalSession(rawSession);
   if (!session) redirect("/portal/giris");
 
-  const [t, masterData, passkeys] = await Promise.all([
+  const [t, masterData, passkeys, corrections, consents, receipts] = await Promise.all([
     getTranslations("member-portal"),
     getPortalMasterData(session.subjectRef),
     listPortalPasskeys(session.subjectRef),
+    listPortalCorrections(session.subjectRef),
+    listPortalConsents(session.subjectRef),
+    listPortalReceipts(session.subjectRef),
   ]);
 
   if (!masterData) redirect("/portal/giris");
@@ -94,6 +104,20 @@ export async function PortalShellView() {
           <p>{t("shell.passkeyCount", { count: passkeys.length })}</p>
         </CardContent>
       </Card>
+
+      <PortalSelfServicePanel
+        initialCorrections={corrections}
+        initialConsents={consents}
+        receipts={receipts.map((r) => ({
+          ref: r.ref,
+          kind: r.kind,
+          number: r.number,
+          year: r.year,
+          amountCents: r.amountCents,
+          voided: r.voided,
+        }))}
+        stepUpActive={stepUpActive}
+      />
     </main>
   );
 }

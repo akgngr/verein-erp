@@ -27,7 +27,7 @@ Verein ERP 44 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekra
 
 | Modül | Açıklama | Sürüm |
 |---|---|---|
-| [Bağışlar](./moduller/donations) | Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı takibi. | 1.1.11 |
+| [Bağışlar](./moduller/donations) | Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı takibi. | 1.1.12 |
 | [Banka bağlantısı](./moduller/banking) | Banka hesaplarını lisanslı PSD2 sağlayıcısı üzerinden bağlar, hareketleri muhasebeye aktarır. | 1.1.8 |
 | [CRM](./moduller/crm) | Kişiler ve kurumlarla ilişki yönetimi: aşamalar, fırsatlar, zaman akışı ve takipler. | 1.0.9 |
 | [Demo veri](./moduller/demo) | Test için kurgusal örnek veri yükler; modül kapatılınca hepsini siler. | 1.0.3 |
@@ -46,7 +46,7 @@ Verein ERP 44 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekra
 | [Takvim](./moduller/calendar) | Kişisel ve ortak takvimler; etkinlik, toplantı, görev ve son tarihler tek görünümde. | 1.3.14 |
 | [Toplantılar](./moduller/meetings) | Yönetim kurulu ve genel kurul toplantı takvimi, tutanaklar ve kararlar. | 1.4.1 |
 | [Toplu e-posta](./moduller/mailings) | Üyelere, velilere ve diğer modüllerin alıcı listelerine kişiye özel toplu e-posta. | 2.6.1 |
-| [Üyeler](./moduller/members) | Üye kayıtları, üyelik tipleri, aidat tahakkuk ve ödeme takibi. | 1.15.5 |
+| [Üyeler](./moduller/members) | Üye kayıtları, üyelik tipleri, aidat tahakkuk ve ödeme takibi. | 1.15.6 |
 
 ## Eklentiler
 
@@ -64,6 +64,6 @@ Verein ERP 44 modülden oluşur. Modüller **Ayarlar → Modül Yönetimi** ekra
 | [SMS](./moduller/campaign-sms) | Kampanyalar için SMS kanalı (seven.io veya Twilio). Yalnız SMS izni verenlere gider. | 1.1.2 |
 | [Telegram](./moduller/campaign-telegram) | Kampanyalar için Telegram kanalı (Bot API). Kişi davet bağlantısıyla abone olur; /stop ile ayrılır. | 1.0.2 |
 | [Uyum kontrolü](./moduller/compliance) | Kamu yararı (Gemeinnützigkeit) için iç kontrol listesi: süreler ve sınırlar. Vergi danışmanlığı değildir. | 0.2.0 |
-| [Üye Portalı](./moduller/member-portal) | Parolasız sihirli bağlantı ve geçiş anahtarı ile üye self-servis portalı. | 0.1.0 |
+| [Üye Portalı](./moduller/member-portal) | Parolasız sihirli bağlantı ve geçiş anahtarı ile üye self-servis portalı. | 0.2.0 |
 | [WhatsApp](./moduller/campaign-whatsapp) | Kampanyalar için WhatsApp kanalı (Meta Cloud API, onaylı şablonla). Yalnız WhatsApp izni verenlere gider. | 1.1.2 |
 | [Yapay zekâ asistanı](./moduller/ai) | Sağ panelde sohbet eden, yalnızca izin verilen modüllerin toplu verisini okuyan asistan. | 1.15.10 |

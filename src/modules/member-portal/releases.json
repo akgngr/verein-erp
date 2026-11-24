@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı.",
   "releases": [
     {
+      "version": "0.2.0",
+      "date": "2026-11-24",
+      "title": {
+        "tr": "Self-servis: düzeltme kuyruğu, rızalar ve makbuzlar (P2)",
+        "de": "Self-Service: Korrekturwarteschlange, Einwilligungen und Belege (P2)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yönetim kurulu onay kuyruklu veri düzeltme önerileri, anında geri çekme + çift onaylı rıza yönetimi ve step-up korumalı imzalı PDF makbuz indirme eklendi.",
+          "de": "Korrekturvorschläge mit Vorstands-Freigabewarteschlange, Sofort-Widerruf + Double-Opt-In-Einwilligungen und Step-up-geschützte signierte PDF-Belegdownloads ergänzt."
+        }
+      ]
+    },
+    {
       "version": "0.1.0",
       "date": "2026-11-23",
       "title": {
