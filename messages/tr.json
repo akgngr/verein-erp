@@ -5543,6 +5543,9 @@
       "trackedCurrenciesDesc": "Dashboard kartında ve özet tablolarda gösterilecek öncelikli para birimleri.",
       "saveButton": "Ayarları Kaydet",
       "savedSuccess": "Ayarlar başarıyla kaydedildi!"
+    },
+    "widget": {
+      "rates": "Döviz kurları"
     }
   },
   "grants": {
@@ -10424,6 +10427,9 @@
     "secretary": {
       "dailyForecast": "Bugün hava {temp}°, {cond}.",
       "outdoorWarning": "Açık alan etkinlikleri veya randevular için hava koşullarını göz önünde bulundurun."
+    },
+    "widget": {
+      "current": "Hava durumu"
     }
   },
   "widgets": {
