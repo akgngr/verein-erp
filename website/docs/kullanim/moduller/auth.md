@@ -13,9 +13,15 @@ Kullanıcı girişi, oturum yönetimi ve parola güvenliği.
 |---|---|
 | Anahtar | `auth` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.1.0 |
+| Sürüm | 1.1.1 |
 
 ## Sürüm notları
+
+### 1.1.1 — Davet sayfası
+
+_2026-11-24_
+
+- **İyileştirme:** Davet bağlantısı sayfası (/davet/…) oturum açmadan açılabilir; belirteç sunucuda doğrulanır.
 
 ### 1.1.0 — Zaman sınırlı harici erişim doğrulaması
 
@@ -60,8 +66,4 @@ _2026-11-05_
 - **Güvenlik:** Giriş denemesi kilitleme politikası ortaklaştırıldı ve test edilebilir hale getirildi.
 - **Düzeltme:** Dosya yolu doğrulaması Windows ayraçlarını ve kontrol karakterlerini güvenli biçimde işler.
 
-### 1.0.0 — İlk sürüm
-
-_2026-10-29_
-
-- **Yeni:** İlk sürüm.
+Daha eski 1 herkese açık sürüm notu.

@@ -10092,7 +10092,14 @@
       "isActive": "Konto aktiv",
       "isActiveHint": "Ein deaktivierter Benutzer kann auch mit gültiger Sitzung nichts ausführen.",
       "created": "Benutzer wurde angelegt.",
-      "updated": "Benutzer wurde aktualisiert."
+      "updated": "Benutzer wurde aktualisiert.",
+      "setupMode": "Kontoeinrichtung",
+      "setupInvite": "Einladungslink senden (Nutzer legt das Passwort selbst fest)",
+      "setupPassword": "Passwort selbst festlegen und weitergeben",
+      "setupInviteHint": "An die E-Mail-Adresse geht ein einmaliger, 72 Stunden gültiger Link. Die E-Mail enthält kein Passwort.",
+      "setupPasswordHint": "Geben Sie das vorläufige Passwort auf sicherem Weg weiter; beim ersten Login muss es geändert werden.",
+      "createdInvited": "Nutzer angelegt, Einladungslink an {email} gesendet.",
+      "createdInviteFailed": "Nutzer angelegt, aber die Einladungs-E-Mail konnte nicht gesendet werden. Prüfen Sie die E-Mail-Einstellungen und versuchen Sie es in der Liste mit „Einladungslink senden“ erneut."
     },
     "resetPassword": {
       "title": "Passwort zurücksetzen",
@@ -10263,7 +10270,8 @@
       }
     },
     "access": {
-      "system": "Liest installierte und aktive Module, um zu prüfen, ob Modulrollen (z. B. Lehrkraft) verfügbar sind. Startet beim Löschen eines Benutzers die Bereinigung personenbezogener Daten in den Modulen (Recht auf Löschung)."
+      "system": "Liest installierte und aktive Module, um zu prüfen, ob Modulrollen (z. B. Lehrkraft) verfügbar sind. Startet beim Löschen eines Benutzers die Bereinigung personenbezogener Daten in den Modulen (Recht auf Löschung).",
+      "mail": "Zum Versand der Einladungs-E-Mail (nur ein Einmal-Link)."
     },
     "roles": {
       "newRole": "Neue Rolle",
@@ -10340,6 +10348,25 @@
         "active": "Aktiv",
         "expired": "Abgelaufen",
         "revoked": "Widerrufen"
+      }
+    },
+    "invite": {
+      "action": "Einladungslink senden",
+      "sent": "Einladungslink an {email} gesendet (72 Stunden gültig).",
+      "pageTitle": "Einladung annehmen",
+      "pageIntro": "Legen Sie das Passwort für {email} fest. Dieser Link ist nur einmal gültig.",
+      "password": "Neues Passwort",
+      "confirm": "Passwort (Wiederholung)",
+      "submit": "Passwort festlegen",
+      "done": "Ihr Passwort wurde gespeichert. Sie können sich jetzt anmelden.",
+      "toLogin": "Zur Anmeldung",
+      "errors": {
+        "invalid": "Dieser Einladungslink ist ungültig, abgelaufen oder bereits verwendet. Bitten Sie Ihre Verwaltung um eine neue Einladung.",
+        "inactive": "An inaktive Nutzer kann keine Einladung gesendet werden.",
+        "mailNotConfigured": "E-Mail-Versand ist nicht eingerichtet (Einstellungen → E-Mail).",
+        "appUrl": "Die App-Adresse (APP_URL) muss mit https definiert sein.",
+        "sendFailed": "Einladungs-E-Mail konnte nicht gesendet werden.",
+        "mismatch": "Die Passwörter stimmen nicht überein."
       }
     }
   },
