@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.0.4",
+      "date": "2026-11-24",
+      "title": {
+        "tr": "Üye portalı kişi adı içermeyen işleme günlüğü sözleşmesi",
+        "de": "Mitgliederportal-Vertrag für personenfreies Verarbeitungsprotokoll"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yalnızca ilgili üyeye ait işlemleri rol kategorisiyle döndüren denetim sorgusu eklendi.",
+          "de": "Abfrage für betroffenenbezogenes Verarbeitungsprotokoll ohne Personennamen ergänzt."
+        }
+      ]
+    },
+    {
       "version": "1.0.3",
       "date": "2026-11-23",
       "title": {

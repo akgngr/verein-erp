@@ -13,7 +13,7 @@ Parolasız sihirli bağlantı ve geçiş anahtarı ile üye self-servis portalı
 |---|---|
 | Anahtar | `member-portal` |
 | Tür | Eklenti |
-| Sürüm | 0.2.0 |
+| Sürüm | 0.3.0 |
 
 ## Diğer modüllere erişim
 
@@ -25,6 +25,11 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 | [Bağışlar](./donations) | okuma | Üyenin kendi bağış makbuzlarını (Zuwendungsbestätigung) PDF olarak indirmesi için kullanılır. |
 | [Öğrenciler](./students) | okuma | Veli bağlantılı öğrenci bilgilerini göstermek için kullanılır. |
 | [E-posta Altyapısı](./mail) | yazma | Tek kullanımlık sihirli giriş bağlantısı ve çift onaylı rıza bağlantısı göndermek için kullanılır. |
+| [Dosyalarım](./exports) | okuma, yazma | DSGVO Md. 15 şifreli veri dışa aktarımı oluşturmak ve indirmek için kullanılır. |
+| [Denetim Kayıtları](./audit) | okuma | Üyenin kendi verilerine ait işleme günlüğünü kişi adı olmadan göstermek için kullanılır. |
+| [Etkinlikler](./events) | okuma, yazma | Business+ lisansıyla etkinliklere kayıt olmak için kullanılır. |
+| [e-Sign](./online-forms) | okuma, yazma | Business+ lisansıyla bekleyen belgeleri imzalamak için kullanılır. |
+| [Modül Yönetimi](./system) | okuma | Business+ lisans durumunu doğrulamak için kullanılır. |
 
 ## Varsayılan yetkiler
 
@@ -35,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Üye Portalı Yönetimi | görüntüleme, düzenleme | görüntüleme | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 0.3.0 — Veri hakları (Md. 15), işleme günlüğü ve Business+ özellikleri (P3)
+
+_2026-11-24_
+
+- **Yeni:** Step-up korumalı DSGVO Md. 15 şifreli dışa aktarım, kişi adı içermeyen işleme günlüğü ve lisans kapılı Business+ etkinlik kaydı ile belge imzalama eklendi.
 
 ### 0.2.0 — Self-servis: düzeltme kuyruğu, rızalar ve makbuzlar (P2)
 

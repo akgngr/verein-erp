@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "2.2.3",
+      "date": "2026-11-24",
+      "title": {
+        "tr": "Üye portalı DSGVO Md. 15 şifreli dışa aktarım sözleşmesi",
+        "de": "Mitgliederportal-Vertrag für verschlüsselten DSGVO-Art.-15-Export"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "7 gün geçerli AES-256-GCM şifreli Md. 15 dışa aktarım oluşturma ve indirme sözleşmesi eklendi.",
+          "de": "Vertrag für 7 Tage gültigen AES-256-GCM-verschlüsselten Art.-15-Export ergänzt."
+        }
+      ]
+    },
+    {
       "version": "2.2.2",
       "date": "2026-11-23",
       "title": {

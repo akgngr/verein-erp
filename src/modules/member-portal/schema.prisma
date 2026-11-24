@@ -61,3 +61,17 @@ model PortalConsentChallenge {
   @@index([subjectRef, channel])
   @@map("portal_consent_challenges")
 }
+
+model PortalArt15Request {
+  id              String   @id @default(cuid())
+  subjectRef      String
+  memberId        String
+  status          String   @default("PENDING") // "PENDING" | "READY"
+  generatedFileId String?
+  expiresAt       DateTime
+  createdAt       DateTime @default(now())
+
+  @@index([subjectRef, status])
+  @@index([memberId, createdAt])
+  @@map("portal_art15_requests")
+}

@@ -4,11 +4,17 @@ import { getTranslations } from "next-intl/server";
 
 import { Button, Card, CardContent, CardHeader, StatusChip } from "@/shared/components/kit";
 
+import { PortalRightsPanel } from "../components/portal-rights-panel";
 import { PortalSelfServicePanel } from "../components/portal-self-service-panel";
 import { getActivePortalSession } from "../services/auth";
 import { isPortalEnabled, isPortalStepUpActive, PORTAL_SESSION_COOKIE } from "../services/auth-core";
 import { getPortalMasterData } from "../services/master-data";
 import { listPortalPasskeys } from "../services/passkey";
+import {
+  listPortalArt15Requests,
+  listPortalBusinessFeatures,
+  listPortalProcessingLog,
+} from "../services/rights";
 import {
   listPortalConsents,
   listPortalCorrections,
@@ -16,10 +22,10 @@ import {
 } from "../services/self-service";
 
 /**
- * Isolated Member Portal shell (ADR 0010 P1/P2):
+ * Isolated Member Portal shell (ADR 0010 P1/P2/P3):
  * reads ONLY the portal session cookie (never admin session), shows own
  * master data with masked IBAN, passkey status, corrections queue, consents,
- * and step-up gated receipt downloads.
+ * step-up receipts, Art. 15 export, processing log, and Business+ features.
  */
 export async function PortalShellView() {
   if (!isPortalEnabled()) notFound();
@@ -29,13 +35,26 @@ export async function PortalShellView() {
   const session = await getActivePortalSession(rawSession);
   if (!session) redirect("/portal/giris");
 
-  const [t, masterData, passkeys, corrections, consents, receipts] = await Promise.all([
+  const [
+    t,
+    masterData,
+    passkeys,
+    corrections,
+    consents,
+    receipts,
+    art15Requests,
+    processingLog,
+    businessFeatures,
+  ] = await Promise.all([
     getTranslations("member-portal"),
     getPortalMasterData(session.subjectRef),
     listPortalPasskeys(session.subjectRef),
     listPortalCorrections(session.subjectRef),
     listPortalConsents(session.subjectRef),
     listPortalReceipts(session.subjectRef),
+    listPortalArt15Requests(session.subjectRef),
+    listPortalProcessingLog(session.subjectRef),
+    listPortalBusinessFeatures(session.subjectRef),
   ]);
 
   if (!masterData) redirect("/portal/giris");
@@ -117,6 +136,37 @@ export async function PortalShellView() {
           voided: r.voided,
         }))}
         stepUpActive={stepUpActive}
+      />
+
+      <PortalRightsPanel
+        initialArt15={art15Requests.map((r) => ({
+          id: r.id,
+          status: r.status,
+          expiresAt: r.expiresAt.toISOString(),
+          createdAt: r.createdAt.toISOString(),
+        }))}
+        processingLog={processingLog.map((e) => ({
+          id: e.id,
+          actorRole: e.actorRole,
+          category: e.category,
+          action: e.action,
+          createdAt: e.createdAt.toISOString(),
+        }))}
+        stepUpActive={stepUpActive}
+        businessLicensed={businessFeatures.licensed}
+        initialEvents={businessFeatures.events.map((ev) => ({
+          id: ev.id,
+          title: ev.title,
+          startDate: ev.startDate.toISOString(),
+          location: ev.location,
+          isOnline: ev.isOnline,
+          isRegistered: ev.isRegistered,
+        }))}
+        initialPendingForms={businessFeatures.pendingForms.map((f) => ({
+          id: f.id,
+          kind: f.kind,
+          expiresAt: f.expiresAt.toISOString(),
+        }))}
       />
     </main>
   );

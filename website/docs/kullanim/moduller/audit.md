@@ -13,7 +13,7 @@ Sistem işlemlerinin değiştirilemez güvenlik ve denetim logları.
 |---|---|
 | Anahtar | `audit` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.0.3 |
+| Sürüm | 1.0.4 |
 | Sayfalar | `/ayarlar/denetim-kaydi` |
 
 ## Varsayılan yetkiler
@@ -25,6 +25,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Güvenlik & Değişiklik Günlüğü | görüntüleme | — | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.0.4 — Üye portalı kişi adı içermeyen işleme günlüğü sözleşmesi
+
+_2026-11-24_
+
+- **Yeni:** Yalnızca ilgili üyeye ait işlemleri rol kategorisiyle döndüren denetim sorgusu eklendi.
 
 ### 1.0.3 — TAX_ADVISOR rolü izin tanımı
 

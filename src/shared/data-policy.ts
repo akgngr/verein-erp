@@ -62,6 +62,7 @@ export const DATA_POLICY = {
   MailSettings: { owner: "mail", category: "K0", reason: "SMTP parolası (şifreli)", sensitiveFields: [] },
   MeetingFile: { owner: "meetings", category: "K0", reason: "Toplantı belgeleri", sensitiveFields: [] },
   MemberNote: { owner: "members", category: "K0", reason: "Serbest metin; özel nitelikli veri içerebilir (DSGVO Md. 9)", sensitiveFields: ["body"] },
+  PortalArt15Request: { owner: "member-portal", category: "K1", reason: "Üye portalı DSGVO Md. 15 dışa aktarım talebi", sensitiveFields: ["subjectRef", "memberId"] },
   PortalConsentChallenge: { owner: "member-portal", category: "K0", reason: "Üye portalı çift onaylı rıza doğrulama belirteci", sensitiveFields: ["tokenHash", "addressMasked"] },
   PortalLoginToken: { owner: "member-portal", category: "K0", reason: "Üye portalı tek kullanımlık giriş belirteci", sensitiveFields: ["tokenHash", "nonceHash"] },
   PortalPasskey: { owner: "member-portal", category: "K0", reason: "Üye portalı WebAuthn geçiş anahtarı", sensitiveFields: ["publicKey"] },

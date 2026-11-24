@@ -13,7 +13,12 @@
     "members": "Wird verwendet, um eigene Stammdaten anzuzeigen, Korrekturvorschläge einzureichen und Einwilligungen zu verwalten.",
     "students": "Wird verwendet, um verknüpfte Schülerdaten für Erziehungsberechtigte anzuzeigen.",
     "mail": "Wird verwendet, um einmalige Anmelde- und Double-Opt-In-Links per E-Mail zu senden.",
-    "donations": "Wird verwendet, um eigene Zuwendungsbestätigungen als PDF herunterzuladen."
+    "donations": "Wird verwendet, um eigene Zuwendungsbestätigungen als PDF herunterzuladen.",
+    "exports": "Wird verwendet, um verschlüsselte DSGVO-Art.-15-Exporte zu erstellen und bereitzustellen.",
+    "audit": "Wird verwendet, um das eigene Verarbeitungsprotokoll ohne Personennamen anzuzeigen.",
+    "events": "Wird verwendet, um sich mit Business+-Lizenz für Veranstaltungen anzumelden.",
+    "online-forms": "Wird verwendet, um mit Business+-Lizenz ausstehende Dokumente zu unterzeichnen.",
+    "system": "Wird verwendet, um den Business+-Lizenzstatus zu prüfen."
   },
   "login": {
     "title": "Anmeldung zum Mitgliederportal",
@@ -93,5 +98,48 @@
       "dues": "Beitragsquittung",
       "donation": "Zuwendungsbestätigung"
     }
+  },
+  "art15": {
+    "title": "DSGVO Art. 15 Datenauskunft",
+    "subtitle": "Fordern Sie eine verschlüsselte Kopie Ihrer Daten an (7 Tage gültig, max. 1 offener Antrag).",
+    "stepUpHint": "Bitte führen Sie zuerst ein Step-up mit Ihrem Passkey durch, um einen Art.-15-Export anzufordern.",
+    "requestButton": "Verschlüsselten Export anfordern",
+    "createdNotice": "Ihr verschlüsselter Art.-15-Export steht bereit (7 Tage gültig).",
+    "errorNotice": "Es liegt bereits ein offener Antrag vor oder ein Step-up ist erforderlich.",
+    "empty": "Noch keine Art.-15-Anfragen.",
+    "bundleTitle": "DSGVO Art. 15 Paket (AES-256-GCM)",
+    "downloadButton": "Verschlüsselte Datei herunterladen"
+  },
+  "processingLog": {
+    "title": "Verarbeitungsprotokoll",
+    "subtitle": "Ausschließlich eigene Einträge; ohne Namen anderer Personen.",
+    "empty": "Noch keine Einträge.",
+    "roles": {
+      "PORTAL": "Mitgliederportal",
+      "BOARD": "Vorstand",
+      "SYSTEM": "System"
+    },
+    "categories": {
+      "masterData": "Stammdaten",
+      "receipts": "Belege",
+      "events": "Veranstaltungen",
+      "signing": "Signatur",
+      "art15": "Art.-15-Export",
+      "portal": "Portal"
+    }
+  },
+  "events": {
+    "title": "Veranstaltungen (Business+)",
+    "subtitle": "Melden Sie sich direkt für veröffentlichte Vereinsveranstaltungen an.",
+    "empty": "Keine bevorstehenden Veranstaltungen.",
+    "registered": "Angemeldet",
+    "registerButton": "Anmelden"
+  },
+  "signing": {
+    "title": "Ausstehende Dokumente (Business+)",
+    "subtitle": "Unterzeichnen Sie offene Online-Formulare direkt im Portal.",
+    "empty": "Keine offenen Dokumente zur Signatur.",
+    "signerNameLabel": "Name des Unterzeichners",
+    "signButton": "Dokument unterzeichnen"
   }
 }
