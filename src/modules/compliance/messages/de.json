@@ -11,7 +11,8 @@
   },
   "access": {
     "system": "Prüft, ob das Modul, aus dem die Regel ihre Daten bezieht, aktiv ist.",
-    "tasks": "Aus einem Befund wird nach Bestätigung ein Aufgabenentwurf erstellt."
+    "tasks": "Aus einem Befund wird nach Bestätigung ein Aufgabenentwurf erstellt.",
+    "exports": "Compliance-Berichte werden als PDF/CSV unter Meine Dateien bereitgestellt."
   },
   "nav": {
     "compliance": "Compliance-Check"
@@ -65,5 +66,16 @@
     "unknownRule": "Regel nicht gefunden.",
     "noTask": "Für diese Regel gibt es keinen Aufgabenvorschlag.",
     "noFinding": "Kein aktueller Befund; bitte Seite neu laden."
+  },
+  "ui": {
+    "yearLabel": "Jahr",
+    "previewToggle": "Entwurfsvorschau",
+    "previewActive": "Vorschau aktiv (?preview=1)",
+    "exportPdf": "Als PDF exportieren",
+    "exportCsv": "Als CSV exportieren",
+    "exportReady": "{format}-Bericht unter Meine Dateien gespeichert.",
+    "downloadExport": "{format} herunterladen",
+    "computedValue": "Berechneter Wert",
+    "askAdvisorLink": "Steuerberatung verwalten"
   }
 }
