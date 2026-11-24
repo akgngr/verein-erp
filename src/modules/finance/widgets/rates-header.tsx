@@ -20,7 +20,6 @@ export default function FinanceRatesHeaderWidget() {
   const [expanded, setExpanded] = useState(false);
 
   const refresh = useCallback(async (active: () => boolean) => {
-    setBusy(true);
     try {
       const result = await fetchExchangeRatesAction({ base: "EUR" });
       if (!active()) return;
@@ -56,7 +55,7 @@ export default function FinanceRatesHeaderWidget() {
         <section aria-label={translate("title")} className="absolute right-0 top-full z-50 mt-2 w-64 max-w-[90vw] rounded-2xl border border-emerald-500/20 bg-surface p-4 text-ink-900 shadow-xl dark:text-ink-100">
           <div className="mb-3 flex items-center justify-between">
             <div className="flex items-center gap-2 text-sm font-bold"><ArrowRightLeft className="size-4 text-emerald-500" aria-hidden="true" />{translate("title")}</div>
-            <button type="button" disabled={busy} onClick={() => void refresh(() => true)} aria-label={translate("refresh")} title={translate("refresh")}
+            <button type="button" disabled={busy} onClick={() => { setBusy(true); void refresh(() => true); }} aria-label={translate("refresh")} title={translate("refresh")}
               className="rounded-lg p-1.5 text-ink-500 transition-colors hover:bg-emerald-500/10 focus-visible:outline-2 focus-visible:outline-emerald-500 disabled:opacity-50">
               <RefreshCw className={`size-4 ${busy ? "animate-spin motion-reduce:animate-none" : ""}`} aria-hidden="true" />
             </button>
