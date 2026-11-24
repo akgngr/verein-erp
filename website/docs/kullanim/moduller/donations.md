@@ -13,7 +13,7 @@ Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı 
 |---|---|
 | Anahtar | `donations` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.11 |
+| Sürüm | 1.1.13 |
 | Sayfalar | `/bagislar`, `/bagislar/bagiscilar`, `/bagislar/bildirimler`, `/bagislar/bildirimler/olustur`, `/bagislar/ayarlar` |
 
 ## Diğer modüllere erişim
@@ -41,6 +41,18 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_donation_statistics`
 
 ## Sürüm notları
+
+### 1.1.13 — nav.json kategori ve alt modül tanımı
+
+_2026-11-24_
+
+- **İyileştirme:** Kullanıcı bazlı sol menü gruplama ve alt modül hiyerarşisi için nav.json eklendi.
+
+### 1.1.12 — Üye portalı bağış makbuzu PDF sözleşmesi
+
+_2026-11-24_
+
+- **Yeni:** Üyenin kendi bağış bildirimlerini portal üzerinden doğrulayıp PDF olarak indirebilmesi için sunucu sözleşmesi eklendi.
 
 ### 1.1.11 — TAX_ADVISOR rolü izin tanımı
 
@@ -78,16 +90,4 @@ _2026-11-17_
 
 - **İyileştirme:** Buton görünümü ve etkileşim semantiği ortak ActionButton pattern'ine taşındı; modül bu kullanımda HeroUI Button implementasyonuna doğrudan bağlı değil.
 
-### 1.1.3 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-### 1.1.2 — AI veri sınıfı
-
-_2026-11-15_
-
-- **İyileştirme:** Bağış istatistiği aracı AI veri sınıfı "aggregate" olarak işaretlendi.
-
-Daha eski 3 herkese açık sürüm notu.
+Daha eski 5 herkese açık sürüm notu.

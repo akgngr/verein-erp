@@ -1,0 +1,65 @@
+{
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı.",
+  "releases": [
+    {
+      "version": "0.3.1",
+      "date": "2026-11-24",
+      "title": {
+        "tr": "Portal CSP nonce, SameSite=Strict oturum ve Secure __Host- çerezleri",
+        "de": "Portal-CSP-Nonce, SameSite=Strict-Sitzung und Secure-__Host--Cookies"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "İstek başına CSP nonce + x-nonce başlığı, __Host-portal-session için SameSite=Strict ve tüm __Host- çerezleri için daima Secure=true eklendi.",
+          "de": "Pro-Anfrage-CSP-Nonce + x-nonce-Header, SameSite=Strict für __Host-portal-session und immer Secure=true für alle __Host--Cookies ergänzt."
+        }
+      ]
+    },
+    {
+      "version": "0.3.0",
+      "date": "2026-11-24",
+      "title": {
+        "tr": "Veri hakları (Md. 15), işleme günlüğü ve Business+ özellikleri (P3)",
+        "de": "Betroffenenrechte (Art. 15), Verarbeitungsprotokoll und Business+-Funktionen (P3)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Step-up korumalı DSGVO Md. 15 şifreli dışa aktarım, kişi adı içermeyen işleme günlüğü ve lisans kapılı Business+ etkinlik kaydı ile belge imzalama eklendi.",
+          "de": "Step-up-geschützter verschlüsselter Art.-15-Export, personenfreies Verarbeitungsprotokoll sowie lizenzgeschützte Business+-Funktionen (Veranstaltungsanmeldung und Dokumentenunterzeichnung) ergänzt."
+        }
+      ]
+    },
+    {
+      "version": "0.2.0",
+      "date": "2026-11-24",
+      "title": {
+        "tr": "Self-servis: düzeltme kuyruğu, rızalar ve makbuzlar (P2)",
+        "de": "Self-Service: Korrekturwarteschlange, Einwilligungen und Belege (P2)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yönetim kurulu onay kuyruklu veri düzeltme önerileri, anında geri çekme + çift onaylı rıza yönetimi ve step-up korumalı imzalı PDF makbuz indirme eklendi.",
+          "de": "Korrekturvorschläge mit Vorstands-Freigabewarteschlange, Sofort-Widerruf + Double-Opt-In-Einwilligungen und Step-up-geschützte signierte PDF-Belegdownloads ergänzt."
+        }
+      ]
+    },
+    {
+      "version": "0.1.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Parolasız üye portalı çekirdeği (P1)",
+        "de": "Passwortloser Mitgliederportal-Kern (P1)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Sihirli bağlantı (15 dk, POST onaylı, nonce bağlı), oturum yönetimi (15 dk boşta / 8 sa mutlak / en fazla 3), WebAuthn passkey step-up ve salt okunur üye ana verisi eklendi.",
+          "de": "Magic-Link-Anmeldung (15 Min., POST-Bestätigung, Nonce-Bindung), Sitzungsverwaltung (15 Min. Inaktivität / 8 Std. absolut / max. 3), WebAuthn-Passkey-Step-up und schreibgeschützte Stammdaten ergänzt."
+        }
+      ]
+    }
+  ]
+}

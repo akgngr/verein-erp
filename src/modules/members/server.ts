@@ -42,6 +42,21 @@ export {
   deleteDueAction,
 } from "./actions/dues-actions";
 export { updateMembershipTypeConfigAction } from "./actions/member-type-actions";
+export {
+  PORTAL_CORRECTION_FIELDS,
+  type PortalCorrectionField,
+  type PortalCorrectionProposalRow,
+  type PortalConsentTarget,
+  listMemberCorrectionProposalsForPortal,
+  proposeMemberCorrectionForPortal,
+  listPendingMemberCorrectionProposals,
+  reviewMemberCorrectionProposalAction,
+  getMemberConsentsForPortal,
+  revokeMemberConsentForPortal,
+  grantMemberConsentForPortal,
+  listMemberPaymentsForPortal,
+  renderMemberPaymentReceiptPdfForPortal,
+} from "./services/portal-self-service";
 
 // --- Handlers (API ince rotaları) ------------------------------------------
 export { exportMembersHandler } from "./handlers/export-members";

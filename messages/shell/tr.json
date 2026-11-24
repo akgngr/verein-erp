@@ -120,7 +120,33 @@
     "userActions": "Kullanıcı işlemleri",
     "overview": "Genel bakış",
     "backToMain": "Ana menü",
-    "backToModule": "{module} menüsüne dön"
+    "backToModule": "{module} menüsüne dön",
+    "customizeMenu": "Menüyü özelleştir",
+    "categories": {
+      "association": "Dernek",
+      "finance": "Finans",
+      "education": "Eğitim",
+      "communication": "İletişim",
+      "operations": "Araçlar"
+    },
+    "customizer": {
+      "title": "Sol Menüyü Özelleştir",
+      "subtitle": "Yalnızca kendi hesabınız için menü grupları oluşturun, modülleri alt modül olarak gruplayın veya gizleyin.",
+      "newGroupPlaceholder": "Yeni kategori adı (ör. Dernek İşleri)",
+      "addGroupButton": "Kategori ekle",
+      "deleteGroupButton": "Grubu sil",
+      "moduleColumn": "Modül",
+      "categoryColumn": "Kategori",
+      "parentColumn": "Üst Modül",
+      "noParent": "Bağımsız (kök)",
+      "visible": "Görünür",
+      "hidden": "Gizli",
+      "moveUp": "Yukarı",
+      "moveDown": "Aşağı",
+      "resetButton": "Varsayılana sıfırla",
+      "saveButton": "Kaydet",
+      "cancelButton": "İptal"
+    }
   },
   "panel": {
     "title": "Panel",

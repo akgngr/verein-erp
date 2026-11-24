@@ -4,8 +4,9 @@ import { syncModuleSchemas } from "../src/shared/modules/sync-schemas";
 import { syncModuleTranslations } from "../src/shared/modules/sync-i18n";
 import { syncModuleRegistry } from "../src/shared/modules/sync-registry";
 import { syncModuleRoutes } from "../src/shared/modules/sync-routes";
+import { syncModuleNavDefaults } from "../src/shared/modules/sync-nav";
 
-export { syncModuleSchemas, syncModuleTranslations, syncModuleRegistry, syncModuleRoutes };
+export { syncModuleSchemas, syncModuleTranslations, syncModuleRegistry, syncModuleRoutes, syncModuleNavDefaults };
 
 // Komut satırından doğrudan çalıştırıldığında:
 const isDirectExecution =
@@ -19,8 +20,9 @@ if (isDirectExecution) {
   const i18nRes = syncModuleTranslations();
   const regRes = syncModuleRegistry();
   const routeRes = syncModuleRoutes();
+  const navRes = syncModuleNavDefaults();
   console.log(
-    `[sync] ${schemaRes.synced.length} şema | Çeviriler (${Object.keys(i18nRes.modulesMerged).join(", ")}) | ${regRes.registered.length} modül | ${routeRes.syncedRoutes.length} rota ${routeRes.rebuilt ? "(modül rotaları yeniden kuruldu)" : "(güncel)"}.`,
+    `[sync] ${schemaRes.synced.length} şema | Çeviriler (${Object.keys(i18nRes.modulesMerged).join(", ")}) | ${regRes.registered.length} modül | ${routeRes.syncedRoutes.length} rota | ${navRes.count} nav.json ${routeRes.rebuilt ? "(modül rotaları yeniden kuruldu)" : "(güncel)"}.`,
   );
   if (routeRes.cleanedRoutes.length > 0) {
     console.log(`[sync] Eski düzenden ${routeRes.cleanedRoutes.length} köprü kaldırıldı (artık (modules) klasöründe).`);

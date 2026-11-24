@@ -13,7 +13,7 @@ Anlık konum bazlı hava durumu, tahminler, panel kartı ve sekreter etkinlik ö
 |---|---|
 | Anahtar | `weather` |
 | Tür | Eklenti |
-| Sürüm | 0.1.3 |
+| Sürüm | 0.1.4 |
 | Sayfalar | `/weather` |
 
 ## Diğer modüllere erişim
@@ -39,6 +39,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_current_weather`
 
 ## Sürüm notları
+
+### 0.1.4 — nav.json kategori ve alt modül tanımı
+
+_2026-11-24_
+
+- **İyileştirme:** Kullanıcı bazlı sol menü gruplama ve alt modül hiyerarşisi için nav.json eklendi.
 
 ### 0.1.3 — TAX_ADVISOR rolü izin tanımı
 

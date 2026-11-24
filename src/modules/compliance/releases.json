@@ -2,6 +2,36 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.2.1",
+      "date": "2026-11-24",
+      "title": {
+        "tr": "nav.json kategori ve alt modül tanımı",
+        "de": "nav.json Kategorie- und Untermodul-Definition"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Kullanıcı bazlı sol menü gruplama ve alt modül hiyerarşisi için nav.json eklendi.",
+          "de": "nav.json für benutzerspezifische Seitenleisten-Gruppierung und Untermodul-Hierarchie ergänzt."
+        }
+      ]
+    },
+    {
+      "version": "0.2.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Uyum kokpiti arayüzü ve PDF/CSV dışa aktarım",
+        "de": "Compliance-Cockpit-Oberfläche und PDF/CSV-Export"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Yıl seçici, klavye erişimli trafik ışığı kartları, yasal kaynak bağlantıları, yönetici önizleme anahtarı (?preview=1) ve Dosyalarım üzerinden PDF/CSV dışa aktarım eklendi.",
+          "de": "Jahresauswahl, tastaturbedienbare Ampelkarten, Rechtsquellen-Links, Admin-Vorschau-Schalter (?preview=1) und PDF/CSV-Export über Meine Dateien ergänzt."
+        }
+      ]
+    },
+    {
       "version": "0.1.1",
       "date": "2026-11-23",
       "title": {
