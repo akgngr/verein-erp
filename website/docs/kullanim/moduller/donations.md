@@ -13,7 +13,7 @@ Bağış kayıtları, bağış makbuzu (Zuwendungsbestätigung) ve bağışçı 
 |---|---|
 | Anahtar | `donations` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.9 |
+| Sürüm | 1.1.10 |
 | Sayfalar | `/bagislar`, `/bagislar/bagiscilar`, `/bagislar/bildirimler`, `/bagislar/bildirimler/olustur`, `/bagislar/ayarlar` |
 
 ## Diğer modüllere erişim

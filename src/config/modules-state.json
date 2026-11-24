@@ -10,5 +10,6 @@
   "meetings": true,
   "donations": true,
   "test_dummy_module": true,
-  "ai": false
+  "ai": false,
+  "compliance": false
 }
