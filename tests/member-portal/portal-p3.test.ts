@@ -1,10 +1,12 @@
 import { describe, it } from "node:test";
 import assert from "node:assert/strict";
-import { createDecipheriv, createHash } from "node:crypto";
 import { readFileSync } from "node:fs";
 import path from "node:path";
 
-import { encryptArt15Payload } from "../../src/modules/exports/services/art15-crypto";
+import {
+  decryptArt15Payload,
+  encryptArt15Payload,
+} from "../../src/modules/exports/services/art15-crypto";
 
 describe("Member Portal P3 — Art. 15, Processing Log & Business+ (ADR 0010)", () => {
   it("Art. 15 payload is encrypted with AES-256-GCM and never stored in plaintext", () => {
@@ -12,22 +14,9 @@ describe("Member Portal P3 — Art. 15, Processing Log & Business+ (ADR 0010)", 
     const envelopeJson = encryptArt15Payload(sample);
     assert.ok(!envelopeJson.includes("alice@example.de"), "plaintext PII must not appear");
 
-    const env = JSON.parse(envelopeJson) as {
-      alg: string;
-      iv: string;
-      tag: string;
-      ciphertext: string;
-    };
+    const env = JSON.parse(envelopeJson) as { alg: string };
     assert.equal(env.alg, "AES-256-GCM");
-
-    const key = createHash("sha256").update("verein-erp-dev-art15-secret").digest();
-    const decipher = createDecipheriv("aes-256-gcm", key, Buffer.from(env.iv, "base64"));
-    decipher.setAuthTag(Buffer.from(env.tag, "base64"));
-    const decrypted = Buffer.concat([
-      decipher.update(Buffer.from(env.ciphertext, "base64")),
-      decipher.final(),
-    ]).toString("utf8");
-    assert.equal(decrypted, sample);
+    assert.equal(decryptArt15Payload(envelopeJson), sample);
   });
 
   it("Art. 15 enforces one open request, step-up, 7-day expiry, and board visibility", () => {

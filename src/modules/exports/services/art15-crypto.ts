@@ -1,4 +1,4 @@
-import { createCipheriv, createHash, randomBytes } from "node:crypto";
+import { createCipheriv, createDecipheriv, createHash, randomBytes } from "node:crypto";
 
 function getEncryptionKey(): Buffer {
   const secret =
@@ -21,4 +21,20 @@ export function encryptArt15Payload(plainJson: string): string {
     tag: tag.toString("base64"),
     ciphertext: encrypted.toString("base64"),
   });
+}
+
+export function decryptArt15Payload(envelopeJson: string): string {
+  const env = JSON.parse(envelopeJson) as {
+    alg: string;
+    iv: string;
+    tag: string;
+    ciphertext: string;
+  };
+  const key = getEncryptionKey();
+  const decipher = createDecipheriv("aes-256-gcm", key, Buffer.from(env.iv, "base64"));
+  decipher.setAuthTag(Buffer.from(env.tag, "base64"));
+  return Buffer.concat([
+    decipher.update(Buffer.from(env.ciphertext, "base64")),
+    decipher.final(),
+  ]).toString("utf8");
 }
