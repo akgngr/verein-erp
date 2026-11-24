@@ -2,7 +2,7 @@ import { cookies } from "next/headers";
 import { notFound, redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 
-import { Button, Card, StatusChip } from "@/shared/components/kit";
+import { Button, Card, CardContent, CardHeader, StatusChip } from "@/shared/components/kit";
 
 import { getActivePortalSession } from "../services/auth";
 import { isPortalEnabled, isPortalStepUpActive, PORTAL_SESSION_COOKIE } from "../services/auth-core";
@@ -56,11 +56,11 @@ export async function PortalShellView() {
       </header>
 
       <Card>
-        <Card.Header>
+        <CardHeader>
           <h2 className="text-base font-semibold text-ink-900">{t("shell.masterDataTitle")}</h2>
           <p className="text-xs text-ink-500">{t("shell.masterDataSubtitle")}</p>
-        </Card.Header>
-        <Card.Content>
+        </CardHeader>
+        <CardContent>
           <dl className="grid grid-cols-1 gap-3 text-sm sm:grid-cols-2">
             <div>
               <dt className="text-xs text-ink-500">{t("shell.fields.email")}</dt>
@@ -83,16 +83,16 @@ export async function PortalShellView() {
               <dd className="font-mono text-ink-900">{masterData.maskedIban ?? "—"}</dd>
             </div>
           </dl>
-        </Card.Content>
+        </CardContent>
       </Card>
 
       <Card>
-        <Card.Header>
+        <CardHeader>
           <h2 className="text-base font-semibold text-ink-900">{t("shell.securityTitle")}</h2>
-        </Card.Header>
-        <Card.Content className="text-sm text-ink-600">
+        </CardHeader>
+        <CardContent className="text-sm text-ink-600">
           <p>{t("shell.passkeyCount", { count: passkeys.length })}</p>
-        </Card.Content>
+        </CardContent>
       </Card>
     </main>
   );
