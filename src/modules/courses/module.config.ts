@@ -24,7 +24,7 @@ import {
 export const moduleConfig: ModuleConfig = {
   key: "courses",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.4.13",
+  version: "1.4.14",
   label: "Kurslar",
   description:
     "Gönüllü kurslar ve Nachhilfe: öğretmenler, dersler, kayıtlar, ücretler ve muhasebe aktarımı.",

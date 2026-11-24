@@ -110,6 +110,7 @@
     "automationWorkflows": "Workflows",
     "bankaBaglantisi": "Bankverbindung",
     "calendar": "Kalender",
+    "compliance": "Compliance-Check",
     "courses": "Kurse",
     "crm": "CRM",
     "demoVeri": "Demodaten",
@@ -3364,6 +3365,72 @@
     },
     "access": {
       "mailings": "Um Zustell-/Lesebestätigungen des Anbieters zu prüfen und im Kampagnen-Versandprotokoll zu speichern."
+    }
+  },
+  "compliance": {
+    "module": {
+      "label": "Compliance-Check",
+      "description": "Interne Checkliste zur Gemeinnützigkeit: Fristen und Grenzen. Keine Steuerberatung."
+    },
+    "permissions": {
+      "compliance": {
+        "label": "Compliance-Check",
+        "description": "Checkliste ansehen, Aufgabenentwurf aus einem Befund, Regel mit Begründung deaktivieren."
+      }
+    },
+    "access": {
+      "system": "Prüft, ob das Modul, aus dem die Regel ihre Daten bezieht, aktiv ist.",
+      "tasks": "Aus einem Befund wird nach Bestätigung ein Aufgabenentwurf erstellt."
+    },
+    "navTitle": "Compliance-Check",
+    "title": "Compliance-Check {year}",
+    "description": "Aus den erfassten Daten berechnete Fristen und Grenzen. Befunde nennen die allgemeine Regel und den Wert; sie entscheiden nichts.",
+    "disclaimer": "Interne Checkliste, keine Steuerberatung. Für Ihren Einzelfall wenden Sie sich an Ihre Steuerberatung.",
+    "previewNotice": "Vorschau: Es werden auch noch nicht geprüfte Regeln (Entwurf) angezeigt. Sie werden nicht gespeichert und erscheinen nicht in Zusammenfassungen.",
+    "areasLabel": "Bereiche",
+    "areas": {
+      "status": "Status und Bestätigungen",
+      "finance": "Mittel und Einnahmen",
+      "people": "Zahlungen"
+    },
+    "light": {
+      "green": "In Ordnung",
+      "yellow": "Achtung",
+      "red": "Kritisch",
+      "grey": "Nicht geprüft"
+    },
+    "mode": {
+      "disabled": "Deaktiviert",
+      "preview": "Vorschau (Entwurf)"
+    },
+    "version": "Version {version}, gültig ab {from}",
+    "legalSource": "Quelle",
+    "ok": "Nach der allgemeinen Regel kein Befund.",
+    "disabledReason": "Vom Verein deaktiviert: {reason}",
+    "empty": "Für dieses Jahr gibt es keine geprüften Regeln.",
+    "unchecked": {
+      "noProvider": "Nicht geprüft: kein Datenlieferant.",
+      "moduleUnavailable": "Nicht geprüft: zugehöriges Modul ist deaktiviert.",
+      "providerError": "Nicht geprüft: Daten konnten nicht gelesen werden.",
+      "notRecorded": "Nicht geprüft: erforderliche Angabe fehlt.",
+      "noBookings": "Nicht geprüft: keine Buchungen für das Jahr.",
+      "wrongShape": "Nicht geprüft: Datenformat passt nicht.",
+      "badRule": "Nicht geprüft: Regeldefinition unvollständig."
+    },
+    "createTask": "Aufgabenentwurf erstellen",
+    "taskCreated": "Aufgabe erstellt.",
+    "reasonLabel": "Begründung",
+    "disableRule": "Regel deaktivieren",
+    "enableRule": "Regel wieder aktivieren",
+    "askAdvisor": "Jeder Befund beruht auf der allgemeinen Quelle. Für die Entscheidung in Ihrem Fall fragen Sie Ihre Steuerberatung.",
+    "secretary": {
+      "findings": "Compliance-Check: {count} Befunde",
+      "disclaimer": "Interne Checkliste, keine Steuerberatung."
+    },
+    "errors": {
+      "unknownRule": "Regel nicht gefunden.",
+      "noTask": "Für diese Regel gibt es keinen Aufgabenvorschlag.",
+      "noFinding": "Kein aktueller Befund; bitte Seite neu laden."
     }
   },
   "courses": {

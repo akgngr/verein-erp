@@ -147,6 +147,8 @@ export const DATA_POLICY = {
   SecretaryProposal: { owner: "secretary", category: "K1", reason: "Sekreter önerisi; içerik ve önizleme şifreli", sensitiveFields: ["payloadEnc", "previewEnc", "preconditionsEnc"], personalOwnerField: "userId" },
   SecretaryFollowUp: { owner: "secretary", category: "K1", reason: "Kullanıcının takip kayıtları; başlık şifreli, kaynak yalnız uygulama içi yol", sensitiveFields: ["titleEnc"], personalOwnerField: "userId" },
   Notification: { owner: "notifications", category: "K1", reason: "Kullanıcı bildirimi; parametreler şifreli, metin okunurken üretilir; 90 gün saklanır", sensitiveFields: ["paramsEnc"], personalOwnerField: "userId" },
+  ComplianceRuleState: { owner: "compliance", category: "K1", reason: "Kurumun kural devre dışı bırakma kararı ve gerekçesi (kişisel veri yok)", sensitiveFields: [] },
+  ComplianceFinding: { owner: "compliance", category: "K1", reason: "Uyum bulgusu: yalnız toplamlar ve takma ad referansları; isim yok", sensitiveFields: [] },
   WidgetUserPreference: { owner: "widgets", category: "K1", reason: "Kullanıcının widget görünürlük ve sıra tercihi (yalnız widget kimliği)", sensitiveFields: [], personalOwnerField: "userId" },
   WidgetPolicy: { owner: "widgets", category: "K1", reason: "Kurum düzeyi widget politikası (kişisel veri yok)", sensitiveFields: [] },
   NotificationPreference: { owner: "notifications", category: "K1", reason: "Bildirim türü × kanal tercihi", sensitiveFields: [], personalOwnerField: "userId" },

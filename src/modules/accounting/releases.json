@@ -2,7 +2,7 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
-      "version": "1.27.1",
+      "version": "1.27.2",
       "date": "2026-11-23",
       "title": {
         "tr": "TAX_ADVISOR rolü izin tanımı",
@@ -13,6 +13,21 @@
           "type": "security",
           "tr": "TAX_ADVISOR rolü için salt okunur görüntüleme izni tanımlandı.",
           "de": "Schreibgeschützte Lese-Berechtigung für die Rolle TAX_ADVISOR ergänzt."
+        }
+      ]
+    },
+    {
+      "version": "1.27.1",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Uyum kontrolü veri sağlayıcısı",
+        "de": "Datenlieferant für den Compliance-Check"
+      },
+      "changes": [
+        {
+          "type": "internal",
+          "tr": "Uyum kontrolü (ADR 0009) için yalnız toplam değer döndüren, salt okunur bir metrik sağlayıcı eklendi.",
+          "de": "Schreibgeschützter Kennzahl-Lieferant (nur Summen) für den Compliance-Check (ADR 0009) ergänzt."
         }
       ]
     },

@@ -13,7 +13,7 @@ Dernek ana verileri, resmi iletişim ve antet logosu.
 |---|---|
 | Anahtar | `organization` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.0.7 |
+| Sürüm | 1.0.8 |
 | Sayfalar | `/ayarlar/dernek` |
 
 ## Varsayılan yetkiler
@@ -32,7 +32,7 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 
 ## Sürüm notları
 
-### 1.0.7 — TAX_ADVISOR rolü izin tanımı
+### 1.0.8 — TAX_ADVISOR rolü izin tanımı
 
 _2026-11-23_
 

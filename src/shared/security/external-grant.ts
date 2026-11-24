@@ -1,7 +1,7 @@
 export const TIME_BOXED_ROLES = ["TAX_ADVISOR"] as const;
 export const EXTERNAL_GRANT_DEFAULT_DAYS = 14;
 export const EXTERNAL_GRANT_MAX_DAYS = 90;
-export const EXTERNAL_GRANT_ALLOWED_MODULES = ["accounting", "finance"] as const;
+export const EXTERNAL_GRANT_ALLOWED_MODULES = ["accounting", "finance", "compliance"] as const;
 
 export type TimeBoxWindow = {
   startsAt: Date;
