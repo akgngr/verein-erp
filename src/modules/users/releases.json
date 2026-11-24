@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.2.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Vergi danışmanı (TAX_ADVISOR) rolü ve zaman sınırlı erişim",
+        "de": "Steuerberater-Rolle (TAX_ADVISOR) und zeitlich begrenzter Zugriff"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Muhasebe ve finans raporları için salt okunur TAX_ADVISOR rolü ile varsayılan 14 / en fazla 90 günlük erişim penceresi yönetimi eklendi.",
+          "de": "Schreibgeschützte Rolle TAX_ADVISOR für Buchhaltung und Finanzberichte sowie Verwaltung zeitlich begrenzter Zugriffsfenster (Standard 14, max. 90 Tage) ergänzt."
+        }
+      ]
+    },
+    {
       "version": "1.1.11",
       "date": "2026-11-23",
       "title": {

@@ -46,6 +46,8 @@ export type DispatchDeps = {
   webPush?: { isAvailable: () => Promise<boolean>; send: (userId: string, message: { title: string; body: string; url: string }) => Promise<{ ok: boolean } | null> };
   /** N6b (#363): SMS (varsayılan kapalı; yapılandırılmamışsa yok sayılır). */
   sms?: { isAvailable: () => Promise<boolean>; send: (userId: string, text: string) => Promise<{ ok: boolean; providerId?: string } | null> };
+  /** N5 (#362): WhatsApp Cloud API (fail closed: onaylı şablon + doğrulanmış numara yoksa yok sayılır). */
+  whatsapp?: { isAvailable: () => Promise<boolean>; send: (userId: string, count: number, link: string) => Promise<{ ok: boolean; providerId?: string } | null> };
   /** N4 (#361): Telegram (yapılandırılmamışsa yok sayılır). */
   telegram?: { isAvailable: () => Promise<boolean>; chatFor: (userId: string) => Promise<string | null>; send: (chatId: string, text: string) => Promise<{ ok: boolean; providerId?: string }> };
 };
@@ -128,6 +130,10 @@ export async function runDispatch(now: Date, deps: DispatchDeps): Promise<Dispat
       const message = messageFor(deps.locale, count, link, text);
       return sms.send(user.id, `${message.subject}\n${link}`).catch(() => ({ ok: false }));
     });
+  }
+  const whatsapp = deps.whatsapp;
+  if (whatsapp && (await whatsapp.isAvailable().catch(() => false))) {
+    senders.set("whatsapp", async (user, count, link) => whatsapp.send(user.id, count, link).catch(() => ({ ok: false })));
   }
   if (!senders.size) return result;
   const db = getDb();
@@ -233,6 +239,10 @@ export async function defaultDispatchDeps(): Promise<DispatchDeps> {
     sms: {
       isAvailable: async () => (await import("./sms")).smsAvailable(),
       send: async (userId, text) => (await import("./sms")).sendSms(userId, text),
+    },
+    whatsapp: {
+      isAvailable: async () => (await import("./whatsapp")).whatsappAvailable(),
+      send: async (userId, count, link) => (await import("./whatsapp")).sendWhatsapp(userId, count, link),
     },
     webPush: {
       isAvailable: async () => Boolean(await (await import("./web-push")).publicKey()),

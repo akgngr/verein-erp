@@ -14,7 +14,7 @@ import { defineNotificationType, defineNotificationTypes } from "@/shared/notifi
 import { definePermissions } from "@/shared/permissions/define";
 import type { Role } from "@/shared/roles";
 
-const perms = definePermissions("demo", { ADMIN: ["view"], BOARD: ["view"], SECRETARY: [], TREASURER: [], AUDITOR: [], TEACHER: [], VIEWER: [] });
+const perms = definePermissions("demo", { ADMIN: ["view"], BOARD: ["view"], SECRETARY: [], TREASURER: [], AUDITOR: [], TAX_ADVISOR: [], TEACHER: [], VIEWER: [] });
 const assigned = defineNotificationType({
   key: "assigned",
   severity: "warning",

@@ -13,7 +13,7 @@ Test kullanıcılarının hata ve önerilerini toplar.
 |---|---|
 | Anahtar | `feedback` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.4 |
+| Sürüm | 1.1.5 |
 | Sayfalar | `/geri-bildirim` |
 
 ## Diğer modüllere erişim
@@ -28,11 +28,17 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| Geri bildirim | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma | görüntüleme, oluşturma | görüntüleme, oluşturma | görüntüleme, oluşturma | görüntüleme, oluşturma | görüntüleme, oluşturma |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| Geri bildirim | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma | görüntüleme, oluşturma | görüntüleme, oluşturma | görüntüleme, oluşturma | — | görüntüleme, oluşturma | görüntüleme, oluşturma |
 
 ## Sürüm notları
+
+### 1.1.5 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 1.1.4 — Arayüz altyapısı
 

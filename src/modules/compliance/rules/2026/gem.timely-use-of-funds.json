@@ -1,0 +1,52 @@
+{
+  "id": "gem.timely-use-of-funds",
+  "version": 1,
+  "title": {
+    "tr": "Fonların zamanında kullanılması (kaba hesap)",
+    "de": "Zeitnahe Mittelverwendung (Überschlag)"
+  },
+  "legalSource": [
+    {
+      "norm": "§ 55 Abs. 1 Nr. 5 AO",
+      "url": "https://www.gesetze-im-internet.de/ao_1977/__55.html"
+    },
+    {
+      "norm": "§ 62 AO",
+      "url": "https://www.gesetze-im-internet.de/ao_1977/__62.html",
+      "note": {
+        "tr": "Rezervler düşülür. Küçük kurumlar için istisnalar olabilir.",
+        "de": "Rücklagen werden abgezogen. Für kleine Körperschaften können Ausnahmen gelten."
+      }
+    }
+  ],
+  "jurisdiction": "DE",
+  "effective": {
+    "from": "2026-01-01",
+    "to": null
+  },
+  "metric": "accounting.unusedFundsOfYear",
+  "params": {
+    "lagYears": 2
+  },
+  "condition": {
+    "op": "gt",
+    "value": 0
+  },
+  "severity": "warn",
+  "finding": {
+    "tr": "Kaba hesap: {year} yılından {lagYear} yılına ait, gelir − gider − açık rezervler sonucu {valueCents} kullanılmamış görünüyor.",
+    "de": "Überschlag: Für {lagYear} ergeben sich Einnahmen − Ausgaben − offene Rücklagen von {valueCents}, die im Jahr {year} noch nicht verwendet erscheinen."
+  },
+  "suggestedTask": {
+    "title": {
+      "tr": "Fon kullanımı ve rezervleri vergi danışmanıyla kontrol et",
+      "de": "Mittelverwendung und Rücklagen mit Steuerberater prüfen"
+    },
+    "dueInDays": 60,
+    "role": "TREASURER"
+  },
+  "review": {
+    "status": "draft",
+    "reviewerRole": "owner"
+  }
+}

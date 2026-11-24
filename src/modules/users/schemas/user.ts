@@ -10,6 +10,9 @@ export const userCreateSchema = z.object({
   email: z.email("validation.emailInvalid").max(200),
   role: roleSchema,
   password: passwordSchema,
+  grantModuleScope: z.enum(["accounting", "finance"]).nullable().optional(),
+  grantStartsAt: z.string().datetime().optional(),
+  grantExpiresAt: z.string().datetime().optional(),
 });
 
 export const userUpdateSchema = z.object({

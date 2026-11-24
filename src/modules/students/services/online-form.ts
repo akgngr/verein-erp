@@ -103,6 +103,13 @@ export async function applyGuardianSelfService(id: string, input: GuardianSelfSe
   return true;
 }
 
+/** SEPA yetki yenileme (online-forms) için: Debitor numarası → veli kimliği. Yalnız kimlik döner, kişi verisi yok. */
+export async function getGuardianIdsByDebtorNumber(debtorNumbers: number[]): Promise<Map<number, string>> {
+  if (!debtorNumbers.length) return new Map();
+  const rows = await getDb().studentGuardian.findMany({ where: { debtorNumber: { in: debtorNumbers }, deletedAt: null }, select: { id: true, debtorNumber: true } });
+  return new Map(rows.map((row) => [row.debtorNumber, row.id]));
+}
+
 /** SEPA modülü için: Debitor numarasına göre velinin yetki bilgisi (IBAN tam; yalnız sunucuda kullanılır). */
 export async function getGuardianMandates(debtorNumbers: number[]) {
   const rows = await getDb().studentGuardian.findMany({

@@ -1,0 +1,21 @@
+{
+  "id": "gem.exemption-notice-expiry",
+  "version": 1,
+  "title": { "tr": "Muafiyet belgesinin geçerlilik süresi", "de": "Gültigkeit des Freistellungsbescheids" },
+  "legalSource": [
+    { "norm": "§ 63 Abs. 5 AO", "url": "https://www.gesetze-im-internet.de/ao_1977/__63.html", "note": { "tr": "Bağış makbuzu yalnız belge tarihi belirli bir süreden eski değilse düzenlenebilir.", "de": "Zuwendungsbestätigungen nur, solange der Bescheid nicht älter als die gesetzliche Frist ist." } },
+    { "norm": "§ 60a AO", "url": "https://www.gesetze-im-internet.de/ao_1977/__60a.html" }
+  ],
+  "jurisdiction": "DE",
+  "effective": { "from": "2026-01-01", "to": null },
+  "metric": "organization.exemptionNoticeDate",
+  "params": { "addYears.EXEMPTION_NOTICE": 5, "addYears.TAX_ASSESSMENT_ANNEX": 5, "addYears.SPECIAL_ASSESSMENT_60A": 3, "warnDays": 180 },
+  "condition": { "op": "daysUntilLte", "value": "warnDays" },
+  "severity": "warn",
+  "finding": {
+    "tr": "Kayıtlı muafiyet belgesi tarihi {date}. Genel kurala göre bu belgeye dayanan bağış makbuzu düzenleme süresi {dueDate} tarihinde bitiyor ({days} gün).",
+    "de": "Hinterlegter Bescheid vom {date}. Nach der allgemeinen Regel endet die darauf gestützte Ausstellung von Zuwendungsbestätigungen am {dueDate} ({days} Tage)."
+  },
+  "suggestedTask": { "title": { "tr": "Muafiyet belgesinin yenilenmesini vergi danışmanıyla görüş", "de": "Erneuerung des Bescheids mit Steuerberater klären" }, "dueInDays": 30, "role": "BOARD" },
+  "review": { "status": "draft", "reviewerRole": "owner" }
+}

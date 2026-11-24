@@ -8,7 +8,7 @@ Tetikleyici: takvim senkron eklentileri, CRM ve sekreter S1–S3 tamamlandığı
 - CI'da imaj taraması ve Semgrep yok. SAST olarak CodeQL varsayılan kurulumu çalışır. Sır taraması ve bağımlılık denetimi #110 ile eklendi.
 
 ## Yapılacaklar (öncelik sırasıyla)
-- [ ] **Yetki matrisi + IDOR testleri** — rol × sayfa/server action, başka kullanıcının kaydına id ile erişim (yetki kayıt defterinden otomatik üret)
+- [x] **Yetki matrisi + IDOR testleri** — rol × sayfa/server action, başka kullanıcının kaydına id ile erişim (yetki kayıt defterinden otomatik üret) (#409)
 - [ ] Canlı sunucu isteyen 3 security testini CI'da build edilmiş uygulamaya karşı çalıştır
 - [x] Gitleaks (sır taraması) — `.github/workflows/security.yml` (#110)
 - [ ] GitHub secret scanning + push protection (repo ayarı; sahibi açmalı)

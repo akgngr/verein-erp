@@ -10,6 +10,7 @@ export const bankingPermissions = definePermissions("banking", {
   SECRETARY: [],
   TREASURER: ["view", "update", "approve"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: [],
 });

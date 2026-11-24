@@ -7,6 +7,7 @@ export const onlineFormsPermissions = definePermissions("online-forms", {
   SECRETARY: ["view", "create", "update"],
   TREASURER: [],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: [],
 });

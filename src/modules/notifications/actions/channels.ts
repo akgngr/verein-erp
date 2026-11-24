@@ -10,6 +10,7 @@ import { type ChannelConfigView, listChannelConfigs } from "../services/channel-
 import { configureSms, confirmSmsVerification, requestSmsVerification, revokeSms, SmsError } from "../services/sms";
 import { configureWebPush, publicKey, subscribe, subscriptionSchema, unsubscribe, WebPushError } from "../services/web-push";
 import { configureTelegram, requestTelegramLink, revokeTelegramLink, TelegramError, telegramLinkStatus } from "../services/telegram";
+import { configureWhatsapp, WhatsappError } from "../services/whatsapp";
 
 const view = { definition: notificationsPermissions, action: "view" as const };
 const admin = { definition: notificationsPermissions, action: "update" as const };
@@ -18,7 +19,7 @@ async function guard<T>(fn: () => Promise<T>): Promise<T> {
   try {
     return await fn();
   } catch (error) {
-    if (error instanceof WebPushError || error instanceof SmsError) throw new ActionError(error.message);
+    if (error instanceof WebPushError || error instanceof SmsError || error instanceof WhatsappError) throw new ActionError(error.message);
     if (error instanceof TelegramError) throw new ActionError(error.message.startsWith("notifications.") ? error.message : "notifications.channels.errors.telegramWebhook");
     throw error;
   }
@@ -119,6 +120,30 @@ export async function saveSmsChannelAction(input: unknown): Promise<ActionResult
     handler: async ({ input, user, audit }) => {
       await guard(() => configureSms(input, user.id));
       await audit({ action: "SETTINGS_UPDATE", entity: "NotificationChannelConfig", entityId: "sms", after: { enabled: input.enabled, provider: input.provider ?? null, keyChanged: Boolean(input.apiKey?.trim()) } });
+      return null;
+    },
+  })(input);
+}
+
+/**
+ * N5 (#362): WhatsApp Cloud API ayarı. Etkinleştirmek için token, telefon numarası kimliği, şablon ve
+ * "Meta şablonu onayladı" teyidi zorunludur (fail closed). Denetimde sır yok.
+ */
+export async function saveWhatsappChannelAction(input: unknown): Promise<ActionResult<null>> {
+  return createAction({
+    permission: admin,
+    schema: z.object({
+      enabled: z.boolean(),
+      accessToken: z.string().max(1024).optional(),
+      phoneNumberId: z.string().max(20).optional(),
+      templateName: z.string().max(512).optional(),
+      templateLanguage: z.string().max(5).optional(),
+      templateApproved: z.boolean().optional(),
+      graphVersion: z.string().max(6).optional(),
+    }).strict(),
+    handler: async ({ input, user, audit }) => {
+      await guard(() => configureWhatsapp(input, user.id));
+      await audit({ action: "SETTINGS_UPDATE", entity: "NotificationChannelConfig", entityId: "whatsapp", after: { enabled: input.enabled, templateApproved: input.templateApproved ?? null, tokenChanged: Boolean(input.accessToken?.trim()) } });
       return null;
     },
   })(input);

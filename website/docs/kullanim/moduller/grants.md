@@ -13,7 +13,7 @@ Hibe ve proje fonları: finansman planı, ödemeler ve Verwendungsnachweis (kull
 |---|---|
 | Anahtar | `grants` |
 | Tür | Resmî modül |
-| Sürüm | 1.0.10 |
+| Sürüm | 1.0.11 |
 | Gerektirir | [Muhasebe](./accounting) |
 
 ## Diğer modüllere erişim
@@ -29,9 +29,9 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| Hibeler | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme, silme | görüntüleme | görüntüleme, oluşturma, düzenleme, silme | görüntüleme | — | — |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| Hibeler | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme, silme | görüntüleme | görüntüleme, oluşturma, düzenleme, silme | görüntüleme | — | — | — |
 
 ## Asistan araçları
 
@@ -40,6 +40,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_grant_overview`
 
 ## Sürüm notları
+
+### 1.0.11 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 1.0.10 — GoBD silme koruması ve şema tutarlılığı
 
@@ -83,10 +89,4 @@ _2026-11-15_
 
 - **Güvenlik:** Toplu istatistik araçları katı girdi, sunucu sonucu ve modele çıkacak alanların açık şemalarıyla v2 sözleşmesine taşındı; kişisel satırlar modele döndürülmez.
 
-### 1.0.2 — Yeni hibe formu çekmecede
-
-_2026-11-07_
-
-- **İyileştirme:** Yeni hibe formu diğer formlar gibi sağdan açılan çekmecede.
-
-Daha eski 2 herkese açık sürüm notu.
+Daha eski 3 herkese açık sürüm notu.

@@ -8,6 +8,7 @@ export const membersPermissions = definePermissions("members", {
   VIEWER: ["view"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
 });
 
@@ -23,6 +24,7 @@ export const memberPaymentsPermissions = definePermissions("memberPayments", {
   VIEWER: [],
   TREASURER: ["view", "create", "update"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
 });
 
@@ -34,6 +36,7 @@ export const memberTypesPermissions = definePermissions("memberTypes", {
   VIEWER: ["view"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
 });
 
@@ -44,6 +47,7 @@ export const memberIdentityPermissions = definePermissions("memberIdentity", {
   SECRETARY: ["view"],
   TREASURER: [],
   AUDITOR: [],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: [],
 });

@@ -6,6 +6,11 @@ import { z } from "zod";
 import { writeAudit } from "@/shared/audit/write-audit";
 import { getDb } from "@/shared/db";
 import { can, type PermissionAction, type PermissionDefinition } from "@/shared/permissions/define";
+import {
+  canExternalReviewerAccessResource,
+  hasActiveExternalGrant,
+  isTimeBoxedRole,
+} from "@/shared/security/external-grant";
 import { buildUserLabel } from "@/shared/utils";
 import type { ActionResult } from "@/shared/types/action";
 
@@ -38,13 +43,26 @@ async function loadPolicy(): Promise<void> {
   await loadPermissionPolicy(true);
 }
 
-/** Mevcut oturum kullanıcısını veritabanından tazeleyerek döner; pasif kullanıcı null döner. */
+async function hasValidTimeBoxedAccess(
+  dbUser: { id: string; role: string },
+  resource?: string,
+  now = new Date(),
+): Promise<boolean> {
+  if (!isTimeBoxedRole(dbUser.role)) return true;
+  const grants = await getDb().externalAccessGrant.findMany({ where: { userId: dbUser.id } });
+  return resource
+    ? canExternalReviewerAccessResource(dbUser.role, grants, resource, now)
+    : hasActiveExternalGrant(grants, now);
+}
+
+/** Mevcut oturum kullanıcısını veritabanından tazeleyerek döner; pasif veya süresi dolmuş harici kullanıcı null döner. */
 export async function getCurrentUser(): Promise<SessionUser | null> {
   const session = await auth();
   if (!session?.user?.id) return null;
 
   const dbUser = await getDb().user.findUnique({ where: { id: session.user.id } });
   if (!dbUser || !dbUser.isActive) return null;
+  if (!(await hasValidTimeBoxedAccess(dbUser))) return null;
   await loadPolicy();
 
   return {
@@ -58,7 +76,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
 
 /**
  * Oturumu doğrular ve kullanıcıyı VERİTABANINDAN yeniden okur.
- * Kullanıcı pasife alınmışsa JWT süresi dolmadan etkisiz hale gelir (6. bölüm, md. 6).
+ * Kullanıcı pasife alınmışsa veya harici erişim süresi dolmuşsa JWT süresi dolmadan etkisiz hale gelir (6. bölüm, md. 6).
  */
 export async function requireUser(): Promise<SessionUser> {
   const session = await auth();
@@ -66,6 +84,9 @@ export async function requireUser(): Promise<SessionUser> {
 
   const dbUser = await getDb().user.findUnique({ where: { id: session.user.id } });
   if (!dbUser || !dbUser.isActive) {
+    throw new UnauthorizedError("auth.errors.sessionInvalid");
+  }
+  if (!(await hasValidTimeBoxedAccess(dbUser))) {
     throw new UnauthorizedError("auth.errors.sessionInvalid");
   }
   await loadPolicy();
@@ -86,6 +107,19 @@ export async function requirePermission(
 ): Promise<SessionUser> {
   const user = await requireUser();
   if (!can(user.role, definition, action)) throw new ForbiddenError();
+  if (isTimeBoxedRole(user.role)) {
+    if (!(await hasValidTimeBoxedAccess(user, definition.resource))) {
+      throw new ForbiddenError();
+    }
+    await writeAudit({
+      userId: user.id,
+      userLabel: buildUserLabel(user.name, user.email),
+      action: "VIEW",
+      entity: "ExternalReviewerView",
+      entityId: definition.resource,
+      after: { action, resource: definition.resource },
+    });
+  }
   return user;
 }
 

@@ -7,6 +7,7 @@ export const progressPermissions = definePermissions("progress", {
   SECRETARY: ["view", "create", "update"],
   TREASURER: [],
   AUDITOR: [],
+  TAX_ADVISOR: [],
   TEACHER: ["view", "create", "update", "delete"],
   VIEWER: [],
 });
@@ -18,6 +19,7 @@ export const progressNotesAllPermissions = definePermissions("progressNotesAll",
   SECRETARY: [],
   TREASURER: [],
   AUDITOR: [],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: [],
 });

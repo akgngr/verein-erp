@@ -21,6 +21,7 @@ import calendaroutlookReleases from "@/modules/calendar-outlook/releases.json";
 import campaignsmsReleases from "@/modules/campaign-sms/releases.json";
 import campaigntelegramReleases from "@/modules/campaign-telegram/releases.json";
 import campaignwhatsappReleases from "@/modules/campaign-whatsapp/releases.json";
+import complianceReleases from "@/modules/compliance/releases.json";
 import coursesReleases from "@/modules/courses/releases.json";
 import crmReleases from "@/modules/crm/releases.json";
 import demoReleases from "@/modules/demo/releases.json";
@@ -66,6 +67,7 @@ export const moduleReleases: { moduleKey: string; releases: ModuleRelease[] }[] 
   { moduleKey: "campaign-sms", releases: campaignsmsReleases.releases as ModuleRelease[] },
   { moduleKey: "campaign-telegram", releases: campaigntelegramReleases.releases as ModuleRelease[] },
   { moduleKey: "campaign-whatsapp", releases: campaignwhatsappReleases.releases as ModuleRelease[] },
+  { moduleKey: "compliance", releases: complianceReleases.releases as ModuleRelease[] },
   { moduleKey: "courses", releases: coursesReleases.releases as ModuleRelease[] },
   { moduleKey: "crm", releases: crmReleases.releases as ModuleRelease[] },
   { moduleKey: "demo", releases: demoReleases.releases as ModuleRelease[] },

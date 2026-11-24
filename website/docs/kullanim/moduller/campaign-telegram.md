@@ -13,7 +13,7 @@ Kampanyalar için Telegram kanalı (Bot API). Kişi davet bağlantısıyla abone
 |---|---|
 | Anahtar | `campaign-telegram` |
 | Tür | Eklenti |
-| Sürüm | 1.0.1 |
+| Sürüm | 1.0.2 |
 | Gerektirir | [Toplu e-posta](./mailings) |
 
 ## Diğer modüllere erişim
@@ -28,11 +28,17 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| Telegram | görüntüleme | görüntüleme | görüntüleme | — | görüntüleme | — | — |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| Telegram | görüntüleme | görüntüleme | görüntüleme | — | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.0.2 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 1.0.0 — İlk sürüm
 

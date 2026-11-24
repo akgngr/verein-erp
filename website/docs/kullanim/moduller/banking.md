@@ -13,7 +13,7 @@ Banka hesaplarını lisanslı PSD2 sağlayıcısı üzerinden bağlar, hareketle
 |---|---|
 | Anahtar | `banking` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.7 |
+| Sürüm | 1.1.8 |
 | Sayfalar | `/ayarlar/banka-baglantisi` |
 | Gerektirir | [Muhasebe](./accounting) |
 
@@ -29,11 +29,17 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| Banka bağlantısı | görüntüleme, düzenleme, onay | görüntüleme | — | görüntüleme, düzenleme, onay | görüntüleme | — | — |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| Banka bağlantısı | görüntüleme, düzenleme, onay | görüntüleme | — | görüntüleme, düzenleme, onay | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.1.8 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 1.1.6 — Kod bakımı
 

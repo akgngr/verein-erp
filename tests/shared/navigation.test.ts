@@ -104,7 +104,7 @@ describe("Menü eşleştirme mantığı", () => {
     BOARD: ["view"],
     SECRETARY: ["view"],
     TREASURER: ["view"],
-    AUDITOR: ["view"],
+    AUDITOR: ["view"], TAX_ADVISOR: [],
     TEACHER: ["view"],
     VIEWER: ["view"],
   });

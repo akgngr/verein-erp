@@ -13,16 +13,16 @@ Dernek ana verileri, resmi iletişim ve antet logosu.
 |---|---|
 | Anahtar | `organization` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.0.6 |
+| Sürüm | 1.0.8 |
 | Sayfalar | `/ayarlar/dernek` |
 
 ## Varsayılan yetkiler
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| Dernek Ana Bilgileri | görüntüleme, düzenleme | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | — | — |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| Dernek Ana Bilgileri | görüntüleme, düzenleme | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | — | — | — |
 
 ## Asistan araçları
 
@@ -31,6 +31,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_organization_info`
 
 ## Sürüm notları
+
+### 1.0.8 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 1.0.5 — Ortak UI bileşenleri (iç değişiklik)
 

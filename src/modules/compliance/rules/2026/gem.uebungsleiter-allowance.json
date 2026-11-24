@@ -1,0 +1,20 @@
+{
+  "id": "gem.uebungsleiter-allowance",
+  "version": 1,
+  "title": { "tr": "Eğitmen ödeneği (Übungsleiterpauschale) yıllık sınırı", "de": "Übungsleiterpauschale je Person" },
+  "legalSource": [
+    { "norm": "§ 3 Nr. 26 EStG", "url": "https://www.gesetze-im-internet.de/estg/__3.html", "note": { "tr": "Tutar incelemede doğrulanmalı (2026 için değişiklik yapılmış olabilir).", "de": "Betrag im Review bestätigen (Änderung ab 2026 möglich)." } }
+  ],
+  "jurisdiction": "DE",
+  "effective": { "from": "2026-01-01", "to": null },
+  "metric": "courses.teacherPayoutsPerPersonYear",
+  "params": { "limitCents": 330000 },
+  "condition": { "op": "gt", "value": "limitCents" },
+  "severity": "warn",
+  "finding": {
+    "tr": "{ref} için {year} yılı onaylı/ödenmiş hakedişleri {valueCents}. Genel yıllık sınır: {thresholdCents}.",
+    "de": "Für {ref} betragen die freigegebenen/ausgezahlten Honorare {year} {valueCents}. Allgemeiner Jahresbetrag: {thresholdCents}."
+  },
+  "suggestedTask": { "title": { "tr": "Eğitmen ödemelerinin vergi durumunu danışmanla görüş", "de": "Steuerliche Behandlung der Übungsleiter-Zahlungen klären" }, "dueInDays": 30, "role": "TREASURER" },
+  "review": { "status": "draft", "reviewerRole": "owner" }
+}

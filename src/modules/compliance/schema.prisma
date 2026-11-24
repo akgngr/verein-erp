@@ -1,0 +1,27 @@
+/// ADR 0009: association may disable a rule (audited reason), never edit its content.
+model ComplianceRuleState {
+  ruleId    String   @id
+  disabled  Boolean
+  reason    String
+  updatedAt DateTime @updatedAt
+
+  @@map("compliance_rule_states")
+}
+
+/// Last evaluation per rule/period/person-ref, with the rule version that produced it (reproducible).
+/// facts hold aggregates only (amounts in cents, counts, dates, pseudonymous refs) — no names.
+model ComplianceFinding {
+  id          String   @id @default(cuid())
+  ruleId      String
+  ruleVersion Int
+  period      Int
+  refKey      String   @default("")
+  status      String // ok | triggered | unchecked
+  severity    String // info | warn | critical
+  facts       Json
+  evaluatedAt DateTime @default(now())
+
+  @@unique([ruleId, period, refKey])
+  @@index([period])
+  @@map("compliance_findings")
+}

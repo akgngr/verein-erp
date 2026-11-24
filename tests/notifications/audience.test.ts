@@ -19,7 +19,7 @@ if (enabled && process.env.DATABASE_URL !== process.env.AI_TEST_DATABASE_URL) th
 test("db: herkese ve role göre; yetkisiz rol hariç; tekrar yok", { skip: !enabled }, async () => {
   const db = getDb();
   const { notify } = await import("@/modules/notifications/services/inbox");
-  const perms = definePermissions("demo", { ADMIN: ["view"], BOARD: ["view"], SECRETARY: ["view"], TREASURER: [], AUDITOR: [], TEACHER: [], VIEWER: [] });
+  const perms = definePermissions("demo", { ADMIN: ["view"], BOARD: ["view"], SECRETARY: ["view"], TREASURER: [], AUDITOR: [], TAX_ADVISOR: [], TEACHER: [], VIEWER: [] });
   const registry = [defineNotificationTypes("notifications", [defineNotificationType({ key: "announcement", severity: "info", defaultChannels: ["in_app"], permission: { definition: perms, action: "view" }, schema: z.object({ title: z.string() }).strict(), titleKey: "notifications.announcement.title", href: () => "/" })])];
   const tag = `au-${randomUUID().slice(0, 8)}`;
   const mk = (role: Role) => db.user.create({ data: { name: tag, email: `${randomUUID()}@${tag}.example.test`, passwordHash: "x", role, isActive: true } });

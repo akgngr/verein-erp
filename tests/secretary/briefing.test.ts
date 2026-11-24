@@ -5,7 +5,7 @@ import { getBriefing, isHidden, sortItems } from "@/modules/secretary/services/b
 import { definePermissions } from "@/shared/permissions/define";
 import { defineModuleSecretary, type BriefingItem, type ModuleSecretary } from "@/shared/secretary/define";
 
-const roles = (admin: ("view")[], board: ("view")[] = []) => ({ ADMIN: admin, BOARD: board, SECRETARY: [], TREASURER: [], AUDITOR: [], TEACHER: [], VIEWER: [] });
+const roles = (admin: ("view")[], board: ("view")[] = []) => ({ ADMIN: admin, BOARD: board, SECRETARY: [], TREASURER: [], AUDITOR: [], TAX_ADVISOR: [], TEACHER: [], VIEWER: [] });
 const view = (grants = roles(["view"])) => ({ definition: definePermissions("demo", grants), action: "view" as const });
 const item = (module: string, kind: string, severity: BriefingItem["severity"] = "info", extra: Partial<BriefingItem> = {}): BriefingItem =>
   ({ id: `${module}:${kind}`, module, kind, severity, title: kind, href: `/${module}`, ...extra });

@@ -1,0 +1,18 @@
+{
+  "id": "gem.receipt-template-validity",
+  "version": 1,
+  "title": { "tr": "Makbuzların muafiyet belgesi süresi içinde düzenlenmesi", "de": "Zuwendungsbestätigungen innerhalb der Bescheid-Gültigkeit" },
+  "legalSource": [{ "norm": "§ 63 Abs. 5 AO", "url": "https://www.gesetze-im-internet.de/ao_1977/__63.html" }],
+  "jurisdiction": "DE",
+  "effective": { "from": "2026-01-01", "to": null },
+  "metric": "donations.receiptsOutsideNoticeValidity",
+  "params": { "addYears.EXEMPTION_NOTICE": 5, "addYears.TAX_ASSESSMENT_ANNEX": 5, "addYears.SPECIAL_ASSESSMENT_60A": 3 },
+  "condition": { "op": "gt", "value": 0 },
+  "severity": "critical",
+  "finding": {
+    "tr": "{year} yılında, antetteki muafiyet belgesinin genel süresi dolduktan sonra düzenlenmiş {value} bağış makbuzu var.",
+    "de": "{year} wurden {value} Zuwendungsbestätigungen nach Ablauf der allgemeinen Frist des im Briefkopf genannten Bescheids ausgestellt."
+  },
+  "suggestedTask": { "title": { "tr": "Etkilenen makbuzları vergi danışmanıyla gözden geçir", "de": "Betroffene Bestätigungen mit Steuerberater prüfen" }, "dueInDays": 14, "role": "TREASURER" },
+  "review": { "status": "draft", "reviewerRole": "owner" }
+}
