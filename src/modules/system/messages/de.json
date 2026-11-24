@@ -53,7 +53,8 @@
     "modulSagligi": "Modul-Gesundheit",
     "widgetlar": "Widget-Einstellungen",
     "privacyPresets": "Datenschutzprofile",
-    "egressReport": "Datenausgangsbericht"
+    "egressReport": "Datenausgangsbericht",
+    "menuDuzeni": "Menüanordnung"
   },
   "meta": {
     "settings": "Einstellungen",
