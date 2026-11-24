@@ -13,7 +13,12 @@
     "members": "Üyenin kendi ana verilerini salt okunur göstermek, düzeltme talebi kuyruğu ve rıza yönetimi için kullanılır.",
     "students": "Veli bağlantılı öğrenci bilgilerini göstermek için kullanılır.",
     "mail": "Tek kullanımlık sihirli giriş bağlantısı ve çift onaylı rıza bağlantısı göndermek için kullanılır.",
-    "donations": "Üyenin kendi bağış makbuzlarını (Zuwendungsbestätigung) PDF olarak indirmesi için kullanılır."
+    "donations": "Üyenin kendi bağış makbuzlarını (Zuwendungsbestätigung) PDF olarak indirmesi için kullanılır.",
+    "exports": "DSGVO Md. 15 şifreli veri dışa aktarımı oluşturmak ve indirmek için kullanılır.",
+    "audit": "Üyenin kendi verilerine ait işleme günlüğünü kişi adı olmadan göstermek için kullanılır.",
+    "events": "Business+ lisansıyla etkinliklere kayıt olmak için kullanılır.",
+    "online-forms": "Business+ lisansıyla bekleyen belgeleri imzalamak için kullanılır.",
+    "system": "Business+ lisans durumunu doğrulamak için kullanılır."
   },
   "login": {
     "title": "Üye Portalı Girişi",
@@ -93,5 +98,48 @@
       "dues": "Aidat Makbuzu",
       "donation": "Bağış Makbuzu"
     }
+  },
+  "art15": {
+    "title": "DSGVO Md. 15 Veri Dışa Aktarımı",
+    "subtitle": "Kişisel verilerinizin şifreli kopyasını talep edin (7 gün geçerli, aynı anda en fazla 1 açık talep).",
+    "stepUpHint": "Md. 15 dışa aktarımı için önce geçiş anahtarı ile ek doğrulama yapın.",
+    "requestButton": "Şifreli dışa aktarım talep et",
+    "createdNotice": "Şifreli Md. 15 dosyanız hazırlandı (7 gün geçerli).",
+    "errorNotice": "Zaten açık bir Md. 15 talebiniz var veya ek doğrulama gerekiyor.",
+    "empty": "Henüz Md. 15 dışa aktarım talebi yok.",
+    "bundleTitle": "DSGVO Md. 15 Paketi (AES-256-GCM)",
+    "downloadButton": "Şifreli dosyayı indir"
+  },
+  "processingLog": {
+    "title": "Veri İşleme Günlüğü",
+    "subtitle": "Yalnızca size ait işlemler; başka kişilerin adları gösterilmez.",
+    "empty": "Henüz işlem kaydı yok.",
+    "roles": {
+      "PORTAL": "Üye Portalı",
+      "BOARD": "Yönetim Kurulu",
+      "SYSTEM": "Sistem"
+    },
+    "categories": {
+      "masterData": "Ana Veri",
+      "receipts": "Makbuzlar",
+      "events": "Etkinlikler",
+      "signing": "İmzalama",
+      "art15": "Md. 15 Dışa Aktarım",
+      "portal": "Portal"
+    }
+  },
+  "events": {
+    "title": "Etkinlikler (Business+)",
+    "subtitle": "Yayımlanan dernek etkinliklerine doğrudan kayıt olun.",
+    "empty": "Yaklaşan etkinlik bulunmuyor.",
+    "registered": "Kayıtlı",
+    "registerButton": "Kayıt ol"
+  },
+  "signing": {
+    "title": "Bekleyen Belgeler (Business+)",
+    "subtitle": "Bekleyen çevrimiçi formları portal üzerinden imzalayın.",
+    "empty": "İmzalanacak bekleyen belge yok.",
+    "signerNameLabel": "İmzalayan adı soyadı",
+    "signButton": "Belgeyi imzala"
   }
 }

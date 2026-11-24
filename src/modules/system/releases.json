@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.18.2",
+      "date": "2026-11-24",
+      "title": {
+        "tr": "Lisans özelliği kontrolü dışa aktarımı",
+        "de": "Export der Lizenzfunktionsprüfung"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "hasLicensedFeature fonksiyonu modül sunucu sözleşmesine eklendi.",
+          "de": "hasLicensedFeature im Server-Vertrag des System-Moduls bereitgestellt."
+        }
+      ]
+    },
+    {
       "version": "1.18.1",
       "date": "2026-11-23",
       "title": {

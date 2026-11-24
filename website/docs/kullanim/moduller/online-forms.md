@@ -13,7 +13,7 @@ e-Sign: kişiye süreli bağlantı, form tamamlama, Datenschutz onayı, imza ve 
 |---|---|
 | Anahtar | `online-forms` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.1 |
+| Sürüm | 1.3.2 |
 | Sayfalar | `/online-formlar` |
 | Gerektirir | [Toplu e-posta](./mailings) |
 | Önerir | [Üyeler](./members), [Öğrenciler](./students) |
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | e-Sign | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | — | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.3.2 — Üye portalı belge imzalama sözleşmesi
+
+_2026-11-24_
+
+- **Yeni:** Üyenin bekleyen çevrimiçi formlarını portal üzerinden imzalaması için sözleşme eklendi.
 
 ### 1.3.1 — TAX_ADVISOR rolü izin tanımı
 
@@ -83,12 +89,4 @@ _2026-11-16_
 
 - **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
 
-### 1.2.0 — Çoklu form belgeleri ve Word benzeri editör
-
-_2026-11-07_
-
-- **Yeni:** Sabit iki metin alanı yerine istenen sayıda belge (Datenschutz, fotoğraf izni, kurallar vb.) eklenebilir; sıralanabilir, form türüne göre gösterilir, onay kutusu isteğe bağlı/zorunlu seçilebilir.
-- **Yeni:** Belgeler tam ekran modalda Tiptap tabanlı Word benzeri editörle düzenlenir (başlıklar, listeler, hizalama, tablo, bağlantı). HTML sunucuda temizlenir.
-- **İyileştirme:** İmzalı PDF ve kanıt kaydı her belgenin metnini ve onay durumunu içerir. Eski metinler belgelere taşındı.
-
-Daha eski 3 herkese açık sürüm notu.
+Daha eski 4 herkese açık sürüm notu.
