@@ -46,3 +46,8 @@ export { templatePreviewPdfHandler } from "./handlers/template-preview-pdf";
 export { exportDonationsHandler } from "./handlers/export-donations";
 export { exportConfirmationsHandler } from "./handlers/export-confirmations";
 export { berlinTodayStart, parseDateOnly } from "./utils";
+export {
+  listDonationConfirmationsForPortal,
+  getDonationConfirmationPdfForPortal,
+  type PortalDonationConfirmationRow,
+} from "./services/portal-receipts";

@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.15.6",
+      "date": "2026-11-24",
+      "title": {
+        "tr": "Üye portalı düzeltme kuyruğu ve self-servis sözleşmeleri",
+        "de": "Mitgliederportal-Korrekturwarteschlange und Self-Service-Verträge"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "MemberCorrectionProposal onay kuyruğu, portal rıza/düzeltme sözleşmeleri ve aidat makbuzu PDF sözleşmesi eklendi.",
+          "de": "Freigabewarteschlange MemberCorrectionProposal, Portal-Einwilligungs-/Korrekturverträge und Beitragsquittungs-PDF-Vertrag ergänzt."
+        }
+      ]
+    },
+    {
       "version": "1.15.5",
       "date": "2026-11-23",
       "title": {

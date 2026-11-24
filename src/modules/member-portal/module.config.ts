@@ -8,13 +8,14 @@ import { memberPortalPermissions } from "./permissions";
  */
 export const moduleConfig: ModuleConfig = {
   key: "member-portal",
-  version: "0.1.0",
+  version: "0.2.0",
   label: "Üye Portalı",
   description: "Parolasız sihirli bağlantı ve geçiş anahtarı ile üye self-servis portalı.",
   category: "EXTENSION",
   hasSchema: true,
   access: [
-    { module: "members", operations: ["read"] },
+    { module: "members", operations: ["read", "write"] },
+    { module: "donations", operations: ["read"] },
     { module: "students", operations: ["read"] },
     { module: "mail", operations: ["write"] },
   ],

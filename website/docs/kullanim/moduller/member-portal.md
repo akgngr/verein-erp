@@ -13,7 +13,7 @@ Parolasız sihirli bağlantı ve geçiş anahtarı ile üye self-servis portalı
 |---|---|
 | Anahtar | `member-portal` |
 | Tür | Eklenti |
-| Sürüm | 0.1.0 |
+| Sürüm | 0.2.0 |
 
 ## Diğer modüllere erişim
 
@@ -21,9 +21,10 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 | Modül | İşlem | Gerekçe |
 |---|---|---|
-| [Üyeler](./members) | okuma | Üyenin kendi ana verilerini salt okunur göstermek için kullanılır. |
+| [Üyeler](./members) | okuma, yazma | Üyenin kendi ana verilerini salt okunur göstermek, düzeltme talebi kuyruğu ve rıza yönetimi için kullanılır. |
+| [Bağışlar](./donations) | okuma | Üyenin kendi bağış makbuzlarını (Zuwendungsbestätigung) PDF olarak indirmesi için kullanılır. |
 | [Öğrenciler](./students) | okuma | Veli bağlantılı öğrenci bilgilerini göstermek için kullanılır. |
-| [E-posta Altyapısı](./mail) | yazma | Tek kullanımlık sihirli giriş bağlantısı göndermek için kullanılır. |
+| [E-posta Altyapısı](./mail) | yazma | Tek kullanımlık sihirli giriş bağlantısı ve çift onaylı rıza bağlantısı göndermek için kullanılır. |
 
 ## Varsayılan yetkiler
 
@@ -34,6 +35,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Üye Portalı Yönetimi | görüntüleme, düzenleme | görüntüleme | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 0.2.0 — Self-servis: düzeltme kuyruğu, rızalar ve makbuzlar (P2)
+
+_2026-11-24_
+
+- **Yeni:** Yönetim kurulu onay kuyruklu veri düzeltme önerileri, anında geri çekme + çift onaylı rıza yönetimi ve step-up korumalı imzalı PDF makbuz indirme eklendi.
 
 ### 0.1.0 — Parolasız üye portalı çekirdeği (P1)
 
