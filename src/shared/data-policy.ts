@@ -62,6 +62,9 @@ export const DATA_POLICY = {
   MailSettings: { owner: "mail", category: "K0", reason: "SMTP parolası (şifreli)", sensitiveFields: [] },
   MeetingFile: { owner: "meetings", category: "K0", reason: "Toplantı belgeleri", sensitiveFields: [] },
   MemberNote: { owner: "members", category: "K0", reason: "Serbest metin; özel nitelikli veri içerebilir (DSGVO Md. 9)", sensitiveFields: ["body"] },
+  PortalLoginToken: { owner: "member-portal", category: "K0", reason: "Üye portalı tek kullanımlık giriş belirteci", sensitiveFields: ["tokenHash", "nonceHash"] },
+  PortalPasskey: { owner: "member-portal", category: "K0", reason: "Üye portalı WebAuthn geçiş anahtarı", sensitiveFields: ["publicKey"] },
+  PortalSession: { owner: "member-portal", category: "K0", reason: "Üye portalı oturumu", sensitiveFields: ["sessionHash"] },
   ProgressNote: { owner: "progress", category: "K0", reason: "Çocuklara ilişkin değerlendirme notları", sensitiveFields: ["goals", "text"] },
   SystemSetting: { owner: "system", category: "K0", reason: "Yapılandırma ve erişim onayları (sır içerebilir)", sensitiveFields: [] },
   User: { owner: "users", category: "K0", reason: "Kimlik doğrulama sırları (parola hash, kilit)", sensitiveFields: ["passwordHash", "email"], directAccess: ["auth"] },
@@ -171,6 +174,7 @@ export const DATA_POLICY = {
   Student: { owner: "students", category: "K3", reason: "Reşit olmayanlar; yapay zekâya yalnız sayım", sensitiveFields: ["firstName", "lastName", "birthDate", "email", "phone"] },
   Task: { owner: "tasks", category: "K3", reason: "Görevler; başlık maskeli, kişi alanları yok", sensitiveFields: ["memberName", "memberId", "createdByLabel", "completedByLabel"] },
   // ── K2 ──
+  SecurityRateLimit: { owner: "member-portal", category: "K2", reason: "Hız sınırı sayacı (yalnızca karma anahtar)", sensitiveFields: [] },
   ExternalAccessGrant: { owner: "users", category: "K2", reason: "Harici inceleme zaman sınırı kaydı", sensitiveFields: [], directAccess: ["auth"], personalOwnerField: "userId" },
   AccountingAccount: { owner: "accounting", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },
   AccountingAsset: { owner: "accounting", category: "K2", reason: "Kişi içermeyen kurumsal/yapılandırma verisi", sensitiveFields: [] },

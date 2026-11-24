@@ -1,0 +1,51 @@
+{
+  "module": {
+    "label": "Mitgliederportal",
+    "description": "Self-Service-Portal für Mitglieder mit passwortlosem Magic Link und Passkey."
+  },
+  "permissions": {
+    "member-portal": {
+      "label": "Mitgliederportal-Verwaltung",
+      "description": "Status und Einstellungen des Mitgliederportals einsehen und verwalten."
+    }
+  },
+  "access": {
+    "members": "Wird verwendet, um die eigenen Stammdaten schreibgeschützt anzuzeigen.",
+    "students": "Wird verwendet, um verknüpfte Schülerdaten für Erziehungsberechtigte anzuzeigen.",
+    "mail": "Wird verwendet, um den einmaligen Anmeldelink per E-Mail zu senden."
+  },
+  "nav": {
+    "portal": "Mitgliederportal"
+  },
+  "login": {
+    "title": "Anmeldung zum Mitgliederportal",
+    "subtitle": "Kein Passwort erforderlich. Wir senden einen einmaligen Anmeldelink an Ihre hinterlegte E-Mail-Adresse.",
+    "emailLabel": "E-Mail-Adresse",
+    "emailPlaceholder": "name@verein.de",
+    "submitButton": "Anmeldelink senden",
+    "sentNotice": "Falls die E-Mail-Adresse bei uns hinterlegt ist, wurde ein Anmeldelink gesendet."
+  },
+  "confirm": {
+    "title": "Anmeldung bestätigen",
+    "subtitle": "Klicken Sie auf die Schaltfläche unten, um Ihre Sitzung zu starten.",
+    "submitButton": "Im Mitgliederportal anmelden",
+    "missingToken": "Ungültiger oder fehlender Anmeldelink."
+  },
+  "shell": {
+    "welcome": "Willkommen, {name}",
+    "memberNumber": "Mitgliedsnummer",
+    "stepUpActive": "Step-up aktiv (5 Min.)",
+    "stepUpRequired": "Für geschützte Aktionen Step-up erforderlich",
+    "signOutEverywhere": "Überall abmelden",
+    "masterDataTitle": "Meine Stammdaten (Nur Lesen)",
+    "masterDataSubtitle": "Ihre Daten sind ausschließlich für Sie sichtbar.",
+    "securityTitle": "Sicherheit und Passkeys",
+    "passkeyCount": "Registrierte Passkeys: {count}",
+    "fields": {
+      "email": "E-Mail",
+      "phone": "Telefon",
+      "address": "Adresse",
+      "iban": "IBAN (Maskiert)"
+    }
+  }
+}

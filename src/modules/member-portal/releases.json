@@ -1,0 +1,20 @@
+{
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı.",
+  "releases": [
+    {
+      "version": "0.1.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "Parolasız üye portalı çekirdeği (P1)",
+        "de": "Passwortloser Mitgliederportal-Kern (P1)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Sihirli bağlantı (15 dk, POST onaylı, nonce bağlı), oturum yönetimi (15 dk boşta / 8 sa mutlak / en fazla 3), WebAuthn passkey step-up ve salt okunur üye ana verisi eklendi.",
+          "de": "Magic-Link-Anmeldung (15 Min., POST-Bestätigung, Nonce-Bindung), Sitzungsverwaltung (15 Min. Inaktivität / 8 Std. absolut / max. 3), WebAuthn-Passkey-Step-up und schreibgeschützte Stammdaten ergänzt."
+        }
+      ]
+    }
+  ]
+}

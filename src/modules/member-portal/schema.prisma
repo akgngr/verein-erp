@@ -1,0 +1,49 @@
+model PortalLoginToken {
+  id         String    @id @default(cuid())
+  tokenHash  String    @unique
+  subjectRef String
+  nonceHash  String
+  purpose    String    @default("login") // "login" | "stepup"
+  expiresAt  DateTime
+  usedAt     DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@index([subjectRef, expiresAt])
+  @@map("portal_login_tokens")
+}
+
+model PortalSession {
+  id          String    @id @default(cuid())
+  sessionHash String    @unique
+  subjectRef  String
+  stepUpUntil DateTime?
+  lastSeenAt  DateTime  @default(now())
+  expiresAt   DateTime
+  revokedAt   DateTime?
+  createdAt   DateTime  @default(now())
+
+  @@index([subjectRef, expiresAt])
+  @@map("portal_sessions")
+}
+
+model PortalPasskey {
+  id           String   @id @default(cuid())
+  subjectRef   String
+  credentialId String   @unique
+  publicKey    String
+  counter      Int      @default(0)
+  transports   String?
+  createdAt    DateTime @default(now())
+
+  @@index([subjectRef])
+  @@map("portal_passkeys")
+}
+
+model SecurityRateLimit {
+  key         String    @id
+  count       Int       @default(0)
+  windowStart DateTime
+  lockedUntil DateTime?
+
+  @@map("security_rate_limits")
+}
