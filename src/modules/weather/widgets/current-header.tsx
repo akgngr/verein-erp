@@ -27,7 +27,6 @@ export default function CurrentWeatherHeaderWidget() {
   const [expanded, setExpanded] = useState(false);
 
   const refresh = useCallback(async (active: () => boolean) => {
-    setBusy(true);
     try {
       const result = await searchCityWeatherAction({ query: CITY });
       if (!active()) return;
@@ -62,7 +61,7 @@ export default function CurrentWeatherHeaderWidget() {
         <section aria-label={translate("title")} className="absolute right-0 top-full z-50 mt-2 w-64 max-w-[90vw] rounded-2xl border border-sky-500/20 bg-surface p-4 text-ink-900 shadow-xl dark:text-ink-100">
           <div className="flex items-center justify-between">
             <span className="flex items-center gap-1.5 text-xs font-semibold"><MapPin className="size-3.5 text-sky-500" aria-hidden="true" />{CITY}</span>
-            <button type="button" disabled={busy} onClick={() => void refresh(() => true)} aria-label={translate("refresh")} title={translate("refresh")}
+            <button type="button" disabled={busy} onClick={() => { setBusy(true); void refresh(() => true); }} aria-label={translate("refresh")} title={translate("refresh")}
               className="rounded-lg p-1.5 text-ink-500 transition-colors hover:bg-sky-500/10 focus-visible:outline-2 focus-visible:outline-sky-500 disabled:opacity-50">
               <RefreshCw className={`size-4 ${busy ? "animate-spin motion-reduce:animate-none" : ""}`} aria-hidden="true" />
             </button>
