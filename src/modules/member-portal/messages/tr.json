@@ -1,0 +1,51 @@
+{
+  "module": {
+    "label": "Üye Portalı",
+    "description": "Parolasız sihirli bağlantı ve geçiş anahtarı ile üye self-servis portalı."
+  },
+  "permissions": {
+    "member-portal": {
+      "label": "Üye Portalı Yönetimi",
+      "description": "Üye portalı ayarlarını ve durumunu görüntüleme/yönetme."
+    }
+  },
+  "access": {
+    "members": "Üyenin kendi ana verilerini salt okunur göstermek için kullanılır.",
+    "students": "Veli bağlantılı öğrenci bilgilerini göstermek için kullanılır.",
+    "mail": "Tek kullanımlık sihirli giriş bağlantısı göndermek için kullanılır."
+  },
+  "nav": {
+    "portal": "Üye Portalı"
+  },
+  "login": {
+    "title": "Üye Portalı Girişi",
+    "subtitle": "Parola gerekmez. Kayıtlı e-posta adresinize tek kullanımlık giriş bağlantısı göndeririz.",
+    "emailLabel": "E-posta adresi",
+    "emailPlaceholder": "ornek@dernek.de",
+    "submitButton": "Giriş bağlantısı gönder",
+    "sentNotice": "E-posta adresi kayıtlarımızda varsa giriş bağlantısı gönderildi."
+  },
+  "confirm": {
+    "title": "Girişi Onayla",
+    "subtitle": "Oturumu başlatmak için aşağıdaki düğmeye basın.",
+    "submitButton": "Üye portalına giriş yap",
+    "missingToken": "Geçersiz veya eksik giriş bağlantısı."
+  },
+  "shell": {
+    "welcome": "Hoş geldiniz, {name}",
+    "memberNumber": "Üye numarası",
+    "stepUpActive": "Ek doğrulama aktif (5 dk)",
+    "stepUpRequired": "Hassas işlemler için ek doğrulama gerekir",
+    "signOutEverywhere": "Tüm oturumlardan çık",
+    "masterDataTitle": "Üyelik Bilgilerim (Salt Okunur)",
+    "masterDataSubtitle": "Kişisel verileriniz yalnızca sizin tarafınızdan görüntülenir.",
+    "securityTitle": "Güvenlik ve Geçiş Anahtarları",
+    "passkeyCount": "Kayıtlı geçiş anahtarı (Passkey): {count}",
+    "fields": {
+      "email": "E-posta",
+      "phone": "Telefon",
+      "address": "Adres",
+      "iban": "IBAN (Maskeli)"
+    }
+  }
+}

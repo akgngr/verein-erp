@@ -34,6 +34,7 @@ import * as grantsPermissionExports from "@/modules/grants/permissions";
 import * as inventoryPermissionExports from "@/modules/inventory/permissions";
 import * as mailPermissionExports from "@/modules/mail/permissions";
 import * as mailingsPermissionExports from "@/modules/mailings/permissions";
+import * as memberportalPermissionExports from "@/modules/member-portal/permissions";
 import * as notificationsPermissionExports from "@/modules/notifications/permissions";
 import * as onlineformsPermissionExports from "@/modules/online-forms/permissions";
 import * as progressPermissionExports from "@/modules/progress/permissions";
@@ -84,6 +85,7 @@ export const permissionResources: { moduleKey: string; definitions: PermissionDe
   { moduleKey: "inventory", definitions: definitionsOf(inventoryPermissionExports) },
   { moduleKey: "mail", definitions: definitionsOf(mailPermissionExports) },
   { moduleKey: "mailings", definitions: definitionsOf(mailingsPermissionExports) },
+  { moduleKey: "member-portal", definitions: definitionsOf(memberportalPermissionExports) },
   { moduleKey: "notifications", definitions: definitionsOf(notificationsPermissionExports) },
   { moduleKey: "online-forms", definitions: definitionsOf(onlineformsPermissionExports) },
   { moduleKey: "progress", definitions: definitionsOf(progressPermissionExports) },
