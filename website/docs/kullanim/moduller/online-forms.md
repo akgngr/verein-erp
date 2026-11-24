@@ -13,7 +13,7 @@ e-Sign: kişiye süreli bağlantı, form tamamlama, Datenschutz onayı, imza ve 
 |---|---|
 | Anahtar | `online-forms` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.2 |
+| Sürüm | 1.3.3 |
 | Sayfalar | `/online-formlar` |
 | Gerektirir | [Toplu e-posta](./mailings) |
 | Önerir | [Üyeler](./members), [Öğrenciler](./students) |
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | e-Sign | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | — | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 1.3.3 — nav.json kategori ve alt modül tanımı
+
+_2026-11-24_
+
+- **İyileştirme:** Kullanıcı bazlı sol menü gruplama ve alt modül hiyerarşisi için nav.json eklendi.
 
 ### 1.3.2 — Üye portalı belge imzalama sözleşmesi
 
@@ -83,10 +89,4 @@ _2026-11-17_
 
 - **İyileştirme:** Buton görünümü ve etkileşim semantiği ortak ActionButton pattern'ine taşındı; modül bu kullanımda HeroUI Button implementasyonuna doğrudan bağlı değil.
 
-### 1.2.1 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-Daha eski 4 herkese açık sürüm notu.
+Daha eski 5 herkese açık sürüm notu.

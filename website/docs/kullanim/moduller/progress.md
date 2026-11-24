@@ -13,7 +13,7 @@ Kurs öğrencilerinin yoklaması, sınav ve notları, gelişim notları ve veli 
 |---|---|
 | Anahtar | `progress` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.6 |
+| Sürüm | 1.1.7 |
 | Sayfalar | `/ogrenci-takibi` |
 | Gerektirir | [Kurslar](./courses) |
 
@@ -42,6 +42,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_progress_statistics`
 
 ## Sürüm notları
+
+### 1.1.7 — nav.json kategori ve alt modül tanımı
+
+_2026-11-24_
+
+- **İyileştirme:** Kullanıcı bazlı sol menü gruplama ve alt modül hiyerarşisi için nav.json eklendi.
 
 ### 1.1.6 — TAX_ADVISOR rolü izin tanımı
 
@@ -85,9 +91,4 @@ _2026-11-01_
 
 - **İyileştirme:** Öğrenci takibi ana menüde değil, Kurslar menüsünde.
 
-### 1.0.0 — Kurslar, öğrenciler ve öğrenci takibi
-
-_2026-10-30_
-
-- **Yeni:** Kurs ve özel ders yönetimi, öğretmen rolü, ücretler ve muhasebe aktarımı.
-- **Yeni:** Öğrenci ve veli kayıtları (DATEV uyumlu); devam, not ve değerlendirme takibi.
+Daha eski 1 herkese açık sürüm notu.

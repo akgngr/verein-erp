@@ -3,6 +3,7 @@
 import { Button, Drawer, Dropdown, Label, Tooltip } from "@heroui/react";
 import {
   Building2,
+  ChevronDown,
   ChevronLeft,
   ChevronRight,
   LayoutDashboard,
@@ -11,6 +12,7 @@ import {
   PanelLeftClose,
   PanelLeftOpen,
   Settings,
+  SlidersHorizontal,
   UserRound,
   type LucideIcon,
 } from "lucide-react";
@@ -28,8 +30,16 @@ import { useTranslations } from "next-intl";
 
 import { registry } from "@/registry";
 import { RoleChip } from "@/shared/components/roles/roles-provider";
+import { MODULE_NAV_DEFAULTS } from "@/shared/navigation/nav-defaults.generated";
+import {
+  resolveUserSidebarTree,
+  type ResolvedNavNode,
+  type UserNavConfig,
+} from "@/shared/navigation/user-nav";
 import type { Role } from "@/shared/roles";
 import { can } from "@/shared/permissions/define";
+
+import { NavCustomizerModal } from "./nav-customizer-modal";
 import {
   MODULE_HOME_KEY,
   findActiveKey,
@@ -195,11 +205,13 @@ type MenuLink = {
 function SidebarContent({
   role,
   activeModuleKeys,
+  initialNavConfig = null,
   onNavigate,
   collapsed = false,
 }: {
   role: Role;
   activeModuleKeys?: string[];
+  initialNavConfig?: UserNavConfig | null;
   onNavigate?: () => void;
   /** İkon şeridi: etiketler gizlenir, ipucu (tooltip) olarak gösterilir. */
   collapsed?: boolean;
@@ -209,6 +221,16 @@ function SidebarContent({
   const tNav = useTranslations("nav");
   const tSidebar = useTranslations("sidebar");
   const tRoot = useTranslations();
+
+  const [navConfig, setNavConfig] = useState<UserNavConfig | null>(initialNavConfig);
+  const [collapsedGroups, setCollapsedGroups] = useState<Record<string, boolean>>(() => {
+    const map: Record<string, boolean> = {};
+    for (const id of initialNavConfig?.collapsedGroupIds ?? []) {
+      map[id] = true;
+    }
+    return map;
+  });
+  const [customizerOpen, setCustomizerOpen] = useState(false);
 
   const allowed = (permission: PermissionRequirement) =>
     can(role, permission.definition, permission.action);
@@ -469,13 +491,103 @@ function SidebarContent({
               );
             })()
           : null}
-        <div className="flex flex-col gap-1">
-          {mainItems.map(renderMainItem)}
-        </div>
+        {(() => {
+          const navTree = resolveUserSidebarTree({
+            items: mainItems,
+            modules: visibleModules,
+            defaults: MODULE_NAV_DEFAULTS,
+            userConfig: navConfig,
+            defaultCategoryLabels: {
+              association: tSidebar("categories.association"),
+              finance: tSidebar("categories.finance"),
+              education: tSidebar("categories.education"),
+              communication: tSidebar("categories.communication"),
+              operations: tSidebar("categories.operations"),
+            },
+          });
+
+          const renderNodeTree = (node: ResolvedNavNode) => (
+            <div key={node.moduleKey} className="flex flex-col gap-0.5">
+              {renderMainItem(node.item)}
+              {!collapsed && node.children.length > 0 ? (
+                <div className="ml-4 flex flex-col gap-0.5 border-l border-white/15 pl-2.5">
+                  {node.children.map((child) => renderNodeTree(child))}
+                </div>
+              ) : null}
+            </div>
+          );
+
+          if (collapsed) {
+            return (
+              <div className="flex flex-col gap-1">
+                {mainItems.map(renderMainItem)}
+              </div>
+            );
+          }
+
+          return (
+            <>
+              <div className="flex flex-col gap-1">
+                {navTree.pinnedTop.map(renderMainItem)}
+              </div>
+              <div className="flex flex-col gap-3">
+                {navTree.categories.map((category) => {
+                  const isGroupCollapsed = Boolean(collapsedGroups[category.id]);
+                  return (
+                    <div key={category.id} className="flex flex-col gap-1">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setCollapsedGroups((prev) => ({
+                            ...prev,
+                            [category.id]: !prev[category.id],
+                          }))
+                        }
+                        aria-expanded={!isGroupCollapsed}
+                        className="flex items-center justify-between px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-white/50 hover:text-white/80"
+                      >
+                        <span className="truncate">{category.label}</span>
+                        {isGroupCollapsed ? (
+                          <ChevronRight className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                        ) : (
+                          <ChevronDown className="h-3.5 w-3.5 shrink-0" aria-hidden />
+                        )}
+                      </button>
+                      {!isGroupCollapsed ? (
+                        <div className="flex flex-col gap-0.5">
+                          {category.nodes.map(renderNodeTree)}
+                        </div>
+                      ) : null}
+                    </div>
+                  );
+                })}
+              </div>
+              <NavCustomizerModal
+                open={customizerOpen}
+                onClose={() => setCustomizerOpen(false)}
+                allItems={navTree.allItems}
+                categories={navTree.categories}
+                initialConfig={navConfig}
+                labelForItem={(node) => navLabel(node.item)}
+                onSaved={(next) => setNavConfig(next)}
+              />
+            </>
+          );
+        })()}
         {settings ? (
           <div className="flex flex-col gap-1 border-t border-white/15 pt-3">
             {renderMainItem(settings.hub)}
           </div>
+        ) : null}
+        {!collapsed ? (
+          <button
+            type="button"
+            onClick={() => setCustomizerOpen(true)}
+            className="flex items-center gap-2 rounded-lg px-3 py-1.5 text-xs font-medium text-white/60 hover:bg-white/10 hover:text-white"
+          >
+            <SlidersHorizontal className="h-3.5 w-3.5 shrink-0" aria-hidden />
+            <span className="truncate">{tSidebar("customizeMenu")}</span>
+          </button>
         ) : null}
       </nav>
 
@@ -689,12 +801,14 @@ function SidebarUserFooter({
 function DesktopSidebar({
   role,
   activeModuleKeys,
+  initialNavConfig = null,
   userName,
   userEmail,
   onSignOut,
 }: {
   role: Role;
   activeModuleKeys?: string[];
+  initialNavConfig?: UserNavConfig | null;
   userName?: string;
   userEmail?: string;
   onSignOut?: () => Promise<void>;
@@ -714,6 +828,7 @@ function DesktopSidebar({
         <SidebarContent
           role={role}
           activeModuleKeys={activeModuleKeys}
+          initialNavConfig={initialNavConfig}
           collapsed={collapsed}
         />
       </div>
@@ -759,12 +874,14 @@ function DesktopSidebar({
 function MobileSidebar({
   role,
   activeModuleKeys,
+  initialNavConfig = null,
   userName,
   userEmail,
   onSignOut,
 }: {
   role: Role;
   activeModuleKeys?: string[];
+  initialNavConfig?: UserNavConfig | null;
   userName?: string;
   userEmail?: string;
   onSignOut?: () => Promise<void>;
@@ -785,6 +902,7 @@ function MobileSidebar({
                   <SidebarContent
                     role={role}
                     activeModuleKeys={activeModuleKeys}
+                    initialNavConfig={initialNavConfig}
                     onNavigate={close}
                   />
                 </Drawer.Body>

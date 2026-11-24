@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.3.0",
+      "date": "2026-11-24",
+      "title": {
+        "tr": "Kullanıcı bazlı sol menü özelleştirme tercihi",
+        "de": "Benutzerspezifische Seitenleisten-Navigationseinstellungen"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "UserNavPreference modeli, /api/users/nav-preferences uç noktası ve DSGVO silme kancası eklendi.",
+          "de": "Modell UserNavPreference, Endpunkt /api/users/nav-preferences und DSGVO-Lösch-Hook ergänzt."
+        }
+      ]
+    },
+    {
       "version": "1.2.0",
       "date": "2026-11-23",
       "title": {

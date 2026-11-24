@@ -166,7 +166,33 @@
     "userActions": "Benutzeraktionen",
     "overview": "Übersicht",
     "backToMain": "Hauptmenü",
-    "backToModule": "Zurück zu {module}"
+    "backToModule": "Zurück zu {module}",
+    "customizeMenu": "Menü anpassen",
+    "categories": {
+      "association": "Verein",
+      "finance": "Finanzen",
+      "education": "Bildung",
+      "communication": "Kommunikation",
+      "operations": "Werkzeuge"
+    },
+    "customizer": {
+      "title": "Seitenleiste anpassen",
+      "subtitle": "Erstellen Sie persönliche Kategorien, ordnen Sie Untermodule zu oder blenden Sie Module aus.",
+      "newGroupPlaceholder": "Neuer Kategoriename (z. B. Vereinsarbeit)",
+      "addGroupButton": "Kategorie hinzufügen",
+      "deleteGroupButton": "Gruppe löschen",
+      "moduleColumn": "Modul",
+      "categoryColumn": "Kategorie",
+      "parentColumn": "Übergeordnet",
+      "noParent": "Eigenständig (Stamm)",
+      "visible": "Sichtbar",
+      "hidden": "Ausgeblendet",
+      "moveUp": "Hoch",
+      "moveDown": "Runter",
+      "resetButton": "Zurücksetzen",
+      "saveButton": "Speichern",
+      "cancelButton": "Abbrechen"
+    }
   },
   "panel": {
     "title": "Dashboard",

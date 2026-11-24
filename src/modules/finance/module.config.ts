@@ -6,7 +6,7 @@ import { financePermissions } from "./permissions";
 
 export const moduleConfig: ModuleConfig = {
   key: "finance",
-  version: "0.1.3",
+  version: "0.1.4",
   label: "Finans",
   description:
     "Canlı döviz kurları, piyasa göstergeleri, kur çevirici ve finansal AI asistanı.",

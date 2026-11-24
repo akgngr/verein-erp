@@ -5,7 +5,7 @@ import { eventsPermissions } from "./permissions";
 export const moduleConfig: ModuleConfig = {
   key: "events",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.2.11",
+  version: "1.2.12",
   label: "Etkinlikler",
   description:
     "Dernek etkinlikleri, seminerler, atölyeler ve katılımcı yönetimi.",

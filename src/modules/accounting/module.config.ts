@@ -28,7 +28,7 @@ import {
 export const moduleConfig: ModuleConfig = {
   key: "accounting",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.27.2",
+  version: "1.27.3",
   label: "Muhasebe",
   description:
     "Dernekler ve küçük işletmeler için EÜR odaklı gelir-gider, fiş, fatura ve bütçe yönetimi.",
