@@ -72,6 +72,9 @@ export const authConfig = {
       // /giris?pasif=1 adresine yönlendirir ve döngü burada kırılır.
       const isPassiveNotice = path === "/giris" && nextUrl.searchParams.has("pasif");
 
+      // Davet bağlantısı (users/invitations): oturumsuz açılır; belirteç sunucuda doğrulanır.
+      if (path.startsWith("/davet/")) return true;
+
       if (path === "/giris" && !isPassiveNotice) {
         return sessionUser ? NextResponse.redirect(new URL("/", nextUrl)) : true;
       }

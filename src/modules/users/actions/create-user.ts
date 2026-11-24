@@ -15,10 +15,12 @@ import { ActionError, createAction } from "@/modules/auth/server";
 import { usersPermissions } from "../permissions";
 import { userCreateSchema } from "../schemas/user";
 import { createExternalGrant } from "../services/external-grants";
+import { sendInvitationTo } from "../services/invitation-mail";
+import { randomBytes } from "node:crypto";
 import { isAssignableRole } from "../services/roles";
 
 /** Yeni kullanıcı: ad, e-posta, rol, geçici parola; mustChangePassword = true (11.1). */
-export async function createUserAction(input: unknown): Promise<ActionResult<{ id: string }>> {
+export async function createUserAction(input: unknown): Promise<ActionResult<{ id: string; inviteSent: boolean }>> {
   const run = createAction({
     permission: { definition: usersPermissions, action: "create" },
     schema: userCreateSchema,
@@ -67,8 +69,9 @@ export async function createUserAction(input: unknown): Promise<ActionResult<{ i
           name: input.name,
           email,
           role: input.role,
-          passwordHash: await hashPassword(input.password),
-          mustChangePassword: true,
+          // Davet modunda kimsenin bilmediği rastgele parola; kullanıcı bağlantıyla kendi parolasını belirler.
+          passwordHash: await hashPassword(input.setupMode === "password" && input.password ? input.password : randomBytes(32).toString("base64url")),
+          mustChangePassword: input.setupMode === "password",
         },
       });
 
@@ -90,9 +93,16 @@ export async function createUserAction(input: unknown): Promise<ActionResult<{ i
         });
       }
 
-      return { id: created.id };
+      let inviteSent = false;
+      if (input.setupMode === "invite") {
+        // Kullanıcı oluştu; e-posta gönderilemezse hata yerine bilgi döner (satırdaki "Davet gönder" ile yeniden denenir).
+        inviteSent = await sendInvitationTo({ id: created.id, name: created.name, email: created.email, locale: created.locale }, user.id).then(() => true, () => false);
+        if (inviteSent) await audit({ action: "USER_INVITE", entity: "User", entityId: created.id });
+      }
+
+      return { id: created.id, inviteSent };
     },
   });
 
-  return run(input) as Promise<ActionResult<{ id: string }>>;
+  return run(input) as Promise<ActionResult<{ id: string; inviteSent: boolean }>>;
 }

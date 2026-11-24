@@ -53,10 +53,11 @@ export function UserCreateForm() {
   const [formError, setFormError] = useState<string | null>(null);
   const form = useForm<UserCreateInput>({
     resolver: zodResolver(userCreateSchema),
-    defaultValues: { name: "", email: "", role: "VIEWER", password: "" },
+    defaultValues: { name: "", email: "", role: "VIEWER", setupMode: "invite", password: "" },
   });
 
   const selectedRole = (useWatch({ control: form.control, name: "role" }) as Role) || "VIEWER";
+  const setupMode = useWatch({ control: form.control, name: "setupMode" }) ?? "invite";
 
   const onSubmit = form.handleSubmit(async (values) => {
     setFormError(null);
@@ -65,7 +66,12 @@ export function UserCreateForm() {
       setFormError(applyActionResult(result, form.setError));
       return;
     }
-    notify.success(t("created"));
+    if (values.setupMode === "invite") {
+      if (result.data.inviteSent) notify.success(t("createdInvited", { email: values.email }));
+      else notify.warning(t("createdInviteFailed"));
+    } else {
+      notify.success(t("created"));
+    }
     if (closeDrawer) {
       closeDrawer();
     } else {
@@ -98,14 +104,27 @@ export function UserCreateForm() {
         isRequired
       />
       <RolePermissionsPreview role={selectedRole} />
-      <FormPasswordInput
-        name="password"
-        label={t("tempPassword")}
+      <FormSelect
+        name="setupMode"
+        label={t("setupMode")}
         control={form.control}
-        allowGenerate
+        options={[
+          { value: "invite", label: t("setupInvite") },
+          { value: "password", label: t("setupPassword") },
+        ]}
         isRequired
-        description={t("tempPasswordHint")}
+        description={setupMode === "invite" ? t("setupInviteHint") : t("setupPasswordHint")}
       />
+      {setupMode === "password" ? (
+        <FormPasswordInput
+          name="password"
+          label={t("tempPassword")}
+          control={form.control}
+          allowGenerate
+          isRequired
+          description={t("tempPasswordHint")}
+        />
+      ) : null}
       <FormErrorSummary message={formError} />
       <div className="flex items-center gap-2">
         <SubmitButton isSubmitting={form.formState.isSubmitting}>
