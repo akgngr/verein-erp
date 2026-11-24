@@ -6,6 +6,7 @@ export const automationPermissions = definePermissions("automation", {
   SECRETARY: ["view", "create", "update"],
   TREASURER: ["view"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: ["view"],
 });

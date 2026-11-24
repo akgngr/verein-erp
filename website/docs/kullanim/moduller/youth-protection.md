@@ -13,18 +13,24 @@ Eğitmen ve gönüllülerin genişletilmiş adli sicil belgesi (§ 72a SGB VIII)
 |---|---|
 | Anahtar | `youth-protection` |
 | Tür | Eklenti |
-| Sürüm | 0.1.0 |
+| Sürüm | 0.1.1 |
 | Sayfalar | `/youth-protection` |
 
 ## Varsayılan yetkiler
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| Çocuk Koruma | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme, silme | görüntüleme, oluşturma, düzenleme | — | görüntüleme | — | — |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| Çocuk Koruma | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme, silme | görüntüleme, oluşturma, düzenleme | — | görüntüleme | — | — | — |
 
 ## Sürüm notları
+
+### 0.1.1 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 0.1.0 — Çocuk Koruma İnceleme Takibi (§ 72a SGB VIII)
 

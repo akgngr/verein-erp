@@ -1,0 +1,69 @@
+{
+  "module": {
+    "label": "Uyum kontrolü",
+    "description": "Kamu yararı (Gemeinnützigkeit) için iç kontrol listesi: süreler ve sınırlar. Vergi danışmanlığı değildir."
+  },
+  "permissions": {
+    "compliance": {
+      "label": "Uyum kontrolü",
+      "description": "İç kontrol listesini görme, bulgudan görev taslağı, kural devre dışı bırakma (gerekçeli)."
+    }
+  },
+  "access": {
+    "system": "Kural kaynağı olan modül açık mı, kontrol edilir.",
+    "tasks": "Bir bulgudan, kullanıcı onayıyla görev taslağı oluşturulur."
+  },
+  "nav": {
+    "compliance": "Uyum kontrolü"
+  },
+  "navTitle": "Uyum kontrolü",
+  "title": "Uyum kontrolü {year}",
+  "description": "Kayıtlı verilerden hesaplanan süreler ve sınırlar. Bulgular genel kuralı ve rakamı gösterir; karar vermez.",
+  "disclaimer": "İç kontrol listesi, vergi danışmanlığı değildir. Kendi durumunuz için vergi danışmanınıza danışın.",
+  "previewNotice": "Önizleme: henüz incelenmemiş (taslak) kurallar da gösteriliyor. Bunlar kaydedilmez ve özetlere girmez.",
+  "areasLabel": "Alanlar",
+  "areas": {
+    "status": "Statü ve makbuzlar",
+    "finance": "Fonlar ve gelir",
+    "people": "Ödemeler"
+  },
+  "light": {
+    "green": "Uygun",
+    "yellow": "Dikkat",
+    "red": "Kritik",
+    "grey": "Kontrol edilmedi"
+  },
+  "mode": {
+    "disabled": "Devre dışı",
+    "preview": "Önizleme (taslak)"
+  },
+  "version": "Sürüm {version}, {from} itibarıyla",
+  "legalSource": "Kaynak",
+  "ok": "Genel kurala göre bulgu yok.",
+  "disabledReason": "Kurum tarafından devre dışı: {reason}",
+  "empty": "Bu yıl için incelenmiş kural yok.",
+  "unchecked": {
+    "noProvider": "Kontrol edilmedi: veri sağlayıcı yok.",
+    "moduleUnavailable": "Kontrol edilmedi: ilgili modül kapalı.",
+    "providerError": "Kontrol edilmedi: veri okunamadı.",
+    "notRecorded": "Kontrol edilmedi: gerekli bilgi kayıtlı değil.",
+    "noBookings": "Kontrol edilmedi: ilgili yıl için kayıt yok.",
+    "wrongShape": "Kontrol edilmedi: veri biçimi uygun değil.",
+    "badRule": "Kontrol edilmedi: kural tanımı eksik."
+  },
+  "createTask": "Görev taslağı oluştur",
+  "taskCreated": "Görev oluşturuldu.",
+  "reasonLabel": "Gerekçe",
+  "disableRule": "Kuralı devre dışı bırak",
+  "enableRule": "Kuralı yeniden etkinleştir",
+  "askAdvisor": "Her bulgu genel kaynağa dayanır. Kendi durumunuza ilişkin karar için vergi danışmanınıza sorun.",
+  "secretary": {
+    "findings": "Uyum kontrolünde {count} bulgu var",
+    "disclaimer": "İç kontrol listesi, vergi danışmanlığı değildir."
+  },
+  "errors": {
+    "unknownRule": "Kural bulunamadı.",
+    "noTask": "Bu kural için görev önerisi yok.",
+    "noFinding": "Güncel bir bulgu yok; sayfayı yenileyin."
+  }
+}

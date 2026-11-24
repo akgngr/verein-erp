@@ -28,7 +28,10 @@
   "skip": {
     "noMandate": "SEPA yetkisi yok",
     "invalidIban": "IBAN geçersiz",
-    "alreadyInRun": "Açık bir tahsilatta zaten var"
+    "alreadyInRun": "Açık bir tahsilatta zaten var",
+    "dormant": "Yetki 36 aydır kullanılmadı",
+    "renewAfterReturn": "İade sonrası yeni yetki gerekli",
+    "pausedAfterReturns": "Tekrarlayan iadeler nedeniyle duraklatıldı"
   },
   "createRun": "Tahsilat dosyası oluştur",
   "created": "{number} oluşturuldu.",
@@ -67,7 +70,6 @@
   "cancelRun": "Tahsilatı iptal et",
   "cancelConfirm": "Bu tahsilat iptal edilecek. Dosyayı bankaya yüklemediyseniz devam edin.",
   "markReturned": "Geri döndü",
-  "returnPrompt": "Geri dönüş nedeni (ör. AC04 hesap kapalı, MD06 itiraz, AM04 yetersiz bakiye):",
   "returnedToast": "Kalem geri döndü; ödeme iptal edildi ve borç yeniden açıldı.",
   "collectedOn": "Tahsil tarihi: {date}",
   "remittance": {
@@ -84,7 +86,12 @@
     "notOpen": "Tahsilat açık değil.",
     "notCollected": "Kalem tahsil edilmiş değil.",
     "reason": "Nedeni girin.",
-    "notFound": "Tahsilat bulunamadı."
+    "notFound": "Tahsilat bulunamadı.",
+    "renewalUnavailable": "Çevrimiçi formlar modülü kullanılamıyor.",
+    "renewalTarget": "Bu kayıt için kişi bulunamadı.",
+    "renewalForbidden": "Bu kişiye form bağlantısı gönderme yetkiniz yok.",
+    "renewalNoAddress": "Bu kanal için adres yok.",
+    "renewalFailed": "Bağlantı gönderilemedi."
   },
   "access": {
     "accounting": "Derneğin IBAN'ını ve Gläubiger-ID'yi okur.",
@@ -92,6 +99,94 @@
     "courses": "Vadesi gelmiş kurs ücretlerini okur; tahsil edilenleri ödeme olarak kaydeder (muhasebe fişiyle), geri dönenleri ters çevirir.",
     "students": "Kurs ücretinin ödeyicisi olan velinin SEPA yetkisini okur.",
     "organization": "Dosyada derneğin adını kullanır.",
-    "system": "Kaynak modüllerin açık olup olmadığını kontrol eder."
+    "system": "Kaynak modüllerin açık olup olmadığını kontrol eder.",
+    "online-forms": "Yeni SEPA yetkisi gereken borçlulara mevcut çevrimiçi form üzerinden e-imza bağlantısı göndermek ve bağlantının durumunu göstermek için."
+  },
+  "health": {
+    "title": "Mandat sağlığı ve iade koçu",
+    "description": "Tahsilattan önce yetkileri denetler: eksik referans veya imza tarihi, IBAN sağlama toplamı (yerel), 36 ay kullanılmayan yetkiler ve tekrarlayan iadeler. Hiçbir şey kaydedilmez veya gönderilmez.",
+    "threshold": "Duraklatma eşiği (12 ay)",
+    "thresholdOption": "{count, plural, one {# iadeden sonra} other {# iadeden sonra}}",
+    "check": "Denetle",
+    "summary": "{checked} borçlu denetlendi; {issues} kayıtta sorun var, {blocked} tanesi tahsilattan çıkarılacak.",
+    "allGood": "Tüm yetkiler tahsilata hazır.",
+    "returnsCell": "{count, plural, one {# iade} other {# iade}} · {fee} ücret",
+    "columns": {
+      "debtor": "Borçlu",
+      "iban": "IBAN",
+      "mandate": "Yetki ref.",
+      "issues": "Sorunlar",
+      "returns": "İadeler (12 ay)"
+    },
+    "issues": {
+      "missingIban": "IBAN yok",
+      "invalidIban": "IBAN geçersiz",
+      "missingReference": "Yetki referansı yok",
+      "missingSignatureDate": "İmza tarihi yok",
+      "futureSignatureDate": "İmza tarihi gelecekte",
+      "dormant": "36 aydır kullanılmadı (süresi doldu)",
+      "missingHolder": "Hesap sahibi boş",
+      "renewAfterReturn": "İade sonrası yeni yetki gerekli",
+      "pausedAfterReturns": "Tekrarlayan iade: duraklatıldı"
+    }
+  },
+  "coach": {
+    "codes": {
+      "AC01": "IBAN hatalı; hesap bulunamadı.",
+      "AC04": "Hesap kapatılmış.",
+      "AC06": "Hesap bloke edilmiş.",
+      "AC13": "Borçlu hesabı tüketici hesabı (yalnız B2B için).",
+      "AG01": "Bu hesapta otomatik ödeme yapılamıyor.",
+      "AM04": "Hesapta yeterli bakiye yok.",
+      "MD01": "Geçerli bir yetki (mandat) yok.",
+      "MD06": "Borçlu 8 hafta içinde iade istedi.",
+      "MD07": "Borçlu vefat etti.",
+      "MS02": "Borçlu tahsilata itiraz etti.",
+      "MS03": "Banka gerekçe belirtmedi.",
+      "RR04": "Yasal/düzenleyici sebep.",
+      "SL01": "Borçlunun bankası bu alacaklıyı engelliyor."
+    },
+    "unknownCode": "İade kodu girilmemiş; banka bildirimini kontrol edin.",
+    "actions": {
+      "retry": "Sonraki adım: bakiye sorunu geçici olabilir; bir sonraki tahsilatta yeniden deneyin.",
+      "renewMandate": "Sonraki adım: borçludan yeni bir SEPA yetkisi (ve gerekiyorsa yeni IBAN) isteyin; o zamana kadar tahsilat yapılmaz.",
+      "contactDebtor": "Sonraki adım: borçluyla nazikçe iletişime geçin; itiraz veya iade nedenini sorun, gerekirse havale isteyin.",
+      "manualCheck": "Sonraki adım: bankanın iade bildirimini kontrol edin."
+    },
+    "reminderLabel": "Hatırlatma taslağı (kopyalayıp kendiniz gönderin)",
+    "reminderDraft": "Merhaba,\n\nyetki referansı {reference} ile yaptığımız {amount} tutarındaki SEPA tahsilatı bankanız tarafından iade edildi. Lütfen hesap bilgilerinizi kontrol edip bize kısa bir bilgi verin; gerekirse yeni bir SEPA yetkisi imzalayabilir veya tutarı havale edebilirsiniz.\n\nTeşekkürler, saygılarımızla\n\n—\n\nHallo,\n\ndie SEPA-Lastschrift über {amount} (Mandatsreferenz {reference}) wurde von Ihrer Bank zurückgegeben. Bitte prüfen Sie Ihre Kontodaten und geben Sie uns kurz Bescheid; bei Bedarf können Sie ein neues SEPA-Mandat erteilen oder den Betrag überweisen.\n\nVielen Dank und freundliche Grüße",
+    "copy": "Taslağı kopyala",
+    "copied": "Taslak kopyalandı.",
+    "draftOnly": "Yalnız taslak: buradan gönderim yapılmaz."
+  },
+  "returnForm": {
+    "title": "İadeyi kaydet (Rücklastschrift)",
+    "code": "İade kodu",
+    "fee": "Banka ücreti (€, isteğe bağlı)",
+    "note": "Not (isteğe bağlı)",
+    "hint": "Ödeme iptal edilir ve borç yeniden açılır. İade kodu, mandat sağlığı ve duraklatma için kullanılır.",
+    "cancel": "Vazgeç",
+    "feeInvalid": "Ücret geçerli bir tutar olmalı."
+  },
+  "renewal": {
+    "request": "Yeni mandat iste (e-imza)",
+    "unavailable": "E-imza bağlantısı kullanılamıyor (modül, yetki veya adres yok).",
+    "confirmTitle": "Yeni SEPA yetkisi için e-imza bağlantısı gönderilsin mi?",
+    "confirmText": "Kişiye mevcut çevrimiçi form bağlantısı gönderilir; imzalandığında yeni IBAN ve yetki tarihi kaydedilir. Onaylamadan hiçbir şey gönderilmez.",
+    "channel": "Kanal ve adres",
+    "channels": {
+      "email": "E-posta",
+      "sms": "SMS",
+      "whatsapp": "WhatsApp"
+    },
+    "send": "Bağlantıyı gönder",
+    "cancel": "Vazgeç",
+    "sent": "E-imza bağlantısı gönderildi.",
+    "status": {
+      "PENDING": "Bağlantı gönderildi ({date}), imza bekleniyor",
+      "COMPLETED": "İmzalandı ({date})",
+      "CANCELLED": "Bağlantı iptal edildi ({date})",
+      "EXPIRED": "Bağlantının süresi doldu ({date})"
+    }
   }
 }

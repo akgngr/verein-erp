@@ -136,6 +136,7 @@ const PANEL_ITEM: NavItem = {
         VIEWER: ["view"],
         TREASURER: ["view"],
         AUDITOR: ["view"],
+        TAX_ADVISOR: ["view"],
         TEACHER: ["view"],
       },
     },

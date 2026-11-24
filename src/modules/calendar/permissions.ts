@@ -10,6 +10,7 @@ export const calendarPermissions = definePermissions("calendar", {
   SECRETARY: ["view", "create", "update", "delete"],
   TREASURER: ["view", "create", "update"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: ["view", "create", "update"],
   VIEWER: ["view"],
 });

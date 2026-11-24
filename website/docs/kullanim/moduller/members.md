@@ -1,5 +1,5 @@
 ---
-sidebar_position: 40
+sidebar_position: 41
 title: "Üyeler"
 description: "Üye kayıtları, üyelik tipleri, aidat tahakkuk ve ödeme takibi."
 slug: /kullanim/moduller/members
@@ -13,7 +13,7 @@ slug: /kullanim/moduller/members
 |---|---|
 | Anahtar | `members` |
 | Tür | Resmî modül |
-| Sürüm | 1.15.4 |
+| Sürüm | 1.15.5 |
 | Sayfalar | `/uyeler`, `/uyeler/aidat`, `/uyeler/turler`, `/toplu-eposta?kaynak=members:members`, `/uyeler/ice-aktar` |
 | Önerir | [e-Sign](./online-forms) |
 
@@ -30,12 +30,12 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| Kimlik numaraları | görüntüleme | görüntüleme | görüntüleme | — | — | — | — |
-| Aidat ve Ödemeler | görüntüleme, oluşturma, düzenleme, silme | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | — | — |
-| Üyelik Tipleri | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | görüntüleme | — | görüntüleme |
-| Üye Kayıtları | görüntüleme, oluşturma, düzenleme, silme | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | — | görüntüleme |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| Kimlik numaraları | görüntüleme | görüntüleme | görüntüleme | — | — | — | — | — |
+| Aidat ve Ödemeler | görüntüleme, oluşturma, düzenleme, silme | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | — | — | — |
+| Üyelik Tipleri | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | görüntüleme | — | — | görüntüleme |
+| Üye Kayıtları | görüntüleme, oluşturma, düzenleme, silme | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | — | — | görüntüleme |
 
 ## Asistan araçları
 
@@ -44,6 +44,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `create_dataset` · `create_dues_dataset` · `get_member_profile` · `get_member_statistics` · `list_dues_by_person` · `query_dataset`
 
 ## Sürüm notları
+
+### 1.15.5 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 1.15.4 — GoBD silme koruması
 
@@ -87,10 +93,4 @@ _2026-11-17_
 
 - **İyileştirme:** Aidat raporundaki yıl seçimi ortak SelectField adapterına taşındı; doğrudan HeroUI Select/ListBox/Label bağımlılığı kaldırıldı.
 
-### 1.14.2 — Aidat rozetleri ortak UI katmanında
-
-_2026-11-17_
-
-- **İyileştirme:** Rozet görünümü ortak StatusChip pattern'ine taşındı; modül artık bu kullanımda HeroUI Chip implementasyonuna doğrudan bağlı değil.
-
-Daha eski 29 herkese açık sürüm notu.
+Daha eski 30 herkese açık sürüm notu.

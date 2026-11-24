@@ -7,7 +7,7 @@ import { moduleNotificationRegistry } from "@/notification-registry";
 import { definePermissions } from "@/shared/permissions/define";
 import { defineNotificationType, defineNotificationTypes, isSafeNotificationHref, validateModuleNotifications } from "@/shared/notifications/define";
 
-const permissions = definePermissions("demo", { ADMIN: ["view"], BOARD: [], SECRETARY: [], TREASURER: [], AUDITOR: [], TEACHER: [], VIEWER: [] });
+const permissions = definePermissions("demo", { ADMIN: ["view"], BOARD: [], SECRETARY: [], TREASURER: [], AUDITOR: [], TAX_ADVISOR: [], TEACHER: [], VIEWER: [] });
 const valid = defineNotificationType({
   key: "assigned",
   severity: "info",

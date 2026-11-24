@@ -6,6 +6,7 @@ export const financePermissions = definePermissions("finance", {
   SECRETARY: ["view"],
   TREASURER: ["view", "approve"],
   AUDITOR: ["view"],
+  TAX_ADVISOR: ["view"],
   TEACHER: ["view"],
   VIEWER: ["view"],
 });

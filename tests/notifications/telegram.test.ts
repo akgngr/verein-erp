@@ -63,7 +63,7 @@ test("db: yapılandırma, bağlama, /stop, dağıtım", { skip: !enabled }, asyn
     assert.ok(row.addressEnc && row.addressEnc !== "42", "sohbet kimliği şifreli");
 
     // Dağıtım: Telegram tercihli tür → genel metin, tek gönderim.
-    const perms = definePermissions("demo", { ADMIN: ["view"], BOARD: [], SECRETARY: [], TREASURER: [], AUDITOR: [], TEACHER: [], VIEWER: [] });
+    const perms = definePermissions("demo", { ADMIN: ["view"], BOARD: [], SECRETARY: [], TREASURER: [], AUDITOR: [], TAX_ADVISOR: [], TEACHER: [], VIEWER: [] });
     const registry = [defineNotificationTypes("meetings", [defineNotificationType({ key: "invited", severity: "info", defaultChannels: ["in_app", "telegram"], permission: { definition: perms, action: "view" }, schema: z.object({ title: z.string() }).strict(), titleKey: "notifications.invited.title", href: () => "/toplantilar" })])];
     const users = new Map([[user.id, { id: user.id, role: "ADMIN" as Role, isActive: true, email: null }]]);
     const deps = {

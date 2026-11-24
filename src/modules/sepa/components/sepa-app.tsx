@@ -21,6 +21,7 @@ import {
   markReturnedAction,
   previewRunAction,
 } from "../actions/sepa-actions";
+import { RETURN_CODE_LIST } from "../lib/mandate-health";
 
 type Preview = Extract<
   Awaited<ReturnType<typeof previewRunAction>>,
@@ -346,6 +347,8 @@ type RunDetail = {
     status: "PENDING" | "COLLECTED" | "RETURNED";
     receipt: string | null;
     returnReason: string | null;
+    returnCode: string | null;
+    returnFeeCents: number | null;
   }[];
 };
 
@@ -362,6 +365,7 @@ export function SepaRunDetail({
   const router = useRouter();
   const { money, date } = useMoney();
   const [collectedAt, setCollectedAt] = useState(run.collectionDate);
+  const [returning, setReturning] = useState<{ itemId: string; code: string; fee: string; reason: string } | null>(null);
   const [pending, start] = useTransition();
   const call = (
     fn: () => Promise<{ ok: boolean; error?: string }>,
@@ -479,9 +483,9 @@ export function SepaRunDetail({
                 >
                   {t(`itemStatus.${item.status}`)}
                 </StatusChip>
-                {item.returnReason ? (
+                {item.returnReason || item.returnCode ? (
                   <span className="block text-xs text-danger">
-                    {item.returnReason}
+                    {[item.returnCode, item.returnReason !== item.returnCode ? item.returnReason : null, item.returnFeeCents ? money(item.returnFeeCents) : null].filter(Boolean).join(" · ")}
                   </span>
                 ) : null}
               </td>
@@ -493,19 +497,7 @@ export function SepaRunDetail({
                   <Button
                     size="sm"
                     isDisabled={pending}
-                    onPress={() => {
-                      const reason = window.prompt(t("returnPrompt"), "AC04");
-                      if (reason)
-                        call(
-                          () =>
-                            markReturnedAction({
-                              runId: run.id,
-                              itemId: item.id,
-                              reason,
-                            }),
-                          t("returnedToast"),
-                        );
-                    }}
+                    onPress={() => setReturning({ itemId: item.id, code: "AM04", fee: "", reason: "" })}
                     variant={actionVariant("danger", "light")}
                   >
                     {t("markReturned")}
@@ -516,6 +508,44 @@ export function SepaRunDetail({
           ))}
         </tbody>
       </table>
+      {returning ? (
+        <form
+          className="flex flex-col gap-3 rounded-lg border border-danger-200 p-3"
+          aria-label={t("returnForm.title")}
+          onSubmit={(event) => {
+            event.preventDefault();
+            const fee = returning.fee.trim() ? Math.round(Number(returning.fee.replace(",", ".")) * 100) : null;
+            if (fee !== null && (!Number.isFinite(fee) || fee < 0)) return void notify.error(t("returnForm.feeInvalid"));
+            call(() => markReturnedAction({ runId: run.id, itemId: returning.itemId, code: returning.code, feeCents: fee, reason: returning.reason }), t("returnedToast"));
+            setReturning(null);
+          }}
+        >
+          <h3 className="font-medium">{t("returnForm.title")}</h3>
+          <div className="grid grid-cols-1 items-end gap-3 sm:grid-cols-3">
+            <Select id="sepa-return-code" value={returning.code} onChange={(value) => setReturning({ ...returning, code: String(value ?? returning.code) })}>
+              <Label>{t("returnForm.code")}</Label>
+              {RETURN_CODE_LIST.map((code) => (
+                <Select.Item key={code} id={code} textValue={`${code} · ${t(`coach.codes.${code}` as never)}`}>
+                  <Label>{code} · {t(`coach.codes.${code}` as never)}</Label>
+                </Select.Item>
+              ))}
+            </Select>
+            <TextField value={returning.fee} onChange={(fee) => setReturning({ ...returning, fee })} className="w-full">
+              <Label>{t("returnForm.fee")}</Label>
+              <Input inputMode="decimal" placeholder=" " />
+            </TextField>
+            <TextField value={returning.reason} onChange={(reason) => setReturning({ ...returning, reason })} className="w-full">
+              <Label>{t("returnForm.note")}</Label>
+              <Input placeholder=" " maxLength={200} />
+            </TextField>
+          </div>
+          <p className="text-xs text-ink-500">{t("returnForm.hint")}</p>
+          <div className="flex gap-2">
+            <Button type="submit" variant={actionVariant("danger", "solid")} isPending={pending}>{t("markReturned")}</Button>
+            <Button variant={actionVariant("default", "light")} onPress={() => setReturning(null)}>{t("returnForm.cancel")}</Button>
+          </div>
+        </form>
+      ) : null}
       {run.collectedAt ? (
         <p className="text-xs text-ink-500">
           {t("collectedOn", { date: date(run.collectedAt) })}

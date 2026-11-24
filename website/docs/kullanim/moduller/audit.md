@@ -13,18 +13,24 @@ Sistem işlemlerinin değiştirilemez güvenlik ve denetim logları.
 |---|---|
 | Anahtar | `audit` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.0.2 |
+| Sürüm | 1.0.3 |
 | Sayfalar | `/ayarlar/denetim-kaydi` |
 
 ## Varsayılan yetkiler
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Salt okunur | Sayman | Denetçi | Öğretmen |
-|---|---|---|---|---|---|---|---|
-| Güvenlik & Değişiklik Günlüğü | görüntüleme | — | — | — | — | — | — |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Salt okunur | Sayman | Denetçi | TAX_ADVISOR | Öğretmen |
+|---|---|---|---|---|---|---|---|---|
+| Güvenlik & Değişiklik Günlüğü | görüntüleme | — | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.0.3 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 1.0.2 — Denetim eylem rozeti ortak UI katmanında
 

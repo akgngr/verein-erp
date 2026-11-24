@@ -45,7 +45,7 @@ export type DocumentStrings = {
   dunningTitles: [string, string, string];
   dunningSalutation: string;
   /** ACC-8 Kassenprüfungsbericht */
-  auditor: { title: string; intro: (year: number) => string; account: string; opening: string; income: string; expense: string; transfer: string; closing: string; total: string; checks: string; result: string; resultText: string; auditor: string; place: string; checkJournal: string; checkReceipts: string; checkGaps: string; checkCash: string; ok: string; issues: (count: number) => string; missing: (count: number) => string };
+  auditor: { title: string; intro: (year: number) => string; account: string; opening: string; income: string; expense: string; transfer: string; closing: string; total: string; checks: string; checklistHeading: string; findingsHeading: string; noFindings: string; sectionLabels: Record<"BOOKING_SAMPLE" | "RECEIPT_COMPLETENESS" | "CASH_COUNTS" | "BANK_RECONCILIATION" | "OPEN_ITEMS", string>; severityLabels: Record<"INFO" | "NOTE" | "ISSUE", string>; statusLabels: Record<"OPEN" | "RESOLVED", string>; result: string; resultText: string; auditor: string; place: string; checkJournal: string; checkReceipts: string; checkGaps: string; checkCash: string; ok: string; issues: (count: number) => string; missing: (count: number) => string };
   dunningIntro: (number: string, date: string) => string;
   dunningInvoiceOpen: string;
   dunningFee: string;
@@ -133,7 +133,20 @@ export const DOCUMENT_STRINGS: { de: DocumentStrings; tr: DocumentStrings } = {
       title: "Kassenprüfungsbericht",
       intro: (year) => `Die Kassenprüfer haben die Buchführung für das Geschäftsjahr ${year} geprüft. Grundlage waren die Buchungen, Belege, Kontoauszüge und Kassenabschlüsse.`,
       account: "Konto", opening: "Anfangsbestand", income: "Einnahmen", expense: "Ausgaben", transfer: "Umbuchungen", closing: "Endbestand", total: "Summe",
-      checks: "Prüfungsfeststellungen (automatisch)", result: "Ergebnis der Prüfung",
+      checks: "Prüfungsfeststellungen (automatisch)",
+      checklistHeading: "Prüfungs-Checkliste (Prüfraum)",
+      findingsHeading: "Feststellungen & Hinweise der Kassenprüfung",
+      noFindings: "Keine offenen Beanstandungen erfasst.",
+      sectionLabels: {
+        BOOKING_SAMPLE: "Buchungsstichprobe",
+        RECEIPT_COMPLETENESS: "Belegvollständigkeit",
+        CASH_COUNTS: "Kassensturz / Kassenabschlüsse",
+        BANK_RECONCILIATION: "Bankabstimmung",
+        OPEN_ITEMS: "Offene Posten",
+      },
+      severityLabels: { INFO: "Info", NOTE: "Hinweis", ISSUE: "Beanstandung" },
+      statusLabels: { OPEN: "Offen", RESOLVED: "Erledigt" },
+      result: "Ergebnis der Prüfung",
       resultText: "Die Kasse wurde ordnungsgemäß geführt; Bestände und Belege stimmen überein. Die Kassenprüfer empfehlen der Mitgliederversammlung die Entlastung des Vorstands. (Bitte bei Beanstandungen anpassen.)",
       auditor: "Kassenprüfer/in", place: "Ort, Datum",
       checkJournal: "Unveränderbares Protokoll", checkReceipts: "Belege vollständig", checkGaps: "Buchungsnummern lückenlos", checkCash: "Kassenabschlüsse (offene Tage)",
@@ -224,7 +237,20 @@ export const DOCUMENT_STRINGS: { de: DocumentStrings; tr: DocumentStrings } = {
       title: "Kasa Denetim Raporu (Kassenprüfungsbericht)",
       intro: (year) => `Kasa denetçileri ${year} mali yılının muhasebesini denetlemiştir. Fişler, belgeler, banka ekstreleri ve kasa kapanışları esas alınmıştır.`,
       account: "Hesap", opening: "Açılış", income: "Gelir", expense: "Gider", transfer: "Virman", closing: "Kapanış", total: "Toplam",
-      checks: "Denetim tespitleri (otomatik)", result: "Denetim sonucu",
+      checks: "Denetim tespitleri (otomatik)",
+      checklistHeading: "Denetim Kontrol Listesi (Denetim Odası)",
+      findingsHeading: "Kasa Denetimi Bulgu ve Notları",
+      noFindings: "Kayıtlı açık bulgu bulunmamaktadır.",
+      sectionLabels: {
+        BOOKING_SAMPLE: "Fiş örneklemi",
+        RECEIPT_COMPLETENESS: "Belge tamlığı",
+        CASH_COUNTS: "Kasa sayımı / kapanışları",
+        BANK_RECONCILIATION: "Banka mutabakatı",
+        OPEN_ITEMS: "Açık kalemler",
+      },
+      severityLabels: { INFO: "Bilgi", NOTE: "Not", ISSUE: "Bulgu" },
+      statusLabels: { OPEN: "Açık", RESOLVED: "Çözüldü" },
+      result: "Denetim sonucu",
       resultText: "Kasa usulüne uygun tutulmuştur; bakiyeler ve belgeler uyumludur. Denetçiler genel kurula yönetim kurulunun ibrasını önerir. (Bulgu varsa düzenleyin.)",
       auditor: "Kasa denetçisi", place: "Yer, tarih",
       checkJournal: "Değişmez günlük", checkReceipts: "Belgeler tam", checkGaps: "Fiş numaraları kesintisiz", checkCash: "Kasa kapanışları (açık gün)",

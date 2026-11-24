@@ -13,7 +13,7 @@ Dernek etkinlikleri, seminerler, atölyeler ve katılımcı yönetimi.
 |---|---|
 | Anahtar | `events` |
 | Tür | Resmî modül |
-| Sürüm | 1.2.9 |
+| Sürüm | 1.2.10 |
 | Sayfalar | `/events`, `/events?filter.timeFilter=upcoming`, `/events?filter.timeFilter=past` |
 
 ## Diğer modüllere erişim
@@ -29,9 +29,9 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| Etkinlikler | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme, onay | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | — | görüntüleme |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| Etkinlikler | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma, düzenleme, onay | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | — | — | görüntüleme |
 
 ## Asistan araçları
 
@@ -40,6 +40,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `list_upcoming_events` · `propose_event`
 
 ## Sürüm notları
+
+### 1.2.10 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 1.2.9 — Arayüz altyapısı
 
@@ -83,10 +89,4 @@ _2026-11-15_
 
 - **Güvenlik:** Öneri araçları katı Zod girdisi ve sabit model sonucu kullanır; salt öneri sorguları gereksiz kişi detaylarını okumaz. Kalan eski okuma araçlarının dönüşümü ayrı sürer.
 
-### 1.2.1 — AI veri sözleşmesi ve liste güvenilirliği
-
-_2026-11-15_
-
-- **İyileştirme:** AI çıktısı açık şema veya sayfalama metadatasıyla sınırlandırılır; kişi alanları eklenmez.
-
-Daha eski 3 herkese açık sürüm notu.
+Daha eski 4 herkese açık sürüm notu.

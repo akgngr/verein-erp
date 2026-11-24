@@ -23,6 +23,7 @@ import { moduleConfig as calendaroutlookModule } from "@/modules/calendar-outloo
 import { moduleConfig as campaignsmsModule } from "@/modules/campaign-sms";
 import { moduleConfig as campaigntelegramModule } from "@/modules/campaign-telegram";
 import { moduleConfig as campaignwhatsappModule } from "@/modules/campaign-whatsapp";
+import { moduleConfig as complianceModule } from "@/modules/compliance";
 import { moduleConfig as coursesModule } from "@/modules/courses";
 import { moduleConfig as crmModule } from "@/modules/crm";
 import { moduleConfig as demoModule } from "@/modules/demo";
@@ -70,6 +71,7 @@ export const allModules: ModuleConfig[] = [
   campaignsmsModule,
   campaigntelegramModule,
   campaignwhatsappModule,
+  complianceModule,
   coursesModule,
   crmModule,
   demoModule,

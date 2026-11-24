@@ -13,7 +13,7 @@ Gönüllü kurslar ve Nachhilfe: öğretmenler, dersler, kayıtlar, ücretler ve
 |---|---|
 | Anahtar | `courses` |
 | Tür | Resmî modül |
-| Sürüm | 1.4.12 |
+| Sürüm | 1.4.14 |
 | Sayfalar | `/kurslar`, `/ogrenciler`, `/ogrenci-takibi`, `/kurslar/ogretmenler`, `/kurslar/odemeler`, `/kurslar/hakedisler`, `/kurslar/ayarlar` |
 | Gerektirir | [Öğrenciler](./students) |
 | Önerir | [Öğrenci takibi](./progress) |
@@ -34,15 +34,15 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| Kurs ücretleri | görüntüleme, oluşturma, düzenleme, silme | görüntüleme | görüntüleme, oluşturma | görüntüleme, oluşturma, düzenleme, silme | görüntüleme | — | — |
-| Tüm öğretmenlerin hakedişleri (kapsam) | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — | — |
-| Öğretmen hakedişleri | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme | görüntüleme | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme | görüntüleme | — |
-| Dersler | görüntüleme, oluşturma, düzenleme, silme | görüntüleme, oluşturma, düzenleme, silme | görüntüleme, oluşturma, düzenleme, silme | görüntüleme | görüntüleme | görüntüleme, oluşturma, düzenleme, silme | — |
-| Öğretmenler | görüntüleme, oluşturma, düzenleme, silme | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | — | — |
-| Tüm kurslar | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — | görüntüleme |
-| Kurslar | görüntüleme, oluşturma, düzenleme, silme | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | görüntüleme | — |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| Kurs ücretleri | görüntüleme, oluşturma, düzenleme, silme | görüntüleme | görüntüleme, oluşturma | görüntüleme, oluşturma, düzenleme, silme | görüntüleme | — | — | — |
+| Tüm öğretmenlerin hakedişleri (kapsam) | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — | — | — |
+| Öğretmen hakedişleri | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme | görüntüleme | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme | — | görüntüleme | — |
+| Dersler | görüntüleme, oluşturma, düzenleme, silme | görüntüleme, oluşturma, düzenleme, silme | görüntüleme, oluşturma, düzenleme, silme | görüntüleme | görüntüleme | — | görüntüleme, oluşturma, düzenleme, silme | — |
+| Öğretmenler | görüntüleme, oluşturma, düzenleme, silme | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | — | — | — |
+| Tüm kurslar | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — | — | görüntüleme |
+| Kurslar | görüntüleme, oluşturma, düzenleme, silme | görüntüleme, oluşturma, düzenleme | görüntüleme, oluşturma, düzenleme | görüntüleme | görüntüleme | — | görüntüleme | — |
 
 ## Asistan araçları
 
@@ -51,6 +51,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_course_statistics` · `list_courses` · `propose_course` · `propose_course_status` · `propose_delete_course`
 
 ## Sürüm notları
+
+### 1.4.14 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
 
 ### 1.4.12 — GoBD silme koruması
 
@@ -94,10 +100,4 @@ _2026-11-15_
 
 - **Güvenlik:** Asistan araçları v2 veri sözleşmesine taşındı: modele giden her alan açıkça listelenir ve veri sınıfı bildirilir. Toplam ve kurumsal veriler denetimli bulut modunda da kullanılabilir; serbest kişisel içerik yalnız yerel modelde kalır.
 
-### 1.4.4 — Sürümlü AI öneri ve sonuç sınırları
-
-_2026-11-15_
-
-- **Güvenlik:** Öneri araçları katı Zod girdisi ve sabit model sonucu kullanır; salt öneri sorguları gereksiz kişi detaylarını okumaz. Kalan eski okuma araçlarının dönüşümü ayrı sürer.
-
-Daha eski 8 herkese açık sürüm notu.
+Daha eski 9 herkese açık sürüm notu.

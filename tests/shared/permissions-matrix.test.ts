@@ -30,7 +30,7 @@ describe("Roller ve izinler (veritabanı politikası)", () => {
     }
   });
 
-  const sample = definePermissions("sample", { ADMIN: ["view", "create", "delete"], BOARD: ["view"], SECRETARY: [], TREASURER: [], AUDITOR: [], VIEWER: [], TEACHER: ["view"] });
+  const sample = definePermissions("sample", { ADMIN: ["view", "create", "delete"], BOARD: ["view"], SECRETARY: [], TREASURER: [], AUDITOR: [], TAX_ADVISOR: [], VIEWER: [], TEACHER: ["view"] });
 
   test("yönetici değişikliği varsayılanı ezer; desteklenmeyen işlem verilemez", () => {
     const policy: PermissionPolicy = { overrides: { BOARD: { sample: ["view", "create", "approve"] } }, unavailableRoles: [] };
@@ -59,7 +59,9 @@ describe("Roller ve izinler (veritabanı politikası)", () => {
     const find = (resource: string) => all.find((item) => item.definition.resource === resource)!.definition;
     const coursesAll = find("coursesAll");
     assert.equal(can("TEACHER", coursesAll, "view", empty), false, "öğretmen yalnızca kendi kurslarını görür");
-    for (const role of SYSTEM_ROLES) assert.equal(can(role, coursesAll, "view", empty), true);
+    for (const role of SYSTEM_ROLES) {
+      assert.equal(can(role, coursesAll, "view", empty), role !== "TAX_ADVISOR");
+    }
     const identity = find("memberIdentity");
     assert.deepEqual(SYSTEM_ROLES.filter((role) => can(role, identity, "view", empty)), ["ADMIN", "BOARD", "SECRETARY"]);
     assert.deepEqual(SYSTEM_ROLES.filter((role) => can(role, find("progressNotesAll"), "delete", empty)), ["ADMIN"]);

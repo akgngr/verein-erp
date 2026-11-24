@@ -12,7 +12,7 @@ import {
   type BriefingItem,
 } from "@/shared/secretary/define";
 
-const permission = { definition: definePermissions("demo", { ADMIN: ["view"], BOARD: [], SECRETARY: [], TREASURER: [], AUDITOR: [], TEACHER: [], VIEWER: [] }), action: "view" as const };
+const permission = { definition: definePermissions("demo", { ADMIN: ["view"], BOARD: [], SECRETARY: [], TREASURER: [], AUDITOR: [], TAX_ADVISOR: [], TEACHER: [], VIEWER: [] }), action: "view" as const };
 const item = (overrides: Partial<BriefingItem> = {}): BriefingItem => ({
   id: "accounting:invoice-overdue", module: "accounting", kind: "invoice-overdue", severity: "warning",
   title: "3 überfällige Rechnungen", href: "/muhasebe/faturalar", ...overrides,

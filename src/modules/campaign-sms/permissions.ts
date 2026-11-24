@@ -7,6 +7,7 @@ export const campaignSmsPermissions = definePermissions("campaign-sms", {
   SECRETARY: ["view"],
   TREASURER: [],
   AUDITOR: ["view"],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: [],
 });

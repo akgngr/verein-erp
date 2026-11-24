@@ -11,6 +11,7 @@ import { SecretaryFollowUps } from "../components/follow-ups";
 import { SecretaryWeeklyReport } from "../components/weekly-report";
 import { SecretaryDelegationPanel } from "../components/delegation-panel";
 import { SecretaryChannelConsentsPanel } from "../components/channel-consents-panel";
+import { SecretaryDocumentReviewLink } from "../components/document-review-link";
 import { SecretaryInboxView } from "./inbox-view";
 import { SecretaryPreferencesView } from "./preferences-view";
 import { secretaryPermissions } from "../permissions";
@@ -85,6 +86,9 @@ export async function SecretaryHomeView() {
         files: t("ui.weeklyReportFiles"), pending: t("ui.weeklyReportPending"),
         ready: t("ui.weeklyReportReady"), failed: t("ui.weeklyReportFailed"),
         error: t("ui.weeklyReportError"),
+      }} />
+      <SecretaryDocumentReviewLink labels={{
+        title: t("ui.documentReviewTitle"), description: t("ui.documentReviewDescription"), open: t("ui.documentReviewOpen"),
       }} />
       <SecretaryInboxView user={{ id: user.id, role: user.role }} />
       {delegations === null ? <p role="status">{t("ui.delegationPanel.unavailable")}</p> :

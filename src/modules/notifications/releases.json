@@ -2,6 +2,36 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.15.1",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "TAX_ADVISOR rolü izin tanımı",
+        "de": "Berechtigungsdefinition für Rolle TAX_ADVISOR"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.",
+          "de": "Standardmäßig geschlossener Berechtigungseintrag für die Systemrolle TAX_ADVISOR ergänzt."
+        }
+      ]
+    },
+    {
+      "version": "0.15.0",
+      "date": "2026-11-23",
+      "title": {
+        "tr": "WhatsApp kanalı (hazır, kapalı)",
+        "de": "WhatsApp-Kanal (vorbereitet, deaktiviert)"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Meta WhatsApp Cloud API bağlantısı eklendi. Meta işletme doğrulaması ve şablon onayı teyit edilene kadar kanal kapalı kalır; mesaj yalnız sayı ve uygulama bağlantısı içerir.",
+          "de": "Anbindung an die Meta WhatsApp Cloud API ergänzt. Bis die Meta-Unternehmensverifizierung und die Vorlagenfreigabe bestätigt sind, bleibt der Kanal deaktiviert; Nachrichten enthalten nur Anzahl und App-Link."
+        }
+      ]
+    },
+    {
       "version": "0.14.1",
       "date": "2026-11-23",
       "title": {

@@ -597,3 +597,79 @@ model AccountingReserve {
 
   @@index([year])
 }
+
+enum AuditRoomSection {
+  BOOKING_SAMPLE
+  RECEIPT_COMPLETENESS
+  CASH_COUNTS
+  BANK_RECONCILIATION
+  OPEN_ITEMS
+}
+
+enum AuditFindingSeverity {
+  INFO
+  NOTE
+  ISSUE
+}
+
+enum AuditFindingStatus {
+  OPEN
+  RESOLVED
+}
+
+/// B001 Q1: Kassenprüfer süreli (time-boxed) denetim odası.
+model AccountingAuditRoom {
+  id             String                        @id @default(cuid())
+  year           Int
+  title          String
+  auditorUserId  String?
+  startsAt       DateTime
+  expiresAt      DateTime
+  revokedAt      DateTime?
+  createdById    String
+  createdByLabel String
+  createdAt      DateTime                      @default(now())
+  updatedAt      DateTime                      @updatedAt
+  checklistItems AccountingAuditChecklistItem[]
+  findings       AccountingAuditFinding[]
+
+  @@index([year])
+  @@index([auditorUserId, expiresAt])
+}
+
+/// B001 Q1: Kassenprüfer rehberli kontrol listesi öğesi.
+model AccountingAuditChecklistItem {
+  id             String              @id @default(cuid())
+  roomId         String
+  section        AuditRoomSection
+  checked        Boolean             @default(false)
+  note           String?
+  checkedById    String?
+  checkedByLabel String?
+  checkedAt      DateTime?
+  updatedAt      DateTime            @updatedAt
+  room           AccountingAuditRoom @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@unique([roomId, section])
+  @@index([roomId])
+}
+
+/// B001 Q1: Kassenprüfer denetim bulgusu (Genel Kurul raporuna aktarılır).
+model AccountingAuditFinding {
+  id             String               @id @default(cuid())
+  roomId         String
+  section        AuditRoomSection
+  severity       AuditFindingSeverity @default(NOTE)
+  status         AuditFindingStatus   @default(OPEN)
+  summary        String
+  detail         String?
+  createdById    String
+  createdByLabel String
+  resolvedById   String?
+  resolvedAt     DateTime?
+  createdAt      DateTime             @default(now())
+  updatedAt      DateTime             @updatedAt
+  room           AccountingAuditRoom  @relation(fields: [roomId], references: [id], onDelete: Cascade)
+
+  @@index([roomId, status])
+}

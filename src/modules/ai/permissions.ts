@@ -10,6 +10,7 @@ export const aiPermissions = definePermissions("ai", {
   SECRETARY: ["view"],
   TREASURER: ["view"],
   AUDITOR: [],
+  TAX_ADVISOR: [],
   TEACHER: [],
   VIEWER: [],
 });

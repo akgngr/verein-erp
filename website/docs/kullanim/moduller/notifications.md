@@ -13,7 +13,7 @@ Tüm modüllerin bildirimleri tek yerde; kanal tercihleri ve rızalar.
 |---|---|
 | Anahtar | `notifications` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 0.14.1 |
+| Sürüm | 0.15.1 |
 | Sayfalar | `/ayarlar/bildirimler`, `/ayarlar/bildirimler/duyurular`, `/ayarlar/bildirimler/aboneler` |
 
 ## Diğer modüllere erişim
@@ -30,11 +30,23 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 
 Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo kurulumdaki varsayılandır.
 
-| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | Öğretmen | Salt okunur |
-|---|---|---|---|---|---|---|---|
-| Bildirimler | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme |
+| İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
+|---|---|---|---|---|---|---|---|---|
+| Bildirimler | görüntüleme, düzenleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — | görüntüleme | görüntüleme |
 
 ## Sürüm notları
+
+### 0.15.1 — TAX_ADVISOR rolü izin tanımı
+
+_2026-11-23_
+
+- **Güvenlik:** TAX_ADVISOR sistem rolü için varsayılan kapalı (erişimsiz) izin kaydı eklendi.
+
+### 0.15.0 — WhatsApp kanalı (hazır, kapalı)
+
+_2026-11-23_
+
+- **Yeni:** Meta WhatsApp Cloud API bağlantısı eklendi. Meta işletme doğrulaması ve şablon onayı teyit edilene kadar kanal kapalı kalır; mesaj yalnız sayı ve uygulama bağlantısı içerir.
 
 ### 0.14.0 — Yönetici abone görünümü ekranı
 
@@ -79,17 +91,4 @@ _2026-11-20_
 - **Yeni:** Otomasyonlarda yeni adım: 'Bildirim gönder' — herkese veya seçilen rollere kurum içi bildirim.
 - **Güvenlik:** SMS anahtarı veritabanında şifreli, numara şifreli; doğrulama kodu yalnız hash, 15 dakika, sınırlı deneme. SMS'e yalnız genel metin ve bağlantı gider.
 
-### 0.8.0 — Tür özel dış kanal metni
-
-_2026-11-20_
-
-- **İyileştirme:** Bildirim türü, dış kanallar için yalnız sayı/tarih içeren kısa bir metin verebilir (ör. günlük özet: '12 kayıt, 2 acil'); yoksa genel metin kullanılır. Sekreter tercihlerinin taşınması için içe alma işlevleri eklendi.
-
-### 0.7.0 — Abone görünümü (yönetici)
-
-_2026-11-20_
-
-- **Yeni:** Yönetici, hangi kullanıcının hangi bildirim kanalını kullandığını görebilir (e-posta tercihi, Telegram bağı, tarayıcı bildirimi cihaz sayısı) ve gerekirse bir kullanıcının Telegram bağını veya tarayıcı aboneliklerini kaldırabilir.
-- **Güvenlik:** Görünümde adres, sohbet kimliği veya cihaz adresi yoktur; her görüntüleme ve kaldırma denetim kaydına yazılır.
-
-Daha eski 6 herkese açık sürüm notu.
+Daha eski 8 herkese açık sürüm notu.
