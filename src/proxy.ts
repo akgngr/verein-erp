@@ -2,12 +2,11 @@ import NextAuth from "next-auth";
 import { NextResponse, type NextRequest } from "next/server";
 
 import { authConfig } from "@/modules/auth/edge";
+import { buildPortalCsp, generatePortalNonce } from "@/modules/member-portal/services/portal-csp";
 
 // Next.js 16: middleware dosyasının adı proxy.ts'tir (kurulu sürüme göre belirlendi).
 // Edge-uyumlu Auth.js yapılandırması kullanılır; Prisma import EDİLMEZ.
 const authMiddleware = NextAuth(authConfig).auth;
-
-const PORTAL_CSP = "default-src 'self'; frame-ancestors 'none'";
 
 function isPortalPath(pathname: string): boolean {
   return (
@@ -17,8 +16,8 @@ function isPortalPath(pathname: string): boolean {
   );
 }
 
-function withPortalSecurityHeaders(res: NextResponse): NextResponse {
-  res.headers.set("Content-Security-Policy", PORTAL_CSP);
+function withPortalSecurityHeaders(res: NextResponse, nonce: string): NextResponse {
+  res.headers.set("Content-Security-Policy", buildPortalCsp(nonce));
   res.headers.set("Referrer-Policy", "no-referrer");
   res.headers.set("X-Frame-Options", "DENY");
   res.headers.set("X-Content-Type-Options", "nosniff");
@@ -32,10 +31,16 @@ export async function proxy(request: NextRequest, event: unknown) {
   // - Never invokes admin Auth.js middleware (admin session cookie is ignored/refused).
   // - PORTAL_ENABLED=false by default -> 404.
   if (isPortalPath(pathname)) {
+    const nonce = generatePortalNonce();
     if (process.env.PORTAL_ENABLED !== "true") {
-      return withPortalSecurityHeaders(new NextResponse("Not found", { status: 404 }));
+      return withPortalSecurityHeaders(new NextResponse("Not found", { status: 404 }), nonce);
     }
-    return withPortalSecurityHeaders(NextResponse.next());
+    const requestHeaders = new Headers(request.headers);
+    requestHeaders.set("x-nonce", nonce);
+    return withPortalSecurityHeaders(
+      NextResponse.next({ request: { headers: requestHeaders } }),
+      nonce,
+    );
   }
 
   // Admin routes never accept the portal cookie as authentication.

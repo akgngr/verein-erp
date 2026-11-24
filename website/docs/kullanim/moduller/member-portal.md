@@ -13,7 +13,7 @@ Parolasız sihirli bağlantı ve geçiş anahtarı ile üye self-servis portalı
 |---|---|
 | Anahtar | `member-portal` |
 | Tür | Eklenti |
-| Sürüm | 0.3.0 |
+| Sürüm | 0.3.1 |
 
 ## Diğer modüllere erişim
 
@@ -40,6 +40,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Üye Portalı Yönetimi | görüntüleme, düzenleme | görüntüleme | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 0.3.1 — Portal CSP nonce, SameSite=Strict oturum ve Secure __Host- çerezleri
+
+_2026-11-24_
+
+- **Güvenlik:** İstek başına CSP nonce + x-nonce başlığı, __Host-portal-session için SameSite=Strict ve tüm __Host- çerezleri için daima Secure=true eklendi.
 
 ### 0.3.0 — Veri hakları (Md. 15), işleme günlüğü ve Business+ özellikleri (P3)
 

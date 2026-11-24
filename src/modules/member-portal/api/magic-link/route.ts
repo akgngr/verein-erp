@@ -42,7 +42,7 @@ export async function POST(req: NextRequest) {
   res.cookies.set(PORTAL_NONCE_COOKIE, rawNonce, {
     httpOnly: true,
     sameSite: "lax",
-    secure: process.env.NODE_ENV === "production",
+    secure: true,
     path: "/",
     maxAge: 15 * 60,
   });
