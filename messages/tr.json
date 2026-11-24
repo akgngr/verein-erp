@@ -7746,7 +7746,9 @@
         "rateLimited": "Bugün için doğrulama kodu sınırına ulaşıldı.",
         "sendFailed": "Doğrulama kodu gönderilemedi.",
         "codeExpired": "Kodun süresi doldu veya deneme hakkı bitti; yeniden isteyin.",
-        "codeInvalid": "Kod hatalı."
+        "codeInvalid": "Kod hatalı.",
+        "whatsappConfig": "WhatsApp ayarları geçersiz (telefon numarası kimliği, şablon adı veya dil).",
+        "whatsappNotReady": "WhatsApp etkinleştirilemez: erişim anahtarı, telefon numarası kimliği, şablon ve Meta şablon onayı teyidi gerekli."
       }
     },
     "notifications": {
