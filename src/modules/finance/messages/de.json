@@ -49,6 +49,11 @@
     "savedSuccess": "Einstellungen erfolgreich gespeichert!"
   },
   "widget": {
-    "rates": "Wechselkurse"
+    "rates": "Wechselkurse",
+    "title": "Wechselkurse",
+    "unavailable": "Kurse nicht verfügbar",
+    "refresh": "Aktualisieren",
+    "more": "Finanzen öffnen",
+    "base": "1 EUR"
   }
 }
