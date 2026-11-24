@@ -3,4 +3,4 @@
 import { gateRouteHandler } from "@/modules/system/server";
 import * as route from "@/modules/member-portal/api/signing/route";
 
-
+export const POST = gateRouteHandler("member-portal", route.POST);

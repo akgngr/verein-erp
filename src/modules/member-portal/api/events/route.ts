@@ -12,7 +12,7 @@ const EVENT_REGISTER_SCHEMA = z.object({
   eventId: z.string().min(1),
 });
 
-export async function handlePortalEventRegisterPost(request: Request): Promise<NextResponse> {
+export async function POST(request: Request): Promise<NextResponse> {
   if (!isPortalEnabled()) {
     return NextResponse.json({ ok: false, error: "notFound" }, { status: 404 });
   }

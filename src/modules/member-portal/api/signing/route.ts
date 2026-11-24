@@ -13,7 +13,7 @@ const SIGN_SCHEMA = z.object({
   signerName: z.string().trim().min(1).max(150),
 });
 
-export async function handlePortalSigningPost(request: Request): Promise<NextResponse> {
+export async function POST(request: Request): Promise<NextResponse> {
   if (!isPortalEnabled()) {
     return NextResponse.json({ ok: false, error: "notFound" }, { status: 404 });
   }

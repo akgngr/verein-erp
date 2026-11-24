@@ -11,7 +11,7 @@ import {
 } from "../../../services/auth-core";
 import { downloadPortalArt15Export } from "../../../services/rights";
 
-export async function handlePortalArt15DownloadGet(request: Request): Promise<Response> {
+export async function GET(request: Request): Promise<Response> {
   if (!isPortalEnabled()) {
     return NextResponse.json({ ok: false, error: "notFound" }, { status: 404 });
   }

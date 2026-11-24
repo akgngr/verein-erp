@@ -35,10 +35,10 @@ export {
   requestPortalConsentOptIn,
   confirmPortalConsentOptIn,
 } from "./services/self-service";
-export { handlePortalArt15Post } from "./api/art15/route";
-export { handlePortalArt15DownloadGet } from "./api/art15/download/route";
-export { handlePortalEventRegisterPost } from "./api/events/route";
-export { handlePortalSigningPost } from "./api/signing/route";
+export { POST as handlePortalArt15Post } from "./api/art15/route";
+export { GET as handlePortalArt15DownloadGet } from "./api/art15/download/route";
+export { POST as handlePortalEventRegisterPost } from "./api/events/route";
+export { POST as handlePortalSigningPost } from "./api/signing/route";
 export {
   PORTAL_BUSINESS_FEATURE,
   hasPortalBusinessLicense,
