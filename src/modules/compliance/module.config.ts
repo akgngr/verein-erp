@@ -11,7 +11,7 @@ import { compliancePermissions } from "./permissions";
  */
 export const moduleConfig: ModuleConfig = {
   key: "compliance",
-  version: "0.1.1",
+  version: "0.2.0",
   label: "Uyum kontrolü",
   description: "Kamu yararı (Gemeinnützigkeit) için iç kontrol listesi: süreler ve sınırlar. Vergi danışmanlığı değildir.",
   category: "EXTENSION",
@@ -19,6 +19,7 @@ export const moduleConfig: ModuleConfig = {
   access: [
     { module: "system", operations: ["read"] }, // kullanılabilir modüller (sağlayıcı modülü açık mı)
     { module: "tasks", operations: ["write"] }, // bulgudan taslak görev (insan onayıyla)
+    { module: "exports", operations: ["write"] }, // PDF/CSV dışa aktarım
   ],
   nav: [
     {
