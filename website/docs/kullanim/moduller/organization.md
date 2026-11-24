@@ -13,7 +13,7 @@ Dernek ana verileri, resmi iletişim ve antet logosu.
 |---|---|
 | Anahtar | `organization` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.0.6 |
+| Sürüm | 1.0.7 |
 | Sayfalar | `/ayarlar/dernek` |
 
 ## Varsayılan yetkiler

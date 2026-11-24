@@ -1,0 +1,17 @@
+{
+  "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
+  "releases": [
+    {
+      "version": "0.1.0",
+      "date": "2026-11-23",
+      "title": { "tr": "Kamu yararı uyum paneli", "de": "Gemeinnützigkeits-Cockpit" },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Muafiyet belgesi süresi, makbuz geçerliliği, fon kullanımı (kaba hesap), eğitmen ödeneği ve ekonomik işletme sınırı için iç kontrol listesi. Kurallar veri olarak tutulur ve incelemeden önce yalnız önizlemede çalışır. Vergi danışmanlığı değildir.",
+          "de": "Interne Checkliste für Bescheid-Gültigkeit, Zuwendungsbestätigungen, Mittelverwendung (Überschlag), Übungsleiterpauschale und Besteuerungsgrenze. Regeln sind Daten und laufen vor dem Review nur in der Vorschau. Keine Steuerberatung."
+        }
+      ]
+    }
+  ]
+}

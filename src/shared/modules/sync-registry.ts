@@ -15,6 +15,7 @@ const CALENDAR_FILE = path.join(ROOT_DIR, "src", "calendar-registry.ts");
 const SECRETARY_FILE = path.join(ROOT_DIR, "src", "secretary-registry.ts");
 const NOTIFICATION_FILE = path.join(ROOT_DIR, "src", "notification-registry.ts");
 const WIDGET_FILE = path.join(ROOT_DIR, "src", "widget-registry.ts");
+const COMPLIANCE_FILE = path.join(ROOT_DIR, "src", "compliance-registry.ts");
 const CALENDAR_SYNC_FILE = path.join(ROOT_DIR, "src", "calendar-sync-registry.ts");
 const CAMPAIGN_CHANNEL_FILE = path.join(ROOT_DIR, "src", "campaign-channel-registry.ts");
 const AUTOMATION_FILE = path.join(ROOT_DIR, "src", "automation-registry.ts");
@@ -113,6 +114,7 @@ export const registry: ModuleConfig[] = allModules;
   syncConventionFile(validModules, "channels.ts", "channels", CAMPAIGN_CHANNEL_FILE, "ModuleCampaignChannels", "@/shared/campaigns/channel", "moduleChannelRegistry", "Kampanya gönderim kanalları (src/modules/<modül>/channels.ts).");
   syncConventionFile(validModules, "secretary.ts", "secretary", SECRETARY_FILE, "ModuleSecretary", "@/shared/secretary/define", "moduleSecretaryRegistry", "Kişisel sekretere sabah özeti katkısı veren modüller (src/modules/<modül>/secretary.ts).");
   syncConventionFile(validModules, "notifications.ts", "notifications", NOTIFICATION_FILE, "ModuleNotifications", "@/shared/notifications/define", "moduleNotificationRegistry", "Merkezi bildirim türleri (src/modules/<modül>/notifications.ts, ADR 0006).");
+  syncConventionFile(validModules, "compliance.ts", "compliance", COMPLIANCE_FILE, "ModuleCompliance", "@/shared/compliance/define", "moduleComplianceRegistry", "Uyum (Gemeinnützigkeit) metrik sağlayıcıları (src/modules/<modül>/compliance.ts, ADR 0009).");
   syncWidgetRegistry(validModules);
   syncAutomationTasks(validModules);
 
