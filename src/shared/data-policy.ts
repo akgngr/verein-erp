@@ -154,6 +154,7 @@ export const DATA_POLICY = {
   Notification: { owner: "notifications", category: "K1", reason: "Kullanıcı bildirimi; parametreler şifreli, metin okunurken üretilir; 90 gün saklanır", sensitiveFields: ["paramsEnc"], personalOwnerField: "userId" },
   ComplianceRuleState: { owner: "compliance", category: "K1", reason: "Kurumun kural devre dışı bırakma kararı ve gerekçesi (kişisel veri yok)", sensitiveFields: [] },
   ComplianceFinding: { owner: "compliance", category: "K1", reason: "Uyum bulgusu: yalnız toplamlar ve takma ad referansları; isim yok", sensitiveFields: [] },
+  UserInvitation: { owner: "users", category: "K0", reason: "Davet bağlantısı belirteci (yalnız hash), süre ve kullanım zamanı", sensitiveFields: ["tokenHash"], personalOwnerField: "userId" },
   WidgetUserPreference: { owner: "widgets", category: "K1", reason: "Kullanıcının widget görünürlük ve sıra tercihi (yalnız widget kimliği)", sensitiveFields: [], personalOwnerField: "userId" },
   WidgetPolicy: { owner: "widgets", category: "K1", reason: "Kurum düzeyi widget politikası (kişisel veri yok)", sensitiveFields: [] },
   NotificationPreference: { owner: "notifications", category: "K1", reason: "Bildirim türü × kanal tercihi", sensitiveFields: [], personalOwnerField: "userId" },
