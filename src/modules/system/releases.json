@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.18.3",
+      "date": "2026-11-24",
+      "title": {
+        "tr": "Menü düzeni ayar sayfası",
+        "de": "Einstellungsseite für die Menüanordnung"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Kullanıcı bazlı menü özelleştirme sayfası Ayarlar menüsüne (/ayarlar/menu) taşındı.",
+          "de": "Die benutzerbezogene Menüanpassung wurde in die Einstellungen (/ayarlar/menu) verschoben."
+        }
+      ]
+    },
+    {
       "version": "1.18.2",
       "date": "2026-11-24",
       "title": {

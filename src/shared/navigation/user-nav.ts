@@ -1,4 +1,4 @@
-import type { ModuleConfig, NavCategoryId, NavItem } from "../types/module";
+import type { ModuleConfig, NavItem } from "../types/module";
 import type { ModuleNavDefault } from "./nav-defaults.generated";
 
 export type NavCategoryGroup = {
@@ -25,7 +25,7 @@ export type UserNavConfig = {
 export type ResolvedNavNode = {
   moduleKey: string;
   item: NavItem;
-  categoryId: string;
+  categoryId: string | null;
   parentModule: string | null;
   order: number;
   hidden: boolean;
@@ -41,22 +41,6 @@ export type ResolvedNavCategory = {
   nodes: ResolvedNavNode[];
 };
 
-export const DEFAULT_NAV_CATEGORY_IDS: readonly NavCategoryId[] = [
-  "association",
-  "finance",
-  "education",
-  "communication",
-  "operations",
-];
-
-export const DEFAULT_NAV_CATEGORY_ORDER: Record<NavCategoryId, number> = {
-  association: 10,
-  finance: 20,
-  education: 30,
-  communication: 40,
-  operations: 50,
-};
-
 export function resolveModuleKeyForNavItem(
   item: NavItem,
   modules: readonly ModuleConfig[],
@@ -68,22 +52,23 @@ export function resolveModuleKeyForNavItem(
 /**
  * Kullanıcı bazlı sol menü ağacını üretir:
  * - Girdi `items` zaten aktif modül + rol yetkisi filtresinden geçmiş olmalıdır (yetki aşımı imkânsız).
- * - Varsayılan kategori ve alt modül ilişkileri `nav.json` (MODULE_NAV_DEFAULTS) üzerinden gelir.
- * - Kullanıcının `UserNavConfig` katmanı kategori, üst modül, sıra ve gizleme uygular.
- * - Üst modül gizli/yoksa veya döngü oluşuyorsa alt modül güvenli biçimde kategori köküne çıkar.
+ * - Varsayılan kategori zorlaması yoktur; yalnızca kullanıcının oluşturduğu özel gruplar (`userConfig.groups`) kullanılır.
+ * - Alt modül ilişkileri (`parentModule`) varsayılan `nav.json` veya kullanıcı tercihi üzerinden gelir ve üst modülün alt menüsünde açılır.
+ * - Üst modül gizli/yoksa veya döngü oluşuyorsa alt modül güvenli biçimde ana listeye çıkar.
  */
 export function resolveUserSidebarTree(input: {
   items: readonly NavItem[];
   modules: readonly ModuleConfig[];
   defaults: Record<string, ModuleNavDefault>;
   userConfig?: UserNavConfig | null;
-  defaultCategoryLabels: Record<NavCategoryId, string>;
 }): {
+  uncategorizedNodes: ResolvedNavNode[];
   categories: ResolvedNavCategory[];
+  childrenByParent: Record<string, ResolvedNavNode[]>;
   allItems: ResolvedNavNode[];
   pinnedTop: NavItem[];
 } {
-  const { items, modules, defaults, userConfig, defaultCategoryLabels } = input;
+  const { items, modules, defaults, userConfig } = input;
   const itemOverrides = userConfig?.items ?? {};
 
   const pinnedTop: NavItem[] = [];
@@ -99,13 +84,12 @@ export function resolveUserSidebarTree(input: {
     const def = defaults[moduleKey];
     const ov = itemOverrides[moduleKey];
 
-    const categoryId =
-      ov?.categoryId ?? item.categoryGroup ?? def?.categoryGroup ?? "association";
+    const categoryId = ov && "categoryId" in ov ? (ov.categoryId ?? null) : null;
     const parentModule =
       ov && "parentModule" in ov
         ? (ov.parentModule ?? null)
         : (item.parentModule ?? def?.parentModule ?? null);
-    const order = typeof ov?.order === "number" ? ov.order : (def?.order ?? item.order);
+    const order = typeof ov?.order === "number" ? ov.order : item.order;
     const hidden = Boolean(ov?.hidden);
 
     rawNodes.push({
@@ -121,35 +105,17 @@ export function resolveUserSidebarTree(input: {
 
   rawNodes.sort((a, b) => a.order - b.order || a.moduleKey.localeCompare(b.moduleKey));
 
-  // Kategori haritası: varsayılanlar + kullanıcının özel grupları
+  // Kategori haritası: yalnızca kullanıcının oluşturduğu özel gruplar
   const categoryMap = new Map<string, ResolvedNavCategory>();
-  for (const id of DEFAULT_NAV_CATEGORY_IDS) {
-    categoryMap.set(id, {
-      id,
-      label: defaultCategoryLabels[id],
-      order: DEFAULT_NAV_CATEGORY_ORDER[id],
-      isCustom: false,
-      collapsedByDefault: false,
+  for (const customGroup of userConfig?.groups ?? []) {
+    categoryMap.set(customGroup.id, {
+      id: customGroup.id,
+      label: customGroup.label,
+      order: customGroup.order,
+      isCustom: true,
+      collapsedByDefault: Boolean(customGroup.collapsedByDefault),
       nodes: [],
     });
-  }
-
-  for (const customGroup of userConfig?.groups ?? []) {
-    const existing = categoryMap.get(customGroup.id);
-    if (existing) {
-      existing.label = customGroup.label || existing.label;
-      existing.order = customGroup.order;
-      existing.collapsedByDefault = Boolean(customGroup.collapsedByDefault);
-    } else {
-      categoryMap.set(customGroup.id, {
-        id: customGroup.id,
-        label: customGroup.label,
-        order: customGroup.order,
-        isCustom: true,
-        collapsedByDefault: Boolean(customGroup.collapsedByDefault),
-        nodes: [],
-      });
-    }
   }
 
   // Görünür düğümlerin üst-alt modül ağacını kur (döngü korumalı)
@@ -172,24 +138,32 @@ export function resolveUserSidebarTree(input: {
   };
 
   const rootNodes: ResolvedNavNode[] = [];
+  const childrenByParent: Record<string, ResolvedNavNode[]> = {};
   for (const node of visibleMap.values()) {
     const parent = node.parentModule ? visibleMap.get(node.parentModule) : undefined;
     if (parent && !wouldCreateCycle(node.moduleKey, parent.moduleKey)) {
       node.categoryId = parent.categoryId;
       parent.children.push(node);
+      (childrenByParent[parent.moduleKey] ??= []).push(node);
     } else {
       rootNodes.push(node);
     }
   }
 
+  const uncategorizedNodes: ResolvedNavNode[] = [];
   for (const node of rootNodes) {
-    const cat = categoryMap.get(node.categoryId) ?? categoryMap.get("association")!;
-    cat.nodes.push(node);
+    const cat = node.categoryId ? categoryMap.get(node.categoryId) : undefined;
+    if (cat) {
+      cat.nodes.push(node);
+    } else {
+      node.categoryId = null;
+      uncategorizedNodes.push(node);
+    }
   }
 
   const categories = Array.from(categoryMap.values())
     .filter((c) => c.nodes.length > 0 || c.isCustom)
     .sort((a, b) => a.order - b.order || a.label.localeCompare(b.label));
 
-  return { categories, allItems: rawNodes, pinnedTop };
+  return { uncategorizedNodes, categories, childrenByParent, allItems: rawNodes, pinnedTop };
 }

@@ -39,14 +39,6 @@ function makeModule(key: string, href: string, order: number): ModuleConfig {
   };
 }
 
-const LABELS = {
-  association: "Dernek",
-  finance: "Finans",
-  education: "Eğitim",
-  communication: "İletişim",
-  operations: "Araçlar",
-};
-
 describe("Per-user Sidebar Navigation Tree (nav.json + UserNavConfig)", () => {
   const modules = [
     makeModule("members", "/uyeler", 1),
@@ -64,21 +56,23 @@ describe("Per-user Sidebar Navigation Tree (nav.json + UserNavConfig)", () => {
   };
   const items = [panelItem, ...modules.flatMap((m) => m.nav)];
 
-  it("groups modules into categories and nests sub-modules (donations -> accounting) from nav.json", () => {
+  it("keeps main menu flat (no forced categories) and nests sub-modules (donations -> accounting) into childrenByParent", () => {
     const tree = resolveUserSidebarTree({
       items,
       modules,
       defaults: MODULE_NAV_DEFAULTS,
-      defaultCategoryLabels: LABELS,
     });
 
     assert.equal(tree.pinnedTop.length, 1);
-    const financeCat = tree.categories.find((c) => c.id === "finance");
-    assert.ok(financeCat);
-    assert.equal(financeCat.nodes.length, 1);
-    assert.equal(financeCat.nodes[0].moduleKey, "accounting");
-    assert.equal(financeCat.nodes[0].children.length, 1);
-    assert.equal(financeCat.nodes[0].children[0].moduleKey, "donations");
+    assert.equal(tree.categories.length, 0);
+    assert.deepEqual(
+      tree.uncategorizedNodes.map((n) => n.moduleKey),
+      ["members", "accounting", "weather"],
+    );
+    assert.deepEqual(
+      (tree.childrenByParent["accounting"] ?? []).map((n) => n.moduleKey),
+      ["donations"],
+    );
   });
 
   it("applies per-user custom categories, sub-module promotion, and hiding", () => {
@@ -94,7 +88,6 @@ describe("Per-user Sidebar Navigation Tree (nav.json + UserNavConfig)", () => {
           weather: { hidden: true },
         },
       },
-      defaultCategoryLabels: LABELS,
     });
 
     const custom = tree.categories.find((c) => c.id === "custom_1");
@@ -103,8 +96,11 @@ describe("Per-user Sidebar Navigation Tree (nav.json + UserNavConfig)", () => {
       custom.nodes.map((n) => n.moduleKey),
       ["members", "donations"],
     );
+    assert.deepEqual(
+      tree.uncategorizedNodes.map((n) => n.moduleKey),
+      ["accounting"],
+    );
     assert.equal(tree.allItems.find((i) => i.moduleKey === "weather")?.hidden, true);
-    assert.equal(tree.categories.some((c) => c.id === "operations"), false);
   });
 
   it("prevents cycles and promotes children if parent is hidden", () => {
@@ -118,14 +114,11 @@ describe("Per-user Sidebar Navigation Tree (nav.json + UserNavConfig)", () => {
           donations: { parentModule: "accounting" },
         },
       },
-      defaultCategoryLabels: LABELS,
     });
 
-    const financeCat = tree.categories.find((c) => c.id === "finance");
-    assert.ok(financeCat);
     assert.deepEqual(
-      financeCat.nodes.map((n) => n.moduleKey),
-      ["donations"],
+      tree.uncategorizedNodes.map((n) => n.moduleKey),
+      ["members", "donations", "weather"],
     );
   });
 });
