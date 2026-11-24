@@ -21,6 +21,10 @@ updates:
         update-types: ["version-update:semver-major"] # çalışma zamanındaki Node LTS ile aynı kalmalı
       - dependency-name: "lucide-react"
         update-types: ["version-update:semver-major"] # 1.x react-server içinde kırılıyor (#458)
+      - dependency-name: "i18next"
+        update-types: ["version-update:semver-major"] # @workflowbuilder/sdk i18next ^24'e bağlı; editör TR/DE çevirisini kaybeder (#489, #553)
+      - dependency-name: "react-i18next"
+        update-types: ["version-update:semver-major"] # aynı sebep: SDK react-i18next ^15'e bağlı
     groups:
       production:
         dependency-type: production
