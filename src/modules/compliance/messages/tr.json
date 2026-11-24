@@ -11,7 +11,8 @@
   },
   "access": {
     "system": "Kural kaynağı olan modül açık mı, kontrol edilir.",
-    "tasks": "Bir bulgudan, kullanıcı onayıyla görev taslağı oluşturulur."
+    "tasks": "Bir bulgudan, kullanıcı onayıyla görev taslağı oluşturulur.",
+    "exports": "Uyum raporu PDF/CSV olarak Dosyalarım alanına aktarılır."
   },
   "nav": {
     "compliance": "Uyum kontrolü"
@@ -65,5 +66,16 @@
     "unknownRule": "Kural bulunamadı.",
     "noTask": "Bu kural için görev önerisi yok.",
     "noFinding": "Güncel bir bulgu yok; sayfayı yenileyin."
+  },
+  "ui": {
+    "yearLabel": "Yıl",
+    "previewToggle": "Taslak önizleme",
+    "previewActive": "Önizleme açık (?preview=1)",
+    "exportPdf": "PDF dışa aktar",
+    "exportCsv": "CSV dışa aktar",
+    "exportReady": "{format} raporu Dosyalarım alanına kaydedildi.",
+    "downloadExport": "{format} indir",
+    "computedValue": "Hesaplanan değer",
+    "askAdvisorLink": "Vergi danışmanı erişimi"
   }
 }
