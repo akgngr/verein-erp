@@ -20,10 +20,10 @@ export { listPortalPasskeys, registerPortalPasskey, completePasskeyStepUp } from
 export { POST as magicLinkHandler } from "./api/magic-link/route";
 export { POST as confirmMagicLinkHandler } from "./api/confirm/route";
 export { POST as portalLogoutHandler } from "./api/logout/route";
-export { handlePortalCorrectionPost } from "./api/corrections/route";
-export { handlePortalConsentPost } from "./api/consents/route";
-export { handlePortalConsentConfirmGet } from "./api/consents/confirm/route";
-export { handlePortalReceiptDownloadGet } from "./api/receipts/[ref]/route";
+export { POST as handlePortalCorrectionPost } from "./api/corrections/route";
+export { POST as handlePortalConsentPost } from "./api/consents/route";
+export { GET as handlePortalConsentConfirmGet } from "./api/consents/confirm/route";
+export { GET as handlePortalReceiptDownloadGet } from "./api/receipts/[ref]/route";
 export { signReceiptRef, verifyReceiptRef } from "./services/receipt-ref";
 export {
   CONSENT_TEXT_VERSION,

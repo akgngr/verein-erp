@@ -5,7 +5,7 @@ import { NextResponse } from "next/server";
 import { isPortalEnabled } from "../../../services/auth-core";
 import { confirmPortalConsentOptIn } from "../../../services/self-service";
 
-export async function handlePortalConsentConfirmGet(request: Request): Promise<NextResponse> {
+export async function GET(request: Request): Promise<NextResponse> {
   if (!isPortalEnabled()) {
     return NextResponse.json({ ok: false, error: "notFound" }, { status: 404 });
   }

@@ -13,7 +13,7 @@ const CONSENT_ACTION_SCHEMA = z.object({
   target: z.enum(["bulkMail", "photo", "sms", "whatsapp", "telegram"]),
 });
 
-export async function handlePortalConsentPost(request: Request): Promise<NextResponse> {
+export async function POST(request: Request): Promise<NextResponse> {
   if (!isPortalEnabled()) {
     return NextResponse.json({ ok: false, error: "notFound" }, { status: 404 });
   }

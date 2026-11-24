@@ -15,7 +15,7 @@ const CORRECTION_SCHEMA = z.object({
   proposedValue: z.string().trim().min(1).max(200),
 });
 
-export async function handlePortalCorrectionPost(request: Request): Promise<NextResponse> {
+export async function POST(request: Request): Promise<NextResponse> {
   if (!isPortalEnabled()) {
     return NextResponse.json({ ok: false, error: "notFound" }, { status: 404 });
   }
