@@ -10,5 +10,6 @@ export const lifecycle: ModuleLifecycle = {
     const db = getDb();
     await db.externalAccessGrant.deleteMany({ where: { userId } });
     await db.userNavPreference.deleteMany({ where: { userId } });
+    await db.userInvitation.deleteMany({ where: { userId } });
   },
 };

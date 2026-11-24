@@ -10263,7 +10263,8 @@
       }
     },
     "access": {
-      "system": "Modül rollerinin (örn. Öğretmen) kullanılabilir olup olmadığını görmek için kurulu ve etkin modülleri okur. Kullanıcı silinirken modüllerin kişisel veri temizliğini başlatır (KVKK/DSGVO silinme hakkı)."
+      "system": "Modül rollerinin (örn. Öğretmen) kullanılabilir olup olmadığını görmek için kurulu ve etkin modülleri okur. Kullanıcı silinirken modüllerin kişisel veri temizliğini başlatır (KVKK/DSGVO silinme hakkı).",
+      "mail": "Davet e-postası göndermek için (yalnız tek kullanımlık bağlantı)."
     },
     "roles": {
       "newRole": "Yeni rol",
@@ -10340,6 +10341,25 @@
         "active": "Aktif",
         "expired": "Süresi doldu",
         "revoked": "İptal edildi"
+      }
+    },
+    "invite": {
+      "action": "Davet bağlantısı gönder",
+      "sent": "{email} adresine davet bağlantısı gönderildi (72 saat geçerli).",
+      "pageTitle": "Daveti kabul et",
+      "pageIntro": "{email} hesabı için şifrenizi belirleyin. Bu bağlantı tek kullanımlıktır.",
+      "password": "Yeni şifre",
+      "confirm": "Şifre (tekrar)",
+      "submit": "Şifreyi belirle",
+      "done": "Şifreniz kaydedildi. Artık giriş yapabilirsiniz.",
+      "toLogin": "Girişe git",
+      "errors": {
+        "invalid": "Bu davet bağlantısı geçersiz, süresi dolmuş veya daha önce kullanılmış. Yöneticinizden yeni bir davet isteyin.",
+        "inactive": "Pasif kullanıcıya davet gönderilemez.",
+        "mailNotConfigured": "E-posta gönderimi yapılandırılmamış (Ayarlar → E-posta).",
+        "appUrl": "Uygulama adresi (APP_URL) https ile tanımlı olmalı.",
+        "sendFailed": "Davet e-postası gönderilemedi.",
+        "mismatch": "Şifreler eşleşmiyor."
       }
     }
   },

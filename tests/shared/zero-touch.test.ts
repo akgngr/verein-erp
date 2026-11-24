@@ -16,6 +16,7 @@ const APP_DIR = path.join(ROOT_DIR, "src", "app");
 const SHELL_ROUTE_FILES = new Set([
   "(dashboard)/page.tsx", // Panel: birden çok modülün özetini gösterir
   "(auth)/giris/page.tsx", // Giriş: oturum öncesi düzen (dashboard dışında)
+  "(auth)/davet/[token]/page.tsx", // Davet bağlantısı: oturum öncesi şifre belirleme (users/invitations)
   "api/health/route.ts", // Konteyner sağlık kontrolü
 ]);
 
