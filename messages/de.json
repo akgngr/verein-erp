@@ -5543,6 +5543,9 @@
       "trackedCurrenciesDesc": "Prioritäre Währungen für das Dashboard-Widget und Kurztabellen.",
       "saveButton": "Einstellungen speichern",
       "savedSuccess": "Einstellungen erfolgreich gespeichert!"
+    },
+    "widget": {
+      "rates": "Wechselkurse"
     }
   },
   "grants": {
@@ -10424,6 +10427,9 @@
     "secretary": {
       "dailyForecast": "Heute {temp}°, {cond}.",
       "outdoorWarning": "Berücksichtigen Sie die Wetterbedingungen für Aktivitäten im Freien oder Termine."
+    },
+    "widget": {
+      "current": "Wetter"
     }
   },
   "widgets": {
