@@ -65,5 +65,7 @@
       "label": "Dernek Ana Bilgileri",
       "description": "Resmi dernek sicil no, vergi no, banka hesapları ve antet logosu."
     }
-  }
+  },
+  "yes": "Evet",
+  "no": "Hayır"
 }

@@ -2103,7 +2103,8 @@
       "reportNotFound": "Bericht nicht gefunden.",
       "staleProposal": "Der Datensatz wurde geändert oder der Vorschlag ist abgelaufen. Bitte erstellen Sie einen neuen Vorschlag.",
       "cloudIntentRequired": "Beim Cloud-Anbieter sind nur feste Anfragen wie „Mitgliederstatistik 2026“, „Spendenübersicht 2026“ oder „Beitragsdatei 2026“ verfügbar. Wählen Sie für Freitext einen lokalen Anbieter.",
-      "cloudDisabled": "Die Cloud-Verarbeitung ist ausgeschaltet. Die Administration kann ein lokales Modell wählen oder Einstellungen → KI-Assistent → Cloud-Datenrichtlinie ändern."
+      "cloudDisabled": "Die Cloud-Verarbeitung ist ausgeschaltet. Die Administration kann ein lokales Modell wählen oder Einstellungen → KI-Assistent → Cloud-Datenrichtlinie ändern.",
+      "providerNotAllowed": "Dieser Anbieter ist durch die angewendete Datenschutz-Voreinstellung nicht erlaubt (Einstellungen → Datenschutz)."
     },
     "panel": {
       "title": "Assistent",
@@ -2539,6 +2540,16 @@
         "label": "Sicherheits- & Änderungsprotokoll",
         "description": "Unveränderliche Prüfspuren und Sicherheitsereignisse."
       }
+    },
+    "details": {
+      "open": "Details",
+      "title": "Änderungsdetails",
+      "before": "Vorher",
+      "after": "Nachher",
+      "none": "Keine Angaben"
+    },
+    "errors": {
+      "notFound": "Protokolleintrag nicht gefunden."
     }
   },
   "auth": {
@@ -8527,7 +8538,9 @@
         "label": "Vereinsstammdaten",
         "description": "Registernummer, Steuernummer, Bankverbindungen und Briefkopf-Logo."
       }
-    }
+    },
+    "yes": "Ja",
+    "no": "Nein"
   },
   "progress": {
     "module": {
@@ -9527,7 +9540,9 @@
       "organization": "Für die Lizenzprüfung werden Name und Register-/Steuernummer der Organisation gelesen (die Lizenz ist an diese Organisation gebunden).",
       "users": "Prüft das Vorhandensein eines Administratorkontos im Modul- und Workflow-Gesundheitscockpit.",
       "ai": "Liest den Status konfigurierter KI-Anbieter für Datenschutz-Voreinstellungen und den monatlichen Datenausgangsbericht.",
-      "widgets": "Zeigt Widget-Einstellungen an und speichert Änderungen der Nutzer."
+      "widgets": "Zeigt Widget-Einstellungen an und speichert Änderungen der Nutzer.",
+      "automation": "Liest im Modul-Gesundheitscockpit fehlgeschlagene Hintergrundaufgaben und den Worker-Heartbeat (keine Ein-/Ausgabedaten).",
+      "notifications": "Liest im Modul-Gesundheitscockpit, welche Benachrichtigungskanäle aktiv sind (keine Geheimnisse oder Einstellungen)."
     },
     "gate": {
       "manage": "Zur Modulverwaltung",
@@ -9628,7 +9643,9 @@
         "smallBusinessOff": "Regelbesteuerung",
         "presetOn": "Kategorien und Konten werden angelegt",
         "presetOff": "nein",
-        "note": "Nicht ausgewählte optionale Module werden deaktiviert (Daten bleiben erhalten)."
+        "note": "Daten nicht ausgewählter Module werden nicht gelöscht; deaktiviert wird nur, was Sie unten bestätigen.",
+        "willDisable": "Derzeit aktive, nicht ausgewählte Module: {modules}.",
+        "confirmDisable": "Diese Module deaktivieren (ohne Bestätigung bleiben sie aktiv)"
       },
       "back": "Zurück",
       "next": "Weiter",
@@ -9641,7 +9658,10 @@
         "profile": "Organisationsdaten erfassen",
         "accountingSettings": "Buchhaltungseinstellungen",
         "modulesPage": "Modulverwaltung",
-        "dashboard": "Zum Dashboard"
+        "dashboard": "Zum Dashboard",
+        "kept": "Aktiv gelassen, da nicht bestätigt: {modules}",
+        "mapped": "Leere Standardzuordnungen in den Buchhaltungseinstellungen (Kasse/Bank, Spenden- und Beitragskategorie) wurden ergänzt.",
+        "mappingFailed": "Die Buchhaltungs-Standardzuordnung war nicht möglich; bitte unter Buchhaltung → Einstellungen ergänzen."
       },
       "errors": {
         "accountingOff": "Für die Buchhaltungsvorbereitung muss das Modul Buchhaltung ausgewählt sein."
@@ -9782,7 +9802,11 @@
             "right": "Kopfzeile · rechts"
           }
         },
-        "resetSuccess": "Standardeinstellungen wiederhergestellt."
+        "resetSuccess": "Standardeinstellungen wiederhergestellt.",
+        "policy": {
+          "label": "Für alle erlaubt",
+          "toggle": "Widget {title} für alle Benutzer erlauben oder sperren"
+        }
       }
     },
     "readiness": {
@@ -9883,7 +9907,15 @@
       "apply": "Bestätigen und anwenden",
       "applying": "Wird angewendet…",
       "noChanges": "Das Profil ist bereits aktiv; keine Änderungen.",
-      "readOnly": "Zur Änderung sind Systemadministratorrechte erforderlich."
+      "readOnly": "Zur Änderung sind Systemadministratorrechte erforderlich.",
+      "blocked": "Voreinstellung nicht angewendet: Einige Moduländerungen sind wegen Abhängigkeiten oder fehlender Zugriffsfreigabe blockiert.",
+      "blockersTitle": "Vor dem Anwenden zu lösen",
+      "blockers": {
+        "requires": "{module} würde aktiviert, aber erforderliche Module bleiben deaktiviert: {modules}.",
+        "missing": "Für {module} erforderliche Module fehlen oder sind zu alt: {modules}.",
+        "approval": "Der Zugriff von {module} ist nicht freigegeben; bitte zuerst in der Modulverwaltung freigeben.",
+        "dependents": "{module} würde deaktiviert, aber abhängige Module bleiben aktiv: {modules}."
+      }
     },
     "egressUi": {
       "title": "Monatlicher Datenausgangsbericht",

@@ -13,7 +13,7 @@ Test kullanıcılarının hata ve önerilerini toplar.
 |---|---|
 | Anahtar | `feedback` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.6 |
+| Sürüm | 1.1.7 |
 | Sayfalar | `/geri-bildirim` |
 
 ## Diğer modüllere erişim
@@ -33,6 +33,13 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Geri bildirim | görüntüleme, oluşturma, düzenleme, silme, onay | görüntüleme, oluşturma | görüntüleme, oluşturma | görüntüleme, oluşturma | görüntüleme, oluşturma | — | görüntüleme, oluşturma | görüntüleme, oluşturma |
 
 ## Sürüm notları
+
+### 1.1.7 — Kullanıcı silmede anonimleştirme
+
+_2026-11-25_
+
+- **Güvenlik:** Kullanıcı silinince geri bildirimleri anonimleştirilir ve ekran görüntüleri silinir (DSGVO md. 17).
+- **Düzeltme:** Kaydı oluşturan kişi kendi ekran görüntüsünü görebilir.
 
 ### 1.1.6 — nav.json kategori ve alt modül tanımı
 

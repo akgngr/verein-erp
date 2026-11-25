@@ -1,13 +1,22 @@
 "use client";
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 
+import { Dialog } from "@/shared/components/kit";
 import { DataTable } from "@/shared/components/data-table/data-table";
+import { DateRangeFilter } from "@/shared/components/data-table/date-range-filter";
 import type { DataTableColumn } from "@/shared/components/data-table/types";
 import { StatusChip } from "@/shared/components/ui/status-chip";
 import { formatDateTime } from "@/shared/utils";
 
+import { getAuditLogChangesAction } from "../actions/audit-actions";
 import { AUDIT_ACTIONS, AUDIT_ENTITIES } from "../constants";
 import type { AuditLogRow } from "../queries/list-audit-logs";
+
+/** #583: Sabit liste ile veritabanındaki değerlerin birleşimi (yeni modüllerin işlemleri de filtrelenebilir). */
+function mergeValues(known: readonly string[], found: string[]): string[] {
+  return [...new Set([...known, ...found])];
+}
 
 /** Denetim kaydı: salt okunur ortak DataTable (11.2). */
 export function AuditLogTable({
@@ -18,6 +27,7 @@ export function AuditLogTable({
   sort,
   dir,
   q,
+  filterValues,
 }: {
   rows: AuditLogRow[];
   total: number;
@@ -26,8 +36,14 @@ export function AuditLogTable({
   sort?: string;
   dir?: "asc" | "desc";
   q?: string;
+  filterValues?: { actions: string[]; entities: string[] };
 }) {
   const t = useTranslations("audit");
+  const [detail, setDetail] = useState<{ row: AuditLogRow; before: unknown; after: unknown; error?: string } | null>(null);
+  const openDetail = async (row: AuditLogRow) => {
+    const response = await getAuditLogChangesAction({ id: row.id });
+    setDetail(response.ok ? { row, ...response.data } : { row, before: null, after: null, error: response.error });
+  };
   // Bilinmeyen (yeni modüllerin eklediği) değerler ham gösterilir.
   const actionLabel = (action: string) =>
     t.has(`actions.${action}`) ? t(`actions.${action}`) : action;
@@ -62,6 +78,7 @@ export function AuditLogTable({
   ];
 
   return (
+    <>
     <DataTable<AuditLogRow>
       ariaLabel={t("table.aria")}
       columns={columns}
@@ -77,7 +94,7 @@ export function AuditLogTable({
         {
           key: "action",
           label: t("table.action"),
-          options: AUDIT_ACTIONS.map((value) => ({
+          options: mergeValues(AUDIT_ACTIONS, filterValues?.actions ?? []).map((value) => ({
             value,
             label: actionLabel(value),
           })),
@@ -85,14 +102,46 @@ export function AuditLogTable({
         {
           key: "entity",
           label: t("table.entity"),
-          options: AUDIT_ENTITIES.map((value) => ({
+          options: mergeValues(AUDIT_ENTITIES, filterValues?.entities ?? []).map((value) => ({
             value,
             label: entityLabel(value),
           })),
         },
       ]}
+      dateFilter={<DateRangeFilter label={t("table.date")} idPrefix="audit-date" />}
+      rowActions={(row) => [{ key: "details", label: t("details.open"), onPress: () => void openDetail(row) }]}
       emptyMessage={t("table.empty")}
     />
+    <Dialog isOpen={Boolean(detail)} onOpenChange={(open) => !open && setDetail(null)} size="lg" scroll="inside" aria-label={t("details.title")}>
+      {detail ? (
+        <>
+          <Dialog.Header>
+            <Dialog.Heading>
+              {t("details.title")} · {actionLabel(detail.row.action)} · {entityLabel(detail.row.entity)}
+            </Dialog.Heading>
+          </Dialog.Header>
+          <Dialog.Body className="flex flex-col gap-3 text-sm">
+            <p className="text-ink-500">
+              {formatDateTime(detail.row.createdAt)} · {detail.row.userLabel ?? "—"} · {detail.row.entityId ?? "—"}
+            </p>
+            {detail.error ? <p className="text-danger">{detail.error}</p> : null}
+            {(["before", "after"] as const).map((key) => (
+              <section key={key} className="flex flex-col gap-1">
+                <h3 className="font-semibold">{t(`details.${key}`)}</h3>
+                {detail[key] === null || detail[key] === undefined ? (
+                  <p className="text-ink-500">{t("details.none")}</p>
+                ) : (
+                  <pre className="max-h-72 overflow-auto rounded-lg border border-ink-200 bg-ink-50 p-3 text-xs whitespace-pre-wrap break-all">
+                    {JSON.stringify(detail[key], null, 2)}
+                  </pre>
+                )}
+              </section>
+            ))}
+          </Dialog.Body>
+        </>
+      ) : null}
+    </Dialog>
+    </>
   );
 }
 

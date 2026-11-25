@@ -13,7 +13,7 @@ Sistemde yüklü çekirdek, resmi ve eklenti modüllerin yönetimi.
 |---|---|
 | Anahtar | `system` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.18.5 |
+| Sürüm | 1.19.0 |
 | Sayfalar | `/ayarlar`, `/ayarlar/widgetlar`, `/ayarlar/moduller`, `/ayarlar/moduller/saglik`, `/ayarlar/moduller/paketler`, `/ayarlar/kurulum`, `/ayarlar/lisans`, `/ayarlar/gizlilik`, `/ayarlar/veri-cikisi`, `/ayarlar/menu`, `/ayarlar/surum-notlari` |
 
 ## Diğer modüllere erişim
@@ -27,6 +27,8 @@ Yönetici, modülü açarken bu erişimleri onaylar (bkz. [Modül yönetimi](/yo
 | [Kullanıcılar](./users) | okuma, yazma | Modül ve iş akışı sağlığı kokpitinde yönetici kullanıcısının varlığı denetlenir. |
 | [Yapay zekâ asistanı](./ai) | okuma | Gizlilik ön ayarları ve aylık veri çıkışı raporu için yapılandırılmış yapay zekâ sağlayıcılarının durumu okunur. |
 | [Widget Platformu](./widgets) | okuma, yazma | Widget tercihlerini gösterir ve kullanıcının değişikliklerini kaydeder. |
+| [Otomasyon](./automation) | okuma | Modül sağlık kokpitinde başarısız arka plan işleri ve worker kalp atışı okunur (girdi/sonuç verisi okunmaz). |
+| [Bildirimler](./notifications) | okuma | Modül sağlık kokpitinde hangi bildirim kanallarının etkin olduğu okunur (sır ve ayar okunmaz). |
 
 ## Varsayılan yetkiler
 
@@ -34,10 +36,20 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 
 | İzin | Yönetici | Yönetim Kurulu | Sekreter | Sayman | Denetçi | TAX_ADVISOR | Öğretmen | Salt okunur |
 |---|---|---|---|---|---|---|---|---|
-| Sistem Ayarları | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | — | görüntüleme | görüntüleme |
+| Sistem Ayarları | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme | görüntüleme |
 | Modül Yönetimi | görüntüleme, düzenleme, silme | görüntüleme | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.19.0 — Sağlık kokpiti, kurulum sihirbazı ve gizlilik ön ayarları
+
+_2026-11-25_
+
+- **Düzeltme:** Sağlık kokpiti başarısız arka plan işlerini ve worker kalp atışını doğru gösterir (önceden yanlış tablo sorgulanıp hep 0 görünüyordu); veriler modüllerin public API'lerinden okunur.
+- **İyileştirme:** Çekirdek (CORE) modüllerin erişimi her zaman onaylıdır; yeni kurulumda ve güncellemelerde 'izin bekliyor' görünmez.
+- **Güvenlik:** Gizlilik ön ayarı bağımlılıkları ve erişim onaylarını denetler; engel varsa önizlemede listelenir ve uygulanmaz.
+- **Düzeltme:** Kurulum sihirbazı açık modülleri yalnız açık onayla kapatır, zorunlu bağımlılıkları (örn. otomasyon) açar, dernek ön ayarına SEPA, CRM, toplu e-posta ve hibeleri ekler ve muhasebe varsayılan eşlemelerini doldurur.
+- **Düzeltme:** 'settings' izni tek tanıma indirildi; Menü düzeni sayfası sunucuda yetki ister; yöneticiler widget'ları herkes için açıp kapatabilir.
 
 ### 1.18.5 — Menü grubu kimlik çakışması düzeltmesi
 
@@ -85,10 +97,4 @@ _2026-11-23_
 - **Yeni:** Aylık veri çıkışı raporlayıcısı yapılandırma, gerçekleşen aktarımlar ve sağlayıcı tarafı saklama sürelerini birbirinden ayırır; akış kapatılsa bile geçmiş aktarım kayıtları değiştirilmez.
 - **Yeni:** Strict / Standard / Connected gizlilik ön ayarları veri olarak tanımlandı; önizleme farkı üretir, yönetici onayı ile uygulanır ve Strict profilinde kendi sunucunuzda barındırılan model ucu önerilir.
 
-### 1.16.0 — Kişisel widget ayarları
-
-_2026-11-23_
-
-- **Yeni:** Widget görünürlük ve sıralama ayarları, sıfırlama ve masaüstü/mobil önizleme kullanıcı hesabına bağlandı.
-
-Daha eski 28 herkese açık sürüm notu.
+Daha eski 29 herkese açık sürüm notu.

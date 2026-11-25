@@ -2103,7 +2103,8 @@
       "reportNotFound": "Rapor bulunamadı.",
       "staleProposal": "Kayıt değişti veya önerinin süresi doldu. Lütfen yeni bir öneri oluşturun.",
       "cloudIntentRequired": "Bulut sağlayıcıda yalnızca “Üye sayısı 2026”, “Bağış özeti 2026” veya “Aidat dosyası 2026” gibi hazır istekler kullanılabilir. Serbest metin için yerel sağlayıcıyı seçin.",
-      "cloudDisabled": "Bulut işleme kapalı. Yönetici yerel bir model seçebilir veya Ayarlar → AI asistanı → Bulut veri politikası'nı değiştirebilir."
+      "cloudDisabled": "Bulut işleme kapalı. Yönetici yerel bir model seçebilir veya Ayarlar → AI asistanı → Bulut veri politikası'nı değiştirebilir.",
+      "providerNotAllowed": "Bu sağlayıcı, uygulanan gizlilik ön ayarı tarafından izin verilmiyor (Ayarlar → Gizlilik)."
     },
     "panel": {
       "title": "Asistan",
@@ -2539,6 +2540,16 @@
         "label": "Güvenlik & Değişiklik Günlüğü",
         "description": "Değiştirilemez sistemsel denetim izleri ve güvenlik kayıtları."
       }
+    },
+    "details": {
+      "open": "Ayrıntılar",
+      "title": "Değişiklik ayrıntısı",
+      "before": "Önce",
+      "after": "Sonra",
+      "none": "Kayıt yok"
+    },
+    "errors": {
+      "notFound": "Denetim kaydı bulunamadı."
     }
   },
   "auth": {
@@ -8527,7 +8538,9 @@
         "label": "Dernek Ana Bilgileri",
         "description": "Resmi dernek sicil no, vergi no, banka hesapları ve antet logosu."
       }
-    }
+    },
+    "yes": "Evet",
+    "no": "Hayır"
   },
   "progress": {
     "module": {
@@ -9527,7 +9540,9 @@
       "organization": "Lisans doğrulaması için kurum adı ve sicil/vergi numarası okunur (lisans bu kuruma bağlıdır).",
       "users": "Modül ve iş akışı sağlığı kokpitinde yönetici kullanıcısının varlığı denetlenir.",
       "ai": "Gizlilik ön ayarları ve aylık veri çıkışı raporu için yapılandırılmış yapay zekâ sağlayıcılarının durumu okunur.",
-      "widgets": "Widget tercihlerini gösterir ve kullanıcının değişikliklerini kaydeder."
+      "widgets": "Widget tercihlerini gösterir ve kullanıcının değişikliklerini kaydeder.",
+      "automation": "Modül sağlık kokpitinde başarısız arka plan işleri ve worker kalp atışı okunur (girdi/sonuç verisi okunmaz).",
+      "notifications": "Modül sağlık kokpitinde hangi bildirim kanallarının etkin olduğu okunur (sır ve ayar okunmaz)."
     },
     "gate": {
       "manage": "Modül yönetimine git",
@@ -9628,7 +9643,9 @@
         "smallBusinessOff": "normal KDV",
         "presetOn": "kategoriler ve hesaplar eklenecek",
         "presetOff": "yok",
-        "note": "Listede olmayan isteğe bağlı modüller kapatılır (veriler silinmez)."
+        "note": "Seçilmeyen modüllerin verileri silinmez; kapatma yalnız aşağıda onaylarsanız yapılır.",
+        "willDisable": "Şu an açık olan ve seçmediğiniz modüller: {modules}.",
+        "confirmDisable": "Bu modülleri kapat (onaylamazsanız açık kalırlar)"
       },
       "back": "Geri",
       "next": "İleri",
@@ -9641,7 +9658,10 @@
         "profile": "Kurum bilgilerini gir",
         "accountingSettings": "Muhasebe ayarları",
         "modulesPage": "Modül Yönetimi",
-        "dashboard": "Panele dön"
+        "dashboard": "Panele dön",
+        "kept": "Onaylanmadığı için açık bırakılan modüller: {modules}",
+        "mapped": "Muhasebe ayarlarındaki boş varsayılanlar (nakit/banka hesabı, bağış ve aidat kategorisi) dolduruldu.",
+        "mappingFailed": "Muhasebe varsayılanları otomatik eşlenemedi; Muhasebe → Ayarlar sayfasından tamamlayın."
       },
       "errors": {
         "accountingOff": "Muhasebe hazırlığı için Muhasebe modülü seçili olmalı."
@@ -9782,7 +9802,11 @@
             "right": "Üst çubuk · sağ"
           }
         },
-        "resetSuccess": "Varsayılan ayarlar geri yüklendi."
+        "resetSuccess": "Varsayılan ayarlar geri yüklendi.",
+        "policy": {
+          "label": "Herkese açık",
+          "toggle": "{title} widget'ını tüm kullanıcılar için aç/kapat"
+        }
       }
     },
     "readiness": {
@@ -9883,7 +9907,15 @@
       "apply": "Onayla ve uygula",
       "applying": "Uygulanıyor…",
       "noChanges": "Bu profil zaten geçerli; değişiklik yok.",
-      "readOnly": "Bu ayarları değiştirmek için sistem yöneticisi izni gerekir."
+      "readOnly": "Bu ayarları değiştirmek için sistem yöneticisi izni gerekir.",
+      "blocked": "Ön ayar uygulanamadı: bazı modül değişiklikleri bağımlılık veya erişim izni nedeniyle engelleniyor.",
+      "blockersTitle": "Uygulamadan önce çözülmesi gerekenler",
+      "blockers": {
+        "requires": "{module} açılacak ama zorunlu bağımlılıkları kapalı kalıyor: {modules}.",
+        "missing": "{module} için gerekli modül kurulu değil veya sürümü yetersiz: {modules}.",
+        "approval": "{module} modülünün erişim izni onaylı değil; önce Modül Yönetimi'nden onaylayın.",
+        "dependents": "{module} kapanacak ama ona bağlı modüller açık kalıyor: {modules}."
+      }
     },
     "egressUi": {
       "title": "Aylık veri çıkışı raporu",

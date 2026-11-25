@@ -15,3 +15,5 @@ export {
   type EnqueueTaskOptions,
 } from "./services/execution-control";
 export { scheduleTask, listSchedules, listSchedulableTasks } from "./services/schedules";
+// Modül sağlık kokpiti (system): kaynak modül başına başarısız/çalışan yürütmeler (#583).
+export { getAutomationHealthByModule, type AutomationModuleHealth } from "./queries/health-snapshot";

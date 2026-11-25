@@ -1,3 +1,5 @@
+import { enabledDependents, planEnable } from "@/shared/modules/dependencies";
+
 export const PRIVACY_PRESET_IDS = ["Strict", "Standard", "Connected"] as const;
 export type PrivacyPresetId = (typeof PRIVACY_PRESET_IDS)[number];
 
@@ -106,7 +108,44 @@ export type PrivacyPresetPreview = {
   changedModuleCount: number;
   aiChanges: PresetAiDiff;
   hasChanges: boolean;
+  /** #583: Uygulamayı engelleyen bağımlılık/onay sorunları (boşsa uygulanabilir). */
+  blockers?: PresetBlocker[];
 };
+
+/**
+ * #583: Ön ayar modül açıp kaparken Modül Yönetimi ile aynı kurallara uyar:
+ * - açılan modülün zorunlu bağımlılıkları sonuç durumda açık olmalı ve kurulu olmalı;
+ * - açılan modülün erişim izni onaylı olmalı;
+ * - kapanan modüle zorunlu bağlı modüller sonuç durumda kapalı olmalı.
+ * Korunan/CORE modüller ön ayarla değişmez ve her zaman açık sayılır.
+ */
+export type PresetBlocker = { moduleKey: string; reason: "requires" | "missing" | "approval" | "dependents"; modules: string[] };
+
+export function findPresetBlockers(input: {
+  moduleChanges: PresetModuleDiffItem[];
+  modules: Parameters<typeof planEnable>[1];
+  currentEnabled: (key: string) => boolean;
+  protectedKeys: ReadonlySet<string>;
+  accessApproved: (key: string) => boolean;
+}): PresetBlocker[] {
+  const changes = new Map(
+    input.moduleChanges.filter((item) => item.changed && !input.protectedKeys.has(item.moduleKey)).map((item) => [item.moduleKey, item.targetEnabled]),
+  );
+  const finalEnabled = (key: string) => input.protectedKeys.has(key) || (changes.has(key) ? Boolean(changes.get(key)) : input.currentEnabled(key));
+  const blockers: PresetBlocker[] = [];
+  for (const [key, enable] of changes) {
+    if (enable) {
+      const plan = planEnable(key, input.modules, finalEnabled);
+      if (plan.missing.length) blockers.push({ moduleKey: key, reason: "missing", modules: plan.missing.map((item) => item.module) });
+      if (plan.enable.length) blockers.push({ moduleKey: key, reason: "requires", modules: plan.enable });
+      if (!input.accessApproved(key)) blockers.push({ moduleKey: key, reason: "approval", modules: [] });
+    } else {
+      const dependents = enabledDependents(key, input.modules, finalEnabled);
+      if (dependents.length) blockers.push({ moduleKey: key, reason: "dependents", modules: dependents });
+    }
+  }
+  return blockers;
+}
 
 /**
  * Pure diff computation for previewing a privacy preset before admin approval.

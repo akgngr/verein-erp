@@ -10,6 +10,12 @@ import { organizationPermissions } from "../permissions";
 import { ProfileForm } from "../components/profile-form";
 
 /** Dernek bilgileri sayfası (Faz 4, 4.2) — görüntüleme + güncelleme. */
+const EXEMPTION_DOCUMENT_LABEL: Record<string, "exemptionDocumentTypeNotice" | "exemptionDocumentTypeAnnex" | "exemptionDocumentType60a"> = {
+  EXEMPTION_NOTICE: "exemptionDocumentTypeNotice",
+  TAX_ASSESSMENT_ANNEX: "exemptionDocumentTypeAnnex",
+  SPECIAL_ASSESSMENT_60A: "exemptionDocumentType60a",
+};
+
 export async function OrganizationProfileView() {
   let canUpdate = false;
   try {
@@ -73,6 +79,13 @@ export async function OrganizationProfileView() {
                   t("exemptionNoticePeriod"),
                   profile.exemptionNoticePeriod ?? "-",
                 ],
+                // #583: Gemeinnützigkeit alanları salt okunur görünümde de gösterilir.
+                [
+                  t("exemptionDocumentType"),
+                  profile.exemptionDocumentType ? t(EXEMPTION_DOCUMENT_LABEL[profile.exemptionDocumentType] ?? "exemptionDocumentTypeNone") : "-",
+                ],
+                [t("charitablePurposes"), profile.charitablePurposes ?? "-"],
+                [t("membershipFeesDeductible"), profile.membershipFeesDeductible ? t("yes") : t("no")],
               ] as const
             ).map(([label, value]) => (
               <div key={label} className="border-b border-ink-100 py-2">

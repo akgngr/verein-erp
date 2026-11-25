@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "0.15.2",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Etkin kanal listesi",
+        "de": "Liste aktiver Kanäle"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Sağlık kokpiti etkin bildirim kanallarını public API ile okur (sır ve ayar döndürülmez).",
+          "de": "Das Gesundheitscockpit liest aktive Kanäle über die öffentliche API (ohne Geheimnisse und Einstellungen)."
+        }
+      ]
+    },
+    {
       "version": "0.15.1",
       "date": "2026-11-23",
       "title": {
