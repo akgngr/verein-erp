@@ -80,11 +80,22 @@ const RANK: Record<string, number> = { QUEUED: 0, SENT: 1, DELIVERED: 2, READ: 3
 /** Sağlayıcı bildirimi (SMS/WhatsApp). Durum geri gitmez (okundu → teslim edildi olmaz). */
 export async function recordProviderStatus(input: { channel: string; providerId: string; status: "DELIVERED" | "READ" | "FAILED"; at?: Date; error?: string }): Promise<boolean> {
   const db = getDb();
-  const row = await db.mailingDelivery.findFirst({ where: { channel: input.channel, providerId: input.providerId }, select: { id: true, status: true, deliveredAt: true, readAt: true } });
+  const row = await db.mailingDelivery.findFirst({ where: { channel: input.channel, providerId: input.providerId }, select: { id: true, campaignId: true, status: true, deliveredAt: true, readAt: true } });
   if (!row) return false;
   const at = input.at ?? new Date();
   if (input.status === "FAILED") {
-    if (row.status === "QUEUED" || row.status === "SENT") await db.mailingDelivery.update({ where: { id: row.id }, data: { status: "FAILED", error: input.error?.slice(0, 80) ?? "PROVIDER_FAILED" } });
+    // #581: Gönderildi sayılmış (SENT) mesajın sonradan gelen başarısız bildirimi kampanya sayaçlarına yansır.
+    // Geçiş koşullu güncellemeyle yapılır; aynı bildirim iki kez gelirse sayaç bir kez değişir.
+    const transitioned = await db.mailingDelivery.updateMany({
+      where: { id: row.id, status: { in: ["QUEUED", "SENT"] } },
+      data: { status: "FAILED", error: input.error?.slice(0, 80) ?? "PROVIDER_FAILED" },
+    });
+    if (transitioned.count === 1 && row.status === "SENT") {
+      await db.mailingCampaign.updateMany({
+        where: { id: row.campaignId, sentCount: { gt: 0 } },
+        data: { sentCount: { decrement: 1 }, failedCount: { increment: 1 } },
+      });
+    }
     return true;
   }
   await db.mailingDelivery.update({

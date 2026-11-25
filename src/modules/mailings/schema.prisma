@@ -96,6 +96,11 @@ model MailingDelivery {
   openCount    Int       @default(0)
   firstClickAt DateTime?
   clickCount   Int       @default(0)
+  /// #581: Alıcı kaydı ("<modül>:<kaynak>:<kayıt id>"); tek tıkla abonelikten çıkış bu kayda yazılır.
+  recipientKey  String?
+  /// #581: Yalnız programatik (API) gönderimde worker'ın kişiselleştirmesi için; gönderimden sonra silinir.
+  recipientName String?
+  vars          Json?
   createdAt    DateTime  @default(now())
 
   @@unique([campaignId, address])

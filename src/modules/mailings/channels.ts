@@ -19,6 +19,10 @@ export const channels = defineChannels("mailings", [
       subject: message.subject,
       text: message.text,
       html: message.html,
+      // #581: RFC 8058 tek tıkla çıkış (Gmail/Yahoo toplu gönderici kuralları, UWG § 7).
+      ...(message.unsubscribeUrl
+        ? { headers: { "List-Unsubscribe": `<${message.unsubscribeUrl}>`, "List-Unsubscribe-Post": "List-Unsubscribe=One-Click" as const } }
+        : {}),
       context: { module: "mailings", reference: message.reference },
     }))),
     delivered: (reference) => listSuccessfulMailRecipients("mailings", reference),

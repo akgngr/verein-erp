@@ -68,7 +68,8 @@ export const channels = defineChannels("campaign-sms", [
     ],
     // Ülke kodu ayardan: "0151 …" → "+49151…".
     enrich: async (list, config) => list.map((recipient) => ({ ...recipient, phone: normalizePhone(recipient.phone, config.countryCode || "49") })),
-    webhookUrls: (config, origin) => config.provider === "seven" && config.apiKey
+    // #581: Uygulama sırrı yoksa seven.io adresi gösterilmez (sevenWebhookSecret → null).
+    webhookUrls: (config, origin) => config.provider === "seven" && config.apiKey && sevenWebhookSecret(config.apiKey)
       ? [{ key: "sevenDlr", url: `${origin}/api/campaign-sms/webhook/seven/${sevenWebhookSecret(config.apiKey)}` }]
       : config.provider === "twilio" ? [{ key: "twilioStatus", url: `${origin}/api/campaign-sms/webhook/twilio` }] : [],
     address: (recipient) => normalizePhone(recipient.phone),

@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.5.4",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Liste başlıkları ve dizin",
+        "de": "Listen-Header und Index"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "E-posta iletisi izinli List-Unsubscribe başlıklarını taşıyabilir; mail_logs (modül, referans) dizini eklendi.",
+          "de": "Nachrichten können die erlaubten List-Unsubscribe-Header tragen; Index (Modul, Referenz) auf mail_logs ergänzt."
+        }
+      ]
+    },
+    {
       "version": "1.5.3",
       "date": "2026-11-23",
       "title": {

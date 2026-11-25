@@ -11,3 +11,5 @@ export { campaignShortcutHref } from "./services/shortcuts";
 // Kanal eklentilerinin teslim/okundu bildirimleri için.
 export { recordProviderStatus } from "./services/tracking";
 export { listDirectChannels, sendDirectMessage } from "./services/direct";
+// Kanal eklentilerinin abonelik olaylarını (Telegram /start, /stop) kaynağın rızasına yazması için (#581).
+export { recordChannelConsent } from "./services/channel-consent";

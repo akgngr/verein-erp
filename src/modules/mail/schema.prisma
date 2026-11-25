@@ -29,6 +29,8 @@ model MailLog {
 
   @@index([status])
   @@index([module])
+  // #581: Kampanya yeniden denemesi `listSuccessfulMailRecipients(module, reference)` ile sorgular.
+  @@index([module, reference])
   @@index([createdAt])
   @@map("mail_logs")
 }

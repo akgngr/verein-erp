@@ -1,13 +1,13 @@
 import "server-only";
 import { emitAutomationEvent } from "@/shared/automation/emit";
 
-import type { Prisma } from "@prisma/client";
+import { Prisma } from "@prisma/client";
 import { z } from "zod";
 
 import { moduleChannelRegistry } from "@/campaign-channel-registry";
 import { moduleRecipientRegistry } from "@/recipient-registry";
-import { isMailConfigured, sendMail, sendMailBatch } from "@/modules/mail/automation";
-import { createWorkflow, publishWorkflow, saveWorkflowDraft, setWorkflowEnabled, startWorkflow } from "@/modules/automation/automation";
+import { isMailConfigured, sendMail } from "@/modules/mail/automation";
+import { createWorkflow, enqueueTask, publishWorkflow, saveWorkflowDraft, setWorkflowEnabled, startWorkflow } from "@/modules/automation/automation";
 import { splitForChannel, type CampaignChannel, type ChannelConfig } from "@/shared/campaigns/channel";
 import { canEncryptSecrets, openSecret, sealSecret } from "@/shared/security/secret-box";
 import { injectTracking, newTrackingToken } from "./tracking";
@@ -359,10 +359,13 @@ async function processCampaignAttempt(campaignId: string, context: TaskExecution
 
   await loadPermissionPolicy();
   const role = creator.role as Role;
-  if (!can(role, mailingsPermissions, "create")) return failCampaign("MAILING_PERMISSION_REVOKED");
+  // #581: Programatik gönderim ("<modül>:api") alıcılarını kaynak yerine kendi gönderim kaydından alır; çağıran
+  // modül kendi yetkisini ve erişim onayını denetlemiştir (mailings.create aranmaz).
+  const apiCampaign = isApiSource(campaign.source);
+  if (!apiCampaign && !can(role, mailingsPermissions, "create")) return failCampaign("MAILING_PERMISSION_REVOKED");
 
-  const source = await findSource(role, campaign.source);
-  if (!source) return failCampaign("MAILING_SOURCE_PERMISSION_REVOKED");
+  const source = apiCampaign ? null : await findSource(role, campaign.source);
+  if (!apiCampaign && !source) return failCampaign("MAILING_SOURCE_PERMISSION_REVOKED");
 
   const filterResult = z.record(z.string().max(40), z.array(z.string().max(40)).max(20)).safeParse(campaign.filter);
   if (!filterResult.success) throw new Error("MAILING_FILTER_INVALID");
@@ -371,7 +374,8 @@ async function processCampaignAttempt(campaignId: string, context: TaskExecution
   if (!channel) return failCampaign("MAILING_CHANNEL_UNAVAILABLE");
   const config = await getChannelConfig(channel.key);
   if (!(await channel.isConfigured(config))) return failCampaign("MAILING_CHANNEL_NOT_CONFIGURED");
-  const { eligible, noAddress: noEmail, optOut } = splitForChannel(channel, await prepareRecipients(campaign.source, await source.resolve(filter), channel));
+  const resolved = source ? await prepareRecipients(campaign.source, await source.resolve(filter), channel) : await apiRecipients(campaign.id);
+  const { eligible, noAddress: noEmail, optOut } = splitForChannel(channel, resolved);
   // A retry after a worker restart must not resend recipients whose successful delivery
   // was already durably logged for this campaign.
   const normalize = (value: string) => value.trim().toLowerCase();
@@ -384,55 +388,68 @@ async function processCampaignAttempt(campaignId: string, context: TaskExecution
 
   // Alıcı başına kayıt + izleme belirteci (yeniden denemede aynı belirteç kullanılır).
   const addressOf = (row: Recipient) => (channel.address(row) as string).slice(0, 200);
-  if (pending.length) {
+  if (pending.length && !apiCampaign) {
     await db.mailingDelivery.createMany({
-      data: pending.map((row) => ({ campaignId: campaign.id, channel: channel.key, address: addressOf(row), token: newTrackingToken() })),
+      data: pending.map((row) => ({ campaignId: campaign.id, channel: channel.key, address: addressOf(row), token: newTrackingToken(), recipientKey: `${campaign.source}:${row.id}`.slice(0, 300) })),
       skipDuplicates: true,
     });
   }
-  const tokens = new Map((await db.mailingDelivery.findMany({
+  const deliveryRows = new Map((await db.mailingDelivery.findMany({
     where: { campaignId: campaign.id, address: { in: pending.map(addressOf) } },
-    select: { address: true, token: true },
-  })).map((row) => [row.address, row.token]));
+    select: { address: true, token: true, recipientKey: true },
+  })).map((row) => [row.address, row]));
   const track = channel.key === "email" && campaign.tracking && Boolean(campaign.trackingBaseUrl);
+  // #581: Tek tıkla çıkış yalnız kaynağa bağlı alıcıda (rıza kaynağın kaydına yazılabilir) ve genel adres varsa.
+  const publicBase = campaign.trackingBaseUrl ?? process.env.APP_URL ?? null;
 
   const messages = pending.map((row) => {
     // HTML gövde (editör) worker'da da kişiselleştirilir; değerler HTML'de kaçışlanır.
-    const html = channel.capabilities.html && campaign.bodyHtml ? renderMailTemplateHtml(campaign.bodyHtml, row.vars) : undefined;
-    const token = tokens.get(addressOf(row));
+    const delivery = deliveryRows.get(addressOf(row));
+    const unsubscribeUrl = channel.key === "email" && publicBase && delivery?.recipientKey ? unsubscribeLink(publicBase, delivery.token) : undefined;
+    const vars = unsubscribeUrl ? { unsubscribeLink: unsubscribeUrl, ...row.vars } : row.vars;
+    const html = channel.capabilities.html && campaign.bodyHtml ? renderMailTemplateHtml(campaign.bodyHtml, vars) : undefined;
     return {
       to: channel.address(row) as string,
       toName: row.name,
-      subject: renderMailTemplate(campaign.subject, row.vars),
-      text: renderMailTemplate(campaign.body, row.vars),
-      html: html && track && token ? injectTracking(html, campaign.trackingBaseUrl!, token) : html,
+      subject: renderMailTemplate(campaign.subject, vars),
+      text: renderMailTemplate(campaign.body, vars),
+      html: html && track && delivery ? injectTracking(html, campaign.trackingBaseUrl!, delivery.token) : html,
       reference: campaign.id,
       callbackBaseUrl: campaign.trackingBaseUrl ?? undefined,
+      unsubscribeUrl,
     };
   });
 
-  let results: Awaited<ReturnType<CampaignChannel["sendBatch"]>>;
-  try {
-    results = await channel.sendBatch(messages, config);
-  } catch (error) {
-    if (context.attempt >= 3) {
-      await failCampaign("MAILING_SEND_ATTEMPTS_EXHAUSTED");
+  // #581: Sonuçlar her parçadan hemen sonra kaydedilir. Önceden tüm gönderim bitince tek işlemde
+  // yazılıyordu; ara hatada yeniden deneme zaten gönderilmiş SMS/WhatsApp'ları ikinci kez gönderebiliyordu.
+  let sentNow = 0;
+  let failed = 0;
+  for (const chunk of chunked(messages, SEND_CHUNK_SIZE)) {
+    if (context.signal?.aborted) throw new Error("TASK_ABORTED");
+    let results: Awaited<ReturnType<CampaignChannel["sendBatch"]>>;
+    try {
+      results = await channel.sendBatch(chunk, config);
+    } catch (error) {
+      if (context.attempt >= 3) {
+        await failCampaign("MAILING_SEND_ATTEMPTS_EXHAUSTED");
+      }
+      throw error;
     }
-    throw error;
+    // E-posta: SMTP sunucusu kabul ettiyse teslim edildi sayılır; SMS/WhatsApp teslimi sağlayıcı bildirir.
+    const now = new Date();
+    await db.$transaction(chunk.map((message, index) => {
+      const result = results[index];
+      return db.mailingDelivery.update({
+        where: { campaignId_address: { campaignId: campaign.id, address: message.to.slice(0, 200) } },
+        data: result?.ok
+          ? { status: channel.key === "email" ? "DELIVERED" : "SENT", sentAt: now, ...(channel.key === "email" ? { deliveredAt: now } : {}), providerId: result.providerId?.slice(0, 200) ?? null, error: null, ...(apiCampaign ? { vars: Prisma.DbNull, recipientName: null } : {}) }
+          : { status: "FAILED", error: (result?.error ?? "SEND_FAILED").slice(0, 80) },
+      });
+    }));
+    sentNow += results.filter((result) => result.ok).length;
+    failed += results.filter((result) => !result.ok).length;
   }
-  // E-posta: SMTP sunucusu kabul ettiyse teslim edildi sayılır; SMS/WhatsApp teslimi sağlayıcı bildirir.
-  const now = new Date();
-  await db.$transaction(messages.map((message, index) => {
-    const result = results[index];
-    return db.mailingDelivery.update({
-      where: { campaignId_address: { campaignId: campaign.id, address: message.to.slice(0, 200) } },
-      data: result?.ok
-        ? { status: channel.key === "email" ? "DELIVERED" : "SENT", sentAt: now, ...(channel.key === "email" ? { deliveredAt: now } : {}), providerId: result.providerId?.slice(0, 200) ?? null, error: null }
-        : { status: "FAILED", error: (result?.error ?? "SEND_FAILED").slice(0, 80) },
-    });
-  }));
-  const sent = alreadySent + results.filter((result) => result.ok).length;
-  const failed = results.filter((result) => !result.ok).length;
+  const sent = alreadySent + sentNow;
   await db.mailingCampaign.update({
     where: { id: campaign.id },
     data: {
@@ -468,17 +485,25 @@ export async function processCampaign(campaignId: string, context: TaskExecution
   }
 }
 
+/**
+ * #581: Programatik gönderim de worker kuyruğundan geçer (önceden web sürecinde "fire-and-forget" çalışıyordu;
+ * süreç yeniden başlarsa gönderim yarım kalıyor, yeniden deneme yoktu). Ad ve yer tutucu değerleri gönderim
+ * kaydında tutulur ve başarılı gönderimden sonra silinir; otomasyon yükünde yalnız kampanya kimliği vardır.
+ */
 async function createAndRun(input: { source: string; filter: Record<string, string[]>; subject: string; body: string; bodyHtml?: string; actor: Actor; list: Recipient[] }) {
   const { eligible, noEmail, optOut } = split(input.list);
   if (eligible.length === 0) return { id: "", recipients: 0 };
-  const campaign = await getDb().mailingCampaign.create({
+  const db = getDb();
+  const unique = [...new Map(eligible.map((row) => [(row.email as string).trim().toLowerCase(), row])).values()];
+  const campaign = await db.mailingCampaign.create({
     data: {
       source: input.source,
       filter: input.filter as Prisma.InputJsonValue,
       subject: input.subject,
       body: input.body,
       bodyHtml: input.bodyHtml ?? null,
-      recipientCount: eligible.length,
+      status: "SENDING",
+      recipientCount: unique.length,
       skippedNoEmail: noEmail,
       skippedOptOut: optOut,
       createdById: input.actor.id,
@@ -486,28 +511,55 @@ async function createAndRun(input: { source: string; filter: Record<string, stri
     },
     select: { id: true },
   });
-  const messages = eligible.map((row) => ({
-    to: row.email as string,
-    toName: row.name,
-    subject: renderMailTemplate(input.subject, row.vars),
-    text: renderMailTemplate(input.body, row.vars),
-    html: input.bodyHtml ? renderMailTemplateHtml(input.bodyHtml, row.vars) : undefined,
-    context: { module: "mailings", reference: campaign.id },
-  }));
-  void run(campaign.id, messages);
-  return { id: campaign.id, recipients: eligible.length };
+  await db.mailingDelivery.createMany({
+    data: unique.map((row) => ({
+      campaignId: campaign.id,
+      channel: "email",
+      address: (row.email as string).trim().slice(0, 200),
+      token: newTrackingToken(),
+      recipientName: row.name.slice(0, 200),
+      vars: row.vars as Prisma.InputJsonValue,
+    })),
+    skipDuplicates: true,
+  });
+  try {
+    await enqueueTask(sendCampaignTask, { campaignId: campaign.id }, { requestedById: input.actor.id, sourceModule: "mailings", idempotencyKey: `mailings:campaign:${campaign.id}` });
+  } catch (error) {
+    await db.mailingCampaign.update({ where: { id: campaign.id }, data: { status: "FAILED", finishedAt: new Date() } });
+    throw error;
+  }
+  return { id: campaign.id, recipients: unique.length };
 }
 
-async function run(id: string, messages: Parameters<typeof sendMailBatch>[0]) {
-  const db = getDb();
-  try {
-    const results = await sendMailBatch(messages);
-    const sent = results.filter((result) => result.ok).length;
-    await db.mailingCampaign.update({ where: { id }, data: { sentCount: sent, failedCount: results.length - sent, status: sent === 0 ? "FAILED" : "DONE", finishedAt: new Date() } });
-  } catch (error) {
-    console.error("[mailings] send failed:", error instanceof Error ? error.message : error);
-    await db.mailingCampaign.update({ where: { id }, data: { status: "FAILED", finishedAt: new Date() } });
-  }
+const SEND_CHUNK_SIZE = 20;
+
+function chunked<T>(items: T[], size: number): T[][] {
+  const out: T[][] = [];
+  for (let index = 0; index < items.length; index += size) out.push(items.slice(index, index + size));
+  return out;
+}
+
+const isApiSource = (source: string) => source.endsWith(":api");
+
+/** API kampanyası alıcıları: henüz gönderilmemiş gönderim kayıtlarından (ad ve değişkenlerle). */
+async function apiRecipients(campaignId: string): Promise<Recipient[]> {
+  const rows = await getDb().mailingDelivery.findMany({
+    where: { campaignId },
+    select: { id: true, address: true, recipientName: true, vars: true },
+    orderBy: { createdAt: "asc" },
+  });
+  return rows.map((row) => ({
+    id: row.id,
+    email: row.address,
+    name: row.recipientName ?? "",
+    optOut: false,
+    vars: row.vars && typeof row.vars === "object" && !Array.isArray(row.vars) ? (row.vars as Record<string, string>) : {},
+  }));
+}
+
+/** #581: Tek tıkla abonelikten çıkış adresi (genel, oturumsuz; belirteç tahmin edilemez). */
+export function unsubscribeLink(baseUrl: string, token: string): string {
+  return `${baseUrl.replace(/\/+$/, "")}/api/mailings/t/u/${encodeURIComponent(token)}`;
 }
 
 /** Kayıtlı segmentler (filtre önayarları); kullanıcının erişebildiği kaynaklarla sınırlı. */
