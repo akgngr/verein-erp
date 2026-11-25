@@ -47,5 +47,13 @@
     "trackedCurrenciesDesc": "Prioritäre Währungen für das Dashboard-Widget und Kurztabellen.",
     "saveButton": "Einstellungen speichern",
     "savedSuccess": "Einstellungen erfolgreich gespeichert!"
+  },
+  "widget": {
+    "rates": "Wechselkurse",
+    "title": "Wechselkurse",
+    "unavailable": "Kurse nicht verfügbar",
+    "refresh": "Aktualisieren",
+    "more": "Finanzen öffnen",
+    "base": "1 EUR"
   }
 }

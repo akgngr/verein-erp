@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler).",
   "releases": [
     {
+      "version": "0.2.0",
+      "date": "2026-11-24",
+      "title": {
+        "tr": "Hafif hava durumu header widget'ı",
+        "de": "Leichtes Wetter-Header-Widget"
+      },
+      "changes": [
+        {
+          "type": "feature",
+          "tr": "Frankfurt olarak açıkça etiketlenen hava durumu widget'ı; yetkili sunucu eylemi, manuel yenileme ve azaltılmış hareket desteği.",
+          "de": "Explizit als Frankfurt gekennzeichnetes Wetter-Widget; autorisierte Server-Aktion, manuelle Aktualisierung und reduzierte Bewegung."
+        }
+      ]
+    },
+    {
       "version": "0.1.4",
       "date": "2026-11-24",
       "title": {

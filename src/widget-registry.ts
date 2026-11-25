@@ -3,10 +3,14 @@
 import { buildWidgetRegistry, type WidgetRegistration } from "@/shared/widgets/registry";
 
 import { widgets as systemWidgets } from "@/modules/system/widget";
+import { widgets as financeWidgets } from "@/modules/finance/widget";
 import { widgets as notificationsWidgets } from "@/modules/notifications/widget";
+import { widgets as weatherWidgets } from "@/modules/weather/widget";
 
 /** Modüllerin widget'ları (src/modules/<modül>/widget.ts). */
 export const widgetRegistry: readonly WidgetRegistration[] = buildWidgetRegistry([
   { module: "system", widgets: systemWidgets },
+  { module: "finance", widgets: financeWidgets },
   { module: "notifications", widgets: notificationsWidgets },
+  { module: "weather", widgets: weatherWidgets },
 ]);
