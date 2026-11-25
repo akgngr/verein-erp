@@ -426,7 +426,8 @@
       "accessGrantsPending": "Bu modülün talep ettiği erişim izinleri yönetici onayı bekliyor.",
       "failedJobsDetected": "Arka plan iş kuyruğunda başarısız görevler tespit edildi.",
       "notificationsNoChannel": "Bildirim modülü için aktif bir dağıtım kanalı (E-posta, Telegram vb.) yapılandırılmamış.",
-      "generalIssue": "Modül yapılandırması veya iş akışında dikkat edilmesi gereken durumlar var."
+      "generalIssue": "Modül yapılandırması veya iş akışında dikkat edilmesi gereken durumlar var.",
+      "portalDisabledByEnv": "Üye portalı modülü açık, ancak sunucuda PORTAL_ENABLED=true ayarlı değil; /portal ziyaretçilere kapalı (404)."
     }
   },
   "privacyUi": {

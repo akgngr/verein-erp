@@ -88,6 +88,11 @@ export async function getModuleReadinessReport(): Promise<ModuleReadinessReport>
     configurationMap["auth"] = { status: "COMPLETE", missingKeys: [] };
   }
 
+  // #580: Üye portalı modülü açık ama PORTAL_ENABLED kapalıysa portal 404 döner; kokpitte belirtilir.
+  if (states["member-portal"] === true && process.env.PORTAL_ENABLED !== "true") {
+    configurationMap["member-portal"] = { status: "INCOMPLETE", missingKeys: ["PORTAL_ENABLED"], guidanceKey: "portalDisabledByEnv" };
+  }
+
   // 2. Etkin bildirim kanalları ve 3. arka plan işleri: modüllerin public API'leri (#583). Önceden ham SQL
   //    yanlış tabloyu ("AutomationExecution") sorgulayıp hatayı yutuyordu; kokpit başarısız işleri hiç
   //    göstermiyordu. Ham SQL ayrıca DATA_POLICY'yi atlıyordu. Sorgu hatası artık yutulmaz.
