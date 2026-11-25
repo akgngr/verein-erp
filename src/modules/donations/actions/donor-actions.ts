@@ -104,13 +104,8 @@ export async function createDonorAction(
         }
       }
 
-      const memberNameParts = memberCopy ? memberCopy.name.trim().split(/\s+/).filter(Boolean) : [];
-      const resolvedFirstName = memberCopy
-        ? memberNameParts.slice(0, -1).join(" ") || null
-        : input.firstName;
-      const resolvedLastName = memberCopy
-        ? memberNameParts.at(-1) || null
-        : input.lastName;
+      const resolvedFirstName = memberCopy?.firstName ?? input.firstName;
+      const resolvedLastName = memberCopy?.lastName ?? input.lastName;
       const resolvedPostalCode = memberCopy ? memberCopy.postalCode : input.postalCode;
 
       const duplicate = await findDuplicateDonor({
