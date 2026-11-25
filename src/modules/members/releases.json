@@ -17,6 +17,21 @@
       ]
     },
     {
+      "version": "1.15.8",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Kanal rızası eşitlemesi",
+        "de": "Synchronisierung der Kanaleinwilligung"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Telegram /start ve /stop ile tek tıkla e-posta çıkışı üyenin rızasını ve toplu e-posta itirazını günceller.",
+          "de": "Telegram /start und /stop sowie die One-Click-Abmeldung aktualisieren Einwilligungen und den Widerspruch gegen Massenmails."
+        }
+      ]
+    },
+    {
       "version": "1.15.7",
       "date": "2026-11-24",
       "title": {

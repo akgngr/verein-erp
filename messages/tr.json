@@ -3381,7 +3381,7 @@
       }
     },
     "access": {
-      "mailings": "Webhook'ta bot ayarlarını (şifreli) okumak için."
+      "mailings": "Webhook'ta bot ayarlarını (şifreli) okumak ve /start, /stop ile verilen/geri alınan Telegram rızasını kişinin kaydına yazmak için."
     },
     "replies": {
       "linked": "✅ Abonelik onaylandı. Ayrılmak için /stop yazın.",
@@ -6359,7 +6359,8 @@
         "templateLanguage": "Şablon dili",
         "countryCode": "Varsayılan ülke kodu",
         "appSecret": "App Secret (bildirim imzası)",
-        "verifyToken": "Doğrulama belirteci (Meta'ya da aynısını girin, en az 8 karakter)"
+        "verifyToken": "Doğrulama belirteci (Meta'ya da aynısını girin, en az 8 karakter)",
+        "utilityTemplateName": "İşlem mesajı şablonu (Utility; e-imza bağlantısı gibi tek kişiye mesajlar, gövdede tek değişken '{{1}}')"
       },
       "telegram": {
         "botToken": "Bot anahtarı (BotFather)",
@@ -6468,6 +6469,14 @@
       "columnsHelp": "İçerik eklemek için tuvalde bir sütuna tıklayın, sonra soldan bileşen seçin. Mobilde sütunlar alt alta dizilir.",
       "designSettings": "Genel tasarım",
       "selectHint": "Bir bloğu düzenlemek için tuvalde üzerine tıklayın."
+    },
+    "unsubscribe": {
+      "title": "Bültenden çık",
+      "confirm": "Artık e-posta ile toplu duyuru almak istemiyor musunuz?",
+      "button": "Aboneliği bitir",
+      "done": "Aboneliğiniz bitirildi; artık e-posta ile toplu duyuru almayacaksınız.",
+      "unknown": "Bu çıkış bağlantısı geçersiz.",
+      "unsupported": "Çıkış otomatik kaydedilemedi. Lütfen derneğe başvurun."
     }
   },
   "meetings": {

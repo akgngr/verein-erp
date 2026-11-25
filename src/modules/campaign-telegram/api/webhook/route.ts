@@ -1,8 +1,7 @@
-import { timingSafeEqual } from "node:crypto";
-
 import { getTranslations } from "next-intl/server";
 
-import { getChannelConfig } from "@/modules/mailings/server";
+import { getChannelConfig, recordChannelConsent } from "@/modules/mailings/server";
+import { readWebhookBody, sameSecret } from "@/shared/campaigns/webhook-body";
 
 import { handleUpdate, telegramCall, webhookSecret } from "../../services/telegram";
 
@@ -14,12 +13,22 @@ import { handleUpdate, telegramCall, webhookSecret } from "../../services/telegr
 export async function POST(request: Request) {
   const config = await getChannelConfig("telegram");
   if (!config.botToken) return new Response(null, { status: 404 });
-  const expected = Buffer.from(webhookSecret(config.botToken));
-  const given = Buffer.from(request.headers.get("x-telegram-bot-api-secret-token") ?? "");
-  if (given.length !== expected.length || !timingSafeEqual(given, expected)) return new Response(null, { status: 401 });
+  if (!sameSecret(request.headers.get("x-telegram-bot-api-secret-token") ?? "", webhookSecret(config.botToken))) {
+    return new Response(null, { status: 401 });
+  }
 
-  const update = (await request.json().catch(() => ({}))) as Parameters<typeof handleUpdate>[0];
-  const result = await handleUpdate(update);
+  // #581: Gövde boyutu sınırlıdır (oturumsuz uç).
+  const raw = await readWebhookBody(request);
+  if (raw === null) return new Response(null, { status: 413 });
+  let update: Parameters<typeof handleUpdate>[0] = {};
+  try {
+    update = JSON.parse(raw || "{}") as Parameters<typeof handleUpdate>[0];
+  } catch {
+    update = {};
+  }
+  const result = await handleUpdate(update, (recipientKey, granted) =>
+    recordChannelConsent(recipientKey, "telegram", granted, granted ? "Telegram /start" : "Telegram /stop"),
+  );
   const chatId = update.message?.chat?.id;
   if (chatId !== undefined && result !== "ignored") {
     // Kişinin dili bilinmez: yanıt Türkçe ve Almanca birlikte gönderilir.

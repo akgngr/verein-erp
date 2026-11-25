@@ -1,4 +1,5 @@
 import { getChannelConfig, recordProviderStatus } from "@/modules/mailings/server";
+import { readWebhookBody } from "@/shared/campaigns/webhook-body";
 
 import { mapSevenStatus, verifySevenSecret } from "../../../../services/webhook";
 
@@ -12,7 +13,15 @@ export async function POST(request: Request, { params }: { params: Promise<{ sec
   const { secret } = await params;
   const config = await getChannelConfig("sms");
   if (config.provider !== "seven" || !config.apiKey || !verifySevenSecret(config.apiKey, secret)) return new Response(null, { status: 404 });
-  const payload = (await request.json().catch(() => ({}))) as SevenPayload;
+  // #581: Gövde boyutu sınırlıdır (oturumsuz uç).
+  const raw = await readWebhookBody(request);
+  if (raw === null) return new Response(null, { status: 413 });
+  let payload: SevenPayload = {};
+  try {
+    payload = JSON.parse(raw || "{}") as SevenPayload;
+  } catch {
+    payload = {};
+  }
   const id = payload.data?.msg_id ?? payload.data?.id;
   const status = mapSevenStatus(payload.data?.status ?? "");
   if ((payload.webhook_event ?? "dlr") === "dlr" && id !== undefined && status) {

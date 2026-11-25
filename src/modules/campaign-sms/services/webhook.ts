@@ -11,13 +11,19 @@ const equal = (a: string, b: string) => {
 /**
  * seven.io imza desteklemediği için gizli yol: uygulama sırrı (AUTH_SECRET) anahtarlı HMAC ile API anahtarından
  * türetilir (anahtar veya uygulama sırrı değişince değişir). Yol tek başına API anahtarını açığa çıkarmaz.
+ * #581: Uygulama sırrı yoksa `null` (fail closed): önceden boş dizeye düşüyor, gizli yol yalnız API anahtarından
+ * türetiliyordu.
  */
-export function sevenWebhookSecret(apiKey: string): string {
-  const appSecret = process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET ?? "";
+export function sevenWebhookSecret(apiKey: string): string | null {
+  const appSecret = process.env.AUTH_SECRET || process.env.NEXTAUTH_SECRET || "";
+  if (appSecret.length < 16 || !apiKey) return null;
   return createHmac("sha256", apiKey).update(`verein-erp:seven-webhook:${appSecret}`).digest("base64url").slice(0, 32);
 }
 
-export const verifySevenSecret = (apiKey: string, given: string) => equal(sevenWebhookSecret(apiKey), given);
+export const verifySevenSecret = (apiKey: string, given: string) => {
+  const expected = sevenWebhookSecret(apiKey);
+  return expected !== null && equal(expected, given);
+};
 
 /**
  * Twilio isteği doğrulama: base64(HMAC-SHA1(authToken, tam URL + sıralı (anahtar+değer)…)).

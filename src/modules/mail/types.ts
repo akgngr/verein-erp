@@ -25,6 +25,11 @@ export interface MailMessage {
   /** Optional HTML body. */
   html?: string;
   replyTo?: string;
+  /**
+   * #581: Ek başlıklar. Yalnız izinli adlar (List-Unsubscribe, List-Unsubscribe-Post) kabul edilir;
+   * değerde satır sonu olamaz (başlık enjeksiyonu).
+   */
+  headers?: Partial<Record<"List-Unsubscribe" | "List-Unsubscribe-Post", string>>;
   /** Logged with the attempt: which module sent it and for which record. */
   context: { module: string; reference?: string };
 }

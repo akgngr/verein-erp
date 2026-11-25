@@ -51,6 +51,12 @@ _2026-11-25_
 
 - **İyileştirme:** Maskeli IBAN ve SEPA yetkisi kaydı üye portalı ve çevrimiçi formlar için public API'den sunulur.
 
+### 1.15.8 — Kanal rızası eşitlemesi
+
+_2026-11-25_
+
+- **Güvenlik:** Telegram /start ve /stop ile tek tıkla e-posta çıkışı üyenin rızasını ve toplu e-posta itirazını günceller.
+
 ### 1.15.7 — nav.json kategori ve alt modül tanımı
 
 _2026-11-24_
@@ -87,10 +93,4 @@ _2026-11-19_
 
 - **Düzeltme:** E-postaya göre üye eşleştirmesi arka plan işlerinden de güvenle kullanılabilir.
 
-### 1.15.1 — Arayüz altyapısı
-
-_2026-11-18_
-
-- **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
-
-Daha eski 33 herkese açık sürüm notu.
+Daha eski 34 herkese açık sürüm notu.
