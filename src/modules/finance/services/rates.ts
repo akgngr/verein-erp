@@ -28,7 +28,7 @@ export interface RatesData {
   date: string;
   timeLastUpdateUtc: string;
   rates: Record<string, number>;
-  previousRates?: Record<string, number>;
+  // #585: Uydurma "önceki kur" (Math.sin) ve sabit ±% eğilimler kaldırıldı; sağlayıcı geçmiş kur vermez.
 }
 
 // 15 dakikalık bellek içi önbellek
@@ -94,9 +94,6 @@ export async function getExchangeRates(base: string = DEFAULT_BASE_CURRENCY): Pr
       date: new Date().toISOString().split("T")[0],
       timeLastUpdateUtc: json.time_last_update_utc ?? new Date().toUTCString(),
       rates: json.rates,
-      previousRates: Object.fromEntries(
-        Object.entries(json.rates).map(([k, v]) => [k, Number((v * (1 + (Math.sin(k.charCodeAt(0)) * 0.005))).toFixed(4))]),
-      ),
     };
 
     ratesCache.set(safeBase, { data, timestamp: now });
@@ -114,7 +111,7 @@ export async function getExchangeRates(base: string = DEFAULT_BASE_CURRENCY): Pr
       date: new Date().toISOString().split("T")[0],
       timeLastUpdateUtc: new Date().toUTCString(),
       rates,
-      previousRates: rates,
+
     };
     ratesCache.set(safeBase, { data: fallbackData, timestamp: now });
     return fallbackData;
