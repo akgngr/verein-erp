@@ -42,7 +42,8 @@ export async function POST(request: Request): Promise<NextResponse> {
     parsed.data.signerName,
   );
   if (!result.ok) {
-    const status = result.reason === "licenseRequired" ? 403 : 400;
+    // #580: Portal içi imza kapalı; e-postadaki form bağlantısı kullanılır (410 Gone).
+    const status = result.reason === "licenseRequired" ? 403 : result.reason === "useEmailLink" ? 410 : 400;
     return NextResponse.json({ ok: false, error: result.reason }, { status });
   }
 

@@ -1,8 +1,8 @@
 import "server-only";
 
-import { getMember } from "@/modules/members/server";
+import { getMember, getMemberMandate } from "@/modules/members/server";
 
-import { maskIban } from "./auth-core";
+import { parseSubjectRef } from "./subject-ref";
 
 export type PortalMasterData = {
   id: string;
@@ -24,7 +24,10 @@ export type PortalMasterData = {
  * with masked IBAN. Never returns another member's data.
  */
 export async function getPortalMasterData(subjectRef: string): Promise<PortalMasterData | null> {
-  const member = await getMember(subjectRef, "SECRETARY");
+  // #580: Özne "member:<id>" biçimindedir; önceden ham değer üye kimliği gibi kullanılıyordu.
+  const parsed = parseSubjectRef(subjectRef);
+  if (!parsed || parsed.kind !== "member") return null;
+  const [member, mandate] = await Promise.all([getMember(parsed.id, "SECRETARY"), getMemberMandate(parsed.id)]);
   if (!member) return null;
 
   return {
@@ -39,6 +42,7 @@ export async function getPortalMasterData(subjectRef: string): Promise<PortalMas
     postalCode: member.postalCode,
     city: member.city,
     status: member.status,
-    maskedIban: maskIban(null),
+    // #580: Gerçek SEPA IBAN'ı maskeli (yalnız ilk 4 ve son 4 karakter); önceden her zaman boştu.
+    maskedIban: mandate?.ibanMasked ?? null,
   };
 }

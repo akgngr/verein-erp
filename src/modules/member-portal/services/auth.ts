@@ -1,7 +1,7 @@
 import "server-only";
 
 import { sendMail } from "@/modules/mail/server";
-import { listMembers } from "@/modules/members/server";
+import { findMemberIdsByEmail, getMember } from "@/modules/members/server";
 import { writeAudit } from "@/shared/audit/write-audit";
 import { getDb } from "@/shared/db";
 import { consumeRateLimit, hashRateLimitSubject, PORTAL_RATE_LIMITS } from "@/shared/security/rate-limit";
@@ -16,6 +16,7 @@ import {
   PORTAL_SESSION_ABSOLUTE_MS,
   PORTAL_STEP_UP_TTL_MS,
 } from "./auth-core";
+import { memberSubjectRef, normalizeSubjectRef, parseSubjectRef } from "./subject-ref";
 
 async function equalizeTiming(startedAtMs: number, minMs = 80): Promise<void> {
   const elapsed = Date.now() - startedAtMs;
@@ -32,6 +33,8 @@ export async function requestPortalMagicLink(params: {
   purpose?: "login" | "stepup";
   locale?: "tr" | "de";
   now?: Date;
+  /** #580: Ek doğrulamada bağlantı oturumun kendi üyesine bağlanır (aynı e-postayı paylaşan başka üyeye değil). */
+  memberId?: string;
 }): Promise<{ ok: true; rateLimited?: boolean }> {
   const startedAt = Date.now();
   const now = params.now ?? new Date();
@@ -49,18 +52,10 @@ export async function requestPortalMagicLink(params: {
     return { ok: true, rateLimited: true };
   }
 
-  const found = await listMembers({
-    q: normalizedEmail,
-    page: 1,
-    pageSize: 10,
-    skip: 0,
-    take: 10,
-    sort: "lastName",
-    dir: "asc",
-    filters: {},
-  });
-
-  const member = found.rows.find((m) => m.email?.trim().toLowerCase() === normalizedEmail);
+  // #580: Tam e-posta eşleşmesi (büyük/küçük harf duyarsız, silinmemiş üye). Önceden sayfalı bulanık arama
+  // ilk 10 sonuç içinde arıyordu. Aynı e-postayı paylaşan birden çok üye varsa (aile) ilk kayıt kullanılır.
+  const [memberId] = params.memberId ? [params.memberId] : await findMemberIdsByEmail(normalizedEmail);
+  const member = memberId ? await getMember(memberId, "SECRETARY") : null;
   if (!member || !member.email) {
     await equalizeTiming(startedAt);
     return { ok: true };
@@ -76,7 +71,7 @@ export async function requestPortalMagicLink(params: {
   const tokenRecord = await getDb().portalLoginToken.create({
     data: {
       tokenHash,
-      subjectRef: member.id,
+      subjectRef: memberSubjectRef(member.id),
       nonceHash,
       purpose,
       expiresAt,
@@ -101,7 +96,7 @@ export async function requestPortalMagicLink(params: {
     action: "PORTAL_MAGIC_LINK_ISSUED",
     entity: "PortalLoginToken",
     entityId: tokenRecord.id,
-    after: { subjectRef: member.id, purpose },
+    after: { subjectRef: memberSubjectRef(member.id), purpose },
   });
 
   await equalizeTiming(startedAt);
@@ -149,10 +144,13 @@ export async function consumePortalMagicLinkPost(params: {
   const expiresAt = new Date(now.getTime() + PORTAL_SESSION_ABSOLUTE_MS);
   const stepUpUntil =
     existing.purpose === "stepup" ? new Date(now.getTime() + PORTAL_STEP_UP_TTL_MS) : null;
+  // #580: Önceki sürümün öneksiz belirteçleri de "member:<id>" olarak oturuma yazılır.
+  const subjectRef = normalizeSubjectRef(existing.subjectRef);
+  if (!subjectRef) return { ok: false, reason: "invalid_or_expired" };
 
   await db.$transaction(async (tx) => {
     const active = await tx.portalSession.findMany({
-      where: { subjectRef: existing.subjectRef, revokedAt: null, expiresAt: { gt: now } },
+      where: { subjectRef, revokedAt: null, expiresAt: { gt: now } },
       orderBy: { createdAt: "asc" },
     });
     if (active.length >= PORTAL_MAX_SESSIONS_PER_SUBJECT) {
@@ -165,7 +163,7 @@ export async function consumePortalMagicLinkPost(params: {
     await tx.portalSession.create({
       data: {
         sessionHash,
-        subjectRef: existing.subjectRef,
+        subjectRef,
         stepUpUntil,
         lastSeenAt: now,
         expiresAt,
@@ -177,10 +175,10 @@ export async function consumePortalMagicLinkPost(params: {
     action: "PORTAL_SESSION_CREATED",
     entity: "PortalSession",
     entityId: existing.id,
-    after: { subjectRef: existing.subjectRef, purpose: existing.purpose },
+    after: { subjectRef, purpose: existing.purpose },
   });
 
-  return { ok: true, rawSessionToken, subjectRef: existing.subjectRef, purpose: existing.purpose };
+  return { ok: true, rawSessionToken, subjectRef, purpose: existing.purpose };
 }
 
 export async function getActivePortalSession(rawSessionToken: string | undefined, now = new Date()) {
@@ -194,12 +192,16 @@ export async function getActivePortalSession(rawSessionToken: string | undefined
     where: { id: session.id },
     data: { lastSeenAt: now },
   });
-  return session;
+  // #580: Önceki sürümde açılmış öneksiz oturumlar da servislerin beklediği biçimde döner.
+  return { ...session, subjectRef: normalizeSubjectRef(session.subjectRef) ?? session.subjectRef };
 }
 
 export async function signOutEverywhere(subjectRef: string, now = new Date()): Promise<void> {
+  const parsed = parseSubjectRef(subjectRef);
+  // Önekli ve (önceki sürümden kalma) öneksiz oturumlar birlikte kapatılır.
+  const refs = parsed ? [`${parsed.kind}:${parsed.id}`, ...(parsed.kind === "member" ? [parsed.id] : [])] : [subjectRef];
   await getDb().portalSession.updateMany({
-    where: { subjectRef, revokedAt: null },
+    where: { subjectRef: { in: refs }, revokedAt: null },
     data: { revokedAt: now },
   });
   await writeAudit({
@@ -207,5 +209,32 @@ export async function signOutEverywhere(subjectRef: string, now = new Date()): P
     entity: "PortalSession",
     entityId: subjectRef,
     after: { subjectRef },
+  });
+}
+
+/**
+ * #580: E-postayla ek doğrulama (step-up). Geçiş anahtarı doğrulaması henüz yok; oturumdaki üyenin kayıtlı
+ * e-postasına "stepup" amaçlı tek kullanımlık bağlantı gönderilir. Bağlantı onaylanınca 5 dakikalık ek
+ * doğrulamalı yeni oturum açılır (consumePortalMagicLink). Hız sınırları giriş bağlantısıyla aynıdır.
+ */
+export async function requestPortalStepUpLink(params: {
+  subjectRef: string;
+  ip: string;
+  rawNonce: string;
+  origin: string;
+  locale?: "tr" | "de";
+}): Promise<{ ok: boolean; rateLimited?: boolean }> {
+  const parsed = parseSubjectRef(params.subjectRef);
+  if (!parsed || parsed.kind !== "member") return { ok: false };
+  const member = await getMember(parsed.id, "SECRETARY");
+  if (!member?.email) return { ok: false };
+  return requestPortalMagicLink({
+    email: member.email,
+    ip: params.ip,
+    rawNonce: params.rawNonce,
+    origin: params.origin,
+    purpose: "stepup",
+    locale: params.locale,
+    memberId: parsed.id,
   });
 }
