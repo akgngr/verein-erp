@@ -7,7 +7,9 @@ import type { OnlineFormKind } from "@prisma/client";
 import { sendDirectMessage } from "@/modules/mailings/server";
 import {
   applyMemberSelfService,
+  getMemberMandate,
   getMemberSelfService,
+  saveMemberMandate,
   type MemberSelfService,
 } from "@/modules/members/server";
 import { getOrganizationProfile } from "@/modules/organization/server";
@@ -186,13 +188,16 @@ async function findOpen(token: string) {
   return row;
 }
 
-/** Oturumsuz form sayfası: belirteç geçerliyse formu ön doldurulmuş verir ve açılma zamanını kaydeder. */
+/**
+ * Oturumsuz form sayfası: belirteç geçerliyse formu ön doldurulmuş verir.
+ * #580: GET artık yazmaz; açılma zamanı tarayıcıda form gösterildikten sonra `markPublicFormOpened` ile
+ * kaydedilir (bağlantı tarayıcıları/önizlemeler "açıldı" olarak sayılmaz).
+ */
 export async function loadPublicForm(token: string): Promise<PublicForm | null> {
   const row = await findOpen(token);
   if (!row) return null;
   const target = await resolveTarget(row.kind, row.subjectId, row.signerId);
   if (!target) return null;
-  if (!row.openedAt) await getDb().onlineFormRequest.update({ where: { id: row.id }, data: { openedAt: new Date() } });
   const strip = <T extends { id: string }>(value: T | null) => {
     if (!value) return null;
     const { id: _id, ...rest } = value;
@@ -250,7 +255,7 @@ export async function submitPublicForm(input: z.output<typeof submitSchema>, lab
   const photo = input.member?.photoConsent ?? input.student?.photoConsent;
   if (photo) consents.push("photo");
   for (const doc of documents) if (doc.purpose === "OTHER" && doc.requiresConsent && accepted.has(doc.id)) consents.push(`doc:${doc.title.slice(0, 60)}`);
-  if (input.guardian?.sepaMandate) consents.push("sepa");
+  if (input.guardian?.sepaMandate || (row.kind === "MEMBER" && input.member?.sepaMandate)) consents.push("sepa");
   for (const channel of input.member?.messagingConsents ?? input.guardian?.messagingConsents ?? []) consents.push(channel);
   const applied = { member: needs.member ? input.member : undefined, student: needs.student ? input.student : undefined, guardian: needs.guardian ? input.guardian : undefined };
   const signatureHash = createHash("sha256").update(input.signature).digest("hex");
@@ -265,7 +270,7 @@ export async function submitPublicForm(input: z.output<typeof submitSchema>, lab
     signedAt: signedAt.toISOString(), channel: row.channel, sentTo: row.sentTo, consents, textVersion: version, documentKey, evidenceHash,
     texts: shown(orgName),
     documents: documents.map((doc) => ({ title: doc.title, purpose: doc.purpose, text: documentHtmlToText(doc.contentHtml), requiresConsent: doc.requiresConsent, accepted: !doc.requiresConsent || accepted.has(doc.id) })),
-    data: { member: applied.member, student: applied.student, guardian: applied.guardian ? { ...applied.guardian, iban: maskIban(applied.guardian.iban) } : undefined },
+    data: { member: applied.member ? { ...applied.member, iban: maskIban(applied.member.iban) } : undefined, student: applied.student, guardian: applied.guardian ? { ...applied.guardian, iban: maskIban(applied.guardian.iban) } : undefined },
   };
   const db = getDb();
   const claimed = await db.onlineFormRequest.updateMany({
@@ -275,7 +280,21 @@ export async function submitPublicForm(input: z.output<typeof submitSchema>, lab
   if (claimed.count !== 1) return false;
   try {
     const label = labelFor(input.signerName);
-    if (applied.member) await applyMemberSelfService(row.subjectId, { ...applied.member, country: applied.member.country }, signedAt, label);
+    if (applied.member) {
+      // #580: SEPA alanları üye kaydına members API'siyle ayrıca yazılır (yetki tarihi = imza tarihi).
+      const { iban: memberIban, bic: memberBic, accountHolder: memberHolder, sepaMandate: memberMandate, ...memberData } = applied.member;
+      await applyMemberSelfService(row.subjectId, { ...memberData, country: memberData.country }, signedAt, label);
+      if (memberMandate && memberIban && memberHolder) {
+        const current = await getMemberMandate(row.subjectId);
+        await saveMemberMandate(row.subjectId, {
+          iban: memberIban,
+          bic: memberBic,
+          accountHolder: memberHolder,
+          reference: current?.reference || current?.defaultReference || `M-${row.subjectId.slice(0, 8)}`,
+          date: signedAt.toISOString().slice(0, 10),
+        });
+      }
+    }
     if (applied.student) await applyStudentSelfService(row.subjectId, applied.student, signedAt);
     if (applied.guardian) await applyGuardianSelfService(row.kind === "GUARDIAN" ? row.subjectId : row.signerId!, applied.guardian, signedAt);
   } catch (error) {
@@ -284,4 +303,11 @@ export async function submitPublicForm(input: z.output<typeof submitSchema>, lab
   }
   await emitAutomationEvent(onlineFormCompletedEvent, { requestId: row.id, kind: row.kind });
   return row.id;
+}
+
+/** #580: Tarayıcıda gösterilen formun açılma zamanı (ilk kez; tekrar yazılmaz). */
+export async function markPublicFormOpened(token: string): Promise<void> {
+  const row = await findOpen(token);
+  if (!row || row.openedAt) return;
+  await getDb().onlineFormRequest.updateMany({ where: { id: row.id, openedAt: null }, data: { openedAt: new Date() } });
 }

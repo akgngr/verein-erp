@@ -3,7 +3,7 @@
 import { useState } from "react";
 import { useTranslations } from "next-intl";
 
-import { Button, Card, CardContent, CardHeader, Input, StatusChip } from "@/shared/components/kit";
+import { Button, Card, CardContent, CardHeader, StatusChip } from "@/shared/components/kit";
 
 type Art15Item = {
   id: string;

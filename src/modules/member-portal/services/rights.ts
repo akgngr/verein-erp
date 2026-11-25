@@ -9,10 +9,7 @@ import {
   createEncryptedArt15ExportForPortal,
   readEncryptedArt15ExportForPortal,
 } from "@/modules/exports/server";
-import {
-  listPendingOnlineFormsForPortal,
-  signOnlineFormForPortal,
-} from "@/modules/online-forms/server";
+import { listPendingOnlineFormsForPortal } from "@/modules/online-forms/server";
 import { hasLicensedFeature } from "@/modules/system/server";
 
 import { getPortalMasterData } from "./master-data";

@@ -77,7 +77,8 @@
     "noEncryption": "Zum Verschlüsseln der Unterschriften ist kein Schlüssel eingerichtet (AUTH_SECRET).",
     "invalid": "Bitte prüfen Sie die markierten Felder.",
     "linkInvalid": "Der Link ist ungültig, abgelaufen oder wurde bereits verwendet.",
-    "textsChanged": "Die Formulartexte wurden inzwischen geändert. Bitte Seite neu laden, Text lesen und erneut unterschreiben."
+    "textsChanged": "Die Formulartexte wurden inzwischen geändert. Bitte Seite neu laden, Text lesen und erneut unterschreiben.",
+    "rateLimited": "Zu viele Versuche; bitte warten Sie kurz und versuchen Sie es erneut."
   },
   "validation": {
     "tooLong": "Zu lang.",
@@ -89,7 +90,9 @@
     "bic": "Bitte eine gültige BIC eingeben.",
     "signerName": "Bitte Vor- und Nachnamen eingeben.",
     "signature": "Bitte im Unterschriftsfeld unterschreiben.",
-    "privacy": "Die Datenschutzerklärung muss bestätigt werden."
+    "privacy": "Die Datenschutzerklärung muss bestätigt werden.",
+    "ibanRequired": "Für das SEPA-Mandat bitte die IBAN angeben.",
+    "accountHolderRequired": "Für das SEPA-Mandat bitte den Kontoinhaber angeben."
   },
   "public": {
     "title": "Anmeldeformular",

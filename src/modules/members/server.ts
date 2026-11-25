@@ -289,7 +289,7 @@ export async function listMemberOptions(options: { ids?: string[] } = {}): Promi
 /** Bu e-posta adresine sahip (silinmemiş) üyelerin kimlikleri; kullanıcıyı üye kaydıyla eşleştirmek için. */
 export { findMemberIdsByEmail } from "./queries/find-member-ids-by-email";
 // #580: Üye portalı ana verisinde maskeli IBAN (yalnız ilk/son 4 karakter).
-export { getMemberMandate } from "./services/sepa-mandate";
+export { getMemberMandate, saveMemberMandate } from "./services/sepa-mandate";
 export { getMemberSelfService, applyMemberSelfService } from "./services/online-form";
 export type { MemberSelfService, MemberSelfServiceInput } from "./services/online-form";
 export { listDebitableDues, recordSepaDuePayments, voidSepaDuePayment, type DebitableDue } from "./services/sepa-debit";
