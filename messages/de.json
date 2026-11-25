@@ -152,6 +152,7 @@
     "youth-protection": "Jugendschutz"
   },
   "sidebar": {
+    "brandShort": "Verein ERP",
     "brand": "Vereinsverwaltung",
     "collapse": "Menü einklappen",
     "expand": "Menü ausklappen",
@@ -301,7 +302,32 @@
         "description": "Wirkt sich nur auf Ihre Oberfläche aus."
       }
     },
-    "moduleSettings": "Einstellungen: {module}"
+    "moduleSettings": "Einstellungen: {module}",
+    "itemDescriptions": {
+      "ai": "KI-Anbieter, Einwilligung und Regeln für die Datenweitergabe.",
+      "kullanicilar": "Benutzerkonten, Rollen und Einladungen.",
+      "automationMonitor": "Workflows, geplante Aufgaben und Ausführungsverlauf.",
+      "securityMonitor": "Sicherheitsprüfung der Installation und Warnungen.",
+      "denetimKaydi": "Wer hat wann was geändert: unveränderliches Protokoll.",
+      "mail": "Konto für ausgehende E-Mails und Versandeinstellungen.",
+      "gelenKutusu": "Verbundenes Postfach und Verarbeitung eingehender E-Mails.",
+      "notifications": "Benachrichtigungsarten, Kanäle und Ruhezeiten.",
+      "duyurular": "Mitteilungen nach Rollen an alle Benutzer senden.",
+      "aboneler": "Abonnenten der Benachrichtigungskanäle.",
+      "demoVeri": "Beispieldaten zum Ausprobieren laden oder entfernen.",
+      "widgetlar": "Widgets in der Kopfzeile und ihre Freigaben.",
+      "moduller": "Module aktivieren, deaktivieren und ihre Zugriffe freigeben.",
+      "modulSagligi": "Status- und Konfigurationsprüfung der Module.",
+      "modulPaketleri": "Vorgefertigte Modulpakete.",
+      "kurulum": "Die Schritte der Ersteinrichtung erneut ausführen.",
+      "lisans": "Lizenzinformationen und Nutzungsbedingungen.",
+      "privacyPresets": "Datenschutz-Voreinstellungen: welche Daten nach außen dürfen.",
+      "egressReport": "Bericht über Daten, die an externe Dienste gehen.",
+      "menuDuzeni": "Reihenfolge und Sichtbarkeit des Seitenmenüs.",
+      "surumNotlari": "Versionshinweise der App und der Module.",
+      "organization": "Vereinsname, Anschrift, Logo und Angaben zur Gemeinnützigkeit.",
+      "bankaBaglantisi": "Bankverbindung und Import von Kontoumsätzen."
+    }
   },
   "roles": {
     "ADMIN": "Administrator",
@@ -2699,10 +2725,41 @@
       "deleted": "Zeitplan gelöscht.",
       "empty": "Noch keine geplanten Aufgaben.",
       "every": "Alle {hours} Stunden",
+      "everyMinutes": "Alle {minutes} Minuten",
+      "everyDays": "Alle {days} Tage",
       "next": "Nächster Lauf: {date}",
       "last": "Letzter Lauf: {date}",
       "enabled": "Aktiv",
-      "delete": "Löschen"
+      "delete": "Löschen",
+      "taskLabels": {
+        "ai": {
+          "cleanup_history": "KI-Verlauf bereinigen"
+        },
+        "calendar": {
+          "sync_external": "Externe Kalender synchronisieren"
+        },
+        "exports": {
+          "cleanup_files": "Abgelaufene Exportdateien löschen"
+        },
+        "meetings": {
+          "vote_purge": "Alte Abstimmungsdaten bereinigen"
+        },
+        "notifications": {
+          "purge": "Alte Benachrichtigungen bereinigen",
+          "dispatch": "Ausstehende Benachrichtigungen senden"
+        },
+        "secretary": {
+          "daily_briefing": "Tagesübersicht des Sekretärs",
+          "follow_up_reminders": "Wiedervorlage-Erinnerungen",
+          "migrate_notifications": "Sekretär-Benachrichtigungen migrieren"
+        },
+        "security-monitor": {
+          "run_tests": "Sicherheitsprüfung ausführen"
+        },
+        "youth-protection": {
+          "statutory_purge": "Einträge nach Ablauf der gesetzlichen Frist löschen"
+        }
+      }
     },
     "errors": {
       "notCancellable": "Diese Aufgabe kann nicht mehr abgebrochen werden.",
@@ -8084,6 +8141,24 @@
       "preferencesTable": "Benachrichtigungsarten und Kanäle",
       "settingsTitle": "Ruhezeiten und Zusammenfassung",
       "type": "Benachrichtigungsart",
+      "typeLabels": {
+        "mail": {
+          "triage": "Neue E-Mail im Posteingang"
+        },
+        "meetings": {
+          "invited": "Als Teilnehmer zu einer Sitzung hinzugefügt"
+        },
+        "notifications": {
+          "announcement": "Mitteilungen"
+        },
+        "secretary": {
+          "daily-digest": "Tagesübersicht des Sekretärs",
+          "proposal": "Sekretär-Vorschläge zur Bestätigung"
+        },
+        "tasks": {
+          "assigned": "Mir zugewiesene Aufgaben"
+        }
+      },
       "inApp": "In der Anwendung (immer aktiv)",
       "loading": "Einstellungen werden geladen…",
       "preferencesError": "Einstellungen konnten nicht gespeichert werden.",

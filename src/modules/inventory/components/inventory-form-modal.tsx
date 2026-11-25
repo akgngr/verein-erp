@@ -2,14 +2,14 @@
 
 import { useDrawerPlacement } from "@/shared/hooks/use-media-query";
 import { drawerDialogClass, SheetHandle } from "@/shared/components/forms/form-drawer";
-import { Description, FieldError, Input, InputGroup, Label, Sheet, Spinner, Switch, TextArea, TextField, Button } from "@/shared/components/kit";
+import { DateInput, Description, FieldError, Input, InputGroup, Label, Sheet, Spinner, Switch, TextArea, TextField, Button } from "@/shared/components/kit";
 
 import { DialogDismissButton } from "@/shared/components/ui/dialog-dismiss-button";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { useEffect, useState, useTransition } from "react";
-import { useForm, useWatch } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useTranslations } from "next-intl";
 
@@ -256,20 +256,26 @@ export function InventoryFormModal({
                     </FieldError>
                   </TextField>
 
-                  <TextField
-                    isInvalid={Boolean(errors.purchaseDate)}
-                    className={["w-full"].filter(Boolean).join(" ")}
-                  >
-                    <Label>{t("fields.purchaseDate")}</Label>
-                    <Input
-                      {...register("purchaseDate")}
-                      type="date"
-                      placeholder=" "
+                  <div className="flex w-full flex-col gap-1">
+                    <Controller
+                      name="purchaseDate"
+                      control={control}
+                      render={({ field }) => (
+                        <DateInput
+                          label={t("fields.purchaseDate")}
+                          ariaLabel={t("fields.purchaseDate")}
+                          value={field.value ?? ""}
+                          onChange={field.onChange}
+                          className="w-full"
+                        />
+                      )}
                     />
-                    <FieldError>
-                      {errorText(errors.purchaseDate?.message)}
-                    </FieldError>
-                  </TextField>
+                    {errors.purchaseDate ? (
+                      <p role="alert" className="text-xs text-danger">
+                        {errorText(errors.purchaseDate.message)}
+                      </p>
+                    ) : null}
+                  </div>
 
                   <TextField
                     isInvalid={Boolean(errors.assignedMemberId)}

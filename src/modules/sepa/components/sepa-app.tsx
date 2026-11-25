@@ -1,7 +1,7 @@
 "use client";
 
 import { notify } from "@/shared/components/ui/notify";
-import { Description, Input, Label, Select, Spinner, StatusChip, TextField, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
+import { DateInput, Input, Label, Select, Spinner, StatusChip, TextField, Button, buttonClassName, TextLink as ActionLink } from "@/shared/components/kit";
 
 import { actionVariant } from "@/shared/components/ui/action-appearance";
 
@@ -135,27 +135,25 @@ export function SepaApp({
                 <Input placeholder=" " inputMode="numeric" />
               </TextField>
             ) : (
-              <TextField
+              <DateInput
+                label={t("dueUntil")}
+                ariaLabel={t("dueUntil")}
                 value={param.COURSE_FEES}
                 onChange={(value) => {
                   setParam({ ...param, COURSE_FEES: value });
                   setPreview(null);
                 }}
-                className={["w-full"].filter(Boolean).join(" ")}
-              >
-                <Label>{t("dueUntil")}</Label>
-                <Input type="date" placeholder=" " />
-              </TextField>
+                className="w-full"
+              />
             )}
-            <TextField
+            <DateInput
+              label={t("collectionDate")}
+              ariaLabel={t("collectionDate")}
               value={collectionDate}
               onChange={setCollectionDate}
-              className={["w-full"].filter(Boolean).join(" ")}
-            >
-              <Label>{t("collectionDate")}</Label>
-              <Input type="date" placeholder=" " />
-              <Description>{t("collectionHelp")}</Description>
-            </TextField>
+              description={t("collectionHelp")}
+              className="w-full"
+            />
             <Button
               onPress={() =>
                 start(async () => {
@@ -406,14 +404,13 @@ export function SepaRunDetail({
       ) : null}
       {run.status === "CREATED" && can.update ? (
         <div className="flex flex-wrap items-end gap-2">
-          <TextField
+          <DateInput
+            label={t("collectedAt")}
+            ariaLabel={t("collectedAt")}
             value={collectedAt}
             onChange={setCollectedAt}
-            className={["max-w-[200px]"].filter(Boolean).join(" ")}
-          >
-            <Label>{t("collectedAt")}</Label>
-            <Input type="date" placeholder=" " />
-          </TextField>
+            className="max-w-[200px]"
+          />
           <Button
             onPress={() =>
               window.confirm(

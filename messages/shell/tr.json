@@ -256,7 +256,32 @@
         "description": "Yalnızca sizin arayüzünüzü etkiler."
       }
     },
-    "moduleSettings": "{module} ayarları"
+    "moduleSettings": "{module} ayarları",
+    "itemDescriptions": {
+      "ai": "Yapay zekâ sağlayıcısı, rıza ve veri paylaşım kuralları.",
+      "kullanicilar": "Kullanıcı hesapları, roller ve davetler.",
+      "automationMonitor": "İş akışları, zamanlanmış görevler ve çalıştırma geçmişi.",
+      "securityMonitor": "Kurulumun güvenlik denetimi ve uyarılar.",
+      "denetimKaydi": "Kim, ne zaman, neyi değiştirdi: değiştirilemez kayıt.",
+      "mail": "Giden e-posta hesabı ve gönderim ayarları.",
+      "gelenKutusu": "Bağlı posta kutusu ve gelen e-postaların işlenmesi.",
+      "notifications": "Bildirim türleri, kanallar ve sessiz saatler.",
+      "duyurular": "Rollere göre tüm kullanıcılara duyuru gönderin.",
+      "aboneler": "Bildirim kanallarına bağlı aboneler.",
+      "demoVeri": "Deneme için örnek veri yükleyin veya kaldırın.",
+      "widgetlar": "Başlık çubuğundaki widget'lar ve izinleri.",
+      "moduller": "Modülleri etkinleştirin, devre dışı bırakın ve erişimlerini onaylayın.",
+      "modulSagligi": "Modüllerin durum ve yapılandırma denetimi.",
+      "modulPaketleri": "Hazır modül paketleri.",
+      "kurulum": "İlk kurulum adımlarını yeniden çalıştırın.",
+      "lisans": "Lisans bilgileri ve kullanım koşulları.",
+      "privacyPresets": "Gizlilik ön ayarları: hangi verinin dışarı çıkabileceği.",
+      "egressReport": "Harici hizmetlere giden verilerin raporu.",
+      "menuDuzeni": "Kenar çubuğu menüsünün sırası ve görünürlüğü.",
+      "surumNotlari": "Uygulama ve modül sürüm notları.",
+      "organization": "Dernek adı, adres, logo ve kamu yararı bilgileri.",
+      "bankaBaglantisi": "Banka hesabı bağlantısı ve hesap hareketleri aktarımı."
+    }
   },
   "roles": {
     "ADMIN": "Yönetici",

@@ -5,7 +5,7 @@
  * framework date objects.
  */
 import { parseDate } from "@internationalized/date";
-import { DateField, DatePicker, Label } from "@heroui/react";
+import { DateField, DatePicker, Description, Label } from "@heroui/react";
 import type { ReactNode } from "react";
 
 import { DateCalendar } from "@/shared/components/forms/date-calendar";
@@ -30,9 +30,17 @@ export type DateInputProps = {
   isRequired?: boolean;
   isDisabled?: boolean;
   className?: string;
+  /** Yardım metni (alanın altında). */
+  description?: ReactNode;
+  /** Form gönderiminde ISO tarihle (YYYY-MM-DD) gizli alan olarak gönderilir. */
+  name?: string;
 };
 
-export function DateInput({ label, ariaLabel, value, onChange, minValue, maxValue, isRequired, isDisabled, className }: DateInputProps) {
+/**
+ * #586: Tarih alanı yerel biçimde (TR/DE: GG.AA.YYYY) gösterilir; tarayıcının yerel ayarına bağlı yerel
+ * `<input type="date">` (ör. mm/dd/yyyy) yerine bunu kullanın.
+ */
+export function DateInput({ label, ariaLabel, value, onChange, minValue, maxValue, isRequired, isDisabled, className, description, name }: DateInputProps) {
   const min = toDate(minValue) ?? undefined;
   const max = toDate(maxValue) ?? undefined;
   return (
@@ -47,6 +55,7 @@ export function DateInput({ label, ariaLabel, value, onChange, minValue, maxValu
       isDisabled={isDisabled}
       aria-label={label ? undefined : ariaLabel}
       className={className}
+      name={name}
     >
       {label ? <Label>{label}</Label> : null}
       <DateField.Group>
@@ -57,6 +66,7 @@ export function DateInput({ label, ariaLabel, value, onChange, minValue, maxValu
           </DatePicker.Trigger>
         </DateField.Suffix>
       </DateField.Group>
+      {description ? <Description>{description}</Description> : null}
       <DatePicker.Popover>
         <DateCalendar label={ariaLabel} minValue={min} maxValue={max} />
       </DatePicker.Popover>

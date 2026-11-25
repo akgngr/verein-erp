@@ -256,7 +256,32 @@
         "description": "Wirkt sich nur auf Ihre Oberfläche aus."
       }
     },
-    "moduleSettings": "Einstellungen: {module}"
+    "moduleSettings": "Einstellungen: {module}",
+    "itemDescriptions": {
+      "ai": "KI-Anbieter, Einwilligung und Regeln für die Datenweitergabe.",
+      "kullanicilar": "Benutzerkonten, Rollen und Einladungen.",
+      "automationMonitor": "Workflows, geplante Aufgaben und Ausführungsverlauf.",
+      "securityMonitor": "Sicherheitsprüfung der Installation und Warnungen.",
+      "denetimKaydi": "Wer hat wann was geändert: unveränderliches Protokoll.",
+      "mail": "Konto für ausgehende E-Mails und Versandeinstellungen.",
+      "gelenKutusu": "Verbundenes Postfach und Verarbeitung eingehender E-Mails.",
+      "notifications": "Benachrichtigungsarten, Kanäle und Ruhezeiten.",
+      "duyurular": "Mitteilungen nach Rollen an alle Benutzer senden.",
+      "aboneler": "Abonnenten der Benachrichtigungskanäle.",
+      "demoVeri": "Beispieldaten zum Ausprobieren laden oder entfernen.",
+      "widgetlar": "Widgets in der Kopfzeile und ihre Freigaben.",
+      "moduller": "Module aktivieren, deaktivieren und ihre Zugriffe freigeben.",
+      "modulSagligi": "Status- und Konfigurationsprüfung der Module.",
+      "modulPaketleri": "Vorgefertigte Modulpakete.",
+      "kurulum": "Die Schritte der Ersteinrichtung erneut ausführen.",
+      "lisans": "Lizenzinformationen und Nutzungsbedingungen.",
+      "privacyPresets": "Datenschutz-Voreinstellungen: welche Daten nach außen dürfen.",
+      "egressReport": "Bericht über Daten, die an externe Dienste gehen.",
+      "menuDuzeni": "Reihenfolge und Sichtbarkeit des Seitenmenüs.",
+      "surumNotlari": "Versionshinweise der App und der Module.",
+      "organization": "Vereinsname, Anschrift, Logo und Angaben zur Gemeinnützigkeit.",
+      "bankaBaglantisi": "Bankverbindung und Import von Kontoumsätzen."
+    }
   },
   "roles": {
     "ADMIN": "Administrator",

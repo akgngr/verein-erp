@@ -7,6 +7,11 @@ import { useTransition } from "react";
 import { LOCALE_LABELS, SUPPORTED_LOCALES, type Locale } from "@/i18n/config";
 import { Button, ButtonGroup } from "@/shared/components/kit";
 
+/** Oturum yokken dil tercihi: next-intl'in okuduğu çerez (1 yıl, tüm rotalar). */
+function writeLocaleCookie(locale: Locale) {
+  document.cookie = `NEXT_LOCALE=${locale}; path=/; max-age=31536000; samesite=lax`;
+}
+
 /**
  * #586: Giriş sayfasında TR/DE dil seçimi (oturum yok). Seçim NEXT_LOCALE çerezine yazılır; giriş sonrası
  * kullanıcı tercihi (User.locale) yine geçerlidir.
@@ -19,7 +24,7 @@ export function LoginLocaleSwitcher() {
 
   function choose(next: Locale) {
     if (next === locale) return;
-    document.cookie = `NEXT_LOCALE=${next}; path=/; max-age=31536000; samesite=lax`;
+    writeLocaleCookie(next);
     startTransition(() => router.refresh());
   }
 
