@@ -1,11 +1,16 @@
 "use client";
 
-import { useState } from "react";
+import { createElement, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { ArrowDown, ArrowUp, Eye, EyeOff, Plus, RotateCcw, Trash2 } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 
 import { Button, Input } from "@/shared/components/kit";
+import {
+  CATEGORY_ICON_OPTIONS,
+  getCategoryIcon,
+  type CategoryIconKey,
+} from "@/shared/navigation/category-icons";
 import type { NavCategoryGroup, UserNavConfig } from "@/shared/navigation/user-nav";
 
 import {
@@ -27,6 +32,10 @@ type ItemState = {
   order: number;
   hidden: boolean;
 };
+
+type UnifiedRow =
+  | { kind: "module"; key: string; order: number; item: MenuCustomizerModuleItem }
+  | { kind: "group"; key: string; order: number; group: NavCategoryGroup };
 
 function buildInitialItemState(
   items: MenuCustomizerModuleItem[],
@@ -56,6 +65,7 @@ export function MenuCustomizerClient({
 }) {
   const t = useTranslations("sidebar.customizer");
   const tNav = useTranslations("nav");
+  const locale = useLocale();
   const router = useRouter();
 
   const [groups, setGroups] = useState<NavCategoryGroup[]>(
@@ -65,25 +75,46 @@ export function MenuCustomizerClient({
     buildInitialItemState(items, initialConfig),
   );
   const [newGroupLabel, setNewGroupLabel] = useState("");
+  const [newGroupIcon, setNewGroupIcon] = useState<CategoryIconKey>("folder");
   const [pending, setPending] = useState(false);
   const [statusMessage, setStatusMessage] = useState<string | null>(null);
+  const groupSeqRef = useRef(1);
 
   const labelFor = (item: MenuCustomizerModuleItem) =>
     item.labelKey && tNav.has(item.labelKey) ? tNav(item.labelKey) : item.fallbackLabel;
 
-  const sortedItems = [...items].sort(
-    (a, b) =>
-      (itemMap[a.moduleKey]?.order ?? a.defaultOrder) -
-        (itemMap[b.moduleKey]?.order ?? b.defaultOrder) ||
-      a.moduleKey.localeCompare(b.moduleKey),
-  );
+  const iconLabel = (opt: (typeof CATEGORY_ICON_OPTIONS)[number]) =>
+    locale.startsWith("de") ? opt.labelDe : opt.labelTr;
+
+  const unifiedRows: UnifiedRow[] = [
+    ...items.map((item) => ({
+      kind: "module" as const,
+      key: item.moduleKey,
+      order: itemMap[item.moduleKey]?.order ?? item.defaultOrder,
+      item,
+    })),
+    ...groups.map((group) => ({
+      kind: "group" as const,
+      key: group.id,
+      order: group.order,
+      group,
+    })),
+  ].sort((a, b) => {
+    if (a.order !== b.order) return a.order - b.order;
+    if (a.kind !== b.kind) return a.kind === "module" ? -1 : 1;
+    return a.key.localeCompare(b.key);
+  });
 
   function addCustomGroup() {
     const label = newGroupLabel.trim();
     if (!label) return;
-    const id = `custom_${Date.now().toString(36)}`;
-    const maxOrder = groups.reduce((acc, g) => Math.max(acc, g.order), 0);
-    setGroups((prev) => [...prev, { id, label, order: maxOrder + 10, isCustom: true }]);
+    const seq = groupSeqRef.current++;
+    const id = `custom_${seq}_${groups.length + 1}`;
+    const maxOrder = unifiedRows.reduce((acc, r) => Math.max(acc, r.order), 0);
+    setGroups((prev) => [
+      ...prev,
+      { id, label, order: maxOrder + 10, icon: newGroupIcon, isCustom: true },
+    ]);
     setNewGroupLabel("");
   }
 
@@ -100,23 +131,37 @@ export function MenuCustomizerClient({
     });
   }
 
-  function moveOrder(moduleKey: string, delta: -1 | 1) {
-    const idx = sortedItems.findIndex((n) => n.moduleKey === moduleKey);
+  function moveUnifiedOrder(kind: "module" | "group", key: string, delta: -1 | 1) {
+    const idx = unifiedRows.findIndex((r) => r.kind === kind && r.key === key);
     const swapIdx = idx + delta;
-    if (idx < 0 || swapIdx < 0 || swapIdx >= sortedItems.length) return;
-    const aKey = sortedItems[idx].moduleKey;
-    const bKey = sortedItems[swapIdx].moduleKey;
-    setItemMap((prev) => {
-      const aOrder = prev[aKey]?.order ?? idx * 10;
-      const bOrder = prev[bKey]?.order ?? swapIdx * 10;
-      const nextAOrder = aOrder === bOrder ? (delta < 0 ? aOrder - 1 : aOrder + 1) : bOrder;
-      const nextBOrder = aOrder === bOrder ? aOrder : aOrder;
-      return {
-        ...prev,
-        [aKey]: { ...prev[aKey], order: nextAOrder },
-        [bKey]: { ...prev[bKey], order: nextBOrder },
-      };
+    if (idx < 0 || swapIdx < 0 || swapIdx >= unifiedRows.length) return;
+
+    const reordered = [...unifiedRows];
+    const [moved] = reordered.splice(idx, 1);
+    reordered.splice(swapIdx, 0, moved);
+
+    const nextOrders = new Map<string, number>();
+    reordered.forEach((row, index) => {
+      nextOrders.set(`${row.kind}:${row.key}`, (index + 1) * 10);
     });
+
+    setItemMap((prev) => {
+      const next = { ...prev };
+      for (const modKey of Object.keys(next)) {
+        const assigned = nextOrders.get(`module:${modKey}`);
+        if (typeof assigned === "number") {
+          next[modKey] = { ...next[modKey], order: assigned };
+        }
+      }
+      return next;
+    });
+
+    setGroups((prev) =>
+      prev.map((g) => {
+        const assigned = nextOrders.get(`group:${g.id}`);
+        return typeof assigned === "number" ? { ...g, order: assigned } : g;
+      }),
+    );
   }
 
   async function handleSave() {
@@ -161,6 +206,10 @@ export function MenuCustomizerClient({
     }
   }
 
+  const parentCandidates = [...items].sort((a, b) =>
+    labelFor(a).localeCompare(labelFor(b)),
+  );
+
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 p-6">
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -196,9 +245,27 @@ export function MenuCustomizerClient({
         </div>
       ) : null}
 
-      {/* İsteğe bağlı özel kategori ekleme */}
+      {/* İsteğe bağlı özel kategori/menü grubu ekleme */}
       <section className="rounded-2xl border border-ink-200 bg-white p-4 shadow-xs">
         <div className="flex flex-wrap items-center gap-2">
+          <div className="flex items-center gap-2 rounded-lg border border-ink-200 bg-white px-2.5 py-1.5">
+            {createElement(getCategoryIcon(newGroupIcon), {
+              className: "h-4 w-4 shrink-0 text-ink-600",
+              "aria-hidden": true,
+            })}
+            <select
+              aria-label={t("iconLabel")}
+              value={newGroupIcon}
+              onChange={(e) => setNewGroupIcon(e.target.value as CategoryIconKey)}
+              className="bg-transparent text-xs text-ink-800 focus:outline-none"
+            >
+              {CATEGORY_ICON_OPTIONS.map((opt) => (
+                <option key={opt.key} value={opt.key}>
+                  {iconLabel(opt)}
+                </option>
+              ))}
+            </select>
+          </div>
           <Input
             value={newGroupLabel}
             onChange={(e) => setNewGroupLabel(e.target.value)}
@@ -216,29 +283,9 @@ export function MenuCustomizerClient({
             {t("addGroupButton")}
           </Button>
         </div>
-        {groups.length > 0 ? (
-          <div className="mt-3 flex flex-wrap gap-2">
-            {groups.map((g) => (
-              <span
-                key={g.id}
-                className="inline-flex items-center gap-1.5 rounded-full border border-ink-200 bg-ink-50 px-3 py-1 text-xs font-medium text-ink-800"
-              >
-                {g.label}
-                <button
-                  type="button"
-                  onClick={() => removeCustomGroup(g.id)}
-                  aria-label={t("deleteGroupButton")}
-                  className="text-ink-400 hover:text-danger"
-                >
-                  <Trash2 className="h-3.5 w-3.5" aria-hidden />
-                </button>
-              </span>
-            ))}
-          </div>
-        ) : null}
       </section>
 
-      {/* Modül düzenleme tablosu */}
+      {/* Birleşik menü ve grup düzenleme tablosu */}
       <section className="overflow-hidden rounded-2xl border border-ink-200 bg-white shadow-xs">
         <div className="divide-y divide-ink-100">
           <div className="grid grid-cols-12 gap-3 bg-ink-50 px-4 py-2.5 text-xs font-semibold text-ink-600">
@@ -250,14 +297,92 @@ export function MenuCustomizerClient({
             </div>
           </div>
 
-          {sortedItems.map((item, idx) => {
+          {unifiedRows.map((row, idx) => {
+            if (row.kind === "group") {
+              return (
+                <div
+                  key={`group:${row.key}`}
+                  className="grid grid-cols-12 items-center gap-3 bg-ink-50/40 px-4 py-2.5 text-sm"
+                >
+                  <div className="col-span-4 flex items-center gap-2 font-medium text-ink-900">
+                    {createElement(getCategoryIcon(row.group.icon), {
+                      className: "h-4 w-4 shrink-0 text-brand-700",
+                      "aria-hidden": true,
+                    })}
+                    <span className="truncate">{row.group.label}</span>
+                    <span className="rounded-full bg-brand-100 px-2 py-0.5 text-[10px] font-semibold text-brand-800">
+                      {t("groupBadge")}
+                    </span>
+                  </div>
+
+                  <div className={groups.length > 0 ? "col-span-3" : "hidden"}>
+                    <select
+                      aria-label={`${row.group.label} ${t("iconLabel")}`}
+                      value={row.group.icon ?? "folder"}
+                      onChange={(e) =>
+                        setGroups((prev) =>
+                          prev.map((g) =>
+                            g.id === row.group.id ? { ...g, icon: e.target.value } : g,
+                          ),
+                        )
+                      }
+                      className="w-full rounded-lg border border-ink-200 bg-white px-2.5 py-1.5 text-xs text-ink-800"
+                    >
+                      {CATEGORY_ICON_OPTIONS.map((opt) => (
+                        <option key={opt.key} value={opt.key}>
+                          {iconLabel(opt)}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+
+                  <div className={groups.length > 0 ? "col-span-3" : "col-span-5"} />
+
+                  <div
+                    className={
+                      groups.length > 0
+                        ? "col-span-2 flex items-center justify-end gap-1"
+                        : "col-span-3 flex items-center justify-end gap-1"
+                    }
+                  >
+                    <button
+                      type="button"
+                      onClick={() => moveUnifiedOrder("group", row.key, -1)}
+                      disabled={idx === 0}
+                      aria-label={t("moveUp")}
+                      className="rounded-lg p-1.5 text-ink-500 hover:bg-ink-100 disabled:opacity-30"
+                    >
+                      <ArrowUp className="h-4 w-4" aria-hidden />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => moveUnifiedOrder("group", row.key, 1)}
+                      disabled={idx === unifiedRows.length - 1}
+                      aria-label={t("moveDown")}
+                      className="rounded-lg p-1.5 text-ink-500 hover:bg-ink-100 disabled:opacity-30"
+                    >
+                      <ArrowDown className="h-4 w-4" aria-hidden />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => removeCustomGroup(row.group.id)}
+                      aria-label={t("deleteGroupButton")}
+                      className="rounded-lg p-1.5 text-ink-500 hover:bg-ink-100 hover:text-danger"
+                    >
+                      <Trash2 className="h-4 w-4" aria-hidden />
+                    </button>
+                  </div>
+                </div>
+              );
+            }
+
+            const item = row.item;
             const state = itemMap[item.moduleKey];
             if (!state) return null;
-            const parentCandidates = sortedItems.filter((n) => n.moduleKey !== item.moduleKey);
 
             return (
               <div
-                key={item.moduleKey}
+                key={`module:${item.moduleKey}`}
                 className="grid grid-cols-12 items-center gap-3 px-4 py-2.5 text-sm"
               >
                 <div className="col-span-4 flex items-center gap-2 font-medium text-ink-900">
@@ -309,11 +434,13 @@ export function MenuCustomizerClient({
                     className="w-full rounded-lg border border-ink-200 bg-white px-2.5 py-1.5 text-xs text-ink-800"
                   >
                     <option value="">{t("noParent")}</option>
-                    {parentCandidates.map((cand) => (
-                      <option key={cand.moduleKey} value={cand.moduleKey}>
-                        {labelFor(cand)}
-                      </option>
-                    ))}
+                    {parentCandidates
+                      .filter((n) => n.moduleKey !== item.moduleKey)
+                      .map((cand) => (
+                        <option key={cand.moduleKey} value={cand.moduleKey}>
+                          {labelFor(cand)}
+                        </option>
+                      ))}
                   </select>
                 </div>
 
@@ -326,7 +453,7 @@ export function MenuCustomizerClient({
                 >
                   <button
                     type="button"
-                    onClick={() => moveOrder(item.moduleKey, -1)}
+                    onClick={() => moveUnifiedOrder("module", item.moduleKey, -1)}
                     disabled={idx === 0}
                     aria-label={t("moveUp")}
                     className="rounded-lg p-1.5 text-ink-500 hover:bg-ink-100 disabled:opacity-30"
@@ -335,8 +462,8 @@ export function MenuCustomizerClient({
                   </button>
                   <button
                     type="button"
-                    onClick={() => moveOrder(item.moduleKey, 1)}
-                    disabled={idx === sortedItems.length - 1}
+                    onClick={() => moveUnifiedOrder("module", item.moduleKey, 1)}
+                    disabled={idx === unifiedRows.length - 1}
                     aria-label={t("moveDown")}
                     className="rounded-lg p-1.5 text-ink-500 hover:bg-ink-100 disabled:opacity-30"
                   >

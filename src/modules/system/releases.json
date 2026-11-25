@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security | internal. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.18.4",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Menü grupları için sıralama ve ikon seçimi",
+        "de": "Sortierung und Symbolauswahl für Menügruppen"
+      },
+      "changes": [
+        {
+          "type": "improvement",
+          "tr": "Menü düzeni sayfasında özel gruplar modüller arasında yukarı/aşağı sıralanabilir ve ikon seçilebilir hâle getirildi.",
+          "de": "Benutzerdefinierte Gruppen können in der Menüanordnung frei zwischen Modulen sortiert und mit einem Symbol versehen werden."
+        }
+      ]
+    },
+    {
       "version": "1.18.3",
       "date": "2026-11-24",
       "title": {
