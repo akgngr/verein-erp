@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.10.3",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Sunucu paketine yerel dosyalar girmiyor",
+        "de": "Lokale Dateien gelangen nicht mehr ins Server-Paket"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Dosya depolama yolu derleme sırasında artık izlenmiyor; kaynak kodu, testler ve yerel yüklemeler standalone sunucu paketine kopyalanmıyor.",
+          "de": "Der Speicherpfad wird beim Build nicht mehr verfolgt; Quellcode, Tests und lokale Uploads werden nicht mehr in das Standalone-Serverpaket kopiert."
+        }
+      ]
+    },
+    {
       "version": "1.10.2",
       "date": "2026-11-24",
       "title": {

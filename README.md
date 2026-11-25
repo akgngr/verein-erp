@@ -109,7 +109,7 @@ değişkeni değil, uygulama içindeki ayar ekranlarından girilir ve şifreli s
 | Komut | Açıklama |
 | --- | --- |
 | `pnpm dev` / `pnpm dev:full` | Geliştirme sunucusu (+ worker). |
-| `pnpm build` / `pnpm start` | Üretim derlemesi ve sunucu. |
+| `pnpm build` / `pnpm start` | Üretim derlemesi (4 GB heap ile; ardından `scripts/check-standalone.mjs` paketi doğrular) ve derlenmiş standalone sunucuyu yerelde başlatma (`scripts/start-standalone.mjs`: statik dosyaları kopyalar, `.env`/`.env.local`'ı proje kökünden yükler). |
 | `pnpm automation:worker` | Arka plan iş işleyicisi. |
 | `pnpm lint` / `pnpm typecheck` / `pnpm test` | ESLint, TypeScript, testler (`pnpm test:<alan>` ile tek alan). |
 | `pnpm module:sync` | Modül şemalarını, rota köprülerini, kayıt dosyalarını ve çevirileri yeniden üretir. |
@@ -172,6 +172,11 @@ değişkeni değil, uygulama içindeki ayar ekranlarından girilir ve şifreli s
 - Çok aşamalı `Dockerfile`: web (`output: "standalone"`) ve ayrı **worker** imajı. Konteyner
   başlarken `prisma migrate deploy` çalışır; sağlık kontrolü `/api/health`.
 - `UPLOAD_DIR` için kalıcı volume bağlanmalıdır.
+- Standalone paket (`.next/standalone`) yalnız derlenmiş kodu, gerekli `node_modules` dosyalarını, PDF fontlarını
+  ve `src/config` içeriğini taşır; kaynak kod, testler, belgeler, `storage/` ve `.env` dosyaları pakete girmez
+  (`pnpm build` sonunda `scripts/check-standalone.mjs` doğrular, CI'da da çalışır). Sunucu ortam değişkenlerini
+  konteynerden alır; çalışma anında dosya okuyan yeni kodda dinamik yola `/* turbopackIgnore: true */` eklenir ve
+  gereken dosya `next.config.ts → outputFileTracingIncludes` listesine yazılır.
 - **Yedek:** veritabanı (`pg_dump -Fc`) ve `UPLOAD_DIR` **birlikte** alınmalıdır; `AUTH_SECRET`
   ayrıca güvenli saklanmalıdır (şifreli kayıtlar ona bağlıdır).
 - Ayrıntılar: [docs/DEPLOYMENT_GITHUB_COOLIFY.md](docs/DEPLOYMENT_GITHUB_COOLIFY.md),

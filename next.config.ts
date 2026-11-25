@@ -70,13 +70,22 @@ const nextConfig: NextConfig = {
   // varsayılan ".next" aynen korunur. (Sandbox'ta çalışan dev sunucusunu bozmadan
   // `pnpm build` doğrulaması için kullanılır; kullanıcı tarafında etkisi yoktur.)
   distDir: process.env.NEXT_DIST_DIR || ".next",
-  // Prisma sorgu motorunun standalone çıktıya dahil edilmesi için
+  // KARAR (#587): Çalışma anında dosya sisteminden okunan HER varlık burada açıkça listelenir.
+  // Depolama yollarındaki `turbopackIgnore` (shared/files/storage.ts) projenin tamamının izlenmesini
+  // kapattığı için standalone çıktı artık yalnız bu listeyi ve import edilen kodu içerir.
   outputFileTracingIncludes: {
-    "/**": ["./node_modules/.prisma/client/**", "./node_modules/@prisma/client/**"],
-    // KARAR (Faz 2, 9. bölüm): tutanak PDF fontları rota çıktısına ayrıca dahil
-    // edilir; @react-pdf/renderer dosyayı process.cwd() üzerinden okur.
-    "/api/meetings/[id]/minutes-pdf": ["./src/modules/meetings/assets/fonts/**"],
-    "/api/progress/report": ["./src/shared/pdf/fonts/**"],
+    "/**": [
+      // Prisma sorgu motoru
+      "./node_modules/.prisma/client/**",
+      "./node_modules/@prisma/client/**",
+      // PDF fontları: @react-pdf/renderer dosyayı process.cwd() üzerinden okur. Makbuz, bağış bildirimi,
+      // fatura, rapor ve tutanak PDF'leri rota handler'larında ve server action'larda üretildiği için
+      // tüm rotalara eklenir (birkaç MB).
+      "./src/shared/pdf/fonts/**",
+      "./src/modules/meetings/assets/fonts/**",
+      // Modül durumu, lisans yayıncıları ve güvenilen yayıncılar çalışma anında okunur.
+      "./src/config/**",
+    ],
     // Evrak OCR (docs/specs/DOCUMENTS_AI.md): tesseract.js çalışanı, WASM çekirdeği ve dil paketleri
     // çalışma anında dosya sisteminden yüklenir; standalone çıktıya açıkça dahil edilir.
     "/api/documents/analyze": OCR_RUNTIME_FILES,

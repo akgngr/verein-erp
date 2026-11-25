@@ -16,9 +16,16 @@ import { getEnv } from "@/shared/env";
  * UPLOAD_DIR içinde değilse işlem reddedilir (path traversal koruması).
  */
 
-/** UPLOAD_DIR kökünü mutlak olarak döner (göreli yollar process.cwd()'ye bağlıdır). */
+/**
+ * UPLOAD_DIR kökünü mutlak olarak döner (göreli yollar process.cwd()'ye bağlıdır).
+ *
+ * KARAR (#587): `turbopackIgnore` yorumları dinamik yolun derleme anında izlenmesini (output file
+ * tracing) kapatır. Aksi halde Turbopack bu `path.resolve` çağrısı yüzünden projenin tamamını
+ * (src, tests, docs, yerel yüklemeler) `.next/standalone` içine kopyalar. Çalışma anında gereken
+ * dosyalar (fontlar, src/config) next.config.ts → outputFileTracingIncludes ile açıkça eklenir.
+ */
 export function getUploadRoot(): string {
-  return path.resolve(process.cwd(), getEnv().UPLOAD_DIR);
+  return path.resolve(/* turbopackIgnore: true */ process.cwd(), getEnv().UPLOAD_DIR);
 }
 
 /** storagePath'i UPLOAD_DIR altındaki mutlak yola çözer; yol dışına çıkışı reddeder. */
@@ -29,7 +36,7 @@ export function resolveSafePath(storagePath: string): string {
   }
   // Treat Windows separators as separators on every platform before resolving.
   const normalizedPath = storagePath.replace(/\\/g, path.sep);
-  const resolved = path.resolve(root, normalizedPath);
+  const resolved = path.resolve(/* turbopackIgnore: true */ root, normalizedPath);
   if (resolved !== root && !resolved.startsWith(root + path.sep)) {
     throw new Error("Geçersiz depolama yolu.");
   }

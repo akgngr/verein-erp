@@ -9,3 +9,9 @@ upload
 skills
 .zscripts
 *.log
+# #587: Yerel yüklemeler (üye/muhasebe belgeleri) ve test/çıktı klasörleri imaj bağlamına girmez.
+storage
+coverage
+theme-preview
+playwright-report
+test-results
