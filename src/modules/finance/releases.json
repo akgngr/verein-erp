@@ -2,6 +2,26 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler).",
   "releases": [
     {
+      "version": "0.3.0",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Gerçek kurlar, ayarlar uygulanıyor",
+        "de": "Echte Kurse, Einstellungen wirksam"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Uydurma eğilim rozetleri (+0,2 % / −0,1 %) ve hesaplanmış 'önceki kur' kaldırıldı; yalnız sağlayıcının güncel kuru gösterilir.",
+          "de": "Erfundene Trendbadges (+0,2 % / −0,1 %) und berechnete „Vorkurse“ wurden entfernt; angezeigt wird nur der aktuelle Anbieterkurs."
+        },
+        {
+          "type": "fix",
+          "tr": "Para birimi adları arayüz dilinde; koyu modda tutar alanı okunur; ayarlarda kaydedilen ana para birimi ve izlenen para birimleri uygulanır.",
+          "de": "Währungsnamen in der Oberflächensprache; Betragsfeld im Dunkelmodus lesbar; gespeicherte Basis- und beobachtete Währungen werden angewendet."
+        }
+      ]
+    },
+    {
       "version": "0.2.1",
       "date": "2026-11-25",
       "title": {

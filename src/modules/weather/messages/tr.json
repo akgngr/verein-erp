@@ -73,7 +73,8 @@
     "95": "Gök Gürültülü Fırtına",
     "96": "Dolu ile Birlikte Fırtına",
     "99": "Şiddetli Dolu ve Fırtına",
-    "fallback": "Değişken Hava"
+    "fallback": "Değişken Hava",
+    "77": "Kar Taneleri"
   },
   "secretary": {
     "dailyForecast": "Bugün hava {temp}°, {cond}.",

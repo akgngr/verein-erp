@@ -68,6 +68,10 @@ export const DATA_POLICY = {
   PortalPasskey: { owner: "member-portal", category: "K0", reason: "Üye portalı WebAuthn geçiş anahtarı", sensitiveFields: ["publicKey"] },
   PortalSession: { owner: "member-portal", category: "K0", reason: "Üye portalı oturumu", sensitiveFields: ["sessionHash"] },
   ProgressNote: { owner: "progress", category: "K0", reason: "Çocuklara ilişkin değerlendirme notları", sensitiveFields: ["goals", "text"] },
+  // #585: Güvenlik denetim sonuçları yalnız güvenlik izleme modülünde (ortam ayrıntısı içerebilir).
+  SecurityTestRun: { owner: "security-monitor", category: "K0", reason: "Güvenlik denetimi sonuçları ve günlükleri (ortam ayrıntısı)", sensitiveFields: ["logs", "results"] },
+  SecurityTestAlert: { owner: "security-monitor", category: "K0", reason: "Güvenlik uyarıları", sensitiveFields: ["metadata"] },
+  SecurityTestSchedule: { owner: "security-monitor", category: "K0", reason: "Eski zamanlama kaydı (kullanılmıyor; zamanlama otomasyondadır)", sensitiveFields: [] },
   SystemSetting: { owner: "system", category: "K0", reason: "Yapılandırma ve erişim onayları (sır içerebilir)", sensitiveFields: [] },
   User: { owner: "users", category: "K0", reason: "Kimlik doğrulama sırları (parola hash, kilit)", sensitiveFields: ["passwordHash", "email"], directAccess: ["auth"] },
   UserProfile: { owner: "auth", category: "K0", reason: "Banka ve iletişim verisi", sensitiveFields: ["accountHolder", "bic", "city", "houseNumber", "ibanEnc", "mobile", "phone", "postalCode", "street", "taxNumberEnc"], personalOwnerField: "userId" },

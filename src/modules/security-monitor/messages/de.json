@@ -73,5 +73,15 @@
         }
       }
     }
+  },
+  "checks": {
+    "authSecret": "App-Geheimnis (AUTH_SECRET) mindestens 32 Zeichen",
+    "secretEncryption": "Gespeicherte Geheimnisse können verschlüsselt werden",
+    "appUrlHttps": "Öffentliche Adresse (APP_URL) gesetzt und in Produktion HTTPS",
+    "uploadsNotPublic": "Uploads liegen nicht im öffentlichen Ordner",
+    "auditAppendOnly": "Protokoll ist unveränderlich (Datenbank-Trigger)",
+    "migrations": "Keine fehlgeschlagene Datenbankmigration",
+    "productionMode": "Läuft im Produktionsmodus",
+    "RUNTIME_CHECKS_FAILED": "Prüfungen konnten nicht ausgeführt werden (siehe Serverprotokoll)"
   }
 }

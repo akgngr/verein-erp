@@ -3,6 +3,7 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 
 import { ForbiddenError, requirePermission } from "@/modules/auth/server";
+import { getOrganizationProfile } from "@/modules/organization/server";
 import { FormDrawerButton } from "@/shared/components/forms/form-drawer";
 import { AccessDenied } from "@/shared/components/ui/access-denied";
 import { PageHeader } from "@/shared/components/ui/page-header";
@@ -40,7 +41,8 @@ export async function YouthProtectionListView({ searchParams }: { searchParams: 
     defaultDir: "asc",
     filterKeys: ["status"],
   });
-  const list = await listYouthProtectionItems(params);
+  const [list, profile] = await Promise.all([listYouthProtectionItems(params), getOrganizationProfile()]);
+  const organization = { name: profile.name ?? null, city: profile.city ?? null };
 
   const canCreate = can(user.role, youthProtectionPermissions, "create");
   const canUpdate = can(user.role, youthProtectionPermissions, "update");
@@ -78,6 +80,7 @@ export async function YouthProtectionListView({ searchParams }: { searchParams: 
         q={params.q}
         canUpdate={canUpdate}
         canDelete={canDelete}
+        organization={organization}
       />
       {canCreate && raw.yeni !== undefined ? <YouthProtectionItemCreateView /> : null}
       {canUpdate && typeof raw.duzenle === "string" && raw.duzenle ? (
@@ -85,6 +88,7 @@ export async function YouthProtectionListView({ searchParams }: { searchParams: 
       ) : null}
       {raw.letter !== undefined ? (
         <FeeExemptionLetterView
+          organization={organization}
           initialPersonName={typeof raw.letter === "string" && raw.letter !== "1" ? raw.letter : undefined}
         />
       ) : null}

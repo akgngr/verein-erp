@@ -73,5 +73,15 @@
         }
       }
     }
+  },
+  "checks": {
+    "authSecret": "Uygulama sırrı (AUTH_SECRET) en az 32 karakter",
+    "secretEncryption": "Kayıtlı sırlar şifrelenebiliyor",
+    "appUrlHttps": "Genel adres (APP_URL) tanımlı ve üretimde HTTPS",
+    "uploadsNotPublic": "Yüklemeler herkese açık klasörde değil",
+    "auditAppendOnly": "Denetim kaydı değiştirilemez (veritabanı tetikleyicileri)",
+    "migrations": "Başarısız veritabanı göçü yok",
+    "productionMode": "Üretim modunda çalışıyor",
+    "RUNTIME_CHECKS_FAILED": "Denetimler çalıştırılamadı (sunucu günlüğüne bakın)"
   }
 }

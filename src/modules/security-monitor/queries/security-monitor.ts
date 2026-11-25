@@ -76,47 +76,9 @@ export async function getSecurityTestAlerts(options: {
   };
 }
 
-export async function getSecurityTestSchedules() {
-  return getDb().securityTestSchedule.findMany({ orderBy: { name: "asc" } });
-}
-
-export async function createSecurityTestSchedule(schedule: {
-  name: string;
-  testSuite: string;
-  cronExpression: string;
-  enabled?: boolean;
-  timeoutMs?: number;
-  retryCount?: number;
-}) {
-  return getDb().securityTestSchedule.create({
-    data: {
-      name: schedule.name,
-      testSuite: schedule.testSuite,
-      cronExpression: schedule.cronExpression,
-      enabled: schedule.enabled ?? true,
-      timeoutMs: schedule.timeoutMs ?? 300000,
-      retryCount: schedule.retryCount ?? 3,
-    },
-  });
-}
-
-export async function updateSecurityTestSchedule(
-  id: string,
-  updates: {
-    name?: string;
-    testSuite?: string;
-    cronExpression?: string;
-    enabled?: boolean;
-    timeoutMs?: number;
-    retryCount?: number;
-  },
-) {
-  return getDb().securityTestSchedule.update({ where: { id }, data: updates });
-}
-
-export async function deleteSecurityTestSchedule(id: string) {
-  await getDb().securityTestSchedule.delete({ where: { id } });
-}
+// #585: Ayrı zamanlama tablosu (SecurityTestSchedule) hiçbir yere bağlı değildi; düzenli çalıştırma otomasyon
+// zamanlamasıyladır (security-monitor.run_tests görevinin `schedule` tanımı). API ve servis fonksiyonları kaldırıldı;
+// tablo veri kaybı olmasın diye şemada kalır.
 
 export async function acknowledgeSecurityAlert(id: string, userId: string) {
   return getDb().securityTestAlert.update({

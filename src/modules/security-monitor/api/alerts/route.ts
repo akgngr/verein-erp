@@ -1,31 +1,24 @@
 import { NextResponse } from "next/server";
+import { z } from "zod";
+
 import { requirePermission } from "@/modules/auth/server";
+
 import { securityMonitorPermissions } from "../../permissions";
 import { getSecurityTestAlerts } from "../../server";
+import { securityRoute } from "../../services/http";
+
+const listQuery = z.object({
+  limit: z.coerce.number().int().min(1).max(100).default(50),
+  page: z.coerce.number().int().min(1).max(10_000).default(1),
+  severity: z.enum(["low", "medium", "high", "critical"]).optional(),
+  status: z.enum(["open", "acknowledged", "resolved"]).optional(),
+});
 
 // GET /api/security-monitor/alerts - List alerts
 export async function GET(request: Request) {
-  try {
+  return securityRoute(async () => {
     await requirePermission(securityMonitorPermissions, "view");
-
-    const { searchParams } = new URL(request.url);
-    const limit = parseInt(searchParams.get("limit") || "50");
-    const severity = searchParams.get("severity") || undefined;
-    const status = searchParams.get("status") || undefined;
-    const page = parseInt(searchParams.get("page") || "1");
-
-    const result = await getSecurityTestAlerts({
-      limit,
-      severity,
-      status,
-      page,
-    });
-
-    return NextResponse.json(result);
-  } catch (error) {
-    return NextResponse.json(
-      { error: error instanceof Error ? error.message : "Failed to fetch alerts" }, // i18n-ignore
-      { status: 400 }
-    );
-  }
+    const query = listQuery.parse(Object.fromEntries(new URL(request.url).searchParams));
+    return NextResponse.json(await getSecurityTestAlerts(query));
+  });
 }

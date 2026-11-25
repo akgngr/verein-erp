@@ -2,7 +2,7 @@ import { CloudSun } from "lucide-react";
 
 import { defineCards } from "@/shared/types/dashboard";
 import { weatherPermissions } from "../permissions";
-import { getWeatherData } from "../services/weather";
+import { getOrganizationWeather } from "../services/weather";
 
 export const cards = defineCards([
   {
@@ -15,7 +15,7 @@ export const cards = defineCards([
     href: "/weather",
     permission: { definition: weatherPermissions, action: "view" },
     render: async () => {
-      const weather = await getWeatherData();
+      const weather = await getOrganizationWeather();
       const { WeatherCardBody } = await import("./weather-card-body");
       return <WeatherCardBody initialWeather={weather} />;
     },
