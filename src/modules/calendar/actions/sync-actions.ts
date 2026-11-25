@@ -29,6 +29,8 @@ function fail(error: unknown): never {
     SYNC_PROVIDER_UNAVAILABLE: "calendar.sync.errors.unavailable",
     SYNC_SECRET_REQUIRED: "calendar.sync.errors.secretRequired",
     SYNC_AUTH: "calendar.sync.errors.auth",
+    // #584: Özel sunucu adresi sağlayıcının izinli sunucularından değilse anlaşılır mesaj.
+    SYNC_HOST_NOT_ALLOWED: "calendar.sync.errors.hostNotAllowed",
   };
   if (error instanceof ActionError) throw error;
   if (error && typeof error === "object" && (error as { name?: string }).name === "SyncAuthError") throw new ActionError(known.SYNC_AUTH);
@@ -58,9 +60,11 @@ export async function connectPasswordAction(input: unknown): Promise<ActionResul
       password: z.string().min(4).max(200),
       serverUrl: z.string().url().startsWith("https://").max(300).optional().or(z.literal("")),
     }),
-    handler: async ({ input, user }) => {
+    handler: async ({ input, user, audit }) => {
       try {
         const id = await connectWithPassword(user.id, input.provider, { username: input.username, password: input.password, serverUrl: input.serverUrl || undefined });
+        // #584: Dış takvim bağlantısı denetlenir (kullanıcı adı, parola ve sunucu adresi yazılmaz).
+        await audit({ action: "CONNECT", entity: "CalendarSyncAccount", entityId: id, after: { provider: input.provider } });
         await syncAccount(id);
         revalidatePath("/calendar");
         return { id };
@@ -89,8 +93,9 @@ export async function disconnectSyncAction(input: unknown): Promise<ActionResult
   return createAction({
     permission: { definition: calendarPermissions, action: "view" },
     schema: z.object({ accountId: z.string().min(1).max(64) }),
-    handler: async ({ input, user }) => {
+    handler: async ({ input, user, audit }) => {
       await disconnectAccount(user.id, input.accountId);
+      await audit({ action: "DISCONNECT", entity: "CalendarSyncAccount", entityId: input.accountId });
       revalidatePath("/calendar");
       return { ok: true as const };
     },
@@ -123,12 +128,19 @@ export async function saveSyncAppAction(input: unknown): Promise<ActionResult<{ 
       clientSecret: z.string().trim().max(500).optional().or(z.literal("")),
       tenant: z.string().trim().max(100).optional().or(z.literal("")),
     }),
-    handler: async ({ input, user }) => {
+    handler: async ({ input, user, audit }) => {
       try {
         await saveApp(input.provider, { clientId: input.clientId, clientSecret: input.clientSecret || undefined, tenant: input.tenant || null }, user.id);
       } catch (error) {
         fail(error);
       }
+      // #584: OAuth uygulaması ayarı denetlenir; gizli anahtar asla yazılmaz, yalnız değişip değişmediği.
+      await audit({
+        action: "UPDATE",
+        entity: "CalendarSyncApp",
+        entityId: input.provider,
+        after: { provider: input.provider, clientId: input.clientId, secretChanged: Boolean(input.clientSecret), tenant: input.tenant || null },
+      });
       revalidatePath("/calendar");
       return { ok: true as const };
     },

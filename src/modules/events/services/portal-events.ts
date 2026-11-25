@@ -3,6 +3,8 @@ import "server-only";
 import { writeAudit } from "@/shared/audit/write-audit";
 import { getDb } from "@/shared/db";
 
+import { registerAttendee } from "./attendee-registration";
+
 export type PortalEventRow = {
   id: string;
   title: string;
@@ -18,7 +20,7 @@ export async function listPublishedEventsForPortal(memberId: string): Promise<Po
   const db = getDb();
   const now = new Date();
   const events = await db.event.findMany({
-    where: { status: "PUBLISHED", startDate: { gte: now } },
+    where: { status: "PUBLISHED", startDate: { gte: now }, deletedAt: null },
     orderBy: { startDate: "asc" },
     take: 25,
     include: {
@@ -49,44 +51,26 @@ export async function registerMemberForEventForPortal(input: {
   lastName: string;
   email: string | null;
 }): Promise<{ ok: true } | { ok: false; reason: "notFound" | "alreadyRegistered" | "full" }> {
-  const db = getDb();
-  const event = await db.event.findFirst({
-    where: { id: input.eventId, status: "PUBLISHED" },
-    include: {
-      attendees: {
-        where: { status: { not: "CANCELLED" } },
-        select: { memberId: true },
-      },
-    },
-  });
-  if (!event) return { ok: false, reason: "notFound" };
-
-  if (event.attendees.some((a) => a.memberId === input.memberId)) {
-    return { ok: false, reason: "alreadyRegistered" };
-  }
-  if (event.capacity !== null && event.attendees.length >= event.capacity) {
-    return { ok: false, reason: "full" };
-  }
-
-  const attendee = await db.eventAttendee.create({
-    data: {
-      eventId: event.id,
+  // #584: Kontenjan ve mükerrer kayıt kontrolü yönetici eylemiyle aynı kilitli transaction'da yapılır.
+  const result = await registerAttendee(
+    {
+      eventId: input.eventId,
       memberId: input.memberId,
       firstName: input.firstName,
       lastName: input.lastName,
       email: input.email,
-      status: "REGISTERED",
     },
-    select: { id: true },
-  });
+    { publishedOnly: true },
+  );
+  if (!result.ok) return result;
 
   await writeAudit({
     userId: input.subjectRef,
     userLabel: "Member Portal",
     action: "PORTAL_EVENT_REGISTERED",
     entity: "EventAttendee",
-    entityId: attendee.id,
-    after: { eventId: event.id, memberId: input.memberId },
+    entityId: result.id,
+    after: { eventId: input.eventId, memberId: input.memberId },
   });
 
   return { ok: true };

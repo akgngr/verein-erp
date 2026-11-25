@@ -1,5 +1,7 @@
 import "server-only";
 
+import { berlinMidnight } from "@/shared/calendar/berlin-date";
+
 import { defineCalendarSync, syncFetch, syncJson, SyncAuthError, type CalendarSyncProvider, type RemoteEvent, type SyncAppConfig, type SyncCredentials } from "@/shared/calendar/sync";
 
 const GRAPH = "https://graph.microsoft.com/v1.0";
@@ -17,7 +19,8 @@ export function graphDate(value: GraphDate | undefined, allDay: boolean): Date |
   const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2}):(\d{2})/.exec(value.dateTime);
   if (!match) return null;
   const [y, mo, d, h, mi, s] = match.slice(1).map(Number);
-  return allDay ? new Date(y, mo - 1, d) : new Date(Date.UTC(y, mo - 1, d, h, mi, s));
+  // #584: Tüm gün tarihi sunucu saat diliminden bağımsız olarak Berlin gece yarısına çevrilir.
+  return allDay ? berlinMidnight(y, mo, d) : new Date(Date.UTC(y, mo - 1, d, h, mi, s));
 }
 
 export function mapGraphEvent(event: GraphEvent): RemoteEvent | null {

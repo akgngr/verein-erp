@@ -80,7 +80,8 @@
   },
   "errors": {
     "notFound": "Aufgabe nicht gefunden.",
-    "memberNotFound": "Das ausgewählte Mitglied wurde nicht gefunden oder ist ausgetreten."
+    "memberNotFound": "Das ausgewählte Mitglied wurde nicht gefunden oder ist ausgetreten.",
+    "meetingNotFound": "Die ausgewählte Sitzung wurde nicht gefunden."
   },
   "validation": {
     "titleRequired": "Titel ist erforderlich.",

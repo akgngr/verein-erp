@@ -12,6 +12,7 @@ export {
   deleteAttendeeAction,
 } from "./actions/event-actions"
 export { buildEventsWorkbook } from "./services/event-export-service"
+export { berlinLocalToUtc, utcToBerlinLocalInput } from "./helpers/berlin-time"
 export {
   listPublishedEventsForPortal,
   registerMemberForEventForPortal,

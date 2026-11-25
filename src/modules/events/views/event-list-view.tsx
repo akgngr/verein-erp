@@ -1,4 +1,8 @@
 import { getTranslations } from "next-intl/server";
+import { ForbiddenError, requirePermission } from "@/modules/auth/server"
+import { AccessDenied } from "@/shared/components/ui/access-denied"
+import { can } from "@/shared/permissions/define"
+import { eventsPermissions } from "../permissions"
 import { FormDrawerButton } from "@/shared/components/forms/form-drawer"
 import { Plus } from "lucide-react"
 import { PageHeader } from "@/shared/components/ui/page-header"
@@ -14,6 +18,14 @@ interface EventListViewProps {
 }
 
 export async function EventListView({ searchParams }: EventListViewProps) {
+  // #584: Modül kapısı yalnız modülün açık olduğunu denetler; görüntüleme yetkisi burada zorunludur.
+  let role: string
+  try {
+    role = (await requirePermission(eventsPermissions, "view")).role
+  } catch (error) {
+    if (error instanceof ForbiddenError) return <AccessDenied />
+    throw error
+  }
   const tEvents = await getTranslations("events");
   const raw = await searchParams
 
@@ -47,9 +59,11 @@ export async function EventListView({ searchParams }: EventListViewProps) {
         title={tEvents("title")}
         description={tEvents("description")}
         actions={
-          <FormDrawerButton param="yeni" startIcon={<Plus className="h-4 w-4" />}>
-            {tEvents("newEvent")}
-          </FormDrawerButton>
+          can(role, eventsPermissions, "create") ? (
+            <FormDrawerButton param="yeni" startIcon={<Plus className="h-4 w-4" />}>
+              {tEvents("newEvent")}
+            </FormDrawerButton>
+          ) : null
         }
       />
 
@@ -63,9 +77,11 @@ export async function EventListView({ searchParams }: EventListViewProps) {
         sort={params.sort}
         dir={params.dir}
         q={params.q}
+        canUpdate={can(role, eventsPermissions, "update")}
+        canDelete={can(role, eventsPermissions, "delete")}
       />
 
-      <EventCreateModal isOpen={isModalOpen} />
+      {can(role, eventsPermissions, "create") ? <EventCreateModal isOpen={isModalOpen} /> : null}
     </div>
   )
 }

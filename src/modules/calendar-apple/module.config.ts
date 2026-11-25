@@ -7,7 +7,7 @@ import type { ModuleConfig } from "@/shared/types/module";
 export const moduleConfig: ModuleConfig = {
   key: "calendar-apple",
   // Modül sürümü: releases.json en üstteki sürümle aynı olmalı (modülde her değişiklikte artırın).
-  version: "1.0.1",
+  version: "1.0.2",
   label: "Apple Takvim",
   description: "iCloud takvimini CalDAV ile salt okunur bağlar (Apple ID + uygulamaya özel parola).",
   category: "EXTENSION",

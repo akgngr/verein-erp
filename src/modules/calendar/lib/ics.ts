@@ -15,10 +15,48 @@ export type IcsEvent = {
 const pad = (value: number) => String(value).padStart(2, "0");
 const utc = (date: Date) =>
   `${date.getUTCFullYear()}${pad(date.getUTCMonth() + 1)}${pad(date.getUTCDate())}T${pad(date.getUTCHours())}${pad(date.getUTCMinutes())}${pad(date.getUTCSeconds())}Z`;
-const day = (date: Date) => `${date.getFullYear()}${pad(date.getMonth() + 1)}${pad(date.getDate())}`;
 
+/**
+ * #584: Tüm gün kayıtları takvim arayüzünde Berlin gece yarısı (başlangıç) ve 23:59 (bitiş) olarak saklanır.
+ * Tarih, sunucunun saat dilimi yerine Europe/Berlin takvimine göre yazılır; aksi halde UTC sunucuda bir gün
+ * önceye kayar.
+ */
+const berlinDateFormatter = new Intl.DateTimeFormat("en-CA", {
+  timeZone: "Europe/Berlin",
+  year: "numeric",
+  month: "2-digit",
+  day: "2-digit",
+});
+const berlinTimeFormatter = new Intl.DateTimeFormat("en-GB", {
+  timeZone: "Europe/Berlin",
+  hour: "2-digit",
+  minute: "2-digit",
+  hourCycle: "h23",
+});
+const berlinYmd = (date: Date) => berlinDateFormatter.format(date); // YYYY-MM-DD
+const addDaysYmd = (ymd: string, days: number) => {
+  const date = new Date(`${ymd}T00:00:00Z`);
+  date.setUTCDate(date.getUTCDate() + days);
+  return date.toISOString().slice(0, 10);
+};
+const compactYmd = (ymd: string) => ymd.replace(/-/g, "");
+
+/**
+ * Tüm gün etkinliğin RFC 5545 tarihleri: DTEND dışlayıcıdır ve her zaman DTSTART'tan sonradır.
+ * Bitiş Berlin gece yarısında ise (zaten dışlayıcı biçim) o gün; değilse bitiş gününün ertesi günü.
+ */
+export function allDayRange(start: Date, end: Date): { start: string; end: string } {
+  const startYmd = berlinYmd(start);
+  const endYmd = berlinYmd(end);
+  const endIsMidnight = berlinTimeFormatter.format(end) === "00:00";
+  let exclusiveEnd = endIsMidnight ? endYmd : addDaysYmd(endYmd, 1);
+  if (exclusiveEnd <= startYmd) exclusiveEnd = addDaysYmd(startYmd, 1);
+  return { start: compactYmd(startYmd), end: compactYmd(exclusiveEnd) };
+}
+
+/** RFC 5545 §3.3.11 metin kaçışı: ters eğik çizgi, noktalı virgül, virgül ve satır sonu. */
 export function escapeIcs(text: string): string {
-  return text.replace(/\\/g, "\\\\").replace(/;/g, "\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
+  return text.replace(/\\/g, "\\\\").replace(/;/g, "\\;").replace(/,/g, "\\,").replace(/\r?\n/g, "\\n");
 }
 
 /** Fold lines longer than 75 octets (RFC 5545 §3.1). */
@@ -54,8 +92,8 @@ export function buildIcs(name: string, events: IcsEvent[], now = new Date()): st
   for (const event of events) {
     lines.push("BEGIN:VEVENT", `UID:${event.uid}`, `DTSTAMP:${utc(event.updatedAt ?? now)}`);
     if (event.allDay) {
-      const endDay = new Date(event.end.getTime() <= event.start.getTime() ? event.start.getTime() + 86_400_000 : event.end.getTime());
-      lines.push(`DTSTART;VALUE=DATE:${day(event.start)}`, `DTEND;VALUE=DATE:${day(endDay)}`);
+      const range = allDayRange(event.start, event.end);
+      lines.push(`DTSTART;VALUE=DATE:${range.start}`, `DTEND;VALUE=DATE:${range.end}`);
     } else {
       lines.push(`DTSTART:${utc(event.start)}`, `DTEND:${utc(event.end)}`);
     }

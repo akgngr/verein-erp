@@ -1,5 +1,7 @@
 import { getTranslations } from "next-intl/server";
 
+import { getEnv } from "@/shared/env";
+
 import { buildFeedForToken } from "../../../services/feed";
 
 /**
@@ -7,9 +9,12 @@ import { buildFeedForToken } from "../../../services/feed";
  * No session: the secret, revocable per-user token authenticates the request
  * (excluded from the auth proxy in src/proxy.ts). Unknown tokens get 404.
  */
-export async function GET(_request: Request, { params }: { params: Promise<{ token: string }> }) {
+export async function GET(request: Request, { params }: { params: Promise<{ token: string }> }) {
   const { token } = await params;
-  const t = await getTranslations({ locale: "de", namespace: "calendar" });
+  // #584: Takvim adı abonelik bağlantısındaki dile göre (?lang=tr|de); yoksa resmî belge dili.
+  const lang = new URL(request.url).searchParams.get("lang");
+  const locale = lang === "tr" || lang === "de" ? lang : getEnv().DOCUMENT_LANGUAGE;
+  const t = await getTranslations({ locale, namespace: "calendar" });
   const body = await buildFeedForToken(token.replace(/\.ics$/, ""), t("feedName"));
   if (!body) return new Response(null, { status: 404 });
   return new Response(body, {

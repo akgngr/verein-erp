@@ -6,8 +6,9 @@ export async function getEventById(
 ): Promise<EventDetailData | null> {
   const db = getDb()
 
-  const item = await db.event.findUnique({
-    where: { id },
+  // #584: Yumuşak silinmiş etkinlik bulunamadı sayılır.
+  const item = await db.event.findFirst({
+    where: { id, deletedAt: null },
     include: {
       attendees: {
         orderBy: { registeredAt: "desc" },

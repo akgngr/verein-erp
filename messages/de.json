@@ -3280,7 +3280,8 @@
         "unavailable": "Dieses Plugin ist nicht aktiv.",
         "secretRequired": "Beim ersten Speichern ist das Client-Secret erforderlich.",
         "auth": "Zugangsdaten abgelehnt.",
-        "failed": "Kalender konnte nicht verbunden werden."
+        "failed": "Kalender konnte nicht verbunden werden.",
+        "hostNotAllowed": "Diese Serveradresse ist nicht erlaubt. Verwenden Sie die offizielle Adresse des Anbieters (für iCloud caldav.icloud.com)."
       },
       "settingsTitle": "Kalendereinstellungen",
       "settingsDescription": "Daten eurer eigenen OAuth-Apps für die Google- und Outlook-Synchronisation. Benutzer verbinden ihre Konten in den Kalendereinstellungen.",
@@ -5155,7 +5156,9 @@
       "removedToast": "{name} wurde aus der Teilnehmerliste entfernt.",
       "addFailed": "Der Teilnehmer konnte nicht hinzugefügt werden.",
       "statusFailed": "Der Status konnte nicht aktualisiert werden.",
-      "removeFailed": "Der Teilnehmer konnte nicht entfernt werden."
+      "removeFailed": "Der Teilnehmer konnte nicht entfernt werden.",
+      "memberPicker": "Mitglied auswählen (optional)",
+      "memberPickerHint": "Bei Auswahl werden die Namensfelder ausgefüllt und die Anmeldung mit dem Mitglied verknüpft; für Gäste leer lassen."
     },
     "attendeeStatus": {
       "REGISTERED": "Angemeldet",
@@ -5193,7 +5196,9 @@
       "invalidStatus": "Ungültiger Status.",
       "statusUpdateFailed": "Der Teilnahmestatus konnte nicht aktualisiert werden.",
       "invalidAttendeeId": "Ungültige Teilnehmer-ID.",
-      "attendeeDeleteFailed": "Der Teilnehmer konnte nicht entfernt werden."
+      "attendeeDeleteFailed": "Der Teilnehmer konnte nicht entfernt werden.",
+      "alreadyRegistered": "Dieses Mitglied ist bereits für die Veranstaltung angemeldet.",
+      "memberNotFound": "Das ausgewählte Mitglied wurde nicht gefunden."
     },
     "validation": {
       "titleMin": "Der Titel muss mindestens 3 Zeichen lang sein.",
@@ -5203,7 +5208,16 @@
       "eventIdInvalid": "Ungültige Veranstaltungs-ID.",
       "firstNameMin": "Der Vorname muss mindestens 2 Zeichen lang sein.",
       "lastNameMin": "Der Nachname muss mindestens 2 Zeichen lang sein.",
-      "emailInvalid": "Bitte eine gültige E-Mail-Adresse eingeben."
+      "emailInvalid": "Bitte eine gültige E-Mail-Adresse eingeben.",
+      "titleMax": "Der Titel darf höchstens 200 Zeichen lang sein.",
+      "descriptionMax": "Die Beschreibung darf höchstens 5000 Zeichen lang sein.",
+      "dateInvalid": "Bitte ein gültiges Datum mit Uhrzeit eingeben.",
+      "endBeforeStart": "Das Ende darf nicht vor dem Beginn liegen.",
+      "locationMax": "Der Ort darf höchstens 300 Zeichen lang sein.",
+      "capacityMax": "Die Kapazität darf höchstens 100000 betragen.",
+      "nameMax": "Vor- und Nachname dürfen höchstens 100 Zeichen lang sein.",
+      "phoneMax": "Die Telefonnummer darf höchstens 40 Zeichen lang sein.",
+      "notesMax": "Die Notiz darf höchstens 1000 Zeichen lang sein."
     },
     "form": {
       "createTitle": "Neue Veranstaltung anlegen",
@@ -9981,7 +9995,8 @@
     },
     "errors": {
       "notFound": "Aufgabe nicht gefunden.",
-      "memberNotFound": "Das ausgewählte Mitglied wurde nicht gefunden oder ist ausgetreten."
+      "memberNotFound": "Das ausgewählte Mitglied wurde nicht gefunden oder ist ausgetreten.",
+      "meetingNotFound": "Die ausgewählte Sitzung wurde nicht gefunden."
     },
     "validation": {
       "titleRequired": "Titel ist erforderlich.",

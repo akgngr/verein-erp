@@ -13,7 +13,7 @@ Görev ve iş takibi yönetimi.
 |---|---|
 | Anahtar | `tasks` |
 | Tür | Eklenti |
-| Sürüm | 1.3.13 |
+| Sürüm | 1.3.14 |
 | Sayfalar | `/tasks`, `/tasks/bana-atananlar` |
 
 ## Diğer modüllere erişim
@@ -42,6 +42,13 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `list_open_tasks` · `propose_complete_task` · `propose_delete_task` · `propose_task`
 
 ## Sürüm notları
+
+### 1.3.14 — Bana atananlar ve toplantı bağlantısı
+
+_2026-11-25_
+
+- **Düzeltme:** "Bana atananlar" yalnız size atanmış görevleri gösterir; oluşturduğunuz ama başkasına atadığınız görevler artık listelenmez.
+- **Düzeltme:** Bağlanan toplantının varlığı doğrulanır; denetim kaydına kişi adı yazılmaz.
 
 ### 1.3.13 — nav.json kategori ve alt modül tanımı
 
@@ -85,10 +92,4 @@ _2026-11-18_
 
 - **İyileştirme:** Düğme ve bağlantılar ortak arayüz kitine taşındı. Görünüm ve davranış değişmedi.
 
-### 1.3.5 — Ortak UI bileşenleri (iç değişiklik)
-
-_2026-11-17_
-
-- **İyileştirme:** Form alanları, pencereler, sekmeler, rozetler ve yükleme göstergeleri ortak UI kitine taşındı; görünüm ve davranış değişmez.
-
-Daha eski 11 herkese açık sürüm notu.
+Daha eski 12 herkese açık sürüm notu.
