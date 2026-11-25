@@ -13,7 +13,7 @@ Yönetici ve üye kullanıcı hesapları, roller ve erişim izinleri.
 |---|---|
 | Anahtar | `users` |
 | Tür | Çekirdek (her zaman açık) |
-| Sürüm | 1.4.0 |
+| Sürüm | 1.4.1 |
 | Sayfalar | `/ayarlar/kullanicilar` |
 
 ## Diğer modüllere erişim
@@ -34,6 +34,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Kullanıcı Hesapları | görüntüleme, oluşturma, düzenleme, silme | — | — | — | — | — | — | — |
 
 ## Sürüm notları
+
+### 1.4.1 — Menü grubu ikon alanı kalıcılığı
+
+_2026-11-25_
+
+- **Düzeltme:** groupSchema içine icon alanı eklenerek özel grup ikonlarının veritabanında saklanması sağlandı.
 
 ### 1.4.0 — Davet bağlantısı
 
@@ -77,10 +83,4 @@ _2026-11-20_
 
 - **İyileştirme:** Diğer modüller, bildirim alıcısını e-posta adresine göre etkin kullanıcılar arasından bulabilir.
 
-### 1.1.7 — Kod bakımı
-
-_2026-11-19_
-
-- **İyileştirme:** Kullanılmayan kod temizlendi; formlar alan değişikliklerini React Compiler ile uyumlu şekilde izliyor. Görünüm ve davranış değişmedi.
-
-Daha eski 9 herkese açık sürüm notu.
+Daha eski 10 herkese açık sürüm notu.
