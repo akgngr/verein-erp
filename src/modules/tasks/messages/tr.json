@@ -80,7 +80,8 @@
   },
   "errors": {
     "notFound": "Görev bulunamadı.",
-    "memberNotFound": "Seçilen üye bulunamadı veya üyeliği sona ermiş."
+    "memberNotFound": "Seçilen üye bulunamadı veya üyeliği sona ermiş.",
+    "meetingNotFound": "Seçilen toplantı bulunamadı."
   },
   "validation": {
     "titleRequired": "Başlık zorunludur.",

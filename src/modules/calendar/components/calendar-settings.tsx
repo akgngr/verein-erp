@@ -10,7 +10,7 @@ import { actionVariant } from "@/shared/components/ui/action-appearance";
 
 import { Link2, Plus, RefreshCw, Unlink } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useTranslations } from "next-intl";
+import { useLocale, useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 
 import {
@@ -40,6 +40,7 @@ export function CalendarSettings({
   sync,
 }: Props) {
   const t = useTranslations("calendar.settings");
+  const locale = useLocale();
   const router = useRouter();
   const [pending, startTransition] = useTransition();
   const [feedUrl, setFeedUrl] = useState<string | null>(null);
@@ -91,7 +92,7 @@ export function CalendarSettings({
                         if (!response.ok)
                           return void notify.error(response.error);
                         setFeedUrl(
-                          `${window.location.origin}/api/calendar/feed/${response.data.token}.ics`,
+                          `${window.location.origin}/api/calendar/feed/${response.data.token}.ics?lang=${locale}`,
                         );
                         setFeedActive(true);
                       })

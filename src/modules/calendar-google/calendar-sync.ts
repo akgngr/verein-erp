@@ -1,5 +1,7 @@
 import "server-only";
 
+import { berlinMidnight } from "@/shared/calendar/berlin-date";
+
 import { defineCalendarSync, syncFetch, syncJson, SyncAuthError, type CalendarSyncProvider, type RemoteEvent, type SyncAppConfig, type SyncCredentials } from "@/shared/calendar/sync";
 
 const AUTH = "https://accounts.google.com/o/oauth2/v2/auth";
@@ -17,7 +19,8 @@ const auth = (credentials: SyncCredentials) => ({ headers: { Authorization: `Bea
 export function googleDate(value: GoogleDate | undefined): { date: Date; allDay: boolean } | null {
   if (value?.dateTime) return { date: new Date(value.dateTime), allDay: false };
   const match = value?.date && /^(\d{4})-(\d{2})-(\d{2})$/.exec(value.date);
-  return match ? { date: new Date(Number(match[1]), Number(match[2]) - 1, Number(match[3])), allDay: true } : null;
+  // #584: Tüm gün tarihi sunucu saat diliminden bağımsız olarak Berlin gece yarısına çevrilir.
+  return match ? { date: berlinMidnight(Number(match[1]), Number(match[2]), Number(match[3])), allDay: true } : null;
 }
 
 export function mapGoogleEvent(event: GoogleEvent): RemoteEvent | null {
