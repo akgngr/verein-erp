@@ -19,5 +19,5 @@ export { saveItemForAsset, markItemScrapped } from "./services/asset-sync";
 
 export async function getInventorySnapshot(id:string) {
   const {getDb}=await import("@/shared/db");
-  return getDb().inventoryItem.findUnique({where:{id},select:{id:true,updatedAt:true}});
+  return getDb().inventoryItem.findFirst({where:{id,deletedAt:null},select:{id:true,updatedAt:true}});
 }

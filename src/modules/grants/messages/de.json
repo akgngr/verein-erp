@@ -98,7 +98,8 @@
     "amount": "Betrag",
     "receipt": "Beleg",
     "narrative": "Sachbericht",
-    "narrativePlaceholder": "Durchgeführte Maßnahmen, erreichte Ziele, Teilnehmendenzahlen, Begründung von Abweichungen …"
+    "narrativePlaceholder": "Durchgeführte Maßnahmen, erreichte Ziele, Teilnehmendenzahlen, Begründung von Abweichungen …",
+    "detailsHidden": "Belegdetails sind Buchhaltungsdaten und werden nur mit Leserecht für die Buchhaltung angezeigt. Die Summen oben enthalten alle Belege."
   },
   "financing": {
     "approvedCents": "Bewilligte Zuwendung",

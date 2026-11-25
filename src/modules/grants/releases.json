@@ -2,6 +2,31 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security.",
   "releases": [
     {
+      "version": "1.0.12",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Muhasebe verisi yetkisi ve ödeme denetimi",
+        "de": "Buchhaltungsberechtigung und Auszahlungsprüfung"
+      },
+      "changes": [
+        {
+          "type": "security",
+          "tr": "Fiş/defter ayrıntıları ve rapor PDF'i yalnız muhasebeyi görebilen rollere gösterilir (ör. SECRETARY özet görür).",
+          "de": "Belegdetails und Berichts-PDF sind nur für Rollen mit Buchhaltungs-Leserecht sichtbar (z. B. sieht SECRETARY nur die Zusammenfassung)."
+        },
+        {
+          "type": "security",
+          "tr": "Ödeme 'alındı' işareti yalnız aynı fona ait ödemede değiştirilebilir; alınmış ödeme geri alınamaz (GoBD).",
+          "de": "Die Markierung „erhalten“ ist nur für Auszahlungen desselben Fördervorhabens änderbar; erhaltene Auszahlungen können nicht zurückgesetzt werden (GoBD)."
+        },
+        {
+          "type": "fix",
+          "tr": "Yeni fon kaydı 'oluşturma', düzenleme 'güncelleme' izni ister; bütçe ve ödeme işlemleri denetim kaydı bırakır.",
+          "de": "Neue Fördervorhaben erfordern das Recht „Anlegen“, Änderungen „Bearbeiten“; Budget- und Auszahlungsaktionen werden protokolliert."
+        }
+      ]
+    },
+    {
       "version": "1.0.11",
       "date": "2026-11-23",
       "title": {

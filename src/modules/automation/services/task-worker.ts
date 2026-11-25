@@ -18,8 +18,10 @@ import {
   getLegacyExecutionStaleBefore,
 } from "@/shared/automation/lease";
 import { getDb } from "@/shared/db";
+import { refreshActivePermissionPolicy } from "@/shared/permissions/define";
 import { automationTasks } from "../tasks/registry";
 import type { AutomationTaskQueuePayload } from "../worker/queue";
+import { automationLocaleFrom } from "./automation-locale";
 import { assertTaskModulesUsable } from "./execution-control";
 import { recordAutomationLog } from "./log-store";
 import { queueWorkflowAdvance } from "./workflow-runtime";
@@ -284,6 +286,10 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
       return;
     }
 
+    // #582: Görev içindeki can(...) çağrıları veritabanındaki rol geçersiz kılmalarını ve özel rolleri
+    // görmelidir. Yükleyici yoksa veya yüklenemezse görev yeniden denenir (izin varsayılana düşmez).
+    await refreshActivePermissionPolicy();
+
     const storedContext = asObject(execution.context);
     const controller = new AbortController();
     const timeoutSeconds = task.timeoutSeconds ?? 300;
@@ -294,7 +300,7 @@ export async function executeAutomationTask(payload: AutomationTaskQueuePayload)
       requestedById: execution.requestedById,
       organizationId: execution.organizationId,
       correlationId: execution.correlationId,
-      locale: storedContext.locale === "tr" ? "tr" : "de",
+      locale: automationLocaleFrom(storedContext),
       attempt,
       leaseToken,
       signal: controller.signal,

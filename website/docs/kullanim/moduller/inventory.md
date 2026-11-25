@@ -13,7 +13,7 @@ Dernek demirbaşları, teknik ekipmanlar ve zimmet kayıtlarının takibi.
 |---|---|
 | Anahtar | `inventory` |
 | Tür | Resmî modül |
-| Sürüm | 1.1.12 |
+| Sürüm | 1.2.0 |
 | Sayfalar | `/inventory`, `/inventory/kategoriler` |
 
 ## Diğer modüllere erişim
@@ -40,6 +40,15 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_inventory_overview` · `list_inventory_items` · `propose_delete_inventory_item` · `propose_inventory_item` · `propose_inventory_status`
 
 ## Sürüm notları
+
+### 1.2.0 — AfA yetkisi, CSV güvenliği, yumuşak silme
+
+_2026-11-25_
+
+- **Güvenlik:** AfA'da izlenen eşyada muhasebe demirbaşını değiştiren işlem muhasebe yazma izni ister (SECRETARY/BOARD artık AfA kaydını değiştiremez).
+- **Güvenlik:** CSV dışa aktarımında formül enjeksiyonu (=, +, -, @) nötrlenir.
+- **Düzeltme:** Asistanla eşya oluşturma artık çalışır (zorunlu alan eksikti).
+- **İyileştirme:** Silme yumuşaktır ve tüm işlemler denetim kaydı bırakır.
 
 ### 1.1.12 — nav.json kategori ve alt modül tanımı
 
@@ -83,10 +92,4 @@ _2026-11-16_
 
 - **İyileştirme:** Asistanın öneri araçları (onay kartlı) bulut sağlayıcıda denetimli modda da kullanılabilir.
 
-### 1.1.5 — HeroUI v3 arayüz geçişi
-
-_2026-11-16_
-
-- **İyileştirme:** Modül arayüzü yerel HeroUI v3 bileşenlerine ve ortak açık/koyu tema renklerine geçirildi. Mevcut iş akışları, izinler ve çeviriler korunur.
-
-Daha eski 6 herkese açık sürüm notu.
+Daha eski 7 herkese açık sürüm notu.

@@ -13,7 +13,7 @@ Regularly runs system security tests and monitors results
 |---|---|
 | Anahtar | `security-monitor` |
 | Tür | Resmî modül |
-| Sürüm | 1.3.6 |
+| Sürüm | 1.3.7 |
 | Sayfalar | `/guvenlik-izleme` |
 | Gerektirir | [Otomasyon](./automation) |
 
@@ -34,6 +34,12 @@ Roller ve izinler **Ayarlar → Roller** ekranından değiştirilebilir; tablo k
 | Güvenlik İzleme | görüntüleme, oluşturma, düzenleme, silme | — | — | — | görüntüleme | — | — |
 
 ## Sürüm notları
+
+### 1.3.7 — Sayfa yetkisi
+
+_2026-11-25_
+
+- **Güvenlik:** Sayfa sunucuda yetki ister; 'Testleri çalıştır' yalnız oluşturma iznine sahip rollere görünür.
 
 ### 1.3.6 — TAX_ADVISOR rolü izin tanımı
 
@@ -78,10 +84,4 @@ _2026-11-06_
 - **Yeni:** Güvenlik testleri iş akışı düzenleyicisinde görev olarak kullanılabilir.
 - **Düzeltme:** Güvenlik İzleme ekranı var olmayan /api/modules/... adreslerini çağırdığı için 404 alıyordu; istatistik, çalıştırma ve uyarı istekleri ile test kuyruğa alma artık doğru /api/security-monitor/... adreslerini kullanıyor. Menü etiketi Otomasyon İzleme ile çakışmıyor.
 
-### 1.2.0 — Güvenlik testleri zamanlanabilir
-
-_2026-11-05_
-
-- **Yeni:** Güvenlik testleri Otomasyon ekranından düzenli aralıklarla (en az saatlik) çalışacak şekilde zamanlanabilir.
-
-Daha eski 3 herkese açık sürüm notu.
+Daha eski 4 herkese açık sürüm notu.

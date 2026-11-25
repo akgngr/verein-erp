@@ -2,6 +2,21 @@
   "_comment": "Modül sürüm notları. Modülde her değişiklikte yeni sürümü EN ÜSTE ekleyin; module.config.ts 'version' ile aynı olmalı (pnpm module:check ve CI denetler). type: feature | improvement | fix | security. appVersion: uygulama sürümü (isteğe bağlı).",
   "releases": [
     {
+      "version": "1.0.4",
+      "date": "2026-11-25",
+      "title": {
+        "tr": "Demo verisi sayfası yetki hatası",
+        "de": "Berechtigungsfehler der Demodaten-Seite"
+      },
+      "changes": [
+        {
+          "type": "fix",
+          "tr": "Yetkisiz kullanıcı /ayarlar/demo-veri sayfasında 500 hatası yerine 'Erişim yok' ekranını görür.",
+          "de": "Unberechtigte Benutzer sehen auf /ayarlar/demo-veri statt eines 500-Fehlers den Hinweis „Kein Zugriff“."
+        }
+      ]
+    },
+    {
       "version": "1.0.3",
       "date": "2026-11-23",
       "title": {

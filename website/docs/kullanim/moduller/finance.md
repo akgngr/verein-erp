@@ -13,7 +13,7 @@ Canlı döviz kurları, piyasa göstergeleri, kur çevirici ve finansal AI asist
 |---|---|
 | Anahtar | `finance` |
 | Tür | Eklenti |
-| Sürüm | 0.2.0 |
+| Sürüm | 0.2.1 |
 | Sayfalar | `/finance`, `/finance/ayarlar` |
 
 ## Varsayılan yetkiler
@@ -31,6 +31,12 @@ Asistanın bu modülde kullanabildiği araçlar (bkz. [Yapay zekâ asistanı](/k
 `get_exchange_rates`
 
 ## Sürüm notları
+
+### 0.2.1 — Sayfa yetkileri
+
+_2026-11-25_
+
+- **Güvenlik:** Döviz sayfası görüntüleme, ayarlar sayfası onay (ADMIN, TREASURER) izni ister; VIEWER ayarları doğrudan URL ile açamaz.
 
 ### 0.2.0 — Hafif döviz header widget'ı
 

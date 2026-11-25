@@ -2666,7 +2666,8 @@
       "cancel": "Abbrechen",
       "retry": "Erneut versuchen",
       "cancelled": "Aufgabe abgebrochen.",
-      "retried": "Aufgabe erneut eingereiht."
+      "retried": "Aufgabe erneut eingereiht.",
+      "detailsHidden": "Technische Details sind nur für Rollen sichtbar, die Automationen verwalten dürfen."
     },
     "access": {
       "mailings": "Zur Registrierung der vertrauenswürdigen Kampagnenaufgabe des Rundmail-Moduls im Worker-Aufgabenverzeichnis.",
@@ -4044,7 +4045,10 @@
       "sourceMissing": "Quelldatensatz nicht gefunden oder Modul deaktiviert.",
       "notFound": "Eintrag nicht gefunden.",
       "summary": "Bitte mindestens 2 Zeichen eingeben.",
-      "title": "Der Titel muss mindestens 2 Zeichen lang sein."
+      "title": "Der Titel muss mindestens 2 Zeichen lang sein.",
+      "sourceForbidden": "Sie dürfen Kontakte aus dieser Quelle nicht sehen.",
+      "amount": "Der Betrag darf nicht negativ sein.",
+      "amountMax": "Der Betrag darf höchstens 20.000.000 € betragen."
     },
     "access": {
       "members": "Liest Name und Kontaktdaten der CRM-Kontakte aus dem Mitgliedsdatensatz (ohne Kopie).",
@@ -4080,7 +4084,8 @@
           }
         }
       }
-    }
+    },
+    "restricted": "Eingeschränkt (keine Berechtigung für das Quellmodul)"
   },
   "demo": {
     "module": {
@@ -5665,7 +5670,8 @@
       "amount": "Betrag",
       "receipt": "Beleg",
       "narrative": "Sachbericht",
-      "narrativePlaceholder": "Durchgeführte Maßnahmen, erreichte Ziele, Teilnehmendenzahlen, Begründung von Abweichungen …"
+      "narrativePlaceholder": "Durchgeführte Maßnahmen, erreichte Ziele, Teilnehmendenzahlen, Begründung von Abweichungen …",
+      "detailsHidden": "Belegdetails sind Buchhaltungsdaten und werden nur mit Leserecht für die Buchhaltung angezeigt. Die Summen oben enthalten alle Belege."
     },
     "financing": {
       "approvedCents": "Bewilligte Zuwendung",
@@ -5795,7 +5801,8 @@
       "forbidden": "Sie haben keine Berechtigung für diese Aktion.",
       "validation": "Die Eingaben sind ungültig. Bitte prüfen Sie das Formular.",
       "notFound": "Der Inventareintrag wurde nicht gefunden. Möglicherweise wurde er gelöscht.",
-      "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut."
+      "unknown": "Ein unerwarteter Fehler ist aufgetreten. Bitte versuchen Sie es erneut.",
+      "assetForbidden": "Dieser Gegenstand wird in der Buchhaltung als Anlagegut (AfA) geführt. Für Änderungen an Name, Betrag, Datum, Ausmusterung oder AfA-Kennzeichen ist eine Schreibberechtigung in der Buchhaltung erforderlich."
     },
     "export": {
       "filePrefix": "inventar"
