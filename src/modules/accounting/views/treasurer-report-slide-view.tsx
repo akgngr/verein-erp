@@ -86,7 +86,7 @@ export function TreasurerReportSlideView({
           </span>
           <span className="text-[11px] text-ink-500 mt-1 flex items-center gap-1">
             <TrendingUp className="h-3 w-3 text-emerald-600" aria-hidden="true" />
-            {t("previousYear")}: {formatMoney(report.totals.totalIncomeCents - (report.totals.yearOnYearDeltaCents > 0 ? report.totals.yearOnYearDeltaCents : 0))}
+            {t("previousYear")}: {formatMoney(report.totals.previousYearIncomeCents)}
           </span>
         </SurfaceCard>
 
@@ -97,7 +97,7 @@ export function TreasurerReportSlideView({
           </span>
           <span className="text-[11px] text-ink-500 mt-1 flex items-center gap-1">
             <TrendingDown className="h-3 w-3 text-rose-600" aria-hidden="true" />
-            {t("previousYear")}: {formatMoney(report.totals.totalExpenseCents)}
+            {t("previousYear")}: {formatMoney(report.totals.previousYearExpenseCents)}
           </span>
         </SurfaceCard>
 

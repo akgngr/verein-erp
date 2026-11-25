@@ -47,16 +47,24 @@ export async function gobdExportHandler(request: Request): Promise<Response> {
   const from = new Date(Date.UTC(year, 0, 1));
   const to = new Date(Date.UTC(year, 11, 31));
   const db = getDb();
-  const [profile, tax, bookings, accounts, categories, invoices, payables, journal] = await Promise.all([
+  const [profile, tax, bookings, accounts, categories, invoices, payables, cashClosings, assets, flatRates, reserves] = await Promise.all([
     getOrganizationProfile(),
     getTaxSettings(db),
     db.accountingBooking.findMany({ where: { year }, orderBy: { sequence: "asc" }, include: { account: true, counterAccount: true, category: true } }),
     db.accountingAccount.findMany({ orderBy: { name: "asc" } }),
     db.accountingCategory.findMany({ orderBy: { name: "asc" } }),
-    db.accountingInvoice.findMany({ where: { kind: "INVOICE", status: { not: "DRAFT" }, issueDate: { gte: from, lte: to } }, orderBy: { number: "asc" } }),
+    db.accountingInvoice.findMany({ where: { kind: { in: ["INVOICE", "CREDIT_NOTE"] }, status: { not: "DRAFT" }, issueDate: { gte: from, lte: to } }, orderBy: { number: "asc" } }),
     db.accountingPayable.findMany({ where: { status: { not: "DRAFT" }, issueDate: { gte: from, lte: to } }, orderBy: { issueDate: "asc" } }),
-    db.accountingJournal.findMany({ where: { createdAt: { gte: from, lt: new Date(Date.UTC(year + 1, 0, 1)) } }, orderBy: { seq: "asc" } }),
+    db.accountingCashClosing.findMany({ where: { closingDate: { gte: from, lte: to } }, orderBy: { closingDate: "asc" }, include: { account: { select: { name: true } } } }),
+    db.accountingAsset.findMany({ where: { acquisitionDate: { lte: to } }, orderBy: { acquisitionDate: "asc" } }),
+    db.accountingFlatRate.findMany({ where: { date: { gte: from, lte: to } }, orderBy: { date: "asc" } }),
+    db.accountingReserve.findMany({ where: { OR: [{ year }, { releasedYear: year }] }, orderBy: { year: "asc" } }),
   ]);
+  const bookingIdList = bookings.map((b) => b.id);
+  const journal = await db.accountingJournal.findMany({
+    where: { bookingId: { in: [...bookingIdList, `YEAR:${year}`] } },
+    orderBy: { seq: "asc" },
+  });
 
   const tables: GdpduTable[] = [
     {
@@ -70,9 +78,9 @@ export async function gobdExportHandler(request: Request): Promise<Response> {
       rows: [...accounts.map((row) => [row.id, row.accountNumber, row.name, `Geldkonto ${row.type}`, tax.chartOfAccounts]), ...categories.map((row) => [row.id, row.accountNumber, row.name, `Kategorie ${row.direction}`, tax.chartOfAccounts])], // i18n-ignore
     },
     {
-      file: "ausgangsrechnungen.csv", name: "Ausgangsrechnungen", description: "Gestellte Rechnungen", primaryKey: "Rechnungsnummer", // i18n-ignore
-      columns: [A("Rechnungsnummer", "Nummer"), D("Rechnungsdatum", "Datum"), A("Empfaenger", "Empfänger"), N("Netto", "EUR"), N("Steuer", "EUR"), N("Brutto", "EUR"), N("Bezahlt", "EUR"), A("Status", "Status")], // i18n-ignore
-      rows: invoices.map((row) => [row.number, day(row.issueDate), row.recipientName, row.netCents / 100, row.taxCents / 100, row.grossCents / 100, row.paidCents / 100, row.status]),
+      file: "ausgangsrechnungen.csv", name: "Ausgangsrechnungen", description: "Gestellte Rechnungen und Stornorechnungen", primaryKey: "Rechnungsnummer", // i18n-ignore
+      columns: [A("Rechnungsnummer", "Nummer"), A("Belegart", "INVOICE/CREDIT_NOTE"), D("Rechnungsdatum", "Datum"), A("Empfaenger", "Empfänger"), N("Netto", "EUR"), N("Steuer", "EUR"), N("Brutto", "EUR"), N("Bezahlt", "EUR"), A("Status", "Status")], // i18n-ignore
+      rows: invoices.map((row) => [row.number, row.kind, day(row.issueDate), row.recipientName, row.netCents / 100, row.taxCents / 100, row.grossCents / 100, row.paidCents / 100, row.status]),
     },
     {
       file: "eingangsrechnungen.csv", name: "Eingangsrechnungen", description: "Erfasste Eingangsrechnungen", primaryKey: "ID", // i18n-ignore
@@ -80,8 +88,28 @@ export async function gobdExportHandler(request: Request): Promise<Response> {
       rows: payables.map((row) => [row.id, row.number, day(row.issueDate), row.supplierName, row.supplierVatId, row.netCents / 100, row.taxCents / 100, row.grossCents / 100, row.paidCents / 100, row.status, row.source, row.sha256]),
     },
     {
+      file: "kassenabschluesse.csv", name: "Kassenabschluesse", description: "Tägliche Kassenabschlüsse mit Zählprotokoll", primaryKey: "ID", // i18n-ignore
+      columns: [A("ID", "Interne ID"), A("Konto", "Kassenkonto"), D("Abschlussdatum", "Datum"), N("Sollbestand", "Buchbestand EUR"), N("Istbestand", "Gezählter Bestand EUR"), N("Differenz", "Differenz EUR"), A("Notiz", "Notiz"), A("Bearbeiter", "Erfasst von")], // i18n-ignore
+      rows: cashClosings.map((row) => [row.id, row.account.name, day(row.closingDate), row.bookBalanceCents / 100, row.countedBalanceCents / 100, row.differenceCents / 100, row.note, row.createdByLabel]),
+    },
+    {
+      file: "anlagegueter.csv", name: "Anlagegueter", description: "Anlagenverzeichnis (AfA/GWG/Sammelposten)", primaryKey: "ID", // i18n-ignore
+      columns: [A("ID", "Interne ID"), A("Bezeichnung", "Name"), D("Anschaffung", "Anschaffungsdatum"), N("Anschaffungskosten", "Netto EUR"), A("Methode", "LINEAR/GWG/POOL"), N("NutzungsdauerMonate", "Monate", 0), D("Abgang", "Abgangsdatum"), A("Notiz", "Notiz")], // i18n-ignore
+      rows: assets.map((row) => [row.id, row.name, day(row.acquisitionDate), row.costCents / 100, row.method, row.usefulLifeMonths, day(row.disposalDate), row.notes]),
+    },
+    {
+      file: "pauschalen.csv", name: "Pauschalen", description: "Pauschale Betriebsausgaben (Homeoffice, Fahrtkosten, Verpflegung)", primaryKey: "ID", // i18n-ignore
+      columns: [A("ID", "Interne ID"), D("Datum", "Datum"), A("Art", "HOME_OFFICE/MILEAGE/MEALS_8H/MEALS_24H"), N("Menge", "Menge"), N("Betrag", "EUR"), A("Notiz", "Notiz")], // i18n-ignore
+      rows: flatRates.map((row) => [row.id, day(row.date), row.kind, Number(row.quantity), row.amountCents / 100, row.note]),
+    },
+    {
+      file: "ruecklagen.csv", name: "Ruecklagen", description: "Rücklagen gemäß § 62 AO", primaryKey: "ID", // i18n-ignore
+      columns: [A("ID", "Interne ID"), N("Jahr", "Bildungsjahr", 0), A("Art", "FREE/PURPOSE/REPLACEMENT/OPERATING"), N("Betrag", "EUR"), A("Zweck", "Zweck"), N("GeplantJahr", "Geplantes Verwendungsjahr", 0), N("AufgeloestJahr", "Auflösungsjahr", 0)], // i18n-ignore
+      rows: reserves.map((row) => [row.id, row.year, row.kind, row.amountCents / 100, row.purpose, row.plannedUseYear, row.releasedYear]),
+    },
+    {
       file: "journal.csv", name: "Protokoll", description: "Unveränderbares Änderungsprotokoll (Hash-Kette)", primaryKey: "Laufnummer", // i18n-ignore
-      columns: [N("Laufnummer", "Fortlaufend", 0), A("Belegnummer", "Buchung"), A("Ereignis", "CREATE/UPDATE/REVERSE/SEAL"), A("Zeitpunkt", "ISO-Zeitstempel"), A("Bearbeiter", "Benutzer"), A("Inhaltshash", "SHA-256 des Buchungsinhalts"), A("Vorgaengerhash", "SHA-256 Vorgänger"), A("Hash", "SHA-256 dieses Eintrags")], // i18n-ignore
+      columns: [N("Laufnummer", "Fortlaufend", 0), A("Belegnummer", "Buchung"), A("Ereignis", "CREATE/UPDATE/REVERSE/SEAL/YEAR_UNLOCK"), A("Zeitpunkt", "ISO-Zeitstempel"), A("Bearbeiter", "Benutzer"), A("Inhaltshash", "SHA-256 des Buchungsinhalts"), A("Vorgaengerhash", "SHA-256 Vorgänger"), A("Hash", "SHA-256 dieses Eintrags")], // i18n-ignore
       rows: journal.map((row) => [row.seq, row.bookingNumber, row.event, row.createdAt.toISOString(), row.actorLabel, row.snapshotHash, row.prevHash, row.hash]),
     },
   ];
@@ -127,9 +155,9 @@ export async function gobdProcedureHandler(): Promise<Response> {
     "## 3. Technische Systemdokumentation",
     "- Webanwendung (Next.js) mit PostgreSQL-Datenbank; Zugriff nur nach Anmeldung; Rollen- und Rechtekonzept je Modul.",
     "- Buchungen können nicht gelöscht werden (Datenbank-Trigger); Korrekturen erfolgen per Storno mit Begründung.",
-    `- Unveränderbarkeit: jede Erfassung, Änderung und Stornierung wird in einem fortlaufenden, hash-verketteten Protokoll (SHA-256) festgehalten (${journalCount} Einträge${firstJournal ? ` seit ${firstJournal.createdAt.toISOString().slice(0, 10)}` : ""}); die Prüfung ist in der Anwendung jederzeit möglich.`,
-    "- Belegdateien werden mit Prüfsumme (SHA-256) gespeichert.",
-    "- Datenträgerüberlassung (Z3): Export im GDPdU-Format (index.xml + CSV) je Wirtschaftsjahr.",
+    `- Unveränderbarkeit: jede Erfassung, Änderung, Stornierung und Jahresfreigabe wird in einem fortlaufenden, hash-verketteten Protokoll (SHA-256) festgehalten (${journalCount} Einträge${firstJournal ? ` seit ${firstJournal.createdAt.toISOString().slice(0, 10)}` : ""}); die Prüfung ist in der Anwendung jederzeit möglich.`,
+    "- Eingangsrechnungsbelege (AccountingPayable) und Zuwendungsbestätigungen werden mit SHA-256-Prüfsumme gespeichert; Buchungsanhänge (AccountingBookingFile) werden unveränderlich im Dateispeicher abgelegt und weich gelöscht.",
+    "- Datenträgerüberlassung (Z3): Export im GDPdU-Format (index.xml mit UTF-8-Deklaration + CSV) je Wirtschaftsjahr.",
     "",
     "## 4. Betriebsdokumentation",
     `- Datensicherung: ${todo} (Häufigkeit, Speicherort, Wiederherstellungstest)`,

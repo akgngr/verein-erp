@@ -32,7 +32,7 @@ export function gdpduIndex(input: { supplierName: string; location: string; comm
       };
       const pk = table.columns.find((col) => col.name === table.primaryKey) as GdpduColumn;
       const rest = table.columns.filter((col) => col.name !== table.primaryKey);
-      return `<Table><URL>${esc(table.file)}</URL><Name>${esc(table.name)}</Name><Description>${esc(table.description)}</Description>${range}<DecimalSymbol>,</DecimalSymbol><DigitGroupingSymbol>.</DigitGroupingSymbol><VariableLength><ColumnDelimiter>;</ColumnDelimiter><RecordDelimiter>&#13;&#10;</RecordDelimiter><TextEncapsulator>"</TextEncapsulator><VariablePrimaryKey>${column(pk)}</VariablePrimaryKey>${rest.map((col) => `<VariableColumn>${column(col)}</VariableColumn>`).join("")}</VariableLength></Table>`;
+      return `<Table><URL>${esc(table.file)}</URL><Name>${esc(table.name)}</Name><Description>${esc(table.description)}</Description>${range}<UTF8/><DecimalSymbol>,</DecimalSymbol><DigitGroupingSymbol>.</DigitGroupingSymbol><VariableLength><ColumnDelimiter>;</ColumnDelimiter><RecordDelimiter>&#13;&#10;</RecordDelimiter><TextEncapsulator>"</TextEncapsulator><VariablePrimaryKey>${column(pk)}</VariablePrimaryKey>${rest.map((col) => `<VariableColumn>${column(col)}</VariableColumn>`).join("")}</VariableLength></Table>`;
     })
     .join("\n");
   return [

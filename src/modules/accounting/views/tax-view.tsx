@@ -15,7 +15,7 @@ import { getDb } from "@/shared/db";
 import { formatMoney } from "@/shared/money";
 
 import { accountingPermissions } from "../permissions";
-import { getSmallBusinessCheck, listTaxRows } from "../queries/tax-reports";
+import { getSmallBusinessCheck, listTaxRows, listUstvaRows } from "../queries/tax-reports";
 import { getEuerAdjustments } from "../queries/assets";
 import { getTaxSettings } from "../services/tax";
 import {
@@ -35,7 +35,7 @@ const iso = (date: Date) => date.toISOString().slice(0, 10);
 
 /**
  * Vergi (ACC-2): UStVA Kennzahlen (drill-down), EÜR özeti ve DATEV EXTF dışa aktarımı.
- * Tek veri kaynağı: iptal edilmemiş fişler (brüt/net/KDV). Ist-Versteuerung: fiş tarihi.
+ * Tek veri kaynağı: iptal edilmemiş fişler (IST) veya fatura kesim tarihi + gider fişleri (SOLL).
  */
 export async function TaxView({
   tab,
@@ -76,7 +76,9 @@ export async function TaxView({
           to: new Date(Date.UTC(year, 11, 31)),
         };
   const [rows, smallBusiness] = await Promise.all([
-    listTaxRows(range.from, range.to),
+    tab === "ustva"
+      ? listUstvaRows(range.from, range.to, settings.taxMethod)
+      : listTaxRows(range.from, range.to),
     settings.smallBusiness ? getSmallBusinessCheck(year) : null,
   ]);
 
@@ -219,7 +221,11 @@ function BookingList({
           className="flex flex-wrap justify-between gap-2 py-1.5"
         >
           <Link
-            href={`/muhasebe/${row.id}`}
+            href={
+              row.id.startsWith("inv:")
+                ? `/muhasebe/faturalar/${row.id.split(":")[1]}`
+                : `/muhasebe/${row.id}`
+            }
             className="text-accent underline-offset-2 hover:underline"
           >
             {row.bookingNumber} · {iso(row.bookingDate)} · {row.description}

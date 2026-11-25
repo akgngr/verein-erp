@@ -28,7 +28,7 @@ import { ActionError } from "@/modules/auth/server";
  * ("Betragskorrektur") ve doğru tutarla yeni fiş açılır. @@unique([sourceType, sourceId]) nedeniyle
  * sonraki fişler `<ödemeId>:<n>` kaynak kimliğiyle yazılır; hepsi aynı ödemeye aittir.
  */
-type PaymentBooking = { id: string; sourceId: string | null; reversedAt: Date | null; bookingDate: Date; amount: { toString(): string } };
+type PaymentBooking = { id: string; sourceId: string | null; reversedAt: Date | null; bookingDate: Date; amount: { toString(): string }; accountId: string };
 
 function groupBookingsByPayment(bookings: PaymentBooking[]): Map<string, PaymentBooking[]> {
   const map = new Map<string, PaymentBooking[]>();
@@ -101,7 +101,7 @@ export async function previewMemberSync(): Promise<{
   // Var olan kaynak fişleri tek sorguda al (idempotans kontrolü).
   const existingBookings = await db.accountingBooking.findMany({
     where: { sourceType: "MEMBER_PAYMENT" },
-    select: { id: true, sourceId: true, reversedAt: true, bookingDate: true, amount: true },
+    select: { id: true, sourceId: true, reversedAt: true, bookingDate: true, amount: true, accountId: true },
   });
   const bookingsByPayment = groupBookingsByPayment(existingBookings);
 
@@ -207,7 +207,7 @@ export async function runMemberSync(
   const payments = await listPaymentsForAccounting();
   const existingBookings = await db.accountingBooking.findMany({
     where: { sourceType: "MEMBER_PAYMENT" },
-    select: { id: true, sourceId: true, reversedAt: true, bookingDate: true, amount: true },
+    select: { id: true, sourceId: true, reversedAt: true, bookingDate: true, amount: true, accountId: true },
   });
   const bookingsByPayment = groupBookingsByPayment(existingBookings);
 
@@ -218,6 +218,7 @@ export async function runMemberSync(
   const conflicts: Array<{ receiptNumber: string; reason: string }> = [];
 
   const { assertNoNegativeCash } = await import("./balances");
+  const { assertCashNotClosed } = await import("./booking-guards");
 
   for (const payment of payments) {
     const allBookings = bookingsByPayment.get(payment.id) ?? [];
@@ -243,7 +244,7 @@ export async function runMemberSync(
 
       try {
         await db.$transaction(async (tx: Prisma.TransactionClient) => {
-          // Hesap açılış tarihi kontrolü.
+          // Hesap açılış tarihi ve kasa kapanış kontrolü.
           const account = await tx.accountingAccount.findUniqueOrThrow({
             where: { id: accountId },
             select: { openingDate: true },
@@ -251,8 +252,10 @@ export async function runMemberSync(
           if (paidAt.getTime() < account.openingDate.getTime()) {
             throw new ActionError("accounting.errors.beforeOpening");
           }
+          await assertCashNotClosed(tx, [accountId], paidAt);
 
           if (existing) {
+            await assertCashNotClosed(tx, [existing.accountId], existing.bookingDate);
             await tx.accountingBooking.update({
               where: { id: existing.id },
               data: {
@@ -292,6 +295,9 @@ export async function runMemberSync(
           });
 
           await assertNoNegativeCash(accountId, tx);
+          if (existing && existing.accountId !== accountId) {
+            await assertNoNegativeCash(existing.accountId, tx);
+          }
           await recordJournal(tx, [createdBooking.id], "CREATE", actor);
         });
         createdCount += 1;
@@ -303,12 +309,7 @@ export async function runMemberSync(
       }
     } else {
       if (!existing || existing.reversedAt) continue;
-      const bookingYear = (
-        await db.accountingBooking.findUniqueOrThrow({
-          where: { id: existing.id },
-          select: { bookingDate: true },
-        })
-      ).bookingDate.getUTCFullYear();
+      const bookingYear = existing.bookingDate.getUTCFullYear();
       if (await isLockedYear(bookingYear)) {
         conflicts.push({
           receiptNumber: payment.receiptNumber,
@@ -317,19 +318,27 @@ export async function runMemberSync(
         continue;
       }
 
-      await db.$transaction(async (tx: Prisma.TransactionClient) => {
-        await tx.accountingBooking.update({
-          where: { id: existing.id },
-          data: {
-            reversedAt: new Date(),
-            reversedById: actor.id,
-            reversedByLabel: actor.label,
-            reverseReason: `Quittung storniert: ${payment.voidReason ?? ""}`.trim(),
-          },
+      try {
+        await db.$transaction(async (tx: Prisma.TransactionClient) => {
+          await assertCashNotClosed(tx, [existing.accountId], existing.bookingDate);
+          await tx.accountingBooking.update({
+            where: { id: existing.id },
+            data: {
+              reversedAt: new Date(),
+              reversedById: actor.id,
+              reversedByLabel: actor.label,
+              reverseReason: `Quittung storniert: ${payment.voidReason ?? ""}`.trim(),
+            },
+          });
+          await assertNoNegativeCash(existing.accountId, tx);
+          await recordJournal(tx, [existing.id], "REVERSE", actor);
         });
-        await recordJournal(tx, [existing.id], "REVERSE", actor);
-      });
-      reversedCount += 1;
+        reversedCount += 1;
+      } catch (error) {
+        const message = error instanceof Error ? error.message : "common.errors.unexpected";
+        const values = error instanceof ActionError || error instanceof BookingRuleError ? error.values : undefined;
+        conflicts.push({ receiptNumber: payment.receiptNumber, reason: translate(message, values) });
+      }
     }
   }
 

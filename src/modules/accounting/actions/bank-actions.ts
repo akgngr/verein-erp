@@ -91,12 +91,19 @@ export async function bookBankTransactionAction(input: unknown): Promise<ActionR
           bookingIds = paid.bookingIds;
         } else {
           const text = [row.counterpartyName, row.purpose].filter(Boolean).join(" – ");
+          const existingBankCount = await tx.accountingBooking.count({
+            where: {
+              sourceType: BANK_SOURCE,
+              OR: [{ sourceId: row.id }, { sourceId: { startsWith: `${row.id}:` } }],
+            },
+          });
+          const bankSourceId = existingBankCount === 0 ? row.id : `${row.id}:${existingBankCount}`;
           const booking = await createSourcedBooking({
             tx,
             actor,
             type: row.amountCents >= 0 ? "INCOME" : "EXPENSE",
             sourceType: BANK_SOURCE,
-            sourceId: row.id,
+            sourceId: bankSourceId,
             bookingDate: row.bookingDate,
             accountId: row.accountId,
             categoryId: input.categoryId,
@@ -129,6 +136,61 @@ export async function bookBankTransactionAction(input: unknown): Promise<ActionR
     },
   });
   return run(input);
+}
+
+/**
+ * Yanlış sınıflandırılmış banka fişini ters kaydeder (Storno) ve satırı yeniden
+ * eşleştirme için `OPEN` durumuna alır. Fatura/gelen fatura eşleştirmeleri kendi ekranından yönetilir.
+ */
+export async function reverseBankTransactionAction(input: unknown): Promise<ActionResult> {
+  const { z } = await import("zod");
+  const { reverseSourcedBooking } = await import("../services/sourced-bookings");
+  const { assertNoNegativeCash } = await import("../services/balances");
+  const run = createAction({
+    permission: { definition: accountingPermissions, action: "delete" },
+    schema: z.object({
+      id: z.string().min(1),
+      reason: z.string().trim().min(5, "accounting.validation.reverseReasonMin").max(300, "accounting.validation.reverseReasonMax"),
+    }),
+    handler: async ({ input, user, audit }) => {
+      const actor = { id: user.id, label: buildUserLabel(user.name, user.email) };
+      await getDb().$transaction(async (tx) => {
+        const row = await tx.accountingBankTransaction.findUnique({ where: { id: input.id } });
+        if (!row) throw new ActionError("accounting.bank.errors.notFound");
+        if (row.status !== "BOOKED") throw new ActionError("accounting.bank.errors.notBooked");
+        if (row.invoiceId) throw new ActionError("accounting.bank.errors.reverseInvoiceManaged");
+        const ids = (row.bookingIds ?? "").split(",").filter(Boolean);
+        const linkedBookings = ids.length
+          ? await tx.accountingBooking.findMany({ where: { id: { in: ids } }, select: { id: true, sourceType: true } })
+          : [];
+        if (linkedBookings.some((b) => b.sourceType !== BANK_SOURCE)) {
+          throw new ActionError("accounting.bank.errors.reverseInvoiceManaged");
+        }
+        await reverseSourcedBooking({
+          tx,
+          actor,
+          sourceType: BANK_SOURCE,
+          sourceId: row.id,
+          reason: input.reason,
+        });
+        await assertNoNegativeCash(row.accountId, tx);
+        await tx.accountingBankTransaction.update({
+          where: { id: row.id },
+          data: { status: "OPEN", bookingIds: null, invoiceId: null },
+        });
+      });
+      await audit({
+        action: "REVERSE",
+        entity: "AccountingBankTransaction",
+        entityId: input.id,
+        after: { status: "OPEN", reason: input.reason },
+      });
+      refresh();
+      revalidatePath("/muhasebe");
+      return undefined;
+    },
+  });
+  return run(input) as Promise<ActionResult>;
 }
 
 /** Özel (Privatentnahme/-einlage) / yok say / geri aç. Fişe bağlı satır değiştirilemez. */

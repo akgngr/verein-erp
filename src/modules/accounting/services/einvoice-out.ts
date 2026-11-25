@@ -64,7 +64,7 @@ export const PEPPOL_PROFILE = "urn:fdc:peppol.eu:2017:poacc:billing:01:1.0";
 const esc = (value: string) => value.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
 const amount = (cents: number) => (cents / 100).toFixed(2);
 const tag = (name: string, value: string | null | undefined, attrs = "") => (value ? `<${name}${attrs}>${esc(value)}</${name}>` : "");
-const category = (rate: number, smallBusiness: boolean) => (rate > 0 ? "S" : smallBusiness ? "E" : "Z");
+const category = (rate: number, _smallBusiness: boolean) => (rate > 0 ? "S" : "E");
 
 function party(p: XInvoiceParty, role: "seller" | "buyer"): string {
   const taxScheme = [

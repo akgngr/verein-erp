@@ -14,7 +14,7 @@ import {
   bookingReverseSchema,
   bookingUpdateSchema,
 } from "../schemas/booking";
-import { assertNoNegativeCash, assertNoNegativeCashWithReplacement, toDecimal } from "../services/balances";
+import { assertNoNegativeCash, toDecimal } from "../services/balances";
 import { BookingRuleError, assertBookingDateAllowed, assertCashNotClosed, assertCategoryMatches } from "../services/booking-guards";
 import { allocateBookingNumber, runWithBookingNumberRetry } from "../services/booking-number";
 import { berlinYear, parseDateOnly } from "../utils";
@@ -239,45 +239,19 @@ export async function updateBookingAction(input: unknown): Promise<ActionResult>
           });
           await recordJournal(tx, [existing.id], "UPDATE", { id: user.id, label: updatedByLabel });
 
-          // Kassenminus: eski etkisini çıkar, yeni hareketi koy (§ 8 md. 9).
-          if (existing.type === "TRANSFER") {
-            await assertNoNegativeCashWithReplacement(
-              input.accountId,
-              tx,
-              existing.id,
-              {
-                bookingDate,
-                type: "TRANSFER",
-                accountId: input.accountId,
-                counterAccountId: input.counterAccountId,
-                amountCents: cents,
-              },
-            );
-            await assertNoNegativeCashWithReplacement(
-              input.counterAccountId ?? input.accountId,
-              tx,
-              existing.id,
-              {
-                bookingDate,
-                type: "TRANSFER",
-                accountId: input.accountId,
-                counterAccountId: input.counterAccountId,
-                amountCents: cents,
-              },
-            );
-          } else {
-            await assertNoNegativeCashWithReplacement(
-              input.accountId,
-              tx,
-              existing.id,
-              {
-                bookingDate,
-                type: existing.type,
-                accountId: input.accountId,
-                counterAccountId: null,
-                amountCents: cents,
-              },
-            );
+          // Kassenminus: hem eski hem yeni etkilenen tüm kasa hesapları güncellenmiş kayıtla denetlenir.
+          const affectedAccounts = [
+            ...new Set(
+              [
+                existing.accountId,
+                existing.counterAccountId,
+                input.accountId,
+                existing.type === "TRANSFER" ? input.counterAccountId : null,
+              ].filter((id): id is string => Boolean(id)),
+            ),
+          ];
+          for (const accId of affectedAccounts) {
+            await assertNoNegativeCash(accId, tx);
           }
         });
       } catch (error) {

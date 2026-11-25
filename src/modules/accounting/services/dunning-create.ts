@@ -22,7 +22,7 @@ export async function createDunningForInvoice(
   db: Db = getDb(),
 ): Promise<{ id: string; level: number; invoiceNumber: string | null; invoiceId: string }> {
   const [invoice, settings] = await Promise.all([
-    db.accountingInvoice.findUnique({ where: { id: invoiceId }, include: { contact: { select: { vatId: true } }, dunnings: { orderBy: { level: "desc" }, take: 1 } } }),
+    db.accountingInvoice.findUnique({ where: { id: invoiceId }, include: { contact: { select: { vatId: true, einvoiceType: true } }, dunnings: { orderBy: { level: "desc" }, take: 1 } } }),
     db.accountingInvoiceSettings.findUnique({ where: { id: "singleton" } }),
   ]);
   if (!invoice || invoice.kind !== "INVOICE" || invoice.status !== "ISSUED") throw new DunningError("accounting.dunning.errors.notDunnable");
@@ -32,7 +32,7 @@ export async function createDunningForInvoice(
   const last = invoice.dunnings[0] ?? null;
   const level = nextDunningLevel({ dueDate: due, today, last, intervalDays });
   if (!open || !level) throw new DunningError("accounting.dunning.errors.notDue");
-  const business = Boolean(invoice.contact?.vatId);
+  const business = Boolean(invoice.contact?.vatId) || invoice.contact?.einvoiceType === "B2B" || invoice.contact?.einvoiceType === "PUBLIC";
   // Zahlungserinnerung (kademe 1) faizsiz ve ücretsiz istenebilir; faiz kademe 2'den itibaren.
   const rate = level >= 2 ? defaultInterestRate(Number(settings?.baseInterestRate ?? 0), business) : 0;
   const created = await db.accountingDunning.create({
